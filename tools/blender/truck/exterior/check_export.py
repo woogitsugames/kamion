@@ -21,7 +21,7 @@ import bpy
 from mathutils import Euler, Matrix, Vector
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", ".."))
-TRI_LIMIT = {"LOD0": 100000, "LOD1": 45000, "LOD2": 15500, "LOD3": 6000}   # = a6_export.TRI_LIMIT
+TRI_LIMIT = {"LOD0": 140000, "LOD1": 45000, "LOD2": 15500, "LOD3": 6000}   # = a6_export.TRI_LIMIT
 BAKED_MATS = ("MI_Ext_Paint", "MI_Ext_Trim", "MI_Ext_Metal", "MI_Ext_Lights")
 
 

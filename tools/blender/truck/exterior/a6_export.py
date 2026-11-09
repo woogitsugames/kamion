@@ -56,7 +56,7 @@ ATLAS_RES = {"Paint": 2048, "Trim": 2048, "Metal": 2048, "Lights": 1024}
 DECAL_RES = 1024
 TIERS = {"High": 1, "Medium": 2, "Low": 4}          # divisor of the High size
 TRI_TARGET = {1: 43000, 2: 14500, 3: 5000}
-TRI_LIMIT = {0: 100000, 1: 45000, 2: 15500, 3: 6000}
+TRI_LIMIT = {0: 140000, 1: 45000, 2: 15500, 3: 6000}   # LOD0 100k -> 140k: owner/lead 2026-11-09 (quality first; phone headroom)
 
 MAT_SLOT = {
     "paint": "Paint",
@@ -208,6 +208,10 @@ def build_source():
     C.build_all()
     # decal quad over the TRAKT wordmark (the stroke geometry is baked into the decal atlas and dropped)
     wm = [o for o in bpy.data.objects if o.name.startswith("wordmark_")]
+    if not wm:
+        # B2 v2: the TRAKT letters are real geometry ('badge_trakt_*', Metal slot) on a black band; the paint-slot
+        # decal stays in the shader contract with a transparent atlas (TruckAssetBuilder unchanged)
+        return subpaths, strokes, wm
     pts = [o.matrix_world @ V(c) for o in wm for c in o.bound_box]
     lo, hi = bbox(pts)
     hw = max(abs(lo.x), abs(hi.x)) + 0.03
@@ -1213,7 +1217,7 @@ def frames(pieces_by_part, mirrors):
                 f[f"MUDFLAP_{kind}{sd}"] = (V(((lo.x + hi.x) / 2, (lo.y + hi.y) / 2, hi.z)), X, Y, Z)
     for k, nm in ((0, "WIPER_L"), (1, "WIPER_R")):
         piv = V(bpy.data.objects[f"wiper_pivot{k}"]["centre"])
-        n = B.CAB.normal_front(2.06, piv.x)
+        n = B.CAB.normal_front(B.WS_Z0, piv.x)
         up = V((0, -n.z, n.y)).normalized()        # along the glass, upwards
         xa = up.cross(n).normalized()
         f[nm] = (piv, xa, up, n)
@@ -1599,15 +1603,15 @@ def glass_interface(master, path):
                     "tools/blender/truck/check_fit.py tests it on the exported FBX files.",
             "wall_m": 0.03,
             "z_yf_yb_w_rf_rb": [[round(z, 4)] + [round(v, 4) for v in B.CAB.sec(z)]
-                                for z in [B.CAB_Z0 + 0.025 * i for i in range(int((G.ROOF_Z - B.CAB_Z0) / 0.025) + 1)]],
+                                for z in [B.CAB_Z0 + 0.025 * i for i in range(int((B.ROOF_Z - B.CAB_Z0) / 0.025) + 1)]],
         },
         "interior_contract": [
             "with the exterior present disable the interior CAB_Glass_Windows (placeholder windscreen + door glass) "
             "and CAB_ShellPlaceholder: the exterior GLASS_* objects are the only glazing (CAB_Glass = cluster cover "
             "glass stays)",
             "windscreen inner trim (A-pillar trims, header, dash top edge) must end on the inner glass face = "
-            "inner_face_grid_a2_13x49 (= outer surface - 6 mm along the true normal); visible opening z 2.06-2.96 m "
-            "(A2), glass edge 2.048-2.972 m",
+            "inner_face_grid_a2_13x49 (= outer surface - 6 mm along the true normal); visible opening z "
+            f"{B.WS_Z0:.2f}-{B.WS_Z1:.2f} m (A2), glass edge {B.WS_Z0 - 0.012:.3f}-{B.WS_Z1 + 0.012:.3f} m",
             "interior frit band (ws_frit*): same widths as frit_on_exterior_glass_m.inside_visible_opening_m, on "
             "the inner face (inner_face_grid_a2_13x49 - 1.5 mm), facing the cab",
             "door glass: interior door card window opening = side_glass outline minus the 35 mm black frame",
@@ -2056,7 +2060,8 @@ def main():
         pv = bpy.data.objects[f"wiper_pivot{k}"]
         lo, hi = bbox(world_verts(pv))
         pv["centre"] = list((lo + hi) / 2)
-    decal_rect = bpy.data.objects["decal_wordmark"]["decal_rect"]
+    dq = bpy.data.objects.get("decal_wordmark")
+    decal_rect = dq["decal_rect"] if dq else [-0.5, 0.5, 0.0, 0.1]   # B2 v2: no decal -> transparent atlas
     decal = raster_decal(wm, decal_rect, DECAL_RES)
     # HIGH = untouched full-detail copy (bake source)
     hcoll = new_collection("HIGH")
