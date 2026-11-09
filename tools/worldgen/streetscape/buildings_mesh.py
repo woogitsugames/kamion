@@ -506,7 +506,7 @@ def load(fc, origin, overrides):
     return out
 
 
-def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase, kind, pitched):
+def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase, kind, pitched, zone_wall=None):
     """LOD1 wall edge: cheap (8-14 triangles) but not a box face - plinth, window zone (office / block: far facade
     material, UV1 = (bay, storey) grid), wall above, projecting coping at the attic."""
     lay = "buildings_low"
@@ -535,7 +535,7 @@ def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh
             u0 = (0.0 - um0) / g["pitch_m"] + 0.5
             u1 = (L - um0) / g["pitch_m"] + 0.5
             v0, v1 = (z - zw0) / sh, (zw1 - zw0) / sh          # v0 < 0: the strip below the ground floor
-            band(z, zw1, f"{wall}__far_{kind}", uv1=[[u0, v0], [u1, v0], [u1, v1], [u0, v1]])
+            band(z, zw1, f"{zone_wall or wall}__far_{kind}", uv1=[[u0, v0], [u1, v0], [u1, v1], [u0, v1]])
             z = zw1
     band(z, zt, wall)
     # coping ledge 0.12 m proud over the top 0.25 m: front + top (the wall continues behind it, so no underside)
@@ -645,6 +645,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
             d = (c_ - a) / L
             nout = np.array([d[1], -d[0]])
             nouts.append(nout)
+            lod1_main, lod1_zone = wall, None        # LOD1 colours follow what dominates the LOD0 wall (W-H4)
             dk = dock_edges.get(tuple(np.round(a, 2)))
             zt = zeave
             is_main = ei == main or (typ == "hall" and L > 30)
@@ -722,6 +723,10 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                         if typ == "office" and st_ + 1 < storeys:
                             band_z.append((z0_ + sill_ + wh_ + 0.08, z0_ + sh + sill_ - 0.08))
                 band_mat = accent if typ == "block" else "plaster_band_grey"
+                if gable_accent:
+                    lod1_main = accent
+                elif band_z and typ == "block":
+                    lod1_zone = band_mat                 # accent window rows -> accent window zone on LOD1
 
                 def plaster_mat(u0, u1, z0, z1, usplits=usplits, gable_accent=gable_accent, zpl=zpl, band_z=band_z):
                     if z1 <= zpl + 1e-6:
@@ -770,8 +775,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                      [a[0], a[1], zt])
             # LOD1 (v3.1): plinth band, window zone with the far facade material (window grid in UV1), wall above,
             # projecting coping at the attic; pitched houses keep the plain wall
-            lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase,
-                      "ribbon" if variant["ribbon"] else typ, pitched)
+            lod1_wall(acc, typ, lod1_main, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase,
+                      "ribbon" if variant["ribbon"] else typ, pitched, zone_wall=lod1_zone)
             u_acc += L
         if typ == "hall" and len(edges) >= 3:                       # corner flashings
             for i, (a, c_) in enumerate(edges):

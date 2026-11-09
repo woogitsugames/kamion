@@ -18,7 +18,7 @@ from . import standards as S
 from .geom import Polyline, cumlen, smooth_1d, smooth_open
 
 DENSE = 0.5          # m, dense polyline spacing used for evaluation
-SURFACE_MAT = {"asphalt": "road_asphalt", "paved": "road_asphalt", "concrete": "road_concrete",
+SURFACE_MAT = {"asphalt": "road_asphalt", "asphalt_new": "road_asphalt_new", "paved": "road_asphalt", "concrete": "road_concrete",
                "concrete:plates": "road_concrete", "paving_stones": "road_paving", "sett": "road_sett",
                "cobblestone": "road_sett", "unhewn_cobblestone": "road_sett", "compacted": "road_gravel",
                "gravel": "road_gravel", "fine_gravel": "road_gravel", "unpaved": "road_gravel",
@@ -253,6 +253,7 @@ def apply_edge_overrides(net: Network, edges, overrides):
                     sec.side_override[side] = st[f"side_{side}"]
             if "surface" in st:
                 sec.surface_mat = SURFACE_MAT.get(st["surface"], "road_asphalt")
+                sec.provenance["surface_override"] = st["surface"]
             sec.provenance["authored_override"] = ov["id"]
         net.overrides_applied.append({"id": ov["id"], "targets": ids})
 

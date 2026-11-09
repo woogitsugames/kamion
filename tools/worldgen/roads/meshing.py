@@ -105,18 +105,24 @@ def build_ribbon(buf: MeshBuf, net, c, coarse=False):
     UV = V[:, :2].copy()
     T = grid_tris(len(st), len(q))
     sec_mid = c.section(0.5 * (s0 + s1), net.sec_list)
-    secmat = sec_mid.surface_mat
+    secmat = S.surface_material(c, sec_mid)
     UV1 = None
     if not coarse:
-        # UV1 = (lane coordinate, distance to the nearer carriageway edge) for wheel-path / gutter weathering
         lw = max(sec_mid.lane_w, 2.0)
         latv = lat.ravel()
         hwv = np.repeat(hw, len(q))
-        if sec_mid.oneway or sec_mid.roundabout:
-            lanec = (latv + hwv - sec_mid.edge_strip) / lw
+        if secmat == "road_concrete":
+            # concrete pavement (ADR 0019): UV1 = (metres along the chain, lane-scaled metres across) so the 5 m
+            # sawn joints of concrete_cast_5m_joints run across the road and longitudinal joints sit on the lane
+            # lines (one 5 m texture slab = one lane width)
+            UV1 = np.column_stack([np.repeat(st, len(q)), (latv + hwv - sec_mid.edge_strip) / lw * 5.0])
         else:
-            lanec = np.abs(latv) / lw
-        UV1 = np.column_stack([lanec, hwv - np.abs(latv)])
+            # UV1 = (lane coordinate, distance to the nearer carriageway edge) for wheel-path / gutter weathering
+            if sec_mid.oneway or sec_mid.roundabout:
+                lanec = (latv + hwv - sec_mid.edge_strip) / lw
+            else:
+                lanec = np.abs(latv) / lw
+            UV1 = np.column_stack([lanec, hwv - np.abs(latv)])
     # split carriageway into ground / bridge parts so bridges are not rasterised into the terrain
     tri_station = np.minimum(T.min(1) // len(q), len(st) - 2)      # station row of each quad
     on_bridge = br[tri_station] | br[np.minimum(tri_station + 1, len(st) - 1)]
@@ -308,7 +314,7 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
         if c.meta.get("walled") is not None:      # no soffit over walled ramps (hidden between the walls)
             open_ = c.interp(c.meta["walled"].astype(float), ss) < 0.5
             Ts = Ts[open_[np.minimum(Ts // 2, len(ss) - 1)].any(axis=1)]
-        buf.add("bridge", "bridge_concrete", V, V[:, :2], Ts, src=c.id + ":soffit")
+        buf.add("bridge", "bridge_soffit", V, V[:, :2], Ts, src=c.id + ":soffit")
         tt0, nn0 = c.line.frame(ss)
         for side, sgn in (("L", 1.0), ("R", -1.0)):
             bot, top = outer[side]

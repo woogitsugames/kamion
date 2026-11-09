@@ -76,7 +76,12 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     # joint conform: roads + paved
     mask = rmask | pmask
     zjoin = np.where(rmask, road_z, np.where(pmask, pz, -np.inf))
-    zc, dist = CF.conform(hf, zjoin, mask)
+    # grass verge / island strips (road layer, verge_grass only): terrain stays just under them (CF.conform)
+    _, vmask = CF.rasterise([p for p in road_parts if p.mat == "verge_grass"], hf)
+    _, hmask = CF.rasterise([p for p in road_parts if p.mat != "verge_grass"], hf)
+    soft = vmask & ~hmask & ~pmask
+    zc, dist = CF.conform(hf, zjoin, mask, soft=soft)
+    rep["terrain_soft_nodes"] = int(soft.sum())
     zc = CF.clamp_under_decks(zc, deck, deck_mask, thick, mask)
     zc = CF.tidy(zc, zjoin, mask, dist)
     bmask = PV.rasterize_polys([b["poly"] for b in blds], hf)
@@ -109,7 +114,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         return PV.bilinear(hf.z, hf, np.asarray(e, float), np.asarray(n, float))
     FU.guardrails(lin, w.net, znat, frep)
     FU.noise_barriers(lin, src, origin, roads_poly, frep)
-    FU.power_lines(lin, src, origin, frep)
+    FU.power_lines(lin, src, origin, frep, pl=pl, roads_poly=roads_poly)
     GT.build(pl, lin, w.net, graph, overrides, roads_poly, bpoly, origin, frep)
     pl.items.extend(facade_signs)
     from roads import build_world as BW
