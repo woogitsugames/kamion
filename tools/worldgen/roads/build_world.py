@@ -306,6 +306,22 @@ def cameras(region_id, w):
         cams.append({"id": f"stretch_{k + 1:02d}", "type": "persp", "fov_deg": 60.0, "route_s_m": st,
                      "pos": [r(q[0]), r(q[1]), r(z + 2.5)], "look_at": [r(tgt[0]), r(tgt[1]), r(zt + 1.4)],
                      "note": f"reference stretch, driver eye 2.5 m: {note}"})
+    # r4 blocker check: the on-ramp from Rondo Bieżeństwa beside the Andersa westbound ramp (truck stopped at
+    # s = 571 m on the walled ramp's cap, kerb ridge at s = 604 m): driver eye and an oblique view from above-left
+    q, z, t = lane_point(540.0)
+    tgt = at(590.0)
+    _, _, _, zt = surface_at(w, tgt)
+    cams.append({"id": "route_onramp_andersa", "type": "persp", "fov_deg": 60.0, "route_s_m": 540.0,
+                 "pos": [r(q[0]), r(q[1]), r(z + 2.5)], "look_at": [r(tgt[0]), r(tgt[1]), r(zt + 1.0)],
+                 "note": "driver eye 2.5 m on the on-ramp beside the Andersa westbound ramp (r4 blocker, s 571 / 604 m)"})
+    q2 = at(585.0)
+    _, _, _, z2 = surface_at(w, q2)
+    t2 = at(590.0) - at(580.0)
+    t2 = t2 / max(np.hypot(*t2), 1e-9)
+    pos2 = q2 - t2 * 35.0 + np.array([-t2[1], t2[0]]) * 22.0
+    cams.append({"id": "route_onramp_andersa_above", "type": "persp", "fov_deg": 55.0,
+                 "pos": [r(pos2[0]), r(pos2[1]), r(z2 + 16.0)], "look_at": [r(q2[0]), r(q2[1]), r(z2)],
+                 "note": "oblique from above-left over the on-ramp / Andersa ramp end (r4 blocker, s 571-610 m)"})
     for k, hd in enumerate(w.stats.get("hero_docks", [])[:1]):
         pos = hd["mid"] + hd["nout"] * 26.0 - hd["d"] * 18.0
         tgt = hd["mid"] + hd["d"] * 6.0

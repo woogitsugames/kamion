@@ -22,13 +22,13 @@
    "look_at": [
     -554.833,
     20.955,
-    140.768
+    140.759
    ],
    "note": "Rondo Putry from ~40 m (two-level: Andersa viaduct above the ring)",
    "pos": [
     -484.833,
     100.955,
-    182.768
+    182.759
    ],
    "type": "persp"
   },
@@ -70,13 +70,13 @@
    "look_at": [
     554.682,
     -716.454,
-    145.769
+    145.815
    ],
    "note": "Rondo Pamięci Bieżeństwa 1915 r.",
    "pos": [
     504.682,
     -761.454,
-    183.769
+    183.815
    ],
    "type": "persp"
   },
@@ -86,13 +86,13 @@
    "look_at": [
     542.607,
     -738.329,
-    148.769
+    148.815
    ],
    "note": "photo match: CC0 20201102_152339 Rondo Pamięci Bieżeństwa (approximate viewpoint)",
    "pos": [
     576.9,
     -676.204,
-    141.317
+    141.313
    ],
    "type": "persp"
   },
@@ -166,6 +166,39 @@
   },
   {
    "fov_deg": 60.0,
+   "id": "route_onramp_andersa",
+   "look_at": [
+    351.136,
+    -592.413,
+    141.791
+   ],
+   "note": "driver eye 2.5 m on the on-ramp beside the Andersa westbound ramp (r4 blocker, s 571 / 604 m)",
+   "pos": [
+    397.932,
+    -610.098,
+    142.873
+   ],
+   "route_s_m": 540.0,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "route_onramp_andersa_above",
+   "look_at": [
+    355.754,
+    -594.331,
+    140.762
+   ],
+   "note": "oblique from above-left over the on-ramp / Andersa ramp end (r4 blocker, s 571-610 m)",
+   "pos": [
+    379.632,
+    -628.077,
+    156.762
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
    "id": "stretch_05_docks",
    "look_at": [
     628.94,
@@ -185,7 +218,7 @@
     -554.833,
     20.955
    ],
-   "height": 260.768,
+   "height": 260.759,
    "id": "ortho_putry",
    "note": "orthographic top view for overlay on the GUGiK orthophoto",
    "size_m": 260.0,
