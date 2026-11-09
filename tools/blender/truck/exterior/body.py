@@ -67,21 +67,26 @@ CFG = {
     "rb": 0.10,
     "roof_r": 0.40,
     # front face (front-projection params: x = lateral, wraps round the corner beyond the flat part)
-    # TRAKT face: the grille is the brand's T (wide upper bar, stem widening downwards like a road in
-    # perspective); headlamps sit under the bar ends, their inner edges parallel to the 'road' edges.
-    # R2 #3: slimmer lamp (0.23 m tall), inner edge still parallel to the grille 'road' edge
-    "lamp": [(0.90, 1.30), (1.30, 1.30), (1.30, 1.53), (0.72, 1.53)],
-    # DRL light guides inside the lens: T-bar along the top + road edge down the inner side (right lamp)
-    "drl": [((0.752, 1.508), (1.272, 1.508)), ((0.758, 1.492), (0.918, 1.318))],
-    "stem": [(-0.80, 1.235), (0.80, 1.235), (0.50, 1.64), (-0.50, 1.64)],   # road: narrow at the top
-    "bar": [(-0.84, 1.625), (0.84, 1.625), (0.84, 1.86), (-0.84, 1.86)],    # T-bar
+    # TRAKT face (r4, REVIEW r3 X1/X2): 2020s proportions - one tall grille field reaching 0.125 m under the
+    # visible glass (was 0.20 m, with a paint band carrying the wordmark), the brand's road-T kept as the
+    # grille outline (wide upper bar, stem widening downwards like a road in perspective) but with a gentler
+    # step, so the face reads as one dark mass, not a T-shaped hole in a white panel. Slim lamps (0.16 m, was
+    # 0.23 m) sit low beside the stem, their inner edge parallel to the 'road' edge.
+    "lamp": [(0.830, 1.280), (1.335, 1.280), (1.360, 1.450), (0.790, 1.450)],
+    # DRL light guides (right lamp): T-bar line along the top + road-edge line down the inner side, both
+    # inset ~20 mm behind the lens and split at the corner (they no longer lie on the housing edge)
+    "drl": [((0.856, 1.424), (1.322, 1.424)), ((0.834, 1.412), (0.862, 1.300))],
+    "stem": [(-0.80, 1.235), (0.80, 1.235), (0.70, 1.668), (-0.70, 1.668)],   # road: narrow at the top
+    "bar": [(-0.86, 1.655), (0.86, 1.655), (0.86, 1.935), (-0.86, 1.935)],    # T-bar
     "bumper_road": [(-0.86, 0.885), (0.86, 0.885), (0.806, 1.21), (-0.806, 1.21)],
-    "emblem_z": 1.742, "emblem_w": 0.22,
-    # one grille field, three bar weights: 2 thick body-colour bars in the T-bar, 3 thin graphite bars in the
-    # stem (pitch opening downwards), fine honeycomb behind everything. (z_centre, height, depth, material)
-    "grille_bars": [(1.800, 0.050, 0.040, "paint"), (1.684, 0.044, 0.046, "paint"),
-                    (1.548, 0.020, 0.058, "trim_graphite"), (1.448, 0.020, 0.058, "trim_graphite"),
-                    (1.330, 0.020, 0.058, "trim_graphite")],
+    "emblem_z": 1.783, "emblem_w": 0.20,
+    "wordmark_z": 1.889,
+    # one grille field, three bar weights: 2 body-colour bars in the T-bar (the upper one flush, carrying the
+    # TRAKT wordmark), 4 thin graphite louvres in the stem, fine honeycomb behind everything.
+    # (z_centre, height, depth, material)
+    "grille_bars": [(1.889, 0.074, 0.040, "paint"), (1.690, 0.040, 0.046, "paint"),
+                    (1.590, 0.018, 0.058, "trim_graphite"), (1.500, 0.018, 0.058, "trim_graphite"),
+                    (1.410, 0.018, 0.058, "trim_graphite"), (1.320, 0.018, 0.058, "trim_graphite")],
     "bumper_split": 0.67,             # body colour above, dark textured lower bumper below
     "side_split": 0.55,               # body colour on the step boxes / corner above, dark skirt below
     "ws_bottom_x": 1.27, "ws_top_x": 1.15,
@@ -249,13 +254,15 @@ def front_face(feathers, strokes):
         t = (z - st[1][1]) / (st[2][1] - st[1][1])
         return st[1][0] + (st[2][0] - st[1][0]) * t
     for k, (zc, hgt, depth, m_) in enumerate(CFG["grille_bars"]):
-        grille_bar(f"grille_bar{k}", zc, hgt, depth, gx(zc) - 0.004, m_, round_front=(m_ == "paint"))
+        grille_bar(f"grille_bar{k}", zc, hgt, depth, gx(zc) - 0.004, m_, round_front=(m_ == "paint"),
+                   nose=0.0 if k == 0 else -0.003)
     # frame: raised graphite band along the T outline (outer edge flush with the pocket edge)
-    outline = [(-0.80, 1.235), (0.80, 1.235), (0.51, 1.625), (0.84, 1.625), (0.84, 1.86), (-0.84, 1.86),
-               (-0.84, 1.625), (-0.51, 1.625)]
-    ribbon("grille_frame", outline, 0.026, "trim_graphite", off=-0.004, thick=0.010)
+    st, br = CFG["stem"], CFG["bar"]
+    xs = gx(br[0][1] - 1e-6)
+    outline = [st[0], st[1], (xs, br[0][1]), br[1], br[2], br[3], br[0], (-xs, br[0][1])]
+    ribbon("grille_frame", outline, 0.022, "trim_graphite", off=-0.004, thick=0.010)
     emblem(feathers)
-    wordmark(strokes)
+    wordmark(strokes, z_c=CFG["wordmark_z"], height=0.050)
     # cowl (wiper panel) between hatch and windscreen
     CAB.patch("cowl", "plastic", "front", 1.978, 2.048, -1.12, 1.12, off=0.002, nz=3, npar=40)
     for k, x in enumerate(np.linspace(-0.9, 0.9, 14) if False else [-0.9 + 1.8 * i / 13 for i in range(14)]):
@@ -303,13 +310,15 @@ def ribbon(name, poly, width, m, off=-0.004, thick=0.01, kind="front", loft=None
                        thick=thick)
 
 
-def grille_bar(name, zc, hgt, depth, hw, m, round_front=True, n=2):   # flat part of the front: n=2 is exact
+def grille_bar(name, zc, hgt, depth, hw, m, round_front=True, n=2, nose=-0.003):   # flat front: n=2 is exact
     """Horizontal grille bar following the cab front: body-colour bars get a rounded nose, graphite bars a
-    louvre face tilted up (different depth and section, so the field never reads as identical slats)."""
+    louvre face tilted up (different depth and section, so the field never reads as identical slats).
+    nose = offset of the bar face from the cab surface (0 = flush, carries the wordmark decal)."""
     h = hgt / 2
     if round_front:
-        prof = [(-h, -depth), (-h, -0.018), (-h * 0.85, -0.009), (-h * 0.5, -0.0045), (0.0, -0.003),
-                (h * 0.5, -0.0045), (h * 0.85, -0.009), (h, -0.018), (h, -depth)]
+        r = min(0.015, h * 0.6)
+        prof = [(-h, -depth), (-h, nose - r), (-h + r * 0.3, nose - r * 0.3), (-h + r, nose), (h - r, nose),
+                (h - r * 0.3, nose - r * 0.3), (h, nose - r), (h, -depth)]
     else:
         prof = [(-h, -depth), (-h, -0.024), (-h * 0.6, -0.022), (h, -0.011), (h, -depth)]
     bm = bmesh.new()
@@ -391,7 +400,7 @@ def drl_guide(name, s, p0, p1, wdt=0.016, n=12):
     ln = math.hypot(dx, dz)
     nx, nz = -dz / ln * wdt / 2, dx / ln * wdt / 2
     layers = []
-    for o in (-0.034, -0.012):
+    for o in (-0.036, -0.016):
         rows = []
         for sg in (-1, 1):
             rows.append([bm.verts.new(CAB.front_pt(z0 + dz * j / n + sg * nz, s * (x0 + dx * j / n + sg * nx), o))
@@ -419,42 +428,107 @@ def oriented_lathe(name, prof, p, nrm, m, seg=18):
     return ob
 
 
+def lens_dome(name, poly, m, crown=0.008, thick=0.005, rim_off=-0.001, sub=8):
+    """Outer lamp lens: a crowned shell over a convex polygon [(x, z)] (front projection), with real edge
+    thickness (outer + inner surface + rim wall), so the lens catches a highlight band along its crown and
+    shows a lit edge at an angle (REVIEW r3 X1: 'no outer lens with thickness and reflection')."""
+    bm = bmesh.new()
+    n = len(poly)
+    cp = sum(p for p, _ in poly) / n
+    cz = sum(z for _, z in poly) / n
+    rim = []
+    for i in range(n):
+        (pa, za), (pb, zb) = poly[i], poly[(i + 1) % n]
+        for k in range(sub):
+            t = k / sub
+            rim.append((pa + (pb - pa) * t, za + (zb - za) * t))
+    lv = (1.0, 0.85, 0.62, 0.36)          # ring scale towards the centroid
+    rise = (0.0, 0.55, 0.88, 1.0)          # crown profile (fast rise at the edge, flat top)
+    shells = []
+    for o_in in (0.0, -thick):
+        rings = []
+        for l, r in zip(lv, rise):
+            off = rim_off + crown * r + o_in
+            rings.append([bm.verts.new(CAB.front_pt(cz + (z - cz) * l, cp + (p - cp) * l, off)) for p, z in rim])
+        cv = bm.verts.new(CAB.front_pt(cz, cp, rim_off + crown + o_in))
+        mm = len(rim)
+        for ra, rb in zip(rings, rings[1:]):
+            for i in range(mm):
+                f = (ra[i], ra[(i + 1) % mm], rb[(i + 1) % mm], rb[i])
+                bm.faces.new(f if o_in == 0.0 else tuple(reversed(f)))
+        for i in range(mm):
+            f = (rings[-1][i], rings[-1][(i + 1) % mm], cv)
+            bm.faces.new(f if o_in == 0.0 else tuple(reversed(f)))
+        shells.append(rings[0])
+    a_, b_ = shells
+    for i in range(len(a_)):
+        j = (i + 1) % len(a_)
+        bm.faces.new((a_[i], b_[i], b_[j], a_[j]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return G.obj_from_bm(name, bm, m, sharp=55)
+
+
+def lamp_cell(tag, s, x0, x1, z0, z1, beam):
+    """One LED reflector module (rectangular, not a round 'eyeball'): dark-chrome frame with depth, faceted
+    reflector floor, and either a slim projector lens (low beam) or an LED bar (high beam)."""
+    rect = [(x0, z0), (x1, z0), (x1, z1), (x0, z1)]
+    poly = rect if s > 0 else mirror_poly(rect)
+    sx = lambda x: s * x  # noqa: E731
+    # reflector floor: two facets meeting in a shallow ridge (reads as a stamped reflector, not a flat plate)
+    zm = (z0 + z1) / 2
+    CAB.quad_patch(f"proj_bowl_{tag}_a", "reflector", "front", [(sx(x0), z0), (sx(x1), z0), (sx(x1), zm),
+                                                               (sx(x0), zm)], off=-0.044, nu=4, nv=1)
+    CAB.quad_patch(f"proj_bowl_{tag}_b", "reflector", "front", [(sx(x0), zm), (sx(x1), zm), (sx(x1), z1),
+                                                               (sx(x0), z1)], off=-0.040, nu=4, nv=1)
+    ribbon(f"proj_shroud_{tag}", poly, 0.007, "dark_chrome", off=-0.044, thick=0.026)
+    cx, w, h = (x0 + x1) / 2, (x1 - x0), (z1 - z0)
+    if beam == "low":
+        # projector lens: wide, low rectangle with a dark-chrome bezel lip
+        lx0, lx1, lz0, lz1 = cx - w * 0.36, cx + w * 0.36, zm - h * 0.20, zm + h * 0.16
+        CAB.quad_patch(f"proj_lens_{tag}", "projector", "front", [(sx(lx0), lz0), (sx(lx1), lz0), (sx(lx1), lz1),
+                                                                  (sx(lx0), lz1)], off=-0.030, nu=4, nv=1,
+                       thick=0.008)
+    else:
+        CAB.quad_patch(f"hb_mask_{tag}", "lamp_inner", "front", [(sx(x0 + 0.008), zm - 0.010),
+                                                                 (sx(x1 - 0.008), zm - 0.010),
+                                                                 (sx(x1 - 0.008), zm + 0.010),
+                                                                 (sx(x0 + 0.008), zm + 0.010)],
+                       off=-0.036, nu=6, nv=1, thick=0.008)
+        CAB.quad_patch(f"hb_led_{tag}", "led_off", "front", [(sx(x0 + 0.014), zm - 0.0035),
+                                                             (sx(x1 - 0.014), zm - 0.0035),
+                                                             (sx(x1 - 0.014), zm + 0.0035),
+                                                             (sx(x0 + 0.014), zm + 0.0035)],
+                       off=-0.026, nu=6, nv=1, thick=0.003)
+
+
 def headlamps():
-    """2020s lamp (R2 #3): thick clear outer lens in a black gasket, black inner mask, two projector modules
-    in reflector bowls, a slim LED high-beam line in a black mask, amber indicator strip. The DRL light guides
-    (T-bar along the top + road edge down the inner side) are half of the TRAKT mark per lamp: both lamps
-    and the T-shaped grille frame read as the brand's road-T."""
+    """2020s full-LED lamp (REVIEW r3 X1): slim housing, crowned clear outer lens with real thickness in a
+    black gasket, black inner mask carrying the graphic - two low-beam reflector modules with slim
+    projector lenses and one high-beam module (rectangular cells in dark-chrome frames, no round
+    'eyeballs'), a thin amber LED indicator line along the bottom. The DRL light guides (T-bar along the top
+    + road edge down the inner side, split at the corner and set back behind the lens) are half of the
+    TRAKT mark per lamp: both lamps and the T-shaped grille frame read as the brand's road-T."""
     set_group("cab")
     for s in (-1, 1):
         poly = CFG["lamp"] if s > 0 else mirror_poly(CFG["lamp"])
-        CAB.poly_patch(f"lamp_back_{s}", "lamp_inner", "front", poly, off=-0.062, sub=6)
+        CAB.poly_patch(f"lamp_back_{s}", "lamp_inner", "front", poly, off=-0.052, sub=6)
         for k, ((x0, z0), (x1, z1)) in enumerate(CFG["drl"]):
-            drl_guide(f"drl_{s}_{k}", s, (x0, z0), (x1, z1))
-        # projector modules: reflector bowl, dark-chrome shroud ring, dark projector lens
-        for k, x in enumerate((0.99, 1.15)):
-            z = 1.424
-            nrm = CAB.normal_front(z, s * x)
-            p = V(CAB.front_pt(z, s * x, 0.0))
-            oriented_lathe(f"proj_bowl_{s}_{k}", [(0.058, -0.012), (0.052, -0.026), (0.040, -0.042), (0.024, -0.055),
-                                                  (0.010, -0.060)], p, nrm, "reflector")
-            oriented_lathe(f"proj_shroud_{s}_{k}", [(0.038, -0.050), (0.038, -0.030), (0.034, -0.026),
-                                                    (0.030, -0.028)], p, nrm, "dark_chrome")
-            oriented_lathe(f"proj_lens_{s}_{k}", [(0.030, -0.031), (0.028, -0.024), (0.023, -0.017), (0.014, -0.012),
-                                                  (0.0, -0.010)], p, nrm, "projector")
-        # LED high-beam line inside a black mask (no 'cubes')
-        CAB.quad_patch(f"hb_mask_{s}", "plastic_satin", "front",
-                       [(s * 0.95, 1.334), (s * 1.255, 1.334), (s * 1.255, 1.362), (s * 0.95, 1.362)], off=-0.034,
-                       nu=14, nv=1, thick=0.010)
-        CAB.quad_patch(f"hb_led_{s}", "led_off", "front",
-                       [(s * 0.965, 1.344), (s * 1.24, 1.344), (s * 1.24, 1.352), (s * 0.965, 1.352)], off=-0.023,
-                       nu=14, nv=1, thick=0.003)
-        # amber indicator strip (reflector look behind the clear lens)
+            drl_guide(f"drl_{s}_{k}", s, (x0, z0), (x1, z1), wdt=0.010)
+        # module row: low, low, high (outboard cell wraps onto the corner)
+        for k, (x0, x1, beam) in enumerate(((0.905, 1.000, "low"), (1.015, 1.110, "low"), (1.125, 1.225, "high"))):
+            lamp_cell(f"{s}_{k}", s, x0, x1, 1.322, 1.392, beam)
+        # outboard corner: dark-chrome fin with a vertical light-guide end of the DRL (lamp reads round the corner)
+        CAB.quad_patch(f"lamp_fin_{s}", "dark_chrome", "front",
+                       [(s * 1.245, 1.312), (s * 1.262, 1.312), (s * 1.275, 1.405), (s * 1.258, 1.405)]
+                       if s > 0 else [(s * 1.262, 1.312), (s * 1.245, 1.312), (s * 1.258, 1.405),
+                                      (s * 1.275, 1.405)], off=-0.040, nu=2, nv=2, thick=0.020)
+        # amber LED indicator line just above the lamp floor
         CAB.quad_patch(f"indicator_{s}", "lens_amber", "front",
-                       [(s * 0.95, 1.307), (s * 1.27, 1.307), (s * 1.27, 1.325), (s * 0.95, 1.325)],
-                       off=-0.026, nu=16, nv=1, thick=0.008)
-        # clear outer lens with thickness (two Fresnel surfaces) + black gasket round it
-        CAB.poly_patch(f"lamp_lens_{s}", "lens_clear", "front", poly, off=-0.002, thick=0.006, sub=6)
-        ribbon(f"lamp_gasket_{s}", poly, 0.011, "plastic_satin", off=-0.003, thick=0.0065)
+                       [(s * 0.905, 1.294), (s * 1.30, 1.294), (s * 1.30, 1.310), (s * 0.905, 1.310)],
+                       off=-0.034, nu=16, nv=1, thick=0.006)   # >= cage (0.02) behind the lens: bakes clean
+        # crowned clear outer lens (two Fresnel surfaces + rim) + black gasket round it
+        lens_dome(f"lamp_lens_{s}", poly, "lens_clear", crown=0.014, thick=0.005)
+        ribbon(f"lamp_gasket_{s}", poly, 0.008, "plastic_satin", off=-0.004, thick=0.006)
 
 
 # ---------------------------------------------------------------- corner deflectors, roof, rear wall
@@ -634,7 +708,8 @@ def lower_fairing():
         # step treads (aluminium tread plate) with a dark nosing
         xo, xi = s * (CAB_HALF_W - 0.004), s * (CAB_HALF_W - STEP_DEPTH)
         for k, (z, y0, y1) in enumerate(STEPS):
-            box_mm(f"step_tread{k}_{s}", min(xo, xi), max(xo, xi), y0 + 0.004, y1 - 0.004, z, z + 0.014, "checker",
+            # r4 (REVIEW r3 X3): perforated anti-slip treads (mud falls through), not flat checker plate
+            box_mm(f"step_tread{k}_{s}", min(xo, xi), max(xo, xi), y0 + 0.004, y1 - 0.004, z, z + 0.014, "perforated",
                    bev=0.003)
             box_mm(f"step_nose{k}_{s}", xo - s * 0.025, xo, y0 + 0.004, y1 - 0.004, z - 0.02, z + 0.016,
                    "plastic_satin", bev=0.004)
@@ -644,11 +719,11 @@ def lower_fairing():
         # fog / cornering lamps in their pockets
         LOW.patch(f"fog_lens_{s}", "lens_clear", "front", 0.705, 0.785, s * 0.805, s * 1.195, off=0.0, nz=2, npar=10)
         LOW.patch(f"fog_back_{s}", "lamp_inner", "front", 0.70, 0.79, s * 0.80, s * 1.20, off=-0.045, nz=1, npar=10)
-        LOW.patch(f"fog_led_{s}", "led_off", "front", 0.735, 0.755, s * 0.84, s * 1.16, off=-0.03, nz=1, npar=8,
-                  thick=0.01)
-        for k, x in enumerate((0.92, 1.06)):
-            p = V(LOW.front_pt(0.745, s * x, -0.035))
-            cyl(f"fog_bowl_{s}_{k}", p, 0.032, 0.02, "reflector", axis="Y", seg=20)
+        # r4: slim LED fog/cornering bar in a dark-chrome carrier (the two round bowls read as ~2008)
+        LOW.patch(f"fog_bowl_{s}", "dark_chrome", "front", 0.728, 0.762, s * 0.83, s * 1.17, off=-0.036, nz=1,
+                  npar=8, thick=0.006)
+        LOW.patch(f"fog_led_{s}", "led_off", "front", 0.741, 0.749, s * 0.845, s * 1.155, off=-0.030, nz=1, npar=8,
+                  thick=0.006)
         # cleaning steps in the bumper (folding treads) + tow pin cover outline
         LOW.patch(f"bstep_tread_{s}", "checker", "front", 1.003, 1.012, s * 0.925, s * 1.115, off=-0.115,
                   thick=0.11, nz=1, npar=4)

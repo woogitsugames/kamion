@@ -21,7 +21,7 @@ Dopasowanie do wnętrza (oba FBX razem, materiały w glinie, szkło przezroczyst
 
 | | LOD0 | LOD1 | LOD2 |
 |---|---|---|---|
-| Trójkąty (limit) | **82 958** (≤ 100 tys.) | **43 000** (≤ 45 tys.) | **14 499** (≤ 15,5 tys.) |
+| Trójkąty (limit) | **82 714** (≤ 100 tys.) | **42 999** (≤ 45 tys.) | **14 499** (≤ 15,5 tys.) |
 | Obiekty | 25 | 25 | 19 (bez lusterek RT) |
 | Plik | `SM_TruckExterior_LOD0.fbx` 6,8 MB | `…LOD1.fbx` 4,1 MB | `…LOD2.fbx` 1,5 MB |
 
@@ -51,6 +51,14 @@ Większość punktów zamknęła runda 3 A4 (drzwi/stopnie, przód z lat 2020., 
 4. **Ciemne malowanie dawało dwukolorową ciężarówkę** (zderzak i stopnie zostały białe). Przyczyna: `Mesh.materials.clear()` w Blenderze 4.x kasuje numery materiałów ścian, więc każda część z kilkoma materiałami wpadała w całości do pierwszego slotu. Po naprawie lakier na osłonie dolnej jest w slocie `Paint`. Ten sam błąd był w eksporcie wnętrza, też naprawiony.
 5. **Granice materiałów przy upraszczaniu:** czarne trójkąty tworzywa wjeżdżały na lakier w LOD2. Wierzchołki na granicach slotów są teraz chronione.
 6. **Hierarchia FBX** (punkt wyżej): spłaszczona, sprawdzana parsowaniem surowego pliku.
+
+## Runda r4: przód 2020s (REVIEW r3 §5 X1–X4)
+Przed/po: `przed_r3/*.jpg` (kadry r3) vs te same nazwy w tym katalogu. Nowe kadry: `przod_white_lod0.jpg`, `zbl_reflektor_dark_lod0.jpg`, `{34przod,zbl_reflektor}_{white,dark}_lowsun_lod0.jpg` (niskie słońce ~8°, nowe oświetlenie `lowsun` w `scene.py`). Montaże ze zdjęciami (zdjęcia poza gitem, więc montaże też): `artifacts/visual-qa/truck-A6-r4/montaz_*.jpg`.
+- **X1 reflektor:** zamiast dwóch okrągłych projektorów: 2 moduły świateł mijania (prostokątne komory z ciemnochromową ramką, fasetowany odbłyśnik, płaska soczewka projektora) + moduł drogowy z listwą LED, cienka listwa kierunkowskazu LED, ciemnochromowa płetwa na narożniku. Klosz to osobna wypukła powłoka (strzałka 14 mm, grubość 5 mm, ścianka brzegu), w slocie `Glass`. DRL (pół znaku T: górna linia + krawędź „drogi”) odsunięty 16–36 mm za klosz i rozcięty w narożniku. Lampa smuklejsza: 0,17 m (było 0,23 m), niżej.
+- **X2 lico:** grill sięga 0,125 m pod szybę (było 0,20 m), napis TRAKT na górnej, licowanej listwie grilla (nie na pasku lakieru), łagodniejszy uskok T (trzon 0,70→0,80 m zamiast 0,50→0,80 m), 4 lamele w trzonie. Światła przeciwmgielne: listwa LED zamiast dwóch okrągłych misek. **Bryła kabiny, szyba i dach bez zmian** (kontrakt `glass_interface.json` i dopasowanie wnętrza) — z daleka epokę nadal ciągnie płaskie, pionowe lico i „bańka” dachu; to wymaga decyzji lidera (zmiana powłoki = ponowne dopasowanie wnętrza).
+- **X3 (częściowo):** stopnie z blachy perforowanej; wnęka stopni nadal prostokątna (otwarte).
+- **X4:** zamiast pierścienia „gór” las z pojedynczych drzew (sosna/świerk/brzoza, 16 wariantów instancjonowanych na chmurze punktów, 230–330 m, mgiełka z odległości). Otwarte: las wciąż szaro-ciemny, pnie czytają się jak równy płot.
+- Pieczenie: elementy lampy muszą leżeć ≥ 20 mm (klatka bake) za kloszem, inaczej promienie trafiają w klosz (kierunkowskaz wychodził w plamy). Materiał `projector` nieprzezroczysty (transmisja wypiekała niebieski odcień).
 
 ## Otwarte
 - **Brak kadru URP i z telefonu** (`docs/06` §5 pkt 2): przyjdzie z importem A7. Bez tego nie może być PASS.

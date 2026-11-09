@@ -1850,6 +1850,20 @@ def qa_renders(a, tex, lod_roots, manifest):
                         ("zbl_tyl", "siodło: smar, przewody")):
         cam(view, (1600, 900))
         render(f"{view}_white_lod0.jpg", f"TRAKT A6 eksport | LOD0 | {label} | pochmurno")
+    # r4 front (REVIEW r3 X1/X2): straight-on front, lamp close-ups in both liveries, low sun (~8 deg)
+    cam("przod", (1600, 900))
+    render("przod_white_lod0.jpg", "TRAKT A6 eksport | LOD0 | przód (ortho) | biel | pochmurno")
+    preview_materials(tex, "dark")
+    cam("zbl_reflektor", (1600, 900))
+    render("zbl_reflektor_dark_lod0.jpg", "TRAKT A6 eksport | LOD0 | reflektor | zieleń butelkowa | pochmurno")
+    S.lighting("lowsun")
+    for livery in ("white", "dark"):
+        preview_materials(tex, livery)
+        for view in ("34przod", "zbl_reflektor"):
+            cam(view, (1600, 900))
+            render(f"{view}_{livery}_lowsun_lod0.jpg", f"TRAKT A6 eksport | LOD0 | {LIVERIES[livery]['label']} | "
+                                                       f"niskie słońce (~8°)")
+    preview_materials(tex, "white")
     S.lighting("urp")
     cam("34przod", (1600, 900))
     render("34przod_white_lod0_urp.jpg", "TRAKT A6 eksport | LOD0 | biel | jak URP (emulacja w Cycles, nie URP)")

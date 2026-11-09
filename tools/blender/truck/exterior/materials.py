@@ -672,7 +672,8 @@ def build_library(livery="white", clay=False):
     principled("led_off", "LIGHTS", (0.75, 0.75, 0.76), 0.25, spec=0.6)
     principled("lens_amber", "LIGHTS", (0.95, 0.42, 0.04), 0.05, transm=0.85, ior=1.49)
     principled("lens_red", "LIGHTS", (0.55, 0.02, 0.015), 0.05, transm=0.85, ior=1.49)
-    principled("projector", "LIGHTS", (0.03, 0.03, 0.035), 0.02, transm=0.6, ior=1.6)
+    # r4: smoked projector lens, opaque in the bake (transmission baked the env as a blue cast in the game atlas)
+    principled("projector", "LIGHTS", (0.045, 0.045, 0.048), 0.04, spec=0.7)
     if clay:
         for k in ("lens_amber", "lens_red", "projector"):
             b = STATE["mats"][k].node_tree.nodes["Principled BSDF"]

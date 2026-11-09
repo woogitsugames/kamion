@@ -80,6 +80,27 @@ def lighting(kind):
         bg.inputs["Strength"].default_value = 1.15
         sun_e, sun_a, rot = 0.9, 30.0, (math.radians(50), 0, math.radians(-150))
         c.max_bounces, c.diffuse_bounces, c.glossy_bounces, c.transmission_bounces = 8, 4, 4, 8
+    elif kind == "lowsun":
+        # late-autumn low sun (~8 deg), clear-ish sky: warm direct light raking the front/left, cooler sky fill
+        tc = nt.nodes.new("ShaderNodeTexCoord")
+        sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+        nt.links.new(tc.outputs["Generated"], sep.inputs[0])
+        ramp = nt.nodes.new("ShaderNodeValToRGB")
+        ramp.color_ramp.elements[0].position = 0.0
+        ramp.color_ramp.elements[0].color = (0.30, 0.29, 0.27, 1)
+        ramp.color_ramp.elements[1].position = 0.52
+        ramp.color_ramp.elements[1].color = (0.80, 0.74, 0.66, 1)     # warm haze at the horizon
+        e = ramp.color_ramp.elements.new(1.0)
+        e.color = (0.30, 0.42, 0.62, 1)                               # blue zenith
+        mr = nt.nodes.new("ShaderNodeMapRange")
+        mr.inputs["From Min"].default_value = -1
+        mr.inputs["From Max"].default_value = 1
+        nt.links.new(sep.outputs[2], mr.inputs["Value"])
+        nt.links.new(mr.outputs[0], ramp.inputs[0])
+        nt.links.new(ramp.outputs[0], bg.inputs["Color"])
+        bg.inputs["Strength"].default_value = 0.75
+        sun_e, sun_a, rot = 4.2, 0.6, (math.radians(82), 0, math.radians(-125))
+        c.max_bounces, c.diffuse_bounces, c.glossy_bounces, c.transmission_bounces = 8, 4, 4, 8
     elif kind == "urp":
         bg.inputs["Color"].default_value = (0.50, 0.55, 0.62, 1)
         bg.inputs["Strength"].default_value = 0.55
@@ -95,6 +116,8 @@ def lighting(kind):
     sun = bpy.data.lights.new("sun", "SUN")
     sun.energy = sun_e
     sun.angle = math.radians(sun_a)
+    if kind == "lowsun":
+        sun.color = (1.0, 0.80, 0.60)
     ob = bpy.data.objects.new("sun", sun)
     ob.rotation_euler = rot
     sc.collection.objects.link(ob)
@@ -193,7 +216,6 @@ def yard():
     wall = _mat_simple("hall_panel", (0.42, 0.43, 0.43), 0.6, rib=6.0)
     dock = _mat_simple("hall_dock", (0.10, 0.11, 0.12), 0.5)
     roofm = _mat_simple("hall_roof", (0.22, 0.22, 0.23), 0.7)
-    trees = _mat_simple("treeline", (0.035, 0.045, 0.035), 0.9)
     mast = _mat_simple("mast", (0.35, 0.36, 0.37), 0.5)
     _bx("hall_A", (34, -8, 5), (16, 70, 10), wall)
     for k in range(6):
@@ -202,30 +224,159 @@ def yard():
     _bx("hall_B_roof", (-6, -46, 9.05), (60.4, 16.4, 0.2), roofm)
     for k in range(5):
         _bx(f"dock_B{k}", (-28 + k * 10, -37.95, 1.9), (3.0, 0.1, 3.2), dock)
-    # treeline ring segments far away (irregular heights)
-    rng = np.random.default_rng(7)
-    # continuous treeline: one ring mesh with a noisy crown silhouette (pine/birch edge)
-    bm = bmesh.new()
-    n = 1440
-    r = 170
-    bot, top = [], []
-    jit = np.convolve(rng.random(n + 8), np.ones(5) / 5, mode="same")[4:n + 4]   # crowns, not sawteeth (R2 #11)
-    for k in range(n):
-        a = 2 * math.pi * k / n
-        h = 10.5 + 2.0 * math.sin(a * 5 + 0.3) + 1.2 * math.sin(a * 17 + 1) + 0.6 * math.sin(a * 61) + jit[k] * 2.2
-        bot.append(bm.verts.new((r * math.cos(a), r * math.sin(a), 0)))
-        top.append(bm.verts.new((r * math.cos(a), r * math.sin(a), h)))
-    for k in range(n):
-        bm.faces.new((bot[k], bot[(k + 1) % n], top[(k + 1) % n], top[k]))
-    me = bpy.data.meshes.new("treeline")
-    bm.to_mesh(me)
-    ob = bpy.data.objects.new("treeline", me)
-    me.materials.append(trees)
-    bpy.context.scene.collection.objects.link(ob)
-    ob["group"] = "backdrop"
+    forest()
     for k, (x, y) in enumerate(((-16, -20), (14, 22), (-22, 18), (18, -26))):
         _bx(f"mast_{k}", (x, y, 7), (0.25, 0.25, 14), mast)
         _bx(f"mast_head_{k}", (x, y, 14), (1.2, 0.5, 0.3), mast)
+
+
+def _forest_material():
+    """Crowns: per-tree tint (colour attribute 'tint') x noise clumps, rough."""
+    m = bpy.data.materials.new("forest")
+    m.use_nodes = True
+    nt = m.node_tree
+    b = nt.nodes["Principled BSDF"]
+    at = nt.nodes.new("ShaderNodeAttribute")
+    at.attribute_name = "tint"
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    nz = nt.nodes.new("ShaderNodeTexNoise")
+    nz.inputs["Scale"].default_value = 0.9
+    nz.inputs["Detail"].default_value = 6.0
+    nt.links.new(tc.outputs["Object"], nz.inputs["Vector"])
+    mr = nt.nodes.new("ShaderNodeMapRange")
+    mr.inputs["To Min"].default_value = 0.45
+    mr.inputs["To Max"].default_value = 1.25
+    nt.links.new(nz.outputs["Fac"], mr.inputs["Value"])
+    mul = nt.nodes.new("ShaderNodeMix")
+    mul.data_type = "RGBA"
+    mul.blend_type = "MULTIPLY"
+    mul.inputs[0].default_value = 1.0
+    nt.links.new(at.outputs["Color"], mul.inputs[6])
+    nt.links.new(mr.outputs[0], mul.inputs[7])
+    # aerial perspective: 100-170 m of autumn haze lifts the forest towards the horizon colour (no black cut-out)
+    cam = nt.nodes.new("ShaderNodeCameraData")
+    hz = nt.nodes.new("ShaderNodeMath")
+    hz.operation = "MULTIPLY"
+    hz.inputs[1].default_value = -1.0 / 1400.0
+    nt.links.new(cam.outputs["View Distance"], hz.inputs[0])
+    ex = nt.nodes.new("ShaderNodeMath")
+    ex.operation = "EXPONENT"
+    nt.links.new(hz.outputs[0], ex.inputs[0])
+    haze = nt.nodes.new("ShaderNodeMix")
+    haze.data_type = "RGBA"
+    haze.inputs[6].default_value = (0.22, 0.26, 0.23, 1)
+    nt.links.new(ex.outputs[0], haze.inputs[0])            # factor = transmittance: 1 -> crown colour
+    nt.links.new(mul.outputs[2], haze.inputs[7])
+    nt.links.new(haze.outputs[2], b.inputs["Base Color"])
+    b.inputs["Roughness"].default_value = 0.92
+    bump = nt.nodes.new("ShaderNodeBump")
+    bump.inputs["Strength"].default_value = 0.8
+    nt.links.new(nz.outputs["Fac"], bump.inputs["Height"])
+    nt.links.new(bump.outputs["Normal"], b.inputs["Normal"])
+    return m
+
+
+def forest(r0=230.0, r1=330.0, seed=11):
+    """Podlasie forest edge round the yard (REVIEW r2 #11 / r3 X4: no saw-tooth 'mountains'): a few rows of
+    individual trees - spruce/pine (stacked irregular whorls on a bare lower trunk) and birch/alder (lumpy
+    crowns), heights 13-25 m, clearings and denser stands. Backdrop only, never exported."""
+    rng = np.random.default_rng(seed)
+    pal_con = [(0.028, 0.050, 0.026), (0.036, 0.058, 0.030), (0.026, 0.044, 0.030)]
+    pal_dec = [(0.060, 0.080, 0.034), (0.070, 0.082, 0.036), (0.050, 0.072, 0.032), (0.085, 0.078, 0.042)]
+    trunk_c = (0.05, 0.045, 0.04)
+    birch_c = (0.20, 0.19, 0.18)
+    fmat = _forest_material()
+    root = bpy.data.objects.new("forest", None)
+    bpy.context.scene.collection.objects.link(root)
+    root["group"] = "backdrop"
+
+    def variant(vi, kind):
+        """One tree at the origin (bmesh), instanced many times on a vertex cloud (fast to build and render)."""
+        bm = bmesh.new()
+        tint = bm.loops.layers.color.new("tint")
+
+        def paint(faces, c):
+            for f in faces:
+                for lp in f.loops:
+                    lp[tint] = (*c, 1.0)
+
+        def cone(z0, z1, r, seg, c):
+            ring = []
+            for k in range(seg):
+                a_ = 2 * math.pi * k / seg + rng.random() * 0.4
+                rr = r * (0.75 + 0.5 * rng.random())
+                ring.append(bm.verts.new((rr * math.cos(a_), rr * math.sin(a_), z0 + rng.random() * 0.4)))
+            tip = bm.verts.new((rng.normal() * 0.2, rng.normal() * 0.2, z1))
+            fs = [bm.faces.new((ring[k], ring[(k + 1) % seg], tip)) for k in range(seg)]
+            fs.append(bm.faces.new(list(reversed(ring))))
+            paint(fs, c)
+
+        def blob(cx, cy, zc, rx, rz, c):
+            res = bmesh.ops.create_icosphere(bm, subdivisions=2, radius=1.0)
+            vs = res["verts"]
+            for v in vs:
+                k = 0.75 + 0.5 * rng.random()
+                v.co = Vector((cx + v.co.x * rx * k, cy + v.co.y * rx * k, zc + v.co.z * rz * (0.85 + 0.3 * rng.random())))
+            paint(list({f for v in vs for f in v.link_faces}), c)
+
+        def trunk(h, r, c):
+            res = bmesh.ops.create_cone(bm, cap_ends=False, segments=5, radius1=r, radius2=r * 0.6, depth=h)
+            for v in res["verts"]:
+                v.co += Vector((0, 0, h / 2))
+            paint(list({f for v in res["verts"] for f in v.link_faces}), c)
+
+        if kind == "pine":      # Scots pine: long bare trunk, flat irregular crown (the typical Podlasie edge)
+            h = 17.0 + 8.0 * rng.random()
+            c = pal_con[rng.integers(len(pal_con))]
+            trunk(h * 0.8, 0.20, trunk_c)
+            for t in range(5):
+                blob(rng.normal() * 1.6, rng.normal() * 1.6, h * (0.78 + 0.04 * t) + rng.normal() * 0.6,
+                     1.8 + 1.5 * rng.random(), 1.1 + 0.6 * rng.random(), c)
+        elif kind == "spruce":  # stacked irregular whorls, blunt top
+            h = 15.0 + 8.0 * rng.random()
+            base = h * (0.15 + 0.10 * rng.random())
+            c = pal_con[rng.integers(len(pal_con))]
+            trunk(base + 1.0, 0.22, trunk_c)
+            w = 2.0 + 1.2 * rng.random()
+            for t in range(4):
+                z0 = base + (h - base) * t * 0.22
+                cone(z0, min(h, z0 + (h - base) * 0.45), w * (1.0 - 0.2 * t), 7, c)
+        else:                   # birch / alder
+            h = 13.0 + 8.0 * rng.random()
+            c = pal_dec[rng.integers(len(pal_dec))]
+            trunk(h * 0.55, 0.16, birch_c if rng.random() < 0.5 else trunk_c)
+            for t in range(3):
+                blob(rng.normal() * 1.2, rng.normal() * 1.2, h * (0.62 + 0.12 * t), 2.4 + 1.6 * rng.random(),
+                     2.0 + 1.0 * rng.random(), c)
+        me = bpy.data.meshes.new(f"tree_{vi}")
+        bm.to_mesh(me)
+        bm.free()
+        me.materials.append(fmat)
+        me.shade_smooth()      # soft crowns (flat-shaded icospheres read as boulders)
+        return me
+
+    kinds = ["pine"] * 8 + ["spruce"] * 4 + ["birch"] * 4
+    pts = [[] for _ in kinds]
+    n = 5200
+    ang = rng.random(n) * 2 * math.pi
+    clump = 0.5 + 0.5 * np.sin(ang * 23 + 1.3) * np.sin(ang * 7)      # clearings and denser stands
+    for i in range(n):
+        if rng.random() > 0.25 + 0.75 * clump[i]:
+            continue
+        r = r0 + (r1 - r0) * rng.random() ** 1.5
+        pts[rng.integers(len(kinds))].append((r * math.cos(ang[i]), r * math.sin(ang[i]), 0.0))
+    for vi, kind in enumerate(kinds):
+        tree = bpy.data.objects.new(f"tree_{vi}", variant(vi, kind))
+        cloud = bpy.data.meshes.new(f"forest_pts_{vi}")
+        cloud.from_pydata(pts[vi], [], [])
+        em = bpy.data.objects.new(f"forest_pts_{vi}", cloud)
+        em.instance_type = "VERTS"
+        for o in (em, tree):
+            bpy.context.scene.collection.objects.link(o)
+            o["group"] = "backdrop"
+        tree.parent = em
+        em.parent = root
+    return root
 
 
 def studio():
@@ -334,7 +485,7 @@ CAMS = {
     "bok": dict(loc=(-30, -1.0, 1.95), rot=(math.radians(90), 0, math.radians(-90)), ortho=10.8, fig=(-2.0, 2.4)),
     "przod": dict(loc=(-0.0, 30, 2.0), rot=(math.radians(90), 0, math.radians(180)), ortho=7.4, fig=(-2.6, 2.4)),
     "34tyl": dict(loc=(9.2, -14.6, 2.5), target=(-0.3, -1.7, 1.55), lens=42, fig=(-2.6, -6.2)),
-    "zbl_reflektor": dict(loc=(-2.7, 4.5, 1.62), target=(-0.98, 1.45, 1.44), lens=75, fig=None),
+    "zbl_reflektor": dict(loc=(-2.75, 4.4, 1.56), target=(-1.06, 1.45, 1.37), lens=75, fig=None),
     "zbl_stopnie": dict(loc=(-4.4, 1.6, 1.15), target=(-1.2, -0.30, 0.78), lens=45, fig=None),
     "zbl_tyl": dict(loc=(-3.4, -7.6, 3.4), target=(0.0, -2.5, 1.25), lens=38, fig=None),
     "zbl_kolo": dict(loc=(4.2, -2.6, 0.95), target=(1.2, -3.7, 0.55), lens=50, fig=None),
