@@ -1,4 +1,4 @@
-"""Materials for the BIELIK exterior (A4).
+"""Materials for the TRAKT exterior (A4).
 
 Render materials are many; every one is tagged with a GAME SLOT (<= 6 in Unity, A6 atlases):
   PAINT  - body paint (livery colour, clearcoat)
@@ -446,6 +446,9 @@ def build_library(livery="white", clay=False):
     m, nt, b = principled("steel", "METAL", (0.42, 0.42, 0.43), 0.45, metal=1.0)
     if not clay:
         grime(nt, b, (0.42, 0.42, 0.43), 0.45, h0=1.3, amount=0.8)
+    principled("coupling_red", "TRIM", (0.40, 0.02, 0.02), 0.45)
+    principled("coupling_yellow", "TRIM", (0.70, 0.45, 0.02), 0.45)
+    principled("adblue_blue", "TRIM", (0.02, 0.10, 0.45), 0.4)
     principled("grease", "METAL", (0.015, 0.014, 0.012), 0.18, spec=0.6)
     m, nt, b = principled("checker", "METAL", (0.80, 0.80, 0.81), 0.38, metal=1.0)
     if not clay:

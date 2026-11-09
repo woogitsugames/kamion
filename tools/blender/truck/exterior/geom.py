@@ -313,6 +313,7 @@ def boolean(ob, cutters, op="DIFFERENCE"):
         md.operation = op
         md.object = c
         md.solver = "EXACT"
+        md.material_mode = "TRANSFER"   # pocket walls take the cutter's material (dark), not the paint
         c.hide_render = True
     apply_mods(ob)
     for c in cutters:
@@ -578,12 +579,12 @@ class Loft:
                 bm.faces.new((a[i], b[i], b[(i + 1) % m_], a[(i + 1) % m_]))
         return obj_from_bm(name, bm, m, sharp=60)
 
-    def gap_v(self, name, side, y, z0, z1, w=0.007, off=0.0015, m="gap"):
+    def gap_v(self, name, side, y, z0, z1, w=0.009, off=0.0015, m="gap"):
         f = y if callable(y) else (lambda z, v=y: v)
         return self.patch(name, m, "side", z0, z1, lambda z: f(z) - w / 2, lambda z: f(z) + w / 2, off=off, nz=12,
                           npar=1, side=side)
 
-    def gap_h(self, name, side, z, y0, y1, w=0.007, off=0.0015, m="gap"):
+    def gap_h(self, name, side, z, y0, y1, w=0.009, off=0.0015, m="gap"):
         return self.patch(name, m, "side", z - w / 2, z + w / 2, y0, y1, off=off, nz=1, npar=24, side=side)
 
 
@@ -592,10 +593,11 @@ def load_svg_mark(path):
     """Returns (feathers: list of polygons, strokes: list of (polyline, width)). SVG units, y down."""
     import re
     txt = open(path, encoding="utf-8").read()
-    feathers = []
+    feathers = []  # list of subpaths; for an evenodd path the first is the outline, the rest are holes
     for d in re.findall(r'<path[^>]*d="([^"]+)"', txt):
-        nums = [float(v) for v in re.findall(r"-?\d+\.?\d*", d)]
-        feathers.append(list(zip(nums[0::2], nums[1::2])))
+        for sub in d.split("M")[1:]:
+            nums = [float(v) for v in re.findall(r"-?\d+\.?\d*", sub)]
+            feathers.append(list(zip(nums[0::2], nums[1::2])))
     sw = float(re.search(r'stroke-width="([\d.]+)"', txt).group(1))
     strokes = []
     for pts in re.findall(r'<polyline points="([^"]+)"', txt):
