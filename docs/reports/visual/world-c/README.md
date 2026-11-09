@@ -1,6 +1,6 @@
 # Visual QA — kafel `bialystok-industrial-c`, v3.1 (2026-11-09)
 
-Te same kamery i preset co v3 (Blender 4.2.9 EEVEE, 1600×900, 48 próbek, AgX). Pliki `<kamera>__<światło>.jpg` to teraz v3.1, a stan v3 kluczowych kadrów jest w `before_v3_*`. `*_lod1.jpg` pokazuje budynki wyłącznie w LOD1, czyli to, co widzi tier Low/Medium dalej niż 100 m od trasy (flaga `--bld-lod1`). **To nadal render offline, nie URP na telefonie.** HLOD lasu i fasady LOD1 wymagają jeszcze pracy w imporcie Unity (ADR 0013).
+Te same kamery i preset co v3 (Blender 4.2.9 EEVEE, 1600×900, 48 próbek, AgX). Pliki `<kamera>__<światło>.jpg` to teraz v3.1, a stan v3 kluczowych kadrów jest w `before_v3_*`. `*_lod1.jpg` pokazuje budynki wyłącznie w LOD1, czyli to, co widzi tier Low/Medium dalej niż 100 m od trasy (flaga `--bld-lod1`). **To nadal render offline, nie URP na telefonie.** HLOD lasu i fasady LOD1 wymagają jeszcze pracy w imporcie Unity (ADR 0015).
 
 | # | Punkt v3.1 | Stan | Dowód |
 |---|---|---|---|
@@ -13,7 +13,7 @@ Te same kamery i preset co v3 (Blender 4.2.9 EEVEE, 1600×900, 48 próbek, AgX).
 
 **Pętla v3.1:** (r1) ściany wewnętrzne przycięte pod koroną pokazywały koronę jak gładkie wzgórze, więc ściany mają pełną wysokość. (r2) Ściana oglądana wzdłuż DK8 rozmazywała się w smugi, więc pas 12 m przy drodze zostaje drzewami. (r4) Krzewy brzegu ściągały koronę do 2–3 m, co dawało zielone „płachty” w widoku kierowcy, więc korona jest liczona tylko z drzew ≥ 8 m. Dwa sąsiednie biurowce z ceglanej palety dawały efekt Lego, więc cegła występuje w 1 na 7 i ma mniejsze nasycenie.
 
-**Otwarte (v3.1):** przy niskim słońcu impostory pasa przydrożnego mają jasne beżowe plamy (wypiek przy jednolitym niebie, oświetlany jak powierzchnia pionowa); ocena `visual-critic` v3.1; import HLOD i fasad far w Unity (UV1 + shader, ADR 0013); LOD odległości dróg i placów dla Low; zdjęcia właściciela (mury ramp, kolory elewacji).
+**Otwarte (v3.1):** przy niskim słońcu impostory pasa przydrożnego mają jasne beżowe plamy (wypiek przy jednolitym niebie, oświetlany jak powierzchnia pionowa); ocena `visual-critic` v3.1; import HLOD i fasad far w Unity (UV1 + shader, ADR 0015); LOD odległości dróg i placów dla Low; zdjęcia właściciela (mury ramp, kolory elewacji).
 
 ---
 
