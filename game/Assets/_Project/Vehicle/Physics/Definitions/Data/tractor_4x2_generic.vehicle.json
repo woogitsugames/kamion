@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "id": "tractor_4x2_generic",
+  "description": "Generic modern EU 4x2 long-haul tractor, high sleeper cab, solo (no trailer). Provenance: docs/VEHICLE_REFERENCE_DATA.md",
+  "engineId": "diesel_r6_13l_368kw",
+  "gearboxId": "amt12_od_traxon_class",
+  "massElements": [
+    { "name": "frame_rails_crossmembers", "massKg": 900,  "center": { "x": 0, "y": 0.95, "z": 1.6 }, "size": { "x": 0.9, "y": 0.3, "z": 6.0 } },
+    { "name": "engine_gearbox",           "massKg": 1500, "center": { "x": 0, "y": 1.00, "z": 3.3 }, "size": { "x": 0.9, "y": 1.0, "z": 1.8 } },
+    { "name": "cab_high_sleeper",         "massKg": 1300, "center": { "x": 0, "y": 2.40, "z": 3.9 }, "size": { "x": 2.5, "y": 2.2, "z": 2.3 } },
+    { "name": "front_axle_wheels_brakes", "massKg": 800,  "center": { "x": 0, "y": 0.51, "z": 3.7 }, "size": { "x": 2.0, "y": 0.5, "z": 0.5 } },
+    { "name": "rear_axle_duals_brakes",   "massKg": 1300, "center": { "x": 0, "y": 0.51, "z": 0.0 }, "size": { "x": 2.4, "y": 0.6, "z": 0.6 } },
+    { "name": "fuel_tanks_partly_full",   "massKg": 600,  "center": { "x": 0, "y": 0.80, "z": 1.8 }, "size": { "x": 2.4, "y": 0.6, "z": 1.2 } },
+    { "name": "air_tanks_batteries_aftertreatment_misc", "massKg": 600, "center": { "x": 0, "y": 1.00, "z": 1.5 }, "size": { "x": 2.2, "y": 0.8, "z": 4.0 } },
+    { "name": "fifth_wheel",              "massKg": 200,  "center": { "x": 0, "y": 1.20, "z": 0.3 }, "size": { "x": 0.9, "y": 0.2, "z": 0.9 } },
+    { "name": "cooling_front_bumper",     "massKg": 300,  "center": { "x": 0, "y": 1.00, "z": 4.4 }, "size": { "x": 2.4, "y": 1.2, "z": 0.5 } }
+  ],
+  "axles": [
+    {
+      "name": "front",
+      "positionZ": 3.70,
+      "trackWidth": 2.05,
+      "tiresPerSide": 1,
+      "steered": true,
+      "driven": false,
+      "tireId": "tire_315_80_r22_5",
+      "suspension": {
+        "type": "parabolic_leaf",
+        "springRate": 213000,
+        "progressiveRate": 2.0e6,
+        "travel": 0.18,
+        "staticPositionFraction": 0.5,
+        "bumpStopClearance": 0.025,
+        "bumpStopRate": 4.0e7,
+        "damperBump": 9000,
+        "damperRebound": 18000,
+        "damperKneeVelocity": 0.3,
+        "damperHighSpeedFactor": 0.4,
+        "antiRollStiffness": 200000
+      },
+      "serviceBrakeTorque": 18000,
+      "parkingBrakeTorque": 0
+    },
+    {
+      "name": "rear",
+      "positionZ": 0.0,
+      "trackWidth": 1.83,
+      "tiresPerSide": 2,
+      "steered": false,
+      "driven": true,
+      "tireId": "tire_315_80_r22_5",
+      "suspension": {
+        "type": "air_4_bellows",
+        "springRate": 91000,
+        "progressiveRate": 1.5e6,
+        "travel": 0.20,
+        "staticPositionFraction": 0.5,
+        "bumpStopClearance": 0.025,
+        "bumpStopRate": 4.0e7,
+        "damperBump": 5000,
+        "damperRebound": 10000,
+        "damperKneeVelocity": 0.3,
+        "damperHighSpeedFactor": 0.4,
+        "antiRollStiffness": 300000
+      },
+      "serviceBrakeTorque": 18000,
+      "parkingBrakeTorque": 12000
+    }
+  ],
+  "steering": {
+    "maxRoadWheelAngleDeg": 40,
+    "maxSteerRateDegS": 30,
+    "ackermannFactor": 1.0,
+    "steeringRatio": 20
+  },
+  "brakes": {
+    "applyTimeConstant": 0.25,
+    "releaseTimeConstant": 0.30,
+    "parkingTimeConstant": 0.6,
+    "absEnabled": true,
+    "absSlipRelease": 0.18,
+    "absSlipReapply": 0.08,
+    "absReleaseRate": 8.0,
+    "absApplyRate": 4.0,
+    "absMinSpeedMs": 1.5,
+    "asrEnabled": true,
+    "asrSlipThreshold": 0.15,
+    "asrReduceRate": 3.0,
+    "asrRecoverRate": 1.0,
+    "hillStartAid": true,
+    "hillStartMaxHold": 2.0
+  },
+  "driveline": {
+    "finalDriveRatio": 3.40,
+    "finalDriveEfficiency": 0.97,
+    "speedLimiterKmh": 90,
+    "speedLimiterBand": 2.0
+  },
+  "aero": {
+    "dragArea": 7.4,
+    "airDensity": 1.2,
+    "center": { "x": 0, "y": 1.8, "z": 2.5 }
+  },
+  "cab": {
+    "pitchFrequencyHz": 1.5,
+    "rollFrequencyHz": 1.6,
+    "dampingRatio": 0.35,
+    "accelGain": 0.55,
+    "maxPitchDeg": 4,
+    "maxRollDeg": 4
+  }
+}
