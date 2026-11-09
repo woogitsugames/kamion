@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aaadffd9830c584aad19d3c9531e496, type: 3}
+  m_Name: VehicleData_Tractor4x2
+  m_EditorClassIdentifier: Game.Vehicle.Runtime::Game.Vehicle.Runtime.VehicleDataAsset
+  vehicle: {fileID: 4900000, guid: 2baad5610f6fd514791e4ea06db381b4, type: 3}
+  engine: {fileID: 4900000, guid: 79ed7557e223fa44891e27e66623a5fc, type: 3}
+  gearbox: {fileID: 4900000, guid: 21b03e82c2afdef4da4e49ea05e6a4c4, type: 3}
+  tires:
+  - {fileID: 4900000, guid: a2665c16815a1ef48a8601a77d98eeeb, type: 3}
+  - {fileID: 4900000, guid: b17168366161d13429512c9247333370, type: 3}
