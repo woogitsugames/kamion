@@ -1,0 +1,311 @@
+{
+ "region": "bialystok-industrial-c",
+ "bbox": [
+  776971.0,
+  595199.0,
+  779019.0,
+  597247.0
+ ],
+ "terrain": {
+  "max": 163.34,
+  "mean": 139.487,
+  "min": 121.5,
+  "missing_samples": 0,
+  "slope_deg_p50": 2.99,
+  "slope_deg_p99": 29.75,
+  "route_ground_min_max_m": [
+   130.05,
+   145.79
+  ]
+ },
+ "graph": {
+  "nodes": 550,
+  "edges": 646,
+  "length_km": 36.71,
+  "length_by_class_m": {
+   "living_street": 5271,
+   "residential": 3308,
+   "secondary": 2154,
+   "secondary_link": 68,
+   "service": 15216,
+   "tertiary": 564,
+   "tertiary_link": 230,
+   "trunk": 7013,
+   "trunk_link": 2261,
+   "unclassified": 630
+  },
+  "boundary_nodes": 37,
+  "weak_components": 14,
+  "largest_component_nodes": 460,
+  "small_components": [
+   [
+    "Bw245360816:2525715056-2525715055:0e",
+    "Bw302318842:3664178876-2274001289:0s",
+    "Bw363758822:3664178904-3664178812:0e",
+    "..."
+   ],
+   [
+    "n2159944774",
+    "n2256103770",
+    "n2256103776",
+    "..."
+   ],
+   [
+    "Bw240542865:2450383266-2450383269:0s",
+    "n2450383269"
+   ],
+   [
+    "Bw262057909:2677018251-2677018247:0e",
+    "Bw262057909:2677018251-2677018247:0s"
+   ],
+   [
+    "Bw262057910:2677018258-2677018257:0e",
+    "n2677018258"
+   ],
+   [
+    "Bw264567311:2702319726-2702319727:1s",
+    "n2702319727"
+   ],
+   [
+    "Bw362028538:3664178876-3664178933:0s",
+    "n3664178933"
+   ],
+   [
+    "Bw392226368:3954799567-3954799585:0s",
+    "n3954799585"
+   ],
+   [
+    "n13144506798",
+    "n13144506799"
+   ],
+   [
+    "n2446218935",
+    "n4329801881"
+   ],
+   [
+    "n2638975403",
+    "n5202512918"
+   ],
+   [
+    "n5335110111",
+    "n9986085592"
+   ],
+   [
+    "n8857984206",
+    "n9986085590"
+   ]
+  ],
+  "strong_largest_nodes": 411,
+  "degree_hist": {
+   "1": 138,
+   "2": 116,
+   "3": 263,
+   "4": 32,
+   "5": 1
+  },
+  "dangling_non_boundary_nodes": 101,
+  "zero_length_edges": [],
+  "sharp_vertices_gt100deg": [],
+  "sharp_count": 0,
+  "bridges": 13,
+  "bridge_without_layer": [],
+  "low_confidence_counts": {
+   "lanes": 454,
+   "maxspeed": 379,
+   "turn:lanes": 97,
+   "surface": 104
+  },
+  "major_coverage_by_length_osm": {
+   "lanes": 0.963,
+   "maxspeed": 0.812,
+   "surface": 0.992,
+   "turn:lanes": 0.429
+  },
+  "major_length_m": 12290,
+  "route_coverage_by_length_osm": {
+   "lanes": 0.863,
+   "maxspeed": 0.727,
+   "surface": 0.852,
+   "turn:lanes": 0.362
+  },
+  "route_length_m": 2401.3,
+  "route_edges": 29,
+  "width_from": {
+   "bdot10k": 425
+  },
+  "bdot10k_matched_edges": 518,
+  "bdot10k_width_per_osm_lane_major_m": {
+   "p10": 2.67,
+   "p50": 4.0,
+   "p90": 5.0,
+   "n": 157
+  },
+  "width_osm_vs_bdot10k_disagree_gt2m": []
+ },
+ "buildings": {
+  "count": 643,
+  "height_source": {
+   "gugik_lod1_2024": 581,
+   "bdot10k_storeys": 4,
+   "gugik_lod2_2017": 2,
+   "default": 53,
+   "osm_levels": 3
+  },
+  "footprint_source": {
+   "bdot10k": 589,
+   "osm": 54
+  },
+  "roof_only": 14,
+  "lod1_minus_lod2_m": {
+   "n": 450,
+   "p10": -3.28,
+   "p50": -1.52,
+   "p90": -0.28
+  },
+  "height_m": {
+   "p50": 6.67,
+   "max": 56.0
+  }
+ },
+ "alignment": {
+  "method": "see tools/worldgen/qa_report.py docstring",
+  "ortho": "gugik-orto-2024-rgb-0p25-bialystok-industrial-c",
+  "edges_tested": [
+   "w177861600:1882953899-4391371827",
+   "w771649420:7203633359-2256069832",
+   "w261467968:1166108052-8483208347",
+   "w999223605:9224916297-9224916311",
+   "w560802662:1883483260-1883101797",
+   "w560802656:4103450292-277320063",
+   "w262140922:1832991672-1847317049",
+   "w882366266:2256069816-8205694666"
+  ],
+  "results": [
+   {
+    "edge": "w177861600:1882953899-4391371827",
+    "name": null,
+    "highway": "tertiary_link",
+    "samples": 50,
+    "offset_median_m": 1.0,
+    "offset_iqr_m": 1.84,
+    "pavement_width_median_m": 9.8,
+    "osm_lanes": 2,
+    "lanes_src": "osm",
+    "bdot10k_dist_m": 0.47,
+    "bdot10k_width_m": 8.0,
+    "mid": [
+     778445.4,
+     595583.4
+    ]
+   },
+   {
+    "edge": "w771649420:7203633359-2256069832",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "highway": "trunk",
+    "samples": 22,
+    "offset_median_m": -0.12,
+    "offset_iqr_m": 6.34,
+    "pavement_width_median_m": 17.8,
+    "osm_lanes": 2,
+    "lanes_src": "osm",
+    "bdot10k_dist_m": 0.59,
+    "bdot10k_width_m": 7.5,
+    "mid": [
+     777143.8,
+     597163.9
+    ]
+   },
+   {
+    "edge": "w261467968:1166108052-8483208347",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "highway": "secondary",
+    "samples": 17,
+    "offset_median_m": 0.5,
+    "offset_iqr_m": 0.75,
+    "pavement_width_median_m": 7.8,
+    "osm_lanes": 2,
+    "lanes_src": "osm",
+    "bdot10k_dist_m": 0.09,
+    "bdot10k_width_m": 8.0,
+    "mid": [
+     777452.8,
+     596070.6
+    ]
+   },
+   {
+    "edge": "w560802662:1883483260-1883101797",
+    "name": "Generała Władysława Andersa",
+    "highway": "trunk",
+    "samples": 28,
+    "offset_median_m": -2.06,
+    "offset_iqr_m": 2.84,
+    "pavement_width_median_m": 13.6,
+    "osm_lanes": 3,
+    "lanes_src": "osm",
+    "bdot10k_dist_m": 0.11,
+    "bdot10k_width_m": 10.0,
+    "mid": [
+     778960.9,
+     595274.5
+    ]
+   },
+   {
+    "edge": "w560802656:4103450292-277320063",
+    "name": "Generała Władysława Andersa",
+    "highway": "trunk",
+    "samples": 25,
+    "offset_median_m": -1.5,
+    "offset_iqr_m": 2.75,
+    "pavement_width_median_m": 9.8,
+    "osm_lanes": 3,
+    "lanes_src": "osm",
+    "bdot10k_dist_m": 0.3,
+    "bdot10k_width_m": 8.0,
+    "mid": [
+     777927.0,
+     595843.3
+    ]
+   },
+   {
+    "edge": "w262140922:1832991672-1847317049",
+    "name": "Generała Stanisława Maczka",
+    "highway": "trunk",
+    "samples": 21,
+    "offset_median_m": -1.5,
+    "offset_iqr_m": 1.0,
+    "pavement_width_median_m": 10.0,
+    "osm_lanes": 3,
+    "lanes_src": "osm",
+    "bdot10k_dist_m": 1.09,
+    "bdot10k_width_m": 10.5,
+    "mid": [
+     777052.6,
+     596286.9
+    ]
+   },
+   {
+    "edge": "w882366266:2256069816-8205694666",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "highway": "trunk",
+    "samples": 43,
+    "offset_median_m": -0.25,
+    "offset_iqr_m": 4.25,
+    "pavement_width_median_m": 10.8,
+    "osm_lanes": 2,
+    "lanes_src": "osm",
+    "bdot10k_dist_m": 0.1,
+    "bdot10k_width_m": 6.5,
+    "mid": [
+     777450.8,
+     596464.2
+    ]
+   }
+  ]
+ },
+ "png_bytes": {
+  "bialystok-industrial-c_hillshade_roads.png": 390264,
+  "bialystok-industrial-c_buildings_height_source.png": 314706,
+  "bialystok-industrial-c_roads_confidence.png": 252148,
+  "bialystok-industrial-c_ortho_alignment.png": 283040
+ }
+}

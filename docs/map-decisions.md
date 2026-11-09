@@ -4,6 +4,9 @@
 
 Status: **czeka na decyzję właściciela** (propozycja agenta `geo-worldgen`, 2026-11-09).
 
+> **Robocze założenie lidera (2026-11-09), NIE decyzja właściciela.** Właściciel jest nieobecny, więc lider przyjął kandydata **C** (Andersa / Rondo Putry → DK8/DK19, baza Kwadrat Park) jako roboczy obszar startowy dla prac Etapu 4. Kafel to `bialystok-industrial-c` (`tools/worldgen/regions.py`, `Data/Regions/bialystok-industrial-c/`), a raport danych jest w [`docs/DATA_QA.md`](DATA_QA.md).
+> **Odwracalność:** cały pipeline jest sparametryzowany identyfikatorem regionu. Przejście na A lub B to jeden nowy wpis w `regions.py` (bbox liczy `regions.py --derive`) oraz ponowne uruchomienie `ingest.py` i `build_region.py`. Dane powiatowe GUGiK (BDOT10k, LoD1/LoD2, drzewa) są wspólne dla A, B i C (powiat 2061). Arkusze NMT i ortofoto pobiera się dla nowego bbox automatycznie. Nic z tej pracy nie blokuje wyboru A ani B.
+
 **Źródło:** wyłącznie OpenStreetMap (wycinek Geofabrik `podlaskie-261108`, ODbL, „© OpenStreetMap contributors”). Nie użyto Google ani żadnych podkładów kafelkowych.
 **Odtworzenie:** `uv run tools/worldgen/analyze_candidates.py` (z katalogu repo).
 **Wszystkie liczby** pochodzą z `docs/reports/map/candidates.json`. Mapy są w `docs/reports/map/`.
@@ -44,19 +47,31 @@ Status: **czeka na decyzję właściciela** (propozycja agenta `geo-worldgen`, 2
 - **C:** łącznice i Rondo Bieżeństwa nie mają `maxspeed` (6 odcinków). **Topologia jest do sprawdzenia w terenie:** gdy wymusiłem wjazd z Ronda Bieżeństwa bezpośrednio na Andersa w kierunku północno-zachodnim, router zawrócił przez Rondo Chodakowskiego. Albo takiego wjazdu naprawdę nie ma, albo w OSM brakuje połączenia (koniec `tertiary_link` 177861600 leży ok. 13 m od jezdni Andersa). Trasa w tabeli jedzie przez `tertiary_link` + `trunk_link`. Ramp nie ma w danych.
 - **Wszystkie trzy:** `sidewalk` i `lit` praktycznie nie są otagowane. Chodniki i oświetlenie trzeba będzie wziąć z BDOT10k lub ze zdjęć.
 
-### Dane GUGiK potrzebne dla obszaru startowego
-Wszyscy trzej kandydaci leżą w powiecie m. Białystok (TERYT 2061). Wyjątek to końcówka przedłużenia B do S8, która może leżeć w powiecie białostockim. W tej sesji **nic z GUGiK nie zostało pobrane**.
+### Dane GUGiK potrzebne dla obszaru startowego (sprawdzone 2026-11-09 na usługach GUGiK)
+Wszyscy trzej kandydaci leżą w powiecie m. Białystok (TERYT 2061). Wyjątkiem jest końcówka przedłużenia B do S8, która może leżeć w powiecie białostockim. Dostępność sprawdziłem **zapytaniami do usług GUGiK** dla kafla `bialystok-industrial-c` (bbox EPSG:2180 776971, 595199 – 779019, 597247):
+- skorowidze arkuszy przez WFS 1.0.0 `GetFeature`, osobno dla każdego roku (`tools/worldgen/gugik_index.py`; pełny wynik ze wszystkimi latami i arkuszami jest w `Data/SourceManifests/bialystok-industrial-c.gugik-availability.json`);
+- zbiory powiatowe przez WMS `GetFeatureInfo` (panel „Pobierz dane”);
+- rozmiary plików z `HEAD`.
 
-| Zbiór | Do czego | Dostępność dla obszaru | Status |
-|---|---|---|---|
-| NMT (siatka 1 m, z LiDAR) | teren, niweleta, nasypy przy wiaduktach (C, B) | GUGiK prowadzi NMT dla całego kraju | `UNVERIFIED`: nie sprawdziłem arkuszy, daty ani układu wysokościowego (spodziewany PL-EVRF2007-NH, do potwierdzenia przy pobraniu) |
-| BDOT10k | klasy dróg, chodniki, ogrodzenia, funkcje budynków, pokrycie terenu | zbiór ogólnokrajowy, bezpłatny | `UNVERIFIED`: dla powiatu 2061 nie pobrany |
-| Modele 3D budynków LoD1 | bryły | według geoportal.gov.pl cały kraj, warstwy 2019–2024; wyszukiwarka wskazuje aktualizację LoD1 m.in. dla podlaskiego | `UNVERIFIED` (nie pobrane) |
-| Modele 3D budynków **LoD2** (CityGML 2.0) | kształty dachów hal i bloków | geoportal: „236 powiatów obejmujących obszar 10 województw”, stan na 2017 r. Lista powiatów jest tylko na mapie zasięgu (obrazek), której nie dało się odczytać automatycznie | **`UNVERIFIED`**: czy Białystok jest w zasięgu LoD2, trzeba sprawdzić w module „Pobierz dane” (Topografia → Modele 3D budynków) |
-| Modele 3D drzew (CityGML LoD1) | rozmieszczenie i wysokość drzew | strona geoportalu nie podaje listy; wynik wyszukiwania sugeruje, że Białystok był w jednym z komunikatów o kolejnych powiatach | `UNVERIFIED` |
-| Ortofotomapa | tylko referencja dla człowieka | cały kraj | sprawdzić warunki przy pobraniu |
+Pobrane zbiory mają manifesty z SHA256 w `Data/SourceManifests/` i wpisy w `docs/LICENSES.md`.
 
-Licencja: geoportal deklaruje, że modele 3D budynków są „dostępne bezpłatnie i możliwe do dowolnego wykorzystania”, a modele drzew „nieodpłatnie i do powszechnego wykorzystania”. Każdy zbiór dostanie manifest z SHA256 przy pobraniu (`docs/LICENSES.md`).
+| Zbiór | Status | URL / usługa | Format, CRS | Aktualność, rozdzielczość | Rozmiar |
+|---|---|---|---|---|---|
+| **NMT** | **dostępny, pobrany** | skorowidz `…/PZGIK/NumerycznyModelTerenuEVRF2007/WFS/Skorowidze`, pliki `opendata.geoportal.gov.pl/NumDaneWys/NMT/83271/…` (4 arkusze 1:5000: N-34-107-A-d-3-3/-3-4, C-b-1-1/-1-2) | ARC/INFO ASCII GRID, PL-1992 (EPSG:2180), **PL-EVRF2007-NH** (EPSG:9651) | **2025-04-18**, 1,00 m, ALS; błąd śr. wys. 0,09 m, sytuacji 0,15 m. W kaflu są też serie 2019–2024 | 4 × ~37 MB |
+| NMPT (DSM) | dostępny, **niepobrany** (opcja `--with nmpt`) | `…/PZGIK/NumerycznyModelPokryciaTerenuEVRF2007/WFS/Skorowidze`, `…/NumDaneWys/NMPT/83270/…` | ARC/INFO ASCII, EPSG:2180, EVRF2007 | 2025-04-18, 0,50 m (jest też 2023-09-15) | 4 × ~149 MB |
+| Chmury punktów LiDAR | dostępne, **niepobrane** (opcja `--with lidar`) | `…/PZGIK/DanePomiaroweLidarEVRF2007/WFS/Skorowidze`, `…/NumDaneWys/DanePomiaroweLAZ/…` | LAZ, EPSG:2180, EVRF2007 | 2025-04-18 i 2023-09-15, 12 pkt/m², 25 arkuszy 1:1250 na serię; błąd śr. wys. 0,10 m | ~194 MB/arkusz (sprawdzony 1 arkusz), ok. 4,8 GB na serię (szacunek) |
+| **BDOT10k** powiat 2061 | **dostępny, pobrany** | WMS `…/PZGIK/BDOT/WMS/PobieranieBDOT10k` (GetFeatureInfo), plik `opendata.geoportal.gov.pl/bdot10k/schemat2021/GPKG/20/2061_GPKG.zip` (są też GML, SHP oraz GML w schemacie 2011) | GeoPackage, 63 warstwy, EPSG:2180 | wersja obiektów 2024-09-23 | 15,6 MB |
+| **Modele 3D budynków LoD2** | **dostępne dla Białegostoku, pobrane** (rozstrzyga wcześniejsze `UNVERIFIED`) | WMS `…/PZGIK/FOTO/WMS/ModeleBudynkow3D`, warstwa `Modele_3D_budynkow_LoD2_2017`, plik `opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD2/2061_gml.zip` | CityGML 2.0, `EPSG::2180` + **PL-KRON86-NH** (stary układ wysokościowy!) | stan 2017, 30 628 budynków w powiecie | 23,5 MB |
+| **Modele 3D budynków LoD1** | **dostępne, pobrane** (wersja 2024) | ta sama usługa WMS, warstwa `Modele_3D_budynkow_LoD1_2024`, plik `…/InneDane/Budynki3D/LOD1/2024/20/2061.zip` (są też wersje 2019/2021/2022) | CityGML, `EPSG::2180` + `EPSG::9651` (EVRF2007), `measuredHeight` | 2024, 36 971 budynków | 12,8 MB |
+| Modele 3D drzew | **dostępne dla Białegostoku**, **niepobrane** (opcja `--with trees`, 1,07 GB) | WMS `…/PZGIK/FOTO/WMS/ModeleDrzew3D`, warstwa `Modele_3D_drzew_LoD1_2023`, plik `…/InneDane/Drzewa3D/LOD1/2023/20/2061.zip` | CityGML LoD1 | 2023, 242 438 drzew w powiecie | 1,07 GB |
+| **Ortofotomapa** | **dostępna, pobrana** (0,25 m) | `…/PZGIK/ORTO/WFS/Skorowidze`, `opendata.geoportal.gov.pl/ortofotomapa/81427/…` (4 arkusze) | GeoTIFF RGB, PL-1992 | **2024-05-27**, 0,25 m. Nowsze 5 cm: 2025-04-18 (PL-1992, ~1 GB/arkusz) i 2024-03-30 (PL-2000/S8, ~90 MB/arkusz), niepobrane | 4 × ~44 MB |
+
+**Licencje (cytuję źródła, ostateczna ocena: `LEGAL_REVIEW_REQUIRED` przed sklepem):**
+- **Modele 3D budynków i drzew:** panel pobierania GUGiK (odpowiedź WMS GetFeatureInfo, 2026-11-09) podaje „Licencja **CC BY 4.0**”. Strona geoportalu mówi, że modele budynków są „dostępne bezpłatnie i możliwe do dowolnego wykorzystania”, a drzewa „nieodpłatnie i do powszechnego wykorzystania”. Stosujemy surowszy wariant: CC BY 4.0 z atrybucją.
+- **NMT, NMPT, LiDAR, ortofoto, BDOT10k:** od 31.07.2020 są udostępniane nieodpłatnie i bez wniosku na podstawie art. 40a ust. 2 pkt 1 ustawy Prawo geodezyjne i kartograficzne w brzmieniu nadanym nowelizacją Dz.U. 2020 poz. 782. Podstawę prawną zacytowałem ze źródeł wtórnych (Geoforum, gov.pl), **nie z tekstu ISAP**, dlatego status to `LEGAL_REVIEW_REQUIRED`. Usługi WFS/WCS deklarują `Fees: none` / „Brak ograniczeń”.
+- Atrybucja w grze: „Źródło danych: Główny Urząd Geodezji i Kartografii (geoportal.gov.pl)” obok „© OpenStreetMap contributors”.
+
+**Uwaga o układzie wysokościowym:** jedyna usługa WCS NMT (`…/PZGIK/NMT/GRID1/WCS/DigitalTerrainModelFormatTIFF`) publikuje wyłącznie pokrycie `DTM_PL-KRON86-NH_TIFF`, czyli stary układ. Dlatego pobieramy arkusze EVRF2007 z opendata, a nie wycinek z WCS. WCS NMPT (`…/NMPT/GRID1/WCS/DigitalSurfaceModel`) ma oba pokrycia: `DSM_PL-KRON86-NH` i `DSM_PL-EVRF2007-NH`.
 
 ### Rekomendacja: **C — Andersa / Rondo Putry → DK8/DK19**
 

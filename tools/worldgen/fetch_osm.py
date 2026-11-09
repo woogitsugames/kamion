@@ -4,7 +4,7 @@ Usage (from repo root):
     uv run tools/worldgen/fetch_osm.py            # download only if not cached
     uv run tools/worldgen/fetch_osm.py --force    # re-download (new snapshot)
 
-Raw file goes to `data/raw/osm/` (gitignored). Manifest goes to
+Raw file goes to `Data/raw/osm/` (gitignored). Manifest goes to
 `Data/SourceManifests/osm-geofabrik-podlaskie.json` (committed).
 
 Policy (ADR 0002): OSM + GUGiK only. One file download from Geofabrik instead of
@@ -23,7 +23,7 @@ from pathlib import Path
 import requests
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-RAW_DIR = REPO_ROOT / "data" / "raw" / "osm"
+RAW_DIR = REPO_ROOT / "Data" / "raw" / "osm"
 MANIFEST = REPO_ROOT / "Data" / "SourceManifests" / "osm-geofabrik-podlaskie.json"
 LATEST_URL = "https://download.geofabrik.de/europe/poland/podlaskie-latest.osm.pbf"
 USER_AGENT = "truck-sim-pl-worldgen/0.1 (one-off extract download; non-commercial dev)"

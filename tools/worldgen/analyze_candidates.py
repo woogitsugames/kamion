@@ -4,7 +4,7 @@ onto a national / expressway road, 2-3 km drivable route).
 Reproduce everything (from repo root):
     uv run tools/worldgen/analyze_candidates.py
 
-Inputs : Geofabrik podlaskie extract (downloaded + manifested by fetch_osm.py, cached in data/raw/)
+Inputs : Geofabrik podlaskie extract (downloaded + manifested by fetch_osm.py, cached in Data/raw/)
 Outputs: docs/reports/map/overview_bialystok.png
          docs/reports/map/candidate_<id>.png
          docs/reports/map/candidates.json      (all numbers quoted in docs/map-decisions.md)

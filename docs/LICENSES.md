@@ -1,6 +1,6 @@
 # LICENSES — rejestr źródeł i zasobów
 
-Każde pobrane źródło danych, zasób graficzny, dźwięk, czcionka i narzędzie, którego wynik trafia do repo lub buildu, ma tu wpis. Manifesty maszynowe (URL, data, SHA256, CRS) leżą w `Data/SourceManifests/*.json`; surowe pliki w `data/raw/` (poza gitem). Zakaz źródeł Google: ADR 0002.
+Każde pobrane źródło danych, zasób graficzny, dźwięk, czcionka i narzędzie, którego wynik trafia do repo lub buildu, ma tu wpis. Manifesty maszynowe (URL, data, SHA256, CRS) leżą w `Data/SourceManifests/*.json`; surowe pliki w `Data/raw/` (poza gitem). Zakaz źródeł Google: ADR 0002.
 
 ## Dane geograficzne
 
@@ -14,8 +14,22 @@ Każde pobrane źródło danych, zasób graficzny, dźwięk, czcionka i narzędz
 - Atrybucja OSM musi być widoczna w grze (ekran „O grze”/napisy) — ADR 0002.
 - Danych OSM nie łączymy z Mapillary (CC BY-SA) w jednej bazie (docs/05 §3).
 
-## GUGiK (jeszcze nie pobrane)
-Zbiory planowane dla obszaru startowego (NMT, BDOT10k, modele 3D budynków LoD1/LoD2, modele 3D drzew) — status i zasięg w `docs/map-decisions.md`. Strona GUGiK deklaruje dla modeli 3D budynków „dostępne bezpłatnie i możliwe do dowolnego wykorzystania” (geoportal.gov.pl, sprawdzone 2026-11-09). Wpis z SHA256 zostanie dodany przy pierwszym pobraniu.
+## GUGiK (Główny Urząd Geodezji i Kartografii)
+Zbiory pobrane 2026-11-09 przez `tools/worldgen/ingest.py --region bialystok-industrial-c`. Surowe pliki leżą w `Data/raw/gugik/` (poza gitem). Pełna lista plików z SHA256, datą pobrania, arkuszem i datą aktualności jest w manifestach. Tabela nie powtarza SHA256 plików, bo są ich dziesiątki: autorytatywne są manifesty JSON. Dostępność i źródła zasad licencyjnych: `docs/map-decisions.md` (sekcja „Dane GUGiK”).
+
+| ID (manifest) | Zbiór | URL | Pliki / rozmiar | Licencja | Atrybucja | W gicie? | Użycie |
+|---|---|---|---|---|---|---|---|
+| `gugik-nmt-2025-bialystok-industrial-c` | NMT 1 m, PL-EVRF2007-NH, 2025-04-18 | `https://opendata.geoportal.gov.pl/NumDaneWys/NMT/83271/…` | 4 arkusze ASC, 149 MB | dane GUGiK udostępniane nieodpłatnie (PGiK art. 40a ust. 2 pkt 1, od 2020-07-31), `LEGAL_REVIEW_REQUIRED` | „Źródło danych: GUGiK (geoportal.gov.pl)” | nie | heightmapa `Data/raw/derived/…/heightmap_2049.r16` (pochodna, poza gitem), `z_terrain` w grafie |
+| `gugik-orto-2024-rgb-0p25-bialystok-industrial-c` | Ortofotomapa RGB 0,25 m, 2024-05-27 | `https://opendata.geoportal.gov.pl/ortofotomapa/81427/…` | 4 GeoTIFF, 179 MB | j.w., `LEGAL_REVIEW_REQUIRED` | j.w. | nie | **tylko referencja i QA** (nie tekstura); wycinki w `docs/reports/map/bialystok-industrial-c_ortho_alignment.png` |
+| `gugik-bdot10k-2061` | BDOT10k powiat 2061, GPKG, wersja 2024-09 | `https://opendata.geoportal.gov.pl/bdot10k/schemat2021/GPKG/20/2061_GPKG.zip` | 15,6 MB | j.w., `LEGAL_REVIEW_REQUIRED` | j.w. | nie | obrysy budynków, szerokość i nawierzchnia jezdni (fallback w grafie) |
+| `gugik-lod2-2017-2061` | Modele 3D budynków LoD2 (stan 2017), CityGML 2.0 | `https://opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD2/2061_gml.zip` | 23,5 MB | **CC BY 4.0** (panel pobierania GUGiK) | „Źródło danych: GUGiK (geoportal.gov.pl), CC BY 4.0” | nie | wysokość kalenicy i okapu, typ dachu |
+| `gugik-lod1-2024-2061` | Modele 3D budynków LoD1 2024, CityGML | `https://opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD1/2024/20/2061.zip` | 12,8 MB | **CC BY 4.0** | j.w. | nie | wysokość budynków (`measuredHeight`) |
+
+Sprawdzone, ale **niepobrane** (opcje `ingest.py --with nmpt|trees|lidar`): NMPT 0,5 m 2025, modele 3D drzew LoD1 2023 (CC BY 4.0, 1,07 GB), LiDAR LAZ 2025 (12 pkt/m², ~4,8 GB).
+
+### Uwagi
+- Pochodne produkty w `Data/Regions/bialystok-industrial-c/` (`roads.graph.json`, `buildings.geojson`) **łączą dane ODbL (OSM) z CC BY 4.0 / danymi GUGiK**. Graf dróg to baza pochodna OSM (share-alike ODbL §4.4), a pola z BDOT10k mają oznaczone pochodzenie (`src: bdot10k`). Przed udostępnieniem publicznym (build w sklepie) potrzebny jest przegląd prawny zgodności ODbL z CC BY 4.0: `LEGAL_REVIEW_REQUIRED`.
+- Mapy w `docs/reports/map/bialystok-industrial-c_*.png` to *Produced Work* z atrybucją OSM i GUGiK na każdym obrazie. Wycinki ortofoto w raporcie są małe (6 × 90 m) i służą jako dowód QA.
 
 ## Narzędzia (biblioteki Pythona w `tools/worldgen`, wersje w `tools/worldgen/uv.lock`)
-Używane tylko w pipeline, nie są dystrybuowane w buildzie: osmium (pyosmium, BSD-2), shapely (BSD-3), pyproj (MIT), geopandas (BSD-3), networkx (BSD-3), matplotlib (PSF-based/matplotlib licence), numpy (BSD-3), Pillow (MIT-CMU), requests (Apache-2.0).
+Używane tylko w pipeline, nie są dystrybuowane w buildzie: osmium (pyosmium, BSD-2), shapely (BSD-3), pyproj (MIT), geopandas (BSD-3), pyogrio (MIT), networkx (BSD-3), matplotlib (PSF-based/matplotlib licence), numpy (BSD-3), Pillow (MIT-CMU), requests (Apache-2.0), rasterio (BSD-3, z wbudowanym GDAL — MIT/X), PyYAML (MIT), pytest (MIT, tylko testy).
