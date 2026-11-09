@@ -26,27 +26,27 @@
         1.9
       ],
       [
-        0.9982,
+        1.0653,
         2.02
       ],
       [
-        1.1963,
+        1.3306,
         2.14
       ],
       [
-        1.1847,
+        1.3259,
         2.17
       ],
       [
-        1.057,
+        1.2745,
         2.5
       ],
       [
-        0.941,
+        1.2278,
         2.8
       ],
       [
-        0.8652,
+        1.1967,
         3.0
       ]
     ],
@@ -66,7 +66,7 @@
     "note": "interior opening = shut line moved inwards by the seal overlap; replaces DOOR_Y0/DOOR_Y1 (-0.24 / 1.13) in tools/blender/truck/interior/build_interior.py",
     "DOOR_Y0_rear_m": -0.56,
     "DOOR_Y1_front_at_floor_m": 0.76,
-    "DOOR_Y1_front_at_belt_m": 1.1447,
+    "DOOR_Y1_front_at_belt_m": 1.2859,
     "sill_z_m": 1.4,
     "head_z_m": 2.98,
     "door_card_y_range_m": [
@@ -79,11 +79,11 @@
     "front_edge": "follows the A-pillar: y = win_front(z) in body.py",
     "front_edge_yz_m": [
       [
-        1.1447,
+        1.2859,
         2.17
       ],
       [
-        0.8468,
+        1.166,
         2.94
       ]
     ],
