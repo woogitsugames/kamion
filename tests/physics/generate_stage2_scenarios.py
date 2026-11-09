@@ -291,6 +291,24 @@ sc("curb_15cm_left_comb", "Left wheels of the whole combination over a 15 cm cur
    variants=COMB, initial={"speedKmh": 8},
    ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [{"minX": -3, "maxX": -0.5, "minZ": 6, "maxZ": 9, "height": 0.15}]})
 
+# Kerb strike at 50 km/h. Thresholds are regression guards taken from the 2026-11-09 baseline of the core with 15 contact
+# rays (WORKING_VALUE, not requirements): 5 cm lift <= 0.05 s, 14 cm: empty 0.70 s / laden 0.25 s. The 14 cm hop is a known
+# weakness (phone telemetry saw ~0.4 s axle lift); lower these when the contact / droop model improves.
+for h_cm, ft, off_e, off_l, fzmax in [(5, 0.05, 0.1, 0.1, 4), (14, 0.14, 0.8, 0.3, 4.5)]:
+    base = [chk("max_dv_step_ms", mx=0.35, source="no impulse spikes (phone single-step jolt was 0.6-0.7 m/s; sim baseline <= 0.1)"),
+            chk("max_pos_jump_m", mx=1e-6, source="no teleport"),
+            chk("max_fz_ratio", mx=fzmax, source="bounded wheel load peaks (sim baseline 1.8 / 3.9 for 5 / 14 cm; phone saw 6.8)"),
+            chk("max_trailer_roll_deg", mx=8, source="geometric roll plus overshoot"),
+            chk("max_fifth_wheel_error_mm", mx=5, source="constraint holds"),
+            chk("wheel_off_ground_time_s", mx=off_e, variant="empty", source="regression guard on measured baseline (WORKING_VALUE)"),
+            chk("wheel_off_ground_time_s", mx=off_l, variant="laden40", source="regression guard on measured baseline (WORKING_VALUE)")]
+    sc(f"curb_strike_{h_cm}cm_50kmh_comb",
+       f"Left wheels of the whole combination hit a {h_cm} cm kerb face at 50 km/h",
+       "docs/04 s6.11", 10,
+       {"type": "speedhold", "targetKmh": 50}, base,
+       variants=["empty", "laden40"], initial={"speedKmh": 50},
+       ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [{"minX": -3, "maxX": -0.5, "minZ": 30, "maxZ": 33, "height": ft}]})
+
 sc("speed_bump_comb", "Speed bump 7 cm x 0.5 m across the lane at 15 km/h", "docs/04 s6.11", 12,
    {"type": "speedhold", "targetKmh": 15},
    [chk("max_dv_step_ms", mx=0.35, source="no impulse spikes"),

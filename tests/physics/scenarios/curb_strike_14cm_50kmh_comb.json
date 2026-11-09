@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "curb_strike_14cm_50kmh_comb",
+  "description": "Left wheels of the whole combination hit a 14 cm kerb face at 50 km/h",
+  "spec": "docs/04 s6.11",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt",
+    "boxes": [
+      {
+        "minX": -3,
+        "maxX": -0.5,
+        "minZ": 30,
+        "maxZ": 33,
+        "height": 0.14
+      }
+    ]
+  },
+  "initial": {
+    "speedKmh": 50
+  },
+  "duration": 10,
+  "driver": {
+    "type": "speedhold",
+    "targetKmh": 50
+  },
+  "checks": [
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no impulse spikes (phone single-step jolt was 0.6-0.7 m/s; sim baseline <= 0.1)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_pos_jump_m",
+      "status": "WORKING_VALUE",
+      "source": "no teleport",
+      "max": 1e-06
+    },
+    {
+      "metric": "max_fz_ratio",
+      "status": "WORKING_VALUE",
+      "source": "bounded wheel load peaks (sim baseline 1.8 / 3.9 for 5 / 14 cm; phone saw 6.8)",
+      "max": 4.5
+    },
+    {
+      "metric": "max_trailer_roll_deg",
+      "status": "WORKING_VALUE",
+      "source": "geometric roll plus overshoot",
+      "max": 8
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "constraint holds",
+      "max": 5
+    },
+    {
+      "metric": "wheel_off_ground_time_s",
+      "status": "WORKING_VALUE",
+      "source": "regression guard on measured baseline (WORKING_VALUE)",
+      "max": 0.8,
+      "variant": "empty"
+    },
+    {
+      "metric": "wheel_off_ground_time_s",
+      "status": "WORKING_VALUE",
+      "source": "regression guard on measured baseline (WORKING_VALUE)",
+      "max": 0.3,
+      "variant": "laden40"
+    }
+  ]
+}
