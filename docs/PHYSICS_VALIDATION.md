@@ -1,138 +1,195 @@
-# Physics validation — Stage 1, tractor solo 4x2
+# Physics validation — Stage 2, tractor 4x2 + semi-trailer
 
-Status: **all 21 scenarios and 32 xUnit tests are green** in the plain .NET runner (2026-11-09, base commit `e9a9268` plus this change). Nothing has been run in Unity or on a device yet. Unity was still being installed.
+Status: **85 scenario runs (417 checks) and 117 xUnit tests are green** in the plain .NET runner (2026-11-09, branch `worktree-agent-afbe05f0042d88840`). This covers the solo tractor, the empty combination (14.5 t) and the 40.0 t combination. Nothing has been run in Unity or on a device yet. Stage 1 history is in git (`ee235b4`).
 
-Parameter provenance: `docs/VEHICLE_REFERENCE_DATA.md`. Most numbers are WORKING_VALUE. The tolerances below therefore check **plausibility and numerical quality** (stability, no creep, no spikes, dt-independence, sign conventions). They do **not** check that the model matches a specific real truck.
+Parameter provenance: `docs/VEHICLE_REFERENCE_DATA.md`. Most numbers are still WORKING_VALUE, so the tolerances mostly check **plausibility and numerical quality**. The exceptions are the items backed by UN R13 Annex 4 text (S5), the 90 km/h limiter (S3) and the class-reference engine and gearbox data (S1, S2, opened in Stage 2).
 
 ## 1. How to run
 
 ```powershell
-dotnet test tools/physics-runner                                    # 32 tests (xUnit), ~3 s
-dotnet run -c Release --project tools/physics-runner/Runner         # all scenarios + CSV to artifacts/physics/<timestamp>/
-dotnet run -c Release --project tools/physics-runner/Runner -- --only brake_80_0_dry
-uv run tools/telemetry/plot.py artifacts/physics/<timestamp>/        # one PNG per CSV, next to it
+$env:DOTNET_ROOT = "$env:LOCALAPPDATA\Microsoft\dotnet"; $env:PATH = "$env:DOTNET_ROOT;$env:PATH"
+dotnet test tools/physics-runner -c Release                                   # 117 tests, ~10 s
+dotnet run -c Release --project tools/physics-runner/Runner                   # 85 runs + multi-run checks + bench -> artifacts/physics/<ts>/
+dotnet run -c Release --project tools/physics-runner/Runner -- --only brake_80_0_dry_abs_comb          # all variants of one scenario
+dotnet run -c Release --project tools/physics-runner/Runner -- --only lane_change_80@laden40          # one variant
+dotnet run -c Release --project tools/physics-runner/Runner -- --update-golden   # rewrite tests/golden/*.csv (review the diff!)
+dotnet run -c Release --project tools/physics-runner/Runner -- --bench           # cost per step, 40 t combination
+uv run tools/telemetry/plot.py artifacts/physics/<ts>/                         # one PNG per CSV
+uv run python tests/physics/generate_stage2_scenarios.py tests/physics/scenarios   # regenerate the Stage 2 scenario JSONs
 ```
 
-Requirements: a .NET SDK 8 or newer (projects target `net8.0` with `RollForward=Major`), and `uv` for the plots.
+Scenario variants: a scenario with `"variants": ["solo", "empty", "laden40"]` expands to `<id>@solo`, `<id>@empty` and `<id>@laden40`. `laden40` is GCW = 40.0 t exactly (25.5 t cargo, CoG 2.3 m). A check can be limited to one variant.
 
-On this machine the system-wide SDK was missing. A user-local SDK 10.0.403 was installed to `%LOCALAPPDATA%\Microsoft\dotnet` with the official `dotnet-install.ps1`. To use it, set `DOTNET_ROOT` to that folder and put it first in `PATH`.
-
-## 2. Architecture (ADR 0004)
+## 2. Architecture (ADR 0004, extended)
 
 ```
-game/Assets/_Project/Vehicle/Physics/        Game.Vehicle.Physics.asmdef (noEngineReferences: true), pure C# 9
-  Math/          Vec3, Quat, Mat3 (double; Unity component layout; handedness-agnostic formulas)
-  Definitions/   VehicleDefinition, TireDefinition, EngineDefinition, GearboxDefinition (+schemaVersion,
-                 Validate()), MassProperties (CoM + inertia tensor from mass elements), Data/*.json
-  Core/          IGroundQuery, GroundHit, ChassisState, DriverInput, AppliedForce
-  Components/    TireModel, Engine, AmtController, Steering, CabSuspension, WheelState
-  VehicleModel   the solver: ChassisState + DriverInput + IGroundQuery -> forces at world points
-tools/physics-runner/
-  Sim/           compiles the sources above via <Compile Include="../../../game/.../*.cs">,
-                 plus RigidBody6Dof, AnalyticGround, scenario/driver/metric/telemetry code
-  Runner/        console: all scenarios -> CSV + summary.md
-  Tests/         xUnit
-tests/physics/scenarios/*.json   scenario = ground, initial state, driver, checks (min/max + status + source)
-tools/telemetry/plot.py          CSV -> PNG
+game/Assets/_Project/Vehicle/Physics/          pure C# 9, no UnityEngine
+  Definitions/  VehicleDefinition (+ air, retarder, fifthWheel, per-axle brake data), TrailerDefinition,
+                CargoDefinition, EngineDefinition (+ engine brake curve), GearboxDefinition (+ AMT strategy)
+  Components/   WheelGroup      contacts, steel / levelled air springs, tires, wheel spin, brake constraints (shared)
+                Pneumatics      AirBrakeSystem (tractor), TrailerBrakeSystem, ABS state machine, Retarder
+                FifthWheel      coupling constraint
+                AmtController, Engine (+ engine brake), CabSuspension (3-DOF), Steering, TireModel
+  VehicleModel  tractor: driveline, steering, air supply, endurance brakes, blending, hill hold
+  TrailerModel  trailer body: axles, trailer brakes, landing gear, trailer aero share
+  CombinationModel  one fixed step for both bodies + coupling; outputs force + torque per body
+tools/physics-runner/Sim   RigidBody6Dof x2, AnalyticGround, scenarios/variants/events, drivers, metrics, telemetry, golden
+tests/physics/scenarios    61 JSON files -> 85 runs
+tests/golden               9 golden CSV subsets + tolerances.json
 ```
 
-### Fixed step and substeps
-`VehicleModel.Step(dt, chassis, input, ground)` is called once per fixed step (100 Hz).
+### One fixed step (`CombinationModel.Step`, 100 Hz)
+1. **Tractor** (`VehicleModel.Step`): contacts and suspension (and air levelling); brake demands (pedal blending, hill hold, lever, brake cruise, ABS cut-off); air supply (compressor, governor, protection valve, leaks, red and yellow lines, spring chambers); AMT; engine-brake actuator; retarder. Then 4 substeps of: tires and wheel spin → **service chambers + ABS** → engine → clutch and brake Coulomb constraints (PGS) → wheel-deceleration signal.
+2. **Air lines**: the red line charges the trailer reservoir. Red and yellow pressures go to the trailer.
+3. **Trailer** (`TrailerModel.Step`): contacts and levelling; emergency relay; 4 substeps of tires → chambers + ABS → brake constraints; landing gear legs; trailer aero.
+4. **Fifth wheel** (`FifthWheel.Solve`): both bodies' end-of-step velocities are predicted from the model forces plus gravity (the same semi-implicit Euler the host uses, including the gyroscopic term). Then 8 sequential-impulse iterations:
+   - kingpin point: 3×3 block solve with Baumgarte 0.2 and a 0.5 m/s cap; during the 0.4 s after the jaw locks it is a 4 Hz critically damped soft constraint;
+   - roll: implicit soft spring 1e7 N m/rad (stable for any stiffness);
+   - soft one-sided stops on roll ±4°, pitch ±12° and articulation ±90° (3 Hz, critically damped: cab contact);
+   - plate Coulomb friction about the kingpin.
 
-Once per step it does:
-- suspension and contact: multi-ray wheel contact, spring, tire radial compliance, damper, anti-roll bar;
-- steering, brakes/ABS/ASR/hill-hold, AMT logic.
+   The impulses come back as a force at the kingpin plus a pure torque per body.
 
-Then it runs `substeps` (default 4) inner iterations of:
-- tire relaxation states and combined-slip forces;
-- wheel spin;
-- engine;
-- clutch + brake constraints, solved with projected Gauss-Seidel using Coulomb capacity limits. A locked brake gives exactly ω = 0, so there is no creep.
-
-During the substeps the chassis velocity is held fixed. The resulting tire forces are averaged over the substeps and handed to the rigid-body host. The model **never integrates the chassis and never applies gravity**.
-
-### Unity adapter (to be written by the leader / gameplay; it is a thin layer)
+### Unity adapter for the combination (to be written by the leader / gameplay)
 ```csharp
-// Vehicle/Runtime/VehicleBody.cs (UnityEngine side) — sketch
-void Awake() {
-    model = new VehicleModel(vehicleDef, engineDef, gearboxDef, tires, settings);   // defs from TextAsset JSON
-    rb.mass = (float)model.MassProps.Mass;
-    rb.centerOfMass = ToV3(model.MassProps.CenterOfMass);
-    // inertia: diagonalise MassProps.Inertia (symmetric 3x3) -> rb.inertiaTensor + rb.inertiaTensorRotation
-}
-void FixedUpdate() {                       // Time.fixedDeltaTime = 0.01
-    var s = new ChassisState { Position = ToD(rb.position), Rotation = ToD(rb.rotation),
-        CenterOfMassWorld = ToD(rb.worldCenterOfMass), LinearVelocity = ToD(rb.linearVelocity),
-        AngularVelocity = ToD(rb.angularVelocity) };
-    model.Step(Time.fixedDeltaTime, s, input, groundQuery);     // groundQuery: Physics.Raycast on the road mesh layer
-    for (int i = 0; i < model.ForceCount; i++)
-        rb.AddForceAtPosition(ToV3(model.Forces[i].Force), ToV3(model.Forces[i].Point), ForceMode.Force);
+// two Rigidbodies (tractor, trailer); NO PhysX joint between them
+void FixedUpdate() {
+    combo.Gravity = ToD(Physics.gravity);
+    combo.Step(Time.fixedDeltaTime, ToState(tractorRb), ToState(trailerRb), input, groundQuery);
+    tractorRb.AddForce(ToV3(combo.TractorForce));  tractorRb.AddTorque(ToV3(combo.TractorTorque));
+    trailerRb.AddForce(ToV3(combo.TrailerForce));  trailerRb.AddTorque(ToV3(combo.TrailerTorque));
 }
 ```
-- `IGroundQuery` maps to `Physics.Raycast(origin, dir, out hit, maxDist, roadMask)`. Use `QueryTriggerInteraction.Ignore` and do not allocate. The surface friction scale comes from a `PhysicMaterial`/surface table lookup keyed by the collider.
-- The vehicle frame origin is on the ground below the rear-axle centre at design ride height. The prefab's root must use the same origin, or the adapter applies a constant offset.
-- Gravity stays on the Rigidbody (`useGravity = true`). PhysX integrates the body and resolves chassis–world collisions. The wheels never have colliders.
-- Floating origin: an origin shift between steps is safe. The solver keeps no absolute world positions between steps. Tire deflections, suspension `SPrev` and the previous velocity used for cab acceleration are all relative quantities. `ChassisState` is in world coordinates, but it is used only within a single step.
-- The solver uses `double` internally. Converting to and from Unity `float` happens only in the adapter.
+- Mass, CoM and the inertia tensor of both bodies come from `Tractor.MassProps` and `Trailer.MassProps`. The trailer's include the cargo, so rebuild the `TrailerModel` when the load changes.
+- The constraint predicts velocities with the model's own mass properties. PhysX integrates almost the same way. Any residual is removed by the Baumgarte feedback. The runner's kingpin error never exceeds 0.16 mm. On the phone, measure it again (`FifthWheel.PositionError`).
+- Coupling: `combo.CouplingArmed = true`. The jaw locks automatically inside the capture window. Uncoupling is `combo.Uncouple()`. It is refused unless the landing gear is down (`Trailer.LandingGearDown`), because there is no chassis-ground collision to catch the nose.
+- Driver inputs added in Stage 2: `RetarderLever` (0 off, 1 engine brake, 2–5 retarder stages), `BrakeCruiseKmh`, `ManualMode`, `ShiftUp`/`ShiftDown` (edge-triggered).
 
-## 3. Results (runner, dt = 0.01 s, 4 substeps)
+## 3. Results (runner, dt = 0.01 s, 4 substeps; run `artifacts/physics/stage2-final`)
 
-Run `artifacts/physics/20261109-110958` (gitignored). CSV and PNG for every scenario are in that folder.
+Values are for solo / empty / 40 t where the item has variants. ✅ = all checks of the scenario passed.
 
-| docs/04 §6 | Scenario | Metric | Result | Expected / tolerance | Status of expectation | Pass |
-|---|---|---|---|---|---|---|
-| 1 | standstill_flat_parking (300 s) | drift / max \|v\| after 5 s | 0 m / 1e-14 m/s | ≤ 5 mm / ≤ 1 mm/s | WORKING_VALUE (no-creep threshold) | ✅ |
-| 1 | standstill_12pct_uphill_parking | drift / max \|v\| | 2.2 µm / 7.3 µm/s | ≤ 5 mm / ≤ 1 mm/s | WORKING_VALUE | ✅ |
-| 1 | standstill_12pct_downhill_parking | drift / max \|v\| | 4.6 µm / 10 µm/s | ≤ 5 mm / ≤ 1 mm/s | WORKING_VALUE | ✅ |
-| 2 | launch_0_80_flat | rollback / stall / min rpm | 0 m / no / 600 rpm | ≤ 2 cm / no / ≥ 550 | WORKING_VALUE | ✅ |
-| 2 | launch_6pct_uphill (full throttle, HSA) | rollback / stall | 1.5 mm / no | ≤ 5 cm / no | WORKING_VALUE | ✅ |
-| 2 | launch_6pct_uphill_light_throttle (40 %) | rollback / 0–15 km/h | 1.5 mm / 2.7 s | ≤ 5 cm / 2–25 s | WORKING_VALUE | ✅ |
-| 3 | launch_0_80_flat | 0–60 / 0–80 km/h | 10.0 s / 14.2 s | 7–20 s / 12–32 s | WORKING_VALUE (power-to-weight plausibility; no sourced solo-tractor data) | ✅ |
-| 3 | repeatability, 3 runs (headings 0°/37°/113°) | max deviation 0–60 / 0–80 | 0.00 % / 0.00 % | ≤ 3 % | docs/04 + task brief | ✅ |
-| 4 | top_speed_flat (100 s full throttle) | max / settled speed | 89.35 / 89.35 km/h | ≤ 90.5 / 87–90 | SOURCED (S3: 90 km/h limiter) | ✅ |
-| 5 | brake_80_0_dry (ABS) | stop distance / MFDD | 33.3 m / 7.69 m/s² | 32–55 m / 5.0–8.0 | WORKING_VALUE; MFDD per R13 definition. The lower bound 5.0 is the R13 N3 figure, UNVERIFIED. | ✅ |
-| 5 | brake_80_0_dry | lateral deviation / yaw rate | 3e-7 m / 0 °/s | ≤ 0.5 m / ≤ 2 °/s | WORKING_VALUE | ✅ |
-| 5 | brake_80_0_wet (ABS, μ≈0.5) | stop distance / MFDD | 53.0 m / 4.69 m/s² | 45–85 m / 3.0–5.5 | WORKING_VALUE | ✅ |
-| 7 | circle_r25_10kmh | radius error / a_y / steer÷Ackermann | 0.02 m / 0.308 / 1.009 | ≤ 0.5 / 0.278–0.340 / 0.9–1.6 | DERIVED (v²/R, atan(L/R)) | ✅ |
-| 7 | circle_r25_20kmh | same | 0.09 m / 1.229 / 1.036 | ≤ 0.5 / 1.111–1.358 / 0.9–1.6 | DERIVED | ✅ |
-| 7 | circle_r50_20kmh | same | 0.04 m / 0.617 / 1.037 | ≤ 0.5 / 0.556–0.679 / 0.9–1.6 | DERIVED | ✅ |
-| 7 | circle_r50_35kmh | same; body roll | 0.24 m / 1.881 / 1.113; 0.99° | ≤ 0.5 / 1.701–2.079 / 0.9–1.6; ≤ 3° | DERIVED | ✅ |
-| 7 | understeer gradient (test) | steer÷Ackermann at 10 → 20 km/h, R25 | 1.009 → 1.036 | increasing | qualitative | ✅ |
-| 11 | curb_8cm_both (8 km/h) | max Δv per step / teleport / max Fz÷static | 0.062 m/s / 1e-14 m / 1.87 | ≤ 0.35 / ≤ 1e-6 / ≤ 4 | WORKING_VALUE | ✅ |
-| 11 | curb_15cm_both | same | 0.096 / 2e-14 / 2.88 | ≤ 0.35 / ≤ 1e-6 / ≤ 4 | WORKING_VALUE | ✅ |
-| 11 | curb_15cm_left (one side) | same; max roll | 0.049 / 1e-14 / 2.76; 5.8° | …; ≤ 8° | DERIVED (geometric 4.5° plus overshoot) | ✅ |
-| 12 | dt 50/100/120 Hz | 0–80 / stop dist. dry / a_y R25 | 1.07 % / 0.64 % / 0.02 % max deviation | ≤ 5 % | WORKING_VALUE | ✅ |
-| 12 | substeps 2/4/8 | stop distance dry | 0.34 % | ≤ 5 % | WORKING_VALUE | ✅ |
-| 15 | steer_sign_forward_right / left | yaw rate | +10.9 / −10.9 °/s | > +1 / < −1 | DERIVED (Unity frame: +steer = right = +yaw about +Y) | ✅ |
-| 15 | steer_sign_reverse_right | yaw rate | −3.85 °/s | < −1 | DERIVED | ✅ |
-| — | zero allocation (test) | GC bytes over 2000 steps (solver + integrator) | 0 | 0 | CLAUDE.md | ✅ |
-| — | cost | mean solver + integrator time per 10 ms step (desktop, Release) | ~2–17 µs | — | measured on desktop, **not** on a phone | info |
+| docs/04 §6 | Scenario | Key result | Expected / tolerance | Status of expectation |
+|---|---|---|---|---|
+| 1 | park_12pct_down/up_comb (300 s, tractor spring brakes only) | creep after 60 s ≤ 1.8e-7 m; total creep ≤ 0.39 mm; max speed ≤ 0.66 mm/s | ≤ 0.5 mm / ≤ 5 mm / ≤ 1 mm/s | **SOURCED** 12 % (S5 2.3.2) + WORKING no-creep ✅ |
+| 1 | park_flat_5min_comb, soak_30min_parked | drift 5e-7 m, KE 2e-7 J over 30 min, air 12.5 bar | ≤ 5 mm, ≤ 1e-3 J, ≥ 10.5 bar | WORKING ✅ |
+| 2 | launch_6pct_uphill_comb (full throttle, HSA) | rollback 2.1 / 2.3 mm; 0–15 km/h 2.5 / 4.5 s; clutch 30 / 37 °C; 7 / 5 shifts | ≤ 5 cm; ≤ 250 °C; ≤ 14 shifts | WORKING ✅ |
+| 2 | launch_6pct_uphill_light_comb (35 % pedal, 40 t) | rollback 2.3 mm, 0–10 km/h 19.7 s | ≤ 5 cm | WORKING ✅ |
+| 3 | launch_0_80_flat / launch_flat_comb | 0–60: 9.7 / 13.3 / 26.9 s; 0–80: 13.8 / 20.5 / 46.2 s | 40 t: 25–60 / 40–95 s | DERIVED (power-to-weight + shift losses) ✅ |
+| 4 | top_speed_flat_comb | 89.4 / 89.2 km/h in 12th | ≤ 90.5, settles 87–90 | **SOURCED** S3 ✅ |
+| 4 | grade_5pct_steady (40 t) | 50.2 km/h steady, ±0.03 km/h, 1516 rpm | 44–60 km/h | DERIVED: η P / (m g (sin α + f_r) + aero) ≈ 54 km/h ✅ |
+| 5 | brake_80_0_dry (ABS) | 34.9 / 39.0 / 40.5 m; MFDD 7.41 / 7.48 / 7.07 m/s² | ≤ 61.2 m; 5.0–8.0 | WORKING (R13 N3 type-0 figures UNVERIFIED) ✅ |
+| 5 | brake_80_0_wet (ABS) | 50.9 (solo, Stage 1 file) / 54.9 / 56.5 m; MFDD 5.0 / 4.8 / 4.7 | 45–95 m | WORKING ✅ |
+| 5 | brake_80_0_dry / wet no ABS | dry 44.7 / 44.6 / 49.1 m; wet 75.4 / 78.2 / 81.9 m (locked) | longer than ABS | WORKING ✅ |
+| 5 | brake_response_static | front 0.25 s, rear 0.31 s, trailer 0.53–0.54 s (75 % of final) | ≤ 0.6 s | **SOURCED** S5 4.1.1 ✅ |
+| 5 | rear / trailer lock under ABS (all ABS runs) | 0 s above 2 m/s | ≤ 0.03 / 0.05 s | Stage 1 note fixed ✅ |
+| 6 | downhill_7pct_typeIIA (40 t, 6 km, brake cruise 30 km/h) | mean 30.0 km/h, service brake 0, max 1971 rpm | 25–35 km/h, no service brake | **SOURCED** S5 1.8.2 ✅ |
+| 6 | downhill_7pct_brake_cruise_60 | 60.0 km/h ± 0.000; EB ≈ 200 kW + retarder ≈ 170 kW (≤ 3103 Nm) | 59–61.5; ≤ 4000 Nm | S2 retarder limit ✅ |
+| 6 | downhill_7pct_full_lever | speed settles (range 0.001 km/h over 40 s), EB torque 1173 Nm | stabilises | WORKING ✅ |
+| 6 | downhill_7pct_service_pumping (endurance brakes off) | service circuits fall to 5.06 bar, warning on | ≤ 9 bar, ≥ 3 bar, warning | WORKING (real consequence) ✅ |
+| 6 | air_leak_rear_circuit (burst at 60 km/h) | warning; rear circuit 0 bar; stop 33.1 m on the remaining circuits | ≤ 64.4 m | **SOURCED** S5 2.2 secondary braking ✅ |
+| 6 | air_leak_park_circuit | trailer emergency braking + spring brakes stop the combination | stops | WORKING ✅ |
+| 7 | circle_r50_10/35kmh_comb | offtracking 0.61 / 0.60 m at 10 km/h, 0.48 / 0.41 m at 35 km/h; a_y within 1 % of v²/R | 0.4–0.8 m at 10 km/h | DERIVED (√(R²+e²) − √(R²+e²−L²) = 0.59 m) ✅ |
+| 7 | rollover_r50_cog_low / high (40 t, speed ramp) | first wheel lift at **0.462 g** (CoG 1.9 m) / **0.341 g** (CoG 2.6 m) | 0.25–0.55 g; high < low | WORKING (literature 0.3–0.45 g, UNVERIFIED) ✅ |
+| 8 | lane_change_60 / 80 (double, 3.5 m over 50 / 70 m; path peak 0.18–0.19 g, driver-realised 0.09–0.10 g) | max articulation 0.8–1.4°; RA 0.96–0.99; residual ≤ 0.04°; no lift | RA 0.8–1.6 | WORKING (literature RA 1.0–1.3, UNVERIFIED) ✅ |
+| 9 | jackknife_wet_curve_noabs (EBS fault: no ABS, no load sensing, half pedal, steering held) | **81.4°** articulation (empty); drive axle locked 2.95 s | ≥ 30° (must be possible) | ✅ |
+| 9 | jackknife_wet_curve_retarder_noabs (lever 5 on wet, ABS failed) | **92°** (empty; reaches the soft cab stop); drive axle locked 1.7 s | ≥ 30° | ✅ |
+| 9 | jackknife_wet_curve_abs_50 / _100 (ABS + load sensing working) | 4.8–7.2° max, no lock | ≤ 10° | ✅ |
+| 11 | curb_15cm_left_comb, speed_bump_comb (+ Stage 1 curbs) | Fz peak ≤ 3.45× static, trailer roll ≤ 3.3°, cab heave ≤ 46 mm, no teleport | ≤ 4×, ≤ 8°, ≤ 50 mm | WORKING ✅ |
+| 12 | dt 50/100/120 Hz and substeps 2/4/8 (section 4) | ≤ 1.0 % (all metrics) | ≤ 5 % | WORKING ✅ |
+| 14 | soak_30min_cycle (40 t, 20 × accelerate / lane change / stop) | first vs last cycle cruise 74.0 / 73.5 km/h; standstill speed 4.6e-5 / 4.3e-5 m/s; kingpin error ≤ 0.03 mm; max articulation 2.3°; air ≥ 11.4 bar | no drift | WORKING ✅ |
+| 15 | steer_sign_right / reverse_right_comb | +17.4 to +22 °/s forward, −3.1 to −3.9 °/s reversing | sign as solo | DERIVED ✅ |
+| — | couple_uncouple | 1 coupling, kingpin load 0.97–0.98 × static after raising the legs, coupling bump ≤ 62 kN, dv ≤ 0.14 m/s/step, uncoupled trailer moves ≤ 3 mm | | WORKING ✅ |
+| — | manual_mode_shifts (40 t) | gears 2→5 by hand, 4 over-revving requests refused, max 2074 rpm | ≤ 2130 rpm | S1 max revs ✅ |
+| — | zero allocation (test) | 0 bytes over 2000 steps, solo and 40 t combination | 0 | CLAUDE.md ✅ |
 
-Repeatability is exactly 0 % because the runner is deterministic. Earlier iterations showed about 0.6 % spread from heading-dependent rounding, after which shift timing lands on a different step. The test still guards the 3 % budget. In Unity, PhysX is not deterministic across devices (docs/04 §1), so the same 3 % check must be repeated on the phone.
+All 21 Stage 1 solo scenarios still pass. Their values moved slightly:
+- 0–80 is now 13.8 s (it was 14.2 s), because the AMT no longer over-revs.
+- The dry stop is now 34.9 m (it was 33.3 m), because EBS load sensing gives less rear pressure solo.
+- The solo 12 % parking now measures creep in the ground plane, because the rear suspension levels.
 
-## 4. Plot review (PNGs looked at, not just numbers)
+## 4. Multi-run checks and cost
 
-Reviewed: launch_0_80_flat, launch_6pct_uphill, brake_80_0_dry, standstill_12pct_downhill_parking, curb_15cm_left (twice: before and after the fixes below).
+| Check | Values | Max deviation |
+|---|---|---|
+| Repeatability 0–60 / 0–80, headings 0°/37°/113° | 9.678 / 13.825 s | 0.00 % |
+| dt 50/100/120 Hz: solo 0–80 | 14.05 / 13.83 / 13.85 s | 0.99 % |
+| dt: solo dry stop | 34.85 / 34.91 / 34.89 m | **0.09 %** (Stage 1: 0.64 %; before the substep ABS fix: 5.3 %) |
+| dt: 40 t dry ABS stop | 40.45 / 40.52 / 40.67 m | 0.29 % (before the fix: 6.5 %) |
+| dt: 40 t lane change max articulation | 0.801 / 0.802 / 0.803° | 0.09 % |
+| dt: 40 t 0–60 | 27.05 / 26.90 / 26.92 s | 0.35 % |
+| substeps 2/4/8: solo / 40 t dry stop | 34.61–34.99 / 40.52–40.82 m | 0.66 % / 0.49 % |
 
-Findings that led to changes during this run:
-1. **Curb 15 cm.** The first version had a single-step Fz spike of 117 kN (5× static) on the front-left wheel. The cause was a rigid tire on the bump stop. Fix: tire radial compliance in series with the spring, solved by Newton iteration. The spike is now 2.8×, with a smooth roll to −5° and a clean recovery.
-2. **Teleport metric.** It compared the vehicle-origin displacement with the CoM velocity, which is wrong under rotation. It now compares CoM position with CoM velocity, and the residual is 1e-14 m.
-3. **Launch.** Without traction control the rear wheels spun to slip 0.9 and the engine hit the 2100 rpm governor (empty tractor, rear axle about 2.7 t). Added ASR (engine intervention only) and a faster clutch close. Slip now peaks at about 0.1–0.2. The pedal input to the AMT is now the effective value after limiter and ASR, so the top gear 12 is reached and cruise is 1225 rpm at 89 km/h. Before this, the AMT stayed in 11th at 1600 rpm because the driver pedal was at 100 %.
-4. **Braking.** The engine was dragged to 0 rpm (stall/restart) by wheel lock and by the clutch staying closed through downshifts. Now the clutch opens when ABS is active and at idle without throttle, so no stall. Low-speed tire damping τ went from 0.01 to 0.03 s, which reduced rocking after the stop. A small residual tire wind-up stays after the stop with all wheels braked (±2 kN front/rear, summing to 0). This is physically plausible.
-5. **Cab pitch.** It hit its ±4° clamp under 0.3 g. The gain was reparametrised as h/r_g². Now about 1° at 3 m/s² and 2.7° at 0.8 g braking.
-6. **Neutral steer.** With load-proportional cornering stiffness the result was exactly Ackermann at all speeds. Degressive stiffness (K ∝ Fz^0.7) now gives understeer that grows with speed.
+**Cost per fixed step**, full 40 t combination: 10 wheel ends × 15 rays, 4 substeps, clutch + brake PGS, fifth wheel 8 iterations, both body integrations. Desktop, Release, `--bench`, 30 000 steps:
+- **p50 6.4–6.7 µs**;
+- mean 6.0 µs on a quiet machine, 7.5–11 µs while another agent was running Unity;
+- p99 6.8–34 µs depending on the same load.
 
-Remaining visual notes (not failures):
-- During a full-throttle launch in gears 4–5 the engine still briefly reaches about 2000 rpm, because the shift cooldown and skip logic lag a very light vehicle. AMT tuning is planned for Stage 2.
-- The rear (lightly loaded) wheels briefly lock at brake onset before ABS reacts (slip −1 for about 0.1 s). There is no load-proportional brake distribution (EBS) yet.
+Solo tractor: about 2–3 µs. This was measured on the desktop, **not** on a phone. The Samsung A budget (ADR 0004) still has to be measured.
 
-## 5. Known gaps / not modelled (Stage 1)
+## 5. Plot review (PNGs looked at) and what was fixed
 
-- Unsprung masses are lumped into the chassis. There are no wheel-hop modes. The tire vertical spring has no mass and no damping.
-- Brakes: first-order pressure lag only. There is no air system, tanks, compressor, EBS load distribution, retarder or engine brake. All of that is Stage 2 (docs/04 §2.8).
-- AMT: no manual mode, no creep function, no grade-based shift strategy beyond the launch gear. The clutch has no thermal model.
-- Engine: no BSFC/fuel, no exhaust brake.
-- Tire: single effective radius; surface table only in the runner; no camber or turn-slip; aligning torque is an estimate for steering feedback only.
-- Contact: rays are in the wheel plane only. Ruts and lateral curb edges under a wide dual pair are not resolved. The ruts and speed-bump scenarios from §6.11 are not written yet.
-- Not covered yet: items 6, 8, 9, 10, 13, 14 (they need a trailer, a retarder, floating origin or a 30-min soak), and the 40 t variants of 2, 3 and 5.
-- No Unity PlayMode or device run yet. The Samsung A CPU cost and the substep count benchmark are pending (ADR 0004).
+Reviewed:
+- launch 40 t 6 %; launch 40 t flat;
+- brake 80→0 40 t dry and wet, ABS on and off;
+- downhill 7 % brake cruise, full lever, Type-IIA and pumping;
+- lane change 80 (40 t);
+- jackknife without ABS (EBS fault and retarder), and with ABS;
+- coupling and uncoupling;
+- solo brake and launch;
+- rollover (high CoG);
+- park-circuit leak.
+
+Several were reviewed again after each fix. Findings that changed the model:
+
+1. **Gear hunting 4↔5↔6 on a 6 % climb with 40 t.** Speed was stuck at 15–20 km/h, with 40 shifts in 60 s. The cause: the grade bonus moved the down-shift line (1300 rpm) above the post-up-shift minimum (1250 rpm). Now an up-shift must land ≥ 100 rpm above the effective down-shift line, and the speed lost during the 0.55 s interruption is included. After the fix: 3→4→…→8 with 5 shifts, a steady climb to 41 km/h near rated power, and shifts at about 1850 rpm.
+2. **Brake cruise limit cycle.** The lever stage chattered 2↔3 at 100 Hz, giving ±150 N m retarder ripple and +2 km/h offset. Brake cruise is now a PI controller inside the model that modulates the endurance brakes continuously. It holds exactly 60.0 km/h on 7 % with 40 t, with no service brake.
+3. **Hard coupling impact.** The tractor reversed at 5 km/h into the braked trailer: 80 m/s² and 630 kN on the kingpin in one step. Two fixes: an AMT creep function (idle-speed approach at about 3 km/h), and a 0.4 s compliant jaw engagement. Now the bump is ≤ 62 kN.
+4. **Tractor jump on uncoupling.** About 30–60 kN of kingpin load was released instantly into the levelled rear springs, and a wheel unloaded. Now the legs are cranked 7 cm past ground contact, so they lift the nose off the plate first. No wheel lift.
+5. **Post-stop rebound after a locked-wheel stop** (also present in Stage 1: the +3.4 m/s² spike at the end of the solo brake run). The relaxation tire state kept about σ = 0.3 m of "deflection" from sliding. At standstill it acted as a spring and pushed the truck back up to 0.5 m/s. Below 3 m/s the deflection is now capped at the deflection at peak force (about 3 cm). The remaining post-stop motion is body pitch rebound, about 2° (physical).
+6. **ABS depended on the fixed step.** Stop distance changed 5–6.5 % between 50 and 100 Hz, because the ABS loop ran per fixed step (20 ms at 50 Hz). The ABS, chamber pressures and the wheel-deceleration signal now run in the 2.5 ms wheel substeps. Deviation is now 0.09–0.29 %.
+7. **Stage 1 note "rear lock ~0.1 s at brake onset".** Fixed by three things: EBS load sensing (the solo drive axle gets 25–36 % pressure), a wheel-deceleration "hold" criterion, and a slip-speed floor so the ABS does not dump in the last metres. Lock time is now 0 s in every ABS run (above 2 m/s).
+8. **Stage 1 note "~2000 rpm overshoot in gears 4–5".** Fixed by an up-shift trigger on the predicted rpm, a 0.3 s same-direction hold-off (it was 1.0 s), and an over-rev guard. Max rpm in gears ≤ 6 is now 1668–1720 rpm.
+9. **Launch with wheelspin.** The AMT left the launch state while the drive wheels spun (solo, 4th gear), and then cascaded down-shifts. Leaving launch now also requires small engine-to-road slip, referenced to vehicle speed.
+10. **Jackknife at full pedal without ABS did not happen**, because all wheels lock and the combination slides as one body. That is physically right. The realistic failure cases were added instead: an EBS fault without load sensing at half pedal, where the light drive axle locks first (81°); and the retarder on wet with failed ABS (92°). The hard articulation stop gave a 2 m/s one-step impulse, so all fifth-wheel stops are now soft.
+11. **Lane change too harsh, plus a driver weave.** 3.5 m over 40 m at 80 km/h is 0.34 g, almost the rollover threshold. The manoeuvre was changed to 70 m (path 0.18 g; the driver realises about 0.1 g). A 0.1–0.2 Hz weave after the manoeuvre came from the pure-pursuit driver, not the vehicle. A longer look-ahead and yaw-rate feedback in the driver removed it. A residual 0.04° articulation is plate-friction stick.
+12. **Telemetry `a_lat` was the body-frame velocity derivative** (≈ 0 in a steady turn; also wrong in Stage 1). It is now v·r + dv_y/dt. The 12 % parking "drift" was vertical levelling settling, so creep is now measured in the ground plane.
+
+Visual notes (not failures):
+- Under ABS braking with 40 t, the kingpin pushes the tractor with about 100 kN, because the trailer is slightly under-braked by its ALB. Real EBS coupling-force control would reduce this. It is not modelled.
+- In a hard stop the cab pitches about 3° and the body about 2°, with 2–3 visible pitch oscillations after stopping (ζ about 0.3).
+- The AMT up-shifts once while coasting before a stop (11→12, then engine-brake down-shift). This is harmless.
+- A 40 t hill start on 6 % launches in 3rd gear (2.5× force margin rule). That is plausible, but a real AMT may pick 1st or 2nd.
+
+## 6. Golden telemetry
+
+`tests/golden/*.csv` contains 9 scenarios:
+- 40 t: hill start; dry and wet ABS stops; brake cruise; lane change;
+- empty: wet stop without ABS; EBS-fault jackknife;
+- solo: dry stop; 0–80.
+
+Each file has 17 columns: speed, rpm, gear, accelerations, yaw, articulation, kingpin load, air pressures, retarder and engine-brake torque, two chamber pressures and two wheel loads. Sampling is 10 Hz, or 2 Hz for runs longer than 40 s; total 190 KB.
+
+Tolerances are in `tests/golden/tolerances.json` as per-column absolute + relative values. A column may have up to 3 % outlier samples. Test: `Stage2Tests.GoldenTelemetry_Matches`. After an intended physics change, run `--update-golden` and review the CSV diff in the PR.
+
+## 7. Known gaps / not modelled
+
+- **Not run in Unity or on the phone.** PhysX integration of two bodies with this constraint, cost on the Samsung A, and the feel test (docs/03 Stage 2 gate) are still open.
+- **Items not covered by the runner:** §6.10 (reversing to a ramp, tight yard manoeuvres; needs a reversing driver, and a dock or ramp geometry), §6.13 (floating origin and streaming, Unity), §6.15 for input modes other than the direct steer command (touch, gyro: Unity input layer).
+- **No chassis–ground or tractor–trailer collision geometry.** Jackknife ends on the soft 90° stop, rollover scenarios stop at wheel lift, and uncoupling requires the legs to be down.
+- **Ruts are not modelled**: rays are in the wheel plane only. No dynamic load sharing between interconnected bellows (only static equalisation by levelling).
+- **Brakes:** no thermal model or fade; no EBS coupling-force control; ABS uses the true contact-point speed as the reference speed (a real ECU estimates it); the trailer ABS is one generic layout. Compressed-air response is checked against R13 Annex 4 §4.1.1, but the Annex 6 method was not read.
+- **Endurance brakes:** the retarder has no oil-temperature derating (only the 600 kW power cap); the EPG-only exhaust brake stage is not separate.
+- **AMT:** no GPS predictive strategy; mass and grade are taken from the model, not estimated; the creep function is a fixed torque.
+- **Unsourced numbers:** most trailer, air and brake parameters are WORKING_VALUE (see the reference data). The rollover threshold and rearward amplification bands rest on unopened literature.
+
+## 8. Owner feel test (phone, Stage 2 gate), checklist
+
+1. Hill start, 40 t on a steep street: no rollback, the engine note rises under load, no hunting after the start.
+2. Emergency stop from 80 km/h, empty and 40 t: cab dive, ABS feel, straight line; then the same on wet.
+3. Roundabout at 30–40 km/h with 40 t: trailer roll, offtracking over the inner kerb.
+4. Reversing to the ramp with the trailer camera (needs Unity scene): articulation response, the stop at 90°.
+5. Long descent with the retarder lever and brake cruise: speed held, no service brake.
+6. Coupling to a parked trailer at walking pace: a bump, but not a hit.
+
+Note for each item: mass feel, braking, steering wheel feedback, trailer behaviour.

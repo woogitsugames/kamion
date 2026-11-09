@@ -1,4 +1,4 @@
-# Vehicle reference data — tractor 4x2 (Stage 1, solo)
+# Vehicle reference data — tractor 4x2 + curtainsider semi-trailer (Stage 2)
 
 Every number used by the physics model, with unit, source and status:
 
@@ -15,11 +15,14 @@ The vehicle is a **generic fictional** modern EU 4x2 long-haul tractor with a hi
 
 | ID | Source |
 |---|---|
-| S1 | Volvo Trucks fact sheet D13K500 (EU6 SCR), https://stpi.it.volvo.com/STPIFiles/Volvo/FactSheet/D13K500_Eng_010_338550297.pdf. Same figures on https://www.volvotrucks.co.nz/en-nz/trucks/trucks/volvo-fh/specifications/powertrain.html. Retrieved 2026-11-09 through a web search summary; the PDF itself was **not** opened. Re-check before calling this SOURCED in a gate review. |
-| S2 | ZF product data sheet "TraXon Torque", https://www.zf.com/public/org/Product-data-sheet_TraXon-Torque_71520.pdf. It gives the standard 12-speed ratios 12.92 … 1.00, 0.77 and reverse 12.03. Retrieved 2026-11-09 through a web search summary; the PDF was not opened. |
-| S3 | Council Directive 92/6/EEC, as amended by 2002/85/EC (speed limitation devices; N3 at 90 km/h). docs/04 §5 also lists the 90 km/h limiter as a fact to verify. |
-| S4 | ETRTO / ISO tyre size designation, used geometrically: 315/80 R22.5 means section width 315 mm, aspect ratio 80 %, rim diameter 22.5 in. |
-| S5 | UN Regulation No. 13, Annex 4: the definition of mean fully developed deceleration (MFDD) between 0.8 v0 and 0.1 v0. The numeric N3 type-0 requirement was **not** verified (search did not find the text). It is marked UNVERIFIED wherever it is used. |
+| S1 | Volvo Trucks fact sheet D13K500, EU6SCR, version 10 (2025-06-16), https://stpi.it.volvo.com/STPIFiles/Volvo/FactSheet/D13K500_Eng_010_338550297.pdf. **The PDF was downloaded and its text read on 2026-11-09** (Stage 2). It states: max power 368 kW (500 hp) at 1530–1800 rpm; max torque 2500 Nm at 980–1270 rpm; max revs 2100 rpm; economy range 950–1400 rpm, optimum 1100–1300 rpm; exhaust brake (EPG) 200 kW at 2300 rpm; engine brake (VEB+) 375 kW at 2300 rpm; 12.8 dm³, 6 cylinders; dry weight about 1100 kg. Used as a **class reference** only. Status upgraded from "search summary" to **SOURCED (document opened)**. |
+| S2 | ZF product data sheet "TraXon", https://www.zf.com/public/org/Product-data-sheet_TraXon-Torque_71520.pdf. **The PDF was downloaded and its text read on 2026-11-09.** Standard ratios for 12 TX 2610/3420 SO (and the Intarder variants 2611/3421): 12.92, 9.98, 7.69, 5.94, 4.57, 3.53, 2.83, 2.19, 1.68, 1.30, 1.00, 0.77; reverse R1–R4 12.03, 9.29, 2.64, 2.04. Max input torque 2600 / 3400 Nm. "ZF-Intarder with up to 4,000 Nm/600 kW braking torque/power". Class reference. Status upgraded to **SOURCED (document opened)**. |
+| S3 | Council Directive 92/6/EEC, as amended by 2002/85/EC (speed limitation devices; N3 at 90 km/h). docs/04 §5 also lists the 90 km/h limiter as a fact to verify. Not re-opened in Stage 2. |
+| S4 | ETRTO / ISO tyre size designation, used geometrically: 315/80 R22.5 means section width 315 mm, aspect ratio 80 %, rim diameter 22.5 in; 385/65 R22.5 likewise. |
+| S5 | UN Regulation No. 13 (02 series), Annex 4, English/Japanese parallel text published by MLIT Japan, https://www.mlit.go.jp/jidosha/un/UN_R013_02.pdf, **downloaded and read 2026-11-09** (35 pages, Annexes 1–4). Verified in the text: MFDD definition; Type-IIA (para 1.8.2: laden, energy equivalent to 30 km/h on a 7 % down-gradient over 6 km, service/secondary/parking brakes not engaged; engine-brake-only tolerance ±5 km/h); secondary braking for category N: s ≤ 0.15 v + 2 v²/130 (para 2.2, dm 2.2 m/s²); parking brake holds the laden vehicle on 18 % (para 2.3.1) and the towing vehicle's parking brake holds the combination on 12 % (para 2.3.2); response time: braking force on the least favourably placed axle within 0.6 s (para 4.1.1; for compressed-air systems deemed met by Annex 6, which is **not** in this document). Still **UNVERIFIED**: the numeric N3 type-0 limits (the table cells did not extract; the believed values s ≤ 0.15 v + v²/130 and dm ≥ 5.0 m/s² stay UNVERIFIED). |
+| S6 | Load index table (ISO 4209 / ETRTO): load index 160 = 4500 kg per single tire. Used only as a plausibility bound for 385/65 R22.5 trailer tires; not re-opened, treat as UNVERIFIED. |
+
+Literature quoted in check rationales but **not opened** (UNVERIFIED): static rollover threshold of laden tractor-semitrailers about 0.3–0.45 g (UMTRI / Winkler); rearward amplification of tractor-semitrailers about 1.0–1.3; EU weights and dimensions (Directive 96/53/EC: 13.6 m semitrailer, 2.55 m width, kingpin-to-rear 12.0 m, front swing radius 2.04 m, drive axle 11.5 t, tridem 24 t, 40 t GCW).
 
 ## Mass and geometry (`tractor_4x2_generic.vehicle.json`)
 
@@ -62,25 +65,29 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 
 ## Suspension
 
-| Parameter | Front (parabolic leaf) | Rear (air, 4 bellows) | Unit | Status | Derivation |
+| Parameter | Front (parabolic leaf) | Rear (air, 4 bellows, levelled) | Unit | Status | Derivation |
 |---|---|---|---|---|---|
-| Wheel rate per side | 213 000 | 91 000 | N/m | DERIVED from WORKING | k = m_corner (2π f)² with f = 1.5 Hz (front) and 1.3 Hz (rear). Both f values are WORKING_VALUE. |
+| Wheel rate per side (at reference load) | 213 000 | 91 000 | N/m | DERIVED from WORKING | k = m_corner (2π f)² with f = 1.5 Hz (front) and 1.3 Hz (rear). Both f values are WORKING_VALUE. |
+| Reference load (static position at mid travel) | solo static | solo static | – | DERIVED | Front steel spring: a heavier load sags (e.g. +1.5 t front axle at 40 t = +3.9 cm, still clear of the bump stop). |
+| Air spring rate scaling | – | k × (bellows force / reference load) | – | WORKING_VALUE | Air spring stiffness ∝ bellows pressure, so the natural frequency stays ~1.3 Hz at any load |
+| Height levelling: time constant / deadband | – | 8 s / 8 mm | – | WORKING_VALUE | One levelling valve per axle (symmetric, does not fight roll). The bellows force is also the EBS load signal. |
 | Cubic progression | 2.0e6 | 1.5e6 | N/m³ | WORKING_VALUE | |
 | Travel (bump to droop) | 0.18 | 0.20 | m | WORKING_VALUE | |
-| Static position | mid-travel | mid-travel | – | WORKING_VALUE | Spring preload is solved so that static load sits at mid travel |
 | Bump-stop clearance / quadratic rate | 0.025 / 4e7 | 0.025 / 4e7 | m, N/m² | WORKING_VALUE | |
-| Damper bump / rebound | 9000 / 18000 | 5000 / 10000 | N s/m | DERIVED from WORKING | ζ ≈ 0.3 of sqrt(k m); rebound is twice bump |
+| Damper bump / rebound | 9000 / 18000 | 5000 / 10000 | N s/m | DERIVED from WORKING | ζ ≈ 0.3 of sqrt(k m) solo; rebound is twice bump |
 | Damper knee / high-speed slope factor | 0.3 / 0.4 | 0.3 / 0.4 | m/s, – | WORKING_VALUE | |
 | Anti-roll stiffness (axle) | 200 000 | 300 000 | N m/rad | WORKING_VALUE | |
 
-Cab suspension (visual/camera only in Stage 1). Pitch 1.5 Hz, roll 1.6 Hz, ζ 0.35, acceleration gain 0.55 rad/s² per m/s², limit ±4°. Status: WORKING_VALUE.
+### Cab suspension (`cab`, camera only)
+
+3-DOF cab (heave, pitch, roll) on mounts at (0, 1.5, 3.9) m, excited by the chassis specific force at the mount point and by the chassis angular acceleration. Pitch 1.5 Hz, roll 1.6 Hz, heave 1.8 Hz, ζ 0.35, gain h/r_g² 0.55 rad/s² per m/s². Soft progressive stops from 80 % of ±4° / ±4° / ±50 mm (no hard clamp). Status: WORKING_VALUE. Measured: about 3° cab pitch in an ABS stop, 43–46 mm heave over a 7 cm speed bump at 15 km/h.
 
 ## Engine (`diesel_r6_13l_368kw.engine.json`)
 
 | Parameter | Value | Unit | Status | Source / derivation |
 |---|---|---|---|---|
-| Configuration | 13 l inline-6 diesel | – | WORKING_VALUE | Class per docs/04 §2.6 and the task brief |
-| Peak torque plateau | 2500 Nm @ 980–1270 rpm | N m | SOURCED (class reference) | S1 (D13K500) |
+| Configuration | 13 l inline-6 diesel | – | WORKING_VALUE | Class per docs/04 §2.6 and the task brief (S1 class: 12.8 dm³ R6) |
+| Peak torque plateau | 2500 Nm @ 980–1270 rpm | N m | SOURCED (class reference) | S1 (opened) |
 | Rated power | 368 kW @ 1530–1800 rpm | kW | SOURCED (class reference) | S1 |
 | Torque at 1530 / 1800 rpm | 2297 / 1952 | N m | DERIVED | T = P / ω from 368 kW |
 | Max engine speed | 2100 | rpm | SOURCED (class reference) | S1 |
@@ -90,48 +97,139 @@ Cab suspension (visual/camera only in Stage 1). Pitch 1.5 Hz, roll 1.6 Hz, ζ 0.
 | Idle / stall | 600 / 350 | rpm | WORKING_VALUE | |
 | Turbo lag (NA fraction / boost τ) | 0.45 / 0.35 s | – | WORKING_VALUE | |
 | Economy band (for gearing check) | 950–1400 (optimum 1100–1300) | rpm | SOURCED (class reference) | S1 |
+| Engine brake (VEB+ class) total retarding torque at 2300 rpm | 1557 | N m | DERIVED from SOURCED | S1: 375 kW at 2300 rpm → 375 000 / 240.9 rad/s. Test `EnduranceBrakes_MatchClassReference` checks 375 kW. |
+| Engine brake torque at 800 / 1000 / 1200 / 1500 / 1800 / 2100 / 2400 rpm | 300 / 650 / 900 / 1150 / 1350 / 1500 / 1557 | N m | WORKING_VALUE | Shape only; total including motoring drag. The EPG-only figure (S1: 200 kW at 2300 rpm) is not modelled separately. |
+| Engine brake actuation τ | 0.25 | s | WORKING_VALUE | |
+| Overrun limit while engine braking | 2400 | rpm | WORKING_VALUE | The AMT up-shifts at 2250 rpm in engine-brake mode |
 
 ## Gearbox and driveline (`amt12_od_traxon_class.gearbox.json`)
 
 | Parameter | Value | Unit | Status | Source / derivation |
 |---|---|---|---|---|
-| Forward ratios 1–12 | 12.92, 9.98, 7.69, 5.94, 4.57, 3.53, 2.83, 2.19, 1.68, 1.30, 1.00, 0.77 | – | SOURCED | S2 (TraXon standard 12-speed overdrive set) |
-| Reverse ratio | 12.03 | – | SOURCED | S2 (first reverse ratio) |
+| Forward ratios 1–12 | 12.92, 9.98, 7.69, 5.94, 4.57, 3.53, 2.83, 2.19, 1.68, 1.30, 1.00, 0.77 | – | SOURCED | S2 (opened): TraXon standard ratio set |
+| Reverse ratio | 12.03 | – | SOURCED | S2 (R1; R2–R4 9.29 / 2.64 / 2.04 not used) |
 | Gearbox efficiency | 0.97 | – | WORKING_VALUE | |
-| Final drive ratio | 3.40 | – | DERIVED | Chosen so that 12th gear runs at ~1160 rpm at 85 km/h and ~1225 rpm at 90 km/h. That is inside the S1 optimum band 1100–1300 rpm. Calculation: 23.6 m/s / 0.51 m × 0.77 × 3.40 = 121 rad/s. |
+| Final drive ratio | 3.40 | – | DERIVED | Chosen so that 12th gear runs at ~1160 rpm at 85 km/h and ~1225 rpm at 90 km/h, inside the S1 optimum band 1100–1300 rpm. Calculation: 23.6 m/s / 0.51 m × 0.77 × 3.40 = 121 rad/s. |
 | Final drive efficiency | 0.97 | – | WORKING_VALUE | |
 | Clutch capacity | 4000 | N m | WORKING_VALUE | About 1.6 × peak engine torque |
+| Clutch thermal: heat capacity / cooling τ / warning | 25 000 J/K / 300 s / 250 °C | – | WORKING_VALUE | Energy from slip power; measured 37 °C peak for a 40 t start on 6 % |
 | Shift phases (torque ramp / neutral / sync / clutch close) | 0.12 / 0.15 / 0.20 / 0.15 | s | WORKING_VALUE | About 0.6 s torque interruption in total |
-| Up-shift rpm (light → full throttle) | 1250 → 1750 | rpm | WORKING_VALUE | |
-| Down-shift rpm (light → full) | 850 → 1100 | rpm | WORKING_VALUE | |
-| Min rpm after up-shift (light → full) | 950 → 1250 | rpm | WORKING_VALUE | |
-| Max skip / cooldown | 2 gears / 1.0 s | – | WORKING_VALUE | |
-| Launch rpm (light → full) / max launch gear | 800 → 1100 / 4 | rpm, – | WORKING_VALUE | The launch gear is chosen from mass and grade with a 2.5× force margin |
+| Up-shift rpm (light → full throttle) | 1250 → 1750 | rpm | WORKING_VALUE | Triggered on the rpm predicted at the end of the torque ramp (rpm rate × 0.27 s) |
+| Down-shift rpm (light → full) | 850 → 1100 (+200 on climbs > 2.5 % at > 50 % pedal) | rpm | WORKING_VALUE | Grade bonus keeps the engine in the torque plateau |
+| Min rpm after up-shift (light → full) | max(950 → 1250, down-shift line + 100) | rpm | WORKING_VALUE | Includes the speed lost during the interruption ((resistance / mass) × 0.545 s); prevents hunting |
+| Up-shift acceptance (≥ 30 % pedal) | acceleration in the new gear ≥ 0.10 × pedal | m/s² | WORKING_VALUE | Mass/grade/aero-aware (tractive force vs resistance) |
+| Max skip / up→down hold-off / same-direction hold-off | 2 gears / 1.0 s / 0.3 s | – | WORKING_VALUE | Over-rev guard (> governor − 50 rpm) bypasses both |
+| Launch rpm (light → full) + load bonus / max launch gear | 800 → 1100 + 250 × required-force fraction / 4 | rpm, – | WORKING_VALUE | The launch gear is chosen from mass and grade with a 2.5× force margin |
+| Creep (pedal < 0.15) | 500 | N m | WORKING_VALUE | Clutch torque at idle for manoeuvring / coupling |
+| Engine-brake mode down / up-shift | 1500 / 2250 | rpm | WORKING_VALUE | Keeps VEB+ in its effective band |
+| Manual mode: min rpm after a requested shift / protection down-shift | 750 / 650 | rpm | WORKING_VALUE | Over-revving down-shifts are refused |
 | Speed limiter | 90 | km/h | SOURCED | S3 |
 | Limiter band (fuelling fade) | 2 | km/h | WORKING_VALUE | |
-| Differential | open | – | WORKING_VALUE | No diff lock in Stage 1 |
+| Differential | open | – | WORKING_VALUE | No diff lock yet |
 
-## Brakes and steering
+## Air brake system (tractor `air`, `brakes`, per-axle fields)
 
 | Parameter | Value | Unit | Status | Source / derivation |
 |---|---|---|---|---|
-| Service brake torque per wheel end (front / rear) | 18 000 / 18 000 | N m | WORKING_VALUE | Enough to lock any wheel of a solo tractor, so ABS is needed |
-| Spring (parking) brake torque per rear wheel end | 12 000 | N m | WORKING_VALUE | 12 % grade needs about 2.2 kN m per rear wheel end (DERIVED) |
-| Pressure build-up / release τ | 0.25 / 0.30 | s | WORKING_VALUE | First-order lag. The pneumatic system model comes in Stage 2. |
-| Spring brake τ | 0.6 | s | WORKING_VALUE | |
-| ABS release / re-apply slip | 0.18 / 0.08 | – | WORKING_VALUE | Simple per-wheel modulation |
-| ASR (engine intervention) slip threshold | 0.15 | – | WORKING_VALUE | |
-| Hill start aid max hold | 2.0 | s | WORKING_VALUE | |
+| Compressor delivery | 450 NL/min at 2000 rpm, ∝ engine speed, −3 % per bar back-pressure | – | WORKING_VALUE | Charging from empty at 1200 rpm: spring brakes released after 163 s, cut-out after 378 s (test) |
+| Governor cut-out / cut-in | 12.5 / 11.0 | bar | WORKING_VALUE | APU-class |
+| Reservoirs supply / circuit 1 front / circuit 2 rear / circuit 3 spring brakes + trailer | 30 / 20 / 30 / 20 | L | WORKING_VALUE | |
+| Protection valve opening | 7.0 | bar | WORKING_VALUE | A burst circuit drains the supply only down to this |
+| Trailer supply (red) limit / control (yellow) max | 8.5 / 7.5 | bar | WORKING_VALUE | |
+| Low-pressure warning | 5.5 | bar | WORKING_VALUE | R13 warning threshold not verified |
+| Spring brake: release starts / complete | 3.0 / 5.5 | bar | WORKING_VALUE | Air loss in circuit 3 applies the spring brakes progressively |
+| Max chamber pressure / pad threshold | 8.5 / 0.4 | bar | WORKING_VALUE | |
+| Chamber volume front / rear / trailer | 0.8 / 1.0 / 1.0 | L | WORKING_VALUE | Air consumption per application |
+| Build-up τ front / rear | 0.18 / 0.22 | s | WORKING_VALUE | Measured 75 % times 0.25 / 0.31 s (vehicle at rest) ≤ 0.6 s (S5 4.1.1) |
+| Build-up trailer (two cascaded lags) | 0.15 + 0.20 | s | WORKING_VALUE | Measured 0.53–0.54 s ≤ 0.6 s (S5 4.1.1) |
+| Release τ front / rear / trailer | 0.25 / 0.28 / 0.30 | s | WORKING_VALUE | |
+| Service brake torque per wheel end front / rear / trailer | 20 000 / 24 000 / 18 000 | N m | WORKING_VALUE | Laden rear needs ≥ 22 kN m to reach μ = 0.8 (DERIVED: 55 kN × 0.8 × 0.51 m) |
+| Spring brake torque per wheel end, tractor rear | 16 000 | N m | DERIVED + WORKING margin | S5 2.3.2: the tractor alone must hold 40 t on 12 %: 40 t × 9.81 × 0.119 × 0.51 m / 2 = 11.9 kN m; ×1.35 margin |
+| Spring brake torque per wheel end, trailer axles 1–2 | 12 000 | N m | WORKING_VALUE | |
+| EBS load sensing (laden axle load / minimum factor) | rear 112.8 kN / 0.25; trailer axles 78.5 kN / 0.2; front none | – | WORKING_VALUE | Signal = levelled bellows force |
+| ABS: release slip / re-apply slip | 0.16 / 0.06 (+0.6 m/s slip-speed floor) | – | WORKING_VALUE | |
+| ABS: wheel decel (hold) / re-accel (end dump) | 12 / 4 | m/s² | WORKING_VALUE | |
+| ABS: dump τ / slow re-apply factor / cut-out speed | 0.045 s / ×3 / 1.5 m/s | – | WORKING_VALUE | Loop runs every wheel substep (2.5 ms) |
+| ABS layout | tractor 4S/4M; trailer 2 modulators (per side), all wheels sensed, select-low | – | WORKING_VALUE | |
+| Trailer reservoir / emergency apply / release | 80 L / 3.5 / 4.5 bar | – | WORKING_VALUE | Red-line loss → trailer service brakes from the reservoir |
+| Trailer relay gain | 1.13 | – | WORKING_VALUE | 7.5 bar control → 8.5 bar chamber |
+| Background consumption | 8 | NL/min | WORKING_VALUE | Air suspension, actuators |
+| Brake blending | first 15 % of pedal travel = endurance brakes only | – | WORKING_VALUE | |
+| Hill start aid max hold / ASR slip threshold | 2.0 s / 0.15 | – | WORKING_VALUE | |
+
+## Retarder (`retarder`, Intarder class)
+
+| Parameter | Value | Unit | Status | Source / derivation |
+|---|---|---|---|---|
+| Maximum braking torque / power at the gearbox output | 4000 / 600 | N m / kW | SOURCED (class reference) | S2 (opened): "up to 4,000 Nm/600 kW" |
+| Full torque above propshaft speed | 900 rpm (≈ 50 km/h); ∝ n² below | rpm | WORKING_VALUE | Hydrodynamic characteristic |
+| Lever | 0 off, 1 engine brake, 2–5 engine brake + retarder 25/50/75/100 % | – | WORKING_VALUE | |
+| Fill / drain τ | 0.4 / 0.3 | s | WORKING_VALUE | |
+| Brake cruise (downhill speed control) | PI on speed error, 0.35 + 0.08 /s per km/h | – | WORKING_VALUE | Holds 60.0 km/h on 7 % with 40 t (test) |
+| Cut-off | throttle, ABS on the drive axle, < 1 m/s, reverse (retarder) | – | WORKING_VALUE | Without ABS the retarder can lock the drive axle on wet (jackknife scenario) |
+
+## Steering
+
+| Parameter | Value | Unit | Status | Source / derivation |
+|---|---|---|---|---|
 | Max road-wheel angle (virtual centre) | 40 | deg | WORKING_VALUE | |
 | Max steer rate (road wheel) | 30 | deg/s | WORKING_VALUE | |
 | Ackermann factor | 1.0 | – | WORKING_VALUE | Full Ackermann, with the rear axle as the reference line |
 | Steering ratio (handwheel / road wheel) | 20 | – | WORKING_VALUE | |
+
+## Fifth wheel and coupling (`fifthWheel`)
+
+| Parameter | Value | Unit | Status | Source / derivation |
+|---|---|---|---|---|
+| Jaw position (tractor frame) | (0, 1.20, 0.55) | m | WORKING_VALUE | 0.55 m ahead of the drive axle; 1.20 m height (common EU standard height class) |
+| Pitch (fore/aft plate) limit | ±12 | deg | WORKING_VALUE | Soft stop, 10 Hz |
+| Roll coupling stiffness / damping / hard limit | 1.0e7 N m/rad / 2.0e5 N m s/rad / ±4° | – | WORKING_VALUE | Implicit soft constraint (unconditionally stable) |
+| Articulation stop (cab/frame contact) | ±90 | deg | WORKING_VALUE | Soft stop 3 Hz, critically damped (deformable contact) |
+| Plate friction | μ 0.08 × kingpin load × 0.35 m | – | WORKING_VALUE | Greased plate |
+| Capture window | 0.05 m horizontal, 0.12 m vertical, < 1.5 m/s | – | WORKING_VALUE | |
+| Jaw engagement | 0.4 s compliant phase, 4 Hz critically damped | – | WORKING_VALUE | Spreads the coupling bump (measured ≤ 62 kN, dv ≤ 0.14 m/s per step) |
+| Baumgarte factor / speed cap / iterations | 0.2 / 0.5 m/s / 8 | – | Solver setting | Max kingpin separation in all scenarios 0.16 mm |
+
+## Semi-trailer (`curtainsider_tridem_13_6.trailer.json`)
+
+Frame: origin on the ground below the kingpin, axles at negative z.
+
+| Parameter | Value | Unit | Status | Source / derivation |
+|---|---|---|---|---|
+| Body length / width | 13.6 / 2.55 | m | SOURCED via docs/04 §5 | EU legal maximum (Directive 96/53/EC, UNVERIFIED) |
+| Kingpin height | 1.20 | m | WORKING_VALUE | Matches the fifth wheel |
+| Kingpin to front wall | 1.6 | m | DERIVED | Front swing radius √(1.6² + 1.275²) = 2.04 m (96/53/EC limit, UNVERIFIED) |
+| Empty mass (sum of elements) | 7000 | kg | WORKING_VALUE | Frame 2200, floor 1100, body/curtains/roof 1300, tridem + wheels + brakes 2250, landing gear 150 |
+| Empty CoG / static kingpin load | z −5.89 m / 1645 kg | – | DERIVED | Lever rule over the tridem centre |
+| Tridem axle positions | −6.39 / −7.70 / −9.01 (1.31 m spacing) | m | WORKING_VALUE | |
+| Track (wide-base single wheel centres) | 2.04 | m | WORKING_VALUE | |
+| Air suspension rate per side / reference | 79 000 N/m at empty static load (1.5 Hz) | – | DERIVED from WORKING | Interconnected bellows (one levelling group: equal axle loads) |
+| Dampers bump / rebound, anti-roll per axle | 9000 / 18000 N s/m, 400 000 N m/rad | – | WORKING_VALUE | |
+| Landing gear legs | z −2.2 m, ±0.95 m, 4e6 N/m, 6e4 N s/m, μ 0.6; lowered foot −0.07 m (lifts the nose off the plate), raised +0.45 m, crank 0.05 m/s | – | WORKING_VALUE | |
+| Trailer drag area share | 1.5 | m² | WORKING_VALUE | Combination CdA 4.3 + 1.5 = 5.8 m² (Cd ≈ 0.58 × A ≈ 10 m²) |
+
+### Tire 385/65 R22.5 (`tire_385_65_r22_5.tire.json`)
+
+Same model and shape factors as 315/80 R22.5 (all WORKING_VALUE) except: effective radius 0.515 m (unloaded 0.536 m by S4 geometry), width 0.385 m (S4), wheel inertia 22 kg m², radial stiffness 1.1e6 N/m, nominal load 35 kN (S6 bound 44 kN per tire), rolling resistance 0.0050.
+
+### Load cases (runner presets; cargo is not part of the trailer data)
+
+| Preset | Cargo | GCW | Axle loads front / drive / tridem | Kingpin |
+|---|---|---|---|---|
+| solo | – | 7.5 t | 4.81 / 2.69 / – t | – |
+| empty | 0 | 14.5 t | 5.05 / 4.09 / 5.36 t (DERIVED) | 1.65 t |
+| laden40 | 25.5 t, uniform over the bay, CoG 2.3 m (floor 1.30 + 1.0) | **40.0 t** | 6.27 / 11.11 / 22.62 t | 9.88 t |
+| cargo24 | 24 t | 38.5 t | – | – |
+
+The 40 t validation set uses GCW = 40.0 t exactly (the legal maximum, worst case). Cargo CoG height and position are scenario parameters (rollover scenarios use 1.9 m and 2.6 m).
 
 ## Solver settings (not vehicle data)
 
 | Parameter | Value | Status |
 |---|---|---|
 | Fixed step | 0.01 s (100 Hz) | ADR 0004 |
-| Wheel/driveline substeps | 4 (2.5 ms) | WORKING_VALUE. Benchmark on the Samsung A is still pending (ADR 0004). |
+| Wheel/driveline substeps | 4 (2.5 ms); ABS and chamber pressures also run per substep | WORKING_VALUE. Benchmark on the Samsung A is still pending (ADR 0004). |
 | Contact rays per wheel / arc | 15 rays over ±63° | WORKING_VALUE |
 | Constraint iterations (clutch + brakes) | 4 | WORKING_VALUE |
+| Fifth-wheel iterations | 8 | WORKING_VALUE |
+| Low-speed tire deflection cap | 1.2 × deflection at peak force below 3 m/s | WORKING_VALUE (removes the stored-slide rebound after a locked stop) |
