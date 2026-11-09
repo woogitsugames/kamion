@@ -27,6 +27,31 @@ namespace Game.Tests
         }
 
         [Test]
+        public void LowSun_SkyAwayFromTheSunIsBlue_AndTheAmbientIsNotWarm()
+        {
+            // Review r4 L2: at 9 deg the sky opposite the sun must be bluish (B >= R) and the shade ambient not warm.
+            var p = LightingPreset.CreateLowSun();
+            var m = p.CreateModel();
+            float az = (p.sunAzimuthDeg + 180f) * Mathf.Deg2Rad;
+            var warm = new System.Collections.Generic.List<string>();
+            foreach (float elDeg in new[] { 5f, 12f, 20f, 45f, 90f })
+            {
+                float el = elDeg * Mathf.Deg2Rad;
+                var d = new Vector3(Mathf.Cos(el) * Mathf.Sin(az), Mathf.Sin(el), Mathf.Cos(el) * Mathf.Cos(az));
+                var c = m.Radiance(d);
+                Debug.Log($"[TEST] lowsun anti-sun sky el {elDeg}: rgb/max {c.r / c.maxColorComponent:F3} {c.g / c.maxColorComponent:F3} {c.b / c.maxColorComponent:F3}");
+                // 5 deg: the long hazy horizon path stays warm (logged only); review r4 measured the sky 15-25 deg up.
+                if (elDeg >= 10f && c.b < c.r) warm.Add(elDeg.ToString());
+            }
+            var sh = m.AmbientProbe(p.groundAlbedo, 24, p.ambientSkySaturation);
+            var res = new Color[1];
+            sh.Evaluate(new[] { Vector3.up }, res);
+            Debug.Log($"[TEST] lowsun ambient up rgb {res[0].r:F4} {res[0].g:F4} {res[0].b:F4}");
+            Assert.IsEmpty(warm, "sky opposite the sun is warm at these elevations");
+            Assert.That(res[0].b, Is.GreaterThanOrEqualTo(res[0].r), "shade ambient (sky) is warm");
+        }
+
+        [Test]
         public void IncidentMeterExposure_SunnySixteen()
         {
             var m = new SkyModel(45f, 180f, 2.5f, 0f, 0f);

@@ -39,14 +39,17 @@ import materials as M  # noqa: E402
 
 V = G.V
 CAB_MOUNT = V(0.0, 0.225, 1.15)   # graybox CabPivot (TractorDimensions: cabBodyBottom, cab mid-length) in A2 frame
-TRI_TARGET = {0: 90000, 1: 40000, 2: 20000}
-AO_RES = {0: 2048, 1: 1024, 2: 512}
+TRI_TARGET = {0: 120000, 1: 40000, 2: 20000}   # LOD0 90k -> 120k (lead 2026-11-09)
+AO_RES = {0: 4096, 1: 1024, 2: 512}   # B2.1: LOD0 High atlas 2048 -> 4096 (owner/lead: quality first)
+AO_TIER_LOD0 = {"High": 4096, "Medium": 1024, "Low": 512}   # Medium/Low keep their r3 sizes (phone memory)
 TIERS = {"High": 1.0, "Medium": 0.5, "Low": 0.25}
 
 LOD1_DROP = ("rocker_led_", "hatch_pleat_", "din_btn_", "bunk_btn_", "fridge_vent", "socket_", "usb_p_", "cup_",
              "drawer_grip_", "rear_grip_", "oh_grip_", "_damper", "bunk_buckle_", "doc_clip_roller", "hvac_ring_",
              "start_ring", "stalk_boss_", "_lever_knob", "_lever_h", "_arm_pivot", "pocket_mat_", "spot_",
-             "mirror_spine_", "bunk_strap_", "tweeter_grille_", "dash_spk_rim", "ws_frit_dots")
+             "mirror_spine_", "bunk_strap_", "tweeter_grille_", "dash_spk_rim", "ws_frit_dots",
+             "hvac_lcd_seg_", "hvac_knob_mark_", "sun_visor_clip_", "sun_visor_seam_", "socket_12v_cap", "usb_s_",
+             "_vvane", "door_arm_stitch_")
 LOD2_DROP = LOD1_DROP + ("_cst_", "_ctr_", "_bst_", "_btr_", "rocker_icon_", "hvac_icon_", "low_icon_", "light_icon",
                          "defrost_", "reading_lamp_", "pillow", "blanket", "curtain_side_", "hatch_blind", "_hr_collar",
                          "_belt_latch_grip", "_belt_guide", "_buckle", "_pocket_edge", "door_spk_grille_", "vent_",
@@ -54,14 +57,17 @@ LOD2_DROP = LOD1_DROP + ("_cst_", "_ctr_", "_bst_", "_btr_", "rocker_icon_", "hv
                          "opener_", "winswitch_", "mirrorswitch_", "uglove", "glove_gap", "pdash_parting",
                          "dash_parting", "rocker_", "swpack_", "stack_rotary", "hvac_btn_", "low_sw_", "mirror_pad", "light_rotary",
                          "_backpocket", "door_pull_", "dash_tray_lip", "doc_clip", "hatch_frame", "drawer_",
-                         "_belt_latch", "tweeter_", "door_seal_", "win_channel_", "curtain_rail")
+                         "_belt_latch", "tweeter_", "door_seal_", "win_channel_", "curtain_rail",
+                         "dash_insert_stitch_", "door_insert_stitch_", "stack_flank_stitch", "hvac_plate",
+                         "hvac_lcd_bezel", "stack_cubby", "socket_12v", "sun_visor_hinge_", "spoke_trim_",
+                         "emblem_wm_", "sun_visor_clip_", "visor_centre_bracket", "_vane")
 
 # ---------------------------------------------------------------- slots (game materials)
 SLOT_OF = {
     "MI_Cab_Plastic": ("dash_soft", "dash_lower", "dash_mid", "dash_dark", "trim_insert", "trim_light", "metal_dark",
                        "piano", "switch", "knob", "gap", "led_off", "lamp_lens", "yellow", "ext_plastic", "frit",
                        "hazard_red"),
-    "MI_Cab_Leather": ("leather", "leather_wheel", "leather_centre"),
+    "MI_Cab_Leather": ("leather", "leather_wheel", "leather_centre", "leather_trim"),
     "MI_Cab_Fabric": ("headliner", "wall_fabric", "mattress", "curtain", "seat_fabric", "blind", "webbing"),
     "MI_Cab_Rubber": ("floor_mat", "rubber"),
     "MI_Cab_Metal": ("satin", "scuff_plate", "chrome", "paint"),
@@ -73,7 +79,7 @@ SLOT_OF = {
 SLOT = {m: s for s, ms in SLOT_OF.items() for m in ms}
 DETAIL_SET = {"MI_Cab_Plastic": ("dashgrain", 1024), "MI_Cab_Leather": ("leather", 1024),
               "MI_Cab_Fabric": ("fabric", 512), "MI_Cab_Rubber": ("rubbermat", 1024), "MI_Cab_Metal": ("brushed", 512)}
-WEAR_MUL = {"leather": 2.3, "leather_wheel": 1.6, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3}
+WEAR_MUL = {"leather_trim": 1.6, "leather": 2.3, "leather_wheel": 1.6, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3}
 NO_AO = ("curtain_", "blind_", "hatch_blind",     # thin interpenetrating cloth (critic #15) and the rim, which
          "wheel_rim", "wheel_stitch",           # rotates (a baked occlusion pattern would turn with it): median value
          "ws_frit")                             # A6 r3: frit on the glass (no surface under it to inherit UV1 from)
@@ -755,6 +761,8 @@ def bake_ao(receivers, hide, res, samples, distance, out_png):
     except Exception:
         sc.cycles.device = "CPU"
     sc.cycles.samples = samples
+    sc.cycles.use_auto_tile = False      # B2.1: 4096 atlas in one tile (tiled bake crashed Cycles 4.2 on 4096 targets)
+    sc.cycles.tile_size = max(2048, res)
     sc.cycles.max_bounces = 6
     sc.cycles.diffuse_bounces = 4
     sc.cycles.glossy_bounces = 0
@@ -1293,7 +1301,7 @@ def process_lod(lod, a, out_dir, manifest):
     tex_dir = os.path.join(out_dir, "textures")
     ao_files = {}
     for tier, f in TIERS.items():
-        size = max(256, int(AO_RES[0] * f)) if lod == 0 else max(256, int(res * f / TIERS["High"]))
+        size = AO_TIER_LOD0[tier] if lod == 0 else max(256, int(res * f / TIERS["High"]))
         size = min(size, res)
         d = os.path.join(tex_dir, tier)
         os.makedirs(d, exist_ok=True)
@@ -1379,7 +1387,9 @@ def main():
     tex = None
     man_path = a.manifest or os.path.join(out, "cab_interior_manifest.json")
     manifest = {"asset": "cab interior (brand-neutral), track A6", "generator": "tools/blender/truck/interior/a6_export.py",
-                "lods": {}}
+                "lods": {}, "tri_budget": {"LOD0": 120000, "LOD1": 45000, "LOD2": 22000,
+                                           "note": "triangle limits (check_export.py); LOD0 90k -> 120k (lead "
+                                                   "2026-11-09), LOD1/LOD2 unchanged"}}
     if os.path.exists(man_path):
         old = json.load(open(man_path, encoding="utf-8"))
         manifest["lods"].update(old.get("lods", {}))

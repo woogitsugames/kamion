@@ -170,6 +170,89 @@ def tyre_scrub(buf, docks, zsurf, report):
     report["tyre_scrub_tracks"] = n
 
 
+STALL_LINE_W = 0.12          # P-1e-like solid line 0.12 m (stand boundaries on private yards, WORKING_VALUE)
+STALL_DEPTH_M = 17.5         # stand depth: tractor + 13.6 m trailer + clearance (WORKING_VALUE)
+DRAIN_GRID_M = 24.0          # WORKING_VALUE: yard gullies / slot drains on a ~24 m grid (fall 0.5-1 %)
+GULLY_SIZE = (0.50, 0.60)    # m, cast-iron gully grate (D400 class, typical 500 x 600, WORKING_VALUE)
+
+
+def _quad_strip(buf, mat, C0, C1, w, zsurf, lift, src, uv1=None):
+    """Straight decal strip from C0 to C1 (E, N), width w, subdivided every 2 m to follow the yard surface."""
+    L = float(np.hypot(*(C1 - C0)))
+    if L < 0.3:
+        return
+    n = max(1, int(math.ceil(L / 2.0)))
+    d = (C1 - C0) / L
+    nn = np.array([-d[1], d[0]])
+    t = np.linspace(0, 1, n + 1)
+    C = C0[None] + (C1 - C0)[None] * t[:, None]
+    V2 = np.vstack([C - nn * w / 2, C + nn * w / 2])
+    Z = zsurf(V2[:, 0], V2[:, 1]) + lift
+    m = n + 1
+    T = np.array([(i, i + 1, m + i + 1) for i in range(m - 1)] + [(i, m + i + 1, m + i) for i in range(m - 1)])
+    # (i, i+1, m+i+1): right edge -> forward -> left edge = CCW seen from above (faces up)
+    uv = np.column_stack([np.tile(t * L, 2), np.repeat([0.0, 1.0], m)])
+    buf.add("markings", mat, np.column_stack([V2, Z]), uv, T, src=src,
+            UV1=None if uv1 is None else np.tile(uv1, (2 * m, 1)))
+
+
+def yard_markings(buf, stalls, zsurf, report):
+    """Painted truck stand lines on yards (r4 W-H1): one line between neighbouring 3.8 m stands, perpendicular to the
+    yard edge, plus a front line; worn paint (material marking_yard), broken where the dock manoeuvring area is."""
+    n = 0
+    for a, d, nin, u0, u1, mat, key, pg, keep_free in stalls:
+        if mat == "yard_gravel" or hf(key, "paint") > 0.75:        # 25 % of yards without painted stands
+            continue
+        k = int(round((u1 - u0) / 3.8))
+        for i in range(k + 1):
+            base = a + d * (u0 + i * 3.8) + nin * 0.6
+            tip = base + nin * STALL_DEPTH_M
+            seg = LineString([base, tip])
+            if keep_free.intersects(seg) or not pg.buffer(-0.3).contains(seg):
+                continue
+            _quad_strip(buf, "marking_yard", base, tip, STALL_LINE_W, zsurf, S.MARKING_LIFT, f"stall:{key}:{i}")
+            n += 1
+        f0, f1 = a + d * u0 + nin * (0.6 + STALL_DEPTH_M), a + d * u1 + nin * (0.6 + STALL_DEPTH_M)
+        seg = LineString([f0, f1])
+        if not keep_free.intersects(seg) and pg.buffer(-0.3).contains(seg):
+            _quad_strip(buf, "marking_yard", f0, f1, STALL_LINE_W, zsurf, S.MARKING_LIFT, f"stall:{key}:front")
+    report["stall_lines"] = n
+
+
+def yard_drains(buf, paved, bpoly, zsurf, report):
+    """Cast-iron gully grates on yards >= 600 m2 on a jittered DRAIN_GRID_M grid, >= 3 m inside the yard and away
+    from buildings (procedural grate in the engine material drain_grate; UV0 0..1 over the grate)."""
+    n = 0
+    for item in paved:
+        if item["mat"] not in ("yard_behaton", "yard_concrete", "yard_asphalt", "yard_paving", "yard_slabs"):
+            continue
+        for pi, pg in enumerate(getattr(item["poly"], "geoms", [item["poly"]])):
+            if pg.geom_type != "Polygon" or pg.area < 600:
+                continue
+            inner = pg.buffer(-3.0)
+            if inner.is_empty:
+                continue
+            x0, y0, x1, y1 = inner.bounds
+            key = f"{item['id']}#{pi}"
+            ox, oy = hf(key, "dx") * DRAIN_GRID_M, hf(key, "dy") * DRAIN_GRID_M
+            for gx in np.arange(x0 + ox, x1, DRAIN_GRID_M):
+                for gy in np.arange(y0 + oy, y1, DRAIN_GRID_M):
+                    k = (key, round(float(gx), 1), round(float(gy), 1))
+                    q = np.array([gx + (hf(*k, "jx") - 0.5) * 4, gy + (hf(*k, "jy") - 0.5) * 4])
+                    if not inner.contains(Point(q)) or (bpoly is not None and bpoly.distance(Point(q)) < 2.0):
+                        continue
+                    ang = hf(key, "rot") * math.pi
+                    d = np.array([math.cos(ang), math.sin(ang)])
+                    nn = np.array([-d[1], d[0]])
+                    hx, hy = GULLY_SIZE[0] / 2, GULLY_SIZE[1] / 2
+                    V2 = np.array([q - d * hx - nn * hy, q + d * hx - nn * hy, q + d * hx + nn * hy, q - d * hx + nn * hy])
+                    Z = zsurf(V2[:, 0], V2[:, 1]) + S.MARKING_LIFT * 0.5
+                    buf.add("markings", "drain_grate", np.column_stack([V2, Z]), [[0, 0], [1, 0], [1, 1], [0, 1]],
+                            np.array([(0, 1, 2), (0, 2, 3)]), src=f"drain:{key}")
+                    n += 1
+    report["yard_drains"] = n
+
+
 def _edge_rows(poly, min_len):
     """(start, direction, inward normal, length) for every exterior edge of poly >= min_len."""
     ring = poly.exterior
@@ -186,7 +269,9 @@ def _edge_rows(poly, min_len):
 DOCK_MANOEUVRE_M = 35.0      # WORKING_VALUE: kept free in front of dock rows (13.6 m trailer + tractor turning in)
 
 
-def truck_yards(pl, paved, sp, report, docks=()):
+def truck_yards(pl, paved, sp, report, docks=(), stalls=None):
+    """stalls (list, optional): collects (a, d, nin, u_from, u_to, mat) of every truck stand row for the painted
+    stall lines (yard_markings)."""
     cnt = {"yard_trailers": 0, "coupled": 0, "solo_tractors": 0, "containers": 0}
     k_rear, k_front = LP.tractor_extent()
     zones = []
@@ -213,6 +298,8 @@ def truck_yards(pl, paved, sp, report, docks=()):
             if item["mat"] != "yard_gravel":
                 for ei, (a, d, nin, L) in enumerate(_edge_rows(pg, 20.0)):
                     nb = int((L - 4.0) // 3.8)
+                    if stalls is not None and nb >= 2:
+                        stalls.append((a, d, nin, 2.0, 2.0 + nb * 3.8, item["mat"], f"{ykey}:{ei}", pg, keep_free))
                     for i in range(nb):
                         key = (ykey, ei, i)
                         if hf(*key, "occ") > 0.40:
@@ -463,7 +550,11 @@ def place(pl, docks, paved, blds, roads_poly, bpoly, route_P, report, buf=None, 
     if buf is not None and zsurf is not None:
         tyre_scrub(buf, docks, zsurf, rep)
     parking(pl, paved, sp, rep, buf, zsurf)
-    truck_yards(pl, paved, sp, rep, docks)
+    stalls = []
+    truck_yards(pl, paved, sp, rep, docks, stalls)
     yard_props(pl, blds, docks, sp, rep)
+    if buf is not None and zsurf is not None:
+        yard_markings(buf, stalls, zsurf, rep)
+        yard_drains(buf, paved, bpoly, zsurf, rep)
     report["life"] = rep
     return rep

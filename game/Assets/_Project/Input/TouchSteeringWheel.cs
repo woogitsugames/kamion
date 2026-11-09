@@ -19,6 +19,10 @@ namespace Game.Controls
         /// <summary>Half lock-to-lock range of the on-screen wheel [deg]; 270 = comfort, 900 = sim (docs/04 §3).</summary>
         public float HalfRangeDeg = 270f;
         public float DeadZone = 0.01f;
+        /// <summary>Output gain (settings menu); 1 = full lock at the full wheel range.</summary>
+        public float Sensitivity = 1f;
+        /// <summary>Multiplier of the self-centring speed (settings menu); 0 = the wheel stays where it was left.</summary>
+        public float CentreStrength = 1f;
         public float SmoothingTau = 0.02f;
         /// <summary>Centring speed limit [deg/s of the on-screen wheel].</summary>
         public float CentreRateMaxDegS = 540f;
@@ -72,9 +76,9 @@ namespace Game.Controls
             if (!Held)
             {
                 float rate = SelfCentreRate(fb.ForwardSpeed, fb.AligningTorque, CentreRateMaxDegS, CentreSpeedRef, AligningTorqueRef);
-                WheelDeg = Mathf.MoveTowards(WheelDeg, 0f, rate * dt);
+                WheelDeg = Mathf.MoveTowards(WheelDeg, 0f, rate * Mathf.Max(0f, CentreStrength) * dt);
             }
-            float target = SteeringMath.DeadZone(WheelDeg / Mathf.Max(1f, HalfRangeDeg), DeadZone);
+            float target = Mathf.Clamp(SteeringMath.DeadZone(WheelDeg / Mathf.Max(1f, HalfRangeDeg), DeadZone) * Sensitivity, -1f, 1f);
             Output = Mathf.Lerp(Output, target, SteeringMath.SmoothingAlpha(dt, SmoothingTau));
             intent.Steer = Output;
             intent.SteerActive = true;

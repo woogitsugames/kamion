@@ -289,7 +289,7 @@ namespace Game.Vehicle.Physics
     public class FifthWheelDefinition
     {
         /// <summary>Kingpin lock point (jaw centre) in tractor frame [m].</summary>
-        public Vec3 position = new Vec3(0, 1.15, 0.55);
+        public Vec3 position = new Vec3(0, 1.15, 0.68);
         /// <summary>Fore/aft plate oscillation limit [deg].</summary>
         public double pitchLimitDeg = 12;
         /// <summary>Roll coupling: torsional stiffness [N m/rad] and damping [N m s/rad] between tractor and trailer, plus a hard limit.</summary>

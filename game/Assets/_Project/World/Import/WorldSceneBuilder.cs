@@ -98,7 +98,9 @@ namespace Game.World.Import
             // Track A7: the TRAKT art truck when it has been built (TruckAssetBuilder), else the graybox.
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(TruckAssetBuilder.PrefabPath) ??
                          AssetDatabase.LoadAssetAtPath<GameObject>(DrivingLabSceneBuilder.PrefabPath);
-            var trailerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(DrivingLabSceneBuilder.TrailerPrefabPath);
+            // The art curtainsider when it has been built (TrailerAssetBuilder), else the graybox trailer (same physics root).
+            var trailerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(TrailerAssetBuilder.PrefabPath) ??
+                                AssetDatabase.LoadAssetAtPath<GameObject>(DrivingLabSceneBuilder.TrailerPrefabPath);
             if (prefab == null || trailerPrefab == null) throw new FileNotFoundException("DrivingLab prefabs missing: run Kamion/Setup/Rebuild DrivingLab first");
             const float spawnS = 12f;
             Vector3 spawnPos = route.points.Length > 1 ? route.PointAt(spawnS) : Vector3.zero;
@@ -128,7 +130,9 @@ namespace Game.World.Import
             var applier = camGo.AddComponent<QualityProfileApplier>();
             applier.targetCamera = cam;
             applier.volume = vol;
-            applier.worldTextures = WorldTextureGenerator.All.Select(AssetDatabase.LoadAssetAtPath<Texture>).Where(t => t != null).ToArray();
+            // legacy detail textures + the generated PBR sets (ADR 0022): the tier sets their aniso and mip bias
+            applier.worldTextures = WorldTextureGenerator.All.Select(AssetDatabase.LoadAssetAtPath<Texture>).Where(t => t != null)
+                .Concat(WorldPbrMaterials.LoadAll(r.Dir)).ToArray();
 
             var boot = new GameObject("DrivingLabBootstrap").AddComponent<DrivingLabBootstrap>();
             boot.vehicle = truck.GetComponent<VehicleBody>();
@@ -152,7 +156,7 @@ namespace Game.World.Import
             // The tractor at the gate (truck on the imported ground, contact shadows) and the cab view down the access road.
             Vector3 side = Vector3.Cross(Vector3.up, spawnFwd);
             Qa(qa, "truck-at-gate", spawnPos + spawnFwd * 11f + side * 7f + Vector3.up * 2.6f, spawnPos + Vector3.up * 1.6f - spawnFwd * 3f, 50f,
-                "Graybox tractor + trailer at the Kwadrat Park spawn: wheels on the imported collision, shadows, scale against the road.");
+                "Tractor + trailer at the Kwadrat Park spawn: wheels on the imported collision, shadows, scale against the road.");
             Vector3 eye = spawnPos + spawn.rotation * dims.EyePointVehicle;
             Qa(qa, "cab-gate", eye, eye + spawnFwd * 30f - Vector3.up * 2.2f, 55f, "Driver eye at the spawn, looking along the depot access road.");
 
@@ -232,16 +236,16 @@ namespace Game.World.Import
         // Layers per LOD (ADR 0012). Distances: manifest switch distances (camera to near chunk edge) + 0.7 chunk.
         static readonly string[][] k_LowLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture" },
-            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture" },
-            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires" },
+            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires" },
+            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires" },
             new[] { "terrain_lod3", "bridge", "buildings_lod1" },
         };
         static readonly string[][] k_HighLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture" },
-            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture" },
-            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires" },
+            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires" },
+            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires" },
             new[] { "terrain_lod3", "bridge", "buildings_lod1" },
         };
         static readonly HashSet<string> k_ShadowCasters = new HashSet<string> { "bridge", "buildings", "buildings_lod1", "furniture" };

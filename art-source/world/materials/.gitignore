@@ -1,0 +1,7 @@
+# Generated texture sets are NOT versioned (lead decision 2026-11-09: public repo, LFS limits,
+# "everything as code"). Rebuild with _src/build_all.py, see README.md.
+/*/
+!/_src/
+!/_renders/
+/_renders/*.png
+__pycache__/

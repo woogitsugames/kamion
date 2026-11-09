@@ -57,7 +57,9 @@ Shader "Kamion/Cab Interior"
             TEXTURE2D(_AO); SAMPLER(sampler_AO);
             TEXTURE2D(_DecalAtlas); SAMPLER(sampler_DecalAtlas);
             half4 _CabFill;     // rgb: first-bounce irradiance / pi in exposed units (CabInteriorLighting)
+            half _CabEnclosure; // share of the open-sky SH the closed cab blocks (roof, walls); 0 = open sky (unset global)
             half _CabGain;      // cab-view tone-mapping gain (1 = off)
+            half4 _CabShadowLift; // x: strength k, y: knee k0 (exposed linear); gain = 1 + k (k0 / (Y + k0))^3, cab view only
 
             struct Attributes
             {
@@ -129,7 +131,7 @@ Shader "Kamion/Cab Interior"
                 input.shadowCoord = TransformWorldToShadowCoord(i.positionWS);
                 input.fogCoord = i.fogFactor;
                 // AO multiplies the whole indirect term in UniversalFragmentPBR (occlusion), the fill included.
-                input.bakedGI = SampleSH(nWS) + _CabFill.rgb;
+                input.bakedGI = SampleSH(nWS) * (1.0 - _CabEnclosure) + _CabFill.rgb;
                 input.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(i.positionCS);
                 input.shadowMask = half4(1, 1, 1, 1);
 
@@ -142,6 +144,11 @@ Shader "Kamion/Cab Interior"
                 s.normalTS = nTS;
                 half4 col = UniversalFragmentPBR(input, s);
                 col.rgb *= _CabGain > 0.0 ? _CabGain : 1.0;   // unset global (0) = no gain
+                // Local shadow lift (review r4 L1): a phone's local tone mapping lifts deep shade in a backlit cab. Smooth
+                // in luminance (Y * gain stays monotone for k < 16), ~1 above 3 x the knee.
+                half yl = dot(col.rgb, half3(0.2126, 0.7152, 0.0722));
+                half q = _CabShadowLift.y / (yl + _CabShadowLift.y + 1e-5);
+                col.rgb *= 1.0 + _CabShadowLift.x * q * q * q;
                 col.rgb = MixFog(col.rgb, i.fogFactor);
                 return half4(col.rgb, 1);
             }

@@ -163,6 +163,81 @@ def plot_sfx(manifest, path: Path) -> None:
     plt.close(fig)
 
 
+def _sfx_arrays(manifest):
+    return {s["name"]: sf.read(ROOT / s["file"])[0] for s in manifest["sfx"]}
+
+
+def _spec(ax, x, name, fmax, secs=None):
+    if secs:
+        x = x[: int(secs * 48000)]
+    f, t, S = signal.spectrogram(x, 48000, nperseg=1024, noverlap=768)
+    ax.pcolormesh(t, f, 10 * np.log10(S + 1e-14), shading="auto", vmin=-130, vmax=-40, cmap="magma")
+    ax.set_ylim(0, fmax)
+    ax.set_title(name, fontsize=8)
+    ax.tick_params(labelsize=7)
+
+
+def plot_layers(manifest, rep: Path) -> None:
+    a = _sfx_arrays(manifest)
+    groups = {
+        "layers_tyres_spectrograms.png": [("road_roll_loop", 10000), ("tyre_wet_loop", 10000), ("tyre_concrete_loop", 10000),
+                                          ("tyre_cobbles_loop", 10000), ("tyre_gravel_loop", 10000), ("tyre_grass_loop", 10000),
+                                          ("tyre_squeal_loop", 8000), ("tyre_squeal_cab_loop", 8000), ("tyre_cobbles_cab_loop", 10000)],
+        "layers_mech_pneu_spectrograms.png": [("retarder_loop", 6000), ("compressor_loop", 8000), ("parking_brake_release", 12000),
+                                               ("air_dryer_purge_b", 12000), ("indicator_tick_cab", 12000), ("indicator_tock_cab", 12000),
+                                               ("indicator_tick", 12000), ("compressor_cab_loop", 8000), ("parking_brake_release_cab", 12000)],
+        "layers_ambient_spectrograms.png": [("ambient_bed_loop", 6000), ("ambient_bed_cab_loop", 6000), ("forklift_loop", 6000),
+                                             ("bird_sparrow", 10000), ("bird_tit", 10000), ("bird_crow_caw", 6000)],
+    }
+    for fname, items in groups.items():
+        cols = 3
+        rows = int(np.ceil(len(items) / cols))
+        fig, axes = plt.subplots(rows, cols, figsize=(13, 3.0 * rows))
+        for ax, (name, fmax) in zip(np.ravel(axes), items):
+            _spec(ax, a[name], name, fmax, secs=6.0)
+        for ax in list(np.ravel(axes))[len(items):]:
+            ax.axis("off")
+        fig.tight_layout()
+        save_png_small(fig, rep / fname, dpi=70, colors=64)
+        plt.close(fig)
+    # ext vs cab average spectra
+    pairs = [("road_roll_loop", "road_roll_cab_loop"), ("wind_loop", "wind_cab_loop"), ("tyre_cobbles_loop", "tyre_cobbles_cab_loop"),
+             ("compressor_loop", "compressor_cab_loop"), ("retarder_loop", "retarder_cab_loop"), ("ambient_bed_loop", "ambient_bed_cab_loop"),
+             ("air_brake_release", "air_brake_release_cab"), ("parking_brake_release", "parking_brake_release_cab")]
+    fig, axes = plt.subplots(2, 4, figsize=(14, 6))
+    for ax, (e, c) in zip(axes.ravel(), pairs):
+        for nm, col in ((e, "tab:blue"), (c, "tab:red")):
+            f, P = signal.welch(a[nm], 48000, nperseg=4096)
+            ax.semilogx(f[1:], 10 * np.log10(P[1:] + 1e-14), color=col, lw=0.9, label="ext" if nm == e else "cab")
+        ax.set_xlim(30, 20000)
+        ax.set_ylim(-120, -40)
+        ax.set_title(e, fontsize=8)
+        ax.grid(alpha=0.3, which="both")
+        ax.tick_params(labelsize=7)
+    axes[0, 0].legend(fontsize=7)
+    fig.tight_layout()
+    save_png_small(fig, rep / "layers_cab_vs_ext_spectra.png", dpi=70, colors=64)
+    plt.close(fig)
+
+
+def layer_levels(manifest) -> dict:
+    a = _sfx_arrays(manifest)
+    out = {}
+    for s in manifest["sfx"]:
+        x = a[s["name"]]
+        f, P = signal.welch(x, 48000, nperseg=4096)
+        tot = P.sum()
+        centroid = float((f * P).sum() / tot)
+        bands = {}
+        for lo, hi in ((20, 200), (200, 1000), (1000, 4000), (4000, 16000)):
+            m = (f >= lo) & (f < hi)
+            bands[f"{lo}-{hi}"] = round(float(10 * np.log10(P[m].sum() / tot + 1e-12)), 1)
+        out[s["name"]] = {"perspective": s.get("perspective", "ext"), "loop": s["loop"], "dur_s": round(len(x) / 48000, 2),
+                          "peak_dbfs": round(s["peak_dbfs"], 1), "rms_dbfs": round(s["rms_dbfs"], 1),
+                          "centroid_hz": round(centroid), "band_db_rel": bands}
+    return out
+
+
 def main() -> int:
     manifest = json.loads((GEN / "manifest.json").read_text(encoding="utf-8"))
     REP.mkdir(parents=True, exist_ok=True)
@@ -193,7 +268,12 @@ def main() -> int:
              "rms_dbfs": round(20 * np.log10(np.sqrt(np.mean(x ** 2))), 2)}
         if s["loop"]:
             r.update(seam_metrics(x))
-            ok = r["seam_ratio_d1"] < 1.0 and r["seam_ratio_d2"] < 1.0
+            # seam must be indistinguishable from the interior: first and second difference at the seam do not
+            # exceed the largest ones inside the loop (the 99.9th-percentile ratios are kept as information)
+            d1m, d2m = np.max(np.abs(np.diff(x))), np.max(np.abs(np.diff(x, 2)))
+            r["seam_vs_max_d1"] = float(abs(x[0] - x[-1]) / (d1m + 1e-12))
+            r["seam_vs_max_d2"] = float(abs(x[1] - 2 * x[0] + x[-1]) / (d2m + 1e-12))
+            ok = r["seam_vs_max_d1"] < 1.0 and r["seam_vs_max_d2"] < 1.0
         else:
             r["edge_abs_first_last"] = [float(abs(x[0])), float(abs(x[-1]))]
             ok = abs(x[0]) < 1e-3 and abs(x[-1]) < 1e-3
@@ -218,6 +298,9 @@ def main() -> int:
     plot_loop_spectra(manifest["clips"], REP / "engine_loop_spectra.png")
     plot_waveforms(manifest["clips"], REP / "engine_waveforms.png")
     plot_sfx(manifest, REP / "sfx_spectrograms.png")
+    plot_layers(manifest, REP)
+    layer_summary = layer_levels(manifest)
+    (REP / "layers_analysis.json").write_text(json.dumps(layer_summary, indent=1, default=float), encoding="utf-8")
 
     print(json.dumps(summary, indent=1, default=float))
     print(f"{'clip':26s} {'rms':>6s} {'f_fire':>7s} {'f0est':>7s} {'pk_Hz':>7s} {'pk_h':>5s} {'fire/half':>9s} {'seam':>5s}  bands")

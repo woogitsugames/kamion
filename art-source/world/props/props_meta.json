@@ -735,6 +735,13 @@
    "tris_lod0": 14,
    "tris_lod1": 14
   },
+  "gantry_footing": {
+   "materials": [
+    "concrete_base"
+   ],
+   "tris_lod0": 12,
+   "tris_lod1": 12
+  },
   "gatehouse": {
    "materials": [
     "booth_glass",
@@ -974,11 +981,10 @@
   },
   "sign_gantry_16_68": {
    "materials": [
-    "concrete_base",
     "gantry_steel"
    ],
-   "tris_lod0": 744,
-   "tris_lod1": 60
+   "tris_lod0": 720,
+   "tris_lod1": 36
   },
   "sign_post": {
    "materials": [

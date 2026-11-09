@@ -109,6 +109,7 @@ class Junction:
     give_way: bool = False
     boundary: list = field(default_factory=list)    # [(xy, tag)] CCW
     notes: list = field(default_factory=list)
+    internal: list = field(default_factory=list)    # absorbed chains inside the cluster (their surface shapes the patch)
 
 
 def _ang(v):
@@ -141,6 +142,16 @@ def corner_radius(net, arm_k, arm_k1, override=None):
     if arm_k.is_ring() or arm_k1.is_ring():
         R = min(R, 12.0)
     return R
+
+
+def _facing_gap(A, B, d=6.0):
+    """Signed clear width between the facing gutters of two angularly adjacent arms (A left, B right), d m out
+    from the junction: < 0 where the carriageways overlap."""
+    d = min(d, A.L, B.L)
+    pa, pb = A.gutter(d, +1), B.gutter(min(d, B.L), -1)
+    t = A.direction(d)
+    nl = np.array([-t[1], t[0]])
+    return float(np.dot(pb - pa, nl))
 
 
 def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
@@ -177,8 +188,11 @@ def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
             if h0 is not None:   # fork: gutters cross -> gore nose just after the carriageways separate
                 c = Corner("nose", k, k1, tau_k=min(h0[0] + 1.5, mA), tau_k1=min(h0[1] + 1.5, mB))
                 c.meta_fork = True
-            else:                # parallel (median): nose at the trims
+            elif _facing_gap(A, B) >= S.NOSE_MIN_GAP_M:   # parallel (median): nose at the trims
                 c = Corner("nose", k, k1, tau_k=-1.0, tau_k1=-1.0)
+            else:                # parallel carriageways that touch or overlap (merge of an on-ramp into the main
+                # road, Andersa / Rondo Bieżeństwa): no island between them, the surfaces join (straight corner)
+                j.notes.append(f"corner {k}-{k1}: arms touch (gap {_facing_gap(A, B):.2f} m) -> no nose")
         elif alpha_deg <= S.STRAIGHT_MIN_ANGLE_DEG:
             R = corner_radius(net, A, B, r_override)
             while R >= 0.75:
@@ -358,6 +372,9 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
         if not c.closed and (c.id, "a") not in arm_keys and (c.id, "b") not in arm_keys and \
                 c.node_a in parent and c.node_b in parent:
             c.meta["absorbed"] = True
+            for j in juncs:
+                if c.node_a in j.nodes and c.node_b in j.nodes:
+                    j.internal.append(c)
     for j in juncs:
         j.boundary = patch_boundary(j)
     return juncs

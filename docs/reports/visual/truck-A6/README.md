@@ -14,6 +14,26 @@ Zewnętrze (`docs/reports/visual/truck-A6-exterior/`) jest teraz jedyną karoser
 - **Naprawiony błąd materiałów:** w `consolidate()` `Mesh.materials.clear()` (Blender 4.x) kasował numery materiałów ścian, więc każdy obiekt roboczy trafiał w całości do jednego zestawu. Teraz numery są czytane przed wyczyszczeniem. Kolor i chropowatość są w danych wierzchołków, więc w renderach różnica jest mała, ale mapy detali (skóra, tkanina) trafiają teraz na właściwe ściany.
 - Rendery „jak URP” po dopasowaniu: `a6fit_kierowca_overcast_urp.jpg`, `a6fit_pasazer_overcast_urp.jpg`, `a6fit_lezanka_overcast_urp.jpg`. Test linii wzroku zegarów: nadal PASS.
 
+## Dopasowanie do bryły B2 v2 (2026-11-09)
+Zewnętrze dostało szybę 1,94–3,12 m pochyloną o 7° i dach 3,75 m (`glass_interface.json`). Wnętrze czyta teraz z tego pliku także **kąt szyby** (`rake_deg_from_vertical`; `--rake` tylko do studiów) i wysokość dachu. Przed/po: `przed_b2/kierowca_*.jpg` vs `kierowca_*_urp.jpg`.
+- Deska sięga do nowej, niższej krawędzi szyby (podszybie opada do 1,93 m za fritem 75 mm); czarny górny pas deski znowu w materiale „soft” (podział materiałów liczony od strony lica, bo profil zaczyna się teraz poniżej linii podziału).
+- Wycieraczki zastępcze, frit, osłony słupków A, nadproże, kaseta rolet i lusterko przednie liczone od nowych krawędzi szyby.
+- Naprawiony błąd: zasłony przy słupkach A (fałdy prawie 180°) z `use_even_offset` wyrzucały pojedyncze wierzchołki 0,5 m w pole widzenia (czarny „kolec” na szybie po przesunięciu zasłony do przodu).
+- **Trójkąty:** LOD0 **84 161** (nowy limit 120 tys.), LOD1 **39 537**, LOD2 **21 969**. `check_export` PASS, `check_fit` PASS, linia wzroku PASS (`sightline.json`, rake 7°).
+- Nieprzejęte z arkuszy wnętrza w B2 v2: konsola, skóra koniak, kierownica 4-ramienna, czarny daszek — zrobione w B2.1 (wyżej).
+
+## Runda B2.1: układ z arkuszy właściciela, koniak (2026-11-09)
+Przed/po: `przed_b21/*.jpg` (B2 v2) vs te same nazwy w tym katalogu. Montaże z arkuszami `trakt_b2_wnetrze_*` (poza gitem): `artifacts/visual-qa/truck-B21/`.
+- **Konsola** (`build_centre_stack`): dwa prostokątne nawiewy w satynowych ramkach po bokach ekranu 10,1″ (górny pas konsoli chowa się za wargą deski, więc nawiewy nie mogły stać nad ekranem), 2 rzędy po 7 przełączników kołyskowych z ikonami (czerwony przycisk awaryjnych w środku górnego rzędu, diody przy funkcjach z zatrzaskiem, jedna zaślepka), osobny pakiet 3 wysokich przełączników zawieszenia, panel klimatyzacji (2 pokrętła w satynowych pierścieniach, wyświetlacz LCD, 5 klawiszy), wnęka na telefon, 2× USB-C, gniazdo 12 V z klapką. Konsola obrócona 15° do kierowcy i pochylona 10° (było 22°/16°: lewa część i górny pas ginęły w desce).
+- **Skóra koniak z przeszyciem:** wyściełany pas na desce pasażera (od konsoli do nawiewu, 14 cm, dwie linie szwu), panele boczków drzwi i podłokietniki (szew, wytarcie od łokcia), poduszka na boku konsoli. Nowy materiał `leather_trim` w slocie `MI_Cab_Leather` (bez nowych slotów). Tworzywa wokół: grafit (dolna deska 0,20 → 0,088 albedo), drobne ziarno `hardgrain`, lekki kurz.
+- **Kierownica 4-ramienna:** dwa smukłe dolne ramiona w „V” zamiast jednego, satynowe wstawki w dolnych i bocznych ramionach, przyciski na ramionach bez zmian, **napis TRAKT** (satyna, wypukły 1,2 mm) na piaście zamiast znaku.
+- **Czarny pas nad szybą na całą szerokość:** dwie wyściełane osłony przeciwsłoneczne w płaszczyźnie szyby (w strefie fritu, dół 20 mm nad widoczną szybą), zawiasy, satynowe zaczepy, środkowy wspornik, przeszycie obwodowe; kaseta rolet czarna.
+- Nawiewy na końcach deski prostokątne (lamele poziome + pionowe z tyłu); nawiew na środku deski pasażera usunięty (tam jest skóra), klips na dokumenty też.
+- **Atlas AO LOD0 High 4096** (było 2048); Medium/Low 1024/512 jak dotąd.
+- **Trójkąty:** LOD0 **90 009** (≤ 120 tys.), LOD1 **41 115**, LOD2 **21 709** (≤ 22 tys.). `check_export` PASS, `check_fit` PASS, linia wzroku PASS (LOD0 i LOD2). Kontrakt bez zmian: `DISPLAY_Infotainment` (obiekt `info_screen`, slot `MI_Cab_Display`) i wszystkie nazwy, sloty, piwoty i manifest.
+- Pętla QA: (1) konsola przecięta po skosie przez deskę w kadrze pomocniczym → nowy kąt; (2) satynowe paski na bocznych ramionach sterczały jak „języczki” → 2,5 mm, prawie płasko; (3) LOD2 22 453 > 22 000 → rozdzielczość nowych loftów zależna od LOD.
+- Otwarte: dolna część kabiny w podglądzie URP nadal prawie czarna (L1, `rendering-perf`); w arkuszach koniak biegnie też górą deski przed kierowcą — tu tylko po stronie pasażera.
+
 ## Runda 3 (2026-11-09, po recenzji `REVIEW-2026-11-09-r2.md`, sekcja A6 i punkt 8 listy top-12)
 
 Decyzje właściciela wpisane jako domyślne: **wstawki koniak**, **tylko cyfrowe zegary**, **znak TRAKT na piaście**, szyba koncepcji B (19°). Wszystkie rendery kontrolne i eksport (FBX, manifest) powstają teraz z tymi ustawieniami, bez dodatkowych przełączników.

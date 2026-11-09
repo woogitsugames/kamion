@@ -347,6 +347,11 @@ namespace Game.World.Import
             if (r.Materials.TryGetValue(name, out var regionMat))
             {
                 textured = r.MaterialDefs.TryGetValue(name, out var d) && d.Get("texture") != null;
+                if (d != null)
+                {
+                    WorldPbrMaterials.Channels(d, name, out bool pbrUv0, out _, out _);   // ADR 0022: mesh UV in metres
+                    textured |= pbrUv0;
+                }
                 return regionMat;
             }
             var info = g.Materials.FirstOrDefault(m => m.Name == name);

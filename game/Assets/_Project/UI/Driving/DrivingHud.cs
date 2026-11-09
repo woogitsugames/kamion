@@ -25,7 +25,7 @@ namespace Game.UI.Driving
         public DiagnosticsSampler Sampler;
         public DriverInputMixer Mixer;
         public Func<bool> IsGyroMode;
-        public Action ToggleSteeringMode, ToggleWheelRange, ResetVehicle, OpenMenu;
+        public Action ToggleSteeringMode, ToggleWheelRange, ResetVehicle, OpenMenu, OpenSettings;
         public Func<string> StatusLine;
         /// <summary>Developer diagnostics (status/autopilot/coupling lines) visible at start. Default off; launch argument devhud=1 or the four-finger hold toggles it.</summary>
         public bool DevDiagnostics;
@@ -349,8 +349,12 @@ namespace Game.UI.Driving
             Button(m_SafeArea, "Couple", a, new Vector2(x0 + w + gap, y3), new Vector2(w, h), () => m_Ctx.Touch?.RequestCouplingToggle(), out _).text = "Siodło";
             Button(m_SafeArea, "Legs", a, new Vector2(x0 + 2 * (w + gap), y3), new Vector2(w, h), () => m_Ctx.Touch?.RequestLandingGearToggle(), out _).text = "Nogi ↑↓";
 
+            // ---- fourth row: control settings (own screen, ControlSettingsPanel) ----
+            float y4 = y3 - h - gap;
+            Button(m_SafeArea, "Settings", a, new Vector2(x0, y4), new Vector2(w, h), () => m_Ctx.OpenSettings?.Invoke(), out _).text = "Ustawienia";
+
             // ---- lab panel (spawn presets, ABS fault, reversing camera) ----
-            var lab = Panel("LabPanel", m_SafeArea, a, new Vector2(-24f, y3 - gap), new Vector2(3 * w + 2 * gap, 3 * h + 4 * gap + 36f));
+            var lab = Panel("LabPanel", m_SafeArea, a, new Vector2(-24f, y4 - gap), new Vector2(3 * w + 2 * gap, 3 * h + 4 * gap + 36f));
             lab.GetComponent<Image>().raycastTarget = true;
             Label(lab, "Title", "Start zestawu (reset pozycji)", SmallFont - 2, TextAnchor.MiddleLeft, new Vector2(12f, 3 * h + 3 * gap), new Vector2(560f, 34f)).color = k_Muted;
             string[] names = { "Solo", "Pusta", "24 t", "40 t" };

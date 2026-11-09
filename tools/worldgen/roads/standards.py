@@ -68,11 +68,19 @@ CROSSFALL = 0.02
 CROSSFALL_CURVE = 0.025             # WORKING_VALUE: one-sided superelevation on curves R < CURVE_R
 CURVE_R = 400.0                     # WORKING_VALUE
 CROSSFALL_RAMP_SIGMA_M = 10.0       # WORKING_VALUE: smoothing of the crossfall change (rampa przechyłkowa)
+CROSSFALL_MATCH_M = 20.0            # WORKING_VALUE: ramp length matching crossfall of through chains at a node
 
 # Kerb ("krawężnik"). Height 0.12-0.15 m in Polish urban practice; PTB2022 § 89 ust. 2 pkt 1 treats a
 # kerb >= 0.12 m as a (barrier-relevant) raised kerb. 0.13 m = WORKING_VALUE. Standard 15 x 30 cm kerb -> top width 0.15 m.
 KERB_HEIGHT = 0.13
 KERB_TOP_W = 0.15
+# network._tight_side: chains sharing a node are left to the junction patch within this distance of it (WORKING_VALUE,
+# about the largest junction cluster radius, junctions.py max cluster diameter 30 m)
+ADJ_NODE_SKIP_M = 30.0
+# profile.adjacent_targets: a chain solved after a parallel ground road whose edge it touches (gap < ADJ_TOUCH_M)
+# takes that road's surface height at the shared edge, weight ADJ_WEIGHT against 1 for an NMT sample (WORKING_VALUEs)
+ADJ_TOUCH_M = 0.5
+ADJ_WEIGHT = 400.0
 KERB_HEIGHT_APRON = 0.04            # WORKING_VALUE: roundabout truck apron kerb (mountable)
 # Sidewalk. PTB2022 § 29 ust. 1: >= 1.80 m. 2.00 m = WORKING_VALUE. Crossfall towards the road
 # <= 3 % (PTB2022 § 33); we use 2 %.
@@ -101,6 +109,10 @@ BERM_W = 1.0                        # flat strip next to the road before the emb
 # 16.5 m articulated truck; the regulation (§ 58 ust. 3) only requires passage of the design vehicle.
 CURB_RADIUS = {"A": 20.0, "S": 20.0, "GP": 15.0, "G": 12.0, "Z": 10.0, "L": 8.0, "D": 8.0}
 NOSE_MAX_ANGLE_DEG = 25.0           # corners narrower than this get a median/splitter nose
+# Junction patch collision fill spacing (m). Was 6 m: on long patches (fork trims of 65-68 m) the linear 6 m facets
+# left 5-6 cm steps under the wheels (route_start s = 1422 m, test_route_corridor). WORKING_VALUE.
+PATCH_COLLISION_SPACING_M = 2.0
+NOSE_MIN_GAP_M = 0.5                # ... if the clear width between the carriageways is at least this (WORKING_VALUE)
 STRAIGHT_MIN_ANGLE_DEG = 155.0      # corners wider than this are a straight kerb (no fillet)
 FORK_STRAIGHT_DEG = 150.0          # WORKING_VALUE: two chains this close to collinear at a node = one road
 TAPER_RATIO = 10.0                 # WORKING_VALUE: taper length = 10 x width change (skos 1:10)
@@ -258,3 +270,26 @@ def grade_limit(highway: str, maxspeed: float | None) -> tuple[float, float]:
         if vp >= v:
             return std, diff
     return MAX_GRADE_BY_VP[-1][1:]
+
+
+# Recently resurfaced carriageways (ADR 0019). There is no resurfacing date in OSM / BDOT10k, so a share of the public
+# road chains (class Z and up, not roundabouts, not bridges) gets the fresh SMA wearing course (material
+# road_asphalt_new, texture set asphalt_sma_fresh); junction patches keep the worn surface of the majority of their
+# arms (resurfacing usually stops at the junction). The share and the classes are WORKING_VALUE; an authored override
+# `surface: asphalt_new` / `surface: asphalt` on the edges wins.
+NEW_ASPHALT_SHARE = 0.25
+NEW_ASPHALT_CLASSES = ("A", "S", "GP", "G", "Z")
+
+
+def surface_material(chain, sec):
+    """Engine surface material of a carriageway chain: the section's material, with worn asphalt switched to
+    road_asphalt_new for the resurfaced share (deterministic hash of the chain id)."""
+    import hashlib
+    m = sec.surface_mat
+    if m != "road_asphalt" or sec.provenance.get("surface_override"):
+        return m
+    br = getattr(chain, "bridge", None)
+    if chain.roundabout or sec.cls not in NEW_ASPHALT_CLASSES or (br is not None and bool(br.any())):
+        return m
+    h = int(hashlib.sha1(f"{chain.id}:asphalt_new".encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
+    return "road_asphalt_new" if h < NEW_ASPHALT_SHARE else m

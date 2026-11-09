@@ -45,7 +45,7 @@ def strip(buf, c, s0, s1, lat, w, kind):
     for i in range(n):
         T += [(2 * i, 2 * i + 2, 2 * i + 3), (2 * i, 2 * i + 3, 2 * i + 1)]
     uv = np.column_stack([np.repeat(ss - s0, 2), np.tile([0.0, 1.0], len(ss))])
-    buf.add("markings", "marking_white", V, uv, np.array(T), src=kind)
+    buf.add("markings", "marking_white", V, uv, np.array(T), src=f"{kind}@{c.id}")
 
 
 def dashed(buf, c, s0, s1, lat, w, dash, gap, kind):
@@ -68,7 +68,7 @@ def polygon_mark(buf, c, poly_xy, origin_s, lat0, fwd, left, kind):
     # chain frame (s, lat) is right-handed; flips if exactly one of fwd/left is negative
     if fwd * left < 0:
         T = T[:, [0, 2, 1]]
-    buf.add("markings", "marking_white", V, ring.copy(), T, src=kind)
+    buf.add("markings", "marking_white", V, ring.copy(), T, src=f"{kind}@{c.id}")
 
 
 def arrow_glyph(turns: list, long: bool):
@@ -115,6 +115,56 @@ def lane_layout(sec, hw, dirn):
 
 
 def build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
+    first = len(buf.parts)
+    _build_markings(buf, net, juncs, ctx_points, report)
+    report["overlap_removed_tris"] = drop_overlapping(buf, net, first)
+
+
+OVERLAP_INSET_M = 0.25      # a line is inside another carriageway when it lies this far inside its edge (WORKING_VALUE)
+OVERLAP_DZ_M = 1.0          # ... and within this height of its surface (bridges over roads are not overlaps)
+
+
+def drop_overlapping(buf, net, first):
+    """Removes marking triangles of one chain that lie on another chain's carriageway (ADR 0018 overlap zones: an
+    on-ramp running onto Andersa, the gate split at Kwadrat Park). Both chains used to paint their edge and lane lines
+    across each other there (REVIEW r4 P1). Lines on a shared touching edge (within OVERLAP_INSET_M) are kept."""
+    import shapely
+    from shapely.geometry import LineString as _LS
+    chains = [c for c in net.chains if not c.meta.get("absorbed") and len(c.line.p) >= 2]
+    foot = [_LS(c.line.p).buffer(float(np.max(c.hw_at(c.line.s))) + 0.5) for c in chains]
+    tree = shapely.STRtree(foot)
+    removed = 0
+    for pi in range(first, len(buf.parts)):
+        p = buf.parts[pi]
+        if p.layer != "markings" or "@" not in p.src:
+            continue
+        own = p.src.split("@", 1)[1]
+        cen = p.V[p.T].mean(1)
+        hits = tree.query(shapely.points(cen[:, :2]), predicate="intersects")
+        if hits.size == 0:
+            continue
+        drop = np.zeros(len(p.T), bool)
+        for ti, ci in zip(hits[0].tolist(), hits[1].tolist()):
+            c = chains[ci]
+            if c.id == own or drop[ti]:
+                continue
+            s, lat = c.line.project(cen[ti, :2])
+            if not (c.t_a <= s <= c.length - c.t_b):
+                continue
+            hw = float(c.hw_at(s))
+            if abs(lat) > hw - OVERLAP_INSET_M:
+                continue
+            if abs(float(c.crossfall_z(s, lat)) - (cen[ti, 2] - S.MARKING_LIFT)) > OVERLAP_DZ_M:
+                continue
+            drop[ti] = True
+        if drop.any():
+            removed += int(drop.sum())
+            p.T = p.T[~drop]
+    buf.parts[first:] = [p for p in buf.parts[first:] if len(p.T)]
+    return removed
+
+
+def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
     secs = net.sec_list
     arm_info = {}
     for j in juncs:
@@ -310,7 +360,7 @@ def strip_cross(buf, c, s_mid, depth, lat0, lat1):
     b = _surface_pts(c, s, np.full(2, lat1))
     V = np.vstack([a, b])          # 0:(s0,lat0) 1:(s1,lat0) 2:(s0,lat1) 3:(s1,lat1)
     T = np.array([(0, 1, 3), (0, 3, 2)])
-    buf.add("markings", "marking_white", V, np.array([[0, 0], [0, 1], [1, 0], [1, 1]], float), T, src="P-14")
+    buf.add("markings", "marking_white", V, np.array([[0, 0], [0, 1], [1, 0], [1, 1]], float), T, src=f"P-14@{c.id}")
 
 
 def _segmented(buf, c, sa, sb, lat, w, dash, gap, cont, kind):

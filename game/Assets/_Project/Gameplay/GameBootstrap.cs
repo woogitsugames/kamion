@@ -1,4 +1,5 @@
 using System.Globalization;
+using Game.Controls;
 using Game.Core;
 using Game.Platform;
 using Game.Rendering;
@@ -91,16 +92,39 @@ namespace Game.Gameplay
             // The imported world (WorldC) is in the build only when it was generated (scripts/import-region.ps1).
             var entries = new System.Collections.Generic.List<(string, System.Action)>
             {
-                ("Plac testowy — jazda", () => SceneManager.LoadScene(DrivingLabLayout.SceneName)),
+                ("DrivingLab — plac testowy", () => SceneManager.LoadScene(DrivingLabLayout.SceneName)),
             };
             if (Application.CanStreamedLevelBeLoaded(WorldCSceneName))
-                entries.Add(("Białystok — Kwadrat Park", () => SceneManager.LoadScene(WorldCSceneForTier())));
+            {
+                // Same values as the launch arguments route_s / route_end (consumed by DrivingLabBootstrap in WorldC).
+                entries.Add(("Trasa G3-A — Kwadrat Park, brama, Bieżeństwa", () =>
+                {
+                    StartRequest.Set("G3-A", StartRequest.G3AStartS, StartRequest.G3AEndS);
+                    SceneManager.LoadScene(WorldCSceneForTier());
+                }));
+                entries.Add(("Trasa G3-B — Andersa, Rondo Putry", () =>
+                {
+                    StartRequest.Set("G3-B", StartRequest.G3BStartS, StartRequest.G3BEndS);
+                    SceneManager.LoadScene(WorldCSceneForTier());
+                }));
+            }
+            entries.Add(("Ustawienia sterowania", OpenControlSettings));
+            ControlSettings.Load().Log("boot");
             BootMenu.Create(Camera.main, entries.ToArray()).transform.SetParent(transform, false);
 
             // Launch argument "scene" (adb: -e scene DrivingLab) jumps straight into a scene; the remaining
             // arguments (autopilot, speed) are read by that scene's bootstrap.
             string scene = Platform.GetLaunchArgument("scene");
             if (!string.IsNullOrEmpty(scene)) m_PendingScene = scene == WorldCSceneName ? WorldCSceneForTier() : scene;
+        }
+
+        ControlSettingsPanel m_Settings;
+
+        void OpenControlSettings()
+        {
+            if (m_Settings != null) return;
+            m_Settings = ControlSettingsPanel.Create(null, ControlSettings.Load(), null, null);
+            m_Settings.transform.SetParent(transform, false);
         }
     }
 }

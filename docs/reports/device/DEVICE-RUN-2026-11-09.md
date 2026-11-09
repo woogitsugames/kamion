@@ -205,3 +205,29 @@ A16 Low, trasa 40 t / 50 km/h, `telemetry=1`: `artifacts/device/RFGL34SJYDZ/2026
 - EditMode: 22/22 zielone.
 - PlayMode: 25 zielonych, 3 pominięte, **2 czerwone** (`WorldCRouteTests`, Solo i zestaw: skarpa na s = 571 m, pkt 1). Wcześniej zielone.
 - Data/Regions/…/world_manifest.json, streetscape_qa.json i art-source/world/props/props_meta.json zmieniły się po regeneracji (liczby trójkątów ±2, przeliczone hashe). Nie commituję ich, dopóki świat nie jest poprawiony.
+
+## r5 — D23 v2 (ADR 0016), forest HLOD (ADR 0015), High MSAA 2×, TRAKT r4 + interior LOD0 (rendering-perf, 21:14–21:57)
+APK `kamion-0.1.0-0908719f0c` (Low/Medium content, 134,0 MB) on the A16, `…-99ba0320df-high` (247,5 MB) on the S24+. Static QA cameras, 30 FPS cap,
+window after 20 s (A16) / 25 s (S24+) warm-up. Before every run: `isKeyguardShowing=false`, battery < 36 °C (one S24+ repeat started at 37 °C, marked).
+Screen never put to sleep by the scripts. Frames (native 2340×1080): `docs/reports/visual/truck-A7/device-r2/`.
+
+| Device / view | FPS | frame p50 / p95 / p99 / max [ms] | GPU p50 / p95 | CPU p50 | PSS MB | battery °C / thermal |
+|---|---|---|---|---|---|---|
+| A16 Low cab-dash overcast / low sun / dusk | 30,1 / 30,1 / 30,0 | 33,3 / 33,5 / 33,6 / ≤ 50 | 16,1–16,2 / ≤ 18,0 | 18,0–18,6 | 610–613 | 29,4 / 0 |
+| A16 Low street (Andersa) / truck-34 | 30,1 / 30,0 | 33,3 / 33,5 / 33,6 | 16,2 / 16,0 | 18,7 / 17,9 | 610 / 615 | 29,4 / 0 |
+| A16 Low DK8 forest, HLOD on / `rq_hlod=0` | 30,1 / 30,1 | 33,3 / 33,4 / 33,5 | **26,7** / 27,8 | 15,8 / 17,9 | 610 / 612 | 29,3 / 0 |
+| **A16 Low DK8 forest, 30 min** (53 016 frames) | 29,98 | 33,3 / 33,5 / 33,6 / 100 (22 frames > 50 ms) | 27,4 / 29,0 | 18,8 | 575 | **30,5 / 0** after 30 min |
+| S24+ High cab-dash overcast / low sun / dusk | 30,0 | 33,4 / 33,6–33,7 / 34,1–35,1 | 12,2 / 14,9 / 21,6 | 18,6–19,4 | 1000–1055 | 34,6–37,2 / 0 |
+| S24+ High street / truck-34 | 30,0 | 33,4 / 33,6–33,8 / 34,1–34,7 | 12,9 / 12,7 | 19,5 / 18,2 | 994 | 36,2–36,4 / 0 |
+| S24+ High DK8, MSAA 2× (new) HLOD on (repeat, start 37 °C) / off | 30,0 / 30,0 | 33,4 / 33,6 / 33,8 | **18,7** / 18,3 | 16,8 / 16,9 | 983 / 991 | 38,4 / 0 |
+| S24+ High DK8, `rq_msaa=4` (old High) | 26,8 | 33,4 / 66,8 / 67,2 | 36,3 / 37,4 | 17,4 | 1058 | 37,0 / 0 |
+
+- High MSAA 4× → 2×: −17,6 ms GPU in the forest (36,3 → 18,7), 26,8 → 30 FPS; confirms r4. The 10 s motion recording (review r3 condition)
+  needs the route through DK8, blocked by the s ≈ 583–606 m world fault → after the world fix, with gate 3.
+- Forest HLOD: −1,1 ms GPU on the A16 (the A16 already culls trees at 300 m × LOD bias); no gain measurable on the S24+ here (QA camera looks along the
+  road, near trees dominate). Draws in the High truck-34 view 742 → 282 with the per-chunk merge (editor stats).
+- Interior LOD0 on every tier: A16 cab-dash GPU 16,1 ms (A7: 16,0–16,3 ms with LOD2) — no measurable cost; PSS 571–581 → 610–615 MB (+35 MB: LOD0 interior
+  mesh + AO atlas, HLOD meshes). S24+ cab-dash 12,2 ms overcast (A7: 29 ms on a hot phone; cool now).
+- One S24+ DK8 run with HLOD fell to 10 FPS (frame p50 100 ms, GPU 22,6 ms, CPU 26 ms) right after the low-sun/dusk runs at 35,9 °C; the 60 s repeat was a
+  clean 30 FPS, GPU 18,7 ms. Cause UNVERIFIED (no logcat hint) — watch for it in gate 3.
+- Tests: EditMode 27/27; PlayMode 35 passed, 4 skipped, 2 failed (`WorldCRouteTests`: stuck at s ≈ 583–606 m, world v3.1 fault — the world agent's fix).

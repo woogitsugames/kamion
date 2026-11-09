@@ -45,10 +45,10 @@ namespace Game.Vehicle.Physics
     {
         public double floorHeight = 1.30;
         /// <summary>Front wall position (z) and inner length / width / height [m].</summary>
-        public double frontZ = 1.55;
-        public double length = 13.5;
-        public double width = 2.48;
-        public double height = 2.70;
+        public double frontZ = 1.572;
+        public double length = 13.512;
+        public double width = 2.50;
+        public double height = 2.58;
         public double maxPayloadKg = 26000;
     }
 

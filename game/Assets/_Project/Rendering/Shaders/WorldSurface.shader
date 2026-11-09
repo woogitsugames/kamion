@@ -14,6 +14,10 @@
 //   the pixel footprint and fade to their mean coverage once a bay is smaller than ~1.5 px (no moire far away); per-pane
 //   tone from a hash of the bay/storey index (blinds, curtains, dark rooms). Rows with storey index < 0 (plinth strip)
 //   have no panes.
+// - Street lamps at dusk (review r4 L3): _Emission (luminance cd/m^2, linear RGB; lamp glass materials, StreetLamps)
+//   x global _KamionStreetLamps (0..1, from the sun elevation) x _KamionExposure; and, while _KamionLampLights > 0
+//   (StreetLamps point lights near the camera, High), a Lambert loop over URP's per-object additional lights - a uniform
+//   branch, no extra variants.
 Shader "Kamion/World Surface"
 {
     Properties
@@ -38,6 +42,8 @@ Shader "Kamion/World Surface"
         [Toggle] _ReceiveShadows ("Receive shadows", Float) = 1
         _WindowGrid ("Far facade pane rect in a bay (u0, u1, v0, v1)", Vector) = (0.25, 0.75, 0.3, 0.8)
         _GlassColor ("Far facade glass albedo (linear)", Color) = (0.03, 0.035, 0.04, 1)
+        _Emission ("Emission luminance (cd/m2, linear; street lamp glass)", Color) = (0, 0, 0, 0)
+        [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull (lamp glass: Off - the generator's glass quad faces up)", Float) = 2
         [Toggle] _GroundMasks ("Terrain ground masks from COLOR_0 (R road distance/20 m, G forest floor, B unmown, A bare soil)", Float) = 0
     }
     SubShader
@@ -58,7 +64,9 @@ Shader "Kamion/World Surface"
             float _Smoothness, _SmoothnessVar, _Occlusion, _OffsetFactor, _OffsetUnits, _ReceiveShadows, _GroundMasks;
             float4 _WindowGrid;
             float4 _GlassColor;
+            float4 _Emission;
         CBUFFER_END
+        float _KamionStreetLamps, _KamionLampLights, _KamionExposure;
         ENDHLSL
 
         Pass
@@ -66,7 +74,7 @@ Shader "Kamion/World Surface"
             Name "ForwardLit"
             Tags { "LightMode" = "UniversalForward" }
             Offset [_OffsetFactor], [_OffsetUnits]
-            Cull Back ZWrite On
+            Cull [_Cull] ZWrite On
 
             HLSLPROGRAM
             #pragma target 3.0
@@ -225,6 +233,16 @@ Shader "Kamion/World Surface"
                 half grazing = saturate(smooth + 0.04);
                 half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, _Occlusion) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
                 color += ambient + env;
+                if (_KamionLampLights > 0.0)
+                {
+                    uint nl = GetAdditionalLightsCount();
+                    for (uint li = 0u; li < nl; li++)
+                    {
+                        Light A = GetAdditionalLight(li, i.positionWS);
+                        color += albedo * A.color * (A.distanceAttenuation * saturate(dot(n, A.direction)));
+                    }
+                }
+                color += _Emission.rgb * (_KamionStreetLamps * _KamionExposure);
 
                 color = MixFog(color, i.fogFactor);
                 return half4(color, 1.0);

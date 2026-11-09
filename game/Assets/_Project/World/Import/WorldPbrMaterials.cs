@@ -1,0 +1,381 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using Game.Editor.Build;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.Rendering;
+using static Game.World.Import.MiniJson;
+
+namespace Game.World.Import
+{
+    /// <summary>
+    /// Generated PBR texture sets of the world (ADR 0022) → <c>Kamion/World PBR</c> materials.
+    /// Source: art-source/world/materials/materials_spec.json + PNGs built by _src/build_all.py (not in git; the import
+    /// script builds them when missing). A manifest material with <c>texture_set</c> naming a set of the spec gets a PBR
+    /// material: "tiling_set" (calibrated albedo, world-planar or mesh UV), "modulation_set" (neutral map × manifest
+    /// colour, mesh UV0 in metres), "decal_atlas" (oil). Layers: macro_variation (every material), asphalt_cracks_layer
+    /// and asphalt_detail_photo (asphalt). Unknown sets fall back to the previous Kamion/World Surface path.
+    /// Textures are copied into Assets/_Generated/World/&lt;id&gt;/Textures/PBR/ (gitignored) with ASTC per the spec
+    /// (tier -materialTier, default Medium: 1024 px for 4 m tiles = 3.9 mm/texel).
+    /// </summary>
+    public static class WorldPbrMaterials
+    {
+        public const string ShaderName = "Kamion/World PBR";
+        static Dictionary<string, object> s_Spec;
+        static string s_Tier;
+        static readonly Dictionary<string, Texture2D> s_Tex = new Dictionary<string, Texture2D>();
+        public static readonly List<Texture> Imported = new List<Texture>();
+
+        static string SpecPath => Path.Combine(EditorTools.RepoRoot, "art-source", "world", "materials", "materials_spec.json");
+        static string SetRoot => Path.Combine(EditorTools.RepoRoot, "art-source", "world", "materials");
+
+        public static void Reset()
+        {
+            s_Spec = null;
+            s_Tex.Clear();
+            Imported.Clear();
+            s_Tier = EditorTools.Arg("-materialTier", "Medium");
+        }
+
+        static Dictionary<string, object> Spec()
+        {
+            if (s_Spec == null)
+            {
+                if (s_Tier == null) s_Tier = EditorTools.Arg("-materialTier", "Medium");
+                s_Spec = File.Exists(SpecPath) ? Obj(Obj(Parse(File.ReadAllText(SpecPath))).Get("sets")) : new Dictionary<string, object>();
+            }
+            return s_Spec;
+        }
+
+        static Dictionary<string, object> Set(string name) => name != null && Spec().Get(name) is Dictionary<string, object> s ? s : null;
+
+        /// <summary>True when the manifest material has a generated set whose files exist for the tier.</summary>
+        public static bool Has(Dictionary<string, object> def, string id)
+        {
+            if (id == "decal_tyre") return true;   // procedural strip profile, no set
+            if (def.Get("procedural") as string == "grate") return true;   // gully grates (drain_grate)
+            if (Stripes(def) != null) return true;                         // painted bands (boom, hazard)
+            var s = Set(def.Get("texture_set") as string);
+            return s != null && FilesFor(s) != null;
+        }
+
+        /// <summary>Vertex channels the material needs (mesh baking keeps TEXCOORD_0 / TEXCOORD_1 only where read).</summary>
+        public static void Channels(Dictionary<string, object> def, string id, out bool uv0, out bool uv1, out bool colors)
+        {
+            uv0 = uv1 = colors = false;
+            if (!Has(def, id)) return;
+            var s = Set(def.Get("texture_set") as string);
+            string kind = s != null ? Str(s.Get("kind")) : "decal";
+            string uv = s != null ? Str(s.Get("uv")) ?? "" : "";
+            if ((kind == "modulation_set" || uv.StartsWith("mesh_uv0")) && def.Get("uv") as string != "planar") uv0 = true;
+            if (def.Get("uv1") as string == "along_m") uv1 = true;
+            if (id == "road_asphalt" || id == "road_asphalt_new") uv1 = true;           // _ROADWEAR
+            if (id == "decal_patch" || id == "decal_oil" || id == "decal_tyre") { uv0 = true; uv1 = true; }
+            if (def.Get("procedural") as string == "grate" || Stripes(def) != null) uv0 = true;
+            if (id == "terrain_grass") colors = true;
+        }
+
+        /// <summary>Procedural stripe sets: (direction in UV metres, period m, colour A, colour B), linear colours.</summary>
+        static (Vector2 dir, float period, Color a, Color b)? Stripes(Dictionary<string, object> def)
+        {
+            switch (def.Get("texture_set") as string)
+            {
+                // boom arm: 0.5 m red / white bands along the arm (UV u = metres, life_props.barrier_arm)
+                case "boom_red_white": return (new Vector2(1f, 0f), 1.0f, new Color(0.45f, 0.025f, 0.02f), new Color(0.68f, 0.68f, 0.66f));
+                // dock leveller edges: yellow / black 45 deg, 0.1 m bands (WORKING_VALUE)
+                case "hazard_stripes_45deg": return (new Vector2(0.7071f, 0.7071f), 0.2f, new Color(0.55f, 0.40f, 0.03f), new Color(0.02f, 0.02f, 0.02f));
+            }
+            return null;
+        }
+
+        static Dictionary<string, object> FilesFor(Dictionary<string, object> set)
+        {
+            if (!(set.Get("files") is Dictionary<string, object> f)) return null;
+            foreach (var t in new[] { s_Tier ?? "Medium", "Medium", "High", "Low" })
+                if (f.Get(t) is Dictionary<string, object> info)
+                {
+                    string dir = Path.Combine(SetRoot, Str(info.Get("dir")));
+                    if (Arr(info.Get("files")).All(x => File.Exists(Path.Combine(dir, Str(x))))) return info;
+                }
+            return null;
+        }
+
+        /// <summary>PBR material for a manifest material, or null when its set is missing (caller falls back).</summary>
+        public static Material Create(RegionImporter.Result r, string id, Dictionary<string, object> def, string path)
+        {
+            if (!Has(def, id)) return null;
+            var shader = Shader.Find(ShaderName) ?? throw new InvalidOperationException(ShaderName + " not found (compile error?)");
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
+            mat.shader = shader;
+            mat.shaderKeywords = Array.Empty<string>();
+            mat.enableInstancing = true;
+            var c = Arr(def.Get("color"));
+            var col = new Vector3((float)Num(c[0]), (float)Num(c[1]), (float)Num(c[2]));
+            string setName = def.Get("texture_set") as string;
+            var set = Set(setName);
+            string kind = set != null ? Str(set.Get("kind")) : "decal";
+
+            // textures
+            var macro = Layer(r, "macro_variation", "T_macro_variation.png", false, false);
+            mat.SetTexture("_MacroMap", macro);
+            Vector4 tile = new Vector4(4, 4, 16, 1);
+            if (set != null)
+            {
+                var info = FilesFor(set);
+                string dir = Str(info.Get("dir"));
+                foreach (var fo in Arr(info.Get("files")))
+                {
+                    string f = Str(fo);
+                    if (f.Contains("_late_autumn")) continue;
+                    string slot = f.EndsWith("_BaseColor.png") ? "_BaseMap" : f.EndsWith("_Normal.png") ? "_NormalMap" :
+                        f.EndsWith("_MaskMap.png") ? "_MaskMap" : f.EndsWith("_Var.png") ? "_VarMap" : null;
+                    if (slot == null) continue;
+                    mat.SetTexture(slot, Import(r, setName, dir, f, info, slot));
+                }
+                var tm = Arr(set.Get("tile_m"));
+                tile.x = (float)Num(tm[0]); tile.y = (float)Num(tm[1]);
+            }
+
+            float scale = 1f;
+            Vector3 tint = Vector3.one;
+            if (kind == "modulation_set") { scale = 2f; tint = col; }
+            else if (set != null && set.Get("albedo") is Dictionary<string, object> alb && alb.Get("mean_rgb_linear") is List<object> mean)
+            {
+                // calibrated set: grey tint = manifest luminance / set mean luminance (1 when the generator uses the set
+                // mean); the hue always comes from the set (a per-channel ratio turned the grass magenta)
+                float lm = 0.2126f * (float)Num(mean[0]) + 0.7152f * (float)Num(mean[1]) + 0.0722f * (float)Num(mean[2]);
+                float lc = 0.2126f * col.x + 0.7152f * col.y + 0.0722f * col.z;
+                float t = Mathf.Clamp(lc / Mathf.Max(lm, 1e-3f), 0.4f, 2.5f);
+                tint = new Vector3(t, t, t);
+            }
+            mat.SetVector("_Tint", new Vector4(tint.x, tint.y, tint.z, 1f));
+            mat.SetFloat("_AlbedoScale", scale);
+            mat.SetFloat("_NormalStrength", 1f);
+            mat.SetFloat("_SmoothnessScale", 1f);
+            mat.SetFloat("_MetallicScale", 0f);
+            mat.SetFloat("_MacroSize", 64f);
+            mat.SetFloat("_MacroStrength", kind == "modulation_set" ? 0.06f : 0.16f);
+            mat.SetFloat("_MacroWear", kind == "modulation_set" ? 0.05f : 0.2f);
+            mat.SetFloat("_ElementJitter", 0f);
+            mat.SetFloat("_ReceiveShadows", 1f);
+            SetBlend(mat, false);
+            mat.SetFloat("_OffsetFactor", 0f);
+            mat.SetFloat("_OffsetUnits", 0f);
+            mat.SetFloat("_Cull", (float)CullMode.Back);
+            mat.renderQueue = -1;
+
+            string uv = set != null ? Str(set.Get("uv")) ?? "" : "";
+            if ((kind == "modulation_set" || uv.StartsWith("mesh_uv0")) && def.Get("uv") as string != "planar") mat.EnableKeyword("_UV_MESH0");
+            if (def.Get("uv1") as string == "along_m") mat.EnableKeyword("_UV_MESH1");
+            if (setName == "behaton_i_grey" || setName == "paving_20x10_grey") { mat.SetFloat("_ElementJitter", 0.12f); mat.SetFloat("_ElementSize", 0.17f); }
+            if (setName == "concrete_cast_5m_joints" || setName == "concrete_slab_3x1.5") { mat.SetFloat("_ElementJitter", 0.07f); mat.SetFloat("_ElementSize", 2.0f); }
+            if (setName == "large_panel_joints" || setName == "brick") { mat.SetFloat("_ElementJitter", 0.05f); mat.SetFloat("_ElementSize", setName == "brick" ? 0.25f : 2.8f); }
+
+            bool asphalt = setName == "asphalt_worn" || setName == "asphalt_sma_fresh" || setName == "asphalt_patch";
+            if (id == "road_asphalt" || id == "road_asphalt_new")
+            {
+                mat.EnableKeyword("_ROADWEAR");
+                mat.SetFloat("_WheelPolish", id == "road_asphalt" ? 0.6f : 0.25f);
+                mat.SetFloat("_GutterDirt", id == "road_asphalt" ? 0.55f : 0.3f);
+            }
+            if (setName == "asphalt_worn")
+            {
+                var cm = Layer(r, "asphalt_cracks_layer", "T_asphalt_cracks_layer_Mask.png", false, false);
+                var cn = Layer(r, "asphalt_cracks_layer", "T_asphalt_cracks_layer_Normal.png", false, true);
+                if (cm != null && cn != null)
+                {
+                    mat.SetTexture("_CrackMap", cm); mat.SetTexture("_CrackNormal", cn);
+                    mat.EnableKeyword("_CRACKS");
+                    mat.SetFloat("_CrackStrength", id == "yard_asphalt" ? 0.9f : 0.75f);
+                }
+            }
+            if (asphalt)
+            {
+                var da = Layer(r, "asphalt_detail_photo", "T_asphalt_detail_photo_DetailAlbedo.png", true, false);
+                var dn = Layer(r, "asphalt_detail_photo", "T_asphalt_detail_photo_DetailNormal.png", false, true);
+                if (da != null && dn != null)
+                {
+                    mat.SetTexture("_DetailAlbedo", da); mat.SetTexture("_DetailNormal", dn);
+                    mat.EnableKeyword("_PHOTO_DETAIL");
+                    mat.SetFloat("_DetailFade", 25f);
+                }
+            }
+            if (id == "terrain_grass") { mat.EnableKeyword("_GROUNDMASKS"); mat.SetFloat("_GroundTint", 1f); }
+            if (id.StartsWith("hall_wall") || id.StartsWith("plaster_") || id == "panel_concrete" || id == "brick_red" || id == "hall_plinth")
+            {
+                mat.EnableKeyword("_SPLASH");
+                mat.SetFloat("_SplashHeight", id == "hall_plinth" ? 0.35f : 0.6f);
+            }
+
+            if (Stripes(def) is var st && st != null)
+            {
+                mat.EnableKeyword("_STRIPES");
+                mat.EnableKeyword("_UV_MESH0");
+                mat.SetVector("_Stripe", new Vector4(st.Value.dir.x, st.Value.dir.y, st.Value.period, 0f));
+                mat.SetVector("_StripeA", (Vector4)st.Value.a);
+                mat.SetVector("_StripeB", (Vector4)st.Value.b);
+            }
+            if (setName == "behaton_i_grey" || setName == "paving_20x10_grey" || setName == "concrete_cast_5m_joints" || setName == "concrete_slab_3x1.5")
+            {
+                // yards and footways: soiling and wear patches stronger than on carriageways (r4 W-H1: "too clean")
+                mat.SetFloat("_MacroStrength", 0.2f);
+                mat.SetFloat("_MacroWear", 0.38f);
+            }
+
+            // decals (markings layer): polygon offset like the markings, later queue
+            if (def.Get("decal") is bool dc && dc)
+            {
+                mat.SetFloat("_OffsetFactor", -1f);
+                mat.SetFloat("_OffsetUnits", -4f);
+                mat.SetFloat("_ReceiveShadows", 1f);
+                mat.renderQueue = (int)RenderQueue.Geometry + 10;
+                if (id == "decal_patch")
+                {
+                    mat.EnableKeyword("_DECAL_PATCH");
+                    var worn = Set("asphalt_worn");
+                    float ratio = 2.0f;
+                    if (worn != null && set != null && worn.Get("albedo") is Dictionary<string, object> wa && set.Get("albedo") is Dictionary<string, object> pa)
+                        ratio = (float)(Num(wa.Get("mean_lum_linear")) / Math.Max(1e-3, Num(pa.Get("mean_lum_linear"))));
+                    mat.SetFloat("_AgeTint", ratio);
+                }
+                else if (id == "decal_oil")
+                {
+                    mat.EnableKeyword("_DECAL_ALPHA");
+                    mat.SetFloat("_DecalAlpha", 0.85f);
+                    mat.SetVector("_Tint", Vector4.one);
+                    SetBlend(mat, true);
+                    mat.renderQueue = (int)RenderQueue.Geometry + 20;
+                }
+                else if (def.Get("procedural") as string == "grate")
+                {
+                    mat.EnableKeyword("_DECAL_GRATE");
+                    mat.renderQueue = (int)RenderQueue.Geometry + 15;
+                }
+                else if (id == "decal_tyre")
+                {
+                    mat.EnableKeyword("_DECAL_TYRE");
+                    mat.SetVector("_Tint", new Vector4(col.x, col.y, col.z, 1f));
+                    mat.SetFloat("_DecalAlpha", 0.45f);
+                    SetBlend(mat, true);
+                    mat.renderQueue = (int)RenderQueue.Geometry + 20;
+                }
+            }
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
+        static void SetBlend(Material mat, bool alpha)
+        {
+            mat.SetFloat("_SrcBlend", alpha ? (float)BlendMode.SrcAlpha : (float)BlendMode.One);
+            mat.SetFloat("_DstBlend", alpha ? (float)BlendMode.OneMinusSrcAlpha : (float)BlendMode.Zero);
+            mat.SetFloat("_ZWrite", alpha ? 0f : 1f);
+            mat.SetOverrideTag("RenderType", alpha ? "Transparent" : "Opaque");
+        }
+
+        static Texture2D Layer(RegionImporter.Result r, string setName, string file, bool srgb, bool normal)
+        {
+            var set = Set(setName);
+            if (set == null) return null;
+            var info = FilesFor(set);
+            if (info == null) return null;
+            string slot = normal ? "_NormalMap" : srgb ? "_BaseMap" : "_MaskMap";
+            return Import(r, setName, Str(info.Get("dir")), file, info, slot);
+        }
+
+        /// <summary>Copies one PNG of a set into the generated folder and applies the import settings of its slot.</summary>
+        static Texture2D Import(RegionImporter.Result r, string setName, string dir, string file, Dictionary<string, object> info, string slot)
+        {
+            string key = setName + "/" + file;
+            if (s_Tex.TryGetValue(key, out var cached)) return cached;
+            string src = Path.Combine(SetRoot, dir, file);
+            if (!File.Exists(src)) return null;
+            string dstDir = $"{r.Dir}/Textures/PBR/{setName}";
+            Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, dstDir));
+            string dst = $"{dstDir}/{file}";
+            string full = Path.Combine(EditorTools.ProjectRoot, dst);
+            bool copy = !File.Exists(full) || new FileInfo(full).Length != new FileInfo(src).Length || !File.ReadAllBytes(full).SequenceEqual(File.ReadAllBytes(src));
+            if (copy)
+            {
+                File.Copy(src, full, true);
+                AssetDatabase.ImportAsset(dst, ImportAssetOptions.ForceSynchronousImport);
+            }
+            var ti = (TextureImporter)AssetImporter.GetAtPath(dst);
+            bool normal = slot == "_NormalMap" || file.Contains("Normal");
+            bool srgb = slot == "_BaseMap" && !file.Contains("_Mask") && !file.Contains("macro");
+            bool var = file.EndsWith("_Var.png");
+            bool hasAlpha = file.Contains("oil_stain") && file.EndsWith("_BaseColor.png") || file.EndsWith("_MaskMap.png") || var || file.Contains("cracks_layer_Mask") || file.Contains("macro");
+            var res = Arr(info.Get("res"));
+            int maxRes = Mathf.NextPowerOfTwo(Mathf.Max((int)Num(res[0]), (int)Num(res[1])));
+            string astc = "6x6";
+            if (info.Get("astc") is Dictionary<string, object> a)
+            {
+                string k = file.EndsWith("_BaseColor.png") ? "BaseColor" : normal ? "Normal" : file.EndsWith("_MaskMap.png") ? "MaskMap" : var ? "Var" :
+                    file.Contains("Detail") ? "DetailAlbedo" : file.Contains("cracks_layer_Mask") ? "Mask" : "Macro";
+                if (a.Get(k) is string s) astc = s;
+                else if (a.Get("MaskMap") is string s2) astc = s2;
+            }
+            string sig = $"pbr2|{normal}|{srgb}|{var}|{hasAlpha}|{maxRes}|{astc}";
+            if (copy || ti.userData != sig)
+            {
+                ti.textureType = normal ? TextureImporterType.NormalMap : TextureImporterType.Default;
+                ti.sRGBTexture = srgb;
+                ti.mipmapEnabled = !var;
+                ti.mipmapFilter = srgb ? TextureImporterMipFilter.KaiserFilter : TextureImporterMipFilter.BoxFilter;
+                ti.alphaSource = hasAlpha ? TextureImporterAlphaSource.FromInput : TextureImporterAlphaSource.None;
+                ti.alphaIsTransparency = false;
+                ti.wrapMode = TextureWrapMode.Repeat;
+                ti.filterMode = var ? FilterMode.Point : FilterMode.Trilinear;
+                ti.anisoLevel = 4;
+                ti.maxTextureSize = Mathf.Max(maxRes, 32);
+                ti.textureCompression = TextureImporterCompression.CompressedHQ;
+                ti.SetPlatformTextureSettings(new TextureImporterPlatformSettings
+                {
+                    name = "Android", overridden = true, maxTextureSize = Mathf.Max(maxRes, 32),
+                    format = AstcFormat(astc), compressionQuality = 50,
+                });
+                ti.userData = sig;
+                ti.SaveAndReimport();
+            }
+            var tex = AssetDatabase.LoadAssetAtPath<Texture2D>(dst);
+            s_Tex[key] = tex;
+            if (tex != null && !var) Imported.Add(tex);
+            return tex;
+        }
+
+        static TextureImporterFormat AstcFormat(string b)
+        {
+            switch (b)
+            {
+                case "4x4": return TextureImporterFormat.ASTC_4x4;
+                case "5x5": return TextureImporterFormat.ASTC_5x5;
+                case "8x8": return TextureImporterFormat.ASTC_8x8;
+                case "10x10": return TextureImporterFormat.ASTC_10x10;
+                default: return TextureImporterFormat.ASTC_6x6;
+            }
+        }
+
+        /// <summary>All PBR textures under the region's generated folder (for the tier's aniso / mip bias).</summary>
+        public static Texture[] LoadAll(string regionDir)
+        {
+            string dir = $"{regionDir}/Textures/PBR";
+            if (!AssetDatabase.IsValidFolder(dir)) return Array.Empty<Texture>();
+            return AssetDatabase.FindAssets("t:Texture2D", new[] { dir }).Select(AssetDatabase.GUIDToAssetPath)
+                .Where(p => !p.EndsWith("_Var.png")).Select(AssetDatabase.LoadAssetAtPath<Texture>).Where(t => t != null).ToArray();
+        }
+
+        /// <summary>Estimated GPU bytes of the imported PBR textures (Android ASTC with mips, from the spec).</summary>
+        public static long EstimatedGpuBytes()
+        {
+            long sum = 0;
+            var seen = new HashSet<string>(s_Tex.Keys.Select(k => k.Split('/')[0]));
+            foreach (var name in seen)
+                if (Set(name) is Dictionary<string, object> s && FilesFor(s) is Dictionary<string, object> info && info.Get("gpu_bytes_astc_mips") != null)
+                    sum += (long)Num(info.Get("gpu_bytes_astc_mips"));
+            return sum;
+        }
+    }
+}

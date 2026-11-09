@@ -21,14 +21,14 @@ namespace Game.Vehicle.Runtime
         public float frontOverhang = 1.45f;
         public float rearOverhang = 0.80f;
         public float cabWidth = 2.49f;
-        public float overallHeight = 3.95f;
+        public float overallHeight = 3.75f;   // B2 v2 (owner decision 2026-11-09), dims.json overall_height_m
         public float cabBackBehindFrontAxle = 0.95f;
         public float cabBodyBottom = 1.15f;
         public float cabInteriorFloor = 1.40f;
         public float frameWidthOuter = 0.85f;
         public float frameTopHeight = 0.97f;
         public float fifthWheelHeight = 1.15f;
-        public float fifthWheelLead = 0.55f;
+        public float fifthWheelLead = 0.68f;   // ADR 0019 (was 0.55)
         public float dualSpacing = 0.34f;
         public float tyreSectionWidth = 0.315f;
         public float rimFlangeDiameter = 0.60f;

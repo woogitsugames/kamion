@@ -11,6 +11,7 @@ import json
 import struct
 
 import numpy as np
+from scipy import ndimage
 import pytest
 
 from conftest import REGION_DIR, REGION_ID, REPO
@@ -176,8 +177,15 @@ def test_terrain_stays_below_road(world):
     w = world["w"]
     road_z, mask = CF.rasterise([p for p in w.buf.parts if p.layer == "road"], w.hf)
     zc = np.load(world["out"] / "terrain_conformed.npy").astype(np.float64)
-    gap = road_z[mask] - zc[mask]
+    # hard surfaces (carriageway, kerbs, paving) and their 2-node neighbourhood: 0.30 m clearance; grass verge
+    # strips far from them only need the terrain under the grass (CF.SOFT_UNDER, ADR 0022 / REVIEW r3 W3)
+    _, hard = CF.rasterise([p for p in w.buf.parts if p.layer == "road" and p.mat != "verge_grass"], w.hf)
+    near_hard = mask & ndimage.binary_dilation(hard, iterations=CF.SOFT_CLEAR_CELLS)
+    gap = road_z[near_hard] - zc[near_hard]
     assert gap.min() >= 0.30 - 1e-3
+    soft = mask & ~near_hard
+    if soft.any():
+        assert (road_z[soft] - zc[soft]).min() >= CF.SOFT_UNDER - 1e-3
 
 
 # ------------------------------------------------------------------------------------------ export
@@ -206,7 +214,8 @@ def test_glb_structure(world):
     assert {"terrain_lod0", "terrain_lod1", "terrain_lod2", "terrain_lod3", "road", "road_collision"} <= names
     for acc in doc["accessors"]:
         if acc["componentType"] == 5123:
-            assert acc["count"] % 3 == 0 or acc["type"] == "SCALAR"
+            # u16 = indices or normalised COLOR_0 (terrain masks, wire tangents on the High variant)
+            assert acc["count"] % 3 == 0 or acc["type"] == "SCALAR" or (acc["type"] == "VEC4" and acc.get("normalized"))
     mats = {m["name"] for m in doc["materials"]}
     assert "road_asphalt" in mats and "terrain_grass" in mats
 

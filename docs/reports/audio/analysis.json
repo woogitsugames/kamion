@@ -4533,6 +4533,8 @@
    "seam_jump": 0.13385009765625,
    "seam_ratio_d1": 0.5770285790942348,
    "seam_ratio_d2": 0.5519977433953418,
+   "seam_vs_max_d1": 0.4946988495357309,
+   "seam_vs_max_d2": 0.4886222589954466,
    "ok": true
   },
   {
@@ -4542,6 +4544,19 @@
    "seam_jump": 0.035003662109375,
    "seam_ratio_d1": 0.5870004227123414,
    "seam_ratio_d2": 0.10270774976343089,
+   "seam_vs_max_d1": 0.3938873626329303,
+   "seam_vs_max_d2": 0.07289595758622355,
+   "ok": true
+  },
+  {
+   "name": "road_roll_cab_loop",
+   "peak_dbfs": -6.01,
+   "rms_dbfs": -17.33,
+   "seam_jump": 0.0152587890625,
+   "seam_ratio_d1": 0.9823182710566039,
+   "seam_ratio_d2": 0.3088235292629481,
+   "seam_vs_max_d1": 0.5580357142653062,
+   "seam_vs_max_d2": 0.24418604641858735,
    "ok": true
   },
   {
@@ -4551,6 +4566,19 @@
    "seam_jump": 0.005615234375,
    "seam_ratio_d1": 0.16027846640924154,
    "seam_ratio_d2": 0.03341288782554923,
+   "seam_vs_max_d1": 0.11171827565047919,
+   "seam_vs_max_d2": 0.021772939345702246,
+   "ok": true
+  },
+  {
+   "name": "wind_cab_loop",
+   "peak_dbfs": -8.34,
+   "rms_dbfs": -21.88,
+   "seam_jump": 0.0009765625,
+   "seam_ratio_d1": 0.06584362139473753,
+   "seam_ratio_d2": 0.1960784312465667,
+   "seam_vs_max_d1": 0.05071315372161368,
+   "seam_vs_max_d2": 0.13513513507529584,
    "ok": true
   },
   {
@@ -4560,12 +4588,24 @@
    "seam_jump": 0.05950927734375,
    "seam_ratio_d1": 0.7946203792718814,
    "seam_ratio_d2": 0.364678899055161,
+   "seam_vs_max_d1": 0.7502885725184357,
+   "seam_vs_max_d2": 0.33403361342238314,
    "ok": true
   },
   {
    "name": "air_brake_release",
    "peak_dbfs": -1.0,
    "rms_dbfs": -22.92,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "air_brake_release_cab",
+   "peak_dbfs": -4.07,
+   "rms_dbfs": -25.76,
    "edge_abs_first_last": [
     0.0,
     0.0
@@ -4583,9 +4623,29 @@
    "ok": true
   },
   {
+   "name": "parking_brake_set_cab",
+   "peak_dbfs": -3.52,
+   "rms_dbfs": -25.41,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
    "name": "air_dryer_purge",
    "peak_dbfs": -1.0,
    "rms_dbfs": -21.17,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "air_dryer_purge_cab",
+   "peak_dbfs": -2.49,
+   "rms_dbfs": -20.9,
    "edge_abs_first_last": [
     0.0,
     0.0
@@ -4603,9 +4663,359 @@
    "ok": true
   },
   {
+   "name": "gearshift_air_cab",
+   "peak_dbfs": -7.5,
+   "rms_dbfs": -28.42,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
    "name": "turbo_liftoff",
    "peak_dbfs": -1.0,
    "rms_dbfs": -17.1,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "tyre_wet_loop",
+   "peak_dbfs": -5.35,
+   "rms_dbfs": -18.14,
+   "seam_jump": 0.0521240234375,
+   "seam_ratio_d1": 0.324037061642052,
+   "seam_ratio_d2": 0.4417486262858974,
+   "seam_vs_max_d1": 0.220871589291706,
+   "seam_vs_max_d2": 0.32126152612447856,
+   "ok": true
+  },
+  {
+   "name": "tyre_wet_cab_loop",
+   "peak_dbfs": -6.03,
+   "rms_dbfs": -17.66,
+   "seam_jump": 0.001495361328125,
+   "seam_ratio_d1": 0.12405063290110153,
+   "seam_ratio_d2": 0.03389830506591899,
+   "seam_vs_max_d1": 0.08718861209456051,
+   "seam_vs_max_d2": 0.024390243892692447,
+   "ok": true
+  },
+  {
+   "name": "tyre_concrete_loop",
+   "peak_dbfs": -5.65,
+   "rms_dbfs": -18.14,
+   "seam_jump": 0.005126953125,
+   "seam_ratio_d1": 0.07973414358286639,
+   "seam_ratio_d2": 0.09476285595039442,
+   "seam_vs_max_d1": 0.056603773584280724,
+   "seam_vs_max_d2": 0.0681410639556289,
+   "ok": true
+  },
+  {
+   "name": "tyre_concrete_cab_loop",
+   "peak_dbfs": -4.65,
+   "rms_dbfs": -17.51,
+   "seam_jump": 0.00506591796875,
+   "seam_ratio_d1": 0.3624454148212301,
+   "seam_ratio_d2": 0.49999999976594284,
+   "seam_vs_max_d1": 0.2573643410721964,
+   "seam_vs_max_d2": 0.34653465335291833,
+   "ok": true
+  },
+  {
+   "name": "tyre_cobbles_loop",
+   "peak_dbfs": -4.36,
+   "rms_dbfs": -18.14,
+   "seam_jump": 0.016448974609375,
+   "seam_ratio_d1": 0.34006180417540943,
+   "seam_ratio_d2": 0.1398898098692929,
+   "seam_vs_max_d1": 0.092850990524885,
+   "seam_vs_max_d2": 0.03360413589344514,
+   "ok": true
+  },
+  {
+   "name": "tyre_cobbles_cab_loop",
+   "peak_dbfs": -5.23,
+   "rms_dbfs": -17.63,
+   "seam_jump": 0.0018310546875,
+   "seam_ratio_d1": 0.10600669254971813,
+   "seam_ratio_d2": 0.254545454393801,
+   "seam_vs_max_d1": 0.07957559681351786,
+   "seam_vs_max_d2": 0.1538461537907557,
+   "ok": true
+  },
+  {
+   "name": "tyre_gravel_loop",
+   "peak_dbfs": -2.08,
+   "rms_dbfs": -18.14,
+   "seam_jump": 0.056549072265625,
+   "seam_ratio_d1": 0.33900351626757047,
+   "seam_ratio_d2": 0.3713127439329999,
+   "seam_vs_max_d1": 0.18006024681703428,
+   "seam_vs_max_d2": 0.19380328550568202,
+   "ok": true
+  },
+  {
+   "name": "tyre_gravel_cab_loop",
+   "peak_dbfs": -5.93,
+   "rms_dbfs": -18.35,
+   "seam_jump": 0.0020751953125,
+   "seam_ratio_d1": 0.13877551019480122,
+   "seam_ratio_d2": 0.17567567559788458,
+   "seam_vs_max_d1": 0.09176788123750736,
+   "seam_vs_max_d2": 0.11607142853746939,
+   "ok": true
+  },
+  {
+   "name": "tyre_grass_loop",
+   "peak_dbfs": -5.29,
+   "rms_dbfs": -18.14,
+   "seam_jump": 0.009490966796875,
+   "seam_ratio_d1": 0.1992312620073489,
+   "seam_ratio_d2": 0.12944983818312641,
+   "seam_vs_max_d1": 0.11309090908956153,
+   "seam_vs_max_d2": 0.09607686148667074,
+   "ok": true
+  },
+  {
+   "name": "tyre_grass_cab_loop",
+   "peak_dbfs": -4.06,
+   "rms_dbfs": -17.08,
+   "seam_jump": 0.0048828125,
+   "seam_ratio_d1": 0.3187250995807889,
+   "seam_ratio_d2": 0.2499999998537143,
+   "seam_vs_max_d1": 0.23774145615484354,
+   "seam_vs_max_d2": 0.17283950610291846,
+   "ok": true
+  },
+  {
+   "name": "tyre_squeal_loop",
+   "peak_dbfs": -6.0,
+   "rms_dbfs": -11.18,
+   "seam_jump": 0.063568115234375,
+   "seam_ratio_d1": 0.30677412646545155,
+   "seam_ratio_d2": 0.42394904946233586,
+   "seam_vs_max_d1": 0.24411109808883172,
+   "seam_vs_max_d2": 0.2892156862719289,
+   "ok": true
+  },
+  {
+   "name": "tyre_squeal_cab_loop",
+   "peak_dbfs": -11.08,
+   "rms_dbfs": -18.33,
+   "seam_jump": 0.01885986328125,
+   "seam_ratio_d1": 0.6280487804668904,
+   "seam_ratio_d2": 0.6907216493678682,
+   "seam_vs_max_d1": 0.6029268292490179,
+   "seam_vs_max_d2": 0.6536585364808825,
+   "ok": true
+  },
+  {
+   "name": "retarder_loop",
+   "peak_dbfs": -6.0,
+   "rms_dbfs": -17.96,
+   "seam_jump": 0.035491943359375,
+   "seam_ratio_d1": 0.7805348173390215,
+   "seam_ratio_d2": 0.19831932772017055,
+   "seam_vs_max_d1": 0.5712180746469953,
+   "seam_vs_max_d2": 0.13641618496593055,
+   "ok": true
+  },
+  {
+   "name": "retarder_cab_loop",
+   "peak_dbfs": -6.06,
+   "rms_dbfs": -18.35,
+   "seam_jump": 0.002471923828125,
+   "seam_ratio_d1": 0.10931174088585435,
+   "seam_ratio_d2": 1.0978260865655047,
+   "seam_vs_max_d1": 0.08766233765922887,
+   "seam_vs_max_d2": 0.7829457362352281,
+   "ok": true
+  },
+  {
+   "name": "compressor_loop",
+   "peak_dbfs": -6.0,
+   "rms_dbfs": -19.95,
+   "seam_jump": 0.000640869140625,
+   "seam_ratio_d1": 0.016431899167185526,
+   "seam_ratio_d2": 0.00158227097015067,
+   "seam_vs_max_d1": 0.012711864406527516,
+   "seam_vs_max_d2": 0.0008006405123889229,
+   "ok": true
+  },
+  {
+   "name": "compressor_cab_loop",
+   "peak_dbfs": -5.5,
+   "rms_dbfs": -18.4,
+   "seam_jump": 0.0006103515625,
+   "seam_ratio_d1": 0.044543429840847214,
+   "seam_ratio_d2": 0.0,
+   "seam_vs_max_d1": 0.03623188405582021,
+   "seam_vs_max_d2": 0.0,
+   "ok": true
+  },
+  {
+   "name": "ambient_bed_loop",
+   "peak_dbfs": -6.0,
+   "rms_dbfs": -19.3,
+   "seam_jump": 0.005584716796875,
+   "seam_ratio_d1": 0.1380090497703452,
+   "seam_ratio_d2": 0.1235632183849872,
+   "seam_vs_max_d1": 0.08333333333208985,
+   "seam_vs_max_d2": 0.06952303961012278,
+   "ok": true
+  },
+  {
+   "name": "ambient_bed_cab_loop",
+   "peak_dbfs": -7.64,
+   "rms_dbfs": -20.83,
+   "seam_jump": 0.0013427734375,
+   "seam_ratio_d1": 0.13580246912206798,
+   "seam_ratio_d2": 0.08695652161524385,
+   "seam_vs_max_d1": 0.0938166311235092,
+   "seam_vs_max_d2": 0.05263157890198338,
+   "ok": true
+  },
+  {
+   "name": "forklift_loop",
+   "peak_dbfs": -6.0,
+   "rms_dbfs": -18.26,
+   "seam_jump": 0.01007080078125,
+   "seam_ratio_d1": 0.16224172837326498,
+   "seam_ratio_d2": 0.16402116401168493,
+   "seam_vs_max_d1": 0.12420022581706067,
+   "seam_vs_max_d2": 0.10788863108638598,
+   "ok": true
+  },
+  {
+   "name": "forklift_cab_loop",
+   "peak_dbfs": -13.49,
+   "rms_dbfs": -23.86,
+   "seam_jump": 0.00238037109375,
+   "seam_ratio_d1": 0.21369863011780144,
+   "seam_ratio_d2": 0.24390243882945867,
+   "seam_vs_max_d1": 0.16702355459213483,
+   "seam_vs_max_d2": 0.1960784312465667,
+   "ok": true
+  },
+  {
+   "name": "parking_brake_release",
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -21.99,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "parking_brake_release_cab",
+   "peak_dbfs": -2.65,
+   "rms_dbfs": -22.41,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "air_dryer_purge_b",
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -20.91,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "air_dryer_purge_b_cab",
+   "peak_dbfs": -4.1,
+   "rms_dbfs": -24.22,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "bird_sparrow",
+   "peak_dbfs": -4.0,
+   "rms_dbfs": -17.3,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "bird_tit",
+   "peak_dbfs": -4.0,
+   "rms_dbfs": -13.18,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "bird_crow_caw",
+   "peak_dbfs": -4.0,
+   "rms_dbfs": -20.62,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "bird_crow_caw_cab",
+   "peak_dbfs": -17.05,
+   "rms_dbfs": -29.65,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "indicator_tick_cab",
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -23.89,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "indicator_tick",
+   "peak_dbfs": -10.23,
+   "rms_dbfs": -30.37,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "indicator_tock_cab",
+   "peak_dbfs": -1.36,
+   "rms_dbfs": -22.11,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "indicator_tock",
+   "peak_dbfs": -8.49,
+   "rms_dbfs": -26.78,
    "edge_abs_first_last": [
     0.0,
     0.0

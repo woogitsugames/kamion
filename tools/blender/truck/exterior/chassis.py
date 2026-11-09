@@ -203,8 +203,7 @@ def equipment():
     box_mm("eats_shield", 1.17, 1.185, -2.00, -1.23, 0.50, 0.98, "perforated", bev=0.01)
     for z in (0.52, 0.96):
         box_mm(f"eats_band_{z}", 1.165, 1.19, -2.02, -1.21, z - 0.012, z + 0.012, "steel", bev=0.003)
-    rod("exhaust_out", (1.00, -2.02, 0.50), (1.12, -2.16, 0.36), 0.05, "steel", seg=16)
-    cyl("exhaust_tip", (1.125, -2.17, 0.35), 0.054, 0.02, "chassis", axis="Z", seg=16)
+    exhaust_stack()
     # battery box with lid and latches
     box_mm("battery_box", xi, 1.10, -2.86, -2.16, 0.56, 1.00, "plastic", bev=0.02)
     box_mm("battery_lid_gap", 1.10, 1.103, -2.84, -2.18, 0.94, 0.945, "gap")
@@ -237,6 +236,95 @@ def equipment():
     tube("catwalk_grab", [(-1.18, CAB_BACK_Y - 0.01, 1.35), (-1.18, CAB_BACK_Y - 0.06, 1.40),
                           (-1.18, CAB_BACK_Y - 0.06, 2.10), (-1.18, CAB_BACK_Y - 0.01, 2.15)], 0.014, "plastic_satin")
     set_group("frame")
+
+
+# ---------------------------------------------------------------- vertical exhaust stack (B2.1, owner sheets)
+# ADR 0019 (kingpin 0.68 m ahead of the rear axle, y -3.02): the trailer front swings within 2.04 m of the kingpin
+# and passes ~3 cm behind the cab back wall on the centre line, so the stack stands at the cab's rear CORNER, right
+# side (owner sheets), outboard where the swing circle is furthest back, inboard of the cab-mounted side extender.
+STACK = (1.12, -1.17)          # x, y of the stack axis (cab back wall -0.95, extender x >= 1.214, fairing ends -1.14)
+STACK_R = 0.0635               # 5 in (127 mm) tail pipe
+STACK_SHIELD = 0.0775          # heat-shield outer radius (clamps 0.0815)
+STACK_TOP = 3.60               # top of the slash cut (roof 3.75 m)
+TRAILER_SWING_R = 2.04         # EU semitrailer front swing radius about the kingpin (Directive 96/53/EC class value)
+
+
+def stack_clearance():
+    """Plan clearance (m) of the stack's outermost radius from the trailer swing circle (> 0 = clear)."""
+    ky = -WB + FIFTH_LEAD
+    return math.hypot(STACK[0], STACK[1] - ky) - (STACK_SHIELD + 0.004) - TRAILER_SWING_R
+
+
+def stack_pipe(name, x, y, z0, z1, r, m, slash=0.0, seg=28, inner_m=None, wall=0.002):
+    """Open pipe from z0 to z1 (top cut on a slant: +slash m higher at the rear, -Y), with a visible wall and a dark
+    inner surface (the outlet reads as a pipe, not a rod)."""
+    bm = bmesh.new()
+    nz = 6
+    outer, inner = [], []
+    for k in range(nz + 1):
+        t = k / nz
+        ro, ri = [], []
+        for i in range(seg):
+            a = 2 * math.pi * i / seg
+            ca, sa = math.cos(a), math.sin(a)
+            zt = z1 - slash * 0.5 * (1 + sa) if k == nz else z0 + (z1 - slash - z0) * t
+            ro.append(bm.verts.new((x + r * ca, y - r * sa, zt)))
+            ri.append(bm.verts.new((x + (r - wall) * ca, y - (r - wall) * sa, zt)))
+        outer.append(ro)
+        inner.append(ri)
+    for rings, flip in ((outer, False), (inner, True)):
+        for a_, b_ in zip(rings, rings[1:]):
+            for i in range(seg):
+                f = (a_[i], a_[(i + 1) % seg], b_[(i + 1) % seg], b_[i])
+                bm.faces.new(tuple(reversed(f)) if flip else f)
+    for i in range(seg):      # wall lips at both ends (closed shell: normals recalc cleanly)
+        bm.faces.new((outer[-1][i], inner[-1][i], inner[-1][(i + 1) % seg], outer[-1][(i + 1) % seg]))
+        bm.faces.new((outer[0][(i + 1) % seg], inner[0][(i + 1) % seg], inner[0][i], outer[0][i]))
+    ob = G.obj_from_bm(name, bm, m, sharp=60)
+    if inner_m:
+        ob.data.materials.append(G.mat(inner_m))
+        n_out = seg * nz
+        for p in ob.data.polygons:
+            if n_out <= p.index < 2 * n_out:
+                p.material_index = 1
+    return ob
+
+
+def exhaust_stack():
+    """Vertical tail pipe behind the cab, right side (owner sheets B2.1): out of the aftertreatment box top through
+    a short stainless flex section, up past the cab back to just under the roof line with a slash-cut outlet that
+    blows rearward. Perforated stainless heat shield on stand-off clamps over the reachable height, a frame-mounted
+    square-tube stay with two clamps. Frame-mounted (CHASSIS): the cab tilts and rides on its suspension without it.
+    Clearance: 2.16 m from the kingpin (EU semi-trailer front swing radius 2.04 m), 0.15 m from the side extender."""
+    x, y = STACK
+    r = STACK_R
+    clr = stack_clearance()
+    print(f"exhaust stack: {clr * 1000:.0f} mm outside the {TRAILER_SWING_R} m trailer swing circle")
+    assert clr > 0.005, f"exhaust stack inside the trailer swing circle ({clr:.3f} m)"
+    # elbow out of the box top + flex section (stainless bellows)
+    # stays behind the step-box fairing (ends at y -1.14, top 1.21) until it is above it, then jogs forward
+    tube("exhaust_elbow", [(x, -1.42, 1.02), (x, -1.30, 1.06), (x, -1.215, 1.14), (x, -1.215, 1.20), (x, y, 1.27),
+                           (x, y, 1.285)], r * 0.94, "steel", seg=20)
+    for k in range(9):
+        cyl(f"exhaust_flex_{k}", (x, y, 1.295 + k * 0.016), r * (1.07 if k % 2 else 1.0), 0.010, "steel", axis="Z",
+            seg=24)
+    stack_pipe("exhaust_stack", x, y, 1.43, 3.42, r, "steel", seg=28)
+    cyl("exhaust_stack_band", (x, y, 1.43), r + 0.006, 0.03, "steel", axis="Z", seg=28, bev=0.003)
+    # outlet: slash cut, rear-facing (the socket EXHAUST_OUT is its centre), soot-blackened inside
+    stack_pipe("exhaust_outlet", x, y, 3.40, STACK_TOP, r, "steel", slash=0.12, seg=28, inner_m="gap")
+    # heat shield: perforated sleeve on stand-offs, open at both ends, from waist height to above the cab steps
+    stack_pipe("exhaust_shield", x, y, 1.55, 3.05, STACK_SHIELD, "perforated", seg=28, inner_m="chassis", wall=0.0015)
+    for k, z in enumerate((1.62, 2.30, 2.98)):
+        cyl(f"exhaust_clamp_{k}", (x, y, z), STACK_SHIELD + 0.004, 0.032, "steel", axis="Z", seg=28, bev=0.004)
+        box(f"exhaust_clamp_bolt_{k}", (x - r - 0.026, y, z), (0.022, 0.018, 0.024), "steel", bev=0.003)
+    # frame-mounted stay: square tube from the frame rail up the inboard side of the pipe, two U-clamps
+    xs = x - r - 0.06
+    box_mm("exhaust_stay_foot", FRAME_HALF_W, xs + 0.02, y - 0.05, y + 0.05, FRAME_TOP - 0.10, FRAME_TOP - 0.06,
+           "chassis", bev=0.004)
+    box_mm("exhaust_stay", xs - 0.02, xs + 0.02, y - 0.02, y + 0.02, FRAME_TOP - 0.10, 2.36, "chassis", bev=0.004)
+    for k, z in enumerate((1.62, 2.30)):
+        box_mm(f"exhaust_stay_arm_{k}", xs, x - r - 0.018, y - 0.015, y + 0.015, z - 0.02, z + 0.02, "chassis",
+               bev=0.003)
 
 
 # ---------------------------------------------------------------- fifth wheel, couplings, rear end

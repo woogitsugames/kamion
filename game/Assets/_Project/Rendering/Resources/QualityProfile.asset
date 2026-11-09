@@ -44,6 +44,13 @@ MonoBehaviour:
     simpleFoliage: 1
     forestHlodM: 70
     forestHlodCullM: 1000
+    clearCoat: 1
+    envCaptureSize: 0
+    envCaptureInterval: 2
+    envCaptureFarClip: 250
+    contactShadows: 1
+    cabShadowLift: 8
+    streetLights: 0
     budgetDrawCalls: 250
     budgetTrianglesK: 350
     budgetTextureMB: 64
@@ -80,6 +87,13 @@ MonoBehaviour:
     simpleFoliage: 1
     forestHlodM: 70
     forestHlodCullM: 1000
+    clearCoat: 1
+    envCaptureSize: 0
+    envCaptureInterval: 2
+    envCaptureFarClip: 250
+    contactShadows: 1
+    cabShadowLift: 8
+    streetLights: 0
     budgetDrawCalls: 350
     budgetTrianglesK: 550
     budgetTextureMB: 96
@@ -116,6 +130,13 @@ MonoBehaviour:
     simpleFoliage: 1
     forestHlodM: 120
     forestHlodCullM: 0
+    clearCoat: 1
+    envCaptureSize: 128
+    envCaptureInterval: 2
+    envCaptureFarClip: 200
+    contactShadows: 1
+    cabShadowLift: 8
+    streetLights: 4
     budgetDrawCalls: 800
     budgetTrianglesK: 1500
     budgetTextureMB: 256
@@ -152,6 +173,13 @@ MonoBehaviour:
     simpleFoliage: 1
     forestHlodM: 120
     forestHlodCullM: 0
+    clearCoat: 1
+    envCaptureSize: 256
+    envCaptureInterval: 1
+    envCaptureFarClip: 300
+    contactShadows: 1
+    cabShadowLift: 8
+    streetLights: 6
     budgetDrawCalls: 1000
     budgetTrianglesK: 2000
     budgetTextureMB: 384

@@ -12,13 +12,18 @@
   Output : game/Assets/_Generated/World/<id>/ (gitignored): Meshes/{Low,High}/*.asset, Collision/*.asset, Materials/,
            Textures/, Instances.asset, WorldC.unity (Low/Medium content, in the build list), WorldC_High.unity (High
            content, shipped only with build-android.ps1 -WorldHigh). Memory report: artifacts/world/<id>-import.json.
-  Decision records: docs/adr/0011-world-import-gltfast.md, docs/adr/0012-world-content-tiers-instancing.md.
+  PBR texture sets (ADR 0022): art-source/world/materials/<set>/<tier>/*.png are not versioned; when any file listed in
+  materials_spec.json is missing for -MaterialTier (default Medium) the generator _src/build_all.py runs first (all
+  tiers, deterministic, ~4 min), then Unity copies the tier into _Generated/.../Textures/PBR with ASTC per the spec.
+  Decision records: docs/adr/0011-world-import-gltfast.md, docs/adr/0012-world-content-tiers-instancing.md,
+  docs/adr/0022-world-pbr-materials.md.
   One Unity per project: fails if game/ is open elsewhere.
 #>
 param(
     [Parameter(Mandatory)] [string]$Region,
     [switch]$Build,
-    [string]$Tiers = 'Low,High'
+    [string]$Tiers = 'Low,High',
+    [ValidateSet('High', 'Medium', 'Low')] [string]$MaterialTier = 'Medium'
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -35,8 +40,23 @@ if ($Build -or -not (Test-Path $route)) {
     if ($LASTEXITCODE -ne 0) { throw "export-route.py failed ($LASTEXITCODE)" }
 }
 
+# PBR texture sets (ADR 0022): build when any file of the spec is missing for the tier
+$matRoot = Join-Path $RepoRoot 'art-source/world/materials'
+$spec = Get-Content (Join-Path $matRoot 'materials_spec.json') -Raw | ConvertFrom-Json
+$missing = 0
+foreach ($p in $spec.sets.PSObject.Properties) {
+    $f = $p.Value.files.$MaterialTier
+    if (-not $f) { continue }
+    foreach ($n in $f.files) { if (-not (Test-Path (Join-Path $matRoot "$($f.dir)/$n"))) { $missing++ } }
+}
+if ($missing -gt 0) {
+    Write-Host "PBR sets: $missing files missing for $MaterialTier - running art-source/world/materials/_src/build_all.py"
+    & uv run --project (Join-Path $RepoRoot 'tools/worldgen') python (Join-Path $matRoot '_src/build_all.py')
+    if ($LASTEXITCODE -ne 0) { throw "build_all.py failed ($LASTEXITCODE)" }
+}
+
 $log = Join-Path $LogsDir "import-region-$Region-$(Get-Timestamp).log"
-$unityArgs = @('-executeMethod', 'Game.World.Import.RegionImporter.ImportBatch', '-region', $Region, '-tiers', $Tiers)
+$unityArgs = @('-executeMethod', 'Game.World.Import.RegionImporter.ImportBatch', '-region', $Region, '-tiers', $Tiers, '-materialTier', $MaterialTier)
 $code = Invoke-UnityBatch -LogFile $log -Arguments $unityArgs
 $result = Select-String -Path $log -Pattern 'IMPORT_RESULT:.*' | Select-Object -Last 1
 if ($code -ne 0 -or -not $result -or $result.Line -notmatch 'IMPORT_RESULT: OK') {
