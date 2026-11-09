@@ -20,6 +20,7 @@ sys.path.insert(0, str(HERE))
 import pbrkit as K  # noqa: E402
 import sets_asphalt as A  # noqa: E402
 import sets_other as O  # noqa: E402
+import sets_facade as F  # noqa: E402
 
 OUT = HERE.parent
 REPO = OUT.parents[2]
@@ -230,6 +231,24 @@ def main():
         entry["albedo_target_mean_lum_linear"] = meta["target"]
         entry.update(info)
         sets[name] = entry
+    for name, meta in F.FACADE_SETS.items():
+        if only and name not in only:
+            continue
+        print("facade set", name, flush=True)
+        t0 = time.perf_counter()
+        s = meta["fn"]()
+        s.name = name
+        info = K.write_set(s, OUT, tiers=TIERS_SEL)
+        print(f"  {time.perf_counter() - t0:.1f} s", flush=True)
+        for t, fi in info["files"].items():
+            fi["astc"] = ASTC[t]
+            fi["gpu_bytes_astc_mips"] = int(gpu_estimate(fi, t))
+        entry = {k: v for k, v in meta.items() if k != "fn"}
+        entry["uv"] = "mesh_uv0_metres (u along, v up)"
+        entry["kind"] = "modulation_set"
+        entry["albedo_target_mean_lum_linear"] = F.MOD_MEAN
+        entry.update(info)
+        sets[name] = entry
     for name, meta in LAYERS.items():
         if only and name not in only:
             continue
@@ -244,10 +263,11 @@ def main():
         sets[name] = entry
     spec = {
         "schema": "kamion.world.materials/1",
-        "generator": "art-source/world/materials/_src/build_all.py (pbrkit.py, sets_asphalt.py, sets_other.py)",
+        "generator": "art-source/world/materials/_src/build_all.py (pbrkit.py, sets_asphalt.py, sets_other.py, sets_facade.py)",
         "conventions": {
             "units": "metres; tile_m = world size of one texture repeat",
-            "BaseColor": "sRGB, linear albedo calibrated (Rec.709 luminance mean = albedo_target_mean_lum_linear)",
+            "BaseColor": "sRGB, linear albedo calibrated (Rec.709 luminance mean = albedo_target_mean_lum_linear); "
+                         "kind modulation_set: neutral map with mean 0.5, engine albedo = 2 x manifest colour x map",
             "Normal": "tangent space, OpenGL (+Y = +v), Unity/glTF convention; import as Normal map",
             "MaskMap": "URP Lit: R metallic, G occlusion, B detail mask, A smoothness; import sRGB off",
             "Var": "R height normalised over height_range_m, G per-element random id (block/slab/chip; point "

@@ -77,15 +77,58 @@ def stain(buf, P0, z_of, r, key, src):
     T = np.array([(0, 1 + k, 1 + (k + 1) % n) for k in range(n)])
     rr = max(rad.max() * stretch, 1e-3)
     uv = np.vstack([[0.5, 0.5], 0.5 + 0.5 * (V2[1:] - P0) / rr])
-    buf.add("markings", "decal_oil", V, uv, T, src=src)
+    # UV1.y = stain seed: the engine picks one of the 4 cells of the oil_stain_alpha atlas (ADR 0019)
+    uv1 = np.column_stack([np.zeros(len(V)), np.full(len(V), hf(key, "cell"))])
+    buf.add("markings", "decal_oil", V, uv, T, src=src, UV1=uv1)
+
+
+GULLY_SPACING_M = 35.0        # WORKING_VALUE: street gullies every 30-40 m along kerbed carriageways
+GULLY_SIZE = (0.50, 0.60)     # m; grate 500 x 600 (D400 class, typical; WORKING_VALUE), long side along the kerb
+
+
+def gullies(buf, net, report):
+    """Road gullies at the kerb (odwodnienie, r4 brief): every ~GULLY_SPACING_M on kerbed edges, on the low side of
+    one-way carriageways and on both sides of crowned two-way ones; grate in the gutter 0.05 m off the kerb face."""
+    from .network import side_params, URBAN, ISLAND
+    n = 0
+    for c in net.chains:
+        if c.meta.get("absorbed") or c.roundabout:
+            continue
+        s0, s1 = c.t_a + 3.0, c.length - c.t_b - 3.0
+        if s1 - s0 < 10.0:
+            continue
+        sec = c.section(0.5 * (s0 + s1), net.sec_list)
+        for side, sgn in (("L", 1.0), ("R", -1.0)):
+            for k, s in enumerate(np.arange(s0 + hf(c.id, side, "g0") * GULLY_SPACING_M, s1, GULLY_SPACING_M)):
+                s = float(s)
+                if c.bridge[c.idx(s)]:
+                    continue
+                kind, h, w, depth, mat = side_params(c, side, s)
+                if kind not in (URBAN, ISLAND) or h < 0.08:
+                    continue
+                hw = float(c.hw_at(s))
+                if sec.oneway and float(c.crossfall_z(s, sgn * hw)) > float(c.crossfall_z(s, -sgn * hw)):
+                    continue                                   # high side of a one-way carriageway
+                lat = sgn * (hw - 0.05 - GULLY_SIZE[0] / 2)
+                ds, dl = GULLY_SIZE[1] / 2, GULLY_SIZE[0] / 2
+                ss = np.array([s - ds, s + ds, s + ds, s - ds])
+                ll = np.array([lat - dl, lat - dl, lat + dl, lat + dl])
+                P = _surf(c, ss, ll, LIFT_PATCH)
+                T = np.array([(0, 1, 2), (0, 2, 3)])
+                buf.add("markings", "drain_grate", P, [[0, 0], [1, 0], [1, 1], [0, 1]], T, src=f"gully:{c.id}:{side}:{k}")
+                n += 1
+    report["gullies"] = n
 
 
 def build(buf, net, juncs, report):
     cnt = {"patches": 0, "oil": 0}
+    gullies(buf, net, cnt)
     secs = net.sec_list
     for c in net.chains:
         if c.meta.get("absorbed") or c.roundabout:
             continue
+        if S.surface_material(c, c.section(0.5 * (c.t_a + c.length - c.t_b), secs)) == "road_asphalt_new":
+            continue                     # resurfaced recently (ADR 0019): no repair patches yet
         s0, s1 = c.t_a + 1.0, c.length - c.t_b - 1.0
         if s1 - s0 < 8.0:
             continue

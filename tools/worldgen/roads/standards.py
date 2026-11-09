@@ -270,3 +270,26 @@ def grade_limit(highway: str, maxspeed: float | None) -> tuple[float, float]:
         if vp >= v:
             return std, diff
     return MAX_GRADE_BY_VP[-1][1:]
+
+
+# Recently resurfaced carriageways (ADR 0019). There is no resurfacing date in OSM / BDOT10k, so a share of the public
+# road chains (class Z and up, not roundabouts, not bridges) gets the fresh SMA wearing course (material
+# road_asphalt_new, texture set asphalt_sma_fresh); junction patches keep the worn surface of the majority of their
+# arms (resurfacing usually stops at the junction). The share and the classes are WORKING_VALUE; an authored override
+# `surface: asphalt_new` / `surface: asphalt` on the edges wins.
+NEW_ASPHALT_SHARE = 0.25
+NEW_ASPHALT_CLASSES = ("A", "S", "GP", "G", "Z")
+
+
+def surface_material(chain, sec):
+    """Engine surface material of a carriageway chain: the section's material, with worn asphalt switched to
+    road_asphalt_new for the resurfaced share (deterministic hash of the chain id)."""
+    import hashlib
+    m = sec.surface_mat
+    if m != "road_asphalt" or sec.provenance.get("surface_override"):
+        return m
+    br = getattr(chain, "bridge", None)
+    if chain.roundabout or sec.cls not in NEW_ASPHALT_CLASSES or (br is not None and bool(br.any())):
+        return m
+    h = int(hashlib.sha1(f"{chain.id}:asphalt_new".encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
+    return "road_asphalt_new" if h < NEW_ASPHALT_SHARE else m

@@ -385,6 +385,14 @@ def signals(pl, net, juncs, report):
             else:
                 z = pl.add("signal_pole", p, yaw_of(face), src=f"rule:signal:{j.id}")
             pl.add(f"signal_head_{lit}", p + face * 0.15, yaw_of(face), z=z + 2.9, src=f"rule:signal:{j.id}")
+            # repeater on the left (median kerb) of one-way approaches with >= 2 lanes, as on the Andersa / Maczka
+            # photos (S-1 repeated on the left side; Dz.U. 2019 poz. 2311 zał. 3 - paragraph UNVERIFIED, not re-read)
+            if sec.oneway and lanes_in >= 2:
+                pL = a.gutter(d, -1, extra=S.KERB_TOP_W + 0.6)
+                zl = pl.add("signal_pole", pL, yaw_of(face), src=f"rule:signal:{j.id}:left")
+                pl.add(f"signal_head_{lit}", pL + face * 0.15, yaw_of(face), z=zl + 2.9, src=f"rule:signal:{j.id}:left")
+                rep_left = report.setdefault("signal_repeaters_left", 0)
+                report["signal_repeaters_left"] = rep_left + 1
             n += 1
     report["signal_approaches"] = n
 
@@ -714,13 +722,72 @@ def noise_barriers(lin, src, origin, roads_poly, report):
     report["noise_barriers_m"] = round(L)
 
 
-def power_lines(lin, src, origin, report):
+WIRE_HALF_W = 0.012          # m; conductor ~24 mm incl. sag ripple (WORKING_VALUE, AFL-6 70-120 mm2 class)
+
+
+# Supports of BDOT10k power lines (OT_SULN_L). The line vertices are the angle points; BDOT / OSM poles (OT_BUWT_P,
+# power=pole/tower) cover only part of them (tile C: 44 of 74 vertices without a pole within 10 m), so conductors hung
+# in the air (REVIEW r4 W-H2). Every angle point gets a support unless a mapped one stands within SUPPORT_SNAP_M (the
+# span then ends on that pole), and straight runs get intermediate supports every <= span max. WORKING_VALUE: typical
+# MV overhead line spans 60-100 m on concrete poles, HV 110 kV 250-400 m on lattice towers (no source in repo).
+SUPPORT_SNAP_M = {"power_pole": 10.0, "pylon": 15.0}
+SPAN_MAX_M = {"power_pole": 80.0, "pylon": 350.0}
+
+
+def _nearest_support(pl, q, r):
+    best, bd = None, r * r
+    for g in ("power_pole", "pylon"):
+        for p in pl.pts.get(g, []):
+            d = (p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2
+            if d < bd:
+                best, bd = np.array([p[0], p[1]], float), d
+    return best
+
+
+def power_supports(pl, P, hv, key, roads_poly, report):
+    """Support points of one line (E, N): angle points + intermediate supports, snapped to mapped poles; adds the
+    missing supports as instances. Returns the support polyline."""
+    proto = "pylon" if hv else "power_pole"
+    span = SPAN_MAX_M[proto]
+    pts = [P[0]]
+    for a, b in zip(P, P[1:]):
+        L = float(np.hypot(*(b - a)))
+        k = max(1, int(math.ceil(L / span)))
+        pts += [a + (b - a) * (i / k) for i in range(1, k + 1)]
+    out = []
+    for i, q in enumerate(pts):
+        d = (pts[min(i + 1, len(pts) - 1)] - pts[max(i - 1, 0)])
+        d = d / max(np.linalg.norm(d), 1e-9)
+        snap = _nearest_support(pl, q, SUPPORT_SNAP_M[proto])
+        if snap is not None:
+            out.append(snap)
+            for it in pl.items:                        # mapped pole: turn its cross-arm across the line
+                if it["p"] in ("power_pole", "pylon") and abs(it["e"] - snap[0]) < 2e-3 and abs(it["n"] - snap[1]) < 2e-3:
+                    it["yaw"] = round(float(yaw_of(d)), 4)
+            continue
+        if roads_poly is not None and roads_poly.contains(Point(float(q[0]), float(q[1]))):
+            continue                                   # never on a carriageway: the span runs on to the next support
+        pl.add(proto, q, yaw_of(d), src=f"rule:power_support:{key}", group=proto)   # arms (local x) across the line
+        report["supports_added"] = report.get("supports_added", 0) + 1
+        out.append(np.asarray(q, float))
+    return np.array(out)
+
+
+def power_lines(lin, src, origin, report, pl=None, roads_poly=None):
     n = 0
+    sup_rep = {}
+    if roads_poly is not None:
+        from shapely.prepared import prep
+        roads_poly = prep(roads_poly.buffer(1.0))
     for f in src["bdot10k"]["OT_SULN_L"]:
         hv = "wysokiego" in (f["props"].get("rodzaj") or "")
         P = np.asarray(f["geometry"]["coordinates"], float) - origin
         if len(P) < 2:
             continue
+        if pl is not None:
+            P = power_supports(pl, P, hv, f["id"], roads_poly, sup_rep)
+            if len(P) < 2:
+                continue
         h, sep = (23.0, 5.0) if hv else (11.7, 0.8)
         for a, b in zip(P, P[1:]):
             L = float(np.hypot(*(b - a)))
@@ -734,12 +801,21 @@ def power_lines(lin, src, origin, report):
             Z = za + (zb - za) * t - sag
             dvec = (b - a) / L
             nn = np.array([-dvec[1], dvec[0]])
+            # 3D tangent of the sagging wire per sample (engine ribbon, ADR 0019 / REVIEW r4 W-H2)
+            dz = np.gradient(Z, t * L) if len(t) > 1 else np.zeros_like(t)
+            tan = np.column_stack([np.repeat(dvec[None], len(t), 0), dz])
+            tan /= np.linalg.norm(tan, axis=1, keepdims=True)
             for o in (-sep, 0.0, sep):
                 QQ = Q + nn * o
-                for dz in (0.0,):
-                    V = np.concatenate([np.column_stack([QQ, Z + dz - 0.012]), np.column_stack([QQ, Z + dz + 0.012])])
-                    m = len(QQ)
-                    T = np.array([(i, i + 1, m + i + 1) for i in range(m - 1)] + [(i, m + i + 1, m + i) for i in range(m - 1)])
-                    lin.buf.add("furniture", "wire", V, V[:, :2], np.concatenate([T, T[:, [0, 2, 1]]]), src=f"bdot:{f['id']}")
+                V = np.concatenate([np.column_stack([QQ, Z - WIRE_HALF_W]), np.column_stack([QQ, Z + WIRE_HALF_W])])
+                m = len(QQ)
+                T = np.array([(i, i + 1, m + i + 1) for i in range(m - 1)] + [(i, m + i + 1, m + i) for i in range(m - 1)])
+                # layer "wires": the engine re-expands each ribbon towards the camera to >= 1 px with coverage alpha
+                # (Kamion/World Wire): UV0 = (side -1/+1, physical half width m), COLOR_0 = tangent * 0.5 + 0.5
+                uv = np.column_stack([np.repeat([-1.0, 1.0], m), np.full(2 * m, WIRE_HALF_W)])
+                col = np.concatenate([tan, tan]) * 0.5 + 0.5
+                col = np.column_stack([col, np.ones(2 * m)])
+                lin.buf.add("wires", "wire", V, uv, T, src=f"bdot:{f['id']}", COL=col)
         n += 1
     report["power_lines"] = n
+    report["power_supports_added"] = sup_rep.get("supports_added", 0)

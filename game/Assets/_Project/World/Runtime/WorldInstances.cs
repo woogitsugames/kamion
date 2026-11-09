@@ -83,7 +83,17 @@ namespace Game.World
                 if (m_Thin[p] && m_Ends[p].Length > 0) m_Ends[p][m_Ends[p].Length - 1] = Mathf.Min(m_Ends[p][m_Ends[p].Length - 1], m_TreeCull);
             }
             m_Origin = new Vector3(float.NaN, 0f, 0f);
+            m_PoleCull = 0f;
+            for (int p = 0; p < set.prototypes.Length; p++)
+            {
+                var pr = set.prototypes[p];
+                if ((pr.name.StartsWith("power_pole") || pr.name.StartsWith("pylon")) && m_Ends[p].Length > 0)
+                    m_PoleCull = Mathf.Max(m_PoleCull, m_Ends[p][m_Ends[p].Length - 1]);
+            }
         }
+
+        static readonly int k_WireFade = Shader.PropertyToID("_KamionWireFade");
+        float m_PoleCull;
 
         // Vegetation settings of the active tier (QualityProfile, ADR 0012 / device runs); the serialized fields below are
         // the fallback when no tier was applied (edit-mode tools without an applier).
@@ -257,6 +267,13 @@ namespace Game.World
             Vector3 cp = cam.transform.position;
             float scale = Mathf.Max(0.05f, QualitySettings.lodBias * distanceScale);
             float far = cam.farClipPlane, far2 = far;   // far2: the chunk-merge loop runs before cells (same limit)
+            // Power-line conductors (Kamion/World Wire) fade out with the cull distance of the poles that carry them
+            // (REVIEW r4 W-H2: wires hung in the air over the DK8 forest on Low after the poles were culled).
+            if (m_PoleCull > 0f)
+            {
+                float pc = Mathf.Min(m_PoleCull * scale, far);
+                Shader.SetGlobalVector(k_WireFade, new Vector4(pc * 0.8f, pc, 0f, 0f));
+            }
             var protos = set.prototypes;
             var cells = set.cells;
             var runs = set.runs;

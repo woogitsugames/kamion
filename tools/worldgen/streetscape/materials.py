@@ -9,12 +9,12 @@ The Blender control renders build equivalent procedural shaders (tools/blender/w
 
 M = {
     # paved areas
-    "yard_paving": {"color": [0.20, 0.20, 0.19], "rough": 0.85, "surface": "paving_stones", "texture_set": "paving_20x10_grey"},
-    "yard_concrete": {"color": [0.27, 0.27, 0.25], "rough": 0.85, "surface": "concrete", "texture_set": "concrete_cast_5m_joints"},
-    "yard_slabs": {"color": [0.25, 0.25, 0.23], "rough": 0.85, "surface": "concrete", "texture_set": "concrete_slab_3x1.5"},
-    "yard_asphalt": {"color": [0.075, 0.075, 0.072], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
-    "yard_gravel": {"color": [0.22, 0.20, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
-    "path_asphalt": {"color": [0.08, 0.08, 0.077], "rough": 0.9, "surface": "asphalt"},
+    "yard_paving": {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones", "texture_set": "paving_20x10_grey"},
+    "yard_concrete": {"color": [0.30, 0.297, 0.288], "rough": 0.85, "surface": "concrete", "texture_set": "concrete_cast_5m_joints"},
+    "yard_slabs": {"color": [0.27, 0.267, 0.258], "rough": 0.85, "surface": "concrete", "texture_set": "concrete_slab_3x1.5"},
+    "yard_asphalt": {"color": [0.131, 0.13, 0.129], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
+    "yard_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
+    "path_asphalt": {"color": [0.131, 0.13, 0.129], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
     "cycle_red": {"color": [0.20, 0.06, 0.05], "rough": 0.88, "surface": "asphalt", "texture_set": "paving_red"},
     # buildings
     "hall_wall_grey": {"color": [0.46, 0.47, 0.46], "rough": 0.5, "metal": 0.2, "texture_set": "sandwich_ribbed"},
@@ -89,7 +89,7 @@ M = {
     "concrete_wall": {"color": [0.30, 0.30, 0.28], "rough": 0.9},
     "barrier_post": {"color": [0.40, 0.41, 0.41], "rough": 0.55, "metal": 0.9},
     "noise_panel": {"color": [0.20, 0.24, 0.22], "rough": 0.6, "metal": 0.3, "texture_set": "noise_cassette"},
-    "wire": {"color": [0.15, 0.15, 0.15], "rough": 0.5, "metal": 0.8},
+    "wire": {"color": [0.11, 0.11, 0.105], "rough": 0.5, "shader": "wire"},   # weathered aluminium conductor, ribbon
     "concrete_pole": {"color": [0.33, 0.33, 0.31], "rough": 0.9},
     "insulator": {"color": [0.5, 0.5, 0.5], "rough": 0.3},
     "paint_white_reflective": {"color": [0.7, 0.7, 0.7], "rough": 0.4},
@@ -177,11 +177,13 @@ M = {
     "wood_planks_green": {"color": [0.08, 0.14, 0.10], "rough": 0.85, "texture_set": "wood_siding"},
     "chimney_brick": {"color": [0.22, 0.09, 0.06], "rough": 0.9, "texture_set": "brick"},
     # behaton (I-shaped interlocking blocks) in truck yards (streetscape.paved)
-    "yard_behaton": {"color": [0.21, 0.21, 0.20], "rough": 0.85, "surface": "paving_stones", "texture_set": "behaton_i_grey"},
+    "yard_behaton": {"color": [0.23, 0.228, 0.22], "rough": 0.85, "surface": "paving_stones", "texture_set": "behaton_i_grey"},
     # decals on roads (markings layer, depth offset like the markings)
     "decal_oil": {"color": [0.02, 0.02, 0.02], "rough": 0.35, "decal": True, "texture_set": "oil_stain_alpha"},
     "decal_tyre": {"color": [0.018, 0.018, 0.017], "rough": 0.55, "decal": True, "texture_set": "tyre_scrub_alpha"},
-    "decal_patch": {"color": [0.055, 0.055, 0.053], "rough": 0.85, "decal": True, "texture_set": "asphalt_patch"},
+    "marking_yard": {"color": [0.46, 0.46, 0.44], "rough": 0.7, "surface": "paint", "decal": True},   # worn yard paint
+    "drain_grate": {"color": [0.035, 0.033, 0.03], "rough": 0.6, "decal": True, "procedural": "grate"},  # cast iron
+    "decal_patch": {"color": [0.062, 0.062, 0.06], "rough": 0.85, "decal": True, "texture_set": "asphalt_patch"},
     # bridges (roads.meshing bridge_style overrides; CC0 photos of the Andersa viaducts, docs/REFERENCES.md)
     "bridge_fascia_red": {"color": [0.30, 0.05, 0.04], "rough": 0.7},
     "bridge_fascia_green": {"color": [0.07, 0.17, 0.10], "rough": 0.7},
@@ -215,7 +217,8 @@ FAR_GRID = {"block": {"pitch_m": 3.0, "win_w": 0.50, "sill": 0.32, "head": 0.84}
             "office": {"pitch_m": 3.0, "win_w": 0.50, "sill": 0.26, "head": 0.71},
             "ribbon": {"pitch_m": 3.0, "win_w": 1.00, "sill": 0.26, "head": 0.71}}
 _FAR_WALLS = {"block": ["plaster_cream", "plaster_grey", "plaster_pastel_blue", "plaster_light", "plaster_yellow",
-                        "plaster_peach", "plaster_sage", "panel_concrete"],
+                        "plaster_peach", "plaster_sage", "panel_concrete", "plaster_accent_terracotta",
+                        "plaster_accent_green", "plaster_accent_ochre", "plaster_accent_grey"],
               "office": ["plaster_light", "plaster_grey", "plaster_beige", "plaster_white", "brick_red"]}
 _FAR_WALLS["ribbon"] = _FAR_WALLS["office"]
 for _k, _ws in _FAR_WALLS.items():

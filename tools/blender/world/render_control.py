@@ -839,6 +839,7 @@ def build_materials():
         **{f"forest_{k}_{mix}": mat_forest(f"forest_{k}_{mix}") for k in ("edge", "canopy")
            for mix in ("conifer", "mixed", "broadleaf")},
         "road_asphalt": mat_asphalt("road_asphalt"),
+        "road_asphalt_new": mat_asphalt("road_asphalt_new", 0.055),
         "yard_asphalt": mat_asphalt("yard_asphalt", 0.08, lanes=False, yard=True),
         "path_asphalt": mat_asphalt("path_asphalt", 0.085, lanes=False),
         "road_concrete": mat_concrete_yard("road_concrete", 0.27, 5.0, 3.5),
@@ -849,6 +850,7 @@ def build_materials():
         "sidewalk_paving": mat_pavers("sidewalk_paving", g((122, 120, 114)), g((112, 110, 104)), moss=False),
         "apron_sett": mat_pavers("apron_sett", g((104, 90, 84)), g((92, 80, 76)), 0.12, 0.12, moss=False),
         "bridge_concrete": mat_concrete_struct("bridge_concrete", 0.30),
+        "bridge_soffit": mat_concrete_struct("bridge_soffit", 0.15),
         "barrier_steel": mat_flat("barrier_steel", (0.30, 0.31, 0.31), 0.5, 0.9, 0.3),
         "verge_grass": mat_terrain("verge_grass"),
         "shoulder_gravel": mat_gravel("shoulder_gravel"),

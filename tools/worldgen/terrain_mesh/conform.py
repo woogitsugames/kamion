@@ -146,7 +146,15 @@ def tidy(z, road, mask, dist, close_m=7, iters=150):
     return out
 
 
-def conform(hf, road, mask):
+SOFT_UNDER = 0.04          # m: terrain just under grass verges / island grass (WORKING_VALUE)
+SOFT_CLEAR_CELLS = 2       # ... only where no hard surface (carriageway, kerb, paving) is within this many nodes
+
+
+def conform(hf, road, mask, soft=None):
+    """soft (optional bool grid): footprint nodes covered only by grass verge strips. Those that are at least
+    SOFT_CLEAR_CELLS nodes from any hard surface get the terrain SOFT_UNDER under the grass instead of
+    TERRAIN_UNDER_ROAD: the coarse terrain grid (1-2 m) used to dip 0.35 m inside narrow kerbed islands and behind
+    verges and showed the strips' vertical flanges as green walls / "troughs" (REVIEW r3 W3, r4 W-H5)."""
     nmt = hf.z
     out = nmt.copy()
     if not mask.any():
@@ -159,4 +167,8 @@ def conform(hf, road, mask):
     hi = zedge - 0.03 + run
     out = np.clip(nmt, lo, hi)
     out[mask] = road[mask] - S.TERRAIN_UNDER_ROAD
+    if soft is not None and soft.any():
+        hard = mask & ~soft
+        relax = soft & ~ndimage.binary_dilation(hard, iterations=SOFT_CLEAR_CELLS)
+        out[relax] = road[relax] - SOFT_UNDER
     return out, d

@@ -158,6 +158,7 @@ namespace Game.World.Import
             // ---- materials (data-driven from the manifest) ----
             if (!WorldTextureGenerator.Exist()) WorldTextureGenerator.GenerateAll();
             LookDevAssets.EnsureAll();
+            WorldPbrMaterials.Reset();
             var roadAsphalt = Obj(manifest.Get("materials")).Get("road_asphalt") as Dictionary<string, object>;
             foreach (var kv in Obj(manifest.Get("materials")))
             {
@@ -249,8 +250,12 @@ namespace Game.World.Import
                 var t = InstanceImporter.ImportTexture(r, Path.Combine(EditorTools.RepoRoot, Str(m.Get("texture_ref"))), clamp: false);
                 return LitMaterial(path, albedo, rough, metal, t, edge, edge ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, edge, null);
             }
+            if (m.Get("shader") as string == "wire") return WireMaterial(path, albedo);
             if (m.Get("window_grid") is Dictionary<string, object> grid && m.Get("base") is string baseId)
                 return FarFacadeMaterial(r, path, baseId, albedo, rough, grid, m.Get("glass_color") as List<object>);
+            // Generated PBR sets (ADR 0019): ground, facades, props, decals with a set in materials_spec.json.
+            var pbr = WorldPbrMaterials.Create(r, id, m, path);
+            if (pbr != null) return pbr;
             string tex = m.Get("texture") as string;
             if (tex != null || m.Get("emissive") != null)
             {
@@ -295,6 +300,22 @@ namespace Game.World.Import
             return mat;
         }
 
+        /// <summary>Power-line conductors (generator layer "wires"): camera-facing ribbons >= 1 px with coverage alpha,
+        /// faded with the power-pole cull distance (Kamion/World Wire, ADR 0019).</summary>
+        static Material WireMaterial(string path, Color albedo)
+        {
+            var shader = Shader.Find("Kamion/World Wire") ?? throw new InvalidOperationException("Kamion/World Wire not found (compile error?)");
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
+            mat.shader = shader;
+            mat.enableInstancing = true;
+            mat.SetVector("_BaseColor", new Vector4(albedo.r, albedo.g, albedo.b, 1f));
+            mat.SetFloat("_MinPixels", 1.2f);
+            mat.SetFloat("_MaxAlpha", 0.95f);
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
         /// <summary>URP Lit material (linear colour in, alpha clip with coverage-preserving mips, optional emission).</summary>
         public static Material LitMaterial(string path, Color linear, float rough, float metal, Texture2D tex, bool alphaClip, float cutoff, bool doubleSided, Color? emission)
         {
@@ -325,8 +346,8 @@ namespace Game.World.Import
         }
 
         // ------------------------------------------------------------------------------------------------- meshes
-        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "buildings_lod1", "furniture" };
-        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "buildings", "buildings_lod1", "furniture" };
+        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires" };
+        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "buildings", "buildings_lod1", "furniture", "wires" };
 
         static void BakeVisual(Result r, Chunk ch, GlbReader g, string tier, GlbReader.MeshNode extraBuildingsLod0 = null)
         {
@@ -368,7 +389,7 @@ namespace Game.World.Import
                 var nd = layer == "buildings" && tier != "High" ? extraBuildingsLod0 : g.Find(layer);
                 if (nd == null || nd.Primitives.Count == 0) continue;
                 var mats = new Material[nd.Primitives.Count];
-                bool uv = false, uv1 = false;
+                bool uv = false, uv1 = false, colors = false;
                 for (int i = 0; i < mats.Length; i++)
                 {
                     string id = nd.Primitives[i].Material;
@@ -378,9 +399,15 @@ namespace Game.World.Import
                     {
                         if (def.Get("texture") != null) uv = true;
                         if (def.Get("window_grid") != null && nd.Primitives[i].Uv1 != null) uv1 = true;   // far facades (ADR 0015)
+                        // PBR sets (ADR 0019): mesh UV in metres, road wear / decal data in TEXCOORD_1
+                        WorldPbrMaterials.Channels(def, id, out bool p0, out bool p1, out bool pc);
+                        uv |= p0 && nd.Primitives[i].Uv0 != null;
+                        uv1 |= p1 && nd.Primitives[i].Uv1 != null;
+                        colors |= pc && nd.Primitives[i].Colors != null;
                     }
                 }
-                Add(layer, WorldMeshBake.Compact($"{ch.Id}_{layer}", nd.Primitives, new WorldMeshBake.Options { Uv0 = uv, Uv1 = uv1 }), mats);
+                if (layer == "wires") { uv = true; colors = true; }   // side / half width + tangent (Kamion/World Wire)
+                Add(layer, WorldMeshBake.Compact($"{ch.Id}_{layer}", nd.Primitives, new WorldMeshBake.Options { Uv0 = uv, Uv1 = uv1, Colors = colors }), mats);
             }
         }
 
@@ -498,6 +525,7 @@ namespace Game.World.Import
             float lowFine = r.Chunks.Average(c => c.FineFractionLow), highFine = r.Chunks.Average(c => c.FineFractionHigh);
             sb.Append($"  \"terrain_band_fine_fraction\": {{ \"Low\": {lowFine.ToString("F3", ci)}, \"High\": {highFine.ToString("F3", ci)} }},\n");
             var instSet = AssetDatabase.LoadAssetAtPath<WorldInstanceSet>($"{r.Dir}/Instances.asset");
+            sb.Append($"  \"pbr_textures_gpu_bytes_astc\": {WorldPbrMaterials.EstimatedGpuBytes()},\n");
             sb.Append($"  \"instances\": {(instSet != null ? instSet.matrices.Length : 0)},\n  \"prop_colliders\": {(r.PropColliders != null ? r.PropColliders.Count : 0)}\n}}\n");
             string dir = Path.Combine(EditorTools.RepoRoot, "artifacts", "world");
             Directory.CreateDirectory(dir);

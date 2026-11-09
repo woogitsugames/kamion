@@ -145,3 +145,20 @@ Przykład w repo (baza Kwadrat Park): droga dojazdowa do placu ma w OSM tylko `h
 - **Mesh budget v3.1** (te same założenia, `streetscape_qa.json` → `mesh_budget.frame_estimate[].by_category_*`): High 0,86–1,98 mln, w lesie przy DK8 **1,68 mln** (v3: 8,16 mln; HLOD lasu + ciaśniejsze LOD drzew), Low 0,28–0,90 mln (DK8 0,35 mln; powyżej 0,6 mln są odcinki przy Andersa, gdzie 0,39–0,61 mln to same drogi i place bez LOD). **Rozmiar v3.1:** High 415 MiB, Low `.low.glb` 89 MiB; szacunek siatek Unity Low (formaty ADR 0012, przed LZ4HC; TEXCOORD_1 f16 dla fasad `__far_`) 52,1 MiB render + 7,2 MiB kolizja = 59,3 MiB (v3: 55,6): +1,8 MiB HLOD lasu, +0,55 MiB LOD1 budynków, +0,9 MiB murów i balustrad ramp, +0,4 MiB barier. To nadal szacunek skryptu, nie pomiar z APK.
 - Mesh budget v3 (te same założenia): Low 0,27–0,86 mln (stretch_04 przy wiadukcie 0,86 mln, reszta ≤ 0,62 mln), High 1,1–3,5 mln, a w lesie przy DK8 8,2 mln (bez zmian, HLOD lasu nadal do zrobienia).
 - Mesh budget r2 (`streetscape_qa.json` → `mesh_budget`): szacunek klatki dla kamer kontrolnych (klin 120°, bez occlusion cullingu): Low 0,24–0,81 mln trójkątów (cel z docs/06 §6: 0,4–0,6 mln; przekracza go stretch_04 przy Andersa), High 1,0–3,1 mln, a w lesie przy DK8 8,1 mln (do zrobienia: gęstsze impostory, HLOD lasu, occlusion culling). Statycznie na chunk: mediana High 152 tys. / Low 46 tys. trójkątów, max 286 tys. / 126 tys., do 55 materiałów. Liczby klatki trzeba potwierdzić na urządzeniu; politykę LOD opisuje `LOD_POLICY` w `build_world.py` (WORKING_VALUE).
+
+## v3.3 (ADR 0019): PBR sets in Unity, wires, overlaps, yards
+
+- Materials with `texture_set` naming a set of `art-source/world/materials/materials_spec.json` are drawn with
+  `Kamion/World PBR` (ground: calibrated sets, manifest colour = set mean; facades / props: modulation sets on mesh UV0
+  in metres). `pwsh scripts/import-region.ps1 [-MaterialTier Medium]` builds missing sets (`_src/build_all.py`) and
+  imports them with ASTC per the spec. `road_concrete` carries TEXCOORD_1 = (metres along, lane-scaled metres across);
+  25 % of public chains are `road_asphalt_new` (`standards.surface_material`, WORKING_VALUE).
+- `GlbReader` flips TEXCOORD_1 back (the generator flips every UV set): far facades now have panes on every storey.
+- Power lines: supports added at BDOT angle points and every ≤ 80 m (MV) / 350 m (HV) unless a mapped pole is within
+  10 / 15 m (`furniture.power_supports`, QA `power_supports_added`); conductors in node `wires` (ribbons,
+  `Kamion/World Wire`, ≥ 1.2 px, faded with the pole cull distance).
+- Markings of a chain lying ≥ 0.25 m inside another carriageway are dropped (`markings.drop_overlapping`, QA
+  `markings_overlap_removed_tris`). Truck-stand lines (`marking_yard`), yard gullies and street gullies (`drain_grate`,
+  procedural grate). Signal repeaters on the left of one-way approaches with ≥ 2 lanes. Terrain only 4 cm under grass
+  verge strips away from hard surfaces (`conform.SOFT_UNDER`).
+- Frames: `docs/reports/visual/world-c/v33/README.md`. Tests: `tests/gis/test_world_v33.py`.

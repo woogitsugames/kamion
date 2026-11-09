@@ -38,10 +38,10 @@ from terrain_mesh import conform as CF    # noqa: E402
 from terrain_mesh.gltf import GLB, GLTF_AXES, smooth_normals  # noqa: E402
 from streetscape import export as PR      # noqa: E402
 
-LAYERS = ("road", "bridge", "markings", "paved", "buildings", "buildings_low", "furniture", "collision")
+LAYERS = ("road", "bridge", "markings", "paved", "buildings", "buildings_low", "furniture", "wires", "collision")
 NODES = (("road", "road"), ("bridge", "bridge"), ("markings", "markings"), ("paved", "paved"),
          ("buildings", "buildings"), ("buildings_low", "buildings_lod1"), ("furniture", "furniture"),
-         ("collision", "road_collision"))
+         ("wires", "wires"), ("collision", "road_collision"))
 
 
 def DEFAULT_OUT(region_id):
@@ -55,19 +55,32 @@ GENERATOR_VERSION = "world-c/1"
 # table of docs/06 §3; values chosen in the range of measured asphalt (0.05-0.12), concrete (0.3-0.4),
 # grass (0.1-0.2). `surface` = physics surface type for the vehicle model (docs/04).
 MATERIALS = {
-    "road_asphalt": {"color": [0.075, 0.075, 0.072], "rough": 0.9, "surface": "asphalt"},
-    "road_concrete": {"color": [0.32, 0.32, 0.30], "rough": 0.85, "surface": "concrete"},
-    "road_paving": {"color": [0.30, 0.27, 0.24], "rough": 0.85, "surface": "paving_stones"},
+    # Ground materials with a generated PBR set (art-source/world/materials/materials_spec.json, ADR 0019):
+    # `color` = the set's calibrated mean linear albedo, so the engine tint is 1; `texture_set` names the set.
+    "road_asphalt": {"color": [0.131, 0.13, 0.129], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
+    "road_asphalt_new": {"color": [0.075, 0.075, 0.073], "rough": 0.85, "surface": "asphalt",
+                         "texture_set": "asphalt_sma_fresh"},
+    "road_concrete": {"color": [0.30, 0.297, 0.288], "rough": 0.85, "surface": "concrete",
+                      "texture_set": "concrete_cast_5m_joints", "uv1": "along_m"},
+    "road_paving": {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones",
+                    "texture_set": "paving_20x10_grey"},
     "road_sett": {"color": [0.24, 0.22, 0.20], "rough": 0.9, "surface": "sett"},
-    "road_gravel": {"color": [0.30, 0.27, 0.22], "rough": 0.95, "surface": "gravel"},
-    "curb_concrete": {"color": [0.40, 0.40, 0.38], "rough": 0.85, "surface": "concrete_kerb"},
-    "sidewalk_paving": {"color": [0.34, 0.32, 0.29], "rough": 0.85, "surface": "paving_stones"},
+    "road_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
+    "curb_concrete": {"color": [0.28, 0.278, 0.27], "rough": 0.85, "surface": "concrete_kerb",
+                      "texture_set": "kerb_concrete_1m"},
+    "sidewalk_paving": {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones",
+                        "texture_set": "paving_20x10_grey"},
     "apron_sett": {"color": [0.27, 0.24, 0.21], "rough": 0.9, "surface": "sett"},
-    "bridge_concrete": {"color": [0.42, 0.42, 0.40], "rough": 0.85, "surface": "concrete"},
+    # viaducts: precast-concrete modulation map projected in world metres (the deck / pier meshes have no metric UV);
+    # albedo from the CC0 Bieżeństwa photo (piers mid grey, soffit in its own shadow, REVIEW r3 W4). WORKING_VALUE
+    "bridge_concrete": {"color": [0.42, 0.42, 0.40], "rough": 0.85, "surface": "concrete",
+                        "texture_set": "concrete_precast", "uv": "planar"},
+    "bridge_soffit": {"color": [0.15, 0.15, 0.145], "rough": 0.9, "surface": "concrete",
+                      "texture_set": "concrete_precast", "uv": "planar"},
     "barrier_steel": {"color": [0.55, 0.56, 0.57], "rough": 0.45, "metal": 0.9, "surface": "steel"},
-    "verge_grass": {"color": [0.11, 0.15, 0.06], "rough": 0.95, "surface": "grass"},
-    "shoulder_gravel": {"color": [0.30, 0.27, 0.22], "rough": 0.95, "surface": "gravel"},
-    "terrain_grass": {"color": [0.11, 0.15, 0.06], "rough": 0.95, "surface": "grass"},
+    "verge_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
+    "shoulder_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
+    "terrain_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
     "marking_white": {"color": [0.72, 0.72, 0.69], "rough": 0.6, "surface": "paint",
                       "decal": True, "depth_offset_m": S.MARKING_LIFT},
     "collision_asphalt": {"color": [1, 0, 1], "rough": 1.0, "surface": "asphalt", "collision": True},
@@ -89,7 +102,7 @@ def glb_materials():
     return _GLB_MATS
 
 
-WELD = {"road_asphalt", "road_concrete", "road_paving", "road_sett", "road_gravel", "collision_asphalt",
+WELD = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel", "collision_asphalt",
         "sidewalk_paving", "apron_sett"}
 
 
@@ -568,7 +581,9 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
                            "the area edge m, distance to a building wall m)",
                   "buildings": "LOD0 buildings with openings, docks, roofs",
                   "buildings_lod1": "LOD1 prisms with the same wall materials",
-                  "furniture": "linear furniture: fences, guard rails, noise barriers, retaining walls, wires",
+                  "furniture": "linear furniture: fences, guard rails, noise barriers, retaining walls",
+                  "wires": "power-line conductors as thin ribbons: TEXCOORD_0 = (side -1/+1, physical half width m), "
+                           "COLOR_0 = tangent * 0.5 + 0.5; the engine re-expands them towards the camera to >= 1 px",
                   "forest_hlod_<i>_<j>": "forest HLOD cell (64 m): canopy + alpha-tested edge walls; draw it instead "
                                          "of the trees with instance field fc = <i>_<j> when the cell bbox is farther "
                                          "than lod_policy.<profile>.forest_hlod_m; textures: material extras "
@@ -639,7 +654,7 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
     per_chunk = []
     for ch in chunks_meta:
         t = ch["triangles"]
-        stat = sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved", "furniture"))
+        stat = sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved", "furniture", "wires"))
         ci, cj = (int(x) for x in ch["id"].split("_"))
         inst = inst_by_chunk.get((ci, cj), [])
         per_chunk.append({"chunk": ch["id"], "materials": len(ch["materials"]),
@@ -671,7 +686,7 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
                 lod = next(l for lim, l in pol["terrain"] if d < lim)
                 add("terrain", t.get(f"terrain_lod{lod}", 0))
                 add("roads", sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved")))
-                add("furniture", t.get("furniture", 0) if d < pol["furn"] else 0)
+                add("furniture", (t.get("furniture", 0) + t.get("wires", 0)) if d < pol["furn"] else 0)
                 add("buildings", t.get("buildings", 0) if d < pol["bld"] else t.get("buildings_lod1", 0))
                 mats |= set(ch["materials"])
                 far_cells = set()
@@ -761,6 +776,7 @@ def qa_report(w, mk_report, mask):
             "footprint_nodes": int(mask.sum()),
             "nmt_nodes_replaced_under_decks": w.stats.get("nmt_replaced_under_decks", 0),
             "markings": mk_report.get("markings", {}),
+            "markings_overlap_removed_tris": mk_report.get("overlap_removed_tris", 0),
             "decals": mk_report.get("decals", {}),
             "crossings_snapped": mk_report.get("crossings_snapped", 0),
             "crossings_skipped": mk_report.get("crossings_skipped", []),
