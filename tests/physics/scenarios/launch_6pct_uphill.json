@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "launch_6pct_uphill",
+  "description": "Standstill facing uphill on 6% held by service brake, release, full throttle (hill start aid)",
+  "spec": "docs/04 s6.2",
+  "ground": {
+    "gradePercent": 6
+  },
+  "initial": {
+    "headingDeg": 0
+  },
+  "duration": 30,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 2.0,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "rollback_m",
+      "max": 0.05,
+      "status": "WORKING_VALUE",
+      "source": "docs/04 s6.2 'bez cofania sie'; 5 cm allowance for tire/suspension compliance"
+    },
+    {
+      "metric": "stalled",
+      "max": 0,
+      "status": "WORKING_VALUE",
+      "source": "engine must not stall"
+    },
+    {
+      "metric": "min_rpm",
+      "from": 2.0,
+      "min": 550,
+      "status": "WORKING_VALUE",
+      "source": "engine stays near idle or above"
+    },
+    {
+      "metric": "time_to_kmh",
+      "arg": 30,
+      "min": 4,
+      "max": 25,
+      "status": "WORKING_VALUE",
+      "source": "plausibility band from power-to-weight (368 kW / 7.5 t); no sourced solo-tractor acceleration data"
+    }
+  ]
+}

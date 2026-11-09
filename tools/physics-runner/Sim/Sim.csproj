@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Plain .NET host for the Unity-independent physics core.
+    The physics sources are NOT copied: they are compiled straight from the Unity project folder,
+    so the .NET runner and Unity always build the same code (ADR 0004).
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>PhysicsRunner.Sim</RootNamespace>
+    <AssemblyName>PhysicsRunner.Sim</AssemblyName>
+    <!-- Unity 6 compiles C# 9; keep the shared sources within that language version. -->
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../../../game/Assets/_Project/Vehicle/Physics/**/*.cs" LinkBase="VehiclePhysics" />
+    <Compile Include="*.cs" />
+  </ItemGroup>
+
+</Project>

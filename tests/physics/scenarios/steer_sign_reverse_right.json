@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "steer_sign_reverse_right",
+  "description": "Reverse 5 km/h, steer +0.25 (wheels right): body yaws left while backing",
+  "spec": "docs/04 s6.15",
+  "ground": {
+    "gradePercent": 0
+  },
+  "initial": {},
+  "duration": 12,
+  "driver": {
+    "type": "speedhold",
+    "targetKmh": 5,
+    "steer": 0.25,
+    "selector": "R"
+  },
+  "checks": [
+    {
+      "metric": "yaw_rate_mean_dps",
+      "from": 6,
+      "max": -1.0,
+      "status": "DERIVED",
+      "source": "docs/04 s6.15 steering command sign -> yaw sign (Unity frame: +steer = right = +yaw about +Y); reversing: yaw = v/L tan(delta) with v<0"
+    },
+    {
+      "metric": "stalled",
+      "max": 0,
+      "status": "WORKING_VALUE",
+      "source": "engine must not stall"
+    }
+  ]
+}

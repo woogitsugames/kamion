@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "top_speed_flat",
+  "description": "Full throttle from standstill on flat dry asphalt for 100 s; EU speed limiter 90 km/h",
+  "spec": "docs/04 s6.4",
+  "ground": {
+    "gradePercent": 0
+  },
+  "initial": {},
+  "duration": 100,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "max_speed_kmh",
+      "max": 90.5,
+      "status": "SOURCED",
+      "source": "Council Directive 92/6/EEC as amended by 2002/85/EC: N3 speed limitation device set to 90 km/h (+0.5 km/h numeric allowance WORKING_VALUE)"
+    },
+    {
+      "metric": "mean_speed_kmh",
+      "from": 80,
+      "min": 87,
+      "max": 90.0,
+      "status": "WORKING_VALUE",
+      "source": "settles just under the limiter set speed; 3 km/h band"
+    }
+  ]
+}
