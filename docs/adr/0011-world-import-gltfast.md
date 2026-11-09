@@ -1,5 +1,5 @@
 # ADR 0011 — World import into Unity: glTFast, generated assets outside git
-Status: Accepted (rendering-perf / world import), 2026-11-09.
+Status: Accepted (rendering-perf / world import), 2026-11-09. **Import path superseded by ADR 0012** (GLBs are baked directly, not copied into Assets; glTFast stays for future run-time loading).
 
 ## Context
 `tools/worldgen/roads/build_world.py` writes 64 chunk GLBs (~270 MB, `Data/raw/derived/<id>/world/`, not in git) and

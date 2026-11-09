@@ -8,13 +8,13 @@ namespace Game.Rendering
     /// colour, so all five agree (docs/adr/0010-look-development-sky-exposure-tonemapping.md).
     ///
     /// Clear sky luminance: Preetham, Shirley, Smits, "A Practical Analytic Model for Daylight" (SIGGRAPH 1999), Perez
-    /// distribution as a function of turbidity T. Clear sky colour (chromaticity only, luminance 1): single scattering in a
-    /// spherical Rayleigh + Mie + ozone atmosphere (coefficients of Bruneton 2017 / Hillaire 2020 at 680/550/440 nm, aerosol
+    /// distribution as a function of turbidity T. Clear sky colour (chromaticity only, luminance 1): spectral (12-band) scattering
+    /// in a spherical Rayleigh + Mie + ozone atmosphere (coefficients of Bruneton 2017 / Hillaire 2020, aerosol
     /// optical depth from T through Ångström β = 0.04 (T − 1), α = 1.3), baked per sun position into a 64×32 LUT
     /// (angle to the sun × zenith angle). Preetham's own xy fit is biased toward magenta below ~30° elevation (the
     /// "slate" sky of the first Unity renders, docs/reports/visual/unity-look-v2); the scattering colour is greener-blue
-    /// and whiter toward the horizon. Multiple scattering is not modelled (slightly too saturated at the zenith; within
-    /// measured clear-sky zenith CCTs of 10 000–25 000 K). Overcast: CIE standard overcast sky (Moon and Spencer 1942,
+    /// and whiter toward the horizon. Higher orders: one isotropic second-order term (mean sky + ground radiance) refills the long horizontal paths; the zenith stays within
+    /// measured clear-sky zenith CCTs of 10 000–25 000 K. Overcast: CIE standard overcast sky (Moon and Spencer 1942,
     /// CIE S 011/E:2003 type 1): L(θ) = Lz (1 + 2 cos θ) / 3, achromatic D65.
     /// Absolute levels are NOT taken from Preetham's zenith formula; the dome is normalised so that its horizontal
     /// illuminance equals the daylight-availability fits of the IESNA Lighting Handbook (9th ed., ch. 8):
@@ -309,52 +309,127 @@ namespace Game.Rendering
             y = m_Zy * Perez(m_Py, theta, gamma) / Perez(m_Py, 0f, m_ThetaS);
         }
 
-        // ---------------------------------------------------------------- single-scattering chromaticity
+        // ---------------------------------------------------------------- scattering chromaticity (spectral)
         const float EarthR = 6360e3f, AtmosphereR = 6460e3f, ObserverH = 150f, RayleighH = 8000f, MieH = 1200f;
-        static readonly Vector3 k_Rayleigh = new Vector3(5.802e-6f, 13.558e-6f, 33.1e-6f);   // m⁻¹ at sea level, 680/550/440 nm
-        static readonly Vector3 k_Ozone = new Vector3(0.650e-6f, 1.881e-6f, 0.085e-6f);      // absorption, tent 10-40 km
-        static readonly Vector3 k_Lambda = new Vector3(0.680f, 0.550f, 0.440f);              // µm
-        static readonly Vector3 k_SolarTop = new Vector3(0.98f, 1f, 0.96f);                   // same as SunColorFromTurbidity
         const float MieG = 0.76f, MieExtinctionPerScattering = 1.11f;
-
+        const int Bands = 12;                   // 410 … 696 nm, 26 nm apart
+        static float BandNm(int k) => 410f + 26f * k;
+        // Rayleigh scattering at sea level, 33.1e-6 m⁻¹ at 440 nm (Bruneton 2017), ∝ λ⁻⁴.
+        static float RayleighAt(float nm) => 33.1e-6f * Mathf.Pow(440f / nm, 4f);
+        // Ozone absorption (Chappuis band), linear through Bruneton's 440/550/680 nm values; tent profile 10–40 km.
+        static float OzoneAt(float nm) => nm < 550f ? Mathf.Lerp(0.085e-6f, 1.881e-6f, Mathf.InverseLerp(440f, 550f, nm))
+                                                     : Mathf.Lerp(1.881e-6f, 0.650e-6f, Mathf.InverseLerp(550f, 680f, nm));
         static float OzoneDensity(float h) => Mathf.Max(0f, 1f - Mathf.Abs(h - 25000f) / 15000f);
+        // Extraterrestrial solar spectrum ≈ black body 5778 K (relative).
+        static float SolarAt(float nm) { float l = nm * 1e-9f; return 1f / (Mathf.Pow(l, 5f) * (Mathf.Exp(1.4388e-2f / (l * 5778f)) - 1f)); }
+        static float Lobe(float x, float mu, float s1, float s2) { float t = (x - mu) / (x < mu ? s1 : s2); return Mathf.Exp(-0.5f * t * t); }
+        // CIE 1931 2° colour-matching functions, multi-lobe fit of Wyman, Sloan and Shirley (JCGT 2013).
+        static Vector3 Cmf(float nm) => new Vector3(
+            1.056f * Lobe(nm, 599.8f, 37.9f, 31.0f) + 0.362f * Lobe(nm, 442.0f, 16.0f, 26.7f) - 0.065f * Lobe(nm, 501.1f, 20.4f, 26.2f),
+            0.821f * Lobe(nm, 568.8f, 46.9f, 40.5f) + 0.286f * Lobe(nm, 530.9f, 16.3f, 31.1f),
+            1.217f * Lobe(nm, 437.0f, 11.8f, 36.0f) + 0.681f * Lobe(nm, 459.0f, 26.0f, 13.8f));
 
         static float RayLengthToTop(float r, float mu) => -r * mu + Mathf.Sqrt(Mathf.Max(0f, r * r * (mu * mu - 1f) + AtmosphereR * AtmosphereR));
 
+        /// <summary>
+        /// Spectral (12 bands) single scattering + one isotropic second-order term (mean sky and ground radiance as the
+        /// source), integrated to CIE XYZ and converted to Rec.709, normalised to luminance 1. Three "RGB wavelengths"
+        /// (the usual real-time shortcut) gave a green-grey horizon and a beige haze in the first v2 renders.
+        /// </summary>
         void BuildChroma()
         {
             float beta = 0.04f * (Turbidity - 1f);
-            var mie = new Vector3(beta * Mathf.Pow(k_Lambda.x, -1.3f), beta * Mathf.Pow(k_Lambda.y, -1.3f), beta * Mathf.Pow(k_Lambda.z, -1.3f)) / MieH;
-            Vector3 Ext(float h) => k_Rayleigh * Mathf.Exp(-h / RayleighH) + mie * (MieExtinctionPerScattering * Mathf.Exp(-h / MieH)) + k_Ozone * OzoneDensity(h);
-
-            // Optical depth towards the sun as a function of height (the sun's local zenith angle is taken as constant
-            // along the view ray: < 3° change over the 300 km of a horizontal ray).
-            const int nh = 96;
-            var sunOd = new Vector3[nh];
-            float muS = Mathf.Max(SunDirection.y, 0.02f);
-            float HAt(int k) => 60000f * (k / (float)(nh - 1)) * (k / (float)(nh - 1));
-            for (int k = 0; k < nh; k++)
+            var ray = new float[Bands]; var mie = new float[Bands]; var oz = new float[Bands]; var sol = new float[Bands]; var cmf = new Vector3[Bands];
+            for (int k = 0; k < Bands; k++)
             {
-                float r0 = EarthR + HAt(k), len = RayLengthToTop(r0, muS);
+                float nm = BandNm(k);
+                ray[k] = RayleighAt(nm); mie[k] = beta * Mathf.Pow(nm / 1000f, -1.3f) / MieH; oz[k] = OzoneAt(nm); sol[k] = SolarAt(nm); cmf[k] = Cmf(nm);
+            }
+            float solMax = 0f; foreach (var v in sol) solMax = Mathf.Max(solMax, v);
+            for (int k = 0; k < Bands; k++) sol[k] /= solMax;
+
+            // Optical depth towards the sun per band as a function of height (the sun's local zenith angle is taken as
+            // constant along the view ray: < 3° change over the 300 km of a horizontal ray).
+            const int nh = 64;
+            var sunOd = new float[nh, Bands];
+            float muS = Mathf.Max(SunDirection.y, 0.02f);
+            for (int a = 0; a < nh; a++)
+            {
+                float hk = 60000f * (a / (float)(nh - 1)) * (a / (float)(nh - 1));
+                float r0 = EarthR + hk, len = RayLengthToTop(r0, muS);
                 const int ns = 24;
-                Vector3 od = Vector3.zero;
                 for (int i = 0; i < ns; i++)
                 {
                     float t = len * ((i + 0.5f) / ns) * ((i + 0.5f) / ns), dt = len * (2f * i + 1f) / (ns * ns);
                     float h = Mathf.Sqrt(r0 * r0 + t * t + 2f * r0 * t * muS) - EarthR;
-                    od += Ext(h) * dt;
+                    float dR = Mathf.Exp(-h / RayleighH), dM = Mathf.Exp(-h / MieH) * MieExtinctionPerScattering, dO = OzoneDensity(h);
+                    for (int k = 0; k < Bands; k++) sunOd[a, k] += (ray[k] * dR + mie[k] * dM + oz[k] * dO) * dt;
                 }
-                sunOd[k] = od;
             }
-            Vector3 SunOd(float h)
+            float SunOd(float h, int k)
             {
                 float f = Mathf.Sqrt(Mathf.Clamp(h, 0f, 60000f) / 60000f) * (nh - 1);
-                int k = Mathf.Min((int)f, nh - 2);
-                return Vector3.Lerp(sunOd[k], sunOd[k + 1], f - k);
+                int a = Mathf.Min((int)f, nh - 2);
+                return Mathf.Lerp(sunOd[a, k], sunOd[a + 1, k], f - a);
             }
 
             float sinS = Mathf.Sqrt(1f - SunDirection.y * SunDirection.y), cosS = SunDirection.y;
             float r0v = EarthR + ObserverH;
+            var sdir = new Vector3(sinS, cosS, 0f);
+            var odv = new float[Bands];
+
+            void March(Vector3 d, float[] ambient, float[] L)
+            {
+                float cosT = d.y, mu = Vector3.Dot(d, sdir);
+                float pR = 3f / (16f * Mathf.PI) * (1f + mu * mu);
+                float pM = 3f / (8f * Mathf.PI) * (1f - MieG * MieG) * (1f + mu * mu) / ((2f + MieG * MieG) * Mathf.Pow(1f + MieG * MieG - 2f * MieG * mu, 1.5f));
+                float len = RayLengthToTop(r0v, cosT);
+                const int n = 32;
+                System.Array.Clear(odv, 0, Bands);
+                System.Array.Clear(L, 0, Bands);
+                float prev = 0f;
+                for (int s2 = 0; s2 < n; s2++)
+                {
+                    float t1 = len * ((s2 + 1f) / n) * ((s2 + 1f) / n), dt = t1 - prev, tm = 0.5f * (prev + t1);
+                    prev = t1;
+                    float h = Mathf.Sqrt(r0v * r0v + tm * tm + 2f * r0v * tm * cosT) - EarthR;
+                    float dR = Mathf.Exp(-h / RayleighH), dM = Mathf.Exp(-h / MieH), dO = OzoneDensity(h);
+                    for (int k = 0; k < Bands; k++)
+                    {
+                        float e = (ray[k] * dR + mie[k] * dM * MieExtinctionPerScattering + oz[k] * dO) * dt;
+                        float mid = odv[k] + 0.5f * e;
+                        float sc = ray[k] * dR, sm = mie[k] * dM;
+                        L[k] += Mathf.Exp(-mid - SunOd(h, k)) * sol[k] * (sc * pR + sm * pM) * dt;
+                        if (ambient != null) L[k] += Mathf.Exp(-mid) * (sc + sm) * ambient[k] * 0.5f * dt;
+                        odv[k] += e;
+                    }
+                }
+            }
+
+            // Second-order source: mean single-scattered sky radiance over the upper hemisphere + Lambertian ground
+            // (albedo 0.2) lit by the attenuated sun and that sky; isotropic phase over each hemisphere (½ each).
+            var amb = new float[Bands];
+            var tmp = new float[Bands];
+            const int ar = 6, ac = 12;
+            for (int a = 0; a < ar; a++)
+            for (int b = 0; b < ac; b++)
+            {
+                float z = (a + 0.5f) / ar, sz = Mathf.Sqrt(1f - z * z), phi = (b + 0.5f) * 2f * Mathf.PI / ac;
+                March(new Vector3(sz * Mathf.Cos(phi), z, sz * Mathf.Sin(phi)), null, tmp);
+                for (int k = 0; k < Bands; k++) amb[k] += tmp[k] / (ar * ac);
+            }
+            for (int k = 0; k < Bands; k++)
+                amb[k] += 0.2f * (sol[k] * Mathf.Exp(-SunOd(ObserverH, k)) * Mathf.Max(cosS, 0f) / Mathf.PI + amb[k]);
+
+            // White balance: the extraterrestrial sun maps to the same near-white (0.98, 1, 0.96) the sun light uses
+            // (SunColorFromTurbidity), so sky and sunlight share one reference white - like a camera on daylight WB.
+            Vector3 sunXyz = Vector3.zero;
+            for (int k = 0; k < Bands; k++) sunXyz += cmf[k] * sol[k];
+            var sunRgb = new Vector3(3.2404542f * sunXyz.x - 1.5371385f * sunXyz.y - 0.4985314f * sunXyz.z,
+                -0.9692660f * sunXyz.x + 1.8760108f * sunXyz.y + 0.0415560f * sunXyz.z,
+                0.0556434f * sunXyz.x - 0.2040259f * sunXyz.y + 1.0572252f * sunXyz.z);
+            var wb = new Vector3(0.98f / sunRgb.x, 1f / sunRgb.y, 0.96f / sunRgb.z);
+
             for (int j = 0; j < ChromaHeight; j++)
             for (int i = 0; i < ChromaWidth; i++)
             {
@@ -363,31 +438,15 @@ namespace Game.Rendering
                 float gamma = u * Mathf.PI, cosG = Mathf.Cos(gamma);
                 // Direction with zenith angle θ and angle γ to the sun (sun at azimuth 0); clamp unreachable γ.
                 float cosPhi = sinT * sinS > 1e-5f ? Mathf.Clamp((cosG - cosT * cosS) / (sinT * sinS), -1f, 1f) : 1f;
-                var d = new Vector3(sinT * cosPhi, cosT, sinT * Mathf.Sqrt(1f - cosPhi * cosPhi));
-                var sdir = new Vector3(sinS, cosS, 0f);
-                float mu = Vector3.Dot(d, sdir);
-                float pR = 3f / (16f * Mathf.PI) * (1f + mu * mu);
-                float pM = 3f / (8f * Mathf.PI) * (1f - MieG * MieG) * (1f + mu * mu) / ((2f + MieG * MieG) * Mathf.Pow(1f + MieG * MieG - 2f * MieG * mu, 1.5f));
-                float len = RayLengthToTop(r0v, cosT);
-                const int n = 40;
-                Vector3 odv = Vector3.zero, L = Vector3.zero;
-                float prev = 0f;
-                for (int s2 = 0; s2 < n; s2++)
-                {
-                    float t1 = len * ((s2 + 1f) / n) * ((s2 + 1f) / n), dt = t1 - prev, tm = 0.5f * (prev + t1);
-                    prev = t1;
-                    float h = Mathf.Sqrt(r0v * r0v + tm * tm + 2f * r0v * tm * cosT) - EarthR;
-                    var e = Ext(h) * dt;
-                    odv += e * 0.5f;
-                    var od = odv + SunOd(h);
-                    var tr = new Vector3(Mathf.Exp(-od.x), Mathf.Exp(-od.y), Mathf.Exp(-od.z));
-                    float rr = Mathf.Exp(-h / RayleighH) * pR, rm = Mathf.Exp(-h / MieH) * pM;
-                    L += Vector3.Scale(tr, k_Rayleigh * rr + mie * rm) * dt;
-                    odv += e * 0.5f;
-                }
-                L = Vector3.Scale(L, k_SolarTop);
-                float lum = 0.2126f * L.x + 0.7152f * L.y + 0.0722f * L.z;
-                m_Chroma[j * ChromaWidth + i] = lum > 0f ? new Color(L.x / lum, L.y / lum, L.z / lum, 1f) : Color.white;
+                March(new Vector3(sinT * cosPhi, cosT, sinT * Mathf.Sqrt(1f - cosPhi * cosPhi)), amb, tmp);
+                Vector3 xyz = Vector3.zero;
+                for (int k = 0; k < Bands; k++) xyz += cmf[k] * tmp[k];
+                var c = new Color(
+                    Mathf.Max(0f, 3.2404542f * xyz.x - 1.5371385f * xyz.y - 0.4985314f * xyz.z) * wb.x,
+                    Mathf.Max(0f, -0.9692660f * xyz.x + 1.8760108f * xyz.y + 0.0415560f * xyz.z) * wb.y,
+                    Mathf.Max(0f, 0.0556434f * xyz.x - 0.2040259f * xyz.y + 1.0572252f * xyz.z) * wb.z);
+                float lum = 0.2126f * c.r + 0.7152f * c.g + 0.0722f * c.b;
+                m_Chroma[j * ChromaWidth + i] = lum > 0f ? new Color(c.r / lum, c.g / lum, c.b / lum, 1f) : Color.white;
             }
         }
 
