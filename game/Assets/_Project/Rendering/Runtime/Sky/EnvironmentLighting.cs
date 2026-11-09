@@ -38,6 +38,7 @@ namespace Game.Rendering
             k_SunDir = Shader.PropertyToID("_SkySunDir"), k_SunColor = Shader.PropertyToID("_SkySunColor"),
             k_FogColor = Shader.PropertyToID("_SkyFogColor"), k_Chroma = Shader.PropertyToID("_SkyChroma");
         Texture2D m_ChromaTex;
+        static readonly int k_Exposure = Shader.PropertyToID("_KamionExposure");
 
         void OnEnable()
         {
@@ -82,6 +83,8 @@ namespace Game.Rendering
             if (p == null) return;
             Model = p.CreateModel();
             var m = Model;
+            // Display value per cd/m^2: emissive surfaces (truck lamps, A7) are authored in physical luminance.
+            Shader.SetGlobalFloat(k_Exposure, m.Exposure);
 
             // ---- sun ----
             if (sun == null) sun = RenderSettings.sun;

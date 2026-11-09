@@ -21,9 +21,12 @@ namespace Game.Vehicle.Runtime
         public Transform cabPivot;
         /// <summary>Steering wheel; its local +Z is the column axis pointing away from the driver.</summary>
         public Transform steeringWheel;
+        /// <summary>Also move the cab pivot down by the cab-suspension heave (art truck; the graybox keeps rotation only).</summary>
+        public bool applyCabHeave;
 
         Quaternion m_SteeringWheelRest = Quaternion.identity;
         Quaternion m_CabRest = Quaternion.identity;
+        Vector3 m_CabRestPos;
         float[] m_PrevS, m_CurS, m_SpinDeg, m_PrevSpinDeg;
         Vector3[] m_Hardpoints;
         bool m_Ready;
@@ -43,7 +46,7 @@ namespace Game.Vehicle.Runtime
                 m_PrevS[i] = m_CurS[i] = (float)wheels[i].S;
             }
             if (steeringWheel != null) m_SteeringWheelRest = steeringWheel.localRotation;
-            if (cabPivot != null) m_CabRest = cabPivot.localRotation;
+            if (cabPivot != null) { m_CabRest = cabPivot.localRotation; m_CabRestPos = cabPivot.localPosition; }
             m_Ready = true;
         }
 
@@ -85,6 +88,8 @@ namespace Game.Vehicle.Runtime
             {
                 // Pitch > 0 = nose down (rotation about +X); roll > 0 = left side down (rotation about +Z).
                 cabPivot.localRotation = m_CabRest * Quaternion.Euler((float)model.Cab.Pitch * Mathf.Rad2Deg, 0f, (float)model.Cab.Roll * Mathf.Rad2Deg);
+                // Heave > 0 = cab moved down (mounts compressed).
+                if (applyCabHeave) cabPivot.localPosition = m_CabRestPos - new Vector3(0f, (float)model.Cab.Heave, 0f);
             }
             if (steeringWheel != null)
             {

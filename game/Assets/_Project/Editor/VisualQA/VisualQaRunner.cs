@@ -149,6 +149,16 @@ namespace Game.Editor.VisualQA
 
                 // Vehicle mirrors and reversing cameras render into their textures first (LateUpdate does not run here).
                 foreach (var m in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None)) m.RenderNow();
+                // Art truck (A7): tier binding, lamp state and the cab fill for this camera (LateUpdate does not run here).
+                foreach (var rig in UnityEngine.Object.FindObjectsByType<TruckVisualRig>(FindObjectsSortMode.None)) rig.Apply();
+                foreach (var tl in UnityEngine.Object.FindObjectsByType<TruckLights>(FindObjectsSortMode.None)) tl.Refresh();
+                // -qaCabFill off: A/B frames without the cab fill and the cab-view lift (A7 before/after).
+                if (EditorTools.Arg("-qaCabFill", "on") == "off")
+                {
+                    Shader.SetGlobalVector("_CabFill", Vector4.zero);
+                    Shader.SetGlobalFloat("_CabGain", 1f);
+                }
+                else foreach (var cl in UnityEngine.Object.FindObjectsByType<CabInteriorLighting>(FindObjectsSortMode.None)) cl.Refresh(cam);
 
                 // UI is rendered in its own pass (UI layer only, transparent clear) and composited over the world
                 // image (premultiplied "over"), exactly like the runtime Screen Space - Overlay canvas: world geometry

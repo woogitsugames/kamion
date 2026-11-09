@@ -169,6 +169,13 @@ namespace Game.Gameplay
             if (ap == "route") { if (!StartRouteDriver(platform.GetLaunchArgument("speed"))) ap = null; }
             else if (!string.IsNullOrEmpty(ap)) { ConfigureAutopilot(ap, platform.GetLaunchArgument("speed")); m_AutopilotStart = true; }
             Spawn(m_Spawn);
+            // lighting=<preset> (clear | overcast | lowsun | dusk): device frames of the control set under the same light (A7).
+            string lighting = platform.GetLaunchArgument("lighting");
+            if (!string.IsNullOrEmpty(lighting))
+            {
+                var env = FindAnyObjectByType<EnvironmentLighting>();
+                if (env == null || !env.SetPreset(lighting)) Debug.LogWarning($"[LAB] lighting={lighting}: no such preset");
+            }
             ActivateControlCamera(platform.GetLaunchArgument("qacam"), platform.GetLaunchArgument("qacam_set"));
             // telemetry=1: record the vehicle CSV from the first physics step (device runs, e.g. the route jolt check).
             m_AutoRecord = platform.GetLaunchArgument("telemetry") == "1";

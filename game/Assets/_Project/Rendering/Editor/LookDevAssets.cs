@@ -18,6 +18,8 @@ namespace Game.Rendering.Editor
         public const string LightingDir = "Assets/_Project/Rendering/Settings/Lighting";
         public const string ClearPreset = LightingDir + "/LP_Clear.asset";
         public const string OvercastPreset = LightingDir + "/LP_Overcast.asset";
+        public const string LowSunPreset = LightingDir + "/LP_LowSun.asset";
+        public const string DuskPreset = LightingDir + "/LP_Dusk.asset";
         public const string SkyMaterial = LightingDir + "/M_Sky.mat";
         public const string WorldVolumeProfile = "Assets/_Project/Rendering/Settings/VP_World.asset";
         public const string QualityProfilePath = "Assets/_Project/Rendering/Resources/QualityProfile.asset";
@@ -31,6 +33,10 @@ namespace Game.Rendering.Editor
                 AssetDatabase.CreateAsset(LightingPreset.CreateClear(), ClearPreset);
             if (AssetDatabase.LoadAssetAtPath<LightingPreset>(OvercastPreset) == null)
                 AssetDatabase.CreateAsset(LightingPreset.CreateOvercast(), OvercastPreset);
+            if (AssetDatabase.LoadAssetAtPath<LightingPreset>(LowSunPreset) == null)
+                AssetDatabase.CreateAsset(LightingPreset.CreateLowSun(), LowSunPreset);
+            if (AssetDatabase.LoadAssetAtPath<LightingPreset>(DuskPreset) == null)
+                AssetDatabase.CreateAsset(LightingPreset.CreateDusk(), DuskPreset);
 
             var shader = Shader.Find("Kamion/Sky");
             if (shader == null) throw new System.InvalidOperationException("Shader Kamion/Sky not found (compile error?)");
@@ -69,6 +75,8 @@ namespace Game.Rendering.Editor
         {
             AssetDatabase.LoadAssetAtPath<LightingPreset>(ClearPreset),
             AssetDatabase.LoadAssetAtPath<LightingPreset>(OvercastPreset),
+            AssetDatabase.LoadAssetAtPath<LightingPreset>(LowSunPreset),
+            AssetDatabase.LoadAssetAtPath<LightingPreset>(DuskPreset),
         };
 
         public static QualityProfile LoadQualityProfile() => AssetDatabase.LoadAssetAtPath<QualityProfile>(QualityProfilePath);

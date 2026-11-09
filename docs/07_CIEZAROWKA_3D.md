@@ -22,6 +22,10 @@ Każdy krok kończy się **renderem kontrolnym** (stałe kamery, studio + plener
 9. **LOD0–LOD3 + impostor dla ruchu AI**, proste kolizje, punkty: oczy kierowcy, kamery, siodło, osie, światła, emitery dźwięku.
 10. **Eksport** (FBX lub glTF — ADR), import do Unity skryptem, prefab generowany, walidator (skala, osie, pivoty, nazwy, materiały, liczba trójkątów, texel density).
 
+**Unity (A7):** prefab TRAKT budowany kodem z manifestów (`Kamion/Setup/Rebuild TRAKT truck`, `TruckAssetBuilder`), hierarchia z
+`rig_parent`, koła/kabina/kierownica sterowane stanem solvera, tiery High/Medium/Low = LOD i atlasy z manifestu. Szczegóły, pomiary
+i otwarte punkty: `docs/reports/visual/truck-A7/README.md`.
+
 ## 3. Budżety (hipotezy — ratyfikuj na telefonie)
 - Zewnętrze LOD0: 120–250 tys. trójkątów (kamera zewnętrzna, flagowiec); LOD0 Medium dla Samsunga A osobno, jeśli trzeba.
 - Kabina (widok FPP): osobny budżet, wnętrze niewidoczne z zewnątrz w niskim LOD.
