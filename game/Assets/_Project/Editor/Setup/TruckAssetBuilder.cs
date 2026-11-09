@@ -234,7 +234,9 @@ namespace Game.Editor.Setup
                         // Livery "white" (biel flotowa), manifest liveries.white; colours are linear.
                         m.SetTexture("_DecalMap", Tex<Texture2D>($"{et}/T_Ext_Decal.png"));
                         m.SetColor("_PaintColor", new Color(0.78f, 0.785f, 0.78f, 1f));
-                        m.SetFloat("_PaintRoughness", 0.32f); m.SetFloat("_PaintMetallic", 0f);
+                        // Base coat under a clear coat (review r3 E1): base 0.36, coat 0.08, F0 0.04 (shader).
+                        m.SetFloat("_PaintRoughness", 0.36f); m.SetFloat("_PaintMetallic", 0f);
+                        m.SetFloat("_ClearCoat", 1f); m.SetFloat("_ClearCoatRoughness", 0.08f); m.SetFloat("_Flake", 0f);
                         m.SetColor("_DecalColor", new Color(0.1f, 0.104f, 0.11f, 1f));
                         m.SetFloat("_DecalMetallic", 1f); m.SetFloat("_DecalRoughness", 0.3f);
                     }
@@ -243,7 +245,15 @@ namespace Game.Editor.Setup
                     Add("MI_Ext_" + slot, m);
                 }
                 var g = Mat(dir, "MI_Ext_Glass", glass);
-                g.SetFloat("_UseVertexColor", 1f); g.SetFloat("_Opacity", 0.10f); g.SetFloat("_Smoothness", 0.96f); g.SetFloat("_Grime", 0f);
+                // Laminated green windscreen: visible transmittance ~0.78 incl. reflection (EU >= 0.75), so 0.16 absorption;
+                // road film outside the wiper sweeps (pivots: manifest WIPER_L/R rig_local_position, glass object space).
+                g.SetFloat("_UseVertexColor", 1f); g.SetFloat("_Opacity", 0.16f); g.SetFloat("_Smoothness", 0.96f); g.SetFloat("_Grime", 0f);
+                g.SetFloat("_Wiper", 0.35f);
+                g.SetVector("_WiperPivotA", new Vector4(-1.0f, 0.87f, 0.18f, 0.95f));
+                g.SetVector("_WiperPivotB", new Vector4(-0.08f, 0.87f, 0.18f, 0.95f));
+                g.SetVector("_WiperSweep", new Vector4(-5f, 100f, 0.8f, 2.0f));
+                g.SetFloat("_WindscreenMinZ", 0.95f);
+                g.SetVector("_CabCentreOS", new Vector4(0f, 1.0f, -0.6f, 0f));
                 g.renderQueue = (int)RenderQueue.Transparent;
                 Add("MI_Ext_Glass", g);
                 // Main mirrors: unlit, the render texture replaces the idle colour (RenderTextureMirror).
@@ -566,6 +576,13 @@ namespace Game.Editor.Setup
                 lamps.body = body;
                 var cabLight = root.AddComponent<CabInteriorLighting>();
                 cabLight.cab = cabBody;
+                // A8 (review r4 E-N1 / E1 / E2): contact shadow under the tractor and its wheels, local reflection capture.
+                // Cab + bumper + engine block from the front (solid, ~0.38 m clearance), then chassis with tanks and fenders
+                // (gaps between the rails, ~0.55 m). Clearances WORKING_VALUE (docs/07, dims.json).
+                var td = new TractorDimensions();
+                AddContactShadow(root, visuals.wheelPivots, td.cabWidth * 0.5f,
+                    new[] { (td.FrontFaceZ - td.CabRearZ, 0.38f, 0.95f, 2), (0f, 0.55f, 0.85f, 3) });
+                root.AddComponent<VehicleReflectionCapture>();
 
                 SetLayer(root, UnityGroundQuery.ResolveVehicleLayer());
                 foreach (var r in root.GetComponentsInChildren<Renderer>(true)) { r.lightProbeUsage = LightProbeUsage.BlendProbes; r.reflectionProbeUsage = ReflectionProbeUsage.BlendProbes; }
@@ -581,6 +598,64 @@ namespace Game.Editor.Setup
             {
                 UnityEngine.Object.DestroyImmediate(root);
             }
+        }
+
+        /// <summary>
+        /// Contact shadow of a vehicle (review r4 E-N1). Measured from the built hierarchy, not assumed: wheel radius =
+        /// half height of the wheel's renderers, ground = mean wheel contact height in the root frame, footprint = bounds
+        /// of the other mesh renderers in the root frame (x clamped to the body width). <paramref name="sections"/> splits
+        /// the footprint from the front: (length m or 0 = rest, underside clearance above ground m, strength, rows);
+        /// <paramref name="maxLength"/> > 0 limits the footprint to that length from the rear end.
+        /// </summary>
+        public static ContactShadowCaster AddContactShadow(GameObject root, Transform[] wheelPivots, float maxHalfWidth,
+            (float length, float clearance, float strength, int rows)[] sections, float maxLength = 0f, float dualWidth = 0.66f, float singleWidth = 0.34f)
+        {
+            var t = root.transform;
+            var pivots = (wheelPivots ?? new Transform[0]).Where(w => w != null).ToArray();
+            var wheelRs = new HashSet<Renderer>(pivots.SelectMany(w => w.GetComponentsInChildren<Renderer>(true)));
+            var wheels = new List<ContactShadowCaster.Wheel>();
+            float groundSum = 0f;
+            foreach (var w in pivots)
+            {
+                var rs = w.GetComponentsInChildren<Renderer>(true);
+                float radius = rs.Length > 0 ? rs.Max(r => r.bounds.extents.y) : 0.5f;
+                Vector3 lp = t.InverseTransformPoint(w.position);
+                groundSum += lp.y - radius;
+                float width = rs.Length > 0 ? rs.Max(r => Mathf.Abs(t.InverseTransformVector(r.bounds.size).x)) : singleWidth;
+                wheels.Add(new ContactShadowCaster.Wheel { centre = w, radius = radius, width = Mathf.Clamp(width, singleWidth, dualWidth) });
+            }
+            float ground = wheels.Count > 0 ? groundSum / wheels.Count : 0f;
+            bool any = false; var b = new Bounds();
+            foreach (var r in root.GetComponentsInChildren<MeshRenderer>(true))
+            {
+                if (wheelRs.Contains(r)) continue;
+                var lb = r.bounds;
+                for (int k = 0; k < 8; k++)
+                {
+                    var c = new Vector3((k & 1) == 0 ? lb.min.x : lb.max.x, (k & 2) == 0 ? lb.min.y : lb.max.y, (k & 4) == 0 ? lb.min.z : lb.max.z);
+                    var p = t.InverseTransformPoint(c);
+                    if (!any) { b = new Bounds(p, Vector3.zero); any = true; } else b.Encapsulate(p);
+                }
+            }
+            float hw = Mathf.Min(any ? b.extents.x : maxHalfWidth, maxHalfWidth);
+            float zMin = any ? b.min.z : -1f, zMax = any ? b.max.z : 1f;
+            if (maxLength > 0f) zMax = Mathf.Min(zMax, zMin + maxLength);   // measured from the rear end
+            var slabs = new List<ContactShadowCaster.Slab>();
+            float z1 = zMax;
+            foreach (var sct in sections)
+            {
+                float z0 = sct.length > 0f ? Mathf.Max(zMin, z1 - sct.length) : zMin;
+                slabs.Add(new ContactShadowCaster.Slab { centre = new Vector2(b.center.x, 0.5f * (z0 + z1)), halfSize = new Vector2(hw - 0.05f, 0.5f * (z1 - z0) - 0.05f),
+                    undersideY = ground + sct.clearance, strength = sct.strength, rows = sct.rows });
+                z1 = z0;
+            }
+            var cs = root.GetComponent<ContactShadowCaster>();
+            if (cs == null) cs = root.AddComponent<ContactShadowCaster>();
+            cs.slabs = slabs.ToArray();
+            cs.wheels = wheels.ToArray();
+            Debug.Log($"[TRUCK] contact shadow {root.name}: ground y {ground:F2}, footprint z {zMin:F2}..{zMax:F2}, half width {hw:F2}, wheels {wheels.Count} " +
+                      $"(r {string.Join("/", wheels.Select(w => w.radius.ToString("F2")))}, w {string.Join("/", wheels.Select(w => w.width.ToString("F2")))})");
+            return cs;
         }
 
         static Transform Child(Transform parent, string name, Vector3 localPos)

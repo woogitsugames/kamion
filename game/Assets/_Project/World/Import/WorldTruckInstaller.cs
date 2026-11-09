@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Linq;
@@ -44,6 +45,22 @@ namespace Game.World.Import
         [MenuItem("Kamion/Setup/Install TRAKT truck in WorldC")]
         static void Menu() => InstallBatch();
 
+        /// <summary>
+        /// Contact shadow under the scene's trailer (review r4 E-N1): one slab over the 13.6 m box at the main-beam
+        /// underside, plus the wheel blobs (TruckAssetBuilder.AddContactShadow). Scene override, the shared trailer prefab
+        /// is untouched.
+        /// </summary>
+        static void InstallTrailerContactShadow()
+        {
+            var trailer = UnityEngine.Object.FindAnyObjectByType<TrailerBody>();
+            if (trailer == null) return;
+            var tv = trailer.GetComponent<TrailerVisuals>();
+            var dims = new TrailerDimensions();
+            // Box length from the rear end (bounds also hold the coupler and cables ahead of the front wall).
+            TruckAssetBuilder.AddContactShadow(trailer.gameObject, tv != null ? tv.wheelPivots : null, dims.width * 0.5f,
+                new[] { (0f, dims.beamBottom + 0.08f, 0.85f, 6) }, dims.length, 0.42f, 0.42f);
+        }
+
         public static void InstallInScene(string scenePath)
         {
             LookDevAssets.EnsureAll();
@@ -62,6 +79,7 @@ namespace Game.World.Import
             var env = UnityEngine.Object.FindAnyObjectByType<EnvironmentLighting>();
             if (env != null) { env.presets = LookDevAssets.Presets(); env.Apply(); }
             TruckAssetBuilder.AddControlCameras(truck.transform);
+            InstallTrailerContactShadow();
             float heading = Mathf.Repeat(Mathf.Atan2(truck.transform.forward.x, truck.transform.forward.z) * Mathf.Rad2Deg, 360f);
             Debug.Log($"[TRUCK] installed in {scenePath} at {pos}, heading {heading:F1} deg");
             EditorSceneManager.MarkSceneDirty(scene);
