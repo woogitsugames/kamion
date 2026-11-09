@@ -10,7 +10,7 @@ Measurement tool: Boot diagnostics (`DiagnosticsSampler`, rolling 600-frame wind
 |---|---|---|---|---|---|---|
 | Galaxy A16 (Helio G99, Mali-G57 MC2, 4 GB) / Medium | 30 | ≤ 34.0 ms | ≤ 40 ms | ≤ 1.2 GB total app | no throttling (status ≤ light) after 30 min | WORKING_VALUE |
 | Galaxy A16 / Low | 30 (60 optional in menus) | ≤ 34.0 ms | ≤ 40 ms | ≤ 1.0 GB | same | WORKING_VALUE |
-| Galaxy S24+ / High–Ultra | 60 | ≤ 17.0 ms | ≤ 20 ms | ≤ 2.0 GB | same | not measured (phone not connected yet) |
+| Galaxy S24+ / High–Ultra | 60 | ≤ 17.0 ms | ≤ 20 ms | ≤ 2.0 GB | same | measured at the 30 FPS cap only (r5: GPU 12–22 ms in the A7/world QA views, PSS ≤ 1.06 GB, MSAA 2×); 60 FPS not yet attempted |
 
 Rationale: 4 GB devices kill background-heavy apps around 1–1.5 GB PSS; Android `lowmemorykiller` thresholds are device-specific → re-check on A16 when real content exists.
 
