@@ -58,6 +58,7 @@ namespace Game.World
         {
             RenderPipelineManager.beginCameraRendering -= OnBeginCamera;
             QualityProfileApplier.Applied -= OnTierApplied;
+            ReleaseMaterials();
         }
 
         void Allocate()
@@ -103,6 +104,8 @@ namespace Game.World
             m_TreeShadowMask = ok ? t.treeShadowLodMask : (QualitySettings.lodBias < 1f ? 1 : 3);
             m_Trees = !RenderOverrides.Trees.HasValue || RenderOverrides.Trees.Value;
             bool a2c = !ok || t.leafAlphaToCoverage;
+            bool simple = ok && t.simpleFoliage;
+            if (m_Mats == null || simple != m_SimpleFoliage) BuildMaterials(simple);
             if (a2c != m_LeafA2C || !Mathf.Approximately(cull, m_TreeCull))
             {
                 m_LeafA2C = a2c;
@@ -111,12 +114,69 @@ namespace Game.World
             if (!Mathf.Approximately(cull, m_TreeCull)) { m_TreeCull = cull; m_Batch = null; }   // re-cap impostor distances
         }
 
-        /// <summary>Alpha-to-coverage on the alpha-clipped vegetation materials (URP Lit _AlphaToMask render state).</summary>
+        /// <summary>Alpha-to-coverage on the alpha-clipped vegetation materials (URP Lit / Kamion/Vegetation _AlphaToMask render state).</summary>
         void SetLeafAlphaToCoverage(bool on)
         {
             if (set == null || set.materials == null || !Application.isPlaying) return;   // never edit the assets in the editor
             foreach (var m in set.materials)
                 if (m != null && m.HasProperty("_AlphaToMask") && m.IsKeywordEnabled("_ALPHATEST_ON")) m.SetFloat("_AlphaToMask", on ? 1f : 0f);
+            if (m_Mats != null)
+                foreach (var m in m_Mats)
+                    if (m != null && m.shader == m_FoliageShader) m.SetFloat("_AlphaToMask", on ? 1f : 0f);
+        }
+
+        // Materials actually drawn (set.materials, or runtime copies on Kamion/Vegetation for leaf cards / impostors on
+        // tiers with simpleFoliage). The generated asset is never modified.
+        Material[] m_Mats;
+        bool m_SimpleFoliage;
+        Shader m_FoliageShader;
+
+        /// <summary>A leaf card or impostor material: alpha-clipped and double sided (InstanceImporter.ProtoMaterial).</summary>
+        static bool IsFoliage(Material m) =>
+            m != null && m.IsKeywordEnabled("_ALPHATEST_ON") && m.HasProperty("_Cull") && m.GetFloat("_Cull") == 0f &&
+            (m.name.StartsWith("M_leaves_") || m.name.StartsWith("M_impostor_"));
+
+        void BuildMaterials(bool simple)
+        {
+            ReleaseMaterials();
+            m_SimpleFoliage = simple;
+            var src = set != null ? set.materials : null;
+            if (src == null) { m_Mats = Array.Empty<Material>(); return; }
+            m_Mats = (Material[])src.Clone();
+            var qp = QualityProfile.Load();
+            var template = qp != null ? qp.foliageMaterial : null;
+            m_FoliageShader = template != null ? template.shader : null;
+            if (!simple || m_FoliageShader == null || !m_FoliageShader.isSupported) return;
+            var copies = new System.Collections.Generic.Dictionary<Material, Material>();
+            for (int i = 0; i < m_Mats.Length; i++)
+            {
+                var m = m_Mats[i];
+                if (!IsFoliage(m)) continue;
+                if (!copies.TryGetValue(m, out var c))
+                {
+                    c = new Material(template) { name = m.name + " (simple)", hideFlags = HideFlags.DontSave, enableInstancing = true, renderQueue = m.renderQueue };
+                    c.SetTexture("_BaseMap", m.GetTexture("_BaseMap"));
+                    c.SetTextureScale("_BaseMap", m.GetTextureScale("_BaseMap"));
+                    c.SetTextureOffset("_BaseMap", m.GetTextureOffset("_BaseMap"));
+                    c.SetColor("_BaseColor", m.GetColor("_BaseColor"));
+                    c.SetFloat("_Cutoff", m.GetFloat("_Cutoff"));
+                    c.SetFloat("_Cull", 0f);
+                    c.SetFloat("_AlphaToMask", m_LeafA2C ? 1f : 0f);
+                    copies[m] = c;
+                }
+                m_Mats[i] = c;
+            }
+        }
+
+        void ReleaseMaterials()
+        {
+            if (m_Mats == null || set == null || set.materials == null) { m_Mats = null; return; }
+            foreach (var m in m_Mats)
+                if (m != null && Array.IndexOf(set.materials, m) < 0)
+                {
+                    if (Application.isPlaying) Destroy(m); else DestroyImmediate(m);
+                }
+            m_Mats = null;
         }
 
         void OnTierApplied(QualityProfile.Tier t) => m_TierRead = false;
@@ -280,7 +340,7 @@ namespace Game.World
             int m0 = p.materialStart[lod];
             for (int s = 0; s < mesh.subMeshCount; s++)
             {
-                var mat = set.materials[m0 + s];
+                var mat = (m_Mats ?? set.materials)[m0 + s];
                 if (mat == null) continue;
                 var rp = new RenderParams(mat)
                 {

@@ -51,6 +51,8 @@ namespace Game.Rendering
             [Tooltip("Cull distance of trees and shrubs (m × LOD bias), caps the baked impostor distance")] public float treeCullM;
             [Tooltip("Tree LODs that cast shadows: bit 0 = LOD0, bit 1 = LOD1 (impostors never)")] public int treeShadowLodMask;
             [Tooltip("Alpha-to-coverage on leaf cards / impostors (needs MSAA; smooth edges, costs coverage work on the GPU)")] public bool leafAlphaToCoverage;
+            [Tooltip("Leaf cards / impostors use Kamion/Vegetation (depth pass + ZTest Equal colour pass, Lambert) instead of URP Lit. " +
+                     "A16 DK8 forest: the Lit leaves were fragment bound (ADR 0013)")] public bool simpleFoliage;
             [Header("Budget assumptions (UNMEASURED until the phone is measured)")]
             public int budgetDrawCalls;
             public int budgetTrianglesK;
@@ -78,6 +80,10 @@ namespace Game.Rendering
         }
 
         public DeviceRule[] deviceRules = DefaultDeviceRules();
+        [Tooltip("Template for leaf cards / impostors on tiers with simpleFoliage (Kamion/Vegetation, GPU instancing on). A material " +
+                 "asset, not just the shader: without an instanced material in the build Unity strips the INSTANCING_ON variants " +
+                 "and Graphics.RenderMeshInstanced draws nothing (A16, 2026-11-09)")]
+        public Material foliageMaterial;
         [Tooltip("Tier when no device rule matches")] public string fallbackTier = "Medium";
 
         public static DeviceRule[] DefaultDeviceRules() => new[]
@@ -133,6 +139,8 @@ namespace Game.Rendering
         /// Defaults (docs/adr/0010 §tiers). Mali-G57 MC2 is tile-based: MSAA resolves on tile memory, so 4× is the
         /// cheapest AA that also fixes geometric aliasing of kerbs and the 0.12 m markings mesh; FXAA/SMAA would add a
         /// full-screen pass and TAA needs motion vectors + history (bandwidth, ghosting) - flagship only, later.
+        /// Medium is MSAA 2×, not 4×: A16 DK8 forest with HDR, GPU p50 64.7 ms at 4× vs 36.9 ms at 2× (Kamion/Vegetation
+        /// foliage; with URP Lit 61.6 vs 50.4). Cause UNVERIFIED (no GPU counters yet): likely 4× HDR samples exceeding the G57 tile buffer (ADR 0013).
         /// </summary>
         public static Tier[] Defaults() => new[]
         {
@@ -145,19 +153,19 @@ namespace Game.Rendering
                 shadowDepthBias = 1.0f, shadowNormalBias = 1.0f,
                 anisotropic = 1, worldTextureAniso = 2, worldMipBias = 0f, lodBias = 0.5f, cameraFarClip = 900f,
                 worldDetail = false, additionalLightsPerObject = 2,
-                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true,
+                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 budgetDrawCalls = 250, budgetTrianglesK = 350, budgetTextureMB = 64, budgetShadowMs = 1.0f, budgetStatus = "UNMEASURED",
             },
             new Tier
             {
-                name = "Medium", renderScale = 0.85f, msaa = 4, postAntialiasing = AntialiasingMode.None, hdr = true,
+                name = "Medium", renderScale = 0.85f, msaa = 2, postAntialiasing = AntialiasingMode.None, hdr = true,
                 postProcessing = true, tonemapping = TonemappingMode.Neutral,
                 shadowDistance = 60f, shadowResolution = 1024, shadowCascades = 2, cascade2Split = 0.25f,
                 cascade4Split = new Vector3(0.067f, 0.2f, 0.467f), softShadows = false, softShadowQuality = SoftShadowQuality.Low,
                 shadowDepthBias = 1.0f, shadowNormalBias = 1.0f,
                 anisotropic = 1, worldTextureAniso = 4, worldMipBias = 0f, lodBias = 0.8f, cameraFarClip = 1400f,
                 worldDetail = true, additionalLightsPerObject = 4,
-                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true,
+                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 budgetDrawCalls = 350, budgetTrianglesK = 550, budgetTextureMB = 96, budgetShadowMs = 1.5f, budgetStatus = "UNMEASURED",
             },
             new Tier
@@ -169,7 +177,7 @@ namespace Game.Rendering
                 shadowDepthBias = 0.8f, shadowNormalBias = 0.8f,
                 anisotropic = 1, worldTextureAniso = 8, worldMipBias = 0f, lodBias = 1.5f, cameraFarClip = 2500f,
                 worldDetail = true, additionalLightsPerObject = 4,
-                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, leafAlphaToCoverage = true,
+                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, leafAlphaToCoverage = true, simpleFoliage = false,
                 budgetDrawCalls = 800, budgetTrianglesK = 1500, budgetTextureMB = 256, budgetShadowMs = 2.0f, budgetStatus = "UNMEASURED (no flagship attached)",
             },
             new Tier
@@ -181,7 +189,7 @@ namespace Game.Rendering
                 shadowDepthBias = 0.6f, shadowNormalBias = 0.6f,
                 anisotropic = 2, worldTextureAniso = 16, worldMipBias = 0f, lodBias = 2.0f, cameraFarClip = 3500f,
                 worldDetail = true, additionalLightsPerObject = 8,
-                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, leafAlphaToCoverage = true,
+                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, leafAlphaToCoverage = true, simpleFoliage = false,
                 budgetDrawCalls = 1000, budgetTrianglesK = 2000, budgetTextureMB = 384, budgetShadowMs = 3.0f, budgetStatus = "UNMEASURED (no flagship attached)",
             },
         };
