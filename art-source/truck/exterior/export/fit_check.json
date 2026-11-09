@@ -8,8 +8,8 @@
    "outside": 0
   },
   "CAB_Interior_LOD1": {
-   "verts": 19027,
-   "outside": 0
+   "verts": 19627,
+   "outside": 1
   },
   "DISPLAY_BunkPanel_LOD1": {
    "verts": 4,
@@ -56,15 +56,25 @@
    "outside": 0
   },
   "STEERING_WHEEL_LOD1": {
-   "verts": 2262,
+   "verts": 2750,
    "outside": 0
   }
  },
- "outside_samples": [],
+ "outside_samples": [
+  {
+   "object": "CAB_Interior_LOD1",
+   "a2": [
+    -0.882,
+    1.392,
+    1.662
+   ],
+   "glass_zone": false
+  }
+ ],
  "contacts": 6,
- "verts_tested": 21646,
- "verts_outside": 0,
+ "verts_tested": 22734,
+ "verts_outside": 1,
  "verts_outside_glass_zone": 0,
- "outside_fraction": 0.0,
+ "outside_fraction": 4e-05,
  "pass": true
 }

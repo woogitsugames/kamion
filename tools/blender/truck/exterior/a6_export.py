@@ -52,9 +52,12 @@ TRUCK_GROUPS = ("cab", "lower", "frame", "wheels", "mirrors")
 SLOT_MAT = {"Paint": "MI_Ext_Paint", "Trim": "MI_Ext_Trim", "Metal": "MI_Ext_Metal", "Glass": "MI_Ext_Glass",
             "Lights": "MI_Ext_Lights", "MirrorRT": "MI_Ext_MirrorRT"}
 BAKED = ("Paint", "Trim", "Metal", "Lights")
-ATLAS_RES = {"Paint": 2048, "Trim": 2048, "Metal": 2048, "Lights": 1024}
+# B2.1 (owner/lead 2026-11-09, quality first): High atlases 2048 -> 4096 (Lights 1024 -> 2048); Medium and Low keep
+# their r4 sizes (1024 / 512, Lights 512 / 256) so the phones' memory budget does not move
+ATLAS_RES = {"Paint": 4096, "Trim": 4096, "Metal": 4096, "Lights": 2048}
 DECAL_RES = 1024
-TIERS = {"High": 1, "Medium": 2, "Low": 4}          # divisor of the High size
+TIERS = {"High": 1, "Medium": 4, "Low": 8}          # divisor of the High size (Decal: 1 / 2 / 4)
+DECAL_TIERS = {"High": 1, "Medium": 2, "Low": 4}
 TRI_TARGET = {1: 43000, 2: 14500, 3: 5000}
 TRI_LIMIT = {0: 140000, 1: 45000, 2: 15500, 3: 6000}   # LOD0 100k -> 140k: owner/lead 2026-11-09 (quality first; phone headroom)
 
@@ -64,6 +67,7 @@ MAT_SLOT = {
     "checker": "Metal", "perforated": "Metal", "wordmark": "Metal",
     "glass": "Glass", "glass_tint": "Glass",
     "lamp_inner": "Lights", "reflector": "Lights", "dark_chrome": "Lights", "led_drl": "Lights", "led_off": "Lights",
+    "led_amber": "Lights",
     "lens_amber": "Lights", "lens_red": "Lights", "projector": "Lights",
     "mirror": "MirrorRT",
 }   # everything else (plastics, rubber, tyres, chassis, graphite, honeycomb, frit, plate, grease, ...) -> Trim
@@ -87,7 +91,7 @@ URP_LIT_DIRT = 0.5          # _Dirt baked into the stock-URP-Lit fallback BaseMa
 
 DOOR_PIECES = ("door_skirt_", "door_handle_", "door_lock_", "win_frame_", "belt_seal_", "door_shell_")
 LOD1_DROP = ("_nut", "_washer", "_hubbolt", "battery_latch", "door_lock_", "emblem_dash", "extender_hinge",
-             "washer_nozzle", "antenna_base", "fifth_pin", "fifth_grease", "fifth_handle_grip", "catwalk_ladder",
+             "washer_nozzle", "antenna_base", "fifth_pin", "fifth_grease", "fifth_handle_grip", "catwalk_ladder", "exhaust_clamp_bolt", "exhaust_stack_band",
              "catwalk_brk", "rear_lamp_brk", "trailer_socket_brk", "fairing_brk", "spring_hanger", "tank_saddle",
              "mudflap_rib", "socket_lid", "proj_shroud", "air_tank_strap", "tank_bead", "fuel_neck", "exhaust_tip",
              "bellow_plate", "palm_face", "coil_head", "work_lamp", "extender_flap", "diff_nose", "kingpin")
@@ -98,9 +102,11 @@ LOD2_DROP = LOD1_DROP + ("coil", "damper_", "brake_chamber", "caliper_", "tie_ro
                          "frame_cross", "axle_arm", "trailing_arm", "guard_arm", "hb_mask", "proj_bowl", "socket",
                          "brake_disc", "_dish", "belt_seal", "wiper_pivot", "arch_brush", "bstep_tread", "fog_back",
                          "fog_bowl", "battery_lid", "adblue_cap", "diff", "front_axle", "axle_rear", "bellow_",
-                         "front_mudflap_clamp", "lamp_gasket", "rear_joint", "air_tank", "exhaust_out",
+                         "front_mudflap_clamp", "lamp_gasket", "rear_joint", "air_tank",
                          "fifth_handle", "fifth_lock", "fifth_bracket", "fifth_mount", "plate_holder",
-                         "marker_front_led", "catwalk_grab", "coupling_panel", "_hubcap", "_hub")
+                         "marker_front_led", "catwalk_grab", "coupling_panel", "_hubcap", "_hub",
+                         "exhaust_flex", "exhaust_clamp", "exhaust_stay_arm", "proj_bezel", "pos_gasket",
+                         "marker_front_gasket", "side_repeater_base")
 LOD3_KEEP = ("cab_shell", "door_shell_", "door_skirt", "side_glass", "windscreen", "lower_fairing", "arch_flare",
              "side_fairing", "side_extender", "rear_guard", "fuel_tank", "adblue_tank", "battery_box", "eats_box",
              "frame_rail", "fifth_plate", "lamp_lens", "lamp_back", "drl_", "indicator_", "rear_lens", "marker_",
@@ -438,8 +444,10 @@ def light_group(pname, mname, x):
         return "DRL"
     if pname.startswith("proj_lens"):
         return "LOW_BEAM"
-    if pname.startswith("hb_led"):
+    if pname.startswith(("hb_led", "hb_lens")):
         return "HIGH_BEAM"
+    if pname.startswith("pos_led"):
+        return "MARKER_FRONT"
     if pname.startswith(("indicator_", "side_repeater")) or (pname.startswith("rear_lens") and mname == "lens_amber"):
         return "IND_L" if x < 0 else "IND_R"
     if pname.startswith("rear_lens"):
@@ -501,6 +509,9 @@ def to_game_piece(o, gm):
     is_decal = o.name.startswith("decal_")
     rect = o.get("decal_rect")
     tint_of = {"glass": (0.80, 0.86, 0.83), "glass_tint": (0.45, 0.50, 0.48), "lens_clear": (0.95, 0.95, 0.95)}
+    # B2.1: Col.a = IOR - 1 of the transparent surface (Fresnel F0 = ((n-1)/(n+1))^2): laminated glass 1.52, lamp
+    # lenses hard-coated polycarbonate 1.59 (the lens catches a stronger, crisper reflection than the windscreen)
+    ior_of = {"glass": 1.52, "glass_tint": 1.52, "lens_clear": 1.59}
     face_slot = []
     for p in me.polygons:
         mn = names[p.material_index] if p.material_index < len(names) else ""
@@ -517,7 +528,7 @@ def to_game_piece(o, gm):
         tint = tint_of.get(mn, (1, 1, 1))
         for li in p.loop_indices:
             dl[li].uv = (gi, 1.0 if gi else 0.0)
-            cd[li].color = (*[c ** (1 / 2.2) for c in tint], 1.0)
+            cd[li].color = (*[c ** (1 / 2.2) for c in tint], ior_of.get(mn, 2.0) - 1.0)
             if is_decal and rect:
                 co = me.vertices[me.loops[li].vertex_index].co
                 u = (rect[1] - co.x) / (rect[1] - rect[0])
@@ -928,6 +939,10 @@ def bake_atlases(pieces, high, a):
     sc.cycles.use_denoising = False
     sc.render.bake.margin = 16
     sc.render.bake.margin_type = "EXTEND"
+    # B2.1: 4096 atlases are bigger than the default 2048 render tile; tiled baking into several images at once
+    # crashed Cycles 4.2 (memcpy in BlenderOutputDriver::read_render_tile). One tile covers the largest atlas.
+    sc.cycles.use_auto_tile = False
+    sc.cycles.tile_size = max(ATLAS_RES.values())
     setup_world()
     coll = new_collection("BAKE_PROXY")
     proxies = {}
@@ -1101,8 +1116,9 @@ def compose_textures(baked, decal, out_dir):
             sets["MaskMap" + sfx] = np.dstack([metal, ao[..., 0:1], np.clip(rdm[..., 1:2], 0, 1), 1 - rough])
         for kind, arr in sets.items():
             cur = arr.astype(np.float32)
+            hi = cur.shape[0]
             for tier, div in TIERS.items():
-                if tier != "High":
+                while cur.shape[0] > hi // div:      # B2.1: High 4096 -> Medium 1024 -> Low 512 (2 + 1 halvings)
                     cur = down2(cur)
                     if kind == "N":
                         v = cur * 2 - 1
@@ -1114,7 +1130,7 @@ def compose_textures(baked, decal, out_dir):
                 save_png(cur, p, alpha=kind != "N")
                 files.setdefault(s, {}).setdefault(kind, {})[tier] = {"path": rel(p), "size": int(cur.shape[0])}
     cur = decal
-    for tier in TIERS:
+    for tier in DECAL_TIERS:
         if tier != "High":
             cur = down2(cur)
         d = os.path.join(out_dir, "textures", tier)
@@ -1683,7 +1699,9 @@ def preview_materials(tex, livery, dirt=0.5, drl=1.0):
             gl = nt.nodes.new("ShaderNodeBsdfGlossy")
             gl.inputs["Roughness"].default_value = 0.0
             fr = nt.nodes.new("ShaderNodeLayerWeight")
-            fr.inputs["Blend"].default_value = 0.16
+            # B2.1: dielectric Fresnel of the surface's IOR (Col.a = IOR - 1): Blend = 1 - 1/IOR
+            ior = M.math_node(nt, "ADD", col.outputs["Alpha"], 1.0)
+            nt.links.new(M.math_node(nt, "SUBTRACT", 1.0, M.math_node(nt, "DIVIDE", 1.0, ior)), fr.inputs["Blend"])
             mx = nt.nodes.new("ShaderNodeMixShader")
             nt.links.new(fr.outputs["Fresnel"], mx.inputs[0])
             nt.links.new(tr.outputs[0], mx.inputs[1])
@@ -1855,6 +1873,10 @@ def qa_renders(a, tex, lod_roots, manifest):
         cam(view, (1600, 900))
         render(f"{view}_white_lod0.jpg", f"TRAKT A6 eksport | LOD0 | {label} | pochmurno")
     # r4 front (REVIEW r3 X1/X2): straight-on front, lamp close-ups in both liveries, low sun (~8 deg)
+    for view, label in (("34przod_p", "3/4 przód prawy: wydech pionowy, marker na nadkolu, lampy"),
+                        ("zbl_wydech", "zbliżenie: wydech pionowy za kabiną, osłona perforowana, stopnie")):
+        cam(view, (1600, 900))
+        render(f"{view}_white_lod0.jpg", f"TRAKT A6 eksport | LOD0 | {label} | pochmurno")
     cam("przod", (1600, 900))
     render("przod_white_lod0.jpg", "TRAKT A6 eksport | LOD0 | przód (ortho) | biel | pochmurno")
     preview_materials(tex, "dark")
@@ -2003,7 +2025,10 @@ def contract(tex, td):
         "uv0 'Atlas'": "unique atlas UV per slot (right wheels + right caliper reuse the left wheels' UVs mirrored)",
         "uv1 'Decal'": "Paint slot only: decal atlas UV (T_Ext_Decal); (0.002, 0.002) = transparent texel elsewhere",
         "uv2 'Data'": "x = light group id (light_groups), y = emissive mask (1 on lamp emitters); 0 elsewhere",
-        "color 'Col'": "sRGB-encoded tint for Glass (windscreen green, lens clear); white elsewhere",
+        "color 'Col'": "rgb: sRGB-encoded tint for Glass (windscreen green, lens clear), white elsewhere; a: IOR - 1 of "
+                       "the transparent surface (0.52 laminated glass, 0.59 polycarbonate lamp lens; 1 elsewhere). "
+                       "Glass shader: Fresnel F0 = ((n-1)/(n+1))^2, Schlick, smoothness 0.97 (lens 1.0); lamp lenses "
+                       "are real 6 mm shells (outer + inner face + rim), so they show two reflections and a lit edge",
         "textures": "T_Ext_<Slot>_C (RGB albedo sRGB, A roughness), _N (tangent normal, OpenGL +Y), _M (R AO, G dirt "
                     "mask at full strength, B metallic; Paint: B = paint mask), all linear except C.rgb",
         "albedo": "C.rgb; Paint: C.rgb * _PaintColor; then lerp(albedo, _DirtColor, saturate(M.g * _Dirt)); Paint: "

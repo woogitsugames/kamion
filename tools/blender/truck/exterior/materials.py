@@ -106,7 +106,9 @@ def thin_glass(name, slot, tint, rough=0.0, ior=1.52):
     gl.inputs["Color"].default_value = (1, 1, 1, 1)
     # Layer Weight Fresnel is symmetric front/back; the Fresnel node inverts the IOR on back faces and
     # gives total internal reflection when seen from inside the cab (thin sheets have no inside)
-    fr = N(nt, "ShaderNodeLayerWeight", Blend=0.16 if ior > 1.5 else 0.10)
+    # B2.1: Layer Weight 'Fresnel' with Blend = 1 - 1/IOR is the dielectric Fresnel curve of that IOR (F0 = 4 % for
+    # 1.52 glass, 5.2 % for 1.59 polycarbonate lamp lenses); before it was 0.16/0.10 (weak, 'aquarium' glass)
+    fr = N(nt, "ShaderNodeLayerWeight", Blend=1.0 - 1.0 / ior)
     mix = N(nt, "ShaderNodeMixShader")
     L(nt, fr.outputs["Fresnel"], mix.inputs[0])
     L(nt, tr.outputs[0], mix.inputs[1])
@@ -663,13 +665,15 @@ def build_library(livery="white", clay=False):
         "interior", "TRIM", (0.10, 0.10, 0.10), 0.7)
     principled("curtain", "TRIM", (0.06, 0.06, 0.065), 0.9)
     # LIGHTS
-    thin_glass("lens_clear", "LIGHTS", (0.95, 0.95, 0.95), 0.01, ior=1.49)
+    thin_glass("lens_clear", "LIGHTS", (0.95, 0.95, 0.95), 0.0, ior=1.59)      # hard-coated polycarbonate
     principled("lamp_inner", "LIGHTS", (0.025, 0.025, 0.027), 0.35, spec=0.5)
     principled("reflector", "LIGHTS", (0.85, 0.86, 0.88), 0.08, metal=1.0)
     principled("dark_chrome", "LIGHTS", (0.20, 0.205, 0.21), 0.18, metal=1.0)
     drl = PARAMS["drl"]
     principled("led_drl", "LIGHTS", (0.9, 0.9, 0.9), 0.3, emit=(1.0, 0.97, 0.92), emit_s=14.0 * drl)
     principled("led_off", "LIGHTS", (0.75, 0.75, 0.76), 0.25, spec=0.6)
+    # B2.1: amber LED diffuser strip (indicator light guide): orange when off too, satin, no transmission (bakes)
+    principled("led_amber", "LIGHTS", (0.80, 0.30, 0.025), 0.30, spec=0.6)
     principled("lens_amber", "LIGHTS", (0.95, 0.42, 0.04), 0.05, transm=0.85, ior=1.49)
     principled("lens_red", "LIGHTS", (0.55, 0.02, 0.015), 0.05, transm=0.85, ior=1.49)
     # r4: smoked projector lens, opaque in the bake (transmission baked the env as a blue cast in the game atlas)

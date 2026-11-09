@@ -8,6 +8,8 @@ interior generator; eye point unchanged (-0.55, 0.45, 2.50).
 R2 #2 layout (real EU cab-over): front wheel under the front half of the door, a fixed body-colour corner
 panel ahead of the door, door rear shut line 0.60 m behind the axle, the door's lower rear corner drops
 over the top step as a skirt, three steps behind the wheel in a body-colour step well.
+B2.1 (owner sheets 2026-11-09): the door ends at the cab's lower edge, ahead of / above the steps (no skirt), the
+steps come down 0.05-0.06 m so the top tread keeps foot clearance under the door sill.
 """
 import math
 
@@ -44,12 +46,14 @@ DOOR_SEAL = 0.04                     # shut line -> aperture edge (seal overlap)
 DOOR_FRONT_LOW = 0.80                # door front shut line below the corner panel (fixed panel ahead of it)
 DOOR_KINK_Z = (1.90, 2.14)           # front shut line runs diagonally from the corner panel up to the A-pillar
 WIN_REAR = DOOR_REAR + DOOR_SEAL + 0.07   # door glass rear edge (-0.49; interior: aperture rear + 0.07)
-SKIRT_Z = 0.98                       # door skirt bottom (lower rear corner of the door, covers the top step)
+SKIRT_Z = None                       # B2.1: no door skirt - the door ends at CAB_Z0, the steps stay open below it
 ARCH_R = 0.60                        # front wheel arch radius (tyre r 0.538 + 6 cm)
 ARCH_OUT = ARCH_R + 0.035            # outer edge of the arch flare
 FAIR_BACK = -1.14                    # lower fairing (step boxes) ends 0.19 m behind the cab back wall
 # steps behind the front wheel: (z of tread top, y rear, y front); widths 0.42 / 0.485 / 0.60 m
-STEPS = ((0.45, -1.08, -0.66), (0.79, -1.07, -0.585), (1.10, -1.06, -0.46))
+# B2.1: top tread 1.114 -> 1.054 m (0.17 m toe room under the 1.225 m cab edge now that the door skirt is gone);
+# rises 0.32 / 0.28 m and 0.35 m tread -> 1.40 m floor (ISO 2867 class: <= 0.40 m)
+STEPS = ((0.45, -1.08, -0.66), (0.77, -1.07, -0.585), (1.04, -1.06, -0.46))
 STEP_DEPTH = 0.21                    # tread depth (x)
 HANDLE_Y = (-0.83, -0.74)            # recessed grab handle in the fixed rear side panel, behind the door
 PIVOT = Vector((0.0, 1.42, 1.19))    # cab tilt pivot (front cab mount on the frame horns)
@@ -97,7 +101,8 @@ CFG = {
     "lamp": [(0.828, 1.600), (1.300, 1.600), (1.312, 1.762), (0.828, 1.762)],
     # DRL light guides (right lamp): line along the top + a short vertical guide on the grille side, inset behind
     # the lens and split at the corner
-    "drl": [((0.845, 1.738), (1.296, 1.738)), ((0.845, 1.724), (0.845, 1.618))],
+    # B2.1: vertical guide 21 mm further in from the lens edge (the thicker lens rim mirrored it away at 3/4 views)
+    "drl": [((0.866, 1.738), (1.296, 1.738)), ((0.866, 1.724), (0.866, 1.618))],
     "stem": [(-0.80, 1.235), (0.80, 1.235), (0.80, 1.600), (-0.80, 1.600)],   # lower grille field
     "bar": [(-0.80, 1.585), (0.80, 1.585), (0.80, 1.852), (-0.80, 1.852)],    # upper field + black wordmark band
     "bumper_road": [(-0.80, 0.885), (0.80, 0.885), (0.80, 1.21), (-0.80, 1.21)],   # lower intake (honeycomb)
@@ -227,13 +232,9 @@ def doors_and_gaps():
         CAB.gap_v(f"door_gap_f_{s}", s, door_front_y, CAB_Z0 + 0.01, 3.00, w=0.012)
         CAB.gap_v(f"door_gap_r_{s}", s, DOOR_REAR, CAB_Z0 - 0.01, 3.00, w=0.012)
         CAB.gap_h(f"door_gap_t_{s}", s, 3.00, DOOR_REAR, win_front(3.0) + 0.04, w=0.012)
-        # door skirt: the door's lower rear corner drops below the tilt line, behind the arch, over the top step
-        CAB.patch(f"door_skirt_{s}", "paint", "side", SKIRT_Z, CAB_Z0 + 0.012, DOOR_REAR + 0.006,
-                  lambda z: arch_y(min(z, WHEEL_Z + ARCH_OUT - 0.006)) - 0.008, off=-0.012, thick=0.018, side=s,
-                  nz=10, npar=10)
-        CAB.gap_v(f"skirt_gap_r_{s}", s, DOOR_REAR, SKIRT_Z - 0.006, CAB_Z0 + 0.01, w=0.012, off=0.0075)
-        CAB.gap_h(f"skirt_gap_b_{s}", s, SKIRT_Z - 0.002, DOOR_REAR - 0.006, arch_y(SKIRT_Z) - 0.004, w=0.010,
-                  off=0.0075)
+        # B2.1 (owner sheets): no door skirt - the door's lower edge is the cab edge (1.225 m) and the step well
+        # behind the wheel stays open below it; a dark seal lip marks the door bottom over the steps
+        CAB.gap_h(f"door_gap_b_{s}", s, CAB_Z0 + 0.006, DOOR_REAR - 0.006, DOOR_FRONT_LOW + 0.006, w=0.008, off=0.004)
         # rear side panel / roof split and the side extender line (stamping joints)
         CAB.gap_h(f"roofjoint_{s}", s, 3.30, CAB_BACK_Y + 0.12, win_front(3.30) + 0.08, w=0.005)
         # flush door handle with recess and key cylinder (near the rear edge, reachable from the steps)
@@ -510,27 +511,24 @@ def lamp_cell(tag, s, x0, x1, z0, z1, beam):
                                                                (sx(x0), z1)], off=-0.040, nu=4, nv=1)
     ribbon(f"proj_shroud_{tag}", poly, 0.007, "dark_chrome", off=-0.044, thick=0.026)
     cx, w, h = (x0 + x1) / 2, (x1 - x0), (z1 - z0)
-    if beam == "low":
-        # B2 (REVIEW r3.1 X1 'cassette, no lens visible'): round projector lens - a smoked half-dome (r 24 mm)
-        # in a dark-chrome ring, reads as a lens with refraction depth, not a flat grey box
-        p = V(CAB.front_pt(zm, sx(cx), -0.040))
-        nrm = V(CAB.normal_front(zm, sx(cx)))
-        r = min(w, h) * 0.36
-        dome = [(0.0, 0.016), (r * 0.45, 0.0145), (r * 0.75, 0.0105), (r * 0.93, 0.005), (r, 0.0), (r, -0.004)]
-        oriented_lathe(f"proj_lens_{tag}", dome, p, nrm, "projector", seg=20)
-        ring = [(r + 0.006, -0.004), (r + 0.006, 0.003), (r + 0.001, 0.004), (r - 0.001, 0.001)]
-        oriented_lathe(f"proj_ring_{tag}", ring, p, nrm, "dark_chrome", seg=20)
-    else:
-        CAB.quad_patch(f"hb_mask_{tag}", "lamp_inner", "front", [(sx(x0 + 0.008), zm - 0.010),
-                                                                 (sx(x1 - 0.008), zm - 0.010),
-                                                                 (sx(x1 - 0.008), zm + 0.010),
-                                                                 (sx(x0 + 0.008), zm + 0.010)],
-                       off=-0.036, nu=6, nv=1, thick=0.008)
-        CAB.quad_patch(f"hb_led_{tag}", "led_off", "front", [(sx(x0 + 0.014), zm - 0.0035),
-                                                             (sx(x1 - 0.014), zm - 0.0035),
-                                                             (sx(x1 - 0.014), zm + 0.0035),
-                                                             (sx(x0 + 0.014), zm + 0.0035)],
-                       off=-0.026, nu=6, nv=1, thick=0.003)
+    # B2.1 (owner sheets: rectangular LED modules): every module carries a rectangular projector lens - a crowned
+    # rounded-rectangle block of smoked polycarbonate (real thickness, two surfaces + wall, so it catches a
+    # highlight on its crown and a lit edge at an angle) in a thin dark-chrome bezel. Low beam = the two inner
+    # modules, high beam = the outer one (light groups by name: proj_lens_* / hb_lens_*).
+    lw, lh = w - 0.026, h - 0.026
+    rr = [(cx + px, zm + pz) for px, pz in rrect(lw, lh, 0.012, 3)]
+    rr = rr if s > 0 else mirror_poly(rr)
+    nm = "proj_lens" if beam == "low" else "hb_lens"
+    # back face no deeper than the lamp back (-52 mm): check_fit found the interior dash behind a deeper block
+    # strongly crowned (14 mm over a 44 mm block): the sky reflects only on the upper half, the lower half mirrors
+    # the black lamp floor - reads as a lens with depth, not a flat grey pane under overcast light
+    lens_dome(f"{nm}_{tag}", rr, "projector", crown=0.014, thick=0.012, rim_off=-0.040, sub=2)
+    ribbon(f"proj_bezel_{tag}", rr, 0.0035, "dark_chrome", off=-0.041, thick=0.004)
+    # LED emitter strip at the top edge of the high-beam module (reads as a different module, not a third copy)
+    if beam != "low":
+        CAB.quad_patch(f"hb_led_{tag}", "led_off", "front", [(sx(x0 + 0.012), z1 - 0.0085), (sx(x1 - 0.012), z1 - 0.0085),
+                                                             (sx(x1 - 0.012), z1 - 0.0045), (sx(x0 + 0.012), z1 - 0.0045)],
+                       off=-0.036, nu=6, nv=1, thick=0.002)
 
 
 def headlamps():
@@ -554,17 +552,30 @@ def headlamps():
                        [(s * 1.245, 1.632), (s * 1.262, 1.632), (s * 1.275, 1.725), (s * 1.258, 1.725)]
                        if s > 0 else [(s * 1.262, 1.632), (s * 1.245, 1.632), (s * 1.258, 1.725),
                                       (s * 1.275, 1.725)], off=-0.040, nu=2, nv=2, thick=0.020)
-        # B2 (REVIEW r3.1 X1): indicator = LED light guide behind the clear lens, silver when off (amber only
-        # when lit: light group IND_*), on a dark-chrome carrier, running along the lamp floor round the corner
-        CAB.quad_patch(f"indicator_{s}", "led_off", "front",
-                       [(s * 0.860, 1.612), (s * 1.285, 1.612), (s * 1.285, 1.621), (s * 0.860, 1.621)],
+        # B2.1 (owner sheets): indicator = amber LED diffuser strip behind the clear lens (amber also when off, as
+        # in the sheets; light group IND_*), on a dark-chrome carrier, along the lamp floor round the corner
+        CAB.quad_patch(f"indicator_{s}", "led_amber", "front",
+                       [(s * 0.860, 1.607), (s * 1.285, 1.607), (s * 1.285, 1.625), (s * 0.860, 1.625)],
                        off=-0.030, nu=20, nv=1, thick=0.004)   # >= cage (0.02) behind the lens: bakes clean
         CAB.quad_patch(f"ind_carrier_{s}", "dark_chrome", "front",
-                       [(s * 0.855, 1.606), (s * 1.290, 1.606), (s * 1.290, 1.627), (s * 0.855, 1.627)],
+                       [(s * 0.855, 1.602), (s * 1.290, 1.602), (s * 1.290, 1.630), (s * 0.855, 1.630)],
                        off=-0.040, nu=20, nv=1)
         # crowned clear outer lens (two Fresnel surfaces + rim) + black gasket round it
-        lens_dome(f"lamp_lens_{s}", poly, "lens_clear", crown=0.020, thick=0.006, sub=12)
+        # B2.1: crown 20 -> 11 mm: with the physical lens Fresnel (IOR 1.59) the steep 20 mm edge roll turned into a
+        # mirror at 3/4 views and hid the DRL's vertical guide; 11 mm keeps a crisp highlight band on the crown
+        lens_dome(f"lamp_lens_{s}", poly, "lens_clear", crown=0.011, thick=0.006, sub=12)
         ribbon(f"lamp_gasket_{s}", poly, 0.008, "plastic_satin", off=-0.004, thick=0.006)
+        # B2.1 (owner sheets): small LED position / cornering lamp under the headlamp on the cab corner face - a
+        # recessed black pocket with an LED bar and its own crowned lens in a gasket (light group MARKER_FRONT)
+        pp = [(0.935, 1.395), (1.135, 1.395), (1.140, 1.437), (0.935, 1.437)]
+        pp = pp if s > 0 else mirror_poly(pp)
+        CAB.poly_patch(f"pos_back_{s}", "lamp_inner", "front", pp, off=-0.034, sub=3)
+        CAB.quad_patch(f"pos_led_{s}", "led_off", "front", [(s * 0.955, 1.411), (s * 1.120, 1.411), (s * 1.122, 1.421),
+                                                            (s * 0.955, 1.421)] if s > 0 else
+                       [(s * 1.120, 1.411), (s * 0.955, 1.411), (s * 0.955, 1.421), (s * 1.122, 1.421)],
+                       off=-0.026, nu=8, nv=1, thick=0.003)
+        lens_dome(f"pos_lens_{s}", pp, "lens_clear", crown=0.006, thick=0.004, sub=4)
+        ribbon(f"pos_gasket_{s}", pp, 0.005, "plastic_satin", off=-0.003, thick=0.004)
 
 
 # ---------------------------------------------------------------- corner deflectors, roof, rear wall
@@ -591,10 +602,17 @@ def corners_roof_rear():
     set_group("cab")
     sun_visor()
     # B2 v2 (owner sheets): row of five roof-front marker lamps over the header
+    # B2.1: each lamp = moulded black base on the header (rubber gasket line), a recessed LED bar and a crowned
+    # clear lens with real thickness standing 22 mm proud; tilted with the 7 deg front plane
+    rot = Matrix.Rotation(math.radians(RAKE), 3, "X")
     for i, xm in enumerate((-0.80, -0.40, 0.0, 0.40, 0.80)):
         p = V(CAB.front_pt(ROOF_Z - 0.16, xm, 0.0))
-        box(f"marker_front_{i}", p + V((0, 0.005, 0)), (0.10, 0.03, 0.035), "lens_clear", bev=0.007)
-        box(f"marker_front_led_{i}", p - V((0, 0.006, 0)), (0.08, 0.01, 0.022), "led_off")
+        box(f"marker_front_base_{i}", p + rot @ V((0, 0.004, 0)), (0.124, 0.012, 0.050), "plastic_satin", bev=0.005,
+            seg=3, rot=rot)
+        box(f"marker_front_gasket_{i}", p + rot @ V((0, 0.0005, 0)), (0.128, 0.004, 0.054), "rubber", bev=0.002, rot=rot)
+        box(f"marker_front_led_{i}", p + rot @ V((0, 0.0115, 0)), (0.084, 0.004, 0.012), "led_off", rot=rot)
+        box(f"marker_front_{i}", p + rot @ V((0, 0.021, 0)), (0.104, 0.010, 0.034), "lens_clear", bev=0.0045, seg=3,
+            rot=rot)
     for s in (-1, 1):
         box(f"marker_rear_{s}", (s * (CAB_HALF_W - 0.24), CAB_BACK_Y - 0.012, ROOF_Z - 0.17), (0.12, 0.025, 0.045),
             "lens_red", bev=0.006)
@@ -728,8 +746,9 @@ def lower_fairing():
     cuts.append(LOW.quad_patch("cut_road", "trim_graphite", "front", CFG["bumper_road"], off=-0.034, thick=0.15,
                                nu=16, nv=3))
     for s in (-1, 1):
-        cuts.append(LOW.patch(f"cut_fog_{s}", "lamp_inner", "front", 0.70, 0.79, s * 0.80, s * 1.20, off=-0.05,
-                              thick=0.12, nz=2, npar=10))
+        # B2.1 (owner sheets): compact LED fog / cornering module in each bumper corner (was a 0.40 m slot)
+        cuts.append(LOW.patch(f"cut_fog_{s}", "lamp_inner", "front", 0.695, 0.785, s * 0.96, s * 1.17, off=-0.05,
+                              thick=0.12, nz=2, npar=8))
         cuts.append(LOW.patch(f"cut_bstep_{s}", "plastic", "front", 1.00, 1.08, s * 0.92, s * 1.12, off=-0.12,
                               thick=0.2, nz=1, npar=4))
     boolean(lo, cuts)
@@ -774,17 +793,23 @@ def lower_fairing():
                    bev=0.003)
             box_mm(f"step_nose{k}_{s}", xo - s * 0.025, xo, y0 + 0.004, y1 - 0.004, z - 0.02, z + 0.016,
                    "plastic_satin", bev=0.004)
-        # amber side repeater on the bumper corner ahead of the arch
-        p = V(LOW.side_pt(0.98, 0.86, s, 0.002))
-        box(f"side_repeater_{s}", p, (0.012, 0.09, 0.035), "lens_amber", bev=0.004)
-        # fog / cornering lamps in their pockets
-        LOW.patch(f"fog_lens_{s}", "lens_clear", "front", 0.705, 0.785, s * 0.805, s * 1.195, off=0.0, nz=2, npar=10)
-        LOW.patch(f"fog_back_{s}", "lamp_inner", "front", 0.70, 0.79, s * 0.80, s * 1.20, off=-0.045, nz=1, npar=10)
-        # r4: slim LED fog/cornering bar in a dark-chrome carrier (the two round bowls read as ~2008)
-        LOW.patch(f"fog_bowl_{s}", "dark_chrome", "front", 0.728, 0.762, s * 0.83, s * 1.17, off=-0.036, nz=1,
+        # B2.1 (owner sheets): amber side marker / repeater on the front wheel-arch flare, ahead of the wheel top,
+        # set tangentially on the flare's outer face (light group IND_*)
+        a = math.radians(62.0)
+        rm = (ARCH_R + ARCH_OUT) / 2
+        p = V((s * (CAB_HALF_W + 0.011), rm * math.cos(a), WHEEL_Z + rm * math.sin(a)))
+        rot = Matrix.Rotation(-(math.pi / 2 - a), 3, "X")
+        box(f"side_repeater_base_{s}", p - V((s * 0.003, 0, 0)), (0.006, 0.070, 0.026), "plastic_satin", bev=0.002,
+            rot=rot)
+        box(f"side_repeater_{s}", p + V((s * 0.002, 0, 0)), (0.006, 0.062, 0.020), "lens_amber", bev=0.003, rot=rot)
+        # fog / cornering module: clear lens over two square LED cells in a dark-chrome carrier
+        LOW.patch(f"fog_lens_{s}", "lens_clear", "front", 0.700, 0.780, s * 0.965, s * 1.165, off=0.0, nz=2, npar=8)
+        LOW.patch(f"fog_back_{s}", "lamp_inner", "front", 0.695, 0.785, s * 0.96, s * 1.17, off=-0.045, nz=1, npar=8)
+        LOW.patch(f"fog_bowl_{s}", "dark_chrome", "front", 0.708, 0.772, s * 0.975, s * 1.155, off=-0.038, nz=1,
                   npar=8, thick=0.006)
-        LOW.patch(f"fog_led_{s}", "led_off", "front", 0.741, 0.749, s * 0.845, s * 1.155, off=-0.030, nz=1, npar=8,
-                  thick=0.006)
+        for k, (u0, u1) in enumerate(((0.990, 1.060), (1.075, 1.145))):
+            LOW.patch(f"fog_led_{s}_{k}", "led_off", "front", 0.716, 0.764, s * u0, s * u1, off=-0.031, nz=1, npar=3,
+                      thick=0.006)
         # cleaning steps in the bumper (folding treads) + tow pin cover outline
         LOW.patch(f"bstep_tread_{s}", "checker", "front", 1.003, 1.012, s * 0.925, s * 1.115, off=-0.115,
                   thick=0.11, nz=1, npar=4)
@@ -833,9 +858,8 @@ def door_interface(path):
                                     "diagonal to the A-pillar at z 2.14, then parallel to the A-pillar",
             "top_shut_line_z_m": 3.00,
             "bottom_edge_z_m": CAB_Z0,
-            "skirt": {"note": "lower rear corner of the door drops below the tilt line over the top step",
-                      "y_rear_m": DOOR_REAR, "y_front_m_at_bottom": r(arch_y(SKIRT_Z)), "z_bottom_m": SKIRT_Z,
-                      "front_edge": "follows the wheel-arch flare (radius 0.635 m about the front axle)"},
+            "skirt": None,
+            "skirt_note": "B2.1: removed - the door ends at bottom_edge_z_m, the steps are open below it",
             "seal_overlap_m": DOOR_SEAL,
         },
         "aperture_for_interior": {
