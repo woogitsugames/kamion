@@ -941,9 +941,9 @@
     3
    ],
    "length_m": 615.5,
-   "max_grade": 0.0511,
+   "max_grade": 0.0494,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.435,
+   "profile_rms_vs_nmt_m": 0.934,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.0,
@@ -1623,9 +1623,9 @@
     3
    ],
    "length_m": 610.3,
-   "max_grade": 0.0505,
+   "max_grade": 0.0506,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.447,
+   "profile_rms_vs_nmt_m": 0.884,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.0,
@@ -1651,7 +1651,7 @@
    "length_m": 324.7,
    "max_grade": 0.0511,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.424,
+   "profile_rms_vs_nmt_m": 0.426,
    "sidewalk_frac": 0.5,
    "width_m": [
     7.5,
@@ -1930,9 +1930,9 @@
     2
    ],
    "length_m": 571.3,
-   "max_grade": 0.0322,
+   "max_grade": 0.0214,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.293,
+   "profile_rms_vs_nmt_m": 0.016,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.0
@@ -2255,9 +2255,9 @@
     2
    ],
    "length_m": 42.8,
-   "max_grade": 0.0203,
+   "max_grade": 0.0103,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.009,
+   "profile_rms_vs_nmt_m": 0.018,
    "sidewalk_frac": 0.5,
    "width_m": [
     6.5
@@ -2304,9 +2304,9 @@
     2
    ],
    "length_m": 569.9,
-   "max_grade": 0.031,
+   "max_grade": 0.0219,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.184,
+   "profile_rms_vs_nmt_m": 2.308,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.0
@@ -4432,9 +4432,9 @@
     2
    ],
    "length_m": 75.9,
-   "max_grade": 0.0311,
+   "max_grade": 0.0172,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.03,
+   "profile_rms_vs_nmt_m": 0.013,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5
@@ -4938,9 +4938,9 @@
     2
    ],
    "length_m": 61.4,
-   "max_grade": 0.0316,
+   "max_grade": 0.0284,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.031,
+   "profile_rms_vs_nmt_m": 0.027,
    "sidewalk_frac": 0.5,
    "width_m": [
     6.5
@@ -4963,7 +4963,7 @@
    "length_m": 73.3,
    "max_grade": 0.0216,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.009,
+   "profile_rms_vs_nmt_m": 0.014,
    "sidewalk_frac": 0.5,
    "width_m": [
     10.5
@@ -5124,9 +5124,9 @@
     3
    ],
    "length_m": 108.7,
-   "max_grade": 0.0552,
+   "max_grade": 0.0544,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.011,
+   "profile_rms_vs_nmt_m": 0.0,
    "sidewalk_frac": 0.0,
    "width_m": [
     10.75
@@ -7481,9 +7481,9 @@
     2
    ],
    "length_m": 42.9,
-   "max_grade": 0.015,
+   "max_grade": 0.0091,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.007,
+   "profile_rms_vs_nmt_m": 0.01,
    "sidewalk_frac": 0.5,
    "width_m": [
     6.5
@@ -9944,22 +9944,93 @@
  ],
  "junction_notes": {
   "j:n1166107986": [
-   "corner 0-1: no fillet fits (alpha 59 deg) -> sharp"
+   "corner 0-1: no fillet fits (alpha 59 deg) -> sharp",
+   "corner 0-1: kerb chamfer 1:4 over -1.1 m (width step 1.99 m)"
+  ],
+  "j:n1166108049": [
+   "corner 0-1: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
+  "j:n13358260889": [
+   "corner 1-2: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
+  "j:n1832991672": [
+   "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
+  "j:n1847044943": [
+   "corner 2-3: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
+  "j:n1847044945": [
+   "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
+  "j:n1847044957": [
+   "corner 1-2: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
+  "j:n1847317043": [
+   "corner 1-2: kerb chamfer 1:4 over 12.2 m (width step 3.04 m)"
+  ],
+  "j:n1847317049": [
+   "corner 1-2: kerb chamfer 1:4 over 9.3 m (width step 2.34 m)",
+   "corner 0-1: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
+  "j:n1881569102": [
+   "corner 2-3: kerb chamfer 1:4 over 10.2 m (width step 2.56 m)"
+  ],
+  "j:n1882690750": [
+   "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
+  "j:n1882887381": [
+   "corner 1-2: kerb line continued to the emerging lane edge (gate-type split)",
+   "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
+  "j:n1883101813": [
+   "corner 0-1: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
+  "j:n1883469484": [
+   "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
   ],
   "j:n1883483212": [
    "corner 1-2: no fillet fits (alpha 42 deg) -> sharp"
+  ],
+  "j:n2229796375": [
+   "corner 2-0: kerb chamfer 1:4 over 11.6 m (width step 3.34 m)"
   ],
   "j:n2398630576": [
    "corner 4-5: no fillet fits (alpha 93 deg) -> sharp"
   ],
   "j:n2441701440": [
-   "corner 1-2: no fillet fits (alpha 63 deg) -> sharp"
+   "corner 1-2: no fillet fits (alpha 63 deg) -> sharp",
+   "corner 1-2: kerb chamfer 1:4 over 12.8 m (width step 3.19 m)"
+  ],
+  "j:n260019949": [
+   "corner 0-1: kerb chamfer 1:4 over 11.1 m (width step 2.77 m)"
   ],
   "j:n2840742185": [
-   "corner 0-1: no fillet fits (alpha 91 deg) -> sharp"
+   "corner 0-1: no fillet fits (alpha 91 deg) -> sharp",
+   "corner 2-3: kerb chamfer 1:4 over -7.6 m (width step 2.46 m)"
+  ],
+  "j:n3341716402": [
+   "corner 1-2: kerb chamfer 1:4 over 7.3 m (width step 1.83 m)",
+   "corner 2-0: kerb chamfer 1:4 over 10.4 m (width step 2.59 m)"
+  ],
+  "j:n3999157676": [
+   "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
+  "j:n6311661182": [
+   "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
   ],
   "j:n6426064896": [
-   "corner 3-4: no fillet fits (alpha 62 deg) -> sharp"
+   "corner 3-4: no fillet fits (alpha 62 deg) -> sharp",
+   "corner 3-4: kerb chamfer 1:4 over 0.4 m (width step 0.35 m)"
+  ],
+  "j:n6942794470": [
+   "corner 1-2: kerb chamfer 1:4 over 14.8 m (width step 3.71 m)"
+  ],
+  "j:n833297643": [
+   "corner 0-1: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
+  "j:n9224916300": [
+   "corner 1-2: kerb line continued to the emerging lane edge (gate-type split)",
+   "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
   ]
  },
  "region": "bialystok-industrial-c",
@@ -10068,7 +10139,11 @@
    6337303569
   ],
   "crossings_snapped": 74,
-  "footprint_nodes": 496549,
+  "decals": {
+   "oil": 313,
+   "patches": 341
+  },
+  "footprint_nodes": 507110,
   "fork_tapers": [
    {
     "chain": "c:w69667331:1166107977-1166107980",
@@ -10598,23 +10673,21 @@
   ],
   "grade_over_limit": [],
   "junction_patches": {
-   "delaunay": 47,
-   "polar": 138,
+   "delaunay": 43,
+   "polar": 142,
    "repaired": 20
   },
   "junctions": 205,
   "junctions_earclip": [],
   "junctions_repaired": [
-   "j:n1847317043",
+   "j:n1847044957",
    "j:n1852129066",
    "j:n1882954015",
    "j:n1883101800",
    "j:n14311000107",
-   "j:n2229796375",
    "j:n2229796436",
    "j:n2229796287",
    "j:n1882887385",
-   "j:n3341716402",
    "j:n1847044943",
    "j:n1847044961",
    "j:n4103450291",
@@ -10622,7 +10695,9 @@
    "j:n2560366183",
    "j:n1166107984",
    "j:n6426064896",
+   "j:n2441701440",
    "j:n833297643",
+   "j:n260019949",
    "j:n9224961524",
    "j:n2204459612"
   ],
@@ -10634,14 +10709,14 @@
   ],
   "markings": {
    "P-1 centre line": 4,
-   "P-1 lane line": 173,
+   "P-1 lane line": 169,
    "P-10 crossing": 59,
    "P-13": 15,
    "P-14": 33,
    "P-7b edge line": 154,
    "P-8 arrow": 202
   },
-  "nmt_nodes_replaced_under_decks": 12559,
+  "nmt_nodes_replaced_under_decks": 538,
   "overrides_applied": [
    {
     "id": "kwadrat-park-yard-access-width",
@@ -10661,6 +10736,22 @@
     "id": "kwadrat-park-access-junction-radius",
     "targets": [
      "n1882887381"
+    ]
+   },
+   {
+    "id": "andersa-viaduct-biezenstwa-style",
+    "targets": [
+     "w175157461",
+     "w177895177"
+    ]
+   },
+   {
+    "id": "andersa-viaduct-putry-style",
+    "targets": [
+     "w1101181473",
+     "w173956078",
+     "w284022563",
+     "w606396460"
     ]
    }
   ],

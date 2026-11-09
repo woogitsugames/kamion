@@ -99,8 +99,8 @@ def grow(species, variant, lod):
     H = HREF[species] * rng.uniform(0.92, 1.08)
     g = Geo()
     leaf = f"leaves_{species}"
-    cards_keep = 1.0 if lod == 0 else 0.33
-    csize_k = 1.0 if lod == 0 else 1.6
+    cards_keep = 1.0 if lod == 0 else (0.6 if species == "birch" else 0.33)
+    csize_k = 1.0 if lod == 0 else (1.5 if species == "birch" else 1.6)
     seg = 8 if lod == 0 else 5
     crng = random.Random(variant * 7 + 3)
 
@@ -117,39 +117,61 @@ def grow(species, variant, lod):
             g.card(leaf, p, nrm, Vector((0, 0, 1)), size * csize_k * crng.uniform(0.8, 1.2), crown_c)
 
     if species == "pine":
-        lean = Vector((rng.uniform(-0.04, 0.04), rng.uniform(-0.04, 0.04), 1))
-        trunk = bend_path(Vector((0, 0, -0.3)), lean, H, 14, rng, 0.03)
-        rad = [0.24 * (1 - i / 14) ** 0.8 + 0.02 for i in range(15)]
+        # mature Scots pine: long clean bole, crown in the top ~35 % that is flattened, asymmetric (a light side)
+        # and made of sparse foliage clumps at the ends of a few long, irregular, upturned limbs; whorls have
+        # missing branches; no regular tiers, no tuft on a pole
+        lean = Vector((rng.uniform(-0.05, 0.05), rng.uniform(-0.05, 0.05), 1))
+        trunk = bend_path(Vector((0, 0, -0.3)), lean, H * 0.94, 14, rng, 0.035)
+        rad = [0.24 * (1 - i / 14) ** 0.8 + 0.025 for i in range(15)]
         g.tube("bark_pine_lower", trunk[:7], rad[:7], seg)
         g.tube("bark_pine", trunk[6:], rad[6:], seg, v0=H * 0.43)
-        cc = trunk[12]
-        z0 = H * rng.uniform(0.55, 0.65)
+        cc = trunk[13]
+        light = rng.uniform(0, 2 * math.pi)            # side of the stand edge / gap: longer limbs there
+        z0 = H * rng.uniform(0.58, 0.68)
         z = z0
-        while z < H * 0.97:
-            f = (z - z0) / (H - z0)
+        nlimb = 0
+        while z < H * 0.93:
+            f = (z - z0) / (H * 0.93 - z0)
             for _ in range(rng.randint(3, 5)):
+                if rng.random() < 0.28:                 # missing / broken branch in the whorl
+                    continue
                 a = rng.uniform(0, 2 * math.pi)
-                L = (3.4 * (1 - f) ** 0.6 + 0.7) * rng.uniform(0.7, 1.15)
-                d = Vector((math.cos(a), math.sin(a), rng.uniform(0.1, 0.5)))
+                bias = 0.65 + 0.55 * max(0.0, math.cos(a - light))
+                L = (1.0 + 2.6 * math.sin(math.pi * min(1.0, 0.25 + f * 0.85))) * bias * rng.uniform(0.6, 1.2)
+                up = rng.uniform(0.15, 0.55) + f * 0.3
+                d = Vector((math.cos(a), math.sin(a), up))
                 k = z / H * 14
-                p0 = trunk[int(k)].lerp(trunk[min(int(k) + 1, 14)], k - int(k))
-                br = bend_path(p0, d, L, 4, rng, 0.15)
-                if lod == 0 or L > 2.0:
-                    g.tube("bark_twig", br, [0.06 * (1 - f * 0.5) * (1 - i / 5) + 0.01 for i in range(5)], max(3, seg // 2))
-                cards_along(br, 1.7, int(5 + 4 * L), cc, flat=1.0, start=0.35)
-            z += rng.uniform(0.5, 0.9)
+                p0 = trunk[min(int(k), 13)].lerp(trunk[min(int(k) + 1, 14)], k - int(k))
+                br = bend_path(p0, d, L, 5, rng, 0.22, gravity=-0.04)
+                if lod == 0 or L > 1.8:
+                    g.tube("bark_twig", br, [0.07 * (1 - f * 0.4) * (1 - i / 6) + 0.012 for i in range(6)],
+                           max(3, seg // 2))
+                # foliage clumps: 1-3 dense clusters near the limb end (sparse inside the crown)
+                for cl in range(rng.randint(2, 4)):
+                    t = rng.uniform(0.55, 1.0)
+                    kk = t * (len(br) - 1)
+                    ia = int(kk)
+                    q = br[ia].lerp(br[min(ia + 1, len(br) - 1)], kk - ia)
+                    rcl = rng.uniform(0.5, 1.0) * (0.7 + 0.4 * bias)
+                    for _ in range(int((7 + 6 * rcl) * (1.0 if lod == 0 else 0.45)) + 1):
+                        pc = q + Vector((crng.uniform(-rcl, rcl), crng.uniform(-rcl, rcl), crng.uniform(-0.55, 0.45) * rcl))
+                        nrm = Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), crng.uniform(-0.2, 1.4)))
+                        g.card(leaf, pc, nrm, Vector((0, 0, 1)), 1.25 * csize_k * crng.uniform(0.8, 1.2), cc)
+                nlimb += 1
+            z += rng.uniform(0.45, 1.0)
+        # leader: the stem ends inside the top clumps (no tuft on a bare pole)
+        for _ in range(int(14 * (1.0 if lod == 0 else 0.5))):
+            pc = trunk[-1] + Vector((crng.uniform(-1.1, 1.1), crng.uniform(-1.1, 1.1), crng.uniform(-1.2, 0.2)))
+            g.card(leaf, pc, Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), 1.2)), Vector((0, 0, 1)), 1.2 * csize_k, cc)
         # dead lower branch stubs
         if lod == 0:
-            for _ in range(10):
-                zz = rng.uniform(H * 0.2, z0)
+            for _ in range(12):
+                zz = rng.uniform(H * 0.25, z0)
                 k = zz / H * 14
-                p0 = trunk[int(k)]
+                p0 = trunk[min(int(k), 14)]
                 a = rng.uniform(0, 2 * math.pi)
-                g.tube("bark_pine_lower", [p0, p0 + Vector((math.cos(a), math.sin(a), -0.1)) * rng.uniform(0.2, 0.7)],
+                g.tube("bark_pine_lower", [p0, p0 + Vector((math.cos(a), math.sin(a), -0.1)) * rng.uniform(0.2, 0.8)],
                        [0.025, 0.008], 3)
-        for _ in range(int(25 * cards_keep)):      # top tuft
-            p = trunk[-1] + Vector((rng.uniform(-1, 1), rng.uniform(-1, 1), rng.uniform(-0.8, 0.2)))
-            g.card(leaf, p, Vector((rng.uniform(-1, 1), rng.uniform(-1, 1), 2)), Vector((0, 0, 1)), 1.6 * csize_k, cc)
         return g, H
     # broadleaf + shrub
     if species == "shrub":
@@ -183,7 +205,7 @@ def grow(species, variant, lod):
         br = bend_path(p0, d, L, 5, rng, 0.18)
         g.tube(BARK[species][0] if species != "birch" else "bark_twig", br,
                [r0 * 0.4 * (1 - i / 6) + 0.012 for i in range(6)], max(3, seg // 2))
-        nsub = (7 if species == "birch" else 5) if lod == 0 else 3
+        nsub = (7 if species == "birch" else 5) if lod == 0 else (5 if species == "birch" else 3)
         for s in range(nsub):
             t = 0.35 + 0.6 * rng.random()
             q0 = br[int(t * 5)]
@@ -266,7 +288,7 @@ def bake_impostor(ob, name, H):
     sc = bpy.context.scene
     sc.render.engine = "BLENDER_EEVEE_NEXT"
     sc.render.film_transparent = True
-    sc.render.resolution_x, sc.render.resolution_y = 192, 384
+    sc.render.resolution_x, sc.render.resolution_y = 256, 384
     sc.eevee.taa_render_samples = 16
     sc.view_settings.view_transform = "Standard"
     for o in sc.objects:
@@ -304,14 +326,15 @@ def impostor_object(name, H, png):
     tex.image = bpy.data.images.load(str(png))
     nt.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
     nt.links.new(tex.outputs["Alpha"], bsdf.inputs["Alpha"])
-    w = H * 1.05 / 2
+    w = H * 1.05 * (256 / 384) / 2       # impostor plane matches the 256 x 384 bake (wide crowns)
     verts, faces, uvs = [], [], []
     for k in range(2):
         a = k * math.pi / 2
         c, s = math.cos(a), math.sin(a)
         base = len(verts)
-        for x, z, uv in ((-w, 0, (0, 0)), (w, 0, (1, 0)), (w, 2 * w, (1, 1)), (-w, 2 * w, (0, 1))):
-            verts.append((x * c, x * s, z - 0.3 + H * 0.5 - w))
+        hh = H * 1.05                      # bake: ortho_scale = H * 1.05 over the 384 px height
+        for x, z, uv in ((-w, 0, (0, 0)), (w, 0, (1, 0)), (w, hh, (1, 1)), (-w, hh, (0, 1))):
+            verts.append((x * c, x * s, z - 0.3 + H * 0.5 - hh / 2))
             uvs.append(uv)
         faces.append((base, base + 1, base + 2, base + 3))
     me = bpy.data.meshes.new(name + ".lod2")

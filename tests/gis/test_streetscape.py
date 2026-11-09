@@ -130,3 +130,129 @@ def test_instances_reference_existing_prototypes():
             assert 100.0 < it["z"] < 200.0
             n += 1
     assert n > 1000
+
+
+# ------------------------------------------------------------------------------------------ r2 kit (critic R2)
+def test_life_prototypes_budget_and_lods():
+    """Static life props: LOD1 well below LOD0, mobile-sized LOD0 (docs/06 par. 6), every prototype buildable."""
+    from streetscape import life_props as LP
+    P = LP.build_all()
+    tris = {k: (sum(len(p["T"]) for p in a.out()), sum(len(p["T"]) for p in b.out())) for k, (a, b, _) in P.items()}
+    for k, (t0, t1) in tris.items():
+        assert t1 <= t0, k
+    assert max(t0 for k, (t0, _) in tris.items() if k.startswith(("car_", "van_"))) <= 600
+    assert max(t1 for k, (_, t1) in tris.items() if k.startswith(("car_", "van_"))) <= 120
+    assert max(t0 for k, (t0, _) in tris.items() if k.startswith("trailer_")) <= 1200
+    assert max(t1 for k, (_, t1) in tris.items() if k.startswith("trailer_")) <= 250
+
+
+def test_facade_signs_are_functional_text_only():
+    """Fascia signs carry functional lettering only (no brand names, CLAUDE.md rule 8)."""
+    from streetscape import life_props as LP
+    allowed = {"HALA", "A", "B", "C", "D", "BIURO", "RECEPCJA", "DOSTAWY", "PORTIERNIA", "MAGAZYN", "SERWIS"}
+    for code, text in LP.SIGNS.items():
+        assert set(text.split()) <= allowed, text
+        im = LP.sign_texture(code)
+        assert im.size[1] == 64 and im.size[0] >= 64
+
+
+def test_decal_lift_order():
+    """Decals never z-fight: patch < oil < paint, all above the road surface."""
+    from roads import decals as DC
+    from roads import standards as S
+    assert 0 < DC.LIFT_PATCH < DC.LIFT_OIL < S.MARKING_LIFT
+
+
+def test_band_edges_avoid_openings():
+    """Cladding band edges and colour-field edges move off openings (no fake sills or jambs)."""
+    from streetscape import facade_kit as FK
+    ops = [(2.0, 5.0, 1.2, 4.2, 0.25, "dock", "dock_door"), (8.0, 9.0, 0.15, 2.25, 0.08, "door", "door_steel")]
+    z = FK.safe_z(3.0, ops, 0.6, 9.0)
+    assert z is not None and all(not (o[2] < z < o[3]) for o in ops)
+    u = FK.safe_u(8.5, ops, 20.0)
+    assert u is not None and all(not (o[0] <= u <= o[1]) for o in ops)
+
+
+def test_life_props_and_gate_kit_placed(qa):
+    life = qa["furniture"]["life"]
+    assert life["dock_trailers"] >= 20
+    assert life["parking"]["cars"] + life["parking"]["vans"] >= 50
+    assert life["pallets"] >= 50 and life["bins"] >= 10
+    gates = qa["furniture"]["gates"]
+    assert gates["stale"] == [] and [g["id"] for g in gates["applied"]] == ["kwadrat-park-gate-kit"]
+    assert gates["applied"][0]["gatehouse"] is not None and gates["applied"][0]["fence_m"] > 10
+
+
+def test_truck_yards_are_behaton(qa):
+    mats = qa["paved_m2_by_material"]
+    assert mats.get("yard_behaton", 0) > 20_000
+    assert mats.get("yard_paving", 0) > 0                   # car parks / footways keep rectangular blocks
+
+
+def test_embankment_barriers_found(qa):
+    """The embankment rule (fill > 2 m) measured at the toe of the slope, not on the berm."""
+    f = qa["furniture"]
+    assert f["guardrails_m"]["embankment"] > 0
+    assert f["embankment_check"]["max_drop_m"] > f["embankment_check"]["threshold_m"]
+
+
+def test_gate_split_has_kerb_chamfer():
+    """Kwadrat Park gate: the two-way access road splitting into entry/exit lanes is joined by a kerb chamfer,
+    not a lateral kerb step (visual-critic R2 #10)."""
+    p = REGION_DIR / "generated" / "roads_qa.json"
+    if not p.exists():
+        pytest.skip("roads_qa.json not generated")
+    notes = json.loads(p.read_text(encoding="utf-8"))["junction_notes"]
+    gate = [v for k, v in notes.items() if "1882887381" in k]
+    assert gate and any("chamfer" in n or "kerb line continued" in n for n in gate[0])
+
+
+def test_photo_matched_overrides_applied(qa):
+    """Bridge styles, the Putry gantry and the EC chimneys (CC0 photos / OSM ground truth) are all applied."""
+    lm = qa["furniture"]["landmarks"]
+    assert lm["stale"] == []
+    assert [g["id"] for g in lm["gantries"]] == ["andersa-putry-approach-gantry"]
+    assert len(lm["landmarks"]) == 2
+    man = json.loads((REGION_DIR / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
+    ids = {o["id"] for o in man["overrides_applied"]}
+    assert {"andersa-viaduct-biezenstwa-style", "andersa-viaduct-putry-style"} <= ids
+    assert man["overrides_stale"] == []
+
+
+def test_overhead_board_layout():
+    from streetscape import signs as SG
+    im, w, h = SG.overhead_board([(["E67"], "Warszawa"), (["65"], "Ełk")])
+    assert 1.0 < h < 2.0 and w > h
+    r, g, b = im.convert("RGB").getpixel((im.size[0] // 2, im.size[1] - 2))
+    assert g > r                                            # green field (white border is inside the edge)
+
+
+def test_yards_have_trucks_and_containers(qa):
+    """Truck yards are not empty plains (critic R2 #2): parked trailers, coupled and solo tractors, containers."""
+    life = qa["furniture"]["life"]
+    assert life["yard_trailers"] >= 50 and life["coupled"] >= 10 and life["solo_tractors"] >= 10
+    assert life["containers"] >= 4
+    assert life["tyre_scrub_tracks"] >= 2 * qa["furniture"]["life"]["dock_trailers"]
+
+
+def test_second_lamp_family_on_side_streets(qa):
+    fam = qa["furniture"]["lamps"]["by_family"]
+    old = sum(v for k, v in fam.items() if k.startswith("lamp_old_"))
+    assert old >= 50 and fam.get("lamp_12m", 0) > 0          # older family exists, main roads keep the modern one
+
+
+def test_vehicle_prototypes_are_plain():
+    """Tractor and container prototypes: two LODs, LOD1 much lighter, no texture beyond plate/corrugation."""
+    from streetscape import life_props as LP
+    for m0, m1, col in (LP.tractor("white"), LP.container(40, "rust"), LP.container(20, "blue")):
+        t0 = sum(len(p["T"]) for p in m0.out())
+        t1 = sum(len(p["T"]) for p in m1.out())
+        assert 0 < t1 < t0 <= 1500 and col is not None
+    a, b = LP.tractor_extent()
+    assert -2.0 < a < -1.0 and 4.0 < b < 5.5                      # 4x2 tractor ~6.2 m long
+
+
+def test_ground_props_off_the_carriageway(qa):
+    """Lamp / sign / signal bases are pushed off the carriageway (the Unity importer counted 88 on the road)."""
+    r = qa["furniture"]["props_off_carriageway"]
+    assert r["moved"] > 0 and r["still_on_road"] <= 5

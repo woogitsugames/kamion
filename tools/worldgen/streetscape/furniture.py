@@ -77,6 +77,45 @@ def side_surface_offset(c, side, s):
     return kind, h, w, side_extent(kind, h, w, depth, mat)
 
 
+# ------------------------------------------------------------------------------------------- carriageway check
+GROUND_PROPS = ("lamp_", "sign_post", "signal_pole", "signal_mast", "bollard", "waste_bin", "bench", "power_pole",
+                "street_cabinet", "bus_shelter", "pylon")
+
+
+def clear_carriageway(pl, carriage, zsurf, report):
+    """Ground-standing props whose base lies on a carriageway (rule placement near junction patches, OSM nodes
+    drawn on the road axis) are pushed 0.8 m beyond the nearest carriageway edge; everything stacked on the same
+    base (sign plates) moves with it and keeps its height above the base. Overhead items (signal heads on masts,
+    gantry boards, booms) are not touched. Lamp / sign counts on the road were reported by the Unity importer."""
+    import shapely
+    from shapely.geometry import Point
+    from shapely.ops import nearest_points
+    inner = carriage.buffer(-0.05)
+    shapely.prepare(inner)
+    groups = {}
+    for it in pl.items:
+        groups.setdefault((round(it["e"], 2), round(it["n"], 2)), []).append(it)
+    moved, left = 0, []
+    for (e, n), items in groups.items():
+        base = [it for it in items if it["p"].startswith(GROUND_PROPS)]
+        if not base or not inner.contains(Point(e, n)):
+            continue
+        q = nearest_points(carriage.boundary, Point(e, n))[0]
+        v = np.array([q.x - e, q.y - n])
+        L = float(np.hypot(*v))
+        new = np.array([q.x, q.y]) + (v / L if L > 1e-6 else np.array([1.0, 0.0])) * 0.8
+        if inner.contains(Point(*new)):
+            left.append(base[0]["p"])
+            continue
+        z0 = float(zsurf(np.array([new[0]]), np.array([new[1]]))[0])
+        dz = z0 - base[0]["z"]
+        for it in items:
+            it["e"], it["n"] = round(float(new[0]), 3), round(float(new[1]), 3)
+            it["z"] = round(it["z"] + dz, 3)
+        moved += 1
+    report["props_off_carriageway"] = {"moved": moved, "still_on_road": len(left)}
+
+
 # ------------------------------------------------------------------------------------------- lamps
 def lamps(pl, net, osm_nodes, origin, report):
     n0 = 0
@@ -93,6 +132,14 @@ def lamps(pl, net, osm_nodes, origin, report):
         if sec.cls not in S.LAMP or sec.highway in ("service",) and c.length < 60:
             continue
         spec = S.LAMP[sec.cls]
+        # older side-street family (critic R2 #10): one family per street (hash of the chain), never on G/GP;
+        # residential streets 65 % old (spun-concrete poles dominate), other L/D roads 30 % (grey steel)
+        proto = f"lamp_{int(spec['h'])}m"
+        if sec.cls in ("L", "D", "Z") and sec.highway not in ("primary", "secondary", "trunk"):
+            u = _h(c.id + ":lampfamily") % 100
+            res = sec.highway in ("residential", "living_street")
+            if u < (65 if res else 30):
+                proto = "lamp_old_concrete_9m" if (res and u < 50) or (not res and u < 8) else "lamp_old_steel_8m"
         oneway = sec.oneway
         sides = ["R"] if (oneway and (c.dirn > 0).mean() >= 0.5) or not oneway else ["L"]
         s0, s1 = c.t_a + 4, c.length - c.t_b - 4
@@ -115,9 +162,12 @@ def lamps(pl, net, osm_nodes, origin, report):
                 if c.bridge[c.idx(s)]:
                     z = float(c.crossfall_z(s, sgn * hw)) + S.BRIDGE_KERB_H
                     p = c.line.offset_point(s, sgn * (hw + S.KERB_TOP_W + 0.6))
-                pl.add(f"lamp_{int(spec['h'])}m", p, yaw_of(face), z=z, src=f"rule:{c.id}", group="lamp")
+                pl.add(proto if z is None else f"lamp_{int(spec['h'])}m", p, yaw_of(face), z=z, src=f"rule:{c.id}",
+                       group="lamp")
                 n += 1
-    report["lamps"] = {"osm": n0, "rule": n}
+    report["lamps"] = {"osm": n0, "rule": n,
+                       "by_family": {k: sum(1 for it in pl.items if it["p"] == k) for k in
+                                     sorted({it["p"] for it in pl.items if it["p"].startswith("lamp_")})}}
 
 
 # ------------------------------------------------------------------------------------------- signs
@@ -446,8 +496,11 @@ class Lin:
             self.buf.add("collision", collision, V, UV, np.concatenate([T, T[:, [0, 2, 1]]]), src=src)
 
     def slab(self, mat, P, zb, zt, thick, src="", collision=None):
-        for off in (-thick / 2, thick / 2):
-            self.ribbon(mat, P, zb, zt, off, src, both=False, collision=None)
+        # right face (offset -t/2) keeps the ribbon winding (faces right), the left face is flipped; the top faces up
+        # only (nobody sees its underside). Before v3 both sides had the same winding -> see-through from one side.
+        self.ribbon(mat, P, zb, zt, -thick / 2, src, both=False, collision=None)
+        self.ribbon(mat, P[::-1], zb[::-1] if np.ndim(zb) else zb, zt[::-1] if np.ndim(zt) else zt, -thick / 2, src,
+                    both=False, collision=None)
         d = np.gradient(P, axis=0)
         d /= np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)[:, None]
         nrm = np.column_stack([-d[:, 1], d[:, 0]])
@@ -456,7 +509,6 @@ class Lin:
         V = np.concatenate([np.column_stack([A, zt]), np.column_stack([B, zt])])
         T = np.array([(k, k + 1, n + k + 1) for k in range(n - 1)] + [(k, n + k + 1, n + k) for k in range(n - 1)])
         self.buf.add("furniture", mat, V, V[:, :2], T, src=src)
-        self.buf.add("furniture", mat, V, V[:, :2], T[:, [0, 2, 1]], src=src)
         if collision:
             self.ribbon(collision, P, zb, zt, 0.0, src, both=False, collision=None)
             self.buf.parts[-1].layer = "collision"
@@ -503,7 +555,7 @@ def fences(lin, src, origin, roads_poly, report):
         line = LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
         key = f"osm:way/{f['osm_way']}:{f['part']}"
         for part in cut_by(line, cutter):
-            P = lin.dens(part, 1.0)
+            P = lin.dens(part, 2.0)              # 2 m: the Low terrain band is 2 m, posts sample the ground themselves
             Z = lin.z(P)
             if b in ("fence", "yes"):
                 col = ["fence_green", "fence_anthracite", "fence_galv"][_h(key) % 3]
@@ -570,6 +622,7 @@ def guardrail(lin, P, Z, key):
 
 def guardrails(lin, net, zground, report):
     m = {"bridge": 0.0, "median": 0.0, "embankment": 0.0}
+    drops, runs = [], []
     for c in net.chains:
         if c.meta.get("absorbed"):
             continue
@@ -596,8 +649,14 @@ def guardrails(lin, net, zground, report):
             zb[med] = zg[med] - 0.02
             rur = (kinds == RURAL) & ~br
             if rur.any():
-                P_out = c.line.offset_point(ss, sgn * (hw + ext + 2.0))
-                drop = zg - zground(P_out[:, 0], P_out[:, 1])
+                # embankment height = road edge minus the ground at the toe of the fill slope: berm 1 m +
+                # slope 1:1.5 of a 2 m fill + 1 m = profile end + 5 m (the old probe at +2 m only ever saw
+                # the berm, so the rule never fired); take the lowest of three probes (5, 7, 9 m)
+                drop = np.full(len(ss), -1e9)            # zground = natural ground (NMT), not the conformed terrain
+                for extra in (5.0, 7.0, 9.0):
+                    P_out = c.line.offset_point(ss, sgn * (hw + ext + extra))
+                    drop = np.maximum(drop, zg - zground(P_out[:, 0], P_out[:, 1]))
+                drops.append(float(drop[rur].max()))
                 emb = rur & (drop > S.GUARDRAIL_EMBANKMENT_H)
                 # extend 12 m each way (approach), close small gaps
                 from scipy import ndimage
@@ -622,9 +681,18 @@ def guardrails(lin, net, zground, report):
                     else:
                         Zr = zb[sl]
                     guardrail(lin, P, Zr, f"{c.id}:{side}:{['', 'bridge', 'median', 'embankment'][want[k]]}")
+                    if want[k] == 3:
+                        runs.append({"chain": c.id, "side": side, "s": [round(float(ss[k]), 1), round(float(ss[kk]), 1)],
+                                     "max_drop_m": round(float(drop[sl].max()), 2),
+                                     "at": [round(float(v), 1) for v in c.line.offset_point(ss[(k + kk) // 2], 0.0)]})
                     m[["", "bridge", "median", "embankment"][want[k]]] += kk - k
                 k = kk + 1
     report["guardrails_m"] = {k: round(v) for k, v in m.items()}
+    d = np.array(drops) if drops else np.zeros(1)
+    report["embankment_check"] = {"rural_sides": len(drops), "max_drop_m": round(float(d.max()), 2),
+                                  "p95_drop_m": round(float(np.percentile(d, 95)), 2),
+                                  "threshold_m": S.GUARDRAIL_EMBANKMENT_H, "runs": runs,
+                                  "ground": "NMT (decks removed) at the profile end + 5 / 7 / 9 m"}
 
 
 def noise_barriers(lin, src, origin, roads_poly, report):

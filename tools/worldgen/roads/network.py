@@ -420,7 +420,13 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
         sec_mid = net.sec_list[int(c.sec_idx[len(c.sec_idx) // 2])]
         fast = (built_up and sec_mid.cls in ("GP", "G", "S", "A") and (sec_mid.maxspeed or 50) >= S.RURAL_MIN_SPEED
                 and not c.roundabout and not c.bridge.all() and wk_tree is not None)
+        # A footway / cycle path set back from the carriageway (within RURAL_FOOT_M, e.g. the cycle path
+        # along DK8) no longer turns the edge into an urban kerb: at >= 70 km/h the edge stays without a
+        # kerb (paved shoulder + verge, PTB2022 § 23 ust. 10) and only the ditch becomes a shallow swale
+        # (SWALE_DEPTH) so the profile ends before the path. Only a sidewalk attached to the kerb (walk_d
+        # below) keeps the urban kerbed edge.
         rural_d = {"L": np.zeros(n, bool), "R": np.zeros(n, bool)}
+        path_d = {"L": np.zeros(n, bool), "R": np.zeros(n, bool)}
         if fast:
             win = max(1, int(round(30.0 / 4.0)))
             for side_, sg in (("L", 1.0), ("R", -1.0)):
@@ -428,9 +434,11 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 for j, i in enumerate(idx):
                     q = Point(*(c.line.p[i] + c.line.n[i] * sg * (c.hw[i] + S.RURAL_FOOT_M / 2)))
                     hits[j] = 1.0 if len(wk_tree.query(q.buffer(S.RURAL_FOOT_M / 2 + 1.0))) else 0.0
-                hs = np.array([hits[max(0, j - win):j + win + 1].mean() for j in range(len(idx))]) < 0.2
-                rural_d[side_] = np.interp(np.arange(n), idx, hs.astype(float)) > 0.5
+                hs = np.array([hits[max(0, j - win):j + win + 1].mean() for j in range(len(idx))]) >= 0.2
+                path_d[side_] = np.interp(np.arange(n), idx, hs.astype(float)) > 0.5
+                rural_d[side_] = np.ones(n, bool)
         c.meta["rural"] = {k: round(float(v.mean()), 2) for k, v in rural_d.items()}
+        c.meta["rural_path"] = {k: round(float(v.mean()), 2) for k, v in path_d.items()}
         for side, sgn in (("L", 1.0), ("R", -1.0)):
             walk = np.zeros(len(idx))
             median = np.zeros(len(idx))
@@ -468,8 +476,10 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
             med_s = np.array([median[max(0, j - win):j + win + 1].mean() for j in range(len(idx))]) > 0.45
             walk_d = np.interp(np.arange(n), idx, walk_s.astype(float)) > 0.5
             med_d = np.interp(np.arange(n), idx, med_s.astype(float)) > 0.5
-            kind = np.where(rural_d[side] | (not built_up), RURAL, URBAN)
+            rural_here = rural_d[side] & ~(walk_d & ~med_d)
+            kind = np.where(rural_here | (not built_up), RURAL, URBAN)
             h = np.full(n, S.KERB_HEIGHT)
+            h[rural_here] = np.where(path_d[side][rural_here], S.SWALE_DEPTH, S.DITCH_DEPTH)    # RURAL: h = ditch depth
             w = np.where(walk_d & ~med_d, S.SIDEWALK_W, 0.0)
             mat = np.where(walk_d & ~med_d, 1, 0)
             depth = np.full(n, S.FLANGE_DEPTH)
@@ -501,7 +511,8 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                     w[m], mat[m] = 0.0, 0
                 elif kd == "flush":           # paved yard / no kerb: flat edge strip at road level
                     h[m], w[m], mat[m] = 0.0, 0.0, 0
-            other = rural_d["L" if side == "R" else "R"]
+            os_ = "L" if side == "R" else "R"
+            other = rural_d[os_] & ~path_d[os_]          # median rule unchanged: other side free of paths
             fast_med = fast and (sec_mid.maxspeed or 50) >= 90
             kind[med_d] = np.where(other[med_d] | fast_med, MEDIAN_RURAL, URBAN)
             if c.roundabout and side == ("L" if (c.dirn > 0).mean() >= 0.5 else "R"):
@@ -549,7 +560,7 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
         zp = -S.CROSSFALL * ps
         sw = 0.75
         z1 = zp - S.SHOULDER_CROSSFALL * sw
-        d = S.DITCH_DEPTH
+        d = h if 0.05 < h < 1.5 else S.DITCH_DEPTH       # ditch depth per station (swale next to a path)
         u0 = ps + sw
         u2 = u0 + d * S.DITCH_SLOPE
         u3 = u2 + S.DITCH_BOTTOM_W

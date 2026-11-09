@@ -16,6 +16,9 @@ from terrain_mesh import conform as CF
 
 from . import buildings_mesh as BM
 from . import furniture as FU
+from . import gate as GT
+from . import landmarks as LM
+from . import life as LF
 from . import paved as PV
 from . import sources as SRC
 from . import vegetation as VG
@@ -47,14 +50,17 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
                  if o.get("kind") == "paved_area"]
     yard_union = shapely.union_all([shapely.make_valid(p) for p in yard_src] + [roads_poly])
     brep = {}
-    docks = BM.build(w.buf, blds, hf, zsmooth, yard_union, roads_poly, brep)
+    facade_signs = []
+    docks = BM.build(w.buf, blds, hf, zsmooth, yard_union, roads_poly, brep, sign_out=facade_signs)
     rep["buildings"] = brep
     log("buildings", brep["typologies"], "docks", brep["docks"])
     bpoly = shapely.union_all([b["poly"] for b in blds])
 
     # paved areas
     prep = {}
-    paved = PV.collect(src, origin, overrides, docks, roads_poly, bpoly, prep)
+    truck_zone = shapely.union_all([b["poly"].buffer(40.0) for b in blds if b["typ"] == "hall"] +
+                                   [d["apron"].buffer(10.0) for d in docks])
+    paved = PV.collect(src, origin, overrides, docks, roads_poly, bpoly, prep, truck_zone=truck_zone)
     rep["paved_m2_by_source"] = prep
     pmask = PV.rasterize_polys([p["poly"] for p in paved], hf) & ~rmask
     pz = PV.paved_heights(hf, road_z, rmask, pmask)
@@ -93,13 +99,27 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FU.speed_signs(pl, w.net, frep, codes)
     FU.crossing_signs(pl, w.net, w.ctx["points"], frep, codes)
     FU.direction_boards(pl, w.net, attrs, frep, boards)
+    LM.build(pl, w.net, graph, overrides, origin, boards, frep)
     FU.misc_points(pl, w.net, src, origin, frep, codes)
     FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep)
     lin = FU.Lin(w.buf, zsurf)
     FU.fences(lin, src, origin, roads_poly, frep)
-    FU.guardrails(lin, w.net, zground, frep)
+    def znat(e, n):                              # natural ground (NMT, decks removed): embankment height
+        return PV.bilinear(hf.z, hf, np.asarray(e, float), np.asarray(n, float))
+    FU.guardrails(lin, w.net, znat, frep)
     FU.noise_barriers(lin, src, origin, roads_poly, frep)
     FU.power_lines(lin, src, origin, frep)
+    GT.build(pl, lin, w.net, graph, overrides, roads_poly, bpoly, origin, frep)
+    pl.items.extend(facade_signs)
+    from roads import build_world as BW
+    try:
+        route_P = BW.route_polyline(rid, w)[0]
+    except Exception as e:                      # no candidate route for this region: no corridor
+        log("life: no start route", e)
+        route_P = None
+    LF.place(pl, docks, paved, blds, roads_poly, bpoly, route_P, frep, buf=w.buf, zsurf=zsurf)
+    carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
+    FU.clear_carriageway(pl, carriage, zsurf, frep)
     rep["furniture"] = frep
     log("furniture", {k: v for k, v in frep.items() if k != "junction_signs"})
 

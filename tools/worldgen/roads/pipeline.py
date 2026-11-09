@@ -64,6 +64,17 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     overrides = load_overrides(region_id)
 
     net = Nw.load(graph, origin, overrides)
+    M.BRIDGE_STYLES.clear()
+    for o in overrides:
+        if o.get("kind") == "bridge_style":
+            ways = {str(e["id"]).split(":")[0].lstrip("w") for e in graph["edges"]}
+            hit = [w for w in o["target"]["osm_way"] if str(w) in ways]
+            for wid in hit:
+                M.BRIDGE_STYLES[str(wid)] = o["set"]
+            if hit:
+                net.overrides_applied.append({"id": o["id"], "targets": [f"w{w}" for w in hit]})
+            else:
+                net.overrides_stale.append(o["id"])
     pts, foot = ctx_local(ctx, origin)
     tapers = []
     Nw.taper_forks(net, tapers)

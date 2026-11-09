@@ -72,6 +72,8 @@ class Mesh:
         return res
 
 
+LAMP_OLD = (("concrete", 9), ("steel", 8))     # (kind, height m) of the older side-street family
+
 # ------------------------------------------------------------------------------------------- builders
 def lamp(h, bracket, double=False):
     m, l1, col = Mesh(), Mesh(), Mesh()
@@ -86,6 +88,42 @@ def lamp(h, bracket, double=False):
             mm.quad("lamp_glass", end + [-0.13, sgn * 0.04, -0.081], end + [0.13, sgn * 0.04, -0.081],
                     end + [0.13, sgn * 0.6, -0.081], end + [-0.13, sgn * 0.6, -0.081])
     col.tube("collision_steel", [0, 0, 0], [0, 0, h], 0.12, 0.12, 6)
+    return m, l1, col
+
+
+def lamp_old(h, kind):
+    """Second lamp family for side streets (critic R2 #10): older installations still common on Polish residential
+    and industrial access roads (shapes typical, no product copied; dimensions WORKING_VALUE).
+      kind "concrete": spun-concrete pole (żerdź wirowana, 0.24 -> 0.14 m) with a steel arm rising in an arc and an
+        elongated "cobra" sodium luminaire (orange-tinted bowl);
+      kind "steel":    thin grey-painted steel pole with a straight arm tilted up 15 deg and a box luminaire."""
+    m, l1, col = Mesh(), Mesh(), Mesh()
+    for mm, seg in ((m, 10), (l1, 5)):
+        if kind == "concrete":
+            mm.tube("concrete_pole", [0, 0, -0.3], [0, 0, h], 0.12, 0.07, seg)
+            pts = [np.array([0.0, 0.05, h - 1.4])]
+            for k in range(1, 7):                       # arc: up then out (quarter ellipse 1.2 m out, 1.0 m up)
+                a = k / 6 * math.pi / 2
+                pts.append(np.array([0.0, 0.05 + 1.2 * math.sin(a), h - 1.4 + 1.0 * (1 - math.cos(a)) + 0.35 * math.sin(a)]))
+            pts.append(pts[-1] + [0, 0.5, 0.06])
+            for a_, b_ in zip(pts[:-1], pts[1:]):
+                mm.tube("steel_painted_grey", a_, b_, 0.03, 0.03, max(4, seg // 2), cap=False)
+            for zb in (h - 1.4, h - 0.7):               # clamp bands
+                mm.tube("steel_painted_grey", [0, 0, zb], [0, 0, zb + 0.08], 0.105, 0.105, seg, cap=False)
+            e = pts[-1]
+            mm.box("luminaire_old", e + [0, 0.35, 0.02], 0.15, 0.40, 0.08)
+            mm.quad("lamp_glass_sodium", e + [-0.12, 0.02, -0.065], e + [0.12, 0.02, -0.065],
+                    e + [0.12, 0.66, -0.065], e + [-0.12, 0.66, -0.065])
+        else:
+            mm.box("concrete_base", [0, 0, 0.1], 0.2, 0.2, 0.2)
+            mm.tube("steel_painted_grey", [0, 0, 0.2], [0, 0, h - 0.2], 0.075, 0.05, seg)
+            top = np.array([0, 0, h - 0.35])
+            end = top + np.array([0, 1.4 * math.cos(math.radians(15)), 1.4 * math.sin(math.radians(15))])
+            mm.tube("steel_painted_grey", top, end, 0.03, 0.03, max(4, seg // 2))
+            mm.box("luminaire_old", end + [0, 0.28, 0.0], 0.14, 0.3, 0.07)
+            mm.quad("lamp_glass_sodium", end + [-0.11, 0.04, -0.072], end + [0.11, 0.04, -0.072],
+                    end + [0.11, 0.52, -0.072], end + [-0.11, 0.52, -0.072])
+    col.tube("collision_steel", [0, 0, 0], [0, 0, h], 0.13, 0.13, 6)
     return m, l1, col
 
 
@@ -276,6 +314,8 @@ def build_all(sign_codes, boards):
     P = {}
     for cls, d in S.LAMP.items():
         P[f"lamp_{int(d['h'])}m"] = lamp(d["h"], d["bracket"])
+    for kind, hh in LAMP_OLD:
+        P[f"lamp_old_{kind}_{hh}m"] = lamp_old(float(hh), kind)
     P["sign_post"] = sign_post()
     for c in sorted(sign_codes):
         P[f"plate_{c}"] = plate(c)
@@ -294,4 +334,7 @@ def build_all(sign_codes, boards):
     P["bench"] = bench()
     P["waste_bin"] = waste_bin()
     P["street_cabinet"] = street_cabinet()
+    from . import life_props as LP
+    P.update(LP.build_all())
+    P.update(LP.build_registered())
     return P

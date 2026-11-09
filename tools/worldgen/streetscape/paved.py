@@ -34,7 +34,7 @@ OSM_SURFACE = {"asphalt": "yard_asphalt", "paving_stones": "yard_paving", "concr
                "sett": "yard_paving", "grass_paver": "yard_gravel"}
 PATH_SURFACE = {"kostka prefabrykowana": "sidewalk_paving", "masa bitumiczna": "path_asphalt", "beton": "yard_concrete",
                 "płyty betonowe": "yard_slabs"}
-EDGED = {"yard_paving", "sidewalk_paving", "cycle_red"}       # paving blocks need an edging restraint
+EDGED = {"yard_paving", "yard_behaton", "sidewalk_paving", "cycle_red"}       # paving blocks need an edging restraint
 CELL = 4.0
 
 
@@ -44,31 +44,39 @@ def _poly_local(coords, origin):
     return Polygon(rings[0], rings[1:])
 
 
-def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report):
-    """Return [(id, shapely polygon (local), material, source)] without overlaps, in priority order."""
+def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, truck_zone=None):
+    """Return [{id, poly (local), mat, source, parking}] without overlaps, in priority order.
+
+    truck_zone: polygon around halls / dock aprons; block-paved BDOT yards (> 800 m2) touching it are laid
+    with I-shaped interlocking blocks (behaton, `yard_behaton`) as Polish truck yards are, while car parks and
+    footways keep rectangular blocks."""
     cand = []
     for o in overrides:
         if o.get("kind") != "paved_area":
             continue
         ring = np.asarray(o["polygon_epsg2180"], float) - origin
-        cand.append((o["id"], Polygon(ring), o["material"], "authored_override"))
+        cand.append((o["id"], Polygon(ring), o["material"], "authored_override", bool(o.get("parking"))))
     for d in docks:
-        cand.append((d["id"], d["apron"], "yard_concrete", "dock_apron"))
+        cand.append((d["id"], d["apron"], "yard_concrete", "dock_apron", False))
     osm_park = [a for a in src["osm"]["areas"] if a["tags"].get("amenity") == "parking" or "area:highway" in a["tags"]]
     for a in osm_park:
         if a["tags"].get("surface") in OSM_SURFACE:
             cand.append((f"osm:{a['osm_type']}/{a['osm_id']}:{a['part']}", _poly_local(a["geometry"]["coordinates"], origin),
-                         OSM_SURFACE[a["tags"]["surface"]], "osm"))
+                         OSM_SURFACE[a["tags"]["surface"]], "osm", a["tags"].get("amenity") == "parking"))
     for f in src["bdot10k"]["OT_PTPL_A"]:
         m = BDOT_SURFACE.get(f["props"].get("materialnawierzchni"), "yard_asphalt")
-        cand.append((f"bdot:{f['id']}", _poly_local(f["geometry"]["coordinates"], origin), m, "bdot10k_PTPL"))
+        pp = _poly_local(f["geometry"]["coordinates"], origin)
+        if m == "yard_paving" and truck_zone is not None and pp.area > 800 and pp.intersects(truck_zone):
+            m = "yard_behaton"
+        cand.append((f"bdot:{f['id']}", pp, m, "bdot10k_PTPL", False))
     for f in src["bdot10k"]["OT_KUKO_A"]:
         m = "yard_asphalt" if f["props"].get("rodzaj") == "parking" else "yard_concrete"
-        cand.append((f"bdot:{f['id']}", _poly_local(f["geometry"]["coordinates"], origin), m, "bdot10k_KUKO"))
+        cand.append((f"bdot:{f['id']}", _poly_local(f["geometry"]["coordinates"], origin), m, "bdot10k_KUKO",
+                     f["props"].get("rodzaj") == "parking"))
     for a in osm_park:
         if a["tags"].get("surface") not in OSM_SURFACE:
             cand.append((f"osm:{a['osm_type']}/{a['osm_id']}:{a['part']}", _poly_local(a["geometry"]["coordinates"], origin),
-                         "yard_asphalt", "osm(default surface)"))
+                         "yard_asphalt", "osm(default surface)", a["tags"].get("amenity") == "parking"))
     for f in src["bdot10k"]["OT_SKRP_L"]:
         pr = f["props"]
         mat = PATH_SURFACE.get(pr.get("materialnawierzchni"))
@@ -79,10 +87,10 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report):
         w = float(pr.get("szerokosc") or S.SETBACK_PATH_W)
         ln = shapely.LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
         cand.append((f"bdot:{f['id']}", ln.buffer(w / 2, cap_style="flat", join_style="mitre", mitre_limit=2.0),
-                     mat, "bdot10k_SKRP"))
+                     mat, "bdot10k_SKRP", False))
     taken = shapely.union_all([roads_poly.buffer(0.02), buildings_poly]) if buildings_poly is not None else roads_poly
     out = []
-    for cid, poly, mat, srcname in cand:
+    for cid, poly, mat, srcname, is_parking in cand:
         poly = shapely.make_valid(poly)
         g = poly.difference(taken)
         g = g.buffer(-0.05).buffer(0.05)           # drop slivers
@@ -92,7 +100,7 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report):
             p = p.simplify(0.05)
             if p.is_empty or p.area <= 3.0 or p.geom_type != "Polygon":
                 continue
-            out.append({"id": f"{cid}#{k}", "poly": p, "mat": mat, "source": srcname})
+            out.append({"id": f"{cid}#{k}", "poly": p, "mat": mat, "source": srcname, "parking": is_parking})
             kept += p.area
         if kept:
             taken = shapely.union(taken, poly)

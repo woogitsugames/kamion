@@ -28,6 +28,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from roads import decals as DC           # noqa: E402
 from roads import markings as MK          # noqa: E402
 from roads import meshing as M            # noqa: E402
 from roads import pipeline                # noqa: E402
@@ -262,8 +263,8 @@ def cameras(region_id, w):
     # depot gate: junction where the depot access road meets the public road
     gate_node = "n1882887381"
     sj = nodes_s.get(gate_node, 265.0)
-    q, z, t = lane_point(sj + 14)
-    tgt = at(max(0.0, sj - 35))
+    q, z, t = lane_point(sj + 30)                 # far enough out that the booms and the gatehouse are in frame
+    tgt = at(max(0.0, sj - 25))
     _, _, _, zt = surface_at(w, tgt)
     cams.append({"id": "kwadrat_park_gate", "type": "persp", "fov_deg": 60.0,
                  "pos": [r(q[0]), r(q[1]), r(z + 2.5)], "look_at": [r(tgt[0]), r(tgt[1]), r(zt + 1.0)],
@@ -283,6 +284,14 @@ def cameras(region_id, w):
         cams.append({"id": "biezenstwa_above", "type": "persp", "fov_deg": 55.0,
                      "pos": [r(ctr2[0] - 50), r(ctr2[1] - 45), r(zc2 + 38)],
                      "look_at": [r(ctr2[0]), r(ctr2[1]), r(zc2)], "note": "Rondo Pamięci Bieżeństwa 1915 r."})
+        # side-by-side with the CC0 photo 20201102_152339 (Rakoon, docs/REFERENCES.md): pedestrian eye 1.6 m on the
+        # north-east side of the ring, looking SSW across the ring under the Andersa viaduct (EC chimneys on the left)
+        pe = ctr2 + np.array([0.483, 0.875]) * 46.0
+        _, _, _, zpe = surface_at(w, pe)
+        la = ctr2 - np.array([0.483, 0.875]) * 25.0
+        cams.append({"id": "photo_biezenstwa_ground", "type": "persp", "fov_deg": 62.0,
+                     "pos": [r(pe[0]), r(pe[1]), r(zpe + 1.6)], "look_at": [r(la[0]), r(la[1]), r(zc2 + 3.0)],
+                     "note": "photo match: CC0 20201102_152339 Rondo Pamięci Bieżeństwa (approximate viewpoint)"})
     # Stage 3 reference stretch: driver eye (2.5 m) along the first ~420 m of the route, Kwadrat Park yard ->
     # depot gate -> Rondo Bieżeństwa (the most polished part of the tile)
     for k, (st, look, note) in enumerate(((30.0, 60.0, "Kwadrat Park yard, loading docks on the right"),
@@ -398,6 +407,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
     mk_report = {}
     MK.build_markings(w.buf, w.net, w.junctions, w.ctx["points"], mk_report)
     log("markings", mk_report.get("markings"))
+    DC.build(w.buf, w.net, w.junctions, mk_report)
+    log("decals", mk_report.get("decals"))
 
     # terrain conform (roads + paved areas) + streetscape (buildings, yards, furniture, vegetation)
     road_z, rmask = CF.rasterise([p for p in w.buf.parts if p.layer == "road"], w.hf)
@@ -613,6 +624,8 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
                     if di > 200 and float(np.dot((np.array([it["e"], it["n"]]) - pos) / di, look)) < 0.5:
                         continue
                     rule = pol["tree"] if it["p"].startswith("tree_") else pol["prop"]
+                    if it["p"].startswith("landmark_"):       # landmarks are never culled (LOD1 beyond 650 m)
+                        rule = [[650, "tris_lod0"], [1e9, "tris_lod1"]]
                     key = next((k for lim, k in rule if di < lim), None)
                     if key:
                         tot += itris(it, key)
@@ -666,6 +679,7 @@ def qa_report(w, mk_report, mask):
             "footprint_nodes": int(mask.sum()),
             "nmt_nodes_replaced_under_decks": w.stats.get("nmt_replaced_under_decks", 0),
             "markings": mk_report.get("markings", {}),
+            "decals": mk_report.get("decals", {}),
             "crossings_snapped": mk_report.get("crossings_snapped", 0),
             "crossings_skipped": mk_report.get("crossings_skipped", []),
             "bridges": w.bridges,

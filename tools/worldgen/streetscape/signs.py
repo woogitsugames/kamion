@@ -181,6 +181,44 @@ def direction_board(dests, refs, green):
     return im, W * px / 64 * 0.36, H * px / 64 * 0.36
 
 
+def overhead_board(rows, row_m=0.62):
+    """Overhead direction board on a gantry (our own schematic drawing after the CC0 photo of the gantry at the
+    Andersa / Rondo Putry approach): green field, white border, one row per destination with route shields
+    (E-roads: green shield with a white border, national roads: red shield) and a downward lane arrow on the
+    left. rows = [(refs, destination)]. Returns (image, width_m, height_m); row height `row_m` (WORKING_VALUE)."""
+    px_m = 160                                     # pixels per metre
+    rh = int(row_m * px_m)
+    f = _font(int(rh * 0.52))
+    fs = _font(int(rh * 0.36))
+    probe = ImageDraw.Draw(_img())
+    shield_w = int(rh * 0.95)
+    nsh = max(len(r[0]) for r in rows)
+    tw = max(probe.textbbox((0, 0), d, font=f)[2] for _, d in rows)
+    W = int(rh * 0.9 + nsh * (shield_w + 12) + tw + rh * 0.6)
+    H = int(rh * len(rows) + rh * 0.3)
+    im = Image.new("RGBA", (W, H), (*GREEN, 255))
+    d = ImageDraw.Draw(im)
+    d.rectangle([5, 5, W - 6, H - 6], outline=WHITE, width=8)
+    ax = int(rh * 0.45)                             # downward arrow (lane assignment)
+    d.line([(ax, H * 0.22), (ax, H * 0.72)], fill=WHITE, width=max(10, rh // 9))
+    d.polygon([(ax - rh * 0.22, H * 0.66), (ax + rh * 0.22, H * 0.66), (ax, H * 0.84)], fill=WHITE)
+    for i, (refs, dest) in enumerate(rows):
+        y0 = int(rh * 0.15 + i * rh)
+        x = int(rh * 0.9)
+        for r in refs:
+            e = r.upper().startswith("E")
+            d.rounded_rectangle([x, y0 + rh * 0.18, x + shield_w, y0 + rh * 0.82], radius=8,
+                                fill=GREEN if e else RED, outline=WHITE, width=5)
+            bb = d.textbbox((0, 0), r, font=fs)
+            d.text((x + shield_w / 2 - (bb[2] - bb[0]) / 2 - bb[0], y0 + rh / 2 - (bb[3] - bb[1]) / 2 - bb[1]), r,
+                   font=fs, fill=WHITE)
+            x += shield_w + 12
+        x = int(rh * 0.9 + nsh * (shield_w + 12) + rh * 0.15)
+        bb = d.textbbox((0, 0), dest, font=f)
+        d.text((x - bb[0], y0 + rh / 2 - (bb[3] - bb[1]) / 2 - bb[1]), dest, font=f, fill=WHITE)
+    return im, W / px_m, H / px_m
+
+
 def plate_back(shape):
     im = _img(64, 64)
     ImageDraw.Draw(im).rectangle([0, 0, 63, 63], fill=GREY_BACK)

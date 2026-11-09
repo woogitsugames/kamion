@@ -210,6 +210,34 @@ def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
     for i in range(n):
         t = max(tau[i]) + 0.25
         trims[i] = min(t, max_trim[i])
+    # width-change joins ("straight" corners whose gutters never meet, e.g. a two-way road splitting into
+    # one-way entry/exit lanes around a gatehouse island): instead of a lateral kerb step at the trims,
+    # extend the wider arm so the kerb runs as a chamfer of 1 : S.CHAMFER_RATIO from the narrow arm's
+    # gutter end to the wider arm's gutter (WORKING_VALUE ratio, typical kerb taper at splitter islands).
+    for c in corners:
+        if c.kind != "straight" or c.arc is not None or n < 3:
+            continue
+        A, B = arms[c.k], arms[c.k1]
+        hA, hB = float(A.chain.hw_at(A.s(trims[c.k]))), float(B.chain.hw_at(B.s(trims[c.k1])))
+        if abs(hA - hB) < 0.4:
+            continue
+        wide, narrow, ws, ns = (c.k, c.k1, +1, -1) if hA > hB else (c.k1, c.k, -1, +1)
+        W, Nn = arms[wide], arms[narrow]
+        P = Nn.gutter(trims[narrow], ns)
+        gl, gd = W.line(ws, 0.0, min(LOOK, W.L))
+        dist = np.hypot(*(gl - P).T)
+        i0 = int(np.argmin(dist))
+        delta = float(dist[i0])
+        if not 0.3 < delta < 4.0:
+            continue
+        t_need = float(gd[i0]) + S.CHAMFER_RATIO * delta
+        t_w = min(t_need, max_trim[wide])
+        if t_w <= trims[wide] + 0.05:
+            continue                  # already long enough (or capped by the next junction)
+        trims[wide] = t_w
+        c.kind = "chamfer"            # joined end corner to end corner at the (final) trims, like "straight"
+        j.notes.append(f"corner {c.k}-{c.k1}: kerb chamfer 1:{S.CHAMFER_RATIO:g} over {t_w - float(gd[i0]):.1f} m "
+                       f"(width step {delta:.2f} m)")
     # median noses sit at the trims and bulge back toward the junction by r = gap / 2: push the
     # trims out by r so the nose does not intrude into the crossing carriageway
     for c in corners:
@@ -369,22 +397,44 @@ def patch_boundary(j: Junction):
         B = j.arms[(i + 1) % n]
         tb = j.trims[(i + 1) % n]
         # gutter of arm i (left) from trim inward to tau
-        nose_at_trim = c.kind in ("nose", "straight") and c.tau_k < 0
+        nose_at_trim = c.kind in ("nose", "straight", "chamfer") and c.tau_k < 0
         tk = t if nose_at_trim else c.tau_k
         tk1 = tb if nose_at_trim else c.tau_k1
+        x_pt = None
         if c.kind == "straight" and nose_at_trim and \
                 float(np.hypot(*(a.gutter(t, +1) - B.gutter(tb, -1)))) > 6.0:
             # trims differ a lot: keep the shorter arm's end corner and walk down the longer arm's gutter
             # to the point nearest to it (a taper), instead of a long diagonal across the patch
-            dd = np.linspace(0.0, max(t, tb), 60)
+            # If the longer arm's gutter starts INSIDE the shorter arm's carriageway (a narrow lane leaving a
+            # wide road, e.g. one-way gate lanes splitting off a two-way access road), the nearest point lies
+            # under the wide road and the kerb made a Z-step. Then continue the shorter arm's kerb line
+            # straight to where the longer arm's gutter emerges from under it (X) and follow that gutter.
+            dd = np.linspace(0.0, max(t, tb), 120)
             if t <= tb:
                 g = B.gutter(dd, -1)
-                tk1 = float(min(dd[int(np.argmin(np.hypot(*(g - a.gutter(t, +1)).T)))], tb))
+                PA, dA = a.gutter(t, +1), a.direction(t)
+                sd = (g - PA) @ np.array([-dA[1], dA[0]])
+                k = np.nonzero(sd >= 0.0)[0]
+                if len(k) and k[0] > 0 and dd[k[0]] < tb:
+                    tk1 = float(dd[k[0]])
+                    x_pt = PA + dA * float((g[k[0]] - PA) @ dA)
+                else:
+                    tk1 = float(min(dd[int(np.argmin(np.hypot(*(g - PA).T)))], tb))
             else:
                 g = a.gutter(dd, +1)
-                tk = float(min(dd[int(np.argmin(np.hypot(*(g - B.gutter(tb, -1)).T)))], t))
+                PB, dB = B.gutter(tb, -1), B.direction(tb)
+                sd = (g - PB) @ np.array([dB[1], -dB[0]])
+                k = np.nonzero(sd >= 0.0)[0]
+                if len(k) and k[0] > 0 and dd[k[0]] < t:
+                    tk = float(dd[k[0]])
+                    x_pt = PB + dB * float((g[k[0]] - PB) @ dB)
+                else:
+                    tk = float(min(dd[int(np.argmin(np.hypot(*(g - PB).T)))], t))
         for d in _desc(t, tk):
             out.append((a.gutter(d, +1), ("gutter", i, d, +1)))
+        if x_pt is not None and c.kind == "straight":
+            out.append((x_pt, ("arc", ci, 0.5)))
+            j.notes.append(f"corner {c.k}-{c.k1}: kerb line continued to the emerging lane edge (gate-type split)")
         if c.kind == "fillet":
             for f, p in zip(np.linspace(0, 1, len(c.arc))[1:-1], c.arc[1:-1]):
                 out.append((p, ("arc", ci, float(f))))
