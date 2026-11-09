@@ -1,7 +1,7 @@
 """Track A6 — automated sightline test: are the key instruments visible from the driver eye point?
 
     blender -b --factory-startup --python-exit-code 1 --python tools/blender/truck/interior/sightline_test.py -- \
-        [--report out.json] [--lod 0] [--rake 5]
+        [--report out.json] [--lod 0] [--rake 19]
 
 Builds the same interior as build_interior.py (no render), then casts rays from the eye point (and a small head box
 around it) to a dense grid of sample points on every key instrument rectangle. A sample is occluded when the first
@@ -118,7 +118,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--report", default="")
     p.add_argument("--lod", type=int, default=0)
-    p.add_argument("--rake", type=float, default=5.0)
+    p.add_argument("--rake", type=float, default=19.0)
     a = p.parse_args(argv)
     sys_argv = sys.argv
     sys.argv = [sys_argv[0], "--", "--out", os.path.join(BI.REPO, "artifacts"), "--rake", str(a.rake),

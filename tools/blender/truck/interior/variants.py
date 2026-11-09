@@ -28,10 +28,10 @@ def main():
     out = os.path.abspath(a.out)
     tmp = os.path.join(out, "_var")
     os.makedirs(tmp, exist_ok=True)
-    trims = [("grafit", "grafit (domyślny)"), ("piasek", "piasek"), ("koniak", "koniak"), ("lupek", "łupek")]
+    trims = [("grafit", "grafit"), ("piasek", "piasek"), ("koniak", "koniak (wybrany, domyślny)"), ("lupek", "łupek")]
     for t, _ in trims:
         blender(tmp, "pasazer,fotel", ["--trim", t, "--suffix", f"_{t}"], a.samples)
-    badges = [("none", "bez znaku (neutralny)"), ("trakt", "TRAKT"), ("bielik", "BIELIK"), ("narew", "NAREW")]
+    badges = [("none", "bez znaku (neutralny)"), ("trakt", "TRAKT (wybrany, domyślny)"), ("bielik", "BIELIK"), ("narew", "NAREW")]
     for b, _ in badges:
         blender(tmp, "piasta", ["--badge", b, "--suffix", f"_{b}"], a.samples)
     uv = ["uv", "run", "--no-project", "--with", "pillow", "python", SHEET]

@@ -211,6 +211,59 @@ def display(name, fname, strength=1.6, rough=0.08, fingerprints=0.0):
     return m
 
 
+def mirror_rt(name, fname, strength=0.7, tint=(1.0, 1.0, 1.0)):
+    """Render-only stand-in for a mirror RenderTexture (REVIEW-2026-11-09-r2 A6 #4): the quad shows a blurred 'probe'
+    image (make_textures.mirror_placeholders) as emission, plus the weak front-surface reflection of the cover glass.
+    The image has the cab flank on its inner edge at u = 1; quads on the right-hand side (world x > 0) read u mirrored.
+    Strength/tint are Value/RGB nodes named 'rt_strength'/'rt_tint' so the lighting setup can match the sky level
+    (mirror reflectance ~0.55 x sky radiance). In Unity each MIRROR_* quad shows its own camera RT instead."""
+    m, nt, out = _new(name)
+    PARAMS[name] = dict(kind="simple", tint=(0.85, 0.86, 0.87), rough=0.02, metal=1.0)
+    b = nt.nodes.new("ShaderNodeBsdfPrincipled")
+    nt.links.new(b.outputs[0], out.inputs["Surface"])
+    tc = nt.nodes.new("ShaderNodeUVMap")
+    tc.uv_map = "UVMap"
+    su = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(tc.outputs["UV"], su.inputs[0])
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+    sp = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(geo.outputs["Position"], sp.inputs[0])
+    right = _math(nt, "GREATER_THAN", sp.outputs["X"], 0.0)
+    one_m2u = _math(nt, "MULTIPLY_ADD", su.outputs["X"], -2.0)
+    one_m2u.node.inputs[2].default_value = 1.0
+    u2 = _math(nt, "MULTIPLY_ADD", right, one_m2u)
+    nt.links.new(su.outputs["X"], u2.node.inputs[2])
+    cb = nt.nodes.new("ShaderNodeCombineXYZ")
+    nt.links.new(u2, cb.inputs[0])
+    nt.links.new(su.outputs["Y"], cb.inputs[1])
+    t = nt.nodes.new("ShaderNodeTexImage")
+    t.image = img(fname, noncolor=False)
+    t.extension = "EXTEND"
+    nt.links.new(cb.outputs[0], t.inputs["Vector"])
+    rgb = nt.nodes.new("ShaderNodeRGB")
+    rgb.name = "rt_tint"
+    rgb.outputs[0].default_value = (*tint, 1)
+    st = nt.nodes.new("ShaderNodeValue")
+    st.name = "rt_strength"
+    st.outputs[0].default_value = strength
+    col = _mix_rgb(nt, 1.0, t.outputs["Color"], rgb.outputs[0], "MULTIPLY")
+    nt.links.new(col, b.inputs["Emission Color"])
+    nt.links.new(st.outputs[0], b.inputs["Emission Strength"])
+    b.inputs["Base Color"].default_value = (0.01, 0.01, 0.01, 1)
+    b.inputs["Roughness"].default_value = 0.03
+    b.inputs["Specular IOR Level"].default_value = 0.5
+    m.diffuse_color = (0.5, 0.52, 0.55, 1)
+    return m
+
+
+def set_mirror_level(strength, tint=(1.0, 1.0, 1.0)):
+    """Match the mirror placeholders to the current sky (see mirror_rt)."""
+    for m in bpy.data.materials:
+        if m.use_nodes and "rt_strength" in m.node_tree.nodes:
+            m.node_tree.nodes["rt_strength"].outputs[0].default_value = strength
+            m.node_tree.nodes["rt_tint"].outputs[0].default_value = (*tint, 1)
+
+
 def decal(name, fname, rgb, rough=0.6, alpha_from="alpha", tile_u=None, emit=None):
     """Alpha-tested decal (stitching, printed labels/icons). UVs come from the strip / quad itself."""
     m, nt, out = _new(name)

@@ -7,7 +7,7 @@
    "root": "CabInterior_LOD2",
    "objects": {
     "CAB_Interior_LOD2": {
-     "tris": 15470,
+     "tris": 15446,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -24,7 +24,7 @@
      "role": "CAB_Interior"
     },
     "CAB_ShellPlaceholder_LOD2": {
-     "tris": 2210,
+     "tris": 2198,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Metal"
@@ -96,10 +96,11 @@
      }
     },
     "STEERING_WHEEL_LOD2": {
-     "tris": 3256,
+     "tris": 3232,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
+      "MI_Cab_Metal",
       "MI_Cab_Decal"
      ],
      "pivot_unity_local": [
@@ -331,7 +332,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 21574,
+   "tris_total": 21514,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -368,17 +369,17 @@
      "size": 256
     }
    },
-   "hidden_faces_removed": 1247,
-   "tris_before_cleanup": 23958,
-   "build_s": 15.9,
-   "file_bytes": 2483532
+   "hidden_faces_removed": 1180,
+   "tris_before_cleanup": 23762,
+   "build_s": 15.8,
+   "file_bytes": 2499628
   },
   "LOD1": {
    "file": "art-source/truck/interior/export/SM_CabInterior_LOD1.fbx",
    "root": "CabInterior_LOD1",
    "objects": {
     "CAB_Interior_LOD1": {
-     "tris": 30383,
+     "tris": 30447,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -395,7 +396,7 @@
      "role": "CAB_Interior"
     },
     "CAB_ShellPlaceholder_LOD1": {
-     "tris": 2488,
+     "tris": 2459,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Rubber",
@@ -468,10 +469,11 @@
      }
     },
     "STEERING_WHEEL_LOD1": {
-     "tris": 4026,
+     "tris": 3986,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
+      "MI_Cab_Metal",
       "MI_Cab_Decal"
      ],
      "pivot_unity_local": [
@@ -727,7 +729,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 37767,
+   "tris_total": 37762,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -764,17 +766,17 @@
      "size": 256
     }
    },
-   "hidden_faces_removed": 3761,
-   "tris_before_cleanup": 45220,
-   "build_s": 23.8,
-   "file_bytes": 4452892
+   "hidden_faces_removed": 3752,
+   "tris_before_cleanup": 45200,
+   "build_s": 26.6,
+   "file_bytes": 4487868
   },
   "LOD0": {
    "file": "art-source/truck/interior/export/SM_CabInterior_LOD0.fbx",
    "root": "CabInterior_LOD0",
    "objects": {
     "CAB_Interior_LOD0": {
-     "tris": 64321,
+     "tris": 66641,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -791,7 +793,7 @@
      "role": "CAB_Interior"
     },
     "CAB_ShellPlaceholder_LOD0": {
-     "tris": 4316,
+     "tris": 4236,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Rubber",
@@ -864,10 +866,11 @@
      }
     },
     "STEERING_WHEEL_LOD0": {
-     "tris": 7800,
+     "tris": 7680,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
+      "MI_Cab_Metal",
       "MI_Cab_Decal"
      ],
      "pivot_unity_local": [
@@ -1123,7 +1126,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 78381,
+   "tris_total": 80501,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -1160,10 +1163,10 @@
      "size": 512
     }
    },
-   "hidden_faces_removed": 8733,
-   "tris_before_cleanup": 96896,
-   "build_s": 51.1,
-   "file_bytes": 8815308
+   "hidden_faces_removed": 9099,
+   "tris_before_cleanup": 99816,
+   "build_s": 60.4,
+   "file_bytes": 8940284
   }
  },
  "units": "metres",
@@ -1313,7 +1316,7 @@
      "size": 256
     }
    },
-   "notes": "alpha clip 0.5; colour = vertex tint x atlas RGB; bands: icons v 0.005-0.495, grille 0.505-0.87, stitch 0.88-0.995 (U repeats)"
+   "notes": "alpha clip 0.5; colour = vertex tint x atlas RGB; bands: icons v 0.005-0.495, grille 0.505-0.87, stitch 0.88-0.995 (U repeats); occlusion = _AO on uv1 like the opaque slots (uv1 is copied from the surface under the decal, so stitching does not glow under sky ambient)"
   },
   "MI_Cab_Glass": {
    "slot": "MI_Cab_Glass",

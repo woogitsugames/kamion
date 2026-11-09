@@ -4,7 +4,38 @@
 
 Wszystko nadal powstaje ze skryptów: nic nie było klikane ręcznie w Blenderze.
 
-## Co zmieniłem (punkty recenzji)
+## Runda 3 (2026-11-09, po recenzji `REVIEW-2026-11-09-r2.md`, sekcja A6 i punkt 8 listy top-12)
+
+Decyzje właściciela wpisane jako domyślne: **wstawki koniak**, **tylko cyfrowe zegary**, **znak TRAKT na piaście**, szyba koncepcji B (19°). Wszystkie rendery kontrolne i eksport (FBX, manifest) powstają teraz z tymi ustawieniami, bez dodatkowych przełączników.
+
+| # | Uwaga (r2) | Co zrobiłem | Dowód |
+|---|---|---|---|
+| A6 #2 | Biały pas u dołu szyby w URP-like | **Czarny ceramiczny pas (frit)** na wewnętrznej stronie szyby: 75 mm nad dolną krawędzią widocznej szyby, 50 mm u góry, 45 mm po bokach, do tego dwa rzędy kropek, które przechodzą w czystą szybę (jak w prawdziwych szybach). Zrobiony jako geometria 1,5 mm przed szybą, więc działa tak samo w Cycles, w URP-like i w grze (shader szyby nie potrzebuje maski). | `r3_kierowca_overcast_urp.jpg`, `kierowca_overcast_urp.jpg`, `zegary_*` |
+| A6 #3 | Rendery w koniaku | Koniak domyślny w `build_interior.py` i w eksporcie. Cały zestaw kontrolny powtórzony. | wszystkie kadry |
+| A6 #4 | Lusterka jako białe płyty | Szkło lusterek pokazuje teraz **zastępczy, rozmyty obraz** tego, co lusterko widzi na placu (niebo, linia lasu, hala, asfalt z linią, bok kabiny przy wewnętrznej krawędzi; lusterka krawężnikowe i przednie widzą asfalt). Jasność dobrana do nieba (odbicie ok. 0,55). To tylko zastępstwo do renderów: w grze każdy `MIRROR_*` dostaje obraz z własnej kamery. Przy okazji głowice lusterek stoją tam, gdzie w modelu zewnętrznym (y 0,78 zamiast 1,18) i są ustawione tak, jak ustawiłby je kierowca (kąt między okiem a polem widzenia). | `r3_pasazer_overcast_urp.jpg`, `pasazer_*` |
+| A6 #5 | Świecące przeszycia foteli w URP-like | Przyczyna: w podglądzie URP naklejki dostawały światło otoczenia **bez** mapy otoczenia (AO). Teraz dostają je tak samo jak powierzchnia pod spodem. Druga przyczyna: przy przenoszeniu UV1 z powierzchni pod naklejką narożniki jednej ścianki mogły trafić na różne wyspy atlasu (szum na kratce nawiewu, „tunel” na fricie). Teraz w takim przypadku cała ścianka bierze wartość ze środka. Nić jest ciepłoszara (0,34), a nie prawie biała. Kontrakt shadera w manifeście opisuje AO dla naklejek. | `r3_fotel_overcast_urp.jpg`, `fotel_*` |
+| A6 #6 | Brak rzędu kontrolek | Pełny rząd 13 kontrolek (ISO 2575, rysowane skryptem): hamulec postojowy, usterka hamulców, niskie ciśnienie I/II, ABS, ABS naczepy, retarder, check engine, świece żarowe, ładowanie, ciśnienie oleju, temperatura płynu, pasy, światła mijania. Zgaszone są ciemnoszare. Świecą 2, zgodnie ze stanem z kadru (jazda 82 km/h): **światła mijania i gotowość retardera** (zielone). Rząd mieści się w polu `telltales_row` testu linii wzroku. | `r3_zegary_overcast_urp.jpg`, `zegary_*` |
+| błąd | `ws_y()`: `--rake 19` pochylało szybę do przodu | Zmieniony znak. Szyba pochyla się do tyłu, tak jak w `exterior/body.py`. Domyślnie 19° (koncepcja B). Razem z szybą przesunęły się słupki A, przednia krawędź bocznej szyby, zasłony i schowek nad szybą. | wszystkie kadry, `sightline.json` (`rake_deg: 19`) |
+| błąd | Dół skóry drzwi 1,15 m, a krawędź kabiny w modelu zewnętrznym 1,225 m | Zastępcze poszycie (drzwi, boki, przód, tył) kończy się na `bottom_edge_z_m` z interfejsu drzwi (1,225 m). Punkt zaczepienia `CAB_MOUNT_REF` (1,15 m) się nie zmienia. | `stats.json` |
+| top-12 #2 | Drzwi ~0,3 m do tyłu (model zewnętrzny) | Wnętrze czyta `art-source/truck/exterior/door_interface.json` (z gałęzi `main`, autor: model zewnętrzny). Otwór drzwi to −0,56…0,76 m przy podłodze; przednia krawędź idzie pionowo za stałym panelem narożnym do 1,90 m, potem skośnie do słupka A (1,14 m na linii okna). Boczna szyba: tył −0,49, przód wzdłuż słupka A, 2,17…2,94 m. Boczek drzwi ma ten sam zarys. Podłokietnik, przełączniki, uchwyt, kieszeń i głośnik zostają tam, gdzie kierowca ich używa (fotel się nie przesunął), i są przycięte do krawędzi otworu. Tylna część boczka (ok. 0,45 m) jest gładka i zamyka się przy końcu leżanki. Leżankę zwęziłem o 90 mm z każdej strony, żeby boczek miał luz. Panel leżanki przeniosłem na ścianę za otworem. Bez pliku interfejsu skrypt wraca do wartości z A6. | `debug` z widoku bocznego (poza zestawem), `pasazer_*`, `r3_pasazer_overcast_urp.jpg` |
+
+**Pętla visual QA, runda 3 (oglądane po zmniejszeniu do 800 px):**
+1. Frit i kropki wyglądały dobrze w Cycles. Po poprawce kąta szyby **lusterka schowały się za słupkiem A i zasłoną** (widok z oka kierowcy, kamera pomocnicza). Przeniosłem głowice na pozycję z modelu zewnętrznego i ustawiłem je względem oka. Obraz zastępczy miał horyzont w połowie i za dużo nieba, więc przerobiłem go na widok ustawionego lusterka (horyzont na 1/3 wysokości).
+2. URP-like: w paśmie fritu widać było „tunel” (pomniejszony fragment atlasu AO), a kratka nawiewu przy szybie była zaszumiona. Przyczyna: przenoszenie UV1 na naklejki (opis wyżej). W niskim słońcu lusterka świeciły na biało, bo oświetlenie Cycles nadpisywało poziom ustawiony dla URP-like. Poza tym renderer zapisywał kadry URP-like do `C:\docs\…`, bo dostawał ścieżkę względną. Poprawione (`a6_export.py` zamienia ją na bezwzględną).
+3. Po wejściu interfejsu drzwi: nowy boczek i zwężona leżanka. Na boku oparcia fotela pojawiły się trójkątne plamy AO: stała wartość na ściankę psuła długie paski, na przykład taśmę pasa. Teraz paski mają płynne UV1, a stała wartość jest tylko tam, gdzie narożniki trafiają na różne wyspy. Ostatni zestaw jest czysty.
+
+**Wyniki kontroli (runda 3):** test linii wzroku **PASS** (LOD0 i LOD2, szyba 19°; dodatkowo PASS przy 5°), `check_export.py` **CHECK PASS** dla LOD0–2. Trójkąty: LOD0 **80 501** (≤ 90 tys.), LOD1 **37 762**, LOD2 **21 514**.
+
+**Nowe rendery i arkusze:** wszystkie `*_overcast*.jpg` i `*_lowsun*.jpg` (Cycles 512 spp i URP-like), `cycles_vs_urp_*.jpg` (odświeżone), `r3_*.jpg` (runda 2 obok rundy 3, URP-like). Arkusze `wariant_*` i `porownanie_*` są z rundy 2 (decyzje już zapadły) i ich nie zmieniałem.
+
+**Nadal otwarte (r3):**
+- Niskie słońce w URP-like: wnętrze dalej prawie czarne (A6 #1, decyzja `rendering-perf`: światło kabiny / sonda). Tego w tej rundzie nie ruszałem.
+- Wycieraczki w polu widzenia i słabe odbicie deski w szybie (A6 #7), klawiatura „jak kalkulator” na konsoli (A6 #8), kanciasty zagłówek (A6 #9), atlas AO (A6 #10), drzewa w tle (A6 #11) są w kolejce na A6.1.
+- Szyba wnętrza leży ok. 5 cm za szybą modelu zewnętrznego, a jej górna krawędź jest na 3,02 m (w modelu zewnętrznym 2,96 m). Do uzgodnienia przy składaniu w Unity: w grze potrzebna jest jedna szyba.
+- Lusterka i dach zastępczego poszycia (`CAB_ShellPlaceholder`) wystają poza nadwozie TRAKT. Po imporcie modelu zewnętrznego poszycie zastępcze się wyłącza.
+- Frit to geometria w grupie `CAB_Interior` (materiał „plastik”, prawie czarny). Jeśli Unity będzie używać szyby z modelu zewnętrznego, ten pas może tam zostać, bo i tak leży po wewnętrznej stronie.
+
+## Co zmieniłem w rundzie 2 (punkty recenzji)
 
 | # | Uwaga krytyka | Co zrobiłem | Dowód |
 |---|---|---|---|
@@ -15,7 +46,7 @@ Wszystko nadal powstaje ze skryptów: nic nie było klikane ręcznie w Blenderze
 | 12 | Pusta płyta deski po stronie pasażera, kaptur „doklejony”, góra deski biała w niskim słońcu | Dwie półki z gumową matą i rantem (środek i strona pasażera), kratka głośnika w rogu, uchwyt na dokumenty, uchwyt na kubek i USB przy konsoli, linie podziału paneli. Kaptur wyrasta z deski i ma 3 mm szczelinę podziału na styku. Soft-touch jest bardziej matowy i słabiej błyszczy. W ujęciu z niskim słońcem poprawiłem proporcję słońca do nieba (było ok. 20:1, przy niskim słońcu to za dużo). | `pasazer_lowsun.jpg`, `porownanie_pasazer_lowsun.jpg` |
 | 15 | Zaszumione AO, szyby i zasłony w wypalaniu, dużo zmarnowanego miejsca, „tekturowe” tło | Nowa mapa otoczenia (szczegóły niżej). Tło renderów to teraz **własny** plac logistyczny: zróżnicowany las sosnowo-brzozowy z kart, hala z doków, łaty i spękania asfaltu, betonowe płyty, naczepy, maszty z oprawami, chmury. Nic nie jest pobrane z internetu. | wszystkie kadry |
 
-## Rendery kontrolne (1600×900)
+## Rendery kontrolne (1600×900, od rundy 3: koniak, TRAKT, szyba 19°)
 
 Cycles (referencja, światło odbite) i URP-like (model oświetlenia gry), te same kamery co w A5:
 
@@ -89,6 +120,7 @@ uv run --no-project --with pillow --with numpy python tools/blender/truck/interi
 blender -b --factory-startup --python tools/blender/truck/interior/build_interior.py -- --out docs/reports/visual/truck-A6 --samples 512 --stats docs/reports/visual/truck-A6/stats.json
 blender -b --factory-startup --python-exit-code 1 --python tools/blender/truck/interior/sightline_test.py -- --report docs/reports/visual/truck-A6/sightline.json
 blender -b --factory-startup --python tools/blender/truck/interior/a6_export.py -- --lods 0,1,2 --urp-out docs/reports/visual/truck-A6
+# arkusze r3: uv run --no-project --with pillow python tools/blender/truck/interior/beforeafter.py OUT.jpg TYTUŁ lewy.jpg etykieta prawy.jpg etykieta
 blender -b --factory-startup --python-exit-code 1 --python tools/blender/truck/interior/check_export.py
 python tools/blender/truck/interior/variants.py --out docs/reports/visual/truck-A6
 ```

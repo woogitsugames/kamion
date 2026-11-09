@@ -46,7 +46,7 @@ TIERS = {"High": 1.0, "Medium": 0.5, "Low": 0.25}
 LOD1_DROP = ("rocker_led_", "hatch_pleat_", "din_btn_", "bunk_btn_", "fridge_vent", "socket_", "usb_p_", "cup_",
              "drawer_grip_", "rear_grip_", "oh_grip_", "_damper", "bunk_buckle_", "doc_clip_roller", "hvac_ring_",
              "start_ring", "stalk_boss_", "_lever_knob", "_lever_h", "_arm_pivot", "pocket_mat_", "spot_",
-             "mirror_spine_", "bunk_strap_", "tweeter_grille_", "dash_spk_rim")
+             "mirror_spine_", "bunk_strap_", "tweeter_grille_", "dash_spk_rim", "ws_frit_dots")
 LOD2_DROP = LOD1_DROP + ("_cst_", "_ctr_", "_bst_", "_btr_", "rocker_icon_", "hvac_icon_", "low_icon_", "light_icon",
                          "defrost_", "reading_lamp_", "pillow", "blanket", "curtain_side_", "hatch_blind", "_hr_collar",
                          "_belt_latch_grip", "_belt_guide", "_buckle", "_pocket_edge", "door_spk_grille_", "vent_",
@@ -59,7 +59,7 @@ LOD2_DROP = LOD1_DROP + ("_cst_", "_ctr_", "_bst_", "_btr_", "rocker_icon_", "hv
 # ---------------------------------------------------------------- slots (game materials)
 SLOT_OF = {
     "MI_Cab_Plastic": ("dash_soft", "dash_lower", "dash_mid", "dash_dark", "trim_insert", "trim_light", "metal_dark",
-                       "piano", "switch", "knob", "gap", "led_off", "lamp_lens", "yellow", "ext_plastic"),
+                       "piano", "switch", "knob", "gap", "led_off", "lamp_lens", "yellow", "ext_plastic", "frit"),
     "MI_Cab_Leather": ("leather", "leather_wheel", "leather_centre"),
     "MI_Cab_Fabric": ("headliner", "wall_fabric", "mattress", "curtain", "seat_fabric", "blind", "webbing"),
     "MI_Cab_Rubber": ("floor_mat", "rubber"),
@@ -67,14 +67,15 @@ SLOT_OF = {
     "MI_Cab_Decal": ("stitch", "stitch_dark", "icons", "grille", "grille_dash"),
     "MI_Cab_Glass": ("windscreen", "side_glass", "cover_glass"),
     "MI_Cab_Display": ("disp_cluster", "disp_info", "disp_din", "disp_gauges"),
-    "MI_Cab_MirrorRT": ("mirror",),
+    "MI_Cab_MirrorRT": ("mirror", "mirror_down"),
 }
 SLOT = {m: s for s, ms in SLOT_OF.items() for m in ms}
 DETAIL_SET = {"MI_Cab_Plastic": ("dashgrain", 1024), "MI_Cab_Leather": ("leather", 1024),
               "MI_Cab_Fabric": ("fabric", 512), "MI_Cab_Rubber": ("rubbermat", 1024), "MI_Cab_Metal": ("brushed", 512)}
 WEAR_MUL = {"leather": 2.3, "leather_wheel": 1.6, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3}
 NO_AO = ("curtain_", "blind_", "hatch_blind",     # thin interpenetrating cloth (critic #15) and the rim, which
-         "wheel_rim", "wheel_stitch")           # rotates (a baked occlusion pattern would turn with it): median value
+         "wheel_rim", "wheel_stitch",           # rotates (a baked occlusion pattern would turn with it): median value
+         "ws_frit")                             # A6 r3: frit on the glass (no surface under it to inherit UV1 from)
 
 # ---------------------------------------------------------------- functional groups (draw calls, pivots)
 def group_of(name):
@@ -457,14 +458,27 @@ def transfer_decal_uv1(obs):
         for p in me.polygons:
             if not at.data[p.index].value:
                 continue
-            for li in p.loop_indices:
-                co = mw @ me.vertices[me.loops[li].vertex_index].co
+            # A6 r3: per-corner lookup (smooth along strips such as belt webbing), but when the corners of one face land
+            # on different receiver islands (UVs far apart in the atlas) the whole face takes the value at its centre;
+            # before r3 such faces spanned unrelated atlas areas (noisy defroster grille, 'tunnel' in the frit).
+            def lookup(co):
                 hit = bvh.find_nearest(co, 0.03)
                 if hit[0] is None:
-                    continue
+                    return None
                 k = hit[2]
                 w = poly_3d_calc([tv[i] for i in tp[k]], hit[0])
-                uv[li].uv = sum((tri_uv[k][j] * w[j] for j in range(3)), Vector((0.0, 0.0)))
+                return sum((tri_uv[k][j] * w[j] for j in range(3)), Vector((0.0, 0.0)))
+            uvs = [lookup(mw @ me.vertices[me.loops[li].vertex_index].co) for li in p.loop_indices]
+            ok = [u for u in uvs if u is not None]
+            if not ok:
+                continue
+            if len(ok) < len(uvs) or max((a - b).length for a in ok for b in ok) > 0.05:
+                c = lookup(mw @ p.center)
+                if c is None:
+                    continue
+                uvs = [c] * len(uvs)
+            for li, u in zip(p.loop_indices, uvs):
+                uv[li].uv = u
                 n += 1
         me.attributes.remove(at)
     return n
@@ -800,10 +814,21 @@ def preview_materials(slot_textures, ao_path):
     nt.links.new(uvn_.outputs["UV"], t.inputs["Vector"])
     col = nt.nodes.new("ShaderNodeVertexColor")
     col.layer_name = "Col"
-    nt.links.new(M._mix_rgb(nt, 1.0, col.outputs["Color"], t.outputs["Color"], "MULTIPLY"), b.inputs["Base Color"])
+    dbase = M._mix_rgb(nt, 1.0, col.outputs["Color"], t.outputs["Color"], "MULTIPLY")
+    nt.links.new(dbase, b.inputs["Base Color"])
     nt.links.new(t.outputs["Alpha"], b.inputs["Alpha"])
     b.inputs["Roughness"].default_value = 0.6
     m.blend_method = "CLIP"
+    # A6 r3 (critic r2 #5): decals get the same ambient x occlusion as the surface under them (UV1 was transferred
+    # after the bake). Before r3 the preview added the sky ambient WITHOUT the AO map, so seat stitching glowed.
+    uvb = nt.nodes.new("ShaderNodeUVMap")
+    uvb.uv_map = "Bake"
+    aod = nt.nodes.new("ShaderNodeTexImage")
+    aod.image = ao_img
+    nt.links.new(uvb.outputs["UV"], aod.inputs["Vector"])
+    damb = M._mix_rgb(nt, 1.0, M._mix_rgb(nt, 1.0, dbase, ambient_node(nt), "MULTIPLY"), aod.outputs["Color"], "MULTIPLY")
+    nt.links.new(damb, b.inputs["Emission Color"])
+    b.inputs["Emission Strength"].default_value = 1.0
     # glass: thin, mostly transparent, Fresnel reflection, no shadow
     m = bpy.data.materials["MI_Cab_Glass"]
     nt = m.node_tree
@@ -1075,6 +1100,8 @@ def main():
     p.add_argument("--debug-col", action="store_true", help="URP renders show only the vertex tint (QA)")
     a = p.parse_args(argv)
     out = os.path.abspath(a.out)
+    if a.urp_out:   # A6 r3: Blender resolves a relative render path against the drive root, not the cwd
+        a.urp_out = os.path.abspath(a.urp_out)
     os.makedirs(out, exist_ok=True)
     tex = None
     man_path = a.manifest or os.path.join(out, "cab_interior_manifest.json")
@@ -1110,7 +1137,9 @@ def contract(tex, out):
             e["textures"] = {t: {k: (rel(v) if isinstance(v, str) else v) for k, v in d.items()} for t, d in tex[slot].items()}
         mats[slot] = e
     mats["MI_Cab_Plastic"]["metallic_from"] = mats["MI_Cab_Metal"]["metallic_from"] = "uv3.y"
-    mats["MI_Cab_Decal"]["notes"] = "alpha clip 0.5; colour = vertex tint x atlas RGB; bands: icons v 0.005-0.495, grille 0.505-0.87, stitch 0.88-0.995 (U repeats)"
+    mats["MI_Cab_Decal"]["notes"] = ("alpha clip 0.5; colour = vertex tint x atlas RGB; bands: icons v 0.005-0.495, grille 0.505-0.87, "
+                                     "stitch 0.88-0.995 (U repeats); occlusion = _AO on uv1 like the opaque slots (uv1 is "
+                                     "copied from the surface under the decal, so stitching does not glow under sky ambient)")
     mats["MI_Cab_Glass"]["notes"] = "transparent, Fresnel reflection (reflection probe), grime from T_Cab_GlassGrime on uv0 (1 tile = 1.1 m)"
     mats["MI_Cab_Display"]["notes"] = "unlit emissive; each DISPLAY_* object gets its own runtime RenderTexture / UI texture (uv0 0-1)"
     mats["MI_Cab_MirrorRT"]["notes"] = "each MIRROR_* quad shows its own mirror camera RenderTexture (uv0 0-1, mirror flip in the camera)"
@@ -1171,13 +1200,21 @@ def urp_renders(a, tex, manifest):
     for kind in a.urp_light.split(","):
         AMB_KIND[0] = kind
         preview_materials(tex, ao)
-        mr = bpy.data.materials["MI_Cab_MirrorRT"].node_tree.nodes.get("Principled BSDF")
-        mr.inputs["Emission Color"].default_value = (0.30, 0.31, 0.32, 1)   # stands in for the mirror RenderTexture
-        mr.inputs["Emission Strength"].default_value = 1.0
+        # A6 r3: the mirror RenderTextures are stood in for by a blurred 'probe' image (was a flat grey emission that
+        # rendered white); kerb/front mirrors look down at the ground
+        M.mirror_rt("MI_Cab_MirrorRT", "mirror_rt_side.png")
+        down = M.mirror_rt("MI_Cab_MirrorRT_down", "mirror_rt_down.png")
+        for ob in bpy.data.objects:
+            if ob.type == "MESH" and ob.name.startswith(("MIRROR_Kerb", "MIRROR_Front")):
+                for i, mm in enumerate(ob.data.materials):
+                    if mm and mm.name == "MI_Cab_MirrorRT":
+                        ob.data.materials[i] = down
         if a.debug_ao or a.debug_col:
             debug_ao_materials(ao, col=a.debug_col)
         add_ambient_to_backdrop(set())
         setup_urp_like(kind, a.urp_res)
+        lvl, tint = BI.MIRROR_LEVEL[kind]            # after set_lighting (which sets the Cycles level): scale by the dome
+        M.set_mirror_level(lvl * AMB[kind][1] / AMB["overcast"][1], tint)
         if a.debug_ao or a.debug_col:
             bpy.context.scene.view_settings.exposure = 0.0   # show the map values as they are
         for cname in BI.LIGHT_CAMS[kind]:
