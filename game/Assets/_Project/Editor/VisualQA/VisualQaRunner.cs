@@ -8,7 +8,9 @@ using Game.UI;
 using Game.UI.Driving;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using Game.Vehicle.Runtime;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace Game.Editor.VisualQA
 {
@@ -98,10 +100,36 @@ namespace Game.Editor.VisualQA
                 bool wasEnabled = cam.enabled;
                 qa.gameObject.SetActive(true);
 
+                // Vehicle mirrors and reversing cameras render into their textures first (LateUpdate does not run here).
+                foreach (var m in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None)) m.RenderNow();
+
+                // UI is rendered in its own pass (UI layer only, transparent clear) and composited over the world
+                // image (premultiplied "over"), exactly like the runtime Screen Space - Overlay canvas: world geometry
+                // can never draw over the HUD. (A Screen Space - Camera canvas on the world camera let non-static scene
+                // objects - signs, cones - draw over HUD buttons, e.g. the "0 m" sign over the gear "−" button.)
+                Camera uiCam = null;
+                int prevMask = cam.cullingMask;
+                bool ui = qa.includeDiagnosticsOverlay || qa.includeDrivingHud;
+                if (ui)
+                {
+                    var uiGo = new GameObject("QA_UICamera");
+                    uiGo.transform.SetPositionAndRotation(cam.transform.position, cam.transform.rotation);
+                    uiCam = uiGo.AddComponent<Camera>();
+                    uiCam.enabled = false;
+                    uiCam.fieldOfView = cam.fieldOfView; uiCam.nearClipPlane = 0.05f; uiCam.farClipPlane = 10f;
+                    uiCam.cullingMask = 1 << 5;
+                    uiCam.clearFlags = CameraClearFlags.SolidColor;
+                    uiCam.backgroundColor = new Color(0f, 0f, 0f, 0f);
+                    uiCam.allowHDR = false; uiCam.allowMSAA = false;
+                    var ud = uiGo.AddComponent<UniversalAdditionalCameraData>();
+                    ud.renderPostProcessing = false; ud.renderShadows = false; ud.antialiasing = AntialiasingMode.None;
+                    cam.cullingMask = prevMask & ~(1 << 5);
+                }
+
                 DiagnosticsOverlay overlay = null;
                 if (qa.includeDiagnosticsOverlay)
                 {
-                    overlay = DiagnosticsOverlay.Create(cam, new DefaultPlatformServices(), null);
+                    overlay = DiagnosticsOverlay.Create(uiCam, new DefaultPlatformServices(), null);
                     // Simulate the A16 camera cutout in landscape (left edge, ~4 % of width).
                     overlay.OverrideSafeAreaNormalized(new Rect(0.04f, 0f, 0.96f, 1f));
                 }
@@ -109,27 +137,52 @@ namespace Game.Editor.VisualQA
                 DrivingHud hud = null;
                 if (qa.includeDrivingHud)
                 {
-                    hud = DrivingHud.Create(cam, null);
+                    var ctx = new DrivingHudContext();
+                    if (qa.drivingHudReverseCamera)
+                    {
+                        var trailer = UnityEngine.Object.FindAnyObjectByType<TrailerBody>();
+                        var rc = trailer != null ? trailer.GetComponentInChildren<ReversingCamera>(true) : null;
+                        if (rc != null)
+                        {
+                            rc.RenderNow();
+                            var revTex = rc.Texture;
+                            ctx.ReverseCameraTexture = () => revTex;
+                            ctx.ReverseCameraLabel = () => "KAMERA COFANIA (naczepa)";
+                        }
+                    }
+                    hud = DrivingHud.Create(uiCam, ctx);
                     hud.OverrideSafeAreaNormalized(new Rect(0.04f, 0f, 0.96f, 1f));
                     hud.SetTelemetryVisible(qa.drivingHudTelemetry);
                     hud.RefreshNow();
                 }
 
-                var rt = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB)
-                { antiAliasing = 1 };
                 var prevTarget = cam.targetTexture;
-                cam.targetTexture = rt;
                 cam.enabled = true;
-                if (overlay != null) overlay.RefreshNow();
-                if (overlay != null || hud != null) Canvas.ForceUpdateCanvases();
-                cam.Render();
-
-                var prevActive = RenderTexture.active;
-                RenderTexture.active = rt;
-                var tex = new Texture2D(width, height, TextureFormat.RGB24, false);
-                tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+                var world = RenderToPixels(cam, width, height, out _);
+                Color32[] pixels = world;
+                if (ui)
+                {
+                    // Canvas roots must be on the UI layer for the UI-only camera; the camera must be enabled for canvases.
+                    if (hud != null) SetLayer(hud.transform, 5);
+                    if (overlay != null) SetLayer(overlay.transform, 5);
+                    uiCam.enabled = true;
+                    var over = RenderToPixels(uiCam, width, height, out _, () =>
+                    {
+                        // Lay the canvases out for the capture resolution (the camera now targets the texture).
+                        if (overlay != null) overlay.RefreshNow();
+                        Canvas.ForceUpdateCanvases();
+                    });
+                    for (int i = 0; i < pixels.Length; i++)
+                    {
+                        var u = over[i];
+                        int inv = 255 - u.a;
+                        pixels[i] = new Color32((byte)Mathf.Min(255, u.r + world[i].r * inv / 255), (byte)Mathf.Min(255, u.g + world[i].g * inv / 255),
+                            (byte)Mathf.Min(255, u.b + world[i].b * inv / 255), 255);
+                    }
+                }
+                var tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
+                tex.SetPixels32(pixels);
                 tex.Apply();
-                RenderTexture.active = prevActive;
 
                 string file = Path.Combine(outDir, qa.id + ".png");
                 File.WriteAllBytes(file, tex.EncodeToPNG());
@@ -138,10 +191,10 @@ namespace Game.Editor.VisualQA
 
                 cam.targetTexture = prevTarget;
                 cam.enabled = wasEnabled;
+                cam.cullingMask = prevMask;
+                if (uiCam != null) UnityEngine.Object.DestroyImmediate(uiCam.gameObject);
                 qa.gameObject.SetActive(wasActive);
                 UnityEngine.Object.DestroyImmediate(tex);
-                rt.Release();
-                UnityEngine.Object.DestroyImmediate(rt);
                 if (hud != null) UnityEngine.Object.DestroyImmediate(hud.gameObject);
                 if (overlay != null || hud != null)
                 {
@@ -151,6 +204,35 @@ namespace Game.Editor.VisualQA
                 }
             }
             return rendered;
+        }
+
+        static void SetLayer(Transform t, int layer)
+        {
+            t.gameObject.layer = layer;
+            for (int i = 0; i < t.childCount; i++) SetLayer(t.GetChild(i), layer);
+        }
+
+        /// <summary>Renders a camera into a temporary sRGB target and reads the pixels back (bottom-up rows).</summary>
+        static Color32[] RenderToPixels(Camera cam, int width, int height, out int count, Action beforeRender = null)
+        {
+            var rt = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB) { antiAliasing = 1 };
+            var prev = cam.targetTexture;
+            cam.targetTexture = rt;
+            beforeRender?.Invoke();
+            cam.Render();
+            var prevActive = RenderTexture.active;
+            RenderTexture.active = rt;
+            var tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            tex.Apply();
+            RenderTexture.active = prevActive;
+            cam.targetTexture = prev;
+            var px = tex.GetPixels32();
+            count = px.Length;
+            UnityEngine.Object.DestroyImmediate(tex);
+            rt.Release();
+            UnityEngine.Object.DestroyImmediate(rt);
+            return px;
         }
     }
 }
