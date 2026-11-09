@@ -143,6 +143,8 @@ namespace PhysicsRunner.Sim
         public double brakeAt = -1;
         public double brakeLevel = 1;
         public bool holdSteerOnBrake;
+        /// <summary>lanechange: pure-pursuit look-ahead [s of travel] (longer = smoother, less driver-induced weave).</summary>
+        public double lookaheadGain = 1.6;
         /// <summary>lanechange: start distance [m], transition length [m], offset [m], double lane change, hold length [m].</summary>
         public double startDistance = 30;
         public double length = 25;

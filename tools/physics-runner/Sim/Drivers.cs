@@ -101,12 +101,15 @@ namespace PhysicsRunner.Sim
     /// <summary>Pure-pursuit steering on the tractor rear-axle point (vehicle origin).</summary>
     static class PurePursuit
     {
-        public static double Steer(SimContext s, Vec3 target, double ld, double wheelbase)
+        public static double Steer(SimContext s, Vec3 target, double ld, double wheelbase, double yawRateGain = 0)
         {
             Vec3 p = s.Body.Position;
             Vec3 local = s.Body.Rotation.InverseRotate(target - p);
             double alpha = Math.Atan2(local.x, local.z);
-            double delta = Math.Atan(2 * wheelbase * Math.Sin(alpha) / ld);
+            double kappa = 2 * Math.Sin(alpha) / ld;
+            double delta = Math.Atan(wheelbase * kappa);
+            // Optional yaw-rate feedback (driver / lane-keeping style): damps the driver-vehicle loop.
+            if (yawRateGain > 0) delta += yawRateGain * (s.Tractor.SpeedForward * kappa - s.Tractor.YawRate);
             return MathUtil.Clamp(delta / s.Tractor.Steering.MaxAngle, -1, 1);
         }
     }
@@ -190,10 +193,10 @@ namespace PhysicsRunner.Sim
             _sc.Update(Math.Abs(s.Tractor.SpeedForward), dt, out double th, out double br);
             Vec3 p = s.Body.Position;
             double x = Vec3.Dot(p - _p0, _f0);
-            double ld = Math.Max(8.0, 1.0 * Math.Abs(s.Tractor.SpeedForward));
+            double ld = Math.Max(8.0, _d.lookaheadGain * Math.Abs(s.Tractor.SpeedForward));
             double xt = x + ld;
             Vec3 target = _p0 + _f0 * xt - _r0 * Offset(xt);
-            double steer = PurePursuit.Steer(s, target, ld, _wheelbase);
+            double steer = PurePursuit.Steer(s, target, ld, _wheelbase, 0.3);
             if (_d.brakeAt >= 0 && t >= _d.brakeAt) { th = 0; br = _d.brakeLevel; }
             return new DriverInput { Throttle = th, Brake = br, Steer = steer, Selector = GearSelector.Drive, RetarderLever = _d.retarderLever };
         }
@@ -244,7 +247,7 @@ namespace PhysicsRunner.Sim
             double ld = Math.Max(8.0, Math.Abs(s.Tractor.SpeedForward));
             double xt = x + ld;
             Vec3 target = _p0 + _f0 * xt - _r0 * Offset(xt);
-            double steer = PurePursuit.Steer(s, target, ld, _wheelbase);
+            double steer = PurePursuit.Steer(s, target, ld, _wheelbase, 0.3);
             double th = 0, br = 0;
             if (tc < 0.6 * P) _sc.Update(Math.Abs(s.Tractor.SpeedForward), dt, out th, out br);
             else if (tc < 0.85 * P) br = Math.Abs(s.Tractor.SpeedForward) > 0.2 ? 0.45 : 1.0;
