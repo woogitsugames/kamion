@@ -150,6 +150,14 @@ namespace Game.Editor.VisualQA
                             ctx.ReverseCameraLabel = () => "KAMERA COFANIA (naczepa)";
                         }
                     }
+                    if (qa.drivingHudMirrorInsets)
+                    {
+                        foreach (var mir in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None))
+                        {
+                            var mt = mir.Texture;
+                            if (mir.phase == 0) ctx.LeftMirrorTexture = () => mt; else ctx.RightMirrorTexture = () => mt;
+                        }
+                    }
                     hud = DrivingHud.Create(uiCam, ctx);
                     hud.OverrideSafeAreaNormalized(new Rect(0.04f, 0f, 0.96f, 1f));
                     hud.SetTelemetryVisible(qa.drivingHudTelemetry);

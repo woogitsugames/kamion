@@ -72,7 +72,7 @@ namespace Game.UI
             scaler.matchWidthOrHeight = 1f; // landscape: scale by height
             gameObject.AddComponent<GraphicRaycaster>();
 
-            var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            var font = UiFonts.Default;
 
             m_SafeArea = NewRect("SafeArea", transform);
             m_SafeArea.anchorMin = Vector2.zero;

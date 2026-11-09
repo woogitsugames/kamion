@@ -54,6 +54,9 @@ namespace Game.Gameplay
         string m_Status = "";
         float m_StatusUntil;
         ReversingCamera m_TractorCam, m_TrailerCam, m_ActiveRevCam;
+        RenderTextureMirror m_MirrorL, m_MirrorR;
+        bool m_MirrorInsets;
+        const string PrefMirrorInsets = "lab.mirrorInsets";
         bool m_AutopilotStart;
 
         public SteerMode CurrentSteerMode => m_SteerMode;
@@ -102,6 +105,9 @@ namespace Game.Gameplay
             m_Rig.eyeAnchor = visuals != null && visuals.cabPivot != null ? visuals.cabPivot.Find("DriverEyePoint") : null;
             m_TractorCam = vehicle.GetComponentInChildren<ReversingCamera>(true);
             m_TrailerCam = trailer != null ? trailer.GetComponentInChildren<ReversingCamera>(true) : null;
+            foreach (var mir in vehicle.GetComponentsInChildren<RenderTextureMirror>(true))
+                if (mir.phase == 0) m_MirrorL = mir; else m_MirrorR = mir;
+            m_MirrorInsets = PlayerPrefs.GetInt(PrefMirrorInsets, 1) != 0;
 
             m_Audio = gameObject.AddComponent<TruckAudioController>();
             m_Audio.vehicle = vehicle;
@@ -126,6 +132,12 @@ namespace Game.Gameplay
                 CouplingStatus = CouplingStatus,
                 ReverseCameraTexture = () => m_ActiveRevCam != null ? m_ActiveRevCam.Texture : null,
                 ReverseCameraLabel = () => m_ActiveRevCam == m_TrailerCam ? "KAMERA COFANIA (naczepa)" : "KAMERA SIODŁA (za kabiną)",
+                // Mirror strategy (visual review #14): in the cab view the main mirrors are shown as insets by default
+                // (usable at any head angle); look-around still shows the real glass. Toggle in the lab menu.
+                LeftMirrorTexture = () => MirrorInsetsOn && m_MirrorL != null ? m_MirrorL.Texture : null,
+                RightMirrorTexture = () => MirrorInsetsOn && m_MirrorR != null ? m_MirrorR.Texture : null,
+                MirrorInsets = () => m_MirrorInsets,
+                ToggleMirrorInsets = () => { m_MirrorInsets = !m_MirrorInsets; PlayerPrefs.SetInt(PrefMirrorInsets, m_MirrorInsets ? 1 : 0); },
             }, overlay: true);
             m_Hud.transform.SetParent(transform, false);
 
@@ -296,6 +308,7 @@ namespace Game.Gameplay
 
             // Extra cameras: mirrors only in the cab view; reversing view while in R (or forced on).
             RenderTextureMirror.GlobalEnabled = m_Rig.mode == CameraMode.Cab;
+            RenderTextureMirror.ForceRender = MirrorInsetsOn;
             bool rev = m_Selector == GearSelector.Reverse || m_ReverseCamForced;
             var want = !rev ? null : (vehicle.Coupled && m_TrailerCam != null ? m_TrailerCam : m_TractorCam);
             if (m_ActiveRevCam != want)
@@ -357,6 +370,8 @@ namespace Game.Gameplay
             t.LandingGearDown = !t.LandingGearDown;
             Flash(t.LandingGearDown ? "Nogi podporowe: opuszczanie" : "Nogi podporowe: podnoszenie");
         }
+
+        bool MirrorInsetsOn => m_MirrorInsets && m_Rig != null && m_Rig.mode == CameraMode.Cab;
 
         string CouplingStatus()
         {

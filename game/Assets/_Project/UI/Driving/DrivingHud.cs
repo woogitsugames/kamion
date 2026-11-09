@@ -44,6 +44,10 @@ namespace Game.UI.Driving
         /// <summary>Texture of the active reversing camera, or null when the view is hidden.</summary>
         public Func<Texture> ReverseCameraTexture;
         public Func<string> ReverseCameraLabel;
+        /// <summary>Main-mirror render textures shown as insets in the cab view (null = hidden).</summary>
+        public Func<Texture> LeftMirrorTexture, RightMirrorTexture;
+        public Action ToggleMirrorInsets;
+        public Func<bool> MirrorInsets;
     }
 
     /// <summary>
@@ -62,8 +66,8 @@ namespace Game.UI.Driving
     public sealed class DrivingHud : MonoBehaviour
     {
         const int Font = 30, SmallFont = 22;
-        static readonly Color k_Panel = new Color(0.06f, 0.065f, 0.07f, 0.66f);
-        static readonly Color k_Button = new Color(0.16f, 0.17f, 0.18f, 0.92f);
+        static readonly Color k_Panel = new Color(0.06f, 0.065f, 0.07f, 0.88f);
+        static readonly Color k_Button = new Color(0.16f, 0.17f, 0.18f, 0.95f);
         static readonly Color k_ButtonOn = new Color(0.30f, 0.36f, 0.30f, 0.92f);
         static readonly Color k_Text = new Color(0.95f, 0.95f, 0.91f, 1f);
         static readonly Color k_Muted = new Color(0.70f, 0.70f, 0.67f, 1f);
@@ -82,7 +86,9 @@ namespace Game.UI.Driving
         GameObject m_WheelGo, m_GyroGo, m_TelemetryPanel, m_LabPanel, m_ReversePanel;
         Text m_Coupling, m_ReverseLabel, m_LampAbs, m_LampStop, m_LampEb, m_LampRet, m_Air1, m_Air2, m_CruiseLabel, m_AbsFaultLabel;
         Image m_Air1Bar, m_Air2Bar;
-        RawImage m_ReverseImage;
+        RawImage m_ReverseImage, m_MirrorL, m_MirrorR;
+        GameObject m_MirrorLGo, m_MirrorRGo;
+        Text m_MirrorInsetLabel;
         readonly Image[] m_StalkCells = new Image[6];
         readonly Image[] m_SpawnBtns = new Image[4];
         Image m_CruiseBtn;
@@ -132,7 +138,7 @@ namespace Game.UI.Driving
             scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
             scaler.matchWidthOrHeight = 1f;
             gameObject.AddComponent<GraphicRaycaster>();
-            m_Font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            m_Font = UiFonts.Default;
 
             // Look pad first (behind everything) and full screen, not limited to the safe area.
             var look = Rect("LookPad", transform);
@@ -173,8 +179,16 @@ namespace Game.UI.Driving
             bar.anchorMin = Vector2.zero; bar.anchorMax = new Vector2(0f, 1f); bar.offsetMin = bar.offsetMax = Vector2.zero;
             m_RpmBar = bar.gameObject.AddComponent<Image>();
             m_RpmBar.color = k_Muted;
-            m_Rpm = Label(p, "Rpm", "600 obr/min", SmallFont, TextAnchor.UpperLeft, new Vector2(24f, 112f), new Vector2(300f, 30f));
-            m_Rpm.color = k_Muted;
+            for (int r = 500; r < 2100; r += 500)
+            {
+                var tick = Rect("RpmTick" + r, barBg);
+                float u = r / 2100f;
+                tick.anchorMin = new Vector2(u, -0.6f); tick.anchorMax = new Vector2(u, 1.6f);
+                tick.offsetMin = new Vector2(-1f, 0f); tick.offsetMax = new Vector2(1f, 0f);
+                var ti = tick.gameObject.AddComponent<Image>(); ti.color = new Color(1f, 1f, 1f, 0.55f); ti.raycastTarget = false;
+            }
+            m_Rpm = Label(p, "Rpm", "600 obr/min", 26, TextAnchor.UpperLeft, new Vector2(22f, 108f), new Vector2(300f, 34f));
+            m_Rpm.color = k_Text;
             m_Status = Label(m_SafeArea, "Status", "", SmallFont, TextAnchor.UpperCenter, Vector2.zero, new Vector2(900f, 34f));
             Place((RectTransform)m_Status.transform, new Vector2(0.5f, 1f), new Vector2(-450f, -280f), new Vector2(900f, 34f));
             m_Status.color = k_Amber;
@@ -213,7 +227,7 @@ namespace Game.UI.Driving
             Stretch(rot);
             var img = rot.gameObject.AddComponent<Image>();
             img.sprite = WheelSprite();
-            img.color = new Color(0.86f, 0.86f, 0.82f, 0.80f);
+            img.color = new Color(0.70f, 0.73f, 0.75f, 0.62f);
             img.raycastTarget = false;
             var w = root.gameObject.AddComponent<SteeringWheelWidget>();
             w.wheel = m_Ctx.Wheel;
@@ -237,7 +251,7 @@ namespace Game.UI.Driving
             var thr = PedalRect("Throttle", new Vector2(-230f, 40f), new Vector2(190f, 360f), k_ThrottleFill, "GAZ", v => { if (m_Ctx.Touch != null) m_Ctx.Touch.ThrottleRaw = v; });
             _ = brake; _ = thr;
             const float bw = 120f, bh = 92f, g = 12f;
-            float x = -24f - 4 * bw - 3 * g, y1 = 360f, y2 = y1 + bh + g;
+            float x = -24f - 4 * bw - 3 * g, y1 = 420f, y2 = y1 + bh + g; // throttle pedal top = 400
             Button(m_SafeArea, "R", br, new Vector2(x, y1), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestSelector(SelectorRequest.Reverse), out m_ReverseBtn).text = "R";
             Button(m_SafeArea, "N", br, new Vector2(x + (bw + g), y1), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestSelector(SelectorRequest.Neutral), out m_NeutralBtn).text = "N";
             Button(m_SafeArea, "D", br, new Vector2(x + 2 * (bw + g), y1), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestSelector(SelectorRequest.Drive), out m_DriveBtn).text = "D";
@@ -293,21 +307,26 @@ namespace Game.UI.Driving
             Button(m_SafeArea, "Legs", a, new Vector2(x0 + 2 * (w + gap), y3), new Vector2(w, h), () => m_Ctx.Touch?.RequestLandingGearToggle(), out _).text = "Nogi ↑↓";
 
             // ---- lab panel (spawn presets, ABS fault, reversing camera) ----
-            var lab = Panel("LabPanel", m_SafeArea, a, new Vector2(-24f, y3 - gap), new Vector2(3 * w + 2 * gap, 2 * h + 3 * gap + 36f));
+            var lab = Panel("LabPanel", m_SafeArea, a, new Vector2(-24f, y3 - gap), new Vector2(3 * w + 2 * gap, 3 * h + 4 * gap + 36f));
             lab.GetComponent<Image>().raycastTarget = true;
-            Label(lab, "Title", "Start zestawu (reset pozycji)", SmallFont - 2, TextAnchor.MiddleLeft, new Vector2(12f, 2 * h + 2 * gap), new Vector2(560f, 34f)).color = k_Muted;
+            Label(lab, "Title", "Start zestawu (reset pozycji)", SmallFont - 2, TextAnchor.MiddleLeft, new Vector2(12f, 3 * h + 3 * gap), new Vector2(560f, 34f)).color = k_Muted;
             string[] names = { "Solo", "Pusta", "24 t", "40 t" };
             float bw = (3 * w + 2 * gap - 5 * gap) / 4f;
             for (int i = 0; i < 4; i++)
             {
                 int idx = i;
-                Button(lab, "Spawn" + i, Vector2.zero, new Vector2(gap + i * (bw + gap), h + 2 * gap), new Vector2(bw, h), () => { m_Ctx.Spawn?.Invoke(idx); m_LabPanel.SetActive(false); }, out m_SpawnBtns[i]).text = names[i];
+                Button(lab, "Spawn" + i, Vector2.zero, new Vector2(gap + i * (bw + gap), 2 * h + 3 * gap), new Vector2(bw, h), () => { m_Ctx.Spawn?.Invoke(idx); m_LabPanel.SetActive(false); }, out m_SpawnBtns[i]).text = names[i];
             }
             float hw2 = (3 * w + 2 * gap - 3 * gap) / 2f;
-            m_AbsFaultLabel = Button(lab, "AbsFault", Vector2.zero, new Vector2(gap, gap), new Vector2(hw2, h), () => m_Ctx.ToggleAbsFault?.Invoke(), out _);
-            Button(lab, "RevCam", Vector2.zero, new Vector2(2 * gap + hw2, gap), new Vector2(hw2, h), () => m_Ctx.Touch?.RequestReverseCameraToggle(), out _).text = "Kamera cofania";
+            m_AbsFaultLabel = Button(lab, "AbsFault", Vector2.zero, new Vector2(gap, h + 2 * gap), new Vector2(hw2, h), () => m_Ctx.ToggleAbsFault?.Invoke(), out _);
+            Button(lab, "RevCam", Vector2.zero, new Vector2(2 * gap + hw2, h + 2 * gap), new Vector2(hw2, h), () => m_Ctx.Touch?.RequestReverseCameraToggle(), out _).text = "Kamera cofania";
             m_LabPanel = lab.gameObject;
             m_LabPanel.SetActive(false);
+
+            // ---- main-mirror insets (cab view), between the readout and the corner buttons ----
+            m_MirrorL = MirrorInset("MirrorInsetL", -460f, out m_MirrorLGo);
+            m_MirrorR = MirrorInset("MirrorInsetR", 300f, out m_MirrorRGo);
+            m_MirrorInsetLabel = Button(lab, "MirrorInsets", Vector2.zero, new Vector2(gap, gap), new Vector2(3 * w, h), () => m_Ctx.ToggleMirrorInsets?.Invoke(), out _);
 
             // ---- reversing camera view (top centre) ----
             var rev = Rect("ReverseView", m_SafeArea);
@@ -325,6 +344,23 @@ namespace Game.UI.Driving
             m_ReverseLabel = Label(rev, "Label", "KAMERA COFANIA", 18, TextAnchor.MiddleLeft, new Vector2(16f, 273f), new Vector2(320f, 36f));
             m_ReversePanel = rev.gameObject;
             m_ReversePanel.SetActive(false);
+        }
+
+        /// <summary>Mirror inset 160 × 290 at the top, x relative to the screen centre; image flipped like a mirror.</summary>
+        RawImage MirrorInset(string name, float x, out GameObject go)
+        {
+            var rt = Rect(name, m_SafeArea);
+            Place(rt, new Vector2(0.5f, 1f), new Vector2(x, -20f - 290f), new Vector2(160f, 290f));
+            var frame = rt.gameObject.AddComponent<Image>();
+            frame.color = new Color(0.03f, 0.03f, 0.035f, 0.95f); frame.raycastTarget = false;
+            var img = Rect("Image", rt);
+            img.anchorMin = Vector2.zero; img.anchorMax = Vector2.one; img.offsetMin = new Vector2(5f, 5f); img.offsetMax = new Vector2(-5f, -5f);
+            var ri = img.gameObject.AddComponent<RawImage>();
+            ri.uvRect = new Rect(1f, 0f, -1f, 1f); // mirror image
+            ri.raycastTarget = false;
+            go = rt.gameObject;
+            go.SetActive(false);
+            return ri;
         }
 
         Text Lamp(RectTransform parent, string text, float x)
@@ -482,6 +518,13 @@ namespace Game.UI.Driving
                 m_NextCoupling = Time.unscaledTime + 0.1f;
                 m_Coupling.text = m_Ctx.CouplingStatus() ?? "";
             }
+            SetInset(m_MirrorLGo, m_MirrorL, m_Ctx.LeftMirrorTexture);
+            SetInset(m_MirrorRGo, m_MirrorR, m_Ctx.RightMirrorTexture);
+            if (m_MirrorInsetLabel != null)
+            {
+                string ml = m_Ctx.MirrorInsets != null && m_Ctx.MirrorInsets() ? "Lusterka w kabinie: okienka" : "Lusterka w kabinie: tylko rozglądanie";
+                if (!ReferenceEquals(m_MirrorInsetLabel.text, ml)) m_MirrorInsetLabel.text = ml;
+            }
             var tex = m_Ctx.ReverseCameraTexture != null ? m_Ctx.ReverseCameraTexture() : null;
             bool show = tex != null;
             if (m_ReversePanel.activeSelf != show) m_ReversePanel.SetActive(show);
@@ -493,6 +536,14 @@ namespace Game.UI.Driving
         }
 
         float m_NextCoupling;
+
+        static void SetInset(GameObject go, RawImage img, Func<Texture> src)
+        {
+            var t = src != null ? src() : null;
+            bool on = t != null;
+            if (go.activeSelf != on) go.SetActive(on);
+            if (on && img.texture != t) img.texture = t;
+        }
 
         static readonly string[] k_DriveGears = BuildGearLabels("D"), k_ManualGears = BuildGearLabels("M");
 

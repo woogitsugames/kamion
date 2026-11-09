@@ -31,6 +31,8 @@ namespace Game.Vehicle.Runtime
     {
         /// <summary>Global switch (the driving lab turns mirrors off outside the cab view).</summary>
         public static bool GlobalEnabled = true;
+        /// <summary>Render even when the glass is not on screen (the HUD shows the textures as mirror insets).</summary>
+        public static bool ForceRender;
 
         public Renderer glass;
         /// <summary>Glass width / height (render-texture aspect).</summary>
@@ -85,7 +87,7 @@ namespace Game.Vehicle.Runtime
         void LateUpdate()
         {
             var cam = Cam;
-            if (!GlobalEnabled || glass == null || !glass.isVisible && m_Rt != null)
+            if (!GlobalEnabled || glass == null || !ForceRender && !glass.isVisible && m_Rt != null)
             {
                 cam.enabled = false;
                 return;

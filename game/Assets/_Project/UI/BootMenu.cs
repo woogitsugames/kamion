@@ -23,7 +23,7 @@ namespace Game.UI
             scaler.referenceResolution = new Vector2(1920f, 1080f);
             scaler.matchWidthOrHeight = 1f;
             go.AddComponent<GraphicRaycaster>();
-            var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            var font = UiFonts.Default;
             float w = 560f, h = 110f, gap = 20f;
             float total = entries.Length * w + (entries.Length - 1) * gap;
             for (int i = 0; i < entries.Length; i++)

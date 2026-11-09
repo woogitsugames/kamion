@@ -26,6 +26,9 @@ namespace Game.Rendering
         [Tooltip("With includeDrivingHud: show the reversing-camera view (rendered from the trailer's rear camera).")]
         public bool drivingHudReverseCamera;
 
+        [Tooltip("With includeDrivingHud: show the main-mirror insets (cab view).")]
+        public bool drivingHudMirrorInsets;
+
         [TextArea] public string note;
     }
 }
