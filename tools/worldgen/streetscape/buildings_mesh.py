@@ -28,6 +28,8 @@ from shapely.geometry import Polygon, shape
 
 from roads import standards as S
 
+from . import facade_kit as FK
+
 HALL_FUNCS = {"magazyn", "produkcyjny", "warsztat remontowo-naprawczy", "elektrociepłownia", "spalarnia śmieci",
               "industrial", "warehouse", "silos", "stacja pomp", "straż pożarna", "construction"}
 WAREHOUSE_FUNCS = {"magazyn", "produkcyjny", "warehouse", "industrial"}
@@ -151,11 +153,18 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
         acc.quad(layer, rv, B, C, C + back, B + back)          # right jamb (faces -d)
         w, h = ub - ua, vb - va
         acc.quad(layer, mat_in, A + back, B + back, C + back, D + back, uv=[[0, 0], [w, 0], [w, h], [0, h]])
-        if kind == "window" and w > 1.25:                   # mullion
+        if kind in ("window", "balcony") and w > 1.25:      # mullion
             um = 0.5 * (ua + ub)
             c = np.array(P(um, 0.5 * (va + vb))) + back + n3 * 0.04
             acc.box(layer, "window_frame", c, d3 * 0.035, n3 * 0.035, [0, 0, h / 2])
-        if kind == "window":                                 # transom + sill flashing
+        if kind == "ribbon":                                 # ribbon window: mullions every ~1.35 m + transom
+            k = max(1, int(round(w / 1.35)))
+            for i in range(1, k):
+                c = np.array(P(ua + w * i / k, 0.5 * (va + vb))) + back + n3 * 0.04
+                acc.box(layer, "window_frame", c, d3 * 0.03, n3 * 0.035, [0, 0, h / 2])
+            c = np.array(P(0.5 * (ua + ub), va + h * 0.72)) + back + n3 * 0.04
+            acc.box(layer, "window_frame", c, d3 * (w / 2), n3 * 0.03, [0, 0, 0.025])
+        if kind in ("window", "ribbon"):                     # transom + sill flashing
             c = np.array(P(0.5 * (ua + ub), va)) + n3 * 0.03
             acc.box(layer, "hall_flashing" if mat.startswith("hall") else "window_sill", c, d3 * (w / 2 + 0.04),
                     n3 * 0.05, [0, 0, 0.02])
@@ -264,8 +273,11 @@ def gable(acc, layer, rect, zeave, zridge, wall_mat, roof_mat):
 
 
 # ------------------------------------------------------------------------------------------- facades
-def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here):
-    """Openings for one wall edge (u along the edge from its start), in absolute z."""
+def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, variant=None):
+    """Openings for one wall edge (u along the edge from its start), in absolute z.
+    variant: ribbon (office: ribbon windows on the upper storeys), balcony (block: balcony doors every second
+    bay from the 1st floor), drive_door (hall: one 4.0 x 4.5 m sectional door on the main facade), main."""
+    variant = variant or {}
     ops = []
     if typ == "hall":
         if docks_here:
@@ -284,6 +296,10 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here):
                 if any(abs(um - (o[0] + o[1]) / 2) < 1.6 for o in ops):
                     continue
                 ops.append((um - 1.0, um + 1.0, zw, zw + 1.0, 0.12, "window", "glass"))
+        if variant.get("drive_door") and variant.get("main") and L > 25 and ztop - zref > 5.5:
+            um = L - 7.0
+            ops = [o for o in ops if o[1] < um - 2.6 or o[0] > um + 2.6]
+            ops.append((um - 2.0, um + 2.0, zref + 0.02, zref + 4.5, 0.2, "door", "garage_door"))
         return ops
     if typ == "shed":
         if is_main and L > 3.2 and hfloat(key, "gar") < 0.6:
@@ -314,8 +330,17 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here):
                 ops.append((um - dw / 2, um + dw / 2, zref + 0.15, zref + 2.4, 0.15, "door",
                             "door_glass" if typ == "office" else "door_steel"))
                 continue
+            if typ == "block" and variant.get("balcony") and s >= 1 and i % 2 == 0:
+                ops.append((um - 1.05, um + 0.95, z0 + 0.05, z0 + 2.25, 0.14, "balcony", "glass"))
+                continue
+            if typ == "office" and variant.get("ribbon") and s >= 1:
+                continue
             w = ww if not (typ == "block" and i % 3 == 2) else 0.9
             ops.append((um - w / 2, um + w / 2, z0 + sill, z0 + sill + wh, 0.14, "window", "glass"))
+        if typ == "office" and variant.get("ribbon") and s >= 1 and n >= 2:
+            u0 = (L - (n - 1) * pitch) / 2 - ww / 2
+            u1 = u0 + (n - 1) * pitch + ww
+            ops.append((u0, u1, z0 + sill, z0 + sill + wh, 0.12, "ribbon", "glass"))
     return ops
 
 
@@ -428,10 +453,11 @@ def load(fc, origin, overrides):
     return out
 
 
-def build(buf, blds, hf, zsample, yard_union, roads_poly, report):
+def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None):
     """Generate building meshes into buf; returns dock descriptions (for the paved aprons)."""
     all_docks = []
     counts = {}
+    signs = []
     for b in blds:
         poly, p, typ = b["poly"], b["props"], b["typ"]
         counts[typ] = counts.get(typ, 0) + 1
@@ -490,34 +516,76 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report):
         edges = ring_edges(work.exterior)
         dist = [roads_poly.distance(shapely.Point(*(0.5 * (a + c_)))) if roads_poly is not None else 0 for a, c_ in edges]
         main = int(np.argmin(dist)) if dist else 0
+        lens = [float(np.linalg.norm(c_ - a)) for a, c_ in edges]
+        # block: balconies on the long side(s) away from the main (entrance) facade
+        bal_edges = set()
+        if typ == "block" and storeys >= 3 and lens:
+            far = sorted(range(len(edges)), key=lambda i: -dist[i])
+            for i in far[:2]:
+                if lens[i] > 12 and i != main:
+                    bal_edges.add(i)
+        variant = {"ribbon": typ == "office" and FK.hfloat(key, "ribbon") < 0.5,
+                   "drive_door": typ == "hall" and FK.hfloat(key, "drive") < 0.5}
+        scheme = FK.hall_scheme(key, wall) if typ == "hall" else None
+        insulated = typ == "block" and FK.hfloat(key, "etics") < 0.7
+        if typ == "block" and not insulated:
+            wall = "panel_concrete"
+        accent = FK.hpick(FK.ACCENT_PLASTER, key, "accent")
+        wooden = typ == "house" and storeys == 1 and poly.area < 120 and FK.hfloat(key, "wood") < 0.12
+        if wooden:
+            wall = "wood_planks" if FK.hfloat(key, "woodc") < 0.6 else "wood_planks_green"
         u_acc = 0.0
         dock_edges = {tuple(np.round(dk["edge"][0], 2)): dk for dk in docks}
+        nouts = []
+        signed = False
         for ei, (a, c_) in enumerate(edges):
             L = float(np.linalg.norm(c_ - a))
             if L < 0.05:
+                nouts.append(np.array([0.0, 0.0]))
                 continue
             d = (c_ - a) / L
             nout = np.array([d[1], -d[0]])
+            nouts.append(nout)
             dk = dock_edges.get(tuple(np.round(a, 2)))
             zt = zeave
-            ops = facade_openings(typ, L, zref, zt, storeys, f"{key}:{ei}", ei == main or (typ == "hall" and L > 30),
-                                  dk is not None)
+            is_main = ei == main or (typ == "hall" and L > 30)
+            ops = facade_openings(typ, L, zref, zt, storeys, f"{key}:{ei}", is_main, dk is not None,
+                                  dict(variant, balcony=ei in bal_edges, main=ei == main))
             if dk:
                 zf = dk["yard_z"] + S.DOCK_FLOOR_H
                 for dock in dk["docks"]:
                     ops.append((dock["u"] - S.DOCK_DOOR_W / 2, dock["u"] + S.DOCK_DOOR_W / 2, zf, zf + S.DOCK_DOOR_H,
                                 0.25, "dock", "dock_door"))
             if typ == "hall":
-                # plinth (concrete, up to dock floor) + sandwich panels + flashing band on top
+                # plinth (concrete, up to dock floor) + cladding scheme + coping on top
                 zpl = (dk["yard_z"] + S.DOCK_FLOOR_H) if dk else zref + 0.6
-                wall_with_openings(acc, "buildings", "hall_plinth", a, d, nout, L, zbot, zpl,
-                                   [o for o in ops if o[2] < zpl], u0=u_acc, vref=zref)
-                wall_with_openings(acc, "buildings", wall, a, d, nout, L, zpl, zt - 0.4,
-                                   [(o[0], o[1], max(o[2], zpl), o[3], o[4], o[5], o[6]) for o in ops if o[3] > zpl],
-                                   u0=u_acc, vref=zref)
+                zlow = FK.safe_z(zref + scheme["low"][1], ops, zpl, zt - 0.4, 0.45) if scheme["low"] else None
+                ztopb = FK.safe_z(zt - 0.4 - scheme["top"][1], ops, zpl, zt - 0.4) if scheme["top"] else None
+
+                def hall_mat(u0, u1, z0, z1, zpl=zpl, zlow=zlow, ztopb=ztopb):
+                    if z1 <= zpl + 1e-6:
+                        return "hall_plinth"
+                    if zlow is not None and z1 <= zlow + 1e-6:
+                        return scheme["low"][0]
+                    if ztopb is not None and z0 >= ztopb - 1e-6:
+                        return scheme["top"][0]
+                    return wall
+                FK.wall_pieces(wall_with_openings, acc, a, d, nout, L, zbot, zt - 0.4, ops, u_acc, zref,
+                               [zpl, zlow, ztopb], [], hall_mat)
                 P3 = lambda q, z: [q[0], q[1], z]
                 acc.quad("buildings", "hall_flashing", P3(a + nout * 0.03, zt - 0.4), P3(c_ + nout * 0.03, zt - 0.4),
                          P3(c_ + nout * 0.03, zt), P3(a + nout * 0.03, zt))
+                if scheme["gutter"] and L > 20:
+                    FK.gutter(acc, a, c_, nout, zt - 0.02)
+                    for u in FK.downpipe_positions(L, ops, f"{key}:{ei}", 18.0):
+                        FK.downpipe(acc, a, d, nout, u, zbot + 0.4, zt - 0.12, hopper=False)
+                else:
+                    FK.coping(acc, a, c_, nout, zt)
+                    for u in FK.downpipe_positions(L, ops, f"{key}:{ei}", 22.0):
+                        FK.downpipe(acc, a, d, nout, u, zbot + 0.4, zt - 0.75, hopper=True)
+                for o in ops:                                         # canopies over personnel doors
+                    if o[5] == "door" and o[6] == "door_steel":
+                        FK.canopy(acc, a, d, nout, (o[0] + o[1]) / 2, o[1] - o[0] + 0.8, o[3] + 0.35, 0.9)
                 if dk:
                     for dock in dk["docks"]:
                         build_dock(acc, "buildings", a, d, nout, dock["u"], dk["yard_z"], dock["num"])
@@ -528,18 +596,65 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report):
                         cm = a + d * (0.5 * (u0d + u1d)) + nout * 1.0
                         acc.box("buildings", "steel_painted", [cm[0], cm[1], cz], np.append(d * (u1d - u0d) / 2, 0),
                                 np.append(nout * 1.0, 0), [0, 0, 0.08])
+                        signs.append(FK.sign_instance("dostawy", a, d, nout, u0d - 3.0 if u0d > 6 else u1d + 3.0,
+                                                      cz + 1.2, f"{key}:{ei}"))
+                if is_main and not signed and L > 25 and (hero or FK.hfloat(key, "sign") < 0.6):
+                    code = "hala_a" if hero else FK.hpick(["hala_b", "hala_c", "hala_d", "magazyn"], key, "code")
+                    u = FK.safe_u(L * (0.18 if FK.hfloat(key, "su") < 0.5 else 0.82), ops, L)
+                    if u is not None and zt - zref > 6.5:
+                        signs.append(FK.sign_instance(code, a, d, nout, u, zt - 1.6, f"{key}:{ei}"))
+                        signed = True
             else:
                 zpl = zref + 0.35
-                wall_with_openings(acc, "buildings", "plinth_dark", a, d, nout, L, zbot, zpl,
-                                   [o for o in ops if o[2] < zpl], u0=u_acc, vref=zref)
-                wall_with_openings(acc, "buildings", wall, a, d, nout, L, zpl, zt,
-                                   [(o[0], o[1], max(o[2], zpl), o[3], o[4], o[5], o[6]) for o in ops if o[3] > zpl],
-                                   u0=u_acc, vref=zref)
+                usplits = []
+                if insulated and ei == main and L > 12:              # accent field on the stairwell axis
+                    door = [o for o in ops if o[5] == "door"]
+                    if door:
+                        um = (door[0][0] + door[0][1]) / 2
+                        usplits = [FK.safe_u(um - 1.6, ops, L), FK.safe_u(um + 1.6, ops, L)]
+                gable_accent = insulated and L < 16 and FK.hfloat(key, "gable") < 0.6
+
+                def plaster_mat(u0, u1, z0, z1, usplits=usplits, gable_accent=gable_accent, zpl=zpl):
+                    if z1 <= zpl + 1e-6:
+                        return "plinth_dark"
+                    if gable_accent:
+                        return accent
+                    if len(usplits) == 2 and None not in usplits and usplits[0] - 1e-6 <= u0 and u1 <= usplits[1] + 1e-6:
+                        return accent
+                    return wall
+                FK.wall_pieces(wall_with_openings, acc, a, d, nout, L, zbot, zt, ops, u_acc, zref, [zpl],
+                               [u for u in usplits if u is not None] if None not in usplits else [], plaster_mat)
+                if typ == "block":
+                    for o in ops:
+                        if o[5] == "balcony":
+                            FK.balcony(acc, a, d, nout, (o[0] + o[1]) / 2, o[1] - o[0] + 0.4, o[2] - 0.03)
+                        elif o[5] == "door":
+                            FK.canopy(acc, a, d, nout, (o[0] + o[1]) / 2, 2.6, o[3] + 0.3, 1.4, mat="balcony_slab")
+                elif typ == "office":
+                    for o in ops:
+                        if o[5] == "door":
+                            FK.canopy(acc, a, d, nout, (o[0] + o[1]) / 2, 3.2, o[3] + 0.45, 1.6, posts=False)
+                            if not signed and zt - zref > 4.0:
+                                code = FK.hpick(["biuro", "recepcja", "serwis", "biuro"], key, "osign")
+                                signs.append(FK.sign_instance(code, a, d, nout, (o[0] + o[1]) / 2, o[3] + 1.05,
+                                                              f"{key}:{ei}"))
+                                signed = True
+                    if L > 8:
+                        for u in (0.35, L - 0.35):
+                            FK.downpipe(acc, a, d, nout, u, zbot + 0.4, zt - 0.4, hopper=True)
+                elif typ == "house":
+                    for o in ops:
+                        if o[5] == "door":
+                            FK.canopy(acc, a, d, nout, (o[0] + o[1]) / 2, 1.6, o[3] + 0.25, 0.9,
+                                      mat="roof_metal_graphite" if not wooden else "wood_planks")
             # LOD1 + collision: plain wall
             for layer, mat in (("buildings_low", wall), ("collision", "collision_building")):
                 acc.quad(layer, mat, [a[0], a[1], zbot], [c_[0], c_[1], zbot], [c_[0], c_[1], zt], [a[0], a[1], zt],
                          uv=[[u_acc, zbot - zref], [u_acc + L, zbot - zref], [u_acc + L, zt - zref], [u_acc, zt - zref]])
             u_acc += L
+        if typ == "hall" and len(edges) >= 3:                       # corner flashings
+            for i, (a, c_) in enumerate(edges):
+                FK.corner_trim(acc, a, nouts[i - 1], nouts[i], zref + 0.6, zeave - 0.4)
         # courtyard walls (holes), plain
         for hole in poly.interiors if not pitched else []:
             for a, c_ in ring_edges(hole):
@@ -550,12 +665,31 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report):
             for layer in ("buildings", "buildings_low"):
                 gable(acc, layer, work, zeave, ztop, wall, roof)
             gable(acc, "collision", work, zeave, ztop, "collision_building", "collision_building")
+            # eaves gutters (long sides) + downpipes at two corners, chimney
+            cw = np.asarray(work.exterior.coords)[:4]
+            ew = [np.linalg.norm(cw[(i + 1) % 4] - cw[i]) for i in range(4)]
+            kk = 0 if ew[0] >= ew[1] else 1
+            for i in (kk, kk + 2):
+                a, c_ = cw[i % 4], cw[(i + 1) % 4]
+                dd_ = (c_ - a) / max(np.linalg.norm(c_ - a), 1e-6)
+                nn_ = np.array([dd_[1], -dd_[0]])
+                FK.gutter(acc, a, c_, nn_, zeave - 0.25, proud=0.38)
+                FK.downpipe(acc, a, dd_, nn_ * 1.0, 0.25 if i == kk else float(np.linalg.norm(c_ - a)) - 0.25,
+                            zbot + 0.4, zeave - 0.35, hopper=False)
+            if not wooden or FK.hfloat(key, "wchim") < 0.8:
+                FK.chimney(acc, work, ztop, key)
         else:
             roof_flat(acc, "buildings", poly, zeave, attic=0.3 if typ in ("hall", "office", "block") else 0.15,
                       skylights=typ == "hall", key=key)
             roof_flat(acc, "buildings_low", poly, zeave, attic=0.0)
             roof_flat(acc, "collision", poly, zeave, mat="collision_building", attic=0.0)
+            if typ == "hall" and poly.area > 600:
+                FK.roof_vents(acc, poly, zeave - 0.3, key, "hall")
+            elif typ == "block":
+                FK.roof_vents(acc, poly, zeave - 0.3, key, "block")
         acc.flush(buf, key)
     report.update({"typologies": counts, "docks": sum(len(d["docks"]) for d in all_docks),
-                   "dock_facades": [d["id"] for d in all_docks]})
+                   "dock_facades": [d["id"] for d in all_docks], "facade_signs": len(signs)})
+    if sign_out is not None:
+        sign_out.extend(signs)
     return all_docks
