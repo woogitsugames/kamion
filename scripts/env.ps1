@@ -76,9 +76,13 @@ function Invoke-UnityBatch {
     Write-Host "unity: $UnityExe $($argList -join ' ')"
     Repair-UnityLicenseVisibility
     $env:JAVA_HOME = $AndroidJdk
-    # Call operator + pipe: waits for the GUI-subsystem Unity.exe.
-    & $UnityExe @argList 2>&1 | Out-Host
-    $code = $LASTEXITCODE
+    # Wait for Unity.exe itself only: Unity may start long-lived children (adb server, licensing
+    # client) that inherit pipes, so neither piping its output nor Start-Process -Wait (waits for
+    # the whole tree) is safe. Progress goes to the -logFile.
+    $p = Start-Process -FilePath $UnityExe -ArgumentList $argList -NoNewWindow -PassThru
+    $null = $p.Handle  # cache the handle so ExitCode is available after exit
+    $p.WaitForExit()
+    $code = $p.ExitCode
     if ($code -eq 198) { Write-Warning 'Unity exit 198 = no licence visible to this process. See docs/ENVIRONMENT_AUDIT.md (MSIX AppData virtualisation).' }
     return $code
 }
