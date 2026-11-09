@@ -327,7 +327,16 @@ def headlamps():
     set_group("cab")
     for s in (-1, 1):
         poly = CFG["lamp"] if s > 0 else mirror_poly(CFG["lamp"])
-        CAB.poly_patch(f"lamp_back_{s}", "lamp_inner", "front", poly, off=-0.06, sub=6)
+        CAB.poly_patch(f"lamp_back_{s}", "dark_chrome", "front", poly, off=-0.06, sub=6)
+        # LED high-beam array between the T-bar and the projectors (5 modules)
+        for k in range(5):
+            x0 = 0.80 + k * 0.088
+            CAB.quad_patch(f"hb_led_{s}_{k}", "led_off", "front",
+                           [(s * x0, 1.455), (s * (x0 + 0.06), 1.455), (s * (x0 + 0.06), 1.50), (s * x0, 1.50)],
+                           off=-0.04, nu=2, nv=1, thick=0.012)
+            CAB.quad_patch(f"hb_bezel_{s}_{k}", "lamp_inner", "front",
+                           [(s * (x0 - 0.008), 1.447), (s * (x0 + 0.068), 1.447), (s * (x0 + 0.068), 1.508),
+                            (s * (x0 - 0.008), 1.508)], off=-0.05, nu=2, nv=1, thick=0.008)
         # dark-chrome inner bezel band below the lens edge
         for k, ((x0, z0), (x1, z1)) in enumerate(CFG["drl"]):
             drl_guide(f"drl_{s}_{k}", s, (x0, z0), (x1, z1))
@@ -414,12 +423,12 @@ def mirrors(kind="classic", front=True):
             xh = s * 1.50
             yh = base.y - 0.10
             # arm: upper beam + lower strut, satin black
-            tube(f"mirror_arm_{s}", [base + V((s * 0.0, 0, 0.06)), V((s * 1.33, yh + 0.02, 3.05)),
-                                     V((xh, yh, 3.00))], 0.018, "plastic_satin", seg=10)
+            tube(f"mirror_arm_{s}", [base + V((s * 0.0, 0, 0.03)), V((s * 1.33, yh + 0.02, 2.99)),
+                                     V((xh, yh, 2.94))], 0.015, "plastic_satin", seg=10)
             tube(f"mirror_strut_{s}", [V(CAB.side_pt(2.25, win_front(2.25) - 0.02, s, 0.0)),
                                        V((xh - s * 0.02, yh, 2.08))], 0.014, "plastic_satin", seg=10)
             # class II main + class IV wide-angle heads; body-colour back caps
-            for nm, zc, hgt in (("main", 2.62, 0.42), ("wide", 2.20, 0.20)):
+            for nm, zc, hgt in (("main", 2.60, 0.42), ("wide", 2.20, 0.20)):
                 sh = box(f"mirror_{nm}_{s}", (xh, yh, zc), (0.24, 0.085, hgt), "plastic_satin", bev=0.03, seg=4)
                 cap = box(f"mirror_{nm}_cap_{s}", (xh, yh + 0.02, zc), (0.235, 0.06, hgt - 0.01), "paint", bev=0.03,
                           seg=4)
@@ -489,7 +498,8 @@ def lower_fairing():
     me.shade_smooth()
     if hasattr(me, "set_sharp_from_angle"):
         me.set_sharp_from_angle(angle=math.radians(45))
-    bevel(lo, 0.006, 2, angle=50)
+    # no bevel modifier here: on the booleaned n-gons it spiked a vertex to the ground (seen in A4 ortho
+    # renders); edges stay crisp via sharp-edge smoothing, the bevel comes back with the A6 retopo
     for s in (-1, 1):
         # arch flare (defined edge) and inner wheelhouse liner
         arch(f"arch_flare_{s}", 0.0, WHEEL_Z, ARCH_R - 0.004, ARCH_R + 0.035, s * (CAB_HALF_W - 0.03),
@@ -518,7 +528,7 @@ def lower_fairing():
     LOW.patch("bumper_split", "gap", "front", 0.872, 0.880, -1.6, 1.6, off=0.001, nz=1, npar=60)
     # number plate (PL/EU 520 x 114 mm) on a dark holder
     LOW.patch("plate_holder", "plastic", "front", 0.765, 0.905, -0.275, 0.275, off=0.001, thick=0.008, nz=2, npar=8)
-    LOW.patch("plate", "plate", "front", 0.778, 0.892, -0.26, 0.26, off=0.0105, nz=1, npar=4)
+    G.plate_uv(LOW.patch("plate", "plate", "front", 0.778, 0.892, -0.26, 0.26, off=0.0105, nz=1, npar=4), 1)
     LOW.patch("tow_cover", "gap", "front", 1.02, 1.025, -0.12, 0.12, off=0.001, nz=1, npar=2)
     LOW.patch("tow_cover_b", "gap", "front", 0.93, 0.935, -0.12, 0.12, off=0.001, nz=1, npar=2)
     for s in (-1, 1):
@@ -545,7 +555,7 @@ def interior_proxies():
     """Simple dark volumes standing in for the A5 interior: dash, wheel, seats, curtain, overhead shelf.
     Kept out of the exterior triangle budget (group 'interior_proxy')."""
     set_group("interior_proxy")
-    box_mm("ip_dash", -1.16, 1.16, 1.02, 1.40, 1.55, 2.09, "interior", bev=0.04, seg=3)
+    box_mm("ip_dash", -1.04, 1.04, 1.00, 1.33, 1.60, 2.09, "interior", bev=0.04, seg=3)
     box_mm("ip_hood", -0.85, -0.25, 1.00, 1.18, 2.09, 2.17, "interior", bev=0.03, seg=3)
     import bmesh as _b
     bm = _b.new()

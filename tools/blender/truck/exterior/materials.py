@@ -94,6 +94,28 @@ def principled(name, slot, rgb, rough, metal=0.0, coat=0.0, spec=0.5, aniso=0.0,
     return m, nt, b
 
 
+def thin_glass(name, slot, tint, rough=0.0, ior=1.52):
+    """Thin sheet glass (single-surface glazing/lenses): transparent with Fresnel reflection, no
+    refraction - a single-sided Principled transmission surface would act as a solid lens."""
+    m, nt, b = _new(name, slot)
+    out = nt.nodes["Material Output"]
+    nt.nodes.remove(b)
+    tr = N(nt, "ShaderNodeBsdfTransparent")
+    tr.inputs["Color"].default_value = (*tint, 1)
+    gl = N(nt, "ShaderNodeBsdfGlossy", Roughness=rough)
+    gl.inputs["Color"].default_value = (1, 1, 1, 1)
+    # Layer Weight Fresnel is symmetric front/back; the Fresnel node inverts the IOR on back faces and
+    # gives total internal reflection when seen from inside the cab (thin sheets have no inside)
+    fr = N(nt, "ShaderNodeLayerWeight", Blend=0.16 if ior > 1.5 else 0.10)
+    mix = N(nt, "ShaderNodeMixShader")
+    L(nt, fr.outputs["Fresnel"], mix.inputs[0])
+    L(nt, tr.outputs[0], mix.inputs[1])
+    L(nt, gl.outputs[0], mix.inputs[2])
+    L(nt, mix.outputs[0], out.inputs[0])
+    m.diffuse_color = (*tint, 0.3)
+    return m
+
+
 # ---------------------------------------------------------------- grime (subtle, height + cavity driven)
 def grime(nt, b, rgb_sock_default, rough_default, h0=1.0, amount=0.5, cavity=True, dust=(0.16, 0.145, 0.12)):
     """Mix road dust into base colour/roughness: stronger near the ground, in cavities (AO), broken by noise."""
@@ -399,7 +421,7 @@ def tyre_material(name, kind, tread_img, side_img, v_tread, v_side, pitches_arou
     L(nt, cmb2.outputs[0], si.inputs[0])
     in_side = math_node(nt, "MULTIPLY", math_node(nt, "GREATER_THAN", v, vs0), math_node(nt, "LESS_THAN", v, vs1))
     sh = math_node(nt, "MULTIPLY", si.outputs["Color"], in_side)
-    hsum = math_node(nt, "ADD", math_node(nt, "MULTIPLY", th, 1.0), math_node(nt, "MULTIPLY", sh, 0.25))
+    hsum = math_node(nt, "ADD", math_node(nt, "MULTIPLY", th, 1.0), math_node(nt, "MULTIPLY", sh, 0.55))
     bump = N(nt, "ShaderNodeBump", Strength=1.0, Distance=0.004)
     L(nt, hsum, bump.inputs["Height"])
     L(nt, bump.outputs["Normal"], b.inputs["Normal"])
@@ -478,15 +500,15 @@ def build_library(livery="white", clay=False):
         L(nt, mix.outputs[2], b.inputs["Base Color"])
         L(nt, ti.outputs["Color"], b.inputs["Metallic"])
     # GLASS
-    principled("glass", "GLASS", (0.90, 0.95, 0.93), 0.0, transm=1.0, ior=1.52)
-    principled("glass_tint", "GLASS", (0.55, 0.62, 0.60), 0.0, transm=1.0, ior=1.52)
+    thin_glass("glass", "GLASS", (0.80, 0.86, 0.83))      # laminated windscreen/side glass, slight green
+    thin_glass("glass_tint", "GLASS", (0.45, 0.50, 0.48))
     principled("mirror", "GLASS", (0.90, 0.90, 0.90), 0.02, metal=1.0)
     principled("frit", "GLASS", (0.008, 0.008, 0.008), 0.25, spec=0.6)
     principled("interior", "TRIM", (0.035, 0.034, 0.033), 0.7) if not clay else principled(
         "interior", "TRIM", (0.10, 0.10, 0.10), 0.7)
     principled("curtain", "TRIM", (0.06, 0.06, 0.065), 0.9)
     # LIGHTS
-    principled("lens_clear", "LIGHTS", (0.97, 0.97, 0.97), 0.02, transm=1.0, ior=1.49)
+    thin_glass("lens_clear", "LIGHTS", (0.95, 0.95, 0.95), 0.01, ior=1.49)
     principled("lamp_inner", "LIGHTS", (0.025, 0.025, 0.027), 0.35, spec=0.5)
     principled("reflector", "LIGHTS", (0.85, 0.86, 0.88), 0.08, metal=1.0)
     principled("dark_chrome", "LIGHTS", (0.20, 0.205, 0.21), 0.18, metal=1.0)
@@ -497,7 +519,7 @@ def build_library(livery="white", clay=False):
     principled("lens_red", "LIGHTS", (0.55, 0.02, 0.015), 0.05, transm=0.85, ior=1.49)
     principled("projector", "LIGHTS", (0.03, 0.03, 0.035), 0.02, transm=0.6, ior=1.6)
     if clay:
-        for k in ("lens_clear", "lens_amber", "lens_red", "projector"):
+        for k in ("lens_amber", "lens_red", "projector"):
             b = STATE["mats"][k].node_tree.nodes["Principled BSDF"]
             b.inputs["Transmission Weight"].default_value = 0.0
             b.inputs["Base Color"].default_value = (0.75, 0.76, 0.78, 1) if k == "lens_clear" else b.inputs[

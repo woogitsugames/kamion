@@ -62,8 +62,8 @@ def wheel(name, xc, y, out, et, tyre_mat, nuts=True, hub="front", seg=48):
     c = V((xc, y, WHEEL_Z))
     prof, v, _, _ = tyre_profile()
     lathe(name + "_tyre", prof, c, tyre_mat, seg=seg, side=out, uv_v=v, sharp=60)
-    inner = [(r - 0.010, x) for r, x in reversed(RIM_PROF)]
-    lathe(name + "_rim", RIM_PROF + inner, c, "alu_wheel", seg=40, side=out, sharp=45)
+    inner = [(0.290, 0.118), (0.270, 0.095), (0.248, 0.05), (0.248, -0.05), (0.270, -0.095), (0.290, -0.118)]
+    lathe(name + "_rim", RIM_PROF + inner[::-1], c, "alu_wheel", seg=min(40, seg), side=out, sharp=45)
     xd = et
     # dish: barrel -> disc
     sgn = 1 if et >= 0 else -1
@@ -107,7 +107,7 @@ def wheels():
         half = DUAL_SPACING / 2
         wheel(f"wheel_R{sd}o", s * (REAR_TRACK / 2 + half), -WB, s, -half + 0.011, "tyre_drive", hub="rear")
         wheel(f"wheel_R{sd}i", s * (REAR_TRACK / 2 - half), -WB, s, half - 0.011, "tyre_drive", nuts=False, hub=None,
-              seg=32)
+              seg=24)
 
 
 # ---------------------------------------------------------------- frame, axles, suspension, driveline
@@ -310,7 +310,7 @@ def fifth_wheel_and_rear():
         for k, (a, b_, m_) in enumerate(((0.76, 0.92, "lens_amber"), (0.92, 1.08, "lens_red"),
                                          (1.08, 1.16, "lens_clear"))):
             box_mm(f"rear_lens_{s}_{k}", s * a, s * b_, Y_END - 0.026, Y_END - 0.016, 0.755, 0.885, m_, bev=0.003)
-    box_mm("rear_plate", 0.48, 0.70, Y_END - 0.03, Y_END - 0.02, 0.62, 0.734, "plate")
+    G.plate_uv(box_mm("rear_plate", 0.42, 0.94, Y_END - 0.03, Y_END - 0.02, 0.60, 0.714, "plate"), -1)
     box_mm("trailer_socket_brk", -0.20, 0.20, Y_END - 0.01, Y_END + 0.02, 0.86, 0.94, "chassis")
 
 

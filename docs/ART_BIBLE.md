@@ -7,7 +7,7 @@ Wiążące tło: `docs/06` (anti-slop), ADR 0005. Każda sekcja ma właściciela
 ### Charakter
 - Narzędzie pracy, nie zabawka ani reklama: proporcje i szczegóły wynikają z funkcji (stopnie, uchwyty, lusterka, lampy obrysowe, przewody do naczepy). Każdy element ma powód, żeby tam być.
 - Fikcyjna marka z polskim zakorzenieniem (propozycje: TRAKT / BIELIK / NAREW — wybór właściciela, `docs/plan/TRACK-A.md` §5). Zakaz nawiązań do kształtów grilla, świateł i kabin prawdziwych producentów.
-- Język formy wybierany w A2 (koncepcje A/B/C). Po wyborze dopisz tu: dominujące linie, promienie zaokrągleń (w metrach), kąt szyby, motyw świateł.
+- Język formy: **koncepcja B + marka TRAKT** (decyzja właściciela 2026-11-09). Szczegóły w „Zewnętrze (A3/A4)” niżej.
 
 ### Skala i wymiary
 - 1 unit = 1 m. Wymiary tylko z `art-source/truck/dims.json` (statusy SOURCED/DERIVED/WORKING_VALUE). Każdy render koncepcyjny ma figurę 1,80 m i siatkę 1 m; wymiary bryły są mierzone automatycznie, nie „na oko”.
@@ -32,6 +32,20 @@ Wiążące tło: `docs/06` (anti-slop), ADR 0005. Każda sekcja ma właściciela
 - Lusterka bez ramion albo „wiszące w powietrzu”; brak lusterka przedniego/krawężnikowego.
 - Siodło na złej wysokości, brak przewodów do naczepy, pusta rama bez zbiorników.
 - Zbyt czyste i symetryczne podwozie w finalnym modelu (A4+): zbiornik paliwa po jednej stronie, akumulatory/SCR po drugiej.
+
+### Zewnętrze (A3/A4) — TRAKT, koncepcja B
+- **Bryła**: wysoka kabina sypialna, szyba pochylona 19° i zawinięta na narożniki, przód dolny prawie pionowy (spadek 3 cm na 0,76 m). Narożniki w rzucie R 0,32 m (dół) → 0,34 (podszybie) → 0,40 (góra szyby) → 0,46 m (dach); dach R 0,40 m; lekkie zwężenie ku górze (połowa szerokości 1,245 → 1,20 m); zintegrowany daszek jako 3–4 cm wysunięcie krawędzi dachu nad szybą. Profile w `tools/blender/truck/exterior/body.py` (`CFG`).
+- **Podział**: kabina (lakier) siedzi na osłonie na ramie (tworzywo) — linia uchylania 1,225 m; osłona = zderzak + narożniki z nadkolem (R 0,60 m, obrzeże 35 mm) + skrzynki stopni. Nigdy „pudełko nad kołem”.
+- **Twarz marki**: grill = litera T (górna belka ±0,84 m, „droga” zwężająca się ku górze: ±0,80 → ±0,50 m), przedłużony w zderzaku do tablicy; listwy poziome z delikatnym opadem na końcach. Reflektory: kliny pod końcami belki, krawędź wewnętrzna równoległa do „drogi”. **Podpis świateł dziennych = pozioma belka + ukośna krawędź drogi** w każdym reflektorze; nie używać kształtów innych producentów (ukośna belka, L, C, sześciokąt, gwiazda, lew, gryf).
+- **Marka**: emblemat z `art-source/truck/brand/trakt.svg` (chrom, kreski pasa ruchu ciemne), napis TRAKT ciemnym chromem nad grillem (litery z kresek z SVG, rozstrzelone). Chrom tylko na emblemacie.
+- **Malowania**: biel flotowa (albedo liniowe ~0,78, chropowatość bazy 0,32 + lakier bezbarwny 0,03) i ciemna zieleń butelkowa (0,020/0,040/0,034, lekki metalik 0,35). Kolejne malowania: przygaszone, średnio lub bardzo ciemne, bez nasyconych barw.
+- **Tworzywa zewnętrzne** albedo ~0,037, chropowatość 0,62, mikroziarno; satynowe (ramiona lusterek, listwy grilla) ~0,03 / 0,36; guma 0,018 / 0,82; rama czarny półpołysk 0,022 / 0,45; aluminium zbiornika szczotkowane 0,30 (anizotropia), felgi 0,17; szyby cienkie z rantem frit.
+- **Lusterka**: domyślnie klasyczne (kl. II + IV na ramieniu, V po prawej, VI nad prawym narożnikiem), czasze w kolorze nadwozia; wariant kamer w generatorze. Lusterko kl. VI zawsze.
+- **Koła**: aluminium 22.5×9.00, 10 śrub, przód ET +120 mm z kołpakiem; tył bliźniaki tarczami do siebie (głęboka czasza z piastą). Opony bez marki, własny bieżnik (przód zygzak, tył bloki), napisy rozmiar/indeks/M+S/3PMSF.
+- **Asymetria podwozia**: lewa — zbiornik paliwa (aluminium, opaski) + AdBlue; prawa — skrzynka oczyszczania spalin z osłoną perforowaną i wylotem w dół + akumulatory. Kładka z blachy ryflowanej, spirale na wieszaku.
+- **Budżet**: LOD0 zewnętrza ≤ ~100 tys. trójkątów (High), 6 slotów materiałów; szczegóły ≤ 1 cm (szczeliny, śruby, ryflowanie) docelowo w normalnych (A6).
+- **Rendery kontrolne A3/A4**: 3/4 przód (42 mm, oczy 1,65 m), bok i przód (ortho), 3/4 tył prawa strona, zbliżenia (reflektor, nadkole/stopnie, tył kabiny/siodło, koła tylne); dwa oświetlenia — „pochmurno” (pełne GI) i „jak URP” (płaskie otoczenie + słońce, bez odbić rozproszonych); proceduralny plac logistyczny jako tło; JPEG 1600×900 ≤ 400 KB.
+- **Czerwone flagi zewnętrza (dodatkowe)**: szerokość > 2,55 m przez dodatki (deflektory, uchwyty — mierzyć!), szkło jako jednostronna powierzchnia refrakcyjna (soczewka/„bańka”), fazowanie na bryłach po cięciu (kolce), kieszenie lamp z lakierem na ściankach, napisy lustrzane w rzucie z przodu.
 
 ### Wnętrze kabiny (A5)
 - Charakter: miejsce pracy i odpoczynku zawodowego kierowcy — spokojne, ciemne u góry (deska nie odbija się w szybie), cieplejsza szarość niżej, jasna podsufitka. Zadbane, lekko używane; zero „gamingowych” akcentów, podświetleń RGB i błyszczącego plastiku.

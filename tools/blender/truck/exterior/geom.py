@@ -82,6 +82,21 @@ def box_uv(bm, scale=1.0):
                 lp[uv].uv = (co.x * scale, co.y * scale)
 
 
+def plate_uv(ob, facing=1):
+    """Normalised planar UV for decal-like parts (number plates): u runs left->right as seen by a viewer
+    in front of the face (facing +1 = faces +Y, -1 = faces -Y), v bottom->top."""
+    me = ob.data
+    xs = [v.co.x for v in me.vertices]
+    zs = [v.co.z for v in me.vertices]
+    x0, x1, z0, z1 = min(xs), max(xs), min(zs), max(zs)
+    uv = me.uv_layers.get("UVMap") or me.uv_layers.new(name="UVMap")
+    for lp in me.loops:
+        co = me.vertices[lp.vertex_index].co
+        u = (x1 - co.x) / (x1 - x0) if facing > 0 else (co.x - x0) / (x1 - x0)
+        uv.data[lp.index].uv = (u, (co.z - z0) / (z1 - z0))
+    return ob
+
+
 def obj_from_bm(name, bm, m, smooth=True, sharp=35.0, uv=True):
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     if uv and not bm.loops.layers.uv.get("UVMap"):

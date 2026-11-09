@@ -7,9 +7,9 @@ Właściciel toru: `truck-artist`. Ocena wizualna: `visual-critic` + akceptacja 
 | Krok | Opis | Stan |
 |---|---|---|
 | A1 | Brief, wymiary klasy, punkt oczu, lista zdjęć | **gotowe (ten plik + `art-source/truck/dims.json`)** — wartości `WORKING_VALUE` do potwierdzenia zdjęciami |
-| A2 | 3 koncepcje sylwetki + 3 marki | **gotowe do wyboru** → `docs/reports/visual/truck-A2/README.md` |
-| A3 | Blockout w skali wybranej koncepcji, kabina, oczy kierowcy, widoczność | czeka na wybór właściciela |
-| A4 | high-poly zewnętrza | po A3 |
+| A2 | 3 koncepcje sylwetki + 3 marki | **wybrane przez właściciela 2026-11-09: sylwetka B, marka TRAKT** (§9) |
+| A3 | Blockout w skali wybranej koncepcji, kabina, oczy kierowcy, widoczność | **gotowe do oceny** → §10, `docs/reports/visual/truck-A3/README.md` |
+| A4 | zewnętrze (mid-poly game-ready + detal) | **pierwsza pełna wersja do oceny** → §11, `docs/reports/visual/truck-A4/README.md` |
 | A5 | Wnętrze kabiny (neutralne markowo: wspólna bryła, zmienne tylko znak na piaście i kolor wstawek) | **pierwsza pełna wersja do oceny** → §8 i `docs/reports/visual/truck-A5/README.md` |
 | A6–A8 | low/UV/bake (atlasy), LOD/import do Unity, naczepa | później |
 
@@ -122,3 +122,23 @@ blender -b --factory-startup --python tools/blender/truck/interior/bake_ao.py
 Duże mapy kafelkowane i atlas AO są generowane (pomijane w git przez `art-source/truck/interior/.gitignore`); w repo są tylko skrypty i małe grafiki (ekrany, symbole, maski).
 
 **Następne kroki wnętrza:** zdjęcia właściciela → korekta wartości WORKING_VALUE; wybór koloru wstawek i stylu zegarów; A6: usunięcie ukrytych ścian, scalenie 49 materiałów do ~6 atlasów, LOD1/LOD2, wypalenie szwów/drobnych kształtów do normalnych na Medium/Low; A7: import do Unity, ekrany sterowane z fizyki, lusterka jako render texture, zrzuty z A16.
+
+## 9. Decyzja: sylwetka B + marka TRAKT (właściciel, 2026-11-09)
+- **Sylwetka B** (aero, szyba ~19°) potwierdzona przez właściciela 2026-11-09 jako baza (wcześniej rekomendacja `visual-critic` i robocze założenie lidera; A — „lata 90.”, C — „USA/retro”).
+- **Marka: TRAKT** (`art-source/truck/brand/trakt.svg`). Wyszukanie w EUIPO/UPRP **nadal do zrobienia** przed publikacją czegokolwiek z nazwą.
+- Generator zewnętrza jest parametryczny (`tools/blender/truck/exterior/body.py`, słownik `CFG`: profile kabiny, kształt grilla, lamp, podpisu LED), więc zmiana frontu/marki to zmiana danych, nie kodu.
+
+## 10. A3 — blockout w skali, punkt oczu, widoczność (właściciel: `truck-artist`)
+Raport: `docs/reports/visual/truck-A3/README.md`. Ta sama bryła co A4 w „clay”, siatka 1 m, figura 1,80 m.
+- Zmierzone: szerokość nadwozia **2,548 m** (≤ 2,55), wysokość 3,98 m (≤ 4,00), długość 6,06 m, zwis przedni 1,53 m, siodło 1,15 m.
+- Widoczność (promienie z punktu oczu (−0,55; 0,45; 2,50)): słupek A lewy **8°**, prawy **3,5°**; ziemia na wprost od **~5,0 m** przed zderzakiem, przed prawym narożnikiem od ~9 m — strefę pokrywają lusterka kl. V/VI. Deska/kierownica to bryły zastępcze o wymiarach z A5.
+- Test uchylania kabiny 50° wokół zawiasu (0; 1,44; 1,19) m — bez kolizji; zderzak, nadkola i stopnie są na ramie (linia uchylania 1,225 m).
+- **Do decyzji lidera:** (1) przy oczach 0,45 m przed osią i otworze drzwi A5 [−0,24; 1,13] m koło jest pod drzwiami, więc stopnie są za kołem „po skosie” — rozważyć przesunięcie oczu i drzwi ~0,3 m do tyłu po zdjęciach właściciela (`dims.json` + A5); (2) znak pochylenia szyby w `build_interior.py` (`ws_y` idzie do przodu przy `--rake 19`); (3) dolna krawędź skóry drzwi wnętrza 1,15 m vs kabina zewnętrzna 1,225 m.
+
+## 11. A4 — zewnętrze (właściciel: `truck-artist`)
+Raport z renderami (2 oświetlenia: pochmurno z pełnym GI i „jak URP” bez odbić rozproszonych; 2 malowania: biel flotowa i ciemna zieleń butelkowa; lusterka klasyczne + wariant z kamerami) i listą poprawek: `docs/reports/visual/truck-A4/README.md`.
+- Front marki: grill w kształcie T z „drogą” przedłużoną w zderzaku, reflektory klinowe pod belką T, podpis LED = belka + krawędź drogi; emblemat z `trakt.svg` (jedyny chrom).
+- Budżet: **LOD0 99 776 trójkątów** (cel High ≤ ~100 tys.), plan LOD1 ≈ 43 tys., LOD2 ≈ 14,5 tys.; 6 slotów materiałów w grze (lakier, tworzywa/rama, metal, szkło, światła, opony); UV na wszystkich częściach (`UVMap`).
+- Tło renderów proceduralne (bez pobranych HDRI) — brak nowych pozycji w `docs/LICENSES.md`; napisy fontem Inter (już w rejestrze).
+- Odtworzenie: `blender -b --factory-startup --python tools/blender/truck/exterior/build.py -- --mode a4 --out docs/reports/visual/truck-A4` (pełne komendy w raporcie). Tekstury generowane do `art-source/truck/exterior/textures/` (poza gitem).
+- Następne: ocena `visual-critic` i właściciela → A6 (usunięcie ukrytych ścian, atlasy, wypalenie szczelin/śrub do normalnych, maski zużycia, LOD) → A7 import do Unity i zrzut z telefonu.

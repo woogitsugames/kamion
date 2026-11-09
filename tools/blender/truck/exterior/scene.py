@@ -331,7 +331,7 @@ def eye_dir(yaw_deg, pitch_deg):
 CAMS = {
     "34przod": dict(loc=(-8.4, 10.6, 1.65), target=(-0.1, -0.9, 1.72), lens=42, fig=(2.8, 2.4)),
     "bok": dict(loc=(-30, -1.0, 1.95), rot=(math.radians(90), 0, math.radians(-90)), ortho=10.8, fig=(-2.0, 2.4)),
-    "przod": dict(loc=(-0.0, 30, 2.05), rot=(math.radians(90), 0, math.radians(180)), ortho=6.6, fig=(-2.4, 2.4)),
+    "przod": dict(loc=(-0.0, 30, 2.0), rot=(math.radians(90), 0, math.radians(180)), ortho=7.4, fig=(-2.6, 2.4)),
     "34tyl": dict(loc=(9.2, -14.6, 2.5), target=(-0.3, -1.7, 1.55), lens=42, fig=(-2.6, -6.2)),
     "zbl_reflektor": dict(loc=(-2.7, 4.5, 1.62), target=(-0.98, 1.45, 1.44), lens=75, fig=None),
     "zbl_stopnie": dict(loc=(-4.4, 1.6, 1.15), target=(-1.2, -0.30, 0.78), lens=45, fig=None),
