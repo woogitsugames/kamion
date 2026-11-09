@@ -17,7 +17,7 @@
   pwsh scripts/gate3-run.ps1 -Serial X -Tier Low -DryRun                               # validate plan, no adb/Unity
 .NOTES
   Exit: 0 all requested steps done and measurement valid; 2 plan/prerequisite error; 3 unsupported segment (game lacks
-  launch arg); 4 build/install failed; 5 phone locked/asleep (measurement rejected); 6 metrics missing.
+  launch arg; no longer the case once route_s exists in the game sources, the check greps for it); 4 build/install failed; 5 phone locked/asleep (measurement rejected); 6 metrics missing.
   Output: artifacts/gate3/<ts>/<serial>/ (gate3-result.json, metrics copy, logcat, cam/<id>.png).
   Verdicts compare with docs/PERFORMANCE_BUDGETS.md WORKING_VALUEs; they are measurements, not the owner's gate decision.
 #>
@@ -105,6 +105,13 @@ $result = [ordered]@{
 if (-not $hasGate3Cams) { $result.gameLacks += "qacam_set (gate3_cameras.json not loaded in the scene -> g3* cameras cannot be framed on the phone)" }
 
 if (-not (Assert-PhoneReady 'before install')) { exit 5 }
+
+# gate3_cameras.json is read by the game from Resources (qacam_set=gate3): refresh the copy so the APK carries the current file.
+if (-not $SkipBuild -and $hasGate3Cams) {
+    $resDir = Join-Path $RepoRoot 'game/Assets/_Project/Gameplay/Resources'
+    New-Item -ItemType Directory -Force $resDir | Out-Null
+    Copy-Item $camFile (Join-Path $resDir 'gate3_cameras.json') -Force
+}
 
 # ---------------------------------------------------------------- 1. build + install (build-android.ps1)
 $baArgs = @('-Install', '-Serial', $Serial)
