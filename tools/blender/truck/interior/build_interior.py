@@ -3,14 +3,15 @@
 Run headless (Blender 4.2 LTS), textures first (once):
     uv run --no-project --with pillow --with numpy python tools/blender/truck/interior/make_textures.py
     blender -b --factory-startup --python tools/blender/truck/interior/build_interior.py -- \
-        --out docs/reports/visual/truck-A5 [--cams all] [--light overcast,lowsun] [--trim grafit] \
-        [--badge none|trakt|bielik|narew] [--rake 5] [--samples 384] [--blend path.blend]
+        --out docs/reports/visual/truck-A5 [--cams all] [--light overcast,lowsun] [--trim koniak] \
+        [--badge trakt|none|bielik|narew] [--rake 19] [--samples 384] [--blend path.blend]
 
 Everything is generated here: no hand-edited .blend. Frame = A2 blockout frame (dims.json):
 1 unit = 1 m, Z up, truck faces +Y, driver side (LHD) = -X, origin = ground under front axle centre.
 Ergonomic values are WORKING_VALUE unless marked; table with sources: docs/reports/visual/truck-A5/README.md.
-Swappable per brand (A/B/C not chosen yet): --badge (steering-wheel hub emblem), --trim (insert colour),
---rake (windscreen rake: A/C ~3-5 deg, B ~19 deg); everything else is the shared cab shell.
+Owner decisions 2026-11-09: concept B + TRAKT (--rake 19, --badge trakt), trim koniak, digital-only cluster. The other
+values stay as switches (--trim, --badge, --rake: A/C ~3-5 deg); everything else is the shared cab shell.
+Rake = windscreen lean BACK from vertical (top edge further rearward, -Y), as in exterior/body.py.
 """
 import argparse
 import json
@@ -65,11 +66,47 @@ TRIMS = {  # insert colour (linear albedo) — the only interior colour that cha
     "koniak": (0.150, 0.068, 0.032),
     "lupek": (0.060, 0.074, 0.090),
 }
-RAKE = 5.0
+RAKE = 19.0                                    # concept B (TRAKT), same as exterior/body.py RAKE
 
 
 def ws_y(z):
-    return WS_Y0 + (z - WS_Z0) * math.tan(math.radians(RAKE))
+    """Windscreen inner surface y at height z. A6 r3 fix: the screen leans back (y decreases upwards); before r3 the
+    sign was inverted, so '--rake 19' leaned the glass forward."""
+    return WS_Y0 - (z - WS_Z0) * math.tan(math.radians(RAKE))
+
+
+# ---------------------------------------------------------------- door / shell interface with the exterior (A3/A4)
+# The exterior generator (tools/blender/truck/exterior/body.py, round 3) owns the door opening, the side glass and the
+# shell lower edge and publishes them in art-source/truck/exterior/door_interface.json (REVIEW-2026-11-09-r2 top-12 #2:
+# door opening ~0.3 m rearward, fixed body-colour corner panel ahead of it). The interior reads that file; without it
+# (old checkouts) it falls back to the A6 values, which matched the r2 exterior.
+DOOR_IF_PATH = os.path.join(REPO, "art-source", "truck", "exterior", "door_interface.json")
+DOOR_IF_A6 = {"door_y0": -0.24, "door_front_yz": [(1.13, 1.0), (1.13, 3.2)], "side_glass_z": (2.17, 2.96),
+              "side_glass_front_yz": None, "shell_bottom_z": 1.225, "source": "A6 fallback (r2 exterior)"}
+
+
+def load_door_interface():
+    """-> door_y0 (aperture rear edge), door_front_yz (aperture front edge polyline (y, z), = exterior front shut line
+    moved inboard by the seal overlap), side_glass_z, side_glass_front_yz, shell_bottom_z (door/shell lower edge)."""
+    d = dict(DOOR_IF_A6)
+    if not os.path.exists(DOOR_IF_PATH):
+        print("door interface: no file, using A6 values")
+        return d
+    src = json.load(open(DOOR_IF_PATH, encoding="utf-8"))
+    door, ap, gl = src["door"], src["aperture_for_interior"], src["side_glass"]
+    ov = door.get("seal_overlap_m", 0.04)
+    d["door_y0"] = ap["DOOR_Y0_rear_m"]
+    d["door_front_yz"] = sorted(((y - ov, z) for y, z in door["front_shut_line_yz_m"]), key=lambda t: t[1])
+    d["side_glass_z"] = (gl["belt_z_m"], gl["top_z_m"])
+    d["side_glass_front_yz"] = sorted((tuple(p) for p in gl["front_edge_yz_m"]), key=lambda t: t[1])
+    d["shell_bottom_z"] = door["bottom_edge_z_m"]
+    d["source"] = os.path.relpath(DOOR_IF_PATH, REPO).replace("\\", "/")
+    print("door interface:", d)
+    return d
+
+
+DOOR_IF = load_door_interface()
+SKIN_Z0 = DOOR_IF["shell_bottom_z"]             # A6 r3: placeholder skins end at the exterior shell edge (was 1.15)
 
 
 def smooth(e0, e1, x):
@@ -94,10 +131,10 @@ def parse_args():
     p.add_argument("--out", required=True)
     p.add_argument("--cams", default="all")
     p.add_argument("--light", default="overcast,lowsun")
-    p.add_argument("--trim", default="grafit", choices=sorted(TRIMS))
-    p.add_argument("--badge", default="none", choices=["none", "trakt", "bielik", "narew"])
+    p.add_argument("--trim", default="koniak", choices=sorted(TRIMS))
+    p.add_argument("--badge", default="trakt", choices=["none", "trakt", "bielik", "narew"])
     p.add_argument("--paint", default="0.70,0.70,0.68")
-    p.add_argument("--rake", type=float, default=5.0)
+    p.add_argument("--rake", type=float, default=19.0)
     p.add_argument("--res", default="1600x900")
     p.add_argument("--samples", type=int, default=384)
     p.add_argument("--blend", default="")
@@ -159,20 +196,24 @@ def build_materials(a):
     M.simple("led_off", (0.55, 0.55, 0.53), rough=0.35)
     M.simple("lamp_lens", (0.80, 0.80, 0.78), rough=0.25, emit=((1.0, 0.95, 0.85), 0.0))
     M.simple("yellow", (0.50, 0.33, 0.02), rough=0.5)
-    M.simple("mirror", (0.85, 0.86, 0.87), rough=0.015, metal=1.0)
+    # A6 r3: mirror glass shows a placeholder 'probe' image (the game uses camera RenderTextures), not a white slab
+    M.mirror_rt("mirror", "mirror_rt_side.png")
+    M.mirror_rt("mirror_down", "mirror_rt_down.png")
+    # A6 r3: black ceramic frit (enamel on the inner face of the windscreen), geometry -> same in Cycles, URP and game
+    M.simple("frit", (0.011, 0.011, 0.012), rough=0.42, spec=0.5)
     M.simple("ext_plastic", (0.032, 0.032, 0.034), rough=0.6)
     M.simple("chrome", (0.75, 0.75, 0.75), rough=0.12, metal=1.0)
     M.paint("paint", paint_rgb)
-    M.thin_glass("windscreen", grime=0.10, sunstrip=(2.86, 3.02, (0.36, 0.42, 0.44)),
-                 frit=(WS_Z0 + 0.035, WS_Z1 - 0.01, XI - 0.105))
+    M.thin_glass("windscreen", grime=0.10, sunstrip=(2.86, 3.02, (0.36, 0.42, 0.44)))
     M.thin_glass("side_glass", grime=0.06)
     M.thin_glass("cover_glass", tint=(0.96, 0.96, 0.96))
     M.display("disp_cluster", "display_cluster.png", strength=1.5, rough=0.10, fingerprints=0.10)
     M.display("disp_info", "display_infotainment.png", strength=1.1, rough=0.12, fingerprints=0.18)
     M.display("disp_gauges", "display_gauges.png", strength=1.2, rough=0.06)
     M.display("disp_din", "display_din.png", strength=1.0, rough=0.2)
-    M.decal("stitch", "stitch_rgba.png", (0.62, 0.60, 0.56), rough=0.7)
-    M.decal("stitch_dark", "stitch_rgba.png", (0.30, 0.30, 0.30), rough=0.7)
+    # A6 r3: warm-grey thread, a step above the leather, not a white dotted line (critic r2 #5)
+    M.decal("stitch", "stitch_rgba.png", (0.34, 0.31, 0.27), rough=0.7)
+    M.decal("stitch_dark", "stitch_rgba.png", (0.20, 0.20, 0.20), rough=0.7)
     M.decal("icons", "icons_atlas.png", (0.80, 0.80, 0.76), rough=0.4, alpha_from="mask")
     M.decal("grille", "grille_mask.png", (0.02, 0.02, 0.02), rough=0.6, alpha_from="mask")
     M.decal("grille_dash", "grille_mask.png", (0.040, 0.041, 0.043), rough=0.65, alpha_from="mask")
@@ -203,7 +244,7 @@ def build_shell():
     box_mm("floor_slab", -HALF_OUT, HALF_OUT, YB - T, FRONT_WALL_Y + 0.06, FLOOR - 0.10, FLOOR - 0.005, "metal_dark")
     # back wall (inner fabric face) and outer skin
     box_mm("back_wall", -XI, XI, YB - 0.02, YB, FLOOR, CEIL_SIDE + 0.15, "wall_fabric", bev=0.004)
-    box_mm("back_skin", -HALF_OUT, HALF_OUT, YB - T, YB - 0.02, FLOOR - 0.25, ROOF_OUT - 0.05, "paint", bev=0.03)
+    box_mm("back_skin", -HALF_OUT, HALF_OUT, YB - T, YB - 0.02, SKIN_Z0, ROOF_OUT - 0.05, "paint", bev=0.03)
     # headliner: lofted vault along Y
     prof = []
     for i in range(25):
@@ -222,7 +263,7 @@ def build_shell():
         xin, xout = s * XI, s * HALF_OUT
         # rear side wall (behind door, bunk area)
         box_mm(f"side_rear_{s}", xin, xin + s * 0.02, YB, DOOR_Y0, FLOOR, CEIL_SIDE + 0.05, "wall_fabric", bev=0.003)
-        box_mm(f"skin_rear_{s}", xin + s * 0.02, xout, YB - T, DOOR_Y0 + 0.01, FLOOR - 0.25, ROOF_OUT - 0.08, "paint",
+        box_mm(f"skin_rear_{s}", xin + s * 0.02, xout, YB - T, DOOR_Y0 + 0.01, SKIN_Z0, ROOF_OUT - 0.08, "paint",
                bev=0.02)
         # header over door (inside: fabric strip under headliner)
         box_mm(f"side_top_{s}", xin, xin + s * 0.02, DOOR_Y0, ws_y(3.0) - 0.10, WIN_Z1 + 0.06, CEIL_SIDE + 0.05,
@@ -230,23 +271,41 @@ def build_shell():
         box_mm(f"skin_top_{s}", xin + s * 0.02, xout, DOOR_Y0, ws_y(3.0) + 0.05, WIN_Z1 - 0.01, ROOF_OUT - 0.08, "paint",
                bev=0.02)
         # lower front corner skin (between door and front wall, below the A-pillar)
-        box_mm(f"skin_front_{s}", xin + s * 0.02, xout, DOOR_Y1 - 0.02, FRONT_WALL_Y + 0.10, FLOOR - 0.25, WS_Z0, "paint",
+        box_mm(f"skin_front_{s}", xin + s * 0.02, xout, DOOR_Y1 - 0.02, FRONT_WALL_Y + 0.10, SKIN_Z0, WS_Z0, "paint",
                bev=0.02)
         box_mm(f"side_front_{s}", xin, xin + s * 0.02, DOOR_Y1 - 0.02, FRONT_WALL_Y, FLOOR, WS_Z0, "dash_dark")
     # front: wall under the windscreen (outer) + inner footwell wall
-    box_mm("front_skin", -HALF_OUT, HALF_OUT, FRONT_WALL_Y + 0.0, FRONT_WALL_Y + 0.10, FLOOR - 0.25, WS_Z0 - 0.02,
+    box_mm("front_skin", -HALF_OUT, HALF_OUT, FRONT_WALL_Y + 0.0, FRONT_WALL_Y + 0.10, SKIN_Z0, WS_Z0 - 0.02,
            "paint", bev=0.03)
     box_mm("footwell_wall", -XI, XI, FRONT_WALL_Y - 0.02, FRONT_WALL_Y, FLOOR, 1.95, "dash_dark")
     # header strip above the windscreen (inside, mostly hidden by overhead storage)
     box_mm("ws_header", -XI, XI, ws_y(WS_Z1) - 0.02, ws_y(WS_Z1) + 0.12, WS_Z1 - 0.01, CEIL + 0.02, "headliner")
 
 
-DOOR_Y0, DOOR_Y1 = -0.24, 1.13                 # door aperture (rear edge = B-pillar, front edge = A-pillar base)
-WIN_Z0, WIN_Z1 = 2.17, 2.96                    # side window (beltline, top)
+def door_front(z):
+    """Aperture front edge y at height z (exterior front shut line - seal overlap): vertical behind the fixed corner
+    panel, then diagonal to the A-pillar."""
+    return lerp_tab([(zz, yy) for yy, zz in DOOR_IF["door_front_yz"]], z)
+
+
+DOOR_Y0 = DOOR_IF["door_y0"]                    # aperture rear edge (B-pillar side)
+DOOR_Y1 = door_front(FLOOR)                     # aperture front edge at floor height (fixed corner panel ahead)
+WIN_Z0, WIN_Z1 = DOOR_IF["side_glass_z"]        # side window (beltline, top)
+
+
+def door_y(y, z, margin=0.0):
+    """Door-card features keep their A6 positions (they belong to the seat, which did not move) but never run past the
+    aperture front edge at their height."""
+    return min(y, door_front(z) - margin)
 
 
 def side_win_front(z):
-    return ws_y(z) - 0.15
+    """Side-glass front edge (follows the A-pillar); from the exterior interface when present."""
+    pts = DOOR_IF["side_glass_front_yz"]
+    if not pts:
+        return ws_y(z) - 0.15
+    (y0, z0), (y1, z1) = pts[0], pts[-1]
+    return y0 + (y1 - y0) * (z - z0) / (z1 - z0)
 
 
 # ---------------------------------------------------------------- windscreen, A-pillars, side glass
@@ -267,6 +326,7 @@ def build_glass():
         loops.append(lp)
     g = loft("windscreen", list(zip(*loops)), "windscreen", closed=False, sharp=None)
     # (loft along x: loops transposed so faces span z)
+    build_frit(hw)
     # rubber gasket around the windscreen (outside face)
     for z in (WS_Z0 - 0.025, WS_Z1 + 0.025):
         box_mm(f"ws_gasket_{z:.2f}", -hw - 0.02, hw + 0.02, ws_y(z) + 0.012, ws_y(z) + 0.05, z - 0.015, z + 0.015, "rubber")
@@ -284,7 +344,7 @@ def build_glass():
         tube(f"win_channel_{s}", [c + V(-s * 0.012, 0, 0) for c in corners] + [corners[0] + V(-s * 0.012, 0, 0)],
              0.011, "rubber", seg=8, cap=False)
         # outer skin around the side window: below beltline is the door skin
-        box_mm(f"door_skin_{s}", s * (XI + 0.05), s * HALF_OUT, DOOR_Y0 + 0.01, DOOR_Y1 + 0.02, FLOOR - 0.25, WIN_Z0,
+        box_mm(f"door_skin_{s}", s * (XI + 0.05), s * HALF_OUT, DOOR_Y0 + 0.01, DOOR_Y1 + 0.02, SKIN_Z0, WIN_Z0,
                "paint", bev=0.015)
         # B-pillar strip between glass and rear wall (outer)
         box_mm(f"bpillar_skin_{s}", s * (XI + 0.02), s * HALF_OUT, DOOR_Y0, DOOR_Y0 + 0.07, WIN_Z0, WIN_Z1 + 0.07, "paint")
@@ -326,6 +386,51 @@ def build_glass():
         rod(f"wiper_arm_{i}", (x0, y, WS_Z0 - 0.045), (x0 + 0.78, y + 0.01, WS_Z0 - 0.015), 0.008, "ext_plastic", seg=8)
         box(f"wiper_blade_{i}", (x0 + 0.40, y - 0.012, WS_Z0 - 0.025), (0.80, 0.012, 0.018), "rubber", bev=0.003,
             rot=Matrix.Rotation(math.radians(3), 3, "Y"))
+
+
+FRIT_BOTTOM, FRIT_TOP, FRIT_SIDE = 0.075, 0.05, 0.045   # frit band widths above/below the visible glass edge (m)
+
+
+def build_frit(hw):
+    """A6 r3 (critic r2 #2): black ceramic frit printed on the inner face of the windscreen. Real screens carry a
+    60-120 mm opaque band at the bottom (hides the cowl, wiper spindles and the bonding bead) with a dot-matrix fade
+    on its inner edge, a narrower band at the top and down the sides. Built as geometry 1.5 mm inboard of the glass so
+    Cycles, the URP-like preview and the game all get it without a shader mask; normals face the cab."""
+    def gy(x, z):
+        return ws_y(z) + 0.012 + 0.018 * (1 - (x / hw) ** 2) - 0.0015
+
+    def patch(name, x0, x1, z0, z1, nx, nz):
+        bm = bmesh.new()
+        rows = [[bm.verts.new(V(x0 + (x1 - x0) * i / nx, gy(x0 + (x1 - x0) * i / nx, z0 + (z1 - z0) * j / nz),
+                                 z0 + (z1 - z0) * j / nz)) for i in range(nx + 1)] for j in range(nz + 1)]
+        for j in range(nz):
+            for i in range(nx):
+                bm.faces.new((rows[j][i], rows[j][i + 1], rows[j + 1][i + 1], rows[j + 1][i]))   # normal -> -Y
+        ob = G.finish(name, bm, "frit", smooth=True, sharp=None, recalc=False)
+        ob["fixed_uv"] = True          # no AO-atlas island of its own (inherits the occlusion of the cowl under it)
+        return ob
+
+    zb, zt = WS_Z0 + FRIT_BOTTOM, WS_Z1 - FRIT_TOP
+    patch("ws_frit_bottom", -hw, hw, WS_Z0 - 0.02, zb, G.Q(40, 10), 1)
+    patch("ws_frit_top", -hw, hw, zt, WS_Z1 + 0.02, G.Q(40, 10), 1)
+    for s in (-1, 1):
+        xa, xb = sorted((s * hw, s * (hw - FRIT_SIDE)))
+        patch(f"ws_frit_side_{s}", xa, xb, zb, zt, 1, G.Q(8, 3))
+    # dot-matrix fade above the bottom band and below the top band: two rows of shrinking hexagonal dots
+    bm = bmesh.new()
+    pitch = 0.014
+    for zc_, dz, r in ((zb, 1, 0.0042), (zb, 2, 0.0026), (zt, -1, 0.0042), (zt, -2, 0.0026)):
+        z = zc_ + dz * pitch * 0.62
+        n = int((2 * (hw - FRIT_SIDE)) / pitch)
+        for i in range(n):
+            x = -(hw - FRIT_SIDE) + (i + 0.5 + 0.5 * (abs(dz) % 2 == 0)) * pitch
+            if abs(x) > hw - FRIT_SIDE:
+                continue
+            vs = [bm.verts.new(V(x + r * math.cos(a), gy(x, z + r * math.sin(a)), z + r * math.sin(a)))
+                  for a in (2 * math.pi * k / 6 for k in range(6))]
+            bm.faces.new(vs)
+    dots = G.finish("ws_frit_dots", bm, "frit", smooth=False, recalc=False)
+    dots["fixed_uv"] = True
 
 
 # ---------------------------------------------------------------- dashboard
@@ -1187,32 +1292,38 @@ def seat(prefix, cx, driver):
 
 # ---------------------------------------------------------------- doors
 def build_doors():
+    """Door cards on the r3 aperture from the exterior interface (DOOR_IF_PATH): rear edge -0.56, front edge vertical
+    at 0.76 up to z 1.90, then diagonal to the A-pillar. The card outline follows that edge; armrest, switches, pull,
+    pocket and speaker stay where the seated driver uses them (the seat did not move) and are clipped to the edge.
+    The rear 0.45 m of the card is a plain panel: it closes against the end of the bunk (bunk is inset to clear it)."""
     group("doors")
     for s in (-1, 1):
         xw = s * XI
-        y0, y1 = DOOR_Y0 + 0.03, DOOR_Y1 - 0.02
-        # main door trim: lower panel (dash_lower), shaped in plan (y,z grid pushed inward)
+        y0 = DOOR_Y0 + 0.03
+        y1 = lambda z: door_front(z) - 0.02                          # noqa: E731  card front edge at height z
+        # main door trim: lower panel (dash_lower), shaped in plan (y,z grid pushed inward); front edge follows the
+        # aperture (vertical, then the diagonal towards the A-pillar)
         zs = [FLOOR + 0.05, 1.60, 1.80, 1.93, 2.02, 2.10, WIN_Z0 - 0.01]
         inset = [0.045, 0.050, 0.056, 0.060, 0.064, 0.070, 0.050]   # how far the trim stands proud of the wall
         loops = []
-        for yi in range(13):
-            y = y0 + (y1 - y0) * yi / 12
-            lp = [V(xw - s * d, y, z) for z, d in zip(zs, inset)]
-            lp += [V(xw, y, WIN_Z0 - 0.01), V(xw, y, FLOOR + 0.05)]
+        for yi in range(G.Q(17, 9)):
+            t = yi / (G.Q(17, 9) - 1)
+            lp = [V(xw - s * d, y0 + (y1(z) - y0) * t, z) for z, d in zip(zs, inset)]
+            lp += [V(xw, y0 + (y1(WIN_Z0 - 0.01) - y0) * t, WIN_Z0 - 0.01), V(xw, y0 + (y1(FLOOR + 0.05) - y0) * t, FLOOR + 0.05)]
             loops.append(lp)
         dp = loft(f"door_trim_{s}", loops, "dash_lower", closed=True, cap0=True, cap1=True)
         bevel(dp, 0.006, 2, angle=30)
         # sill cap (soft) along the beltline
         loops = []
         for yi in range(13):
-            y = y0 + (y1 - y0) * yi / 12
+            y = y0 + (y1(WIN_Z0 - 0.03) - y0) * yi / 12
             loops.append([V(xw - s * px, y, WIN_Z0 - 0.06 + pz) for px, pz in
                           ((0.0, 0.0), (0.075, 0.0), (0.083, 0.03), (0.07, 0.058), (0.02, 0.066), (0.0, 0.066))])
         sc = loft(f"door_sill_{s}", loops, "dash_soft", closed=True, cap0=True, cap1=True)
         # insert panel (trim colour) between armrest and sill
         loops = []
         for yi in range(11):
-            y = 0.02 + 0.92 * yi / 10
+            y = door_y(0.02 + 0.92 * yi / 10, 2.03, 0.04)
             loops.append([V(xw - s * 0.072, y, 2.03), V(xw - s * 0.076, y, 2.10), V(xw - s * 0.064, y, 2.10),
                           V(xw - s * 0.060, y, 2.03)])
         ins = loft(f"door_insert_{s}", loops, "trim_insert", closed=True, cap0=True, cap1=True)
@@ -1220,11 +1331,11 @@ def build_doors():
         # armrest with pull cup, window switch pad at the front
         loops = []
         for yi in range(15):
-            y = -0.02 + 0.80 * yi / 14
+            y = door_y(-0.02 + 0.80 * yi / 14, 1.93, 0.04)
             h = 0.055
             loops.append([V(xw - s * (0.060 + px), y, 1.955 + pz) for px, pz in rrect(0.085, h, 0.022, 3, 0.04, 0)])
         arm = loft(f"door_armrest_{s}", loops, "leather", closed=True, cap0=True, cap1=True, sharp=60)
-        sp = V(xw - s * 0.12, 0.66, 1.987)
+        sp = V(xw - s * 0.12, door_y(0.66, 1.93, 0.08), 1.987)
         panel(f"winswitch_pad_{s}", rrect(0.07, 0.11, 0.012, 3), sp, V(0, 0, 1), V(0, 1, 0), 0.008, "piano", bev=0.002)
         for k in range(2):
             box(f"winswitch_{s}_{k}", tuple(sp + V(s * (-0.015 + 0.03 * k) * 0, -0.03 + 0.04 * k, 0.006)),
@@ -1235,27 +1346,28 @@ def build_doors():
                V(xw - s * 0.07, 0.64, 1.93)]
         tube(f"door_pull_{s}", G.polyline_smooth(pts, 4), 0.013, "dash_dark", seg=10)
         # interior opener lever (satin) near the front top
-        lp = V(xw - s * 0.072, 0.92, 2.06)
+        lp = V(xw - s * 0.072, door_y(0.92, 2.06, 0.08), 2.06)
         panel(f"opener_cup_{s}", rrect(0.10, 0.045, 0.015, 3), lp, V(-s, 0, 0), V(0, 0, 1), 0.006, "dash_dark", bev=0.002)
         box(f"opener_lever_{s}", tuple(lp + V(-s * 0.008, -0.01, 0)), (0.012, 0.075, 0.016), "satin", bev=0.005)
         # map pocket with bottle holder
         loops = []
         for yi in range(11):
-            y = -0.10 + 0.95 * yi / 10
+            y = -0.08 + (door_y(0.85, 1.50, 0.04) + 0.08) * yi / 10      # starts ahead of the bunk end
             loops.append([V(xw - s * px, y, pz) for px, pz in
                           ((0.050, 1.50), (0.105, 1.50), (0.112, 1.66), (0.098, 1.70), (0.088, 1.66), (0.085, 1.54),
                            (0.050, 1.54))])
         pk = loft(f"door_pocket_{s}", loops, "dash_lower", closed=True, cap0=True, cap1=True)
         bevel(pk, 0.004, 2)
-        box_mm(f"pocket_mat_{s}", xw - s * 0.052, xw - s * 0.083, -0.09, 0.84, 1.541, 1.546, "rubber")
+        box_mm(f"pocket_mat_{s}", xw - s * 0.052, xw - s * 0.083, -0.07, door_y(0.84, 1.50, 0.05), 1.541, 1.546, "rubber")
         # speaker in the upper front of the door
-        c = V(xw - s * 0.058, 0.88, 1.79)
+        c = V(xw - s * 0.058, door_y(0.88, 1.79, 0.12), 1.79)
         cyl(f"door_spk_{s}", c, 0.075, 0.012, "dash_dark", axis="X", seg=40, bev=0.004)
         plane_uv(f"door_spk_grille_{s}", quad_on(c + V(-s * 0.0065, 0, 0), V(-s, 0, 0), V(0, 0, 1), 0.13, 0.13), "grille")
         # door seal around the aperture + scuff plate on the floor sill
-        pts = [V(xw + s * 0.004, DOOR_Y0, FLOOR), V(xw + s * 0.004, DOOR_Y0, WIN_Z1 + 0.05),
-               V(xw + s * 0.004, side_win_front(WIN_Z1) + 0.03, WIN_Z1 + 0.05),
-               V(xw + s * 0.004, side_win_front(WS_Z0) + 0.04, WS_Z0 - 0.04), V(xw + s * 0.004, DOOR_Y1, FLOOR)]
+        top = WIN_Z1 + 0.05
+        front = [V(xw + s * 0.004, y, z) for y, z in reversed(DOOR_IF["door_front_yz"]) if FLOOR < z < top]
+        pts = ([V(xw + s * 0.004, DOOR_Y0, FLOOR), V(xw + s * 0.004, DOOR_Y0, top),
+                V(xw + s * 0.004, door_front(top), top)] + front + [V(xw + s * 0.004, DOOR_Y1, FLOOR)])
         tube(f"door_seal_{s}", pts, 0.012, "rubber", seg=8, cap=False)
         sp_ = box_mm(f"scuff_{s}", xw - s * 0.06, xw + s * 0.004, DOOR_Y0 + 0.02, DOOR_Y1 - 0.02, FLOOR - 0.004, FLOOR + 0.012,
                      "scuff_plate", bev=0.003)
@@ -1275,9 +1387,10 @@ def build_floor():
 def build_bunk():
     group("bunk")
     yf = -0.10
+    xb = XI - 0.09   # r3: the door aperture now starts at y -0.56, so the bunk ends stand 90 mm clear of the door card
     # base with drawers: left storage, centre fridge drawer, right storage
-    box_mm("bunk_base", -XI, XI, YB, yf, FLOOR, 1.86, "dash_lower", bev=0.008)
-    for i, (x0, x1) in enumerate(((-1.10, -0.40), (-0.36, 0.36), (0.40, 1.10))):
+    box_mm("bunk_base", -xb, xb, YB, yf, FLOOR, 1.86, "dash_lower", bev=0.008)
+    for i, (x0, x1) in enumerate(((-1.03, -0.40), (-0.36, 0.36), (0.40, 1.03))):
         fr = box_mm(f"drawer_{i}", x0, x1, yf - 0.012, yf + 0.002, 1.47, 1.80, "dash_lower", bev=0.006)
         box_mm(f"drawer_grip_{i}", (x0 + x1) / 2 - 0.09, (x0 + x1) / 2 + 0.09, yf - 0.024, yf - 0.010, 1.755, 1.775,
                "dash_dark", bev=0.004)
@@ -1285,12 +1398,12 @@ def build_bunk():
     # mattress: rounded slab, fabric, piping along the top edge
     loops = []
     for i in range(23):
-        x = -XI + 0.01 + (2 * XI - 0.02) * i / 22
+        x = -xb + 0.01 + (2 * xb - 0.02) * i / 22
         loops.append([V(x, y, z) for y, z in
                       ((YB + 0.01, 1.865), (yf - 0.01, 1.865), (yf - 0.005, 1.90), (yf - 0.012, 1.99), (yf - 0.035, 2.005),
                        (YB + 0.03, 2.005), (YB + 0.01, 1.99))])
     mt = loft("mattress", loops, "mattress", closed=True, cap0=True, cap1=True, sharp=70)
-    tube("mattress_piping", [V(-XI + 0.02, yf - 0.025, 2.0), V(XI - 0.02, yf - 0.025, 2.0)], 0.004, "mattress", seg=6)
+    tube("mattress_piping", [V(-xb + 0.02, yf - 0.025, 2.0), V(xb - 0.02, yf - 0.025, 2.0)], 0.004, "mattress", seg=6)
     # pillow + folded blanket (lived-in, tidy)
     loops = []
     for i in range(11):
@@ -1306,7 +1419,7 @@ def build_bunk():
         box_mm(f"bunk_strap_{x}", x - 0.02, x + 0.02, YB + 0.085, YB + 0.092, 2.80, 3.12, "webbing")
         box_mm(f"bunk_buckle_{x}", x - 0.025, x + 0.025, YB + 0.088, YB + 0.10, 2.92, 2.96, "metal_dark", bev=0.003)
     # bunk control panel on the driver-side rear wall (climate, alarm, lights)
-    c = V(-XI + 0.008, YB + 0.45, 2.32)
+    c = V(-XI + 0.008, min(YB + 0.45, DOOR_Y0 - 0.11), 2.32)   # on the wall behind the door opening
     panel("bunk_panel", rrect(0.16, 0.10, 0.012, 3), c, V(1, 0, 0), V(0, 0, 1), 0.012, "dash_dark", bev=0.003)
     for k in range(3):
         panel(f"bunk_btn_{k}", rrect(0.03, 0.022, 0.004, 2), c + V(0.004, -0.045 + 0.045 * k, -0.02), V(1, 0, 0),
@@ -1413,34 +1526,43 @@ def build_curtains():
 
 # ---------------------------------------------------------------- mirrors (outside, seen through the windows)
 def build_mirrors():
+    """Outside mirrors, seen through the windows; heads placed where exterior/body.py mirrors('classic') puts them
+    (A6 r3: before, the heads sat 0.4 m further forward and, with the corrected rake, hid behind the A-pillar).
+    Glass faces are aimed like a driver would set them: the normal bisects 'to the eye point' and 'to the field of view'
+    (class II/IV: straight back along the cab side; class V: the ground at the passenger door; class VI: the ground in
+    front of the bumper). The MIRROR_* quads carry the game's RenderTextures; arms/housings are shell placeholders."""
     group("mirrors")
+    my = side_win_front(2.90) - 0.125        # head y; = exterior/body.py mirrors(): win_front(2.90) + 0.02 - 0.10
+
+    def aim(c, target):
+        return ((EYE - c).normalized() + (V(*target) - c).normalized()).normalized()
+
     for s in (-1, 1):
-        xh = s * 1.50
-        yh = 1.18
-        # arms: upper from the A-pillar top, lower to the pillar base
-        top = [V(s * HALF_OUT, ws_y(2.95) - 0.08, 2.95), V(s * 1.38, ws_y(2.95) - 0.06, 2.97), V(xh, yh, 2.90)]
+        xh, yh = s * 1.50, my
+        top = [V(s * HALF_OUT, side_win_front(2.90) + 0.02, 2.93), V(s * 1.33, yh + 0.02, 2.99), V(xh, yh, 2.94)]
         tube(f"mirror_arm_up_{s}", G.polyline_smooth(top, 4), 0.016, "ext_plastic", seg=12)
-        low = [V(s * HALF_OUT, ws_y(2.15) - 0.08, 2.15), V(s * 1.40, yh + 0.02, 2.14), V(xh, yh, 2.16)]
+        low = [V(s * HALF_OUT, side_win_front(2.25) - 0.02, 2.25), V(s * 1.40, yh + 0.01, 2.12), V(xh, yh, 2.08)]
         tube(f"mirror_arm_lo_{s}", G.polyline_smooth(low, 4), 0.014, "ext_plastic", seg=12)
-        # main (class II) and wide-angle (class IV) heads; glass faces backwards (-Y) slightly in
-        n = V(-s * 0.18, -1, 0).normalized()
-        for name, zc, h, w in (("main", 2.60, 0.40, 0.21), ("wide", 2.26, 0.19, 0.20)):
+        for name, zc, h, w in (("main", 2.60, 0.39, 0.215), ("wide", 2.20, 0.17, 0.215)):
             c = V(xh, yh, zc)
+            n = aim(c, (xh, yh - 30.0, zc - 0.6))
             panel(f"mirror_{name}_housing_{s}", rrect(w + 0.025, h + 0.025, 0.035, 4), c - n * 0.005, n, V(0, 0, 1), 0.09,
                   "ext_plastic", bev=0.02, bseg=3)
             plane_uv(f"mirror_{name}_glass_{s}", quad_on(c, n, V(0, 0, 1), w, h, off=0.002), "mirror")
-        rod(f"mirror_spine_{s}", (xh, yh + 0.03, 2.16), (xh, yh + 0.03, 2.90), 0.012, "ext_plastic", seg=10)
-    # class V kerb mirror (passenger front-top corner) and class VI front mirror (above the screen, outside)
-    c = V(1.20, ws_y(WS_Z1) + 0.22, 3.10)
-    tube("kerb_arm", [V(1.05, ws_y(WS_Z1) + 0.08, 3.25), V(1.15, ws_y(WS_Z1) + 0.18, 3.20), c], 0.012, "ext_plastic", seg=10)
-    panel("kerb_head", rrect(0.20, 0.16, 0.03, 3), c, V(-0.3, -0.5, -0.8).normalized(), V(0, 1, 0), 0.06, "ext_plastic",
-          bev=0.01)
-    plane_uv("kerb_glass", quad_on(c, V(-0.3, -0.5, -0.8).normalized(), V(0, 1, 0), 0.17, 0.13, off=0.002), "mirror")
-    c = V(0.35, ws_y(WS_Z1) + 0.34, 3.10)
-    tube("front_arm", [V(0.35, ws_y(WS_Z1) + 0.10, 3.30), c + V(0, 0, 0.06)], 0.012, "ext_plastic", seg=10)
-    nf = V(0, -0.6, -0.8).normalized()
-    panel("front_head", rrect(0.26, 0.15, 0.03, 3), c, nf, V(1, 0, 0), 0.06, "ext_plastic", bev=0.01)
-    plane_uv("front_glass", quad_on(c, nf, V(1, 0, 0), 0.23, 0.12, off=0.002), "mirror")
+        rod(f"mirror_spine_{s}", (xh, yh + 0.03, 1.95 if s > 0 else 2.08), (xh, yh + 0.03, 2.94), 0.012, "ext_plastic",
+            seg=10)
+    # class V kerb mirror under the passenger main mirrors, class VI front mirror over the passenger-side corner
+    c = V(1.42, my + 0.012, 1.98)
+    n = aim(c, (1.55, 0.6, 0.0))
+    tube("kerb_arm", [V(1.50, my + 0.03, 1.97), c + n * -0.03], 0.012, "ext_plastic", seg=10)
+    panel("kerb_head", rrect(0.20, 0.14, 0.03, 3), c - n * 0.004, n, V(1, 0, 0), 0.06, "ext_plastic", bev=0.01)
+    plane_uv("kerb_glass", quad_on(c, n, V(1, 0, 0), 0.17, 0.11, off=0.002), "mirror_down")
+    c = V(0.98, ws_y(WS_Z1) + 0.25, 3.12)
+    n = aim(c, (0.6, 3.2, 0.0))
+    tube("front_arm", [V(0.98, ws_y(WS_Z1) + 0.06, 3.26), V(0.98, ws_y(WS_Z1) + 0.20, 3.24), c - n * 0.03], 0.012,
+         "ext_plastic", seg=10)
+    panel("front_head", rrect(0.26, 0.15, 0.03, 3), c - n * 0.004, n, V(1, 0, 0), 0.06, "ext_plastic", bev=0.01)
+    plane_uv("front_glass", quad_on(c, n, V(1, 0, 0), 0.23, 0.12, off=0.002), "mirror_down")
 
 
 # ---------------------------------------------------------------- UVs
@@ -1518,6 +1640,10 @@ def setup_render(a):
     sc.render.use_stamp = False
 
 
+# mirror placeholder level per sky: ~0.55 reflectance x sky radiance / 0.83 (sky value in the placeholder image)
+MIRROR_LEVEL = {"overcast": (0.55, (1.0, 1.0, 1.0)), "lowsun": (0.55, (1.0, 0.90, 0.78))}
+
+
 def set_lighting(kind):
     sc = bpy.context.scene
     for o in list(bpy.data.objects):
@@ -1555,6 +1681,7 @@ def set_lighting(kind):
         nt.links.new(sky, bg.inputs["Color"])
         bg.inputs["Strength"].default_value = 1.35
         sc.view_settings.exposure = 2.3
+        M.set_mirror_level(*MIRROR_LEVEL["overcast"])
     else:
         # low sun ~9 deg from the front-left (late afternoon heading west-ish)
         sky = nt.nodes.new("ShaderNodeTexSky")
@@ -1579,6 +1706,7 @@ def set_lighting(kind):
         to_sun = V(-math.sin(az - math.pi / 2) * 0 + math.cos(az), math.sin(az), math.tan(el)).normalized()
         sun.rotation_euler = (-to_sun).to_track_quat("-Z", "Y").to_euler()
         sc.view_settings.exposure = 1.2
+        M.set_mirror_level(*MIRROR_LEVEL["lowsun"])
     sc.world = w
 
 

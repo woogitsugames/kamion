@@ -295,6 +295,80 @@ def arc_ticks(d, cx, cy, r, a0, a1, n_major, n_minor, col, col_minor, lw=3, ln=1
         d.line([(x0, y0), (x1, y1)], fill=c, width=lw if major else max(1, lw - 1))
 
 
+def telltale_row(d, W, y=12, s=44, pitch=72):
+    """A6 r3 (REVIEW-2026-11-09-r2 A6 #6): full warning-lamp row along the top edge of the cluster, ISO 2575-style
+    glyphs drawn here. Unlit lamps stay as faint grey symbols (as behind a real telltale lens); the vehicle state of
+    the control frames (driving at 82 km/h, engine warm, dipped beam on, retarder in auto) lights only dipped beam and
+    retarder-ready, both green. Order follows a typical EU truck: brakes/air first, then powertrain, then lamps."""
+    off = (36, 37, 38)
+    red, amber, green = (205, 52, 38), (226, 150, 28), (74, 168, 92)
+    lit = {"retarder": green, "beam": green}
+    names = ["park", "brake", "air", "abs", "trailer", "retarder", "mil", "preheat", "battery", "oil", "coolant",
+             "belt", "beam"]
+    x0 = (W - pitch * (len(names) - 1) - s) // 2
+    lw = 4
+
+    def arcs(x, c):  # brake-drum brackets either side of a circle
+        d.arc([x - 4, y + 2, x + 14, y + s - 2], 110, 250, fill=c, width=lw)
+        d.arc([x + s - 14, y + 2, x + s + 4, y + s - 2], -70, 70, fill=c, width=lw)
+
+    def ring_text(x, c, t, fs=22):
+        d.ellipse([x + 6, y + 4, x + s - 6, y + s - 4], outline=c, width=lw)
+        f = font(fs)
+        d.text((x + s / 2 - d.textlength(t, font=f) / 2, y + s / 2 - fs * 0.62), t, fill=c, font=f)
+
+    for i, nm in enumerate(names):
+        x = x0 + i * pitch
+        c = lit.get(nm, off)
+        if nm in ("park", "brake", "air", "abs", "retarder"):
+            arcs(x, c)
+            ring_text(x, c, {"park": "P", "brake": "!", "air": "I II", "abs": "ABS", "retarder": "R"}[nm],
+                      fs={"air": 13, "abs": 12}.get(nm, 24))
+            if nm == "air":  # low air: pressure waves under the symbol
+                d.line([(x + 10, y + s + 1), (x + s - 10, y + s + 1)], fill=c, width=2)
+        elif nm == "trailer":
+            d.rectangle([x + 2, y + 8, x + s - 6, y + 28], outline=c, width=lw)
+            d.line([(x + s - 6, y + 22), (x + s + 2, y + 22)], fill=c, width=lw)
+            for wx in (x + 10, x + 22):
+                d.ellipse([wx - 5, y + 28, wx + 5, y + 38], outline=c, width=3)
+            d.text((x + 8, y + 10), "ABS", fill=c, font=font(11))
+        elif nm == "mil":  # engine outline
+            pts = [(x + 6, y + 16), (x + 14, y + 16), (x + 14, y + 10), (x + 30, y + 10), (x + 30, y + 16),
+                   (x + 36, y + 16), (x + 40, y + 12), (x + 44, y + 12), (x + 44, y + 32), (x + 40, y + 32),
+                   (x + 36, y + 28), (x + 32, y + 36), (x + 14, y + 36), (x + 6, y + 28)]
+            d.line(pts + [pts[0]], fill=c, width=lw, joint="curve")
+        elif nm == "preheat":  # glow-plug coil
+            for k in range(4):
+                d.arc([x + 6 + k * 8, y + 12, x + 18 + k * 8, y + 32], 180, 360, fill=c, width=lw)
+            d.line([(x + 4, y + 36), (x + s - 4, y + 36)], fill=c, width=3)
+        elif nm == "battery":
+            d.rectangle([x + 4, y + 12, x + s - 4, y + 36], outline=c, width=lw)
+            d.rectangle([x + 10, y + 7, x + 16, y + 12], fill=c)
+            d.rectangle([x + s - 16, y + 7, x + s - 10, y + 12], fill=c)
+            d.line([(x + 10, y + 23), (x + 17, y + 23)], fill=c, width=3)
+            d.line([(x + s - 18, y + 23), (x + s - 10, y + 23)], fill=c, width=3)
+            d.line([(x + s - 14, y + 19), (x + s - 14, y + 27)], fill=c, width=3)
+        elif nm == "oil":  # oil can with a drop
+            d.polygon([(x + 4, y + 22), (x + 16, y + 18), (x + 30, y + 18), (x + 42, y + 12), (x + 32, y + 32),
+                       (x + 8, y + 32)], outline=c, width=lw)
+            d.ellipse([x + 40, y + 26, x + 46, y + 34], fill=c)
+        elif nm == "coolant":  # thermometer in waves
+            d.line([(x + s / 2, y + 4), (x + s / 2, y + 28)], fill=c, width=5)
+            d.ellipse([x + s / 2 - 6, y + 26, x + s / 2 + 6, y + 38], fill=c)
+            for k, xx in enumerate((x + 4, x + s / 2 + 10)):
+                d.line([(xx, y + 40), (xx + 6, y + 37), (xx + 12, y + 40)], fill=c, width=2)
+        elif nm == "belt":
+            d.ellipse([x + 16, y + 2, x + 28, y + 14], outline=c, width=3)
+            d.line([(x + 22, y + 14), (x + 22, y + 34)], fill=c, width=lw)
+            d.line([(x + 12, y + 16), (x + 32, y + 32)], fill=c, width=lw)
+            d.line([(x + 12, y + 40), (x + 32, y + 40)], fill=c, width=3)
+        elif nm == "beam":  # dipped beam
+            d.pieslice([x, y + 4, x + 40, y + 40], 90, 270, fill=c)
+            d.rectangle([x + 20, y + 4, x + 24, y + 40], fill=c)
+            for k in range(3):
+                d.line([(x + 30, y + 10 + 12 * k), (x + 52, y + 16 + 12 * k)], fill=c, width=4)
+
+
 def cluster_display():
     """12.3-inch class instrument cluster screen (aspect ~ 2.6:1), daytime driving state (A6 layout).
 
@@ -366,13 +440,7 @@ def cluster_display():
         d.line([(1240 + int(180 * 8.5 / 12.5), y - 4), (1240 + int(180 * 8.5 / 12.5), y + 22)], fill=grey, width=2)
         d.text((1432, y - 10), f"{v:.1f}".replace(".", ","), fill=white, font=font(28))
     d.text((1460, 412), "bar", fill=grey, font=font(24))
-    # ---- telltale row (top): lit telltales only — dipped beam (green), cruise active (green)
-    def beam(x, y, col):
-        d.pieslice([x, y, x + 40, y + 36], 90, 270, fill=col)
-        d.rectangle([x + 20, y, x + 24, y + 36], fill=col)
-        for k in range(3):
-            d.line([(x + 30, y + 6 + 12 * k), (x + 52, y + 12 + 12 * k)], fill=col, width=4)
-    beam(560, 14, green)
+    telltale_row(d, W)
     img.save(os.path.join(OUT, "display_cluster.png"), optimize=True)
     print("cluster")
 
@@ -672,6 +740,66 @@ def tree_cards():
     print("tree cards")
 
 
+def mirror_placeholders():
+    """Render-only stand-ins for the mirror RenderTextures (REVIEW-2026-11-09-r2 A6 #4): a blurred 'probe' of what a
+    class II/IV mirror sees on the yard, so the control frames show no white slabs. Not a game texture: in Unity every
+    MIRROR_* quad gets its own camera RT. Linear values ~ scene radiance / sky (sky ~0.9), shader scales by light.
+
+    mirror_rt_side.png (256 x 512, portrait): the cab flank runs up the INNER edge (u = 1; the shader flips u on the
+    right-hand mirrors), sky above a ragged treeline and a low hall, asphalt with a lane line converging to the rear.
+    mirror_rt_down.png (256 x 256): kerb/front mirror, mostly asphalt with a parking line and the dark tyre/step
+    corner."""
+    rng = np.random.default_rng(4242)
+    w, h = 256, 512
+    vv = np.linspace(0.0, 1.0, h)[:, None] * np.ones((1, w))     # 0 top .. 1 bottom
+    uu = np.ones((h, 1)) * np.linspace(0.0, 1.0, w)[None, :]
+    img = np.zeros((h, w, 3))
+    sky = np.array([0.80, 0.83, 0.87]) * (1.0 - 0.18 * (1 - vv[..., None]))
+    img[:] = sky
+    hor = 0.36 + 0.004 * np.sin(uu * 5.0)                          # horizon (slightly bent by mirror curvature)
+    hall = (uu > 0.08) & (uu < 0.52) & (vv > hor - 0.05) & (vv < hor)
+    img[hall] = (0.55, 0.56, 0.57)
+    tree_top = hor - 0.025 - 0.025 * norm01(np.cumsum(rng.normal(0, 1, w)))[None, :]
+    trees = (vv > tree_top) & (vv < hor) & ~hall
+    img[trees] = (0.085, 0.10, 0.075)
+    ground = vv >= hor
+    g = 0.20 + 0.03 * rng.normal(0, 1, (h, w))
+    gd = np.clip((vv - hor) / (1 - hor + 1e-6), 0, 1)
+    img[ground] = np.stack([g * (0.98 + 0.05 * gd), g * (0.98 + 0.05 * gd), g * 0.96], -1)[ground]
+    lane = ground & (np.abs(uu - (0.30 - 0.22 * gd)) < 0.003 + 0.012 * gd)
+    img[lane] = (0.55, 0.55, 0.53)
+    # cab flank on the inner edge: perspective wedge (narrow at the horizon, wide near the mirror)
+    edge = 1.0 - (0.05 + 0.20 * np.clip(vv - 0.05, 0, 1))
+    cab = uu > edge
+    paint = 0.50 - 0.14 * vv                                     # flank in its own shade
+    img[cab] = np.stack([paint, paint, paint * 0.98], -1)[cab]
+    win = cab & (vv < 0.26)                                       # side window band: dark glass
+    img[win] = (0.10, 0.11, 0.115)
+    gap = (np.abs(uu - (edge + 0.5 * (1 - edge))) < 0.004) & (vv > 0.26) & cab
+    img[gap] = (0.05, 0.05, 0.05)
+    step = cab & (vv > 0.86)                                       # steps / arch: dark
+    img[step] = (0.04, 0.04, 0.04)
+    im = Image.fromarray((np.clip(img, 0, 1) ** (1 / 2.2) * 255).astype(np.uint8), "RGB")
+    im = im.filter(ImageFilter.GaussianBlur(2.2))                  # probe blur
+    arr = np.asarray(im).astype(np.float32) / 255.0
+    vig = 1.0 - 0.25 * (np.abs(uu - 0.5) * 2) ** 4 - 0.25 * (np.abs(vv - 0.5) * 2) ** 4   # housing occlusion
+    arr = arr * vig[..., None] ** (1 / 2.2)
+    Image.fromarray((arr * 255).astype(np.uint8), "RGB").save(os.path.join(OUT, "mirror_rt_side.png"), optimize=True)
+    # down-looking mirrors
+    n = 256
+    vv = np.linspace(0, 1, n)[:, None] * np.ones((1, n))
+    uu = np.ones((n, 1)) * np.linspace(0, 1, n)[None, :]
+    g = 0.19 + 0.035 * fnoise(n, 4, 60)
+    img = np.stack([g, g, g * 0.97], -1)
+    line = np.abs(uu * 0.8 + vv * 0.35 - 0.62) < 0.022
+    img[line] = (0.50, 0.50, 0.48)
+    tyre = (uu - 1.05) ** 2 + (vv - 1.05) ** 2 < 0.20
+    img[tyre] = (0.035, 0.035, 0.035)
+    im = Image.fromarray((np.clip(img, 0, 1) ** (1 / 2.2) * 255).astype(np.uint8), "RGB").filter(ImageFilter.GaussianBlur(2.0))
+    im.save(os.path.join(OUT, "mirror_rt_down.png"), optimize=True)
+    print("mirror placeholders")
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     leather()
@@ -691,6 +819,7 @@ def main():
     icon_atlas()
     gauge_faces()
     tree_cards()
+    mirror_placeholders()
     tot = sum(os.path.getsize(os.path.join(OUT, f)) for f in os.listdir(OUT))
     print("TOTAL KB", tot // 1024)
 
