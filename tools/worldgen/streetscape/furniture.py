@@ -95,7 +95,7 @@ def clear_carriageway(pl, carriage, zsurf, report):
     groups = {}
     for it in pl.items:
         groups.setdefault((round(it["e"], 2), round(it["n"], 2)), []).append(it)
-    moved, left = 0, []
+    moved, left, drop = 0, [], set()
     for (e, n), items in groups.items():
         base = [it for it in items if it["p"].startswith(GROUND_PROPS)]
         if not base or not inner.contains(Point(e, n)):
@@ -105,7 +105,8 @@ def clear_carriageway(pl, carriage, zsurf, report):
         L = float(np.hypot(*v))
         new = np.array([q.x, q.y]) + (v / L if L > 1e-6 else np.array([1.0, 0.0])) * 0.8
         if inner.contains(Point(*new)):
-            left.append(base[0]["p"])
+            left.append({"p": base[0]["p"], "at": [round(e, 1), round(n, 1)], "src": base[0].get("src", "")})
+            drop.update(id(it) for it in items)      # a pole in the middle of a lane is worse than a missing one
             continue
         z0 = float(zsurf(np.array([new[0]]), np.array([new[1]]))[0])
         dz = z0 - base[0]["z"]
@@ -113,7 +114,9 @@ def clear_carriageway(pl, carriage, zsurf, report):
             it["e"], it["n"] = round(float(new[0]), 3), round(float(new[1]), 3)
             it["z"] = round(it["z"] + dz, 3)
         moved += 1
-    report["props_off_carriageway"] = {"moved": moved, "still_on_road": len(left)}
+    if drop:
+        pl.items[:] = [it for it in pl.items if id(it) not in drop]
+    report["props_off_carriageway"] = {"moved": moved, "still_on_road": 0, "removed": left[:20]}
 
 
 # ------------------------------------------------------------------------------------------- lamps

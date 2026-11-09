@@ -39,9 +39,9 @@ def test_wall_openings_are_holes():
     ops = [(2.0, 3.5, 1.0, 2.5, 0.15, "window", "glass"), (5.0, 8.0, 0.0, 3.0, 0.25, "dock", "dock_door")]
     BM.wall_with_openings(acc, "buildings", "hall_wall_grey", np.array([0.0, 0.0]), np.array([1.0, 0.0]),
                           np.array([0.0, -1.0]), 10.0, 0.0, 6.0, ops)
-    V, T, _ = acc.d[("buildings", "hall_wall_grey")][0]
+    V, T = acc.d[("buildings", "hall_wall_grey")][0][:2]
     area = 0.0
-    for (V_, T_, _) in acc.d[("buildings", "hall_wall_grey")]:
+    for (V_, T_, *_) in acc.d[("buildings", "hall_wall_grey")]:
         a, b, c = V_[T_[:, 0]], V_[T_[:, 1]], V_[T_[:, 2]]
         area += 0.5 * np.linalg.norm(np.cross(b - a, c - a), axis=1).sum()
         n = np.cross(b - a, c - a)
