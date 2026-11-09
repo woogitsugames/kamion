@@ -358,9 +358,39 @@ TRACTOR = dict(wb=3.70, fh=1.45, cab_l=2.30, W=2.49, H=3.85, floor=1.30, fw_ahea
 TRAILER_KINGPIN = 12.40          # rear edge -> kingpin of the 13.6 m trailer (WORKING_VALUE)
 
 
+def _plan(hw, y0, y1, rf, rr, n=3):
+    """Rounded-rectangle plan section (x, y), CCW seen from above: front corners radius rf, rear rr."""
+    pts = []
+    for cx, cy, r, a0 in ((hw - rr, y0 + rr, rr, -90), (hw - rf, y1 - rf, rf, 0), (-hw + rf, y1 - rf, rf, 90),
+                          (-hw + rr, y0 + rr, rr, 180)):
+        for k in range(n):
+            a = math.radians(a0 + 90 * k / (n - 1))
+            pts.append((cx + r * math.cos(a), cy + r * math.sin(a)))
+    return np.array(pts)
+
+
+def vloft(m, mat, sections, zs, cap=True):
+    """Loft of CCW plan sections stacked along z (outward faces) + top cap."""
+    k = len(sections[0])
+    V = [[x, y, z] for sec, z in zip(sections, zs) for x, y in sec]
+    T = []
+    for i in range(len(zs) - 1):
+        for j in range(k):
+            a, b = i * k + j, i * k + (j + 1) % k
+            T += [(a, b, b + k), (a, b + k, a + k)]
+    m.add(mat, V, T, [[v[1], v[2]] for v in V])
+    if cap:
+        c = np.mean(sections[-1], axis=0)
+        Vc = [[c[0], c[1], zs[-1]]] + [[x, y, zs[-1]] for x, y in sections[-1]]
+        m.add(mat, Vc, [(0, 1 + j, 1 + (j + 1) % k) for j in range(k)], [[v[0], v[1]] for v in Vc])
+
+
 def tractor(colour):
-    """Generic 4x2 cab-over tractor; origin under the fifth wheel. Dimensions typical for the class (WORKING_VALUE);
-    the shape is deliberately plain (flat front, square cab, no make-specific grille or lights)."""
+    """Generic 4x2 cab-over tractor (v3.1 silhouette), origin under the fifth wheel, +y forward. Dimensions typical
+    for the class (WORKING_VALUE); deliberately brand-less: raked windscreen, rounded cab corners, medium roof with a
+    roof deflector (owiewka dachowa) and cab side extenders, black grille panel without any badge, fuel tank and
+    battery box between the axles, steps behind the front wheel, rear mudguards, mirrors. LOD0 <= 1.5 k triangles,
+    LOD1 ~ 300 (props_meta.json)."""
     t = TRACTOR
     paint = f"tractor_paint_{colour}"
     hw = t["W"] / 2
@@ -368,47 +398,85 @@ def tractor(colour):
     y_fa = y_ra + t["wb"]                      # front axle
     y_front = y_fa + t["fh"]
     y_cab0 = y_front - t["cab_l"]
+    z_roof, z_defl = 3.30, t["H"]
     out = []
     for lod in (0, 1):
         m = Mesh()
-        if lod == 0:
-            secs = [rounded_rect(hw, t["floor"], t["H"], 0.14, 0.06), rounded_rect(hw, t["floor"], t["H"], 0.14, 0.06),
-                    rounded_rect(hw - 0.04, t["floor"] - 0.05, t["H"] - 0.06, 0.16, 0.08)]
-            loft(m, paint, secs, [y_cab0, y_front - 0.25, y_front])
-        else:
-            bx(m, paint, -hw, hw, y_cab0, y_front, t["floor"], t["H"])
-        m.quad("car_glass", [hw - 0.12, y_front + 0.004, 2.05], [-hw + 0.12, y_front + 0.004, 2.05],
-               [-hw + 0.14, y_front - 0.04, 3.02], [hw - 0.14, y_front - 0.04, 3.02])
+        n = 3 if lod == 0 else 2
+        # cab: plan sections from the cab floor to the roof; the windscreen is raked back, roof edge rounded
+        rows = [(1.05, 0.0, 0.0, 0.16), (2.05, 0.0, 0.0, 0.18), (3.00, 0.20, 0.02, 0.22), (3.20, 0.32, 0.06, 0.26),
+                (z_roof, 0.50, 0.16, 0.26)]
+        if lod:
+            rows = [rows[0], rows[1], rows[2], rows[4]]
+        secs = [_plan(hw - dx, y_cab0 + (0.0 if z < 3.1 else dx), y_front - dy, rf, 0.06, n) for z, dy, dx, rf in rows]
+        vloft(m, paint, secs, [r[0] for r in rows])
+
+        def yf(z):                             # front face y at height z (windscreen rake)
+            return y_front - 0.20 * min(max((z - 2.05) / 0.95, 0.0), 1.0)
+        # windscreen + side windows (just proud of the body)
+        m.quad("car_glass", [hw - 0.16, yf(2.10) + 0.012, 2.10], [-hw + 0.16, yf(2.10) + 0.012, 2.10],
+               [-hw + 0.20, yf(2.95) + 0.012, 2.95], [hw - 0.20, yf(2.95) + 0.012, 2.95])
         for sx in (-1, 1):
-            q = [[sx * (hw + 0.004), y_front - 0.95, 2.05], [sx * (hw + 0.004), y_front - 0.12, 2.05],
-                 [sx * (hw + 0.004), y_front - 0.16, 2.85], [sx * (hw + 0.004), y_front - 0.95, 2.85]]
+            q = [[sx * (hw + 0.005), y_front - 0.95, 2.12], [sx * (hw + 0.005), y_front - 0.22, 2.12],
+                 [sx * (hw - 0.012), y_front - 0.34, 2.88], [sx * (hw - 0.012), y_front - 0.95, 2.88]]
             m.quad("car_glass", *(q if sx > 0 else q[::-1]))
-        bx(m, "car_trim", -hw + 0.05, hw - 0.05, y_front - 0.1, y_front + 0.06, 0.45, 0.85)          # bumper
+        # roof deflector: wedge from the roof (0.8 m behind the front) up to z_defl at the cab rear
+        yd0, yd1 = y_front - 0.85, y_cab0 + 0.04
+        wf, wr = hw - 0.30, hw - 0.10
+        A, B = [wf, yd0, z_roof - 0.02], [-wf, yd0, z_roof - 0.02]
+        C, D = [-wr, yd1, z_defl], [wr, yd1, z_defl]
+        E, F = [-wr, yd1, z_roof - 0.02], [wr, yd1, z_roof - 0.02]
+        m.quad(paint, A, B, C, D)                                   # sloped front face
+        m.quad(paint, D, C, E, F)                                   # rear face
+        m.add(paint, [A, D, F], [(0, 1, 2)])                        # sides
+        m.add(paint, [B, E, C], [(0, 1, 2)])
+        # cab side extenders behind the cab (paint), front bumper, grille panel, lights
+        for sx in (-1, 1):
+            bx(m, paint, sx * (hw - 0.03) - 0.015, sx * (hw - 0.03) + 0.015, y_cab0 - 0.32, y_cab0, 1.50, 3.55)
+        bx(m, "car_trim", -hw + 0.04, hw - 0.04, y_front - 0.30, y_front + 0.06, 0.38, 0.82)        # bumper
+        bx(m, paint, -hw + 0.10, hw - 0.10, y_front - 0.35, y_front + 0.01, 0.82, 1.06)              # lower panel
+        m.quad("car_trim", [hw - 0.32, y_front + 0.004, 1.12], [-hw + 0.32, y_front + 0.004, 1.12],
+               [-hw + 0.32, y_front + 0.004, 1.92], [hw - 0.32, y_front + 0.004, 1.92])            # grille (no badge)
+        for sx in (-1, 1):
+            x0 = sx * (hw - 0.30)
+            m.quad("car_light_head", [x0 + 0.22, y_front + 0.065, 0.62], [x0 - 0.22, y_front + 0.065, 0.62],
+                   [x0 - 0.22, y_front + 0.065, 0.76], [x0 + 0.22, y_front + 0.065, 0.76])
         if lod == 0:
-            bx(m, "car_trim", -hw + 0.25, hw - 0.25, y_front - 0.02, y_front + 0.01, 1.35, 1.95)      # front panel
-            for sx in (-1, 1):
-                x0 = sx * (hw - 0.32)
-                m.quad("car_light_head", [x0 - 0.2, y_front + 0.065, 0.62], [x0 + 0.2, y_front + 0.065, 0.62],
-                       [x0 + 0.2, y_front + 0.065, 0.76], [x0 - 0.2, y_front + 0.065, 0.76])
-                bx(m, "car_trim", sx * (hw + 0.05), sx * (hw + 0.09), y_front - 0.45, y_front - 0.3, 2.1, 2.75)
-                m.tube("car_trim", [sx * hw, y_front - 0.35, 2.6], [sx * (hw + 0.07), y_front - 0.38, 2.6], 0.015, None, 4)
-                bx(m, "car_trim", sx * (hw - 0.25), sx * (hw + 0.01), y_fa - 0.95, y_fa - 0.45, 0.45, 1.25)
-            q = [[-0.26, y_front + 0.065, 0.48], [0.26, y_front + 0.065, 0.48], [0.26, y_front + 0.065, 0.59],
-                 [-0.26, y_front + 0.065, 0.59]]
+            bx(m, paint, -hw + 0.08, hw - 0.08, yf(3.0) - 0.05, yf(3.0) + 0.14, 2.98, 3.04)          # sun visor
+            q = [[0.26, y_front + 0.065, 0.45], [-0.26, y_front + 0.065, 0.45], [-0.26, y_front + 0.065, 0.56],
+                 [0.26, y_front + 0.065, 0.56]]
             m.add("plate_pl", q, [(0, 1, 2), (0, 2, 3)], [[0, 0], [1, 0], [1, 1], [0, 1]])
-            bx(m, paint, -hw + 0.06, hw - 0.06, y_front - 0.25, y_front + 0.12, t["H"] - 0.68, t["H"] - 0.6)  # visor
+            for sx in (-1, 1):
+                # mirror arm + head (camera-mirror free, classic glass mirror housing)
+                bx(m, "car_trim", sx * hw, sx * (hw + 0.26), y_front - 0.30, y_front - 0.26, 2.62, 2.66)
+                bx(m, "car_trim", sx * (hw + 0.22), sx * (hw + 0.32), y_front - 0.36, y_front - 0.22, 2.20, 2.72)
+                # steps under the door, behind the front wheel
+                bx(m, "car_trim", sx * (hw - 0.30), sx * (hw - 0.02), y_cab0 + 0.02, y_fa - 0.62, 0.45, 1.05)
+                # front mudguard lip over the wheel
+                bx(m, "car_trim", sx * (hw - 0.38), sx * (hw - 0.02), y_fa - 0.60, y_fa + 0.62, 1.02, 1.07)
+        # chassis rails, rear crossmember, fifth wheel
         for sx in (-1, 1):
             bx(m, "trailer_chassis", sx * 0.43 - 0.05, sx * 0.43 + 0.05, y_ra - t["rear_oh"], y_cab0 + 0.3, 0.75, 1.05)
-        bx(m, "trailer_chassis", -0.48, 0.48, y_ra - t["rear_oh"], y_ra - t["rear_oh"] + 0.12, 0.55, 1.05)
+        bx(m, "trailer_chassis", -0.55, 0.55, y_ra - t["rear_oh"], y_ra - t["rear_oh"] + 0.12, 0.50, 1.05)
         if lod == 0:
-            m.tube("rim", [hw - 0.62, y_ra + 0.8, 0.85], [hw - 0.62, y_ra + 2.2, 0.85], 0.30, None, 12)       # fuel tank
-            bx(m, "trailer_chassis", -hw + 0.1, -hw + 0.55, y_ra + 1.0, y_ra + 2.1, 0.55, 1.1)               # air/battery
-            m.tube("trailer_alu", [-hw + 0.35, y_cab0 - 0.15, 1.2], [-hw + 0.35, y_cab0 - 0.15, 3.5], 0.07, None, 8)
-            m.tube("trailer_chassis", [0, 0, 1.08], [0, 0, 1.18], 0.9, 0.9, 16)                               # fifth wheel
+            m.tube("trailer_chassis", [0, 0, 1.05], [0, 0, 1.20], 0.88, 0.88, 14)                    # fifth wheel
+            for sx in (-1, 1):                                       # rear lights on the crossmember
+                m.quad("car_light_tail", [sx * 0.75 - 0.14, y_ra - t["rear_oh"] - 0.005, 0.70],
+                       [sx * 0.75 + 0.14, y_ra - t["rear_oh"] - 0.005, 0.70],
+                       [sx * 0.75 + 0.14, y_ra - t["rear_oh"] - 0.005, 0.82],
+                       [sx * 0.75 - 0.14, y_ra - t["rear_oh"] - 0.005, 0.82])
+            # fuel tank (right) and battery / air-tank box (left) between the axles; AdBlue tank behind it
+            m.tube("rim", [hw - 0.40, y_cab0 - 0.10, 0.80], [hw - 0.40, y_cab0 - 1.55, 0.80], 0.31, None, 12)
+            bx(m, "trailer_chassis", -hw + 0.12, -hw + 0.58, y_cab0 - 1.25, y_cab0 - 0.10, 0.52, 1.08)
+            m.tube("car_trim", [-hw + 0.35, y_cab0 - 1.35, 0.80], [-hw + 0.35, y_cab0 - 1.75, 0.80], 0.22, None, 8)
         else:
             bx(m, "trailer_chassis", -0.85, 0.85, -0.85, 0.85, 1.05, 1.18)
+            bx(m, "rim", hw - 0.70, hw - 0.10, y_cab0 - 1.55, y_cab0 - 0.10, 0.50, 1.10)
+        # rear mudguards (top + rear flap)
         for sx in (-1, 1):
-            bx(m, "car_trim", sx * (hw - 0.55), sx * (hw - 0.02), y_ra - 0.6, y_ra + 0.6, 1.12, 1.16)         # mudguard
+            bx(m, "car_trim", sx * (hw - 0.62), sx * (hw - 0.02), y_ra - 0.62, y_ra + 0.62, 1.12, 1.16)
+            if lod == 0:
+                bx(m, "rubber_black", sx * (hw - 0.62), sx * (hw - 0.02), y_ra - 0.66, y_ra - 0.63, 0.30, 1.14)
         for ya, wdt in ((y_fa, 0.32), (y_ra, 0.62)):
             for sx in (-1, 1):
                 wheel(m, [sx * (hw - 0.18 - (0.12 if wdt > 0.5 else 0.0)), ya, 0.51], 0.51, wdt, 14 if lod == 0 else 6,
