@@ -208,8 +208,9 @@ namespace Game.Editor.Setup
             var glass = Shader.Find("Kamion/Truck Glass");
             var cab = Shader.Find("Kamion/Cab Interior");
             var unlit = Shader.Find("Universal Render Pipeline/Unlit");
+            var display = Shader.Find("Kamion/Cab Display");
             var lit = Shader.Find("Universal Render Pipeline/Lit");
-            if (ext == null || glass == null || cab == null) throw new InvalidOperationException("truck shaders not compiled (Kamion/Truck Exterior, Truck Glass, Cab Interior)");
+            if (ext == null || glass == null || cab == null || display == null) throw new InvalidOperationException("truck shaders not compiled (Kamion/Truck Exterior, Truck Glass, Cab Interior)");
             Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, ResDir));
             var sets = new Dictionary<string, TruckMaterialSet>();
             foreach (var tier in Tiers)
@@ -257,7 +258,7 @@ namespace Game.Editor.Setup
                 Add("MI_Ext_MirrorProbe", mp);
 
                 // Interior: tier = LOD (High LOD0, Medium LOD1, Low LOD2); AO atlas of that LOD at the tier size.
-                int il = tier == "High" ? 0 : tier == "Medium" ? 1 : 2;
+                int il = TruckVisualRig.InteriorLodFor(tier);
                 string it = $"{SrcInt}/Textures/{tier}";
                 var ao = Tex<Texture2D>($"{it}/T_Cab_AO_LOD{il}.png");
                 foreach (var slot in new[] { "Plastic", "Leather", "Fabric", "Rubber", "Metal" })
@@ -280,16 +281,20 @@ namespace Game.Editor.Setup
                 var cg = Mat(dir, "MI_Cab_Glass", glass);
                 cg.SetFloat("_UseVertexColor", 1f); cg.SetFloat("_Opacity", 0.06f); cg.SetFloat("_Smoothness", 0.95f);
                 cg.SetTexture("_GrimeMap", Tex<Texture2D>($"{it}/T_Cab_GlassGrime.png"));
-                cg.SetFloat("_Grime", 0.12f);   // cluster cover glass: light haze, the display must stay readable
+                // Cluster cover glass: no grime - the haze texture over the screen read as a grey noisy slab (review r3 C1).
+                cg.SetFloat("_Grime", 0f);
                 cg.renderQueue = (int)RenderQueue.Transparent;
                 Add("MI_Cab_Glass", cg);
                 foreach (var d in DisplayObjects)
                 {
                     string tex = d == "DISPLAY_Cluster" ? "T_Display_cluster" : d == "DISPLAY_Infotainment" ? "T_Display_infotainment" : "T_Display_din";
-                    var m = Mat(dir, "MI_Cab_" + d, unlit);
+                    // Backlit LCD in exposed units with a readability floor (Kamion/Cab Display, review r3 C1). WORKING_VALUE.
+                    var m = Mat(dir, "MI_Cab_" + d, display);
                     m.SetTexture("_BaseMap", Tex<Texture2D>($"{SrcInt}/Textures/Displays/{tex}.png"));
-                    // Backlit LCD (~400 cd/m^2) in the exposed image: WORKING_VALUE until displays follow the scene exposure.
-                    m.SetColor("_BaseColor", new Color(0.55f, 0.55f, 0.55f, 1f));
+                    m.SetFloat("_Luminance", 500f);
+                    m.SetFloat("_MinDisplay", 0.45f);
+                    m.SetFloat("_MaxDisplay", 0.9f);
+                    m.SetFloat("_Reflection", 0.1f);   // sky reflection mostly occluded by the cluster hood / dash top
                     Add("MI_Cab_Display:" + d, m);
                 }
 
@@ -443,6 +448,8 @@ namespace Game.Editor.Setup
                             bool glassish = transparent || slotNames.All(s => s == "MI_Ext_Glass");
                             r.shadowCastingMode = glassish ? ShadowCastingMode.Off : ShadowCastingMode.On;
                             r.receiveShadows = !glassish;
+                            // Wheels (origin = wheel centre): tyre contact-patch flattening in Kamion/Truck Exterior.
+                            if (role.StartsWith("WHEEL_", StringComparison.Ordinal)) r.renderingLayerMask |= TruckVisualRig.TyreRenderingLayer;
                             exteriorLods[lod].Add(r);
                         }
                     }
@@ -484,10 +491,12 @@ namespace Game.Editor.Setup
                     {
                         string n = r.name;
                         if (n.StartsWith("CAB_ShellPlaceholder", StringComparison.Ordinal) || n.StartsWith("CAB_Glass_Windows", StringComparison.Ordinal) ||
-                            n.StartsWith("MIRROR_", StringComparison.Ordinal))
+                            n.StartsWith("MIRROR_", StringComparison.Ordinal) || n.StartsWith("CAB_Glass_LOD", StringComparison.Ordinal))
                         {
                             // The exterior owns the skin, the glazing and the mirrors (glass_interface.json); the shell placeholder was
                             // the white band seen through the windscreen in the A6 URP-like renders (review r2 A6 #2).
+                            // CAB_Glass (cluster cover glass): its unoccluded sky Fresnel greyed the screen to 4-6:1 (review r3 C1);
+                            // Kamion/Cab Display carries the (hood-occluded) cover reflection itself.
                             UnityEngine.Object.DestroyImmediate(r.gameObject);
                             continue;
                         }
@@ -547,6 +556,7 @@ namespace Game.Editor.Setup
                 rig.interiorLods = interiorLods.Select(l => new TruckVisualRig.RendererList { renderers = l.ToArray() }).ToArray();
                 rig.slots = rendererSlots.ToArray();
                 rig.residentSet = sets["Low"];
+                rig.tyreFlatRadius = (float)probe.Wheels[0].Radius;   // physics rolling radius: contact-patch plane of the wheel meshes
                 var sz = Json.Obj(ext["lod_screen_size_suggestion"]);
                 rig.screenSizes = new[] { (float)Json.Num(sz["LOD0"]), (float)Json.Num(sz["LOD1"]), (float)Json.Num(sz["LOD2"]), (float)Json.Num(sz["cull"]) };
                 rig.forceLevel = 0;

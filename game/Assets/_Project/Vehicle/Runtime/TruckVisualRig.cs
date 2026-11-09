@@ -8,7 +8,7 @@ namespace Game.Vehicle.Runtime
     /// interior LOD and the material set (High / Medium / Low textures). The prefab references the Low set only (always
     /// resident, ~4 MB); the Medium and High sets load from Resources on demand, so a Low device never loads the 2048
     /// atlases. Tier index = QualitySettings level (0 Low, 1 Medium, 2 High, 3 Ultra = High content).
-    /// Manifest mapping: exterior High LOD0-1, Medium LOD1-2, Low LOD2; interior High LOD0, Medium LOD1, Low LOD2.
+    /// Manifest mapping: exterior High LOD0-1, Medium LOD1-2, Low LOD2; interior LOD0 on every tier (InteriorLodFor).
     /// </summary>
     [ExecuteAlways]
     [DefaultExecutionOrder(-50)]
@@ -18,7 +18,14 @@ namespace Game.Vehicle.Runtime
         public struct RendererSlots { public Renderer renderer; public string[] slots; }
 
         public const string ResourcesPrefix = "TRAKT/TruckMaterials_";
+        /// <summary>Rendering layer bit of the wheel renderers: Kamion/Truck Exterior flattens the tyre at the physics
+        /// rolling radius (global _KamionTyreFlatRadius from <see cref="tyreFlatRadius"/>) - model free radius 0.538 m vs 0.51 m.</summary>
+        public const uint TyreRenderingLayer = 1u << 8;
         public static readonly string[] TierNames = { "Low", "Medium", "High", "High" };
+        /// <summary>Interior LOD per tier name. Review r3 C3: LOD1/LOD2 facet visibly at 0.3-1.2 m from the driver's eye,
+        /// so the interior is LOD0 on every tier (75 k triangles; A16 cost measured in the device run). The material sets
+        /// carry the AO atlas of this LOD (TruckAssetBuilder).</summary>
+        public static int InteriorLodFor(string tier) => 0;
 
         [Tooltip("Exterior renderers by LOD (index 0..2)")] public RendererList[] exteriorLods = new RendererList[3];
         [Tooltip("Interior renderers by LOD (index 0..2)")] public RendererList[] interiorLods = new RendererList[3];
@@ -31,6 +38,10 @@ namespace Game.Vehicle.Runtime
         [Tooltip("Interior is culled below this screen height (it is only seen through the glass from near)")]
         public float interiorCull = 0.12f;
         [Tooltip("-1 = follow QualitySettings")] public int forceLevel = -1;
+        [Tooltip("Physics tyre rolling radius (m), written by TruckAssetBuilder from the vehicle definition. The wheel meshes " +
+                 "(free radius 0.538 m) are flattened at this distance below the wheel centre; 0 = off")]
+        public float tyreFlatRadius;
+        static readonly int k_TyreFlat = Shader.PropertyToID("_KamionTyreFlatRadius");
 
         [Serializable]
         public sealed class RendererList { public Renderer[] renderers = new Renderer[0]; }
@@ -52,6 +63,7 @@ namespace Game.Vehicle.Runtime
         {
             int level = Level;
             m_Applied = level;
+            Shader.SetGlobalFloat(k_TyreFlat, tyreFlatRadius);
             string tier = TierNames[level];
             ActiveTier = tier;
             var set = residentSet != null && residentSet.name.EndsWith(tier, StringComparison.Ordinal) ? residentSet
@@ -88,7 +100,7 @@ namespace Game.Vehicle.Runtime
             }
             if (interiorGroup != null)
             {
-                int il = tier == "High" ? 0 : tier == "Medium" ? 1 : 2;
+                int il = InteriorLodFor(tier);
                 for (int i = 0; i < 3; i++)
                 {
                     var rs = interiorLods != null && i < interiorLods.Length && interiorLods[i] != null ? interiorLods[i].renderers : new Renderer[0];

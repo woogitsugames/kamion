@@ -7,7 +7,10 @@
 //   TruckLights) * uv2.y * _KamionExposure (display value per cd/m^2, EnvironmentLighting). Lamps are therefore in the same
 //   exposed units as the sun and sky: a DRL is bright, a tail lamp is a dim red by day, both read correctly at dusk.
 // - Lighting: URP UniversalFragmentPBR (main light + cascaded shadows, SH ambient x AO, reflection probe / custom
-//   environment). No clear coat (URP Complex Lit would double the cost; WORKING_VALUE, see docs/reports/visual/truck-A7).
+//   environment). Tyre deflection: renderers with rendering layer bit 8 (TruckVisualRig.TyreRenderingLayer, the wheel
+//   meshes, origin = wheel centre) are flattened in the vertex shader at _KamionTyreFlatRadius below the wheel centre
+//   (world down) - the free-radius model tyre (0.538 m) on a 0.51 m physics rolling radius otherwise sinks ~2.8 cm into
+//   the road. All passes (colour, shadow, depth) use the same displaced position. No clear coat (URP Complex Lit would double the cost; WORKING_VALUE, see docs/reports/visual/truck-A7).
 Shader "Kamion/Truck Exterior"
 {
     Properties
@@ -39,6 +42,18 @@ Shader "Kamion/Truck Exterior"
             float4 _PaintColor, _DecalColor, _DirtColor;
             float _NormalStrength, _IsPaint, _PaintRoughness, _PaintMetallic, _DecalMetallic, _DecalRoughness, _Dirt, _Lamps;
         CBUFFER_END
+        float _KamionTyreFlatRadius;   // global (VehicleVisuals: physics rolling radius), 0 = off
+
+        // Loaded-tyre contact patch: clamp the part of the tyre below the contact plane onto it.
+        float3 KamionTyreFlatten(float3 positionWS)
+        {
+            if (_KamionTyreFlatRadius > 0.0 && (GetMeshRenderingLayer() & (1u << 8)) != 0u)
+            {
+                float floorY = UNITY_MATRIX_M._m13 - _KamionTyreFlatRadius;
+                positionWS.y = max(positionWS.y, floorY);
+            }
+            return positionWS;
+        }
         ENDHLSL
 
         Pass
@@ -90,15 +105,16 @@ Shader "Kamion/Truck Exterior"
             Varyings vert(Attributes v)
             {
                 Varyings o = (Varyings)0;
-                VertexPositionInputs p = GetVertexPositionInputs(v.positionOS.xyz);
+                float3 pw = KamionTyreFlatten(TransformObjectToWorld(v.positionOS.xyz));
                 VertexNormalInputs n = GetVertexNormalInputs(v.normalOS, v.tangentOS);
-                o.positionCS = p.positionCS;
-                o.positionWS = p.positionWS;
+                float4 pcs = TransformWorldToHClip(pw);
+                o.positionCS = pcs;
+                o.positionWS = pw;
                 o.normalWS = n.normalWS;
                 o.tangentWS = half4(n.tangentWS, v.tangentOS.w * GetOddNegativeScale());
                 o.uv01 = float4(v.uv0, v.uv1);
                 o.uv2 = v.uv2;
-                o.fogFactor = ComputeFogFactor(p.positionCS.z);
+                o.fogFactor = ComputeFogFactor(pcs.z);
                 return o;
             }
 
@@ -181,7 +197,7 @@ Shader "Kamion/Truck Exterior"
             V ShadowVert(A v)
             {
                 V o;
-                float3 pw = TransformObjectToWorld(v.positionOS.xyz);
+                float3 pw = KamionTyreFlatten(TransformObjectToWorld(v.positionOS.xyz));
                 float3 nw = TransformObjectToWorldNormal(v.normalOS);
             #if _CASTING_PUNCTUAL_LIGHT_SHADOW
                 float3 ld = normalize(_LightPosition - pw);
@@ -212,7 +228,7 @@ Shader "Kamion/Truck Exterior"
             #pragma fragment DepthFrag
             struct A { float4 positionOS : POSITION; };
             struct V { float4 positionCS : SV_POSITION; };
-            V DepthVert(A v) { V o; o.positionCS = TransformObjectToHClip(v.positionOS.xyz); return o; }
+            V DepthVert(A v) { V o; o.positionCS = TransformWorldToHClip(KamionTyreFlatten(TransformObjectToWorld(v.positionOS.xyz))); return o; }
             half4 DepthFrag(V i) : SV_Target { return 0; }
             ENDHLSL
         }
