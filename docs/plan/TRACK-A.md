@@ -11,7 +11,9 @@ Właściciel toru: `truck-artist`. Ocena wizualna: `visual-critic` + akceptacja 
 | A3 | Blockout w skali wybranej koncepcji, kabina, oczy kierowcy, widoczność | czeka na wybór właściciela |
 | A4 | high-poly zewnętrza | po A3 |
 | A5 | Wnętrze kabiny (neutralne markowo: wspólna bryła, zmienne tylko znak na piaście i kolor wstawek) | **pierwsza pełna wersja do oceny** → §8 i `docs/reports/visual/truck-A5/README.md` |
-| A6–A8 | low/UV/bake (atlasy), LOD/import do Unity, naczepa | później |
+| A5 → A6 | Poprawki wnętrza po recenzji krytyka (#4, #5, #10, #11, #12, #15) | **zrobione, do ponownej oceny** → `docs/reports/visual/truck-A6/README.md` |
+| A6 | Wnętrze game-ready: LOD0/1/2, czyszczenie ukrytych ścian, 5 zestawów + atlas naklejek, mapa otoczenia kabiny, FBX + manifest | **zrobione** → §9 |
+| A7–A8 | Import do Unity (prefab, shader „Kamion/CabInterior”, ekrany/lusterka, zrzuty z telefonu), naczepa | później (A7: lider / agent Unity) |
 
 ## 1. Klasa pojazdu
 Nowoczesny europejski ciągnik siodłowy **4×2**, kabina nad silnikiem (cab-over), **wysoka kabina sypialna** long-haul, kierownica po lewej. Fikcyjna marka (D6), oryginalne wzornictwo — inspiracja klasą, nie modelem.
@@ -122,3 +124,12 @@ blender -b --factory-startup --python tools/blender/truck/interior/bake_ao.py
 Duże mapy kafelkowane i atlas AO są generowane (pomijane w git przez `art-source/truck/interior/.gitignore`); w repo są tylko skrypty i małe grafiki (ekrany, symbole, maski).
 
 **Następne kroki wnętrza:** zdjęcia właściciela → korekta wartości WORKING_VALUE; wybór koloru wstawek i stylu zegarów; A6: usunięcie ukrytych ścian, scalenie 49 materiałów do ~6 atlasów, LOD1/LOD2, wypalenie szwów/drobnych kształtów do normalnych na Medium/Low; A7: import do Unity, ekrany sterowane z fizyki, lusterka jako render texture, zrzuty z A16.
+
+## 9. A6 — wnętrze gotowe do importu (właściciel: `truck-artist`)
+Raport, rendery Cycles i URP-like, porównania przed/po: `docs/reports/visual/truck-A6/README.md`.
+
+- **Widoczność zegarów:** okrągłe zegary usunięte, ekran 12,3″ (ciśnienie I/II, paliwo, AdBlue, jedna prędkość) w „wannie” deski. Test `tools/blender/truck/interior/sightline_test.py` (exit 1 przy zasłonięciu) = PASS dla LOD0, LOD2 i szyby 19° (B).
+- **Eksport:** `art-source/truck/interior/export/SM_CabInterior_LOD{0,1,2}.fbx` (LOD0 poza gitem, > 5 MB, generowany) + `cab_interior_manifest.json` (obiekty, trójkąty, materiały, tekstury per profil, kontrakt shadera, punkty, osie animacji, osie Unity). Trójkąty: 78 381 / 37 767 / 21 574.
+- **Układ:** początek = `CAB_MOUNT_REF` = graybox `CabPivot` (Unity pojazdu (0; 1,15; 3,925)); Blender (x, y, z) → Unity (x, z, y); FBX `axis_forward=Z, axis_up=Y`, bake space transform. Walidacja: `check_export.py` (PASS); kontrola po stronie Unity — położenie `EYE_POINT` = (−0,55; 1,35; 0,225) lokalnie.
+- **Oświetlenie:** mapa `T_Cab_AO_LODn` = światło otoczenia kabiny (białe niebo + odbicia, Cycles 4096 spp, odszumione w obrębie wysp); w URP mnoży światło pośrednie (rozproszone i odbicia). Przy niskim słońcu URP-like pokazuje bardzo ciemne wnętrze — decyzja o „fill”/sondzie kabiny należy do `rendering-perf`.
+- **Odtworzenie:** komendy w raporcie A6 (§ „Jak odtworzyć”).
