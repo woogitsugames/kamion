@@ -114,12 +114,29 @@ ROUNDABOUT_CROSSFALL = 0.02
 
 # Bridges (low confidence: OSM only says bridge=viaduct + layer)
 BRIDGE_DECK_THICKNESS = 1.20        # WORKING_VALUE
-# Vertical clearance (skrajnia pionowa) of a public road under a structure. WORKING_VALUE 4.70 m: the usual Polish
-# value for roads of class Z and above; the regulation on road engineering structures has not been read here
-# (UNVERIFIED citation). Margin 0.30 m for crossfall and surfacing. Ground truth for the two Andersa viaducts:
-# CC0 photos 20201102_152339 and 7204_May_2021 (docs/REFERENCES.md) show multi-span decks well above the rings.
-BRIDGE_CLEARANCE = 4.70
+# Vertical clearance (skrajnia jezdni) under a structure: rozporządzenie Ministra Infrastruktury z dnia 24 czerwca
+# 2022 r. w sprawie przepisów techniczno-budowlanych dotyczących dróg publicznych (Dz.U. 2022 poz. 1518, "PTB2022"),
+# § 80 ust. 1: wysokość skrajni nie mniejsza niż 5,00 m dla jezdni drogi klasy A lub S (pkt 1) i 4,50 m dla jezdni
+# drogi klasy GP, G, Z, L lub D (pkt 2); § 78 ust. 6: mierzona pionowo od nawierzchni. § 80 ust. 2 allows less only
+# in difficult conditions / for existing structures with consent (not modelled). Read from the ISAP/ELI text of the
+# regulation on 2026-11-09. v3 used a flat WORKING_VALUE 4.70 m (the figure of the repealed 2000 regulation on road
+# engineering structures for A/S/GP, not re-read here: UNVERIFIED).
+# BRIDGE_CLEARANCE_MARGIN 0.30 m: WORKING_VALUE (future overlay, crossfall, deck sag); the regulation has no such
+# term. The real deck heights of the Andersa viaducts are not in the data (the NMT is the lidar ground class and
+# has the ring roads, not the decks, at the crossings: checked, deck-minus-ring in the NMT 0.3-1.2 m = noise).
+CLEARANCE_BY_CLASS = {"A": 5.00, "S": 5.00, "GP": 4.50, "G": 4.50, "Z": 4.50, "L": 4.50, "D": 4.50}
+BRIDGE_CLEARANCE = 4.50             # minimum over the classes above (PTB2022 § 80 ust. 1 pkt 2)
 BRIDGE_CLEARANCE_MARGIN = 0.30
+
+
+def clearance_height(cls: str) -> float:
+    return CLEARANCE_BY_CLASS.get(cls, BRIDGE_CLEARANCE)
+
+
+# Raised ramps (layer >= 1, no bridge) built on retaining walls when the NMT has no fill under them
+# (profile.mark_walled_ramps). WORKING_VALUE thresholds.
+RAMP_WALL_MIN_H = 1.0
+RAMP_WALL_FILL_FRAC = 0.35
 BRIDGE_KERB_H = 0.20                # WORKING_VALUE (kapa chodnikowa)
 BRIDGE_CAP_W = 1.50                 # WORKING_VALUE
 BRIDGE_PARAPET_H = 1.10             # WORKING_VALUE (bariera / balustrada)

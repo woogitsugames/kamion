@@ -58,7 +58,7 @@ def place(src, origin, hf, zc, blocked, report):
         j = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, H - 1)
         return ~blocked[j, i], zc[j, i]
 
-    def emit(P, species, rng, src_id, hscale=1.0):
+    def emit(P, species, rng, src_id, hscale=1.0, fk=None):
         if not len(P):
             return
         good, z = ok(P)
@@ -70,26 +70,32 @@ def place(src, origin, hf, zc, blocked, report):
             out.append({"p": f"tree_{sp}", "v": int(rng.integers(0, 3)), "e": round(float(x), 2), "n": round(float(y), 2),
                         "z": round(float(zz), 2), "h": round(float(h), 1), "yaw": round(float(rng.uniform(0, 6.2832)), 3),
                         "lean": round(float(rng.uniform(0, 0.05)), 3), "src": src_id})
+            if fk:
+                out[-1]["fk"] = fk          # forest stand tree (texture mix of the forest HLOD, forest_hlod.py)
 
     def pick(rng, mix, n):
         return rng.choice(SPECIES, size=n, p=np.asarray(mix) / np.sum(mix))
 
     forests = []
+    forest_mix = []
     for f in src["bdot10k"]["OT_PTLZ_A"]:
         poly = PV._poly_local(f["geometry"]["coordinates"], origin)
         if not poly.is_valid:
             poly = shapely.make_valid(poly)
+        kat = f["props"].get("kategoria")
+        fk = {"iglasty": "conifer", "liściasty": "broadleaf"}.get(kat, "mixed")
         forests.append(poly)
+        forest_mix.append((poly, fk))
         rng = np.random.default_rng(_seed(f["id"]))
         rodzaj = f["props"].get("rodzaj", "las")
         P = _scatter(poly, SPACING.get(rodzaj, 4.5), rng)
-        sp = pick(rng, MIX.get(f["props"].get("kategoria"), MIX[None]), len(P))
-        emit(P, sp, rng, f"bdot:{f['id']}", 0.7 if rodzaj == "zagajnik" else 1.0)
+        sp = pick(rng, MIX.get(kat, MIX[None]), len(P))
+        emit(P, sp, rng, f"bdot:{f['id']}", 0.7 if rodzaj == "zagajnik" else 1.0, fk=fk)
         # edge: shrubs + young deciduous along the outline
         edge = poly.buffer(3.0).difference(poly.buffer(-5.0))
         P = _scatter(edge, 3.0, rng)
         sp = pick(rng, [0.0, 0.25, 0.15, 0.05, 0.0, 0.55], len(P))
-        emit(P, sp, rng, f"bdot:{f['id']}:edge", 0.6)
+        emit(P, sp, rng, f"bdot:{f['id']}:edge", 0.6, fk=fk)
     for f in src["bdot10k"]["OT_PTRK_A"]:
         poly = PV._poly_local(f["geometry"]["coordinates"], origin)
         rng = np.random.default_rng(_seed(f["id"]))
@@ -145,6 +151,7 @@ def place(src, origin, hf, zc, blocked, report):
     for t in out:
         cnt[t["p"]] = cnt.get(t["p"], 0) + 1
     report["trees"] = cnt
+    report["_forest_mix"] = forest_mix
     return out, forests
 
 

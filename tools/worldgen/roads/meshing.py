@@ -304,7 +304,11 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
         # deck soffit: from right bottom to left bottom, facing down
         Lb, Rb = outer["L"][0], outer["R"][0]
         V = np.concatenate([Rb[:, None, :], Lb[:, None, :]], axis=1).reshape(-1, 3)
-        buf.add("bridge", "bridge_concrete", V, V[:, :2], grid_tris(len(ss), 2, flip=True), src=c.id + ":soffit")
+        Ts = grid_tris(len(ss), 2, flip=True)
+        if c.meta.get("walled") is not None:      # no soffit over walled ramps (hidden between the walls)
+            open_ = c.interp(c.meta["walled"].astype(float), ss) < 0.5
+            Ts = Ts[open_[np.minimum(Ts // 2, len(ss) - 1)].any(axis=1)]
+        buf.add("bridge", "bridge_concrete", V, V[:, :2], Ts, src=c.id + ":soffit")
         tt0, nn0 = c.line.frame(ss)
         for side, sgn in (("L", 1.0), ("R", -1.0)):
             bot, top = outer[side]
@@ -328,6 +332,26 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                     box(buf, "bridge", "barrier_steel", p3[:2] + c.line.frame(s_p)[1] * sgn * 0.06,
                         c.line.frame(s_p)[0], 0.07, 0.07, p3[2] - 0.05, p3[2] + style["screen_h"] + 0.1,
                         c.id + ":screen")
+        # retaining walls of a walled ramp (profile.mark_walled_ramps): block-faced wall from the deck edge down to
+        # 0.5 m below the NMT beside it, facing outward; also a collision wall
+        wl = c.meta.get("walled")
+        if wl is not None:
+            wsel = c.interp(wl.astype(float), ss) > 0.5
+            widx = np.where(wsel)[0]
+            for wr in (np.split(widx, np.where(np.diff(widx) > 1)[0] + 1) if len(widx) else []):
+                wr = np.arange(max(0, wr[0] - 1), min(len(ss) - 1, wr[-1] + 1) + 1)
+                if len(wr) < 2:
+                    continue
+                for side, sgn in (("L", 1.0), ("R", -1.0)):
+                    top = outer[side][1][wr].copy()
+                    zg = c.interp(c.meta["walled_zg"][side], ss[wr]) - 0.5
+                    bot = top.copy()
+                    bot[:, 2] = np.minimum(zg, top[:, 2] - 0.3)
+                    off = np.column_stack([nn0[wr] * sgn * 0.02, np.zeros(len(wr))])
+                    for layer, mat in (("bridge", "ramp_wall_blocks"), ("collision", "collision_fence")):
+                        _strip(buf, layer, mat, bot + off, top + off, c.id + ":ramp_wall", both=False)
+                        if sgn > 0:
+                            buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
         # balustrade on both cap edges (WORKING_VALUE geometry, low confidence): open steel railing =
         # handrail band at 1.0-1.1 m + mid rail at 0.45-0.60 m + posts every 2 m, set 0.15 m in from the edge
         tt, nn = c.line.frame(ss)
@@ -380,7 +404,10 @@ def build_bridge_supports(buf, c, hf, ground_footprint, report):
     if not c.bridge.any() or c.meta.get("absorbed"):
         return
     s = c.line.s
-    idx = np.where(c.bridge)[0]
+    wl = c.meta.get("walled")
+    idx = np.where(c.bridge & ~wl if wl is not None else c.bridge)[0]      # walled ramps stand on their walls
+    if not len(idx):
+        return
     runs = np.split(idx, np.where(np.diff(idx) > 1)[0] + 1)
     for run in runs:
         sa, sb = s[run[0]], s[run[-1]]

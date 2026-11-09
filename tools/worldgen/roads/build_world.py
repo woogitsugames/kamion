@@ -76,7 +76,9 @@ MATERIALS = {
     "collision_grass": {"color": [1, 0, 1], "rough": 1.0, "surface": "grass", "collision": True},
 }
 from streetscape.materials import M as _SM   # noqa: E402
+from streetscape import forest_hlod as FH     # noqa: E402
 MATERIALS.update(_SM)
+MATERIALS.update(FH.materials())
 _GLB_MATS = None
 
 
@@ -471,6 +473,16 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
             if prims:
                 glb.add_mesh(node, prims, {"layer": layer, "collision": layer == "collision"})
                 tri[node] = int(sum(len(p["T"]) for p in prims))
+        cells = sorted((cid, c) for cid, c in st["forest_hlod"].items() if c["chunk"] == key)
+        cell_meta = []
+        for cid, c in cells:
+            ex = {"layer": "forest_hlod", "cell": cid, "bbox_local_m": c["bbox"], "trees": c["trees"],
+                  "switch_m": {p_: pol["forest_hlod_m"] for p_, pol in LOD_POLICY.items()}}
+            glb.add_mesh(f"forest_hlod_{cid}", c["prims"], ex)
+            cell_meta.append({"id": cid, "bbox_local_m": c["bbox"], "tris": c["tris"], "trees": c["trees"],
+                              "mix": c["mix"]})
+        if cells:
+            tri["forest_hlod"] = int(sum(c["tris"] for _, c in cells))
         data = glb.bytes({"region": region_id, "chunk": [ci, cj], "axes": GLTF_AXES})
         fn = f"chunk_{ci}_{cj}.glb"
         (out_root / fn).write_bytes(data)
@@ -483,6 +495,11 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
             prims = layers.get(layer, [])
             if prims and layer != "buildings":
                 glb_lo.add_mesh(node, prims, {"layer": layer, "collision": layer == "collision"})
+        for cid, c in cells:
+            glb_lo.add_mesh(f"forest_hlod_{cid}", c["prims"], {"layer": "forest_hlod", "cell": cid,
+                                                               "bbox_local_m": c["bbox"], "trees": c["trees"],
+                                                               "switch_m": {p_: pol["forest_hlod_m"]
+                                                                            for p_, pol in LOD_POLICY.items()}})
         data_lo = glb_lo.bytes({"region": region_id, "chunk": [ci, cj], "axes": GLTF_AXES, "variant": "low"})
         fn_lo = f"chunk_{ci}_{cj}.low.glb"
         (out_root / fn_lo).write_bytes(data_lo)
@@ -500,6 +517,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
                                "n_min": n0 - (cj + 1) * CH.CHUNK_M, "n_max": n0 - cj * CH.CHUNK_M,
                                "z_min_evrf2007": r(zz.min(), 2), "z_max_evrf2007": r(zz.max(), 2)},
             "triangles": tri,
+            "forest_cells": cell_meta,
             "materials": sorted({p["mat"] for L in layers.values() for p in L} | {"terrain_grass"}),
             "instances": {"file": f"Data/raw/derived/{region_id}/world/{ifn}", "count": len(inst),
                           "sha256": sha(itext.encode("utf-8"))},
@@ -535,11 +553,16 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
                   "buildings": "LOD0 buildings with openings, docks, roofs",
                   "buildings_lod1": "LOD1 prisms with the same wall materials",
                   "furniture": "linear furniture: fences, guard rails, noise barriers, retaining walls, wires",
+                  "forest_hlod_<i>_<j>": "forest HLOD cell (64 m): canopy + alpha-tested edge walls; draw it instead "
+                                         "of the trees with instance field fc = <i>_<j> when the cell bbox is farther "
+                                         "than lod_policy.<profile>.forest_hlod_m; textures: material extras "
+                                         "texture_ref (art-source/world/vegetation/forest_*.png)",
                   "road_collision": "collision: smooth road surfaces (4 m stations, no flanges), paved areas, "
                                     "LOD1 buildings, fences/rails/walls; one primitive per surface material"},
         "instances": "Data/raw/derived/<id>/world/instances_<ci>_<cj>.json: point instances {p: prototype, e, n, z, "
                      "yaw [, sz scale z][, h/v/lean for trees]} of art-source/world/props/street_props.glb and "
                      "art-source/world/vegetation/trees.glb (+ trees_lod2.glb impostors)",
+        "lod_policy": LOD_POLICY,
         "materials": MATERIALS, "chunks": chunks_meta, "sources_sha256": srcs,
         "overrides_applied": w.net.overrides_applied, "overrides_stale": w.net.overrides_stale,
     }
@@ -559,21 +582,34 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
 
 # --------------------------------------------------------------------------------------------
 # LOD policy (WORKING_VALUE until measured on the Samsung A16 / Mali-G57 MC2, docs/06 §6):
-#   High: terrain LOD0 < 330 m, LOD1 < 600 m, LOD2 beyond; buildings LOD0 < 700 m; trees LOD0 < 80 m,
-#         LOD1 < 250 m, impostor < 1500 m; props LOD0 < 120 m, LOD1 < 650 m.
-#   Low : terrain LOD1 < 330 m, LOD2 < 600 m, LOD3 beyond; buildings LOD1; trees LOD1 < 40 m, impostor < 400 m,
-#         culled beyond; props LOD1 < 250 m, culled beyond; linear furniture < 400 m.
+#   High: terrain LOD0 < 330 m, LOD1 < 600 m, LOD2 beyond; buildings LOD0 < 700 m; trees LOD0 < 35 m,
+#         LOD1 < 80 m, impostor < 1500 m; forest stands (trees with "fc") are replaced by their forest HLOD
+#         cell when the cell bbox is > 120 m away (v3.1); props LOD0 < 120 m, LOD1 < 650 m.
+#   Low : terrain LOD1 < 330 m, LOD2 < 600 m, LOD3 beyond; buildings LOD1; trees LOD1 < 35 m, impostor < 400 m,
+#         culled beyond; forest HLOD 70-1000 m, culled beyond; props LOD1 < 250 m, culled beyond;
+#         linear furniture < 400 m.
+# v3 had trees LOD0 < 80 m / LOD1 < 250 m and no forest HLOD (DK8 forest frame 8.2 M triangles on High).
 LOD_POLICY = {
     "High": {"terrain": [[330, 0], [600, 1], [1e9, 2]], "bld": 700,
-             "tree": [[80, "tris_lod0"], [250, "tris_lod1"], [1500, "tris_lod2"]],
+             "tree": [[35, "tris_lod0"], [80, "tris_lod1"], [1500, "tris_lod2"]],
+             "forest_hlod_m": 120, "forest_hlod_cull_m": 1e9,
              "prop": [[120, "tris_lod0"], [650, "tris_lod1"]], "furn": 1e9},
     "Low": {"terrain": [[330, 1], [600, 2], [1e9, 3]], "bld": 0,
-            "tree": [[40, "tris_lod1"], [400, "tris_lod2"]], "prop": [[250, "tris_lod1"]], "furn": 400},
+            "tree": [[35, "tris_lod1"], [400, "tris_lod2"]], "forest_hlod_m": 70, "forest_hlod_cull_m": 1000,
+            "prop": [[250, "tris_lod1"]], "furn": 400},
 }
 
 
+def _bbox_dist(b, p):
+    dx = max(b[0] - p[0], 0.0, p[0] - b[2])
+    dy = max(b[1] - p[1], 0.0, p[1] - b[3])
+    return math.hypot(dx, dy)
+
+
 def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
-    """Static triangles/materials per chunk + per-camera frame estimate (120 deg wedge around the view)."""
+    """Static triangles/materials per chunk + per-camera frame estimate (120 deg wedge around the view) with a
+    breakdown by category (terrain, roads = road + bridge + markings + paved, furniture, buildings, trees per
+    LOD, forest HLOD, props)."""
     tp = REPO / "art-source" / "world" / "vegetation" / "trees_meta.json"
     trees = json.loads(tp.read_text(encoding="utf-8"))["trees"] if tp.exists() else {}
 
@@ -593,6 +629,7 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
         per_chunk.append({"chunk": ch["id"], "materials": len(ch["materials"]),
                           "tris_high_static": stat + t.get("terrain_lod0", 0) + t.get("buildings", 0),
                           "tris_low_static": stat + t.get("terrain_lod1", 0) + t.get("buildings_lod1", 0),
+                          "tris_forest_hlod": t.get("forest_hlod", 0),
                           "instances": len(inst), "trees": sum(1 for i in inst if i["p"].startswith("tree_"))})
     frames = []
     for cam in cams:
@@ -603,7 +640,10 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
         look /= max(np.linalg.norm(look), 1e-9)
         res = {"camera": cam["id"]}
         for prof, pol in LOD_POLICY.items():
-            tot = 0
+            cat = {}
+
+            def add(k, v):
+                cat[k] = cat.get(k, 0) + int(v)
             mats = set()
             for ch in chunks_meta:
                 b = ch["bounds_local_m"]
@@ -613,28 +653,54 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
                     continue
                 t = ch["triangles"]
                 lod = next(l for lim, l in pol["terrain"] if d < lim)
-                tot += t.get(f"terrain_lod{lod}", 0)
-                tot += sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved"))
-                tot += t.get("furniture", 0) if d < pol["furn"] else 0
-                tot += t.get("buildings", 0) if d < pol["bld"] else t.get("buildings_lod1", 0)
+                add("terrain", t.get(f"terrain_lod{lod}", 0))
+                add("roads", sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved")))
+                add("furniture", t.get("furniture", 0) if d < pol["furn"] else 0)
+                add("buildings", t.get("buildings", 0) if d < pol["bld"] else t.get("buildings_lod1", 0))
                 mats |= set(ch["materials"])
+                far_cells = set()
+                for fc in ch.get("forest_cells", []):
+                    dfc = _bbox_dist(fc["bbox_local_m"], pos)
+                    if dfc > pol["forest_hlod_m"]:
+                        far_cells.add(fc["id"])
+                        if dfc < pol["forest_hlod_cull_m"]:
+                            add("forest_hlod", fc["tris"])
                 ci, cj = (int(x) for x in ch["id"].split("_"))
                 for it in inst_by_chunk.get((ci, cj), []):
+                    if it.get("fc") in far_cells:
+                        continue
                     di = math.hypot(it["e"] - pos[0], it["n"] - pos[1])
                     if di > 200 and float(np.dot((np.array([it["e"], it["n"]]) - pos) / di, look)) < 0.5:
                         continue
-                    rule = pol["tree"] if it["p"].startswith("tree_") else pol["prop"]
+                    is_tree = it["p"].startswith("tree_")
+                    rule = pol["tree"] if is_tree else pol["prop"]
                     if it["p"].startswith("landmark_"):       # landmarks are never culled (LOD1 beyond 650 m)
                         rule = [[650, "tris_lod0"], [1e9, "tris_lod1"]]
                     key = next((k for lim, k in rule if di < lim), None)
                     if key:
-                        tot += itris(it, key)
-            res[f"tris_{prof.lower()}"] = int(tot)
+                        add(("trees_" + key[5:]) if is_tree else "props", itris(it, key))
+            res[f"tris_{prof.lower()}"] = int(sum(cat.values()))
+            res[f"by_category_{prof.lower()}"] = dict(sorted(cat.items()))
             res[f"materials_{prof.lower()}"] = len(mats)
         frames.append(res)
     return {"lod_policy": LOD_POLICY, "per_chunk": per_chunk, "frame_estimate": frames,
-            "note": "frame estimate = chunks/instances within 1.6 km in a 120 deg wedge, no occlusion culling; "
+            "note": "frame estimate = chunks/instances within 1.6 km in a 120 deg wedge (everything within 200 m), "
+                    "no occlusion culling; forest HLOD cells beyond forest_hlod_m replace their trees; "
                     "docs/06 par. 6 hypotheses: Low <= 400-600 k tris, High <= 1.5-2 M"}
+
+
+def budget_from_disk(region_id: str, out_root: Path | None = None):
+    """Recompute the mesh budget from the exported manifest + instance files (after a LOD policy change)."""
+    gen = pipeline.REGIONS / region_id / "generated"
+    man = json.loads((gen / "world_manifest.json").read_text(encoding="utf-8"))
+    cams = json.loads((gen / "control_cameras.json").read_text(encoding="utf-8"))["cameras"]
+    pm = json.loads((REPO / "art-source/world/props/props_meta.json").read_text(encoding="utf-8"))["prototypes"]
+    inst = {}
+    for ch in man["chunks"]:
+        ci, cj = (int(x) for x in ch["id"].split("_"))
+        p = (out_root / Path(ch["instances"]["file"]).name) if out_root else REPO / ch["instances"]["file"]
+        inst[(ci, cj)] = json.loads(p.read_text(encoding="utf-8"))["instances"]
+    return mesh_budget(man["chunks"], inst, pm, cams)
 
 
 def qa_report(w, mk_report, mask):
@@ -683,6 +749,8 @@ def qa_report(w, mk_report, mask):
             "crossings_snapped": mk_report.get("crossings_snapped", 0),
             "crossings_skipped": mk_report.get("crossings_skipped", []),
             "bridges": w.bridges,
+            "walled_ramps": w.profiles.get("walled_ramps", []),
+            "clearance_by_class_m": S.CLEARANCE_BY_CLASS,
             "fork_tapers": w.stats.get("fork_tapers", []),
             "overrides_applied": net.overrides_applied, "overrides_stale": net.overrides_stale,
             "low_confidence": [
@@ -701,7 +769,17 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--region", required=True)
     ap.add_argument("--context", action="store_true", help="re-extract generated/osm_context.json first")
+    ap.add_argument("--budget-only", action="store_true",
+                    help="recompute mesh_budget in streetscape_qa.json from the exported files (no rebuild)")
     a = ap.parse_args()
+    if a.budget_only:
+        gen = pipeline.REGIONS / a.region / "generated"
+        qa = json.loads((gen / "streetscape_qa.json").read_text(encoding="utf-8"))
+        qa["mesh_budget"] = budget_from_disk(a.region)
+        write_json(gen / "streetscape_qa.json", qa)
+        for f in qa["mesh_budget"]["frame_estimate"]:
+            print(f["camera"], f["tris_high"], f["tris_low"])
+        return
     if a.context:
         from roads import context
         reg = pipeline.load_region(a.region)

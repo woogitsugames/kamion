@@ -20,7 +20,7 @@ REPO = Path(__file__).resolve().parents[3]
 OUT = REPO / "art-source" / "world" / "vegetation"
 
 # base leaf colours (sRGB), summer, muted (docs/06: przygaszone zielenie)
-COL = {"birch": (86, 104, 46), "alder": (52, 68, 34), "maple": (70, 92, 40), "linden": (74, 94, 42),
+COL = {"birch": (100, 116, 50), "alder": (52, 68, 34), "maple": (70, 92, 40), "linden": (74, 94, 42),
        "pine": (44, 62, 38), "shrub": (66, 84, 40)}
 
 
@@ -103,8 +103,10 @@ def foliage(species, seed, n=512):
 def bark(species, seed, n=256):
     rng = np.random.default_rng(seed)
     if species == "birch":
-        a = np.full((n, n, 3), (205, 202, 192), float)
-        for _ in range(60):     # black lenticel dashes
+        # v3.1: albedo lowered from (205, 202, 192): a sunlit white trunk read as a bare white pole in the
+        # dark stand (REVIEW r2 #7); weathered birch bark is a dull grey-white with many dark lenticels
+        a = np.full((n, n, 3), (176, 173, 164), float)
+        for _ in range(95):     # black lenticel dashes
             y = rng.integers(0, n)
             x0 = rng.integers(0, n)
             w = rng.integers(8, 40)

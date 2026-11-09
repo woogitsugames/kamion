@@ -39,6 +39,8 @@ def args():
     ap.add_argument("--light", default="overcast")
     ap.add_argument("--world-root", default="")
     ap.add_argument("--no-grass", action="store_true")
+    ap.add_argument("--bld-lod1", action="store_true", help="LOD1 buildings at every distance (Low/Medium look)")
+    ap.add_argument("--suffix", default="", help="appended to the output file names")
     return ap.parse_args(argv)
 
 
@@ -779,9 +781,63 @@ def mat_emit(name, col, strength=1.0):
     return m
 
 
+def mat_far_facade(name, col, grid, base_mat=None):
+    """LOD1 far facade (v3.1, buildings_mesh.lod1_wall): wall colour + window grid from UV1 (one unit = one bay x
+    one storey): glass panes with a light frame, per-window tone variation (curtains / reflections) from a hash
+    of the cell, so far blocks are not boxes and not a repeated texture."""
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    u, v, _ = b.sep(b.uv("UVMap.001"))
+    fu, fv = b.math("FRACT", u), b.math("FRACT", v)
+    hw = grid["win_w"] / 2
+    inx = b.math("LESS_THAN", b.math("ABSOLUTE", b.math("SUBTRACT", fu, 0.5)), hw + 1e-4)
+    iny = b.math("MULTIPLY", b.math("GREATER_THAN", fv, grid["sill"]), b.math("LESS_THAN", fv, grid["head"]))
+    win = b.math("MULTIPLY", inx, iny)
+    frx = b.math("LESS_THAN", b.math("ABSOLUTE", b.math("SUBTRACT", fu, 0.5)), hw - 0.025)
+    fry = b.math("MULTIPLY", b.math("GREATER_THAN", fv, grid["sill"] + 0.03), b.math("LESS_THAN", fv, grid["head"] - 0.03))
+    pane = b.math("MULTIPLY", frx, fry)
+    cell = b.combine(b.math("FLOOR", u), b.math("FLOOR", v), 0.0)
+    wn = b.nt.nodes.new("ShaderNodeTexWhiteNoise")
+    wn.noise_dimensions = "3D"
+    b.link(cell, wn.inputs["Vector"])
+    tone = b.ramp(wn.outputs["Value"], [(0.0, (0.020, 0.024, 0.028)), (0.7, (0.045, 0.050, 0.055)),
+                                         (0.92, (0.20, 0.19, 0.17)), (1.0, (0.33, 0.31, 0.27))])
+    wall = b.mix(b.math("MULTIPLY", b.noise(obj, 0.4, 3.0), 0.18), col, tuple(c * 0.82 for c in col))
+    streak = b.noise(b.vmath("MULTIPLY", obj, (5.0, 5.0, 0.2)), 1.0, 3.0)
+    wall = b.mix(b.math("MULTIPLY", b.math("GREATER_THAN", streak, 0.6), 0.2), wall, tuple(c * 0.65 for c in col))
+    frame = b.mix(win, wall, (0.55, 0.55, 0.53))
+    b.finish(b.mix(pane, frame, tone), 0.85)
+    return m
+
+
+def mat_forest(name):
+    """Forest HLOD (v3.1): baked edge / canopy textures (make_trees.py) as base colour; the edge is alpha-tested."""
+    m = new_mat(name)
+    b = NB(m)
+    tex = b.nt.nodes.new("ShaderNodeTexImage")
+    tex.image = bpy.data.images.load(str(VEG / f"{name}.png"))
+    tex.interpolation = "Cubic"
+    b.link(b.uv("UVMap"), tex.inputs["Vector"])
+    b.bsdf.inputs["Roughness"].default_value = 0.95
+    b.link(tex.outputs["Color"], b.bsdf.inputs["Base Color"])
+    if name.startswith("forest_edge"):
+        b.link(tex.outputs["Alpha"], b.bsdf.inputs["Alpha"])
+        try:
+            m.surface_render_method = "DITHERED"
+        except AttributeError:
+            pass
+        m.use_backface_culling = False
+    else:                       # canopy is single sided (glTF doubleSided false): never seen from below
+        m.use_backface_culling = True
+    return m
+
+
 def build_materials():
     g = lambda c: srgb(c)
     M = {
+        **{f"forest_{k}_{mix}": mat_forest(f"forest_{k}_{mix}") for k in ("edge", "canopy")
+           for mix in ("conifer", "mixed", "broadleaf")},
         "road_asphalt": mat_asphalt("road_asphalt"),
         "yard_asphalt": mat_asphalt("yard_asphalt", 0.08, lanes=False, yard=True),
         "path_asphalt": mat_asphalt("path_asphalt", 0.085, lanes=False),
@@ -818,7 +874,7 @@ def build_materials():
         "plaster_beige": mat_plaster("plaster_beige", g((190, 176, 150))),
         "plaster_cream": mat_plaster("plaster_cream", g((200, 184, 146))),
         "plaster_pastel_blue": mat_plaster("plaster_pastel_blue", g((150, 166, 176))),
-        "brick_red": mat_pavers("brick_red", g((128, 62, 46)), g((118, 58, 44)), 0.25, 0.065, rot_uv=True, moss=False),
+        "brick_red": mat_pavers("brick_red", g((116, 70, 56)), g((104, 64, 52)), 0.25, 0.065, rot_uv=True, moss=False),
         "plinth_dark": mat_flat("plinth_dark", g((90, 90, 88)), 0.9),
         "roof_tiles_red": mat_lines_v("roof_tiles_red", g((120, 52, 36)), 0.33, 0.03, 0.7, 0.0),
         "roof_tiles_brown": mat_lines_v("roof_tiles_brown", g((76, 50, 40)), 0.33, 0.03, 0.7, 0.0),
@@ -874,7 +930,25 @@ def build_materials():
         "chimney_white": mat_flat("chimney_white", g((206, 206, 202)), 0.85),
         "signal_red_on": mat_emit("signal_red_on", (1.0, 0.08, 0.03), 18.0),
         "signal_green_on": mat_emit("signal_green_on", (0.1, 1.0, 0.55), 14.0),
+        # v3.1 facade palette + walled ramps
+        "plaster_yellow": mat_plaster("plaster_yellow", g((206, 188, 132))),
+        "plaster_peach": mat_plaster("plaster_peach", g((206, 168, 140))),
+        "plaster_sage": mat_plaster("plaster_sage", g((160, 170, 146))),
+        "plaster_white": mat_plaster("plaster_white", g((208, 208, 204))),
+        "plaster_band_grey": mat_plaster("plaster_band_grey", g((112, 114, 114))),
+        "ramp_wall_blocks": mat_pavers("ramp_wall_blocks", g((150, 146, 138)), g((136, 132, 126)), 0.40, 0.20,
+                                       rot_uv=True, moss=False),
     }
+    # LOD1 far facades <wall>__far_<kind>: colour of the wall material in this table (render sRGB values)
+    wall_rgb = {"plaster_light": (196, 192, 182), "plaster_grey": (150, 150, 148), "plaster_beige": (190, 176, 150),
+                "plaster_cream": (200, 184, 146), "plaster_pastel_blue": (150, 166, 176), "plaster_yellow": (206, 188, 132),
+                "plaster_peach": (206, 168, 140), "plaster_sage": (160, 170, 146), "plaster_white": (208, 208, 204),
+                "brick_red": (112, 68, 55), "panel_concrete": (150, 146, 136)}
+    grids = {"block": {"win_w": 0.50, "sill": 0.32, "head": 0.84}, "office": {"win_w": 0.50, "sill": 0.26, "head": 0.71},
+             "ribbon": {"win_w": 1.00, "sill": 0.26, "head": 0.71}}
+    for w_, rgb in wall_rgb.items():
+        for k_, gr in grids.items():
+            M[f"{w_}__far_{k_}"] = mat_far_facade(f"{w_}__far_{k_}", g(rgb), gr)
     return M
 
 
@@ -984,18 +1058,19 @@ def place_props(insts, protos, cam_pos, radius):
     return n
 
 
-def place_trees(insts, protos, cam_pos, radius):
-    """One point cloud per (prototype, LOD) -> Instance on Points (scale = h / href, yaw, lean)."""
+def place_trees(insts, protos, cam_pos, radius, lod_m=(80.0, 250.0), far_cells=frozenset()):
+    """One point cloud per (prototype, LOD) -> Instance on Points (scale = h / href, yaw, lean). lod_m = LOD0 / LOD1
+    limits of the High tree policy (world_manifest lod_policy); trees of forest HLOD cells drawn as HLOD are skipped."""
     meta = json.loads((VEG / "trees_meta.json").read_text(encoding="utf-8"))["trees"]
     groups = {}
     for it in insts:
-        if not it["p"].startswith("tree_"):
+        if not it["p"].startswith("tree_") or it.get("fc") in far_cells:
             continue
         d = math.hypot(it["e"] - cam_pos[0], it["n"] - cam_pos[1])
         if d > radius:
             continue
         name = f"{it['p']}_{it['v']}"
-        lod = "" if d < 80 else (".lod1" if d < 250 else ".lod2")
+        lod = "" if d < lod_m[0] else (".lod1" if d < lod_m[1] else ".lod2")
         groups.setdefault((name, lod), []).append(it)
     total = 0
     for (name, lod), pts in sorted(groups.items()):
@@ -1345,6 +1420,10 @@ def render_cam(a, cam, man, out, world_root, light):
         tgt = cam["look_at"]
         radius = 1100.0
     pos = cam.get("pos", [tgt[0], tgt[1], 0])
+    pol = man.get("lod_policy", {}).get("High", {})
+    tree_lod_m = tuple(lim for lim, _ in pol.get("tree", [[80, 0], [250, 0]])[:2])
+    hlod_m = pol.get("forest_hlod_m", 1e9)
+    far_cells = set()
     objs, terrain0, insts = [], [], []
     for ch in man["chunks"]:
         b = ch["bounds_local_m"]
@@ -1357,7 +1436,14 @@ def render_cam(a, cam, man, out, world_root, light):
         else:
             lod = 0 if dist < 330 else (1 if dist < 600 else 2)
             keep = {f"terrain_lod{lod}", "road", "bridge", "markings", "paved", "furniture"}
-            keep.add("buildings" if dist < 700 else "buildings_lod1")
+            keep.add("buildings" if dist < 700 and not a.bld_lod1 else "buildings_lod1")
+            for fc in ch.get("forest_cells", []):
+                bb = fc["bbox_local_m"]
+                dx = max(bb[0] - pos[0], 0.0, pos[0] - bb[2])
+                dy = max(bb[1] - pos[1], 0.0, pos[1] - bb[3])
+                if math.hypot(dx, dy) > hlod_m:
+                    far_cells.add(fc["id"])
+                    keep.add(f"forest_hlod_{fc['id']}")
         path = (world_root / Path(ch["file"]).name) if world_root else REPO / ch["file"]
         new = import_chunk(path, keep, root)
         objs += new
@@ -1380,11 +1466,12 @@ def render_cam(a, cam, man, out, world_root, light):
         add_far_ground(zmin - 2.0, pos)
         protos = load_protos(mats)
         n_props = place_props(insts, protos, pos, 650.0)
-        n_trees = place_trees(insts, protos, pos, 1300.0)
+        n_trees = place_trees(insts, protos, pos, 1300.0, tree_lod_m, frozenset(far_cells))
         bpy.context.view_layer.update()
         if not a.no_grass:
             add_grass(terrain0, pos)
-        print(f"[render] {cam['id']}/{light}: {len(objs)} chunk objects, {n_props} props, {n_trees} trees")
+        print(f"[render] {cam['id']}/{light}: {len(objs)} chunk objects, {n_props} props, {n_trees} trees, "
+              f"{len(far_cells)} forest HLOD cells")
     cd = bpy.data.cameras.new(cam["id"])
     co = bpy.data.objects.new(cam["id"], cd)
     scene.collection.objects.link(co)
@@ -1400,7 +1487,7 @@ def render_cam(a, cam, man, out, world_root, light):
         cd.angle = math.radians(cam["fov_deg"])
         co.location = cam["pos"]
         look_at(co, cam["look_at"])
-        fn = f"{cam['id']}__{light}.jpg"
+        fn = f"{cam['id']}__{light}{a.suffix}.jpg"
     scene.render.filepath = str(out / fn)
     bpy.ops.render.render(write_still=True)
     print(f"[render] wrote {scene.render.filepath}")

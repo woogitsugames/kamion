@@ -231,3 +231,25 @@ def sign_instance(code, a, d, nout, u, z, src):
     yaw = math.atan2(nout[1], nout[0]) - math.pi / 2
     return {"p": f"facade_sign_{code}", "e": round(float(p[0]), 3), "n": round(float(p[1]), 3), "z": round(float(z), 3),
             "yaw": round(float(yaw), 4), "src": src}
+
+
+def machine_rooms(acc, poly, z, layer):
+    """Lift machine rooms (one per ~30 m of a block's long axis) as plain boxes: the LOD1 roof silhouette of a
+    wielka płyta block (v3.1; LOD0 gets them from roof_vents)."""
+    r = poly.minimum_rotated_rectangle
+    c = np.asarray(r.exterior.coords)[:4]
+    e = [np.hypot(*(c[(i + 1) % 4] - c[i])) for i in range(4)]
+    k = 0 if e[0] >= e[1] else 1
+    along = (c[(k + 1) % 4] - c[k]) / max(e[k], 1e-6)
+    across = np.array([-along[1], along[0]])
+    ctr = np.asarray(r.centroid.coords[0])
+    Lr = max(e)
+    inner = poly.buffer(-2.0)
+    if inner.is_empty:
+        return
+    for i in range(max(1, int(Lr // 30))):
+        t = (i + 0.5) * Lr / max(1, int(Lr // 30)) - Lr / 2
+        p = ctr + along * t
+        if inner.contains(shapely.Point(*p)):
+            acc.box(layer, "balcony_slab", v3(p, z + 1.1), np.append(along * 1.4, 0), np.append(across * 1.6, 0),
+                    [0, 0, 1.1])

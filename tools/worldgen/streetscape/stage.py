@@ -15,6 +15,7 @@ from roads import standards as S
 from terrain_mesh import conform as CF
 
 from . import buildings_mesh as BM
+from . import forest_hlod as FH
 from . import furniture as FU
 from . import gate as GT
 from . import landmarks as LM
@@ -127,8 +128,14 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     blocked = ndimage.binary_dilation(mask | bmask, iterations=3)
     vrep = {}
     trees, forests = VG.place(src, origin, hf, zc, blocked, vrep)
+    forest_mix = vrep.pop("_forest_mix")
     rep["vegetation"] = vrep
     log("trees", vrep["trees"])
+    # forest HLOD cells (canopy + edge walls) replacing far stands
+    no_forest = shapely.union_all([roads_poly, bpoly] + [p["poly"] for p in paved]).buffer(2.5)
+    half = w.region["bbox"]["width_m"] / 2
+    hlod = FH.build(trees, forest_mix, no_forest, zground, half, vrep)
+    log("forest hlod", vrep["forest_hlod"])
     col = VG.ground_masks(src, origin, hf, dist, forests)
     return {"zc": zc, "dist": dist, "mask": mask, "rmask": rmask, "col": col, "instances": pl.items + trees,
-            "codes": codes, "boards": boards, "report": rep, "docks": docks, "paved": paved}
+            "codes": codes, "boards": boards, "report": rep, "docks": docks, "paved": paved, "forest_hlod": hlod}

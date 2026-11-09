@@ -941,9 +941,9 @@
     3
    ],
    "length_m": 615.5,
-   "max_grade": 0.0494,
+   "max_grade": 0.0481,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.934,
+   "profile_rms_vs_nmt_m": 0.981,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.0,
@@ -1623,9 +1623,9 @@
     3
    ],
    "length_m": 610.3,
-   "max_grade": 0.0506,
+   "max_grade": 0.0493,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.884,
+   "profile_rms_vs_nmt_m": 0.929,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.0,
@@ -1930,7 +1930,7 @@
     2
    ],
    "length_m": 571.3,
-   "max_grade": 0.0214,
+   "max_grade": 0.0202,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.016,
    "sidewalk_frac": 1.0,
@@ -2304,9 +2304,9 @@
     2
    ],
    "length_m": 569.9,
-   "max_grade": 0.0219,
+   "max_grade": 0.0208,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 2.308,
+   "profile_rms_vs_nmt_m": 2.205,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.0
@@ -7343,9 +7343,9 @@
     1
    ],
    "length_m": 33.5,
-   "max_grade": 0.0291,
+   "max_grade": 0.0278,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.02,
+   "profile_rms_vs_nmt_m": 0.033,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.0
@@ -10121,6 +10121,15 @@
    }
   ],
   "chains": 429,
+  "clearance_by_class_m": {
+   "A": 5.0,
+   "D": 4.5,
+   "G": 4.5,
+   "GP": 4.5,
+   "L": 4.5,
+   "S": 5.0,
+   "Z": 4.5
+  },
   "crossings_skipped": [
    1166108041,
    2881403132,
@@ -10141,9 +10150,9 @@
   "crossings_snapped": 74,
   "decals": {
    "oil": 313,
-   "patches": 341
+   "patches": 325
   },
-  "footprint_nodes": 507110,
+  "footprint_nodes": 499285,
   "fork_tapers": [
    {
     "chain": "c:w69667331:1166107977-1166107980",
@@ -10716,7 +10725,7 @@
    "P-7b edge line": 154,
    "P-8 arrow": 202
   },
-  "nmt_nodes_replaced_under_decks": 538,
+  "nmt_nodes_replaced_under_decks": 2044,
   "overrides_applied": [
    {
     "id": "kwadrat-park-yard-access-width",
@@ -10757,6 +10766,36 @@
   ],
   "overrides_stale": [],
   "roundabout_junctions": 12,
-  "signalised_junctions": 14
+  "signalised_junctions": 14,
+  "walled_ramps": [
+   {
+    "chain": "c:w1101181473:10076968415-1847263305",
+    "confidence": "medium",
+    "max_wall_h_m": 5.16,
+    "nmt_fill_max_m": 0.66,
+    "walled_m": 156.9
+   },
+   {
+    "chain": "c:w173956078:1847263293-5749429982",
+    "confidence": "medium",
+    "max_wall_h_m": 5.64,
+    "nmt_fill_max_m": 0.88,
+    "walled_m": 157.5
+   },
+   {
+    "chain": "c:w175157461:1883101816-1883469484",
+    "confidence": "medium",
+    "max_wall_h_m": 5.09,
+    "nmt_fill_max_m": 1.48,
+    "walled_m": 245.4
+   },
+   {
+    "chain": "c:w177895177:1883101822-1883062831",
+    "confidence": "medium",
+    "max_wall_h_m": 4.67,
+    "nmt_fill_max_m": 1.31,
+    "walled_m": 217.5
+   }
+  ]
  }
 }

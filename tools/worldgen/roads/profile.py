@@ -152,16 +152,18 @@ def clearance_requirements(net, el_of, ground_z) -> dict:
     a ground road. Ground roads sharing a node with the bridge chain are ignored within 30 m of that node (a
     bridge over a stream meets its own approach roads at grade). ground_z: {chain id: solved profile}."""
     from scipy.spatial import cKDTree
-    gp, gz, ghw, gk, gs = [], [], [], [], []
+    gp, gz, ghw, gk, gs, gcl = [], [], [], [], [], []
     ground = [c for c in net.chains if c.id in ground_z]
     for k, c in enumerate(ground):
         gp.append(c.line.p); gz.append(ground_z[c.id]); ghw.append(c.hw)
         gk.append(np.full(len(c.line.s), k)); gs.append(c.line.s)
+        gcl.append(np.array([S.clearance_height(net.sec_list[i].cls) for i in c.sec_idx]))
     if not gp:
         return {}
-    gp, gz, ghw, gk, gs = (np.concatenate(x) for x in (gp, gz, ghw, gk, gs))
+    gp, gz, ghw, gk, gs, gcl = (np.concatenate(x) for x in (gp, gz, ghw, gk, gs, gcl))
     tree = cKDTree(gp)
-    need = S.BRIDGE_CLEARANCE + S.BRIDGE_CLEARANCE_MARGIN + S.BRIDGE_DECK_THICKNESS
+    # deck surface >= road below + skrajnia of that road's class (PTB2022 § 80 ust. 1) + margin + deck depth
+    extra = S.BRIDGE_CLEARANCE_MARGIN + S.BRIDGE_DECK_THICKNESS
     out = {}
     for c in net.chains:
         if not c.bridge.any():
@@ -175,7 +177,7 @@ def clearance_requirements(net, el_of, ground_z) -> dict:
                 g = ground[int(gk[k])]
                 if (g.node_a in ends and gs[k] < 30.0) or (g.node_b in ends and g.length - gs[k] < 30.0):
                     continue
-                req[int(i)] = max(req.get(int(i), -1e9), float(gz[k]) + need)
+                req[int(i)] = max(req.get(int(i), -1e9), float(gz[k]) + float(gcl[k]) + extra)
         if req:
             out[c.id] = req
     return out
@@ -239,3 +241,65 @@ def build_profiles(net, hf: Heightfield) -> dict:
                             "grade_limit_difficult": max(l[1] for l in lims),
                             "bridge_m": round(float(c.bridge.mean() * c.length), 1)})
     return {"node_z": zn, "chains": stats}
+
+
+def mark_walled_ramps(net, hf: Heightfield) -> list:
+    """Raised ramps (non-bridge stations, with or without OSM layer >= 1) whose fill is absent from the NMT are
+    retaining-wall ramps,
+    not 1 : 1.5 embankments (v3.1). Reasoning: the GUGiK NMT is the lidar ground class; earth embankments with
+    side slopes are ground and stay in it (Maczka west of Rondo Putry: slopes 1 : 1.3-1.5 measured in the NMT),
+    but a fill between vertical walls is filtered out like a building, so the NMT runs at the level of the
+    ground beside the road (both Andersa ramps: the axis NMT is within ~0.5 m of the ground 15-30 m to the
+    sides while the solved profile is up to 6 m higher). CC0/CC BY-SA photos (docs/REFERENCES.md:
+    `Andersa,_Maczka_streets_in_Białystok_2.jpg`) show the Putry ramp ending in a block-faced retaining wall.
+    A station is walled when it is not a bridge, at least RAMP_WALL_MIN_H above the NMT on the
+    axis, and the NMT shows less than RAMP_WALL_FILL_FRAC of that height as fill (axis vs. 6 m beyond the
+    edge). Runs shorter than 8 m are dropped; runs are extended by 4 m. The stations are added to c.bridge
+    (deck geometry, no terrain conform) and listed in c.meta["walled"] (mesh: walls instead of piers)."""
+    out = []
+    for c in net.chains:
+        if c.z is None:
+            continue
+        # any non-bridge station: OSM tags the eastbound Andersa ramps at Rondo Bieżeństwa layer=1, the westbound
+        # ones not at all, yet both rise ~5 m to the deck with no fill in the NMT
+        el = ~c.bridge
+        if not el.any():
+            continue
+        s = c.line.s
+        P = c.line.p
+        _, nrm = c.line.frame(s)
+        za = hf.sample(P[:, 0], P[:, 1])
+        side = []
+        for sg in (-1, 1):
+            q = P + nrm * sg * (c.hw[:, None] + 6.0)
+            side.append(hf.sample(q[:, 0], q[:, 1]))
+        zs = np.minimum(side[0], side[1])
+        h = c.z - zs
+        fill = za - zs
+        w = el & (c.z - za > S.RAMP_WALL_MIN_H) & (fill < S.RAMP_WALL_FILL_FRAC * np.maximum(h, 1e-3))
+        if not w.any():
+            continue
+        idx = np.where(w)[0]
+        runs = np.split(idx, np.where(np.diff(idx) > 1)[0] + 1)
+        keep = np.zeros(len(s), bool)
+        for r in runs:
+            if s[r[-1]] - s[r[0]] < 8.0:
+                continue
+            lo = np.searchsorted(s, s[r[0]] - 4.0)
+            hi = np.searchsorted(s, s[r[-1]] + 4.0, side="right")
+            keep[lo:hi] = True
+        keep &= el
+        if not keep.any():
+            continue
+        c.bridge = c.bridge | keep
+        c.meta["walled"] = keep
+        # ground at the wall foot (NMT 1.5 m beyond the deck edge cap), per side ("L" = +normal)
+        zg = {}
+        for name, sg in (("L", 1), ("R", -1)):
+            q = P + nrm * sg * (c.hw[:, None] + S.KERB_TOP_W + S.BRIDGE_CAP_W + 1.5)
+            zg[name] = hf.sample(q[:, 0], q[:, 1])
+        c.meta["walled_zg"] = zg
+        out.append({"chain": c.id, "walled_m": round(float(keep.sum() * (s[1] - s[0] if len(s) > 1 else 0)), 1),
+                    "max_wall_h_m": round(float((c.z - za)[keep].max()), 2),
+                    "nmt_fill_max_m": round(float(fill[keep].max()), 2), "confidence": "medium"})
+    return out

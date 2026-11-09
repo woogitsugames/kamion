@@ -1,4 +1,23 @@
-# Visual QA — kafel `bialystok-industrial-c`, v3: Świat C v3 (2026-11-09)
+# Visual QA — kafel `bialystok-industrial-c`, v3.1 (2026-11-09)
+
+Te same kamery i preset co v3 (Blender 4.2.9 EEVEE, 1600×900, 48 próbek, AgX). Pliki `<kamera>__<światło>.jpg` to teraz v3.1, a stan v3 kluczowych kadrów jest w `before_v3_*`. `*_lod1.jpg` pokazuje budynki wyłącznie w LOD1, czyli to, co widzi tier Low/Medium dalej niż 100 m od trasy (flaga `--bld-lod1`). **To nadal render offline, nie URP na telefonie.** HLOD lasu i fasady LOD1 wymagają jeszcze pracy w imporcie Unity (ADR 0013).
+
+| # | Punkt v3.1 | Stan | Dowód |
+|---|---|---|---|
+| 1 | Las przy DK8: HLOD, sylwetki sosny i brzozy, brzozy bez koron | Komórki 64 m: korona + ściany brzegu z alfą, wypieczone z naszych drzew LOD0 (`v31_forest_hlod_bakes.jpg`). Pas 12 m przy drodze zostaje pojedynczymi drzewami. Brzozy mają liście wzdłuż pnia, ciemniejszą korę, a impostory pełną koronę. **DK8 High: 8,16 → 1,68 mln trójkątów, Low 0,35 mln.** | [przed](before_v3_dk8_dk19_exit__overcast.jpg) → [po](dk8_dk19_exit__overcast.jpg), [lowsun](dk8_dk19_exit__lowsun.jpg), [kierowca Andersa](driver_andersa_to_putry__lowsun.jpg) |
+| 2 | Biurowce i bloki jak pudła | Kondygnacje z BDOT10k (biurowiec 41,8 m: 11 × 3,69 m), obróbka attyki, wysoki cokół bloków z okienkami piwnic, rury spustowe, pasy okienne i podokienne, maszynownie na dachach, szersza paleta. LOD1: cokół + strefa okien z materiałem „far facade” (siatka okno × kondygnacja w UV1, odcień na okno) + obróbka attyki, ≤ 10 trójkątów na krawędź. | [stretch_01 przed](before_v3_stretch_01__overcast.jpg) → [LOD0](stretch_01__overcast.jpg) / [LOD1](stretch_01__overcast_lod1.jpg); [stretch_02 LOD1](stretch_02__overcast_lod1.jpg); [Putry LOD1](putry_above__overcast_lod1.jpg) |
+| 3 | Skrajnia 4,70 m; rampy: nasypy czy mury | Zacytowane: PTB2022 (Dz.U. 2022 poz. 1518) § 80 ust. 1, czyli 5,00 m nad A/S i 4,50 m nad GP–D, plus zapas 0,30 m (WORKING_VALUE). NMT: rampy Andersa nie mają nasypu w NMT (oś ≈ grunt obok, niweleta do 5,6 m wyżej), a nasyp Maczka ma (skarpy 1 : 1,3–1,5). Stąd 4 łańcuchy na murach oporowych. Zgadza się to ze zdjęciem `Andersa,_Maczka_streets_in_Białystok_2.jpg` (CC BY-SA, tylko referencja), gdzie estakada przechodzi w mur z bloczków. | [stretch_04 przed](before_v3_stretch_04__overcast.jpg) → [po](stretch_04__overcast.jpg); [Bieżeństwa z góry](biezenstwa_above__overcast.jpg); pomost vs CC0 `20201102_152339`: [render](photo_biezenstwa_ground__overcast.jpg) |
+| 4 | Ciągnik na placach | Pochylona szyba, zaokrąglona kabina, owiewka dachowa i boczne, grill bez znaczka, zbiorniki, stopnie, błotniki, lusterka, podwójne koła. LOD0 766, LOD1 254 trójkąty (było 628/150). | [podgląd](v31_tractor_preview.jpg), [stretch_01](stretch_01__overcast.jpg), [rampy](stretch_05_docks__overcast.jpg) |
+
+**Budżet v3.1** (`streetscape_qa.json` → `mesh_budget`, szacunek generatora): High 0,86–1,98 mln (wszystkie kamery ≤ 2 mln), Low 0,28–0,90 mln. Powyżej 0,6 mln są stretch_01–05 (0,60–0,90), bo 0,39–0,61 mln to drogi i place bez LOD odległości (tak było w v3). Siatki Unity Low (ADR 0012, przed LZ4HC): 59,3 MiB (v3: 55,6). To szacunek, nie pomiar z APK.
+
+**Pętla v3.1:** (r1) ściany wewnętrzne przycięte pod koroną pokazywały koronę jak gładkie wzgórze, więc ściany mają pełną wysokość. (r2) Ściana oglądana wzdłuż DK8 rozmazywała się w smugi, więc pas 12 m przy drodze zostaje drzewami. (r4) Krzewy brzegu ściągały koronę do 2–3 m, co dawało zielone „płachty” w widoku kierowcy, więc korona jest liczona tylko z drzew ≥ 8 m. Dwa sąsiednie biurowce z ceglanej palety dawały efekt Lego, więc cegła występuje w 1 na 7 i ma mniejsze nasycenie.
+
+**Otwarte (v3.1):** przy niskim słońcu impostory pasa przydrożnego mają jasne beżowe plamy (wypiek przy jednolitym niebie, oświetlany jak powierzchnia pionowa); ocena `visual-critic` v3.1; import HLOD i fasad far w Unity (UV1 + shader, ADR 0013); LOD odległości dróg i placów dla Low; zdjęcia właściciela (mury ramp, kolory elewacji).
+
+---
+
+# Historia: v3 (2026-11-09)
 
 Rendery v3 to te same kamery i ten sam preset (Blender 4.2.9 EEVEE, 1600×900, 48 próbek, AgX, `__overcast` / `__lowsun`). Pliki `<kamera>__<światło>.jpg` w tym katalogu to teraz v3. Poprzednie wersje to `before_v2_*` i `before_v3a_*`. Porównania ze zdjęciami: CC0 z `docs/REFERENCES.md` (Rakoon, Wikimedia Commons). Zdjęcia CC BY-SA służyły tylko jako referencja, nie jako tekstura. **To nadal render offline, nie URP na telefonie.**
 
