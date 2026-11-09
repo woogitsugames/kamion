@@ -4,6 +4,16 @@
 
 Wszystko nadal powstaje ze skryptów: nic nie było klikane ręcznie w Blenderze.
 
+## Dopasowanie do zewnętrza A6 (2026-11-09, `glass_interface.json`)
+
+Zewnętrze (`docs/reports/visual/truck-A6-exterior/`) jest teraz jedyną karoserią i jedynym szkłem w grze. Wnętrze się do niego dopasowuje:
+- **Szyba przednia z zewnętrza:** wnętrze czyta `art-source/truck/exterior/glass_interface.json` (wewnętrzna powierzchnia szyby, siatka 13×49 punktów). Otwór szyby z 2,07–3,02 m na **2,06–2,96 m** (jak w zewnętrzu), płaszczyzna szyby o 39 mm do przodu, nadruk (frit) w tych samych szerokościach co na zewnątrz (dół 75 mm), słupki A cofnięte za zawinięcie szyby w narożach.
+- **Nic nie wystaje poza karoserię:** krok `fit_to_exterior` (w eksporcie) przesuwa do środka każdy wierzchołek, który leżał poza powłoką kabiny (powłoka 30 mm) albo przed szybą. LOD0: przesunięto 5095 wierzchołków w 38 obiektach; największe przesunięcia to nadproże nad szybą, przednia krawędź podsufitki i półki nad szybą (do 0,6 m w narożach dachu: zewnętrze ma tam duże zaokrąglenie, wnętrze miało prostokątne pudło).
+- **Test:** `tools/blender/truck/check_fit.py` (oba FBX razem, jak w prefabie A7): przed dopasowaniem **302** wierzchołki wnętrza poza karoserią (16 w strefie szyby), teraz **0** (2 „styki” < 10 mm przy uszczelce słupka A). Raport: `art-source/truck/exterior/export/fit_check.json`. Rendery kontrolne w glinie: `fit_oko_*.jpg`, `fit_zewn_*.jpg` w katalogu zewnętrza.
+- **Szyby wnętrza** (szyba przednia i drzwiowa) są w osobnym obiekcie `CAB_Glass_Windows` (zastępcze, wyłączyć przy obecnym zewnętrzu). `CAB_Glass` to teraz tylko szybka zegarów.
+- **Naprawiony błąd materiałów:** w `consolidate()` `Mesh.materials.clear()` (Blender 4.x) kasował numery materiałów ścian, więc każdy obiekt roboczy trafiał w całości do jednego zestawu. Teraz numery są czytane przed wyczyszczeniem. Kolor i chropowatość są w danych wierzchołków, więc w renderach różnica jest mała, ale mapy detali (skóra, tkanina) trafiają teraz na właściwe ściany.
+- Rendery „jak URP” po dopasowaniu: `a6fit_kierowca_overcast_urp.jpg`, `a6fit_pasazer_overcast_urp.jpg`, `a6fit_lezanka_overcast_urp.jpg`. Test linii wzroku zegarów: nadal PASS.
+
 ## Runda 3 (2026-11-09, po recenzji `REVIEW-2026-11-09-r2.md`, sekcja A6 i punkt 8 listy top-12)
 
 Decyzje właściciela wpisane jako domyślne: **wstawki koniak**, **tylko cyfrowe zegary**, **znak TRAKT na piaście**, szyba koncepcji B (19°). Wszystkie rendery kontrolne i eksport (FBX, manifest) powstają teraz z tymi ustawieniami, bez dodatkowych przełączników.
