@@ -1,4 +1,4 @@
-# ADR 0013 — Forest HLOD cells and LOD1 far facades (world v3.1)
+# ADR 0015 — Forest HLOD cells and LOD1 far facades (world v3.1)
 Status: Proposed (world-builder), 2026-11-09. Extends ADR 0012 (tiers, instancing). Needs the importer / shader
 work listed under "Consequences" before it is visible in Unity.
 Evidence: `Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json` → `mesh_budget` (frame estimate by
