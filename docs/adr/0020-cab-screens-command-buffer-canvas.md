@@ -1,4 +1,4 @@
-# ADR 0018 — Cab screens: own command-buffer canvas into render textures, map data baked offline
+# ADR 0020 — Cab screens: own command-buffer canvas into render textures, map data baked offline
 Status: Proposed (gameplay-ui agent), 2026-11-09
 Context: Review r4 C-N1: the 12.3" cluster, the navigation and the DIN faces were static textures ("82 km/h" while parked, 14:32 at dusk). They must follow the solver on a Helio G99 phone without GC, at 30 Hz for the cluster, and keep `Kamion/Cab Display` (exposure, readability floor, contrast rules) as the material. D20: the cluster is a screen only.
 Options: (a) uGUI canvas + camera per screen into a render texture: one URP camera render per screen per refresh (culling, pass setup, ~0.3-1 ms CPU on mobile) and `Text.text` string churn; (b) UI Toolkit panel to render texture: same camera-less path but a layout/text system to keep allocation-free, heavier than the content; (c) own immediate-mode canvas: one mesh, one draw per screen through `Graphics.ExecuteCommandBuffer`, glyphs from the Inter dynamic font atlas at the exact render-texture pixel size, analytic 1-pixel edges for boxes, rings and arcs in one small shader.
