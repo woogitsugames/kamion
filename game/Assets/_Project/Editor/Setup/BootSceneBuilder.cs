@@ -102,7 +102,7 @@ namespace Game.Editor.Setup
             boot.AddComponent<GameBootstrap>();
 
             EditorSceneManager.SaveScene(scene, ScenePath);
-            EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };
+            BuildScenes.Apply();
             Debug.Log($"[SETUP] Boot scene written: {ScenePath}");
         }
 

@@ -17,6 +17,12 @@ namespace Game.Rendering
         [Tooltip("Render the diagnostics overlay on top (for UI legibility checks).")]
         public bool includeDiagnosticsOverlay;
 
+        [Tooltip("Render the driving HUD (touch controls) on top, in its static preview state.")]
+        public bool includeDrivingHud;
+
+        [Tooltip("With includeDrivingHud: also show the telemetry panel.")]
+        public bool drivingHudTelemetry;
+
         [TextArea] public string note;
     }
 }

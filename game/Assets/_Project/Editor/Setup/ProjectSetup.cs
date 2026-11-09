@@ -56,9 +56,11 @@ namespace Game.Editor.Setup
             try
             {
                 ApplyPlayerSettings();
+                ApplyTimeAndLayers();
                 var assets = CreateUrpTierAssets();
                 ApplyQualityLevels(assets);
                 BootSceneBuilder.BuildAndRegister();
+                DrivingLabSceneBuilder.Build();
                 AssetDatabase.SaveAssets();
                 Debug.Log("SETUP_RESULT: OK");
             }
@@ -75,8 +77,26 @@ namespace Game.Editor.Setup
         static void MenuApply()
         {
             ApplyPlayerSettings();
+            ApplyTimeAndLayers();
             ApplyQualityLevels(CreateUrpTierAssets());
             AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>
+        /// Physics step 100 Hz (docs/04 §1), at most 10 fixed steps per rendered frame, and the "Vehicle" layer
+        /// (layer 8) that the wheel raycasts exclude.
+        /// </summary>
+        public static void ApplyTimeAndLayers()
+        {
+            var tm = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TimeManager.asset")[0]);
+            Find(tm, "Fixed Timestep").floatValue = 0.01f;
+            Find(tm, "Maximum Allowed Timestep").floatValue = 0.1f;
+            tm.ApplyModifiedPropertiesWithoutUndo();
+            var tags = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+            var layers = Find(tags, "layers");
+            layers.GetArrayElementAtIndex(8).stringValue = "Vehicle";
+            tags.ApplyModifiedPropertiesWithoutUndo();
+            Debug.Log("[SETUP] fixedDeltaTime 0.01 s, max 0.1 s/frame, layer 8 = Vehicle");
         }
 
         public static void ApplyPlayerSettings()

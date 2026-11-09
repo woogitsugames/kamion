@@ -5,6 +5,7 @@ using Game.Editor.Build;
 using Game.Platform;
 using Game.Rendering;
 using Game.UI;
+using Game.UI.Driving;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -46,6 +47,10 @@ namespace Game.Editor.VisualQA
         [MenuItem("Kamion/Visual QA/Render Boot control cameras")]
         static void MenuRenderBoot() =>
             Render("Boot", 2340, 1080, "Medium", Path.Combine(EditorTools.RepoRoot, "artifacts", "visual-qa", "Boot"));
+
+        [MenuItem("Kamion/Visual QA/Render DrivingLab control cameras")]
+        static void MenuRenderLab() =>
+            Render("DrivingLab", 2340, 1080, "Medium", Path.Combine(EditorTools.RepoRoot, "artifacts", "visual-qa", "DrivingLab"));
 
         public static int Render(string sceneName, int width, int height, string tier, string outDir)
         {
@@ -101,16 +106,22 @@ namespace Game.Editor.VisualQA
                     overlay.OverrideSafeAreaNormalized(new Rect(0.04f, 0f, 0.96f, 1f));
                 }
 
+                DrivingHud hud = null;
+                if (qa.includeDrivingHud)
+                {
+                    hud = DrivingHud.Create(cam, null);
+                    hud.OverrideSafeAreaNormalized(new Rect(0.04f, 0f, 0.96f, 1f));
+                    hud.SetTelemetryVisible(qa.drivingHudTelemetry);
+                    hud.RefreshNow();
+                }
+
                 var rt = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB)
                 { antiAliasing = 1 };
                 var prevTarget = cam.targetTexture;
                 cam.targetTexture = rt;
                 cam.enabled = true;
-                if (overlay != null)
-                {
-                    overlay.RefreshNow();
-                    Canvas.ForceUpdateCanvases();
-                }
+                if (overlay != null) overlay.RefreshNow();
+                if (overlay != null || hud != null) Canvas.ForceUpdateCanvases();
                 cam.Render();
 
                 var prevActive = RenderTexture.active;
@@ -131,11 +142,12 @@ namespace Game.Editor.VisualQA
                 UnityEngine.Object.DestroyImmediate(tex);
                 rt.Release();
                 UnityEngine.Object.DestroyImmediate(rt);
-                if (overlay != null)
+                if (hud != null) UnityEngine.Object.DestroyImmediate(hud.gameObject);
+                if (overlay != null || hud != null)
                 {
                     var es = UnityEngine.Object.FindAnyObjectByType<UnityEngine.EventSystems.EventSystem>();
                     if (es != null) UnityEngine.Object.DestroyImmediate(es.gameObject);
-                    UnityEngine.Object.DestroyImmediate(overlay.gameObject);
+                    if (overlay != null) UnityEngine.Object.DestroyImmediate(overlay.gameObject);
                 }
             }
             return rendered;
