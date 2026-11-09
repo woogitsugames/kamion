@@ -1,6 +1,6 @@
 # Physics validation — Stage 2, tractor 4x2 + semi-trailer
 
-Status: **85 scenario runs (417 checks) and 117 xUnit tests are green** in the plain .NET runner (2026-11-09, branch `worktree-agent-afbe05f0042d88840`). This covers the solo tractor, the empty combination (14.5 t) and the 40.0 t combination. Nothing has been run in Unity or on a device yet. Stage 1 history is in git (`ee235b4`).
+Status: **93 scenario runs (445 checks) and 141 xUnit tests are green** in the plain .NET runner (2026-11-09; ADR 0009 requests R5–R7 resolved on branch `worktree-agent-a949c191e8892b0e8`, see section 2a). This covers the solo tractor, the empty combination (14.5 t) and the 40.0 t combination. Nothing has been run in Unity or on a device yet. Stage 1 history is in git (`ee235b4`).
 
 Parameter provenance: `docs/VEHICLE_REFERENCE_DATA.md`. Most numbers are still WORKING_VALUE, so the tolerances mostly check **plausibility and numerical quality**. The exceptions are the items backed by UN R13 Annex 4 text (S5), the 90 km/h limiter (S3) and the class-reference engine and gearbox data (S1, S2, opened in Stage 2).
 
@@ -8,8 +8,8 @@ Parameter provenance: `docs/VEHICLE_REFERENCE_DATA.md`. Most numbers are still W
 
 ```powershell
 $env:DOTNET_ROOT = "$env:LOCALAPPDATA\Microsoft\dotnet"; $env:PATH = "$env:DOTNET_ROOT;$env:PATH"
-dotnet test tools/physics-runner -c Release                                   # 117 tests, ~10 s
-dotnet run -c Release --project tools/physics-runner/Runner                   # 85 runs + multi-run checks + bench -> artifacts/physics/<ts>/
+dotnet test tools/physics-runner -c Release                                   # 141 tests, ~10 s
+dotnet run -c Release --project tools/physics-runner/Runner                   # 93 runs + multi-run checks + bench -> artifacts/physics/<ts>/
 dotnet run -c Release --project tools/physics-runner/Runner -- --only brake_80_0_dry_abs_comb          # all variants of one scenario
 dotnet run -c Release --project tools/physics-runner/Runner -- --only lane_change_80@laden40          # one variant
 dotnet run -c Release --project tools/physics-runner/Runner -- --update-golden   # rewrite tests/golden/*.csv (review the diff!)
@@ -34,7 +34,7 @@ game/Assets/_Project/Vehicle/Physics/          pure C# 9, no UnityEngine
   TrailerModel  trailer body: axles, trailer brakes, landing gear, trailer aero share
   CombinationModel  one fixed step for both bodies + coupling; outputs force + torque per body
 tools/physics-runner/Sim   RigidBody6Dof x2, AnalyticGround, scenarios/variants/events, drivers, metrics, telemetry, golden
-tests/physics/scenarios    61 JSON files -> 85 runs
+tests/physics/scenarios    65 JSON files -> 93 runs
 tests/golden               9 golden CSV subsets + tolerances.json
 ```
 
@@ -60,10 +60,29 @@ void FixedUpdate() {
     trailerRb.AddForce(ToV3(combo.TrailerForce));  trailerRb.AddTorque(ToV3(combo.TrailerTorque));
 }
 ```
-- Mass, CoM and the inertia tensor of both bodies come from `Tractor.MassProps` and `Trailer.MassProps`. The trailer's include the cargo, so rebuild the `TrailerModel` when the load changes.
+- Mass, CoM and the inertia tensor of both bodies come from `Tractor.MassProps` and `Trailer.MassProps`. The trailer's include the cargo. When the load changes, use `combo.SetCargo(cargo)` (no new model, see 2a) and copy `Trailer.MassProps` into the trailer Rigidbody again.
 - The constraint predicts velocities with the model's own mass properties. PhysX integrates almost the same way. Any residual is removed by the Baumgarte feedback. The runner's kingpin error never exceeds 0.16 mm. On the phone, measure it again (`FifthWheel.PositionError`).
-- Coupling: `combo.CouplingArmed = true`. The jaw locks automatically inside the capture window. Uncoupling is `combo.Uncouple()`. It is refused unless the landing gear is down (`Trailer.LandingGearDown`), because there is no chassis-ground collision to catch the nose.
+- Coupling: `combo.CouplingArmed = true`. The jaw locks automatically inside the capture window; the throat guides a kingpin up to ±0.18 m off the centre line into it (R5, 2a). Uncoupling is `combo.Uncouple()`. It is refused unless the landing gear is down (`Trailer.LandingGearDown`), because there is no chassis-ground collision to catch the nose.
 - Driver inputs added in Stage 2: `RetarderLever` (0 off, 1 engine brake, 2–5 retarder stages), `BrakeCruiseKmh`, `ManualMode`, `ShiftUp`/`ShiftDown` (edge-triggered).
+
+### 2a. Resolution of ADR 0009 requests R5–R7 (2026-11-09)
+
+**R5, coupling throat** (`FifthWheel.ComputeThroatGuide`, called by `CombinationModel.Step` while the jaw is armed and open).
+- The plate slot is a funnel that opens to the rear. Mouth ±0.18 m wide at 0.40 m behind the jaw centre, narrowing linearly to ±0.025 m at the jaw cup (about 18° lead-in ramps). All values are WORKING_VALUE: typical lead-in of a fifth wheel plate, not measured on a specific model (`FifthWheelDefinition.captureThroat*`).
+- A kingpin inside the funnel and vertically within `captureHeight` that is wider than the local ramp half-width is pushed to the centre line by a spring-damper contact (3 MN/m, 150 kN s/m, capped at 80 kN), equal and opposite on both bodies at the kingpin. The 80 kN cap is about what the trailer feet and the tractor tires can give sideways.
+- `TryCapture` is unchanged (5 cm radius, 12 cm vertical, 1.5 m/s, heading within 25°). The ramps bring the kingpin inside that radius.
+- Result (reversing at about 3 km/h, trailer on its legs): couples from −0.18 to +0.17 m offset and up to ±5° yaw, bump 99–110 kN, dv ≤ 0.16 m/s/step; at ±0.21 m, 0.30 m and −0.45 m it does not couple (no false capture). Scenarios `couple_offset_right_15cm`, `couple_offset_left_18cm`, `couple_miss_25cm`; tests `CouplingThroat_*`.
+
+**R6, kingpin load at standstill on locked brakes.**
+- Cause (found with `couple_standstill_locked`: couple, hold service + parking brake, raise the legs): the old 0.67–0.9× was not a vertical effect. With every trailer wheel locked, any slow pitch change of the combination (the nose load moving from the legs to the plate, the tractor's air suspension re-levelling for about a minute) is a ~1 cm horizontal geometry mismatch. The tire stick springs stored it as 60–110 kN of longitudinal preload. That force acts at the plate height (1.2 m), and shifts the kingpin load by Fx·h / wheelbase (about 10 kN, 10 % of the 97 kN static load for 40 t). Parking brake only (trailer wheels free) was never affected.
+- Fix (`TrailerModel.StandstillRelaxTau`, WORKING_VALUE 2 s): while the combination is coupled and stands still (|v| < 0.05 m/s) the longitudinal contact-patch deflection of the **trailer** wheels relaxes. That is the real carcass hysteresis and trailing-arm bush compliance that the rigid-axle model lacks. The tractor wheels and brakes keep holding, so on a slope the trailer settles by about F / k_tractor and stops: no creep (the 12 % parking scenarios, drift ≤ 5 mm, are unchanged). Lateral stick is untouched; jackknife and all golden telemetry still pass unchanged.
+- Result: kingpin / static 1.005 (empty) and 1.014 (40 t) at 50–80 s after raising the legs on locked brakes (was 0.95 and 0.90 in the same scenario without the fix; 0.67 in the Unity case, which was not reproduced exactly).
+
+**R7, trailer / cargo swap without rebuilding.**
+- `CombinationModel.SetTrailer(TrailerModel trailer, bool coupled)`: replaces the trailer (or removes it with `null`), resets the fifth wheel without counting an uncoupling, clears the arming, re-levels both suspensions. The tractor model and the combination object stay.
+- `CombinationModel.SetCargo(CargoDefinition)` / `TrailerModel.SetCargo(cargo, onKingpin)`: changes the load case of the existing trailer model in place (mass, CoM, inertia, static axle loads, pre-levelling). No new wheel group.
+- Both are between-step calls. `TrailerModel.MassProps` and `.Cargo` are now properties that change on `SetCargo`: copy `MassProps` into the Rigidbody again. The step stays allocation-free (test `Step_DoesNotAllocate_AfterSetCargo`: 0 B over 500 steps after a cargo change).
+- Tests `SetCargo_InPlace_SettlesToNewStaticLoad` (22 t, then back to empty: kingpin / static 1.000, 0.998), `SetTrailer_SwapsWithoutRebuildingTheCombination` (18 t swap 1.000, then solo).
 
 ## 3. Results (runner, dt = 0.01 s, 4 substeps; run `artifacts/physics/stage2-final`)
 
@@ -99,6 +118,9 @@ Values are for solo / empty / 40 t where the item has variants. ✅ = all checks
 | 12 | dt 50/100/120 Hz and substeps 2/4/8 (section 4) | ≤ 1.0 % (all metrics) | ≤ 5 % | WORKING ✅ |
 | 14 | soak_30min_cycle (40 t, 20 × accelerate / lane change / stop) | first vs last cycle cruise 74.0 / 73.5 km/h; standstill speed 4.6e-5 / 4.3e-5 m/s; kingpin error ≤ 0.03 mm; max articulation 2.3°; air ≥ 11.4 bar | no drift | WORKING ✅ |
 | 15 | steer_sign_right / reverse_right_comb | +17.4 to +22 °/s forward, −3.1 to −3.9 °/s reversing | sign as solo | DERIVED ✅ |
+| — | couple_standstill_locked (R6) | kingpin load 1.005 / 1.014 × static on locked brakes with legs up, speed < 5 mm/s | 0.97–1.03 | DERIVED ✅ |
+| — | couple_offset_right_15cm, couple_offset_left_18cm (R5) | couples with a 15 cm / 18 cm offset (4° yaw), bump ≤ 107 kN, kingpin error < 5 mm after the engagement | 1 coupling | WORKING ✅ |
+| — | couple_miss_25cm (R5) | no coupling at 25 cm | 0 couplings | WORKING ✅ |
 | — | couple_uncouple | 1 coupling, kingpin load 0.97–0.98 × static after raising the legs, coupling bump ≤ 62 kN, dv ≤ 0.14 m/s/step, uncoupled trailer moves ≤ 3 mm | | WORKING ✅ |
 | — | manual_mode_shifts (40 t) | gears 2→5 by hand, 4 over-revving requests refused, max 2074 rpm | ≤ 2130 rpm | S1 max revs ✅ |
 | — | zero allocation (test) | 0 bytes over 2000 steps, solo and 40 t combination | 0 | CLAUDE.md ✅ |
