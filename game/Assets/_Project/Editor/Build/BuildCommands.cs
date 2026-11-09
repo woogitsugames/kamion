@@ -66,7 +66,16 @@ namespace Game.Editor.Build
             };
 
             Debug.Log($"[BUILD] Android APK → {outputPath} (development={development}) scenes=[{string.Join(", ", scenes)}]");
-            BuildReport report = BuildPipeline.BuildPlayer(options);
+            // BuildInfoWriter sets versionCode from the git commit count for this build only;
+            // restore it afterwards so building never dirties ProjectSettings.asset.
+            int savedVersionCode = PlayerSettings.Android.bundleVersionCode;
+            BuildReport report;
+            try { report = BuildPipeline.BuildPlayer(options); }
+            finally
+            {
+                PlayerSettings.Android.bundleVersionCode = savedVersionCode;
+                AssetDatabase.SaveAssets();
+            }
             var s = report.summary;
             bool ok = s.result == BuildResult.Succeeded;
             Debug.Log($"BUILD_RESULT: {s.result} errors={s.totalErrors} warnings={s.totalWarnings} " +

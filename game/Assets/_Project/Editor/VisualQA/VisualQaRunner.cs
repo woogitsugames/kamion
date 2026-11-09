@@ -64,6 +64,27 @@ namespace Game.Editor.VisualQA
 
             var cams = UnityEngine.Object.FindObjectsByType<ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None)
                 .OrderBy(c => c.id, StringComparer.Ordinal).ToArray();
+            // Warm-up: the very first Camera.Render after opening a scene in batchmode can draw with
+            // stale per-material SRP-batcher data (every object showed the ground material). Render
+            // each camera once into a throwaway target before capturing.
+            if (cams.Length > 0)
+            {
+                var warm = new RenderTexture(256, 128, 24);
+                foreach (var qa in cams)
+                {
+                    var c = qa.GetComponent<Camera>();
+                    bool active = qa.gameObject.activeSelf;
+                    qa.gameObject.SetActive(true);
+                    var prev = c.targetTexture;
+                    c.targetTexture = warm;
+                    c.Render();
+                    c.targetTexture = prev;
+                    qa.gameObject.SetActive(active);
+                }
+                warm.Release();
+                UnityEngine.Object.DestroyImmediate(warm);
+            }
+
             int rendered = 0;
             foreach (var qa in cams)
             {
