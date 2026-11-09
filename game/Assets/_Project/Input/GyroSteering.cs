@@ -32,6 +32,9 @@ namespace Game.Controls
             }
         }
 
+        public static float SteerFromTilt(float relDeg, float maxTiltDeg, float deadZoneDeg, bool invert)
+            => SteerFromTilt(relDeg, maxTiltDeg, deadZoneDeg) * (invert ? -1f : 1f);
+
         public static float SteerFromTilt(float relDeg, float maxTiltDeg, float deadZoneDeg)
         {
             float x = relDeg / Mathf.Max(1f, maxTiltDeg);
@@ -52,6 +55,8 @@ namespace Game.Controls
 
         public float MaxTiltDeg = 35f;
         public float DeadZoneDeg = 1.0f;
+        /// <summary>Flips the steering direction (settings menu), for a sensor whose sign is opposite on the device.</summary>
+        public bool Invert;
         public readonly OneEuroFilter Filter = new OneEuroFilter(minCutoff: 1.0f, beta: 0.02f, derivativeCutoff: 1.0f);
 
         float m_Neutral;
@@ -102,7 +107,7 @@ namespace Game.Controls
             if (!m_Calibrated) return;
             RelativeTiltDeg = Filter.Filter(GyroMath.Relative(raw, m_Neutral), dt);
             if (m_HoldTimer > 0f) { m_HoldTimer -= dt; Output = 0f; }
-            else Output = GyroMath.SteerFromTilt(RelativeTiltDeg, MaxTiltDeg, DeadZoneDeg);
+            else Output = GyroMath.SteerFromTilt(RelativeTiltDeg, MaxTiltDeg, DeadZoneDeg, Invert);
             intent.Steer = Output;
             intent.SteerActive = true;
         }
