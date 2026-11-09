@@ -146,6 +146,20 @@ namespace Game.World
             var src = set != null ? set.materials : null;
             if (src == null) { m_Mats = Array.Empty<Material>(); return; }
             m_Mats = (Material[])src.Clone();
+            // Street lamp glass: per-instance-set copies that StreetLamps lights at dusk (review r4 L3, rendering-perf).
+            var lampCopies = new System.Collections.Generic.Dictionary<Material, Material>();
+            for (int i = 0; i < m_Mats.Length; i++)
+            {
+                var m = m_Mats[i];
+                if (!StreetLamps.IsLampGlass(m)) continue;
+                if (!lampCopies.TryGetValue(m, out var c))
+                {
+                    c = new Material(m) { name = m.name, hideFlags = HideFlags.DontSave };
+                    StreetLamps.RegisterGlass(c);
+                    lampCopies[m] = c;
+                }
+                m_Mats[i] = c;
+            }
             var qp = QualityProfile.Load();
             var template = qp != null ? qp.foliageMaterial : null;
             m_FoliageShader = template != null ? template.shader : null;
@@ -177,6 +191,7 @@ namespace Game.World
             foreach (var m in m_Mats)
                 if (m != null && Array.IndexOf(set.materials, m) < 0)
                 {
+                    StreetLamps.UnregisterGlass(m);
                     if (Application.isPlaying) Destroy(m); else DestroyImmediate(m);
                 }
             m_Mats = null;
@@ -200,6 +215,27 @@ namespace Game.World
             }
             if (m_CellBounds == null || m_CellBounds.Length != set.cells.Length) m_CellBounds = new Bounds[set.cells.Length];
             for (int i = 0; i < set.cells.Length; i++) { var b = set.cells[i].bounds; b.center += o; m_CellBounds[i] = b; }
+            SendLampHeads();
+        }
+
+        Vector3[] m_LampHeads;
+        /// <summary>Lamp head positions (top of the LOD0 bounds, over its centre) for StreetLamps' point lights.</summary>
+        void SendLampHeads()
+        {
+            int n = 0;
+            foreach (var r in set.runs) if (r.prototype >= 0 && set.prototypes[r.prototype].name.StartsWith("lamp_")) n += r.count;
+            if (m_LampHeads == null || m_LampHeads.Length != n) m_LampHeads = new Vector3[n];
+            int k = 0;
+            foreach (var r in set.runs)
+            {
+                if (r.prototype < 0) continue;
+                var pr = set.prototypes[r.prototype];
+                if (!pr.name.StartsWith("lamp_") || pr.lods.Length == 0 || pr.lods[0] == null) continue;
+                var b = pr.lods[0].bounds;
+                var head = new Vector3(b.center.x, b.max.y - 0.25f, b.center.z);
+                for (int i = 0; i < r.count && k < n; i++) m_LampHeads[k++] = m_World[r.start + i].MultiplyPoint3x4(head);
+            }
+            StreetLamps.SetHeads(m_LampHeads, k);
         }
 
         void OnBeginCamera(ScriptableRenderContext ctx, Camera cam)

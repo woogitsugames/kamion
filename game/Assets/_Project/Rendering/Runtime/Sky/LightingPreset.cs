@@ -24,7 +24,7 @@ namespace Game.Rendering
         [Tooltip("Meteorological visibility (km); fog density = 3.912 / V (Koschmieder)")]
         public float visibilityKm = 30f;
         [Tooltip("Diffuse albedo of the surrounding ground for the lower hemisphere of the ambient probe")]
-        public Color groundAlbedo = new Color(0.16f, 0.17f, 0.12f);
+        public Color groundAlbedo = new Color(0.15f, 0.155f, 0.135f);   // yard: asphalt/concrete + verge grass (r4 L2: was olive 0.16/0.17/0.12)
         [Tooltip("Saturation of the sky part of the ambient light (1 = the analytic sky). The probe has no inter-reflections " +
                  "from walls, trees and the truck itself, which grey real shadows; 0.55 removes the cyan shadows of the " +
                  "first renders (visual review r2 #3, docs/06 §2). WORKING_VALUE.")]

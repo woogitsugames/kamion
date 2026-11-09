@@ -160,6 +160,16 @@ namespace Game.Editor.VisualQA
                     screens.RenderNow();
                     Debug.Log($"[VISUALQA] cab screens {vb.name}: refresh {screens.LastCpuMs:F3} ms CPU, cluster {screens.Cluster.VertexCount} verts, nav {screens.Nav.VertexCount} verts, night={screens.State.Night}, clock={screens.State.ClockMinutes / 60:D2}:{screens.State.ClockMinutes % 60:D2}");
                 }
+                // A8: contact shadows, the vehicle reflection capture and the dusk street-lamp lights (no LateUpdate here).
+                ContactShadowCaster.RefreshAll();
+                for (int ci = 0; ci < ContactShadowCaster.Count; ci++)
+                {
+                    var csc = ContactShadowCaster.Get(ci);
+                    Debug.Log($"[QA] contact shadow {csc.name}: {csc.LastVertices} vertices, {csc.LastHits} ground hits");
+                }
+                if (VehicleReflectionCapture.Active != null) VehicleReflectionCapture.Active.RenderAllNow();
+                foreach (var sl in UnityEngine.Object.FindObjectsByType<StreetLamps>(FindObjectsSortMode.None)) sl.RefreshLights(cam);
+                Debug.Log("[QA] street lamps: " + StreetLamps.Diagnostics);
                 // -qaCabFill off: A/B frames without the cab fill and the cab-view lift (A7 before/after).
                 if (EditorTools.Arg("-qaCabFill", "on") == "off")
                 {

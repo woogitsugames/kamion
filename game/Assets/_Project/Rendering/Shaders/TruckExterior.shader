@@ -10,7 +10,12 @@
 //   environment). Tyre deflection: renderers with rendering layer bit 8 (TruckVisualRig.TyreRenderingLayer, the wheel
 //   meshes, origin = wheel centre) or bit 9 (TrailerVisualRig.TyreRenderingLayer, trailer wheels) are flattened in the vertex shader at _KamionTyreFlatRadius below the wheel centre
 //   (world down) - the free-radius model tyre (0.538 m) on a 0.51 m physics rolling radius otherwise sinks ~2.8 cm into
-//   the road. All passes (colour, shadow, depth) use the same displaced position. No clear coat (URP Complex Lit would double the cost; WORKING_VALUE, see docs/reports/visual/truck-A7).
+//   the road. All passes (colour, shadow, depth) use the same displaced position.
+// - Clear coat (Paint slot, review r3 E1): a second, smooth dielectric GGX layer (F0 0.04, _ClearCoatRoughness) over the
+//   base paint, as in URP Complex Lit but without its extra variants: base * (1 - Fc) + coat env reflection * Fc (reflection
+//   probe / environment, AO as specular occlusion) + coat sun highlight. Mask = paint mask * (1 - dust): dust sits on top
+//   of the lacquer. Global _KamionClearCoatOff (QualityProfile.clearCoat false -> 1) is the tier switch. Optional metallic
+//   flake (_Flake, off for the fleet white): mip-faded sparkle in the base specular, for dark metallic liveries.
 Shader "Kamion/Truck Exterior"
 {
     Properties
@@ -22,7 +27,11 @@ Shader "Kamion/Truck Exterior"
         _NormalStrength ("Normal strength", Range(0, 2)) = 1
         [Toggle] _IsPaint ("Paint slot (B = paint mask, decal on uv1)", Float) = 0
         _PaintColor ("Paint colour (linear)", Color) = (0.78, 0.785, 0.78, 1)
-        _PaintRoughness ("Paint roughness", Range(0, 1)) = 0.32
+        _PaintRoughness ("Paint base roughness (under the clear coat)", Range(0, 1)) = 0.36
+        _ClearCoat ("Clear coat amount", Range(0, 1)) = 1
+        _ClearCoatRoughness ("Clear coat perceptual roughness", Range(0.02, 0.5)) = 0.08
+        _Flake ("Metallic flake (0 = solid paint)", Range(0, 1)) = 0
+        _FlakeScale ("Flake cells per atlas UV", Float) = 2500
         _PaintMetallic ("Paint metallic", Range(0, 1)) = 0
         _DecalColor ("Decal colour (linear)", Color) = (0.1, 0.104, 0.11, 1)
         _DecalMetallic ("Decal metallic", Range(0, 1)) = 1
@@ -41,6 +50,7 @@ Shader "Kamion/Truck Exterior"
             float4 _CMap_ST;
             float4 _PaintColor, _DecalColor, _DirtColor;
             float _NormalStrength, _IsPaint, _PaintRoughness, _PaintMetallic, _DecalMetallic, _DecalRoughness, _Dirt, _Lamps;
+            float _ClearCoat, _ClearCoatRoughness, _Flake, _FlakeScale;
         CBUFFER_END
         float _KamionTyreFlatRadius;          // global (TruckVisualRig: tractor physics rolling radius 0.51 m), 0 = off
         float _KamionTrailerTyreFlatRadius;   // global (TrailerVisualRig: trailer physics rolling radius 0.515 m), 0 = off
@@ -85,6 +95,21 @@ Shader "Kamion/Truck Exterior"
             TEXTURE2D(_DecalMap); SAMPLER(sampler_DecalMap);
             TEXTURE2D(_TruckLightState); SAMPLER(sampler_point_clamp);
             float _KamionExposure;
+            float _KamionClearCoatOff;
+            half4 _CabShadowLift;   // cab-view local shadow lift (CabInteriorLighting; 0 outside the cab view)   // tier switch (QualityProfileApplier): 0 = on (unset global), 1 = off
+
+            // GGX specular of one smooth dielectric layer for the main light (D * Vis * F * NdotL), Unity light units.
+            half3 CoatDirect(Light L, half3 n, half3 v, half rough, half F0)
+            {
+                half3 h = SafeNormalize(L.direction + v);
+                half NoH = saturate(dot(n, h)), NoL = saturate(dot(n, L.direction)), LoH = saturate(dot(L.direction, h));
+                half a2 = max(rough * rough, 0.0016); a2 *= a2;
+                half d = NoH * NoH * (a2 - 1.0) + 1.00001;
+                half F = F0 + (1.0 - F0) * Pow4(1.0 - LoH) * (1.0 - LoH);
+                // Normalised GGX * Kelemen visibility (as URP DirectBRDFSpecular), * PI because Unity lights carry no 1/PI.
+                half spec = a2 / (4.0 * d * d * max(0.1, LoH * LoH));
+                return L.color * (spec * F * NoL * L.distanceAttenuation * L.shadowAttenuation);
+            }
 
             struct Attributes
             {
@@ -132,9 +157,11 @@ Shader "Kamion/Truck Exterior"
                 half3 albedo = c.rgb;
                 half rough = c.a;
                 half metal = m.b;
+                half coat = 0;
                 if (_IsPaint > 0.5)
                 {
                     half paint = m.b;
+                    coat = paint * _ClearCoat * (1.0 - _KamionClearCoatOff);
                     albedo = lerp(albedo, albedo * _PaintColor.rgb, paint);
                     rough = lerp(rough, _PaintRoughness, paint);
                     metal = _PaintMetallic * paint;
@@ -144,6 +171,7 @@ Shader "Kamion/Truck Exterior"
                     rough = lerp(rough, _DecalRoughness, d.a);
                 }
                 half dirt = saturate(m.g * _Dirt);
+                coat *= 1.0 - saturate(dirt * 1.5);
                 albedo = lerp(albedo, _DirtColor.rgb, dirt);
                 rough = saturate(rough + 0.35 * m.g * _Dirt);
                 metal *= 1.0 - dirt;
@@ -175,7 +203,36 @@ Shader "Kamion/Truck Exterior"
                 half3 lum = SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2(u, 0.5), 0).rgb;
                 s.emission = lum * saturate(i.uv2.y) * _KamionExposure;
             #endif
+                // Metallic flake: per-cell random normal tilt in the base specular only, faded out where a cell is
+                // smaller than a pixel (no sparkle aliasing at distance).
+                half3 nBase = nWS;
+                if (_Flake > 0.0 && _IsPaint > 0.5)
+                {
+                    float2 cell = floor(uv * _FlakeScale);
+                    float3 hsh = frac(sin(float3(dot(cell, float2(127.1, 311.7)), dot(cell, float2(269.5, 183.3)), dot(cell, float2(419.2, 371.9)))) * 43758.5453);
+                    float px = max(length(ddx(uv * _FlakeScale)), length(ddy(uv * _FlakeScale)));
+                    half fade = saturate(1.5 - px) * _Flake * m.b;
+                    nBase = normalize(nWS + (half3(hsh) - 0.5) * 0.6 * fade);
+                    input.normalWS = nBase;
+                }
                 half4 col = UniversalFragmentPBR(input, s);
+                if (coat > 0.001)
+                {
+                    half3 v = input.viewDirectionWS;
+                    // Coat sits on the geometric + macro normal (orange peel is far below the atlas resolution).
+                    half NoV = saturate(dot(nWS, v));
+                    half Fc = (0.04 + 0.96 * Pow4(1.0 - NoV) * (1.0 - NoV)) * coat;
+                    half3 R = reflect(-v, nWS);
+                    half3 env = GlossyEnvironmentReflection(R, i.positionWS, _ClearCoatRoughness, m.r);
+                    Light L = GetMainLight(input.shadowCoord, i.positionWS, input.shadowMask);
+                    half3 direct = CoatDirect(L, nWS, v, _ClearCoatRoughness, 0.04) * coat;
+                    col.rgb = col.rgb * (1.0 - Fc) + env * Fc + direct;
+                }
+                // Cab view (review r4 L1): the A-pillars, door frames and mirror housings seen from the driver's seat get the
+                // same local shadow lift as the interior (Kamion/Cab Interior); zero outside the cab view.
+                half yl = dot(col.rgb, half3(0.2126, 0.7152, 0.0722));
+                half ql = _CabShadowLift.y / (yl + _CabShadowLift.y + 1e-5);
+                col.rgb *= 1.0 + _CabShadowLift.x * ql * ql * ql;
                 col.rgb = MixFog(col.rgb, i.fogFactor);
                 return half4(col.rgb, 1);
             }

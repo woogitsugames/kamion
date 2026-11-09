@@ -56,6 +56,14 @@ namespace Game.Rendering
             [Tooltip("Forest HLOD (ADR 0015): beyond this distance (m, camera to the 64 m cell bounds) a cell's forest trees are " +
                      "replaced by its canopy + edge-wall mesh. Same as the generator's lod_policy.<content tier>.forest_hlod_m")] public float forestHlodM;
             [Tooltip("Forest HLOD cells beyond this distance are not drawn (0 = no limit)")] public float forestHlodCullM;
+            [Header("Vehicle look (A8: clear coat, reflections, contact shadows, cab shadows, dusk lights)")]
+            [Tooltip("Clear-coat layer on the truck paint (Kamion/Truck Exterior: one extra env sample + GGX on paint pixels)")] public bool clearCoat;
+            [Tooltip("Vehicle reflection capture: cube face size in px (0 = off, the analytic sky cubemap is used)")] public int envCaptureSize;
+            [Tooltip("Render one capture face every N frames (6 faces = one full refresh)")] public int envCaptureInterval;
+            [Tooltip("Far clip of the capture camera (m)")] public float envCaptureFarClip;
+            [Tooltip("Contact shadow / ambient occlusion blobs under the tractor, trailer and wheels (one draw per vehicle)")] public bool contactShadows;
+            [Tooltip("Cab-view local shadow lift strength (CabInteriorLighting, review r4 L1; 0 = off)")] public float cabShadowLift;
+            [Tooltip("Real point lights at the nearest street lamps at dusk (0 = emission only)")] public int streetLights;
             [Header("Budget assumptions (UNMEASURED until the phone is measured)")]
             public int budgetDrawCalls;
             public int budgetTrianglesK;
@@ -160,6 +168,7 @@ namespace Game.Rendering
                 worldDetail = false, additionalLightsPerObject = 2,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 70f, forestHlodCullM = 1000f,
+                clearCoat = true, envCaptureSize = 0, envCaptureInterval = 2, envCaptureFarClip = 250f, contactShadows = true, cabShadowLift = 8f, streetLights = 0,
                 budgetDrawCalls = 250, budgetTrianglesK = 350, budgetTextureMB = 64, budgetShadowMs = 1.0f, budgetStatus = "UNMEASURED",
             },
             new Tier
@@ -173,6 +182,7 @@ namespace Game.Rendering
                 worldDetail = true, additionalLightsPerObject = 4,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 70f, forestHlodCullM = 1000f,
+                clearCoat = true, envCaptureSize = 0, envCaptureInterval = 2, envCaptureFarClip = 250f, contactShadows = true, cabShadowLift = 8f, streetLights = 0,
                 budgetDrawCalls = 350, budgetTrianglesK = 550, budgetTextureMB = 96, budgetShadowMs = 1.5f, budgetStatus = "UNMEASURED",
             },
             new Tier
@@ -186,6 +196,7 @@ namespace Game.Rendering
                 worldDetail = true, additionalLightsPerObject = 4,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 120f, forestHlodCullM = 0f,
+                clearCoat = true, envCaptureSize = 128, envCaptureInterval = 2, envCaptureFarClip = 200f, contactShadows = true, cabShadowLift = 8f, streetLights = 4,
                 budgetDrawCalls = 800, budgetTrianglesK = 1500, budgetTextureMB = 256, budgetShadowMs = 2.0f, budgetStatus = "UNMEASURED (no flagship attached)",
             },
             new Tier
@@ -199,6 +210,7 @@ namespace Game.Rendering
                 worldDetail = true, additionalLightsPerObject = 8,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 120f, forestHlodCullM = 0f,
+                clearCoat = true, envCaptureSize = 256, envCaptureInterval = 1, envCaptureFarClip = 300f, contactShadows = true, cabShadowLift = 8f, streetLights = 6,
                 budgetDrawCalls = 1000, budgetTrianglesK = 2000, budgetTextureMB = 384, budgetShadowMs = 3.0f, budgetStatus = "UNMEASURED (no flagship attached)",
             },
         };

@@ -1,8 +1,17 @@
 // Thin-sheet vehicle glass (track A7): windscreen, door glass, lamp lenses (exterior Glass slot) and the cluster cover glass
-// (interior). Premultiplied alpha: the scene behind is attenuated by (1 - alpha) and the Fresnel reflection of the
-// environment (reflection probe / EnvironmentLighting cubemap) plus the sun highlight is added. Tint from the vertex
-// colour (sRGB, exterior contract: windscreen slightly green, lenses clear) times _Tint. Optional grime (interior
-// T_Cab_GlassGrime on uv0) adds diffuse haze that catches the light. Neither casts nor receives shadows.
+// (interior). Premultiplied alpha: the scene behind is attenuated by (1 - alpha) and the Fresnel reflection is added.
+// Tint from the vertex colour (sRGB, exterior contract: windscreen slightly green, lenses clear) times _Tint. Neither casts
+// nor receives shadows.
+// Reflection (review r3 E2 / r4 E2: "aquarium glass"):
+// - outside face (normal away from the cab centre _CabCentreOS): Schlick F0 0.04 on the environment = the vehicle
+//   reflection capture (VehicleReflectionCapture, High) or the sky cubemap (Low/Medium), plus the sun highlight;
+// - inside face (seen from the cab): the cab is the "environment" - a cheap analytic interior radiance (dark dash in the
+//   lower hemisphere of the reflected ray, headliner above) lit by the sky irradiance and the sun on the dash top, so the
+//   windscreen carries the faint dash reflection a driver sees (docs/06 §4) instead of an outdoor horizon.
+// Dirt (_Wiper > 0, windscreen only): a thin road film outside the two wiper sweeps (pivots and blade radii in the glass
+// object space, from the exterior manifest), denser towards the bottom edge, with faint arc streaks at the sweep borders,
+// faded out when the streak period falls below a pixel. The film scatters sky and sun light (haze) and roughens the
+// reflection. Optional grime texture (interior T_Cab_GlassGrime on uv0) as before.
 Shader "Kamion/Truck Glass"
 {
     Properties
@@ -13,6 +22,13 @@ Shader "Kamion/Truck Glass"
         _GrimeMap ("Grime (R, uv0)", 2D) = "black" {}
         _Grime ("Grime amount", Range(0, 1)) = 0
         [Toggle] _UseVertexColor ("Tint from vertex colour", Float) = 1
+        _CabCentreOS ("Cab centre in object space (inside / outside face)", Vector) = (0, 1.0, -0.6, 0)
+        _InteriorAlbedo ("Interior albedo seen in the glass (dash below, headliner above)", Vector) = (0.035, 0.12, 0, 0)
+        _Wiper ("Road film outside the wiper sweeps (0 = off)", Range(0, 1)) = 0
+        _WiperPivotA ("Wiper A pivot (object xy) + inner, outer radius", Vector) = (-1.0, 0.87, 0.18, 0.95)
+        _WiperPivotB ("Wiper B pivot (object xy) + inner, outer radius", Vector) = (-0.08, 0.87, 0.18, 0.95)
+        _WiperSweep ("Sweep start, end (deg from +X towards +Y), windscreen min/max object y", Vector) = (-5, 100, 0.8, 2.0)
+        _WindscreenMinZ ("Windscreen: object z above this (front face of the cab)", Float) = 0.95
     }
     SubShader
     {
@@ -35,7 +51,8 @@ Shader "Kamion/Truck Glass"
             CBUFFER_START(UnityPerMaterial)
                 float4 _Tint;
                 float4 _GrimeMap_ST;
-                float _Opacity, _Smoothness, _Grime, _UseVertexColor;
+                float4 _CabCentreOS, _InteriorAlbedo, _WiperPivotA, _WiperPivotB, _WiperSweep;
+                float _Opacity, _Smoothness, _Grime, _UseVertexColor, _Wiper, _WindscreenMinZ;
             CBUFFER_END
             TEXTURE2D(_GrimeMap); SAMPLER(sampler_GrimeMap);
 
@@ -48,6 +65,8 @@ Shader "Kamion/Truck Glass"
                 half3 tint : TEXCOORD2;
                 float2 uv : TEXCOORD3;
                 half fogFactor : TEXCOORD4;
+                float3 positionOS : TEXCOORD5;
+                half inside : TEXCOORD6;
             };
 
             Varyings vert(Attributes v)
@@ -60,32 +79,75 @@ Shader "Kamion/Truck Glass"
                 o.tint = _Tint.rgb * (_UseVertexColor > 0.5 ? SRGBToLinear(v.color.rgb) : half3(1, 1, 1));
                 o.uv = v.uv0;
                 o.fogFactor = ComputeFogFactor(p.positionCS.z);
+                o.positionOS = v.positionOS.xyz;
+                // Inner face of the glass: its normal points towards the cab centre.
+                o.inside = dot(v.normalOS, _CabCentreOS.xyz - v.positionOS.xyz) > 0.0 ? 1.0 : 0.0;
                 return o;
             }
 
-            half4 frag(Varyings i, bool front : SV_IsFrontFace) : SV_Target
+            // 1 inside one wiper sweep (annulus sector), 0 outside, soft 2 cm border; also the arc streak phase.
+            half Sweep(float2 p, float4 pivot, float2 sweepDeg, out float r)
+            {
+                float2 d = p - pivot.xy;
+                r = length(d);
+                float a = degrees(atan2(d.y, d.x));
+                half inR = smoothstep(pivot.z - 0.02, pivot.z + 0.02, r) * (1.0 - smoothstep(pivot.w - 0.02, pivot.w + 0.02, r));
+                half inA = smoothstep(sweepDeg.x - 2.0, sweepDeg.x + 2.0, a) * (1.0 - smoothstep(sweepDeg.y - 2.0, sweepDeg.y + 2.0, a));
+                return inR * inA;
+            }
+
+            half4 frag(Varyings i) : SV_Target
             {
                 half3 n = normalize(i.normalWS);
                 float3 V = GetWorldSpaceNormalizeViewDir(i.positionWS);
                 half NoV = saturate(abs(dot(n, V)));
                 half F = 0.04 + 0.96 * Pow4(1.0 - NoV) * (1.0 - NoV);
-                half pr = 1.0 - _Smoothness;
-                half3 R = reflect(-V, n);
-                half3 env = GlossyEnvironmentReflection(R, pr, 1.0);
-
                 Light L = GetMainLight();
+                half3 amb = SampleSH(n);
+
+                // ---- road film outside the wiper sweeps (windscreen) ----
+                half film = 0;
+                if (_Wiper > 0.0)
+                {
+                    float2 p = i.positionOS.xy;
+                    float rA, rB;
+                    half wiped = max(Sweep(p, _WiperPivotA, _WiperSweep.xy, rA), Sweep(p, _WiperPivotB, _WiperSweep.xy, rB));
+                    half onScreen = step(_WiperSweep.z, p.y) * step(p.y, _WiperSweep.w) * step(_WindscreenMinZ, i.positionOS.z);
+                    float h = saturate((p.y - _WiperSweep.z) / max(_WiperSweep.w - _WiperSweep.z, 0.01));
+                    // Film: densest at the bottom edge (spray from the road), a light veil elsewhere.
+                    half outside = (1.0 - wiped) * (0.35 + 0.65 * (1.0 - h) * (1.0 - h));
+                    // Faint arcs left by the blades inside the sweep (period 1.5 cm), faded below the pixel scale.
+                    float per = max(fwidth(rA), fwidth(rB)) * 66.0;
+                    half arcs = wiped * (0.5 + 0.5 * sin(rA * 418.9)) * saturate(1.0 - per * 2.0) * 0.12 * (1.0 - h);
+                    film = saturate(outside + arcs) * _Wiper * onScreen;
+                }
+
+                half grime = SAMPLE_TEXTURE2D(_GrimeMap, sampler_GrimeMap, i.uv).r * _Grime + film;
+                half pr = saturate(1.0 - _Smoothness + film * 0.25);
+                half3 R = reflect(-V, n);
+                half3 env;
+                if (i.inside > 0.5)
+                {
+                    // Cab interior in the reflection: dash below (lit by the sky through the glass and by the sun on its
+                    // top), headliner and back wall above (sky light only). Exposed units like the SH ambient.
+                    half3 skyE = SampleSH(half3(0, 1, 0));
+                    half3 dash = _InteriorAlbedo.x * (skyE * 0.6 + L.color * saturate(L.direction.y) * 0.5);
+                    half3 roof = _InteriorAlbedo.y * skyE * 0.15;
+                    env = lerp(roof, dash, smoothstep(0.1, -0.2, R.y));
+                }
+                else
+                    env = GlossyEnvironmentReflection(R, i.positionWS, pr, 1.0);
+
                 half r = max(pr * pr, 0.002);
                 float3 H = SafeNormalize(float3(L.direction) + V);
                 half NoH = saturate(dot(n, H));
                 half d = NoH * NoH * (r * r - 1.0) + 1.00001;
                 half spec = (r * r) / (4.0 * PI * d * d) * saturate(dot(n, L.direction)) * F * 4.0;
 
-                half grime = SAMPLE_TEXTURE2D(_GrimeMap, sampler_GrimeMap, i.uv).r * _Grime;
-                half3 amb = SampleSH(n);
                 half absorb = saturate(_Opacity + grime * 0.25);
-                // Body colour of the glass (what is absorbed and scattered) + grime haze lit by sun and sky.
+                // Body colour of the glass (what is absorbed and scattered) + grime / film haze lit by sun and sky.
                 half3 body = i.tint * amb * _Opacity * 0.5 + grime * (amb + L.color * saturate(dot(n, L.direction))) * 0.18;
-                half3 col = body + env * F + L.color * spec;
+                half3 col = body + env * F + L.color * spec * (1.0 - i.inside * 0.7);
                 half alpha = saturate(absorb + F);
                 col = MixFog(col, i.fogFactor);
                 // Premultiplied "over": transmission is grey (1 - alpha); the tint shows in the body term only.

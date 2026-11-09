@@ -386,7 +386,7 @@ namespace Game.Rendering
             var sdir = new Vector3(sinS, cosS, 0f);
             var odv = new float[Bands];
 
-            void March(Vector3 d, float[] ambient, float[] L)
+            void March(Vector3 d, float[] ambient, float[] L, bool rayleighOnly = false)
             {
                 float cosT = d.y, mu = Vector3.Dot(d, sdir);
                 float pR = 3f / (16f * Mathf.PI) * (1f + mu * mu);
@@ -407,7 +407,7 @@ namespace Game.Rendering
                         float e = (ray[k] * dR + mie[k] * dM * MieExtinctionPerScattering + oz[k] * dO) * dt;
                         float mid = odv[k] + 0.5f * e;
                         float sc = ray[k] * dR, sm = mie[k] * dM;
-                        L[k] += Mathf.Exp(-mid - SunOd(h, k)) * sol[k] * (sc * pR + sm * pM) * dt;
+                        L[k] += Mathf.Exp(-mid - SunOd(h, k)) * sol[k] * (sc * pR + (rayleighOnly ? 0f : sm * pM)) * dt;
                         if (ambient != null) L[k] += Mathf.Exp(-mid) * (sc + sm) * ambient[k] * 0.5f * dt;
                         odv[k] += e;
                     }
@@ -423,7 +423,10 @@ namespace Game.Rendering
             for (int b = 0; b < ac; b++)
             {
                 float z = (a + 0.5f) / ar, sz = Mathf.Sqrt(1f - z * z), phi = (b + 0.5f) * 2f * Mathf.PI / ac;
-                March(new Vector3(sz * Mathf.Cos(phi), z, sz * Mathf.Sin(phi)), null, tmp);
+                // Rayleigh only: the Mie aureole (g = 0.76) is a narrow forward lobe that keeps travelling away from the
+                // observer; counted as an isotropic source it painted the whole low-sun horizon orange (review r4 L2:
+                // khaki sky 154/140/114, anti-sun horizon R > B at 9 deg).
+                March(new Vector3(sz * Mathf.Cos(phi), z, sz * Mathf.Sin(phi)), null, tmp, true);
                 for (int k = 0; k < Bands; k++) amb[k] += tmp[k] / (ar * ac);
             }
             for (int k = 0; k < Bands; k++)

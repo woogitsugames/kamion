@@ -45,6 +45,8 @@ namespace Game.Rendering
         void OnEnable()
         {
             Instance = this;
+            // Dusk street lighting (review r4 L3) lives next to the sun that switches it.
+            if (GetComponent<StreetLamps>() == null) gameObject.AddComponent<StreetLamps>().hideFlags = HideFlags.DontSave;
             Apply();
         }
 
@@ -88,6 +90,7 @@ namespace Game.Rendering
             var m = Model;
             // Display value per cd/m^2: emissive surfaces (truck lamps, A7) are authored in physical luminance.
             Shader.SetGlobalFloat(k_Exposure, m.Exposure);
+            StreetLamps.SetSunElevation(m.SunElevationDeg);
 
             // ---- sun ----
             if (sun == null) sun = RenderSettings.sun;
