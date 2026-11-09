@@ -1,0 +1,25 @@
+{
+  "// about": "Golden telemetry tolerances (tools/physics-runner/Sim/Golden.cs). Per column [abs, rel]: a sample is an outlier when |value - golden| > abs + rel * |golden|. A column passes with at most maxOutlierFraction outliers (shift timing may move by a step). Regenerate goldens with `physics-runner --update-golden` and review the diff before committing.",
+  "defaultAbs": 0.1,
+  "defaultRel": 0.02,
+  "maxOutlierFraction": 0.03,
+  "columns": {
+    "speed_kmh": [0.5, 0.01],
+    "rpm": [50, 0.03],
+    "gear": [0.5, 0.0],
+    "a_long": [0.3, 0.05],
+    "a_lat": [0.3, 0.05],
+    "yaw_rate_dps": [0.5, 0.05],
+    "articulation_deg": [0.5, 0.05],
+    "kingpin_fz": [2000, 0.03],
+    "air_front_bar": [0.2, 0.02],
+    "air_rear_bar": [0.2, 0.02],
+    "air_trailer_res_bar": [0.2, 0.02],
+    "retarder_torque": [100, 0.05],
+    "engine_brake_torque": [100, 0.05],
+    "front_L_p_bar": [0.3, 0.05],
+    "rear_L_p_bar": [0.3, 0.05],
+    "front_L_fz": [2000, 0.05],
+    "rear_L_fz": [2000, 0.05]
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "id": "soak_30min_cycle",
+  "description": "30 min simulated: 20 x (accelerate to 80, double lane change, brake to stop, stand)",
+  "spec": "docs/04 s6.14",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "sampleEvery": 5,
+  "duration": 1800,
+  "driver": {
+    "type": "soak",
+    "targetKmh": 80,
+    "cyclePeriod": 90
+  },
+  "checks": [
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "no constraint drift over 30 min",
+      "max": 5
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no spikes",
+      "max": 0.35
+    },
+    {
+      "metric": "mean_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "first cycle cruise",
+      "min": 60,
+      "max": 82,
+      "from": 30,
+      "to": 50
+    },
+    {
+      "metric": "mean_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "last cycle cruise (compare with first: no drift)",
+      "min": 60,
+      "max": 82,
+      "from": 1740,
+      "to": 1760
+    },
+    {
+      "metric": "max_speed_after_ms",
+      "status": "WORKING_VALUE",
+      "source": "standstill in the first cycle",
+      "max": 0.002,
+      "from": 85,
+      "to": 89.9
+    },
+    {
+      "metric": "max_speed_after_ms",
+      "status": "WORKING_VALUE",
+      "source": "standstill in the last cycle: no energy growth",
+      "max": 0.002,
+      "from": 1795,
+      "to": 1799.9
+    },
+    {
+      "metric": "min_air_service_bar",
+      "status": "WORKING_VALUE",
+      "source": "air supply sustains the duty cycle",
+      "min": 8
+    },
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "lane changes stay tame",
+      "max": 12
+    }
+  ]
+}

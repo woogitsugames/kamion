@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "id": "brake_80_0_dry_abs_comb",
+  "description": "80->0 km/h full service brake, dry asphalt, ABS on",
+  "spec": "docs/04 s6.5",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 80,
+    "gear": 11
+  },
+  "overrides": {
+    "absEnabled": true
+  },
+  "duration": 20,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 0.5,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    },
+    {
+      "metric": "stop_distance_m",
+      "status": "WORKING_VALUE",
+      "source": "upper bound = 0.15 v + v^2/130 at 80 km/h (believed R13 N3 type-0 formula, UNVERIFIED; the type-0 table did not extract); lower bound ~ v^2/(2 x 0.8 g) + build-up",
+      "min": 35,
+      "max": 61.2
+    },
+    {
+      "metric": "mfdd_ms2",
+      "status": "WORKING_VALUE",
+      "source": "MFDD (R13 Annex 4 definition); 5.0 = believed N3 type-0 minimum (UNVERIFIED); <= mu g",
+      "min": 5.0,
+      "max": 8.0
+    },
+    {
+      "metric": "max_lateral_deviation_m",
+      "status": "WORKING_VALUE",
+      "source": "straight-line stability under ABS",
+      "max": 0.5
+    },
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "no trailer swing under ABS braking on a straight",
+      "max": 2.0
+    },
+    {
+      "metric": "rear_lock_time_s",
+      "status": "WORKING_VALUE",
+      "source": "Stage 2 fix: no tractor drive-axle lock at brake onset (EBS load sensing + decel-threshold ABS)",
+      "max": 0.03
+    },
+    {
+      "metric": "trailer_lock_time_s",
+      "status": "WORKING_VALUE",
+      "source": "trailer ABS 2S/2M prevents lock",
+      "max": 0.05
+    }
+  ]
+}

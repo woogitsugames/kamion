@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "air_leak_park_circuit",
+  "description": "60 km/h, circuit 3 (spring brakes + trailer supply) bursts at t=3 s, no pedal",
+  "spec": "docs/04 s2.8",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 60
+  },
+  "events": [
+    {
+      "t": 3,
+      "type": "leak",
+      "circuit": 3,
+      "lpm": 3000
+    }
+  ],
+  "duration": 60,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0.4,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 3,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "trailer_emergency",
+      "status": "WORKING_VALUE",
+      "source": "red-line loss applies the trailer brakes (emergency relay valve)",
+      "min": 1
+    },
+    {
+      "metric": "min_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "spring brakes + trailer emergency brake stop the combination",
+      "max": 0.5,
+      "from": 40
+    },
+    {
+      "metric": "low_air_warning",
+      "status": "WORKING_VALUE",
+      "source": "warning",
+      "min": 1
+    }
+  ]
+}

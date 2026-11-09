@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "id": "downhill_7pct_full_lever",
+  "description": "40 t, 7% down from 70 km/h, endurance lever at maximum, no pedal: speed settles",
+  "spec": "docs/04 s6.6",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": -7,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 70
+  },
+  "duration": 120,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 5
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "speed_range_kmh",
+      "status": "WORKING_VALUE",
+      "source": "speed stabilises (endurance brakes stronger than gravity at 70 km/h)",
+      "max": 3,
+      "from": 80
+    },
+    {
+      "metric": "max_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "no runaway",
+      "max": 71
+    },
+    {
+      "metric": "max_engine_brake_torque_nm",
+      "status": "WORKING_VALUE",
+      "source": "engine brake active (VEB+ class; S1 375 kW at 2300 rpm)",
+      "min": 500
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

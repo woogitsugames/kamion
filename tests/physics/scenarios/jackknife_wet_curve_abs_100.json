@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "jackknife_wet_curve_abs_100",
+  "description": "Same curve, ABS and load sensing working, pedal 100% at t = 6 s with the steering held",
+  "spec": "docs/04 s6.9",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "wet_asphalt"
+  },
+  "initial": {
+    "speedKmh": 60
+  },
+  "duration": 14,
+  "driver": {
+    "type": "circle",
+    "targetKmh": 60,
+    "radius": 120,
+    "direction": 1,
+    "brakeAt": 6,
+    "brakeLevel": 1.0,
+    "holdSteerOnBrake": true,
+    "retarderLever": 5
+  },
+  "checks": [
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "ABS keeps the combination stable (and cuts the retarder)",
+      "max": 10
+    },
+    {
+      "metric": "rear_lock_time_s",
+      "status": "WORKING_VALUE",
+      "source": "ABS prevents lock",
+      "max": 0.1
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    }
+  ]
+}

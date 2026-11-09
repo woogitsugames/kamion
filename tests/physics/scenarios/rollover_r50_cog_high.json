@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "rollover_r50_cog_high",
+  "description": "40 t on R = 50 m, speed ramp until the first wheel lifts, cargo CoG 2.6 m",
+  "spec": "docs/04 s6.7",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "cargo": {
+    "massKg": 0,
+    "cogHeight": 2.6
+  },
+  "endCondition": "wheel_lift",
+  "duration": 140,
+  "driver": {
+    "type": "circle",
+    "targetKmh": 30,
+    "radius": 50,
+    "direction": 1,
+    "rampKmhPerS": 0.5,
+    "rampStart": 15
+  },
+  "checks": [
+    {
+      "metric": "lat_accel_at_first_lift",
+      "status": "WORKING_VALUE",
+      "source": "static rollover threshold of laden tractor-semitrailers ~0.3-0.45 g in the literature (UMTRI / Winkler; not opened, UNVERIFIED)",
+      "min": 0.25,
+      "max": 0.55
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

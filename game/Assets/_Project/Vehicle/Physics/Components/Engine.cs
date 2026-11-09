@@ -4,7 +4,8 @@ namespace Game.Vehicle.Physics
 {
     /// <summary>
     /// Diesel engine: full-load torque LUT, motoring drag LUT, simple boost lag, idle governor,
-    /// high-speed governor (torque fade) and a speed-target mode used by the AMT for rev matching.
+    /// high-speed governor (torque fade), engine brake (compression release / exhaust pressure governor)
+    /// and a speed-target mode used by the AMT for rev matching.
     /// </summary>
     public sealed class Engine
     {
@@ -14,6 +15,9 @@ namespace Game.Vehicle.Physics
         public double LastTorque;     // net indicated torque applied this substep [N m]
         public double LastLoad;       // effective fuel demand 0..1
         public bool Stalled;
+        /// <summary>Engine brake activation state 0..1 and the retarding torque it adds beyond the motoring drag [N m].</summary>
+        public double EngineBrakeState;
+        public double EngineBrakeTorque;
 
         readonly double _idleOmega, _govStart, _maxOmega, _stallOmega;
 
@@ -30,7 +34,9 @@ namespace Game.Vehicle.Physics
 
         public double Rpm => Omega * MathUtil.RadSToRpm;
         public double IdleOmega => _idleOmega;
+        public double MaxOmega => _maxOmega;
         public double Inertia => Def.inertia;
+        public bool HasEngineBrake => Def.engineBrakeCurveRpm.Length >= 2;
 
         public double FullLoadTorque(double omega)
         {
@@ -43,6 +49,25 @@ namespace Game.Vehicle.Physics
 
         public double DragTorque(double omega) => MathUtil.Lut(Def.dragCurveRpm, Def.dragCurveNm, omega * MathUtil.RadSToRpm);
 
+        /// <summary>Total retarding torque (drag included) at full engine-brake command [N m].</summary>
+        public double EngineBrakeTotal(double omega)
+        {
+            double drag = DragTorque(omega);
+            if (!HasEngineBrake) return drag;
+            double eb = MathUtil.Lut(Def.engineBrakeCurveRpm, Def.engineBrakeCurveNm, omega * MathUtil.RadSToRpm);
+            // Below ~idle the valve actuation fades out (no braking at standstill engine).
+            eb *= MathUtil.Clamp01((omega - 0.9 * _idleOmega) / (0.5 * _idleOmega));
+            return Math.Max(drag, eb);
+        }
+
+        /// <summary>Updates the engine-brake actuator (once per fixed step). Command 0..1.</summary>
+        public void UpdateEngineBrake(double command, double dt)
+        {
+            if (!HasEngineBrake || Stalled) command = 0;
+            EngineBrakeState = MathUtil.FirstOrder(EngineBrakeState, MathUtil.Clamp01(command), Def.engineBrakeTimeConstant, dt);
+            if (EngineBrakeState < 1e-4) EngineBrakeState = 0;
+        }
+
         /// <summary>
         /// Computes the net engine torque for this substep.
         /// demand: accelerator 0..1 (already limited by speed limiter / AMT torque ramp).
@@ -50,6 +75,7 @@ namespace Game.Vehicle.Physics
         /// </summary>
         public double ComputeTorque(double demand, double targetOmega, double dt)
         {
+            EngineBrakeTorque = 0;
             if (Stalled)
             {
                 LastLoad = 0;
@@ -62,12 +88,10 @@ namespace Game.Vehicle.Physics
 
             if (targetOmega > 0)
             {
-                // P controller on speed, expressed as load fraction.
                 double err = targetOmega - Omega;
                 load = MathUtil.Clamp01(err * 0.05 + drag / Math.Max(full, 1.0));
             }
 
-            // Idle governor: never let fuelling drop below what keeps idle speed.
             double idleErr = _idleOmega - Omega;
             if (idleErr > 0)
             {
@@ -75,15 +99,23 @@ namespace Game.Vehicle.Physics
                 if (idleLoad > load) load = idleLoad;
             }
 
-            // Turbo lag: boost follows load with a first-order lag; available torque fraction
-            // = NA fraction + (1 - NA) * boost.
             Boost = MathUtil.FirstOrder(Boost, load, Def.boostTimeConstant, dt);
             double available = Def.naturallyAspiratedFraction + (1.0 - Def.naturallyAspiratedFraction) * Boost;
             double effLoad = Math.Min(load, available);
             if (Omega >= _maxOmega) effLoad = 0;
 
+            double retard = drag;
+            if (EngineBrakeState > 0 && effLoad < 0.02 && targetOmega <= 0)
+            {
+                // Fuel cut while the engine brake is active.
+                double total = EngineBrakeTotal(Omega);
+                retard = drag + EngineBrakeState * (total - drag);
+                EngineBrakeTorque = retard - drag;
+                effLoad = 0;
+            }
+
             LastLoad = effLoad;
-            LastTorque = full * effLoad - drag;
+            LastTorque = full * effLoad - retard;
             return LastTorque;
         }
 
@@ -93,7 +125,7 @@ namespace Game.Vehicle.Physics
             if (Omega < 0) Omega = 0;
         }
 
-        /// <summary>Starter: restart a stalled engine (instant for Stage 1).</summary>
+        /// <summary>Starter: restart a stalled engine (instant for Stage 1/2).</summary>
         public void Restart()
         {
             Stalled = false;

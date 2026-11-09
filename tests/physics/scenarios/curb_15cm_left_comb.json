@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "curb_15cm_left_comb",
+  "description": "Left wheels of the whole combination over a 15 cm curb at 8 km/h",
+  "spec": "docs/04 s6.11",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt",
+    "boxes": [
+      {
+        "minX": -3,
+        "maxX": -0.5,
+        "minZ": 6,
+        "maxZ": 9,
+        "height": 0.15
+      }
+    ]
+  },
+  "initial": {
+    "speedKmh": 8
+  },
+  "duration": 18,
+  "driver": {
+    "type": "speedhold",
+    "targetKmh": 8
+  },
+  "checks": [
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no impulse spikes",
+      "max": 0.35
+    },
+    {
+      "metric": "max_pos_jump_m",
+      "status": "WORKING_VALUE",
+      "source": "no teleport",
+      "max": 1e-06
+    },
+    {
+      "metric": "max_fz_ratio",
+      "status": "WORKING_VALUE",
+      "source": "bounded wheel load peaks",
+      "max": 4
+    },
+    {
+      "metric": "max_trailer_roll_deg",
+      "status": "WORKING_VALUE",
+      "source": "geometric roll (0.15 m over ~2 m track) plus overshoot",
+      "max": 8
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "constraint holds",
+      "max": 5
+    }
+  ]
+}

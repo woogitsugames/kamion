@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "speed_bump_comb",
+  "description": "Speed bump 7 cm x 0.5 m across the lane at 15 km/h",
+  "spec": "docs/04 s6.11",
+  "variants": [
+    "solo",
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt",
+    "boxes": [
+      {
+        "minX": -5,
+        "maxX": 5,
+        "minZ": 10,
+        "maxZ": 10.5,
+        "height": 0.07
+      }
+    ]
+  },
+  "initial": {
+    "speedKmh": 15
+  },
+  "duration": 12,
+  "driver": {
+    "type": "speedhold",
+    "targetKmh": 15
+  },
+  "checks": [
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no impulse spikes",
+      "max": 0.35
+    },
+    {
+      "metric": "max_pos_jump_m",
+      "status": "WORKING_VALUE",
+      "source": "no teleport",
+      "max": 1e-06
+    },
+    {
+      "metric": "max_fz_ratio",
+      "status": "WORKING_VALUE",
+      "source": "bounded wheel load peaks",
+      "max": 4
+    },
+    {
+      "metric": "max_cab_heave_mm",
+      "status": "WORKING_VALUE",
+      "source": "cab mounts stay inside their travel (soft stops)",
+      "max": 50
+    }
+  ]
+}

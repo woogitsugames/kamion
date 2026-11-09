@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "id": "manual_mode_shifts",
+  "description": "Manual mode: start in 2nd, shift up by hand, try an over-revving downshift at speed (must be rejected)",
+  "spec": "docs/04 s2.7",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 40,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true
+      },
+      {
+        "t": 0.5,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true,
+        "shiftUp": true
+      },
+      {
+        "t": 1.0,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true
+      },
+      {
+        "t": 6,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true,
+        "shiftUp": true
+      },
+      {
+        "t": 6.2,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true
+      },
+      {
+        "t": 11,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true,
+        "shiftUp": true
+      },
+      {
+        "t": 11.2,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true
+      },
+      {
+        "t": 16,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true,
+        "shiftUp": true
+      },
+      {
+        "t": 16.2,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true
+      },
+      {
+        "t": 22,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true,
+        "shiftDown": true
+      },
+      {
+        "t": 22.2,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true
+      },
+      {
+        "t": 23,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true,
+        "shiftDown": true
+      },
+      {
+        "t": 23.2,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true
+      },
+      {
+        "t": 23.4,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true,
+        "shiftDown": true
+      },
+      {
+        "t": 23.6,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true
+      },
+      {
+        "t": 23.8,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true,
+        "shiftDown": true
+      },
+      {
+        "t": 24,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "manual": true
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "max_gear",
+      "status": "WORKING_VALUE",
+      "source": "driver-selected gears 2 -> 5 only (no automatic upshift in manual)",
+      "min": 5,
+      "max": 5
+    },
+    {
+      "metric": "rejected_shifts",
+      "status": "WORKING_VALUE",
+      "source": "over-revving downshift refused",
+      "min": 1
+    },
+    {
+      "metric": "max_rpm",
+      "status": "WORKING_VALUE",
+      "source": "S1: max revs 2100 rpm (governor fade) respected in manual; 30 rpm overshoot allowance",
+      "max": 2130,
+      "from": 1
+    },
+    {
+      "metric": "stalled",
+      "status": "WORKING_VALUE",
+      "source": "no stall",
+      "max": 0
+    }
+  ]
+}

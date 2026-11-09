@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "id": "launch_flat_comb",
+  "description": "Standstill on flat, release brake, full throttle, AMT auto, to the limiter",
+  "spec": "docs/04 s6.2, s6.3",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 120,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 1.0,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "rollback_m",
+      "status": "WORKING_VALUE",
+      "source": "no rollback on flat",
+      "max": 0.02
+    },
+    {
+      "metric": "stalled",
+      "status": "WORKING_VALUE",
+      "source": "engine must not stall",
+      "max": 0
+    },
+    {
+      "metric": "min_rpm",
+      "status": "WORKING_VALUE",
+      "source": "engine stays near idle or above",
+      "min": 550,
+      "from": 1
+    },
+    {
+      "metric": "time_to_kmh",
+      "status": "DERIVED",
+      "source": "power-to-weight: 0.5 m v^2 / (0.75 x 368 kW) + 6-8 shifts x ~0.6 s interruption; 14.5 t",
+      "min": 12,
+      "max": 35,
+      "arg": 60,
+      "variant": "empty"
+    },
+    {
+      "metric": "time_to_kmh",
+      "status": "DERIVED",
+      "source": "as above incl. aero; 14.5 t",
+      "min": 20,
+      "max": 55,
+      "arg": 80,
+      "variant": "empty"
+    },
+    {
+      "metric": "time_to_kmh",
+      "status": "DERIVED",
+      "source": "0.5 x 40 t x 16.7^2 / (0.7 x 368 kW) = 22 s + shifts + rolling; plausibility band, no sourced test data",
+      "min": 25,
+      "max": 60,
+      "arg": 60,
+      "variant": "laden40"
+    },
+    {
+      "metric": "time_to_kmh",
+      "status": "DERIVED",
+      "source": "as above, 22.2 m/s: 38 s + shifts + rolling + aero",
+      "min": 40,
+      "max": 95,
+      "arg": 80,
+      "variant": "laden40"
+    },
+    {
+      "metric": "max_speed_kmh",
+      "status": "SOURCED",
+      "source": "S3: 90 km/h limiter",
+      "max": 90.5
+    },
+    {
+      "metric": "max_rpm_in_gear",
+      "status": "WORKING_VALUE",
+      "source": "Stage 2 fix: no over-rev to the 1900-2100 rpm governor in the low gears",
+      "max": 1900,
+      "arg": 6,
+      "from": 1
+    },
+    {
+      "metric": "max_clutch_temp_c",
+      "status": "WORKING_VALUE",
+      "source": "clutch below the warning temperature on a flat start",
+      "max": 250
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

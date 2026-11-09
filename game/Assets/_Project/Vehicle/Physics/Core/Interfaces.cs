@@ -61,6 +61,17 @@ namespace Game.Vehicle.Physics
         public double Steer;
         public bool ParkingBrake;
         public GearSelector Selector;
+        /// <summary>
+        /// Endurance brake lever: 0 = off, 1 = engine brake, 2..(1+retarder stages) = engine brake + retarder
+        /// at increasing fractions of its maximum torque.
+        /// </summary>
+        public int RetarderLever;
+        /// <summary>Downhill speed control ("brake cruise") set speed [km/h], 0 = off: the endurance brakes are modulated to hold it (no service brake).</summary>
+        public double BrakeCruiseKmh;
+        /// <summary>AMT manual mode (driver chooses the gear; the AMT still operates the clutch and protects the engine).</summary>
+        public bool ManualMode;
+        /// <summary>Shift requests (manual mode). Edge-triggered: a request is consumed on the step it turns true.</summary>
+        public bool ShiftUp, ShiftDown;
     }
 
     /// <summary>Force applied at a world point (output of the solver for one fixed step).</summary>

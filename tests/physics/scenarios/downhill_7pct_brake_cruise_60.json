@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "id": "downhill_7pct_brake_cruise_60",
+  "description": "40 t, 7% down, brake cruise at 60 km/h with engine brake + retarder stages",
+  "spec": "docs/04 s6.6",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": -7,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 60
+  },
+  "duration": 180,
+  "driver": {
+    "type": "speedhold",
+    "targetKmh": 60,
+    "enduranceOnly": true
+  },
+  "checks": [
+    {
+      "metric": "mean_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "speed stabilised at the set speed",
+      "min": 59,
+      "max": 61.5,
+      "from": 60
+    },
+    {
+      "metric": "speed_range_kmh",
+      "status": "WORKING_VALUE",
+      "source": "no hunting / limit cycle of the downhill speed control",
+      "max": 2,
+      "from": 60
+    },
+    {
+      "metric": "max_retarder_torque_nm",
+      "status": "SOURCED",
+      "source": "S2: Intarder up to 4000 Nm / 600 kW (class reference)",
+      "min": 1000,
+      "max": 4000
+    },
+    {
+      "metric": "max_service_demand",
+      "status": "WORKING_VALUE",
+      "source": "service brake not needed",
+      "max": 0
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

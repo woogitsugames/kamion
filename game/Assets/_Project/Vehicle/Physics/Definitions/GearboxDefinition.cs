@@ -18,6 +18,10 @@ namespace Game.Vehicle.Physics
 
         /// <summary>Clutch torque capacity when fully engaged [N m].</summary>
         public double clutchMaxTorque = 4000;
+        /// <summary>Clutch thermal model: heat capacity of pressure plate + flywheel face [J/K], cooling time constant [s], warning temperature [deg C].</summary>
+        public double clutchHeatCapacity = 25000;
+        public double clutchCoolingTimeConstant = 300;
+        public double clutchWarnTempC = 250;
 
         // --- AMT shift logic (WORKING_VALUEs, see reference data) ---
         public double shiftTorqueRampTime = 0.12;
@@ -32,10 +36,29 @@ namespace Game.Vehicle.Physics
         public double minRpmAfterUpshiftLight = 950;
         public double minRpmAfterUpshiftFull = 1250;
         public int maxSkip = 2;
+        /// <summary>Hold-off after an upshift before a downshift is allowed (anti-hunting) [s].</summary>
         public double shiftCooldown = 1.0;
+        /// <summary>Hold-off between two shifts in the same direction [s] (short, so a light truck does not over-rev).</summary>
+        public double sameDirectionCooldown = 0.3;
+        /// <summary>Minimum acceleration the truck must still have in the new gear for an upshift (full throttle) [m/s^2].</summary>
+        public double minAccelAfterUpshift = 0.10;
+        /// <summary>Extra downshift rpm on climbs heavier than gradeDownshiftThreshold (keeps the engine in the torque plateau).</summary>
+        public double gradeDownshiftBonusRpm = 200;
+        public double gradeDownshiftThreshold = 0.025;
         public double launchRpmLight = 800;
         public double launchRpmFull = 1100;
+        /// <summary>Extra launch rpm per unit of required launch force fraction (heavy / uphill starts).</summary>
+        public double launchRpmLoadBonus = 250;
         public int maxLaunchGear = 4;
+        /// <summary>Creep function: below this pedal the launch clutch holds creepTorqueNm at idle [-, N m].</summary>
+        public double creepPedal = 0.15;
+        public double creepTorqueNm = 500;
+        /// <summary>Engine braking: downshift below / upshift above these engine speeds [rpm].</summary>
+        public double engineBrakeDownshiftRpm = 1500;
+        public double engineBrakeUpshiftRpm = 2250;
+        /// <summary>Manual mode: lowest engine speed accepted after a requested shift and auto-protection downshift speed [rpm].</summary>
+        public double manualMinRpmAfterShift = 750;
+        public double manualProtectDownshiftRpm = 650;
 
         public int ForwardGearCount => forwardRatios.Length;
 

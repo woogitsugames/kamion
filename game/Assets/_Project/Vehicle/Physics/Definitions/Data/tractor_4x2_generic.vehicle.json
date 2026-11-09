@@ -1,24 +1,141 @@
 {
   "schemaVersion": 1,
   "id": "tractor_4x2_generic",
-  "description": "Generic modern EU 4x2 long-haul tractor, high sleeper cab, solo (no trailer). Provenance: docs/VEHICLE_REFERENCE_DATA.md",
+  "description": "Generic modern EU 4x2 long-haul tractor, high sleeper cab. Solo or with a semi-trailer (fifth wheel). Provenance: docs/VEHICLE_REFERENCE_DATA.md",
   "engineId": "diesel_r6_13l_368kw",
   "gearboxId": "amt12_od_traxon_class",
   "massElements": [
-    { "name": "frame_rails_crossmembers", "massKg": 900,  "center": { "x": 0, "y": 0.95, "z": 1.6 }, "size": { "x": 0.9, "y": 0.3, "z": 6.0 } },
-    { "name": "engine_gearbox",           "massKg": 1500, "center": { "x": 0, "y": 1.00, "z": 3.3 }, "size": { "x": 0.9, "y": 1.0, "z": 1.8 } },
-    { "name": "cab_high_sleeper",         "massKg": 1300, "center": { "x": 0, "y": 2.40, "z": 3.9 }, "size": { "x": 2.5, "y": 2.2, "z": 2.3 } },
-    { "name": "front_axle_wheels_brakes", "massKg": 800,  "center": { "x": 0, "y": 0.51, "z": 3.7 }, "size": { "x": 2.0, "y": 0.5, "z": 0.5 } },
-    { "name": "rear_axle_duals_brakes",   "massKg": 1300, "center": { "x": 0, "y": 0.51, "z": 0.0 }, "size": { "x": 2.4, "y": 0.6, "z": 0.6 } },
-    { "name": "fuel_tanks_partly_full",   "massKg": 600,  "center": { "x": 0, "y": 0.80, "z": 1.8 }, "size": { "x": 2.4, "y": 0.6, "z": 1.2 } },
-    { "name": "air_tanks_batteries_aftertreatment_misc", "massKg": 600, "center": { "x": 0, "y": 1.00, "z": 1.5 }, "size": { "x": 2.2, "y": 0.8, "z": 4.0 } },
-    { "name": "fifth_wheel",              "massKg": 200,  "center": { "x": 0, "y": 1.20, "z": 0.3 }, "size": { "x": 0.9, "y": 0.2, "z": 0.9 } },
-    { "name": "cooling_front_bumper",     "massKg": 300,  "center": { "x": 0, "y": 1.00, "z": 4.4 }, "size": { "x": 2.4, "y": 1.2, "z": 0.5 } }
+    {
+      "name": "frame_rails_crossmembers",
+      "massKg": 900,
+      "center": {
+        "x": 0,
+        "y": 0.95,
+        "z": 1.6
+      },
+      "size": {
+        "x": 0.9,
+        "y": 0.3,
+        "z": 6.0
+      }
+    },
+    {
+      "name": "engine_gearbox",
+      "massKg": 1500,
+      "center": {
+        "x": 0,
+        "y": 1.0,
+        "z": 3.3
+      },
+      "size": {
+        "x": 0.9,
+        "y": 1.0,
+        "z": 1.8
+      }
+    },
+    {
+      "name": "cab_high_sleeper",
+      "massKg": 1300,
+      "center": {
+        "x": 0,
+        "y": 2.4,
+        "z": 3.9
+      },
+      "size": {
+        "x": 2.5,
+        "y": 2.2,
+        "z": 2.3
+      }
+    },
+    {
+      "name": "front_axle_wheels_brakes",
+      "massKg": 800,
+      "center": {
+        "x": 0,
+        "y": 0.51,
+        "z": 3.7
+      },
+      "size": {
+        "x": 2.0,
+        "y": 0.5,
+        "z": 0.5
+      }
+    },
+    {
+      "name": "rear_axle_duals_brakes",
+      "massKg": 1300,
+      "center": {
+        "x": 0,
+        "y": 0.51,
+        "z": 0.0
+      },
+      "size": {
+        "x": 2.4,
+        "y": 0.6,
+        "z": 0.6
+      }
+    },
+    {
+      "name": "fuel_tanks_partly_full",
+      "massKg": 600,
+      "center": {
+        "x": 0,
+        "y": 0.8,
+        "z": 1.8
+      },
+      "size": {
+        "x": 2.4,
+        "y": 0.6,
+        "z": 1.2
+      }
+    },
+    {
+      "name": "air_tanks_batteries_aftertreatment_misc",
+      "massKg": 600,
+      "center": {
+        "x": 0,
+        "y": 1.0,
+        "z": 1.5
+      },
+      "size": {
+        "x": 2.2,
+        "y": 0.8,
+        "z": 4.0
+      }
+    },
+    {
+      "name": "fifth_wheel",
+      "massKg": 200,
+      "center": {
+        "x": 0,
+        "y": 1.2,
+        "z": 0.3
+      },
+      "size": {
+        "x": 0.9,
+        "y": 0.2,
+        "z": 0.9
+      }
+    },
+    {
+      "name": "cooling_front_bumper",
+      "massKg": 300,
+      "center": {
+        "x": 0,
+        "y": 1.0,
+        "z": 4.4
+      },
+      "size": {
+        "x": 2.4,
+        "y": 1.2,
+        "z": 0.5
+      }
+    }
   ],
   "axles": [
     {
       "name": "front",
-      "positionZ": 3.70,
+      "positionZ": 3.7,
       "trackWidth": 2.05,
       "tiresPerSide": 1,
       "steered": true,
@@ -27,19 +144,26 @@
       "suspension": {
         "type": "parabolic_leaf",
         "springRate": 213000,
-        "progressiveRate": 2.0e6,
+        "progressiveRate": 2000000.0,
         "travel": 0.18,
         "staticPositionFraction": 0.5,
         "bumpStopClearance": 0.025,
-        "bumpStopRate": 4.0e7,
+        "bumpStopRate": 40000000.0,
         "damperBump": 9000,
         "damperRebound": 18000,
         "damperKneeVelocity": 0.3,
         "damperHighSpeedFactor": 0.4,
         "antiRollStiffness": 200000
       },
-      "serviceBrakeTorque": 18000,
-      "parkingBrakeTorque": 0
+      "serviceBrakeTorque": 20000,
+      "parkingBrakeTorque": 0,
+      "brakeChamberVolumeL": 0.8,
+      "brakeCircuit": 1,
+      "brakeApplyTimeConstant": 0.18,
+      "brakeApplySecondTimeConstant": 0,
+      "brakeReleaseTimeConstant": 0.25,
+      "ladenAxleLoadN": 0,
+      "minLoadSensingFactor": 1.0
     },
     {
       "name": "rear",
@@ -52,19 +176,30 @@
       "suspension": {
         "type": "air_4_bellows",
         "springRate": 91000,
-        "progressiveRate": 1.5e6,
-        "travel": 0.20,
+        "progressiveRate": 1500000.0,
+        "travel": 0.2,
         "staticPositionFraction": 0.5,
         "bumpStopClearance": 0.025,
-        "bumpStopRate": 4.0e7,
+        "bumpStopRate": 40000000.0,
         "damperBump": 5000,
         "damperRebound": 10000,
         "damperKneeVelocity": 0.3,
         "damperHighSpeedFactor": 0.4,
-        "antiRollStiffness": 300000
+        "antiRollStiffness": 300000,
+        "airLevelling": true,
+        "levellingTimeConstant": 8.0,
+        "levellingDeadband": 0.008,
+        "levellingGroup": 0
       },
-      "serviceBrakeTorque": 18000,
-      "parkingBrakeTorque": 12000
+      "serviceBrakeTorque": 24000,
+      "parkingBrakeTorque": 16000,
+      "brakeChamberVolumeL": 1.0,
+      "brakeCircuit": 2,
+      "brakeApplyTimeConstant": 0.22,
+      "brakeApplySecondTimeConstant": 0,
+      "brakeReleaseTimeConstant": 0.28,
+      "ladenAxleLoadN": 112800,
+      "minLoadSensingFactor": 0.25
     }
   ],
   "steering": {
@@ -75,23 +210,29 @@
   },
   "brakes": {
     "applyTimeConstant": 0.25,
-    "releaseTimeConstant": 0.30,
+    "releaseTimeConstant": 0.3,
     "parkingTimeConstant": 0.6,
+    "maxChamberPressureBar": 8.5,
+    "thresholdPressureBar": 0.4,
     "absEnabled": true,
-    "absSlipRelease": 0.18,
-    "absSlipReapply": 0.08,
-    "absReleaseRate": 8.0,
-    "absApplyRate": 4.0,
+    "absSlipRelease": 0.16,
+    "absSlipReapply": 0.06,
+    "absDecelThreshold": 12.0,
+    "absReaccelThreshold": 4.0,
+    "absDumpTimeConstant": 0.045,
+    "absSlowApplyFactor": 3.0,
     "absMinSpeedMs": 1.5,
     "asrEnabled": true,
     "asrSlipThreshold": 0.15,
     "asrReduceRate": 3.0,
     "asrRecoverRate": 1.0,
     "hillStartAid": true,
-    "hillStartMaxHold": 2.0
+    "hillStartMaxHold": 2.0,
+    "brakeBlending": true,
+    "blendingPedalTravel": 0.15
   },
   "driveline": {
-    "finalDriveRatio": 3.40,
+    "finalDriveRatio": 3.4,
     "finalDriveEfficiency": 0.97,
     "speedLimiterKmh": 90,
     "speedLimiterBand": 2.0
@@ -99,7 +240,12 @@
   "aero": {
     "dragArea": 7.4,
     "airDensity": 1.2,
-    "center": { "x": 0, "y": 1.8, "z": 2.5 }
+    "center": {
+      "x": 0,
+      "y": 1.8,
+      "z": 2.5
+    },
+    "dragAreaWithTrailer": 4.3
   },
   "cab": {
     "pitchFrequencyHz": 1.5,
@@ -107,6 +253,66 @@
     "dampingRatio": 0.35,
     "accelGain": 0.55,
     "maxPitchDeg": 4,
-    "maxRollDeg": 4
+    "maxRollDeg": 4,
+    "heaveFrequencyHz": 1.8,
+    "maxHeaveM": 0.05,
+    "mountCenter": {
+      "x": 0,
+      "y": 1.5,
+      "z": 3.9
+    }
+  },
+  "air": {
+    "compressorFlowLpm": 450,
+    "compressorRatedRpm": 2000,
+    "compressorPressureLossPerBar": 0.03,
+    "cutOutBar": 12.5,
+    "cutInBar": 11.0,
+    "supplyVolumeL": 30,
+    "frontVolumeL": 20,
+    "rearVolumeL": 30,
+    "parkTrailerVolumeL": 20,
+    "protectionOpeningBar": 7.0,
+    "circuitConductance": 20,
+    "redLineConductance": 6,
+    "trailerSupplyLimitBar": 8.5,
+    "trailerControlMaxBar": 7.5,
+    "lowPressureWarningBar": 5.5,
+    "springReleaseStartBar": 3.0,
+    "springReleaseFullBar": 5.5,
+    "baselineConsumptionLpm": 8
+  },
+  "retarder": {
+    "present": true,
+    "maxTorqueNm": 4000,
+    "maxPowerKW": 600,
+    "fullTorqueShaftRpm": 900,
+    "stages": 4,
+    "fillTimeConstant": 0.4,
+    "drainTimeConstant": 0.3
+  },
+  "fifthWheel": {
+    "position": {
+      "x": 0,
+      "y": 1.2,
+      "z": 0.55
+    },
+    "pitchLimitDeg": 12,
+    "rollStiffness": 10000000.0,
+    "rollDamping": 200000.0,
+    "rollLimitDeg": 4,
+    "yawLimitDeg": 90,
+    "stopFrequencyHz": 10,
+    "yawStopFrequencyHz": 3,
+    "plateFrictionCoeff": 0.08,
+    "plateFrictionRadius": 0.35,
+    "captureDistance": 0.05,
+    "captureHeight": 0.12,
+    "captureMaxSpeed": 1.5,
+    "positionCorrection": 0.2,
+    "maxCorrectionSpeed": 0.5,
+    "iterations": 8,
+    "engageTime": 0.4,
+    "engageFrequencyHz": 4
   }
 }

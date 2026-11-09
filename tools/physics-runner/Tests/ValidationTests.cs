@@ -146,20 +146,31 @@ namespace PhysicsRunner.Tests
         [Fact]
         public void Step_DoesNotAllocate()
         {
-            var sc = Suites.Find("circle_r25_20kmh");
-            var (model, body, ground) = ScenarioRunner.Setup(sc, new RunOptions());
-            var inp = new DriverInput { Throttle = 0.4, Steer = 0.2, Selector = GearSelector.Drive };
-            for (int i = 0; i < 300; i++) { model.Step(0.01, body.State, inp, ground); body.Integrate(0.01, model.TotalForce, model.TotalTorque); }
-            long before = GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < 2000; i++)
+            foreach (var id in new[] { "circle_r25_20kmh", "lane_change_80@laden40" })
             {
-                inp.Brake = (i / 500) % 2 == 0 ? 0 : 0.5;
-                inp.Throttle = inp.Brake > 0 ? 0 : 0.6;
-                model.Step(0.01, body.State, inp, ground);
-                body.Integrate(0.01, model.TotalForce, model.TotalTorque);
+                var sc = Suites.Find(id);
+                var s = ScenarioRunner.Setup(sc, new RunOptions());
+                var inp = new DriverInput { Throttle = 0.4, Steer = 0.05, Selector = GearSelector.Drive };
+                void Step()
+                {
+                    var ts = s.TrailerBody != null ? s.TrailerBody.State : default;
+                    s.Combo.Step(0.01, s.Body.State, ts, inp, s.Ground);
+                    s.Body.Integrate(0.01, s.Combo.TractorForce, s.Combo.TractorTorque);
+                    s.TrailerBody?.Integrate(0.01, s.Combo.TrailerForce, s.Combo.TrailerTorque);
+                }
+                for (int i = 0; i < 300; i++) Step();
+                long before = GC.GetAllocatedBytesForCurrentThread();
+                for (int i = 0; i < 2000; i++)
+                {
+                    inp.Brake = (i / 500) % 2 == 0 ? 0 : 0.5;
+                    inp.Throttle = inp.Brake > 0 ? 0 : 0.6;
+                    inp.RetarderLever = (i / 250) % 3;
+                    Step();
+                }
+                long after = GC.GetAllocatedBytesForCurrentThread();
+                _out.WriteLine($"{id}: {after - before} bytes");
+                Assert.Equal(0, after - before);
             }
-            long after = GC.GetAllocatedBytesForCurrentThread();
-            Assert.Equal(0, after - before);
         }
 
         [Fact]

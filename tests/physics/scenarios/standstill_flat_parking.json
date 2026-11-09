@@ -28,11 +28,25 @@
   },
   "checks": [
     {
-      "metric": "drift_m",
+      "metric": "creep_m",
       "from": 5,
       "max": 0.005,
       "status": "WORKING_VALUE",
-      "source": "docs/04 s6.1 'no drift/oscillation 5 min'; 5 mm over 300 s chosen as the no-creep threshold"
+      "source": "no creep in the ground plane (Stage 2: replaces the 3D drift, which now includes the levelled air suspension settling)"
+    },
+    {
+      "metric": "creep_m",
+      "from": 60,
+      "max": 0.0005,
+      "status": "WORKING_VALUE",
+      "source": "no creep at all once settled"
+    },
+    {
+      "metric": "drift_m",
+      "from": 5,
+      "max": 0.012,
+      "status": "WORKING_VALUE",
+      "source": "3D displacement incl. vertical settling of the levelled rear air suspension (deadband 8 mm)"
     },
     {
       "metric": "max_speed_after_ms",

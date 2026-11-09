@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "downhill_7pct_service_pumping",
+  "description": "40 t, 7% down at 40 km/h with service brake only (endurance brakes off), driver pumps the pedal",
+  "spec": "docs/04 s6.6",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": -7,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 40
+  },
+  "overrides": {
+    "enduranceBrakes": false
+  },
+  "duration": 240,
+  "driver": {
+    "type": "speedhold",
+    "targetKmh": 40,
+    "pumpPeriod": 4
+  },
+  "checks": [
+    {
+      "metric": "min_air_service_bar",
+      "status": "WORKING_VALUE",
+      "source": "pumping the pedal consumes more air (~50 NL per application, 10 chambers) than the compressor delivers (~450 NL/min at rated speed): the classic long-descent pressure loss",
+      "max": 9.0
+    },
+    {
+      "metric": "min_air_service_bar",
+      "status": "WORKING_VALUE",
+      "source": "the service brake keeps working (pressure does not collapse within 4 min)",
+      "min": 3.0
+    },
+    {
+      "metric": "low_air_warning",
+      "status": "WORKING_VALUE",
+      "source": "warning lamp comes on: real consequence of pumping on a long descent",
+      "min": 1
+    },
+    {
+      "metric": "max_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "speed controlled",
+      "max": 50
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

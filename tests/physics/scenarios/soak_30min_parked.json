@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "soak_30min_parked",
+  "description": "30 min simulated parked with the engine idling",
+  "spec": "docs/04 s6.14",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "parkingBrake": true
+  },
+  "sampleEvery": 5,
+  "duration": 1800,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": true,
+        "selector": "N"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "drift_m",
+      "status": "WORKING_VALUE",
+      "source": "no creep",
+      "max": 0.005,
+      "from": 5
+    },
+    {
+      "metric": "max_speed_after_ms",
+      "status": "WORKING_VALUE",
+      "source": "no energy drift / oscillation",
+      "max": 0.001,
+      "from": 5
+    },
+    {
+      "metric": "max_kinetic_energy_j",
+      "status": "WORKING_VALUE",
+      "source": "no energy growth",
+      "max": 0.001,
+      "from": 5
+    },
+    {
+      "metric": "min_air_service_bar",
+      "status": "WORKING_VALUE",
+      "source": "governor keeps the reservoirs in the cut-in/cut-out band",
+      "min": 10.5,
+      "from": 5
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

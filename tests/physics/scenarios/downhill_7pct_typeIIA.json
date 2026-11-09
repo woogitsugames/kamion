@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "id": "downhill_7pct_typeIIA",
+  "description": "R13 type-IIA-like: 40 t, 7% down, 30 km/h held with endurance brakes only (brake cruise), 6 km",
+  "spec": "docs/04 s6.6",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": -7,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 30
+  },
+  "sampleEvery": 5,
+  "duration": 720,
+  "driver": {
+    "type": "speedhold",
+    "targetKmh": 30,
+    "enduranceOnly": true
+  },
+  "checks": [
+    {
+      "metric": "mean_speed_kmh",
+      "status": "SOURCED",
+      "source": "UN R13 Annex 4 1.8.2: laden, 30 km/h average on 7% for 6 km without service/secondary/parking brakes (+/-5 km/h)",
+      "min": 25,
+      "max": 35,
+      "from": 60
+    },
+    {
+      "metric": "max_service_demand",
+      "status": "SOURCED",
+      "source": "UN R13 Annex 4 1.8.2: service brake not used",
+      "max": 0
+    },
+    {
+      "metric": "max_rpm",
+      "status": "WORKING_VALUE",
+      "source": "engine overrun limit while engine braking (WORKING_VALUE 2400 rpm)",
+      "max": 2400
+    },
+    {
+      "metric": "max_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "no runaway",
+      "max": 40,
+      "from": 30
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}
