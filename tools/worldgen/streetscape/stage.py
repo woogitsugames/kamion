@@ -118,6 +118,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         log("life: no start route", e)
         route_P = None
     LF.place(pl, docks, paved, blds, roads_poly, bpoly, route_P, frep, buf=w.buf, zsurf=zsurf)
+    carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
+    FU.clear_carriageway(pl, carriage, zsurf, frep)
     rep["furniture"] = frep
     log("furniture", {k: v for k, v in frep.items() if k != "junction_signs"})
 

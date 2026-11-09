@@ -250,3 +250,9 @@ def test_vehicle_prototypes_are_plain():
         assert 0 < t1 < t0 <= 1500 and col is not None
     a, b = LP.tractor_extent()
     assert -2.0 < a < -1.0 and 4.0 < b < 5.5                      # 4x2 tractor ~6.2 m long
+
+
+def test_ground_props_off_the_carriageway(qa):
+    """Lamp / sign / signal bases are pushed off the carriageway (the Unity importer counted 88 on the road)."""
+    r = qa["furniture"]["props_off_carriageway"]
+    assert r["moved"] > 0 and r["still_on_road"] <= 5

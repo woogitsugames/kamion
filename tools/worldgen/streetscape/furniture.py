@@ -77,6 +77,45 @@ def side_surface_offset(c, side, s):
     return kind, h, w, side_extent(kind, h, w, depth, mat)
 
 
+# ------------------------------------------------------------------------------------------- carriageway check
+GROUND_PROPS = ("lamp_", "sign_post", "signal_pole", "signal_mast", "bollard", "waste_bin", "bench", "power_pole",
+                "street_cabinet", "bus_shelter", "pylon")
+
+
+def clear_carriageway(pl, carriage, zsurf, report):
+    """Ground-standing props whose base lies on a carriageway (rule placement near junction patches, OSM nodes
+    drawn on the road axis) are pushed 0.8 m beyond the nearest carriageway edge; everything stacked on the same
+    base (sign plates) moves with it and keeps its height above the base. Overhead items (signal heads on masts,
+    gantry boards, booms) are not touched. Lamp / sign counts on the road were reported by the Unity importer."""
+    import shapely
+    from shapely.geometry import Point
+    from shapely.ops import nearest_points
+    inner = carriage.buffer(-0.05)
+    shapely.prepare(inner)
+    groups = {}
+    for it in pl.items:
+        groups.setdefault((round(it["e"], 2), round(it["n"], 2)), []).append(it)
+    moved, left = 0, []
+    for (e, n), items in groups.items():
+        base = [it for it in items if it["p"].startswith(GROUND_PROPS)]
+        if not base or not inner.contains(Point(e, n)):
+            continue
+        q = nearest_points(carriage.boundary, Point(e, n))[0]
+        v = np.array([q.x - e, q.y - n])
+        L = float(np.hypot(*v))
+        new = np.array([q.x, q.y]) + (v / L if L > 1e-6 else np.array([1.0, 0.0])) * 0.8
+        if inner.contains(Point(*new)):
+            left.append(base[0]["p"])
+            continue
+        z0 = float(zsurf(np.array([new[0]]), np.array([new[1]]))[0])
+        dz = z0 - base[0]["z"]
+        for it in items:
+            it["e"], it["n"] = round(float(new[0]), 3), round(float(new[1]), 3)
+            it["z"] = round(it["z"] + dz, 3)
+        moved += 1
+    report["props_off_carriageway"] = {"moved": moved, "still_on_road": len(left)}
+
+
 # ------------------------------------------------------------------------------------------- lamps
 def lamps(pl, net, osm_nodes, origin, report):
     n0 = 0
