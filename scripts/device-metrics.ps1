@@ -6,6 +6,7 @@
   pwsh scripts/device-metrics.ps1                                 # app already running, single phone
   pwsh scripts/device-metrics.ps1 -Launch -DurationSeconds 90     # (re)start app, wait 90 s, collect
   pwsh scripts/device-metrics.ps1 -AllDevices -Launch -DurationSeconds 1800 -Tier Medium -Fps 30
+  pwsh scripts/device-metrics.ps1 -Launch -DurationSeconds 90 -Scene DrivingLab -Autopilot circle50 -Speed 40   # scripted driving
 .NOTES
   Output: artifacts/device/<serial>/<ts>/ (metrics.json = computed p50/p95/p99 after warm-up).
 #>
@@ -16,7 +17,10 @@ param(
     [int]$DurationSeconds = 0,
     [int]$WarmupSeconds = 5,
     [ValidateSet('', 'Low', 'Medium', 'High', 'Ultra')] [string]$Tier = '',
-    [int]$Fps = 0
+    [int]$Fps = 0,
+    [string]$Scene = '',
+    [string]$Autopilot = '',
+    [int]$Speed = 0
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -37,6 +41,9 @@ if ($Launch) {
         $startArgs = @('shell', 'am', 'start', '-n', $component)
         if ($Tier) { $startArgs += @('-e', 'tier', $Tier) }
         if ($Fps -gt 0) { $startArgs += @('-e', 'fps', "$Fps") }
+        if ($Scene) { $startArgs += @('-e', 'scene', $Scene) }
+        if ($Autopilot) { $startArgs += @('-e', 'autopilot', $Autopilot) }
+        if ($Speed -gt 0) { $startArgs += @('-e', 'speed', "$Speed") }
         & $Adb -s $d @startArgs | Out-Null
         Write-Host "$d launched $component"
     }
