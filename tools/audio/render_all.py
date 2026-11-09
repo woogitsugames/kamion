@@ -20,6 +20,7 @@ import soundfile as sf
 
 import dsp
 import engine_synth as es
+import sfx_layers as sl
 import sfx_synth as sx
 from dsp import FS
 
@@ -112,17 +113,78 @@ def main() -> None:
         "turbo_liftoff": (sx.turbo_liftoff(), False),
     }
     manifest["sfx"] = []
-    for name, (x, is_loop) in sfx.items():
-        target = -1.0 if not is_loop else -6.0
-        x = x * (10 ** (target / 20) / np.max(np.abs(x)))
+
+    def write_sfx(name, x, is_loop, perspective="ext", group="base", cab_of=None):
         path = OUT / "sfx" / f"{name}.wav"
         path.parent.mkdir(parents=True, exist_ok=True)
         sf.write(path, x.astype(np.float32), FS, subtype="PCM_16")
         manifest["sfx"].append({"name": name, "file": str(path.relative_to(ROOT)).replace("\\", "/"),
                                 "loop": is_loop, "samples": len(x), "peak_dbfs": dsp.db(np.max(np.abs(x))),
-                                "rms_dbfs": dsp.db(dsp.rms(x))})
+                                "rms_dbfs": dsp.db(dsp.rms(x)), "perspective": perspective, "group": group})
+
+    def norm_peak(x, is_loop):
+        target = -1.0 if not is_loop else -6.0
+        return x * (10 ** (target / 20) / np.max(np.abs(x)))
+
+    def limit(x, ceiling_db=-1.0):
+        pk = np.max(np.abs(x))
+        c = 10 ** (ceiling_db / 20)
+        return x * (c / pk) if pk > c else x
+
+    for name, (x, is_loop) in sfx.items():
+        x = norm_peak(x, is_loop)
+        write_sfx(name, x, is_loop)
         if not args.no_previews and name in ("turbo_whistle_loop", "air_brake_release", "parking_brake_set", "turbo_liftoff"):
             write_ogg(PREV / f"{name}.ogg", np.tile(x, 2) if is_loop else x)
+        # cabin perspective of the original layers (prerendered filter, ADR 0012)
+        cab_profile = {"air_brake_release": "pneu", "parking_brake_set": "pneu", "air_dryer_purge": "pneu",
+                       "gearshift_air": "pneu", "road_roll_loop": "road", "wind_loop": "wind"}.get(name)
+        if cab_profile:
+            write_sfx(name.replace("_loop", "_cab_loop") if is_loop else name + "_cab", limit(sl.cab_filter(x, is_loop, cab_profile)), is_loop, "cab", "base")
+
+    # --- layers added in the audio-layers pass (tyres x surface, squeal, retarder, compressor, relay, ambience) ---
+    asphalt = sfx["road_roll_loop"][0]
+    asphalt = norm_peak(asphalt, True)
+    ref_rms = dsp.rms(asphalt)
+    tyres = {
+        "tyre_wet_loop": sl.tyre_asphalt_wet_loop(),
+        "tyre_concrete_loop": sl.tyre_concrete_loop(),
+        "tyre_cobbles_loop": sl.tyre_cobbles_loop(),
+        "tyre_gravel_loop": sl.tyre_gravel_loop(),
+        "tyre_grass_loop": sl.tyre_grass_loop(),
+    }
+    for name, x in tyres.items():
+        x = limit(x * (ref_rms / dsp.rms(x)))  # equal RMS; per-surface level lives in the game's surface table
+        write_sfx(name, x, True, "ext", "tyre")
+        write_sfx(name.replace("_loop", "_cab_loop"), limit(sl.cab_filter(x, True, "road")), True, "cab", "tyre")
+    write_sfx("tyre_squeal_loop", norm_peak(sl.tyre_squeal_loop(), True), True, "ext", "tyre")
+    write_sfx("tyre_squeal_cab_loop", limit(sl.cab_filter(norm_peak(sl.tyre_squeal_loop(), True), True, "road")), True, "cab", "tyre")
+    for name, fn, prof in (("retarder_loop", sl.retarder_loop, "mech"), ("compressor_loop", sl.compressor_loop, "mech"),
+                           ("ambient_bed_loop", sl.ambient_industrial_bed_loop, "ambient"),
+                           ("forklift_loop", sl.forklift_loop, "ambient")):
+        x = norm_peak(fn(), True)
+        grp = "ambient" if "ambient" in name or "forklift" in name else "mech"
+        write_sfx(name, x, True, "ext", grp)
+        write_sfx(name.replace("_loop", "_cab_loop"), limit(sl.cab_filter(x, True, prof)), True, "cab", grp)
+    for name, fn, prof in (("parking_brake_release", sl.parking_brake_release, "pneu"), ("air_dryer_purge_b", sl.air_dryer_purge_b, "pneu"),
+                           ("bird_sparrow", sl.bird_sparrow, None), ("bird_tit", sl.bird_tit, None),
+                           ("bird_crow_caw", sl.bird_crow_caw, "ambient")):
+        x = norm_peak(fn(), False)
+        if name.startswith("bird"):
+            x *= 10 ** (-3 / 20)
+        grp = "ambient" if name.startswith("bird") else "pneumatics"
+        write_sfx(name, x, False, "ext", grp)
+        if prof:  # sparrow / tit: 3-5 kHz chirps are inaudible through closed glass -> exterior only
+            write_sfx(name + "_cab", limit(sl.cab_filter(x, False, prof)), False, "cab", grp)
+    for name, fn in (("indicator_tick", sl.indicator_tick), ("indicator_tock", sl.indicator_tock)):
+        x = norm_peak(fn(), False)
+        write_sfx(name + "_cab", limit(sl.cab_filter(x, False, "dash")), False, "cab", "relay")
+        write_sfx(name, limit(sl.cab_filter(x, False, "relay_ext")), False, "ext", "relay")
+
+    if not args.no_previews:
+        for n_ in ("tyre_concrete_loop", "tyre_cobbles_loop", "tyre_squeal_loop", "retarder_loop", "compressor_loop"):
+            x, _ = sf.read(OUT / "sfx" / f"{n_}.wav")
+            write_ogg(PREV / f"{n_}.ogg", np.tile(x, 2))
 
     (OUT / "manifest.json").write_text(json.dumps(manifest, indent=1), encoding="utf-8")
 

@@ -55,7 +55,7 @@ Legend: ✅ done and verified · 🟡 done, verification pending · ⛔ blocked 
 
 ## Requests to other owners
 - **R5–R7 (vehicle-physics):** see ADR 0009 (lateral jaw throat, standstill kingpin share, `CombinationModel.SetTrailer`).
-- **R8 (audio):** listening test in the app; retarder whine / compressor / start-stop layers still TODO (AUDIO_DESIGN §4).
+- **R8 (audio):** listening test in the app (demo: `art-source/audio/demo/layers_*.ogg`); retarder, compressor, tyre surfaces + squeal, relay, yard ambience, cab/ext pairs now generated and wired (ADR 0017); start/stop one-shots and the turn-signal input still TODO.
 - **R9 (rendering-perf):** measure mirror + reversing camera cost on the A16; decide whether Low drops mirror glass rendering to insets only.
 - Stage 1 requests R1–R4 still open.
 

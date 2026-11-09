@@ -132,6 +132,35 @@ namespace Game.Editor.Audio
             lib.roadRollLoop = Sfx("road_roll_loop");
             lib.windLoop = Sfx("wind_loop");
             lib.gearWhineLoop = Sfx("gear_whine_loop");
+            // cabin perspectives + the audio-layers pass (all optional: an older manifest just leaves them null)
+            lib.airBrakeReleaseCab = Sfx("air_brake_release_cab");
+            lib.parkingBrakeSetCab = Sfx("parking_brake_set_cab");
+            lib.airDryerPurgeCab = Sfx("air_dryer_purge_cab");
+            lib.gearshiftAirCab = Sfx("gearshift_air_cab");
+            lib.roadRollLoopCab = Sfx("road_roll_cab_loop");
+            lib.windLoopCab = Sfx("wind_cab_loop");
+            lib.parkingBrakeRelease = Sfx("parking_brake_release");
+            lib.parkingBrakeReleaseCab = Sfx("parking_brake_release_cab");
+            lib.airDryerPurgeB = Sfx("air_dryer_purge_b");
+            lib.airDryerPurgeBCab = Sfx("air_dryer_purge_b_cab");
+            VehicleAudioLibrary.PerspectivePair Pair(string ext, string cab) =>
+                new VehicleAudioLibrary.PerspectivePair { ext = Sfx(ext), cab = Sfx(cab) };
+            lib.tyreSurface = new[]
+            {
+                Pair("road_roll_loop", "road_roll_cab_loop"), Pair("tyre_wet_loop", "tyre_wet_cab_loop"),
+                Pair("tyre_concrete_loop", "tyre_concrete_cab_loop"), Pair("tyre_cobbles_loop", "tyre_cobbles_cab_loop"),
+                Pair("tyre_gravel_loop", "tyre_gravel_cab_loop"), Pair("tyre_grass_loop", "tyre_grass_cab_loop"),
+            };
+            lib.tyreSqueal = Pair("tyre_squeal_loop", "tyre_squeal_cab_loop");
+            lib.retarder = Pair("retarder_loop", "retarder_cab_loop");
+            lib.compressor = Pair("compressor_loop", "compressor_cab_loop");
+            lib.ambientBed = Pair("ambient_bed_loop", "ambient_bed_cab_loop");
+            lib.forklift = Pair("forklift_loop", "forklift_cab_loop");
+            lib.crowCaw = Pair("bird_crow_caw", "bird_crow_caw_cab");
+            lib.indicatorTick = Pair("indicator_tick", "indicator_tick_cab");
+            lib.indicatorTock = Pair("indicator_tock", "indicator_tock_cab");
+            lib.birdSparrow = Sfx("bird_sparrow");
+            lib.birdTit = Sfx("bird_tit");
             lib.sourceInfo = $"{man.clips.Length} engine loops + {man.sfx.Length} sfx, {man.generator}";
             EditorUtility.SetDirty(lib);
             AssetDatabase.SaveAssets();

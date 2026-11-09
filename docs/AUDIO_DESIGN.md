@@ -67,14 +67,19 @@ Stałe ziarno `ENGINE_SEED`: odchyłki amplitudy cylindrów (σ 8%), wyprzedzeni
 | Hamulec silnikowy | `ebrake_{ext,cab}_{0900..2100}.wav` — 13 × 2 | rpm, engineBrake | **wygenerowane + runtime** |
 | Gwizd turbo | `turbo_whistle_loop.wav` (3,2 kHz przy pitch 1) | turboBoost → pitch 0,6–1,45, głośność ∝ boost^1,5 × (0,35+0,65·throttle) | **wygenerowane + runtime** |
 | Zdmuchnięcie przy odpuszczeniu gazu (wastegate/recyrkulacja) | `turbo_liftoff.wav` | detektor: spadek gazu > 0,5 przy boost > 0,35 | **wygenerowane + runtime** |
-| Zwolnienie hamulca roboczego | `air_brake_release.wav` | zdarzenie z modelu hamulców | wygenerowane (wywołanie: TODO model pneumatyki) |
-| Hamulec postojowy (zał.) | `parking_brake_set.wav` | zdarzenie | wygenerowane |
-| Przedmuch osuszacza | `air_dryer_purge.wav` | ciśnienie zbiornika osiąga próg regulatora | wygenerowane |
+| Zwolnienie hamulca roboczego | `air_brake_release.wav` (+ `_cab`) | spadek zapotrzebowania hamulca po przytrzymaniu > 0,25 s | wygenerowane + runtime |
+| Hamulec postojowy (zał. / zwol.) | `parking_brake_set.wav`, `parking_brake_release.wav` (+ `_cab`) | `Input.ParkingBrake` (zbocze) | wygenerowane + runtime |
+| Przedmuch osuszacza | `air_dryer_purge.wav`, `air_dryer_purge_b.wav` („psst”, naprzemiennie) (+ `_cab`) | `Air.CompressorLoaded` true→false | wygenerowane + runtime |
 | Zmiana biegu (cylinder AMT „pft”) | `gearshift_air.wav` | zdarzenie skrzyni | wygenerowane |
-| Wycie skrzyni / retardera | `gear_whine_loop.wav` (1 kHz przy pitch 1) | prędkość wału wyjściowego / moment retardera | wygenerowana baza; retarder: osobna warstwa + szum oleju — TODO |
-| Opony × nawierzchnia | `road_roll_loop.wav` | prędkość (pitch 0,75–1,35, głośność ∝ v^1,6) | wygenerowane (sucho/asfalt); mokro, kostka, szuter — TODO |
+| Wycie skrzyni | `gear_whine_loop.wav` (1 kHz przy pitch 1) | prędkość wału wyjściowego | wygenerowana baza (bez wywołania w grze) |
+| Retarder | `retarder_loop.wav` + `_cab_loop` (łopatki 340 Hz × pitch, szum oleju, korpus) | `Retarder.Fill` (τ 0,08/0,25 s), pitch 0,5–1,5 ∝ prędkość | wygenerowane + runtime |
+| Opony × nawierzchnia | `road_roll_loop` (asfalt), `tyre_{wet,concrete,cobbles,gravel,grass}_loop` + `_cab_loop`; równe RMS, poziom względny w `LayerMath.SurfaceLevel` | prędkość (pitch 0,75–1,35, głośność ∝ v^1,1–1,6 wg nawierzchni), udział nawierzchni = obciążenie kontaktu `Fz` per `SurfaceId` (ciągnik + naczepa), crossfade τ 0,15 s | wygenerowane + runtime |
+| Pisk opon | `tyre_squeal_loop` + `_cab_loop` (~930 Hz + harmoniczne, stick-slip) | `LayerMath.CombinedSlip` = √((κ/0,12)²+(α/0,10)²) > 0,8, × udział nawierzchni „piszczącej” (żwir/trawa 0), v > 1,5 m/s | wygenerowane + runtime (progi WORKING_VALUE) |
 | Wiatr | `wind_loop.wav` | prędkość (∝ v^2,2) | wygenerowane |
-| Kompresor powietrza | — | obroty, stan regulatora | TODO (pulsujący tłokowy, ~rpm·przełożenie) |
+| Kompresor powietrza | `compressor_loop` + `_cab_loop` (dwucylindrowy, 14 suwów/s przy pitch 1) | `Air.CompressorLoaded` i silnik pracuje; pitch = rpm/1000 | wygenerowane + runtime |
+| Przekaźnik kierunkowskazu | `indicator_tick/tock` (+ `_cab`) | `TruckAudioController.SetIndicators` (90/min); **w grze nie ma jeszcze wejścia kierunkowskazu** | wygenerowane + API |
+| Otoczenie strefy przemysłowej | `ambient_bed_loop` (daleki ruch, brum 100/200 Hz, wiatr, dalekie stuki), `forklift_loop` (silnik trakcyjny, pompa, sygnał cofania), ptaki `bird_{sparrow,tit,crow_caw}` | `AmbientAudio.zone/zoneLevel`, maskowanie prędkością, kabina: warianty filtrowane, sikora/wróbel tylko na zewnątrz | wygenerowane + runtime (strefa = pole w inspektorze, brak systemu stref) |
+| Wnętrze vs zewnątrz (SFX) | każda warstwa ma wariant `_cab`/`_cab_loop` z `sfx_layers.cab_filter` (profile: pneu, road, wind, mech, ambient, dash) | `PerspectiveLoop` — crossfade equal-power po `InteriorBlend`, jedno z dwóch źródeł zawsze ma głośność 0 (wirtualizowane) | wygenerowane + runtime (ADR 0017) |
 | Rozruch / wyłączenie | — | stan silnika | TODO (one-shoty; `EngineAudio` już płynnie wycisza pętle między 380 a 80 rpm) |
 
 ## 5. Runtime (`game/Assets/_Project/Audio/`)
@@ -148,6 +153,7 @@ Obejrzane wykresy (PNG, ≤ 300 KB każdy) i co na nich widać:
 ## 9. Pliki w repo
 - Generator: `tools/audio/` (`pyproject.toml`, `uv.lock`, Python 3.12) — `dsp.py`, `engine_synth.py`, `sfx_synth.py`, `render_all.py`, `analyze.py`, `runtime_sim.py`, `render_demo.py`.
 - Odsłuch dla właściciela: `art-source/audio/demo/drive_demo.ogg` (kabina, 30 s), `drive_demo_exterior.ogg`, telemetria `drive_demo_telemetry.csv`.
+- Warstwy 2026-11-09: `art-source/audio/demo/layers_tour_{ext,cab}.ogg` (każda warstwa solo, indeks czasów w `docs/reports/audio/layers_demo_analysis.json`) i `layers_drive_{ext,cab}.ogg` (46 s: postój w zakładzie → ruszenie → beton → kostka → żwir → mokry asfalt → pisk → zjazd z retarderem → hamowanie). Pełne WAV: `art-source/audio/generated/demo/`.
 - Podglądy (każda pętla ×2 pod rząd — szew powinien być niesłyszalny): `art-source/audio/previews/*.ogg`.
 - Pełny bank WAV: `art-source/audio/generated/` (gitignored, odtwarzalny).
 - Raporty: `docs/reports/audio/`.
@@ -157,4 +163,4 @@ Obejrzane wykresy (PNG, ≤ 300 KB każdy) i co na nich widać:
 - Brak referencji porównawczej z prawdziwej ciężarówki (docs/08 §3.1 przewiduje nagrania właściciela — gdyby powstały, porównam widma rzędów i balans pasm).
 - Na głośniku telefonu fundamentalna jest niesłyszalna — konieczny profil miksu z §8 (nieprzetestowany).
 - Runtime nie był uruchomiony w Unity; ustawienie `timeSamples` po `Play()` wymaga potwierdzenia w edytorze/na urządzeniu.
-- Rozruch/wyłączenie, kompresor, retarder, warianty nawierzchni — TODO (§4).
+- Rozruch/wyłączenie, wejście kierunkowskazu, system stref otoczenia — TODO (§4). Warstwy z 2026-11-09 (opony × nawierzchnia, pisk, retarder, kompresor, otoczenie, kabina) tylko analiza widmowa + testy logiki; **brzmienie nieocenione uchem** (ptaki, wózek i pisk najbardziej ryzykowne — synteza „impresyjna”).
