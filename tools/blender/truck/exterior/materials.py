@@ -29,7 +29,7 @@ LIVERIES = {
     "clay": ((0.50, 0.50, 0.50), 0.55, 0.0, "clay"),
 }
 SLOTS = {}
-PARAMS = {"dirt": 0.35, "drl": 1.0}
+PARAMS = {"dirt": 0.5, "drl": 1.0}
 
 
 # ---------------------------------------------------------------- node helpers
@@ -117,8 +117,12 @@ def thin_glass(name, slot, tint, rough=0.0, ior=1.52):
 
 
 # ---------------------------------------------------------------- grime (subtle, height + cavity driven)
-def grime(nt, b, rgb_sock_default, rough_default, h0=1.0, amount=0.5, cavity=True, dust=(0.16, 0.145, 0.12)):
-    """Mix road dust into base colour/roughness: stronger near the ground, in cavities (AO), broken by noise."""
+def grime(nt, b, rgb_sock_default, rough_default, h0=1.0, amount=0.5, cavity=True, dust=(0.16, 0.145, 0.12),
+          film=0.0, streak=0.0, back=0.0, cav=0.8):
+    """Mix road dust into base colour/roughness: stronger near the ground, in cavities (AO), broken by noise.
+    film: extra road-film gradient on the lowest 0.6 m (spray from the own wheels; R2 #11).
+    streak: vertical run-down streaks (noise stretched in z) on vertical faces.
+    back: rear-wheel spray on rear-facing faces (cab back wall), fading upwards to ~2.2 m."""
     geo = N(nt, "ShaderNodeNewGeometry")
     sep = N(nt, "ShaderNodeSeparateXYZ")
     L(nt, geo.outputs["Position"], sep.inputs[0])
@@ -129,10 +133,43 @@ def grime(nt, b, rgb_sock_default, rough_default, h0=1.0, amount=0.5, cavity=Tru
     nmap = N(nt, "ShaderNodeMapRange", **{"From Min": 0.35, "From Max": 0.75})
     L(nt, noise.outputs["Fac"], nmap.inputs["Value"])
     f = math_node(nt, "MULTIPLY", hz, nmap.outputs[0])
+    if film > 0:
+        lowz = math_node(nt, "SUBTRACT", 0.62, sep.outputs[2])
+        lowz = math_node(nt, "DIVIDE", lowz, 0.30, clamp=True)            # 0 above 0.62 m, 1 below 0.32 m
+        n2 = N(nt, "ShaderNodeTexNoise", Scale=9.0, Detail=8.0, Roughness=0.65)
+        L(nt, geo.outputs["Position"], n2.inputs["Vector"])
+        m2 = N(nt, "ShaderNodeMapRange", **{"From Min": 0.30, "From Max": 0.62, "To Min": 0.45})
+        L(nt, n2.outputs["Fac"], m2.inputs["Value"])
+        f = math_node(nt, "ADD", f, math_node(nt, "MULTIPLY", math_node(nt, "MULTIPLY", lowz, m2.outputs[0]), film))
+    if streak > 0:
+        sc = N(nt, "ShaderNodeVectorMath", _operation="MULTIPLY")
+        sc.inputs[1].default_value = (14.0, 14.0, 0.9)
+        L(nt, geo.outputs["Position"], sc.inputs[0])
+        n3 = N(nt, "ShaderNodeTexNoise", Scale=1.0, Detail=4.0, Roughness=0.5)
+        L(nt, sc.outputs[0], n3.inputs["Vector"])
+        m3 = N(nt, "ShaderNodeMapRange", **{"From Min": 0.55, "From Max": 0.75})
+        L(nt, n3.outputs["Fac"], m3.inputs["Value"])
+        vert = N(nt, "ShaderNodeSeparateXYZ")
+        L(nt, geo.outputs["Normal"], vert.inputs[0])
+        isv = math_node(nt, "SUBTRACT", 1.0, math_node(nt, "ABSOLUTE", vert.outputs[2]))
+        hz2 = math_node(nt, "DIVIDE", math_node(nt, "SUBTRACT", 2.4, sep.outputs[2]), 2.4, clamp=True)
+        f = math_node(nt, "ADD", f, math_node(nt, "MULTIPLY", math_node(nt, "MULTIPLY", m3.outputs[0], isv),
+                                              math_node(nt, "MULTIPLY", hz2, streak)))
+    if back > 0:
+        nrm = N(nt, "ShaderNodeSeparateXYZ")
+        L(nt, geo.outputs["Normal"], nrm.inputs[0])
+        rear = math_node(nt, "MULTIPLY", nrm.outputs[1], -1.0, clamp=True)
+        hb = math_node(nt, "DIVIDE", math_node(nt, "SUBTRACT", 2.3, sep.outputs[2]), 1.2, clamp=True)
+        n4 = N(nt, "ShaderNodeTexNoise", Scale=6.0, Detail=6.0, Roughness=0.6)
+        L(nt, geo.outputs["Position"], n4.inputs["Vector"])
+        m4 = N(nt, "ShaderNodeMapRange", **{"From Min": 0.3, "From Max": 0.6, "To Min": 0.35})
+        L(nt, n4.outputs["Fac"], m4.inputs["Value"])
+        f = math_node(nt, "ADD", f, math_node(nt, "MULTIPLY", math_node(nt, "MULTIPLY", rear, hb),
+                                              math_node(nt, "MULTIPLY", m4.outputs[0], back)))
     if cavity:
         ao = N(nt, "ShaderNodeAmbientOcclusion", Distance=0.12, _samples=8)
         inv = math_node(nt, "SUBTRACT", 1.0, ao.outputs["AO"])
-        inv = math_node(nt, "MULTIPLY", inv, 0.8)
+        inv = math_node(nt, "MULTIPLY", inv, cav)
         f = math_node(nt, "ADD", f, inv)
     f = math_node(nt, "MULTIPLY", f, amount * PARAMS["dirt"], clamp=True)
     mix = N(nt, "ShaderNodeMix", _data_type="RGBA")
@@ -246,6 +283,50 @@ def louver_mask(n=256):
     for cx, cy in ((0.25, 0.25), (0.75, 0.25), (0.0, 0.75), (0.5, 0.75), (1.0, 0.75), (0.25, 1.25), (0.75, -0.25)):
         holes = np.maximum(holes, (np.hypot(x - cx, y - cy) < 0.17).astype(float))
     return _save_image("perforation", 1 - holes)
+
+
+def honeycomb(w=256, strand=0.16):
+    """Seamless pointy-top hex mesh: one tile = sqrt(3) x 3 circumradii (two cells). 1 = strand, 0 = hole."""
+    h = int(round(w * 3 / math.sqrt(3)))
+    a = 1.0
+    W, H = math.sqrt(3) * a, 3 * a
+    y, x = np.mgrid[0:h, 0:w]
+    px, py = (x + 0.5) / w * W, (y + 0.5) / h * H
+    d = np.full((h, w), 9.0)
+    ap = a * math.sqrt(3) / 2
+    for j in range(-1, 4):
+        for i in range(-1, 3):
+            cx, cy = i * W + (j % 2) * W / 2, j * 1.5 * a
+            dx, dy = np.abs(px - cx), np.abs(py - cy)
+            d = np.minimum(d, np.maximum(dx, dx * 0.5 + dy * math.sqrt(3) / 2))
+    t = (d / ap - (1 - strand)) / 0.05
+    return _save_image(f"honeycomb_{w}", np.clip(t, 0, 1))
+
+
+def honey_material(name, cell, rgb=(0.030, 0.031, 0.033)):
+    """Honeycomb grille insert: strands satin dark plastic, holes near-black (depth faked by colour + bump).
+    cell = flat-to-flat cell size in metres; box UV (front faces: u = x, v = z)."""
+    m, nt, b = principled(name, "TRIM", rgb, 0.45)
+    img = STATE.setdefault("honey_img", None) or honeycomb()
+    STATE["honey_img"] = img
+    a = cell / math.sqrt(3)
+    tc = N(nt, "ShaderNodeUVMap", _uv_map="UVMap")
+    mp = N(nt, "ShaderNodeMapping")
+    mp.inputs["Scale"].default_value = (1 / (math.sqrt(3) * a), 1 / (3 * a), 1)
+    L(nt, tc.outputs["UV"], mp.inputs["Vector"])
+    ti = N(nt, "ShaderNodeTexImage", _image=img, _interpolation="Linear")
+    L(nt, mp.outputs[0], ti.inputs[0])
+    mix = N(nt, "ShaderNodeMix", _data_type="RGBA")
+    mix.inputs[6].default_value = (0.002, 0.002, 0.002, 1)
+    mix.inputs[7].default_value = (*rgb, 1)
+    L(nt, ti.outputs["Color"], mix.inputs[0])
+    L(nt, mix.outputs[2], b.inputs["Base Color"])
+    rr = math_node(nt, "ADD", math_node(nt, "MULTIPLY", ti.outputs["Color"], -0.3), 0.75)
+    L(nt, rr, b.inputs["Roughness"])
+    bump = N(nt, "ShaderNodeBump", Strength=0.8, Distance=cell * 0.25)
+    L(nt, ti.outputs["Color"], bump.inputs["Height"])
+    L(nt, bump.outputs["Normal"], b.inputs["Normal"])
+    return m
 
 
 # ---------------------------------------------------------------- text rendered to texture (Inter, OFL)
@@ -389,7 +470,59 @@ def build_paint(livery, clay=False):
     b.inputs["Coat IOR"].default_value = 1.5
     if not clay:
         micro_bump(nt, b, 260.0, 0.03, 0.0002, target="Coat Normal")  # orange peel
-        grime(nt, b, lv[0], lv[1], h0=1.7, amount=0.55)
+        # fleet truck a few days after washing: road film low down, run-down streaks, rear-wheel spray on
+        # the cab back wall (R2 #5/#11)
+        grime(nt, b, lv[0], lv[1], h0=1.6, amount=0.55, film=1.6, streak=0.35, back=3.2,
+              dust=(0.15, 0.135, 0.11), cav=1.8)
+    # wordmark: dark satin on light liveries, satin silver on dark ones (R2 #9: it vanished on bottle green)
+    if livery == "dark" and not clay:
+        principled("wordmark", "METAL", (0.62, 0.63, 0.64), 0.32, metal=1.0)
+    else:
+        principled("wordmark", "METAL", (0.10, 0.104, 0.11), 0.30, metal=1.0)
+    return m
+
+
+def alu_wheel(clay=False):
+    """Forged aluminium wheel, machined (R2 #6: was mirror-like at roughness 0.17): roughness 0.26, turned
+    rings along the profile, anisotropy along the circumference, brake dust in the dish and round the nuts."""
+    rgb = (0.86, 0.87, 0.88)
+    m, nt, b = principled("alu_wheel", "METAL", rgb, 0.26, metal=1.0, aniso=0.45)
+    if clay:
+        return m
+    tg = N(nt, "ShaderNodeTangent", _direction_type="UV_MAP", _uv_map="UVMap")
+    L(nt, tg.outputs["Tangent"], b.inputs["Tangent"])
+    uvn = N(nt, "ShaderNodeUVMap", _uv_map="UVMap")
+    sep = N(nt, "ShaderNodeSeparateXYZ")
+    L(nt, uvn.outputs["UV"], sep.inputs[0])
+    rings = math_node(nt, "SINE", math_node(nt, "MULTIPLY", sep.outputs[1], 900.0))
+    bump = N(nt, "ShaderNodeBump", Strength=0.25, Distance=0.0002)
+    L(nt, rings, bump.inputs["Height"])
+    L(nt, bump.outputs["Normal"], b.inputs["Normal"])
+    grime(nt, b, rgb, 0.26, h0=1.15, amount=1.5, dust=(0.085, 0.068, 0.050), film=0.6)
+    return m
+
+
+def grease(clay=False):
+    """Fifth-wheel grease (R2 #5: was flat light grey): dark brown-black, wet sheen where thick, dull brown
+    smear where thin, lumpy."""
+    m, nt, b = principled("grease", "METAL", (0.020, 0.015, 0.009), 0.12, spec=0.45)
+    if clay:
+        return m
+    tc = N(nt, "ShaderNodeTexCoord")
+    nz = N(nt, "ShaderNodeTexNoise", Scale=7.0, Detail=10.0, Roughness=0.7)
+    L(nt, tc.outputs["Object"], nz.inputs["Vector"])
+    mr = N(nt, "ShaderNodeMapRange", **{"From Min": 0.42, "From Max": 0.62})
+    L(nt, nz.outputs["Fac"], mr.inputs["Value"])
+    mix = N(nt, "ShaderNodeMix", _data_type="RGBA")
+    mix.inputs[6].default_value = (0.026, 0.019, 0.011, 1)     # thin smear
+    mix.inputs[7].default_value = (0.009, 0.007, 0.005, 1)     # thick, wet
+    L(nt, mr.outputs[0], mix.inputs[0])
+    L(nt, mix.outputs[2], b.inputs["Base Color"])
+    rough = math_node(nt, "ADD", math_node(nt, "MULTIPLY", mr.outputs[0], -0.45), 0.60)
+    L(nt, rough, b.inputs["Roughness"])
+    bump = N(nt, "ShaderNodeBump", Strength=0.6, Distance=0.003)
+    L(nt, nz.outputs["Fac"], bump.inputs["Height"])
+    L(nt, bump.outputs["Normal"], b.inputs["Normal"])
     return m
 
 
@@ -441,17 +574,35 @@ def build_library(livery="white", clay=False):
     m, nt, b = principled("plastic", "TRIM", trim_rgb, 0.62, spec=0.45)
     if not clay:
         micro_bump(nt, b, 900.0, 0.25, 0.0003)
-        grime(nt, b, trim_rgb, 0.62, h0=1.4, amount=0.9)
+        grime(nt, b, trim_rgb, 0.62, h0=1.4, amount=0.9, film=1.2, streak=0.3)
     m, nt, b = principled("plastic_satin", "TRIM", (0.028, 0.029, 0.03) if not clay else (0.25, 0.25, 0.25), 0.36)
     principled("rubber", "TRIM", (0.018, 0.018, 0.018), 0.82, spec=0.3)
     principled("gap", "TRIM", (0.004, 0.004, 0.004), 0.9, spec=0.2)
     ch_rgb = (0.022, 0.022, 0.023) if not clay else (0.16, 0.16, 0.16)
     m, nt, b = principled("chassis", "TRIM", ch_rgb, 0.45)
     if not clay:
-        grime(nt, b, ch_rgb, 0.45, h0=1.2, amount=1.2, dust=(0.12, 0.11, 0.09))
+        grime(nt, b, ch_rgb, 0.45, h0=1.2, amount=1.2, dust=(0.12, 0.11, 0.09), film=1.0)
     m, nt, b = principled("grille_mesh", "TRIM", (0.012, 0.012, 0.013), 0.55)
     if not clay:
         micro_bump(nt, b, 260.0, 0.6, 0.002, kind="voronoi")
+    # graphite trim (grille frame, bumper 'road' frame, thin grille bars): painted plastic with a fine metallic
+    # flake, satin - reads as a deliberate dark-silver accent, not chrome
+    m, nt, b = principled("trim_graphite", "TRIM", (0.075, 0.077, 0.080) if not clay else (0.3, 0.3, 0.3), 0.34,
+                          metal=0.55, coat=0.3)
+    if not clay:
+        micro_bump(nt, b, 700.0, 0.12, 0.0002)
+        grime(nt, b, (0.075, 0.077, 0.080), 0.34, h0=1.9, amount=0.5)
+    if clay:
+        principled("grille_honey", "TRIM", (0.12, 0.12, 0.12), 0.6)
+        principled("grille_honey_coarse", "TRIM", (0.12, 0.12, 0.12), 0.6)
+    else:
+        honey_material("grille_honey", 0.022)
+        honey_material("grille_honey_coarse", 0.034, rgb=(0.026, 0.026, 0.027))
+    # spray-suppression brush (EU Reg. 109/2011): dark fibres, very rough, streaky bump
+    m, nt, b = principled("brush", "TRIM", (0.020, 0.020, 0.019), 0.92, spec=0.25)
+    if not clay:
+        micro_bump(nt, b, 1400.0, 0.9, 0.002)
+        grime(nt, b, (0.020, 0.020, 0.019), 0.92, h0=1.2, amount=1.4, cavity=False, dust=(0.09, 0.08, 0.065))
     # plate
     m, nt, b = principled("plate", "TRIM", (0.8, 0.8, 0.8), 0.35)
     if not clay:
@@ -461,8 +612,8 @@ def build_library(livery="white", clay=False):
     # METAL
     m, nt, b = principled("alu_brushed", "METAL", (0.90, 0.91, 0.92), 0.30, metal=1.0, aniso=0.6)
     if not clay:
-        grime(nt, b, (0.90, 0.91, 0.92), 0.30, h0=1.1, amount=0.6)
-    principled("alu_wheel", "METAL", (0.91, 0.92, 0.93), 0.17, metal=1.0, aniso=0.3)
+        grime(nt, b, (0.90, 0.91, 0.92), 0.30, h0=1.1, amount=0.6, film=1.0, streak=0.4)
+    alu_wheel(clay)
     principled("chrome", "METAL", (0.95, 0.95, 0.96), 0.06, metal=1.0)
     principled("satin_alu", "METAL", (0.80, 0.81, 0.82), 0.32, metal=1.0)
     m, nt, b = principled("steel", "METAL", (0.42, 0.42, 0.43), 0.45, metal=1.0)
@@ -471,9 +622,11 @@ def build_library(livery="white", clay=False):
     principled("coupling_red", "TRIM", (0.40, 0.02, 0.02), 0.45)
     principled("coupling_yellow", "TRIM", (0.70, 0.45, 0.02), 0.45)
     principled("adblue_blue", "TRIM", (0.02, 0.10, 0.45), 0.4)
-    principled("grease", "METAL", (0.015, 0.014, 0.012), 0.18, spec=0.6)
+    grease(clay)
     m, nt, b = principled("checker", "METAL", (0.80, 0.80, 0.81), 0.38, metal=1.0)
     if not clay:
+        # worn treads: boot grit and mud in the grooves, polished bar tops (roughness lower where it is high)
+        grime(nt, b, (0.80, 0.80, 0.81), 0.38, h0=1.4, amount=1.6, dust=(0.11, 0.10, 0.085))
         img = checker_plate()
         tc = N(nt, "ShaderNodeUVMap", _uv_map="UVMap")
         mp = N(nt, "ShaderNodeMapping")

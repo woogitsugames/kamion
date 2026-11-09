@@ -1,28 +1,28 @@
 {
-  "lod0_exterior_tris": 99776,
+  "lod0_exterior_tris": 99710,
   "by_group": {
     "frame": 19763,
-    "cab": 28760,
-    "lower": 9754,
+    "cab": 28634,
+    "lower": 10454,
     "mirrors": 3664,
-    "wheels": 37835
+    "wheels": 37195
   },
   "by_game_slot": {
-    "TRIM": 37911,
-    "METAL": 27138,
-    "PAINT": 9227,
-    "LIGHTS": 6192,
-    "GLASS": 2508,
+    "TRIM": 36161,
+    "METAL": 26738,
+    "PAINT": 11971,
+    "LIGHTS": 6060,
+    "GLASS": 1980,
     "TYRE": 16800
   },
   "top_objects": [
     {
       "name": "cab_shell",
-      "tris": 15640
+      "tris": 15824
     },
     {
       "name": "lower_fairing",
-      "tris": 4858
+      "tris": 5390
     },
     {
       "name": "wheel_RRo_tyre",
@@ -77,20 +77,8 @@
       "tris": 984
     },
     {
-      "name": "wheel_RRi_disc",
-      "tris": 984
-    },
-    {
       "name": "wheel_RLo_disc",
       "tris": 984
-    },
-    {
-      "name": "wheel_RLi_disc",
-      "tris": 984
-    },
-    {
-      "name": "windscreen",
-      "tris": 960
     },
     {
       "name": "wheel_RRi_rim",
@@ -115,13 +103,26 @@
     {
       "name": "coil0",
       "tris": 720
+    },
+    {
+      "name": "wheel_RRi_disc",
+      "tris": 664
+    },
+    {
+      "name": "wheel_RLi_disc",
+      "tris": 664
+    },
+    {
+      "name": "diff",
+      "tris": 528
     }
   ],
-  "objects": 622,
+  "objects": 627,
   "render_materials": [
     "adblue_blue",
     "alu_brushed",
     "alu_wheel",
+    "brush",
     "chassis",
     "checker",
     "chrome",
@@ -135,6 +136,8 @@
     "glass",
     "glass_tint",
     "grease",
+    "grille_honey",
+    "grille_honey_coarse",
     "grille_mesh",
     "interior",
     "lamp_inner",
@@ -154,8 +157,10 @@
     "rubber",
     "satin_alu",
     "steel",
+    "trim_graphite",
     "tyre_drive",
-    "tyre_steer"
+    "tyre_steer",
+    "wordmark"
   ],
   "game_slots": [
     "GLASS",
@@ -166,7 +171,7 @@
     "TYRE"
   ],
   "lod_plan_measured": {
-    "decimate_0.45": 43083,
-    "decimate_0.15": 14495
+    "decimate_0.45": 43020,
+    "decimate_0.15": 14277
   }
 }

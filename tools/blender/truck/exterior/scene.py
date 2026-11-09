@@ -206,12 +206,13 @@ def yard():
     rng = np.random.default_rng(7)
     # continuous treeline: one ring mesh with a noisy crown silhouette (pine/birch edge)
     bm = bmesh.new()
-    n = 720
+    n = 1440
     r = 170
     bot, top = [], []
+    jit = np.convolve(rng.random(n + 8), np.ones(5) / 5, mode="same")[4:n + 4]   # crowns, not sawteeth (R2 #11)
     for k in range(n):
         a = 2 * math.pi * k / n
-        h = 11 + 4 * math.sin(a * 7) + 3 * math.sin(a * 23 + 1) + rng.random() * 3.5
+        h = 10.5 + 2.0 * math.sin(a * 5 + 0.3) + 1.2 * math.sin(a * 17 + 1) + 0.6 * math.sin(a * 61) + jit[k] * 2.2
         bot.append(bm.verts.new((r * math.cos(a), r * math.sin(a), 0)))
         top.append(bm.verts.new((r * math.cos(a), r * math.sin(a), h)))
     for k in range(n):
@@ -553,6 +554,14 @@ def visibility(out_dir, az=(-110, 110), el=(-50, 30), step=0.5):
         if cur:
             spans.append(cur)
         return [(round(float(a), 1), round(float(b), 1)) for a, b in spans]
+    def mirror_extent(side):
+        """Angular size of the mirror heads seen from the eye (R2 #7: was ~3 deg wide, edge-on)."""
+        cols = [j for j, a in enumerate(azs) if (a > 0) == (side > 0) and (cat[:, j] == 3).any()]
+        rows = [i for i in range(len(els)) if any(cat[i, j] == 3 for j in cols)]
+        if not cols:
+            return None
+        return {"yaw_deg": [round(float(azs[cols[0]]), 1), round(float(azs[cols[-1]]), 1)],
+                "width_deg": round(len(cols) * step, 1), "height_deg": round(len(rows) * step, 1)}
     i0 = int(np.argmin(np.abs(azs - 0)))
     bumper_y = 1.522
     res = {
@@ -561,6 +570,8 @@ def visibility(out_dir, az=(-110, 110), el=(-50, 30), step=0.5):
         "ground_visible_from_m_ahead_of_bumper_at_passenger_corner": None,
         "pillar_and_body_spans_deg_at_eye_height (left side, +yaw)": blocked_span(0.0, 1),
         "pillar_and_body_spans_deg_at_eye_height (right side, -yaw)": blocked_span(0.0, -1),
+        "mirrors_seen_from_eye_left (main+wide, incl. housings)": mirror_extent(1),
+        "mirrors_seen_from_eye_right (main+wide+kerb, incl. housings)": mirror_extent(-1),
         "map_axes": f"x: yaw {az[1]}..{az[0]} deg (left = driver side), y: pitch {el[0]}..{el[1]} deg, 10 deg grid",
         "legend": {"jasnoniebieski": "widoczne (przez szybę)", "szary": "inne części", "czerwony": "słupek/nadwozie",
                    "niebieski": "lusterko", "pomarańczowy": "kierownica", "brązowy": "deska/wnętrze (proxy A3)"},

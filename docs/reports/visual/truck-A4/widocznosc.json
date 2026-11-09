@@ -1,0 +1,47 @@
+{
+  "eye_point_m": [
+    -0.550000011920929,
+    0.44999998807907104,
+    2.5
+  ],
+  "ground_visible_from_m_ahead_of_bumper_straight_ahead": 4.96,
+  "ground_visible_from_m_ahead_of_bumper_at_passenger_corner": 9.19,
+  "pillar_and_body_spans_deg_at_eye_height (left side, +yaw)": [
+    [
+      50.0,
+      42.0
+    ]
+  ],
+  "pillar_and_body_spans_deg_at_eye_height (right side, -yaw)": [
+    [
+      -68.5,
+      -72.0
+    ]
+  ],
+  "mirrors_seen_from_eye_left (main+wide, incl. housings)": {
+    "yaw_deg": [
+      77.0,
+      46.0
+    ],
+    "width_deg": 31.5,
+    "height_deg": 45.0
+  },
+  "mirrors_seen_from_eye_right (main+wide+kerb, incl. housings)": {
+    "yaw_deg": [
+      -70.0,
+      -83.5
+    ],
+    "width_deg": 12.5,
+    "height_deg": 21.0
+  },
+  "map_axes": "x: yaw 110..-110 deg (left = driver side), y: pitch -50..30 deg, 10 deg grid",
+  "legend": {
+    "jasnoniebieski": "widoczne (przez szybę)",
+    "szary": "inne części",
+    "czerwony": "słupek/nadwozie",
+    "niebieski": "lusterko",
+    "pomarańczowy": "kierownica",
+    "brązowy": "deska/wnętrze (proxy A3)"
+  },
+  "azimuth_to_passenger_corner_deg": -59.2
+}
