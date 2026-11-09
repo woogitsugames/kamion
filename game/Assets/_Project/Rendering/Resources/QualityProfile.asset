@@ -42,6 +42,8 @@ MonoBehaviour:
     treeShadowLodMask: 1
     leafAlphaToCoverage: 1
     simpleFoliage: 1
+    forestHlodM: 70
+    forestHlodCullM: 1000
     budgetDrawCalls: 250
     budgetTrianglesK: 350
     budgetTextureMB: 64
@@ -76,6 +78,8 @@ MonoBehaviour:
     treeShadowLodMask: 1
     leafAlphaToCoverage: 1
     simpleFoliage: 1
+    forestHlodM: 70
+    forestHlodCullM: 1000
     budgetDrawCalls: 350
     budgetTrianglesK: 550
     budgetTextureMB: 96
@@ -83,7 +87,7 @@ MonoBehaviour:
     budgetStatus: UNMEASURED
   - name: High
     renderScale: 1
-    msaa: 4
+    msaa: 2
     postAntialiasing: 0
     hdr: 1
     postProcessing: 1
@@ -109,7 +113,9 @@ MonoBehaviour:
     treeCullM: 600
     treeShadowLodMask: 3
     leafAlphaToCoverage: 1
-    simpleFoliage: 0
+    simpleFoliage: 1
+    forestHlodM: 120
+    forestHlodCullM: 0
     budgetDrawCalls: 800
     budgetTrianglesK: 1500
     budgetTextureMB: 256
@@ -143,7 +149,9 @@ MonoBehaviour:
     treeCullM: 600
     treeShadowLodMask: 3
     leafAlphaToCoverage: 1
-    simpleFoliage: 0
+    simpleFoliage: 1
+    forestHlodM: 120
+    forestHlodCullM: 0
     budgetDrawCalls: 1000
     budgetTrianglesK: 2000
     budgetTextureMB: 384

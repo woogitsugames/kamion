@@ -79,3 +79,10 @@ Proposal (not applied; QualityProfile is rendering-perf's code, High keeps the c
 - High MSAA 4x to 2x. This is the lever (-17 to -18 ms), and High then holds 30 FPS in the forest with 12 ms to spare.
 - Keep Lit on High: Vegetation saves another 3.6 ms at 2x, which does not justify the visual change (specular lobe, probe reflection) on the tier meant to look best. Revisit if High must reach 60 FPS.
 - Visual check of 2x vs 4x edge quality on the S24+ is still due (visual-critic).
+
+## Addendum r5 — applied on High (rendering-perf, 2026-11-09)
+- Review r3 §7 accepted MSAA 2× on High (no visible edge difference on native S24+ crops) on condition of a 10 s motion
+  recording on the S24+ (DK8, flicker of poles, rails, power lines). `QualityProfile` High/Ultra: `msaa = 2`
+  (`URP_High`, `QualitySettings.antiAliasing` via `ProjectSetup`).
+- Review r3 §7 also passed `Kamion/Vegetation` over Lit ("Lit shows blue-ish see-through sheets instead of crowns", −3.6 ms
+  at 2×), and G4 found High foliage greyer than Low: `simpleFoliage` is now on for every tier (one foliage look).

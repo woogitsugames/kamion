@@ -9,7 +9,8 @@ namespace Game.Rendering
     /// camera) when no vendor GPU profiler is available. Not a player setting; ignored unless an argument is given.
     /// Keys: rq_msaa (1/2/4), rq_scale (render scale), rq_shadow (shadow distance m, 0 = off), rq_post (0/1),
     /// rq_hdr (0/1), rq_a2c (0/1 leaf alpha-to-coverage), rq_trees (0 = no instanced trees), rq_treeshadow (LOD mask),
-    /// rq_card (tree card LOD scale), rq_cull (tree cull m), rq_thin (tree thinning start m), rq_vegshader (0/1 simple foliage).
+    /// rq_card (tree card LOD scale), rq_cull (tree cull m), rq_thin (tree thinning start m), rq_vegshader (0/1 simple foliage),
+    /// rq_hlod (forest HLOD switch distance m, 0 = off; ADR 0015).
     /// </summary>
     public static class RenderOverrides
     {
@@ -25,10 +26,11 @@ namespace Game.Rendering
         public static float? TreeCull;
         public static float? TreeThin;
         public static bool? SimpleFoliage;
+        public static float? ForestHlod;
 
         public static bool Any => Msaa.HasValue || RenderScale.HasValue || ShadowDistance.HasValue || Post.HasValue || Hdr.HasValue ||
                                   LeafA2C.HasValue || Trees.HasValue || TreeShadowMask.HasValue || TreeCardScale.HasValue ||
-                                  TreeCull.HasValue || TreeThin.HasValue || SimpleFoliage.HasValue;
+                                  TreeCull.HasValue || TreeThin.HasValue || SimpleFoliage.HasValue || ForestHlod.HasValue;
 
         /// <summary>Reads the overrides through a launch-argument getter (platform services). Returns a log line.</summary>
         public static string Parse(Func<string, string> arg)
@@ -36,9 +38,9 @@ namespace Game.Rendering
             Msaa = I(arg("rq_msaa")); RenderScale = F(arg("rq_scale")); ShadowDistance = F(arg("rq_shadow"));
             Post = B(arg("rq_post")); Hdr = B(arg("rq_hdr")); LeafA2C = B(arg("rq_a2c")); Trees = B(arg("rq_trees"));
             TreeShadowMask = I(arg("rq_treeshadow")); TreeCardScale = F(arg("rq_card")); TreeCull = F(arg("rq_cull"));
-            TreeThin = F(arg("rq_thin")); SimpleFoliage = B(arg("rq_vegshader"));
+            TreeThin = F(arg("rq_thin")); SimpleFoliage = B(arg("rq_vegshader")); ForestHlod = F(arg("rq_hlod"));
             return Any ? $"msaa={Msaa} scale={RenderScale} shadow={ShadowDistance} post={Post} hdr={Hdr} a2c={LeafA2C} trees={Trees} " +
-                         $"treeshadow={TreeShadowMask} card={TreeCardScale} cull={TreeCull} thin={TreeThin} vegshader={SimpleFoliage}" : null;
+                         $"treeshadow={TreeShadowMask} card={TreeCardScale} cull={TreeCull} thin={TreeThin} vegshader={SimpleFoliage} hlod={ForestHlod}" : null;
         }
 
         /// <summary>The tier with the overrides applied (vegetation + camera fields; URP asset fields by the applier).</summary>
@@ -55,6 +57,7 @@ namespace Game.Rendering
             if (TreeCull.HasValue) t.treeCullM = TreeCull.Value;
             if (TreeThin.HasValue) t.treeThinStartM = TreeThin.Value;
             if (SimpleFoliage.HasValue) t.simpleFoliage = SimpleFoliage.Value;
+            if (ForestHlod.HasValue) t.forestHlodM = ForestHlod.Value > 0f ? ForestHlod.Value : -1f;   // -1 = off
             return t;
         }
 

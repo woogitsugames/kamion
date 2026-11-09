@@ -57,6 +57,11 @@ namespace Game.Editor.Setup
                         qp.tiers[i].leafAlphaToCoverage = d.leafAlphaToCoverage;
                         dirty = true;
                     }
+                    if (qp.tiers[i].forestHlodM <= 0f)   // ADR 0015
+                    {
+                        qp.tiers[i].forestHlodM = d.forestHlodM; qp.tiers[i].forestHlodCullM = d.forestHlodCullM;
+                        dirty = true;
+                    }
                 }
             }
             if (qp.deviceRules == null || qp.deviceRules.Length == 0) { qp.deviceRules = QualityProfile.DefaultDeviceRules(); dirty = true; }
