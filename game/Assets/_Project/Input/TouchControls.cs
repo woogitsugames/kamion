@@ -19,13 +19,18 @@ namespace Game.Controls
         public float ThrottleRaw, BrakeRaw;
 
         SelectorRequest m_Selector;
-        int m_Shift;
-        bool m_Park, m_Manual;
+        int m_Shift, m_Retarder;
+        bool m_Park, m_Manual, m_Couple, m_Legs, m_Cruise, m_RevCam;
 
         public void RequestSelector(SelectorRequest s) => m_Selector = s;
         public void RequestShift(int delta) => m_Shift += delta;
         public void RequestParkingToggle() => m_Park = true;
         public void RequestManualToggle() => m_Manual = true;
+        public void RequestRetarderStep(int delta) => m_Retarder += delta;
+        public void RequestCouplingToggle() => m_Couple = true;
+        public void RequestLandingGearToggle() => m_Legs = true;
+        public void RequestBrakeCruiseToggle() => m_Cruise = true;
+        public void RequestReverseCameraToggle() => m_RevCam = true;
 
         public static float Shape(float raw, float exponent) => Mathf.Pow(Mathf.Clamp01(raw), Mathf.Max(0.1f, exponent));
 
@@ -38,7 +43,13 @@ namespace Game.Controls
             intent.ShiftDelta = m_Shift;
             intent.ToggleParkingBrake = m_Park;
             intent.ToggleManual = m_Manual;
+            intent.RetarderDelta = m_Retarder;
+            intent.ToggleCoupling = m_Couple;
+            intent.ToggleLandingGear = m_Legs;
+            intent.ToggleBrakeCruise = m_Cruise;
+            intent.ToggleReverseCamera = m_RevCam;
             m_Selector = SelectorRequest.None; m_Shift = 0; m_Park = false; m_Manual = false;
+            m_Retarder = 0; m_Couple = false; m_Legs = false; m_Cruise = false; m_RevCam = false;
         }
     }
 }

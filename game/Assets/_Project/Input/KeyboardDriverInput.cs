@@ -5,7 +5,8 @@ namespace Game.Controls
 {
     /// <summary>
     /// Keyboard driving for editor testing. W/↑ throttle, S/↓ brake, A/D/←/→ steer (rate-limited, auto-centre),
-    /// 1/2/3 = D/N/R, E/Q = shift +/-, M = auto/manual, Space = parking brake. Analog values ramp so keys behave like pedals.
+    /// 1/2/3 = D/N/R, E/Q = shift +/-, M = auto/manual, Space = parking brake; Stage 2: X/Z = retarder stalk more/less,
+    /// C = couple (arm jaw) / uncouple, G = landing gear, B = brake cruise, V = reversing camera. Analog values ramp so keys behave like pedals.
     /// </summary>
     public sealed class KeyboardDriverInput : IDriverInput
     {
@@ -49,6 +50,12 @@ namespace Game.Controls
             if (kb.qKey.wasPressedThisFrame) intent.ShiftDelta -= 1;
             if (kb.spaceKey.wasPressedThisFrame) intent.ToggleParkingBrake = true;
             if (kb.mKey.wasPressedThisFrame) intent.ToggleManual = true;
+            if (kb.xKey.wasPressedThisFrame) intent.RetarderDelta += 1;
+            if (kb.zKey.wasPressedThisFrame) intent.RetarderDelta -= 1;
+            if (kb.cKey.wasPressedThisFrame) intent.ToggleCoupling = true;
+            if (kb.gKey.wasPressedThisFrame) intent.ToggleLandingGear = true;
+            if (kb.bKey.wasPressedThisFrame) intent.ToggleBrakeCruise = true;
+            if (kb.vKey.wasPressedThisFrame) intent.ToggleReverseCamera = true;
         }
     }
 }

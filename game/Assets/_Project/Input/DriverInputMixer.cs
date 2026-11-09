@@ -51,6 +51,11 @@ namespace Game.Controls
                 result.ShiftDelta += it.ShiftDelta;
                 result.ToggleParkingBrake |= it.ToggleParkingBrake;
                 result.ToggleManual |= it.ToggleManual;
+                result.RetarderDelta += it.RetarderDelta;
+                result.ToggleCoupling |= it.ToggleCoupling;
+                result.ToggleLandingGear |= it.ToggleLandingGear;
+                result.ToggleBrakeCruise |= it.ToggleBrakeCruise;
+                result.ToggleReverseCamera |= it.ToggleReverseCamera;
             }
             if (!steered) SteeringSource = "-";
             return result;

@@ -26,6 +26,16 @@ namespace Game.Controls
         public bool ToggleParkingBrake;
         /// <summary>One-shot: toggle AMT automatic / manual mode.</summary>
         public bool ToggleManual;
+        /// <summary>One-shot: endurance-brake stalk steps (+1 = one detent more braking, -1 = less).</summary>
+        public int RetarderDelta;
+        /// <summary>One-shot: arm the fifth-wheel jaw / uncouple.</summary>
+        public bool ToggleCoupling;
+        /// <summary>One-shot: crank the landing gear down / up.</summary>
+        public bool ToggleLandingGear;
+        /// <summary>One-shot: downhill speed control (brake cruise) on at the current speed / off.</summary>
+        public bool ToggleBrakeCruise;
+        /// <summary>One-shot: reversing camera view on / auto.</summary>
+        public bool ToggleReverseCamera;
 
         public void ClearCommands()
         {
@@ -33,6 +43,11 @@ namespace Game.Controls
             ShiftDelta = 0;
             ToggleParkingBrake = false;
             ToggleManual = false;
+            RetarderDelta = 0;
+            ToggleCoupling = false;
+            ToggleLandingGear = false;
+            ToggleBrakeCruise = false;
+            ToggleReverseCamera = false;
         }
     }
 

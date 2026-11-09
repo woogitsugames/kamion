@@ -27,6 +27,23 @@ namespace Game.UI.Driving
         public Func<bool> IsGyroMode;
         public Action ToggleSteeringMode, ToggleWheelRange, ResetVehicle, OpenMenu;
         public Func<string> StatusLine;
+
+        // ---- Stage 2 (lab actions; the stalk, coupling and landing-gear buttons go through TouchControls) ----
+        /// <summary>Respawn: 0 solo (trailer parked in the coupling bay), 1 empty, 2 24 t cargo, 3 40 t gross.</summary>
+        public Action<int> Spawn;
+        public Func<int> CurrentSpawn;
+        public Action ToggleAbsFault;
+        public Func<bool> AbsFault;
+        /// <summary>Endurance-brake stalk position (0 off, 1 engine brake, 2.. retarder stages) and its maximum.</summary>
+        public Func<int> RetarderLever;
+        public int RetarderLeverMax = 5;
+        /// <summary>Brake-cruise set speed [km/h], 0 = off.</summary>
+        public Func<float> BrakeCruiseKmh;
+        /// <summary>One line about the trailer (coupled / parked, jaw-to-kingpin guide), empty without a trailer.</summary>
+        public Func<string> CouplingStatus;
+        /// <summary>Texture of the active reversing camera, or null when the view is hidden.</summary>
+        public Func<Texture> ReverseCameraTexture;
+        public Func<string> ReverseCameraLabel;
     }
 
     /// <summary>
@@ -37,6 +54,10 @@ namespace Game.UI.Driving
     /// telemetry panel (per-wheel load and slip, physics step time, frame-time percentiles).
     /// Laid out inside Screen.safeArea; reference 1920×1080 scaled by height (A16 landscape = 2340×1080).
     /// Calm palette (dark translucent panels, off-white text, muted accent) — no neon, no glass effects.
+    /// Stage 2: endurance-brake stalk (0 / engine brake / retarder R1–R4) + brake cruise right of the wheel; warning
+    /// strip under the readout (ABS, low air STOP, engine brake, retarder, both service-circuit pressures);
+    /// coupling / landing-gear / lab-menu buttons (third row top right); reversing-camera view (top centre) while
+    /// reversing; telemetry with articulation, kingpin load and trailer data.
     /// </summary>
     public sealed class DrivingHud : MonoBehaviour
     {
@@ -58,7 +79,17 @@ namespace Game.UI.Driving
         Rect m_AppliedSafe;
         Vector2Int m_AppliedScreen;
 
-        GameObject m_WheelGo, m_GyroGo, m_TelemetryPanel;
+        GameObject m_WheelGo, m_GyroGo, m_TelemetryPanel, m_LabPanel, m_ReversePanel;
+        Text m_Coupling, m_ReverseLabel, m_LampAbs, m_LampStop, m_LampEb, m_LampRet, m_Air1, m_Air2, m_CruiseLabel, m_AbsFaultLabel;
+        Image m_Air1Bar, m_Air2Bar;
+        RawImage m_ReverseImage;
+        readonly Image[] m_StalkCells = new Image[6];
+        readonly Image[] m_SpawnBtns = new Image[4];
+        Image m_CruiseBtn;
+        int m_LastAir1 = int.MinValue, m_LastAir2 = int.MinValue;
+        static readonly string[] k_AirStrings = BuildAirStrings();
+        static readonly string[] k_CruiseStrings = BuildCruiseStrings();
+        const string k_CruiseOff = "Zjazd\nwył.";
         Text m_Speed, m_Gear, m_Rpm, m_Park, m_Status, m_Telemetry, m_GyroLabel;
         Text m_CamLabel, m_SteerLabel, m_TelLabel, m_RecLabel;
         Image m_RpmBar, m_RecImage, m_DriveBtn, m_NeutralBtn, m_ReverseBtn, m_ParkBtn, m_ManualBtn;
@@ -120,6 +151,7 @@ namespace Game.UI.Driving
             BuildWheel();
             BuildGyroPanel();
             BuildPedalsAndGears();
+            BuildStage2();
             EnsureEventSystem();
             ApplySafeArea();
             RefreshLabels();
@@ -144,7 +176,7 @@ namespace Game.UI.Driving
             m_Rpm = Label(p, "Rpm", "600 obr/min", SmallFont, TextAnchor.UpperLeft, new Vector2(24f, 112f), new Vector2(300f, 30f));
             m_Rpm.color = k_Muted;
             m_Status = Label(m_SafeArea, "Status", "", SmallFont, TextAnchor.UpperCenter, Vector2.zero, new Vector2(900f, 34f));
-            Place((RectTransform)m_Status.transform, new Vector2(0.5f, 1f), new Vector2(-450f, -206f), new Vector2(900f, 34f));
+            Place((RectTransform)m_Status.transform, new Vector2(0.5f, 1f), new Vector2(-450f, -280f), new Vector2(900f, 34f));
             m_Status.color = k_Amber;
         }
 
@@ -164,9 +196,9 @@ namespace Game.UI.Driving
 
         void BuildTelemetryPanel()
         {
-            var p = Panel("Telemetry", m_SafeArea, new Vector2(0f, 1f), new Vector2(24f, -24f), new Vector2(760f, 470f));
+            var p = Panel("Telemetry", m_SafeArea, new Vector2(0f, 1f), new Vector2(24f, -24f), new Vector2(800f, 500f));
             m_TelemetryPanel = p.gameObject;
-            m_Telemetry = Label(p, "Body", "", SmallFont, TextAnchor.UpperLeft, new Vector2(18f, 12f), new Vector2(730f, 450f));
+            m_Telemetry = Label(p, "Body", "", SmallFont, TextAnchor.UpperLeft, new Vector2(18f, 10f), new Vector2(770f, 484f));
             m_Telemetry.font = m_Font;
             m_TelemetryPanel.SetActive(false);
         }
@@ -214,6 +246,123 @@ namespace Game.UI.Driving
             Button(m_SafeArea, "ShiftUp", br, new Vector2(x + (bw + g), y2), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestShift(+1), out _).text = "+";
             Button(m_SafeArea, "Manual", br, new Vector2(x + 2 * (bw + g), y2), new Vector2(2 * bw + g, bh), () => m_Ctx.Touch?.RequestManualToggle(), out m_ManualBtn).text = "A/M";
         }
+
+        static readonly string[] k_StalkLabels = { "0", "HS", "R1", "R2", "R3", "R4" };
+
+        void BuildStage2()
+        {
+            // ---- warning strip under the readout ----
+            var strip = Panel("Warnings", m_SafeArea, new Vector2(0.5f, 1f), new Vector2(0f, -178f), new Vector2(560f, 92f));
+            m_LampAbs = Lamp(strip, "ABS", 10f);
+            m_LampStop = Lamp(strip, "STOP", 92f);
+            m_LampEb = Lamp(strip, "HS", 174f);
+            m_LampRet = Lamp(strip, "RET", 256f);
+            m_Air1 = Label(strip, "Air1", "1  — bar", SmallFont - 2, TextAnchor.MiddleLeft, new Vector2(346f, 50f), new Vector2(200f, 34f));
+            m_Air2 = Label(strip, "Air2", "2  — bar", SmallFont - 2, TextAnchor.MiddleLeft, new Vector2(346f, 8f), new Vector2(200f, 34f));
+            m_Air1Bar = Bar(strip, "Air1Bar", new Vector2(346f, 46f));
+            m_Air2Bar = Bar(strip, "Air2Bar", new Vector2(346f, 4f));
+
+            // ---- coupling status (under the status line) ----
+            m_Coupling = Label(m_SafeArea, "Coupling", "", SmallFont, TextAnchor.UpperCenter, Vector2.zero, new Vector2(1100f, 34f));
+            Place((RectTransform)m_Coupling.transform, new Vector2(0.5f, 1f), new Vector2(-550f, -318f), new Vector2(1100f, 34f));
+            m_Coupling.color = k_Muted;
+
+            // ---- endurance-brake stalk + brake cruise, right of the steering wheel ----
+            var stalk = Rect("Stalk", m_SafeArea);
+            Place(stalk, Vector2.zero, new Vector2(530f, 40f), new Vector2(116f, 476f));
+            var title = Label(stalk, "Title", "Hamulce\nzwalniające", 18, TextAnchor.UpperCenter, new Vector2(0f, 384f), new Vector2(116f, 50f));
+            title.color = k_Muted;
+            const float ch = 48f, cg = 5f;
+            for (int i = 0; i < k_StalkLabels.Length; i++)
+            {
+                int stage = i;
+                float y = 6 * (ch + cg) - (i + 1) * (ch + cg) + 0f;
+                Button(stalk, "Stalk" + k_StalkLabels[i], Vector2.zero, new Vector2(0f, y), new Vector2(116f, ch),
+                    () => { if (m_Ctx.Touch != null && m_Ctx.RetarderLever != null) m_Ctx.Touch.RequestRetarderStep(stage - m_Ctx.RetarderLever()); }, out m_StalkCells[i]).text = k_StalkLabels[i];
+            }
+            m_CruiseLabel = Button(stalk, "Cruise", Vector2.zero, new Vector2(0f, 6 * (ch + cg) + 4f), new Vector2(116f, 60f),
+                () => m_Ctx.Touch?.RequestBrakeCruiseToggle(), out m_CruiseBtn);
+            m_CruiseLabel.fontSize = 20;
+
+            // ---- third row top right: lab menu, coupling, landing gear ----
+            const float w = 200f, h = 74f, gap = 10f;
+            Vector2 a = new Vector2(1f, 1f);
+            float x0 = -24f - 3 * w - 2 * gap, y3 = -24f - 3 * h - 2 * gap;
+            Button(m_SafeArea, "Lab", a, new Vector2(x0, y3), new Vector2(w, h), () => { m_LabPanel.SetActive(!m_LabPanel.activeSelf); }, out _).text = "Zestaw…";
+            Button(m_SafeArea, "Couple", a, new Vector2(x0 + w + gap, y3), new Vector2(w, h), () => m_Ctx.Touch?.RequestCouplingToggle(), out _).text = "Siodło";
+            Button(m_SafeArea, "Legs", a, new Vector2(x0 + 2 * (w + gap), y3), new Vector2(w, h), () => m_Ctx.Touch?.RequestLandingGearToggle(), out _).text = "Nogi ↑↓";
+
+            // ---- lab panel (spawn presets, ABS fault, reversing camera) ----
+            var lab = Panel("LabPanel", m_SafeArea, a, new Vector2(-24f, y3 - gap), new Vector2(3 * w + 2 * gap, 2 * h + 3 * gap + 36f));
+            lab.GetComponent<Image>().raycastTarget = true;
+            Label(lab, "Title", "Start zestawu (reset pozycji)", SmallFont - 2, TextAnchor.MiddleLeft, new Vector2(12f, 2 * h + 2 * gap), new Vector2(560f, 34f)).color = k_Muted;
+            string[] names = { "Solo", "Pusta", "24 t", "40 t" };
+            float bw = (3 * w + 2 * gap - 5 * gap) / 4f;
+            for (int i = 0; i < 4; i++)
+            {
+                int idx = i;
+                Button(lab, "Spawn" + i, Vector2.zero, new Vector2(gap + i * (bw + gap), h + 2 * gap), new Vector2(bw, h), () => { m_Ctx.Spawn?.Invoke(idx); m_LabPanel.SetActive(false); }, out m_SpawnBtns[i]).text = names[i];
+            }
+            float hw2 = (3 * w + 2 * gap - 3 * gap) / 2f;
+            m_AbsFaultLabel = Button(lab, "AbsFault", Vector2.zero, new Vector2(gap, gap), new Vector2(hw2, h), () => m_Ctx.ToggleAbsFault?.Invoke(), out _);
+            Button(lab, "RevCam", Vector2.zero, new Vector2(2 * gap + hw2, gap), new Vector2(hw2, h), () => m_Ctx.Touch?.RequestReverseCameraToggle(), out _).text = "Kamera cofania";
+            m_LabPanel = lab.gameObject;
+            m_LabPanel.SetActive(false);
+
+            // ---- reversing camera view (top centre) ----
+            var rev = Rect("ReverseView", m_SafeArea);
+            Place(rev, new Vector2(0.5f, 1f), new Vector2(-280f, -362f - 315f), new Vector2(560f, 315f));
+            var frame = rev.gameObject.AddComponent<Image>();
+            frame.color = k_Panel; frame.raycastTarget = false;
+            var imgRt = Rect("Image", rev);
+            imgRt.anchorMin = Vector2.zero; imgRt.anchorMax = Vector2.one; imgRt.offsetMin = new Vector2(6f, 6f); imgRt.offsetMax = new Vector2(-6f, -6f);
+            m_ReverseImage = imgRt.gameObject.AddComponent<RawImage>();
+            m_ReverseImage.raycastTarget = false;
+            var labelBg = Rect("LabelBg", rev);
+            Place(labelBg, Vector2.zero, new Vector2(6f, 273f), new Vector2(330f, 36f));
+            var lbi = labelBg.gameObject.AddComponent<Image>();
+            lbi.color = k_Panel; lbi.raycastTarget = false;
+            m_ReverseLabel = Label(rev, "Label", "KAMERA COFANIA", 18, TextAnchor.MiddleLeft, new Vector2(16f, 273f), new Vector2(320f, 36f));
+            m_ReversePanel = rev.gameObject;
+            m_ReversePanel.SetActive(false);
+        }
+
+        Text Lamp(RectTransform parent, string text, float x)
+        {
+            var t = Label(parent, "Lamp" + text, text, 24, TextAnchor.MiddleCenter, new Vector2(x, 14f), new Vector2(76f, 64f));
+            t.color = k_LampOff;
+            return t;
+        }
+
+        Image Bar(RectTransform parent, string name, Vector2 pos)
+        {
+            var bg = Rect(name + "Bg", parent);
+            Place(bg, Vector2.zero, pos, new Vector2(200f, 6f));
+            bg.gameObject.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.12f);
+            var bar = Rect(name, bg);
+            bar.anchorMin = Vector2.zero; bar.anchorMax = new Vector2(0f, 1f); bar.offsetMin = bar.offsetMax = Vector2.zero;
+            var img = bar.gameObject.AddComponent<Image>();
+            img.color = k_Muted; img.raycastTarget = false;
+            return img;
+        }
+
+        static string[] BuildCruiseStrings()
+        {
+            var a = new string[121];
+            for (int i = 0; i < a.Length; i++) a[i] = "Zjazd\n" + i.ToString(CultureInfo.InvariantCulture) + " km/h";
+            return a;
+        }
+
+        static string[] BuildAirStrings()
+        {
+            // 0.0 .. 15.0 bar in 0.1 steps, prefixed per circuit at use time (no per-frame formatting).
+            var a = new string[151];
+            for (int i = 0; i < a.Length; i++) a[i] = (i / 10f).ToString("F1", CultureInfo.InvariantCulture) + " bar";
+            return a;
+        }
+
+        static readonly Color k_LampOff = new Color(1f, 1f, 1f, 0.16f);
+        static readonly Color k_Green = new Color(0.55f, 0.80f, 0.50f, 1f);
 
         RectTransform PedalRect(string name, Vector2 pos, Vector2 size, Color fillColor, string label, Action<float> onValue)
         {
@@ -292,7 +441,58 @@ namespace Game.UI.Driving
                 m_Telemetry.text = BuildTelemetry();
             }
             if (m_RecImage != null) m_RecImage.color = m_Ctx.Recorder != null && m_Ctx.Recorder.IsRecording ? new Color(0.55f, 0.16f, 0.14f, 0.95f) : k_Button;
+            RefreshStage2(v);
         }
+
+        void RefreshStage2(VehicleBody v)
+        {
+            int lever = m_Ctx.RetarderLever != null ? m_Ctx.RetarderLever() : 0;
+            for (int i = 0; i < m_StalkCells.Length; i++) m_StalkCells[i].color = i == lever ? (i == 0 ? k_ButtonOn : new Color(0.42f, 0.36f, 0.20f, 0.95f)) : k_Button;
+            float cruise = m_Ctx.BrakeCruiseKmh != null ? m_Ctx.BrakeCruiseKmh() : 0f;
+            string cl = cruise > 0f ? k_CruiseStrings[Mathf.Clamp(Mathf.RoundToInt(cruise), 0, k_CruiseStrings.Length - 1)] : k_CruiseOff;
+            if (!ReferenceEquals(m_CruiseLabel.text, cl)) m_CruiseLabel.text = cl;
+            m_CruiseBtn.color = cruise > 0f ? k_ButtonOn : k_Button;
+            int spawn = m_Ctx.CurrentSpawn != null ? m_Ctx.CurrentSpawn() : -1;
+            for (int i = 0; i < m_SpawnBtns.Length; i++) m_SpawnBtns[i].color = i == spawn ? k_ButtonOn : k_Button;
+            bool fault = m_Ctx.AbsFault != null && m_Ctx.AbsFault();
+            string fl = fault ? "ABS: USTERKA" : "ABS: sprawny";
+            if (!ReferenceEquals(m_AbsFaultLabel.text, fl)) m_AbsFaultLabel.text = fl;
+
+            bool absActive = false, low = false, eb = false, ret = false;
+            double p1 = 0, p2 = 0;
+            if (v != null && v.Initialized)
+            {
+                var m = v.Model;
+                absActive = m.Air.AbsAnyActive || (v.Trailer != null && v.Coupled && v.Trailer.Model.Brakes.AbsAnyActive);
+                low = m.Air.LowPressureWarning;
+                eb = m.Engine.EngineBrakeState > 0.05;
+                ret = m.Retarder.Torque > 50;
+                p1 = m.Air.Front; p2 = m.Air.Rear;
+            }
+            m_LampAbs.color = fault || absActive ? k_Amber : k_LampOff;
+            m_LampStop.color = low ? k_Red : k_LampOff;
+            m_LampEb.color = eb ? k_Green : k_LampOff;
+            m_LampRet.color = ret ? k_Green : k_LampOff;
+            int i1 = Mathf.Clamp(Mathf.RoundToInt((float)p1 * 10f), 0, 150), i2 = Mathf.Clamp(Mathf.RoundToInt((float)p2 * 10f), 0, 150);
+            if (i1 != m_LastAir1) { m_LastAir1 = i1; m_Air1.text = k_AirStrings[i1]; m_Air1Bar.rectTransform.anchorMax = new Vector2(Mathf.Clamp01(i1 / 130f), 1f); m_Air1Bar.color = low ? k_Red : k_Muted; }
+            if (i2 != m_LastAir2) { m_LastAir2 = i2; m_Air2.text = k_AirStrings[i2]; m_Air2Bar.rectTransform.anchorMax = new Vector2(Mathf.Clamp01(i2 / 130f), 1f); m_Air2Bar.color = low ? k_Red : k_Muted; }
+
+            if (m_Ctx.CouplingStatus != null && Time.unscaledTime >= m_NextCoupling)
+            {
+                m_NextCoupling = Time.unscaledTime + 0.1f;
+                m_Coupling.text = m_Ctx.CouplingStatus() ?? "";
+            }
+            var tex = m_Ctx.ReverseCameraTexture != null ? m_Ctx.ReverseCameraTexture() : null;
+            bool show = tex != null;
+            if (m_ReversePanel.activeSelf != show) m_ReversePanel.SetActive(show);
+            if (show)
+            {
+                if (m_ReverseImage.texture != tex) m_ReverseImage.texture = tex;
+                if (m_Ctx.ReverseCameraLabel != null) { var l = m_Ctx.ReverseCameraLabel(); if (!ReferenceEquals(l, m_ReverseLabel.text)) m_ReverseLabel.text = l; }
+            }
+        }
+
+        float m_NextCoupling;
 
         static readonly string[] k_DriveGears = BuildGearLabels("D"), k_ManualGears = BuildGearLabels("M");
 
@@ -325,7 +525,22 @@ namespace Game.UI.Driving
               .Append("  hamulec ").Append(inp.Brake.ToString("F2", ci)).Append("→").Append(m.BrakeDemand.ToString("F2", ci))
               .Append("  skręt ").Append(inp.Steer.ToString("+0.00;-0.00", ci)).Append(" (koło kier. ").Append(m.Steering.HandwheelDeg.ToString("F0", ci)).Append("°)\n");
             sb.Append("powietrze ").Append(m.Air.Front.ToString("F1", ci)).Append('/').Append(m.Air.Rear.ToString("F1", ci))
-              .Append(" bar  postojowy ").Append(m.ParkingBrakeState.ToString("F2", ci)).Append(m.HillHoldActive ? "  HSA" : "").Append('\n');
+              .Append(" bar  postojowy ").Append(m.ParkingBrakeState.ToString("F2", ci)).Append(m.HillHoldActive ? "  HSA" : "")
+              .Append("  dźwignia ").Append(inp.RetarderLever).Append("  HS ").Append(m.Engine.EngineBrakeTorque.ToString("F0", ci))
+              .Append(" Nm  ret ").Append(m.Retarder.Torque.ToString("F0", ci)).Append(" Nm\n");
+            if (v.Trailer != null)
+            {
+                var fw = v.Combination.FifthWheel;
+                var tm = v.Trailer.Model;
+                sb.Append("naczepa ").Append((tm.Mass / 1000).ToString("F1", ci)).Append(" t  ").Append(fw.Coupled ? "sprzężona" : "odpięta")
+                  .Append("  przegub ").Append((fw.Articulation * MathUtil.Rad2Deg).ToString("+0.0;-0.0", ci)).Append("°  siodło Fz ")
+                  .Append((fw.KingpinLoadLocal.y / 1000).ToString("F0", ci)).Append(" kN Fx ").Append((fw.KingpinLoadLocal.z / 1000).ToString("F0", ci))
+                  .Append(" kN  błąd ").Append((fw.PositionError * 1000).ToString("F2", ci)).Append(" mm\n");
+                double tl = 0; foreach (var tw in tm.Wheels) tl += tw.Fz;
+                sb.Append("  osie naczepy ").Append((tl / 1000).ToString("F0", ci)).Append(" kN  nogi ").Append((tm.LandingGearLoad / 1000).ToString("F0", ci))
+                  .Append(" kN  zbiornik ").Append(tm.Brakes.Reservoir.ToString("F1", ci)).Append(" bar").Append(tm.Brakes.Emergency ? "  HAM. AWARYJNE" : "")
+                  .Append(tm.Brakes.AbsAnyActive ? "  ABS" : "").Append('\n');
+            }
             sb.Append("koło    Fz kN   poślizg  znos°  ugięcie  nawierzchnia\n");
             var ws = m.Wheels;
             for (int i = 0; i < ws.Length; i++)
