@@ -34,6 +34,15 @@ Sprawdzone, ale **niepobrane** (opcje `ingest.py --with nmpt|trees|lidar`): NMPT
 ## Narzędzia (biblioteki Pythona w `tools/worldgen`, wersje w `tools/worldgen/uv.lock`)
 Używane tylko w pipeline, nie są dystrybuowane w buildzie: osmium (pyosmium, BSD-2), shapely (BSD-3), pyproj (MIT), geopandas (BSD-3), pyogrio (MIT), networkx (BSD-3), matplotlib (PSF-based/matplotlib licence), numpy (BSD-3), Pillow (MIT-CMU), requests (Apache-2.0), rasterio (BSD-3, z wbudowanym GDAL — MIT/X), PyYAML (MIT), pytest (MIT, tylko testy).
 
+## Zasoby gry generowane kodem i wbudowane (Etap 1)
+
+| Zasób | Pochodzenie | Licencja | Użycie |
+|---|---|---|---|
+| Tekstury placu `Environment/DrivingLab/Textures/T_*.png` (asfalt, beton, kostka, żwir, trawa), siatki, materiały | generowane proceduralnie przez `DrivingLabSceneBuilder.cs` (szum z hasha, bez zewnętrznych zdjęć) | własne (repo) | DrivingLab |
+| Graybox ciągnika `Vehicle/Runtime/Prefabs/Tractor4x2_Graybox.prefab` | generowany z prymitywów Unity przez `GrayboxTractorBuilder.cs` | własne (repo) | DrivingLab, testy |
+| Sprite kierownicy HUD | generowany w kodzie (`DrivingHud.WheelSprite`) | własne | HUD |
+| Czcionka `LegacyRuntime.ttf` | wbudowany zasób edytora Unity (`Resources.GetBuiltinResource`) | w ramach licencji Unity Editor/Runtime | HUD, tablice na placu (tymczasowo, do zastąpienia czcionką docelową) |
+
 ## Audio
 
 Wszystkie dźwięki poniżej są **w 100% syntetyzowane naszym kodem** (numpy/scipy) — bez nagrań, sampli, banków dźwięków ani generatorów AI. Brak praw osób trzecich; licencja = licencja projektu. Opis modelu: `docs/AUDIO_DESIGN.md`.

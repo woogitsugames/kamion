@@ -8,3 +8,9 @@
 ## Stage 0 — build-qa update (2026-11-09)
 - Done: project hygiene + asmdefs, Android player settings + URP tiers as code (ADR 0006), Boot scene with diagnostics overlay and frame-time CSV, batchmode build/visual-QA/test/device scripts, doctor green, clean-clone build verified, APK installed on Galaxy A16, physics + audio code compile in Unity.
 - Blocked / needs owner: Galaxy A16 is behind a PIN lock screen — unlock it so the Boot scene can be measured (FPS p50/p95/p99, PSS, temperature, phone screenshot). See docs/reports/GATE-0.md.
+
+## Stage 1 — driving lab (integration, 2026-11-09)
+- Done: physics Stage 2 merged (`92a6a97`); Unity adapter `Vehicle/Runtime` (PhysX body + pure C# solver, 100 Hz, zero GC/step, ADR 0008); graybox tractor prefab at dims.json dimensions; generated `DrivingLab` scene (pad, circles, figure-eight, 6/12 % ramps, 8/15 cm curbs, bump, ruts, six surfaces); input layer (`IDriverInput`: touch wheel, pedals, gyro, keyboard, autopilot); cab/chase/orbit cameras; HUD + telemetry overlay + CSV; Boot → DrivingLab; APK `kamion-0.1.0-72402a4971` builds clean; visual QA reviewed, 5 defects fixed. Tests: EditMode 18/18, PlayMode 10/10 (0–60 9.84 s vs runner 9.678 s; 12 % parked drift ≤ 5 mm/60 s; curb 15 cm max Δv 0.092 m/s; 0 GC).
+- Plan/checklist: `docs/plan/STAGE-1.md`. Owner report draft: `docs/reports/GATE-1-draft.md`.
+- Blocked / needs owner: Galaxy A16 PIN-locked during the whole session → no install/run/FPS/screenshot for Gate 0 or Gate 1; owner feel test pending (steering range, self-centre, gyro sign, pedal curves).
+- Open requests: surface table with sourced values in the core (vehicle-physics); AMT shift pitch rock on the empty tractor; trailer in DrivingLab (stretch).
