@@ -28,7 +28,7 @@ namespace Game.Vehicle.Runtime
         public float frameWidthOuter = 0.85f;
         public float frameTopHeight = 0.97f;
         public float fifthWheelHeight = 1.15f;
-        public float fifthWheelLead = 0.55f;
+        public float fifthWheelLead = 0.68f;   // ADR 0019 (was 0.55)
         public float dualSpacing = 0.34f;
         public float tyreSectionWidth = 0.315f;
         public float rimFlangeDiameter = 0.60f;
