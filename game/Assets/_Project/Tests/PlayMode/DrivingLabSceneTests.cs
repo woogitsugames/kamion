@@ -31,6 +31,16 @@ namespace Game.Tests
             Assert.Greater(body.StepCount, 50, "physics must be stepping");
             Assert.Less(drift, 0.05f, "parked truck must stay at the spawn");
             foreach (var w in body.Model.Wheels) Assert.IsTrue(w.Contact, w.Name + " has no ground contact");
+            // Engine audio is wired to the physics when the generated library exists (gitignored WAVs).
+            var audio = Object.FindAnyObjectByType<TruckAudioController>();
+            Assert.IsNotNull(audio, "audio controller missing");
+            if (TruckSim.Audio.VehicleAudioLibrary.LoadDefault() != null)
+            {
+                Assert.IsTrue(audio.HasAudio, "engine audio not started");
+                Debug.Log($"[TEST] audio: {audio.Engine.ActiveEngineVoices} engine voices at {audio.Rpm:F0} rpm, interior blend {audio.InteriorBlend:F2}");
+                Assert.Greater(audio.Engine.ActiveEngineVoices, 0, "idle loop voices playing");
+            }
+            else Debug.LogWarning("[TEST] VehicleAudioLibrary not generated - audio part skipped");
         }
 
         /// <summary>Stage 2: every lab spawn preset puts the combination at rest (coupled presets: kingpin in the jaw).</summary>
