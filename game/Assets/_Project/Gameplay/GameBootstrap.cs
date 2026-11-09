@@ -5,6 +5,7 @@ using Game.Rendering;
 using Game.Telemetry;
 using Game.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Game.Gameplay
 {
@@ -21,6 +22,14 @@ namespace Game.Gameplay
         [SerializeField] bool showOverlay = true;
 
         public IPlatformServices Platform { get; private set; }
+        string m_PendingScene;
+
+        void Start()
+        {
+            if (string.IsNullOrEmpty(m_PendingScene)) return;
+            Debug.Log($"[BOOT] launch argument scene={m_PendingScene}");
+            SceneManager.LoadScene(m_PendingScene);
+        }
 
         void Awake()
         {
@@ -52,6 +61,14 @@ namespace Game.Gameplay
                 var overlay = DiagnosticsOverlay.Create(cam, Platform, sampler);
                 overlay.transform.SetParent(transform, false);
             }
+
+            BootMenu.Create(Camera.main, ("Plac testowy — jazda", () => SceneManager.LoadScene(DrivingLabLayout.SceneName)))
+                .transform.SetParent(transform, false);
+
+            // Launch argument "scene" (adb: -e scene DrivingLab) jumps straight into a scene; the remaining
+            // arguments (autopilot, speed) are read by that scene's bootstrap.
+            string scene = Platform.GetLaunchArgument("scene");
+            if (!string.IsNullOrEmpty(scene)) m_PendingScene = scene;
         }
     }
 }
