@@ -1,4 +1,4 @@
-// Kamion/World Wire - power-line conductors (generator layer "wires", ADR 0019, REVIEW r4 W-H2).
+// Kamion/World Wire - power-line conductors (generator layer "wires", ADR 0022, REVIEW r4 W-H2).
 // The generator writes each conductor as a thin vertical ribbon: TEXCOORD_0 = (side -1/+1, physical half width m),
 // COLOR_0 = 3D tangent * 0.5 + 0.5 in the generator frame (E, N, U) -> Unity (r, b, g). The vertex shader rebuilds the
 // centre line and re-expands it towards the camera to at least _MinPixels px; alpha = physical width / drawn width, so a

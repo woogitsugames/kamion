@@ -178,7 +178,7 @@ def test_terrain_stays_below_road(world):
     road_z, mask = CF.rasterise([p for p in w.buf.parts if p.layer == "road"], w.hf)
     zc = np.load(world["out"] / "terrain_conformed.npy").astype(np.float64)
     # hard surfaces (carriageway, kerbs, paving) and their 2-node neighbourhood: 0.30 m clearance; grass verge
-    # strips far from them only need the terrain under the grass (CF.SOFT_UNDER, ADR 0019 / REVIEW r3 W3)
+    # strips far from them only need the terrain under the grass (CF.SOFT_UNDER, ADR 0022 / REVIEW r3 W3)
     _, hard = CF.rasterise([p for p in w.buf.parts if p.layer == "road" and p.mat != "verge_grass"], w.hf)
     near_hard = mask & ndimage.binary_dilation(hard, iterations=CF.SOFT_CLEAR_CELLS)
     gap = road_z[near_hard] - zc[near_hard]

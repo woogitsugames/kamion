@@ -12,11 +12,11 @@
   Output : game/Assets/_Generated/World/<id>/ (gitignored): Meshes/{Low,High}/*.asset, Collision/*.asset, Materials/,
            Textures/, Instances.asset, WorldC.unity (Low/Medium content, in the build list), WorldC_High.unity (High
            content, shipped only with build-android.ps1 -WorldHigh). Memory report: artifacts/world/<id>-import.json.
-  PBR texture sets (ADR 0019): art-source/world/materials/<set>/<tier>/*.png are not versioned; when any file listed in
+  PBR texture sets (ADR 0022): art-source/world/materials/<set>/<tier>/*.png are not versioned; when any file listed in
   materials_spec.json is missing for -MaterialTier (default Medium) the generator _src/build_all.py runs first (all
   tiers, deterministic, ~4 min), then Unity copies the tier into _Generated/.../Textures/PBR with ASTC per the spec.
   Decision records: docs/adr/0011-world-import-gltfast.md, docs/adr/0012-world-content-tiers-instancing.md,
-  docs/adr/0019-world-pbr-materials.md.
+  docs/adr/0022-world-pbr-materials.md.
   One Unity per project: fails if game/ is open elsewhere.
 #>
 param(
@@ -40,7 +40,7 @@ if ($Build -or -not (Test-Path $route)) {
     if ($LASTEXITCODE -ne 0) { throw "export-route.py failed ($LASTEXITCODE)" }
 }
 
-# PBR texture sets (ADR 0019): build when any file of the spec is missing for the tier
+# PBR texture sets (ADR 0022): build when any file of the spec is missing for the tier
 $matRoot = Join-Path $RepoRoot 'art-source/world/materials'
 $spec = Get-Content (Join-Path $matRoot 'materials_spec.json') -Raw | ConvertFrom-Json
 $missing = 0

@@ -1,4 +1,4 @@
-// Kamion/World PBR - generated PBR texture sets of the world (art-source/world/materials, ADR 0019).
+// Kamion/World PBR - generated PBR texture sets of the world (art-source/world/materials, ADR 0022).
 // Contract: art-source/world/materials/materials_spec.json (packing, tile size, UV mode per set):
 //   _BaseMap   sRGB albedo. "calibrated" sets carry the real albedo (_Tint = 1, _AlbedoScale = 1); "modulation" sets
 //              (facades, props) are neutral grey with mean 0.5 and are tinted by the manifest colour (_AlbedoScale 2).

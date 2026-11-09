@@ -133,7 +133,7 @@ namespace Game.World.Import
                         Normals = a.Get("NORMAL") != null ? ReadVec3(a.Get("NORMAL"), true) : null,
                         Uv0 = a.Get("TEXCOORD_0") != null ? ReadVec2(a.Get("TEXCOORD_0"), true) : null,
                         // The generator writes every UV set with v flipped (glTF convention, terrain_mesh/gltf.py), so
-                        // TEXCOORD_1 is flipped back like TEXCOORD_0 (before ADR 0019 it was read as 1 - v: far facades
+                        // TEXCOORD_1 is flipped back like TEXCOORD_0 (before ADR 0022 it was read as 1 - v: far facades
                         // drew panes only on the ground floor, REVIEW r4 W-H4 / W-H7).
                         Uv1 = a.Get("TEXCOORD_1") != null ? ReadVec2(a.Get("TEXCOORD_1"), true) : null,
                         Colors = a.Get("COLOR_0") != null ? ReadColor(a.Get("COLOR_0")) : null,

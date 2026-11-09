@@ -1,4 +1,4 @@
-# World C v3.3 (ADR 0019) — before / after frames
+# World C v3.3 (ADR 0022) — before / after frames
 
 Unity frames: `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low` and `-Scene WorldC_High -Tier High`, overcast unless
 named, 2340 × 1080 shrunk to 800 px. "before" = main at 88d51c4 (import of 2026-11-09 21:04), "after" = this branch.

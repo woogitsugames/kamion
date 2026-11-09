@@ -12,7 +12,7 @@ using static Game.World.Import.MiniJson;
 namespace Game.World.Import
 {
     /// <summary>
-    /// Generated PBR texture sets of the world (ADR 0019) → <c>Kamion/World PBR</c> materials.
+    /// Generated PBR texture sets of the world (ADR 0022) → <c>Kamion/World PBR</c> materials.
     /// Source: art-source/world/materials/materials_spec.json + PNGs built by _src/build_all.py (not in git; the import
     /// script builds them when missing). A manifest material with <c>texture_set</c> naming a set of the spec gets a PBR
     /// material: "tiling_set" (calibrated albedo, world-planar or mesh UV), "modulation_set" (neutral map × manifest

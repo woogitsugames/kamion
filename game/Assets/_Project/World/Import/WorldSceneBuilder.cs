@@ -130,7 +130,7 @@ namespace Game.World.Import
             var applier = camGo.AddComponent<QualityProfileApplier>();
             applier.targetCamera = cam;
             applier.volume = vol;
-            // legacy detail textures + the generated PBR sets (ADR 0019): the tier sets their aniso and mip bias
+            // legacy detail textures + the generated PBR sets (ADR 0022): the tier sets their aniso and mip bias
             applier.worldTextures = WorldTextureGenerator.All.Select(AssetDatabase.LoadAssetAtPath<Texture>).Where(t => t != null)
                 .Concat(WorldPbrMaterials.LoadAll(r.Dir)).ToArray();
 

@@ -1,4 +1,4 @@
-# ADR 0019 — World PBR texture sets in Unity, power-line ribbons, marking overlaps (world v3.3)
+# ADR 0022 — World PBR texture sets in Unity, power-line ribbons, marking overlaps (world v3.3)
 
 Status: Accepted (world-builder), 2026-11-09. Extends ADR 0012 (tiers), ADR 0015 (far facades), ADR 0018 (overlaps).
 Evidence: `docs/reports/visual/world-c/README.md` (v3.3 before/after frames), `tests/gis/test_world_v33.py`.

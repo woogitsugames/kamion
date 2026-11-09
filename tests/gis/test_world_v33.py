@@ -1,4 +1,4 @@
-"""World C v3.3 (ADR 0019): PBR texture sets wired to the manifest, power-line supports and the `wires` node, overlap
+"""World C v3.3 (ADR 0022): PBR texture sets wired to the manifest, power-line supports and the `wires` node, overlap
 removal of markings, yard stand lines and gullies, resurfaced asphalt."""
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ def rqa():
 
 def test_ground_materials_use_spec_sets(manifest, spec):
     """Every carriageway / yard / verge material names a generated set; calibrated sets have the set's mean albedo as
-    manifest colour (engine tint ~1, ADR 0019)."""
+    manifest colour (engine tint ~1, ADR 0022)."""
     for mid in ("road_asphalt", "road_asphalt_new", "road_concrete", "curb_concrete", "sidewalk_paving",
                 "verge_grass", "terrain_grass", "yard_asphalt", "yard_concrete", "yard_behaton", "yard_paving",
                 "yard_slabs", "yard_gravel", "decal_patch", "decal_oil"):

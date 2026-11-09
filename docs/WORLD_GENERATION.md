@@ -146,7 +146,7 @@ Przykład w repo (baza Kwadrat Park): droga dojazdowa do placu ma w OSM tylko `h
 - Mesh budget v3 (te same założenia): Low 0,27–0,86 mln (stretch_04 przy wiadukcie 0,86 mln, reszta ≤ 0,62 mln), High 1,1–3,5 mln, a w lesie przy DK8 8,2 mln (bez zmian, HLOD lasu nadal do zrobienia).
 - Mesh budget r2 (`streetscape_qa.json` → `mesh_budget`): szacunek klatki dla kamer kontrolnych (klin 120°, bez occlusion cullingu): Low 0,24–0,81 mln trójkątów (cel z docs/06 §6: 0,4–0,6 mln; przekracza go stretch_04 przy Andersa), High 1,0–3,1 mln, a w lesie przy DK8 8,1 mln (do zrobienia: gęstsze impostory, HLOD lasu, occlusion culling). Statycznie na chunk: mediana High 152 tys. / Low 46 tys. trójkątów, max 286 tys. / 126 tys., do 55 materiałów. Liczby klatki trzeba potwierdzić na urządzeniu; politykę LOD opisuje `LOD_POLICY` w `build_world.py` (WORKING_VALUE).
 
-## v3.3 (ADR 0019): PBR sets in Unity, wires, overlaps, yards
+## v3.3 (ADR 0022): PBR sets in Unity, wires, overlaps, yards
 
 - Materials with `texture_set` naming a set of `art-source/world/materials/materials_spec.json` are drawn with
   `Kamion/World PBR` (ground: calibrated sets, manifest colour = set mean; facades / props: modulation sets on mesh UV0

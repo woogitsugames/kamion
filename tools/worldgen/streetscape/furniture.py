@@ -801,7 +801,7 @@ def power_lines(lin, src, origin, report, pl=None, roads_poly=None):
             Z = za + (zb - za) * t - sag
             dvec = (b - a) / L
             nn = np.array([-dvec[1], dvec[0]])
-            # 3D tangent of the sagging wire per sample (engine ribbon, ADR 0019 / REVIEW r4 W-H2)
+            # 3D tangent of the sagging wire per sample (engine ribbon, ADR 0022 / REVIEW r4 W-H2)
             dz = np.gradient(Z, t * L) if len(t) > 1 else np.zeros_like(t)
             tan = np.column_stack([np.repeat(dvec[None], len(t), 0), dz])
             tan /= np.linalg.norm(tan, axis=1, keepdims=True)

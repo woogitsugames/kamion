@@ -253,7 +253,7 @@ namespace Game.World.Import
             if (m.Get("shader") as string == "wire") return WireMaterial(path, albedo);
             if (m.Get("window_grid") is Dictionary<string, object> grid && m.Get("base") is string baseId)
                 return FarFacadeMaterial(r, path, baseId, albedo, rough, grid, m.Get("glass_color") as List<object>);
-            // Generated PBR sets (ADR 0019): ground, facades, props, decals with a set in materials_spec.json.
+            // Generated PBR sets (ADR 0022): ground, facades, props, decals with a set in materials_spec.json.
             var pbr = WorldPbrMaterials.Create(r, id, m, path);
             if (pbr != null) return pbr;
             string tex = m.Get("texture") as string;
@@ -301,7 +301,7 @@ namespace Game.World.Import
         }
 
         /// <summary>Power-line conductors (generator layer "wires"): camera-facing ribbons >= 1 px with coverage alpha,
-        /// faded with the power-pole cull distance (Kamion/World Wire, ADR 0019).</summary>
+        /// faded with the power-pole cull distance (Kamion/World Wire, ADR 0022).</summary>
         static Material WireMaterial(string path, Color albedo)
         {
             var shader = Shader.Find("Kamion/World Wire") ?? throw new InvalidOperationException("Kamion/World Wire not found (compile error?)");
@@ -399,7 +399,7 @@ namespace Game.World.Import
                     {
                         if (def.Get("texture") != null) uv = true;
                         if (def.Get("window_grid") != null && nd.Primitives[i].Uv1 != null) uv1 = true;   // far facades (ADR 0015)
-                        // PBR sets (ADR 0019): mesh UV in metres, road wear / decal data in TEXCOORD_1
+                        // PBR sets (ADR 0022): mesh UV in metres, road wear / decal data in TEXCOORD_1
                         WorldPbrMaterials.Channels(def, id, out bool p0, out bool p1, out bool pc);
                         uv |= p0 && nd.Primitives[i].Uv0 != null;
                         uv1 |= p1 && nd.Primitives[i].Uv1 != null;

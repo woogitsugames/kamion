@@ -55,7 +55,7 @@ GENERATOR_VERSION = "world-c/1"
 # table of docs/06 §3; values chosen in the range of measured asphalt (0.05-0.12), concrete (0.3-0.4),
 # grass (0.1-0.2). `surface` = physics surface type for the vehicle model (docs/04).
 MATERIALS = {
-    # Ground materials with a generated PBR set (art-source/world/materials/materials_spec.json, ADR 0019):
+    # Ground materials with a generated PBR set (art-source/world/materials/materials_spec.json, ADR 0022):
     # `color` = the set's calibrated mean linear albedo, so the engine tint is 1; `texture_set` names the set.
     "road_asphalt": {"color": [0.131, 0.13, 0.129], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
     "road_asphalt_new": {"color": [0.075, 0.075, 0.073], "rough": 0.85, "surface": "asphalt",
