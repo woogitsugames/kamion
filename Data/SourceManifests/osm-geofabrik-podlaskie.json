@@ -1,0 +1,23 @@
+{
+  "id": "osm-geofabrik-podlaskie",
+  "name": "OpenStreetMap extract: województwo podlaskie (Geofabrik)",
+  "url": "https://download.geofabrik.de/europe/poland/podlaskie-261108.osm.pbf",
+  "url_latest_alias": "https://download.geofabrik.de/europe/poland/podlaskie-latest.osm.pbf",
+  "downloaded_utc": "2026-11-09T09:31:29+00:00",
+  "snapshot": "261108",
+  "sha256": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d",
+  "size_bytes": 77939164,
+  "local_path": "data/raw/osm/podlaskie-261108.osm.pbf",
+  "format": "osm.pbf",
+  "crs": "EPSG:4326 (WGS84 lon/lat, OSM native); reprojected to EPSG:2180 in pipeline",
+  "extent": "Województwo podlaskie (Geofabrik boundary polygon)",
+  "accuracy": "Volunteered geographic information; positional accuracy not guaranteed, tag completeness varies (see docs/reports/map/candidates.json coverage stats)",
+  "license": "ODbL 1.0",
+  "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+  "attribution": "© OpenStreetMap contributors",
+  "provider_terms": "https://download.geofabrik.de/ (Geofabrik GmbH; data © OpenStreetMap contributors)",
+  "in_git": false,
+  "used_by": [
+    "tools/worldgen/analyze_candidates.py"
+  ]
+}
