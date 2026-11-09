@@ -309,7 +309,21 @@ for h_cm, ft, off_e, off_l, fzmax in [(5, 0.05, 0.1, 0.1, 4), (14, 0.14, 0.8, 0.
        variants=["empty", "laden40"], initial={"speedKmh": 50},
        ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [{"minX": -3, "maxX": -0.5, "minZ": 30, "maxZ": 33, "height": ft}]})
 
-sc("speed_bump_comb", "Speed bump 7 cm x 0.5 m across the lane at 15 km/h", "docs/04 s6.11", 12,
+# Phone event reconstruction (DEVICE-RUN-2026-11-09 r3, s = 598 m): the per-step suspension + tyre travel on the phone
+# shows a ~27 cm effective step at 42 km/h with 40 t, not a 14 cm kerb (PHYSICS_VALIDATION s3a). Regression guards.
+sc("kerb_step_27cm_42kmh_comb",
+   "Phone event reconstruction (DEVICE-RUN-2026-11-09 r3, s = 598 m): 40 t at 42 km/h, left wheels hit a 27 cm effective step (kerb on a higher carriageway edge)",
+   "docs/04 s6.11; docs/PHYSICS_VALIDATION.md s3a", 6,
+   {"type": "speedhold", "targetKmh": 42},
+   [chk("max_dv_step_ms", mx=0.35, source="no impulse spikes (same limit as the 14 cm kerb strike)"),
+    chk("max_pos_jump_m", mx=1e-6, source="no teleport"),
+    chk("max_fz_ratio", mn=5.2, mx=7.5, source="regression guard on measured 6.50 (phone 6.8x); a 27 cm step is above the tyre envelope a vertical-ray contact can climb smoothly"),
+    chk("max_wheel_airtime_s", mx=0.5, arg=1, source="regression guard on measured 0.42 s (phone: both front wheels unloaded ~0.4 s)"),
+    chk("max_fifth_wheel_error_mm", mx=5, source="constraint holds")],
+   variants=["laden40"], initial={"speedKmh": 42},
+   ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [{"minX": -3, "maxX": -0.5, "minZ": 30, "maxZ": 33, "height": 0.27}]})
+
+sc("speed_bump_comb","Speed bump 7 cm x 0.5 m across the lane at 15 km/h", "docs/04 s6.11", 12,
    {"type": "speedhold", "targetKmh": 15},
    [chk("max_dv_step_ms", mx=0.35, source="no impulse spikes"),
     chk("max_pos_jump_m", mx=1e-6, source="no teleport"),

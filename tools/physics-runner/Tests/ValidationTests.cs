@@ -178,10 +178,10 @@ namespace PhysicsRunner.Tests
         {
             var m = ScenarioRunner.Defs.CreateModel("tractor_4x2_generic", new SolverSettings());
             for (int i = 0; i < 200; i++) m.Steering.Update(0.5, 0.01);
-            double inner = m.Steering.WheelAngle(+1.025, 3.7);
-            double outer = m.Steering.WheelAngle(-1.025, 3.7);
+            double inner = m.Steering.WheelAngle(+1.02, 3.7);
+            double outer = m.Steering.WheelAngle(-1.02, 3.7);
             Assert.True(inner > outer && outer > 0);
-            // cot(outer) - cot(inner) = track / wheelbase
+            // cot(outer) - cot(inner) = track / wheelbase (front track 2.04 m, ADR 0014: wheels at +/-1.02 m)
             Assert.InRange(1 / Math.Tan(outer) - 1 / Math.Tan(inner), 2.04 / 3.7 - 1e-6, 2.04 / 3.7 + 1e-6);
         }
     }

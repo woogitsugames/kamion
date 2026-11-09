@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "id": "kerb_step_27cm_42kmh_comb",
+  "description": "Phone event reconstruction (DEVICE-RUN-2026-11-09 r3, s = 598 m): 40 t at 42 km/h, left wheels hit a 27 cm effective step (kerb on a higher carriageway edge)",
+  "spec": "docs/04 s6.11; docs/PHYSICS_VALIDATION.md s3a",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt",
+    "boxes": [
+      {
+        "minX": -3,
+        "maxX": -0.5,
+        "minZ": 30,
+        "maxZ": 33,
+        "height": 0.27
+      }
+    ]
+  },
+  "initial": {
+    "speedKmh": 42
+  },
+  "duration": 6,
+  "driver": {
+    "type": "speedhold",
+    "targetKmh": 42
+  },
+  "checks": [
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no impulse spikes (same limit as the 14 cm kerb strike)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_pos_jump_m",
+      "status": "WORKING_VALUE",
+      "source": "no teleport",
+      "max": 1e-06
+    },
+    {
+      "metric": "max_fz_ratio",
+      "status": "WORKING_VALUE",
+      "source": "regression guard on measured 6.50 (phone 6.8x); a 27 cm step is above the tyre envelope a vertical-ray contact can climb smoothly",
+      "min": 5.2,
+      "max": 7.5
+    },
+    {
+      "metric": "max_wheel_airtime_s",
+      "arg": 1,
+      "status": "WORKING_VALUE",
+      "source": "regression guard on measured 0.42 s (phone: both front wheels unloaded ~0.4 s)",
+      "max": 0.5
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "constraint holds",
+      "max": 5
+    }
+  ]
+}
