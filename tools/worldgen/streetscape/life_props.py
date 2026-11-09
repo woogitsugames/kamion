@@ -814,12 +814,10 @@ def sign_gantry(span, H):
     """Steel lattice sign gantry: two 0.6 x 0.6 m lattice columns at x = +-span/2 on concrete footings and a
     0.8 m deep lattice beam whose top is at H; +y = front (boards hang there). Typical Polish overhead-sign
     structure (CC0 photo, docs/REFERENCES.md); member sizes WORKING_VALUE."""
-    m, l1, col = Mesh(), Mesh(), Mesh()
+    m, l1 = Mesh(), Mesh()
     zb0, zb1 = H - 1.0, H
     for sx in (-1, 1):
         x = sx * span / 2
-        bx(m, "concrete_base", x - 0.6, x + 0.6, -0.6, 0.6, -0.3, 0.25)
-        bx(l1, "concrete_base", x - 0.6, x + 0.6, -0.6, 0.6, -0.3, 0.25)
         for cx in (-0.3, 0.3):
             for cy in (-0.3, 0.3):
                 m.tube("gantry_steel", [x + cx, cy, 0.25], [x + cx, cy, H], 0.05, None, 6, cap=False)
@@ -836,8 +834,19 @@ def sign_gantry(span, H):
             za, zb = (zb0, zb1) if i % 2 == 0 else (zb1, zb0)
             m.tube("gantry_steel", [x, cy, za], [x + 1.0, cy, zb], 0.025, None, 4, cap=False)
     bx(l1, "gantry_steel", -span / 2, span / 2, -0.4, 0.4, zb0, zb1)
-    for sx in (-1, 1):
-        col.box("collision_steel", [sx * span / 2, 0, 2.0], 0.35, 0.35, 2.0)
+    # no collider on the gantry itself: the Unity importer makes one box per prototype from its .col below 2.6 m,
+    # which for two columns 16 m apart was a wall across the carriageway (route_start s = 1375 m). The columns'
+    # colliders come with the separate `gantry_footing` instances (one per column, streetscape.landmarks).
+    return m, l1, None
+
+
+def gantry_footing():
+    """Concrete footing of one gantry column (1.2 x 1.2 m, -0.3..0.25 m) with the column's collider (0.7 x 0.7 m up
+    to 4 m)."""
+    m, l1, col = Mesh(), Mesh(), Mesh()
+    bx(m, "concrete_base", -0.6, 0.6, -0.6, 0.6, -0.3, 0.25)
+    bx(l1, "concrete_base", -0.6, 0.6, -0.6, 0.6, -0.3, 0.25)
+    col.box("collision_steel", [0, 0, 2.0], 0.35, 0.35, 2.0)
     return m, l1, col
 
 
@@ -868,6 +877,8 @@ def build_registered():
     P = {}
     for span, hdm in sorted(GANTRIES):
         P[f"sign_gantry_{span}_{hdm}"] = sign_gantry(float(span), hdm / 10.0)
+    if GANTRIES:
+        P["gantry_footing"] = gantry_footing()
     for name, (H, d0, d1) in sorted(LANDMARKS.items()):
         P[name] = chimney(H, d0, d1)
     return P
