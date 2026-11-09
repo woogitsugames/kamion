@@ -25,6 +25,8 @@ namespace Game.Vehicle.Runtime
         public string CurrentFile => m_Csv?.FilePath;
         public long RowsWritten => m_Csv != null ? m_Csv.RowsWritten : 0;
         public static string TelemetryDirectory => Path.Combine(Application.persistentDataPath, "telemetry");
+        /// <summary>Distance along the scripted route (m) for the route_s column; NaN-free 0 when not driving a route.</summary>
+        public Func<float> RouteProgress;
 
         public void Toggle() { if (IsRecording) StopRecording(); else StartRecording(); }
 
@@ -58,6 +60,8 @@ namespace Game.Vehicle.Runtime
                         n + "_brake_t", n + "_abs", n + "_drive_t", n + "_tire_defl", n + "_contact", n + "_surface" });
                 }
             cols.AddRange(new[] { "axle0_load", "axle1_load", "trailer_axles_load", "step_us", "frame_ms" });
+            // Body velocity (world) for per-step |dv| jolt analysis on the phone, and the route progress (autopilot=route).
+            cols.AddRange(new[] { "vel_x", "vel_y", "vel_z", "route_s" });
             var build = BuildInfo.Current;
             string file = Path.Combine(TelemetryDirectory, "drive-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".csv");
             string trailer = (body.Model.Def.id + "," + build.ShortLabel).Replace("\n", "");
@@ -134,6 +138,8 @@ namespace Game.Vehicle.Runtime
                 }
             }
             r[i++] = a0; r[i++] = a1; r[i++] = at; r[i++] = body.LastStepMicros; r[i++] = Time.unscaledDeltaTime * 1000.0;
+            Vector3 v = rb.linearVelocity;
+            r[i++] = v.x; r[i++] = v.y; r[i++] = v.z; r[i++] = RouteProgress != null ? RouteProgress() : 0f;
             m_Csv.CommitRow();
         }
 

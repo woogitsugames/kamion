@@ -158,6 +158,9 @@ namespace Game.Gameplay
             else if (!string.IsNullOrEmpty(ap)) { ConfigureAutopilot(ap, platform.GetLaunchArgument("speed")); m_AutopilotStart = true; }
             Spawn(m_Spawn);
             ActivateControlCamera(platform.GetLaunchArgument("qacam"));
+            // telemetry=1: record the vehicle CSV from the first physics step (device runs, e.g. the route jolt check).
+            m_AutoRecord = platform.GetLaunchArgument("telemetry") == "1";
+            m_Recorder.RouteProgress = () => RouteDriver.Enabled ? RouteDriver.Progress : 0f;
             Debug.Log($"[LAB] DrivingLab ready: vehicle={vehicle.name} trailer={(trailer != null ? trailer.name : "none")} spawn={m_Spawn} steer={m_SteerMode} autopilot={(Autopilot.Enabled || RouteDriver.Enabled ? ap : "off")} fixedDt={Time.fixedDeltaTime}");
         }
 
@@ -324,9 +327,12 @@ namespace Game.Gameplay
 
         void Flash(string s) { m_Status = s; m_StatusUntil = Time.unscaledTime + 3f; }
 
+        bool m_AutoRecord;
+
         void Update()
         {
             if (!vehicle.Initialized) return;
+            if (m_AutoRecord) { m_AutoRecord = false; m_Recorder.StartRecording(); }
             var m = vehicle.Model;
             var fb = new VehicleFeedback
             {
