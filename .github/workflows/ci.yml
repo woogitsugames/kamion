@@ -1,0 +1,36 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  physics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { lfs: false }
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - name: Unit tests
+        run: dotnet test tools/physics-runner/PhysicsRunner.sln -c Release --logger "trx;LogFileName=physics.trx"
+      - name: Validation scenarios
+        run: dotnet run -c Release --project tools/physics-runner/Runner
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: physics-results
+          path: |
+            tools/physics-runner/**/TestResults/*.trx
+            artifacts/physics/**/summary.md
+          if-no-files-found: ignore
+
+  gis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { lfs: false }
+      - uses: astral-sh/setup-uv@v6
+      - name: GIS tests (raw-data tests auto-skip)
+        run: uv run --project tools/worldgen pytest tests/gis -q
