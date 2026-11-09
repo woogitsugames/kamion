@@ -158,3 +158,50 @@ Przyczyna to schodek Z przy rozwidleniu jezdni: węzeł 4391371827, `tertiary_li
 - Potem wysłałem `KEYCODE_SLEEP`, żeby go schłodzić. **To zablokowało S24+ PIN-em i dalsze pomiary High nie były możliwe.**
   To mój błąd: skrypty nie mogą usypiać ekranu.
 - Do ponownego pomiaru, gdy telefon będzie chłodny i odblokowany: las DK8 Lit vs Vegetation, MSAA 4× vs 2×, trasa.
+
+## r4 — świat v3 po regeneracji (blokada trasy na s = 571 m), S24+ High: las DK8 (build-qa, wieczór)
+APK `kamion-0.1.0-1b4edcfd4b-dirty-high` (SHA256 `bd8cbafe447eb94d15775c48dcf545f42cba5d4248dc6df26ddc43c16f9a24a9`, 220,6 MB, build 67 s).
+Świat zregenerowany z main (`build_world.py` + `import-region.ps1 -Build`, 64 chunki, Low 90,6 MB / High 217,2 MB) i zaimportowany.
+Przed każdym przebiegiem `isKeyguardShowing=false` i bateria < 36 °C. Limit 30 FPS. Ekranu nie usypiałem.
+
+### 1. Szarpnięcie na s ≈ 604 m — NIE DA SIĘ ZMIERZYĆ: nowa przeszkoda na s = 570,6 m
+A16 Low, trasa 40 t / 50 km/h, `telemetry=1`: `artifacts/device/RFGL34SJYDZ/20261109-184909/telemetry/drive-20261109-184915.csv`.
+
+| | r3 (stary świat) | r4 (świat v3 po regeneracji) |
+|---|---|---|
+| zasięg trasy | 987 m | **571 m** (zestaw staje) |
+| max \|dv\| na krok | 0,586 m/s przy s = 605,8 m | **9,77 m/s przy s = 570,6 m** (43 → 16 km/h w jednym kroku) |
+| \|dv\| na s ≈ 598–606 m | 0,586 | nieosiągalne |
+
+- Uskok krawężnika z r3 nie jest już mierzalny, bo ciągnik uderza wcześniej: kolizja bryły (nie koła; koła stoją na asfalcie, surface 0).
+- PlayMode `WorldCRouteTests` (Solo i zestaw) padają na tym samym miejscu: `progress 572/2401 m`, `max |dv| 13,45 m/s at s=571`.
+  - Kontakt: `Chunk_5_6/col_grass` przy (363,7; 11,37; −598,8) o `Cab`, impuls 118 kN·s.
+- Geometria z `chunk_5_6.glb`: droga jest na U = 140,7, a 1,8 m od punktu uderzenia stoi `collision_grass` do U ≈ 142,9 (+2,2 m).
+  Za nim jest wyżej położona `collision_asphalt` z barierą stalową na 143,3–143,8. To skarpa lub rampa wchodząca w pas ruchu.
+- Zmiana vs r3: regeneracja świata. Zmiana wymiarów pojazdu (`c3a9b5a`) jest drobna, więc kolizji nie tłumaczy.
+- Do world-builder: skarpa/rampa przy (369; −600), chunk 5_6. Po poprawce powtórzyć pomiar (procedura bez zmian).
+- Nie zmieniałem kodu ani świata w trakcie pomiaru.
+
+### 2. S24+ (High), las DK8, kamera `dk8-dk19-exit` — ważne (bateria 32–36 °C, thermal 0, okno 23–27 s po 30 s rozgrzewki)
+| Wariant | FPS (mean) | GPU p50 / p95 [ms] | CPU p50 | PSS | bateria po |
+|---|---|---|---|---|---|
+| Lit (URP), MSAA 4× (obecny High) | 25,7 | 38,7 / 39,8 | 17,4 | 996 MB | 37,8 °C |
+| Kamion/Vegetation, MSAA 4× | 30,0 | 31,3 / 32,5 | 17,5 | 990 MB | 37,9 °C |
+| **Kamion/Vegetation, MSAA 2×** | 30,0 | **18,0** / 19,9 | 17,2 | 919 MB | 37,3 °C |
+| **Lit, MSAA 2×** | 30,0 | **21,6** / 24,2 | 16,6 | 914 MB | 38,0 °C |
+
+- Wartości r3 (68 ms Lit, 72 ms Vegetation) były zawyżone przez przegrzanie (44 °C).
+- Na S24+ 4× kosztuje +17–18 ms względem 2× niezależnie od shadera liści (Lit 38,7 vs 21,6; Vegetation 31,3 vs 18,0). To ten sam wzorzec co na Mali-G57.
+- Vegetation oszczędza dodatkowo 3,6 ms przy 2× (18,0 vs 21,6) i 7,4 ms przy 4×.
+- Przy 4× High nie trzyma 30 FPS w lesie (25,7 FPS, p95 klatki 66,8 ms). Przy 2× trzyma z zapasem 12 ms (Lit).
+- Przebiegi A–D: `artifacts/device/RZCX60VE8ZY/20261109-185818`, `-190233`, `-190638`, `-190952`. Zrzutów nie oceniałem wizualnie.
+
+### 3. S24+ trasa 40 t, 90 s — NIE WYKONANA
+- Trasa i tak urywa się na s = 571 m (pkt 1).
+- Od ok. 19:10 aplikacja `com.woogitsugames.kamion` na S24+ jest uruchamiana przez innego agenta. Bateria rosła 36 → 43,6 °C przy moim wyłączonym przebiegu, więc warunek < 36 °C nie był spełniony.
+- Nie startowałem w trakcie cudzego przebiegu. Nie zmieniałem stanu ekranu.
+
+### Testy
+- EditMode: 22/22 zielone.
+- PlayMode: 25 zielonych, 3 pominięte, **2 czerwone** (`WorldCRouteTests`, Solo i zestaw: skarpa na s = 571 m, pkt 1). Wcześniej zielone.
+- Data/Regions/…/world_manifest.json, streetscape_qa.json i art-source/world/props/props_meta.json zmieniły się po regeneracji (liczby trójkątów ±2, przeliczone hashe). Nie commituję ich, dopóki świat nie jest poprawiony.

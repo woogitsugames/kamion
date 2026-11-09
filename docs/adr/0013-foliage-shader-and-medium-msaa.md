@@ -64,3 +64,18 @@ with depth write stops the tile GPU from killing hidden layers early.
   - Re-measure cool, then decide `simpleFoliage` / MSAA for High.
 - Alpha-to-coverage edges in pass 2 depend on the same sharpened alpha as pass 1. Check for shimmer in motion on the
   phone (visual QA in motion, not only stills).
+
+## Addendum r4 (S24+ High, measured cool: 32-36 C, thermal 0; DK8 forest, 30 FPS cap)
+| High | GPU p50 | FPS |
+|---|---|---|
+| Lit, MSAA 4x (current) | 38.7 ms | 25.7 |
+| Kamion/Vegetation, MSAA 4x | 31.3 ms | 30.0 |
+| Kamion/Vegetation, MSAA 2x | 18.0 ms | 30.0 |
+| Lit, MSAA 2x | 21.6 ms | 30.0 |
+
+Evidence: `docs/reports/device/DEVICE-RUN-2026-11-09.md` r4. The r3 S24+ numbers (68/72 ms) were taken at 44 C and are superseded.
+
+Proposal (not applied; QualityProfile is rendering-perf's code, High keeps the current 4x until the owner decides):
+- High MSAA 4x to 2x. This is the lever (-17 to -18 ms), and High then holds 30 FPS in the forest with 12 ms to spare.
+- Keep Lit on High: Vegetation saves another 3.6 ms at 2x, which does not justify the visual change (specular lobe, probe reflection) on the tier meant to look best. Revisit if High must reach 60 FPS.
+- Visual check of 2x vs 4x edge quality on the S24+ is still due (visual-critic).
