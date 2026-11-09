@@ -65,6 +65,8 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
 
     net = Nw.load(graph, origin, overrides)
     pts, foot = ctx_local(ctx, origin)
+    tapers = []
+    Nw.taper_forks(net, tapers)
     # walkways that make a road "urban" (kerbed): OSM footway/cycleway + BDOT10k paved paths (not forest paths)
     from shapely.geometry import LineString
     walk = [LineString(np.array(f["geometry"]) - np.array(origin)) for f in ctx["footways"] if f["highway"] != "path"]
@@ -98,4 +100,5 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
         M.build_patch(buf, net, j, coarse=True)
     w = World(region=region, origin=origin, net=net, junctions=juncs, hf=hf, ctx={"points": pts, "foot": foot},
               buf=buf, profiles=prof, stats=stats)
+    w.stats["fork_tapers"] = tapers
     return w

@@ -36,7 +36,10 @@ def smooth_normals(V, T):
 
 
 class GLB:
-    def __init__(self, materials: dict):
+    def __init__(self, materials: dict, compact: bool = False):
+        """compact=True (Low/Medium chunk variant): int8 normals (KHR_mesh_quantization), 8-bit vertex
+        colours, no TEXCOORD_0 on terrain (the terrain shader tiles by world position)."""
+        self.compact = compact
         self.materials = materials          # name -> {"color": [r,g,b], "rough": f, "metal": f}
         self.mat_index = {}
         self.bin = bytearray()
@@ -68,7 +71,7 @@ class GLB:
         self.textures.append({"source": len(self.images) - 1, "sampler": 0})
         return len(self.textures) - 1
 
-    def _view(self, data: bytes, target=None):
+    def _view(self, data: bytes, target=None, stride=None):
         while len(self.bin) % 4:
             self.bin += b"\0"
         off = len(self.bin)
@@ -76,6 +79,8 @@ class GLB:
         v = {"buffer": 0, "byteOffset": off, "byteLength": len(data)}
         if target:
             v["target"] = target
+        if stride:
+            v["byteStride"] = stride
         self.views.append(v)
         return len(self.views) - 1
 
@@ -100,20 +105,45 @@ class GLB:
             Nn = p.get("N")
             if Nn is None:
                 Nn = smooth_normals(V, T)
-            pos = to_gltf(V).astype("<f4")
-            nor = to_gltf(Nn).astype("<f4")
-            attrs = {"POSITION": self._acc(pos, 5126, "VEC3", 34962, True),
-                     "NORMAL": self._acc(nor, 5126, "VEC3", 34962)}
+            # quantise before float32 so tiny float differences between environments (BLAS, numpy builds)
+            # do not change the bytes: positions 1 mm, normals / UVs 1e-4
+            pos = np.round(to_gltf(V), 3).astype("<f4")
+            nor = np.round(to_gltf(Nn), 4).astype("<f4")
+            if self.materials.get(p["mat"], {}).get("collision"):
+                # collision primitives: positions + indices only (no shading attributes)
+                attrs = {"POSITION": self._acc(pos, 5126, "VEC3", 34962, True)}
+                idx = np.asarray(T, np.int64).ravel()
+                ia = self._acc(idx.astype("<u2" if idx.max() < 65535 else "<u4"),
+                               5123 if idx.max() < 65535 else 5125, "SCALAR", 34963)
+                gp.append({"attributes": attrs, "indices": ia, "material": self._mat(p["mat"]), "mode": 4})
+                continue
+            attrs = {"POSITION": self._acc(pos, 5126, "VEC3", 34962, True)}
+            if self.compact:              # int8 normalised normals, padded to 4 bytes per vertex
+                n8 = np.zeros((len(nor), 4), "<i1")
+                n8[:, :3] = np.clip(np.round(nor * 127), -127, 127)
+                vi = self._view(n8.tobytes(), 34962, stride=4)
+                self.accessors.append({"bufferView": vi, "componentType": 5120, "count": len(nor), "type": "VEC3",
+                                       "normalized": True})
+                attrs["NORMAL"] = len(self.accessors) - 1
+            else:
+                attrs["NORMAL"] = self._acc(nor, 5126, "VEC3", 34962)
+            terrain = p["mat"] == "terrain_grass"
             for key, sem in (("UV", "TEXCOORD_0"), ("UV1", "TEXCOORD_1")):
+                if key == "UV" and terrain and self.compact:
+                    continue
                 if p.get(key) is not None:
                     uv = np.asarray(p[key], np.float64).copy()
                     uv[:, 1] = 1.0 - uv[:, 1]      # glTF v points down; importers map back to v (up)
+                    uv = np.round(uv, 4)
                     attrs[sem] = self._acc(uv.astype("<f4"), 5126, "VEC2", 34962)
             if p.get("COL") is not None:          # per-vertex data (weathering masks), linear RGBA 0..1
                 col = np.clip(np.asarray(p["COL"], np.float64), 0, 1)
                 if col.shape[1] == 3:
                     col = np.column_stack([col, np.ones(len(col))])
-                attrs["COLOR_0"] = self._acc(np.round(col * 65535).astype("<u2"), 5123, "VEC4", 34962)
+                if self.compact:
+                    attrs["COLOR_0"] = self._acc(np.round(col * 255).astype("<u1"), 5121, "VEC4", 34962)
+                else:
+                    attrs["COLOR_0"] = self._acc(np.round(col * 65535).astype("<u2"), 5123, "VEC4", 34962)
                 self.accessors[-1]["normalized"] = True
             idx = T.ravel()
             if idx.max() < 65535:
@@ -138,6 +168,9 @@ class GLB:
                "nodes": self.nodes, "meshes": self.meshes, "materials": self.gmats,
                "accessors": self.accessors, "bufferViews": self.views,
                "buffers": [{"byteLength": len(self.bin)}]}
+        if self.compact:
+            doc["extensionsUsed"] = ["KHR_mesh_quantization"]
+            doc["extensionsRequired"] = ["KHR_mesh_quantization"]
         if self.textures:
             doc.update({"images": self.images, "textures": self.textures,
                         "samplers": [{"magFilter": 9729, "minFilter": 9987, "wrapS": 10497, "wrapT": 10497}]})

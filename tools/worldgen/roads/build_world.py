@@ -463,6 +463,18 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         data = glb.bytes({"region": region_id, "chunk": [ci, cj], "axes": GLTF_AXES})
         fn = f"chunk_{ci}_{cj}.glb"
         (out_root / fn).write_bytes(data)
+        # Low/Medium variant: no 1 m terrain LOD, no detailed buildings (LOD1 prisms only)
+        glb_lo = GLB(glb_materials(), compact=True)
+        for li, prims in sorted(terrain[key].items()):
+            if li >= 1:
+                glb_lo.add_mesh(f"terrain_lod{li}", prims, {"lod": li, "spacing_m": CH.LODS[li]})
+        for layer, node in NODES:
+            prims = layers.get(layer, [])
+            if prims and layer != "buildings":
+                glb_lo.add_mesh(node, prims, {"layer": layer, "collision": layer == "collision"})
+        data_lo = glb_lo.bytes({"region": region_id, "chunk": [ci, cj], "axes": GLTF_AXES, "variant": "low"})
+        fn_lo = f"chunk_{ci}_{cj}.low.glb"
+        (out_root / fn_lo).write_bytes(data_lo)
         allz = [p["V"][:, 2] for p in terrain[key][0]] + [p["V"][:, 2] for L in layers.values() for p in L]
         zz = np.concatenate(allz)
         inst = inst_by_chunk.get(key, [])
@@ -480,8 +492,11 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
             "materials": sorted({p["mat"] for L in layers.values() for p in L} | {"terrain_grass"}),
             "instances": {"file": f"Data/raw/derived/{region_id}/world/{ifn}", "count": len(inst),
                           "sha256": sha(itext.encode("utf-8"))},
+            "low": {"file": f"Data/raw/derived/{region_id}/world/{fn_lo}", "bytes": len(data_lo),
+                    "sha256": sha(data_lo)},
         })
-    log("exported", len(chunks_meta), "GLB,", sum(c["bytes"] for c in chunks_meta) // 2**20, "MiB")
+    log("exported", len(chunks_meta), "GLB,", sum(c["bytes"] for c in chunks_meta) // 2**20, "MiB (High), ",
+        sum(c["low"]["bytes"] for c in chunks_meta) // 2**20, "MiB (Low)")
 
     gen = pipeline.REGIONS / region_id / "generated"
     srcs = {}
@@ -654,6 +669,7 @@ def qa_report(w, mk_report, mask):
             "crossings_snapped": mk_report.get("crossings_snapped", 0),
             "crossings_skipped": mk_report.get("crossings_skipped", []),
             "bridges": w.bridges,
+            "fork_tapers": w.stats.get("fork_tapers", []),
             "overrides_applied": net.overrides_applied, "overrides_stale": net.overrides_stale,
             "low_confidence": [
                 "bridge deck heights interpolated between abutments (NMT = ground under deck); piers by rule",

@@ -132,7 +132,7 @@ def grass_tuft(seed=3, n=256):
         h = rng.uniform(n * 0.3, n * 0.95)
         bend = rng.uniform(-n * 0.15, n * 0.15)
         dry = rng.uniform() < 0.25
-        c = (150, 140, 90) if dry else jitter((70, 96, 44), rng, 0.25)
+        c = (168, 156, 104) if dry else jitter((96, 122, 58), rng, 0.25)
         pts = [(x0 + bend * (t ** 2), n - 1 - h * t) for t in np.linspace(0, 1, 8)]
         d.line(pts, fill=(*c, 255), width=int(rng.integers(2, 4)))
     return im

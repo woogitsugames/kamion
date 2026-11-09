@@ -517,7 +517,7 @@ def build_materials():
         "road_gravel": mat_gravel("road_gravel"),
         "curb_concrete": mat_kerb("curb_concrete", 0.26),
         "sidewalk_paving": mat_pavers("sidewalk_paving", g((122, 120, 114)), g((112, 110, 104)), moss=False),
-        "apron_sett": mat_pavers("apron_sett", g((112, 82, 72)), g((96, 70, 62)), 0.12, 0.12, moss=False),
+        "apron_sett": mat_pavers("apron_sett", g((104, 90, 84)), g((92, 80, 76)), 0.12, 0.12, moss=False),
         "bridge_concrete": mat_concrete_yard("bridge_concrete", 0.28, 100.0, 100.0),
         "barrier_steel": mat_flat("barrier_steel", (0.30, 0.31, 0.31), 0.5, 0.9, 0.3),
         "verge_grass": mat_terrain("verge_grass"),
@@ -641,6 +641,8 @@ def load_protos(mats):
     assign_materials(list(protos.values()), mats)
     for o in protos.values():
         for s in o.material_slots:
+            if s.material and s.material.name.startswith(("sign_", "plate_back")):
+                s.material.use_backface_culling = True      # the plate back hides the face from behind
             if s.material and s.material.name.startswith(("leaves", "impostor", "fence")):
                 try:
                     s.material.surface_render_method = "DITHERED"

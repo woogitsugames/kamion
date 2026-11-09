@@ -349,6 +349,52 @@ def prepare_chain(c: Chain, net: Network, sec_index: dict):
     c.m_lat = m + (m % 2)          # even -> the crown (lat 0) is always a vertex
 
 
+def taper_forks(net: Network, report: list | None = None):
+    """At a node where two chains continue (nearly collinear, > FORK_STRAIGHT_DEG) with different
+    carriageway widths, narrow the wider chain toward the other one's width over a taper of
+    TAPER_RATIO x width difference (>= TAPER_MIN_M), so the junction patch sees equal edges and the kerb
+    runs as a smooth skew instead of a Z-shaped step (PTB2022 §17 ust. 6: smooth width changes)."""
+    ends = {}
+    for c in net.chains:
+        if c.meta.get("absorbed") or c.roundabout or len(c.line.s) < 4:
+            continue
+        ends.setdefault(c.node_a, []).append((c, "a"))
+        ends.setdefault(c.node_b, []).append((c, "b"))
+    for node, lst in sorted(ends.items()):
+        if len(lst) < 2:
+            continue
+        dirs = []
+        for c, e in lst:
+            s = min(6.0, c.length / 2) if e == "a" else c.length - min(6.0, c.length / 2)
+            t, _ = c.line.frame(s)
+            dirs.append(t if e == "a" else -t)
+        for i in range(len(lst)):
+            for j in range(i + 1, len(lst)):
+                cosang = float(np.dot(dirs[i], dirs[j]))
+                if cosang > -math.cos(math.radians(S.FORK_STRAIGHT_DEG)):
+                    continue
+                (ci, ei), (cj, ej) = lst[i], lst[j]
+                hi_ = float(ci.hw[0] if ei == "a" else ci.hw[-1])
+                hj_ = float(cj.hw[0] if ej == "a" else cj.hw[-1])
+                if not (0.25 <= abs(hi_ - hj_) <= S.TAPER_MAX_DHW):
+                    continue
+                si = ci.section(min(1.0, ci.length) if ei == "a" else ci.length - 1.0, net.sec_list)
+                sj = cj.section(min(1.0, cj.length) if ej == "a" else cj.length - 1.0, net.sec_list)
+                if si.cls != sj.cls or si.oneway != sj.oneway or si.highway.endswith("_link") != sj.highway.endswith("_link"):
+                    continue                     # a real diverge / merge, not one road changing width
+                (cw, ew, hw_w), hn = ((ci, ei, hi_), hj_) if hi_ > hj_ else ((cj, ej, hj_), hi_)
+                L = max(S.TAPER_MIN_M, S.TAPER_RATIO * (hw_w - hn) * 2)
+                L = min(L, 0.6 * cw.length)
+                d = cw.line.s if ew == "a" else cw.length - cw.line.s
+                f = np.clip(d / L, 0, 1)
+                f = f * f * (3 - 2 * f)
+                target = hn + (cw.hw - hn) * f
+                cw.hw = np.where(d < L, np.minimum(cw.hw, target), cw.hw)
+                if report is not None:
+                    report.append({"node": node, "chain": cw.id, "from_hw": round(hw_w, 2), "to_hw": round(hn, 2),
+                                   "taper_m": round(L, 1)})
+
+
 # --------------------------------------------------------------------------------------------
 def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: list | None = None,
                  yards=None):

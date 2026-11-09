@@ -100,6 +100,10 @@ BERM_W = 1.0                        # flat strip next to the road before the emb
 CURB_RADIUS = {"A": 20.0, "S": 20.0, "GP": 15.0, "G": 12.0, "Z": 10.0, "L": 8.0, "D": 8.0}
 NOSE_MAX_ANGLE_DEG = 25.0           # corners narrower than this get a median/splitter nose
 STRAIGHT_MIN_ANGLE_DEG = 155.0      # corners wider than this are a straight kerb (no fillet)
+FORK_STRAIGHT_DEG = 150.0          # WORKING_VALUE: two chains this close to collinear at a node = one road
+TAPER_RATIO = 10.0                 # WORKING_VALUE: taper length = 10 x width change (skos 1:10)
+TAPER_MIN_M = 15.0                 # WORKING_VALUE
+TAPER_MAX_DHW = 1.25               # WORKING_VALUE: larger half-width changes are lane additions (kept as is)
 JUNCTION_MIN_TRIM = 2.0             # m, minimal junction size along each arm
 
 # Roundabouts: circulatory crossfall falls outwards (towards the outer kerb). WORKING_VALUE.
