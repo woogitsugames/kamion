@@ -106,6 +106,138 @@ def load_door_interface():
 
 
 DOOR_IF = load_door_interface()
+
+
+# ---------------------------------------------------------------- windscreen interface with the exterior (A6)
+# The exterior export (tools/blender/truck/exterior/a6_export.py) owns the single windscreen and publishes its inner
+# face in art-source/truck/exterior/glass_interface.json. The interior fits its trims, dash top and frit print to it;
+# its own CAB_Glass_Windows is only a placeholder for interior-only renders (hidden in the game with the exterior).
+GLASS_IF_PATH = os.path.join(REPO, "art-source", "truck", "exterior", "glass_interface.json")
+
+
+def load_glass_interface():
+    if not os.path.exists(GLASS_IF_PATH):
+        print("glass interface: no file, using A6 r3 interior values")
+        return None
+    w = json.load(open(GLASS_IF_PATH, encoding="utf-8"))["windscreen"]
+    g = w.get("inner_face_grid_a2_13x49")
+    if not g:
+        return None
+    src = json.load(open(GLASS_IF_PATH, encoding="utf-8"))
+    rows = [sorted(((p[0], p[1]) for p in r), key=lambda t: t[0]) for r in g["points"]]
+    zs = [r[len(r) // 2][2] for r in g["points"]]
+    fr = w["frit_on_exterior_glass_m"].get("inside_visible_opening_m", {})
+    sh = src.get("shell_sections", {})
+    return {"z_vis": tuple(w["visible_opening_z_m"]), "rows": rows, "zs": zs, "frit": fr,
+            "shell": sh.get("z_yf_yb_w_rf_rb"), "wall": sh.get("wall_m", 0.03),
+            "opening_x": g.get("opening_edge_abs_x_per_row"),
+            "source": os.path.relpath(GLASS_IF_PATH, REPO).replace("\\", "/")}
+
+
+GLASS_IF = load_glass_interface()
+
+
+def glass_y(x, z):
+    """Inner face of the exterior windscreen (A2 y) at lateral x and height z (clamped to the glass)."""
+    if GLASS_IF is None:
+        return ws_y(z) + 0.012 + 0.018 * (1 - min(1.0, (x / (XI - 0.055)) ** 2))
+    zs, rows = GLASS_IF["zs"], GLASS_IF["rows"]
+
+    def row_y(r):
+        if x <= r[0][0]:
+            return r[0][1]
+        for (x0, y0), (x1, y1) in zip(r[:-1], r[1:]):
+            if x <= x1:
+                return y0 + (y1 - y0) * (x - x0) / max(1e-9, x1 - x0)
+        return r[-1][1]
+    if z <= zs[0]:
+        k, t = 0, (z - zs[0]) / (zs[1] - zs[0])
+    elif z >= zs[-1]:
+        k, t = len(zs) - 2, (z - zs[-2]) / (zs[-1] - zs[-2])
+    else:
+        k = max(i for i in range(len(zs) - 1) if zs[i] <= z)
+        t = (z - zs[k]) / (zs[k + 1] - zs[k])
+    return row_y(rows[k]) + (row_y(rows[k + 1]) - row_y(rows[k])) * t
+
+
+def shell_sec(z):
+    tab = GLASS_IF["shell"]
+    if z <= tab[0][0]:
+        return tab[0][1:]
+    for a, b in zip(tab[:-1], tab[1:]):
+        if z <= b[0]:
+            t = (z - a[0]) / (b[0] - a[0])
+            return [a[i] + (b[i] - a[i]) * t for i in range(1, 6)]
+    return tab[-1][1:]
+
+
+def fit_to_exterior(objs, margin=0.004):
+    """A6 fit (glass_interface.json): pull every vertex that lies outside the exterior cab (shell inner surface =
+    outer - wall, or the windscreen inner face inside the glazed opening) back inside, by `margin`. Run on the
+    export meshes (modifiers applied, transforms baked). The exterior is the only skin and glazing in the game, so
+    any interior vertex beyond it would show through the glass or poke through the paint. Returns per-object stats."""
+    if GLASS_IF is None or not GLASS_IF.get("shell"):
+        return {}
+    wall = GLASS_IF["wall"] + margin
+    z_lo, z_hi = GLASS_IF["shell"][0][0], GLASS_IF["shell"][-1][0]
+    zg0, zg1 = GLASS_IF["zs"][0], GLASS_IF["zs"][-1]
+
+    def glass_half(z):
+        """|x| up to which the shell is cut (visible opening, 5 mm inside its edge); beyond it the A-pillar skin."""
+        t = min(1.0, max(0.0, (z - zg0) / (zg1 - zg0)))
+        f = t * (len(GLASS_IF["zs"]) - 1)
+        k = min(len(GLASS_IF["zs"]) - 2, int(f))
+        if GLASS_IF.get("opening_x"):
+            ox = GLASS_IF["opening_x"]
+            return ox[k] + (ox[k + 1] - ox[k]) * (f - k) - 0.005
+        return GLASS_IF["rows"][k][-1][0] - 0.03
+    out = {}
+    for o in objs:
+        me = o.data
+        n, dmax = 0, 0.0
+        for v in me.vertices:
+            x, y, z = v.co
+            if not (z_lo <= z <= z_hi):
+                continue
+            yf, yb, w, rf, rb = shell_sec(z)
+            ax = abs(x)
+            nx, ny = ax, y
+            # side wall
+            nx = min(nx, w - wall)
+            # front: glazed opening -> glass inner face, else shell (flat + plan corner arc)
+            if WS_Z0 <= z <= WS_Z1 and ax <= glass_half(z):
+                yl = glass_y(x, z) - 2 * margin    # y margin: the wrapped corners slope ~45 deg in plan
+            else:
+                cx, r = w - rf, max(0.002, rf - wall)
+                if ax <= cx:
+                    yl = yf - wall
+                else:
+                    yl = (yf - rf) + math.sqrt(max(0.0, r * r - min(r, ax - cx) ** 2))
+                    if ax - cx > r:
+                        nx = min(nx, cx + r)
+            ny = min(ny, yl)
+            # back: flat + plan corner arc
+            cxb, r = w - rb, max(0.002, rb - wall)
+            ylb = yb + wall if nx <= cxb else (yb + rb) - math.sqrt(max(0.0, r * r - min(r, nx - cxb) ** 2))
+            ny = max(ny, ylb)
+            d = math.hypot(nx - ax, ny - y)
+            if d > 1e-6:
+                v.co.x = math.copysign(nx, x) if x != 0 else 0.0
+                v.co.y = ny
+                n += 1
+                dmax = max(dmax, d)
+        if n:
+            me.update()
+            out[o.name] = {"verts_moved": n, "max_move_m": round(dmax, 4)}
+    return out
+
+
+if GLASS_IF is not None:
+    # A6 fit: visible opening and the glass plane from the exterior. ws_y() stays the reference plane of the trims
+    # (12 mm behind the glass inner face on the centre line, as the r3 trims were designed against the glass edge).
+    WS_Z0, WS_Z1 = GLASS_IF["z_vis"]
+    WS_Y0 = glass_y(0.0, WS_Z0) - 0.012
+    print(f"glass interface: WS_Z0 {WS_Z0}, WS_Z1 {WS_Z1}, WS_Y0 {WS_Y0:.4f} ({GLASS_IF['source']})")
 SKIN_Z0 = DOOR_IF["shell_bottom_z"]             # A6 r3: placeholder skins end at the exterior shell edge (was 1.15)
 
 
@@ -321,7 +453,7 @@ def build_glass():
         lp = []
         for t in xs:
             x = t * hw
-            y = ws_y(z) + 0.012 + 0.018 * (1 - (x / hw) ** 2)  # slight bow, no wrap (brand-neutral)
+            y = glass_y(x, z)          # A6: inner face of the exterior windscreen (placeholder glass)
             lp.append(V(x, y, z))
         loops.append(lp)
     g = loft("windscreen", list(zip(*loops)), "windscreen", closed=False, sharp=None)
@@ -353,7 +485,8 @@ def build_glass():
         loops = []
         for zi in range(7):
             z = WS_Z0 - 0.06 + (WS_Z1 + 0.08 - WS_Z0 + 0.06) * zi / 6
-            y = ws_y(z)
+            # A6: the exterior glass wraps round the corner; keep the trim's front face 8 mm behind its inner face
+            y = min(ws_y(z), glass_y(s * (XI - 0.05), min(max(z, WS_Z0), WS_Z1)) - 0.058)
             sec = [(XI - 0.085, y + 0.025), (XI - 0.05, y + 0.05), (XI + 0.01, y + 0.045), (XI + 0.01, side_win_front(z) - 0.02),
                    (XI - 0.03, side_win_front(z) - 0.035), (XI - 0.075, y - 0.07), (XI - 0.095, y - 0.02)]
             loops.append([V(s * px, py, z) for px, py in sec])
@@ -389,6 +522,8 @@ def build_glass():
 
 
 FRIT_BOTTOM, FRIT_TOP, FRIT_SIDE = 0.075, 0.05, 0.045   # frit band widths above/below the visible glass edge (m)
+if GLASS_IF is not None and GLASS_IF["frit"]:   # A6: one print, same widths as the exterior band
+    FRIT_BOTTOM, FRIT_TOP, FRIT_SIDE = (GLASS_IF["frit"][k] for k in ("bottom", "top", "sides"))
 
 
 def build_frit(hw):
@@ -397,7 +532,7 @@ def build_frit(hw):
     on its inner edge, a narrower band at the top and down the sides. Built as geometry 1.5 mm inboard of the glass so
     Cycles, the URP-like preview and the game all get it without a shader mask; normals face the cab."""
     def gy(x, z):
-        return ws_y(z) + 0.012 + 0.018 * (1 - (x / hw) ** 2) - 0.0015
+        return glass_y(x, z) - 0.0015
 
     def patch(name, x0, x1, z0, z1, nx, nz):
         bm = bmesh.new()
