@@ -9,6 +9,8 @@ namespace Game.Vehicle.Runtime
     public sealed class GrayboxMaterials
     {
         public Material paint, chassis, tire, rim, interior, dark, marker;
+        /// <summary>Stage 2: mirror glass (URP Unlit, gets the render texture), trailer curtain, trailer body panels, rear lamps.</summary>
+        public Material mirror, curtain, trailerPanel, lamp;
 
         public static GrayboxMaterials CreateRuntime()
         {
@@ -21,20 +23,27 @@ namespace Game.Vehicle.Runtime
                 return m;
             }
             var p = DefaultColors;
+            var mirror = new Material(Shader.Find("Universal Render Pipeline/Unlit")) { name = "GB_MirrorGlass" };
+            mirror.SetColor("_BaseColor", MirrorIdleColor);
             return new GrayboxMaterials
             {
                 paint = M("GB_Paint", p[0], 0.45f), chassis = M("GB_Chassis", p[1], 0.25f), tire = M("GB_Tire", p[2], 0.15f),
                 rim = M("GB_Rim", p[3], 0.4f), interior = M("GB_Interior", p[4], 0.2f), dark = M("GB_Dark", p[5], 0.3f),
-                marker = M("GB_Marker", p[6], 0.3f),
+                marker = M("GB_Marker", p[6], 0.3f), mirror = mirror, curtain = M("GB_Curtain", p[7], 0.2f),
+                trailerPanel = M("GB_TrailerPanel", p[8], 0.35f), lamp = M("GB_Lamp", p[9], 0.5f),
             };
         }
 
-        /// <summary>sRGB base colours: paint, chassis, tire, rim, interior, dark trim, rotation marker.</summary>
+        /// <summary>Glass colour before the first mirror render (dim grey-blue, not black).</summary>
+        public static readonly Color MirrorIdleColor = new Color(0.42f, 0.47f, 0.52f, 1f);
+
+        /// <summary>sRGB base colours: paint, chassis, tire, rim, interior, dark trim, rotation marker, curtain, trailer panels, rear lamps.</summary>
         public static readonly Color[] DefaultColors =
         {
             new Color(0.78f, 0.78f, 0.76f), new Color(0.16f, 0.16f, 0.17f), new Color(0.07f, 0.07f, 0.07f),
             new Color(0.62f, 0.63f, 0.64f), new Color(0.30f, 0.30f, 0.29f), new Color(0.11f, 0.11f, 0.12f),
-            new Color(0.85f, 0.55f, 0.10f),
+            new Color(0.85f, 0.55f, 0.10f), new Color(0.40f, 0.45f, 0.50f), new Color(0.80f, 0.80f, 0.78f),
+            new Color(0.55f, 0.08f, 0.06f),
         };
     }
 
@@ -47,7 +56,7 @@ namespace Game.Vehicle.Runtime
     public static class GrayboxTractorBuilder
     {
         public const string RootName = "Tractor4x2_Graybox";
-        static Mesh s_Cube, s_Cylinder;
+        static Mesh s_Cube, s_Cylinder, s_Quad;
 
         public static VehicleBody Build(VehicleDataAsset data, TractorDimensions dims, GrayboxMaterials mats)
         {
@@ -101,6 +110,12 @@ namespace Game.Vehicle.Runtime
             BuildCab(cabPivot, cabOrigin, dims, mats, out Transform steeringWheel);
             var eye = Child(cabPivot, "DriverEyePoint", dims.EyePointVehicle - cabOrigin);
             eye.localRotation = Quaternion.identity;
+
+            // Coupling camera behind the cab looking down at the fifth wheel (reversing aid when solo).
+            var coupleCam = Child(root.transform, "CouplingCamera", new Vector3(0f, dims.overallHeight - 0.9f, dims.CabRearZ - 0.12f));
+            coupleCam.localRotation = Quaternion.Euler(38f, 180f, 0f);
+            RenderTextureMirror.ConfigureCheapCamera(coupleCam.gameObject.AddComponent<Camera>(), 62f, 0.1f, 120f);
+            coupleCam.gameObject.AddComponent<ReversingCamera>();
 
             // ---- wheels (positions from the physics definition) ----
             var wheelsRoot = Child(root.transform, "Wheels", Vector3.zero);
@@ -172,7 +187,7 @@ namespace Game.Vehicle.Runtime
                 float headX = s * (d.mirrorHeadOuter - 0.125f);
                 Box(pivot, "MirrorArm" + n, new Vector3((headX + s * d.cabWidth * 0.5f) * 0.5f, eye.y + 0.25f, zf - 0.10f) - o,
                     new Vector3(Mathf.Abs(headX - s * d.cabWidth * 0.5f), 0.04f, 0.04f), m.dark);
-                Box(pivot, "MirrorHead" + n, new Vector3(headX, eye.y + 0.05f, zf - 0.10f) - o, new Vector3(0.25f, 0.42f, 0.08f), m.dark);
+                BuildMirror(pivot, o, "Mirror" + n, new Vector3(headX, eye.y + 0.05f, zf - 0.10f), eye, s, s < 0 ? 0 : 1, m);
             }
             // Interior.
             P("Dashboard", xl + 0.10f, xr - 0.10f, yFloor, wsBottom - 0.05f, zf - 0.45f, zf - th, m.interior);
@@ -204,7 +219,33 @@ namespace Game.Vehicle.Runtime
             steeringWheel = sw;
         }
 
-        static void Tire(Transform spin, string name, float xOffset, float r, float width, int outerSide, GrayboxMaterials m, TractorDimensions d)
+        /// <summary>
+        /// Mirror head: housing + glass quad oriented so that the line of sight from the design eye point reflects
+        /// to look back along the vehicle side (3 % outward, 5 % down: trailer wheels and road in view), plus the mirror camera on that reflected
+        /// axis. Glass 0.21 x 0.38 m (WORKING_VALUE, class II main mirror size).
+        /// </summary>
+        static void BuildMirror(Transform pivot, Vector3 o, string name, Vector3 head, Vector3 eye, int side, int phase, GrayboxMaterials m)
+        {
+            Vector3 d = (head - eye).normalized;
+            Vector3 b = new Vector3(side * 0.03f, -0.05f, -1f).normalized;
+            Vector3 n = (d - b).normalized;                  // glass back normal (away from the driver)
+            Quaternion q = Quaternion.LookRotation(n, Vector3.up);
+            MeshObj(pivot, name + "Head", head - o, new Vector3(0.25f, 0.42f, 0.08f), q, m.dark, CubeMesh);
+            const float gw = 0.21f, gh = 0.38f;
+            var glass = MeshObj(pivot, name + "Glass", head - o - n * 0.042f, new Vector3(gw, gh, 1f), q, m.mirror != null ? m.mirror : m.dark, QuadMesh);
+            var glassR = glass.GetComponent<MeshRenderer>();
+            glassR.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            glassR.receiveShadows = false;
+            var camT = Child(pivot, name + "Camera", head - o - n * 0.05f);
+            camT.localRotation = Quaternion.LookRotation(b, Vector3.up);
+            RenderTextureMirror.ConfigureCheapCamera(camT.gameObject.AddComponent<Camera>(), 24f, 0.1f, 250f);
+            var mir = camT.gameObject.AddComponent<RenderTextureMirror>();
+            mir.glass = glassR;
+            mir.aspect = gw / gh;
+            mir.phase = phase;
+        }
+
+        internal static void Tire(Transform spin, string name, float xOffset, float r, float width, int outerSide, GrayboxMaterials m, TractorDimensions d)
         {
             var t = Child(spin, name, new Vector3(xOffset, 0f, 0f));
             Cyl(t, "Tread", Vector3.zero, new Vector3(2f * r, width * 0.5f, 2f * r), Quaternion.Euler(0f, 0f, 90f), m.tire);
@@ -221,7 +262,7 @@ namespace Game.Vehicle.Runtime
 
         // ------------------------------------------------------------------ helpers
 
-        static Transform Child(Transform parent, string name, Vector3 localPos)
+        internal static Transform Child(Transform parent, string name, Vector3 localPos)
         {
             var go = new GameObject(name);
             go.transform.SetParent(parent, false);
@@ -229,19 +270,19 @@ namespace Game.Vehicle.Runtime
             return go.transform;
         }
 
-        static void BoxCol(Transform parent, string name, Vector3 center, Vector3 size)
+        internal static void BoxCol(Transform parent, string name, Vector3 center, Vector3 size)
         {
             var t = Child(parent, name, center);
             t.gameObject.AddComponent<BoxCollider>().size = size;
         }
 
-        static Transform Box(Transform parent, string name, Vector3 localPos, Vector3 size, Material mat) =>
+        internal static Transform Box(Transform parent, string name, Vector3 localPos, Vector3 size, Material mat) =>
             MeshObj(parent, name, localPos, size, Quaternion.identity, mat, CubeMesh);
 
-        static Transform Cyl(Transform parent, string name, Vector3 localPos, Vector3 scale, Quaternion rot, Material mat) =>
+        internal static Transform Cyl(Transform parent, string name, Vector3 localPos, Vector3 scale, Quaternion rot, Material mat) =>
             MeshObj(parent, name, localPos, scale, rot, mat, CylinderMesh);
 
-        static Transform MeshObj(Transform parent, string name, Vector3 localPos, Vector3 scale, Quaternion rot, Material mat, Mesh mesh)
+        internal static Transform MeshObj(Transform parent, string name, Vector3 localPos, Vector3 scale, Quaternion rot, Material mat, Mesh mesh)
         {
             var go = new GameObject(name);
             go.transform.SetParent(parent, false);
@@ -254,8 +295,9 @@ namespace Game.Vehicle.Runtime
             return go.transform;
         }
 
-        static Mesh CubeMesh => s_Cube != null ? s_Cube : (s_Cube = PrimitiveMesh(PrimitiveType.Cube));
-        static Mesh CylinderMesh => s_Cylinder != null ? s_Cylinder : (s_Cylinder = PrimitiveMesh(PrimitiveType.Cylinder));
+        internal static Mesh CubeMesh => s_Cube != null ? s_Cube : (s_Cube = PrimitiveMesh(PrimitiveType.Cube));
+        internal static Mesh QuadMesh => s_Quad != null ? s_Quad : (s_Quad = PrimitiveMesh(PrimitiveType.Quad));
+        internal static Mesh CylinderMesh => s_Cylinder != null ? s_Cylinder : (s_Cylinder = PrimitiveMesh(PrimitiveType.Cylinder));
 
         static Mesh PrimitiveMesh(PrimitiveType t)
         {
@@ -265,7 +307,7 @@ namespace Game.Vehicle.Runtime
             return mesh;
         }
 
-        static void SetLayerRecursive(GameObject go, int layer)
+        internal static void SetLayerRecursive(GameObject go, int layer)
         {
             go.layer = layer;
             foreach (Transform c in go.transform) SetLayerRecursive(c.gameObject, layer);

@@ -19,6 +19,7 @@ namespace Game.Vehicle.Runtime
     {
         public VehicleBody body;
         CsvRecorder m_Csv;
+        TrailerModel m_RecTrailer;
 
         public bool IsRecording => m_Csv != null;
         public string CurrentFile => m_Csv?.FilePath;
@@ -37,6 +38,10 @@ namespace Game.Vehicle.Runtime
                 "throttle_in", "brake_in", "steer_in", "parking_in", "throttle_eff", "brake_demand", "parking_state", "hill_hold",
                 "rpm", "gear", "amt_state", "clutch_cmd", "engine_torque", "clutch_torque", "boost", "asr_factor",
                 "steer_angle_deg", "handwheel_deg", "aligning_torque", "cab_pitch_deg", "cab_roll_deg",
+                // Stage 2 (runner names): endurance brakes, air, coupling.
+                "retarder_lever", "engine_brake_torque", "retarder_torque", "air_supply_bar", "air_front_bar", "air_rear_bar",
+                "air_trailer_res_bar", "low_air_warning", "articulation_deg", "kingpin_fz", "kingpin_fx", "fifth_wheel_err_mm",
+                "coupled", "trailer_x", "trailer_z", "landing_gear_load",
             };
             foreach (var w in m.Wheels)
             {
@@ -44,7 +49,15 @@ namespace Game.Vehicle.Runtime
                 cols.AddRange(new[] { n + "_fz", n + "_fx", n + "_fy", n + "_slip", n + "_alpha_deg", n + "_comp", n + "_omega",
                     n + "_brake_t", n + "_abs", n + "_drive_t", n + "_tire_defl", n + "_contact", n + "_surface" });
             }
-            cols.AddRange(new[] { "axle0_load", "axle1_load", "step_us", "frame_ms" });
+            m_RecTrailer = body.Trailer != null ? body.Trailer.Model : null;
+            if (m_RecTrailer != null)
+                foreach (var w in m_RecTrailer.Wheels)
+                {
+                    string n = w.Name;
+                    cols.AddRange(new[] { n + "_fz", n + "_fx", n + "_fy", n + "_slip", n + "_alpha_deg", n + "_comp", n + "_omega",
+                        n + "_brake_t", n + "_abs", n + "_drive_t", n + "_tire_defl", n + "_contact", n + "_surface" });
+                }
+            cols.AddRange(new[] { "axle0_load", "axle1_load", "trailer_axles_load", "step_us", "frame_ms" });
             var build = BuildInfo.Current;
             string file = Path.Combine(TelemetryDirectory, "drive-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".csv");
             string trailer = (body.Model.Def.id + "," + build.ShortLabel).Replace("\n", "");
@@ -65,6 +78,8 @@ namespace Game.Vehicle.Runtime
         void FixedUpdate()
         {
             if (m_Csv == null || body == null || !body.Initialized) return;
+            // The column set depends on the trailer: a respawn with another trailer model ends the file.
+            if (!ReferenceEquals(body.Trailer != null ? body.Trailer.Model : null, m_RecTrailer)) { StopRecording(); return; }
             Record();
         }
 
@@ -87,7 +102,16 @@ namespace Game.Vehicle.Runtime
             r[i++] = m.EngineTorque; r[i++] = m.ClutchTorque; r[i++] = m.Engine.Boost; r[i++] = m.AsrFactor;
             r[i++] = m.Steering.Angle * MathUtil.Rad2Deg; r[i++] = m.Steering.HandwheelDeg; r[i++] = m.AligningTorqueTotal;
             r[i++] = m.Cab.Pitch * MathUtil.Rad2Deg; r[i++] = m.Cab.Roll * MathUtil.Rad2Deg;
-            double a0 = 0, a1 = 0;
+            var air = m.Air;
+            var tr = m_RecTrailer;
+            var fw = body.Combination.FifthWheel;
+            r[i++] = inp.RetarderLever; r[i++] = m.Engine.EngineBrakeTorque; r[i++] = m.Retarder.Torque;
+            r[i++] = air.Supply; r[i++] = air.Front; r[i++] = air.Rear; r[i++] = tr != null ? tr.Brakes.Reservoir : 0; r[i++] = air.LowPressureWarning ? 1 : 0;
+            r[i++] = tr != null ? fw.Articulation * MathUtil.Rad2Deg : 0; r[i++] = tr != null ? fw.KingpinLoadLocal.y : 0; r[i++] = tr != null ? fw.KingpinLoadLocal.z : 0;
+            r[i++] = tr != null && fw.Coupled ? fw.PositionError * 1000 : 0; r[i++] = fw.Coupled ? 1 : 0;
+            Vector3 tp = body.Trailer != null ? body.Trailer.Body.position : Vector3.zero;
+            r[i++] = tp.x; r[i++] = tp.z; r[i++] = tr != null ? tr.LandingGearLoad : 0;
+            double a0 = 0, a1 = 0, at = 0;
             var wheels = m.Wheels;
             for (int k = 0; k < wheels.Length; k++)
             {
@@ -97,7 +121,19 @@ namespace Game.Vehicle.Runtime
                 r[i++] = w.TireDeflection; r[i++] = w.Contact ? 1 : 0; r[i++] = w.SurfaceId;
                 if (w.AxleIndex == 0) a0 += w.Fz; else a1 += w.Fz;
             }
-            r[i++] = a0; r[i++] = a1; r[i++] = body.LastStepMicros; r[i++] = Time.unscaledDeltaTime * 1000.0;
+            if (tr != null)
+            {
+                var tw = tr.Wheels;
+                for (int k = 0; k < tw.Length; k++)
+                {
+                    var w = tw[k];
+                    r[i++] = w.Fz; r[i++] = w.Fx; r[i++] = w.Fy; r[i++] = w.SlipRatio; r[i++] = w.SlipAngle * MathUtil.Rad2Deg;
+                    r[i++] = w.Compression; r[i++] = w.Omega; r[i++] = w.BrakeTorque; r[i++] = w.AbsFactor; r[i++] = w.DriveTorque;
+                    r[i++] = w.TireDeflection; r[i++] = w.Contact ? 1 : 0; r[i++] = w.SurfaceId;
+                    at += w.Fz;
+                }
+            }
+            r[i++] = a0; r[i++] = a1; r[i++] = at; r[i++] = body.LastStepMicros; r[i++] = Time.unscaledDeltaTime * 1000.0;
             m_Csv.CommitRow();
         }
 

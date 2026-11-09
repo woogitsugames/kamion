@@ -20,11 +20,14 @@ namespace Game.Vehicle.Runtime
         public TextAsset engine;
         public TextAsset gearbox;
         public TextAsset[] tires = new TextAsset[0];
+        /// <summary>Semi-trailer definition (Stage 2). Optional: solo-only data assets leave it empty.</summary>
+        public TextAsset trailer;
 
         [NonSerialized] VehicleDefinition m_Vehicle;
         [NonSerialized] EngineDefinition m_Engine;
         [NonSerialized] GearboxDefinition m_Gearbox;
         [NonSerialized] Dictionary<string, TireDefinition> m_Tires;
+        [NonSerialized] TrailerDefinition m_Trailer;
 
         public static VehicleDataAsset LoadDefault()
         {
@@ -34,12 +37,22 @@ namespace Game.Vehicle.Runtime
         }
 
         public VehicleDefinition Vehicle { get { Parse(); return m_Vehicle; } }
+        public bool HasTrailer => trailer != null;
+        public TrailerDefinition Trailer { get { Parse(); return m_Trailer; } }
 
         /// <summary>Creates a fresh solver instance (new state). Definitions are parsed once and shared.</summary>
         public VehicleModel CreateModel(SolverSettings settings = null)
         {
             Parse();
             return new VehicleModel(m_Vehicle, m_Engine, m_Gearbox, m_Tires, settings);
+        }
+
+        /// <summary>Creates a fresh trailer solver with the given load (null = empty). Mass properties include the cargo.</summary>
+        public TrailerModel CreateTrailer(CargoDefinition cargo = null, SolverSettings settings = null)
+        {
+            Parse();
+            if (m_Trailer == null) throw new InvalidOperationException($"{name}: no trailer definition assigned");
+            return new TrailerModel(m_Trailer, m_Tires, cargo, settings);
         }
 
         void Parse()
@@ -62,7 +75,15 @@ namespace Game.Vehicle.Runtime
             }
             if (v.engineId != e.id) throw new FormatException($"{name}: vehicle wants engine '{v.engineId}', got '{e.id}'");
             if (v.gearboxId != g.id) throw new FormatException($"{name}: vehicle wants gearbox '{v.gearboxId}', got '{g.id}'");
-            m_Vehicle = v; m_Engine = e; m_Gearbox = g; m_Tires = t;
+            TrailerDefinition tr = null;
+            if (trailer != null)
+            {
+                tr = JsonUtility.FromJson<TrailerDefinition>(trailer.text);
+                tr.Validate();
+                foreach (var a in tr.axles)
+                    if (!t.ContainsKey(a.tireId)) throw new FormatException($"{name}: trailer wants tire '{a.tireId}', not assigned");
+            }
+            m_Vehicle = v; m_Engine = e; m_Gearbox = g; m_Tires = t; m_Trailer = tr;
         }
 
         void OnValidate() { m_Vehicle = null; }

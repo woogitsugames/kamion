@@ -56,6 +56,15 @@ namespace Game.Cameras
 
         public void SetMode(CameraMode m) { mode = m; m_ChaseInit = false; }
 
+        /// <summary>Chase / orbit framing for a tractor alone or with a 13.6 m semi-trailer behind it.</summary>
+        public void SetCombination(bool withTrailer)
+        {
+            chaseDistance = withTrailer ? 26f : 13f;
+            chaseHeight = withTrailer ? 7.5f : 4.5f;
+            orbitDistance = withTrailer ? 26f : 14f;
+            m_ChaseInit = false;
+        }
+
         /// <summary>Drag on the free screen area (pixels).</summary>
         public void AddLookDelta(Vector2 px)
         {
@@ -75,7 +84,7 @@ namespace Game.Cameras
         public void AddZoom(float delta)
         {
             if (mode == CameraMode.Orbit) orbitDistance = Mathf.Clamp(orbitDistance * (1f - delta * 0.1f), 4f, 80f);
-            else if (mode == CameraMode.Chase) chaseDistance = Mathf.Clamp(chaseDistance * (1f - delta * 0.1f), 7f, 30f);
+            else if (mode == CameraMode.Chase) chaseDistance = Mathf.Clamp(chaseDistance * (1f - delta * 0.1f), 7f, 45f);
         }
 
         void FixedUpdate()
