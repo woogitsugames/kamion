@@ -128,6 +128,8 @@ namespace Game.Gameplay
             m_Audio = gameObject.AddComponent<TruckAudioController>();
             m_Audio.vehicle = vehicle;
             m_Audio.rig = m_Rig;
+            // Live 12.3" cluster, navigation and DIN screens from the solver (art truck only; review r4 C-N1).
+            CabScreensInstaller.Install(vehicle);
 
             m_Hud = DrivingHud.Create(mainCamera, new DrivingHudContext
             {

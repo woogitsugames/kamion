@@ -152,6 +152,14 @@ namespace Game.Editor.VisualQA
                 // Art truck (A7): tier binding, lamp state and the cab fill for this camera (LateUpdate does not run here).
                 foreach (var rig in UnityEngine.Object.FindObjectsByType<TruckVisualRig>(FindObjectsSortMode.None)) rig.Apply();
                 foreach (var tl in UnityEngine.Object.FindObjectsByType<TruckLights>(FindObjectsSortMode.None)) tl.Refresh();
+                // Live cab screens (cluster, navigation, DIN) drawn from the (parked) vehicle state for this light.
+                foreach (var vb in UnityEngine.Object.FindObjectsByType<VehicleBody>(FindObjectsSortMode.None))
+                {
+                    var screens = Game.Gameplay.CabScreensInstaller.Install(vb);
+                    if (screens == null) continue;
+                    screens.RenderNow();
+                    Debug.Log($"[VISUALQA] cab screens {vb.name}: refresh {screens.LastCpuMs:F3} ms CPU, cluster {screens.Cluster.VertexCount} verts, nav {screens.Nav.VertexCount} verts, night={screens.State.Night}, clock={screens.State.ClockMinutes / 60:D2}:{screens.State.ClockMinutes % 60:D2}");
+                }
                 // -qaCabFill off: A/B frames without the cab fill and the cab-view lift (A7 before/after).
                 if (EditorTools.Arg("-qaCabFill", "on") == "off")
                 {
