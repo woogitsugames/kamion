@@ -204,14 +204,14 @@ namespace Game.World.Import
         /// interpolated (both neighbours do the same, whatever their own blocks are), and a 1.5 m skirt hides cracks
         /// against a neighbour drawn at another LOD. Normals from central differences of the grid.
         /// </summary>
-        public static Mesh TerrainBand(string name, GlbReader.Primitive grid, float s, Vector2 minEN, Vector2 maxEN, int block, float bandM, out float fineFraction)
+        public static Mesh TerrainBand(string name, GlbReader.Primitive grid, float s, Vector2 minEN, Vector2 maxEN, int block, float bandM, out float fineFraction, int dilation = 1)
         {
-            var (pos, nrm, col, tris) = TerrainBandData(name, grid, s, minEN, maxEN, block, bandM, out fineFraction);
+            var (pos, nrm, col, tris) = TerrainBandData(name, grid, s, minEN, maxEN, block, bandM, out fineFraction, dilation);
             return Build(name, pos, nrm, null, col, new List<int[]> { tris });
         }
 
         /// <summary>Raw arrays of <see cref="TerrainBand"/> (also used for the terrain collider).</summary>
-        public static (Vector3[] pos, Vector3[] nrm, Color32[] col, int[] tris) TerrainBandData(string name, GlbReader.Primitive grid, float s, Vector2 minEN, Vector2 maxEN, int block, float bandM, out float fineFraction)
+        public static (Vector3[] pos, Vector3[] nrm, Color32[] col, int[] tris) TerrainBandData(string name, GlbReader.Primitive grid, float s, Vector2 minEN, Vector2 maxEN, int block, float bandM, out float fineFraction, int dilation = 1)
         {
             int nx = Mathf.RoundToInt((maxEN.x - minEN.x) / s) + 1, nz = Mathf.RoundToInt((maxEN.y - minEN.y) / s) + 1;
             var H = new float[nx * nz];
@@ -249,8 +249,8 @@ namespace Game.World.Import
             for (int i = 0; i < bx; i++)
             {
                 bool f = false;
-                for (int dj = -1; dj <= 1 && !f; dj++)
-                for (int di = -1; di <= 1 && !f; di++)
+                for (int dj = -dilation; dj <= dilation && !f; dj++)
+                for (int di = -dilation; di <= dilation && !f; di++)
                 {
                     int a = i + di, c = j + dj;
                     if (a >= 0 && c >= 0 && a < bx && c < bz) f = near[c * bx + a];

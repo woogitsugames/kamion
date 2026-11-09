@@ -110,8 +110,10 @@ namespace Game.World.Import
         public const float CorridorM = 320f;
         /// <summary>Terrain band: blocks with a road/paved edge closer than this keep the fine spacing (+1 block dilation).</summary>
         public const float TerrainBandM = 15f;
+        /// <summary>Low content: tighter band (10 m, no dilation) - the 2 m terrain is the largest Low mesh in the APK.</summary>
+        public const float TerrainBandLowM = 10f;
         /// <summary>Low content: chunks closer than this to the start route also get LOD0 buildings.</summary>
-        public const float LowBuildingsLod0M = 100f;
+        public const float LowBuildingsLod0M = 60f;
 
         // ------------------------------------------------------------------------------------------------- import
         public static Result Import(string region, string[] tiers)
@@ -304,7 +306,8 @@ namespace Game.World.Import
             string fineNode = tier == "High" ? "terrain_lod0" : "terrain_lod1";
             float spacing = tier == "High" ? 1f : 2f;
             var fineGrid = g.Find(fineNode) ?? throw new InvalidDataException($"{ch.Id}: {fineNode} missing");
-            var band = WorldMeshBake.TerrainBand($"{ch.Id}_terrain_band", Merge(fineGrid), spacing, ch.Min, ch.Max, 8, TerrainBandM, out float fine);
+            var band = WorldMeshBake.TerrainBand($"{ch.Id}_terrain_band", Merge(fineGrid), spacing, ch.Min, ch.Max, 8,
+                tier == "High" ? TerrainBandM : TerrainBandLowM, out float fine, tier == "High" ? 1 : 0);
             if (tier == "High") ch.FineFractionHigh = fine; else ch.FineFractionLow = fine;
             Add("terrain_band", band, terrainMat);
             foreach (var t in tier == "High" ? new[] { "terrain_lod1", "terrain_lod2", "terrain_lod3" } : new[] { "terrain_lod2", "terrain_lod3" })
@@ -378,13 +381,11 @@ namespace Game.World.Import
             }
             // Terrain fallback: in the route corridor the same band as the Low LOD0 terrain (2 m within 15 m of roads and
             // yards, 4 m elsewhere), elsewhere the 4 m grid. Roads and yards have their own collision on top.
+            // APK budget (ADR 0012): the 4 m grid everywhere. Prebaked PhysX data doubles every collision byte, and the
+            // 2 m corridor band alone was ~40 MB in the build. Off-road the wheels may sit a few cm off the 2 m visual
+            // terrain; roads, yards, kerbs and verges next to roads have their own collision.
             Vector3[] tp = null; int[] tt = null;
-            if (ch.Corridor && low.Find("terrain_lod1") is GlbReader.MeshNode fine)
-            {
-                var d = WorldMeshBake.TerrainBandData($"{ch.Id}_terrain", Merge(fine), 2f, ch.Min, ch.Max, 8, TerrainBandM, out _);
-                tp = d.pos; tt = d.tris;
-            }
-            else if (low.Find("terrain_lod2") is GlbReader.MeshNode terr)
+            if (low.Find("terrain_lod2") is GlbReader.MeshNode terr)
             {
                 var pos = new List<Vector3>();
                 var tris = new List<int>();

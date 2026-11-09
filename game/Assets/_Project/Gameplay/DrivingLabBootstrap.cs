@@ -157,7 +157,33 @@ namespace Game.Gameplay
             if (ap == "route") { if (!StartRouteDriver(platform.GetLaunchArgument("speed"))) ap = null; }
             else if (!string.IsNullOrEmpty(ap)) { ConfigureAutopilot(ap, platform.GetLaunchArgument("speed")); m_AutopilotStart = true; }
             Spawn(m_Spawn);
+            ActivateControlCamera(platform.GetLaunchArgument("qacam"));
             Debug.Log($"[LAB] DrivingLab ready: vehicle={vehicle.name} trailer={(trailer != null ? trailer.name : "none")} spawn={m_Spawn} steer={m_SteerMode} autopilot={(Autopilot.Enabled || RouteDriver.Enabled ? ap : "off")} fixedDt={Time.fixedDeltaTime}");
+        }
+
+        /// <summary>
+        /// Device visual QA (launch argument qacam=&lt;control camera id&gt;): renders the scene from that ControlCamera
+        /// with the tier's camera settings, HUD hidden - native-resolution phone frames of the editor control set
+        /// (scripts/device-metrics.ps1 -QaCamera).
+        /// </summary>
+        void ActivateControlCamera(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return;
+            foreach (var qa in FindObjectsByType<Game.Rendering.ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (qa.id != id) continue;
+                var cam = qa.GetComponent<Camera>();
+                qa.gameObject.SetActive(true);
+                cam.enabled = true;
+                cam.depth = (mainCamera != null ? mainCamera.depth : 0f) + 10f;
+                var applier = FindAnyObjectByType<Game.Rendering.QualityProfileApplier>();
+                if (applier != null) { applier.targetCamera = cam; applier.ApplyNow(); }
+                if (mainCamera != null) mainCamera.enabled = false;
+                if (m_Hud != null) m_Hud.gameObject.SetActive(false);
+                Debug.Log($"[LAB] control camera {id} active ({cam.pixelWidth}x{cam.pixelHeight})");
+                return;
+            }
+            Debug.LogWarning($"[LAB] qacam={id}: no such ControlCamera in the scene");
         }
 
         static LabSpawn ParseSpawn(string arg, LabSpawn fallback)

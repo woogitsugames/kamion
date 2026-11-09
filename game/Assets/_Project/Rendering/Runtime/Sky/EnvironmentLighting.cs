@@ -106,7 +106,7 @@ namespace Game.Rendering
 
             // ---- ambient (L2 SH of sky + ground) ----
             RenderSettings.ambientMode = AmbientMode.Custom;
-            RenderSettings.ambientProbe = m.AmbientProbe(p.groundAlbedo);
+            RenderSettings.ambientProbe = m.AmbientProbe(p.groundAlbedo, 24, p.ambientSkySaturation);
             RenderSettings.ambientIntensity = 1f;
 
             // ---- specular environment ----

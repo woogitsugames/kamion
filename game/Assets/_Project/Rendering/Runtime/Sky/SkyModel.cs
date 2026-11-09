@@ -168,7 +168,7 @@ namespace Game.Rendering
         /// illuminance / π) into Unity's L2 ambient probe. Each sample acts as a directional light of intensity L·k·dω/π,
         /// which reproduces the irradiance E(n)·k/π a Unity Lambert surface expects. The sun is NOT included (real light).
         /// </summary>
-        public UnityEngine.Rendering.SphericalHarmonicsL2 AmbientProbe(Color groundAlbedo, int resolution = 24)
+        public UnityEngine.Rendering.SphericalHarmonicsL2 AmbientProbe(Color groundAlbedo, int resolution = 24, float skySaturation = 1f)
         {
             var sh = new UnityEngine.Rendering.SphericalHarmonicsL2();
             Color ground = groundAlbedo * (HorizontalIlluminanceLux * Exposure / Mathf.PI);
@@ -183,11 +183,19 @@ namespace Game.Rendering
                 {
                     float phi = 2f * Mathf.PI * (c + 0.5f) / cols;
                     var d = new Vector3(s * Mathf.Cos(phi), z, s * Mathf.Sin(phi));
-                    Color L = z > 0f ? ExposedRadiance(d) : ground;
+                    Color L = z > 0f ? Desaturate(ExposedRadiance(d), skySaturation) : ground;
                     sh.AddDirectionalLight(d, L, dOmega / Mathf.PI);
                 }
             }
             return sh * ShConventionScale(resolution);
+        }
+
+        /// <summary>Lerp toward the Rec.709 luminance (keeps luminance, scales chroma).</summary>
+        public static Color Desaturate(Color c, float saturation)
+        {
+            if (saturation >= 1f) return c;
+            float y = 0.2126f * c.r + 0.7152f * c.g + 0.0722f * c.b;
+            return Color.LerpUnclamped(new Color(y, y, y, c.a), c, saturation);
         }
 
         static float s_ShScale;

@@ -20,6 +20,7 @@ param(
     [ValidateSet('', 'Low', 'Medium', 'High', 'Ultra')] [string]$Tier = '',
     [int]$Fps = 0,
     [switch]$Uncapped,
+    [string]$QaCamera = '',
     [string]$Scene = '',
     [string]$Autopilot = '',
     [int]$Speed = 0,
@@ -51,6 +52,8 @@ if ($Launch) {
         if ($Autopilot) { $startArgs += @('-e', 'autopilot', $Autopilot) }
         if ($Speed -gt 0) { $startArgs += @('-e', 'speed', "$Speed") }
         if ($Trailer) { $startArgs += @('-e', 'trailer', $Trailer) }
+        # -QaCamera <id>: render from that ControlCamera (HUD hidden) - native-resolution device frame of the control set.
+        if ($QaCamera) { $startArgs += @('-e', 'qacam', $QaCamera) }
         & $Adb -s $d @startArgs | Out-Null
         Write-Host "$d launched $component"
     }

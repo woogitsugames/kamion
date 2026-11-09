@@ -233,7 +233,7 @@ namespace Game.UI.Driving
             Stretch(rot);
             var img = rot.gameObject.AddComponent<Image>();
             img.sprite = WheelSprite();
-            img.color = new Color(0.70f, 0.73f, 0.75f, 0.62f);
+            img.color = new Color(0.70f, 0.73f, 0.75f, 0.30f);   // toned down (visual review r2): a guide, not a disc over the road
             img.raycastTarget = false;
             var w = root.gameObject.AddComponent<SteeringWheelWidget>();
             w.wheel = m_Ctx.Wheel;

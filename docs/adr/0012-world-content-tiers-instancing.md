@@ -61,8 +61,8 @@ inside the chunk); a 1.5 m skirt on the chunk border hides cracks against a neig
   (`WorldInstanceSet` asset). Per camera (`beginCameraRendering`, so mirrors get their own shorter cull): frustum test per
   cell, one LOD for a whole run when the cell lies inside one LOD band, else per instance; 1023-matrix batches,
   one `RenderMeshInstanced` per submesh per batch. No GC per frame.
-- LOD end distances at LOD bias 1 (`InstanceImporter.Policy`, WORKING_VALUE): trees 30 / 100 m, impostor to 1000 m;
-  shrubs 15 / 50 / 300 m; lamps 60 / 400 m; signs and signals 50 / 250 m; pylons 80 / 1500 m; small props 30 / 120 m.
+- LOD end distances at LOD bias 1 (`InstanceImporter.Policy`, WORKING_VALUE): trees 20 / 60 m, impostor to 1000 m;
+  shrubs 12 / 40 / 300 m; lamps 60 / 400 m; signs and signals 50 / 250 m; pylons 80 / 1500 m; small props 30 / 120 m.
   They scale with the tier's LOD bias (Low 0.5, Medium 0.8, High 1.5). Hard switches, no cross-fade (to do: dithered
   LOD fade once measured on the A16).
 - Shadows: LOD0 props and LOD0/LOD1 trees cast (only inside the tier's shadow distance anyway); impostors never.

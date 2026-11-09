@@ -35,8 +35,10 @@ namespace Game.World.Import
         static (float[] ends, int shadowMask) Policy(string proto, int lodCount)
         {
             float[] e;
-            if (proto.StartsWith("tree_shrub")) e = new[] { 15f, 50f, 300f };
-            else if (proto.StartsWith("tree_")) e = new[] { 30f, 100f, 1000f };
+            // Trees: the forest along DK8 is the worst view - with 30/100 m it drew 0.78 M instanced triangles on
+            // Medium (budget 0.55 M for everything); 20/60 m keeps Medium at ~0.3 M there.
+            if (proto.StartsWith("tree_shrub")) e = new[] { 12f, 40f, 300f };
+            else if (proto.StartsWith("tree_")) e = new[] { 20f, 60f, 1000f };
             else if (proto.StartsWith("lamp_")) e = new[] { 60f, 400f };
             else if (proto == "pylon" || proto == "power_pole") e = new[] { 80f, 1500f };
             else if (proto.StartsWith("plate_") || proto.StartsWith("board_") || proto.StartsWith("sign_") || proto.StartsWith("signal_")) e = new[] { 50f, 250f };
