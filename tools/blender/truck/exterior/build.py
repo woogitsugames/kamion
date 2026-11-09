@@ -33,7 +33,7 @@ LABEL = {
     "oko_przod": "z punktu oczu: na wprost", "oko_lewo": "z punktu oczu: szyba lewa",
     "oko_prawo": "z punktu oczu: szyba prawa i lusterka",
 }
-LIGHT_LABEL = {"overcast": "pochmurno (pełne GI)", "urp": "jak URP (bez odbić rozproszonych)", "studio": "studio"}
+LIGHT_LABEL = {"overcast": "pochmurno (pełne GI)", "urp": "jak URP (bez odbić rozproszonych)", "studio": "studio", "lowsun": "niskie słońce (~8°)"}
 
 
 def parse():
