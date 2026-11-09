@@ -32,3 +32,13 @@ Wiążące tło: `docs/06` (anti-slop), ADR 0005. Każda sekcja ma właściciela
 - Lusterka bez ramion albo „wiszące w powietrzu”; brak lusterka przedniego/krawężnikowego.
 - Siodło na złej wysokości, brak przewodów do naczepy, pusta rama bez zbiorników.
 - Zbyt czyste i symetryczne podwozie w finalnym modelu (A4+): zbiornik paliwa po jednej stronie, akumulatory/SCR po drugiej.
+
+### Wnętrze kabiny (A5)
+- Charakter: miejsce pracy i odpoczynku zawodowego kierowcy — spokojne, ciemne u góry (deska nie odbija się w szybie), cieplejsza szarość niżej, jasna podsufitka. Zadbane, lekko używane; zero „gamingowych” akcentów, podświetleń RGB i błyszczącego plastiku.
+- Neutralność marki: wspólna bryła dla A/B/C; od marki zależą tylko znak na piaście i kolor wstawek (`grafit` domyślny, `piasek`, `koniak`, `lupek`).
+- Wartości materiałów (albedo liniowe / chropowatość, WORKING_VALUE — brak jeszcze tabeli pomiarowej z `docs/06` §3): góra deski soft-touch 0,042 / ~0,7; dół deski 0,15 / ~0,6; tworzywo ciemne 0,03 / ~0,6; skóra foteli 0,034 / ~0,55 (przetarcia 0,26); wieniec kierownicy 0,03 / ~0,55; podsufitka 0,30 / 0,88; dywanik gumowy 0,04 / ~0,8; metal satynowy 0,5 metal / ~0,35. Połysk tylko na szkle ekranów i lusterkach.
+- Detal tam, gdzie patrzy kierowca: ziarno tworzyw (normal), przeszycia i perforacja foteli, symbole na przyciskach, kratki głośników i nawiewów, szczeliny podziału paneli, uszczelki. Drobny detal w teksturze, bryła w siatce; bevel tylko tam, gdzie łapie się światło.
+- Zużycie sterowane maskami (atrybut `wear`, AO): lewa boczna poduszka fotela kierowcy, wieniec „na 10 i 14”, dywanik pod piętą i przy drzwiach, listwa progowa, kurz w zagłębieniach. Subtelnie — flota, nie wrak.
+- Ekrany: realistyczne treści (prędkość, obroty z zieloną strefą ekonomii, bieg AMT, tempomat/ogranicznik, ciśnienie powietrza w 2 obwodach, paliwo/AdBlue, tachograf), spokojna paleta, bez sci-fi. Tekst fontem z otwartą licencją (Inter, OFL), polskie znaki.
+- Rendery kontrolne wnętrza (Blender, A5): kamery `kierowca` (oczy kierowcy, 80° poziomo), `zegary`, `pasazer`, `lezanka`, `kierownica`, `fotel`; światło: pochmurne niebo + nisko stojące słońce (~9°); AgX bez looków, bez bloomu/winiety; JPEG 1600×900 ≤ 400 KB.
+- Czerwone flagi wnętrza: kaptur zegarów zasłaniający ekran lub wyglądający jak postawiony telewizor; nawiewy/przyciski „wiszące” na powierzchni; jednolity czarny plastik bez ziarna; fotel jak klocek bez przeszyć i mechanizmu; kierownica bez przycisków i dźwigni; biała/odbijająca deska w szybie; brak tachografu i hamulca postojowego.
