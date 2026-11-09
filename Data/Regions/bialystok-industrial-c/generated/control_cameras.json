@@ -1,0 +1,98 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "driver_andersa_to_putry",
+   "look_at": [
+    -292.594,
+    -185.604,
+    131.376
+   ],
+   "note": "truck driver eye 2.5 m, right lane of Andersa (DK19/DK65) approaching Rondo Putry",
+   "pos": [
+    -204.59,
+    -251.666,
+    133.365
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "putry_above",
+   "look_at": [
+    -554.833,
+    20.955,
+    134.679
+   ],
+   "note": "Rondo Putry from ~40 m (two-level: Andersa viaduct above the ring)",
+   "pos": [
+    -484.833,
+    100.955,
+    176.679
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "kwadrat_park_gate",
+   "look_at": [
+    644.731,
+    -555.267,
+    142.29
+   ],
+   "note": "from the public road back into the Kwadrat Park depot access road (route start)",
+   "pos": [
+    618.486,
+    -596.417,
+    143.346
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dk8_dk19_exit",
+   "look_at": [
+    -710.709,
+    663.642,
+    145.953
+   ],
+   "note": "Al. Tysiąclecia Państwa Polskiego northbound, DK8/DK19 exit from the city",
+   "pos": [
+    -639.488,
+    579.731,
+    146.355
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "biezenstwa_above",
+   "look_at": [
+    554.682,
+    -716.454,
+    140.273
+   ],
+   "note": "Rondo Pamięci Bieżeństwa 1915 r.",
+   "pos": [
+    504.682,
+    -761.454,
+    178.273
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    -554.833,
+    20.955
+   ],
+   "height": 254.679,
+   "id": "ortho_putry",
+   "note": "orthographic top view for overlay on the GUGiK orthophoto",
+   "size_m": 260.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "bialystok-industrial-c",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

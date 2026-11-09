@@ -1,0 +1,33 @@
+# authored_overrides for bialystok-industrial-c (docs/WORLD_GENERATION.md §Overrides)
+#
+# Applied by tools/worldgen/roads/build_world.py AFTER the road graph is loaded and BEFORE geometry is
+# generated, keyed by stable OSM-derived ids (edge id, osm_way, node id), so they survive every
+# regeneration. A target that no longer exists is reported as "stale" in generated/roads_qa.json
+# (never silently dropped). Rule (CLAUDE.md §7, skill geo-worldgen): fix the generator when it is wrong;
+# use an override only for facts the data does not describe.
+schema: truck-sim-pl/overrides/1
+overrides:
+  - id: kwadrat-park-yard-access-width
+    target: {osm_way: [188397874, 1090234585, 1090234575]}
+    reason: >-
+      Depot access road to the Kwadrat Park yard (route start). OSM has no lanes/width and BDOT10k has no
+      matching carriageway, so the generator falls back to class D (2 x 2.50 m = 5.0 m, PTB2022 §17 ust.1).
+      The 2024-05-27 orthophoto shows ~7 m of asphalt used by articulated trucks. Set 2 x 3.50 m.
+    confidence: medium
+    verify: owner photo session item 1 (gate and yard)
+    set: {lanes: 2, lane_width: 3.5}
+  - id: kwadrat-park-yard-flush-edges
+    target: {osm_way: [1090234575]}
+    reason: >-
+      Inside the paved yard the access road has no raised kerbs (orthophoto: continuous paved surface).
+    confidence: medium
+    verify: owner photo session item 1
+    set: {side_left: flush, side_right: flush}
+  - id: kwadrat-park-access-junction-radius
+    target: {node: n1882887381}
+    reason: >-
+      Trucks (16.5 m articulated) turn into the depot access road here; use a 15 m kerb return instead of
+      the class default (8 m for class D, standards.CURB_RADIUS). WORKING_VALUE until photographed.
+    confidence: low
+    verify: owner photo session item 1
+    set: {curb_radius: 15.0}
