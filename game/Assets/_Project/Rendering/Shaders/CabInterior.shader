@@ -44,8 +44,8 @@ Shader "Kamion/Cab Interior"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
-            #pragma multi_compile_fragment _ _SHADOWS_SOFT
-            #pragma multi_compile_fragment _ _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
+            // Hard shadows in the cab (no soft-shadow variants): the sun patches come through the glass edges and the
+            // frit, soft filtering on a full-screen interior cost ~3 ms GPU on the S24+ High (A7 measurement, throttled).
             #pragma shader_feature_local _KAMION_CAB_DECAL
             #pragma multi_compile_fog
             #define _NORMALMAP 1

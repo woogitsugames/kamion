@@ -83,6 +83,18 @@ Source: `docs/reports/device/DEVICE-RUN-2026-11-09.md` §r3. GPU = `FrameTimingM
 
 Medium tier is MSAA 2× (4× cost +28 ms GPU in the forest on the G57). Leaf cards use `Kamion/Vegetation` on Low/Medium.
 
+## Measured: TRAKT art truck vs graybox (track A7), 2026-11-09
+Source: `docs/reports/visual/truck-A7/README.md`. WorldC, control camera `cab-gate` (driver eye at the spawn), same camera in both APKs.
+
+| | graybox | TRAKT (A6 LOD0-2 + interior) |
+|---|---|---|
+| Galaxy A16, Low, uncapped (vsync 60) | 59.35 FPS, GPU p50 15.78 ms, PSS 560 MB | 59.49 FPS, GPU p50 15.94 ms, PSS 579 MB |
+| Galaxy S24+, High, uncapped, thermal status 2 (warm all session) | 44.85 FPS, GPU 21.88 ms, PSS 1001 MB | 47.43 FPS, GPU 20.02 ms, PSS 1074 MB |
+
+Truck content per tier: Low = exterior LOD2 14.5k + interior LOD2 19.0k tris, 512/256 atlases; Medium = LOD1-2 + interior
+LOD1 34.9k; High = LOD0-1 (82.9k) + interior LOD0 75.4k, 2048 atlases. Build +54 MB uncompressed, APK +12.1 MB. Open: S24+ High
+`cab-dash` view in sun 36 ms GPU (warm phone; shadows on the full-screen interior +7 ms) - profile on a cold phone.
+
 ## World content v2 (ADR 0012) — build and memory, 2026-11-09
 Sources: `artifacts/world/bialystok-industrial-c-import.json` (bake), `BUILD_CONTENT` lines of the build logs (Unity build
 report, sizes before LZ4HC), APK file sizes. Tile C = 4 km², 64 chunks, ≈ 110 800 instances (2 300 props + 108 500 trees).
