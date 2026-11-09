@@ -1,4 +1,5 @@
-// Analytic daylight sky (Preetham 1999 clear + CIE overcast), parameters computed on the CPU by Game.Rendering.SkyModel.
+// Analytic daylight sky (Preetham 1999 clear luminance × single-scattering colour LUT + CIE overcast), parameters computed
+// on the CPU by Game.Rendering.SkyModel.
 // Output is in exposed display units (same exposure as the sun light, ambient SH and fog), so the horizon matches the fog.
 // Below the horizon the dome fades to the fog colour (aerial perspective of distant ground): no hard horizon seam.
 // Interleaved-gradient-noise dither of ±0.5 LSB hides 8-bit banding on LDR tiers (no post-processing dither there).
@@ -32,6 +33,7 @@ Shader "Kamion/Sky"
             float4 _SkySunColor;    // linear, luminance 1
             float4 _SkyFogColor;    // exposed horizon colour
             float _SunDiscScale;
+            TEXTURE2D(_SkyChroma); SAMPLER(sampler_SkyChroma);   // u = γ/π, v = sqrt(cos θ); rgb of luminance 1
 
             struct Attributes { float4 positionOS : POSITION; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct Varyings { float4 positionCS : SV_POSITION; float3 dir : TEXCOORD0; UNITY_VERTEX_OUTPUT_STEREO };
@@ -70,10 +72,9 @@ Shader "Kamion/Sky"
                 if (_SkyMisc.x < 1.0)
                 {
                     float Y = Perez(_SkyPerezY, _SkyPerezE.x, cosTheta, gamma, cosGamma) * _SkyZenith.z;
-                    float cosThetaC = max(cosTheta, 0.104528);   // chromaticity no lower than 6° (Preetham magenta horizon)
-                    float x = Perez(_SkyPerezX, _SkyPerezE.y, cosThetaC, gamma, cosGamma) * _SkyZenith.x;
-                    float y = Perez(_SkyPerezYc, _SkyPerezE.z, cosThetaC, gamma, cosGamma) * _SkyZenith.y;
-                    clear = XyYToRec709(x, y, Y);
+                    float2 uv = float2(gamma / PI, sqrt(saturate(d.y)));
+                    uv = (uv * float2(63.0, 31.0) + 0.5) / float2(64.0, 32.0);     // texel centres of the 64×32 LUT
+                    clear = SAMPLE_TEXTURE2D_LOD(_SkyChroma, sampler_SkyChroma, uv, 0).rgb * Y;
                 }
                 float over = _SkyZenith.w * (1.0 + 2.0 * cosTheta) / 3.0;
                 return lerp(clear, over.xxx, _SkyMisc.x);

@@ -29,7 +29,8 @@ namespace Game.Rendering
             k_PerezYc = Shader.PropertyToID("_SkyPerezYc"), k_PerezE = Shader.PropertyToID("_SkyPerezE"),
             k_Zenith = Shader.PropertyToID("_SkyZenith"), k_Misc = Shader.PropertyToID("_SkyMisc"),
             k_SunDir = Shader.PropertyToID("_SkySunDir"), k_SunColor = Shader.PropertyToID("_SkySunColor"),
-            k_FogColor = Shader.PropertyToID("_SkyFogColor");
+            k_FogColor = Shader.PropertyToID("_SkyFogColor"), k_Chroma = Shader.PropertyToID("_SkyChroma");
+        Texture2D m_ChromaTex;
 
         void OnEnable()
         {
@@ -44,6 +45,7 @@ namespace Game.Rendering
 
         void OnDestroy()
         {
+            if (m_ChromaTex != null) { if (Application.isPlaying) Destroy(m_ChromaTex); else DestroyImmediate(m_ChromaTex); }
             if (m_Reflection != null) { if (Application.isPlaying) Destroy(m_Reflection); else DestroyImmediate(m_Reflection); }
         }
 
@@ -96,6 +98,9 @@ namespace Game.Rendering
                 skyMaterial.SetVector(k_SunDir, m.SunDirection);
                 skyMaterial.SetVector(k_SunColor, (Vector4)m.SunColor);
                 skyMaterial.SetVector(k_FogColor, (Vector4)fog);
+                if (m_ChromaTex != null) { if (Application.isPlaying) Destroy(m_ChromaTex); else DestroyImmediate(m_ChromaTex); }
+                m_ChromaTex = m.CreateChromaTexture();
+                skyMaterial.SetTexture(k_Chroma, m_ChromaTex);
                 RenderSettings.skybox = skyMaterial;
             }
 

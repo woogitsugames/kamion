@@ -7,9 +7,15 @@ namespace Game.Rendering
     /// Analytic daylight model used for the sky dome, the ambient SH, the reflection cubemap, the sun light and the fog
     /// colour, so all five agree (docs/adr/0010-look-development-sky-exposure-tonemapping.md).
     ///
-    /// Clear sky: Preetham, Shirley, Smits, "A Practical Analytic Model for Daylight" (SIGGRAPH 1999): Perez luminance
-    /// distribution and CIE xy chromaticity as functions of turbidity T, converted to linear Rec.709. Overcast: CIE standard
-    /// overcast sky (Moon and Spencer 1942, CIE S 011/E:2003 type 1): L(θ) = Lz (1 + 2 cos θ) / 3, achromatic D65.
+    /// Clear sky luminance: Preetham, Shirley, Smits, "A Practical Analytic Model for Daylight" (SIGGRAPH 1999), Perez
+    /// distribution as a function of turbidity T. Clear sky colour (chromaticity only, luminance 1): single scattering in a
+    /// spherical Rayleigh + Mie + ozone atmosphere (coefficients of Bruneton 2017 / Hillaire 2020 at 680/550/440 nm, aerosol
+    /// optical depth from T through Ångström β = 0.04 (T − 1), α = 1.3), baked per sun position into a 64×32 LUT
+    /// (angle to the sun × zenith angle). Preetham's own xy fit is biased toward magenta below ~30° elevation (the
+    /// "slate" sky of the first Unity renders, docs/reports/visual/unity-look-v2); the scattering colour is greener-blue
+    /// and whiter toward the horizon. Multiple scattering is not modelled (slightly too saturated at the zenith; within
+    /// measured clear-sky zenith CCTs of 10 000–25 000 K). Overcast: CIE standard overcast sky (Moon and Spencer 1942,
+    /// CIE S 011/E:2003 type 1): L(θ) = Lz (1 + 2 cos θ) / 3, achromatic D65.
     /// Absolute levels are NOT taken from Preetham's zenith formula; the dome is normalised so that its horizontal
     /// illuminance equals the daylight-availability fits of the IESNA Lighting Handbook (9th ed., ch. 8):
     ///   extraterrestrial illuminance 127.5 klx, direct normal E_dn = 127.5 exp(-c m), c = 0.21 (clear),
@@ -40,6 +46,9 @@ namespace Game.Rendering
         readonly float m_Zx, m_Zy, m_ThetaS;
         readonly float m_ClearScale;     // cd/m² per unit of normalised Preetham luminance
         readonly float m_OvercastZenith; // cd/m²
+
+        public const int ChromaWidth = 64, ChromaHeight = 32;   // u = γ/π (angle to the sun), v = sqrt(cos θ)
+        readonly Color[] m_Chroma = new Color[ChromaWidth * ChromaHeight];
 
         /// <param name="sunElevationDeg">sun altitude above the horizon</param>
         /// <param name="sunAzimuthDeg">compass azimuth (0 = north, 90 = east), world X = east, Z = north</param>
@@ -81,6 +90,7 @@ namespace Game.Rendering
             m_OvercastZenith = overKh * 9f / (7f * Mathf.PI);
 
             SunColor = SunColorFromTurbidity(T, m);
+            if (Overcast < 1f) BuildChroma();
         }
 
         public static float ExposureFromEv100(float ev100) => 1f / (1.2f * Mathf.Pow(2f, ev100));
@@ -109,8 +119,10 @@ namespace Game.Rendering
             Color c = Color.black;
             if (Overcast < 1f)
             {
-                ClearXyY(dir, out float Y, out float x, out float y);
-                c += XyYToRec709(x, y, Y * m_ClearScale) * (1f - Overcast);
+                float theta = Mathf.Acos(Mathf.Clamp(dir.y, -1f, 1f));
+                float gamma = Mathf.Acos(Mathf.Clamp(Vector3.Dot(dir, SunDirection), -1f, 1f));
+                float Y = Perez(m_PY, theta, gamma) / Perez(m_PY, 0f, m_ThetaS) * m_ClearScale;
+                c += ChromaAt(dir.y, gamma) * (Y * (1f - Overcast));
             }
             if (Overcast > 0f)
             {
@@ -288,16 +300,116 @@ namespace Game.Rendering
             return m_ClearScale * Perez(m_PY, theta, gamma) / Perez(m_PY, 0f, m_ThetaS);
         }
 
-        void ClearXyY(Vector3 dir, out float Y, out float x, out float y)
+        /// <summary>Preetham CIE xy chromaticity (kept for comparison in tests; the sky uses <see cref="ChromaAt"/>).</summary>
+        public void PreethamXy(Vector3 dir, out float x, out float y)
         {
-            float theta = Mathf.Acos(Mathf.Clamp(dir.y, -1f, 1f));
+            float theta = Mathf.Min(Mathf.Acos(Mathf.Clamp(dir.y, -1f, 1f)), ChromaMaxZenithRad);
             float gamma = Mathf.Acos(Mathf.Clamp(Vector3.Dot(dir, SunDirection), -1f, 1f));
-            Y = Perez(m_PY, theta, gamma) / Perez(m_PY, 0f, m_ThetaS);
-            // Preetham's chromaticity turns magenta in the last few degrees above the horizon (known artefact of the
-            // fit); evaluate chromaticity no lower than 6° elevation.
-            float thetaC = Mathf.Min(theta, ChromaMaxZenithRad);
-            x = m_Zx * Perez(m_Px, thetaC, gamma) / Perez(m_Px, 0f, m_ThetaS);
-            y = m_Zy * Perez(m_Py, thetaC, gamma) / Perez(m_Py, 0f, m_ThetaS);
+            x = m_Zx * Perez(m_Px, theta, gamma) / Perez(m_Px, 0f, m_ThetaS);
+            y = m_Zy * Perez(m_Py, theta, gamma) / Perez(m_Py, 0f, m_ThetaS);
+        }
+
+        // ---------------------------------------------------------------- single-scattering chromaticity
+        const float EarthR = 6360e3f, AtmosphereR = 6460e3f, ObserverH = 150f, RayleighH = 8000f, MieH = 1200f;
+        static readonly Vector3 k_Rayleigh = new Vector3(5.802e-6f, 13.558e-6f, 33.1e-6f);   // m⁻¹ at sea level, 680/550/440 nm
+        static readonly Vector3 k_Ozone = new Vector3(0.650e-6f, 1.881e-6f, 0.085e-6f);      // absorption, tent 10-40 km
+        static readonly Vector3 k_Lambda = new Vector3(0.680f, 0.550f, 0.440f);              // µm
+        static readonly Vector3 k_SolarTop = new Vector3(0.98f, 1f, 0.96f);                   // same as SunColorFromTurbidity
+        const float MieG = 0.76f, MieExtinctionPerScattering = 1.11f;
+
+        static float OzoneDensity(float h) => Mathf.Max(0f, 1f - Mathf.Abs(h - 25000f) / 15000f);
+
+        static float RayLengthToTop(float r, float mu) => -r * mu + Mathf.Sqrt(Mathf.Max(0f, r * r * (mu * mu - 1f) + AtmosphereR * AtmosphereR));
+
+        void BuildChroma()
+        {
+            float beta = 0.04f * (Turbidity - 1f);
+            var mie = new Vector3(beta * Mathf.Pow(k_Lambda.x, -1.3f), beta * Mathf.Pow(k_Lambda.y, -1.3f), beta * Mathf.Pow(k_Lambda.z, -1.3f)) / MieH;
+            Vector3 Ext(float h) => k_Rayleigh * Mathf.Exp(-h / RayleighH) + mie * (MieExtinctionPerScattering * Mathf.Exp(-h / MieH)) + k_Ozone * OzoneDensity(h);
+
+            // Optical depth towards the sun as a function of height (the sun's local zenith angle is taken as constant
+            // along the view ray: < 3° change over the 300 km of a horizontal ray).
+            const int nh = 96;
+            var sunOd = new Vector3[nh];
+            float muS = Mathf.Max(SunDirection.y, 0.02f);
+            float HAt(int k) => 60000f * (k / (float)(nh - 1)) * (k / (float)(nh - 1));
+            for (int k = 0; k < nh; k++)
+            {
+                float r0 = EarthR + HAt(k), len = RayLengthToTop(r0, muS);
+                const int ns = 24;
+                Vector3 od = Vector3.zero;
+                for (int i = 0; i < ns; i++)
+                {
+                    float t = len * ((i + 0.5f) / ns) * ((i + 0.5f) / ns), dt = len * (2f * i + 1f) / (ns * ns);
+                    float h = Mathf.Sqrt(r0 * r0 + t * t + 2f * r0 * t * muS) - EarthR;
+                    od += Ext(h) * dt;
+                }
+                sunOd[k] = od;
+            }
+            Vector3 SunOd(float h)
+            {
+                float f = Mathf.Sqrt(Mathf.Clamp(h, 0f, 60000f) / 60000f) * (nh - 1);
+                int k = Mathf.Min((int)f, nh - 2);
+                return Vector3.Lerp(sunOd[k], sunOd[k + 1], f - k);
+            }
+
+            float sinS = Mathf.Sqrt(1f - SunDirection.y * SunDirection.y), cosS = SunDirection.y;
+            float r0v = EarthR + ObserverH;
+            for (int j = 0; j < ChromaHeight; j++)
+            for (int i = 0; i < ChromaWidth; i++)
+            {
+                float v = j / (float)(ChromaHeight - 1), u = i / (float)(ChromaWidth - 1);
+                float cosT = Mathf.Max(v * v, 0.0005f), sinT = Mathf.Sqrt(1f - cosT * cosT);
+                float gamma = u * Mathf.PI, cosG = Mathf.Cos(gamma);
+                // Direction with zenith angle θ and angle γ to the sun (sun at azimuth 0); clamp unreachable γ.
+                float cosPhi = sinT * sinS > 1e-5f ? Mathf.Clamp((cosG - cosT * cosS) / (sinT * sinS), -1f, 1f) : 1f;
+                var d = new Vector3(sinT * cosPhi, cosT, sinT * Mathf.Sqrt(1f - cosPhi * cosPhi));
+                var sdir = new Vector3(sinS, cosS, 0f);
+                float mu = Vector3.Dot(d, sdir);
+                float pR = 3f / (16f * Mathf.PI) * (1f + mu * mu);
+                float pM = 3f / (8f * Mathf.PI) * (1f - MieG * MieG) * (1f + mu * mu) / ((2f + MieG * MieG) * Mathf.Pow(1f + MieG * MieG - 2f * MieG * mu, 1.5f));
+                float len = RayLengthToTop(r0v, cosT);
+                const int n = 40;
+                Vector3 odv = Vector3.zero, L = Vector3.zero;
+                float prev = 0f;
+                for (int s2 = 0; s2 < n; s2++)
+                {
+                    float t1 = len * ((s2 + 1f) / n) * ((s2 + 1f) / n), dt = t1 - prev, tm = 0.5f * (prev + t1);
+                    prev = t1;
+                    float h = Mathf.Sqrt(r0v * r0v + tm * tm + 2f * r0v * tm * cosT) - EarthR;
+                    var e = Ext(h) * dt;
+                    odv += e * 0.5f;
+                    var od = odv + SunOd(h);
+                    var tr = new Vector3(Mathf.Exp(-od.x), Mathf.Exp(-od.y), Mathf.Exp(-od.z));
+                    float rr = Mathf.Exp(-h / RayleighH) * pR, rm = Mathf.Exp(-h / MieH) * pM;
+                    L += Vector3.Scale(tr, k_Rayleigh * rr + mie * rm) * dt;
+                    odv += e * 0.5f;
+                }
+                L = Vector3.Scale(L, k_SolarTop);
+                float lum = 0.2126f * L.x + 0.7152f * L.y + 0.0722f * L.z;
+                m_Chroma[j * ChromaWidth + i] = lum > 0f ? new Color(L.x / lum, L.y / lum, L.z / lum, 1f) : Color.white;
+            }
+        }
+
+        /// <summary>Clear-sky colour of luminance 1 (linear Rec.709) for a view direction (y = cos θ) and angle to the sun.</summary>
+        public Color ChromaAt(float cosTheta, float gamma)
+        {
+            float u = Mathf.Clamp01(gamma / Mathf.PI) * (ChromaWidth - 1), v = Mathf.Sqrt(Mathf.Clamp01(cosTheta)) * (ChromaHeight - 1);
+            int i = Mathf.Min((int)u, ChromaWidth - 2), j = Mathf.Min((int)v, ChromaHeight - 2);
+            float fu = u - i, fv = v - j;
+            Color a = Color.Lerp(m_Chroma[j * ChromaWidth + i], m_Chroma[j * ChromaWidth + i + 1], fu);
+            Color b = Color.Lerp(m_Chroma[(j + 1) * ChromaWidth + i], m_Chroma[(j + 1) * ChromaWidth + i + 1], fu);
+            return Color.Lerp(a, b, fv);
+        }
+
+        /// <summary>The chromaticity LUT as a texture for Kamion/Sky (RGBAHalf, bilinear, clamp).</summary>
+        public Texture2D CreateChromaTexture()
+        {
+            var t = new Texture2D(ChromaWidth, ChromaHeight, TextureFormat.RGBAHalf, false, true)
+            { name = "SkyChroma", wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear, hideFlags = HideFlags.DontSave };
+            t.SetPixels(m_Chroma);
+            t.Apply(false, false);
+            return t;
         }
 
         static float IntegrateHorizontal(Func<Vector3, float> L)
