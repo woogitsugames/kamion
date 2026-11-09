@@ -52,14 +52,15 @@ LOD2_DROP = LOD1_DROP + ("_cst_", "_ctr_", "_bst_", "_btr_", "rocker_icon_", "hv
                          "_belt_latch_grip", "_belt_guide", "_buckle", "_pocket_edge", "door_spk_grille_", "vent_",
                          "din_unit_", "din_lcd_1", "bunk_lcd", "bunk_panel", "dome_", "wiper_", "ws_gasket_",
                          "opener_", "winswitch_", "mirrorswitch_", "uglove", "glove_gap", "pdash_parting",
-                         "dash_parting", "rocker_", "hvac_btn_", "low_sw_", "mirror_pad", "light_rotary",
+                         "dash_parting", "rocker_", "swpack_", "stack_rotary", "hvac_btn_", "low_sw_", "mirror_pad", "light_rotary",
                          "_backpocket", "door_pull_", "dash_tray_lip", "doc_clip", "hatch_frame", "drawer_",
                          "_belt_latch", "tweeter_", "door_seal_", "win_channel_", "curtain_rail")
 
 # ---------------------------------------------------------------- slots (game materials)
 SLOT_OF = {
     "MI_Cab_Plastic": ("dash_soft", "dash_lower", "dash_mid", "dash_dark", "trim_insert", "trim_light", "metal_dark",
-                       "piano", "switch", "knob", "gap", "led_off", "lamp_lens", "yellow", "ext_plastic", "frit"),
+                       "piano", "switch", "knob", "gap", "led_off", "lamp_lens", "yellow", "ext_plastic", "frit",
+                       "hazard_red"),
     "MI_Cab_Leather": ("leather", "leather_wheel", "leather_centre"),
     "MI_Cab_Fabric": ("headliner", "wall_fabric", "mattress", "curtain", "seat_fabric", "blind", "webbing"),
     "MI_Cab_Rubber": ("floor_mat", "rubber"),
@@ -383,14 +384,235 @@ def texel_weight(name):
     return 1.0
 
 
+# A6.1 (critic r2 #10): 66 deg smart-project islands, parts < 0.01 m2 and thin seals/tubes inherit UV1 from the panel
+# under them, sliver islands (< 64 texels at 2048) inherit from the face next to them, own skyline packer.
+# LOD0 atlas coverage 39 % -> 69 %, islands 2627 -> ~780 (see the manifest 'ao_atlas_layout').
+UV_DEFAULT = {"angle": 66.0, "margin": 0.0025, "shape": "CONCAVE", "rotate": "ANY", "small_m2": 0.01,
+              "packer": "skyline", "sliver_px": 64, "order": "side"}
+UV_CFG = dict(UV_DEFAULT)
+
+
+UV_STATS = {}
+_SMALL_ID = [0]
+# thin rubber channels, seals and tubes: long L/U-shaped islands that fill < 15 % of their box; their occlusion is the
+# occlusion of the panel they run along (UV1 transferred like a decal)
+INHERIT_AO = ("door_seal_", "win_channel_", "grab_A_", "drv_bellows", "pas_bellows", "dash_tray_lip_", "door_pull_",
+              "curtain_rail", "_hr_post_", "rear_lid_", "drv_shield_", "pas_shield_")
+RESERVED = (1.0 - 0.012, 1.0 - 0.030)   # top-right texels: neutral (white) block and cloth block of the AO atlas
+
+
+def _hull(pts):
+    pts = sorted(set((round(p[0], 7), round(p[1], 7)) for p in pts))
+    if len(pts) < 3:
+        return pts
+
+    def cross(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+    lo, hi = [], []
+    for p in pts:
+        while len(lo) >= 2 and cross(lo[-2], lo[-1], p) <= 0:
+            lo.pop()
+        lo.append(p)
+    for p in reversed(pts):
+        while len(hi) >= 2 and cross(hi[-2], hi[-1], p) <= 0:
+            hi.pop()
+        hi.append(p)
+    return lo[:-1] + hi[:-1]
+
+
+def _min_rect_angle(pts):
+    """Rotation that gives the minimum-area bounding box (rotating calipers over the convex hull edges)."""
+    h = _hull(pts)
+    if len(h) < 3:
+        return 0.0
+    best = (1e30, 0.0)
+    H = np.array(h)
+    for i in range(len(h)):
+        e = H[(i + 1) % len(h)] - H[i]
+        a = -math.atan2(e[1], e[0])
+        c, s_ = math.cos(a), math.sin(a)
+        x = H[:, 0] * c - H[:, 1] * s_
+        y = H[:, 0] * s_ + H[:, 1] * c
+        ar = (x.max() - x.min()) * (y.max() - y.min())
+        if ar < best[0]:
+            best = (ar, a)
+    return best[1]
+
+
+def _skyline(rects, margin, scale):
+    """Bottom-left skyline packing of (w, h) rects (already scaled) into the unit square minus the reserved corner.
+    Returns [(x, y, rotated)] or None if it does not fit."""
+    sky = [[0.0, 0.0, 1.0]]               # segments: x, y, width
+    out = [None] * len(rects)
+    key = {"side": lambda i: (-max(rects[i]), -min(rects[i])), "area": lambda i: -rects[i][0] * rects[i][1],
+           "short": lambda i: (-min(rects[i]), -max(rects[i]))}[UV_CFG.get("order", "side")]
+    order = sorted(range(len(rects)), key=key)
+    for i in order:
+        best = None
+        for rot in (False, True):
+            w, h = rects[i]
+            if rot:
+                w, h = h, w
+            w, h = w * scale + margin, h * scale + margin
+            if w > 1.0:
+                continue
+            for k in range(len(sky)):
+                x = sky[k][0]
+                if x + w > 1.0 + 1e-9:
+                    break
+                y, j, span = 0.0, k, 0.0
+                while span < w - 1e-12:
+                    y = max(y, sky[j][1])
+                    span += sky[j][2]
+                    j += 1
+                    if j >= len(sky) and span < w - 1e-12:
+                        span = -1
+                        break
+                if span < 0 or y + h > 1.0 + 1e-9:
+                    continue
+                if x + w > RESERVED[0] and y + h > RESERVED[1]:
+                    continue
+                key = (y + h, x)
+                if best is None or key < best[0]:
+                    best = (key, x, y, w, h, rot)
+        if best is None:
+            return None
+        _, x, y, w, h, rot = best
+        out[i] = (x, y, rot)
+        # raise the skyline over [x, x + w) to y + h
+        new, x1 = [], x + w
+        for sx, sy, sw in sky:
+            ex = sx + sw
+            if ex <= x or sx >= x1:
+                new.append([sx, sy, sw])
+                continue
+            if sx < x:
+                new.append([sx, sy, x - sx])
+            if ex > x1:
+                new.append([x1, sy, ex - x1])
+        new.append([x, y + h, w])
+        new.sort()
+        merged = []
+        for seg in new:
+            if merged and abs(merged[-1][1] - seg[1]) < 1e-12 and abs(merged[-1][0] + merged[-1][2] - seg[0]) < 1e-9:
+                merged[-1][2] += seg[2]
+            else:
+                merged.append(seg)
+        sky = merged
+    return out
+
+
+def uv_area_of(objs, layer="Bake"):
+    a = 0.0
+    for o in objs:
+        me = o.data
+        uv = me.uv_layers[layer].data
+        at = me.attributes.get("uv1_transfer")
+        for p in me.polygons:
+            if at and at.data[p.index].value:
+                continue
+            pts = [uv[li].uv for li in p.loop_indices]
+            for i in range(1, len(pts) - 1):
+                a += abs((pts[i] - pts[0]).cross(pts[i + 1] - pts[0])) / 2
+    return a
+
+
+def pack_skyline(rec, margin):
+    """A6.1 (critic r2 #10): own island packer for the AO atlas. Blender's pack_islands left 55-60 % of the 2048 atlas
+    empty with this many islands; here each island is turned to its minimum-area box, the boxes are skyline-packed
+    (largest first, 90 deg turns allowed) and the largest scale that still fits is found by bisection."""
+    from bpy_extras import bmesh_utils
+    islands = []    # (obj, [loops], rotation, (minx, miny), (w, h))
+    bms = {}
+    for o in rec:
+        bm = bmesh.new()
+        bm.from_mesh(o.data)
+        uvl = bm.loops.layers.uv["Bake"]
+        bms[o.name] = (o, bm, uvl)
+        for isl in bmesh_utils.bmesh_linked_uv_islands(bm, uvl):
+            loops = [l for f in isl for l in f.loops]
+            pts = [tuple(l[uvl].uv) for l in loops]
+            a = _min_rect_angle(pts)
+            c, s_ = math.cos(a), math.sin(a)
+            xs = [p[0] * c - p[1] * s_ for p in pts]
+            ys = [p[0] * s_ + p[1] * c for p in pts]
+            islands.append((o.name, loops, a, (min(xs), min(ys)), (max(xs) - min(xs), max(ys) - min(ys))))
+    def fit(isls):
+        rects = [isl[4] for isl in isls]
+        area = sum(w * h for w, h in rects)
+        lo, hi = 0.2 / math.sqrt(area), 1.0 / math.sqrt(area)
+        best = None
+        for _ in range(16):
+            mid = (lo + hi) / 2
+            r = _skyline(rects, margin, mid)
+            if r is None:
+                hi = mid
+            else:
+                lo, best = mid, (mid, r)
+        return best
+    sc, place = fit(islands)
+    # sliver islands (bevel specks, < 64 texels and < 12 texels long at 2048) bake as noise: their faces take UV1 from the face next to
+    # them after the bake (same transfer as decals) and leave the atlas to the panels
+    n_obj = {}
+    for isl in islands:
+        n_obj[isl[0]] = n_obj.get(isl[0], 0) + 1
+    px = (2048 * sc) ** 2
+    slivers = []
+    for isl in islands:
+        a = 0.0
+        uvl = bms[isl[0]][2]
+        for f in {l.face for l in isl[1]}:
+            pts = [l[uvl].uv for l in f.loops]
+            for i in range(1, len(pts) - 1):
+                a += abs((pts[i] - pts[0]).cross(pts[i + 1] - pts[0])) / 2
+        # only compact specks: a long thin strip (seat side panel, belt edge) keeps its island, otherwise each of its
+        # triangles takes a different neighbour value (saw-tooth occlusion along the strip)
+        compact = max(isl[4]) * sc * 2048 < 12.0
+        if a * px < UV_CFG.get("sliver_px", 0) and compact and n_obj[isl[0]] > 1:
+            slivers.append(isl)
+    if slivers:
+        ids = {id(i) for i in slivers}
+        islands = [i for i in islands if id(i) not in ids]
+        sc, place = fit(islands)
+        for oname, loops, *_ in slivers:
+            o, bm, uvl = bms[oname]
+            lay = bm.faces.layers.int.get("uv1_transfer") or bm.faces.layers.int.new("uv1_transfer")
+            for l in loops:
+                l[uvl].uv = (0.999, 0.999)
+                l.face[lay] = 1
+    for (oname, loops, a, (mx, my), (w, h)), (x, y, rot) in zip(islands, place):
+        uvl = bms[oname][2]
+        c, s_ = math.cos(a), math.sin(a)
+        for l in loops:
+            u, v = l[uvl].uv
+            ru, rv = (u * c - v * s_ - mx) * sc, (u * s_ + v * c - my) * sc
+            if rot:
+                ru, rv = h * sc - rv, ru
+            l[uvl].uv = (x + margin / 2 + ru, y + margin / 2 + rv)
+    for o, bm, _ in bms.values():
+        bm.to_mesh(o.data)
+        bm.free()
+    return {"packer": "skyline", "islands": len(islands), "sliver_islands_transferred": len(slivers),
+            "uv_coverage": round(uv_area_of(rec), 4)}
+
+
 def layout_bake_uv(objs, receivers):
+    UV_STATS.clear()
     for o in objs:
         o.data.uv_layers.active = o.data.uv_layers["Bake"]
     rec = [o for o in receivers if len(o.data.polygons)]
+    if UV_CFG["small_m2"] > 0:   # small parts inherit the occlusion of the surface they sit on (like decals)
+        small = {o.name for o in rec if sum(p.area for p in o.data.polygons) < UV_CFG["small_m2"]
+                 or (o["src"] if "src" in o else o.name).startswith(INHERIT_AO)}
+        UV_STATS["small_parts_inherit"] = len(small)
+        for o in rec:
+            if o.name in small:
+                o["small_ao"] = True
+        rec = [o for o in rec if o.name not in small]
     select(rec)
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.uv.smart_project(angle_limit=math.radians(60), island_margin=0.0, area_weight=0.0, correct_aspect=True,
+    bpy.ops.uv.smart_project(angle_limit=math.radians(UV_CFG["angle"]), island_margin=0.0, area_weight=0.0, correct_aspect=True,
                              scale_to_bounds=False)
     bpy.ops.object.mode_set(mode="OBJECT")
     for o in rec:  # uniform density, then texel priority
@@ -405,21 +627,24 @@ def layout_bake_uv(objs, receivers):
         k = math.sqrt(a3 / max(auv, 1e-12)) * texel_weight(o["src"] if "src" in o else o.name)
         for d in uv:
             d.uv = d.uv * k
-    select(rec)
-    bpy.ops.object.mode_set(mode="EDIT")
-    bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.uv.select_all(action="SELECT")
-    bpy.ops.uv.pack_islands(udim_source="CLOSEST_UDIM", rotate=True, scale=True, margin_method="FRACTION",
-                            margin=0.003, shape_method="CONCAVE")
-    bpy.ops.object.mode_set(mode="OBJECT")
-    for o in rec:
-        for d in o.data.uv_layers["Bake"].data:
-            d.uv = d.uv * 0.985
+    if UV_CFG.get("packer") == "skyline":
+        UV_STATS.update(pack_skyline(rec, UV_CFG["margin"]))
+    else:
+        select(rec)
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_all(action="SELECT")
+        bpy.ops.uv.select_all(action="SELECT")
+        bpy.ops.uv.pack_islands(udim_source="CLOSEST_UDIM", rotate=True, rotate_method=UV_CFG["rotate"], scale=True,
+                                margin_method="FRACTION", margin=UV_CFG["margin"], shape_method=UV_CFG["shape"])
+        bpy.ops.object.mode_set(mode="OBJECT")
+        for o in rec:
+            for d in o.data.uv_layers["Bake"].data:
+                d.uv = d.uv * 0.985
     for o in objs:   # non-receivers -> neutral block (glass, displays, mirrors), cloth block, or marked for transfer
         if o in rec:
             continue
         g = group_of(o.name)
-        transfer = (o.get("decal") or o.get("fixed_uv")) and not o.name.startswith(NO_AO)             and not g.startswith(("CAB_Glass", "DISPLAY_", "MIRROR_"))
+        transfer = (o.get("decal") or o.get("fixed_uv") or o.get("small_ao")) and not o.name.startswith(NO_AO)             and not g.startswith(("CAB_Glass", "DISPLAY_", "MIRROR_"))
         tgt = (0.999, 0.9785) if o.name.startswith(NO_AO) else (0.999, 0.999)
         for d in o.data.uv_layers["Bake"].data:
             d.uv = tgt
@@ -427,6 +652,11 @@ def layout_bake_uv(objs, receivers):
             at = o.data.attributes.get("uv1_transfer") or o.data.attributes.new("uv1_transfer", "INT", "FACE")
             for d in at.data:
                 d.value = 1
+            if o.get("small_ao"):   # one occlusion value for the whole small part (no per-face streaks)
+                _SMALL_ID[0] += 1
+                ob_ = o.data.attributes.get("uv1_obj") or o.data.attributes.new("uv1_obj", "INT", "FACE")
+                for d in ob_.data:
+                    d.value = _SMALL_ID[0]
     for o in objs:
         o.data.uv_layers.active = o.data.uv_layers["UVMap"]
 
@@ -459,14 +689,36 @@ def transfer_decal_uv1(obs):
             continue
         uv = me.uv_layers["Bake"].data
         mw = o.matrix_world
+        oid = me.attributes.get("uv1_obj")
+        parts = {}
+        if oid:
+            for p in me.polygons:
+                if oid.data[p.index].value:
+                    parts.setdefault(oid.data[p.index].value, []).append(p)
+        for faces in parts.values():   # small parts: value at the panel point nearest to the part's centre
+            a_ = sum(p.area for p in faces) or 1.0
+            c = sum((p.center * p.area for p in faces), Vector()) / a_
+            hit = bvh.find_nearest(mw @ c, 0.30)
+            if hit[0] is None:
+                continue
+            k = hit[2]
+            w = poly_3d_calc([tv[i] for i in tp[k]], hit[0])
+            u_ = sum((tri_uv[k][j] * w[j] for j in range(3)), Vector((0.0, 0.0)))
+            for p in faces:
+                for li in p.loop_indices:
+                    uv[li].uv = u_
+                    n += 1
+        done = {p.index for faces in parts.values() for p in faces}
         for p in me.polygons:
-            if not at.data[p.index].value:
+            if not at.data[p.index].value or p.index in done:
                 continue
             # A6 r3: per-corner lookup (smooth along strips such as belt webbing), but when the corners of one face land
             # on different receiver islands (UVs far apart in the atlas) the whole face takes the value at its centre;
             # before r3 such faces spanned unrelated atlas areas (noisy defroster grille, 'tunnel' in the frit).
             def lookup(co):
                 hit = bvh.find_nearest(co, 0.03)
+                if hit[0] is None:   # A6.1: small parts (knobs, stalks, seals) may stand off their panel
+                    hit = bvh.find_nearest(co, 0.30)
                 if hit[0] is None:
                     return None
                 k = hit[2]
@@ -485,6 +737,8 @@ def transfer_decal_uv1(obs):
                 uv[li].uv = u
                 n += 1
         me.attributes.remove(at)
+        if oid:
+            me.attributes.remove(me.attributes["uv1_obj"])
     return n
 
 
@@ -553,6 +807,10 @@ def bake_ao(receivers, hide, res, samples, distance, out_png):
     img.pixels.foreach_get(px)
     a = px.reshape(res, res, 4)
     ao, cov = a[..., 0].copy(), (a[..., 3] > 0.5).astype(np.float32)
+    UV_STATS["baked_texel_coverage"] = round(float(cov.mean()), 4)
+    qa = os.path.join(BI.REPO, "artifacts", "truck-interior")
+    os.makedirs(qa, exist_ok=True)
+    np.save(os.path.join(qa, f"ao_coverage_{res}.npy"), cov[::-1].astype(np.uint8))   # QA preview (rows top-down)
     # denoise inside islands: normalised Gaussian (sigma ~1.2 px), never across empty texels
     k = np.exp(-0.5 * (np.arange(-4, 5) / 2.6) ** 2).astype(np.float32)
     k /= k.sum()
@@ -1072,6 +1330,7 @@ def process_lod(lod, a, out_dir, manifest):
         info["tris_total"] += t
     info["empties_unity_local"] = {k: b2u(p - CAB_MOUNT) for k, p in empties.items()}
     info["ao_atlas"] = ao_files
+    info["ao_atlas_layout"] = dict(UV_STATS, **{k: UV_CFG[k] for k in ("angle", "margin", "small_m2", "sliver_px")})
     info["fit_to_exterior"] = {"source": "art-source/truck/exterior/glass_interface.json",
                                "verts_moved": sum(v["verts_moved"] for v in fit.values()),
                                "max_move_m": max([v["max_move_m"] for v in fit.values()] or [0.0]),
@@ -1110,6 +1369,7 @@ def main():
     p.add_argument("--urp-cams", default="all")
     p.add_argument("--manifest", default="")
     p.add_argument("--debug-ao", action="store_true", help="URP renders show only the AO atlas (QA)")
+    p.add_argument("--probe-gain", type=float, default=1.0, help="QA: scale the windscreen probe reflection")
     p.add_argument("--debug-col", action="store_true", help="URP renders show only the vertex tint (QA)")
     a = p.parse_args(argv)
     out = os.path.abspath(a.out)
@@ -1203,7 +1463,136 @@ def contract(tex, out):
                        "in)"],
         },
         "textures_root": rel(os.path.join(out, "textures")),
+        "cab_reflection_probe": {   # A6.1 (critic r2 #7): dash reflection in the windscreen (inner face of GLASS_*)
+            "centre_unity_local": b2u(PROBE_C - CAB_MOUNT),
+            "box_min_unity_local": b2u(V(PROBE_BOX[0].x, PROBE_BOX[0].y, PROBE_BOX[0].z) - CAB_MOUNT),
+            "box_max_unity_local": b2u(V(PROBE_BOX[1].x, PROBE_BOX[1].y, PROBE_BOX[1].z) - CAB_MOUNT),
+            "notes": "suggestion for rendering-perf: one in-cab reflection probe (box projection over this volume, "
+                     "baked or refreshed per time of day, child of the cab), sampled by the glass on its inner face with "
+                     "thin-sheet Fresnel R = 2F/(1+F), F0 = 0.04. The URP-like preview renders exactly this "
+                     "(a6_export.py render_cab_probe / glass_with_probe)."},
     }
+
+
+# A6.1 (critic r2 #7): faint reflection of the dash in the windscreen. In the game the glass gets it from an in-cab
+# reflection probe (baked / updated per time of day, box projection over the cab volume) with Fresnel on the inner
+# face. The URP-like preview does the same: the probe is rendered with the preview's own lighting (Cycles, no
+# bounces = direct sun + the SH-like ambient emission, glass hidden) and the glass adds Schlick-Fresnel x probe.
+PROBE_C = V(0.0, 0.20, 2.45)                                    # A2 frame, cab centre at head height
+PROBE_BOX = (V(-1.17, -0.90, 1.40), V(1.17, 1.32, 3.86))       # inner cab volume (box projection)
+
+
+def render_cab_probe(kind, path, res=(1024, 512), samples=48):
+    sc = bpy.context.scene
+    keep = (sc.render.engine, sc.camera, sc.render.resolution_x, sc.render.resolution_y, sc.view_settings.view_transform,
+            sc.view_settings.exposure, sc.render.image_settings.file_format, sc.render.filepath)
+    sc.render.engine = "CYCLES"
+    try:
+        prefs = bpy.context.preferences.addons["cycles"].preferences
+        prefs.compute_device_type = "OPTIX"
+        prefs.get_devices()
+        for d in prefs.devices:
+            d.use = d.type == "OPTIX"
+        sc.cycles.device = "GPU"
+    except Exception:
+        sc.cycles.device = "CPU"
+    sc.cycles.samples = samples
+    sc.cycles.use_denoising = True
+    sc.cycles.max_bounces = 0
+    sc.render.resolution_x, sc.render.resolution_y = res
+    sc.view_settings.view_transform = "Standard"
+    sc.view_settings.exposure = 0.0
+    sc.render.image_settings.file_format = "OPEN_EXR"
+    sc.render.image_settings.color_depth = "16"
+    cd = bpy.data.cameras.new("cab_probe")
+    cd.type = "PANO"
+    cd.panorama_type = "EQUIRECTANGULAR"
+    cam = bpy.data.objects.new("cab_probe", cd)
+    sc.collection.objects.link(cam)
+    cam.location = PROBE_C
+    cam.rotation_euler = (math.pi / 2, 0, -math.pi / 2)   # image centre = +X, u = 0.5 - atan2(y, x) / 2pi (= world env)
+    hidden = [o for o in bpy.data.objects if o.type == "MESH" and o.name.startswith("CAB_Glass") and not o.hide_render]
+    for o in hidden:
+        o.hide_render = True
+    sc.camera = cam
+    sc.render.filepath = path
+    bpy.ops.render.render(write_still=True)
+    for o in hidden:
+        o.hide_render = False
+    bpy.data.objects.remove(cam)
+    (sc.render.engine, sc.camera, sc.render.resolution_x, sc.render.resolution_y, sc.view_settings.view_transform,
+     sc.view_settings.exposure, sc.render.image_settings.file_format, sc.render.filepath) = keep
+    print("cab reflection probe", kind, "->", path)
+
+
+def glass_with_probe(probe_path, gain=1.0):
+    """URP-like windscreen: (1 - R) x transparent + R x probe(box-projected reflection); Schlick F0 = 0.04 per face,
+    two faces (thin sheet)."""
+    m = bpy.data.materials["MI_Cab_Glass"]
+    # the cluster cover glass keeps the plain preview glass (anti-glare, it faces the driver's dark torso; the cab
+    # probe, centred 1 m away, would paint the seat and headliner into it)
+    cover = bpy.data.materials.get("MI_Cab_Glass_cover") or m.copy()
+    cover.name = "MI_Cab_Glass_cover"
+    for ob in bpy.data.objects:
+        if ob.type == "MESH" and ob.name.startswith("CAB_Glass_LOD"):
+            for i, mm in enumerate(ob.data.materials):
+                if mm == m:
+                    ob.data.materials[i] = cover
+    nt = m.node_tree
+    for n in list(nt.nodes):
+        nt.nodes.remove(n)
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+
+    def vm(op, a, b=None):
+        n = nt.nodes.new("ShaderNodeVectorMath")
+        n.operation = op
+        for i, x in enumerate((a, b)):
+            if x is None:
+                continue
+            if isinstance(x, (tuple, list, Vector)):
+                n.inputs[i].default_value = tuple(x)
+            else:
+                nt.links.new(x, n.inputs[i])
+        return n.outputs[1] if op in ("DOT_PRODUCT", "LENGTH") else n.outputs[0]
+    cosv = M._math(nt, "ABSOLUTE", vm("DOT_PRODUCT", geo.outputs["Incoming"], geo.outputs["Normal"]))
+    f5 = M._math(nt, "POWER", M._math(nt, "SUBTRACT", 1.0, cosv), 5.0)
+    fres = M._math(nt, "MULTIPLY_ADD", f5, 0.96)
+    fres.node.inputs[2].default_value = 0.04
+    # a single sheet reflects at both faces: R = 2F / (1 + F) (~8 % instead of 4 % near normal incidence)
+    fres = M._math(nt, "DIVIDE", M._math(nt, "MULTIPLY", fres, 2.0), M._math(nt, "ADD", fres, 1.0))
+    fres = M._math(nt, "MULTIPLY", fres, gain, clamp=True)
+    neg = nt.nodes.new("ShaderNodeVectorMath")          # view ray = -Incoming
+    neg.operation = "SCALE"
+    neg.inputs["Scale"].default_value = -1.0
+    nt.links.new(geo.outputs["Incoming"], neg.inputs[0])
+    r = vm("REFLECT", neg.outputs[0], geo.outputs["Normal"])
+    lo, hi = PROBE_BOX                                   # box projection: exit point of the reflected ray
+    t1 = vm("DIVIDE", vm("SUBTRACT", tuple(hi), geo.outputs["Position"]), r)
+    t2 = vm("DIVIDE", vm("SUBTRACT", tuple(lo), geo.outputs["Position"]), r)
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(vm("MAXIMUM", t1, t2), sep.inputs[0])
+    t = M._math(nt, "MINIMUM", M._math(nt, "MINIMUM", sep.outputs[0], sep.outputs[1]), sep.outputs[2])
+    sc_ = nt.nodes.new("ShaderNodeVectorMath")
+    sc_.operation = "SCALE"
+    nt.links.new(r, sc_.inputs[0])
+    nt.links.new(t, sc_.inputs["Scale"])
+    hit = vm("ADD", geo.outputs["Position"], sc_.outputs[0])
+    d = vm("SUBTRACT", hit, tuple(PROBE_C))
+    env = nt.nodes.new("ShaderNodeTexEnvironment")
+    env.image = bpy.data.images.load(probe_path, check_existing=False)
+    env.image.colorspace_settings.name = "Linear Rec.709"
+    nt.links.new(d, env.inputs["Vector"])
+    em = nt.nodes.new("ShaderNodeEmission")
+    nt.links.new(env.outputs["Color"], em.inputs["Color"])
+    tr = nt.nodes.new("ShaderNodeBsdfTransparent")
+    tr.inputs["Color"].default_value = (0.90, 0.93, 0.92, 1)
+    mx = nt.nodes.new("ShaderNodeMixShader")
+    nt.links.new(fres, mx.inputs[0])
+    nt.links.new(tr.outputs[0], mx.inputs[1])
+    nt.links.new(em.outputs[0], mx.inputs[2])
+    nt.links.new(mx.outputs[0], out.inputs["Surface"])
+    m.blend_method = "BLEND"
 
 
 def urp_renders(a, tex, manifest):
@@ -1231,6 +1620,11 @@ def urp_renders(a, tex, manifest):
         setup_urp_like(kind, a.urp_res)
         lvl, tint = BI.MIRROR_LEVEL[kind]            # after set_lighting (which sets the Cycles level): scale by the dome
         M.set_mirror_level(lvl * AMB[kind][1] / AMB["overcast"][1], tint)
+        if not (a.debug_ao or a.debug_col):
+            probe = os.path.join(BI.REPO, "artifacts", "truck-interior", f"cab_probe_{kind}.exr")
+            os.makedirs(os.path.dirname(probe), exist_ok=True)
+            render_cab_probe(kind, probe)
+            glass_with_probe(probe, a.probe_gain)
         if a.debug_ao or a.debug_col:
             bpy.context.scene.view_settings.exposure = 0.0   # show the map values as they are
         for cname in BI.LIGHT_CAMS[kind]:
