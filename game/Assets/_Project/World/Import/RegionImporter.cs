@@ -4,27 +4,34 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using Game.Editor.Build;
 using Game.Rendering.Editor;
 using Game.Vehicle.Runtime;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering;
 using static Game.World.Import.MiniJson;
 
 namespace Game.World.Import
 {
     /// <summary>
-    /// Imports a generated region (tools/worldgen roads/build_world.py) into Unity:
-    ///   Data/Regions/&lt;id&gt;/generated/world_manifest.json + Data/raw/derived/&lt;id&gt;/world/chunk_*.glb
-    ///   → Assets/_Generated/World/&lt;id&gt;/ (gitignored): Chunks/*.glb (imported by glTFast, ADR 0011),
-    ///     Collision/*.asset (one mesh per surface type), Materials/*.mat, and the scene (see <see cref="WorldSceneBuilder"/>).
+    /// Imports a generated region (tools/worldgen roads/build_world.py, schema world-manifest/1 v2) into Unity (ADR 0011,
+    /// ADR 0012). The GLBs are read directly (<see cref="GlbReader"/>) and baked into compact meshes per content tier:
+    ///   Low  (Low + Medium quality): chunk_*.low.glb → terrain "band" 2 m near roads / 4 m elsewhere, terrain 4 m / 8 m,
+    ///        roads, bridges, markings, paved areas, LOD1 buildings, linear furniture;
+    ///   High (High + Ultra):         chunk_*.glb → terrain band 1 m near roads / 2 m elsewhere, terrain 2/4/8 m, the same
+    ///        layers plus LOD0 buildings (openings, docks).
+    /// Collision (identical for both tiers): road_collision split per surface + terrain fallback (2 m in the start-route
+    /// corridor, 4 m elsewhere). Point instances (props, signs, signals, trees) → <see cref="InstanceImporter"/>.
+    /// Output (gitignored): Assets/_Generated/World/&lt;id&gt;/{Meshes/Low|High, Collision, Materials, Textures,
+    /// Instances.asset, WorldC.unity, WorldC_High.unity}.
     /// Batchmode: -executeMethod Game.World.Import.RegionImporter.ImportBatch -region bialystok-industrial-c
-    /// (scripts/import-region.ps1). Prints "IMPORT_RESULT: OK|FAILED".
+    /// (scripts/import-region.ps1). Prints "IMPORT_RESULT: OK|FAILED" and "WORLD_MEMORY: ..." lines.
     /// </summary>
     public static class RegionImporter
     {
         public const string GeneratedRoot = "Assets/_Generated/World";
+        public static readonly string[] Tiers = { "Low", "High" };
 
         public static void ImportBatch()
         {
@@ -32,11 +39,13 @@ namespace Game.World.Import
             try
             {
                 string region = EditorTools.Arg("-region", "bialystok-industrial-c");
-                bool skipCopy = EditorTools.HasArg("-skipCopy");
-                var r = Import(region, !skipCopy);
-                WorldSceneBuilder.Build(r);
+                string only = EditorTools.Arg("-tiers", "Low,High");
+                var r = Import(region, only.Split(','));
+                foreach (var t in r.TiersBuilt) WorldSceneBuilder.Build(r, t);
+                Game.Editor.Setup.BuildScenes.Apply();
+                WriteReport(r);
                 exit = 0;
-                Debug.Log($"IMPORT_RESULT: OK region={region} chunks={r.Chunks.Count} corridor={r.Chunks.Count(c => c.Corridor)} scene={r.ScenePath}");
+                Debug.Log($"IMPORT_RESULT: OK region={region} chunks={r.Chunks.Count} corridor={r.Chunks.Count(c => c.Corridor)} tiers={string.Join("+", r.TiersBuilt)}");
             }
             catch (Exception e)
             {
@@ -47,44 +56,65 @@ namespace Game.World.Import
         }
 
         [MenuItem("Kamion/World/Import region bialystok-industrial-c")]
-        static void Menu() => WorldSceneBuilder.Build(Import("bialystok-industrial-c", true));
+        static void Menu()
+        {
+            var r = Import("bialystok-industrial-c", Tiers);
+            foreach (var t in r.TiersBuilt) WorldSceneBuilder.Build(r, t);
+            Game.Editor.Setup.BuildScenes.Apply();
+            WriteReport(r);
+        }
 
         // ------------------------------------------------------------------------------------------------- data model
+        public sealed class Layer
+        {
+            public string Node;          // terrain_band, terrain_lod1..3, road, bridge, markings, paved, buildings, buildings_lod1, furniture
+            public Mesh Mesh;
+            public Material[] Materials;
+        }
+
         public sealed class Chunk
         {
             public string Id;
-            public string GlbAssetPath;
             public Vector2 Min, Max;     // local E/N
             public bool Corridor;
             public string Sha256;
-            public GameObject Model;     // glTFast-imported asset root
-            public Mesh CollisionHost;   // container asset with the per-surface collision meshes
+            public readonly Dictionary<string, List<Layer>> Layers = new Dictionary<string, List<Layer>>();   // tier → layers
             public readonly List<(Mesh mesh, string surface)> Collision = new List<(Mesh, string)>();
-            public readonly List<(string node, Mesh mesh, Material[] materials)> Visual = new List<(string, Mesh, Material[])>();
+            public Mesh TerrainCollision;
+            public float FineFractionLow, FineFractionHigh;
         }
 
         public sealed class Result
         {
             public string Region;
             public string Dir;
-            public string ScenePath;
             public double AnchorX, AnchorY, AnchorZ;
             public float ChunkSize;
             public readonly List<Chunk> Chunks = new List<Chunk>();
             public readonly Dictionary<string, Material> Materials = new Dictionary<string, Material>();
+            public readonly Dictionary<string, Dictionary<string, object>> MaterialDefs = new Dictionary<string, Dictionary<string, object>>();
             public readonly Dictionary<string, string> MaterialSurface = new Dictionary<string, string>();
             public Vector2[] RouteEN = Array.Empty<Vector2>();
             public float[] RouteLimits = Array.Empty<float>();
             public List<object> ControlCameras = new List<object>();
             public float[] LodSwitchM = { 0f, 120f, 300f, 700f };
             public int ShaMismatches;
+            public readonly List<string> TiersBuilt = new List<string>();
+            public WorldInstanceSet Instances;
+            public InstanceImporter.Colliders PropColliders;
+            public readonly Dictionary<string, long> MemoryBytes = new Dictionary<string, long>();   // "<tier>/<category>"
+            public string ScenePath(string tier) => $"{Dir}/{WorldSceneBuilder.SceneNameFor(Region, tier)}.unity";
         }
 
-        /// <summary>Corridor = chunks within this distance of the start route get full LODs, markings and collision.</summary>
+        /// <summary>Corridor = chunks within this distance of the start route get the 2 m terrain collider.</summary>
         public const float CorridorM = 320f;
+        /// <summary>Terrain band: blocks with a road/paved edge closer than this keep the fine spacing (+1 block dilation).</summary>
+        public const float TerrainBandM = 15f;
+        /// <summary>Low content: chunks closer than this to the start route also get LOD0 buildings.</summary>
+        public const float LowBuildingsLod0M = 100f;
 
         // ------------------------------------------------------------------------------------------------- import
-        public static Result Import(string region, bool copyGlb)
+        public static Result Import(string region, string[] tiers)
         {
             string repo = EditorTools.RepoRoot;
             string regionDir = Path.Combine(repo, "Data", "Regions", region);
@@ -92,14 +122,11 @@ namespace Game.World.Import
             var regionYaml = File.ReadAllLines(Path.Combine(regionDir, "region.yaml"));
             var r = new Result { Region = region, Dir = $"{GeneratedRoot}/{region}", ChunkSize = (float)Num(manifest.Get("chunk_size_m")) };
             ReadAnchor(regionYaml, out r.AnchorX, out r.AnchorY, out r.AnchorZ);
-            r.ScenePath = $"{r.Dir}/{WorldSceneBuilder.SceneNameFor(region)}.unity";
             var ox = Obj(manifest.Get("origin_epsg2180"));
             if (Math.Abs(Num(ox.Get("x")) - r.AnchorX) > 0.01 || Math.Abs(Num(ox.Get("y")) - r.AnchorY) > 0.01)
                 throw new InvalidOperationException("world_manifest origin != region.yaml origin");
-            var lods = Arr(manifest.Get("terrain_lods"));
-            r.LodSwitchM = lods.Select(l => (float)Num(Obj(l).Get("suggested_switch_m"))).ToArray();
+            r.LodSwitchM = Arr(manifest.Get("terrain_lods")).Select(l => (float)Num(Obj(l).Get("suggested_switch_m"))).ToArray();
 
-            // Route (scripts/export-route.py) and control cameras (worldgen).
             string routePath = Path.Combine(regionDir, "route_start.json");
             if (File.Exists(routePath))
             {
@@ -111,162 +138,272 @@ namespace Game.World.Import
             string camPath = Path.Combine(regionDir, "generated", "control_cameras.json");
             if (File.Exists(camPath)) r.ControlCameras = Arr(Obj(Parse(File.ReadAllText(camPath))).Get("cameras"));
 
-            foreach (var d in new[] { r.Dir, r.Dir + "/Chunks", r.Dir + "/Collision", r.Dir + "/Materials" })
+            // v1 imports copied the GLBs into Assets (glTFast); the bake reads them in place - drop the copies.
+            if (AssetDatabase.IsValidFolder($"{r.Dir}/Chunks")) AssetDatabase.DeleteAsset($"{r.Dir}/Chunks");
+            foreach (var d in new[] { r.Dir, r.Dir + "/Collision", r.Dir + "/Materials", r.Dir + "/Textures", r.Dir + "/Meshes/Low", r.Dir + "/Meshes/High" })
                 Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, d));
             EnsureGitignored();
 
             // ---- materials (data-driven from the manifest) ----
             if (!WorldTextureGenerator.Exist()) WorldTextureGenerator.GenerateAll();
             LookDevAssets.EnsureAll();
+            var roadAsphalt = Obj(manifest.Get("materials")).Get("road_asphalt") as Dictionary<string, object>;
             foreach (var kv in Obj(manifest.Get("materials")))
             {
                 var m = Obj(kv.Value);
-                string surface = Str(m.Get("surface"));
-                r.MaterialSurface[kv.Key] = surface;
+                r.MaterialDefs[kv.Key] = m;
+                r.MaterialSurface[kv.Key] = Str(m.Get("surface"));
                 if (m.Get("collision") is bool col && col) continue;
-                var c = Arr(m.Get("color"));
-                var albedo = new Color((float)Num(c[0]), (float)Num(c[1]), (float)Num(c[2]));
-                float rough = m.Get("rough") != null ? (float)Num(m.Get("rough")) : 0.9f;
-                float metal = m.Get("metal") != null ? (float)Num(m.Get("metal")) : 0f;
-                bool decal = m.Get("decal") is bool dc && dc;
-                Color? bg = null;
-                if (decal && Obj(manifest.Get("materials")).Get("road_asphalt") is Dictionary<string, object> ra)
-                {
-                    var rc = Arr(ra.Get("color"));
-                    bg = new Color((float)Num(rc[0]), (float)Num(rc[1]), (float)Num(rc[2]));
-                }
-                r.Materials[kv.Key] = LookDevAssets.WorldMaterial($"{r.Dir}/Materials/M_{kv.Key}.mat", surface, albedo, rough, metal, decal, bg);
+                r.Materials[kv.Key] = CreateMaterial(r, kv.Key, m, roadAsphalt);
             }
 
-            // ---- chunks: copy GLB (verified against the manifest sha256) and let glTFast import them ----
+            // ---- chunks ----
             string srcDir = Path.Combine(repo, "Data", "raw", "derived", region, "world");
-            var chunks = Arr(manifest.Get("chunks"));
-            AssetDatabase.StartAssetEditing();
-            try
+            var chunkDefs = Arr(manifest.Get("chunks"));
+            int n = 0;
+            foreach (var co in chunkDefs)
             {
-                foreach (var co in chunks)
+                var c = Obj(co);
+                var b = Obj(c.Get("bounds_local_m"));
+                var ch = new Chunk
                 {
-                    var c = Obj(co);
-                    var b = Obj(c.Get("bounds_local_m"));
-                    var ch = new Chunk
-                    {
-                        Id = Str(c.Get("id")),
-                        Min = new Vector2((float)Num(b.Get("e_min")), (float)Num(b.Get("n_min"))),
-                        Max = new Vector2((float)Num(b.Get("e_max")), (float)Num(b.Get("n_max"))),
-                        Sha256 = Str(c.Get("sha256")),
-                    };
-                    string file = Path.GetFileName(Str(c.Get("file")));
-                    ch.GlbAssetPath = $"{r.Dir}/Chunks/{file}";
-                    ch.Corridor = DistanceToRoute(ch, r.RouteEN) <= CorridorM || r.RouteEN.Length == 0;
-                    string dst = Path.Combine(EditorTools.ProjectRoot, ch.GlbAssetPath);
-                    if (copyGlb || !File.Exists(dst))
-                    {
-                        string src = Path.Combine(srcDir, file);
-                        if (!File.Exists(src))
-                            throw new FileNotFoundException($"{src} missing - run: uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region {region}");
-                        string srcSha = Sha256(src);
-                        if (srcSha != ch.Sha256)
-                        {
-                            // Not fatal: the generator output differs in float rounding between Python environments
-                            // (seen 2026-11-09: 10 of 64 chunks after a fresh uv venv). Reported to world-builder.
-                            Debug.LogWarning($"[IMPORT] {file}: sha256 {srcSha.Substring(0, 12)} != manifest {ch.Sha256.Substring(0, 12)} (regenerated in another environment?)");
-                            r.ShaMismatches++;
-                        }
-                        if (!File.Exists(dst) || Sha256(dst) != srcSha) File.Copy(src, dst, true);
-                    }
-                    r.Chunks.Add(ch);
-                }
-            }
-            finally { AssetDatabase.StopAssetEditing(); }
-            AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+                    Id = Str(c.Get("id")),
+                    Min = new Vector2((float)Num(b.Get("e_min")), (float)Num(b.Get("n_min"))),
+                    Max = new Vector2((float)Num(b.Get("e_max")), (float)Num(b.Get("n_max"))),
+                    Sha256 = Str(c.Get("sha256")),
+                };
+                ch.Corridor = DistanceToRoute(ch, r.RouteEN) <= CorridorM || r.RouteEN.Length == 0;
+                EditorUtility.DisplayProgressBar("Import region", ch.Id, (float)n++ / chunkDefs.Count);
 
-            // ---- read the imported models ----
-            foreach (var ch in r.Chunks)
-            {
-                ch.Model = AssetDatabase.LoadAssetAtPath<GameObject>(ch.GlbAssetPath);
-                if (ch.Model == null) throw new InvalidOperationException($"glTFast did not import {ch.GlbAssetPath}");
-                CollectMeshes(ch, r);
-                BuildCollision(ch, r);
+                string lowFile = Path.Combine(srcDir, Path.GetFileName(Str(Obj(c.Get("low")).Get("file"))));
+                string highFile = Path.Combine(srcDir, Path.GetFileName(Str(c.Get("file"))));
+                CheckSha(r, lowFile, Str(Obj(c.Get("low")).Get("sha256")), region);
+                var low = GlbReader.Load(lowFile);
+                BakeCollision(r, ch, low);
+                GlbReader high = null;
+                GlbReader High() { if (high == null) { CheckSha(r, highFile, ch.Sha256, region); high = GlbReader.Load(highFile); } return high; }
+                foreach (var tier in tiers)
+                    BakeVisual(r, ch, tier == "High" ? High() : low, tier,
+                        // Low content keeps LOD0 buildings (docks, openings) near the start route: that is where the
+                        // player is; elsewhere LOD1 prisms (ADR 0012).
+                        tier != "High" && DistanceToRoute(ch, r.RouteEN) <= LowBuildingsLod0M ? High().Find("buildings") : null);
+                r.Chunks.Add(ch);
             }
+            EditorUtility.ClearProgressBar();
+            r.TiersBuilt.AddRange(tiers);
+
+            // ---- point instances (props, trees) ----
+            var instFiles = chunkDefs.Select(co => Path.Combine(srcDir, Path.GetFileName(Str(Obj(Obj(co).Get("instances")).Get("file"))))).ToList();
+            r.Instances = InstanceImporter.Build(r, instFiles, out r.PropColliders);
+
             AssetDatabase.SaveAssets();
             Debug.Log($"[IMPORT] {region}: sha256 mismatches vs manifest: {r.ShaMismatches}");
             Debug.Log($"[IMPORT] {region}: {r.Chunks.Count} chunks ({r.Chunks.Count(c => c.Corridor)} in the {CorridorM:F0} m route corridor), {r.Materials.Count} materials, route {r.RouteEN.Length} points");
             return r;
         }
 
-        static readonly string[] k_Nodes = { "terrain_lod0", "terrain_lod1", "terrain_lod2", "terrain_lod3", "road", "bridge", "markings", "road_collision" };
-
-        /// <summary>Walks the glTFast hierarchy: (glTF node name, mesh, material per submesh mapped to our materials).</summary>
-        static void CollectMeshes(Chunk ch, Result r)
+        static void CheckSha(Result r, string file, string expected, string region)
         {
-            foreach (var mf in ch.Model.GetComponentsInChildren<MeshFilter>(true))
+            if (!File.Exists(file))
+                throw new FileNotFoundException($"{file} missing - run: uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region {region}");
+            string sha = Sha256(file);
+            if (sha == expected) return;
+            // Not fatal: generator bytes differ between Python environments (float rounding), see WORLD_GENERATION.md.
+            Debug.LogWarning($"[IMPORT] {Path.GetFileName(file)}: sha256 {sha.Substring(0, 12)} != manifest {expected.Substring(0, 12)} (regenerated in another environment?)");
+            r.ShaMismatches++;
+        }
+
+        // ------------------------------------------------------------------------------------------------- materials
+        static Material CreateMaterial(Result r, string id, Dictionary<string, object> m, Dictionary<string, object> roadAsphalt)
+        {
+            var c = Arr(m.Get("color"));
+            var albedo = new Color((float)Num(c[0]), (float)Num(c[1]), (float)Num(c[2]));
+            float rough = m.Get("rough") != null ? (float)Num(m.Get("rough")) : 0.9f;
+            float metal = m.Get("metal") != null ? (float)Num(m.Get("metal")) : 0f;
+            string surface = Str(m.Get("surface"));
+            string path = $"{r.Dir}/Materials/M_{id}.mat";
+            string tex = m.Get("texture") as string;
+            if (tex != null || m.Get("emissive") != null)
             {
-                string node = NodeName(mf.transform);
-                if (node == null) { Debug.LogWarning($"[IMPORT] {ch.Id}: unknown node {mf.name}"); continue; }
-                var mr = mf.GetComponent<MeshRenderer>();
-                var src = mr != null ? mr.sharedMaterials : Array.Empty<Material>();
-                var mats = new Material[src.Length];
-                for (int i = 0; i < src.Length; i++)
+                Texture2D t = null;
+                if (tex != null) t = InstanceImporter.ImportTexture(r, Path.Combine(EditorTools.RepoRoot, "art-source", "world", "textures", tex + ".png"), clamp: false);
+                bool clip = m.Get("alpha_cutoff") != null;
+                Color? emission = null;
+                if (m.Get("emissive") is List<object> e)
+                    // Exposed units (ADR 0010): emissive in the manifest is relative radiance; ×0.25 keeps a lit signal
+                    // lamp clearly brighter than daylit surfaces without clipping to white on LDR tiers.
+                    emission = new Color((float)Num(e[0]), (float)Num(e[1]), (float)Num(e[2])) * 0.25f;
+                return LitMaterial(path, albedo, rough, metal, t, clip, clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, clip, emission);
+            }
+            bool decal = m.Get("decal") is bool dc && dc;
+            Color? bg = null;
+            if (decal && roadAsphalt != null)
+            {
+                var rc = Arr(roadAsphalt.Get("color"));
+                bg = new Color((float)Num(rc[0]), (float)Num(rc[1]), (float)Num(rc[2]));
+            }
+            var mat = LookDevAssets.WorldMaterial(path, surface, albedo, rough, metal, decal, bg);
+            // Terrain reads the generator's ground masks from COLOR_0 (forest floor, unmown grass, bare soil).
+            if (mat.HasProperty("_GroundMasks")) mat.SetFloat("_GroundMasks", id == "terrain_grass" ? 1f : 0f);
+            return mat;
+        }
+
+        /// <summary>URP Lit material (linear colour in, alpha clip with coverage-preserving mips, optional emission).</summary>
+        public static Material LitMaterial(string path, Color linear, float rough, float metal, Texture2D tex, bool alphaClip, float cutoff, bool doubleSided, Color? emission)
+        {
+            var shader = Shader.Find("Universal Render Pipeline/Lit");
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
+            mat.shader = shader;
+            mat.enableInstancing = true;
+            mat.SetColor("_BaseColor", new Color(linear.r, linear.g, linear.b, 1f).gamma);
+            mat.SetTexture("_BaseMap", tex);
+            mat.SetFloat("_Smoothness", Mathf.Clamp01(1f - rough));
+            mat.SetFloat("_Metallic", metal);
+            mat.SetFloat("_Cull", doubleSided ? 0f : 2f);
+            mat.SetFloat("_AlphaClip", alphaClip ? 1f : 0f);
+            mat.SetFloat("_Cutoff", cutoff);
+            if (alphaClip) { mat.EnableKeyword("_ALPHATEST_ON"); mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.AlphaTest; }
+            else { mat.DisableKeyword("_ALPHATEST_ON"); mat.renderQueue = -1; }
+            if (mat.HasProperty("_AlphaToMask")) mat.SetFloat("_AlphaToMask", alphaClip ? 1f : 0f);
+            if (emission.HasValue)
+            {
+                mat.EnableKeyword("_EMISSION");
+                mat.SetColor("_EmissionColor", emission.Value);
+                mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
+            }
+            else mat.DisableKeyword("_EMISSION");
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
+        // ------------------------------------------------------------------------------------------------- meshes
+        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "buildings_lod1", "furniture" };
+        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "buildings", "buildings_lod1", "furniture" };
+
+        static void BakeVisual(Result r, Chunk ch, GlbReader g, string tier, GlbReader.MeshNode extraBuildingsLod0 = null)
+        {
+            string assetPath = $"{r.Dir}/Meshes/{tier}/chunk_{ch.Id}.asset";
+            AssetDatabase.DeleteAsset(assetPath);
+            var host = new Mesh { name = $"chunk_{ch.Id}_{tier}" };   // empty main asset; layers are sub-assets
+            AssetDatabase.CreateAsset(host, assetPath);
+            var layers = new List<Layer>();
+            ch.Layers[tier] = layers;
+            var terrainMat = new[] { r.Materials["terrain_grass"] };
+
+            void Add(string node, Mesh mesh, Material[] mats)
+            {
+                AssetDatabase.AddObjectToAsset(mesh, host);
+                layers.Add(new Layer { Node = node, Mesh = mesh, Materials = mats });
+                string cat = node.StartsWith("terrain") ? "terrain" : node.StartsWith("buildings") ? "buildings" : node;
+                r.MemoryBytes.TryGetValue($"{tier}/{cat}", out long v);
+                r.MemoryBytes[$"{tier}/{cat}"] = v + WorldMeshBake.GpuBytes(mesh);
+            }
+
+            // Terrain: band (fine near roads) + coarser LODs.
+            string fineNode = tier == "High" ? "terrain_lod0" : "terrain_lod1";
+            float spacing = tier == "High" ? 1f : 2f;
+            var fineGrid = g.Find(fineNode) ?? throw new InvalidDataException($"{ch.Id}: {fineNode} missing");
+            var band = WorldMeshBake.TerrainBand($"{ch.Id}_terrain_band", Merge(fineGrid), spacing, ch.Min, ch.Max, 8, TerrainBandM, out float fine);
+            if (tier == "High") ch.FineFractionHigh = fine; else ch.FineFractionLow = fine;
+            Add("terrain_band", band, terrainMat);
+            foreach (var t in tier == "High" ? new[] { "terrain_lod1", "terrain_lod2", "terrain_lod3" } : new[] { "terrain_lod2", "terrain_lod3" })
+            {
+                var nd = g.Find(t);
+                if (nd == null) continue;
+                Add(t, WorldMeshBake.Compact($"{ch.Id}_{t}", nd.Primitives, new WorldMeshBake.Options { Colors = true }), terrainMat);
+            }
+
+            var layerNames = tier == "High" || extraBuildingsLod0 == null ? (tier == "High" ? k_HighLayers : k_LowLayers) : k_HighLayers;
+            foreach (var layer in layerNames)
+            {
+                var nd = layer == "buildings" && tier != "High" ? extraBuildingsLod0 : g.Find(layer);
+                if (nd == null || nd.Primitives.Count == 0) continue;
+                var mats = new Material[nd.Primitives.Count];
+                bool uv = false;
+                for (int i = 0; i < mats.Length; i++)
                 {
-                    string id = src[i] != null ? src[i].name : null;
-                    if (id != null && r.Materials.TryGetValue(id, out var m)) mats[i] = m;
-                    else if (node != "road_collision") Debug.LogWarning($"[IMPORT] {ch.Id}/{node}: material '{id}' not in manifest");
+                    string id = nd.Primitives[i].Material;
+                    if (id != null && r.Materials.TryGetValue(id, out var mm)) mats[i] = mm;
+                    else Debug.LogWarning($"[IMPORT] {ch.Id}/{layer}: material '{id}' not in manifest");
+                    if (id != null && r.MaterialDefs.TryGetValue(id, out var def) && def.Get("texture") != null) uv = true;
                 }
-                ch.Visual.Add((node, mf.sharedMesh, mats));
+                Add(layer, WorldMeshBake.Compact($"{ch.Id}_{layer}", nd.Primitives, new WorldMeshBake.Options { Uv0 = uv }), mats);
             }
         }
 
-        static string NodeName(Transform t)
+        static GlbReader.Primitive Merge(GlbReader.MeshNode node)
         {
-            for (; t != null; t = t.parent)
-                foreach (var n in k_Nodes)
-                    if (t.name == n) return n;
-            return null;
+            if (node.Primitives.Count == 1) return node.Primitives[0];
+            var pos = new List<Vector3>();
+            var col = new List<Color32>();
+            foreach (var p in node.Primitives)
+            {
+                pos.AddRange(p.Positions);
+                if (p.Colors != null) col.AddRange(p.Colors);
+                else for (int i = 0; i < p.Positions.Length; i++) col.Add(new Color32(255, 0, 0, 0));
+            }
+            return new GlbReader.Primitive { Positions = pos.ToArray(), Colors = col.ToArray(), Indices = Array.Empty<int>() };
         }
 
-        /// <summary>Splits the road_collision submeshes (one per surface) into separate meshes for MeshColliders.</summary>
-        static void BuildCollision(Chunk ch, Result r)
+        /// <summary>road_collision (one primitive per surface) → one mesh per surface; terrain fallback 2 m (corridor) / 4 m.</summary>
+        static void BakeCollision(Result r, Chunk ch, GlbReader low)
         {
-            string path = $"{r.Dir}/Collision/{Path.GetFileNameWithoutExtension(ch.GlbAssetPath)}_collision.asset";
+            string path = $"{r.Dir}/Collision/chunk_{ch.Id}_collision.asset";
             AssetDatabase.DeleteAsset(path);
             var host = new Mesh { name = ch.Id + "_collision" };
             AssetDatabase.CreateAsset(host, path);
-            ch.CollisionHost = host;
-            foreach (var (node, mesh, _) in ch.Visual)
+            long bytes = 0;
+            var nd = low.Find("road_collision");
+            if (nd != null)
             {
-                if (node != "road_collision") continue;
-                var mr = FindRenderer(ch.Model, mesh);
-                var srcMats = mr != null ? mr.sharedMaterials : Array.Empty<Material>();
-                var verts = mesh.vertices;
-                for (int s = 0; s < mesh.subMeshCount; s++)
+                // Merge primitives of the same surface (several collision_* materials map to one surface kind).
+                var bySurface = new Dictionary<string, (List<Vector3> p, List<int> t)>();
+                foreach (var prim in nd.Primitives)
                 {
-                    string matName = s < srcMats.Length && srcMats[s] != null ? srcMats[s].name : "collision_asphalt";
-                    string surface = r.MaterialSurface.TryGetValue(matName, out var sf) ? sf : "asphalt";
-                    var tris = mesh.GetTriangles(s);
-                    // Compact the vertex set of this surface.
-                    var map = new Dictionary<int, int>();
-                    var v2 = new List<Vector3>();
-                    for (int i = 0; i < tris.Length; i++)
-                    {
-                        if (!map.TryGetValue(tris[i], out int ni)) { ni = v2.Count; map[tris[i]] = ni; v2.Add(verts[tris[i]]); }
-                        tris[i] = ni;
-                    }
-                    var m = new Mesh { name = $"{ch.Id}_{surface}" };
-                    m.indexFormat = v2.Count > 65000 ? IndexFormat.UInt32 : IndexFormat.UInt16;
-                    m.SetVertices(v2);
-                    m.SetTriangles(tris, 0);
-                    m.RecalculateBounds();
+                    string surface = prim.Material != null && r.MaterialSurface.TryGetValue(prim.Material, out var sf) && sf != null ? sf : "asphalt";
+                    if (!bySurface.TryGetValue(surface, out var acc)) bySurface[surface] = acc = (new List<Vector3>(), new List<int>());
+                    var (pos, tris) = WorldMeshBake.Compacted(prim.Positions, prim.Indices);
+                    int b0 = acc.p.Count;
+                    acc.p.AddRange(pos);
+                    foreach (int i in tris) acc.t.Add(i + b0);
+                }
+                foreach (var kv in bySurface)
+                {
+                    var m = WorldMeshBake.PositionsOnly($"{ch.Id}_{kv.Key}", kv.Value.p.ToArray(), kv.Value.t.ToArray());
                     AssetDatabase.AddObjectToAsset(m, host);
-                    ch.Collision.Add((m, surface));
+                    ch.Collision.Add((m, kv.Key));
+                    bytes += kv.Value.p.Count * 12L + kv.Value.t.Count * 4L;
                 }
             }
-        }
-
-        static MeshRenderer FindRenderer(GameObject root, Mesh mesh)
-        {
-            foreach (var mf in root.GetComponentsInChildren<MeshFilter>(true))
-                if (mf.sharedMesh == mesh) return mf.GetComponent<MeshRenderer>();
-            return null;
+            // Terrain fallback: in the route corridor the same band as the Low LOD0 terrain (2 m within 15 m of roads and
+            // yards, 4 m elsewhere), elsewhere the 4 m grid. Roads and yards have their own collision on top.
+            Vector3[] tp = null; int[] tt = null;
+            if (ch.Corridor && low.Find("terrain_lod1") is GlbReader.MeshNode fine)
+            {
+                var d = WorldMeshBake.TerrainBandData($"{ch.Id}_terrain", Merge(fine), 2f, ch.Min, ch.Max, 8, TerrainBandM, out _);
+                tp = d.pos; tt = d.tris;
+            }
+            else if (low.Find("terrain_lod2") is GlbReader.MeshNode terr)
+            {
+                var pos = new List<Vector3>();
+                var tris = new List<int>();
+                foreach (var prim in terr.Primitives)
+                {
+                    int b0 = pos.Count;
+                    pos.AddRange(prim.Positions);
+                    foreach (int i in prim.Indices) tris.Add(i + b0);
+                }
+                tp = pos.ToArray(); tt = tris.ToArray();
+            }
+            if (tp != null)
+            {
+                ch.TerrainCollision = WorldMeshBake.PositionsOnly($"{ch.Id}_terrain", tp, tt);
+                AssetDatabase.AddObjectToAsset(ch.TerrainCollision, host);
+                bytes += tp.Length * 12L + tt.Length * 4L;
+            }
+            r.MemoryBytes.TryGetValue("collision", out long v);
+            r.MemoryBytes["collision"] = v + bytes;
         }
 
         public static SurfaceKind SurfaceKindOf(string surface)
@@ -278,7 +415,11 @@ namespace Game.World.Import
                 case "paving_stones": case "sett": return SurfaceKind.Cobbles;
                 case "gravel": return SurfaceKind.Gravel;
                 case "grass": return SurfaceKind.Grass;
-                default: return SurfaceKind.DryAsphalt;
+                // Fences, guard rails, walls: vertical obstacles; the wheel model only sees them if it climbs one.
+                case "steel": return SurfaceKind.Concrete;
+                default:
+                    Debug.LogWarning($"[IMPORT] unknown collision surface '{surface}' → DryAsphalt");
+                    return SurfaceKind.DryAsphalt;
             }
         }
 
@@ -292,6 +433,35 @@ namespace Game.World.Import
                 best = Mathf.Min(best, Mathf.Sqrt(dx * dx + dy * dy));
             }
             return best;
+        }
+
+        // ------------------------------------------------------------------------------------------------- report
+        /// <summary>Mesh memory per tier (GPU vertex+index bytes of non-readable meshes; collision = positions + indices
+        /// before PhysX cooking) → log line + artifacts/world/&lt;region&gt;-import.json.</summary>
+        static void WriteReport(Result r)
+        {
+            var ci = CultureInfo.InvariantCulture;
+            var sb = new StringBuilder();
+            sb.Append("{\n  \"region\": \"").Append(r.Region).Append("\",\n  \"generated\": \"").Append(DateTime.Now.ToString("s", ci)).Append("\",\n  \"bytes\": {\n");
+            sb.Append(string.Join(",\n", r.MemoryBytes.OrderBy(k => k.Key).Select(k => $"    \"{k.Key}\": {k.Value}")));
+            sb.Append("\n  },\n");
+            float lowFine = r.Chunks.Average(c => c.FineFractionLow), highFine = r.Chunks.Average(c => c.FineFractionHigh);
+            sb.Append($"  \"terrain_band_fine_fraction\": {{ \"Low\": {lowFine.ToString("F3", ci)}, \"High\": {highFine.ToString("F3", ci)} }},\n");
+            var instSet = AssetDatabase.LoadAssetAtPath<WorldInstanceSet>($"{r.Dir}/Instances.asset");
+            sb.Append($"  \"instances\": {(instSet != null ? instSet.matrices.Length : 0)},\n  \"prop_colliders\": {(r.PropColliders != null ? r.PropColliders.Count : 0)}\n}}\n");
+            string dir = Path.Combine(EditorTools.RepoRoot, "artifacts", "world");
+            Directory.CreateDirectory(dir);
+            File.WriteAllText(Path.Combine(dir, r.Region + "-import.json"), sb.ToString());
+            foreach (var tier in r.TiersBuilt)
+            {
+                long render = r.MemoryBytes.Where(k => k.Key.StartsWith(tier + "/")).Sum(k => k.Value);
+                long inst = r.MemoryBytes.TryGetValue("instances", out var iv) ? iv : 0;
+                long col = r.MemoryBytes.TryGetValue("collision", out var cv) ? cv : 0;
+                Debug.Log(string.Format(ci, "WORLD_MEMORY: tier={0} render_meshes={1:F1} MB instances={2:F1} MB collision_src={3:F1} MB total={4:F1} MB [{5}]",
+                    tier, render / 1048576.0, inst / 1048576.0, col / 1048576.0, (render + inst + col) / 1048576.0,
+                    string.Join(", ", r.MemoryBytes.Where(k => k.Key.StartsWith(tier + "/")).Select(k => $"{k.Key.Substring(tier.Length + 1)} {k.Value / 1048576.0:F1}"))));
+            }
+            Debug.Log(string.Format(ci, "WORLD_TERRAIN_BAND: fine fraction Low {0:P0} High {1:P0}", lowFine, highFine));
         }
 
         static void ReadAnchor(string[] yaml, out double x, out double y, out double z)

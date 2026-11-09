@@ -98,6 +98,11 @@ namespace Game.Rendering.Editor
                     return new SurfaceStyle { texture = WorldTextureGenerator.Gravel, tile = 2f, detailScale = 2.9f, detailMix = 0.5f, macroSize = 29f, macroStrength = 0.2f, macroTint = Color.white };
                 case "paint":
                     return new SurfaceStyle { texture = WorldTextureGenerator.Paint, tile = 1.7f, detailScale = 2.3f, detailMix = 0.4f, macroSize = 31f, macroStrength = 0.15f, macroTint = Color.white };
+                case null:
+                case "":
+                    // Building walls, roofs, props (no driving surface): factory-made panels, plaster, membranes - fine
+                    // grain only, almost no macro blotches (the concrete style read as marble on 100 m hall walls).
+                    return new SurfaceStyle { texture = WorldTextureGenerator.Paint, tile = 1.7f, detailScale = 2.3f, detailMix = 0.4f, macroSize = 23f, macroStrength = 0.05f, macroTint = Color.white };
                 default: // concrete, concrete_kerb, steel fallback
                     return new SurfaceStyle { texture = WorldTextureGenerator.Concrete, tile = 2f, detailScale = 2.6f, detailMix = 0.5f, macroSize = 19f, macroStrength = 0.2f, macroTint = Color.white };
             }

@@ -19,6 +19,17 @@ namespace Game.Gameplay
     public sealed class GameBootstrap : MonoBehaviour
     {
         public const string WorldCSceneName = "WorldC";
+        /// <summary>High-content variant (full chunks, LOD0 buildings, 1 m terrain band; ADR 0012). Only in builds made
+        /// with -WorldHigh; Low/Medium always use <see cref="WorldCSceneName"/>.</summary>
+        public const string WorldCHighSceneName = "WorldC_High";
+
+        /// <summary>The WorldC scene matching the active quality tier (content tier, ADR 0012).</summary>
+        public static string WorldCSceneForTier()
+        {
+            string t = QualityTiers.Current;
+            bool high = t == "High" || t == "Ultra";
+            return high && Application.CanStreamedLevelBeLoaded(WorldCHighSceneName) ? WorldCHighSceneName : WorldCSceneName;
+        }
         [SerializeField] int defaultTargetFps = 30;
         [SerializeField] bool showOverlay = true;
 
@@ -69,13 +80,13 @@ namespace Game.Gameplay
                 ("Plac testowy — jazda", () => SceneManager.LoadScene(DrivingLabLayout.SceneName)),
             };
             if (Application.CanStreamedLevelBeLoaded(WorldCSceneName))
-                entries.Add(("Białystok — Kwadrat Park", () => SceneManager.LoadScene(WorldCSceneName)));
+                entries.Add(("Białystok — Kwadrat Park", () => SceneManager.LoadScene(WorldCSceneForTier())));
             BootMenu.Create(Camera.main, entries.ToArray()).transform.SetParent(transform, false);
 
             // Launch argument "scene" (adb: -e scene DrivingLab) jumps straight into a scene; the remaining
             // arguments (autopilot, speed) are read by that scene's bootstrap.
             string scene = Platform.GetLaunchArgument("scene");
-            if (!string.IsNullOrEmpty(scene)) m_PendingScene = scene;
+            if (!string.IsNullOrEmpty(scene)) m_PendingScene = scene == WorldCSceneName ? WorldCSceneForTier() : scene;
         }
     }
 }

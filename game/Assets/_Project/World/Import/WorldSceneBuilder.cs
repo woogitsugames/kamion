@@ -27,10 +27,16 @@ namespace Game.World.Import
     /// </summary>
     public static class WorldSceneBuilder
     {
-        public static string SceneNameFor(string region) => region == "bialystok-industrial-c" ? "WorldC" : "World_" + region;
-
-        public static void Build(RegionImporter.Result r)
+        public static string SceneNameFor(string region, string tier = "Low")
         {
+            string b = region == "bialystok-industrial-c" ? "WorldC" : "World_" + region;
+            return tier == "High" ? b + "_High" : b;
+        }
+
+        /// <summary>Builds the scene of one content tier: "Low" (Low + Medium quality, WorldC) or "High" (WorldC_High).</summary>
+        public static void Build(RegionImporter.Result r, string tier)
+        {
+            string scenePath = r.ScenePath(tier);
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
             // ---------------- lighting ----------------
@@ -61,10 +67,16 @@ namespace Game.World.Import
             int colliders = 0;
             foreach (var ch in r.Chunks)
             {
-                BuildChunk(ch, rootGo.transform, r, ref colliders);
+                BuildChunk(ch, rootGo.transform, r, tier, ref colliders);
                 infos.Add(new WorldRegionRoot.ChunkInfo { id = ch.Id, minEN = ch.Min, maxEN = ch.Max, corridor = ch.Corridor, sha256 = ch.Sha256 });
             }
             root.chunks = infos.ToArray();
+            // GPU-instanced props and trees (ADR 0012) - in region-root space, like the chunks.
+            // Reload by path: NewScene(Single) unloads unreferenced assets, which turns the in-memory reference fake-null.
+            var instances = AssetDatabase.LoadAssetAtPath<WorldInstanceSet>($"{r.Dir}/Instances.asset");
+            if (instances != null) rootGo.AddComponent<WorldInstances>().set = instances;
+            else Debug.LogWarning("[IMPORT] Instances.asset missing - no props or trees in " + scenePath);
+            colliders += BuildPropColliders(r, rootGo.transform);
             Physics.SyncTransforms();
 
             // ---------------- route (heights from the collision) ----------------
@@ -142,11 +154,32 @@ namespace Game.World.Import
             Vector3 eye = spawnPos + spawn.rotation * dims.EyePointVehicle;
             Qa(qa, "cab-gate", eye, eye + spawnFwd * 30f - Vector3.up * 2.2f, 55f, "Driver eye at the spawn, looking along the depot access road.");
 
-            Directory.CreateDirectory(Path.Combine(Game.Editor.Build.EditorTools.ProjectRoot, Path.GetDirectoryName(r.ScenePath)));
-            EditorSceneManager.SaveScene(scene, r.ScenePath);
-            BuildScenes.Apply();
+            Directory.CreateDirectory(Path.Combine(Game.Editor.Build.EditorTools.ProjectRoot, Path.GetDirectoryName(scenePath)));
+            EditorSceneManager.SaveScene(scene, scenePath);
             AssetDatabase.SaveAssets();
-            Debug.Log($"[IMPORT] scene {r.ScenePath}: {r.Chunks.Count} chunks, {colliders} colliders, route {route.Length:F0} m, spawn {spawnPos}");
+            Debug.Log($"[IMPORT] scene {scenePath} (tier {tier}): {r.Chunks.Count} chunks, {colliders} colliders, route {route.Length:F0} m, spawn {spawnPos}");
+        }
+
+        /// <summary>Box colliders of street props (lamps, poles, signal masts, gates...) in the start-route corridor.</summary>
+        static int BuildPropColliders(RegionImporter.Result r, Transform parent)
+        {
+            if (r.PropColliders == null || r.PropColliders.Count == 0) return 0;
+            var root = new GameObject("PropColliders").transform;
+            root.SetParent(parent, false);
+            foreach (var (proto, m, local) in r.PropColliders.Items)
+            {
+                var go = new GameObject(proto);
+                go.transform.SetParent(root, false);
+                go.transform.localPosition = m.GetColumn(3);
+                go.transform.localRotation = m.rotation;
+                go.transform.localScale = m.lossyScale;
+                var bc = go.AddComponent<BoxCollider>();
+                bc.center = local.center;
+                bc.size = Vector3.Max(local.size, new Vector3(0.05f, 0.05f, 0.05f));
+                go.AddComponent<GroundSurface>().kind = SurfaceKind.Concrete;
+                go.isStatic = true;
+            }
+            return r.PropColliders.Count;
         }
 
         /// <summary>Ground under a route point; under viaducts the hit closest to the previous point's height wins.</summary>
@@ -163,67 +196,63 @@ namespace Game.World.Import
             return best.point;
         }
 
-        static void BuildChunk(RegionImporter.Chunk ch, Transform parent, RegionImporter.Result r, ref int colliders)
+        // Layers per LOD (ADR 0012). Distances: manifest switch distances (camera to near chunk edge) + 0.7 chunk.
+        static readonly string[][] k_LowLods =
+        {
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture" },
+            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture" },
+            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1" },
+            new[] { "terrain_lod3", "bridge", "buildings_lod1" },
+        };
+        static readonly string[][] k_HighLods =
+        {
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture" },
+            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture" },
+            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1" },
+            new[] { "terrain_lod3", "bridge", "buildings_lod1" },
+        };
+        static readonly HashSet<string> k_ShadowCasters = new HashSet<string> { "bridge", "buildings", "buildings_lod1", "furniture" };
+
+        static void BuildChunk(RegionImporter.Chunk ch, Transform parent, RegionImporter.Result r, string tier, ref int colliders)
         {
             var go = new GameObject("Chunk_" + ch.Id);
             go.transform.SetParent(parent, false);
-            var byNode = new Dictionary<string, List<Renderer>>();
-            Mesh terrainLod1 = null;
-            foreach (var (node, mesh, mats) in ch.Visual)
+            var byNode = new Dictionary<string, Renderer>();
+            foreach (var layer in ch.Layers[tier])
             {
-                if (node == "road_collision") continue;
-                if (node == "terrain_lod1") terrainLod1 = mesh;
-                bool far = !ch.Corridor;
-                // Outside the route corridor: no LOD0/LOD1 terrain, no markings (memory, ADR 0011 §corridor).
-                if (far && (node == "terrain_lod0" || node == "terrain_lod1" || node == "markings")) continue;
-                var child = new GameObject(node);
+                var child = new GameObject(layer.Node);
                 child.transform.SetParent(go.transform, false);
-                child.AddComponent<MeshFilter>().sharedMesh = mesh;
+                child.AddComponent<MeshFilter>().sharedMesh = layer.Mesh;
                 var mr = child.AddComponent<MeshRenderer>();
-                mr.sharedMaterials = mats;
-                bool castsShadows = node == "bridge";
-                mr.shadowCastingMode = castsShadows ? ShadowCastingMode.On : ShadowCastingMode.Off;
+                mr.sharedMaterials = layer.Materials;
+                mr.shadowCastingMode = k_ShadowCasters.Contains(layer.Node) ? ShadowCastingMode.On : ShadowCastingMode.Off;
                 mr.receiveShadows = true;
                 mr.lightProbeUsage = LightProbeUsage.Off;
                 mr.reflectionProbeUsage = ReflectionProbeUsage.Off;
-                if (!byNode.TryGetValue(node, out var list)) byNode[node] = list = new List<Renderer>();
-                list.Add(mr);
+                byNode[layer.Node] = mr;
             }
 
-            // LODGroup: screen-relative height h = size / (2 d tan(fov/2)) for the switch distance d measured to the
-            // chunk centre (manifest distances are from the camera to the near chunk edge, so add half a chunk).
+            // LODGroup: screen-relative height h = size / (2 d tan(fov/2)) for the switch distance d to the chunk centre.
             var lg = go.AddComponent<LODGroup>();
             float size = r.ChunkSize;
             float H(float d) => Mathf.Clamp(size / (2f * Mathf.Max(d, 1f) * Mathf.Tan(30f * Mathf.Deg2Rad)), 0.0005f, 1f);
             float half = size * 0.70f;
-            var get = (System.Func<string, Renderer[]>)(n => byNode.TryGetValue(n, out var l) ? l.ToArray() : new Renderer[0]);
-            var road = get("road").Concat(get("bridge")).ToArray();
-            LOD[] lods;
-            if (ch.Corridor)
+            var table = tier == "High" ? k_HighLods : k_LowLods;
+            var lods = new LOD[table.Length];
+            for (int i = 0; i < table.Length; i++)
             {
-                lods = new[]
-                {
-                    new LOD(H(r.LodSwitchM[1] + half), get("terrain_lod0").Concat(road).Concat(get("markings")).ToArray()),
-                    new LOD(H(r.LodSwitchM[2] + half), get("terrain_lod1").Concat(road).Concat(get("markings")).ToArray()),
-                    new LOD(H(r.LodSwitchM[3] + half), get("terrain_lod2").Concat(road).ToArray()),
-                    new LOD(0.0005f, get("terrain_lod3").Concat(get("bridge")).ToArray()),
-                };
-            }
-            else
-            {
-                lods = new[]
-                {
-                    new LOD(H(r.LodSwitchM[3] + half), get("terrain_lod2").Concat(road).ToArray()),
-                    new LOD(0.0005f, get("terrain_lod3").Concat(get("bridge")).ToArray()),
-                };
+                // Without LOD0 buildings (Low content away from the route) LOD0 shows the LOD1 prisms.
+                var names = table[i].Select(n => n == "buildings" && !byNode.ContainsKey("buildings") ? "buildings_lod1" : n);
+                var rs = names.Where(byNode.ContainsKey).Select(n => byNode[n]).ToArray();
+                float h = i + 1 < table.Length ? H(r.LodSwitchM[i + 1] + half) : 0.0005f;
+                lods[i] = new LOD(h, rs);
             }
             lg.SetLODs(lods);
             lg.size = size;
             lg.localReferencePoint = new Vector3((ch.Min.x + ch.Max.x) * 0.5f, 140f, (ch.Min.y + ch.Max.y) * 0.5f);
             lg.fadeMode = LODFadeMode.None;
 
-            // Collision: one MeshCollider per surface + terrain fallback in the corridor.
-            if (!ch.Corridor) return;
+            // Collision (same in every tier): one MeshCollider per surface + terrain fallback.
             var col = new GameObject("Collision");
             col.transform.SetParent(go.transform, false);
             foreach (var (mesh, surface) in ch.Collision)
@@ -236,12 +265,12 @@ namespace Game.World.Import
                 c.AddComponent<GroundSurface>().kind = RegionImporter.SurfaceKindOf(surface);
                 colliders++;
             }
-            if (terrainLod1 != null)
+            if (ch.TerrainCollision != null)
             {
                 var t = new GameObject("col_terrain");
                 t.transform.SetParent(col.transform, false);
                 var mc = t.AddComponent<MeshCollider>();
-                mc.sharedMesh = terrainLod1;
+                mc.sharedMesh = ch.TerrainCollision;
                 t.AddComponent<GroundSurface>().kind = SurfaceKind.Grass;
                 colliders++;
             }

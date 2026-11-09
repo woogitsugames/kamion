@@ -30,6 +30,7 @@ Shader "Kamion/World Surface"
         _OffsetFactor ("Depth offset factor", Float) = 0
         _OffsetUnits ("Depth offset units", Float) = 0
         [Toggle] _ReceiveShadows ("Receive shadows", Float) = 1
+        [Toggle] _GroundMasks ("Terrain ground masks from COLOR_0 (R road distance/20 m, G forest floor, B unmown, A bare soil)", Float) = 0
     }
     SubShader
     {
@@ -45,7 +46,7 @@ Shader "Kamion/World Surface"
             float4 _FadeColor;
             float _FadeWidth;
             float _TileSize, _DetailScale, _DetailMix, _MacroSize, _MacroStrength;
-            float _Smoothness, _SmoothnessVar, _Occlusion, _OffsetFactor, _OffsetUnits, _ReceiveShadows;
+            float _Smoothness, _SmoothnessVar, _Occlusion, _OffsetFactor, _OffsetUnits, _ReceiveShadows, _GroundMasks;
         CBUFFER_END
         ENDHLSL
 
@@ -72,13 +73,14 @@ Shader "Kamion/World Surface"
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
             TEXTURE2D(_MacroMap); SAMPLER(sampler_MacroMap);
 
-            struct Attributes { float4 positionOS : POSITION; float3 normalOS : NORMAL; UNITY_VERTEX_INPUT_INSTANCE_ID };
+            struct Attributes { float4 positionOS : POSITION; float3 normalOS : NORMAL; half4 color : COLOR; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct Varyings
             {
                 float4 positionCS : SV_POSITION;
                 float3 positionWS : TEXCOORD0;
                 half3 normalWS : TEXCOORD1;
                 half fogFactor : TEXCOORD2;
+                half4 masks : TEXCOORD3;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -94,6 +96,7 @@ Shader "Kamion/World Surface"
                 o.positionWS = p.positionWS;
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
                 o.fogFactor = ComputeFogFactor(p.positionCS.z);
+                o.masks = v.color;
                 return o;
             }
 
@@ -124,6 +127,20 @@ Shader "Kamion/World Surface"
                 half m = (macro - 0.5) * 2.0;
                 half3 albedo = _BaseColor.rgb * (2.0 * det) * (1.0 + _MacroStrength * m);
                 albedo *= lerp(half3(1, 1, 1), _MacroTint.rgb, saturate(m));
+                if (_GroundMasks > 0.5)
+                {
+                    // Generator ground masks (docs/WORLD_GENERATION.md): G forest floor (needle/leaf litter with moss),
+                    // B unmown grass (drier, yellower), A bare soil; R = distance to road or yard / 20 m → a 1 m strip of
+                    // grit and sand along the paved edge. Albedos are linear means (WORKING_VALUE, judged against the
+                    // Blender control renders until photo scans exist).
+                    half4 k = i.masks;
+                    half3 detail = (2.0 * det) * (1.0 + _MacroStrength * m);
+                    albedo = lerp(albedo, albedo * half3(1.22, 1.08, 0.72), k.b * 0.8);
+                    albedo = lerp(albedo, half3(0.085, 0.072, 0.045) * detail, k.g);
+                    albedo = lerp(albedo, half3(0.13, 0.11, 0.085) * detail, k.a);
+                    half grit = (1.0 - smoothstep(0.03, 0.07, k.r)) * 0.7;
+                    albedo = lerp(albedo, half3(0.19, 0.17, 0.14) * detail, grit);
+                }
                 albedo = saturate(albedo);
                 // Markings: a 0.12 m line covers less than a pixel at distance / grazing angles; the geometry then
                 // sparkles. Pre-filter: blend towards the road albedo by the line's pixel coverage (fwidth footprint).

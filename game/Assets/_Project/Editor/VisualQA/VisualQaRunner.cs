@@ -214,6 +214,9 @@ namespace Game.Editor.VisualQA
                 var world = RenderToPixels(cam, width, height, out _, null, msaa, scale);
                 stats.AppendLine(SceneStats.Estimate(cam, hasTier ? tierSettings.shadowDistance : QualitySettings.shadowDistance,
                     hasTier ? tierSettings.shadowCascades : 1, qa.id));
+                var wi = Game.World.WorldInstances.Last;
+                if (wi.Draws > 0)
+                    stats.AppendLine($"  {qa.id} instanced (props+trees): draws {wi.Draws}, instances {wi.Instances}, triangles {wi.Triangles / 1000}k, cells {wi.VisibleCells}");
                 Color32[] pixels = world;
                 if (ui)
                 {

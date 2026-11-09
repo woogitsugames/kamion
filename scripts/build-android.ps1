@@ -6,6 +6,7 @@
   pwsh scripts/build-android.ps1 -Install -Run            # build, install on the single attached phone, launch, logcat
   pwsh scripts/build-android.ps1 -Install -AllDevices -Run -LogcatSeconds 60
   pwsh scripts/build-android.ps1 -SkipBuild -Install -Serial RFGL34SJYDZ -Run -Tier Low -Fps 60
+  pwsh scripts/build-android.ps1 -WorldHigh                # also ship the High world content (WorldC_High, ADR 0012)
 .NOTES
   Exit code 0 = everything requested succeeded. Build log: artifacts/logs/build-<ts>.log.
   APK: artifacts/apk/kamion-<version>-<sha>.apk (+ .sha256). Missing devices are skipped with a warning.
@@ -17,6 +18,7 @@ param(
     [switch]$AllDevices,
     [switch]$Run,
     [switch]$Development,
+    [switch]$WorldHigh,
     [switch]$SkipBuild,
     [int]$LogcatSeconds = 20,
     [ValidateSet('', 'Low', 'Medium', 'High', 'Ultra')] [string]$Tier = '',
@@ -30,7 +32,7 @@ New-Item -ItemType Directory -Force $LogsDir, (Join-Path $ArtifactsDir 'apk') | 
 $version = (Select-String -Path "$ProjectPath/ProjectSettings/ProjectSettings.asset" -Pattern '^\s*bundleVersion:\s*(.+)$').Matches[0].Groups[1].Value.Trim()
 $sha = Get-GitShortSha
 if (& git -C $RepoRoot status --porcelain --untracked-files=no) { $sha = "$sha-dirty" }
-$apk = Join-Path $ArtifactsDir "apk/kamion-$version-$sha$(if ($Development) { '-dev' }).apk"
+$apk = Join-Path $ArtifactsDir "apk/kamion-$version-$sha$(if ($WorldHigh) { '-high' })$(if ($Development) { '-dev' }).apk"
 
 # ---------------------------------------------------------------- build
 if (-not $SkipBuild) {
@@ -49,6 +51,7 @@ if (-not $SkipBuild) {
     $log = Join-Path $LogsDir "build-$ts.log"
     $unityArgs = @('-executeMethod', 'Game.Editor.Build.BuildCommands.BuildAndroidApk', '-buildOutput', $apk)
     if ($Development) { $unityArgs += '-development' }
+    if ($WorldHigh) { $unityArgs += '-worldHigh' }
     $sw = [Diagnostics.Stopwatch]::StartNew()
     $code = Invoke-UnityBatch -LogFile $log -Arguments $unityArgs
     $result = Select-String -Path $log -Pattern 'BUILD_RESULT:.*' -ErrorAction SilentlyContinue | Select-Object -Last 1
