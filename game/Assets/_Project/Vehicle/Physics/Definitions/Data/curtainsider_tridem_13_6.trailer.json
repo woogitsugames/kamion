@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "id": "curtainsider_tridem_13_6",
+  "description": "Generic EU curtainsider semi-trailer, 13.6 m, tridem air suspension, 385/65 R22.5 singles, disc brakes, EBS 2S/2M. Provenance: docs/VEHICLE_REFERENCE_DATA.md",
+  "massElements": [
+    {
+      "name": "chassis_frame_gooseneck",
+      "massKg": 2200,
+      "center": {
+        "x": 0,
+        "y": 1.05,
+        "z": -5.2
+      },
+      "size": {
+        "x": 1.2,
+        "y": 0.4,
+        "z": 13.0
+      }
+    },
+    {
+      "name": "floor",
+      "massKg": 1100,
+      "center": {
+        "x": 0,
+        "y": 1.25,
+        "z": -5.2
+      },
+      "size": {
+        "x": 2.55,
+        "y": 0.1,
+        "z": 13.6
+      }
+    },
+    {
+      "name": "body_curtains_roof_walls_doors",
+      "massKg": 1300,
+      "center": {
+        "x": 0,
+        "y": 2.6,
+        "z": -5.2
+      },
+      "size": {
+        "x": 2.55,
+        "y": 2.7,
+        "z": 13.6
+      }
+    },
+    {
+      "name": "tridem_axles_wheels_brakes",
+      "massKg": 2250,
+      "center": {
+        "x": 0,
+        "y": 0.515,
+        "z": -7.7
+      },
+      "size": {
+        "x": 2.4,
+        "y": 0.6,
+        "z": 3.2
+      }
+    },
+    {
+      "name": "landing_gear_misc",
+      "massKg": 150,
+      "center": {
+        "x": 0,
+        "y": 0.9,
+        "z": -2.2
+      },
+      "size": {
+        "x": 2.0,
+        "y": 0.6,
+        "z": 0.4
+      }
+    }
+  ],
+  "kingpinHeight": 1.2,
+  "axles": [
+    {
+      "name": "axle1",
+      "positionZ": -6.39,
+      "trackWidth": 2.04,
+      "tiresPerSide": 1,
+      "steered": false,
+      "driven": false,
+      "tireId": "tire_385_65_r22_5",
+      "suspension": {
+        "type": "air_2_bellows_trailing_arm",
+        "springRate": 79000,
+        "progressiveRate": 1000000.0,
+        "travel": 0.2,
+        "staticPositionFraction": 0.5,
+        "bumpStopClearance": 0.025,
+        "bumpStopRate": 40000000.0,
+        "damperBump": 9000,
+        "damperRebound": 18000,
+        "damperKneeVelocity": 0.3,
+        "damperHighSpeedFactor": 0.4,
+        "antiRollStiffness": 400000,
+        "airLevelling": true,
+        "levellingTimeConstant": 8.0,
+        "levellingDeadband": 0.008,
+        "levellingGroup": 1
+      },
+      "serviceBrakeTorque": 18000,
+      "parkingBrakeTorque": 12000,
+      "brakeChamberVolumeL": 1.0,
+      "brakeCircuit": 0,
+      "brakeApplyTimeConstant": 0.15,
+      "brakeApplySecondTimeConstant": 0.2,
+      "brakeReleaseTimeConstant": 0.3,
+      "ladenAxleLoadN": 78500,
+      "minLoadSensingFactor": 0.2
+    },
+    {
+      "name": "axle2",
+      "positionZ": -7.7,
+      "trackWidth": 2.04,
+      "tiresPerSide": 1,
+      "steered": false,
+      "driven": false,
+      "tireId": "tire_385_65_r22_5",
+      "suspension": {
+        "type": "air_2_bellows_trailing_arm",
+        "springRate": 79000,
+        "progressiveRate": 1000000.0,
+        "travel": 0.2,
+        "staticPositionFraction": 0.5,
+        "bumpStopClearance": 0.025,
+        "bumpStopRate": 40000000.0,
+        "damperBump": 9000,
+        "damperRebound": 18000,
+        "damperKneeVelocity": 0.3,
+        "damperHighSpeedFactor": 0.4,
+        "antiRollStiffness": 400000,
+        "airLevelling": true,
+        "levellingTimeConstant": 8.0,
+        "levellingDeadband": 0.008,
+        "levellingGroup": 1
+      },
+      "serviceBrakeTorque": 18000,
+      "parkingBrakeTorque": 12000,
+      "brakeChamberVolumeL": 1.0,
+      "brakeCircuit": 0,
+      "brakeApplyTimeConstant": 0.15,
+      "brakeApplySecondTimeConstant": 0.2,
+      "brakeReleaseTimeConstant": 0.3,
+      "ladenAxleLoadN": 78500,
+      "minLoadSensingFactor": 0.2
+    },
+    {
+      "name": "axle3",
+      "positionZ": -9.01,
+      "trackWidth": 2.04,
+      "tiresPerSide": 1,
+      "steered": false,
+      "driven": false,
+      "tireId": "tire_385_65_r22_5",
+      "suspension": {
+        "type": "air_2_bellows_trailing_arm",
+        "springRate": 79000,
+        "progressiveRate": 1000000.0,
+        "travel": 0.2,
+        "staticPositionFraction": 0.5,
+        "bumpStopClearance": 0.025,
+        "bumpStopRate": 40000000.0,
+        "damperBump": 9000,
+        "damperRebound": 18000,
+        "damperKneeVelocity": 0.3,
+        "damperHighSpeedFactor": 0.4,
+        "antiRollStiffness": 400000,
+        "airLevelling": true,
+        "levellingTimeConstant": 8.0,
+        "levellingDeadband": 0.008,
+        "levellingGroup": 1
+      },
+      "serviceBrakeTorque": 18000,
+      "parkingBrakeTorque": 0,
+      "brakeChamberVolumeL": 1.0,
+      "brakeCircuit": 0,
+      "brakeApplyTimeConstant": 0.15,
+      "brakeApplySecondTimeConstant": 0.2,
+      "brakeReleaseTimeConstant": 0.3,
+      "ladenAxleLoadN": 78500,
+      "minLoadSensingFactor": 0.2
+    }
+  ],
+  "cargoBay": {
+    "floorHeight": 1.3,
+    "frontZ": 1.55,
+    "length": 13.5,
+    "width": 2.48,
+    "height": 2.7,
+    "maxPayloadKg": 26000
+  },
+  "landingGear": {
+    "positionZ": -2.2,
+    "halfTrack": 0.95,
+    "loweredFootY": -0.07,
+    "raisedFootY": 0.45,
+    "stiffness": 4000000.0,
+    "damping": 60000.0,
+    "friction": 0.6,
+    "tangentialStiffness": 2000000.0,
+    "crankSpeed": 0.05
+  },
+  "brakes": {
+    "maxChamberPressureBar": 8.5,
+    "thresholdPressureBar": 0.4,
+    "reservoirVolumeL": 80,
+    "emergencyApplyBar": 3.5,
+    "emergencyReleaseBar": 4.5,
+    "springReleaseStartBar": 3.0,
+    "springReleaseFullBar": 5.5,
+    "relayGain": 1.13,
+    "absEnabled": true,
+    "absPerSide": true,
+    "absSensedAxle": 1,
+    "parkingTimeConstant": 0.6
+  },
+  "dragArea": 1.5,
+  "aeroCenter": {
+    "x": 0,
+    "y": 2.5,
+    "z": -5.0
+  }
+}

@@ -29,6 +29,16 @@ namespace Game.Vehicle.Physics
         public double naturallyAspiratedFraction = 0.45;
         public double boostTimeConstant = 0.35;
 
+        /// <summary>
+        /// Engine brake (compression release + exhaust pressure governor): total retarding torque at full
+        /// engine-brake command vs rpm, including the motoring drag [N m, positive magnitude]. Empty = no engine brake.
+        /// </summary>
+        public double[] engineBrakeCurveRpm = new double[0];
+        public double[] engineBrakeCurveNm = new double[0];
+        public double engineBrakeTimeConstant = 0.25;
+        /// <summary>Highest engine speed allowed while engine braking (overrun) [rpm].</summary>
+        public double maxOverrunRpm = 2400;
+
         public void Validate()
         {
             if (schemaVersion != CurrentSchemaVersion) throw new FormatException($"EngineDefinition '{id}': unsupported schemaVersion {schemaVersion}");
@@ -36,6 +46,8 @@ namespace Game.Vehicle.Physics
             if (dragCurveRpm.Length < 2 || dragCurveRpm.Length != dragCurveNm.Length) throw new FormatException($"EngineDefinition '{id}': bad drag curve");
             for (int i = 1; i < torqueCurveRpm.Length; i++) if (torqueCurveRpm[i] <= torqueCurveRpm[i - 1]) throw new FormatException($"EngineDefinition '{id}': torque rpm must increase");
             for (int i = 1; i < dragCurveRpm.Length; i++) if (dragCurveRpm[i] <= dragCurveRpm[i - 1]) throw new FormatException($"EngineDefinition '{id}': drag rpm must increase");
+            if (engineBrakeCurveRpm.Length != engineBrakeCurveNm.Length) throw new FormatException($"EngineDefinition '{id}': bad engine brake curve");
+            for (int i = 1; i < engineBrakeCurveRpm.Length; i++) if (engineBrakeCurveRpm[i] <= engineBrakeCurveRpm[i - 1]) throw new FormatException($"EngineDefinition '{id}': engine brake rpm must increase");
             if (inertia <= 0) throw new FormatException($"EngineDefinition '{id}': inertia must be > 0");
         }
     }

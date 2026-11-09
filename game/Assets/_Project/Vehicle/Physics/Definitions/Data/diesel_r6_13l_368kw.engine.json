@@ -1,16 +1,76 @@
 {
   "schemaVersion": 1,
   "id": "diesel_r6_13l_368kw",
-  "description": "13 l inline-6 diesel, 368 kW / 2500 Nm class. Plateau and power band from a published OEM fact sheet of this class; low-end and fade points WORKING_VALUE. See docs/VEHICLE_REFERENCE_DATA.md",
-  "torqueCurveRpm": [ 500, 600, 800, 950, 980, 1270, 1400, 1530, 1800, 1900, 2100 ],
-  "torqueCurveNm":  [ 900, 1200, 1900, 2450, 2500, 2500, 2420, 2297, 1952, 1800, 1500 ],
-  "dragCurveRpm": [ 0, 600, 1000, 1500, 2000, 2400 ],
-  "dragCurveNm":  [ 60, 90, 130, 190, 260, 320 ],
+  "description": "13 l inline-6 diesel, 368 kW / 2500 Nm class. Plateau, power band, max revs and VEB+ engine-brake rating from the Volvo D13K500 fact sheet (class reference); other points WORKING_VALUE. See docs/VEHICLE_REFERENCE_DATA.md",
+  "torqueCurveRpm": [
+    500,
+    600,
+    800,
+    950,
+    980,
+    1270,
+    1400,
+    1530,
+    1800,
+    1900,
+    2100
+  ],
+  "torqueCurveNm": [
+    900,
+    1200,
+    1900,
+    2450,
+    2500,
+    2500,
+    2420,
+    2297,
+    1952,
+    1800,
+    1500
+  ],
+  "dragCurveRpm": [
+    0,
+    600,
+    1000,
+    1500,
+    2000,
+    2400
+  ],
+  "dragCurveNm": [
+    60,
+    90,
+    130,
+    190,
+    260,
+    320
+  ],
   "inertia": 3.5,
   "idleRpm": 600,
   "governorStartRpm": 1900,
   "maxRpm": 2100,
   "stallRpm": 350,
   "naturallyAspiratedFraction": 0.45,
-  "boostTimeConstant": 0.35
+  "boostTimeConstant": 0.35,
+  "engineBrakeCurveRpm": [
+    800,
+    1000,
+    1200,
+    1500,
+    1800,
+    2100,
+    2300,
+    2400
+  ],
+  "engineBrakeCurveNm": [
+    300,
+    650,
+    900,
+    1150,
+    1350,
+    1500,
+    1557,
+    1557
+  ],
+  "engineBrakeTimeConstant": 0.25,
+  "maxOverrunRpm": 2400
 }
