@@ -9,7 +9,9 @@ Właściciel toru: `truck-artist`. Ocena wizualna: `visual-critic` + akceptacja 
 | A1 | Brief, wymiary klasy, punkt oczu, lista zdjęć | **gotowe (ten plik + `art-source/truck/dims.json`)** — wartości `WORKING_VALUE` do potwierdzenia zdjęciami |
 | A2 | 3 koncepcje sylwetki + 3 marki | **gotowe do wyboru** → `docs/reports/visual/truck-A2/README.md` |
 | A3 | Blockout w skali wybranej koncepcji, kabina, oczy kierowcy, widoczność | czeka na wybór właściciela |
-| A4–A8 | high-poly, kabina, low/UV/bake, LOD/import, naczepa | później |
+| A4 | high-poly zewnętrza | po A3 |
+| A5 | Wnętrze kabiny (neutralne markowo: wspólna bryła, zmienne tylko znak na piaście i kolor wstawek) | **pierwsza pełna wersja do oceny** → §8 i `docs/reports/visual/truck-A5/README.md` |
+| A6–A8 | low/UV/bake (atlasy), LOD/import do Unity, naczepa | później |
 
 ## 1. Klasa pojazdu
 Nowoczesny europejski ciągnik siodłowy **4×2**, kabina nad silnikiem (cab-over), **wysoka kabina sypialna** long-haul, kierownica po lewej. Fikcyjna marka (D6), oryginalne wzornictwo — inspiracja klasą, nie modelem.
@@ -100,3 +102,23 @@ Opcja `--blend <ścieżka>` zapisuje scenę do podglądu (np. do `artifacts/`, p
 
 ## 7. Następny krok (A3, po wyborze)
 Wybrana koncepcja (+ ewentualne mieszanki: np. kabina z B, front z C) → blockout w skali z wnętrzem kabiny (fotel, kierownica, deska jako bryły), eye-point jako empty, test widoczności przez szybę i w lusterkach, korekta wymiarów po zdjęciach właściciela, rendery kontrolne + `visual-critic`.
+
+## 8. A5 — wnętrze kabiny (właściciel: `truck-artist`)
+Raport z renderami, tabelą ergonomii, budżetami i pytaniami: `docs/reports/visual/truck-A5/README.md`.
+
+**Zasada neutralności marki:** jedna bryła wnętrza dla A/B/C. Parametry zależne od marki: `--badge none|trakt|bielik|narew` (znak na piaście, z SVG w `art-source/truck/brand/`), `--trim grafit|piasek|koniak|lupek` (wstawki deski, drzwi, środki foteli). Pochylenie szyby `--rake` (A/C ≈ 3–5°, B ≈ 19°) przesuwa szybę, słupki i schowek nad szybą; dla B słupek A i szyba boczna wymagają dopracowania w A3.
+
+**Ergonomia (skrót, pełna tabela w raporcie):** oczy (−0,55; 0,45; 2,50) z `dims.json`; punkt H 0,635 m niżej (UNECE R46, SOURCED), 0,465 m nad płaską podłogą; kierownica Ø 470 mm, 38° od poziomu, środek (−0,55; 0,875; 2,12); wysokość stojąca 2,22 m; ekran zegarów 12,3″ pod kapturem ustawionym nad linią wzroku oko → górna krawędź ekranu; konsola środkowa 22° do kierowcy; bez pedału sprzęgła (AMT); hamulec postojowy jako dźwignia zaworu pneumatycznego na desce. Wszystko poza R46 i wymiarami z przepisów = `WORKING_VALUE` do potwierdzenia zdjęciem „z fotela kierowcy” (§4 ★).
+
+**Budżety (zmierzone / plan):** 83 490 trójkątów łącznie ze skorupą, szybami i lusterkami (cel High 60–90 tys.); LOD Medium ~40 tys., Low ~20 tys. (plan w raporcie). Tekstury: High ≈ 12,5 MB, Medium ≈ 2,7 MB, Low ≈ 0,8 MB (ASTC + mipmapy). Jeden atlas AO 2048 na całą kabinę (warstwa UV `Bake`), tekstury kafelkowane w metrach (warstwa `UVMap`).
+
+**Odtworzenie:**
+```
+uv run --no-project --with pillow --with numpy python tools/blender/truck/interior/make_textures.py
+blender -b --factory-startup --python tools/blender/truck/interior/build_interior.py -- --out docs/reports/visual/truck-A5 --samples 512 --stats docs/reports/visual/truck-A5/stats.json
+python tools/blender/truck/interior/variants.py --out docs/reports/visual/truck-A5
+blender -b --factory-startup --python tools/blender/truck/interior/bake_ao.py
+```
+Duże mapy kafelkowane i atlas AO są generowane (pomijane w git przez `art-source/truck/interior/.gitignore`); w repo są tylko skrypty i małe grafiki (ekrany, symbole, maski).
+
+**Następne kroki wnętrza:** zdjęcia właściciela → korekta wartości WORKING_VALUE; wybór koloru wstawek i stylu zegarów; A6: usunięcie ukrytych ścian, scalenie 49 materiałów do ~6 atlasów, LOD1/LOD2, wypalenie szwów/drobnych kształtów do normalnych na Medium/Low; A7: import do Unity, ekrany sterowane z fizyki, lusterka jako render texture, zrzuty z A16.

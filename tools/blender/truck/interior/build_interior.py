@@ -688,14 +688,14 @@ def build_wheel(badge):
     # hub / airbag cover: soft-cornered octagon pad
     hub_loops = []
     for depth, scl in ((-0.045, 0.96), (-0.010, 1.0), (0.012, 1.0), (0.026, 0.97), (0.035, 0.90), (0.040, 0.78),
-                       (0.042, 0.55), (0.0425, 0.0)):
+                       (0.042, 0.55), (0.0428, 0.30)):
         lp = []
         for i in range(40):
             a = 2 * math.pi * i / 40
             r = 0.082 * (1 + 0.07 * math.cos(4 * a)) * max(scl, 0.02)
             lp.append(C + n * depth + u * (r * math.cos(a) * 1.08) + v * (r * math.sin(a) * 0.90 - 0.006))
         hub_loops.append(lp)
-    hub = loft("wheel_hub", hub_loops, "dash_soft", closed=True, cap0=True, sharp=80)
+    hub = loft("wheel_hub", hub_loops, "dash_soft", closed=True, cap0=True, cap1=True, sharp=80)
     # horn-pad parting line
     pts = []
     for i in range(41):
