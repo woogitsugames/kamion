@@ -50,6 +50,7 @@ def parse():
     p.add_argument("--blend", default="")
     p.add_argument("--tag", default="")
     p.add_argument("--no-analysis", action="store_true")
+    p.add_argument("--vis", action="store_true", help="a4: eye-point views + visibility map (widocznosc_*)")
     return p.parse_args(argv)
 
 
@@ -151,6 +152,7 @@ def main():
     os.makedirs(a.out, exist_ok=True)
     fig = build(a)
     S.measure(os.path.join(a.out, "wymiary.json"))
+    B.door_interface(os.path.join(G.REPO, "art-source", "truck", "exterior", "door_interface.json"))
     if a.mode == "a4":
         lods = S.lod_estimate()
         S.tri_stats(os.path.join(a.out, "stats.json"), extra={"lod_plan_measured": lods})
@@ -183,6 +185,12 @@ def main():
                 M.build_paint(livery)
                 for v in views:
                     render_view(a, v, light, livery, fig, a.tag)
+        if a.vis:
+            S.lighting("overcast")
+            M.build_paint(a.liveries.split(",")[0])
+            for v in ("oko_przod", "oko_lewo", "oko_prawo"):
+                render_view(a, v, "overcast", a.liveries.split(",")[0], fig, a.tag)
+            S.visibility(a.out)
     if a.blend:
         os.makedirs(os.path.dirname(os.path.abspath(a.blend)), exist_ok=True)
         bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(a.blend))

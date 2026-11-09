@@ -72,12 +72,12 @@ def wheel(name, xc, y, out, et, tyre_mat, nuts=True, hub="front", seg=48):
     if abs(et) > 0.09:
         lathe(name + "_dish", dish, c, "alu_wheel", seg=48, side=out, sharp=40)
     disc = lathe(name + "_disc", [(0.112, xd - 0.011), (0.236, xd - 0.011), (0.236, xd + 0.011),
-                                  (0.112, xd + 0.011)], c, "alu_wheel", seg=40, side=out, sharp=40, closed_ends=False)
+                                  (0.112, xd + 0.011)], c, "alu_wheel", seg=min(40, seg), side=out, sharp=40, closed_ends=False)
     cutters = []
     for k in range(10):
         a = 2 * math.pi * (k + 0.5) / 10
         cutters.append(cyl(f"{name}_hh{k}", (xc + out * xd, y + 0.200 * math.cos(a), WHEEL_Z + 0.200 * math.sin(a)),
-                           0.028, 0.06, "alu_wheel", seg=16))
+                           0.028, 0.06, "alu_wheel", seg=16 if seg > 30 else 10))
     boolean(disc, cutters)
     xf = xc + out * (xd + 0.011)   # disc outer face
     if nuts:
@@ -123,8 +123,8 @@ def frame_and_axles():
                         "steel", seg=6, axis="X")
         # front frame horns: bumper brackets + cab tilt pivot brackets
         box_mm(f"frame_horn_{s}", s * 0.36, s * 0.44, 1.18, 1.46, 0.95, 1.12, "chassis", bev=0.01)
-        cyl(f"cab_pivot_{s}", (s * 0.40, 1.44, 1.19), 0.035, 0.12, "steel", axis="X", seg=16)
-        box_mm(f"cab_pivot_brk_{s}", s * 0.37, s * 0.43, 1.40, 1.48, 1.10, 1.20, "chassis", bev=0.006)
+        cyl(f"cab_pivot_{s}", (s * 0.40, 1.42, 1.19), 0.035, 0.12, "steel", axis="X", seg=16)
+        box_mm(f"cab_pivot_brk_{s}", s * 0.37, s * 0.43, 1.38, 1.46, 1.10, 1.20, "chassis", bev=0.006)
     for y in (-1.20, -2.30, -3.05, -3.85, Y_END + 0.06):
         box_mm(f"frame_cross_{y}", -FRAME_HALF_W + 0.08, FRAME_HALF_W - 0.08, y - 0.05, y + 0.05,
                FRAME_TOP - 0.24, FRAME_TOP - 0.04, "chassis")
@@ -178,7 +178,7 @@ def equipment():
     set_group("frame")
     xo = -(FRAME_HALF_W + 0.02)
     # fuel tank (aluminium, left), 600 x 620 section, ~1.1 m long (~400 l WORKING_VALUE)
-    w, h, y0, y1, zc = 0.60, 0.62, -2.22, -1.12, 0.73
+    w, h, y0, y1, zc = 0.60, 0.62, -2.34, -1.20, 0.73   # starts behind the step box (fairing to -1.14)
     xc = xo - w / 2
     sec = [(xc + px, zc + pz) for px, pz in rrect(w, h, 0.13, 5)]
     extrude_poly("fuel_tank", sec, y1 - y0, "alu_brushed", plane="XZ", origin=(0, y0, 0), bev=0.02, bseg=3)
@@ -192,23 +192,23 @@ def equipment():
     cyl("fuel_neck", (xc - 0.18, y1 - 0.15, zc + h / 2 + 0.02), 0.045, 0.05, "alu_brushed", axis="Z", seg=20)
     cyl("fuel_cap", (xc - 0.18, y1 - 0.15, zc + h / 2 + 0.055), 0.055, 0.03, "chassis", axis="Z", seg=24, bev=0.006)
     # AdBlue tank behind it, black plastic with a blue cap
-    w2, h2, a0, a1 = 0.44, 0.50, -2.66, -2.28
+    w2, h2, a0, a1 = 0.44, 0.50, -2.78, -2.40
     xc2 = xo - w2 / 2
     sec = [(xc2 + px, 0.70 + pz) for px, pz in rrect(w2, h2, 0.08, 4)]
     extrude_poly("adblue_tank", sec, a1 - a0, "plastic", plane="XZ", origin=(0, a0, 0), bev=0.01)
-    cyl("adblue_cap", (xc2 - 0.10, -2.40, 0.97), 0.045, 0.035, "adblue_blue", axis="Z", seg=20, bev=0.005)
+    cyl("adblue_cap", (xc2 - 0.10, -2.52, 0.97), 0.045, 0.035, "adblue_blue", axis="Z", seg=20, bev=0.005)
     # right: aftertreatment box (DPF+SCR) with perforated heat shield and down-angled outlet
     xi = FRAME_HALF_W + 0.02
-    box_mm("eats_box", xi, 1.17, -1.95, -1.05, 0.44, 1.04, "chassis", bev=0.05, seg=3)
-    box_mm("eats_shield", 1.17, 1.185, -1.90, -1.10, 0.50, 0.98, "perforated", bev=0.01)
+    box_mm("eats_box", xi, 1.17, -2.05, -1.18, 0.44, 1.04, "chassis", bev=0.05, seg=3)
+    box_mm("eats_shield", 1.17, 1.185, -2.00, -1.23, 0.50, 0.98, "perforated", bev=0.01)
     for z in (0.52, 0.96):
-        box_mm(f"eats_band_{z}", 1.165, 1.19, -1.92, -1.08, z - 0.012, z + 0.012, "steel", bev=0.003)
-    rod("exhaust_out", (1.00, -1.92, 0.50), (1.12, -2.06, 0.36), 0.05, "steel", seg=16)
-    cyl("exhaust_tip", (1.125, -2.07, 0.35), 0.054, 0.02, "chassis", axis="Z", seg=16)
+        box_mm(f"eats_band_{z}", 1.165, 1.19, -2.02, -1.21, z - 0.012, z + 0.012, "steel", bev=0.003)
+    rod("exhaust_out", (1.00, -2.02, 0.50), (1.12, -2.16, 0.36), 0.05, "steel", seg=16)
+    cyl("exhaust_tip", (1.125, -2.17, 0.35), 0.054, 0.02, "chassis", axis="Z", seg=16)
     # battery box with lid and latches
-    box_mm("battery_box", xi, 1.10, -2.70, -2.02, 0.56, 1.00, "plastic", bev=0.02)
-    box_mm("battery_lid_gap", 1.10, 1.103, -2.68, -2.04, 0.94, 0.945, "gap")
-    for y in (-2.20, -2.52):
+    box_mm("battery_box", xi, 1.10, -2.86, -2.16, 0.56, 1.00, "plastic", bev=0.02)
+    box_mm("battery_lid_gap", 1.10, 1.103, -2.84, -2.18, 0.94, 0.945, "gap")
+    for y in (-2.34, -2.66):
         box_mm(f"battery_latch_{y}", 1.10, 1.115, y - 0.03, y + 0.03, 0.84, 0.95, "steel", bev=0.004)
     # air tanks (across, under the frame)
     for y in (-2.80, -3.00):
@@ -217,7 +217,7 @@ def equipment():
             cyl(f"air_tank_strap_{y}_{x}", (x, y, 0.66), 0.11, 0.03, "chassis", axis="X", seg=24)
     # low side fairings under tanks/boxes, with side marker lamps (amber)
     for s in (-1, 1):
-        box_mm(f"side_fairing_{s}", s * (CAB_HALF_W - 0.03), s * (CAB_HALF_W - 0.01), -3.02, CAB_BACK_Y - 0.01,
+        box_mm(f"side_fairing_{s}", s * (CAB_HALF_W - 0.03), s * (CAB_HALF_W - 0.01), -3.02, -1.15,
                0.36, 0.48, "plastic", bev=0.006)
         for y in (-1.55, -2.60):
             box_mm(f"side_marker_{s}_{y}", s * (CAB_HALF_W - 0.012), s * (CAB_HALF_W + 0.002), y - 0.05, y + 0.05,
@@ -230,9 +230,9 @@ def equipment():
     for y in (-1.06, -1.68):
         box_mm(f"catwalk_brk_{y}", -0.46, 0.46, y - 0.02, y + 0.02, FRAME_TOP, FRAME_TOP + 0.02, "chassis")
     for k, z in enumerate((0.62, 0.84)):
-        box_mm(f"catwalk_step{k}", -1.08, -0.82, -1.10, -0.98, z, z + 0.02, "checker", bev=0.003)
-    rod("catwalk_ladder_a", (-1.08, -1.04, 0.58), (-1.08, -1.04, 0.98), 0.012, "chassis")
-    rod("catwalk_ladder_b", (-0.82, -1.04, 0.58), (-0.82, -1.04, 0.98), 0.012, "chassis")
+        box_mm(f"catwalk_step{k}", -0.92, -0.68, -1.12, -1.00, z, z + 0.02, "checker", bev=0.003)
+    rod("catwalk_ladder_a", (-0.92, -1.06, 0.58), (-0.92, -1.06, 0.98), 0.012, "chassis")
+    rod("catwalk_ladder_b", (-0.68, -1.06, 0.58), (-0.68, -1.06, 0.98), 0.012, "chassis")
     set_group("cab")   # grab handle is on the cab back corner
     tube("catwalk_grab", [(-1.18, CAB_BACK_Y - 0.01, 1.35), (-1.18, CAB_BACK_Y - 0.06, 1.40),
                           (-1.18, CAB_BACK_Y - 0.06, 2.10), (-1.18, CAB_BACK_Y - 0.01, 2.15)], 0.014, "plastic_satin")
