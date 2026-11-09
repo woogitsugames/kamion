@@ -95,6 +95,20 @@ Truck content per tier: Low = exterior LOD2 14.5k + interior LOD2 19.0k tris, 51
 LOD1 34.9k; High = LOD0-1 (82.9k) + interior LOD0 75.4k, 2048 atlases. Build +54 MB uncompressed, APK +12.1 MB. Open: S24+ High
 `cab-dash` view in sun 36 ms GPU (warm phone; shadows on the full-screen interior +7 ms) - profile on a cold phone.
 
+## Measured: A8 vehicle look (clear coat, reflection capture, contact shadows, cab lift, dusk lamps), 2026-11-09
+ADR 0021. Same APK (734e0d8 + A8 commits), WorldC overcast, uncapped, `rq_a8=0` (all A8 features off) vs default.
+
+| | A8 off | A8 on |
+|---|---|---|
+| Galaxy A16, Low, `truck-34` (vsync 60, battery 29.9 C, status 0) | GPU p50 15.92 / p95 18.05 ms, CPU 9.61 ms, PSS 632 MB | GPU p50 15.91 / p95 18.02 ms, CPU 9.79 ms, PSS 625 MB |
+| Galaxy A16, Low, `cab-dash` | GPU p50 15.97 / p95 18.21 ms | GPU p50 15.97 / p95 18.11 ms |
+| Galaxy S24+, High, `truck-34` (31-37 C, status 0-1, order bias) | GPU p50 8.64 (cold) / 10.00 (warm) ms, CPU 7.36 / 8.42 ms | GPU p50 9.73 ms, CPU 8.99 ms; capture off: GPU 9.63, CPU 8.44 ms |
+
+A16 Low: no measurable GPU cost (no capture on Low; clear coat and contact patch within noise; budget was 2 ms). S24+ High:
+GPU within the thermal drift (< 0.4 ms), capture +0.5 ms CPU main (one 128 px face every 2 frames, Reflection camera type -
+the first version, which let WorldInstances submit the instanced forest for every face, cost +4 ms CPU). Not measured: 30 min
+thermal run with A8, dusk lamp point lights on High (4 pixel lights, uniform loop in Kamion/World Surface).
+
 ## World content v2 (ADR 0012) — build and memory, 2026-11-09
 Sources: `artifacts/world/bialystok-industrial-c-import.json` (bake), `BUILD_CONTENT` lines of the build logs (Unity build
 report, sizes before LZ4HC), APK file sizes. Tile C = 4 km², 64 chunks, ≈ 110 800 instances (2 300 props + 108 500 trees).
