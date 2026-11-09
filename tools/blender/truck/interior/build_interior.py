@@ -306,11 +306,16 @@ def build_materials(a):
     # lower dash, door and pillar trims step up to clear mid-tones so the cab reads without bounce light (URP).
     M.pbr("dash_soft", (0.045, 0.046, 0.048), "dashgrain", 0.10, rough_add=0.24, nstr=1.25, spec=0.16,
           dust=(0.18, (0.070, 0.068, 0.062), 0.05))
-    M.pbr("dash_lower", (0.200, 0.193, 0.180), "hardgrain", 0.08, nstr=0.8, rough_add=0.04, spec=0.42)
-    M.pbr("dash_mid", (0.110, 0.108, 0.104), "dashgrain", 0.10, nstr=0.9, rough_add=0.08, spec=0.40)
+    # B2.1 (owner sheets D19/D20): charcoal mouldings round the koniak leather (r3 warm-grey lower dash read as a
+    # 2000s cab); still a clear step above the soft top so the parting lines and grain read in the URP look
+    M.pbr("dash_lower", (0.088, 0.087, 0.085), "hardgrain", 0.08, nstr=0.9, rough_add=0.05, spec=0.42,
+          dust=(0.22, (0.105, 0.100, 0.090), 0.06))
+    M.pbr("dash_mid", (0.066, 0.066, 0.066), "dashgrain", 0.10, nstr=0.9, rough_add=0.08, spec=0.40)
     M.pbr("trim_light", (0.270, 0.262, 0.245), "hardgrain", 0.08, nstr=0.7, rough_add=0.06, spec=0.40)
     M.pbr("dash_dark", (0.030, 0.030, 0.032), "hardgrain", 0.08, nstr=0.6)
     M.pbr("trim_insert", trim, "dashgrain", 0.10, nstr=0.8)
+    # B2.1: koniak leather inserts (passenger dash, door cards, armrests, stack flank), stitched; slight wear
+    M.pbr("leather_trim", tuple(c * 1.05 for c in trim), "leather", 0.12, nstr=0.9, wear=(0.20, 1.6))
     M.pbr("leather", (0.034, 0.033, 0.032), "leather", 0.12, nstr=1.0, wear=(0.26, 2.3), coat=0.0)
     M.pbr("leather_wheel", (0.030, 0.029, 0.028), "leather", 0.05, nstr=0.8, wear=(0.26, 1.6))
     centre = (0.040, 0.039, 0.038) if a.trim == "grafit" else tuple(c * 0.85 for c in trim)
@@ -658,19 +663,31 @@ def build_dash():
     # parting line between the two mouldings
     pts = [lp[split] + V(0, -0.0015, 0) for lp in loops[1:-1]]
     strip("dash_parting", pts, V(0, -1, 0.2).normalized(), 0.003, "gap", offset=0.0005)
-    # trim insert band across the passenger dash face (brand colour) with a satin bead under it
-    for x0, x1 in ((0.30, 1.03),):
-        n = 24
-        lp_top, lp_bot = [], []
-        for i in range(n + 1):
-            x = x0 + (x1 - x0) * i / n
-            fy, tz = dash_face_y(x), dash_top_z(x)
-            lp_top.append(V(x, fy - 0.004, tz - 0.07))
-            lp_bot.append(V(x, fy - 0.004, tz - 0.145))
-        ins = loft("dash_insert", [lp_top, lp_bot, [p + V(0, 0.02, 0) for p in lp_bot], [p + V(0, 0.02, 0) for p in lp_top]],
-                   "trim_insert", closed=False)
-        bevel(ins, 0.004, 2)
-        tube("dash_bead", [p + V(0, -0.002, -0.006) for p in lp_bot], 0.0035, "satin", seg=8)
+    # B2.1 (owner sheets): padded koniak leather band across the passenger dash face, from the stack flank to the
+    # end vent, crowned 8 mm, stitched top and bottom (twin needle line 6 mm in from each edge)
+    def face_at(x, z):
+        """y of the dash face at (x, z): front part of the lofted profile (between the top lip and the knee)."""
+        tz = dash_top_z(x)
+        pr = sorted((p.z, p.y) for p in dash_profile(x)[:34] if tz - 0.30 < p.z < tz - 0.004 and
+                    p.y < dash_face_y(x) + 0.06)
+        return lerp_tab(pr, z)
+
+    nl = G.Q(30, 10)
+    xs_l = [0.345 + (0.955 - 0.345) * i / nl for i in range(nl + 1)]
+    band = [(-0.026, 0.002), (-0.034, 0.007), (-0.060, 0.011), (-0.100, 0.012), (-0.140, 0.011), (-0.162, 0.007),
+            (-0.170, 0.002)]
+    lps = []
+    for x in xs_l:
+        tz = dash_top_z(x)
+        end = smooth(0.0, 0.02, min(x - 0.345, 0.955 - x))           # rounded ends: lift fades to the face
+        lp = [V(x, face_at(x, tz + dz) - lift * (0.35 + 0.65 * end), tz + dz) for dz, lift in band]
+        lp += [V(x, face_at(x, tz - 0.170) + 0.012, tz - 0.170), V(x, face_at(x, tz - 0.026) + 0.012, tz - 0.026)]
+        lps.append(lp)
+    ins = loft("dash_insert", lps, "leather_trim", closed=True, cap0=True, cap1=True, sharp=70)
+    for k, dz in enumerate((-0.033, -0.163)):
+        pts = [V(x, face_at(x, dash_top_z(x) + dz) - 0.0068, dash_top_z(x) + dz) for x in xs_l[1:-1]]
+        strip(f"dash_insert_stitch_{k}", pts, V(0, -1, 0.15).normalized(), 0.005, "stitch", offset=0.0004,
+              u_len=0.017)
     # ---- passenger dash (A6, critic #12): open tray with a ribbed rubber mat and a raised lip on the dash top,
     # document clip on the face, speaker grille in the corner, cup holder by the stack, parting lines that break
     # the slab into real mouldings (insert band, upper glovebox lid, lower glovebox)
@@ -705,13 +722,7 @@ def build_dash():
     gob["fixed_uv"] = True
     tube("dash_spk_rim", [drape(x, y, 0.002) for x, y in ((sx0, sy0), (sx1, sy0), (sx1, sy1), (sx0, sy1), (sx0, sy0))],
          0.003, "dash_dark", seg=6, cap=False)
-    # document clip on the upper passenger face (spring bar with two rubber rollers)
-    x = 0.70
-    fy = dash_face_y(x)
-    tz = dash_top_z(x)
-    box("doc_clip_bar", (x, fy - 0.010, tz - 0.052), (0.20, 0.016, 0.018), "dash_dark", bev=0.005)
-    for dx in (-0.07, 0.07):
-        cyl(f"doc_clip_roller_{dx}", (x + dx, fy - 0.017, tz - 0.060), 0.007, 0.03, "rubber", axis="X", seg=12)
+    # (B2.1: the r3 document clip sat on the leather band; the band takes its place, as in the owner sheets)
     # parting line between the insert band and the glovebox panel (breaks the slab into real mouldings)
     pts = []
     for i in range(25):
@@ -832,89 +843,103 @@ def build_binnacle():
 
 
 def build_centre_stack():
-    """Centre stack angled ~22 deg towards the driver (wrap-around), tilted back 16 deg."""
-    yaw, tilt = math.radians(22), math.radians(16)
+    """Centre stack angled ~22 deg towards the driver (wrap-around), tilted back 16 deg. B2.1 layout (owner sheets
+    D19/D20, real 2020s cabs): two rectangular vents across the top, the 10.1 in screen (DISPLAY_Infotainment, runtime
+    UI), two rows of seven rocker switches with icons (red hazard button in the middle of the top row), a separate
+    three-switch air-suspension pack, the climate panel (two knobs, LCD, five keys) and a 12 V socket + USB.
+    B2.1: yaw 22 -> 15 deg, tilt 16 -> 10 deg, 32 mm proud: at 22/16 deg the driver-side third and the top band of
+    the face sank behind the dash face and the dash-top lip (half the screen and a vent cut off from the seats)."""
+    yaw, tilt = math.radians(15), math.radians(10)
     n = V(-math.sin(yaw) * math.cos(tilt), -math.cos(yaw) * math.cos(tilt), math.sin(tilt)).normalized()
     up = V(0, 0, 1)
-    c0 = V(0.03, 0.962, 1.855)
+    c0 = V(0.03, 0.930, 1.845)
     u = up.cross(n).normalized()
     v = n.cross(u).normalized()
-    # body (dash_mid surround) rising out of the dash
-    outline = rrect(0.46, 0.52, 0.05, 6)
-    body = panel("stack_body", outline, c0, n, up, 0.22, "dash_mid", bev=0.012, bseg=3)
-    # dark face plate
-    panel("stack_face", rrect(0.43, 0.49, 0.036, 5), c0 + n * 0.003, n, up, 0.006, "dash_dark", bev=0.002)
-    # two vents across the top of the stack
-    for k, du in enumerate((-0.10, 0.10)):
-        vent_rect(f"vent_stack_{k}", c0 + u * du + v * 0.200 + n * 0.004, n, w=0.15, h=0.048)
-    # screen (10.1 in, 225 x 135 mm), with bezel
-    cs = c0 + v * 0.075 + n * 0.006
+    nq = n.to_track_quat("Y", "Z").to_matrix()
+    rotm = n.to_track_quat("Z", "Y").to_matrix()
+
+    def at(du, dv, dn=0.0):
+        return c0 + u * du + v * dv + n * dn
+    # body (dash_mid surround) rising out of the dash, piano-dark face plate
+    body = panel("stack_body", rrect(0.46, 0.52, 0.05, 6), c0, n, up, 0.22, "dash_mid", bev=0.012, bseg=3)
+    panel("stack_face", rrect(0.43, 0.49, 0.036, 5), at(0, 0, 0.003), n, up, 0.006, "dash_dark", bev=0.002)
+    # koniak leather pad on the passenger flank of the stack (owner sheets), stitched along its front edge
+    fl = c0 + u * 0.240 - n * 0.095
+    panel("stack_flank_leather", rrect(0.17, 0.40, 0.03, 4), fl, u, up, 0.010, "leather_trim", bev=0.004)
+    strip("stack_flank_stitch", [fl + n * 0.072 + v * (-0.18 + 0.36 * i / 12) for i in range(13)], u,
+          0.005, "stitch", offset=0.0004, u_len=0.017)
+    # two rectangular vents at the top of the stack, either side of the screen (the band above v ~0.17 is under the
+    # dash-top lip as seen from the seats, so the vents flank the screen instead of sitting over it)
+    for k, du in enumerate((-0.171, 0.171)):
+        vent_rect(f"vent_stack_{k}", at(du, 0.100, 0.004), n, w=0.060, h=0.118)
+    # screen (10.1 in, 225 x 135 mm), with bezel: kept for the runtime navigation UI (DISPLAY_Infotainment)
+    cs = at(0, 0.098, 0.006)
     panel("info_bezel", rrect(0.250, 0.158, 0.010, 3), cs + n * 0.008, n, up, 0.010, "piano", bev=0.002)
     plane_uv("info_screen", quad_on(cs, n, up, 0.225, 0.135, off=0.0085), "disp_info")
-    # A6.1 (critic r2 #8: a 2 x 6 grid of identical keys read as a calculator): two switch packs of mixed modules in
-    # recessed carriers, like real truck switch banks. Row 1: big hazard push button, two double-width rockers
-    # (diff lock, axle lift), three single rockers. Row 2: work-light dimmer rotary, single rockers, a flat double
-    # key, and a blank cap (real packs always carry unused slots). Rockers sit tipped +-5 deg (one end pressed), LED
-    # slits only on the latching functions; everything else stays dark.
+
     def module(name, du, dv, w, h, icon, kind="rocker", tip=0, led=False):
-        p = c0 + u * du + v * dv + n * 0.006
+        p = at(du, dv, 0.006)
         if kind == "rocker":
             nt = (Matrix.Rotation(math.radians(5 * tip), 3, u) @ n).normalized()
             sw = panel(name, rrect(w, h, 0.0035, 2), p + n * 0.013, nt, up, 0.013, "switch", bev=0.002)
-            ic = quad_on(p + n * 0.0135 + v * (0.007 if icon != "blank" else 0.0), nt, up, 0.015, 0.015, off=0.0)
-        elif kind == "push":
+            ic = quad_on(p + n * 0.0135 + v * (h / 2 - 0.0115 if h > 0.05 else 0.004 if icon != "blank" else 0.0), nt,
+                         up, 0.014, 0.014, off=0.0)
+        else:   # hazard push button: red, triangle icon
             sw = panel(name, rrect(w, h, 0.005, 2), p + n * 0.012, n, up, 0.012, "hazard_red", bev=0.003)
-            ic = quad_on(p, n, up, 0.024, 0.024, off=0.0125)
-        else:   # flat key
-            sw = panel(name, rrect(w, h, 0.004, 2), p + n * 0.009, n, up, 0.009, "switch", bev=0.002)
-            ic = quad_on(p, n, up, 0.015, 0.015, off=0.0095)
+            ic = quad_on(p, n, up, 0.020, 0.020, off=0.0125)
         if icon != "blank":
             plane_uv(name.replace("rocker_", "rocker_icon_"), ic, "icons", uv=M_ICON(icon))
         if led:
-            box(name.replace("rocker_", "rocker_led_"), tuple(p - v * (h / 2 - 0.006) + n * 0.0135),
-                (min(0.010, w * 0.35), 0.0018, 0.0022), "led_off",
-                rot=n.to_track_quat("Y", "Z").to_matrix())
+            box(name.replace("rocker_", "rocker_led_"), tuple(p - v * (h / 2 - 0.005) + n * 0.0135),
+                (min(0.010, w * 0.35), 0.0018, 0.0022), "led_off", rot=nq)
         return sw
-
-    rows = [  # (v, [(name, width, height, icon, kind, tip, led)])
-        (-0.058, [("haz", 0.040, 0.040, "hazard", "push", 0, False), ("dl", 0.046, 0.040, "diff_lock", "rocker", 1, True),
-                  ("al", 0.046, 0.040, "axle_lift", "rocker", -1, True), ("wl", 0.026, 0.040, "work_light", "rocker", 1, True),
-                  ("bc", 0.026, 0.040, "beacon", "rocker", -1, False), ("esp", 0.026, 0.040, "esp_off", "rocker", 1, False)]),
-        (-0.117, [("sh", 0.026, 0.040, "seat_heat", "rocker", -1, False), ("mh", 0.026, 0.040, "mirror_heat", "rocker", 1, True),
-                  ("la", 0.046, 0.026, "lane_assist", "key", 0, False), ("iu", 0.046, 0.026, "idle_up", "key", 0, False),
-                  ("bl", 0.026, 0.040, "blank", "rocker", 0, False)]),
-    ]
+    # two rows of seven 24 mm modules, hazard in the middle of the top row (latching functions carry an LED slit)
+    rows = [(-0.012, [("fog_rear", 1, True), ("work_light", -1, True), ("beacon", 1, False), ("hazard", 0, False),
+                      ("cab_light", -1, False), ("mirror_heat", 1, True), ("seat_heat", -1, True)]),
+            (-0.055, [("diff_lock", 1, True), ("axle_lift", -1, True), ("ptos", 1, True), ("esp_off", -1, False),
+                      ("lane_assist", 1, False), ("idle_up", -1, False), ("blank", 0, False)])]
+    w, gap, du_c = 0.024, 0.005, -0.050
+    widths = 7 * w + 6 * gap
     for r, (dv, mods) in enumerate(rows):
-        gap = 0.0055
-        widths = sum(m[1] for m in mods) + gap * (len(mods) - 1)
-        x0 = -widths / 2 + (0.024 if r == 1 else 0.0)
-        # recessed carrier of the pack (dark frame, 2 mm proud of the face plate, joints between modules)
-        pc = c0 + u * (x0 + widths / 2) + v * dv + n * 0.006
-        panel(f"swpack_{r}", rrect(widths + 0.012, 0.052, 0.006, 2), pc + n * 0.004, n, up, 0.004, "dash_dark",
+        panel(f"swpack_{r}", rrect(widths + 0.012, 0.042, 0.005, 2), at(du_c, dv, 0.010), n, up, 0.004, "dash_dark",
               bev=0.0015)
-        x = x0
-        for k, (nm, w, h, icon, kind, tip, led) in enumerate(mods):
-            module(f"rocker_{r}_{k}", x + w / 2, dv, w, h, icon, kind, tip, led)
-            x += w + gap
-    # rotary work-light / panel dimmer at the start of row 2 (knurled skirt, pointer line)
-    p = c0 + u * -0.150 + v * -0.117 + n * 0.006
-    rotm = n.to_track_quat("Z", "Y").to_matrix()
-    cyl("stack_rotary_base", p + n * 0.003, 0.021, 0.005, "dash_dark", seg=28, bev=0.001, rot=rotm)
-    cyl("stack_rotary", p + n * 0.013, 0.016, 0.018, "knob", seg=28, bev=0.0025, rot=rotm)
-    box("stack_rotary_mark", tuple(p + n * 0.0225 + v * 0.008), (0.0018, 0.0012, 0.008), "led_off",
-        rot=n.to_track_quat("Y", "Z").to_matrix())
-    # HVAC: two knobs + row of buttons at the bottom
-    for i, du in enumerate((-0.14, 0.14)):
-        p = c0 + u * du + v * -0.195 + n * 0.006
-        cyl(f"hvac_knob_{i}", p + n * 0.014, 0.024, 0.026, "knob", seg=32, bev=0.003,
-            rot=n.to_track_quat("Z", "Y").to_matrix())
-        cyl(f"hvac_ring_{i}", p + n * 0.003, 0.030, 0.006, "satin", seg=32, bev=0.001,
-            rot=n.to_track_quat("Z", "Y").to_matrix())
-    for k, ic in enumerate(("ac", "fan", "defrost", "recirc")):
-        p = c0 + u * (-0.063 + k * 0.042) + v * -0.195 + n * 0.006
-        panel(f"hvac_btn_{k}", rrect(0.034, 0.026, 0.005, 2), p + n * 0.008, n, up, 0.008, "switch", bev=0.002)
-        plane_uv(f"hvac_icon_{k}", quad_on(p, n, up, 0.018, 0.018, off=0.0085), "icons", uv=M_ICON(ic))
-    # lower centre: open tray + two cup holders + 12/24 V sockets in the lower dash face
+        for k, (icon, tip, led) in enumerate(mods):
+            du = du_c - widths / 2 + w / 2 + k * (w + gap)
+            if icon == "hazard":
+                module(f"rocker_{r}_{k}", du, dv, 0.030, 0.030, icon, "push")
+            else:
+                module(f"rocker_{r}_{k}", du, dv, w, 0.032, icon, "rocker", tip, led)
+    # air-suspension pack: three tall rockers (raise / ride height / lower) in their own carrier
+    dus = [0.150 + (k - 1) * (w + gap) for k in range(3)]
+    panel("swpack_susp", rrect(3 * w + 2 * gap + 0.012, 0.086, 0.006, 2), at(0.150, -0.0335, 0.010), n, up, 0.004,
+          "dash_dark", bev=0.0015)
+    for k, (du, icon) in enumerate(zip(dus, ("plus", "res", "minus"))):
+        module(f"rocker_s_{k}", du, -0.0335, w, 0.074, icon, "rocker", (1, 0, -1)[k], led=(k == 1))
+    # climate panel: recessed dark plate, two knobs with satin rings, LCD between them, five keys under the LCD
+    panel("hvac_plate", rrect(0.40, 0.088, 0.010, 3), at(0, -0.150, 0.008), n, up, 0.004, "dash_dark", bev=0.0015)
+    for i, du in enumerate((-0.140, 0.140)):
+        p = at(du, -0.150, 0.006)
+        cyl(f"hvac_ring_{i}", p + n * 0.006, 0.031, 0.006, "satin", seg=36, bev=0.001, rot=rotm)
+        cyl(f"hvac_knob_{i}", p + n * 0.018, 0.025, 0.024, "knob", seg=36, bev=0.003, rot=rotm)
+        box(f"hvac_knob_mark_{i}", tuple(p + n * 0.0305 + v * 0.016), (0.002, 0.0012, 0.008), "led_off", rot=nq)
+    panel("hvac_lcd_bezel", rrect(0.150, 0.036, 0.004, 2), at(0, -0.132, 0.012), n, up, 0.003, "piano", bev=0.001)
+    for k in range(3):       # unlit LCD segments: set temperature left / fan / set temperature right
+        box(f"hvac_lcd_seg_{k}", tuple(at(-0.045 + 0.045 * k, -0.132, 0.0152)), (0.022, 0.0006, 0.010), "dash_dark",
+            rot=nq)
+    for k, ic in enumerate(("ac", "recirc", "defrost", "fan", "eco")):
+        p = at(-0.060 + k * 0.030, -0.169, 0.006)
+        panel(f"hvac_btn_{k}", rrect(0.026, 0.018, 0.004, 2), p + n * 0.009, n, up, 0.006, "switch", bev=0.0015)
+        plane_uv(f"hvac_icon_{k}", quad_on(p, n, up, 0.013, 0.013, off=0.0092), "icons", uv=M_ICON(ic))
+    # bottom row: small open cubby (phone), USB-C pair, 12 V socket with a hinged cap
+    panel("stack_cubby", rrect(0.150, 0.034, 0.008, 3), at(-0.075, -0.217, 0.0065), n, up, 0.003, "rubber",
+          bev=0.001)
+    for k in range(2):
+        panel(f"usb_s_{k}", rrect(0.010, 0.0045, 0.002, 1), at(0.040 + k * 0.020, -0.217, 0.008), n, up, 0.003, "gap")
+    p = at(0.120, -0.217, 0.006)
+    cyl("socket_12v_ring", p + n * 0.004, 0.017, 0.008, "satin", seg=28, bev=0.001, rot=rotm)
+    cyl("socket_12v", p + n * 0.006, 0.0115, 0.008, "gap", seg=24, rot=rotm)
+    box("socket_12v_cap", tuple(p + n * 0.010 + v * 0.019), (0.030, 0.004, 0.010), "dash_dark", bev=0.0015, rot=nq)
+    # lower centre: open tray + two cup holders + 24 V socket in the lower dash face
     yt = dash_face_y(0.03)
     box_mm("tray_recess", -0.14, 0.18, yt - 0.01, yt + 0.12, 1.56, 1.585, "rubber")
     for i, x in enumerate((-0.06, 0.08)):
@@ -957,22 +982,24 @@ def vent_rect(name, c, n, w=0.11, h=0.05):
     panel(name + "_throat", rrect(w, h, 0.005, 2), c + n * 0.0065, n, up, 0.03, "gap")
     u = up.cross(n).normalized()
     v = n.cross(u).normalized()
-    for k in range(5):
-        p = c + v * (-h / 2 + h * (k + 0.5) / 5) + n * 0.002
+    nv = max(4, int(round(h / 0.0095)))
+    for k in range(nv):
+        p = c + v * (-h / 2 + h * (k + 0.5) / nv) + n * 0.002
         panel(f"{name}_vane{k}", rrect(w - 0.004, 0.003, 0.0012, 1), p, (n * 0.9 + v * -0.4).normalized(), up, 0.016,
               "dash_dark")
+    for k in range(-2, 3):      # rear vertical vanes (B2.1)
+        panel(f"{name}_vvane{k}", rrect(0.0025, h - 0.006, 0.001, 1), c + u * (k * w / 5.2) - n * 0.012, n, up, 0.014,
+              "gap")
     box(f"{name}_tab", tuple(c + n * 0.008), (0.012, 0.010, 0.02), "knob", bev=0.002)
 
 
 def build_vents():
-    # round vents at the dash ends (side-window demist / driver)
+    # B2.1 (owner sheets): rectangular vents at both dash ends (side-window demist / face), satin surrounds; the
+    # passenger face vent of r3 went (the leather band runs there)
     for s in (-1, 1):
-        x = s * 1.03
-        c = V(x, dash_face_y(x) - 0.004, dash_top_z(x) - 0.085)
-        vent_round(f"vent_end_{s}", c, V(0.25 * -s, -1, 0.15).normalized())
-    # passenger face vent (in the trim band zone, above the insert)
-    c = V(0.52, dash_face_y(0.52) - 0.004, 2.075)
-    vent_rect("vent_p", c, V(0, -1, 0.05).normalized(), w=0.16, h=0.04)
+        x = s * 1.035
+        c = V(x, dash_face_y(x) - 0.004, dash_top_z(x) - 0.088)
+        vent_rect(f"vent_end_{s}", c, V(0.25 * -s, -1, 0.12).normalized(), w=0.088, h=0.072)
 
 
 def build_dash_switches():
@@ -1080,19 +1107,20 @@ def build_wheel(badge):
     strip("wheel_stitch", pts, nrm, 0.010, "stitch_dark", offset=0.0012, u_len=0.016)
 
     # ---- spokes: flat plates (rounded-rect section), dished from the hub to the rim
-    def spoke(name, ang, widths, thick=0.019, r0=0.060, r1=WHEEL_R - 0.004):
+    def spoke(name, ang, widths, thick=0.019, r0=0.060, r1=WHEEL_R - 0.004, lift=0.0, mat="dash_dark", rr=0.0075,
+              t0=0.0, t1=1.0):
         radial = u * math.cos(ang) + v * math.sin(ang)
         side = n.cross(radial).normalized()
         sec = []
         nt = G.Q(9, 5)
         for j in range(nt + 1):
-            t = j / (nt - 0) if nt else 0
+            t = t0 + (t1 - t0) * j / nt
             r = r0 + (r1 - r0) * t
             w = lerp_tab(widths, t)
-            dz = HUB_DEPTH + (0.0 - HUB_DEPTH) * smooth(0.70, 1.0, t) - 0.004
+            dz = HUB_DEPTH + (0.0 - HUB_DEPTH) * smooth(0.70, 1.0, t) - 0.004 + lift
             pc = C + radial * r + n * dz
-            sec.append([pc + side * px + n * py for px, py in rrect(w, thick, 0.0075, 3)])
-        return loft(name, sec, "dash_dark", closed=True, cap0=True, cap1=True, sharp=50), radial, side
+            sec.append([pc + side * px + n * py for px, py in rrect(w, thick, min(rr, thick / 2 - 1e-4), 3)])
+        return loft(name, sec, mat, closed=True, cap0=True, cap1=True, sharp=50), radial, side
 
     pods = {}
     for sgn in (-1, 1):
@@ -1100,8 +1128,18 @@ def build_wheel(badge):
         ob, radial, side = spoke(f"spoke_{sgn}", ang, [(0.0, 0.082), (0.30, 0.078), (0.62, 0.072), (0.80, 0.052),
                                                        (1.0, 0.062)])
         pods[sgn] = (radial, side)
-    spoke("spoke_low", -math.pi / 2, [(0.0, 0.070), (0.5, 0.050), (0.85, 0.046), (1.0, 0.070)], thick=0.018,
-          r0=0.050)
+    # B2.1 (owner sheets): four-spoke wheel - the single lower spoke became two slim spokes in a V (+-32 deg off
+    # 6 o'clock), each with a satin-silver insert along its face; the side spokes carry a satin strip under the pods
+    for k, sg in enumerate((-1, 1)):
+        ang = -math.pi / 2 + sg * math.radians(32)
+        spoke(f"spoke_low_{k}", ang, [(0.0, 0.040), (0.5, 0.030), (0.85, 0.028), (1.0, 0.044)], thick=0.017,
+              r0=0.062)
+        spoke(f"spoke_trim_low_{k}", ang, [(0.0, 0.012), (1.0, 0.010)], thick=0.0025, r0=0.062, lift=0.0085,
+              mat="satin", rr=0.0015, t0=0.10, t1=0.82)
+    for sgn in (-1, 1):
+        ang = SPOKE_ANG if sgn > 0 else math.pi - SPOKE_ANG
+        spoke(f"spoke_trim_side_{sgn}", ang, [(0.0, 0.016), (1.0, 0.020)], thick=0.0025, lift=0.0090, mat="satin",
+              rr=0.0012, t0=0.68, t1=0.93)
     # switch pods integrated in the side spokes: recessed piano-black bezel + 2 x 3 flush keys (18 mm pitch)
     for sgn, (radial, side) in pods.items():
         r_c = 0.142
@@ -1174,7 +1212,43 @@ def build_wheel(badge):
         cyl(f"stalk_boss_{s}", base + u * s * 0.06, 0.02, 0.03, "dash_dark", axis="X", seg=16)
 
 
+def hub_wordmark(c, n, v, width=0.064):
+    """TRAKT wordmark on the hub (owner sheets): monoline letters from art-source/truck/brand/trakt.svg, satin metal,
+    raised 1.2 mm, letter-spaced like the grille badge (exterior/body.py wordmark)."""
+    path = os.path.join(REPO, "art-source", "truck", "brand", "trakt.svg")
+    txt = open(path, encoding="utf-8").read()
+    sw = float(re.search(r'stroke-width="([\d.]+)"', txt).group(1))
+    strokes = [[tuple(float(t) for t in q.split(",")) for q in pts.split()]
+               for pts in re.findall(r'<polyline points="([^"]+)"', txt)]
+    bounds = [192, 239, 293, 347, 401, 460]
+    spacing = 14.0
+
+    def idx(x):
+        return next((i for i, b in enumerate(bounds[1:]) if x < b), len(bounds) - 2)
+    allx = [x + idx(min(q[0] for q in pl)) * spacing for pl in strokes for x, _ in pl]
+    x0, x1 = min(allx), max(allx)
+    ys = [y for pl in strokes for _, y in pl]
+    ymid = (min(ys) + max(ys)) / 2
+    sc = width / (x1 - x0 + sw)
+    u = v.cross(n).normalized()
+    for k, pl in enumerate(strokes):
+        off = idx(min(q[0] for q in pl)) * spacing
+        for j, (a, b) in enumerate(zip(pl, pl[1:])):
+            pa = c + u * ((a[0] + off - (x0 + x1) / 2) * sc) + v * (-(a[1] - ymid) * sc)
+            pb = c + u * ((b[0] + off - (x0 + x1) / 2) * sc) + v * (-(b[1] - ymid) * sc)
+            d = pb - pa
+            if d.length < 1e-6:
+                continue
+            ax = d.normalized()
+            m3 = Matrix((ax, n.cross(ax).normalized(), n)).transposed()
+            box(f"emblem_wm_{k}_{j}", tuple((pa + pb) / 2 + n * 0.0012), (d.length + sw * sc, sw * sc, 0.0018), "satin",
+                rot=m3)
+
+
 def emblem(badge, c, n, v):
+    if badge == "trakt":
+        hub_wordmark(c, n, v)
+        return
     if badge == "none":
         panel("emblem_plate", rrect(0.050, 0.022, 0.008, 3), c + n * 0.002, n, v, 0.003, "metal_dark", bev=0.001)
         return
@@ -1524,21 +1598,30 @@ def build_doors():
             loops.append([V(xw - s * px, y, WIN_Z0 - 0.06 + pz) for px, pz in
                           ((0.0, 0.0), (0.075, 0.0), (0.083, 0.03), (0.07, 0.058), (0.02, 0.066), (0.0, 0.066))])
         sc = loft(f"door_sill_{s}", loops, "dash_soft", closed=True, cap0=True, cap1=True)
-        # insert panel (trim colour) between armrest and sill
+        # B2.1 (owner sheets): padded koniak leather panel between armrest and sill (was a 7 cm painted strip),
+        # crowned 6 mm, twin stitch lines along its top and bottom edges
         loops = []
-        for yi in range(11):
-            y = door_y(0.02 + 0.92 * yi / 10, 2.03, 0.04)
-            loops.append([V(xw - s * 0.072, y, 2.03), V(xw - s * 0.076, y, 2.10), V(xw - s * 0.064, y, 2.10),
-                          V(xw - s * 0.060, y, 2.03)])
-        ins = loft(f"door_insert_{s}", loops, "trim_insert", closed=True, cap0=True, cap1=True)
-        bevel(ins, 0.003, 1)
+        ny = G.Q(12, 5)
+        for yi in range(ny + 1):
+            y = door_y(0.02 + 0.92 * yi / ny, 2.03, 0.04)
+            loops.append([V(xw - s * 0.071, y, 1.992), V(xw - s * 0.077, y, 2.010), V(xw - s * 0.080, y, 2.050),
+                          V(xw - s * 0.077, y, 2.092), V(xw - s * 0.071, y, 2.104), V(xw - s * 0.058, y, 2.104),
+                          V(xw - s * 0.058, y, 1.992)])
+        ins = loft(f"door_insert_{s}", loops, "leather_trim", closed=True, cap0=True, cap1=True, sharp=70)
+        for k, (z, d) in enumerate(((1.999, 0.0737), (2.097, 0.0745))):
+            pts = [V(xw - s * d, door_y(0.04 + 0.88 * i / 16, z, 0.04), z) for i in range(17)]
+            strip(f"door_insert_stitch_{s}_{k}", pts, V(-s, 0, 0), 0.005, "stitch", offset=0.0006, u_len=0.017)
         # armrest with pull cup, window switch pad at the front
         loops = []
         for yi in range(15):
             y = door_y(-0.02 + 0.80 * yi / 14, 1.93, 0.04)
             h = 0.055
             loops.append([V(xw - s * (0.060 + px), y, 1.955 + pz) for px, pz in rrect(0.085, h, 0.022, 3, 0.04, 0)])
-        arm = loft(f"door_armrest_{s}", loops, "leather", closed=True, cap0=True, cap1=True, sharp=60)
+        arm = loft(f"door_armrest_{s}", loops, "leather_trim", closed=True, cap0=True, cap1=True, sharp=60)
+        set_wear(arm, lambda co: 0.6 * smooth(1.97, 1.982, co.z))      # elbow polish on the top
+        pts = [V(xw - s * 0.1015, door_y(-0.01 + 0.76 * i / 14, 1.93, 0.04), 1.979) for i in range(15)]
+        strip(f"door_arm_stitch_{s}", pts, V(-s * 0.4, 0, 1).normalized(), 0.005, "stitch", offset=0.0007,
+              u_len=0.017)
         sp = V(xw - s * 0.12, door_y(0.66, 1.93, 0.08), 1.987)
         panel(f"winswitch_pad_{s}", rrect(0.07, 0.11, 0.012, 3), sp, V(0, 0, 1), V(0, 1, 0), 0.008, "piano", bev=0.002)
         for k in range(2):
@@ -1718,8 +1801,32 @@ def build_curtains():
         bunched(f"curtain_side_{s}", b, V(0, -1, 0), V(-s, 0, 0), 0.11, 2.02, WIN_Z1 + 0.07)
     # electric roller blinds in a cassette over the windscreen; driver side pulled down a little
     yb = ws_y(WS_Z1) - 0.035
-    box_mm("blind_cassette", -XI + 0.07, XI - 0.07, yb - 0.035, yb + 0.015, WS_Z1 - 0.005, WS_Z1 + 0.04, "dash_lower",
+    box_mm("blind_cassette", -XI + 0.07, XI - 0.07, yb - 0.035, yb + 0.015, WS_Z1 - 0.005, WS_Z1 + 0.04, "dash_dark",
            bev=0.01)
+    # B2.1 (owner sheets): black inner visor band across the full width over the windscreen: two padded sun
+    # visors parked up in the plane of the glass (in the top frit zone, bottom 20 mm above the visible glass edge
+    # so they do not cut the view), hinge rods, satin clips, centre bracket. Glass-parallel frame from the rake.
+    r = math.radians(RAKE)
+    nrm, upg = V(0, -math.cos(r), -math.sin(r)), V(0, -math.sin(r), math.cos(r))
+    zv0, zv1 = WS_Z1 - 0.10 + 0.02, WS_Z1 + 0.030
+    zc = (zv0 + zv1) / 2
+    for k, (x0, x1) in enumerate(((-0.96, -0.07), (0.07, 0.96))):
+        xc, w = (x0 + x1) / 2, x1 - x0
+        ymin = min(glass_y(x0 + (x1 - x0) * i / 12, zc) for i in range(13))
+        c = V(xc, ymin - 0.032, zc)
+        panel(f"sun_visor_{k}", rrect(w, zv1 - zv0, 0.030, G.Q(5, 2)), c, nrm, upg, 0.024, "dash_soft", bev=0.008,
+              bseg=G.Q(3, 1))
+        rod(f"sun_visor_hinge_{k}", c + upg * ((zv1 - zv0) / 2 - 0.006) + nrm * -0.012 + V(x0 - xc + 0.02, 0, 0),
+            c + upg * ((zv1 - zv0) / 2 - 0.006) + nrm * -0.012 + V(x1 - xc - 0.02, 0, 0), 0.0065, "dash_dark", seg=10)
+        xi = x1 - 0.03 if k == 0 else x0 + 0.03
+        box(f"sun_visor_clip_{k}", tuple(c + V(xi - xc, 0, 0) - upg * 0.035 + nrm * 0.004), (0.022, 0.012, 0.030),
+            "satin", bev=0.003)
+        # stitched seam round the visor face (padded vinyl)
+        e = 0.012
+        loop = [c + nrm * 0.0005 + V(px, 0, 0) + upg * pz for px, pz in rrect(w - 2 * e, zv1 - zv0 - 2 * e, 0.02, 3)]
+        strip(f"sun_visor_seam_{k}", loop + [loop[0]], nrm, 0.004, "stitch_dark", offset=0.0005, u_len=0.017)
+    box("visor_centre_bracket", tuple(V(0.0, glass_y(0.0, zc) - 0.040, zc + 0.02)), (0.10, 0.03, 0.07), "dash_dark",
+        bev=0.008)
     for x0, x1, drop in ((-XI + 0.10, -0.03, 0.10), (0.03, XI - 0.10, 0.20)):
         z1 = WS_Z1 - 0.005
         z0 = z1 - drop
