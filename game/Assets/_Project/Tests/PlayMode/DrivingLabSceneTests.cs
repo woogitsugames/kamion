@@ -43,6 +43,35 @@ namespace Game.Tests
             else Debug.LogWarning("[TEST] VehicleAudioLibrary not generated - audio part skipped");
         }
 
+        /// <summary>Review r2 #3: developer text (status/autopilot/coupling) is hidden by default and toggled by SetDevDiagnostics.</summary>
+        [UnityTest]
+        public IEnumerator DrivingHud_DiagnosticText_HiddenUnlessDeveloperMode()
+        {
+            Physics.simulationMode = SimulationMode.FixedUpdate;
+            SceneManager.LoadScene(DrivingLabLayout.SceneName, LoadSceneMode.Single);
+            yield return null;
+            var hud = Object.FindAnyObjectByType<DrivingHud>();
+            Assert.IsFalse(hud.DevDiagnostics, "developer diagnostics must default to off");
+            var status = FindDeep(hud.transform, "Status");
+            Assert.IsNotNull(status, "status label missing");
+            Assert.IsFalse(status.gameObject.activeInHierarchy, "status line visible without developer mode");
+            hud.SetDevDiagnostics(true);
+            Assert.IsTrue(status.gameObject.activeInHierarchy, "status line must show in developer mode");
+            hud.SetDevDiagnostics(false);
+            Assert.IsFalse(status.gameObject.activeInHierarchy);
+        }
+
+        static Transform FindDeep(Transform t, string name)
+        {
+            foreach (Transform c in t)
+            {
+                if (c.name == name) return c;
+                var r = FindDeep(c, name);
+                if (r != null) return r;
+            }
+            return null;
+        }
+
         /// <summary>Stage 2: every lab spawn preset puts the combination at rest (coupled presets: kingpin in the jaw).</summary>
         [UnityTest]
         public IEnumerator DrivingLab_SpawnPresets_CombinationAtRest()

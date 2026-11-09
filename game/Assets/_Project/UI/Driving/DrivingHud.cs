@@ -27,6 +27,8 @@ namespace Game.UI.Driving
         public Func<bool> IsGyroMode;
         public Action ToggleSteeringMode, ToggleWheelRange, ResetVehicle, OpenMenu;
         public Func<string> StatusLine;
+        /// <summary>Developer diagnostics (status/autopilot/coupling lines) visible at start. Default off; launch argument devhud=1 or the four-finger hold toggles it.</summary>
+        public bool DevDiagnostics;
 
         // ---- Stage 2 (lab actions; the stalk, coupling and landing-gear buttons go through TouchControls) ----
         /// <summary>Respawn: 0 solo (trailer parked in the coupling bay), 1 empty, 2 24 t cargo, 3 40 t gross.</summary>
@@ -66,6 +68,7 @@ namespace Game.UI.Driving
     public sealed class DrivingHud : MonoBehaviour
     {
         const int Font = 30, SmallFont = 22;
+        static readonly Color k_PedalPanel = new Color(0.06f, 0.065f, 0.07f, 0.97f);
         static readonly Color k_Panel = new Color(0.06f, 0.065f, 0.07f, 0.88f);
         static readonly Color k_Button = new Color(0.16f, 0.17f, 0.18f, 0.95f);
         static readonly Color k_ButtonOn = new Color(0.30f, 0.36f, 0.30f, 0.92f);
@@ -105,6 +108,33 @@ namespace Game.UI.Driving
         readonly StringBuilder m_Sb = new StringBuilder(2048);
         static readonly string[] k_SpeedStrings = BuildNumbers(200);
 
+        /// <summary>Developer diagnostic text (status line, coupling line). Off by default in every build; toggled by launch argument
+        /// devhud=1 (context) or by holding four fingers on the screen for 0.8 s.</summary>
+        public bool DevDiagnostics { get; private set; }
+        float m_MultiTouchSince = -1f;
+        bool m_MultiTouchLatched;
+
+        public void SetDevDiagnostics(bool on)
+        {
+            DevDiagnostics = on;
+            if (m_Status != null) m_Status.gameObject.SetActive(on);
+            if (m_Coupling != null) m_Coupling.gameObject.SetActive(on && TelemetryVisible);
+        }
+
+        void PollDevGesture()
+        {
+            var ts = UnityEngine.InputSystem.Touchscreen.current;
+            int n = 0;
+            if (ts != null)
+                foreach (var t in ts.touches) if (t.press.isPressed) n++;
+            if (n >= 4)
+            {
+                if (m_MultiTouchSince < 0f) m_MultiTouchSince = Time.unscaledTime;
+                else if (!m_MultiTouchLatched && Time.unscaledTime - m_MultiTouchSince >= 0.8f) { m_MultiTouchLatched = true; SetDevDiagnostics(!DevDiagnostics); }
+            }
+            else { m_MultiTouchSince = -1f; m_MultiTouchLatched = false; }
+        }
+
         public bool TelemetryVisible => m_TelemetryPanel != null && m_TelemetryPanel.activeSelf;
 
         /// <param name="overlay">Screen Space - Overlay (runtime: always on top, no camera dependency); false = Screen
@@ -125,7 +155,8 @@ namespace Game.UI.Driving
         {
             if (m_TelemetryPanel != null) m_TelemetryPanel.SetActive(on);
             // The coupling diagnostics line (kingpin offset, articulation, legs) is telemetry: hidden by default.
-            if (m_Coupling != null) m_Coupling.gameObject.SetActive(on);
+            if (m_Coupling != null) m_Coupling.gameObject.SetActive(on && DevDiagnostics);
+            if (m_Status != null) Place((RectTransform)m_Status.transform, new Vector2(0f, 1f), new Vector2(24f, on ? -580f : -24f), new Vector2(900f, 34f));
             RefreshLabels();
         }
 
@@ -195,9 +226,11 @@ namespace Game.UI.Driving
             }
             m_Rpm = Label(p, "Rpm", "600 obr/min", 26, TextAnchor.UpperLeft, new Vector2(22f, 108f), new Vector2(300f, 34f));
             m_Rpm.color = k_Text;
-            m_Status = Label(m_SafeArea, "Status", "", SmallFont, TextAnchor.UpperCenter, Vector2.zero, new Vector2(900f, 34f));
-            Place((RectTransform)m_Status.transform, new Vector2(0.5f, 1f), new Vector2(-450f, -280f), new Vector2(900f, 34f));
+            m_Status = Label(m_SafeArea, "Status", "", SmallFont, TextAnchor.UpperLeft, Vector2.zero, new Vector2(900f, 34f));
+            Place((RectTransform)m_Status.transform, new Vector2(0f, 1f), new Vector2(24f, -24f), new Vector2(900f, 34f));
             m_Status.color = k_Amber;
+            m_Status.gameObject.SetActive(m_Ctx.DevDiagnostics);   // developer text, not over the horizon (review r2 #3)
+            DevDiagnostics = m_Ctx.DevDiagnostics;
         }
 
         void BuildTopButtons()
@@ -233,7 +266,7 @@ namespace Game.UI.Driving
             Stretch(rot);
             var img = rot.gameObject.AddComponent<Image>();
             img.sprite = WheelSprite();
-            img.color = new Color(0.70f, 0.73f, 0.75f, 0.30f);   // toned down (visual review r2): a guide, not a disc over the road
+            img.color = new Color(0.55f, 0.58f, 0.60f, 0.34f);   // toned down (visual review r2): a guide, not a disc over the road
             img.raycastTarget = false;
             var w = root.gameObject.AddComponent<SteeringWheelWidget>();
             w.wheel = m_Ctx.Wheel;
@@ -283,16 +316,19 @@ namespace Game.UI.Driving
             m_Air2Bar = Bar(strip, "Air2Bar", new Vector2(346f, 4f));
 
             // ---- coupling status (under the status line) ----
-            m_Coupling = Label(m_SafeArea, "Coupling", "", SmallFont, TextAnchor.UpperCenter, Vector2.zero, new Vector2(1100f, 34f));
-            Place((RectTransform)m_Coupling.transform, new Vector2(0.5f, 1f), new Vector2(-550f, -318f), new Vector2(1100f, 34f));
+            m_Coupling = Label(m_SafeArea, "Coupling", "", SmallFont, TextAnchor.UpperLeft, Vector2.zero, new Vector2(1100f, 34f));
+            Place((RectTransform)m_Coupling.transform, new Vector2(0f, 1f), new Vector2(24f, -620f), new Vector2(1100f, 34f));
             m_Coupling.color = k_Muted;
-            m_Coupling.gameObject.SetActive(false);   // shown with the telemetry panel
+            m_Coupling.gameObject.SetActive(false);   // shown with the telemetry panel, developer mode only
 
             // ---- endurance-brake stalk + brake cruise, right of the steering wheel ----
             var stalk = Rect("Stalk", m_SafeArea);
             Place(stalk, Vector2.zero, new Vector2(530f, 40f), new Vector2(116f, 476f));
-            var title = Label(stalk, "Title", "Hamulce\nzwalniające", 18, TextAnchor.UpperCenter, new Vector2(0f, 384f), new Vector2(116f, 50f));
-            title.color = k_Muted;
+            var titleBg = Rect("TitleBg", stalk);
+            Place(titleBg, Vector2.zero, new Vector2(0f, 382f), new Vector2(116f, 56f));
+            var tbi = titleBg.gameObject.AddComponent<Image>(); tbi.color = k_PedalPanel; tbi.raycastTarget = false;   // legible on any background
+            var title = Label(stalk, "Title", "Hamulce\nzwalniające", 20, TextAnchor.MiddleCenter, new Vector2(0f, 382f), new Vector2(116f, 56f));
+            title.color = k_Text;
             const float ch = 48f, cg = 5f;
             for (int i = 0; i < k_StalkLabels.Length; i++)
             {
@@ -411,7 +447,7 @@ namespace Game.UI.Driving
         {
             var rt = Rect(name, m_SafeArea);
             Place(rt, new Vector2(1f, 0f), pos - new Vector2(0f, 0f), size);
-            rt.gameObject.AddComponent<Image>().color = k_Panel;
+            rt.gameObject.AddComponent<Image>().color = k_PedalPanel;   // near-opaque: road markings must not show through
             var fill = Rect("Fill", rt);
             fill.anchorMin = Vector2.zero; fill.anchorMax = new Vector2(1f, 0f); fill.offsetMin = fill.offsetMax = Vector2.zero;
             var fi = fill.gameObject.AddComponent<Image>();
@@ -436,6 +472,7 @@ namespace Game.UI.Driving
         void Update()
         {
             ApplySafeArea();
+            PollDevGesture();
             RefreshNow();
         }
 
@@ -475,7 +512,7 @@ namespace Game.UI.Driving
             m_NeutralBtn.color = sel == GearSelector.Neutral ? k_ButtonOn : k_Button;
             m_ReverseBtn.color = sel == GearSelector.Reverse ? k_ButtonOn : k_Button;
             m_ParkBtn.color = park ? new Color(0.45f, 0.18f, 0.15f, 0.92f) : k_Button;
-            if (m_Ctx.StatusLine != null) { var s = m_Ctx.StatusLine(); if (!ReferenceEquals(s, m_Status.text)) m_Status.text = s ?? ""; }
+            if (DevDiagnostics && m_Ctx.StatusLine != null) { var s = m_Ctx.StatusLine(); if (!ReferenceEquals(s, m_Status.text)) m_Status.text = s ?? ""; }
             if (gyro && m_Ctx.Gyro != null && Time.unscaledTime >= m_NextTelemetry)
                 m_GyroLabel.text = "Gyro: " + m_Ctx.Gyro.RelativeTiltDeg.ToString("F1", CultureInfo.InvariantCulture) + "°" + (m_Ctx.Gyro.HasSensor ? "" : "  (brak czujnika)");
             if (TelemetryVisible && Time.unscaledTime >= m_NextTelemetry)
@@ -520,7 +557,7 @@ namespace Game.UI.Driving
             if (i1 != m_LastAir1) { m_LastAir1 = i1; m_Air1.text = k_AirStrings[i1]; m_Air1Bar.rectTransform.anchorMax = new Vector2(Mathf.Clamp01(i1 / 130f), 1f); m_Air1Bar.color = low ? k_Red : k_Muted; }
             if (i2 != m_LastAir2) { m_LastAir2 = i2; m_Air2.text = k_AirStrings[i2]; m_Air2Bar.rectTransform.anchorMax = new Vector2(Mathf.Clamp01(i2 / 130f), 1f); m_Air2Bar.color = low ? k_Red : k_Muted; }
 
-            if (m_Ctx.CouplingStatus != null && Time.unscaledTime >= m_NextCoupling)
+            if (DevDiagnostics && TelemetryVisible && m_Ctx.CouplingStatus != null && Time.unscaledTime >= m_NextCoupling)
             {
                 m_NextCoupling = Time.unscaledTime + 0.1f;
                 m_Coupling.text = m_Ctx.CouplingStatus() ?? "";
@@ -760,10 +797,10 @@ namespace Game.UI.Driving
                 float dx = x - c, dy = y - c;
                 float r = Mathf.Sqrt(dx * dx + dy * dy);
                 float a = 0f;
-                a = Mathf.Max(a, Band(r, 104f, 124f));                                   // rim
-                a = Mathf.Max(a, Band(r, 0f, 26f));                                      // hub
-                if (dy < 6f && Mathf.Abs(dy) < 9f && r < 106f) a = Mathf.Max(a, 1f);    // left/right spokes
-                if (dy < 0f && Mathf.Abs(dx) < 9f && r < 106f) a = Mathf.Max(a, 1f);    // bottom spoke
+                a = Mathf.Max(a, Band(r, 110f, 122f));                                   // rim
+                a = Mathf.Max(a, Band(r, 0f, 18f));                                      // hub
+                if (dy < 6f && Mathf.Abs(dy) < 6f && r < 112f) a = Mathf.Max(a, 1f);    // left/right spokes
+                if (dy < 0f && Mathf.Abs(dx) < 6f && r < 112f) a = Mathf.Max(a, 1f);    // bottom spoke
                 byte g = 235;
                 if (dy > 0f && Mathf.Abs(dx) < 10f && r > 100f && r < 126f) { a = 1f; px[y * n + x] = new Color32(240, 168, 50, 255); continue; } // top marker
                 px[y * n + x] = new Color32(g, g, g, (byte)(Mathf.Clamp01(a) * 255));

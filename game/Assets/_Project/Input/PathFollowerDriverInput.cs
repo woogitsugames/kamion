@@ -27,6 +27,21 @@ namespace Game.Controls
 
         public float Progress { get; private set; }
         public float Length => m_S.Length > 0 ? m_S[m_S.Length - 1] : 0f;
+
+        /// <summary>Route distance (m) at which the driver brakes smoothly to a stop and reports <see cref="Finished"/>;
+        /// 0 or less = the end of the path (launch argument route_end, gate 3 segments).</summary>
+        public float EndS;
+
+        float EffectiveEnd => EndS > 1f ? Mathf.Min(EndS, Length) : Length;
+
+        /// <summary>Starts following from route distance <paramref name="s"/> (vehicle spawned mid-route).</summary>
+        public void SeekTo(float s)
+        {
+            if (m_S.Length < 2) return;
+            int i = 0;
+            while (i < m_S.Length - 2 && m_S[i + 1] < s) i++;
+            m_Seg = i; Progress = Mathf.Clamp(s, 0f, Length); Finished = false;
+        }
         public bool Finished { get; private set; }
         public float LastSteer { get; private set; }
         public float CrossTrackError { get; private set; }
@@ -87,7 +102,7 @@ namespace Game.Controls
                 float lim = LimitAt(Progress + s) / 3.6f;
                 if (lim > 0f) vMax = Mathf.Min(vMax, Mathf.Sqrt(lim * lim + 2f * 1.2f * s));
             }
-            float remaining = Length - Progress;
+            float remaining = EffectiveEnd - Progress;
             if (remaining < StopDistance) vMax = Mathf.Min(vMax, Mathf.Max(0f, remaining - 3f) / StopDistance * 6f);
             Finished = remaining < 4f;
             CommandedSpeedKmh = vMax * 3.6f;

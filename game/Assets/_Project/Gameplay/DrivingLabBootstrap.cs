@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Globalization;
 using Game.Cameras;
 using Game.Controls;
@@ -63,6 +64,10 @@ namespace Game.Gameplay
         bool m_MirrorInsets;
         const string PrefMirrorInsets = "lab.mirrorInsets";
         bool m_AutopilotStart;
+        float m_RouteS = -1f, m_RouteEndS = -1f;
+        bool m_RouteDoneLogged;
+        float m_StartTime;
+        Transform[] m_IgnoreRoots;
 
         public SteerMode CurrentSteerMode => m_SteerMode;
         public LabSpawn CurrentSpawn => m_Spawn;
@@ -123,6 +128,7 @@ namespace Game.Gameplay
             {
                 Vehicle = vehicle, Wheel = Wheel, Touch = Touch, Gyro = Gyro, Rig = m_Rig, Recorder = m_Recorder,
                 Sampler = m_Sampler, Mixer = m_Mixer,
+                DevDiagnostics = platform.GetLaunchArgument("devhud") == "1",
                 IsGyroMode = () => m_SteerMode == SteerMode.Gyro,
                 ToggleSteeringMode = () => SetSteerMode((SteerMode)(((int)m_SteerMode + 1) % 3)),
                 ResetVehicle = () => Spawn(m_Spawn),
@@ -153,11 +159,17 @@ namespace Game.Gameplay
             // trailer=solo still gives a solo tractor. Lab circle runs stay solo (Stage 1 measurement).
             var apDefault = ap == "route" ? LabSpawn.Gross40t : LabSpawn.Solo;
             m_Spawn = ParseSpawn(tr, !string.IsNullOrEmpty(ap) ? apDefault : (LabSpawn)Mathf.Clamp(PlayerPrefs.GetInt(PrefSpawn, (int)LabSpawn.Empty), 0, 3));
+            // World scenes (spawn point): a Solo preference saved in the lab would leave the trailer parked behind the tractor
+            // (device run 2026-11-09), so without an explicit trailer= argument the world start is always a coupled combination.
+            if (spawnPoint != null && string.IsNullOrEmpty(tr) && m_Spawn == LabSpawn.Solo) m_Spawn = LabSpawn.Empty;
             if (trailer == null) m_Spawn = LabSpawn.Solo;
+            m_IgnoreRoots = new[] { vehicle.transform, trailer != null ? trailer.transform : null };
+            ReadRouteArguments(platform);
+            m_StartTime = Time.time;
             if (ap == "route") { if (!StartRouteDriver(platform.GetLaunchArgument("speed"))) ap = null; }
             else if (!string.IsNullOrEmpty(ap)) { ConfigureAutopilot(ap, platform.GetLaunchArgument("speed")); m_AutopilotStart = true; }
             Spawn(m_Spawn);
-            ActivateControlCamera(platform.GetLaunchArgument("qacam"));
+            ActivateControlCamera(platform.GetLaunchArgument("qacam"), platform.GetLaunchArgument("qacam_set"));
             // telemetry=1: record the vehicle CSV from the first physics step (device runs, e.g. the route jolt check).
             m_AutoRecord = platform.GetLaunchArgument("telemetry") == "1";
             m_Recorder.RouteProgress = () => RouteDriver.Enabled ? RouteDriver.Progress : 0f;
@@ -169,12 +181,15 @@ namespace Game.Gameplay
         /// with the tier's camera settings, HUD hidden - native-resolution phone frames of the editor control set
         /// (scripts/device-metrics.ps1 -QaCamera).
         /// </summary>
-        void ActivateControlCamera(string id)
+        void ActivateControlCamera(string id, string set = null)
         {
             if (string.IsNullOrEmpty(id)) return;
+            // qacam_set=gate3: cameras of Data/Regions/<region>/gate3_cameras.json, re-seated on the road collision.
+            if (set == "gate3") Gate3Cameras.CreateAll(FindAnyObjectByType<Game.World.WorldRegionRoot>(), m_IgnoreRoots);
+            string want = Gate3Cameras.Norm(id);
             foreach (var qa in FindObjectsByType<Game.Rendering.ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
-                if (qa.id != id) continue;
+                if (qa.id != id && Gate3Cameras.Norm(qa.id) != want) continue;
                 var cam = qa.GetComponent<Camera>();
                 qa.gameObject.SetActive(true);
                 cam.enabled = true;
@@ -225,9 +240,39 @@ namespace Game.Gameplay
             if (route == null || route.points.Length < 2) { Debug.LogWarning("[LAB] autopilot=route but the scene has no route"); return false; }
             RouteDriver.SetPath(route.WorldPoints(), route.speedLimitsKmh);
             RouteDriver.TargetSpeedKmh = float.TryParse(speedArg, NumberStyles.Float, CultureInfo.InvariantCulture, out float s) && s > 0 ? s : 50f;
+            if (m_RouteEndS > 0f) RouteDriver.EndS = m_RouteEndS;
+            if (m_RouteS > 0f) RouteDriver.SeekTo(m_RouteS);
             RouteDriver.Enabled = true;
             m_Parking = false;
             return true;
+        }
+
+        /// <summary>
+        /// Launch arguments route_s / route_end (gate 3): spawn the combination at route distance s (heading = route tangent,
+        /// trailer coupled by the normal spawn path) and let the route autopilot stop smoothly at route_end.
+        /// </summary>
+        void ReadRouteArguments(IPlatformServices platform)
+        {
+            if (route == null || route.points.Length < 2) return;
+            var ci = CultureInfo.InvariantCulture;
+            if (float.TryParse(platform.GetLaunchArgument("route_s"), NumberStyles.Float, ci, out float s) && s >= 0f) m_RouteS = Mathf.Min(s, route.Length);
+            if (float.TryParse(platform.GetLaunchArgument("route_end"), NumberStyles.Float, ci, out float e) && e > 0f) m_RouteEndS = Mathf.Min(e, route.Length);
+        }
+
+        /// <summary>Respawns the current preset at route distance s (same as launch argument route_s; also used by tests).</summary>
+        public void SetRouteSpawn(float s)
+        {
+            if (route == null || route.points.Length < 2) return;
+            m_RouteS = Mathf.Clamp(s, 0f, route.Length);
+            Spawn(m_Spawn);
+        }
+
+        /// <summary>Spawn pose at route distance s: ground height from the road collision when present (else the route's own y).</summary>
+        public static void RouteSpawnPose(Game.World.WorldRoute route, float s, IList<Transform> ignore, out Vector3 pos, out Quaternion rot)
+        {
+            pos = route.PointAt(s);
+            if (Gate3Cameras.TryGroundY(pos.x, pos.z, pos.y + 3f, ignore, out float gy)) pos.y = gy;
+            rot = Quaternion.LookRotation(route.TangentAt(s), Vector3.up);
         }
 
         void ConfigureAutopilot(string mode, string speedArg)
@@ -250,6 +295,12 @@ namespace Game.Gameplay
             m_Spawn = spawn;
             if (persist) PlayerPrefs.SetInt(PrefSpawn, (int)spawn);
             bool coupled = spawn != LabSpawn.Solo && trailer != null;
+            if (route != null && m_RouteS >= 0f && !m_AutopilotStart)
+            {
+                RouteSpawnPose(route, m_RouteS, m_IgnoreRoots, out Vector3 rp, out Quaternion rr);
+                SpawnAt(spawn, rp, rr);
+                return;
+            }
             if (spawnPoint != null && !m_AutopilotStart)
             {
                 SpawnAt(spawn, spawnPoint.position, Quaternion.LookRotation(Vector3.ProjectOnPlane(spawnPoint.forward, Vector3.up), Vector3.up));
@@ -333,6 +384,11 @@ namespace Game.Gameplay
         {
             if (!vehicle.Initialized) return;
             if (m_AutoRecord) { m_AutoRecord = false; m_Recorder.StartRecording(); }
+            if (!m_RouteDoneLogged && RouteDriver.Enabled && RouteDriver.Finished)
+            {
+                m_RouteDoneLogged = true;
+                Debug.Log($"[GATE3] segment done t={(Time.time - m_StartTime).ToString("F1", CultureInfo.InvariantCulture)} s s={RouteDriver.Progress.ToString("F1", CultureInfo.InvariantCulture)}");
+            }
             var m = vehicle.Model;
             var fb = new VehicleFeedback
             {
