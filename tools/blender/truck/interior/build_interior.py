@@ -28,6 +28,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import geom as G  # noqa: E402
 import materials as M  # noqa: E402
+import backdrop as BD  # noqa: E402
 from geom import (V, bevel, box, box_mm, cyl, loft, panel, plane_uv, quad_on, rod, rrect, solidify,  # noqa: E402
                   strip, subsurf, tube)
 
@@ -104,6 +105,8 @@ def parse_args():
     p.add_argument("--suffix", default="")
     p.add_argument("--hide", default="", help="comma list of objects-name prefixes to hide (debug views)")
     p.add_argument("--camxyz", default="", help="debug camera 'x,y,z:tx,ty,tz:hfov' (name 'debug')")
+    p.add_argument("--lod", type=int, default=0, help="0 = full (High), 1 = Medium, 2 = Low tessellation")
+    p.add_argument("--no-backdrop", action="store_true", help="skip the render backdrop (tests, export)")
     return p.parse_args(argv)
 
 
@@ -123,9 +126,13 @@ def group(name):
 def build_materials(a):
     trim = TRIMS[a.trim]
     paint_rgb = tuple(float(v) for v in a.paint.split(","))
-    M.pbr("dash_soft", (0.042, 0.043, 0.045), "dashgrain", 0.10, nstr=0.9, dust=(0.35, (0.10, 0.095, 0.085), 0.05))
-    M.pbr("dash_lower", (0.150, 0.145, 0.135), "hardgrain", 0.08, nstr=0.7, rough_add=0.02)
-    M.pbr("dash_mid", (0.075, 0.074, 0.072), "dashgrain", 0.10, nstr=0.8)
+    # A6 (critic #5, #12): soft-touch stays dark and velvety (rougher, lower specular, no bright dust film);
+    # lower dash, door and pillar trims step up to clear mid-tones so the cab reads without bounce light (URP).
+    M.pbr("dash_soft", (0.045, 0.046, 0.048), "dashgrain", 0.10, rough_add=0.24, nstr=1.25, spec=0.16,
+          dust=(0.18, (0.070, 0.068, 0.062), 0.05))
+    M.pbr("dash_lower", (0.200, 0.193, 0.180), "hardgrain", 0.08, nstr=0.8, rough_add=0.04, spec=0.42)
+    M.pbr("dash_mid", (0.110, 0.108, 0.104), "dashgrain", 0.10, nstr=0.9, rough_add=0.08, spec=0.40)
+    M.pbr("trim_light", (0.270, 0.262, 0.245), "hardgrain", 0.08, nstr=0.7, rough_add=0.06, spec=0.40)
     M.pbr("dash_dark", (0.030, 0.030, 0.032), "hardgrain", 0.08, nstr=0.6)
     M.pbr("trim_insert", trim, "dashgrain", 0.10, nstr=0.8)
     M.pbr("leather", (0.034, 0.033, 0.032), "leather", 0.12, nstr=1.0, wear=(0.26, 2.3), coat=0.0)
@@ -134,9 +141,9 @@ def build_materials(a):
     M.pbr("leather_centre", centre, "leather", 0.12, nstr=0.7, perforate=0.04, wear=(0.34, 1.5))
     M.pbr("seat_fabric", tuple(c * 0.9 + 0.01 for c in trim), "seatfabric", 0.06, nstr=1.0, sheen=0.3)
     M.pbr("headliner", (0.31, 0.30, 0.28), "fabric", 0.05, nstr=0.6, sheen=0.2)
-    M.pbr("wall_fabric", (0.105, 0.102, 0.098), "fabric", 0.05, nstr=0.8, sheen=0.25)
+    M.pbr("wall_fabric", (0.165, 0.160, 0.152), "fabric", 0.05, nstr=0.8, sheen=0.25)
     M.pbr("mattress", (0.085, 0.088, 0.095), "seatfabric", 0.06, nstr=1.0, sheen=0.3)
-    M.pbr("curtain", (0.060, 0.062, 0.066), "fabric", 0.04, nstr=0.9, sheen=0.4)
+    M.pbr("curtain", (0.100, 0.102, 0.106), "fabric", 0.04, nstr=0.9, sheen=0.4)
     M.pbr("floor_mat", (0.040, 0.040, 0.039), "rubbermat", 0.40, nstr=1.0, wear=(0.55, 2.4),
           dust=(0.6, (0.13, 0.12, 0.10), 0.10))
     M.pbr("satin", (0.50, 0.50, 0.50), "brushed", 0.10, metal=0.85, rough_add=0.05, nstr=0.3)
@@ -148,7 +155,7 @@ def build_materials(a):
     M.simple("gap", (0.004, 0.004, 0.004), rough=0.9)
     M.simple("switch", (0.020, 0.020, 0.021), rough=0.42)
     M.simple("knob", (0.025, 0.025, 0.026), rough=0.36)
-    M.simple("webbing", (0.030, 0.030, 0.033), rough=0.75, spec=0.3)
+    M.simple("webbing", (0.062, 0.062, 0.066), rough=0.78, spec=0.3)
     M.simple("led_off", (0.55, 0.55, 0.53), rough=0.35)
     M.simple("lamp_lens", (0.80, 0.80, 0.78), rough=0.25, emit=((1.0, 0.95, 0.85), 0.0))
     M.simple("yellow", (0.50, 0.33, 0.02), rough=0.5)
@@ -169,15 +176,9 @@ def build_materials(a):
     M.decal("icons", "icons_atlas.png", (0.80, 0.80, 0.76), rough=0.4, alpha_from="mask")
     M.decal("grille", "grille_mask.png", (0.02, 0.02, 0.02), rough=0.6, alpha_from="mask")
     M.decal("grille_dash", "grille_mask.png", (0.040, 0.041, 0.043), rough=0.65, alpha_from="mask")
-    M.asphalt("asphalt")
     M.grass("grass")
     M.line_paint("line_paint")
     M.blind("blind")
-    M.simple("treeline", (0.070, 0.082, 0.074), rough=0.95)
-    M.simple("hall", (0.36, 0.37, 0.37), rough=0.6)
-    M.simple("hall_band", (0.10, 0.13, 0.16), rough=0.5)
-    M.simple("pole", (0.30, 0.31, 0.31), rough=0.4, metal=0.6)
-    M.simple("trailer", (0.42, 0.43, 0.44), rough=0.5)
 
 
 # ---------------------------------------------------------------- wear attribute helper
@@ -253,10 +254,11 @@ def build_glass():
     group("glass")
     # windscreen: one sheet, curved into the pillars at the outer 120 mm (slight wrap)
     hw = XI - 0.055
-    xs = [-1 + 2 * i / 40 for i in range(41)]
+    nwx, nwz = G.Q(40, 10), G.Q(8, 3)
+    xs = [-1 + 2 * i / nwx for i in range(nwx + 1)]
     loops = []
-    for zi in range(9):
-        z = WS_Z0 - 0.02 + (WS_Z1 - WS_Z0 + 0.04) * zi / 8
+    for zi in range(nwz + 1):
+        z = WS_Z0 - 0.02 + (WS_Z1 - WS_Z0 + 0.04) * zi / nwz
         lp = []
         for t in xs:
             x = t * hw
@@ -295,7 +297,7 @@ def build_glass():
             sec = [(XI - 0.085, y + 0.025), (XI - 0.05, y + 0.05), (XI + 0.01, y + 0.045), (XI + 0.01, side_win_front(z) - 0.02),
                    (XI - 0.03, side_win_front(z) - 0.035), (XI - 0.075, y - 0.07), (XI - 0.095, y - 0.02)]
             loops.append([V(s * px, py, z) for px, py in sec])
-        ap = loft(f"apillar_trim_{s}", loops, "dash_lower", closed=True, cap0=True, cap1=True)
+        ap = loft(f"apillar_trim_{s}", loops, "trim_light", closed=True, cap0=True, cap1=True)
         bevel(ap, 0.008, 2, angle=30)
         # outer pillar skin (paint) between windscreen and door glass
         loops = []
@@ -333,9 +335,24 @@ def dash_face_y(x):
                      (0.36, 1.00), (0.95, 1.00), (1.06, 1.06), (XI, 1.12)], x)
 
 
-def dash_top_z(x):
+def dash_top_z_base(x):
     return lerp_tab([(-XI, 2.10), (-0.9, 2.085), (-0.78, 2.075), (-0.32, 2.075), (-0.2, 2.10), (0.3, 2.12),
                      (0.95, 2.12), (XI, 2.10)], x)
+
+
+# Cluster tub (A6, critic #4): the dash top dips under the binnacle hood so that the 12.3" screen sits inside the
+# upper steering-wheel window seen from the eye point (sightline_test.py proves it). The hood cheeks hide the step.
+CLUSTER_W, CLUSTER_H = 0.292, 0.1123            # 12.3 in class screen (WORKING_VALUE)
+CLUSTER_C = V(-0.55, 1.178, 2.083)              # screen centre: bottom ~2.027, top ~2.139 (tuned by sightline test)
+TUB_DIP, TUB_HW, TUB_FADE = 0.058, 0.170, 0.300
+
+
+def tub_dip(x):
+    return TUB_DIP * (1.0 - smooth(TUB_HW, TUB_FADE, abs(x - CLUSTER_C.x)))
+
+
+def dash_top_z(x):
+    return dash_top_z_base(x) - tub_dip(x)
 
 
 def knee(x):
@@ -359,7 +376,8 @@ def dash_profile(x, n=44):
 
 def build_dash():
     group("dash")
-    xs = [lerp_tab([(0, -XI + 0.005), (1, XI - 0.005)], i / 46) for i in range(47)]
+    nd = G.Q(46, 20)
+    xs = [lerp_tab([(0, -XI + 0.005), (1, XI - 0.005)], i / nd) for i in range(nd + 1)]
     loops = [dash_profile(x) for x in xs]
 
     # material split at a fixed profile index (uniform arc-length resampling -> clean, continuous parting line)
@@ -386,11 +404,62 @@ def build_dash():
                    "trim_insert", closed=False)
         bevel(ins, 0.004, 2)
         tube("dash_bead", [p + V(0, -0.002, -0.006) for p in lp_bot], 0.0035, "satin", seg=8)
-    # passenger dash-top storage lid (slightly proud, soft-touch) with a finger recess
-    tz = dash_top_z(0.67)
-    box_mm("dash_lid", 0.40, 0.95, dash_face_y(0.67) + 0.055, dash_face_y(0.67) + 0.20, tz - 0.012, tz + 0.0035, "dash_soft",
-           bev=0.004, seg=2)
-    box_mm("dash_lid_recess", 0.62, 0.72, dash_face_y(0.67) + 0.050, dash_face_y(0.67) + 0.062, tz - 0.01, tz + 0.001, "gap")
+    # ---- passenger dash (A6, critic #12): open tray with a ribbed rubber mat and a raised lip on the dash top,
+    # document clip on the face, speaker grille in the corner, cup holder by the stack, parting lines that break
+    # the slab into real mouldings (insert band, upper glovebox lid, lower glovebox)
+    def drape(x, y, lift):
+        return V(x, y, dash_surface_z(x, y) + lift)
+
+    for ti, (tx0, tx1) in enumerate(((0.00, 0.38), (0.44, 0.90))):    # centre tray + passenger tray
+        ty0, ty1 = dash_face_y(0.6) + 0.085, dash_face_y(0.6) + 0.245
+        nmx, nmy = G.Q(12, 5), G.Q(6, 3)
+        bm = bmesh.new()
+        uvl = bm.loops.layers.uv.new("UVMap")
+        grid = [[bm.verts.new(drape(tx0 + (tx1 - tx0) * i / nmx, ty0 + (ty1 - ty0) * j / nmy, 0.0015))
+                 for j in range(nmy + 1)] for i in range(nmx + 1)]
+        for i in range(nmx):
+            for j in range(nmy):
+                bm.faces.new((grid[i][j], grid[i + 1][j], grid[i + 1][j + 1], grid[i][j + 1]))
+        G.finish(f"dash_tray_mat_{ti}", bm, "floor_mat", smooth=True, sharp=None)
+        lip = []
+        for (x, y) in ([(tx0 + (tx1 - tx0) * i / 10, ty0) for i in range(11)] + [(tx1, ty0 + (ty1 - ty0) * j / 4) for j in range(1, 5)] +
+                       [(tx1 - (tx1 - tx0) * i / 10, ty1) for i in range(1, 11)] + [(tx0, ty1 - (ty1 - ty0) * j / 4) for j in range(1, 5)]):
+            lip.append(drape(x, y, 0.004))
+        tube(f"dash_tray_lip_{ti}", lip, 0.0055, "dash_mid", seg=8)
+    # speaker grille in the passenger corner of the dash top
+    sx0, sx1, sy0, sy1 = 0.93, 1.07, dash_face_y(1.0) + 0.09, dash_face_y(1.0) + 0.20
+    bm = bmesh.new()
+    uvl = bm.loops.layers.uv.new("UVMap")
+    vs = [bm.verts.new(drape(x, y, 0.0012)) for x, y in ((sx0, sy0), (sx1, sy0), (sx1, sy1), (sx0, sy1))]
+    f = bm.faces.new(vs)
+    for lp, t in zip(f.loops, ((0, 0), (2.8, 0), (2.8, 1.0), (0, 1.0))):
+        lp[uvl].uv = t
+    gob = G.finish("dash_spk_grille", bm, "grille_dash", smooth=False, recalc=False)
+    gob["fixed_uv"] = True
+    tube("dash_spk_rim", [drape(x, y, 0.002) for x, y in ((sx0, sy0), (sx1, sy0), (sx1, sy1), (sx0, sy1), (sx0, sy0))],
+         0.003, "dash_dark", seg=6, cap=False)
+    # document clip on the upper passenger face (spring bar with two rubber rollers)
+    x = 0.70
+    fy = dash_face_y(x)
+    tz = dash_top_z(x)
+    box("doc_clip_bar", (x, fy - 0.010, tz - 0.052), (0.20, 0.016, 0.018), "dash_dark", bev=0.005)
+    for dx in (-0.07, 0.07):
+        cyl(f"doc_clip_roller_{dx}", (x + dx, fy - 0.017, tz - 0.060), 0.007, 0.03, "rubber", axis="X", seg=12)
+    # parting line between the insert band and the glovebox panel (breaks the slab into real mouldings)
+    pts = []
+    for i in range(25):
+        xx = 0.30 + 0.76 * i / 24
+        prof = dash_profile(xx)
+        best = min(prof[:40], key=lambda p: abs(p.z - 1.955))
+        pts.append(V(xx, best.y - 0.0015, 1.955))
+    strip("pdash_parting", pts, V(0, -1, 0), 0.003, "gap", offset=0.0)
+    # cup holder (fold-out ring) and USB-C pair by the centre stack
+    x = 0.33
+    cyl("cup_p_ring", (x, dash_face_y(x) - 0.045, 1.88), 0.042, 0.010, "satin", seg=32, bev=0.002)
+    cyl("cup_p_well", (x, dash_face_y(x) - 0.045, 1.876), 0.037, 0.012, "gap", seg=24)
+    box("cup_p_arm", (x, dash_face_y(x) - 0.012, 1.88), (0.03, 0.03, 0.008), "dash_dark", bev=0.002)
+    for k in range(2):
+        box(f"usb_p_{k}", (0.42 + k * 0.022, dash_face_y(0.42) - 0.002, 1.895), (0.010, 0.004, 0.0045), "gap")
     # glovebox shut-lines on the lower passenger dash
     for (a, b) in (((0.42, 1.68), (1.00, 1.68)), ((0.42, 1.68), (0.42, 1.92)), ((1.00, 1.68), (1.00, 1.92)),
                    ((0.42, 1.92), (1.00, 1.92))):
@@ -412,7 +481,9 @@ def build_dash():
         n_t = 8
         for k in range(n_t):
             xc = xa + (xb - xa) * (k + 0.5) / n_t
-            z = WS_Z0 - 0.012 + (dash_top_z(xc) - WS_Z0) * (0.065 / 0.095)
+            if abs(xc - CLUSTER_C.x) < TUB_FADE:
+                continue  # under the binnacle hood
+            z = WS_Z0 - 0.012 + (dash_top_z_base(xc) - WS_Z0) * (0.065 / 0.095)
             box_mm(f"defrost_recess_{side}_{k}", xc - (xb - xa) / n_t / 2, xc + (xb - xa) / n_t / 2, y - 0.017, y + 0.017,
                    z - 0.012, z - 0.0015, "gap")
             plane_uv(f"defrost_grille_{side}_{k}", quad_on(V(xc, y, z + 0.001), V(0, 0, 1), V(0, 1, 0), (xb - xa) / n_t,
@@ -423,46 +494,73 @@ def build_dash():
     build_dash_switches()
 
 
+def dash_surface_z(x, y):
+    """Height of the dash top skin at (x, y) (interpolated along the lofted dash profile at x)."""
+    prof = [(p.y, p.z) for p in dash_profile(x)[:30] if p.z > dash_top_z(x) - 0.05]
+    prof.sort()
+    return lerp_tab(prof, y)
+
+
 def build_binnacle():
-    """Low cowl over the cluster: thin lip, top sloping down into the dash, cheeks tapering over 30 % of width."""
-    xc, hw = SEAT_X, 0.40
-
-    def amp(x):
-        u = abs(x - xc) / hw
-        return 1.0 - smooth(0.66, 1.0, u)
-
-    base_z = dash_top_z(xc) - 0.006
-    # sight line eye -> top edge of the screen: z = 2.50 - 0.416 (y - 0.45); lip and underside stay above it
-    prof = [(1.058, 2.252), (1.062, 2.268), (1.10, 2.279), (1.17, 2.276), (1.25, 2.230), (1.31, 2.145), (1.335, base_z),
-            (1.240, base_z), (1.234, 2.205), (1.15, 2.238), (1.09, 2.250)]
-    prof = [(y, z) for y, z in G.polyline_smooth(prof[:7], 3)] + prof[7:]
-    loops = []
-    for i in range(41):
-        x = xc - hw + 2 * hw * i / 40
-        a = max(amp(x), 0.03)
-        # the lip recedes towards the cheeks (cowl is shallower at the ends)
-        loops.append([V(x, y + (1 - a) * 0.06 * (y < 1.2), base_z + (z - base_z) * a) for y, z in prof])
-    hood = loft("binnacle_hood", loops, "dash_soft", closed=True, cap0=True, cap1=True, sharp=70)
-    # recess back wall behind the screen
-    box_mm("cluster_backwall", xc - 0.255, xc + 0.255, 1.226, 1.242, base_z, 2.20, "dash_dark")
-    # cluster screen (12.3 in class, 292 x 112 mm) facing the eye point
-    c = V(xc, 1.172, 2.139)
+    """Cluster hood (A6): sits in the dash-top tub, blends into the dash skin with a 3 mm parting seam, same grain.
+    The 12.3" screen alone carries every readout (no separate round dials: they were bisected by the rim)."""
+    xc = CLUSTER_C.x
+    c = CLUSTER_C
     n = (EYE - c).normalized()
     up = V(0, 0, 1)
-    plane_uv("cluster_screen", quad_on(c, n, up, 0.292, 0.1123), "disp_cluster")
-    panel("cluster_bezel", rrect(0.312, 0.128, 0.012, 3), c - n * 0.004, n, up, 0.03, "piano", bev=0.003)
-    plane_uv("cluster_glass", quad_on(c, n, up, 0.30, 0.118, off=0.0025), "cover_glass")
-    # two analogue-style pods either side (dual air-pressure gauge left, fuel right)
-    for i, dx in enumerate((-0.212, 0.212)):
-        cc = V(xc + dx, 1.167, 2.145)
-        nn = (EYE - cc).normalized()
-        cyl(f"gauge_pod_{i}", cc - nn * 0.012, 0.050, 0.03, "dash_dark", seg=32, bev=0.004,
-            rot=nn.to_track_quat("Z", "Y").to_matrix())
-        tube(f"gauge_ring_{i}", [cc + (nn.cross(V(0, 0, 1)).normalized() * math.cos(t) +
-                                       nn.cross(nn.cross(V(0, 0, 1))).normalized() * -math.sin(t)) * 0.046 + nn * 0.004
-                                  for t in [2 * math.pi * k / 40 for k in range(41)]], 0.0035, "satin", seg=8, cap=False)
-        G.disc_uv(f"gauge_face_{i}", cc, nn, up, 0.0445, "disp_gauges",
-                  uv_rect=((0.5 * i + 0.03, 0.03), (0.5 * i + 0.47, 0.91)), off=0.0035)
+    vv = n.cross(up.cross(n).normalized()).normalized()          # screen 'up' in its plane
+    top = c + vv * CLUSTER_H / 2
+    # eye -> screen-top sight line, evaluated at the lip: the lip stays 8 mm above it (whole screen visible)
+    y_l = c.y - 0.112
+    z_l = EYE.z + (top.z - EYE.z) * (y_l - EYE.y) / (top.y - EYE.y) + 0.008
+    yb = c.y + 0.064                                              # back wall of the screen recess
+    full, fade = 0.178, 0.285                                     # hood cheeks: full height -> blended into the dash
+    prof = [(y_l, z_l), (y_l + 0.002, z_l + 0.012), (y_l + 0.020, z_l + 0.022), (y_l + 0.070, z_l + 0.028),
+            (y_l + 0.140, z_l + 0.020), (yb + 0.040, z_l - 0.012), (yb + 0.072, z_l - 0.060)]
+    prof = G.polyline_smooth(prof, 3)
+    under = [(yb + 0.085, None), (yb + 0.004, None), (yb + 0.004, top.z + 0.030), (y_l + 0.06, z_l + 0.004),
+             (y_l + 0.012, z_l + 0.0)]
+    nx = G.Q(44, 14)
+    loops, cross_f, cross_b = [], [], []
+    for i in range(nx + 1):
+        x = xc - fade + 2 * fade * i / nx
+        a = 1.0 - smooth(full, fade, abs(x - xc))
+        base = dash_top_z(x) - 0.012
+        lp = []
+        for (y, z) in prof + under:
+            yy = y + (1 - a) * 0.075 * (1 if y < yb else -0.3)
+            zz = base if z is None else base + (z - base) * max(a, 0.0)
+            lp.append(V(x, yy, zz))
+        loops.append(lp)
+    hood = loft("binnacle_hood", loops, "dash_soft", closed=True, cap0=True, cap1=True, sharp=70)
+    # parting seam where the hood skin meets the dash skin (3 mm dark groove following the intersection)
+    for i, lp in enumerate(loops):
+        x = lp[0].x
+        outer = lp[:len(prof) + 1]
+        hits = []
+        for p0, p1 in zip(outer[:-1], outer[1:]):
+            d0 = p0.z - dash_surface_z(x, p0.y)
+            d1 = p1.z - dash_surface_z(x, p1.y)
+            if d0 * d1 < 0:
+                t = d0 / (d0 - d1)
+                q = p0.lerp(p1, t)
+                hits.append(V(x, q.y, dash_surface_z(x, q.y) + 0.0008))
+        if len(hits) >= 2:
+            cross_f.append((i, hits[0]))
+        if hits:
+            cross_b.append((i, hits[-1]))
+    mid = nx / 2
+    seam = ([p for i, p in reversed(cross_f) if i < mid] + [p for i, p in cross_b] +
+            [p for i, p in reversed(cross_f) if i > mid])
+    if len(seam) > 3:
+        strip("binnacle_seam", seam, V(0, 0, 1), 0.003, "gap", offset=0.0)
+    # recess back wall + floor behind/under the screen
+    box_mm("cluster_backwall", xc - 0.172, xc + 0.172, yb, yb + 0.016, dash_top_z(xc) - 0.02, top.z + 0.03, "dash_dark")
+    # cluster screen (12.3 in class) facing the eye point, piano-black bezel, anti-glare cover glass
+    plane_uv("cluster_screen", quad_on(c, n, up, CLUSTER_W, CLUSTER_H), "disp_cluster")
+    panel("cluster_bezel", rrect(CLUSTER_W + 0.016, CLUSTER_H + 0.014, 0.010, 3), c - n * 0.004, n, up, 0.03, "piano",
+          bev=0.0025)
+    plane_uv("cluster_glass", quad_on(c, n, up, CLUSTER_W + 0.006, CLUSTER_H + 0.004, off=0.0025), "cover_glass")
     return hood
 
 
@@ -617,94 +715,124 @@ def wheel_frame():
     return n, u, v
 
 
+SPOKE_ANG = math.radians(-14.0)                 # side spokes dropped below 3/9 o'clock (opens the cluster window)
+HUB_DEPTH = -0.022                              # dish: hub face sits 22 mm behind the rim plane (towards the column)
+
+
+def hub_outline(scale=1.0, n=48):
+    """Hub / airbag cover plan shape: rounded shield, wider at the top (2-D, wheel plane: x = u, y = v)."""
+    pts = []
+    for i in range(n):
+        a = 2 * math.pi * i / n
+        x, y = math.cos(a), math.sin(a)
+        w = 0.086 - 0.012 * max(0.0, -y)                       # narrower towards 6 o'clock
+        h = 0.066 if y > 0 else 0.060
+        r = (abs(x) ** 3.2 + abs(y) ** 3.2) ** (-1 / 3.2)       # superellipse: flat sides, crisp shoulders
+        pts.append((x * r * w * scale, y * r * h * scale - 0.004))
+    return pts
+
+
 def build_wheel(badge):
+    """Truck steering wheel (A6, critic #10): 470 mm rim with finger grips and thumb contours, broad flat side spokes
+    carrying integrated switch pods (flush keys, ~0.8 mm gaps, shared bezel), wide lower spoke, firm hub moulding
+    with a crisp tear seam. Everything that turns is parented to the STEERING_WHEEL pivot at export (A6)."""
     group("wheel")
     n, u, v = wheel_frame()
     C = WHEEL_C
-    # rim: elliptical section swept around, with finger grips at 9-3 back side
-    N, S = 72, 12
+    # ---- rim: egg-shaped section (35 x 29 mm), finger grips on the back, thumb rests above the side spokes
+    N, S = G.Q(96, 40), G.Q(16, 8)
+    thumb = [SPOKE_ANG + math.radians(24), math.pi - SPOKE_ANG - math.radians(24)]
     loops = []
     for i in range(N):
         a = 2 * math.pi * i / N
         radial = u * math.cos(a) + v * math.sin(a)
-        grip = 0.0025 * max(0.0, math.cos(2 * (a - 0.0))) ** 8
+        grip = 0.0022 * (0.5 + 0.5 * math.cos(9 * a)) * (1 - 0.6 * math.exp(-((math.sin(a) - 1) / 0.4) ** 2))
+        th = sum(math.exp(-((math.atan2(math.sin(a - t), math.cos(a - t))) / 0.16) ** 2) for t in thumb)
         ring = []
         for k in range(S):
             b = 2 * math.pi * k / S
-            rr = RIM_R[0] + (grip if math.sin(b) < 0 else 0)
-            ring.append(C + radial * (WHEEL_R + math.cos(b) * RIM_R[1]) + n * (math.sin(b) * rr))
+            cb, sb = math.cos(b), math.sin(b)
+            rad = RIM_R[1] * (1.0 + (0.10 + 0.22 * th) * max(0.0, -cb))   # fuller inner side, thumb pads
+            dep = RIM_R[0] * (1.0 - 0.10 * max(0.0, sb))                # flatter face towards the driver
+            if sb < 0:
+                dep += grip
+            ring.append(C + radial * (WHEEL_R + cb * rad) + n * (sb * dep - 0.0015 * th * max(0.0, -cb)))
         loops.append(ring)
     loops.append(loops[0])
     rim = loft("wheel_rim", loops, "leather_wheel", closed=True, sharp=None)
     set_wear(rim, lambda co: 0.9 * max(math.exp(-((math.atan2((co - C).dot(v), (co - C).dot(u)) - math.radians(150)) / 0.30) ** 2),
                                        math.exp(-((math.atan2((co - C).dot(v), (co - C).dot(u)) - math.radians(30)) / 0.30) ** 2))
              * (0.7 + 0.3 * hash01(co.x, co.y, co.z)))
-    # inner seam stitching (cross stitch look) on the inner side of the rim
+    # stitched seam along the inner side of the rim
     pts, nrm = [], []
     for i in range(121):
         a = 2 * math.pi * i / 120
         radial = u * math.cos(a) + v * math.sin(a)
-        pts.append(C + radial * (WHEEL_R - RIM_R[1] * 0.98))
+        th = sum(math.exp(-((math.atan2(math.sin(a - t), math.cos(a - t))) / 0.16) ** 2) for t in thumb)
+        pts.append(C + radial * (WHEEL_R - RIM_R[1] * (1.10 + 0.22 * th) * 0.995))
         nrm.append(-radial)
     strip("wheel_stitch", pts, nrm, 0.010, "stitch_dark", offset=0.0012, u_len=0.016)
-    # spokes: 3 + 9 o'clock (with switch pads) and a lower double spoke
-    for s in (-1, 1):
-        a = 0.0 if s > 0 else math.pi
-        radial = u * math.cos(a) + v * math.sin(a)
-        p0 = C + radial * 0.075 - n * 0.01
-        p1 = C + radial * (WHEEL_R - 0.005) - n * 0.002
-        loops = []
-        for t in (0.0, 0.3, 0.7, 1.0):
-            pc = p0.lerp(p1, t) - v * 0.008
-            h = 0.060 - 0.028 * t
-            w = 0.022
-            loops.append([pc + v * (h / 2 * math.sin(b)) + n * (w / 2 * math.cos(b)) for b in
-                          [2 * math.pi * k / 16 for k in range(16)]])
-        sp = loft(f"spoke_{s}", loops, "dash_dark", closed=True, cap0=True, cap1=True)
-        # switch pad on the spoke (cruise/limiter left... phone/menu right)
-        pc = C + radial * 0.125 + n * 0.006
-        panel(f"spoke_pad_{s}", rrect(0.075, 0.052, 0.010, 3), pc, n, v, 0.010, "piano", bev=0.003)
-        labels = ([["res", "plus", "phone"], ["ok", "minus", "vol"]] if s < 0 else
+
+    # ---- spokes: flat plates (rounded-rect section), dished from the hub to the rim
+    def spoke(name, ang, widths, thick=0.019, r0=0.060, r1=WHEEL_R - 0.004):
+        radial = u * math.cos(ang) + v * math.sin(ang)
+        side = n.cross(radial).normalized()
+        sec = []
+        nt = G.Q(9, 5)
+        for j in range(nt + 1):
+            t = j / (nt - 0) if nt else 0
+            r = r0 + (r1 - r0) * t
+            w = lerp_tab(widths, t)
+            dz = HUB_DEPTH + (0.0 - HUB_DEPTH) * smooth(0.70, 1.0, t) - 0.004
+            pc = C + radial * r + n * dz
+            sec.append([pc + side * px + n * py for px, py in rrect(w, thick, 0.0075, 3)])
+        return loft(name, sec, "dash_dark", closed=True, cap0=True, cap1=True, sharp=50), radial, side
+
+    pods = {}
+    for sgn in (-1, 1):
+        ang = SPOKE_ANG if sgn > 0 else math.pi - SPOKE_ANG
+        ob, radial, side = spoke(f"spoke_{sgn}", ang, [(0.0, 0.082), (0.30, 0.078), (0.62, 0.072), (0.80, 0.052),
+                                                       (1.0, 0.062)])
+        pods[sgn] = (radial, side)
+    spoke("spoke_low", -math.pi / 2, [(0.0, 0.070), (0.5, 0.050), (0.85, 0.046), (1.0, 0.070)], thick=0.018,
+          r0=0.050)
+    # switch pods integrated in the side spokes: recessed piano-black bezel + 2 x 3 flush keys (18 mm pitch)
+    for sgn, (radial, side) in pods.items():
+        r_c = 0.142
+        t = (r_c - 0.060) / (WHEEL_R - 0.004 - 0.060)
+        dz = HUB_DEPTH + (0.0 - HUB_DEPTH) * smooth(0.70, 1.0, t) - 0.004 + 0.0095
+        pc = C + radial * r_c + n * dz
+        # pod 'up' axis = along the spoke towards the rim (keys read radially)
+        panel(f"spoke_pod_{sgn}", rrect(0.042, 0.060, 0.007, 3), pc + n * 0.0006, n, radial, 0.004, "piano", bev=0.0008)
+        labels = ([["res", "plus", "phone"], ["ok", "minus", "vol"]] if sgn < 0 else
                   [["arrow_l", "ok", "arrow_r"], ["eco", "minus", "plus"]])
         for r in range(2):
             for k in range(3):
-                q = pc + u * (-0.022 + k * 0.022) + v * (0.012 - r * 0.024) + n * 0.002
-                panel(f"spoke_btn_{s}_{r}_{k}", rrect(0.018, 0.018, 0.004, 2), q + n * 0.002, n, v, 0.006, "switch",
-                      bev=0.0018)
-                plane_uv(f"spoke_icon_{s}_{r}_{k}", quad_on(q, n, v, 0.011, 0.011, off=0.0025), "icons",
+                q = pc + radial * (-0.018 + k * 0.018) * (1 if sgn > 0 else -1) + side * sgn * (0.0092 - r * 0.0184)
+                panel(f"spoke_btn_{sgn}_{r}_{k}", rrect(0.0172, 0.0176, 0.0028, 2), q + n * 0.0013, n, radial, 0.0016,
+                      "switch", bev=0.0005, bseg=1)
+                plane_uv(f"spoke_icon_{sgn}_{r}_{k}", quad_on(q, n, v, 0.010, 0.010, off=0.0015), "icons",
                          uv=M_ICON(labels[r][k]))
-    for s in (-1, 1):  # lower spoke pair (V)
-        a = math.radians(270 + s * 28)
-        radial = u * math.cos(a) + v * math.sin(a)
-        p0 = C + radial * 0.05 - n * 0.015
-        p1 = C + radial * (WHEEL_R - 0.005) - n * 0.004
-        loops = []
-        side = n.cross(radial).normalized()
-        for t in (0.0, 0.5, 1.0):
-            pc = p0.lerp(p1, t)
-            loops.append([pc + side * (0.016 * math.sin(b)) + n * (0.010 * math.cos(b)) for b in
-                          [2 * math.pi * k / 12 for k in range(12)]])
-        loft(f"spoke_low_{s}", loops, "dash_dark", closed=True, cap0=True, cap1=True)
-    # hub / airbag cover: soft-cornered octagon pad
-    hub_loops = []
-    for depth, scl in ((-0.045, 0.96), (-0.010, 1.0), (0.012, 1.0), (0.026, 0.97), (0.035, 0.90), (0.040, 0.78),
-                       (0.042, 0.55), (0.0428, 0.30)):
-        lp = []
-        for i in range(40):
-            a = 2 * math.pi * i / 40
-            r = 0.082 * (1 + 0.07 * math.cos(4 * a)) * max(scl, 0.02)
-            lp.append(C + n * depth + u * (r * math.cos(a) * 1.08) + v * (r * math.sin(a) * 0.90 - 0.006))
-        hub_loops.append(lp)
-    hub = loft("wheel_hub", hub_loops, "dash_soft", closed=True, cap0=True, cap1=True, sharp=80)
-    # horn-pad parting line
+    # ---- hub: moulded shroud (dark) + firm airbag cover (soft-touch), crisp 2-3 mm edge radius, tear seam
+    def hub_ring(scale, depth):
+        return [C + n * depth + u * px + v * py for px, py in hub_outline(scale, G.Q(64, 24))]
+    shroud = [hub_ring(1.14, HUB_DEPTH - 0.050), hub_ring(1.16, HUB_DEPTH - 0.020), hub_ring(1.13, HUB_DEPTH - 0.004),
+              hub_ring(1.10, HUB_DEPTH - 0.001)]
+    loft("wheel_hub_shroud", shroud, "dash_dark", closed=True, cap0=True, cap1=True, sharp=60)
+    d0 = HUB_DEPTH
+    cover = [hub_ring(1.068, d0 - 0.004), hub_ring(1.072, d0 + 0.012), hub_ring(1.070, d0 + 0.0228),
+             hub_ring(1.062, d0 + 0.0262), hub_ring(1.046, d0 + 0.0279), hub_ring(0.95, d0 + 0.0291),
+             hub_ring(0.60, d0 + 0.0298), hub_ring(0.25, d0 + 0.0300)]
+    loft("wheel_hub", cover, "dash_soft", closed=True, cap0=True, cap1=True, sharp=80)
+    hub_face = d0 + 0.0300
+    # tear seam: U-shaped groove (deployment flap), crisp and narrow
     pts = []
-    for i in range(41):
-        a = 2 * math.pi * i / 40
-        r = 0.082 * (1 + 0.07 * math.cos(4 * a)) * 0.84
-        pts.append(C + n * 0.0378 + u * (r * math.cos(a) * 1.08) + v * (r * math.sin(a) * 0.90 - 0.006))
-    strip("hub_gap", pts, n, 0.0022, "gap", offset=0.0012)
+    for (px, py) in hub_outline(0.80, 64):
+        pts.append(C + n * (d0 + 0.0287) + u * px + v * py)
+    pts.append(pts[0])
+    strip("hub_gap", pts, n, 0.0015, "gap", offset=0.0009)
     # emblem (swappable): plain plate for 'none', otherwise mark polygons from art-source/truck/brand/*.svg
-    emblem(badge, C + n * 0.0425, n, v)
+    emblem(badge, C + n * (hub_face - 0.0005), n, v)
     # column shroud + adjust collar
     d = -n
     loops = []
@@ -800,41 +928,59 @@ def build_pedals():
 
 # ---------------------------------------------------------------- seats
 def seat(prefix, cx, driver):
-    """Air-suspended truck seat. Local frames: cushion origin = centre bottom of cushion foam."""
+    """Air-suspended truck seat (A6, critic #11): crowned cushion and backrest, rolled side bolsters, sitting creases
+    (front of the cushion, bight, lumbar, door-side bolster of the driver seat), separate headrest on two posts,
+    integrated belt (webbing, latch plate, shoulder guide), moulded back shell with a pocket, visible damper."""
     group("seats")
     c_w = 0.150              # centre-panel half width
-    W2 = 0.265
+    W2 = 0.268
     yc = HPT.y + 0.12        # cushion centre: cushion spans H-point -145 mm .. +385 mm
-    zc = HPT.z - 0.200       # cushion bottom; top of foam ~95 mm above + bolsters
+    zc = HPT.z - 0.200       # cushion bottom; top of foam ~90 mm above + bolsters
     Mc = Matrix.Translation((cx, yc, zc))
+    sgn_door = -1 if driver else 1          # door-side bolster (entry wear, creases)
+    ph = 0.37 if driver else 0.81           # crease phase: the two seats are not identical
 
     def ctop(x, y):
         ax = abs(x)
-        z = 0.092 + 0.010 * math.sin(math.pi * (y + 0.265) / 0.53)
-        z += 0.042 * smooth(c_w + 0.004, c_w + 0.06, ax) * (0.55 + 0.45 * smooth(-0.25, 0.05, y))
-        z -= 0.0065 * math.exp(-((ax - c_w) / 0.0055) ** 2)
+        u = (y + 0.265) / 0.53
+        z = 0.086 + 0.011 * math.sin(math.pi * min(1.0, max(0.0, u))) * (1 - (min(ax, c_w) / c_w) ** 2)  # crown
+        if ax > c_w:  # rolled bolster: rises past the seam, round top ~46 mm high, rolling towards the side wall
+            b = smooth(c_w + 0.002, c_w + 0.045, ax) * (0.55 + 0.45 * smooth(-0.25, 0.05, y))
+            z += 0.046 * b * math.sqrt(max(0.0, 1 - ((ax - (c_w + 0.07)) / 0.115) ** 2)) ** 0.6
+        z -= 0.0065 * math.exp(-((ax - c_w) / 0.0055) ** 2)                       # seam groove
         if ax < c_w:
             for ys in (-0.075, 0.075):
-                z -= 0.004 * math.exp(-((y - ys) / 0.005) ** 2)
+                z -= 0.0035 * math.exp(-((y - ys) / 0.005) ** 2)
+            # sitting creases: shallow folds along y at the front of the centre panel, and at the bight
+            fr = smooth(0.06, 0.17, y) * (1 - smooth(0.20, 0.25, y))
+            z -= 0.0016 * fr * (0.5 + 0.5 * math.sin(2 * math.pi * (x / 0.034 + ph) + 3.0 * y))
+            bt = 1 - smooth(-0.25, -0.17, y)
+            z -= 0.0020 * bt * (0.5 + 0.5 * math.sin(2 * math.pi * (x / 0.041 + 1.7 * ph)))
+            z -= 0.012 * bt
+        elif x * sgn_door > 0 and driver:
+            # entry-side bolster: compression wrinkles across the roll, front half
+            w = smooth(-0.05, 0.10, y) * (1 - smooth(0.20, 0.25, y))
+            z -= 0.0022 * w * (0.5 + 0.5 * math.sin(2 * math.pi * (y / 0.028 + ph)))
         return z
 
     def edge(x):
-        r = 0.045
+        r = 0.055
         ax = abs(x)
         if ax <= W2 - r:
             return 1.0
         t = (ax - (W2 - r)) / r
         return math.sqrt(max(0.0, 1 - t * t))
 
-    xs = [-W2 + 2 * W2 * i / 40 for i in range(41)]
-    ys = [-0.265 + 0.53 * j / 28 for j in range(29)]
+    nx_, ny_ = G.Q(64, 22), G.Q(40, 16)
+    xs = [-W2 + 2 * W2 * i / nx_ for i in range(nx_ + 1)]
+    ys = [-0.265 + 0.53 * j / ny_ for j in range(ny_ + 1)]
     loops = []
     for y in ys:
         drop = 0.0
-        if y > 0.19:
-            t = (y - 0.19) / 0.078
+        if y > 0.175:                     # waterfall front edge, ~90 mm radius
+            t = (y - 0.175) / 0.092
             drop = 1 - math.sqrt(max(0.0, 1 - min(t, 0.985) ** 2))
-        top = [V(x * (1 - 0.06 * drop), y, max(0.02, (ctop(x, y) * edge(x)) * (1 - drop) + 0.02 * drop)) for x in xs]
+        top = [V(x * (1 - 0.05 * drop), y, max(0.02, (ctop(x, y) * edge(x)) * (1 - drop) + 0.02 * drop)) for x in xs]
         bot = [V(W2 - 0.012, y, 0.0), V(0.0, y, -0.004), V(-W2 + 0.012, y, 0.0)]
         loops.append(top + bot)
 
@@ -853,7 +999,7 @@ def seat(prefix, cx, driver):
         x = sx * (c_w + 0.011)
         pts, nr = [], []
         for j in range(36):
-            y = -0.255 + 0.44 * j / 35
+            y = -0.25 + 0.43 * j / 35
             z = ctop(x, y)
             dzx = (ctop(x + 0.002, y) - ctop(x - 0.002, y)) / 0.004
             dzy = (ctop(x, y + 0.002) - ctop(x, y - 0.002)) / 0.004
@@ -865,69 +1011,68 @@ def seat(prefix, cx, driver):
         for side in (-1, 1):
             y = ys_ + side * 0.0085
             pts = [V(-c_w + 0.004 + (2 * c_w - 0.008) * i / 24, y, 0) for i in range(25)]
-            pts = [V(p.x, p.y, ctop(p.x, p.y)) for p in pts]
+            pts = [V(p.x, p.y, ctop(p.x, p.y) + 0.0004) for p in pts]
             sobj = strip(f"{prefix}_ctr_{ys_}_{side}", pts, V(0, 0, 1), 0.006, "stitch", offset=0.0012, u_len=0.017)
             sobj.matrix_world = Mc
 
-    # ---- backrest (local: x across, y forward = face, z up along the backrest)
+    # ---- backrest (local: x across, y forward = face, z up along the backrest); top at s = SB, headrest above
     rec = math.radians(17)
-    # local +y = face (towards +Y world); rotation about X by +rec leans the top back (-Y).
-    # front surface ~140 mm behind the H-point (hip joint sits inside the body, ahead of the backrest)
     Mb = Matrix.Translation((cx, yc - 0.265 - 0.085, zc + 0.05)) @ Matrix.Rotation(rec, 4, "X")
-    widths = [(0.0, 0.250), (0.18, 0.258), (0.42, 0.262), (0.54, 0.246), (0.60, 0.205), (0.64, 0.160),
-              (0.70, 0.152), (0.80, 0.150), (0.86, 0.140)]
+    SB = 0.64
+    widths = [(0.0, 0.250), (0.18, 0.258), (0.42, 0.264), (0.56, 0.258), (0.64, 0.250)]
 
     def cw(s):
-        return lerp_tab([(0.0, 0.145), (0.52, 0.145), (0.62, 0.095), (0.9, 0.095)], s)
+        return lerp_tab([(0.0, 0.145), (0.50, 0.145), (0.60, 0.135), (0.7, 0.135)], s)
 
     def bfront(x, s):
         ax = abs(x)
-        y = 0.105 + 0.022 * math.exp(-((s - 0.20) / 0.09) ** 2)
-        fade = 1 - smooth(0.42, 0.60, s)
-        y += 0.060 * smooth(cw(s) + 0.004, cw(s) + 0.07, ax) * fade
-        y += 0.020 * smooth(0.64, 0.70, s) * (1 - smooth(0.06, 0.15, ax))  # head pad
+        y = 0.100 + 0.024 * math.exp(-((s - 0.20) / 0.10) ** 2)                 # lumbar
+        y += 0.008 * (1 - (min(ax, cw(s)) / cw(s)) ** 2)                        # crown of the centre panel
+        if ax > cw(s):
+            roll = smooth(cw(s) + 0.004, cw(s) + 0.05, ax)
+            y += ((0.062 - 0.036 * smooth(0.30, 0.58, s)) * roll *
+                  math.sqrt(max(0.0, 1 - ((ax - (cw(s) + 0.07)) / 0.12) ** 2)) ** 0.6)
         y -= 0.006 * math.exp(-((ax - cw(s)) / 0.0055) ** 2)
         if ax < cw(s):
             for ss in (0.24, 0.40):
                 y -= 0.0045 * math.exp(-((s - ss) / 0.005) ** 2)
+            lb = 1 - smooth(0.04, 0.13, s)                                        # creases where the back meets the seat
+            y -= 0.0016 * lb * (0.5 + 0.5 * math.sin(2 * math.pi * (s / 0.022 + 0.6 * x / 0.05 + ph)))
         return y
 
     loops = []
-    S = [0.86 * k / 40 for k in range(41)]
+    nS, nX = G.Q(44, 16), G.Q(48, 18)
+    S = [SB * k / nS for k in range(nS + 1)]
     for s in S:
         w = lerp_tab(widths, s)
         top_round = 1.0
-        if s > 0.80:
-            t = (s - 0.80) / 0.065
+        if s > SB - 0.055:
+            t = (s - (SB - 0.055)) / 0.058
             top_round = math.sqrt(max(0.02, 1 - min(t, 0.99) ** 2))
         front = []
-        for i in range(41):
-            xr = -1 + 2 * i / 40
+        for i in range(nX + 1):
+            xr = -1 + 2 * i / nX
             x = xr * w
-            r = 0.05
+            r = 0.055
             e = 1.0 if abs(x) <= w - r else math.sqrt(max(0.0, 1 - ((abs(x) - (w - r)) / r) ** 2))
-            front.append(V(x * (0.94 + 0.06 * top_round), (bfront(x, s) * e) * top_round, s))
+            front.append(V(x * (0.95 + 0.05 * top_round), (bfront(x, s) * e) * top_round, s))
         back = [V(w - 0.01, -0.012, s), V(0.0, -0.02, s), V(-w + 0.01, -0.012, s)]
-        back = [V(p.x * (0.94 + 0.06 * top_round), p.y * top_round, p.z) for p in back]
+        back = [V(p.x * (0.95 + 0.05 * top_round), p.y * top_round, p.z) for p in back]
         loops.append(front + back)
 
     def bidx(f):
         cc = f.calc_center_median()
-        return 1 if abs(cc.x) < cw(cc.z) - 0.002 and cc.y > 0.06 and cc.z < 0.60 else 0
+        return 1 if abs(cc.x) < cw(cc.z) - 0.002 and cc.y > 0.06 and cc.z < SB - 0.04 else 0
 
     back = loft(f"{prefix}_backrest", loops, ["leather", "leather_centre"], closed=True, cap0=True, cap1=True,
                 mat_idx=bidx, sharp=70)
     back.matrix_world = Mb
     if driver:
         set_wear(back, lambda co: 0.7 * smooth(0.16, 0.25, -co.x) * smooth(0.05, 0.25, co.z) * (1 - smooth(0.45, 0.6, co.z)))
-    # backrest shell (hard plastic back cover)
-    shell_loops = [[V(p.x * 1.005, -0.013 - 0.012 * (1 - abs(p.x) / 0.27), p.z) for p in lp[-3:]] for lp in loops]
-    for sx in (-1, 1):
-        x = sx * 0.0
     for sx in (-1, 1):  # vertical stitch lines
         pts, nr = [], []
         for k in range(30):
-            s = 0.03 + 0.53 * k / 29
+            s = 0.03 + (SB - 0.10) * k / 29
             x = sx * (cw(s) + 0.011)
             y = bfront(x, s)
             dyx = (bfront(x + 0.002, s) - bfront(x - 0.002, s)) / 0.004
@@ -940,38 +1085,74 @@ def seat(prefix, cx, driver):
         for side in (-1, 1):
             s = ss + side * 0.0085
             pts = [V(-cw(s) + 0.004 + (2 * cw(s) - 0.008) * i / 24, 0, s) for i in range(25)]
-            pts = [V(p.x, bfront(p.x, s), s) for p in pts]
+            pts = [V(p.x, bfront(p.x, s) + 0.0004, s) for p in pts]
             sobj = strip(f"{prefix}_btr_{ss}_{side}", pts, V(0, 1, 0), 0.006, "stitch", offset=0.0012, u_len=0.017)
             sobj.matrix_world = Mb
-    # back cover panel
-    # moulded back shell following the backrest silhouette (narrows into the head section)
+    # moulded back shell following the backrest silhouette, with a lower pocket (fabric, elastic top band)
     sh_loops = []
-    for s_ in [0.02 + 0.82 * k / 24 for k in range(25)]:
+    for s_ in [0.02 + (SB - 0.03) * k / 20 for k in range(21)]:
         w = lerp_tab(widths, s_) - 0.006
-        rnd_top = 1.0 if s_ < 0.80 else max(0.25, 1 - (s_ - 0.80) / 0.05)
+        rnd_top = 1.0 if s_ < SB - 0.05 else max(0.30, 1 - (s_ - (SB - 0.05)) / 0.04)
         sh_loops.append([V(px * rnd_top, -0.022 + py, s_) for px, py in rrect(2 * w, 0.034, 0.016, 3, 0, -0.017)])
     bc = loft(f"{prefix}_backcover", sh_loops, "dash_mid", closed=True, cap0=True, cap1=True, sharp=50)
     bc.matrix_world = Mb
-    pk = box(f"{prefix}_backpocket", (0, -0.060, 0.24), (0.40, 0.014, 0.30), "wall_fabric", bev=0.006, seg=2)
+    pk_loops = []
+    for k in range(9):
+        s_ = 0.10 + 0.27 * k / 8
+        bulge = 0.010 + 0.012 * math.sin(math.pi * k / 8) ** 0.7
+        pk_loops.append([V(-0.19 + 0.38 * i / 16, -0.059 - bulge * (1 - ((-0.19 + 0.38 * i / 16) / 0.19) ** 4), s_)
+                         for i in range(17)])
+    pk = loft(f"{prefix}_backpocket", list(zip(*pk_loops)), "seat_fabric", closed=False)
+    solidify(pk, 0.004)
     pk.matrix_world = Mb
-    eb = box(f"{prefix}_pocket_edge", (0, -0.063, 0.39), (0.40, 0.016, 0.018), "webbing", bev=0.005, seg=2)
+    eb = box(f"{prefix}_pocket_edge", (0, -0.068, 0.372), (0.39, 0.016, 0.022), "webbing", bev=0.006, seg=2)
     eb.matrix_world = Mb
-    # integrated seat belt: webbing from the top outer corner, down the outer bolster to the anchor
+    # ---- separate headrest on two posts (gap 25 mm above the backrest)
+    hr_z0, hr_h, hr_w, hr_d = SB + 0.025, 0.170, 0.270, 0.085
+    hl = []
+    nh = G.Q(18, 8)
+    for i in range(nh + 1):
+        t = -1 + 2 * i / nh
+        x = t * hr_w / 2
+        k = math.sqrt(max(0.05, 1 - abs(t) ** 6))
+        wing = 0.018 * abs(t) ** 3                       # slight forward wings
+        hl.append([V(x, 0.045 + wing + py * (0.5 + 0.5 * k), hr_z0 + hr_h / 2 + pz * (0.55 + 0.45 * k))
+                   for py, pz in rrect(hr_d, hr_h, 0.038, 4)])
+    hrest = loft(f"{prefix}_headrest", hl, "leather", closed=True, cap0=True, cap1=True, sharp=70)
+    hrest.matrix_world = Mb
+    for hx in (-0.075, 0.075):
+        post = rod(f"{prefix}_hr_post_{hx}", (hx, 0.040, SB - 0.04), (hx, 0.042, hr_z0 + 0.04), 0.0055, "satin", seg=12)
+        post.matrix_world = Mb
+        col = cyl(f"{prefix}_hr_collar_{hx}", (hx, 0.040, SB - 0.004), 0.011, 0.012, "dash_dark", seg=16)
+        col.matrix_world = Mb
+    # ---- integrated belt: shoulder guide at the top outer corner, webbing down the outer bolster, latch plate
     sx = -1 if driver else 1
     pts = []
-    for k in range(12):
-        s = 0.76 - 0.72 * k / 11
-        x = sx * (lerp_tab(widths, s) - 0.012)
-        pts.append(V(x, bfront(x * 0.98, s) * 0.55 + 0.035, s))
-    belt = strip(f"{prefix}_belt", pts, V(sx, 0.4, 0).normalized(), 0.046, "webbing", offset=0.006, u_len=0.2)
+    for k in range(16):
+        s = SB - 0.035 - (SB - 0.08) * k / 15
+        x = sx * (cw(s) + 0.050 - 0.012 * k / 15)
+        pts.append(V(x, bfront(x, s) + 0.007, s))
+    belt = strip(f"{prefix}_belt", pts, V(0, 1, 0), 0.047, "webbing", offset=0.0, u_len=0.2)
     belt.matrix_world = Mb
-    solidify(belt, 0.0015)
-    guide = box(f"{prefix}_belt_guide", (sx * 0.20, 0.03, 0.78), (0.07, 0.045, 0.03), "dash_dark", bev=0.008)
+    solidify(belt, 0.0016)
+    guide = box(f"{prefix}_belt_guide", (sx * (cw(SB) + 0.050), 0.090, SB - 0.022), (0.065, 0.040, 0.030), "dash_dark",
+                bev=0.008)
     guide.matrix_world = Mb
+    lp_ = pts[-1]
+    latch = box(f"{prefix}_belt_latch", (lp_.x, lp_.y + 0.006, lp_.z - 0.02), (0.050, 0.006, 0.060), "satin", bev=0.003)
+    latch.matrix_world = Mb
+    lpb = box(f"{prefix}_belt_latch_grip", (lp_.x, lp_.y + 0.008, lp_.z + 0.012), (0.054, 0.012, 0.024), "dash_dark",
+              bev=0.004)
+    lpb.matrix_world = Mb
     # buckle on the inner side
     bx = cx - sx * 0.29
     rod(f"{prefix}_buckle_stalk", (bx, yc - 0.22, zc + 0.02), (bx, yc - 0.20, zc + 0.12), 0.012, "webbing", seg=8)
     box(f"{prefix}_buckle", (bx, yc - 0.20, zc + 0.15), (0.03, 0.022, 0.07), "dash_dark", bev=0.006)
+    # gas damper of the air suspension, visible behind the bellows
+    rod(f"{prefix}_damper", (cx + 0.12, yc - 0.27, FLOOR + 0.06), (cx - 0.05, yc - 0.25, zc - 0.05), 0.014, "metal_dark",
+        seg=12)
+    rod(f"{prefix}_damper_rod", (cx - 0.05, yc - 0.25, zc - 0.05), (cx - 0.12, yc - 0.24, zc - 0.035), 0.006, "satin",
+        seg=10)
     # side shields (plastic covers over the mechanism) + levers
     for s in (-1, 1):
         sh = box(f"{prefix}_shield_{s}", (cx + s * (W2 + 0.012), yc - 0.02, zc + 0.01), (0.022, 0.46, 0.10), "dash_dark",
@@ -1200,10 +1381,10 @@ def build_curtains():
         for zi in range(9):
             z = z0 + (z1 - z0) * zi / 8
             lp = []
-            nn = folds * 6
+            nn = G.Q(folds * 6, folds * 2)
             for i in range(nn + 1):
                 t = i / nn
-                depth = 0.035 * math.sin(2 * math.pi * folds * t) * (0.85 + 0.15 * math.sin(7 * z + i))
+                depth = (0.035 if G.STATE["q"] > 0.4 else 0.0) * math.sin(2 * math.pi * folds * t) * (0.85 + 0.15 * math.sin(7 * z + i))
                 lp.append(base + along * (width * t) + normal * depth + V(0, 0, z - base.z))
             loops.append(lp)
         c = loft(name, loops, "curtain", closed=False, sharp=None)
@@ -1260,60 +1441,6 @@ def build_mirrors():
     nf = V(0, -0.6, -0.8).normalized()
     panel("front_head", rrect(0.26, 0.15, 0.03, 3), c, nf, V(1, 0, 0), 0.06, "ext_plastic", bev=0.01)
     plane_uv("front_glass", quad_on(c, nf, V(1, 0, 0), 0.23, 0.12, off=0.002), "mirror")
-
-
-# ---------------------------------------------------------------- backdrop
-def build_backdrop():
-    group("backdrop")
-    bm = bmesh.new()
-    bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=60)
-    G.finish("ground_asphalt", bm, "asphalt", smooth=False)
-    bm = bmesh.new()
-    bmesh.ops.create_circle(bm, cap_ends=True, segments=64, radius=1500)
-    g = G.finish("ground_grass", bm, "grass", smooth=False)
-    g.location.z = -0.02
-    # worn parking-bay lines (Polish practice: white 0.12 m)
-    for k in range(-4, 5):
-        x = k * 4.0 + 2.0
-        box_mm(f"bay_line_{k}", x - 0.06, x + 0.06, 6.0, 22.0, 0.0, 0.004, "line_paint")
-    box_mm("bay_line_front", -18, 18, 22.0, 22.12, 0.0, 0.004, "line_paint")
-    # distant tree line: one ring strip with a noisy canopy silhouette and field gaps (hazy, desaturated = distance)
-    import random
-    rnd = random.Random(5)
-    ph = [rnd.uniform(0, 6.28) for _ in range(6)]
-    bm = bmesh.new()
-    N = 2400
-    rows = []
-    for i in range(N):
-        a = 2 * math.pi * i / N
-        r = 240 + 40 * math.sin(2 * a + ph[0]) + 15 * math.sin(5 * a + ph[1])
-        # Podlasie: flat land, mixed forest edge ~14-20 m; canopy bumps every few metres, no hills
-        h = 15.5 + 1.5 * math.sin(4 * a + ph[2]) + 1.2 * math.sin(180 * a + ph[3]) + 0.9 * math.sin(430 * a + ph[4])
-        h += 0.9 * (rnd.random() - 0.5) + (1.6 if rnd.random() > 0.95 else 0.0)  # single taller pines/spruces
-        rows.append((r, a, h))
-    hs = [rows[i][2] for i in range(N)]
-    hs = [(hs[i - 1] + 2 * hs[i] + hs[(i + 1) % N]) / 4 for i in range(N)]  # rounder crowns, fewer spikes
-    rows = [(bm.verts.new((r * math.cos(a), r * math.sin(a), -1.0)), bm.verts.new((r * math.cos(a), r * math.sin(a), h)))
-            for (r, a, _), h in zip(rows, hs)]
-    for i in range(N):
-        a0, b0 = rows[i]
-        a1, b1 = rows[(i + 1) % N]
-        bm.faces.new((a0, a1, b1, b0))
-    G.finish("treeline", bm, "treeline", smooth=False)
-    # logistics hall at mid distance + a row of yard light poles (scale cues)
-    box_mm("hall", -120, -40, 70, 115, 0, 11.5, "hall", bev=0.2)
-    box_mm("hall_band", -120.2, -39.8, 69.8, 115.2, 10.2, 11.0, "hall_band")
-    for k in range(6):
-        box_mm(f"hall_dock_{k}", -110 + k * 12, -104 + k * 12, 69.95, 70.0, 1.2, 4.6, "hall_band")
-    for k in (-3, -2, 2, 3):
-        x, y = k * 16.0 + (6.0 if k < 0 else -6.0), 40.0
-        rod(f"pole_{k}", (x, y, 0), (x, y, 12), 0.09, "pole", seg=10, r1=0.06)
-        box(f"pole_lamp_{k}", (x, y - 0.5, 11.9), (0.35, 1.1, 0.12), "pole", bev=0.02)
-    # neighbouring parked semi-trailer on the passenger side (scale cue in the right mirror)
-    box_mm("trailer_side", 3.1, 5.65, -14.0, 0.2, 1.2, 4.0, "trailer", bev=0.03)
-    for y in (-11.5, -10.2, -8.9):
-        for x in (3.3, 5.45):
-            cyl(f"trailer_wheel_{x}_{y}", (x, y, 0.5), 0.5, 0.3, "rubber", axis="X", seg=24)
 
 
 # ---------------------------------------------------------------- UVs
@@ -1415,7 +1542,17 @@ def set_lighting(kind):
         ramp.color_ramp.elements[1].position = 0.6
         ramp.color_ramp.elements[1].color = (0.80, 0.82, 0.86, 1)
         nt.links.new(sep.outputs["Z"], ramp.inputs[0])
-        nt.links.new(ramp.outputs[0], bg.inputs["Color"])
+        cl = nt.nodes.new("ShaderNodeTexNoise")       # low-contrast stratus texture (A6: no flat white sky)
+        cl.inputs["Scale"].default_value = 3.5
+        cl.inputs["Detail"].default_value = 6
+        cl.inputs["Roughness"].default_value = 0.55
+        nt.links.new(tc.outputs["Generated"], cl.inputs["Vector"])
+        cm = nt.nodes.new("ShaderNodeMapRange")
+        cm.inputs[1].default_value, cm.inputs[2].default_value = 0.35, 0.70
+        cm.inputs[3].default_value, cm.inputs[4].default_value = 0.86, 1.06
+        nt.links.new(cl.outputs["Fac"], cm.inputs[0])
+        sky = M._mix_rgb(nt, 1.0, ramp.outputs[0], cm.outputs[0], "MULTIPLY")
+        nt.links.new(sky, bg.inputs["Color"])
         bg.inputs["Strength"].default_value = 1.35
         sc.view_settings.exposure = 2.3
     else:
@@ -1429,9 +1566,11 @@ def set_lighting(kind):
         sky.air_density = 1.2
         sky.dust_density = 2.5
         nt.links.new(sky.outputs[0], bg.inputs["Color"])
-        bg.inputs["Strength"].default_value = 0.16
+        # A6: a 9 deg sun is strongly attenuated; sun:sky balance ~ 4:1 instead of ~20:1 (+1.6 EV) so sunlit dark
+        # plastics stay dark grey rather than going beige-white
+        bg.inputs["Strength"].default_value = 0.30
         ld = bpy.data.lights.new("sun", "SUN")
-        ld.energy = 7.0
+        ld.energy = 4.0
         ld.angle = math.radians(0.6)
         ld.color = (1.0, 0.80, 0.60)
         sun = bpy.data.objects.new("sun", ld)
@@ -1439,7 +1578,7 @@ def set_lighting(kind):
         # Nishita rotation is measured from +X? use direction vector: sun at azimuth az (from +Y towards -X)
         to_sun = V(-math.sin(az - math.pi / 2) * 0 + math.cos(az), math.sin(az), math.tan(el)).normalized()
         sun.rotation_euler = (-to_sun).to_track_quat("-Z", "Y").to_euler()
-        sc.view_settings.exposure = 1.6
+        sc.view_settings.exposure = 1.2
     sc.world = w
 
 
@@ -1508,6 +1647,10 @@ def build(a):
     RAKE = a.rake
     t0 = time.time()
     bpy.ops.wm.read_factory_settings(use_empty=True)
+    COLLS.clear()
+    M._IMG.clear()
+    M.PARAMS.clear()
+    G.STATE["q"] = {0: 1.0, 1: 0.55, 2: 0.27}[getattr(a, "lod", 0)]
     build_materials(a)
     build_shell()
     build_glass()
@@ -1524,7 +1667,8 @@ def build(a):
     build_mirrors()
     interior = [o for c, col in COLLS.items() if c != "backdrop" for o in col.objects]
     k = auto_uv(interior)
-    build_backdrop()
+    if not getattr(a, "no_backdrop", False):
+        BD.build(group)
     per, tot = tri_stats()
     stats = {"tris_total_interior_incl_shell_and_mirrors": tot, "tris_per_group": per, "uv_scale_m_per_atlas": k,
              "objects": len(interior), "materials": len([m for m in bpy.data.materials if m.users]),

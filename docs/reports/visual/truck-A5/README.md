@@ -1,5 +1,7 @@
 # Tor A5 — wnętrze kabiny (neutralne markowo)
 
+> **Uwaga (A6):** po recenzji `visual-critic` wnętrze zostało poprawione i przygotowane do importu — aktualny raport: [`../truck-A6/README.md`](../truck-A6/README.md). Ten plik zostaje jako stan „przed”.
+
 **Co to jest:** pierwsza pełna wersja wnętrza kabiny naszej ciężarówki — to, co gracz widzi najczęściej (kamera w kabinie na telefonie). Wnętrze pasuje do każdej z koncepcji A/B/C: bryła kabiny jest wspólna, a od marki zależą tylko **znak na piaście kierownicy** i **kolor wstawek**. Wszystko powstaje ze skryptów (Blender, bez ręcznego klikania), w prawdziwej skali, z punktem oczu kierowcy z `art-source/truck/dims.json`.
 
 To są rendery z Blendera (Cycles, path tracing), a nie zrzuty z gry. W grze (Unity URP, telefon) światło będzie liczone prościej — dlatego razem z modelem powstała też mapa AO do „wypalenia” cieni kontaktowych (niżej).

@@ -1,0 +1,1415 @@
+{
+ "asset": "cab interior (brand-neutral), track A6",
+ "generator": "tools/blender/truck/interior/a6_export.py",
+ "lods": {
+  "LOD2": {
+   "file": "art-source/truck/interior/export/SM_CabInterior_LOD2.fbx",
+   "root": "CabInterior_LOD2",
+   "objects": {
+    "CAB_Interior_LOD2": {
+     "tris": 15470,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Leather",
+      "MI_Cab_Fabric",
+      "MI_Cab_Rubber",
+      "MI_Cab_Metal",
+      "MI_Cab_Decal"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "CAB_Interior"
+    },
+    "CAB_ShellPlaceholder_LOD2": {
+     "tris": 2210,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Metal"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "CAB_ShellPlaceholder"
+    },
+    "CAB_Glass_LOD2": {
+     "tris": 132,
+     "materials": [
+      "MI_Cab_Glass"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "CAB_Glass"
+    },
+    "DISPLAY_Cluster_LOD2": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Display"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "DISPLAY_Cluster"
+    },
+    "DISPLAY_Infotainment_LOD2": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Display"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "DISPLAY_Infotainment"
+    },
+    "LEVER_ParkBrake_LOD2": {
+     "tris": 96,
+     "materials": [
+      "MI_Cab_Plastic"
+     ],
+     "pivot_unity_local": [
+      -0.205,
+      0.72,
+      0.77029
+     ],
+     "role": "LEVER_ParkBrake",
+     "animation": {
+      "pull": {
+       "local_axis_blender": "X",
+       "axis_unity_cab": [
+        1.0,
+        0.0,
+        0.0
+       ],
+       "local_axis_unity": "X"
+      }
+     }
+    },
+    "STEERING_WHEEL_LOD2": {
+     "tris": 3256,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Leather",
+      "MI_Cab_Decal"
+     ],
+     "pivot_unity_local": [
+      -0.55,
+      0.97,
+      0.65
+     ],
+     "role": "STEERING_WHEEL",
+     "animation": {
+      "steer": {
+       "local_axis_blender": "Z",
+       "axis_unity_cab": [
+        0.0,
+        0.78801,
+        -0.61566
+       ],
+       "local_axis_unity": "Y"
+      }
+     }
+    },
+    "STALK_Indicator_LOD2": {
+     "tris": 60,
+     "materials": [
+      "MI_Cab_Plastic"
+     ],
+     "pivot_unity_local": [
+      -0.61,
+      0.89428,
+      0.71551
+     ],
+     "role": "STALK_Indicator",
+     "animation": {
+      "up_down_indicators": {
+       "local_axis_blender": "Z",
+       "axis_unity_cab": [
+        0.0,
+        0.78801,
+        -0.61566
+       ],
+       "local_axis_unity": "Y"
+      },
+      "pull_flash_push_wipe": {
+       "local_axis_blender": "Y",
+       "axis_unity_cab": [
+        0.0,
+        0.61566,
+        0.78801
+       ],
+       "local_axis_unity": "Z"
+      }
+     }
+    },
+    "STALK_Retarder_LOD2": {
+     "tris": 40,
+     "materials": [
+      "MI_Cab_Plastic"
+     ],
+     "pivot_unity_local": [
+      -0.49,
+      0.90474,
+      0.7289
+     ],
+     "role": "STALK_Retarder",
+     "animation": {
+      "steps_up_down": {
+       "local_axis_blender": "Z",
+       "axis_unity_cab": [
+        0.0,
+        0.78801,
+        -0.61566
+       ],
+       "local_axis_unity": "Y"
+      }
+     }
+    },
+    "STALK_AMT_LOD2": {
+     "tris": 88,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Metal"
+     ],
+     "pivot_unity_local": [
+      -0.49,
+      0.88012,
+      0.69738
+     ],
+     "role": "STALK_AMT",
+     "animation": {
+      "up_down_mode": {
+       "local_axis_blender": "Z",
+       "axis_unity_cab": [
+        0.0,
+        0.78801,
+        -0.61566
+       ],
+       "local_axis_unity": "Y"
+      }
+     }
+    },
+    "PEDAL_Brake_LOD2": {
+     "tris": 112,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Rubber"
+     ],
+     "pivot_unity_local": [
+      -0.48,
+      0.71,
+      1.105
+     ],
+     "role": "PEDAL_Brake",
+     "animation": {
+      "press": {
+       "local_axis_blender": "X",
+       "axis_unity_cab": [
+        1.0,
+        0.0,
+        0.0
+       ],
+       "local_axis_unity": "X"
+      }
+     }
+    },
+    "PEDAL_Accel_LOD2": {
+     "tris": 92,
+     "materials": [
+      "MI_Cab_Rubber"
+     ],
+     "pivot_unity_local": [
+      -0.315,
+      0.27,
+      0.935
+     ],
+     "role": "PEDAL_Accel",
+     "animation": {
+      "press": {
+       "local_axis_blender": "X",
+       "axis_unity_cab": [
+        1.0,
+        0.0,
+        0.0
+       ],
+       "local_axis_unity": "X"
+      }
+     }
+    },
+    "DISPLAY_Tachograph_LOD2": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Display"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "DISPLAY_Tachograph"
+    },
+    "MIRROR_MainL_LOD2": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_MainL"
+    },
+    "MIRROR_WideL_LOD2": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_WideL"
+    },
+    "MIRROR_MainR_LOD2": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_MainR"
+    },
+    "MIRROR_WideR_LOD2": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_WideR"
+    },
+    "MIRROR_Kerb_LOD2": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_Kerb"
+    },
+    "MIRROR_Front_LOD2": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_Front"
+    }
+   },
+   "tris_total": 21574,
+   "empties_unity_local": {
+    "EYE_POINT": [
+     -0.55,
+     1.35,
+     0.225
+    ],
+    "H_POINT": [
+     -0.55,
+     0.715,
+     0.225
+    ],
+    "WHEEL_CENTRE": [
+     -0.55,
+     0.97,
+     0.65
+    ],
+    "CAB_MOUNT_REF": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ao_atlas": {
+    "High": {
+     "path": "art-source/truck/interior/export/textures/High/T_Cab_AO_LOD2.png",
+     "size": 512
+    },
+    "Medium": {
+     "path": "art-source/truck/interior/export/textures/Medium/T_Cab_AO_LOD2.png",
+     "size": 256
+    },
+    "Low": {
+     "path": "art-source/truck/interior/export/textures/Low/T_Cab_AO_LOD2.png",
+     "size": 256
+    }
+   },
+   "hidden_faces_removed": 1247,
+   "tris_before_cleanup": 23958,
+   "build_s": 15.9,
+   "file_bytes": 2483532
+  },
+  "LOD1": {
+   "file": "art-source/truck/interior/export/SM_CabInterior_LOD1.fbx",
+   "root": "CabInterior_LOD1",
+   "objects": {
+    "CAB_Interior_LOD1": {
+     "tris": 30383,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Leather",
+      "MI_Cab_Fabric",
+      "MI_Cab_Rubber",
+      "MI_Cab_Metal",
+      "MI_Cab_Decal"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "CAB_Interior"
+    },
+    "CAB_ShellPlaceholder_LOD1": {
+     "tris": 2488,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Rubber",
+      "MI_Cab_Metal"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "CAB_ShellPlaceholder"
+    },
+    "CAB_Glass_LOD1": {
+     "tris": 242,
+     "materials": [
+      "MI_Cab_Glass"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "CAB_Glass"
+    },
+    "DISPLAY_Cluster_LOD1": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Display"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "DISPLAY_Cluster"
+    },
+    "DISPLAY_Infotainment_LOD1": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Display"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "DISPLAY_Infotainment"
+    },
+    "LEVER_ParkBrake_LOD1": {
+     "tris": 110,
+     "materials": [
+      "MI_Cab_Plastic"
+     ],
+     "pivot_unity_local": [
+      -0.205,
+      0.72,
+      0.77029
+     ],
+     "role": "LEVER_ParkBrake",
+     "animation": {
+      "pull": {
+       "local_axis_blender": "X",
+       "axis_unity_cab": [
+        1.0,
+        0.0,
+        0.0
+       ],
+       "local_axis_unity": "X"
+      }
+     }
+    },
+    "STEERING_WHEEL_LOD1": {
+     "tris": 4026,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Leather",
+      "MI_Cab_Decal"
+     ],
+     "pivot_unity_local": [
+      -0.55,
+      0.97,
+      0.65
+     ],
+     "role": "STEERING_WHEEL",
+     "animation": {
+      "steer": {
+       "local_axis_blender": "Z",
+       "axis_unity_cab": [
+        0.0,
+        0.78801,
+        -0.61566
+       ],
+       "local_axis_unity": "Y"
+      }
+     }
+    },
+    "STALK_Indicator_LOD1": {
+     "tris": 88,
+     "materials": [
+      "MI_Cab_Plastic"
+     ],
+     "pivot_unity_local": [
+      -0.61,
+      0.89428,
+      0.71551
+     ],
+     "role": "STALK_Indicator",
+     "animation": {
+      "up_down_indicators": {
+       "local_axis_blender": "Z",
+       "axis_unity_cab": [
+        0.0,
+        0.78801,
+        -0.61566
+       ],
+       "local_axis_unity": "Y"
+      },
+      "pull_flash_push_wipe": {
+       "local_axis_blender": "Y",
+       "axis_unity_cab": [
+        0.0,
+        0.61566,
+        0.78801
+       ],
+       "local_axis_unity": "Z"
+      }
+     }
+    },
+    "STALK_Retarder_LOD1": {
+     "tris": 48,
+     "materials": [
+      "MI_Cab_Plastic"
+     ],
+     "pivot_unity_local": [
+      -0.49,
+      0.90474,
+      0.7289
+     ],
+     "role": "STALK_Retarder",
+     "animation": {
+      "steps_up_down": {
+       "local_axis_blender": "Z",
+       "axis_unity_cab": [
+        0.0,
+        0.78801,
+        -0.61566
+       ],
+       "local_axis_unity": "Y"
+      }
+     }
+    },
+    "STALK_AMT_LOD1": {
+     "tris": 124,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Metal"
+     ],
+     "pivot_unity_local": [
+      -0.49,
+      0.88012,
+      0.69738
+     ],
+     "role": "STALK_AMT",
+     "animation": {
+      "up_down_mode": {
+       "local_axis_blender": "Z",
+       "axis_unity_cab": [
+        0.0,
+        0.78801,
+        -0.61566
+       ],
+       "local_axis_unity": "Y"
+      }
+     }
+    },
+    "PEDAL_Brake_LOD1": {
+     "tris": 128,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Rubber"
+     ],
+     "pivot_unity_local": [
+      -0.48,
+      0.71,
+      1.105
+     ],
+     "role": "PEDAL_Brake",
+     "animation": {
+      "press": {
+       "local_axis_blender": "X",
+       "axis_unity_cab": [
+        1.0,
+        0.0,
+        0.0
+       ],
+       "local_axis_unity": "X"
+      }
+     }
+    },
+    "PEDAL_Accel_LOD1": {
+     "tris": 108,
+     "materials": [
+      "MI_Cab_Rubber"
+     ],
+     "pivot_unity_local": [
+      -0.315,
+      0.27,
+      0.935
+     ],
+     "role": "PEDAL_Accel",
+     "animation": {
+      "press": {
+       "local_axis_blender": "X",
+       "axis_unity_cab": [
+        1.0,
+        0.0,
+        0.0
+       ],
+       "local_axis_unity": "X"
+      }
+     }
+    },
+    "DISPLAY_BunkPanel_LOD1": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Display"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "DISPLAY_BunkPanel"
+    },
+    "DISPLAY_Tachograph_LOD1": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Display"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "DISPLAY_Tachograph"
+    },
+    "DISPLAY_Radio_LOD1": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Display"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "DISPLAY_Radio"
+    },
+    "MIRROR_MainL_LOD1": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_MainL"
+    },
+    "MIRROR_WideL_LOD1": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_WideL"
+    },
+    "MIRROR_MainR_LOD1": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_MainR"
+    },
+    "MIRROR_WideR_LOD1": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_WideR"
+    },
+    "MIRROR_Kerb_LOD1": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_Kerb"
+    },
+    "MIRROR_Front_LOD1": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_Front"
+    }
+   },
+   "tris_total": 37767,
+   "empties_unity_local": {
+    "EYE_POINT": [
+     -0.55,
+     1.35,
+     0.225
+    ],
+    "H_POINT": [
+     -0.55,
+     0.715,
+     0.225
+    ],
+    "WHEEL_CENTRE": [
+     -0.55,
+     0.97,
+     0.65
+    ],
+    "CAB_MOUNT_REF": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ao_atlas": {
+    "High": {
+     "path": "art-source/truck/interior/export/textures/High/T_Cab_AO_LOD1.png",
+     "size": 1024
+    },
+    "Medium": {
+     "path": "art-source/truck/interior/export/textures/Medium/T_Cab_AO_LOD1.png",
+     "size": 512
+    },
+    "Low": {
+     "path": "art-source/truck/interior/export/textures/Low/T_Cab_AO_LOD1.png",
+     "size": 256
+    }
+   },
+   "hidden_faces_removed": 3761,
+   "tris_before_cleanup": 45220,
+   "build_s": 23.8,
+   "file_bytes": 4452892
+  },
+  "LOD0": {
+   "file": "art-source/truck/interior/export/SM_CabInterior_LOD0.fbx",
+   "root": "CabInterior_LOD0",
+   "objects": {
+    "CAB_Interior_LOD0": {
+     "tris": 64321,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Leather",
+      "MI_Cab_Fabric",
+      "MI_Cab_Rubber",
+      "MI_Cab_Metal",
+      "MI_Cab_Decal"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "CAB_Interior"
+    },
+    "CAB_ShellPlaceholder_LOD0": {
+     "tris": 4316,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Rubber",
+      "MI_Cab_Metal"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "CAB_ShellPlaceholder"
+    },
+    "CAB_Glass_LOD0": {
+     "tris": 706,
+     "materials": [
+      "MI_Cab_Glass"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "CAB_Glass"
+    },
+    "DISPLAY_Cluster_LOD0": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Display"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "DISPLAY_Cluster"
+    },
+    "DISPLAY_Infotainment_LOD0": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Display"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "DISPLAY_Infotainment"
+    },
+    "LEVER_ParkBrake_LOD0": {
+     "tris": 328,
+     "materials": [
+      "MI_Cab_Plastic"
+     ],
+     "pivot_unity_local": [
+      -0.205,
+      0.72,
+      0.77029
+     ],
+     "role": "LEVER_ParkBrake",
+     "animation": {
+      "pull": {
+       "local_axis_blender": "X",
+       "axis_unity_cab": [
+        1.0,
+        0.0,
+        0.0
+       ],
+       "local_axis_unity": "X"
+      }
+     }
+    },
+    "STEERING_WHEEL_LOD0": {
+     "tris": 7800,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Leather",
+      "MI_Cab_Decal"
+     ],
+     "pivot_unity_local": [
+      -0.55,
+      0.97,
+      0.65
+     ],
+     "role": "STEERING_WHEEL",
+     "animation": {
+      "steer": {
+       "local_axis_blender": "Z",
+       "axis_unity_cab": [
+        0.0,
+        0.78801,
+        -0.61566
+       ],
+       "local_axis_unity": "Y"
+      }
+     }
+    },
+    "STALK_Indicator_LOD0": {
+     "tris": 164,
+     "materials": [
+      "MI_Cab_Plastic"
+     ],
+     "pivot_unity_local": [
+      -0.61,
+      0.89428,
+      0.71551
+     ],
+     "role": "STALK_Indicator",
+     "animation": {
+      "up_down_indicators": {
+       "local_axis_blender": "Z",
+       "axis_unity_cab": [
+        0.0,
+        0.78801,
+        -0.61566
+       ],
+       "local_axis_unity": "Y"
+      },
+      "pull_flash_push_wipe": {
+       "local_axis_blender": "Y",
+       "axis_unity_cab": [
+        0.0,
+        0.61566,
+        0.78801
+       ],
+       "local_axis_unity": "Z"
+      }
+     }
+    },
+    "STALK_Retarder_LOD0": {
+     "tris": 88,
+     "materials": [
+      "MI_Cab_Plastic"
+     ],
+     "pivot_unity_local": [
+      -0.49,
+      0.90474,
+      0.7289
+     ],
+     "role": "STALK_Retarder",
+     "animation": {
+      "steps_up_down": {
+       "local_axis_blender": "Z",
+       "axis_unity_cab": [
+        0.0,
+        0.78801,
+        -0.61566
+       ],
+       "local_axis_unity": "Y"
+      }
+     }
+    },
+    "STALK_AMT_LOD0": {
+     "tris": 224,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Metal"
+     ],
+     "pivot_unity_local": [
+      -0.49,
+      0.88012,
+      0.69738
+     ],
+     "role": "STALK_AMT",
+     "animation": {
+      "up_down_mode": {
+       "local_axis_blender": "Z",
+       "axis_unity_cab": [
+        0.0,
+        0.78801,
+        -0.61566
+       ],
+       "local_axis_unity": "Y"
+      }
+     }
+    },
+    "PEDAL_Brake_LOD0": {
+     "tris": 224,
+     "materials": [
+      "MI_Cab_Plastic",
+      "MI_Cab_Rubber"
+     ],
+     "pivot_unity_local": [
+      -0.48,
+      0.71,
+      1.105
+     ],
+     "role": "PEDAL_Brake",
+     "animation": {
+      "press": {
+       "local_axis_blender": "X",
+       "axis_unity_cab": [
+        1.0,
+        0.0,
+        0.0
+       ],
+       "local_axis_unity": "X"
+      }
+     }
+    },
+    "PEDAL_Accel_LOD0": {
+     "tris": 188,
+     "materials": [
+      "MI_Cab_Rubber"
+     ],
+     "pivot_unity_local": [
+      -0.315,
+      0.27,
+      0.935
+     ],
+     "role": "PEDAL_Accel",
+     "animation": {
+      "press": {
+       "local_axis_blender": "X",
+       "axis_unity_cab": [
+        1.0,
+        0.0,
+        0.0
+       ],
+       "local_axis_unity": "X"
+      }
+     }
+    },
+    "DISPLAY_BunkPanel_LOD0": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Display"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "DISPLAY_BunkPanel"
+    },
+    "DISPLAY_Tachograph_LOD0": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Display"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "DISPLAY_Tachograph"
+    },
+    "DISPLAY_Radio_LOD0": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Display"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "DISPLAY_Radio"
+    },
+    "MIRROR_MainL_LOD0": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_MainL"
+    },
+    "MIRROR_WideL_LOD0": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_WideL"
+    },
+    "MIRROR_MainR_LOD0": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_MainR"
+    },
+    "MIRROR_WideR_LOD0": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_WideR"
+    },
+    "MIRROR_Kerb_LOD0": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_Kerb"
+    },
+    "MIRROR_Front_LOD0": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_MirrorRT"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "MIRROR_Front"
+    }
+   },
+   "tris_total": 78381,
+   "empties_unity_local": {
+    "EYE_POINT": [
+     -0.55,
+     1.35,
+     0.225
+    ],
+    "H_POINT": [
+     -0.55,
+     0.715,
+     0.225
+    ],
+    "WHEEL_CENTRE": [
+     -0.55,
+     0.97,
+     0.65
+    ],
+    "CAB_MOUNT_REF": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ao_atlas": {
+    "High": {
+     "path": "art-source/truck/interior/export/textures/High/T_Cab_AO_LOD0.png",
+     "size": 2048
+    },
+    "Medium": {
+     "path": "art-source/truck/interior/export/textures/Medium/T_Cab_AO_LOD0.png",
+     "size": 1024
+    },
+    "Low": {
+     "path": "art-source/truck/interior/export/textures/Low/T_Cab_AO_LOD0.png",
+     "size": 512
+    }
+   },
+   "hidden_faces_removed": 8733,
+   "tris_before_cleanup": 96896,
+   "build_s": 51.1,
+   "file_bytes": 8815308
+  }
+ },
+ "units": "metres",
+ "unity_axes": "+X right (passenger side), +Y up, +Z forward; driver at -X (LHD)",
+ "frame_mapping": "A2/Blender (x, y, z) -> Unity (x, z, y); FBX exported with axis_forward=Z, axis_up=Y, bake_space_transform, FBX_SCALE_ALL. Unity import: Scale Factor 1, Convert Units on, Bake Axis Conversion off; check EYE_POINT local position below after import.",
+ "origin": {
+  "name": "CAB_MOUNT_REF",
+  "a2_frame": [
+   0.0,
+   0.22499999403953552,
+   1.149999976158142
+  ],
+  "unity_vehicle": [
+   0.0,
+   1.15,
+   3.925
+  ],
+  "note": "= graybox CabPivot (TractorDimensions: y = cabBodyBottom, z = CabRearZ + cabLen/2). Parent CabInterior_LODn to the cab-suspension pivot with localPosition 0, localRotation 0."
+ },
+ "tiers": {
+  "High": "LOD0 + High textures",
+  "Medium": "LOD1 + Medium textures",
+  "Low": "LOD2 + Low textures",
+  "texture_compression": "ASTC: Normal 5x5 (High) / 6x6; Detail 6x6 (High) / 8x8; AO 6x6 / 8x8; Decal 6x6; all power-of-two squares, mipmaps on, AO + Detail + Normal linear (not sRGB)"
+ },
+ "materials": {
+  "MI_Cab_Plastic": {
+   "slot": "MI_Cab_Plastic",
+   "detail_set": "dashgrain",
+   "textures": {
+    "High": {
+     "detail": "art-source/truck/interior/export/textures/High/T_Cab_Plastic_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/High/T_Cab_Plastic_Normal.png",
+     "size": 1024
+    },
+    "Medium": {
+     "detail": "art-source/truck/interior/export/textures/Medium/T_Cab_Plastic_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/Medium/T_Cab_Plastic_Normal.png",
+     "size": 512
+    },
+    "Low": {
+     "detail": "art-source/truck/interior/export/textures/Low/T_Cab_Plastic_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/Low/T_Cab_Plastic_Normal.png",
+     "size": 256
+    }
+   },
+   "metallic_from": "uv3.y"
+  },
+  "MI_Cab_Leather": {
+   "slot": "MI_Cab_Leather",
+   "detail_set": "leather",
+   "textures": {
+    "High": {
+     "detail": "art-source/truck/interior/export/textures/High/T_Cab_Leather_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/High/T_Cab_Leather_Normal.png",
+     "size": 1024
+    },
+    "Medium": {
+     "detail": "art-source/truck/interior/export/textures/Medium/T_Cab_Leather_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/Medium/T_Cab_Leather_Normal.png",
+     "size": 512
+    },
+    "Low": {
+     "detail": "art-source/truck/interior/export/textures/Low/T_Cab_Leather_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/Low/T_Cab_Leather_Normal.png",
+     "size": 256
+    }
+   }
+  },
+  "MI_Cab_Fabric": {
+   "slot": "MI_Cab_Fabric",
+   "detail_set": "fabric",
+   "textures": {
+    "High": {
+     "detail": "art-source/truck/interior/export/textures/High/T_Cab_Fabric_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/High/T_Cab_Fabric_Normal.png",
+     "size": 512
+    },
+    "Medium": {
+     "detail": "art-source/truck/interior/export/textures/Medium/T_Cab_Fabric_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/Medium/T_Cab_Fabric_Normal.png",
+     "size": 256
+    },
+    "Low": {
+     "detail": "art-source/truck/interior/export/textures/Low/T_Cab_Fabric_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/Low/T_Cab_Fabric_Normal.png",
+     "size": 128
+    }
+   }
+  },
+  "MI_Cab_Rubber": {
+   "slot": "MI_Cab_Rubber",
+   "detail_set": "rubbermat",
+   "textures": {
+    "High": {
+     "detail": "art-source/truck/interior/export/textures/High/T_Cab_Rubber_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/High/T_Cab_Rubber_Normal.png",
+     "size": 1024
+    },
+    "Medium": {
+     "detail": "art-source/truck/interior/export/textures/Medium/T_Cab_Rubber_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/Medium/T_Cab_Rubber_Normal.png",
+     "size": 512
+    },
+    "Low": {
+     "detail": "art-source/truck/interior/export/textures/Low/T_Cab_Rubber_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/Low/T_Cab_Rubber_Normal.png",
+     "size": 256
+    }
+   }
+  },
+  "MI_Cab_Metal": {
+   "slot": "MI_Cab_Metal",
+   "detail_set": "brushed",
+   "textures": {
+    "High": {
+     "detail": "art-source/truck/interior/export/textures/High/T_Cab_Metal_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/High/T_Cab_Metal_Normal.png",
+     "size": 512
+    },
+    "Medium": {
+     "detail": "art-source/truck/interior/export/textures/Medium/T_Cab_Metal_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/Medium/T_Cab_Metal_Normal.png",
+     "size": 256
+    },
+    "Low": {
+     "detail": "art-source/truck/interior/export/textures/Low/T_Cab_Metal_Detail.png",
+     "normal": "art-source/truck/interior/export/textures/Low/T_Cab_Metal_Normal.png",
+     "size": 128
+    }
+   },
+   "metallic_from": "uv3.y"
+  },
+  "MI_Cab_Decal": {
+   "slot": "MI_Cab_Decal",
+   "textures": {
+    "High": {
+     "atlas": "art-source/truck/interior/export/textures/High/T_Cab_Decal.png",
+     "size": 1024
+    },
+    "Medium": {
+     "atlas": "art-source/truck/interior/export/textures/Medium/T_Cab_Decal.png",
+     "size": 512
+    },
+    "Low": {
+     "atlas": "art-source/truck/interior/export/textures/Low/T_Cab_Decal.png",
+     "size": 256
+    }
+   },
+   "notes": "alpha clip 0.5; colour = vertex tint x atlas RGB; bands: icons v 0.005-0.495, grille 0.505-0.87, stitch 0.88-0.995 (U repeats)"
+  },
+  "MI_Cab_Glass": {
+   "slot": "MI_Cab_Glass",
+   "textures": {
+    "High": {
+     "grime": "art-source/truck/interior/export/textures/High/T_Cab_GlassGrime.png",
+     "size": 512
+    },
+    "Medium": {
+     "grime": "art-source/truck/interior/export/textures/Medium/T_Cab_GlassGrime.png",
+     "size": 256
+    },
+    "Low": {
+     "grime": "art-source/truck/interior/export/textures/Low/T_Cab_GlassGrime.png",
+     "size": 128
+    }
+   },
+   "notes": "transparent, Fresnel reflection (reflection probe), grime from T_Cab_GlassGrime on uv0 (1 tile = 1.1 m)"
+  },
+  "MI_Cab_Display": {
+   "slot": "MI_Cab_Display",
+   "notes": "unlit emissive; each DISPLAY_* object gets its own runtime RenderTexture / UI texture (uv0 0-1)"
+  },
+  "MI_Cab_MirrorRT": {
+   "slot": "MI_Cab_MirrorRT",
+   "notes": "each MIRROR_* quad shows its own mirror camera RenderTexture (uv0 0-1, mirror flip in the camera)"
+  }
+ },
+ "shader_contract": {
+  "name": "Kamion/CabInterior (Shader Graph, URP Lit, opaque)",
+  "per_material": "_Detail (RGBA linear: R variation, G micro-AO, B roughness, A perforation mask), _Normal (tangent space, OpenGL +Y), _AO (UV1 atlas of the LOD), _DetailTiling = 1 (tiling is already in UV0)",
+  "vertex": {
+   "color.rgb": "base tint, sRGB-encoded -> convert to linear in the shader",
+   "color.a": "base roughness (linear)",
+   "uv0": "tiled detail UV (pre-scaled per authoring material)",
+   "uv1": "AO atlas UV (unique, non-overlapping; neutral white block for glass/decals/displays/mirrors/curtains)",
+   "uv2.x": "wear amount (brightens albedo, lowers roughness)",
+   "uv2.y": "detail strength s (0..1)",
+   "uv3.x": "perforation flag (leather centre panels)",
+   "uv3.y": "metallic"
+  },
+  "formula": {
+   "detailMix": "s > 0 ? 1 : 0",
+   "albedo": "tint * lerp(1, (0.7 + 0.6*R) * (0.4 + 0.6*G), detailMix) * lerp(1, A, uv3.x) * (1 + 1.5*uv2.x)",
+   "roughness": "saturate(color.a + (B - 0.5) * 0.4 * detailMix - 0.25*uv2.x)",
+   "normal": "UnpackNormal(_Normal) with strength 1.25*s",
+   "metallic": "uv3.y",
+   "occlusion": "_AO.r on uv1 (URP: occlusion -> indirect/ambient only)"
+  }
+ },
+ "named_objects": {
+  "eye_point": "EYE_POINT (driver ocular point, UNECE R46-based; parent of the cab camera)",
+  "mirrors_render_texture": [
+   "MIRROR_MainL",
+   "MIRROR_MainR",
+   "MIRROR_WideL",
+   "MIRROR_WideR",
+   "MIRROR_Kerb",
+   "MIRROR_Front"
+  ],
+  "displays_runtime_ui": {
+   "DISPLAY_Cluster": "12.3 in instrument cluster, 1560x600 layout (sightline-tested)",
+   "DISPLAY_Infotainment": "10.1 in centre screen",
+   "DISPLAY_Tachograph": "1DIN tacho LCD",
+   "DISPLAY_Radio": "1DIN radio LCD (LOD0/1)",
+   "DISPLAY_BunkPanel": "bunk climate panel LCD (LOD0/1)"
+  },
+  "animated": {
+   "STEERING_WHEEL": {
+    "steer": "Z"
+   },
+   "STALK_Indicator": {
+    "up_down_indicators": "Z",
+    "pull_flash_push_wipe": "Y"
+   },
+   "STALK_Retarder": {
+    "steps_up_down": "Z"
+   },
+   "STALK_AMT": {
+    "up_down_mode": "Z"
+   },
+   "PEDAL_Brake": {
+    "press": "X"
+   },
+   "PEDAL_Accel": {
+    "press": "X"
+   },
+   "LEVER_ParkBrake": {
+    "pull": "X"
+   }
+  },
+  "static": [
+   "CAB_Interior",
+   "CAB_Glass",
+   "CAB_ShellPlaceholder (exterior skin/mirror housings placeholder until A3; disable when the A3 exterior is in)"
+  ]
+ },
+ "textures_root": "art-source/truck/interior/export/textures"
+}

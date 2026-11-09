@@ -9,7 +9,12 @@ import bmesh
 import bpy
 from mathutils import Matrix, Vector
 
-STATE = {"coll": None, "mats": {}}
+STATE = {"coll": None, "mats": {}, "q": 1.0}
+
+
+def Q(n, lo=3):
+    """Tessellation count scaled by the LOD quality factor STATE['q'] (1.0 = LOD0)."""
+    return max(lo, int(round(n * STATE["q"])))
 
 
 def V(*a):
@@ -47,7 +52,7 @@ def bevel(ob, width, seg=2, angle=35, harden=True, clamp=True):
         return ob
     m = ob.modifiers.new("bevel", "BEVEL")
     m.width = width
-    m.segments = seg
+    m.segments = seg if STATE["q"] >= 0.75 else max(1, seg - 1)
     m.limit_method = "ANGLE"
     m.angle_limit = math.radians(angle)
     m.harden_normals = harden
@@ -82,6 +87,7 @@ def wnormal(ob):
 def rrect(w, h, r, n=4, cx=0.0, cy=0.0):
     """Closed rounded rectangle (CCW), r clamped; n segments per corner."""
     r = min(r, w / 2 - 1e-4, h / 2 - 1e-4)
+    n = max(1, int(round(n * STATE["q"])))
     pts = []
     for (ox, oy, a0) in ((w / 2 - r, h / 2 - r, 0), (-w / 2 + r, h / 2 - r, 90),
                          (-w / 2 + r, -h / 2 + r, 180), (w / 2 - r, -h / 2 + r, 270)):
@@ -200,6 +206,7 @@ def box_mm(name, x0, x1, y0, y1, z0, z1, mat, bev=0.0, seg=2):
 
 def cyl(name, c, r, depth, mat, axis="Z", seg=24, bev=0.0, bseg=2, r2=None, rot=None):
     bm = bmesh.new()
+    seg = Q(seg, 8)
     bmesh.ops.create_cone(bm, cap_ends=True, cap_tris=False, segments=seg, radius1=r,
                           radius2=r if r2 is None else r2, depth=depth)
     if axis == "X":
@@ -215,6 +222,7 @@ def cyl(name, c, r, depth, mat, axis="Z", seg=24, bev=0.0, bseg=2, r2=None, rot=
 def rod(name, p0, p1, r, mat, seg=12, r1=None, cap=True):
     p0, p1 = Vector(p0), Vector(p1)
     d = p1 - p0
+    seg = Q(seg, 6)
     bm = bmesh.new()
     bmesh.ops.create_cone(bm, cap_ends=cap, cap_tris=False, segments=seg, radius1=r,
                           radius2=r if r1 is None else r1, depth=d.length)
@@ -227,6 +235,7 @@ def rod(name, p0, p1, r, mat, seg=12, r1=None, cap=True):
 def tube(name, path, r, mat, seg=12, n_per=1, cap=True, radii=None):
     """Swept circle along a 3D polyline (parallel-transport frames)."""
     P = [Vector(p) for p in path]
+    seg = Q(seg, 6)
     loops = []
     prev_n = None
     for i, p in enumerate(P):
@@ -246,7 +255,7 @@ def tube(name, path, r, mat, seg=12, n_per=1, cap=True, radii=None):
 
 def sphere(name, c, r, mat, scale=(1, 1, 1), u=16, v=8):
     bm = bmesh.new()
-    bmesh.ops.create_uvsphere(bm, u_segments=u, v_segments=v, radius=r)
+    bmesh.ops.create_uvsphere(bm, u_segments=Q(u, 8), v_segments=Q(v, 4), radius=r)
     bmesh.ops.scale(bm, vec=Vector(scale), verts=bm.verts)
     bmesh.ops.translate(bm, vec=Vector(c), verts=bm.verts)
     return finish(name, bm, mat, sharp=80)

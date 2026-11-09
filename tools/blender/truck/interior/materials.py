@@ -13,6 +13,7 @@ from geom import STATE
 
 TEX = None  # set by build_interior: absolute path of art-source/truck/interior/textures
 _IMG = {}
+PARAMS = {}  # material name -> authoring parameters (A6: consolidation into game material slots)
 
 
 def img(fname, noncolor=True):
@@ -93,6 +94,8 @@ def pbr(name, tint, tset, tile_m, rough_mul=1.0, rough_add=0.0, nstr=1.0, metal=
     """Tiled detail-set material. wear = (rough_target, tint_mul) driven by the 'wear' colour attribute.
     dust = (amount, rgb) accumulated in cavities (Cycles AO node; baked to the AO atlas for the game)."""
     m, nt, out = _new(name)
+    PARAMS[name] = dict(kind="pbr", tint=tuple(tint), tset=tset, tile=tile_m, rough_mul=rough_mul, rough_add=rough_add,
+                        nstr=nstr, metal=metal, perforate=bool(perforate), sheen=sheen)
     b = nt.nodes.new("ShaderNodeBsdfPrincipled")
     nt.links.new(b.outputs[0], out.inputs["Surface"])
     vec = _uv(nt, tile_m, rot=uv_rot)
@@ -145,6 +148,7 @@ def pbr(name, tint, tset, tile_m, rough_mul=1.0, rough_add=0.0, nstr=1.0, metal=
 
 def simple(name, rgb, rough=0.5, metal=0.0, spec=0.5, coat=0.0, coat_rough=0.05, emit=None, alpha=1.0):
     m, nt, out = _new(name)
+    PARAMS[name] = dict(kind="simple", tint=tuple(rgb), rough=rough, metal=metal)
     b = nt.nodes.new("ShaderNodeBsdfPrincipled")
     nt.links.new(b.outputs[0], out.inputs["Surface"])
     b.inputs["Base Color"].default_value = (*rgb, 1)
@@ -163,6 +167,7 @@ def simple(name, rgb, rough=0.5, metal=0.0, spec=0.5, coat=0.0, coat_rough=0.05,
 def paint(name, rgb, rough=0.28):
     """Exterior cab paint: base + clear coat, a little orange-peel via fine noise bump."""
     m, nt, out = _new(name)
+    PARAMS[name] = dict(kind="simple", tint=tuple(rgb), rough=rough, metal=0.0)
     b = nt.nodes.new("ShaderNodeBsdfPrincipled")
     nt.links.new(b.outputs[0], out.inputs["Surface"])
     b.inputs["Base Color"].default_value = (*rgb, 1)
@@ -209,6 +214,7 @@ def display(name, fname, strength=1.6, rough=0.08, fingerprints=0.0):
 def decal(name, fname, rgb, rough=0.6, alpha_from="alpha", tile_u=None, emit=None):
     """Alpha-tested decal (stitching, printed labels/icons). UVs come from the strip / quad itself."""
     m, nt, out = _new(name)
+    PARAMS[name] = dict(kind="decal", tint=tuple(rgb), rough=rough, tex=fname)
     b = nt.nodes.new("ShaderNodeBsdfPrincipled")
     nt.links.new(b.outputs[0], out.inputs["Surface"])
     tc = nt.nodes.new("ShaderNodeUVMap")
