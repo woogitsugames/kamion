@@ -30,12 +30,38 @@ namespace Game.World
         {
             public Bounds bounds;
             public int runStart, runCount;
+            [Tooltip("Forest HLOD of this cell: index + 1 into hlods (0 = none, ADR 0015)")]
+            public int hlod;
         }
 
         [Serializable]
         public struct Run
         {
             public int prototype, start, count;
+            [Tooltip("Forest trees replaced by the cell's HLOD beyond the switch distance (instance \"fc\", ADR 0015)")]
+            public bool forest;
+        }
+
+        /// <summary>Forest HLOD of one 64 m cell (ADR 0015): canopy + edge walls, region-root space.</summary>
+        [Serializable]
+        public sealed class Hlod
+        {
+            public string id;
+            public Mesh mesh;
+            [Tooltip("Index into materials of submesh 0")]
+            public int materialStart;
+            public int trees;
+            [Tooltip("Index into hlodGroups (the chunk merge this cell belongs to)")]
+            public int group;
+        }
+
+        /// <summary>All HLOD cells of one chunk merged (one submesh per material), drawn when the chunk is beyond the switch distance.</summary>
+        [Serializable]
+        public sealed class HlodGroup
+        {
+            public string id;
+            public Mesh mesh;
+            public int materialStart;
         }
 
         public Prototype[] prototypes = Array.Empty<Prototype>();
@@ -43,5 +69,7 @@ namespace Game.World
         public Cell[] cells = Array.Empty<Cell>();
         public Run[] runs = Array.Empty<Run>();
         public Matrix4x4[] matrices = Array.Empty<Matrix4x4>();
+        public Hlod[] hlods = Array.Empty<Hlod>();
+        public HlodGroup[] hlodGroups = Array.Empty<HlodGroup>();
     }
 }

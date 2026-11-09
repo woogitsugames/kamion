@@ -42,7 +42,7 @@ namespace Game.World
         Bounds[] m_CellBounds;  // cell bounds in world space
         Camera m_Camera;
 
-        public struct Stats { public int Draws, Instances, Triangles, VisibleCells; }
+        public struct Stats { public int Draws, Instances, Triangles, VisibleCells, HlodCells; }
         /// <summary>Counters of the last camera rendered (visual QA / diagnostics).</summary>
         public static Stats Last;
 
@@ -87,7 +87,7 @@ namespace Game.World
 
         // Vegetation settings of the active tier (QualityProfile, ADR 0012 / device runs); the serialized fields below are
         // the fallback when no tier was applied (edit-mode tools without an applier).
-        float m_TreeCull, m_TreeCard, m_ThinStart;
+        float m_TreeCull, m_TreeCard, m_ThinStart, m_HlodSwitch, m_HlodCull;
         int m_TreeShadowMask;
         bool m_Trees = true;
         bool m_LeafA2C = true;
@@ -102,6 +102,9 @@ namespace Game.World
             m_TreeCard = ok ? t.treeCardLodScale : treeLodScaleMax;
             m_ThinStart = ok ? t.treeThinStartM : thinStartM;
             m_TreeShadowMask = ok ? t.treeShadowLodMask : (QualitySettings.lodBias < 1f ? 1 : 3);
+            // forestHlodM: > 0 switch distance, < 0 off (rq_hlod=0), 0 = not set (profile before ADR 0015) → fallback field.
+            m_HlodSwitch = ok && t.forestHlodM != 0f ? Mathf.Max(t.forestHlodM, 0f) : forestHlodM;
+            m_HlodCull = ok && t.forestHlodM != 0f ? t.forestHlodCullM : forestHlodCullM;
             m_Trees = !RenderOverrides.Trees.HasValue || RenderOverrides.Trees.Value;
             bool a2c = !ok || t.leafAlphaToCoverage;
             bool simple = ok && t.simpleFoliage;
@@ -134,7 +137,7 @@ namespace Game.World
         /// <summary>A leaf card or impostor material: alpha-clipped and double sided (InstanceImporter.ProtoMaterial).</summary>
         static bool IsFoliage(Material m) =>
             m != null && m.IsKeywordEnabled("_ALPHATEST_ON") && m.HasProperty("_Cull") && m.GetFloat("_Cull") == 0f &&
-            (m.name.StartsWith("M_leaves_") || m.name.StartsWith("M_impostor_"));
+            (m.name.StartsWith("M_leaves_") || m.name.StartsWith("M_impostor_") || m.name.StartsWith("M_forest_edge_"));
 
         void BuildMaterials(bool simple)
         {
@@ -217,12 +220,33 @@ namespace Game.World
             GeometryUtility.CalculateFrustumPlanes(cam, m_Planes);
             Vector3 cp = cam.transform.position;
             float scale = Mathf.Max(0.05f, QualitySettings.lodBias * distanceScale);
-            float far = cam.farClipPlane;
+            float far = cam.farClipPlane, far2 = far;   // far2: the chunk-merge loop runs before cells (same limit)
             var protos = set.prototypes;
             var cells = set.cells;
             var runs = set.runs;
             var mats = m_World;
             Last = default;
+
+            // Forest HLOD per chunk (ADR 0015): a chunk whose nearest point is beyond the switch distance is drawn as one
+            // merged mesh; its cells then skip their own HLOD draw (and their forest trees, as below).
+            var groups = set.hlodGroups;
+            int ng = groups != null ? groups.Length : 0;
+            if (m_GroupFar == null || m_GroupFar.Length != ng) m_GroupFar = new bool[ng];
+            Vector3 o = m_Origin;
+            for (int g = 0; g < ng; g++)
+            {
+                var mesh = groups[g].mesh;
+                bool gFar = false;
+                if (mesh != null && m_Trees && m_HlodSwitch > 0f)
+                {
+                    var gb = mesh.bounds; gb.center += o;
+                    float d = Mathf.Sqrt(gb.SqrDistance(cp));
+                    gFar = d > m_HlodSwitch;
+                    if (gFar && (m_HlodCull <= 0f || d < m_HlodCull) && d < far2 && GeometryUtility.TestPlanesAABB(m_Planes, gb))
+                        DrawMesh(mesh, groups[g].materialStart, gb);
+                }
+                m_GroupFar[g] = gFar;
+            }
 
             for (int ci = 0; ci < cells.Length; ci++)
             {
@@ -233,9 +257,20 @@ namespace Game.World
                 if (dNear > far) continue;
                 float dFar = FarDistance(b, cp);
                 Last.VisibleCells++;
+                // Forest HLOD (ADR 0015): beyond the tier's switch distance the cell mesh replaces its forest trees.
+                bool hlod = false;
+                if (cell.hlod > 0 && m_Trees && m_HlodSwitch > 0f && set.hlods != null && cell.hlod <= set.hlods.Length)
+                {
+                    var h = set.hlods[cell.hlod - 1];
+                    bool groupDrawn = h.group >= 0 && h.group < ng && m_GroupFar[h.group];
+                    hlod = groupDrawn || dNear > m_HlodSwitch;
+                    if (hlod) Last.HlodCells++;
+                    if (hlod && !groupDrawn && (m_HlodCull <= 0f || dNear < m_HlodCull)) DrawMesh(h.mesh, h.materialStart, b);
+                }
                 for (int ri = cell.runStart; ri < cell.runStart + cell.runCount; ri++)
                 {
                     var run = runs[ri];
+                    if (hlod && run.forest) continue;
                     var p = protos[run.prototype];
                     var ends = m_Ends[run.prototype];
                     if (!m_Trees && m_Thin[run.prototype]) continue;
@@ -308,6 +343,39 @@ namespace Game.World
             for (int l = 0; l < ends.Length; l++)
                 if (d < ends[l] * (l == last ? cullScale : lodScale)) return l;
             return -1;
+        }
+
+        [Tooltip("Forest HLOD switch distance (m to the cell bounds) when no tier was applied; QualityProfile.forestHlodM per tier")]
+        public float forestHlodM = 120f;
+        [Tooltip("Forest HLOD cull distance (0 = none) when no tier was applied")]
+        public float forestHlodCullM = 0f;
+
+        bool[] m_GroupFar;
+
+        /// <summary>A forest HLOD mesh (cell or chunk merge), region-root space, no shadows (beyond every tier's shadow distance).</summary>
+        void DrawMesh(Mesh mesh, int materialStart, Bounds b)
+        {
+            if (mesh == null) return;
+            var mats = m_Mats ?? set.materials;
+            var trs = Matrix4x4.Translate(m_Origin);
+            for (int s = 0; s < mesh.subMeshCount; s++)
+            {
+                var mat = mats[materialStart + s];
+                if (mat == null) continue;
+                var rp = new RenderParams(mat)
+                {
+                    camera = m_Camera,
+                    worldBounds = b,
+                    shadowCastingMode = ShadowCastingMode.Off,
+                    receiveShadows = true,
+                    layer = gameObject.layer,
+                    lightProbeUsage = LightProbeUsage.Off,
+                    reflectionProbeUsage = ReflectionProbeUsage.Off,
+                };
+                Graphics.RenderMesh(rp, mesh, s, trs);
+                Last.Draws++;
+                Last.Triangles += (int)(mesh.GetIndexCount(s) / 3);
+            }
         }
 
         void Append(int proto, int lod, Matrix4x4[] src, int start, int count, Bounds cellBounds)

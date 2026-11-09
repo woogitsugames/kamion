@@ -131,10 +131,74 @@ namespace Game.World.Import
             }
 
             // ---- instances ----
-            var items = new List<(long cell, int proto, Matrix4x4 m)>();
+            var items = new List<(long cell, bool forest, int proto, Matrix4x4 m)>();
             colliders = new Colliders();
             var corridor = r.Chunks.Where(c => c.Corridor).ToList();
             float minE = r.Chunks.Min(c => c.Min.x), minN = r.Chunks.Min(c => c.Min.y);
+            long CellKey(float e, float n) => ((long)Mathf.Floor((n - minN) / CellM) << 20) | (long)Mathf.Floor((e - minE) / CellM);
+
+            // ---- forest HLOD cells (ADR 0015): one mesh per 64 m cell; its trees ("fc") go into that instance cell ----
+            var hlods = new List<WorldInstanceSet.Hlod>();
+            var hlodKey = new Dictionary<string, long>();
+            var hlodOfKey = new Dictionary<long, int>();
+            var hlodChunk = new List<string>();
+            var hlodSrc = new List<int>();
+            int srcIndex = -1;
+            foreach (var (cid, node, chunkId) in r.ForestHlod)
+            {
+                srcIndex++;
+                if (hlodKey.ContainsKey(cid)) { Debug.LogWarning($"[IMPORT] forest HLOD cell {cid} appears twice"); continue; }
+                var h = new WorldInstanceSet.Hlod { id = cid, materialStart = materials.Count };
+                if (node.Extras != null && node.Extras.Get("trees") != null) h.trees = (int)Num(node.Extras.Get("trees"));
+                foreach (var prim in node.Primitives)
+                {
+                    Material hm = null;
+                    if (prim.Material == null || !r.Materials.TryGetValue(prim.Material, out hm))
+                        Debug.LogWarning($"[IMPORT] forest HLOD {cid}: material '{prim.Material}' not in manifest");
+                    materials.Add(hm);
+                }
+                h.mesh = WorldMeshBake.Compact("forest_hlod_" + cid, node.Primitives, new WorldMeshBake.Options { Uv0 = true });
+                AssetDatabase.AddObjectToAsset(h.mesh, set);
+                bytes += WorldMeshBake.GpuBytes(h.mesh);
+                var c = h.mesh.bounds.center;
+                long key = CellKey(c.x, c.z);
+                if (hlodOfKey.ContainsKey(key)) { Debug.LogWarning($"[IMPORT] forest HLOD {cid}: instance cell already has an HLOD"); continue; }
+                hlodKey[cid] = key;
+                hlodOfKey[key] = hlods.Count;
+                hlods.Add(h);
+                hlodChunk.Add(chunkId);
+                hlodSrc.Add(srcIndex);
+            }
+            // Per-chunk merge of the HLOD cells (one submesh per material): drawn instead of the cells when the whole
+            // chunk is beyond the switch distance - a cell draw per material cost 550 draws in the truck-34 view on High.
+            var groups = new List<WorldInstanceSet.HlodGroup>();
+            foreach (var g in Enumerable.Range(0, hlods.Count).GroupBy(i => hlodChunk[i]))
+            {
+                var byMat = new Dictionary<string, List<GlbReader.Primitive>>();
+                foreach (int hi in g)
+                {
+                    hlods[hi].group = groups.Count;
+                    foreach (var prim in r.ForestHlod[hlodSrc[hi]].node.Primitives)
+                    {
+                        string mk = prim.Material ?? "";
+                        if (!byMat.TryGetValue(mk, out var list)) byMat[mk] = list = new List<GlbReader.Primitive>();
+                        list.Add(prim);
+                    }
+                }
+                var grp = new WorldInstanceSet.HlodGroup { id = g.Key, materialStart = materials.Count };
+                var merged = new List<GlbReader.Primitive>();
+                foreach (var kv in byMat.OrderBy(k => k.Key, StringComparer.Ordinal))
+                {
+                    merged.Add(MergePrimitives(kv.Value));
+                    r.Materials.TryGetValue(kv.Key, out var gm);
+                    materials.Add(gm);
+                }
+                grp.mesh = WorldMeshBake.Compact("forest_hlod_chunk_" + g.Key, merged, new WorldMeshBake.Options { Uv0 = true });
+                AssetDatabase.AddObjectToAsset(grp.mesh, set);
+                bytes += WorldMeshBake.GpuBytes(grp.mesh);
+                groups.Add(grp);
+            }
+            int forestTrees = 0, forestOrphans = 0;
             foreach (var f in instanceFiles)
             {
                 if (!File.Exists(f)) throw new FileNotFoundException(f + " missing - rerun build_world.py");
@@ -143,6 +207,13 @@ namespace Game.World.Import
                     var it = Obj(io);
                     string p = Str(it.Get("p"));
                     float e = (float)Num(it.Get("e")), n = (float)Num(it.Get("n")), z = (float)Num(it.Get("z")), yaw = (float)Num(it.Get("yaw"));
+                    long cellKey = CellKey(e, n);
+                    bool forest = false;
+                    if (it.Get("fc") is string fc)
+                    {
+                        if (hlodKey.TryGetValue(fc, out long hk)) { cellKey = hk; forest = true; forestTrees++; }
+                        else forestOrphans++;
+                    }
                     Matrix4x4 m;
                     if (p.StartsWith("tree_"))
                     {
@@ -159,17 +230,17 @@ namespace Game.World.Import
                     }
                     int pi = Proto(p);
                     if (pi < 0) continue;
-                    long cx = (long)Mathf.Floor((e - minE) / CellM), cz = (long)Mathf.Floor((n - minN) / CellM);
-                    items.Add(((cz << 20) | cx, pi, m));
+                    items.Add((cellKey, forest, pi, m));
                     if (colMeshes.TryGetValue(p, out var cb) && cb.HasValue && corridor.Any(c => e >= c.Min.x && e < c.Max.x && n >= c.Min.y && n < c.Max.y))
                         colliders.Items.Add((p, m, cb.Value));
                 }
             }
 
-            items.Sort((a, b) => a.cell != b.cell ? a.cell.CompareTo(b.cell) : a.proto.CompareTo(b.proto));
+            items.Sort((a, b) => a.cell != b.cell ? a.cell.CompareTo(b.cell) : a.forest != b.forest ? a.forest.CompareTo(b.forest) : a.proto.CompareTo(b.proto));
             var cells = new List<WorldInstanceSet.Cell>();
             var runs = new List<WorldInstanceSet.Run>();
             var mats = new Matrix4x4[items.Count];
+            var hlodUsed = new bool[hlods.Count];
             for (int i = 0; i < items.Count;)
             {
                 long cell = items[i].cell;
@@ -178,24 +249,37 @@ namespace Game.World.Import
                 while (i < items.Count && items[i].cell == cell)
                 {
                     int pr = items[i].proto, start = i;
-                    while (i < items.Count && items[i].cell == cell && items[i].proto == pr)
+                    bool forest = items[i].forest;
+                    while (i < items.Count && items[i].cell == cell && items[i].proto == pr && items[i].forest == forest)
                     {
                         mats[i] = items[i].m;
                         var wb = Transform(protos[pr].lods[0].bounds, items[i].m);
                         if (first) { c.bounds = wb; first = false; } else c.bounds.Encapsulate(wb);
                         i++;
                     }
-                    runs.Add(new WorldInstanceSet.Run { prototype = pr, start = start, count = i - start });
+                    runs.Add(new WorldInstanceSet.Run { prototype = pr, start = start, count = i - start, forest = forest });
                     protos[pr].count += i - start;
                 }
                 c.runCount = runs.Count - c.runStart;
+                if (hlodOfKey.TryGetValue(cell, out int hi))
+                {
+                    c.hlod = hi + 1;
+                    c.bounds.Encapsulate(hlods[hi].mesh.bounds);
+                    hlodUsed[hi] = true;
+                }
                 cells.Add(c);
             }
+            for (int hi = 0; hi < hlods.Count; hi++)   // an HLOD cell without instances (cannot happen with MIN_TREES ≥ 8; kept for safety)
+                if (!hlodUsed[hi]) cells.Add(new WorldInstanceSet.Cell { bounds = hlods[hi].mesh.bounds, runStart = runs.Count, runCount = 0, hlod = hi + 1 });
             set.prototypes = protos.ToArray();
             set.materials = materials.ToArray();
             set.cells = cells.ToArray();
             set.runs = runs.ToArray();
             set.matrices = mats;
+            set.hlods = hlods.ToArray();
+            set.hlodGroups = groups.ToArray();
+            Debug.Log($"[IMPORT] forest HLOD: {hlods.Count} cells, {hlods.Sum(h => Enumerable.Range(0, h.mesh.subMeshCount).Sum(k => (long)h.mesh.GetIndexCount(k) / 3))} triangles, " +
+                      $"{forestTrees} forest trees switchable, {forestOrphans} with an unknown fc cell");
             EditorUtility.SetDirty(set);
             bytes += mats.Length * 64L;
             r.MemoryBytes["instances"] = bytes;
@@ -203,6 +287,21 @@ namespace Game.World.Import
                       $"({string.Join(", ", protos.OrderByDescending(q => q.count).Take(8).Select(q => $"{q.name} {q.count}"))}…), " +
                       $"{colliders.Count} prop colliders in the corridor, prototype meshes + matrices {bytes / 1048576.0:F1} MB");
             return set;
+        }
+
+        static GlbReader.Primitive MergePrimitives(List<GlbReader.Primitive> prims)
+        {
+            if (prims.Count == 1) return prims[0];
+            var pos = new List<Vector3>(); var nrm = new List<Vector3>(); var uv = new List<Vector2>(); var idx = new List<int>();
+            foreach (var p in prims)
+            {
+                int b = pos.Count;
+                pos.AddRange(p.Positions);
+                if (p.Normals != null) nrm.AddRange(p.Normals); else nrm.AddRange(Enumerable.Repeat(Vector3.up, p.Positions.Length));
+                if (p.Uv0 != null) uv.AddRange(p.Uv0); else uv.AddRange(new Vector2[p.Positions.Length]);
+                foreach (int i in p.Indices) idx.Add(i + b);
+            }
+            return new GlbReader.Primitive { Material = prims[0].Material, Positions = pos.ToArray(), Normals = nrm.ToArray(), Uv0 = uv.ToArray(), Indices = idx.ToArray() };
         }
 
         /// <summary>Blender Euler XYZ (rx, ry, yaw) about (E, N, U), tree local from the export_yup GLB, uniform scale.</summary>

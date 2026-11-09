@@ -1,5 +1,5 @@
 # ADR 0015 — Forest HLOD cells and LOD1 far facades (world v3.1)
-Status: Proposed (world-builder), 2026-11-09. Extends ADR 0012 (tiers, instancing). Needs the importer / shader
+Status: Accepted (world-builder; Unity part rendering-perf), 2026-11-09. Extends ADR 0012 (tiers, instancing). Needs the importer / shader
 work listed under "Consequences" before it is visible in Unity.
 Evidence: `Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json` → `mesh_budget` (frame estimate by
 category), `docs/reports/visual/world-c/README.md` (v3.1 renders), `tests/gis/test_world_v31.py`.
@@ -44,3 +44,18 @@ category), `docs/reports/visual/world-c/README.md` (v3.1 renders), `tests/gis/te
   walled ramps (+0.9) and barriers (+0.4) of the same release.
 - Without the importer work Unity shows plain-colour LOD1 window zones and keeps drawing all trees (no regression
   in triangles versus v3, no gain either).
+
+## Unity implementation (rendering-perf, 2026-11-09)
+- `RegionImporter` reads `forest_hlod_*` nodes from the Low chunk GLBs (same mesh in both variants); `InstanceImporter`
+  bakes one mesh per cell and, per chunk, one merged mesh (submesh per material), and puts every tree with `fc` into its
+  cell's instance cell as a `forest` run (`WorldInstanceSet.hlods`, `hlodGroups`, `Cell.hlod`, `Run.forest`).
+  534 cells, 77.6 k triangles, 102 150 switchable trees, 0 unknown `fc`. Instances asset 12.0 → 13.8 MB (cells + merges).
+- `WorldInstances`: a chunk whose nearest point is beyond the switch distance draws its merged mesh; otherwise each cell
+  beyond the switch distance draws its own mesh. Either way the cell's forest trees are skipped. No shadows (beyond every
+  tier's shadow distance). Distances per tier in `QualityProfile` (`forestHlodM` Low/Medium 70 m, High/Ultra 120 m;
+  `forestHlodCullM` 1000 m on Low/Medium); launch override `rq_hlod=<m>` (0 = off) for device ablation.
+  Draws, High truck-34 view: 742 with per-cell draws, 282 with the chunk merge.
+- Edge walls go to `Kamion/Vegetation` on `simpleFoliage` tiers like leaf cards; the canopy stays URP Lit (opaque).
+- Far facades: `WorldMeshBake` keeps TEXCOORD_1 (float16×2) on layers with a `window_grid` material; `Kamion/World Surface`
+  keyword `_FAR_FACADE` draws the pane grid (box-filtered, mean coverage once a bay is < 1.5 px, per-pane tone hash,
+  glass smoothness 0.9 for the sky reflection). The material is the base wall's style + `_WindowGrid`/`_GlassColor`.

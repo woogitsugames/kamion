@@ -10,8 +10,8 @@ namespace Game.World.Import
     /// - <see cref="Compact"/>: one Unity mesh from glTF primitives (one submesh per primitive) with compact vertex
     ///   formats: position float32×3 (absolute region metres: half precision would be 6–12 cm at 128–256 m), normal
     ///   SNorm8×4 (or float16×4 where the device/editor rejects SNorm8), COLOR_0 UNorm8×4 only where a shader reads it
-    ///   (terrain ground masks), TEXCOORD_0 float16×2 only where a material samples a texture. TEXCOORD_1 (lane coordinate /
-    ///   distance to edges) is dropped until the surface shader uses it. Meshes are not readable at run time.
+    ///   (terrain ground masks), TEXCOORD_0 float16×2 only where a material samples a texture. TEXCOORD_1 is dropped except for
+    ///   far facades (window grid, ADR 0015). Meshes are not readable at run time.
     /// - <see cref="TerrainBand"/>: "fine near roads, coarse elsewhere" terrain from a chunk's terrain grid.
     /// - <see cref="PositionsOnly"/>: collision meshes.
     /// </summary>
@@ -20,6 +20,8 @@ namespace Game.World.Import
         public struct Options
         {
             public bool Uv0;
+            /// <summary>TEXCOORD_1 float16×2: LOD1 far-facade window grid (ADR 0015). Zero where a primitive has none.</summary>
+            public bool Uv1;
             public bool Colors;
         }
 
@@ -51,6 +53,7 @@ namespace Game.World.Import
             var pos = new Vector3[nv];
             var nrm = new Vector3[nv];
             var uv = o.Uv0 ? new Vector2[nv] : null;
+            var uv1 = o.Uv1 ? new Vector2[nv] : null;
             var col = o.Colors ? new Color32[nv] : null;
             var subs = new List<int[]>();
             int b = 0;
@@ -60,6 +63,7 @@ namespace Game.World.Import
                 if (p.Normals != null) Array.Copy(p.Normals, 0, nrm, b, p.Normals.Length);
                 else for (int i = 0; i < p.Positions.Length; i++) nrm[b + i] = Vector3.up;
                 if (uv != null && p.Uv0 != null) Array.Copy(p.Uv0, 0, uv, b, p.Uv0.Length);
+                if (uv1 != null && p.Uv1 != null) Array.Copy(p.Uv1, 0, uv1, b, p.Uv1.Length);
                 if (col != null)
                 {
                     if (p.Colors != null) Array.Copy(p.Colors, 0, col, b, p.Colors.Length);
@@ -70,10 +74,10 @@ namespace Game.World.Import
                 subs.Add(idx);
                 b += p.Positions.Length;
             }
-            return Build(name, pos, nrm, uv, col, subs);
+            return Build(name, pos, nrm, uv, col, subs, uv1);
         }
 
-        public static Mesh Build(string name, Vector3[] pos, Vector3[] nrm, Vector2[] uv, Color32[] col, List<int[]> subs)
+        public static Mesh Build(string name, Vector3[] pos, Vector3[] nrm, Vector2[] uv, Color32[] col, List<int[]> subs, Vector2[] uv1 = null)
         {
             int nv = pos.Length;
             var nf = NormalFormat();
@@ -86,6 +90,7 @@ namespace Game.World.Import
             int stride = 12 + nsize;
             if (col != null) { attrs.Add(new VertexAttributeDescriptor(VertexAttribute.Color, VertexAttributeFormat.UNorm8, 4)); stride += 4; }
             if (uv != null) { attrs.Add(new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float16, 2)); stride += 4; }
+            if (uv1 != null) { attrs.Add(new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float16, 2)); stride += 4; }
 
             var data = new byte[nv * stride];
             for (int i = 0; i < nv; i++)
@@ -104,7 +109,8 @@ namespace Game.World.Import
                 }
                 o += nsize;
                 if (col != null) { var c = col[i]; data[o] = c.r; data[o + 1] = c.g; data[o + 2] = c.b; data[o + 3] = c.a; o += 4; }
-                if (uv != null) { WriteH(data, o, uv[i].x); WriteH(data, o + 2, uv[i].y); }
+                if (uv != null) { WriteH(data, o, uv[i].x); WriteH(data, o + 2, uv[i].y); o += 4; }
+                if (uv1 != null) { WriteH(data, o, uv1[i].x); WriteH(data, o + 2, uv1[i].y); }
             }
 
             var m = new Mesh { name = name };

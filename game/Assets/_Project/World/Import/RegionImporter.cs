@@ -101,6 +101,10 @@ namespace Game.World.Import
             public int ShaMismatches;
             public readonly List<string> TiersBuilt = new List<string>();
             public WorldInstanceSet Instances;
+            /// <summary>Forest HLOD cells (ADR 0015): node forest_hlod_&lt;cell&gt; of the chunk GLBs (Low variant; same mesh in both).</summary>
+            public readonly List<(string cell, GlbReader.MeshNode node, string chunk)> ForestHlod = new List<(string, GlbReader.MeshNode, string)>();
+            /// <summary>manifest lod_policy.&lt;Low|High&gt;.forest_hlod_m / forest_hlod_cull_m (cross-checked with QualityProfile).</summary>
+            public readonly Dictionary<string, (float switchM, float cullM)> ForestHlodPolicy = new Dictionary<string, (float, float)>();
             public InstanceImporter.Colliders PropColliders;
             public readonly Dictionary<string, long> MemoryBytes = new Dictionary<string, long>();   // "<tier>/<category>"
             public string ScenePath(string tier) => $"{Dir}/{WorldSceneBuilder.SceneNameFor(Region, tier)}.unity";
@@ -128,6 +132,11 @@ namespace Game.World.Import
             if (Math.Abs(Num(ox.Get("x")) - r.AnchorX) > 0.01 || Math.Abs(Num(ox.Get("y")) - r.AnchorY) > 0.01)
                 throw new InvalidOperationException("world_manifest origin != region.yaml origin");
             r.LodSwitchM = Arr(manifest.Get("terrain_lods")).Select(l => (float)Num(Obj(l).Get("suggested_switch_m"))).ToArray();
+            if (manifest.Get("lod_policy") is Dictionary<string, object> pol)
+                foreach (var kv in pol)
+                    if (kv.Value is Dictionary<string, object> pt && pt.Get("forest_hlod_m") != null)
+                        r.ForestHlodPolicy[kv.Key] = ((float)Num(pt.Get("forest_hlod_m")),
+                            pt.Get("forest_hlod_cull_m") != null ? (float)Num(pt.Get("forest_hlod_cull_m")) : 0f);
 
             string routePath = Path.Combine(regionDir, "route_start.json");
             if (File.Exists(routePath))
@@ -155,6 +164,10 @@ namespace Game.World.Import
                 var m = Obj(kv.Value);
                 r.MaterialDefs[kv.Key] = m;
                 r.MaterialSurface[kv.Key] = Str(m.Get("surface"));
+            }
+            foreach (var kv in r.MaterialDefs.ToList())
+            {
+                var m = kv.Value;
                 if (m.Get("collision") is bool col && col) continue;
                 r.Materials[kv.Key] = CreateMaterial(r, kv.Key, m, roadAsphalt);
             }
@@ -182,6 +195,9 @@ namespace Game.World.Import
                 CheckSha(r, lowFile, Str(Obj(c.Get("low")).Get("sha256")), region);
                 var low = GlbReader.Load(lowFile);
                 BakeCollision(r, ch, low);
+                foreach (var node in low.Nodes)
+                    if (node.Name.StartsWith("forest_hlod_") && node.Primitives.Count > 0)
+                        r.ForestHlod.Add((node.Extras != null && node.Extras.Get("cell") is string cid ? cid : node.Name.Substring("forest_hlod_".Length), node, ch.Id));
                 GlbReader high = null;
                 GlbReader High() { if (high == null) { CheckSha(r, highFile, ch.Sha256, region); high = GlbReader.Load(highFile); } return high; }
                 foreach (var tier in tiers)
@@ -224,6 +240,17 @@ namespace Game.World.Import
             float metal = m.Get("metal") != null ? (float)Num(m.Get("metal")) : 0f;
             string surface = Str(m.Get("surface"));
             string path = $"{r.Dir}/Materials/M_{id}.mat";
+            if (m.Get("hlod") is bool hl && hl)
+            {
+                // Forest HLOD (ADR 0015): shared PNG baked from the LOD0 trees (texture_ref, repo-relative). Edge walls are
+                // alpha-masked and double sided; the canopy is opaque. On simpleFoliage tiers WorldInstances swaps the edge
+                // walls to Kamion/Vegetation at run time, like leaf cards.
+                bool edge = m.Get("alpha_cutoff") != null;
+                var t = InstanceImporter.ImportTexture(r, Path.Combine(EditorTools.RepoRoot, Str(m.Get("texture_ref"))), clamp: false);
+                return LitMaterial(path, albedo, rough, metal, t, edge, edge ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, edge, null);
+            }
+            if (m.Get("window_grid") is Dictionary<string, object> grid && m.Get("base") is string baseId)
+                return FarFacadeMaterial(r, path, baseId, albedo, rough, grid, m.Get("glass_color") as List<object>);
             string tex = m.Get("texture") as string;
             if (tex != null || m.Get("emissive") != null)
             {
@@ -247,6 +274,24 @@ namespace Game.World.Import
             var mat = LookDevAssets.WorldMaterial(path, surface, albedo, rough, metal, decal, bg);
             // Terrain reads the generator's ground masks from COLOR_0 (forest floor, unmown grass, bare soil).
             if (mat.HasProperty("_GroundMasks")) mat.SetFloat("_GroundMasks", id == "terrain_grass" ? 1f : 0f);
+            return mat;
+        }
+
+        /// <summary>
+        /// LOD1 far facade (ADR 0015 §2): the base wall's Kamion/World Surface style + keyword _FAR_FACADE, which draws the
+        /// window grid from TEXCOORD_1 (one unit = one bay × one storey; pane rectangle from the manifest window_grid).
+        /// </summary>
+        static Material FarFacadeMaterial(Result r, string path, string baseId, Color albedo, float rough, Dictionary<string, object> grid, List<object> glass)
+        {
+            r.MaterialDefs.TryGetValue(baseId, out var baseDef);
+            string surface = baseDef != null ? Str(baseDef.Get("surface")) : null;
+            var mat = LookDevAssets.WorldMaterial(path, surface, albedo, rough, 0f, false, null);
+            float w = (float)Num(grid.Get("win_w")), sill = (float)Num(grid.Get("sill")), head = (float)Num(grid.Get("head"));
+            mat.EnableKeyword("_FAR_FACADE");
+            mat.SetVector("_WindowGrid", new Vector4(0.5f - w * 0.5f, 0.5f + w * 0.5f, sill, head));
+            var g = glass != null ? new Color((float)Num(glass[0]), (float)Num(glass[1]), (float)Num(glass[2])) : new Color(0.03f, 0.035f, 0.04f);
+            mat.SetColor("_GlassColor", new Color(g.r, g.g, g.b, 1f).gamma);
+            EditorUtility.SetDirty(mat);
             return mat;
         }
 
@@ -323,15 +368,19 @@ namespace Game.World.Import
                 var nd = layer == "buildings" && tier != "High" ? extraBuildingsLod0 : g.Find(layer);
                 if (nd == null || nd.Primitives.Count == 0) continue;
                 var mats = new Material[nd.Primitives.Count];
-                bool uv = false;
+                bool uv = false, uv1 = false;
                 for (int i = 0; i < mats.Length; i++)
                 {
                     string id = nd.Primitives[i].Material;
                     if (id != null && r.Materials.TryGetValue(id, out var mm)) mats[i] = mm;
                     else Debug.LogWarning($"[IMPORT] {ch.Id}/{layer}: material '{id}' not in manifest");
-                    if (id != null && r.MaterialDefs.TryGetValue(id, out var def) && def.Get("texture") != null) uv = true;
+                    if (id != null && r.MaterialDefs.TryGetValue(id, out var def))
+                    {
+                        if (def.Get("texture") != null) uv = true;
+                        if (def.Get("window_grid") != null && nd.Primitives[i].Uv1 != null) uv1 = true;   // far facades (ADR 0015)
+                    }
                 }
-                Add(layer, WorldMeshBake.Compact($"{ch.Id}_{layer}", nd.Primitives, new WorldMeshBake.Options { Uv0 = uv }), mats);
+                Add(layer, WorldMeshBake.Compact($"{ch.Id}_{layer}", nd.Primitives, new WorldMeshBake.Options { Uv0 = uv, Uv1 = uv1 }), mats);
             }
         }
 
