@@ -40,10 +40,34 @@ Decyzje właściciela wpisane jako domyślne: **wstawki koniak**, **tylko cyfrow
 
 **Nadal otwarte (r3):**
 - Niskie słońce w URP-like: wnętrze dalej prawie czarne (A6 #1, decyzja `rendering-perf`: światło kabiny / sonda). Tego w tej rundzie nie ruszałem.
-- Wycieraczki w polu widzenia i słabe odbicie deski w szybie (A6 #7), klawiatura „jak kalkulator” na konsoli (A6 #8), kanciasty zagłówek (A6 #9), atlas AO (A6 #10), drzewa w tle (A6 #11) są w kolejce na A6.1.
+- ~~Wycieraczki, odbicie deski (A6 #7), konsola „jak kalkulator” (A6 #8), kanciasty zagłówek (A6 #9), atlas AO (A6 #10)~~: zrobione w rundzie 3b (niżej). Drzewa w tle (A6 #11) nadal otwarte.
 - Szyba wnętrza leży ok. 5 cm za szybą modelu zewnętrznego, a jej górna krawędź jest na 3,02 m (w modelu zewnętrznym 2,96 m). Do uzgodnienia przy składaniu w Unity: w grze potrzebna jest jedna szyba.
 - Lusterka i dach zastępczego poszycia (`CAB_ShellPlaceholder`) wystają poza nadwozie TRAKT. Po imporcie modelu zewnętrznego poszycie zastępcze się wyłącza.
 - Frit to geometria w grupie `CAB_Interior` (materiał „plastik”, prawie czarny). Jeśli Unity będzie używać szyby z modelu zewnętrznego, ten pas może tam zostać, bo i tak leży po wewnętrznej stronie.
+
+### Runda 3b (2026-11-09, A6.1: reszta uwag r2 do wnętrza)
+
+Koniak, tylko ekran 12,3″ i znak TRAKT zostają domyślne (D19, D20). Nazwy obiektów, zestawy materiałów, punkty obrotu i format manifestu się nie zmieniły (sprawdzone porównaniem manifestu: te same obiekty, materiały i pivoty w LOD0–2), więc generator prefabu A7 działa bez zmian. W manifeście doszły tylko dwa klucze informacyjne: `lods.*.ao_atlas_layout` i `cab_reflection_probe`.
+
+| # (r2) | Uwaga | Co zrobiłem | Dowód |
+|---|---|---|---|
+| A6 #3 | Zestaw kontrolny w koniaku | Cały zestaw (Cycles 512 spp i URP-like, pochmurno i niskie słońce) wyrenderowany od nowa w koniaku. | wszystkie `*_overcast*.jpg`, `*_lowsun*.jpg` |
+| A6 #5 | Przeszycia nie mogą świecić | Sprawdzone na nowych kadrach: przeszycia i pas są zwykłym materiałem (naklejka z kanałem alfa, światło jak powierzchnia pod spodem, mapa AO przeniesiona z niej). Emisji nie ma ani w Cycles, ani w kontrakcie shadera. Nowe przenoszenie AO dla drobnych części (niżej) nie psuje pasa: pierwsza wersja dawała „piłę” na boku oparcia, poprawione przed oddaniem. | `fotel_overcast_urp.jpg`, `pasazer_overcast_urp.jpg` |
+| A6 #6 | Rząd kontrolek na ekranie | Rząd 13 kontrolek z rundy 3 jest na miejscu (zgaszone ciemnoszare, świecą światła mijania i gotowość retardera) i mieści się w polu `telltales_row` testu linii wzroku (PASS). | `zegary_overcast_urp.jpg`, `sightline.json` |
+| A6 #7 | Odbicie deski w szybie, wycieraczki | **Wycieraczki:** w modelu zewnętrznym pióra leżały na 2,095 m, czyli za czarnym pasem (frit kończy się na 2,135 m), więc z fotela nie było ich widać. Teraz leżą tuż nad pasem (dolna krawędź 2,142 m, końcówka 16 mm wyżej), punkty obrotu bez zmian (`exterior/body.py`, eksport zewnętrza powtórzony, `check_export` zewnętrza PASS). Wnętrze ma te same pióra jako zastępstwo do własnych renderów. **Odbicie:** szyba jest pojedynczą taflą, więc odbija na obu powierzchniach (R = 2F/(1+F), ok. 8 % zamiast 4 %), w Cycles i w URP-like. W URP-like szyba odbija **sondę odbić kabiny** (panorama wnętrza renderowana w modelu oświetlenia gry, rzut na bryłę kabiny), czyli to, co gra może zrobić jedną sondą odbić w kabinie. Propozycja dla `rendering-perf` jest w manifeście (`cab_reflection_probe`). Odbicie jest delikatne: widać je na tle ciemniejszych miejsc i w niskim słońcu, a na jasnym asfalcie prawie znika (tak jak w prawdziwej kabinie). Szybka zegarów dostaje zwykłe szkło bez sondy (inaczej odbijałaby fotel). | `r3b_szyba.jpg`, `kierowca_overcast_urp.jpg`, `kierowca_lowsun_urp.jpg` |
+| A6 #8 | Konsola jak kalkulator | Zamiast siatki 2×6 identycznych klawiszy: dwa pakiety przełączników w ciemnych ramkach, moduły różnej szerokości. Rząd 1: duży czerwony przycisk awaryjnych, dwa podwójne kołyskowe (blokada mostu, podnoszenie osi), trzy pojedyncze. Rząd 2: pokrętło ściemniacza, pojedyncze kołyskowe, dwa płaskie podwójne klawisze, jedna zaślepka (w prawdziwych pakietach zawsze są puste miejsca). Kołyskowe są przechylone ±5° (jedna strona wciśnięta), diody tylko przy funkcjach z zatrzaskiem i ciemne, nie białe kropki. Układ (pakiety pod ekranem, nad pokrętłami klimatyzacji) wzięty z proporcji zdjęcia referencyjnego, bez kopiowania kształtów. | `r3b_konsola.jpg`, `lezanka_overcast.jpg` |
+| A6 #9 | Kanciasty zagłówek | 31 przekrojów rozłożonych gęściej przy końcach (zamiast 19 równych), zaokrąglenia 6 segmentów, koniec jako superelipsa. Pierwsza próba usunęła schodki, ale na końcach zrobiła płaską „pigułkę” ze szwem cieniowania; superelipsa to usunęła. | `r3b_zaglowek.jpg`, `lezanka_overcast*.jpg` |
+| A6 #10 | Atlas AO pusty w 25–30 %, drobne wyspy | Zmierzone: w r3 wyspy zajmowały tylko **ok. 39 %** atlasu (2627 wysp, 1886 mniejszych niż 64 teksele). Teraz: rzutowanie 66°, części mniejsze niż 0,01 m² oraz cienkie uszczelki, rurki i listwy biorą wartość z panelu, na którym leżą (jedna wartość na część, bez smug), drobinki z fazek biorą wartość z sąsiedniej ściany, a wyspy pakuje własny pakowacz (obrót do najmniejszego prostokąta, pakowanie „skyline”, największa skala, która się mieści). Wynik LOD0: **66 % pokrycia UV, 786 wysp**, z marginesem wypalania 85 % tekseli z danymi (LOD1 66 %, LOD2 68 %). Duże panele dostały większe wyspy. | `r3b_ao_atlas.jpg`, `ao_atlas_preview.jpg` (czerwone = puste) |
+
+**Pętla visual QA (3b, oglądane po zmniejszeniu do 960 px):**
+1. Pierwszy układ przełączników stał przy lewej krawędzi płyty konsoli; wyśrodkowałem pakiety. Wycieraczki widać od razu w obu modelach światła.
+2. Zagłówek: po gęstszych przekrojach zostały „pigułki” na końcach (opis wyżej), poprawione superelipsą.
+3. Atlas: po wycięciu drobnych wysp na boku oparcia i taśmie pasa pojawiła się „piła” (każdy trójkąt długiego paska brał inną wartość) i smugi na dźwigni przy fotelu. Teraz przenosimy tylko zwarte drobinki (< 12 tekseli długości), a drobne części dostają jedną wartość na całą część. Sprawdzone na samej mapie AO (`--debug-ao`) z sześciu kamer.
+4. Odbicie: pomnożone ×12 do kontroli pokazuje deskę, koniakową listwę pasażera i słupki we właściwych miejscach szyby (rzut na bryłę kabiny działa). W normalnej sile jest słabe, zgodnie z fizyką. Szybka zegarów z sondą pokazywała jasny pas, więc ma zwykłe szkło.
+
+**Wyniki kontroli (3b):** test linii wzroku **PASS**, `check_export.py` **CHECK PASS** (LOD0–2), `check_fit.py` **PASS** (0 wierzchołków poza karoserią), `check_export` zewnętrza **PASS**. Trójkąty: LOD0 **83 117** (budżet ≤ ~85 tys.), LOD1 **38 992**, LOD2 **21 910**.
+
+**Otwarte po 3b:** niskie słońce w URP-like nadal ciemne (A6 #1, `rendering-perf`); drzewa tła (A6 #11); lekki szew AO na górze zagłówka (widać tylko z leżanki, pod światło); odbicie deski w grze zależy od tego, czy `rendering-perf` doda sondę kabiny; brak kadru z prawdziwego URP i z telefonu (A7). Rendery zewnętrza w `truck-A6-exterior/` są sprzed przesunięcia wycieraczek (różnica 5 cm wysokości piór, widoczna tylko z bliska).
 
 ## Co zmieniłem w rundzie 2 (punkty recenzji)
 
@@ -129,7 +153,11 @@ Nowych zasobów zewnętrznych brak. Tło, drzewa i tekstury są generowane skryp
 uv run --no-project --with pillow --with numpy python tools/blender/truck/interior/make_textures.py
 blender -b --factory-startup --python tools/blender/truck/interior/build_interior.py -- --out docs/reports/visual/truck-A6 --samples 512 --stats docs/reports/visual/truck-A6/stats.json
 blender -b --factory-startup --python-exit-code 1 --python tools/blender/truck/interior/sightline_test.py -- --report docs/reports/visual/truck-A6/sightline.json
+blender -b --factory-startup --python tools/blender/truck/exterior/a6_export.py -- --no-renders   # 3b: tylko gdy zmienia się zewnętrze (wycieraczki)
 blender -b --factory-startup --python tools/blender/truck/interior/a6_export.py -- --lods 0,1,2 --urp-out docs/reports/visual/truck-A6
+blender -b --factory-startup --python-exit-code 1 --python tools/blender/truck/check_fit.py -- --report art-source/truck/exterior/export/fit_check.json
+uv run --no-project --with pillow --with numpy python tools/blender/truck/interior/ao_preview.py   # ao_atlas_preview.jpg (czerwone = puste)
+# arkusze 3b (r3b_konsola, r3b_zaglowek, r3b_szyba): beforeafter.py z wycinków kadrów r3 i 3b
 # arkusze r3: uv run --no-project --with pillow python tools/blender/truck/interior/beforeafter.py OUT.jpg TYTUŁ lewy.jpg etykieta prawy.jpg etykieta
 blender -b --factory-startup --python-exit-code 1 --python tools/blender/truck/interior/check_export.py
 python tools/blender/truck/interior/variants.py --out docs/reports/visual/truck-A6
