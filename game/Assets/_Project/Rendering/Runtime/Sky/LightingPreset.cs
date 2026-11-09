@@ -75,5 +75,29 @@ namespace Game.Rendering
             p.exposureCompensation = 1.0f; p.lookContrast = -8f; p.lookSaturation = 0f; p.lookShadowLift = 0.025f;
             return p;
         }
+
+        /// <summary>
+        /// Low sun (track A7 cab check, visual review r2 A6 #1): 9 deg elevation, azimuth 60 deg (a June morning in
+        /// Bialystok, ~05:30). At the WorldC spawn (heading ~209 deg) the sun is behind-left of the cab: the hard case,
+        /// windscreen and passenger side in shade. WORKING_VALUE.
+        /// </summary>
+        public static LightingPreset CreateLowSun()
+        {
+            var p = CreateInstance<LightingPreset>();
+            p.name = "LP_LowSun";
+            p.sunElevationDeg = 9f; p.sunAzimuthDeg = 60f; p.turbidity = 3f; p.overcast = 0f; p.visibilityKm = 15f;
+            p.exposureCompensation = 1.2f; p.lookContrast = -10f; p.lookSaturation = -3f; p.lookShadowLift = 0.03f;
+            return p;
+        }
+
+        /// <summary>Dusk (track A7): sun 1 deg above the horizon at azimuth 300 deg (summer evening), hazy. WORKING_VALUE.</summary>
+        public static LightingPreset CreateDusk()
+        {
+            var p = CreateInstance<LightingPreset>();
+            p.name = "LP_Dusk";
+            p.sunElevationDeg = 1f; p.sunAzimuthDeg = 300f; p.turbidity = 4f; p.overcast = 0.2f; p.visibilityKm = 12f;
+            p.exposureCompensation = 1.2f; p.lookContrast = -10f; p.lookSaturation = -3f; p.lookShadowLift = 0.035f;
+            return p;
+        }
     }
 }
