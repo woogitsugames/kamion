@@ -235,7 +235,9 @@ namespace Game.Editor.Setup
                 e.FindPropertyRelative("name").stringValue = t.name;
                 e.FindPropertyRelative("customRenderPipeline").objectReferenceValue = assets[i];
                 e.FindPropertyRelative("vSyncCount").intValue = 0;
-                e.FindPropertyRelative("antiAliasing").intValue = 0; // URP asset owns MSAA
+                // URP owns MSAA (URP_<tier>.m_MSAA) and mirrors it into QualitySettings.antiAliasing whenever the level becomes
+                // active; write the same value so the editor does not leave a dirty ProjectSettings diff behind.
+                e.FindPropertyRelative("antiAliasing").intValue = t.msaa > 1 ? t.msaa : 0;
                 e.FindPropertyRelative("shadowDistance").floatValue = t.shadowDistance;
                 e.FindPropertyRelative("lodBias").floatValue = t.lodBias;
                 e.FindPropertyRelative("anisotropicTextures").intValue = t.anisotropic;
