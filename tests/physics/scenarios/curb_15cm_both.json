@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "curb_15cm_both",
+  "description": "15 cm full-width step up and down at 8 km/h",
+  "spec": "docs/04 s6.11",
+  "ground": {
+    "gradePercent": 0,
+    "boxes": [
+      {
+        "minX": -5,
+        "maxX": 5,
+        "minZ": 20,
+        "maxZ": 35,
+        "height": 0.15
+      }
+    ]
+  },
+  "initial": {
+    "speedKmh": 8,
+    "gear": 0
+  },
+  "duration": 30,
+  "driver": {
+    "type": "speedhold",
+    "targetKmh": 8,
+    "steer": 0,
+    "selector": "D"
+  },
+  "checks": [
+    {
+      "metric": "max_dv_step_ms",
+      "max": 0.35,
+      "status": "WORKING_VALUE",
+      "source": "docs/04 s6.11 continuous contact / no teleport; 0.35 m/s change per 10 ms step (~3.5 g) limit"
+    },
+    {
+      "metric": "max_pos_jump_m",
+      "max": 1e-06,
+      "status": "WORKING_VALUE",
+      "source": "position change fully explained by velocity (no teleport)"
+    },
+    {
+      "metric": "final_z_m",
+      "min": 45,
+      "status": "WORKING_VALUE",
+      "source": "vehicle actually crosses the obstacle"
+    },
+    {
+      "metric": "max_fz_ratio",
+      "max": 4.0,
+      "status": "WORKING_VALUE",
+      "source": "no extreme wheel-load spikes (bump-stop engagement allowed)"
+    },
+    {
+      "metric": "max_abs_roll_deg",
+      "max": 6.0,
+      "status": "WORKING_VALUE",
+      "source": "no roll-over tendency"
+    }
+  ]
+}

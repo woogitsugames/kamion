@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "id": "launch_6pct_uphill_light_throttle",
+  "description": "Uphill 6% launch with 40% throttle (hill start aid)",
+  "spec": "docs/04 s6.2",
+  "ground": {
+    "gradePercent": 6
+  },
+  "initial": {
+    "headingDeg": 0
+  },
+  "duration": 25,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 2.0,
+        "throttle": 0.4,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "rollback_m",
+      "max": 0.05,
+      "status": "WORKING_VALUE",
+      "source": "docs/04 s6.2 'bez cofania sie'"
+    },
+    {
+      "metric": "stalled",
+      "max": 0,
+      "status": "WORKING_VALUE",
+      "source": "engine must not stall"
+    },
+    {
+      "metric": "time_to_kmh",
+      "arg": 15,
+      "min": 2,
+      "max": 25,
+      "status": "WORKING_VALUE",
+      "source": "plausibility band from power-to-weight (368 kW / 7.5 t); no sourced solo-tractor acceleration data"
+    }
+  ]
+}

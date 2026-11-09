@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "id": "brake_80_0_wet",
+  "description": "80->0 km/h full service brake, ABS on, wet asphalt",
+  "spec": "docs/04 s6.5",
+  "ground": {
+    "gradePercent": 0,
+    "surface": "wet_asphalt"
+  },
+  "initial": {
+    "speedKmh": 80,
+    "gear": 11
+  },
+  "duration": 15,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 0.5,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "stop_distance_m",
+      "min": 45,
+      "max": 85,
+      "status": "WORKING_VALUE",
+      "source": "v^2/(2 a) with WORKING mu plus 0.3-0.5 s pneumatic build-up; no sourced solo-tractor data"
+    },
+    {
+      "metric": "mfdd_ms2",
+      "min": 3.0,
+      "max": 5.5,
+      "status": "WORKING_VALUE",
+      "source": "MFDD band from wet peak mu ~0.5 (WORKING_VALUE)"
+    },
+    {
+      "metric": "max_lateral_deviation_m",
+      "max": 0.5,
+      "status": "WORKING_VALUE",
+      "source": "straight-line stability under ABS braking"
+    },
+    {
+      "metric": "max_yaw_rate_dps",
+      "max": 2.0,
+      "status": "WORKING_VALUE",
+      "source": "no spin / yaw instability under ABS braking"
+    }
+  ]
+}

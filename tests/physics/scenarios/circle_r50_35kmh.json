@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "circle_r50_35kmh",
+  "description": "Constant-radius circle R=50 m (rear-axle path) at 35 km/h, right turn, dry asphalt",
+  "spec": "docs/04 s6.7",
+  "ground": {
+    "gradePercent": 0
+  },
+  "initial": {
+    "speedKmh": 35,
+    "gear": 0
+  },
+  "duration": 40,
+  "driver": {
+    "type": "circle",
+    "targetKmh": 35,
+    "radius": 50,
+    "direction": 1
+  },
+  "checks": [
+    {
+      "metric": "radius_error_m",
+      "from": 20,
+      "max": 0.5,
+      "status": "WORKING_VALUE",
+      "source": "path follower + vehicle hold the circle"
+    },
+    {
+      "metric": "lat_accel_ms2",
+      "from": 20,
+      "min": 1.701,
+      "max": 2.079,
+      "status": "DERIVED",
+      "source": "v^2/R = 1.890 m/s^2 +/-10%"
+    },
+    {
+      "metric": "steer_vs_ackermann",
+      "arg": 3.7,
+      "from": 20,
+      "min": 0.9,
+      "max": 1.6,
+      "status": "DERIVED",
+      "source": "mean steer angle / atan(L/R), L=3.70 m: ~1 (kinematic) at low speed, >1 = understeer"
+    },
+    {
+      "metric": "max_abs_roll_deg",
+      "from": 20,
+      "max": 3.0,
+      "status": "WORKING_VALUE",
+      "source": "body roll sanity below 0.2 g"
+    },
+    {
+      "metric": "mean_speed_kmh",
+      "from": 20,
+      "min": 33.5,
+      "max": 36.5,
+      "status": "WORKING_VALUE",
+      "source": "speed controller holds the target"
+    }
+  ]
+}

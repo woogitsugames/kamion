@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "id": "standstill_flat_parking",
+  "description": "Parked on flat dry asphalt, spring brake on, neutral, 5 min",
+  "spec": "docs/04 s6.1",
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "headingDeg": 0
+  },
+  "duration": 305,
+  "dt": 0.01,
+  "substeps": 4,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": true,
+        "selector": "N"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "drift_m",
+      "from": 5,
+      "max": 0.005,
+      "status": "WORKING_VALUE",
+      "source": "docs/04 s6.1 'no drift/oscillation 5 min'; 5 mm over 300 s chosen as the no-creep threshold"
+    },
+    {
+      "metric": "max_speed_after_ms",
+      "from": 5,
+      "max": 0.001,
+      "status": "WORKING_VALUE",
+      "source": "no oscillation: |v| < 1 mm/s after settling"
+    },
+    {
+      "metric": "max_abs_roll_deg",
+      "from": 5,
+      "max": 0.5,
+      "status": "WORKING_VALUE",
+      "source": "sanity: vehicle stays level laterally"
+    }
+  ]
+}

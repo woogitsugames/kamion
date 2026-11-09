@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "steer_sign_forward_right",
+  "description": "Forward 15 km/h, steer +0.25 (right)",
+  "spec": "docs/04 s6.15",
+  "ground": {
+    "gradePercent": 0
+  },
+  "initial": {
+    "speedKmh": 15
+  },
+  "duration": 8,
+  "driver": {
+    "type": "speedhold",
+    "targetKmh": 15,
+    "steer": 0.25,
+    "selector": "D"
+  },
+  "checks": [
+    {
+      "metric": "yaw_rate_mean_dps",
+      "from": 3,
+      "min": 1.0,
+      "status": "DERIVED",
+      "source": "docs/04 s6.15 steering command sign -> yaw sign (Unity frame: +steer = right = +yaw about +Y)"
+    },
+    {
+      "metric": "lateral_displacement_m",
+      "min": 0.5,
+      "status": "DERIVED",
+      "source": "moves towards +X (right)"
+    }
+  ]
+}

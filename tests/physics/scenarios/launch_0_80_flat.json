@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "id": "launch_0_80_flat",
+  "description": "Standstill on flat dry asphalt, release service brake, full throttle, AMT auto",
+  "spec": "docs/04 s6.2, s6.3",
+  "ground": {
+    "gradePercent": 0
+  },
+  "initial": {},
+  "duration": 45,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 1.0,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "rollback_m",
+      "max": 0.02,
+      "status": "WORKING_VALUE",
+      "source": "no rollback on flat"
+    },
+    {
+      "metric": "stalled",
+      "max": 0,
+      "status": "WORKING_VALUE",
+      "source": "engine must not stall"
+    },
+    {
+      "metric": "min_rpm",
+      "from": 1.0,
+      "min": 550,
+      "status": "WORKING_VALUE",
+      "source": "engine stays near/above idle 600 rpm"
+    },
+    {
+      "metric": "time_to_kmh",
+      "arg": 60,
+      "min": 7,
+      "max": 20,
+      "status": "WORKING_VALUE",
+      "source": "plausibility band from power-to-weight (368 kW / 7.5 t); no sourced solo-tractor acceleration data"
+    },
+    {
+      "metric": "time_to_kmh",
+      "arg": 80,
+      "min": 12,
+      "max": 32,
+      "status": "WORKING_VALUE",
+      "source": "plausibility band from power-to-weight (368 kW / 7.5 t); no sourced solo-tractor acceleration data"
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "max": 0.1,
+      "status": "WORKING_VALUE",
+      "source": "no jolts > 10 m/s^2 within one 10 ms step (shifts, clutch lock-up)"
+    }
+  ]
+}
