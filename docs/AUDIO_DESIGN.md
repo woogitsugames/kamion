@@ -87,7 +87,12 @@ Stałe ziarno `ENGINE_SEED`: odchyłki amplitudy cylindrów (σ 8%), wyprzedzeni
 - Kompilacja sprawdzona Roslynem Unity (`Editor/Data/DotNetSdkRoslyn/csc.dll`, referencje `UnityEngine.CoreModule/AudioModule` 6000.3.28f1, netstandard 2.1) — 0 błędów; ostrzeżenia tylko CS0649 dla `[SerializeField]` (normalne poza Unity). **Nie testowane w edytorze ani na telefonie.**
 - `tools/audio/runtime_sim.py` to wierne lustro algorytmu (te same stałe, ten sam LCG) — na nim renderowane jest demo i testy crossfade. Zmiana w jednym = zmiana w drugim.
 
-### Import do Unity (dla lidera / następny krok)
+### Integracja w grze (Etap 2, ADR 0009) — zrobione
+- `Editor/Audio/VehicleAudioImporter.cs` (menu Kamion/Audio/Import vehicle audio, batch `Game.Editor.Audio.VehicleAudioImporter.ImportBatch`, `scripts/build-lab.ps1`): czyta `manifest.json`, kopiuje WAV do `Assets/_Project/Audio/Generated/Clips` (gitignored), import ADPCM (pętle: Compressed In Memory; one-shoty: Decompress On Load), tworzy 4 `EngineSoundBank` + `VehicleAudioLibrary` w `Resources/VehicleAudio`. Build importuje sam, `build-android.ps1` generuje WAV, gdy ich brak (`render_all.py --no-previews`, podglądy OGG w repo nietknięte).
+- `Gameplay/TruckAudioController.cs`: `IEngineAudioState` z modelu (rpm, `Engine.LastLoad`, zapotrzebowanie gazu, `EngineBrakeState`, `Boost`); blend kabina/zewnątrz z trybu kamery (0,15 s); one-shoty ze zdarzeń modelu: zwolnienie hamulca po przytrzymaniu, hamulec postojowy zał./zwol., przedmuch osuszacza przy odcięciu regulatora, start zmiany biegu AMT; pętle opon i wiatru od prędkości.
+- Sprawdzone: w scenie DrivingLab na biegu jałowym grają 2 głosy silnika (test PlayMode); APK: „Sounds” 13,1 MB. **Nie odsłuchane** (agent nie słyszy; telefon zablokowany).
+
+### Import do Unity (historia — wykonane w Etapie 2)
 1. `cd tools/audio && uv run python render_all.py` → `art-source/audio/generated/` (≈47 MB WAV, gitignored).
 2. Skopiować WAV do `game/Assets/_Project/Audio/Clips/` (lub dodać Editor-importer czytający `manifest.json` i tworzący 4 `EngineSoundBank`).
 3. Ustawienia importu klipów silnika: **Load Type = Compressed In Memory, Compression = ADPCM**, Preload, sample rate 48 kHz (opcja: override 44,1 kHz dla Low).

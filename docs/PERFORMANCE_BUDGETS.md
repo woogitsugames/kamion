@@ -26,5 +26,17 @@ Physics fixed step, vehicle, world streaming, rendering CPU, GPU — not budgete
 | GC allocations per fixed step | 0 | PlayMode `FixedStep_ZeroGcAllocation` (2000 steps) | ✅ |
 | Galaxy A16, DrivingLab with autopilot (R50, 40 km/h): FPS p50/p95/p99, PSS, temperature | — | `pwsh scripts/device-metrics.ps1 -Launch -DurationSeconds 90 -Scene DrivingLab -Autopilot circle50 -Speed 40` | **not measured — phone locked (2026-11-09)** |
 
+### Vehicle combination (Stage 2)
+| What | Value | Where measured | Status |
+|---|---|---|---|
+| Tractor + trailer solver + Unity adapter per step (excl. PhysX simulate), 40 t, cruising with steer | **61 µs mean** (solo tractor 23 µs) | desktop editor (Mono), PlayMode `Combination_FixedStep_ZeroGcAllocation` | **desktop only — not a phone number** |
+| Same core, .NET runner (Release, no Unity) | p50 6.4–6.7 µs | `docs/PHYSICS_VALIDATION.md` §4 | desktop |
+| Ground raycasts per step, combination | 152 (10 wheel ends × 15 + 2 landing-gear legs) → 15 200/s | by construction | measure on A16; `RaycastCommand` batching is the fallback |
+| GC allocations per combination step | 0 | PlayMode, 2000 steps | ✅ |
+| Extra cameras in the cab view | 2 mirror cameras alternating (≈ 1 extra scene render/frame on Low/Medium), render textures 224/288/384/512 px high (Low/Medium/High/Ultra), far clip 150/250/400 m, no shadows/post/MSAA | `VehicleCameraBudget` | WORKING_VALUE — measure GPU/CPU on A16 |
+| Reversing camera | only in R (or forced), 320×180 … 640×360, every 2nd frame on Low/Medium | `VehicleCameraBudget` | WORKING_VALUE |
+| Vehicle audio memory | ADPCM Compressed In Memory, build report "Sounds" 13.1 MB | `artifacts/logs/build-*.log` | matches AUDIO_DESIGN §6 estimate (≈ 13 MB) |
+| Galaxy A16, DrivingLab, 40 t combination on autopilot | — | `pwsh scripts/device-metrics.ps1 -Launch -DurationSeconds 90 -Scene DrivingLab -Autopilot circle50 -Speed 40 -Trailer 40` | **not measured — phone locked** |
+
 ## Measured: empty Boot scene on Galaxy A16 (Stage 0 baseline)
 _Not measured yet — see `docs/reports/GATE-0.md` for the state of the measurement._

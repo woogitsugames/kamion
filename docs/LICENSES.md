@@ -61,3 +61,4 @@ Tylko pipeline, nie trafiają do buildu: numpy (BSD-3), scipy (BSD-3), soundfile
 | ID | Source | Licence | Use |
 |---|---|---|---|
 | `font-inter` | Inter (Rasmus Andersson), file shipped with Blender 4.2 (`datafiles/fonts`) | SIL Open Font License 1.1 | rasterised text in cab display textures (art-source/truck/interior/textures); font file not in repo |
+| `font-inter-ui` | Inter Regular (The Inter Project Authors), `Inter-Regular.otf` copied unmodified from the Unity URP package samples (`com.unity.render-pipelines.core` Samples~/Common/TextMesh Pro) | SIL Open Font License 1.1 (licence text shipped next to it: `game/Assets/_Project/UI/Resources/Fonts/Inter-OFL.txt`; "Inter" is a Reserved Font Name, file not modified or renamed) | all uGUI text (driving HUD, Boot menu, diagnostics overlay); in the APK |

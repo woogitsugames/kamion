@@ -1,0 +1,26 @@
+# ADR 0009 — Tractor + semi-trailer in Unity, extra vehicle cameras, vehicle audio import
+Status: Accepted (Stage 2 integration), 2026-11-09
+Builds on ADR 0004 (physics), 0007 (audio), 0008 (Stage 1 adapter). Code: `Vehicle/Runtime` (TrailerBody, CombinationPlacement, GrayboxTrailerBuilder, RenderTextureMirror, ReversingCamera), `Gameplay` (DrivingLabBootstrap, TruckAudioController), `Editor/Audio/VehicleAudioImporter.cs`.
+
+## Decisions
+| Topic | Decision | Why |
+|---|---|---|
+| Two bodies | Tractor and trailer are two PhysX Rigidbodies. `VehicleBody.Tick` steps the core's `CombinationModel` (tractor, air lines, trailer, fifth wheel) once per fixed step and applies `TractorForce/Torque` and `TrailerForce/Torque` with `AddForce` + `AddTorque`. No PhysX joint. Solo keeps the Stage 1 force-at-contact-point path. The trailer has no FixedUpdate of its own. | PHYSICS_VALIDATION §2: the coupling impulses are already inside the force totals. One tick for both bodies = one ordering. Measured kingpin error in Unity ≤ 0.14 mm (runner ≤ 0.16 mm). |
+| Mass properties | Trailer mass/CoM/inertia from `TrailerModel.MassProps` (cargo included). A load change rebuilds the trailer model and the combination (lab spawn). | Same rule as the tractor (never from colliders). |
+| Placement | `CombinationPlacement` (port of the runner's `Setup`) places the tractor on its static axle offsets with the kingpin load, the coupled trailer pitched so its axles sit on the ground, the parked trailer on its legs pressed in by the static nose load. | Spawns without a suspension transient (drift after spawn 0.3 mm instead of 22 mm). |
+| Tractor ↔ trailer collision | Colliders stay enabled between the two bodies. The trailer's body collider starts above the coupler plate (1.22 m), the tractor has no collider at the fifth wheel. | Up to the 90° articulation stop the trailer corner never reaches the cab (2.0 m vs 2.2 m), so contact only happens when something is wrong (reversing into a parked trailer without coupling). |
+| Coupling | Arm the jaw (`CouplingArmed`), the core captures within its window (5 cm horizontal, 12 cm vertical, < 1.5 m/s). Uncoupling only with the legs down (core rule). HUD shows the kingpin-to-jaw offset. | Core behaviour unchanged. The 5 cm lateral window is tight for hand driving: request R5 below. |
+| Mirrors | Each main mirror: a camera on the reflected sight line from the design eye point, render texture (Medium 288 px high), shown flipped on the glass and, by default, as HUD insets in the cab view. Mirrors render only in the cab view; two mirrors alternate frames (Medium/Low), no shadows/post/MSAA, far clip 150–400 m by tier. | Usable mirrors at any head angle (visual review #14) for one extra scene render per frame. Static mirror geometry, not head-tracked reflection. |
+| Reversing cameras | Trailer rear portal (when coupled) or behind the cab looking at the fifth wheel (solo, coupling aid). Shown while in R or forced on, every 2nd frame on Low/Medium. | docs/03 Stage 2 "cofanie z kamerą naczepy". |
+| Visual QA HUD | HUD rendered in its own UI-layer pass and composited over the world image. | A Screen Space - Camera canvas shared with the world camera let scene objects draw over buttons. |
+| Vehicle audio import | Editor importer reads `art-source/audio/generated/manifest.json`, copies the WAVs into `Assets/_Project/Audio/Generated` (gitignored), ADPCM Compressed In Memory (loops) / Decompress On Load (one-shots), builds 4 `EngineSoundBank`s + `VehicleAudioLibrary` in Resources. The build imports when needed; `build-android.ps1` renders the WAVs when missing. | WAVs (47 MB) stay out of git (ADR 0007); the APK carries 13.1 MB of ADPCM. Missing library = silent game with a warning, not a broken build. |
+| Audio drive | `TruckAudioController`: rpm, fuelling load (`Engine.LastLoad`), throttle demand, engine-brake state and boost from the model; cab/exterior blend from the camera mode; one-shots from model events (service-brake release after a held application, spring brake set/release, governor cut-out purge, AMT shift start). | AUDIO_DESIGN §5 interface; events derived, not scripted. |
+
+## Requests to vehicle-physics (core API / data, not changed here)
+- **R5:** fifth-wheel capture uses one horizontal radius (`captureDistance` 0.05 m). A real jaw throat guides the kingpin ±0.15–0.2 m laterally while reversing. Propose a lateral capture window + a guide force (or a separate lateral tolerance) so coupling by hand on a phone is realistic.
+- **R6:** at standstill on locked brakes, raising the legs leaves the kingpin at 0.67× its static load until the combination rolls (tire stick shares the nose load; 0.97× once rolling). Plausible, but check against the runner.
+- **R7:** `CombinationModel` cannot swap trailers or rebuild after a load change; the adapter creates a new combination. A `SetTrailer(TrailerModel, bool coupled)` would avoid re-creating the tractor model.
+
+## Consequences
+- Combination step = 152 raycasts (10 wheel ends × 15 + 2 legs). Desktop editor cost 61 µs/step mean (Mono, editor) vs 23 µs solo — **not a phone number**; measure on the A16.
+- Mirrors and the reversing camera add up to one extra camera render per frame in the cab view; to be measured on the A16 (PERFORMANCE_BUDGETS).

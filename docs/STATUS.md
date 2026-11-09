@@ -14,3 +14,9 @@
 - Plan/checklist: `docs/plan/STAGE-1.md`. Owner report draft: `docs/reports/GATE-1-draft.md`.
 - Blocked / needs owner: Galaxy A16 PIN-locked during the whole session → no install/run/FPS/screenshot for Gate 0 or Gate 1; owner feel test pending (steering range, self-centre, gyro sign, pedal curves).
 - Open requests: surface table with sourced values in the core (vehicle-physics); AMT shift pitch rock on the empty tractor; trailer in DrivingLab (stretch).
+
+## Stage 2 — trailer, air brakes, full driveline in Unity (integration, 2026-11-09)
+- Done: two-body adapter (tractor + trailer Rigidbodies, `CombinationModel`, no PhysX joint, ADR 0009); graybox 13.6 m curtainsider; cargo empty / 24 t / 40 t; coupling, landing gear, uncoupling; DrivingLab presets Solo/Pusta/24 t/40 t, coupling bay, 5-bay loading dock with bumpers, 600 m 7 % road, wet skid pad, ABS/EBS fault toggle; stalk (HS, R1–R4), brake cruise, air gauges, STOP/ABS/HS/RET lamps, articulation telemetry; reversing cameras; render-texture mirrors + cab insets; engine audio imported from tools/audio and driven by the physics; visual review #14 UI fixes (Inter font). Tests: EditMode 18/18, PlayMode 26/26 (runner match 0.2–2 %: 80→0 ABS 38.9/40.6 m, hill start 4.58 s, descent 30.0 km/h, jackknife 80°). APK builds (48 MB).
+- Plan/checklist: `docs/plan/STAGE-2.md`. Owner report draft: `docs/reports/GATE-2-draft.md`.
+- Blocked / needs owner: Galaxy A16 still PIN-locked → no device numbers for Gates 0/1/2, no feel test; decision mirror insets vs look-around.
+- Open requests: R5 jaw throat (lateral capture), R6 standstill kingpin share, R7 `CombinationModel.SetTrailer` (vehicle-physics); audio listening test + missing layers; mirror/raycast cost on the A16 (rendering-perf).

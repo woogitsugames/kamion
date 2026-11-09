@@ -32,6 +32,7 @@ Mobilny (Android → iOS) realistyczny symulator ciężarówki z naczepą. Unity
 - Build + instalacja + start + logcat: `pwsh scripts/build-android.ps1 -Install -Run [-Serial <s> | -AllDevices] [-LogcatSeconds 60] [-Tier Low|Medium|High|Ultra] [-Fps 30|60] [-SkipBuild] [-Development]`
 - Pomiar na telefonie (CSV klatek, p50/p95/p99, PSS, temp., zrzut ekranu): `pwsh scripts/device-metrics.ps1 [-Launch -DurationSeconds 90] [-Serial <s> | -AllDevices]` → `artifacts/device/<serial>/<ts>/`
 - Testy EditMode/PlayMode: `pwsh scripts/test.ps1 [-Platform EditMode|PlayMode]` → `artifacts/tests/*.xml`
+- Plac testowy + import dźwięku pojazdu z kodu: `pwsh scripts/build-lab.ps1` (WAV: `cd tools/audio; uv run python render_all.py`)
 - Kamery kontrolne (visual QA): `pwsh scripts/visual-qa.ps1 -Scene Boot [-Tier Medium]` → `artifacts/visual-qa/<scene>/<id>.png` (GPU wymagane, bez `-nographics`)
 - Wejścia batchmode: `Game.Editor.Build.BuildCommands.BuildAndroidApk`, `Game.Editor.Setup.ProjectSetup.ApplyAll`, `Game.Editor.VisualQA.VisualQaRunner.RenderControlCameras`
 - Telefon musi być odblokowany (skrypty nie wpisują PIN-u; zablokowany = pomiar odrzucony).
