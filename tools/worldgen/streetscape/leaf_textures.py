@@ -112,7 +112,7 @@ def bark(species, seed, n=256):
             a[y:y + h, x0:x0 + w] = (35, 33, 30)
         a *= rng.uniform(0.85, 1.0, (n, 1, 1))
     else:
-        base = {"pine": (112, 84, 66), "alder": (78, 72, 64), "maple": (92, 86, 76), "linden": (84, 78, 70),
+        base = {"pine": (104, 86, 74), "alder": (78, 72, 64), "maple": (92, 86, 76), "linden": (84, 78, 70),
                 "shrub": (80, 70, 60), "twig": (66, 60, 54)}[species]
         noise = rng.normal(0, 1, (n, n // 8))
         noise = np.repeat(noise, 8, axis=1)

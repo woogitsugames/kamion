@@ -202,6 +202,27 @@ def srgb(c):
 
 
 # ============================================================================================ materials
+def crack_net(b, obj, scale, warp, width_m, seal_m, presence):
+    """Meandering crack network: Voronoi cell edges in a domain-warped space (two octaves of warp), crack width
+    modulated along the path, present only where a low-frequency mask is high. Returns (crack, seal) masks."""
+    wv = b.nt.nodes.new("ShaderNodeTexNoise")
+    wv.inputs["Scale"].default_value = scale * 2.2
+    wv.inputs["Detail"].default_value = 3.0
+    wv.inputs["Roughness"].default_value = 0.6
+    b.link(obj, wv.inputs["Vector"])
+    wcol = b.vmath("SUBTRACT", wv.outputs["Color"], (0.5, 0.5, 0.5))
+    pw = b.vmath("ADD", obj, b.vmath("MULTIPLY", wcol, (warp, warp, 0.0)))
+    cr = b.voronoi(pw, scale, feature="DISTANCE_TO_EDGE", rand=1.0)
+    dist_m = b.math("DIVIDE", cr.outputs["Distance"], scale)                  # metres to the cell edge
+    wmod = b.math("ADD", 0.45, b.math("MULTIPLY", b.noise(obj, scale * 9.0, 2.0), 1.1))
+    pres = b.math("GREATER_THAN", b.noise(obj, scale * 0.8, 2.0, 0.5), presence)
+    crack = b.math("MULTIPLY", b.math("LESS_THAN", dist_m, b.math("MULTIPLY", wmod, width_m)), pres)
+    sealed = b.math("GREATER_THAN", b.noise(obj, scale * 0.5, 1.0), 0.45)       # sealing crews do whole stretches
+    seal = b.math("MULTIPLY", b.math("MULTIPLY", b.math("LESS_THAN", dist_m, b.math("MULTIPLY", wmod, seal_m)), pres),
+                  sealed)
+    return crack, seal
+
+
 def mat_asphalt(name, base=0.075, lanes=True, yard=False):
     m = new_mat(name)
     b = NB(m)
@@ -209,25 +230,14 @@ def mat_asphalt(name, base=0.075, lanes=True, yard=False):
     big = b.noise(obj, 0.035, 3.0, 0.5)
     mid = b.noise(obj, 0.6, 5.0, 0.6)
     agg = b.noise(obj, 180.0, 2.0, 0.5)
-    tone = b.ramp(b.mixf(0.4, big, mid), [(0.3, (base * 0.80,) * 3), (0.55, (base, base, base * 0.97)),
-                                           (0.72, (base * 1.25, base * 1.24, base * 1.2))])
-    # patches: rectangular repair cells (Chebychev Voronoi), some cells darker (fresh) or lighter (old)
-    vor = b.voronoi(b.vmath("MULTIPLY", obj, (1.0, 0.35, 1.0)), 0.11, metric="CHEBYCHEV")
-    pick = b.math("GREATER_THAN", vor.outputs["Color"], 0.86)
-    patch_in = b.math("LESS_THAN", vor.outputs["Distance"], 0.32)
-    patch = b.math("MULTIPLY", pick, patch_in)
-    col = b.mix(b.math("MULTIPLY", patch, 0.7), tone, (base * 0.72, base * 0.72, base * 0.72))
-    edge = b.math("MULTIPLY", pick, b.math("MULTIPLY", b.math("GREATER_THAN", vor.outputs["Distance"], 0.30),
-                                              b.math("LESS_THAN", vor.outputs["Distance"], 0.34)))
-    col = b.mix(edge, col, (0.02, 0.02, 0.02))
-    # cracks + crack sealing (bitumen bands)
-    cr = b.voronoi(obj, 0.25, feature="DISTANCE_TO_EDGE")
-    crn = b.noise(obj, 0.4, 2.0)
-    crack = b.math("MULTIPLY", b.math("LESS_THAN", cr.outputs["Distance"], 0.005), b.math("GREATER_THAN", crn, 0.60))
-    seal = b.math("MULTIPLY", b.math("LESS_THAN", cr.outputs["Distance"], 0.022), b.math("GREATER_THAN", crn, 0.70))
-    col = b.mix(b.math("MULTIPLY", seal, 0.55), col, (0.025, 0.025, 0.025))
-    col = b.mix(b.math("MULTIPLY", crack, 0.8), col, (0.02, 0.02, 0.02))
-    rough = b.mixf(seal, 0.9, 0.55)
+    tone = b.ramp(b.mixf(0.4, big, mid), [(0.3, (base * 0.82,) * 3), (0.55, (base, base, base * 0.97)),
+                                           (0.72, (base * 1.22, base * 1.21, base * 1.17))])
+    col = tone
+    # meandering crack network with 2-4 cm bitumen sealant bands (patches are geometry decals, not a grid)
+    crack, seal = crack_net(b, obj, 0.16, 2.2, 0.006, 0.03, 0.52)
+    col = b.mix(b.math("MULTIPLY", seal, 0.85), col, (0.018, 0.018, 0.018))
+    col = b.mix(b.math("MULTIPLY", crack, 0.9), col, (0.012, 0.012, 0.012))
+    rough = b.mixf(seal, 0.9, 0.8)         # bitumen sealant: a little smoother than the aggregate, not glossy (dusty)
     if lanes:
         uv1 = b.uv("UVMap.001")
         u, v, _ = b.sep(uv1)
@@ -236,16 +246,20 @@ def mat_asphalt(name, base=0.075, lanes=True, yard=False):
         wheel = b.math("ADD", b.gauss(fr, 0.27, 0.075), b.gauss(fr, 0.73, 0.075))
         wheel = b.math("MULTIPLY", wheel, valid)
         wheel = b.math("MULTIPLY", wheel, b.math("ADD", 0.6, b.math("MULTIPLY", mid, 0.6)))
-        col = b.mix(b.math("MULTIPLY", wheel, 0.55), col, (base * 0.6, base * 0.6, base * 0.62))
+        col = b.mix(b.math("MULTIPLY", wheel, 0.5), col, (base * 0.62, base * 0.62, base * 0.64))
         rough = b.mixf(b.math("MULTIPLY", wheel, 0.7), rough, 0.74)
-        oil = b.math("MULTIPLY", b.gauss(fr, 0.5, 0.09), b.math("GREATER_THAN", b.noise(obj, 1.3, 3.0), 0.55))
-        col = b.mix(b.math("MULTIPLY", b.math("MULTIPLY", oil, valid), 0.6), col, (0.03, 0.028, 0.026))
         gut = b.math("SUBTRACT", 1.0, b.math("DIVIDE", v, 0.7), clamp=True)
         gut = b.math("MULTIPLY", gut, b.math("ADD", 0.5, mid))
         col = b.mix(b.math("MULTIPLY", gut, 0.7), col, (0.16, 0.14, 0.11))
-        # longitudinal joint between lanes (paving seam)
-        seam = b.math("MULTIPLY", b.math("LESS_THAN", b.math("MINIMUM", fr, b.math("SUBTRACT", 1.0, fr)), 0.012), valid)
-        col = b.mix(b.math("MULTIPLY", seam, 0.6), col, (0.03, 0.03, 0.03))
+        # longitudinal paving joint between lanes: an open, wandering crack, sealed on some stretches
+        jn = b.math("MULTIPLY", b.math("SUBTRACT", b.noise(obj, 0.9, 2.0), 0.5), 0.05)
+        dj = b.math("MINIMUM", b.math("FRACT", b.math("ADD", u, jn)), b.math("SUBTRACT", 1.0, b.math("FRACT", b.math("ADD", u, jn))))
+        jw = b.math("ADD", 0.004, b.math("MULTIPLY", b.noise(obj, 3.0, 2.0), 0.01))
+        seam = b.math("MULTIPLY", b.math("LESS_THAN", dj, jw), valid)
+        seamseal = b.math("MULTIPLY", b.math("MULTIPLY", b.math("LESS_THAN", dj, 0.012), valid),
+                          b.math("GREATER_THAN", b.noise(obj, 0.05, 1.0), 0.5))
+        col = b.mix(b.math("MULTIPLY", seamseal, 0.8), col, (0.02, 0.02, 0.02))
+        col = b.mix(b.math("MULTIPLY", seam, 0.7), col, (0.015, 0.015, 0.015))
         rut = b.math("MULTIPLY", wheel, -0.5)
         h = b.math("ADD", b.math("MULTIPLY", agg, 1.0), rut)
     else:
@@ -254,8 +268,47 @@ def mat_asphalt(name, base=0.075, lanes=True, yard=False):
             tyre = b.math("GREATER_THAN", b.noise(b.vmath("MULTIPLY", obj, (0.15, 1.5, 1)), 2.0, 2.0), 0.62)
             col = b.mix(b.math("MULTIPLY", tyre, 0.35), col, (0.03, 0.03, 0.03))
     nrm = b.bump(h, 0.22, 0.004)
-    nrm = b.bump(b.math("MULTIPLY", crack, -1.0), 0.4, 0.004, nrm)
+    nrm = b.bump(b.math("MULTIPLY", crack, -1.0), 0.12, 0.003, nrm)
+    nrm = b.bump(seal, 0.05, 0.002, nrm)
     b.finish(col, rough, nrm)
+    return m
+
+
+def mat_decal_patch(name, base=0.075):
+    """Repair patch decal: UV = metres in the patch, UV1.x = age (0 fresh black .. 1 old grey); dark cut edge."""
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    u, v, _ = b.sep(b.uv("UVMap"))
+    age, seed, _ = b.sep(b.uv("UVMap.001"))
+    n = b.noise(obj, 1.5, 4.0, 0.6)
+    fresh = (0.032, 0.032, 0.031)
+    old = (base * 1.15, base * 1.14, base * 1.1)
+    col = b.mix(age, fresh, old)
+    col = b.mix(b.math("MULTIPLY", n, 0.3), col, (base * 0.7, base * 0.7, base * 0.7))
+    agg = b.noise(obj, 160.0, 2.0)
+    col = b.mix(b.math("MULTIPLY", b.math("GREATER_THAN", agg, 0.62), b.math("MULTIPLY", age, 0.4)), col,
+                (base * 1.6, base * 1.55, base * 1.5))
+    b.finish(col, b.mixf(age, 0.55, 0.88), b.bump(agg, 0.2, 0.003))
+    return m
+
+
+def mat_decal_oil(name):
+    """Oil stain: radial alpha from the centre (UV 0.5, 0.5) broken by noise, darker and glossier core."""
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    uvv = b.uv("UVMap")
+    d = b.vmath("LENGTH", b.vmath("SUBTRACT", uvv, (0.5, 0.5, 0.0)))
+    n = b.noise(obj, 4.0, 4.0, 0.7)
+    a = b.math("SUBTRACT", 1.0, b.math("DIVIDE", b.math("ADD", d, b.math("MULTIPLY", n, 0.35)), 0.62), clamp=True)
+    a = b.math("POWER", a, 0.7)
+    b.finish((0.012, 0.011, 0.010), b.mixf(a, 0.85, 0.3))
+    b.link(b.math("MULTIPLY", a, 0.75), b.bsdf.inputs["Alpha"])
+    try:
+        m.surface_render_method = "DITHERED"
+    except AttributeError:
+        pass
     return m
 
 
@@ -313,6 +366,13 @@ def mat_pavers(name, c1, c2, w=0.20, h=0.10, rot_uv=True, moss=True):
     col = b.mix(b.math("MULTIPLY", dirt, 0.45), br.outputs["Color"], (c1[0] * 0.6, c1[1] * 0.58, c1[2] * 0.52))
     stain = b.math("GREATER_THAN", b.noise(obj, 0.9, 3.0), 0.63)
     col = b.mix(b.math("MULTIPLY", stain, 0.5), col, (c1[0] * 0.5, c1[1] * 0.5, c1[2] * 0.5))
+    if moss:     # yards: second-scale variation (batches) + wandering tyre tracks along the yard's long axis
+        big = b.noise(obj, 0.05, 3.0, 0.5)
+        col = b.mix(b.math("MULTIPLY", big, 0.4), col, (c1[0] * 0.75, c1[1] * 0.75, c1[2] * 0.72))
+        uu, vv, _ = b.sep(b.uv("UVMap"))
+        tr = b.noise(b.vmath("MULTIPLY", b.combine(uu, vv, 0.0), (0.08, 1.4, 1.0)), 1.0, 2.0, 0.5)
+        track = b.math("MULTIPLY", b.math("GREATER_THAN", tr, 0.58), b.math("ADD", 0.3, b.noise(obj, 0.3, 2.0)))
+        col = b.mix(b.math("MULTIPLY", track, 0.45), col, (c1[0] * 0.5, c1[1] * 0.5, c1[2] * 0.5))
     if moss:     # weeds/moss in joints near the edge of the paved area (UV1.x = distance to edge)
         e, wdist, _ = b.sep(b.uv("UVMap.001"))
         near = b.math("SUBTRACT", 1.0, b.math("DIVIDE", e, 0.6), clamp=True)
@@ -323,6 +383,155 @@ def mat_pavers(name, c1, c2, w=0.20, h=0.10, rot_uv=True, moss=True):
         col = b.mix(b.math("MULTIPLY", near_wall, 0.5), col, (0.10, 0.09, 0.07))
     nrm = b.bump(br.outputs["Fac"], 0.35, 0.004)
     b.finish(col, 0.86, nrm)
+    return m
+
+
+def mat_behaton(name, c1, c2, w=0.20, h=0.165, d=0.12, waist=0.2, mort=0.0035):
+    """I-shaped interlocking blocks (behaton, 198 x 163 mm) in half-offset rows: per-block tone, darker tyre
+    tracks along the yard's main direction (UV u = long axis), second-scale variation, settlement, weeds in the
+    joints near the edges. Joint layout derived for the double-T block: wide ends protrude into the
+    neighbouring rows where the neighbours' waists are."""
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    u, v, _ = b.sep(b.uv("UVMap"))
+    r = b.math("FLOOR", b.math("DIVIDE", v, h))
+    fy = b.math("FRACT", b.math("DIVIDE", v, h))
+    xu = b.math("ADD", b.math("DIVIDE", u, w), b.math("MULTIPLY", b.math("MODULO", r, 2.0), 0.5))
+    fx = b.math("FRACT", xu)
+    bi = b.math("FLOOR", xu)
+    mw, mh = mort / w, mort / h
+    jA = b.math("LESS_THAN", b.math("MINIMUM", fx, b.math("SUBTRACT", 1.0, fx)), mw)
+    in_w = b.math("LESS_THAN", b.math("ABSOLUTE", b.math("SUBTRACT", fx, 0.5)), waist)
+    dh = b.math("MINIMUM", b.math("ABSOLUTE", b.math("SUBTRACT", fy, d)), b.math("ABSOLUTE", b.math("SUBTRACT", fy, 1.0 - d)))
+    jB = b.math("MULTIPLY", in_w, b.math("LESS_THAN", dh, mh))
+    ends = b.math("MAXIMUM", b.math("LESS_THAN", fy, d), b.math("GREATER_THAN", fy, 1.0 - d))
+    dv = b.math("MINIMUM", b.math("MINIMUM", b.math("ABSOLUTE", b.math("SUBTRACT", fx, 0.5 - waist)),
+                                              b.math("ABSOLUTE", b.math("SUBTRACT", fx, 0.5 + waist))),
+                b.math("ABSOLUTE", b.math("SUBTRACT", fx, 0.5)))
+    jC = b.math("MULTIPLY", ends, b.math("LESS_THAN", dv, mw))
+    joint = b.math("MAXIMUM", jA, b.math("MAXIMUM", jB, jC))
+    # per-block tone (hash of the block cell; ends belong to the neighbours, ignored at this scale)
+    cell = b.combine(bi, r, 0.0)
+    wn = b.nt.nodes.new("ShaderNodeTexWhiteNoise")
+    wn.noise_dimensions = "3D"
+    b.link(cell, wn.inputs["Vector"])
+    col = b.mix(wn.outputs["Value"], c1, c2)
+    big = b.noise(obj, 0.05, 3.0, 0.5)                        # second-scale variation (batches, wear)
+    col = b.mix(b.math("MULTIPLY", big, 0.45), col, tuple(x * 0.72 for x in c1))
+    # tyre tracks: bands along u, wandering
+    tr = b.noise(b.vmath("MULTIPLY", b.combine(u, v, 0.0), (0.08, 1.4, 1.0)), 1.0, 2.0, 0.5)
+    track = b.math("MULTIPLY", b.math("GREATER_THAN", tr, 0.56), b.math("ADD", 0.4, b.noise(obj, 0.3, 2.0)))
+    col = b.mix(b.math("MULTIPLY", track, 0.55), col, tuple(x * 0.42 for x in c1))
+    stain = b.math("GREATER_THAN", b.noise(obj, 0.7, 3.0), 0.66)
+    col = b.mix(b.math("MULTIPLY", stain, 0.45), col, tuple(x * 0.5 for x in c1))
+    col = b.mix(b.math("MULTIPLY", joint, 0.85), col, tuple(x * 0.4 for x in c1))
+    e, wdist, _ = b.sep(b.uv("UVMap.001"))
+    near = b.math("SUBTRACT", 1.0, b.math("DIVIDE", e, 0.8), clamp=True)
+    weeds = b.math("MULTIPLY", b.math("MULTIPLY", near, joint), b.math("GREATER_THAN", b.noise(obj, 2.5, 3.0), 0.42))
+    col = b.mix(b.math("MULTIPLY", weeds, 0.9), col, (0.05, 0.07, 0.025))
+    near_wall = b.math("SUBTRACT", 1.0, b.math("DIVIDE", wdist, 1.0), clamp=True)
+    col = b.mix(b.math("MULTIPLY", near_wall, 0.5), col, (0.10, 0.09, 0.07))
+    settle = b.noise(obj, 0.25, 2.0)
+    nrm = b.bump(b.math("MULTIPLY", joint, -1.0), 0.35, 0.004)
+    nrm = b.bump(settle, 0.25, 0.02, nrm)
+    b.finish(col, b.mixf(track, 0.86, 0.75), nrm)
+    return m
+
+
+def mat_planks(name, col, period=0.14, rough=0.85):
+    """Horizontal weatherboarding (UV v = metres above ground): board joints, per-board tone, grey weathering."""
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    u, v, _ = b.sep(b.uv("UVMap"))
+    row = b.math("FLOOR", b.math("DIVIDE", v, period))
+    fr = b.math("FRACT", b.math("DIVIDE", v, period))
+    wn = b.nt.nodes.new("ShaderNodeTexWhiteNoise")
+    wn.noise_dimensions = "1D"
+    b.link(row, wn.inputs["W"])
+    base = b.mix(b.math("MULTIPLY", wn.outputs["Value"], 0.35), col, tuple(c * 0.75 for c in col))
+    grain = b.noise(b.vmath("MULTIPLY", obj, (0.3, 0.3, 8.0)), 6.0, 3.0)
+    base = b.mix(b.math("MULTIPLY", grain, 0.25), base, tuple(c * 0.8 for c in col))
+    weather = b.math("MULTIPLY", b.noise(obj, 0.8, 3.0), 0.45)
+    base = b.mix(weather, base, (0.20, 0.19, 0.17))
+    j = b.math("LESS_THAN", fr, 0.08)
+    base = b.mix(b.math("MULTIPLY", j, 0.8), base, tuple(c * 0.3 for c in col))
+    splash = b.math("SUBTRACT", 1.0, b.math("DIVIDE", b.math("SUBTRACT", v, 0.3), 0.6), clamp=True)
+    base = b.mix(b.math("MULTIPLY", splash, 0.5), base, (0.10, 0.09, 0.07))
+    b.finish(base, rough, b.bump(b.math("SUBTRACT", fr, j), 0.4, 0.01))
+    return m
+
+
+def mat_large_panel(name, col):
+    """Wielka płyta: precast panels with sealed joints (3.0 m x 2.8 m storey grid from 0.3 m), grey streaks
+    under every joint, slightly different panel tones."""
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    u, v, _ = b.sep(b.uv("UVMap"))
+    vv = b.math("SUBTRACT", v, 0.3)
+    jh = b.line_mask(vv, 2.8, 0.018)
+    jv = b.line_mask(u, 3.0, 0.018)
+    joint = b.math("MAXIMUM", jh, jv)
+    cell = b.combine(b.math("FLOOR", b.math("DIVIDE", u, 3.0)), b.math("FLOOR", b.math("DIVIDE", vv, 2.8)), 0.0)
+    wn = b.nt.nodes.new("ShaderNodeTexWhiteNoise")
+    wn.noise_dimensions = "3D"
+    b.link(cell, wn.inputs["Vector"])
+    base = b.mix(b.math("MULTIPLY", wn.outputs["Value"], 0.3), col, tuple(c * 0.82 for c in col))
+    agg = b.noise(obj, 30.0, 2.0)
+    base = b.mix(b.math("MULTIPLY", agg, 0.2), base, tuple(c * 1.15 for c in col))
+    fr = b.math("FRACT", b.math("DIVIDE", vv, 2.8))
+    streak = b.math("MULTIPLY", b.math("SUBTRACT", 1.0, fr), b.math("GREATER_THAN", b.noise(
+        b.vmath("MULTIPLY", obj, (4.0, 4.0, 0.2)), 1.0, 3.0), 0.55))
+    base = b.mix(b.math("MULTIPLY", streak, 0.35), base, tuple(c * 0.55 for c in col))
+    base = b.mix(b.math("MULTIPLY", joint, 0.85), base, (0.06, 0.06, 0.06))
+    b.finish(base, 0.9, b.bump(b.math("MULTIPLY", joint, -1.0), 0.5, 0.01))
+    return m
+
+
+def mat_pallet(name, col):
+    """EUR pallet sides (UV metres): boards 22 mm top/bottom, 78 mm blocks at 0 / 0.55 / 1.1 m, dark gaps."""
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    u, v, _ = b.sep(b.uv("UVMap"))
+    fv = b.math("FRACT", b.math("DIVIDE", v, 0.144))
+    gapz = b.math("MULTIPLY", b.math("GREATER_THAN", fv, 0.16), b.math("LESS_THAN", fv, 0.84))
+    fu = b.math("FRACT", b.math("DIVIDE", b.math("ADD", u, 0.05), 0.55))
+    block = b.math("LESS_THAN", fu, 0.2)
+    gap = b.math("MULTIPLY", gapz, b.math("SUBTRACT", 1.0, block))
+    base = b.mix(b.math("MULTIPLY", b.noise(obj, 6.0, 3.0), 0.35), col, tuple(c * 0.7 for c in col))
+    grey = b.math("MULTIPLY", b.noise(obj, 1.3, 2.0), 0.6)
+    base = b.mix(grey, base, (0.22, 0.20, 0.17))
+    base = b.mix(gap, base, (0.015, 0.012, 0.01))
+    b.finish(base, 0.9, b.bump(b.math("MULTIPLY", gap, -1.0), 0.4, 0.01))
+    return m
+
+
+def mat_curtain(name, col):
+    """Curtainsider: vertical folds (UV u = metres along the trailer), road grime toward the bottom, faded top."""
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    u, v, _ = b.sep(b.uv("UVMap"))
+    fold = b.math("SINE", b.math("MULTIPLY", u, 2 * math.pi / 0.31))
+    sag = b.noise(b.vmath("MULTIPLY", obj, (1.0, 1.0, 0.3)), 0.8, 2.0)
+    base = b.mix(b.math("MULTIPLY", b.noise(obj, 0.6, 3.0), 0.2), col, tuple(c * 0.8 for c in col))
+    grime = b.math("SUBTRACT", 1.0, b.math("DIVIDE", v, 1.2), clamp=True)
+    base = b.mix(b.math("MULTIPLY", grime, 0.45), base, (0.10, 0.09, 0.08))
+    b.finish(base, 0.72, b.bump(b.math("ADD", b.math("MULTIPLY", fold, 0.5), sag), 0.25, 0.02))
+    return m
+
+
+def mat_boom(name):
+    """Boom barrier: 0.5 m red / white bands along the tube (UV v = metres along the boom)."""
+    m = new_mat(name)
+    b = NB(m)
+    u, v, _ = b.sep(b.uv("UVMap"))
+    band = b.math("LESS_THAN", b.math("FRACT", b.math("DIVIDE", v, 1.0)), 0.5)
+    col = b.mix(band, srgb((228, 228, 222)), srgb((182, 28, 30)))
+    b.finish(col, 0.45)
     return m
 
 
@@ -562,6 +771,34 @@ def build_materials():
         "concrete_wall": mat_concrete_yard("concrete_wall", 0.26, 4.0, 100.0),
         "steel_galv": mat_flat("steel_galv", (0.33, 0.34, 0.34), 0.55, 0.85, 0.3),
         "barrier_post": mat_flat("barrier_post", (0.30, 0.31, 0.31), 0.55, 0.85, 0.3),
+        "yard_behaton": mat_behaton("yard_behaton", g((112, 111, 106)), g((98, 97, 93))),
+        "decal_patch": mat_decal_patch("decal_patch"),
+        "decal_oil": mat_decal_oil("decal_oil"),
+        "hall_wall_graphite": mat_hall("hall_wall_graphite", g((66, 70, 74)), "v"),
+        "hall_wall_accent_blue": mat_hall("hall_wall_accent_blue", g((58, 84, 112)), "v"),
+        "hall_wall_accent_red": mat_hall("hall_wall_accent_red", g((126, 58, 50)), "v"),
+        "hall_wall_accent_green": mat_hall("hall_wall_accent_green", g((64, 98, 80)), "v"),
+        "booth_panel": mat_hall("booth_panel", g((176, 178, 176)), "h"),
+        "balcony_panel": mat_lines_v("balcony_panel", g((150, 154, 156)), 0.12, 0.01, 0.6, 0.3, horizontal=False),
+        "balcony_slab": mat_concrete_yard("balcony_slab", 0.27, 100.0, 100.0),
+        "panel_concrete": mat_large_panel("panel_concrete", g((150, 146, 136))),
+        "plaster_accent_terracotta": mat_plaster("plaster_accent_terracotta", g((168, 96, 70))),
+        "plaster_accent_green": mat_plaster("plaster_accent_green", g((120, 142, 112))),
+        "plaster_accent_ochre": mat_plaster("plaster_accent_ochre", g((190, 150, 88))),
+        "plaster_accent_grey": mat_plaster("plaster_accent_grey", g((104, 106, 108))),
+        "wood_planks": mat_planks("wood_planks", g((112, 84, 58))),
+        "wood_planks_green": mat_planks("wood_planks_green", g((70, 96, 78))),
+        "chimney_brick": mat_pavers("chimney_brick", g((116, 58, 44)), g((104, 52, 42)), 0.25, 0.065, rot_uv=True,
+                                    moss=False),
+        "pallet_wood": mat_pallet("pallet_wood", g((150, 124, 92))),
+        "gate_boom": mat_boom("gate_boom"),
+        "trailer_curtain_grey": mat_curtain("trailer_curtain_grey", g((110, 112, 112))),
+        "trailer_curtain_blue": mat_curtain("trailer_curtain_blue", g((52, 64, 88))),
+        "trailer_curtain_white": mat_curtain("trailer_curtain_white", g((196, 198, 196))),
+        "trailer_curtain_red": mat_curtain("trailer_curtain_red", g((112, 52, 46))),
+        "trailer_curtain_green": mat_curtain("trailer_curtain_green", g((62, 84, 70))),
+        "trailer_curtain_silver": mat_curtain("trailer_curtain_silver", g((160, 162, 162))),
+        "trailer_box_white": mat_lines_v("trailer_box_white", g((200, 202, 200)), 1.2, 0.006, 0.45, 0.1, horizontal=False),
         "signal_red_on": mat_emit("signal_red_on", (1.0, 0.08, 0.03), 18.0),
         "signal_green_on": mat_emit("signal_green_on", (0.1, 1.0, 0.55), 14.0),
     }
@@ -738,7 +975,14 @@ def add_grass(terrain_objs, cam_pos, radius=55.0):
     b = NB(m)
     tex = b.nt.nodes.new("ShaderNodeTexImage")
     tex.image = bpy.data.images.load(str(path))
-    b.link(tex.outputs["Color"], b.bsdf.inputs["Base Color"])
+    # per-instance tint: ~18 % dead (straw-brown) tufts, the rest varies a little in hue
+    oi = b.nt.nodes.new("ShaderNodeObjectInfo")
+    dead = b.math("LESS_THAN", oi.outputs["Random"], 0.18)
+    tint = b.mix(dead, (1.0, 1.0, 1.0), (1.55, 1.15, 0.62), blend="MULTIPLY")
+    vary = b.mix(b.math("MULTIPLY", oi.outputs["Random"], 0.35), (1.0, 1.0, 1.0), (0.85, 0.95, 0.8), blend="MIX")
+    colt = b.mix(1.0, tex.outputs["Color"], tint, blend="MULTIPLY")
+    colt = b.mix(1.0, colt, vary, blend="MULTIPLY")
+    b.link(colt, b.bsdf.inputs["Base Color"])
     b.link(tex.outputs["Alpha"], b.bsdf.inputs["Alpha"])
     b.bsdf.inputs["Roughness"].default_value = 0.9
     try:
@@ -802,7 +1046,21 @@ def add_grass(terrain_objs, cam_pos, radius=55.0):
         dist_pts.distribute_method = "RANDOM"
         L.new(gi.outputs["Geometry"], dist_pts.inputs["Mesh"])
         L.new(near.outputs[0], dist_pts.inputs["Selection"])
-        L.new(d2.outputs[0], dist_pts.inputs["Density"])
+        # clustered density (no polka dots): patches of ~4-8 m where the noise is high, bare in between
+        cn = N.new("ShaderNodeTexNoise")
+        cn.inputs["Scale"].default_value = 0.18
+        cn.inputs["Detail"].default_value = 3.0
+        cpos = N.new("GeometryNodeInputPosition")
+        L.new(cpos.outputs[0], cn.inputs["Vector"])
+        cl = N.new("ShaderNodeMapRange")
+        cl.inputs["From Min"].default_value = 0.42
+        cl.inputs["From Max"].default_value = 0.62
+        cl.inputs["To Min"].default_value = 0.05
+        cl.inputs["To Max"].default_value = 2.2
+        L.new(cn.outputs["Fac"], cl.inputs["Value"])
+        d3 = N.new("ShaderNodeMath"); d3.operation = "MULTIPLY"
+        L.new(d2.outputs[0], d3.inputs[0]); L.new(cl.outputs["Result"], d3.inputs[1])
+        L.new(d3.outputs[0], dist_pts.inputs["Density"])
         inst = N.new("GeometryNodeInstanceOnPoints")
         info = N.new("GeometryNodeObjectInfo")
         info.inputs["Object"].default_value = tuft
@@ -822,7 +1080,16 @@ def add_grass(terrain_objs, cam_pos, radius=55.0):
         L.new(sepc.outputs[2], sB.inputs[0]); sB.inputs[1].default_value = 0.9; sB.inputs[2].default_value = 0.3
         sS = N.new("ShaderNodeMath"); sS.operation = "MULTIPLY"
         L.new(rs.outputs[1], sS.inputs[0]); L.new(sB.outputs[0], sS.inputs[1])
-        L.new(sS.outputs[0], inst.inputs["Scale"])
+        # taller toward the kerb / road edge (R = distance to the road / 20 m): x1.35 at the kerb, x0.9 beyond 2.5 m
+        kr = N.new("ShaderNodeMapRange")
+        kr.inputs["From Min"].default_value = 0.03
+        kr.inputs["From Max"].default_value = 0.125
+        kr.inputs["To Min"].default_value = 1.35
+        kr.inputs["To Max"].default_value = 0.9
+        L.new(sepc.outputs[0], kr.inputs["Value"])
+        sK = N.new("ShaderNodeMath"); sK.operation = "MULTIPLY"
+        L.new(sS.outputs[0], sK.inputs[0]); L.new(kr.outputs["Result"], sK.inputs[1])
+        L.new(sK.outputs[0], inst.inputs["Scale"])
         join = N.new("GeometryNodeJoinGeometry")
         L.new(gi.outputs["Geometry"], join.inputs[0])
         L.new(inst.outputs["Instances"], join.inputs[0])
@@ -897,8 +1164,37 @@ def setup_world(scene, engine, samples, res, light):
         bg.inputs["Strength"].default_value = 0.30
         sun.energy = 3.0
         sun.angle = math.radians(0.6)
-        sun.color = (1.0, 0.78, 0.56)
+        sun.color = (1.0, 0.80, 0.60)
         scene.view_settings.exposure = -0.3
+        # Lighting (non-camera rays) differs from the visible sky: the single-scattering sky is far too blue as
+        # an irradiance source at 8 deg sun (teal shadows next to orange light). Desaturate it to 50 % and give
+        # the lower hemisphere a warm-grey ground bounce (dry grass / asphalt / concrete, albedo ~0.15-0.25)
+        # so shadowed walls are lit half by the sky and half by the ground (cool grey, not cyan).
+        bw = nt.nodes.new("ShaderNodeRGBToBW")
+        nt.links.new(sky.outputs["Color"], bw.inputs["Color"])
+        desat = nt.nodes.new("ShaderNodeMix")
+        desat.data_type = "RGBA"
+        desat.inputs["Factor"].default_value = 0.5
+        nt.links.new(sky.outputs["Color"], desat.inputs["A"])
+        nt.links.new(bw.outputs["Val"], desat.inputs["B"])
+        gz = nt.nodes.new("ShaderNodeMapRange")
+        gz.inputs["From Min"].default_value = -0.06
+        gz.inputs["From Max"].default_value = 0.04
+        gz.inputs["To Min"].default_value = 1.0
+        gz.inputs["To Max"].default_value = 0.0
+        nt.links.new(sepz.outputs["Z"], gz.inputs["Value"])
+        ground = nt.nodes.new("ShaderNodeMix")
+        ground.data_type = "RGBA"
+        nt.links.new(gz.outputs["Result"], ground.inputs["Factor"])
+        nt.links.new(desat.outputs["Result"], ground.inputs["A"])
+        ground.inputs["B"].default_value = (0.60, 0.56, 0.50, 1)
+        lp = nt.nodes.new("ShaderNodeLightPath")
+        cam = nt.nodes.new("ShaderNodeMix")
+        cam.data_type = "RGBA"
+        nt.links.new(lp.outputs["Is Camera Ray"], cam.inputs["Factor"])
+        nt.links.new(ground.outputs["Result"], cam.inputs["A"])
+        nt.links.new(mixh.outputs["Result"], cam.inputs["B"])
+        mixh = cam
     else:                             # overcast: grey gradient sky + very soft weak key light
         el, az = 40.0, 200.0
         grad = nt.nodes.new("ShaderNodeMix")
