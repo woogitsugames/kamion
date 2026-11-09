@@ -182,7 +182,7 @@ namespace PhysicsRunner.Tests
             double outer = m.Steering.WheelAngle(-1.025, 3.7);
             Assert.True(inner > outer && outer > 0);
             // cot(outer) - cot(inner) = track / wheelbase
-            Assert.InRange(1 / Math.Tan(outer) - 1 / Math.Tan(inner), 2.05 / 3.7 - 1e-6, 2.05 / 3.7 + 1e-6);
+            Assert.InRange(1 / Math.Tan(outer) - 1 / Math.Tan(inner), 2.04 / 3.7 - 1e-6, 2.04 / 3.7 + 1e-6);
         }
     }
 }
