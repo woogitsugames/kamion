@@ -446,8 +446,11 @@ class Lin:
             self.buf.add("collision", collision, V, UV, np.concatenate([T, T[:, [0, 2, 1]]]), src=src)
 
     def slab(self, mat, P, zb, zt, thick, src="", collision=None):
-        for off in (-thick / 2, thick / 2):
-            self.ribbon(mat, P, zb, zt, off, src, both=False, collision=None)
+        # right face (offset -t/2) keeps the ribbon winding (faces right), the left face is flipped; the top faces up
+        # only (nobody sees its underside). Before v3 both sides had the same winding -> see-through from one side.
+        self.ribbon(mat, P, zb, zt, -thick / 2, src, both=False, collision=None)
+        self.ribbon(mat, P[::-1], zb[::-1] if np.ndim(zb) else zb, zt[::-1] if np.ndim(zt) else zt, -thick / 2, src,
+                    both=False, collision=None)
         d = np.gradient(P, axis=0)
         d /= np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)[:, None]
         nrm = np.column_stack([-d[:, 1], d[:, 0]])
@@ -456,7 +459,6 @@ class Lin:
         V = np.concatenate([np.column_stack([A, zt]), np.column_stack([B, zt])])
         T = np.array([(k, k + 1, n + k + 1) for k in range(n - 1)] + [(k, n + k + 1, n + k) for k in range(n - 1)])
         self.buf.add("furniture", mat, V, V[:, :2], T, src=src)
-        self.buf.add("furniture", mat, V, V[:, :2], T[:, [0, 2, 1]], src=src)
         if collision:
             self.ribbon(collision, P, zb, zt, 0.0, src, both=False, collision=None)
             self.buf.parts[-1].layer = "collision"
@@ -503,7 +505,7 @@ def fences(lin, src, origin, roads_poly, report):
         line = LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
         key = f"osm:way/{f['osm_way']}:{f['part']}"
         for part in cut_by(line, cutter):
-            P = lin.dens(part, 1.0)
+            P = lin.dens(part, 2.0)              # 2 m: the Low terrain band is 2 m, posts sample the ground themselves
             Z = lin.z(P)
             if b in ("fence", "yes"):
                 col = ["fence_green", "fence_anthracite", "fence_galv"][_h(key) % 3]
