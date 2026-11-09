@@ -39,3 +39,12 @@ Real photographs; licences checked via the Commons API. **CC0 / public domain** 
 | `Truck_digital_mirror_left_camera*.jpg` | CC BY-SA 4.0 | KoeppiK | camera-mirror hardware reference only |
 
 Sources: https://commons.wikimedia.org/wiki/File:<filename>
+
+### Route C photos fetched by the lead from Commons (2026-11-09, 2048 px thumbnails)
+| File | Licence | Author |
+|---|---|---|
+| `Andersa,_Maczka_streets_in_Białystok_1.jpg`, `…_2.jpg` | CC BY-SA 3.0 | Henryk Borawski |
+| `Krzysztof_Putra_Roundabout_in_Białystok.jpg` (Rondo Putry) | CC BY-SA 4.0 | Henryk Borawski |
+| `7197_May_2021_in_Białystok.jpg`, `20240626_103137_June_2024_in_Białystok.jpg` | CC0 | Rakoon |
+| `EC_Białystok.jpg` (power-plant chimneys — landmark visible from the route) | CC BY-SA 2.5 | Hiuppo |
+| `6972_December_2019_…_Aleja_Tysiąclecia_Państwa_Polskiego.jpg`, `20201223_143208_…`, `20201223_141958_…` | CC0 | Rakoon |
