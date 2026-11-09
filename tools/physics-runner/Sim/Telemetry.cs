@@ -19,6 +19,9 @@ namespace PhysicsRunner.Sim
         public double SumFz;
         public double MinFz;
         public int WheelsOffGround;
+        /// <summary>Bit i set = wheel i unloaded (no contact or Fz &lt; 500 N); tractor wheels first, then trailer.</summary>
+        public ulong OffMask;
+        public int TractorWheelCount;
         public double KineticEnergy;
         // combination
         public bool HasTrailer, Coupled;

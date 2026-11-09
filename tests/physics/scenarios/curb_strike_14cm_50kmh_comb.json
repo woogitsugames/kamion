@@ -44,8 +44,8 @@
     {
       "metric": "max_fz_ratio",
       "status": "WORKING_VALUE",
-      "source": "bounded wheel load peaks (sim baseline 1.8 / 3.9 for 5 / 14 cm; phone saw 6.8)",
-      "max": 4.5
+      "source": "bounded wheel load peaks (sim 2026-11-09: 3.90 empty / 3.53 laden; phone saw 6.8)",
+      "max": 4.2
     },
     {
       "metric": "max_trailer_roll_deg",
@@ -62,15 +62,45 @@
     {
       "metric": "wheel_off_ground_time_s",
       "status": "WORKING_VALUE",
-      "source": "regression guard on measured baseline (WORKING_VALUE)",
-      "max": 0.8,
+      "source": "regression guard on measured value 2026-11-09 (union over 10 wheel ends; dominated by the drop off the kerb end, see PHYSICS_VALIDATION)",
+      "max": 0.75,
       "variant": "empty"
     },
     {
       "metric": "wheel_off_ground_time_s",
       "status": "WORKING_VALUE",
-      "source": "regression guard on measured baseline (WORKING_VALUE)",
-      "max": 0.3,
+      "source": "regression guard on measured value 2026-11-09 (union over 10 wheel ends; dominated by the drop off the kerb end, see PHYSICS_VALIDATION)",
+      "max": 0.28,
+      "variant": "laden40"
+    },
+    {
+      "metric": "max_wheel_airtime_s",
+      "arg": 1,
+      "status": "WORKING_VALUE",
+      "source": "axle flight: longest single-wheel unload; tractor target < 0.15 s (lead brief 2026-11-09)",
+      "max": 0.15,
+      "variant": "empty"
+    },
+    {
+      "metric": "max_wheel_airtime_s",
+      "status": "WORKING_VALUE",
+      "source": "regression guard on measured value 2026-11-09 (empty tridem: axle 1 hangs at full droop while axles 2-3 are still on the kerb; frame torsion not modelled)",
+      "max": 0.25,
+      "variant": "empty"
+    },
+    {
+      "metric": "max_wheel_airtime_s",
+      "arg": 1,
+      "status": "WORKING_VALUE",
+      "source": "axle flight: longest single-wheel unload; tractor target < 0.15 s (lead brief 2026-11-09)",
+      "max": 0.12,
+      "variant": "laden40"
+    },
+    {
+      "metric": "max_wheel_airtime_s",
+      "status": "WORKING_VALUE",
+      "source": "axle flight: longest single-wheel unload; target < 0.15 s (lead brief 2026-11-09)",
+      "max": 0.12,
       "variant": "laden40"
     }
   ]

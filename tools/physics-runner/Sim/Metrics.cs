@@ -201,6 +201,25 @@ namespace PhysicsRunner.Sim
                     for (int i = i0; i <= i1; i++) if (s[i].WheelsOffGround > 0) tOff += dtS;
                     return tOff;
                 }
+                case "max_wheel_airtime_s":
+                {
+                    // longest continuous interval in which one single wheel is unloaded ("axle flight");
+                    // arg 1 = tractor wheels only, otherwise every wheel of the combination
+                    if (i1 <= i0) return 0;
+                    double dtS = (s[i1].T - s[i0].T) / (i1 - i0), best = 0;
+                    var run = new int[64];
+                    for (int i = i0; i <= i1; i++)
+                    {
+                        ulong mask = s[i].OffMask;
+                        int n = arg == 1 ? s[i].TractorWheelCount : 64;
+                        for (int b = 0; b < n; b++)
+                        {
+                            run[b] = (mask & (1UL << b)) != 0 ? run[b] + 1 : 0;
+                            best = Math.Max(best, run[b] * dtS);
+                        }
+                    }
+                    return best;
+                }
                 case "wheel_lift": return Max(s, i0, i1, x => x.WheelsOffGround) > 0 ? 1 : 0;
                 case "coupled_final": return s[i1].Coupled ? 1 : 0;
                 case "coupling_events": return r.CouplingEvents;

@@ -20,7 +20,9 @@ The vehicle is a **generic fictional** modern EU 4x2 long-haul tractor with a hi
 | S3 | Council Directive 92/6/EEC, as amended by 2002/85/EC (speed limitation devices; N3 at 90 km/h). docs/04 §5 also lists the 90 km/h limiter as a fact to verify. Not re-opened in Stage 2. |
 | S4 | ETRTO / ISO tyre size designation, used geometrically: 315/80 R22.5 means section width 315 mm, aspect ratio 80 %, rim diameter 22.5 in; 385/65 R22.5 likewise. |
 | S5 | UN Regulation No. 13 (02 series), Annex 4, English/Japanese parallel text published by MLIT Japan, https://www.mlit.go.jp/jidosha/un/UN_R013_02.pdf, **downloaded and read 2026-11-09** (35 pages, Annexes 1–4). Verified in the text: MFDD definition; Type-IIA (para 1.8.2: laden, energy equivalent to 30 km/h on a 7 % down-gradient over 6 km, service/secondary/parking brakes not engaged; engine-brake-only tolerance ±5 km/h); secondary braking for category N: s ≤ 0.15 v + 2 v²/130 (para 2.2, dm 2.2 m/s²); parking brake holds the laden vehicle on 18 % (para 2.3.1) and the towing vehicle's parking brake holds the combination on 12 % (para 2.3.2); response time: braking force on the least favourably placed axle within 0.6 s (para 4.1.1; for compressed-air systems deemed met by Annex 6, which is **not** in this document). Still **UNVERIFIED**: the numeric N3 type-0 limits (the table cells did not extract; the believed values s ≤ 0.15 v + v²/130 and dm ≥ 5.0 m/s² stay UNVERIFIED). |
-| S6 | Load index table (ISO 4209 / ETRTO): load index 160 = 4500 kg per single tire. Used only as a plausibility bound for 385/65 R22.5 trailer tires; not re-opened, treat as UNVERIFIED. |
+| S6 | Load index table (ISO 4209 / ETRTO): load index 160 = 4500 kg per single tire. Used only as a plausibility bound for 385/65 R22.5 trailer tires; not re-opened, treat as UNVERIFIED. (Load index 156 = 4000 kg is used in S7 the same way, same status.) |
+| S7 | Bridgestone M-STEER 001 datasheet, https://www.bigtyres.co.uk/media/landingpages/documents/bridgestone_m-steer-001_datasheet.pdf, **downloaded and its text read on 2026-11-09**. Rows used: 315/80 R22.5 156/150 K: overall diameter 1092 mm, static loaded radius 507 mm; 385/65 R22.5 160 K: overall diameter 1086 mm, static loaded radius 502 mm. The sheet does not state the load and pressure at which the static loaded radius was measured. The usual data-book convention is the maximum single load at its pressure, but that convention is UNVERIFIED here. Used for a secant radial stiffness (class reference, one manufacturer). |
+| S8 | Hendrickson "HT Series trailer air suspensions" brochure L632, https://www.hendrickson-intl.com/getattachment/36dba227-370f-48b6-8fe3-de02635fec76/L632.pdf, **downloaded and its text read on 2026-11-09**. Used statement: HT250T is "excellent for high travel suspension applications (up to 5.9 in.)", that is 150 mm total travel for a high-travel trailer air suspension. Class reference (US product) for the order of trailer axle travel only. |
 
 Literature quoted in check rationales but **not opened** (UNVERIFIED): static rollover threshold of laden tractor-semitrailers about 0.3–0.45 g (UMTRI / Winkler); rearward amplification of tractor-semitrailers about 1.0–1.3; EU weights and dimensions (Directive 96/53/EC: 13.6 m semitrailer, 2.55 m width, kingpin-to-rear 12.0 m, front swing radius 2.04 m, drive axle 11.5 t, tridem 24 t, 40 t GCW).
 
@@ -47,7 +49,7 @@ Literature quoted in check rationales but **not opened** (UNVERIFIED): static ro
 | Effective radius (geometry + kinematics) | 0.51 | m | WORKING_VALUE | Between the static loaded and unloaded radius (0.538 m unloaded). It is a single value for both uses (simplification). |
 | Width | 0.315 | m | SOURCED | S4 |
 | Wheel inertia per tire (tire + rim + hub + rotor) | 20 | kg m² | WORKING_VALUE | ≈ 70 kg tire at r ≈ 0.45 m plus rim and rotor |
-| Radial stiffness per tire | 1.0e6 | N/m | WORKING_VALUE | Typical order for heavy truck tires at service pressure |
+| Radial stiffness per tire | 1.0e6 | N/m | DERIVED (S7, S6 status) | Secant: free radius 546 mm − static loaded radius 507 mm = 39 mm at 4000 kg (LI 156) → 39.2 kN / 0.039 m = 1.01e6 N/m. The secant at rated load. The tangent at the lighter steer-axle load and the radial damping were not measured (no damping in the model; the tire is a spring in series with the suspension). Checked 2026-11-09 for the kerb-strike task; value unchanged. |
 | Peak μ, dry asphalt, at nominal load | 0.80 | – | WORKING_VALUE | Truck tires are usually quoted at 0.7–0.9 on dry asphalt; no cited source |
 | μ load sensitivity | −0.08 per unit (Fz/Fz0 − 1) | – | WORKING_VALUE | |
 | Nominal load Fz0 | 30 | kN | WORKING_VALUE | About the steer-axle load per tire |
@@ -72,7 +74,7 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 | Air spring rate scaling | – | k × (bellows force / reference load) | – | WORKING_VALUE | Air spring stiffness ∝ bellows pressure, so the natural frequency stays ~1.3 Hz at any load |
 | Height levelling: time constant / deadband | – | 8 s / 8 mm | – | WORKING_VALUE | One levelling valve per axle (symmetric, does not fight roll). The bellows force is also the EBS load signal. |
 | Cubic progression | 2.0e6 | 1.5e6 | N/m³ | WORKING_VALUE | |
-| Travel (bump to droop) | 0.18 | 0.20 | m | WORKING_VALUE | |
+| Travel (bump to droop) | 0.18 | 0.20 | m | WORKING_VALUE | Trailer axles also 0.20 m. That is more than the 150 mm that S8 quotes for a *high-travel* trailer air suspension, so the droop is not too short (kerb-strike analysis in PHYSICS_VALIDATION §3a). |
 | Bump-stop clearance / quadratic rate | 0.025 / 4e7 | 0.025 / 4e7 | m, N/m² | WORKING_VALUE | |
 | Damper bump / rebound | 9000 / 18000 | 5000 / 10000 | N s/m | DERIVED from WORKING | ζ ≈ 0.3 of sqrt(k m) solo; rebound is twice bump |
 | Damper knee / high-speed slope factor | 0.3 / 0.4 | 0.3 / 0.4 | m/s, – | WORKING_VALUE | |
@@ -210,7 +212,7 @@ Frame: origin on the ground below the kingpin, axles at negative z.
 
 ### Tire 385/65 R22.5 (`tire_385_65_r22_5.tire.json`)
 
-Same model and shape factors as 315/80 R22.5 (all WORKING_VALUE) except: effective radius 0.515 m (unloaded 0.536 m by S4 geometry), width 0.385 m (S4), wheel inertia 22 kg m², radial stiffness 1.1e6 N/m, nominal load 35 kN (S6 bound 44 kN per tire), rolling resistance 0.0050.
+Same model and shape factors as 315/80 R22.5 (all WORKING_VALUE) except: effective radius 0.515 m (unloaded 0.536 m by S4 geometry), width 0.385 m (S4), wheel inertia 22 kg m², radial stiffness 1.1e6 N/m (DERIVED, S7: 543 − 502 = 41 mm at 4500 kg (LI 160, S6) → 1.08e6 N/m secant), nominal load 35 kN (S6 bound 44 kN per tire), rolling resistance 0.0050.
 
 ### Load cases (runner presets; cargo is not part of the trailer data)
 

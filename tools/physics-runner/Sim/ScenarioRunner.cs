@@ -383,13 +383,15 @@ namespace PhysicsRunner.Sim
             Vec3 fwd = b.Rotation * Vec3.Forward;
             Vec3 right = b.Rotation * Vec3.Right;
             double maxRatio = 0, sumFz = 0, minFz = double.MaxValue, rearSlip = 0;
-            int off = 0;
+            int off = 0, bit = 0;
+            ulong offMask = 0;
             foreach (var w in m.Wheels)
             {
                 sumFz += w.Fz;
                 if (w.StaticLoad > 0) maxRatio = Math.Max(maxRatio, w.Fz / w.StaticLoad);
                 minFz = Math.Min(minFz, w.Fz);
-                if (!w.Contact || w.Fz < 500) off++;
+                if (!w.Contact || w.Fz < 500) { off++; if (bit < 64) offMask |= 1UL << bit; }
+                bit++;
                 if (w.Driven && Math.Abs(w.Vx) > 2.0) rearSlip = Math.Min(rearSlip, w.KinematicSlip * Math.Sign(w.Vx));
             }
             var smp = new Sample
@@ -417,7 +419,8 @@ namespace PhysicsRunner.Sim
                 foreach (var w in tr.Wheels)
                 {
                     minFz = Math.Min(minFz, w.Fz);
-                    if (!w.Contact || w.Fz < 500) off++;
+                    if (!w.Contact || w.Fz < 500) { off++; if (bit < 64) offMask |= 1UL << bit; }
+                    bit++;
                     if (Math.Abs(w.Vx) > 2.0) tSlip = Math.Min(tSlip, w.KinematicSlip * Math.Sign(w.Vx));
                 }
                 Vec3 tright = tb.Rotation * Vec3.Right;
@@ -435,6 +438,8 @@ namespace PhysicsRunner.Sim
             }
             smp.MinFz = minFz;
             smp.WheelsOffGround = off;
+            smp.OffMask = offMask;
+            smp.TractorWheelCount = m.Wheels.Length;
             return smp;
         }
     }
