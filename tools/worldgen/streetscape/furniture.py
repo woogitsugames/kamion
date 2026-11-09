@@ -570,6 +570,7 @@ def guardrail(lin, P, Z, key):
 
 def guardrails(lin, net, zground, report):
     m = {"bridge": 0.0, "median": 0.0, "embankment": 0.0}
+    drops, runs = [], []
     for c in net.chains:
         if c.meta.get("absorbed"):
             continue
@@ -596,8 +597,14 @@ def guardrails(lin, net, zground, report):
             zb[med] = zg[med] - 0.02
             rur = (kinds == RURAL) & ~br
             if rur.any():
-                P_out = c.line.offset_point(ss, sgn * (hw + ext + 2.0))
-                drop = zg - zground(P_out[:, 0], P_out[:, 1])
+                # embankment height = road edge minus the ground at the toe of the fill slope: berm 1 m +
+                # slope 1:1.5 of a 2 m fill + 1 m = profile end + 5 m (the old probe at +2 m only ever saw
+                # the berm, so the rule never fired); take the lowest of three probes (5, 7, 9 m)
+                drop = np.full(len(ss), -1e9)            # zground = natural ground (NMT), not the conformed terrain
+                for extra in (5.0, 7.0, 9.0):
+                    P_out = c.line.offset_point(ss, sgn * (hw + ext + extra))
+                    drop = np.maximum(drop, zg - zground(P_out[:, 0], P_out[:, 1]))
+                drops.append(float(drop[rur].max()))
                 emb = rur & (drop > S.GUARDRAIL_EMBANKMENT_H)
                 # extend 12 m each way (approach), close small gaps
                 from scipy import ndimage
@@ -622,9 +629,18 @@ def guardrails(lin, net, zground, report):
                     else:
                         Zr = zb[sl]
                     guardrail(lin, P, Zr, f"{c.id}:{side}:{['', 'bridge', 'median', 'embankment'][want[k]]}")
+                    if want[k] == 3:
+                        runs.append({"chain": c.id, "side": side, "s": [round(float(ss[k]), 1), round(float(ss[kk]), 1)],
+                                     "max_drop_m": round(float(drop[sl].max()), 2),
+                                     "at": [round(float(v), 1) for v in c.line.offset_point(ss[(k + kk) // 2], 0.0)]})
                     m[["", "bridge", "median", "embankment"][want[k]]] += kk - k
                 k = kk + 1
     report["guardrails_m"] = {k: round(v) for k, v in m.items()}
+    d = np.array(drops) if drops else np.zeros(1)
+    report["embankment_check"] = {"rural_sides": len(drops), "max_drop_m": round(float(d.max()), 2),
+                                  "p95_drop_m": round(float(np.percentile(d, 95)), 2),
+                                  "threshold_m": S.GUARDRAIL_EMBANKMENT_H, "runs": runs,
+                                  "ground": "NMT (decks removed) at the profile end + 5 / 7 / 9 m"}
 
 
 def noise_barriers(lin, src, origin, roads_poly, report):

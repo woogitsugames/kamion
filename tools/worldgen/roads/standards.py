@@ -89,6 +89,8 @@ PAVED_SHOULDER_MEDIAN = 0.50       # WORKING_VALUE: inner paved strip next to a 
 RURAL_MIN_SPEED = 70.0             # WORKING_VALUE: GP/G sections at >= 70 km/h without footways get the rural profile
 RURAL_FOOT_M = 7.0                 # WORKING_VALUE: no footway/path within this distance of the carriageway edge
 SHOULDER_CROSSFALL = 0.06           # WORKING_VALUE (unpaved shoulder, § 24 ust. 3: "skuteczne odwodnienie")
+CHAMFER_RATIO = 4.0                 # WORKING_VALUE: kerb chamfer 1:4 where a carriageway narrows at a split (gate islands)
+SWALE_DEPTH = 0.20                  # WORKING_VALUE: shallow swale instead of a ditch where a set-back path runs < 7 m away
 DITCH_DEPTH = 0.60                  # WORKING_VALUE
 DITCH_SLOPE = 1.5                   # 1 : 1.5, WORKING_VALUE
 DITCH_BOTTOM_W = 0.40               # WORKING_VALUE
@@ -159,7 +161,7 @@ PAVED_FLANGE = 0.30         # vertical skirt under yard edges (hides the terrain
 EDGING_W = 0.08             # concrete edging (obrzeże betonowe 8 x 30 cm), common Polish practice WORKING_VALUE
 EDGING_H = 0.03             # top of edging above the block paving WORKING_VALUE
 SETBACK_PATH_W = 2.0        # default width of a set-back footpath without BDOT SZEROKOSC (PTB2022 § 29: >= 1.80 m)
-SURFACE_OF = {"yard_paving": "paving", "sidewalk_paving": "paving", "cycle_red": "asphalt",
+SURFACE_OF = {"yard_paving": "paving", "yard_behaton": "paving", "sidewalk_paving": "paving", "cycle_red": "asphalt",
               "yard_concrete": "asphalt", "yard_slabs": "asphalt", "yard_asphalt": "asphalt",
               "path_asphalt": "asphalt", "yard_gravel": "grass"}   # -> collision_<x> materials
 
