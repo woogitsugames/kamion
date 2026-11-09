@@ -30,7 +30,9 @@ namespace Game.Rendering
         Volume m_LookVolume;
         VolumeProfile m_LookProfile;
         ColorAdjustments m_ColorAdj;
-        LiftGammaGain m_Lgg;
+        Tonemapping m_Tonemap;
+        ColorCurves m_Curves;
+        TextureCurve m_Master, m_LumSat;
 
         static readonly int k_PerezY = Shader.PropertyToID("_SkyPerezY"), k_PerezX = Shader.PropertyToID("_SkyPerezX"),
             k_PerezYc = Shader.PropertyToID("_SkyPerezYc"), k_PerezE = Shader.PropertyToID("_SkyPerezE"),
@@ -53,6 +55,7 @@ namespace Game.Rendering
 
         void OnDestroy()
         {
+            m_Master?.Release(); m_LumSat?.Release();
             if (m_LookProfile != null) { if (Application.isPlaying) Destroy(m_LookProfile); else DestroyImmediate(m_LookProfile); }
             if (m_LookVolume != null) { if (Application.isPlaying) Destroy(m_LookVolume.gameObject); else DestroyImmediate(m_LookVolume.gameObject); }
             if (m_ChromaTex != null) { if (Application.isPlaying) Destroy(m_ChromaTex); else DestroyImmediate(m_ChromaTex); }
@@ -160,15 +163,21 @@ namespace Game.Rendering
                 m_LookProfile.name = "VP_Look (runtime)";
                 m_LookProfile.hideFlags = HideFlags.DontSave;
                 m_ColorAdj = m_LookProfile.Add<ColorAdjustments>(true);
-                m_Lgg = m_LookProfile.Add<LiftGammaGain>(true);
+                m_Tonemap = m_LookProfile.Add<Tonemapping>(true);
+                m_Curves = m_LookProfile.Add<ColorCurves>(true);
             }
             m_LookVolume.sharedProfile = m_LookProfile;
-            m_ColorAdj.contrast.Override(p.lookContrast);
+            m_ColorAdj.contrast.Override(0f);
             m_ColorAdj.saturation.Override(p.lookSaturation);
             m_ColorAdj.postExposure.Override(0f);   // exposure is pre-multiplied into the lights (also on LDR tiers)
-            m_Lgg.lift.Override(new Vector4(1f, 1f, 1f, p.lookShadowLift));
-            m_Lgg.gamma.Override(new Vector4(1f, 1f, 1f, 0f));
-            m_Lgg.gain.Override(new Vector4(1f, 1f, 1f, p.lookHighlightGain));
+            // ADR 0016: the phone tone curve replaces the Neutral tonemapper (VP_World) on the post-processing tiers.
+            m_Tonemap.mode.Override(TonemappingMode.None);
+            m_Master?.Release();
+            m_LumSat?.Release();
+            m_Master = new TextureCurve(LookGrading.MasterCurveKeys(p.lookBlackLevel, p.lookWhiteClip), 0f, false, new Vector2(0f, 1f));
+            m_LumSat = new TextureCurve(LookGrading.HighlightDesaturationKeys(p.lookHighlightDesaturation, p.lookWhiteClip), 0.5f, false, new Vector2(0f, 1f));
+            m_Curves.master.Override(m_Master);
+            m_Curves.lumVsSat.Override(m_LumSat);
         }
     }
 }

@@ -18,10 +18,11 @@ MonoBehaviour:
   overcast: 1
   visibilityKm: 8
   groundAlbedo: {r: 0.16, g: 0.17, b: 0.12, a: 1}
+  ambientSkySaturation: 0.55
   autoExposure: 1
   ev100: 15
-  exposureCompensation: 1
-  lookContrast: -6
+  exposureCompensation: 0
   lookSaturation: 0
-  lookShadowLift: 0.012
-  lookHighlightGain: 0
+  lookBlackLevel: 0.015
+  lookWhiteClip: 0.7
+  lookHighlightDesaturation: 0.4

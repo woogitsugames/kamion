@@ -29,7 +29,8 @@ namespace Game.Rendering
         [Tooltip("Interior surface area (m^2)")] public float interiorArea = 26f;
         [Tooltip("Cab-view lift in stops (phone local tone mapping, D23)")] public float cabViewEv = 0.3f;
         [Tooltip("Extra fill scale (1 = physical estimate)")] public float fillScale = 1f;
-        [Tooltip("Colour of the bounce (warm: dash, koniak, floor mat)")] public Color bounceTint = new Color(1f, 0.93f, 0.85f);
+        [Tooltip("Colour of the bounce (dash, koniak, floor mat). Mild: review r3 C2 - a strongly warm tint on top of the sun " +
+                 "colour turned the black plastics beige at low sun")] public Color bounceTint = new Color(1f, 0.97f, 0.93f);
 
         /// <summary>Windows in the cab frame: outward normal and daylight-opening area (m^2).</summary>
         static readonly Vector3[] k_WinN =
@@ -66,18 +67,18 @@ namespace Game.Rendering
             {
                 Vector3 sLocal = t.InverseTransformDirection(m.SunDirection);
                 float eSky = m.SkyHorizontalIlluminanceLux * 0.5f;
-                float flux = 0f;
+                float fluxSun = 0f, fluxSky = 0f;
                 for (int i = 0; i < k_WinN.Length; i++)
                 {
                     float cos = Mathf.Max(0f, Vector3.Dot(k_WinN[i].normalized, sLocal));
-                    flux += k_WinA[i] * (m.SunNormalIlluminanceLux * cos + eSky);
+                    fluxSun += k_WinA[i] * m.SunNormalIlluminanceLux * cos;
+                    fluxSky += k_WinA[i] * eSky;
                 }
-                flux *= glassTransmittance;
                 float rho = Mathf.Clamp(meanAlbedo, 0.01f, 0.9f);
-                float eBounce = flux * rho / (interiorArea * (1f - rho));
-                float k = m.Exposure / Mathf.PI * fillScale;
-                Color c = m.SunColor * bounceTint;
-                fill = new Vector3(c.r, c.g, c.b) * (eBounce * k);
+                float bounce = glassTransmittance * rho / (interiorArea * (1f - rho)) * m.Exposure / Mathf.PI * fillScale;
+                // Sun part in the sun's colour, sky part neutral (overcast-grey daylight through the glass; review r3 C2).
+                Color c = (m.SunColor * fluxSun + Color.white * fluxSky) * bounceTint * bounce;
+                fill = new Vector3(c.r, c.g, c.b);
             }
             float gain = 1f;
             if (cam != null && interiorBounds.Contains(t.InverseTransformPoint(cam.transform.position)))

@@ -29,14 +29,12 @@ namespace Game.Rendering.Editor
         {
             Directory.CreateDirectory(Path.Combine(ProjectRoot, LightingDir));
             Directory.CreateDirectory(Path.Combine(ProjectRoot, Path.GetDirectoryName(QualityProfilePath)));
-            if (AssetDatabase.LoadAssetAtPath<LightingPreset>(ClearPreset) == null)
-                AssetDatabase.CreateAsset(LightingPreset.CreateClear(), ClearPreset);
-            if (AssetDatabase.LoadAssetAtPath<LightingPreset>(OvercastPreset) == null)
-                AssetDatabase.CreateAsset(LightingPreset.CreateOvercast(), OvercastPreset);
-            if (AssetDatabase.LoadAssetAtPath<LightingPreset>(LowSunPreset) == null)
-                AssetDatabase.CreateAsset(LightingPreset.CreateLowSun(), LowSunPreset);
-            if (AssetDatabase.LoadAssetAtPath<LightingPreset>(DuskPreset) == null)
-                AssetDatabase.CreateAsset(LightingPreset.CreateDusk(), DuskPreset);
+            // Presets are code (LightingPreset.Create*): the assets are rewritten from the factories on every run so the
+            // look cannot drift from what is reviewed in code (the clear/overcast assets had diverged by hand, D23).
+            SyncPreset(LightingPreset.CreateClear(), ClearPreset);
+            SyncPreset(LightingPreset.CreateOvercast(), OvercastPreset);
+            SyncPreset(LightingPreset.CreateLowSun(), LowSunPreset);
+            SyncPreset(LightingPreset.CreateDusk(), DuskPreset);
 
             var shader = Shader.Find("Kamion/Sky");
             if (shader == null) throw new System.InvalidOperationException("Shader Kamion/Sky not found (compile error?)");
@@ -69,6 +67,17 @@ namespace Game.Rendering.Editor
                 AssetDatabase.CreateAsset(qp, QualityProfilePath);
             }
             AssetDatabase.SaveAssets();
+        }
+
+        static void SyncPreset(LightingPreset fresh, string path)
+        {
+            var existing = AssetDatabase.LoadAssetAtPath<LightingPreset>(path);
+            if (existing == null) { AssetDatabase.CreateAsset(fresh, path); return; }
+            string name = existing.name;
+            EditorUtility.CopySerialized(fresh, existing);
+            existing.name = name;
+            Object.DestroyImmediate(fresh);
+            EditorUtility.SetDirty(existing);
         }
 
         public static LightingPreset[] Presets() => new[]

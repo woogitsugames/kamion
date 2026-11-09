@@ -3,9 +3,10 @@ using UnityEngine;
 namespace Game.Rendering
 {
     /// <summary>
-    /// A daylight condition (sun position, atmosphere, exposure, fog). Applied by <see cref="EnvironmentLighting"/>.
-    /// Values are documented in docs/adr/0010-look-development-sky-exposure-tonemapping.md; all WORKING_VALUE until
-    /// compared with owner photos of the same place and time.
+    /// A daylight condition (sun position, atmosphere, exposure, fog, look). Applied by <see cref="EnvironmentLighting"/>.
+    /// Sky and exposure: docs/adr/0010; exposure table and tone curve ("like a phone photo", D23): docs/adr/0016.
+    /// All WORKING_VALUE until compared with owner photos of the same place and time. The assets in
+    /// Rendering/Settings/Lighting are rewritten from the Create* factories (LookDevAssets.EnsureAll): edit the code.
     /// </summary>
     [CreateAssetMenu(menuName = "Kamion/Rendering/Lighting Preset", fileName = "LP_New")]
     public sealed class LightingPreset : ScriptableObject
@@ -29,27 +30,29 @@ namespace Game.Rendering
                  "first renders (visual review r2 #3, docs/06 §2). WORKING_VALUE.")]
         [Range(0f, 1f)] public float ambientSkySaturation = 0.55f;
 
-        [Header("Exposure")]
-        [Tooltip("Automatic: incident-meter EV100 of the horizontal illuminance (EV = log2(E/2.5)) plus compensation")]
+        [Header("Exposure (ADR 0016)")]
+        [Tooltip("On: camera EV100 from the sun-elevation table (ExposureTable), like a phone's scene metering. " +
+                 "Off: the fixed ev100 below.")]
         public bool autoExposure = true;
         public float ev100 = 15f;
-        [Tooltip("Exposure compensation in stops (positive = brighter). D23: a phone exposes ~+1 EV over an incident meter " +
-                 "(matrix metering on a dark ground, highlight roll-off by the tone curve) - clear +1.2, overcast +1.0.")]
-        public float exposureCompensation = 1.2f;
+        [Tooltip("Extra bias in stops on top of the table (positive = brighter). 0 for the reference presets.")]
+        public float exposureCompensation;
 
-        [Header("Look (owner decision D23: like a phone photo)")]
-        [Tooltip("Colour grading contrast (URP Color Adjustments, -100..100). A phone's global tone curve is flatter than a " +
-                 "film S-curve; negative = softer. Applied on every tier that runs post-processing.")]
-        [Range(-50f, 20f)] public float lookContrast = -10f;
+        [Header("Look (owner decision D23: like a phone photo; ADR 0016)")]
         [Tooltip("Colour grading saturation (-100..100). Natural colours: 0 or slightly negative (docs/06 §2).")]
         [Range(-30f, 20f)] public float lookSaturation = 0f;
-        [Tooltip("Shadow lift (Lift/Gamma/Gain lift offset): phone pipelines raise the black level and open the shadows " +
-                 "(multi-frame noise reduction + local tone mapping). 0 = none.")]
-        [Range(0f, 0.15f)] public float lookShadowLift = 0.03f;
-        [Tooltip("Highlight gain offset (Lift/Gamma/Gain gain): negative pulls bright surfaces and the sky away from clipping.")]
-        [Range(-0.2f, 0.1f)] public float lookHighlightGain = 0f;
+        [Tooltip("Display black level (sRGB 0..1) of an albedo-0 pixel, applied after the tone curve (review r3 G1: ≤ 2 %).")]
+        [Range(0f, 0.04f)] public float lookBlackLevel = 0.015f;
+        [Tooltip("Scene value (exposed linear) where the tone curve reaches display white and clips. Phones clip an overcast " +
+                 "sky (review r3: 20 % of the sky in the reference photo); the old Neutral tonemapper never exceeded ~85 %.")]
+        [Range(0.6f, 3f)] public float lookWhiteClip = 0.7f;
+        [Tooltip("Highlight desaturation towards white near the clip (0 = none, 1 = grey at the clip): a clipped sky goes " +
+                 "white, not yellow (review r3 G5).")]
+        [Range(0f, 1f)] public float lookHighlightDesaturation = 0.4f;
 
-        public float ResolveEv100(SkyModel probe) => (autoExposure ? SkyModel.IncidentEv100(probe.HorizontalIlluminanceLux) : ev100) - exposureCompensation;
+        /// <summary>Camera EV100 of this preset (table from sun elevation and cloud, minus the bias). No per-frame pass.</summary>
+        public float ResolveEv100(SkyModel probe) =>
+            (autoExposure ? ExposureTable.Ev100(probe.SunElevationDeg, probe.Overcast) : ev100) - exposureCompensation;
 
         /// <summary>Builds the sky model with the resolved exposure (two passes: illuminance does not depend on exposure).</summary>
         public SkyModel CreateModel()
@@ -63,7 +66,6 @@ namespace Game.Rendering
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_Clear";
             p.sunElevationDeg = 42f; p.sunAzimuthDeg = 200f; p.turbidity = 2.5f; p.overcast = 0f; p.visibilityKm = 20f;
-            p.exposureCompensation = 1.2f; p.lookContrast = -10f; p.lookSaturation = -3f; p.lookShadowLift = 0.03f;
             return p;
         }
 
@@ -72,7 +74,6 @@ namespace Game.Rendering
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_Overcast";
             p.sunElevationDeg = 30f; p.sunAzimuthDeg = 200f; p.turbidity = 4f; p.overcast = 1f; p.visibilityKm = 8f;
-            p.exposureCompensation = 1.0f; p.lookContrast = -8f; p.lookSaturation = 0f; p.lookShadowLift = 0.025f;
             return p;
         }
 
@@ -86,7 +87,7 @@ namespace Game.Rendering
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_LowSun";
             p.sunElevationDeg = 9f; p.sunAzimuthDeg = 60f; p.turbidity = 3f; p.overcast = 0f; p.visibilityKm = 15f;
-            p.exposureCompensation = 1.2f; p.lookContrast = -10f; p.lookSaturation = -3f; p.lookShadowLift = 0.03f;
+            p.lookSaturation = -3f;
             return p;
         }
 
@@ -96,8 +97,35 @@ namespace Game.Rendering
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_Dusk";
             p.sunElevationDeg = 1f; p.sunAzimuthDeg = 300f; p.turbidity = 4f; p.overcast = 0.2f; p.visibilityKm = 12f;
-            p.exposureCompensation = 1.2f; p.lookContrast = -10f; p.lookSaturation = -3f; p.lookShadowLift = 0.035f;
+            p.lookSaturation = -3f;
             return p;
+        }
+    }
+
+    /// <summary>
+    /// Camera EV100 by sun elevation and cloud (ADR 0016), replacing the incident meter on the horizontal illuminance
+    /// (review r3 G2/G3). Values include the D23 "phone" brightening (+1 EV over an incident meter at high sun):
+    /// - high sun: unchanged from ADR 0010 + D23 (clear 42° → 13.9, overcast 30° → 11.1);
+    /// - low sun: a phone meters the scene, where sunlit walls are bright, so it exposes ~1.4 EV less than the horizontal
+    ///   meter would (9°: 13.1 instead of 11.1 - a 0.6-albedo wall facing the sun ≈ 0.7 linear, ~90 %, instead of 2.8);
+    /// - dusk: no compensation of the falling light - sun 1° hazy lands 2-2.5 EV darker on screen than an overcast noon.
+    /// WORKING_VALUE (to be compared with owner photos at the same times).
+    /// </summary>
+    public static class ExposureTable
+    {
+        static readonly float[] k_El = { 0f, 5f, 10f, 20f, 30f, 45f, 90f };
+        static readonly float[] k_Clear = { 11.5f, 12.5f, 13.3f, 13.5f, 13.7f, 13.9f, 14.0f };
+        static readonly float[] k_Overcast = { 10.0f, 10.3f, 10.6f, 10.9f, 11.1f, 11.4f, 11.6f };
+
+        public static float Ev100(float sunElevationDeg, float overcast)
+        {
+            float el = Mathf.Clamp(sunElevationDeg, k_El[0], k_El[k_El.Length - 1]);
+            int i = 0;
+            while (i < k_El.Length - 2 && el > k_El[i + 1]) i++;
+            float t = (el - k_El[i]) / (k_El[i + 1] - k_El[i]);
+            float clear = Mathf.Lerp(k_Clear[i], k_Clear[i + 1], t);
+            float over = Mathf.Lerp(k_Overcast[i], k_Overcast[i + 1], t);
+            return Mathf.Lerp(clear, over, Mathf.Clamp01(overcast));
         }
     }
 }
