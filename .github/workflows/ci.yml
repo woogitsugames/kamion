@@ -13,6 +13,8 @@ jobs:
         with: { lfs: false }
       - uses: actions/setup-dotnet@v4
         with: { dotnet-version: '8.0.x' }
+      - name: Model/physics dimension sync (ADR 0014)
+        run: python3 tests/physics/test_dims_sync.py
       - name: Unit tests
         run: dotnet test tools/physics-runner/PhysicsRunner.sln -c Release --logger "trx;LogFileName=physics.trx"
       - name: Validation scenarios
