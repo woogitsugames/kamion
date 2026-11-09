@@ -1,0 +1,235 @@
+// World surfaces from the region generator (terrain, carriageways, kerbs, sidewalks, bridges, markings).
+// - World-space planar projection (XZ for up-facing, XY/ZY for walls): generator UVs are not needed, no seams between
+//   chunks, texel density fixed in metres (_TileSize).
+// - Anti-tiling: tier keyword _KAMION_WORLD_DETAIL adds a second sample at a different scale rotated by 37° and a
+//   second macro-noise octave; without it (Low tier) one detail sample + one macro sample.
+// - Albedo is calibrated: texture mean ≈ 0.5 (linear), result = _BaseColor × 2 × tex, so _BaseColor is the mean albedo
+//   from the world manifest (asphalt 0.075, grass 0.11/0.15/0.06 …).
+// - Markings: polygon offset (_OffsetFactor/_OffsetUnits) instead of relying on the +6 mm lift alone - 24-bit depth at
+//   200 m resolves only ~5 cm with a 0.05 m near plane, so the lift alone z-fights.
+// - Lighting: Lambert + Unity's minimalist GGX for the sun (with cascaded shadows), L2 SH ambient, environment reflection
+//   with Fresnel, exponential fog. SRP-batcher compatible.
+Shader "Kamion/World Surface"
+{
+    Properties
+    {
+        _BaseColor ("Mean albedo (linear)", Color) = (0.5, 0.5, 0.5, 1)
+        _BaseMap ("Detail albedo (mean 0.5, linear)", 2D) = "grey" {}
+        _TileSize ("Detail tile size (m)", Float) = 4
+        _DetailScale ("Second sample scale", Float) = 2.71
+        _DetailMix ("Second sample weight", Range(0, 1)) = 0.5
+        _MacroMap ("Macro noise (R: 1st octave, G: 2nd)", 2D) = "grey" {}
+        _MacroSize ("Macro tile size (m)", Float) = 61
+        _MacroStrength ("Macro albedo variation", Range(0, 1)) = 0.25
+        _MacroTint ("Macro tint (multiplied where noise is high)", Color) = (1, 1, 1, 1)
+        _Smoothness ("Smoothness", Range(0, 1)) = 0.1
+        _SmoothnessVar ("Smoothness from detail (polish)", Range(0, 1)) = 0
+        _Occlusion ("Ambient occlusion", Range(0, 1)) = 1
+        _FadeWidth ("Marking line width for distance pre-filter (m, 0 = off)", Float) = 0
+        _FadeColor ("Pre-filter background albedo (linear)", Color) = (0.075, 0.075, 0.072, 1)
+        _OffsetFactor ("Depth offset factor", Float) = 0
+        _OffsetUnits ("Depth offset units", Float) = 0
+        [Toggle] _ReceiveShadows ("Receive shadows", Float) = 1
+    }
+    SubShader
+    {
+        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "Queue" = "Geometry" "UniversalMaterialType" = "Lit" }
+
+        HLSLINCLUDE
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+        CBUFFER_START(UnityPerMaterial)
+            float4 _BaseColor;
+            float4 _BaseMap_ST;
+            float4 _MacroMap_ST;
+            float4 _MacroTint;
+            float4 _FadeColor;
+            float _FadeWidth;
+            float _TileSize, _DetailScale, _DetailMix, _MacroSize, _MacroStrength;
+            float _Smoothness, _SmoothnessVar, _Occlusion, _OffsetFactor, _OffsetUnits, _ReceiveShadows;
+        CBUFFER_END
+        ENDHLSL
+
+        Pass
+        {
+            Name "ForwardLit"
+            Tags { "LightMode" = "UniversalForward" }
+            Offset [_OffsetFactor], [_OffsetUnits]
+            Cull Back ZWrite On
+
+            HLSLPROGRAM
+            #pragma target 3.0
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
+            #pragma multi_compile _ _KAMION_WORLD_DETAIL
+            #pragma multi_compile_fog
+            #pragma multi_compile_instancing
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+
+            TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
+            TEXTURE2D(_MacroMap); SAMPLER(sampler_MacroMap);
+
+            struct Attributes { float4 positionOS : POSITION; float3 normalOS : NORMAL; UNITY_VERTEX_INPUT_INSTANCE_ID };
+            struct Varyings
+            {
+                float4 positionCS : SV_POSITION;
+                float3 positionWS : TEXCOORD0;
+                half3 normalWS : TEXCOORD1;
+                half fogFactor : TEXCOORD2;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
+
+            Varyings vert(Attributes v)
+            {
+                Varyings o = (Varyings)0;
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_TRANSFER_INSTANCE_ID(v, o);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+                VertexPositionInputs p = GetVertexPositionInputs(v.positionOS.xyz);
+                o.positionCS = p.positionCS;
+                o.positionWS = p.positionWS;
+                o.normalWS = TransformObjectToWorldNormal(v.normalOS);
+                o.fogFactor = ComputeFogFactor(p.positionCS.z);
+                return o;
+            }
+
+            // Planar projection in world metres; uses the absolute world position so chunks tile seamlessly.
+            float2 ProjectUV(float3 pw, half3 n)
+            {
+                half3 a = abs(n);
+                if (a.y >= 0.7) return pw.xz;
+                return a.x > a.z ? pw.zy : pw.xy;
+            }
+
+            half4 frag(Varyings i) : SV_Target
+            {
+                UNITY_SETUP_INSTANCE_ID(i);
+                half3 n = normalize(i.normalWS);
+                float2 uvm = ProjectUV(i.positionWS, n);
+
+                half det = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uvm / _TileSize).r;
+                half macro = SAMPLE_TEXTURE2D(_MacroMap, sampler_MacroMap, uvm / _MacroSize).r;
+            #if defined(_KAMION_WORLD_DETAIL)
+                const float2x2 rot = float2x2(0.7986, -0.6018, 0.6018, 0.7986);   // 37°
+                half det2 = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, mul(rot, uvm) / (_TileSize * _DetailScale) + 0.37).r;
+                det = lerp(det, det2, _DetailMix);
+                half macro2 = SAMPLE_TEXTURE2D(_MacroMap, sampler_MacroMap, mul(rot, uvm) / (_MacroSize * 4.13)).g;
+                macro = macro * 0.6 + macro2 * 0.4;
+            #endif
+                // Detail texture mean 0.5 → ×2; macro mean 0.5 → ±strength.
+                half m = (macro - 0.5) * 2.0;
+                half3 albedo = _BaseColor.rgb * (2.0 * det) * (1.0 + _MacroStrength * m);
+                albedo *= lerp(half3(1, 1, 1), _MacroTint.rgb, saturate(m));
+                albedo = saturate(albedo);
+                // Markings: a 0.12 m line covers less than a pixel at distance / grazing angles; the geometry then
+                // sparkles. Pre-filter: blend towards the road albedo by the line's pixel coverage (fwidth footprint).
+                if (_FadeWidth > 0.0)
+                {
+                    float footprint = length(fwidth(i.positionWS.xz));
+                    half coverage = saturate(_FadeWidth * 1.5 / max(footprint, 1e-4));
+                    albedo = lerp(_FadeColor.rgb, albedo, coverage);
+                }
+                half smooth = saturate(_Smoothness + _SmoothnessVar * (det - 0.5));
+
+                float3 V = GetWorldSpaceNormalizeViewDir(i.positionWS);
+                half NoV = saturate(dot(n, V));
+                half perceptualRoughness = 1.0 - smooth;
+                half r = max(perceptualRoughness * perceptualRoughness, 0.002);
+                half r2 = r * r;
+                const half3 specColor = half3(0.04, 0.04, 0.04);
+
+                // Sun
+                float4 shadowCoord = TransformWorldToShadowCoord(i.positionWS);
+                Light L = GetMainLight(shadowCoord, i.positionWS, half4(1, 1, 1, 1));
+                half atten = L.distanceAttenuation * lerp(1.0, L.shadowAttenuation, _ReceiveShadows);
+                half NoL = saturate(dot(n, L.direction));
+                float3 H = SafeNormalize(float3(L.direction) + V);
+                half NoH = saturate(dot(n, H));
+                half LoH = saturate(dot(L.direction, H));
+                float d = NoH * NoH * (r2 - 1.0) + 1.00001;
+                half spec = r2 / ((d * d) * max(0.1, LoH * LoH) * (r * 4.0 + 2.0));
+                half3 color = (albedo * (1.0 - 0.04) + specColor * spec) * L.color * (atten * NoL);
+
+                // Ambient: L2 SH (sky + ground) and environment reflection
+                half3 ambient = SampleSH(n) * albedo * _Occlusion;
+                half3 R = reflect(-V, n);
+                half fresnel = Pow4(1.0 - NoV);
+                half grazing = saturate(smooth + 0.04);
+                half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, _Occlusion) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
+                color += ambient + env;
+
+                color = MixFog(color, i.fogFactor);
+                return half4(color, 1.0);
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "ShadowCaster"
+            Tags { "LightMode" = "ShadowCaster" }
+            ZWrite On ZTest LEqual ColorMask 0 Cull Back
+
+            HLSLPROGRAM
+            #pragma target 3.0
+            #pragma vertex ShadowVert
+            #pragma fragment ShadowFrag
+            #pragma multi_compile_instancing
+            #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
+
+            float3 _LightDirection;
+            float3 _LightPosition;
+
+            struct A { float4 positionOS : POSITION; float3 normalOS : NORMAL; UNITY_VERTEX_INPUT_INSTANCE_ID };
+            struct V { float4 positionCS : SV_POSITION; };
+
+            V ShadowVert(A v)
+            {
+                UNITY_SETUP_INSTANCE_ID(v);
+                V o;
+                float3 pw = TransformObjectToWorld(v.positionOS.xyz);
+                float3 nw = TransformObjectToWorldNormal(v.normalOS);
+            #if _CASTING_PUNCTUAL_LIGHT_SHADOW
+                float3 ld = normalize(_LightPosition - pw);
+            #else
+                float3 ld = _LightDirection;
+            #endif
+                float4 cs = TransformWorldToHClip(ApplyShadowBias(pw, nw, ld));
+            #if UNITY_REVERSED_Z
+                cs.z = min(cs.z, UNITY_NEAR_CLIP_VALUE);
+            #else
+                cs.z = max(cs.z, UNITY_NEAR_CLIP_VALUE);
+            #endif
+                o.positionCS = cs;
+                return o;
+            }
+            half4 ShadowFrag(V i) : SV_Target { return 0; }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "DepthOnly"
+            Tags { "LightMode" = "DepthOnly" }
+            ZWrite On ColorMask R Cull Back
+            Offset [_OffsetFactor], [_OffsetUnits]
+
+            HLSLPROGRAM
+            #pragma target 3.0
+            #pragma vertex DepthVert
+            #pragma fragment DepthFrag
+            #pragma multi_compile_instancing
+            struct A { float4 positionOS : POSITION; UNITY_VERTEX_INPUT_INSTANCE_ID };
+            struct V { float4 positionCS : SV_POSITION; };
+            V DepthVert(A v) { UNITY_SETUP_INSTANCE_ID(v); V o; o.positionCS = TransformObjectToHClip(v.positionOS.xyz); return o; }
+            half4 DepthFrag(V i) : SV_Target { return 0; }
+            ENDHLSL
+        }
+    }
+    Fallback Off
+}

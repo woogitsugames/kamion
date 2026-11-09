@@ -1,0 +1,127 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b82bdd3f87861fa48b0a9e5b574ee4f3, type: 3}
+  m_Name: QualityProfile
+  m_EditorClassIdentifier: Game.Rendering::Game.Rendering.QualityProfile
+  tiers:
+  - name: Low
+    renderScale: 0.75
+    msaa: 2
+    postAntialiasing: 0
+    hdr: 0
+    postProcessing: 0
+    tonemapping: 0
+    shadowDistance: 35
+    shadowResolution: 1024
+    shadowCascades: 1
+    cascade2Split: 0.25
+    cascade4Split: {x: 0.067, y: 0.2, z: 0.467}
+    softShadows: 0
+    softShadowQuality: 1
+    shadowDepthBias: 1
+    shadowNormalBias: 1
+    anisotropic: 1
+    worldTextureAniso: 2
+    worldMipBias: 0
+    lodBias: 0.6
+    cameraFarClip: 900
+    worldDetail: 0
+    additionalLightsPerObject: 2
+    budgetDrawCalls: 250
+    budgetTrianglesK: 350
+    budgetTextureMB: 64
+    budgetShadowMs: 1
+    budgetStatus: UNMEASURED
+  - name: Medium
+    renderScale: 0.85
+    msaa: 4
+    postAntialiasing: 0
+    hdr: 1
+    postProcessing: 1
+    tonemapping: 1
+    shadowDistance: 60
+    shadowResolution: 1024
+    shadowCascades: 2
+    cascade2Split: 0.25
+    cascade4Split: {x: 0.067, y: 0.2, z: 0.467}
+    softShadows: 0
+    softShadowQuality: 1
+    shadowDepthBias: 1
+    shadowNormalBias: 1
+    anisotropic: 1
+    worldTextureAniso: 4
+    worldMipBias: 0
+    lodBias: 1
+    cameraFarClip: 1400
+    worldDetail: 1
+    additionalLightsPerObject: 4
+    budgetDrawCalls: 350
+    budgetTrianglesK: 550
+    budgetTextureMB: 96
+    budgetShadowMs: 1.5
+    budgetStatus: UNMEASURED
+  - name: High
+    renderScale: 1
+    msaa: 4
+    postAntialiasing: 0
+    hdr: 1
+    postProcessing: 1
+    tonemapping: 1
+    shadowDistance: 100
+    shadowResolution: 2048
+    shadowCascades: 3
+    cascade2Split: 0.25
+    cascade4Split: {x: 0.08, y: 0.25, z: 0.55}
+    softShadows: 1
+    softShadowQuality: 2
+    shadowDepthBias: 0.8
+    shadowNormalBias: 0.8
+    anisotropic: 1
+    worldTextureAniso: 8
+    worldMipBias: 0
+    lodBias: 1.5
+    cameraFarClip: 2500
+    worldDetail: 1
+    additionalLightsPerObject: 4
+    budgetDrawCalls: 800
+    budgetTrianglesK: 1500
+    budgetTextureMB: 256
+    budgetShadowMs: 2
+    budgetStatus: UNMEASURED (no flagship attached)
+  - name: Ultra
+    renderScale: 1
+    msaa: 4
+    postAntialiasing: 0
+    hdr: 1
+    postProcessing: 1
+    tonemapping: 1
+    shadowDistance: 150
+    shadowResolution: 4096
+    shadowCascades: 4
+    cascade2Split: 0.25
+    cascade4Split: {x: 0.05, y: 0.18, z: 0.45}
+    softShadows: 1
+    softShadowQuality: 3
+    shadowDepthBias: 0.6
+    shadowNormalBias: 0.6
+    anisotropic: 2
+    worldTextureAniso: 16
+    worldMipBias: 0
+    lodBias: 2
+    cameraFarClip: 3500
+    worldDetail: 1
+    additionalLightsPerObject: 8
+    budgetDrawCalls: 1000
+    budgetTrianglesK: 2000
+    budgetTextureMB: 384
+    budgetShadowMs: 3
+    budgetStatus: UNMEASURED (no flagship attached)

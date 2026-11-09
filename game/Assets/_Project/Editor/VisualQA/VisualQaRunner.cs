@@ -34,7 +34,9 @@ namespace Game.Editor.VisualQA
                 int h = int.Parse(EditorTools.Arg("-qaHeight", "1080"));
                 string tier = EditorTools.Arg("-qaTier", "Medium");
                 string outDir = EditorTools.Arg("-qaOutput", Path.Combine(EditorTools.RepoRoot, "artifacts", "visual-qa", scene));
-                int count = Render(scene, w, h, tier, outDir);
+                string lighting = EditorTools.Arg("-qaLighting", null);
+                string only = EditorTools.Arg("-qaCameras", null);
+                int count = Render(scene, w, h, tier, outDir, lighting, only);
                 exit = count > 0 ? 0 : 1;
                 Debug.Log($"VISUALQA_RESULT: {(exit == 0 ? "OK" : "NO_CAMERAS")} rendered={count} dir={outDir}");
             }
@@ -50,11 +52,15 @@ namespace Game.Editor.VisualQA
         static void MenuRenderBoot() =>
             Render("Boot", 2340, 1080, "Medium", Path.Combine(EditorTools.RepoRoot, "artifacts", "visual-qa", "Boot"));
 
+        [MenuItem("Kamion/Visual QA/Render WorldC control cameras")]
+        static void MenuRenderWorld() =>
+            Render("WorldC", 2340, 1080, "Medium", Path.Combine(EditorTools.RepoRoot, "artifacts", "visual-qa", "WorldC"));
+
         [MenuItem("Kamion/Visual QA/Render DrivingLab control cameras")]
         static void MenuRenderLab() =>
             Render("DrivingLab", 2340, 1080, "Medium", Path.Combine(EditorTools.RepoRoot, "artifacts", "visual-qa", "DrivingLab"));
 
-        public static int Render(string sceneName, int width, int height, string tier, string outDir)
+        public static int Render(string sceneName, int width, int height, string tier, string outDir, string lighting = null, string onlyCameras = null)
         {
             string scenePath = AssetDatabase.FindAssets("t:Scene " + sceneName)
                 .Select(AssetDatabase.GUIDToAssetPath)
@@ -69,8 +75,40 @@ namespace Game.Editor.VisualQA
             EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
             Directory.CreateDirectory(outDir);
 
+            // Look development (ADR 0010): lighting preset and the tier's camera-side settings (post, AA, far clip).
+            var env = UnityEngine.Object.FindAnyObjectByType<EnvironmentLighting>();
+            if (env != null)
+            {
+                if (!string.IsNullOrEmpty(lighting) && !env.SetPreset(lighting)) throw new ArgumentException("unknown lighting preset " + lighting);
+                env.Apply();
+            }
+            var profile = QualityProfile.Load();
+            QualityProfile.Tier tierSettings = default;
+            bool hasTier = profile != null && profile.TryGet(tier, out tierSettings);
+            var volume = UnityEngine.Object.FindAnyObjectByType<UnityEngine.Rendering.Volume>();
+            var applier = UnityEngine.Object.FindAnyObjectByType<QualityProfileApplier>(FindObjectsInactive.Include);
+            var worldTextures = applier != null ? applier.worldTextures : null;
+            string[] filter = string.IsNullOrEmpty(onlyCameras) ? null : onlyCameras.Split(',');
+
             var cams = UnityEngine.Object.FindObjectsByType<ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                .Where(c => filter == null || filter.Contains(c.id))
                 .OrderBy(c => c.id, StringComparer.Ordinal).ToArray();
+            int msaa = 1; float scale = 1f;
+            if (hasTier)
+            {
+                UnityEngine.Rendering.Universal.Tonemapping tm = null;
+                foreach (var qa in cams)
+                {
+                    // Keep the authored far clip of lab cameras when it is shorter than the tier's.
+                    var c = qa.GetComponent<Camera>();
+                    float far = c.farClipPlane;
+                    QualityProfileApplier.Apply(tierSettings, c, volume, worldTextures, ref tm);
+                    c.farClipPlane = Mathf.Min(far, tierSettings.cameraFarClip);
+                }
+                msaa = Mathf.Max(1, tierSettings.msaa);
+                scale = tierSettings.renderScale;
+            }
+            var stats = new System.Text.StringBuilder();
             // Warm-up: the very first Camera.Render after opening a scene in batchmode can draw with
             // stale per-material SRP-batcher data (every object showed the ground material). Render
             // each camera once into a throwaway target before capturing.
@@ -166,7 +204,9 @@ namespace Game.Editor.VisualQA
 
                 var prevTarget = cam.targetTexture;
                 cam.enabled = true;
-                var world = RenderToPixels(cam, width, height, out _);
+                var world = RenderToPixels(cam, width, height, out _, null, msaa, scale);
+                stats.AppendLine(SceneStats.Estimate(cam, hasTier ? tierSettings.shadowDistance : QualitySettings.shadowDistance,
+                    hasTier ? tierSettings.shadowCascades : 1, qa.id));
                 Color32[] pixels = world;
                 if (ui)
                 {
@@ -211,6 +251,8 @@ namespace Game.Editor.VisualQA
                     if (overlay != null) UnityEngine.Object.DestroyImmediate(overlay.gameObject);
                 }
             }
+            string lightName = lighting ?? "scene";
+            if (stats.Length > 0) File.WriteAllText(Path.Combine(outDir, "stats.txt"), $"tier={tier} lighting={lightName} msaa={msaa} renderScale={scale.ToString(System.Globalization.CultureInfo.InvariantCulture)}" + System.Environment.NewLine + stats);
             return rendered;
         }
 
@@ -221,13 +263,25 @@ namespace Game.Editor.VisualQA
         }
 
         /// <summary>Renders a camera into a temporary sRGB target and reads the pixels back (bottom-up rows).</summary>
-        static Color32[] RenderToPixels(Camera cam, int width, int height, out int count, Action beforeRender = null)
+        /// <summary>
+        /// Renders like the phone: at render scale (URP ignores the asset's render scale for render-texture targets) with
+        /// the tier's MSAA on the target, then bilinear upscale to the output size (what URP's final blit does on device).
+        /// </summary>
+        static Color32[] RenderToPixels(Camera cam, int width, int height, out int count, Action beforeRender = null, int msaa = 1, float scale = 1f)
         {
-            var rt = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB) { antiAliasing = 1 };
+            int sw = Mathf.Max(16, Mathf.RoundToInt(width * scale)), sh = Mathf.Max(16, Mathf.RoundToInt(height * scale));
+            var src = new RenderTexture(sw, sh, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB) { antiAliasing = msaa };
             var prev = cam.targetTexture;
-            cam.targetTexture = rt;
+            cam.targetTexture = src;
             beforeRender?.Invoke();
             cam.Render();
+            var rt = src;
+            if (sw != width || sh != height || msaa > 1)
+            {
+                rt = new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB) { antiAliasing = 1, filterMode = FilterMode.Bilinear };
+                src.filterMode = FilterMode.Bilinear;
+                Graphics.Blit(src, rt);
+            }
             var prevActive = RenderTexture.active;
             RenderTexture.active = rt;
             var tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
@@ -240,6 +294,7 @@ namespace Game.Editor.VisualQA
             UnityEngine.Object.DestroyImmediate(tex);
             rt.Release();
             UnityEngine.Object.DestroyImmediate(rt);
+            if (src != rt) { src.Release(); UnityEngine.Object.DestroyImmediate(src); }
             return px;
         }
     }

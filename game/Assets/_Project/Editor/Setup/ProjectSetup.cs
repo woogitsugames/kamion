@@ -1,5 +1,6 @@
 using System;
 using Game.Editor.Build;
+using Game.Rendering;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEngine;
@@ -27,28 +28,22 @@ namespace Game.Editor.Setup
         public const string SettingsDir = "Assets/_Project/Rendering/Settings";
         const string BaseUrpAsset = SettingsDir + "/Mobile_RPAsset.asset";
 
-        struct Tier
-        {
-            public string Name;
-            public float RenderScale;
-            public int Msaa;
-            public bool Hdr;
-            public float ShadowDistance;
-            public int ShadowResolution;
-            public int Cascades;
-            public bool SoftShadows;
-            public int AdditionalLightsPerObject;
-            public float LodBias;
-            public int Anisotropic; // 0 disable, 1 per-texture, 2 force
-        }
+        public const string QualityProfilePath = "Assets/_Project/Rendering/Resources/QualityProfile.asset";
 
-        static readonly Tier[] k_Tiers =
+        /// <summary>Per-tier values come from the QualityProfile asset (single source of truth, ADR 0010).</summary>
+        public static QualityProfile.Tier[] LoadTiers()
         {
-            new Tier { Name = "Low",    RenderScale = 0.75f, Msaa = 1, Hdr = false, ShadowDistance = 30f,  ShadowResolution = 512,  Cascades = 1, SoftShadows = false, AdditionalLightsPerObject = 2, LodBias = 0.6f, Anisotropic = 0 },
-            new Tier { Name = "Medium", RenderScale = 0.85f, Msaa = 2, Hdr = false, ShadowDistance = 50f,  ShadowResolution = 1024, Cascades = 1, SoftShadows = false, AdditionalLightsPerObject = 4, LodBias = 1.0f, Anisotropic = 1 },
-            new Tier { Name = "High",   RenderScale = 1.0f,  Msaa = 4, Hdr = true,  ShadowDistance = 80f,  ShadowResolution = 2048, Cascades = 2, SoftShadows = true,  AdditionalLightsPerObject = 4, LodBias = 1.5f, Anisotropic = 1 },
-            new Tier { Name = "Ultra",  RenderScale = 1.0f,  Msaa = 4, Hdr = true,  ShadowDistance = 120f, ShadowResolution = 2048, Cascades = 4, SoftShadows = true,  AdditionalLightsPerObject = 8, LodBias = 2.0f, Anisotropic = 2 },
-        };
+            var qp = AssetDatabase.LoadAssetAtPath<QualityProfile>(QualityProfilePath);
+            if (qp == null)
+            {
+                System.IO.Directory.CreateDirectory(System.IO.Path.Combine(EditorTools.ProjectRoot, System.IO.Path.GetDirectoryName(QualityProfilePath)));
+                qp = ScriptableObject.CreateInstance<QualityProfile>();
+                qp.tiers = QualityProfile.Defaults();
+                AssetDatabase.CreateAsset(qp, QualityProfilePath);
+                AssetDatabase.SaveAssets();
+            }
+            return qp.tiers;
+        }
 
         public static void ApplyAll()
         {
@@ -70,6 +65,21 @@ namespace Game.Editor.Setup
                 Debug.Log("SETUP_RESULT: FAILED");
                 exit = 1;
             }
+            if (Application.isBatchMode) EditorApplication.Exit(exit);
+        }
+
+        /// <summary>Batchmode: player settings + URP tier assets + quality levels from the QualityProfile only (no scene rebuild).</summary>
+        public static void ApplyRenderingBatch()
+        {
+            int exit = 0;
+            try
+            {
+                ApplyPlayerSettings();
+                ApplyQualityLevels(CreateUrpTierAssets());
+                AssetDatabase.SaveAssets();
+                Debug.Log("SETUP_RESULT: OK");
+            }
+            catch (Exception e) { Debug.LogException(e); Debug.Log("SETUP_RESULT: FAILED"); exit = 1; }
             if (Application.isBatchMode) EditorApplication.Exit(exit);
         }
 
@@ -127,32 +137,43 @@ namespace Game.Editor.Setup
             PlayerSettings.Android.preferredInstallLocation = AndroidPreferredInstallLocation.Auto;
             PlayerSettings.SetManagedStrippingLevel(android, ManagedStrippingLevel.Low);
             PlayerSettings.SetIl2CppCompilerConfiguration(android, Il2CppCompilerConfiguration.Release);
+            // World MeshColliders (imported chunks) are cooked at build time: meshes need not be readable on device.
+            PlayerSettings.bakeCollisionMeshes = true;
             Debug.Log($"[SETUP] player settings: {ApplicationId} min={MinSdk} target={TargetSdk} IL2CPP ARM64 Vulkan+GLES3 linear landscape");
         }
 
         static UniversalRenderPipelineAsset[] CreateUrpTierAssets()
         {
-            var result = new UniversalRenderPipelineAsset[k_Tiers.Length];
-            for (int i = 0; i < k_Tiers.Length; i++)
+            var tiers = LoadTiers();
+            var result = new UniversalRenderPipelineAsset[tiers.Length];
+            for (int i = 0; i < tiers.Length; i++)
             {
-                var t = k_Tiers[i];
-                string path = $"{SettingsDir}/URP_{t.Name}.asset";
+                var t = tiers[i];
+                string path = $"{SettingsDir}/URP_{t.name}.asset";
                 if (AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(path) == null &&
                     !AssetDatabase.CopyAsset(BaseUrpAsset, path))
                     throw new InvalidOperationException($"Cannot create {path} from {BaseUrpAsset}");
 
                 var asset = AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(path);
                 var so = new SerializedObject(asset);
-                Set(so, "m_RenderScale", t.RenderScale);
-                Set(so, "m_MSAA", t.Msaa);
-                Set(so, "m_SupportsHDR", t.Hdr);
-                Set(so, "m_HDRColorBufferPrecision", 0);
+                Set(so, "m_RenderScale", t.renderScale);
+                Set(so, "m_MSAA", t.msaa);
+                Set(so, "m_SupportsHDR", t.hdr);
+                Set(so, "m_HDRColorBufferPrecision", 0);            // R11G11B10: same 32 bpp as RGBA8 on the tile
                 Set(so, "m_MainLightShadowsSupported", true);
-                Set(so, "m_MainLightShadowmapResolution", t.ShadowResolution);
-                Set(so, "m_ShadowDistance", t.ShadowDistance);
-                Set(so, "m_ShadowCascadeCount", t.Cascades);
-                Set(so, "m_SoftShadowsSupported", t.SoftShadows);
-                Set(so, "m_AdditionalLightsPerObjectLimit", t.AdditionalLightsPerObject);
+                Set(so, "m_MainLightShadowmapResolution", t.shadowResolution);
+                Set(so, "m_ShadowDistance", t.shadowDistance);
+                Set(so, "m_ShadowCascadeCount", t.shadowCascades);
+                Set(so, "m_Cascade2Split", t.cascade2Split);
+                Find(so, "m_Cascade4Split").vector3Value = t.cascade4Split;
+                Set(so, "m_Cascade3Split", new Vector2(t.cascade4Split.x, t.cascade4Split.y));
+                Set(so, "m_ShadowDepthBias", t.shadowDepthBias);
+                Set(so, "m_ShadowNormalBias", t.shadowNormalBias);
+                Set(so, "m_SoftShadowsSupported", t.softShadows);
+                Set(so, "m_SoftShadowQuality", (int)t.softShadowQuality);
+                Set(so, "m_AdditionalLightsPerObjectLimit", t.additionalLightsPerObject);
+                Set(so, "m_ColorGradingMode", t.hdr ? 1 : 0);        // HDR grading when the buffer is HDR
+                Set(so, "m_ColorGradingLutSize", 32);
                 Set(so, "m_AdditionalLightShadowsSupported", false);
                 Set(so, "m_RequireDepthTexture", false);
                 Set(so, "m_RequireOpaqueTexture", false);
@@ -168,6 +189,7 @@ namespace Game.Editor.Setup
         static void Set(SerializedObject so, string prop, float v) { Find(so, prop).floatValue = v; }
         static void Set(SerializedObject so, string prop, int v) { Find(so, prop).intValue = v; }
         static void Set(SerializedObject so, string prop, bool v) { Find(so, prop).boolValue = v; }
+        static void Set(SerializedObject so, string prop, Vector2 v) { Find(so, prop).vector2Value = v; }
 
         static SerializedProperty Find(SerializedObject so, string prop) =>
             so.FindProperty(prop) ?? throw new InvalidOperationException($"{so.targetObject.name}: no property {prop}");
@@ -177,18 +199,19 @@ namespace Game.Editor.Setup
             var qs = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/QualitySettings.asset")[0];
             var so = new SerializedObject(qs);
             var levels = so.FindProperty("m_QualitySettings");
-            levels.arraySize = k_Tiers.Length;
-            for (int i = 0; i < k_Tiers.Length; i++)
+            var tiers = LoadTiers();
+            levels.arraySize = tiers.Length;
+            for (int i = 0; i < tiers.Length; i++)
             {
-                var t = k_Tiers[i];
+                var t = tiers[i];
                 var e = levels.GetArrayElementAtIndex(i);
-                e.FindPropertyRelative("name").stringValue = t.Name;
+                e.FindPropertyRelative("name").stringValue = t.name;
                 e.FindPropertyRelative("customRenderPipeline").objectReferenceValue = assets[i];
                 e.FindPropertyRelative("vSyncCount").intValue = 0;
                 e.FindPropertyRelative("antiAliasing").intValue = 0; // URP asset owns MSAA
-                e.FindPropertyRelative("shadowDistance").floatValue = t.ShadowDistance;
-                e.FindPropertyRelative("lodBias").floatValue = t.LodBias;
-                e.FindPropertyRelative("anisotropicTextures").intValue = t.Anisotropic;
+                e.FindPropertyRelative("shadowDistance").floatValue = t.shadowDistance;
+                e.FindPropertyRelative("lodBias").floatValue = t.lodBias;
+                e.FindPropertyRelative("anisotropicTextures").intValue = t.anisotropic;
                 e.FindPropertyRelative("globalTextureMipmapLimit").intValue = 0;
                 e.FindPropertyRelative("realtimeReflectionProbes").boolValue = false;
                 e.FindPropertyRelative("softParticles").boolValue = false;
