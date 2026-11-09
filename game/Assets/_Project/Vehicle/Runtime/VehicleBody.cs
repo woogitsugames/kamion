@@ -132,8 +132,13 @@ namespace Game.Vehicle.Runtime
         {
             if (Model == null) Initialize(data);
             Trailer = trailer;
-            Combination = new CombinationModel(Model, trailer != null ? trailer.Model : null, coupled && trailer != null) { Gravity = Model.Gravity };
-            if (trailer != null) trailer.Model.Brakes.InitSpringChambers(trailer.Model.Group);
+            // R7: swap the trailer inside the existing combination (no rebuild of the tractor model / combination).
+            Combination.SetTrailer(trailer != null ? trailer.Model : null, coupled && trailer != null);
+            if (trailer != null)
+            {
+                trailer.ApplyMassProps();
+                trailer.Model.Brakes.InitSpringChambers(trailer.Model.Group);
+            }
         }
 
         /// <summary>Gives the tractor (and a coupled trailer) a forward speed with the drivetrain engaged (scripted starts, tests).</summary>

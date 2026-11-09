@@ -248,6 +248,8 @@ namespace Game.Gameplay
             if (trailer != null)
             {
                 var preset = spawn == LabSpawn.Cargo24t ? CargoPreset.Cargo24t : spawn == LabSpawn.Gross40t ? CargoPreset.Gross40t : CargoPreset.Empty;
+                // A respawn is a full reset of the trailer state (legs, brakes, wheels); a pure load change while the
+                // trailer stays connected uses TrailerBody.SetCargo (R7, in place).
                 trailer.Initialize(vehicle.Data, preset, vehicle.Model.MassProps.Mass);
                 vehicle.ConnectTrailer(trailer, coupled);
                 CombinationPlacement.Tractor(vehicle.Model, pos, north, out Vector3 vp, out Quaternion vq);
@@ -411,6 +413,9 @@ namespace Game.Gameplay
             Vector3 jaw = vehicle.transform.TransformPoint(vehicle.Model.Def.fifthWheel.position.ToUnity());
             Vector3 kp = vehicle.Trailer.transform.TransformPoint(t.KingpinLocal.ToUnity());
             Vector3 d = vehicle.transform.InverseTransformDirection(kp - jaw);
+            // While the jaw is armed the core reports the kingpin offset it actually guides on (R5 throat).
+            var oj = c.FifthWheel.OpenJawOffset;
+            if (c.CouplingArmed && (oj.x != 0 || oj.y != 0 || oj.z != 0)) d = oj.ToUnity();
             string side = Mathf.Abs(d.x) < 0.005f ? "na osi" : (Mathf.Abs(d.x) * 100f).ToString("F0", ci) + " cm " + (d.x > 0 ? "w prawo" : "w lewo");
             string dist = d.z < 0 ? (-d.z).ToString("F2", ci) + " m za siodłem" : d.z.ToString("F2", ci) + " m przed siodłem";
             return "Naczepa odpięta (nogi " + legsTxt + ") · sworzeń " + dist + ", " + side + ", wys. " + (d.y * 100f).ToString("+0;-0", ci) + " cm · szczęki " + (c.CouplingArmed ? "GOTOWE" : "nieaktywne");

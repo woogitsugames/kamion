@@ -66,6 +66,20 @@ namespace Game.Vehicle.Runtime
             Cargo = CargoPresets.Create(preset, tractorMassKg > 0 ? tractorMassKg : MassProperties.Compute(data.Vehicle.massElements).Mass, data.Trailer);
             Model = data.CreateTrailer(Cargo, settings);
             var rb = Body;
+            ApplyMassProps();
+            rb.useGravity = true;
+            rb.linearDamping = 0f;
+            rb.angularDamping = 0f;
+            rb.maxAngularVelocity = 50f;
+            rb.sleepThreshold = 0f;
+            rb.interpolation = RigidbodyInterpolation.Interpolate;
+            rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
+        }
+
+        /// <summary>Copies the model's mass, centre of mass and inertia (cargo included) into the Rigidbody.</summary>
+        public void ApplyMassProps()
+        {
+            var rb = Body;
             var mp = Model.MassProps;
             rb.mass = (float)mp.Mass;
             rb.automaticCenterOfMass = false;
@@ -74,13 +88,21 @@ namespace Game.Vehicle.Runtime
             InertiaUtil.Diagonalize(mp.Inertia, out Vector3 principal, out Quaternion rot);
             rb.inertiaTensor = principal;
             rb.inertiaTensorRotation = rot;
-            rb.useGravity = true;
-            rb.linearDamping = 0f;
-            rb.angularDamping = 0f;
-            rb.maxAngularVelocity = 50f;
-            rb.sleepThreshold = 0f;
-            rb.interpolation = RigidbodyInterpolation.Interpolate;
-            rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
+        }
+
+        /// <summary>
+        /// R7 (ADR 0009 resolution): changes the load case of the existing trailer model in place - no new model, no new
+        /// wheel group - and re-masses the Rigidbody. When the trailer is connected to a tractor, the combination's
+        /// <see cref="CombinationModel.SetCargo"/> is used so the tractor's kingpin load follows. Call between steps.
+        /// </summary>
+        public void SetCargo(CargoPreset preset, double tractorMassKg, CombinationModel combination = null)
+        {
+            if (Model == null) { Initialize(data, preset, tractorMassKg); return; }
+            Preset = preset;
+            Cargo = CargoPresets.Create(preset, tractorMassKg > 0 ? tractorMassKg : MassProperties.Compute(data.Vehicle.massElements).Mass, data.Trailer);
+            if (combination != null && combination.Trailer == Model) combination.SetCargo(Cargo);
+            else Model.SetCargo(Cargo, false);
+            ApplyMassProps();
         }
 
         /// <summary>Teleports the trailer (at rest) to a pose. Call <see cref="Physics.SyncTransforms"/> before raycasting.</summary>
