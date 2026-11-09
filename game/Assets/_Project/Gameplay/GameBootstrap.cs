@@ -49,7 +49,21 @@ namespace Game.Gameplay
             Platform = PlatformServices.Create();
 
             string tierArg = Platform.GetLaunchArgument("tier");
-            if (!QualityTiers.Apply(tierArg)) QualityTiers.Apply(QualityTiers.SavedTier);
+            if (!QualityTiers.Apply(tierArg) && !QualityTiers.Apply(QualityTiers.SavedTier))
+            {
+                // First launch: tier by device class (data in QualityProfile.deviceRules; not saved, so a rule update
+                // reaches players who never chose a tier themselves).
+                var qp = QualityProfile.Load();
+                if (qp != null)
+                {
+                    string auto = qp.TierForDevice(SystemInfo.graphicsDeviceName, SystemInfo.deviceModel, SystemInfo.systemMemorySize, out string why);
+                    QualityTiers.Apply(auto);
+                    Debug.Log($"[BOOT] auto tier {auto}: {why}");
+                }
+            }
+
+            string rq = RenderOverrides.Parse(Platform.GetLaunchArgument);
+            if (rq != null) Debug.Log("[BOOT] render overrides (profiling): " + rq);
 
             int fps = defaultTargetFps;
             if (int.TryParse(Platform.GetLaunchArgument("fps"), NumberStyles.Integer, CultureInfo.InvariantCulture, out int argFps) && argFps > 0)

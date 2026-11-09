@@ -72,6 +72,11 @@ namespace Game.Telemetry
         // Pending CSV rows (frame index, session time, frame ms) — preallocated.
         float[] m_PendingTime;
         float[] m_PendingMs;
+        float[] m_PendingCpu;
+        float[] m_PendingGpu;
+        // FrameTimingManager (PlayerSettings "Frame Timing Stats"): GPU time of the frame on Vulkan/GLES devices that report
+        // it (Mali, Xclipse); 0 when unsupported. Reported for the frame that finished a few frames earlier.
+        readonly FrameTiming[] m_Timing = new FrameTiming[1];
         long[] m_PendingFrame;
         int m_PendingCount;
 
@@ -100,6 +105,8 @@ namespace Game.Telemetry
             m_PendingTime = new float[pendingCap];
             m_PendingMs = new float[pendingCap];
             m_PendingFrame = new long[pendingCap];
+            m_PendingCpu = new float[pendingCap];
+            m_PendingGpu = new float[pendingCap];
             m_SessionStart = Time.realtimeSinceStartup;
             OpenFiles();
         }
@@ -111,7 +118,7 @@ namespace Game.Telemetry
                 OutputDirectory = Path.Combine(Application.persistentDataPath, "diag");
                 Directory.CreateDirectory(OutputDirectory);
                 m_Csv = new StreamWriter(Path.Combine(OutputDirectory, "frametimes.csv"), false, new UTF8Encoding(false));
-                m_Csv.WriteLine("frame,t_s,frame_ms");
+                m_Csv.WriteLine("frame,t_s,frame_ms,cpu_main_ms,gpu_ms");
                 m_SummaryPath = Path.Combine(OutputDirectory, "summary.json");
             }
             catch (Exception e)
@@ -129,8 +136,17 @@ namespace Game.Telemetry
 
             m_Frame++;
             m_Stats.Add(dtMs);
+            FrameTimingManager.CaptureFrameTimings();
+            float cpuMs = 0f, gpuMs = 0f;
+            if (FrameTimingManager.GetLatestTimings(1, m_Timing) > 0)
+            {
+                cpuMs = (float)m_Timing[0].cpuMainThreadFrameTime;
+                gpuMs = (float)m_Timing[0].gpuFrameTime;
+            }
             if (m_PendingCount < m_PendingFrame.Length)
             {
+                m_PendingCpu[m_PendingCount] = cpuMs;
+                m_PendingGpu[m_PendingCount] = gpuMs;
                 m_PendingFrame[m_PendingCount] = m_Frame;
                 m_PendingTime[m_PendingCount] = now - m_SessionStart;
                 m_PendingMs[m_PendingCount] = dtMs;
@@ -178,7 +194,9 @@ namespace Game.Telemetry
             {
                 m_Sb.Append(m_PendingFrame[i]).Append(',')
                     .Append(m_PendingTime[i].ToString("F4", ci)).Append(',')
-                    .Append(m_PendingMs[i].ToString("F3", ci)).Append('\n');
+                    .Append(m_PendingMs[i].ToString("F3", ci)).Append(',')
+                    .Append(m_PendingCpu[i].ToString("F3", ci)).Append(',')
+                    .Append(m_PendingGpu[i].ToString("F3", ci)).Append('\n');
             }
             m_PendingCount = 0;
             m_Csv.Write(m_Sb);

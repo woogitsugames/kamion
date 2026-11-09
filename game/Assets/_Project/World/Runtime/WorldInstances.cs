@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Game.Rendering;
 
 namespace Game.World
 {
@@ -48,10 +49,16 @@ namespace Game.World
         void OnEnable()
         {
             RenderPipelineManager.beginCameraRendering += OnBeginCamera;
-            Allocate();
+            QualityProfileApplier.Applied += OnTierApplied;
+            m_TierRead = false;
+            m_TreeCull = -1f;
         }
 
-        void OnDisable() => RenderPipelineManager.beginCameraRendering -= OnBeginCamera;
+        void OnDisable()
+        {
+            RenderPipelineManager.beginCameraRendering -= OnBeginCamera;
+            QualityProfileApplier.Applied -= OnTierApplied;
+        }
 
         void Allocate()
         {
@@ -72,10 +79,47 @@ namespace Game.World
                 m_Ends[p] = (float[])pr.lodEndM.Clone();
                 // Impostor forests: cap the cull distance (device measurement: DK8 forest 10 FPS on the A16 Medium,
                 // 14 FPS on the S24+ High before thinning and this cap).
-                if (m_Thin[p] && m_Ends[p].Length > 0) m_Ends[p][m_Ends[p].Length - 1] = Mathf.Min(m_Ends[p][m_Ends[p].Length - 1], treeCullM);
+                if (m_Thin[p] && m_Ends[p].Length > 0) m_Ends[p][m_Ends[p].Length - 1] = Mathf.Min(m_Ends[p][m_Ends[p].Length - 1], m_TreeCull);
             }
             m_Origin = new Vector3(float.NaN, 0f, 0f);
         }
+
+        // Vegetation settings of the active tier (QualityProfile, ADR 0012 / device runs); the serialized fields below are
+        // the fallback when no tier was applied (edit-mode tools without an applier).
+        float m_TreeCull, m_TreeCard, m_ThinStart;
+        int m_TreeShadowMask;
+        bool m_Trees = true;
+        bool m_LeafA2C = true;
+        bool m_TierRead;
+
+        void ReadTier()
+        {
+            m_TierRead = true;
+            var t = QualityProfileApplier.Current;
+            bool ok = QualityProfileApplier.HasCurrent && t.treeCullM > 0f;
+            float cull = ok ? t.treeCullM : treeCullM;
+            m_TreeCard = ok ? t.treeCardLodScale : treeLodScaleMax;
+            m_ThinStart = ok ? t.treeThinStartM : thinStartM;
+            m_TreeShadowMask = ok ? t.treeShadowLodMask : (QualitySettings.lodBias < 1f ? 1 : 3);
+            m_Trees = !RenderOverrides.Trees.HasValue || RenderOverrides.Trees.Value;
+            bool a2c = !ok || t.leafAlphaToCoverage;
+            if (a2c != m_LeafA2C || !Mathf.Approximately(cull, m_TreeCull))
+            {
+                m_LeafA2C = a2c;
+                SetLeafAlphaToCoverage(a2c);
+            }
+            if (!Mathf.Approximately(cull, m_TreeCull)) { m_TreeCull = cull; m_Batch = null; }   // re-cap impostor distances
+        }
+
+        /// <summary>Alpha-to-coverage on the alpha-clipped vegetation materials (URP Lit _AlphaToMask render state).</summary>
+        void SetLeafAlphaToCoverage(bool on)
+        {
+            if (set == null || set.materials == null || !Application.isPlaying) return;   // never edit the assets in the editor
+            foreach (var m in set.materials)
+                if (m != null && m.HasProperty("_AlphaToMask") && m.IsKeywordEnabled("_ALPHATEST_ON")) m.SetFloat("_AlphaToMask", on ? 1f : 0f);
+        }
+
+        void OnTierApplied(QualityProfile.Tier t) => m_TierRead = false;
 
         /// <summary>World-space copies of matrices and cell bounds; redone only when the region root moves (floating origin).</summary>
         void SyncOrigin()
@@ -100,6 +144,7 @@ namespace Game.World
             if (set == null || set.cells == null || set.cells.Length == 0) return;
             if (cam.cameraType == CameraType.Preview || cam.cameraType == CameraType.Reflection) return;
             if (cam.cameraType == CameraType.SceneView && !includeSceneViewCamera) return;
+            if (!m_TierRead) ReadTier();
             if (m_Batch == null || m_BatchOffset.Length != set.prototypes.Length) Allocate();
             Render(cam);
         }
@@ -133,7 +178,8 @@ namespace Game.World
                     var run = runs[ri];
                     var p = protos[run.prototype];
                     var ends = m_Ends[run.prototype];
-                    float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, treeLodScaleMax) : scale;
+                    if (!m_Trees && m_Thin[run.prototype]) continue;
+                    float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, m_TreeCard) : scale;
                     int ln = LodAt(ends, dNear, ls, scale), lf = LodAt(ends, dFar, ls, scale);
                     bool thinnable = m_Thin[run.prototype];
                     int stride = thinnable ? ThinStride(dNear, scale) : 1;
@@ -171,7 +217,7 @@ namespace Game.World
 
         int ThinStride(float d, float scale)
         {
-            float s = thinStartM * scale;
+            float s = m_ThinStart * scale;
             return d < s ? 1 : d < 2.5f * s ? 2 : 4;
         }
 
@@ -227,8 +273,9 @@ namespace Game.World
             var p = set.prototypes[proto];
             var mesh = p.lods[lod];
             var b = m_BatchBounds[slot];
-            // Low/Medium (lodBias < 1): only LOD0 casts - LOD1 tree cards in the shadow pass doubled the forest cost on the A16.
-            int mask = QualitySettings.lodBias < 1f ? p.shadowLodMask & 1 : p.shadowLodMask;
+            // Tree casters per tier (QualityProfile.treeShadowLodMask): LOD1 tree cards in the shadow pass doubled the
+            // forest cost on the A16 (Low/Medium cast from LOD0 only).
+            int mask = m_Thin[proto] ? p.shadowLodMask & m_TreeShadowMask : p.shadowLodMask;
             var shadows = (mask & (1 << lod)) != 0 ? ShadowCastingMode.On : ShadowCastingMode.Off;
             int m0 = p.materialStart[lod];
             for (int s = 0; s < mesh.subMeshCount; s++)

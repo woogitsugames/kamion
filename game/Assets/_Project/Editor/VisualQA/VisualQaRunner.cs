@@ -85,7 +85,9 @@ namespace Game.Editor.VisualQA
             var profile = QualityProfile.Load();
             QualityProfile.Tier tierSettings = default;
             bool hasTier = profile != null && profile.TryGet(tier, out tierSettings);
-            var volume = UnityEngine.Object.FindAnyObjectByType<UnityEngine.Rendering.Volume>();
+            // The world volume carries the tonemapper; EnvironmentLighting adds a runtime look-grading volume (D23).
+            var volume = UnityEngine.Object.FindObjectsByType<UnityEngine.Rendering.Volume>(FindObjectsSortMode.None)
+                .FirstOrDefault(v => v.sharedProfile != null && v.sharedProfile.Has<UnityEngine.Rendering.Universal.Tonemapping>());
             var applier = UnityEngine.Object.FindAnyObjectByType<QualityProfileApplier>(FindObjectsInactive.Include);
             var worldTextures = applier != null ? applier.worldTextures : null;
             string[] filter = string.IsNullOrEmpty(onlyCameras) ? null : onlyCameras.Split(',');

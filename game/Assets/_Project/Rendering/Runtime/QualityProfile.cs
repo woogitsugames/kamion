@@ -45,6 +45,12 @@ namespace Game.Rendering
             public float cameraFarClip;
             [Tooltip("Enable the world surface detail layer (second albedo scale + macro variation)")] public bool worldDetail;
             public int additionalLightsPerObject;
+            [Header("Vegetation (WorldInstances; device-measured, DK8 forest)")]
+            [Tooltip("Upper limit of the LOD-bias factor for tree card LODs (LOD0/LOD1 leaf cards)")] public float treeCardLodScale;
+            [Tooltip("Trees beyond this distance (m × LOD bias) are thinned: every 2nd, every 4th beyond 2.5×")] public float treeThinStartM;
+            [Tooltip("Cull distance of trees and shrubs (m × LOD bias), caps the baked impostor distance")] public float treeCullM;
+            [Tooltip("Tree LODs that cast shadows: bit 0 = LOD0, bit 1 = LOD1 (impostors never)")] public int treeShadowLodMask;
+            [Tooltip("Alpha-to-coverage on leaf cards / impostors (needs MSAA; smooth edges, costs coverage work on the GPU)")] public bool leafAlphaToCoverage;
             [Header("Budget assumptions (UNMEASURED until the phone is measured)")]
             public int budgetDrawCalls;
             public int budgetTrianglesK;
@@ -54,6 +60,59 @@ namespace Game.Rendering
         }
 
         public Tier[] tiers = Defaults();
+
+        /// <summary>
+        /// First-launch tier by device (no launch argument, nothing saved by the player). Rules are checked in order; a rule
+        /// matches when every non-empty condition holds (case-insensitive substring of SystemInfo.graphicsDeviceName /
+        /// deviceModel, RAM ≤ maxRamMb when > 0). Medium stays selectable in the settings on every device.
+        /// Measured basis: docs/reports/device/DEVICE-RUN-2026-11-09.md (A16 DK8 forest: Low 30 FPS, Medium 13-17 FPS).
+        /// </summary>
+        [Serializable]
+        public struct DeviceRule
+        {
+            public string gpuContains;
+            public string modelContains;
+            [Tooltip("Match when SystemInfo.systemMemorySize ≤ this (MB); 0 = ignore")] public int maxRamMb;
+            public string tier;
+            public string note;
+        }
+
+        public DeviceRule[] deviceRules = DefaultDeviceRules();
+        [Tooltip("Tier when no device rule matches")] public string fallbackTier = "Medium";
+
+        public static DeviceRule[] DefaultDeviceRules() => new[]
+        {
+            // Galaxy A16 4G/5G class: Mali-G57 MC2 (Helio G99) / 4 GB. Measured: Medium 13-17 FPS in the DK8 forest.
+            new DeviceRule { gpuContains = "Mali-G57", tier = "Low", note = "Galaxy A16 (Helio G99): measured, Low holds 30 FPS" },
+            new DeviceRule { gpuContains = "Mali-G52", tier = "Low", note = "older entry-level Mali (same class or below the A16)" },
+            new DeviceRule { gpuContains = "Mali-G68", tier = "Low", note = "Mali-G68 MC4 entry 5G (Dimensity 6xxx) - UNMEASURED" },
+            new DeviceRule { gpuContains = "Adreno (TM) 6", tier = "Low", note = "Adreno 6xx entry/mid - UNMEASURED" },
+            new DeviceRule { maxRamMb = 4200, tier = "Low", note = "≤ 4 GB RAM: world PSS ~0.5 GB, keep the Low content budget" },
+            // Flagships: Galaxy S24+ (Xclipse 940) measured; Adreno 7xx/8xx and Immortalis are the same class (UNMEASURED).
+            new DeviceRule { gpuContains = "Xclipse 9", tier = "High", note = "Galaxy S24+ (Exynos 2400): measured, High ~60 FPS" },
+            new DeviceRule { gpuContains = "Adreno (TM) 7", tier = "High", note = "Snapdragon 8 Gen 1-3 - UNMEASURED" },
+            new DeviceRule { gpuContains = "Adreno (TM) 8", tier = "High", note = "Snapdragon 8 Elite - UNMEASURED" },
+            new DeviceRule { gpuContains = "Immortalis", tier = "High", note = "Dimensity 9xxx - UNMEASURED" },
+        };
+
+        /// <summary>The first-launch tier for a device (see <see cref="DeviceRule"/>).</summary>
+        public string TierForDevice(string gpu, string model, int ramMb, out string reason)
+        {
+            if (deviceRules != null)
+                foreach (var r in deviceRules)
+                {
+                    if (string.IsNullOrEmpty(r.tier)) continue;
+                    bool any = false;
+                    if (!string.IsNullOrEmpty(r.gpuContains)) { any = true; if (gpu == null || gpu.IndexOf(r.gpuContains, StringComparison.OrdinalIgnoreCase) < 0) continue; }
+                    if (!string.IsNullOrEmpty(r.modelContains)) { any = true; if (model == null || model.IndexOf(r.modelContains, StringComparison.OrdinalIgnoreCase) < 0) continue; }
+                    if (r.maxRamMb > 0) { any = true; if (ramMb <= 0 || ramMb > r.maxRamMb) continue; }
+                    if (!any) continue;
+                    reason = r.note;
+                    return r.tier;
+                }
+            reason = "no device rule matched";
+            return fallbackTier;
+        }
 
         public bool TryGet(string tierName, out Tier tier)
         {
@@ -86,6 +145,7 @@ namespace Game.Rendering
                 shadowDepthBias = 1.0f, shadowNormalBias = 1.0f,
                 anisotropic = 1, worldTextureAniso = 2, worldMipBias = 0f, lodBias = 0.5f, cameraFarClip = 900f,
                 worldDetail = false, additionalLightsPerObject = 2,
+                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true,
                 budgetDrawCalls = 250, budgetTrianglesK = 350, budgetTextureMB = 64, budgetShadowMs = 1.0f, budgetStatus = "UNMEASURED",
             },
             new Tier
@@ -97,6 +157,7 @@ namespace Game.Rendering
                 shadowDepthBias = 1.0f, shadowNormalBias = 1.0f,
                 anisotropic = 1, worldTextureAniso = 4, worldMipBias = 0f, lodBias = 0.8f, cameraFarClip = 1400f,
                 worldDetail = true, additionalLightsPerObject = 4,
+                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true,
                 budgetDrawCalls = 350, budgetTrianglesK = 550, budgetTextureMB = 96, budgetShadowMs = 1.5f, budgetStatus = "UNMEASURED",
             },
             new Tier
@@ -108,6 +169,7 @@ namespace Game.Rendering
                 shadowDepthBias = 0.8f, shadowNormalBias = 0.8f,
                 anisotropic = 1, worldTextureAniso = 8, worldMipBias = 0f, lodBias = 1.5f, cameraFarClip = 2500f,
                 worldDetail = true, additionalLightsPerObject = 4,
+                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, leafAlphaToCoverage = true,
                 budgetDrawCalls = 800, budgetTrianglesK = 1500, budgetTextureMB = 256, budgetShadowMs = 2.0f, budgetStatus = "UNMEASURED (no flagship attached)",
             },
             new Tier
@@ -119,6 +181,7 @@ namespace Game.Rendering
                 shadowDepthBias = 0.6f, shadowNormalBias = 0.6f,
                 anisotropic = 2, worldTextureAniso = 16, worldMipBias = 0f, lodBias = 2.0f, cameraFarClip = 3500f,
                 worldDetail = true, additionalLightsPerObject = 8,
+                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, leafAlphaToCoverage = true,
                 budgetDrawCalls = 1000, budgetTrianglesK = 2000, budgetTextureMB = 384, budgetShadowMs = 3.0f, budgetStatus = "UNMEASURED (no flagship attached)",
             },
         };

@@ -24,6 +24,7 @@ namespace Game.Rendering
         Tonemapping m_Tonemapping;
 
         public static QualityProfile.Tier Current { get; private set; }
+        public static bool HasCurrent { get; private set; }
 
         void OnEnable() => ApplyNow();
 
@@ -37,13 +38,35 @@ namespace Game.Rendering
             m_AppliedLevel = QualitySettings.GetQualityLevel();
             var profile = QualityProfile.Load();
             if (profile == null || !profile.TryGet(QualityTiers.Current, out var t)) return;
-            Current = t;
+            if (RenderOverrides.Any)
+            {
+                t = RenderOverrides.ApplyTo(t);
+                ApplyPipelineOverrides(t);
+            }
             Apply(t, targetCamera != null ? targetCamera : Camera.main, volume, worldTextures, ref m_Tonemapping);
         }
+
+        /// <summary>
+        /// Profiling overrides that live on the URP asset (baked per tier by the editor): written to the active asset at
+        /// run time only (player builds / play mode with launch arguments), never saved.
+        /// </summary>
+        static void ApplyPipelineOverrides(QualityProfile.Tier t)
+        {
+            if (!(GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset urp)) return;
+            if (RenderOverrides.Msaa.HasValue) urp.msaaSampleCount = t.msaa;
+            if (RenderOverrides.RenderScale.HasValue) urp.renderScale = t.renderScale;
+            if (RenderOverrides.ShadowDistance.HasValue) urp.shadowDistance = t.shadowDistance;
+            if (RenderOverrides.Hdr.HasValue) urp.supportsHDR = t.hdr;
+        }
+
+        /// <summary>Raised after a tier was applied (vegetation reads <see cref="Current"/>).</summary>
+        public static event System.Action<QualityProfile.Tier> Applied;
 
         /// <summary>Static entry for editor tools (visual QA) that render without entering play mode.</summary>
         public static void Apply(QualityProfile.Tier t, Camera cam, Volume volume, Texture[] worldTextures, ref Tonemapping tonemapping)
         {
+            Current = t;
+            HasCurrent = true;
             if (cam != null)
             {
                 cam.farClipPlane = t.cameraFarClip;
@@ -73,6 +96,7 @@ namespace Game.Rendering
                     tex.anisoLevel = t.worldTextureAniso;
                     tex.mipMapBias = t.worldMipBias;
                 }
+            Applied?.Invoke(t);
         }
     }
 }

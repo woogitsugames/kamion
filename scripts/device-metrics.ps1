@@ -24,7 +24,9 @@ param(
     [string]$Scene = '',
     [string]$Autopilot = '',
     [int]$Speed = 0,
-    [ValidateSet('', 'solo', 'empty', '24', '40')] [string]$Trailer = ''
+    [ValidateSet('', 'solo', 'empty', '24', '40')] [string]$Trailer = '',
+    # Extra intent extras "key=value" (profiling overrides, e.g. rq_msaa=1 rq_shadow=0; see RenderOverrides.cs).
+    [string[]]$Extra = @()
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -54,6 +56,7 @@ if ($Launch) {
         if ($Trailer) { $startArgs += @('-e', 'trailer', $Trailer) }
         # -QaCamera <id>: render from that ControlCamera (HUD hidden) - native-resolution device frame of the control set.
         if ($QaCamera) { $startArgs += @('-e', 'qacam', $QaCamera) }
+        foreach ($kv in $Extra) { $k, $v = $kv -split '=', 2; $startArgs += @('-e', $k, $v) }
         & $Adb -s $d @startArgs | Out-Null
         Write-Host "$d launched $component"
     }
@@ -116,6 +119,14 @@ foreach ($d in $devices) {
                 p50Ms = Get-Percentile $ms 0.50; p95Ms = Get-Percentile $ms 0.95; p99Ms = Get-Percentile $ms 0.99; maxMs = $ms[-1]
                 over33ms = @($ms | Where-Object { $_ -gt 33.4 }).Count; over50ms = @($ms | Where-Object { $_ -gt 50 }).Count
             }
+            # FrameTimingManager columns (GPU / CPU main thread per frame; 0 = not reported by the driver).
+            if ($rows[0].PSObject.Properties.Name -contains 'gpu_ms') {
+                $inv = [Globalization.CultureInfo]::InvariantCulture
+                $gpu = [double[]]($rows | ForEach-Object { [double]::Parse($_.gpu_ms, $inv) } | Where-Object { $_ -gt 0 } | Sort-Object)
+                $cpu = [double[]]($rows | ForEach-Object { [double]::Parse($_.cpu_main_ms, $inv) } | Where-Object { $_ -gt 0 } | Sort-Object)
+                if ($gpu.Count -gt 0) { $metrics.gpuMs = [ordered]@{ samples = $gpu.Count; p50 = Get-Percentile $gpu 0.50; p95 = Get-Percentile $gpu 0.95; p99 = Get-Percentile $gpu 0.99 } }
+                if ($cpu.Count -gt 0) { $metrics.cpuMainMs = [ordered]@{ samples = $cpu.Count; p50 = Get-Percentile $cpu 0.50; p95 = Get-Percentile $cpu 0.95; p99 = Get-Percentile $cpu 0.99 } }
+            }
         }
     } else {
         Write-Warning "$d : frametimes.csv not available (app not run yet, or storage not readable)"
@@ -126,6 +137,8 @@ foreach ($d in $devices) {
 
     $ft = $metrics.frameTime
     if ($ft) { Write-Host ("  frames {0} over {1}s: mean {2} fps, p50 {3:F2} / p95 {4:F2} / p99 {5:F2} / max {6:F2} ms" -f $ft.samples, $ft.spanSeconds, $ft.meanFps, $ft.p50Ms, $ft.p95Ms, $ft.p99Ms, $ft.maxMs) }
+    if ($metrics.gpuMs) { Write-Host ("  GPU p50 {0:F2} / p95 {1:F2} ms ({2} samples)" -f $metrics.gpuMs.p50, $metrics.gpuMs.p95, $metrics.gpuMs.samples) }
+    if ($metrics.cpuMainMs) { Write-Host ("  CPU main p50 {0:F2} / p95 {1:F2} ms" -f $metrics.cpuMainMs.p50, $metrics.cpuMainMs.p95) }
     Write-Host ("  PSS {0} MB, battery {1} C, thermal status {2}" -f $metrics.pssMb, $battC, $thermStatus)
     Write-Host "  screenshot $(Join-Path $out 'screen.png')"
 }

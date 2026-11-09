@@ -42,6 +42,27 @@ namespace Game.Editor.Setup
                 AssetDatabase.CreateAsset(qp, QualityProfilePath);
                 AssetDatabase.SaveAssets();
             }
+            // Migration: fields added after the asset was created deserialize as zero - take them from the code defaults.
+            bool dirty = false;
+            var defs = QualityProfile.Defaults();
+            for (int i = 0; i < qp.tiers.Length; i++)
+            {
+                foreach (var d in defs)
+                {
+                    if (!string.Equals(d.name, qp.tiers[i].name, StringComparison.OrdinalIgnoreCase)) continue;
+                    if (qp.tiers[i].treeCullM <= 0f)
+                    {
+                        qp.tiers[i].treeCardLodScale = d.treeCardLodScale; qp.tiers[i].treeThinStartM = d.treeThinStartM;
+                        qp.tiers[i].treeCullM = d.treeCullM; qp.tiers[i].treeShadowLodMask = d.treeShadowLodMask;
+                        qp.tiers[i].leafAlphaToCoverage = d.leafAlphaToCoverage;
+                        dirty = true;
+                    }
+                }
+            }
+            if (qp.deviceRules == null || qp.deviceRules.Length == 0) { qp.deviceRules = QualityProfile.DefaultDeviceRules(); dirty = true; }
+            // Always re-serialize: new non-array fields (device rules) exist only as code initialisers until written once.
+            EditorUtility.SetDirty(qp); AssetDatabase.SaveAssets();
+            _ = dirty;
             return qp.tiers;
         }
 
@@ -105,8 +126,11 @@ namespace Game.Editor.Setup
             var tags = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
             var layers = Find(tags, "layers");
             layers.GetArrayElementAtIndex(8).stringValue = "Vehicle";
+            // World kerbs: hit by the wheel raycasts, never by vehicle body colliders (WorldCollisionCooker).
+            layers.GetArrayElementAtIndex(9).stringValue = "WorldKerb";
             tags.ApplyModifiedPropertiesWithoutUndo();
-            Debug.Log("[SETUP] fixedDeltaTime 0.01 s, max 0.1 s/frame, layer 8 = Vehicle");
+            Physics.IgnoreLayerCollision(8, 9, true);   // also stored in the collision matrix (DynamicsManager)
+            Debug.Log("[SETUP] fixedDeltaTime 0.01 s, max 0.1 s/frame, layer 8 = Vehicle, layer 9 = WorldKerb (ignores Vehicle)");
         }
 
         public static void ApplyPlayerSettings()
@@ -137,8 +161,11 @@ namespace Game.Editor.Setup
             PlayerSettings.Android.preferredInstallLocation = AndroidPreferredInstallLocation.Auto;
             PlayerSettings.SetManagedStrippingLevel(android, ManagedStrippingLevel.Low);
             PlayerSettings.SetIl2CppCompilerConfiguration(android, Il2CppCompilerConfiguration.Release);
-            // World MeshColliders (imported chunks) are cooked at build time: meshes need not be readable on device.
-            PlayerSettings.bakeCollisionMeshes = true;
+            // World MeshColliders are cooked at load (WorldCollisionCooker, parallel Physics.BakeMesh), not prebaked: the
+            // prebaked PhysX data was ~17 MB of the APK (ADR 0012, lead decision 2026-11-09). Collision meshes stay readable.
+            PlayerSettings.bakeCollisionMeshes = false;
+            // GPU / CPU frame times in the diagnostics CSV (FrameTimingManager) for on-device profiling.
+            PlayerSettings.enableFrameTimingStats = true;
             Debug.Log($"[SETUP] player settings: {ApplicationId} min={MinSdk} target={TargetSdk} IL2CPP ARM64 Vulkan+GLES3 linear landscape");
         }
 
