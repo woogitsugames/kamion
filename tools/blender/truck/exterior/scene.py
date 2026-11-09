@@ -489,6 +489,9 @@ CAMS = {
     "zbl_stopnie": dict(loc=(-4.4, 1.6, 1.15), target=(-1.2, -0.30, 0.78), lens=45, fig=None),
     "zbl_tyl": dict(loc=(-3.4, -7.6, 3.4), target=(0.0, -2.5, 1.25), lens=38, fig=None),
     "zbl_kolo": dict(loc=(4.2, -2.6, 0.95), target=(1.2, -3.7, 0.55), lens=50, fig=None),
+    # B2.1: right (passenger) side - vertical exhaust stack behind the cab, arch marker, steps, corner lamps
+    "34przod_p": dict(loc=(8.4, 10.6, 1.65), target=(0.1, -0.9, 1.72), lens=42, fig=None),
+    "zbl_wydech": dict(loc=(4.6, 0.9, 2.2), target=(1.05, -1.25, 2.05), lens=32, fig=None),
     "top": dict(loc=(0.0, 3.0, 40), rot=(0, 0, 0), ortho=28.0, fig=None),
     "tilt": dict(loc=(-30, -0.4, 2.3), rot=(math.radians(90), 0, math.radians(-90)), ortho=10.0, fig=None),
 }
