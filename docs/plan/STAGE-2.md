@@ -26,15 +26,15 @@ Legend: ✅ done and verified · 🟡 done, verification pending · ⛔ blocked 
 | 5 | UI bug "−0 m" over the gear "−" button | ✅ | cause: visual-QA Screen Space - Camera canvas; HUD now its own pass (`VisualQaRunner`) + near-opaque controls |
 | 5a | Black mirror box in the cab view | ✅ | mirror glass shows the render texture |
 | 5b | Visual review #14: GAZ vs D/P overlap, opaque controls, rpm contrast, Inter font, mirror strategy | ✅ | commit `6a3387c`; `editor-lab-cab-eye` |
-| 6 | PlayMode tests (below) | ✅ | 26 PlayMode + 18 EditMode green |
-| 7 | APK | ✅ | `kamion-0.1.0-<sha>.apk`, BUILD_RESULT Succeeded, 48 MB (Sounds 13.1 MB) |
+| 6 | PlayMode tests (below) | ✅ | 24 PlayMode (+3 explicit capture) + 18 EditMode green |
+| 7 | APK | ✅ | `kamion-0.1.0-91960ba015.apk`, BUILD_RESULT Succeeded (1 IL2CPP clang warning), 48.5 MB (Sounds 13.1 MB) |
 | 7a | Visual QA (18 control cameras + 7 runtime captures), PNGs reviewed, defects fixed | ✅ | `artifacts/visual-qa/DrivingLab*/`; fixed: sign text overflow, mirror aim, reversing-camera script lost from prefab (one MonoBehaviour per file), HUD missing in QA pass |
 | 8 | On phone: install, FPS p50/p95/p99 with the combination, mirrors/raycast cost, screenshots | ⛔ | phone PIN-locked |
 | 8a | Gate 0 / Gate 1 device measurements | ⛔ | same |
 | 9 | Owner feel test (hill start 40 t, emergency stop, roundabout, reversing to the dock, descent, coupling) | ⛔ | needs the phone; checklist in GATE-2-draft |
 
 ## Test results (Unity 6000.3.28f1, desktop editor, 2026-11-09)
-`pwsh scripts/test.ps1` → EditMode 18/18, PlayMode 26/26 (+3 explicit capture tests: `-Filter Game.Tests.Stage2CaptureTests`).
+`pwsh scripts/test.ps1` → EditMode 18/18, PlayMode 24/24 + 3 explicit capture tests (skipped by default; `-Filter Game.Tests.Stage2CaptureTests`, 3/3 passed).
 
 | Test | Unity | Limit | Runner (PHYSICS_VALIDATION §3) |
 |---|---|---|---|

@@ -53,7 +53,7 @@ Zestaw ciągnik + naczepa jeździ na placu testowym, sprzęga się i odpina, ham
 | Śmieci w pamięci na krok fizyki zestawu | 0 | 0 | ✅ |
 | Koszt kroku fizyki zestawu (komputer, edytor) | 61 µs | 6 µs (symulator .NET) | **nie dotyczy telefonu** |
 
-Testy automatyczne: 18/18 (logika) i 26/26 (fizyka i scena w Unity). Szczegóły: `docs/plan/STAGE-2.md`.
+Testy automatyczne: 18/18 (logika) i 24/24 (fizyka i scena w Unity) + 3 testy z nagraniem obrazów. Szczegóły: `docs/plan/STAGE-2.md`.
 
 ## Jak to wygląda (render z edytora, nie zrzut z telefonu)
 
