@@ -7,3 +7,6 @@ textures/grime_mask.png
 textures/cab_ao_atlas.png
 *.blend
 *.blend1
+
+# A6 export: LOD0 FBX is > 5 MB -> regenerate with a6_export.py (everything else in export/ is < 5 MB and committed)
+export/SM_CabInterior_LOD0.fbx
