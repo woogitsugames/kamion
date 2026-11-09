@@ -42,3 +42,25 @@ overrides:
     confidence: medium
     verify: owner photo session items 1-2 (gate, yard, hall elevations, docks)
     set: {typology: hall, hero: true, docks: true, wall_material: hall_wall_silver, max_docks_per_facade: 18}
+  - id: kwadrat-park-gate-kit
+    kind: depot_gate
+    node: n1882887381
+    depot_way: 188397874
+    entry_way: 188397866
+    exit_way: 194536287
+    gate_offset_m: 16.0
+    gate_side: left
+    fence_return_m: 30.0
+    median_min_w: 0.8
+    barrier_past_nose_m: 3.0
+    replace_radius_m: 25.0
+    reason: >-
+      OSM maps the Kwadrat Park entrance only as a two-way access road splitting into one-way entry and exit
+      lanes, plus one lift_gate node 13 m off the road; no fence, no gatehouse. The 2024-05-27 orthophoto
+      (0.25 m) shows a narrow grass median (~2.5 m) between the lanes and a thin line across the eastern
+      (entry) lane at the median nose that reads as a boom barrier; no gatehouse or fence line is identifiable.
+      Kit: one striped boom per lane housed on the median 3 m past its nose, a gatehouse beside the entry lane,
+      a cantilever sliding gate across the two-way road 16 m inside the depot with panel fence returns.
+      Everything except the boom position is WORKING_VALUE (typical Polish depot entrance) until photographed.
+    confidence: low
+    verify: owner photo session item 1 (gate, gatehouse, barrier arms, fence line, which side the gate slides)

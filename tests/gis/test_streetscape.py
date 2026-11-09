@@ -130,3 +130,78 @@ def test_instances_reference_existing_prototypes():
             assert 100.0 < it["z"] < 200.0
             n += 1
     assert n > 1000
+
+
+# ------------------------------------------------------------------------------------------ r2 kit (critic R2)
+def test_life_prototypes_budget_and_lods():
+    """Static life props: LOD1 well below LOD0, mobile-sized LOD0 (docs/06 par. 6), every prototype buildable."""
+    from streetscape import life_props as LP
+    P = LP.build_all()
+    tris = {k: (sum(len(p["T"]) for p in a.out()), sum(len(p["T"]) for p in b.out())) for k, (a, b, _) in P.items()}
+    for k, (t0, t1) in tris.items():
+        assert t1 <= t0, k
+    assert max(t0 for k, (t0, _) in tris.items() if k.startswith(("car_", "van_"))) <= 600
+    assert max(t1 for k, (_, t1) in tris.items() if k.startswith(("car_", "van_"))) <= 120
+    assert max(t0 for k, (t0, _) in tris.items() if k.startswith("trailer_")) <= 1200
+    assert max(t1 for k, (_, t1) in tris.items() if k.startswith("trailer_")) <= 250
+
+
+def test_facade_signs_are_functional_text_only():
+    """Fascia signs carry functional lettering only (no brand names, CLAUDE.md rule 8)."""
+    from streetscape import life_props as LP
+    allowed = {"HALA", "A", "B", "C", "D", "BIURO", "RECEPCJA", "DOSTAWY", "PORTIERNIA", "MAGAZYN", "SERWIS"}
+    for code, text in LP.SIGNS.items():
+        assert set(text.split()) <= allowed, text
+        im = LP.sign_texture(code)
+        assert im.size[1] == 64 and im.size[0] >= 64
+
+
+def test_decal_lift_order():
+    """Decals never z-fight: patch < oil < paint, all above the road surface."""
+    from roads import decals as DC
+    from roads import standards as S
+    assert 0 < DC.LIFT_PATCH < DC.LIFT_OIL < S.MARKING_LIFT
+
+
+def test_band_edges_avoid_openings():
+    """Cladding band edges and colour-field edges move off openings (no fake sills or jambs)."""
+    from streetscape import facade_kit as FK
+    ops = [(2.0, 5.0, 1.2, 4.2, 0.25, "dock", "dock_door"), (8.0, 9.0, 0.15, 2.25, 0.08, "door", "door_steel")]
+    z = FK.safe_z(3.0, ops, 0.6, 9.0)
+    assert z is not None and all(not (o[2] < z < o[3]) for o in ops)
+    u = FK.safe_u(8.5, ops, 20.0)
+    assert u is not None and all(not (o[0] <= u <= o[1]) for o in ops)
+
+
+def test_life_props_and_gate_kit_placed(qa):
+    life = qa["furniture"]["life"]
+    assert life["dock_trailers"] >= 20
+    assert life["parking"]["cars"] + life["parking"]["vans"] >= 50
+    assert life["pallets"] >= 50 and life["bins"] >= 10
+    gates = qa["furniture"]["gates"]
+    assert gates["stale"] == [] and [g["id"] for g in gates["applied"]] == ["kwadrat-park-gate-kit"]
+    assert gates["applied"][0]["gatehouse"] is not None and gates["applied"][0]["fence_m"] > 10
+
+
+def test_truck_yards_are_behaton(qa):
+    mats = qa["paved_m2_by_material"]
+    assert mats.get("yard_behaton", 0) > 20_000
+    assert mats.get("yard_paving", 0) > 0                   # car parks / footways keep rectangular blocks
+
+
+def test_embankment_barriers_found(qa):
+    """The embankment rule (fill > 2 m) measured at the toe of the slope, not on the berm."""
+    f = qa["furniture"]
+    assert f["guardrails_m"]["embankment"] > 0
+    assert f["embankment_check"]["max_drop_m"] > f["embankment_check"]["threshold_m"]
+
+
+def test_gate_split_has_kerb_chamfer():
+    """Kwadrat Park gate: the two-way access road splitting into entry/exit lanes is joined by a kerb chamfer,
+    not a lateral kerb step (visual-critic R2 #10)."""
+    p = REGION_DIR / "generated" / "roads_qa.json"
+    if not p.exists():
+        pytest.skip("roads_qa.json not generated")
+    notes = json.loads(p.read_text(encoding="utf-8"))["junction_notes"]
+    gate = [v for k, v in notes.items() if "1882887381" in k]
+    assert gate and any("chamfer" in n or "kerb line continued" in n for n in gate[0])

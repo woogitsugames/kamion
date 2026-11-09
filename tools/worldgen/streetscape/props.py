@@ -294,4 +294,6 @@ def build_all(sign_codes, boards):
     P["bench"] = bench()
     P["waste_bin"] = waste_bin()
     P["street_cabinet"] = street_cabinet()
+    from . import life_props as LP
+    P.update(LP.build_all())
     return P

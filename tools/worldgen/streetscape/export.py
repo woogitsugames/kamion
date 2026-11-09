@@ -70,11 +70,19 @@ def export(codes, boards, out_dir=None):
         hh = max(32, int(round(ww * im.size[1] / im.size[0])))
         sign_png[c] = SG.png_bytes(im, (ww, hh))
         mats[f"sign_{c}"] = {"color": [1, 1, 1], "rough": 0.45, "texture_png": sign_png[c]}
+    from . import life_props as LP
+    for c in sorted(LP.SIGNS):
+        b = SG.png_bytes(LP.sign_texture(c))
+        sign_png[f"facade_{c}"] = b
+        mats[f"sign_facade_{c}"] = {"color": [1, 1, 1], "rough": 0.5, "texture_png": b}
+    pb = SG.png_bytes(LP.plate_texture())
+    tex_extra = {"plate_pl": pb}
+    mats["plate_pl"] = {"color": [1, 1, 1], "rough": 0.4, "texture_png": pb}
     for c, b in sign_png.items():
         p = sign_dir / f"{c}.png"
         if not p.exists() or p.read_bytes() != b:
             p.write_bytes(b)
-    for k, b in textures().items():
+    for k, b in {**textures(), **tex_extra}.items():
         p = tex_dir / f"{k}.png"
         if not p.exists() or p.read_bytes() != b:
             p.write_bytes(b)

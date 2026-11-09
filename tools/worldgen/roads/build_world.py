@@ -28,6 +28,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from roads import decals as DC           # noqa: E402
 from roads import markings as MK          # noqa: E402
 from roads import meshing as M            # noqa: E402
 from roads import pipeline                # noqa: E402
@@ -398,6 +399,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
     mk_report = {}
     MK.build_markings(w.buf, w.net, w.junctions, w.ctx["points"], mk_report)
     log("markings", mk_report.get("markings"))
+    DC.build(w.buf, w.net, w.junctions, mk_report)
+    log("decals", mk_report.get("decals"))
 
     # terrain conform (roads + paved areas) + streetscape (buildings, yards, furniture, vegetation)
     road_z, rmask = CF.rasterise([p for p in w.buf.parts if p.layer == "road"], w.hf)
@@ -666,6 +669,7 @@ def qa_report(w, mk_report, mask):
             "footprint_nodes": int(mask.sum()),
             "nmt_nodes_replaced_under_decks": w.stats.get("nmt_replaced_under_decks", 0),
             "markings": mk_report.get("markings", {}),
+            "decals": mk_report.get("decals", {}),
             "crossings_snapped": mk_report.get("crossings_snapped", 0),
             "crossings_skipped": mk_report.get("crossings_skipped", []),
             "bridges": w.bridges,
