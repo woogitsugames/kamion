@@ -3,8 +3,12 @@
 Profile = Whittaker smoother of the NMT road-surface samples (median across the carriageway), with
 hard constraints at junction nodes so all chains meeting at a node share its height. The smoothing
 weight λ is increased until the vertical curvature satisfies the class minimum radius
-(standards.VCURVE_MIN_R). Bridge stations carry zero data weight (NMT = ground under the deck), so the
-deck is a smooth interpolation between the abutments (low confidence, flagged).
+(standards.VCURVE_MIN_R). Elevated stations (OSM `bridge` or `layer` >= 1) carry zero data weight (the
+NMT is bare ground under a deck and under ramps the classifier removed), so a deck is a smooth curve between
+known nodes. Grade separation: wherever an elevated station lies over a ground road, the deck surface is held at
+the ground road + standards.BRIDGE_CLEARANCE + margin + deck thickness (hard constraint). Without it the NMT
+pulled both Andersa viaducts down to ~1.5 m above the rings they cross (photos show multi-span viaducts).
+Nodes where only elevated chains meet get their height from the decks solved first (low confidence, flagged).
 """
 
 from __future__ import annotations
@@ -50,13 +54,19 @@ def load_heightfield(terrain_meta: dict, repo_root, origin) -> Heightfield:
     return Heightfield(z, terrain_meta["bbox"], origin)
 
 
+def elevated(net, c) -> np.ndarray:
+    """Per station: on a structure or a raised ramp (OSM bridge, or layer >= 1)."""
+    return np.array([bool(net.sec_list[i].bridge) or net.sec_list[i].layer >= 1 for i in c.sec_idx])
+
+
 def node_heights(net, hf: Heightfield) -> dict:
-    """Ground height at every chain-end node (median of NMT within 3 m); None on bridges."""
+    """Ground height at every chain-end node (median of NMT within 3 m); None where only elevated chains meet."""
     zs = {}
     bridge_end = {}
     for c in net.chains:
+        el = elevated(net, c)
         for node, i in ((c.node_a, 0), (c.node_b, -1)):
-            bridge_end.setdefault(node, []).append(bool(c.bridge[i]))
+            bridge_end.setdefault(node, []).append(bool(el[i]))
     off = np.array([(dx, dy) for dx in (-3, -1.5, 0, 1.5, 3) for dy in (-3, -1.5, 0, 1.5, 3) if dx * dx + dy * dy <= 9.1])
     for nid in sorted(bridge_end):
         ov = net.nodes[nid].get("override", {})
@@ -80,7 +90,8 @@ def whittaker(y, w, lam, h):
     return spsolve(A.tocsc(), w * np.nan_to_num(y))
 
 
-def chain_profile(c, hf: Heightfield, z_a, z_b, rmin: float):
+def chain_profile(c, hf: Heightfield, z_a, z_b, rmin: float, el=None, req=None):
+    """el: elevated stations (zero data weight); req: {station: required deck height} (hard constraints)."""
     s = c.line.s
     n = len(s)
     _, nrm = c.line.frame(s)
@@ -90,7 +101,10 @@ def chain_profile(c, hf: Heightfield, z_a, z_b, rmin: float):
         q = c.line.p + nrm * (c.hw * f)[:, None]
         samp.append(hf.sample(q[:, 0], q[:, 1]))
     y = np.median(np.array(samp), axis=0)
-    w = np.where(c.bridge, 0.0, 1.0)
+    w = np.where(c.bridge if el is None else el, 0.0, 1.0)
+    for i, zr in (req or {}).items():
+        y[i] = zr
+        w[i] = 1e8
     if w.sum() == 0:
         w[:] = 1e-3
     for zz, i in ((z_a, 0), (z_b, n - 1)):
@@ -133,18 +147,67 @@ def crossfall(c):
     return e
 
 
+def clearance_requirements(net, el_of, ground_z) -> dict:
+    """{chain id: {station: required deck surface z}} for bridge stations (OSM `bridge`) whose footprint overlaps
+    a ground road. Ground roads sharing a node with the bridge chain are ignored within 30 m of that node (a
+    bridge over a stream meets its own approach roads at grade). ground_z: {chain id: solved profile}."""
+    from scipy.spatial import cKDTree
+    gp, gz, ghw, gk, gs = [], [], [], [], []
+    ground = [c for c in net.chains if c.id in ground_z]
+    for k, c in enumerate(ground):
+        gp.append(c.line.p); gz.append(ground_z[c.id]); ghw.append(c.hw)
+        gk.append(np.full(len(c.line.s), k)); gs.append(c.line.s)
+    if not gp:
+        return {}
+    gp, gz, ghw, gk, gs = (np.concatenate(x) for x in (gp, gz, ghw, gk, gs))
+    tree = cKDTree(gp)
+    need = S.BRIDGE_CLEARANCE + S.BRIDGE_CLEARANCE_MARGIN + S.BRIDGE_DECK_THICKNESS
+    out = {}
+    for c in net.chains:
+        if not c.bridge.any():
+            continue
+        ends = {c.node_a, c.node_b}
+        req = {}
+        for i in np.nonzero(c.bridge)[0]:
+            for k in tree.query_ball_point(c.line.p[i], float(c.hw[i]) + float(ghw.max()) + 0.5):
+                if np.hypot(*(gp[k] - c.line.p[i])) > float(c.hw[i]) + float(ghw[k]) + 0.5:
+                    continue
+                g = ground[int(gk[k])]
+                if (g.node_a in ends and gs[k] < 30.0) or (g.node_b in ends and g.length - gs[k] < 30.0):
+                    continue
+                req[int(i)] = max(req.get(int(i), -1e9), float(gz[k]) + need)
+        if req:
+            out[c.id] = req
+    return out
+
+
 def build_profiles(net, hf: Heightfield) -> dict:
     zn = node_heights(net, hf)
     stats = {}
-    # pass 1: chains with known end heights; unknown (bridge) nodes get the mean of solved ends
-    pending = {}
+    el_of = {c.id: elevated(net, c) for c in net.chains}
+    rmin_of = {c.id: min(S.VCURVE_MIN_R[net.sec_list[i].cls] for i in np.unique(c.sec_idx)) for c in net.chains}
+    # 1) ground chains (no elevated station): NMT with fixed node heights
+    ground = {}
     for c in net.chains:
-        rmin = min(S.VCURVE_MIN_R[net.sec_list[i].cls] for i in np.unique(c.sec_idx))
+        if el_of[c.id].any():
+            continue
+        c.z, stats[c.id] = chain_profile(c, hf, zn.get(c.node_a), zn.get(c.node_b), rmin_of[c.id], el_of[c.id])
+        ground[c.id] = c.z
+    # 2) grade separation: deck heights over the ground roads
+    req = clearance_requirements(net, el_of, ground)
+    # 3) elevated chains: decks with clearance constraints first, then the rest; unknown nodes take the mean of the
+    #    chain ends solved so far (decks first), and every chain touching such a node is solved again
+    order = sorted((c for c in net.chains if el_of[c.id].any()), key=lambda c: (c.id not in req, c.id))
+    pending = {}
+    for c in order:
         za, zb = zn.get(c.node_a), zn.get(c.node_b)
-        z, st = chain_profile(c, hf, za, zb, rmin)
-        c.z = z
-        stats[c.id] = st
-        for node, zz in ((c.node_a, z[0]), (c.node_b, z[-1])):
+        if za is None and c.node_a in pending:
+            za = float(np.mean(pending[c.node_a]))
+        if zb is None and c.node_b in pending:
+            zb = float(np.mean(pending[c.node_b]))
+        el = el_of[c.id] if (c.id in req or za is not None or zb is not None) else None
+        c.z, stats[c.id] = chain_profile(c, hf, za, zb, rmin_of[c.id], el, req.get(c.id))
+        for node, zz in ((c.node_a, c.z[0]), (c.node_b, c.z[-1])):
             if zn.get(node) is None:
                 pending.setdefault(node, []).append(float(zz))
     if pending:
@@ -152,8 +215,14 @@ def build_profiles(net, hf: Heightfield) -> dict:
             zn[node] = float(np.mean(vals))
         for c in net.chains:
             if c.node_a in pending or c.node_b in pending:
-                rmin = min(S.VCURVE_MIN_R[net.sec_list[i].cls] for i in np.unique(c.sec_idx))
-                c.z, stats[c.id] = chain_profile(c, hf, zn[c.node_a], zn[c.node_b], rmin)
+                c.z, stats[c.id] = chain_profile(c, hf, zn[c.node_a], zn[c.node_b], rmin_of[c.id], el_of[c.id],
+                                                 req.get(c.id))
+    for c in net.chains:
+        if c.id in req:
+            ii = np.array(sorted(req[c.id]))
+            zr = np.array([req[c.id][i] for i in ii])
+            stats[c.id]["clearance"] = {"stations": int(len(ii)), "required_max": round(float(zr.max()), 2),
+                                        "min_margin_m": round(float((c.z[ii] - zr).min()), 3)}
     for c in net.chains:
         c.e = crossfall(c)
         g = np.gradient(c.z, c.line.s) if len(c.z) > 1 else np.zeros(1)

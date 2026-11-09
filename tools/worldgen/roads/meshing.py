@@ -240,6 +240,7 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
 #   noise_screen  transparent noise-screen panels on the deck edge ("transparent") and their height
 # Default: bare concrete, round grey piers, no screen. Ground truth: CC0 photos in docs/REFERENCES.md.
 BRIDGE_STYLES = {}
+FASCIA_BAND_H = 0.55        # WORKING_VALUE: painted band height read off the CC0 photos (vs ~1.1 m railing)
 DEFAULT_BRIDGE_STYLE = {"fascia": None, "pier_mat": "bridge_concrete", "noise_screen": None, "screen_h": 3.0,
                         "pier_r": 0.6}
 
@@ -308,8 +309,10 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
         for side, sgn in (("L", 1.0), ("R", -1.0)):
             bot, top = outer[side]
             off = np.column_stack([nn0 * sgn * 0.015, np.zeros(len(ss))])
-            if style["fascia"]:          # painted deck edge band (fascia + cap edge), 1.5 cm proud
-                _strip(buf, "bridge", f"bridge_fascia_{style['fascia']}", bot + off, top + off + [0, 0, 0.02],
+            if style["fascia"]:          # painted band at the cap edge (top FASCIA_BAND_H of the edge), 1.5 cm proud;
+                # below it the bare concrete edge beam, as on both CC0 photos of the Andersa viaducts
+                fb = np.column_stack([bot[:, :2], np.maximum(bot[:, 2], top[:, 2] - FASCIA_BAND_H)])
+                _strip(buf, "bridge", f"bridge_fascia_{style['fascia']}", fb + off, top + off + [0, 0, 0.02],
                        c.id + ":fascia", both=False)
                 # winding: the strip faces outward (left side reversed)
                 if sgn > 0:

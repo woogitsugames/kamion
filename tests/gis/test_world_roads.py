@@ -267,3 +267,16 @@ def test_side_profile_kerb_height():
     prof = side_profile(URBAN, S.KERB_HEIGHT, S.SIDEWALK_W, S.FLANGE_DEPTH, 1)
     face = prof[0]
     assert face[0] == face[2] == 0.0 and 0.12 <= face[3] - face[1] <= 0.15
+
+
+@needs_heightmap
+def test_grade_separation_clearance(world):
+    """Decks over ground roads keep the vertical clearance (standards.BRIDGE_CLEARANCE + margin + deck); both Andersa
+    viaducts (Rondo Bieżeństwa, Rondo Putry) are constrained. The NMT alone pulled them to ~1.5 m above the rings."""
+    from roads import standards as S
+    st = world["w"].profiles["chains"]
+    cl = {k: v["clearance"] for k, v in st.items() if "clearance" in v}
+    assert any("w177895177" in k or "w175157461" in k for k in cl)      # Bieżeństwa
+    assert any("w1101181473" in k or "w173956078" in k for k in cl)     # Putry
+    assert all(v["min_margin_m"] > -0.10 for v in cl.values()), cl
+    assert S.BRIDGE_CLEARANCE >= 4.5

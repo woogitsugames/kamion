@@ -114,6 +114,12 @@ ROUNDABOUT_CROSSFALL = 0.02
 
 # Bridges (low confidence: OSM only says bridge=viaduct + layer)
 BRIDGE_DECK_THICKNESS = 1.20        # WORKING_VALUE
+# Vertical clearance (skrajnia pionowa) of a public road under a structure. WORKING_VALUE 4.70 m: the usual Polish
+# value for roads of class Z and above; the regulation on road engineering structures has not been read here
+# (UNVERIFIED citation). Margin 0.30 m for crossfall and surfacing. Ground truth for the two Andersa viaducts:
+# CC0 photos 20201102_152339 and 7204_May_2021 (docs/REFERENCES.md) show multi-span decks well above the rings.
+BRIDGE_CLEARANCE = 4.70
+BRIDGE_CLEARANCE_MARGIN = 0.30
 BRIDGE_KERB_H = 0.20                # WORKING_VALUE (kapa chodnikowa)
 BRIDGE_CAP_W = 1.50                 # WORKING_VALUE
 BRIDGE_PARAPET_H = 1.10             # WORKING_VALUE (bariera / balustrada)
