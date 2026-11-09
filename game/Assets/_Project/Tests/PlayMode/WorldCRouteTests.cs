@@ -48,6 +48,26 @@ namespace Game.Tests
             return sb.Length > 0 ? sb.ToString() : "(no static collider in the box)";
         }
 
+        /// <summary>Records rigid-body contacts of the tractor/trailer with static colliders (impacts that are not wheel rays).</summary>
+        sealed class ContactProbe : MonoBehaviour
+        {
+            public string Last;
+            public float LastImpulse;
+            void OnCollisionStay(Collision c) => Record(c);
+            void OnCollisionEnter(Collision c) => Record(c);
+            void Record(Collision c)
+            {
+                if (c.rigidbody != null) return;
+                float imp = c.impulse.magnitude;
+                if (imp <= LastImpulse) return;
+                LastImpulse = imp;
+                var p = c.collider.transform.parent;
+                Last = string.Format(CultureInfo.InvariantCulture, "{0}{1} impulse {2:F0} N s at {3} (own collider {4})",
+                    p != null && p.parent != null ? p.parent.name + "/" : "", c.collider.name, imp, c.GetContact(0).point.ToString("F2"),
+                    c.GetContact(0).thisCollider != null ? c.GetContact(0).thisCollider.name : "?");
+            }
+        }
+
         static IEnumerator DriveRoute(DrivingLabBootstrap.LabSpawn preset, float targetKmh)
         {
             if (!Application.CanStreamedLevelBeLoaded(GameBootstrap.WorldCSceneName))
@@ -83,7 +103,9 @@ namespace Game.Tests
                 var trailerRb = body.Trailer != null ? body.Trailer.Body : null;
                 Vector3 tvPrev = trailerRb != null ? trailerRb.linearVelocity : Vector3.zero;
                 float maxDvTrailer = 0f;
-                string hitInfo = null;
+                string hitInfo = null, peakInfo = null;
+                var probe = body.gameObject.AddComponent<ContactProbe>();
+                double[] fzPrev = new double[body.Model.Wheels.Length];
 
                 while (!driver.Finished && steps * Dt < simLimit)
                 {
@@ -113,7 +135,24 @@ namespace Game.Tests
 
                         Vector3 v = rb.linearVelocity;
                         float dv = (v - vPrev).magnitude;
-                        if (dv > maxDv) { maxDv = dv; maxDvAt = driver.Progress; }
+                        if (dv > maxDv)
+                        {
+                            maxDv = dv; maxDvAt = driver.Progress;
+                            // What changed in this step: largest wheel-load jump (ground seam / step) or a body contact.
+                            var sb = new System.Text.StringBuilder();
+                            int wi = 0; double best = 0; string bestW = "-";
+                            foreach (var w in m.Wheels)
+                            {
+                                double j = System.Math.Abs(w.Fz - fzPrev[wi]);
+                                if (j > best) { best = j; bestW = string.Format(CultureInfo.InvariantCulture, "{0} dFz {1:F0} N at {2} n={3} surf {4}", w.Name, j, w.ContactPoint, w.Normal, w.SurfaceId); }
+                                wi++;
+                            }
+                            sb.Append("wheel ").Append(bestW).Append("; body contact ").Append(probe.LastImpulse > 0 ? probe.Last : "none")
+                              .Append("; pos ").Append(body.transform.position.ToString("F2")).Append(" v ").Append((v.magnitude * 3.6f).ToString("F1", CultureInfo.InvariantCulture)).Append(" km/h");
+                            peakInfo = sb.ToString();
+                        }
+                        { int wi = 0; foreach (var w in m.Wheels) fzPrev[wi++] = w.Fz; }
+                        probe.LastImpulse = 0f;
                         if (dv > 3f && hitInfo == null) hitInfo = DescribeObstacles(body);
                         vPrev = v;
                         if (trailerRb != null)
@@ -151,7 +190,7 @@ namespace Game.Tests
                     "max chassis below route ground {9:F2} m at s={10:F0} m, longest no-contact run {11} steps, max cross-track {12:F2} m, v max {13:F0} km/h, fell {14}, stuck {15}",
                     preset, steps, steps * Dt, driver.Progress, route.Length, driver.Finished, maxDv, maxDvAt,
                     trailerRb != null ? string.Format(ci, " (trailer {0:F3})", maxDvTrailer) : "",
-                    maxBelow, maxBelowAt, maxNoContactRun, maxCte, vMaxKmh, fell, stuck) + (hitInfo != null ? " | impact near: " + hitInfo : "");
+                    maxBelow, maxBelowAt, maxNoContactRun, maxCte, vMaxKmh, fell, stuck) + " | peak: " + peakInfo + (hitInfo != null ? " | impact near: " + hitInfo : "");
                 Debug.Log(summary);
                 try
                 {
@@ -165,6 +204,9 @@ namespace Game.Tests
                 Assert.IsFalse(stuck, "vehicle stuck: " + summary);
                 Assert.IsTrue(driver.Finished, "route not completed in time: " + summary);
                 Assert.Less(maxCte, 4.0f, "path follower left the lane by > 4 m");
+                // Jolt: a body hit on world collision (kerb under the bumper: 1.62 m/s before the kerb layer). Kerb
+                // mounting by the wheels stays below ~0.4 m/s per 10 ms step (v1 route 0.72 incl. a lamp hit).
+                Assert.Less(maxDv, 0.8f, "jolt: |dv| per step >= 0.8 m/s (body impact on world collision): " + summary);
             }
             finally
             {

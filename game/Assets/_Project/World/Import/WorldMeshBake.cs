@@ -143,15 +143,15 @@ namespace Game.World.Import
             return m;
         }
 
-        /// <summary>Position-only mesh for MeshColliders (stays readable: PhysX cooks at load or build).</summary>
+        /// <summary>Position-only mesh for MeshColliders (readable: PhysX cooks it at load, WorldCollisionCooker).</summary>
         public static Mesh PositionsOnly(string name, Vector3[] pos, int[] tris)
         {
             var m = new Mesh { name = name, indexFormat = pos.Length > 65535 ? IndexFormat.UInt32 : IndexFormat.UInt16 };
             m.SetVertices(pos);
             m.SetTriangles(tris, 0, true);
-            // Collision meshes are cooked at build time (Player Settings: Prebake Collision Meshes), so the player does not
-            // need a readable CPU copy: drop it after upload (the mesh is never drawn; the GPU copy is tiny-ish).
-            m.UploadMeshData(true);
+            // Cooked at load by WorldCollisionCooker (Physics.BakeMesh on worker threads), so the CPU copy must stay
+            // readable in the player (prebaked PhysX data cost ~17 MB of APK; ADR 0012 §6).
+            m.UploadMeshData(false);
             return m;
         }
 

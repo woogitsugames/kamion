@@ -154,6 +154,12 @@ namespace Game.World.Import
             Vector3 eye = spawnPos + spawn.rotation * dims.EyePointVehicle;
             Qa(qa, "cab-gate", eye, eye + spawnFwd * 30f - Vector3.up * 2.2f, 55f, "Driver eye at the spawn, looking along the depot access road.");
 
+            // Collision is cooked at load (no prebaked PhysX data in the APK): save the world MeshColliders disabled and let
+            // WorldCollisionCooker bake them in parallel and enable them (ADR 0012 §6).
+            var meshColliders = rootGo.GetComponentsInChildren<MeshCollider>(true);
+            foreach (var mc in meshColliders) mc.enabled = false;
+            rootGo.AddComponent<WorldCollisionCooker>().colliders = meshColliders;
+
             Directory.CreateDirectory(Path.Combine(Game.Editor.Build.EditorTools.ProjectRoot, Path.GetDirectoryName(scenePath)));
             EditorSceneManager.SaveScene(scene, scenePath);
             AssetDatabase.SaveAssets();
@@ -282,6 +288,14 @@ namespace Game.World.Import
             {
                 var c = new GameObject("col_" + surface);
                 c.transform.SetParent(col.transform, false);
+                // Kerbs: wheel rays only - the graybox body colliders (bumper 0.35 m) touched a 0.14 m roundabout kerb
+                // under braking dive (40 t route, |dv| 1.62 m/s at s≈604 m); a real bumper sweeps over kerbs.
+                if (surface.Contains("kerb"))
+                {
+                    int kl = LayerMask.NameToLayer(WorldCollisionCooker.KerbLayerName);
+                    if (kl >= 0) c.layer = kl;
+                    else Debug.LogWarning("[IMPORT] layer WorldKerb missing - run scripts/setup-project.ps1");
+                }
                 var mc = c.AddComponent<MeshCollider>();
                 mc.sharedMesh = mesh;
                 mc.cookingOptions = MeshColliderCookingOptions.CookForFasterSimulation | MeshColliderCookingOptions.EnableMeshCleaning | MeshColliderCookingOptions.WeldColocatedVertices | MeshColliderCookingOptions.UseFastMidphase;
