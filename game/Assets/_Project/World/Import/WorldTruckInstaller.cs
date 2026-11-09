@@ -13,9 +13,9 @@ using UnityEngine;
 namespace Game.World.Import
 {
     /// <summary>
-    /// Track A7: puts the TRAKT tractor (TruckAssetBuilder prefab) into the generated world scenes in place of the graybox
-    /// (same pose, bootstrap rewired), registers all lighting presets and adds the A7 control cameras. New imports get the
-    /// truck from WorldSceneBuilder directly; this updates scenes imported before. Batchmode:
+    /// Track A7: puts the TRAKT tractor (TruckAssetBuilder prefab) and the art curtainsider (TrailerAssetBuilder prefab) into
+    /// the generated world scenes in place of the graybox (same pose, bootstrap rewired), registers all lighting presets and
+    /// adds the A7 control cameras. New imports get both from WorldSceneBuilder directly; this updates scenes imported before. Batchmode:
     /// -executeMethod Game.World.Import.WorldTruckInstaller.InstallBatch
     /// </summary>
     public static class WorldTruckInstaller
@@ -26,6 +26,7 @@ namespace Game.World.Import
             try
             {
                 TruckAssetBuilder.Build();
+                TrailerAssetBuilder.Build();
                 int n = 0;
                 foreach (var guid in AssetDatabase.FindAssets("t:Scene WorldC"))
                 {
@@ -59,6 +60,15 @@ namespace Game.World.Import
             var boot = UnityEngine.Object.FindAnyObjectByType<DrivingLabBootstrap>();
             if (boot != null) boot.vehicle = truck.GetComponent<VehicleBody>();
             UnityEngine.Object.DestroyImmediate(old.gameObject);
+            var trailerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(TrailerAssetBuilder.PrefabPath);
+            var oldTrailer = UnityEngine.Object.FindObjectsByType<TrailerBody>(FindObjectsSortMode.None).FirstOrDefault();
+            if (trailerPrefab != null && oldTrailer != null)
+            {
+                var trailer = (GameObject)PrefabUtility.InstantiatePrefab(trailerPrefab, scene);
+                trailer.transform.SetPositionAndRotation(oldTrailer.transform.position, oldTrailer.transform.rotation);
+                if (boot != null) boot.trailer = trailer.GetComponent<TrailerBody>();
+                UnityEngine.Object.DestroyImmediate(oldTrailer.gameObject);
+            }
             var env = UnityEngine.Object.FindAnyObjectByType<EnvironmentLighting>();
             if (env != null) { env.presets = LookDevAssets.Presets(); env.Apply(); }
             TruckAssetBuilder.AddControlCameras(truck.transform);

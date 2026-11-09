@@ -468,6 +468,43 @@ namespace Game.Editor.Setup
                     UnityEngine.Object.DestroyImmediate(model);
                 }
 
+                // ---- fifth wheel at the PHYSICS kingpin lock (ADR 0019: lead 0.68 m). The exterior export still models the
+                // plate inside CHASSIS at the art FIFTH_WHEEL_KINGPIN (0.55 m): until the re-export, an interim plate + kingpin
+                // jaw marker sits at the physics position, 3 mm above the art plate top so it wins the depth test; the art plate
+                // only shows behind it under the trailer. Removed automatically once the art socket matches the physics. ----
+                {
+                    Vector3 fwPhys = new Vector3((float)def.fifthWheel.position.x, (float)def.fifthWheel.position.y, (float)def.fifthWheel.position.z);
+                    var fwEmpty = Json.Obj(Json.Obj(Json.Obj(lods["LOD0"])["empties"])["FIFTH_WHEEL_KINGPIN"]);
+                    Vector3 fwArt = V3(fwEmpty["position_unity_vehicle"]);
+                    var socket = Child(chassis, "FifthWheel_Physics", fwPhys);   // kingpin lock point (jaw centre), physics frame
+                    if ((fwArt - fwPhys).magnitude > 0.01f)
+                    {
+                        Debug.LogWarning($"[TRUCK] fifth wheel: art FIFTH_WHEEL_KINGPIN {fwArt} != physics {fwPhys} (dims.json fifth_wheel_lead_m); interim plate at the physics position until the exterior re-export");
+                        string mp = $"{MatDir}/MI_FifthWheel_Interim.mat";
+                        var fm = AssetDatabase.LoadAssetAtPath<Material>(mp);
+                        if (fm == null) { fm = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = "MI_FifthWheel_Interim" }; AssetDatabase.CreateAsset(fm, mp); }
+                        // Greased black cast steel: albedo 0.035 linear, smoothness 0.45 (grease film). WORKING_VALUE.
+                        fm.SetColor("_BaseColor", new Color(0.035f, 0.035f, 0.033f, 1f)); fm.SetFloat("_Metallic", 0.6f); fm.SetFloat("_Smoothness", 0.45f);
+                        EditorUtility.SetDirty(fm);
+                        Mesh cyl = Resources.GetBuiltinResource<Mesh>("New-Cylinder.fbx");
+                        void Part(string n, Vector3 lp, Vector3 scale)
+                        {
+                            var go = new GameObject(n, typeof(MeshFilter), typeof(MeshRenderer));
+                            go.transform.SetParent(socket, false);
+                            go.transform.localPosition = lp; go.transform.localScale = scale;
+                            go.GetComponent<MeshFilter>().sharedMesh = cyl;
+                            var mr = go.GetComponent<MeshRenderer>();
+                            mr.sharedMaterial = fm; mr.shadowCastingMode = ShadowCastingMode.On;
+                        }
+                        // Plate 0.86 m diameter (class-typical 50 mm kingpin couplings, WORKING_VALUE), 6 cm thick, top 3 mm above the lock plane.
+                        Part("Plate", new Vector3(0f, 0.003f - 0.03f, 0f), new Vector3(0.86f, 0.03f, 0.86f));
+                        // Bracket / bearing block under the plate down to the frame top.
+                        float frameTop = dims.frameTopHeight;
+                        float h = Mathf.Max(0.02f, fwPhys.y - 0.06f - frameTop);
+                        Part("Bracket", new Vector3(0f, -0.06f - h * 0.5f, 0f), new Vector3(0.5f, h * 0.5f, 0.5f));
+                    }
+                }
+
                 // ---- driver eye point (camera anchor: DrivingLabBootstrap looks for cabPivot/DriverEyePoint) ----
                 var eye = Child(cabSusp, "DriverEyePoint", eyeLocal - mount);
                 if ((eyeLocal - dims.EyePointVehicle).sqrMagnitude > 1e-6f)
@@ -642,6 +679,8 @@ namespace Game.Editor.Setup
             Q("cab-right", eye, Quaternion.Euler(8f, 58f, 0f), 62f, "A7: passenger seat, passenger door card, right mirrors through the glass.");
             Vector3 p34 = new Vector3(-6.8f, 2.1f, 11.5f), look = new Vector3(0f, 1.7f, 2.6f);
             Q("truck-34", p34, Quaternion.LookRotation(look - p34, Vector3.up), 45f, "A7: TRAKT front 3/4, driver side (paint, lamps, glass, wheels on the ground).");
+            Vector3 pr = new Vector3(-7.5f, 2.3f, -17.5f), lookR = new Vector3(0f, 1.9f, -7.0f);
+            Q("trailer-34", pr, Quaternion.LookRotation(lookR - pr, Vector3.up), 45f, "Curtainsider rear 3/4, driver side (curtain, doors, tridem on the ground, landing gear, lamps).");
         }
 
         // ------------------------------------------------------------------ tiny JSON reader (manifests)

@@ -8,7 +8,7 @@
 //   exposed units as the sun and sky: a DRL is bright, a tail lamp is a dim red by day, both read correctly at dusk.
 // - Lighting: URP UniversalFragmentPBR (main light + cascaded shadows, SH ambient x AO, reflection probe / custom
 //   environment). Tyre deflection: renderers with rendering layer bit 8 (TruckVisualRig.TyreRenderingLayer, the wheel
-//   meshes, origin = wheel centre) are flattened in the vertex shader at _KamionTyreFlatRadius below the wheel centre
+//   meshes, origin = wheel centre) or bit 9 (TrailerVisualRig.TyreRenderingLayer, trailer wheels) are flattened in the vertex shader at _KamionTyreFlatRadius below the wheel centre
 //   (world down) - the free-radius model tyre (0.538 m) on a 0.51 m physics rolling radius otherwise sinks ~2.8 cm into
 //   the road. All passes (colour, shadow, depth) use the same displaced position. No clear coat (URP Complex Lit would double the cost; WORKING_VALUE, see docs/reports/visual/truck-A7).
 Shader "Kamion/Truck Exterior"
@@ -42,14 +42,18 @@ Shader "Kamion/Truck Exterior"
             float4 _PaintColor, _DecalColor, _DirtColor;
             float _NormalStrength, _IsPaint, _PaintRoughness, _PaintMetallic, _DecalMetallic, _DecalRoughness, _Dirt, _Lamps;
         CBUFFER_END
-        float _KamionTyreFlatRadius;   // global (VehicleVisuals: physics rolling radius), 0 = off
+        float _KamionTyreFlatRadius;          // global (TruckVisualRig: tractor physics rolling radius 0.51 m), 0 = off
+        float _KamionTrailerTyreFlatRadius;   // global (TrailerVisualRig: trailer physics rolling radius 0.515 m), 0 = off
 
         // Loaded-tyre contact patch: clamp the part of the tyre below the contact plane onto it.
+        // Rendering layer bit 8 = tractor wheels, bit 9 = trailer wheels (different tyre size, different rolling radius).
         float3 KamionTyreFlatten(float3 positionWS)
         {
-            if (_KamionTyreFlatRadius > 0.0 && (GetMeshRenderingLayer() & (1u << 8)) != 0u)
+            uint layer = GetMeshRenderingLayer();
+            float r = (layer & (1u << 8)) != 0u ? _KamionTyreFlatRadius : ((layer & (1u << 9)) != 0u ? _KamionTrailerTyreFlatRadius : 0.0);
+            if (r > 0.0)
             {
-                float floorY = UNITY_MATRIX_M._m13 - _KamionTyreFlatRadius;
+                float floorY = UNITY_MATRIX_M._m13 - r;
                 positionWS.y = max(positionWS.y, floorY);
             }
             return positionWS;
