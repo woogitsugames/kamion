@@ -156,6 +156,25 @@ Levers tried, each run against both variants (sensitivity runs in `artifacts/phy
 
 Conclusion: the union of airtime over 10 wheel ends **cannot reach < 0.15 s** for a 14 cm drop at 50 km/h with real travel. The five left wheel stations drop off one after the other, and each one flies for about 50 ms even on a real truck. The brief's "no long axle flight" is checked as the longest single-wheel unload: tractor ≤ 0.15 s (met: 0.11 / 0.08 s), all wheels ≤ 0.25 s empty and ≤ 0.12 s laden. The empty-tridem 0.21 s needs trailer frame torsion, which is not modelled (§7). The phone symptom is not in the core: the remaining suspects are in the Unity adapter.
 
+### 3b. Unity adapter parity and the phone event (2026-11-09, evening)
+
+PlayMode `KerbStrikeParityTests` runs the same block, speed hold, load cases and metrics as the runner in Unity (PhysX bodies, `UnityGroundQuery`, 15 rays, 4 substeps, 0.01 s). The block is built two ways: a BoxCollider on Default (the body colliders could touch it) and a MeshCollider with the DrivingLab slab topology on `WorldKerb` (wheel rays only, as in WorldC). CSVs: `artifacts/physics/unity-kerb/`; overlay plots: `tests/physics/plot_kerb_parity.py` → `artifacts/physics/kerb-parity/parity_*.png` (looked at: the Fz, compression, tyre deflection and pitch traces lie on top of each other).
+
+| curb_strike_14cm_50kmh_comb | Fz / static | tractor single-wheel unload | all wheels | pitch peak | max \|dv\| |
+|---|---|---|---|---|---|
+| runner, empty | 3.90 | 0.11 s | 0.21 s | 1.66° | 0.068 |
+| Unity box / mesh, empty | 3.90 / 3.90 | 0.11 / 0.11 s | 0.20 / 0.21 s | 1.67° | 0.068 |
+| runner, 40 t | 3.53 | 0.08 s | 0.09 s | 1.99° | 0.079 |
+| Unity box / mesh, 40 t | 3.56 / 3.56 | 0.08 / 0.08 s | 0.09 / 0.09 s | 1.98° | 0.081 |
+
+The adapter agrees with the core within 1 % on every metric, and no PhysX body contact occurs. Ray normals on vertical mesh faces, ray count, step and substeps are therefore **not** the cause of the phone values.
+
+**The phone event was not a 14 cm kerb.** Telemetry from r3 (`artifacts/device/RFGL34SJYDZ/20261109-180828`, t = 72.12–72.14 s): front left suspension compression goes 0.057 → 0.106 → 0.128 m and tyre deflection 0.036 → 0.117 → 0.212 m in two 10 ms steps. Their sum (the geometric rise of the ground under the ray fan) is 0.246 m. The front hardpoint itself rises about 3 cm (pitch −0.31 → −0.10°), so the effective step was **about 0.27 m**: a kerb on a higher carriageway or verge edge at the split, not the 5–14 cm kerb face. Scenario `kerb_step_27cm_42kmh_comb@laden40` (same block, 0.27 m, 42 km/h, 40 t) gives in the core Fz 6.50× static, tractor wheel unload 0.42 s (both front wheels 0.25 s), pitch +6.4°. On the phone: 6.8×, about 0.4 s, +8°. Unity (mesh) gives 6.48×, 0.45 s, +6.37°. The sum of compression and deflection at the peak is 0.251 m in the core and 0.254 m on the phone.
+
+The only Unity-specific difference shows after the strike. When the nose comes down (−8°) with the front tyre deflected 0.19 m, the graybox **bumper collider touches the ground** (PhysX contact, 2.9 kN·s). This gives max |dv| 0.54 m/s per step (core 0.20; phone r3 0.59–0.71 m/s at landing) and damps the later oscillation (front Fz second peak 55 kN in Unity, 97 kN in the core). This is by design: PhysX owns chassis–world collisions, and the core has no body geometry.
+
+Consequences: no adapter change is needed. The fix for the phone event is the world geometry (continuous kerb at carriageway splits, `806e89d`, already on main; check again after the WorldC s = 571 m blocker is fixed). The model gap that made it look so violent is the tyre: a linear radial spring with no bottoming lets the tyre deflect 0.19–0.21 m (section height of a 315/80 R22.5 is about 0.25 m), see §7.
+
 ## 4. Multi-run checks and cost
 
 | Check | Values | Max deviation |
@@ -223,6 +242,7 @@ Tolerances are in `tests/golden/tolerances.json` as per-column absolute + relati
 ## 7. Known gaps / not modelled
 
 - **Not run in Unity or on the phone.** PhysX integration of two bodies with this constraint, cost on the Samsung A, and the feel test (docs/03 Stage 2 gate) are still open.
+- **No tyre bottoming (rim contact)**: the radial spring is linear without a deflection limit, so a step above about 0.2 m deflects the tyre 0.19–0.21 m and lets the body drop onto its bumper collider in Unity (§3b). A progressive end stop needs a source for the rim-contact deflection (not opened).
 - **Items not covered by the runner:** §6.10 (reversing to a ramp, tight yard manoeuvres; needs a reversing driver, and a dock or ramp geometry), §6.13 (floating origin and streaming, Unity), §6.15 for input modes other than the direct steer command (touch, gyro: Unity input layer).
 - **No chassis–ground or tractor–trailer collision geometry.** Jackknife ends on the soft 90° stop, rollover scenarios stop at wheel lift, and uncoupling requires the legs to be down.
 - **Ruts are not modelled**: rays are in the wheel plane only. No dynamic load sharing between interconnected bellows (only static equalisation by levelling). A trial on the kerb strike made no difference (§3a). **No trailer frame torsion**: on a one-sided step the rigid frame lets a tridem axle hang at full droop (0.21 s, empty, §3a). **No unsprung mass**: wheel ends are massless, and the tire is in series with the suspension, so there is no wheel hop.
