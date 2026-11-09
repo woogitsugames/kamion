@@ -27,7 +27,10 @@ namespace Game.Rendering
         [Tooltip("Glass transmittance (laminated windscreen ~0.75, side glass ~0.8)")] public float glassTransmittance = 0.75f;
         [Tooltip("Mean interior albedo for the bounce (koniak inserts, grey headliner, dark dash)")] public float meanAlbedo = 0.22f;
         [Tooltip("Interior surface area (m^2)")] public float interiorArea = 26f;
-        [Tooltip("Cab-view lift in stops (phone local tone mapping, D23)")] public float cabViewEv = 0.3f;
+        [Tooltip("Cab-view lift in stops (phone local tone mapping, D23; A8: 1.0 with the enclosure below, review r4 L1 '+0.7-1.0 EV')")] public float cabViewEv = 1.0f;
+        [Tooltip("Share of the open-sky ambient (SH) blocked by the cab roof and walls (A8, review r4 E2: from outside the " +
+                 "interior was lit like an open terrace, so the windscreen read as clear glass). Glazing ~4.3 m^2 of ~26 m^2. WORKING_VALUE")]
+        public float enclosure = 0.6f;
         [Tooltip("Extra fill scale (1 = physical estimate)")] public float fillScale = 1f;
         [Tooltip("Colour of the bounce (dash, koniak, floor mat). Mild: review r3 C2 - a strongly warm tint on top of the sun " +
                  "colour turned the black plastics beige at low sun")] public Color bounceTint = new Color(1f, 0.97f, 0.93f);
@@ -41,7 +44,12 @@ namespace Game.Rendering
         };
         static readonly float[] k_WinA = { 1.85f, 0.62f, 0.62f };
 
-        static readonly int k_Fill = Shader.PropertyToID("_CabFill"), k_Gain = Shader.PropertyToID("_CabGain");
+        [Tooltip("Cab-view local shadow lift (review r4 L1): k in gain = 1 + k (k0 / (Y + k0))^3 on the interior; -1 = from the " +
+                 "quality tier (QualityProfile.cabShadowLift)")] public float shadowLift = -1f;
+        [Tooltip("Knee of the shadow lift (exposed linear luminance; 0.004 = ~6 % display)")] public float shadowLiftKnee = 0.004f;
+
+        static readonly int k_Fill = Shader.PropertyToID("_CabFill"), k_Gain = Shader.PropertyToID("_CabGain"),
+            k_Lift = Shader.PropertyToID("_CabShadowLift"), k_Enclosure = Shader.PropertyToID("_CabEnclosure");
 
         public Vector3 LastFill { get; private set; }
         public float LastGain { get; private set; } = 1f;
@@ -51,6 +59,8 @@ namespace Game.Rendering
         {
             Shader.SetGlobalVector(k_Fill, Vector4.zero);
             Shader.SetGlobalFloat(k_Gain, 1f);
+            Shader.SetGlobalVector(k_Lift, Vector4.zero);
+            Shader.SetGlobalFloat(k_Enclosure, 0f);
         }
 
         void LateUpdate() => Refresh(viewCamera != null ? viewCamera : Camera.main);
@@ -80,13 +90,20 @@ namespace Game.Rendering
                 Color c = (m.SunColor * fluxSun + Color.white * fluxSky) * bounceTint * bounce;
                 fill = new Vector3(c.r, c.g, c.b);
             }
-            float gain = 1f;
+            float gain = 1f, lift = 0f;
             if (cam != null && interiorBounds.Contains(t.InverseTransformPoint(cam.transform.position)))
+            {
                 gain = Mathf.Pow(2f, cabViewEv);
+                // Phone-like local tone mapping of the cab view (review r4 L1): only the interior surfaces, only in the
+                // cab view, strongest in the deepest shade - the sky through the glass and the lit dash are untouched.
+                lift = shadowLift >= 0f ? shadowLift : QualityProfileApplier.HasCurrent ? QualityProfileApplier.Current.cabShadowLift : 8f;
+            }
             LastFill = fill;
             LastGain = gain;
             Shader.SetGlobalVector(k_Fill, new Vector4(fill.x, fill.y, fill.z, 0f));
             Shader.SetGlobalFloat(k_Gain, gain);
+            Shader.SetGlobalVector(k_Lift, new Vector4(lift, Mathf.Max(1e-4f, shadowLiftKnee), 0f, 0f));
+            Shader.SetGlobalFloat(k_Enclosure, Mathf.Clamp01(enclosure));
         }
     }
 }
