@@ -263,8 +263,8 @@ def cameras(region_id, w):
     # depot gate: junction where the depot access road meets the public road
     gate_node = "n1882887381"
     sj = nodes_s.get(gate_node, 265.0)
-    q, z, t = lane_point(sj + 14)
-    tgt = at(max(0.0, sj - 35))
+    q, z, t = lane_point(sj + 30)                 # far enough out that the booms and the gatehouse are in frame
+    tgt = at(max(0.0, sj - 25))
     _, _, _, zt = surface_at(w, tgt)
     cams.append({"id": "kwadrat_park_gate", "type": "persp", "fov_deg": 60.0,
                  "pos": [r(q[0]), r(q[1]), r(z + 2.5)], "look_at": [r(tgt[0]), r(tgt[1]), r(zt + 1.0)],

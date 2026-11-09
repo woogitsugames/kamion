@@ -235,8 +235,9 @@ def mat_asphalt(name, base=0.075, lanes=True, yard=False):
     col = tone
     # meandering crack network with 2-4 cm bitumen sealant bands (patches are geometry decals, not a grid)
     crack, seal = crack_net(b, obj, 0.16, 2.2, 0.006, 0.03, 0.52)
-    col = b.mix(b.math("MULTIPLY", seal, 0.85), col, (0.018, 0.018, 0.018))
-    col = b.mix(b.math("MULTIPLY", crack, 0.9), col, (0.012, 0.012, 0.012))
+    # sealant ~half the asphalt albedo (dusty bitumen), open crack darker but not black (r2 #5: black polylines)
+    col = b.mix(b.math("MULTIPLY", seal, 0.75), col, (base * 0.5, base * 0.5, base * 0.5))
+    col = b.mix(b.math("MULTIPLY", crack, 0.8), col, (base * 0.33, base * 0.33, base * 0.33))
     rough = b.mixf(seal, 0.9, 0.8)         # bitumen sealant: a little smoother than the aggregate, not glossy (dusty)
     if lanes:
         uv1 = b.uv("UVMap.001")
@@ -305,6 +306,35 @@ def mat_decal_oil(name):
     a = b.math("POWER", a, 0.7)
     b.finish((0.012, 0.011, 0.010), b.mixf(a, 0.85, 0.3))
     b.link(b.math("MULTIPLY", a, 0.75), b.bsdf.inputs["Alpha"])
+    try:
+        m.surface_render_method = "DITHERED"
+    except AttributeError:
+        pass
+    return m
+
+
+def mat_decal_tyre(name):
+    """Tyre scrub on dock aprons: UV.x = m along the track, UV.y = 0..1 across, UV1 = (track length, seed).
+    Soft edges across, fade-in near the bumpers and fade-out at the far end, streaky along the track (rubber
+    smeared in the direction of travel), broken into dashes by noise; never fully opaque."""
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    u, v, _ = b.sep(b.uv("UVMap"))
+    L, seed, _ = b.sep(b.uv("UVMap.001"))
+    across = b.math("SUBTRACT", 1.0, b.math("ABSOLUTE", b.math("MULTIPLY", b.math("SUBTRACT", v, 0.5), 2.0)))
+    across = b.math("POWER", across, 0.6)
+    fin = b.math("MINIMUM", b.math("DIVIDE", u, 2.5, clamp=True),
+                 b.math("DIVIDE", b.math("SUBTRACT", L, u), b.math("MULTIPLY", L, 0.45), clamp=True))
+    streak = b.noise(b.node("ShaderNodeCombineXYZ", X=b.math("MULTIPLY", u, 0.15), Y=b.math("MULTIPLY", v, 6.0),
+                            Z=b.math("MULTIPLY", seed, 37.0)).outputs[0], 1.0, 3.0, 0.6)
+    brk = b.noise(obj, 0.9, 2.0, 0.5)
+    a = b.math("MULTIPLY", across, fin)
+    a = b.math("MULTIPLY", a, b.math("SUBTRACT", b.math("MULTIPLY", streak, 1.6), 0.35, clamp=True))
+    a = b.math("MULTIPLY", a, b.math("SUBTRACT", b.math("MULTIPLY", brk, 2.2), 0.55, clamp=True))
+    a = b.math("MULTIPLY", a, b.mixf(seed, 0.35, 0.6))
+    b.finish((0.015, 0.015, 0.014), 0.6)
+    b.link(a, b.bsdf.inputs["Alpha"])
     try:
         m.surface_render_method = "DITHERED"
     except AttributeError:
@@ -657,8 +687,9 @@ def mat_plaster(name, col):
     return m
 
 
-def mat_lines_v(name, col, period, width=0.01, rough=0.5, metal=0.3, horizontal=True):
-    """Panels with grooves (sectional doors, noise-barrier cassettes, concrete fence panels)."""
+def mat_lines_v(name, col, period, width=0.01, rough=0.5, metal=0.3, horizontal=True, dirt_h=0.6, dirt_k=0.4):
+    """Panels with grooves (sectional doors, noise-barrier cassettes, concrete fence panels); dirt from the
+    bottom edge up to dirt_h (m of UV v), streaked vertically by noise (dock doors: road spray, rubber)."""
     m = new_mat(name)
     b = NB(m)
     obj = b.tc.outputs["Object"]
@@ -666,8 +697,11 @@ def mat_lines_v(name, col, period, width=0.01, rough=0.5, metal=0.3, horizontal=
     j = b.line_mask(v if horizontal else u, period, width)
     base = b.mix(b.math("MULTIPLY", b.noise(obj, 0.8, 4.0), 0.2), col, tuple(c * 0.8 for c in col))
     base = b.mix(b.math("MULTIPLY", j, 0.7), base, tuple(c * 0.35 for c in col))
-    dirt = b.math("SUBTRACT", 1.0, b.math("DIVIDE", v, 0.6), clamp=True)
-    base = b.mix(b.math("MULTIPLY", dirt, 0.4), base, (0.1, 0.09, 0.07))
+    dirt = b.math("SUBTRACT", 1.0, b.math("DIVIDE", v, dirt_h), clamp=True)
+    streak = b.noise(b.node("ShaderNodeCombineXYZ", X=b.math("MULTIPLY", u, 6.0), Y=b.math("MULTIPLY", v, 0.4)).outputs[0],
+                     1.0, 3.0, 0.6)
+    dirt = b.math("MULTIPLY", dirt, b.math("ADD", 0.55, b.math("MULTIPLY", streak, 0.9)), clamp=True)
+    base = b.mix(b.math("MULTIPLY", dirt, dirt_k), base, (0.1, 0.09, 0.07))
     b.finish(base, rough, b.bump(b.math("MULTIPLY", j, -1.0), 0.4, 0.01), metal=metal)
     return m
 
@@ -777,7 +811,7 @@ def build_materials():
         "window_frame": mat_flat("window_frame", g((200, 200, 196)), 0.5, 0.0, 0.05),
         "door_steel": mat_flat("door_steel", g((120, 124, 126)), 0.5, 0.4),
         "garage_door": mat_lines_v("garage_door", g((160, 160, 156)), 0.55, 0.012, 0.5, 0.3),
-        "dock_door": mat_lines_v("dock_door", g((150, 156, 160)), 0.6, 0.012, 0.45, 0.3),
+        "dock_door": mat_lines_v("dock_door", g((150, 156, 160)), 0.6, 0.012, 0.45, 0.3, dirt_h=1.1, dirt_k=0.6),
         "dock_shelter": mat_flat("dock_shelter", (0.022, 0.022, 0.022), 0.75),
         "hazard_stripes": mat_hazard("hazard_stripes"),
         "noise_panel": mat_lines_v("noise_panel", g((104, 116, 108)), 0.5, 0.015, 0.6, 0.3),
@@ -788,6 +822,7 @@ def build_materials():
         "yard_behaton": mat_behaton("yard_behaton", g((112, 111, 106)), g((98, 97, 93))),
         "decal_patch": mat_decal_patch("decal_patch"),
         "decal_oil": mat_decal_oil("decal_oil"),
+        "decal_tyre": mat_decal_tyre("decal_tyre"),
         "hall_wall_graphite": mat_hall("hall_wall_graphite", g((66, 70, 74)), "v"),
         "hall_wall_accent_blue": mat_hall("hall_wall_accent_blue", g((58, 84, 112)), "v"),
         "hall_wall_accent_red": mat_hall("hall_wall_accent_red", g((126, 58, 50)), "v"),
@@ -996,11 +1031,13 @@ def add_grass(terrain_objs, cam_pos, radius=55.0):
     b = NB(m)
     tex = b.nt.nodes.new("ShaderNodeTexImage")
     tex.image = bpy.data.images.load(str(path))
-    # per-instance tint: ~18 % dead (straw-brown) tufts, the rest varies a little in hue
+    # per-instance tint
     oi = b.nt.nodes.new("ShaderNodeObjectInfo")
-    dead = b.math("LESS_THAN", oi.outputs["Random"], 0.18)
-    tint = b.mix(dead, (1.0, 1.0, 1.0), (1.55, 1.15, 0.62), blend="MULTIPLY")
-    vary = b.mix(b.math("MULTIPLY", oi.outputs["Random"], 0.35), (1.0, 1.0, 1.0), (0.85, 0.95, 0.8), blend="MIX")
+    # ~7 % dead tufts, straw tint kept close to the live colour (the saturated yellow read as polka dots)
+    dead = b.math("LESS_THAN", oi.outputs["Random"], 0.07)
+    tint = b.mix(dead, (1.0, 1.0, 1.0), (1.22, 1.06, 0.78), blend="MULTIPLY")
+    # live tufts a little darker than the card texture so they sit in the ground colour instead of sparkling
+    vary = b.mix(b.math("MULTIPLY", oi.outputs["Random"], 0.35), (0.80, 0.84, 0.74), (0.70, 0.80, 0.64), blend="MIX")
     colt = b.mix(1.0, tex.outputs["Color"], tint, blend="MULTIPLY")
     colt = b.mix(1.0, colt, vary, blend="MULTIPLY")
     b.link(colt, b.bsdf.inputs["Base Color"])
@@ -1050,8 +1087,9 @@ def add_grass(terrain_objs, cam_pos, radius=55.0):
         col.inputs["Name"].default_value = "Color"
         sepc = N.new("FunctionNodeSeparateColor")
         L.new(col.outputs["Attribute"], sepc.inputs[0])
-        # density = 14 * (0.35 + B) * (1 - G) * (1 - A) * (dist-to-road > 0.5 m)
-        mB = N.new("ShaderNodeMath"); mB.operation = "ADD"; mB.inputs[1].default_value = 0.35
+        # density = 26 * (0.25 + B) * (1 - G) * (1 - A) * (dist-to-road > 0.5 m): mown grass = many small tufts
+        # (reads as texture), unmown = fewer, taller ones
+        mB = N.new("ShaderNodeMath"); mB.operation = "ADD"; mB.inputs[1].default_value = 0.25
         L.new(sepc.outputs[2], mB.inputs[0])
         g1 = N.new("ShaderNodeMath"); g1.operation = "SUBTRACT"; g1.inputs[0].default_value = 1.0
         L.new(sepc.outputs[1], g1.inputs[1])
@@ -1061,7 +1099,7 @@ def add_grass(terrain_objs, cam_pos, radius=55.0):
         L.new(sepc.outputs[0], rr.inputs[0])
         d1 = N.new("ShaderNodeMath"); d1.operation = "MULTIPLY"
         L.new(d0.outputs[0], d1.inputs[0]); L.new(rr.outputs[0], d1.inputs[1])
-        d2 = N.new("ShaderNodeMath"); d2.operation = "MULTIPLY"; d2.inputs[1].default_value = 14.0
+        d2 = N.new("ShaderNodeMath"); d2.operation = "MULTIPLY"; d2.inputs[1].default_value = 26.0
         L.new(d1.outputs[0], d2.inputs[0])
         dist_pts = N.new("GeometryNodeDistributePointsOnFaces")
         dist_pts.distribute_method = "RANDOM"
@@ -1098,7 +1136,7 @@ def add_grass(terrain_objs, cam_pos, radius=55.0):
         L.new(rnd.outputs["Value"], inst.inputs["Rotation"])
         # mown verges (B = 0) get short tufts, unmown grass tall ones
         sB = N.new("ShaderNodeMath"); sB.operation = "MULTIPLY_ADD"
-        L.new(sepc.outputs[2], sB.inputs[0]); sB.inputs[1].default_value = 0.9; sB.inputs[2].default_value = 0.3
+        L.new(sepc.outputs[2], sB.inputs[0]); sB.inputs[1].default_value = 0.95; sB.inputs[2].default_value = 0.2
         sS = N.new("ShaderNodeMath"); sS.operation = "MULTIPLY"
         L.new(rs.outputs[1], sS.inputs[0]); L.new(sB.outputs[0], sS.inputs[1])
         # taller toward the kerb / road edge (R = distance to the road / 20 m): x1.35 at the kerb, x0.9 beyond 2.5 m
