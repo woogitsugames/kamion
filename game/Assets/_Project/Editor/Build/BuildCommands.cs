@@ -45,6 +45,10 @@ namespace Game.Editor.Build
                 return 2;
             }
 
+            // Vehicle audio: generated WAVs are not in git; import them when present (build-android.ps1 renders them if missing).
+            bool audio = Game.Editor.Audio.VehicleAudioImporter.ImportIfNeeded();
+            Debug.Log(audio ? "[BUILD] vehicle audio library present" : "[BUILD] WARNING: no vehicle audio (art-source/audio/generated missing) - the APK will be silent");
+
             var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
             if (scenes.Length == 0)
             {

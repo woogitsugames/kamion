@@ -90,6 +90,22 @@ namespace TruckSim.Audio
             _hasPushed = true;
         }
 
+        /// <summary>
+        /// Runtime wiring (banks from <see cref="VehicleAudioLibrary"/>). Call on an inactive GameObject before it is
+        /// activated, or later: an already initialised component rebuilds its voice pools (allocates, not per frame).
+        /// </summary>
+        public void Configure(VehicleAudioLibrary lib, MonoBehaviour provider = null)
+        {
+            exteriorEngine = lib.exteriorEngine; cabEngine = lib.cabEngine;
+            exteriorEngineBrake = lib.exteriorEngineBrake; cabEngineBrake = lib.cabEngineBrake;
+            turboWhistleLoop = lib.turboWhistleLoop; turboLiftoff = lib.turboLiftoff;
+            if (provider != null) stateProvider = provider;
+            if (!_initialised) return;
+            OnDisable();
+            for (int i = transform.childCount - 1; i >= 0; i--) Destroy(transform.GetChild(i).gameObject);
+            Awake();
+        }
+
         void Awake()
         {
             _state = stateProvider as IEngineAudioState;

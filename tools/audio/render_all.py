@@ -54,6 +54,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--quick", action="store_true")
     ap.add_argument("--workers", type=int, default=12)
+    ap.add_argument("--no-previews", action="store_true",
+                    help="do not rewrite the committed OGG previews (build scripts: keeps the git tree clean)")
     args = ap.parse_args()
 
     rpm_grid = RPM_GRID[::3] if args.quick else RPM_GRID
@@ -119,13 +121,13 @@ def main() -> None:
         manifest["sfx"].append({"name": name, "file": str(path.relative_to(ROOT)).replace("\\", "/"),
                                 "loop": is_loop, "samples": len(x), "peak_dbfs": dsp.db(np.max(np.abs(x))),
                                 "rms_dbfs": dsp.db(dsp.rms(x))})
-        if name in ("turbo_whistle_loop", "air_brake_release", "parking_brake_set", "turbo_liftoff"):
+        if not args.no_previews and name in ("turbo_whistle_loop", "air_brake_release", "parking_brake_set", "turbo_liftoff"):
             write_ogg(PREV / f"{name}.ogg", np.tile(x, 2) if is_loop else x)
 
     (OUT / "manifest.json").write_text(json.dumps(manifest, indent=1), encoding="utf-8")
 
     # --- previews: each loop played twice back-to-back (demonstrates the seamless seam) ---
-    if not args.quick:
+    if not args.quick and not args.no_previews:
         want = [("engine", "ext", 600, "mid"), ("engine", "ext", 1300, "on"), ("engine", "ext", 2100, "on"),
                 ("engine", "ext", 1300, "off"), ("engine", "cab", 1300, "mid"), ("engine", "cab", 600, "mid"),
                 ("ebrake", "ext", 1800, None), ("ebrake", "cab", 1800, None)]

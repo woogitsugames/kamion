@@ -34,6 +34,18 @@ $apk = Join-Path $ArtifactsDir "apk/kamion-$version-$sha$(if ($Development) { '-
 
 # ---------------------------------------------------------------- build
 if (-not $SkipBuild) {
+    # Vehicle audio WAVs (~47 MB) are generated, not committed: render them when missing (needs uv, ~30 s).
+    # Unity imports them into Assets/_Project/Audio/Generated (gitignored) at build time (VehicleAudioImporter).
+    $audioManifest = Join-Path $RepoRoot 'art-source/audio/generated/manifest.json'
+    if (-not (Test-Path $audioManifest)) {
+        if (Get-Command uv -ErrorAction SilentlyContinue) {
+            Write-Host 'audio: art-source/audio/generated missing -> uv run python render_all.py'
+            Push-Location (Join-Path $RepoRoot 'tools/audio')
+            try { & uv run python render_all.py --no-previews 2>&1 | Out-File (Join-Path $LogsDir "audio-render-$ts.log") -Encoding utf8 }
+            finally { Pop-Location }
+            if (-not (Test-Path $audioManifest)) { Write-Warning "audio render failed (log artifacts/logs/audio-render-$ts.log) - the APK will be silent" }
+        } else { Write-Warning 'uv not found: cannot render vehicle audio - the APK will be silent' }
+    }
     $log = Join-Path $LogsDir "build-$ts.log"
     $unityArgs = @('-executeMethod', 'Game.Editor.Build.BuildCommands.BuildAndroidApk', '-buildOutput', $apk)
     if ($Development) { $unityArgs += '-development' }
