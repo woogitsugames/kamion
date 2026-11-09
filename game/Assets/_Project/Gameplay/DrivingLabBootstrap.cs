@@ -15,16 +15,22 @@ namespace Game.Gameplay
     /// <summary>
     /// Composition root of the DrivingLab scene: wires input sources (autopilot, keyboard, touch wheel or gyro,
     /// touch pedals) through <see cref="DriverInputMixer"/> into <see cref="VehicleBody.Input"/>, owns the driver
-    /// state (selector, manual mode, parking brake), the camera rig, HUD, telemetry recorder and diagnostics.
-    /// Launch arguments: <c>autopilot</c> (circle50 | circle25) and <c>speed</c> (km/h) for scripted device runs.
+    /// state (selector, manual mode, parking brake, endurance-brake stalk, brake cruise), the trailer and its
+    /// coupling, the camera rig, mirrors, reversing camera, HUD, audio, telemetry recorder and diagnostics.
+    /// Launch arguments: <c>autopilot</c> (circle50 | circle25), <c>speed</c> (km/h) and <c>trailer</c>
+    /// (solo | empty | 24 | 40) for scripted device runs. An autopilot run without <c>trailer</c> is solo (Stage 1 measurement).
     /// </summary>
     [DefaultExecutionOrder(-200)]
     public sealed class DrivingLabBootstrap : MonoBehaviour
     {
         public enum SteerMode { Wheel270 = 0, Wheel900 = 1, Gyro = 2 }
+        /// <summary>Spawn presets of the lab menu. Solo = tractor in the coupling bay, trailer parked behind it.</summary>
+        public enum LabSpawn { Solo = 0, Empty = 1, Cargo24t = 2, Gross40t = 3 }
         const string PrefSteerMode = "controls.steerMode";
+        const string PrefSpawn = "lab.spawn";
 
         public VehicleBody vehicle;
+        public TrailerBody trailer;
         public Camera mainCamera;
 
         readonly DriverInputMixer m_Mixer = new DriverInputMixer();
@@ -38,16 +44,23 @@ namespace Game.Gameplay
         DrivingHud m_Hud;
         VehicleTelemetryRecorder m_Recorder;
         DiagnosticsSampler m_Sampler;
+        TruckAudioController m_Audio;
         SteerMode m_SteerMode;
-        Vector3 m_SpawnPos;
-        Quaternion m_SpawnRot;
+        LabSpawn m_Spawn = LabSpawn.Empty;
         GearSelector m_Selector = GearSelector.Drive;
-        bool m_Manual, m_Parking = true;
+        bool m_Manual, m_Parking = true, m_AbsFault, m_ReverseCamForced;
+        int m_Lever, m_LeverMax = 5, m_CouplingEvents;
+        float m_CruiseKmh;
         string m_Status = "";
         float m_StatusUntil;
+        ReversingCamera m_TractorCam, m_TrailerCam, m_ActiveRevCam;
+        bool m_AutopilotStart;
 
         public SteerMode CurrentSteerMode => m_SteerMode;
+        public LabSpawn CurrentSpawn => m_Spawn;
         public DriverInputMixer Mixer => m_Mixer;
+        public int RetarderLever => m_Lever;
+        public bool AbsFault => m_AbsFault;
 
         void Awake()
         {
@@ -57,9 +70,10 @@ namespace Game.Gameplay
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
             if (vehicle == null) vehicle = FindAnyObjectByType<VehicleBody>();
+            if (trailer == null) trailer = FindAnyObjectByType<TrailerBody>();
             if (mainCamera == null) mainCamera = Camera.main;
-            m_SpawnPos = vehicle.transform.position;
-            m_SpawnRot = vehicle.transform.rotation;
+            if (!vehicle.Initialized) vehicle.Initialize(vehicle.Data);
+            m_LeverMax = 1 + Mathf.Max(0, vehicle.Model.Retarder.Def.present ? vehicle.Model.Retarder.Def.stages : 0);
 
             var platform = PlatformServices.Create();
             m_Sampler = FindAnyObjectByType<DiagnosticsSampler>();
@@ -86,6 +100,12 @@ namespace Game.Gameplay
             m_Rig.targetBody = vehicle.GetComponent<Rigidbody>();
             var visuals = vehicle.GetComponent<VehicleVisuals>();
             m_Rig.eyeAnchor = visuals != null && visuals.cabPivot != null ? visuals.cabPivot.Find("DriverEyePoint") : null;
+            m_TractorCam = vehicle.GetComponentInChildren<ReversingCamera>(true);
+            m_TrailerCam = trailer != null ? trailer.GetComponentInChildren<ReversingCamera>(true) : null;
+
+            m_Audio = gameObject.AddComponent<TruckAudioController>();
+            m_Audio.vehicle = vehicle;
+            m_Audio.rig = m_Rig;
 
             m_Hud = DrivingHud.Create(mainCamera, new DrivingHudContext
             {
@@ -93,15 +113,41 @@ namespace Game.Gameplay
                 Sampler = m_Sampler, Mixer = m_Mixer,
                 IsGyroMode = () => m_SteerMode == SteerMode.Gyro,
                 ToggleSteeringMode = () => SetSteerMode((SteerMode)(((int)m_SteerMode + 1) % 3)),
-                ResetVehicle = ResetVehicle,
+                ResetVehicle = () => Spawn(m_Spawn),
                 OpenMenu = () => SceneManager.LoadScene("Boot"),
                 StatusLine = () => Time.unscaledTime < m_StatusUntil ? m_Status : (Autopilot.Enabled ? "AUTOPILOT (pomiar)" : ""),
+                Spawn = i => Spawn((LabSpawn)i, persist: true),
+                CurrentSpawn = () => (int)m_Spawn,
+                ToggleAbsFault = () => SetAbsFault(!m_AbsFault),
+                AbsFault = () => m_AbsFault,
+                RetarderLever = () => m_Lever,
+                RetarderLeverMax = m_LeverMax,
+                BrakeCruiseKmh = () => m_CruiseKmh,
+                CouplingStatus = CouplingStatus,
+                ReverseCameraTexture = () => m_ActiveRevCam != null ? m_ActiveRevCam.Texture : null,
+                ReverseCameraLabel = () => m_ActiveRevCam == m_TrailerCam ? "KAMERA COFANIA (naczepa)" : "KAMERA SIODŁA (za kabiną)",
             }, overlay: true);
             m_Hud.transform.SetParent(transform, false);
 
             string ap = platform.GetLaunchArgument("autopilot");
-            if (!string.IsNullOrEmpty(ap)) StartAutopilot(ap, platform.GetLaunchArgument("speed"));
-            Debug.Log($"[LAB] DrivingLab ready: vehicle={vehicle.name} steer={m_SteerMode} autopilot={(Autopilot.Enabled ? ap : "off")} fixedDt={Time.fixedDeltaTime}");
+            string tr = platform.GetLaunchArgument("trailer");
+            m_Spawn = ParseSpawn(tr, !string.IsNullOrEmpty(ap) ? LabSpawn.Solo : (LabSpawn)Mathf.Clamp(PlayerPrefs.GetInt(PrefSpawn, (int)LabSpawn.Empty), 0, 3));
+            if (trailer == null) m_Spawn = LabSpawn.Solo;
+            if (!string.IsNullOrEmpty(ap)) { ConfigureAutopilot(ap, platform.GetLaunchArgument("speed")); m_AutopilotStart = true; }
+            Spawn(m_Spawn);
+            Debug.Log($"[LAB] DrivingLab ready: vehicle={vehicle.name} trailer={(trailer != null ? trailer.name : "none")} spawn={m_Spawn} steer={m_SteerMode} autopilot={(Autopilot.Enabled ? ap : "off")} fixedDt={Time.fixedDeltaTime}");
+        }
+
+        static LabSpawn ParseSpawn(string arg, LabSpawn fallback)
+        {
+            switch ((arg ?? "").Trim().ToLowerInvariant())
+            {
+                case "solo": return LabSpawn.Solo;
+                case "empty": case "pusta": return LabSpawn.Empty;
+                case "24": case "24t": return LabSpawn.Cargo24t;
+                case "40": case "40t": return LabSpawn.Gross40t;
+                default: return fallback;
+            }
         }
 
         public void SetSteerMode(SteerMode mode)
@@ -114,7 +160,15 @@ namespace Game.Gameplay
             PlayerPrefs.SetInt(PrefSteerMode, (int)mode);
         }
 
+        /// <summary>Scripted circle drive (device measurements, tests): solo tractor on the circle, trailer parked in its bay.</summary>
         public void StartAutopilot(string mode, string speedArg)
+        {
+            ConfigureAutopilot(mode, speedArg);
+            m_AutopilotStart = true;
+            Spawn(LabSpawn.Solo);
+        }
+
+        void ConfigureAutopilot(string mode, string speedArg)
         {
             bool r25 = mode == "circle25";
             Autopilot.CircleCenter = r25 ? DrivingLabLayout.CircleR25Center : DrivingLabLayout.CircleR50Center;
@@ -122,23 +176,72 @@ namespace Game.Gameplay
             Autopilot.Clockwise = false;
             Autopilot.TargetSpeedKmh = float.TryParse(speedArg, NumberStyles.Float, CultureInfo.InvariantCulture, out float s) && s > 0 ? s : (r25 ? 25f : 40f);
             Autopilot.Enabled = true;
-            m_SpawnPos = Autopilot.CircleCenter + new Vector3(Autopilot.Radius, 0f, 0f);
-            m_SpawnRot = Quaternion.identity;
-            ResetVehicle();
-            m_Parking = false;
+        }
+
+        /// <summary>
+        /// (Re)spawns the tractor and the trailer for a preset. Coupled presets stand at the lane start with the
+        /// trailer in the jaw at static equilibrium; Solo puts the tractor in the coupling bay, aligned 2 m ahead of
+        /// the parked (empty) trailer's kingpin, ready to reverse under it. Everything starts parked.
+        /// </summary>
+        public void Spawn(LabSpawn spawn, bool persist = false)
+        {
+            m_Spawn = spawn;
+            if (persist) PlayerPrefs.SetInt(PrefSpawn, (int)spawn);
+            bool coupled = spawn != LabSpawn.Solo && trailer != null;
+            Quaternion north = Quaternion.identity;
+            Vector3 pos;
+            if (m_AutopilotStart) pos = Autopilot.CircleCenter + new Vector3(Autopilot.Radius, 0f, 0f);
+            else if (coupled) pos = DrivingLabLayout.Spawn;
+            else
+            {
+                float jaw = (float)vehicle.Model.Def.fifthWheel.position.z;
+                pos = DrivingLabLayout.CouplingKingpin + new Vector3(0f, 0f, DrivingLabLayout.CouplingGap - jaw);
+            }
+
+            vehicle.ResetPose(pos, north);
+            if (trailer != null)
+            {
+                var preset = spawn == LabSpawn.Cargo24t ? CargoPreset.Cargo24t : spawn == LabSpawn.Gross40t ? CargoPreset.Gross40t : CargoPreset.Empty;
+                trailer.Initialize(vehicle.Data, preset, vehicle.Model.MassProps.Mass);
+                vehicle.ConnectTrailer(trailer, coupled);
+                CombinationPlacement.Tractor(vehicle.Model, pos, north, out Vector3 vp, out Quaternion vq);
+                vehicle.SetPose(vp, vq);
+                Vector3 tp; Quaternion tq;
+                if (coupled) CombinationPlacement.Coupled(vehicle.Model, vp, vq, trailer.Model, 0f, out tp, out tq);
+                else CombinationPlacement.Parked(trailer.Model, DrivingLabLayout.CouplingKingpin, north, out tp, out tq);
+                trailer.SetPose(tp, tq);
+            }
+            Physics.SyncTransforms();
+            m_CouplingEvents = 0;
+            m_Lever = 0; m_CruiseKmh = 0f;
+            m_Parking = !Autopilot.Enabled;
             m_Selector = GearSelector.Drive;
             m_Manual = false;
-        }
-
-        void ResetVehicle()
-        {
-            vehicle.ResetPose(m_SpawnPos, m_SpawnRot);
-            m_Parking = !Autopilot.Enabled;
             Wheel.SetWheelDeg(0f);
-            Flash("Reset pozycji");
+            SetAbsFault(m_AbsFault, silent: true);
+            m_Rig.SetCombination(coupled);
+            if (m_Audio != null) m_Audio.ResetEvents();
+            Flash(!coupled ? "Solo: cofnij pod naczepę (R), Siodło = uzbrój szczęki" :
+                "Zestaw: " + CargoPresets.DisplayNamePl(trailer.Preset) + ", " + (vehicle.Model.TotalMass / 1000).ToString("F1", CultureInfo.InvariantCulture) + " t");
         }
 
-        void Flash(string s) { m_Status = s; m_StatusUntil = Time.unscaledTime + 2.5f; }
+        /// <summary>EBS/ABS fault simulation for the jackknife demo: no ABS and no load sensing on tractor and trailer.</summary>
+        public void SetAbsFault(bool fault, bool silent = false)
+        {
+            m_AbsFault = fault;
+            var m = vehicle.Model;
+            m.Air.AbsEnabled = !fault && m.Def.brakes.absEnabled;
+            m.Air.LoadSensingEnabled = !fault;
+            if (vehicle.Trailer != null)
+            {
+                var b = vehicle.Trailer.Model.Brakes;
+                b.AbsEnabled = !fault && vehicle.Trailer.Model.Def.brakes.absEnabled;
+                b.LoadSensingEnabled = !fault;
+            }
+            if (!silent) Flash(fault ? "USTERKA EBS: ABS i korektor siły hamowania wyłączone" : "ABS / EBS sprawne");
+        }
+
+        void Flash(string s) { m_Status = s; m_StatusUntil = Time.unscaledTime + 3f; }
 
         void Update()
         {
@@ -162,9 +265,30 @@ namespace Game.Gameplay
             input.Selector = m_Selector;
             input.ParkingBrake = m_Parking;
             input.ManualMode = m_Manual;
+            input.RetarderLever = m_Lever;
+            input.BrakeCruiseKmh = m_CruiseKmh;
             if (intent.ShiftDelta > 0) input.ShiftUp = true;
             if (intent.ShiftDelta < 0) input.ShiftDown = true;
             vehicle.Input = input;
+
+            // Coupling happened inside the solver (jaw locked while armed).
+            var fw = vehicle.Combination.FifthWheel;
+            if (fw.CouplingEvents != m_CouplingEvents)
+            {
+                if (fw.CouplingEvents > m_CouplingEvents) { Flash("Sprzężono. Podnieś nogi (Nogi ↑↓), zwolnij P"); m_Rig.SetCombination(true); }
+                m_CouplingEvents = fw.CouplingEvents;
+            }
+
+            // Extra cameras: mirrors only in the cab view; reversing view while in R (or forced on).
+            RenderTextureMirror.GlobalEnabled = m_Rig.mode == CameraMode.Cab;
+            bool rev = m_Selector == GearSelector.Reverse || m_ReverseCamForced;
+            var want = !rev ? null : (vehicle.Coupled && m_TrailerCam != null ? m_TrailerCam : m_TractorCam);
+            if (m_ActiveRevCam != want)
+            {
+                if (m_ActiveRevCam != null) m_ActiveRevCam.Active = false;
+                m_ActiveRevCam = want;
+                if (want != null) want.Active = true;
+            }
         }
 
         void ApplyCommands(in DriverIntent intent)
@@ -179,6 +303,64 @@ namespace Game.Gameplay
             if (intent.ToggleManual && m_Selector == GearSelector.Drive) { m_Manual = !m_Manual; Flash(m_Manual ? "Skrzynia: tryb ręczny (−/+)" : "Skrzynia: automat"); }
             if (intent.ShiftDelta != 0 && m_Selector == GearSelector.Drive && !m_Manual) { m_Manual = true; Flash("Skrzynia: tryb ręczny (−/+)"); }
             if (intent.Selector == SelectorRequest.Drive && intent.ShiftDelta == 0 && !intent.ToggleManual) m_Manual = false;
+
+            if (intent.RetarderDelta != 0)
+            {
+                m_Lever = Mathf.Clamp(m_Lever + intent.RetarderDelta, 0, m_LeverMax);
+                Flash(m_Lever == 0 ? "Hamulce zwalniające: wył." : m_Lever == 1 ? "Hamulec silnikowy" : "Retarder stopień " + (m_Lever - 1).ToString(CultureInfo.InvariantCulture) + " + hamulec silnikowy");
+            }
+            if (intent.ToggleBrakeCruise)
+            {
+                float v = Mathf.Abs(vehicle.SpeedKmh);
+                if (m_CruiseKmh > 0f) { m_CruiseKmh = 0f; Flash("Stała prędkość zjazdu: wył."); }
+                else if (v >= 10f) { m_CruiseKmh = Mathf.Round(v); Flash("Stała prędkość zjazdu: " + m_CruiseKmh.ToString("F0", CultureInfo.InvariantCulture) + " km/h (retarder + hamulec silnikowy)"); }
+                else Flash("Stała prędkość zjazdu: jedź co najmniej 10 km/h");
+            }
+            if (intent.ToggleReverseCamera) { m_ReverseCamForced = !m_ReverseCamForced; Flash(m_ReverseCamForced ? "Kamera cofania: zawsze" : "Kamera cofania: przy biegu R"); }
+            if (intent.ToggleCoupling) ToggleCoupling();
+            if (intent.ToggleLandingGear) ToggleLandingGear();
+        }
+
+        void ToggleCoupling()
+        {
+            var c = vehicle.Combination;
+            if (vehicle.Trailer == null) { Flash("Brak naczepy (Zestaw…)"); return; }
+            if (c.Coupled)
+            {
+                if (c.Uncouple()) { Flash("Siodło otwarte, naczepa odpięta (hamulec naczepy zaciągnięty)"); m_Rig.SetCombination(false); }
+                else Flash("Najpierw opuść nogi podporowe do ziemi (Nogi ↑↓)");
+                return;
+            }
+            c.CouplingArmed = !c.CouplingArmed;
+            Flash(c.CouplingArmed ? "Szczęki siodła gotowe: cofaj powoli pod naczepę" : "Szczęki siodła: nieaktywne");
+        }
+
+        void ToggleLandingGear()
+        {
+            if (vehicle.Trailer == null) return;
+            var t = vehicle.Trailer.Model;
+            t.LandingGearDown = !t.LandingGearDown;
+            Flash(t.LandingGearDown ? "Nogi podporowe: opuszczanie" : "Nogi podporowe: podnoszenie");
+        }
+
+        string CouplingStatus()
+        {
+            if (vehicle.Trailer == null || !vehicle.Initialized) return "";
+            var ci = CultureInfo.InvariantCulture;
+            var t = vehicle.Trailer.Model;
+            var lg = t.Def.landingGear;
+            float legs = Mathf.Clamp01((float)((t.LandingGearFootY - lg.raisedFootY) / (lg.loweredFootY - lg.raisedFootY)));
+            string legsTxt = legs >= 0.99f ? "opuszczone" : legs <= 0.01f ? "podniesione" : (legs * 100f).ToString("F0", ci) + " %";
+            var c = vehicle.Combination;
+            if (c.Coupled)
+                return "Naczepa sprzężona · przegub " + (c.FifthWheel.Articulation * MathUtil.Rad2Deg).ToString("+0;-0", ci) + "° · nogi " + legsTxt;
+            // Kingpin relative to the jaw in the tractor frame (x right, z forward).
+            Vector3 jaw = vehicle.transform.TransformPoint(vehicle.Model.Def.fifthWheel.position.ToUnity());
+            Vector3 kp = vehicle.Trailer.transform.TransformPoint(t.KingpinLocal.ToUnity());
+            Vector3 d = vehicle.transform.InverseTransformDirection(kp - jaw);
+            string side = Mathf.Abs(d.x) < 0.005f ? "na osi" : (Mathf.Abs(d.x) * 100f).ToString("F0", ci) + " cm " + (d.x > 0 ? "w prawo" : "w lewo");
+            string dist = d.z < 0 ? (-d.z).ToString("F2", ci) + " m za siodłem" : d.z.ToString("F2", ci) + " m przed siodłem";
+            return "Naczepa odpięta (nogi " + legsTxt + ") · sworzeń " + dist + ", " + side + ", wys. " + (d.y * 100f).ToString("+0;-0", ci) + " cm · szczęki " + (c.CouplingArmed ? "GOTOWE" : "nieaktywne");
         }
 
         void OnApplicationPause(bool paused)

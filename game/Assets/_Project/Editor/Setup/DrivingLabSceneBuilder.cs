@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Game.Gameplay;
 using Game.Rendering;
+using Game.Vehicle.Physics;
 using Game.Vehicle.Runtime;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -25,6 +26,8 @@ namespace Game.Editor.Setup
     ///   figure-eight, 6 % and 12 % ramps, 8/15 cm platforms and side curbs, speed bump, ruts, surface patches
     ///   (wet asphalt, concrete, cobbles, gravel, grass) tagged with <see cref="GroundSurface"/>, signs, lighting,
     ///   the truck at the spawn, camera, bootstrap and visual-QA control cameras.
+    /// - Stage 2: graybox curtainsider trailer prefab (coupled behind the truck at the spawn), coupling bay, loading
+    ///   dock with bumpers, 7 % hill road (600 m) with a turning plateau, wet skid pad with an R100 circle.
     /// Entry point: Kamion/Setup/Rebuild DrivingLab, or batchmode -executeMethod Game.Editor.Setup.DrivingLabSceneBuilder.BuildBatch
     /// </summary>
     public static class DrivingLabSceneBuilder
@@ -36,6 +39,7 @@ namespace Game.Editor.Setup
         const string VehicleDataPath = "Assets/_Project/Vehicle/Runtime/Resources/" + VehicleDataAsset.DefaultResourcePath + ".asset";
         const string PrefabDir = "Assets/_Project/Vehicle/Runtime/Prefabs";
         public const string PrefabPath = PrefabDir + "/" + GrayboxTractorBuilder.RootName + ".prefab";
+        public const string TrailerPrefabPath = PrefabDir + "/" + GrayboxTrailerBuilder.RootName + ".prefab";
         const string DefDir = "Assets/_Project/Vehicle/Physics/Definitions/Data";
 
         static readonly List<Mesh> s_Meshes = new List<Mesh>();
@@ -59,7 +63,9 @@ namespace Game.Editor.Setup
 
             var data = CreateVehicleData();
             var dims = ReadAndCheckDims();
-            var prefab = CreateTractorPrefab(data, dims);
+            var gbMats = CreateGrayboxMaterials();
+            var prefab = CreateTractorPrefab(data, dims, gbMats);
+            var trailerPrefab = CreateTrailerPrefab(data, gbMats);
 
             // ---- materials ----
             var asphaltTex = Tex("T_Asphalt", 512, AsphaltPixel);
@@ -182,12 +188,34 @@ namespace Game.Editor.Setup
                 c.isStatic = true;
             }
 
+            // ---- Stage 2: coupling bay, loading dock, hill road, wet skid pad ----
+            var dockMats = new DockMaterials
+            {
+                wall = Lit("M_Dock_Wall", new Color(0.66f, 0.66f, 0.63f), 0.15f, concreteTex),
+                door = Lit("M_Dock_Door", new Color(0.36f, 0.42f, 0.48f), 0.3f),
+                rubber = Lit("M_Dock_Rubber", new Color(0.05f, 0.05f, 0.05f), 0.1f),
+                yellow = paintYellow, barrier = curb,
+            };
+            BuildCouplingBay(marks, signs);
+            BuildDock(world, marks, signs, dockMats);
+            BuildHill(world, signs, s_Asphalt, ramp, curb);
+            BuildWetPad(ground, marks, signs, wet);
+
             SaveMeshes();
 
-            // ---- truck, camera, bootstrap ----
+            // ---- truck + trailer, camera, bootstrap ----
             var truck = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
             truck.transform.SetPositionAndRotation(L.Spawn, Quaternion.identity);
             var eye = L.Spawn + dims.EyePointVehicle;
+            var trailerGo = (GameObject)PrefabUtility.InstantiatePrefab(trailerPrefab);
+            {
+                // Coupled at static equilibrium behind the truck (the bootstrap respawns per the lab preset at run time).
+                var tractorModel = data.CreateModel();
+                var trailerModel = data.CreateTrailer();
+                _ = new CombinationModel(tractorModel, trailerModel, true);
+                CombinationPlacement.Coupled(tractorModel, L.Spawn, Quaternion.identity, trailerModel, 0f, out Vector3 tp, out Quaternion tq);
+                trailerGo.transform.SetPositionAndRotation(tp, tq);
+            }
 
             var camGo = new GameObject("Main Camera") { tag = "MainCamera" };
             var cam = camGo.AddComponent<Camera>();
@@ -199,6 +227,7 @@ namespace Game.Editor.Setup
 
             var boot = new GameObject("DrivingLabBootstrap").AddComponent<DrivingLabBootstrap>();
             boot.vehicle = truck.GetComponent<VehicleBody>();
+            boot.trailer = trailerGo.GetComponent<TrailerBody>();
             boot.mainCamera = cam;
 
             // ---- visual-QA control cameras ----
@@ -208,7 +237,16 @@ namespace Game.Editor.Setup
             Qa(qa, "lab-truck-34", s0 + new Vector3(6.5f, 2.8f, 11.5f), s0 + new Vector3(0f, 1.7f, 2.2f), 50f, "Graybox tractor 3/4 front: proportions, wheels on the ground, cab, mirrors.");
             Qa(qa, "lab-truck-side", s0 + new Vector3(13f, 1.6f, 2.2f), s0 + new Vector3(0f, 1.6f, 2.2f), 40f, "Side elevation: wheelbase 3.70 m, overhangs, cab height 3.95 m against the 1 m cones.");
             Qa(qa, "lab-cab-eye", eye, eye + Quaternion.Euler(7f, 0f, 0f) * Vector3.forward * 10f, 55f, "Driver eye point with the driving HUD: windscreen view, mirrors, steering wheel, safe area.", hud: true);
-            Qa(qa, "lab-chase-hud", s0 + new Vector3(0f, 4.5f, -13f), s0 + new Vector3(0f, 2f, 3f), 50f, "Chase camera with HUD and telemetry panel.", hud: true, telemetry: true);
+            Qa(qa, "lab-chase-hud", s0 + new Vector3(0f, 7.5f, -26f), s0 + new Vector3(0f, 2f, 3f), 50f, "Chase camera (combination framing) with HUD and telemetry panel.", hud: true, telemetry: true);
+            Qa(qa, "lab-combo-34", s0 + new Vector3(10f, 3.6f, 9f), s0 + new Vector3(0f, 1.9f, -4.5f), 50f, "Tractor + 13.6 m curtainsider 3/4 front: kingpin over the fifth wheel, tridem, landing gear, proportions.");
+            Qa(qa, "lab-combo-side", s0 + new Vector3(30f, 2.0f, -3.8f), s0 + new Vector3(0f, 2.0f, -3.8f), 40f, "Combination side elevation: 16.6 m overall, trailer 13.6 × 4.0 m against the 1 m cones.");
+            Qa(qa, "lab-trailer-rear", s0 + new Vector3(-5f, 2.2f, -24f), s0 + new Vector3(0f, 1.4f, -12.5f), 50f, "Trailer rear: doors, lamps, underrun bar, tridem, reversing camera mount.");
+            Qa(qa, "lab-cab-mirror", eye, eye + Quaternion.Euler(6f, -42f, 0f) * Vector3.forward * 10f, 55f, "Cab view turned to the left mirror: render-texture mirror shows the trailer side.", hud: true);
+            Qa(qa, "lab-reverse-hud", s0 + new Vector3(0f, 7.5f, -26f), s0 + new Vector3(0f, 2f, 3f), 50f, "HUD while reversing: reversing-camera view from the trailer rear.", hud: true, reverseCam: true);
+            Qa(qa, "lab-dock", new Vector3(L.DockBay0X + 8f, 9f, L.DockFaceZ - 48f), new Vector3(L.DockBay0X + 8f, 1.5f, L.DockFaceZ), 50f, "Loading dock: 5 bays, 1.20 m dock height, bumpers, guide lines.");
+            Qa(qa, "lab-coupling-bay", L.CouplingKingpin + new Vector3(-14f, 7f, -22f), L.CouplingKingpin + new Vector3(0f, 0f, 0f), 50f, "Coupling bay markings (trailer parked here in the Solo preset).");
+            Qa(qa, "lab-hill", new Vector3(L.HillStartX - 40f, 22f, L.HillZ - 60f), new Vector3(L.HillStartX + 300f, 15f, L.HillZ), 50f, "7 % hill road (600 m, 42 m high), barriers, turning plateau.");
+            Qa(qa, "lab-wet", new Vector3(L.WetX0 - 10f, 30f, L.WetZ0 - 30f), L.WetCircleCenter, 55f, "Wet skid pad with the R100 circle (jackknife demo).");
             Qa(qa, "lab-obstacles", new Vector3(L.ObstacleX - 20f, 12f, L.Curb8Z - 22f), new Vector3(L.ObstacleX, 0f, L.RutsStartZ), 50f, "Obstacle lane: 8/15 cm platforms, speed bump, ruts, side curbs.");
             Qa(qa, "lab-ramps", new Vector3(20f, 6f, L.RampStartZ - 18f), new Vector3((L.Ramp6X + L.Ramp12X) * 0.5f, 1f, L.RampStartZ + 30f), 50f, "6 % and 12 % ramps with plateau.");
             Qa(qa, "lab-surfaces", new Vector3(L.PatchX0 + 60f, 14f, L.PatchZ0 - 26f), new Vector3(L.PatchX0 + 60f, 0f, L.PatchZ0 + 20f), 55f, "Surface patches: dry/wet asphalt, concrete, cobbles, gravel, grass + labels.");
@@ -236,11 +274,14 @@ namespace Game.Editor.Setup
                 if (p.EndsWith(".tire.json")) tires.Add(AssetDatabase.LoadAssetAtPath<TextAsset>(p));
             }
             a.tires = tires.ToArray();
+            a.trailer = AssetDatabase.LoadAssetAtPath<TextAsset>($"{DefDir}/curtainsider_tridem_13_6.trailer.json");
             if (a.vehicle == null || a.engine == null || a.gearbox == null || a.tires.Length == 0)
                 throw new FileNotFoundException("vehicle definitions missing in " + DefDir);
             EditorUtility.SetDirty(a);
             AssetDatabase.SaveAssets();
             a.CreateModel(); // parse + validate now
+            if (a.trailer == null) throw new FileNotFoundException("trailer definition missing in " + DefDir);
+            a.CreateTrailer();
             return a;
         }
 
@@ -276,20 +317,176 @@ namespace Game.Editor.Setup
             return d;
         }
 
-        static GameObject CreateTractorPrefab(VehicleDataAsset data, TractorDimensions dims)
+        static GrayboxMaterials CreateGrayboxMaterials()
         {
             var c = GrayboxMaterials.DefaultColors;
-            var mats = new GrayboxMaterials
+            return new GrayboxMaterials
             {
                 paint = Lit("M_GB_Paint", c[0], 0.45f, null, PrefabDir), chassis = Lit("M_GB_Chassis", c[1], 0.25f, null, PrefabDir),
                 tire = Lit("M_GB_Tire", c[2], 0.15f, null, PrefabDir), rim = Lit("M_GB_Rim", c[3], 0.4f, null, PrefabDir),
                 interior = Lit("M_GB_Interior", c[4], 0.2f, null, PrefabDir), dark = Lit("M_GB_Dark", c[5], 0.3f, null, PrefabDir),
                 marker = Lit("M_GB_Marker", c[6], 0.3f, null, PrefabDir),
+                curtain = Lit("M_GB_Curtain", c[7], 0.2f, null, PrefabDir), trailerPanel = Lit("M_GB_TrailerPanel", c[8], 0.35f, null, PrefabDir),
+                lamp = Lit("M_GB_Lamp", c[9], 0.5f, null, PrefabDir), mirror = Unlit("M_GB_MirrorGlass", GrayboxMaterials.MirrorIdleColor, PrefabDir),
             };
+        }
+
+        static GameObject CreateTractorPrefab(VehicleDataAsset data, TractorDimensions dims, GrayboxMaterials mats)
+        {
             var body = GrayboxTractorBuilder.Build(data, dims, mats);
             var prefab = PrefabUtility.SaveAsPrefabAsset(body.gameObject, PrefabPath);
             UnityEngine.Object.DestroyImmediate(body.gameObject);
             return prefab;
+        }
+
+        static GameObject CreateTrailerPrefab(VehicleDataAsset data, GrayboxMaterials mats)
+        {
+            var body = GrayboxTrailerBuilder.Build(data, new TrailerDimensions(), mats);
+            var prefab = PrefabUtility.SaveAsPrefabAsset(body.gameObject, TrailerPrefabPath);
+            UnityEngine.Object.DestroyImmediate(body.gameObject);
+            return prefab;
+        }
+
+        // ------------------------------------------------------------------ Stage 2 lab areas
+
+        sealed class DockMaterials { public Material wall, door, rubber, yellow, barrier; }
+
+        /// <summary>Painted outline of the parked-trailer spot and the tractor approach lane (trailer parked here in the Solo preset).</summary>
+        static void BuildCouplingBay(Transform marks, Transform signs)
+        {
+            Vector3 k = L.CouplingKingpin;
+            const float hw = 1.6f;
+            float rear = k.z - 12.2f, front = k.z + 14f;
+            Paint(marks, "CouplingBay_W", new Vector3(k.x - hw, 0, (rear + front) * 0.5f), new Vector3(0.12f, 0, front - rear), s_Paint);
+            Paint(marks, "CouplingBay_E", new Vector3(k.x + hw, 0, (rear + front) * 0.5f), new Vector3(0.12f, 0, front - rear), s_Paint);
+            Paint(marks, "CouplingBay_Rear", new Vector3(k.x, 0, rear), new Vector3(2 * hw, 0, 0.12f), s_Paint);
+            Paint(marks, "CouplingBay_Kingpin", new Vector3(k.x, 0, k.z), new Vector3(0.6f, 0, 0.06f), s_Paint);
+            Sign(signs, "PLAC NACZEP — sprzęganie (Zestaw → Solo)", new Vector3(k.x - hw - 3.5f, 0, rear - 3f), 0f, 4.6f);
+        }
+
+        /// <summary>
+        /// Loading dock on the north edge: a warehouse block, 5 bays with sectional doors at the 1.20 m dock floor,
+        /// two rubber bumpers per bay (box colliders the trailer rear touches), yellow guide lines and stop marks.
+        /// </summary>
+        static void BuildDock(Transform world, Transform marks, Transform signs, DockMaterials m)
+        {
+            var dock = Group(world, "LoadingDock");
+            float x0 = L.DockBay0X - 6f, x1 = L.DockBay0X + (L.DockBays - 1) * L.DockBayPitch + 6f;
+            float depth = L.PadHalfSize - L.DockFaceZ;
+            var wall = Solid(dock, "Warehouse", MeshGen.Slab(new Vector3(x1 - x0, 9f, depth), 4f, "Warehouse"), new Vector3((x0 + x1) * 0.5f, 4.5f, L.DockFaceZ + depth * 0.5f), m.wall, SurfaceKind.Concrete);
+            wall.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.On;
+            for (int i = 0; i < L.DockBays; i++)
+            {
+                float x = L.DockBay0X + i * L.DockBayPitch;
+                Deco(dock, $"Door_{i + 1}", new Vector3(x, L.DockHeight + 1.6f, L.DockFaceZ - 0.02f), new Vector3(3.0f, 3.2f, 0.04f), m.door);
+                Deco(dock, $"DoorSeal_{i + 1}", new Vector3(x, L.DockHeight + 1.65f, L.DockFaceZ - 0.01f), new Vector3(3.5f, 3.4f, 0.02f), m.rubber);
+                Deco(dock, $"Leveller_{i + 1}", new Vector3(x, L.DockHeight - 0.03f, L.DockFaceZ - 0.04f), new Vector3(2.2f, 0.06f, 0.08f), m.barrier);
+                for (int sgn = -1; sgn <= 1; sgn += 2)
+                {
+                    // Rubber bumper 0.25 × 0.40 m, 0.12 m proud of the dock face, top 0.15 m above the dock floor (WORKING_VALUE).
+                    var b = Solid(dock, $"Bumper_{i + 1}{(sgn < 0 ? "L" : "R")}", MeshGen.Slab(new Vector3(0.25f, 0.40f, 0.12f), 1f, "Bumper"),
+                        new Vector3(x + sgn * 0.85f, L.DockHeight - 0.05f, L.DockFaceZ - 0.06f), m.rubber, SurfaceKind.Concrete);
+                    b.isStatic = true;
+                    Paint(marks, $"DockGuide_{i + 1}{(sgn < 0 ? "L" : "R")}", new Vector3(x + sgn * 1.65f, 0, L.DockFaceZ - L.DockGuideLength * 0.5f - 0.5f),
+                        new Vector3(0.15f, 0, L.DockGuideLength), m.yellow);
+                }
+                Paint(marks, $"DockStop_{i + 1}", new Vector3(x, 0, L.DockFaceZ - 1.2f), new Vector3(3.3f, 0, 0.15f), m.yellow);
+                WallText(dock, (i + 1).ToString(CultureInfo.InvariantCulture), new Vector3(x, L.DockHeight + 3.6f, L.DockFaceZ - 0.03f), 0.09f);
+            }
+            Sign(signs, "RAMPA ZAŁADUNKOWA — cofanie (wys. 1,20 m)", new Vector3(x0 - 4f, 0, L.DockFaceZ - L.DockGuideLength - 4f), 0f, 5.2f);
+        }
+
+        /// <summary>7 % ramp (600 m, rising east), turning plateau 120 × 120 m on top, concrete barriers along both edges.</summary>
+        static void BuildHill(Transform world, Transform signs, Material asphalt, Material concrete, Material barrier)
+        {
+            var hill = Group(world, "HillRoad_7pct");
+            float L0 = L.HillLength, H = L.HillTopHeight, W = L.HillRoadWidth, P = L.HillPlateau;
+            var prof = new[] { new Vector2(0, 0), new Vector2(L0, H), new Vector2(L0, 0) };
+            var ramp = Solid(hill, "Ramp_7pct", MeshGen.Prism(prof, W, 4f, "HillRamp"), new Vector3(L.HillStartX, 0, L.HillZ), asphalt, SurfaceKind.DryAsphalt, true);
+            ramp.transform.localRotation = Quaternion.Euler(0f, 90f, 0f); // profile +Z → world +X (east)
+            Solid(hill, "Plateau", MeshGen.Slab(new Vector3(P, H, P), 4f, "HillPlateau"), new Vector3(L.HillStartX + L0 + P * 0.5f, H * 0.5f, L.HillZ), concrete, SurfaceKind.Concrete);
+            // Barriers (0.5 × 0.9 m) along the ramp edges, following the slope.
+            float slopeLen = Mathf.Sqrt(L0 * L0 + H * H);
+            float pitch = Mathf.Atan2(H, L0) * Mathf.Rad2Deg;
+            for (int sgn = -1; sgn <= 1; sgn += 2)
+            {
+                var b = Solid(hill, sgn < 0 ? "Barrier_S" : "Barrier_N", MeshGen.Slab(new Vector3(slopeLen, 0.9f, 0.5f), 2f, "HillBarrier" + sgn),
+                    new Vector3(L.HillStartX + L0 * 0.5f, H * 0.5f + 0.45f, L.HillZ + sgn * (W * 0.5f + 0.25f)), barrier, SurfaceKind.Concrete);
+                b.transform.localRotation = Quaternion.Euler(0f, 0f, pitch);
+            }
+            // Plateau edges: east, north, south full length; west in two pieces around the road.
+            float px0 = L.HillStartX + L0, px1 = px0 + P, pz0 = L.HillZ - P * 0.5f, pz1 = L.HillZ + P * 0.5f;
+            void Edge(string n, Vector3 c, Vector3 size) => Solid(hill, n, MeshGen.Slab(size, 2f, n), c, barrier, SurfaceKind.Concrete);
+            Edge("PlateauEdge_E", new Vector3(px1 - 0.25f, H + 0.45f, L.HillZ), new Vector3(0.5f, 0.9f, P));
+            Edge("PlateauEdge_N", new Vector3((px0 + px1) * 0.5f, H + 0.45f, pz1 - 0.25f), new Vector3(P, 0.9f, 0.5f));
+            Edge("PlateauEdge_S", new Vector3((px0 + px1) * 0.5f, H + 0.45f, pz0 + 0.25f), new Vector3(P, 0.9f, 0.5f));
+            float gap0 = L.HillZ - W * 0.5f - 0.5f, gap1 = L.HillZ + W * 0.5f + 0.5f;
+            Edge("PlateauEdge_WS", new Vector3(px0 + 0.25f, H + 0.45f, (pz0 + gap0) * 0.5f), new Vector3(0.5f, 0.9f, gap0 - pz0));
+            Edge("PlateauEdge_WN", new Vector3(px0 + 0.25f, H + 0.45f, (gap1 + pz1) * 0.5f), new Vector3(0.5f, 0.9f, pz1 - gap1));
+            // Centre-line dashes (3 m every 12 m) following the slope.
+            var dashMesh = MeshGen.Slab(new Vector3(3f, 0.002f, 0.15f), 1f, "HillDash");
+            s_Meshes.Add(dashMesh);
+            for (float d = 6f; d < L0 - 3f; d += 12f)
+            {
+                var go = new GameObject("Dash");
+                go.transform.SetParent(hill, false);
+                go.transform.localPosition = new Vector3(L.HillStartX + d, d * L.HillGrade + 0.012f, L.HillZ);
+                go.transform.localRotation = Quaternion.Euler(0f, 0f, pitch);
+                go.AddComponent<MeshFilter>().sharedMesh = dashMesh;
+                var mr = go.AddComponent<MeshRenderer>();
+                mr.sharedMaterial = s_Paint;
+                mr.shadowCastingMode = ShadowCastingMode.Off;
+                go.isStatic = true;
+            }
+            Sign(signs, "PODJAZD / ZJAZD 7 % · 600 m", new Vector3(L.HillStartX - 6f, 0, L.HillZ - W * 0.5f - 3f), 90f, 4.2f);
+            var top = new Vector3(px0 + 8f, H, L.HillZ + W * 0.5f + 3f);
+            Sign(signs, "ZJAZD 7 % — retarder / hamulec silnikowy / stała prędkość", top, -90f, 6.0f);
+        }
+
+        /// <summary>Wet asphalt skid pad (jackknife demo with the ABS fault) and its R100 guide circle.</summary>
+        static void BuildWetPad(Transform ground, Transform marks, Transform signs, Material wet)
+        {
+            float w = L.WetX1 - L.WetX0, d = L.WetZ1 - L.WetZ0;
+            Solid(ground, "WetPad", MeshGen.Slab(new Vector3(w, 0.05f, d), 4f, "WetPad"), new Vector3((L.WetX0 + L.WetX1) * 0.5f, -0.02f, (L.WetZ0 + L.WetZ1) * 0.5f), wet, SurfaceKind.WetAsphalt);
+            Ring(marks, "WetCircle_R100", L.WetCircleCenter + new Vector3(0f, 0.005f, 0f), L.WetCircleR, 0.25f);
+            Sign(signs, "PŁYTA MOKRA · R 100 m · scyzoryk: Zestaw → ABS: USTERKA", new Vector3(L.WetX0 - 4f, 0, L.WetZ1 - 14f), 90f, 6.4f);
+        }
+
+        /// <summary>Visual-only box (no collider).</summary>
+        static void Deco(Transform parent, string name, Vector3 pos, Vector3 size, Material mat)
+        {
+            var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            go.name = name;
+            go.transform.SetParent(parent, false);
+            go.transform.localPosition = pos;
+            go.transform.localScale = size;
+            go.GetComponent<MeshRenderer>().sharedMaterial = mat;
+            UnityEngine.Object.DestroyImmediate(go.GetComponent<Collider>());
+            go.isStatic = true;
+        }
+
+        static void WallText(Transform parent, string text, Vector3 pos, float charSize)
+        {
+            var tgo = new GameObject("Text_" + text);
+            tgo.transform.SetParent(parent, false);
+            tgo.transform.localPosition = pos;
+            var tm = tgo.AddComponent<TextMesh>();
+            tm.font = s_Font; tm.text = text; tm.fontSize = 96; tm.characterSize = charSize;
+            tm.anchor = TextAnchor.MiddleCenter; tm.alignment = TextAlignment.Center;
+            tm.color = new Color(0.9f, 0.9f, 0.85f);
+            tgo.GetComponent<MeshRenderer>().sharedMaterial = s_Text;
+        }
+
+        static Material Unlit(string name, Color color, string dir)
+        {
+            string path = $"{dir}/{name}.mat";
+            var shader = Shader.Find("Universal Render Pipeline/Unlit");
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
+            mat.shader = shader;
+            mat.SetColor("_BaseColor", color);
+            EditorUtility.SetDirty(mat);
+            return mat;
         }
 
         // ------------------------------------------------------------------ scene helpers
@@ -357,6 +554,7 @@ namespace Game.Editor.Setup
         /// <summary>Sign on a post facing south (readable when driving north).</summary>
         static void Sign(Transform parent, string text, Vector3 basePos, float yaw, float width)
         {
+            width = Mathf.Max(width, 0.4f + text.Length * 0.105f); // legacy font at this size: ≈ 0.1 m per character
             var root = new GameObject("Sign_" + text).transform;
             root.SetParent(parent, false);
             root.localPosition = basePos;
@@ -382,7 +580,7 @@ namespace Game.Editor.Setup
             root.gameObject.isStatic = false;
         }
 
-        static void Qa(Transform parent, string id, Vector3 pos, Vector3 lookAt, float fov, string note, bool hud = false, bool telemetry = false)
+        static void Qa(Transform parent, string id, Vector3 pos, Vector3 lookAt, float fov, string note, bool hud = false, bool telemetry = false, bool reverseCam = false)
         {
             var go = new GameObject("QA_" + id);
             go.transform.SetParent(parent, false);
@@ -392,7 +590,7 @@ namespace Game.Editor.Setup
             cam.enabled = false;
             go.AddComponent<UniversalAdditionalCameraData>();
             var qa = go.AddComponent<ControlCamera>();
-            qa.id = id; qa.note = note; qa.includeDrivingHud = hud; qa.drivingHudTelemetry = telemetry;
+            qa.id = id; qa.note = note; qa.includeDrivingHud = hud; qa.drivingHudTelemetry = telemetry; qa.drivingHudReverseCamera = reverseCam;
         }
 
         static void SaveMeshes()

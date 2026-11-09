@@ -23,6 +23,9 @@ namespace Game.Rendering
         [Tooltip("With includeDrivingHud: also show the telemetry panel.")]
         public bool drivingHudTelemetry;
 
+        [Tooltip("With includeDrivingHud: show the reversing-camera view (rendered from the trailer's rear camera).")]
+        public bool drivingHudReverseCamera;
+
         [TextArea] public string note;
     }
 }
