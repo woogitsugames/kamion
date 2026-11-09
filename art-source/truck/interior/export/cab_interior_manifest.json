@@ -7,7 +7,7 @@
    "root": "CabInterior_LOD2",
    "objects": {
     "CAB_Interior_LOD2": {
-     "tris": 15446,
+     "tris": 15494,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -24,7 +24,7 @@
      "role": "CAB_Interior"
     },
     "CAB_ShellPlaceholder_LOD2": {
-     "tris": 2198,
+     "tris": 2210,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Metal"
@@ -36,8 +36,8 @@
      ],
      "role": "CAB_ShellPlaceholder"
     },
-    "CAB_Glass_LOD2": {
-     "tris": 132,
+    "CAB_Glass_Windows_LOD2": {
+     "tris": 130,
      "materials": [
       "MI_Cab_Glass"
      ],
@@ -46,7 +46,7 @@
       0.0,
       0.0
      ],
-     "role": "CAB_Glass"
+     "role": "CAB_Glass_Windows"
     },
     "DISPLAY_Cluster_LOD2": {
      "tris": 2,
@@ -59,6 +59,18 @@
       0.0
      ],
      "role": "DISPLAY_Cluster"
+    },
+    "CAB_Glass_LOD2": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Glass"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "CAB_Glass"
     },
     "DISPLAY_Infotainment_LOD2": {
      "tris": 2,
@@ -332,7 +344,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 21514,
+   "tris_total": 21574,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -369,17 +381,136 @@
      "size": 256
     }
    },
-   "hidden_faces_removed": 1180,
-   "tris_before_cleanup": 23762,
-   "build_s": 15.8,
-   "file_bytes": 2499628
+   "fit_to_exterior": {
+    "source": "art-source/truck/exterior/glass_interface.json",
+    "verts_moved": 671,
+    "max_move_m": 0.6055,
+    "objects": {
+     "floor_slab": {
+      "verts_moved": 8,
+      "max_move_m": 0.3573
+     },
+     "headliner": {
+      "verts_moved": 50,
+      "max_move_m": 0.4429
+     },
+     "side_top_-1": {
+      "verts_moved": 12,
+      "max_move_m": 0.3082
+     },
+     "side_front_-1": {
+      "verts_moved": 4,
+      "max_move_m": 0.265
+     },
+     "side_top_1": {
+      "verts_moved": 12,
+      "max_move_m": 0.3082
+     },
+     "side_front_1": {
+      "verts_moved": 4,
+      "max_move_m": 0.265
+     },
+     "footwell_wall": {
+      "verts_moved": 8,
+      "max_move_m": 0.1727
+     },
+     "ws_header": {
+      "verts_moved": 8,
+      "max_move_m": 0.6055
+     },
+     "ws_frit_bottom": {
+      "verts_moved": 24,
+      "max_move_m": 0.0389
+     },
+     "ws_frit_top": {
+      "verts_moved": 24,
+      "max_move_m": 0.0423
+     },
+     "ws_frit_side_-1": {
+      "verts_moved": 8,
+      "max_move_m": 0.0065
+     },
+     "ws_frit_side_1": {
+      "verts_moved": 8,
+      "max_move_m": 0.0065
+     },
+     "apillar_trim_-1": {
+      "verts_moved": 27,
+      "max_move_m": 0.1481
+     },
+     "grab_A_-1": {
+      "verts_moved": 21,
+      "max_move_m": 0.0183
+     },
+     "apillar_trim_1": {
+      "verts_moved": 27,
+      "max_move_m": 0.1481
+     },
+     "grab_A_1": {
+      "verts_moved": 21,
+      "max_move_m": 0.0183
+     },
+     "dash_main": {
+      "verts_moved": 97,
+      "max_move_m": 0.1625
+     },
+     "floor_mat": {
+      "verts_moved": 12,
+      "max_move_m": 0.0905
+     },
+     "overhead_body": {
+      "verts_moved": 220,
+      "max_move_m": 0.3654
+     },
+     "oh_lid_0": {
+      "verts_moved": 5,
+      "max_move_m": 0.0203
+     },
+     "oh_lid_3": {
+      "verts_moved": 5,
+      "max_move_m": 0.0203
+     },
+     "curtain_ws_-1": {
+      "verts_moved": 5,
+      "max_move_m": 0.0137
+     },
+     "curtain_ws_1": {
+      "verts_moved": 5,
+      "max_move_m": 0.0137
+     },
+     "blind_cassette": {
+      "verts_moved": 24,
+      "max_move_m": 0.1053
+     },
+     "blind_-1.06": {
+      "verts_moved": 4,
+      "max_move_m": 0.0469
+     },
+     "blind_bar_-1.06": {
+      "verts_moved": 12,
+      "max_move_m": 0.0502
+     },
+     "blind_0.03": {
+      "verts_moved": 4,
+      "max_move_m": 0.0491
+     },
+     "blind_bar_0.03": {
+      "verts_moved": 12,
+      "max_move_m": 0.0472
+     }
+    }
+   },
+   "hidden_faces_removed": 1145,
+   "tris_before_cleanup": 23778,
+   "build_s": 16.6,
+   "file_bytes": 2539948
   },
   "LOD1": {
    "file": "art-source/truck/interior/export/SM_CabInterior_LOD1.fbx",
    "root": "CabInterior_LOD1",
    "objects": {
     "CAB_Interior_LOD1": {
-     "tris": 30447,
+     "tris": 30581,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -396,7 +527,7 @@
      "role": "CAB_Interior"
     },
     "CAB_ShellPlaceholder_LOD1": {
-     "tris": 2459,
+     "tris": 2470,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Rubber",
@@ -409,8 +540,8 @@
      ],
      "role": "CAB_ShellPlaceholder"
     },
-    "CAB_Glass_LOD1": {
-     "tris": 242,
+    "CAB_Glass_Windows_LOD1": {
+     "tris": 240,
      "materials": [
       "MI_Cab_Glass"
      ],
@@ -419,7 +550,7 @@
       0.0,
       0.0
      ],
-     "role": "CAB_Glass"
+     "role": "CAB_Glass_Windows"
     },
     "DISPLAY_Cluster_LOD1": {
      "tris": 2,
@@ -432,6 +563,18 @@
       0.0
      ],
      "role": "DISPLAY_Cluster"
+    },
+    "CAB_Glass_LOD1": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Glass"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "CAB_Glass"
     },
     "DISPLAY_Infotainment_LOD1": {
      "tris": 2,
@@ -729,7 +872,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 37762,
+   "tris_total": 37907,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -766,17 +909,164 @@
      "size": 256
     }
    },
-   "hidden_faces_removed": 3752,
-   "tris_before_cleanup": 45200,
-   "build_s": 26.6,
-   "file_bytes": 4487868
+   "fit_to_exterior": {
+    "source": "art-source/truck/exterior/glass_interface.json",
+    "verts_moved": 841,
+    "max_move_m": 0.6055,
+    "objects": {
+     "floor_slab": {
+      "verts_moved": 8,
+      "max_move_m": 0.3573
+     },
+     "headliner": {
+      "verts_moved": 50,
+      "max_move_m": 0.4429
+     },
+     "side_top_-1": {
+      "verts_moved": 12,
+      "max_move_m": 0.3082
+     },
+     "side_front_-1": {
+      "verts_moved": 4,
+      "max_move_m": 0.265
+     },
+     "side_top_1": {
+      "verts_moved": 12,
+      "max_move_m": 0.3082
+     },
+     "side_front_1": {
+      "verts_moved": 4,
+      "max_move_m": 0.265
+     },
+     "footwell_wall": {
+      "verts_moved": 8,
+      "max_move_m": 0.1727
+     },
+     "ws_header": {
+      "verts_moved": 8,
+      "max_move_m": 0.6055
+     },
+     "ws_frit_bottom": {
+      "verts_moved": 46,
+      "max_move_m": 0.0389
+     },
+     "ws_frit_top": {
+      "verts_moved": 46,
+      "max_move_m": 0.0423
+     },
+     "ws_frit_side_-1": {
+      "verts_moved": 10,
+      "max_move_m": 0.0065
+     },
+     "ws_frit_side_1": {
+      "verts_moved": 10,
+      "max_move_m": 0.0065
+     },
+     "win_channel_-1": {
+      "verts_moved": 9,
+      "max_move_m": 0.0839
+     },
+     "win_channel_1": {
+      "verts_moved": 9,
+      "max_move_m": 0.0839
+     },
+     "apillar_trim_-1": {
+      "verts_moved": 27,
+      "max_move_m": 0.1481
+     },
+     "grab_A_-1": {
+      "verts_moved": 21,
+      "max_move_m": 0.0185
+     },
+     "tweeter_-1": {
+      "verts_moved": 22,
+      "max_move_m": 0.0509
+     },
+     "apillar_trim_1": {
+      "verts_moved": 27,
+      "max_move_m": 0.1481
+     },
+     "grab_A_1": {
+      "verts_moved": 23,
+      "max_move_m": 0.0185
+     },
+     "tweeter_1": {
+      "verts_moved": 22,
+      "max_move_m": 0.0509
+     },
+     "dash_main": {
+      "verts_moved": 117,
+      "max_move_m": 0.1625
+     },
+     "door_seal_-1": {
+      "verts_moved": 6,
+      "max_move_m": 0.0222
+     },
+     "door_seal_1": {
+      "verts_moved": 6,
+      "max_move_m": 0.0222
+     },
+     "floor_mat": {
+      "verts_moved": 12,
+      "max_move_m": 0.0905
+     },
+     "overhead_body": {
+      "verts_moved": 220,
+      "max_move_m": 0.3654
+     },
+     "oh_lid_0": {
+      "verts_moved": 5,
+      "max_move_m": 0.0203
+     },
+     "oh_lid_3": {
+      "verts_moved": 5,
+      "max_move_m": 0.0203
+     },
+     "curtain_rail": {
+      "verts_moved": 12,
+      "max_move_m": 0.1298
+     },
+     "curtain_ws_-1": {
+      "verts_moved": 12,
+      "max_move_m": 0.0504
+     },
+     "curtain_ws_1": {
+      "verts_moved": 12,
+      "max_move_m": 0.0504
+     },
+     "blind_cassette": {
+      "verts_moved": 24,
+      "max_move_m": 0.1053
+     },
+     "blind_-1.06": {
+      "verts_moved": 4,
+      "max_move_m": 0.0469
+     },
+     "blind_bar_-1.06": {
+      "verts_moved": 12,
+      "max_move_m": 0.0502
+     },
+     "blind_0.03": {
+      "verts_moved": 4,
+      "max_move_m": 0.0491
+     },
+     "blind_bar_0.03": {
+      "verts_moved": 12,
+      "max_move_m": 0.0472
+     }
+    }
+   },
+   "hidden_faces_removed": 3709,
+   "tris_before_cleanup": 45212,
+   "build_s": 30.0,
+   "file_bytes": 4525500
   },
   "LOD0": {
    "file": "art-source/truck/interior/export/SM_CabInterior_LOD0.fbx",
    "root": "CabInterior_LOD0",
    "objects": {
     "CAB_Interior_LOD0": {
-     "tris": 66641,
+     "tris": 66797,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -793,7 +1083,7 @@
      "role": "CAB_Interior"
     },
     "CAB_ShellPlaceholder_LOD0": {
-     "tris": 4236,
+     "tris": 4232,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Rubber",
@@ -806,8 +1096,8 @@
      ],
      "role": "CAB_ShellPlaceholder"
     },
-    "CAB_Glass_LOD0": {
-     "tris": 706,
+    "CAB_Glass_Windows_LOD0": {
+     "tris": 704,
      "materials": [
       "MI_Cab_Glass"
      ],
@@ -816,7 +1106,7 @@
       0.0,
       0.0
      ],
-     "role": "CAB_Glass"
+     "role": "CAB_Glass_Windows"
     },
     "DISPLAY_Cluster_LOD0": {
      "tris": 2,
@@ -829,6 +1119,18 @@
       0.0
      ],
      "role": "DISPLAY_Cluster"
+    },
+    "CAB_Glass_LOD0": {
+     "tris": 2,
+     "materials": [
+      "MI_Cab_Glass"
+     ],
+     "pivot_unity_local": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "role": "CAB_Glass"
     },
     "DISPLAY_Infotainment_LOD0": {
      "tris": 2,
@@ -1126,7 +1428,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 80501,
+   "tris_total": 80653,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -1163,10 +1465,169 @@
      "size": 512
     }
    },
-   "hidden_faces_removed": 9099,
-   "tris_before_cleanup": 99816,
-   "build_s": 60.4,
-   "file_bytes": 8940284
+   "fit_to_exterior": {
+    "source": "art-source/truck/exterior/glass_interface.json",
+    "verts_moved": 5095,
+    "max_move_m": 0.6055,
+    "objects": {
+     "floor_slab": {
+      "verts_moved": 8,
+      "max_move_m": 0.3573
+     },
+     "headliner": {
+      "verts_moved": 50,
+      "max_move_m": 0.4429
+     },
+     "side_top_-1": {
+      "verts_moved": 28,
+      "max_move_m": 0.3082
+     },
+     "side_front_-1": {
+      "verts_moved": 4,
+      "max_move_m": 0.265
+     },
+     "side_top_1": {
+      "verts_moved": 28,
+      "max_move_m": 0.3082
+     },
+     "side_front_1": {
+      "verts_moved": 4,
+      "max_move_m": 0.265
+     },
+     "footwell_wall": {
+      "verts_moved": 8,
+      "max_move_m": 0.1727
+     },
+     "ws_header": {
+      "verts_moved": 8,
+      "max_move_m": 0.6055
+     },
+     "ws_frit_bottom": {
+      "verts_moved": 82,
+      "max_move_m": 0.0389
+     },
+     "ws_frit_top": {
+      "verts_moved": 82,
+      "max_move_m": 0.0423
+     },
+     "ws_frit_side_-1": {
+      "verts_moved": 18,
+      "max_move_m": 0.0065
+     },
+     "ws_frit_side_1": {
+      "verts_moved": 18,
+      "max_move_m": 0.0065
+     },
+     "ws_frit_dots": {
+      "verts_moved": 3696,
+      "max_move_m": 0.0097
+     },
+     "win_channel_-1": {
+      "verts_moved": 13,
+      "max_move_m": 0.0839
+     },
+     "win_channel_1": {
+      "verts_moved": 13,
+      "max_move_m": 0.0839
+     },
+     "apillar_trim_-1": {
+      "verts_moved": 50,
+      "max_move_m": 0.1488
+     },
+     "grab_A_-1": {
+      "verts_moved": 39,
+      "max_move_m": 0.0186
+     },
+     "tweeter_-1": {
+      "verts_moved": 40,
+      "max_move_m": 0.0509
+     },
+     "tweeter_grille_-1": {
+      "verts_moved": 4,
+      "max_move_m": 0.0447
+     },
+     "apillar_trim_1": {
+      "verts_moved": 50,
+      "max_move_m": 0.1488
+     },
+     "grab_A_1": {
+      "verts_moved": 39,
+      "max_move_m": 0.0186
+     },
+     "tweeter_1": {
+      "verts_moved": 40,
+      "max_move_m": 0.0509
+     },
+     "tweeter_grille_1": {
+      "verts_moved": 4,
+      "max_move_m": 0.0447
+     },
+     "dash_main": {
+      "verts_moved": 191,
+      "max_move_m": 0.1625
+     },
+     "door_seal_-1": {
+      "verts_moved": 8,
+      "max_move_m": 0.0234
+     },
+     "door_seal_1": {
+      "verts_moved": 8,
+      "max_move_m": 0.0234
+     },
+     "floor_mat": {
+      "verts_moved": 28,
+      "max_move_m": 0.0917
+     },
+     "overhead_body": {
+      "verts_moved": 320,
+      "max_move_m": 0.3665
+     },
+     "oh_lid_0": {
+      "verts_moved": 13,
+      "max_move_m": 0.0228
+     },
+     "oh_lid_3": {
+      "verts_moved": 13,
+      "max_move_m": 0.0228
+     },
+     "curtain_rail": {
+      "verts_moved": 16,
+      "max_move_m": 0.1298
+     },
+     "curtain_ws_-1": {
+      "verts_moved": 26,
+      "max_move_m": 0.042
+     },
+     "curtain_ws_1": {
+      "verts_moved": 26,
+      "max_move_m": 0.042
+     },
+     "blind_cassette": {
+      "verts_moved": 56,
+      "max_move_m": 0.1091
+     },
+     "blind_-1.06": {
+      "verts_moved": 4,
+      "max_move_m": 0.0469
+     },
+     "blind_bar_-1.06": {
+      "verts_moved": 28,
+      "max_move_m": 0.0509
+     },
+     "blind_0.03": {
+      "verts_moved": 4,
+      "max_move_m": 0.0491
+     },
+     "blind_bar_0.03": {
+      "verts_moved": 28,
+      "max_move_m": 0.0477
+     }
+    }
+   },
+   "hidden_faces_removed": 9098,
+   "tris_before_cleanup": 99882,
+   "build_s": 61.8,
+   "file_bytes": 8991932
   }
  },
  "units": "metres",
@@ -1410,8 +1871,9 @@
   },
   "static": [
    "CAB_Interior",
-   "CAB_Glass",
-   "CAB_ShellPlaceholder (exterior skin/mirror housings placeholder until A3; disable when the A3 exterior is in)"
+   "CAB_Glass (cluster cover glass)",
+   "CAB_Glass_Windows (windscreen + door glass placeholder: disable when the exterior is in - the exterior GLASS_* objects are the only glazing, see art-source/truck/exterior/glass_interface.json)",
+   "CAB_ShellPlaceholder (exterior skin/mirror housings placeholder; disable when the exterior is in)"
   ]
  },
  "textures_root": "art-source/truck/interior/export/textures"
