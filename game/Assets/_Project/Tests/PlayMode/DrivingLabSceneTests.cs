@@ -33,6 +33,35 @@ namespace Game.Tests
             foreach (var w in body.Model.Wheels) Assert.IsTrue(w.Contact, w.Name + " has no ground contact");
         }
 
+        /// <summary>Stage 2: every lab spawn preset puts the combination at rest (coupled presets: kingpin in the jaw).</summary>
+        [UnityTest]
+        public IEnumerator DrivingLab_SpawnPresets_CombinationAtRest()
+        {
+            Physics.simulationMode = SimulationMode.FixedUpdate;
+            SceneManager.LoadScene(DrivingLabLayout.SceneName, LoadSceneMode.Single);
+            yield return null;
+            var boot = Object.FindAnyObjectByType<DrivingLabBootstrap>();
+            var body = Object.FindAnyObjectByType<VehicleBody>();
+            var trailer = Object.FindAnyObjectByType<TrailerBody>();
+            Assert.IsNotNull(trailer, "trailer missing in DrivingLab");
+            foreach (var preset in new[] { DrivingLabBootstrap.LabSpawn.Gross40t, DrivingLabBootstrap.LabSpawn.Cargo24t, DrivingLabBootstrap.LabSpawn.Empty, DrivingLabBootstrap.LabSpawn.Solo })
+            {
+                boot.Spawn(preset);
+                yield return new WaitForFixedUpdate();
+                Vector3 a0 = body.transform.position, b0 = trailer.transform.position;
+                float end = Time.realtimeSinceStartup + 2f;
+                while (Time.realtimeSinceStartup < end) yield return null;
+                float da = (body.transform.position - a0).magnitude, db = (trailer.transform.position - b0).magnitude;
+                var fw = body.Combination.FifthWheel;
+                Debug.Log($"[TEST] spawn {preset}: coupled {body.Coupled}, mass {body.Model.TotalMass / 1000:F1} t, drift tractor {da * 1000:F1} mm trailer {db * 1000:F1} mm, kingpin err {fw.PositionError * 1000:F2} mm, legs {trailer.Model.LandingGearLoad / 1000:F0} kN");
+                Assert.AreEqual(preset != DrivingLabBootstrap.LabSpawn.Solo, body.Coupled, "coupling state");
+                Assert.Less(da, 0.05f, "tractor at rest");
+                Assert.Less(db, 0.05f, "trailer at rest");
+                if (body.Coupled) Assert.Less(fw.PositionError, 0.005, "kingpin in the jaw");
+                else Assert.Greater(trailer.Model.LandingGearLoad, 10000, "parked trailer stands on its legs");
+            }
+        }
+
         /// <summary>
         /// End-to-end: input bridge → autopilot → vehicle on the scene's R50 circle (the device-measurement path),
         /// plus telemetry CSV recording. 4× time scale, ~24 s of simulation.
