@@ -5,7 +5,8 @@ Usage (from the repo root):  uv run python tests/physics/generate_stage2_scenari
 The JSON files in tests/physics/scenarios are the authority that the runner and the tests read. This script
 is how the Stage 2 files were produced (keeps the solo / empty / 40 t variants and the check sources
 consistent). If you hand-edit a generated JSON, port the change here or the next regeneration loses it.
-Stage 1 solo scenarios are hand-written and not touched by this script.
+Stage 1 solo scenarios are hand-written and not touched by this script. So are the R5/R6 coupling scenarios
+(couple_standstill_locked, couple_offset_*, couple_miss_25cm).
 """
 import json, os, sys
 

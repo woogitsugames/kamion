@@ -104,6 +104,193 @@ namespace PhysicsRunner.Tests
             Assert.True(sub.MaxRelDev <= 0.05, sub.ToString());
         }
 
+        // ------------------------------------------------------------------ R5: coupling throat
+
+        static RunResult RunCouple(string id, double offset, double articulationDeg = 0, double duration = 40)
+        {
+            var sc = Suites.Find(id);
+            sc.overrides.trailerOffset = offset;
+            sc.overrides.articulationDeg = articulationDeg;
+            return ScenarioRunner.Run(sc, new RunOptions { Duration = duration });
+        }
+
+        /// <summary>R5: the throat ramps guide a kingpin up to +/- 0.18 m off the centre line into the jaw (hand reversing).</summary>
+        [Theory]
+        [InlineData(-0.18, 0)]
+        [InlineData(-0.12, 5)]
+        [InlineData(0.0, 0)]
+        [InlineData(0.10, -5)]
+        [InlineData(0.15, 4)]
+        [InlineData(0.17, 0)]
+        public void CouplingThroat_GuidesKingpinIntoJaw(double offset, double articulationDeg)
+        {
+            var r = RunCouple("couple_standstill_locked@laden40", offset, articulationDeg);
+            _out.WriteLine($"offset {offset:F2} m, yaw {articulationDeg} deg: couplings {r.CouplingEvents}, bump {r.Metric("max_kingpin_long_kn"):F0} kN, dv {r.Metric("max_dv_step_ms"):F3} m/s");
+            Assert.Equal(1, r.CouplingEvents);
+            Assert.True(r.Metric("max_kingpin_long_kn") < 150);
+            Assert.True(r.Metric("max_dv_step_ms") < 0.35);
+        }
+
+        /// <summary>R5: wider than the mouth, or far off, there is no (false) coupling.</summary>
+        [Theory]
+        [InlineData(0.21)]
+        [InlineData(-0.21)]
+        [InlineData(0.30)]
+        [InlineData(-0.45)]
+        public void CouplingThroat_FarOff_DoesNotCouple(double offset)
+        {
+            var r = RunCouple("couple_standstill_locked@empty", offset, 0, 12);
+            _out.WriteLine($"offset {offset:F2} m: couplings {r.CouplingEvents}");
+            Assert.Equal(0, r.CouplingEvents);
+            Assert.Equal(0, r.Metric("coupled_final"));
+        }
+
+        /// <summary>R5: the throat does nothing while the jaw is not armed.</summary>
+        [Fact]
+        public void CouplingThroat_NotArmed_NoCouplingNoGuide()
+        {
+            var sc = Suites.Find("couple_standstill_locked@empty");
+            sc.overrides.trailerOffset = 0.12;
+            sc.events = new EventSpec[0];
+            var r = ScenarioRunner.Run(sc, new RunOptions { Duration = 8 });
+            Assert.Equal(0, r.CouplingEvents);
+        }
+
+        // ------------------------------------------------------------------ R6: kingpin load at standstill
+
+        /// <summary>R6: legs up on locked brakes, no rolling: the kingpin carries the static nose load (was 0.67-0.9x).</summary>
+        [Theory]
+        [InlineData("couple_standstill_locked@empty")]
+        [InlineData("couple_standstill_locked@laden40")]
+        public void KingpinLoad_LegsUpOnLockedBrakes_IsStatic(string id)
+        {
+            var r = ScenarioRunner.Run(Suites.Find(id), new RunOptions());
+            double ratio = r.Metric("kingpin_load_vs_static", 0, 50, 80);
+            _out.WriteLine($"{id}: kingpin / static = {ratio:F4}");
+            Assert.InRange(ratio, 0.97, 1.03);
+            Assert.True(r.Metric("max_speed_after_ms", 0, 60) < 0.005);
+        }
+
+        // ------------------------------------------------------------------ R7: trailer / cargo swap in place
+
+        static void Settle(SimContext s, IDriver driver, double seconds, double dt = 0.01)
+        {
+            var tractorState = default(ChassisState); var trailerState = default(ChassisState);
+            double t = 0;
+            int n = (int)Math.Round(seconds / dt);
+            for (int i = 0; i < n; i++)
+            {
+                var inp = driver.Update(t, dt, s);
+                tractorState = s.Body.State;
+                if (s.TrailerBody != null) trailerState = s.TrailerBody.State;
+                s.Combo.Step(dt, tractorState, trailerState, inp, s.Ground);
+                s.Body.Integrate(dt, s.Combo.TractorForce, s.Combo.TractorTorque);
+                s.TrailerBody?.Integrate(dt, s.Combo.TrailerForce, s.Combo.TrailerTorque);
+                t += dt;
+            }
+        }
+
+        /// <summary>The host's side of a load change: new rigid body mass properties on the same pose.</summary>
+        static void ReplaceTrailerBody(SimContext s)
+        {
+            var old = s.TrailerBody;
+            var nb = new RigidBody6Dof(s.Combo.Trailer.MassProps) { Position = old.Position, Rotation = old.Rotation, Velocity = Vec3.Zero };
+            s.TrailerBody = nb;
+        }
+
+        /// <summary>R7: cargo change in place keeps the tractor model, the trailer model and the wheel states; the new load settles to its static kingpin load.</summary>
+        [Fact]
+        public void SetCargo_InPlace_SettlesToNewStaticLoad()
+        {
+            var sc = Suites.Find("park_flat_5min_comb@empty");
+            var s = ScenarioRunner.Setup(sc, new RunOptions());
+            var driver = ScenarioRunner.CreateDriver(sc, s, out _);
+            Settle(s, driver, 3);
+            var tractor = s.Combo.Tractor; var trailer = s.Combo.Trailer; var wheels = trailer.Wheels;
+            double emptyMass = trailer.Mass;
+            s.Combo.SetCargo(new CargoDefinition { massKg = 22000 });
+            ReplaceTrailerBody(s);
+            Assert.Same(tractor, s.Combo.Tractor);
+            Assert.Same(trailer, s.Combo.Trailer);
+            Assert.Same(wheels, trailer.Wheels);
+            Assert.InRange(trailer.Mass, emptyMass + 21999, emptyMass + 22001);
+            Settle(s, driver, 40);
+            var fw = s.Combo.FifthWheel;
+            double ratio = fw.KingpinLoadLocal.y / s.Combo.StaticKingpinLoad;
+            _out.WriteLine($"22 t cargo in place: kingpin / static = {ratio:F4}, error {fw.PositionError * 1000:F2} mm, kingpin {s.Combo.StaticKingpinLoad / 9.81:F0} kg");
+            Assert.InRange(ratio, 0.97, 1.03);
+            Assert.True(fw.PositionError < 0.005);
+            Assert.True(s.Body.Velocity.Magnitude < 0.01 && s.TrailerBody.Velocity.Magnitude < 0.01);
+            // Back to empty: the static load returns to the empty value.
+            s.Combo.SetCargo(new CargoDefinition());
+            ReplaceTrailerBody(s);
+            Settle(s, driver, 40);
+            ratio = fw.KingpinLoadLocal.y / s.Combo.StaticKingpinLoad;
+            _out.WriteLine($"back to empty: kingpin / static = {ratio:F4}");
+            Assert.InRange(ratio, 0.97, 1.03);
+        }
+
+        /// <summary>R7: SetTrailer swaps a coupled trailer (different load) and removes / re-adds one, without a new combination or tractor model.</summary>
+        [Fact]
+        public void SetTrailer_SwapsWithoutRebuildingTheCombination()
+        {
+            var sc = Suites.Find("park_flat_5min_comb@empty");
+            var s = ScenarioRunner.Setup(sc, new RunOptions());
+            var driver = ScenarioRunner.CreateDriver(sc, s, out _);
+            Settle(s, driver, 3);
+            var combo = s.Combo; var tractor = combo.Tractor;
+            var settings = new SolverSettings { substeps = sc.substeps };
+            var heavy = ScenarioRunner.Defs.CreateTrailer(sc.trailer, new CargoDefinition { massKg = 18000 }, settings);
+            combo.SetTrailer(heavy, true);
+            // The host re-places the new trailer on the same pose.
+            var old = s.TrailerBody;
+            s.TrailerBody = new RigidBody6Dof(heavy.MassProps) { Position = old.Position, Rotation = old.Rotation };
+            Assert.Same(tractor, combo.Tractor);
+            Assert.Same(heavy, combo.Trailer);
+            Assert.True(combo.Coupled);
+            Settle(s, driver, 40);
+            double ratio = combo.FifthWheel.KingpinLoadLocal.y / combo.StaticKingpinLoad;
+            _out.WriteLine($"swapped to 18 t cargo: kingpin / static = {ratio:F4}");
+            Assert.InRange(ratio, 0.97, 1.03);
+            Assert.True(combo.FifthWheel.PositionError < 0.005);
+            Assert.Equal(0, combo.FifthWheel.UncouplingEvents);
+
+            // Remove the trailer: solo tractor.
+            combo.SetTrailer(null, false);
+            s.TrailerBody = null;
+            Assert.False(combo.HasTrailer);
+            Assert.False(combo.Coupled);
+            Assert.False(tractor.TrailerConnected);
+            Assert.Equal(0, tractor.TowedMass);
+            Settle(s, driver, 20);
+            Assert.True(s.Body.Velocity.Magnitude < 0.01);
+            Assert.Equal(0, combo.TrailerForce.Magnitude);
+        }
+
+        /// <summary>R7: the combination step stays allocation-free after a cargo change.</summary>
+        [Fact]
+        public void Step_DoesNotAllocate_AfterSetCargo()
+        {
+            var sc = Suites.Find("park_flat_5min_comb@empty");
+            var s = ScenarioRunner.Setup(sc, new RunOptions());
+            var driver = ScenarioRunner.CreateDriver(sc, s, out _);
+            Settle(s, driver, 2);
+            s.Combo.SetCargo(new CargoDefinition { massKg = 15000 });
+            ReplaceTrailerBody(s);
+            Settle(s, driver, 2);
+            long before = GC.GetAllocatedBytesForCurrentThread();
+            var inp = default(DriverInput);
+            for (int i = 0; i < 500; i++)
+            {
+                s.Combo.Step(0.01, s.Body.State, s.TrailerBody.State, inp, s.Ground);
+                s.Body.Integrate(0.01, s.Combo.TractorForce, s.Combo.TractorTorque);
+                s.TrailerBody.Integrate(0.01, s.Combo.TrailerForce, s.Combo.TrailerTorque);
+            }
+            long bytes = GC.GetAllocatedBytesForCurrentThread() - before;
+            _out.WriteLine($"allocated in 500 steps: {bytes} B");
+            Assert.Equal(0, bytes);
+        }
+
         /// <summary>Air supply: an empty system charges, releases the spring brakes, and the governor cuts out.</summary>
         [Fact]
         public void AirSystem_ChargesFromEmpty()

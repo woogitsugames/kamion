@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "couple_standstill_locked",
+  "description": "R6: trailer on landing gear; tractor reverses under it, couples, stops with the service and parking brakes held (all wheels locked), then the legs are raised at standstill. Kingpin load must equal the static nose load without rolling first.",
+  "spec": "docs/04 s2.9; ADR 0009 R6",
+  "variants": ["empty", "laden40"],
+  "ground": {"gradePercent": 0, "surface": "dry_asphalt"},
+  "initial": {},
+  "overrides": {"coupled": false, "trailerGap": 2.0},
+  "events": [
+    {"t": 0.5, "type": "couple_arm"},
+    {"t": 12, "type": "landing_gear_up"}
+  ],
+  "duration": 80,
+  "driver": {"type": "timeline", "keys": [
+    {"t": 0, "throttle": 0, "brake": 1, "steer": 0, "parkingBrake": false, "selector": "R"},
+    {"t": 1, "throttle": 0.05, "brake": 0, "steer": 0, "parkingBrake": false, "selector": "R"},
+    {"t": 6, "throttle": 0, "brake": 1, "steer": 0, "parkingBrake": false, "selector": "R"},
+    {"t": 9, "throttle": 0, "brake": 1, "steer": 0, "parkingBrake": true, "selector": "D"}
+  ]},
+  "checks": [
+    {"metric": "coupling_events", "status": "WORKING_VALUE", "source": "jaw locks once", "min": 1, "max": 1},
+    {"metric": "kingpin_load_vs_static", "status": "DERIVED", "source": "legs up, brakes locked, standing: kingpin carries the static nose load (statics)", "min": 0.97, "max": 1.03, "from": 50},
+    {"metric": "max_speed_after_ms", "status": "WORKING_VALUE", "source": "no creep after the legs are up", "max": 0.005, "from": 60},
+    {"metric": "max_dv_step_ms", "status": "WORKING_VALUE", "source": "no solver explosion", "max": 0.35}
+  ]
+}

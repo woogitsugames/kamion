@@ -97,6 +97,8 @@ namespace PhysicsRunner.Sim
         public bool coupled = true;
         /// <summary>Uncoupled start: kingpin distance behind the open fifth-wheel jaw [m].</summary>
         public double trailerGap = 2.0;
+        /// <summary>Uncoupled start: lateral offset of the kingpin from the tractor centre line [m, + = right] (R5 hand-coupling).</summary>
+        public double trailerOffset;
         /// <summary>Initial articulation (trailer yaw relative to tractor) [deg].</summary>
         public double articulationDeg;
     }

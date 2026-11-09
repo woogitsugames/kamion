@@ -15,7 +15,8 @@ namespace Game.Vehicle.Physics
     public sealed class CombinationModel
     {
         public readonly VehicleModel Tractor;
-        public readonly TrailerModel Trailer;
+        /// <summary>Current trailer (null = solo tractor). Swap it with <see cref="SetTrailer"/>.</summary>
+        public TrailerModel Trailer { get; private set; }
         public readonly FifthWheel FifthWheel;
         public Vec3 Gravity = new Vec3(0, -9.81, 0);
 
@@ -35,6 +36,36 @@ namespace Game.Vehicle.Physics
             Trailer = trailer;
             FifthWheel = new FifthWheel(tractor.Def.fifthWheel);
             if (trailer != null) SetCoupledStatic(coupled);
+        }
+
+        /// <summary>
+        /// R7: replaces the trailer (or removes it with null) without rebuilding the tractor model or this combination.
+        /// Resets the fifth wheel (open jaw, no force, not armed) and sets the static configuration for the new trailer,
+        /// coupled or standing on its legs. The tractor keeps its drivetrain, air system and wheel states. The host must
+        /// move / re-mass its trailer rigid body (<see cref="TrailerModel.MassProps"/>) and place the new trailer itself.
+        /// Never call inside the fixed step's force application; call it between steps.
+        /// </summary>
+        public void SetTrailer(TrailerModel trailer, bool coupled)
+        {
+            if (Trailer != null) Trailer.Coupled = false;
+            FifthWheel.ResetState();
+            CouplingArmed = false;
+            Trailer = trailer;
+            TrailerForce = Vec3.Zero; TrailerTorque = Vec3.Zero;
+            if (trailer != null) SetCoupledStatic(coupled && trailer != null);
+            else
+            {
+                Tractor.SetStaticKingpinLoad(0);
+                UpdateCouplingLinks();
+            }
+        }
+
+        /// <summary>R7: changes the cargo of the current trailer in place (see <see cref="TrailerModel.SetCargo"/>) and re-levels both suspensions to the new kingpin load.</summary>
+        public void SetCargo(CargoDefinition cargo)
+        {
+            if (Trailer == null) return;
+            Trailer.SetCargo(cargo, FifthWheel.Coupled);
+            SetCoupledStatic(FifthWheel.Coupled);
         }
 
         /// <summary>Sets the static configuration (suspension pre-levelling, air lines) and the coupling state.</summary>
@@ -66,6 +97,7 @@ namespace Game.Vehicle.Physics
         {
             bool c = Coupled;
             Tractor.TrailerConnected = c;
+            if (Trailer != null) Trailer.Coupled = c;
             Tractor.TowedMass = c ? Trailer.Mass : 0;
         }
 
@@ -96,6 +128,13 @@ namespace Game.Vehicle.Physics
             Vec3 anchorA = Tractor.Def.fifthWheel.position, anchorB = Trailer.KingpinLocal;
             if (!FifthWheel.Coupled && CouplingArmed)
             {
+                // R5: the throat ramps guide the kingpin to the jaw before the capture test.
+                if (FifthWheel.ComputeThroatGuide(tractorState, anchorA, trailerState, anchorB, out Vec3 fg))
+                {
+                    Vec3 pk = trailerState.LocalToWorld(anchorB);
+                    fB += fg; tB += Vec3.Cross(pk - trailerState.CenterOfMassWorld, fg);
+                    fA -= fg; tA += Vec3.Cross(pk - tractorState.CenterOfMassWorld, -fg);
+                }
                 if (FifthWheel.TryCapture(tractorState, anchorA, trailerState, anchorB))
                 {
                     CouplingArmed = false;

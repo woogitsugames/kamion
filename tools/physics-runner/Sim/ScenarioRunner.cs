@@ -205,7 +205,7 @@ namespace PhysicsRunner.Sim
                 {
                     // Standing on the landing gear, kingpin trailerGap behind the open jaw.
                     Vec3 k = body.State.LocalToWorld(tractor.Def.fifthWheel.position);
-                    Vec3 kGround = k - n * Vec3.Dot(k, n) - fwd * sc.overrides.trailerGap;
+                    Vec3 kGround = k - n * Vec3.Dot(k, n) - fwd * sc.overrides.trailerGap + (qBase * Vec3.Right) * sc.overrides.trailerOffset;
                     var lg = trailer.Def.landingGear;
                     double legLoad = trailer.StaticNoseLoad(false) * 0.5;
                     double pen = legLoad / lg.stiffness;

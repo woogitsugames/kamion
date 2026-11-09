@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "id": "couple_miss_25cm",
+  "description": "R5: kingpin 25 cm off the centre line is wider than the throat: no coupling (no false capture when far off)",
+  "spec": "docs/04 s2.9; ADR 0009 R5",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "overrides": {
+    "coupled": false,
+    "trailerGap": 2.0,
+    "trailerOffset": 0.25
+  },
+  "events": [
+    {
+      "t": 0.5,
+      "type": "couple_arm"
+    }
+  ],
+  "duration": 30,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 1,
+        "throttle": 0.05,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 6,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 9,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": true,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "min": 0,
+      "max": 0,
+      "source": "kingpin wider than the throat mouth (+/- 0.18 m) misses the jaw",
+      "metric": "coupling_events",
+      "status": "WORKING_VALUE"
+    },
+    {
+      "min": 0,
+      "max": 0,
+      "source": "still uncoupled",
+      "metric": "coupled_final",
+      "status": "WORKING_VALUE"
+    }
+  ]
+}
