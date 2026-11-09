@@ -547,6 +547,114 @@
    "tris_lod0": 96,
    "tris_lod1": 30
   },
+  "container_20_0": {
+   "materials": [
+    "container_doors",
+    "container_frame",
+    "container_rust"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 52
+  },
+  "container_20_1": {
+   "materials": [
+    "container_blue",
+    "container_doors",
+    "container_frame"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 52
+  },
+  "container_20_2": {
+   "materials": [
+    "container_doors",
+    "container_frame",
+    "container_grey"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 52
+  },
+  "container_20_3": {
+   "materials": [
+    "container_doors",
+    "container_frame",
+    "container_green"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 52
+  },
+  "container_20_4": {
+   "materials": [
+    "container_beige",
+    "container_doors",
+    "container_frame"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 52
+  },
+  "container_20_5": {
+   "materials": [
+    "container_doors",
+    "container_frame",
+    "container_white"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 52
+  },
+  "container_40_0": {
+   "materials": [
+    "container_doors",
+    "container_frame",
+    "container_rust"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 52
+  },
+  "container_40_1": {
+   "materials": [
+    "container_blue",
+    "container_doors",
+    "container_frame"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 52
+  },
+  "container_40_2": {
+   "materials": [
+    "container_doors",
+    "container_frame",
+    "container_grey"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 52
+  },
+  "container_40_3": {
+   "materials": [
+    "container_doors",
+    "container_frame",
+    "container_green"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 52
+  },
+  "container_40_4": {
+   "materials": [
+    "container_beige",
+    "container_doors",
+    "container_frame"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 52
+  },
+  "container_40_5": {
+   "materials": [
+    "container_doors",
+    "container_frame",
+    "container_white"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 52
+  },
   "facade_sign_biuro": {
    "materials": [
     "sign_facade_biuro",
@@ -680,6 +788,26 @@
     "steel_galv"
    ],
    "tris_lod0": 80,
+   "tris_lod1": 53
+  },
+  "lamp_old_concrete_9m": {
+   "materials": [
+    "concrete_pole",
+    "lamp_glass_sodium",
+    "luminaire_old",
+    "steel_painted_grey"
+   ],
+   "tris_lod0": 154,
+   "tris_lod1": 105
+  },
+  "lamp_old_steel_8m": {
+   "materials": [
+    "concrete_base",
+    "lamp_glass_sodium",
+    "luminaire_old",
+    "steel_painted_grey"
+   ],
+   "tris_lod0": 71,
    "tris_lod1": 53
   },
   "landmark_chimney_120_75": {
@@ -920,9 +1048,103 @@
    "tris_lod0": 12,
    "tris_lod1": 12
   },
+  "tractor_black": {
+   "materials": [
+    "car_glass",
+    "car_light_head",
+    "car_trim",
+    "plate_pl",
+    "rim",
+    "tractor_paint_black",
+    "trailer_alu",
+    "trailer_chassis",
+    "tyre"
+   ],
+   "tris_lod0": 628,
+   "tris_lod1": 150
+  },
+  "tractor_blue": {
+   "materials": [
+    "car_glass",
+    "car_light_head",
+    "car_trim",
+    "plate_pl",
+    "rim",
+    "tractor_paint_blue",
+    "trailer_alu",
+    "trailer_chassis",
+    "tyre"
+   ],
+   "tris_lod0": 628,
+   "tris_lod1": 150
+  },
+  "tractor_green": {
+   "materials": [
+    "car_glass",
+    "car_light_head",
+    "car_trim",
+    "plate_pl",
+    "rim",
+    "tractor_paint_green",
+    "trailer_alu",
+    "trailer_chassis",
+    "tyre"
+   ],
+   "tris_lod0": 628,
+   "tris_lod1": 150
+  },
+  "tractor_red": {
+   "materials": [
+    "car_glass",
+    "car_light_head",
+    "car_trim",
+    "plate_pl",
+    "rim",
+    "tractor_paint_red",
+    "trailer_alu",
+    "trailer_chassis",
+    "tyre"
+   ],
+   "tris_lod0": 628,
+   "tris_lod1": 150
+  },
+  "tractor_silver": {
+   "materials": [
+    "car_glass",
+    "car_light_head",
+    "car_trim",
+    "plate_pl",
+    "rim",
+    "tractor_paint_silver",
+    "trailer_alu",
+    "trailer_chassis",
+    "tyre"
+   ],
+   "tris_lod0": 628,
+   "tris_lod1": 150
+  },
+  "tractor_white": {
+   "materials": [
+    "car_glass",
+    "car_light_head",
+    "car_trim",
+    "plate_pl",
+    "rim",
+    "tractor_paint_white",
+    "trailer_alu",
+    "trailer_chassis",
+    "tyre"
+   ],
+   "tris_lod0": 628,
+   "tris_lod1": 150
+  },
   "trailer_box_0": {
    "materials": [
+    "car_light_head",
     "car_light_tail",
+    "car_trim",
+    "coupling_red",
+    "coupling_yellow",
     "plate_pl",
     "reflector_red",
     "rim",
@@ -933,12 +1155,16 @@
     "trailer_strap",
     "tyre"
    ],
-   "tris_lod0": 888,
+   "tris_lod0": 988,
    "tris_lod1": 156
   },
   "trailer_curtain_0": {
    "materials": [
+    "car_light_head",
     "car_light_tail",
+    "car_trim",
+    "coupling_red",
+    "coupling_yellow",
     "plate_pl",
     "reflector_red",
     "rim",
@@ -950,12 +1176,16 @@
     "trailer_strap",
     "tyre"
    ],
-   "tris_lod0": 820,
+   "tris_lod0": 920,
    "tris_lod1": 196
   },
   "trailer_curtain_1": {
    "materials": [
+    "car_light_head",
     "car_light_tail",
+    "car_trim",
+    "coupling_red",
+    "coupling_yellow",
     "plate_pl",
     "reflector_red",
     "rim",
@@ -967,12 +1197,16 @@
     "trailer_strap",
     "tyre"
    ],
-   "tris_lod0": 820,
+   "tris_lod0": 920,
    "tris_lod1": 196
   },
   "trailer_curtain_2": {
    "materials": [
+    "car_light_head",
     "car_light_tail",
+    "car_trim",
+    "coupling_red",
+    "coupling_yellow",
     "plate_pl",
     "reflector_red",
     "rim",
@@ -984,12 +1218,16 @@
     "trailer_strap",
     "tyre"
    ],
-   "tris_lod0": 820,
+   "tris_lod0": 920,
    "tris_lod1": 196
   },
   "trailer_curtain_3": {
    "materials": [
+    "car_light_head",
     "car_light_tail",
+    "car_trim",
+    "coupling_red",
+    "coupling_yellow",
     "plate_pl",
     "reflector_red",
     "rim",
@@ -1001,12 +1239,16 @@
     "trailer_strap",
     "tyre"
    ],
-   "tris_lod0": 820,
+   "tris_lod0": 920,
    "tris_lod1": 196
   },
   "trailer_curtain_4": {
    "materials": [
+    "car_light_head",
     "car_light_tail",
+    "car_trim",
+    "coupling_red",
+    "coupling_yellow",
     "plate_pl",
     "reflector_red",
     "rim",
@@ -1018,12 +1260,16 @@
     "trailer_strap",
     "tyre"
    ],
-   "tris_lod0": 820,
+   "tris_lod0": 920,
    "tris_lod1": 196
   },
   "trailer_curtain_5": {
    "materials": [
+    "car_light_head",
     "car_light_tail",
+    "car_trim",
+    "coupling_red",
+    "coupling_yellow",
     "plate_pl",
     "reflector_red",
     "rim",
@@ -1035,12 +1281,16 @@
     "trailer_strap",
     "tyre"
    ],
-   "tris_lod0": 820,
+   "tris_lod0": 920,
    "tris_lod1": 196
   },
   "trailer_reefer_0": {
    "materials": [
+    "car_light_head",
     "car_light_tail",
+    "car_trim",
+    "coupling_red",
+    "coupling_yellow",
     "plate_pl",
     "reefer_grille",
     "reefer_unit",
@@ -1053,7 +1303,7 @@
     "trailer_strap",
     "tyre"
    ],
-   "tris_lod0": 902,
+   "tris_lod0": 1002,
    "tris_lod1": 168
   },
   "van_silver": {
