@@ -100,7 +100,9 @@ def group_of(name):
             "kerb_glass": "MIRROR_Kerb", "front_glass": "MIRROR_Front"}
     if name in mirr:
         return mirr[name]
-    if name.startswith(("windscreen", "side_glass", "cluster_glass")):
+    if name.startswith(("windscreen", "side_glass")):
+        return "CAB_Glass_Windows"      # A6 fit: placeholder - the exterior owns the windscreen and door glass
+    if name.startswith("cluster_glass"):
         return "CAB_Glass"
     if name.startswith(("back_skin", "roof_skin", "skin_", "front_skin", "door_skin_", "bpillar_skin_", "apillar_skin_",
                         "wiper_", "mirror_", "kerb_arm", "kerb_head", "front_arm", "front_head", "ws_gasket_")):
@@ -353,13 +355,15 @@ def consolidate(objs):
                     uv0[li].uv = decal_uv(nm, tuple(uv0[li].uv))
                 elif not o.get("fixed_uv"):
                     uv0[li].uv = (uv0[li].uv[0] / (BI_UVK * tile), uv0[li].uv[1] / (BI_UVK * tile))
-        # material slots -> slot materials
+        # material slots -> slot materials. Read the old indices BEFORE materials.clear(): in Blender 4.x it drops
+        # the material_index attribute (every face fell back to new_index[0] = one slot per object until A6 fit)
+        old_idx = [p.material_index for p in me.polygons]
         me.materials.clear()
         for s in SLOT_OF:
             me.materials.append(slots[s])
-        for p in me.polygons:
-            if mats:
-                p.material_index = new_index[p.material_index]
+        if mats:
+            for p, i in zip(me.polygons, old_idx):
+                p.material_index = new_index[i]
     return slots
 
 
@@ -415,7 +419,7 @@ def layout_bake_uv(objs, receivers):
         if o in rec:
             continue
         g = group_of(o.name)
-        transfer = (o.get("decal") or o.get("fixed_uv")) and not o.name.startswith(NO_AO)             and g != "CAB_Glass" and not g.startswith(("DISPLAY_", "MIRROR_"))
+        transfer = (o.get("decal") or o.get("fixed_uv")) and not o.name.startswith(NO_AO)             and not g.startswith(("CAB_Glass", "DISPLAY_", "MIRROR_"))
         tgt = (0.999, 0.9785) if o.name.startswith(NO_AO) else (0.999, 0.999)
         for d in o.data.uv_layers["Bake"].data:
             d.uv = tgt
@@ -996,6 +1000,11 @@ def process_lod(lod, a, out_dir, manifest):
             bpy.data.objects.remove(o)
     apply_modifiers(objs)
     bake_transforms(objs)
+    # A6 fit to the exported exterior (glass_interface.json): nothing visible may lie beyond its skin / glass
+    fit = BI.fit_to_exterior([o for o in objs if not group_of(o.name).startswith(("CAB_ShellPlaceholder",
+                                                                                     "CAB_Glass_Windows", "MIRROR_"))])
+    print(f"LOD{lod}: fit_to_exterior moved {sum(v['verts_moved'] for v in fit.values())} verts in {len(fit)} "
+          f"objects, max {max([v['max_move_m'] for v in fit.values()] or [0])} m")
     tri_raw = sum(tris_of(o) for o in objs)
     keep = {o.name for o in objs if group_of(o.name) not in ("CAB_Interior", "CAB_ShellPlaceholder")}
     removed, tested = remove_hidden(objs, keep)
@@ -1004,7 +1013,7 @@ def process_lod(lod, a, out_dir, manifest):
     consolidate(objs)
     # receivers of the AO atlas
     receivers = [o for o in objs if not o.get("decal") and not o.get("fixed_uv")
-                 and group_of(o.name) not in ("CAB_Glass",) and not o.name.startswith(NO_AO)]
+                 and not group_of(o.name).startswith("CAB_Glass") and not o.name.startswith(NO_AO)]
     layout_bake_uv(objs, receivers)
     groups = join_groups(objs)
     piv = frames()
@@ -1018,7 +1027,7 @@ def process_lod(lod, a, out_dir, manifest):
             set_pivot(ob, CAB_MOUNT, V(1, 0, 0), V(0, 1, 0), V(0, 0, 1))
         finalize_mesh(ob)
     # AO bake on the joined meshes (receivers = opaque groups; glass hidden so rays pass; decals/quads excluded)
-    hide = [ob for g, ob in groups.items() if g == "CAB_Glass"]
+    hide = [ob for g, ob in groups.items() if g.startswith("CAB_Glass")]
     rec = [ob for g, ob in groups.items() if not g.startswith(("CAB_Glass", "DISPLAY_", "MIRROR_"))]
     res = AO_RES[lod] if not a.ao_res else a.ao_res
     ao = bake_ao(rec, hide, res, a.ao_samples, a.ao_distance, None)
@@ -1063,6 +1072,10 @@ def process_lod(lod, a, out_dir, manifest):
         info["tris_total"] += t
     info["empties_unity_local"] = {k: b2u(p - CAB_MOUNT) for k, p in empties.items()}
     info["ao_atlas"] = ao_files
+    info["fit_to_exterior"] = {"source": "art-source/truck/exterior/glass_interface.json",
+                               "verts_moved": sum(v["verts_moved"] for v in fit.values()),
+                               "max_move_m": max([v["max_move_m"] for v in fit.values()] or [0.0]),
+                               "objects": fit}
     info["hidden_faces_removed"] = removed
     info["tris_before_cleanup"] = tri_raw
     info["build_s"] = round(time.time() - t0, 1)
@@ -1183,8 +1196,11 @@ def contract(tex, out):
                                     "DISPLAY_Infotainment": "10.1 in centre screen", "DISPLAY_Tachograph": "1DIN tacho LCD",
                                     "DISPLAY_Radio": "1DIN radio LCD (LOD0/1)", "DISPLAY_BunkPanel": "bunk climate panel LCD (LOD0/1)"},
             "animated": {k: v for k, v in ANIM_AXES.items()},
-            "static": ["CAB_Interior", "CAB_Glass", "CAB_ShellPlaceholder (exterior skin/mirror housings placeholder until A3; "
-                       "disable when the A3 exterior is in)"],
+            "static": ["CAB_Interior", "CAB_Glass (cluster cover glass)",
+                       "CAB_Glass_Windows (windscreen + door glass placeholder: disable when the exterior is in - the "
+                       "exterior GLASS_* objects are the only glazing, see art-source/truck/exterior/glass_interface.json)",
+                       "CAB_ShellPlaceholder (exterior skin/mirror housings placeholder; disable when the exterior is "
+                       "in)"],
         },
         "textures_root": rel(os.path.join(out, "textures")),
     }
