@@ -58,6 +58,8 @@ Licencje sprawdzone przez lidera (`docs/REFERENCES.md` na `main`). W r2 kafla C 
 | `Krzysztof_Putra_Roundabout_in_Białystok.jpg`, `Andersa,_Maczka_streets_in_Białystok_1.jpg`, `…_2.jpg` | Henryk Borawski | CC BY-SA 3.0 / 4.0 | tylko referencja wizualna (kolory wiaduktu Putry, filary w parach) |
 | `EC_Białystok.jpg` | Hiuppo | CC BY-SA 2.5 | tylko referencja wizualna (kominy EC jako dominanta; położenie i wysokość z OSM) |
 
+Świat C v3 (world-builder, 2026-11-09): zdjęcia CC0 `20201102_152339…` i `7204_May_2021…` posłużyły do sprawdzenia skrajni pod obydwoma wiaduktami Andersa (pomost wyraźnie nad pierścieniem) i wysokości malowanego pasa krawędzi pomostu (ok. 0,55 m). Nic z nich nie wycięto. Nowe prototypy v3 to nasze własne proceduralne siatki z `tools/worldgen/streetscape`, bez tekstur zewnętrznych, marek i logo: ciągnik siodłowy 4×2, kontenery ISO 20/40 ft, druga rodzina latarni, lampa rampy i ślady opon.
+
 ## Pakiety Unity spoza szablonu
 
 | ID | Pakiet | Wersja | Licencja | Użycie |
