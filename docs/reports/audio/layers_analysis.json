@@ -1,0 +1,660 @@
+{
+ "turbo_whistle_loop": {
+  "perspective": "ext",
+  "loop": true,
+  "dur_s": 3.0,
+  "peak_dbfs": -6.0,
+  "rms_dbfs": -13.2,
+  "centroid_hz": 3369,
+  "band_db_rel": {
+   "20-200": -82.4,
+   "200-1000": -48.6,
+   "1000-4000": -0.2,
+   "4000-16000": -13.0
+  }
+ },
+ "road_roll_loop": {
+  "perspective": "ext",
+  "loop": true,
+  "dur_s": 4.0,
+  "peak_dbfs": -6.0,
+  "rms_dbfs": -18.1,
+  "centroid_hz": 642,
+  "band_db_rel": {
+   "20-200": -2.6,
+   "200-1000": -6.6,
+   "1000-4000": -6.6,
+   "4000-16000": -19.0
+  }
+ },
+ "road_roll_cab_loop": {
+  "perspective": "cab",
+  "loop": true,
+  "dur_s": 4.0,
+  "peak_dbfs": -6.0,
+  "rms_dbfs": -17.3,
+  "centroid_hz": 159,
+  "band_db_rel": {
+   "20-200": -0.6,
+   "200-1000": -9.6,
+   "1000-4000": -18.7,
+   "4000-16000": -59.5
+  }
+ },
+ "wind_loop": {
+  "perspective": "ext",
+  "loop": true,
+  "dur_s": 6.0,
+  "peak_dbfs": -6.0,
+  "rms_dbfs": -20.3,
+  "centroid_hz": 592,
+  "band_db_rel": {
+   "20-200": -8.1,
+   "200-1000": -1.5,
+   "1000-4000": -8.7,
+   "4000-16000": -25.9
+  }
+ },
+ "wind_cab_loop": {
+  "perspective": "cab",
+  "loop": true,
+  "dur_s": 6.0,
+  "peak_dbfs": -8.3,
+  "rms_dbfs": -21.9,
+  "centroid_hz": 334,
+  "band_db_rel": {
+   "20-200": -4.9,
+   "200-1000": -1.8,
+   "1000-4000": -18.0,
+   "4000-16000": -52.5
+  }
+ },
+ "gear_whine_loop": {
+  "perspective": "ext",
+  "loop": true,
+  "dur_s": 2.0,
+  "peak_dbfs": -6.0,
+  "rms_dbfs": -12.6,
+  "centroid_hz": 1051,
+  "band_db_rel": {
+   "20-200": -71.7,
+   "200-1000": -2.2,
+   "1000-4000": -3.9,
+   "4000-16000": -53.9
+  }
+ },
+ "air_brake_release": {
+  "perspective": "ext",
+  "loop": false,
+  "dur_s": 0.95,
+  "peak_dbfs": -1.0,
+  "rms_dbfs": -22.9,
+  "centroid_hz": 4879,
+  "band_db_rel": {
+   "20-200": -9.1,
+   "200-1000": -20.3,
+   "1000-4000": -5.1,
+   "4000-16000": -2.6
+  }
+ },
+ "air_brake_release_cab": {
+  "perspective": "cab",
+  "loop": false,
+  "dur_s": 1.07,
+  "peak_dbfs": -4.1,
+  "rms_dbfs": -25.8,
+  "centroid_hz": 427,
+  "band_db_rel": {
+   "20-200": -0.9,
+   "200-1000": -15.6,
+   "1000-4000": -8.4,
+   "4000-16000": -21.2
+  }
+ },
+ "parking_brake_set": {
+  "perspective": "ext",
+  "loop": false,
+  "dur_s": 2.1,
+  "peak_dbfs": -1.0,
+  "rms_dbfs": -22.9,
+  "centroid_hz": 4235,
+  "band_db_rel": {
+   "20-200": -7.8,
+   "200-1000": -14.9,
+   "1000-4000": -4.3,
+   "4000-16000": -3.7
+  }
+ },
+ "parking_brake_set_cab": {
+  "perspective": "cab",
+  "loop": false,
+  "dur_s": 2.22,
+  "peak_dbfs": -3.5,
+  "rms_dbfs": -25.4,
+  "centroid_hz": 388,
+  "band_db_rel": {
+   "20-200": -1.0,
+   "200-1000": -11.9,
+   "1000-4000": -8.5,
+   "4000-16000": -23.9
+  }
+ },
+ "air_dryer_purge": {
+  "perspective": "ext",
+  "loop": false,
+  "dur_s": 0.9,
+  "peak_dbfs": -1.0,
+  "rms_dbfs": -21.2,
+  "centroid_hz": 1567,
+  "band_db_rel": {
+   "20-200": -2.4,
+   "200-1000": -14.3,
+   "1000-4000": -5.9,
+   "4000-16000": -8.9
+  }
+ },
+ "air_dryer_purge_cab": {
+  "perspective": "cab",
+  "loop": false,
+  "dur_s": 1.02,
+  "peak_dbfs": -2.5,
+  "rms_dbfs": -20.9,
+  "centroid_hz": 141,
+  "band_db_rel": {
+   "20-200": -0.3,
+   "200-1000": -15.7,
+   "1000-4000": -13.7,
+   "4000-16000": -33.0
+  }
+ },
+ "gearshift_air": {
+  "perspective": "ext",
+  "loop": false,
+  "dur_s": 0.25,
+  "peak_dbfs": -1.0,
+  "rms_dbfs": -20.1,
+  "centroid_hz": 4164,
+  "band_db_rel": {
+   "20-200": -24.4,
+   "200-1000": -5.2,
+   "1000-4000": -6.4,
+   "4000-16000": -3.3
+  }
+ },
+ "gearshift_air_cab": {
+  "perspective": "cab",
+  "loop": false,
+  "dur_s": 0.37,
+  "peak_dbfs": -7.5,
+  "rms_dbfs": -28.4,
+  "centroid_hz": 819,
+  "band_db_rel": {
+   "20-200": -16.7,
+   "200-1000": -0.5,
+   "1000-4000": -11.4,
+   "4000-16000": -21.4
+  }
+ },
+ "turbo_liftoff": {
+  "perspective": "ext",
+  "loop": false,
+  "dur_s": 0.75,
+  "peak_dbfs": -1.0,
+  "rms_dbfs": -17.1,
+  "centroid_hz": 4031,
+  "band_db_rel": {
+   "20-200": -60.3,
+   "200-1000": -27.6,
+   "1000-4000": -2.2,
+   "4000-16000": -4.0
+  }
+ },
+ "tyre_wet_loop": {
+  "perspective": "ext",
+  "loop": true,
+  "dur_s": 4.0,
+  "peak_dbfs": -5.3,
+  "rms_dbfs": -18.1,
+  "centroid_hz": 1705,
+  "band_db_rel": {
+   "20-200": -3.0,
+   "200-1000": -9.0,
+   "1000-4000": -7.0,
+   "4000-16000": -7.8
+  }
+ },
+ "tyre_wet_cab_loop": {
+  "perspective": "cab",
+  "loop": true,
+  "dur_s": 4.0,
+  "peak_dbfs": -6.0,
+  "rms_dbfs": -17.7,
+  "centroid_hz": 137,
+  "band_db_rel": {
+   "20-200": -0.4,
+   "200-1000": -10.9,
+   "1000-4000": -20.5,
+   "4000-16000": -50.8
+  }
+ },
+ "tyre_concrete_loop": {
+  "perspective": "ext",
+  "loop": true,
+  "dur_s": 4.0,
+  "peak_dbfs": -5.7,
+  "rms_dbfs": -18.1,
+  "centroid_hz": 686,
+  "band_db_rel": {
+   "20-200": -2.4,
+   "200-1000": -9.6,
+   "1000-4000": -5.3,
+   "4000-16000": -18.1
+  }
+ },
+ "tyre_concrete_cab_loop": {
+  "perspective": "cab",
+  "loop": true,
+  "dur_s": 4.0,
+  "peak_dbfs": -4.7,
+  "rms_dbfs": -17.5,
+  "centroid_hz": 138,
+  "band_db_rel": {
+   "20-200": -0.4,
+   "200-1000": -12.0,
+   "1000-4000": -17.0,
+   "4000-16000": -58.5
+  }
+ },
+ "tyre_cobbles_loop": {
+  "perspective": "ext",
+  "loop": true,
+  "dur_s": 4.0,
+  "peak_dbfs": -4.4,
+  "rms_dbfs": -18.1,
+  "centroid_hz": 498,
+  "band_db_rel": {
+   "20-200": -4.5,
+   "200-1000": -2.7,
+   "1000-4000": -10.0,
+   "4000-16000": -20.8
+  }
+ },
+ "tyre_cobbles_cab_loop": {
+  "perspective": "cab",
+  "loop": true,
+  "dur_s": 4.0,
+  "peak_dbfs": -5.2,
+  "rms_dbfs": -17.6,
+  "centroid_hz": 237,
+  "band_db_rel": {
+   "20-200": -2.4,
+   "200-1000": -3.8,
+   "1000-4000": -22.0,
+   "4000-16000": -61.0
+  }
+ },
+ "tyre_gravel_loop": {
+  "perspective": "ext",
+  "loop": true,
+  "dur_s": 4.0,
+  "peak_dbfs": -2.1,
+  "rms_dbfs": -18.1,
+  "centroid_hz": 1228,
+  "band_db_rel": {
+   "20-200": -4.1,
+   "200-1000": -5.4,
+   "1000-4000": -6.3,
+   "4000-16000": -10.7
+  }
+ },
+ "tyre_gravel_cab_loop": {
+  "perspective": "cab",
+  "loop": true,
+  "dur_s": 4.0,
+  "peak_dbfs": -5.9,
+  "rms_dbfs": -18.3,
+  "centroid_hz": 199,
+  "band_db_rel": {
+   "20-200": -1.3,
+   "200-1000": -6.2,
+   "1000-4000": -19.1,
+   "4000-16000": -52.1
+  }
+ },
+ "tyre_grass_loop": {
+  "perspective": "ext",
+  "loop": true,
+  "dur_s": 4.0,
+  "peak_dbfs": -5.3,
+  "rms_dbfs": -18.1,
+  "centroid_hz": 462,
+  "band_db_rel": {
+   "20-200": -2.3,
+   "200-1000": -5.8,
+   "1000-4000": -8.7,
+   "4000-16000": -21.6
+  }
+ },
+ "tyre_grass_cab_loop": {
+  "perspective": "cab",
+  "loop": true,
+  "dur_s": 4.0,
+  "peak_dbfs": -4.1,
+  "rms_dbfs": -17.1,
+  "centroid_hz": 158,
+  "band_db_rel": {
+   "20-200": -0.7,
+   "200-1000": -8.4,
+   "1000-4000": -20.8,
+   "4000-16000": -63.5
+  }
+ },
+ "tyre_squeal_loop": {
+  "perspective": "ext",
+  "loop": true,
+  "dur_s": 3.0,
+  "peak_dbfs": -6.0,
+  "rms_dbfs": -11.2,
+  "centroid_hz": 1298,
+  "band_db_rel": {
+   "20-200": -31.4,
+   "200-1000": -1.4,
+   "1000-4000": -5.8,
+   "4000-16000": -22.3
+  }
+ },
+ "tyre_squeal_cab_loop": {
+  "perspective": "cab",
+  "loop": true,
+  "dur_s": 3.0,
+  "peak_dbfs": -11.1,
+  "rms_dbfs": -18.3,
+  "centroid_hz": 957,
+  "band_db_rel": {
+   "20-200": -29.8,
+   "200-1000": -0.1,
+   "1000-4000": -15.2,
+   "4000-16000": -55.8
+  }
+ },
+ "retarder_loop": {
+  "perspective": "ext",
+  "loop": true,
+  "dur_s": 3.0,
+  "peak_dbfs": -6.0,
+  "rms_dbfs": -18.0,
+  "centroid_hz": 575,
+  "band_db_rel": {
+   "20-200": -6.7,
+   "200-1000": -2.1,
+   "1000-4000": -7.9,
+   "4000-16000": -24.8
+  }
+ },
+ "retarder_cab_loop": {
+  "perspective": "cab",
+  "loop": true,
+  "dur_s": 3.0,
+  "peak_dbfs": -6.1,
+  "rms_dbfs": -18.4,
+  "centroid_hz": 335,
+  "band_db_rel": {
+   "20-200": -4.2,
+   "200-1000": -2.3,
+   "1000-4000": -14.6,
+   "4000-16000": -55.1
+  }
+ },
+ "compressor_loop": {
+  "perspective": "ext",
+  "loop": true,
+  "dur_s": 2.0,
+  "peak_dbfs": -6.0,
+  "rms_dbfs": -20.0,
+  "centroid_hz": 183,
+  "band_db_rel": {
+   "20-200": -0.5,
+   "200-1000": -12.6,
+   "1000-4000": -13.9,
+   "4000-16000": -29.7
+  }
+ },
+ "compressor_cab_loop": {
+  "perspective": "cab",
+  "loop": true,
+  "dur_s": 2.0,
+  "peak_dbfs": -5.5,
+  "rms_dbfs": -18.4,
+  "centroid_hz": 105,
+  "band_db_rel": {
+   "20-200": -0.2,
+   "200-1000": -14.9,
+   "1000-4000": -23.9,
+   "4000-16000": -62.3
+  }
+ },
+ "ambient_bed_loop": {
+  "perspective": "ext",
+  "loop": true,
+  "dur_s": 12.0,
+  "peak_dbfs": -6.0,
+  "rms_dbfs": -19.3,
+  "centroid_hz": 451,
+  "band_db_rel": {
+   "20-200": -4.1,
+   "200-1000": -2.9,
+   "1000-4000": -10.5,
+   "4000-16000": -23.8
+  }
+ },
+ "ambient_bed_cab_loop": {
+  "perspective": "cab",
+  "loop": true,
+  "dur_s": 12.0,
+  "peak_dbfs": -7.6,
+  "rms_dbfs": -20.8,
+  "centroid_hz": 197,
+  "band_db_rel": {
+   "20-200": -1.9,
+   "200-1000": -4.6,
+   "1000-4000": -26.6,
+   "4000-16000": -73.7
+  }
+ },
+ "forklift_loop": {
+  "perspective": "ext",
+  "loop": true,
+  "dur_s": 8.0,
+  "peak_dbfs": -6.0,
+  "rms_dbfs": -18.3,
+  "centroid_hz": 773,
+  "band_db_rel": {
+   "20-200": -23.4,
+   "200-1000": -0.7,
+   "1000-4000": -8.6,
+   "4000-16000": -30.0
+  }
+ },
+ "forklift_cab_loop": {
+  "perspective": "cab",
+  "loop": true,
+  "dur_s": 8.0,
+  "peak_dbfs": -13.5,
+  "rms_dbfs": -23.9,
+  "centroid_hz": 362,
+  "band_db_rel": {
+   "20-200": -17.9,
+   "200-1000": -0.1,
+   "1000-4000": -20.9,
+   "4000-16000": -74.9
+  }
+ },
+ "parking_brake_release": {
+  "perspective": "ext",
+  "loop": false,
+  "dur_s": 1.3,
+  "peak_dbfs": -1.0,
+  "rms_dbfs": -22.0,
+  "centroid_hz": 1618,
+  "band_db_rel": {
+   "20-200": -2.5,
+   "200-1000": -13.3,
+   "1000-4000": -6.4,
+   "4000-16000": -8.4
+  }
+ },
+ "parking_brake_release_cab": {
+  "perspective": "cab",
+  "loop": false,
+  "dur_s": 1.42,
+  "peak_dbfs": -2.7,
+  "rms_dbfs": -22.4,
+  "centroid_hz": 156,
+  "band_db_rel": {
+   "20-200": -0.4,
+   "200-1000": -14.2,
+   "1000-4000": -13.6,
+   "4000-16000": -31.6
+  }
+ },
+ "air_dryer_purge_b": {
+  "perspective": "ext",
+  "loop": false,
+  "dur_s": 0.62,
+  "peak_dbfs": -1.0,
+  "rms_dbfs": -20.9,
+  "centroid_hz": 4477,
+  "band_db_rel": {
+   "20-200": -8.0,
+   "200-1000": -17.1,
+   "1000-4000": -5.0,
+   "4000-16000": -3.0
+  }
+ },
+ "air_dryer_purge_b_cab": {
+  "perspective": "cab",
+  "loop": false,
+  "dur_s": 0.74,
+  "peak_dbfs": -4.1,
+  "rms_dbfs": -24.2,
+  "centroid_hz": 370,
+  "band_db_rel": {
+   "20-200": -0.9,
+   "200-1000": -13.6,
+   "1000-4000": -8.7,
+   "4000-16000": -22.3
+  }
+ },
+ "bird_sparrow": {
+  "perspective": "ext",
+  "loop": false,
+  "dur_s": 1.1,
+  "peak_dbfs": -4.0,
+  "rms_dbfs": -17.3,
+  "centroid_hz": 3804,
+  "band_db_rel": {
+   "20-200": -93.6,
+   "200-1000": -100.3,
+   "1000-4000": -1.5,
+   "4000-16000": -5.3
+  }
+ },
+ "bird_tit": {
+  "perspective": "ext",
+  "loop": false,
+  "dur_s": 1.3,
+  "peak_dbfs": -4.0,
+  "rms_dbfs": -13.2,
+  "centroid_hz": 3869,
+  "band_db_rel": {
+   "20-200": -92.6,
+   "200-1000": -86.2,
+   "1000-4000": -2.6,
+   "4000-16000": -3.4
+  }
+ },
+ "bird_crow_caw": {
+  "perspective": "ext",
+  "loop": false,
+  "dur_s": 1.4,
+  "peak_dbfs": -4.0,
+  "rms_dbfs": -20.6,
+  "centroid_hz": 1171,
+  "band_db_rel": {
+   "20-200": -44.0,
+   "200-1000": -4.1,
+   "1000-4000": -2.2,
+   "4000-16000": -20.2
+  }
+ },
+ "bird_crow_caw_cab": {
+  "perspective": "cab",
+  "loop": false,
+  "dur_s": 1.52,
+  "peak_dbfs": -17.1,
+  "rms_dbfs": -29.6,
+  "centroid_hz": 501,
+  "band_db_rel": {
+   "20-200": -35.1,
+   "200-1000": -0.3,
+   "1000-4000": -11.8,
+   "4000-16000": -63.4
+  }
+ },
+ "indicator_tick_cab": {
+  "perspective": "cab",
+  "loop": false,
+  "dur_s": 0.21,
+  "peak_dbfs": -1.0,
+  "rms_dbfs": -23.9,
+  "centroid_hz": 887,
+  "band_db_rel": {
+   "20-200": -57.0,
+   "200-1000": -4.2,
+   "1000-4000": -2.1,
+   "4000-16000": -46.0
+  }
+ },
+ "indicator_tick": {
+  "perspective": "ext",
+  "loop": false,
+  "dur_s": 0.21,
+  "peak_dbfs": -10.2,
+  "rms_dbfs": -30.4,
+  "centroid_hz": 612,
+  "band_db_rel": {
+   "20-200": -57.0,
+   "200-1000": -1.3,
+   "1000-4000": -6.0,
+   "4000-16000": -65.9
+  }
+ },
+ "indicator_tock_cab": {
+  "perspective": "cab",
+  "loop": false,
+  "dur_s": 0.22,
+  "peak_dbfs": -1.4,
+  "rms_dbfs": -22.1,
+  "centroid_hz": 598,
+  "band_db_rel": {
+   "20-200": -55.9,
+   "200-1000": -0.0,
+   "1000-4000": -23.3,
+   "4000-16000": -54.4
+  }
+ },
+ "indicator_tock": {
+  "perspective": "ext",
+  "loop": false,
+  "dur_s": 0.22,
+  "peak_dbfs": -8.5,
+  "rms_dbfs": -26.8,
+  "centroid_hz": 498,
+  "band_db_rel": {
+   "20-200": -56.5,
+   "200-1000": -0.0,
+   "1000-4000": -32.3,
+   "4000-16000": -71.1
+  }
+ }
+}
