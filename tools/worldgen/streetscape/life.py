@@ -14,6 +14,15 @@ Rules (deterministic: every decision is a hash of a stable id, no RNG state; WOR
   bins            groups of 2-4 1100 l containers on paving next to blocks and offices (one corner per building).
   skips           one KP-7 skip at 25 % of the halls, on the yard next to a corner.
   cones           2-3 traffic cones at the ends of some dock rows.
+  truck yards     on block-paved / concrete / asphalt yards >= 1200 m2 (not dock aprons, not car parks): rows of
+                  3.8 m truck bays along every yard edge >= 20 m, rear 1.0 m off the edge, nose into the yard;
+                  occupancy 40 %: trailer on its legs 55 %, trailer coupled to a tractor 28 %, solo tractor 17 %
+                  (tractor colours plain, no lettering); nothing within 35 m in front of a dock row.
+  containers      25 % of concrete / gravel / asphalt yards >= 1200 m2: one row of 2-6 ISO containers (20/40 ft)
+                  along an edge, 30 % of them with a second container stacked on top.
+  tyre scrub      decals (`decal_tyre`) in front of every dock door: 2-3 passes of the two trailer wheel tracks
+                  (+-1.0 m), straight for the last 2-9 m before the bumpers, then bending to the side the trucks
+                  swing in from (one side per dock row, R 22-45 m) up to 16-24 m out; lifted like oil stains.
 Everything keeps clear of road surfaces (incl. flush yard roads), buildings and a 5 m corridor along the start
 route, and must stand on a paved area. Liveries are plain colours; no lettering or logos.
 """
@@ -117,6 +126,158 @@ def dock_trailers(pl, docks, sp, report):
             sp.take(body)
             n += 1
     report["dock_trailers"] = n
+
+
+def tyre_scrub(buf, docks, zsurf, report):
+    """Tyre-scrub decals on the dock aprons (see module docstring). UV.x = metres along the track, UV.y = 0..1
+    across, UV1 = (track length, pass seed): the material fades the ends and breaks the band with noise."""
+    n = 0
+    for dk in docks:
+        p, q = (np.asarray(x, float) for x in dk["edge"])
+        d = (q - p) / np.linalg.norm(q - p)
+        nout = np.array([d[1], -d[0]])
+        side = 1.0 if hf(dk["id"], "swing") < 0.5 else -1.0     # trucks swing in from one end of the row
+        for dock in dk["docks"]:
+            base = p + d * dock["u"] + nout * 0.45
+            for k in range(2 + int(hf(dk["id"], dock["num"], "passes") > 0.5)):
+                key = (dk["id"], dock["num"], k)
+                s0 = 1.2 + hf(*key, "s0") * 1.5
+                s_str = 2.0 + hf(*key, "str") * 7.0                    # straight part
+                L = 16.0 + hf(*key, "len") * 8.0
+                R = 22.0 + hf(*key, "r") * 23.0
+                jit = (hf(*key, "j") - 0.5) * 0.35
+                ss = np.arange(s0, L + 0.01, 1.5)
+                bend = np.where(ss > s_str, (ss - s_str) ** 2 / (2 * R), 0.0)   # lateral offset of the arc
+                for wx in (-1.0, 1.0):
+                    w = 0.30 + hf(*key, wx, "w") * 0.16
+                    lat = wx * 1.0 + jit + side * bend
+                    C = base[None, :] + nout[None, :] * ss[:, None] + d[None, :] * lat[:, None]
+                    t = np.gradient(C, axis=0)
+                    t /= np.maximum(np.linalg.norm(t, axis=1, keepdims=True), 1e-9)
+                    nn = np.column_stack([-t[:, 1], t[:, 0]])
+                    A, B = C - nn * w / 2, C + nn * w / 2
+                    V2 = np.vstack([A, B])
+                    Z = zsurf(V2[:, 0], V2[:, 1]) + S.PAVED_LIFT + 0.008
+                    m = len(ss)
+                    T = np.array([(i, i + 1, m + i + 1) for i in range(m - 1)] + [(i, m + i + 1, m + i) for i in range(m - 1)])
+                    if np.cross(np.append(t[0], 0), np.append(nn[0], 0))[2] < 0:
+                        T = T[:, [0, 2, 1]]
+                    uv = np.column_stack([np.tile(ss - s0, 2), np.repeat([0.0, 1.0], m)])
+                    uv1 = np.column_stack([np.full(2 * m, L - s0), np.full(2 * m, hf(*key, wx, "seed"))])
+                    buf.add("markings", "decal_tyre", np.column_stack([V2, Z]), uv, T,
+                            src=f"tyre:{dk['id']}:{dock['num']}:{k}", UV1=uv1)
+                    n += 1
+    report["tyre_scrub_tracks"] = n
+
+
+def _edge_rows(poly, min_len):
+    """(start, direction, inward normal, length) for every exterior edge of poly >= min_len."""
+    ring = poly.exterior
+    c = np.asarray(ring.coords)
+    if not ring.is_ccw:
+        c = c[::-1]
+    for a, b in zip(c[:-1], c[1:]):
+        L = float(np.hypot(*(b - a)))
+        if L >= min_len:
+            d = (b - a) / L
+            yield a, d, np.array([-d[1], d[0]]), L          # CCW ring: interior on the left
+
+
+DOCK_MANOEUVRE_M = 35.0      # WORKING_VALUE: kept free in front of dock rows (13.6 m trailer + tractor turning in)
+
+
+def truck_yards(pl, paved, sp, report, docks=()):
+    cnt = {"yard_trailers": 0, "coupled": 0, "solo_tractors": 0, "containers": 0}
+    k_rear, k_front = LP.tractor_extent()
+    zones = []
+    for dk in docks:                                   # manoeuvring area in front of every dock row stays free
+        p, q = (np.asarray(x, float) for x in dk["edge"])
+        d = (q - p) / np.linalg.norm(q - p)
+        nout = np.array([d[1], -d[0]])
+        a0 = p + d * (dk["docks"][0]["u"] - 6.0)
+        a1 = p + d * (dk["docks"][-1]["u"] + 6.0)
+        zones.append(Polygon([a0, a1, a1 + nout * DOCK_MANOEUVRE_M, a0 + nout * DOCK_MANOEUVRE_M]))
+    keep_free = shapely.union_all(zones) if zones else Polygon()
+    shapely.prepare(keep_free)
+    for item in paved:
+        if item.get("parking") or item.get("source") == "dock_apron":
+            continue
+        if item["mat"] not in ("yard_behaton", "yard_concrete", "yard_asphalt", "yard_gravel"):
+            continue
+        poly = item["poly"]
+        polys = list(getattr(poly, "geoms", [poly]))
+        for pi, pg in enumerate(polys):
+            if pg.geom_type != "Polygon" or pg.area < 1200:
+                continue
+            ykey = f"{item['id']}#{pi}"
+            if item["mat"] != "yard_gravel":
+                for ei, (a, d, nin, L) in enumerate(_edge_rows(pg, 20.0)):
+                    nb = int((L - 4.0) // 3.8)
+                    for i in range(nb):
+                        key = (ykey, ei, i)
+                        if hf(*key, "occ") > 0.40:
+                            continue
+                        u = 2.0 + 1.9 + i * 3.8
+                        base = a + d * u + nin * 1.0
+                        r = hf(*key, "what")
+                        yaw = yaw_of(nin) + (hf(*key, "yaw") - 0.5) * 0.05
+                        if r < 0.55 or r < 0.83:
+                            body = rect(base + nin * 6.8, nin, 6.9, 1.35)
+                            coupled = r >= 0.55
+                            if coupled:
+                                kp = base + nin * LP.TRAILER_KINGPIN
+                                body = shapely.union_all([body, rect(kp + nin * (k_rear + k_front) / 2, nin,
+                                                                     (k_front - k_rear) / 2 + 0.2, 1.35)])
+                            if keep_free.intersects(body) or not sp.free(body):
+                                continue
+                            k = hf(*key, "kind")
+                            if k < 0.70:
+                                proto = f"trailer_curtain_{int(hf(*key, 'col') * len(LP.CURTAIN_COLOURS)) % len(LP.CURTAIN_COLOURS)}"
+                            elif k < 0.85:
+                                proto = "trailer_box_0"
+                            else:
+                                proto = "trailer_reefer_0"
+                            pl.add(proto, base, yaw, src=f"life:yard:{ykey}")
+                            cnt["yard_trailers"] += 1
+                            if coupled:
+                                tc = LP.TRACTOR_COLOURS[int(hf(*key, "tc") * len(LP.TRACTOR_COLOURS)) % len(LP.TRACTOR_COLOURS)]
+                                pl.add(f"tractor_{tc}", base + nin * LP.TRAILER_KINGPIN, yaw, src=f"life:yard:{ykey}")
+                                cnt["coupled"] += 1
+                            sp.take(body)
+                        else:                                   # solo tractor, nose into the yard
+                            o = base - nin * k_rear + nin * 0.2
+                            body = rect(o + nin * (k_rear + k_front) / 2, nin, (k_front - k_rear) / 2 + 0.2, 1.35)
+                            if keep_free.intersects(body) or not sp.free(body):
+                                continue
+                            tc = LP.TRACTOR_COLOURS[int(hf(*key, "tc") * len(LP.TRACTOR_COLOURS)) % len(LP.TRACTOR_COLOURS)]
+                            pl.add(f"tractor_{tc}", o, yaw, src=f"life:yard:{ykey}")
+                            sp.take(body)
+                            cnt["solo_tractors"] += 1
+            if item["mat"] in ("yard_concrete", "yard_gravel", "yard_asphalt") and hf(ykey, "cont") < 0.25:
+                edges = list(_edge_rows(pg, 16.0))
+                if not edges:
+                    continue
+                a, d, nin, L = edges[int(hf(ykey, "cedge") * len(edges)) % len(edges)]
+                u = 3.0 + hf(ykey, "cu") * max(0.0, L - 30.0) * 0.5
+                for i in range(2 + int(hf(ykey, "cn") * 5)):
+                    ft = 40 if hf(ykey, i, "ft") < 0.55 else 20
+                    hl = LP.CONTAINER_L[ft] / 2
+                    c = a + d * (u + hl) + nin * (1.6 + hf(ykey, i, "off") * 0.3)
+                    fp = rect(c, d, hl + 0.1, 1.3)
+                    if keep_free.intersects(fp) or not sp.free(fp):
+                        break
+                    col = int(hf(ykey, i, "cc") * len(LP.CONTAINER_COLOURS)) % len(LP.CONTAINER_COLOURS)
+                    yaw = yaw_of(d) + (hf(ykey, i, "y") - 0.5) * 0.03
+                    z0 = pl.add(f"container_{ft}_{col}", c, yaw, src=f"life:containers:{ykey}")
+                    cnt["containers"] += 1
+                    if hf(ykey, i, "stack") < 0.30:
+                        col2 = (col + 1 + int(hf(ykey, i, "c2") * 4)) % len(LP.CONTAINER_COLOURS)
+                        pl.add(f"container_{ft}_{col2}", c + d * (hf(ykey, i, "sd") - 0.5) * 0.1, yaw + 0.01,
+                               z=z0 + LP.CONTAINER_H, src=f"life:containers:{ykey}")
+                        cnt["containers"] += 1
+                    sp.take(fp)
+                    u += 2 * hl + 0.4 + hf(ykey, i, "gap") * 0.6
+    report.update(cnt)
 
 
 def _bays(poly, key):
@@ -299,7 +460,10 @@ def place(pl, docks, paved, blds, roads_poly, bpoly, route_P, report, buf=None, 
     route = LineString(route_P) if route_P is not None and len(route_P) > 1 else None
     sp = Space(union, roads_poly, bpoly, route)
     dock_trailers(pl, docks, sp, rep)
+    if buf is not None and zsurf is not None:
+        tyre_scrub(buf, docks, zsurf, rep)
     parking(pl, paved, sp, rep, buf, zsurf)
+    truck_yards(pl, paved, sp, rep, docks)
     yard_props(pl, blds, docks, sp, rep)
     report["life"] = rep
     return rep

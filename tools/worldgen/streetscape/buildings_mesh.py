@@ -153,6 +153,17 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
         acc.quad(layer, rv, B, C, C + back, B + back)          # right jamb (faces -d)
         w, h = ub - ua, vb - va
         acc.quad(layer, mat_in, A + back, B + back, C + back, D + back, uv=[[0, 0], [w, 0], [w, h], [0, h]])
+        if kind in ("window", "balcony", "ribbon"):           # frame around the glass (PVC/alu profile, 7 cm face)
+            fw = min(0.07, w / 5, h / 5)
+            fr = back + n3 * 0.035
+            Ao, Bo, Co, Do = A + fr, B + fr, C + fr, D + fr
+            Ai, Bi = Ao + d3 * fw + [0, 0, fw], Bo - d3 * fw + [0, 0, fw]
+            Ci, Di = Co - d3 * fw - [0, 0, fw], Do + d3 * fw - [0, 0, fw]
+            fm = "hall_flashing" if mat.startswith("hall") else "window_frame"
+            acc.quad(layer, fm, Ao, Bo, Bi, Ai)
+            acc.quad(layer, fm, Bo, Co, Ci, Bi)
+            acc.quad(layer, fm, Co, Do, Di, Ci)
+            acc.quad(layer, fm, Do, Ao, Ai, Di)
         if kind in ("window", "balcony") and w > 1.25:      # mullion
             um = 0.5 * (ua + ub)
             c = np.array(P(um, 0.5 * (va + vb))) + back + n3 * 0.04
@@ -429,6 +440,13 @@ def build_dock(acc, layer, p, d, nout, u, zy, num):
     # dock signal light (red/green box) right of the door
     acc.box(layer, "dock_light", P(W / 2 + side + 0.35, zf + 1.4, 0.08), np.append(d * 0.12, 0), np.append(nout * 0.08, 0),
             [0, 0, 0.22])
+    # dock floodlight on a short wall arm above the shelter, left of centre (LED head tilted to the apron)
+    zl = zf + sh + 0.75
+    acc.box(layer, "steel_galv", P(-0.9, zl, 0.25), np.append(d * 0.025, 0), np.append(nout * 0.25, 0), [0, 0, 0.025])
+    acc.box(layer, "luminaire_housing", P(-0.9, zl - 0.06, 0.55), np.append(d * 0.16, 0), np.append(nout * 0.1, 0),
+            [0, 0, 0.05])
+    acc.quad(layer, "lamp_glass", P(-1.04, zl - 0.115, 0.47), P(-0.76, zl - 0.115, 0.47), P(-0.76, zl - 0.115, 0.63),
+             P(-1.04, zl - 0.115, 0.63))
 
 
 # ------------------------------------------------------------------------------------------- main

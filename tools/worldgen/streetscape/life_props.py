@@ -8,6 +8,11 @@ x = right, y = front, z = up, origin on the ground.
                           backed onto a dock door is placed at the door with yaw = wall outward normal.
                           Kinds: curtain (curtainsider, plain fictional colours, no lettering), box (dry box),
                           reefer (white box + front cooling unit). No real liveries or logos anywhere.
+  tractor_<colour>        4x2 tractor unit, generic cab-over shape (no make, no grille badge, plain paint),
+                          origin = ground under the fifth-wheel centre, +y = forward; a coupled trailer is placed
+                          with its rear edge TRAILER_KINGPIN behind that point (same yaw)
+  container_<20|40>_<k>   ISO dry container (20 ft 6.06 / 40 ft 12.19 x 2.44 x 2.59 m), corrugated sides, faded
+                          plain colours, no operator markings; origin = centre of the footprint, +y = long axis
   pallets_empty_<n>       stack of n empty EUR pallets (1.2 x 0.8 x 0.144 m each)
   pallet_load             one wrapped pallet load (1.2 x 0.8 m, 1.35 m high)
   bin_1100_<colour>       1100 l four-wheel waste container (PN-EN 840-3 size class), lid closed
@@ -35,6 +40,8 @@ from .props import Mesh
 CAR_COLOURS = ["silver", "grey", "black", "white", "blue", "red", "green", "beige"]
 VAN_COLOURS = ["white", "silver", "white2"]
 CURTAIN_COLOURS = ["grey", "blue", "white", "red", "green", "silver"]
+TRACTOR_COLOURS = ["white", "silver", "blue", "red", "green", "black"]
+CONTAINER_COLOURS = ["rust", "blue", "grey", "green", "beige", "white"]
 BIN_COLOURS = ["green", "grey", "yellow", "blue"]
 # body dims: L, W, H, belt z, roof start/end (fractions of L from the rear), windscreen base, hood z at the nose
 CARS = {"hatch": dict(L=4.10, W=1.78, H=1.48, belt=0.93, yC=0.04, yR=0.12, yF=0.55, yA=0.72, nose=0.78, tail=0.95),
@@ -334,6 +341,114 @@ def trailer(kind, colour):
 
 
 # ------------------------------------------------------------------------------------------- yard props
+# ------------------------------------------------------------------------------------------- tractor unit
+TRACTOR = dict(wb=3.70, fh=1.45, cab_l=2.30, W=2.49, H=3.85, floor=1.30, fw_ahead=0.55, rear_oh=1.05)  # WORKING_VALUE
+TRAILER_KINGPIN = 12.40          # rear edge -> kingpin of the 13.6 m trailer (WORKING_VALUE)
+
+
+def tractor(colour):
+    """Generic 4x2 cab-over tractor; origin under the fifth wheel. Dimensions typical for the class (WORKING_VALUE);
+    the shape is deliberately plain (flat front, square cab, no make-specific grille or lights)."""
+    t = TRACTOR
+    paint = f"tractor_paint_{colour}"
+    hw = t["W"] / 2
+    y_ra = -t["fw_ahead"]                      # rear axle
+    y_fa = y_ra + t["wb"]                      # front axle
+    y_front = y_fa + t["fh"]
+    y_cab0 = y_front - t["cab_l"]
+    out = []
+    for lod in (0, 1):
+        m = Mesh()
+        if lod == 0:
+            secs = [rounded_rect(hw, t["floor"], t["H"], 0.14, 0.06), rounded_rect(hw, t["floor"], t["H"], 0.14, 0.06),
+                    rounded_rect(hw - 0.04, t["floor"] - 0.05, t["H"] - 0.06, 0.16, 0.08)]
+            loft(m, paint, secs, [y_cab0, y_front - 0.25, y_front])
+        else:
+            bx(m, paint, -hw, hw, y_cab0, y_front, t["floor"], t["H"])
+        m.quad("car_glass", [hw - 0.12, y_front + 0.004, 2.05], [-hw + 0.12, y_front + 0.004, 2.05],
+               [-hw + 0.14, y_front - 0.04, 3.02], [hw - 0.14, y_front - 0.04, 3.02])
+        for sx in (-1, 1):
+            q = [[sx * (hw + 0.004), y_front - 0.95, 2.05], [sx * (hw + 0.004), y_front - 0.12, 2.05],
+                 [sx * (hw + 0.004), y_front - 0.16, 2.85], [sx * (hw + 0.004), y_front - 0.95, 2.85]]
+            m.quad("car_glass", *(q if sx > 0 else q[::-1]))
+        bx(m, "car_trim", -hw + 0.05, hw - 0.05, y_front - 0.1, y_front + 0.06, 0.45, 0.85)          # bumper
+        if lod == 0:
+            bx(m, "car_trim", -hw + 0.25, hw - 0.25, y_front - 0.02, y_front + 0.01, 1.35, 1.95)      # front panel
+            for sx in (-1, 1):
+                x0 = sx * (hw - 0.32)
+                m.quad("car_light_head", [x0 - 0.2, y_front + 0.065, 0.62], [x0 + 0.2, y_front + 0.065, 0.62],
+                       [x0 + 0.2, y_front + 0.065, 0.76], [x0 - 0.2, y_front + 0.065, 0.76])
+                bx(m, "car_trim", sx * (hw + 0.05), sx * (hw + 0.09), y_front - 0.45, y_front - 0.3, 2.1, 2.75)
+                m.tube("car_trim", [sx * hw, y_front - 0.35, 2.6], [sx * (hw + 0.07), y_front - 0.38, 2.6], 0.015, None, 4)
+                bx(m, "car_trim", sx * (hw - 0.25), sx * (hw + 0.01), y_fa - 0.95, y_fa - 0.45, 0.45, 1.25)
+            q = [[-0.26, y_front + 0.065, 0.48], [0.26, y_front + 0.065, 0.48], [0.26, y_front + 0.065, 0.59],
+                 [-0.26, y_front + 0.065, 0.59]]
+            m.add("plate_pl", q, [(0, 1, 2), (0, 2, 3)], [[0, 0], [1, 0], [1, 1], [0, 1]])
+            bx(m, paint, -hw + 0.06, hw - 0.06, y_front - 0.25, y_front + 0.12, t["H"] - 0.68, t["H"] - 0.6)  # visor
+        for sx in (-1, 1):
+            bx(m, "trailer_chassis", sx * 0.43 - 0.05, sx * 0.43 + 0.05, y_ra - t["rear_oh"], y_cab0 + 0.3, 0.75, 1.05)
+        bx(m, "trailer_chassis", -0.48, 0.48, y_ra - t["rear_oh"], y_ra - t["rear_oh"] + 0.12, 0.55, 1.05)
+        if lod == 0:
+            m.tube("rim", [hw - 0.62, y_ra + 0.8, 0.85], [hw - 0.62, y_ra + 2.2, 0.85], 0.30, None, 12)       # fuel tank
+            bx(m, "trailer_chassis", -hw + 0.1, -hw + 0.55, y_ra + 1.0, y_ra + 2.1, 0.55, 1.1)               # air/battery
+            m.tube("trailer_alu", [-hw + 0.35, y_cab0 - 0.15, 1.2], [-hw + 0.35, y_cab0 - 0.15, 3.5], 0.07, None, 8)
+            m.tube("trailer_chassis", [0, 0, 1.08], [0, 0, 1.18], 0.9, 0.9, 16)                               # fifth wheel
+        else:
+            bx(m, "trailer_chassis", -0.85, 0.85, -0.85, 0.85, 1.05, 1.18)
+        for sx in (-1, 1):
+            bx(m, "car_trim", sx * (hw - 0.55), sx * (hw - 0.02), y_ra - 0.6, y_ra + 0.6, 1.12, 1.16)         # mudguard
+        for ya, wdt in ((y_fa, 0.32), (y_ra, 0.62)):
+            for sx in (-1, 1):
+                wheel(m, [sx * (hw - 0.18 - (0.12 if wdt > 0.5 else 0.0)), ya, 0.51], 0.51, wdt, 14 if lod == 0 else 6,
+                      out_sign=sx, simple=lod > 0)
+        out.append(m)
+    col = Mesh()
+    col.box("collision_vehicle", [0, (y_ra - t["rear_oh"] + y_front) / 2, t["H"] / 2], hw,
+            (y_front - y_ra + t["rear_oh"]) / 2, t["H"] / 2)
+    return out[0], out[1], col
+
+
+def tractor_extent():
+    """(rear, front) of the tractor along +y relative to its origin (fifth wheel)."""
+    t = TRACTOR
+    return -t["fw_ahead"] - t["rear_oh"], -t["fw_ahead"] + t["wb"] + t["fh"]
+
+
+# ------------------------------------------------------------------------------------------- container
+CONTAINER_L = {20: 6.058, 40: 12.192}
+CONTAINER_W, CONTAINER_H = 2.438, 2.591
+
+
+def container(ft, colour):
+    L, W, H = CONTAINER_L[ft], CONTAINER_W, CONTAINER_H
+    hl, hw = L / 2, W / 2
+    mat = f"container_{colour}"
+    out = []
+    for lod in (0, 1):
+        m = Mesh()
+        for sx in (-1, 1):                      # corrugated side walls (UV u = metres along)
+            q = [[sx * hw, -hl + 0.15, 0.15], [sx * hw, hl - 0.15, 0.15], [sx * hw, hl - 0.15, H - 0.12],
+                 [sx * hw, -hl + 0.15, H - 0.12]]
+            m.add(mat, q if sx > 0 else q[::-1], [(0, 1, 2), (0, 2, 3)],
+                  [[0, 0], [L, 0], [L, H], [0, H]] if sx > 0 else [[L, 0], [0, 0], [0, H], [L, H]])
+        bx(m, mat, -hw + 0.02, hw - 0.02, -hl, hl, H - 0.12, H)
+        bx(m, "container_frame", -hw, hw, -hl, hl, 0.0, 0.15)
+        bx(m, mat, -hw + 0.02, hw - 0.02, hl - 0.15, hl, 0.15, H - 0.12)
+        bx(m, "container_doors" if lod == 0 else mat, -hw + 0.02, hw - 0.02, -hl, -hl + 0.15, 0.15, H - 0.12)
+        if lod == 0:
+            for sx in (-1, 1):
+                for sy in (-1, 1):
+                    x0, x1 = (hw - 0.16, hw) if sx > 0 else (-hw, -hw + 0.16)
+                    y0, y1 = (hl - 0.16, hl) if sy > 0 else (-hl, -hl + 0.16)
+                    bx(m, "container_frame", x0 - 0.005 * sx, x1 + 0.005 * sx, y0, y1, 0.0, H + 0.005)
+            for x in (-0.62, -0.2, 0.2, 0.62):
+                m.tube("container_frame", [x, -hl - 0.03, 0.25], [x, -hl - 0.03, H - 0.2], 0.018, None, 5)
+        out.append(m)
+    col = Mesh()
+    col.box("collision_vehicle", [0, 0, H / 2], hw, hl, H / 2)
+    return out[0], out[1], col
+
+
 def pallets_empty(n):
     h = 0.144 * n
     out = []
@@ -589,6 +704,11 @@ def build_all():
     for k, c in enumerate(CURTAIN_COLOURS):
         P[f"trailer_curtain_{k}"] = trailer("curtain", c)
     P["trailer_box_0"] = trailer("box", None)
+    for c in TRACTOR_COLOURS:
+        P[f"tractor_{c}"] = tractor(c)
+    for ft in (20, 40):
+        for k, c in enumerate(CONTAINER_COLOURS):
+            P[f"container_{ft}_{k}"] = container(ft, c)
     P["trailer_reefer_0"] = trailer("reefer", None)
     for n in (4, 8, 12, 16):
         P[f"pallets_empty_{n}"] = pallets_empty(n)

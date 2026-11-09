@@ -225,3 +225,28 @@ def test_overhead_board_layout():
     assert 1.0 < h < 2.0 and w > h
     r, g, b = im.convert("RGB").getpixel((im.size[0] // 2, im.size[1] - 2))
     assert g > r                                            # green field (white border is inside the edge)
+
+
+def test_yards_have_trucks_and_containers(qa):
+    """Truck yards are not empty plains (critic R2 #2): parked trailers, coupled and solo tractors, containers."""
+    life = qa["furniture"]["life"]
+    assert life["yard_trailers"] >= 50 and life["coupled"] >= 10 and life["solo_tractors"] >= 10
+    assert life["containers"] >= 4
+    assert life["tyre_scrub_tracks"] >= 2 * qa["furniture"]["life"]["dock_trailers"]
+
+
+def test_second_lamp_family_on_side_streets(qa):
+    fam = qa["furniture"]["lamps"]["by_family"]
+    old = sum(v for k, v in fam.items() if k.startswith("lamp_old_"))
+    assert old >= 50 and fam.get("lamp_12m", 0) > 0          # older family exists, main roads keep the modern one
+
+
+def test_vehicle_prototypes_are_plain():
+    """Tractor and container prototypes: two LODs, LOD1 much lighter, no texture beyond plate/corrugation."""
+    from streetscape import life_props as LP
+    for m0, m1, col in (LP.tractor("white"), LP.container(40, "rust"), LP.container(20, "blue")):
+        t0 = sum(len(p["T"]) for p in m0.out())
+        t1 = sum(len(p["T"]) for p in m1.out())
+        assert 0 < t1 < t0 <= 1500 and col is not None
+    a, b = LP.tractor_extent()
+    assert -2.0 < a < -1.0 and 4.0 < b < 5.5                      # 4x2 tractor ~6.2 m long
