@@ -73,6 +73,9 @@ foreach ($d in $devices) {
     }
     Write-Host '  installed'
     if (-not $Run) { continue }
+    if (-not (Test-DeviceUnlocked $d)) {
+        Write-Host '  phone is LOCKED (keyguard) - unlock it and keep the screen on; run skipped' -ForegroundColor Red; $failed++; continue
+    }
 
     $component = (& $Adb -s $d shell cmd package resolve-activity --brief $PackageName | Select-Object -Last 1).Trim()
     & $Adb -s $d shell am force-stop $PackageName | Out-Null
@@ -87,6 +90,8 @@ foreach ($d in $devices) {
     $logcat = Join-Path $LogsDir "logcat-$d-$ts.txt"
     & $Adb -s $d logcat -d -v threadtime -s Unity:V AndroidRuntime:E DEBUG:E libc:F CRASH:E ActivityManager:W | Set-Content $logcat -Encoding utf8
     $alive = [bool](& $Adb -s $d shell pidof $PackageName)
+    $resumed = [bool]((& $Adb -s $d shell dumpsys activity activities) | Select-String "topResumedActivity=.*$PackageName")
+    if (-not $resumed) { Write-Host '  app is not the resumed foreground activity (screen off / locked / backgrounded)' -ForegroundColor Red; $alive = $false }
     $bad = Select-String -Path $logcat -Pattern 'Exception|FATAL|signal \d+ \(SIG|ANR in|Crash' |
         Where-Object { $_.Line -notmatch 'Unity\s*:\s*\[DIAG\]' }
     Select-String -Path $logcat -Pattern '\[BOOT\]|\[DIAG\]' | Select-Object -Last 3 | ForEach-Object { Write-Host "  $($_.Line.Trim())" }

@@ -44,6 +44,14 @@ function Resolve-TargetDevices([string[]]$Serial, [switch]$AllDevices) {
     throw "several devices attached ($($attached -join ', ')): pass -Serial <s> or -AllDevices"
 }
 
+# True when the phone shows no keyguard (lock screen). A locked phone pauses the app immediately,
+# so measurements are meaningless; scripts never type PINs - the owner must unlock the phone.
+function Test-DeviceUnlocked([string]$Serial) {
+    & $Adb -s $Serial shell input keyevent KEYCODE_WAKEUP | Out-Null
+    $kg = (& $Adb -s $Serial shell dumpsys window) | Select-String 'isKeyguardShowing=(\w+)' | Select-Object -First 1
+    return -not ($kg -and $kg.Matches[0].Groups[1].Value -eq 'true')
+}
+
 function Test-UnityProjectLocked {
     $lock = Join-Path $ProjectPath 'Temp\UnityLockfile'
     if (-not (Test-Path $lock)) { return $false }

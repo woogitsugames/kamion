@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "Bash(gh:*)",
+      "Bash(git-lfs:*)",
+      "Bash(pwsh -NoProfile -File scripts/*)",
+      "Bash(pwsh scripts/*)",
+      "PowerShell(pwsh -NoProfile -File scripts/*)",
+      "Bash(*Unity.exe* -batchmode*)",
+      "Bash(*adb.exe*)",
+      "Bash(adb:*)",
+      "Bash(scrcpy:*)",
+      "Bash(blender:*)",
+      "Bash(uv:*)",
+      "Bash(python:*)",
+      "Bash(ffmpeg:*)",
+      "Bash(ffprobe:*)",
+      "Bash(astcenc:*)",
+      "Bash(magick:*)",
+      "Bash(dotnet:*)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f*)"
+    ]
+  }
+}

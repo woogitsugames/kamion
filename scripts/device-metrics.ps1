@@ -31,6 +31,7 @@ function Get-Percentile([double[]]$sorted, [double]$p) {
 
 if ($Launch) {
     foreach ($d in $devices) {
+        if (-not (Test-DeviceUnlocked $d)) { Write-Warning "$d is LOCKED (keyguard) - unlock it; measurements would be invalid" }
         $component = (& $Adb -s $d shell cmd package resolve-activity --brief $PackageName | Select-Object -Last 1).Trim()
         & $Adb -s $d shell am force-stop $PackageName | Out-Null
         $startArgs = @('shell', 'am', 'start', '-n', $component)
