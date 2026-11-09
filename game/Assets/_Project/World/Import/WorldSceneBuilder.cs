@@ -128,7 +128,9 @@ namespace Game.World.Import
             var applier = camGo.AddComponent<QualityProfileApplier>();
             applier.targetCamera = cam;
             applier.volume = vol;
-            applier.worldTextures = WorldTextureGenerator.All.Select(AssetDatabase.LoadAssetAtPath<Texture>).Where(t => t != null).ToArray();
+            // legacy detail textures + the generated PBR sets (ADR 0019): the tier sets their aniso and mip bias
+            applier.worldTextures = WorldTextureGenerator.All.Select(AssetDatabase.LoadAssetAtPath<Texture>).Where(t => t != null)
+                .Concat(WorldPbrMaterials.LoadAll(r.Dir)).ToArray();
 
             var boot = new GameObject("DrivingLabBootstrap").AddComponent<DrivingLabBootstrap>();
             boot.vehicle = truck.GetComponent<VehicleBody>();
@@ -232,16 +234,16 @@ namespace Game.World.Import
         // Layers per LOD (ADR 0012). Distances: manifest switch distances (camera to near chunk edge) + 0.7 chunk.
         static readonly string[][] k_LowLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture" },
-            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture" },
-            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires" },
+            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires" },
+            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires" },
             new[] { "terrain_lod3", "bridge", "buildings_lod1" },
         };
         static readonly string[][] k_HighLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture" },
-            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture" },
-            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires" },
+            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires" },
+            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires" },
             new[] { "terrain_lod3", "bridge", "buildings_lod1" },
         };
         static readonly HashSet<string> k_ShadowCasters = new HashSet<string> { "bridge", "buildings", "buildings_lod1", "furniture" };
