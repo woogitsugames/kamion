@@ -118,11 +118,10 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--report", default="")
     p.add_argument("--lod", type=int, default=0)
-    p.add_argument("--rake", type=float, default=19.0)
+    p.add_argument("--rake", type=float, default=None, help="default: exterior glass_interface.json rake")
     a = p.parse_args(argv)
     sys_argv = sys.argv
-    sys.argv = [sys_argv[0], "--", "--out", os.path.join(BI.REPO, "artifacts"), "--rake", str(a.rake),
-                "--lod", str(a.lod), "--no-backdrop"]
+    sys.argv = [sys_argv[0], "--", "--out", os.path.join(BI.REPO, "artifacts")] +         (["--rake", str(a.rake)] if a.rake is not None else []) + ["--lod", str(a.lod), "--no-backdrop"]
     ba = BI.parse_args()
     sys.argv = sys_argv
     BI.build(ba)
@@ -131,7 +130,7 @@ def main():
     for k, r in res.items():
         if r["occluded_nominal"] > 0.0 or r["occluded_headbox_max"] > MAX_HEAD_OCCLUSION:
             fail.append(k)
-    out = {"eye_point": list(BI.EYE), "head_box_m": 0.02, "lod": a.lod, "rake_deg": a.rake, "results": res,
+    out = {"eye_point": list(BI.EYE), "head_box_m": 0.02, "lod": a.lod, "rake_deg": BI.RAKE, "results": res,
            "verdict": "FAIL" if fail else "PASS", "failed": fail}
     print("SIGHTLINE", json.dumps(out, indent=1))
     if a.report:

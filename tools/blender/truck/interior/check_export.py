@@ -16,7 +16,7 @@ import sys
 import bpy
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", ".."))
-LIMIT = {"LOD0": 90000, "LOD1": 45000, "LOD2": 22000}
+LIMIT = {"LOD0": 120000, "LOD1": 45000, "LOD2": 22000}
 
 
 def main():

@@ -39,7 +39,7 @@ import materials as M  # noqa: E402
 
 V = G.V
 CAB_MOUNT = V(0.0, 0.225, 1.15)   # graybox CabPivot (TractorDimensions: cabBodyBottom, cab mid-length) in A2 frame
-TRI_TARGET = {0: 90000, 1: 40000, 2: 20000}
+TRI_TARGET = {0: 120000, 1: 40000, 2: 20000}   # LOD0 90k -> 120k (lead 2026-11-09)
 AO_RES = {0: 2048, 1: 1024, 2: 512}
 TIERS = {"High": 1.0, "Medium": 0.5, "Low": 0.25}
 
