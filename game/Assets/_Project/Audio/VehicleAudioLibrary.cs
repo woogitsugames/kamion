@@ -10,12 +10,30 @@ namespace TruckSim.Audio
     /// </summary>
     public sealed class VehicleAudioLibrary : ScriptableObject
     {
+        /// <summary>Exterior reference clip and its prerendered cabin perspective (tools/audio sfx_layers.cab_filter).</summary>
+        [System.Serializable]
+        public struct PerspectivePair
+        {
+            public AudioClip ext, cab;
+            public bool IsValid => ext != null;
+        }
+
         public const string ResourcePath = "VehicleAudio/VehicleAudioLibrary";
 
         public EngineSoundBank exteriorEngine, cabEngine, exteriorEngineBrake, cabEngineBrake;
         public AudioClip turboWhistleLoop, turboLiftoff;
         public AudioClip airBrakeRelease, parkingBrakeSet, airDryerPurge, gearshiftAir;
         public AudioClip roadRollLoop, windLoop, gearWhineLoop;
+        [Header("Cabin perspective of the original layers")]
+        public AudioClip airBrakeReleaseCab, parkingBrakeSetCab, airDryerPurgeCab, gearshiftAirCab, roadRollLoopCab, windLoopCab;
+
+        [Header("Audio-layers pass (docs/AUDIO_DESIGN.md section 4)")]
+        public AudioClip parkingBrakeRelease, parkingBrakeReleaseCab, airDryerPurgeB, airDryerPurgeBCab;
+        [Tooltip("Tyre rolling loops indexed by SurfaceKind (0 dry asphalt = road roll, 1 wet, 2 concrete, 3 cobbles, 4 gravel, 5 grass).")]
+        public PerspectivePair[] tyreSurface = new PerspectivePair[6];
+        public PerspectivePair tyreSqueal, retarder, compressor, ambientBed, forklift, crowCaw, indicatorTick, indicatorTock;
+        public AudioClip birdSparrow, birdTit;
+
         [Tooltip("manifest.json generator line and clip count, for the log.")]
         public string sourceInfo;
 
