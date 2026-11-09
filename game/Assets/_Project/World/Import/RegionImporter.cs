@@ -168,7 +168,7 @@ namespace Game.World.Import
                         if (srcSha != ch.Sha256)
                         {
                             // Not fatal: the generator output differs in float rounding between Python environments
-                            // (seen 2026-11-09: 21 of 64 chunks after a fresh uv venv). Reported to world-builder.
+                            // (seen 2026-11-09: 10 of 64 chunks after a fresh uv venv). Reported to world-builder.
                             Debug.LogWarning($"[IMPORT] {file}: sha256 {srcSha.Substring(0, 12)} != manifest {ch.Sha256.Substring(0, 12)} (regenerated in another environment?)");
                             r.ShaMismatches++;
                         }

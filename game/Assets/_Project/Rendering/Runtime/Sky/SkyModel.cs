@@ -175,7 +175,38 @@ namespace Game.Rendering
                     sh.AddDirectionalLight(d, L, dOmega / Mathf.PI);
                 }
             }
-            return sh;
+            return sh * ShConventionScale(resolution);
+        }
+
+        static float s_ShScale;
+        static int s_ShScaleRes;
+
+        /// <summary>
+        /// Unity's <c>AddDirectionalLight</c> folds its own normalisation into the probe (measured: a uniform unit-radiance
+        /// sphere evaluates to ~1.89 instead of 1 = E/π). Calibrate once with that uniform sphere so the probe returns
+        /// exactly irradiance/π (test SkyModelTests.AmbientProbe_ReproducesSkyIrradiance).
+        /// </summary>
+        static float ShConventionScale(int resolution)
+        {
+            if (s_ShScaleRes == resolution && s_ShScale > 0f) return s_ShScale;
+            var sh = new UnityEngine.Rendering.SphericalHarmonicsL2();
+            int rows = resolution * 2, cols = resolution * 4;
+            float dOmega = 4f * Mathf.PI / (rows * cols);
+            for (int r = 0; r < rows; r++)
+            {
+                float z = 1f - 2f * (r + 0.5f) / rows;
+                float s = Mathf.Sqrt(Mathf.Max(0f, 1f - z * z));
+                for (int c = 0; c < cols; c++)
+                {
+                    float phi = 2f * Mathf.PI * (c + 0.5f) / cols;
+                    sh.AddDirectionalLight(new Vector3(s * Mathf.Cos(phi), z, s * Mathf.Sin(phi)), Color.white, dOmega / Mathf.PI);
+                }
+            }
+            var res = new Color[1];
+            sh.Evaluate(new[] { Vector3.up }, res);
+            s_ShScale = res[0].g > 1e-6f ? 1f / res[0].g : 1f;
+            s_ShScaleRes = resolution;
+            return s_ShScale;
         }
 
         /// <summary>Exposed irradiance/π (what <c>SampleSH(up)</c> should return) of sky + ground for a normal.</summary>

@@ -40,3 +40,34 @@ Physics fixed step, vehicle, world streaming, rendering CPU, GPU — not budgete
 
 ## Measured: empty Boot scene on Galaxy A16 (Stage 0 baseline)
 _Not measured yet — see `docs/reports/GATE-0.md` for the state of the measurement._
+
+## World rendering per tier (look development, ADR 0010) — all UNMEASURED
+Assumptions for the imported world (WorldC). Source of the settings: `game/Assets/_Project/Rendering/Resources/QualityProfile.asset`.
+"Estimate" columns come from `SceneStats` in the visual-QA runner (CPU-side frustum + LOD selection, submeshes before SRP
+batching, `artifacts/visual-qa/WorldC/it5/*/stats.txt`, 2026-11-09) — they are **not GPU counters and not phone numbers**.
+
+| | Low | Medium | High | Ultra |
+|---|---|---|---|---|
+| Budget: draw calls (before SRP batching) | 250 | 350 | 800 | 1000 |
+| Budget: triangles in view | 350 k | 550 k | 1.5 M | 2 M |
+| Budget: texture memory | 64 MB | 96 MB | 256 MB | 384 MB |
+| Budget: main-light shadow pass | 1.0 ms | 1.5 ms | 2.0 ms | 3.0 ms |
+| Estimate: Andersa driver view (draws / tris) | 44 / 269 k | 73 / 485 k | 97 / 838 k (High, LOD bias 1.5) | — |
+| Estimate: Rondo Putry from 40 m | 54 / 445 k | 66 / 653 k (over) | 85 / 1.06 M | — |
+| Estimate: truck at the gate (draws / shadow-caster draws) | 186 / 170 | 186 / 340 | 189 / 510 | — |
+| World textures (8 × 512² / 256², ASTC 6×6 on Android) | ≈ 1.3 MB | same | same | same |
+| Status | UNMEASURED | UNMEASURED | UNMEASURED (no flagship) | UNMEASURED (no flagship) |
+
+Findings to act on once the A16 is measured:
+- **Graybox tractor + trailer ≈ 178 renderers**: ~180 draws and ×cascades shadow-caster draws by themselves. The real truck
+  model must be merged per material (target < 30 draws for the combination) — the world is cheap next to it.
+- **Terrain LOD0 (135 k tris per 256 m chunk) dominates the triangle count**; Medium uses LOD bias 0.8 and still exceeds
+  550 k in the roundabout overview (not a driving view). If the A16 is vertex-bound: drop LOD0 except the chunk under the
+  truck, or ask world-builder for a 1.5 m LOD0.
+- **Meshes in the APK: 220.8 MB** (all chunk LODs ship, ADR 0011) → PSS risk on 4 GB; measure with
+  `scripts/device-metrics.ps1 -Launch -Scene WorldC -Autopilot route -Speed 50`.
+- Post-processing on Medium (HDR + Neutral uber pass at 0.85 scale ≈ 1.8 Mpx) is the first thing to switch off if the GPU
+  frame is over 33 ms; Low already runs without it and looks nearly the same.
+
+Device runs to do (phone was PIN-locked 2026-11-09): WorldC Low/Medium, route autopilot at 50 km/h, 90 s and 30 min:
+p50/p95/p99, PSS, temperature; Frame Debugger / Arm Performance Studio for the draw and shadow numbers above.

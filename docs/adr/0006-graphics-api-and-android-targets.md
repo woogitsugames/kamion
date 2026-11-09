@@ -16,7 +16,7 @@ Applied by code: `Game.Editor.Setup.ProjectSetup.ApplyAll` (`scripts/setup-proje
 | Frame rate | `Application.targetFrameRate` 30 default, 60 selectable (launch extra `-e fps 60`, overlay button, saved in PlayerPrefs); vSync 0 | 30 FPS on Galaxy A16 is a WORKING_VALUE until Stage 1+ measurements |
 | Quality tiers | quality levels Low / Medium / High / Ultra, each with its own URP asset `Assets/_Project/Rendering/Settings/URP_<Tier>.asset`; Android default Medium, desktop High | separate assets let rendering-perf tune each tier without touching others |
 
-Tier values (all WORKING_VALUE, rendering-perf owns tuning):
+Tier values (all WORKING_VALUE, rendering-perf owns tuning). **Superseded 2026-11-09 by ADR 0010**: the per-tier values now live in `Assets/_Project/Rendering/Resources/QualityProfile.asset` (ProjectSetup writes the URP assets from it); the table below is the Stage 0 history:
 
 | Tier | Render scale | MSAA | HDR | Shadow dist | Shadow map | Cascades | Soft shadows |
 |---|---|---|---|---|---|---|---|

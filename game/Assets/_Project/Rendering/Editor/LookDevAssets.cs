@@ -87,9 +87,9 @@ namespace Game.Rendering.Editor
             {
                 case "grass":
                     // Dry, yellower patches where the macro noise is high: breaks the uniform lawn at distance.
-                    return new SurfaceStyle { texture = WorldTextureGenerator.Grass, tile = 3.1f, detailScale = 3.3f, detailMix = 0.5f, macroSize = 47f, macroStrength = 0.3f, macroTint = new Color(1.25f, 1.12f, 0.85f) };
+                    return new SurfaceStyle { texture = WorldTextureGenerator.Grass, tile = 3.1f, detailScale = 3.3f, detailMix = 0.5f, macroSize = 47f, macroStrength = 0.25f, macroTint = new Color(1.25f, 1.12f, 0.85f) };
                 case "asphalt":
-                    return new SurfaceStyle { texture = WorldTextureGenerator.Asphalt, tile = 2.3f, detailScale = 2.71f, detailMix = 0.45f, macroSize = 37f, macroStrength = 0.22f, macroTint = Color.white, smoothnessVar = 0.08f };
+                    return new SurfaceStyle { texture = WorldTextureGenerator.Asphalt, tile = 2.3f, detailScale = 2.71f, detailMix = 0.45f, macroSize = 37f, macroStrength = 0.14f, macroTint = Color.white, smoothnessVar = 0.08f };
                 case "paving_stones":
                     return new SurfaceStyle { texture = WorldTextureGenerator.Paving, tile = 1.6f, detailScale = 1f, detailMix = 0f, macroSize = 23f, macroStrength = 0.18f, macroTint = Color.white };
                 case "sett":

@@ -36,7 +36,8 @@ Mobilny (Android → iOS) realistyczny symulator ciężarówki z naczepą. Unity
 - Kamery kontrolne (visual QA): `pwsh scripts/visual-qa.ps1 -Scene Boot [-Tier Medium]` → `artifacts/visual-qa/<scene>/<id>.png` (GPU wymagane, bez `-nographics`)
 - Wejścia batchmode: `Game.Editor.Build.BuildCommands.BuildAndroidApk`, `Game.Editor.Setup.ProjectSetup.ApplyAll`, `Game.Editor.VisualQA.VisualQaRunner.RenderControlCameras`
 - Telefon musi być odblokowany (skrypty nie wpisują PIN-u; zablokowany = pomiar odrzucony).
-- Regeneracja mapy: `uv run tools/worldgen/build_region.py --region <id>` + `scripts/import-region.ps1 -Region <id>` (jeszcze nie istnieje)
+- Regeneracja mapy: `uv run tools/worldgen/build_region.py --region <id>` → `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region <id>` → `pwsh scripts/import-region.ps1 -Region <id> [-Build] [-SkipCopy]` (glTFast → `game/Assets/_Generated/World/<id>/` + scena `WorldC`, poza gitem; ADR 0011). Trasa startowa: `uv run --project tools/worldgen python scripts/export-route.py --region <id>`
+- Kamery kontrolne świata: `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low|Medium|High -Lighting clear|overcast -OutputDir <dir>` (ADR 0010)
 
 ## Agenci
 Definicje w `.claude/agents/`. Lider = jedyny integrator. Worktree + gałąź na zadanie. Subagenci nie tworzą subagentów. Kontrakt zadania i format raportu: `docs/09`.

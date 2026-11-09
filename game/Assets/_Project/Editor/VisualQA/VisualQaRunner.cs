@@ -105,6 +105,13 @@ namespace Game.Editor.VisualQA
                     QualityProfileApplier.Apply(tierSettings, c, volume, worldTextures, ref tm);
                     c.farClipPlane = Mathf.Min(far, tierSettings.cameraFarClip);
                 }
+                // ADR 0010 A/B: -qaTonemap Neutral|ACES|None overrides the tier's tonemapper for comparison renders.
+                string tmArg = EditorTools.Arg("-qaTonemap", null);
+                if (tm != null && !string.IsNullOrEmpty(tmArg) && Enum.TryParse(tmArg, true, out UnityEngine.Rendering.Universal.TonemappingMode tmMode))
+                {
+                    tm.mode.value = tmMode;
+                    tm.active = tmMode != UnityEngine.Rendering.Universal.TonemappingMode.None;
+                }
                 msaa = Mathf.Max(1, tierSettings.msaa);
                 scale = tierSettings.renderScale;
             }

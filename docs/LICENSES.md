@@ -41,7 +41,15 @@ Używane tylko w pipeline, nie są dystrybuowane w buildzie: osmium (pyosmium, B
 | Tekstury placu `Environment/DrivingLab/Textures/T_*.png` (asfalt, beton, kostka, żwir, trawa), siatki, materiały | generowane proceduralnie przez `DrivingLabSceneBuilder.cs` (szum z hasha, bez zewnętrznych zdjęć) | własne (repo) | DrivingLab |
 | Graybox ciągnika `Vehicle/Runtime/Prefabs/Tractor4x2_Graybox.prefab` | generowany z prymitywów Unity przez `GrayboxTractorBuilder.cs` | własne (repo) | DrivingLab, testy |
 | Sprite kierownicy HUD | generowany w kodzie (`DrivingHud.WheelSprite`) | własne | HUD |
+| Tekstury powierzchni świata `Rendering/Textures/World/T_World_*.png` (trawa, asfalt, beton, kostka, kostka kamienna, żwir, farba, szum makro) | generowane proceduralnie przez `WorldTextureGenerator.cs` (szum z hasha, Worley), bez zdjęć | własne (repo) | WorldC (shader `Kamion/World Surface`) |
+| Shadery `Kamion/Sky`, `Kamion/World Surface`, model nieba `SkyModel.cs` | własny kod; wzory z publikacji: Preetham, Shirley, Smits 1999 (model nieba), CIE S 011/E:2003 (niebo zachmurzone), IESNA Lighting Handbook (natężenia), Kasten i Young 1989 (masa powietrza) — formuły, nie kod | własne (repo) | WorldC, docelowo każda scena świata |
 | Czcionka `LegacyRuntime.ttf` | wbudowany zasób edytora Unity (`Resources.GetBuiltinResource`) | w ramach licencji Unity Editor/Runtime | HUD, tablice na placu (tymczasowo, do zastąpienia czcionką docelową) |
+
+## Pakiety Unity spoza szablonu
+
+| ID | Pakiet | Wersja | Licencja | Użycie |
+|---|---|---|---|---|
+| `unity-gltfast` | glTFast (`com.unity.cloud.gltfast`, Unity Technologies i autorzy glTFast), rejestr Unity | 6.20.0 (`game/Packages/packages-lock.json`) | Apache License 2.0 (`LICENSE.md` w pakiecie) | import chunków GLB świata w edytorze (`scripts/import-region.ps1`, ADR 0011); w APK trafiają zaimportowane siatki oraz runtime'owe assembly glTFast (pakiet jest zależnością projektu) — przy wydaniu dołączyć tekst licencji Apache 2.0 do ekranu licencji/„O grze” |
 
 ## Audio
 

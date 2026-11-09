@@ -172,7 +172,7 @@ namespace Game.Rendering.Editor
             float grain = Value(u, v, 256, 1) * 0.5f + Value(u, v, 128, 2) * 0.5f;
             float clump = Fbm(u, v, 10, 3, 3);
             float dry = Mathf.SmoothStep(0.62f, 0.78f, Fbm(u, v, 4, 3, 4));
-            return 0.35f * grain + 0.5f * clump + 0.35f * dry;
+            return 0.35f * grain + 0.25f * clump + 0.2f * dry;   // low-frequency weight kept small: no blotchy 'noise layer' on Low (single sample)
         }
 
         // Asphalt AC 0/11, tile 2.3 m: binder with aggregate (bright chips), fine pores, faint tyre polish.
@@ -182,7 +182,7 @@ namespace Game.Rendering.Editor
             float stone = chips < 0.38f ? 0.55f + 0.45f * id : 0.25f;
             float pores = Value(u, v, 256, 12) < 0.12f ? -0.3f : 0f;
             float blotch = Fbm(u, v, 6, 3, 13);
-            return 0.55f * stone + 0.35f * blotch + pores;
+            return 0.55f * stone + 0.12f * blotch + pores;
         }
 
         // Concrete (kerbs, bridges), tile 2 m: smooth blotches and pores.
