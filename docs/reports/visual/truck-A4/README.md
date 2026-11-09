@@ -1,12 +1,14 @@
-# Tor A4 — zewnętrze ciężarówki TRAKT (koncepcja B), wersja do oceny
+# Tor A4 — zewnętrze ciężarówki TRAKT (koncepcja B), runda 3 (po recenzji R2)
 
-**Co to jest:** pełne zewnętrze naszego ciągnika 4×2 w docelowym stylu: sylwetka B (aerodynamiczna, szyba pochylona 19°), marka **TRAKT** (decyzja właściciela 2026-11-09; rejestry znaków towarowych jeszcze niesprawdzone). Model jest w całości generowany kodem (`tools/blender/truck/exterior/`), w skali 1:1, z wymiarami z `art-source/truck/dims.json`. Wnętrze widoczne przez szyby to proste bryły zastępcze — pełne wnętrze robi równolegle zadanie A5.
+**Co to jest:** pełne zewnętrze naszego ciągnika 4×2 w docelowym stylu: sylwetka B (aerodynamiczna, szyba pochylona 19°), marka **TRAKT** (decyzja właściciela 2026-11-09; rejestry znaków towarowych jeszcze niesprawdzone). Model jest w całości generowany kodem (`tools/blender/truck/exterior/`), w skali 1:1, z wymiarami z `art-source/truck/dims.json`. Wnętrze widoczne przez szyby to proste bryły zastępcze — pełne wnętrze jest osobnym zadaniem (A6, tapicerka koniak).
 
-Rendery: Blender Cycles 1600×900, dwa oświetlenia:
+**Runda 3** odpowiada na recenzję `docs/reports/visual/REVIEW-2026-11-09-r2.md`, punkty #2 (drzwi, stopnie, nadkole), #3 (przód z lat 2020.) i #11 (zużycie i materiały). Szczegóły w sekcji „Runda 3 — zmiany” i w tabeli przed/po. Oceny nie wystawiam sam — kolejny przegląd robi `visual-critic`.
+
+Rendery: Blender Cycles 1600×900, 160 próbek, dwa oświetlenia:
 - **pochmurno** — rozproszone niebo + słaby, bardzo miękki „słońce”, pełne odbicia światła (jak dobre zdjęcie w szary dzień),
-- **jak URP** — płaskie światło otoczenia + jedno słońce, **bez odbić rozproszonych**, jedno odbicie lustrzane: tak mniej więcej zobaczy to telefon (Unity URP bez GI).
+- **jak URP** — płaskie światło otoczenia + jedno słońce, **bez odbić rozproszonych**, jedno odbicie lustrzane: tak mniej więcej zobaczy to telefon (Unity URP bez GI). To nadal emulacja w Cycles, nie prawdziwy kadr URP.
 
-Tło: prosty plac logistyczny zbudowany w skrypcie (płyty betonowe z fugami, hale z bramami, linia lasu, maszty). **Nie pobierałem żadnego HDRI** — nie ma nowych zasobów do `docs/LICENSES.md`. Napisy na tablicy i oponach: font Inter (OFL, plik już w repo).
+Tło: prosty plac logistyczny zbudowany w skrypcie. **Nie pobierałem żadnego HDRI** ani tekstur — nie ma nowych zasobów do `docs/LICENSES.md`. Obrazy w `Data/photos/` to **referencje AI, nie zdjęcia** — użyte tylko do nastroju i proporcji (stopnie za kołem, kabina w kolorze nadwozia do dołu, soczewka lampy z grubością), nie jako wzór kształtu.
 
 ## Najważniejsze kadry
 
@@ -25,15 +27,62 @@ Zbliżenia (biel, pochmurno / jak URP):
 | ![](zbl_reflektor_white_overcast.jpg) | ![](zbl_stopnie_white_overcast.jpg) | ![](zbl_tyl_white_overcast.jpg) | ![](zbl_kolo_white_overcast.jpg) |
 | ![](zbl_reflektor_white_urp.jpg) | ![](zbl_stopnie_white_urp.jpg) | ![](zbl_tyl_white_urp.jpg) | ![](zbl_kolo_white_urp.jpg) |
 
-Pozostałe: `przod_white_urp.jpg`, `bok_white_urp.jpg`, `34tyl_white_urp.jpg`, `zbl_reflektor_dark_overcast.jpg`.
+Z punktu oczu kierowcy (lusterka ustawione na oko): `oko_przod_white_overcast.jpg`, `oko_lewo_white_overcast.jpg`, `oko_prawo_white_overcast.jpg`; mapa widoczności `widocznosc_mapa.png` + `widocznosc.json`.
+Pozostałe: `przod_white_urp.jpg`, `bok_white_urp.jpg`, `34tyl_white_urp.jpg`, `zbl_reflektor_dark_overcast.jpg`, wariant z kamerami `*_kamery.jpg`.
+
+## Runda 3 — przed / po
+
+Obrazy „przed” (runda 2, zmniejszone do 960 px) są w `przed_r3/`.
+
+| | przed (R2) | po (runda 3) |
+|---|---|---|
+| 3/4 przód | ![](przed_r3/34przod_white_overcast.jpg) | ![](34przod_white_overcast.jpg) |
+| przód | ![](przed_r3/przod_white_overcast.jpg) | ![](przod_white_overcast.jpg) |
+| bok | ![](przed_r3/bok_white_overcast.jpg) | ![](bok_white_overcast.jpg) |
+| nadkole i stopnie | ![](przed_r3/zbl_stopnie_white_overcast.jpg) | ![](zbl_stopnie_white_overcast.jpg) |
+| reflektor | ![](przed_r3/zbl_reflektor_white_overcast.jpg) | ![](zbl_reflektor_white_overcast.jpg) |
+| tył kabiny, siodło | ![](przed_r3/zbl_tyl_white_overcast.jpg) | ![](zbl_tyl_white_overcast.jpg) |
+| koła tylne | ![](przed_r3/zbl_kolo_white_overcast.jpg) | ![](zbl_kolo_white_overcast.jpg) |
+| ciemne malowanie | ![](przed_r3/34przod_dark_overcast.jpg) | ![](34przod_dark_overcast.jpg) |
+| lusterko z fotela | ![](przed_r3/oko_lewo.jpg) | ![](oko_lewo_white_overcast.jpg) |
+| mapa widoczności | ![](przed_r3/widocznosc_mapa.png) | ![](widocznosc_mapa.png) |
+
+## Runda 3 — zmiany (changelog)
+
+**#2 Drzwi, stopnie, nadkole (P0).** Punkt oczu **bez zmian** (−0,55; 0,45; 2,50).
+- Otwór drzwi przesunięty do tyłu: tylna linia drzwi **y −0,60 m** (było −0,28). Przednia linia: pionowo na **y 0,80 m** do z 1,90, potem skosem do słupka A (na wysokości 2,14) i wzdłuż słupka. Przed drzwiami zostaje **stały panel narożny w kolorze nadwozia**.
+- **Dolny tylny róg drzwi schodzi** poniżej linii uchylania (do z 0,98 m) za nadkolem jako fartuch drzwi; jego przednia krawędź idzie po łuku nadkola. Fartuch zasłania przód najwyższego stopnia.
+- **Stopnie za przednim kołem** we wnęce w kolorze nadwozia (bez czarnych skrzynek): 3 stopnie, górne krawędzie 0,46 / 0,80 / 1,11 m, **szerokości 0,42 / 0,485 / 0,60 m**, głębokość 0,21 m, blacha ryflowana z ciemnym noskiem. Dolne stopnie ogranicza łuk nadkola; żeby się zmieściły, osłona stopni sięga 0,19 m za tylną ścianę kabiny (do y −1,14), a zbiornik paliwa, skrzynka oczyszczania spalin i akumulatory przesunęły się o 0,08–0,14 m do tyłu.
+- Szyba boczna: tylna krawędź y −0,49 m (zgodnie z otworem −0,56 + 0,07 jak dotąd we wnętrzu). Uchwyt wpuszczony przeniesiony do stałego panelu za drzwiami (y −0,83…−0,74).
+- **Plik dla wnętrza:** `art-source/truck/exterior/door_interface.json` — linie drzwi, otwór (DOOR_Y0 = −0,56, DOOR_Y1 = 0,76 przy podłodze / 1,14 na linii okna), szyba, fartuch, stopnie. Zapisuje go każde uruchomienie generatora. Karta drzwi we wnętrzu musi się do niego dopasować (zadanie dla agenta wnętrza).
+- Mapa widoczności powtórzona: słupek A lewy nadal 8°, prawy 3,5°, ziemia na wprost od 4,96 m przed zderzakiem (bez zmian), róg pasażera 9,19 m (było 9,05).
+
+**#3 Przód z lat 2020. (P0).**
+- **Jeden grill w kształcie T** zamiast trzech pól identycznych listew: grafitowa ramka wokół całego T, w belce T **dwie grube listwy w kolorze nadwozia** z zaokrąglonym noskiem, w „drodze” **trzy cienkie grafitowe listwy** o profilu żaluzji, głębiej i z rosnącym odstępem, za wszystkim **drobny plaster miodu** (komórka 22 mm). Trzy różne grubości, głębokości i przekroje.
+- Zderzak: „droga” z grilla przedłużona jako **wlot z grubszym plastrem miodu** (34 mm) w grafitowej ramce, bez listew; dolny wlot też plaster miodu, bez listew.
+- **Reflektory**: smuklejsze (0,23 m wysokości), **soczewka z grubością** (dwie powierzchnie z odbiciem Fresnela) w czarnej uszczelce, czarna maska w środku, **dwa moduły projektorowe w odbłyśnikach z głębokością** (czasza, pierścień z ciemnego chromu, ciemna soczewka), **cienka listwa LED świateł drogowych w czarnej masce** zamiast 5 „kostek”, pomarańczowy kierunkowskaz na dole. Podpis świateł dziennych (pozioma belka + ukośna krawędź „drogi” = połowa znaku T) jest teraz **wewnątrz soczewki**, a nie na krawędzi obudowy.
+- **Usunięty „dziób” nad szybą**: profil czoła nad szybą jest gładki (wysunięta warga na z 3,00–3,13 dawała ciemny cień jak spoiler z lat 90.). Przy okazji zastępcza półka wnętrza nie przebija już narożnika dachu.
+- **Koniec ciemnego „cokołu”**: zderzak, narożniki, panel przed nadkolem i skrzynka stopni są w kolorze nadwozia powyżej linii **0,67 m**; ciemne zostają tylko dolny zderzak z wlotem, obrzeże nadkola (~65 mm), wnętrze nadkola i pas pod najniższym stopniem.
+- Napis TRAKT: ciemny satynowy metal na bieli, **satynowe srebro na ciemnej zieleni** (R2 #9: znikał).
+
+**#11 Zużycie i materiały (P1).**
+- Lakier: **film drogowy** na dolnych ~0,6 m, **zacieki** pionowe na bokach, **natrysk z tylnych kół** na tylnej ścianie kabiny, brud w zagłębieniach (wnęka stopni, szczeliny). Tworzywa, rama i zbiornik też dostały film drogowy.
+- **Felgi mniej lustrzane**: chropowatość 0,26 (było 0,17), toczone rowki, anizotropia po obwodzie, **pył hamulcowy** w czaszy i przy nakrętkach.
+- **Siodło**: smar ciemnobrązowo-czarny, mokry połysk tam, gdzie gruby, matowa brązowa smuga tam, gdzie cienki, grudki (było płaskie jasnoszare).
+- Stopnie: brud z butów w rowkach blachy ryflowanej.
+- **Przedni chlapacz** za kołem (guma z żebrami, obejma) i **szczotka przeciwrozbryzgowa** wewnątrz krawędzi nadkola.
+- **Lusterka ustawione na punkt oczu**: normalna szkła = dwusieczna kierunku do oka i wymaganego pola widzenia (kl. II do tyłu wzdłuż naczepy, kl. IV szerzej i niżej, kl. V w dół przy kole). Z fotela szkło jest widoczne całe zamiast „na krawędź” (rozmiar kątowy w `widocznosc.json`).
+
+**Inne:** linia lasu w tle bez „piły” (R2 #11 w tle), wsporniki uchylania kabiny cofnięte o 2 cm, żeby nie przebijały wlotu w zderzaku.
+
+**Pętla wizualna rundy 3** (każdą rundę oglądałem w zmniejszeniu do 800 px i w wycinkach):
+1. R3.1: nowe drzwi/stopnie, nowy grill i lampy → nad szybą pojawił się **ciemny pas** jak osłona przeciwsłoneczna. Strzał promieniem pokazał, że to zastępcza półka wnętrza wystająca przez nowe, cofnięte czoło → półka zmniejszona.
+2. R3.2: ciemny „łezkowaty” kształt w narożniku dachu (ta sama półka w zaokrągleniu) → półka węższa; **wsporniki uchylania przebijały plaster miodu** w zderzaku → płytsza kieszeń + wsporniki cofnięte; siodło za jasne (odbicie nieba w smarze) → ciemniejszy i bardziej matowy cienki smar; natrysk na tylnej ścianie niewidoczny → mocniejszy; **103,6 tys. trójkątów** → listwy grilla na płaskiej części czoła z 2 podziałami, lżejsze moduły lamp, szyba, wewnętrzne felgi: **99,7 tys.**
+3. R3.3: sprawdzenie w obu malowaniach i w „jak URP” — wynik w kadrach powyżej.
 
 ## Wygląd marki TRAKT na przodzie
-Znak TRAKT to litera T, której nóżka jest drogą w perspektywie. Przód jest zbudowany z tego samego pomysłu, żeby nie był „przyklejonym logo”:
-- **grill w kształcie T** — szeroka górna belka i „droga” rozszerzająca się w dół, ciągnięta dalej w zderzaku jako ciemny wlot powietrza aż do tablicy;
-- **reflektory w narożnikach pod belką T**, z wewnętrzną krawędzią równoległą do krawędzi „drogi”;
-- **podpis świetlny (światła dzienne LED)**: w każdym reflektorze poziomy pasek (belka T) + ukośna linia (krawędź drogi) — razem z grillem cały przód czyta się jako T. Pod spodem 5 modułów LED drogowych, 2 soczewki projektorowe, pomarańczowy kierunkowskaz;
-- emblemat T (z pliku `art-source/truck/brand/trakt.svg`) — jedyny chrom na ciężarówce; napis TRAKT ciemnym chromem nad grillem.
-Nie kopiuje żadnego producenta: brak ukośnej belki, gwiazdy, lwa, gryfa, rombu, sześciokąta czy pionowych lamp w kształcie L.
+Znak TRAKT to litera T, której nóżka jest drogą w perspektywie. Na przodzie ten pomysł żyje w **ramce grilla** (obrys T: szeroka belka i „droga” rozszerzająca się w dół, przedłużona w zderzaku) i w **świetle dziennym** (w każdej lampie belka + ukośna krawędź drogi). Emblemat T (z `art-source/truck/brand/trakt.svg`) siedzi na listwach belki; to jedyny chrom na ciężarówce.
+Nie kopiuje żadnego producenta: brak ukośnej belki, gwiazdy, lwa, gryfa, rombu, sześciokąta, pionowych lamp w kształcie L ani poziomych „schodków” listew.
 
 ## Lusterka: klasyczne (wybór domyślny) i kamery (wariant)
 | klasyczne | kamery |
@@ -41,71 +90,47 @@ Nie kopiuje żadnego producenta: brak ukośnej belki, gwiazdy, lwa, gryfa, rombu
 | ![](34przod_white_overcast.jpg) | ![](34przod_white_overcast_kamery.jpg) |
 | ![](przod_white_overcast.jpg) | ![](przod_white_overcast_kamery.jpg) |
 
-Domyślnie **klasyczne**: główne (kl. II) + szerokokątne (kl. IV) na ramieniu, krawężnikowe (kl. V) po prawej, przednie (kl. VI) nad prawym narożnikiem. Powody: (1) to dalej większość ciężarówek na polskich parkingach, (2) gracz cofający z naczepą patrzy w lusterko jak w prawdziwe — działa to samo co w kabinie A5 (tam też są klasyczne), (3) kamery wymagają ekranów na słupkach A we wnętrzu, których A5 nie ma. Wariant z kamerami jest w generatorze (`--mirrors camera`), lusterko kl. VI zostaje w obu.
+Domyślnie **klasyczne**: główne (kl. II) + szerokokątne (kl. IV) na ramieniu, krawężnikowe (kl. V) po prawej, przednie (kl. VI) nad prawym narożnikiem. Wariant z kamerami jest w generatorze (`--mirrors camera`), lusterko kl. VI zostaje w obu.
 
-## Inżynieria i ergonomia (skrót, szczegóły w `docs/reports/visual/truck-A3/`)
-- **Nadkole i błotnik w narożniku kabiny** zamiast „pudełka nad kołem”: zderzak, narożniki z nadkolem, stopnie i boczne osłony to jedna osłona **na ramie**; kabina siedzi na niej z linią uchylania na 1,22 m. Test uchylania o 50° — kabina przechodzi nad zderzakiem.
-- **Stopnie**: trzy, za kołem, po skosie do przodu (0,45 / 0,79 / 1,10 m), aluminiowa blacha ryflowana + nosek; uchwyty: wpuszczony w panelu za drzwiami (mieści się w 2,55 m) + na słupku A wewnątrz. Najwyższy stopień ma 0,59 m szerokości, nie całą szerokość drzwi — bo koło jest pod drzwiami (patrz ustalenie nr 1 w raporcie A3).
-- **Szczeliny**: drzwi (zgodne z otworem wnętrza A5: tył −0,28 m, szyba 2,17–2,94 m), klapa serwisowa przodu, linia uchylania, łączenie dachu, panele tylnej ściany.
-- **Widoczność**: słupek A lewy 8°, prawy 3,5°; ziemia na wprost od ~5 m przed zderzakiem (tabela i mapa w A3).
-- Szerokość nadwozia 2,548 m (limit 2,55), wysokość 3,98 m (limit 4,00).
-
-## Szczegóły, które są w modelu
-Szyba wklejana na płasko z czarnym rantem, wycieraczki i dysze spryskiwacza, kratka podszybia, klapka serwisowa, sygnały dźwiękowe za wlotem w zderzaku, stopnie do mycia szyby w narożnikach zderzaka, tablica PL 520×114 mm (rejestracja fikcyjna), lampy przeciwmgłowe/doświetlające, boczne kierunkowskazy i lampy obrysowe (białe przód, czerwone tył, pomarańczowe boczne), właz dachowy, deflektory boczne z gumową krawędzią, listwa dachu, lampa robocza, tylna ściana z panelem przyłączy (czerwone i żółte złącza pneumatyczne, gniazda elektryczne ISO 7638 / 15-pin) i spiralami na wieszaku, kładka z blachy ryflowanej z drabinką i uchwytem, siodło z płytą, smarem, rowkami, zamkiem i dźwignią, rama z rzędami śrub, oś przednia z resorami parabolicznymi, amortyzatorami, drążkami i tarczami hamulcowymi, oś tylna z mostem, 4 miechami i wahaczami, aluminiowy zbiornik paliwa z opaskami i przetłoczeniami, zbiornik AdBlue z niebieskim korkiem, skrzynka oczyszczania spalin z perforowaną osłoną i wylotem, skrzynka akumulatorów, zbiorniki powietrza, błotniki tylne z chlapaczami, lampy tylne, tylna tablica.
-**Koła**: kute aluminium 22.5×9.00, 10 śrub, przód ET +120 mm (tarcza na zewnątrz, kołpak piasty), tył bliźniaki skręcone tarczami (zewnętrzne koło pokazuje głęboką czaszę i piastę osi). **Opony** 315/80 R22.5: własny bieżnik (przód: 4 zygzakowate rowki + nacięcia; tył: bloki z rowkami poprzecznymi), napisy na boku bez marki (rozmiar, indeks nośności 156/150L, TUBELESS RADIAL, STEER/DRIVE, M+S, symbol 3PMSF, REGROOVABLE, fikcyjny znak homologacji E20 i kod DOT).
+## Inżynieria i ergonomia (skrót)
+- **Drzwi i stopnie**: patrz runda 3 powyżej i `door_interface.json`. Koło przednie jest pod przednią połową drzwi, stopnie za kołem, fartuch drzwi nad najwyższym stopniem.
+- **Nadkole w narożniku osłony** zamiast „pudełka nad kołem”: zderzak, narożniki z nadkolem i skrzynki stopni to jedna osłona **na ramie**; kabina siedzi na niej z linią uchylania na 1,22 m. Oś uchylania y 1,42 m.
+- **Szczeliny**: drzwi (z fartuchem), klapa serwisowa przodu, linia uchylania, łączenie dachu, panele tylnej ściany, linia zderzaka 0,67 m.
+- **Widoczność**: słupek A lewy 8°, prawy 3,5°; ziemia na wprost od ~5 m przed zderzakiem.
+- Szerokość nadwozia **2,548 m** (limit 2,55), wysokość **3,98 m** (limit 4,00), długość 6,06 m (`wymiary.json`).
 
 ## Materiały i budżet
-- **Lakier** z warstwą bezbarwną (lekka „skórka pomarańczy”), dwa malowania: biel flotowa i ciemna zieleń butelkowa; **czarne tworzywa** matowe z mikroziarnem (nie smoła); chrom tylko na emblemacie; subtelny kurz drogowy rosnący ku dołowi i w zagłębieniach (zadbana flota, nie wrak).
-- **Trójkąty LOD0 zewnętrza: 99 776** (cel High ≤ ~100 tys. ✔; bez wnętrza i brył zastępczych). Podział: koła 37,8 tys., kabina 28,8 tys., rama i osprzęt 19,8 tys., osłona dolna 9,8 tys., lusterka 3,7 tys. (`stats.json`).
-- **Plan LOD** (zmierzony uproszczeniem automatycznym): LOD1 ≈ 43 tys. (45%), LOD2 ≈ 14,5 tys. (15%). Ostateczne LOD-y w A6: najpierw usunięcie niewidocznych ścian (wewnętrzna skóra kabiny, wnętrza kół bliźniaczych), potem uproszczenie.
-- **Sloty materiałów w grze: 6** — LAKIER (9,2 tys. tr.), TWORZYWA/RAMA/GUMA/TABLICA (37,9 tys.), METAL (27,1 tys.), SZKŁO (2,5 tys.), ŚWIATŁA (6,2 tys., emisja sterowana z gry), OPONY (16,8 tys.). W Blenderze materiałów jest więcej, każdy ma przypisany slot (`game_slot`); scalenie w atlasy w A6.
-- **UV**: każda część ma warstwę `UVMap` (rzut pudełkowy w skali świata, 1 = 1 m — gotowe pod tekstury kafelkowane); opony i felgi mają UV toczone (u = obwód, v = profil), tablice — UV płaskie. Pakowanie atlasów i wypalanie normalnych to A6.
-
-## Pętla wizualna — co poprawiłem (przed → po)
-Każdą rundę renderowałem i oglądałem; poprawki wynikają z tego, co było widać (albo z pomiaru).
-
-**Względem A2 (uwagi krytyka z REVIEW-2026-11-09):**
-1. Kabina „wisiała” nad kołem jak pudełko → **nadkole wycięte w narożniku osłony**, z obrzeżem i nadkolem wewnętrznym; kabina siedzi na osłonie z linią uchylania.
-2. Ostre narożniki → narożniki zaokrąglone R 0,32–0,46 m (rosnące ku górze).
-3. Mały, generyczny grill i dwie wąskie lampy, pusty przód → grill T + „droga” w zderzaku, duże reflektory z podpisem LED marki.
-4. Brak lusterka kl. V/VI → są (i zostają przy wariancie z kamerami).
-5. Stopnie 0,35 m przy drzwiach 1,15 m → trzy stopnie z blachą ryflowaną, najwyższy 0,59 m; pełna szerokość drzwi niemożliwa przy obecnym położeniu oczu/drzwi (ustalenie dla lidera).
-6. Koła jako czarne dyski → felgi aluminiowe z czaszą, nakrętkami i piastami, opony z bieżnikiem i napisami.
-
-**Rundy A4:**
-1. Narożne deflektory wystawały → szerokość **2,554 m (ponad limit)** i czarne „uszy” przy słupkach → zmniejszone, potem usunięte (2,548 m).
-2. Ściany kieszeni po cięciu (reflektory, grill) dziedziczyły lakier — białe ramki w lampach → przenoszenie materiału z bryły tnącej.
-3. Zderzak jako pusta biała płyta → ciemny dół z tablicą i lampami, linia podziału, potem „droga” z grilla przedłużona w zderzaku.
-4. Napis TRAKT niewidoczny (srebro na bieli), a z przodu **lustrzane odbicie napisu** → ciemny chrom i poprawiona kolejność liter.
-5. Grill czytał się jak dwa osobne grille z białą belką → jeden ciągły grill w kształcie T, większe reflektory klinowe.
-6. Deflektory boczne wystawały ponad ramiona dachu („rogi” z przodu) → dopasowane do zwężenia dachu.
-7. **Okno boczne było nieprzezroczyste** (czarna ramka jako pełny panel) — wykryte w mapie widoczności (zasłonięte 36°–110° w lewo) → ramka jako pierścień.
-8. Słupek A zasłaniał 17,5° → 8° (szersze zawinięcie szyby, węższy frit, szyba boczna dalej do przodu).
-9. Cień „rury” przed reflektorem → zastępcza deska wnętrza przebijała narożnik kabiny (wykryte strzałem promienia z kamery) → zmniejszona.
-10. Pusta, ciemna górna połowa reflektora → wewnętrzna ramka z ciemnego chromu i 5 modułów LED.
-11. Szyba z cienkiej powierzchni działała jak soczewka i z kabiny dawała „bańkę” całkowitego odbicia → szkło cienkie (przezroczyste + odbicie zależne od kąta, symetryczne dla obu stron).
-12. Tablice: pasek UE w środku tablicy, tylna nieczytelna → poprawne UV.
-13. W rzutach z boku i z przodu **klin pod zderzakiem aż do ziemi** → artefakt fazowania na bryle po cięciu (wierzchołek w z = 0) → bez fazowania tej bryły; przy okazji −5 tys. trójkątów.
-14. Budżet: 132 tys. → 99,8 tys. trójkątów (lżejsza siatka kabiny, felgi i koła wewnętrzne, spirale).
-15. Tło: las z klocków → ciągła linia lasu.
+- **Lakier** z warstwą bezbarwną (lekka „skórka pomarańczy”), biel flotowa i ciemna zieleń butelkowa, z warstwą brudu drogowego (wyżej). **Czarne tworzywa** matowe z mikroziarnem; **grafit** (ramki grilla i „drogi”, cienkie listwy) — satynowy lakier z drobnym metalicznym pyłkiem, nie chrom; **plaster miodu** jako tekstura generowana w skrypcie (bez plików z zewnątrz).
+- **Trójkąty LOD0 zewnętrza: 99 710** (cel High ≤ ~100 tys. ✔). Podział: koła 37,2 tys., kabina 28,6 tys., rama i osprzęt 19,8 tys., osłona dolna 10,5 tys., lusterka 3,7 tys. (`stats.json`).
+- **Plan LOD** (uproszczenie automatyczne): LOD1 ≈ 43,0 tys. (45%), LOD2 ≈ 14,3 tys. (15%). Ostateczne LOD-y w A6.
+- **Sloty materiałów w grze: 6** — LAKIER (12,0 tys. tr.), TWORZYWA/RAMA/GUMA/TABLICA (36,2 tys.), METAL (26,7 tys.), SZKŁO (2,0 tys.), ŚWIATŁA (6,1 tys.), OPONY (16,8 tys.). Nowe materiały renderowe (`trim_graphite`, `grille_honey*`, `brush`, `wordmark`) mają przypisany slot (`game_slot`).
+- **UV**: rzut pudełkowy w skali świata (1 = 1 m), opony i felgi toczone, tablice płaskie. Pakowanie atlasów, wypalanie normalnych i gęstość tekseli — A6.
 
 ## Znane braki (świadomie)
-- Wnętrze przez szyby to bryły zastępcze (A5 je zastąpi) — z bliska widać „puste” fotele.
-- Krawędzie osłony dolnej bez fazowania (wróci w A6 przy retopologii); szczeliny paneli to paski geometrii — w A6 pójdą do mapy normalnych.
-- Kurz i brud są proceduralne i lekkie; prawdziwe maski zużycia (progi, stopnie, błotniki) w A6 przy wypalaniu.
-- Brak zdjęć referencyjnych właściciela i porównania obok siebie (checklista `docs/06` §5 pkt 3) oraz zrzutów z telefonu (pkt 2) — model nie jest jeszcze w Unity (A7).
-- Ocena `visual-critic` — do zlecenia przez lidera.
+- Wnętrze przez szyby to bryły zastępcze; wnętrze A6 nie ma jeszcze nowego otworu drzwi (dane w `door_interface.json`).
+- Dwa dolne stopnie mają 0,42 i 0,485 m, nie 0,55–0,6 m: ogranicza je łuk nadkola przy obecnym rozstawie (koło na y 0, ściana kabiny −0,95). Najwyższy ma 0,60 m.
+- Krawędzie osłony dolnej bez fazowania (wróci przy retopologii A6); szczeliny paneli to paski geometrii — w A6 pójdą do mapy normalnych. Brud jest proceduralny; maski zużycia do wypalenia w A6.
+- Nadal **brak kadru URP i z telefonu** (checklista `docs/06` §5 pkt 2) i prawdziwych zdjęć do porównania (pkt 3). Bez nich nie może być PASS.
+- Brak bryły silnika i chłodnicy w teście uchylania (R2 #10) — poza zakresem tej rundy.
 
 ## Czego potrzebuję od Ciebie
-1. Ocena kierunku przodu (grill T, podpis świateł) i obu malowań — czy biel + zieleń, czy inny ciemny kolor.
-2. Lusterka: zostajemy przy klasycznych?
-3. Zdjęcia z listy w `docs/plan/TRACK-A.md` §4, zwłaszcza okolica koła przedniego ze stopniami i widok z fotela — rozstrzygną położenie drzwi/stopni (raport A3, ustalenie 1).
+1. Zdjęcie prawdziwej ciężarówki z miarką: środek koła przedniego → tylna krawędź drzwi, szerokości stopni, wysokość progu. Potwierdzi lub poprawi wartości z `door_interface.json` (teraz WORKING_VALUE).
+2. Ocena nowego przodu (grill T z ramką, listwy w kolorze nadwozia, plaster miodu, lampy) — od `visual-critic` i od Ciebie.
 
 ## Jak odtworzyć
 ```
-blender -b --factory-startup --python tools/blender/truck/exterior/build.py -- --mode a4 --out docs/reports/visual/truck-A4 --lights overcast,urp --liveries white --samples 160 --views 34przod,bok,przod,34tyl,zbl_reflektor,zbl_stopnie,zbl_tyl,zbl_kolo
+blender -b --factory-startup --python tools/blender/truck/exterior/build.py -- --mode a4 --out docs/reports/visual/truck-A4 --mirrors camera --tag _kamery --samples 160 --views 34przod,przod
 blender -b --factory-startup --python tools/blender/truck/exterior/build.py -- --mode a4 --out docs/reports/visual/truck-A4 --lights overcast --liveries dark --samples 160 --views 34przod,bok,przod,34tyl,zbl_reflektor
 blender -b --factory-startup --python tools/blender/truck/exterior/build.py -- --mode a4 --out docs/reports/visual/truck-A4 --lights urp --liveries dark --samples 160 --views 34przod
-blender -b --factory-startup --python tools/blender/truck/exterior/build.py -- --mode a4 --out docs/reports/visual/truck-A4 --mirrors camera --tag _kamery --samples 160 --views 34przod,przod
+blender -b --factory-startup --python tools/blender/truck/exterior/build.py -- --mode a4 --out docs/reports/visual/truck-A4 --lights overcast,urp --liveries white --samples 160 --views 34przod,bok,przod,34tyl,zbl_reflektor,zbl_stopnie,zbl_tyl,zbl_kolo --vis
 ```
-`stats.json` i `wymiary.json` zapisuje każde uruchomienie — wersje w repo pochodzą z wariantu z lusterkami klasycznymi. Tekstury (bieżnik, napisy na oponach, tablica, blacha ryflowana) generują się same do `art-source/truck/exterior/textures/` (poza gitem). `--blend <plik>` zapisuje scenę do podglądu (poza gitem).
+Kolejność ma znaczenie: ostatnie uruchomienie (lusterka klasyczne) zapisuje `stats.json`, `wymiary.json`, `widocznosc*.json/png` i `oko_*.jpg`. Każde uruchomienie zapisuje też `art-source/truck/exterior/door_interface.json`. Tekstury (bieżnik, napisy na oponach, tablica, blacha ryflowana, plaster miodu) generują się same do `art-source/truck/exterior/textures/` (poza gitem). `--blend <plik>` zapisuje scenę do podglądu (poza gitem).
+
+---
+
+<details><summary>Historia: rundy A4 przed recenzją R2</summary>
+
+**Względem A2 (uwagi krytyka z REVIEW-2026-11-09):** nadkole wycięte w narożniku osłony z linią uchylania; narożniki zaokrąglone R 0,32–0,46 m; grill T + „droga” w zderzaku; lusterka kl. V/VI; stopnie z blachą ryflowaną; felgi aluminiowe i opony z bieżnikiem i napisami.
+
+**Rundy A4 (1–15):** szerokość 2,554 → 2,548 m (deflektory); materiał ścian kieszeni z bryły tnącej; zderzak z ciemnym dołem; napis TRAKT czytelny i nie lustrzany; jeden grill w kształcie T; deflektory boczne dopasowane do dachu; okno boczne przezroczyste (wykryte w mapie widoczności); słupek A 17,5° → 8°; deska zastępcza nie przebija narożnika; szyba jako cienkie szkło; UV tablic; klin pod zderzakiem (artefakt fazowania); budżet 132 → 99,8 tys.; las jako ciągła linia.
+</details>
