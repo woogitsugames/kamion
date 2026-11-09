@@ -1,11 +1,98 @@
-# env.ps1 - single source of truth for tool paths. Dot-source from other scripts.
+# env.ps1 - single source of truth for tool paths and shared helpers. Dot-source from other scripts:
+#   . "$PSScriptRoot/env.ps1"
 $RepoRoot     = (Resolve-Path "$PSScriptRoot/..").Path
 $UnityVersion = (Get-Content "$RepoRoot/game/ProjectSettings/ProjectVersion.txt" -ErrorAction SilentlyContinue | Select-String 'm_EditorVersion:' | ForEach-Object { ($_ -split ':\s*')[1].Trim() })
 if (-not $UnityVersion) { $UnityVersion = '6000.3.28f1' }
 $UnityRoot    = if ($env:UNITY_EDITOR_ROOT) { $env:UNITY_EDITOR_ROOT } else { "C:\Program Files\Unity\Hub\Editor\$UnityVersion" }
 $UnityExe     = Join-Path $UnityRoot 'Editor\Unity.exe'
-# One documented Android SDK path: the one shipped with the Unity editor module.
-$AndroidSdk   = Join-Path $UnityRoot 'Editor\Data\PlaybackEngines\AndroidPlayer\SDK'
+# One documented Android toolchain: the SDK/NDK/JDK shipped with the Unity editor Android module.
+$AndroidPlayer = Join-Path $UnityRoot 'Editor\Data\PlaybackEngines\AndroidPlayer'
+$AndroidSdk   = Join-Path $AndroidPlayer 'SDK'
+$AndroidNdk   = Join-Path $AndroidPlayer 'NDK'
+$AndroidJdk   = Join-Path $AndroidPlayer 'OpenJDK'
 $Adb          = Join-Path $AndroidSdk 'platform-tools\adb.exe'
 $ProjectPath  = Join-Path $RepoRoot 'game'
 $ArtifactsDir = Join-Path $RepoRoot 'artifacts'
+$LogsDir      = Join-Path $ArtifactsDir 'logs'
+
+# App identity (must match Game.Editor.Setup.ProjectSetup).
+$PackageName  = 'com.woogitsugames.kamion'
+
+function Get-Timestamp { (Get-Date).ToString('yyyyMMdd-HHmmss') }
+
+function Get-GitShortSha { (& git -C $RepoRoot rev-parse --short=10 HEAD 2>$null) }
+
+# Returns serials of attached, authorised devices (state "device").
+function Get-AdbDevices {
+    if (-not (Test-Path $Adb)) { return @() }
+    @(& $Adb devices | Select-String "`tdevice$" | ForEach-Object { ($_.Line -split "`t")[0] })
+}
+
+# Resolves the target device list for -Serial / -AllDevices; missing devices are skipped with a warning.
+function Resolve-TargetDevices([string[]]$Serial, [switch]$AllDevices) {
+    $attached = Get-AdbDevices
+    if ($AllDevices) { return $attached }
+    if ($Serial) {
+        $ok = @()
+        foreach ($s in $Serial) {
+            if ($attached -contains $s) { $ok += $s } else { Write-Warning "device $s not attached - skipped" }
+        }
+        return $ok
+    }
+    if ($attached.Count -eq 1) { return $attached }
+    if ($attached.Count -eq 0) { Write-Warning 'no adb device attached'; return @() }
+    throw "several devices attached ($($attached -join ', ')): pass -Serial <s> or -AllDevices"
+}
+
+function Test-UnityProjectLocked {
+    $lock = Join-Path $ProjectPath 'Temp\UnityLockfile'
+    if (-not (Test-Path $lock)) { return $false }
+    try { $fs = [IO.File]::Open($lock, 'Open', 'ReadWrite', 'None'); $fs.Close(); return $false } catch { return $true }
+}
+
+# Runs Unity in batchmode against game/ and returns the exit code. Only one Unity per project.
+function Invoke-UnityBatch {
+    param(
+        [Parameter(Mandatory)] [string]$LogFile,
+        [string[]]$Arguments = @(),
+        [switch]$NoGraphics,
+        [switch]$NoQuit,
+        [string]$BuildTarget = 'Android'
+    )
+    if (Test-UnityProjectLocked) { throw "game/ is open in another Unity process (Temp/UnityLockfile locked). One Unity per project." }
+    New-Item -ItemType Directory -Force (Split-Path $LogFile) | Out-Null
+    $argList = @('-batchmode', '-projectPath', $ProjectPath, '-logFile', $LogFile, '-buildTarget', $BuildTarget)
+    if (-not $NoQuit) { $argList += '-quit' }
+    if ($NoGraphics) { $argList += '-nographics' }
+    $argList += $Arguments
+    Write-Host "unity: $UnityExe $($argList -join ' ')"
+    Repair-UnityLicenseVisibility
+    $env:JAVA_HOME = $AndroidJdk
+    # Call operator + pipe: waits for the GUI-subsystem Unity.exe.
+    & $UnityExe @argList 2>&1 | Out-Host
+    $code = $LASTEXITCODE
+    if ($code -eq 198) { Write-Warning 'Unity exit 198 = no licence visible to this process. See docs/ENVIRONMENT_AUDIT.md (MSIX AppData virtualisation).' }
+    return $code
+}
+
+# Unity Hub, Claude desktop and Store PowerShell are MSIX apps: each sees its own virtualised
+# %LOCALAPPDATA%, so the Unity entitlement licence written by one (e.g. Unity Hub) is invisible to
+# Unity launched from another (exit code 198). If the licence is not visible here, copy the newest
+# licence file of this machine from the package stores into the view of this process. Logged.
+function Repair-UnityLicenseVisibility {
+    $target = Join-Path $env:LOCALAPPDATA 'Unity\licenses\UnityEntitlementLicense.xml'
+    if (Test-Path $target) { return }
+    $src = Get-ChildItem "$env:LOCALAPPDATA\Packages\*\LocalCache\Local\Unity\licenses\UnityEntitlementLicense.xml" -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    if (-not $src) { Write-Warning 'No Unity licence found. Activate Unity (Hub → Licences) first.'; return }
+    New-Item -ItemType Directory -Force (Split-Path $target) | Out-Null
+    Copy-Item $src.FullName $target
+    Write-Warning "Unity licence was not visible to this process; copied $($src.FullName) → $target"
+}
+
+# Prints C# compiler errors and other error lines from a Unity log.
+function Show-UnityLogErrors([string]$LogFile, [int]$Max = 40) {
+    if (-not (Test-Path $LogFile)) { return }
+    Select-String -Path $LogFile -Pattern 'error CS\d+|BUILD_ERROR|Exception:|Error building|FAILED|Scripts have compiler errors' |
+        Select-Object -First $Max | ForEach-Object { Write-Host "  $($_.Line)" -ForegroundColor Red }
+}
