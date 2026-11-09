@@ -37,3 +37,4 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 | D20 | Zegary | **Tylko ekran 12,3"** (bez tarcz analogowych) |
 | D21 | Audio (demo) | Kierunek zaakceptowany („brzmi jak ciężarówka”) |
 | D22 | Build Unity w CI | Później; na razie build lokalny |
+| D23 | Wygląd nieba/ekspozycji | **„Jak zdjęcie z telefonu”** — jaśniejsze niebo i obraz, łagodniejszy kontrast (zamiast ekspozycji światłomierzowej) |
