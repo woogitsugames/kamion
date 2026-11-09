@@ -1534,6 +1534,12 @@
    "file_bytes": 9267068
   }
  },
+ "tri_budget": {
+  "LOD0": 120000,
+  "LOD1": 45000,
+  "LOD2": 22000,
+  "note": "triangle limits (check_export.py); LOD0 90k -> 120k (lead 2026-11-09), LOD1/LOD2 unchanged"
+ },
  "units": "metres",
  "unity_axes": "+X right (passenger side), +Y up, +Z forward; driver at -X (LHD)",
  "frame_mapping": "A2/Blender (x, y, z) -> Unity (x, z, y); FBX exported with axis_forward=Z, axis_up=Y, bake_space_transform, FBX_SCALE_ALL. Unity import: Scale Factor 1, Convert Units on, Bake Axis Conversion off; check EYE_POINT local position below after import.",

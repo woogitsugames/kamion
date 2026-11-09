@@ -1379,7 +1379,9 @@ def main():
     tex = None
     man_path = a.manifest or os.path.join(out, "cab_interior_manifest.json")
     manifest = {"asset": "cab interior (brand-neutral), track A6", "generator": "tools/blender/truck/interior/a6_export.py",
-                "lods": {}}
+                "lods": {}, "tri_budget": {"LOD0": 120000, "LOD1": 45000, "LOD2": 22000,
+                                           "note": "triangle limits (check_export.py); LOD0 90k -> 120k (lead "
+                                                   "2026-11-09), LOD1/LOD2 unchanged"}}
     if os.path.exists(man_path):
         old = json.load(open(man_path, encoding="utf-8"))
         manifest["lods"].update(old.get("lods", {}))

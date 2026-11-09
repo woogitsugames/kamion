@@ -3035,6 +3035,12 @@
    "build_s": 2.5
   }
  },
+ "tri_budget": {
+  "LOD0": 140000,
+  "LOD1": 45000,
+  "LOD2": 15500,
+  "note": "triangle limits; LOD0 100k -> 140k (owner/lead 2026-11-09, quality first, phone headroom: A16 Low cab GPU 16 ms / 33 ms), LOD1/LOD2 unchanged (Medium/Low)"
+ },
  "units": "metres",
  "unity_axes": "+X right (passenger side), +Y up, +Z forward; driver at -X (LHD)",
  "frame_mapping": "A2/Blender (x, y, z) -> Unity (x, z, y); FBX axis_forward=Z, axis_up=Y, bake_space_transform, FBX_SCALE_ALL (same as the interior). Unity import: Scale Factor 1, Convert Units on, Bake Axis Conversion off. Positions below are in the Unity vehicle frame unless marked local.",

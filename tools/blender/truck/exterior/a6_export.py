@@ -2106,7 +2106,10 @@ def main():
     master = pieces
     td = texel_density(master, {s: ATLAS_RES[s] for s in BAKED})
     manifest = {"asset": "TRAKT tractor exterior (concept B), track A6", "generator": rel(__file__) if False else
-                "tools/blender/truck/exterior/a6_export.py", "lods": {}}
+                "tools/blender/truck/exterior/a6_export.py", "lods": {},
+                "tri_budget": {**{f"LOD{k}": v for k, v in TRI_LIMIT.items() if k < 3},
+                               "note": "triangle limits; LOD0 100k -> 140k (owner/lead 2026-11-09, quality first, phone "
+                                       "headroom: A16 Low cab GPU 16 ms / 33 ms), LOD1/LOD2 unchanged (Medium/Low)"}}
     gi = glass_interface(master, os.path.join(REPO, "art-source", "truck", "exterior", "glass_interface.json"))
     lcoll = new_collection("LODS")
     roots = {}
