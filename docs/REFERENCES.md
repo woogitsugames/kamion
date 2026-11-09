@@ -23,3 +23,19 @@ Real photos (phone, owner) remain the gold standard for Stage 3 side-by-side com
 | `ciężarówka z zewnątrz*.png`, `Nowoczesna ciężarówka z naczepą…-3.png`, `Mechaniczne detale…-5.png` | A4/A6 exterior: proportions, step/wheel-arch/door relation, chassis detail density, dirt |
 | `przykładowy widok*.png`, `Polska infrastruktura…-2.png`, `Arkusz referencyjny miejskiej infrastruktury-4.png` | World look: Kwadrat Park gate, paving, fences, lamps, signs, halls, overcast sky |
 | `asfalt.png`, `Próbnik tekstur…-6.png`, `ściana budynku.png` | Material look targets (roughness, colour, wear) — not texture sources |
+
+## Real photos (Wikimedia Commons) — `Data/photos/nowe/` (added 2026-11-09)
+Real photographs; licences checked via the Commons API. **CC0 / public domain** may also be used as texture sources (record in LICENSES.md when used). **CC BY-SA** = visual reference only — do not ship them or derive textures from them (share-alike).
+
+| File | Licence | Author | Use |
+|---|---|---|---|
+| `20201102_152339_Rondo_Pamięci_Bieżeństwa_1915_roku_Białystok.jpg` | CC0 | Rakoon | **Ground truth for tile C**: Rondo Bieżeństwa under the Andersa viaduct — red-painted deck edge, cylindrical concrete piers, steel railing, roundabout planting (red shrubs), zebra P-10, D-6 sign, lamp types, overcast November light |
+| `7204_May_2021_in_Białystok.jpg` | CC0 | Rakoon | **Ground truth for tile C** (viaduct near DK8/DK19): green deck, yellow-painted round piers, transparent noise screens on the viaduct, sign gantry (E67 Warszawa / 65 Ełk / 8 Augustów / 19 Kuźnica), wet asphalt, arrows P-8 |
+| `Worn_cracked_asphalt_pavement.jpg` | Public domain | John Harvey | asphalt cracks/wear (may be a texture source) |
+| `Асфальт.jpg` | CC BY-SA 4.0 | Eugenix18 | asphalt look reference only |
+| `Volvo_Truck_FH-…-03ASD.jpg`, `…-Fifth-wheel_coupling-11ASD.jpg` | CC BY-SA 4.0 | Asurnipal | cab rear, couplings, fifth wheel, mudguards, rear lights — detail density reference only (no brand shapes) |
+| `Scania_R_400_EA_4x2_NA,_Nufam_2025,…jpg` | CC BY-SA 4.0 | Matti Blume | exterior proportions (step/door/wheel) reference only |
+| `Scania_S730_dash.jpg` | CC BY-SA 3.0 | Herranderssvensson | dashboard layout reference only |
+| `Truck_digital_mirror_left_camera*.jpg` | CC BY-SA 4.0 | KoeppiK | camera-mirror hardware reference only |
+
+Sources: https://commons.wikimedia.org/wiki/File:<filename>
