@@ -87,6 +87,34 @@ namespace Game.Tests
             Save(m_Rig.cam, id);
         }
 
+        /// <summary>Review r2 #3/#4: HUD with default settings (no diagnostic text) and in developer mode, camera-space canvas.</summary>
+        [UnityTest]
+        public IEnumerator Capture_Hud_DefaultAndDeveloper()
+        {
+            yield return Load();
+            var old = Object.FindAnyObjectByType<Game.UI.Driving.DrivingHud>();
+            if (old != null) Object.Destroy(old.gameObject);
+            yield return null;
+            var cam = m_Rig.cam;
+            var ctx = new Game.UI.Driving.DrivingHudContext
+            {
+                Vehicle = m_Body, Rig = m_Rig,
+                StatusLine = () => "AUTOPILOT (pomiar)",
+                CouplingStatus = () => "Naczepa odpięta (nogi opuszczone) · sworzeń 2.00 m za siodłem",
+            };
+            var hud = Game.UI.Driving.DrivingHud.Create(cam, ctx);
+            hud.OverrideSafeAreaNormalized(new Rect(0.04f, 0f, 0.96f, 1f));
+            yield return null;
+            hud.RefreshNow();
+            Save(cam, "hud-default");
+            hud.SetTelemetryVisible(true);
+            hud.SetDevDiagnostics(true);
+            yield return null;
+            hud.RefreshNow();
+            Save(cam, "hud-developer");
+            Object.Destroy(hud.gameObject);
+        }
+
         [UnityTest]
         public IEnumerator Capture_ReverseIntoDock_BumperContact()
         {

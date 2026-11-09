@@ -123,6 +123,7 @@ namespace Game.Gameplay
             {
                 Vehicle = vehicle, Wheel = Wheel, Touch = Touch, Gyro = Gyro, Rig = m_Rig, Recorder = m_Recorder,
                 Sampler = m_Sampler, Mixer = m_Mixer,
+                DevDiagnostics = platform.GetLaunchArgument("devhud") == "1",
                 IsGyroMode = () => m_SteerMode == SteerMode.Gyro,
                 ToggleSteeringMode = () => SetSteerMode((SteerMode)(((int)m_SteerMode + 1) % 3)),
                 ResetVehicle = () => Spawn(m_Spawn),
@@ -153,6 +154,9 @@ namespace Game.Gameplay
             // trailer=solo still gives a solo tractor. Lab circle runs stay solo (Stage 1 measurement).
             var apDefault = ap == "route" ? LabSpawn.Gross40t : LabSpawn.Solo;
             m_Spawn = ParseSpawn(tr, !string.IsNullOrEmpty(ap) ? apDefault : (LabSpawn)Mathf.Clamp(PlayerPrefs.GetInt(PrefSpawn, (int)LabSpawn.Empty), 0, 3));
+            // World scenes (spawn point): a Solo preference saved in the lab would leave the trailer parked behind the tractor
+            // (device run 2026-11-09), so without an explicit trailer= argument the world start is always a coupled combination.
+            if (spawnPoint != null && string.IsNullOrEmpty(tr) && m_Spawn == LabSpawn.Solo) m_Spawn = LabSpawn.Empty;
             if (trailer == null) m_Spawn = LabSpawn.Solo;
             if (ap == "route") { if (!StartRouteDriver(platform.GetLaunchArgument("speed"))) ap = null; }
             else if (!string.IsNullOrEmpty(ap)) { ConfigureAutopilot(ap, platform.GetLaunchArgument("speed")); m_AutopilotStart = true; }
