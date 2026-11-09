@@ -296,82 +296,83 @@ def arc_ticks(d, cx, cy, r, a0, a1, n_major, n_minor, col, col_minor, lw=3, ln=1
 
 
 def cluster_display():
-    """12.3-inch class instrument cluster screen (aspect ~ 2.6:1), daytime driving state.
+    """12.3-inch class instrument cluster screen (aspect ~ 2.6:1), daytime driving state (A6 layout).
 
-    Content follows what real EU truck clusters show: speedometer (0-125 km/h, 90 km/h
-    limiter zone), rev counter with green economy band, AMT gear + mode, odometer/trip,
-    fuel + AdBlue, two air-circuit pressures, outside temperature, clock.
-    Calm palette: near-black background, warm-white graphics, one green band, red needles.
+    One primary speed readout (large digital, centre) as on 2020s EU truck clusters; rev counter as an arc with the
+    green economy band (left); fuel + AdBlue (bottom left) and both air-brake circuit pressures (bottom right) are on
+    the screen now, because the physical round dials were dropped (they sat behind the rim from the eye point).
+    Telltale row along the top edge (only lit telltales are drawn). Region boxes match sightline_test.CLUSTER_REGIONS.
+    Calm palette: near-black background, warm-white graphics, one green band, a red needle.
     """
     W, H = 1560, 600
     img = Image.new("RGB", (W, H), (6, 7, 8))
     d = ImageDraw.Draw(img)
-    white, grey, dim = (225, 222, 214), (130, 130, 128), (62, 63, 64)
-    red, green, amber = (205, 52, 38), (74, 150, 92), (215, 150, 40)
-
-    def dial(cx, cy, r, vmax, step, minor, val, label, unit, band=None, a0=225, a1=-45):
-        if band:
-            for t in np.linspace(band[0], band[1], 60):
-                a = math.radians(a0 + (a1 - a0) * t / vmax)
-                d.ellipse([cx + (r - 6) * math.cos(a) - 4, cy - (r - 6) * math.sin(a) - 4,
-                           cx + (r - 6) * math.cos(a) + 4, cy - (r - 6) * math.sin(a) + 4], fill=band[2])
-        arc_ticks(d, cx, cy, r, a0, a1, int(vmax / step), minor, white, grey, lw=4, ln=26)
-        f = font(30)
-        for i in range(int(vmax / step) + 1):
-            a = math.radians(a0 + (a1 - a0) * i / (vmax / step))
-            t = str(int(i * step if vmax < 100 or step >= 10 else i * step))
-            if vmax > 1000:
-                t = str(int(i * step / 100))
-            tx, ty = cx + (r - 58) * math.cos(a), cy - (r - 58) * math.sin(a)
-            bw = d.textlength(t, font=f)
-            d.text((tx - bw / 2, ty - 16), t, fill=white, font=f)
-        a = math.radians(a0 + (a1 - a0) * val / vmax)
-        d.line([(cx - 30 * math.cos(a), cy + 30 * math.sin(a)), (cx + (r - 12) * math.cos(a), cy - (r - 12) * math.sin(a))],
-               fill=red, width=7)
-        d.ellipse([cx - 22, cy - 22, cx + 22, cy + 22], fill=(28, 28, 30), outline=dim, width=2)
-        fl = font(24)
-        d.text((cx - d.textlength(unit, font=fl) / 2, cy + r * 0.45), unit, fill=grey, font=fl)
-        if label:
-            d.text((cx - d.textlength(label, font=fl) / 2, cy + r * 0.45 + 30), label, fill=grey, font=fl)
-
-    # speedometer (left), rev counter (right)
-    dial(275, 300, 228, 125, 10, 5, 82, "", "km/h", band=None)
-    dial(1285, 300, 228, 2500, 500, 5, 1180, "x100", "1/min", band=(1000, 1500, green))
-    # centre panel
+    white, grey, dim = (225, 222, 214), (130, 130, 128), (58, 59, 60)
+    red, green, blue = (205, 52, 38), (74, 150, 92), (110, 160, 210)
+    # ---- rev counter (left): 0-2500 1/min, green band 1000-1500, needle at 1180
+    cx, cy, r = 250, 300, 205
+    a0, a1, vmax = 210, -30, 2500
+    for t in np.linspace(1000, 1500, 80):
+        a = math.radians(a0 + (a1 - a0) * t / vmax)
+        d.ellipse([cx + (r - 8) * math.cos(a) - 5, cy - (r - 8) * math.sin(a) - 5,
+                   cx + (r - 8) * math.cos(a) + 5, cy - (r - 8) * math.sin(a) + 5], fill=green)
+    arc_ticks(d, cx, cy, r, a0, a1, 5, 5, white, grey, lw=4, ln=24)
+    f = font(32)
+    for i in range(6):
+        a = math.radians(a0 + (a1 - a0) * i / 5)
+        t = str(i * 5)
+        tx, ty = cx + (r - 56) * math.cos(a), cy - (r - 56) * math.sin(a)
+        d.text((tx - d.textlength(t, font=f) / 2, ty - 18), t, fill=white, font=f)
+    a = math.radians(a0 + (a1 - a0) * 1180 / vmax)
+    d.line([(cx - 26 * math.cos(a), cy + 26 * math.sin(a)), (cx + (r - 14) * math.cos(a), cy - (r - 14) * math.sin(a))],
+           fill=red, width=7)
+    d.ellipse([cx - 20, cy - 20, cx + 20, cy + 20], fill=(28, 28, 30), outline=dim, width=2)
+    fl = font(24)
+    d.text((cx - d.textlength("1/min x100", font=fl) / 2, cy + 52), "1/min x100", fill=grey, font=fl)
+    # ---- centre: one large digital speed, unit, CC / limiter, AMT gear + mode
     cx = W // 2
-    d.rounded_rectangle([cx - 230, 40, cx + 230, 560], radius=18, outline=(30, 31, 33), width=2)
-    fb = font(150)
-    d.text((cx - d.textlength("82", font=fb) / 2, 70), "82", fill=white, font=fb)
-    fm = font(34)
-    d.text((cx - d.textlength("km/h", font=fm) / 2, 225), "km/h", fill=grey, font=fm)
-    # gear + mode
-    d.rounded_rectangle([cx - 150, 285, cx + 150, 375], radius=10, fill=(20, 21, 23))
-    fg = font(64)
-    d.text((cx - 130, 292), "A", fill=grey, font=fg)
-    d.text((cx - 20, 292), "12", fill=white, font=fg)
-    d.text((cx + 85, 312), "E", fill=green, font=font(40))
-    # cruise + limiter
-    fs = font(28)
-    d.text((cx - 200, 395), "CC  85", fill=green, font=fs)
-    d.text((cx + 60, 395), "LIM 90", fill=grey, font=fs)
-    # odometer / trip / clock / temperature
-    d.text((cx - 200, 445), "184 327 km", fill=grey, font=fs)
-    d.text((cx + 60, 445), "T 412,6", fill=grey, font=fs)
-    d.text((cx - 200, 495), "14:32", fill=white, font=fs)
-    d.text((cx + 60, 495), "+7 °C", fill=white, font=fs)
-    # fuel + AdBlue bars (left, under speedo)
-    for i, (lab, frac, col) in enumerate((("D", 0.62, white), ("AdBlue", 0.80, (110, 160, 210)))):
-        y = 528 + i * 34
-        d.text((60, y - 6), lab, fill=grey, font=font(22))
-        d.rectangle([150, y, 470, y + 12], outline=dim, width=2)
-        d.rectangle([152, y + 2, 152 + int(316 * frac), y + 10], fill=col)
-    # air pressures (right, under rev counter)
+    fb = font(196)
+    d.text((cx - d.textlength("82", font=fb) / 2, 40), "82", fill=white, font=fb)
+    fm = font(36)
+    d.text((cx - d.textlength("km/h", font=fm) / 2, 262), "km/h", fill=grey, font=fm)
+    fs = font(30)
+    d.text((cx - 175, 320), "CC 85", fill=green, font=fs)
+    d.text((cx + 60, 320), "LIM 90", fill=grey, font=fs)
+    d.rounded_rectangle([cx - 150, 400, cx + 150, 500], radius=12, fill=(20, 21, 23))
+    fg = font(70)
+    d.text((cx - 128, 410), "A", fill=grey, font=fg)
+    d.text((cx - 22, 410), "12", fill=white, font=fg)
+    d.text((cx + 88, 432), "E", fill=green, font=font(44))
+    # ---- right top: trip computer
+    x0 = 1150
+    for i, (txt, col) in enumerate((("14:32", white), ("+7 °C", white), ("184 327 km", grey), ("T 412,6 km", grey))):
+        d.text((x0 + (i % 2) * 200, 70 + (i // 2) * 60), txt, fill=col, font=fs)
+    d.line([(x0, 205), (W - 40, 205)], fill=dim, width=2)
+    d.text((x0, 228), "Ø 28,4 l/100 km", fill=grey, font=fs)
+    # ---- bottom left: fuel + AdBlue level bars with pump / drop glyphs
+    for i, (lab, frac, col) in enumerate((("D", 0.62, white), ("AdBlue", 0.80, blue))):
+        y = 470 + i * 52
+        d.text((40, y - 10), lab, fill=grey, font=font(26))
+        d.rectangle([150, y, 350, y + 18], outline=dim, width=2)
+        d.rectangle([153, y + 3, 153 + int(194 * frac), y + 15], fill=col)
+        for k in range(1, 4):
+            d.line([(150 + 50 * k, y + 18), (150 + 50 * k, y + 26)], fill=dim, width=2)
+    # ---- bottom right: both air-brake circuits (bar), service range marked
     for i, (lab, v) in enumerate((("I", 10.4), ("II", 10.2))):
-        y = 528 + i * 34
-        d.text((1090, y - 6), lab, fill=grey, font=font(22))
-        d.rectangle([1130, y, 1430, y + 12], outline=dim, width=2)
-        d.rectangle([1132, y + 2, 1132 + int(296 * v / 12.5), y + 10], fill=white)
-        d.text((1445, y - 8), f"{v:.1f} bar".replace(".", ","), fill=grey, font=font(22))
+        y = 470 + i * 52
+        d.text((1200, y - 10), lab, fill=grey, font=font(26))
+        d.rectangle([1240, y, 1420, y + 18], outline=dim, width=2)
+        d.rectangle([1243, y + 3, 1243 + int(174 * v / 12.5), y + 15], fill=white)
+        d.line([(1240 + int(180 * 8.5 / 12.5), y - 4), (1240 + int(180 * 8.5 / 12.5), y + 22)], fill=grey, width=2)
+        d.text((1432, y - 10), f"{v:.1f}".replace(".", ","), fill=white, font=font(28))
+    d.text((1460, 412), "bar", fill=grey, font=font(24))
+    # ---- telltale row (top): lit telltales only — dipped beam (green), cruise active (green)
+    def beam(x, y, col):
+        d.pieslice([x, y, x + 40, y + 36], 90, 270, fill=col)
+        d.rectangle([x + 20, y, x + 24, y + 36], fill=col)
+        for k in range(3):
+            d.line([(x + 30, y + 6 + 12 * k), (x + 52, y + 12 + 12 * k)], fill=col, width=4)
+    beam(560, 14, green)
     img.save(os.path.join(OUT, "display_cluster.png"), optimize=True)
     print("cluster")
 
@@ -606,6 +607,71 @@ def gauge_faces():
     print("gauges")
 
 
+def tree_cards():
+    """Render-backdrop only (not a game asset): 8 tree silhouettes for alpha cards, 256 x 512 each, RGBA.
+    Podlasie mixed forest edge: Scots pine (bare upper trunk, flat irregular crown clumps), Norway spruce (dark
+    cone), birch (white trunk, loose oval crown), alder (dense round crown). Drawn from many small leaf/needle blobs
+    with value noise so the edges are ragged, never a smooth 'lollipop'."""
+    CW, CH = 256, 512
+    img = Image.new("RGBA", (CW * 8, CH), (0, 0, 0, 0))
+    rng = np.random.default_rng(77)
+    kinds = ["pine", "pine", "pine", "spruce", "spruce", "birch", "birch", "alder"]
+    for k, kind in enumerate(kinds):
+        tile = Image.new("RGBA", (CW, CH), (0, 0, 0, 0))
+        d = ImageDraw.Draw(tile)
+        cx = CW // 2 + int(rng.integers(-10, 10))
+        if kind == "pine":
+            trunk_top = int(CH * rng.uniform(0.30, 0.42))
+            d.polygon([(cx - 5, CH), (cx + 5, CH), (cx + 2, trunk_top), (cx - 2, trunk_top)], fill=(78, 54, 40, 255))
+            for _ in range(int(rng.integers(5, 9))):  # crown clumps on short branches
+                bx = cx + int(rng.normal(0, 34))
+                by = int(rng.uniform(CH * 0.04, trunk_top + 40))
+                d.line([(cx, min(by + 20, trunk_top + 60)), (bx, by)], fill=(60, 44, 34, 255), width=3)
+                for _ in range(260):
+                    x = bx + rng.normal(0, 26)
+                    y = by + rng.normal(0, 11)
+                    r = rng.uniform(2, 5)
+                    g = int(rng.uniform(52, 82))
+                    d.ellipse([x - r, y - r, x + r, y + r], fill=(int(g * 0.62), g, int(g * 0.55), 255))
+        elif kind == "spruce":
+            d.line([(cx, CH), (cx, int(CH * 0.02))], fill=(50, 38, 30, 255), width=6)
+            for _ in range(3800):
+                t = rng.uniform(0.0, 1.0) ** 0.8
+                y = CH * 0.02 + t * CH * 0.93
+                half = 6 + t * 70
+                x = cx + rng.uniform(-half, half) * (0.75 + 0.25 * np.sin(y * 0.15))
+                r = rng.uniform(2, 4)
+                g = int(rng.uniform(36, 58))
+                d.ellipse([x - r, y - r, x + r, y + r], fill=(int(g * 0.6), g, int(g * 0.62), 255))
+        elif kind == "birch":
+            top = int(CH * 0.10)
+            d.polygon([(cx - 4, CH), (cx + 4, CH), (cx + 2, top), (cx - 2, top)], fill=(205, 200, 190, 255))
+            for y in range(top, CH, 9):
+                if rng.random() < 0.6:
+                    d.line([(cx - 4, y), (cx + 4, y + 1)], fill=(40, 38, 36, 255), width=2)
+            for _ in range(2600):
+                a = rng.uniform(0, 2 * np.pi)
+                rr = rng.uniform(0, 1) ** 0.6
+                x = cx + np.cos(a) * rr * 70
+                y = CH * 0.36 + np.sin(a) * rr * 150 * (0.8 if np.sin(a) > 0 else 1.0)
+                r = rng.uniform(1.5, 3.5)
+                g = int(rng.uniform(80, 118))
+                d.ellipse([x - r, y - r, x + r, y + r], fill=(int(g * 0.72), g, int(g * 0.45), 255))
+        else:
+            d.polygon([(cx - 6, CH), (cx + 6, CH), (cx + 3, int(CH * 0.45)), (cx - 3, int(CH * 0.45))], fill=(58, 50, 44, 255))
+            for _ in range(3200):
+                a = rng.uniform(0, 2 * np.pi)
+                rr = rng.uniform(0, 1) ** 0.5
+                x = cx + np.cos(a) * rr * 95
+                y = CH * 0.36 + np.sin(a) * rr * 140
+                r = rng.uniform(2, 4.5)
+                g = int(rng.uniform(52, 80))
+                d.ellipse([x - r, y - r, x + r, y + r], fill=(int(g * 0.66), g, int(g * 0.46), 255))
+        img.paste(tile, (k * CW, 0))
+    img.save(os.path.join(OUT, "tree_cards.png"), optimize=True)
+    print("tree cards")
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     leather()
@@ -624,6 +690,7 @@ def main():
     din_displays()
     icon_atlas()
     gauge_faces()
+    tree_cards()
     tot = sum(os.path.getsize(os.path.join(OUT, f)) for f in os.listdir(OUT))
     print("TOTAL KB", tot // 1024)
 
