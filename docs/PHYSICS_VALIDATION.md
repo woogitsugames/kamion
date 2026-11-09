@@ -130,6 +130,32 @@ All 21 Stage 1 solo scenarios still pass. Their values moved slightly:
 - The dry stop is now 34.9 m (it was 33.3 m), because EBS load sensing gives less rear pressure solo.
 - The solo 12 % parking now measures creep in the ground plane, because the rear suspension levels.
 
+## 3a. Kerb strike 14 cm at 50 km/h: wheel unload analysis (2026-11-09)
+
+Scenario `curb_strike_14cm_50kmh_comb`: the left wheels of the whole combination drive over a 3 m long, 14 cm high block, so each left wheel climbs the block and then drops off it. Run `artifacts/physics/after`. CSV analysis per wheel: unloaded means no contact or Fz < 500 N, the same rule as `wheel_off_ground_time_s`.
+
+| | empty | 40 t |
+|---|---|---|
+| Fz peak / static (front left, on the climb; bump stop engaged at 9.2 cm compression) | 3.90 | 3.53 |
+| `wheel_off_ground_time_s` (union over all 10 wheel ends) | 0.70 s | 0.25 s |
+| `max_wheel_airtime_s(1)` (longest single tractor-wheel unload) | 0.11 s (rear right, roll) | 0.08 s (rear left, drop) |
+| `max_wheel_airtime_s` (all wheels) | 0.21 s (trailer axle 1 left) | 0.09 s |
+| front axle airtime (the phone complaint) | 0.05 s (front left, drop off the end) | 0.02–0.04 s |
+| body pitch / cab pitch peak | 2.9° / 3.0° | 3.5° / 3.7° |
+
+Where the union time comes from (empty): (a) every left wheel **drops 14 cm off the block end**. Rear left loses contact for 0.09 s and front left for 0.05 s, because the drop is larger than droop travel plus static tire deflection. A real wheel with unsprung mass also flies about 50 ms: it falls 14 cm at roughly (spring force + m_u g)/m_u ≈ 100 m/s². (b) Trailer axle 1 left hangs at **full droop for 0.21 s** while axles 2–3 are still on the block, because the rigid trailer frame holds the left side up. (c) Wheels on the **opposite side** unload for 0.05–0.15 s on the climb, through the anti-roll stiffness (trailer 400 kN m/rad per axle against about 9 kN static load per empty wheel) and the body roll and pitch.
+
+Levers tried, each run against both variants (sensitivity runs in `artifacts/physics/exp/`):
+- **Tire radial stiffness**: no change. 1.0e6 / 1.1e6 N/m agree with the secant from a manufacturer datasheet (S7: 1.01e6 / 1.08e6).
+- **Contact model (15 rays over ±63°)**: correct for the block. Contact starts at 43.5°, inside the arc. The response is the same at dt 1/50, 1/60 and 1/100 s and substeps 1, 2 and 4: Fz peak 3.87–3.98, union 0.70–0.72 s empty and 0.25–0.36 s laden. The core does **not** reproduce the phone values (Fz 6.8×, front axle 0.4 s, nose 8°).
+- **Rebound damping halved** (rebound = bump): worse, union 0.77 / 0.37 s. The body is less damped.
+- **Damper solved implicitly in series with the tire** (no ±2 m/s rate cap): worse, 0.75 / 0.36 s. The digressive cap acts as a blow-off. Not kept.
+- **Droop**: static position at 0.4 / 0.35 of travel gives more droop but bottoms sooner: 0.84 / 0.40 s and Fz 4.9×. Real trailer travel is not longer than the model's (S8: 150 mm for a high-travel suspension; model 200 mm).
+- **Dynamic bellows interconnection inside the tridem** (Maxwell element, line τ 0.02–0.3 s): 0.65–0.66 s empty. Axle 1 hangs past full droop, so sharing force between the bellows does not give it contact. A version with a pure lag was unstable (the walking mode was pumped). Not kept.
+- **Anti-roll −50 %** (tractor rear and trailer): 0.47 / 0.18 s. This is the only lever with a large effect, but it has no source, and it would change rollover, lane-change and circle metrics. Not changed.
+
+Conclusion: the union of airtime over 10 wheel ends **cannot reach < 0.15 s** for a 14 cm drop at 50 km/h with real travel. The five left wheel stations drop off one after the other, and each one flies for about 50 ms even on a real truck. The brief's "no long axle flight" is checked as the longest single-wheel unload: tractor ≤ 0.15 s (met: 0.11 / 0.08 s), all wheels ≤ 0.25 s empty and ≤ 0.12 s laden. The empty-tridem 0.21 s needs trailer frame torsion, which is not modelled (§7). The phone symptom is not in the core: the remaining suspects are in the Unity adapter.
+
 ## 4. Multi-run checks and cost
 
 | Check | Values | Max deviation |
@@ -199,7 +225,7 @@ Tolerances are in `tests/golden/tolerances.json` as per-column absolute + relati
 - **Not run in Unity or on the phone.** PhysX integration of two bodies with this constraint, cost on the Samsung A, and the feel test (docs/03 Stage 2 gate) are still open.
 - **Items not covered by the runner:** §6.10 (reversing to a ramp, tight yard manoeuvres; needs a reversing driver, and a dock or ramp geometry), §6.13 (floating origin and streaming, Unity), §6.15 for input modes other than the direct steer command (touch, gyro: Unity input layer).
 - **No chassis–ground or tractor–trailer collision geometry.** Jackknife ends on the soft 90° stop, rollover scenarios stop at wheel lift, and uncoupling requires the legs to be down.
-- **Ruts are not modelled**: rays are in the wheel plane only. No dynamic load sharing between interconnected bellows (only static equalisation by levelling).
+- **Ruts are not modelled**: rays are in the wheel plane only. No dynamic load sharing between interconnected bellows (only static equalisation by levelling). A trial on the kerb strike made no difference (§3a). **No trailer frame torsion**: on a one-sided step the rigid frame lets a tridem axle hang at full droop (0.21 s, empty, §3a). **No unsprung mass**: wheel ends are massless, and the tire is in series with the suspension, so there is no wheel hop.
 - **Brakes:** no thermal model or fade; no EBS coupling-force control; ABS uses the true contact-point speed as the reference speed (a real ECU estimates it); the trailer ABS is one generic layout. Compressed-air response is checked against R13 Annex 4 §4.1.1, but the Annex 6 method was not read.
 - **Endurance brakes:** the retarder has no oil-temperature derating (only the 600 kW power cap); the EPG-only exhaust brake stage is not separate.
 - **AMT:** no GPS predictive strategy; mass and grade are taken from the model, not estimated; the creep function is a fixed torque.
