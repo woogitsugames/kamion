@@ -63,6 +63,17 @@ namespace Game.World
             for (int i = 0; i < slots; i++) m_Batch[i] = new Matrix4x4[BatchSize];
             m_BatchCount = new int[slots];
             m_BatchBounds = new Bounds[slots];
+            m_Thin = new bool[set.prototypes.Length];
+            m_Ends = new float[set.prototypes.Length][];
+            for (int p = 0; p < set.prototypes.Length; p++)
+            {
+                var pr = set.prototypes[p];
+                m_Thin[p] = pr.name.StartsWith("tree_");
+                m_Ends[p] = (float[])pr.lodEndM.Clone();
+                // Impostor forests: cap the cull distance (device measurement: DK8 forest 10 FPS on the A16 Medium,
+                // 14 FPS on the S24+ High before thinning and this cap).
+                if (m_Thin[p] && m_Ends[p].Length > 0) m_Ends[p][m_Ends[p].Length - 1] = Mathf.Min(m_Ends[p][m_Ends[p].Length - 1], treeCullM);
+            }
             m_Origin = new Vector3(float.NaN, 0f, 0f);
         }
 
@@ -121,10 +132,16 @@ namespace Game.World
                 {
                     var run = runs[ri];
                     var p = protos[run.prototype];
-                    int ln = LodAt(p, dNear, scale), lf = LodAt(p, dFar, scale);
-                    if (ln == lf)
+                    var ends = m_Ends[run.prototype];
+                    float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, treeLodScaleMax) : scale;
+                    int ln = LodAt(ends, dNear, ls, scale), lf = LodAt(ends, dFar, ls, scale);
+                    bool thinnable = m_Thin[run.prototype];
+                    int stride = thinnable ? ThinStride(dNear, scale) : 1;
+                    if (ln == lf && (stride == ThinStride(dFar, scale) || !thinnable))
                     {
-                        if (ln >= 0) Append(run.prototype, ln, mats, run.start, run.count, b);
+                        if (ln < 0) continue;
+                        if (stride == 1) Append(run.prototype, ln, mats, run.start, run.count, b);
+                        else for (int i = run.start; i < run.start + run.count; i++) if ((i & (stride - 1)) == 0) Append(run.prototype, ln, mats, i, 1, b);
                         continue;
                     }
                     if (ln < 0) continue;   // nearest point already beyond the cull distance
@@ -132,7 +149,9 @@ namespace Game.World
                     {
                         var m = mats[i];
                         float dx = m.m03 - cp.x, dy = m.m13 - cp.y, dz = m.m23 - cp.z;
-                        int l = LodAt(p, Mathf.Sqrt(dx * dx + dy * dy + dz * dz), scale);
+                        float d = Mathf.Sqrt(dx * dx + dy * dy + dz * dz);
+                        if (thinnable && (i & (ThinStride(d, scale) - 1)) != 0) continue;
+                        int l = LodAt(ends, d, ls, scale);
                         if (l >= 0) Append(run.prototype, l, mats, i, 1, b);
                     }
                 }
@@ -142,6 +161,32 @@ namespace Game.World
                     Flush(p, l);
         }
 
+        /// <summary>
+        /// Distance thinning of trees (Mali-G57 measurement 2026-11-09: the DK8 forest ran at 10 FPS on Medium - alpha-tested
+        /// impostor and card overdraw, ~9 000 instances in view). Beyond ThinStartM·lodBias every 2nd tree, beyond
+        /// 2.5×, every 4th; the instance order inside a cell is the generator's (spatially mixed), so the thinning is
+        /// uniform. Tiers with lodBias ≥ 1.5 (High) start much farther away.
+        /// </summary>
+        public float thinStartM = 90f;
+
+        int ThinStride(float d, float scale)
+        {
+            float s = thinStartM * scale;
+            return d < s ? 1 : d < 2.5f * s ? 2 : 4;
+        }
+
+        bool thinnableProto(int p) => m_Thin[p];
+
+        [Tooltip("Upper limit of the LOD-bias factor for tree card LODs (LOD0/LOD1). Device measurement 2026-11-09, DK8 forest " +
+                 "QA camera: A16 Low (bias 0.5) 30 FPS, Medium (0.8) 10-14 FPS, S24+ High (1.5) 14-15 FPS - overdraw of alpha-" +
+                 "tested leaf cards. Cards beyond 10 m / 30 m become impostors on every tier.")]
+        public float treeLodScaleMax = 0.5f;
+
+        bool[] m_Thin;
+        float[][] m_Ends;
+        [Tooltip("Cull distance of trees and shrubs (m at lodBias 1), caps the baked impostor distance")]
+        public float treeCullM = 600f;
+
         static float FarDistance(Bounds b, Vector3 p)
         {
             Vector3 d = new Vector3(Mathf.Max(Mathf.Abs(p.x - b.min.x), Mathf.Abs(p.x - b.max.x)),
@@ -150,11 +195,12 @@ namespace Game.World
             return d.magnitude;
         }
 
-        static int LodAt(WorldInstanceSet.Prototype p, float d, float scale)
+        /// <summary>LOD index for distance d: switch distances × <paramref name="lodScale"/>, the cull distance (last end) × <paramref name="cullScale"/>.</summary>
+        static int LodAt(float[] ends, float d, float lodScale, float cullScale)
         {
-            var ends = p.lodEndM;
+            int last = ends.Length - 1;
             for (int l = 0; l < ends.Length; l++)
-                if (d < ends[l] * scale) return l;
+                if (d < ends[l] * (l == last ? cullScale : lodScale)) return l;
             return -1;
         }
 
@@ -181,7 +227,9 @@ namespace Game.World
             var p = set.prototypes[proto];
             var mesh = p.lods[lod];
             var b = m_BatchBounds[slot];
-            var shadows = (p.shadowLodMask & (1 << lod)) != 0 ? ShadowCastingMode.On : ShadowCastingMode.Off;
+            // Low/Medium (lodBias < 1): only LOD0 casts - LOD1 tree cards in the shadow pass doubled the forest cost on the A16.
+            int mask = QualitySettings.lodBias < 1f ? p.shadowLodMask & 1 : p.shadowLodMask;
+            var shadows = (mask & (1 << lod)) != 0 ? ShadowCastingMode.On : ShadowCastingMode.Off;
             int m0 = p.materialStart[lod];
             for (int s = 0; s < mesh.subMeshCount; s++)
             {

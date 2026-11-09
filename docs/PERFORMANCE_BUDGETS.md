@@ -71,3 +71,31 @@ Findings to act on once the A16 is measured:
 
 Device runs to do (phone was PIN-locked 2026-11-09): WorldC Low/Medium, route autopilot at 50 km/h, 90 s and 30 min:
 p50/p95/p99, PSS, temperature; Frame Debugger / Arm Performance Studio for the draw and shadow numbers above.
+
+## World content v2 (ADR 0012) — build and memory, 2026-11-09
+Sources: `artifacts/world/bialystok-industrial-c-import.json` (bake), `BUILD_CONTENT` lines of the build logs (Unity build
+report, sizes before LZ4HC), APK file sizes. Tile C = 4 km², 64 chunks, ≈ 110 800 instances (2 300 props + 108 500 trees).
+
+| | Low/Medium (`WorldC`) | High (`WorldC_High`) |
+|---|---|---|
+| Run-time mesh memory, render (GPU bytes of non-readable meshes) | **62.1 MB** (terrain 29.2, road 9.6, furniture 9.4, LOD0 buildings ≤ 60 m from the route + LOD1 9.6, paved 2.8, bridge 1.0, markings 0.6) | 179.1 MB (terrain 123.9, buildings 31.8, …) |
+| Instancing (prototype meshes + 110 784 matrices) | 9.0 MB | 9.0 MB |
+| Collision source (positions + indices, before PhysX cooking) | 16.7 MB | same |
+| **Total world mesh memory** | **≈ 88 MB** (target ≤ ~150 MB ✅) | ≈ 205 MB |
+| World content in the build, uncompressed (build report) | 109.6 MB (meshes 62.4, collision incl. prebaked PhysX 33.6, instances 9.2, textures 4.2) | +179.4 MB `Meshes/High` (289.0 MB with both) |
+| APK | **122.0 MB** (LZ4HC) | 228.0 MB (`-WorldHigh`, both tiers) |
+| World share of the APK (APK − the last world-less APK 50.8 MB, `kamion-0.1.0-91960ba015`) | **≈ 71 MB** — target ~60 MB ❌ (≈ +11 MB) | ≈ +106 MB for the High tier |
+
+v1 for comparison: 220.8 MB uncompressed meshes, APK 159.7–167.4 MB, WorldC PSS 790 MB on the A16.
+Next levers for the last ~11 MB (not done, need a decision): run-time collision cooking instead of prebaked
+(`bakeCollisionMeshes`, ≈ −17 MB raw, costs load time on the A16), 32-byte instance records instead of 64-byte matrices
+(−4.6 MB raw), Play Asset Delivery / Addressables for the High tier.
+
+Frame estimates (visual-QA `stats.txt`, CPU-side, before SRP batching; world renderers + instanced props/trees):
+
+| View | Low | Medium | High |
+|---|---|---|---|
+| Andersa driver | 167 + 60 draws / 234 k tris | 246 + 68 / 513 k | 343 + 120 / 1.18 M |
+| Rondo Putry from 40 m | 190 + 50 / 290 k | 254 + 78 / 420 k | 303 + 125 / 1.03 M |
+| Kwadrat Park docks | 167 + 22 / 228 k | 247 + 26 / 400 k | 323 + 77 / 1.28 M |
+| DK8 forest | 43 + 62 / 179 k | 47 + 84 / 371 k | 71 + 120 / 1.34 M |

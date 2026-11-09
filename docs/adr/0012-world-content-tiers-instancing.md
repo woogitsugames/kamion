@@ -65,7 +65,10 @@ inside the chunk); a 1.5 m skirt on the chunk border hides cracks against a neig
   shrubs 12 / 40 / 300 m; lamps 60 / 400 m; signs and signals 50 / 250 m; pylons 80 / 1500 m; small props 30 / 120 m.
   They scale with the tier's LOD bias (Low 0.5, Medium 0.8, High 1.5). Hard switches, no cross-fade (to do: dithered
   LOD fade once measured on the A16).
-- Shadows: LOD0 props and LOD0/LOD1 trees cast (only inside the tier's shadow distance anyway); impostors never.
+- Device-driven limits (A16 / S24+, DK8 forest, `docs/reports/device/DEVICE-RUN-2026-11-09.md`): tree card LODs
+  (LOD0/LOD1) use at most LOD bias 0.5 on every tier (10 / 30 m), trees are thinned with distance (every 2nd beyond
+  90 m × bias, every 4th beyond 2.5×), impostors end at 600 m × bias. Alpha-tested leaf cards were the GPU bottleneck.
+- Shadows: LOD0 props and LOD0 trees cast (LOD1 trees too on High); impostors never.
 - Materials: leaves and impostors URP Lit alpha-clip 0.5 with coverage-preserving mips + alpha-to-coverage (MSAA),
   double-sided (glTF `BLEND` would need per-instance sorting); sign faces alpha-clip, back faces culled (the plate back
   hides the face from behind); bark opaque. Textures are the art-source PNGs with ASTC 6×6 (ASTC 4×4 for sign faces and
