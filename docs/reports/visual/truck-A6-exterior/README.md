@@ -71,7 +71,20 @@ Przed/po: `przed_b2/*.jpg` (r4) vs te same nazwy w tym katalogu. Montaże (poza 
 - **X3:** wnęki stopni zaokrąglone (R 45 mm) i wyłożone ciemnym tworzywem (koniec „białej szafki”); lakier tylko na zewnętrznych ścianach skrzynek.
 - Gęstsza powłoka kabiny (gładsze refleksy na narożnikach). **Trójkąty:** LOD0 **94 437** (nowy limit 140 tys.), LOD1 **43 000** (≤ 45 tys.), LOD2 **14 497** (≤ 15,5 tys.). `check_export` PASS, `check_fit` PASS (0 wierzchołków wnętrza poza karoserią), test linii wzroku PASS.
 - **Kontrakt bez zmian:** nazwy obiektów, sloty, piwoty, `rig_parent`, format manifestu. Kamera `zbl_reflektor` przesunięta na nową wysokość lampy.
-- Z arkuszy nieprzejęte (do decyzji): pionowy wydech za kabiną, małe lampki pod reflektorami, drzwi kończące się przed stopniami (zostaje fartuch drzwi z R2), atlasy 4096 (zostają 2048).
+- Z arkuszy nieprzejęte w B2 v2: pionowy wydech, małe lampki pod reflektorami, drzwi przed stopniami, atlasy 4096 — zrobione w B2.1 (niżej).
+
+## Runda B2.1: detale z arkuszy właściciela (2026-11-09)
+Przed/po: `przed_b21/*.jpg` (B2 v2) vs te same nazwy w tym katalogu. Nowe kadry: `34przod_p_white_lod0.jpg` (prawy bok), `zbl_wydech_white_lod0.jpg`. Montaże z arkuszami (poza gitem): `artifacts/visual-qa/truck-B21/`.
+- **Pionowy wydech za kabiną, prawa strona** (`chassis.py exhaust_stack`): z górnej ściany skrzynki EATS kolanem i krótkim odcinkiem elastycznym, rura 5″ do 3,60 m z wylotem ściętym do tyłu (w środku sadza), perforowana osłona termiczna na obejmach, wspornik z ramy. Mocowany do ramy (CHASSIS), gniazdo `EXHAUST_OUT` na wylocie. **ADR 0019** (sworzeń y −3,02): rura stoi w tylnym narożniku kabiny (x 1,12, y −1,17), 41 mm poza promieniem 2,04 m przodu naczepy (asercja w kodzie), 12 mm od owiewki bocznej, nad skrzynką stopni.
+- **Drzwi kończą się na krawędzi kabiny** (1,225 m) przed/nad stopniami, bez fartucha z R2; stopnie niżej (górny stopień 1,114 → 1,054 m, 0,17 m miejsca na palce). `door_interface.json` bez zmian (wnętrze nie czyta fartucha).
+- **Reflektor:** 3 prostokątne moduły z prostokątnymi soczewkami (bloczek z poliwęglanu, grubość 12 mm, wypukłość 14 mm, ciemnochromowa ramka), drogowy z listwą LED; pas kierunkowskazu **bursztynowy** (dyfuzor LED, 18 mm); klosz zewnętrzny 6 mm z wypukłością 11 mm. **Fresnel w materiale:** `Col.a` = IOR − 1 (szkło 1,52, klosze 1,59), podgląd liczy Fresnela z IOR (wcześniej stała 0,16 = słabe, „akwariowe” szkło).
+- **Małe lampy pod reflektorami** (pozycyjne/doświetlające LED we własnej kieszeni z kloszem, grupa MARKER_FRONT) i **moduły przeciwmgielne LED w narożnikach zderzaka** (2 komórki, zamiast szczeliny 0,40 m).
+- **Lampki obrysowe na dachu:** czarna podstawa, uszczelka, listwa LED, klosz z grubością; pochylone z linią frontu 7°.
+- **Pomarańczowy marker na nadkolu** (styczny do łuku, przed górą koła, grupa IND_*).
+- **Atlasy High 4096** (Paint/Trim/Metal; Lights 2048); Medium/Low bez zmian (1024/512; Lights 512/256). Gęstość tekseli High: lakier 651, tworzywa 259, metal 902, światła 1826 px/m (było 325/130/473/813); Medium/Low jak dotąd. Wypalanie jednym kafelkiem (`tile_size` = atlas): Cycles 4.2 wysypywał się przy kafelkach 2048 na celach 4096.
+- **Trójkąty:** LOD0 **102 057** (≤ 140 tys.), LOD1 **42 998**, LOD2 **14 613**. `check_export` PASS, `check_fit` PASS (1 wierzchołek LOD1 deski w głębokości kieszeni lampy, 0,004 % przy limicie 0,2 %, 0 w strefie szyby), linia wzroku PASS. Kontrakt bez zmian: nazwy, sloty, piwoty, `rig_parent`, manifest, `glass_interface.json`.
+- Pętla QA: (1) wydech w pierwszej wersji stał 5 mm od promienia naczepy po ADR 0019 → narożnik kabiny; (2) fizyczny Fresnel zamienił stromy brzeg klosza (20 mm) w lustro i schował pionową listwę DRL → wypukłość 11 mm; (3) bloczki soczewek sięgały 58 mm w głąb i `check_fit` znalazł wierzchołek deski za nimi → tył bloczka na głębokości tylnej ściany lampy.
+- Otwarte: przy pochmurnym niebie soczewki modułów są średnioszare (odbijają szary plac), w arkuszach są czarne z błyskiem; tylko na kadrze URP/telefonu da się to ocenić. Napis TRAKT na grillu traci poprzeczkę „A” w małej skali (przed tą rundą też).
 
 ## Otwarte
 - **Brak kadru URP i z telefonu** (`docs/06` §5 pkt 2): przyjdzie z importem A7. Bez tego nie może być PASS.
