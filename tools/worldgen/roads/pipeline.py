@@ -65,7 +65,25 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
 
     net = Nw.load(graph, origin, overrides)
     pts, foot = ctx_local(ctx, origin)
-    Nw.assign_sides(net, foot, built_up=built_up)
+    # walkways that make a road "urban" (kerbed): OSM footway/cycleway + BDOT10k paved paths (not forest paths)
+    from shapely.geometry import LineString
+    walk = [LineString(np.array(f["geometry"]) - np.array(origin)) for f in ctx["footways"] if f["highway"] != "path"]
+    ss = rdir / "generated" / "streetscape_sources.json"
+    yards = None
+    if ss.exists():
+        import shapely
+        from shapely.geometry import Polygon
+        src = json.loads(ss.read_text(encoding="utf-8"))
+        walk += [LineString(np.array(f["geometry"]["coordinates"]) - np.array(origin))
+                 for f in src["bdot10k"]["OT_SKRP_L"] if f["props"].get("materialnawierzchni") not in (None, "grunt naturalny")]
+        polys = [Polygon(np.array(f["geometry"]["coordinates"][0]) - np.array(origin)) for f in src["bdot10k"]["OT_PTPL_A"]
+                 if f["props"].get("materialnawierzchni") != "grunt naturalny"]
+        polys += [Polygon(np.array(a["geometry"]["coordinates"][0]) - np.array(origin)) for a in src["osm"]["areas"]
+                  if a["tags"].get("amenity") == "parking"]
+        polys += [Polygon(np.array(o["polygon_epsg2180"]) - np.array(origin)) for o in overrides if o.get("kind") == "paved_area"]
+        yards = shapely.union_all([shapely.make_valid(p) for p in polys])
+        shapely.prepare(yards)
+    Nw.assign_sides(net, foot, built_up=built_up, walkways=walk, yards=yards)
     juncs = J.build_junctions(net, pts)
     hf = hf or P.load_heightfield(terrain_meta, REPO, origin)
     prof = P.build_profiles(net, hf)

@@ -114,6 +114,38 @@ def clamp_under_decks(z, deck, deck_mask, thickness, ground_mask):
     return np.where(under, np.minimum(z, top - thickness - 0.3), z)
 
 
+def tidy(z, road, mask, dist, close_m=7, iters=150):
+    """Visual cleanup after conform (visual review 2026-11-09, items 8):
+    1. narrow enclosed strips (medians, splitter islands, gaps between a road and a yard, closed by
+       `close_m` m) get a harmonic surface spanning the adjacent road edges (no lumps in medians);
+    2. the slope band 1.5-12 m from the road is smoothed (sigma 1.2 m) to remove the faceted
+       EDT-cone creases, never rising above the unsmoothed value next to the road."""
+    closed = ndimage.binary_closing(mask, iterations=close_m) & ~mask
+    out = z.copy()
+    if closed.any():
+        lab, _ = ndimage.label(closed)
+        edge = ndimage.binary_dilation(closed) & mask
+        for sl in ndimage.find_objects(lab):
+            sl = tuple(slice(max(0, s.start - 2), s.stop + 2) for s in sl)
+            sub = out[sl].copy()
+            m = closed[sl]
+            e = edge[sl]
+            if not e.any():
+                continue
+            sub[e] = road[sl][e] - 0.03
+            _, (jj, ii) = ndimage.distance_transform_edt(~e, return_indices=True)
+            sub[m] = sub[jj[m], ii[m]]
+            for _ in range(iters):
+                p = np.pad(sub, 1, mode="edge")
+                avg = 0.25 * (p[:-2, 1:-1] + p[2:, 1:-1] + p[1:-1, :-2] + p[1:-1, 2:])
+                sub[m] = avg[m]
+            out[sl] = np.where(m, sub, out[sl])
+    band = (~mask) & ~closed & (dist > 1.5) & (dist < 12.0)
+    sm = ndimage.gaussian_filter(out, 1.2)
+    out = np.where(band, sm, out)
+    return out
+
+
 def conform(hf, road, mask):
     nmt = hf.z
     out = nmt.copy()

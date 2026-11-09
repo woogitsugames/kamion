@@ -24,13 +24,15 @@ class Part:
     T: np.ndarray       # (m, 3) int
     footprint: bool = False     # rasterised into the terrain conform (ground-level surfaces)
     src: str = ""
+    UV1: np.ndarray | None = None   # (n, 2) second UV set (roads: lane coordinate, distance to edge)
+    COL: np.ndarray | None = None   # (n, 4) per-vertex weathering masks (0..1)
 
 
 @dataclass
 class MeshBuf:
     parts: list = field(default_factory=list)
 
-    def add(self, layer, mat, V, UV, T, footprint=False, src=""):
+    def add(self, layer, mat, V, UV, T, footprint=False, src="", UV1=None, COL=None):
         V = np.asarray(V, float)
         T = np.asarray(T, np.int64).reshape(-1, 3)
         if len(T) == 0:
@@ -40,7 +42,9 @@ class MeshBuf:
         area = 0.5 * np.linalg.norm(np.cross(b - a, c - a), axis=1)
         T = T[area > 1e-6]
         if len(T):
-            self.parts.append(Part(layer, mat, V, np.asarray(UV, float), T, footprint, src))
+            self.parts.append(Part(layer, mat, V, np.asarray(UV, float), T, footprint, src,
+                                   None if UV1 is None else np.asarray(UV1, float),
+                                   None if COL is None else np.asarray(COL, float)))
 
 
 def grid_tris(nr, nc, flip=False):
@@ -100,13 +104,25 @@ def build_ribbon(buf: MeshBuf, net, c, coarse=False):
     V = np.concatenate([XY, Z[..., None]], axis=2).reshape(-1, 3)
     UV = V[:, :2].copy()
     T = grid_tris(len(st), len(q))
-    secmat = c.section(0.5 * (s0 + s1), net.sec_list).surface_mat
+    sec_mid = c.section(0.5 * (s0 + s1), net.sec_list)
+    secmat = sec_mid.surface_mat
+    UV1 = None
+    if not coarse:
+        # UV1 = (lane coordinate, distance to the nearer carriageway edge) for wheel-path / gutter weathering
+        lw = max(sec_mid.lane_w, 2.0)
+        latv = lat.ravel()
+        hwv = np.repeat(hw, len(q))
+        if sec_mid.oneway or sec_mid.roundabout:
+            lanec = (latv + hwv - sec_mid.edge_strip) / lw
+        else:
+            lanec = np.abs(latv) / lw
+        UV1 = np.column_stack([lanec, hwv - np.abs(latv)])
     # split carriageway into ground / bridge parts so bridges are not rasterised into the terrain
     tri_station = np.minimum(T.min(1) // len(q), len(st) - 2)      # station row of each quad
     on_bridge = br[tri_station] | br[np.minimum(tri_station + 1, len(st) - 1)]
     mat = "collision_asphalt" if coarse else secmat
-    buf.add(layer, mat, V, UV, T[~on_bridge], footprint=not coarse, src=c.id)
-    buf.add("collision" if coarse else "bridge", mat, V, UV, T[on_bridge], footprint=False, src=c.id)
+    buf.add(layer, mat, V, UV, T[~on_bridge], footprint=not coarse, src=c.id, UV1=UV1)
+    buf.add("collision" if coarse else "bridge", mat, V, UV, T[on_bridge], footprint=False, src=c.id, UV1=UV1)
     # sides
     for side, sgn in (("L", 1.0), ("R", -1.0)):
         build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse)
@@ -142,7 +158,21 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
     # inner side of curves: compress the profile so it does not fold
     kap = c.line.curvature(st) * sgn
     zg = c.crossfall_z(st, sgn * hw)
-    _emit_strip(buf, P + N * (sgn * hw)[:, None], N * sgn, zg, params, kap, hw, side == "R",
+    G = P + N * (sgn * hw)[:, None]
+    kl = [p[0] for p in params]
+    if len(kinds) > 1 and len(kinds - {URBAN, ISLAND}) > 0:
+        # rural/urban mix (e.g. a bridge on a rural road): one strip per run of the same profile family,
+        # sharing the boundary station so the strips meet
+        cuts = [0] + [i for i in range(1, len(kl)) if kl[i] != kl[i - 1]] + [len(kl)]
+        for r, (a, b) in enumerate(zip(cuts, cuts[1:])):
+            lo, hi = max(0, a - 1) if r else a, b
+            sl = slice(lo, hi)
+            kr = kl[a]
+            prm = [(kr, *p[1:]) for p in params[lo:hi]]
+            _emit_strip(buf, G[sl], (N * sgn)[sl], zg[sl], prm, kap[sl], hw[sl], side == "R",
+                        br[sl] if br is not None else None, coarse, f"{c.id}:{side}:{r}")
+        return
+    _emit_strip(buf, G, N * sgn, zg, params, kap, hw, side == "R",
                 br, coarse, c.id + ":" + side)
 
 
@@ -183,8 +213,13 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
             UV = np.column_stack([np.repeat(along, 2), np.tile([0.0, 1.0], n) * abs(profs[0][k][3] - profs[0][k][1])])
             if mat in ("sidewalk_paving", "apron_sett", "verge_grass", "shoulder_gravel"):
                 mat = "curb_concrete" if mat != "verge_grass" else "verge_grass"
+        elif mat == "curb_concrete":                           # kerb top: u along (1 m segment joints)
+            UV = np.column_stack([np.repeat(along, 2), np.tile([0.0, 1.0], n) * abs(profs[0][k][2] - profs[0][k][0])])
         else:
             UV = V[:, :2].copy()
+        # UV1 = (metres along the edge, metres from the gutter) -> joints, dirt bands, weeds at the kerb line
+        UV1 = np.column_stack([np.repeat(along, 2),
+                               np.array([[profs[i][k][0] * scale[i], profs[i][k][2] * scale[i]] for i in range(n)]).ravel()])
         T = grid_tris(n, 2, flip=flip)
         vertical = abs(profs[0][k][2] - profs[0][k][0]) < 1e-6
         is_flange = vertical and k == nseg - 1 and not coarse
@@ -193,10 +228,10 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
         if br is not None and np.any(br):
             tri_st = np.minimum(T.min(1) // 2, n - 2)
             onb = br[tri_st] | br[np.minimum(tri_st + 1, n - 1)]
-            buf.add(layer, cmat, V, UV, T[~onb], footprint=(not coarse and not vertical), src=src)
-            buf.add("collision" if coarse else "bridge", cmat, V, UV, T[onb], footprint=False, src=src)
+            buf.add(layer, cmat, V, UV, T[~onb], footprint=(not coarse and not vertical), src=src, UV1=UV1)
+            buf.add("collision" if coarse else "bridge", cmat, V, UV, T[onb], footprint=False, src=src, UV1=UV1)
         else:
-            buf.add(layer, cmat, V, UV, T, footprint=(not coarse and not vertical and not is_flange), src=src)
+            buf.add(layer, cmat, V, UV, T, footprint=(not coarse and not vertical and not is_flange), src=src, UV1=UV1)
 
 
 def build_bridge_extras(buf, c, st, P, N, hw, br):

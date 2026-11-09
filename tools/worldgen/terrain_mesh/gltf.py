@@ -42,16 +42,31 @@ class GLB:
         self.bin = bytearray()
         self.views, self.accessors, self.meshes, self.nodes = [], [], [], []
         self.gmats = []
+        self.images, self.textures = [], []
 
     def _mat(self, name):
         if name not in self.mat_index:
             m = self.materials.get(name, {"color": [0.5, 0.5, 0.5], "rough": 0.9, "metal": 0.0})
             self.mat_index[name] = len(self.gmats)
-            self.gmats.append({"name": name, "pbrMetallicRoughness": {
+            gm = {"name": name, "pbrMetallicRoughness": {
                 "baseColorFactor": [float(x) for x in m["color"]] + [1.0],
                 "metallicFactor": float(m.get("metal", 0.0)), "roughnessFactor": float(m["rough"])},
-                "extras": {k: v for k, v in m.items() if k not in ("color", "rough", "metal")}})
+                "extras": {k: v for k, v in m.items() if k not in ("color", "rough", "metal", "texture_png")}}
+            if m.get("texture_png"):           # embedded sRGB base colour texture (bytes)
+                gm["pbrMetallicRoughness"]["baseColorTexture"] = {"index": self._texture(m["texture_png"])}
+                gm["pbrMetallicRoughness"]["baseColorFactor"] = [1.0, 1.0, 1.0, 1.0]
+                if m.get("alpha_cutoff"):
+                    gm["alphaMode"] = "MASK"
+                    gm["alphaCutoff"] = float(m["alpha_cutoff"])
+                    gm["doubleSided"] = True
+            self.gmats.append(gm)
         return self.mat_index[name]
+
+    def _texture(self, png: bytes):
+        vi = self._view(png)
+        self.images.append({"bufferView": vi, "mimeType": "image/png"})
+        self.textures.append({"source": len(self.images) - 1, "sampler": 0})
+        return len(self.textures) - 1
 
     def _view(self, data: bytes, target=None):
         while len(self.bin) % 4:
@@ -89,10 +104,17 @@ class GLB:
             nor = to_gltf(Nn).astype("<f4")
             attrs = {"POSITION": self._acc(pos, 5126, "VEC3", 34962, True),
                      "NORMAL": self._acc(nor, 5126, "VEC3", 34962)}
-            if p.get("UV") is not None:
-                uv = np.asarray(p["UV"], np.float64).copy()
-                uv[:, 1] = -uv[:, 1]           # glTF v points down
-                attrs["TEXCOORD_0"] = self._acc(uv.astype("<f4"), 5126, "VEC2", 34962)
+            for key, sem in (("UV", "TEXCOORD_0"), ("UV1", "TEXCOORD_1")):
+                if p.get(key) is not None:
+                    uv = np.asarray(p[key], np.float64).copy()
+                    uv[:, 1] = 1.0 - uv[:, 1]      # glTF v points down; importers map back to v (up)
+                    attrs[sem] = self._acc(uv.astype("<f4"), 5126, "VEC2", 34962)
+            if p.get("COL") is not None:          # per-vertex data (weathering masks), linear RGBA 0..1
+                col = np.clip(np.asarray(p["COL"], np.float64), 0, 1)
+                if col.shape[1] == 3:
+                    col = np.column_stack([col, np.ones(len(col))])
+                attrs["COLOR_0"] = self._acc(np.round(col * 65535).astype("<u2"), 5123, "VEC4", 34962)
+                self.accessors[-1]["normalized"] = True
             idx = T.ravel()
             if idx.max() < 65535:
                 ia = self._acc(idx.astype("<u2"), 5123, "SCALAR", 34963)
@@ -116,6 +138,9 @@ class GLB:
                "nodes": self.nodes, "meshes": self.meshes, "materials": self.gmats,
                "accessors": self.accessors, "bufferViews": self.views,
                "buffers": [{"byteLength": len(self.bin)}]}
+        if self.textures:
+            doc.update({"images": self.images, "textures": self.textures,
+                        "samplers": [{"magFilter": 9729, "minFilter": 9987, "wrapS": 10497, "wrapT": 10497}]})
         js = json.dumps(doc, sort_keys=True, separators=(",", ":")).encode("utf-8")
         while len(js) % 4:
             js += b" "

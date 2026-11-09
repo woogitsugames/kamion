@@ -31,3 +31,14 @@ overrides:
     confidence: low
     verify: owner photo session item 1
     set: {curb_radius: 15.0}
+  # ---------------------------------------------------------------- streetscape (tools/worldgen/streetscape)
+  - id: kwadrat-park-warehouse
+    target: {building: "bdot:9962cca0-95de-4200-a0c4-3922b8e40d9c"}
+    reason: >-
+      BDOT10k gives FUNKCJA "obiekt handlowo-usługowy", but OSM relation 14517743 maps the same hall as
+      building=warehouse "Kwadrat Park" and the 2024-05-27 orthophoto shows semitrailers parked at its
+      yard facade (loading docks). Treat it as the hero warehouse: docks on yard-facing facades, dock
+      numbering, canopy over the dock row; wall colour not verified.
+    confidence: medium
+    verify: owner photo session items 1-2 (gate, yard, hall elevations, docks)
+    set: {typology: hall, hero: true, docks: true, wall_material: hall_wall_silver, max_docks_per_facade: 18}

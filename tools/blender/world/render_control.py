@@ -1,14 +1,16 @@
-"""Render the world control cameras of a region in Blender (visual QA, not final art).
+"""Render the world control cameras of a region in Blender (visual QA renders; the game is URP, see README).
 
     blender -b --factory-startup -P tools/blender/world/render_control.py -- \
-        --region bialystok-industrial-c --out artifacts/visual/world-c [--cams id1,id2] [--res 1600x900]
-        [--engine EEVEE|CYCLES] [--samples 64]
+        --region bialystok-industrial-c --out <abs dir> [--cams id1,id2] [--res 1600x900]
+        [--light overcast|lowsun|both] [--engine EEVEE|CYCLES] [--samples 64]
 
-Imports the chunk GLBs listed in Data/Regions/<id>/generated/world_manifest.json (terrain LOD by
-distance, road, bridge, markings; never the collision mesh), replaces the placeholder materials by
-simple procedural PBR materials, adds extruded LoD1 buildings as context, a Nishita sky + sun, and
-renders every camera of generated/control_cameras.json. Ortho cameras render an emission-coded road
-layer with a transparent background for the orthophoto overlay (tools/worldgen/roads/qa_ortho.py).
+Imports the chunk GLBs listed in Data/Regions/<id>/generated/world_manifest.json (terrain LOD by distance,
+road, bridge, markings, paved, buildings (LOD0 near / LOD1 far), furniture; never collision), the point
+instances (instances_<ci>_<cj>.json: street props from art-source/world/props/street_props.glb, trees from
+art-source/world/vegetation/trees*.glb with LOD0/LOD1/impostor by distance), replaces the engine material
+placeholders by procedural weathered materials (same masks the engine shaders get: UV1 lane coordinate /
+distance to the edge, terrain vertex colours), scatters grass/weed cards near the camera, and renders with
+AgX under an overcast or a low-sun sky (Nishita). No bloom, no vignette, no chromatic aberration.
 """
 
 import argparse
@@ -22,6 +24,7 @@ import bmesh
 from mathutils import Matrix, Vector
 
 REPO = Path(__file__).resolve().parents[3]
+VEG = REPO / "art-source" / "world" / "vegetation"
 
 
 def args():
@@ -33,150 +36,463 @@ def args():
     ap.add_argument("--res", default="1600x900")
     ap.add_argument("--engine", default="EEVEE")
     ap.add_argument("--samples", type=int, default=64)
+    ap.add_argument("--light", default="overcast")
     ap.add_argument("--world-root", default="")
+    ap.add_argument("--no-grass", action="store_true")
     return ap.parse_args(argv)
 
 
-# ------------------------------------------------------------------------------------------- materials
-def _nodes(mat):
-    mat.use_nodes = True
-    nt = mat.node_tree
-    for n in list(nt.nodes):
-        nt.nodes.remove(n)
-    out = nt.nodes.new("ShaderNodeOutputMaterial")
-    bsdf = nt.nodes.new("ShaderNodeBsdfPrincipled")
-    nt.links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
-    tc = nt.nodes.new("ShaderNodeTexCoord")
-    return nt, bsdf, tc
+# ============================================================================================ node helpers
+class NB:
+    """Tiny node-graph builder."""
+
+    def __init__(self, mat):
+        mat.use_nodes = True
+        self.nt = mat.node_tree
+        for n in list(self.nt.nodes):
+            self.nt.nodes.remove(n)
+        self.out = self.nt.nodes.new("ShaderNodeOutputMaterial")
+        self.bsdf = self.nt.nodes.new("ShaderNodeBsdfPrincipled")
+        self.link(self.bsdf.outputs["BSDF"], self.out.inputs["Surface"])
+        self.tc = self.nt.nodes.new("ShaderNodeTexCoord")
+        self.geo = self.nt.nodes.new("ShaderNodeNewGeometry")
+
+    def link(self, a, b):
+        self.nt.links.new(a, b)
+
+    def node(self, kind, **inputs):
+        n = self.nt.nodes.new(kind)
+        for k, v in inputs.items():
+            if hasattr(v, "is_output") or hasattr(v, "links"):
+                self.link(v, n.inputs[k])
+            else:
+                n.inputs[k].default_value = v
+        return n
+
+    def math(self, op, a, b=None, clamp=False):
+        n = self.nt.nodes.new("ShaderNodeMath")
+        n.operation = op
+        n.use_clamp = clamp
+        for i, v in enumerate((a, b)):
+            if v is None:
+                continue
+            if isinstance(v, (int, float)):
+                n.inputs[i].default_value = v
+            else:
+                self.link(v, n.inputs[i])
+        return n.outputs[0]
+
+    def vmath(self, op, a, b=None):
+        n = self.nt.nodes.new("ShaderNodeVectorMath")
+        n.operation = op
+        for i, v in enumerate((a, b)):
+            if v is None:
+                continue
+            if isinstance(v, (tuple, list)):
+                n.inputs[i].default_value = v
+            else:
+                self.link(v, n.inputs[i])
+        return n.outputs["Vector"] if op not in ("LENGTH", "DOT_PRODUCT") else n.outputs["Value"]
+
+    def uv(self, name):
+        n = self.nt.nodes.new("ShaderNodeUVMap")
+        n.uv_map = name
+        return n.outputs["UV"]
+
+    def sep(self, v):
+        n = self.nt.nodes.new("ShaderNodeSeparateXYZ")
+        self.link(v, n.inputs[0])
+        return n.outputs["X"], n.outputs["Y"], n.outputs["Z"]
+
+    def attr(self, name):
+        n = self.nt.nodes.new("ShaderNodeAttribute")
+        n.attribute_name = name
+        return n
+
+    def noise(self, vec, scale, detail=4.0, rough=0.55, dist=0.0):
+        n = self.nt.nodes.new("ShaderNodeTexNoise")
+        n.inputs["Scale"].default_value = scale
+        n.inputs["Detail"].default_value = detail
+        n.inputs["Roughness"].default_value = rough
+        n.inputs["Distortion"].default_value = dist
+        self.link(vec, n.inputs["Vector"])
+        return n.outputs["Fac"]
+
+    def voronoi(self, vec, scale, feature="F1", metric="EUCLIDEAN", rand=1.0):
+        n = self.nt.nodes.new("ShaderNodeTexVoronoi")
+        n.feature = feature
+        n.distance = metric
+        n.inputs["Scale"].default_value = scale
+        n.inputs["Randomness"].default_value = rand
+        self.link(vec, n.inputs["Vector"])
+        return n
+
+    def ramp(self, src, stops):
+        r = self.nt.nodes.new("ShaderNodeValToRGB")
+        cr = r.color_ramp
+        cr.elements.remove(cr.elements[1])
+        cr.elements[0].position, cr.elements[0].color = stops[0][0], (*stops[0][1], 1)
+        for pos, col in stops[1:]:
+            e = cr.elements.new(pos)
+            e.color = (*col, 1)
+        self.link(src, r.inputs["Fac"])
+        return r.outputs["Color"]
+
+    def mix(self, fac, a, b, blend="MIX"):
+        n = self.nt.nodes.new("ShaderNodeMix")
+        n.data_type = "RGBA"
+        n.blend_type = blend
+        for k, v in (("Factor", fac), ("A", a), ("B", b)):
+            if isinstance(v, (int, float)):
+                n.inputs[k].default_value = v
+            elif isinstance(v, tuple):
+                n.inputs[k].default_value = (*v, 1) if len(v) == 3 else v
+            else:
+                self.link(v, n.inputs[k])
+        return n.outputs["Result"]
+
+    def mixf(self, fac, a, b):
+        n = self.nt.nodes.new("ShaderNodeMix")
+        n.data_type = "FLOAT"
+        for k, v in (("Factor", fac), ("A", a), ("B", b)):
+            if isinstance(v, (int, float)):
+                n.inputs[k].default_value = v
+            else:
+                self.link(v, n.inputs[k])
+        return n.outputs["Result"]
+
+    def bump(self, h, strength, dist=0.01, normal=None):
+        b = self.node("ShaderNodeBump", Strength=strength, Distance=dist)
+        self.link(h, b.inputs["Height"])
+        if normal is not None:
+            self.link(normal, b.inputs["Normal"])
+        return b.outputs["Normal"]
+
+    def finish(self, color, rough, normal=None, metal=None):
+        self.link(color, self.bsdf.inputs["Base Color"]) if not isinstance(color, tuple) else \
+            setattr(self.bsdf.inputs["Base Color"], "default_value", (*color, 1))
+        if isinstance(rough, (int, float)):
+            self.bsdf.inputs["Roughness"].default_value = rough
+        else:
+            self.link(rough, self.bsdf.inputs["Roughness"])
+        if normal is not None:
+            self.link(normal, self.bsdf.inputs["Normal"])
+        if metal is not None:
+            self.bsdf.inputs["Metallic"].default_value = metal
+
+    def gauss(self, x, mu, sig):
+        d = self.math("SUBTRACT", x, mu)
+        q = self.math("DIVIDE", d, sig)
+        q2 = self.math("MULTIPLY", q, q)
+        return self.math("EXPONENT", self.math("MULTIPLY", q2, -1.0))
+
+    def line_mask(self, coord, period, width):
+        """1 near multiples of `period` (joints), width in the same units."""
+        fr = self.math("FRACT", self.math("DIVIDE", coord, period))
+        d = self.math("MINIMUM", fr, self.math("SUBTRACT", 1.0, fr))
+        return self.math("LESS_THAN", self.math("MULTIPLY", d, period), width)
 
 
-def _noise(nt, tc, scale, detail=4.0, rough=0.55, coord="Object"):
-    n = nt.nodes.new("ShaderNodeTexNoise")
-    n.inputs["Scale"].default_value = scale
-    n.inputs["Detail"].default_value = detail
-    n.inputs["Roughness"].default_value = rough
-    nt.links.new(tc.outputs[coord], n.inputs["Vector"])
-    return n
+def new_mat(name):
+    return bpy.data.materials.new(name)
 
 
-def _ramp(nt, src, stops):
-    r = nt.nodes.new("ShaderNodeValToRGB")
-    r.color_ramp.elements.remove(r.color_ramp.elements[1])
-    e0 = r.color_ramp.elements[0]
-    e0.position, e0.color = stops[0][0], (*stops[0][1], 1)
-    for pos, col in stops[1:]:
-        e = r.color_ramp.elements.new(pos)
-        e.color = (*col, 1)
-    nt.links.new(src, r.inputs["Fac"])
-    return r
+def srgb(c):
+    return tuple(((x / 255) ** 2.2) for x in c)
 
 
-def _bump(nt, bsdf, src, strength, dist=0.02):
-    b = nt.nodes.new("ShaderNodeBump")
-    b.inputs["Strength"].default_value = strength
-    b.inputs["Distance"].default_value = dist
-    nt.links.new(src, b.inputs["Height"])
-    nt.links.new(b.outputs["Normal"], bsdf.inputs["Normal"])
-
-
-def mat_asphalt(name, base=0.075):
-    m = bpy.data.materials.new(name)
-    nt, bsdf, tc = _nodes(m)
-    big = _noise(nt, tc, 0.08, 3.0, 0.5)                   # patches, repairs (10-20 m)
-    mid = _noise(nt, tc, 0.9, 6.0, 0.6)                    # stains
-    fine = _noise(nt, tc, 60.0, 2.0, 0.5)                  # aggregate
-    mix = nt.nodes.new("ShaderNodeMix")
-    mix.data_type = "FLOAT"
-    mix.inputs["Factor"].default_value = 0.45
-    nt.links.new(big.outputs["Fac"], mix.inputs["A"])
-    nt.links.new(mid.outputs["Fac"], mix.inputs["B"])
-    b = base
-    col = _ramp(nt, mix.outputs["Result"], [(0.30, (b * 0.70, b * 0.70, b * 0.70)), (0.50, (b, b, b * 0.97)),
-                                            (0.68, (b * 1.35, b * 1.33, b * 1.28))])
-    nt.links.new(col.outputs["Color"], bsdf.inputs["Base Color"])
-    rr = _ramp(nt, mid.outputs["Fac"], [(0.3, (0.82, 0.82, 0.82)), (0.7, (0.95, 0.95, 0.95))])
-    nt.links.new(rr.outputs["Color"], bsdf.inputs["Roughness"])
-    _bump(nt, bsdf, fine.outputs["Fac"], 0.25, 0.004)
+# ============================================================================================ materials
+def mat_asphalt(name, base=0.075, lanes=True, yard=False):
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    big = b.noise(obj, 0.035, 3.0, 0.5)
+    mid = b.noise(obj, 0.6, 5.0, 0.6)
+    agg = b.noise(obj, 180.0, 2.0, 0.5)
+    tone = b.ramp(b.mixf(0.4, big, mid), [(0.3, (base * 0.80,) * 3), (0.55, (base, base, base * 0.97)),
+                                           (0.72, (base * 1.25, base * 1.24, base * 1.2))])
+    # patches: rectangular repair cells (Chebychev Voronoi), some cells darker (fresh) or lighter (old)
+    vor = b.voronoi(b.vmath("MULTIPLY", obj, (1.0, 0.35, 1.0)), 0.11, metric="CHEBYCHEV")
+    pick = b.math("GREATER_THAN", vor.outputs["Color"], 0.86)
+    patch_in = b.math("LESS_THAN", vor.outputs["Distance"], 0.32)
+    patch = b.math("MULTIPLY", pick, patch_in)
+    col = b.mix(b.math("MULTIPLY", patch, 0.7), tone, (base * 0.72, base * 0.72, base * 0.72))
+    edge = b.math("MULTIPLY", pick, b.math("MULTIPLY", b.math("GREATER_THAN", vor.outputs["Distance"], 0.30),
+                                              b.math("LESS_THAN", vor.outputs["Distance"], 0.34)))
+    col = b.mix(edge, col, (0.02, 0.02, 0.02))
+    # cracks + crack sealing (bitumen bands)
+    cr = b.voronoi(obj, 0.25, feature="DISTANCE_TO_EDGE")
+    crn = b.noise(obj, 0.4, 2.0)
+    crack = b.math("MULTIPLY", b.math("LESS_THAN", cr.outputs["Distance"], 0.005), b.math("GREATER_THAN", crn, 0.60))
+    seal = b.math("MULTIPLY", b.math("LESS_THAN", cr.outputs["Distance"], 0.022), b.math("GREATER_THAN", crn, 0.70))
+    col = b.mix(b.math("MULTIPLY", seal, 0.55), col, (0.025, 0.025, 0.025))
+    col = b.mix(b.math("MULTIPLY", crack, 0.8), col, (0.02, 0.02, 0.02))
+    rough = b.mixf(seal, 0.9, 0.55)
+    if lanes:
+        uv1 = b.uv("UVMap.001")
+        u, v, _ = b.sep(uv1)
+        valid = b.math("GREATER_THAN", u, -0.5)
+        fr = b.math("FRACT", u)
+        wheel = b.math("ADD", b.gauss(fr, 0.27, 0.075), b.gauss(fr, 0.73, 0.075))
+        wheel = b.math("MULTIPLY", wheel, valid)
+        wheel = b.math("MULTIPLY", wheel, b.math("ADD", 0.6, b.math("MULTIPLY", mid, 0.6)))
+        col = b.mix(b.math("MULTIPLY", wheel, 0.55), col, (base * 0.6, base * 0.6, base * 0.62))
+        rough = b.mixf(b.math("MULTIPLY", wheel, 0.7), rough, 0.74)
+        oil = b.math("MULTIPLY", b.gauss(fr, 0.5, 0.09), b.math("GREATER_THAN", b.noise(obj, 1.3, 3.0), 0.55))
+        col = b.mix(b.math("MULTIPLY", b.math("MULTIPLY", oil, valid), 0.6), col, (0.03, 0.028, 0.026))
+        gut = b.math("SUBTRACT", 1.0, b.math("DIVIDE", v, 0.7), clamp=True)
+        gut = b.math("MULTIPLY", gut, b.math("ADD", 0.5, mid))
+        col = b.mix(b.math("MULTIPLY", gut, 0.7), col, (0.16, 0.14, 0.11))
+        # longitudinal joint between lanes (paving seam)
+        seam = b.math("MULTIPLY", b.math("LESS_THAN", b.math("MINIMUM", fr, b.math("SUBTRACT", 1.0, fr)), 0.012), valid)
+        col = b.mix(b.math("MULTIPLY", seam, 0.6), col, (0.03, 0.03, 0.03))
+        rut = b.math("MULTIPLY", wheel, -0.5)
+        h = b.math("ADD", b.math("MULTIPLY", agg, 1.0), rut)
+    else:
+        h = agg
+        if yard:
+            tyre = b.math("GREATER_THAN", b.noise(b.vmath("MULTIPLY", obj, (0.15, 1.5, 1)), 2.0, 2.0), 0.62)
+            col = b.mix(b.math("MULTIPLY", tyre, 0.35), col, (0.03, 0.03, 0.03))
+    nrm = b.bump(h, 0.22, 0.004)
+    nrm = b.bump(b.math("MULTIPLY", crack, -1.0), 0.4, 0.004, nrm)
+    b.finish(col, rough, nrm)
     return m
 
 
-def mat_concrete(name, base=0.38, scale=3.0):
-    m = bpy.data.materials.new(name)
-    nt, bsdf, tc = _nodes(m)
-    n = _noise(nt, tc, scale, 6.0, 0.6)
-    col = _ramp(nt, n.outputs["Fac"], [(0.35, (base * 0.82, base * 0.82, base * 0.80)), (0.65, (base, base, base * 0.96))])
-    nt.links.new(col.outputs["Color"], bsdf.inputs["Base Color"])
-    bsdf.inputs["Roughness"].default_value = 0.85
-    f = _noise(nt, tc, 80.0, 2.0)
-    _bump(nt, bsdf, f.outputs["Fac"], 0.15, 0.003)
+def mat_markings(name):
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    wear = b.noise(obj, 3.0, 6.0, 0.7)
+    grain = b.noise(obj, 90.0, 2.0)
+    w2 = b.mixf(0.35, wear, grain)
+    col = b.ramp(w2, [(0.36, (0.07, 0.07, 0.068)), (0.50, (0.38, 0.38, 0.36)), (0.65, (0.52, 0.52, 0.50))])
+    big = b.noise(obj, 0.08, 2.0)
+    col = b.mix(b.math("MULTIPLY", big, 0.35), col, (0.16, 0.15, 0.13))
+    b.finish(col, 0.6, b.bump(grain, 0.1, 0.002))
     return m
 
 
-def mat_pavers(name, c1, c2, w=0.20, h=0.10):
-    m = bpy.data.materials.new(name)
-    nt, bsdf, tc = _nodes(m)
-    br = nt.nodes.new("ShaderNodeTexBrick")
+def mat_kerb(name, base=0.25):
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    u, v, _ = b.sep(b.uv("UVMap"))
+    n = b.noise(obj, 4.0, 6.0, 0.6)
+    col = b.ramp(n, [(0.35, (base * 0.82, base * 0.82, base * 0.8)), (0.65, (base, base, base * 0.97))])
+    seg = b.voronoi(b.vmath("MULTIPLY", b.uv("UVMap"), (1.0, 0.0, 0.0)), 1.0)    # per 1 m segment tone
+    col = b.mix(b.math("MULTIPLY", seg.outputs["Color"], 0.25), col, (base * 0.75, base * 0.74, base * 0.70))
+    joint = b.line_mask(u, 1.0, 0.006)
+    col = b.mix(b.math("MULTIPLY", joint, 0.9), col, (0.05, 0.05, 0.05))
+    dirt = b.math("MULTIPLY", b.noise(obj, 0.7, 3.0), 0.8)
+    col = b.mix(b.math("MULTIPLY", dirt, 0.45), col, (0.12, 0.11, 0.09))
+    nrm = b.bump(b.math("MULTIPLY", joint, -1.0), 0.6, 0.004)
+    nrm = b.bump(b.noise(obj, 60.0, 2.0), 0.15, 0.002, nrm)
+    b.finish(col, 0.88, nrm)
+    return m
+
+
+def mat_pavers(name, c1, c2, w=0.20, h=0.10, rot_uv=True, moss=True):
+    m = new_mat(name)
+    b = NB(m)
+    vec = b.uv("UVMap") if rot_uv else b.tc.outputs["Object"]
+    br = b.nt.nodes.new("ShaderNodeTexBrick")
+    br.offset = 0.5
     br.inputs["Scale"].default_value = 1.0
     br.inputs["Brick Width"].default_value = w
     br.inputs["Row Height"].default_value = h
-    br.inputs["Mortar Size"].default_value = 0.006
+    br.inputs["Mortar Size"].default_value = 0.004
+    br.inputs["Mortar Smooth"].default_value = 0.3
+    br.inputs["Bias"].default_value = 0.0
     br.inputs["Color1"].default_value = (*c1, 1)
     br.inputs["Color2"].default_value = (*c2, 1)
-    br.inputs["Mortar"].default_value = (c1[0] * 0.6, c1[1] * 0.6, c1[2] * 0.6, 1)
-    nt.links.new(tc.outputs["Object"], br.inputs["Vector"])
-    dirt = _noise(nt, tc, 0.6, 4.0)
-    mix = nt.nodes.new("ShaderNodeMix")
-    mix.data_type = "RGBA"
-    mix.blend_type = "MULTIPLY"
-    mix.inputs["Factor"].default_value = 0.35
-    nt.links.new(br.outputs["Color"], mix.inputs["A"])
-    nt.links.new(dirt.outputs["Color"], mix.inputs["B"])
-    nt.links.new(mix.outputs["Result"], bsdf.inputs["Base Color"])
-    bsdf.inputs["Roughness"].default_value = 0.88
-    _bump(nt, bsdf, br.outputs["Fac"], 0.3, 0.004)
+    br.inputs["Mortar"].default_value = (c1[0] * 0.45, c1[1] * 0.45, c1[2] * 0.42, 1)
+    b.link(vec, br.inputs["Vector"])
+    obj = b.tc.outputs["Object"]
+    dirt = b.noise(obj, 0.25, 4.0)
+    col = b.mix(b.math("MULTIPLY", dirt, 0.45), br.outputs["Color"], (c1[0] * 0.6, c1[1] * 0.58, c1[2] * 0.52))
+    stain = b.math("GREATER_THAN", b.noise(obj, 0.9, 3.0), 0.63)
+    col = b.mix(b.math("MULTIPLY", stain, 0.5), col, (c1[0] * 0.5, c1[1] * 0.5, c1[2] * 0.5))
+    if moss:     # weeds/moss in joints near the edge of the paved area (UV1.x = distance to edge)
+        e, wdist, _ = b.sep(b.uv("UVMap.001"))
+        near = b.math("SUBTRACT", 1.0, b.math("DIVIDE", e, 0.6), clamp=True)
+        near_wall = b.math("SUBTRACT", 1.0, b.math("DIVIDE", wdist, 1.0), clamp=True)
+        jm = br.outputs["Fac"]                       # brick Fac = 1 in the joints
+        moss_f = b.math("MULTIPLY", b.math("MULTIPLY", near, jm), b.math("GREATER_THAN", b.noise(obj, 3.0, 3.0), 0.45))
+        col = b.mix(b.math("MULTIPLY", moss_f, 0.9), col, (0.05, 0.07, 0.025))
+        col = b.mix(b.math("MULTIPLY", near_wall, 0.5), col, (0.10, 0.09, 0.07))
+    nrm = b.bump(br.outputs["Fac"], 0.35, 0.004)
+    b.finish(col, 0.86, nrm)
     return m
 
 
-def mat_grass(name):
-    m = bpy.data.materials.new(name)
-    nt, bsdf, tc = _nodes(m)
-    big = _noise(nt, tc, 0.05, 4.0, 0.6)
-    mid = _noise(nt, tc, 0.7, 5.0, 0.6)
-    mix = nt.nodes.new("ShaderNodeMix")
-    mix.data_type = "FLOAT"
-    mix.inputs["Factor"].default_value = 0.4
-    nt.links.new(big.outputs["Fac"], mix.inputs["A"])
-    nt.links.new(mid.outputs["Fac"], mix.inputs["B"])
-    col = _ramp(nt, mix.outputs["Result"], [(0.32, (0.050, 0.075, 0.025)), (0.5, (0.085, 0.105, 0.040)),
-                                            (0.66, (0.140, 0.130, 0.065))])
-    nt.links.new(col.outputs["Color"], bsdf.inputs["Base Color"])
-    bsdf.inputs["Roughness"].default_value = 0.96
-    f = _noise(nt, tc, 25.0, 3.0)
-    _bump(nt, bsdf, f.outputs["Fac"], 0.5, 0.02)
+def mat_concrete_yard(name, base=0.27, jx=5.0, jy=5.0, slabs=False):
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    u, v, _ = b.sep(b.uv("UVMap"))
+    n = b.noise(obj, 0.5, 5.0, 0.6)
+    col = b.ramp(n, [(0.3, (base * 0.8, base * 0.8, base * 0.78)), (0.7, (base * 1.05, base * 1.04, base))])
+    if slabs:
+        cell = b.voronoi(b.vmath("MULTIPLY", b.combine(b.math("FLOOR", b.math("DIVIDE", u, jx)),
+                                                       b.math("FLOOR", b.math("DIVIDE", v, jy))), (1.0, 1.0, 1.0)), 1.0)
+        col = b.mix(b.math("MULTIPLY", cell.outputs["Color"], 0.35), col, (base * 0.75, base * 0.74, base * 0.7))
+    jt = b.math("MAXIMUM", b.line_mask(u, jx, 0.008 if not slabs else 0.02), b.line_mask(v, jy, 0.008 if not slabs else 0.02))
+    col = b.mix(b.math("MULTIPLY", jt, 0.9), col, (0.03, 0.03, 0.03))
+    oil = b.math("GREATER_THAN", b.noise(obj, 0.35, 4.0, 0.7), 0.64)
+    col = b.mix(b.math("MULTIPLY", oil, 0.55), col, (base * 0.35, base * 0.34, base * 0.33))
+    tyre = b.math("GREATER_THAN", b.noise(b.vmath("MULTIPLY", obj, (0.1, 1.2, 1)), 2.0, 2.0), 0.64)
+    col = b.mix(b.math("MULTIPLY", tyre, 0.3), col, (0.05, 0.05, 0.05))
+    e, wdist, _ = b.sep(b.uv("UVMap.001"))
+    near_wall = b.math("SUBTRACT", 1.0, b.math("DIVIDE", wdist, 1.5), clamp=True)
+    col = b.mix(b.math("MULTIPLY", near_wall, 0.5), col, (0.12, 0.11, 0.09))
+    nrm = b.bump(b.math("MULTIPLY", jt, -1.0), 0.5, 0.005)
+    nrm = b.bump(b.noise(obj, 70.0, 2.0), 0.12, 0.002, nrm)
+    b.finish(col, 0.86, nrm)
     return m
 
 
-def mat_paint(name):
-    m = bpy.data.materials.new(name)
-    nt, bsdf, tc = _nodes(m)
-    wear = _noise(nt, tc, 2.5, 6.0, 0.7)
-    col = _ramp(nt, wear.outputs["Fac"], [(0.38, (0.30, 0.30, 0.29)), (0.55, (0.62, 0.62, 0.60)), (0.7, (0.70, 0.70, 0.67))])
-    nt.links.new(col.outputs["Color"], bsdf.inputs["Base Color"])
-    bsdf.inputs["Roughness"].default_value = 0.6
+def _combine(self, x, y, z=0.0):
+    n = self.nt.nodes.new("ShaderNodeCombineXYZ")
+    for i, val in enumerate((x, y, z)):
+        if isinstance(val, (int, float)):
+            n.inputs[i].default_value = val
+        else:
+            self.link(val, n.inputs[i])
+    return n.outputs[0]
+
+
+NB.combine = _combine
+
+
+def mat_gravel(name):
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    n = b.noise(obj, 1.5, 6.0, 0.7)
+    col = b.ramp(n, [(0.3, (0.12, 0.11, 0.09)), (0.55, (0.20, 0.18, 0.15)), (0.75, (0.26, 0.24, 0.20))])
+    vv = b.voronoi(obj, 60.0)
+    col = b.mix(b.math("MULTIPLY", vv.outputs["Distance"], 0.5), col, (0.08, 0.075, 0.07))
+    b.finish(col, 0.95, b.bump(vv.outputs["Distance"], 0.4, 0.01))
     return m
 
 
-def mat_flat(name, col, rough=0.85, metal=0.0):
-    m = bpy.data.materials.new(name)
-    nt, bsdf, tc = _nodes(m)
-    bsdf.inputs["Base Color"].default_value = (*col, 1)
-    bsdf.inputs["Roughness"].default_value = rough
-    bsdf.inputs["Metallic"].default_value = metal
+def mat_terrain(name):
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    a = b.attr("Color")
+    cr, cg, cb, _ = None, None, None, None
+    sepc = b.nt.nodes.new("ShaderNodeSeparateColor")
+    b.link(a.outputs["Color"], sepc.inputs[0])
+    R, G, B = sepc.outputs[0], sepc.outputs[1], sepc.outputs[2]
+    A = a.outputs["Alpha"]
+    big = b.noise(obj, 0.04, 4.0, 0.6)
+    mid = b.noise(obj, 0.5, 5.0, 0.6)
+    fine = b.noise(obj, 6.0, 3.0, 0.6)
+    mown = b.ramp(b.mixf(0.5, big, mid), [(0.3, srgb((52, 70, 32))), (0.55, srgb((66, 84, 38))), (0.75, srgb((84, 94, 48)))])
+    rough_g = b.ramp(b.mixf(0.5, big, mid), [(0.25, srgb((60, 72, 36))), (0.45, srgb((86, 92, 52))),
+                                             (0.62, srgb((112, 106, 70))), (0.8, srgb((74, 82, 44)))])
+    forest = b.ramp(b.mixf(0.5, mid, fine), [(0.3, srgb((64, 56, 40))), (0.5, srgb((78, 72, 50))), (0.65, srgb((66, 76, 42))),
+                                            (0.8, srgb((84, 90, 52)))])
+    bare = b.ramp(mid, [(0.3, srgb((104, 96, 80))), (0.7, srgb((132, 122, 100)))])
+    col = b.mix(B, mown, rough_g)
+    col = b.mix(b.math("MULTIPLY", A, b.math("ADD", 0.4, b.math("MULTIPLY", fine, 0.8))), col, bare)
+    col = b.mix(G, col, forest)
+    # dirt/sand strip at the road edge (0-0.8 m) and dry tufts
+    edge = b.math("SUBTRACT", 1.0, b.math("DIVIDE", R, 0.045), clamp=True)
+    edge = b.math("MULTIPLY", edge, b.math("ADD", 0.3, fine))
+    col = b.mix(b.math("MINIMUM", edge, 0.85), col, srgb((112, 102, 84)))
+    nrm = b.bump(fine, 0.5, 0.03)
+    b.finish(col, 0.95, nrm)
     return m
 
 
-def mat_emit(name, col):
-    m = bpy.data.materials.new(name)
+def mat_hall(name, col, ribs="h"):
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    u, v, _ = b.sep(b.uv("UVMap"))
+    if ribs == "h":        # horizontal panels 1.0 m with micro ribs every 0.1 m
+        j = b.line_mask(v, 1.0, 0.01)
+        micro = b.math("SINE", b.math("MULTIPLY", v, 2 * math.pi / 0.1))
+        h = b.math("ADD", b.math("MULTIPLY", micro, 0.15), b.math("MULTIPLY", j, -1.0))
+    else:                  # vertical trapezoid ribs every 0.25 m, panel joints 1.0 m
+        fr = b.math("FRACT", b.math("DIVIDE", u, 0.25))
+        rib = b.math("LESS_THAN", fr, 0.22)
+        j = b.line_mask(u, 1.0, 0.008)
+        h = b.math("SUBTRACT", rib, j)
+    base = b.mix(b.math("MULTIPLY", b.noise(obj, 0.3, 3.0), 0.15), col, tuple(c * 0.85 for c in col))
+    streak = b.noise(b.vmath("MULTIPLY", obj, (6.0, 6.0, 0.15)), 1.0, 3.0, 0.6)
+    top = b.math("SUBTRACT", 1.0, b.math("DIVIDE", b.math("ABSOLUTE", b.math("SUBTRACT", v, 12.0)), 30.0), clamp=True)
+    base = b.mix(b.math("MULTIPLY", b.math("GREATER_THAN", streak, 0.58), 0.25), base, tuple(c * 0.6 for c in col))
+    splash = b.math("SUBTRACT", 1.0, b.math("DIVIDE", b.math("SUBTRACT", v, 0.5), 0.8), clamp=True)
+    base = b.mix(b.math("MULTIPLY", splash, 0.55), base, (0.12, 0.11, 0.09))
+    base = b.mix(b.math("MULTIPLY", j, 0.6), base, tuple(c * 0.4 for c in col))
+    b.finish(base, 0.48, b.bump(h, 0.25, 0.01), metal=0.25)
+    return m
+
+
+def mat_plaster(name, col):
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    u, v, _ = b.sep(b.uv("UVMap"))
+    n = b.noise(obj, 1.2, 5.0, 0.6)
+    base = b.mix(b.math("MULTIPLY", n, 0.25), col, tuple(c * 0.8 for c in col))
+    streak = b.noise(b.vmath("MULTIPLY", obj, (5.0, 5.0, 0.2)), 1.0, 3.0)
+    base = b.mix(b.math("MULTIPLY", b.math("GREATER_THAN", streak, 0.6), 0.25), base, tuple(c * 0.6 for c in col))
+    splash = b.math("SUBTRACT", 1.0, b.math("DIVIDE", b.math("SUBTRACT", v, 0.3), 0.7), clamp=True)
+    base = b.mix(b.math("MULTIPLY", splash, 0.5), base, (0.12, 0.11, 0.09))
+    b.finish(base, 0.9, b.bump(b.noise(obj, 40.0, 3.0), 0.15, 0.003))
+    return m
+
+
+def mat_lines_v(name, col, period, width=0.01, rough=0.5, metal=0.3, horizontal=True):
+    """Panels with grooves (sectional doors, noise-barrier cassettes, concrete fence panels)."""
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    u, v, _ = b.sep(b.uv("UVMap"))
+    j = b.line_mask(v if horizontal else u, period, width)
+    base = b.mix(b.math("MULTIPLY", b.noise(obj, 0.8, 4.0), 0.2), col, tuple(c * 0.8 for c in col))
+    base = b.mix(b.math("MULTIPLY", j, 0.7), base, tuple(c * 0.35 for c in col))
+    dirt = b.math("SUBTRACT", 1.0, b.math("DIVIDE", v, 0.6), clamp=True)
+    base = b.mix(b.math("MULTIPLY", dirt, 0.4), base, (0.1, 0.09, 0.07))
+    b.finish(base, rough, b.bump(b.math("MULTIPLY", j, -1.0), 0.4, 0.01), metal=metal)
+    return m
+
+
+def mat_hazard(name):
+    m = new_mat(name)
+    b = NB(m)
+    u, v, _ = b.sep(b.uv("UVMap"))
+    s = b.math("FRACT", b.math("DIVIDE", b.math("ADD", u, v), 0.2))
+    st = b.math("LESS_THAN", s, 0.5)
+    col = b.mix(st, srgb((25, 25, 25)), srgb((215, 165, 20)))
+    b.finish(col, 0.55)
+    return m
+
+
+def mat_flat(name, col, rough=0.85, metal=0.0, noise=0.12):
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    base = b.mix(b.math("MULTIPLY", b.noise(obj, 2.0, 4.0), noise), col, tuple(c * 0.7 for c in col))
+    b.finish(base, rough, metal=metal)
+    return m
+
+
+def mat_glass(name, tint=(0.02, 0.025, 0.03)):
+    m = new_mat(name)
+    b = NB(m)
+    b.finish(tint, 0.06, metal=0.0)
+    b.bsdf.inputs["Specular IOR Level"].default_value = 0.8
+    return m
+
+
+def mat_emit(name, col, strength=1.0):
+    m = new_mat(name)
     m.use_nodes = True
     nt = m.node_tree
     for n in list(nt.nodes):
@@ -184,51 +500,103 @@ def mat_emit(name, col):
     out = nt.nodes.new("ShaderNodeOutputMaterial")
     em = nt.nodes.new("ShaderNodeEmission")
     em.inputs["Color"].default_value = (*col, 1)
-    em.inputs["Strength"].default_value = 1.0
+    em.inputs["Strength"].default_value = strength
     nt.links.new(em.outputs["Emission"], out.inputs["Surface"])
     return m
 
 
 def build_materials():
-    return {
+    g = lambda c: srgb(c)
+    M = {
         "road_asphalt": mat_asphalt("road_asphalt"),
-        "road_concrete": mat_concrete("road_concrete", 0.30, 1.5),
-        "road_paving": mat_pavers("road_paving", (0.24, 0.22, 0.20), (0.27, 0.25, 0.22)),
-        "road_sett": mat_pavers("road_sett", (0.20, 0.18, 0.17), (0.23, 0.21, 0.19), 0.12, 0.12),
-        "road_gravel": mat_concrete("road_gravel", 0.26, 8.0),
-        "curb_concrete": mat_concrete("curb_concrete", 0.36, 4.0),
-        "sidewalk_paving": mat_pavers("sidewalk_paving", (0.30, 0.29, 0.27), (0.33, 0.32, 0.30)),
-        "apron_sett": mat_pavers("apron_sett", (0.26, 0.21, 0.18), (0.30, 0.25, 0.21), 0.12, 0.12),
-        "bridge_concrete": mat_concrete("bridge_concrete", 0.27, 1.0),
-        "barrier_steel": mat_flat("barrier_steel", (0.55, 0.56, 0.57), 0.4, 0.85),
-        "verge_grass": mat_grass("verge_grass"),
-        "shoulder_gravel": mat_concrete("shoulder_gravel", 0.26, 8.0),
-        "terrain_grass": mat_grass("terrain_grass"),
-        "marking_white": mat_paint("marking_white"),
+        "yard_asphalt": mat_asphalt("yard_asphalt", 0.08, lanes=False, yard=True),
+        "path_asphalt": mat_asphalt("path_asphalt", 0.085, lanes=False),
+        "road_concrete": mat_concrete_yard("road_concrete", 0.27, 5.0, 3.5),
+        "road_paving": mat_pavers("road_paving", g((92, 88, 82)), g((100, 96, 88)), moss=False),
+        "road_sett": mat_pavers("road_sett", g((80, 76, 72)), g((90, 86, 80)), 0.12, 0.12, moss=False),
+        "road_gravel": mat_gravel("road_gravel"),
+        "curb_concrete": mat_kerb("curb_concrete", 0.26),
+        "sidewalk_paving": mat_pavers("sidewalk_paving", g((122, 120, 114)), g((112, 110, 104)), moss=False),
+        "apron_sett": mat_pavers("apron_sett", g((112, 82, 72)), g((96, 70, 62)), 0.12, 0.12, moss=False),
+        "bridge_concrete": mat_concrete_yard("bridge_concrete", 0.28, 100.0, 100.0),
+        "barrier_steel": mat_flat("barrier_steel", (0.30, 0.31, 0.31), 0.5, 0.9, 0.3),
+        "verge_grass": mat_terrain("verge_grass"),
+        "shoulder_gravel": mat_gravel("shoulder_gravel"),
+        "terrain_grass": mat_terrain("terrain_grass"),
+        "marking_white": mat_markings("marking_white"),
+        "yard_paving": mat_pavers("yard_paving", g((118, 117, 112)), g((106, 105, 100))),
+        "cycle_red": mat_pavers("cycle_red", g((120, 62, 54)), g((108, 56, 50))),
+        "yard_concrete": mat_concrete_yard("yard_concrete", 0.28, 5.0, 5.0),
+        "yard_slabs": mat_concrete_yard("yard_slabs", 0.26, 3.0, 1.5, slabs=True),
+        "yard_gravel": mat_gravel("yard_gravel"),
+        "hall_wall_grey": mat_hall("hall_wall_grey", g((182, 184, 182)), "h"),
+        "hall_wall_silver": mat_hall("hall_wall_silver", g((166, 170, 172)), "v"),
+        "hall_wall_white": mat_hall("hall_wall_white", g((196, 197, 194)), "h"),
+        "hall_wall_ivory": mat_hall("hall_wall_ivory", g((196, 186, 160)), "v"),
+        "hall_plinth": mat_concrete_yard("hall_plinth", 0.24, 6.0, 100.0),
+        "hall_flashing": mat_flat("hall_flashing", g((58, 62, 66)), 0.5, 0.3),
+        "roof_membrane": mat_flat("roof_membrane", g((70, 70, 70)), 0.85),
+        "skylight": mat_flat("skylight", g((190, 192, 190)), 0.3),
+        "reveal_hall": mat_flat("reveal_hall", g((140, 142, 142)), 0.6),
+        "reveal_plaster": mat_flat("reveal_plaster", g((160, 156, 146)), 0.85),
+        "plaster_light": mat_plaster("plaster_light", g((196, 192, 182))),
+        "plaster_grey": mat_plaster("plaster_grey", g((150, 150, 148))),
+        "plaster_beige": mat_plaster("plaster_beige", g((190, 176, 150))),
+        "plaster_cream": mat_plaster("plaster_cream", g((200, 184, 146))),
+        "plaster_pastel_blue": mat_plaster("plaster_pastel_blue", g((150, 166, 176))),
+        "brick_red": mat_pavers("brick_red", g((128, 62, 46)), g((118, 58, 44)), 0.25, 0.065, rot_uv=True, moss=False),
+        "plinth_dark": mat_flat("plinth_dark", g((90, 90, 88)), 0.9),
+        "roof_tiles_red": mat_lines_v("roof_tiles_red", g((120, 52, 36)), 0.33, 0.03, 0.7, 0.0),
+        "roof_tiles_brown": mat_lines_v("roof_tiles_brown", g((76, 50, 40)), 0.33, 0.03, 0.7, 0.0),
+        "roof_metal_graphite": mat_lines_v("roof_metal_graphite", g((52, 54, 56)), 0.35, 0.03, 0.45, 0.4),
+        "glass": mat_glass("glass"),
+        "door_glass": mat_glass("door_glass"),
+        "window_frame": mat_flat("window_frame", g((200, 200, 196)), 0.5, 0.0, 0.05),
+        "door_steel": mat_flat("door_steel", g((120, 124, 126)), 0.5, 0.4),
+        "garage_door": mat_lines_v("garage_door", g((160, 160, 156)), 0.55, 0.012, 0.5, 0.3),
+        "dock_door": mat_lines_v("dock_door", g((150, 156, 160)), 0.6, 0.012, 0.45, 0.3),
+        "dock_shelter": mat_flat("dock_shelter", (0.022, 0.022, 0.022), 0.75),
+        "hazard_stripes": mat_hazard("hazard_stripes"),
+        "noise_panel": mat_lines_v("noise_panel", g((104, 116, 108)), 0.5, 0.015, 0.6, 0.3),
+        "concrete_fence": mat_lines_v("concrete_fence", g((140, 136, 128)), 0.5, 0.02, 0.9, 0.0),
+        "concrete_wall": mat_concrete_yard("concrete_wall", 0.26, 4.0, 100.0),
+        "steel_galv": mat_flat("steel_galv", (0.33, 0.34, 0.34), 0.55, 0.85, 0.3),
+        "barrier_post": mat_flat("barrier_post", (0.30, 0.31, 0.31), 0.55, 0.85, 0.3),
+        "signal_red_on": mat_emit("signal_red_on", (1.0, 0.08, 0.03), 18.0),
+        "signal_green_on": mat_emit("signal_green_on", (0.1, 1.0, 0.55), 14.0),
     }
+    return M
 
 
 EMIT = {"road_asphalt": (0.06, 0.06, 0.06), "curb_concrete": (1.0, 1.0, 1.0), "sidewalk_paving": (1.0, 0.55, 0.15),
         "apron_sett": (1.0, 0.3, 0.1), "marking_white": (1.0, 1.0, 0.0), "bridge_concrete": (0.35, 0.45, 1.0),
         "barrier_steel": (0.2, 0.3, 1.0), "road_paving": (0.6, 0.35, 0.2), "road_concrete": (0.3, 0.3, 0.3),
-        "road_sett": (0.5, 0.3, 0.2), "road_gravel": (0.5, 0.45, 0.3)}
+        "road_sett": (0.5, 0.3, 0.2), "road_gravel": (0.5, 0.45, 0.3), "yard_paving": (0.0, 0.8, 0.8),
+        "yard_concrete": (0.0, 0.5, 1.0), "yard_asphalt": (0.6, 0.0, 0.6), "yard_slabs": (0.0, 0.8, 0.0),
+        "yard_gravel": (0.5, 0.35, 0.2), "cycle_red": (1.0, 0.0, 0.0)}
 
 
-# ------------------------------------------------------------------------------------------- scene
+# ============================================================================================ scene
 def reset():
     bpy.ops.wm.read_factory_settings(use_empty=True)
 
 
-def import_chunk(path, keep, root):
+def import_glb(path):
     before = set(bpy.data.objects)
     bpy.ops.import_scene.gltf(filepath=str(path), merge_vertices=False)
-    new = [o for o in bpy.data.objects if o not in before]
+    return [o for o in bpy.data.objects if o not in before]
+
+
+def import_chunk(path, keep, root):
+    new = import_glb(path)
+    out = []
     for o in new:
         if o.type != "MESH" or o.name.split(".")[0] not in keep:
             bpy.data.objects.remove(o, do_unlink=True)
             continue
         o.parent = root
-    return [o for o in bpy.data.objects if o not in before]
+        out.append(o)
+    return out
 
 
 def assign_materials(objs, mats, emit=False):
@@ -248,158 +616,219 @@ def assign_materials(objs, mats, emit=False):
                 slot.material = mats[key]
 
 
-def add_buildings(path, center, radius, root):
-    data = json.loads(Path(path).read_text(encoding="utf-8"))
-    # muted facade albedos (sheet metal / plaster / brick), WORKING_VALUE for context only
-    palette = {"magazyn": [(0.36, 0.37, 0.38), (0.30, 0.32, 0.34), (0.40, 0.39, 0.37)],
-               "produkcyjny": [(0.33, 0.33, 0.33), (0.27, 0.29, 0.31), (0.38, 0.36, 0.33)],
-               None: [(0.42, 0.39, 0.34), (0.36, 0.35, 0.33), (0.45, 0.41, 0.35), (0.34, 0.25, 0.21)]}
-    mats = {}
-    bm = None
-    count = 0
-    for b in data["buildings"]:
-        ring = b["ring"]
-        cx = sum(p[0] for p in ring) / len(ring)
-        cy = sum(p[1] for p in ring) / len(ring)
-        if math.hypot(cx - center[0], cy - center[1]) > radius or len(ring) < 3:
+def load_protos(mats):
+    """Street props + trees as hidden prototype objects (props rotated into the E,N,U frame)."""
+    coll = bpy.data.collections.new("protos")
+    bpy.context.scene.collection.children.link(coll)
+    protos = {}
+    files = [(REPO / "art-source/world/props/street_props.glb", True), (VEG / "trees.glb", False),
+             (VEG / "trees_lod2.glb", False)]
+    for path, rot in files:
+        if not path.exists():
             continue
-        pal = palette.get(b.get("function"), palette[None])
-        k = sum(ord(ch) for ch in b["id"]) % len(pal)      # deterministic variation
-        col = pal[k]
-        key = (b.get("function") in ("magazyn", "produkcyjny"), k)
-        if key not in mats:
-            mats[key] = mat_flat(f"bld_{len(mats)}", col, 0.85)
-        me = bpy.data.meshes.new("bld")
-        bm = bmesh.new()
-        z0, z1 = b["z0"] - 1.0, b["z0"] + b["h"]
-        bot = [bm.verts.new((x, y, z0)) for x, y in ring]
-        top = [bm.verts.new((x, y, z1)) for x, y in ring]
-        n = len(ring)
-        area = sum(ring[i][0] * ring[(i + 1) % n][1] - ring[(i + 1) % n][0] * ring[i][1] for i in range(n))
-        order = range(n) if area > 0 else range(n - 1, -1, -1)
-        o_ = list(order)
-        try:
-            bm.faces.new([top[i] for i in o_])
-        except ValueError:
-            pass
-        for a in range(n):
-            i, j = o_[a], o_[(a + 1) % n]
-            try:
-                bm.faces.new([bot[i], bot[j], top[j], top[i]])
-            except ValueError:
-                pass
-        bm.to_mesh(me)
-        bm.free()
-        ob = bpy.data.objects.new("bld", me)
-        ob.data.materials.append(mats[key])
+        for o in import_glb(path):
+            if o.type != "MESH":
+                continue
+            if rot:
+                o.data.transform(Matrix.Rotation(math.pi, 4, "Z"))
+            o.matrix_world = Matrix.Identity(4)
+            for c in o.users_collection:
+                c.objects.unlink(o)
+            coll.objects.link(o)
+            o.hide_render = True
+            o.hide_viewport = True
+            protos[o.name] = o
+    assign_materials(list(protos.values()), mats)
+    for o in protos.values():
+        for s in o.material_slots:
+            if s.material and s.material.name.startswith(("leaves", "impostor", "fence")):
+                try:
+                    s.material.surface_render_method = "DITHERED"
+                except AttributeError:
+                    pass
+    return protos
+
+
+def place_props(insts, protos, cam_pos, radius):
+    n = 0
+    for it in insts:
+        p = it["p"]
+        if p.startswith("tree_"):
+            continue
+        if math.hypot(it["e"] - cam_pos[0], it["n"] - cam_pos[1]) > radius:
+            continue
+        far = math.hypot(it["e"] - cam_pos[0], it["n"] - cam_pos[1]) > 120
+        src = protos.get(p + ".lod1") if far else None
+        src = src or protos.get(p)
+        if src is None:
+            continue
+        ob = bpy.data.objects.new(p, src.data)
+        ob.location = (it["e"], it["n"], it["z"])
+        ob.rotation_euler = (0, 0, it["yaw"])
+        if "sz" in it:
+            ob.scale = (1, 1, it["sz"])
         bpy.context.scene.collection.objects.link(ob)
-        count += 1
-    return count
+        n += 1
+    return n
 
 
-def _leaf_mat(name, col):
-    m = bpy.data.materials.new(name)
-    nt, bsdf, tc = _nodes(m)
-    n = _noise(nt, tc, 0.35, 3.0, 0.6)
-    ramp = _ramp(nt, n.outputs["Fac"], [(0.35, tuple(c * 0.75 for c in col)), (0.65, tuple(c * 1.25 for c in col))])
-    nt.links.new(ramp.outputs["Color"], bsdf.inputs["Base Color"])
-    bsdf.inputs["Roughness"].default_value = 0.92
-    f = _noise(nt, tc, 6.0, 4.0)
-    _bump(nt, bsdf, f.outputs["Fac"], 0.6, 0.2)
-    return m
-
-
-def _tree_parts(kind):
-    """Low-poly context vegetation, unit height (scaled by the per-point height h):
-    pine = thin trunk + irregular crown in the top third; shrub = irregular blob. One material per part."""
-    import random
-    rnd = random.Random(7 if kind == 0 else 11)
-    parts = []
-
-    def mesh(name, build, mat):
-        me = bpy.data.meshes.new(name)
-        bm = bmesh.new()
-        build(bm)
-        bm.to_mesh(me)
-        bm.free()
-        me.materials.append(mat)
-        for poly in me.polygons:
-            poly.use_smooth = False
-        parts.append(bpy.data.objects.new(name, me))
-
-    if kind == 0:
-        mesh("tpl_trunk", lambda bm: bmesh.ops.create_cone(
-            bm, cap_ends=True, segments=6, radius1=0.014, radius2=0.008, depth=0.72,
-            matrix=Matrix.Translation((0, 0, 0.36))), mat_flat("bark", (0.11, 0.075, 0.05), 0.9))
-
-        def crown(bm):
-            r = bmesh.ops.create_icosphere(bm, subdivisions=1, radius=1.0,
-                                           matrix=Matrix.Diagonal((0.15, 0.13, 0.17, 1)))
-            for v in r["verts"]:
-                v.co.x += rnd.uniform(-0.035, 0.035)
-                v.co.y += rnd.uniform(-0.035, 0.035)
-                v.co.z = v.co.z * rnd.uniform(0.7, 1.1) + 0.80
-        mesh("tpl_crown", crown, _leaf_mat("pine_leaf", (0.032, 0.048, 0.022)))
-    else:
-        def blob(bm):
-            r = bmesh.ops.create_icosphere(bm, subdivisions=2, radius=0.5)
-            for v in r["verts"]:
-                v.co *= rnd.uniform(0.8, 1.15)
-                v.co.z = v.co.z * 0.8 + 0.42
-        mesh("tpl_shrub", blob, _leaf_mat("shrub_leaf", (0.045, 0.062, 0.026)))
-    return parts
-
-
-def add_trees(path, center, radius):
-    p = Path(path)
-    if not p.exists():
-        return 0
-    data = json.loads(p.read_text(encoding="utf-8"))
-    sel = [t for t in data["trees"] if math.hypot(t[0] - center[0], t[1] - center[1]) < radius]
-    if not sel:
-        return 0
-    for kind in (0, 1):
-        pts = [t for t in sel if t[4] == kind]
-        if not pts:
+def place_trees(insts, protos, cam_pos, radius):
+    """One point cloud per (prototype, LOD) -> Instance on Points (scale = h / href, yaw, lean)."""
+    meta = json.loads((VEG / "trees_meta.json").read_text(encoding="utf-8"))["trees"]
+    groups = {}
+    for it in insts:
+        if not it["p"].startswith("tree_"):
             continue
-        for part in _tree_parts(kind):
-            me = bpy.data.meshes.new(f"pts_{part.name}")
-            me.from_pydata([(t[0], t[1], t[2] - 0.2) for t in pts], [], [])
-            attr = me.attributes.new("h", "FLOAT", "POINT")
-            attr.data.foreach_set("value", [t[3] for t in pts])
-            ob = bpy.data.objects.new(f"scatter_{part.name}", me)
-            bpy.context.scene.collection.objects.link(ob)
-            ng = bpy.data.node_groups.new(f"scatter_{part.name}", "GeometryNodeTree")
-            ng.interface.new_socket(name="Geometry", in_out="INPUT", socket_type="NodeSocketGeometry")
-            ng.interface.new_socket(name="Geometry", in_out="OUTPUT", socket_type="NodeSocketGeometry")
-            n = ng.nodes
-            gi, go = n.new("NodeGroupInput"), n.new("NodeGroupOutput")
-            inst = n.new("GeometryNodeInstanceOnPoints")
-            info = n.new("GeometryNodeObjectInfo")
-            info.inputs["Object"].default_value = part
-            h = n.new("GeometryNodeInputNamedAttribute")
-            h.data_type = "FLOAT"
-            h.inputs["Name"].default_value = "h"
-            rot = n.new("FunctionNodeRandomValue")
-            rot.data_type = "FLOAT_VECTOR"
-            rot.inputs["Min"].default_value = (0, 0, 0)
-            rot.inputs["Max"].default_value = (0.06, 0.06, 6.283)
-            rot.inputs["Seed"].default_value = 3 + kind      # same seed for trunk and crown of a tree
-            real = n.new("GeometryNodeRealizeInstances")
-            L = ng.links
-            L.new(gi.outputs["Geometry"], inst.inputs["Points"])
-            L.new(info.outputs["Geometry"], inst.inputs["Instance"])
-            L.new(h.outputs["Attribute"], inst.inputs["Scale"])
-            L.new(rot.outputs["Value"], inst.inputs["Rotation"])
-            L.new(inst.outputs["Instances"], real.inputs["Geometry"])
-            L.new(real.outputs["Geometry"], go.inputs["Geometry"])
-            mod = ob.modifiers.new("scatter", "NODES")
-            mod.node_group = ng
-            ob.data.materials.append(part.data.materials[0])
-    return len(sel)
+        d = math.hypot(it["e"] - cam_pos[0], it["n"] - cam_pos[1])
+        if d > radius:
+            continue
+        name = f"{it['p']}_{it['v']}"
+        lod = "" if d < 80 else (".lod1" if d < 250 else ".lod2")
+        groups.setdefault((name, lod), []).append(it)
+    total = 0
+    for (name, lod), pts in sorted(groups.items()):
+        src = protos.get(name + lod) or protos.get(name)
+        if src is None:
+            continue
+        href = meta[name]["href_m"]
+        me = bpy.data.meshes.new(f"pts_{name}{lod}")
+        me.from_pydata([(t["e"], t["n"], t["z"] - 0.15) for t in pts], [], [])
+        sc = me.attributes.new("sc", "FLOAT", "POINT")
+        sc.data.foreach_set("value", [t["h"] / href for t in pts])
+        rot = me.attributes.new("rot", "FLOAT_VECTOR", "POINT")
+        flat = []
+        for t in pts:
+            flat += [t["lean"] * math.cos(t["yaw"] * 3), t["lean"] * math.sin(t["yaw"] * 3), t["yaw"]]
+        rot.data.foreach_set("vector", flat)
+        ob = bpy.data.objects.new(f"trees_{name}{lod}", me)
+        bpy.context.scene.collection.objects.link(ob)
+        ng = bpy.data.node_groups.new(f"inst_{name}{lod}", "GeometryNodeTree")
+        ng.interface.new_socket(name="Geometry", in_out="INPUT", socket_type="NodeSocketGeometry")
+        ng.interface.new_socket(name="Geometry", in_out="OUTPUT", socket_type="NodeSocketGeometry")
+        N, L = ng.nodes, ng.links
+        gi, go = N.new("NodeGroupInput"), N.new("NodeGroupOutput")
+        inst = N.new("GeometryNodeInstanceOnPoints")
+        info = N.new("GeometryNodeObjectInfo")
+        info.inputs["Object"].default_value = src
+        a_sc = N.new("GeometryNodeInputNamedAttribute")
+        a_sc.data_type = "FLOAT"
+        a_sc.inputs["Name"].default_value = "sc"
+        a_rot = N.new("GeometryNodeInputNamedAttribute")
+        a_rot.data_type = "FLOAT_VECTOR"
+        a_rot.inputs["Name"].default_value = "rot"
+        L.new(gi.outputs["Geometry"], inst.inputs["Points"])
+        L.new(info.outputs["Geometry"], inst.inputs["Instance"])
+        L.new(a_sc.outputs["Attribute"], inst.inputs["Scale"])
+        L.new(a_rot.outputs["Attribute"], inst.inputs["Rotation"])
+        L.new(inst.outputs["Instances"], go.inputs["Geometry"])
+        ob.modifiers.new("inst", "NODES").node_group = ng
+        total += len(pts)
+    return total
 
 
-def setup_world(scene, engine, samples, res):
+def add_grass(terrain_objs, cam_pos, radius=55.0):
+    """Grass / weed cards scattered on the LOD0 terrain near the camera, density from the ground masks
+    (more in unmown grass, along the kerb line; none on forest floor or bare ground)."""
+    path = VEG / "grass_tuft.png"
+    if not path.exists():
+        return
+    m = bpy.data.materials.new("grass_tuft")
+    b = NB(m)
+    tex = b.nt.nodes.new("ShaderNodeTexImage")
+    tex.image = bpy.data.images.load(str(path))
+    b.link(tex.outputs["Color"], b.bsdf.inputs["Base Color"])
+    b.link(tex.outputs["Alpha"], b.bsdf.inputs["Alpha"])
+    b.bsdf.inputs["Roughness"].default_value = 0.9
+    try:
+        m.surface_render_method = "DITHERED"
+    except AttributeError:
+        pass
+    me = bpy.data.meshes.new("tuft")
+    V, F, UV = [], [], []
+    for k in range(3):
+        a = k * math.pi / 3
+        c, s = math.cos(a) * 0.35, math.sin(a) * 0.35
+        base = len(V)
+        V += [(-c, -s, 0), (c, s, 0), (c, s, 0.5), (-c, -s, 0.5)]
+        UV += [(0, 0), (1, 0), (1, 1), (0, 1)]
+        F.append((base, base + 1, base + 2, base + 3))
+    me.from_pydata(V, [], F)
+    uvl = me.uv_layers.new()
+    for poly in me.polygons:
+        for li in poly.loop_indices:
+            uvl.data[li].uv = UV[me.loops[li].vertex_index]
+    me.materials.append(m)
+    tuft = bpy.data.objects.new("tuft", me)
+    bpy.context.scene.collection.objects.link(tuft)
+    tuft.hide_render = True
+    for t in terrain_objs:
+        loc = t.matrix_world.inverted() @ Vector(cam_pos)
+        ng = bpy.data.node_groups.new("grass", "GeometryNodeTree")
+        ng.interface.new_socket(name="Geometry", in_out="INPUT", socket_type="NodeSocketGeometry")
+        ng.interface.new_socket(name="Geometry", in_out="OUTPUT", socket_type="NodeSocketGeometry")
+        N, L = ng.nodes, ng.links
+        gi, go = N.new("NodeGroupInput"), N.new("NodeGroupOutput")
+        pos = N.new("GeometryNodeInputPosition")
+        dist = N.new("ShaderNodeVectorMath")
+        dist.operation = "DISTANCE"
+        dist.inputs[1].default_value = (loc.x, loc.y, loc.z)
+        L.new(pos.outputs[0], dist.inputs[0])
+        near = N.new("FunctionNodeCompare")
+        near.data_type = "FLOAT"
+        near.operation = "LESS_THAN"
+        near.inputs[1].default_value = radius
+        L.new(dist.outputs["Value"], near.inputs[0])
+        col = N.new("GeometryNodeInputNamedAttribute")
+        col.data_type = "FLOAT_COLOR"
+        col.inputs["Name"].default_value = "Color"
+        sepc = N.new("FunctionNodeSeparateColor")
+        L.new(col.outputs["Attribute"], sepc.inputs[0])
+        # density = 14 * (0.35 + B) * (1 - G) * (1 - A) * (dist-to-road > 0.5 m)
+        mB = N.new("ShaderNodeMath"); mB.operation = "ADD"; mB.inputs[1].default_value = 0.35
+        L.new(sepc.outputs[2], mB.inputs[0])
+        g1 = N.new("ShaderNodeMath"); g1.operation = "SUBTRACT"; g1.inputs[0].default_value = 1.0
+        L.new(sepc.outputs[1], g1.inputs[1])
+        d0 = N.new("ShaderNodeMath"); d0.operation = "MULTIPLY"
+        L.new(mB.outputs[0], d0.inputs[0]); L.new(g1.outputs[0], d0.inputs[1])
+        rr = N.new("ShaderNodeMath"); rr.operation = "GREATER_THAN"; rr.inputs[1].default_value = 0.035
+        L.new(sepc.outputs[0], rr.inputs[0])
+        d1 = N.new("ShaderNodeMath"); d1.operation = "MULTIPLY"
+        L.new(d0.outputs[0], d1.inputs[0]); L.new(rr.outputs[0], d1.inputs[1])
+        d2 = N.new("ShaderNodeMath"); d2.operation = "MULTIPLY"; d2.inputs[1].default_value = 14.0
+        L.new(d1.outputs[0], d2.inputs[0])
+        dist_pts = N.new("GeometryNodeDistributePointsOnFaces")
+        dist_pts.distribute_method = "RANDOM"
+        L.new(gi.outputs["Geometry"], dist_pts.inputs["Mesh"])
+        L.new(near.outputs[0], dist_pts.inputs["Selection"])
+        L.new(d2.outputs[0], dist_pts.inputs["Density"])
+        inst = N.new("GeometryNodeInstanceOnPoints")
+        info = N.new("GeometryNodeObjectInfo")
+        info.inputs["Object"].default_value = tuft
+        rnd = N.new("FunctionNodeRandomValue")
+        rnd.data_type = "FLOAT_VECTOR"
+        rnd.inputs["Min"].default_value = (0, 0, 0)
+        rnd.inputs["Max"].default_value = (0.25, 0.25, 6.28)
+        rs = N.new("FunctionNodeRandomValue")
+        rs.data_type = "FLOAT"
+        rs.inputs[2].default_value = 0.45
+        rs.inputs[3].default_value = 1.25
+        L.new(dist_pts.outputs["Points"], inst.inputs["Points"])
+        L.new(info.outputs["Geometry"], inst.inputs["Instance"])
+        L.new(rnd.outputs["Value"], inst.inputs["Rotation"])
+        # mown verges (B = 0) get short tufts, unmown grass tall ones
+        sB = N.new("ShaderNodeMath"); sB.operation = "MULTIPLY_ADD"
+        L.new(sepc.outputs[2], sB.inputs[0]); sB.inputs[1].default_value = 0.9; sB.inputs[2].default_value = 0.3
+        sS = N.new("ShaderNodeMath"); sS.operation = "MULTIPLY"
+        L.new(rs.outputs[1], sS.inputs[0]); L.new(sB.outputs[0], sS.inputs[1])
+        L.new(sS.outputs[0], inst.inputs["Scale"])
+        join = N.new("GeometryNodeJoinGeometry")
+        L.new(gi.outputs["Geometry"], join.inputs[0])
+        L.new(inst.outputs["Instances"], join.inputs[0])
+        L.new(join.outputs[0], go.inputs["Geometry"])
+        t.modifiers.new("grass", "NODES").node_group = ng
+
+
+def setup_world(scene, engine, samples, res, light):
     w, h = (int(x) for x in res.split("x"))
     scene.render.resolution_x, scene.render.resolution_y = w, h
     scene.render.resolution_percentage = 100
@@ -407,25 +836,25 @@ def setup_world(scene, engine, samples, res):
         scene.render.engine = "CYCLES"
         scene.cycles.samples = samples
         scene.cycles.use_denoising = True
-        scene.cycles.device = "CPU"
     else:
         scene.render.engine = "BLENDER_EEVEE_NEXT"
         scene.eevee.taa_render_samples = samples
         try:
             scene.eevee.use_shadows = True
             scene.eevee.shadow_ray_count = 2
+            scene.eevee.shadow_step_count = 8
             scene.eevee.use_raytracing = False
             scene.eevee.use_gtao = True
-            scene.eevee.gtao_distance = 2.0
+            scene.eevee.gtao_distance = 1.5
+            scene.eevee.fast_gi_method = "GLOBAL_ILLUMINATION"
         except AttributeError:
             pass
     scene.view_settings.view_transform = "AgX"
     looks = [i.identifier for i in scene.view_settings.bl_rna.properties["look"].enum_items]
-    for lk in ("AgX - Medium High Contrast", "AgX - Base Contrast"):
+    for lk in ("AgX - Base Contrast", "AgX - Medium High Contrast"):
         if lk in looks:
             scene.view_settings.look = lk
             break
-    scene.view_settings.exposure = -0.9
     world = bpy.data.worlds.new("sky")
     scene.world = world
     world.use_nodes = True
@@ -434,27 +863,77 @@ def setup_world(scene, engine, samples, res):
         nt.nodes.remove(n)
     sky = nt.nodes.new("ShaderNodeTexSky")
     sky.sky_type = "NISHITA"
-    sky.sun_elevation = math.radians(32)
-    sky.sun_rotation = math.radians(215)
     sky.altitude = 150
     sky.air_density = 1.0
-    sky.dust_density = 1.0
     bg = nt.nodes.new("ShaderNodeBackground")
-    bg.inputs["Strength"].default_value = 0.30
     out = nt.nodes.new("ShaderNodeOutputWorld")
-    nt.links.new(sky.outputs["Color"], bg.inputs["Color"])
-    nt.links.new(bg.outputs["Background"], out.inputs["Surface"])
     sun = bpy.data.lights.new("sun", "SUN")
-    sun.energy = 4.5
-    sun.angle = math.radians(0.6)
-    sun.color = (1.0, 0.96, 0.9)
     so = bpy.data.objects.new("sun", sun)
     scene.collection.objects.link(so)
-    # sun in the SW (azimuth 215 deg from north, elevation 32 deg): light travels toward NE.
-    # Unrotated light points along -Z; X tilt sends it toward +Y (north), Z turns it by -35 deg (to NE).
-    so.rotation_euler = (math.radians(90 - 32), 0, math.radians(-35))
+    # horizon haze: the view direction's z drives a mix toward a haze colour at / below the horizon (the tile
+    # ends 1 km away; below the horizon the camera sees haze, not the black Nishita ground)
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    sepz = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(tc.outputs["Generated"], sepz.inputs[0])
+    hz = nt.nodes.new("ShaderNodeMapRange")
+    hz.inputs["From Min"].default_value = -0.02
+    hz.inputs["From Max"].default_value = 0.25
+    hz.inputs["To Min"].default_value = 1.0
+    hz.inputs["To Max"].default_value = 0.0
+    nt.links.new(sepz.outputs["Z"], hz.inputs["Value"])
+    mixh = nt.nodes.new("ShaderNodeMix")
+    mixh.data_type = "RGBA"
+    nt.links.new(hz.outputs["Result"], mixh.inputs["Factor"])
+    if light == "lowsun":
+        el, az = 8.0, 235.0           # late afternoon, WSW (autumn in Białystok)
+        sky.sun_elevation = math.radians(el)
+        sky.sun_rotation = math.radians(az)
+        sky.dust_density = 2.5
+        sky.sun_disc = False
+        nt.links.new(sky.outputs["Color"], mixh.inputs["A"])
+        mixh.inputs["B"].default_value = (0.55, 0.50, 0.44, 1)
+        bg.inputs["Strength"].default_value = 0.30
+        sun.energy = 3.0
+        sun.angle = math.radians(0.6)
+        sun.color = (1.0, 0.78, 0.56)
+        scene.view_settings.exposure = -0.3
+    else:                             # overcast: grey gradient sky + very soft weak key light
+        el, az = 40.0, 200.0
+        grad = nt.nodes.new("ShaderNodeMix")
+        grad.data_type = "RGBA"
+        nt.links.new(sepz.outputs["Z"], grad.inputs["Factor"])
+        grad.inputs["A"].default_value = (0.78, 0.80, 0.82, 1)
+        grad.inputs["B"].default_value = (0.55, 0.58, 0.63, 1)
+        nt.links.new(grad.outputs["Result"], mixh.inputs["A"])
+        mixh.inputs["B"].default_value = (0.74, 0.76, 0.77, 1)
+        bg.inputs["Strength"].default_value = 1.0
+        sun.energy = 0.9
+        sun.angle = math.radians(40)
+        sun.color = (0.97, 0.98, 1.0)
+        scene.view_settings.exposure = -0.45
+    nt.links.new(mixh.outputs["Result"], bg.inputs["Color"])
+    nt.links.new(bg.outputs["Background"], out.inputs["Surface"])
+    # light travels from azimuth az (from north, clockwise) and elevation el
+    so.rotation_euler = (math.radians(90 - el), 0, math.radians(180 - az))
     scene.render.image_settings.file_format = "JPEG"
-    scene.render.image_settings.quality = 86
+    scene.render.image_settings.quality = 88
+
+
+def add_far_ground(z, pos):
+    """Large plane beyond the tile (distant fields and woods), so the horizon is land, not void."""
+    me = bpy.data.meshes.new("far_ground")
+    R = 15000.0
+    me.from_pydata([(pos[0] - R, pos[1] - R, z), (pos[0] + R, pos[1] - R, z), (pos[0] + R, pos[1] + R, z),
+                    (pos[0] - R, pos[1] + R, z)], [], [(0, 1, 2, 3)])
+    m = new_mat("far_ground")
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    n = b.noise(obj, 0.004, 4.0, 0.6)
+    col = b.ramp(n, [(0.4, srgb((44, 54, 34))), (0.55, srgb((70, 80, 46))), (0.7, srgb((96, 94, 62)))])
+    b.finish(col, 0.95)
+    me.materials.append(m)
+    ob = bpy.data.objects.new("far_ground", me)
+    bpy.context.scene.collection.objects.link(ob)
 
 
 def look_at(obj, target):
@@ -468,70 +947,89 @@ def main():
     man = json.loads((REPO / f"Data/Regions/{a.region}/generated/world_manifest.json").read_text(encoding="utf-8"))
     wanted = [c for c in cams["cameras"] if not a.cams or c["id"] in a.cams.split(",")]
     out = Path(a.out)
-    if not out.is_absolute():
-        out = REPO / out
     out.mkdir(parents=True, exist_ok=True)
     world_root = Path(a.world_root) if a.world_root else None
+    lights = ["overcast", "lowsun"] if a.light == "both" else [a.light]
     for cam in wanted:
-        reset()
-        scene = bpy.context.scene
-        ortho = cam["type"] == "ortho"
-        setup_world(scene, a.engine, a.samples, "1600x1600" if ortho else a.res)
-        root = bpy.data.objects.new("world_root", None)
-        root.rotation_euler = (0, 0, math.pi)      # Blender import (-E, -N, U) -> (E, N, U)
-        scene.collection.objects.link(root)
+        for light in (lights if cam["type"] != "ortho" else ["overcast"]):
+            render_cam(a, cam, man, out, world_root, light)
+
+
+def render_cam(a, cam, man, out, world_root, light):
+    reset()
+    scene = bpy.context.scene
+    ortho = cam["type"] == "ortho"
+    setup_world(scene, a.engine, a.samples, "1600x1600" if ortho else a.res, light)
+    root = bpy.data.objects.new("world_root", None)
+    root.rotation_euler = (0, 0, math.pi)      # Blender import (-E, -N, U) -> (E, N, U)
+    scene.collection.objects.link(root)
+    if ortho:
+        ctr = cam["center"]
+        tgt = (ctr[0], ctr[1], 0)
+        radius = cam["size_m"] * 0.8
+    else:
+        tgt = cam["look_at"]
+        radius = 1100.0
+    pos = cam.get("pos", [tgt[0], tgt[1], 0])
+    objs, terrain0, insts = [], [], []
+    for ch in man["chunks"]:
+        b = ch["bounds_local_m"]
+        cx, cy = (b["e_min"] + b["e_max"]) / 2, (b["n_min"] + b["n_max"]) / 2
+        dist = min(math.hypot(cx - pos[0], cy - pos[1]), math.hypot(cx - tgt[0], cy - tgt[1]))
+        if dist > radius + 190:
+            continue
         if ortho:
-            ctr = cam["center"]
-            tgt = (ctr[0], ctr[1], 0)
-            radius = cam["size_m"] * 0.8
+            keep = {"road", "bridge", "markings", "paved"}
         else:
-            tgt = cam["look_at"]
-            radius = 900.0
-        pos = cam.get("pos", [tgt[0], tgt[1], 0])
-        objs = []
-        for ch in man["chunks"]:
-            b = ch["bounds_local_m"]
-            cx, cy = (b["e_min"] + b["e_max"]) / 2, (b["n_min"] + b["n_max"]) / 2
-            dist = min(math.hypot(cx - pos[0], cy - pos[1]), math.hypot(cx - tgt[0], cy - tgt[1]))
-            if dist > radius + 190:
-                continue
-            if ortho:
-                keep = {"road", "bridge", "markings"}
-            else:
-                lod = 0 if dist < 330 else (1 if dist < 600 else 2)
-                keep = {f"terrain_lod{lod}", "road", "bridge", "markings"}
-            path = (world_root / Path(ch["file"]).name) if world_root else REPO / ch["file"]
-            objs += import_chunk(path, keep, root)
-        if ortho:
-            assign_materials(objs, None, emit=True)
-            scene.render.film_transparent = True
-            scene.render.image_settings.file_format = "PNG"
-            scene.render.image_settings.color_mode = "RGBA"
-            scene.view_settings.view_transform = "Standard"
-            scene.view_settings.exposure = 0
-        else:
-            assign_materials(objs, build_materials())
-            n = add_buildings(REPO / f"Data/raw/derived/{a.region}/world/preview_buildings.json",
-                              tgt, 800.0, root)
-            nt_ = add_trees(REPO / f"Data/raw/derived/{a.region}/world/preview_trees.json", tgt, 900.0)
-            print(f"[render] {cam['id']}: {len(objs)} objects, {n} buildings, {nt_} trees")
-        cd = bpy.data.cameras.new(cam["id"])
-        co = bpy.data.objects.new(cam["id"], cd)
-        scene.collection.objects.link(co)
-        scene.camera = co
-        cd.clip_start, cd.clip_end = 0.1, 4000
-        if ortho:
-            cd.type = "ORTHO"
-            cd.ortho_scale = cam["size_m"]
-            co.location = (cam["center"][0], cam["center"][1], cam["height"])
-            co.rotation_euler = (0, 0, 0)
-        else:
-            cd.angle = math.radians(cam["fov_deg"])
-            co.location = cam["pos"]
-            look_at(co, cam["look_at"])
-        scene.render.filepath = str(out / (cam["id"] + (".png" if ortho else ".jpg")))
-        bpy.ops.render.render(write_still=True)
-        print(f"[render] wrote {scene.render.filepath}")
+            lod = 0 if dist < 330 else (1 if dist < 600 else 2)
+            keep = {f"terrain_lod{lod}", "road", "bridge", "markings", "paved", "furniture"}
+            keep.add("buildings" if dist < 700 else "buildings_lod1")
+        path = (world_root / Path(ch["file"]).name) if world_root else REPO / ch["file"]
+        new = import_chunk(path, keep, root)
+        objs += new
+        terrain0 += [o for o in new if o.name.startswith("terrain_lod0")]
+        ip = (world_root / Path(ch["instances"]["file"]).name) if world_root else REPO / ch["instances"]["file"]
+        if not ortho and ip.exists():
+            insts += json.loads(ip.read_text(encoding="utf-8"))["instances"]
+    if ortho:
+        assign_materials(objs, None, emit=True)
+        scene.render.film_transparent = True
+        scene.render.image_settings.file_format = "PNG"
+        scene.render.image_settings.color_mode = "RGBA"
+        scene.view_settings.view_transform = "Standard"
+        scene.view_settings.exposure = 0
+    else:
+        mats = build_materials()
+        assign_materials(objs, mats)
+        zmin = min((min((o.matrix_world @ Vector(c)).z for c in o.bound_box) for o in objs if o.name.startswith("terrain")),
+                   default=pos[2] - 10)
+        add_far_ground(zmin - 2.0, pos)
+        protos = load_protos(mats)
+        n_props = place_props(insts, protos, pos, 650.0)
+        n_trees = place_trees(insts, protos, pos, 1300.0)
+        bpy.context.view_layer.update()
+        if not a.no_grass:
+            add_grass(terrain0, pos)
+        print(f"[render] {cam['id']}/{light}: {len(objs)} chunk objects, {n_props} props, {n_trees} trees")
+    cd = bpy.data.cameras.new(cam["id"])
+    co = bpy.data.objects.new(cam["id"], cd)
+    scene.collection.objects.link(co)
+    scene.camera = co
+    cd.clip_start, cd.clip_end = 0.1, 4000
+    if ortho:
+        cd.type = "ORTHO"
+        cd.ortho_scale = cam["size_m"]
+        co.location = (cam["center"][0], cam["center"][1], cam["height"])
+        co.rotation_euler = (0, 0, 0)
+        fn = cam["id"] + ".png"
+    else:
+        cd.angle = math.radians(cam["fov_deg"])
+        co.location = cam["pos"]
+        look_at(co, cam["look_at"])
+        fn = f"{cam['id']}__{light}.jpg"
+    scene.render.filepath = str(out / fn)
+    bpy.ops.render.render(write_still=True)
+    print(f"[render] wrote {scene.render.filepath}")
 
 
 main()

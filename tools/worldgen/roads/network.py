@@ -25,7 +25,7 @@ SURFACE_MAT = {"asphalt": "road_asphalt", "paved": "road_asphalt", "concrete": "
                "ground": "road_gravel", "dirt": "road_gravel"}
 
 # side profile families
-URBAN, ISLAND, RURAL = 0, 1, 2
+URBAN, ISLAND, RURAL, MEDIAN_RURAL = 0, 1, 2, 3
 WALK_MATS = ["curb_concrete", "sidewalk_paving", "bridge_concrete", "verge_grass"]
 
 
@@ -213,6 +213,8 @@ def apply_edge_overrides(net: Network, edges, overrides):
     for ov in overrides:
         tgt = ov.get("target", {})
         ids = []
+        if "building" in tgt or ov.get("kind"):
+            continue                       # streetscape overrides (buildings, paved areas): streetscape.stage
         if "edge" in tgt:
             ids = [tgt["edge"]] if tgt["edge"] in net.sections else []
         elif "osm_way" in tgt:
@@ -348,7 +350,8 @@ def prepare_chain(c: Chain, net: Network, sec_index: dict):
 
 
 # --------------------------------------------------------------------------------------------
-def assign_sides(net: Network, footways: list, built_up: bool = True):
+def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: list | None = None,
+                 yards=None):
     """Per-station side profile parameters for every chain (left 'L' and right 'R' of chain direction)."""
     # one-way carriageways (for median detection)
     ow_lines, ow_meta = [], []
@@ -358,6 +361,7 @@ def assign_sides(net: Network, footways: list, built_up: bool = True):
             ow_meta.append(c)
     ow_tree = shapely.STRtree(ow_lines) if ow_lines else None
     ft_tree = shapely.STRtree(footways) if footways else None
+    wk_tree = shapely.STRtree(walkways) if walkways else ft_tree
 
     for c in net.chains:
         n = len(c.line.s)
@@ -365,6 +369,22 @@ def assign_sides(net: Network, footways: list, built_up: bool = True):
         idx = np.arange(0, n, step)
         if idx[-1] != n - 1:
             idx = np.append(idx, n - 1)
+        # rural cross-section (no kerbs: paved shoulder + verge/ditch, PTB2022 § 23 ust. 10) on fast GP/G roads
+        # with no footway within RURAL_FOOT_M on either side (urban kerbed streets keep URBAN). WORKING_VALUE rule.
+        sec_mid = net.sec_list[int(c.sec_idx[len(c.sec_idx) // 2])]
+        fast = (built_up and sec_mid.cls in ("GP", "G", "S", "A") and (sec_mid.maxspeed or 50) >= S.RURAL_MIN_SPEED
+                and not c.roundabout and not c.bridge.all() and wk_tree is not None)
+        rural_d = {"L": np.zeros(n, bool), "R": np.zeros(n, bool)}
+        if fast:
+            win = max(1, int(round(30.0 / 4.0)))
+            for side_, sg in (("L", 1.0), ("R", -1.0)):
+                hits = np.zeros(len(idx))
+                for j, i in enumerate(idx):
+                    q = Point(*(c.line.p[i] + c.line.n[i] * sg * (c.hw[i] + S.RURAL_FOOT_M / 2)))
+                    hits[j] = 1.0 if len(wk_tree.query(q.buffer(S.RURAL_FOOT_M / 2 + 1.0))) else 0.0
+                hs = np.array([hits[max(0, j - win):j + win + 1].mean() for j in range(len(idx))]) < 0.2
+                rural_d[side_] = np.interp(np.arange(n), idx, hs.astype(float)) > 0.5
+        c.meta["rural"] = {k: round(float(v.mean()), 2) for k, v in rural_d.items()}
         for side, sgn in (("L", 1.0), ("R", -1.0)):
             walk = np.zeros(len(idx))
             median = np.zeros(len(idx))
@@ -402,11 +422,22 @@ def assign_sides(net: Network, footways: list, built_up: bool = True):
             med_s = np.array([median[max(0, j - win):j + win + 1].mean() for j in range(len(idx))]) > 0.45
             walk_d = np.interp(np.arange(n), idx, walk_s.astype(float)) > 0.5
             med_d = np.interp(np.arange(n), idx, med_s.astype(float)) > 0.5
-            kind = np.full(n, URBAN if built_up else RURAL)
+            kind = np.where(rural_d[side] | (not built_up), RURAL, URBAN)
             h = np.full(n, S.KERB_HEIGHT)
             w = np.where(walk_d & ~med_d, S.SIDEWALK_W, 0.0)
             mat = np.where(walk_d & ~med_d, 1, 0)
             depth = np.full(n, S.FLANGE_DEPTH)
+            # service roads running through a paved yard (BDOT10k plac / parking): no kerb, flush with the yard
+            if yards is not None and sec_mid.cls == "D":
+                inyard = np.zeros(len(idx))
+                for jj, i in enumerate(idx):
+                    q = c.line.p[i] + c.line.n[i] * sgn * (c.hw[i] + 2.0)
+                    inyard[jj] = 1.0 if yards.contains(Point(*q)) else 0.0
+                win = max(1, int(round(12.0 / 4.0)))
+                ys = np.array([inyard[max(0, jj - win):jj + win + 1].mean() for jj in range(len(idx))]) > 0.5
+                yd = np.interp(np.arange(n), idx, ys.astype(float)) > 0.5
+                h[yd], w[yd] = 0.0, 0.0
+                walk_d = walk_d & ~yd
             # explicit overrides (in OSM edge direction -> convert to chain side)
             for i_sec in np.unique(c.sec_idx):
                 sec = net.sec_list[int(i_sec)]
@@ -424,6 +455,9 @@ def assign_sides(net: Network, footways: list, built_up: bool = True):
                     w[m], mat[m] = 0.0, 0
                 elif kd == "flush":           # paved yard / no kerb: flat edge strip at road level
                     h[m], w[m], mat[m] = 0.0, 0.0, 0
+            other = rural_d["L" if side == "R" else "R"]
+            fast_med = fast and (sec_mid.maxspeed or 50) >= 90
+            kind[med_d] = np.where(other[med_d] | fast_med, MEDIAN_RURAL, URBAN)
             if c.roundabout and side == ("L" if (c.dirn > 0).mean() >= 0.5 else "R"):
                 kind[:] = ISLAND
                 w[:] = S.ROUNDABOUT_APRON_W
@@ -457,15 +491,26 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
                 (ap, top + S.KERB_HEIGHT, ap + S.KERB_TOP_W, top + S.KERB_HEIGHT, "curb_concrete"),
                 (ap + S.KERB_TOP_W, top + S.KERB_HEIGHT, ap + S.KERB_TOP_W, top + S.KERB_HEIGHT - depth,
                  "curb_concrete")]
+    if kind == MEDIAN_RURAL:
+        ps = S.PAVED_SHOULDER_MEDIAN
+        z0 = -S.CROSSFALL * ps
+        return [(0.0, 0.0, ps, z0, "road_asphalt"),
+                (ps, z0, ps + 0.5, z0 - 0.03, "shoulder_gravel"),
+                (ps + 0.5, z0 - 0.03, ps + 2.0, z0 - 0.12, "verge_grass"),
+                (ps + 2.0, z0 - 0.12, ps + 2.0, z0 - 0.12 - depth, "verge_grass")]
     if kind == RURAL:
-        sw = 1.0
-        z1 = -S.SHOULDER_CROSSFALL * sw
+        ps = S.PAVED_SHOULDER
+        zp = -S.CROSSFALL * ps
+        sw = 0.75
+        z1 = zp - S.SHOULDER_CROSSFALL * sw
         d = S.DITCH_DEPTH
-        u2 = sw + d * S.DITCH_SLOPE
+        u0 = ps + sw
+        u2 = u0 + d * S.DITCH_SLOPE
         u3 = u2 + S.DITCH_BOTTOM_W
         u4 = u3 + (d + z1) * S.DITCH_SLOPE
-        return [(0.0, 0.0, sw, z1, "shoulder_gravel"),
-                (sw, z1, u2, z1 - d, "verge_grass"),
+        return [(0.0, 0.0, ps, zp, "road_asphalt"),
+                (ps, zp, u0, z1, "shoulder_gravel"),
+                (u0, z1, u2, z1 - d, "verge_grass"),
                 (u2, z1 - d, u3, z1 - d, "verge_grass"),
                 (u3, z1 - d, u4, 0.0, "verge_grass"),
                 (u4, 0.0, u4, -depth, "verge_grass")]
