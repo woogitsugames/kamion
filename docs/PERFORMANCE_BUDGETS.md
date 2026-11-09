@@ -72,6 +72,17 @@ Findings to act on once the A16 is measured:
 Device runs to do (phone was PIN-locked 2026-11-09): WorldC Low/Medium, route autopilot at 50 km/h, 90 s and 30 min:
 p50/p95/p99, PSS, temperature; Frame Debugger / Arm Performance Studio for the draw and shadow numbers above.
 
+## Measured on the Galaxy A16 — world C, 2026-11-09 r3 (ADR 0013)
+Source: `docs/reports/device/DEVICE-RUN-2026-11-09.md` §r3. GPU = `FrameTimingManager` p50, 30 FPS cap.
+
+| View | Low | Medium |
+|---|---|---|
+| Start route, 40 t, 50 km/h (s ≤ 900 m) | 29.98 FPS, p95 33.50 ms, GPU 16.3 ms, PSS 534 MB | 29.97 FPS, p95 33.52 ms, GPU 23.2 ms, PSS 559 MB |
+| DK8 forest (`dk8-dk19-exit`, worst view so far) | 30.0 FPS, GPU 26.1 ms | 27.0 FPS, GPU 36.9 ms (over budget) |
+| World collision cooking at load (265 meshes) | 250–259 ms (S24+: 71–78 ms) | same |
+
+Medium tier is MSAA 2× (4× cost +28 ms GPU in the forest on the G57). Leaf cards use `Kamion/Vegetation` on Low/Medium.
+
 ## World content v2 (ADR 0012) — build and memory, 2026-11-09
 Sources: `artifacts/world/bialystok-industrial-c-import.json` (bake), `BUILD_CONTENT` lines of the build logs (Unity build
 report, sizes before LZ4HC), APK file sizes. Tile C = 4 km², 64 chunks, ≈ 110 800 instances (2 300 props + 108 500 trees).
