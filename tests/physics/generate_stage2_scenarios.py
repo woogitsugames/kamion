@@ -226,7 +226,7 @@ for kmh in [10, 35]:
        [chk("radius_error_m", mx=0.6, frm=30, source="path following"),
         chk("lat_accel_ms2", mn=(kmh / 3.6) ** 2 / 50 * 0.9, mx=(kmh / 3.6) ** 2 / 50 * 1.1, frm=30, status=D, source="v^2/R")] +
        ([chk("trailer_offtracking_m", mn=0.4, mx=0.8, frm=30, status=D,
-             source="steady low-speed offtracking: sqrt(R^2+e^2) vs sqrt(R^2+e^2-L^2) with e = 0.55 m, L = 7.7 m -> 0.59 m")] if kmh == 10 else
+             source="steady low-speed offtracking: sqrt(R^2+e^2) vs sqrt(R^2+e^2-L^2) with e = 0.68 m, L = 7.7 m -> 0.59 m")] if kmh == 10 else
         [chk("trailer_offtracking_m", mn=-0.5, mx=0.55, frm=30, source="offtracking shrinks / reverses with speed (tire slip angles)"),
          chk("max_trailer_roll_deg", mx=4, frm=30, source="moderate roll at 0.19 g")]) + stable,
        variants=COMB)

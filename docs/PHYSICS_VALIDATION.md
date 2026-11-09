@@ -239,6 +239,10 @@ Each file has 17 columns: speed, rpm, gear, accelerations, yaw, articulation, ki
 
 Tolerances are in `tests/golden/tolerances.json` as per-column absolute + relative values. A column may have up to 3 % outlier samples. Test: `Stage2Tests.GoldenTelemetry_Matches`. After an intended physics change, run `--update-golden` and review the CSV diff in the PR.
 
+### 6a. Dimension sync, ADR 0019 (2026-11-09)
+
+Fifth-wheel lead 0.55 -> 0.68 m (combination 16.47 m <= 16.50 m), cargo bay synced to the model (frontZ 1.572, length 13.512, width 2.50, height 2.58), body mass element centre y 2.60 -> 2.65. All 98 scenarios (482 checks) and 146 unit tests pass. Static loads laden40: front 6.27 -> 6.62 t, drive 11.11 -> 10.76 t. Metrics that moved more than 2 % against the previous run (all inside their check ranges): hill-start shift timing (ASR-limited launch, shift_count 5 -> 7, same speed after 30 s; overlay PNG looked at), coupling kingpin longitudinal peak -12.7 % (new jaw position), jackknife articulation -5 to -6 % (more front axle load), ABS stop mfdd -2.3 % with stop distance +1.3 %, speed-bump Fz ratio +4.4 % / cab heave +3.4 %. Goldens regenerated: brake_80_0_dry_abs_comb, brake_80_0_wet_abs_comb, jackknife_wet_curve_noabs_empty, launch_6pct_uphill_comb (ABS cycle / shift phase moved). Other goldens still pass unchanged.
+
 ## 7. Known gaps / not modelled
 
 - **Not run in Unity or on the phone.** PhysX integration of two bodies with this constraint, cost on the Samsung A, and the feel test (docs/03 Stage 2 gate) are still open.

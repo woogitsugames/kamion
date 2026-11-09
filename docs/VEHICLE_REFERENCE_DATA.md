@@ -183,7 +183,7 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 
 | Parameter | Value | Unit | Status | Source / derivation |
 |---|---|---|---|---|
-| Jaw position (tractor frame) | (0, 1.15, 0.55) | m | WORKING_VALUE | 0.55 m ahead of the drive axle; 1.15 m height = dims.json fifth_wheel_height_m (brief class range 1.10-1.15 m; ISO 1726 not opened, UNVERIFIED). Was 1.20 until ADR 0014 |
+| Jaw position (tractor frame) | (0, 1.15, 0.68) | m | WORKING_VALUE | 0.68 m ahead of the drive axle (was 0.55 until ADR 0019: 1.45 + 3.70 − 0.55 + 12.00 = 16.60 m exceeded the 16.50 m limit of 96/53/EC Annex I 1.1; now 16.47 m); 1.15 m height = dims.json fifth_wheel_height_m (brief class range 1.10-1.15 m; ISO 1726 not opened, UNVERIFIED). Was 1.20 until ADR 0014 |
 | Pitch (fore/aft plate) limit | ±12 | deg | WORKING_VALUE | Soft stop, 10 Hz |
 | Roll coupling stiffness / damping / hard limit | 1.0e7 N m/rad / 2.0e5 N m s/rad / ±4° | – | WORKING_VALUE | Implicit soft constraint (unconditionally stable) |
 | Articulation stop (cab/frame contact) | ±90 | deg | WORKING_VALUE | Soft stop 3 Hz, critically damped (deformable contact) |
@@ -200,7 +200,9 @@ Frame: origin on the ground below the kingpin, axles at negative z.
 |---|---|---|---|---|
 | Body length / width | 13.6 / 2.55 | m | SOURCED via docs/04 §5 | EU legal maximum (Directive 96/53/EC, UNVERIFIED) |
 | Kingpin height | 1.15 | m | WORKING_VALUE | Matches the fifth wheel; one source art-source/truck/dims.json (ADR 0014) |
-| Kingpin to front wall | 1.6 | m | DERIVED | Front swing radius √(1.6² + 1.275²) = 2.04 m (96/53/EC limit, UNVERIFIED) |
+| Kingpin to front wall | 1.6 | m | DERIVED | Front swing radius √(1.6² + 1.275²) = 2.04 m (96/53/EC limit, UNVERIFIED; box bound, the model's rounded corner measures 2.029 m) |
+| Cargo bay (front wall inner face z / length / width / height) | 1.572 / 13.512 / 2.50 / 2.58 | m | WORKING_VALUE | Synced to the model (dims.json trailer_cargo_*, ADR 0019): clear height under the top rail 2.58 m (≈ 2.66 m under the roof bows); floor 1.30 + 2.58 = 3.88 m leaves 12 cm below the 4.00 m roof top. Was 1.55 / 13.5 / 2.48 / 2.70 (floor + height = 4.00 m, no roof) |
+| Body mass element | centre y 2.65, size y 2.70 | m | WORKING_VALUE | Spans floor top 1.30 → roof top 4.00 (was centre 2.60) |
 | Empty mass (sum of elements) | 7000 | kg | WORKING_VALUE | Frame 2200, floor 1100, body/curtains/roof 1300, tridem + wheels + brakes 2250, landing gear 150 |
 | Empty CoG / static kingpin load | z −5.89 m / 1645 kg | – | DERIVED | Lever rule over the tridem centre |
 | Tridem axle positions | −6.39 / −7.70 / −9.01 (1.31 m spacing) | m | WORKING_VALUE | |
@@ -218,12 +220,12 @@ Same model and shape factors as 315/80 R22.5 (all WORKING_VALUE) except: effecti
 
 | Preset | Cargo | GCW | Axle loads front / drive / tridem | Kingpin |
 |---|---|---|---|---|
-| solo | – | 7.5 t | 4.81 / 2.69 / – t | – |
-| empty | 0 | 14.5 t | 5.05 / 4.09 / 5.36 t (DERIVED) | 1.65 t |
-| laden40 | 25.5 t, uniform over the bay, CoG 2.3 m (floor 1.30 + 1.0) | **40.0 t** | 6.27 / 11.11 / 22.62 t | 9.88 t |
+| solo | – | 7.5 t | 4.81 / 2.69 / – t (fifth-wheel mass moved with the jaw: ±0.01 t) | – |
+| empty | 0 | 14.5 t | 5.10 / 4.00 / 5.40 t (DERIVED, jaw 0.68 m) | 1.60 t |
+| laden40 | 25.5 t, uniform over the bay, CoG 2.3 m (floor 1.30 + 1.0) | **40.0 t** | 6.62 / 10.76 / 22.62 t (jaw 0.68 m; was 6.27 / 11.11 with 0.55 m) | 9.88 t |
 | cargo24 | 24 t | 38.5 t | – | – |
 
-The 40 t validation set uses GCW = 40.0 t exactly (the legal maximum, worst case). Cargo CoG height and position are scenario parameters (rollover scenarios use 1.9 m and 2.6 m).
+The 40 t validation set uses GCW = 40.0 t exactly (the legal maximum, worst case). Limits (Directive 96/53/EC Annex I section 3, numbering and values quoted from the owner's reference list, text UNVERIFIED): drive axle 11.5 t, non-driving single axle 10 t, tridem 24 t. The laden40 loads 6.62 / 10.76 / 22.62 t are all within them (drive axle margin 0.74 t; 0.39 t before ADR 0019). Cargo CoG height and position are scenario parameters (rollover scenarios use 1.9 m and 2.6 m).
 
 ## Solver settings (not vehicle data)
 
