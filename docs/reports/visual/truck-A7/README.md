@@ -81,3 +81,21 @@ nie sworznia (5 cm), błąd < 2,5 cm przy 30°.
 4. Lusterka szerokokątne/krawężnikowe/przednie: placeholder z probe, bez RT; lustra płaskie (realne klasy II/IV są wypukłe).
 5. Brak: clear coat, światła punktowe reflektorów nocą, animacja drzwi/wycieraczek/pedałów (pivoty gotowe).
 6. Przegląd `visual-critic` A7 nie wykonany w tej sesji.
+
+## Rebuild B2 v2 + naczepa firanka w Unity (rendering-perf, 2026-11-09 wieczór)
+- **TRAKT B2 v2:** prefab przebudowany z eksportu B2 v2 (`WorldTruckInstaller.InstallBatch`): zewn. 94,4k / 43,0k / 14,5k, wnętrze 78,6k / 36,1k / 19,4k
+  (po usunięciu placeholderów). Wnętrze LOD0 FBX odtworzone Blenderem (`a6_export.py --lods 0`, 84 161 tris; atlas AO identyczny z gitem, różnica 0,00 %).
+- **Siodło (ADR 0019):** fizyka ma sworzeń na 0,68 m przed osią tylną, eksport zewnętrza nadal 0,55 m (płyta w `CHASSIS`). Builder
+  dokłada tymczasową płytę siodła + wspornik w punkcie z fizyki (`FifthWheel_Physics`, 3 mm nad płytą modelu) i ostrzega w logu;
+  znika automatycznie, gdy `FIFTH_WHEEL_KINGPIN` w manifeście zgodzi się z fizyką. **Rozbieżność modelu: 13 cm (do re-eksportu, truck-artist).**
+- **Naczepa:** `TrailerAssetBuilder` (menu Kamion/Setup/Rebuild curtainsider trailer) z `trailer_manifest.json` → `Assets/_Generated/Trailer/`
+  (poza gitem): FBX LOD0–2 (88,97k / 24,48k / 7,83k), atlasy C/N/M per tier (ASTC jak ciągnik), materiały `Kamion/Truck Exterior`
+  (malowanie białe, firanka szara jako drugi slot z maską tintu, chropowatość firanki 0,58 = średnia C.a atlasu, WORKING_VALUE).
+  Korzeń fizyczny z grayboxa (Rigidbody, TrailerBody, te same kolizje, kamera cofania) → fizyka bez zmian. Koła pod spinnerami
+  solvera, opona spłaszczona w shaderze do promienia tocznego 0,515 m (warstwa renderowania bit 9, osobny global od ciągnika 0,51 m),
+  podpory pod transformami nóg `TrailerVisuals` (wysokość stopy z solvera), korba obracana z przesuwu nóg (1 obrót = 0,01 m, UNVERIFIED),
+  drzwi tylne na zawiasach (`TrailerVisualRig.doorsOpen`), lampa tablicy (grupa 13) z `TruckLights`. Tiery: High LOD0–1–2, Medium LOD1–2, Low LOD2.
+- **Sceny:** naczepa artystyczna w `WorldC` i `WorldC_High` (`WorldSceneBuilder` / `WorldTruckInstaller`). **DrivingLab zostaje z grayboxem**
+  (plac testowy fizyki, prefab grayboxa jest też budowany w testach PlayMode w runtime; podmiana nie daje tam wartości oceny).
+- Kamera kontrolna `trailer-34` (tył ¾ od strony kierowcy). Klatki edytora High, pochmurno:
+  [`trailer-34`](trailer-High-overcast_trailer-34.jpg), [`truck-at-gate`](trailer-High-overcast_truck-at-gate.jpg), [styk tridemu](trailer-High-overcast_tridem-contact.jpg).
