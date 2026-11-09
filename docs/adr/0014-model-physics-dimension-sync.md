@@ -1,4 +1,4 @@
-# ADR 0013 - dims.json is the single source of truth for shared model/physics dimensions
+# ADR 0014 - dims.json is the single source of truth for shared model/physics dimensions
 
 Status: accepted (2026-11-09)
 

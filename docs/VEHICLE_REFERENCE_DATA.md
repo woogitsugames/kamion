@@ -80,7 +80,7 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 
 ### Cab suspension (`cab`, camera only)
 
-3-DOF cab (heave, pitch, roll) on mounts at (0, 1.15, 3.925) m (pitch/roll pivot = cab body bottom plane = dims.json cab_mount_height_m / cab_mount_z_m, ADR 0013; was 1.5 m; no effect on the validated cab metrics because the core only uses the point for sampling the chassis motion), excited by the chassis specific force at the mount point and by the chassis angular acceleration. Pitch 1.5 Hz, roll 1.6 Hz, heave 1.8 Hz, ζ 0.35, gain h/r_g² 0.55 rad/s² per m/s². Soft progressive stops from 80 % of ±4° / ±4° / ±50 mm (no hard clamp). Status: WORKING_VALUE. Measured: about 3° cab pitch in an ABS stop, 43–46 mm heave over a 7 cm speed bump at 15 km/h.
+3-DOF cab (heave, pitch, roll) on mounts at (0, 1.15, 3.925) m (pitch/roll pivot = cab body bottom plane = dims.json cab_mount_height_m / cab_mount_z_m, ADR 0014; was 1.5 m; no effect on the validated cab metrics because the core only uses the point for sampling the chassis motion), excited by the chassis specific force at the mount point and by the chassis angular acceleration. Pitch 1.5 Hz, roll 1.6 Hz, heave 1.8 Hz, ζ 0.35, gain h/r_g² 0.55 rad/s² per m/s². Soft progressive stops from 80 % of ±4° / ±4° / ±50 mm (no hard clamp). Status: WORKING_VALUE. Measured: about 3° cab pitch in an ABS stop, 43–46 mm heave over a 7 cm speed bump at 15 km/h.
 
 ## Engine (`diesel_r6_13l_368kw.engine.json`)
 
@@ -181,7 +181,7 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 
 | Parameter | Value | Unit | Status | Source / derivation |
 |---|---|---|---|---|
-| Jaw position (tractor frame) | (0, 1.15, 0.55) | m | WORKING_VALUE | 0.55 m ahead of the drive axle; 1.15 m height = dims.json fifth_wheel_height_m (brief class range 1.10-1.15 m; ISO 1726 not opened, UNVERIFIED). Was 1.20 until ADR 0013 |
+| Jaw position (tractor frame) | (0, 1.15, 0.55) | m | WORKING_VALUE | 0.55 m ahead of the drive axle; 1.15 m height = dims.json fifth_wheel_height_m (brief class range 1.10-1.15 m; ISO 1726 not opened, UNVERIFIED). Was 1.20 until ADR 0014 |
 | Pitch (fore/aft plate) limit | ±12 | deg | WORKING_VALUE | Soft stop, 10 Hz |
 | Roll coupling stiffness / damping / hard limit | 1.0e7 N m/rad / 2.0e5 N m s/rad / ±4° | – | WORKING_VALUE | Implicit soft constraint (unconditionally stable) |
 | Articulation stop (cab/frame contact) | ±90 | deg | WORKING_VALUE | Soft stop 3 Hz, critically damped (deformable contact) |
@@ -197,7 +197,7 @@ Frame: origin on the ground below the kingpin, axles at negative z.
 | Parameter | Value | Unit | Status | Source / derivation |
 |---|---|---|---|---|
 | Body length / width | 13.6 / 2.55 | m | SOURCED via docs/04 §5 | EU legal maximum (Directive 96/53/EC, UNVERIFIED) |
-| Kingpin height | 1.15 | m | WORKING_VALUE | Matches the fifth wheel; one source art-source/truck/dims.json (ADR 0013) |
+| Kingpin height | 1.15 | m | WORKING_VALUE | Matches the fifth wheel; one source art-source/truck/dims.json (ADR 0014) |
 | Kingpin to front wall | 1.6 | m | DERIVED | Front swing radius √(1.6² + 1.275²) = 2.04 m (96/53/EC limit, UNVERIFIED) |
 | Empty mass (sum of elements) | 7000 | kg | WORKING_VALUE | Frame 2200, floor 1100, body/curtains/roof 1300, tridem + wheels + brakes 2250, landing gear 150 |
 | Empty CoG / static kingpin load | z −5.89 m / 1645 kg | – | DERIVED | Lever rule over the tridem centre |

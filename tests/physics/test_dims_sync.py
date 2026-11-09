@@ -1,4 +1,4 @@
-"""art-source/truck/dims.json is the single source of truth for shared model/physics dimensions (ADR 0013).
+"""art-source/truck/dims.json is the single source of truth for shared model/physics dimensions (ADR 0014).
 Run: python tests/physics/test_dims_sync.py   (or pytest)."""
 import json
 import pathlib
