@@ -19,6 +19,7 @@ param(
     [switch]$Run,
     [switch]$Development,
     [switch]$WorldHigh,
+    [string[]]$ExtraUnityArgs = @(),   # e.g. -ExtraUnityArgs '-managedStripping','High' (measurement, never saved)
     [switch]$SkipBuild,
     [int]$LogcatSeconds = 20,
     [ValidateSet('', 'Low', 'Medium', 'High', 'Ultra')] [string]$Tier = '',
@@ -52,6 +53,7 @@ if (-not $SkipBuild) {
     $unityArgs = @('-executeMethod', 'Game.Editor.Build.BuildCommands.BuildAndroidApk', '-buildOutput', $apk)
     if ($Development) { $unityArgs += '-development' }
     if ($WorldHigh) { $unityArgs += '-worldHigh' }
+    if ($ExtraUnityArgs) { $unityArgs += $ExtraUnityArgs }
     $sw = [Diagnostics.Stopwatch]::StartNew()
     $code = Invoke-UnityBatch -LogFile $log -Arguments $unityArgs
     $result = Select-String -Path $log -Pattern 'BUILD_RESULT:.*' -ErrorAction SilentlyContinue | Select-Object -Last 1
