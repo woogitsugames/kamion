@@ -565,6 +565,23 @@ def mat_boom(name):
     return m
 
 
+def mat_concrete_struct(name, base=0.30):
+    """Structural concrete (decks, piers, abutments): low-contrast cloudy tone, faint vertical rain streaks and
+    a darker weathered band at the bottom of vertical faces. No oil, tyre marks or joints (those are yard
+    features; reusing the yard material put oil blotches on the Andersa deck beams)."""
+    m = new_mat(name)
+    b = NB(m)
+    obj = b.tc.outputs["Object"]
+    n = b.noise(obj, 0.4, 4.0, 0.55)
+    col = b.ramp(n, [(0.35, (base * 0.9, base * 0.9, base * 0.88)), (0.65, (base * 1.04, base * 1.03, base))])
+    streak = b.noise(b.vmath("MULTIPLY", obj, (3.0, 3.0, 0.15)), 1.0, 3.0, 0.6)
+    col = b.mix(b.math("MULTIPLY", b.math("GREATER_THAN", streak, 0.6), 0.25), col,
+                (base * 0.7, base * 0.7, base * 0.68))
+    nrm = b.bump(b.noise(obj, 60.0, 2.0), 0.1, 0.002)
+    b.finish(col, 0.88, nrm)
+    return m
+
+
 def mat_concrete_yard(name, base=0.27, jx=5.0, jy=5.0, slabs=False):
     m = new_mat(name)
     b = NB(m)
@@ -775,7 +792,7 @@ def build_materials():
         "curb_concrete": mat_kerb("curb_concrete", 0.26),
         "sidewalk_paving": mat_pavers("sidewalk_paving", g((122, 120, 114)), g((112, 110, 104)), moss=False),
         "apron_sett": mat_pavers("apron_sett", g((104, 90, 84)), g((92, 80, 76)), 0.12, 0.12, moss=False),
-        "bridge_concrete": mat_concrete_yard("bridge_concrete", 0.28, 100.0, 100.0),
+        "bridge_concrete": mat_concrete_struct("bridge_concrete", 0.30),
         "barrier_steel": mat_flat("barrier_steel", (0.30, 0.31, 0.31), 0.5, 0.9, 0.3),
         "verge_grass": mat_terrain("verge_grass"),
         "shoulder_gravel": mat_gravel("shoulder_gravel"),

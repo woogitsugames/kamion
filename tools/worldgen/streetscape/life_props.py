@@ -296,6 +296,18 @@ def trailer(kind, colour):
                 if lod == 0:
                     m.quad("reefer_grille", [-0.85, L + 0.425, 2.6], [0.85, L + 0.425, 2.6], [0.85, L + 0.425, 3.7],
                            [-0.85, L + 0.425, 3.7])
+        if lod == 0:                             # front: corner posts, two uprights, coupling heads, marker lights
+            yf = L + (0.42 if kind == "reefer" else 0.0)
+            for x in (-hw + 0.04, hw - 0.04, -0.45, 0.45):
+                bx(m, "trailer_alu", x - 0.04, x + 0.04, L - 0.02, L + 0.025, zf, H - 0.02)
+            bx(m, "trailer_chassis", -hw + 0.02, hw - 0.02, L - 0.02, L + 0.03, zf - 0.05, zf + 0.22)
+            for x, mat in ((-0.35, "coupling_red"), (-0.15, "coupling_yellow")):
+                bx(m, mat, x - 0.05, x + 0.05, L - 0.3, L - 0.15, zf - 0.22, zf - 0.1)
+            bx(m, "car_trim", 0.05, 0.25, L - 0.3, L - 0.15, zf - 0.24, zf - 0.08)          # electrical socket
+            for sx in (-1, 1):
+                m.quad("car_light_head", [sx * (hw - 0.12) - 0.05, yf + 0.03, H - 0.25],
+                       [sx * (hw - 0.12) + 0.05, yf + 0.03, H - 0.25],
+                       [sx * (hw - 0.12) + 0.05, yf + 0.03, H - 0.17], [sx * (hw - 0.12) - 0.05, yf + 0.03, H - 0.17])
         # rear frame + doors (seen from the dock: dark gap between the leaves), lights, under-run bar
         bx(m, "trailer_alu", -hw - 0.02, hw + 0.02, -0.06, 0.06, zf - 0.08, zf + 0.04)
         bx(m, "trailer_doors", -hw + 0.04, hw - 0.04, -0.04, 0.02, zf, H - 0.08)
