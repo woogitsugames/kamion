@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "id": "couple_offset_left_18cm",
+  "description": "R5: kingpin 18 cm left of the centre line (edge of the throat mouth); the ramps guide it into the jaw",
+  "spec": "docs/04 s2.9; ADR 0009 R5",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "overrides": {
+    "coupled": false,
+    "trailerGap": 2.0,
+    "trailerOffset": -0.18
+  },
+  "events": [
+    {
+      "t": 0.5,
+      "type": "couple_arm"
+    },
+    {
+      "t": 12,
+      "type": "landing_gear_up"
+    }
+  ],
+  "duration": 60,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 1,
+        "throttle": 0.05,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 6,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 9,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": true,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "min": 1,
+      "max": 1,
+      "source": "throat ramps guide the kingpin to the jaw: locks once",
+      "metric": "coupling_events",
+      "status": "WORKING_VALUE"
+    },
+    {
+      "max": 150,
+      "source": "coupling bump stays moderate (compliant engagement), as couple_uncouple",
+      "metric": "max_kingpin_long_kn",
+      "status": "WORKING_VALUE"
+    },
+    {
+      "metric": "kingpin_load_vs_static",
+      "from": 40,
+      "source": "legs up, brakes locked: static nose load",
+      "status": "DERIVED",
+      "max": 1.03,
+      "min": 0.97
+    },
+    {
+      "max": 5,
+      "from": 20,
+      "source": "after the engagement phase the kingpin point is rigid again",
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE"
+    }
+  ]
+}
+

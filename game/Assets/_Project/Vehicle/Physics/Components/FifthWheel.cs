@@ -65,6 +65,56 @@ namespace Game.Vehicle.Physics
             return false;
         }
 
+        /// <summary>Magnitude of the throat ramp force of the last <see cref="ComputeThroatGuide"/> call [N] (0 = not touching).</summary>
+        public double GuideForce;
+        /// <summary>Kingpin offset from the jaw centre in the tractor frame (x right, y up, z forward) while not coupled, for HUD / telemetry.</summary>
+        public Vec3 OpenJawOffset;
+
+        /// <summary>
+        /// R5: coupling throat. While the jaw is open, a kingpin inside the funnel but outside its local half-width is pushed
+        /// towards the centre line by the ramp. Returns true with the force on the trailer at the kingpin (the tractor gets the
+        /// opposite force at the same point). Zero outside the funnel (miss), too high or too low, or when coupled.
+        /// </summary>
+        public bool ComputeThroatGuide(in ChassisState a, Vec3 anchorA, in ChassisState b, Vec3 anchorB, out Vec3 forceOnTrailer)
+        {
+            forceOnTrailer = Vec3.Zero;
+            GuideForce = 0;
+            if (Coupled) return false;
+            Vec3 pA = a.LocalToWorld(anchorA), pB = b.LocalToWorld(anchorB);
+            Vec3 d = a.Rotation.InverseRotate(pB - pA);
+            OpenJawOffset = d;
+            double len = Def.captureThroatLength;
+            if (len <= 1e-6 || Math.Abs(d.y) >= Def.captureHeight || d.z > Def.captureDistance || d.z < -len) return false;
+            double ax = Math.Abs(d.x);
+            if (ax > Def.captureThroatHalfWidth) return false;
+            // The ramps end in the jaw cup, half the capture radius wide, so the guided kingpin is inside the capture radius.
+            double jaw = 0.5 * Def.captureDistance;
+            double m = Math.Max(0, (Def.captureThroatHalfWidth - jaw) / len);
+            double zr = Math.Min(0, d.z);
+            double pen = ax - (jaw + m * (-zr));
+            if (d.z > 0) m = 0;
+            if (pen <= 0) return false;
+            double sgn = d.x >= 0 ? 1 : -1;
+            Vec3 vrel = a.Rotation.InverseRotate(b.PointVelocity(pB) - a.PointVelocity(pA));
+            double n = Def.captureGuideStiffness * pen + Def.captureGuideDamping * (sgn * vrel.x + m * vrel.z);
+            n = MathUtil.Clamp(n, 0, Def.captureGuideMaxForce);
+            if (n <= 0) return false;
+            Vec3 dir = new Vec3(-sgn, 0, -m) * (1.0 / Math.Sqrt(1 + m * m));
+            forceOnTrailer = a.Rotation * (dir * n);
+            GuideForce = n;
+            return true;
+        }
+
+        /// <summary>Back to an open, empty jaw without counting an uncoupling event (trailer swapped out, see <see cref="CombinationModel.SetTrailer"/>).</summary>
+        public void ResetState()
+        {
+            Coupled = false;
+            ForceOnTrailer = Vec3.Zero; TorqueOnTrailer = Vec3.Zero; KingpinLoadLocal = Vec3.Zero; KingpinWorld = Vec3.Zero;
+            Articulation = 0; PitchAngle = 0; RollAngle = 0; PositionError = 0;
+            GuideForce = 0; OpenJawOffset = Vec3.Zero;
+            SinceCoupled = 100;
+        }
+
         public void Release()
         {
             if (Coupled) UncouplingEvents++;

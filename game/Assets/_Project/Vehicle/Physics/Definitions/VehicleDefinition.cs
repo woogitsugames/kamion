@@ -308,6 +308,19 @@ namespace Game.Vehicle.Physics
         public double captureDistance = 0.05;
         public double captureHeight = 0.12;
         public double captureMaxSpeed = 1.5;
+        /// <summary>
+        /// Coupling throat (R5): the plate slot is a funnel opening to the rear. Its mouth is +/- captureThroatHalfWidth wide
+        /// at captureThroatLength behind the jaw centre and narrows linearly to +/- captureDistance at the jaw (the lead-in ramps).
+        /// A kingpin that enters the mouth while the jaw is open is pushed to the centre line by the ramp (spring-damper contact,
+        /// force capped at captureGuideMaxForce, applied equally to both bodies); one that is wider than the mouth misses.
+        /// WORKING_VALUE (+/- 0.18 m, 0.40 m, ~18 deg ramps): typical lead-in of a 2" fifth wheel plate, not measured on a specific model.
+        /// </summary>
+        public double captureThroatHalfWidth = 0.18;
+        public double captureThroatLength = 0.40;
+        /// <summary>Ramp contact stiffness [N/m], damping [N s/m] and force cap [N] (what the trailer feet / tractor tires can give sideways).</summary>
+        public double captureGuideStiffness = 3.0e6;
+        public double captureGuideDamping = 1.5e5;
+        public double captureGuideMaxForce = 80000;
         /// <summary>Position error feedback (fraction per step) and its speed cap [m/s].</summary>
         public double positionCorrection = 0.2;
         public double maxCorrectionSpeed = 0.5;
