@@ -5,6 +5,7 @@ using Game.Controls;
 using Game.Platform;
 using Game.Rendering;
 using Game.Telemetry;
+using Game.UI;
 using Game.UI.Driving;
 using Game.Vehicle.Physics;
 using Game.Vehicle.Runtime;
@@ -27,7 +28,6 @@ namespace Game.Gameplay
         public enum SteerMode { Wheel270 = 0, Wheel900 = 1, Gyro = 2 }
         /// <summary>Spawn presets of the lab menu. Solo = tractor in the coupling bay, trailer parked behind it.</summary>
         public enum LabSpawn { Solo = 0, Empty = 1, Cargo24t = 2, Gross40t = 3 }
-        const string PrefSteerMode = "controls.steerMode";
         const string PrefSpawn = "lab.spawn";
 
         public VehicleBody vehicle;
@@ -69,6 +69,9 @@ namespace Game.Gameplay
         float m_StartTime;
         Transform[] m_IgnoreRoots;
 
+        /// <summary>Player control settings (settings menu); loaded from PlayerPrefs at start, saved on every change.</summary>
+        public ControlSettings Controls { get; private set; }
+        ControlSettingsPanel m_SettingsPanel;
         public SteerMode CurrentSteerMode => m_SteerMode;
         public LabSpawn CurrentSpawn => m_Spawn;
         public DriverInputMixer Mixer => m_Mixer;
@@ -103,7 +106,9 @@ namespace Game.Gameplay
             m_Mixer.Add(Gyro);
             m_Mixer.Add(Touch);
             GyroSteering.EnableSensors();
-            SetSteerMode((SteerMode)PlayerPrefs.GetInt(PrefSteerMode, 0));
+            Controls = ControlSettings.Load();
+            ApplyControls();
+            Controls.Log("loaded");
 
             if (!vehicle.TryGetComponent(out m_Recorder)) m_Recorder = vehicle.gameObject.AddComponent<VehicleTelemetryRecorder>();
             m_Recorder.body = vehicle;
@@ -131,6 +136,7 @@ namespace Game.Gameplay
                 DevDiagnostics = platform.GetLaunchArgument("devhud") == "1",
                 IsGyroMode = () => m_SteerMode == SteerMode.Gyro,
                 ToggleSteeringMode = () => SetSteerMode((SteerMode)(((int)m_SteerMode + 1) % 3)),
+                OpenSettings = OpenControlSettings,
                 ResetVehicle = () => Spawn(m_Spawn),
                 OpenMenu = () => SceneManager.LoadScene("Boot"),
                 StatusLine = () => Time.unscaledTime < m_StatusUntil ? m_Status : (Autopilot.Enabled || RouteDriver.Enabled ? "AUTOPILOT (pomiar)" : ""),
@@ -223,14 +229,32 @@ namespace Game.Gameplay
             }
         }
 
+        /// <summary>HUD "Ster." button: cycles wheel 270 / wheel 900 / gyro and keeps the other tuning of the settings menu.</summary>
         public void SetSteerMode(SteerMode mode)
         {
-            m_SteerMode = mode;
-            Wheel.HalfRangeDeg = mode == SteerMode.Wheel900 ? 900f : 270f;
-            Wheel.Enabled = mode != SteerMode.Gyro;
-            Gyro.Enabled = mode == SteerMode.Gyro;
-            if (Gyro.Enabled) Gyro.Calibrate();
-            PlayerPrefs.SetInt(PrefSteerMode, (int)mode);
+            Controls.gyroEnabled = mode == SteerMode.Gyro;
+            if (mode != SteerMode.Gyro) Controls.wheelRangeDeg = mode == SteerMode.Wheel900 ? 900f : 270f;
+            Controls.Save();
+            Controls.Log("steer-mode");
+            ApplyControls();
+        }
+
+        /// <summary>Pushes <see cref="Controls"/> into the input sources (live, also from the settings menu).</summary>
+        public void ApplyControls()
+        {
+            bool wasGyro = Gyro.Enabled;
+            Controls.ApplyTo(Wheel, Gyro, Touch);
+            m_SteerMode = Controls.gyroEnabled ? SteerMode.Gyro : (Controls.wheelRangeDeg >= 600f ? SteerMode.Wheel900 : SteerMode.Wheel270);
+            if (Gyro.Enabled && !wasGyro) Gyro.Calibrate();
+            if (!Controls.gyroEnabled) Gyro.Suspend();
+            m_Hud?.RefreshNow();
+        }
+
+        void OpenControlSettings()
+        {
+            if (m_SettingsPanel != null) return;
+            m_SettingsPanel = ControlSettingsPanel.Create(null, Controls, ApplyControls, null, Gyro.Calibrate);
+            m_SettingsPanel.transform.SetParent(transform, false);
         }
 
         /// <summary>Scripted circle drive (device measurements, tests): solo tractor on the circle, trailer parked in its bay.</summary>
@@ -260,7 +284,10 @@ namespace Game.Gameplay
         /// </summary>
         void ReadRouteArguments(IPlatformServices platform)
         {
+            bool menuStart = StartRequest.Consume(out float menuS, out float menuEnd);   // Boot menu choice, once
             if (route == null || route.points.Length < 2) return;
+            if (menuStart && menuS >= 0f) m_RouteS = Mathf.Min(menuS, route.Length);
+            if (menuStart && menuEnd > 0f) m_RouteEndS = Mathf.Min(menuEnd, route.Length);
             var ci = CultureInfo.InvariantCulture;
             if (float.TryParse(platform.GetLaunchArgument("route_s"), NumberStyles.Float, ci, out float s) && s >= 0f) m_RouteS = Mathf.Min(s, route.Length);
             if (float.TryParse(platform.GetLaunchArgument("route_end"), NumberStyles.Float, ci, out float e) && e > 0f) m_RouteEndS = Mathf.Min(e, route.Length);
