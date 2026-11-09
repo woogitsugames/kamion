@@ -235,7 +235,7 @@ namespace Game.Editor.Setup
             Vector3 s0 = L.Spawn;
             Qa(qa, "lab-overview", new Vector3(-215f, 120f, -275f), new Vector3(0f, 0f, -10f), 45f, "Whole pad from the south-west: layout legibility, markings, zones.");
             Qa(qa, "lab-truck-34", s0 + new Vector3(6.5f, 2.8f, 11.5f), s0 + new Vector3(0f, 1.7f, 2.2f), 50f, "Graybox tractor 3/4 front: proportions, wheels on the ground, cab, mirrors.");
-            Qa(qa, "lab-truck-side", s0 + new Vector3(13f, 1.6f, 2.2f), s0 + new Vector3(0f, 1.6f, 2.2f), 40f, "Side elevation: wheelbase 3.70 m, overhangs, cab height 3.95 m against the 1 m cones.");
+            Qa(qa, "lab-truck-side", s0 + new Vector3(13f, 1.6f, 2.2f), s0 + new Vector3(0f, 1.6f, 2.2f), 40f, "Side elevation: wheelbase 3.70 m, overhangs, cab height 3.75 m against the 1 m cones.");
             Qa(qa, "lab-cab-eye", eye, eye + Quaternion.Euler(7f, 0f, 0f) * Vector3.forward * 10f, 55f, "Driver eye point with the driving HUD: windscreen view, mirror insets, steering wheel, safe area.", hud: true, mirrorInsets: true);
             Qa(qa, "lab-chase-hud", s0 + new Vector3(0f, 7.5f, -26f), s0 + new Vector3(0f, 2f, 3f), 50f, "Chase camera (combination framing) with HUD and telemetry panel.", hud: true, telemetry: true);
             Qa(qa, "lab-combo-34", s0 + new Vector3(10f, 3.6f, 9f), s0 + new Vector3(0f, 1.9f, -4.5f), 50f, "Tractor + 13.6 m curtainsider 3/4 front: kingpin over the fifth wheel, tridem, landing gear, proportions.");
