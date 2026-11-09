@@ -1,0 +1,68 @@
+id: bialystok-industrial-c
+title: Białystok — Kwadrat Park / Andersa / Rondo Putry → DK8/DK19 (kandydat C)
+status: WORKING_ASSUMPTION (lead), owner decision on D4 pending — see docs/map-decisions.md
+candidate: C_andersa_putry
+crs:
+  horizontal: EPSG:2180 (ETRF2000-PL / CS92)
+  vertical: PL-EVRF2007-NH (EPSG:9651)
+  axes_unity: X = east (EPSG:2180 x), Y = up, Z = north (EPSG:2180 y)  [ADR 0003]
+bbox:
+  xmin: 776971.0
+  ymin: 595199.0
+  xmax: 779019.0
+  ymax: 597247.0
+  width_m: 2048.0
+  height_m: 2048.0
+origin:
+  x: 777995.0
+  y: 596223.0
+  z: 131.14
+  note: 'floating-origin anchor: Unity (0,0,0) = this point; z = NMT height at the point (EVRF2007)'
+teryt_powiat: '2061'
+products:
+  buildings.geojson: Data/Regions/bialystok-industrial-c/buildings.geojson
+  ortho.json: Data/Regions/bialystok-industrial-c/ortho.json
+  roads.graph.json: Data/Regions/bialystok-industrial-c/roads.graph.json
+  terrain.json: Data/Regions/bialystok-industrial-c/terrain.json
+big_products_not_in_git:
+- Data/raw/derived/bialystok-industrial-c/heightmap_2049.r16
+- Data/raw/derived/bialystok-industrial-c/ortho_0p25m.tif
+sources:
+- id: osm-geofabrik-podlaskie
+  license: ODbL 1.0
+  attribution: © OpenStreetMap contributors
+  manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
+  manifest_sha256: 3a63ebb442f2e09904c18a62cbf1eec9bce2fccf8c8d0dfd6264bef37843b3c0
+- id: gugik-nmt-2025-bialystok-industrial-c
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-nmt-2025-bialystok-industrial-c.json
+  manifest_sha256: 97cfa62f5674cfcc7a75f7e5b2634e821ed2001e07c28c44f62bae23011c5f52
+- id: gugik-orto-2024-rgb-0p25-bialystok-industrial-c
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-orto-2024-rgb-0p25-bialystok-industrial-c.json
+  manifest_sha256: 2a425aba2ff924ca22852df42b3d45634382baef306e97619104de27fe1db4ac
+- id: gugik-bdot10k-2061
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-bdot10k-2061.json
+  manifest_sha256: a8f0f31b701953f8718d55592c817a8d737d74ed9ef42ad9136d190e0d9fe303
+- id: gugik-lod1-2024-2061
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod1-2024-2061.json
+  manifest_sha256: da3a0e254a8e4076d29469a92a167e18b8b769d80560eafe99f50ef3a8aebb7b
+- id: gugik-lod2-2017-2061
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod2-2017-2061.json
+  manifest_sha256: e33f858b3afcd65150b12b7eaf990c8da4fd02e5891210f53f0bed24ad3ad2d5
+rebuild:
+- uv run --project tools/worldgen tools/worldgen/ingest.py --region bialystok-industrial-c
+- uv run --project tools/worldgen tools/worldgen/build_region.py --region bialystok-industrial-c

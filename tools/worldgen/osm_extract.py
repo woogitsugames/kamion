@@ -7,7 +7,7 @@ Layers:
   points      – highway=traffic_signals|stop|give_way|crossing|motorway_junction|mini_roundabout,
                 door=loading_dock, amenity=fuel, etc. (nodes)
 
-The parsed result is cached as GeoParquet-free pickles in data/raw/derived/ (gitignored)
+The parsed result is cached as GeoParquet-free pickles in Data/raw/derived/ (gitignored)
 keyed by the extract sha256, so re-runs are fast and deterministic.
 """
 
@@ -41,7 +41,7 @@ POINT_KEYS = {
     "amenity": {"fuel", "loading_dock"},
     "railway": {"level_crossing", "crossing"},
 }
-CACHE_DIR = REPO_ROOT / "data" / "raw" / "derived"
+CACHE_DIR = REPO_ROOT / "Data" / "raw" / "derived"
 
 
 def _in_bbox(lon: float, lat: float) -> bool:

@@ -1,0 +1,27 @@
+{
+  "id": "gugik-lod1-2024-2061",
+  "name": "GUGiK 3D building models LoD1 (2024), powiat 2061",
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "Budynki3D LoD1",
+  "region": "powiat 2061",
+  "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/FOTO/WMS/ModeleBudynkow3D (layer Modele_3D_budynkow_LoD1_2024)",
+  "format": "CityGML 2.0 in ZIP",
+  "crs": "EPSG:2180 + EPSG:9651 EVRF2007 heights (srsName urn:ogc:def:crs,crs:EPSG::2180,crs:EPSG::9651 in files)",
+  "license": "CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: 'dostępne bezpłatnie i możliwe do dowolnego wykorzystania'",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/legalcode.pl",
+  "license_status": "VERIFIED_FROM_PROVIDER_UI (attribution required by CC BY 4.0)",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0",
+  "used_by": [
+    "tools/worldgen/build_region.py --region bialystok-industrial-c"
+  ],
+  "in_git": false,
+  "files": [
+    {
+      "url": "https://opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD1/2024/20/2061.zip",
+      "local_path": "Data/raw/gugik/lod1-2024-2061/2061_lod1_2024.zip",
+      "sha256": "57d3e14d4620c17232eaabd85a8aa5579ed1539772945e23a3971d867901d380",
+      "size_bytes": 12781738,
+      "downloaded_utc": "2026-11-09T10:03:25+00:00"
+    }
+  ]
+}

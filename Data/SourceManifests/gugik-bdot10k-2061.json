@@ -1,0 +1,27 @@
+{
+  "id": "gugik-bdot10k-2061",
+  "name": "GUGiK BDOT10k powiat 2061 (schemat 2021, GPKG)",
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "BDOT10k",
+  "region": "powiat 2061",
+  "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WMS/PobieranieBDOT10k (GetFeatureInfo, layer Powiaty)",
+  "format": "GeoPackage in ZIP",
+  "crs": "EPSG:2180 (PL-1992)",
+  "scale": "1:10 000",
+  "license": "GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)",
+  "license_status": "LEGAL_REVIEW_REQUIRED (statutory basis cited from secondary sources, not from ISAP text)",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)",
+  "used_by": [
+    "tools/worldgen/build_region.py --region bialystok-industrial-c"
+  ],
+  "in_git": false,
+  "files": [
+    {
+      "url": "https://opendata.geoportal.gov.pl/bdot10k/schemat2021/GPKG/20/2061_GPKG.zip",
+      "local_path": "Data/raw/gugik/bdot10k-2061/2061_GPKG.zip",
+      "sha256": "b1b14ed04e2387ddd34ed00a21e07e5384d650eeac70b6fa6cda8787dda4a866",
+      "size_bytes": 15594446,
+      "downloaded_utc": "2026-11-09T10:03:12+00:00"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+ "bounds": [
+  776971.0,
+  595199.0,
+  779019.0,
+  597247.0
+ ],
+ "file": "Data/raw/derived/bialystok-industrial-c/ortho_0p25m.tif",
+ "in_git": false,
+ "res_m": 0.25,
+ "sha256": "19d7c3ca5d2192b1d0367c8d039e41aa60221927755b45c6a6763e933d96258b",
+ "size_px": [
+  8192,
+  8192
+ ],
+ "source_crs": [
+  "EPSG:2180"
+ ],
+ "source_manifest": "gugik-orto-2024-rgb-0p25-bialystok-industrial-c",
+ "source_res_m": [
+  [
+   0.25,
+   0.25
+  ]
+ ],
+ "use": "visual reference + alignment QA only (docs/05 §3); never a game texture"
+}
