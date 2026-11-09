@@ -32,6 +32,22 @@ namespace Game.Tests
         [UnityTest]
         public IEnumerator WorldC_Route_Combination40t_NoFallThrough() => DriveRoute(DrivingLabBootstrap.LabSpawn.Gross40t, 50f);
 
+        /// <summary>Static colliders overlapping a box around the tractor (diagnosis of impacts on the world collision).</summary>
+        static string DescribeObstacles(VehicleBody body)
+        {
+            var t = body.transform;
+            var hits = Physics.OverlapBox(t.position + t.up * 1.8f + t.forward * 1f, new Vector3(1.6f, 1.9f, 4.5f), t.rotation);
+            var sb = new System.Text.StringBuilder();
+            foreach (var h in hits)
+            {
+                if (h.attachedRigidbody != null) continue;
+                var p = h.transform.parent;
+                sb.Append(p != null && p.parent != null ? p.parent.name + "/" : "").Append(h.name).Append(' ')
+                  .Append(h.bounds.center.ToString("F1")).Append("; ");
+            }
+            return sb.Length > 0 ? sb.ToString() : "(no static collider in the box)";
+        }
+
         static IEnumerator DriveRoute(DrivingLabBootstrap.LabSpawn preset, float targetKmh)
         {
             if (!Application.CanStreamedLevelBeLoaded(GameBootstrap.WorldCSceneName))
@@ -67,6 +83,7 @@ namespace Game.Tests
                 var trailerRb = body.Trailer != null ? body.Trailer.Body : null;
                 Vector3 tvPrev = trailerRb != null ? trailerRb.linearVelocity : Vector3.zero;
                 float maxDvTrailer = 0f;
+                string hitInfo = null;
 
                 while (!driver.Finished && steps * Dt < simLimit)
                 {
@@ -97,6 +114,7 @@ namespace Game.Tests
                         Vector3 v = rb.linearVelocity;
                         float dv = (v - vPrev).magnitude;
                         if (dv > maxDv) { maxDv = dv; maxDvAt = driver.Progress; }
+                        if (dv > 3f && hitInfo == null) hitInfo = DescribeObstacles(body);
                         vPrev = v;
                         if (trailerRb != null)
                         {
@@ -133,7 +151,7 @@ namespace Game.Tests
                     "max chassis below route ground {9:F2} m at s={10:F0} m, longest no-contact run {11} steps, max cross-track {12:F2} m, v max {13:F0} km/h, fell {14}, stuck {15}",
                     preset, steps, steps * Dt, driver.Progress, route.Length, driver.Finished, maxDv, maxDvAt,
                     trailerRb != null ? string.Format(ci, " (trailer {0:F3})", maxDvTrailer) : "",
-                    maxBelow, maxBelowAt, maxNoContactRun, maxCte, vMaxKmh, fell, stuck);
+                    maxBelow, maxBelowAt, maxNoContactRun, maxCte, vMaxKmh, fell, stuck) + (hitInfo != null ? " | impact near: " + hitInfo : "");
                 Debug.Log(summary);
                 try
                 {

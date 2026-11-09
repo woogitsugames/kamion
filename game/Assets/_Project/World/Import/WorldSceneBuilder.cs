@@ -166,8 +166,24 @@ namespace Game.World.Import
             if (r.PropColliders == null || r.PropColliders.Count == 0) return 0;
             var root = new GameObject("PropColliders").transform;
             root.SetParent(parent, false);
+            Physics.SyncTransforms();
+            int onRoad = 0;
+            var report = new System.Text.StringBuilder();
             foreach (var (proto, m, local) in r.PropColliders.Items)
             {
+                // A prop whose foot stands on a carriageway (asphalt road collision) is a generator placement error
+                // (seen: lamp_12m at E 326.6 N -579.6 inside the Rondo Biezenstwa approach lane, which stopped the route
+                // autopilot). It keeps its visual but gets no collider; listed for world-builder.
+                Vector3 foot = parent.TransformPoint(m.GetColumn(3));
+                if (Physics.Raycast(foot + Vector3.up * 1.0f, Vector3.down, out var hit, 1.6f) &&
+                    hit.collider.GetComponent<GroundSurface>() is GroundSurface gs && gs.kind == SurfaceKind.DryAsphalt &&
+                    hit.collider.name == "col_asphalt")
+                {
+                    onRoad++;
+                    var lp = m.GetColumn(3);
+                    report.AppendLine($"{proto} E {lp.x:F1} N {lp.z:F1}");
+                    continue;
+                }
                 var go = new GameObject(proto);
                 go.transform.SetParent(root, false);
                 go.transform.localPosition = m.GetColumn(3);
@@ -179,7 +195,14 @@ namespace Game.World.Import
                 go.AddComponent<GroundSurface>().kind = SurfaceKind.Concrete;
                 go.isStatic = true;
             }
-            return r.PropColliders.Count;
+            if (onRoad > 0)
+            {
+                Debug.LogWarning($"[IMPORT] {onRoad} props stand on a carriageway (no collider): see artifacts/world/{r.Region}-props-on-road.txt");
+                string dir = Path.Combine(Game.Editor.Build.EditorTools.RepoRoot, "artifacts", "world");
+                Directory.CreateDirectory(dir);
+                File.WriteAllText(Path.Combine(dir, r.Region + "-props-on-road.txt"), report.ToString());
+            }
+            return r.PropColliders.Count - onRoad;
         }
 
         /// <summary>Ground under a route point; under viaducts the hit closest to the previous point's height wins.</summary>

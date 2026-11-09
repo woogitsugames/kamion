@@ -149,7 +149,10 @@ namespace Game.Gameplay
 
             string ap = platform.GetLaunchArgument("autopilot");
             string tr = platform.GetLaunchArgument("trailer");
-            m_Spawn = ParseSpawn(tr, !string.IsNullOrEmpty(ap) ? LabSpawn.Solo : (LabSpawn)Mathf.Clamp(PlayerPrefs.GetInt(PrefSpawn, (int)LabSpawn.Empty), 0, 3));
+            // World route runs default to the 40 t combination (a solo run would leave the trailer parked at the spawn);
+            // trailer=solo still gives a solo tractor. Lab circle runs stay solo (Stage 1 measurement).
+            var apDefault = ap == "route" ? LabSpawn.Gross40t : LabSpawn.Solo;
+            m_Spawn = ParseSpawn(tr, !string.IsNullOrEmpty(ap) ? apDefault : (LabSpawn)Mathf.Clamp(PlayerPrefs.GetInt(PrefSpawn, (int)LabSpawn.Empty), 0, 3));
             if (trailer == null) m_Spawn = LabSpawn.Solo;
             if (ap == "route") { if (!StartRouteDriver(platform.GetLaunchArgument("speed"))) ap = null; }
             else if (!string.IsNullOrEmpty(ap)) { ConfigureAutopilot(ap, platform.GetLaunchArgument("speed")); m_AutopilotStart = true; }

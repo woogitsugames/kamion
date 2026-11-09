@@ -121,7 +121,13 @@ namespace Game.UI.Driving
         /// <summary>Editor capture only: lay out against a fake safe area (normalized).</summary>
         public void OverrideSafeAreaNormalized(Rect n) { m_SafeOverride = n; ApplySafeArea(); }
 
-        public void SetTelemetryVisible(bool on) { if (m_TelemetryPanel != null) m_TelemetryPanel.SetActive(on); RefreshLabels(); }
+        public void SetTelemetryVisible(bool on)
+        {
+            if (m_TelemetryPanel != null) m_TelemetryPanel.SetActive(on);
+            // The coupling diagnostics line (kingpin offset, articulation, legs) is telemetry: hidden by default.
+            if (m_Coupling != null) m_Coupling.gameObject.SetActive(on);
+            RefreshLabels();
+        }
 
         // ------------------------------------------------------------------ build
 
@@ -280,6 +286,7 @@ namespace Game.UI.Driving
             m_Coupling = Label(m_SafeArea, "Coupling", "", SmallFont, TextAnchor.UpperCenter, Vector2.zero, new Vector2(1100f, 34f));
             Place((RectTransform)m_Coupling.transform, new Vector2(0.5f, 1f), new Vector2(-550f, -318f), new Vector2(1100f, 34f));
             m_Coupling.color = k_Muted;
+            m_Coupling.gameObject.SetActive(false);   // shown with the telemetry panel
 
             // ---- endurance-brake stalk + brake cruise, right of the steering wheel ----
             var stalk = Rect("Stalk", m_SafeArea);

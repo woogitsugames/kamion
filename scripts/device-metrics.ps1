@@ -19,6 +19,7 @@ param(
     [int]$WarmupSeconds = 5,
     [ValidateSet('', 'Low', 'Medium', 'High', 'Ultra')] [string]$Tier = '',
     [int]$Fps = 0,
+    [switch]$Uncapped,
     [string]$Scene = '',
     [string]$Autopilot = '',
     [int]$Speed = 0,
@@ -42,7 +43,10 @@ if ($Launch) {
         & $Adb -s $d shell am force-stop $PackageName | Out-Null
         $startArgs = @('shell', 'am', 'start', '-n', $component)
         if ($Tier) { $startArgs += @('-e', 'tier', $Tier) }
-        if ($Fps -gt 0) { $startArgs += @('-e', 'fps', "$Fps") }
+        # -Uncapped: frame-rate target above any panel rate, so frames are limited only by the GPU/CPU and the
+        # display refresh (A16 90 Hz, S24+ 120 Hz) - shows the real headroom over the 30 FPS cap.
+        if ($Uncapped) { $startArgs += @('-e', 'fps', '240') }
+        elseif ($Fps -gt 0) { $startArgs += @('-e', 'fps', "$Fps") }
         if ($Scene) { $startArgs += @('-e', 'scene', $Scene) }
         if ($Autopilot) { $startArgs += @('-e', 'autopilot', $Autopilot) }
         if ($Speed -gt 0) { $startArgs += @('-e', 'speed', "$Speed") }

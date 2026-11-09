@@ -103,12 +103,24 @@ namespace Game.World.Import
                 var (ends, mask) = Policy(name, p.lods.Length);
                 p.lodEndM = ends;
                 p.shadowLodMask = mask;
-                var col = !tree ? props.Find(name + ".col") : null;
+                // Prop collider = box around the part of the .col mesh below 2.6 m (the post / foot), extended to 2.6 m.
+                // The whole .col bounds of a lamp or signal mast include the arm over the carriageway: a box around it
+                // was a wall across the lane (route test stuck at s = 613 m, S24+ autopilot stopped). Gates (lift,
+                // sliding) get none for now: they are open in gameplay and their boom crosses the access road.
+                var col = !tree && !name.EndsWith("_gate") ? props.Find(name + ".col") : null;
                 if (col != null)
                 {
-                    var b = new Bounds(col.Primitives[0].Positions[0], Vector3.zero);
-                    foreach (var prim in col.Primitives) foreach (var v in prim.Positions) b.Encapsulate(v);
-                    colMeshes[name] = b;
+                    const float h = 2.6f;
+                    Bounds? b = null;
+                    foreach (var prim in col.Primitives)
+                        foreach (var v in prim.Positions)
+                            if (v.y <= h) { if (b == null) b = new Bounds(v, Vector3.zero); else { var bb = b.Value; bb.Encapsulate(v); b = bb; } }
+                    if (b != null)
+                    {
+                        var bv = b.Value;
+                        bv.SetMinMax(bv.min, new Vector3(bv.max.x, h, bv.max.z));
+                        colMeshes[name] = bv;
+                    }
                 }
                 idx = protos.Count;
                 protos.Add(p);
