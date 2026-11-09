@@ -198,4 +198,29 @@ M = {
     "collision_building": {"color": [1, 0, 1], "rough": 1.0, "surface": "concrete", "collision": True},
     "collision_fence": {"color": [1, 0, 1], "rough": 1.0, "surface": "steel", "collision": True},
     "collision_steel": {"color": [1, 0, 1], "rough": 1.0, "surface": "steel", "collision": True},
+    # v3.1 facade palette additions (buildings_mesh.BLOCK_WALLS / OFFICE_WALLS, WORKING_VALUE colours)
+    "plaster_yellow": {"color": [0.58, 0.50, 0.28], "rough": 0.9, "texture_set": "plaster"},
+    "plaster_peach": {"color": [0.58, 0.42, 0.32], "rough": 0.9, "texture_set": "plaster"},
+    "plaster_sage": {"color": [0.40, 0.45, 0.36], "rough": 0.9, "texture_set": "plaster"},
+    "plaster_white": {"color": [0.60, 0.60, 0.58], "rough": 0.9, "texture_set": "plaster"},
+    "plaster_band_grey": {"color": [0.26, 0.27, 0.27], "rough": 0.9, "texture_set": "plaster"},
+    # retaining walls of the raised ramps (roads.profile.mark_walled_ramps): block-faced concrete
+    "ramp_wall_blocks": {"color": [0.34, 0.33, 0.31], "rough": 0.9, "texture_set": "concrete_blocks_split"},
 }
+
+# LOD1 far facade materials <wall>__far_<kind> (buildings_mesh.lod1_wall): the wall colour + a window grid the
+# shader draws from TEXCOORD_1 (one unit = one window bay x one storey; extras.window_grid in those units).
+# Keep in sync with buildings_mesh.FAR_GRID / BLOCK_WALLS / OFFICE_WALLS (test_far_facade_materials).
+FAR_GRID = {"block": {"pitch_m": 3.0, "win_w": 0.50, "sill": 0.32, "head": 0.84},
+            "office": {"pitch_m": 3.0, "win_w": 0.50, "sill": 0.26, "head": 0.71},
+            "ribbon": {"pitch_m": 3.0, "win_w": 1.00, "sill": 0.26, "head": 0.71}}
+_FAR_WALLS = {"block": ["plaster_cream", "plaster_grey", "plaster_pastel_blue", "plaster_light", "plaster_yellow",
+                        "plaster_peach", "plaster_sage", "panel_concrete"],
+              "office": ["plaster_light", "plaster_grey", "plaster_beige", "plaster_white", "brick_red"]}
+_FAR_WALLS["ribbon"] = _FAR_WALLS["office"]
+for _k, _ws in _FAR_WALLS.items():
+    for _w in _ws:
+        if _w in M:
+            M[f"{_w}__far_{_k}"] = {"color": M[_w]["color"], "rough": M[_w]["rough"], "base": _w,
+                                    "window_grid": dict(FAR_GRID[_k], uv="TEXCOORD_1"),
+                                    "glass_color": [0.03, 0.035, 0.04]}
