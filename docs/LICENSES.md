@@ -19,3 +19,17 @@ Zbiory planowane dla obszaru startowego (NMT, BDOT10k, modele 3D budynków LoD1/
 
 ## Narzędzia (biblioteki Pythona w `tools/worldgen`, wersje w `tools/worldgen/uv.lock`)
 Używane tylko w pipeline, nie są dystrybuowane w buildzie: osmium (pyosmium, BSD-2), shapely (BSD-3), pyproj (MIT), geopandas (BSD-3), networkx (BSD-3), matplotlib (PSF-based/matplotlib licence), numpy (BSD-3), Pillow (MIT-CMU), requests (Apache-2.0).
+
+## Audio
+
+Wszystkie dźwięki poniżej są **w 100% syntetyzowane naszym kodem** (numpy/scipy) — bez nagrań, sampli, banków dźwięków ani generatorów AI. Brak praw osób trzecich; licencja = licencja projektu. Opis modelu: `docs/AUDIO_DESIGN.md`.
+
+| ID | Źródło | Autor | Licencja | Data | W gicie? | Użycie / modyfikacje |
+|---|---|---|---|---|---|---|
+| `audio-engine-r6-synth` | `tools/audio/engine_synth.py` + `render_all.py` (synteza impulsowa R6, kolejność 1-5-3-6-2-4) | projekt (agent audio) | własna (projekt) | 2026-11-09 | generator tak; WAV nie (`art-source/audio/generated/`, odtwarzalne) | pętle silnika 16 rpm × 3 obciążenia × ext/cab, hamulec silnikowy 13 rpm × ext/cab |
+| `audio-sfx-synth` | `tools/audio/sfx_synth.py` | projekt (agent audio) | własna (projekt) | 2026-11-09 | generator tak; WAV nie | gwizd turbo, lift-off, zwolnienie hamulca, hamulec postojowy, osuszacz, zmiana biegu, opony, wiatr, wycie przekładni |
+| `audio-previews` | render powyższych (`art-source/audio/previews/*.ogg`) | projekt | własna (projekt) | 2026-11-09 | tak | podglądy do odsłuchu (każda pętla 2× pod rząd) |
+| `audio-drive-demo` | `tools/audio/render_demo.py` (lustro runtime, skryptowana telemetria) | projekt | własna (projekt) | 2026-11-09 | tak (`art-source/audio/demo/`) | demo 30 s kabina + zewnątrz do oceny właściciela |
+
+### Narzędzia audio (biblioteki Pythona w `tools/audio`, wersje w `tools/audio/uv.lock`)
+Tylko pipeline, nie trafiają do buildu: numpy (BSD-3), scipy (BSD-3), soundfile (BSD-3; dołączony libsndfile LGPL-2.1, z koderem Vorbis BSD-3 — używany tylko do zapisu plików offline), matplotlib (licencja matplotlib), Pillow (MIT-CMU, kwantyzacja PNG raportów). Formuły biquadów: RBJ Audio EQ Cookbook (wzory publiczne). K-weighting LUFS: ITU-R BS.1770-4 (współczynniki normy).
