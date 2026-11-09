@@ -87,7 +87,7 @@ namespace Game.Editor.Build
             // Content tiers (APK audit 2026-11-09): the High truck material set (~35 MB of 2048 px ASTC) ships only with
             // -worldHigh; the default APK carries Low + Medium and High quality falls back to Medium (TruckVisualRig).
             ShaderVariantStripper.Enabled = !EditorTools.HasArg("-noShaderStrip");
-            string movedHigh = EditorTools.HasArg("-worldHigh") || EditorTools.HasArg("-noLeanApk") ? null : HideTruckHighTier();
+            bool movedHigh = !(EditorTools.HasArg("-worldHigh") || EditorTools.HasArg("-noLeanApk")) && HideHighTiers();
             // Measurement only (never saved): -managedStripping Minimal|Low|Medium|High overrides the Android level.
             var savedStripping = PlayerSettings.GetManagedStrippingLevel(NamedBuildTarget.Android);
             string stripArg = EditorTools.Arg("-managedStripping", null);
@@ -97,7 +97,7 @@ namespace Game.Editor.Build
             finally
             {
                 PlayerSettings.SetManagedStrippingLevel(NamedBuildTarget.Android, savedStripping);
-                if (movedHigh != null) RestoreTruckHighTier(movedHigh);
+                if (movedHigh) RestoreHighTiers();
                 PlayerSettings.Android.bundleVersionCode = savedVersionCode;
                 AssetDatabase.SaveAssets();
             }
@@ -116,27 +116,42 @@ namespace Game.Editor.Build
             return ok ? 0 : 1;
         }
 
-        const string TruckHighSet = "Assets/_Generated/Truck/Resources/TRAKT/TruckMaterials_High.asset";
-        const string TruckHiddenDir = "Assets/_Generated/Truck/ExcludedFromLowApk";
-
-        /// <summary>Moves the High truck material set out of Resources for one build; restored by <see cref="RestoreTruckHighTier"/>.</summary>
-        static string HideTruckHighTier()
+        // High material sets of the vehicles: loaded by tier with Resources.Load, so every tier's textures ship unless hidden.
+        static readonly string[] HighSets =
         {
-            string hidden = TruckHiddenDir + "/TruckMaterials_High.asset";
-            if (File.Exists(Path.Combine(EditorTools.ProjectRoot, hidden))) RestoreTruckHighTier(hidden);   // crashed earlier build
-            if (!File.Exists(Path.Combine(EditorTools.ProjectRoot, TruckHighSet))) return null;
-            if (!AssetDatabase.IsValidFolder(TruckHiddenDir)) AssetDatabase.CreateFolder("Assets/_Generated/Truck", "ExcludedFromLowApk");
-            string err = AssetDatabase.MoveAsset(TruckHighSet, hidden);
-            if (!string.IsNullOrEmpty(err)) { Debug.LogWarning("[BUILD] cannot hide High truck set: " + err); return null; }
-            Debug.Log("[BUILD] default APK: High truck material set excluded (use -worldHigh to ship it)");
-            return hidden;
+            "Assets/_Generated/Truck/Resources/TRAKT/TruckMaterials_High.asset",
+            "Assets/_Generated/Trailer/Resources/TRAILER/TrailerMaterials_High.asset",
+        };
+        const string HiddenDir = "Assets/_Generated/ExcludedFromLowApk";
+
+        static string HiddenPath(string set) => HiddenDir + "/" + Path.GetFileName(set);
+
+        /// <summary>Moves the High vehicle material sets out of Resources for one build; undone by <see cref="RestoreHighTiers"/>.</summary>
+        static bool HideHighTiers()
+        {
+            RestoreHighTiers();   // leftovers of a crashed build
+            bool any = false;
+            foreach (var set in HighSets)
+            {
+                if (!File.Exists(Path.Combine(EditorTools.ProjectRoot, set))) continue;
+                if (!AssetDatabase.IsValidFolder(HiddenDir)) AssetDatabase.CreateFolder("Assets/_Generated", "ExcludedFromLowApk");
+                string err = AssetDatabase.MoveAsset(set, HiddenPath(set));
+                if (!string.IsNullOrEmpty(err)) Debug.LogWarning("[BUILD] cannot hide " + set + ": " + err);
+                else any = true;
+            }
+            if (any) Debug.Log("[BUILD] default APK: High truck + trailer material sets excluded (use -worldHigh to ship them)");
+            return any;
         }
 
-        static void RestoreTruckHighTier(string hidden)
+        static void RestoreHighTiers()
         {
-            string err = AssetDatabase.MoveAsset(hidden, TruckHighSet);
-            if (!string.IsNullOrEmpty(err)) Debug.LogError("[BUILD] cannot restore " + TruckHighSet + ": " + err);
-            else AssetDatabase.DeleteAsset(TruckHiddenDir);
+            foreach (var set in HighSets)
+            {
+                if (!File.Exists(Path.Combine(EditorTools.ProjectRoot, HiddenPath(set)))) continue;
+                string err = AssetDatabase.MoveAsset(HiddenPath(set), set);
+                if (!string.IsNullOrEmpty(err)) Debug.LogError("[BUILD] cannot restore " + set + ": " + err);
+            }
+            if (AssetDatabase.IsValidFolder(HiddenDir)) AssetDatabase.DeleteAsset(HiddenDir);
         }
 
         /// <summary>Packed size per asset type and for the generated world (build report) → log + JSON next to the APK.</summary>
