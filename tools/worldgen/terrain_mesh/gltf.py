@@ -62,6 +62,10 @@ class GLB:
                     gm["alphaMode"] = "MASK"
                     gm["alphaCutoff"] = float(m["alpha_cutoff"])
                     gm["doubleSided"] = True
+            if m.get("alpha") is not None:     # translucent (e.g. transparent noise screens): BLEND, double-sided
+                gm["pbrMetallicRoughness"]["baseColorFactor"][3] = float(m["alpha"])
+                gm["alphaMode"] = "BLEND"
+                gm["doubleSided"] = True
             self.gmats.append(gm)
         return self.mat_index[name]
 

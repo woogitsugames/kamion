@@ -45,6 +45,19 @@ Używane tylko w pipeline, nie są dystrybuowane w buildzie: osmium (pyosmium, B
 | Shadery `Kamion/Sky`, `Kamion/World Surface`, model nieba `SkyModel.cs` | własny kod; wzory z publikacji: Preetham, Shirley, Smits 1999 (model nieba), CIE S 011/E:2003 (niebo zachmurzone), IESNA Lighting Handbook (natężenia), Kasten i Young 1989 (masa powietrza) — formuły, nie kod | własne (repo) | WorldC, docelowo każda scena świata |
 | Czcionka `LegacyRuntime.ttf` | wbudowany zasób edytora Unity (`Resources.GetBuiltinResource`) | w ramach licencji Unity Editor/Runtime | HUD, tablice na placu (tymczasowo, do zastąpienia czcionką docelową) |
 
+## Fotografie referencyjne świata (Wikimedia Commons, `Data/photos/nowe/`, poza gitem, nie trafiają do buildu)
+
+Licencje sprawdzone przez lidera (`docs/REFERENCES.md` na `main`). W r2 kafla C (world-builder, 2026-11-09) użyte wyłącznie do porównań i ustaleń wyglądu; żadna tekstura nie została z nich wycięta.
+
+| Plik (https://commons.wikimedia.org/wiki/File:…) | Autor | Licencja | Użycie |
+|---|---|---|---|
+| `20201102_152339_Rondo_Pamięci_Bieżeństwa_1915_roku_Białystok.jpg` | Rakoon | CC0 | wiadukt Andersa nad Rondem Bieżeństwa: czerwona krawędź pomostu, okrągłe filary (override `andersa-viaduct-biezenstwa-style`), porównanie z kamerą `biezenstwa_above` |
+| `7204_May_2021_in_Białystok.jpg` | Rakoon | CC0 | wiadukt przy Rondzie Putry: zielona krawędź, żółte filary, przezroczyste ekrany (override `andersa-viaduct-putry-style`); treść tablic nad jezdnią (override `andersa-putry-approach-gantry`; lica tablic to nasz własny rysunek) |
+| `7197_May_2021_in_Białystok.jpg`, `20240626_103137_June_2024_in_Białystok.jpg`, `6972_December_2019_…`, `20201223_141958_…`, `20201223_143208_…` (Al. Tysiąclecia) | Rakoon | CC0 | porównania kadrów, kolor i stan nawierzchni |
+| `Worn_cracked_asphalt_pavement.jpg` | John Harvey | domena publiczna | referencja kształtu spękań (siatka wieloboczna, rysy); dopuszczalne jako źródło tekstury, w r2 nieużyte jako tekstura |
+| `Krzysztof_Putra_Roundabout_in_Białystok.jpg`, `Andersa,_Maczka_streets_in_Białystok_1.jpg`, `…_2.jpg` | Henryk Borawski | CC BY-SA 3.0 / 4.0 | tylko referencja wizualna (kolory wiaduktu Putry, filary w parach) |
+| `EC_Białystok.jpg` | Hiuppo | CC BY-SA 2.5 | tylko referencja wizualna (kominy EC jako dominanta; położenie i wysokość z OSM) |
+
 ## Pakiety Unity spoza szablonu
 
 | ID | Pakiet | Wersja | Licencja | Użycie |

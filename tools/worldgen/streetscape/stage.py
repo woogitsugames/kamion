@@ -17,6 +17,7 @@ from terrain_mesh import conform as CF
 from . import buildings_mesh as BM
 from . import furniture as FU
 from . import gate as GT
+from . import landmarks as LM
 from . import life as LF
 from . import paved as PV
 from . import sources as SRC
@@ -98,6 +99,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FU.speed_signs(pl, w.net, frep, codes)
     FU.crossing_signs(pl, w.net, w.ctx["points"], frep, codes)
     FU.direction_boards(pl, w.net, attrs, frep, boards)
+    LM.build(pl, w.net, graph, overrides, origin, boards, frep)
     FU.misc_points(pl, w.net, src, origin, frep, codes)
     FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep)
     lin = FU.Lin(w.buf, zsurf)

@@ -64,3 +64,66 @@ overrides:
       Everything except the boom position is WORKING_VALUE (typical Polish depot entrance) until photographed.
     confidence: low
     verify: owner photo session item 1 (gate, gatehouse, barrier arms, fence line, which side the gate slides)
+  - id: andersa-viaduct-biezenstwa-style
+    kind: bridge_style
+    target: {osm_way: [175157461, 177895177]}
+    set: {fascia: red, pier_mat: bridge_concrete, noise_screen: null}
+    reason: >-
+      Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r.: red-painted deck edge, plain grey cylindrical
+      concrete piers, steel railing, no noise screen (CC0 photo 20201102_152339, Rakoon, docs/REFERENCES.md).
+      Pier diameter and spacing are not measured (WORKING_VALUE 1.2 m, rule spacing).
+    confidence: medium
+    verify: pier count / spacing and fascia height from a site photo
+  - id: andersa-viaduct-putry-style
+    kind: bridge_style
+    target: {osm_way: [1101181473, 173956078, 284022563, 606396460]}
+    set: {fascia: green, pier_mat: pier_yellow, noise_screen: transparent, screen_h: 3.0}
+    reason: >-
+      Andersa viaduct at Rondo Putry (DK8/DK19/DK65): green deck edge, yellow-painted round piers in pairs,
+      transparent noise screens on posts along the deck (CC0 photo 7204_May_2021, Rakoon; consistent with the
+      CC BY-SA photos of Rondo Putry and Andersa/Maczka used as reference only). Screen height WORKING_VALUE.
+    confidence: medium
+    verify: screen height and post spacing, which deck sides carry screens
+  - id: andersa-putry-approach-gantry
+    kind: sign_gantry
+    osm_way: 266084693
+    before_node: n2840742308
+    distance_m: 40.0
+    boards:
+      - lanes: [0, 1]
+        rows: [[[E67], Warszawa], [["65"], Ełk]]
+      - lanes: [2]
+        rows: [[["8", E67], Augustów], [["19"], Kuźnica]]
+    reason: >-
+      Overhead boards before the split of Andersa (northbound) into the viaduct (Warszawa / Ełk, OSM destination
+      on way 1101181473) and the link to Rondo Putry (Augustów / Kuźnica PL/BY, way 606396463). Board texts follow
+      the CC0 photo 7204_May_2021 (Rakoon); the exact gantry position is not measured (40 m before the split,
+      WORKING_VALUE). Faces are our own schematic drawings, not copies of the real boards.
+    confidence: low
+    verify: gantry station, lane assignment and board layout from a site photo
+  - id: ec-bialystok-chimney-1
+    kind: landmark
+    osm_way: 628899553
+    epsg2180: [778619.25, 595139.04]
+    height_m: 120
+    base_d_m: 7.5
+    top_d_m: 4.5
+    reason: >-
+      EC Białystok power-plant chimney, 60 m south of the tile edge, visible from Rondo Bieżeństwa and the depot
+      (CC BY-SA photo EC_Białystok, reference only). OSM way 628899553: man_made=chimney, height=120,
+      colour=red/white, material=concrete; base diameter from the OSM footprint (7.5 m); top diameter and the
+      band layout are WORKING_VALUE.
+    confidence: medium
+    verify: band layout (one of the two chimneys has a chequered top in the reference photo)
+  - id: ec-bialystok-chimney-2
+    kind: landmark
+    osm_way: 628899554
+    epsg2180: [778713.26, 595089.71]
+    height_m: 120
+    base_d_m: 8.3
+    top_d_m: 4.8
+    reason: >-
+      Second EC Białystok chimney (OSM way 628899554: height=120, colour=red/white, material=concrete);
+      base diameter from the OSM footprint (8.3 m), top diameter WORKING_VALUE.
+    confidence: medium
+    verify: as above

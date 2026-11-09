@@ -205,3 +205,23 @@ def test_gate_split_has_kerb_chamfer():
     notes = json.loads(p.read_text(encoding="utf-8"))["junction_notes"]
     gate = [v for k, v in notes.items() if "1882887381" in k]
     assert gate and any("chamfer" in n or "kerb line continued" in n for n in gate[0])
+
+
+def test_photo_matched_overrides_applied(qa):
+    """Bridge styles, the Putry gantry and the EC chimneys (CC0 photos / OSM ground truth) are all applied."""
+    lm = qa["furniture"]["landmarks"]
+    assert lm["stale"] == []
+    assert [g["id"] for g in lm["gantries"]] == ["andersa-putry-approach-gantry"]
+    assert len(lm["landmarks"]) == 2
+    man = json.loads((REGION_DIR / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
+    ids = {o["id"] for o in man["overrides_applied"]}
+    assert {"andersa-viaduct-biezenstwa-style", "andersa-viaduct-putry-style"} <= ids
+    assert man["overrides_stale"] == []
+
+
+def test_overhead_board_layout():
+    from streetscape import signs as SG
+    im, w, h = SG.overhead_board([(["E67"], "Warszawa"), (["65"], "Ełk")])
+    assert 1.0 < h < 2.0 and w > h
+    r, g, b = im.convert("RGB").getpixel((im.size[0] // 2, im.size[1] - 2))
+    assert g > r                                            # green field (white border is inside the edge)

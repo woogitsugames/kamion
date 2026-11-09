@@ -700,6 +700,20 @@ def mat_glass(name, tint=(0.02, 0.025, 0.03)):
     return m
 
 
+def mat_screen_glass(name):
+    """Transparent noise-screen panels (PMMA / glass): mostly see-through, faint grey tint, sky reflection."""
+    m = new_mat(name)
+    b = NB(m)
+    b.finish((0.6, 0.64, 0.64), 0.08)
+    b.bsdf.inputs["Alpha"].default_value = 0.18
+    try:
+        m.surface_render_method = "DITHERED"
+    except AttributeError:
+        pass
+    m.use_backface_culling = False
+    return m
+
+
 def mat_emit(name, col, strength=1.0):
     m = new_mat(name)
     m.use_nodes = True
@@ -799,6 +813,13 @@ def build_materials():
         "trailer_curtain_green": mat_curtain("trailer_curtain_green", g((62, 84, 70))),
         "trailer_curtain_silver": mat_curtain("trailer_curtain_silver", g((160, 162, 162))),
         "trailer_box_white": mat_lines_v("trailer_box_white", g((200, 202, 200)), 1.2, 0.006, 0.45, 0.1, horizontal=False),
+        "bridge_fascia_red": mat_plaster("bridge_fascia_red", g((150, 52, 44))),
+        "bridge_fascia_green": mat_plaster("bridge_fascia_green", g((70, 118, 84))),
+        "pier_yellow": mat_plaster("pier_yellow", g((178, 166, 98))),
+        "noise_glass": mat_screen_glass("noise_glass"),
+        "chimney_concrete": mat_plaster("chimney_concrete", g((150, 150, 146))),
+        "chimney_red": mat_flat("chimney_red", g((160, 48, 40)), 0.85),
+        "chimney_white": mat_flat("chimney_white", g((206, 206, 202)), 0.85),
         "signal_red_on": mat_emit("signal_red_on", (1.0, 0.08, 0.03), 18.0),
         "signal_green_on": mat_emit("signal_green_on", (0.1, 1.0, 0.55), 14.0),
     }
@@ -894,7 +915,7 @@ def place_props(insts, protos, cam_pos, radius):
         p = it["p"]
         if p.startswith("tree_"):
             continue
-        if math.hypot(it["e"] - cam_pos[0], it["n"] - cam_pos[1]) > radius:
+        if math.hypot(it["e"] - cam_pos[0], it["n"] - cam_pos[1]) > radius and not p.startswith("landmark_"):
             continue
         far = math.hypot(it["e"] - cam_pos[0], it["n"] - cam_pos[1]) > 120
         src = protos.get(p + ".lod1") if far else None

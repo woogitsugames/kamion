@@ -284,6 +284,14 @@ def cameras(region_id, w):
         cams.append({"id": "biezenstwa_above", "type": "persp", "fov_deg": 55.0,
                      "pos": [r(ctr2[0] - 50), r(ctr2[1] - 45), r(zc2 + 38)],
                      "look_at": [r(ctr2[0]), r(ctr2[1]), r(zc2)], "note": "Rondo Pamięci Bieżeństwa 1915 r."})
+        # side-by-side with the CC0 photo 20201102_152339 (Rakoon, docs/REFERENCES.md): pedestrian eye 1.6 m on the
+        # north-east side of the ring, looking SSW across the ring under the Andersa viaduct (EC chimneys on the left)
+        pe = ctr2 + np.array([0.483, 0.875]) * 46.0
+        _, _, _, zpe = surface_at(w, pe)
+        la = ctr2 - np.array([0.483, 0.875]) * 25.0
+        cams.append({"id": "photo_biezenstwa_ground", "type": "persp", "fov_deg": 62.0,
+                     "pos": [r(pe[0]), r(pe[1]), r(zpe + 1.6)], "look_at": [r(la[0]), r(la[1]), r(zc2 + 3.0)],
+                     "note": "photo match: CC0 20201102_152339 Rondo Pamięci Bieżeństwa (approximate viewpoint)"})
     # Stage 3 reference stretch: driver eye (2.5 m) along the first ~420 m of the route, Kwadrat Park yard ->
     # depot gate -> Rondo Bieżeństwa (the most polished part of the tile)
     for k, (st, look, note) in enumerate(((30.0, 60.0, "Kwadrat Park yard, loading docks on the right"),
@@ -616,6 +624,8 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
                     if di > 200 and float(np.dot((np.array([it["e"], it["n"]]) - pos) / di, look)) < 0.5:
                         continue
                     rule = pol["tree"] if it["p"].startswith("tree_") else pol["prop"]
+                    if it["p"].startswith("landmark_"):       # landmarks are never culled (LOD1 beyond 650 m)
+                        rule = [[650, "tris_lod0"], [1e9, "tris_lod1"]]
                     key = next((k for lim, k in rule if di < lim), None)
                     if key:
                         tot += itris(it, key)

@@ -161,6 +161,17 @@ M = {
     # decals on roads (markings layer, depth offset like the markings)
     "decal_oil": {"color": [0.02, 0.02, 0.02], "rough": 0.35, "decal": True, "texture_set": "oil_stain_alpha"},
     "decal_patch": {"color": [0.055, 0.055, 0.053], "rough": 0.85, "decal": True, "texture_set": "asphalt_patch"},
+    # bridges (roads.meshing bridge_style overrides; CC0 photos of the Andersa viaducts, docs/REFERENCES.md)
+    "bridge_fascia_red": {"color": [0.30, 0.05, 0.04], "rough": 0.7},
+    "bridge_fascia_green": {"color": [0.07, 0.17, 0.10], "rough": 0.7},
+    "pier_yellow": {"color": [0.46, 0.40, 0.17], "rough": 0.85},
+    "noise_glass": {"color": [0.55, 0.60, 0.60], "rough": 0.1, "alpha": 0.22},
+    # sign gantry (streetscape.life_props.sign_gantry)
+    "gantry_steel": {"color": [0.42, 0.43, 0.43], "rough": 0.55, "metal": 0.9},
+    # landmarks
+    "chimney_concrete": {"color": [0.40, 0.40, 0.38], "rough": 0.9},
+    "chimney_red": {"color": [0.35, 0.05, 0.04], "rough": 0.85},
+    "chimney_white": {"color": [0.62, 0.62, 0.60], "rough": 0.85},
     # collision
     "collision_vehicle": {"color": [1, 0, 1], "rough": 1.0, "surface": "steel", "collision": True},
     "collision_building": {"color": [1, 0, 1], "rough": 1.0, "surface": "concrete", "collision": True},

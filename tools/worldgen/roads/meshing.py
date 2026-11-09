@@ -234,9 +234,51 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
             buf.add(layer, cmat, V, UV, T, footprint=(not coarse and not vertical and not is_flange), src=src, UV1=UV1)
 
 
+# Per-bridge look from authored overrides `kind: bridge_style` (keyed by OSM way id, set by roads.pipeline):
+#   fascia        painted deck-edge band colour (red / green / None = bare concrete)
+#   pier_mat      material of the round piers (bridge_concrete, pier_yellow)
+#   noise_screen  transparent noise-screen panels on the deck edge ("transparent") and their height
+# Default: bare concrete, round grey piers, no screen. Ground truth: CC0 photos in docs/REFERENCES.md.
+BRIDGE_STYLES = {}
+DEFAULT_BRIDGE_STYLE = {"fascia": None, "pier_mat": "bridge_concrete", "noise_screen": None, "screen_h": 3.0,
+                        "pier_r": 0.6}
+
+
+def bridge_style(c):
+    for eid, _ in c.edges:
+        w = str(eid).split(":")[0].lstrip("w")
+        if w in BRIDGE_STYLES:
+            return {**DEFAULT_BRIDGE_STYLE, **BRIDGE_STYLES[w]}
+    return DEFAULT_BRIDGE_STYLE
+
+
+def _strip(buf, layer, mat, A, B, src, both=True):
+    """Vertical strip between polylines A (bottom) and B (top), both windings (thin decorative parts)."""
+    n = len(A)
+    V = np.concatenate([A, B])
+    T = [(k, k + 1, n + k + 1) for k in range(n - 1)] + [(k, n + k + 1, n + k) for k in range(n - 1)]
+    T = np.array(T)
+    s_ = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(A[:, :2], axis=0).T))])
+    UV = np.column_stack([np.tile(s_, 2), np.concatenate([np.zeros(n), B[:, 2] - A[:, 2]])])
+    buf.add(layer, mat, V, UV, T, src=src)
+    if both:
+        buf.add(layer, mat, V, UV, T[:, [0, 2, 1]], src=src)
+
+
+def cylinder(buf, layer, mat, center_xy, r, z0, z1, src, seg=14):
+    a = np.linspace(0, 2 * math.pi, seg + 1)
+    ring = np.column_stack([np.cos(a), np.sin(a)]) * r + center_xy
+    V = np.concatenate([np.column_stack([ring, np.full(seg + 1, z0)]), np.column_stack([ring, np.full(seg + 1, z1)])])
+    n = seg + 1
+    T = [(i, i + 1, n + i + 1) for i in range(seg)] + [(i, n + i + 1, n + i) for i in range(seg)]
+    UV = np.column_stack([np.tile(a * r, 2), np.repeat([0.0, z1 - z0], n)])
+    buf.add(layer, mat, V, UV, np.array(T), src=src)
+
+
 def build_bridge_extras(buf, c, st, P, N, hw, br):
     if not br.any():
         return
+    style = bridge_style(c)
     idx = np.where(br)[0]
     # contiguous runs
     runs = np.split(idx, np.where(np.diff(idx) > 1)[0] + 1)
@@ -262,6 +304,27 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
         Lb, Rb = outer["L"][0], outer["R"][0]
         V = np.concatenate([Rb[:, None, :], Lb[:, None, :]], axis=1).reshape(-1, 3)
         buf.add("bridge", "bridge_concrete", V, V[:, :2], grid_tris(len(ss), 2, flip=True), src=c.id + ":soffit")
+        tt0, nn0 = c.line.frame(ss)
+        for side, sgn in (("L", 1.0), ("R", -1.0)):
+            bot, top = outer[side]
+            off = np.column_stack([nn0 * sgn * 0.015, np.zeros(len(ss))])
+            if style["fascia"]:          # painted deck edge band (fascia + cap edge), 1.5 cm proud
+                _strip(buf, "bridge", f"bridge_fascia_{style['fascia']}", bot + off, top + off + [0, 0, 0.02],
+                       c.id + ":fascia", both=False)
+                # winding: the strip faces outward (left side reversed)
+                if sgn > 0:
+                    buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
+            if style["noise_screen"]:    # transparent noise screen on posts at the deck edge (both sides)
+                e = top - np.column_stack([nn0 * sgn * 0.05, np.zeros(len(ss))])
+                _strip(buf, "bridge", "noise_glass", e + [0, 0, 0.25], e + [0, 0, style["screen_h"]], c.id + ":screen")
+                run_len = float(ss[-1] - ss[0])
+                for k in range(int(run_len // 3.0) + 1):
+                    s_p = float(ss[0]) + 3.0 * k
+                    pi = np.interp(s_p, ss, np.arange(len(ss)))
+                    p3 = np.array([np.interp(pi, np.arange(len(ss)), e[:, d]) for d in range(3)])
+                    box(buf, "bridge", "barrier_steel", p3[:2] + c.line.frame(s_p)[1] * sgn * 0.06,
+                        c.line.frame(s_p)[0], 0.07, 0.07, p3[2] - 0.05, p3[2] + style["screen_h"] + 0.1,
+                        c.id + ":screen")
         # balustrade on both cap edges (WORKING_VALUE geometry, low confidence): open steel railing =
         # handrail band at 1.0-1.1 m + mid rail at 0.45-0.60 m + posts every 2 m, set 0.15 m in from the edge
         tt, nn = c.line.frame(ss)
@@ -322,6 +385,7 @@ def build_bridge_supports(buf, c, hf, ground_footprint, report):
             continue
         hwmax = float(c.hw[run].max())
         width = 2 * (hwmax + S.KERB_TOP_W + S.BRIDGE_CAP_W)
+        style = bridge_style(c)
         for s_end in (sa, sb):
             p = c.line.point(s_end)
             t, _ = c.line.frame(s_end)
@@ -341,11 +405,10 @@ def build_bridge_supports(buf, c, hf, ground_footprint, report):
                 if ground_footprint is not None and any(ground_footprint(q) for q in cols):
                     continue
                 zt = float(c.zc(sp_)) - S.BRIDGE_DECK_THICKNESS
-                for q in cols:
+                for q in cols:          # round columns in pairs (CC0 photos of both Andersa viaducts)
                     zg = float(hf.sample(q[0], q[1]))
                     if zt - zg > 0.5:
-                        box(buf, "bridge", "bridge_concrete", q, t, S.BRIDGE_PIER_W / 2, S.BRIDGE_PIER_W / 2,
-                            zg - 0.5, zt, c.id + ":pier")
+                        cylinder(buf, "bridge", style["pier_mat"], q, style["pier_r"], zg - 0.5, zt, c.id + ":pier")
                 placed += 1
                 break
         report.append({"chain": c.id, "span_m": round(span, 1), "piers": placed, "confidence": "low",

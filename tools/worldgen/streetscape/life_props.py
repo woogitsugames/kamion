@@ -603,3 +603,71 @@ def build_all():
     for code in SIGNS:
         P[f"facade_sign_{code}"] = facade_sign(code)
     return P
+
+
+# ------------------------------------------------------------------------------------------- gantries, landmarks
+GANTRIES = set()        # (span_m, height_dm) registered by streetscape.landmarks before export
+LANDMARKS = {}          # name -> (height, base_d, top_d) registered by streetscape.landmarks
+
+
+def sign_gantry(span, H):
+    """Steel lattice sign gantry: two 0.6 x 0.6 m lattice columns at x = +-span/2 on concrete footings and a
+    0.8 m deep lattice beam whose top is at H; +y = front (boards hang there). Typical Polish overhead-sign
+    structure (CC0 photo, docs/REFERENCES.md); member sizes WORKING_VALUE."""
+    m, l1, col = Mesh(), Mesh(), Mesh()
+    zb0, zb1 = H - 1.0, H
+    for sx in (-1, 1):
+        x = sx * span / 2
+        bx(m, "concrete_base", x - 0.6, x + 0.6, -0.6, 0.6, -0.3, 0.25)
+        bx(l1, "concrete_base", x - 0.6, x + 0.6, -0.6, 0.6, -0.3, 0.25)
+        for cx in (-0.3, 0.3):
+            for cy in (-0.3, 0.3):
+                m.tube("gantry_steel", [x + cx, cy, 0.25], [x + cx, cy, H], 0.05, None, 6, cap=False)
+        for z in np.arange(0.6, H - 0.3, 1.2):                 # zig-zag lacing on the four faces
+            for (a, b) in (((-0.3, -0.3), (0.3, -0.3)), ((0.3, -0.3), (0.3, 0.3)), ((0.3, 0.3), (-0.3, 0.3)),
+                           ((-0.3, 0.3), (-0.3, -0.3))):
+                m.tube("gantry_steel", [x + a[0], a[1], z], [x + b[0], b[1], z + 0.6], 0.025, None, 4, cap=False)
+        bx(l1, "gantry_steel", x - 0.3, x + 0.3, -0.3, 0.3, 0.25, H)
+    for cy in (-0.4, 0.4):
+        for z in (zb0, zb1):
+            m.tube("gantry_steel", [-span / 2, cy, z], [span / 2, cy, z], 0.06, None, 6, cap=False)
+        xs = np.arange(-span / 2, span / 2 - 0.5, 1.0)
+        for i, x in enumerate(xs):
+            za, zb = (zb0, zb1) if i % 2 == 0 else (zb1, zb0)
+            m.tube("gantry_steel", [x, cy, za], [x + 1.0, cy, zb], 0.025, None, 4, cap=False)
+    bx(l1, "gantry_steel", -span / 2, span / 2, -0.4, 0.4, zb0, zb1)
+    for sx in (-1, 1):
+        col.box("collision_steel", [sx * span / 2, 0, 2.0], 0.35, 0.35, 2.0)
+    return m, l1, col
+
+
+def chimney(H, d0, d1):
+    """Landmark chimney: tapered concrete shaft; the top third in alternating red / white bands (obstacle
+    marking, 7 bands, WORKING_VALUE), a dark top rim."""
+    out = []
+    for lod, seg in ((0, 28), (1, 12)):
+        m = Mesh()
+        zt = H * 0.66
+        r = lambda z: (d0 + (d1 - d0) * z / H) / 2
+        m.tube("chimney_concrete", [0, 0, -1.0], [0, 0, zt], r(0) + 0.01, r(zt), seg, cap=False)
+        nb = 7
+        for k in range(nb):
+            z0 = zt + (H - zt) * k / nb
+            z1 = zt + (H - zt) * (k + 1) / nb
+            m.tube("chimney_red" if (nb - 1 - k) % 2 == 0 else "chimney_white", [0, 0, z0], [0, 0, z1], r(z0), r(z1),
+                   seg, cap=k == nb - 1)
+        if lod == 0:
+            m.tube("chimney_concrete", [0, 0, H - 0.6], [0, 0, H + 0.2], r(H) + 0.25, r(H) + 0.25, seg, cap=False)
+            for z in (zt - 20.0, H - 8.0):                       # service galleries
+                m.tube("gantry_steel", [0, 0, z], [0, 0, z + 0.15], r(z) + 0.9, r(z) + 0.9, seg, cap=True)
+        out.append(m)
+    return out[0], out[1], None
+
+
+def build_registered():
+    P = {}
+    for span, hdm in sorted(GANTRIES):
+        P[f"sign_gantry_{span}_{hdm}"] = sign_gantry(float(span), hdm / 10.0)
+    for name, (H, d0, d1) in sorted(LANDMARKS.items()):
+        P[name] = chimney(H, d0, d1)
+    return P

@@ -296,4 +296,5 @@ def build_all(sign_codes, boards):
     P["street_cabinet"] = street_cabinet()
     from . import life_props as LP
     P.update(LP.build_all())
+    P.update(LP.build_registered())
     return P
