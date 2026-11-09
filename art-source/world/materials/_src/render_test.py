@@ -290,7 +290,8 @@ def setup(res=(1280, 720), samples=48):
     sc.collection.objects.link(so)
     el, az = 40.0, 200.0
     so.rotation_euler = (math.radians(90 - el), 0, math.radians(180 - az))
-    sc.render.image_settings.file_format = "PNG"
+    sc.render.image_settings.file_format = "JPEG"
+    sc.render.image_settings.quality = 88
     return sc
 
 
@@ -306,7 +307,7 @@ def camera(sc, x, y, z=2.5, pitch_down=6.0, yaw=0.0, lens=24.0):
 
 
 def render(sc, name):
-    sc.render.filepath = str(OUTDIR / f"{name}.png")
+    sc.render.filepath = str(OUTDIR / f"{name}.jpg")
     bpy.ops.render.render(write_still=True)
     print("RENDER", sc.render.filepath, flush=True)
 

@@ -1,8 +1,10 @@
 """Build all world-C ground PBR sets into art-source/world/materials/<set>/<tier>/ and materials_spec.json.
 
 Run (from the repo root; uses the worldgen venv only for numpy/scipy/pillow, does not touch tools/worldgen):
-    uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py [--photo <path>] [--only a,b]
-Deterministic: fixed seeds, periodic FFT noise, no time-dependent input.
+    uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py
+        [--tier High,Medium,Low] [--only set_a,set_b] [--photo <path>]
+Outputs are not versioned (art-source/world/materials/.gitignore); see README.md. Deterministic: fixed seeds,
+periodic FFT noise, no time-dependent input, numpy/scipy/pillow pinned by tools/worldgen/uv.lock.
 """
 from __future__ import annotations
 
@@ -21,7 +23,7 @@ import sets_other as O  # noqa: E402
 
 OUT = HERE.parent
 REPO = OUT.parents[2]
-DEFAULT_PHOTO = Path(r"C:/Users/matma/Documents/Claude/kamion/Data/photos/nowe/Worn_cracked_asphalt_pavement.jpg")
+DEFAULT_PHOTO = REPO / "Data" / "photos" / "nowe" / "Worn_cracked_asphalt_pavement.jpg"   # owner set, not versioned
 
 SRC_ALB = ("'Cool Pavements' review, arXiv:2409.12242 (https://arxiv.org/abs/2409.12242), p. 7: new asphalt "
            "concrete ~0.05, rising with ageing and soiling to ~0.15; Portland cement concrete up to 0.35, soiled "
@@ -121,12 +123,17 @@ def gpu_estimate(files_info, tier, kind_map=None):
     return tot
 
 
+TIERS_SEL = list(K.TIERS)
+
+
 def build_cracks(spec):
     c, mask, h = A.cracks_layer()
     out = OUT / "asphalt_cracks_layer"
     info = {"files": {}}
     n_hi = K.normals_from_height(h, c.px)
     for t, f in K.TIERS.items():
+        if t not in TIERS_SEL:
+            continue
         d = out / t
         m = K.down(mask, f)
         hh = K.down(h, f)
@@ -149,6 +156,8 @@ def build_macro():
     out = OUT / "macro_variation"
     info = {"files": {}}
     for t, f in K.TIERS.items():
+        if t not in TIERS_SEL:
+            continue
         d = out / t
         mm = K.down(m, f)
         K.save_png(d / "T_macro_variation.png", mm, "RGBA")
@@ -161,6 +170,9 @@ def build_macro():
 
 
 def build_detail(photo: Path):
+    if not photo.exists():
+        print(f"  SKIP asphalt_detail_photo: source photo not found ({photo}); pass --photo", flush=True)
+        return None
     hp = O.asphalt_detail_photo(photo)
     out = OUT / "asphalt_detail_photo"
     info = {"files": {}, "source_photo": "Data/photos/nowe/Worn_cracked_asphalt_pavement.jpg (public domain)"}
@@ -169,6 +181,8 @@ def build_detail(photo: Path):
     height = 0.45e-3 * hp                                            # lighter = stone top = higher
     px = 1.0 / hp.shape[0]
     for t, f in (("High", 1), ("Medium", 2)):
+        if t not in TIERS_SEL:
+            continue
         d = out / t
         K.save_png(d / "T_asphalt_detail_photo_DetailAlbedo.png", K.srgb_encode(K.down(tex_lin, f)), "L")
         K.save_png(d / "T_asphalt_detail_photo_DetailNormal.png",
@@ -187,7 +201,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--photo", type=Path, default=DEFAULT_PHOTO)
     ap.add_argument("--only", default="")
+    ap.add_argument("--tier", default="High,Medium,Low", help="comma list of High,Medium,Low")
     a = ap.parse_args()
+    import time
+    t_all = time.perf_counter()
+    TIERS_SEL[:] = [t for t in a.tier.split(",") if t in K.TIERS]
     only = set(filter(None, a.only.split(",")))
     spec_path = OUT / "materials_spec.json"
     old = {}
@@ -199,9 +217,11 @@ def main():
         if only and name not in only:
             continue
         print("set", name, flush=True)
+        t0 = time.perf_counter()
         s = meta["fn"]()
         s.name = name
-        info = K.write_set(s, OUT)
+        info = K.write_set(s, OUT, tiers=TIERS_SEL)
+        print(f"  {time.perf_counter() - t0:.1f} s", flush=True)
         for t, fi in info["files"].items():
             fi["astc"] = ASTC[t]
             fi["gpu_bytes_astc_mips"] = int(gpu_estimate(fi, t))
@@ -216,6 +236,8 @@ def main():
         print("layer", name, flush=True)
         info = {"asphalt_cracks_layer": lambda: build_cracks(None), "macro_variation": build_macro,
                 "asphalt_detail_photo": lambda: build_detail(a.photo)}[name]()
+        if info is None:
+            continue
         entry = dict(meta)
         entry["kind"] = "layer"
         entry.update(info)
@@ -247,7 +269,7 @@ def main():
         "sets": dict(sorted(sets.items())),
     }
     K.dump_json(spec_path, spec)
-    print("wrote", spec_path)
+    print("wrote", spec_path, f"total {time.perf_counter() - t_all:.0f} s")
 
 
 if __name__ == "__main__":

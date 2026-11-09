@@ -91,7 +91,7 @@ Tylko pipeline, nie trafiają do buildu: numpy (BSD-3), scipy (BSD-3), soundfile
 
 ## Świat — otoczenie kafla C (world-builder, 2026-11-09)
 
-Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z cudzych modeli, tekstur, zdjęć ani generatorów AI. Tekstur CC0 (Poly Haven, ambientCG) nie użyto, wszystko jest proceduralne.
+Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z cudzych modeli, tekstur, zdjęć ani generatorów AI. Tekstur CC0 (Poly Haven, ambientCG) nie użyto, wszystko jest proceduralne. Wyjątek (2026-11-09): `world-ground-asphalt-detail` jest pochodną zdjęcia z domeny publicznej (wiersz niżej).
 
 | ID | Źródło | Licencja | W gicie? | Użycie |
 |---|---|---|---|---|
@@ -102,4 +102,7 @@ Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z c
 | `world-forest-hlod` | `tools/blender/world/make_trees.py` → `art-source/world/vegetation/forest_edge_{conifer,mixed,broadleaf}.png`, `forest_canopy_*.png` | własna (projekt; wypieczone z naszych drzew LOD0) | tak | tekstury HLOD lasu (ściana brzegu, korona), ADR 0013 |
 | `world-foliage-textures` | `tools/worldgen/streetscape/leaf_textures.py` → `art-source/world/vegetation/{leaves,bark}_*.png`, `grass_tuft.png` | własna (projekt) | tak | karty liści, kora, kępy trawy |
 | `world-misc-textures` | `streetscape/export.py` → `art-source/world/textures/{fence_mesh,dock_digits}.png` | własna (projekt) | tak | siatka panelu ogrodzeniowego 3D, atlas numerów ramp |
+| `world-ground-pbr` | `art-source/world/materials/_src/build_all.py` (numpy/scipy, proceduralnie, stałe ziarna) → `art-source/world/materials/<zestaw>/{High,Medium,Low}/*.png`, `materials_spec.json` | własna (projekt) | nie (generowane, `art-source/world/materials/README.md`) | zestawy PBR nawierzchni: asfalt SMA, asfalt zużyty, łaty, warstwa spękań 16 m, atlas plam oleju, beton 5 m, płyty JOMB 3×1,5, krawężnik, behaton, kostka 20×10, trawa pobocza (lato + późna jesień), żwir, makrowariacja |
+| `world-ground-asphalt-detail` | pochodna zdjęcia `Worn_cracked_asphalt_pavement.jpg` (John Harvey, Wikimedia Commons, **domena publiczna**; `docs/REFERENCES.md`): wycinek bez spękań, filtr górnoprzepustowy luminancji, kafelkowanie → `art-source/world/materials/asphalt_detail_photo/` | domena publiczna (źródło) + własna obróbka | nie (generowane; zdjęcie źródłowe poza repo) | warstwa detalu 1 m na asfaltach (High/Medium) |
+| `world-ground-pbr-renders` | `art-source/world/materials/_src/render_test.py` (Blender 4.2.9) → `art-source/world/materials/_renders/` | własna; montaż `compare_street_vs_photo.jpg` zawiera wycinek zdjęcia CC0 (Rakoon, `20201102_152339_Rondo_Pamięci_Bieżeństwa…jpg`) | tak (JPG ≤ 300 KB) | rendery kontrolne nawierzchni i porównanie ze zdjęciem; nie trafia do buildu |
 | `world-streetscape-data` | `Data/Regions/bialystok-industrial-c/generated/streetscape_sources.json` (OSM + BDOT10k) | ODbL 1.0 (© OpenStreetMap contributors) + dane GUGiK (BDOT10k, art. 40a ust. 2 pkt 1 Pgik) | tak | place, ogrodzenia, drzewa, ekrany, słupy. Ta sama uwaga `LEGAL_REVIEW_REQUIRED` co dla grafu dróg |
