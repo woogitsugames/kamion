@@ -152,6 +152,16 @@ namespace Game.Editor.VisualQA
                 // Art truck (A7): tier binding, lamp state and the cab fill for this camera (LateUpdate does not run here).
                 foreach (var rig in UnityEngine.Object.FindObjectsByType<TruckVisualRig>(FindObjectsSortMode.None)) rig.Apply();
                 foreach (var tl in UnityEngine.Object.FindObjectsByType<TruckLights>(FindObjectsSortMode.None)) tl.Refresh();
+                // A8: contact shadows, the vehicle reflection capture and the dusk street-lamp lights (no LateUpdate here).
+                ContactShadowCaster.RefreshAll();
+                for (int ci = 0; ci < ContactShadowCaster.Count; ci++)
+                {
+                    var csc = ContactShadowCaster.Get(ci);
+                    Debug.Log($"[QA] contact shadow {csc.name}: {csc.LastVertices} vertices, {csc.LastHits} ground hits");
+                }
+                if (VehicleReflectionCapture.Active != null) VehicleReflectionCapture.Active.RenderAllNow();
+                foreach (var sl in UnityEngine.Object.FindObjectsByType<StreetLamps>(FindObjectsSortMode.None)) sl.RefreshLights(cam);
+                Debug.Log("[QA] street lamps: " + StreetLamps.Diagnostics);
                 // -qaCabFill off: A/B frames without the cab fill and the cab-view lift (A7 before/after).
                 if (EditorTools.Arg("-qaCabFill", "on") == "off")
                 {
