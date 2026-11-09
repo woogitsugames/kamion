@@ -23,8 +23,16 @@ function Get-Timestamp { (Get-Date).ToString('yyyyMMdd-HHmmss') }
 function Get-GitShortSha { (& git -C $RepoRoot rev-parse --short=10 HEAD 2>$null) }
 
 # Returns serials of attached, authorised devices (state "device").
+function Start-AdbServer {
+    # Start the adb daemon in its own hidden console so it never inherits (and holds open) the
+    # stdout pipe of whoever runs these scripts - otherwise `pwsh script.ps1 | ...` never ends.
+    $p = Start-Process -FilePath $Adb -ArgumentList 'start-server' -WindowStyle Hidden -PassThru
+    $null = $p.Handle; [void]$p.WaitForExit(30000)
+}
+
 function Get-AdbDevices {
     if (-not (Test-Path $Adb)) { return @() }
+    Start-AdbServer
     @(& $Adb devices | Select-String "`tdevice$" | ForEach-Object { ($_.Line -split "`t")[0] })
 }
 
