@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "id": "top_speed_flat_comb",
+  "description": "Full throttle on flat from 60 km/h, 120 s",
+  "spec": "docs/04 s6.4",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 60
+  },
+  "duration": 120,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "max_speed_kmh",
+      "status": "SOURCED",
+      "source": "S3: 90 km/h speed limiter (N3)",
+      "max": 90.5
+    },
+    {
+      "metric": "mean_speed_kmh",
+      "status": "SOURCED",
+      "source": "settles at the limiter",
+      "min": 87,
+      "max": 90,
+      "from": 90
+    },
+    {
+      "metric": "final_gear",
+      "status": "WORKING_VALUE",
+      "source": "top gear at cruise",
+      "min": 12,
+      "max": 12
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "id": "air_leak_rear_circuit",
+  "description": "60 km/h, circuit 2 (rear) bursts at t=3 s, then emergency stop at t=15 s",
+  "spec": "docs/04 s6.6 / s2.8",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 60
+  },
+  "events": [
+    {
+      "t": 3,
+      "type": "leak",
+      "circuit": 2,
+      "lpm": 3000
+    }
+  ],
+  "duration": 40,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0.4,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 15,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "low_air_warning",
+      "status": "WORKING_VALUE",
+      "source": "low-pressure warning must come on",
+      "min": 1
+    },
+    {
+      "metric": "min_air_service_bar",
+      "status": "WORKING_VALUE",
+      "source": "rear circuit empties",
+      "max": 1.0
+    },
+    {
+      "metric": "stop_distance_m",
+      "status": "SOURCED",
+      "source": "UN R13 Annex 4 2.2: secondary braking N: s <= 0.15 v + 2 v^2/130 at 60 km/h",
+      "max": 64.4
+    },
+    {
+      "metric": "max_lateral_deviation_m",
+      "status": "WORKING_VALUE",
+      "source": "stable straight-line stop on the remaining circuits",
+      "max": 1.0
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "id": "brake_80_0_wet_noabs_comb",
+  "description": "80->0 km/h full service brake, wet asphalt, ABS off",
+  "spec": "docs/04 s6.5",
+  "variants": [
+    "solo",
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "wet_asphalt"
+  },
+  "initial": {
+    "speedKmh": 80,
+    "gear": 11
+  },
+  "overrides": {
+    "absEnabled": false
+  },
+  "duration": 20,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 0.5,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "rear_lock_time_s",
+      "status": "WORKING_VALUE",
+      "source": "without ABS the wheels lock (expected behaviour, not a failure)",
+      "min": 0.3,
+      "variant": "solo"
+    },
+    {
+      "metric": "stop_distance_m",
+      "status": "WORKING_VALUE",
+      "source": "locked-wheel sliding friction bounds",
+      "min": 30,
+      "max": 150
+    }
+  ]
+}

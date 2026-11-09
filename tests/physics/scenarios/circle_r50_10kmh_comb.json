@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "circle_r50_10kmh_comb",
+  "description": "Combination on R = 50 m at 10 km/h",
+  "spec": "docs/04 s6.7",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 60,
+  "driver": {
+    "type": "circle",
+    "targetKmh": 10,
+    "radius": 50,
+    "direction": 1
+  },
+  "checks": [
+    {
+      "metric": "radius_error_m",
+      "status": "WORKING_VALUE",
+      "source": "path following",
+      "max": 0.6,
+      "from": 30
+    },
+    {
+      "metric": "lat_accel_ms2",
+      "status": "DERIVED",
+      "source": "v^2/R",
+      "min": 0.1388888888888889,
+      "max": 0.1697530864197531,
+      "from": 30
+    },
+    {
+      "metric": "trailer_offtracking_m",
+      "status": "DERIVED",
+      "source": "steady low-speed offtracking: sqrt(R^2+e^2) vs sqrt(R^2+e^2-L^2) with e = 0.55 m, L = 7.7 m -> 0.59 m",
+      "min": 0.4,
+      "max": 0.8,
+      "from": 30
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

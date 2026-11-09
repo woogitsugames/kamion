@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "brake_response_static",
+  "description": "Stationary vehicle, full service brake application (response time as in R13, vehicle at rest)",
+  "spec": "docs/04 s6.5 / s2.8",
+  "variants": [
+    "solo",
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 3,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "N"
+      },
+      {
+        "t": 0.5,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "N"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "brake_response_s",
+      "status": "SOURCED",
+      "source": "UN R13 Annex 4 4.1.1: braking force on the least favourable axle within 0.6 s (criterion here: 75 % of the final chamber pressure; Annex 6 method not verified)",
+      "max": 0.6
+    },
+    {
+      "metric": "brake_response_s",
+      "status": "SOURCED",
+      "source": "UN R13 Annex 4 4.1.1",
+      "max": 0.6,
+      "arg": 1
+    },
+    {
+      "metric": "brake_response_s",
+      "status": "WORKING_VALUE",
+      "source": "pneumatic build-up is not instantaneous",
+      "min": 0.15
+    },
+    {
+      "metric": "brake_response_s",
+      "status": "SOURCED",
+      "source": "UN R13 Annex 4 4.1.1 (trailer axle: longest lines, cascaded lag)",
+      "max": 0.6,
+      "arg": 2,
+      "variant": "empty"
+    },
+    {
+      "metric": "brake_response_s",
+      "status": "SOURCED",
+      "source": "UN R13 Annex 4 4.1.1 (trailer axle)",
+      "max": 0.6,
+      "arg": 2,
+      "variant": "laden40"
+    },
+    {
+      "metric": "brake_response_s",
+      "status": "WORKING_VALUE",
+      "source": "trailer builds up later than the tractor (longer lines)",
+      "min": 0.3,
+      "arg": 2,
+      "variant": "laden40"
+    }
+  ]
+}

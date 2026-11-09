@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "id": "steer_sign_reverse_right_comb",
+  "description": "Steering sign with trailer (reverse_right)",
+  "spec": "docs/04 s6.15",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 8,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 1,
+        "throttle": 0.25,
+        "brake": 0,
+        "steer": 0.15,
+        "parkingBrake": false,
+        "selector": "R"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "yaw_rate_mean_dps",
+      "status": "DERIVED",
+      "source": "reversing with right steer: tractor yaws negative (same sign as solo)",
+      "max": -0.3,
+      "from": 4
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    }
+  ]
+}

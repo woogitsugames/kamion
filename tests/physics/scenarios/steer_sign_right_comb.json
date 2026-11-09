@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "steer_sign_right_comb",
+  "description": "Steering sign with trailer (right)",
+  "spec": "docs/04 s6.15",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 15
+  },
+  "duration": 8,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0.3,
+        "brake": 0,
+        "steer": 0.3,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "yaw_rate_mean_dps",
+      "status": "DERIVED",
+      "source": "Unity frame: +steer = right = +yaw about +Y (same as solo)",
+      "min": 1,
+      "from": 4
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    }
+  ]
+}

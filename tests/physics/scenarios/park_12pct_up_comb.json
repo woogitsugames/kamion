@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "id": "park_12pct_up_comb",
+  "description": "Combination parked on 12% (facing uphill), tractor spring brakes only (R13 Annex 4 2.3.2), engine idling, 300 s",
+  "spec": "docs/04 s6.1",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 12,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "parkingBrake": true
+  },
+  "duration": 300,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": true,
+        "selector": "N"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "creep_m",
+      "status": "SOURCED",
+      "source": "holds without creep in the ground plane; 12% from R13 Annex 4 para 2.3.2 (towing vehicle parking brake holds the combination on 12%)",
+      "max": 0.005,
+      "from": 5
+    },
+    {
+      "metric": "creep_m",
+      "status": "WORKING_VALUE",
+      "source": "no creep at all once settled (tire / suspension compliance only in the first seconds)",
+      "max": 0.0005,
+      "from": 60
+    },
+    {
+      "metric": "drift_m",
+      "status": "WORKING_VALUE",
+      "source": "incl. vertical settling of the levelled air suspension (deadband 8 mm)",
+      "max": 0.012,
+      "from": 5
+    },
+    {
+      "metric": "max_speed_after_ms",
+      "status": "WORKING_VALUE",
+      "source": "no oscillation / creep after settling",
+      "max": 0.001,
+      "from": 5
+    },
+    {
+      "metric": "trailer_creep_m",
+      "status": "WORKING_VALUE",
+      "source": "trailer held through the kingpin",
+      "max": 0.005,
+      "from": 5
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

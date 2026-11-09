@@ -13,6 +13,7 @@ namespace PhysicsRunner.Sim
         public readonly Dictionary<string, EngineDefinition> Engines = new Dictionary<string, EngineDefinition>();
         public readonly Dictionary<string, GearboxDefinition> Gearboxes = new Dictionary<string, GearboxDefinition>();
         public readonly Dictionary<string, TireDefinition> Tires = new Dictionary<string, TireDefinition>();
+        public readonly Dictionary<string, TrailerDefinition> Trailers = new Dictionary<string, TrailerDefinition>();
 
         public static readonly JsonSerializerOptions Json = new JsonSerializerOptions
         {
@@ -31,6 +32,7 @@ namespace PhysicsRunner.Sim
                 if (name.EndsWith(".vehicle.json")) { var d = Deserialize<VehicleDefinition>(text, f); d.Validate(); set.Vehicles[d.id] = d; }
                 else if (name.EndsWith(".engine.json")) { var d = Deserialize<EngineDefinition>(text, f); d.Validate(); set.Engines[d.id] = d; }
                 else if (name.EndsWith(".gearbox.json")) { var d = Deserialize<GearboxDefinition>(text, f); d.Validate(); set.Gearboxes[d.id] = d; }
+                else if (name.EndsWith(".trailer.json")) { var d = Deserialize<TrailerDefinition>(text, f); d.Validate(); set.Trailers[d.id] = d; }
                 else if (name.EndsWith(".tire.json")) { var d = Deserialize<TireDefinition>(text, f); d.Validate(); set.Tires[d.id] = d; }
             }
             return set;
@@ -48,6 +50,9 @@ namespace PhysicsRunner.Sim
             var v = Vehicles[vehicleId];
             return new VehicleModel(v, Engines[v.engineId], Gearboxes[v.gearboxId], Tires, settings);
         }
+
+        public TrailerModel CreateTrailer(string trailerId, CargoDefinition cargo, SolverSettings settings) =>
+            new TrailerModel(Trailers[trailerId], Tires, cargo, settings);
     }
 
     public static class RepoPaths

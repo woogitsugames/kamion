@@ -70,6 +70,14 @@
       "max": 0.1,
       "status": "WORKING_VALUE",
       "source": "no jolts > 10 m/s^2 within one 10 ms step (shifts, clutch lock-up)"
+    },
+    {
+      "metric": "max_rpm_in_gear",
+      "arg": 6,
+      "from": 1,
+      "max": 1900,
+      "status": "WORKING_VALUE",
+      "source": "Stage 2 fix of the Stage 1 note: no ~2000 rpm overshoot in gears 4-5 (upshift prediction, short same-direction hold-off)"
     }
   ]
 }

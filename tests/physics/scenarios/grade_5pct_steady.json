@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "id": "grade_5pct_steady",
+  "description": "40 t on a 5% climb, full throttle from 60 km/h, steady speed after 150 s",
+  "spec": "docs/04 s6.4",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 5,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 60
+  },
+  "duration": 200,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "mean_speed_kmh",
+      "status": "DERIVED",
+      "source": "v = eta P / (m g (sin a + f_r) + aero): 0.92 x 368 kW / (40 t x 9.81 x 0.0554 + ~0.7 kN) = 15 m/s (54 km/h); gear steps cost a few km/h",
+      "min": 44,
+      "max": 60,
+      "from": 150
+    },
+    {
+      "metric": "speed_range_kmh",
+      "status": "WORKING_VALUE",
+      "source": "no gear hunting on the climb (mass/grade-aware AMT)",
+      "max": 6,
+      "from": 150
+    },
+    {
+      "metric": "min_rpm",
+      "status": "WORKING_VALUE",
+      "source": "engine kept in the torque plateau (S1: 980-1270 rpm max torque)",
+      "min": 1000,
+      "from": 150
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

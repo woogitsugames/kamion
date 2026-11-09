@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "launch_6pct_uphill_light_comb",
+  "description": "6% hill start with 35 % throttle (gentle driver)",
+  "spec": "docs/04 s6.2",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 6,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 60,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 2.0,
+        "throttle": 0.35,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "rollback_m",
+      "status": "WORKING_VALUE",
+      "source": "no rollback",
+      "max": 0.05
+    },
+    {
+      "metric": "stalled",
+      "status": "WORKING_VALUE",
+      "source": "no stall",
+      "max": 0
+    },
+    {
+      "metric": "time_to_kmh",
+      "status": "WORKING_VALUE",
+      "source": "plausibility",
+      "min": 3,
+      "max": 45,
+      "arg": 10
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

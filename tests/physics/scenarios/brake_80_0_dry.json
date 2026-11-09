@@ -59,6 +59,12 @@
       "max": 2.0,
       "status": "WORKING_VALUE",
       "source": "no spin / yaw instability under ABS braking"
+    },
+    {
+      "metric": "rear_lock_time_s",
+      "max": 0.03,
+      "status": "WORKING_VALUE",
+      "source": "Stage 2 fix of the Stage 1 note: no ~0.1 s drive-axle lock at brake onset (EBS load sensing + wheel-deceleration ABS)"
     }
   ]
 }

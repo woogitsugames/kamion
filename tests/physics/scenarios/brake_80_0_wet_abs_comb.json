@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "id": "brake_80_0_wet_abs_comb",
+  "description": "80->0 km/h full service brake, wet asphalt, ABS on",
+  "spec": "docs/04 s6.5",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "wet_asphalt"
+  },
+  "initial": {
+    "speedKmh": 80,
+    "gear": 11
+  },
+  "overrides": {
+    "absEnabled": true
+  },
+  "duration": 20,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 0.5,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    },
+    {
+      "metric": "stop_distance_m",
+      "status": "WORKING_VALUE",
+      "source": "mu_wet ~0.5 (WORKING): v^2/(2 x 0.45 g) + build-up",
+      "min": 45,
+      "max": 95
+    },
+    {
+      "metric": "mfdd_ms2",
+      "status": "WORKING_VALUE",
+      "source": "<= mu_wet g",
+      "min": 3.0,
+      "max": 5.5
+    },
+    {
+      "metric": "max_lateral_deviation_m",
+      "status": "WORKING_VALUE",
+      "source": "straight-line stability under ABS",
+      "max": 0.5
+    },
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "no trailer swing under ABS braking on a straight",
+      "max": 2.0
+    },
+    {
+      "metric": "rear_lock_time_s",
+      "status": "WORKING_VALUE",
+      "source": "Stage 2 fix: no tractor drive-axle lock at brake onset (EBS load sensing + decel-threshold ABS)",
+      "max": 0.03
+    },
+    {
+      "metric": "trailer_lock_time_s",
+      "status": "WORKING_VALUE",
+      "source": "trailer ABS 2S/2M prevents lock",
+      "max": 0.05
+    }
+  ]
+}

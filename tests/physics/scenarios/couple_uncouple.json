@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "id": "couple_uncouple",
+  "description": "Trailer on landing gear; tractor reverses under it, couples, raises legs, drives 15 m, parks, lowers legs, uncouples, drives away",
+  "spec": "docs/04 s2.9",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "overrides": {
+    "coupled": false,
+    "trailerGap": 2.0
+  },
+  "events": [
+    {
+      "t": 0.5,
+      "type": "couple_arm"
+    },
+    {
+      "t": 8,
+      "type": "landing_gear_up"
+    },
+    {
+      "t": 31,
+      "type": "landing_gear_down"
+    },
+    {
+      "t": 48,
+      "type": "uncouple"
+    }
+  ],
+  "duration": 75,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 1,
+        "throttle": 0.05,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 6,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 7,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 17,
+        "throttle": 0.25,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 25,
+        "throttle": 0,
+        "brake": 0.6,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 30,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": true,
+        "selector": "N"
+      },
+      {
+        "t": 50,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 52,
+        "throttle": 0.25,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 65,
+        "throttle": 0,
+        "brake": 0.5,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "coupling_events",
+      "status": "WORKING_VALUE",
+      "source": "jaw locks once",
+      "min": 1,
+      "max": 1
+    },
+    {
+      "metric": "kingpin_load_vs_static",
+      "status": "DERIVED",
+      "source": "kingpin load after coupling and raising the legs = static nose load",
+      "min": 0.9,
+      "max": 1.1,
+      "from": 20,
+      "to": 24
+    },
+    {
+      "metric": "uncoupling_events",
+      "status": "WORKING_VALUE",
+      "source": "released once",
+      "min": 1,
+      "max": 1
+    },
+    {
+      "metric": "tractor_trailer_distance_m",
+      "status": "WORKING_VALUE",
+      "source": "tractor drove away",
+      "min": 8
+    },
+    {
+      "metric": "trailer_drift_m",
+      "status": "WORKING_VALUE",
+      "source": "uncoupled trailer held by its emergency/spring brakes on the legs",
+      "max": 0.03,
+      "from": 50
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "coupling impact spread by the compliant jaw engagement (0.4 s, 4 Hz); no solver explosion",
+      "max": 0.35
+    },
+    {
+      "metric": "max_kingpin_long_kn",
+      "status": "WORKING_VALUE",
+      "source": "coupling bump at idle-creep approach stays moderate (compliant engagement)",
+      "max": 150,
+      "from": 2,
+      "to": 8
+    },
+    {
+      "metric": "wheel_lift",
+      "status": "WORKING_VALUE",
+      "source": "uncoupling with the legs taking the nose load: the tractor does not jump",
+      "max": 0,
+      "from": 40
+    }
+  ]
+}

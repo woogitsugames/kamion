@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "id": "circle_r50_35kmh_comb",
+  "description": "Combination on R = 50 m at 35 km/h",
+  "spec": "docs/04 s6.7",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 60,
+  "driver": {
+    "type": "circle",
+    "targetKmh": 35,
+    "radius": 50,
+    "direction": 1
+  },
+  "checks": [
+    {
+      "metric": "radius_error_m",
+      "status": "WORKING_VALUE",
+      "source": "path following",
+      "max": 0.6,
+      "from": 30
+    },
+    {
+      "metric": "lat_accel_ms2",
+      "status": "DERIVED",
+      "source": "v^2/R",
+      "min": 1.7013888888888888,
+      "max": 2.0794753086419755,
+      "from": 30
+    },
+    {
+      "metric": "trailer_offtracking_m",
+      "status": "WORKING_VALUE",
+      "source": "offtracking shrinks / reverses with speed (tire slip angles)",
+      "min": -0.5,
+      "max": 0.55,
+      "from": 30
+    },
+    {
+      "metric": "max_trailer_roll_deg",
+      "status": "WORKING_VALUE",
+      "source": "moderate roll at 0.19 g",
+      "max": 4,
+      "from": 30
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}
