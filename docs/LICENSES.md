@@ -56,3 +56,8 @@ Wszystkie dźwięki poniżej są **w 100% syntetyzowane naszym kodem** (numpy/sc
 
 ### Narzędzia audio (biblioteki Pythona w `tools/audio`, wersje w `tools/audio/uv.lock`)
 Tylko pipeline, nie trafiają do buildu: numpy (BSD-3), scipy (BSD-3), soundfile (BSD-3; dołączony libsndfile LGPL-2.1, z koderem Vorbis BSD-3 — używany tylko do zapisu plików offline), matplotlib (licencja matplotlib), Pillow (MIT-CMU, kwantyzacja PNG raportów). Formuły biquadów: RBJ Audio EQ Cookbook (wzory publiczne). K-weighting LUFS: ITU-R BS.1770-4 (współczynniki normy).
+
+## Fonts
+| ID | Source | Licence | Use |
+|---|---|---|---|
+| `font-inter` | Inter (Rasmus Andersson), file shipped with Blender 4.2 (`datafiles/fonts`) | SIL Open Font License 1.1 | rasterised text in cab display textures (art-source/truck/interior/textures); font file not in repo |
