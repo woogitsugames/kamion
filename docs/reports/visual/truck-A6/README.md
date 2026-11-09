@@ -14,6 +14,14 @@ Zewnętrze (`docs/reports/visual/truck-A6-exterior/`) jest teraz jedyną karoser
 - **Naprawiony błąd materiałów:** w `consolidate()` `Mesh.materials.clear()` (Blender 4.x) kasował numery materiałów ścian, więc każdy obiekt roboczy trafiał w całości do jednego zestawu. Teraz numery są czytane przed wyczyszczeniem. Kolor i chropowatość są w danych wierzchołków, więc w renderach różnica jest mała, ale mapy detali (skóra, tkanina) trafiają teraz na właściwe ściany.
 - Rendery „jak URP” po dopasowaniu: `a6fit_kierowca_overcast_urp.jpg`, `a6fit_pasazer_overcast_urp.jpg`, `a6fit_lezanka_overcast_urp.jpg`. Test linii wzroku zegarów: nadal PASS.
 
+## Dopasowanie do bryły B2 v2 (2026-11-09)
+Zewnętrze dostało szybę 1,94–3,12 m pochyloną o 7° i dach 3,75 m (`glass_interface.json`). Wnętrze czyta teraz z tego pliku także **kąt szyby** (`rake_deg_from_vertical`; `--rake` tylko do studiów) i wysokość dachu. Przed/po: `przed_b2/kierowca_*.jpg` vs `kierowca_*_urp.jpg`.
+- Deska sięga do nowej, niższej krawędzi szyby (podszybie opada do 1,93 m za fritem 75 mm); czarny górny pas deski znowu w materiale „soft” (podział materiałów liczony od strony lica, bo profil zaczyna się teraz poniżej linii podziału).
+- Wycieraczki zastępcze, frit, osłony słupków A, nadproże, kaseta rolet i lusterko przednie liczone od nowych krawędzi szyby.
+- Naprawiony błąd: zasłony przy słupkach A (fałdy prawie 180°) z `use_even_offset` wyrzucały pojedyncze wierzchołki 0,5 m w pole widzenia (czarny „kolec” na szybie po przesunięciu zasłony do przodu).
+- **Trójkąty:** LOD0 **84 161** (nowy limit 120 tys.), LOD1 **39 537**, LOD2 **21 969**. `check_export` PASS, `check_fit` PASS, linia wzroku PASS (`sightline.json`, rake 7°).
+- Nieprzejęte z arkuszy wnętrza właściciela (osobna runda): nowy układ konsoli (nawiewy, 2 rzędy kołyskowych, pakiet zawieszenia, panel klimatyzacji), skórzany pas koniak na desce pasażera, kierownica 4-ramienna ze srebrnymi wstawkami, czarny wewnętrzny daszek z uchwytami osłon.
+
 ## Runda 3 (2026-11-09, po recenzji `REVIEW-2026-11-09-r2.md`, sekcja A6 i punkt 8 listy top-12)
 
 Decyzje właściciela wpisane jako domyślne: **wstawki koniak**, **tylko cyfrowe zegary**, **znak TRAKT na piaście**, szyba koncepcji B (19°). Wszystkie rendery kontrolne i eksport (FBX, manifest) powstają teraz z tymi ustawieniami, bez dodatkowych przełączników.

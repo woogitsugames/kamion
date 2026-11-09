@@ -16,17 +16,26 @@ import bpy
 from mathutils import Matrix, Vector
 
 import geom as G
-from geom import (CAB_BACK_Y, CAB_HALF_W, ROOF_Z, WHEEL_Z, EYE, Loft, V, box, box_mm, cyl, rod, sphere, tube,
+from geom import (CAB_BACK_Y, CAB_HALF_W, WHEEL_Z, EYE, Loft, V, box, box_mm, cyl, rod, sphere, tube,
                   lerp_tab, set_group, boolean, bevel, extrude_poly, rrect, arch)
 
-RAKE = 19.0
+# B2 + owner correction (2026-11-09): the front in side view is ONE line - bumper, grille, windscreen and roof edge
+# in a single, nearly upright plane leaning back at a constant RAKE (2020s cab-overs), no step between the glass
+# and the grille (r4 had a vertical face under a 19 deg screen = the ~2008 'step'). RAKE is a WORKING_VALUE chosen
+# in the owner's 5-8 deg band; the interior reads it from glass_interface.json (rake_deg_from_vertical).
+RAKE = 7.0
 TAN = math.tan(math.radians(RAKE))
-WS_Z0, WS_Z1 = 2.06, 2.96            # visible glass bottom/top
-# black ceramic frit inside the visible opening (A6: bottom 35 -> 75 mm, real screens 60-120 mm; hides the cowl, the
+FACE_Y0 = 1.480                      # front plane at the cab lower edge (z = CAB_Z0); bumper top continues it
+WS_Z0, WS_Z1 = 1.94, 3.12            # visible glass bottom/top (B2: 2.06-2.96 -> 1.94-3.12, 1.18 m visible)
+# B2 owner note 'forehead too big' (0.9 m of paint over the glass): cab roof 3.95 -> 3.75 m (WORKING_VALUE; dims.json
+# overall_height_m synced) and the glass top 2.96 -> 3.12 m:
+# black frit + sun visor read as one dark band up to ~3.20 m, painted header ~0.45 m flat + R 0.10 roof edge.
+# Interior headliner stays at 3.62 m (2.22 m standing height over the 1.40 m floor), 0.13 m roof package.
+ROOF_Z = G.ROOF_Z                    # 3.75 m: dims.json overall_height_m (owner decision 2026-11-09, B2 v2)
+# black ceramic frit inside the visible opening (A6: bottom 75 mm, real screens 60-120 mm; hides the cowl, the
 # wiper spindles and the dash top edge from outside and from the seat - REVIEW r2 §2 #2). Published in
 # glass_interface.json; the interior prints the same band on the inner face.
 FRIT_BOTTOM, FRIT_TOP, FRIT_SIDE = 0.075, 0.10, 0.028
-WS_Y0 = 1.405                        # windscreen outer surface at z = 2.04
 CAB_Z0 = 1.225                       # cab shell lower edge = tilt line
 FAIR_TOP = 1.21                      # frame-mounted lower fairing top
 BELT_Z, WIN_TOP = 2.17, 2.94         # side glass (interior: 2.17..2.96)
@@ -46,8 +55,16 @@ HANDLE_Y = (-0.83, -0.74)            # recessed grab handle in the fixed rear si
 PIVOT = Vector((0.0, 1.42, 1.19))    # cab tilt pivot (front cab mount on the frame horns)
 
 
+def face_y(z):
+    """The single front plane (A2 y at height z): lower face, grille, windscreen outer surface, header."""
+    return FACE_Y0 - (z - CAB_Z0) * TAN
+
+
 def ws_y(z):
-    return WS_Y0 - (z - 2.04) * TAN
+    return face_y(z)
+
+
+WS_Y0 = face_y(2.04)                 # windscreen outer surface at z = 2.04 (kept for older callers)
 
 
 def arch_y(z, r=ARCH_OUT, rear=True):
@@ -58,38 +75,43 @@ def arch_y(z, r=ARCH_OUT, rear=True):
 
 
 CFG = {
-    # flush header (R2 #8: the forward lip at z 3.0-3.13 read as a 90s 'beak'); windscreen rake eases into
-    # the roof curve
-    "front": [(CAB_Z0, 1.462), (1.60, 1.455), (1.90, 1.440), (1.985, 1.432), (2.000, 1.418), (2.04, WS_Y0),
-              (2.98, ws_y(2.98)), (3.10, 1.052), (3.30, 1.012), (3.50, 0.980), (3.70, 0.952), (ROOF_Z, 0.920)],
+    # B2/owner: one straight front line from the cab lower edge to the roof edge (the roof radius takes the top);
+    # the bumper below continues the same plane (lower_fairing). Extra keys only add section rings.
+    "front": [(CAB_Z0, face_y(CAB_Z0)), (WS_Z0 - 0.08, face_y(WS_Z0 - 0.08)), (WS_Z0, face_y(WS_Z0)),
+              (WS_Z1 + 0.02, face_y(WS_Z1 + 0.02)), (ROOF_Z, face_y(ROOF_Z))],
     "w": [(CAB_Z0, CAB_HALF_W), (2.70, CAB_HALF_W), (3.50, CAB_HALF_W - 0.02), (ROOF_Z, CAB_HALF_W - 0.045)],
-    "rf": [(CAB_Z0, 0.32), (1.985, 0.34), (2.04, 0.36), (2.98, 0.40), (ROOF_Z, 0.46)],
+    # B2: plan corner under the screen R 0.32 -> 0.16 (crisp corner deflector), blending into the windscreen's
+    # wrap radius (glass contract) over the cowl band; header corner as before
+    # B2 v2: the glass-zone corner tightened too (0.36-0.40 -> 0.22-0.26): the R 0.16 face corner no longer
+    # steps out under a softer glass corner (a visible notch at the cowl), and the screen wraps ~50 deg instead of
+    # ~70 deg (the 90s 'wrapped' screen, REVIEW r3.1 cause 2)
+    "rf": [(CAB_Z0, 0.16), (WS_Z0 - 0.10, 0.16), (WS_Z0 - 0.015, 0.22), (WS_Z1 + 0.02, 0.26), (ROOF_Z, 0.28)],
     "rb": 0.10,
-    "roof_r": 0.40,
+    # B2: roof edge R 0.40 'bubble' -> 0.10 m edge (flat header wall + sun visor, roof shoulder)
+    "roof_r": 0.10,
     # front face (front-projection params: x = lateral, wraps round the corner beyond the flat part)
-    # TRAKT face (r4, REVIEW r3 X1/X2): 2020s proportions - one tall grille field reaching 0.125 m under the
-    # visible glass (was 0.20 m, with a paint band carrying the wordmark), the brand's road-T kept as the
-    # grille outline (wide upper bar, stem widening downwards like a road in perspective) but with a gentler
-    # step, so the face reads as one dark mass, not a T-shaped hole in a white panel. Slim lamps (0.16 m, was
-    # 0.23 m) sit low beside the stem, their inner edge parallel to the 'road' edge.
-    "lamp": [(0.830, 1.280), (1.335, 1.280), (1.360, 1.450), (0.790, 1.450)],
-    # DRL light guides (right lamp): T-bar line along the top + road-edge line down the inner side, both
-    # inset ~20 mm behind the lens and split at the corner (they no longer lie on the housing edge)
-    "drl": [((0.856, 1.424), (1.322, 1.424)), ((0.834, 1.412), (0.862, 1.300))],
-    "stem": [(-0.80, 1.235), (0.80, 1.235), (0.70, 1.668), (-0.70, 1.668)],   # road: narrow at the top
-    "bar": [(-0.86, 1.655), (0.86, 1.655), (0.86, 1.935), (-0.86, 1.935)],    # T-bar
-    "bumper_road": [(-0.86, 0.885), (0.86, 0.885), (0.806, 1.21), (-0.806, 1.21)],
-    "emblem_z": 1.783, "emblem_w": 0.20,
-    "wordmark_z": 1.889,
-    # one grille field, three bar weights: 2 body-colour bars in the T-bar (the upper one flush, carrying the
-    # TRAKT wordmark), 4 thin graphite louvres in the stem, fine honeycomb behind everything.
-    # (z_centre, height, depth, material)
-    "grille_bars": [(1.889, 0.074, 0.040, "paint"), (1.690, 0.040, 0.046, "paint"),
-                    (1.590, 0.018, 0.058, "trim_graphite"), (1.500, 0.018, 0.058, "trim_graphite"),
-                    (1.410, 0.018, 0.058, "trim_graphite"), (1.320, 0.018, 0.058, "trim_graphite")],
+    # B2 v2 face (owner reference sheets 2026-11-09): one wide rectangular grille (+-0.80 m, 1.235-1.82 m) with
+    # horizontal graphite louvres filling the space between the lamps, a flush body-colour strip on top carrying
+    # the TRAKT wordmark, the honeycomb lower intake below it in the bumper. Slim horizontal lamps sit in the
+    # grille's upper corners right against its frame (28 mm) and wrap ~10 cm round the R 0.16 corner.
+    "lamp": [(0.828, 1.600), (1.300, 1.600), (1.312, 1.762), (0.828, 1.762)],
+    # DRL light guides (right lamp): line along the top + a short vertical guide on the grille side, inset behind
+    # the lens and split at the corner
+    "drl": [((0.845, 1.738), (1.296, 1.738)), ((0.845, 1.724), (0.845, 1.618))],
+    "stem": [(-0.80, 1.235), (0.80, 1.235), (0.80, 1.600), (-0.80, 1.600)],   # lower grille field
+    "bar": [(-0.80, 1.585), (0.80, 1.585), (0.80, 1.852), (-0.80, 1.852)],    # upper field + black wordmark band
+    "bumper_road": [(-0.80, 0.885), (0.80, 0.885), (0.80, 1.21), (-0.80, 1.21)],   # lower intake (honeycomb)
+    "emblem_z": None, "emblem_w": 0.15,          # B2 v2: no grille badge, the wordmark carries the brand
+    "wordmark_z": 1.799, "wordmark_h": 0.080,
+    # (z_centre, height, depth, material): flush black band carrying the silver TRAKT letters (owner sheets: light
+    # lettering on a dark strip, the band runs up to the cowl so screen-band-grille read as one dark mass) + 6 louvres
+    "grille_bars": [(1.7985, 0.107, 0.040, "plastic_satin"),
+                    (1.705, 0.020, 0.058, "trim_graphite"), (1.623, 0.020, 0.058, "trim_graphite"),
+                    (1.541, 0.020, 0.058, "trim_graphite"), (1.459, 0.020, 0.058, "trim_graphite"),
+                    (1.377, 0.020, 0.058, "trim_graphite"), (1.295, 0.020, 0.058, "trim_graphite")],
     "bumper_split": 0.67,             # body colour above, dark textured lower bumper below
     "side_split": 0.55,               # body colour on the step boxes / corner above, dark skirt below
-    "ws_bottom_x": 1.27, "ws_top_x": 1.15,
+    "ws_bottom_x": 1.22, "ws_top_x": 1.12,
 }
 CAB = None    # Loft of the cab shell
 LOW = None    # Loft of the lower fairing
@@ -128,7 +150,7 @@ def cab_shell():
     global CAB
     set_group("cab")
     CAB = Loft(CFG["front"], CAB_BACK_Y, CFG["w"], CFG["rf"], CFG["rb"], CAB_Z0, ROOF_Z, roof_r=CFG["roof_r"],
-               arc_n=10, step=0.05, flat_n=5, roof_n=9)
+               arc_n=16, step=0.035, flat_n=6, roof_n=9)   # B2 v2: denser shell (smooth corner highlights, budget 140k)
     sh = CAB.build("cab_shell", "paint", sharp=50, cap_bottom=False)
     sh.data.materials.append(G.mat("interior"))
     so = sh.modifiers.new("solid", "SOLIDIFY")
@@ -230,11 +252,11 @@ def doors_and_gaps():
         # cab tilt line (cab lower edge over the frame-mounted fairing)
     CAB.patch("tilt_gap_front", "gap", "front", CAB_Z0 - 0.006, CAB_Z0 + 0.004, -1.6, 1.6, off=0.001, nz=1, npar=60)
     # service hatch (tilting front flap) outline
-    hx, ht = 0.92, 1.975
+    hx, ht = 0.815, WS_Z0 - 0.085     # B2 v2: the grille is the tilting flap; top under the cowl
     CAB.patch("hatch_gap_top", "gap", "front", ht - 0.0035, ht + 0.0035, -hx, hx, off=0.0012, nz=1, npar=30)
     for s in (-1, 1):
         lamp = CFG["lamp"]
-        z_l = lamp[3][1] + 0.01
+        z_l = CAB_Z0 + 0.012
         CAB.patch(f"hatch_gap_side_{s}", "gap", "front", z_l, ht, s * hx - 0.0035, s * hx + 0.0035, off=0.0012,
                   nz=4, npar=1)
 
@@ -254,19 +276,24 @@ def front_face(feathers, strokes):
         t = (z - st[1][1]) / (st[2][1] - st[1][1])
         return st[1][0] + (st[2][0] - st[1][0]) * t
     for k, (zc, hgt, depth, m_) in enumerate(CFG["grille_bars"]):
-        grille_bar(f"grille_bar{k}", zc, hgt, depth, gx(zc) - 0.004, m_, round_front=(m_ == "paint"),
+        grille_bar(f"grille_bar{k}", zc, hgt, depth, gx(zc) - 0.004, m_, round_front=(k == 0 or m_ == "paint"),
                    nose=0.0 if k == 0 else -0.003)
     # frame: raised graphite band along the T outline (outer edge flush with the pocket edge)
     st, br = CFG["stem"], CFG["bar"]
     xs = gx(br[0][1] - 1e-6)
     outline = [st[0], st[1], (xs, br[0][1]), br[1], br[2], br[3], br[0], (-xs, br[0][1])]
+    outline = [p for i, p in enumerate(outline)          # B2 v2: rectangular grille -> drop repeated corners
+               if math.hypot(p[0] - outline[i - 1][0], p[1] - outline[i - 1][1]) > 1e-4]
     ribbon("grille_frame", outline, 0.022, "trim_graphite", off=-0.004, thick=0.010)
-    emblem(feathers)
-    wordmark(strokes, z_c=CFG["wordmark_z"], height=0.050)
-    # cowl (wiper panel) between hatch and windscreen
-    CAB.patch("cowl", "plastic", "front", 1.978, 2.048, -1.12, 1.12, off=0.002, nz=3, npar=40)
-    for k, x in enumerate(np.linspace(-0.9, 0.9, 14) if False else [-0.9 + 1.8 * i / 13 for i in range(14)]):
-        CAB.patch(f"cowl_slot{k}", "gap", "front", 1.995, 2.03, x - 0.035, x + 0.035, off=0.0035, nz=1, npar=1)
+    if CFG["emblem_z"] is not None:
+        emblem(feathers)
+    # B2 v2: real satin-silver letters (3 mm) on the black band - kept as game geometry ('badge_'), not the
+    # paint-slot decal (a decal can only tint the Paint slot, it cannot draw light letters on dark trim)
+    wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=14.0, mat="satin_alu", name="badge_trakt")
+    # flush cowl (wiper panel) in the same plane, between the service flap and the glass edge
+    CAB.patch("cowl", "plastic", "front", WS_Z0 - 0.082, WS_Z0 - 0.012, -1.12, 1.12, off=0.002, nz=3, npar=40)
+    # B2 v2: no slot row - in the game atlas it baked into a black/grey comb; the plain black cowl now merges with
+    # the black wordmark band below and the frit above (owner sheets: one dark band from the grille to the glass)
     wipers()
 
 
@@ -371,11 +398,12 @@ def wipers():
     # A6.1 (interior critic r2 #7): parked blades lie on the glass just above the 75 mm bottom frit (frit top 2.135 m),
     # rising 16 mm towards the tip, so the driver sees them along the bottom of the screen as in real cabs (they were
     # at 2.095 m, hidden behind the frit). Pivots unchanged; the interior placeholder uses the same numbers.
-    zb0, rise = 2.142 + 0.009, 0.016
+    zb0, rise = WS_Z0 + FRIT_BOTTOM + 0.007 + 0.009, 0.016   # B2: follows the lower glass edge
     for k, (px, length) in enumerate(((-1.00, 0.86), (-0.08, 0.86))):
-        y = CAB.front_pt(2.085, px, 0.02)[1]
-        p0 = V((px, y + 0.01, 2.035))
-        cyl(f"wiper_pivot{k}", (px, CAB.front_pt(2.02, px, 0)[1] + 0.012, 2.02), 0.022, 0.03, "plastic_satin",
+        y = CAB.front_pt(WS_Z0 + 0.025, px, 0.02)[1]
+        p0 = V((px, y + 0.01, WS_Z0 - 0.025))
+        cyl(f"wiper_pivot{k}", (px, CAB.front_pt(WS_Z0 - 0.04, px, 0)[1] + 0.012, WS_Z0 - 0.04), 0.022, 0.03,
+            "plastic_satin",
             axis="Z", seg=16)
         zt = zb0 + rise + 0.018
         tip = V((px + length, CAB.front_pt(zt, px + length, 0.03)[1], zt))
@@ -387,7 +415,7 @@ def wipers():
             pts.append(V(CAB.front_pt(zb0 + rise * (x - px) / length, x, 0.016)))
         tube(f"wiper_blade{k}", pts, 0.009, "rubber", seg=6)
         # washer nozzle on the cowl next to each pivot
-        box((f"washer_nozzle{k}"), (px + 0.12, CAB.front_pt(2.03, px + 0.12, 0)[1] + 0.006, 2.033),
+        box((f"washer_nozzle{k}"), (px + 0.12, CAB.front_pt(WS_Z0 - 0.03, px + 0.12, 0)[1] + 0.006, WS_Z0 - 0.027),
             (0.022, 0.012, 0.010), "plastic_satin", bev=0.003)
 
 
@@ -476,18 +504,22 @@ def lamp_cell(tag, s, x0, x1, z0, z1, beam):
     sx = lambda x: s * x  # noqa: E731
     # reflector floor: two facets meeting in a shallow ridge (reads as a stamped reflector, not a flat plate)
     zm = (z0 + z1) / 2
-    CAB.quad_patch(f"proj_bowl_{tag}_a", "reflector", "front", [(sx(x0), z0), (sx(x1), z0), (sx(x1), zm),
+    CAB.quad_patch(f"proj_bowl_{tag}_a", "lamp_inner", "front", [(sx(x0), z0), (sx(x1), z0), (sx(x1), zm),
                                                                (sx(x0), zm)], off=-0.044, nu=4, nv=1)
-    CAB.quad_patch(f"proj_bowl_{tag}_b", "reflector", "front", [(sx(x0), zm), (sx(x1), zm), (sx(x1), z1),
+    CAB.quad_patch(f"proj_bowl_{tag}_b", "lamp_inner", "front", [(sx(x0), zm), (sx(x1), zm), (sx(x1), z1),
                                                                (sx(x0), z1)], off=-0.040, nu=4, nv=1)
     ribbon(f"proj_shroud_{tag}", poly, 0.007, "dark_chrome", off=-0.044, thick=0.026)
     cx, w, h = (x0 + x1) / 2, (x1 - x0), (z1 - z0)
     if beam == "low":
-        # projector lens: wide, low rectangle with a dark-chrome bezel lip
-        lx0, lx1, lz0, lz1 = cx - w * 0.36, cx + w * 0.36, zm - h * 0.20, zm + h * 0.16
-        CAB.quad_patch(f"proj_lens_{tag}", "projector", "front", [(sx(lx0), lz0), (sx(lx1), lz0), (sx(lx1), lz1),
-                                                                  (sx(lx0), lz1)], off=-0.030, nu=4, nv=1,
-                       thick=0.008)
+        # B2 (REVIEW r3.1 X1 'cassette, no lens visible'): round projector lens - a smoked half-dome (r 24 mm)
+        # in a dark-chrome ring, reads as a lens with refraction depth, not a flat grey box
+        p = V(CAB.front_pt(zm, sx(cx), -0.040))
+        nrm = V(CAB.normal_front(zm, sx(cx)))
+        r = min(w, h) * 0.36
+        dome = [(0.0, 0.016), (r * 0.45, 0.0145), (r * 0.75, 0.0105), (r * 0.93, 0.005), (r, 0.0), (r, -0.004)]
+        oriented_lathe(f"proj_lens_{tag}", dome, p, nrm, "projector", seg=20)
+        ring = [(r + 0.006, -0.004), (r + 0.006, 0.003), (r + 0.001, 0.004), (r - 0.001, 0.001)]
+        oriented_lathe(f"proj_ring_{tag}", ring, p, nrm, "dark_chrome", seg=20)
     else:
         CAB.quad_patch(f"hb_mask_{tag}", "lamp_inner", "front", [(sx(x0 + 0.008), zm - 0.010),
                                                                  (sx(x1 - 0.008), zm - 0.010),
@@ -516,30 +548,54 @@ def headlamps():
             drl_guide(f"drl_{s}_{k}", s, (x0, z0), (x1, z1), wdt=0.010)
         # module row: low, low, high (outboard cell wraps onto the corner)
         for k, (x0, x1, beam) in enumerate(((0.905, 1.000, "low"), (1.015, 1.110, "low"), (1.125, 1.225, "high"))):
-            lamp_cell(f"{s}_{k}", s, x0, x1, 1.322, 1.392, beam)
+            lamp_cell(f"{s}_{k}", s, x0, x1, 1.642, 1.712, beam)
         # outboard corner: dark-chrome fin with a vertical light-guide end of the DRL (lamp reads round the corner)
         CAB.quad_patch(f"lamp_fin_{s}", "dark_chrome", "front",
-                       [(s * 1.245, 1.312), (s * 1.262, 1.312), (s * 1.275, 1.405), (s * 1.258, 1.405)]
-                       if s > 0 else [(s * 1.262, 1.312), (s * 1.245, 1.312), (s * 1.258, 1.405),
-                                      (s * 1.275, 1.405)], off=-0.040, nu=2, nv=2, thick=0.020)
-        # amber LED indicator line just above the lamp floor
-        CAB.quad_patch(f"indicator_{s}", "lens_amber", "front",
-                       [(s * 0.905, 1.294), (s * 1.30, 1.294), (s * 1.30, 1.310), (s * 0.905, 1.310)],
-                       off=-0.034, nu=16, nv=1, thick=0.006)   # >= cage (0.02) behind the lens: bakes clean
+                       [(s * 1.245, 1.632), (s * 1.262, 1.632), (s * 1.275, 1.725), (s * 1.258, 1.725)]
+                       if s > 0 else [(s * 1.262, 1.632), (s * 1.245, 1.632), (s * 1.258, 1.725),
+                                      (s * 1.275, 1.725)], off=-0.040, nu=2, nv=2, thick=0.020)
+        # B2 (REVIEW r3.1 X1): indicator = LED light guide behind the clear lens, silver when off (amber only
+        # when lit: light group IND_*), on a dark-chrome carrier, running along the lamp floor round the corner
+        CAB.quad_patch(f"indicator_{s}", "led_off", "front",
+                       [(s * 0.860, 1.612), (s * 1.285, 1.612), (s * 1.285, 1.621), (s * 0.860, 1.621)],
+                       off=-0.030, nu=20, nv=1, thick=0.004)   # >= cage (0.02) behind the lens: bakes clean
+        CAB.quad_patch(f"ind_carrier_{s}", "dark_chrome", "front",
+                       [(s * 0.855, 1.606), (s * 1.290, 1.606), (s * 1.290, 1.627), (s * 0.855, 1.627)],
+                       off=-0.040, nu=20, nv=1)
         # crowned clear outer lens (two Fresnel surfaces + rim) + black gasket round it
-        lens_dome(f"lamp_lens_{s}", poly, "lens_clear", crown=0.014, thick=0.005)
+        lens_dome(f"lamp_lens_{s}", poly, "lens_clear", crown=0.020, thick=0.006, sub=12)
         ribbon(f"lamp_gasket_{s}", poly, 0.008, "plastic_satin", off=-0.004, thick=0.006)
 
 
 # ---------------------------------------------------------------- corner deflectors, roof, rear wall
+def sun_visor():
+    """B2: black sun visor over the windscreen (2020s header instead of the r4 roof 'bubble'): a thin blade
+    standing 85 mm off the header plane, tilted down, ending 30 mm above the glass; follows the plan wrap."""
+    set_group("cab")
+    z_root, hw, n = WS_Z1 + 0.045, 1.12, 24
+    # section (z, offset from the shell): root on the header, blade sloping down to a 6 mm rounded nose
+    prof = [(z_root + 0.030, -0.004), (z_root + 0.026, 0.040), (z_root + 0.010, 0.086), (z_root + 0.002, 0.090),
+            (z_root - 0.006, 0.084), (z_root - 0.012, 0.040), (z_root - 0.018, -0.004)]
+    bm = bmesh.new()
+    rows = [[bm.verts.new(CAB.front_pt(z, -hw + 2 * hw * j / n, o)) for j in range(n + 1)] for z, o in prof]
+    for a in range(len(rows)):
+        r0, r1 = rows[a], rows[(a + 1) % len(rows)]
+        for j in range(n):
+            bm.faces.new((r0[j], r0[j + 1], r1[j + 1], r1[j]))
+    for j in (0, n):
+        bm.faces.new([r[j] for r in rows])
+    G.obj_from_bm("sun_visor", bm, "plastic", sharp=40)
+
+
 def corners_roof_rear():
     set_group("cab")
+    sun_visor()
+    # B2 v2 (owner sheets): row of five roof-front marker lamps over the header
+    for i, xm in enumerate((-0.80, -0.40, 0.0, 0.40, 0.80)):
+        p = V(CAB.front_pt(ROOF_Z - 0.16, xm, 0.0))
+        box(f"marker_front_{i}", p + V((0, 0.005, 0)), (0.10, 0.03, 0.035), "lens_clear", bev=0.007)
+        box(f"marker_front_led_{i}", p - V((0, 0.006, 0)), (0.08, 0.01, 0.022), "led_off")
     for s in (-1, 1):
-        # air deflector standing off the front corner, from above the lamp up to the A-pillar base
-        # roof marker lamps (front white, rear red), side marker on the roof edge
-        p = V(CAB.front_pt(ROOF_Z - 0.20, s * 0.80, 0.0))
-        box(f"marker_front_{s}", p + V((0, 0.005, 0)), (0.12, 0.03, 0.04), "lens_clear", bev=0.008)
-        box(f"marker_front_led_{s}", p - V((0, 0.006, 0)), (0.10, 0.01, 0.025), "led_off")
         box(f"marker_rear_{s}", (s * (CAB_HALF_W - 0.24), CAB_BACK_Y - 0.012, ROOF_Z - 0.17), (0.12, 0.025, 0.045),
             "lens_red", bev=0.006)
         # side extenders (aero flaps behind the cab), plastic with a rubber trailing edge
@@ -562,10 +618,10 @@ def corners_roof_rear():
     # rear wall: panel joints, work lamp, coupling panel
     y = CAB_BACK_Y - 0.002
     for x in (-0.62, 0.62):
-        box_mm(f"rear_joint_{x}", x - 0.003, x + 0.003, y - 0.002, y, CAB_Z0 + 0.05, 3.55, "gap")
+        box_mm(f"rear_joint_{x}", x - 0.003, x + 0.003, y - 0.002, y, CAB_Z0 + 0.05, ROOF_Z - 0.40, "gap")
     box_mm("rear_joint_h", -1.05, 1.05, y - 0.002, y, 2.30, 2.306, "gap")
-    box_mm("work_lamp", -0.18, 0.18, y - 0.05, y, 3.70, 3.76, "plastic_satin", bev=0.01)
-    box_mm("work_lamp_lens", -0.16, 0.16, y - 0.052, y - 0.049, 3.71, 3.75, "led_off")
+    box_mm("work_lamp", -0.18, 0.18, y - 0.05, y, ROOF_Z - 0.25, ROOF_Z - 0.19, "plastic_satin", bev=0.01)
+    box_mm("work_lamp_lens", -0.16, 0.16, y - 0.052, y - 0.049, ROOF_Z - 0.24, ROOF_Z - 0.20, "led_off")
     box_mm("rear_lower_panel", -1.18, 1.18, y - 0.018, y, CAB_Z0, 1.55, "plastic", bev=0.006)
     # coupling panel (cab-back mounted): red supply / yellow control palm couplings, ISO 7638 + 15-pin sockets
     box_mm("coupling_panel", -0.34, 0.34, y - 0.04, y - 0.018, 1.30, 1.52, "chassis", bev=0.006)
@@ -633,7 +689,7 @@ def mirrors(kind="classic", front=True):
     if not front:
         return
     set_group("mirrors")
-    p = V(CAB.front_pt(3.25, 0.98, 0.0))
+    p = V(CAB.front_pt(WS_Z1 + 0.29, 0.98, 0.0))     # above the sun visor
     tube("front_mirror_arm", [p + V((0, -0.05, 0.10)), p + V((0, 0.12, 0.10)), p + V((0, 0.20, 0.0))], 0.014,
          "plastic_satin", seg=10)
     box("front_mirror", p + V((0, 0.22, -0.10)), (0.26, 0.07, 0.17), "plastic_satin", bev=0.03, seg=3,
@@ -648,9 +704,10 @@ def lower_fairing():
     global LOW
     set_group("lower")
     sp = CFG["bumper_split"]
-    LOW = Loft(front=[(0.38, 1.495), (0.50, 1.522), (1.00, 1.522), (FAIR_TOP, 1.505)], back=FAIR_BACK,
+    # B2/owner: the bumper face continues the cab's front plane (one line in side view), tucking under at the lip
+    LOW = Loft(front=[(0.38, 1.530), (0.55, face_y(0.55)), (FAIR_TOP, face_y(FAIR_TOP) + 0.002)], back=FAIR_BACK,
                w=[(0.38, CAB_HALF_W - 0.02), (0.55, CAB_HALF_W), (sp, CAB_HALF_W), (FAIR_TOP, CAB_HALF_W)],
-               rf=[(0.38, 0.30), (FAIR_TOP, 0.32)], rb=0.05, z0=0.38, ztop=FAIR_TOP, roof_r=0.015, arc_n=14,
+               rf=[(0.38, 0.22), (FAIR_TOP, 0.17)], rb=0.05, z0=0.38, ztop=FAIR_TOP, roof_r=0.015, arc_n=14,
                step=0.04, flat_n=8, roof_n=3)
     lo = LOW.build("lower_fairing", "plastic", sharp=45)
     lo.data.materials.append(G.mat("paint"))
@@ -658,11 +715,13 @@ def lower_fairing():
     for s in (-1, 1):
         c = cyl(f"cut_arch_{s}", (s * 1.10, 0.0, WHEEL_Z), ARCH_R, 0.6, "plastic", axis="X", seg=48)
         cuts.append(c)
-        # step well behind the wheel: three open recesses, walls in body colour (R2 #2/#3: no black boxes)
+        # step well behind the wheel: three open recesses. B2 (REVIEW r3 X3 'white cabinet'): rounded moulded
+        # recesses (R 45 mm cutter) lined in dark textured plastic like real step inserts; the body colour stays on
+        # the outer faces of the step boxes only (R2 #3: no black plinth)
         xo, xi = s * (CAB_HALF_W + 0.1), s * (CAB_HALF_W - STEP_DEPTH)
         for k, (z, y0, y1) in enumerate(STEPS):
             cuts.append(box_mm(f"cut_step{k}_{s}", min(xo, xi), max(xo, xi), y0, y1, z,
-                               z + (0.30 if k == 2 else 0.24), "paint"))
+                               z + (0.30 if k == 2 else 0.24), "plastic", bev=0.045, seg=3))
     # bumper pockets: lower intake, the T 'road' continued in the bumper, fog lamps, two cleaning steps
     cuts.append(LOW.patch("cut_intake", "grille_honey_coarse", "front", 0.45, 0.62, -0.80, 0.80, off=-0.06,
                           thick=0.15, nz=2, npar=24))
@@ -683,6 +742,8 @@ def lower_fairing():
         if p.material_index != 0 or c.z <= sp or n.z < -0.5:
             continue
         sx = 1 if c.x > 0 else -1
+        if c.y < -0.40 and abs(c.x) < CAB_HALF_W - 0.03 and c.z < FAIR_TOP - 0.01:
+            continue          # inside a step well (back wall, floors): dark moulded insert
         outward = n.x * sx > 0.55 or (n.y > 0.55 and c.y > 1.2) or (c.y > 0.62 and n.y > 0.2 and n.x * sx > 0.2)
         if outward or n.z > 0.5:
             p.material_index = 1

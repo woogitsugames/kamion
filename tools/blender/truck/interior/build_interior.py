@@ -49,7 +49,7 @@ FLOOR = D("cab_interior_floor_m")              # 1.40 flat floor
 HALF_OUT = D("cab_width_m") / 2                # 1.245 outer skin
 XI = HALF_OUT - 0.08                           # 1.165 inner trim surface (80 mm wall: skin+insulation+trim)
 YB = D("cab_back_behind_front_axle_m") * -1 + 0.07  # -0.88 inner back wall
-ROOF_OUT = D("overall_height_m")               # 3.95
+ROOF_OUT = D("overall_height_m")               # 3.75 (B2 v2)
 CEIL = 3.62                                    # headliner centre: 2.22 m standing height over flat floor
 CEIL_SIDE = 3.36                               # headliner meets side wall
 WS_Z0, WS_Z1 = 2.07, 3.02                      # windscreen visible glass bottom/top (inner)
@@ -129,6 +129,7 @@ def load_glass_interface():
     fr = w["frit_on_exterior_glass_m"].get("inside_visible_opening_m", {})
     sh = src.get("shell_sections", {})
     return {"z_vis": tuple(w["visible_opening_z_m"]), "rows": rows, "zs": zs, "frit": fr,
+            "rake": w.get("rake_deg_from_vertical"),
             "shell": sh.get("z_yf_yb_w_rf_rb"), "wall": sh.get("wall_m", 0.03),
             "opening_x": g.get("opening_edge_abs_x_per_row"),
             "source": os.path.relpath(GLASS_IF_PATH, REPO).replace("\\", "/")}
@@ -237,6 +238,12 @@ if GLASS_IF is not None:
     # (12 mm behind the glass inner face on the centre line, as the r3 trims were designed against the glass edge).
     WS_Z0, WS_Z1 = GLASS_IF["z_vis"]
     WS_Y0 = glass_y(0.0, WS_Z0) - 0.012
+    # B2 (2026-11-09): the trims' reference plane takes the exterior's rake (7 deg, one-line front) and the placeholder
+    # roof the exterior roof height (3.75 m); --rake still overrides for concept studies
+    if GLASS_IF.get("rake") is not None:
+        RAKE = float(GLASS_IF["rake"])
+    if GLASS_IF.get("shell"):
+        ROOF_OUT = GLASS_IF["shell"][-1][0]
     print(f"glass interface: WS_Z0 {WS_Z0}, WS_Z1 {WS_Z1}, WS_Y0 {WS_Y0:.4f} ({GLASS_IF['source']})")
 SKIN_Z0 = DOOR_IF["shell_bottom_z"]             # A6 r3: placeholder skins end at the exterior shell edge (was 1.15)
 
@@ -266,7 +273,7 @@ def parse_args():
     p.add_argument("--trim", default="koniak", choices=sorted(TRIMS))
     p.add_argument("--badge", default="trakt", choices=["none", "trakt", "bielik", "narew"])
     p.add_argument("--paint", default="0.70,0.70,0.68")
-    p.add_argument("--rake", type=float, default=19.0)
+    p.add_argument("--rake", type=float, default=None, help="default: glass_interface.json rake (exterior)")
     p.add_argument("--res", default="1600x900")
     p.add_argument("--samples", type=int, default=384)
     p.add_argument("--blend", default="")
@@ -532,7 +539,7 @@ def build_glass():
 
 
 WIPERS = ((-1.00, 0.86), (-0.08, 0.86))   # (pivot x, arm length): same as exterior/body.py wipers()
-WIPER_Z0, WIPER_RISE = 2.142, 0.016        # blade lower edge just above the 75 mm frit (top 2.135 m)
+WIPER_Z0, WIPER_RISE = WS_Z0 + 0.075 + 0.007, 0.016   # blade lower edge just above the 75 mm frit (B2: 2.022 m)
 
 
 def wiper_z(x, px, ln):
@@ -640,7 +647,9 @@ def build_dash():
 
     # material split at a fixed profile index (uniform arc-length resampling -> clean, continuous parting line)
     ref = dash_profile(0.6)
-    split = next(i for i, p in enumerate(ref) if p.z < dash_top_z(0.6) - 0.075)
+    # B2: the profile now starts at the lower glass edge (1.93 m, below the parting height), so search on the face side
+    i_top = min(range(len(ref)), key=lambda i: abs(ref[i].y - (dash_face_y(0.6) + 0.05)))
+    split = next(i for i, p in enumerate(ref) if i > i_top and p.z < dash_top_z(0.6) - 0.075)
 
     def mat_seg(i, li):  # 0 = soft top (dark, anti-reflection), 1 = lower dash (warm grey)
         return 0 if i < split else 1
@@ -1697,6 +1706,9 @@ def build_curtains():
             loops.append(lp)
         c = loft(name, loops, "curtain", closed=False, sharp=None)
         solidify(c, 0.003, 0.0)
+        # B2: even-offset thickness on the ~180 deg pleats threw single vertices 0.5 m out (a black spike across the
+        # windscreen once the curtain moved forward with the 7 deg glass); plain offset keeps the 3 mm sheet
+        c.modifiers["solid"].use_even_offset = False
         return c
 
     for s in (-1, 1):  # windscreen curtains parked at the A-pillars, side curtains at the B-pillars
@@ -1752,9 +1764,11 @@ def build_mirrors():
     tube("kerb_arm", [V(1.50, my + 0.03, 1.97), c + n * -0.03], 0.012, "ext_plastic", seg=10)
     panel("kerb_head", rrect(0.20, 0.14, 0.03, 3), c - n * 0.004, n, V(1, 0, 0), 0.06, "ext_plastic", bev=0.01)
     plane_uv("kerb_glass", quad_on(c, n, V(1, 0, 0), 0.17, 0.11, off=0.002), "mirror_down")
-    c = V(0.98, ws_y(WS_Z1) + 0.25, 3.12)
+    # B2: exterior front mirror hangs above the sun visor (body.py: header at WS_Z1 + 0.29, glass ~WS_Z1 + 0.155)
+    c = V(0.98, ws_y(WS_Z1) + 0.18, WS_Z1 + 0.155)
     n = aim(c, (0.6, 3.2, 0.0))
-    tube("front_arm", [V(0.98, ws_y(WS_Z1) + 0.06, 3.26), V(0.98, ws_y(WS_Z1) + 0.20, 3.24), c - n * 0.03], 0.012,
+    tube("front_arm", [V(0.98, ws_y(WS_Z1) + 0.02, WS_Z1 + 0.30), V(0.98, ws_y(WS_Z1) + 0.15, WS_Z1 + 0.28),
+                       c - n * 0.03], 0.012,
          "ext_plastic", seg=10)
     panel("front_head", rrect(0.26, 0.15, 0.03, 3), c - n * 0.004, n, V(1, 0, 0), 0.06, "ext_plastic", bev=0.01)
     plane_uv("front_glass", quad_on(c, n, V(1, 0, 0), 0.23, 0.12, off=0.002), "mirror_down")
@@ -1967,7 +1981,8 @@ def tri_stats():
 def build(a):
     """Build the whole scene (interior + backdrop), UVs and stats. Used by main() and bake_ao.py."""
     global RAKE
-    RAKE = a.rake
+    if a.rake is not None:
+        RAKE = a.rake
     t0 = time.time()
     bpy.ops.wm.read_factory_settings(use_empty=True)
     COLLS.clear()

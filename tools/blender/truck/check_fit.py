@@ -92,10 +92,10 @@ def main():
             n += 1
             t += h[3] + 1e-4
         return n
-    # sanity: exterior windscreen must be at A2 y ~ 1.0-1.45, z 2.05-2.97
+    # sanity: exterior windscreen must be at A2 y ~ 1.0-1.45, z ~1.9-2.97 (B2: lower glass edge 1.928 m)
     ws = [o for o in eo if o.name.startswith("GLASS_Windscreen")][0]
     wv = [ws.matrix_world @ v.co for v in ws.data.vertices]
-    frame_ok = 0.9 < max(p.y for p in wv) < 1.5 and 2.0 < min(p.z for p in wv) < 2.1
+    frame_ok = 0.9 < max(p.y for p in wv) < 1.5 and 1.85 < min(p.z for p in wv) < 2.1
     res = {"exterior": os.path.relpath(ext, REPO).replace("\\", "/"),
            "interior": os.path.relpath(itr, REPO).replace("\\", "/"),
            "frame_check_windscreen_a2": bool(frame_ok), "objects": {}, "outside_samples": []}

@@ -13,7 +13,7 @@
     "semitrailer_kingpin_to_rear_m": {"value": 12.00, "unit": "m", "status": "SOURCED", "source": "Directive 96/53/EC, Annex I 1.6"},
     "semitrailer_front_swing_radius_m": {"value": 2.04, "unit": "m", "status": "SOURCED", "source": "Directive 96/53/EC, Annex I 1.6 (horizontal distance kingpin to any point of the semitrailer front)"},
     "cab_width_m":                {"value": 2.49,  "unit": "m", "status": "WORKING_VALUE", "source": "class-typical body width of EU long-haul cabs (leaves room for 2.55 m limit at wheels/fenders)"},
-    "overall_height_m":           {"value": 3.95,  "unit": "m", "status": "WORKING_VALUE", "source": "high-roof sleeper, unladen; must stay <= max_height_m"},
+    "overall_height_m":           {"value": 3.75,  "unit": "m", "status": "OWNER_DECISION", "source": "decyzja właściciela 2026-11-09, B2 v2: cab roof 3.95 -> 3.75 m (lower painted header over a 3.12 m windscreen top); unladen, roof skin (roof hatch +0.02 m); must stay <= max_height_m"},
     "wheelbase_m":                {"value": 3.70,  "unit": "m", "status": "WORKING_VALUE", "source": "brief: class range 3.6-3.8 m for 4x2 long-haul tractors"},
     "front_overhang_m":           {"value": 1.45,  "unit": "m", "status": "WORKING_VALUE", "source": "front axle to bumper face, class-typical 1.40-1.50 m; concept B (aero nose) uses 1.52 m"},
     "rear_overhang_m":            {"value": 0.80,  "unit": "m", "status": "WORKING_VALUE", "source": "rear axle to frame end, class-typical 0.8-0.9 m"},

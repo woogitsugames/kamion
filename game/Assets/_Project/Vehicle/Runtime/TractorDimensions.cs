@@ -21,7 +21,7 @@ namespace Game.Vehicle.Runtime
         public float frontOverhang = 1.45f;
         public float rearOverhang = 0.80f;
         public float cabWidth = 2.49f;
-        public float overallHeight = 3.95f;
+        public float overallHeight = 3.75f;   // B2 v2 (owner decision 2026-11-09), dims.json overall_height_m
         public float cabBackBehindFrontAxle = 0.95f;
         public float cabBodyBottom = 1.15f;
         public float cabInteriorFloor = 1.40f;
