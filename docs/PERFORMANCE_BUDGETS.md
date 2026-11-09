@@ -136,3 +136,19 @@ Frame estimates (visual-QA `stats.txt`, CPU-side, before SRP batching; world ren
 | Rondo Putry from 40 m | 190 + 50 / 290 k | 254 + 78 / 420 k | 303 + 125 / 1.03 M |
 | Kwadrat Park docks | 167 + 22 / 228 k | 247 + 26 / 400 k | 323 + 77 / 1.28 M |
 | DK8 forest | 43 + 62 / 179 k | 47 + 84 / 371 k | 71 + 120 / 1.34 M |
+
+## APK audit 2026-11-09
+Branch `worktree-agent-a71176f29dc96fb18` (merged with main a402d02, world v3.3 + TRAKT B2.1). Tool: `BuildCommands` now writes `*.top.txt` (top 30 packed assets + shader variants) next to the APK; `build-android.ps1 -ExtraUnityArgs '-noLeanApk','-noShaderStrip','-managedStripping','High'` for A/B runs. Android arm64 only, Low/Medium APK (no `-WorldHigh`).
+
+| Build | APK MB | Textures MB (build report) | Shader variants | Note |
+|---|---|---|---|---|
+| Before (main + audit tooling) | 189.8 | 200.6 | 4056 | World content 133.5 MB (meshes 92.9, PBR textures 27.4, Instances 14.6, collision 11.9) |
+| After: High truck+trailer sets out of Resources, variant stripper | **163.8** (-26.0) | 61.6 | 3848 (-208) | Low/Medium look unchanged; High tier on this APK falls back to Medium vehicle textures (`-WorldHigh` APK is unchanged) |
+| Measured only, not committed: + managed stripping High | 166.0 vs 168.6 (same tree before the trailer change) = -2.6 | - | - | needs link.xml review, ProjectSettings patch below |
+
+Findings: APK = data.unity3d 122 MB + il2cpp 13.7 + resources.resource (ADPCM audio, already minimal) 13.7 + libunity 8.7 + metadata 2.1 + dex 6.4. Truck textures are already per-tier ASTC (5x5 normals / 6x6 / 8x8 masks, 2048 max, mips on, non-readable); meshes non-readable, mesh compression off, world meshes already compact vertex formats (ADR 0012). World PBR is Medium tier 1024 px, ASTC per `materials_spec` (default 6x6), one set for Low and High. Variants: UberPost 768, World PBR 1256 (largest, 4 pragmas x tiers), Lit 448, World Surface 200 - stripping those needs keyword usage per tier (not done).
+Not done: the world goal <= 60 MB is still not met (133.5 MB packed uncompressed; LZ4HC shrinks to roughly half in data.unity3d); remaining big items: Instances.asset 14.6 MB (Matrix4x4[] -> TRS half/quantised needs a `WorldInstances` change), PBR `-MaterialTier Low` (512 px, ~-20 MB but changes look: needs visual-qa), collision 11.9 MB.
+
+ProjectSettings patch for the lead (not committed): (1) `managedStrippingLevel: Android: 1 -> 3` (High), test with a device run (reflection users: glTFast, Json); -2.6 MB. (2) `m_ShowUnitySplashLogo: 1 -> 0`, -1.2 MB, only if the licence allows; (3) `il2cppCompilerConfiguration` stays Release; consider `il2cppCodeGeneration: OptimizeSize` (not measured). (4) mipmap limit groups per quality (Unity 6 `mipmapLimitGroupName`) would let one APK drop top mips on Low at load time - saves RAM, not APK size.
+
+High tier as a separate package (options, nothing deployed): (a) status quo: two APKs, `-WorldHigh` ships WorldC_High + High sets (sideload/test; Play needs one artifact). (b) AAB + Play Asset Delivery install-time/fast-follow packs: High world + High truck/trailer textures as an asset pack, loaded via Addressables (Unity 6 supports Android asset packs through Addressables Play Asset Delivery); needs `buildAppBundle`, an Addressables group per tier, and the High sets taken out of Resources; Play delivers only to devices matching a texture-compression/device-tier targeting rule (device tier targeting can send the pack only to flagships). (c) Addressables remote groups on a CDN: no Play dependency, adds hosting and a download UI. Recommended: (b) once streaming chunks (ADR 0003) lands; until then the build flag (this change) is the cheap equivalent.
