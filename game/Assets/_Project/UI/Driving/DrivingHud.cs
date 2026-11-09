@@ -42,7 +42,7 @@ namespace Game.UI.Driving
     {
         const int Font = 30, SmallFont = 22;
         static readonly Color k_Panel = new Color(0.06f, 0.065f, 0.07f, 0.66f);
-        static readonly Color k_Button = new Color(0.16f, 0.17f, 0.18f, 0.86f);
+        static readonly Color k_Button = new Color(0.16f, 0.17f, 0.18f, 0.92f);
         static readonly Color k_ButtonOn = new Color(0.30f, 0.36f, 0.30f, 0.92f);
         static readonly Color k_Text = new Color(0.95f, 0.95f, 0.91f, 1f);
         static readonly Color k_Muted = new Color(0.70f, 0.70f, 0.67f, 1f);
@@ -70,12 +70,14 @@ namespace Game.UI.Driving
 
         public bool TelemetryVisible => m_TelemetryPanel != null && m_TelemetryPanel.activeSelf;
 
-        public static DrivingHud Create(Camera cam, DrivingHudContext ctx)
+        /// <param name="overlay">Screen Space - Overlay (runtime: always on top, no camera dependency); false = Screen
+        /// Space - Camera, needed for visual-QA captures with Camera.Render.</param>
+        public static DrivingHud Create(Camera cam, DrivingHudContext ctx, bool overlay = false)
         {
             var go = new GameObject("DrivingHud");
             var hud = go.AddComponent<DrivingHud>();
             hud.m_Ctx = ctx ?? new DrivingHudContext();
-            hud.Build(cam);
+            hud.Build(overlay ? null : cam);
             return hud;
         }
 
@@ -89,7 +91,7 @@ namespace Game.UI.Driving
         void Build(Camera cam)
         {
             var canvas = gameObject.AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.renderMode = cam != null ? RenderMode.ScreenSpaceCamera : RenderMode.ScreenSpaceOverlay;
             canvas.worldCamera = cam;
             canvas.planeDistance = cam != null ? Mathf.Max(cam.nearClipPlane * 2f, 0.12f) : 1f;
             canvas.sortingOrder = 900;

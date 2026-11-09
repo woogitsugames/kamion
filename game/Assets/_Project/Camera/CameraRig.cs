@@ -24,6 +24,8 @@ namespace Game.Cameras
 
         [Header("Cab")]
         public float cabFov = 55f;
+        /// <summary>Default downward look in the cab so the dashboard top and steering-wheel rim are in view.</summary>
+        public float cabPitchDown = 7f;
         public float headGain = 0.006f;      // m per m/s^2
         public float headMaxOffset = 0.04f;  // m
         public float headFrequency = 1.8f;   // Hz
@@ -119,7 +121,7 @@ namespace Game.Cameras
                 m_LookYaw = Mathf.MoveTowards(m_LookYaw, 0f, lookReturnRate * dt);
                 m_LookPitch = Mathf.MoveTowards(m_LookPitch, 0f, lookReturnRate * dt);
             }
-            cam.transform.SetPositionAndRotation(anchor.TransformPoint(m_HeadPos), anchor.rotation * Quaternion.Euler(m_LookPitch, m_LookYaw, 0f));
+            cam.transform.SetPositionAndRotation(anchor.TransformPoint(m_HeadPos), anchor.rotation * Quaternion.Euler(cabPitchDown + m_LookPitch, m_LookYaw, 0f));
             cam.fieldOfView = cabFov;
             cam.nearClipPlane = 0.05f;
         }

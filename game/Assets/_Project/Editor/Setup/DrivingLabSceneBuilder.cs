@@ -68,7 +68,7 @@ namespace Game.Editor.Setup
             var gravelTex = Tex("T_Gravel", 512, GravelPixel);
             var grassTex = Tex("T_Grass", 512, GrassPixel);
             s_Asphalt = Lit("M_Asphalt_Dry", Color.white, 0.18f, asphaltTex);
-            var wet = Lit("M_Asphalt_Wet", new Color(0.62f, 0.64f, 0.67f), 0.78f, asphaltTex);
+            var wet = Lit("M_Asphalt_Wet", new Color(0.80f, 0.82f, 0.85f), 0.62f, asphaltTex);
             var concrete = Lit("M_Concrete", Color.white, 0.2f, concreteTex);
             var cobbles = Lit("M_Cobbles", Color.white, 0.22f, cobbleTex);
             var gravel = Lit("M_Gravel", Color.white, 0.08f, gravelTex);
@@ -82,7 +82,7 @@ namespace Game.Editor.Setup
             var cone = Lit("M_Ref_Orange", new Color(0.86f, 0.40f, 0.10f), 0.3f);
             var sky = Skybox();
             s_Font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            s_Text = s_Font.material;
+            s_Text = TextMaterial(s_Font);
 
             s_Meshes.Clear();
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
@@ -97,7 +97,7 @@ namespace Game.Editor.Setup
             // ---- ground ----
             float pad = L.PadHalfSize * 2f;
             Solid(ground, "Pad_Asphalt_400m", MeshGen.Slab(new Vector3(pad, 1f, pad), 4f, "Pad"), new Vector3(0, -0.5f, 0), s_Asphalt, SurfaceKind.DryAsphalt);
-            Solid(ground, "Surround_Grass_2km", MeshGen.Slab(new Vector3(2000f, 1f, 2000f), 8f, "Surround"), new Vector3(0, -0.51f, 0), grass, SurfaceKind.Grass);
+            Solid(ground, "Surround_Grass_8km", MeshGen.Slab(new Vector3(8000f, 1f, 8000f), 8f, "Surround"), new Vector3(0, -0.51f, 0), grass, SurfaceKind.Grass);
 
             // ---- acceleration lane: edge lines, transverse lines every 10 m, signs every 50 m ----
             float laneLen = L.LaneEndZ - L.Spawn.z + 10f;
@@ -191,7 +191,7 @@ namespace Game.Editor.Setup
 
             var camGo = new GameObject("Main Camera") { tag = "MainCamera" };
             var cam = camGo.AddComponent<Camera>();
-            cam.fieldOfView = 55f; cam.nearClipPlane = 0.05f; cam.farClipPlane = 2500f;
+            cam.fieldOfView = 55f; cam.nearClipPlane = 0.05f; cam.farClipPlane = 5000f;
             cam.clearFlags = CameraClearFlags.Skybox;
             camGo.AddComponent<UniversalAdditionalCameraData>();
             camGo.AddComponent<AudioListener>();
@@ -204,12 +204,12 @@ namespace Game.Editor.Setup
             // ---- visual-QA control cameras ----
             var qa = new GameObject("ControlCameras").transform;
             Vector3 s0 = L.Spawn;
-            Qa(qa, "lab-overview", new Vector3(-250f, 170f, -330f), new Vector3(10f, 0f, -10f), 45f, "Whole pad from the south-west: layout legibility, markings, zones.");
+            Qa(qa, "lab-overview", new Vector3(-215f, 120f, -275f), new Vector3(0f, 0f, -10f), 45f, "Whole pad from the south-west: layout legibility, markings, zones.");
             Qa(qa, "lab-truck-34", s0 + new Vector3(6.5f, 2.8f, 11.5f), s0 + new Vector3(0f, 1.7f, 2.2f), 50f, "Graybox tractor 3/4 front: proportions, wheels on the ground, cab, mirrors.");
             Qa(qa, "lab-truck-side", s0 + new Vector3(13f, 1.6f, 2.2f), s0 + new Vector3(0f, 1.6f, 2.2f), 40f, "Side elevation: wheelbase 3.70 m, overhangs, cab height 3.95 m against the 1 m cones.");
-            Qa(qa, "lab-cab-eye", eye, eye + Vector3.forward * 10f, 55f, "Driver eye point with the driving HUD: windscreen view, mirrors, steering wheel, safe area.", hud: true);
+            Qa(qa, "lab-cab-eye", eye, eye + Quaternion.Euler(7f, 0f, 0f) * Vector3.forward * 10f, 55f, "Driver eye point with the driving HUD: windscreen view, mirrors, steering wheel, safe area.", hud: true);
             Qa(qa, "lab-chase-hud", s0 + new Vector3(0f, 4.5f, -13f), s0 + new Vector3(0f, 2f, 3f), 50f, "Chase camera with HUD and telemetry panel.", hud: true, telemetry: true);
-            Qa(qa, "lab-obstacles", new Vector3(L.ObstacleX - 16f, 5f, L.Curb8Z - 16f), new Vector3(L.ObstacleX, 0f, L.RutsStartZ), 50f, "Obstacle lane: 8/15 cm platforms, speed bump, ruts, side curbs.");
+            Qa(qa, "lab-obstacles", new Vector3(L.ObstacleX - 20f, 12f, L.Curb8Z - 22f), new Vector3(L.ObstacleX, 0f, L.RutsStartZ), 50f, "Obstacle lane: 8/15 cm platforms, speed bump, ruts, side curbs.");
             Qa(qa, "lab-ramps", new Vector3(20f, 6f, L.RampStartZ - 18f), new Vector3((L.Ramp6X + L.Ramp12X) * 0.5f, 1f, L.RampStartZ + 30f), 50f, "6 % and 12 % ramps with plateau.");
             Qa(qa, "lab-surfaces", new Vector3(L.PatchX0 + 60f, 14f, L.PatchZ0 - 26f), new Vector3(L.PatchX0 + 60f, 0f, L.PatchZ0 + 20f), 55f, "Surface patches: dry/wet asphalt, concrete, cobbles, gravel, grass + labels.");
             Qa(qa, "lab-circles", new Vector3(-110f, 70f, -215f), new Vector3(-110f, 0f, -40f), 50f, "R50 / R25 circles and figure-eight markings.");
@@ -388,7 +388,7 @@ namespace Game.Editor.Setup
             go.transform.SetParent(parent, false);
             go.transform.SetPositionAndRotation(pos, Quaternion.LookRotation(lookAt - pos, Vector3.up));
             var cam = go.AddComponent<Camera>();
-            cam.fieldOfView = fov; cam.nearClipPlane = hud ? 0.05f : 0.2f; cam.farClipPlane = 2500f;
+            cam.fieldOfView = fov; cam.nearClipPlane = hud ? 0.05f : 0.2f; cam.farClipPlane = 5000f;
             cam.enabled = false;
             go.AddComponent<UniversalAdditionalCameraData>();
             var qa = go.AddComponent<ControlCamera>();
@@ -422,7 +422,7 @@ namespace Game.Editor.Setup
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Linear;
             RenderSettings.fogStartDistance = 350f;
-            RenderSettings.fogEndDistance = 2200f;
+            RenderSettings.fogEndDistance = 1800f;
             RenderSettings.fogColor = new Color(0.68f, 0.73f, 0.79f);
             var sunGo = new GameObject("Sun");
             var sun = sunGo.AddComponent<Light>();
@@ -449,6 +449,28 @@ namespace Game.Editor.Setup
             mat.SetFloat("_Metallic", 0f);
             mat.SetTexture("_BaseMap", tex);
             mat.enableInstancing = true;
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
+        /// <summary>
+        /// Sign text: URP Unlit with the legacy font atlas, alpha-clipped, back faces culled and depth-tested
+        /// (the font's own GUI/Text shader ignores depth, so text showed through the boards and the cab).
+        /// </summary>
+        static Material TextMaterial(Font font)
+        {
+            string path = $"{EnvDir}/M_Sign_Text.mat";
+            var shader = Shader.Find("Universal Render Pipeline/Unlit");
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
+            mat.shader = shader;
+            mat.SetTexture("_BaseMap", font.material.mainTexture);
+            mat.SetColor("_BaseColor", new Color(0.06f, 0.06f, 0.07f, 1f));
+            mat.SetFloat("_AlphaClip", 1f);
+            mat.SetFloat("_Cutoff", 0.5f);
+            mat.EnableKeyword("_ALPHATEST_ON");
+            mat.SetFloat("_Cull", 2f);
+            mat.renderQueue = (int)RenderQueue.AlphaTest;
             EditorUtility.SetDirty(mat);
             return mat;
         }

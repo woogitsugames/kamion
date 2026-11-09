@@ -96,7 +96,7 @@ namespace Game.Gameplay
                 ResetVehicle = ResetVehicle,
                 OpenMenu = () => SceneManager.LoadScene("Boot"),
                 StatusLine = () => Time.unscaledTime < m_StatusUntil ? m_Status : (Autopilot.Enabled ? "AUTOPILOT (pomiar)" : ""),
-            });
+            }, overlay: true);
             m_Hud.transform.SetParent(transform, false);
 
             string ap = platform.GetLaunchArgument("autopilot");

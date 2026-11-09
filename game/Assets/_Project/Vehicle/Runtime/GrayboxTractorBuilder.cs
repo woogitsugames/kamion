@@ -158,15 +158,15 @@ namespace Game.Vehicle.Runtime
             P("FrontLower", xl, xr, yFloor, wsBottom, zf - th, zf, m.paint);
             P("Grille", xl + 0.25f, xr - 0.25f, yb + 0.05f, wsBottom - 0.15f, zf, zf + 0.04f, m.dark);
             P("FrontUpper", xl, xr, wsTop, yt - th, zf - th, zf, m.paint);
-            P("APillar_L", xl, xl + 0.12f, wsBottom, wsTop, zf - 0.12f, zf, m.paint);
-            P("APillar_R", xr - 0.12f, xr, wsBottom, wsTop, zf - 0.12f, zf, m.paint);
+            P("APillar_L", xl, xl + 0.08f, wsBottom, wsTop, zf - 0.09f, zf, m.paint);
+            P("APillar_R", xr - 0.08f, xr, wsBottom, wsTop, zf - 0.09f, zf, m.paint);
             for (int s = -1; s <= 1; s += 2)
             {
                 float x0 = s < 0 ? xl : xr - th, x1 = s < 0 ? xl + th : xr;
                 string n = s < 0 ? "_L" : "_R";
                 P("SideLower" + n, x0, x1, yFloor, winBottom, zb + th, zf - th, m.paint);
                 P("SideRearBand" + n, x0, x1, winBottom, winTop, zb + th, doorRear, m.paint);
-                P("SideFrontPost" + n, x0, x1, winBottom, winTop, zf - 0.15f, zf - th, m.paint);
+                P("SideFrontPost" + n, x0, x1, winBottom, winTop, zf - 0.09f, zf - th, m.paint);
                 P("SideUpper" + n, x0, x1, winTop, yt - th, zb + th, zf - th, m.paint);
                 // Mirror arm + head (head outer edge at mirrorHeadOuter from centre).
                 float headX = s * (d.mirrorHeadOuter - 0.125f);
