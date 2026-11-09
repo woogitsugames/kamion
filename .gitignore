@@ -1,0 +1,36 @@
+# Unity
+game/[Ll]ibrary/
+game/[Tt]emp/
+game/[Oo]bj/
+game/[Bb]uild/
+game/[Bb]uilds/
+game/[Ll]ogs/
+game/[Uu]ser[Ss]ettings/
+game/MemoryCaptures/
+game/*.csproj
+game/*.sln
+game/*.slnx
+game/.vs/
+game/.vscode/
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+*.apk
+*.aab
+*.keystore
+*.jks
+# .NET
+bin/
+obj/
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# project
+artifacts/
+data/raw/
+Builds/
+*.blend1
+.DS_Store
+Thumbs.db

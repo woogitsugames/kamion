@@ -1,0 +1,27 @@
+# 08 — Audio
+
+Decyzja właściciela: na start darmowe źródła i dźwięki generowane (AI / synteza), Suno ewentualnie dla muzyki. Budżet 0 zł.
+
+## 1. Zasady licencyjne (twarde)
+- **Suno: darmowy plan nie daje praw do użytku komercyjnego** (stan na 2026 — zweryfikuj aktualny regulamin). Utwory z darmowego planu = tylko do prototypu, oznaczone `PROTOTYPE_ONLY`, do wymiany przed publikacją lub przegenerowania na planie z prawami komercyjnymi (decyzja właściciela).
+- Każdy dźwięk w `docs/LICENSES.md`: źródło, autor, licencja (CC0 preferowane; CC-BY z atrybucją w credits), data, modyfikacje.
+- Generatory SFX (np. narzędzia AI dostępne właścicielowi) — tylko gdy warunki pozwalają na użytek komercyjny; zapisz plan/warunki w rejestrze.
+- Zakaz nagrań silników konkretnych marek z gier/filmów/YouTube.
+
+## 2. Architektura
+- FMOD for Unity (jeśli warunki darmowej licencji pasują — zweryfikuj) lub Unity Audio + własny mikser. ADR.
+- **Silnik**: warstwy pętli (on-load / off-load × zakresy RPM) z crossfadem sterowanym RPM i obciążeniem z fizyki; dodatkowo: rozruch, wyłączenie, jałowy klekot, turbo (gwizd i „psst” z wastegate sterowane ciśnieniem doładowania), hamulec silnikowy, retarder, skrzynia (wycie, zmiana biegu), pneumatyka (zwolnienie hamulca, postojowy, osuszacz, kompresor), kierunkowskazy, przełączniki, wycieraczki, deszcz o dach i szyby, opony × nawierzchnia × prędkość, wiatr, zawieszenie na nierównościach, otoczenie miasta.
+- Filtrowanie kabina/zewnątrz (okluzja, EQ), przestrzenne źródła na pojeździe (silnik z przodu, wydech, naczepa).
+- Głośność i dynamika dopasowane do słuchawek i głośnika telefonu (dwa profile miksu), normalizacja (np. −16 LUFS dla mobile, do ustalenia).
+
+## 3. Produkcja przy 0 zł
+1. **Synteza proceduralna** (Python numpy/scipy) silnika diesla: model harmoniczny z rzędem zapłonów R6, modulacja obciążeniem, szum spalania, rezonanse wydechu i kabiny — jako baza warstw; plus własne nagrania właściciela (np. ciężarówka na postoju/odjeżdżająca z daleka na parkingu, bez identyfikowalnych osób) jako tekstura i referencja.
+2. **CC0 biblioteki** (np. Freesound z filtrem CC0 — sprawdź każdy plik) dla pneumatyki, przełączników, deszczu, otoczenia.
+3. **Generatory AI** zgodnie z sekcją 1.
+4. Odsłuch porównawczy: agent generuje spektrogramy i porównuje z referencją; **ostateczna ocena — ucho właściciela** na telefonie (głośnik i słuchawki).
+
+## 4. Muzyka
+Radio w kabinie (opcjonalne, później): utwory z prawami komercyjnymi; fikcyjne stacje radiowe. Muzyka menu — subtelna albo żadna; lepiej cisza i dźwięk silnika na postoju niż generyczny „epicki” utwór.
+
+## 5. Bramka audio (Etap 5)
+Wszystkie warstwy z sekcji 2 obecne, brak kliknięć/pętli słyszalnych, płynne przejścia RPM, różnica wnętrze/zewnątrz, zgodność z fizyką (obroty, obciążenie, retarder), rejestr licencji kompletny, oznaczenia `PROTOTYPE_ONLY` wypisane.
