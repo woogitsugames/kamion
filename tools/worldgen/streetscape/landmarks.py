@@ -84,7 +84,11 @@ def build(pl, net, graph, overrides, origin, boards, report):
             H = round(S.SIGN_H_OVERHEAD + 0.2 + hmax + 0.15, 1)
             LP.GANTRIES.add((int(span), int(round(H * 10))))
             ctr = c.line.offset_point(s, 0.5 * (lat_l + lat_r))
-            pl.add(f"sign_gantry_{int(span)}_{int(round(H * 10))}", ctr, _yaw(-travel), z=z, src=f"override:{o['id']}")
+            yaw = _yaw(-travel)
+            pl.add(f"sign_gantry_{int(span)}_{int(round(H * 10))}", ctr, yaw, z=z, src=f"override:{o['id']}")
+            for sx in (-1, 1):            # column footings + colliders (local x of the gantry = (cos yaw, sin yaw))
+                q = ctr + np.array([math.cos(yaw), math.sin(yaw)]) * sx * int(span) / 2
+                pl.add("gantry_footing", q, yaw, z=z, src=f"override:{o['id']}")
             for key, lat, hm in items:
                 p = c.line.offset_point(s, lat) - travel * 0.45
                 pl.add(f"board_{key}", p, _yaw(-travel), z=z + S.SIGN_H_OVERHEAD + 0.2 + hm / 2,

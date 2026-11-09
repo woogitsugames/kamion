@@ -406,6 +406,8 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
             ow_lines.append(LineString(c.line.p))
             ow_meta.append(c)
     ow_tree = shapely.STRtree(ow_lines) if ow_lines else None
+    all_chains = list(net.chains)
+    all_tree = shapely.STRtree([LineString(c.line.p) for c in all_chains])
     ft_tree = shapely.STRtree(footways) if footways else None
     wk_tree = shapely.STRtree(walkways) if walkways else ft_tree
 
@@ -519,16 +521,74 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 kind[:] = ISLAND
                 w[:] = S.ROUNDABOUT_APRON_W
                 mat[:] = 0
-            # bridges: kerb 0.20 + cap 1.50 + fascia = deck thickness
-            br = c.bridge
-            kind[br] = URBAN
-            h[br] = S.BRIDGE_KERB_H
-            w[br] = S.BRIDGE_CAP_W
-            mat[br] = 2
-            depth[br] = S.BRIDGE_DECK_THICKNESS + S.BRIDGE_KERB_H
-            sig = 2.0 / DENSE
-            c.side[side] = {"kind": kind, "h": smooth_1d(h, sig), "w": smooth_1d(w, sig), "mat": mat,
-                            "depth": smooth_1d(depth, sig), "walk": walk_d, "median": med_d}
+            # a parallel carriageway right next to this edge (on-ramp beside the Andersa ramp at Rondo Bieżeństwa):
+            # the verge / ditch / sidewalk would lie on the other road, so the edge is a plain kerb
+            if not (c.roundabout and kind[0] == ISLAND):
+                tight, flush = _tight_side(c, sgn, idx, kind, h, w, depth, mat, all_tree, all_chains)
+                kind[tight], h[tight], w[tight], mat[tight] = URBAN, S.KERB_HEIGHT, 0.0, 0
+                h[flush] = 0.0                    # the other carriageway touches / overlaps: no kerb ridge in it
+                c.meta.setdefault("tight_m", {})[side] = round(float(tight.sum() * DENSE), 1)
+                c.meta.setdefault("flush_m", {})[side] = round(float(flush.sum() * DENSE), 1)
+            c.side[side] = {"kind": kind, "walk": walk_d, "median": med_d, "raw": {"h": h, "w": w, "depth": depth},
+                            "mat": mat}
+        structure_sides(c, c.bridge)
+
+
+def _tight_side(c, sgn, idx, kind, h, w, depth, mat, tree, chains):
+    """Stations whose side profile (verge, ditch, sidewalk) would reach onto another, roughly parallel carriageway:
+    gap between this edge and the other edge < profile extent + 0.3 m (and gap < NOSE_MIN_GAP_M: touching or
+    overlapping, returned as the second mask -> flush edge). Chains meeting this one at a node are ignored
+    within ADJ_NODE_SKIP_M of it (junction patches join them). Checked every 4 m, dilated by 4 m."""
+    n = len(c.line.s)
+    hit = np.zeros(len(idx), bool)
+    touch = np.zeros(len(idx), bool)
+    nodes = {c.node_a: 0.0, c.node_b: c.length}
+    for j, i in enumerate(idx):
+        p, nrm, t = c.line.p[i], c.line.n[i] * sgn, c.line.t[i]
+        ext = side_extent(int(kind[i]), float(h[i]), float(w[i]), float(depth[i]), int(mat[i]))
+        e = p + nrm * c.hw[i]
+        for k in tree.query(Point(*(e + nrm * ext * 0.5)).buffer(ext * 0.5 + 0.3 + 6.0)):
+            oc = chains[int(k)]
+            if oc is c:
+                continue
+            if any(abs(c.line.s[i] - nodes[nd]) < S.ADJ_NODE_SKIP_M for nd in {oc.node_a, oc.node_b} & set(nodes)):
+                continue
+            s_o, lat_o = oc.line.project(e)
+            if s_o <= 0.0 or s_o >= oc.length:
+                continue
+            io = oc.idx(s_o)
+            if abs(float(np.dot(oc.line.t[io], t))) < 0.9:
+                continue
+            if float(np.dot(oc.line.point(s_o) - p, nrm)) <= 0.0:       # other road on the far side
+                continue
+            gap = abs(lat_o) - oc.hw_at(s_o)
+            if gap < ext + 0.3:
+                hit[j] = True
+                if gap < S.NOSE_MIN_GAP_M:
+                    touch[j] = True
+                break
+    win = 1
+    hs = np.array([hit[max(0, j - win):j + win + 1].any() for j in range(len(idx))])
+    ts = np.array([touch[max(0, j - win):j + win + 1].any() for j in range(len(idx))])
+    return (np.interp(np.arange(n), idx, hs.astype(float)) > 0.0,
+            np.interp(np.arange(n), idx, ts.astype(float)) > 0.0)
+
+
+def structure_sides(c: Chain, mask: np.ndarray):
+    """Side profile of deck stations (bridges, and walled ramps once profile.mark_walled_ramps found them):
+    kerb 0.20 + cap 1.50 + fascia = deck thickness, then the per-station values are smoothed (2 m). v3.1 marked
+    walled ramps after assign_sides, so they kept the rural shoulder + ditch at deck height (a 2.65 m strip
+    instead of the 1.5 m cap, overhanging the on-ramp beside Andersa at Rondo Bieżeństwa)."""
+    sig = 2.0 / DENSE
+    for side in ("L", "R"):
+        d = c.side[side]
+        raw = d["raw"]
+        d["kind"][mask] = URBAN
+        raw["h"][mask] = S.BRIDGE_KERB_H
+        raw["w"][mask] = S.BRIDGE_CAP_W
+        d["mat"][mask] = 2
+        raw["depth"][mask] = S.BRIDGE_DECK_THICKNESS + S.BRIDGE_KERB_H
+        d["h"], d["w"], d["depth"] = smooth_1d(raw["h"], sig), smooth_1d(raw["w"], sig), smooth_1d(raw["depth"], sig)
 
 
 def side_profile(kind: int, h: float, w: float, depth: float, mat: int):

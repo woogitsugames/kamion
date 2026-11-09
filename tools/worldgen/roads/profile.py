@@ -3,7 +3,7 @@
 Profile = Whittaker smoother of the NMT road-surface samples (median across the carriageway), with
 hard constraints at junction nodes so all chains meeting at a node share its height. The smoothing
 weight λ is increased until the vertical curvature satisfies the class minimum radius
-(standards.VCURVE_MIN_R). Elevated stations (OSM `bridge` or `layer` >= 1) carry zero data weight (the
+(standards.VCURVE_MIN_R): where a small λ breaks it, a least-squares fit with bounded curvature. Elevated stations (OSM `bridge` or `layer` >= 1) carry zero data weight (the
 NMT is bare ground under a deck and under ramps the classifier removed), so a deck is a smooth curve between
 known nodes. Grade separation: wherever an elevated station lies over a ground road, the deck surface is held at
 the ground road + standards.BRIDGE_CLEARANCE + margin + deck thickness (hard constraint). Without it the NMT
@@ -82,16 +82,54 @@ def node_heights(net, hf: Heightfield) -> dict:
 
 
 def whittaker(y, w, lam, h):
+    """lam: scalar or one value per second-difference row (len(y) - 2): locally stiffer where it is larger."""
     n = len(y)
     if n < 4:
         return np.where(w > 0, y, np.nanmean(y))
     D = sp.diags([1.0, -2.0, 1.0], [0, 1, 2], shape=(n - 2, n)) / (h * h)
-    A = sp.diags(w) + lam * (D.T @ D)
+    L = sp.diags(np.broadcast_to(np.asarray(lam, float), (n - 2,)))
+    A = sp.diags(w) + D.T @ L @ D
     return spsolve(A.tocsc(), w * np.nan_to_num(y))
 
 
-def chain_profile(c, hf: Heightfield, z_a, z_b, rmin: float, el=None, req=None):
-    """el: elevated stations (zero data weight); req: {station: required deck height} (hard constraints)."""
+def bounded_curvature_fit(y, w, kmax, h, lam, z0, lower=None, iters=150):
+    """Whittaker smoother whose λ is raised row by row (x 2.5, rows breaking the bound and their 1 m neighbourhood)
+    until |k| <= kmax (k = second difference / h^2), with z >= lower (nan = no bound) enforced by pinning the stations
+    that fall below it. Stiffening only where the radius is broken keeps the rest of the chain on its data.
+    Returns (z, converged)."""
+    n = len(y)
+    D = (sp.diags([1.0, -2.0, 1.0], [0, 1, 2], shape=(n - 2, n)) / (h * h)).tocsr()
+    yy = w * np.nan_to_num(y)
+    lo = np.full(n, np.nan) if lower is None else lower
+    has_lo = ~np.isnan(lo)
+    lamv = np.full(n - 2, float(lam))
+    pin_lo = np.zeros(n, bool)
+    z = z0
+    ok = False
+    grow = max(1, int(round(1.0 / h)))
+    for _ in range(iters):
+        k = np.abs(D @ z)
+        bad = k > kmax * 1.002
+        new_lo = has_lo & ~pin_lo & (z < np.nan_to_num(lo) - 0.01)
+        if not bad.any() and not new_lo.any():
+            ok = True
+            break
+        if bad.any():
+            idx = np.nonzero(bad)[0]
+            m = np.zeros(n - 2, bool)
+            for d in range(-grow, grow + 1):
+                m[np.clip(idx + d, 0, n - 3)] = True
+            lamv[m] *= 2.5
+        pin_lo |= new_lo
+        wl = np.where(pin_lo, 1e6, 0.0)
+        A = sp.diags(w + wl) + D.T @ sp.diags(lamv) @ D
+        z = spsolve(A.tocsc(), yy + wl * np.nan_to_num(lo))
+    return z, ok
+
+
+def chain_profile(c, hf: Heightfield, z_a, z_b, rmin: float, el=None, req=None, adj=None):
+    """el: elevated stations (zero data weight); req: {station: required deck height} (hard constraints);
+    adj: {station: centreline height that puts this edge on the surface of an adjacent road} (adjacent_targets)."""
     s = c.line.s
     n = len(s)
     _, nrm = c.line.frame(s)
@@ -102,9 +140,13 @@ def chain_profile(c, hf: Heightfield, z_a, z_b, rmin: float, el=None, req=None):
         samp.append(hf.sample(q[:, 0], q[:, 1]))
     y = np.median(np.array(samp), axis=0)
     w = np.where(c.bridge if el is None else el, 0.0, 1.0)
-    for i, zr in (req or {}).items():
+    for i, zr in (adj or {}).items():
         y[i] = zr
-        w[i] = 1e8
+        w[i] = S.ADJ_WEIGHT
+    # clearance: a lower bound on the deck surface (z >= required), not an equality
+    lower = np.full(n, np.nan)
+    for i, zr in (req or {}).items():
+        lower[i] = zr
     if w.sum() == 0:
         w[:] = 1e-3
     for zz, i in ((z_a, 0), (z_b, n - 1)):
@@ -112,18 +154,34 @@ def chain_profile(c, hf: Heightfield, z_a, z_b, rmin: float, el=None, req=None):
             y[i] = zz
             w[i] = 1e8
     kmax = 1.0 / rmin
+    # λ: the smallest (x 2.5 steps from 2) at which the *data alone* (NMT samples, constraint rows down-weighted to
+    # 1) keep the class minimum radius, i.e. the NMT noise is smoothed out. The hard constraints (node heights,
+    # viaduct clearance) and the adjacent-edge targets then bend the profile only where they must: rows whose
+    # curvature still breaks the radius are bounded (bounded_curvature_fit), not the whole chain stiffened. v3
+    # raised one λ until the radius held everywhere: the clearance constraint at a viaduct then straightened the
+    # entire chain (Andersa westbound at Rondo Bieżeństwa: λ 2.8e9, the ramp 2.2 m above the NMT and above the
+    # on-ramp whose edge it touches, 250 m from the deck -> route_start blocked at s = 571 m, r4).
+    wd = np.minimum(w, 1.0)
+    if wd.sum() == 0:
+        wd[:] = 1e-3
     lam = 2.0
-    z = whittaker(y, w, lam, DENSE)
+    z = whittaker(y, wd, lam, DENSE)
     for _ in range(30):
         k = np.abs(np.diff(z, 2)) / DENSE ** 2 if n >= 3 else np.zeros(1)
         if k.max() <= kmax:
             break
         lam *= 2.5
-        z = whittaker(y, w, lam, DENSE)
+        z = whittaker(y, wd, lam, DENSE)
+    z = whittaker(y, w, lam, DENSE)
+    k = np.abs(np.diff(z, 2)) / DENSE ** 2 if n >= 3 else np.zeros(1)
+    below = np.nan_to_num(lower, nan=-np.inf) - z
+    converged = True
+    if n >= 4 and (k.max() > kmax or below.max() > 1e-3):
+        z, converged = bounded_curvature_fit(y, w, kmax, DENSE, lam, z, lower)
     data = w > 0.5
     data[[0, -1]] = False
     rms = float(np.sqrt(np.mean((z[data] - y[data]) ** 2))) if data.any() else 0.0
-    return z, {"lambda": lam, "rms_vs_nmt_m": round(rms, 3),
+    return z, {"lambda": lam, "bounded_fit_converged": converged, "rms_vs_nmt_m": round(rms, 3),
                "max_vcurv_1_per_m": float(np.abs(np.diff(z, 2)).max() / DENSE ** 2) if n >= 3 else 0.0}
 
 
@@ -145,6 +203,65 @@ def crossfall(c):
     val = smooth_1d(val, S.CROSSFALL_RAMP_SIGMA_M / DENSE)
     e[one] = val[one]
     return e
+
+
+def match_crossfall_at_nodes(net) -> int:
+    """Chains continuing through a node (outward directions within 60 deg of opposite: straight continuations and the
+    branches of a fork) get one crossfall at the node, ramped linearly over CROSSFALL_MATCH_M from each end. Pairs
+    are taken straightest first: the first pair meets at the mean of its two end values, a later branch takes the
+    value already fixed for the chain it leaves (a slip road keeps the main carriageway's crossfall at the gore).
+    Crossfall was computed per chain, so the DK8 slip road's 2.5 % curve banking met the 2 % of the carriageway it
+    leaves the other way round at the Putry ramp fork: a 4.5 % twist, 4-5 cm per 0.5 m under the wheels
+    (route_start s = 1422 m). Returns the number of matched chain ends."""
+    ends = {}
+    for c in net.chains:
+        if c.e is None or c.closed or len(c.line.s) < 3:
+            continue
+        ends.setdefault(c.node_a, []).append((c, 0))
+        ends.setdefault(c.node_b, []).append((c, -1))
+    n = 0
+    L = S.CROSSFALL_MATCH_M
+
+    def ramp(C, ec, tv):
+        d = C.line.s if ec == 0 else C.length - C.line.s
+        f = np.clip(1.0 - d / L, 0.0, 1.0)
+        C.e = C.e + (tv - C.e[ec]) * f
+
+    for node in sorted(ends):
+        lst = [(C, ec) for C, ec in ends[node] if not np.isnan(C.e[ec])]
+        pairs = []
+        for ia in range(len(lst)):
+            for ib in range(ia + 1, len(lst)):
+                (A, ea), (B, eb) = lst[ia], lst[ib]
+                if A is B:
+                    continue
+                ta, tb = A.line.t[ea], B.line.t[eb]
+                oa = -ta if ea == 0 else ta
+                ob = -tb if eb == 0 else tb
+                dot = float(np.dot(oa, ob))
+                if dot <= -0.5:
+                    pairs.append((dot, ia, ib))
+        fixed = {}
+        for dot, ia, ib in sorted(pairs):
+            (A, ea), (B, eb) = lst[ia], lst[ib]
+            sg = 1.0 if float(np.dot(A.line.t[ea], B.line.t[eb])) > 0 else -1.0   # B's lateral frame vs A's
+            if ia in fixed and ib in fixed:
+                continue
+            if ia in fixed:
+                tv = fixed[ia]
+            elif ib in fixed:
+                tv = sg * fixed[ib]
+            else:
+                tv = 0.5 * (A.e[ea] + sg * B.e[eb])
+            if ia not in fixed:
+                ramp(A, ea, tv)
+                fixed[ia] = tv
+                n += 1
+            if ib not in fixed:
+                ramp(B, eb, sg * tv)
+                fixed[ib] = sg * tv
+                n += 1
+    return n
 
 
 def clearance_requirements(net, el_of, ground_z) -> dict:
@@ -183,6 +300,53 @@ def clearance_requirements(net, el_of, ground_z) -> dict:
     return out
 
 
+def _surface_offset(e, roof, lat):
+    return -S.CROSSFALL * abs(lat) if roof else e * lat
+
+
+def adjacent_targets(c, ground: list, el) -> dict:
+    """Stations of chain c (not elevated) whose edge touches or overlaps a roughly parallel, already solved ground
+    road (gap between the edges < ADJ_TOUCH_M): the centreline height that puts this edge on that road's surface.
+    Two carriageways side by side (a merge, an on-ramp along a main road) share their edge height; the NMT alone
+    left the Andersa westbound ramp 0.6-2.2 m above the on-ramp from Rondo Bieżeństwa whose edge it touches, so the
+    on-ramp ran into its kerb / wall (route_start blocked at s = 571 m, r4)."""
+    if not ground:
+        return {}
+    from shapely import STRtree
+    from shapely.geometry import LineString, Point
+    tree = STRtree([LineString(g.line.p) for g in ground])
+    ce = crossfall(c)
+    out = {}
+    for i in range(0, len(c.line.s)):
+        if el[i]:
+            continue
+        p, t = c.line.p[i], c.line.t[i]
+        best = None
+        for k in tree.query(Point(*p).buffer(float(c.hw[i]) + 8.0 + S.ADJ_TOUCH_M)):
+            g = ground[int(k)]
+            if g is c:
+                continue
+            s_o, lat_o = g.line.project(p)
+            if s_o <= 0.0 or s_o >= g.length:
+                continue
+            io = g.idx(s_o)
+            if abs(float(np.dot(g.line.t[io], t))) < 0.9:
+                continue
+            hw_o = float(g.hw_at(s_o))
+            if abs(lat_o) - hw_o - float(c.hw[i]) >= S.ADJ_TOUCH_M:
+                continue
+            sg = 1.0 if float(np.dot(g.line.point(s_o) - p, c.line.n[i])) > 0 else -1.0
+            edge = p + c.line.n[i] * sg * float(c.hw[i])
+            s_e, lat_e = g.line.project(edge)
+            z_edge = float(g.crossfall_z(s_e, lat_e))
+            zt = z_edge - _surface_offset(0.0 if np.isnan(ce[i]) else ce[i], np.isnan(ce[i]), sg * float(c.hw[i]))
+            if best is None or abs(lat_o) < best[0]:
+                best = (abs(lat_o), zt)
+        if best is not None:
+            out[i] = best[1]
+    return out
+
+
 def build_profiles(net, hf: Heightfield) -> dict:
     zn = node_heights(net, hf)
     stats = {}
@@ -197,6 +361,10 @@ def build_profiles(net, hf: Heightfield) -> dict:
         ground[c.id] = c.z
     # 2) grade separation: deck heights over the ground roads
     req = clearance_requirements(net, el_of, ground)
+    ground_chains = [c for c in net.chains if c.id in ground]
+    for c in ground_chains:
+        c.e = crossfall(c)
+    adj_of = {}
     # 3) elevated chains: decks with clearance constraints first, then the rest; unknown nodes take the mean of the
     #    chain ends solved so far (decks first), and every chain touching such a node is solved again
     order = sorted((c for c in net.chains if el_of[c.id].any()), key=lambda c: (c.id not in req, c.id))
@@ -208,7 +376,8 @@ def build_profiles(net, hf: Heightfield) -> dict:
         if zb is None and c.node_b in pending:
             zb = float(np.mean(pending[c.node_b]))
         el = el_of[c.id] if (c.id in req or za is not None or zb is not None) else None
-        c.z, stats[c.id] = chain_profile(c, hf, za, zb, rmin_of[c.id], el, req.get(c.id))
+        adj_of[c.id] = adjacent_targets(c, ground_chains, el_of[c.id])
+        c.z, stats[c.id] = chain_profile(c, hf, za, zb, rmin_of[c.id], el, req.get(c.id), adj_of[c.id])
         for node, zz in ((c.node_a, c.z[0]), (c.node_b, c.z[-1])):
             if zn.get(node) is None:
                 pending.setdefault(node, []).append(float(zz))
@@ -218,7 +387,10 @@ def build_profiles(net, hf: Heightfield) -> dict:
         for c in net.chains:
             if c.node_a in pending or c.node_b in pending:
                 c.z, stats[c.id] = chain_profile(c, hf, zn[c.node_a], zn[c.node_b], rmin_of[c.id], el_of[c.id],
-                                                 req.get(c.id))
+                                                 req.get(c.id), adj_of.get(c.id))
+    for cid, a in adj_of.items():
+        if a:
+            stats[cid]["adjacent_edge"] = {"stations": len(a)}
     for c in net.chains:
         if c.id in req:
             ii = np.array(sorted(req[c.id]))
@@ -227,6 +399,8 @@ def build_profiles(net, hf: Heightfield) -> dict:
                                         "min_margin_m": round(float((c.z[ii] - zr).min()), 3)}
     for c in net.chains:
         c.e = crossfall(c)
+    n_match = match_crossfall_at_nodes(net)
+    for c in net.chains:
         g = np.gradient(c.z, c.line.s) if len(c.z) > 1 else np.zeros(1)
         # grade over a 10 m base (what a vehicle feels), not sample-to-sample
         k = max(1, int(5.0 / DENSE))
@@ -240,7 +414,7 @@ def build_profiles(net, hf: Heightfield) -> dict:
                             "grade_limit_std": max(l[0] for l in lims),
                             "grade_limit_difficult": max(l[1] for l in lims),
                             "bridge_m": round(float(c.bridge.mean() * c.length), 1)})
-    return {"node_z": zn, "chains": stats}
+    return {"node_z": zn, "chains": stats, "crossfall_node_matches": n_match}
 
 
 def mark_walled_ramps(net, hf: Heightfield) -> list:
@@ -293,6 +467,9 @@ def mark_walled_ramps(net, hf: Heightfield) -> list:
             continue
         c.bridge = c.bridge | keep
         c.meta["walled"] = keep
+        if c.side:
+            from .network import structure_sides
+            structure_sides(c, keep)
         # ground at the wall foot (NMT 1.5 m beyond the deck edge cap), per side ("L" = +normal)
         zg = {}
         for name, sg in (("L", 1), ("R", -1)):

@@ -461,8 +461,28 @@ class PatchHeight:
             hw = float(c.hw_at(s))
             g = float(c.grade(s)) * a.lat_sign()
             self.arms.append((a, s, P, d, n, hw, g, float(c.zc(s))))
+        self.internal = list(getattr(j, "internal", []))
+
+    def on_arm(self, i, p):
+        """(surface z, clear distance outside the carriageway) when p lies in the trimmed part of arm i (between the
+        junction and the arm's end section, within 0.5 m of its carriageway), else None."""
+        a, s, P, d, n, hw, g, z0 = self.arms[i]
+        if float((p - P) @ d) >= 0.0:
+            return None
+        sp_, lat_ = a.chain.line.project(p)
+        if not 1e-3 < sp_ < a.chain.length - 1e-3:     # beyond the chain end the projection is clamped
+            return None
+        hw_ = float(a.chain.hw_at(sp_))
+        out = abs(lat_) - hw_
+        if out >= 0.5:
+            return None
+        d_node = sp_ if a.end == "a" else a.chain.length - sp_          # distance from the junction node
+        return float(a.chain.crossfall_z(sp_, lat_)), out, d_node
 
     def arm_plane(self, i, p):
+        on = self.on_arm(i, p)
+        if on is not None:
+            return on[0]
         a, s, P, d, n, hw, g, z0 = self.arms[i]
         v = p - P
         along = float(v @ d)
@@ -471,14 +491,38 @@ class PatchHeight:
         return z0 + g * along + cf
 
     def blend(self, p):
+        """IDW of the arms' heights. Inside an arm's own (trimmed) carriageway that arm's surface dominates (weight
+        from the depth inside its carriageway): long trims at forks (65-68 m at the DK8 / Putry ramp fork) and
+        merges otherwise mixed the rising ramp into the through road (0.13 m step on route_start, s = 1478 m)."""
         num = den = 0.0
         for i, (a, s, P, d, n, hw, g, z0) in enumerate(self.arms):
-            A, B = P - n * hw, P + n * hw
-            ab = B - A
-            t = np.clip(float((p - A) @ ab) / max(float(ab @ ab), 1e-9), 0, 1)
-            dist2 = float(np.sum((p - (A + t * ab)) ** 2))
-            w = 1.0 / (dist2 + 1e-6) ** 1.5
-            num += w * self.arm_plane(i, p)
+            on = self.on_arm(i, p)
+            if on is not None:
+                # weight grows with the depth inside the carriageway and falls to 0 at 0.5 m outside it (continuous);
+                # where two arms overlap (fork / merge) the one whose axis is nearer wins, so a ramp's crossfall at
+                # its edge does not lift the through lane
+                # and fades out over the last 4 m before the node, so where the route passes from one arm to the next
+                # through the node their surfaces (crossfall, banking) blend instead of stepping
+                z, out, d_node = on
+                w = 50.0 * (0.5 - out) ** 4 * float(np.clip(d_node / 4.0, 0.02, 1.0)) ** 2
+            else:
+                A, B = P - n * hw, P + n * hw
+                ab = B - A
+                t = np.clip(float((p - A) @ ab) / max(float(ab @ ab), 1e-9), 0, 1)
+                dist2 = float(np.sum((p - (A + t * ab)) ** 2))
+                w = 1.0 / (dist2 + 1e-6) ** 1.5
+                z = self.arm_plane(i, p)
+            num += w * z
+            den += w
+        for c in self.internal:          # absorbed chains (e.g. the 29 m slip w606396458 inside the Bieżeństwa merge)
+            sp_, lat_ = c.line.project(p)
+            if not 1e-3 < sp_ < c.length - 1e-3:
+                continue
+            out = abs(lat_) - float(c.hw_at(sp_))
+            if out >= 0.5:
+                continue
+            w = 50.0 * (0.5 - out) ** 4
+            num += w * float(c.crossfall_z(sp_, lat_))
             den += w
         return num / den
 
@@ -558,9 +602,14 @@ def build_patch(buf, net, j, coarse=False, stats=None):
     mat = "collision_asphalt" if coarse else _patch_mat(net, j)
     layer = "collision" if coarse else ("bridge" if _patch_on_bridge(j) else "road")
     c = _star_center(poly)
+    if c is not None and coarse and float(np.max(np.hypot(*(poly - c).T))) > 15.0:
+        # long collision patches (fork trims of 65-68 m): the polar fan from one centre gave long slivers whose
+        # linear facets cut 5-8 cm under the blended surface (route_start s = 1422 m); boundary-conforming
+        # Delaunay with interior points instead
+        c = None
     if c is not None:
         rmax = float(np.max(np.hypot(*(poly - c).T)))
-        K = max(1, int(math.ceil(rmax / (6.0 if coarse else 2.5))))
+        K = max(1, int(math.ceil(rmax / (S.PATCH_COLLISION_SPACING_M if coarse else 2.5))))
         V = [np.array([c[0], c[1], ph.blend(c)])]
         rings = []
         for k in range(1, K + 1):
@@ -585,9 +634,9 @@ def build_patch(buf, net, j, coarse=False, stats=None):
         if stats is not None:
             stats["polar"] = stats.get("polar", 0) + 1
     else:
-        res = _delaunay_fill(poly, 6.0 if coarse else 2.5)
+        res = _delaunay_fill(poly, S.PATCH_COLLISION_SPACING_M if coarse else 2.5)
         if res is None:
-            res = _repair_fill(poly, zb, ph, 6.0 if coarse else 2.5)
+            res = _repair_fill(poly, zb, ph, S.PATCH_COLLISION_SPACING_M if coarse else 2.5)
             if res is not None:
                 V, T = res
                 buf.add(layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id)
