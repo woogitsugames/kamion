@@ -37,7 +37,7 @@ Dopasowanie do wnętrza (oba FBX razem, materiały w glinie, szkło przezroczyst
 - **Kontrola eksportu** `tools/blender/truck/exterior/check_export.py`: obiekty, trójkąty, materiały, UV `Atlas`, budżety, tekstury, a piwoty czyta z **surowego FBX** (bez importera Blendera) i porównuje z manifestem. Wynik: **PASS** dla LOD0–2.
 
 ## Szyba wspólna z wnętrzem: `art-source/truck/exterior/glass_interface.json`
-Zewnętrze jest właścicielem szyby przedniej i szyb drzwi. Plik podaje: otwór 2,06–2,96 m, nachylenie 19°, narożniki, siatkę 5×7 punktów zewnętrznej powierzchni z **prawdziwymi normalnymi** (wcześniejsza wersja pomijała pochylenie szyby), siatkę **13×49 punktów wewnętrznej powierzchni** (szkło 6 mm), krawędź otworu w każdym rzędzie, szerokości nadruku (frit), obrys szyb drzwi i **przekroje powłoki kabiny** (przód, tył, szerokość, promienie naroży co 25 mm wysokości). Wnętrze buduje z tego swoją szybę zastępczą, nadruk i słupki A, a krok `fit_to_exterior` wciąga do środka wszystko, co wystawało poza karoserię. Test `tools/blender/truck/check_fit.py` (oba FBX naraz): **0 wierzchołków wnętrza poza karoserią** (przed dopasowaniem: 302), raport `art-source/truck/exterior/export/fit_check.json`.
+Zewnętrze jest właścicielem szyby przedniej i szyb drzwi. Plik podaje: otwór 1,94–3,12 m (B2 v2; było 2,06–2,96), nachylenie 7° (było 19°), narożniki, siatkę 5×7 punktów zewnętrznej powierzchni z **prawdziwymi normalnymi** (wcześniejsza wersja pomijała pochylenie szyby), siatkę **13×49 punktów wewnętrznej powierzchni** (szkło 6 mm), krawędź otworu w każdym rzędzie, szerokości nadruku (frit), obrys szyb drzwi i **przekroje powłoki kabiny** (przód, tył, szerokość, promienie naroży co 25 mm wysokości). Wnętrze buduje z tego swoją szybę zastępczą, nadruk i słupki A, a krok `fit_to_exterior` wciąga do środka wszystko, co wystawało poza karoserię. Test `tools/blender/truck/check_fit.py` (oba FBX naraz): **0 wierzchołków wnętrza poza karoserią** (przed dopasowaniem: 302), raport `art-source/truck/exterior/export/fit_check.json`.
 
 ## Recenzja r2 §1: co jest zamknięte
 Większość punktów zamknęła runda 3 A4 (drzwi/stopnie, przód z lat 2020., koniec ciemnego cokołu, przedni chlapacz, felgi 0,26, brud, lusterka na oko, smar siodła). A6 przenosi to do materiałów gry i dodaje:
@@ -59,6 +59,19 @@ Przed/po: `przed_r3/*.jpg` (kadry r3) vs te same nazwy w tym katalogu. Nowe kadr
 - **X3 (częściowo):** stopnie z blachy perforowanej; wnęka stopni nadal prostokątna (otwarte).
 - **X4:** zamiast pierścienia „gór” las z pojedynczych drzew (sosna/świerk/brzoza, 16 wariantów instancjonowanych na chmurze punktów, 230–330 m, mgiełka z odległości). Otwarte: las wciąż szaro-ciemny, pnie czytają się jak równy płot.
 - Pieczenie: elementy lampy muszą leżeć ≥ 20 mm (klatka bake) za kloszem, inaczej promienie trafiają w klosz (kierunkowskaz wychodził w plamy). Materiał `projector` nieprzezroczysty (transmisja wypiekała niebieski odcień).
+
+## Runda B2 v2: bryła 2020s (decyzja właściciela 2026-11-09)
+Przed/po: `przed_b2/*.jpg` (r4) vs te same nazwy w tym katalogu. Montaże (poza gitem): `artifacts/visual-qa/truck-B2/montaz_*.jpg` (ze zdjęciami Scania R / Volvo FH, tylko proporcje), blockouty zatwierdzone przez właściciela: `blockout*_przed_*.jpg`.
+- **Jedna linia frontu (korekta właściciela):** zderzak, grill, szyba i nagłówek w jednej płaszczyźnie odchylonej o **7° od pionu** (`RAKE`, WORKING_VALUE z pasma 5–8°), bez uskoku pod szybą (r4: pionowe lico + szyba 19°). Lico nie jest pochylone do przodu (brief B2 zastąpiony korektą).
+- **Szyba 1,94–3,12 m** (było 2,06–2,96; widoczne 1,18 m), owinięcie narożnika mniejsze: promień w strefie szyby 0,36–0,40 → 0,22–0,26 m, szerokość połówki 1,27/1,15 → 1,22/1,12 m.
+- **Dach 3,95 → 3,75 m** (`dims.json overall_height_m`, decyzja właściciela B2 v2), krawędź dachu R 0,40 → 0,10 m, czarny daszek przeciwsłoneczny nad szybą, rząd 5 lamp obrysowych; malowane czoło ~0,45 m. Podsufitka wnętrza bez zmian (3,62 m: 2,22 m do stania).
+- **Narożnik pod szybą R 0,32 → 0,16 m**, narożnik zderzaka 0,30 → 0,17–0,22 m.
+- **Front wg arkuszy właściciela (AI, tylko kształt):** szeroki prostokątny grill ±0,80 m z 6 grafitowymi lamelami, nad nim czarna listwa do podszybia z **srebrnym napisem TRAKT jako geometria** (Metal), plaster miodu w dolnym wlocie. Brak emblematu na grillu. Kalka decal w slocie Paint zostaje w kontrakcie (atlas przezroczysty), bo decal nie umie narysować jasnych liter na ciemnej listwie.
+- **Reflektor (X1):** w górnym narożniku grilla (1,60–1,76 m, 28 mm od ramki), zawinięty ~10 cm na narożnik; czarne wnętrze, okrągłe soczewki projektorów (kopułki w ciemnochromowym pierścieniu) zamiast płaskich prostokątów, DRL w kształcie „L”, kierunkowskaz jako srebrny pasek LED za kloszem (bursztyn tylko po zapaleniu, grupa IND_*), klosz z wyższą strzałką (20 mm) i grubością 6 mm.
+- **X3:** wnęki stopni zaokrąglone (R 45 mm) i wyłożone ciemnym tworzywem (koniec „białej szafki”); lakier tylko na zewnętrznych ścianach skrzynek.
+- Gęstsza powłoka kabiny (gładsze refleksy na narożnikach). **Trójkąty:** LOD0 **94 437** (nowy limit 140 tys.), LOD1 **43 000** (≤ 45 tys.), LOD2 **14 497** (≤ 15,5 tys.). `check_export` PASS, `check_fit` PASS (0 wierzchołków wnętrza poza karoserią), test linii wzroku PASS.
+- **Kontrakt bez zmian:** nazwy obiektów, sloty, piwoty, `rig_parent`, format manifestu. Kamera `zbl_reflektor` przesunięta na nową wysokość lampy.
+- Z arkuszy nieprzejęte (do decyzji): pionowy wydech za kabiną, małe lampki pod reflektorami, drzwi kończące się przed stopniami (zostaje fartuch drzwi z R2), atlasy 4096 (zostają 2048).
 
 ## Otwarte
 - **Brak kadru URP i z telefonu** (`docs/06` §5 pkt 2): przyjdzie z importem A7. Bez tego nie może być PASS.
