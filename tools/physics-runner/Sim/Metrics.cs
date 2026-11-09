@@ -193,6 +193,14 @@ namespace PhysicsRunner.Sim
                     for (int i = i0; i <= i1; i++) if (s[i].WheelsOffGround > 0) return Math.Abs(s[i].LatAccel) / 9.81;
                     return double.NaN;
                 }
+                case "wheel_off_ground_time_s":
+                {
+                    // total time with any wheel (tractor or trailer) unloaded; samples are equally spaced
+                    if (i1 <= i0) return 0;
+                    double dtS = (s[i1].T - s[i0].T) / (i1 - i0), tOff = 0;
+                    for (int i = i0; i <= i1; i++) if (s[i].WheelsOffGround > 0) tOff += dtS;
+                    return tOff;
+                }
                 case "wheel_lift": return Max(s, i0, i1, x => x.WheelsOffGround) > 0 ? 1 : 0;
                 case "coupled_final": return s[i1].Coupled ? 1 : 0;
                 case "coupling_events": return r.CouplingEvents;

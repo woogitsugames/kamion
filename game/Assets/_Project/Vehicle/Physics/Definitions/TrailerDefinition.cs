@@ -17,7 +17,7 @@ namespace Game.Vehicle.Physics
 
         /// <summary>Empty trailer mass elements (cargo is added at run time).</summary>
         public MassElement[] massElements = new MassElement[0];
-        public double kingpinHeight = 1.20;
+        public double kingpinHeight = 1.15;
         public AxleDefinition[] axles = new AxleDefinition[0];
         public CargoBayDefinition cargoBay = new CargoBayDefinition();
         public LandingGearDefinition landingGear = new LandingGearDefinition();
