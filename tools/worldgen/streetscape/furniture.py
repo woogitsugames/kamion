@@ -93,6 +93,14 @@ def lamps(pl, net, osm_nodes, origin, report):
         if sec.cls not in S.LAMP or sec.highway in ("service",) and c.length < 60:
             continue
         spec = S.LAMP[sec.cls]
+        # older side-street family (critic R2 #10): one family per street (hash of the chain), never on G/GP;
+        # residential streets 65 % old (spun-concrete poles dominate), other L/D roads 30 % (grey steel)
+        proto = f"lamp_{int(spec['h'])}m"
+        if sec.cls in ("L", "D", "Z") and sec.highway not in ("primary", "secondary", "trunk"):
+            u = _h(c.id + ":lampfamily") % 100
+            res = sec.highway in ("residential", "living_street")
+            if u < (65 if res else 30):
+                proto = "lamp_old_concrete_9m" if (res and u < 50) or (not res and u < 8) else "lamp_old_steel_8m"
         oneway = sec.oneway
         sides = ["R"] if (oneway and (c.dirn > 0).mean() >= 0.5) or not oneway else ["L"]
         s0, s1 = c.t_a + 4, c.length - c.t_b - 4
@@ -115,9 +123,12 @@ def lamps(pl, net, osm_nodes, origin, report):
                 if c.bridge[c.idx(s)]:
                     z = float(c.crossfall_z(s, sgn * hw)) + S.BRIDGE_KERB_H
                     p = c.line.offset_point(s, sgn * (hw + S.KERB_TOP_W + 0.6))
-                pl.add(f"lamp_{int(spec['h'])}m", p, yaw_of(face), z=z, src=f"rule:{c.id}", group="lamp")
+                pl.add(proto if z is None else f"lamp_{int(spec['h'])}m", p, yaw_of(face), z=z, src=f"rule:{c.id}",
+                       group="lamp")
                 n += 1
-    report["lamps"] = {"osm": n0, "rule": n}
+    report["lamps"] = {"osm": n0, "rule": n,
+                       "by_family": {k: sum(1 for it in pl.items if it["p"] == k) for k in
+                                     sorted({it["p"] for it in pl.items if it["p"].startswith("lamp_")})}}
 
 
 # ------------------------------------------------------------------------------------------- signs
