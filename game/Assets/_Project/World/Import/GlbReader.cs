@@ -132,7 +132,10 @@ namespace Game.World.Import
                         Positions = ReadVec3(a.Get("POSITION"), true),
                         Normals = a.Get("NORMAL") != null ? ReadVec3(a.Get("NORMAL"), true) : null,
                         Uv0 = a.Get("TEXCOORD_0") != null ? ReadVec2(a.Get("TEXCOORD_0"), true) : null,
-                        Uv1 = a.Get("TEXCOORD_1") != null ? ReadVec2(a.Get("TEXCOORD_1"), false) : null,
+                        // The generator writes every UV set with v flipped (glTF convention, terrain_mesh/gltf.py), so
+                        // TEXCOORD_1 is flipped back like TEXCOORD_0 (before ADR 0019 it was read as 1 - v: far facades
+                        // drew panes only on the ground floor, REVIEW r4 W-H4 / W-H7).
+                        Uv1 = a.Get("TEXCOORD_1") != null ? ReadVec2(a.Get("TEXCOORD_1"), true) : null,
                         Colors = a.Get("COLOR_0") != null ? ReadColor(a.Get("COLOR_0")) : null,
                     };
                     var idx = ReadScalars(p.Get("indices"));
@@ -188,7 +191,7 @@ namespace Game.World.Import
         }
 
         /// <param name="flipV">texture coordinates: glTF v = 0 is the top of the image, Unity v = 0 the bottom (as glTFast).
-        /// TEXCOORD_1 carries metric data (lane coordinate, distances), not image coordinates: not flipped.</param>
+        /// The generator flips every set on export, so metric TEXCOORD_1 data is flipped back as well.</param>
         Vector2[] ReadVec2(object index, bool flipV)
         {
             var v = Accessor(index, 2);
