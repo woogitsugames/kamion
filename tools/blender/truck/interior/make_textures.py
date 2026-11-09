@@ -1,0 +1,632 @@
+"""Track A5 — self-made tileable PBR detail maps + display/label graphics for the cab interior.
+
+    uv run --no-project --with pillow --with numpy python tools/blender/truck/interior/make_textures.py
+
+Everything is synthesised here (numpy noise, Worley cells, hand-placed vector shapes);
+no photos, no downloaded assets, no generator images. Output (PNG, small) goes to
+art-source/truck/interior/textures/ and is consumed by build_interior.py.
+
+Map conventions (match glTF so Blender/Unity import is straightforward):
+  <set>_var.png    albedo VARIATION, linear, mean ~0.5; final albedo = tint * (0.7 + 0.6 * var)
+                   -> one map serves every trim colour (trim colour is a material parameter)
+  <set>_nrm.png    tangent-space normal, OpenGL (+Y up) convention (Blender + Unity)
+  <set>_orm.png    R = micro AO (cavity), G = roughness, B = metallic
+Display graphics are sRGB colour images used as emission behind cover glass.
+Tileability: all noise is generated in the frequency domain or on a wrapped cell grid,
+so every *_var/_nrm/_orm map tiles seamlessly.
+
+Text on displays is rasterised with Inter (SIL OFL 1.1) taken from the Blender install (found via PATH);
+fallback = Pillow's bundled Aileron (CC0, no Polish diacritics). No system fonts, no font file in the repo.
+"""
+import math
+import os
+
+import numpy as np
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
+OUT = os.path.join(REPO, "art-source", "truck", "interior", "textures")
+RNG = np.random.default_rng(20261109)
+
+
+# ---------------------------------------------------------------- tileable noise
+def fnoise(n, f_lo, f_hi, power=1.0, aniso=(1.0, 1.0)):
+    """Periodic band-limited noise, normalised to [0,1]. f in cycles per tile."""
+    w = RNG.standard_normal((n, n))
+    F = np.fft.fft2(w)
+    fy = np.fft.fftfreq(n)[:, None] * n * aniso[1]
+    fx = np.fft.fftfreq(n)[None, :] * n * aniso[0]
+    r = np.sqrt(fx * fx + fy * fy) + 1e-6
+    band = np.exp(-((np.log(r) - np.log(math.sqrt(f_lo * f_hi))) ** 2) / (2 * (math.log(f_hi / f_lo) / 2.5) ** 2))
+    band /= r ** (power - 1.0)
+    out = np.real(np.fft.ifft2(F * band))
+    out -= out.min()
+    return out / max(out.max(), 1e-9)
+
+
+def worley(n, cells, jitter=0.85):
+    """Wrapped Worley noise: returns F1, F2 distances (in cell units) on an n x n tile."""
+    pts = RNG.random((cells, cells, 2)) * jitter + (1 - jitter) / 2
+    ys, xs = np.mgrid[0:n, 0:n].astype(np.float32) * (cells / n)
+    cy, cx = np.floor(ys).astype(int), np.floor(xs).astype(int)
+    f1 = np.full((n, n), 9.0, np.float32)
+    f2 = np.full((n, n), 9.0, np.float32)
+    for dy in (-1, 0, 1):
+        for dx in (-1, 0, 1):
+            gy, gx = cy + dy, cx + dx
+            p = pts[gy % cells, gx % cells]
+            d = np.sqrt((gx + p[..., 0] - xs) ** 2 + (gy + p[..., 1] - ys) ** 2)
+            f2 = np.where(d < f1, f1, np.minimum(f2, d))
+            f1 = np.minimum(f1, d)
+    return f1, f2
+
+
+def blur_wrap(a, k):
+    """Gaussian blur with wrap-around (tile-safe), via FFT."""
+    n = a.shape[0]
+    f = np.fft.fftfreq(n)
+    g = np.exp(-(f[:, None] ** 2 + f[None, :] ** 2) * (2 * math.pi * k) ** 2 / 2)
+    return np.real(np.fft.ifft2(np.fft.fft2(a) * g))
+
+
+def norm01(a):
+    a = a - a.min()
+    return a / max(a.max(), 1e-9)
+
+
+def height_to_normal(h, strength):
+    """Tile-safe normal map (OpenGL convention) from a height field in [0,1]."""
+    dx = (np.roll(h, -1, 1) - np.roll(h, 1, 1)) * 0.5 * strength
+    dy = (np.roll(h, -1, 0) - np.roll(h, 1, 0)) * 0.5 * strength
+    nx, ny, nz = -dx, dy, np.ones_like(h)  # image rows go down -> +dy flips for OpenGL green-up
+    l = np.sqrt(nx * nx + ny * ny + nz * nz)
+    return np.stack([nx / l, ny / l, nz / l], -1) * 0.5 + 0.5
+
+
+def cavity(h, k=3.0, amt=1.0):
+    c = h - blur_wrap(h, k)
+    return np.clip(1.0 + c * 4.0 * amt, 0.0, 1.0)
+
+
+def save_gray(a, name):
+    Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8), "L").save(os.path.join(OUT, name), optimize=True)
+
+
+def save_rgb(a, name):
+    Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8), "RGB").save(os.path.join(OUT, name), optimize=True)
+
+
+def save_set(name, var, height, nstrength, rough, ao=None, metal=0.0):
+    save_gray(var, f"{name}_var.png")
+    save_rgb(height_to_normal(height, nstrength), f"{name}_nrm.png")
+    ao = cavity(height) if ao is None else ao
+    orm = np.stack([ao, np.clip(rough, 0, 1), np.full_like(ao, metal)], -1)
+    save_rgb(orm, f"{name}_orm.png")
+    print("set", name, var.shape)
+
+
+# ---------------------------------------------------------------- material sets
+def leather():
+    """Pebble-grain automotive leather/vinyl. Tile = 0.12 m (see build_interior.TILE)."""
+    n = 1024
+    f1, f2 = worley(n, 96)
+    pebble = norm01(blur_wrap(np.clip(f2 - f1, 0, 0.6), 1.2))       # raised pebbles, creases between
+    fine = fnoise(n, 120, 400)
+    crease = fnoise(n, 6, 20, aniso=(1.0, 3.0))                       # long soft creases (wear)
+    h = 0.75 * pebble + 0.15 * fine + 0.10 * crease
+    var = 0.5 + (pebble - 0.5) * 0.10 + (fnoise(n, 2, 8) - 0.5) * 0.12
+    rough = 0.50 + (1 - pebble) * 0.14 + (fnoise(n, 3, 10) - 0.5) * 0.08
+    save_set("leather", var, h, 2.2, rough)
+
+
+def dashgrain():
+    """Soft-touch moulded grain (fine stipple + low leathery cells). Tile = 0.10 m."""
+    n = 1024
+    f1, f2 = worley(n, 140, jitter=1.0)
+    cells = norm01(blur_wrap(np.clip(f2 - f1, 0, 0.5), 0.8))
+    stipple = fnoise(n, 250, 500)
+    h = 0.55 * cells + 0.45 * stipple
+    var = 0.5 + (fnoise(n, 2, 6) - 0.5) * 0.06 + (cells - 0.5) * 0.04
+    rough = 0.66 + (1 - h) * 0.10 + (fnoise(n, 2, 8) - 0.5) * 0.06
+    save_set("dashgrain", var, h, 1.4, rough)
+
+
+def hardgrain():
+    """Harder injection-moulded plastic: finer, flatter texture, slightly glossier. Tile = 0.08 m."""
+    n = 512
+    st = fnoise(n, 120, 250)
+    h = st
+    var = 0.5 + (fnoise(n, 2, 5) - 0.5) * 0.05
+    rough = 0.52 + (1 - st) * 0.10
+    save_set("hardgrain", var, h, 0.8, rough)
+
+
+def fabric():
+    """Knitted headliner / mattress fabric: fine 2x2 weave + fibre fuzz. Tile = 0.05 m."""
+    n = 512
+    y, x = np.mgrid[0:n, 0:n] / n
+    k = 48  # yarns per tile
+    wa = 0.5 + 0.5 * np.sin(2 * math.pi * k * x)
+    wb = 0.5 + 0.5 * np.sin(2 * math.pi * k * y)
+    over = (np.floor(x * k) + np.floor(y * k)) % 2
+    weave = np.where(over > 0, wa * (0.6 + 0.4 * wb), wb * (0.6 + 0.4 * wa))
+    fuzz = fnoise(n, 100, 256)
+    h = 0.75 * weave + 0.25 * fuzz
+    var = 0.5 + (weave - 0.5) * 0.12 + (fnoise(n, 2, 6) - 0.5) * 0.08
+    rough = np.full_like(h, 0.88) + (fuzz - 0.5) * 0.06
+    save_set("fabric", var, h, 1.0, rough)
+
+
+def seatfabric():
+    """Coarser seat-centre / bunk-cover cloth with a small woven pattern. Tile = 0.06 m."""
+    n = 512
+    y, x = np.mgrid[0:n, 0:n] / n
+    k = 32
+    rib = 0.5 + 0.5 * np.cos(2 * math.pi * k * (x + 0.5 * (np.floor(y * k * 2) % 2) / k))
+    rib *= 0.6 + 0.4 * (0.5 + 0.5 * np.cos(2 * math.pi * k * 2 * y))
+    fuzz = fnoise(n, 80, 256)
+    h = 0.7 * rib + 0.3 * fuzz
+    var = 0.5 + (rib - 0.5) * 0.16 + (fnoise(n, 2, 5) - 0.5) * 0.08
+    rough = 0.9 + (fuzz - 0.5) * 0.05
+    save_set("seatfabric", var, h, 1.2, rough)
+
+
+def rubbermat():
+    """Ribbed rubber floor mat with dust collected in the grooves. Tile = 0.40 m."""
+    n = 1024
+    y, x = np.mgrid[0:n, 0:n] / n
+    ribs = 40  # ~10 mm pitch
+    rib = np.clip(np.abs(((x * ribs) % 1.0) - 0.5) * 2.0, 0, 1)
+    rib = 1.0 - np.clip((rib - 0.55) * 6.0, 0, 1)  # flat-topped ribs with sharp grooves
+    rib = blur_wrap(rib, 1.0)
+    wear = fnoise(n, 1, 4)
+    scuff = fnoise(n, 20, 80, aniso=(1.0, 4.0))
+    dust = np.clip((1 - rib) * 0.8 + (fnoise(n, 3, 12) - 0.5) * 0.6, 0, 1)
+    h = rib * 0.9 + fnoise(n, 150, 400) * 0.1
+    var = 0.45 + dust * 0.35 + (wear - 0.5) * 0.08 - (scuff > 0.7) * 0.04
+    rough = 0.78 + dust * 0.12 - (wear - 0.5) * 0.10
+    save_set("rubbermat", var, h, 3.0, rough)
+
+
+def brushed():
+    """Satin brushed aluminium / painted metal. Tile = 0.10 m, brushing along U."""
+    n = 512
+    streak = fnoise(n, 4, 200, aniso=(0.04, 1.0))
+    h = streak * 0.6 + fnoise(n, 100, 256) * 0.4
+    var = 0.5 + (streak - 0.5) * 0.10
+    rough = 0.32 + (streak - 0.5) * 0.12
+    save_set("brushed", var, h, 0.5, rough, metal=1.0)
+
+
+def grime_mask():
+    """Low-frequency smudge / dust mask for glass, dash top and floor (grayscale)."""
+    n = 1024
+    m = fnoise(n, 1.5, 6) * 0.6 + fnoise(n, 8, 40) * 0.3 + fnoise(n, 80, 300) * 0.1
+    wipe = 0.5 + 0.5 * np.sin(np.linspace(0, 6 * math.pi, n))[None, :] * 0.0
+    save_gray(norm01(m) * 0.9 + wipe * 0.0, "grime_mask.png")
+    print("grime")
+
+
+# ---------------------------------------------------------------- stitch / perforation / grille
+def stitch():
+    """RGBA strip: two parallel rows of lock stitches (tile along U every 4 stitches, 4 mm pitch)."""
+    w, h = 256, 64
+    img = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    pitch = w / 4
+    for row_y in (18, 46):
+        for i in range(4):
+            x0 = i * pitch + pitch * 0.18
+            x1 = i * pitch + pitch * 0.82
+            for t in range(3):  # thread with a little shading: dark edge, light core
+                c = (40 + t * 55, 40 + t * 55, 42 + t * 55, 255)
+                d.line([(x0 + t, row_y), (x1 - t, row_y)], fill=c, width=7 - 2 * t)
+            # needle holes pull the material in
+            for xh in (x0 - 3, x1 + 3):
+                d.ellipse([xh - 2, row_y - 2, xh + 2, row_y + 2], fill=(10, 10, 10, 200))
+    img = img.filter(ImageFilter.GaussianBlur(0.6))
+    img.save(os.path.join(OUT, "stitch_rgba.png"), optimize=True)
+    print("stitch")
+
+
+def perforation():
+    """Perforated-leather mask (seat centre panels): hex grid of 1.2 mm holes. Tile = 0.04 m."""
+    n = 256
+    img = Image.new("L", (n, n), 255)
+    d = ImageDraw.Draw(img)
+    k = 12
+    for j in range(k + 1):
+        for i in range(k + 1):
+            x = (i + 0.5 * (j % 2)) * n / k
+            y = j * n / k
+            for ox in (-n, 0, n):
+                for oy in (-n, 0, n):
+                    d.ellipse([x + ox - 3.2, y + oy - 3.2, x + ox + 3.2, y + oy + 3.2], fill=30)
+    img.filter(ImageFilter.GaussianBlur(0.7)).save(os.path.join(OUT, "perforation_mask.png"), optimize=True)
+    print("perf")
+
+
+def speaker_grille():
+    """Speaker grille mask: punched round holes on a square grid (tile = 0.05 m)."""
+    n = 256
+    img = Image.new("L", (n, n), 255)
+    d = ImageDraw.Draw(img)
+    k = 16
+    for j in range(k):
+        for i in range(k):
+            x, y = (i + 0.5) * n / k, (j + 0.5) * n / k
+            d.ellipse([x - 4.5, y - 4.5, x + 4.5, y + 4.5], fill=0)
+    img.filter(ImageFilter.GaussianBlur(0.6)).save(os.path.join(OUT, "grille_mask.png"), optimize=True)
+    print("grille")
+
+
+# ---------------------------------------------------------------- displays and labels
+def ui_font_path():
+    """Inter (SIL OFL 1.1) as shipped with Blender: has Polish glyphs (Pillow's bundled Aileron does not).
+    The font is only used to rasterise text into textures; it is not copied into the repo or the build."""
+    import glob
+    import shutil
+    exe = shutil.which("blender")
+    if exe:
+        hits = glob.glob(os.path.join(os.path.dirname(os.path.realpath(exe)), "*", "datafiles", "fonts", "Inter.woff2"))
+        if hits:
+            return hits[0]
+    return None
+
+
+_FONT_PATH = ui_font_path()
+
+
+def font(size):
+    if _FONT_PATH:
+        return ImageFont.truetype(_FONT_PATH, size)
+    return ImageFont.load_default(size)  # fallback: Aileron (CC0), no Polish diacritics
+
+
+def arc_ticks(d, cx, cy, r, a0, a1, n_major, n_minor, col, col_minor, lw=3, ln=18):
+    for i in range(n_major * n_minor + 1):
+        a = math.radians(a0 + (a1 - a0) * i / (n_major * n_minor))
+        major = i % n_minor == 0
+        l = ln if major else ln * 0.5
+        c = col if major else col_minor
+        x0, y0 = cx + r * math.cos(a), cy - r * math.sin(a)
+        x1, y1 = cx + (r - l) * math.cos(a), cy - (r - l) * math.sin(a)
+        d.line([(x0, y0), (x1, y1)], fill=c, width=lw if major else max(1, lw - 1))
+
+
+def cluster_display():
+    """12.3-inch class instrument cluster screen (aspect ~ 2.6:1), daytime driving state.
+
+    Content follows what real EU truck clusters show: speedometer (0-125 km/h, 90 km/h
+    limiter zone), rev counter with green economy band, AMT gear + mode, odometer/trip,
+    fuel + AdBlue, two air-circuit pressures, outside temperature, clock.
+    Calm palette: near-black background, warm-white graphics, one green band, red needles.
+    """
+    W, H = 1560, 600
+    img = Image.new("RGB", (W, H), (6, 7, 8))
+    d = ImageDraw.Draw(img)
+    white, grey, dim = (225, 222, 214), (130, 130, 128), (62, 63, 64)
+    red, green, amber = (205, 52, 38), (74, 150, 92), (215, 150, 40)
+
+    def dial(cx, cy, r, vmax, step, minor, val, label, unit, band=None, a0=225, a1=-45):
+        if band:
+            for t in np.linspace(band[0], band[1], 60):
+                a = math.radians(a0 + (a1 - a0) * t / vmax)
+                d.ellipse([cx + (r - 6) * math.cos(a) - 4, cy - (r - 6) * math.sin(a) - 4,
+                           cx + (r - 6) * math.cos(a) + 4, cy - (r - 6) * math.sin(a) + 4], fill=band[2])
+        arc_ticks(d, cx, cy, r, a0, a1, int(vmax / step), minor, white, grey, lw=4, ln=26)
+        f = font(30)
+        for i in range(int(vmax / step) + 1):
+            a = math.radians(a0 + (a1 - a0) * i / (vmax / step))
+            t = str(int(i * step if vmax < 100 or step >= 10 else i * step))
+            if vmax > 1000:
+                t = str(int(i * step / 100))
+            tx, ty = cx + (r - 58) * math.cos(a), cy - (r - 58) * math.sin(a)
+            bw = d.textlength(t, font=f)
+            d.text((tx - bw / 2, ty - 16), t, fill=white, font=f)
+        a = math.radians(a0 + (a1 - a0) * val / vmax)
+        d.line([(cx - 30 * math.cos(a), cy + 30 * math.sin(a)), (cx + (r - 12) * math.cos(a), cy - (r - 12) * math.sin(a))],
+               fill=red, width=7)
+        d.ellipse([cx - 22, cy - 22, cx + 22, cy + 22], fill=(28, 28, 30), outline=dim, width=2)
+        fl = font(24)
+        d.text((cx - d.textlength(unit, font=fl) / 2, cy + r * 0.45), unit, fill=grey, font=fl)
+        if label:
+            d.text((cx - d.textlength(label, font=fl) / 2, cy + r * 0.45 + 30), label, fill=grey, font=fl)
+
+    # speedometer (left), rev counter (right)
+    dial(275, 300, 228, 125, 10, 5, 82, "", "km/h", band=None)
+    dial(1285, 300, 228, 2500, 500, 5, 1180, "x100", "1/min", band=(1000, 1500, green))
+    # centre panel
+    cx = W // 2
+    d.rounded_rectangle([cx - 230, 40, cx + 230, 560], radius=18, outline=(30, 31, 33), width=2)
+    fb = font(150)
+    d.text((cx - d.textlength("82", font=fb) / 2, 70), "82", fill=white, font=fb)
+    fm = font(34)
+    d.text((cx - d.textlength("km/h", font=fm) / 2, 225), "km/h", fill=grey, font=fm)
+    # gear + mode
+    d.rounded_rectangle([cx - 150, 285, cx + 150, 375], radius=10, fill=(20, 21, 23))
+    fg = font(64)
+    d.text((cx - 130, 292), "A", fill=grey, font=fg)
+    d.text((cx - 20, 292), "12", fill=white, font=fg)
+    d.text((cx + 85, 312), "E", fill=green, font=font(40))
+    # cruise + limiter
+    fs = font(28)
+    d.text((cx - 200, 395), "CC  85", fill=green, font=fs)
+    d.text((cx + 60, 395), "LIM 90", fill=grey, font=fs)
+    # odometer / trip / clock / temperature
+    d.text((cx - 200, 445), "184 327 km", fill=grey, font=fs)
+    d.text((cx + 60, 445), "T 412,6", fill=grey, font=fs)
+    d.text((cx - 200, 495), "14:32", fill=white, font=fs)
+    d.text((cx + 60, 495), "+7 °C", fill=white, font=fs)
+    # fuel + AdBlue bars (left, under speedo)
+    for i, (lab, frac, col) in enumerate((("D", 0.62, white), ("AdBlue", 0.80, (110, 160, 210)))):
+        y = 528 + i * 34
+        d.text((60, y - 6), lab, fill=grey, font=font(22))
+        d.rectangle([150, y, 470, y + 12], outline=dim, width=2)
+        d.rectangle([152, y + 2, 152 + int(316 * frac), y + 10], fill=col)
+    # air pressures (right, under rev counter)
+    for i, (lab, v) in enumerate((("I", 10.4), ("II", 10.2))):
+        y = 528 + i * 34
+        d.text((1090, y - 6), lab, fill=grey, font=font(22))
+        d.rectangle([1130, y, 1430, y + 12], outline=dim, width=2)
+        d.rectangle([1132, y + 2, 1132 + int(296 * v / 12.5), y + 10], fill=white)
+        d.text((1445, y - 8), f"{v:.1f} bar".replace(".", ","), fill=grey, font=font(22))
+    img.save(os.path.join(OUT, "display_cluster.png"), optimize=True)
+    print("cluster")
+
+
+def infotainment_display():
+    """10-inch centre screen: truck navigation, calm day palette (generic roads, fictional labels)."""
+    W, H = 1280, 768
+    img = Image.new("RGB", (W, H), (226, 226, 220))
+    d = ImageDraw.Draw(img)
+    rng = np.random.default_rng(7)
+    # blocks of land use
+    for _ in range(26):
+        x, y = rng.integers(0, W), rng.integers(0, H - 120)
+        w, h = rng.integers(60, 260), rng.integers(40, 180)
+        col = [(214, 222, 204), (206, 214, 196), (220, 218, 210)][rng.integers(0, 3)]
+        d.rectangle([x, y, x + w, y + h], fill=col)
+    d.polygon([(0, 520), (300, 470), (520, 560), (700, 640), (0, 640)], fill=(188, 210, 226))  # river
+    # roads
+    roads = [[(-20, 300), (300, 330), (640, 360), (980, 300), (1300, 260)],
+             [(420, -20), (460, 200), (640, 360), (700, 640)],
+             [(900, -20), (880, 180), (980, 300), (1040, 640)],
+             [(100, 640), (220, 420), (300, 330), (260, -20)]]
+    for r in roads:
+        d.line(r, fill=(250, 250, 248), width=22, joint="curve")
+    for r in roads:
+        d.line(r, fill=(255, 255, 255), width=14, joint="curve")
+    d.line([(-20, 300), (300, 330), (640, 360), (980, 300), (1300, 260)], fill=(240, 200, 120), width=16, joint="curve")
+    # route
+    d.line([(640, 640), (640, 360), (980, 300), (1300, 260)], fill=(46, 110, 190), width=12, joint="curve")
+    d.polygon([(640, 560), (622, 600), (640, 590), (658, 600)], fill=(30, 30, 30))
+    # top manoeuvre box + bottom bar
+    d.rectangle([0, 0, 360, 130], fill=(36, 70, 120))
+    d.line([(60, 100), (60, 50), (110, 50)], fill=(255, 255, 255), width=12)
+    d.polygon([(110, 34), (140, 50), (110, 66)], fill=(255, 255, 255))
+    d.text((170, 30), "400 m", fill=(255, 255, 255), font=font(46))
+    d.text((170, 85), "Trasa S8", fill=(210, 220, 235), font=font(26))
+    d.rectangle([0, H - 110, W, H], fill=(40, 42, 46))
+    d.text((40, H - 82), "14:58", fill=(255, 255, 255), font=font(44))
+    d.text((240, H - 82), "126 km", fill=(255, 255, 255), font=font(44))
+    d.text((520, H - 76), "Białystok  ·  Baza Zachód", fill=(190, 192, 196), font=font(32))
+    d.rectangle([W - 120, H - 102, W - 20, H - 18], outline=(120, 122, 126), width=2)
+    d.text((W - 100, H - 80), "MENU", fill=(200, 200, 200), font=font(26))
+    img.save(os.path.join(OUT, "display_infotainment.png"), optimize=True)
+    print("infotainment")
+
+
+def din_displays():
+    """Small LCD faces for the overhead DIN units: digital tachograph + radio (negative LCD)."""
+    W, H = 512, 256
+    img = Image.new("RGB", (W, H), (10, 12, 10))
+    d = ImageDraw.Draw(img)
+    lcd = (150, 200, 120)
+    d.text((14, 10), "1 ▶ 00h47  ‖ 09h12", fill=lcd, font=font(34))
+    d.text((14, 60), "2 ●  14:32   82km/h", fill=lcd, font=font(34))
+    d.line([(0, 128), (W, 128)], fill=(0, 0, 0), width=4)
+    d.text((14, 140), "FM  98,4", fill=(220, 150, 60), font=font(44))
+    d.text((14, 196), "CH 19   AM", fill=(220, 150, 60), font=font(34))
+    img.save(os.path.join(OUT, "display_din.png"), optimize=True)
+    print("din")
+
+
+# --- switch icon atlas: 8x4 cells, white symbols on black (ISO 2575-style, drawn here)
+ICONS = ["low_beam", "fog_rear", "hazard", "diff_lock", "work_light", "beacon", "esp_off", "axle_lift",
+         "ac", "fan", "defrost", "recirc", "seat_heat", "mirror_heat", "cab_light", "sun_blind",
+         "lane_assist", "idle_up", "ptos", "horn_air", "tyre", "eco", "hill", "blank",
+         "plus", "minus", "res", "ok", "arrow_l", "arrow_r", "phone", "vol"]
+
+
+def icon_atlas():
+    C, N = 128, 8
+    img = Image.new("L", (C * N, C * 4), 0)
+    d = ImageDraw.Draw(img)
+    w = 9
+
+    def cell(i):
+        return (i % N) * C, (i // N) * C
+
+    for i, name in enumerate(ICONS):
+        x, y = cell(i)
+        cx, cy = x + C / 2, y + C / 2
+        if name == "low_beam":
+            d.chord([cx - 30, cy - 28, cx + 10, cy + 28], 90, 270, fill=255)
+            for k in range(4):
+                yy = cy - 22 + k * 15
+                d.line([(cx + 6, yy), (cx + 40, yy + 10)], fill=255, width=w)
+        elif name == "fog_rear":
+            d.chord([cx - 10, cy - 28, cx + 30, cy + 28], 270, 90, fill=255)
+            for k in range(3):
+                d.line([(cx - 42, cy - 16 + k * 16), (cx - 14, cy - 16 + k * 16)], fill=255, width=w)
+            d.line([(cx - 30, cy - 34), (cx - 30, cy + 34)], fill=255, width=5)
+        elif name == "hazard":
+            for s in (40, 22):
+                d.polygon([(cx, cy - s), (cx + s * 0.87, cy + s * 0.5), (cx - s * 0.87, cy + s * 0.5)],
+                          outline=255, width=w if s == 40 else 6)
+        elif name == "diff_lock":
+            d.ellipse([cx - 22, cy - 22, cx + 22, cy + 22], outline=255, width=w)
+            d.line([(cx - 44, cy), (cx - 22, cy)], fill=255, width=w)
+            d.line([(cx + 22, cy), (cx + 44, cy)], fill=255, width=w)
+            d.line([(cx, cy - 22), (cx, cy + 22)], fill=255, width=6)
+        elif name == "work_light":
+            d.rectangle([cx - 30, cy - 18, cx, cy + 18], outline=255, width=w)
+            for k in (-1, 0, 1):
+                d.line([(cx + 8, cy + k * 16), (cx + 38, cy + k * 26)], fill=255, width=6)
+        elif name == "beacon":
+            d.chord([cx - 22, cy - 26, cx + 22, cy + 18], 180, 360, fill=255)
+            d.rectangle([cx - 30, cy + 14, cx + 30, cy + 26], fill=255)
+            for a in (200, 240, 300, 340):
+                r = math.radians(a)
+                d.line([(cx + 30 * math.cos(r), cy - 4 + 30 * math.sin(r)), (cx + 44 * math.cos(r), cy - 4 + 44 * math.sin(r))],
+                       fill=255, width=5)
+        elif name == "esp_off":
+            d.rounded_rectangle([cx - 24, cy - 34, cx + 24, cy + 8], radius=8, outline=255, width=w)
+            for k in (-1, 1):
+                d.arc([cx - 40 + k * 14, cy + 4, cx + 40 + k * 14, cy + 34], 200, 340, fill=255, width=5)
+            d.text((cx - 18, cy + 18), "OFF", fill=255, font=font(18))
+        elif name == "axle_lift":
+            d.line([(cx - 40, cy + 20), (cx + 40, cy + 20)], fill=255, width=w)
+            for k in (-28, 0, 28):
+                d.ellipse([cx + k - 9, cy + 26, cx + k + 9, cy + 44], fill=255)
+            d.polygon([(cx, cy - 40), (cx - 16, cy - 16), (cx + 16, cy - 16)], fill=255)
+            d.line([(cx, cy - 18), (cx, cy + 10)], fill=255, width=7)
+        elif name == "ac":
+            d.text((cx - 28, cy - 24), "A/C", fill=255, font=font(40))
+        elif name == "fan":
+            for a in range(0, 360, 90):
+                r = math.radians(a)
+                d.pieslice([cx - 36, cy - 36, cx + 36, cy + 36], a, a + 50, fill=255)
+            d.ellipse([cx - 8, cy - 8, cx + 8, cy + 8], fill=0)
+        elif name == "defrost":
+            d.arc([cx - 40, cy - 30, cx + 40, cy + 40], 200, 340, fill=255, width=w)
+            d.line([(cx - 40, cy + 24), (cx + 40, cy + 24)], fill=255, width=w)
+            for k in (-16, 0, 16):
+                d.line([(cx + k, cy - 6), (cx + k + 6, cy - 32)], fill=255, width=5)
+        elif name == "recirc":
+            d.line([(cx - 40, cy + 26), (cx + 40, cy + 26)], fill=255, width=6)
+            d.arc([cx - 30, cy - 34, cx + 30, cy + 26], 160, 380, fill=255, width=w)
+            d.polygon([(cx - 36, cy + 8), (cx - 20, cy + 8), (cx - 28, cy + 22)], fill=255)
+        elif name == "seat_heat":
+            d.line([(cx - 20, cy + 30), (cx + 24, cy + 30), (cx + 24, cy + 14)], fill=255, width=w)
+            d.line([(cx - 20, cy + 30), (cx - 26, cy - 30)], fill=255, width=w)
+            for k in (-4, 10, 24):
+                d.line([(cx + k - 10, cy - 30), (cx + k - 4, cy), (cx + k - 10, cy + 6)], fill=255, width=4)
+        elif name == "mirror_heat":
+            d.rectangle([cx - 34, cy - 24, cx + 26, cy + 24], outline=255, width=w)
+            for k in (-12, 4):
+                d.line([(cx + k, cy - 14), (cx + k + 6, cy), (cx + k, cy + 14)], fill=255, width=4)
+        elif name == "cab_light":
+            d.chord([cx - 30, cy - 30, cx + 30, cy + 20], 180, 360, fill=255)
+            for k in (-1, 0, 1):
+                d.line([(cx + k * 12, cy + 2), (cx + k * 26, cy + 34)], fill=255, width=5)
+        elif name == "sun_blind":
+            d.rectangle([cx - 38, cy - 34, cx + 38, cy - 22], fill=255)
+            d.rectangle([cx - 34, cy - 22, cx + 34, cy + 10], outline=255, width=4)
+            d.polygon([(cx, cy + 34), (cx - 12, cy + 18), (cx + 12, cy + 18)], fill=255)
+        elif name == "lane_assist":
+            for k in (-1, 1):
+                d.line([(cx + k * 16, cy - 36), (cx + k * 34, cy + 36)], fill=255, width=w)
+            d.rectangle([cx - 10, cy - 8, cx + 10, cy + 20], fill=255)
+        elif name == "idle_up":
+            d.text((cx - 30, cy - 26), "rpm", fill=255, font=font(30))
+            d.polygon([(cx, cy + 6), (cx - 16, cy + 30), (cx + 16, cy + 30)], fill=255)
+        elif name == "ptos":
+            d.text((cx - 32, cy - 22), "PTO", fill=255, font=font(36))
+        elif name == "horn_air":
+            d.polygon([(cx - 36, cy - 10), (cx + 30, cy - 30), (cx + 30, cy + 30), (cx - 36, cy + 10)], outline=255, width=w)
+        elif name == "tyre":
+            d.ellipse([cx - 34, cy - 34, cx + 34, cy + 34], outline=255, width=w)
+            d.text((cx - 6, cy - 22), "!", fill=255, font=font(40))
+        elif name == "eco":
+            d.text((cx - 32, cy - 22), "ECO", fill=255, font=font(36))
+        elif name == "plus":
+            d.line([(cx - 26, cy), (cx + 26, cy)], fill=255, width=w)
+            d.line([(cx, cy - 26), (cx, cy + 26)], fill=255, width=w)
+        elif name == "minus":
+            d.line([(cx - 26, cy), (cx + 26, cy)], fill=255, width=w)
+        elif name in ("res", "ok"):
+            t = name.upper()
+            f = font(44)
+            d.text((cx - d.textlength(t, font=f) / 2, cy - 26), t, fill=255, font=f)
+        elif name == "arrow_l":
+            d.polygon([(cx - 24, cy), (cx + 16, cy - 26), (cx + 16, cy + 26)], fill=255)
+        elif name == "arrow_r":
+            d.polygon([(cx + 24, cy), (cx - 16, cy - 26), (cx - 16, cy + 26)], fill=255)
+        elif name == "phone":
+            d.arc([cx - 34, cy - 34, cx + 34, cy + 34], 120, 240, fill=255, width=14)
+            d.ellipse([cx - 30, cy - 36, cx - 8, cy - 22], fill=255)
+            d.ellipse([cx - 30, cy + 22, cx - 8, cy + 36], fill=255)
+        elif name == "vol":
+            d.polygon([(cx - 34, cy - 10), (cx - 18, cy - 10), (cx, cy - 28), (cx, cy + 28), (cx - 18, cy + 10),
+                       (cx - 34, cy + 10)], fill=255)
+            d.arc([cx - 10, cy - 22, cx + 22, cy + 22], 300, 60, fill=255, width=6)
+            d.arc([cx - 10, cy - 36, cx + 36, cy + 36], 300, 60, fill=255, width=6)
+        elif name == "hill":
+            d.polygon([(cx - 40, cy + 30), (cx + 40, cy + 30), (cx + 40, cy - 20)], outline=255, width=w)
+    img = img.filter(ImageFilter.GaussianBlur(0.8))
+    img.save(os.path.join(OUT, "icons_atlas.png"), optimize=True)
+    print("icons", len(ICONS))
+
+
+def gauge_faces():
+    """Two small analogue-style gauges beside the screen: dual air pressure (0-12 bar, 2 needles) + fuel."""
+    S = 512
+    img = Image.new("RGB", (S * 2, S), (8, 8, 9))
+    d = ImageDraw.Draw(img)
+    white, grey, red = (220, 218, 210), (120, 120, 118), (200, 50, 36)
+    for g in range(2):
+        cx, cy, r = g * S + S / 2, S / 2 + 20, 200
+        a0, a1 = 210, -30
+        if g == 0:
+            arc_ticks(d, cx, cy, r, a0, a1, 6, 4, white, grey, lw=6, ln=34)
+            for i in range(7):
+                a = math.radians(a0 + (a1 - a0) * i / 6)
+                t = str(i * 2)
+                d.text((cx + (r - 70) * math.cos(a) - 10, cy - (r - 70) * math.sin(a) - 18), t, fill=white, font=font(38))
+            for v, col in ((10.4, red), (10.1, (230, 230, 230))):
+                a = math.radians(a0 + (a1 - a0) * v / 12)
+                d.line([(cx, cy), (cx + (r - 20) * math.cos(a), cy - (r - 20) * math.sin(a))], fill=col, width=9)
+            d.text((cx - 30, cy + 70), "bar", fill=grey, font=font(36))
+            d.text((cx - 36, cy + 112), "I   II", fill=grey, font=font(30))
+        else:
+            a0, a1 = 200, 340
+            a0, a1 = 225, 135
+            arc_ticks(d, cx, cy, r, 225, 135 - 180 + 180, 4, 2, white, grey, lw=6, ln=34)
+            d.text((cx - r + 40, cy + 40), "0", fill=white, font=font(40))
+            d.text((cx + r - 70, cy + 40), "1/1", fill=white, font=font(40))
+            a = math.radians(225 + (-45 - 225) * 0.62)
+            d.line([(cx, cy), (cx + (r - 20) * math.cos(a), cy - (r - 20) * math.sin(a))], fill=red, width=9)
+            d.rectangle([cx - 20, cy + 70, cx + 18, cy + 120], outline=grey, width=6)
+            d.line([(cx + 18, cy + 80), (cx + 34, cy + 96), (cx + 34, cy + 120)], fill=grey, width=6)
+        d.ellipse([cx - 24, cy - 24, cx + 24, cy + 24], fill=(30, 30, 32))
+    img.save(os.path.join(OUT, "display_gauges.png"), optimize=True)
+    print("gauges")
+
+
+def main():
+    os.makedirs(OUT, exist_ok=True)
+    leather()
+    dashgrain()
+    hardgrain()
+    fabric()
+    seatfabric()
+    rubbermat()
+    brushed()
+    grime_mask()
+    stitch()
+    perforation()
+    speaker_grille()
+    cluster_display()
+    infotainment_display()
+    din_displays()
+    icon_atlas()
+    gauge_faces()
+    tot = sum(os.path.getsize(os.path.join(OUT, f)) for f in os.listdir(OUT))
+    print("TOTAL KB", tot // 1024)
+
+
+if __name__ == "__main__":
+    main()
