@@ -324,7 +324,10 @@ def thin_glass(name, tint=(0.88, 0.92, 0.90), grime=0.0, sunstrip=None, rough=0.
     else:
         nt.links.new(tint_sock, tr.inputs["Color"])
     mix = nt.nodes.new("ShaderNodeMixShader")
-    nt.links.new(fr.outputs[0], mix.inputs[0])
+    # A6.1: a single sheet reflects at both faces, R = 2F / (1 + F) (~8 % near normal incidence, was 4 %), so the
+    # dash shows faintly in the windscreen against darker parts of the view (critic r2 #7)
+    r2 = _math(nt, "DIVIDE", _math(nt, "MULTIPLY", fr.outputs[0], 2.0), _math(nt, "ADD", fr.outputs[0], 1.0))
+    nt.links.new(r2, mix.inputs[0])
     nt.links.new(tr.outputs[0], mix.inputs[1])
     nt.links.new(gl.outputs[0], mix.inputs[2])
     shader = mix.outputs[0]

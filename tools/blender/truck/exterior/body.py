@@ -359,19 +359,23 @@ def wordmark(strokes, z_c=1.918, height=0.052, spacing=30.0, mat="wordmark", nam
 
 
 def wipers():
+    # A6.1 (interior critic r2 #7): parked blades lie on the glass just above the 75 mm bottom frit (frit top 2.135 m),
+    # rising 16 mm towards the tip, so the driver sees them along the bottom of the screen as in real cabs (they were
+    # at 2.095 m, hidden behind the frit). Pivots unchanged; the interior placeholder uses the same numbers.
+    zb0, rise = 2.142 + 0.009, 0.016
     for k, (px, length) in enumerate(((-1.00, 0.86), (-0.08, 0.86))):
-        z = 2.085
-        y = CAB.front_pt(z, px, 0.02)[1]
+        y = CAB.front_pt(2.085, px, 0.02)[1]
         p0 = V((px, y + 0.01, 2.035))
         cyl(f"wiper_pivot{k}", (px, CAB.front_pt(2.02, px, 0)[1] + 0.012, 2.02), 0.022, 0.03, "plastic_satin",
             axis="Z", seg=16)
-        tip = V((px + length, CAB.front_pt(z + 0.03, px + length, 0.03)[1], z + 0.03))
+        zt = zb0 + rise + 0.018
+        tip = V((px + length, CAB.front_pt(zt, px + length, 0.03)[1], zt))
         rod(f"wiper_arm{k}", p0, tip, 0.008, "plastic_satin", seg=8)
         # blade lying on the glass along the base
         pts = []
         for i in range(9):
             x = px + 0.06 + (length - 0.04) * i / 8
-            pts.append(V(CAB.front_pt(z + 0.01, x, 0.016)))
+            pts.append(V(CAB.front_pt(zb0 + rise * (x - px) / length, x, 0.016)))
         tube(f"wiper_blade{k}", pts, 0.009, "rubber", seg=6)
         # washer nozzle on the cowl next to each pivot
         box((f"washer_nozzle{k}"), (px + 0.12, CAB.front_pt(2.03, px + 0.12, 0)[1] + 0.006, 2.033),

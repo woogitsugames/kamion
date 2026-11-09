@@ -325,7 +325,8 @@ def build_materials(a):
     M.simple("switch", (0.020, 0.020, 0.021), rough=0.42)
     M.simple("knob", (0.025, 0.025, 0.026), rough=0.36)
     M.simple("webbing", (0.062, 0.062, 0.066), rough=0.78, spec=0.3)
-    M.simple("led_off", (0.55, 0.55, 0.53), rough=0.35)
+    M.simple("led_off", (0.16, 0.15, 0.13), rough=0.35)        # A6.1: unlit LED slit, not a white dot
+    M.simple("hazard_red", (0.30, 0.035, 0.03), rough=0.40)
     M.simple("lamp_lens", (0.80, 0.80, 0.78), rough=0.25, emit=((1.0, 0.95, 0.85), 0.0))
     M.simple("yellow", (0.50, 0.33, 0.02), rough=0.5)
     # A6 r3: mirror glass shows a placeholder 'probe' image (the game uses camera RenderTextures), not a white slab
@@ -513,12 +514,29 @@ def build_glass():
         cyl(f"tweeter_{s}", c, 0.028, 0.008, "dash_dark", seg=20, rot=n.to_track_quat("Z", "Y").to_matrix())
         plane_uv(f"tweeter_grille_{s}", quad_on(c, n, V(0, 0, 1), 0.05, 0.05, off=0.0045), "grille",
                  uv=((0, 0), (1, 0), (1, 1), (0, 1)))
-    # wipers parked outside at the bottom of the screen (visible from the seat)
-    for i, x0 in enumerate((-0.95, 0.05)):
-        y = ws_y(WS_Z0) + 0.07
-        rod(f"wiper_arm_{i}", (x0, y, WS_Z0 - 0.045), (x0 + 0.78, y + 0.01, WS_Z0 - 0.015), 0.008, "ext_plastic", seg=8)
-        box(f"wiper_blade_{i}", (x0 + 0.40, y - 0.012, WS_Z0 - 0.025), (0.80, 0.012, 0.018), "rubber", bev=0.003,
-            rot=Matrix.Rotation(math.radians(3), 3, "Y"))
+    # A6.1 (critic r2 #7): wipers parked on the glass just above the bottom frit, as the exterior parks them
+    # (tools/blender/truck/exterior/body.py wipers(): pivots x -1.00 / -0.08, 0.86 m arms, blade rising 2.142 -> 2.158 m
+    # over its length). Placeholder for interior-only renders (CAB_ShellPlaceholder); the game uses WIPER_L/R.
+    for i, (px, ln) in enumerate(WIPERS):
+        def on_glass(x, z, off):
+            return V(x, glass_y(x, min(max(z, WS_Z0), WS_Z1)) + 0.006 + off, z)
+        xb0, xb1 = px + 0.06, px + ln + 0.02
+        pts = [on_glass(xb0 + (xb1 - xb0) * k / 10, wiper_z(xb0 + (xb1 - xb0) * k / 10, px, ln), 0.010) for k in range(11)]
+        tube(f"wiper_blade_{i}", pts, 0.0085, "rubber", seg=6)
+        spine = [p_ + V(0, 0.010, 0.004) for p_ in pts]
+        tube(f"wiper_spine_{i}", spine, 0.0055, "ext_plastic", seg=6)
+        p0 = on_glass(px, WS_Z0 - 0.025, 0.030)
+        tip = on_glass(xb1 - 0.02, wiper_z(xb1, px, ln) + 0.018, 0.022)
+        mid = p0.lerp(tip, 0.5) + V(0, 0.012, 0)
+        tube(f"wiper_arm_{i}", [p0, mid, tip], 0.0075, "ext_plastic", seg=8)
+
+
+WIPERS = ((-1.00, 0.86), (-0.08, 0.86))   # (pivot x, arm length): same as exterior/body.py wipers()
+WIPER_Z0, WIPER_RISE = 2.142, 0.016        # blade lower edge just above the 75 mm frit (top 2.135 m)
+
+
+def wiper_z(x, px, ln):
+    return WIPER_Z0 + 0.0085 + WIPER_RISE * min(1.0, max(0.0, (x - px) / ln))
 
 
 FRIT_BOTTOM, FRIT_TOP, FRIT_SIDE = 0.075, 0.05, 0.045   # frit band widths above/below the visible glass edge (m)
@@ -824,19 +842,58 @@ def build_centre_stack():
     cs = c0 + v * 0.075 + n * 0.006
     panel("info_bezel", rrect(0.250, 0.158, 0.010, 3), cs + n * 0.008, n, up, 0.010, "piano", bev=0.002)
     plane_uv("info_screen", quad_on(cs, n, up, 0.225, 0.135, off=0.0085), "disp_info")
-    # two rows of rocker switches with icons (switch bank)
-    icons = ["low_beam", "fog_rear", "hazard", "diff_lock", "work_light", "beacon",
-             "esp_off", "axle_lift", "seat_heat", "mirror_heat", "lane_assist", "idle_up"]
-    for r in range(2):
-        for k in range(6):
-            p = c0 + u * (-0.135 + k * 0.054) + v * (-0.065 - r * 0.058) + n * 0.006
-            sw = panel(f"rocker_{r}_{k}", rrect(0.026, 0.040, 0.004, 2), p + n * 0.012, n, up, 0.014, "switch", bev=0.0025)
-            if icons[r * 6 + k] == "hazard":
-                sw.data.materials[0] = G.STATE["mats"]["switch"]
-            idx = M_ICON(icons[r * 6 + k])
-            plane_uv(f"rocker_icon_{r}_{k}", quad_on(p + v * 0.006, n, up, 0.016, 0.016, off=0.0125), "icons", uv=idx)
-            # LED telltale in each rocker
-            box(f"rocker_led_{r}_{k}", tuple(p + v * -0.013 + n * 0.0125), (0.006, 0.002, 0.0025), "led_off")
+    # A6.1 (critic r2 #8: a 2 x 6 grid of identical keys read as a calculator): two switch packs of mixed modules in
+    # recessed carriers, like real truck switch banks. Row 1: big hazard push button, two double-width rockers
+    # (diff lock, axle lift), three single rockers. Row 2: work-light dimmer rotary, single rockers, a flat double
+    # key, and a blank cap (real packs always carry unused slots). Rockers sit tipped +-5 deg (one end pressed), LED
+    # slits only on the latching functions; everything else stays dark.
+    def module(name, du, dv, w, h, icon, kind="rocker", tip=0, led=False):
+        p = c0 + u * du + v * dv + n * 0.006
+        if kind == "rocker":
+            nt = (Matrix.Rotation(math.radians(5 * tip), 3, u) @ n).normalized()
+            sw = panel(name, rrect(w, h, 0.0035, 2), p + n * 0.013, nt, up, 0.013, "switch", bev=0.002)
+            ic = quad_on(p + n * 0.0135 + v * (0.007 if icon != "blank" else 0.0), nt, up, 0.015, 0.015, off=0.0)
+        elif kind == "push":
+            sw = panel(name, rrect(w, h, 0.005, 2), p + n * 0.012, n, up, 0.012, "hazard_red", bev=0.003)
+            ic = quad_on(p, n, up, 0.024, 0.024, off=0.0125)
+        else:   # flat key
+            sw = panel(name, rrect(w, h, 0.004, 2), p + n * 0.009, n, up, 0.009, "switch", bev=0.002)
+            ic = quad_on(p, n, up, 0.015, 0.015, off=0.0095)
+        if icon != "blank":
+            plane_uv(name.replace("rocker_", "rocker_icon_"), ic, "icons", uv=M_ICON(icon))
+        if led:
+            box(name.replace("rocker_", "rocker_led_"), tuple(p - v * (h / 2 - 0.006) + n * 0.0135),
+                (min(0.010, w * 0.35), 0.0018, 0.0022), "led_off",
+                rot=n.to_track_quat("Y", "Z").to_matrix())
+        return sw
+
+    rows = [  # (v, [(name, width, height, icon, kind, tip, led)])
+        (-0.058, [("haz", 0.040, 0.040, "hazard", "push", 0, False), ("dl", 0.046, 0.040, "diff_lock", "rocker", 1, True),
+                  ("al", 0.046, 0.040, "axle_lift", "rocker", -1, True), ("wl", 0.026, 0.040, "work_light", "rocker", 1, True),
+                  ("bc", 0.026, 0.040, "beacon", "rocker", -1, False), ("esp", 0.026, 0.040, "esp_off", "rocker", 1, False)]),
+        (-0.117, [("sh", 0.026, 0.040, "seat_heat", "rocker", -1, False), ("mh", 0.026, 0.040, "mirror_heat", "rocker", 1, True),
+                  ("la", 0.046, 0.026, "lane_assist", "key", 0, False), ("iu", 0.046, 0.026, "idle_up", "key", 0, False),
+                  ("bl", 0.026, 0.040, "blank", "rocker", 0, False)]),
+    ]
+    for r, (dv, mods) in enumerate(rows):
+        gap = 0.0055
+        widths = sum(m[1] for m in mods) + gap * (len(mods) - 1)
+        x0 = -widths / 2 + (0.024 if r == 1 else 0.0)
+        # recessed carrier of the pack (dark frame, 2 mm proud of the face plate, joints between modules)
+        pc = c0 + u * (x0 + widths / 2) + v * dv + n * 0.006
+        panel(f"swpack_{r}", rrect(widths + 0.012, 0.052, 0.006, 2), pc + n * 0.004, n, up, 0.004, "dash_dark",
+              bev=0.0015)
+        x = x0
+        for k, (nm, w, h, icon, kind, tip, led) in enumerate(mods):
+            module(f"rocker_{r}_{k}", x + w / 2, dv, w, h, icon, kind, tip, led)
+            x += w + gap
+    # rotary work-light / panel dimmer at the start of row 2 (knurled skirt, pointer line)
+    p = c0 + u * -0.150 + v * -0.117 + n * 0.006
+    rotm = n.to_track_quat("Z", "Y").to_matrix()
+    cyl("stack_rotary_base", p + n * 0.003, 0.021, 0.005, "dash_dark", seg=28, bev=0.001, rot=rotm)
+    cyl("stack_rotary", p + n * 0.013, 0.016, 0.018, "knob", seg=28, bev=0.0025, rot=rotm)
+    box("stack_rotary_mark", tuple(p + n * 0.0225 + v * 0.008), (0.0018, 0.0012, 0.008), "led_off",
+        rot=n.to_track_quat("Y", "Z").to_matrix())
     # HVAC: two knobs + row of buttons at the bottom
     for i, du in enumerate((-0.14, 0.14)):
         p = c0 + u * du + v * -0.195 + n * 0.006
@@ -1350,14 +1407,17 @@ def seat(prefix, cx, driver):
     # ---- separate headrest on two posts (gap 25 mm above the backrest)
     hr_z0, hr_h, hr_w, hr_d = SB + 0.025, 0.170, 0.270, 0.085
     hl = []
-    nh = G.Q(18, 8)
+    # A6.1 (critic r2 #9: polygon steps on the headrest top against the bright window, seen from the bunk): cosine
+    # spacing of the sections (dense where the outline turns down at the ends), more sections, rounder corners, and a
+    # superellipse end (the old 1 - t^6 law made a flat 'pill' cap with a shading crease at each end)
+    nh = G.Q(30, 12)
     for i in range(nh + 1):
-        t = -1 + 2 * i / nh
+        t = -math.cos(math.pi * i / nh)
         x = t * hr_w / 2
-        k = math.sqrt(max(0.05, 1 - abs(t) ** 6))
+        k = max(0.18, (1 - abs(t) ** 4) ** 0.25)          # superellipse end: rounds off without a crease
         wing = 0.018 * abs(t) ** 3                       # slight forward wings
         hl.append([V(x, 0.045 + wing + py * (0.5 + 0.5 * k), hr_z0 + hr_h / 2 + pz * (0.55 + 0.45 * k))
-                   for py, pz in rrect(hr_d, hr_h, 0.038, 4)])
+                   for py, pz in rrect(hr_d, hr_h, 0.038, 6)])
     hrest = loft(f"{prefix}_headrest", hl, "leather", closed=True, cap0=True, cap1=True, sharp=70)
     hrest.matrix_world = Mb
     for hx in (-0.075, 0.075):
