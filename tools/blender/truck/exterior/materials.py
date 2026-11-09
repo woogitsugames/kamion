@@ -177,10 +177,12 @@ def grime(nt, b, rgb_sock_default, rough_default, h0=1.0, amount=0.5, cavity=Tru
     if not isinstance(rgb_sock_default, tuple):
         L(nt, rgb_sock_default, mix.inputs[6])
     mix.inputs[7].default_value = (*dust, 1)
+    mix.label = "grime_mix"          # A6 export: input A = clean colour, factor = dirt mask (baked separately)
     L(nt, f, mix.inputs[0])
     L(nt, mix.outputs[2], b.inputs["Base Color"])
     r = math_node(nt, "MULTIPLY", f, 0.35)
     r = math_node(nt, "ADD", r, rough_default, clamp=True)
+    r.node.label = "grime_rough"     # input 1 = clean roughness
     L(nt, r, b.inputs["Roughness"])
     return f
 
