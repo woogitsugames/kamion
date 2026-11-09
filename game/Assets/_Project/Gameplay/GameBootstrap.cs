@@ -18,6 +18,7 @@ namespace Game.Gameplay
     [DefaultExecutionOrder(-1000)]
     public sealed class GameBootstrap : MonoBehaviour
     {
+        public const string WorldCSceneName = "WorldC";
         [SerializeField] int defaultTargetFps = 30;
         [SerializeField] bool showOverlay = true;
 
@@ -62,8 +63,14 @@ namespace Game.Gameplay
                 overlay.transform.SetParent(transform, false);
             }
 
-            BootMenu.Create(Camera.main, ("Plac testowy — jazda", () => SceneManager.LoadScene(DrivingLabLayout.SceneName)))
-                .transform.SetParent(transform, false);
+            // The imported world (WorldC) is in the build only when it was generated (scripts/import-region.ps1).
+            var entries = new System.Collections.Generic.List<(string, System.Action)>
+            {
+                ("Plac testowy — jazda", () => SceneManager.LoadScene(DrivingLabLayout.SceneName)),
+            };
+            if (Application.CanStreamedLevelBeLoaded(WorldCSceneName))
+                entries.Add(("Białystok — Kwadrat Park", () => SceneManager.LoadScene(WorldCSceneName)));
+            BootMenu.Create(Camera.main, entries.ToArray()).transform.SetParent(transform, false);
 
             // Launch argument "scene" (adb: -e scene DrivingLab) jumps straight into a scene; the remaining
             // arguments (autopilot, speed) are read by that scene's bootstrap.

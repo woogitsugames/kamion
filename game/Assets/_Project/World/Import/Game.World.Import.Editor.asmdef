@@ -1,0 +1,29 @@
+{
+    "name": "Game.World.Import.Editor",
+    "rootNamespace": "Game.World.Import",
+    "references": [
+        "Game.Core",
+        "Game.World",
+        "Game.Rendering",
+        "Game.Rendering.Editor",
+        "Game.Gameplay",
+        "Game.Editor",
+        "Game.Vehicle.Physics",
+        "Game.Vehicle.Runtime",
+        "Game.Cameras",
+        "Game.Controls",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

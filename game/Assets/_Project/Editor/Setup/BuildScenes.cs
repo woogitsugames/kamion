@@ -4,10 +4,14 @@ using UnityEditor;
 
 namespace Game.Editor.Setup
 {
-    /// <summary>Single place that defines the scenes in the build (Boot first).</summary>
+    /// <summary>
+    /// Single place that defines the scenes in the build (Boot first). Generated world scenes (gitignored, created by
+    /// scripts/import-region.ps1) are included only when they exist.
+    /// </summary>
     public static class BuildScenes
     {
-        public static readonly string[] Paths = { BootSceneBuilder.ScenePath, DrivingLabSceneBuilder.ScenePath };
+        public const string WorldCScenePath = "Assets/_Generated/World/bialystok-industrial-c/WorldC.unity";
+        public static readonly string[] Paths = { BootSceneBuilder.ScenePath, DrivingLabSceneBuilder.ScenePath, WorldCScenePath };
 
         public static void Apply()
         {

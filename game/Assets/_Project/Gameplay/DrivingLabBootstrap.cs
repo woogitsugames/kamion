@@ -32,6 +32,10 @@ namespace Game.Gameplay
         public VehicleBody vehicle;
         public TrailerBody trailer;
         public Camera mainCamera;
+        [Tooltip("World scenes (WorldC): spawn here instead of the lab layout; forward = heading")]
+        public Transform spawnPoint;
+        [Tooltip("World scenes: route for the route autopilot (launch argument autopilot=route)")]
+        public Game.World.WorldRoute route;
 
         readonly DriverInputMixer m_Mixer = new DriverInputMixer();
         public readonly AutopilotDriverInput Autopilot = new AutopilotDriverInput();
@@ -39,6 +43,7 @@ namespace Game.Gameplay
         public readonly TouchSteeringWheel Wheel = new TouchSteeringWheel();
         public readonly GyroSteering Gyro = new GyroSteering();
         public readonly TouchControls Touch = new TouchControls();
+        public readonly PathFollowerDriverInput RouteDriver = new PathFollowerDriverInput();
 
         CameraRig m_Rig;
         DrivingHud m_Hud;
@@ -87,6 +92,7 @@ namespace Game.Gameplay
             }
 
             m_Mixer.Add(Autopilot);
+            m_Mixer.Add(RouteDriver);
             m_Mixer.Add(Keyboard);
             m_Mixer.Add(Wheel);
             m_Mixer.Add(Gyro);
@@ -121,7 +127,7 @@ namespace Game.Gameplay
                 ToggleSteeringMode = () => SetSteerMode((SteerMode)(((int)m_SteerMode + 1) % 3)),
                 ResetVehicle = () => Spawn(m_Spawn),
                 OpenMenu = () => SceneManager.LoadScene("Boot"),
-                StatusLine = () => Time.unscaledTime < m_StatusUntil ? m_Status : (Autopilot.Enabled ? "AUTOPILOT (pomiar)" : ""),
+                StatusLine = () => Time.unscaledTime < m_StatusUntil ? m_Status : (Autopilot.Enabled || RouteDriver.Enabled ? "AUTOPILOT (pomiar)" : ""),
                 Spawn = i => Spawn((LabSpawn)i, persist: true),
                 CurrentSpawn = () => (int)m_Spawn,
                 ToggleAbsFault = () => SetAbsFault(!m_AbsFault),
@@ -145,9 +151,10 @@ namespace Game.Gameplay
             string tr = platform.GetLaunchArgument("trailer");
             m_Spawn = ParseSpawn(tr, !string.IsNullOrEmpty(ap) ? LabSpawn.Solo : (LabSpawn)Mathf.Clamp(PlayerPrefs.GetInt(PrefSpawn, (int)LabSpawn.Empty), 0, 3));
             if (trailer == null) m_Spawn = LabSpawn.Solo;
-            if (!string.IsNullOrEmpty(ap)) { ConfigureAutopilot(ap, platform.GetLaunchArgument("speed")); m_AutopilotStart = true; }
+            if (ap == "route") { if (!StartRouteDriver(platform.GetLaunchArgument("speed"))) ap = null; }
+            else if (!string.IsNullOrEmpty(ap)) { ConfigureAutopilot(ap, platform.GetLaunchArgument("speed")); m_AutopilotStart = true; }
             Spawn(m_Spawn);
-            Debug.Log($"[LAB] DrivingLab ready: vehicle={vehicle.name} trailer={(trailer != null ? trailer.name : "none")} spawn={m_Spawn} steer={m_SteerMode} autopilot={(Autopilot.Enabled ? ap : "off")} fixedDt={Time.fixedDeltaTime}");
+            Debug.Log($"[LAB] DrivingLab ready: vehicle={vehicle.name} trailer={(trailer != null ? trailer.name : "none")} spawn={m_Spawn} steer={m_SteerMode} autopilot={(Autopilot.Enabled || RouteDriver.Enabled ? ap : "off")} fixedDt={Time.fixedDeltaTime}");
         }
 
         static LabSpawn ParseSpawn(string arg, LabSpawn fallback)
@@ -180,6 +187,17 @@ namespace Game.Gameplay
             Spawn(LabSpawn.Solo);
         }
 
+        /// <summary>World scenes: drive the scene's <see cref="route"/> with the path follower (measurements, route test).</summary>
+        public bool StartRouteDriver(string speedArg)
+        {
+            if (route == null || route.points.Length < 2) { Debug.LogWarning("[LAB] autopilot=route but the scene has no route"); return false; }
+            RouteDriver.SetPath(route.WorldPoints(), route.speedLimitsKmh);
+            RouteDriver.TargetSpeedKmh = float.TryParse(speedArg, NumberStyles.Float, CultureInfo.InvariantCulture, out float s) && s > 0 ? s : 50f;
+            RouteDriver.Enabled = true;
+            m_Parking = false;
+            return true;
+        }
+
         void ConfigureAutopilot(string mode, string speedArg)
         {
             bool r25 = mode == "circle25";
@@ -200,6 +218,11 @@ namespace Game.Gameplay
             m_Spawn = spawn;
             if (persist) PlayerPrefs.SetInt(PrefSpawn, (int)spawn);
             bool coupled = spawn != LabSpawn.Solo && trailer != null;
+            if (spawnPoint != null && !m_AutopilotStart)
+            {
+                SpawnAt(spawn, spawnPoint.position, Quaternion.LookRotation(Vector3.ProjectOnPlane(spawnPoint.forward, Vector3.up), Vector3.up));
+                return;
+            }
             Vector3 pos;
             if (m_AutopilotStart) pos = Autopilot.CircleCenter + new Vector3(Autopilot.Radius, 0f, 0f);
             else if (coupled) pos = DrivingLabLayout.Spawn;
@@ -241,7 +264,7 @@ namespace Game.Gameplay
             Physics.SyncTransforms();
             m_CouplingEvents = 0;
             m_Lever = 0; m_CruiseKmh = 0f;
-            m_Parking = !Autopilot.Enabled;
+            m_Parking = !Autopilot.Enabled && !RouteDriver.Enabled;
             m_Selector = GearSelector.Drive;
             m_Manual = false;
             Wheel.SetWheelDeg(0f);

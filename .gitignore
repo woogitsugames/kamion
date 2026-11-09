@@ -43,3 +43,6 @@ game/.utmp/
 # vehicle audio imported from art-source/audio/generated (regenerate: tools/audio render_all.py + Kamion/Audio/Import)
 game/Assets/_Project/Audio/Generated/
 game/Assets/_Project/Audio/Generated.meta
+# imported world regions (regenerate: pwsh scripts/import-region.ps1 -Region <id>; ADR 0011)
+game/Assets/_Generated/
+game/Assets/_Generated.meta
