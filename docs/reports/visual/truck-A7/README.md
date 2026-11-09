@@ -67,15 +67,17 @@ Build: zasoby ciężarówki 54 MB nieskompresowane, APK 220,6 → 232,7 MB (+12,
 ## Model ↔ fizyka
 Po ADR 0014 (scalone z main przed klatkami końcowymi): zaczep kabiny 1,15/3,925 = fizyka, siodło 1,15 = fizyka, rozstaw 2,04/1,82 = fizyka
 (test `ExteriorRig_ParentsResolve_AndMatchThePhysics`, tolerancja 1 cm). Pozostaje: opona wolna 0,5378 m vs promień toczny 0,51 m —
-koło stoi w środku z fizyki, więc bieżnik „wchodzi” ~2,8 cm w asfalt (wizualnie ugięcie opony); knuckle obraca się wokół środka koła,
+koło stoi w środku z fizyki; od r2 (rendering-perf) `Kamion/Truck Exterior` spłaszcza oponę na promieniu tocznym (warstwa renderowania 8 kół,
+`TruckVisualRig.tyreFlatRadius` z fizyki), więc bieżnik nie wchodzi w asfalt; knuckle obraca się wokół środka koła,
 nie sworznia (5 cm), błąd < 2,5 cm przy 30°.
 
 ## Otwarte
-1. Na Medium/High czerń jest podniesiona do ~21 % sRGB (p10 kadrów): `lookShadowLift 0.03` działa w liniowej przestrzeni (≈ 19 % sRGB).
-   Na Low (bez post) czerń 1 %. Do decyzji `rendering-perf`/właściciel (D23) — nie zmieniałem globalnego wyglądu w A7.
-2. Przy niskim słońcu i o zmierzchu auto-ekspozycja z oświetlenia poziomego prześwietla ściany w słońcu i kasuje nastrój zmierzchu.
+1. ~~Czerń 21 % / prześwietlone ściany przy niskim słońcu / brak zmierzchu~~ — r2 (rendering-perf): ADR 0016 (krzywa tonalna,
+   tabela EV od wysokości słońca). Wyświetlacze: `Kamion/Cab Display`, kontrast 67:1 (pochmurno) – 160:1 (niskie słońce).
+   Wnętrze LOD0 na każdym tierze (A16 Low: GPU bez zmian, 16,1 ms). Klatki z telefonów: `device-r2/`.
+2. Otwarte z recenzji r3: clear coat lakieru + odbicie nieba w szybie (E1/E2), cień kontaktowy/AO pod pojazdem (E3), lusterka wypukłe (C5).
 3. S24+ High `cab-dash` w słońcu 36 ms GPU (rozgrzany): profil AGI/Frame Debugger cieni na flagowcu do zrobienia na zimnym telefonie;
    brak pomiaru 30 min (temperatura) dla TRAKT.
 4. Lusterka szerokokątne/krawężnikowe/przednie: placeholder z probe, bez RT; lustra płaskie (realne klasy II/IV są wypukłe).
-5. Brak: clear coat, światła punktowe reflektorów nocą, animacja drzwi/wycieraczek/pedałów (pivoty gotowe), wyświetlacze stałą jasnością 0,55.
+5. Brak: clear coat, światła punktowe reflektorów nocą, animacja drzwi/wycieraczek/pedałów (pivoty gotowe).
 6. Przegląd `visual-critic` A7 nie wykonany w tej sesji.
