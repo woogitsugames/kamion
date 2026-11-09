@@ -100,6 +100,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     juncs = J.build_junctions(net, pts)
     hf = hf or P.load_heightfield(terrain_meta, REPO, origin)
     prof = P.build_profiles(net, hf)
+    prof["walled_ramps"] = P.mark_walled_ramps(net, hf)
 
     buf = M.MeshBuf()
     stats = {"patch": {}}
