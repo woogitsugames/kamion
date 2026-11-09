@@ -55,8 +55,8 @@ BAKED = ("Paint", "Trim", "Metal", "Lights")
 ATLAS_RES = {"Paint": 2048, "Trim": 2048, "Metal": 2048, "Lights": 1024}
 DECAL_RES = 1024
 TIERS = {"High": 1, "Medium": 2, "Low": 4}          # divisor of the High size
-TRI_TARGET = {1: 43000, 2: 14500, 3: 3200}
-TRI_LIMIT = {0: 100000, 1: 45000, 2: 15500, 3: 4000}
+TRI_TARGET = {1: 43000, 2: 14500, 3: 5000}
+TRI_LIMIT = {0: 100000, 1: 45000, 2: 15500, 3: 6000}
 
 MAT_SLOT = {
     "paint": "Paint",
@@ -83,6 +83,7 @@ LIVERIES = {   # game material variants of MI_Ext_Paint (linear colours, same as
              "label": "zielen butelkowa (ciemna)"},
 }
 DUST = (0.15, 0.135, 0.11)
+URP_LIT_DIRT = 0.5          # _Dirt baked into the stock-URP-Lit fallback BaseMap/MaskMap
 
 DOOR_PIECES = ("door_skirt_", "door_handle_", "door_lock_", "win_frame_", "belt_seal_", "door_shell_")
 LOD1_DROP = ("_nut", "_washer", "_hubbolt", "battery_latch", "door_lock_", "emblem_dash", "extender_hinge",
@@ -535,11 +536,13 @@ def to_game_piece(o, gm):
             for li in p.loop_indices:
                 co = me.vertices[me.loops[li].vertex_index].co
                 at[li].uv = ((co[a0] - lo[a0]) / max(ext[a0], 1e-6), (co[a1] - lo[a1]) / max(ext[a1], 1e-6))
-    for p, sl in zip(me.polygons, face_slot):
-        p.material_index = new_idx[sl]
+    # materials first: Mesh.materials.clear() drops the material_index attribute (Blender 4.x), which had silently
+    # turned every multi-slot piece into its first slot (lower fairing body colour baked as white Trim)
     me.materials.clear()
     for sl in slots:
         me.materials.append(gm[sl])
+    for p, sl in zip(me.polygons, face_slot):
+        p.material_index = new_idx[sl]
     o["slots"] = slots
 
 
@@ -963,17 +966,40 @@ def bake_atlases(pieces, high, a):
             else:
                 if pass_name not in imgs[s]:
                     imgs[s][pass_name] = new_float_image(f"bake_{s}_{pass_name}", res[s])
+                    if pass_name == "N":
+                        im = imgs[s][pass_name]
+                        im.pixels.foreach_set(np.tile(np.array([0.5, 0.5, 1.0, 1.0], dtype=np.float32),
+                                                      res[s] * res[s]))
                 n.image = imgs[s][pass_name]
             m.node_tree.nodes.active = n
     high_mats = sorted({sl.material for o in high for sl in o.material_slots if sl.material}, key=lambda m: m.name)
     for o in bpy.data.objects:
         o.hide_render = True
-    high_wheel = [o for o in high if o["part"] in ("WHEEL_FL", "WHEEL_RL", "STEER_FL")]
-    high_static = [o for o in high if not o["part"].startswith(("WHEEL_", "STEER_"))]
+    # selected-to-active calls the render engine once PER high-poly object (object_bake_api), and every call re-syncs
+    # the whole scene: with ~800 HIGH objects one pass took ~250 s. One joined HIGH mesh per proxy = one engine call.
+    # Transforms are baked (identity), so object-space texture coordinates stay world-space after the join.
+    def joined(objs, name):
+        cps = [copy_object(o, o.name + "_j", coll) for o in objs if o.type == "MESH" and len(o.data.polygons)]
+        select(cps, cps[0])
+        if len(cps) > 1:
+            bpy.ops.object.join()
+        j = bpy.context.view_layer.objects.active
+        j.name = name
+        return j
+    high_wheel = [joined([o for o in high if o["part"] in ("WHEEL_FL", "WHEEL_RL", "STEER_FL")], "HIGH_WHEELS")]
+    high_static = [joined([o for o in high if not o["part"].startswith(("WHEEL_", "STEER_"))], "HIGH_STATIC")]
+    # Normal pass: the game pieces ARE the high-poly surfaces (same mesh minus bake-only detail), so their own
+    # normal is flat by definition. Baking them against themselves only produced wrong normals where another surface
+    # lies within the cage (rim lip / dish / tyre bead, grille slats: N.z down to ~0). The HIGH set of the normal
+    # pass is therefore the bake-only detail alone (panel-gap strips, frame bolts, wordmark strokes); texels whose
+    # ray misses it keep the pre-filled flat normal. Wheels have no bake-only detail -> flat.
+    hn = [o for o in high if o.get("bake_only") and not o["part"].startswith(("WHEEL_", "STEER_"))]
+    high_static_n = [joined(hn, "HIGH_STATIC_N")] if hn else []
 
-    def run(pass_name, btype, key, samples, only=None, **kw):
+    def run(pass_name, btype, key, samples, only=None, hs=None, **kw):
         px = proxies[key]
-        hs = high_static if key == "STATIC" else high_wheel
+        if hs is None:
+            hs = high_static if key == "STATIC" else high_wheel
         set_targets(pass_name, only)
         sc.cycles.samples = samples
         for o in bpy.data.objects:
@@ -991,9 +1017,13 @@ def bake_atlases(pieces, high, a):
         print(f"  bake {pass_name} {key}: {time.time() - t0:.0f} s")
     for key in ("STATIC", "WHEELS"):
         only = None if key == "STATIC" else ("Trim", "Metal")
-        mute_micro_bumps(high_mats, True)
-        run("N", "NORMAL", key, 8, only, normal_space="TANGENT")
-        mute_micro_bumps(high_mats, False)
+        hsn = high_static_n if key == "STATIC" else []
+        if hsn:
+            mute_micro_bumps(high_mats, True)
+            run("N", "NORMAL", key, 8, only, hs=hsn, normal_space="TANGENT")
+            mute_micro_bumps(high_mats, False)
+        else:
+            set_targets("N", only)          # creates the flat-normal images for this proxy's slots
         emit_override(high_mats, "albedo")
         run("ALB", "EMIT", key, 16, only)
         emit_override(high_mats, "rdm")
@@ -1008,7 +1038,7 @@ def bake_atlases(pieces, high, a):
     out = {}
     for s in BAKED:
         out[s] = {k: img_array(im) for k, im in imgs[s].items()}
-    for px in proxies.values():
+    for px in list(proxies.values()) + high_wheel + high_static + high_static_n:
         bpy.data.objects.remove(px)
     print(f"bakes done in {time.time() - t0:.0f} s")
     return out
@@ -1045,6 +1075,26 @@ def compose_textures(baked, decal, out_dir):
         Mt = np.dstack([ao[..., 0:1], np.clip(rdm[..., 1:2], 0, 1), thirdc, np.ones_like(thirdc)])
         Nt = nrm[..., :3].copy()
         sets = {"C": Ct, "N": Nt, "M": Mt}
+        # Stock URP Lit fallback (A7 can import with the stock shader before Kamion/TruckExterior exists):
+        # BaseMap = final albedo at _Dirt = URP_LIT_DIRT (Paint: per livery), MaskMap = R metallic, G AO, B dirt mask,
+        # A smoothness. URP Lit reads R/A as _MetallicGlossMap and G as _OcclusionMap, so one texture serves both.
+        dm = np.clip(rdm[..., 1:2], 0, 1) * URP_LIT_DIRT
+        variants = [(lv, LIVERIES[lv]) for lv in LIVERIES] if s == "Paint" else [("", None)]
+        for lvn, lv in variants:
+            a3 = alb[..., :3]
+            rough = rdm[..., 0:1]
+            metal = rdm[..., 2:3]
+            if lv is not None:
+                pm = b["PM"][..., 0:1]
+                a3 = a3 * np.array(lv["_PaintColor"], dtype=np.float32)
+                rough = rough * (1 - pm) + lv["_PaintRoughness"] * pm
+                metal = lv["_PaintMetallic"] * pm
+            a3 = a3 * (1 - dm) + np.array(DUST, dtype=np.float32) * dm
+            rough = np.clip(rough + 0.35 * dm, 0, 1)
+            metal = metal * (1 - dm)
+            sfx = "_" + lvn if lvn else ""
+            sets["BaseMap" + sfx] = np.dstack([lin2srgb(a3), np.ones_like(rough)])
+            sets["MaskMap" + sfx] = np.dstack([metal, ao[..., 0:1], np.clip(rdm[..., 1:2], 0, 1), 1 - rough])
         for kind, arr in sets.items():
             cur = arr.astype(np.float32)
             for tier, div in TIERS.items():
@@ -1075,23 +1125,49 @@ def rel(p):
 
 
 # ---------------------------------------------------------------- 6. LODs, pivots, hierarchy
+SILHOUETTE_KEYS = ("_tyre", "_rim", "_disc")    # round parts: the silhouette shows every missing segment
+SILHOUETTE_W = 4.0
+
+
 def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5):
-    """Bisection on a global collapse ratio; small pieces are left alone, emissive/glass pieces keep >= 50%."""
+    """Area-weighted budget: each piece wants k * area^0.6 triangles (clamped to [floor, own count]); k is bisected
+    on the evaluated (collapsed) meshes until the total meets the target. A uniform global ratio (A6 wip) crushed
+    the dense grille / honeycomb pieces into black triangles at LOD2-3 while big smooth panels kept spare tris.
+    Emissive / glass pieces keep >= lights_min of their triangles."""
     dec = [o for o in pieces if tris_of(o) > floor_tris and not o.name.startswith(("decal_", "MIRROR_"))]
     fixed = sum(tris_of(o) for o in pieces if o not in dec)
     base = {o.name: tris_of(o) for o in dec}
+    area = {o.name: max(1e-6, sum(p.area for p in o.data.polygons)) for o in dec}
 
-    def ratio_for(o, r):
+    def ratio_for(o, k):
         sl = o.get("slots", [])
-        lo = lights_min if ("Lights" in sl or "Glass" in sl) else 0.02
-        return min(1.0, max(r, lo))
+        n = base[o.name]
+        lo = max(lights_min * n, floor_tris) if ("Lights" in sl or "Glass" in sl) else floor_tris
+        w = SILHOUETTE_W if any(t in o.name for t in SILHOUETTE_KEYS) else 1.0
+        want = max(lo, k * w * area[o.name] ** 0.6)
+        return min(1.0, want / n)
     for o in dec:
         md = o.modifiers.new("lod", "DECIMATE")
         md.decimate_type = "COLLAPSE"
         md.use_collapse_triangulate = True
-    lo_r, hi_r = 0.01, 1.0
-    for _ in range(9):
-        r = (lo_r + hi_r) / 2
+        # keep slot borders (paint | dark trim | lamp): collapse ignores material seams and pulled black trim
+        # triangles across the body colour at LOD2 (lower fairing corners). Weight 0 = never collapsed.
+        if len(o.data.materials) > 1:
+            me = o.data
+            fm = {}
+            for p in me.polygons:
+                for vi in p.vertices:
+                    fm.setdefault(vi, set()).add(p.material_index)
+            border = {vi for vi, ms in fm.items() if len(ms) > 1}
+            if border:
+                vg = o.vertex_groups.new(name="lod_keep")
+                vg.add([v.index for v in me.vertices if v.index not in border], 1.0, "REPLACE")
+                vg.add(list(border), 0.0, "REPLACE")
+                md.vertex_group = "lod_keep"
+                md.vertex_group_factor = 1.0
+    lo_r, hi_r = 0.01, 1e5
+    for _ in range(18):
+        r = math.sqrt(lo_r * hi_r)
         for o in dec:
             o.modifiers["lod"].ratio = ratio_for(o, r)
         dg = bpy.context.evaluated_depsgraph_get()
@@ -1110,6 +1186,9 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5):
     apply_modifiers(dec)
     for o in dec:
         o.data.set_sharp_from_angle(angle=math.radians(42))
+        vg = o.vertex_groups.get("lod_keep")
+        if vg is not None:
+            o.vertex_groups.remove(vg)
     return lo_r
 
 
@@ -1306,8 +1385,8 @@ def export_lod(lod, master, mirrors, a, manifest, coll):
     raw = sum(tris_of(o) for o in pieces)
     ratio = 1.0
     if lod in TRI_TARGET:
-        ratio = decimate_pieces(pieces, TRI_TARGET[lod], floor_tris=40 if lod < 3 else 12,
-                                lights_min=0.5 if lod < 3 else 0.25)
+        ratio = decimate_pieces(pieces, TRI_TARGET[lod], floor_tris={1: 40, 2: 16, 3: 8}[lod],
+                                lights_min={1: 0.5, 2: 0.3, 3: 0.15}[lod])
     by_part = {}
     for o in master:
         by_part.setdefault(o["part"], []).append(o)
@@ -1331,10 +1410,16 @@ def export_lod(lod, master, mirrors, a, manifest, coll):
                 coll.objects.link(e)
                 e.matrix_world = Matrix.Translation(fr[f"STEER_F{sd}"][0])
                 objs[f"STEER_F{sd}"] = e
+    # FBX hierarchy is FLAT (every part a direct child of the root). Blender's FBX exporter with
+    # bake_space_transform writes wrong local transforms below the first level (verified by parsing the raw FBX:
+    # DOOR_L under CAB_Body landed with Y/Z swapped and X mirrored); one level is exact (same as the interior).
+    # The rig hierarchy (DOOR_L under CAB_Body, WHEEL_FL under STEER_FL, ...) is in the manifest ("rig_parent",
+    # "rig_local_position_unity") and is rebuilt by the A7 prefab generator.
+    rig_parent = {}
     for part, ob in objs.items():
-        par = objs.get(PARENT.get(part, ""), root)
+        rig_parent[part] = objs.get(PARENT.get(part, ""), root)
         mw = ob.matrix_world.copy()
-        ob.parent = par
+        ob.parent = root
         ob.matrix_parent_inverse = Matrix.Identity(4)
         ob.matrix_world = mw
     socks = sockets(master)
@@ -1343,10 +1428,9 @@ def export_lod(lod, master, mirrors, a, manifest, coll):
         e = bpy.data.objects.new(nm if lod == 0 else nm + sfx, None)
         coll.objects.link(e)
         e.empty_display_size = 0.08
-        par = objs.get(parent, root)
-        e.parent = par
+        e.parent = root
         e.matrix_world = Matrix.Translation(p)
-        empties[nm] = (e, parent, p)
+        empties[nm] = (e, objs.get(parent, root), p)
     cols = {}
     if lod == 0:
         cols = collision(master, coll)
@@ -1357,13 +1441,13 @@ def export_lod(lod, master, mirrors, a, manifest, coll):
             ob.matrix_world = Matrix.Translation(ROOT_A2)
     # ---- manifest entry
     info = {"file": None, "root": root.name, "objects": {}, "empties": {}, "collision": {}, "tris_total": 0,
-            "tris_before_decimation": raw, "decimate_ratio": round(ratio, 4)}
+            "tris_before_decimation": raw, "decimate_area_budget_k": round(ratio, 2)}
     for part, ob in objs.items():
-        par = ob.parent
-        e = {"role": part, "parent": par.name, "tris": tris_of(ob),
+        par = rig_parent[part]
+        e = {"role": part, "rig_parent": par.name, "fbx_parent": root.name, "tris": tris_of(ob),
              "materials": [m.name for m in ob.data.materials] if ob.type == "MESH" else [],
              "pivot_unity_vehicle": a2u_point(ob.matrix_world.translation),
-             "local_position_unity": a2u(par.matrix_world.inverted() @ ob.matrix_world.translation)}
+             "rig_local_position_unity": a2u(par.matrix_world.inverted() @ ob.matrix_world.translation)}
         R = ob.matrix_world.to_3x3()
         if R != Matrix.Identity(3):
             e["axes_unity_vehicle"] = {"X": a2u(R.col[0]), "Y": a2u(R.col[2]), "Z": a2u(R.col[1])}
@@ -1382,8 +1466,9 @@ def export_lod(lod, master, mirrors, a, manifest, coll):
         info["objects"][ob.name] = e
         info["tris_total"] += e["tris"]
     for nm, (eo, parent, p) in empties.items():
-        info["empties"][eo.name] = {"parent": eo.parent.name, "position_unity_vehicle": a2u_point(p),
-                                    "local_position_unity": a2u(eo.parent.matrix_world.inverted() @ p)}
+        info["empties"][eo.name] = {"rig_parent": parent.name, "fbx_parent": root.name,
+                                    "position_unity_vehicle": a2u_point(p),
+                                    "rig_local_position_unity": a2u(parent.matrix_world.inverted() @ p)}
     for nm, ob in cols.items():
         info["collision"][nm] = {"tris": tris_of(ob), "verts": len(ob.data.vertices), "convex": True,
                                  "parent": root.name}
@@ -1400,11 +1485,25 @@ def export_lod(lod, master, mirrors, a, manifest, coll):
     info["file_bytes"] = os.path.getsize(fbx)
     info["build_s"] = round(time.time() - t0, 1)
     manifest["lods"][f"LOD{lod}"] = info
-    print(f"LOD{lod}: {info['tris_total']} tris (raw {raw}, ratio {ratio:.3f}), {len(objs)} objects -> {fbx}")
+    print(f"LOD{lod}: {info['tris_total']} tris (raw {raw}, k {ratio:.1f}), {len(objs)} objects -> {fbx}")
     return root, objs
 
 
 # ---------------------------------------------------------------- 7. glass interface
+GLASS_T = 0.006      # laminated windscreen thickness (inner face = outer surface - 6 mm along the true normal)
+
+
+def surf_normal(z, x, h=0.01):
+    """True outward normal of the windscreen surface (the loft 'off' is horizontal, so normal_front ignores the
+    rake): cross product of the surface tangents along the parameter x and along z."""
+    px0, px1 = V(B.CAB.front_pt(z, x - h, 0.0)), V(B.CAB.front_pt(z, x + h, 0.0))
+    pz0, pz1 = V(B.CAB.front_pt(z - h, x, 0.0)), V(B.CAB.front_pt(z + h, x, 0.0))
+    n = (px1 - px0).cross(pz1 - pz0).normalized()
+    if n.dot(V(B.CAB.normal_front(z, x))) < 0:
+        n = -n
+    return n
+
+
 def glass_interface(master, path):
     ws = [o for o in master if o.name == "windscreen"][0]
     me = ws.data
@@ -1419,9 +1518,27 @@ def glass_interface(master, path):
             hx = xb + (xt - xb) * zi / 4
             x = -hx + 2 * hx * xi / 6
             p = V(B.CAB.front_pt(z, x, 0.004))
-            n = B.CAB.normal_front(z, x)
+            n = surf_normal(z, x)
             row.append({"a2": [round(c, 4) for c in p], "unity_cab": a2u(p - CAB_MOUNT), "normal_unity": a2u(n)})
         grid.append(row)
+    # dense inner-face grid for the interior generator (A2 frame): 13 rows (bottom glass edge -> top glass edge) x
+    # 49 columns along the surface parameter (wraps round the corner arcs like the exterior quad_patch)
+    e0 = 0.012
+    inner = []
+    opening_x = []        # physical |x| of the visible opening edge (shell cut) per row of the inner grid
+    for zi in range(13):
+        zt = zi / 12
+        z = (B.WS_Z0 - e0) + (B.WS_Z1 - B.WS_Z0 + 2 * e0) * zt
+        hx = (xb + e0) + (xt - xb) * zt
+        row = []
+        for xi in range(49):
+            x = -hx + 2 * hx * xi / 48
+            p = V(B.CAB.front_pt(z, x, 0.004))
+            n = surf_normal(z, x)
+            q = p - n * GLASS_T
+            row.append([round(q.x, 4), round(q.y, 4), round(q.z, 4)])
+        inner.append(row)
+        opening_x.append(round(abs(B.CAB.front_pt(z, hx - e0, 0.0)[0]), 4))
 
     def corner(x, z, off=0.004):
         p = V(B.CAB.front_pt(z, x, off))
@@ -1445,8 +1562,9 @@ def glass_interface(master, path):
         "frames": {"a2": "Blender/A2: Z up, +Y forward, origin = ground under the front axle, driver = -X",
                    "unity_cab": "Unity axes (x, z, y) relative to CAB_MOUNT_REF (= interior origin, CabPivot)",
                    "cab_mount_ref_a2": list(CAB_MOUNT)},
-        "glass_model": "single surface (thin-sheet shader), 4 mm outside the shell skin; the laminated pane is "
-                       "~6 mm thick: inner face = outer surface - 6 mm along the normal",
+        "glass_model": "single surface (thin-sheet shader), 4 mm (horizontal) outside the shell skin; the laminated "
+                       "pane is ~6 mm thick: inner face = outer surface - 6 mm along the true normal (normal_unity, "
+                       "includes the rake)",
         "windscreen": {
             "object": "GLASS_Windscreen_LOD0 (child of CAB_Body_LOD0)",
             "rake_deg_from_vertical": B.RAKE,
@@ -1456,24 +1574,42 @@ def glass_interface(master, path):
             "outline_corners_glass_edge": {k: corner(x, z) for k, (x, z) in {
                 "bottom_left": (-xb - e, B.WS_Z0 - e), "bottom_right": (xb + e, B.WS_Z0 - e),
                 "top_right": (xt + e, B.WS_Z1 + e), "top_left": (-xt - e, B.WS_Z1 + e)}.items()},
-            "frit_on_exterior_glass_m": {"bottom": 0.035 + e, "top": 0.10 + e, "sides": 0.028 + e,
-                                         "note": "black ceramic band printed on the exterior glass (frit_* geometry, "
-                                                 "Trim slot) - the interior must not add a second frit band"},
+            "frit_on_exterior_glass_m": {"bottom": B.FRIT_BOTTOM + e, "top": B.FRIT_TOP + e, "sides": B.FRIT_SIDE + e,
+                                         "inside_visible_opening_m": {"bottom": B.FRIT_BOTTOM, "top": B.FRIT_TOP,
+                                                                      "sides": B.FRIT_SIDE},
+                                         "note": "black ceramic band (frit_* geometry, Trim slot) on the OUTER side, "
+                                                 "single-sided (faces out). The interior prints the same band on the "
+                                                 "inner face (faces the cab) with these widths, so both sides see "
+                                                 "one consistent print and no light leak at the dash top"},
             "daylight_opening_corners": {k: corner(x, z) for k, (x, z) in {
                 "bottom_left": (-xb + 0.028, B.WS_Z0 + 0.035), "bottom_right": (xb - 0.028, B.WS_Z0 + 0.035),
                 "top_right": (xt - 0.028, B.WS_Z1 - 0.10), "top_left": (-xt + 0.028, B.WS_Z1 - 0.10)}.items()},
             "surface_grid_outer_5x7": grid,
+            "inner_face_grid_a2_13x49": {"rows": "z from glass bottom edge to top edge (uniform)",
+                                         "columns": "surface parameter from left (-X) to right (+X), wrapping the "
+                                                    "corner arcs", "thickness_m": GLASS_T, "points": inner,
+                                         "opening_edge_abs_x_per_row": opening_x},
             "bbox_a2": [[round(c, 4) for c in lo], [round(c, 4) for c in hi]],
         },
         "side_glass": sides,
-        "interior_changes_needed": [
-            "drop CAB_Glass from the interior FBX (or hide it at runtime when the exterior is present): the exterior "
-            "windscreen/door glass is the only glass",
-            "windscreen inner trim (A-pillar trims, header, dash top edge, interior frit band) must end on the inner "
-            "glass face = surface_grid_outer_5x7 points - 6 mm along normal_unity; glass top edge is 2.972 m (A2 z), "
-            "not 3.02 m",
-            "remove the interior frit band (ws_frit*) or move it to the exterior glass inner face; exterior frit "
-            "widths are listed above",
+        "shell_sections": {
+            "note": "cab shell outer surface in plan, per height (A2): front y, back y, half width, front / back plan "
+                    "corner radius (rounded-rectangle section, roof rounding included). The skin is wall_m thick "
+                    "inwards. The interior must stay inside (outer - wall_m) and behind the glass inner face; "
+                    "tools/blender/truck/check_fit.py tests it on the exported FBX files.",
+            "wall_m": 0.03,
+            "z_yf_yb_w_rf_rb": [[round(z, 4)] + [round(v, 4) for v in B.CAB.sec(z)]
+                                for z in [B.CAB_Z0 + 0.025 * i for i in range(int((G.ROOF_Z - B.CAB_Z0) / 0.025) + 1)]],
+        },
+        "interior_contract": [
+            "with the exterior present disable the interior CAB_Glass_Windows (placeholder windscreen + door glass) "
+            "and CAB_ShellPlaceholder: the exterior GLASS_* objects are the only glazing (CAB_Glass = cluster cover "
+            "glass stays)",
+            "windscreen inner trim (A-pillar trims, header, dash top edge) must end on the inner glass face = "
+            "inner_face_grid_a2_13x49 (= outer surface - 6 mm along the true normal); visible opening z 2.06-2.96 m "
+            "(A2), glass edge 2.048-2.972 m",
+            "interior frit band (ws_frit*): same widths as frit_on_exterior_glass_m.inside_visible_opening_m, on "
+            "the inner face (inner_face_grid_a2_13x49 - 1.5 mm), facing the cab",
             "door glass: interior door card window opening = side_glass outline minus the 35 mm black frame",
         ],
     }
@@ -1619,6 +1755,8 @@ def preview_materials(tex, livery, dirt=0.5, drl=1.0):
         nt.links.new(mixd.outputs[2], b.inputs["Base Color"])
         rr = M.math_node(nt, "ADD", rough, M.math_node(nt, "MULTIPLY", dmask, 0.35), clamp=True)
         nt.links.new(rr, b.inputs["Roughness"])
+        # dust / road film is dielectric: it covers the metal (brake dust on the rims reads grey, not dark chrome)
+        metal = M.math_node(nt, "MULTIPLY", metal, M.math_node(nt, "SUBTRACT", 1.0, dmask, clamp=True))
         nt.links.new(metal, b.inputs["Metallic"])
         if slot == "Lights":
             dv = nt.nodes.new("ShaderNodeUVMap")
@@ -1707,6 +1845,15 @@ def qa_renders(a, tex, lod_roots, manifest):
     render("zbl_reflektor_white_lod0.jpg", "TRAKT A6 eksport | LOD0 | zbliżenie: wypalone szczeliny i lampy")
     cam("zbl_stopnie", (1600, 900))
     render("zbl_drzwi_white_lod0.jpg", "TRAKT A6 eksport | LOD0 | drzwi wycięte z kabiny, stopnie")
+    for view, label in (("bok", "bok lewy: film drogowy, zacieki"), ("34tyl", "3/4 tył: natrysk z kół na ścianie"),
+                        ("zbl_kolo", "koła tylne: felga satynowa, pył hamulcowy"),
+                        ("zbl_tyl", "siodło: smar, przewody")):
+        cam(view, (1600, 900))
+        render(f"{view}_white_lod0.jpg", f"TRAKT A6 eksport | LOD0 | {label} | pochmurno")
+    S.lighting("urp")
+    cam("34przod", (1600, 900))
+    render("34przod_white_lod0_urp.jpg", "TRAKT A6 eksport | LOD0 | biel | jak URP (emulacja w Cycles, nie URP)")
+    S.lighting("overcast")
     for lod in sorted(lod_roots):
         show_only(lod)
         cam("34przod", (960, 540))
@@ -1715,6 +1862,17 @@ def qa_renders(a, tex, lod_roots, manifest):
     # pivot debug: doors open, front wheels steered, wipers up, mudflaps swung, axis gizmos
     show_only(0)
     objs = {o.name: o for o in lod_roots[0].children_recursive}
+    # rebuild the rig hierarchy (the FBX is flat) so a door carries its glass, the cab its wipers, ...
+    flat_parent = {}
+    for nm, inf in manifest["lods"]["LOD0"]["objects"].items():
+        o, rp = objs.get(nm), objs.get(inf.get("rig_parent", ""))
+        if o is not None and rp is not None:
+            mw = o.matrix_world.copy()
+            flat_parent[nm] = o.parent
+            o.parent = rp
+            o.matrix_parent_inverse = Matrix.Identity(4)
+            o.matrix_world = mw
+    bpy.context.view_layer.update()
     gizmos = []
     for nm, o in objs.items():
         part = nm.replace("_LOD0", "")
@@ -1743,6 +1901,13 @@ def qa_renders(a, tex, lod_roots, manifest):
     render("pivoty_gora.jpg", "A6 piwoty z góry (ortho): skręt kół wokół osi zwrotnicy, zawiasy drzwi")
     for nm, mb in saved.items():
         bpy.data.objects[nm].matrix_basis = mb
+    bpy.context.view_layer.update()
+    for nm, fp in flat_parent.items():
+        o = objs[nm]
+        mw = o.matrix_world.copy()
+        o.parent = fp
+        o.matrix_parent_inverse = Matrix.Identity(4)
+        o.matrix_world = mw
     for g in gizmos:
         bpy.data.objects.remove(g)
     return out
@@ -1826,12 +1991,21 @@ def contract(tex, td):
         "albedo": "C.rgb; Paint: C.rgb * _PaintColor; then lerp(albedo, _DirtColor, saturate(M.g * _Dirt)); Paint: "
                   "lerp(albedo, _DecalColor, Decal.a)",
         "roughness": "C.a; Paint: lerp(C.a, _PaintRoughness, M.b); + 0.35 * M.g * _Dirt",
-        "metallic": "M.b (Trim/Metal/Lights); Paint: _PaintMetallic * M.b, decal -> _DecalMetallic",
+        "metallic": "M.b (Trim/Metal/Lights); Paint: _PaintMetallic * M.b, decal -> _DecalMetallic; then "
+                    "* (1 - saturate(M.g * _Dirt)) (dust is dielectric)",
         "occlusion": "M.r (URP: indirect/ambient only)",
         "clear_coat": "Paint: _ClearCoat * M.b (URP Complex Lit clear coat, optional on Medium/Low)",
         "emission": "Lights: _LightState[uv2.x] (RGB x intensity, 16x1 texture or array written by the light "
                     "controller) * uv2.y; tail/brake share TAIL_BRAKE (tail ~0.25, brake 1.0)",
         "_Dirt": "0 = washed, 0.5 = look of the A4 renders, 1 = very dirty",
+        "urp_lit_fallback": {"note": "stock URP Lit (no custom shader): _BaseMap = T_Ext_<Slot>_BaseMap[_<livery>] "
+                                     "(albedo with _Dirt = %.2f baked in, Paint per livery), _MetallicGlossMap AND "
+                                     "_OcclusionMap = T_Ext_<Slot>_MaskMap[_<livery>] (R metallic, G AO, B dirt, A "
+                                     "smoothness; Source = Metallic Alpha), _BumpMap = T_Ext_<Slot>_N. Loses: dirt "
+                                     "slider, clear coat, TRAKT wordmark decal (uv1) and light states (emission)."
+                                     % URP_LIT_DIRT,
+                             "glass": "URP Lit Transparent, base colour = vertex colour tint not supported -> use "
+                                      "(0.80, 0.86, 0.84, 0.22), smoothness 0.95"},
         "_DirtColor": list(DUST),
         "light_groups": {i: g for i, g in enumerate(LIGHT_GROUPS)},
         "light_colours_linear": LIGHT_COLOUR,
@@ -1850,7 +2024,8 @@ def main():
     p.add_argument("--ao-samples", type=int, default=256)
     p.add_argument("--samples", type=int, default=128)
     p.add_argument("--cage", type=float, default=0.02)
-    p.add_argument("--lods", default="0,1,2,3")
+    p.add_argument("--lods", default="0,1,2")   # LOD3 (traffic, ~5k) is a draft: wheels/fenders break at that
+                                                 # budget - opt in with --lods 0,1,2,3 once it is reworked
     p.add_argument("--blend", default="")
     a = p.parse_args(argv)
     a.out = os.path.abspath(a.out)            # Blender resolves relative output paths against the drive root
@@ -1877,6 +2052,7 @@ def main():
             continue
         h = copy_object(o, "HI_" + o.name, hcoll)
         h["part"] = o["part"]
+        h["bake_only"] = bool(bake_only(o))
         high.append(h)
     # game pieces
     gcoll = new_collection("GAME")
@@ -1980,13 +2156,15 @@ def meta(tex, td, removed, tested, tri_pieces, gi):
         "cab_body": {"pivot": "CAB_MOUNT_REF = interior origin (CabPivot)", "unity_vehicle": a2u_point(CAB_MOUNT),
                      "note": "parent CAB_Body_LODn and CabInterior_LODn under the same cab-suspension transform with "
                              "localPosition 0: the interior then sits exactly in the exterior"},
-        "rig_note": "Use the LOD0 hierarchy as the rig (transforms). For LOD1-3 parent each part mesh under the LOD0 "
-                    "transform of the same role (CAB_Body, DOOR_L, WHEEL_FL, ...) and put the renderers in a "
-                    "LODGroup. LOD3 merges doors, wipers, door glass and mudflaps into CAB_Body / GLASS_Windscreen / "
+        "rig_note": "The FBX hierarchy is flat (all parts and sockets are direct children of the root; Blender's FBX "
+                    "exporter mis-writes deeper levels with bake_space_transform). Rebuild the rig from "
+                    "lods.LOD0.objects[*].rig_parent (keep world pose): CAB_Body carries doors, wipers, windscreen, "
+                    "mirrors; DOOR_x carries GLASS_Doorx; STEER_Fx carries WHEEL_Fx. For LOD1-3 parent each part mesh "
+                    "under the LOD0 transform of the same role and put the renderers in a LODGroup. LOD3 merges doors, wipers, door glass and mudflaps into CAB_Body / GLASS_Windscreen / "
                     "CHASSIS and has no MIRROR_* quads (LOD2 neither).",
-        "lod_targets": {"LOD0": "<= ~100k", "LOD1": "40-45k", "LOD2": "14-15k", "LOD3": "~3k (traffic / impostor "
-                                                                                    "distance)"},
-        "lod_screen_size_suggestion": {"LOD0": 0.45, "LOD1": 0.18, "LOD2": 0.07, "LOD3": 0.015, "cull": 0.004},
+        "lod_targets": {"LOD0": "<= ~100k", "LOD1": "40-45k", "LOD2": "14-15k",
+                        "LOD3": "draft, not exported by default (~5k traffic LOD; wheels break at that budget)"},
+        "lod_screen_size_suggestion": {"LOD0": 0.45, "LOD1": 0.18, "LOD2": 0.07, "cull": 0.006},
         "hidden_faces": {"removed": removed, "tested": tested, "tris_before_cleanup": tri_pieces,
                          "method": "ray visibility from ~400 exterior points (3 rings x 24 azimuths, 0.3-8 m high, top"
                                    " views) + in-cab eye points; moving parts (doors, wheels, steering, wipers, "

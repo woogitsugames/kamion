@@ -22,6 +22,10 @@ from geom import (CAB_BACK_Y, CAB_HALF_W, ROOF_Z, WHEEL_Z, EYE, Loft, V, box, bo
 RAKE = 19.0
 TAN = math.tan(math.radians(RAKE))
 WS_Z0, WS_Z1 = 2.06, 2.96            # visible glass bottom/top
+# black ceramic frit inside the visible opening (A6: bottom 35 -> 75 mm, real screens 60-120 mm; hides the cowl, the
+# wiper spindles and the dash top edge from outside and from the seat - REVIEW r2 §2 #2). Published in
+# glass_interface.json; the interior prints the same band on the inner face.
+FRIT_BOTTOM, FRIT_TOP, FRIT_SIDE = 0.075, 0.10, 0.028
 WS_Y0 = 1.405                        # windscreen outer surface at z = 2.04
 CAB_Z0 = 1.225                       # cab shell lower edge = tilt line
 FAIR_TOP = 1.21                      # frame-mounted lower fairing top
@@ -160,10 +164,10 @@ def glazing():
     CAB.quad_patch("windscreen", "glass", "front", [(-xb - e, WS_Z0 - e), (xb + e, WS_Z0 - e), (xt + e, WS_Z1 + e),
                                                      (-xt - e, WS_Z1 + e)], off=0.004, nu=36, nv=6)
     # black ceramic frit border (bonded flush glazing) just under the glass surface
-    f = 0.028
-    CAB.quad_patch("frit_bottom", "frit", "front", [(-xb - e, WS_Z0 - e), (xb + e, WS_Z0 - e), (xb, WS_Z0 + 0.035),
-                                                     (-xb, WS_Z0 + 0.035)], off=0.0055, nu=48, nv=1)
-    CAB.quad_patch("frit_top", "frit", "front", [(-xt, WS_Z1 - 0.10), (xt, WS_Z1 - 0.10), (xt + e, WS_Z1 + e),
+    f = FRIT_SIDE
+    CAB.quad_patch("frit_bottom", "frit", "front", [(-xb - e, WS_Z0 - e), (xb + e, WS_Z0 - e), (xb, WS_Z0 + FRIT_BOTTOM),
+                                                     (-xb, WS_Z0 + FRIT_BOTTOM)], off=0.0055, nu=48, nv=1)
+    CAB.quad_patch("frit_top", "frit", "front", [(-xt, WS_Z1 - FRIT_TOP), (xt, WS_Z1 - FRIT_TOP), (xt + e, WS_Z1 + e),
                                                   (-xt - e, WS_Z1 + e)], off=0.0055, nu=48, nv=2)
     for s in (-1, 1):
         a0, a1 = s * (xb + e), s * (xb - f)
