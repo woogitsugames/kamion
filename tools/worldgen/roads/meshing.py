@@ -227,18 +227,31 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
         Lb, Rb = outer["L"][0], outer["R"][0]
         V = np.concatenate([Rb[:, None, :], Lb[:, None, :]], axis=1).reshape(-1, 3)
         buf.add("bridge", "bridge_concrete", V, V[:, :2], grid_tris(len(ss), 2, flip=True), src=c.id + ":soffit")
-        # parapets (balustrade as a solid low-poly band 0.25 m thick, 1.10 m high) on both cap edges
+        # balustrade on both cap edges (WORKING_VALUE geometry, low confidence): open steel railing =
+        # handrail band at 1.0-1.1 m + mid rail at 0.45-0.60 m + posts every 2 m, set 0.15 m in from the edge
+        tt, nn = c.line.frame(ss)
         for side, sgn in (("L", 1.0), ("R", -1.0)):
-            top = outer[side][1]
-            _, nn = c.line.frame(ss)
-            inner = top.copy()
-            inner[:, :2] -= nn * sgn * 0.25
-            hi_o = top.copy(); hi_o[:, 2] += S.BRIDGE_PARAPET_H
-            hi_i = inner.copy(); hi_i[:, 2] += S.BRIDGE_PARAPET_H
-            for a, b in ((inner, hi_i), (hi_i, hi_o), (hi_o, top)):
-                V = np.concatenate([a[:, None, :], b[:, None, :]], axis=1).reshape(-1, 3)
-                buf.add("bridge", "barrier_steel", V, V[:, :2], grid_tris(len(ss), 2, flip=(side == "L")),
-                        src=c.id + ":parapet")
+            top = outer[side][1].copy()
+            top[:, :2] -= nn * sgn * 0.15
+            for z0, z1, th in ((S.BRIDGE_PARAPET_H - 0.10, S.BRIDGE_PARAPET_H, 0.06), (0.45, 0.60, 0.04)):
+                o = top.copy()
+                i = top.copy()
+                i[:, :2] -= nn * sgn * th
+                for a, b in (((i, z0), (i, z1)), ((i, z1), (o, z1)), ((o, z1), (o, z0)), ((o, z0), (i, z0))):
+                    A, B = a[0].copy(), b[0].copy()
+                    A[:, 2] += a[1]
+                    B[:, 2] += b[1]
+                    V = np.concatenate([A[:, None, :], B[:, None, :]], axis=1).reshape(-1, 3)
+                    buf.add("bridge", "barrier_steel", V, V[:, :2], grid_tris(len(ss), 2, flip=(side == "L")),
+                            src=c.id + ":parapet")
+            run_len = float(ss[-1] - ss[0])
+            for k in range(int(run_len // 2.0) + 1):
+                s_p = float(ss[0]) + 2.0 * k
+                pi = np.interp(s_p, ss, np.arange(len(ss)))
+                p3 = np.array([np.interp(pi, np.arange(len(ss)), top[:, d]) for d in range(3)])
+                t2 = c.line.frame(s_p)[0]
+                box(buf, "bridge", "barrier_steel", p3[:2] - c.line.frame(s_p)[1] * sgn * 0.03, t2, 0.04, 0.03,
+                    p3[2], p3[2] + S.BRIDGE_PARAPET_H, c.id + ":parapet")
 
 
 def box(buf, layer, mat, center_xy, along, half_l, half_w, z0, z1, src):

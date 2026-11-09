@@ -373,8 +373,16 @@ def patch_boundary(j: Junction):
         tk = t if nose_at_trim else c.tau_k
         tk1 = tb if nose_at_trim else c.tau_k1
         if c.kind == "straight" and nose_at_trim and \
-                float(np.hypot(*(a.gutter(t, +1) - B.gutter(tb, -1)))) > 15.0:
-            tk, tk1 = 0.0, 0.0          # long direct join would cut across: go round via the nodes
+                float(np.hypot(*(a.gutter(t, +1) - B.gutter(tb, -1)))) > 6.0:
+            # trims differ a lot: keep the shorter arm's end corner and walk down the longer arm's gutter
+            # to the point nearest to it (a taper), instead of a long diagonal across the patch
+            dd = np.linspace(0.0, max(t, tb), 60)
+            if t <= tb:
+                g = B.gutter(dd, -1)
+                tk1 = float(min(dd[int(np.argmin(np.hypot(*(g - a.gutter(t, +1)).T)))], tb))
+            else:
+                g = a.gutter(dd, +1)
+                tk = float(min(dd[int(np.argmin(np.hypot(*(g - B.gutter(tb, -1)).T)))], t))
         for d in _desc(t, tk):
             out.append((a.gutter(d, +1), ("gutter", i, d, +1)))
         if c.kind == "fillet":
