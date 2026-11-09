@@ -68,6 +68,9 @@ namespace Game.Vehicle.Runtime
             ActiveTier = tier;
             var set = residentSet != null && residentSet.name.EndsWith(tier, StringComparison.Ordinal) ? residentSet
                 : Resources.Load<TruckMaterialSet>(ResourcesPrefix + tier);
+            // Default APK ships no High set (build audit 2026-11-09): fall back to the next lower tier before the resident one.
+            if (set == null && level > 0)
+                for (int l = level - 1; l >= 0 && set == null; l--) set = Resources.Load<TruckMaterialSet>(ResourcesPrefix + TierNames[l]);
             if (set == null) set = residentSet;
             if (set != null)
                 foreach (var rs in slots)

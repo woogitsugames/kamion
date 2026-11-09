@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
@@ -83,9 +84,20 @@ namespace Game.Editor.Build
             // restore it afterwards so building never dirties ProjectSettings.asset.
             int savedVersionCode = PlayerSettings.Android.bundleVersionCode;
             BuildReport report;
+            // Content tiers (APK audit 2026-11-09): the High truck material set (~35 MB of 2048 px ASTC) ships only with
+            // -worldHigh; the default APK carries Low + Medium and High quality falls back to Medium (TruckVisualRig).
+            ShaderVariantStripper.Enabled = !EditorTools.HasArg("-noShaderStrip");
+            bool movedHigh = !(EditorTools.HasArg("-worldHigh") || EditorTools.HasArg("-noLeanApk")) && HideHighTiers();
+            // Measurement only (never saved): -managedStripping Minimal|Low|Medium|High overrides the Android level.
+            var savedStripping = PlayerSettings.GetManagedStrippingLevel(NamedBuildTarget.Android);
+            string stripArg = EditorTools.Arg("-managedStripping", null);
+            if (stripArg != null && Enum.TryParse(stripArg, true, out ManagedStrippingLevel lvl))
+                PlayerSettings.SetManagedStrippingLevel(NamedBuildTarget.Android, lvl);
             try { report = BuildPipeline.BuildPlayer(options); }
             finally
             {
+                PlayerSettings.SetManagedStrippingLevel(NamedBuildTarget.Android, savedStripping);
+                if (movedHigh) RestoreHighTiers();
                 PlayerSettings.Android.bundleVersionCode = savedVersionCode;
                 AssetDatabase.SaveAssets();
             }
@@ -102,6 +114,44 @@ namespace Game.Editor.Build
                         Debug.Log($"BUILD_ERROR: {m.content}");
             }
             return ok ? 0 : 1;
+        }
+
+        // High material sets of the vehicles: loaded by tier with Resources.Load, so every tier's textures ship unless hidden.
+        static readonly string[] HighSets =
+        {
+            "Assets/_Generated/Truck/Resources/TRAKT/TruckMaterials_High.asset",
+            "Assets/_Generated/Trailer/Resources/TRAILER/TrailerMaterials_High.asset",
+        };
+        const string HiddenDir = "Assets/_Generated/ExcludedFromLowApk";
+
+        static string HiddenPath(string set) => HiddenDir + "/" + Path.GetFileName(set);
+
+        /// <summary>Moves the High vehicle material sets out of Resources for one build; undone by <see cref="RestoreHighTiers"/>.</summary>
+        static bool HideHighTiers()
+        {
+            RestoreHighTiers();   // leftovers of a crashed build
+            bool any = false;
+            foreach (var set in HighSets)
+            {
+                if (!File.Exists(Path.Combine(EditorTools.ProjectRoot, set))) continue;
+                if (!AssetDatabase.IsValidFolder(HiddenDir)) AssetDatabase.CreateFolder("Assets/_Generated", "ExcludedFromLowApk");
+                string err = AssetDatabase.MoveAsset(set, HiddenPath(set));
+                if (!string.IsNullOrEmpty(err)) Debug.LogWarning("[BUILD] cannot hide " + set + ": " + err);
+                else any = true;
+            }
+            if (any) Debug.Log("[BUILD] default APK: High truck + trailer material sets excluded (use -worldHigh to ship them)");
+            return any;
+        }
+
+        static void RestoreHighTiers()
+        {
+            foreach (var set in HighSets)
+            {
+                if (!File.Exists(Path.Combine(EditorTools.ProjectRoot, HiddenPath(set)))) continue;
+                string err = AssetDatabase.MoveAsset(HiddenPath(set), set);
+                if (!string.IsNullOrEmpty(err)) Debug.LogError("[BUILD] cannot restore " + set + ": " + err);
+            }
+            if (AssetDatabase.IsValidFolder(HiddenDir)) AssetDatabase.DeleteAsset(HiddenDir);
         }
 
         /// <summary>Packed size per asset type and for the generated world (build report) → log + JSON next to the APK.</summary>
@@ -134,6 +184,18 @@ namespace Game.Editor.Build
                            "  \"by_type\": {" + nl +
                            string.Join("," + nl, byType.OrderByDescending(k => k.Value).Select(k => $"    \"{k.Key}\": {k.Value}")) + nl + "  }" + nl + "}" + nl;
                 File.WriteAllText(Path.ChangeExtension(outputPath, ".content.json"), json);
+
+                // APK audit (docs/PERFORMANCE_BUDGETS.md): top 30 packed assets and shader variant counts.
+                var all = new System.Collections.Generic.List<(string path, string type, ulong size)>();
+                foreach (var pa in report.packedAssets)
+                foreach (var c in pa.contents)
+                    all.Add((c.sourceAssetPath ?? "(builtin)", c.type != null ? c.type.Name : "?", c.packedSize));
+                var sb = new System.Text.StringBuilder("BUILD_TOP30 (packed MB, type, asset):" + nl);
+                foreach (var a in all.OrderByDescending(x => x.size).Take(30))
+                    sb.Append($"  {a.size / 1048576.0:F2}\t{a.type}\t{a.path}{nl}");
+                Debug.Log(sb.ToString());
+                Debug.Log("BUILD_SHADER_VARIANTS: " + ShaderVariantCounter.Summary());
+                File.WriteAllText(Path.ChangeExtension(outputPath, ".top.txt"), sb + "SHADER_VARIANTS " + ShaderVariantCounter.Summary() + nl);
             }
             catch (Exception e) { Debug.LogWarning("[BUILD] content report failed: " + e.Message); }
         }
