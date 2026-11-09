@@ -1,0 +1,439 @@
+"""Junction clusters, curb-return fillets, arm trims and junction patch boundaries.
+
+A junction = one or more graph nodes of degree >= 3 merged when the chain between them is shorter than
+the space both corners need. Arms = chains leaving the cluster, oriented outward. Between every pair of
+angularly adjacent arms there is a corner:
+  * fillet  – kerb return of radius R tangent to both gutter lines (centre = intersection of the gutter
+              lines offset outward by R);
+  * nose    – arms almost parallel (median / splitter island): semicircle between the gutters;
+  * straight– arms almost opposite (continuation / ring): gutter lines joined at their intersection.
+Each arm's ribbon is trimmed at the largest tangent station of its two corners; the patch polygon is
+end sections + gutter pieces + arcs, CCW.
+"""
+
+from __future__ import annotations
+
+import math
+from dataclasses import dataclass, field
+
+import numpy as np
+
+from . import standards as S
+from .geom import cumlen, polyline_intersections, polygon_area
+
+LOOK = 70.0     # m of arm used for corner construction
+STEP = 0.5
+
+
+@dataclass
+class Arm:
+    chain: object
+    end: str            # 'a' (outward = +s) or 'b' (outward = -s)
+    node: str
+
+    @property
+    def key(self):
+        return (self.chain.id, self.end)
+
+    @property
+    def L(self):
+        return self.chain.length
+
+    def s(self, d):
+        d = np.asarray(d, float)
+        return d if self.end == "a" else self.chain.length - d
+
+    def lat_sign(self):
+        return 1.0 if self.end == "a" else -1.0
+
+    def gutter(self, d, side, extra=0.0):
+        """Point on the arm's gutter (side +1 = left of outward direction), optionally offset `extra`
+        further outward (away from the road)."""
+        d = np.asarray(d, float)
+        s = self.s(np.maximum(d, 0.0))
+        hw = self.chain.hw_at(s)
+        lat = side * (hw + extra) * self.lat_sign()
+        p = self.chain.line.offset_point(s, lat)
+        if np.any(d < 0):     # straight extrapolation behind the arm start (inside clusters)
+            back = self.direction(0.0) * np.minimum(d, 0.0)[..., None]
+            p = p + back
+        return p
+
+    def line(self, side, extra, dmax, dmin=0.0):
+        d = np.arange(dmin, dmax + 1e-9, STEP)
+        if d[-1] < dmax:
+            d = np.append(d, dmax)
+        return self.gutter(d, side, extra), d
+
+    def direction(self, d=0.0):
+        t, _ = self.chain.line.frame(self.s(d))
+        return t * self.lat_sign()
+
+    def cls(self, sections):
+        return self.chain.section(self.s(1.0), sections).cls
+
+    def is_ring(self):
+        return self.chain.roundabout
+
+    def inbound_dirn(self):
+        """+1 if traffic on this arm travels toward the junction, -1 away, 0 two-way."""
+        i = self.chain.idx(self.s(1.0))
+        dn = int(self.chain.dirn[i])
+        if dn == 0:
+            return 0
+        return -dn if self.end == "a" else dn
+
+
+@dataclass
+class Corner:
+    kind: str
+    k: int
+    k1: int
+    R: float = 0.0
+    center: np.ndarray | None = None
+    tau_k: float = 0.0       # tangent station on arm k (left gutter)
+    tau_k1: float = 0.0      # tangent station on arm k+1 (right gutter)
+    arc: np.ndarray | None = None   # points from arm k gutter to arm k+1 gutter (excluding gutter pieces)
+
+
+@dataclass
+class Junction:
+    id: str
+    nodes: list
+    arms: list = field(default_factory=list)
+    center: np.ndarray | None = None
+    corners: list = field(default_factory=list)
+    trims: dict = field(default_factory=dict)       # arm index -> trim station d
+    signalized: bool = False
+    roundabout: bool = False
+    give_way: bool = False
+    boundary: list = field(default_factory=list)    # [(xy, tag)] CCW
+    notes: list = field(default_factory=list)
+
+
+def _ang(v):
+    return math.atan2(v[1], v[0])
+
+
+def _wrap(a):
+    return (a + math.pi) % (2 * math.pi) - math.pi
+
+
+def chain_ends(net):
+    ends = {}
+    for c in net.chains:
+        if c.closed:
+            continue
+        ends.setdefault(c.node_a, []).append((c, "a"))
+        ends.setdefault(c.node_b, []).append((c, "b"))
+    return ends
+
+
+def corner_radius(net, arm_k, arm_k1, override=None):
+    if override is not None:
+        return float(override)
+    secs = net.sec_list
+    order = ["A", "S", "GP", "G", "Z", "L", "D"]
+    ck, ck1 = arm_k.cls(secs), arm_k1.cls(secs)
+    # kerb return governed by the lower class road (turning into it), WORKING_VALUE
+    lo = max(order.index(ck), order.index(ck1))
+    R = S.CURB_RADIUS[order[lo]]
+    if arm_k.is_ring() or arm_k1.is_ring():
+        R = min(R, 12.0)
+    return R
+
+
+def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
+    arms = j.arms
+    n = len(arms)
+    corners = []
+    tau = {i: [S.JUNCTION_MIN_TRIM, S.JUNCTION_MIN_TRIM] for i in range(n)}   # [right, left]
+    for k in range(n):
+        k1 = (k + 1) % n
+        A, B = arms[k], arms[k1]
+        if n == 1:
+            break
+        dA, dB = A.direction(min(4.0, A.L / 2)), B.direction(min(4.0, B.L / 2))
+        alpha = (_ang(dB) - _ang(dA)) % (2 * math.pi)
+        lookA, lookB = min(LOOK, A.L), min(LOOK, B.L)
+        mA, mB = max_trim[k] - 0.3, max_trim[k1] - 0.3
+        alpha_deg = math.degrees(alpha)
+        back = 25.0 if len(j.nodes) > 1 else 0.0
+
+        def hit(extra, look=LOOK):
+            la, da = A.line(+1, extra, min(look, A.L), -back)
+            lb, db = B.line(-1, extra, min(look, B.L), -back)
+            ok = None
+            for sa, sb, pt in polyline_intersections(la, lb):
+                ta = float(np.interp(sa, cumlen(la), da))
+                tb = float(np.interp(sb, cumlen(lb), db))
+                if ta <= mA and tb <= mB and (ok is None or ta + tb < ok[0] + ok[1]):
+                    ok = (ta, tb, pt)
+            return ok
+
+        c = None
+        if alpha_deg < S.NOSE_MAX_ANGLE_DEG:
+            h0 = hit(0.0, 160.0)
+            if h0 is not None:   # fork: gutters cross -> gore nose just after the carriageways separate
+                c = Corner("nose", k, k1, tau_k=min(h0[0] + 1.5, mA), tau_k1=min(h0[1] + 1.5, mB))
+                c.meta_fork = True
+            else:                # parallel (median): nose at the trims
+                c = Corner("nose", k, k1, tau_k=-1.0, tau_k1=-1.0)
+        elif alpha_deg <= S.STRAIGHT_MIN_ANGLE_DEG:
+            R = corner_radius(net, A, B, r_override)
+            while R >= 0.75:
+                ok = hit(R)
+                if ok is not None:
+                    ta, tb, C = ok
+                    Ta, Tb = A.gutter(ta, +1), B.gutter(tb, -1)
+                    a0, a1 = _ang(Ta - C), _ang(Tb - C)
+                    sweep = _wrap(a1 - a0)
+                    m = max(2, int(math.ceil(abs(sweep) * R / 1.0)))
+                    angs = a0 + sweep * np.linspace(0, 1, m + 1)
+                    arc = C + R * np.column_stack([np.cos(angs), np.sin(angs)])
+                    arc[0], arc[-1] = Ta, Tb
+                    c = Corner("fillet", k, k1, R=R, center=C, tau_k=ta, tau_k1=tb, arc=arc)
+                    break
+                R *= 0.7
+            if c is None:
+                j.notes.append(f"corner {k}-{k1}: no fillet fits (alpha {alpha_deg:.0f} deg) -> sharp")
+        if c is None:
+            best = hit(0.0)
+            if best is not None:
+                c = Corner("straight", k, k1, tau_k=best[0], tau_k1=best[1], arc=np.array([best[2]]))
+            else:   # gutters do not meet (width change / taper): join the two end-section corners directly
+                c = Corner("straight", k, k1, tau_k=-1.0, tau_k1=-1.0, arc=None)
+        corners.append(c)
+        tau[k][1] = max(tau[k][1], c.tau_k)
+        tau[k1][0] = max(tau[k1][0], c.tau_k1)
+    trims = {}
+    for i in range(n):
+        t = max(tau[i]) + 0.25
+        trims[i] = min(t, max_trim[i])
+    # median noses sit at the trims and bulge back toward the junction by r = gap / 2: push the
+    # trims out by r so the nose does not intrude into the crossing carriageway
+    for c in corners:
+        if c.kind == "nose" and c.tau_k < 0:
+            A, B = arms[c.k], arms[c.k1]
+            gap = float(np.hypot(*(A.gutter(trims[c.k], +1) - B.gutter(trims[c.k1], -1))))
+            need = gap / 2 + 0.5
+            trims[c.k] = min(trims[c.k] + need, max_trim[c.k])
+            trims[c.k1] = min(trims[c.k1] + need, max_trim[c.k1])
+    return corners, trims
+
+
+def build_junctions(net, ctx_points=None) -> list[Junction]:
+    ends = chain_ends(net)
+    jn = sorted(n for n, lst in ends.items() if len(lst) >= 3 or (len(lst) == 2 and net.nodes[n]["deg"] >= 3))
+    parent = {n: n for n in jn}
+
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def make(cluster_nodes):
+        nodes = sorted(cluster_nodes)
+        arms = []
+        nodeset = set(nodes)
+        for c in net.chains:
+            if c.closed:
+                continue
+            ina, inb = c.node_a in nodeset, c.node_b in nodeset
+            if ina and inb and not c.roundabout and c.length < 40.0 and len(nodes) > 1:
+                continue        # internal (absorbed) chain
+            if ina:
+                arms.append(Arm(c, "a", c.node_a))
+            if inb:
+                arms.append(Arm(c, "b", c.node_b))
+        ctr = np.mean([net.nodes[n]["xy"] for n in nodes], axis=0)
+        arms.sort(key=lambda a: (_ang(a.gutter(min(6.0, a.L * 0.5), 0) - ctr), a.key))
+        j = Junction(id="j:" + nodes[0], nodes=nodes, arms=arms, center=ctr)
+        return j
+
+    def max_trims(j, assume_half=True):
+        mt = {}
+        for i, a in enumerate(j.arms):
+            other = a.chain.node_b if a.end == "a" else a.chain.node_a
+            if other in parent and find(other) == find(j.nodes[0]) and other != a.node:
+                mt[i] = a.L * 0.5 - 0.25      # chain loops back into the same cluster
+            elif other in parent:
+                mt[i] = a.L * 0.5 - 0.25 if assume_half else a.L - 0.5
+            else:
+                mt[i] = a.L - 0.5
+        return mt
+
+    # iterative clustering
+    for _it in range(8):
+        groups = {}
+        for n in jn:
+            groups.setdefault(find(n), []).append(n)
+        trims = {}
+        for root in sorted(groups):
+            j = make(groups[root])
+            mt = {i: a.L - 0.5 for i, a in enumerate(j.arms)}
+            ovr = _radius_override(net, j)
+            _, tr = compute_corners(net, j, mt, ovr)
+            for i, a in enumerate(j.arms):
+                trims[a.key] = tr[i]
+        merged = False
+        for c in net.chains:
+            if c.closed or c.roundabout:
+                continue
+            if c.node_a in parent and c.node_b in parent and find(c.node_a) != find(c.node_b):
+                ta, tb = trims.get((c.id, "a"), 0), trims.get((c.id, "b"), 0)
+                if c.length < ta + tb + 1.0:
+                    ga = [n for n in jn if find(n) == find(c.node_a)]
+                    gb = [n for n in jn if find(n) == find(c.node_b)]
+                    pts = np.array([net.nodes[n]["xy"] for n in ga + gb])
+                    diam = float(np.max(np.hypot(*(pts[:, None, :] - pts[None, :, :]).transpose(2, 0, 1))))
+                    if diam <= 30.0:
+                        parent[find(c.node_a)] = find(c.node_b)
+                        merged = True
+        if not merged:
+            break
+
+    groups = {}
+    for n in jn:
+        groups.setdefault(find(n), []).append(n)
+    juncs = []
+    for root in sorted(groups):
+        j = make(groups[root])
+        juncs.append(j)
+    # final corners with shared-chain trim limits (two junctions on one chain split it)
+    key2j = {}
+    for j in juncs:
+        for i, a in enumerate(j.arms):
+            key2j[a.key] = (j, i)
+    for j in juncs:
+        mt = max_trims(j)
+        j.corners, j.trims = compute_corners(net, j, mt, _radius_override(net, j))
+        j.roundabout = any(a.is_ring() for a in j.arms)
+        j.signalized = any(net.nodes[n]["signals"] or net.nodes[n]["feature"] == "highway=traffic_signals"
+                           for n in j.nodes)
+        j.give_way = any(net.nodes[n]["feature"] in ("highway=give_way", "highway=stop") for n in j.nodes)
+        if ctx_points:
+            r = 25.0 + max((float(np.hypot(*(net.nodes[n]["xy"] - j.center))) for n in j.nodes), default=0)
+            for p in ctx_points:
+                if p["kind"] == "highway=traffic_signals" and math.hypot(p["e"] - j.center[0], p["n"] - j.center[1]) < r:
+                    j.signalized = True
+    for j in juncs:
+        for i, a in enumerate(j.arms):
+            if a.end == "a":
+                a.chain.t_a = max(a.chain.t_a, j.trims[i])
+            else:
+                a.chain.t_b = max(a.chain.t_b, j.trims[i])
+    # absorbed chains (internal to a cluster) are flagged so no ribbon is built for them
+    arm_keys = {a.key for j in juncs for a in j.arms}
+    for c in net.chains:
+        if not c.closed and (c.id, "a") not in arm_keys and (c.id, "b") not in arm_keys and \
+                c.node_a in parent and c.node_b in parent:
+            c.meta["absorbed"] = True
+    for j in juncs:
+        j.boundary = patch_boundary(j)
+    return juncs
+
+
+def _radius_override(net, j):
+    for n in j.nodes:
+        ov = net.nodes[n].get("override", {})
+        if "curb_radius" in ov:
+            return ov["curb_radius"]
+    return None
+
+
+def patch_boundary(j: Junction):
+    """CCW boundary of the junction patch as [(xy, tag)], tag describes how to evaluate height:
+       ("end", arm_i, side_frac)   point of arm end section (side_frac -1..1 right..left)
+       ("gutter", arm_i, d, side)  arm gutter at station d
+       ("arc", corner_i, frac)     fillet / nose / straight join
+    """
+    out = []
+    n = len(j.arms)
+    if n < 2:
+        return out
+    corner_by_k = {c.k: (ci, c) for ci, c in enumerate(j.corners)}
+    for i, a in enumerate(j.arms):
+        t = j.trims[i]
+        # end section right -> left (sample: gutter, lane points every <= 1.75 m, gutter)
+        out.append((a.gutter(t, -1), ("end", i, -1.0)))
+        hw = float(a.chain.hw_at(a.s(t)))
+        m = a.chain.m_lat          # must equal the ribbon's lateral sampling (shared seam vertices)
+        for q in np.linspace(-1, 1, m + 1)[1:-1]:
+            s = a.s(t)
+            p = a.chain.line.offset_point(s, q * hw * a.lat_sign())
+            out.append((p, ("end", i, float(q))))
+        out.append((a.gutter(t, +1), ("end", i, 1.0)))
+        ci, c = corner_by_k[i]
+        B = j.arms[(i + 1) % n]
+        tb = j.trims[(i + 1) % n]
+        # gutter of arm i (left) from trim inward to tau
+        nose_at_trim = c.kind in ("nose", "straight") and c.tau_k < 0
+        tk = t if nose_at_trim else c.tau_k
+        tk1 = tb if nose_at_trim else c.tau_k1
+        if c.kind == "straight" and nose_at_trim and \
+                float(np.hypot(*(a.gutter(t, +1) - B.gutter(tb, -1)))) > 15.0:
+            tk, tk1 = 0.0, 0.0          # long direct join would cut across: go round via the nodes
+        for d in _desc(t, tk):
+            out.append((a.gutter(d, +1), ("gutter", i, d, +1)))
+        if c.kind == "fillet":
+            for f, p in zip(np.linspace(0, 1, len(c.arc))[1:-1], c.arc[1:-1]):
+                out.append((p, ("arc", ci, float(f))))
+        elif c.kind == "nose":
+            if not nose_at_trim:
+                out.append((a.gutter(tk, +1), ("gutter", i, tk, +1)))
+            P, Q = a.gutter(tk, +1), B.gutter(tk1, -1)
+            r = float(np.hypot(*(Q - P))) / 2
+            if r > 0.3:
+                M = (P + Q) / 2
+                out_dir = a.direction(t) + B.direction(tb)
+                nrm = np.hypot(*out_dir)
+                out_dir = out_dir / nrm if nrm > 1e-6 else np.array([0.0, 0.0])
+                a0 = _ang(P - M)
+                a1 = _ang(Q - M)
+                sweep = _wrap(a1 - a0)
+                mid = a0 + sweep / 2
+                # the nose must bulge toward the junction (against out_dir)
+                if np.dot(np.array([math.cos(mid), math.sin(mid)]), out_dir) > 0:
+                    sweep = sweep - math.copysign(2 * math.pi, sweep)
+                mm = max(3, int(math.ceil(abs(sweep) * r / 0.6)))
+                angs = a0 + sweep * np.linspace(0, 1, mm + 1)
+                arc = M + r * np.column_stack([np.cos(angs), np.sin(angs)])
+                c.arc = arc
+                c.R = r
+                c.center = M
+                for f, p in zip(np.linspace(0, 1, mm + 1)[1:-1], arc[1:-1]):
+                    out.append((p, ("arc", ci, float(f))))
+        elif c.kind == "straight" and c.arc is not None and len(c.arc) == 1:
+            out.append((c.arc[0], ("arc", ci, 0.5)))
+        for d in _asc(tk1, tb):
+            out.append((B.gutter(d, -1), ("gutter", (i + 1) % n, d, -1)))
+    # remove consecutive duplicates
+    clean = []
+    for p, tag in out:
+        if clean and np.hypot(*(p - clean[-1][0])) < 0.02:
+            continue
+        clean.append((np.asarray(p, float), tag))
+    if len(clean) > 2 and np.hypot(*(clean[0][0] - clean[-1][0])) < 0.02:
+        clean.pop()
+    poly = np.array([p for p, _ in clean])
+    if len(poly) >= 3 and polygon_area(poly) < 0:
+        j.notes.append("boundary orientation CW (unexpected)")
+    return clean
+
+
+def _desc(t, tau, step=1.5):
+    """Stations from t (exclusive) down to tau (inclusive)."""
+    if t - tau < 0.05:
+        return []
+    m = max(1, int(math.ceil((t - tau) / step)))
+    return list(np.linspace(t, tau, m + 1)[1:])
+
+
+def _asc(tau, t, step=1.5):
+    """Stations from tau (inclusive) up to t (exclusive)."""
+    if t - tau < 0.05:
+        return []
+    m = max(1, int(math.ceil((t - tau) / step)))
+    return list(np.linspace(tau, t, m + 1)[:-1])
