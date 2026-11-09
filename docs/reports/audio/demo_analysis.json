@@ -1,0 +1,39 @@
+{
+ "drive_demo": {
+  "perspective": "cab",
+  "integrated_lufs": -15.999999999999988,
+  "peak_dbfs": -1.3255138234881878,
+  "ogg_bytes": 246200,
+  "max_engine_voices": 6,
+  "firing_track_median_abs_err_pct": 0.35667348669159865,
+  "firing_track_p90_abs_err_pct": 1.4215126382798706,
+  "freq_resolution_hz": 5.859375
+ },
+ "drive_demo_exterior": {
+  "perspective": "ext",
+  "integrated_lufs": -17.45709660382986,
+  "peak_dbfs": -0.9999999999999997,
+  "ogg_bytes": 285468,
+  "max_engine_voices": 6,
+  "firing_track_median_abs_err_pct": 0.36881186618041767,
+  "firing_track_p90_abs_err_pct": 1.3160128527154622,
+  "freq_resolution_hz": 5.859375
+ },
+ "crossfade_sweep_ext": {
+  "on": {
+   "max_abs_level_dev_db": 0.4229026445317672,
+   "mean_level_dev_db": 0.04933600898033712,
+   "max_step_vs_source": 0.8253809967242136
+  },
+  "mid": {
+   "max_abs_level_dev_db": 0.4170865274026454,
+   "mean_level_dev_db": 0.1268829624648295,
+   "max_step_vs_source": 0.8654696760085391
+  },
+  "off": {
+   "max_abs_level_dev_db": 0.7459529560629861,
+   "mean_level_dev_db": 0.1282752834191148,
+   "max_step_vs_source": 0.896395669026439
+  }
+ }
+}

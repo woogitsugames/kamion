@@ -1,0 +1,14 @@
+[project]
+name = "truck-audio"
+version = "0.1.0"
+description = "TRUCK SIM PL procedural audio pipeline (100% own synthesis, no third-party recordings)"
+requires-python = "==3.12.*"
+dependencies = [
+    "numpy>=2.0",
+    "scipy>=1.13",
+    "soundfile>=0.12.1",
+    "matplotlib>=3.9",
+]
+
+[tool.uv]
+package = false
