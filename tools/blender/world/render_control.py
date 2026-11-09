@@ -828,6 +828,8 @@ def mat_forest(name):
         except AttributeError:
             pass
         m.use_backface_culling = False
+    else:                       # canopy is single sided (glTF doubleSided false): never seen from below
+        m.use_backface_culling = True
     return m
 
 

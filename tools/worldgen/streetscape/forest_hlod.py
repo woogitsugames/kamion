@@ -105,9 +105,13 @@ def build(trees, forests, no_forest, zground, half, report):
         if not er:
             by_cell.setdefault(cell_of(t["e"], t["n"], half), []).append(t)
     hlod = {c for c, lst in by_cell.items() if len(lst) >= MIN_TREES}
-    top = np.array([t["z"] + t["h"] for t in ft])
-    H = np.array([t["h"] for t in ft])
-    kd = cKDTree(P)
+    # canopy / wall heights from the stand trees only: edge-band shrubs and saplings (< 8 m) pulled the canopy
+    # down to 2-3 m at the stand edge and it showed as a sloping green sheet (v3.1 render r4)
+    tall = np.array([t["h"] >= 8.0 for t in ft])
+    Pc = P[tall]
+    top = np.array([t["z"] + t["h"] for t in ft])[tall]
+    H = np.array([t["h"] for t in ft])[tall]
+    kd = cKDTree(Pc)
 
     def canopy_z(Q):
         Q = np.asarray(Q, float).reshape(-1, 2)
@@ -115,7 +119,7 @@ def build(trees, forests, no_forest, zground, half, report):
         for k, q in enumerate(Q):
             idx = kd.query_ball_point(q, CROWN_R)
             if idx:
-                d = np.hypot(*(P[idx] - q).T)
+                d = np.hypot(*(Pc[idx] - q).T)
                 h = H[idx]
                 out[k] = float(np.max(top[idx] - h + h * (0.82 + 0.18 * (1 - (d / CROWN_R) ** 2))))
             else:
