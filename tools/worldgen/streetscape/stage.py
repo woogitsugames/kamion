@@ -1,0 +1,114 @@
+"""Streetscape stage of build_world: buildings + docks -> paved areas -> joint terrain conform -> furniture
+-> vegetation -> ground-cover masks. Everything is added to w.buf (layers 'paved', 'buildings',
+'buildings_low', 'furniture', 'collision') or returned as point instances."""
+
+from __future__ import annotations
+
+import json
+
+import numpy as np
+import shapely
+from scipy import ndimage
+
+from roads import pipeline
+from roads import standards as S
+from terrain_mesh import conform as CF
+
+from . import buildings_mesh as BM
+from . import furniture as FU
+from . import paved as PV
+from . import sources as SRC
+from . import vegetation as VG
+
+
+def run(w, road_z, rmask, deck, deck_mask, thick, log):
+    rid = w.region["id"]
+    rep = {}
+    origin = np.array(w.origin)
+    src = SRC.load(rid)
+    overrides = pipeline.load_overrides(rid)
+    hf = w.hf
+    road_parts = [p for p in w.buf.parts if p.layer == "road"]
+    roads_poly = PV.road_footprint_polygon(road_parts)
+    log(f"streetscape: road footprint polygon {roads_poly.area:.0f} m2")
+    sm = ndimage.gaussian_filter(hf.z, S.PAVED_SMOOTH_M)
+
+    def zsmooth(e, n):
+        return PV.bilinear(sm, hf, np.asarray(e, float), np.asarray(n, float))
+
+    # buildings (+ docks facing yards described by the raw paved sources)
+    fc = json.loads((pipeline.REGIONS / rid / "buildings.geojson").read_text(encoding="utf-8"))
+    blds = BM.load(fc, w.origin, overrides)
+    yard_src = [PV._poly_local(f["geometry"]["coordinates"], w.origin) for f in src["bdot10k"]["OT_PTPL_A"]
+                if f["props"].get("materialnawierzchni") != "grunt naturalny"]
+    yard_src += [PV._poly_local(a["geometry"]["coordinates"], w.origin) for a in src["osm"]["areas"]
+                 if a["tags"].get("amenity") == "parking"]
+    yard_src += [shapely.geometry.Polygon(np.asarray(o["polygon_epsg2180"], float) - origin) for o in overrides
+                 if o.get("kind") == "paved_area"]
+    yard_union = shapely.union_all([shapely.make_valid(p) for p in yard_src] + [roads_poly])
+    brep = {}
+    docks = BM.build(w.buf, blds, hf, zsmooth, yard_union, roads_poly, brep)
+    rep["buildings"] = brep
+    log("buildings", brep["typologies"], "docks", brep["docks"])
+    bpoly = shapely.union_all([b["poly"] for b in blds])
+
+    # paved areas
+    prep = {}
+    paved = PV.collect(src, origin, overrides, docks, roads_poly, bpoly, prep)
+    rep["paved_m2_by_source"] = prep
+    pmask = PV.rasterize_polys([p["poly"] for p in paved], hf) & ~rmask
+    pz = PV.paved_heights(hf, road_z, rmask, pmask)
+    shapely.prepare(roads_poly)
+    PV.build_meshes(w.buf, paved, np.where(np.isfinite(pz), pz, sm), hf, walls=bpoly.boundary, roads_poly=roads_poly)
+    mats = {}
+    for p in paved:
+        mats[p["mat"]] = round(mats.get(p["mat"], 0) + p["poly"].area)
+    rep["paved_m2_by_material"] = mats
+    log("paved", len(paved), "areas", mats)
+
+    # joint conform: roads + paved
+    mask = rmask | pmask
+    zjoin = np.where(rmask, road_z, np.where(pmask, pz, -np.inf))
+    zc, dist = CF.conform(hf, zjoin, mask)
+    zc = CF.clamp_under_decks(zc, deck, deck_mask, thick, mask)
+    zc = CF.tidy(zc, zjoin, mask, dist)
+    bmask = PV.rasterize_polys([b["poly"] for b in blds], hf)
+    zc = np.where(bmask & ~mask, np.minimum(zc, sm), zc)        # ground under buildings never above the floor
+    zsurf_g = np.where(mask, zjoin, zc)
+
+    def zsurf(e, n):
+        return PV.bilinear(zsurf_g, hf, np.asarray(e, float), np.asarray(n, float))
+
+    def zground(e, n):
+        return PV.bilinear(zc, hf, np.asarray(e, float), np.asarray(n, float))
+
+    # furniture
+    pl = FU.Placer(zsurf)
+    codes, boards = set(), {}
+    frep = {}
+    graph = json.loads((pipeline.REGIONS / rid / "roads.graph.json").read_text(encoding="utf-8"))
+    attrs = {e["id"]: e["attrs"] for e in graph["edges"]}
+    FU.signals(pl, w.net, w.junctions, frep)
+    FU.junction_signs(pl, w.net, w.junctions, w.ctx["points"], frep, codes)
+    FU.speed_signs(pl, w.net, frep, codes)
+    FU.crossing_signs(pl, w.net, w.ctx["points"], frep, codes)
+    FU.direction_boards(pl, w.net, attrs, frep, boards)
+    FU.misc_points(pl, w.net, src, origin, frep, codes)
+    FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep)
+    lin = FU.Lin(w.buf, zsurf)
+    FU.fences(lin, src, origin, roads_poly, frep)
+    FU.guardrails(lin, w.net, zground, frep)
+    FU.noise_barriers(lin, src, origin, roads_poly, frep)
+    FU.power_lines(lin, src, origin, frep)
+    rep["furniture"] = frep
+    log("furniture", {k: v for k, v in frep.items() if k != "junction_signs"})
+
+    # vegetation
+    blocked = ndimage.binary_dilation(mask | bmask, iterations=3)
+    vrep = {}
+    trees, forests = VG.place(src, origin, hf, zc, blocked, vrep)
+    rep["vegetation"] = vrep
+    log("trees", vrep["trees"])
+    col = VG.ground_masks(src, origin, hf, dist, forests)
+    return {"zc": zc, "dist": dist, "mask": mask, "rmask": rmask, "col": col, "instances": pl.items + trees,
+            "codes": codes, "boards": boards, "report": rep, "docks": docks, "paved": paved}

@@ -35,6 +35,17 @@ from roads import standards as S          # noqa: E402
 from terrain_mesh import chunks as CH     # noqa: E402
 from terrain_mesh import conform as CF    # noqa: E402
 from terrain_mesh.gltf import GLB, GLTF_AXES, smooth_normals  # noqa: E402
+from streetscape import export as PR      # noqa: E402
+
+LAYERS = ("road", "bridge", "markings", "paved", "buildings", "buildings_low", "furniture", "collision")
+NODES = (("road", "road"), ("bridge", "bridge"), ("markings", "markings"), ("paved", "paved"),
+         ("buildings", "buildings"), ("buildings_low", "buildings_lod1"), ("furniture", "furniture"),
+         ("collision", "road_collision"))
+
+
+def DEFAULT_OUT(region_id):
+    return REPO / "Data" / "raw" / "derived" / region_id / "world"
+
 
 REPO = pipeline.REPO
 GENERATOR_VERSION = "world-c/1"
@@ -63,6 +74,18 @@ MATERIALS = {
     "collision_paving": {"color": [1, 0, 1], "rough": 1.0, "surface": "paving_stones", "collision": True},
     "collision_grass": {"color": [1, 0, 1], "rough": 1.0, "surface": "grass", "collision": True},
 }
+from streetscape.materials import M as _SM   # noqa: E402
+MATERIALS.update(_SM)
+_GLB_MATS = None
+
+
+def glb_materials():
+    global _GLB_MATS
+    if _GLB_MATS is None:
+        _GLB_MATS = {**MATERIALS, **PR.glb_materials()}
+    return _GLB_MATS
+
+
 WELD = {"road_asphalt", "road_concrete", "road_paving", "road_sett", "road_gravel", "collision_asphalt",
         "sidewalk_paving", "apron_sett"}
 
@@ -103,12 +126,18 @@ def assemble(parts, layers, half):
         for key in sorted(set(zip(ci.tolist(), cj.tolist()))):
             sel = (ci == key[0]) & (cj == key[1])
             g = groups.setdefault((key, p.layer, p.mat), [])
-            g.append((pi, p.V, N, p.UV, p.T[sel]))
+            g.append((pi, p.V, N, p.UV, p.T[sel], p.UV1, p.COL))
     out = {}
     for (key, layer, mat), items in sorted(groups.items()):
         V = np.concatenate([it[1][it[4]].reshape(-1, 3) for it in items])
         Nn = np.concatenate([it[2][it[4]].reshape(-1, 3) for it in items])
         UV = np.concatenate([it[3][it[4]].reshape(-1, 2) for it in items])
+        has1 = any(it[5] is not None for it in items)
+        hasc = any(it[6] is not None for it in items)
+        UV1 = np.concatenate([(it[5] if it[5] is not None else np.tile([-1.0, 5.0], (len(it[1]), 1)))[it[4]].reshape(-1, 2)
+                              for it in items]) if has1 else None
+        COL = np.concatenate([(it[6] if it[6] is not None else np.zeros((len(it[1]), 4)))[it[4]].reshape(-1, 4)
+                              for it in items]) if hasc else None
         if mat in WELD:
             q = np.round(V * 1000).astype(np.int64)
             u, inv = np.unique(q, axis=0, return_inverse=True)
@@ -116,6 +145,8 @@ def assemble(parts, layers, half):
             first = np.full(len(u), -1)
             first[inv[::-1]] = np.arange(len(inv))[::-1]
             Vw, UVw = V[first], UV[first]
+            UV1w = UV1[first] if has1 else None
+            COLw = COL[first] if hasc else None
             T = inv.reshape(-1, 3)
             T = T[(T[:, 0] != T[:, 1]) & (T[:, 1] != T[:, 2]) & (T[:, 0] != T[:, 2])]
             Nw = smooth_normals(Vw, T)
@@ -123,8 +154,11 @@ def assemble(parts, layers, half):
             ids = np.concatenate([np.full(it[4].size, it[0]) * 10_000_000 + it[4].ravel() for it in items])
             u, first, inv = np.unique(ids, return_index=True, return_inverse=True)
             Vw, Nw, UVw = V[first], Nn[first], UV[first]
+            UV1w = UV1[first] if has1 else None
+            COLw = COL[first] if hasc else None
             T = inv.ravel().reshape(-1, 3)
-        out.setdefault(key, {}).setdefault(layer, []).append({"V": Vw, "N": Nw, "UV": UVw, "T": T, "mat": mat})
+        out.setdefault(key, {}).setdefault(layer, []).append({"V": Vw, "N": Nw, "UV": UVw, "T": T, "mat": mat,
+                                                              "UV1": UV1w, "COL": COLw})
     return out
 
 
@@ -249,6 +283,24 @@ def cameras(region_id, w):
         cams.append({"id": "biezenstwa_above", "type": "persp", "fov_deg": 55.0,
                      "pos": [r(ctr2[0] - 50), r(ctr2[1] - 45), r(zc2 + 38)],
                      "look_at": [r(ctr2[0]), r(ctr2[1]), r(zc2)], "note": "Rondo Pamięci Bieżeństwa 1915 r."})
+    # Stage 3 reference stretch: driver eye (2.5 m) along the first ~420 m of the route, Kwadrat Park yard ->
+    # depot gate -> Rondo Bieżeństwa (the most polished part of the tile)
+    for k, (st, look, note) in enumerate(((30.0, 60.0, "Kwadrat Park yard, loading docks on the right"),
+                                          (150.0, 60.0, "yard road between the halls toward the gate"),
+                                          (255.0, 55.0, "depot gate (lift gate) and the exit to the public road"),
+                                          (360.0, 60.0, "approach to Rondo Bieżeństwa under the Andersa viaduct"))):
+        q, z, t = lane_point(st)
+        tgt = at(st + look)
+        _, _, _, zt = surface_at(w, tgt)
+        cams.append({"id": f"stretch_{k + 1:02d}", "type": "persp", "fov_deg": 60.0, "route_s_m": st,
+                     "pos": [r(q[0]), r(q[1]), r(z + 2.5)], "look_at": [r(tgt[0]), r(tgt[1]), r(zt + 1.4)],
+                     "note": f"reference stretch, driver eye 2.5 m: {note}"})
+    for k, hd in enumerate(w.stats.get("hero_docks", [])[:1]):
+        pos = hd["mid"] + hd["nout"] * 26.0 - hd["d"] * 18.0
+        tgt = hd["mid"] + hd["d"] * 6.0
+        cams.append({"id": "stretch_05_docks", "type": "persp", "fov_deg": 60.0,
+                     "pos": [r(pos[0]), r(pos[1]), r(hd["z"] + 2.5)], "look_at": [r(tgt[0]), r(tgt[1]), r(hd["z"] + 2.0)],
+                     "note": f"reference stretch: Kwadrat Park loading docks ({hd['n']} doors) from the yard, eye 2.5 m"})
     cams.append({"id": "ortho_putry", "type": "ortho", "center": [r(ctr[0]), r(ctr[1])], "size_m": 260.0,
                  "height": r(zc + 120), "note": "orthographic top view for overlay on the GUGiK orthophoto"})
     return cams
@@ -347,17 +399,28 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
     MK.build_markings(w.buf, w.net, w.junctions, w.ctx["points"], mk_report)
     log("markings", mk_report.get("markings"))
 
-    # terrain conform (uses ground road footprint) + bridge supports avoid ground roads
-    road_z, mask = CF.rasterise([p for p in w.buf.parts if p.layer == "road"], w.hf)
-    zc, dist = CF.conform(w.hf, road_z, mask)
+    # terrain conform (roads + paved areas) + streetscape (buildings, yards, furniture, vegetation)
+    road_z, rmask = CF.rasterise([p for p in w.buf.parts if p.layer == "road"], w.hf)
     deck_parts = [p for p in w.buf.parts if p.layer == "bridge" and not p.src.endswith(":parapet")]
     for p in deck_parts:
         p.footprint = True
     deck, deck_mask = CF.rasterise(deck_parts, w.hf)
     for p in deck_parts:
         p.footprint = False
-    zc = CF.clamp_under_decks(zc, deck, deck_mask, thick, mask)
-    log(f"terrain conformed: footprint {int(mask.sum())} nodes")
+    from streetscape import stage as SS
+    st = SS.run(w, road_z, rmask, deck, deck_mask, thick, log)
+    zc, dist, mask = st["zc"], st["dist"], st["mask"]
+    w.stats["hero_docks"] = []
+    for dk in st["docks"]:
+        if "9962cca0" not in dk["id"] and not dk.get("hero"):
+            continue
+        p, q = (np.asarray(x, float) for x in dk["edge"])
+        d = (q - p) / np.linalg.norm(q - p)
+        nout = np.array([d[1], -d[0]])
+        u0, u1 = dk["docks"][0]["u"], dk["docks"][-1]["u"]
+        mid = p + d * (0.5 * (u0 + u1))
+        w.stats["hero_docks"].append({"mid": mid, "d": d, "nout": nout, "z": dk["yard_z"], "n": len(dk["docks"])})
+    log(f"terrain conformed: footprint {int(rmask.sum())} road + {int(mask.sum() - rmask.sum())} paved nodes")
 
     def on_ground_road(q):
         i = int(round(q[0] - w.hf.x0))
@@ -371,24 +434,28 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
     half = w.region["bbox"]["width_m"] / 2
     e0 = w.region["bbox"]["xmin"] - w.origin[0]
     n0 = w.region["bbox"]["ymax"] - w.origin[1]
-    terrain = CH.build_chunks(zc, mask, e0, n0, w.region["bbox"]["width_m"])
+    terrain = CH.build_chunks(zc, mask, e0, n0, w.region["bbox"]["width_m"], col=st["col"])
     log("terrain chunks", len(terrain))
-    roads = assemble(w.buf.parts, ("road", "bridge", "markings", "collision"), half)
+    roads = assemble(w.buf.parts, LAYERS, half)
     log("road chunks", len(roads))
 
     out_root = out_root or (REPO / "Data" / "raw" / "derived" / region_id / "world")
     out_root.mkdir(parents=True, exist_ok=True)
+    inst_by_chunk = {}
+    for it in sorted(st["instances"], key=lambda t: (t["p"], t["e"], t["n"])):
+        ci_, cj_ = chunk_of(np.array([it["e"]]), np.array([it["n"]]), half)
+        inst_by_chunk.setdefault((int(ci_[0]), int(cj_[0])), []).append(it)
+    props_meta = PR.export(st["codes"], st["boards"], out_root.parent / "props" if out_root != DEFAULT_OUT(region_id) else None)
     chunks_meta = []
     for key in sorted(terrain):
         ci, cj = key
-        glb = GLB(MATERIALS)
+        glb = GLB(glb_materials())
         tri = {}
         for li, prims in sorted(terrain[key].items()):
             glb.add_mesh(f"terrain_lod{li}", prims, {"lod": li, "spacing_m": CH.LODS[li]})
             tri[f"terrain_lod{li}"] = int(sum(len(p["T"]) for p in prims))
         layers = roads.get(key, {})
-        for layer, node in (("road", "road"), ("bridge", "bridge"), ("markings", "markings"),
-                            ("collision", "road_collision")):
+        for layer, node in NODES:
             prims = layers.get(layer, [])
             if prims:
                 glb.add_mesh(node, prims, {"layer": layer, "collision": layer == "collision"})
@@ -396,8 +463,25 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         data = glb.bytes({"region": region_id, "chunk": [ci, cj], "axes": GLTF_AXES})
         fn = f"chunk_{ci}_{cj}.glb"
         (out_root / fn).write_bytes(data)
+        # Low/Medium variant: no 1 m terrain LOD, no detailed buildings (LOD1 prisms only)
+        glb_lo = GLB(glb_materials(), compact=True)
+        for li, prims in sorted(terrain[key].items()):
+            if li >= 1:
+                glb_lo.add_mesh(f"terrain_lod{li}", prims, {"lod": li, "spacing_m": CH.LODS[li]})
+        for layer, node in NODES:
+            prims = layers.get(layer, [])
+            if prims and layer != "buildings":
+                glb_lo.add_mesh(node, prims, {"layer": layer, "collision": layer == "collision"})
+        data_lo = glb_lo.bytes({"region": region_id, "chunk": [ci, cj], "axes": GLTF_AXES, "variant": "low"})
+        fn_lo = f"chunk_{ci}_{cj}.low.glb"
+        (out_root / fn_lo).write_bytes(data_lo)
         allz = [p["V"][:, 2] for p in terrain[key][0]] + [p["V"][:, 2] for L in layers.values() for p in L]
         zz = np.concatenate(allz)
+        inst = inst_by_chunk.get(key, [])
+        ifn = f"instances_{ci}_{cj}.json"
+        itext = json.dumps({"chunk": [ci, cj], "frame": "local E,N,U; yaw about U, rotates prototype +y",
+                            "instances": inst}, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        (out_root / ifn).write_text(itext, encoding="utf-8", newline="\n")
         chunks_meta.append({
             "id": f"{ci}_{cj}", "file": f"Data/raw/derived/{region_id}/world/{fn}", "bytes": len(data),
             "sha256": sha(data),
@@ -406,10 +490,13 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
                                "z_min_evrf2007": r(zz.min(), 2), "z_max_evrf2007": r(zz.max(), 2)},
             "triangles": tri,
             "materials": sorted({p["mat"] for L in layers.values() for p in L} | {"terrain_grass"}),
+            "instances": {"file": f"Data/raw/derived/{region_id}/world/{ifn}", "count": len(inst),
+                          "sha256": sha(itext.encode("utf-8"))},
+            "low": {"file": f"Data/raw/derived/{region_id}/world/{fn_lo}", "bytes": len(data_lo),
+                    "sha256": sha(data_lo)},
         })
-    log("exported", len(chunks_meta), "GLB,", sum(c["bytes"] for c in chunks_meta) // 2**20, "MiB")
-    preview_buildings(region_id, w, out_root / "preview_buildings.json")
-    log("preview trees", preview_trees(region_id, w, zc, mask, out_root / "preview_trees.json"))
+    log("exported", len(chunks_meta), "GLB,", sum(c["bytes"] for c in chunks_meta) // 2**20, "MiB (High), ",
+        sum(c["low"]["bytes"] for c in chunks_meta) // 2**20, "MiB (Low)")
 
     gen = pipeline.REGIONS / region_id / "generated"
     srcs = {}
@@ -426,11 +513,22 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         "chunk_size_m": CH.CHUNK_M,
         "terrain_lods": [{"lod": i, "spacing_m": s, "suggested_switch_m": [0, 120, 300, 700][i]}
                          for i, s in enumerate(CH.LODS)],
-        "nodes": {"terrain_lod<k>": "terrain LODs (with skirts); grass material",
-                  "road": "ground-level road surfaces: carriageways, junction patches, kerbs, sidewalks",
+        "nodes": {"terrain_lod<k>": "terrain LODs (with skirts); COLOR_0 = ground masks (R dist to road/20 m, "
+                                    "G forest floor, B unmown, A bare soil)",
+                  "road": "ground-level road surfaces: carriageways, junction patches, kerbs, sidewalks; "
+                          "TEXCOORD_1 = (lane coordinate, distance to carriageway edge m)",
                   "bridge": "bridge decks, soffits, parapets, abutments, piers (low confidence)",
                   "markings": "horizontal markings decal mesh (lift %.3f m, use depth offset)" % S.MARKING_LIFT,
-                  "road_collision": "simplified smooth collision mesh (4 m stations, no flanges); one primitive per surface"},
+                  "paved": "yards, parking lots, dock aprons, set-back paths + edging; TEXCOORD_1 = (distance to "
+                           "the area edge m, distance to a building wall m)",
+                  "buildings": "LOD0 buildings with openings, docks, roofs",
+                  "buildings_lod1": "LOD1 prisms with the same wall materials",
+                  "furniture": "linear furniture: fences, guard rails, noise barriers, retaining walls, wires",
+                  "road_collision": "collision: smooth road surfaces (4 m stations, no flanges), paved areas, "
+                                    "LOD1 buildings, fences/rails/walls; one primitive per surface material"},
+        "instances": "Data/raw/derived/<id>/world/instances_<ci>_<cj>.json: point instances {p: prototype, e, n, z, "
+                     "yaw [, sz scale z][, h/v/lean for trees]} of art-source/world/props/street_props.glb and "
+                     "art-source/world/vegetation/trees.glb (+ trees_lod2.glb impostors)",
         "materials": MATERIALS, "chunks": chunks_meta, "sources_sha256": srcs,
         "overrides_applied": w.net.overrides_applied, "overrides_stale": w.net.overrides_stale,
     }
@@ -440,9 +538,90 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
     cams = cameras(region_id, w)
     write_json(gen / "control_cameras.json", {"schema": "truck-sim-pl/control-cameras/1", "region": region_id,
                                               "frame": "local E,N,U (U absolute EVRF2007)", "cameras": cams})
+    budget = mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams)
+    write_json(gen / "streetscape_qa.json", {"schema": "truck-sim-pl/streetscape-qa/1", "region": region_id,
+                                             **st["report"], "mesh_budget": budget})
     np.save(out_root / "terrain_conformed.npy", zc.astype(np.float32))
     log("done")
     return w, manifest, qa
+
+
+# --------------------------------------------------------------------------------------------
+# LOD policy (WORKING_VALUE until measured on the Samsung A16 / Mali-G57 MC2, docs/06 §6):
+#   High: terrain LOD0 < 330 m, LOD1 < 600 m, LOD2 beyond; buildings LOD0 < 700 m; trees LOD0 < 80 m,
+#         LOD1 < 250 m, impostor < 1500 m; props LOD0 < 120 m, LOD1 < 650 m.
+#   Low : terrain LOD1 < 330 m, LOD2 < 600 m, LOD3 beyond; buildings LOD1; trees LOD1 < 40 m, impostor < 400 m,
+#         culled beyond; props LOD1 < 250 m, culled beyond; linear furniture < 400 m.
+LOD_POLICY = {
+    "High": {"terrain": [[330, 0], [600, 1], [1e9, 2]], "bld": 700,
+             "tree": [[80, "tris_lod0"], [250, "tris_lod1"], [1500, "tris_lod2"]],
+             "prop": [[120, "tris_lod0"], [650, "tris_lod1"]], "furn": 1e9},
+    "Low": {"terrain": [[330, 1], [600, 2], [1e9, 3]], "bld": 0,
+            "tree": [[40, "tris_lod1"], [400, "tris_lod2"]], "prop": [[250, "tris_lod1"]], "furn": 400},
+}
+
+
+def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
+    """Static triangles/materials per chunk + per-camera frame estimate (120 deg wedge around the view)."""
+    tp = REPO / "art-source" / "world" / "vegetation" / "trees_meta.json"
+    trees = json.loads(tp.read_text(encoding="utf-8"))["trees"] if tp.exists() else {}
+
+    def itris(it, key):
+        if it["p"].startswith("tree_"):
+            m = trees.get(f"{it['p']}_{it.get('v', 0)}")
+            return m.get(key, 0) if m else 0
+        m = props_meta.get(it["p"]) or {}
+        return m.get(key, m.get("tris_lod1", 0))
+
+    per_chunk = []
+    for ch in chunks_meta:
+        t = ch["triangles"]
+        stat = sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved", "furniture"))
+        ci, cj = (int(x) for x in ch["id"].split("_"))
+        inst = inst_by_chunk.get((ci, cj), [])
+        per_chunk.append({"chunk": ch["id"], "materials": len(ch["materials"]),
+                          "tris_high_static": stat + t.get("terrain_lod0", 0) + t.get("buildings", 0),
+                          "tris_low_static": stat + t.get("terrain_lod1", 0) + t.get("buildings_lod1", 0),
+                          "instances": len(inst), "trees": sum(1 for i in inst if i["p"].startswith("tree_"))})
+    frames = []
+    for cam in cams:
+        if cam["type"] != "persp":
+            continue
+        pos = np.array(cam["pos"][:2])
+        look = np.array(cam["look_at"][:2]) - pos
+        look /= max(np.linalg.norm(look), 1e-9)
+        res = {"camera": cam["id"]}
+        for prof, pol in LOD_POLICY.items():
+            tot = 0
+            mats = set()
+            for ch in chunks_meta:
+                b = ch["bounds_local_m"]
+                c = np.array([(b["e_min"] + b["e_max"]) / 2, (b["n_min"] + b["n_max"]) / 2])
+                d = float(np.linalg.norm(c - pos))
+                if d > 1600 or (d > 200 and float(np.dot((c - pos) / d, look)) < 0.5):
+                    continue
+                t = ch["triangles"]
+                lod = next(l for lim, l in pol["terrain"] if d < lim)
+                tot += t.get(f"terrain_lod{lod}", 0)
+                tot += sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved"))
+                tot += t.get("furniture", 0) if d < pol["furn"] else 0
+                tot += t.get("buildings", 0) if d < pol["bld"] else t.get("buildings_lod1", 0)
+                mats |= set(ch["materials"])
+                ci, cj = (int(x) for x in ch["id"].split("_"))
+                for it in inst_by_chunk.get((ci, cj), []):
+                    di = math.hypot(it["e"] - pos[0], it["n"] - pos[1])
+                    if di > 200 and float(np.dot((np.array([it["e"], it["n"]]) - pos) / di, look)) < 0.5:
+                        continue
+                    rule = pol["tree"] if it["p"].startswith("tree_") else pol["prop"]
+                    key = next((k for lim, k in rule if di < lim), None)
+                    if key:
+                        tot += itris(it, key)
+            res[f"tris_{prof.lower()}"] = int(tot)
+            res[f"materials_{prof.lower()}"] = len(mats)
+        frames.append(res)
+    return {"lod_policy": LOD_POLICY, "per_chunk": per_chunk, "frame_estimate": frames,
+            "note": "frame estimate = chunks/instances within 1.6 km in a 120 deg wedge, no occlusion culling; "
+                    "docs/06 par. 6 hypotheses: Low <= 400-600 k tris, High <= 1.5-2 M"}
 
 
 def qa_report(w, mk_report, mask):
@@ -490,6 +669,7 @@ def qa_report(w, mk_report, mask):
             "crossings_snapped": mk_report.get("crossings_snapped", 0),
             "crossings_skipped": mk_report.get("crossings_skipped", []),
             "bridges": w.bridges,
+            "fork_tapers": w.stats.get("fork_tapers", []),
             "overrides_applied": net.overrides_applied, "overrides_stale": net.overrides_stale,
             "low_confidence": [
                 "bridge deck heights interpolated between abutments (NMT = ground under deck); piers by rule",

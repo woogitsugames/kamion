@@ -70,3 +70,17 @@ Tylko pipeline, nie trafiają do buildu: numpy (BSD-3), scipy (BSD-3), soundfile
 |---|---|---|---|
 | `font-inter` | Inter (Rasmus Andersson), file shipped with Blender 4.2 (`datafiles/fonts`) | SIL Open Font License 1.1 | rasterised text in cab display textures (art-source/truck/interior/textures); font file not in repo |
 | `font-inter-ui` | Inter Regular (The Inter Project Authors), `Inter-Regular.otf` copied unmodified from the Unity URP package samples (`com.unity.render-pipelines.core` Samples~/Common/TextMesh Pro) | SIL Open Font License 1.1 (licence text shipped next to it: `game/Assets/_Project/UI/Resources/Fonts/Inter-OFL.txt`; "Inter" is a Reserved Font Name, file not modified or renamed) | all uGUI text (driving HUD, Boot menu, diagnostics overlay); in the APK |
+
+## Świat — otoczenie kafla C (world-builder, 2026-11-09)
+
+Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z cudzych modeli, tekstur, zdjęć ani generatorów AI. Tekstur CC0 (Poly Haven, ambientCG) nie użyto, wszystko jest proceduralne.
+
+| ID | Źródło | Licencja | W gicie? | Użycie |
+|---|---|---|---|---|
+| `world-street-props` | `tools/worldgen/streetscape/props.py` + `export.py` → `art-source/world/props/street_props.glb` | własna (projekt) | tak | latarnie, słupki, tablice znaków, sygnalizatory S-1, wiaty, szlabany, bramy, słupki U-12, słupy, kratownice, ławki, kosze, szafki |
+| `world-sign-faces` | `tools/worldgen/streetscape/signs.py` → `art-source/world/signs/*.png` | własna; wzory znaków wg rozporządzenia (Dz.U. 2019 poz. 2311, zał. 1), narysowane od zera z prymitywów | tak | A-7, B-20, B-33, C-12, D-1, D-6, D-15, schematyczne E-2 |
+| `font-dejavu-sans` | DejaVu Sans Bold (dołączony do matplotlib, `mpl-data/fonts/ttf`) | Bitstream Vera License + public domain (DejaVu): wolno osadzać i rasteryzować, z zakazem sprzedaży samego fontu | rasteryzowany w PNG | cyfry B-33, „STOP”, napisy na schematycznych E-2, numery ramp. Nie jest to krój „Drogowskaz” z rozporządzenia: tablice E są schematyczne |
+| `world-trees` | `tools/blender/world/make_trees.py` → `art-source/world/vegetation/trees.glb`, `trees_lod2.glb`, `impostor_*.png` | własna (projekt) | tak | sosna, brzoza, olsza, klon, lipa, krzew (3 warianty, LOD0/LOD1/impostor) |
+| `world-foliage-textures` | `tools/worldgen/streetscape/leaf_textures.py` → `art-source/world/vegetation/{leaves,bark}_*.png`, `grass_tuft.png` | własna (projekt) | tak | karty liści, kora, kępy trawy |
+| `world-misc-textures` | `streetscape/export.py` → `art-source/world/textures/{fence_mesh,dock_digits}.png` | własna (projekt) | tak | siatka panelu ogrodzeniowego 3D, atlas numerów ramp |
+| `world-streetscape-data` | `Data/Regions/bialystok-industrial-c/generated/streetscape_sources.json` (OSM + BDOT10k) | ODbL 1.0 (© OpenStreetMap contributors) + dane GUGiK (BDOT10k, art. 40a ust. 2 pkt 1 Pgik) | tak | place, ogrodzenia, drzewa, ekrany, słupy. Ta sama uwaga `LEGAL_REVIEW_REQUIRED` co dla grafu dróg |

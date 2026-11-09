@@ -36,7 +36,7 @@ def normals(z, step):
     return n
 
 
-def grid_mesh(z, nrm, e0, n0, step, i0, i1, j0, j1, skirt=1.0):
+def grid_mesh(z, nrm, e0, n0, step, i0, i1, j0, j1, skirt=1.0, col=None):
     """Vertices/tris for LOD-grid nodes [j0..j1] x [i0..i1] (inclusive). Node (j, i) is at
     E = e0 + i*step, N = n0 - j*step."""
     zz = z[j0:j1 + 1, i0:i1 + 1]
@@ -63,6 +63,8 @@ def grid_mesh(z, nrm, e0, n0, step, i0, i1, j0, j1, skirt=1.0):
              np.arange(h)[::-1] * w]                    # west edge, south->north
     del border
     Vs, Ns, Ts = [V], [NR], [T]
+    CC = col[j0:j1 + 1, i0:i1 + 1].reshape(-1, col.shape[-1]) if col is not None else None
+    Cs = [CC] if CC is not None else None
     base = len(V)
     for loop in loops:
         top = V[loop]
@@ -71,28 +73,32 @@ def grid_mesh(z, nrm, e0, n0, step, i0, i1, j0, j1, skirt=1.0):
         m = len(loop)
         Vs += [bot]
         Ns += [NR[loop]]
+        if Cs is not None:
+            Cs += [CC[loop]]
         ti = loop
         bi = base + np.arange(m)
         t1 = np.column_stack([ti[:-1], ti[1:], bi[1:]])
         t2 = np.column_stack([ti[:-1], bi[1:], bi[:-1]])
         Ts += [t1, t2]
         base += m
+    if Cs is not None:
+        return np.vstack(Vs), np.vstack(Ns), np.vstack(Ts), np.vstack(Cs)
     return np.vstack(Vs), np.vstack(Ns), np.vstack(Ts)
 
 
-def build_chunks(zc, mask, e0, n0, size_m):
+def build_chunks(zc, mask, e0, n0, size_m, col=None):
     """Return {(ci, cj): {lod: [primitive dicts]}} for the whole tile."""
     nch = int(size_m // CHUNK_M)
     out = {}
     lod_cache = {}
     for step in LODS:
         zl = lod_grid(zc, mask, step)
-        lod_cache[step] = (zl, normals(zl, step))
+        lod_cache[step] = (zl, normals(zl, step), None if col is None else col[::step, ::step])
     for cj in range(nch):            # rows from north
         for ci in range(nch):        # columns from west
             lods = {}
             for li, step in enumerate(LODS):
-                zl, nl = lod_cache[step]
+                zl, nl, cl = lod_cache[step]
                 per = CHUNK_M // step
                 prims = []
                 sub = SUB_M // step if step == 1 else per
@@ -100,9 +106,11 @@ def build_chunks(zc, mask, e0, n0, size_m):
                     for si in range(0, per, sub):
                         i0 = ci * per + si
                         j0 = cj * per + sj
-                        V, Nn, T = grid_mesh(zl, nl, e0, n0, step, i0, i0 + sub, j0, j0 + sub,
-                                             skirt=1.0 + 0.5 * step)
-                        prims.append({"V": V, "N": Nn, "UV": V[:, :2].copy(), "T": T, "mat": "terrain_grass"})
+                        res = grid_mesh(zl, nl, e0, n0, step, i0, i0 + sub, j0, j0 + sub,
+                                        skirt=1.0 + 0.5 * step, col=cl)
+                        V, Nn, T = res[:3]
+                        prims.append({"V": V, "N": Nn, "UV": V[:, :2].copy(), "T": T, "mat": "terrain_grass",
+                                      "COL": res[3] if cl is not None else None})
                 lods[li] = prims
             out[(ci, cj)] = lods
     return out

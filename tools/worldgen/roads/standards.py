@@ -84,6 +84,10 @@ TERRAIN_UNDER_ROAD = 0.35           # terrain pushed this far below the road sur
 # Rural profile (outside built-up area), PTB2022 § 23 ust. 10 pkt 3-5: unpaved shoulder
 # 1.25 (G) / 1.00 (Z) / 0.75 (L, D) standard.
 SHOULDER_W = {"A": 1.25, "S": 1.25, "GP": 1.25, "G": 1.25, "Z": 1.00, "L": 0.75, "D": 0.75}
+PAVED_SHOULDER = 1.00              # WORKING_VALUE: paved shoulder (pobocze utwardzone) of the rural GP profile
+PAVED_SHOULDER_MEDIAN = 0.50       # WORKING_VALUE: inner paved strip next to a grass median (no kerb)
+RURAL_MIN_SPEED = 70.0             # WORKING_VALUE: GP/G sections at >= 70 km/h without footways get the rural profile
+RURAL_FOOT_M = 7.0                 # WORKING_VALUE: no footway/path within this distance of the carriageway edge
 SHOULDER_CROSSFALL = 0.06           # WORKING_VALUE (unpaved shoulder, § 24 ust. 3: "skuteczne odwodnienie")
 DITCH_DEPTH = 0.60                  # WORKING_VALUE
 DITCH_SLOPE = 1.5                   # 1 : 1.5, WORKING_VALUE
@@ -96,6 +100,10 @@ BERM_W = 1.0                        # flat strip next to the road before the emb
 CURB_RADIUS = {"A": 20.0, "S": 20.0, "GP": 15.0, "G": 12.0, "Z": 10.0, "L": 8.0, "D": 8.0}
 NOSE_MAX_ANGLE_DEG = 25.0           # corners narrower than this get a median/splitter nose
 STRAIGHT_MIN_ANGLE_DEG = 155.0      # corners wider than this are a straight kerb (no fillet)
+FORK_STRAIGHT_DEG = 150.0          # WORKING_VALUE: two chains this close to collinear at a node = one road
+TAPER_RATIO = 10.0                 # WORKING_VALUE: taper length = 10 x width change (skos 1:10)
+TAPER_MIN_M = 15.0                 # WORKING_VALUE
+TAPER_MAX_DHW = 1.25               # WORKING_VALUE: larger half-width changes are lane additions (kept as is)
 JUNCTION_MIN_TRIM = 2.0             # m, minimal junction size along each arm
 
 # Roundabouts: circulatory crossfall falls outwards (towards the outer kerb). WORKING_VALUE.
@@ -136,6 +144,73 @@ ARROW_LONG = {"len": 7.50, "head_len": 2.05, "head_w": 0.75, "shaft_w": 0.15}   
 ARROW_SPACING = {"short": 15.0, "long": 30.0}   # pkt 3.2.1: 15 m (<= 70 km/h), 30 m (others)
 MARKING_LIFT = 0.006                # m above the surface (paint 3 mm + bias), decal depth offset in engine
 SEGREGATION_MIN_CARRIAGEWAY = 5.80  # pkt 2.2.1: no segregation lines on two-way carriageways < 5.80 m
+
+# ============================================================================================
+# Streetscape (tools/worldgen/streetscape). Sources:
+#  [ZNAKI-Z1]  Załącznik nr 1 (vertical signs) to the same 2003 regulation as [ZNAKI-Z2], as amended by
+#              Dz.U. 2021 poz. 2066 (Table 1.11 "Wysokość umieszczania znaków", pkt 1.5.3) – read
+#              2026-11-09 at https://api.sejm.gov.pl/eli/acts/DU/2021/2066/text.html
+# --------------------------------------------------------------------------------------------
+# Paved areas (yards, parking lots). Not regulated geometry -> WORKING_VALUE.
+PAVED_SMOOTH_M = 3.0        # sigma of the NMT smoothing under yards (NMT 1 m, sd 0.09 m) WORKING_VALUE
+PAVED_BLEND_M = 12.0        # distance over which a yard blends into the adjacent road edge height WORKING_VALUE
+PAVED_LIFT = 0.0            # yard surface = smoothed ground (terrain conformed TERRAIN_UNDER_ROAD below)
+PAVED_FLANGE = 0.30         # vertical skirt under yard edges (hides the terrain seam)
+EDGING_W = 0.08             # concrete edging (obrzeże betonowe 8 x 30 cm), common Polish practice WORKING_VALUE
+EDGING_H = 0.03             # top of edging above the block paving WORKING_VALUE
+SETBACK_PATH_W = 2.0        # default width of a set-back footpath without BDOT SZEROKOSC (PTB2022 § 29: >= 1.80 m)
+SURFACE_OF = {"yard_paving": "paving", "sidewalk_paving": "paving", "cycle_red": "asphalt",
+              "yard_concrete": "asphalt", "yard_slabs": "asphalt", "yard_asphalt": "asphalt",
+              "path_asphalt": "asphalt", "yard_gravel": "grass"}   # -> collision_<x> materials
+
+# Vertical signs [ZNAKI-Z1]. Table 1.11: lower edge >= 2.00 m in built-up areas, 2.20 m when the sign
+# stands on a sidewalk; signs over the carriageway >= 5.00 m.
+SIGN_H_MIN = 2.00
+SIGN_H_SIDEWALK = 2.20
+SIGN_H_OVERHEAD = 5.00
+# Sizes ("średnie" group, used on Z/G/GP streets) – WORKING_VALUE: Table 1.1 of [ZNAKI-Z1] not yet read;
+# values are common catalogue plate sizes (triangle side 900, disc 800, square 800, octagon 800 mm).
+# To be verified against Tabl. 1.1 before release.
+SIGN_SIZE = {"triangle": 0.90, "disc": 0.80, "square": 0.80, "octagon": 0.80, "diamond": 0.80}
+SIGN_LATERAL = 0.75         # WORKING_VALUE: plate edge 0.5-1.0 m behind the kerb face (never over the kerb)
+SIGN_POST_D = 0.0603        # Ø60.3 mm galvanised tube, standard Polish sign post (catalogue) WORKING_VALUE
+SPEED_SIGN_AFTER_JUNCTION = 30.0  # WORKING_VALUE distance; rule: a B-33 limit ends at the next junction
+                                  # (rozporządzenie o znakach i sygnałach drogowych, Dz.U. 2019 poz. 2310
+                                  # § 27 ust. 1), so the sign is repeated after every junction
+# Street lighting. PN-EN 13201-2 lighting classes do not fix geometry; WORKING_VALUE from typical
+# Polish municipal practice: galvanised conical steel columns, LED luminaire on a bracket.
+LAMP = {"GP": {"h": 12.0, "spacing": 36.0, "bracket": 1.5},
+        "G": {"h": 10.0, "spacing": 33.0, "bracket": 1.5},
+        "Z": {"h": 9.0, "spacing": 30.0, "bracket": 1.0},
+        "L": {"h": 8.0, "spacing": 30.0, "bracket": 1.0},
+        "D": {"h": 8.0, "spacing": 32.0, "bracket": 0.5}}
+LAMP_OFFSET = 0.80          # WORKING_VALUE: column axis behind the kerb face (skrajnia >= 0.5 m)
+# Traffic signals: S-1 three-aspect heads, Ø300 mm lenses (załącznik nr 3 of the 2003 regulation).
+# Placement -> WORKING_VALUE until read.
+SIGNAL_POLE_H = 4.0         # WORKING_VALUE
+SIGNAL_MAST_H = 6.8         # WORKING_VALUE: cantilever mast, head >= 5.0 m over the carriageway
+SIGNAL_CANTILEVER_LANES = 3 # WORKING_VALUE: approaches with >= 3 lanes get a cantilever head
+# Road restraint systems. GDDKiA "Wytyczne stosowania drogowych barier ochronnych na drogach krajowych"
+# (2010): barrier warranted on embankments higher than ~2 m – WORKING_VALUE until the text is read.
+GUARDRAIL_EMBANKMENT_H = 2.0
+GUARDRAIL_H = 0.75          # top of W-beam (typical SP-05 system) WORKING_VALUE
+GUARDRAIL_POST_SPACING = 2.0
+GUARDRAIL_OFFSET = 0.60     # behind the kerb face / edge WORKING_VALUE
+RAILING_H = 1.10            # pedestrian railing U-12a WORKING_VALUE (catalogue 1.0-1.1 m)
+# Fences (industrial plots) – catalogue values of 3D welded panel fences WORKING_VALUE
+FENCE_PANEL_W = 2.50
+FENCE_H = 2.03
+FENCE_PLINTH_H = 0.20
+CONCRETE_FENCE_H = 2.00     # prefabricated concrete panel fence (OSM barrier=wall around plots) WORKING_VALUE
+CONCRETE_FENCE_POST = 2.00
+NOISE_BARRIER_H = 4.0       # WORKING_VALUE (BDOT10k OT_OIKM_L has no height)
+NOISE_BARRIER_POST = 4.0
+# Loading docks (warehouse halls). WORKING_VALUE (catalogue values of dock equipment).
+DOCK_FLOOR_H = 1.20         # dock floor above the yard (EUR semitrailer bed 1.1-1.3 m)
+DOCK_PITCH = 4.0            # door spacing
+DOCK_DOOR_W, DOCK_DOOR_H = 3.0, 3.0
+DOCK_SHELTER_W, DOCK_SHELTER_H, DOCK_SHELTER_D = 3.40, 3.50, 0.60
+DOCK_APRON_L = 18.0         # concrete apron in front of each dock
 
 
 def road_class(highway: str) -> str:

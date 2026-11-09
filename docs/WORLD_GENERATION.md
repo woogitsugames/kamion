@@ -1,4 +1,4 @@
-# Generacja świata: drogi i teren (Etap 3–4)
+# Generacja świata: drogi, teren i otoczenie (Etap 3–4)
 
 Generator siatek dróg i terenu dla kafla regionu. Pierwsze wdrożenie: `bialystok-industrial-c` (Andersa / Rondo Putry → DK8/DK19, baza Kwadrat Park). Wszystko powstaje z danych (OSM + GUGiK), deterministycznie, jedną komendą.
 
@@ -6,13 +6,16 @@ Generator siatek dróg i terenu dla kafla regionu. Pierwsze wdrożenie: `bialyst
 
 ```
 uv run --project tools/worldgen tools/worldgen/build_region.py --region bialystok-industrial-c   # graf, NMT, budynki (geo-worldgen)
+uv run --project tools/worldgen python -c "import sys; sys.path.insert(0,'tools/worldgen'); from roads import pipeline; from streetscape import sources as s; s.write('bialystok-industrial-c', s.extract(pipeline.load_region('bialystok-industrial-c')))"   # tylko po zmianie OSM/BDOT
+uv run --project tools/worldgen tools/worldgen/streetscape/leaf_textures.py          # tekstury liści/kory/trawy (raz)
+blender -b --factory-startup -P tools/blender/world/make_trees.py                    # biblioteka drzew (raz)
 uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c [--context]
-blender -b --factory-startup -P tools/blender/world/render_control.py -- --region bialystok-industrial-c --out artifacts/visual/world-c/final --res 1600x900 --samples 64
+blender -b --factory-startup -P tools/blender/world/render_control.py -- --region bialystok-industrial-c --out <katalog absolutny> --light both --res 1600x900 --samples 64
 uv run --project tools/worldgen tools/worldgen/roads/qa_ortho.py --region bialystok-industrial-c --render artifacts/visual/world-c/final/ortho_putry.png --out artifacts/visual/world-c/final/ortho_putry_overlay.jpg
 uv run --project tools/worldgen pytest tests/gis -q
 ```
 
-`--context` ponownie wyciąga `generated/osm_context.json` (przejścia, sygnalizacja, chodniki z OSM) z cache wycinka OSM. Bez tej flagi generator nie potrzebuje pliku OSM (tylko grafu, NMT i tego JSON-a). Pełny build trwa ok. 50 s, render 6 kamer ok. 3 min (EEVEE).
+`--context` ponownie wyciąga `generated/osm_context.json` (przejścia, sygnalizacja, chodniki z OSM) z cache wycinka OSM. Bez tej flagi generator nie potrzebuje pliku OSM (tylko grafu, NMT i tego JSON-a). Pełny build trwa ok. 2 min (w tym otoczenie), render 11 kamer × 2 oświetlenia ok. 30 min (EEVEE).
 
 ## Wejścia i wyjścia
 
@@ -22,15 +25,24 @@ uv run --project tools/worldgen pytest tests/gis -q
 | wejście | `Data/Regions/<id>/overrides.yaml` (authored overrides) | tak |
 | wejście | `Data/Regions/<id>/generated/osm_context.json` (ODbL) | tak |
 | wejście | `Data/raw/derived/<id>/heightmap_2049.r16` (NMT 1 m, EVRF2007) | nie |
-| wyjście | `Data/raw/derived/<id>/world/chunk_<ci>_<cj>.glb` (64 pliki, ~270 MB razem, max 5,6 MB) | **nie** (regenerowalne) |
+| wejście | `Data/Regions/<id>/generated/streetscape_sources.json` — place, parkingi, ścieżki, ekrany, drzewa, ogrodzenia, słupy (OSM ODbL + BDOT10k, EPSG:2180) | tak |
+| wyjście | `Data/raw/derived/<id>/world/chunk_<ci>_<cj>.glb` — wariant High (64 pliki, ~390 MB) | **nie** (regenerowalne) |
+| wyjście | `Data/raw/derived/<id>/world/chunk_<ci>_<cj>.low.glb` — wariant Low/Medium (bez terenu 1 m i budynków LOD0; normalne int8 `KHR_mesh_quantization`, kolory 8-bit, teren bez UV0; ~85 MB) | **nie** |
+| wyjście | `Data/raw/derived/<id>/world/instances_<ci>_<cj>.json` — instancje punktowe (latarnie, znaki, sygnalizatory, wiaty, bramy, słupy, drzewa) | **nie** |
+| wyjście | `art-source/world/props/street_props.glb` + `props_meta.json` — prototypy wyposażenia (LOD0/LOD1/kolizja), lica znaków osadzone | tak |
+| wyjście | `art-source/world/vegetation/trees.glb` (LOD0/LOD1) + `trees_lod2.glb` (impostory) + `trees_meta.json` | tak |
+| wyjście | `art-source/world/{signs,textures,vegetation}/*.png` — lica znaków, siatka panelu ogrodzenia, numery ramp, liście, kora, kępy trawy, impostory | tak |
+| wyjście | `Data/Regions/<id>/generated/streetscape_qa.json` — źródła i powierzchnie placów, typologie budynków, rampy, liczniki wyposażenia i drzew, **tabela budżetu siatek** | tak |
 | wyjście | `Data/Regions/<id>/generated/world_manifest.json` — chunki, granice, sha256, materiały, typy nawierzchni, sha256 wejść | tak |
 | wyjście | `Data/Regions/<id>/generated/roads_qa.json` — szerokości i ich źródła, pochylenia, skrzyżowania, mosty, oznakowanie, low_confidence | tak |
 | wyjście | `Data/Regions/<id>/generated/control_cameras.json` — kamery kontrolne (do Blendera i później do Unity visual-qa) | tak |
-| wyjście | `Data/raw/derived/<id>/world/preview_{buildings,trees}.json`, `terrain_conformed.npy` — tylko kontekst renderów / testy | nie |
+| wyjście | `Data/raw/derived/<id>/world/terrain_conformed.npy` — testy | nie |
 
 **Układ:** lokalne metry względem kotwicy z `region.yaml` (E = x − origin.x, N = y − origin.y), wysokości bezwzględne EVRF2007 (ADR 0003). **glTF:** (x, y, z) = (−E, U, N); importery Unity (glTFast, UnityGLTF) negują x, więc w Unity wychodzi X = wschód, Y = góra, Z = północ. Blender importuje jako (−E, −N, U); skrypt renderu obraca to o 180° wokół Z.
 
-**Węzły w każdym GLB:** `terrain_lod0..3` (1/2/4/8 m, ze skirtami; LOD0 = 4 prymitywy po 129² wierzchołków → indeksy 16-bit), `road` (jezdnie, łaty skrzyżowań, krawężniki, chodniki), `bridge` (pomosty, spody, balustrady, przyczółki, podpory), `markings` (oznakowanie poziome jako decal mesh +6 mm), `road_collision` (uproszczona kolizja, osobny prymityw na typ nawierzchni). Sugerowane progi LOD terenu są w manifeście.
+**Węzły w każdym GLB:** `terrain_lod0..3` (1/2/4/8 m, ze skirtami; LOD0 = 4 prymitywy po 129² wierzchołków → indeksy 16-bit; `COLOR_0` = maski podłoża: R odległość od drogi/placu /20 m, G ściółka leśna, B trawa niekoszona, A goła ziemia), `road` (jezdnie, łaty skrzyżowań, krawężniki, chodniki; `TEXCOORD_1` = współrzędna pasa i odległość od krawędzi jezdni → koleiny, brud przy krawężniku), `bridge`, `markings` (decal mesh +6 mm), `paved` (place, parkingi, fartuchy ramp, ścieżki, obrzeża; `TEXCOORD_1` = odległość od krawędzi placu i od ściany), `buildings` (LOD0 z otworami i rampami), `buildings_lod1` (bryły LOD1), `furniture` (ogrodzenia, bariery, ekrany, mury, przewody), `road_collision` (kolizja: drogi, place, budynki LOD1, ogrodzenia/bariery; tylko pozycje + indeksy, osobny prymityw na materiał/typ nawierzchni). Wariant `.low.glb` ma te same nazwy węzłów bez `terrain_lod0` i `buildings`. Pozycje są kwantowane do 1 mm, normalne i UV do 1e-4 przed zapisem float32, żeby drobne różnice numeryczne między środowiskami Pythona nie zmieniały bajtów (zgłoszenie agenta Unity: 10/64 chunków z innym sha256). Sprawdzone: build w świeżym venv (`UV_PROJECT_ENVIRONMENT` w nowym katalogu, ten sam `uv.lock`) daje 128/128 identycznych plików (High + Low). Inny system operacyjny lub CPU nie był testowany.
+
+**Instancje** (`instances_<ci>_<cj>.json`): `{p: prototyp, e, n, z, yaw [, sz]}`; `yaw` obraca lokalne +y prototypu (front: lico znaku, wysięgnik latarni w stronę jezdni), `sz` skaluje oś pionową (wysokość słupka znaku). Drzewa: `{p: tree_<gatunek>, v: wariant, h: wysokość, lean, yaw}`, skala = `h / href_m` z `trees_meta.json`. Prototypy wyposażenia: `street_props.glb` w tej samej konwencji osi co chunki (glTF = (−x, z, y)); drzewa eksportuje Blender (`export_yup`), więc ich lokalna oś pionowa to glTF +Y. Importer powinien je instancjonować (GPU instancing / `Graphics.RenderMeshInstanced`), a nie scalać.
 
 ## Jak to działa
 
@@ -49,9 +61,50 @@ uv run --project tools/worldgen pytest tests/gis -q
 
 Wszystkie liczby projektowe z odnośnikami i oznaczeniem `WORKING_VALUE` są w `tools/worldgen/roads/standards.py`.
 
+## Otoczenie (`tools/worldgen/streetscape`, Etap 3)
+
+Etap otoczenia uruchamia się w `build_world.py` po drogach i oznakowaniu (`streetscape/stage.py`). Kolejność:
+
+1. **Źródła** (`sources.py`): z wycinka OSM i BDOT10k powiatu 2061 wyciągane są place (`OT_PTPL_A` z `MATERIALNAWIERZCHNI`), parkingi i stacje paliw (`OT_KUKO_A`, OSM `amenity=parking`), ścieżki i drogi rowerowe (`OT_SKRP_L`), ekrany akustyczne (`OT_OIKM_L`), przystanki (`OT_OIKM_P`, OSM `highway=bus_stop`), drzewa pojedyncze, szpalery i kępy (`OT_OIPR_P/L`), lasy z kategorią (`OT_PTLZ_A`), mury oporowe (`OT_BUUO_L`), słupy i linie energetyczne (`OT_BUWT_P`, `OT_SULN_L`) oraz z OSM ogrodzenia (`barrier=*`), bramy, szlabany, latarnie, ławki i kosze. Wynik to `generated/streetscape_sources.json` (~440 KB).
+2. **Budynki** (`buildings_mesh.py`): typologia z funkcji BDOT10k i powierzchni (hala, biurowiec/usługi, blok, dom, budynek gospodarczy, wiata). Ściany mają prawdziwe otwory (dekompozycja kolumnowa) z ościeżami. Hala: cokół betonowy, płyta warstwowa (UV u = metry wzdłuż ściany, v = metry nad gruntem; żebra i styki paneli w materiale), obróbka attyki, dach z membraną i attyką, świetliki na halach > 3000 m², drzwi i okna taśmowe. Magazyn z elewacją od strony placu (≥ 60% pasa 2–14 m przed ścianą utwardzone) dostaje rampy co 4 m: brama segmentowa 3 × 3 m na wysokości 1,20 m, uszczelnienie (fartuchy z żółtym pasem), odboje, pomost wyrównawczy z pasami ostrzegawczymi, numer rampy (atlas cyfr), sygnalizator, prowadnice kół oraz betonowy fartuch 18 m przed rampami. Dom: dach dwuspadowy (typ dachu i wysokość okapu z LoD2, nachylenie 35°, WORKING_VALUE). Warstwy: `buildings` (LOD0), `buildings_lod1`, kolizja.
+3. **Place** (`paved.py`): priorytet override → fartuchy ramp → OSM parking z `surface` → BDOT plac/parking → OSM parking bez `surface` → ścieżki. Całość jest przycinana obrysem jezdni (z trójkątów drogi) i budynków. Wysokość: wygładzony NMT (σ 3 m) wtopiony w wysokość krawędzi drogi na 12 m. Siatka dzielona co 4 m. Nawierzchnie: kostka szara (`yard_paving`), beton z nacięciami co 5 m (`yard_concrete`), płyty drogowe 3 × 1,5 m (`yard_slabs`), asfalt, kruszywo, czerwona droga rowerowa, kostka chodnikowa. Obrzeże betonowe 8 × 30 cm tylko przy kostce i tylko tam, gdzie plac nie styka się z jezdnią. Teren jest konformowany do dróg i placów razem.
+4. **Teren** (`conform.tidy`): wąskie zamknięte pasy (pasy dzielące, wyspy, szczeliny droga–plac) dostają harmoniczną powierzchnię między krawędziami dróg, bez garbów. Pas 1,5–12 m od drogi jest wygładzany (σ 1,2 m), co usuwa fasety stożka nasypu.
+5. **Przekrój zamiejski** (`network.assign_sides`): strona jezdni GP/G przy ≥ 70 km/h bez chodnika ani ścieżki w promieniu 7 m dostaje pobocze utwardzone 1,0 m i nieutwardzone 0,75 m, rów i brak krawężnika. Pas dzielący takiej drogi (lub drogi 90 km/h) ma opaskę 0,5 m, trawę i barierę. Drogi serwisowe biegnące przez plac z BDOT/OSM są bez krawężnika.
+6. **Wyposażenie** (`furniture.py`, reguły w docstringu, liczby w `standards.py`):
+   - latarnie co 30–36 m wg klasy drogi;
+   - A-7 + C-12 na każdym wlocie ronda;
+   - A-7 i D-1 na skrzyżowaniach bez sygnalizacji z drogą wyższej klasy;
+   - B-20 z OSM;
+   - B-33 na początku każdego łańcucha z `maxspeed` ≠ 50, powtarzany za skrzyżowaniem (tam ograniczenie się kończy);
+   - D-6 po obu stronach przejść bez sygnalizacji i D-15 na przystankach;
+   - schematyczne E-2 przy łącznicach z `destination`;
+   - S-1 na wlotach skrzyżowań z sygnalizacją (maszt z wysięgnikiem przy ≥ 3 pasach);
+   - bariery stalowe na mostach, pasach dzielących dróg zamiejskich i nasypach > 2 m;
+   - ekrany akustyczne, ogrodzenia panelowe 3D na cokole, ogrodzenia z płyt betonowych, mury oporowe z poręczą, linie energetyczne ze zwisem.
+
+   Wysokość dolnej krawędzi znaku: 2,00 m, a na chodniku 2,20 m (Tabl. 1.11 zał. 1, Dz.U. 2021 poz. 2066). Lica znaków to nasze własne rysunki wektorowe (`signs.py`).
+7. **Roślinność** (`vegetation.py`, `tools/blender/world/make_trees.py`):
+   - gatunki: sosna, brzoza, olsza, klon, lipa, krzew;
+   - rozmieszczenie: siatka z rozrzutem w lasach (miks gatunków wg kategorii BDOT), pas krzewów na skraju lasu, drzewa pojedyncze i szpalery z BDOT/OSM oraz rzadki samosiew na nieużytkach;
+   - drzewa: korony z kart liści na rekurencyjnym szkielecie, normalne kart od środka korony, 3 warianty na gatunek;
+   - LOD: LOD0, LOD1 i impostor (2 skrzyżowane płaty z renderem ortogonalnym).
+
+   Modele 3D drzew GUGiK (1,07 GB) nie są pobrane, więc pozycje pochodzą z BDOT10k i OSM.
+8. **Budżet** (`mesh_budget`): trójkąty i materiały statyczne na chunk (High/Low) oraz szacunek klatki dla kamer kontrolnych wg `LOD_POLICY`.
+
+Rendery kontrolne (`render_control.py`) budują materiały proceduralne z tymi samymi maskami, które dostanie shader silnika:
+- asfalt: łaty, spękania z zalewaniem, polerowane ślady kół i koleiny z `TEXCOORD_1`, plamy oleju w osi pasa, brud przy krawężniku, szew między pasami;
+- krawężnik: segmenty 1 m ze stykami;
+- place: fugi, mech przy krawędziach, brud przy ścianach, ślady opon i oleju;
+- ściany: zacieki i strefa rozbryzgu przy gruncie;
+- teren: z masek podłoża, kępy trawy w promieniu 55 m od kamery (wyższe w trawie niekoszonej).
+
+Oświetlenie `--light overcast|lowsun|both`: AgX, bez bloomu, winiety i aberracji. Horyzont to mgiełka i daleka płaszczyzna terenu.
+
+
 ## Authored overrides
 
-`Data/Regions/<id>/overrides.yaml` jest stosowany po wczytaniu grafu, przed geometrią, i adresuje obiekty stabilnymi identyfikatorami z OSM (`edge`, `osm_way`, `node`). Dzięki temu przeżywa każdą regenerację. Cel, którego już nie ma w danych, trafia do `overrides_stale` w manifeście i w raporcie QA; nic nie jest pomijane po cichu. Obsługiwane pola: `lanes`, `lane_width`, `edge_strip`, `surface`, `side_left/side_right` (`sidewalk`, `verge`, `median`, `flush`), a dla węzła `curb_radius` i `z`.
+`Data/Regions/<id>/overrides.yaml` jest stosowany po wczytaniu grafu, przed geometrią, i adresuje obiekty stabilnymi identyfikatorami z OSM (`edge`, `osm_way`, `node`). Dzięki temu przeżywa każdą regenerację. Cel, którego już nie ma w danych, trafia do `overrides_stale` w manifeście i w raporcie QA; nic nie jest pomijane po cichu. Obsługiwane pola: `lanes`, `lane_width`, `edge_strip`, `surface`, `side_left/side_right` (`sidewalk`, `verge`, `median`, `flush`), a dla węzła `curb_radius` i `z`. Otoczenie: `target: {building: <id z buildings.geojson>}` z `set: {typology, hero, docks, wall_material, max_docks_per_facade}` (przykład: magazyn Kwadrat Park, który BDOT10k opisuje jako obiekt handlowo-usługowy) oraz `kind: paved_area` z `polygon_epsg2180` i `material` (plac, którego nie ma w danych).
 
 Przykład w repo (baza Kwadrat Park): droga dojazdowa do placu ma w OSM tylko `highway=service`, więc generator dał klasę D (2 × 2,50 m). Ortofoto pokazuje ok. 7 m asfaltu, więc override ustawia 2 × 3,50 m. Na placu nie ma krawężników (`flush`), a łuk wjazdu ma 15 m dla naczepy. Każdy wpis ma `reason`, `confidence` i `verify` (pozycję z listy zdjęć właściciela). Test `test_overrides_applied_and_not_stale` pilnuje, że wpisy działają po regeneracji.
 
@@ -62,11 +115,11 @@ Przykład w repo (baza Kwadrat Park): droga dojazdowa do placu ma w OSM tylko `h
 
 ## Znane braki (kolejne kroki)
 
-- **Place, parkingi i podwórza** nie są modelowane: poza drogami jest trawa (widać to na kamerze bramy Kwadrat Parku, gdzie w rzeczywistości jest utwardzony plac). Następny krok: BDOT10k `OT_PTKM_A`/`OT_PTPL_A` + OSM `amenity=parking`, `landuse=industrial` z nawierzchnią.
-- **Chodniki oddalone od krawężnika** (ścieżki OSM > 3,5 m od jezdni) nie są generowane.
+- **Place** są tylko tam, gdzie opisują je BDOT10k/OSM. Utwardzenia widoczne na ortofoto, ale nieobecne w danych (np. część placu wokół długiej hali na wschód od Kwadrat Parku), wymagają override `paved_area` po sesji zdjęciowej.
 - **21 łat skrzyżowań** naprawianych przez `make_valid` (nakładające się rozwidlenia łącznic, gęste klastry przy Rondzie Putry): bez dziur, ale z możliwym nakładaniem się na taśmy i krawężnikami tylko na zewnętrznym obrysie.
-- **Rozwidlenia o różnej szerokości** dają uskok krawężnika zamiast płynnego zwężenia (`kwadrat_park_gate`); potrzebne jest zwężanie `hw` na ramieniu.
+- **Zwężenia na rozwidleniach:** ta sama droga zmieniająca szerokość w węźle (ten sam typ, kierunkowość, różnica połowy szerokości 0,25–1,25 m) jest zwężana skosem 1:10 (`network.taper_forks`, lista w `roads_qa.json` → `fork_tapers`). **Nie** dotyczy to rozdzielenia jezdni dwukierunkowej na dwie jednokierunkowe z wyspą (brama Kwadrat Parku): tam uskok krawężnika jest nadal widoczny i wymaga osobnej geometrii „nosa” rozdzielenia.
 - **Mosty**: wymiary konstrukcji i rozstaw podpór to WORKING_VALUE; zakres `bridge` z OSM bywa krótszy niż obiekt (Bieżeństwa).
 - **Szerokości**: BDOT10k (zaokrąglone do 0,5 m) albo standard klasy. Trzeba je potwierdzić pomiarem na ortofoto 5 cm lub zdjęciami.
-- Roślinność i budynki w renderach są tylko kontekstem (BDOT10k `OT_PTLZ_A`/`OT_PTRK_A` + bryły LoD1) i nie są zasobami gry.
-- Import Unity (`scripts/import-region.ps1`) jeszcze nie istnieje; manifest jest gotowy jako jego wejście.
+- Import Unity: `scripts/import-region.ps1` (glTFast, ADR 0011, scena WorldC) istnieje na `main`. Nowe węzły (`paved`, `buildings`, `buildings_lod1`, `furniture`), wariant `.low.glb` i pliki instancji są dodatkowe; dotychczasowe węzły i ich nazwy się nie zmieniły. Kolizja ma teraz tylko pozycje (bez normalnych/UV), a `road_collision` obejmuje też place, budynki i ogrodzenia (materiały `collision_*`, typ powierzchni w `extras.surface`). Importer musi jeszcze: instancjonować `instances_*.json` z `street_props.glb`/`trees*.glb` i przełączać High/Low.
+- **Rozmiar:** High ~390 MB (z czego 217 MB to teren 1 m), Low ~85 MB na 4 km². Na telefon trzeba jeszcze kompresji siatek przy buildzie (`EXT_meshopt_compression`, obsługiwane przez glTFast; zwykle 3–5× mniej) albo terenu 1 m tylko w pasie przy drodze. Pomiar na A16 jest przed nami.
+- Mesh budget (`streetscape_qa.json` → `mesh_budget`): szacunek klatki dla kamer kontrolnych (klin 120°, bez occlusion cullingu): Low 0,24–0,81 mln trójkątów (cel z docs/06 §6: 0,4–0,6 mln; przekracza go stretch_04 przy Andersa), High 1,0–3,1 mln, a w lesie przy DK8 8,1 mln (do zrobienia: gęstsze impostory, HLOD lasu, occlusion culling). Statycznie na chunk: mediana High 152 tys. / Low 46 tys. trójkątów, max 286 tys. / 126 tys., do 55 materiałów. Liczby klatki trzeba potwierdzić na urządzeniu; politykę LOD opisuje `LOD_POLICY` w `build_world.py` (WORKING_VALUE).
