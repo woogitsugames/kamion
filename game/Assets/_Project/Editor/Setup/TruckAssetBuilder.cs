@@ -162,18 +162,21 @@ namespace Game.Editor.Setup
                     : n.Contains("Decal") || n.StartsWith("T_Display", StringComparison.Ordinal) ? TextureImporterFormat.ASTC_6x6
                     : n.EndsWith("_M", StringComparison.Ordinal) || n.Contains("MaskMap") ? TextureImporterFormat.ASTC_8x8
                     : high ? TextureImporterFormat.ASTC_6x6 : TextureImporterFormat.ASTC_8x8;
+                // B2.1: High atlases are exported at 4096 (owner priority: quality); keep the source size up to 4096.
+                ti.GetSourceTextureWidthAndHeight(out int srcW, out int srcH);
+                int maxSize = Mathf.Clamp(Mathf.NextPowerOfTwo(Mathf.Max(srcW, srcH)), 32, high ? 4096 : 2048);
                 bool dirty = false;
                 if (ti.textureType != (normal ? TextureImporterType.NormalMap : TextureImporterType.Default)) { ti.textureType = normal ? TextureImporterType.NormalMap : TextureImporterType.Default; dirty = true; }
                 if (!normal && ti.sRGBTexture != srgb) { ti.sRGBTexture = srgb; dirty = true; }
                 if (!ti.mipmapEnabled) { ti.mipmapEnabled = true; dirty = true; }
                 if (ti.anisoLevel != 2) { ti.anisoLevel = 2; dirty = true; }
-                if (ti.maxTextureSize != 2048) { ti.maxTextureSize = 2048; dirty = true; }
+                if (ti.maxTextureSize != maxSize) { ti.maxTextureSize = maxSize; dirty = true; }
                 if (ti.alphaSource != TextureImporterAlphaSource.FromInput) { ti.alphaSource = TextureImporterAlphaSource.FromInput; dirty = true; }
                 if (ti.alphaIsTransparency) { ti.alphaIsTransparency = false; dirty = true; }
                 var a = ti.GetPlatformTextureSettings("Android");
-                if (!a.overridden || a.format != fmt || a.maxTextureSize != 2048)
+                if (!a.overridden || a.format != fmt || a.maxTextureSize != maxSize)
                 {
-                    a.overridden = true; a.format = fmt; a.maxTextureSize = 2048; a.compressionQuality = 50;
+                    a.overridden = true; a.format = fmt; a.maxTextureSize = maxSize; a.compressionQuality = 50;
                     ti.SetPlatformTextureSettings(a);
                     dirty = true;
                 }
