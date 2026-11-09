@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace Game.Rendering
 {
@@ -24,6 +25,12 @@ namespace Game.Rendering
         public LightingPreset Active => presets != null && presets.Length > 0 ? presets[Mathf.Clamp(activeIndex, 0, presets.Length - 1)] : null;
 
         Cubemap m_Reflection;
+        // Look grading (D23): a runtime-only global volume with this preset's colour adjustments; never saved, so the
+        // shared world profile (tonemapper only) stays untouched.
+        Volume m_LookVolume;
+        VolumeProfile m_LookProfile;
+        ColorAdjustments m_ColorAdj;
+        LiftGammaGain m_Lgg;
 
         static readonly int k_PerezY = Shader.PropertyToID("_SkyPerezY"), k_PerezX = Shader.PropertyToID("_SkyPerezX"),
             k_PerezYc = Shader.PropertyToID("_SkyPerezYc"), k_PerezE = Shader.PropertyToID("_SkyPerezE"),
@@ -45,6 +52,8 @@ namespace Game.Rendering
 
         void OnDestroy()
         {
+            if (m_LookProfile != null) { if (Application.isPlaying) Destroy(m_LookProfile); else DestroyImmediate(m_LookProfile); }
+            if (m_LookVolume != null) { if (Application.isPlaying) Destroy(m_LookVolume.gameObject); else DestroyImmediate(m_LookVolume.gameObject); }
             if (m_ChromaTex != null) { if (Application.isPlaying) Destroy(m_ChromaTex); else DestroyImmediate(m_ChromaTex); }
             if (m_Reflection != null) { if (Application.isPlaying) Destroy(m_Reflection); else DestroyImmediate(m_Reflection); }
         }
@@ -117,6 +126,8 @@ namespace Game.Rendering
             RenderSettings.customReflectionTexture = m_Reflection;
             RenderSettings.reflectionIntensity = 1f;
 
+            ApplyLook(p);
+
             // ---- aerial perspective: Beer-Lambert extinction with horizon in-scatter colour ----
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Exponential;
@@ -124,6 +135,37 @@ namespace Game.Rendering
             // RenderSettings.fogColor is specified in sRGB like other colours and linearised by Unity.
             var fogClamped = new Color(Mathf.Min(fog.r, 1f), Mathf.Min(fog.g, 1f), Mathf.Min(fog.b, 1f), 1f);
             RenderSettings.fogColor = fogClamped.gamma;
+        }
+
+        void ApplyLook(LightingPreset p)
+        {
+            if (m_LookVolume == null)
+            {
+                const string name = "LookVolume (runtime)";
+                var t = transform.Find(name);
+                var go = t != null ? t.gameObject : new GameObject(name);
+                go.hideFlags = HideFlags.DontSave | HideFlags.NotEditable;
+                go.transform.SetParent(transform, false);
+                m_LookVolume = go.GetComponent<Volume>();
+                if (m_LookVolume == null) m_LookVolume = go.AddComponent<Volume>();
+                m_LookVolume.isGlobal = true;
+                m_LookVolume.priority = 10f;
+            }
+            if (m_LookProfile == null)
+            {
+                m_LookProfile = ScriptableObject.CreateInstance<VolumeProfile>();
+                m_LookProfile.name = "VP_Look (runtime)";
+                m_LookProfile.hideFlags = HideFlags.DontSave;
+                m_ColorAdj = m_LookProfile.Add<ColorAdjustments>(true);
+                m_Lgg = m_LookProfile.Add<LiftGammaGain>(true);
+            }
+            m_LookVolume.sharedProfile = m_LookProfile;
+            m_ColorAdj.contrast.Override(p.lookContrast);
+            m_ColorAdj.saturation.Override(p.lookSaturation);
+            m_ColorAdj.postExposure.Override(0f);   // exposure is pre-multiplied into the lights (also on LDR tiers)
+            m_Lgg.lift.Override(new Vector4(1f, 1f, 1f, p.lookShadowLift));
+            m_Lgg.gamma.Override(new Vector4(1f, 1f, 1f, 0f));
+            m_Lgg.gain.Override(new Vector4(1f, 1f, 1f, p.lookHighlightGain));
         }
     }
 }

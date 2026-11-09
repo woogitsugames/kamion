@@ -22,6 +22,7 @@ Shader "Kamion/World Surface"
         _MacroSize ("Macro tile size (m)", Float) = 61
         _MacroStrength ("Macro albedo variation", Range(0, 1)) = 0.25
         _MacroTint ("Macro tint (multiplied where noise is high)", Color) = (1, 1, 1, 1)
+        _DryTint ("Unmown / dry grass tint (ground masks B)", Color) = (1.22, 1.08, 0.72, 1)
         _Smoothness ("Smoothness", Range(0, 1)) = 0.1
         _SmoothnessVar ("Smoothness from detail (polish)", Range(0, 1)) = 0
         _Occlusion ("Ambient occlusion", Range(0, 1)) = 1
@@ -43,6 +44,7 @@ Shader "Kamion/World Surface"
             float4 _BaseMap_ST;
             float4 _MacroMap_ST;
             float4 _MacroTint;
+            float4 _DryTint;
             float4 _FadeColor;
             float _FadeWidth;
             float _TileSize, _DetailScale, _DetailMix, _MacroSize, _MacroStrength;
@@ -135,7 +137,7 @@ Shader "Kamion/World Surface"
                     // Blender control renders until photo scans exist).
                     half4 k = i.masks;
                     half3 detail = (2.0 * det) * (1.0 + _MacroStrength * m);
-                    albedo = lerp(albedo, albedo * half3(1.22, 1.08, 0.72), k.b * 0.8);
+                    albedo = lerp(albedo, albedo * _DryTint.rgb, k.b * 0.8);
                     albedo = lerp(albedo, half3(0.085, 0.072, 0.045) * detail, k.g);
                     albedo = lerp(albedo, half3(0.13, 0.11, 0.085) * detail, k.a);
                     half grit = (1.0 - smoothstep(0.03, 0.07, k.r)) * 0.7;

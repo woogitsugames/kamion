@@ -56,7 +56,7 @@ if ($Launch) {
         if ($Trailer) { $startArgs += @('-e', 'trailer', $Trailer) }
         # -QaCamera <id>: render from that ControlCamera (HUD hidden) - native-resolution device frame of the control set.
         if ($QaCamera) { $startArgs += @('-e', 'qacam', $QaCamera) }
-        foreach ($kv in $Extra) { $k, $v = $kv -split '=', 2; $startArgs += @('-e', $k, $v) }
+        foreach ($kv in ($Extra -split "," | Where-Object { $_ })) { $k, $v = $kv -split '=', 2; $startArgs += @('-e', $k, $v) }
         & $Adb -s $d @startArgs | Out-Null
         Write-Host "$d launched $component"
     }

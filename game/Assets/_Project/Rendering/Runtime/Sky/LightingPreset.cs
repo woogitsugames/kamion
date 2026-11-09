@@ -33,8 +33,21 @@ namespace Game.Rendering
         [Tooltip("Automatic: incident-meter EV100 of the horizontal illuminance (EV = log2(E/2.5)) plus compensation")]
         public bool autoExposure = true;
         public float ev100 = 15f;
-        [Tooltip("Exposure compensation in stops (positive = brighter)")]
-        public float exposureCompensation = 0.5f;
+        [Tooltip("Exposure compensation in stops (positive = brighter). D23: a phone exposes ~+1 EV over an incident meter " +
+                 "(matrix metering on a dark ground, highlight roll-off by the tone curve) - clear +1.2, overcast +1.0.")]
+        public float exposureCompensation = 1.2f;
+
+        [Header("Look (owner decision D23: like a phone photo)")]
+        [Tooltip("Colour grading contrast (URP Color Adjustments, -100..100). A phone's global tone curve is flatter than a " +
+                 "film S-curve; negative = softer. Applied on every tier that runs post-processing.")]
+        [Range(-50f, 20f)] public float lookContrast = -10f;
+        [Tooltip("Colour grading saturation (-100..100). Natural colours: 0 or slightly negative (docs/06 §2).")]
+        [Range(-30f, 20f)] public float lookSaturation = 0f;
+        [Tooltip("Shadow lift (Lift/Gamma/Gain lift offset): phone pipelines raise the black level and open the shadows " +
+                 "(multi-frame noise reduction + local tone mapping). 0 = none.")]
+        [Range(0f, 0.15f)] public float lookShadowLift = 0.03f;
+        [Tooltip("Highlight gain offset (Lift/Gamma/Gain gain): negative pulls bright surfaces and the sky away from clipping.")]
+        [Range(-0.2f, 0.1f)] public float lookHighlightGain = 0f;
 
         public float ResolveEv100(SkyModel probe) => (autoExposure ? SkyModel.IncidentEv100(probe.HorizontalIlluminanceLux) : ev100) - exposureCompensation;
 
@@ -49,7 +62,8 @@ namespace Game.Rendering
         {
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_Clear";
-            p.sunElevationDeg = 42f; p.sunAzimuthDeg = 200f; p.turbidity = 2.5f; p.overcast = 0f; p.visibilityKm = 30f;
+            p.sunElevationDeg = 42f; p.sunAzimuthDeg = 200f; p.turbidity = 2.5f; p.overcast = 0f; p.visibilityKm = 20f;
+            p.exposureCompensation = 1.2f; p.lookContrast = -10f; p.lookSaturation = -3f; p.lookShadowLift = 0.03f;
             return p;
         }
 
@@ -57,8 +71,8 @@ namespace Game.Rendering
         {
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_Overcast";
-            p.sunElevationDeg = 30f; p.sunAzimuthDeg = 200f; p.turbidity = 4f; p.overcast = 1f; p.visibilityKm = 12f;
-            p.exposureCompensation = 0.3f;
+            p.sunElevationDeg = 30f; p.sunAzimuthDeg = 200f; p.turbidity = 4f; p.overcast = 1f; p.visibilityKm = 8f;
+            p.exposureCompensation = 1.0f; p.lookContrast = -8f; p.lookSaturation = 0f; p.lookShadowLift = 0.025f;
             return p;
         }
     }

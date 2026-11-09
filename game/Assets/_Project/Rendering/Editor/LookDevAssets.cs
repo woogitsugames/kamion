@@ -79,6 +79,9 @@ namespace Game.Rendering.Editor
             public string texture;
             public float tile, detailScale, detailMix, macroSize, macroStrength, smoothnessVar;
             public Color macroTint;
+            /// <summary>Calibrated linear albedo replacing the generator's manifest colour (alpha 0 = keep the manifest).</summary>
+            public Color albedoOverride;
+            public Color dryTint;
         }
 
         public static SurfaceStyle StyleFor(string surface)
@@ -87,7 +90,11 @@ namespace Game.Rendering.Editor
             {
                 case "grass":
                     // Dry, yellower patches where the macro noise is high: breaks the uniform lawn at distance.
-                    return new SurfaceStyle { texture = WorldTextureGenerator.Grass, tile = 3.1f, detailScale = 3.3f, detailMix = 0.5f, macroSize = 47f, macroStrength = 0.25f, macroTint = new Color(1.25f, 1.12f, 0.85f) };
+                    // Visual review r2 §4 #2: the generator's (0.11, 0.15, 0.06) read as a saturated yellow-green lawn.
+                    // Podlasie verges in autumn are olive-grey: linear albedo ≈ 0.09 luminance (field range of mown grass
+                    // 0.08-0.12 incl. dead blades), G/R 1.15, B/G 0.55. Dry/unmown and macro tints toward straw, not yellow.
+                    return new SurfaceStyle { texture = WorldTextureGenerator.Grass, tile = 3.1f, detailScale = 3.3f, detailMix = 0.5f, macroSize = 47f, macroStrength = 0.22f,
+                        macroTint = new Color(1.16f, 1.07f, 0.92f), albedoOverride = new Color(0.085f, 0.098f, 0.054f, 1f), dryTint = new Color(1.22f, 1.10f, 0.92f) };
                 case "asphalt":
                     return new SurfaceStyle { texture = WorldTextureGenerator.Asphalt, tile = 2.3f, detailScale = 2.71f, detailMix = 0.45f, macroSize = 37f, macroStrength = 0.14f, macroTint = Color.white, smoothnessVar = 0.08f };
                 case "paving_stones":
@@ -135,7 +142,9 @@ namespace Game.Rendering.Editor
                 var st = StyleFor(surface);
                 // Material colours are stored as sRGB and linearised for the GPU in a linear project: pass .gamma so the
                 // shader receives the manifest's linear albedo exactly.
+                if (st.albedoOverride.a > 0f) albedo = st.albedoOverride;
                 mat.SetColor("_BaseColor", new Color(albedo.r, albedo.g, albedo.b, 1f).gamma);
+                mat.SetColor("_DryTint", (st.dryTint.maxColorComponent > 0f ? st.dryTint : new Color(1.22f, 1.08f, 0.72f)).gamma);
                 mat.SetTexture("_BaseMap", AssetDatabase.LoadAssetAtPath<Texture2D>(st.texture));
                 mat.SetTexture("_MacroMap", AssetDatabase.LoadAssetAtPath<Texture2D>(WorldTextureGenerator.Macro));
                 mat.SetFloat("_TileSize", st.tile);
