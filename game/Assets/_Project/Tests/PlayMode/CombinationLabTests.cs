@@ -340,6 +340,39 @@ namespace Game.Tests
             Assert.Less(maxSpeed, 3.0f, "no runaway speeds");
         }
 
+        /// <summary>Runner downhill_7pct_typeIIA@laden40 (R13 Type-II(A)): 40 t down 7 % with brake cruise at 30 km/h —
+        /// engine brake + retarder hold the speed, the service brake stays off.</summary>
+        [Test]
+        public void Descent_7pct_40t_BrakeCruise30_NoServiceBrake()
+        {
+            var slope = Slope(0.07f, 760f);
+            var downhill = slope * Quaternion.Euler(0f, 180f, 0f);
+            SpawnCoupled(slope * new Vector3(0, 0, 300f), downhill, CargoPreset.Gross40t, false);
+            m_Body.SetMoving(30f / 3.6f, 0);
+            Physics.SyncTransforms();
+            double sum = 0, vMin = 1e9, vMax = 0, maxService = 0, maxRet = 0; int n = 0;
+            for (int i = 0; i < 5000; i++)
+            {
+                var inp = m_Body.Input;
+                inp.Throttle = 0; inp.Brake = 0; inp.Steer = 0; inp.Selector = GearSelector.Drive; inp.ParkingBrake = false;
+                inp.BrakeCruiseKmh = 30; inp.RetarderLever = 0;
+                m_Body.Input = inp;
+                Step(1);
+                if (i * Dt >= 15f)
+                {
+                    double v = ForwardKmh; sum += v; n++;
+                    vMin = Math.Min(vMin, v); vMax = Math.Max(vMax, v);
+                    maxService = Math.Max(maxService, m_Body.Model.BrakeDemand);
+                    maxRet = Math.Max(maxRet, m_Body.Model.Retarder.Torque);
+                }
+            }
+            double mean = sum / n;
+            Debug.Log($"[TEST] descent 7 % 40 t brake cruise 30: mean {mean:F2} km/h (runner 30.0), range {vMin:F2}..{vMax:F2}, max service demand {maxService:F3}, " +
+                      $"max retarder {maxRet:F0} N m, engine brake {m_Body.Model.Engine.EngineBrakeTorque:F0} N m, gear {m_Body.Model.Amt.Gear}, rpm {m_Body.Model.Engine.Rpm:F0}");
+            Assert.That(mean, Is.InRange(25.0, 35.0), "mean speed 25-35 km/h (runner check)");
+            Assert.Less(maxService, 0.02, "no service brake (endurance brakes only)");
+        }
+
         [Test]
         public void Combination_FixedStep_ZeroGcAllocation()
         {

@@ -188,7 +188,6 @@ namespace Game.Gameplay
             m_Spawn = spawn;
             if (persist) PlayerPrefs.SetInt(PrefSpawn, (int)spawn);
             bool coupled = spawn != LabSpawn.Solo && trailer != null;
-            Quaternion north = Quaternion.identity;
             Vector3 pos;
             if (m_AutopilotStart) pos = Autopilot.CircleCenter + new Vector3(Autopilot.Radius, 0f, 0f);
             else if (coupled) pos = DrivingLabLayout.Spawn;
@@ -197,7 +196,19 @@ namespace Game.Gameplay
                 float jaw = (float)vehicle.Model.Def.fifthWheel.position.z;
                 pos = DrivingLabLayout.CouplingKingpin + new Vector3(0f, 0f, DrivingLabLayout.CouplingGap - jaw);
             }
+            // Autopilot (device runs): solo on the circle, the trailer stays parked in its bay, off the circle.
+            SpawnAt(spawn, pos, Quaternion.identity, m_AutopilotStart ? DrivingLabLayout.CouplingKingpin : (Vector3?)null);
+        }
 
+        /// <summary>
+        /// Spawns a preset at a ground point and heading (flat ground). Coupled presets: trailer in the jaw behind the
+        /// tractor. Solo: the trailer is parked on its legs with the kingpin <see cref="DrivingLabLayout.CouplingGap"/>
+        /// behind the jaw, aligned (ready to reverse under).
+        /// </summary>
+        public void SpawnAt(LabSpawn spawn, Vector3 pos, Quaternion north, Vector3? parkedKingpin = null)
+        {
+            m_Spawn = spawn;
+            bool coupled = spawn != LabSpawn.Solo && trailer != null;
             vehicle.ResetPose(pos, north);
             if (trailer != null)
             {
@@ -208,7 +219,11 @@ namespace Game.Gameplay
                 vehicle.SetPose(vp, vq);
                 Vector3 tp; Quaternion tq;
                 if (coupled) CombinationPlacement.Coupled(vehicle.Model, vp, vq, trailer.Model, 0f, out tp, out tq);
-                else CombinationPlacement.Parked(trailer.Model, DrivingLabLayout.CouplingKingpin, north, out tp, out tq);
+                else
+                {
+                    Vector3 kp = parkedKingpin ?? pos + north * new Vector3(0f, 0f, (float)vehicle.Model.Def.fifthWheel.position.z - DrivingLabLayout.CouplingGap);
+                    CombinationPlacement.Parked(trailer.Model, kp, north, out tp, out tq);
+                }
                 trailer.SetPose(tp, tq);
             }
             Physics.SyncTransforms();
