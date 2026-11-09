@@ -25,3 +25,11 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 - Współczynnik skali tras — Etap 7.
 - Zakup lub pożyczenie flagowca — gdy zacznie blokować.
 - Opinia prawna dot. ODbL/derived database — przed publikacją.
+
+## Decyzje z 2026-11-09 (sesja 1)
+| # | Temat | Decyzja |
+|---|---|---|
+| D15 | Obszar startowy (D4) | **Kandydat C**: Kwadrat Park → ul. gen. Andersa → Rondo Putry → DK8/DK19 Al. Tysiąclecia (`docs/map-decisions.md`) |
+| D16 | Koncepcja ciężarówki (D6) | **Koncepcja B** (aero) jako baza |
+| D17 | Marka (robocza) | **TRAKT** — przed publikacją sprawdzenie znaków towarowych (EUIPO/UPRP) |
+| D18 | Repo | **Publiczne** zostaje (zmiana względem D11) |
