@@ -150,11 +150,12 @@ namespace Game.Tests
         }
 
         /// <summary>Runner couple_uncouple@laden40: reverse at idle creep into the braked 40 t trailer on its legs, the jaw locks, legs up, drive off.</summary>
-        [Test]
-        public void Coupling_UnderLoad_40t_SmoothAndKingpinLoadStatic()
+        [TestCase(CargoPreset.Gross40t, TestName = "Coupling_UnderLoad_40t_SmoothAndKingpinLoadStatic")]
+        [TestCase(CargoPreset.Empty, TestName = "Coupling_Empty_SmoothAndKingpinLoadStatic")]
+        public void Coupling(CargoPreset cargo)
         {
             Flat();
-            SpawnParkedTrailer(new Vector3(0, 0, 0), CargoPreset.Gross40t, 2.0f);
+            SpawnParkedTrailer(new Vector3(0, 0, 0), cargo, 2.0f);
             var c = m_Body.Combination;
             double maxDv = 0, maxLong = 0, maxErrAfter = 0;
             Vector3 vA = m_Body.Body.linearVelocity, vB = m_Trailer.Body.linearVelocity;
@@ -178,7 +179,7 @@ namespace Game.Tests
                 if (t >= 20 && t <= 24) { kpSum += Fw.KingpinLoadLocal.y; kpN++; }
             }
             double kpRatio = kpSum / Math.Max(1, kpN) / c.StaticKingpinLoad;
-            Debug.Log($"[TEST] coupling 40 t: events {Fw.CouplingEvents}, kingpin load / static {kpRatio:F3}, coupling bump max |Fx| {maxLong / 1000:F1} kN, " +
+            Debug.Log($"[TEST] coupling {cargo}: events {Fw.CouplingEvents}, kingpin load / static {kpRatio:F3}, coupling bump max |Fx| {maxLong / 1000:F1} kN, " +
                       $"max |dv| per step {maxDv:F3} m/s, max kingpin error after engagement {maxErrAfter * 1000:F3} mm, speed {ForwardKmh:F1} km/h, gear {m_Body.Model.Amt.Gear}");
             Assert.AreEqual(1, Fw.CouplingEvents, "jaw locks once");
             Assert.IsTrue(m_Body.Coupled);

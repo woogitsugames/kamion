@@ -73,6 +73,84 @@ namespace Game.Tests
         }
 
         /// <summary>
+        /// Stage 2 end-to-end through the touch controls: Solo spawn → release P, R, arm the jaw, creep back under the
+        /// parked trailer → coupled; raise the legs; drive off; stop, lower the legs, uncouple. 4× time scale.
+        /// </summary>
+        [UnityTest]
+        public IEnumerator DrivingLab_CoupleAndUncouple_ThroughTouchControls()
+        {
+            Physics.simulationMode = SimulationMode.FixedUpdate;
+            SceneManager.LoadScene(DrivingLabLayout.SceneName, LoadSceneMode.Single);
+            yield return null;
+            var boot = Object.FindAnyObjectByType<DrivingLabBootstrap>();
+            var body = Object.FindAnyObjectByType<VehicleBody>();
+            var trailer = Object.FindAnyObjectByType<TrailerBody>();
+            var touch = boot.Touch;
+            boot.Spawn(DrivingLabBootstrap.LabSpawn.Solo);
+            yield return null;
+            Time.timeScale = 4f;
+            try
+            {
+                touch.RequestParkingToggle();
+                touch.RequestSelector(Game.Controls.SelectorRequest.Reverse);
+                touch.RequestCouplingToggle();
+                yield return null;
+                Assert.IsTrue(body.Combination.CouplingArmed, "jaw armed by the Siodło button");
+                touch.ThrottleRaw = 0.16f; // shaped 0.16^1.6 ≈ 0.05: idle creep like the runner scenario
+                double t0 = body.SimTime;
+                while (!body.Coupled && body.SimTime - t0 < 20) yield return null;
+                touch.ThrottleRaw = 0f; touch.BrakeRaw = 1f;
+                Assert.IsTrue(body.Coupled, "coupled while reversing under the parked trailer");
+                double tc = body.SimTime - t0;
+                touch.RequestLandingGearToggle();
+                t0 = body.SimTime;
+                // Crank 10.4 s (0.52 m at 0.05 m/s), then the air suspension re-levels (τ 8 s): average 16..20 s like the runner.
+                double kpSum = 0; int kpN = 0;
+                while (body.SimTime - t0 < 20)
+                {
+                    yield return null;
+                    if (body.SimTime - t0 > 16) { kpSum += body.Combination.FifthWheel.KingpinLoadLocal.y; kpN++; }
+                }
+                var tm = trailer.Model;
+                Assert.IsFalse(tm.LandingGearDown, "legs commanded up");
+                Assert.Less(tm.LandingGearLoad, 1.0, "legs off the ground");
+                // Standstill on locked brakes is statically indeterminate (tire stick shares the nose load), so the
+                // kingpin load is checked rolling, like the runner (couple_uncouple: 20-24 s while driving).
+                double kpStand = kpSum / System.Math.Max(1, kpN) / body.Combination.StaticKingpinLoad;
+                touch.BrakeRaw = 0f;
+                touch.RequestSelector(Game.Controls.SelectorRequest.Drive);
+                touch.ThrottleRaw = 0.55f;
+                t0 = body.SimTime;
+                kpSum = 0; kpN = 0;
+                while (body.SimTime - t0 < 6)
+                {
+                    yield return null;
+                    if (body.SimTime - t0 > 3) { kpSum += body.Combination.FifthWheel.KingpinLoadLocal.y; kpN++; }
+                }
+                double kp = kpSum / System.Math.Max(1, kpN) / body.Combination.StaticKingpinLoad;
+                float v = body.SpeedKmh;
+                touch.ThrottleRaw = 0f; touch.BrakeRaw = 1f;
+                t0 = body.SimTime;
+                while (body.SimTime - t0 < 4) yield return null;
+                Assert.Greater(v, 3f, "combination drives off");
+                bool refused = true;
+                touch.RequestCouplingToggle(); // legs still up: must be refused
+                yield return null;
+                refused = body.Coupled;
+                touch.RequestLandingGearToggle();
+                t0 = body.SimTime;
+                while (body.SimTime - t0 < 13) yield return null;
+                touch.RequestCouplingToggle();
+                yield return null;
+                Debug.Log($"[TEST] touch coupling: coupled after {tc:F1} s of creep, kingpin load {kp:F2}× static rolling ({kpStand:F2}× at standstill on brakes), drive-off {v:F1} km/h, uncouple with legs up refused {refused}, legs load {tm.LandingGearLoad / 1000:F0} kN, uncoupled {!body.Coupled}");
+                Assert.IsTrue(refused, "uncoupling refused with the legs up");
+                Assert.IsFalse(body.Coupled, "uncoupled after lowering the legs");
+                Assert.That(kp, Is.InRange(0.85, 1.15), "kingpin carries the static nose load");
+            }
+            finally { Time.timeScale = 1f; }
+        }
+
+        /// <summary>
         /// End-to-end: input bridge → autopilot → vehicle on the scene's R50 circle (the device-measurement path),
         /// plus telemetry CSV recording. 4× time scale, ~24 s of simulation.
         /// </summary>
