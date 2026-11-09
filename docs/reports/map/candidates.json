@@ -1,0 +1,804 @@
+{
+  "generator": "tools/worldgen/analyze_candidates.py",
+  "source": {
+    "id": "osm-geofabrik-podlaskie",
+    "url": "https://download.geofabrik.de/europe/poland/podlaskie-261108.osm.pbf",
+    "sha256": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d",
+    "snapshot": "261108",
+    "license": "ODbL 1.0",
+    "attribution": "© OpenStreetMap contributors"
+  },
+  "crs": "EPSG:2180",
+  "notes": [
+    "Route = shortest drivable path (oneway respected) through authored waypoints.",
+    "Intersections counted at route nodes shared with another drivable OSM way; service/driveway joins counted separately.",
+    "Signalised junctions = clusters (<=80 m) of highway=traffic_signals nodes within 15 m of the route.",
+    "Tag coverage = share of route length (or major-road length in the 3x2 km box) where the tag is present.",
+    "low_confidence_ways = non-service ways on the route missing lanes and/or maxspeed (defaults would be needed)."
+  ],
+  "industrial_zones_top": [
+    {
+      "ha": 142.9,
+      "point_epsg2180": [
+        772810,
+        596653
+      ],
+      "point_wgs84": [
+        53.16509,
+        23.08288
+      ],
+      "osm_names": [
+        "Białostocka Wykończalnia Tkanin - Zakładowa oczyszczalnia ścieków",
+        "Oczyszczalnia ścieków",
+        "Panattoni Park Białystok I",
+        "Przedsiębiorstwo Eksploatacji Dróg i Mostów"
+      ]
+    },
+    {
+      "ha": 115.0,
+      "point_epsg2180": [
+        778103,
+        595509
+      ],
+      "point_wgs84": [
+        53.15209,
+        23.16087
+      ],
+      "osm_names": [
+        "Enea Ciepło Oddział Elektrociepłownia Białystok",
+        "Zakład Unieszkodliwiania Odpadów Komunalnych"
+      ]
+    },
+    {
+      "ha": 93.2,
+      "point_epsg2180": [
+        772374,
+        593588
+      ],
+      "point_wgs84": [
+        53.13782,
+        23.07376
+      ],
+      "osm_names": [
+        "CEDC International Sp. z o.o. oddział Białystok",
+        "Kreatec",
+        "Podlaskie Zakłady Zbożowe S.A. w Białymstoku"
+      ]
+    },
+    {
+      "ha": 77.9,
+      "point_epsg2180": [
+        775439,
+        591590
+      ],
+      "point_wgs84": [
+        53.11833,
+        23.11776
+      ],
+      "osm_names": [
+        "Część zajezdni autobusowej KPK",
+        "PGE Energetyka Kolejowa",
+        "TOP 2001",
+        "Zajezdnia autobusowa KPK",
+        "Zajezdnia autobusowa KPKM",
+        "Złomowisko"
+      ]
+    },
+    {
+      "ha": 57.5,
+      "point_epsg2180": [
+        777386,
+        599866
+      ],
+      "point_wgs84": [
+        53.19154,
+        23.15395
+      ],
+      "osm_names": [
+        "Ujęcie wody"
+      ]
+    },
+    {
+      "ha": 54.8,
+      "point_epsg2180": [
+        781181,
+        590544
+      ],
+      "point_wgs84": [
+        53.10595,
+        23.20243
+      ],
+      "osm_names": []
+    },
+    {
+      "ha": 36.2,
+      "point_epsg2180": [
+        766916,
+        595981
+      ],
+      "point_wgs84": [
+        53.16205,
+        22.99433
+      ],
+      "osm_names": [
+        "Panattoni Park Białystok II",
+        "Panattoni Park Białystok III"
+      ]
+    },
+    {
+      "ha": 34.4,
+      "point_epsg2180": [
+        784090,
+        592691
+      ],
+      "point_wgs84": [
+        53.12366,
+        23.24767
+      ],
+      "osm_names": []
+    },
+    {
+      "ha": 30.5,
+      "point_epsg2180": [
+        773752,
+        586244
+      ],
+      "point_wgs84": [
+        53.07125,
+        23.08805
+      ],
+      "osm_names": [
+        "Strefa przemysłowa Ignatki"
+      ]
+    },
+    {
+      "ha": 29.5,
+      "point_epsg2180": [
+        781776,
+        592733
+      ],
+      "point_wgs84": [
+        53.12527,
+        23.21321
+      ],
+      "osm_names": []
+    },
+    {
+      "ha": 27.5,
+      "point_epsg2180": [
+        777140,
+        586076
+      ],
+      "point_wgs84": [
+        53.06799,
+        23.13836
+      ],
+      "osm_names": []
+    },
+    {
+      "ha": 25.1,
+      "point_epsg2180": [
+        780117,
+        594401
+      ],
+      "point_wgs84": [
+        53.1411,
+        23.18994
+      ],
+      "osm_names": [
+        "PHU Garden",
+        "Zajezdnia autobusowa KZK",
+        "Złomowisko"
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "id": "A_dojlidy_dywizjonu303",
+      "title": "A — Dojlidy / Kuronia (strefa SSE) → DK19 Suchowolca (kier. Zabłudów)",
+      "route": {
+        "length_m": 2444,
+        "start_epsg2180": [
+          781271.3,
+          590237.9
+        ],
+        "end_epsg2180": [
+          782755.9,
+          590065.0
+        ],
+        "start_wgs84": [
+          53.103158,
+          23.203509
+        ],
+        "end_wgs84": [
+          53.100823,
+          23.225478
+        ],
+        "streets_in_order": [
+          "<bez nazwy: service>",
+          "Profesora Andrzeja Kalicińskiego",
+          "Jacka Kuronia",
+          "Plażowa",
+          "Księdza Stanisława Suchowolca",
+          "Zabłudowska"
+        ],
+        "length_by_highway_class_m": {
+          "trunk": 2047,
+          "secondary": 172,
+          "unclassified": 121,
+          "service": 94,
+          "tertiary": 10
+        },
+        "intersections_with_public_roads": 10,
+        "junctions_with_service_roads_or_driveways": 8,
+        "roundabouts_traversed": 0,
+        "roundabout_names": [],
+        "traffic_signal_nodes_on_route": 3,
+        "signalised_junctions_or_crossings": 1,
+        "pedestrian_crossings": 12,
+        "give_way_signs": 0,
+        "stop_signs": 0,
+        "bus_stops_within_25m": 11,
+        "level_crossings": 0,
+        "length_on_bridges_m": 0,
+        "tag_coverage_by_length": {
+          "name": 0.962,
+          "lanes": 0.727,
+          "maxspeed": 0.719,
+          "turn:lanes": 0.158,
+          "surface": 0.669,
+          "lit": 0.298,
+          "sidewalk": 0.0
+        },
+        "low_confidence_ways": [
+          {
+            "osm_way": 614216215,
+            "name": "Profesora Andrzeja Kalicińskiego",
+            "highway": "unclassified",
+            "missing": [
+              "lanes",
+              "maxspeed"
+            ]
+          },
+          {
+            "osm_way": 1547209925,
+            "name": "Plażowa",
+            "highway": "tertiary",
+            "missing": [
+              "maxspeed"
+            ]
+          },
+          {
+            "osm_way": 279864419,
+            "name": "Księdza Stanisława Suchowolca",
+            "highway": "secondary",
+            "missing": [
+              "lanes",
+              "maxspeed"
+            ]
+          },
+          {
+            "osm_way": 279864415,
+            "name": "Księdza Stanisława Suchowolca",
+            "highway": "secondary",
+            "missing": [
+              "maxspeed"
+            ]
+          },
+          {
+            "osm_way": 279864417,
+            "name": "Księdza Stanisława Suchowolca",
+            "highway": "trunk",
+            "missing": [
+              "maxspeed"
+            ]
+          },
+          {
+            "osm_way": 279864414,
+            "name": "Księdza Stanisława Suchowolca",
+            "highway": "trunk",
+            "missing": [
+              "maxspeed"
+            ]
+          },
+          {
+            "osm_way": 279864412,
+            "name": "Księdza Stanisława Suchowolca",
+            "highway": "trunk",
+            "missing": [
+              "maxspeed"
+            ]
+          },
+          {
+            "osm_way": 279864416,
+            "name": "Księdza Stanisława Suchowolca",
+            "highway": "trunk",
+            "missing": [
+              "maxspeed"
+            ]
+          },
+          {
+            "osm_way": 210488456,
+            "name": "Zabłudowska",
+            "highway": "trunk",
+            "missing": [
+              "lanes"
+            ]
+          }
+        ]
+      },
+      "depot": {
+        "large_buildings_within_400m_of_start": [
+          {
+            "osm_id": 674071951,
+            "osm_type": "way",
+            "name": "Biawar",
+            "building": "industrial",
+            "area_m2": 30092,
+            "dist_from_start_m": 5
+          },
+          {
+            "osm_id": 221826898,
+            "osm_type": "way",
+            "name": "Browar Dojlidy",
+            "building": "industrial",
+            "area_m2": 19992,
+            "dist_from_start_m": 225
+          },
+          {
+            "osm_id": 658448323,
+            "osm_type": "way",
+            "name": "Bison",
+            "building": "industrial",
+            "area_m2": 12628,
+            "dist_from_start_m": 333
+          },
+          {
+            "osm_id": 315456645,
+            "osm_type": "way",
+            "name": "Odlewnia Białystok",
+            "building": "industrial",
+            "area_m2": 9439,
+            "dist_from_start_m": 334
+          },
+          {
+            "osm_id": 658448320,
+            "osm_type": "way",
+            "name": null,
+            "building": "industrial",
+            "area_m2": 8988,
+            "dist_from_start_m": 274
+          },
+          {
+            "osm_id": 913986998,
+            "osm_type": "way",
+            "name": null,
+            "building": "industrial",
+            "area_m2": 7263,
+            "dist_from_start_m": 327
+          },
+          {
+            "osm_id": 913986997,
+            "osm_type": "way",
+            "name": "Bieldruk",
+            "building": "industrial",
+            "area_m2": 7098,
+            "dist_from_start_m": 374
+          },
+          {
+            "osm_id": 1169551409,
+            "osm_type": "way",
+            "name": "Spod Igły i Nitki",
+            "building": "industrial",
+            "area_m2": 6711,
+            "dist_from_start_m": 364
+          }
+        ],
+        "loading_dock_nodes_within_400m": 4
+      },
+      "area_3x2km": {
+        "bbox_epsg2180": [
+          780514,
+          589502,
+          783514,
+          591502
+        ],
+        "roundabout_ways": 6,
+        "roundabouts_distinct": 1,
+        "traffic_signal_nodes": 5,
+        "buildings": 1468,
+        "industrial_landuse_ha": 53.5,
+        "major_road_length_m": 9847,
+        "major_road_tag_coverage_by_length": {
+          "lanes": 0.693,
+          "maxspeed": 0.771,
+          "turn:lanes": 0.164,
+          "surface": 0.782
+        },
+        "refs_present": [
+          "19"
+        ],
+        "bridge_or_viaduct_ways_drivable": 2
+      },
+      "png": "docs/reports/map/candidate_A_dojlidy_dywizjonu303.png",
+      "png_bytes": 100971
+    },
+    {
+      "id": "B_przedzalniana_kleeberga",
+      "title": "B — Przędzalniana / Kleeberga (DK8/DK65) → w stronę S8 Białystok Zachód",
+      "route": {
+        "length_m": 2827,
+        "start_epsg2180": [
+          772782.1,
+          595852.5
+        ],
+        "end_epsg2180": [
+          770913.9,
+          594827.7
+        ],
+        "start_wgs84": [
+          53.157924,
+          23.081774
+        ],
+        "end_wgs84": [
+          53.149685,
+          23.053029
+        ],
+        "streets_in_order": [
+          "<bez nazwy: service>",
+          "Przędzalniana",
+          "Rondo Majora Antoniego Wiszowatego",
+          "<bez nazwy: trunk_link>",
+          "Generała Franciszka Kleeberga",
+          "<bez nazwy: trunk>"
+        ],
+        "length_by_highway_class_m": {
+          "trunk": 2111,
+          "unclassified": 382,
+          "trunk_link": 286,
+          "service": 42,
+          "tertiary": 6
+        },
+        "intersections_with_public_roads": 10,
+        "junctions_with_service_roads_or_driveways": 4,
+        "roundabouts_traversed": 1,
+        "roundabout_names": [
+          "Rondo Majora Antoniego Wiszowatego"
+        ],
+        "traffic_signal_nodes_on_route": 0,
+        "signalised_junctions_or_crossings": 0,
+        "pedestrian_crossings": 3,
+        "give_way_signs": 0,
+        "stop_signs": 0,
+        "bus_stops_within_25m": 2,
+        "level_crossings": 0,
+        "length_on_bridges_m": 304,
+        "tag_coverage_by_length": {
+          "name": 0.446,
+          "lanes": 0.897,
+          "maxspeed": 0.985,
+          "turn:lanes": 0.312,
+          "surface": 0.897,
+          "lit": 0.0,
+          "sidewalk": 0.0
+        },
+        "low_confidence_ways": [
+          {
+            "osm_way": 623133905,
+            "name": "Przędzalniana",
+            "highway": "unclassified",
+            "missing": [
+              "lanes"
+            ]
+          }
+        ],
+        "extension_beyond_core_route": {
+          "length_m": 1759,
+          "streets_in_order": [
+            "<bez nazwy: trunk>",
+            "<bez nazwy: motorway>"
+          ],
+          "end_epsg2180": [
+            769202.4,
+            595232.5
+          ]
+        }
+      },
+      "depot": {
+        "large_buildings_within_400m_of_start": [
+          {
+            "osm_id": 222615989,
+            "osm_type": "way",
+            "name": null,
+            "building": "yes",
+            "area_m2": 20519,
+            "dist_from_start_m": 207
+          },
+          {
+            "osm_id": 224161400,
+            "osm_type": "way",
+            "name": "Arsenal-hurt cukierniczy",
+            "building": "yes",
+            "area_m2": 19560,
+            "dist_from_start_m": 13
+          },
+          {
+            "osm_id": 222615999,
+            "osm_type": "way",
+            "name": null,
+            "building": "yes",
+            "area_m2": 14130,
+            "dist_from_start_m": 73
+          },
+          {
+            "osm_id": 222615995,
+            "osm_type": "way",
+            "name": "Centrum Handlowe Fasty",
+            "building": "retail",
+            "area_m2": 12901,
+            "dist_from_start_m": 346
+          },
+          {
+            "osm_id": 306657189,
+            "osm_type": "way",
+            "name": null,
+            "building": "yes",
+            "area_m2": 10672,
+            "dist_from_start_m": 379
+          },
+          {
+            "osm_id": 306657333,
+            "osm_type": "way",
+            "name": null,
+            "building": "yes",
+            "area_m2": 6561,
+            "dist_from_start_m": 36
+          },
+          {
+            "osm_id": 224161396,
+            "osm_type": "way",
+            "name": "Cefarm24",
+            "building": "yes",
+            "area_m2": 5509,
+            "dist_from_start_m": 364
+          },
+          {
+            "osm_id": 224161399,
+            "osm_type": "way",
+            "name": null,
+            "building": "yes",
+            "area_m2": 4223,
+            "dist_from_start_m": 382
+          }
+        ],
+        "loading_dock_nodes_within_400m": 0
+      },
+      "area_3x2km": {
+        "bbox_epsg2180": [
+          770507,
+          594313,
+          773507,
+          596313
+        ],
+        "roundabout_ways": 36,
+        "roundabouts_distinct": 10,
+        "traffic_signal_nodes": 14,
+        "buildings": 1320,
+        "industrial_landuse_ha": 66.1,
+        "major_road_length_m": 26345,
+        "major_road_tag_coverage_by_length": {
+          "lanes": 0.99,
+          "maxspeed": 0.817,
+          "turn:lanes": 0.246,
+          "surface": 0.976
+        },
+        "refs_present": [
+          "669",
+          "676",
+          "8;65"
+        ],
+        "bridge_or_viaduct_ways_drivable": 15
+      },
+      "png": "docs/reports/map/candidate_B_przedzalniana_kleeberga.png",
+      "png_bytes": 141768
+    },
+    {
+      "id": "C_andersa_putry",
+      "title": "C — Andersa (DK19/DK65) / Rondo Putry → DK8/DK19 Al. Tysiąclecia (północ)",
+      "route": {
+        "length_m": 2401,
+        "start_epsg2180": [
+          778732.0,
+          595836.9
+        ],
+        "end_epsg2180": [
+          777258.6,
+          596917.3
+        ],
+        "start_wgs84": [
+          53.154702,
+          23.170537
+        ],
+        "end_wgs84": [
+          53.165161,
+          23.14949
+        ],
+        "streets_in_order": [
+          "<bez nazwy: service>",
+          "Rondo Pamięci Bieżeństwa 1915 roku",
+          "<bez nazwy: tertiary_link>",
+          "<bez nazwy: trunk_link>",
+          "Generała Władysława Andersa",
+          "<bez nazwy: trunk_link>",
+          "Aleja Tysiąclecia Państwa Polskiego"
+        ],
+        "length_by_highway_class_m": {
+          "trunk": 1480,
+          "service": 355,
+          "trunk_link": 326,
+          "tertiary_link": 230,
+          "tertiary": 10
+        },
+        "intersections_with_public_roads": 11,
+        "junctions_with_service_roads_or_driveways": 9,
+        "roundabouts_traversed": 2,
+        "roundabout_names": [
+          "Rondo Pamięci Bieżeństwa 1915 roku",
+          "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+        ],
+        "traffic_signal_nodes_on_route": 3,
+        "signalised_junctions_or_crossings": 2,
+        "pedestrian_crossings": 7,
+        "give_way_signs": 0,
+        "stop_signs": 0,
+        "bus_stops_within_25m": 4,
+        "level_crossings": 0,
+        "length_on_bridges_m": 38,
+        "tag_coverage_by_length": {
+          "name": 0.621,
+          "lanes": 0.863,
+          "maxspeed": 0.727,
+          "turn:lanes": 0.362,
+          "surface": 0.852,
+          "lit": 0.0,
+          "sidewalk": 0.0
+        },
+        "low_confidence_ways": [
+          {
+            "osm_way": 536419678,
+            "name": "Rondo Pamięci Bieżeństwa 1915 roku",
+            "highway": "tertiary",
+            "missing": [
+              "maxspeed"
+            ]
+          },
+          {
+            "osm_way": 177861600,
+            "name": null,
+            "highway": "tertiary_link",
+            "missing": [
+              "maxspeed"
+            ]
+          },
+          {
+            "osm_way": 606396458,
+            "name": null,
+            "highway": "trunk_link",
+            "missing": [
+              "maxspeed"
+            ]
+          },
+          {
+            "osm_way": 536419675,
+            "name": null,
+            "highway": "trunk_link",
+            "missing": [
+              "maxspeed"
+            ]
+          },
+          {
+            "osm_way": 606396463,
+            "name": null,
+            "highway": "trunk_link",
+            "missing": [
+              "maxspeed"
+            ]
+          },
+          {
+            "osm_way": 173956083,
+            "name": null,
+            "highway": "trunk_link",
+            "missing": [
+              "maxspeed"
+            ]
+          }
+        ]
+      },
+      "depot": {
+        "large_buildings_within_400m_of_start": [
+          {
+            "osm_id": 14517743,
+            "osm_type": "relation",
+            "name": "Kwadrat Park",
+            "building": "warehouse",
+            "area_m2": 34112,
+            "dist_from_start_m": 45
+          },
+          {
+            "osm_id": 219260052,
+            "osm_type": "way",
+            "name": "Podlaskie Centrum Rolno-Towarowe S.A.",
+            "building": "retail",
+            "area_m2": 11429,
+            "dist_from_start_m": 297
+          },
+          {
+            "osm_id": 1447231529,
+            "osm_type": "way",
+            "name": null,
+            "building": "industrial",
+            "area_m2": 4855,
+            "dist_from_start_m": 377
+          },
+          {
+            "osm_id": 219260051,
+            "osm_type": "way",
+            "name": null,
+            "building": "yes",
+            "area_m2": 3836,
+            "dist_from_start_m": 21
+          },
+          {
+            "osm_id": 282879276,
+            "osm_type": "way",
+            "name": "KarT Sp. z o.o.",
+            "building": "industrial",
+            "area_m2": 3262,
+            "dist_from_start_m": 308
+          },
+          {
+            "osm_id": 282879154,
+            "osm_type": "way",
+            "name": null,
+            "building": "yes",
+            "area_m2": 2067,
+            "dist_from_start_m": 132
+          }
+        ],
+        "loading_dock_nodes_within_400m": 0
+      },
+      "area_3x2km": {
+        "bbox_epsg2180": [
+          776495,
+          595223,
+          779495,
+          597223
+        ],
+        "roundabout_ways": 16,
+        "roundabouts_distinct": 6,
+        "traffic_signal_nodes": 19,
+        "buildings": 943,
+        "industrial_landuse_ha": 72.6,
+        "major_road_length_m": 16565,
+        "major_road_tag_coverage_by_length": {
+          "lanes": 0.972,
+          "maxspeed": 0.849,
+          "turn:lanes": 0.415,
+          "surface": 0.966
+        },
+        "refs_present": [
+          "19",
+          "19;65",
+          "65",
+          "675",
+          "8",
+          "8;19",
+          "8;65"
+        ],
+        "bridge_or_viaduct_ways_drivable": 15
+      },
+      "png": "docs/reports/map/candidate_C_andersa_putry.png",
+      "png_bytes": 101302
+    }
+  ]
+}
