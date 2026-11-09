@@ -33,3 +33,7 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 | D16 | Koncepcja ciężarówki (D6) | **Koncepcja B** (aero) jako baza |
 | D17 | Marka (robocza) | **TRAKT** — przed publikacją sprawdzenie znaków towarowych (EUIPO/UPRP) |
 | D18 | Repo | **Publiczne** zostaje (zmiana względem D11) |
+| D19 | Wykończenie kabiny | **Koniak** (trim), badge TRAKT na piaście |
+| D20 | Zegary | **Tylko ekran 12,3"** (bez tarcz analogowych) |
+| D21 | Audio (demo) | Kierunek zaakceptowany („brzmi jak ciężarówka”) |
+| D22 | Build Unity w CI | Później; na razie build lokalny |
