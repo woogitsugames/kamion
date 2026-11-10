@@ -44,7 +44,13 @@ GORE_MERGE_MAX_LEN_M = 90.0    # WORKING_VALUE: longer same-direction strips are
 GORE_MIN_ISLAND_M2 = 5.0       # WORKING_VALUE: smaller enclosed islands are painted, not kerbed
 GORE_SLIVER_MIN_M2 = 1.5       # ignore numerical crumbs
 GORE_SLIVER_MAX_LEN_M = 60.0   # WORKING_VALUE: a longer uniformly narrow strip is a median, keep it
-GORE_MAX_SLOPE = 0.10          # fill triangles steeper than this = carriageways at different heights (ramp wall): no fill
+P21_STRIPE_W_M = 0.5           # WORKING_VALUE: P-21 oblique stripe width / gap read off the 0.08 m orthophoto
+P21_STRIPE_GAP_M = 1.0
+P21_EDGE_INSET_M = 0.35        # border line this far inside the gore outline
+GORE_MAX_SLOPE = 0.10          # fill edges steeper than this (+ GORE_MAX_STEP_M) = carriageways at different heights
+GORE_MAX_STEP_M = 0.15         # (ramp wall, viaduct abutment): no fill. WORKING_VALUE
+GORE_MAX_STEP_AUTHORED_M = 0.35  # authored paved_gore (orthophoto says continuous): tolerate patch height mismatch
+GORE_OVERRIDE_CLOSE_M = 3.5    # authored paved_gore: default closing radius (gaps up to 7 m wide); `close_m` per override
 GORE_KERB_DROP_M = 0.06        # kerb top this far below the surface along a paved gore (hidden under the fill)
 GORE_OVERLAP_M = 0.06          # fill reaches this far under the neighbouring carriageways (no cracks)
 GORE_VISUAL_DZ = -0.004        # fill this much below the carriageway where they overlap (no z-fighting)
@@ -59,6 +65,7 @@ class Gore:
     area: float = 0.0
     built: bool = False
     note: str = ""
+    hatch: bool = False           # painted exclusion zone P-21 (paint only, no kerb, no collision obstacle)
 
 
 @dataclass
@@ -148,13 +155,15 @@ class _ChainSurface:
         for k in self.tree.query(Point(*p).buffer(reach)):
             c = self.chains[int(k)]
             s, lat = c.line.project(np.asarray(p, float))
-            if s <= 0.0 or s >= c.length or bool(c.bridge[c.idx(s)]):
+            s = float(np.clip(s, 0.0, c.length))
+            if bool(c.bridge[c.idx(s)]):
                 continue
             hw = float(c.hw_at(s))
-            d = abs(lat) - hw
+            q = c.line.offset_point(s, float(np.clip(lat, -hw, hw)))
+            d = float(np.hypot(*(q - np.asarray(p, float))))        # distance to the carriageway (0 inside it)
             if best is None or d < best[0]:
                 best = (d, float(c.crossfall_z(s, float(np.clip(lat, -hw, hw)))))
-        return None if best is None or best[0] > 4.0 else best[1]
+        return None if best is None or best[0] > 9.0 else best[1]
 
     def same_direction(self, pg):
         """True when the two carriageways nearest to the gap are one-way and run the same way."""
@@ -199,13 +208,18 @@ def _triangulate(pg, step=1.5):
     return V, T
 
 
-def _slope_ok(V, Z, T):
+def _worst_step(V, Z, T):
+    """Largest height excess of a fill edge over GORE_MAX_SLOPE x length (m)."""
+    worst = 0.0
     for i, k in ((0, 1), (1, 2), (2, 0)):
         d = np.hypot(*(V[T[:, i]] - V[T[:, k]]).T)
         dz = np.abs(Z[T[:, i]] - Z[T[:, k]])
-        if np.any(dz > GORE_MAX_SLOPE * np.maximum(d, 0.5) + 0.03):
-            return False
-    return True
+        worst = max(worst, float(np.max(dz - GORE_MAX_SLOPE * d)))
+    return worst
+
+
+def _slope_ok(V, Z, T, authored=False):
+    return _worst_step(V, Z, T) <= (GORE_MAX_STEP_AUTHORED_M if authored else GORE_MAX_STEP_M)
 
 
 def plan(net, juncs, overrides, origin) -> GorePlan:
@@ -236,11 +250,15 @@ def plan(net, juncs, overrides, origin) -> GorePlan:
                 cand.append(Gore(hole, "hole"))
     ov = [o for o in overrides if o.get("kind") == "paved_gore"]
     if ov:
-        gaps = _parts(U.buffer(3.5, quad_segs=6).buffer(-3.5, quad_segs=6).difference(U))
-        gtree = shapely.STRtree(gaps)
+        gap_sets = {}
         for o in ov:
             pt = Point(*o["at_en"])
             rad = float(o.get("radius_m", 40.0))
+            cm = float(o.get("close_m", GORE_OVERRIDE_CLOSE_M))      # half of the widest gap this override may pave
+            if cm not in gap_sets:
+                gg = _parts(U.buffer(cm, quad_segs=6).buffer(-cm, quad_segs=6).difference(U))
+                gap_sets[cm] = (gg, shapely.STRtree(gg))
+            gaps, gtree = gap_sets[cm]
             hit = [gaps[int(k)] for k in gtree.query(pt.buffer(1.5)) if gaps[int(k)].distance(pt) <= 1.5]
             if not hit:
                 gp.overrides_stale.append(o["id"])
@@ -248,10 +266,13 @@ def plan(net, juncs, overrides, origin) -> GorePlan:
             for g in hit:
                 for pg in _parts(g.intersection(pt.buffer(rad))):
                     if pg.area >= GORE_SLIVER_MIN_M2:
-                        cand.append(Gore(pg, "override:" + o["id"]))
+                        cand.append(Gore(pg, "override:" + o["id"], hatch=bool(o.get("hatch"))))
             gp.overrides_applied.append({"id": o["id"], "targets": [f"gap@{o['at_en'][0]:.0f},{o['at_en'][1]:.0f}"]})
     # one polygon per place (an override gap swallows the slivers inside it)
-    cand.sort(key=lambda g: ({"o": 0, "m": 1}.get(g.why[0], 2), -g.poly.area))
+    # authored overrides first, in file order (a small hatched zone listed before the larger plain gap keeps its
+    # paint), then merge gores, then slivers / holes by area
+    order = {id(g): i for i, g in enumerate(cand)}
+    cand.sort(key=lambda g: ({"o": 0, "m": 1}.get(g.why[0], 2), order[id(g)] if g.why[0] == "o" else -g.poly.area))
     taken = None
     for g in cand:
         pg = g.poly if taken is None else g.poly.difference(taken.buffer(0.05))
@@ -267,11 +288,12 @@ def plan(net, juncs, overrides, origin) -> GorePlan:
                                     "area_m2": round(part.area, 1), "reason": "no carriageway height nearby"})
                 continue
             Z = Z.astype(float)
-            if not _slope_ok(V, Z, T):
+            if not _slope_ok(V, Z, T, g.why.startswith("override")):
                 gp.rejected.append({"why": g.why, "xy": [round(v, 1) for v in part.centroid.coords[0]],
-                                    "area_m2": round(part.area, 1), "reason": "carriageways at different heights"})
+                                    "area_m2": round(part.area, 1), "reason": "carriageways at different heights",
+                                    "step_m": round(_worst_step(V, Z, T), 2)})
                 continue
-            gp.gores.append(Gore(part, g.why, area=float(part.area)))
+            gp.gores.append(Gore(part, g.why, area=float(part.area), hatch=g.hatch))
             taken = part if taken is None else taken.union(part)
     for o in overrides:
         if o.get("kind") != "traffic_island":
@@ -379,15 +401,54 @@ def build(buf, net, gp: GorePlan):
                 ok = False
                 break
             Z[i] = z
-        if not ok or not _slope_ok(V, Z, T):
+        if not ok or not _slope_ok(V, Z, T, True):
             g.note = "height mismatch on the generated surface"
             continue
         V3 = np.column_stack([V, Z + GORE_VISUAL_DZ])
         buf.add("road", g.mat, V3, V.copy(), T, footprint=True, src="gore:" + g.why)
         buf.add("collision", "collision_asphalt", np.column_stack([V, Z]), V.copy(), T, src="gore:" + g.why)
         g.built = True
+        if g.hatch:
+            _hatch(buf, g, V, Z)
     for isl in gp.islands:
         _build_island(buf, isl, ms, cs)
+
+
+def _hatch(buf, g: Gore, V, Z):
+    """P-21 exclusion zone: border line + oblique stripes, paint only (markings decal layer)."""
+    from scipy.interpolate import LinearNDInterpolator, NearestNDInterpolator
+    from shapely import affinity
+    lin, near = LinearNDInterpolator(V, Z), NearestNDInterpolator(V, Z)
+    inner = g.poly.buffer(-P21_EDGE_INSET_M)
+    if inner.is_empty:
+        return
+    rect = np.asarray(g.poly.minimum_rotated_rectangle.exterior.coords)
+    e0, e1 = rect[1] - rect[0], rect[2] - rect[1]
+    ax = e0 if np.hypot(*e0) >= np.hypot(*e1) else e1
+    ang = math.degrees(math.atan2(ax[1], ax[0])) + 45.0
+    c = inner.centroid
+    R = float(np.hypot(*(np.asarray(inner.bounds[2:]) - np.asarray(inner.bounds[:2])))) / 2 + 2.0
+    stripes = []
+    y = -R
+    while y < R:
+        stripes.append(shapely.box(c.x - R, c.y + y, c.x + R, c.y + y + P21_STRIPE_W_M))
+        y += P21_STRIPE_W_M + P21_STRIPE_GAP_M
+    paint = affinity.rotate(shapely.union_all(stripes), ang, origin=c).intersection(inner.buffer(-S.LINE_W_WIDE))
+    paint = paint.union(inner.difference(inner.buffer(-S.LINE_W_WIDE)))
+    n = 0
+    for part in _parts(paint):
+        Vp, Tp = _triangulate(part, 2.0)
+        if Vp is None:
+            continue
+        z = lin(Vp)
+        bad = np.isnan(z)
+        if bad.any():
+            z[bad] = near(Vp[bad])
+        UV1 = np.column_stack([np.full(len(Vp), 0.5), np.full(len(Vp), 0.35)])
+        buf.add("markings", "marking_white", np.column_stack([Vp, z + S.MARKING_LIFT]), Vp.copy(), Tp,
+                src="P-21@gore:" + g.why, UV1=UV1)
+        n += 1
+    g.note = f"P-21 hatch, {n} paint parts"
 
 
 def _build_island(buf, isl: Island, ms, cs):
@@ -451,7 +512,7 @@ def report(gp: GorePlan) -> dict:
     return {"rule": {"min_island_w_m": GORE_MIN_ISLAND_W, "min_island_m2": GORE_MIN_ISLAND_M2,
                      "sliver_max_len_m": GORE_SLIVER_MAX_LEN_M, "max_slope": GORE_MAX_SLOPE, "status": "WORKING_VALUE"},
             "paved": by, "kerb_dropped_m": round(gp.flush_m, 1),
-            "gores": [{"why": g.why, "area_m2": round(g.area, 1), "built": g.built, "note": g.note,
+            "gores": [{"why": g.why, "area_m2": round(g.area, 1), "built": g.built, "hatch": g.hatch, "note": g.note,
                        "xy": [round(v, 1) for v in g.poly.centroid.coords[0]]} for g in gp.gores],
             "islands": [{"id": i.id, "area_m2": round(i.poly.area, 1), "surface": i.surface, "built": i.built,
                          "note": i.note} for i in gp.islands],

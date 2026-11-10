@@ -251,3 +251,74 @@ overrides:
       WORKING_VALUE); species from the crown shape (linden / maple); only positions are authored.
     confidence: low
     verify: tree positions on site / orthophoto
+  # ---------------------------------------------------------------- gaps between carriageways (roads/gores.py, ADR 0077)
+  # Rule: a gap between carriageways is a kerbed island only where OSM or the orthophoto shows one. OSM has no
+  # area:highway / traffic_island objects in this tile, so places the GUGiK orthophoto (WMS HighResolution 0.08 m,
+  # cells in Data/raw/refs/gugik-ortho-hr; sheet 0.25 m 2024-05-27) shows as continuous asphalt or as a painted
+  # exclusion zone are listed here. at_en = region-local E/N of a point inside the generated gap; the gap component
+  # within radius_m of it is paved. hatch: true = P-21 paint only (no kerb, no collision obstacle).
+  - id: gore-s610-hatch-north
+    kind: paved_gore
+    at_en: [344.0, -546.0]
+    radius_m: 8.0
+    close_m: 7.0
+    hatch: true
+    reason: >-
+      Junction of the Andersa ramps with the service road at s 610 (j:n1882887385): the orthophoto shows white P-21
+      chevrons on asphalt between the two carriageways, no kerb. Overlay artifacts/islands-r10/before/ramps610.jpg.
+    confidence: high
+    verify: Mapillary / owner drive (paint layout is WORKING_VALUE, 0.5 m stripes, 1.0 m gaps, 45 deg)
+  - id: gore-s610-north-carriageway
+    kind: paved_gore
+    at_en: [348.5, -539.8]
+    radius_m: 45.0
+    close_m: 7.0
+    reason: >-
+      Same junction, north arm: OSM draws two one-way ways, the orthophoto shows one continuous asphalt surface with
+      cars across the generated 436 m2 island (road fraction 0.77-1.0).
+    confidence: medium
+    verify: Mapillary / owner drive
+  - id: gore-s610-hatch-south
+    kind: paved_gore
+    at_en: [337.5, -574.2]
+    radius_m: 30.0
+    close_m: 7.0
+    hatch: true
+    reason: >-
+      Same junction, south side: the 191 m2 triangle is a painted P-21 exclusion zone on the orthophoto (chevrons,
+      zebra crossing through it), not a kerbed island.
+    confidence: high
+    verify: Mapillary / owner drive
+  - id: gore-s610-corners
+    kind: paved_gore
+    at_en: [353.2, -563.5]
+    radius_m: 8.0
+    close_m: 7.0
+    reason: >-
+      Same junction: 33 m2 leftover between the junction patches, asphalt with a zebra crossing on the orthophoto.
+    confidence: high
+    verify: Mapillary / owner drive
+  - id: gore-s610-corner-e
+    kind: paved_gore
+    at_en: [366.2, -562.1]
+    radius_m: 6.0
+    close_m: 7.0
+    reason: Same junction, 11 m2 corner leftover on asphalt (orthophoto road fraction 1.0).
+    confidence: medium
+    verify: Mapillary / owner drive
+  - id: gore-s610-corner-n
+    kind: paved_gore
+    at_en: [353.8, -555.7]
+    radius_m: 5.0
+    close_m: 7.0
+    reason: Same junction, 10 m2 corner leftover on asphalt (orthophoto road fraction 1.0).
+    confidence: medium
+    verify: Mapillary / owner drive
+  - id: gore-s610-corner-w
+    kind: paved_gore
+    at_en: [336.0, -563.1]
+    radius_m: 6.0
+    close_m: 7.0
+    reason: Same junction, 14 m2 corner leftover on asphalt (orthophoto road fraction 1.0).
+    confidence: medium
+    verify: Mapillary / owner drive

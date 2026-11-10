@@ -236,8 +236,25 @@ def window_masks(ctx: Ctx, center, half, res=0.1, yards=None, walk_tris=None):
         if shapes:
             other |= features.rasterize(shapes, out_shape=gm.shape, transform=from_origin(x0, y1, res, res)).astype(bool)
     deck = G.rasterize(ctx.bridge_tris, x0, y1, res, rgb.shape[:2]) if len(ctx.bridge_tris) else np.zeros_like(gm)
+    # roundabout centres (convex hull of the ring carriageway axes): a central island with a sett apron reads as
+    # "road" in the colour classifier, but it is a real island by OSM (junction=roundabout), ADR 0077
+    ring = np.zeros_like(gm)
+    from rasterio import features as _ft
+    from rasterio.transform import from_origin as _fo
+    from shapely.geometry import MultiPoint
+    win = Polygon([(x0, y0), (x1, y0), (x1, y1), (x0, y1)])
+    hulls = [MultiPoint(c.line.p).convex_hull for c in ctx.net.chains if c.roundabout]
+    if hulls:
+        import shapely as _sh
+        rings = [h for h in _parts_of(_sh.union_all([h.buffer(2.0) for h in hulls])) if h.intersects(win)]
+        if rings:
+            ring = _ft.rasterize([(h, 1) for h in rings], out_shape=gm.shape, transform=_fo(x0, y1, res, res)).astype(bool)
     return {"rgb": rgb, "src": src, "res": res, "x0": x0, "y1": y1, "gen": gm, "ortho": om, "green": green, "deck": deck,
-            "paint": paint, "other": other, "model": model}
+            "paint": paint, "other": other, "model": model, "ring": ring}
+
+
+def _parts_of(g):
+    return list(getattr(g, "geoms", [g]))
 
 
 def iou(wm, band_m=6.0):
@@ -289,8 +306,16 @@ def separations(wm, close_m=7.0, min_m2=4.0):
         r, c = cpt["rc"]
         half_w = float(ndi.distance_transform_edt(np.pad(m, 1)).max()) * res
         verdict = "absent_on_ortho" if rf >= 0.6 else ("partial" if rf >= 0.3 else "present")
+        # share of the 1.5 m ring around the component that is carriageway: a notch in the outline (kerb-return
+        # concavity closed by the 7 m closing) has road on one side only and is not a separation at all
+        halo = I.dilate(m, 1.5 / res) & ~m
+        enclosed = float(gen[halo].mean()) if halo.any() else 0.0
         if float(wm["deck"][m].mean()) >= 0.4:
             verdict = "under_deck"
+        elif "ring" in wm and float(wm["ring"][m].mean()) >= 0.5:
+            verdict = "roundabout_centre"
+        elif enclosed < 0.7:
+            verdict = "outline_notch"
         elif half_w > 7.5:
             verdict = "enclosed_block"           # a block ringed by roads (yard, roundabout centre), not an island
         (bad_m if verdict == "absent_on_ortho" else ok_m)[m] = True
