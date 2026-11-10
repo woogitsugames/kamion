@@ -84,3 +84,5 @@
 - Krok26Low: 28 PNG rundy4 Low zapisane. NASTĘPNY: pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting overcast -OutputDir artifacts/megascans-r1/round4/High-overcast; następnie kamery detali.
 
 - Krok26High: 28 PNG rundy4 High zapisane. NASTĘPNY: pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting overcast -OutputDir artifacts/megascans-r1/round4/High-overcast; następnie kamery detali.
+
+- Krok27: końcowe56PNG+6detali oraz raycast gotowe; EditMode wrapper exit=1 (sprawdzić XML). NASTĘPNY: obejrzeć artifacts/megascans-r1/round4/Low-contact.jpg i High-contact.jpg, przeprowadzić niezależną krytykę.
