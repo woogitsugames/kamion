@@ -9,6 +9,8 @@ namespace Game.Vehicle.Runtime
     /// resident, ~4 MB); the Medium and High sets load from Resources on demand, so a Low device never loads the 2048
     /// atlases. Tier index = QualitySettings level (0 Low, 1 Medium, 2 High, 3 Ultra = High content).
     /// Manifest mapping: exterior High LOD0-1, Medium LOD1-2, Low LOD2; interior LOD0 on every tier (InteriorLodFor).
+    /// Cab glazing (GLASS_*) has its own LOD group: the LOD0 glass is the near level on every tier (from the driver's eye
+    /// and wherever the interior is drawn), the tier's exterior chain takes over below that (ADR 0045, GlassLodsFor).
     /// </summary>
     [ExecuteAlways]
     [DefaultExecutionOrder(-50)]
@@ -31,6 +33,9 @@ namespace Game.Vehicle.Runtime
         [Tooltip("Interior renderers by LOD (index 0..2)")] public RendererList[] interiorLods = new RendererList[3];
         public LODGroup exteriorGroup;
         public LODGroup interiorGroup;
+        [Tooltip("Cab glazing renderers by LOD (index 0..2); empty on prefabs built before ADR 0045 (glass in exteriorLods)")]
+        public RendererList[] glassLods = new RendererList[3];
+        public LODGroup glassGroup;
         public RendererSlots[] slots = new RendererSlots[0];
         [Tooltip("Material set referenced by the prefab (Low)")] public TruckMaterialSet residentSet;
         [Tooltip("Manifest lod_screen_size_suggestion: LOD0 0.45, LOD1 0.18, LOD2 0.07, cull 0.006")]
@@ -87,19 +92,24 @@ namespace Game.Vehicle.Runtime
                     if (changed) rs.renderer.sharedMaterials = mats;
                 }
 
-            // Exterior LOD chain per tier.
+            // Exterior LOD chain per tier: (screen height threshold, LOD index).
+            var chain = ExteriorChainFor(tier, screenSizes);
             if (exteriorGroup != null)
             {
-                Renderer[] R(int i) => exteriorLods != null && i < exteriorLods.Length && exteriorLods[i] != null ? exteriorLods[i].renderers : new Renderer[0];
-                LOD[] lods = tier switch
-                {
-                    "High" => new[] { new LOD(screenSizes[0], R(0)), new LOD(screenSizes[1], R(1)), new LOD(screenSizes[3], R(2)) },
-                    "Medium" => new[] { new LOD(screenSizes[1], R(1)), new LOD(screenSizes[3], R(2)) },
-                    _ => new[] { new LOD(screenSizes[3], R(2)) },
-                };
-                for (int i = 0; i < 3; i++) SetEnabled(R(i), lods);
+                var lods = new LOD[chain.Length];
+                for (int i = 0; i < chain.Length; i++) lods[i] = new LOD(chain[i].size, R(exteriorLods, chain[i].lod));
+                for (int i = 0; i < 3; i++) SetEnabled(R(exteriorLods, i), lods);
                 exteriorGroup.SetLODs(lods);
                 exteriorGroup.RecalculateBounds();
+            }
+            if (glassGroup != null)
+            {
+                var gchain = GlassLodsFor(tier, screenSizes, interiorCull);
+                var lods = new LOD[gchain.Length];
+                for (int i = 0; i < gchain.Length; i++) lods[i] = new LOD(gchain[i].size, R(glassLods, gchain[i].lod));
+                for (int i = 0; i < 3; i++) SetEnabled(R(glassLods, i), lods);
+                glassGroup.SetLODs(lods);
+                glassGroup.RecalculateBounds();
             }
             if (interiorGroup != null)
             {
@@ -112,6 +122,31 @@ namespace Game.Vehicle.Runtime
                 interiorGroup.SetLODs(new[] { new LOD(interiorCull, interiorLods[il].renderers) });
                 interiorGroup.RecalculateBounds();
             }
+        }
+
+        static Renderer[] R(RendererList[] l, int i) => l != null && i < l.Length && l[i] != null && l[i].renderers != null ? l[i].renderers : new Renderer[0];
+
+        /// <summary>Exterior LOD chain of a tier as (screen height threshold, LOD index): High LOD0-1-2, Medium LOD1-2, Low LOD2.</summary>
+        public static (float size, int lod)[] ExteriorChainFor(string tier, float[] s) => tier switch
+        {
+            "High" => new[] { (s[0], 0), (s[1], 1), (s[3], 2) },
+            "Medium" => new[] { (s[1], 1), (s[3], 2) },
+            _ => new[] { (s[3], 2) },
+        };
+
+        /// <summary>
+        /// Cab glazing chain of a tier (ADR 0045): LOD0 glass first on every tier, down to the larger of the tier's first
+        /// exterior threshold and the interior cull (the interior is drawn through the glass only above it); below that the
+        /// glass follows the exterior chain. Low: LOD0 > 0.12, LOD2 to cull. Medium: LOD0 > 0.18, LOD2. High: as the body.
+        /// The LOD0 glazing is 912 triangles in total (windscreen 432 + doors 2 x 240), cheap on any tier.
+        /// </summary>
+        public static (float size, int lod)[] GlassLodsFor(string tier, float[] s, float interiorCull)
+        {
+            var c = ExteriorChainFor(tier, s);
+            var r = new System.Collections.Generic.List<(float, int)> { (Mathf.Max(c[0].size, interiorCull), 0) };
+            if (c[0].lod != 0 && c[0].size < interiorCull) r.Add(c[0]);
+            for (int i = 1; i < c.Length; i++) r.Add(c[i]);
+            return r.ToArray();
         }
 
         static void SetEnabled(Renderer[] rs, LOD[] lods)

@@ -395,6 +395,7 @@ namespace Game.Editor.Setup
                 // ---- exterior: three LOD files, flat; rebuild the rig from rig_parent ----
                 var lods = Json.Obj(ext["lods"]);
                 var exteriorLods = new List<Renderer>[3];
+                var glassLods = new List<Renderer>[3];   // GLASS_* (windscreen, door glass): own LOD group, LOD0 near on every tier (ADR 0045)
                 var lod0ByRole = new Dictionary<string, Transform>();
                 var eyeLocal = Vector3.zero;
                 var rendererSlots = new List<TruckVisualRig.RendererSlots>();
@@ -403,6 +404,7 @@ namespace Game.Editor.Setup
                 for (int lod = 0; lod < 3; lod++)
                 {
                     exteriorLods[lod] = new List<Renderer>();
+                    glassLods[lod] = new List<Renderer>();
                     var L = Json.Obj(lods["LOD" + lod]);
                     var model = InstantiateModel($"{SrcExt}/{Path.GetFileName(Json.Str(L["file"]))}", root.transform);
                     var objs = Json.Obj(L["objects"]);
@@ -467,7 +469,7 @@ namespace Game.Editor.Setup
                             r.receiveShadows = !glassish;
                             // Wheels (origin = wheel centre): tyre contact-patch flattening in Kamion/Truck Exterior.
                             if (role.StartsWith("WHEEL_", StringComparison.Ordinal)) r.renderingLayerMask |= TruckVisualRig.TyreRenderingLayer;
-                            exteriorLods[lod].Add(r);
+                            (transparent ? glassLods : exteriorLods)[lod].Add(r);
                         }
                     }
                     // Empties (LOD0 only: lights, eye point, sockets) under their rig parents; drop LOD1-2 copies and collision.
@@ -483,6 +485,21 @@ namespace Game.Editor.Setup
                         if (e.Key == "EYE_POINT") eyeLocal = V3(Json.Obj(e.Value)["position_unity_vehicle"]);
                     }
                     UnityEngine.Object.DestroyImmediate(model);
+                }
+
+                // ---- cab glazing seen from the eye (ADR 0045): the exterior FBX glass is a single outward-facing sheet, so with
+                // Kamion/Truck Glass (Cull Back) the driver looked through no glass at all on every tier (no tint, no dash
+                // reflection, no road film). Kamion/Truck Glass expects an inside face (normal towards the cab), so add one
+                // here when the export has none; skipped automatically once the export ships double-sided glass. ----
+                {
+                    Vector3 eyeW0 = root.transform.TransformPoint(eyeLocal);
+                    foreach (var r in glassLods.SelectMany(l => l))
+                    {
+                        var mf = r.GetComponent<MeshFilter>();
+                        if (mf == null || mf.sharedMesh == null) continue;
+                        var ds = DoubleSidedGlass(mf.sharedMesh, r.transform.InverseTransformPoint(eyeW0));
+                        if (ds != null) mf.sharedMesh = ds;
+                    }
                 }
 
                 // ---- fifth wheel at the PHYSICS kingpin lock (ADR 0019: lead 0.68 m). The exterior export still models the
@@ -623,6 +640,12 @@ namespace Game.Editor.Setup
                 igroup.fadeMode = LODFadeMode.None;
                 var rig = root.AddComponent<TruckVisualRig>();
                 rig.exteriorGroup = group; rig.interiorGroup = igroup;
+                // ADR 0045: the cab glazing is drawn from its own LOD group so the driver always looks through the LOD0
+                // windscreen (Low used to show LOD2 glass only, which does not cover the LOD0 cab opening from the eye).
+                var ggroup = Child(cabBody, "CabGlassLOD", Vector3.zero).gameObject.AddComponent<LODGroup>();
+                ggroup.fadeMode = LODFadeMode.None;
+                rig.glassGroup = ggroup;
+                rig.glassLods = glassLods.Select(l => new TruckVisualRig.RendererList { renderers = l.ToArray() }).ToArray();
                 rig.exteriorLods = exteriorLods.Select(l => new TruckVisualRig.RendererList { renderers = l.ToArray() }).ToArray();
                 rig.interiorLods = interiorLods.Select(l => new TruckVisualRig.RendererList { renderers = l.ToArray() }).ToArray();
                 rig.slots = rendererSlots.ToArray();
@@ -650,6 +673,7 @@ namespace Game.Editor.Setup
 
                 int tris(IEnumerable<Renderer> rs) => rs.Sum(r => { var mf = r.GetComponent<MeshFilter>(); return mf != null && mf.sharedMesh != null ? (int)(mf.sharedMesh.triangles.Length / 3) : 0; });
                 Debug.Log($"[TRUCK] exterior tris LOD0 {tris(exteriorLods[0])} LOD1 {tris(exteriorLods[1])} LOD2 {tris(exteriorLods[2])}; " +
+                          $"glass LOD0 {tris(glassLods[0])} LOD1 {tris(glassLods[1])} LOD2 {tris(glassLods[2])}; " +
                           $"interior LOD0 {tris(interiorLods[0])} LOD1 {tris(interiorLods[1])} LOD2 {tris(interiorLods[2])}; eye {eyeLocal}; mount {mount}");
                 Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, Root));
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
@@ -717,6 +741,58 @@ namespace Game.Editor.Setup
             Debug.Log($"[TRUCK] contact shadow {root.name}: ground y {ground:F2}, footprint z {zMin:F2}..{zMax:F2}, half width {hw:F2}, wheels {wheels.Count} " +
                       $"(r {string.Join("/", wheels.Select(w => w.radius.ToString("F2")))}, w {string.Join("/", wheels.Select(w => w.width.ToString("F2")))})");
             return cs;
+        }
+
+        /// <summary>
+        /// ADR 0045: returns a copy of a single-sided glass sheet with an inside face (reversed winding, flipped normals and
+        /// tangents) saved under Assets/_Generated/Truck/Meshes, or null when the mesh already has normals facing
+        /// <paramref name="eyeOS"/> (the export is double-sided). Same vertex colour / uv, so tint and road film match.
+        /// </summary>
+        public static Mesh DoubleSidedGlass(Mesh src, Vector3 eyeOS, bool save = true)
+        {
+            var v = src.vertices; var n = src.normals;
+            if (n == null || n.Length != v.Length) return null;
+            for (int i = 0; i < v.Length; i++) if (Vector3.Dot(n[i], eyeOS - v[i]) > 0f) return null;
+            int nv = v.Length;
+            Vector3[] D3(Vector3[] a, bool neg) { var o = new Vector3[a.Length * 2]; for (int i = 0; i < a.Length; i++) { o[i] = a[i]; o[i + a.Length] = neg ? -a[i] : a[i]; } return o; }
+            T[] D<T>(T[] a) { if (a == null || a.Length != nv) return null; var o = new T[nv * 2]; a.CopyTo(o, 0); a.CopyTo(o, nv); return o; }
+            var m = new Mesh { name = src.name + "_2S", indexFormat = nv * 2 > 65535 ? IndexFormat.UInt32 : IndexFormat.UInt16 };
+            m.vertices = D3(v, false);
+            m.normals = D3(n, true);
+            var tg = src.tangents;
+            if (tg != null && tg.Length == nv)
+            {
+                var t2 = new Vector4[nv * 2];
+                for (int i = 0; i < nv; i++) { t2[i] = tg[i]; t2[i + nv] = new Vector4(-tg[i].x, -tg[i].y, -tg[i].z, tg[i].w); }
+                m.tangents = t2;
+            }
+            var c = D(src.colors); if (c != null) m.colors = c;
+            for (int ch = 0; ch < 4; ch++)
+            {
+                var uv = new List<Vector2>(); src.GetUVs(ch, uv);
+                if (uv.Count == nv) { var u2 = new List<Vector2>(uv); u2.AddRange(uv); m.SetUVs(ch, u2); }
+            }
+            m.subMeshCount = src.subMeshCount;
+            for (int sm = 0; sm < src.subMeshCount; sm++)
+            {
+                var t = src.GetTriangles(sm);
+                var t2 = new int[t.Length * 2];
+                for (int i = 0; i < t.Length; i += 3)
+                {
+                    t2[i] = t[i]; t2[i + 1] = t[i + 1]; t2[i + 2] = t[i + 2];
+                    t2[t.Length + i] = t[i] + nv; t2[t.Length + i + 1] = t[i + 2] + nv; t2[t.Length + i + 2] = t[i + 1] + nv;
+                }
+                m.SetTriangles(t2, sm);
+            }
+            m.bounds = src.bounds;
+            if (!save) return m;
+            string dir = Root + "/Meshes";
+            Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, dir));
+            string path = $"{dir}/{m.name}.asset";
+            var old = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (old != null) { EditorUtility.CopySerialized(m, old); UnityEngine.Object.DestroyImmediate(m); EditorUtility.SetDirty(old); return old; }
+            AssetDatabase.CreateAsset(m, path);
+            return m;
         }
 
         static Transform Child(Transform parent, string name, Vector3 localPos)
