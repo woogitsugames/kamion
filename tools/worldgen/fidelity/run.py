@@ -266,7 +266,7 @@ def main(argv=None):
         log(f"tile edge profiles done ({len(tile_rows)} chains)")
 
     def edge_summary(rows):
-        offs, signed, n_st, n_valid = [], [], 0, 0
+        offs, signed, rel, rel_s, n_st, n_valid = [], [], [], [], 0, 0
         for r in rows:
             if r.get("skip"):
                 continue
@@ -276,10 +276,15 @@ def main(argv=None):
                     offs.append(abs(r[k]))
                     signed.append(r[k])
                     n_valid += 1
-        out = Mx.stats(offs)
-        out["signed_p50"] = Mx.pct(signed, 50)
+                    if r.get(k + "_green") and not r.get(k + "_walk"):
+                        rel.append(abs(r[k]))
+                        rel_s.append(r[k])
+        out = Mx.stats(rel)                       # primary: kerb/verge edges (road -> vegetation), see ADR 0075
+        out["signed_p50"] = Mx.pct(rel_s, 50)
+        out["all_sides"] = Mx.stats(offs)         # includes road -> sidewalk / parking (classifier-ambiguous)
         out["stations"] = n_st
-        out["valid_sides"] = n_valid
+        out["valid_sides"] = len(rel)
+        out["detected_sides"] = n_valid
         return out
     route_edge_all = [r for rows in edge_rows.values() for r in rows]
     tile_edge_all = [r for rows in tile_rows.values() for r in rows]
@@ -298,7 +303,8 @@ def main(argv=None):
         truth, tsrc = None, None
         if lanes_osm and lanes_osm.isdigit():
             truth, tsrc = int(lanes_osm), "osm"
-        elif oc and oc["agree"] >= 0.6:
+        elif oc and oc["agree"] >= 0.6 and (oc["lanes"] >= 2 or lc["gen"]["oneway"]):
+            # an unmarked two-way road shows no separator line: paint cannot tell 1 from 2 lanes there
             truth, tsrc = oc["lanes"], "ortho"
         lc = dict(lc, ortho=oc, truth=truth, truth_src=tsrc,
                   length_m=round(sp[1] - sp[0], 1) if sp else None,
@@ -345,6 +351,8 @@ def main(argv=None):
         wm = Mx.window_masks(ctx, cen, half, res=0.1, yards=yards, walk_tris=g.walk_tris)
         io = Mx.iou(wm, band_m=4.0)
         gi, miss, imask, mmask = Mx.separations(wm)
+        for x in gi + miss:
+            x["route_dist_m"] = round(route_line.distance(Point(x["xy"])), 1)
         diffs, gen_only, o_only = Mx.area_diffs(wm)
         x0, y1, res = wm["x0"], wm["y1"], wm["res"]
         x1, y0 = x0 + wm["gen"].shape[1] * res, y1 - wm["gen"].shape[0] * res
@@ -453,8 +461,12 @@ def main(argv=None):
             "edge_vs_ortho_m": rs,
             "lanes": lanes_ok(route_lanes),
             "sites_iou": {s["id"]: s["iou"]["iou"] for s in sites},
-            "gen_islands_absent_on_ortho": sum(x["verdict"] == "absent_on_ortho" for s in sites for x in s["gen_islands"]),
-            "ortho_islands_missing_in_gen": sum(len(s["ortho_islands_missing_in_gen"]) for s in sites),
+            "gen_islands_absent_on_ortho": len({tuple(np.round(x["xy"], 0)) for s in sites for x in s["gen_islands"]
+                                                if x["verdict"] == "absent_on_ortho" and x["route_dist_m"] <= 20}),
+            "gen_islands_absent_on_ortho_windows": len({tuple(np.round(x["xy"], 0)) for s in sites for x in
+                                                        s["gen_islands"] if x["verdict"] == "absent_on_ortho"}),
+            "ortho_islands_missing_in_gen": len({tuple(np.round(x["xy"], 0)) for s in sites for x in
+                                                 s["ortho_islands_missing_in_gen"] if x["route_dist_m"] <= 20}),
             "lane_into_island": sum(1 for x in lii if x["on_route"]),
             "lane_into_island_generator_bug": sum(1 for x in lii if x["on_route"] and
                                                   x["verdict"] == "generator_island_on_real_road"),

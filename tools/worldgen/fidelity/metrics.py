@@ -146,6 +146,7 @@ def chain_edge_profiles(ctx: Ctx, c, s_from, s_to, res_pref=0.08, step=PROFILE_S
         lab = I.rgb2lab(rgb)
         gm = G.rasterize(ctx.g.tris, x0, y1, res, rgb.shape[:2])
         green = I.exg(rgb) > I.EXG_GREEN
+        wk = G.rasterize(ctx.g.walk_tris, x0, y1, res, rgb.shape[:2]).astype(np.float32)             if len(ctx.g.walk_tris) else np.zeros(rgb.shape[:2], np.float32)
         model = I.road_model(lab, I.erode(gm, 1.0 / res) & ~green)
         if model is None:
             s = sb
@@ -169,6 +170,8 @@ def chain_edge_profiles(ctx: Ctx, c, s_from, s_to, res_pref=0.08, step=PROFILE_S
             gmv = ndi.map_coordinates(gm.astype(np.float32), [rows, cols], order=0, mode="nearest")
             prof = np.median(nr, axis=0)               # 1 = not road
             gprof = np.median(gmv, axis=0)              # generated carriageway (any chain)
+            grp = np.median(ndi.map_coordinates(green.astype(np.float32), [rows, cols], order=0, mode="nearest"), 0)
+            wkp = np.median(ndi.map_coordinates(wk, [rows, cols], order=0, mode="nearest"), 0)
             rec = {"s": float(si), "hw": hw, "res": res, "src": src}
             ic = len(lat) // 2
             core = np.abs(lat) < max(0.5, hw - 1.2)
@@ -202,6 +205,12 @@ def chain_edge_profiles(ctx: Ctx, c, s_from, s_to, res_pref=0.08, step=PROFILE_S
                     continue
                 det = abs(lat[found]) - res / 2
                 rec[side] = round(float(det - hw), 3)      # + = real carriageway extends beyond the generated edge
+                # reliability: road -> vegetation transition (kerb + verge) and no generated sidewalk in between;
+                # road -> paving / concrete is ambiguous (sidewalks share the asphalt colour on this ortho)
+                outside = (sgn * lat >= det + 0.3) & (sgn * lat <= det + 1.8)
+                between = (sgn * lat >= min(hw, det) - 0.2) & (sgn * lat <= max(hw, det) + 0.2)
+                rec[side + "_green"] = bool(grp[outside].mean() >= 0.5)
+                rec[side + "_walk"] = bool(wkp[between].mean() >= 0.3) if between.any() else False
             res_list.append(rec)
         s = sb
     return res_list
@@ -226,7 +235,8 @@ def window_masks(ctx: Ctx, center, half, res=0.1, yards=None, walk_tris=None):
         shapes = [(p, 1) for p in yards if p.intersects(Polygon([(x0, y0), (x1, y0), (x1, y1), (x0, y1)]))]
         if shapes:
             other |= features.rasterize(shapes, out_shape=gm.shape, transform=from_origin(x0, y1, res, res)).astype(bool)
-    return {"rgb": rgb, "src": src, "res": res, "x0": x0, "y1": y1, "gen": gm, "ortho": om, "green": green,
+    deck = G.rasterize(ctx.bridge_tris, x0, y1, res, rgb.shape[:2]) if len(ctx.bridge_tris) else np.zeros_like(gm)
+    return {"rgb": rgb, "src": src, "res": res, "x0": x0, "y1": y1, "gen": gm, "ortho": om, "green": green, "deck": deck,
             "paint": paint, "other": other, "model": model}
 
 
@@ -273,13 +283,20 @@ def separations(wm, close_m=7.0, min_m2=4.0):
         inner = I.erode(m, 0.4 / res)
         if inner.sum() < 10:
             inner = m
-        rf = float(orth[inner].mean())
+        free = inner & ~wm["other"]
+        rf = float(orth[free].mean()) if free.sum() >= 10 else 0.0
         gf = float(wm["green"][inner].mean())
         r, c = cpt["rc"]
+        half_w = float(ndi.distance_transform_edt(np.pad(m, 1)).max()) * res
         verdict = "absent_on_ortho" if rf >= 0.6 else ("partial" if rf >= 0.3 else "present")
+        if float(wm["deck"][m].mean()) >= 0.4:
+            verdict = "under_deck"
+        elif half_w > 7.5:
+            verdict = "enclosed_block"           # a block ringed by roads (yard, roundabout centre), not an island
         (bad_m if verdict == "absent_on_ortho" else ok_m)[m] = True
         gen_islands.append({"xy": [wm["x0"] + (c + 0.5) * res, wm["y1"] - (r + 0.5) * res], "area_m2": cpt["area_m2"],
-                            "ortho_road_frac": round(rf, 3), "ortho_green_frac": round(gf, 3), "verdict": verdict})
+                            "ortho_road_frac": round(rf, 3), "ortho_green_frac": round(gf, 3), "half_width_m": round(half_w, 2),
+                            "verdict": verdict})
     o_closed = I.close(orth, close_m / res)
     o_closed |= ndi.binary_fill_holes(orth)
     osep = o_closed & ~orth
