@@ -92,5 +92,40 @@ namespace Game.Tests
             }
             finally { rig.forceLevel = -1; }
         }
+
+        /// <summary>
+        /// ADR 0046: exactly one glass layer per tier. The glazing group (GLASS_*) is the only glass; no exterior body renderer
+        /// (CAB_Body_LODn ...) keeps a MI_Ext_Glass slot / submesh, so Low's LOD2 body no longer draws a second glass sheet.
+        /// </summary>
+        [Test]
+        public void Prefab_SingleGlassLayer_OnEveryTier()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
+            Assume.That(prefab, Is.Not.Null, "TRAKT prefab not generated (Kamion/Setup/Rebuild TRAKT truck)");
+            m_Go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+            var rig = m_Go.GetComponent<TruckVisualRig>();
+            foreach (var rs in rig.slots)
+            {
+                if (rs.renderer == null || rs.renderer.name.StartsWith("GLASS_", StringComparison.Ordinal)) continue;
+                var mf = rs.renderer.GetComponent<MeshFilter>();
+                Assert.That(rs.slots.Length, Is.EqualTo(mf.sharedMesh.subMeshCount), $"{rs.renderer.name}: slots match submeshes");
+                Assert.That(rs.slots, Does.Not.Contain("MI_Ext_Glass"), $"{rs.renderer.name} has no baked glass slot (double glass)");
+            }
+            try
+            {
+                for (int level = 0; level < 4; level++)
+                {
+                    rig.forceLevel = level;
+                    rig.Apply();
+                    string tier = TruckVisualRig.TierNames[level];
+                    foreach (var r in rig.exteriorLods.SelectMany(l => l.renderers).Where(r => r != null))
+                        Assert.That(r.sharedMaterials.Select(m => m != null ? m.name : "").Any(n => n.Contains("Glass")), Is.False, $"{r.name} draws glass on {tier}");
+                    // The windscreen is drawn by exactly one glass LOD level at any distance: LOD levels hold disjoint renderers.
+                    var all = rig.glassGroup.GetLODs().SelectMany(l => l.renderers).Where(r => r != null && r.name.StartsWith("GLASS_Windscreen", StringComparison.Ordinal)).ToArray();
+                    Assert.AreEqual(all.Length, all.Distinct().Count(), $"windscreen renderers appear once across glass LOD levels ({tier})");
+                }
+            }
+            finally { rig.forceLevel = -1; }
+        }
     }
 }
