@@ -72,6 +72,26 @@ def test_no_frames_is_not_a_pass():
     assert ge.check_frame_exposure({})["verdict"] == "FAIL"
 
 
+def test_interior_frames_use_the_dark_share_rule_only(tmp_path):
+    # dim but not black cab view: p50 < 15 % would fail a world frame, an interior frame only needs <= 8 % black pixels
+    dim = frame(tmp_path / "dim.png", 30)
+    assert ge.check_frame_exposure({"world": dim})["verdict"] == "FAIL"
+    assert ge.check_frame_exposure({"phone cab-dash_overcast.png": dim})["verdict"] == "PASS"
+    holes = frame(tmp_path / "holes.png", 30, black_frac=0.3)
+    res = ge.check_frame_exposure({"phone cab-dash_lowsun.png": holes})
+    assert res["verdict"] == "FAIL" and res["failing"][0]["interior"] is True
+
+
+def test_find_phone_matches_prefixed_and_suffixed_names(tmp_path):
+    for n in ("a16_low_g3a_eye_s0012.png", "a16_low_g3a_eye_s0062.png", "cab-dash_lowsun.png", "g3a_eye_s0012_1024.jpg"):
+        frame(tmp_path / n, 100)
+    (tmp_path / "small").mkdir()
+    frame(tmp_path / "small" / "a16_low_g3a_eye_s0012.png", 100)
+    names = sorted(f.name for f in ge.find_phone(tmp_path, "g3a_eye_s0012"))
+    assert names == ["a16_low_g3a_eye_s0012.png", "g3a_eye_s0012_1024.jpg"]
+    assert [f.name for f in ge.find_phone(tmp_path, "g3a_eye_s001")] == []   # no partial id match
+
+
 def test_spawn_camera_is_out_of_the_truck():
     d = json.loads((REPO / "Data/Regions/bialystok-industrial-c/gate3_cameras.json").read_text(encoding="utf-8"))
     c = next(c for c in d["cameras"] if c["id"] == "g3a_eye_s0012")

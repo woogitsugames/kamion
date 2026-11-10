@@ -50,6 +50,10 @@ VEGETATION_SUNK_OK_M = 1.0
 FRAME_P50_MIN = 0.15        # median luma (sRGB Rec.709, 0..1) must be above this
 FRAME_DARK_LUMA = 0.03      # a pixel below this luma is "black"
 FRAME_DARK_MAX_FRAC = 0.20  # at most this share of black pixels
+# Cab interior views (cab-dash ...) are dark by nature: the median rule does not apply, they carry their own criterion
+# (r6 L1-r5): at most 8 % of pixels below 3 % luma.
+FRAME_INTERIOR = re.compile(r"(^|[ _-])cab-", re.I)
+FRAME_INTERIOR_DARK_MAX_FRAC = 0.08
 TIER_ORDER = ["Low", "Medium", "High", "Ultra"]
 CC_OK = re.compile(r"^(CC0|PD|public domain|domena publiczna)", re.I)
 
@@ -230,14 +234,17 @@ def check_ground(audit: dict) -> dict:
 
 
 # ---------------------------------------------------------------- frame exposure (W-N10)
-def frame_exposure(im) -> dict:
+def frame_exposure(im, interior: bool = False) -> dict:
     """p50 luma and share of pixels < FRAME_DARK_LUMA of one frame (PIL image or HxWx3/4 array, sRGB 0..255)."""
     a = np.asarray(im.convert("RGB") if hasattr(im, "convert") else im, dtype=np.float64)[..., :3]
     y = srgb_luma(a) / 255.0
     p50 = float(np.median(y))
     dark = float(np.mean(y < FRAME_DARK_LUMA))
-    ok = p50 > FRAME_P50_MIN and dark <= FRAME_DARK_MAX_FRAC
-    return {"p50": round(p50, 4), "dark_frac": round(dark, 4), "ok": bool(ok)}
+    if interior:
+        ok = dark <= FRAME_INTERIOR_DARK_MAX_FRAC
+    else:
+        ok = p50 > FRAME_P50_MIN and dark <= FRAME_DARK_MAX_FRAC
+    return {"p50": round(p50, 4), "dark_frac": round(dark, 4), "ok": bool(ok), "interior": interior}
 
 
 def check_frame_exposure(files: dict) -> dict:
@@ -246,7 +253,7 @@ def check_frame_exposure(files: dict) -> dict:
     for label, f in sorted(files.items()):
         try:
             with Image.open(f) as im:
-                r = frame_exposure(im)
+                r = frame_exposure(im, interior=bool(FRAME_INTERIOR.search(label)))
         except Exception as e:  # unreadable frame is a failure, never silently skipped
             r = {"p50": None, "dark_frac": None, "ok": False, "error": str(e)}
         r["frame"] = label
@@ -255,7 +262,7 @@ def check_frame_exposure(files: dict) -> dict:
         if not r["ok"]:
             bad.append(r)
     return {"verdict": "PASS" if rows and not bad else "FAIL",
-            "rule": f"every editor render and phone frame: p50 luma > {FRAME_P50_MIN:.0%} and <= {FRAME_DARK_MAX_FRAC:.0%} of pixels below {FRAME_DARK_LUMA:.0%} luma (camera inside geometry / black hole = FAIL; r6 W-N10)",
+            "rule": f"every editor render and phone frame: p50 luma > {FRAME_P50_MIN:.0%} and <= {FRAME_DARK_MAX_FRAC:.0%} of pixels below {FRAME_DARK_LUMA:.0%} luma (camera inside geometry / black hole = FAIL; r6 W-N10); cab-* interior frames: only <= {FRAME_INTERIOR_DARK_MAX_FRAC:.0%} of pixels below {FRAME_DARK_LUMA:.0%} luma (r6 L1-r5)",
             "frames_checked": len(rows), "failing_count": len(bad), "failing": bad[:60],
             "worst_p50": sorted(rows, key=lambda r: (r["p50"] is None, r["p50"] if r["p50"] is not None else 0))[:5]}
 
@@ -276,7 +283,9 @@ def find_phone(phone_dir: Path, cam_id: str):
     if not phone_dir.exists():
         return []
     n = norm(cam_id)
-    hits = [f for f in sorted(phone_dir.rglob("*")) if f.suffix.lower() in (".png", ".jpg", ".jpeg") and norm(f.stem).startswith(n)]
+    # the id may be preceded by a device/tier prefix (a16_low_<id>.png, s24_high_<id>.png) and followed by a suffix (_<lighting>, _1024)
+    pat = re.compile(r"(^|-)" + re.escape(n) + r"($|-)")
+    hits = [f for f in sorted(phone_dir.rglob("*")) if f.suffix.lower() in (".png", ".jpg", ".jpeg") and "small" not in f.parts and pat.search(norm(f.stem))]
     return hits
 
 
@@ -425,9 +434,10 @@ def main():
     for n, rr in renders.items():
         for (tt, ll), f in rr.items():
             frames[f"editor {tt}-{ll} {n}"] = f
-    for c in cams:
-        for f in find_phone(phone_dir, c):
-            frames[f"phone {f.name}"] = f
+    if phone_dir.exists():   # every phone frame in the folder, also truck-34 / cab-dash ones that are not gate3 cameras
+        for f in sorted(phone_dir.rglob("*")):
+            if f.suffix.lower() in (".png", ".jpg", ".jpeg") and "small" not in f.parts:
+                frames[f"phone {f.name}"] = f
     checks["frame_exposure"] = check_frame_exposure(frames)
 
     verdicts = {k: v["verdict"] for k, v in checks.items()}
