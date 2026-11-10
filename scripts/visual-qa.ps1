@@ -26,7 +26,9 @@ param(
     # ADR 0043 diagnostic: hide the glazing.
     [switch]$NoGlass,
     # Editor GPU timing: N extra renders per camera (stats.txt, VISUALQA_TIMING lines in the log).
-    [int]$TimeFrames = 0
+    [int]$TimeFrames = 0,
+    # Measurement mask: '<renderer>[:<slot>][;...]' also writes <id>_mask.png with those slots flat magenta.
+    [string]$Mask = ''
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -44,6 +46,7 @@ if ($NoGlass) { $qaArgs += @('-qaNoGlass', '1') }
 if ($CabFill -eq 'off') { $qaArgs += @('-qaCabFill', 'off') }
 if ($Rq) { $qaArgs += @('-qaRq', $Rq) }
 if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
+if ($Mask) { $qaArgs += @('-qaMask', $Mask) }
 $code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
 
 $result = Select-String -Path $log -Pattern 'VISUALQA_RESULT:.*' | Select-Object -Last 1

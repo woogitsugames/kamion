@@ -200,7 +200,11 @@ namespace Game.Editor.VisualQA
                     Shader.SetGlobalVector("_CabFill", Vector4.zero);
                     Shader.SetGlobalFloat("_CabGain", 1f);
                 }
-                else foreach (var cl in UnityEngine.Object.FindObjectsByType<CabInteriorLighting>(FindObjectsSortMode.None)) cl.Refresh(cam);
+                else foreach (var cl in UnityEngine.Object.FindObjectsByType<CabInteriorLighting>(FindObjectsSortMode.None))
+                {
+                    cl.Refresh(cam);
+                    Debug.Log($"[QA] cab light {qa.id}: fill {cl.LastFill.ToString("F4")} gain {cl.LastGain:F2} (meter {cl.LastMeterEv:F2} EV)");
+                }
                 // ADR 0043 diagnostic: -qaNoGlass leaves only the grey Fresnel loss of the glazing (no body absorption,
                 // grime, film or interior reflection), so sky-through-glass can be compared with the real glass in one frame.
                 if (EditorTools.Arg("-qaNoGlass", null) == "1")
@@ -338,6 +342,11 @@ namespace Game.Editor.VisualQA
                 File.WriteAllBytes(file, tex.EncodeToPNG());
                 Debug.Log($"[VISUALQA] {qa.id} → {file}");
                 rendered++;
+                // -qaMask <renderer>[:<slot>][;...]: one more render of the same camera with the matching renderer slots
+                // drawn flat magenta (depth and every other surface unchanged) -> <id>_mask.png, so a measurement script
+                // can select exactly e.g. the steering-wheel rim (STEERING_WHEEL:MI_Cab_Leather) instead of a hand box.
+                string maskSpec = EditorTools.Arg("-qaMask", null);
+                if (!string.IsNullOrEmpty(maskSpec)) WriteMask(cam, width, height, msaa, scale, maskSpec, Path.Combine(outDir, qa.id + "_mask.png"));
 
                 cam.targetTexture = prevTarget;
                 cam.enabled = wasEnabled;
@@ -356,6 +365,41 @@ namespace Game.Editor.VisualQA
             string lightName = lighting ?? "scene";
             if (stats.Length > 0) File.WriteAllText(Path.Combine(outDir, "stats.txt"), $"tier={tier} lighting={lightName} msaa={msaa} renderScale={scale.ToString(System.Globalization.CultureInfo.InvariantCulture)}" + System.Environment.NewLine + stats);
             return rendered;
+        }
+
+        static void WriteMask(Camera cam, int width, int height, int msaa, float scale, string spec, string file)
+        {
+            var sh = Shader.Find("Universal Render Pipeline/Unlit");
+            var flat = new Material(sh) { hideFlags = HideFlags.DontSave };
+            flat.SetColor("_BaseColor", new Color(1f, 0f, 1f, 1f));
+            var saved = new System.Collections.Generic.List<(Renderer r, Material[] m)>();
+            int slots = 0;
+            foreach (var part in spec.Split(';'))
+            {
+                var kv = part.Split(':');
+                string rn = kv[0], sn = kv.Length > 1 ? kv[1] : null;
+                foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                {
+                    if (!r.name.Contains(rn)) continue;
+                    var mats = r.sharedMaterials;
+                    var copy = (Material[])mats.Clone();
+                    bool any = false;
+                    for (int i = 0; i < mats.Length; i++)
+                        if (mats[i] != null && (sn == null || mats[i].name.Contains(sn))) { mats[i] = flat; any = true; slots++; }
+                    if (!any) continue;
+                    saved.Add((r, copy));
+                    r.sharedMaterials = mats;
+                }
+            }
+            var px = RenderToPixels(cam, width, height, out _, null, msaa, scale);
+            foreach (var (r, m) in saved) r.sharedMaterials = m;
+            var tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            tex.SetPixels32(px);
+            tex.Apply();
+            File.WriteAllBytes(file, tex.EncodeToPNG());
+            UnityEngine.Object.DestroyImmediate(tex);
+            UnityEngine.Object.DestroyImmediate(flat);
+            Debug.Log($"[VISUALQA] mask '{spec}': {slots} slots on {saved.Count} renderers ({string.Join(", ", saved.Select(x => x.r.name))}) → {file}");
         }
 
         static void SetLayer(Transform t, int layer)
