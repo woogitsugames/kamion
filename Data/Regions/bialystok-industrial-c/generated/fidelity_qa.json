@@ -1230,7 +1230,7 @@
   "osm_drivable_ways_in_tile": 553
  },
  "inputs_sha256": {
-  "overrides.yaml": "379592c30d67edd72d6eafd761c48a0abe4750f0bf6990aa669f4563292a14ce",
+  "overrides.yaml": "33f78c6e5c2d4c3dd3039a2518ed65988aa06176b6ca800c46d436f68f51925d",
   "roads.graph.json": "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
   "route_start.json": "ca592648746e2ae73750a925a192ec6553dbe4b12ce589751e056760725896bb",
   "tools/worldgen/roads/__init__.py": "328cd6e70845296ce7e67aee4b775c310c3fb318b638111b8ea4d4ad9ca0157b",
@@ -5169,7 +5169,7 @@
      "ortho_green_frac": 0.0,
      "ortho_road_frac": 1.0,
      "route_dist_m": 5.0,
-     "verdict": "absent_on_ortho",
+     "verdict": "present_authored",
      "xy": [
       570.688,
       -688.168
@@ -7134,11 +7134,11 @@
      ]
     },
     {
-     "area_m2": 142.9,
+     "area_m2": 138.7,
      "kind": "ortho_only",
      "xy": [
-      -323.244,
-      -171.549
+      -322.35,
+      -172.228
      ]
     },
     {
@@ -7387,7 +7387,7 @@
      "area_m2": 428.5,
      "half_width_m": 2.7,
      "ortho_green_frac": 0.0,
-     "ortho_road_frac": 0.419,
+     "ortho_road_frac": 0.417,
      "route_dist_m": 8.0,
      "verdict": "partial",
      "xy": [
@@ -7436,8 +7436,8 @@
    "id": "08_signals",
    "iou": {
     "gen_m2": 5593.4,
-    "iou": 0.773,
-    "ortho_m2": 5979.3
+    "iou": 0.775,
+    "ortho_m2": 5966.5
    },
    "lane_into_island": [],
    "name": "Skrzyżowanie z sygnalizacją s 1355-1415",
@@ -8639,7 +8639,7 @@
      "ortho_green_frac": 0.0,
      "ortho_road_frac": 0.886,
      "route_dist_m": 8.4,
-     "verdict": "absent_on_ortho",
+     "verdict": "present_authored",
      "xy": [
       -538.022,
       130.241
@@ -8725,8 +8725,8 @@
     "valid_sides": 616
    },
    "edges": 29,
-   "gen_islands_absent_on_ortho": 3,
-   "gen_islands_absent_on_ortho_windows": 18,
+   "gen_islands_absent_on_ortho": 1,
+   "gen_islands_absent_on_ortho_windows": 16,
    "lane_into_island": 0,
    "lane_into_island_generator_bug": 0,
    "lanes": {
@@ -8750,7 +8750,7 @@
     "05_s900": 0.728,
     "06_s1060_merge": 0.725,
     "07_s1270": 0.746,
-    "08_signals": 0.773,
+    "08_signals": 0.775,
     "09_s1600": 0.73,
     "10_rondo_putry": 0.699,
     "11_dk8": 0.666
