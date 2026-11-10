@@ -160,6 +160,7 @@ namespace Game.World.Import
             if (!WorldTextureGenerator.Exist()) WorldTextureGenerator.GenerateAll();
             LookDevAssets.EnsureAll();
             WorldPbrMaterials.Reset();
+            FabMaterials.Reset();
             var roadAsphalt = Obj(manifest.Get("materials")).Get("road_asphalt") as Dictionary<string, object>;
             foreach (var kv in Obj(manifest.Get("materials")))
             {
@@ -254,6 +255,8 @@ namespace Game.World.Import
             float metal = m.Get("metal") != null ? (float)Num(m.Get("metal")) : 0f;
             string surface = Str(m.Get("surface"));
             string path = $"{r.Dir}/Materials/M_{id}.mat";
+            var fab = FabMaterials.Create(r, id, path);
+            if (fab != null) return fab;
             if (m.Get("hlod") is bool hl && hl)
             {
                 // Forest HLOD (ADR 0015): shared PNG baked from the LOD0 trees (texture_ref, repo-relative). Edge walls are

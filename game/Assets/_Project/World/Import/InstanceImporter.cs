@@ -50,6 +50,7 @@ namespace Game.World.Import
             // Medium (budget 0.55 M for everything); 20/60 m keeps Medium at ~0.3 M there.
             if (proto.StartsWith("tree_shrub")) e = new[] { 12f, 40f, 300f };
             else if (proto.StartsWith("tree_")) e = new[] { 20f, 60f, 1000f };
+            else if (proto.StartsWith("fab_")) e = new[] { 12f, 30f, 65f };
             else if (proto.StartsWith("lamp_")) e = new[] { 60f, 400f };
             else if (proto == "pylon" || proto == "power_pole") e = new[] { 80f, 1500f };
             else if (proto.StartsWith("plate_") || proto.StartsWith("board_") || proto.StartsWith("sign_") || proto.StartsWith("signal_")) e = new[] { 50f, 250f };
@@ -84,6 +85,7 @@ namespace Game.World.Import
             // Authored landmark assets (ADR 0067 / 0071): art-source/world/landmarks/<asset>/<asset>.glb, prototypes
             // "landmark_<...>" (+ .lod1 / .lod2) in the same frame as street_props.glb.
             var landmarkLibs = new List<GlbReader>();
+            foreach (var f in FabMaterials.Libraries()) landmarkLibs.Add(GlbReader.Load(f));
             string lmDir = Path.Combine(art, "landmarks");
             if (Directory.Exists(lmDir))
                 foreach (var f in Directory.GetFiles(lmDir, "*.glb", SearchOption.AllDirectories).OrderBy(x => x, StringComparer.Ordinal))
@@ -445,6 +447,8 @@ namespace Game.World.Import
         {
             textured = false;
             if (name == null) return null;
+            var fab = FabMaterials.Create(r, name, $"{r.Dir}/Materials/Proto/M_{name}.mat");
+            if (fab != null) { textured = true; return fab; }
             if (r.Materials.TryGetValue(name, out var regionMat))
             {
                 textured = r.MaterialDefs.TryGetValue(name, out var d) && d.Get("texture") != null;
