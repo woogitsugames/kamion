@@ -7,7 +7,7 @@
    "root": "CabInterior_LOD2",
    "objects": {
     "CAB_Interior_LOD2": {
-     "tris": 15591,
+     "tris": 15964,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -24,7 +24,7 @@
      "role": "CAB_Interior"
     },
     "CAB_ShellPlaceholder_LOD2": {
-     "tris": 2224,
+     "tris": 2232,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Metal"
@@ -108,7 +108,7 @@
      }
     },
     "STEERING_WHEEL_LOD2": {
-     "tris": 3256,
+     "tris": 3016,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -343,7 +343,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 21709,
+   "tris_total": 21850,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -383,10 +383,10 @@
    "ao_atlas_layout": {
     "small_parts_inherit": 47,
     "packer": "skyline",
-    "islands": 524,
-    "sliver_islands_transferred": 81,
-    "uv_coverage": 0.6703,
-    "baked_texel_coverage": 0.9242,
+    "islands": 528,
+    "sliver_islands_transferred": 73,
+    "uv_coverage": 0.7074,
+    "baked_texel_coverage": 0.9655,
     "angle": 66.0,
     "margin": 0.0025,
     "small_m2": 0.01,
@@ -394,98 +394,150 @@
    },
    "fit_to_exterior": {
     "source": "art-source/truck/exterior/glass_interface.json",
-    "verts_moved": 560,
-    "max_move_m": 0.3709,
+    "verts_moved": 914,
+    "max_move_m": 0.5579,
     "objects": {
      "floor_slab": {
       "verts_moved": 8,
-      "max_move_m": 0.1939
+      "max_move_m": 0.4757
+     },
+     "back_wall": {
+      "verts_moved": 12,
+      "max_move_m": 0.0519
      },
      "headliner": {
-      "verts_moved": 50,
-      "max_move_m": 0.2563
+      "verts_moved": 58,
+      "max_move_m": 0.4006
+     },
+     "side_rear_-1": {
+      "verts_moved": 12,
+      "max_move_m": 0.0353
      },
      "side_top_-1": {
-      "verts_moved": 12,
-      "max_move_m": 0.1397
+      "verts_moved": 18,
+      "max_move_m": 0.2461
      },
      "side_front_-1": {
       "verts_moved": 4,
-      "max_move_m": 0.1633
+      "max_move_m": 0.283
+     },
+     "side_rear_1": {
+      "verts_moved": 12,
+      "max_move_m": 0.0353
      },
      "side_top_1": {
-      "verts_moved": 12,
-      "max_move_m": 0.1397
+      "verts_moved": 18,
+      "max_move_m": 0.2461
      },
      "side_front_1": {
       "verts_moved": 4,
-      "max_move_m": 0.1633
+      "max_move_m": 0.283
      },
      "footwell_wall": {
       "verts_moved": 8,
-      "max_move_m": 0.1007
+      "max_move_m": 0.2422
      },
      "ws_header": {
       "verts_moved": 8,
-      "max_move_m": 0.3709
+      "max_move_m": 0.5579
      },
      "ws_frit_bottom": {
-      "verts_moved": 24,
-      "max_move_m": 0.0311
+      "verts_moved": 22,
+      "max_move_m": 0.0299
      },
      "ws_frit_top": {
-      "verts_moved": 24,
-      "max_move_m": 0.0362
+      "verts_moved": 22,
+      "max_move_m": 0.0427
      },
      "ws_frit_side_-1": {
-      "verts_moved": 8,
-      "max_move_m": 0.0065
+      "verts_moved": 7,
+      "max_move_m": 0.0334
      },
      "ws_frit_side_1": {
-      "verts_moved": 8,
-      "max_move_m": 0.0065
+      "verts_moved": 7,
+      "max_move_m": 0.0334
      },
      "apillar_trim_-1": {
-      "verts_moved": 39,
-      "max_move_m": 0.105
+      "verts_moved": 28,
+      "max_move_m": 0.2091
+     },
+     "grab_A_-1": {
+      "verts_moved": 83,
+      "max_move_m": 0.0443
      },
      "apillar_trim_1": {
-      "verts_moved": 39,
-      "max_move_m": 0.105
+      "verts_moved": 28,
+      "max_move_m": 0.2091
+     },
+     "grab_A_1": {
+      "verts_moved": 83,
+      "max_move_m": 0.0443
      },
      "dash_main": {
-      "verts_moved": 96,
-      "max_move_m": 0.0793
+      "verts_moved": 194,
+      "max_move_m": 0.2111
+     },
+     "accel_pad": {
+      "verts_moved": 6,
+      "max_move_m": 0.0027
+     },
+     "footrest": {
+      "verts_moved": 2,
+      "max_move_m": 0.0006
+     },
+     "floor_mat": {
+      "verts_moved": 40,
+      "max_move_m": 0.1919
      },
      "overhead_body": {
       "verts_moved": 166,
-      "max_move_m": 0.1869
+      "max_move_m": 0.3219
+     },
+     "rear_oh": {
+      "verts_moved": 6,
+      "max_move_m": 0.0162
+     },
+     "curtain_ws_-1": {
+      "verts_moved": 1,
+      "max_move_m": 0.0002
+     },
+     "curtain_ws_1": {
+      "verts_moved": 1,
+      "max_move_m": 0.0002
      },
      "blind_cassette": {
-      "verts_moved": 10,
-      "max_move_m": 0.033
+      "verts_moved": 24,
+      "max_move_m": 0.088
      },
-     "sun_visor_0": {
-      "verts_moved": 20,
-      "max_move_m": 0.024
+     "blind_-1.06": {
+      "verts_moved": 4,
+      "max_move_m": 0.0677
      },
-     "sun_visor_1": {
-      "verts_moved": 20,
-      "max_move_m": 0.024
+     "blind_bar_-1.06": {
+      "verts_moved": 12,
+      "max_move_m": 0.0809
+     },
+     "blind_0.03": {
+      "verts_moved": 4,
+      "max_move_m": 0.0715
+     },
+     "blind_bar_0.03": {
+      "verts_moved": 12,
+      "max_move_m": 0.0789
      }
     }
    },
-   "hidden_faces_removed": 1132,
-   "tris_before_cleanup": 23858,
-   "build_s": 10.0,
-   "file_bytes": 2534940
+   "hidden_faces_removed": 1142,
+   "tris_before_cleanup": 24134,
+   "build_s": 11.5,
+   "file_bytes": 2545788
   },
   "LOD1": {
    "file": "art-source/truck/interior/export/SM_CabInterior_LOD1.fbx",
    "root": "CabInterior_LOD1",
    "objects": {
     "CAB_Interior_LOD1": {
-     "tris": 32471,
+     "tris": 33391,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -502,7 +554,7 @@
      "role": "CAB_Interior"
     },
     "CAB_ShellPlaceholder_LOD1": {
-     "tris": 2916,
+     "tris": 2890,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Rubber",
@@ -847,7 +899,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 41115,
+   "tris_total": 42009,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -888,9 +940,9 @@
     "small_parts_inherit": 172,
     "packer": "skyline",
     "islands": 697,
-    "sliver_islands_transferred": 192,
-    "uv_coverage": 0.6637,
-    "baked_texel_coverage": 0.8896,
+    "sliver_islands_transferred": 188,
+    "uv_coverage": 0.6778,
+    "baked_texel_coverage": 0.9084,
     "angle": 66.0,
     "margin": 0.0025,
     "small_m2": 0.01,
@@ -898,142 +950,198 @@
    },
    "fit_to_exterior": {
     "source": "art-source/truck/exterior/glass_interface.json",
-    "verts_moved": 778,
-    "max_move_m": 0.3709,
+    "verts_moved": 1181,
+    "max_move_m": 0.5579,
     "objects": {
      "floor_slab": {
       "verts_moved": 8,
-      "max_move_m": 0.1939
+      "max_move_m": 0.4757
+     },
+     "back_wall": {
+      "verts_moved": 12,
+      "max_move_m": 0.0519
      },
      "headliner": {
-      "verts_moved": 50,
-      "max_move_m": 0.2563
+      "verts_moved": 58,
+      "max_move_m": 0.4006
+     },
+     "side_rear_-1": {
+      "verts_moved": 12,
+      "max_move_m": 0.0353
      },
      "side_top_-1": {
-      "verts_moved": 12,
-      "max_move_m": 0.1397
+      "verts_moved": 18,
+      "max_move_m": 0.2461
      },
      "side_front_-1": {
       "verts_moved": 4,
-      "max_move_m": 0.1633
+      "max_move_m": 0.283
+     },
+     "side_rear_1": {
+      "verts_moved": 12,
+      "max_move_m": 0.0353
      },
      "side_top_1": {
-      "verts_moved": 12,
-      "max_move_m": 0.1397
+      "verts_moved": 18,
+      "max_move_m": 0.2461
      },
      "side_front_1": {
       "verts_moved": 4,
-      "max_move_m": 0.1633
+      "max_move_m": 0.283
      },
      "footwell_wall": {
       "verts_moved": 8,
-      "max_move_m": 0.1007
+      "max_move_m": 0.2422
      },
      "ws_header": {
       "verts_moved": 8,
-      "max_move_m": 0.3709
+      "max_move_m": 0.5579
      },
      "ws_frit_bottom": {
-      "verts_moved": 46,
-      "max_move_m": 0.0311
+      "verts_moved": 40,
+      "max_move_m": 0.0305
      },
      "ws_frit_top": {
-      "verts_moved": 46,
-      "max_move_m": 0.0362
+      "verts_moved": 40,
+      "max_move_m": 0.0427
      },
      "ws_frit_side_-1": {
-      "verts_moved": 10,
-      "max_move_m": 0.0065
+      "verts_moved": 9,
+      "max_move_m": 0.0334
      },
      "ws_frit_side_1": {
-      "verts_moved": 10,
-      "max_move_m": 0.0065
+      "verts_moved": 9,
+      "max_move_m": 0.0334
      },
      "win_channel_-1": {
-      "verts_moved": 12,
-      "max_move_m": 0.0988
+      "verts_moved": 6,
+      "max_move_m": 0.0444
      },
      "win_channel_1": {
-      "verts_moved": 12,
-      "max_move_m": 0.0988
+      "verts_moved": 6,
+      "max_move_m": 0.0444
      },
      "apillar_trim_-1": {
-      "verts_moved": 39,
-      "max_move_m": 0.105
+      "verts_moved": 28,
+      "max_move_m": 0.2091
+     },
+     "grab_A_-1": {
+      "verts_moved": 90,
+      "max_move_m": 0.0448
+     },
+     "tweeter_-1": {
+      "verts_moved": 22,
+      "max_move_m": 0.0783
      },
      "apillar_trim_1": {
-      "verts_moved": 39,
-      "max_move_m": 0.105
+      "verts_moved": 28,
+      "max_move_m": 0.2091
+     },
+     "grab_A_1": {
+      "verts_moved": 94,
+      "max_move_m": 0.0443
+     },
+     "tweeter_1": {
+      "verts_moved": 22,
+      "max_move_m": 0.0783
      },
      "dash_main": {
-      "verts_moved": 116,
-      "max_move_m": 0.0793
+      "verts_moved": 233,
+      "max_move_m": 0.2111
+     },
+     "pdash_parting": {
+      "verts_moved": 24,
+      "max_move_m": 0.0642
      },
      "glove_gap_(0.42, 1.68)(0.42, 1.92)": {
       "verts_moved": 2,
-      "max_move_m": 0.0109
+      "max_move_m": 0.013
      },
      "glove_gap_(1.0, 1.68)(1.0, 1.92)": {
       "verts_moved": 2,
-      "max_move_m": 0.0109
+      "max_move_m": 0.0349
      },
      "glove_gap_(0.42, 1.92)(1.0, 1.92)": {
       "verts_moved": 18,
-      "max_move_m": 0.0111
+      "max_move_m": 0.0344
      },
-     "door_seal_-1": {
-      "verts_moved": 23,
-      "max_move_m": 0.051
+     "defrost_grille_-1_0": {
+      "verts_moved": 1,
+      "max_move_m": 0.0003
      },
-     "door_seal_1": {
-      "verts_moved": 23,
-      "max_move_m": 0.051
+     "defrost_grille_1_7": {
+      "verts_moved": 1,
+      "max_move_m": 0.0008
+     },
+     "accel_pad": {
+      "verts_moved": 8,
+      "max_move_m": 0.0027
+     },
+     "footrest": {
+      "verts_moved": 2,
+      "max_move_m": 0.0006
+     },
+     "floor_mat": {
+      "verts_moved": 62,
+      "max_move_m": 0.1919
      },
      "overhead_body": {
       "verts_moved": 166,
-      "max_move_m": 0.1869
+      "max_move_m": 0.3219
+     },
+     "rear_oh": {
+      "verts_moved": 6,
+      "max_move_m": 0.0162
      },
      "curtain_rail": {
       "verts_moved": 12,
-      "max_move_m": 0.0392
+      "max_move_m": 0.1221
+     },
+     "curtain_ws_-1": {
+      "verts_moved": 13,
+      "max_move_m": 0.0199
+     },
+     "curtain_ws_1": {
+      "verts_moved": 13,
+      "max_move_m": 0.0199
      },
      "blind_cassette": {
-      "verts_moved": 10,
-      "max_move_m": 0.033
-     },
-     "sun_visor_0": {
-      "verts_moved": 28,
-      "max_move_m": 0.024
-     },
-     "sun_visor_hinge_0": {
-      "verts_moved": 12,
-      "max_move_m": 0.018
-     },
-     "sun_visor_1": {
-      "verts_moved": 28,
-      "max_move_m": 0.024
-     },
-     "sun_visor_hinge_1": {
-      "verts_moved": 12,
-      "max_move_m": 0.018
+      "verts_moved": 24,
+      "max_move_m": 0.088
      },
      "visor_centre_bracket": {
       "verts_moved": 6,
-      "max_move_m": 0.0128
+      "max_move_m": 0.0083
+     },
+     "blind_-1.06": {
+      "verts_moved": 4,
+      "max_move_m": 0.0677
+     },
+     "blind_bar_-1.06": {
+      "verts_moved": 12,
+      "max_move_m": 0.0809
+     },
+     "blind_0.03": {
+      "verts_moved": 4,
+      "max_move_m": 0.0715
+     },
+     "blind_bar_0.03": {
+      "verts_moved": 12,
+      "max_move_m": 0.0789
      }
     }
    },
-   "hidden_faces_removed": 4807,
-   "tris_before_cleanup": 50362,
-   "build_s": 23.0,
-   "file_bytes": 4848732
+   "hidden_faces_removed": 4875,
+   "tris_before_cleanup": 51558,
+   "build_s": 26.1,
+   "file_bytes": 4926220
   },
   "LOD0": {
    "file": "art-source/truck/interior/export/SM_CabInterior_LOD0.fbx",
    "root": "CabInterior_LOD0",
    "objects": {
     "CAB_Interior_LOD0": {
-     "tris": 76888,
+     "tris": 77003,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -1050,7 +1158,7 @@
      "role": "CAB_Interior"
     },
     "CAB_ShellPlaceholder_LOD0": {
-     "tris": 4622,
+     "tris": 4612,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Rubber",
@@ -1395,7 +1503,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 92886,
+   "tris_total": 92991,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -1433,12 +1541,12 @@
     }
    },
    "ao_atlas_layout": {
-    "small_parts_inherit": 264,
+    "small_parts_inherit": 266,
     "packer": "skyline",
-    "islands": 843,
-    "sliver_islands_transferred": 181,
-    "uv_coverage": 0.6558,
-    "baked_texel_coverage": 0.7931,
+    "islands": 857,
+    "sliver_islands_transferred": 195,
+    "uv_coverage": 0.6616,
+    "baked_texel_coverage": 0.8018,
     "angle": 66.0,
     "margin": 0.0025,
     "small_m2": 0.01,
@@ -1446,139 +1554,203 @@
    },
    "fit_to_exterior": {
     "source": "art-source/truck/exterior/glass_interface.json",
-    "verts_moved": 5006,
-    "max_move_m": 0.3709,
+    "verts_moved": 5707,
+    "max_move_m": 0.5579,
     "objects": {
      "floor_slab": {
       "verts_moved": 8,
-      "max_move_m": 0.1939
+      "max_move_m": 0.4757
+     },
+     "back_wall": {
+      "verts_moved": 28,
+      "max_move_m": 0.0519
      },
      "headliner": {
-      "verts_moved": 50,
-      "max_move_m": 0.2563
+      "verts_moved": 58,
+      "max_move_m": 0.4006
+     },
+     "side_rear_-1": {
+      "verts_moved": 28,
+      "max_move_m": 0.0358
      },
      "side_top_-1": {
-      "verts_moved": 28,
-      "max_move_m": 0.1397
+      "verts_moved": 42,
+      "max_move_m": 0.2461
      },
      "side_front_-1": {
       "verts_moved": 4,
-      "max_move_m": 0.1633
+      "max_move_m": 0.283
+     },
+     "side_rear_1": {
+      "verts_moved": 28,
+      "max_move_m": 0.0358
      },
      "side_top_1": {
-      "verts_moved": 28,
-      "max_move_m": 0.1397
+      "verts_moved": 42,
+      "max_move_m": 0.2461
      },
      "side_front_1": {
       "verts_moved": 4,
-      "max_move_m": 0.1633
+      "max_move_m": 0.283
      },
      "footwell_wall": {
       "verts_moved": 8,
-      "max_move_m": 0.1007
+      "max_move_m": 0.2422
      },
      "ws_header": {
       "verts_moved": 8,
-      "max_move_m": 0.3709
+      "max_move_m": 0.5579
      },
      "ws_frit_bottom": {
-      "verts_moved": 82,
-      "max_move_m": 0.0311
+      "verts_moved": 72,
+      "max_move_m": 0.0305
      },
      "ws_frit_top": {
-      "verts_moved": 82,
-      "max_move_m": 0.0362
+      "verts_moved": 72,
+      "max_move_m": 0.0427
      },
      "ws_frit_side_-1": {
-      "verts_moved": 18,
-      "max_move_m": 0.0065
+      "verts_moved": 16,
+      "max_move_m": 0.0334
      },
      "ws_frit_side_1": {
-      "verts_moved": 18,
-      "max_move_m": 0.0065
+      "verts_moved": 16,
+      "max_move_m": 0.0334
      },
      "ws_frit_dots": {
-      "verts_moved": 3696,
-      "max_move_m": 0.008
+      "verts_moved": 3674,
+      "max_move_m": 0.0092
      },
      "win_channel_-1": {
-      "verts_moved": 16,
-      "max_move_m": 0.0988
+      "verts_moved": 8,
+      "max_move_m": 0.0439
      },
      "win_channel_1": {
-      "verts_moved": 16,
-      "max_move_m": 0.0988
+      "verts_moved": 8,
+      "max_move_m": 0.0439
      },
      "apillar_trim_-1": {
-      "verts_moved": 71,
-      "max_move_m": 0.1063
+      "verts_moved": 49,
+      "max_move_m": 0.2091
+     },
+     "grab_A_-1": {
+      "verts_moved": 160,
+      "max_move_m": 0.0447
+     },
+     "tweeter_-1": {
+      "verts_moved": 40,
+      "max_move_m": 0.0783
+     },
+     "tweeter_grille_-1": {
+      "verts_moved": 4,
+      "max_move_m": 0.0702
      },
      "apillar_trim_1": {
-      "verts_moved": 71,
-      "max_move_m": 0.1063
+      "verts_moved": 49,
+      "max_move_m": 0.2091
+     },
+     "grab_A_1": {
+      "verts_moved": 160,
+      "max_move_m": 0.0447
+     },
+     "tweeter_1": {
+      "verts_moved": 40,
+      "max_move_m": 0.0783
+     },
+     "tweeter_grille_1": {
+      "verts_moved": 4,
+      "max_move_m": 0.0702
      },
      "dash_main": {
-      "verts_moved": 204,
-      "max_move_m": 0.0793
+      "verts_moved": 405,
+      "max_move_m": 0.2111
+     },
+     "pdash_parting": {
+      "verts_moved": 24,
+      "max_move_m": 0.0642
      },
      "glove_gap_(0.42, 1.68)(0.42, 1.92)": {
       "verts_moved": 2,
-      "max_move_m": 0.0109
+      "max_move_m": 0.013
      },
      "glove_gap_(1.0, 1.68)(1.0, 1.92)": {
       "verts_moved": 2,
-      "max_move_m": 0.0109
+      "max_move_m": 0.0349
      },
      "glove_gap_(0.42, 1.92)(1.0, 1.92)": {
       "verts_moved": 18,
-      "max_move_m": 0.0111
+      "max_move_m": 0.0344
      },
-     "door_seal_-1": {
-      "verts_moved": 31,
-      "max_move_m": 0.0524
+     "defrost_grille_-1_0": {
+      "verts_moved": 1,
+      "max_move_m": 0.0003
      },
-     "door_seal_1": {
-      "verts_moved": 31,
-      "max_move_m": 0.0524
+     "defrost_grille_1_7": {
+      "verts_moved": 1,
+      "max_move_m": 0.0008
+     },
+     "accel_pad": {
+      "verts_moved": 12,
+      "max_move_m": 0.0038
+     },
+     "footrest": {
+      "verts_moved": 6,
+      "max_move_m": 0.0014
+     },
+     "floor_mat": {
+      "verts_moved": 172,
+      "max_move_m": 0.193
      },
      "overhead_body": {
       "verts_moved": 232,
-      "max_move_m": 0.187
+      "max_move_m": 0.3219
+     },
+     "rear_oh": {
+      "verts_moved": 10,
+      "max_move_m": 0.0162
      },
      "curtain_rail": {
       "verts_moved": 16,
-      "max_move_m": 0.0392
+      "max_move_m": 0.1221
+     },
+     "curtain_ws_-1": {
+      "verts_moved": 21,
+      "max_move_m": 0.0203
+     },
+     "curtain_ws_1": {
+      "verts_moved": 21,
+      "max_move_m": 0.0203
      },
      "blind_cassette": {
-      "verts_moved": 20,
-      "max_move_m": 0.0343
-     },
-     "sun_visor_0": {
-      "verts_moved": 94,
-      "max_move_m": 0.024
-     },
-     "sun_visor_hinge_0": {
-      "verts_moved": 20,
-      "max_move_m": 0.0184
-     },
-     "sun_visor_1": {
-      "verts_moved": 94,
-      "max_move_m": 0.024
-     },
-     "sun_visor_hinge_1": {
-      "verts_moved": 20,
-      "max_move_m": 0.0184
+      "verts_moved": 56,
+      "max_move_m": 0.0919
      },
      "visor_centre_bracket": {
       "verts_moved": 14,
-      "max_move_m": 0.0128
+      "max_move_m": 0.0083
+     },
+     "blind_-1.06": {
+      "verts_moved": 4,
+      "max_move_m": 0.0677
+     },
+     "blind_bar_-1.06": {
+      "verts_moved": 28,
+      "max_move_m": 0.0809
+     },
+     "blind_0.03": {
+      "verts_moved": 4,
+      "max_move_m": 0.0715
+     },
+     "blind_bar_0.03": {
+      "verts_moved": 28,
+      "max_move_m": 0.0795
      }
     }
    },
-   "hidden_faces_removed": 13550,
-   "tris_before_cleanup": 121522,
-   "build_s": 164.3,
-   "file_bytes": 10100652
+   "hidden_faces_removed": 13451,
+   "tris_before_cleanup": 121570,
+   "build_s": 142.1,
+   "file_bytes": 10255196
   }
  },
  "tri_budget": {
