@@ -108,14 +108,14 @@ LOD2_DROP = LOD1_DROP + ("coil", "damper_", "brake_chamber", "caliper_", "tie_ro
                          "fifth_handle", "fifth_lock", "fifth_bracket", "fifth_mount", "plate_holder",
                          "marker_front_led", "catwalk_grab", "coupling_panel", "_hubcap", "_hub",
                          "exhaust_flex", "exhaust_clamp", "exhaust_stay_arm", "proj_bezel", "pos_gasket",
-                         "marker_front_gasket", "side_repeater_base")
+                         "marker_front_gasket", "side_repeater_base", "lane_dash", "proj_shroud", "hb_led", "roof_hatch_glass")
 LOD3_KEEP = ("cab_shell", "door_shell_", "door_skirt", "side_glass", "windscreen", "lower_fairing", "arch_flare",
              "side_fairing", "side_extender", "rear_guard", "fuel_tank", "adblue_tank", "battery_box", "eats_box",
              "frame_rail", "fifth_plate", "lamp_lens", "lamp_back", "drl_", "indicator_", "rear_lens", "marker_",
              "side_marker", "side_repeater", "mirror_main_", "mirror_wide_", "mirror_arm", "front_mirror",
              "grille_back", "grille_frame", "grille_bar", "roof_lip", "_tyre", "_rim", "_disc", "fog_lens", "fog_led",
              "decal_", "frit_", "hb_led", "rear_lamp_", "mudflap_", "front_mudflap_", "spoiler_lip", "intake_mesh",
-             "road_frame", "road_back", "step_tread", "roof_hatch", "rear_lower_panel")
+             "road_frame", "road_back", "step_tread", "roof_hatch", "rear_lower_panel", "sill_clad")
 
 
 # ---------------------------------------------------------------- small helpers
@@ -1157,7 +1157,7 @@ SILHOUETTE_W = 4.0
 # the LOD0 ones) down to ROUND_SEGMENTS around the circumference; the pieces are then fixed in the budget.
 # pieces that break below this share of their LOD0 triangles (locked slot borders leave the collapse too little room:
 # the lower fairing at 0.15 pulled black trim triangles from the bumper corner to the wheel arch)
-MIN_RATIO = {"lower_fairing": 0.3}
+MIN_RATIO = {"lower_fairing": 0.3, "door_shell": 0.30}   # modern door: below ~0.2 the window opening collapsed down to the sill (LOD2)
 ROUND_KEYS = ("_tyre", "_rim")
 ROUND_SEGMENTS = {2: 24, 3: 16}
 

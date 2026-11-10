@@ -375,7 +375,12 @@ class Loft:
     Surface evaluation (front_pt / side_pt) lets patches, lamps and gaps follow the shell exactly.
     """
 
-    def __init__(self, front, back, w, rf, rb, z0, ztop, roof_r=0.1, arc_n=10, step=0.04, flat_n=6, roof_n=10):
+    def __init__(self, front, back, w, rf, rb, z0, ztop, roof_r=0.1, arc_n=10, step=0.04, flat_n=6, roof_n=10,
+                 crown=0.0, roof_rr=None, front_n=None):
+        # rounding pass (2026-11-10): crown = plan radius of the front face (0 = flat; the centreline stays on
+        # `front`, the corner arcs are tangent to the crowned face), roof_rr = (front, side, back) roof-edge radii
+        # over the roof_r tall roof zone (elliptic section; None = roof_r all round), front_n = front face columns
+        self.crown, self.roof_rr, self.front_n = crown, roof_rr, front_n
         self.front, self.back, self.w, self.rf, self.rb = front, back, w, rf, rb
         self.z0, self.ztop, self.roof_r = z0, ztop, roof_r
         self.arc_n, self.step, self.flat_n, self.roof_n = arc_n, step, flat_n, roof_n
@@ -387,9 +392,24 @@ class Loft:
         if z > zr and self.roof_r > 0:
             t = min(z - zr, self.roof_r)
             ins = self.roof_r - math.sqrt(max(self.roof_r ** 2 - t * t, 0))
-            yf, yb, w = yf - ins, yb + ins, w - ins
+            if self.roof_rr:
+                k = ins / self.roof_r
+                yf, yb, w = yf - self.roof_rr[0] * k, yb + self.roof_rr[2] * k, w - self.roof_rr[1] * k
+            else:
+                yf, yb, w = yf - ins, yb + ins, w - ins
         lim = min(w, (yf - yb) / 2) - 0.004
         return yf, yb, w, max(min(rf, lim), 0.003), max(min(rb, lim), 0.003)
+
+    def plan(self, z):
+        """sec(z) + front-face plan geometry: x0 = half width of the (crowned) face up to the corner tangent point,
+        cyc = y of the front corner arc centre, th0 = face tangent angle at the corner start (rad, 0 = flat)."""
+        yf, yb, w, rf, rb = self.sec(z)
+        if not self.crown:
+            return yf, yb, w, rf, rb, w - rf, yf - rf, 0.0
+        R = self.crown
+        d = math.sqrt((R - rf) ** 2 - (w - rf) ** 2)
+        th0 = math.atan2(w - rf, d)
+        return yf, yb, w, rf, rb, R * math.sin(th0), yf - R + d, th0
 
     def arc(self, cx, cy, r, a0, a1, n=None):
         n = n or self.arc_n
@@ -400,14 +420,21 @@ class Loft:
         return [(p0[0] + (p1[0] - p0[0]) * i / n, p0[1] + (p1[1] - p0[1]) * i / n) for i in range(1, n)]
 
     def ring(self, z):
-        yf, yb, w, rf, rb = self.sec(z)
-        fr = self.arc(w - rf, yf - rf, rf, 90, 0)
+        yf, yb, w, rf, rb, x0, cyc, th0 = self.plan(z)
+        a0 = 90 - math.degrees(th0)
+        fr = self.arc(w - rf, cyc, rf, a0, 0)
         br = self.arc(w - rb, yb + rb, rb, 0, -90)
         bl = self.arc(-(w - rb), yb + rb, rb, -90, -180)
-        fl = self.arc(-(w - rf), yf - rf, rf, 180, 90)
+        fl = self.arc(-(w - rf), cyc, rf, 180, 180 - a0)
         n = self.flat_n
+        nf = self.front_n or n + 2
+        if self.crown:
+            R = self.crown
+            face = [(x, yf - R + math.sqrt(R * R - x * x)) for x in (-x0 + 2 * x0 * i / nf for i in range(1, nf))]
+        else:
+            face = self._line(fl[-1], fr[0], nf)
         return (fr + self._line(fr[-1], br[0], n) + br + self._line(br[-1], bl[0], n // 2 + 1) + bl
-                + self._line(bl[-1], fl[0], n) + fl + self._line(fl[-1], fr[0], n + 2))
+                + self._line(bl[-1], fl[0], n) + fl + face)
 
     def levels(self):
         zs, z = [], self.z0
@@ -444,9 +471,9 @@ class Loft:
 
     # --- surface evaluation ---
     def _corner_poly(self, z, which):
-        yf, yb, w, rf, rb = self.sec(z)
+        yf, yb, w, rf, rb, x0, cyc, th0 = self.plan(z)
         if which == "front":
-            return (w - rf, yf - rf), self.arc(w - rf, yf - rf, rf, 90, 0, 48)
+            return (w - rf, cyc), self.arc(w - rf, cyc, rf, 90 - math.degrees(th0), 0, 48)
         return (w - rb, yb + rb), self.arc(w - rb, yb + rb, rb, 0, -90, 48)
 
     @staticmethod
@@ -465,22 +492,25 @@ class Loft:
     def front_pt(self, z, x, off):
         """Point on the front/corner surface at height z and lateral x (x beyond the flat part runs onto the
         corner arc; |x| > w wraps further round the corner by arc length)."""
-        yf, yb, w, rf, rb = self.sec(z)
+        yf, yb, w, rf, rb, x0, cyc, th0 = self.plan(z)
         ax, sg = abs(x), (1 if x >= 0 else -1)
-        if ax <= w - rf:
-            return (x, yf + off, z)
+        if ax <= x0:
+            if not self.crown:
+                return (x, yf + off, z)
+            th = math.asin(ax / self.crown)
+            return (sg * (self.crown + off) * math.sin(th), yf - self.crown + (self.crown + off) * math.cos(th), z)
         # parametrise the corner by arc length beyond the flat part
-        s = ax - (w - rf)
-        a = min(s / rf, math.pi / 2)
-        extra = max(0.0, s - rf * math.pi / 2)
-        cx, cy = w - rf, yf - rf
+        s = ax - x0
+        a = min(th0 + s / rf, math.pi / 2)
+        extra = max(0.0, s - rf * (math.pi / 2 - th0))
+        cx, cy = w - rf, cyc
         px = cx + (rf + off) * math.sin(a)
         py = cy + (rf + off) * math.cos(a) - extra
         return (sg * px, py, z)
 
     def side_pt(self, z, y, side, off):
-        yf, yb, w, rf, rb = self.sec(z)
-        if y > yf - rf:
+        yf, yb, w, rf, rb, x0, cyc, th0 = self.plan(z)
+        if y > cyc:
             c, pts = self._corner_poly(z, "front")
             px, py = self._interp(pts, c, 1, min(y, yf), off)
         elif y < yb + rb:

@@ -122,9 +122,9 @@ def frame_and_axles():
                     cyl(f"frame_bolt_{s}_{y}_{dz}_{dy}", (x1 + s * 0.004, y + dy, FRAME_TOP + dz), 0.011, 0.012,
                         "steel", seg=6, axis="X")
         # front frame horns: bumper brackets + cab tilt pivot brackets
-        box_mm(f"frame_horn_{s}", s * 0.36, s * 0.44, 1.18, 1.46, 0.95, 1.12, "chassis", bev=0.01)
-        cyl(f"cab_pivot_{s}", (s * 0.40, 1.42, 1.19), 0.035, 0.12, "steel", axis="X", seg=16)
-        box_mm(f"cab_pivot_brk_{s}", s * 0.37, s * 0.43, 1.38, 1.46, 1.10, 1.20, "chassis", bev=0.006)
+        box_mm(f"frame_horn_{s}", s * 0.36, s * 0.44, 1.18, 1.38, 0.95, 1.12, "chassis", bev=0.01)
+        cyl(f"cab_pivot_{s}", (s * 0.40, 1.34, 1.19), 0.035, 0.12, "steel", axis="X", seg=16)
+        box_mm(f"cab_pivot_brk_{s}", s * 0.37, s * 0.43, 1.30, 1.38, 1.10, 1.20, "chassis", bev=0.006)
     for y in (-1.20, -2.30, -3.05, -3.85, Y_END + 0.06):
         box_mm(f"frame_cross_{y}", -FRAME_HALF_W + 0.08, FRAME_HALF_W - 0.08, y - 0.05, y + 0.05,
                FRAME_TOP - 0.24, FRAME_TOP - 0.04, "chassis")

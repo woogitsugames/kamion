@@ -60,7 +60,8 @@ LOD2_DROP = LOD1_DROP + ("_cst_", "_ctr_", "_bst_", "_btr_", "rocker_icon_", "hv
                          "_belt_latch", "tweeter_", "door_seal_", "win_channel_", "curtain_rail",
                          "dash_insert_stitch_", "door_insert_stitch_", "stack_flank_stitch", "hvac_plate",
                          "hvac_lcd_bezel", "stack_cubby", "socket_12v", "sun_visor_hinge_", "spoke_trim_",
-                         "emblem_wm_", "sun_visor_clip_", "visor_centre_bracket", "_vane")
+                         "emblem_wm_", "sun_visor_clip_", "visor_centre_bracket", "_vane",
+                         "wheel_stitch")   # modern cab (ADR 0046): larger glazing hides fewer faces, keeps LOD2 <= 22k
 
 # ---------------------------------------------------------------- slots (game materials)
 SLOT_OF = {
