@@ -128,6 +128,7 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 | Manual mode: min rpm after a requested shift / protection down-shift | 750 / 650 | rpm | WORKING_VALUE | Over-revving down-shifts are refused |
 | Speed limiter | 90 | km/h | SOURCED | S3 |
 | Limiter band (fuelling fade) | 2 | km/h | WORKING_VALUE | |
+| Overrun protection offset above the limiter (engine brake + retarder, PI as the brake cruise; 0 = off) | 4 | km/h | WORKING_VALUE | ADR 0082; that series trucks do this on their own is UNVERIFIED. Settles at 94 km/h on a 2–5 % descent at 40 t |
 | Differential | open | – | WORKING_VALUE | No diff lock yet |
 
 ## Air brake system (tractor `air`, `brakes`, per-axle fields)
