@@ -317,6 +317,22 @@ namespace Game.Editor.Setup
                 g.SetFloat("_ExteriorTransmission", 0.42f);
                 g.renderQueue = (int)RenderQueue.Transparent;
                 Add("MI_Ext_Glass", g);
+                // ADR 0059 (r7 N-3): door glass = toughened side glass, no wiper film (the windscreen film made the door
+                // glass seen from the seat a milky foil: sat behind it 55 % of the open view). Visible transmittance of
+                // light-green side glass ~0.80 incl. reflection -> absorption ~0.12 (WORKING_VALUE; EU front side >= 0.70).
+                // One material per door: _CabCentreOS (inside / outside face test) is in the glass object space, and the door
+                // glass sits under DOOR_L / DOOR_R with its own pivot - the windscreen value (0, 1, -0.6) lies in the door
+                // glass plane there, so the inner face was shaded as an OUTSIDE face from the seat (capture reflection, body
+                // haze and the 0.42 exterior transmission in the 1.6-3.2 m band = the milky upper band of r7 N-3). The
+                // door-space centre is set below once the hierarchy exists.
+                foreach (var side in new[] { "L", "R" })
+                {
+                    var dg = Mat(dir, "MI_Ext_DoorGlass" + side, glass);
+                    dg.CopyPropertiesFromMaterial(g);
+                    dg.SetFloat("_Wiper", 0f); dg.SetFloat("_Opacity", 0.12f);
+                    dg.renderQueue = (int)RenderQueue.Transparent;
+                    Add("MI_Ext_DoorGlass" + side, dg);
+                }
                 // Main mirrors: unlit, the render texture replaces the idle colour (RenderTextureMirror).
                 var mrt = Mat(dir, "MI_Ext_MirrorRT", unlit);
                 mrt.SetColor("_BaseColor", GrayboxMaterials.MirrorIdleColor);
@@ -521,6 +537,12 @@ namespace Game.Editor.Setup
                                 continue;   // mirror quads are outside the LODGroup (one per mirror, 2 tris)
                             }
                             var slotNames = r.sharedMaterials.Select(m => m != null ? m.name.Replace(" (Instance)", "") : "MI_Ext_Trim").ToArray();
+                            // ADR 0059 (r7 N-3): side glass has its own material (no wiper road film, side-glass absorption).
+                            if (role.StartsWith("GLASS_Door", StringComparison.Ordinal))
+                            {
+                                string dslot = "MI_Ext_DoorGlass" + (role.StartsWith("GLASS_DoorL", StringComparison.Ordinal) ? "L" : "R");
+                                slotNames = slotNames.Select(s => s == "MI_Ext_Glass" ? dslot : s).ToArray();
+                            }
                             rendererSlots.Add(new TruckVisualRig.RendererSlots { renderer = r, slots = slotNames });
                             r.sharedMaterials = slotNames.Select(s => sets["Low"].Get(s)).ToArray();
                             bool glassish = transparent || slotNames.All(s => s == "MI_Ext_Glass");
@@ -579,6 +601,29 @@ namespace Game.Editor.Setup
                         if (mf == null || mf.sharedMesh == null) continue;
                         var ds = DoubleSidedGlass(mf.sharedMesh, r.transform.InverseTransformPoint(eyeW0));
                         if (ds != null) mf.sharedMesh = ds;
+                    }
+                }
+
+                // ---- ADR 0059 (r7 N-3): cab centre for the door glass inside / outside test, in each door glass's own
+                // object space (the windscreen material's _CabCentreOS is in the cab body space). ----
+                {
+                    var ws = glassLods[0].FirstOrDefault(r => r != null && r.name.StartsWith("GLASS_Windscreen", StringComparison.Ordinal));
+                    if (ws != null)
+                    {
+                        Vector3 cabCentreW = ws.transform.TransformPoint((Vector3)sets["Low"].Get("MI_Ext_Glass").GetVector("_CabCentreOS"));
+                        foreach (var side in new[] { "L", "R" })
+                        {
+                            var door = glassLods[0].FirstOrDefault(r => r != null && r.name.StartsWith("GLASS_Door" + side, StringComparison.Ordinal));
+                            if (door == null) { Debug.LogWarning("[TRUCK] GLASS_Door" + side + " missing"); continue; }
+                            Vector3 c = door.transform.InverseTransformPoint(cabCentreW);
+                            foreach (var tier in Tiers)
+                            {
+                                var dm = sets[tier].Get("MI_Ext_DoorGlass" + side);
+                                dm.SetVector("_CabCentreOS", new Vector4(c.x, c.y, c.z, 0f));
+                                EditorUtility.SetDirty(dm);
+                            }
+                            Debug.Log($"[TRUCK] door glass {side}: cab centre in door space {c}");
+                        }
                     }
                 }
 
