@@ -101,3 +101,8 @@ Worktree `.claude/worktrees/agent-a1409e374f8c12b4f`, gałąź `worktree-agent-a
     $env:KAMION_BLENDER='C:\Users\matma\AppData\Local\Programs\Blender4.2\blender-4.2.9-windows-x64\blender.exe'; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> artifacts/kwadrat-r9/logs/build_world_r10b.log
     uv run --project tools/worldgen python tools/worldgen/fidelity/run.py --region bialystok-industrial-c ; uv run --project tools/worldgen pytest tests/gis -q
     pwsh scripts/import-region.ps1 -Region bialystok-industrial-c ; pwsh artifacts/kwadrat-r9/qa_runs.ps1 -Phase r10b
+- 22:40 `git merge main` (71053f6: HUD 0079, refs 0066) bez konfliktów → 05d5f31. build_world r10b OK (`logs/build_world_r10b.log`, EXIT 0,
+  depot_yard: 6 lamp, 2 kontenery, rule_lamps_removed 6). W toku: fidelity + pytest (`logs/pytest_r10b.log`), import + rendery r10b (`logs/qa_r10b.log`).
+- Referencje bramy: `artifacts/refs/kwadrat-park/INDEX.md` (main, ADR 0066) potwierdza LUKĘ — brak otwartych zdjęć bramy/portierni/ramp;
+  portiernia i szlabany zostają WORKING_VALUE do zdjęć właściciela.
+- NASTĘPNY KROK: obejrzeć `artifacts/kwadrat-r9/r10b/*/kwadrat-park-gate.jpg` (pasy belki), potem `pwsh scripts/test.ps1 -Platform PlayMode`, `pwsh scripts/test.ps1 -Platform EditMode`, ADR 0071, kopia dowodów do main/artifacts/kwadrat-r9.
