@@ -102,6 +102,19 @@ def _island(lin, P_e, P_x, z_lane, src):
     return poly, zt
 
 
+def _bollard(buf, q, t, z, src, w=0.11, h=0.95):
+    """Yellow steel post on the island. Layer "paved" like the island itself: in the chunk's furniture mesh the two
+    posts stretched that mesh's bounds to the gate and put its 19 k triangles into the gate view (Low estimate +10 %)."""
+    nn = np.array([-t[1], t[0]])
+    c4 = [q + sx * t * w / 2 + sy * nn * w / 2 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))]     # CCW from above
+    V = np.array([[*c, z - 0.05] for c in c4] + [[*c, z + h] for c in c4])
+    T = [(4, 5, 6), (4, 6, 7)]
+    for k in range(4):
+        j = (k + 1) % 4
+        T += [(k, j, 4 + j), (k, 4 + j, 4 + k)]
+    buf.add("paved", "paint_yellow", V, V[:, :2].copy(), T, src=src)
+
+
 def _loop(buf, c, s, g, lat_feed, src):
     """Saw-cut induction loop in the lane: a rectangle of bitumen-sealed cuts with chamfered corners and a feeder cut
     toward the island (lat_feed = lateral position of the housing in the chain frame)."""
@@ -309,8 +322,7 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
                 if cut.is_empty:
                     continue
                 q = np.asarray(cut.centroid.coords[0])
-                lin.posts("paint_yellow", np.array([q, q + t_m * 0.01]), 1.0, 0.11, 0.11, 0.95,
-                          zb=np.array([isl_z, isl_z]), src=f"{src}:bollard")
+                _bollard(lin.buf, q, t_m, isl_z, f"{src}:bollard")
             # asphalt repair patches hashed onto the lanes right at the booms sat under the loops like pasted
             # rectangles (review A6): none within 14 m of the housing line
             keep = [p_ for p_ in lin.buf.parts

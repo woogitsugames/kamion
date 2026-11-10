@@ -19,3 +19,14 @@
 - Kod r11: yard_wear.py (ślady, łaty, olej, brud krawędzi), authored dock_trailers, detal naczep, wyspa szlabanu + pętle + słupki, UV1 zacieków hali, płyta `yard_concrete_worn`.
 - UWAGA: pytest gis zapisuje `generated/streetscape_qa.json` / `world_manifest.json` i przebudowuje GLB hali — po testach zawsze pełny build_world.
 - NASTĘPNY KROK: `pwsh artifacts/kwadrat-r11/cycle.ps1 -Phase after1 -Combos Medium-overcast` (w toku) -> obejrzeć -> iteracja.
+
+## 00:20 — iteracja 3 obejrzana, final chain w toku
+- after1 (obejrzane): kostka OK (~0,2 m), ale łata jasna = biała plama, ślady za mocne, słupek na krawędzi wyspy, łata asfaltu pod pętlą.
+- after3 (obejrzane, Medium-overcast/clear, Low-overcast): łaty +7 %/-10 %, ślady 0,35-0,85, słupki w osi wyspy, bez łaty asfaltu przy szlabanie,
+  naczepy ≤ 1188 tris LOD0 (budżet testu 1200), bez nowych submeshów poza filmem brudu na LOD0, brud krawędzi = pasy decal_tyre.
+- pytest gis after3: 227 zielone / 3 czerwone = te same co baseline z main (fidelity stale, 2x korytarz trasy s≈1434–1480, chunk_2_4) — `logs/pytest_gis_after3.log`.
+- Budżet Low (stats.txt, 8 kamer, before -> after3): draws 6170 -> 6218 (+0,8 %), tris 2092k -> 2127k (+1,7 %); +10 % tris w kamerze bramy =
+  2 słupki w warstwie furniture rozciągnęły bounds meshu furniture chunku 6_6 (19 k tris) na kadr bramy -> słupki przeniesione do warstwy paved.
+- W toku: `pwsh artifacts/kwadrat-r11/final.ps1` (build_world -> import -> after/{Medium-overcast,Medium-clear,Low-overcast} -> PlayMode barrier -> EditMode), log `logs/final.log`.
+- NASTĘPNY KROK: `uv run --project tools/worldgen python artifacts/kwadrat-r11/budget.py artifacts/kwadrat-r11/before/Low-overcast artifacts/kwadrat-r11/after/Low-overcast`;
+  obejrzeć after/*; montaż before/after; ADR liczby; kopia do main/artifacts/kwadrat-r11.
