@@ -10,7 +10,14 @@ namespace Game.Rendering
     ///   _KamionStreetLamps from the sun elevation (Polish municipal lighting runs on astronomical clocks / twilight
     ///   switches: on around sunset; here a fade from 3° to 1° elevation, WORKING_VALUE);
     /// - on tiers with <see cref="QualityProfile.Tier.streetLights"/> > 0 keeps that many real point lights at the lamp
-    ///   heads nearest to the camera (re-chosen 4× a second, no allocation), so the road under the nearest lamps is lit.
+    ///   heads nearest to the camera (re-chosen 4× a second, no allocation); since ADR 0062 they light vehicles and props
+    ///   only (Kamion/World Surface ignores them and draws the analytic pools below, so nothing is lit twice);
+    /// - ADR 0062 (review r8 N-20), every tier with <see cref="QualityProfile.Tier.lampPools"/> > 0: the heads nearest to a
+    ///   focus 30 m ahead of the camera go to the world shader as a global array (_KamionLampPos, xyz + fade weight) and
+    ///   Kamion/World Surface adds their inverse-square light with a full-cutoff luminaire shape (constant to 60° from the
+    ///   nadir, zero at 75°) - the pools on the road at no light / shadow / per-object cost (Low has no point lights).
+    ///   A lamp near the edge of the chosen set fades out over the last 25 % of the distance to the first lamp left out,
+    ///   so re-choosing does not pop.
     /// Photometry (WORKING_VALUE, typical LED road luminaire 8–12 klm): lens luminance 2·10⁵ cd/m² (clips to white, as on a
     /// phone), downward intensity ~2500 cd → Unity intensity = I·k/π in exposed units, range 30 m. Sodium (old
     /// luminaires, "_sodium" materials) 2000 K tint.
@@ -27,12 +34,22 @@ namespace Game.Rendering
         static int s_HeadCount;
         static float s_On;
         static readonly int k_On = Shader.PropertyToID("_KamionStreetLamps"), k_LightsOn = Shader.PropertyToID("_KamionLampLights"),
-            k_Emission = Shader.PropertyToID("_Emission");
+            k_Emission = Shader.PropertyToID("_Emission"), k_PoolPos = Shader.PropertyToID("_KamionLampPos"),
+            k_PoolCount = Shader.PropertyToID("_KamionLampCount"), k_PoolColor = Shader.PropertyToID("_KamionLampColor");
+        /// <summary>Upper limit of the analytic pools (size of the shader array).</summary>
+        public const int MaxPools = 8;
+        /// <summary>The pool focus sits this far ahead of the camera (horizontal), where the visible road is.</summary>
+        public const float PoolFocusAheadM = 30f;
+        static readonly Vector4[] s_PoolPos = new Vector4[MaxPools];
+        /// <summary>Number of analytic pools sent to the world shader in the last refresh (diagnostics / tests).</summary>
+        public static int PoolCount { get; private set; }
+        /// <summary>The pool array of the last refresh (xyz head, w fade weight); read-only use.</summary>
+        public static Vector4[] PoolPositions => s_PoolPos;
 
         /// <summary>0..1: lamps on (from the sun elevation of the active lighting preset).</summary>
         public static float On => s_On;
 
-        public static string Diagnostics => $"lamps on {s_On:F2}, glass materials {s_Glass.Count}, heads {s_HeadCount}";
+        public static string Diagnostics => $"lamps on {s_On:F2}, glass materials {s_Glass.Count}, heads {s_HeadCount}, pools {PoolCount}";
 
         public static bool IsLampGlass(Material m) => m != null && m.name.StartsWith("M_lamp_glass");
 
@@ -76,6 +93,8 @@ namespace Game.Rendering
             foreach (var l in m_Lights) if (l != null) { if (Application.isPlaying) Destroy(l.gameObject); else DestroyImmediate(l.gameObject); }
             m_Lights = new Light[0];
             Shader.SetGlobalFloat(k_LightsOn, 0f);
+            PoolCount = 0;
+            Shader.SetGlobalFloat(k_PoolCount, 0f);
         }
 
         void LateUpdate()
@@ -105,6 +124,46 @@ namespace Game.Rendering
                 l.intensity = DownIntensityCd * k / Mathf.PI * s_On;
             }
             Shader.SetGlobalFloat(k_LightsOn, n > 0 ? 1f : 0f);
+            RefreshPools(cam, k);
+        }
+
+        /// <summary>ADR 0062: analytic pools on the world surfaces (all tiers with lampPools > 0).</summary>
+        void RefreshPools(Camera cam, float exposure)
+        {
+            int want = QualityProfileApplier.HasCurrent ? Mathf.Min(QualityProfileApplier.Current.lampPools, MaxPools) : 0;
+            if (s_On <= 0f || cam == null || s_HeadCount == 0 || want <= 0)
+            {
+                PoolCount = 0;
+                Shader.SetGlobalFloat(k_PoolCount, 0f);
+                return;
+            }
+            Vector3 fwd = cam.transform.forward; fwd.y = 0f;
+            Vector3 focus = cam.transform.position + (fwd.sqrMagnitude > 1e-6f ? fwd.normalized * PoolFocusAheadM : Vector3.zero);
+            // n + 1 nearest: the first lamp left out sets the fade-out distance of the chosen ones.
+            int n = Mathf.Min(want + 1, s_HeadCount);
+            EnsurePick(n);
+            PickNearest(focus, n);
+            int used = Mathf.Min(want, n);
+            float edge = n > want ? Mathf.Sqrt(m_Dist[want]) : float.MaxValue;
+            for (int i = 0; i < MaxPools; i++)
+            {
+                if (i >= used || m_Pick[i] < 0) { s_PoolPos[i] = Vector4.zero; continue; }
+                Vector3 h = s_Heads[m_Pick[i]];
+                float d = Mathf.Sqrt(m_Dist[i]);
+                float w = edge < float.MaxValue ? Mathf.Clamp01((edge - d) / (0.25f * edge)) : 1f;
+                s_PoolPos[i] = new Vector4(h.x, h.y, h.z, w);
+            }
+            PoolCount = used;
+            Shader.SetGlobalVectorArray(k_PoolPos, s_PoolPos);
+            Shader.SetGlobalFloat(k_PoolCount, used);
+            // Same photometry as the point lights: E = I cos / d², Unity display units I·k/π (Lambert without 1/π).
+            Color c = k_Led * (DownIntensityCd * exposure / Mathf.PI * s_On);
+            Shader.SetGlobalVector(k_PoolColor, new Vector4(c.r, c.g, c.b, 0f));
+        }
+
+        void EnsurePick(int n)
+        {
+            if (m_Pick.Length < n) { m_Pick = new int[n]; m_Dist = new float[n]; }
         }
 
         void Rebuild()
@@ -112,7 +171,7 @@ namespace Game.Rendering
             OnDisable();
             int count = QualityProfileApplier.HasCurrent ? QualityProfileApplier.Current.streetLights : 0;
             m_Lights = new Light[count];
-            m_Pick = new int[count];
+            EnsurePick(Mathf.Max(count, MaxPools + 1));
             for (int i = 0; i < count; i++)
             {
                 var go = new GameObject("StreetLampLight " + i) { hideFlags = HideFlags.DontSave };
@@ -131,7 +190,7 @@ namespace Game.Rendering
         void PickNearest(Vector3 p, int n)
         {
             for (int i = 0; i < m_Pick.Length; i++) m_Pick[i] = -1;
-            // Small n (≤ 8): insertion into a fixed list, O(lamps · n), no allocation beyond the first call.
+            // Small n (≤ 9): insertion into a fixed list, O(lamps · n), no allocation beyond the first call.
             if (m_Dist.Length != m_Pick.Length) m_Dist = new float[m_Pick.Length];
             for (int i = 0; i < n; i++) m_Dist[i] = float.MaxValue;
             for (int h = 0; h < s_HeadCount; h++)

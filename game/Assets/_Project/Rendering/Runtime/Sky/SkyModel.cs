@@ -42,6 +42,31 @@ namespace Game.Rendering
         public readonly float Exposure;          // k: display value per cd/m²
         public readonly float WhiteBalanceAdaptation;   // 0 = fixed daylight WB (default); ADR 0043 option (c)
         public readonly Color AdaptedWhite;      // colour of a neutral (overcast / ground) radiance after the WB adaptation, luminance 1
+        /// <summary>Requested sun altitude (may be below the horizon, ≥ <see cref="MinTwilightElevationDeg"/>); the sky shape
+        /// uses <see cref="SunElevationDeg"/> (clamped to 0.5°). Street lamps, exposure and the sun light follow this one.</summary>
+        public readonly float TrueSunElevationDeg;
+        /// <summary>Towards the true sun (below the horizon in twilight): sun light transform and the cab clock.</summary>
+        public readonly Vector3 TrueSunDirection;
+        /// <summary>Sky luminance factor relative to the sun at 0.5° (1 above it; ADR 0062 civil twilight).</summary>
+        public readonly float TwilightFactor;
+
+        // ---------------------------------------------------------------- twilight (ADR 0062)
+        public const float MinTwilightElevationDeg = -8f;
+        /// <summary>Horizontal illuminance at the end of civil twilight (sun −6°), clear sky. Commonly quoted ~3.4 lx
+        /// (UNVERIFIED: from memory of the twilight illuminance tables, e.g. Bond and Henderson 1963).</summary>
+        public const float CivilTwilightEndLux = 3.4f;
+        /// <summary>
+        /// Twilight sky luminance factor for a sun below 0.5°: log-linear from 1 at 0.5° (the dome's own clear-sky diffuse
+        /// illuminance there, ≈ 2.25 klx) to <see cref="CivilTwilightEndLux"/> at −6°, i.e. ~0.37× per degree. The sky
+        /// keeps its 0.5° shape and colour (afterglow toward the sun's azimuth). WORKING_VALUE.
+        /// </summary>
+        public static float TwilightFactorAt(float sunElevationDeg)
+        {
+            if (sunElevationDeg >= 0.5f) return 1f;
+            float e05 = (0.8f + 15.5f * Mathf.Sqrt(Mathf.Sin(0.5f * Mathf.Deg2Rad))) * 1000f;
+            float el = Mathf.Max(sunElevationDeg, MinTwilightElevationDeg);
+            return Mathf.Exp(Mathf.Log(CivilTwilightEndLux / e05) * (0.5f - el) / 6.5f);
+        }
 
         // Perez coefficients (A..E) for Y, x, y and zenith values (clear part).
         readonly float[] m_PY = new float[5], m_Px = new float[5], m_Py = new float[5];
@@ -63,18 +88,23 @@ namespace Game.Rendering
         public SkyModel(float sunElevationDeg, float sunAzimuthDeg, float turbidity, float overcast, float ev100, float wbAdaptation = 0f)
         {
             SunElevationDeg = Mathf.Clamp(sunElevationDeg, 0.5f, 89.5f);
+            TrueSunElevationDeg = Mathf.Clamp(sunElevationDeg, MinTwilightElevationDeg, 89.5f);
+            TwilightFactor = TwilightFactorAt(TrueSunElevationDeg);
             Turbidity = Mathf.Clamp(turbidity, 1.7f, 10f);
             Overcast = Mathf.Clamp01(overcast);
             float el = SunElevationDeg * Mathf.Deg2Rad, az = sunAzimuthDeg * Mathf.Deg2Rad;
             SunDirection = new Vector3(Mathf.Cos(el) * Mathf.Sin(az), Mathf.Sin(el), Mathf.Cos(el) * Mathf.Cos(az)).normalized;
+            float elT = TrueSunElevationDeg * Mathf.Deg2Rad;
+            TrueSunDirection = new Vector3(Mathf.Cos(elT) * Mathf.Sin(az), Mathf.Sin(elT), Mathf.Cos(elT) * Mathf.Cos(az)).normalized;
             Exposure = ExposureFromEv100(ev100);
 
             float sinH = Mathf.Sin(el);
             float m = AirMass(SunElevationDeg);
             float clearDn = SolarIlluminanceExtraterrestrialLux * Mathf.Exp(-ClearExtinctionC * m);
-            float clearKh = (0.8f + 15.5f * Mathf.Sqrt(sinH)) * 1000f;
-            float overKh = (0.3f + 21.0f * sinH) * 1000f;
-            SunNormalIlluminanceLux = clearDn * (1f - Overcast);
+            // Twilight (ADR 0062): the sun is below the horizon - no direct light, the dome dims by TwilightFactor.
+            float clearKh = (0.8f + 15.5f * Mathf.Sqrt(sinH)) * 1000f * TwilightFactor;
+            float overKh = (0.3f + 21.0f * sinH) * 1000f * TwilightFactor;
+            SunNormalIlluminanceLux = TrueSunElevationDeg < 0f ? 0f : clearDn * (1f - Overcast);
             SkyHorizontalIlluminanceLux = Mathf.Lerp(clearKh, overKh, Overcast);
 
             // ---- Preetham coefficients ----

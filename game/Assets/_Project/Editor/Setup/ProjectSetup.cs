@@ -64,6 +64,23 @@ namespace Game.Editor.Setup
                     }
                 }
             }
+            if (qp.revision < 62)
+            {
+                // ADR 0062 (owner D36): High render-scale floor 0.80 -> 0.70, FSR 1.0 upscaling, frame-pacing fallback,
+                // analytic lamp pools. A floor that someone tuned away from the old default is kept.
+                for (int i = 0; i < qp.tiers.Length; i++)
+                    foreach (var d in defs)
+                    {
+                        if (!string.Equals(d.name, qp.tiers[i].name, StringComparison.OrdinalIgnoreCase)) continue;
+                        if (Mathf.Abs(qp.tiers[i].adaptiveScaleMin - 0.80f) < 1e-4f) qp.tiers[i].adaptiveScaleMin = d.adaptiveScaleMin;
+                        qp.tiers[i].pacingFallbackFps = d.pacingFallbackFps;
+                        qp.tiers[i].upscalingFilter = d.upscalingFilter;
+                        qp.tiers[i].fsrSharpness = d.fsrSharpness;
+                        qp.tiers[i].lampPools = d.lampPools;
+                    }
+                qp.revision = QualityProfile.CurrentRevision;
+                dirty = true;
+            }
             if (qp.deviceRules == null || qp.deviceRules.Length == 0) { qp.deviceRules = QualityProfile.DefaultDeviceRules(); dirty = true; }
             // Always re-serialize: new non-array fields (device rules) exist only as code initialisers until written once.
             EditorUtility.SetDirty(qp); AssetDatabase.SaveAssets();
@@ -192,6 +209,10 @@ namespace Game.Editor.Setup
                 var asset = AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(path);
                 var so = new SerializedObject(asset);
                 Set(so, "m_RenderScale", t.renderScale);
+                // ADR 0062: upscaler used whenever the (adaptive) render scale is below 1.
+                Set(so, "m_UpscalingFilter", (int)t.upscalingFilter);
+                Set(so, "m_FsrOverrideSharpness", t.fsrSharpness > 0f);
+                if (t.fsrSharpness > 0f) Set(so, "m_FsrSharpness", t.fsrSharpness);
                 Set(so, "m_MSAA", t.msaa);
                 Set(so, "m_SupportsHDR", t.hdr);
                 Set(so, "m_HDRColorBufferPrecision", 0);            // R11G11B10: same 32 bpp as RGBA8 on the tile

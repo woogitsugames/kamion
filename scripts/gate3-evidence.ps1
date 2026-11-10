@@ -30,6 +30,7 @@ param(
     [string]$OutDir,
     [string]$PhoneDir,
     [string]$PhotosRoot,
+    [string]$Apk,   # the installed APK (git sha of the phone frames comes from its name); default: gate3-result*.json under -PhoneDir
     [float]$CorridorM = 30,
     [switch]$SkipAudit,
     [switch]$SkipRender,
@@ -91,6 +92,7 @@ if ($SkipReport) { exit 0 }
 $pyArgs = @("$PSScriptRoot/gate3_evidence.py", '--region', $Region, '--repo', $RepoRoot, '--out', $OutDir, '--phone-dir', $PhoneDir,
     '--tiers', ($Tiers -join ','), '--lightings', ($Lightings -join ','), '--git-sha', $gitSha)
 if ($PhotosRoot) { $pyArgs += @('--photos-root', $PhotosRoot) }
+if ($Apk) { $pyArgs += @('--apk', $Apk) }
 & python -c "import PIL, numpy" 2>$null
 if ($LASTEXITCODE -eq 0) { & python @pyArgs } else { & uv run --no-project --with pillow --with numpy python @pyArgs }
 exit $LASTEXITCODE

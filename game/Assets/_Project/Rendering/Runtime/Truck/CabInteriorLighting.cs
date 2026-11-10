@@ -67,7 +67,8 @@ namespace Game.Rendering
 
         static readonly int k_Fill = Shader.PropertyToID("_CabFill"), k_Gain = Shader.PropertyToID("_CabGain"),
             k_Lift = Shader.PropertyToID("_CabShadowLift"), k_Enclosure = Shader.PropertyToID("_CabEnclosure"),
-            k_Parity = Shader.PropertyToID("_KamionToeParity");
+            k_Parity = Shader.PropertyToID("_KamionToeParity"),
+            k_CamOutside = Shader.PropertyToID("_KamionCamOutside");
 
         [Tooltip("Cab view on the tiers without post-processing: write the D23 toe in the cab shaders (KamionToeParity.hlsl, " +
                  "ADR 0044 addendum r7); off = plain sRGB toe on Low (A/B)")]
@@ -109,6 +110,7 @@ namespace Game.Rendering
             Shader.SetGlobalVector(k_Lift, Vector4.zero);
             Shader.SetGlobalFloat(k_Enclosure, 0f);
             Shader.SetGlobalVector(k_Parity, Vector4.zero);
+            Shader.SetGlobalFloat(k_CamOutside, 0f);
         }
 
         void LateUpdate() => RefreshForView();
@@ -161,7 +163,7 @@ namespace Game.Rendering
                 Color c = (m.SunColor * fluxSun + m.AdaptedWhite * fluxSky) * bounceTint * bounce;
                 fill = new Vector3(c.r, c.g, c.b);
             }
-            float gain = 1f, lift = 0f, enc = exteriorEnclosure;
+            float gain = 1f, lift = 0f, enc = exteriorEnclosure, outside = 1f;
             Vector4 parity = Vector4.zero;
             if (cam != null && interiorBounds.Contains(t.InverseTransformPoint(cam.transform.position)))
             {
@@ -170,6 +172,7 @@ namespace Game.Rendering
                 bool post = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.postProcessing;
                 if (!post && toeParity) parity = LookGrading.NoPostToeParity;
                 gain = Mathf.Pow(2f, cabViewEv + CabMeterEv(m, fill));
+                outside = 0f;
                 enc = enclosure;
                 // Phone-like local tone mapping of the cab view (review r4 L1): only the interior surfaces, only in the
                 // cab view, strongest in the deepest shade - the sky through the glass and the lit dash are untouched.
@@ -185,6 +188,8 @@ namespace Game.Rendering
             Shader.SetGlobalVector(k_Lift, new Vector4(lift, Mathf.Max(1e-4f, shadowLiftKnee), Mathf.Clamp01(shadowLiftNeutral), 0f));
             Shader.SetGlobalFloat(k_Enclosure, Mathf.Clamp01(enc));
             Shader.SetGlobalVector(k_Parity, parity);
+            // ADR 0059: Kamion/Truck Glass dims the far pane of the see-through path only for views from outside the cab.
+            Shader.SetGlobalFloat(k_CamOutside, outside);
         }
     }
 }

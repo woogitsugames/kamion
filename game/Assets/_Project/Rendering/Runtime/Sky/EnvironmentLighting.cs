@@ -94,13 +94,14 @@ namespace Game.Rendering
             var m = Model;
             // Display value per cd/m^2: emissive surfaces (truck lamps, A7) are authored in physical luminance.
             Shader.SetGlobalFloat(k_Exposure, m.Exposure);
-            StreetLamps.SetSunElevation(m.SunElevationDeg);
+            StreetLamps.SetSunElevation(m.TrueSunElevationDeg);
 
             // ---- sun ----
             if (sun == null) sun = RenderSettings.sun;
             if (sun != null)
             {
-                sun.transform.rotation = Quaternion.LookRotation(-m.SunDirection, Vector3.up);
+                // True direction (below the horizon in twilight; the light is then off): cab clock, auto low beam.
+                sun.transform.rotation = Quaternion.LookRotation(-m.TrueSunDirection, Vector3.up);
                 Color c = m.SunColor;
                 float max = Mathf.Max(c.r, Mathf.Max(c.g, c.b));
                 sun.color = (c / max).gamma;

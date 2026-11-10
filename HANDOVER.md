@@ -1,5 +1,32 @@
-# HANDOVER — kamion (TRUCK SIM PL), stan 2026-11-10 ok. 16:00 UTC (sesja 3, limit 5 h 81 %)
+# HANDOVER — kamion (TRUCK SIM PL), stan 2026-11-10 ok. 20:00 (sesja 4, limit 86 %)
 
+## Najpierw (sesja 4 → następna)
+- **main = `0e45111`, wypchnięty.** Scalone w sesji 4: metadane gate3 (gitSha z APK, `-Apk`, duplikaty md5), kamery gate3 jedna poza edytor/telefon + kadry kabiny na telefonie, auta r8 (0/81 dziur, LOD0 16 m, ADR 0041 r8), szkło r8 (ADR 0059: brak stożka/prążków lowsun, szyba drzwi), skala 0,70 + FSR + pacing 30 + plamy latarni dusk −5° (ADR 0062), wypiekana widoczność nieba + dalekie cienie (ADR 0064), Mapillary (ADR 0065, `tools/refs`), lista ujęć + pokrycie, recenzja r8, różnice gra vs Mapillary (`docs/reports/visual/REFS-MAPILLARY-FINDINGS-2026-11-10.md`).
+- **Decyzje D36–D44** w `docs/11` (skala 0,70; próg farby względny; albedo trawy 35–40; panel dev zostaje; CC0 tak; właściciel NIE robi zdjęć — tylko otwarte źródła; Mapillary tak; σ szyby ≥ 8 tylko przy słońcu). Google Maps/3D Tiles/Street View — odmowa wyjaśniona właścicielowi (ToS + koszt + jakość).
+- **Pomiary:** A16 Low e3671b4 `artifacts/gate3/20261110-a16-low-e3671b4/` (G3-A p99 50 ms > 40; cab-dash czerń 2,8–3,8 %; 0 duplikatów). S24+ High e3671b4: 43–47 kl./s (G3-A/G3-B w `artifacts/gate3/20261110-172908`, `-175241`).
+- **Token Mapillary** w `C:\Users\matma\.kamion\secrets.env` (czyta `tools/refs/mapillary_fetch.py`; nigdy nie wypisywać).
+- **Blokada telefonu:** `artifacts/locks/PHONE_RUN` — agenci nie startują Unity, gdy plik istnieje. Zakładaj przed pomiarem, zdejmij po.
+
+## Agenci w toku przy końcu sesji 4 (worktree `.claude/worktrees/agent-<id>`, gałąź `worktree-agent-<id>`, STATUS.md w `<wt>/artifacts/<dir>/`)
+| id | model | zadanie | ADR | dowody |
+|---|---|---|---|---|
+| a9eaaeb7a945e26bb | Opus | ciemne akcenty p10 ≤ 28, berberys (+ rozmieszczenie wg Mapillary: żwir pod wiaduktem), albedo trawy D38, próg farby D37 | 0060 | world-r8 |
+| a6fd2182039af9a34 | Fable | przód TRAKT Low lowsun + aliasing napisu/wycieraczek + E7 obudowy lusterek + N-17 deflektor | 0061 | front-r8 |
+| a173ed44d3c378718 | Opus | skany CC0 (Poly Haven/ambientCG) jako baza materiałów świata | 0063 | cc0-r8 |
+| ab1fb0a47d2f0a491 | Sonnet | otwarte źródła referencji (KartaView, Panoramax, Commons, Openverse, ortofoto GUGiK, dane miasta) | 0066 | refs |
+| a1ec6028c4e13f527 | Fable | wiadukt jako hero asset wg Mapillary | 0067 | viaduct-r9 |
+| a165b14c05122bf57 | Opus | koszt lusterek/capture/cieni → 60 kl./s S24+ | 0068 | mirror-r9 |
+| a6651051778fa221f | Opus | wyposażenie drogi wg Mapillary (ekrany, bramownice, bariery, sygnalizacja, strzałki) | 0069 | street-r9 |
+Przy przejęciu: `git -C <wt> log main..HEAD`, przeczytaj STATUS.md, dokończ albo scal; konflikty możliwe w `tools/worldgen/build_world.py`, `WorldSurface.shader`, `QualityProfile.cs`/`RenderOverrides.cs` (unia pól). Przed usunięciem worktree: skopiuj artifacts, `cmd /c rmdir` junctiony Data/raw, potem `git worktree remove --force --force`.
+
+## Następne kroki
+1. Scal pozostałych agentów (kolejność: świat 0060 → CC0 0063 → ulica 0069 → wiadukt 0067 → przód 0061 → lusterka 0068).
+2. Pełna integracja na main: build_region → build_world → import-region (zawiera WorldSkyBake), Truck/Trailer BuildBatch (szyba drzwi ADR 0059 — bez tego 3 testy `TruckDoorGlassTests` czerwone), InstallBatch, pytest/EditMode/PlayMode/physics, czysty build Low + High.
+3. Telefony (blokada PHONE_RUN, bez Unity): A16 Low gate3 (koszt LOD aut 16 m, plamy latarni, WorldSkyBake: `rq_worldgi 0` A/B), S24+ High A/B wg ADR 0062/0068 (`rq_scalemin`, `rq_mirror_*`, `rq_shadow 60`). Przy `gate3-run` używaj `-Apk` i `pwsh -Command` dla parametrów tablicowych.
+4. Recenzja r9 (visual-critic) z kadrami telefonu + montaże Mapillary; raport bramki 3 (`docs/reports/GATE-3-draft.md`) do decyzji właściciela.
+5. Właściciel testuje jazdę (P + kierownica ADR 0058) na S24+ — APK e3671b4 High zainstalowany; poproś o wynik/logi `CONTROLS`.
+
+---
 ## Najpierw (sesja 3 → następna)
 - **main = `166fa76`, wypchnięty.** Scalone w sesji 3: crash visual-qa D3D12 (ADR 0051), kamera fotela/H-point (ADR 0052), belka maski r7b + przód r7c (ADR 0047), AO aut (ADR 0050), żywopłoty + kontrast farby (ADR 0049 r7), hale Low/High (ADR 0012 r7), capture odbić na wszystkich tierach (ADR 0056), przetarcia skóry (ADR 0044 r8), **ciemna kabina tylko w kadrach QA** (ADR 0044 r9, `ViewCameraResolver`), kierownica — model ręki/szybkość (ADR 0058), **hamulec postojowy trzyma + blokada ruszania AMT** (ADR 0004 addendum), Log bez stack trace, audyt albedo bez szkła/łat AO, `import-region` przebudowuje tekstury gdy `_src` nowsze.
 - **Decyzje właściciela D30–D35** (progi r7) w `docs/11`. Zgoda na pomiar S24+ High **jest** (sesja 3), warunki z `docs/owner/S24-HIGH-RUN.md`.

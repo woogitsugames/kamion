@@ -86,6 +86,14 @@ def cameras(region, out, near):
                      "pos": [float(pos[0]), float(pos[1]), it["z"] + h], "look_at": [float(c[0] + fwd[0] * 0.6),
                                                                                     float(c[1] + fwd[1] * 0.6), zt],
                      "note": "car glass QA, windscreen"})
+    # r8 N-14: the same car from the front three-quarter at the distances where Low used to switch to LOD1
+    # (12.5 m before r8, 16 m now) and beyond; distance = camera to the car origin on the ground plane
+    d34 = (right + fwd) / math.sqrt(2.0)
+    for dist in (8, 12, 15, 25):
+        pos = c + d34 * dist
+        cams.append({"id": f"car_lod_{dist:02d}", "type": "persp", "kind": "photo_match", "fov_deg": 40.0,
+                     "pos": [float(pos[0]), float(pos[1]), z], "look_at": [float(c[0]), float(c[1]), it["z"] + 0.8],
+                     "note": f"car LOD QA, front 3/4 at {dist} m"})
     doc = {"schema": "truck-sim-pl/gate3-cameras/1", "region": region, "car": it, "cameras": cams}
     Path(out).write_text(json.dumps(doc, indent=1), encoding="utf-8")
     print("car", it["p"], "at", round(it["e"], 1), round(it["n"], 1), "->", out)
@@ -144,7 +152,7 @@ def measure(cams_json, png_dir, out_json=None):
     bands = {"lt45": [], "ge70": [], "45_70": []}
     for cam in doc["cameras"]:
         png = Path(png_dir) / f"{cam['id']}.png"
-        if not png.exists():
+        if not png.exists() or not cam["id"].startswith("glass_"):
             continue
         img = np.asarray(Image.open(png).convert("RGB"), np.float64)
         h, w = img.shape[:2]

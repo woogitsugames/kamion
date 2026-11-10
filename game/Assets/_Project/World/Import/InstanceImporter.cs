@@ -47,8 +47,10 @@ namespace Game.World.Import
             else if (proto.StartsWith("landmark_")) e = new[] { 650f, 20000f };
             // Vehicles (ADR 0041 v4, REVIEW r6 W-N6): LOD switches x lodBias, cull FIXED at VehicleCullM on every tier
             // (WorldInstances.IsVehicle), so Low shows the same parked cars and truck rigs as High.
-            // Cars / vans: LOD0 detail, LOD1 simple wheels, LOD2 profile prism (~55 tris). Low (lodBias 0.5): 12 / 45 / 300 m.
-            else if (proto.StartsWith("car_") || proto.StartsWith("van_")) e = new[] { 25f, 90f, WorldInstances.VehicleCullM };
+            // Cars / vans: LOD0 detail, LOD1 simple wheels, LOD2 profile prism (~55 tris). Low (lodBias 0.5): 16 / 42.5 / 300 m
+            // (LOD0 floor WorldInstances.VehicleLod0MinM, ADR 0041 r8; 12.5 m without it). LOD1 end 90 -> 85 m with the richer r8 LOD1: keeps the stretch_04 High
+            // frame estimate under 2.0 M (build_world.mesh_budget).
+            else if (proto.StartsWith("car_") || proto.StartsWith("van_")) e = new[] { 25f, 85f, WorldInstances.VehicleCullM };
             else if (proto.StartsWith("tractor_") || proto.StartsWith("trailer_")) e = new[] { 40f, WorldInstances.VehicleCullM };
             else e = new[] { 30f, 120f };   // bench, bollard, waste bin, street cabinet, pallets, containers
             // Mirror: tools/worldgen/roads/build_world.py instance_ends() (frame estimate) - keep the two in sync.

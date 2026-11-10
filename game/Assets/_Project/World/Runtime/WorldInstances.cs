@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Game.Core;
 using Game.Rendering;
 
 namespace Game.World
@@ -74,11 +75,13 @@ namespace Game.World
             m_Thin = new bool[set.prototypes.Length];
             m_FixedCull = new bool[set.prototypes.Length];
             m_Ends = new float[set.prototypes.Length][];
+            m_Lod0Min = new float[set.prototypes.Length];
             for (int p = 0; p < set.prototypes.Length; p++)
             {
                 var pr = set.prototypes[p];
                 m_Thin[p] = pr.name.StartsWith("tree_");
                 m_FixedCull[p] = IsVehicle(pr.name);
+                m_Lod0Min[p] = m_FixedCull[p] && pr.lods.Length > 1 ? VehicleLod0MinM : 0f;
                 m_Ends[p] = (float[])pr.lodEndM.Clone();
                 // Impostor forests: cap the cull distance (device measurement: DK8 forest 10 FPS on the A16 Medium,
                 // 14 FPS on the S24+ High before thinning and this cap).
@@ -114,14 +117,14 @@ namespace Game.World
             float cull = ok ? t.treeCullM : treeCullM;
             m_TreeCard = ok ? t.treeCardLodScale : treeLodScaleMax;
             m_ThinStart = ok ? t.treeThinStartM : thinStartM;
-            m_TreeShadowMask = ok ? t.treeShadowLodMask : (QualitySettings.lodBias < 1f ? 1 : 3);
+            m_TreeShadowMask = ok ? t.treeShadowLodMask : (TierLodBias < 1f ? 1 : 3);
             // forestHlodM: > 0 switch distance, < 0 off (rq_hlod=0), 0 = not set (profile before ADR 0015) → fallback field.
             m_HlodSwitch = ok && t.forestHlodM != 0f ? Mathf.Max(t.forestHlodM, 0f) : forestHlodM;
             m_HlodCull = ok && t.forestHlodM != 0f ? t.forestHlodCullM : forestHlodCullM;
             m_Trees = !RenderOverrides.Trees.HasValue || RenderOverrides.Trees.Value;
             // Impostor view cross-fade (Kamion/Vegetation _IMPOSTOR): 2 views on Medium and up, the nearest view on Low
             // (half the texture fetches; ADR 0023 cost table). Tier = LOD bias (Low 0.5).
-            Shader.SetGlobalFloat(k_ImpostorBlend, QualitySettings.lodBias >= 0.75f ? 1f : 0f);
+            Shader.SetGlobalFloat(k_ImpostorBlend, TierLodBias >= 0.75f ? 1f : 0f);
             bool a2c = !ok || t.leafAlphaToCoverage;
             bool simple = ok && t.simpleFoliage;
             if (m_Mats == null || simple != m_SimpleFoliage) BuildMaterials(simple);
@@ -265,6 +268,9 @@ namespace Game.World
             StreetLamps.SetHeads(m_LampHeads, k);
         }
 
+        /// <summary>The tier LOD bias (not the temporary extra-view bias while a mirror renders; ADR 0068).</summary>
+        static float TierLodBias => ExtraViewLod.Swapped ? ExtraViewLod.BaseLodBias : QualitySettings.lodBias;
+
         void OnBeginCamera(ScriptableRenderContext ctx, Camera cam)
         {
             if (set == null || set.cells == null || set.cells.Length == 0) return;
@@ -282,7 +288,9 @@ namespace Game.World
             SyncOrigin();
             GeometryUtility.CalculateFrustumPlanes(cam, m_Planes);
             Vector3 cp = cam.transform.position;
-            float scale = Mathf.Max(0.05f, QualitySettings.lodBias * distanceScale);
+            // ADR 0068: extra views (mirrors) use their own LOD scale on the tier bias (Game.Core.ExtraViewLod), whatever
+            // the order of the beginCameraRendering handlers.
+            float scale = Mathf.Max(0.05f, ExtraViewLod.EffectiveLodBias(cam) * distanceScale);
             float far = cam.farClipPlane, far2 = far;   // far2: the chunk-merge loop runs before cells (same limit)
             // Power-line conductors (Kamion/World Wire) fade out with the cull distance of the poles that carry them
             // (REVIEW r4 W-H2: wires hung in the air over the DK8 forest on Low after the poles were culled).
@@ -346,7 +354,8 @@ namespace Game.World
                     if (!m_Trees && m_Thin[run.prototype]) continue;
                     float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, m_TreeCard) : scale;
                     float cs = m_FixedCull[run.prototype] ? distanceScale : scale;   // vehicles: same cull on every tier
-                    int ln = LodAt(ends, dNear, ls, cs), lf = LodAt(ends, dFar, ls, cs);
+                    float l0 = m_Lod0Min[run.prototype] * distanceScale;   // vehicles: LOD0 floor on every tier
+                    int ln = LodAt(ends, dNear, ls, cs, l0), lf = LodAt(ends, dFar, ls, cs, l0);
                     bool thinnable = m_Thin[run.prototype];
                     int stride = thinnable ? ThinStride(dNear, scale) : 1;
                     if (ln == lf && (stride == ThinStride(dFar, scale) || !thinnable))
@@ -363,7 +372,7 @@ namespace Game.World
                         float dx = m.m03 - cp.x, dy = m.m13 - cp.y, dz = m.m23 - cp.z;
                         float d = Mathf.Sqrt(dx * dx + dy * dy + dz * dz);
                         if (thinnable && (i & (ThinStride(d, scale) - 1)) != 0) continue;
-                        int l = LodAt(ends, d, ls, cs);
+                        int l = LodAt(ends, d, ls, cs, l0);
                         if (l >= 0) Append(run.prototype, l, mats, i, 1, b);
                     }
                 }
@@ -399,11 +408,18 @@ namespace Game.World
         bool[] m_Thin;
         bool[] m_FixedCull;
         float[][] m_Ends;
+        float[] m_Lod0Min;
 
         /// <summary>Cull distance (m) of parked vehicles on every tier (ADR 0041 v4, REVIEW r6 W-N6: Low culled the truck
         /// rigs at 60 m and the cars at 200 m, High at 180 / 600 m, so the same cab-dash frame showed different content).
         /// Only the LOD switches scale with lodBias. WORKING_VALUE; mirrored in build_world.py VEHICLE_CULL_M.</summary>
         public const float VehicleCullM = 300f;
+
+        /// <summary>Floor (m) of the LOD0 distance of parked vehicles on every tier (ADR 0041 r8, REVIEW r7 N-14): LOD0 ends
+        /// at max(policy x lodBias, this). Low (lodBias 0.5) switched cars to LOD1 at 12.5 m, so the cars next to the route
+        /// (8-12 m from the cab) had disc wheels and no lamps while High showed rims and plates. With 16 m a car parked
+        /// beside the lane is LOD0 on every tier. WORKING_VALUE; mirrored in build_world.py VEHICLE_LOD0_MIN_M.</summary>
+        public const float VehicleLod0MinM = 16f;
 
         /// <summary>Vehicle prototypes and their contact-shadow patch prototypes ("contact_&lt;spec hash&gt;", ADR 0050): fixed cull.</summary>
         public static bool IsVehicle(string proto) =>
@@ -420,12 +436,17 @@ namespace Game.World
             return d.magnitude;
         }
 
-        /// <summary>LOD index for distance d: switch distances × <paramref name="lodScale"/>, the cull distance (last end) × <paramref name="cullScale"/>.</summary>
-        static int LodAt(float[] ends, float d, float lodScale, float cullScale)
+        /// <summary>LOD index for distance d: switch distances × <paramref name="lodScale"/>, the cull distance (last end) × <paramref name="cullScale"/>;
+        /// LOD0 (when it is not the only LOD) reaches at least <paramref name="lod0Min"/> metres.</summary>
+        public static int LodAt(float[] ends, float d, float lodScale, float cullScale, float lod0Min = 0f)
         {
             int last = ends.Length - 1;
             for (int l = 0; l < ends.Length; l++)
-                if (d < ends[l] * (l == last ? cullScale : lodScale)) return l;
+            {
+                float e = ends[l] * (l == last ? cullScale : lodScale);
+                if (l == 0 && l != last && e < lod0Min) e = lod0Min;
+                if (d < e) return l;
+            }
             return -1;
         }
 

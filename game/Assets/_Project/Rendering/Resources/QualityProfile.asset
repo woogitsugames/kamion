@@ -36,6 +36,9 @@ MonoBehaviour:
     cameraFarClip: 900
     adaptiveScaleMin: 0
     thermalFallbackFps: 0
+    pacingFallbackFps: 0
+    upscalingFilter: 0
+    fsrSharpness: 0
     worldDetail: 0
     additionalLightsPerObject: 2
     treeCardLodScale: 0.5
@@ -56,6 +59,7 @@ MonoBehaviour:
     contactShadows: 1
     cabShadowLift: 8
     streetLights: 0
+    lampPools: 4
     budgetDrawCalls: 250
     budgetTrianglesK: 350
     budgetTextureMB: 64
@@ -84,6 +88,9 @@ MonoBehaviour:
     cameraFarClip: 1400
     adaptiveScaleMin: 0
     thermalFallbackFps: 0
+    pacingFallbackFps: 0
+    upscalingFilter: 0
+    fsrSharpness: 0
     worldDetail: 1
     additionalLightsPerObject: 4
     treeCardLodScale: 0.5
@@ -104,6 +111,7 @@ MonoBehaviour:
     contactShadows: 1
     cabShadowLift: 8
     streetLights: 0
+    lampPools: 6
     budgetDrawCalls: 350
     budgetTrianglesK: 550
     budgetTextureMB: 96
@@ -130,8 +138,11 @@ MonoBehaviour:
     worldMipBias: 0
     lodBias: 1.5
     cameraFarClip: 2500
-    adaptiveScaleMin: 0.8
+    adaptiveScaleMin: 0.7
     thermalFallbackFps: 30
+    pacingFallbackFps: 30
+    upscalingFilter: 3
+    fsrSharpness: 0.75
     worldDetail: 1
     additionalLightsPerObject: 4
     treeCardLodScale: 0.5
@@ -152,6 +163,7 @@ MonoBehaviour:
     contactShadows: 1
     cabShadowLift: 8
     streetLights: 4
+    lampPools: 8
     budgetDrawCalls: 800
     budgetTrianglesK: 1500
     budgetTextureMB: 256
@@ -180,6 +192,9 @@ MonoBehaviour:
     cameraFarClip: 3500
     adaptiveScaleMin: 0
     thermalFallbackFps: 0
+    pacingFallbackFps: 0
+    upscalingFilter: 0
+    fsrSharpness: 0
     worldDetail: 1
     additionalLightsPerObject: 8
     treeCardLodScale: 0.5
@@ -200,11 +215,13 @@ MonoBehaviour:
     contactShadows: 1
     cabShadowLift: 8
     streetLights: 6
+    lampPools: 8
     budgetDrawCalls: 1000
     budgetTrianglesK: 2000
     budgetTextureMB: 384
     budgetShadowMs: 3
     budgetStatus: UNMEASURED (no flagship attached)
+  revision: 62
   deviceRules:
   - gpuContains: Mali-G57
     modelContains: 

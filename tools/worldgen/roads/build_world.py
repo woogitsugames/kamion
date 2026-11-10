@@ -661,6 +661,9 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
 # v3 had trees LOD0 < 80 m / LOD1 < 250 m and no forest HLOD (DK8 forest frame 8.2 M triangles on High).
 VEHICLE_CULL_M = 300.0     # m, all tiers (WORKING_VALUE: a 4.4 m car is ~17 px long there on a 1080 p phone)
 VEHICLE_PREFIX = ("car_", "van_", "tractor_", "trailer_")
+# LOD0 floor of vehicles on every tier (ADR 0041 r8, REVIEW r7 N-14; WorldInstances.VehicleLod0MinM): Low drew the
+# cars 8-12 m beside the route as LOD1. LOD0 ends at max(policy x lodBias, this).
+VEHICLE_LOD0_MIN_M = 16.0
 
 
 def instance_ends(proto, nlods):
@@ -677,7 +680,7 @@ def instance_ends(proto, nlods):
     elif proto.startswith("landmark_"):
         e = [650.0, 20000.0]
     elif proto.startswith(("car_", "van_")):
-        e = [25.0, 90.0, VEHICLE_CULL_M]
+        e = [25.0, 85.0, VEHICLE_CULL_M]
     elif proto.startswith(("tractor_", "trailer_")):
         e = [40.0, VEHICLE_CULL_M]
     else:
@@ -691,7 +694,10 @@ def instance_rule(proto, nlods, bias):
     """[[end m, tris key]] of a non-tree prototype on a tier with this lodBias (WorldInstances.LodAt)."""
     e, fixed = instance_ends(proto, nlods)
     n = len(e)
-    return [[x * (1.0 if (fixed and k == n - 1) else bias), f"tris_lod{k}"] for k, x in enumerate(e)]
+    rule = [[x * (1.0 if (fixed and k == n - 1) else bias), f"tris_lod{k}"] for k, x in enumerate(e)]
+    if fixed and n > 1:
+        rule[0][0] = max(rule[0][0], VEHICLE_LOD0_MIN_M)
+    return rule
 
 
 LOD_POLICY = {
