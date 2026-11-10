@@ -33,3 +33,12 @@ Gałąź: worktree-agent-ab1fb0a47d2f0a491 (nie scalona; integruje lider).
   Pokrycie ujęć ulicznych+Commons: 54/55 (brak tylko #2). Podsumowanie: `uv run --project tools/refs python tools/refs/summarize.py`.
   NASTĘPNY KROK: dokończyć commons/openverse (te same komendy z sekcji Komendy; wznawiają się), potem `summarize.py`, docs/REFERENCES.md (tabela źródeł),
   docs/LICENSES.md (wpisy źródeł), skopiować artifacts/refs z worktree do głównego artifacts/refs, odpiąć junctiony, raport <= 20 linii.
+
+## Log 20:55 (przejecie sesji 5)
+- Nowe: tools/refs/object_refs.py (obiekty kwadrat-park, fire-station, dusk-sodium), tools/refs/curation/<obj>.json (odrzucenia po przegladzie), matplotlib+shapely w pyproject.
+- STRAZ POZARNA: OSM way/211035271 JRG nr 2, ul. Andersa, 53.157322, 23.156306 (miasto: Andersa 46, 53.157380, 23.155985). fire-station: 17 refs + 2 ortho + plan, INDEX.md gotowy.
+- kwadrat-park: kartaview/panoramax 0 trafien (teren prywatny), commons-geo 5, commons-search w toku (429 z thumb bywa wolne).
+- Commons ogolny: 140 plikow; openverse 1 (API wolne).
+  NASTEPNY KROK: uv run --project tools/refs python tools/refs/object_refs.py --object kwadrat-park dusk-sodium  (wznawia z cache)
+  potem: ... open_sources.py --source commons --radius 600 --categories --interval 1.5 ; ... --source openverse --interval 1.5 ; summarize.py ;
+  object_refs.py --object fire-station kwadrat-park dusk-sodium --index-only ; docs/REFERENCES.md + docs/LICENSES.md ; pytest tests/refs -q
