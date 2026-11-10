@@ -66,7 +66,7 @@ MAT_SLOT = {
     "alu_brushed": "Metal", "alu_wheel": "Metal", "chrome": "Metal", "satin_alu": "Metal", "steel": "Metal",
     "checker": "Metal", "perforated": "Metal", "wordmark": "Metal",
     "glass": "Glass", "glass_tint": "Glass",
-    "lamp_inner": "Lights", "reflector": "Lights", "dark_chrome": "Lights", "led_drl": "Lights", "led_off": "Lights",
+    "lamp_inner": "Lights", "reflector": "Lights", "dark_chrome": "Lights", "lamp_housing": "Lights", "led_drl": "Lights", "led_off": "Lights",
     "led_amber": "Lights",
     "lens_amber": "Lights", "lens_red": "Lights", "projector": "Lights",
     "mirror": "MirrorRT",
