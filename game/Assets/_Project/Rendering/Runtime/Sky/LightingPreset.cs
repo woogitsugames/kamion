@@ -117,7 +117,7 @@ namespace Game.Rendering
             // carry the faint leaked-beam shadows beyond the realtime distance), a thin stratocumulus deck.
             p.sunElevationDeg = 41f; p.sunAzimuthDeg = 200f; p.turbidity = 4f; p.overcast = 1f; p.visibilityKm = 8f;
             p.overcastDirectional = 0.6f; p.overcastSunLeak = 0.05f;
-            p.cloudContrast = 0.26f;
+            p.cloudContrast = 0.21f;
             p.hazeGroundFactor = 1.6f; p.hazeScaleHeightM = 60f;
             return p;
         }
