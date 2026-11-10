@@ -91,7 +91,8 @@ Etap otoczenia uruchamia się w `build_world.py` po drogach i oznakowaniu (`stre
    - schematyczne E-2 przy łącznicach z `destination`;
    - S-1 na wlotach skrzyżowań z sygnalizacją (maszt z wysięgnikiem przy ≥ 3 pasach);
    - bariery stalowe na mostach, pasach dzielących dróg zamiejskich i nasypach > 2 m (wysokość nasypu = krawędź jezdni minus **NMT** w 5/7/9 m za końcem przekroju; wcześniej sonda 2 m za przekrojem trafiała zawsze w bermę terenu konformowanego, więc reguła nigdy nie działała; odcinki i spadki w `streetscape_qa.json` → `furniture.embankment_check.runs`);
-   - zestaw bramy zakładu z override `kind: depot_gate` (`gate.py`, niżej);
+   - zestaw bramy zakładu z override `kind: depot_gate` (`gate.py`, niżej); od r11 szafy szlabanów stoją na wyspie z krawężnikiem (mediana między pasami, +0,16 m, kolizja), z pętlami indukcyjnymi w nawierzchni i słupkami na nosach wyspy;
+   - plac zakładu z override `kind: depot_yard` (`depot_yard.py`): strefa bez miejsc postojowych, lampy i kontenery z ortofotomapy, `dock_trailers` (naczepy przy dokach podane wprost: prototyp, kąt, odsunięcie) oraz `wear` (`yard_wear.py`: tory jazdy, przełożona kostka, wykop kablowy, olej przy dokach, brud przy krawędziach; współrzędne (u, o) w układzie ściany z dokami; ADR 0071 r11);
    - ekrany akustyczne, ogrodzenia panelowe 3D na cokole, ogrodzenia z płyt betonowych, mury oporowe z poręczą, linie energetyczne ze zwisem.
 
    Wysokość dolnej krawędzi znaku: 2,00 m, a na chodniku 2,20 m (Tabl. 1.11 zał. 1, Dz.U. 2021 poz. 2066). Lica znaków to nasze własne rysunki wektorowe (`signs.py`).

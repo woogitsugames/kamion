@@ -30,3 +30,19 @@
 - W toku: `pwsh artifacts/kwadrat-r11/final.ps1` (build_world -> import -> after/{Medium-overcast,Medium-clear,Low-overcast} -> PlayMode barrier -> EditMode), log `logs/final.log`.
 - NASTĘPNY KROK: `uv run --project tools/worldgen python artifacts/kwadrat-r11/budget.py artifacts/kwadrat-r11/before/Low-overcast artifacts/kwadrat-r11/after/Low-overcast`;
   obejrzeć after/*; montaż before/after; ADR liczby; kopia do main/artifacts/kwadrat-r11.
+
+## 00:35 (11.11) — r11 ZAKOŃCZONE
+- Final: `after/{Medium-overcast,Medium-clear,Low-overcast}` (8 kamer), `compare/*.jpg` (before nad after), `budget_low.txt`.
+- Budżet Low (8 kamer, stats.txt): draws 6170 -> 6214 (+0,7 %), tris 2092k -> 2108k (+0,8 %); najgorsza kamera +1,3 % draws (brama).
+- Testy: pytest gis 227/3 (te same 3 czerwone co baseline main: fidelity stale, 2x korytarz trasy s≈1434–1480); PlayMode
+  `WorldCBarrierTests|DepotBarrierTests` 4/4 (0 kontaktów, max |dv| 0,050 m/s — wyspa nie jest dotykana); EditMode 176 zielone / 0 czerwonych /
+  5 inconclusive (prefab ciężarówki nie generowany w worktree) / 7 skip.
+- Efekty uboczne Unity cofnięte (M_Sky, ProjectSettings, LP_Clear/LP_Dusk/LP_LowSun — serializacja presetów światła, NIE commitowane).
+- OTWARTE: visual-critic (lider); zrzuty z telefonu; A8 (wieżowiec, klosz lampy); tablica przy bramie (brak źródła);
+  `_Tile` nadal 4 m dla zestawów bez `elements_per_tile` (concrete_cast 10 m, kerb 2x0,5, sandwich 6 m, brick 1,4 m...) — decyzja lidera;
+  tekstury PBR na dysku main są STARE (proceduralne, sprzed skanów CC0) — po scaleniu: build_all.py (import-region zrobi to sam tylko gdy brakuje plików / _src nowsze).
+- NASTĘPNY KROK (lider): scalić `worktree-kwadrat-r11`; na main:
+    uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py
+    $env:KAMION_BLENDER='C:\Users\matma\AppData\Local\Programs\Blender4.2\blender-4.2.9-windows-x64\blender.exe'; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+    pwsh scripts/import-region.ps1 -Region bialystok-industrial-c
+    pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCBarrierTests|DepotBarrierTests"
