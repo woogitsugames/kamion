@@ -205,6 +205,13 @@ namespace Game.World.Import
                 }
             }
             if (id == "terrain_grass") { mat.EnableKeyword("_GROUNDMASKS"); mat.SetFloat("_GroundTint", 1f); }
+            if (id == "terrain_grass" || id == "verge_grass")
+            {
+                // Review r5 W-N3: macro-masked bare soil + rotated second sample (ADR 0042). Refill = linear mean of
+                // the grass_verge texels without bare soil (Var.B < 0.1), measured from the Medium BaseColor.
+                mat.EnableKeyword("_GRASS_DETILE");
+                mat.SetVector("_GrassFill", new Vector4(0.079f, 0.109f, 0.037f, 1f));   // linear, no sRGB conversion
+            }
             if (id.StartsWith("hall_wall") || id.StartsWith("plaster_") || id == "panel_concrete" || id == "brick_red" || id == "hall_plinth")
             {
                 mat.EnableKeyword("_SPLASH");

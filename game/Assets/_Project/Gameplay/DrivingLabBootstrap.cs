@@ -122,7 +122,8 @@ namespace Game.Gameplay
             m_TractorCam = vehicle.GetComponentInChildren<ReversingCamera>(true);
             m_TrailerCam = trailer != null ? trailer.GetComponentInChildren<ReversingCamera>(true) : null;
             foreach (var mir in vehicle.GetComponentsInChildren<RenderTextureMirror>(true))
-                if (mir.phase == 0) m_MirrorL = mir; else m_MirrorR = mir;
+                if (!mir.main) continue;
+                else if (mir.phase == 0) m_MirrorL = mir; else m_MirrorR = mir;
             m_MirrorInsets = PlayerPrefs.GetInt(PrefMirrorInsets, 1) != 0;
 
             m_Audio = gameObject.AddComponent<TruckAudioController>();
