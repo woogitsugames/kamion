@@ -1013,7 +1013,7 @@ namespace Game.Editor.Setup
             Q("truck-34", p34, Quaternion.LookRotation(look - p34, Vector3.up), 45f, "A7: TRAKT front 3/4, driver side (paint, lamps, glass, wheels on the ground).");
             // r8 (ADR 0061): the cab front nearly head-on, 30 deg field (mask, TRAKT letters, wipers and louvres at twice
             // the truck-34 pixel scale): aliasing of thin front detail is judged here and in truck-34.
-            Vector3 pf = new Vector3(1.2f, 1.95f, 13.6f), lookF = new Vector3(0f, 1.85f, 5.4f);
+            Vector3 pf = new Vector3(0.8f, 1.9f, 10.6f), lookF = new Vector3(0f, 1.85f, 5.4f);
             Q("truck-front", pf, Quaternion.LookRotation(lookF - pf, Vector3.up), 30f, "r8: cab front head-on (mask bar, TRAKT letters, parked wipers, louvres, lamps).");
             Vector3 pr = new Vector3(-7.5f, 2.3f, -17.5f), lookR = new Vector3(0f, 1.9f, -7.0f);
             Q("trailer-34", pr, Quaternion.LookRotation(lookR - pr, Vector3.up), 45f, "Curtainsider rear 3/4, driver side (curtain, doors, tridem on the ground, landing gear, lamps).");

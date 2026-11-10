@@ -103,7 +103,7 @@ LOD1_DROP = ("_nut", "_washer", "_hubbolt", "battery_latch", "door_lock_", "embl
 LOD2_DROP = LOD1_DROP + ("coil", "damper_", "brake_chamber", "caliper_", "tie_rod", "drag_link", "steering_box",
                          "propshaft", "anti_roll", "leaf_", "handle_bar", "handle_back", "door_handle", "mirror_strut",
                          "horn", "flap_arm", "catwalk", "gooseneck", "step_nose", "eats_band", "fuel_cap", "oil_pan",
-                         "gearbox", "engine", "radiator", "cab_pivot", "frame_horn", "frame_front_cross",
+                         "gearbox", "engine", "radiator", "frame_front_cross",
                          "frame_cross", "axle_arm", "trailing_arm", "guard_arm", "hb_mask", "proj_bowl", "proj_refl", "hb_refl", "socket",
                          "brake_disc", "_dish", "belt_seal", "wiper_pivot", "arch_brush", "bstep_tread", "fog_back",
                          "fog_bowl", "battery_lid", "adblue_cap", "diff", "front_axle", "axle_rear", "bellow_",
@@ -741,7 +741,7 @@ def uv_islands(me, uvl, faces):
 # the smart-project space, before packing) to a width worth THIN_PIECES texels on the Low atlas of its slot (x 8 on
 # High). The parts carry flat colours (AO / dirt only), so the stretch shows nowhere. WORKING_VALUE
 THIN_PIECES = {"badge_trakt": 6, "wiper_arm": 6, "wiper_blade": 6, "wiper_pivot": 6, "washer_nozzle": 6,
-               "lane_dash": 6, "grille_bar_endcap": 6, "grille_bar_l": 4, "grille_bar_b": 4}      # texels on Low
+               "lane_dash": 6, "grille_bar_endcap": 6, "grille_bar_l": 6, "grille_bar_b": 6}      # texels on Low
 THIN_LOW_PX_PER_M = {"MI_Ext_Trim": 29.0, "MI_Ext_Metal": 113.0, "MI_Ext_Paint": 80.0, "MI_Ext_Lights": 180.0}
 
 
@@ -830,7 +830,12 @@ def unwrap_atlases(pieces):
             for f in bm.faces:
                 f.select = f.material_index == mi
             bmesh.update_edit_mesh(o.data)
-        margin = 0.004 if ATLAS_RES[slot] >= 2048 else 0.006
+        margin = 0.002 if ATLAS_RES[slot] >= 2048 else 0.004      # r8: 8 px of 4096 (was 0.004 / 0.006, never applied)
+        # r8: the UVs were edited through the mesh API above (priority scale, thin islands). Without a fresh UV
+        # selection Blender 4.2 packs the islands by their smart-project outlines: shrunk islands kept their old slot
+        # (Trim atlas 33 % used) and WIDENED ones were laid over their neighbours (3 500 polygons of the first r8
+        # export shared texels with another island; check_export.py now tests for that)
+        bpy.ops.uv.select_all(action="SELECT")
         bpy.ops.uv.pack_islands(rotate=True, margin_method="FRACTION", margin=margin, shape_method="CONCAVE")
         bpy.ops.object.mode_set(mode="OBJECT")
         print(f"atlas {slot}: {len(objs)} pieces, {time.time() - t0:.0f} s")
@@ -1389,6 +1394,10 @@ GRID_PIECES = {"grille_bar_l": ("front", 0.001, 0.003), "grille_bar_b": ("low", 
 # breaks into dashes whatever the mesh. Without it the lamella is its face-down face only and the gap above it shows
 # the dark tray: bands of 5 px and 3 px on Low instead of a sub-pixel highlight.
 GRID_OPEN_TOP = {"grille_bar_l": 0.006, "grille_bar_b": 0.006}     # strips within this of the top row are dropped
+# r8 (ADR 0061): with the top gone the gap between two LOD2 lamellae showed 25 mm of the dark tray: 3 px on Low, under
+# 5 % at low sun, i.e. the "clusters" of review r7 N-1. The face-down face is drawn out by this share of its height
+# (50 -> 65 mm, along its own slope): the gap is a 1.5 px shadow line, the rhythm stays. LOD0 / LOD1 keep the section.
+GRID_FACE_EXT = {"grille_bar_l": 0.30, "grille_bar_b": 0.30}
 
 
 def grid_spec(o):
@@ -1518,6 +1527,18 @@ def reduce_grid(o, kind, tol_m, open_top=0.0):
         keepc |= cand
     kc = sorted(keepc)
     kill = []
+    ext = next((v for k, v in GRID_FACE_EXT.items() if o.name.startswith(k)), 0.0) if open_top else 0.0
+    if ext:
+        zmin = min(r[0] for r in row.values())
+        low = [v for v in row if abs(row[v][0] - zmin) < 0.0015]
+        offmax = max(row[v][1] for v in low)
+        for v in low:
+            if row[v][1] < offmax - 0.004:
+                continue                      # rear edge of the underside stays on the tray
+            ups = [e.other_vert(v) for e in v.link_edges if e.other_vert(v) in row and row[e.other_vert(v)][0] > zmin + 0.02]
+            if ups:
+                top = max(ups, key=lambda u: row[u][1])
+                v.co = v.co + (v.co - top.co) * ext
     if open_top:
         ztop = max(r[0] for r in row.values())
         for key in [k for k in strips if min(k[0][0], k[1][0]) >= ztop - open_top]:

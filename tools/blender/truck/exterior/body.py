@@ -845,7 +845,24 @@ def _wordmark_on_face(strokes, z_c, height, spacing, mat, name, weight, depth, b
         bm = bmesh.new()
         bm.from_mesh(ob.data)
         bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
-        bmesh.ops.dissolve_limit(bm, angle_limit=math.radians(0.5), verts=bm.verts, edges=bm.edges)
+        for _ in range(3):
+            bmesh.ops.dissolve_limit(bm, angle_limit=math.radians(0.5), verts=bm.verts, edges=bm.edges)
+            # vertices left on a straight outline edge (two collinear edges, nothing else)
+            lone = [v for v in bm.verts if len(v.link_edges) == 2 and abs(
+                (v.link_edges[0].other_vert(v).co - v.co).normalized().dot(
+                    (v.link_edges[1].other_vert(v).co - v.co).normalized()) + 1.0) < 1e-6]
+            if not lone:
+                break
+            bmesh.ops.dissolve_verts(bm, verts=lone)
+        # triangles here, not in the exporter: the union leaves vertices on straight outline edges (where a wall of
+        # one stroke ends on the face of another), the n-gon fill made zero-area triangles of them and the FBX
+        # round trip dropped those (check_export: 9 triangles fewer than the manifest)
+        bmesh.ops.triangulate(bm, faces=bm.faces, ngon_method="BEAUTY")
+        bmesh.ops.dissolve_degenerate(bm, dist=2e-5, edges=bm.edges)
+        flat = [f for f in bm.faces if f.calc_area() < 1e-10]
+        if flat:    # collinear leftovers: no area, so no crack opens when they go
+            bmesh.ops.delete(bm, geom=flat, context="FACES")
+        print(f"  {ob.name}: {len(bm.faces)} triangles ({len(flat)} zero-area dropped)")
         for v in bm.verts:
             v.co = o + rt * v.co.x + n * (v.co.y + 0.0010) + up * v.co.z
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
@@ -1295,7 +1312,7 @@ def mirrors(kind="classic", front=True):
             c = V((xh, yh, 2.47))
             # r4: slimmer head (0.25 x 0.15 -> HOUSE_W x ~0.115 m deep): seen from the eye point it must not hide
             # more than the two B2 heads did (11.5 deg); measured with pillar_obstruction.py
-            box(f"mirror_main_house_{s}", c, (HOUSE_W, 0.080, 0.76), "plastic_satin", bev=0.038, seg=4, rot=rot)
+            box(f"mirror_main_house_{s}", c, (HOUSE_W, 0.080, 0.76), "mirror_plastic", bev=0.038, seg=4, rot=rot)
             # r6 E7: the back shell is dark grained plastic, not body colour (a white back read as a blank card)
             box(f"mirror_main_cap_{s}", c + rot @ V((0, 0.030, 0)), (HOUSE_W - 0.008, 0.085, 0.745), "plastic",
                 bev=0.040, seg=5, rot=rot)
@@ -1310,8 +1327,8 @@ def mirrors(kind="classic", front=True):
                 hb = ck + rk @ V((0, 0.030, -0.030))
                 out = V((ck.x - foot.x, ck.y - foot.y, 0.0)).normalized()
                 tube("mirror_kerb_arm", [foot - out * 0.01, foot + out * 0.05 + V((0, 0, 0.02)), hb + V((0, 0, -0.03)),
-                                         hb], 0.011, "plastic_satin", seg=8)
-                box("mirror_kerb", ck, (0.20, 0.08, 0.14), "plastic_satin", bev=0.03, seg=3, rot=rk)
+                                         hb], 0.011, "mirror_plastic", seg=8)
+                box("mirror_kerb", ck, (0.20, 0.08, 0.14), "mirror_plastic", bev=0.03, seg=3, rot=rk)
                 box("mirror_kerb_glass", ck + rk @ V((0, -0.041, 0)), (0.18, 0.006, 0.12), "mirror", bev=0.003,
                     rot=rk)
             box(f"mirror_main_glass_{s}", c + rot @ V((0, -0.041, 0.13)), (HOUSE_W - 0.024, 0.006, 0.44), "mirror",
@@ -1322,16 +1339,16 @@ def mirrors(kind="classic", front=True):
                 p0 = V(CAB.side_pt(zb, win_front(zb) + 0.012, s, -0.012))
                 p1 = V((xh - s * 0.08, yh + 0.012, zh))
                 d = p1 - p0
-                box(f"mirror_arm_{nm}_{s}", (p0 + p1) / 2, (d.length, 0.040, 0.070), "plastic_satin", bev=0.018, seg=2,
+                box(f"mirror_arm_{nm}_{s}", (p0 + p1) / 2, (d.length, 0.040, 0.070), "mirror_plastic", bev=0.018, seg=2,
                     rot=d.to_track_quat("X", "Z").to_matrix())
         elif kind == "classic":
             xh = s * 1.50
             yh = base.y - 0.10
             # arm: upper beam + lower strut, satin black
             tube(f"mirror_arm_{s}", [base + V((s * 0.0, 0, 0.03)), V((s * 1.33, yh + 0.02, 2.99)),
-                                     V((xh, yh, 2.94))], 0.015, "plastic_satin", seg=10)
+                                     V((xh, yh, 2.94))], 0.015, "mirror_plastic", seg=10)
             tube(f"mirror_strut_{s}", [V(CAB.side_pt(2.25, win_front(2.25) - 0.02, s, 0.0)),
-                                       V((xh - s * 0.02, yh, 2.08))], 0.014, "plastic_satin", seg=10)
+                                       V((xh - s * 0.02, yh, 2.08))], 0.014, "mirror_plastic", seg=10)
             # class II main + class IV wide-angle heads; body-colour back caps. R2 #7: each glass is aimed so
             # that the eye point sees the field it must show (glass normal = bisector of the direction to the
             # eye and the required view direction), not left facing straight back (edge-on from the seat)
@@ -1340,11 +1357,11 @@ def mirrors(kind="classic", front=True):
                 c = V((xh, yh, zc))
                 rot = mirror_aim(c, view)
                 if rounded():   # aero housing: fully rounded rim (R 42 mm) and a deeper, domed body-colour back
-                    box(f"mirror_{nm}_{s}", c, (0.24, 0.085, hgt), "plastic_satin", bev=0.042, seg=7, rot=rot)
+                    box(f"mirror_{nm}_{s}", c, (0.24, 0.085, hgt), "mirror_plastic", bev=0.042, seg=7, rot=rot)
                     box(f"mirror_{nm}_cap_{s}", c + rot @ V((0, 0.035, 0)), (0.232, 0.10, hgt - 0.012), "paint",
                         bev=0.049, seg=8, rot=rot)
                 else:
-                    box(f"mirror_{nm}_{s}", c, (0.24, 0.085, hgt), "plastic_satin", bev=0.03, seg=4, rot=rot)
+                    box(f"mirror_{nm}_{s}", c, (0.24, 0.085, hgt), "mirror_plastic", bev=0.03, seg=4, rot=rot)
                     box(f"mirror_{nm}_cap_{s}", c + rot @ V((0, 0.02, 0)), (0.235, 0.06, hgt - 0.01), "paint",
                         bev=0.03, seg=4, rot=rot)
                 box(f"mirror_{nm}_glass_{s}", c + rot @ V((0, -0.044, 0)), (0.215, 0.006, hgt - 0.03), "mirror",
@@ -1352,18 +1369,18 @@ def mirrors(kind="classic", front=True):
             if s > 0:  # class V kerb mirror on the passenger side, under the main mirrors, looking down
                 c = V((s * 1.42, yh + 0.04, 1.98))
                 rot = mirror_aim(c, (0.25, -0.35, -1.0))
-                box("mirror_kerb", c, (0.20, 0.08, 0.14), "plastic_satin", bev=0.03, seg=3, rot=rot)
+                box("mirror_kerb", c, (0.20, 0.08, 0.14), "mirror_plastic", bev=0.03, seg=3, rot=rot)
                 box("mirror_kerb_glass", c + rot @ V((0, -0.041, 0)), (0.18, 0.006, 0.12), "mirror", bev=0.003,
                     rot=rot)
         else:
             # camera monitor system: short aero arm with a camera pod (class II/IV)
             yh = base.y - 0.05
             tube(f"cam_arm_{s}", [base + V((0, 0, 0.04)), V((s * 1.36, yh, 2.98)), V((s * 1.44, yh - 0.03, 2.96))],
-                 0.022, "plastic_satin", seg=10)
-            sphere(f"cam_pod_{s}", (s * 1.46, yh - 0.06, 2.95), 0.05, "plastic_satin", scale=(1.1, 2.2, 1.0))
+                 0.022, "mirror_plastic", seg=10)
+            sphere(f"cam_pod_{s}", (s * 1.46, yh - 0.06, 2.95), 0.05, "mirror_plastic", scale=(1.1, 2.2, 1.0))
             cyl(f"cam_lens_{s}", (s * 1.46, yh - 0.165, 2.95), 0.016, 0.008, "glass_tint", axis="Y", seg=16)
             if s > 0:
-                sphere("cam_pod_kerb", (s * 1.36, yh - 0.03, 2.86), 0.035, "plastic_satin", scale=(1, 1.6, 1))
+                sphere("cam_pod_kerb", (s * 1.36, yh - 0.03, 2.86), 0.035, "mirror_plastic", scale=(1, 1.6, 1))
     # class VI front mirror over the passenger-side corner (kept with camera mirrors too)
     if not front:
         return
@@ -1377,13 +1394,13 @@ def mirrors(kind="classic", front=True):
         rot = mirror_aim(c, tgt - c)
         hb = c + rot @ V((0, 0.030, 0.045))
         tube("front_mirror_arm", [p + V((0, -0.05, 0.10)), p + V((0, 0.13, 0.10)), V((p.x, hb.y + 0.01, p.z + 0.02)),
-                                  hb + V((0, 0.01, 0.10)), hb], 0.013, "plastic_satin", seg=10)
-        box("front_mirror", c, (0.26, 0.07, 0.17), "plastic_satin", bev=0.03, seg=3, rot=rot)
+                                  hb + V((0, 0.01, 0.10)), hb], 0.013, "mirror_plastic", seg=10)
+        box("front_mirror", c, (0.26, 0.07, 0.17), "mirror_plastic", bev=0.03, seg=3, rot=rot)
         box("front_mirror_glass", c + rot @ V((0, -0.0355, 0)), (0.24, 0.006, 0.15), "mirror", bev=0.003, rot=rot)
         return
     tube("front_mirror_arm", [p + V((0, -0.05, 0.10)), p + V((0, 0.12, 0.10)), p + V((0, 0.20, 0.0))], 0.014,
-         "plastic_satin", seg=10)
-    box("front_mirror", p + V((0, 0.22, -0.10)), (0.26, 0.07, 0.17), "plastic_satin", bev=0.03, seg=3,
+         "mirror_plastic", seg=10)
+    box("front_mirror", p + V((0, 0.22, -0.10)), (0.26, 0.07, 0.17), "mirror_plastic", bev=0.03, seg=3,
         rot=Matrix.Rotation(math.radians(-35), 3, "X"))
     box("front_mirror_glass", p + V((0, 0.20, -0.135)), (0.24, 0.006, 0.15), "mirror", bev=0.003,
         rot=Matrix.Rotation(math.radians(-35), 3, "X"))
