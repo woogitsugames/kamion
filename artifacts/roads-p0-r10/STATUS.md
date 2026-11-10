@@ -58,3 +58,10 @@ Galaz: worktree-agent-ad6af5501cb259d76.
   bierze wysokosc lacznicy, ktora sie w niego wlacza; overlap_dz.py: 119 komorek > 5 cm (max 0,238) -> 0 (max 0,045).
   W toku (niezbudowane): network flush-strip wypelnia szczeline (j:n10015785253), meshing.PatchHeight.arm_plane.
 - NASTEPNY KROK: git merge main (generated -> --ours) ; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c ; uv run --project tools/worldgen python scripts/export-route.py --region bialystok-industrial-c ; uv run --project tools/worldgen python tests/gis/route_corridor.py
+- 2026-11-11 main scalony do galezi (generated = ours, regen: build_region + build_world + export-route + fidelity).
+  Dodatkowo: pasek flush siega sasiedniej jezdni (network._tight_side gap, meshing._corner_gaps) -> skirt:j:road_asphalt
+  2 -> 0; PatchHeight.arm_plane; ratchety: test_road_fidelity BASELINE (os 0,129 / krawedz 2,50 / wysepki 6 / lii 2,
+  uzasadnienie w ADR 0076), test_road_consistency (+kerb_on_carriageway, prop_through_deck = 0, reszta obnizona, trasa 1),
+  test_terrain_walls (steep_grass 0, skirt:j 0). ADR: docs/adr/0076-route-corridor-kerbs-poles.md.
+  Wynik: pytest tests/gis 222 passed, 2 xfailed; route_corridor 4789 stacji, 0 uskokow, 0 przeszkod; consistency 69.
+- NASTEPNY KROK: pwsh scripts/import-region.ps1 -Region bialystok-industrial-c ; pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Medium -Lighting overcast -Gate3 artifacts/roads-p0-r10/p0_cameras.json -Cameras p0_median_slot_eye,p0_n10015785253_top,p0_n4103450295_top,p0_n1882887385_top,p0_lamp_w1101181473_eye,p0_ma001_top,p0_ma012_top,au_f_s0620,au_f_s0640,au_r_s1380,au_r_s1400,p0_kerb_merge_top,p0_fork_putry_eye -OutputDir artifacts/roads-p0-r10/renders ; pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCRouteTests|WorldCBarrierTests"

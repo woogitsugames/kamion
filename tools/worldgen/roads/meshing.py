@@ -12,7 +12,7 @@ import numpy as np
 
 from . import standards as S
 from .geom import ear_clip, polygon_area
-from .network import ISLAND, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, side_params, side_profile
+from .network import FLUSH_FILL_MAX_M, ISLAND, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, side_params, side_profile
 
 
 @dataclass
@@ -902,8 +902,64 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
                 corner = j.corners[tag[1]]
                 if corner.kind in ("fillet", "nose") and corner.R > 0:
                     kap[m] = 1.0 / (0.8 / 0.9 * corner.R)
+        # another carriageway (not an arm of this junction) right beside the corner: the strip is flush asphalt up
+        # to it. The kerb of a median that two carriageways close on used to end 3 m before they met and left a
+        # slot down to the terrain (j:n10015785253, 0.5 m deep, terrain_walls QA; ADR 0076)
+        gaps = _corner_gaps(net, j, G, OUT)
+        params = [(URBAN, 0.0, float(g), p[3], MAT_FLUSH_ROAD) if (p[0] == URBAN and np.isfinite(g)) else p
+                  for p, g in zip(params, gaps)]
+        fl = [p[0] == URBAN and p[4] == MAT_FLUSH_ROAD for p in params]
         # the corner polyline runs CCW around the patch, outward = right of travel -> mirrored strip
-        _emit_strip(buf, G, OUT, Z, params, kap, hwz, True, None, coarse, j.id + f":corner{i}")
+        if len(set(fl)) > 1:
+            # one strip per run of flush / kerbed stations sharing the boundary station (as build_side_strip): the
+            # material of a strip is the majority of its stations
+            cuts = [0] + [m for m in range(1, len(fl)) if fl[m] != fl[m - 1]] + [len(fl)]
+            for r, (a_, b_) in enumerate(zip(cuts, cuts[1:])):
+                lo = max(0, a_ - 1) if r else a_
+                if b_ - lo < 2:
+                    continue
+                sl = slice(lo, b_)
+                prm = [(q[0], q[1], q[2], q[3], MAT_FLUSH_ROAD if fl[a_] else (0 if q[4] == MAT_FLUSH_ROAD else q[4]))
+                       if q[0] == URBAN else q for q in params[lo:b_]]
+                _emit_strip(buf, G[sl], OUT[sl], Z[sl], prm, kap[sl], hwz[sl], True, None, coarse,
+                            j.id + f":corner{i}" + (f":{r}" if r else ""))
+        else:
+            _emit_strip(buf, G, OUT, Z, params, kap, hwz, True, None, coarse, j.id + f":corner{i}")
+
+
+def _corner_gaps(net, j, G, OUT):
+    """Per corner station: clear gap [m] to the carriageway of another ground chain lying outward of the corner and
+    running along it, when that gap is under FLUSH_FILL_MAX_M (0 where it overlaps); nan elsewhere."""
+    from shapely import STRtree
+    from shapely.geometry import LineString, Point
+    if getattr(net, "_cw_tree", None) is None:
+        ch = [c for c in net.chains if not c.meta.get("absorbed") and len(c.line.p) >= 2]
+        net._cw_tree = (STRtree([LineString(c.line.p) for c in ch]), ch)
+    tree, ch = net._cw_tree
+    own = {a.chain.id for a in j.arms} | {c.id for c in getattr(j, "internal", [])}
+    out = np.full(len(G), np.nan)
+    if _patch_on_bridge(j):
+        return out
+    for m, (p, o) in enumerate(zip(G, OUT)):
+        best = None
+        for k in tree.query(Point(*p).buffer(FLUSH_FILL_MAX_M + 12.0)):
+            oc = ch[int(k)]
+            if oc.id in own:
+                continue
+            s_o, lat_o = oc.line.project(p)
+            if s_o <= 1e-3 or s_o >= oc.length - 1e-3:
+                continue
+            io = oc.idx(s_o)
+            if bool(oc.bridge[io]) or abs(float(np.dot(oc.line.t[io], o))) > 0.5:
+                continue
+            if float(np.dot(oc.line.point(s_o) - p, o)) <= 0.0:          # the other road is behind the corner
+                continue
+            gap = max(abs(lat_o) - float(oc.hw_at(s_o)), 0.0)
+            if gap < FLUSH_FILL_MAX_M and (best is None or gap < best):
+                best = gap
+        if best is not None:
+            out[m] = best
+    return out
 
 
 # ---------------------------------------------------------------------------------------------

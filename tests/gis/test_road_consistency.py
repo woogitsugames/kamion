@@ -15,11 +15,15 @@ QA = REGION_DIR / "generated" / "road_consistency_qa.json"
 # Ratchet (ADR 0033 / 0074): rest of the tile. Lower whenever a fix lands, never raise. Target 0.
 # Build 2026-11-10 r9: 222 -> 145 (arrow 13->8, furniture 7->5, blind end 90->56, marking 58->17, obstacle 53->58
 # (tapers now excluded, new fork geometry exposed 5), prop 1->1).
-RATCHET = {"arrow_no_exit": 8, "furniture_in_lane": 5, "lane_blind_end": 56, "marking_off_carriageway": 17,
-           "obstacle_in_lane": 58, "prop_on_carriageway": 1}
-# start route G3-A / G3-B, both carriageways within route_band_m: 26 -> 2 (open: depot gate split j:n1882954015 lane into
-# the gate median, fire-station yard service road j:n4103450295). Target 0.
-ROUTE_MAX = 2
+RATCHET = {"arrow_no_exit": 8, "furniture_in_lane": 1, "lane_blind_end": 55, "marking_off_carriageway": 3,
+           "obstacle_in_lane": 2, "prop_on_carriageway": 0,
+           # ADR 0076: poles piercing a deck above them, kerbs lying on a carriageway (across / along a lane)
+           "prop_through_deck": 0, "kerb_on_carriageway": 0}
+# roads-p0-r10 (ADR 0076), build of 2026-11-11: 145 -> 69 on the tile (furniture 5 -> 1, markings 17 -> 3, obstacles
+# 58 -> 2, poles on a carriageway 1 -> 0).
+# start route G3-A / G3-B, both carriageways within route_band_m: 26 -> 2 -> 1 (open: lane_blind_end at the depot gate
+# split j:n1882954015, E 602 N -645). Target 0.
+ROUTE_MAX = 1
 
 
 def _qa():

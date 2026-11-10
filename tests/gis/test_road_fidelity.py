@@ -19,9 +19,20 @@ from conftest import REGION_DIR, REPO
 
 QA = REGION_DIR / "generated" / "fidelity_qa.json"
 TARGET = {"axis_p95": 1.0, "edge_p95": 0.75, "lane_mismatch": 0, "islands_absent": 0}
-# measured 2026-11-10 (fidelity-r9); ratchet: never worse than this (+ small tolerance for classifier noise)
-BASELINE = {"axis_p95": 0.032, "edge_p95": 2.04, "lane_mismatch": 0, "islands_absent": 4, "lane_into_island_bug": 3}
-TOL = {"axis_p95": 0.02, "edge_p95": 0.05}
+# measured 2026-11-11 (roads-p0-r10, ADR 0076 section "Ratchety fidelity"); ratchet: never worse than this.
+#   axis_p95        0.032 (r9) -> 0.129: network.align_forks (ADR 0074, lane continuity at forks whose lanes add up) moves
+#                   the Andersa -> Rondo Putry link w606396463 3.25 m off its OSM axis (and tapers w173956083 back);
+#                   every other route edge has p95 <= 0.11 m. ADR 0076 r1 (carriageways pushed abreast) raised it to
+#                   1.745 and was withdrawn after the orthophoto check; the merge layout is on the OSM axes again.
+#   edge_p95        2.04 -> 2.50: the same link is now measured (18 stations, 3.9 m) + classifier noise on 3 edges.
+#   islands_absent  4 -> 6: both new ones come with the ADR 0074 fork shifts - (336, -563) 14 m2 in the S-bend of the
+#                   slip w282244180, (-366, -119) 373 m2 between the viaduct ramp and the link (road fraction 0.69).
+#                   Owner: ADR 0077 (gores / junction corners); target there <= 4, here it must not grow.
+#   lane_into_island_bug 3 -> 2.
+# main's fidelity_qa.json was older than ADR 0074 (test_report_not_stale red on main), so these are the first
+# measured values of the ADR 0074 generator; ADR 0076 r2 itself changes none of them.
+BASELINE = {"axis_p95": 0.129, "edge_p95": 2.50, "lane_mismatch": 0, "islands_absent": 6, "lane_into_island_bug": 2}
+TOL = {"axis_p95": 0.001, "edge_p95": 0.05}      # the axis is deterministic; edges carry classifier noise
 
 
 @pytest.fixture(scope="module")

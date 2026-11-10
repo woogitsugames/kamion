@@ -1625,7 +1625,7 @@
    "length_m": 610.3,
    "max_grade": 0.053,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.47,
+   "profile_rms_vs_nmt_m": 0.471,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.0,
@@ -1651,7 +1651,7 @@
    "length_m": 324.7,
    "max_grade": 0.0511,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.424,
+   "profile_rms_vs_nmt_m": 0.426,
    "sidewalk_frac": 0.5,
    "width_m": [
     7.5,
@@ -10160,7 +10160,7 @@
   "crossings_skipped": [],
   "crossings_snapped": 71,
   "decals": {
-   "gullies": 781,
+   "gullies": 777,
    "oil": 286,
    "patches": 301
   },
@@ -10169,7 +10169,7 @@
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 502482,
+  "footprint_nodes": 504227,
   "fork_abreast": [
    {
     "beside": "c:w173956078:1847263293-5749429982",
@@ -11033,7 +11033,7 @@
    "P-8 skipped (off carriageway)": 62
   },
   "markings_overlap_removed_tris": 113,
-  "nmt_nodes_replaced_under_decks": 2280,
+  "nmt_nodes_replaced_under_decks": 2281,
   "overrides_applied": [
    {
     "id": "kwadrat-park-yard-access-width",
@@ -11072,6 +11072,12 @@
     ]
    },
    {
+    "id": "kwadrat-park-hero",
+    "targets": [
+     "bdot:9962cca0-95de-4200-a0c4-3922b8e40d9c"
+    ]
+   },
+   {
     "id": "andersa-viaduct-biezenstwa-hero",
     "targets": [
      "w175157461",
@@ -11082,8 +11088,8 @@
   "overrides_stale": [],
   "roundabout_junctions": 12,
   "sides_on_carriageway_culled": {
-   "kerb_tris": 936,
-   "parts": 110,
+   "kerb_tris": 1297,
+   "parts": 158,
    "side_tris": 134
   },
   "signalised_junctions": 11,
