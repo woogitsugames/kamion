@@ -284,7 +284,7 @@ def _cavity(h: np.ndarray, px: float) -> np.ndarray:
 
 def tiling_from_scan(name: str, aid: str, *, target: float, hue, out_L: float, out_n: int, seed: int,
                      bomb_cells: int = 0, ao_k=0.5, flat_m=1.0, flat_k=0.8, nrm_gain=1.0, hue_keep=0.6,
-                     rough_scale=1.0, rough_add=0.0, segment: dict | None = None, period_fix: dict | None = None,
+                     rough_scale=1.0, rough_add=0.0, ao_gamma=0.4, segment: dict | None = None, period_fix: dict | None = None,
                      modulation=False):
     """A tiling (calibrated) or modulation set from one scan. out_L = tile size (m); bomb_cells > 0 re-assembles the
     scan (resampled to the output texel) into the out_L tile."""
@@ -344,7 +344,7 @@ def tiling_from_scan(name: str, aid: str, *, target: float, hue, out_L: float, o
     else:
         alb, _ = calibrate(alb, target)
     s = SurfaceSet(name, c, alb.astype(np.float32), h.astype(np.float32), rough, eid.astype(np.float32),
-                   joint.astype(np.float32), ao_extra=soft_ao(ao))
+                   joint.astype(np.float32), ao_extra=soft_ao(ao, ao_gamma))
     s.scan_info = info
     return s
 
@@ -449,7 +449,7 @@ SCAN_SETS = {
     # tiling sets straight from a scan
     "asphalt_worn": (["asphalt_04"], lambda: tiling_from_scan(
         "asphalt_worn", "asphalt_04", target=0.08, hue=HUE_ASPHALT_WORN, out_L=4.04, out_n=2048, seed=6311,
-        flat_m=0.35, flat_k=0.95, hue_keep=0.5)),
+        flat_m=0.35, flat_k=0.95, hue_keep=0.5, ao_gamma=0.0, rough_add=-0.03)),   # r8 asphalt level 100-106 sRGB (Low ov)
     "asphalt_sma_fresh": (["asphalt_pit_lane"], lambda: tiling_from_scan(
         "asphalt_sma_fresh", "asphalt_pit_lane", target=0.075, hue=HUE_ASPHALT_SMA, out_L=4.0, out_n=2048, seed=6312,
         bomb_cells=4, flat_m=0.6, flat_k=0.85, hue_keep=0.4, rough_add=-0.15)),
