@@ -37,6 +37,7 @@ Shader "Kamion/Cab Display"
             #pragma vertex vert
             #pragma fragment frag
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "KamionToeParity.hlsl"
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
             float _KamionExposure;
             struct A { float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0; };
@@ -60,7 +61,7 @@ Shader "Kamion/Cab Display"
                 half NoV = saturate(dot(n, Vd));
                 half fresnel = 0.04 + 0.96 * Pow4(1.0 - NoV) * (1.0 - NoV);
                 half3 env = GlossyEnvironmentReflection(reflect(-Vd, n), 0.05, 1.0) * fresnel * _Reflection;
-                return half4(screen * gain + env, 1.0);
+                return half4(KamionToeParity(screen * gain + env), 1.0);   // D23 toe without the LUT (cab view, ADR 0044 r7)
             }
             ENDHLSL
         }

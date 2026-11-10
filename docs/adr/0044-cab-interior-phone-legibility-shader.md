@@ -98,3 +98,20 @@ Frames: `artifacts/owner/modern-front/r6b/` (`before` = main bb7549d, `v1` = fir
   1024 px one pixel on the dash is ~0.9 mm, so the grain is sub-pixel there by construction. No control camera sees
   the driver's seat bolster or the stitched seam at readable size: UNVERIFIED in frame. Interior LOD0 / 1 / 2:
   97 103 / 43 329 / 21 984 (was 96 811 / 43 128 / 21 960; LOD2 limit 22 000), `interior/check_export.py` PASS.
+
+
+## Addendum r7 (2026-11-10, rendering-perf): cab-view display parity on Low
+Measured (cab-dash, editor, share of pixels < 3 % luma / p50): Low dusk 8.7 % / 13.9 vs High 2.1 % / 15.5. High with
+post-processing off (`-qaRq rq_post=0`): 9.5 % / 13.6, with the vehicle capture off: unchanged 2.1 %. So the gap is the
+display transfer, not the light: High maps the scene through the D23 master curve (black floor 1.5 %, 0.0025 -> 3.8 %,
+0.01 -> 11.5 %, 0.18 -> 48.4 %), Low has no LUT and writes plain sRGB (0 %, 3.2 %, 10.0 %, 46.1 %).
+Decision: in the cab view on tiers without post-processing, the cab shaders (CabInterior, TruckExterior cab-view parts,
+CabDisplay) write the linear value whose plain sRGB equals the D23 display: c' = c (1 + a k / (c + k)) + f k2 / (c + k2)
+per channel (`KamionToeParity.hlsl`, `LookGrading.NoPostToeParity` = 0.21129, 0.206849, 0.001319, 0.000598, least-squares
+fit to the master curve, <= 0.45 display points for c <= 0.2; EditMode `CabToeParityTests`). Set by CabInteriorLighting
+only when the camera is in the cab and the tier has no post (`toeParity`, default on); identity everywhere else. No light
+is added: it is the same tone curve the phone-look tiers already apply. The non-physical sheen stays removed (r6).
+Result Low (before -> after; High): dusk 8.7 -> 4.8 % / 13.9 -> 15.0 (2.1 % / 15.5), overcast 5.0 -> 2.4 % / 20.0 -> 21.6
+(1.8 % / 22.1), lowsun 2.0 % / 16.9 (1.8 % / 17.5), clear 3.9 -> 1.8 %. Cost: ~12 ALU per cab pixel; editor Low 1755x810
+cab-dash 5.21 -> 4.94 ms (noise). A16 not measured. The world outside the cab on Low keeps plain sRGB (10-25 % darker
+in linear than High in the toe and mids): a global Low LUT would cost a full-screen pass, not done.
