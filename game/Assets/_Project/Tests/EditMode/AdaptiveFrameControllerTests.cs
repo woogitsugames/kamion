@@ -44,6 +44,17 @@ namespace Game.Tests.EditMode
         }
 
         [Test]
+        public void FirstStepIs085ThenFloorOnlyIfStillOverBudget()
+        {
+            var c = NewScale(); float t = 0f;
+            Assert.AreEqual(0.85f, Run(c, ref t, 2.2f, 30f), 1e-4f, "1.00 -> 0.85 first, even under heavy load");
+            Assert.AreEqual(0.80f, Run(c, ref t, 2.0f, 30f), 1e-4f, "still > 15 ms at 0.85 -> 0.80 after the next window");
+            var d = NewScale(); t = 0f;
+            Assert.AreEqual(0.85f, Run(d, ref t, 2.2f, 17.5f), 1e-4f);
+            Assert.Greater(Run(d, ref t, 20f, 17.5f), 0.85f - 1e-4f, "12.6 ms at 0.85 is under budget: never drops to 0.80");
+        }
+
+        [Test]
         public void ChangesAtMostOncePerWindow()
         {
             var c = NewScale(); float t = 0f;

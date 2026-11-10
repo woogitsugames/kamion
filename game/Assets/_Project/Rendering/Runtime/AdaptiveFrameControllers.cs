@@ -7,8 +7,8 @@ namespace Game.Rendering
     /// GPU frame times are collected in a tumbling window (<see cref="WindowS"/>); at the end of each window the p90 decides:
     /// - p90 &lt; <see cref="FullScaleBelowFraction"/> of the frame interval (13 ms at 60 FPS): step up towards 1.0, but only
     ///   when the pixel model (GPU ∝ scale²) predicts the next step stays below the step-down threshold (no ping-pong);
-    /// - p90 &gt; <see cref="StepDownAboveFraction"/> of the interval (15 ms at 60 FPS): step down to the scale the pixel model
-    ///   puts at <see cref="TargetFraction"/> of the interval, at least one step;
+    /// - p90 &gt; <see cref="StepDownAboveFraction"/> of the interval (15 ms at 60 FPS): from full scale to
+    ///   <see cref="FirstStepScale"/> (0.85), below it one <see cref="Step"/> per window down to <see cref="MinScale"/>;
     /// - otherwise hold (hysteresis band).
     /// Steps are multiples of <see cref="Step"/> (0.05); at most one change per window (2 s). Windows with too few valid GPU
     /// samples (device does not report GPU time) change nothing, so such devices stay at <see cref="MaxScale"/>.
@@ -21,8 +21,9 @@ namespace Game.Rendering
         public float WindowS = 2f;
         public float FullScaleBelowFraction = 13f / (1000f / 60f);   // 0.78
         public float StepDownAboveFraction = 15f / (1000f / 60f);    // 0.90
-        public float TargetFraction = 12.5f / (1000f / 60f);         // 0.75
         public int MinSamples = 30;
+        /// <summary>First step down from <see cref="MaxScale"/> (ADR 0046: 1.00 → 0.85, then 0.80 only under sustained load).</summary>
+        public float FirstStepScale = 0.85f;
 
         readonly float[] m_Samples;
         readonly float[] m_Scratch;
@@ -78,11 +79,10 @@ namespace Game.Rendering
             float down = StepDownAboveFraction * intervalMs, up = FullScaleBelowFraction * intervalMs;
             if (p90Ms > down)
             {
-                // pixel model: gpu(s) ≈ gpu(scale) · (s / scale)²
-                float ideal = scale * (float)Math.Sqrt(TargetFraction * intervalMs / p90Ms);
-                float stepped = Quantize(ideal, floor: true);
-                if (stepped > scale - Step + 1e-4f) stepped = scale - Step;
-                return Clamp(stepped);
+                // From full scale the first step goes to FirstStepScale (0.85, visual-critic PASS); below it one Step per
+                // window, so the floor (0.80, conditional PASS) is only reached when p90 is still over the line at 0.85.
+                if (scale >= MaxScale - 1e-4f && FirstStepScale < scale) return Clamp(FirstStepScale);
+                return Clamp(Quantize(scale, floor: false) - Step);
             }
             if (p90Ms < up && scale < MaxScale - 1e-4f)
             {
