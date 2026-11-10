@@ -130,8 +130,8 @@
    "eave_z": 10.72,
    "lettering": {
     "u": [
-     38.1,
-     46.7
+     37.9,
+     46.55
     ],
     "z": [
      9.2,
@@ -140,15 +140,15 @@
    },
    "number": {
     "u": [
-     38.9,
-     40.9
+     37.9,
+     40.3
     ],
     "z": [
      8.05,
      8.85
     ]
    },
-   "openings_note": "r3: measured on the CC0 photo 7197 (gable 12 m = 325 px): arched windows 4.7 x 4.6 m (size in atlas_layout.json 'arch'), 1.2 m apart; round window d 3.4 m, centre 4.5 m below the crown; lettering centre 2.1 m and '998' 3.3 m below the crown. WORKING_VALUE +-0.2 m (sill hidden by the thujas)",
+   "openings_note": "r3: measured on the CC0 photo 7197 (gable 12 m = 325 px): arched windows 4.7 x 4.6 m (size in atlas_layout.json 'arch'), 1.2 m apart; round window d 3.4 m, centre 4.5 m below the crown; lettering centre 2.1 m and '998' 3.3 m below the crown. WORKING_VALUE +-0.2 m (sill hidden by the thujas). r4 (same photo, 67 px/m at full size): arched windows have 3 lights; round window = one wide blue post + thin white transom; lettering spans 1.5-10.15 m and the handset roundel + '998' 1.57-3.84 m from the W corner, digits 0.6 m; four ochre vent squares ~0.2 m at 1.37 / 4.22 / 7.22 / 10.3 m, 0.9 m above the lettering centre",
    "round_window": {
     "d": 3.4,
     "u": 42.4,
@@ -161,7 +161,17 @@
    "v": [
     0.0,
     24.5
-   ]
+   ],
+   "vents": {
+    "size": 0.2,
+    "u": [
+     37.77,
+     40.62,
+     43.62,
+     46.7
+    ],
+    "z": 10.5
+   }
   },
   "link": {
    "ridge_v": 10.8,
