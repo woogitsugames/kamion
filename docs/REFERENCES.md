@@ -48,3 +48,19 @@ Sources: https://commons.wikimedia.org/wiki/File:<filename>
 | `7197_May_2021_in_Białystok.jpg`, `20240626_103137_June_2024_in_Białystok.jpg` | CC0 | Rakoon |
 | `EC_Białystok.jpg` (power-plant chimneys — landmark visible from the route) | CC BY-SA 2.5 | Hiuppo |
 | `6972_December_2019_…_Aleja_Tysiąclecia_Państwa_Polskiego.jpg`, `20201223_143208_…`, `20201223_141958_…` | CC0 | Rakoon |
+
+### Curtainsider semi-trailer (added 2026-11-10, trailer realism pass 2)
+Real photographs from Wikimedia Commons, 1600-1920 px previews, licence read from the Commons API (`extmetadata`). **Reference only**: geometry/detail density/wear; no brand shapes, logos or liveries are copied, CC BY / CC BY-SA files are never shipped or used as texture sources.
+
+| File (`Data/photos/nowe/`) | Commons title | Author | Licence | URL | Use |
+|---|---|---|---|---|---|
+| `trailer_Auflieger_tautliner_01.jpg` | Auflieger tautliner 01.jpg | Ra Boe | CC BY-SA 2.5 | https://commons.wikimedia.org/wiki/File:Auflieger_tautliner_01.jpg | side: curtain tension, straps, chassis under the floor |
+| `trailer_Krone_Tautliner.jpg` | Krone Tautliner.jpg | Jk20301 | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Krone_Tautliner.jpg | true side: short mudflaps behind the last axle, pallet box, landing gear, rear under-run height, top rail |
+| `trailer_Moderne_Tauliner_Verschluss.jpg` | Moderne Tauliner Verschluss.jpg | selbst | Public domain | https://commons.wikimedia.org/wiki/File:Moderne_Tauliner_Verschluss.jpg | curtain buckle / over-centre tensioner close-up (may be a texture source: PD) |
+| `trailer_Richard_Westbury_Volvo_FH460_artic_curtainsider_Port_of_Teignmouth_29_March_2012.jpg` | Richard Westbury Volvo FH460 artic curtainsider, Port of Teignmouth, 29 March 2012.jpg | Barry Lewis | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Richard_Westbury_Volvo_FH460_artic_curtainsider,_Port_of_Teignmouth,_29_March_2012.jpg | worn working trailer: dirt on curtain and chassis, rear lamps, under-run |
+| `trailer_Tony_Powell_Transport_ML02_PNZ_DAF_CF_artic_curtainsider_Port_of_Teignmouth_24_April_2012.jpg` | Tony Powell Transport (ML02 PNZ) DAF CF artic curtainsider, Port of Teignmouth, 24 April 2012.jpg | Barry Lewis | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Tony_Powell_Transport_(ML02_PNZ)_DAF_CF_artic_curtainsider,_Port_of_Teignmouth,_24_April_2012.jpg | worn working trailer: grime gradient, mudflaps, side guards |
+| `trailer_W2425-Semi_Tautliner_3750N8.jpg` | W2425-Semi Tautliner 3750N8.jpg | Llann Wé² | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:W2425-Semi_Tautliner_3750N8.jpg | curtainsider exterior, curtain wrinkles |
+| `trailer_W2426-Semi_Tautliner_OuvertureArriere_Superireure_4421N8.jpg` | W2426-Semi Tautliner OuvertureArriere+Superireure 4421N8.jpg | Llann Wé² | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:W2426-Semi_Tautliner_OuvertureArriere%2BSuperireure_4421N8.jpg | rear portal open: door thickness, hinges, roof bows, floor edge |
+| `trailer_W2427-Semi_Tautliner_OuvertureLaterale_3743N8.jpg` | W2427-Semi Tautliner OuvertureLaterale 3743N8.jpg | Llann Wé² | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:W2427-Semi_Tautliner_OuvertureLaterale_3743N8.jpg | side opened: posts, lath pockets, sill |
+| `trailer_WieltonCurtainSider.jpg` | WieltonCurtainSider.jpg | Cekay | CC0 | https://commons.wikimedia.org/wiki/File:WieltonCurtainSider.jpg | side 3/4: curtain, buckles, side guards, landing gear (may be a texture source: CC0) |
+| `trailer_Wielton_Trailer_Test.jpg` | Wielton Trailer Test.jpg | Cekay | Public domain | https://commons.wikimedia.org/wiki/File:Wielton_Trailer_Test.jpg | whole rig proportions |

@@ -252,18 +252,23 @@ def trailer_plate_image():
 
 
 def r70_image():
-    """R70 marking plate pattern: 45 deg stripes, 100 mm pitch (WORKING_VALUE look, ECE R70 not opened)."""
+    """Rear marking plate of a TRAILER (UN R70 class 2/4 look): retro-reflective yellow field with a fluorescent red
+    border - the oblique yellow/red chevrons belong to trucks and tractors, not to trailers and semi-trailers.
+    WORKING_VALUE: border = 22 % of the plate height (R70 text not opened; plate here 565 x 110 mm)."""
     import numpy as np
     w, h = 512, 128
     y, x = np.mgrid[0:h, 0:w]
-    s = ((x + y) / (w / 5.65 * 1.0)) % 1.0       # plate 0.565 m wide -> ~5.65 stripes per 0.1 m pitch
-    red = s < 0.5
+    bw = int(h * 0.22)
     img = np.zeros((h, w, 3))
-    img[red] = (0.62, 0.02, 0.015)
-    img[~red] = (0.85, 0.60, 0.02)
-    edge = (x < 4) | (x > w - 5) | (y < 4) | (y > h - 5)
-    img[edge] = (0.62, 0.02, 0.015)
-    return M._save_image("trl_r70", img.astype("float32"), colorspace="sRGB")
+    img[:] = (0.86, 0.66, 0.03)
+    # honeycomb cells of the retro-reflective sheeting (faint, reads only close up)
+    cell = (np.sin(x * 0.55) * np.sin((y + (x // 11 % 2) * 5) * 0.63)) * 0.035
+    img += cell[..., None] * np.array((1.0, 0.8, 0.1))
+    border = (x < bw) | (x > w - 1 - bw) | (y < bw) | (y > h - 1 - bw)
+    img[border] = (0.66, 0.03, 0.02)
+    rim = (x < 3) | (x > w - 4) | (y < 3) | (y > h - 4)       # bare aluminium plate edge
+    img[rim] = (0.55, 0.56, 0.57)
+    return M._save_image("trl_r70", np.clip(img, 0, 1).astype("float32"), colorspace="sRGB")
 
 
 def tyre_profile():
@@ -618,6 +623,11 @@ def side_guards():
             ob = box_mm(f"sideguard_{s}_{zc}", x - 0.012, x + 0.012, y1, y0, zc - 0.05, zc + 0.05, "alu_extr", bev=0.004)
             box_mm(f"sideguard_groove_{s}_{zc}", x + s * 0.0125 - 0.001, x + s * 0.0125 + 0.001, y1 + 0.02, y0 - 0.02,
                    zc - 0.004, zc + 0.004, "gap")
+            # black plastic end caps closing the hollow extrusion (real guards never end in a raw saw cut)
+            for k, ye in enumerate((y0, y1)):
+                d = 1 if k == 0 else -1
+                box_mm(f"sideguard_cap_{s}_{zc}_{k}", x - 0.014, x + 0.014, min(ye - d * 0.004, ye + d * 0.022),
+                       max(ye - d * 0.004, ye + d * 0.022), zc - 0.052, zc + 0.052, "trl_plastic")
         for yy in (y0 - 0.12, (y0 + y1) / 2, y1 + 0.12):
             box_mm(f"sideguard_post_{s}_{yy:.2f}", x - s * 0.03 - 0.025, x - s * 0.03 + 0.025, yy - 0.004, yy + 0.004,
                    0.44, 1.17, "galv")
@@ -878,7 +888,8 @@ def rear_lamps_and_rup():
         rod(f"rup_brace_{s}", (s * BEAM_X, yo + 0.12, 0.52), (s * BEAM_X, yo + 0.85, beam_bottom(yo + 0.85) + 0.01),
             0.025, "galv", seg=8)
         # R70 rear marking plates on the bar
-        box_mm(f"r70_plate_{s}", s * 0.60, s * 1.165, yo + 0.016, yo + 0.020, 0.43, 0.54, "r70")
+        G.plate_uv(box_mm(f"r70_plate_{s}", s * 0.60, s * 1.165, yo + 0.016, yo + 0.020, 0.43, 0.54, "r70"),
+                   facing=-1)     # normalised UV: the red border must frame the plate, not tile across it
         # lamp panel under the sill
         box_mm(f"lamp_panel_{s}", s * 0.60, s * 1.24, yo + 0.03, yo + 0.04, 0.80, 1.08, "trl_chassis", bev=0.003)
         box_mm(f"lamp_panel_side_{s}", s * 1.23, s * 1.24, yo + 0.04, yo + 0.20, 0.80, 1.08, "trl_chassis")
@@ -889,36 +900,43 @@ def rear_lamps_and_rup():
         lo, hi = min(x0, x1), max(x0, x1)
         zc = 0.94
         box_mm(f"rear_lamp_body_{sd}", lo, hi, yo - 0.045, yo + 0.03, zc - 0.085, zc + 0.085, "lamp_body", bev=0.01)
-        # chambers from the outside in: indicator (amber), tail/stop (red), reverse (white) or fog (red, left only)
-        w = (hi - lo - 0.04) / 4
+        # one continuous multi-colour lens moulding (as on real trailer combination lamps): the sections butt against
+        # each other with no bezel between them and share ONE pillow-crowned outer surface; only a thin housing lip
+        # frames the whole lens. From the outside in: indicator (amber), tail/stop (red), reverse (white, right) or
+        # fog (red, left only). Section widths 30/25/25/20 % of the lens.
+        la, lb = lo + 0.018, hi - 0.018
+        za, zb = zc - 0.066, zc + 0.066
+        box_mm(f"rear_lamp_lip_{sd}", lo + 0.008, hi - 0.008, yo - 0.052, yo - 0.044, zc - 0.074, zc + 0.074,
+               "lamp_body", bev=0.003)
+        fr = [0.30, 0.25, 0.25, 0.20]
         kinds = ["lens_amber_o", "lens_red_o", "lens_red_o", "lens_white_o" if s > 0 else "lens_red_o"]
         names = ["ind", "tail", "stop", "rev" if s > 0 else "fog"]
+        W = lb - la
+        edge = 0.0
         for k, (mname, nm) in enumerate(zip(kinds, names)):
-            xa = (hi - 0.02 - k * w) if s > 0 else (lo + 0.02 + k * w)
-            xb = xa - s * (w - 0.006)
-            a, b = min(xa, xb), max(xa, xb)
-            # recessed chamber (dark bezel ring) + 10 mm lens slab with a 3 mm rounded rim, pillow-crowned face
-            box_mm(f"rear_bezel_{nm}_{sd}", a - 0.003, b + 0.003, yo - 0.050, yo - 0.044, zc - 0.071, zc + 0.071,
-                   "lamp_body", bev=0.002)
-            box_mm(f"rear_lens_{nm}_{sd}", a, b, yo - 0.058, yo - 0.048, zc - 0.068, zc + 0.068, mname,
-                   bev=0.003, seg=3)
-            # crowned outer face of the lens (2.5 mm pillow) as a grid just proud of the slab
-            nx, nz = 8, 6
+            w = W * fr[k]
+            if s > 0:          # outside = +x
+                b, a = lb - edge, lb - edge - w
+            else:
+                a, b = la + edge, la + edge + w
+            edge += w
+            box_mm(f"rear_lens_{nm}_{sd}", a, b, yo - 0.056, yo - 0.048, za, zb, mname, bev=0.0015, seg=1)
+            nx, nz = max(3, int(round(10 * w / (W * 0.25)))), 6
             rows = []
             for iz in range(nz + 1):
                 tz = iz / nz
                 row = []
                 for ix in range(nx + 1):
-                    tx = ix / nx
-                    crown = 0.0025 * math.sin(math.pi * tx) * math.sin(math.pi * tz)
-                    row.append(V((a + 0.004 + (b - a - 0.008) * tx, yo - 0.0581 - crown,
-                                  zc - 0.064 + 0.128 * tz)))
+                    x = a + (b - a) * ix / nx
+                    tx = (x - la) / W            # crown over the WHOLE lens, continuous across the sections
+                    crown = 0.004 * math.sin(math.pi * tx) ** 0.6 * math.sin(math.pi * tz) ** 0.6
+                    row.append(V((x, yo - 0.0562 - crown, za + 0.002 + (zb - za - 0.004) * tz)))
                 rows.append(row)
             sheet(f"rear_lens_{nm}_{sd}_face", rows, mname, flip=False, smooth=True)
-            # LED dots under the lens (emitters, same light group as the lens)
+            # LED emitters seen through the lens
             for j in range(3):
                 zz = zc - 0.04 + 0.04 * j
-                cyl(f"rear_led_{nm}_{sd}_{j}", ((a + b) / 2, yo - 0.0605, zz), 0.010, 0.002, mname, axis="Y", seg=12)
+                cyl(f"rear_led_{nm}_{sd}_{j}", ((a + b) / 2, yo - 0.0545, zz), 0.010, 0.002, mname, axis="Y", seg=12)
         # triangular retro-reflector (red) inboard of the lamp
         xt = s * 0.54
         tri = [(xt - 0.075, 0.82), (xt + 0.075, 0.82), (xt, 0.95)]
