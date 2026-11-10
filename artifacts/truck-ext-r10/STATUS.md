@@ -20,3 +20,8 @@ NEXT: `bash artifacts/truck-ext-r10/tools/full.sh r2` then look at r2/High-overc
 - r4 running: `trailer_export` (roof 0.36, stains x1.0) -> build -> frames High/Low x overcast/clear/lowsun into `r4/`.
 NEXT (if killed): rerun r4 = trailer export + `pwsh artifacts/truck-ext-r10/tools/unity.ps1 -Step build` + `-Step render -Out r4 -Lights overcast,clear,lowsun -Cameras truck-34,truck-front,trailer-34,chase,truck-side,truck-rear34,trailer-side,truck-34r`;
   then `-Step test`, fill ADR 0083 "Measured", `git add art-source/truck/*/export` (LFS) and commit, copy artifacts/truck-ext-r10 to the main checkout.
+- 22:55 STOP at the 95 % limit (lead order). r4 exported + built + rendered (`r4/`, High/Low x overcast/clear/lowsun; Low lowsun render exit 1: NOT looked at).
+  r4 frames NOT yet viewed (roof albedo 0.36 + stains: unverified). check_export PASS for both (ext r2 export: LOD0 104 514 / LOD1 43 000 / LOD2 17 689; trailer r4: 89 000 / 24 500 / 7 850).
+  Exported art (FBX + atlases + manifests, r2 exterior / r4 trailer) is committed in this commit. EditMode tests NOT run. ADR 0083 "Measured" not filled. No visual-critic review, no phone.
+NEXT: look at `artifacts/truck-ext-r10/r4/High-overcast/chase.png` (roof), then
+  `pwsh artifacts/truck-ext-r10/tools/unity.ps1 -Step test` ; `bash artifacts/truck-ext-r10/tools/sheets.sh before r4` ; fill ADR 0083 Measured ; rerun `-Step render -Out r4 -Tiers Low -Lights lowsun`.
