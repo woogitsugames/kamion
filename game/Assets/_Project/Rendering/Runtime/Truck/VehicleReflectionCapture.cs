@@ -34,6 +34,11 @@ namespace Game.Rendering
         [Tooltip("Layers excluded from the capture (the vehicles themselves, UI)")]
         public LayerMask excludeLayers = (1 << 8) | (1 << 5);
         [Tooltip("Upper limit of the capture far clip (m); the tier value is clamped to it")] public float maxFarClip = 200f;
+        [Tooltip("ADR 0068: LOD-bias multiplier while a capture face renders (128 px over 90 deg = 1.4 px/deg vs ~25 in the main view)")]
+        public float captureLodScale = 0.25f;
+
+        /// <summary>ADR 0068 A/B (rq_ab envcap): no faces are rendered while true; the last cube stays bound.</summary>
+        public static bool Paused;
 
         static readonly Quaternion[] k_Face =
         {
@@ -118,6 +123,11 @@ namespace Game.Rendering
                 data.requiresColorOption = CameraOverrideOption.Off;
                 data.requiresDepthOption = CameraOverrideOption.Off;
                 data.SetRenderer(0);
+                // ADR 0068: lower LOD for the 128 px faces (LODGroups; the instanced world already skips Reflection cameras).
+                var tag = camGo.AddComponent<ExtraViewTag>();
+                tag.kind = Game.Core.ExtraViewKind.Capture;
+                tag.lodScale = RenderOverrides.EnvCaptureLod ?? captureLodScale;
+                Game.Core.ExtraViewLod.Hook();
             }
             if (m_Cube == null)
             {
@@ -176,7 +186,7 @@ namespace Game.Rendering
 
         void LateUpdate()
         {
-            if (!Application.isPlaying || m_Size <= 0 || m_Cube == null) return;
+            if (!Application.isPlaying || m_Size <= 0 || m_Cube == null || Paused) return;
             if (++m_FrameCounter < m_Interval) return;
             m_FrameCounter = 0;
             // ADR 0056 (Low/Medium): a complete cube is kept while the capture point stays within envCaptureMinMove of

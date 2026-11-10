@@ -77,6 +77,8 @@ namespace Game.Telemetry
         float[] m_PendingCpu;
         float[] m_PendingGpu;
         float[] m_PendingScale;
+        int[] m_PendingMirrors;
+        int[] m_PendingAb;
         // FrameTimingManager (PlayerSettings "Frame Timing Stats"): GPU time of the frame on Vulkan/GLES devices that report
         // it (Mali, Xclipse); 0 when unsupported. Reported for the frame that finished a few frames earlier.
         readonly FrameTiming[] m_Timing = new FrameTiming[1];
@@ -111,6 +113,8 @@ namespace Game.Telemetry
             m_PendingCpu = new float[pendingCap];
             m_PendingGpu = new float[pendingCap];
             m_PendingScale = new float[pendingCap];
+            m_PendingMirrors = new int[pendingCap];
+            m_PendingAb = new int[pendingCap];
             m_SessionStart = Time.realtimeSinceStartup;
             OpenFiles();
         }
@@ -122,7 +126,7 @@ namespace Game.Telemetry
                 OutputDirectory = Path.Combine(Application.persistentDataPath, "diag");
                 Directory.CreateDirectory(OutputDirectory);
                 m_Csv = new StreamWriter(Path.Combine(OutputDirectory, "frametimes.csv"), false, new UTF8Encoding(false));
-                m_Csv.WriteLine("frame,t_s,frame_ms,cpu_main_ms,gpu_ms,render_scale");
+                m_Csv.WriteLine("frame,t_s,frame_ms,cpu_main_ms,gpu_ms,render_scale,mirror_n,ab");   // ADR 0068: mirror renders, A/B state
                 m_SummaryPath = Path.Combine(OutputDirectory, "summary.json");
             }
             catch (Exception e)
@@ -152,6 +156,8 @@ namespace Game.Telemetry
                 m_PendingCpu[m_PendingCount] = cpuMs;
                 m_PendingGpu[m_PendingCount] = gpuMs;
                 m_PendingScale[m_PendingCount] = Game.Core.RenderState.RenderScale;   // ADR 0062: A/B of the scale floor
+                m_PendingMirrors[m_PendingCount] = Game.Core.ExtraViewStats.LastFrameMirrorRenders;   // ADR 0068
+                m_PendingAb[m_PendingCount] = Game.Core.ExtraViewStats.AbIndex;
                 m_PendingFrame[m_PendingCount] = m_Frame;
                 m_PendingTime[m_PendingCount] = now - m_SessionStart;
                 m_PendingMs[m_PendingCount] = dtMs;
@@ -242,14 +248,22 @@ namespace Game.Telemetry
 
             var ci = CultureInfo.InvariantCulture;
             Debug.Log(string.Format(ci,
-                "[DIAG] t={0:F0}s tier={1} target={2} fps={3:F1} p50={4:F2} p95={5:F2} p99={6:F2} max={7:F2}ms temp={8:F1}C thermal={9} headroom={10:F2} pss={11}MB scale={12:F2} fallback={13}",
+                "[DIAG] t={0:F0}s tier={1} target={2} fps={3:F1} p50={4:F2} p95={5:F2} p99={6:F2} max={7:F2}ms temp={8:F1}C thermal={9} headroom={10:F2} pss={11}MB scale={12:F2} fallback={13}" +
+                " mir={14:F2}/f cpu={15:F2} gpu={16} cap={17:F2}/f cpu={18:F2} gpu={19} shd_gpu={20} main_cpu={21:F2}{22}",
                 j.sessionSeconds, j.qualityTier, j.targetFps, j.meanFps, j.p50Ms, j.p95Ms, j.p99Ms, j.maxMs,
-                j.batteryTempC, j.thermalStatus, j.thermalHeadroom, j.pssKb >= 0 ? j.pssKb / 1024 : -1, j.renderScale, j.capFallback));
+                j.batteryTempC, j.thermalStatus, j.thermalHeadroom, j.pssKb >= 0 ? j.pssKb / 1024 : -1, j.renderScale, j.capFallback,
+                // ADR 0068: fixed passes - mirror renders / capture faces per frame, main-thread ms per frame, GPU ms (development players only, else "-")
+                Game.Core.ExtraViewStats.MirrorRendersPerFrame, Game.Core.ExtraViewStats.MirrorCpuMs, Gpu(Game.Core.ExtraViewStats.MirrorGpuMs),
+                Game.Core.ExtraViewStats.CaptureFacesPerFrame, Game.Core.ExtraViewStats.CaptureCpuMs, Gpu(Game.Core.ExtraViewStats.CaptureGpuMs),
+                Gpu(Game.Core.ExtraViewStats.ShadowGpuMs), Game.Core.ExtraViewStats.MainCpuMs,
+                Game.Core.ExtraViewStats.AbState != null ? " ab=" + Game.Core.ExtraViewStats.AbState : ""));
 
             if (m_SummaryPath == null) return;
             try { File.WriteAllText(m_SummaryPath, JsonUtility.ToJson(j, true)); }
             catch (Exception e) { Debug.LogWarning($"[DIAG] summary write failed: {e.Message}"); }
         }
+
+        static string Gpu(float ms) => ms >= 0f ? ms.ToString("F2", CultureInfo.InvariantCulture) : "-";
 
         void OnApplicationPause(bool paused)
         {
