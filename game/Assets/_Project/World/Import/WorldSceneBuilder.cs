@@ -126,7 +126,7 @@ namespace Game.World.Import
             var dims = DrivingLabSceneBuilder.ReadAndCheckDims();
             var camGo = new GameObject("Main Camera") { tag = "MainCamera" };
             var cam = camGo.AddComponent<Camera>();
-            cam.fieldOfView = 55f; cam.nearClipPlane = 0.05f; cam.farClipPlane = 1400f;
+            cam.fieldOfView = 55f; cam.nearClipPlane = 0.05f; cam.farClipPlane = 3500f;
             cam.clearFlags = CameraClearFlags.Skybox;
             camGo.AddComponent<UniversalAdditionalCameraData>();
             camGo.AddComponent<AudioListener>();
@@ -163,6 +163,7 @@ namespace Game.World.Import
                 "Tractor + trailer at the Kwadrat Park spawn: wheels on the imported collision, shadows, scale against the road.");
             Vector3 eye = spawnPos + spawn.rotation * dims.EyePointVehicle;
             Qa(qa, "cab-gate", eye, eye + spawnFwd * 30f - Vector3.up * 2.2f, 55f, "Driver eye at the spawn, looking along the depot access road.");
+            AddEdgeCameras(qa);
 
             TruckAssetBuilder.AddControlCameras(truck.transform);
 
@@ -357,13 +358,37 @@ namespace Game.World.Import
             }
         }
 
+        static void AddEdgeCameras(Transform qa)
+        {
+            var defs = new (string id, Vector2 posEN, Vector2 dirEN, string note)[]
+            {
+                ("edge-north", new Vector2(-837.9f, 936.7f), new Vector2(-0.21f, 0.98f),
+                    "Driver eye 2.5 m on al. Tysiaclecia N (~937 m N), looking NNW past the U-20 closure over the northern forest/city edge (ADR 0085)."),
+                ("edge-east", new Vector2(934.5f, -931.3f), new Vector2(0.88f, -0.48f),
+                    "Driver eye 2.5 m on ul. Gen. W. Andersa E (~935 m E), looking ESE past the U-20 closure over the eastern horizon (ADR 0085)."),
+                ("edge-west", new Vector2(-949.8f, 50.8f), new Vector2(-1.00f, -0.09f),
+                    "Driver eye 2.5 m on ul. Gen. S. Maczka W (~-950 m E), looking W past the U-20 closure over the western horizon (ADR 0085)."),
+                ("edge-south", new Vector2(-267.6f, -965.9f), new Vector2(0.46f, -0.89f),
+                    "Driver eye 2.5 m on al. Tysiaclecia S (~-966 m N), looking SSE past the U-20 closure towards Bialostoczek and EC chimneys (ADR 0085)."),
+            };
+            foreach (var (id, posEN, dirEN, note) in defs)
+            {
+                if (qa.Find("QA_" + id) != null) continue;
+                Vector2 d = dirEN.normalized;
+                Vector3 g = Ground(new Vector3(posEN.x, 0f, posEN.y), float.NaN);
+                Vector3 pos = g + Vector3.up * 2.5f;
+                Vector3 look = new Vector3(posEN.x + d.x * 120f, g.y + 2.0f, posEN.y + d.y * 120f);
+                Qa(qa, id, pos, look, 60f, note);
+            }
+        }
+
         static void Qa(Transform parent, string id, Vector3 pos, Vector3 lookAt, float fov, string note)
         {
             var go = new GameObject("QA_" + id);
             go.transform.SetParent(parent, false);
             go.transform.SetPositionAndRotation(pos, Quaternion.LookRotation(lookAt - pos, Vector3.up));
             var cam = go.AddComponent<Camera>();
-            cam.fieldOfView = fov; cam.nearClipPlane = 0.1f; cam.farClipPlane = 1400f;
+            cam.fieldOfView = fov; cam.nearClipPlane = 0.1f; cam.farClipPlane = 3500f;
             cam.enabled = false;
             go.AddComponent<UniversalAdditionalCameraData>();
             var qa = go.AddComponent<ControlCamera>();
