@@ -79,6 +79,7 @@ namespace Game.UI.Driving
         static readonly Color k_Text = new Color(0.95f, 0.95f, 0.91f, 1f);
         static readonly Color k_Muted = new Color(0.70f, 0.70f, 0.67f, 1f);
         static readonly Color k_Amber = new Color(0.95f, 0.66f, 0.18f, 1f);
+        static readonly Color k_ParkOn = new Color(0.66f, 0.17f, 0.14f, 0.97f);
         static readonly Color k_Red = new Color(0.86f, 0.25f, 0.20f, 1f);
         static readonly Color k_ThrottleFill = new Color(0.45f, 0.62f, 0.45f, 0.85f);
         static readonly Color k_BrakeFill = new Color(0.72f, 0.30f, 0.26f, 0.85f);
@@ -104,6 +105,10 @@ namespace Game.UI.Driving
         static readonly string[] k_AirStrings = BuildAirStrings();
         static readonly string[] k_CruiseStrings = BuildCruiseStrings();
         const string k_CruiseOff = "Zjazd\nwył.";
+        Text m_ParkWarn;
+        CanvasGroup m_ParkWarnGroup;
+        ParkingBrakeWarningTracker m_ParkWarnTracker;
+        float m_LastParkWarnAlpha = -1f;
         Text m_Speed, m_Gear, m_Rpm, m_Park, m_Status, m_Telemetry, m_GyroLabel;
         Text m_CamLabel, m_SteerLabel, m_TelLabel, m_RecLabel;
         Image m_RpmBar, m_RecImage, m_DriveBtn, m_NeutralBtn, m_ReverseBtn, m_ParkBtn, m_ManualBtn;
@@ -212,7 +217,7 @@ namespace Game.UI.Driving
             m_Speed = Label(p, "Speed", "0", 84, TextAnchor.MiddleRight, new Vector2(20f, 18f), new Vector2(210f, 120f));
             Label(p, "Unit", "km/h", SmallFont, TextAnchor.LowerLeft, new Vector2(236f, 34f), new Vector2(90f, 40f)).color = k_Muted;
             m_Gear = Label(p, "Gear", "N", 64, TextAnchor.MiddleCenter, new Vector2(330f, 30f), new Vector2(120f, 100f));
-            m_Park = Label(p, "Park", "P", 44, TextAnchor.MiddleCenter, new Vector2(460f, 40f), new Vector2(80f, 80f));
+            m_Park = Label(p, "Park", "(P)", 40, TextAnchor.MiddleCenter, new Vector2(460f, 40f), new Vector2(80f, 80f));
             m_Park.color = k_Red;
             var barBg = Rect("RpmBg", p);
             Place(barBg, new Vector2(0f, 0f), new Vector2(20f, 10f), new Vector2(520f, 10f));
@@ -299,7 +304,7 @@ namespace Game.UI.Driving
             Button(m_SafeArea, "R", br, new Vector2(x, y1), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestSelector(SelectorRequest.Reverse), out m_ReverseBtn).text = "R";
             Button(m_SafeArea, "N", br, new Vector2(x + (bw + g), y1), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestSelector(SelectorRequest.Neutral), out m_NeutralBtn).text = "N";
             Button(m_SafeArea, "D", br, new Vector2(x + 2 * (bw + g), y1), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestSelector(SelectorRequest.Drive), out m_DriveBtn).text = "D";
-            Button(m_SafeArea, "Park", br, new Vector2(x + 3 * (bw + g), y1), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestParkingToggle(), out m_ParkBtn).text = "P";
+            Button(m_SafeArea, "Park", br, new Vector2(x + 3 * (bw + g), y1), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestParkingToggle(), out m_ParkBtn).text = "(P)\n<size=17>POSTOJOWY</size>";
             Button(m_SafeArea, "ShiftDown", br, new Vector2(x, y2), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestShift(-1), out _).text = "−";
             Button(m_SafeArea, "ShiftUp", br, new Vector2(x + (bw + g), y2), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestShift(+1), out _).text = "+";
             Button(m_SafeArea, "Manual", br, new Vector2(x + 2 * (bw + g), y2), new Vector2(2 * bw + g, bh), () => m_Ctx.Touch?.RequestManualToggle(), out m_ManualBtn).text = "A/M";
@@ -319,6 +324,13 @@ namespace Game.UI.Driving
             m_Air2 = Label(strip, "Air2", "2  — bar", SmallFont - 2, TextAnchor.MiddleLeft, new Vector2(346f, 8f), new Vector2(200f, 34f));
             m_Air1Bar = Bar(strip, "Air1Bar", new Vector2(346f, 46f));
             m_Air2Bar = Bar(strip, "Air2Bar", new Vector2(346f, 4f));
+
+            // ---- parking-brake drive-away warning (P applied, D/R + throttle): red text under the warning strip, fades ~1 s after it clears ----
+            var pw = Panel("ParkWarn", m_SafeArea, new Vector2(0.5f, 1f), new Vector2(0f, -278f), new Vector2(560f, 50f));
+            pw.GetComponent<Image>().color = new Color(0.40f, 0.10f, 0.09f, 0.94f);
+            m_ParkWarn = Label(pw, "Text", "Hamulec postojowy!", Font - 2, TextAnchor.MiddleCenter, Vector2.zero, new Vector2(560f, 50f));
+            m_ParkWarnGroup = pw.gameObject.AddComponent<CanvasGroup>();
+            m_ParkWarnGroup.alpha = 0f; m_ParkWarnGroup.blocksRaycasts = false; m_ParkWarnGroup.interactable = false;
 
             // ---- turn signals: left / hazard / right above the steering wheel (lit with the flasher; self-cancel like a stalk) ----
             const float th = 84f;
@@ -522,11 +534,16 @@ namespace Game.UI.Driving
                 m_RpmBar.color = rpm > 1900f ? k_Amber : k_Muted;
             }
             if (m_Park.enabled != park) m_Park.enabled = park;
+            bool warn = v != null && v.Initialized && v.Model.ParkingBrakeWarning;
+            int warnCount = v != null && v.Initialized ? v.Model.ParkingBrakeWarningCount : 0;
+            m_ParkWarnTracker.Poll(warn, warnCount, Time.unscaledTime);
+            float wa = m_ParkWarnTracker.Alpha;
+            if (!Mathf.Approximately(wa, m_LastParkWarnAlpha)) { m_LastParkWarnAlpha = wa; m_ParkWarnGroup.alpha = wa; }
             m_DriveBtn.color = sel == GearSelector.Drive && !manual ? k_ButtonOn : k_Button;
             m_ManualBtn.color = sel == GearSelector.Drive && manual ? k_ButtonOn : k_Button;
             m_NeutralBtn.color = sel == GearSelector.Neutral ? k_ButtonOn : k_Button;
             m_ReverseBtn.color = sel == GearSelector.Reverse ? k_ButtonOn : k_Button;
-            m_ParkBtn.color = park ? new Color(0.45f, 0.18f, 0.15f, 0.92f) : k_Button;
+            m_ParkBtn.color = park ? k_ParkOn : k_Button;
             if (DevDiagnostics && m_Ctx.StatusLine != null) { var s = m_Ctx.StatusLine(); if (!ReferenceEquals(s, m_Status.text)) m_Status.text = s ?? ""; }
             if (gyro && m_Ctx.Gyro != null && Time.unscaledTime >= m_NextTelemetry)
                 m_GyroLabel.text = "Gyro: " + m_Ctx.Gyro.RelativeTiltDeg.ToString("F1", CultureInfo.InvariantCulture) + "°" + (m_Ctx.Gyro.HasSensor ? "" : "  (brak czujnika)");

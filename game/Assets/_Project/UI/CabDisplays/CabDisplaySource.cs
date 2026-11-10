@@ -76,6 +76,7 @@ namespace Game.UI.CabDisplays
                 s.AbsFault = model.Def.brakes.absEnabled && !air.AbsEnabled;
                 s.AbsActive = air.AbsAnyActive;
                 s.ParkingBrake = model.ParkingBrakeState > 0.5;
+                s.ParkingBrakeWarning = model.ParkingBrakeWarning;
                 s.RetarderStages = model.Retarder.Def.present ? model.Retarder.Def.stages : 0;
                 s.RetarderFill = (float)model.Retarder.Fill;
                 s.TrailerConnected = trailer != null && coupled;
@@ -85,7 +86,7 @@ namespace Game.UI.CabDisplays
             {
                 s.SpeedKmh = 0f; s.EngineRunning = false; s.EngineRpm = 0f; s.Gear = 0; s.ShiftTarget = 0;
                 s.IdleRpm = 600f; s.MaxRpm = 2100f; s.EcoLowRpm = 1250f; s.EcoHighRpm = 1750f;
-                s.ParkingBrake = true; s.AirWarnBar = 5.5f;
+                s.ParkingBrake = true; s.ParkingBrakeWarning = false; s.AirWarnBar = 5.5f;
             }
 
             // ---- trip computer (integrates on the solver clock, so pauses and tests are deterministic) ----
@@ -125,6 +126,7 @@ namespace Game.UI.CabDisplays
             s.Indicators = live ? lights.indicatorLever : Indicators;
             // Live: the flasher phase of the stalk (TurnSignal, 1.5 Hz); fallback without a stalk source: same rate on the sim clock.
             s.FlasherOn = s.Indicators != 0 && (live ? lights.flasherLit : (time % 0.667) < 0.333);
+            s.ParkingBrakeFlashOn = s.ParkingBrakeWarning && (time % 0.8) < 0.4;
             s.LowBeam = lights != null && lights.LowBeamOn;
             s.HighBeam = lights != null && lights.highBeam;
             // Night mode by the light sensor: sun below the automatic dipped-beam threshold (TruckLights, 6°). The sun

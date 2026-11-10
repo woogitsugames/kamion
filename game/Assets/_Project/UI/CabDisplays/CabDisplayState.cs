@@ -28,6 +28,10 @@ namespace Game.UI.CabDisplays
         public float AirWarnBar;
         public bool AirLowWarning;
         public bool ParkingBrake;
+        /// <summary>Drive-away attempt with the parking brake applied (VehicleModel.ParkingBrakeWarning): the telltale flashes.</summary>
+        public bool ParkingBrakeWarning;
+        /// <summary>Flash phase of the parking-brake telltale while warning (true = lit; 0.8 s period, 50 %).</summary>
+        public bool ParkingBrakeFlashOn;
         /// <summary>Endurance brake stalk: 0 off, 1 engine brake, 2.. retarder stages.</summary>
         public int RetarderLever, RetarderStages;
         /// <summary>Retarder fill 0..1 (actual braking).</summary>
