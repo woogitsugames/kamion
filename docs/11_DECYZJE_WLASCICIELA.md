@@ -46,3 +46,5 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 | D25 | Test jazdy właściciela | **Po raporcie bramki 3** — APK ze wszystkimi poprawkami, instrukcja `docs/owner/FEEL-TEST.md` |
 | D26 | Modele 3D | Agenci modeli (truck-artist, Blender) na **Fable 5.2**; shadery/światło/świat na Opus |
 | D27 | Balans bieli przy niskim słońcu | **„Jak w telefonie” 0,5** w `LP_LowSun` (ADR 0043 opcja c); pozostałe presety bez adaptacji |
+| D28 | Kabina TRAKT | **Nowy nowoczesny front** (wariant `modern`, Fable 5.2): czarna maska „T”, wąskie LED w narożnikach, zderzak jedną bryłą, czapa dachu ze spojlerem, lekka wypukłość czoła R 10 m; zdjęcia prasowe właściciela tylko jako wzór stylu, bez cech cudzej marki |
+| D29 | Pochylenie przodu | **1,5°** w widoku z boku (zamiast 7°), przód w jednej płaszczyźnie |
