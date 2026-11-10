@@ -63,6 +63,74 @@ CC_OK = re.compile(r"^(CC0|PD|public domain|domena publiczna)", re.I)
 
 FONT = None
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import gate3_meta  # noqa: E402  (APK identity + duplicate frames, shared with gate3-run.ps1)
+
+
+# ---------------------------------------------------------------- APK identity + unique frames (r7 section 7 / 14 #1)
+def discover_apk_info(phone_dir: Path, apk_arg: str | None, repo: Path) -> dict:
+    """Which APK do the phone frames come from? --apk wins; else the apkFile/apk.path of the gate3-result*.json found under phone_dir.
+    git sha = the sha in the APK name (build HEAD), never `git rev-parse HEAD` now."""
+    head = gate3_meta.head_sha(repo)
+    if apk_arg:
+        m = gate3_meta.apk_meta(apk_arg, repo, head)
+        return {"source": "--apk", "apks": [m], "git_sha": m["gitSha"], "warnings": list(m["warnings"])}
+    files, warnings = {}, []
+    if phone_dir.exists():
+        for rj in sorted(phone_dir.rglob("gate3-result*.json")):
+            try:
+                r = json.loads(rj.read_text(encoding="utf-8-sig"))
+            except Exception:
+                continue
+            name = r.get("apkFile") or Path((r.get("apk") or {}).get("path", "") or "").name
+            if not name:
+                continue
+            legacy = not r.get("apkFile")
+            files.setdefault(name, {"results": [], "legacy": legacy, "sha256": r.get("apkSha256") or (r.get("apk") or {}).get("sha256")})
+            files[name]["results"].append(rj.name)
+            if legacy:
+                files[name]["legacy"] = True
+            rs = r.get("gitSha")
+            nsha = (gate3_meta.parse_apk_name(name) or {}).get("sha")
+            if rs and nsha and not nsha.startswith(rs[:len(nsha)]) and not rs.startswith(nsha):
+                warnings.append(f"{rj.name}: result gitSha {rs[:10]} is not the APK's build sha {nsha} (HEAD at measurement time, not the build)")
+    apks = []
+    for name, v in files.items():
+        i = gate3_meta.parse_apk_name(name)
+        w = []
+        if i is None:
+            w.append(f"APK name '{name}' unparseable")
+        else:
+            if i["dirty"]:
+                w.append(f"APK {name} is -dirty: not valid gate evidence")
+            if head and not head.startswith(i["sha"]):
+                w.append(f"APK {name} was built from {i['sha']}, repo HEAD is {head[:10]}")
+        if v["legacy"]:
+            w.append(f"{name}: result has no apkFile (old format) - apk.path was the newest file in artifacts/apk then, not necessarily the installed one")
+        apks.append({"apkFile": name, "apkSha256": v["sha256"], "gitSha": (i or {}).get("sha"), "dirty": (i or {}).get("dirty"), "results": v["results"], "warnings": w})
+        warnings += w
+    if len(apks) > 1:
+        warnings.append(f"phone frames come from {len(apks)} different APKs: {', '.join(a['apkFile'] for a in apks)}")
+    if not apks:
+        warnings.append("no gate3-result*.json with APK info under the phone dir and no --apk: git sha of the phone frames unknown")
+    shas = sorted({a["gitSha"] for a in apks if a["gitSha"]})
+    return {"source": "gate3-result*.json" if apks else None, "apks": apks, "git_sha": ",".join(shas) if shas else None, "warnings": warnings}
+
+
+def check_unique_frames(files: dict) -> dict:
+    """Phone frames of DIFFERENT cameras with identical bytes (md5) mean one camera has no frame of its own (r7: s1532 == s1482)."""
+    import hashlib
+    groups: dict[str, list[str]] = {}
+    for label, f in sorted(files.items()):
+        try:
+            groups.setdefault(hashlib.md5(Path(f).read_bytes()).hexdigest(), []).append(label)
+        except OSError:
+            pass
+    dups = [{"md5": k, "frames": v} for k, v in groups.items() if len(v) > 1]
+    return {"verdict": "FAIL" if dups else "PASS",
+            "rule": "no two frames in the phone dir may be byte-identical (identical md5 = at least one is not a frame of its own camera)",
+            "frames_checked": sum(len(v) for v in groups.values()), "duplicate_groups": len(dups), "duplicates": dups[:40]}
+
 
 def font(size: int):
     global FONT
@@ -396,7 +464,8 @@ def main():
     ap.add_argument("--photos-root")
     ap.add_argument("--tiers", default="Low,Medium,High")
     ap.add_argument("--lightings", default="overcast,lowsun")
-    ap.add_argument("--git-sha", default="")
+    ap.add_argument("--git-sha", default="", help="sha of the repo the EDITOR renders were made from (not the phone APK)")
+    ap.add_argument("--apk", help="the installed APK (default: from gate3-result*.json under --phone-dir)")
     a = ap.parse_args()
     repo, out, phone_dir = Path(a.repo), Path(a.out), Path(a.phone_dir)
     tiers, lights = a.tiers.split(","), a.lightings.split(",")
@@ -443,10 +512,18 @@ def main():
             if f.suffix.lower() in (".png", ".jpg", ".jpeg") and "small" not in f.parts:
                 frames[f"phone {f.name}"] = f
     checks["frame_exposure"] = check_frame_exposure(frames)
+    phone_frames = {k: v for k, v in frames.items() if k.startswith("phone ")}
+    if phone_frames:
+        checks["unique_phone_frames"] = check_unique_frames(phone_frames)
+    apk_info = discover_apk_info(phone_dir, a.apk, repo)
+    for w in apk_info["warnings"]:
+        print(f"WARNING: {w}", file=sys.stderr)
 
     verdicts = {k: v["verdict"] for k, v in checks.items()}
     overall = "PASS" if all(v == "PASS" for v in verdicts.values()) and checks else "FAIL"
-    result = {"schema": "truck-sim-pl/gate3-evidence/1", "region": a.region, "git_sha": a.git_sha, "overall": overall, "checks": checks, "verdicts": verdicts,
+    result = {"schema": "truck-sim-pl/gate3-evidence/1", "region": a.region, "git_sha": apk_info["git_sha"] or a.git_sha,
+              "git_sha_source": "apk" if apk_info["git_sha"] else "editor_repo_head (no APK info found)", "editor_git_sha": a.git_sha,
+              "apk": apk_info["apks"], "warnings": apk_info["warnings"], "overall": overall, "checks": checks, "verdicts": verdicts,
               "cameras": len(cams), "phone_screencaps_missing_for": missing_phone, "phone_dir": str(phone_dir),
               "references_embedded": [c for c, v in sheets.items() if v["reference"].endswith((".jpg", ".png", ".jpeg"))],
               "photos_root": str(photos_root) if photos_root else None, "sheets": sheets,
@@ -466,8 +543,13 @@ def write_md(res: dict, audit: dict | None, out: Path):
         L.append(f"| {k} | **{v}** |")
     L += ["", f"Phone screencaps: {res['cameras'] - len(res['phone_screencaps_missing_for'])}/{res['cameras']} cameras have one in `{res['phone_dir']}`. "
           f"References embedded for {len(res['references_embedded'])} cameras (CC0/PD only). Sheets: `sheets/<camera>.png`.", ""]
+    L += [f"Phone APK(s): " + (", ".join(f"`{x['apkFile']}`" + (f" sha256 {x['apkSha256'][:12]}" if x.get('apkSha256') else "") for x in res.get("apk", [])) or "unknown")
+          + f". git_sha ({res.get('git_sha_source')}): `{res['git_sha']}`; editor renders: `{res.get('editor_git_sha')}`.", ""]
+    L += [f"- WARNING: {w}" for w in res.get("warnings", [])] + [""]
     for k, c in res["checks"].items():
         L += [f"## {k}: {c['verdict']}", "", c.get("rule", ""), ""]
+        if k == "unique_phone_frames":
+            L += [f"{c['frames_checked']} phone frames, {c['duplicate_groups']} duplicate group(s)."] + [f"- {d['md5'][:10]}: {', '.join(d['frames'])}" for d in c["duplicates"]]
         if k == "albedo_histogram":
             L += [f"{c['materials_checked']} materials, {c['fail']} FAIL, {c['warn']} WARN, {len(c['exempt'])} exempt (`{c['exempt_rule']}`). Histogram: `{c['histogram_png']}`.", ""]
             for r in c["failing"][:12]:

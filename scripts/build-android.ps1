@@ -21,6 +21,7 @@ param(
     [switch]$WorldHigh,
     [string[]]$ExtraUnityArgs = @(),   # e.g. -ExtraUnityArgs '-managedStripping','High' (measurement, never saved)
     [switch]$SkipBuild,
+    [string]$Apk = '',   # with -SkipBuild: install exactly this APK (default: newest file in artifacts/apk, ambiguous between Low and -high)
     [int]$LogcatSeconds = 20,
     [ValidateSet('', 'Low', 'Medium', 'High', 'Ultra')] [string]$Tier = '',
     [int]$Fps = 0
@@ -69,8 +70,14 @@ if (-not $SkipBuild) {
     Write-Host "SHA256 $hash"
     Write-Host "log    $log"
 } else {
-    $apk = Get-ChildItem (Join-Path $ArtifactsDir 'apk') -Filter *.apk | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
-    if (-not $apk) { throw 'no APK in artifacts/apk (run without -SkipBuild)' }
+    if ($Apk) {
+        if (-not (Test-Path $Apk)) { throw "-Apk not found: $Apk" }
+        $apk = (Resolve-Path $Apk).Path
+    } else {
+        $apk = Get-ChildItem (Join-Path $ArtifactsDir 'apk') -Filter *.apk | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
+        if (-not $apk) { throw 'no APK in artifacts/apk (run without -SkipBuild)' }
+        Write-Warning 'no -Apk given: using the NEWEST file in artifacts/apk (may be the wrong Low/-high variant)'
+    }
     Write-Host "using existing APK $apk"
 }
 
