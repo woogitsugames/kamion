@@ -109,6 +109,13 @@ GPU within the thermal drift (< 0.4 ms), capture +0.5 ms CPU main (one 128 px fa
 the first version, which let WorldInstances submit the instanced forest for every face, cost +4 ms CPU). Not measured: 30 min
 thermal run with A8, dusk lamp point lights on High (4 pixel lights, uniform loop in Kamion/World Surface).
 
+**Correction (ADR 0056, 2026-11-10):** the capture above rendered the skybox only (no depth buffer) and never reached the
+truck shaders, so "capture +0.5 ms CPU" is the cost of a sky-only capture. Since ADR 0056 every tier captures real geometry:
+Low 64 px / 1 face per 10 frames / far 150 m, Medium 64 / 6, High 128 / 3, Ultra 256 / 2, no faces while parked
+(< 2 m, < 20 s; High 0.5 m, 10 s). Editor upper bound per face: 148 draws, 179k tris (Low). Estimate for A16 Low:
+<= +0.2 ms GPU average while driving (budget 0.3), 0 parked; peak frame ~1-2 ms GPU + CPU. **UNVERIFIED, measure with
+and without `rq_envcap=0`** (A16 Low, S24+ High 60 FPS).
+
 ## World content v2 (ADR 0012) — build and memory, 2026-11-09
 Sources: `artifacts/world/bialystok-industrial-c-import.json` (bake), `BUILD_CONTENT` lines of the build logs (Unity build
 report, sizes before LZ4HC), APK file sizes. Tile C = 4 km², 64 chunks, ≈ 110 800 instances (2 300 props + 108 500 trees).

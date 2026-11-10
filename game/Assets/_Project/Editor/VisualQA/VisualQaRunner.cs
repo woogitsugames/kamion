@@ -380,6 +380,9 @@ namespace Game.Editor.VisualQA
                 File.WriteAllBytes(file, tex.EncodeToPNG());
                 Debug.Log($"[VISUALQA] {qa.id} → {file}");
                 rendered++;
+                // -qaEnvDump 1 (ADR 0056): the vehicle reflection cube used for this frame -> <id>_envcube.png (6 faces).
+                if (EditorTools.Arg("-qaEnvDump", "0") == "1" && VehicleReflectionCapture.Active != null)
+                    VehicleReflectionCapture.Active.DumpStrip(Path.Combine(outDir, qa.id + "_envcube.png"));
                 // -qaMask <renderer>[:<slot>][;...]: one more render of the same camera with the matching renderer slots
                 // drawn flat magenta (depth and every other surface unchanged) -> <id>_mask.png, so a measurement script
                 // can select exactly e.g. the steering-wheel rim (STEERING_WHEEL:MI_Cab_Leather) instead of a hand box.

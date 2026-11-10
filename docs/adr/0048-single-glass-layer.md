@@ -40,3 +40,8 @@ therefore not baked body glass; cause still open.
   CabGlassLOD only; but any path that skips Apply (rig disabled, scene opened without play/QA) draws the stale chain
   with LOD0 and LOD2 glass at once. Fix (lead / world import): regenerate WorldC from the current prefab, or revert the
   LODGroup and `m_Enabled` overrides of the TRAKT instance in the scene builder.
+
+## Addendum r7 (2026-11-10, D31)
+With a working capture (ADR 0056) the windscreen mirrors the hall behind the camera. p50 overcast is 31.1 High / 29.7 Low
+(below the D31 band of 33-45; the Volvo photo is 23), and sigma is 4.0-4.2 (FAIL >= 8). Most of the photo sigma comes from
+the interior seen through the pane and from tree reflections (instanced content, not in the capture). See ADR 0056.

@@ -66,3 +66,8 @@ Status: Accepted (rendering-perf), 2026-11-09. Review: `docs/reports/visual/REVI
   tyre), Medium 35 / 29 / 28 %, High 35 / 29 / 28 %; under the trailer front 51–57 %. Phone numbers: pending (no device run).
 - Cost: same draw count; +1 hard shadow-map tap (Low: no soft shadows) per patch pixel and a slightly larger patch
   (margin + h). Phone GPU delta not measured yet (UNVERIFIED, expected well under 0.1 ms on A16 Low).
+
+## Addendum r7 (2026-11-10): the capture was a no-op until ADR 0056
+The capture faces rendered without a depth buffer (skybox only) and the Custom ReflectionProbe never reached the truck
+shaders. Both are fixed in ADR 0056 (2D face RT with depth + global `_KamionVehicleEnvCube`, no probe). The A8 numbers
+above therefore measured a sky-only capture. All tiers now have a capture (Low/Medium 64 px, sparse, idle when parked).
