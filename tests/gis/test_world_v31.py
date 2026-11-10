@@ -134,3 +134,25 @@ def test_tractor_silhouette_budget():
     V = np.array(V)
     assert V[:, 2].max() == pytest.approx(LP.TRACTOR["H"], abs=0.01)   # roof deflector top
     assert {"rim", "tyre", "car_glass", "car_trim"} <= {p["mat"] for p in p0}
+
+
+def test_dock_lod1_silhouette_is_cheap_and_complete():
+    """HANDOVER pkt 7: build_dock_lod1 draws the shelter, leveller and wheel guides on LOD1 at < 40 % of LOD0, in at
+    most 3 materials (one draw each per chunk); gutter + downpipe share one LOD1 material."""
+    import numpy as np
+    from streetscape import buildings_mesh as BM
+    from streetscape import facade_kit as FK
+    acc = BM.Acc()
+    a, d, n = np.array([0.0, 0.0]), np.array([1.0, 0.0]), np.array([0.0, -1.0])
+    BM.build_dock(acc, "buildings", a, d, n, 10.0, 100.0, 7)
+    BM.build_dock_lod1(acc, a, d, n, 10.0, 100.0, 7)
+    FK.gutter(acc, a, np.array([30.0, 0.0]), n, 108.0)
+    FK.downpipe(acc, a, d, n, 5.0, 100.4, 107.9, hopper=True)
+    tris = {}
+    for (layer, mat), items in acc.d.items():
+        tris.setdefault(layer, {})[mat] = sum(len(it[1]) for it in items)
+    l0, l1 = tris["buildings"], tris["buildings_low"]
+    for m in ("hall_flashing", "paint_yellow", "downpipe"):
+        assert l1.get(m), m
+    assert set(l1) == {"hall_flashing", "paint_yellow", "downpipe"}, set(l1)
+    assert sum(l1.values()) < 0.4 * sum(l0.values())

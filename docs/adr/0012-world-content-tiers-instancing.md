@@ -87,3 +87,56 @@ Terrain fallback: 2 m grid in the 320 m route corridor, 4 m elsewhere (every chu
   world scene is reloaded.
 - Numbers (memory, APK, frame estimates) are in `docs/PERFORMANCE_BUDGETS.md`; all UNMEASURED on the phone until the A16
   is unlocked.
+
+## Addendum r7 (2026-11-10) — the same buildings on every tier: LOD1 silhouette parity (HANDOVER pkt 7)
+
+**Problem.** Low content draws `buildings_lod1` for every chunk more than `LowBuildingsLod0M` = 60 m from the start
+route, and High draws it beyond the LOD switch. The facade kit put docks, dock shelters, gutters, downpipes, canopies
+and chimneys only into LOD0 (`buildings`), and the LOD1 hall wall was one band of the base cladding. Result
+(`artifacts/world-fixes/halls-parity/before/sheet_docks_far_7_6_eye_*`): the Kwadrat Park hall in chunk 7_6 (90 m from
+the route) had 11 docks and a red top band on High and was a plain ivory box on Low.
+
+**Decision.** A tier changes detail density, never the building:
+- `facade_kit.gutter / downpipe / canopy / chimney` emit a LOD1 copy as one box without the faces against the wall or
+  never facing the street (`Acc.box(skip=...)`): gutter 6, downpipe 6, canopy 10, chimney 10 triangles.
+- `buildings_mesh.build_dock_lod1`: shelter frame (two curtains + header) with the yellow guide stripes, leveller block,
+  wheel guides; 54 triangles per dock (LOD0 178) + ~10 for the recessed door opening in the LOD1 wall. Number
+  plate, hazard stripes, bumpers, signal and flood lights stay LOD0 detail.
+- LOD1 hall walls are built by `FK.wall_pieces` with the LOD0 plinth height (dock floor on dock facades), the LOD0
+  colour bands (graphite base / accent top) and the dock doors as recessed openings (reveals + door infill), so the LOD1
+  colour and the door rhythm match LOD0.
+- Draw calls: every material is one submesh per chunk, so the LOD1 pieces reuse materials LOD1 already draws
+  (`FK.L1_MAT`: gutter / canopy / leveller -> `downpipe` grey, shelter / dock reveals -> `hall_flashing` graphite).
+  Without this merge the Low dock view cost 332 draws instead of 275 (`after-v1`, `after-v2`).
+- Tests: `tests/gis/test_world_tiers.py::test_lod1_keeps_the_silhouette_pieces` (no chunk has a LOD0-only dock / gutter
+  / downpipe / chimney), `test_low_variant_carries_the_lod1_silhouette`, `tests/gis/test_world_v31.py::
+  test_dock_lod1_silhouette_is_cheap_and_complete`.
+
+**Numbers** (bialystok-industrial-c, 64 chunks, 207 docks; editor estimates before SRP batching, 2340x1080):
+
+| | before | after | delta |
+|---|---|---|---|
+| `buildings_lod1` triangles, region | 32 633 | 73 267 | +40 634 |
+| `buildings` (LOD0) triangles, region | 1 044 774 | 1 044 382 | −392 (chimney bottoms) |
+| `*.low.glb` bytes, region | 94 562 504 | 96 915 008 | +2.35 MB (+2.5 %) |
+| Unity Low world meshes (buildings) / total | 18.4 / 109.8 MB | 20.5 / 111.9 MB | +2.1 MB |
+| Unity High world total | 246.5 MB | 248.5 MB | +2.0 MB |
+| Low `docks_far_7_6_eye` draws / shadow draws / tris | 94 / 50 / 128 k | 105 / 55 / 132 k | +11 / +5 / +4 k |
+| Low `docks_far_7_6_wide` draws / tris | 96 / 124 k | 107 / 128 k | +11 / +4 k |
+| Low `stretch_05_docks` draws / tris | 244 / 250 k | 275 / 261 k | +31 / +11 k |
+| High `stretch_05_docks` draws / tris | 463 / 1 100 k | 489 / 1 108 k | +26 / +8 k |
+| Generator frame estimate `stretch_05_docks` Low tris | 664 754 | 680 981 | +2.4 % |
+
+`stretch_05_docks` on Low now exceeds the static draw budget of 250 (docs/PERFORMANCE_BUDGETS.md, before SRP
+batching; it was at 244). All Kamion/World PBR / Surface materials share one shader, so the SRP Batcher keeps the extra
+draws cheap on the CPU, but the phone number decides: measure on the A16 (UNMEASURED); if it costs frame time, the next
+lever is merging the LOD1 colour-band materials per chunk (vertex-colour tint of one hall-wall material).
+
+**Tyre marks in front of the docks (HANDOVER pkt 7, "not rendered on Low").** Not reproduced in the editor on
+0eb8b84 + this change: Low and High draw the `decal_tyre` strips in both lightings (`*/stretch-05-docks.png`,
+`*/docks_far_7_6_eye.png`; apron crop p5/p50 luminance Low 63/168 vs High 67/175 overcast, 37/167 vs 42/173 clear).
+Checked: the decal is in the `markings` node of both GLB variants with TEXCOORD_0/1 (Low compact GLB keeps UV),
+`WorldPbrMaterials.Channels` keeps UV0/UV1 on both tiers, `_DECAL_TYRE` is a `shader_feature_local` set on the shared
+material and not stripped (`ShaderVariantStripper` strips only lightmap / deferred / debug), the lighting path has no
+tier branch, and the Low LODGroup keeps `markings` in LOD0-1. The earlier impression came from 1000 px thumbnails of
+the 0.75-scale Low frame, where the 0.3-0.46 m broken strips average out. Open: confirm on the A16 (offline in adb).
