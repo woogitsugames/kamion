@@ -1,4 +1,4 @@
-# Megascans R1 — gpt-megascans
+﻿# Megascans R1 — gpt-megascans
 
 - Krok 1: przeczytano kontrakt i zasady; worktree z main 2df87f1. Bez zmian w main, telefonach i ustawieniach projektu.
 - NASTĘPNY KROK: `robocopy C:\Users\matma\Documents\Claude\kamion\Data\raw Data\raw /E /XJ /R:1 /W:1`
@@ -27,10 +27,14 @@
 - Krok 9: EditMode188:176 PASS,0 FAIL,7 skipped,5 inconclusive (nie zatajono bramek bez danych). Obejrzano komplet56 ujęć baseline na arkuszach Low/High oraz realne referencje CC0. Samokrytyka: świat nadal zbyt równy i czysty; detal ma być lokalny, nie zasypywać utrzymanych poboczy śmieciami. Cofnięto efekty uboczne Unity w QualitySettings i Lighting.
 - NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis -q` po wygenerowaniu rundy after.
 
-- Krok 10: atlas512/1024 ze wsp?lnymi UV pod??czono do3zatwierdzonych studzienek i kratek, bez oddzielnych materia??w na poszczeg?lne skany. Krzewy z bliska otrzymaj? mniej agresywnie zredukowan? geometri?; dalsze LOD b?d? billboardami z prawid?owym, osobnym atlasem. Pe?ny GIS baseline trwa; dotychczasowe b??dy wymagaj? weryfikacji po otrzymaniu pe?nego wyniku.
+- Krok 10: atlas 512/1024 ze wspólnymi UV podłączono do trzech zatwierdzonych studzienek i kratek. Krzewy z bliska otrzymują geometrię z zachowaną sylwetką; dalsze LOD mają osobny atlas billboardów. Trwa pełny GIS baseline.
 
 - Krok 11: rozpoznano i naprawiono czerwony kanał masek Quixel. Faktyczne LOD0/1/2: boxwood7062/9/3, elderberry7139/11/3, grass3660/6/3, wildgrass3588/8/3. Atlas po zmianie map odtworzony; spoiny krawężnika zachowane. Low używa istniejącego simpleFoliage również dla Fab; fallback czyści poprzednie mapy/metalki z materiałów.
 - NASTĘPNY KROK: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c`.
 
 - Krok 12: docelowe testy Fab52/52 PASS. Obejrzano finalny arkusz roślin (źródło/LOD0/LOD1) i7propsów; poprawiono również podwójny transform rodzica małego kamienia. Pierwszy pełny GIS:249 PASS,3 FAIL,11 ERROR;11błędów wynikało z nowej konwersji trasy ndarray→LineString (naprawione+regresja),2FAIL to znany korytarz1432–1480,1FAIL to stary raport fidelity (regenerowany).
 - NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` po after-build i zakończeniu EditMode.
+
+
+- Krok 13: EditMode194:182 PASS,0 FAIL,7 skipped,5 inconclusive. Odświeżenie fidelity ujawniło3odziedziczone porażki ratchet (axis0,129m,edge2,483m,6wysp); pipeline/markings/graph/overrides identyczne z main2df87f1, fidelity nie używa etapu Fab. Bez obniżania progów i bez zmian w cudzych drogach. Raport pozostaje jawnie FAIL względem pełnego DoD.
+- NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` po after-build.
