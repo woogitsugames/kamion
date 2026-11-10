@@ -51,6 +51,23 @@ def material(name, spec):
             nt.links.new(mul.outputs[0], b.inputs["Alpha"])
         else:
             nt.links.new(im.outputs["Color"], b.inputs["Base Color"])
+    elif spec.get("shader") == "car_glass":
+        # UV0 u codes of WorldCarGlass.shader: >= 6 clear lamp cover (life_cars.LENS_U), >= 2 privacy pane
+        uv = nt.nodes.new("ShaderNodeUVMap")
+        sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+        nt.links.new(uv.outputs["UV"], sep.inputs[0])
+        ab = nt.nodes.new("ShaderNodeMath")
+        ab.operation = "ABSOLUTE"
+        nt.links.new(sep.outputs["X"], ab.inputs[0])
+        gt = nt.nodes.new("ShaderNodeMath")
+        gt.operation = "GREATER_THAN"
+        gt.inputs[1].default_value = 6.0
+        nt.links.new(ab.outputs[0], gt.inputs[0])
+        mix = nt.nodes.new("ShaderNodeMapRange")
+        mix.inputs["To Min"].default_value = float(spec.get("alpha", 1.0))
+        mix.inputs["To Max"].default_value = float(spec.get("lens_alpha", 0.10))
+        nt.links.new(gt.outputs[0], mix.inputs["Value"])
+        nt.links.new(mix.outputs["Result"], b.inputs["Alpha"])
     elif spec.get("blend"):
         b.inputs["Alpha"].default_value = float(spec.get("alpha", 1.0))
     if spec.get("blend"):
