@@ -162,6 +162,11 @@ namespace Game.World.Import
             mat.SetFloat("_AlbedoScale", scale);
             mat.SetFloat("_NormalStrength", 1f);
             mat.SetFloat("_SmoothnessScale", 1f);
+            // Parked-car paint (ADR 0073): the car_grime set carries clean paint at roughness 0.32 (smoothness 0.68) plus
+            // film / dust; the manifest "rough" of the colour is the CLEAN clear coat, so scale the set to it. Before, the
+            // manifest value was ignored and every paint rendered at 0.59 mean smoothness ("primer", REVIEW r8).
+            if (id.StartsWith("car_paint_") && def.Get("rough") != null)
+                mat.SetFloat("_SmoothnessScale", Mathf.Clamp((1f - (float)Num(def.Get("rough"))) / 0.68f, 0.5f, 1.4f));
             mat.SetFloat("_MetallicScale", 0f);
             mat.SetFloat("_MacroSize", 64f);
             mat.SetFloat("_MacroStrength", kind == "modulation_set" ? 0.06f : 0.16f);

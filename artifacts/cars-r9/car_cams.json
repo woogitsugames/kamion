@@ -1,0 +1,201 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-industrial-c",
+ "car": {
+  "e": 698.662,
+  "n": -432.336,
+  "p": "car_estate_red",
+  "src": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+  "yaw": -2.113,
+  "z": 141.335
+ },
+ "cameras": [
+  {
+   "id": "glass_side_00",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 50.0,
+   "pos": [
+    694.8289756962355,
+    -438.1172476756104,
+    143.035
+   ],
+   "look_at": [
+    697.9406055501498,
+    -432.9521087953644,
+    142.485
+   ],
+   "note": "car glass QA, side glass at ~0 deg"
+  },
+  {
+   "id": "glass_side_25",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 50.0,
+   "pos": [
+    697.2910826635539,
+    -438.9442111662457,
+    143.035
+   ],
+   "look_at": [
+    697.9406055501498,
+    -432.9521087953644,
+    142.485
+   ],
+   "note": "car glass QA, side glass at ~25 deg"
+  },
+  {
+   "id": "glass_side_40",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 50.0,
+   "pos": [
+    698.8569064124669,
+    -438.9050130218105,
+    143.035
+   ],
+   "look_at": [
+    697.9406055501498,
+    -432.9521087953644,
+    142.485
+   ],
+   "note": "car glass QA, side glass at ~40 deg"
+  },
+  {
+   "id": "glass_side_70",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 50.0,
+   "pos": [
+    702.6383123698932,
+    -438.8118323127526,
+    143.035
+   ],
+   "look_at": [
+    697.9406055501498,
+    -432.9521087953644,
+    142.485
+   ],
+   "note": "car glass QA, side glass at ~70 deg"
+  },
+  {
+   "id": "glass_side_78",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 50.0,
+   "pos": [
+    703.4043834850099,
+    -438.0991070408861,
+    143.035
+   ],
+   "look_at": [
+    697.9406055501498,
+    -432.9521087953644,
+    142.485
+   ],
+   "note": "car glass QA, side glass at ~78 deg"
+  },
+  {
+   "id": "glass_front",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 50.0,
+   "pos": [
+    704.6580152838677,
+    -435.9481739597679,
+    143.035
+   ],
+   "look_at": [
+    699.1759441671887,
+    -432.64561491083725,
+    142.485
+   ],
+   "note": "car glass QA, windscreen"
+  },
+  {
+   "id": "glass_front_low",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 50.0,
+   "pos": [
+    706.3711625078299,
+    -436.9802236625587,
+    143.035
+   ],
+   "look_at": [
+    699.1759441671887,
+    -432.64561491083725,
+    142.485
+   ],
+   "note": "car glass QA, windscreen"
+  },
+  {
+   "id": "car_lod_08",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    700.5884347034785,
+    -440.1005894503981,
+    143.035
+   ],
+   "look_at": [
+    698.662,
+    -432.336,
+    142.13500000000002
+   ],
+   "note": "car LOD QA, front 3/4 at 8 m"
+  },
+  {
+   "id": "car_lod_12",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    701.5516520552178,
+    -443.9828841755972,
+    143.035
+   ],
+   "look_at": [
+    698.662,
+    -432.336,
+    142.13500000000002
+   ],
+   "note": "car LOD QA, front 3/4 at 12 m"
+  },
+  {
+   "id": "car_lod_15",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    702.2740650690222,
+    -446.8946052194965,
+    143.035
+   ],
+   "look_at": [
+    698.662,
+    -432.336,
+    142.13500000000002
+   ],
+   "note": "car LOD QA, front 3/4 at 15 m"
+  },
+  {
+   "id": "car_lod_25",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    704.6821084483703,
+    -456.60034203249415,
+    143.035
+   ],
+   "look_at": [
+    698.662,
+    -432.336,
+    142.13500000000002
+   ],
+   "note": "car LOD QA, front 3/4 at 25 m"
+  }
+ ]
+}

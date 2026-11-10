@@ -1,23 +1,17 @@
-"""Parked-vehicle prototypes (ADR 0041 par. 6): generic passenger cars and a light van, built from a side
-profile (the way a car body is drawn) instead of a box loft. Frame as streetscape.props: x = right, y = nose,
-z = up, origin = centre of the footprint on the ground.
+"""Parked-vehicle prototypes (ADR 0041 par. 6, ADR 0073): generic passenger cars and a mid-size panel van, built
+from a side profile (the way a car body is drawn). Frame as streetscape.props: x = right, y = nose, z = up,
+origin = centre of the footprint on the ground.
 
 No make or model is reproduced: each body is a class average (lengths, wheelbases and heights below are typical
-values of the European B/C/D segments, B/C-SUV and car-derived light vans, all WORKING_VALUE) with no grille
-shape, lamp signature or badge of any real vehicle. Registration plates: fictional strings in the Polish format
-(plate_atlas, REVIEW r6 W-N9), generated from a seed, not taken from any register; LOD1 shows only the EU band
-and a grey character band.
+values of the European C/D segments, C-SUV and mid-size panel vans, all WORKING_VALUE; proportions checked against
+street photos of the route, used as a pattern only) with no grille shape, lamp signature or badge of any real
+vehicle. Registration plates: fictional strings in the Polish format (plate_atlas, REVIEW r6 W-N9), generated from
+a seed, not taken from any register.
 
-A body is a closed side profile of named points (rear bumper -> tail -> rear glass -> roof -> windscreen -> hood
--> nose -> front bumper), each with its own half width (plan taper at the nose and tail, tumblehome of the
-greenhouse). The top strip is the profile swept across x; the sides are the profile polygon itself.
-  LOD0  rounded shoulders (a chamfer station across x, so A/C pillars and roof rails come out body-coloured
-        for free), wheel-arch cut-outs with dark liners, recessed wheels (tyre tube, sidewall, rim), framed side
-        windows split at the B pillar, door shut lines and handles, lamps, grille, plates, mirrors, dark lower
-        valances and sills, roof rails (estate / SUV), arch cladding (SUV)
-  LOD1  same profile without the chamfer; round tyre + rim discs on the body side, framed side windows, lamps,
-        plates, mirrors, sills: at 12-45 m it still has a hood, a raked windscreen, pillars and four round wheels
-  LOD2  the LOD1 body with a glazed greenhouse and one dark under-body block (far parking rows)
+  LOD0 / LOD1  r9 shell (_Shell, _vehicle2): profile swept across x with a crowned top, shoulder arcs and side
+               columns whose rows lie on the body's feature lines; lamp units, seams, wheels, glazing over a dark
+               interior (LOD0), road film overlays
+  LOD2         first-pass body (_vehicle): the profile without shoulders, glazed greenhouse, under-body skirt
 """
 
 from __future__ import annotations
@@ -39,31 +33,35 @@ VAN_COLOURS = ["white", "silver", "white2"]
 # tumble = greenhouse inset per side at the roof, bp = cowl -> B pillar, qp = B pillar -> C pillar (bodies with
 # a third side window), cp / ap = C and A pillar widths, cargo = no glass behind the B pillar.
 CARS = {
-    "hatch": dict(L=4.08, W=1.77, H=1.46, wb=2.58, foh=0.86, r=0.315, sill=0.20, belt=1.00, nose=0.81, hood=0.94,
-                  ws=0.92, tail=(0.10, 1.06), deck=0.0, rg=(0.50, 0.05), tumble=0.18, bp=1.40, qp=None, cp=0.26,
-                  ap=0.10, face="swept"),
-    "sedan": dict(L=4.66, W=1.81, H=1.43, wb=2.72, foh=0.91, r=0.325, sill=0.20, belt=0.98, nose=0.79, hood=1.08,
-                  ws=0.96, tail=(0.07, 1.03), deck=0.40, rg=(1.12, 0.05), tumble=0.19, bp=1.40, qp=None, cp=0.22,
-                  ap=0.10, face="wide"),
-    "estate": dict(L=4.70, W=1.81, H=1.47, wb=2.72, foh=0.91, r=0.325, sill=0.20, belt=0.98, nose=0.79, hood=1.08,
-                   ws=0.96, tail=(0.10, 1.06), deck=0.0, rg=(0.42, 0.045), tumble=0.18, bp=1.40, qp=0.98, cp=0.14,
-                   ap=0.10, rails=True, face="swept"),
-    "suv": dict(L=4.40, W=1.84, H=1.63, wb=2.64, foh=0.89, r=0.36, sill=0.27, belt=1.12, nose=0.99, hood=1.00,
-                ws=0.86, tail=(0.10, 1.20), deck=0.0, rg=(0.46, 0.05), tumble=0.16, bp=1.36, qp=0.90, cp=0.22,
-                ap=0.10, rails=True, clad=True, face="tall"),
+    # r9 (ADR 0073): class-typical proportions re-read off street photos of the route (Mapillary, proportions only):
+    # longer bonnets (cowl 0.2 m behind the front axle), 29-32 deg windscreens, near-vertical fascias, bumper ledges.
+    "hatch": dict(L=4.26, W=1.79, H=1.46, wb=2.62, foh=0.88, r=0.316, sill=0.19, belt=1.05, nose=0.86, hood=1.00,
+                  ws=0.76, tail=(0.11, 1.04), deck=0.0, rg=(0.44, 0.055), tumble=0.17, bp=1.30, qp=None, cp=0.34,
+                  ap=0.10, face="swept", plan=(0.78, 0.23, 0.55, 0.13), flare=0.020),
+    "sedan": dict(L=4.64, W=1.80, H=1.44, wb=2.70, foh=0.90, r=0.320, sill=0.19, belt=1.03, nose=0.83, hood=1.12,
+                  ws=0.80, tail=(0.06, 1.06), deck=0.44, rg=(1.10, 0.05), tumble=0.18, bp=1.30, qp=None, cp=0.24,
+                  ap=0.10, face="wide", plan=(0.82, 0.24, 0.60, 0.14), flare=0.018),
+    "estate": dict(L=4.66, W=1.80, H=1.48, wb=2.70, foh=0.90, r=0.320, sill=0.19, belt=1.03, nose=0.83, hood=1.12,
+                   ws=0.80, tail=(0.10, 1.05), deck=0.0, rg=(0.40, 0.05), tumble=0.17, bp=1.30, qp=1.00, cp=0.13,
+                   ap=0.10, rails=True, face="swept", plan=(0.82, 0.24, 0.55, 0.12), flare=0.018),
+    "suv": dict(L=4.42, W=1.84, H=1.65, wb=2.66, foh=0.90, r=0.350, sill=0.25, belt=1.20, nose=1.03, hood=1.04,
+                ws=0.70, tail=(0.10, 1.20), deck=0.0, rg=(0.44, 0.06), tumble=0.16, bp=1.28, qp=0.92, cp=0.20,
+                ap=0.10, rails=True, clad=True, face="tall", plan=(0.70, 0.20, 0.50, 0.11), flare=0.030),
 }
-VAN = dict(L=4.52, W=1.83, H=1.85, wb=2.78, foh=0.88, r=0.325, sill=0.23, belt=1.14, nose=1.00, hood=0.72,
-           ws=0.72, tail=(0.035, 1.14), deck=0.0, rg=(0.10, 0.05), tumble=0.08, bp=1.30, qp=None, cp=0.10, ap=0.10,
-           cargo=True, face="tall")
+# Mid-size panel van ("furgon", r9: replaces the 4.5 m car-derived van): short steep bonnet, upright screen, slab
+# sides with a sliding-door track, barn doors, unpainted bumpers, pressed-steel wheels. WORKING_VALUE class averages.
+VAN = dict(L=4.90, W=1.93, H=1.97, wb=3.00, foh=0.93, r=0.345, sill=0.27, belt=1.27, nose=1.08, hood=0.66,
+           ws=0.62, tail=(0.03, 1.26), deck=0.0, rg=(0.07, 0.05), tumble=0.07, bp=1.18, qp=None, cp=0.10, ap=0.10,
+           cargo=True, face="van", plan=(0.62, 0.20, 0.32, 0.06), flare=0.016, blackbump=True)
 
-# Front faces (generic 2015-2024 class looks, no make reproduced), fractions of the fascia edge (hood lip -> bumper
-# peak): drop / run of the fascia, lamp top / bottom at the inner and outer end, grille half width (in top half
-# widths) and its top, light bar across the tail.
+# Front faces (generic class looks, no make reproduced). Fractions t along the upper fascia edge (bonnet lip ->
+# bumper peak): lamp top / bottom at the inner and outer end; g = across coordinate of the shell (1 = where the
+# corner arc starts, 2 = the side line): lamp inner / outer end, grille half width, grille top; bar = light bar.
 FACES = {
-    # r8 (REVIEW r7 W-N7 "a line instead of headlamps"): taller housings (was 0.26 / 0.44, 0.24 / 0.36, 0.20 / 0.32)
-    "swept": dict(drop=0.34, run=0.20, lamp=(0.03, 0.36, 0.00, 0.54), gw=0.62, gt=0.30, bar=False),
-    "wide": dict(drop=0.32, run=0.18, lamp=(0.03, 0.34, 0.00, 0.46), gw=0.62, gt=0.20, bar=True),
-    "tall": dict(drop=0.42, run=0.14, lamp=(0.02, 0.28, 0.00, 0.40), gw=0.64, gt=0.14, bar=False),
+    "swept": dict(lean=0.060, band=0.28, lamp=(0.10, 0.70, 0.00, 0.78), lg=(0.52, 1.95), gw=0.44, gt=0.30, bar=False),
+    "wide": dict(lean=0.055, band=0.27, lamp=(0.06, 0.62, 0.00, 0.70), lg=(0.58, 1.95), gw=0.52, gt=0.16, bar=True),
+    "tall": dict(lean=0.040, band=0.31, lamp=(0.04, 0.56, 0.00, 0.60), lg=(0.62, 1.92), gw=0.56, gt=0.12, bar=False),
+    "van": dict(lean=0.050, band=0.30, lamp=(0.06, 0.80, 0.02, 0.74), lg=(0.66, 1.92), gw=0.60, gt=0.14, bar=False),
 }
 
 
@@ -527,39 +525,61 @@ def _vehicle(d, paint, lod):
     return _paint_uv(m)
 
 
-# =========================================================================================== v2 bodies (ADR 0041 par. 7)
-# LOD0 / LOD1 of the 2026-11-10 second pass: curved shell (crowned roof / hood / glass, rounded shoulders, barrel
-# sides, rounded plan corners), wheel arches cut into the side with the tyres set inside, revolved tyres and rims,
-# see-through tinted glass with a dark interior (LOD0). The first-pass _vehicle(lod=1) above is now LOD2.
+
+
+# =========================================================================================== r9 bodies (ADR 0073)
+# LOD0 / LOD1. The shell is still a side profile swept across x (crowned top, shoulder arcs, side columns down to the
+# sill / wheel-arch line), but r9 re-draws WHAT is swept so that the bodies stop reading as bars of soap:
+#   profile   bonnet as a convex arc from the cowl to a tight lip, near-vertical lamp band, bumper face, chin; rear
+#             bumper with a ledge under the tailgate; roof with its peak over the B pillar
+#   plan      super-elliptic corners (straight wings, then a real corner) instead of a boat-shaped quarter ellipse
+#   section   lower-body tuck, vertical door skin, shoulder facet under the belt line (catches the sky), tumblehome;
+#             the side rows sit ON those feature lines; wheel-arch flares + lip rings
+#   details   lamp units with a bright lens in a dark housing that wrap into the wings, tail-lamp clusters, bonnet
+#             and door shut lines, bumper seams, black B pillars, cowl panel, wipers, recessed handles, mirrors
+# The first-pass _vehicle(lod=1) above is LOD2.
 def _controls(d):
     L, H = d["L"], d["H"]
     y0, y1 = -L / 2, L / 2
     sill, belt = d["sill"], d["belt"]
-    zr, zf = sill + 0.05, sill + 0.03
+    zr, zf = sill + 0.04, sill + 0.03
     ty, tz = d["tail"]
     yA = y1 - d["hood"]
     yF = yA - d["ws"]
     yR = y0 + d["rg"][0]
     cargo = d.get("cargo", False)
     f = FACES[d.get("face", "swept")]
-    yH = y1 - 0.012 - f["run"]
-    C = [("R0", y0 + 0.10, zr, 0.03, 0.0, "trim"),
-         ("R1", y0, zr + 0.17, 0.08, 0.04, "paint"),
-         ("R2", y0 + 0.02, tz - 0.12, 0.09, 0.04, "paint"),
-         ("R3", y0 + ty, tz, 0.09, 0.035, "paint")]
+    bump = "bump" if d.get("blackbump") else "paint"
+    bt = d.get("bt", sill + 0.40)                      # rear bumper ledge
+    zl = d["nose"]                                     # bonnet lip
+    zp = zl - f["band"]                                # bumper peak under the lamp band
+    yL = y1 - f["lean"]
+
+    def c(n, y, z, R, CR, mat, rnd=1):
+        return dict(n=n, y=y, z=z, R=R, CR=CR, mat=mat, rnd=rnd)
+
+    def hood(t):                                       # convex arc cowl -> lip
+        return yA + t * (yL - yA), belt + t * (zl - belt) + 0.035 * 4 * t * (1 - t)
+    C = [c("R0", y0 + 0.14, zr, 0.03, 0.0, "trim", 0),
+         c("R1", y0 + 0.012, zr + 0.07, 0.11, 0.035, bump, 1),
+         c("RB", y0, bt, 0.11, 0.04, "paint", 0),
+         c("R2", y0 + 0.035, bt + 0.025, 0.10, 0.04, "paint", 0)]
     if d["deck"] > 0:
-        C.append(("G0", y0 + ty + d["deck"], tz + 0.015, 0.085, 0.03, "glass"))
+        C += [c("R3", y0 + ty, tz, 0.09, 0.035, "paint", 1),
+              c("G0", y0 + ty + d["deck"], tz + 0.02, 0.085, 0.03, "glass", 1)]
     else:
-        C[-1] = ("G0", y0 + ty, tz, 0.085, 0.03, "paint" if cargo else "glass")
-    C += [("G1", yR, H - d["rg"][1], 0.10, 0.04, "paint"),
-          ("G2", (yR + yF) / 2, H, 0.10, 0.04, "paint"),
-          ("G3", yF, H - 0.03, 0.10, 0.04, "glass"),
-          ("G4", yA, belt, 0.08, 0.035, "paint"),
-          ("H0", yA + 0.52 * (yH - yA), belt + 0.52 * (d["nose"] - belt) + 0.05, 0.09, 0.035, "paint"),
-          ("H1", yH, d["nose"], 0.10, 0.04, "paint"),                      # bonnet leading edge
-          ("F1", y1 - 0.012, d["nose"] - f["drop"], 0.10, 0.05, "paint"),  # bumper peak (fascia: lamps, grille)
-          ("F2", y1 - 0.035, zf + 0.085, 0.08, 0.05, "trim"),
-          ("F3", y1 - 0.15, zf, 0.03, 0.0, "trim")]
+        C.append(c("G0", y0 + ty, tz, 0.085, 0.03, "paint" if cargo else "glass", 1))
+    C += [c("G1", yR, H - d["rg"][1], 0.085, 0.035, "paint", 1),
+          c("G2r", yF - 0.70 * (yF - yR), H - 0.012, 0.085, 0.035, "paint", 0),
+          c("G2", yF - 0.30 * (yF - yR), H, 0.085, 0.035, "paint", 0),
+          c("G3", yF, H - 0.035, 0.08, 0.035, "glass", 1),
+          c("G4", yA, belt, 0.06, 0.03, "paint", 1),
+          c("H0", *hood(0.36), 0.055, 0.04, "paint", 0),
+          c("H0b", *hood(0.72), 0.06, 0.045, "paint", 0),
+          c("H1", yL, zl, 0.075, 0.055, "paint", 2),
+          c("F1", y1 - 0.004, zp, 0.14, 0.085, bump, 1),
+          c("F2", y1 - 0.022, zf + 0.085, 0.14, 0.075, "trim", 1),
+          c("F3", y1 - 0.15, zf, 0.03, 0.0, "trim", 0)]
     return C
 
 
@@ -567,28 +587,29 @@ class _Shell:
     def __init__(self, d, lod):
         self.d, self.lod = d, lod
         C = _controls(d)
+        if lod > 0:                              # LOD1: no intermediate roof / bonnet stations
+            C = [c for c in C if c["n"] not in ("G2r", "H0b", "RB")]
         P, R, CR, tag = [], [], [], []           # dense points; tag = (control index, part) part: 0 QA, 1 M, 2 QB
-        cp = np.array([[c[1], c[2]] for c in C])
+        cp = np.array([[c["y"], c["z"]] for c in C])
         for k, c in enumerate(C):
-            # LOD1 (v4): the bonnet lip and the bumper peak keep a 3-point chamfer (Low sees LOD1
-            # from 12.5 m: unrounded they were knife edges with one flat facet mirroring the sky)
-            if k in (0, len(C) - 1) or (lod > 0 and c[0] not in ("H1", "F1")):
-                P.append(cp[k]); R.append(c[3]); CR.append(c[4]); tag.append((k, 1))
+            rnd = c["rnd"]
+            if lod > 0:                          # LOD1: only the bonnet lip and the bumper peak stay chamfered
+                rnd = 1 if c["n"] in ("H1", "F1") else 0
+            if k in (0, len(C) - 1) or rnd == 0:
+                P.append(cp[k]); R.append(c["R"]); CR.append(c["CR"]); tag.append((k, 1))
                 continue
             a, b = cp[k - 1] - cp[k], cp[k + 1] - cp[k]
             la, lb = np.linalg.norm(a), np.linalg.norm(b)
-            # v4 (HANDOVER "square fronts"): the bonnet lip and the bumper peak are 5-point quadratic Bezier rounds
-            # with a longer reach, the other corners 3-point chamfers (part 1 = the control's mid point)
-            soft = c[0] in ("H1", "F1") and lod == 0
-            kl = min(0.30 * la, 0.30 * lb, 0.16) if soft else min(0.25 * la, 0.25 * lb, 0.11 if c[0] == "G1" else 0.07)
+            soft = rnd == 2
+            kl = min(0.30 * la, 0.30 * lb, 0.055) if soft else min(0.25 * la, 0.25 * lb, 0.11 if c["n"] == "G1" else 0.07)
             qa, qb = cp[k] + a / la * kl, cp[k] + b / lb * kl
             ts = ((0, 0.0), (3, 0.25), (1, 0.5), (4, 0.75), (2, 1.0)) if soft else ((0, 0.0), (1, 0.5), (2, 1.0))
             for part, t in ts:
                 q = (1 - t) ** 2 * qa + 2 * t * (1 - t) * cp[k] + t * t * qb
-                P.append(q); R.append(c[3]); CR.append(c[4]); tag.append((k, part))
+                P.append(q); R.append(c["R"]); CR.append(c["CR"]); tag.append((k, part))
         self.C, self.P, self.R, self.CR, self.tag = C, np.array(P), np.array(R), np.array(CR), tag
         if lod > 0:
-            self.CR = self.CR * 0.7             # v4: LOD1 keeps most of the crown (mid point of the top, g = 0)
+            self.CR = self.CR * 0.7             # LOD1 keeps most of the crown (mid point of the top, g = 0)
         n = len(P)
         E = np.diff(self.P, axis=0)
         EN = np.column_stack([-E[:, 1], E[:, 0]])
@@ -603,47 +624,99 @@ class _Shell:
             if S[i, 0] <= S[i - 1, 0] + 1e-3:
                 S[i, 0] = S[i - 1, 0] + 1e-3
         self.S = S
-        names = [c[0] for c in C]
+        names = [c["n"] for c in C]
         self.mid = {names[k]: i for i, (k, part) in enumerate(tag) if part == 1}
+        self.first = {}
+        for i, (k, part) in enumerate(tag):
+            self.first.setdefault(names[k], i)
         self.seg = {}                                          # control name -> dense edge index of its straight part
         self.emat = []
         for i in range(n - 1):
             (ka, pa), (kb, pb) = tag[i], tag[i + 1]
             if ka != kb:
                 self.seg[names[ka]] = i
-                self.emat.append(C[ka][5])
+                self.emat.append(C[ka]["mat"])
             else:
-                m0, m1 = C[ka - 1][5], C[ka][5]
-                self.emat.append(m0 if m0 == m1 else "paint")
+                m0, m1 = C[ka - 1]["mat"], C[ka]["mat"]
+                self.emat.append(m0 if m0 == m1 else ("paint" if "glass" in (m0, m1) else m1 if m0 == "paint" else m0))
         self.hw = d["W"] / 2
         self.sill, self.belt = d["sill"], d["belt"]
         self.bl0, self.bl1 = S[self.mid["G0"]], S[self.mid["G4"]]
         self.zroof = float(S[:, 1].max())
         self.y0, self.y1 = -d["L"] / 2, d["L"] / 2
+        self.pl = d.get("plan", (0.90, 0.30, 0.55, 0.13))
+        self.r = d["r"]
+        self.ra = d["r"] + 0.045
+        self.yfa = d["L"] / 2 - d["foh"]
+        self.yra = self.yfa - d["wb"]
+        self.F = d.get("flare", 0.02)
+        van = d.get("cargo", False)
+        self.tuck, self.shd, self.shi = (0.035, 0.10, 0.016) if van else (0.050, 0.115, 0.042)
+        i0, i1 = self.mid["G4"], self.first["H1"]             # bonnet edge line (cowl -> lip)
+        self.hy, self.hz = S[i0:i1 + 1, 0].copy(), S[i0:i1 + 1, 1].copy()
+        self.Sx = np.array([self.X(S[i, 0], S[i, 1]) for i in range(n)])
 
     def zbelt(self, y):
         (ya, za), (yb, zb) = self.bl0, self.bl1
         return za + (zb - za) * (y - ya) / (yb - ya)
 
+    def ztop(self, y):
+        """Upper edge of the body side: belt line beside the greenhouse, bonnet edge ahead of it, tail top behind."""
+        if y < self.bl0[0]:
+            return float(self.bl0[1])
+        if y <= self.bl1[0]:
+            return float(self.zbelt(y))
+        return float(np.interp(y, self.hy, self.hz))
+
     def plan(self, y):
         w = self.hw
-        Rf, tf, Rr, tr = 0.80, 0.27, 0.50, 0.15
+        Rf, tf, Rr, tr = self.pl
+        p = 2.3
         u = min(1.0, max(0.0, (y - (self.y1 - Rf)) / Rf))
-        w -= tf * (1 - math.sqrt(max(0.0, 1 - u * u)))
+        w -= tf * (1 - (1 - u ** p) ** (1 / p))
         u = min(1.0, max(0.0, ((self.y0 + Rr) - y) / Rr))
-        w -= tr * (1 - math.sqrt(max(0.0, 1 - u * u)))
+        w -= tr * (1 - (1 - u ** p) ** (1 / p))
         return w
 
+    def flare(self, y, z):
+        f = 0.0
+        for yc in (self.yra, self.yfa):
+            dd = math.hypot(y - yc, z - self.r) - self.ra
+            f = max(f, 1.0 if dd <= 0 else math.exp(-(dd / 0.10) ** 2))
+        return self.F * f
+
     def X(self, y, z):
-        """Half width of the body side at (y, z): plan taper, barrel below the belt, tumblehome above it."""
+        """Half width of the body side at (y, z): plan taper, tuck below the widest line, vertical door skin, shoulder
+        facet under the belt, tumblehome above it, wheel-arch flares."""
         w = self.plan(y)
-        zw = self.sill + 0.55 * (self.belt - self.sill)
-        if z <= zw:
-            return w - 0.05 * min(1.3, (zw - z) / (zw - self.sill)) ** 2
-        zb = self.zbelt(y) if self.bl0[0] <= y <= self.bl1[0] else 1e9
-        if z <= zb:
-            return w - 0.012 * min(1.0, (z - zw) / max(min(zb, self.belt) - zw, 1e-3)) ** 2
-        return w - 0.012 - self.d["tumble"] * (z - zb) / max(self.zroof - zb, 1e-3)
+        zt = self.ztop(y)
+        zm = self.sill + 0.42 * (zt - self.sill)
+        if z <= zm:
+            x = w - self.tuck * min(1.25, (zm - z) / max(zm - self.sill, 1e-3)) ** 2
+        else:
+            zs = zt - self.shd
+            if z <= zs:
+                x = w
+            elif z <= zt or not (self.bl0[0] <= y <= self.bl1[0]):
+                x = w - self.shi * min(1.0, (z - zs) / self.shd)
+            else:
+                x = w - self.shi - self.d["tumble"] * (z - zt) / max(self.zroof - zt, 1e-3)
+        return x + self.flare(y, z)
+
+    def rows(self, y, zb, zm, nr):
+        """Heights of the side rows at y between the lower edge zb and the upper edge zm, on the feature lines."""
+        zt = self.ztop(y)
+        zs = self.sill
+        if nr >= 4:
+            zz = [zb, zs + 0.17 * (zt - zs), zs + 0.42 * (zt - zs), zt - self.shd, zm]
+        elif nr == 3:
+            zz = [zb, zs + 0.42 * (zt - zs), zt - self.shd, zm]
+        else:
+            zz = [zb, zt - self.shd, zm]
+        out = [zb]
+        for z in zz[1:-1]:
+            out.append(min(max(z, out[-1]), zm))
+        return out + [zm]
 
     def pt(self, i, g):
         """Surface point and normal at dense profile index i, signed across coordinate g: |g| <= 1 crowned top
@@ -651,7 +724,7 @@ class _Shell:
         sx = 1.0 if g >= 0 else -1.0
         a = abs(g)
         Pi, Ni, Si = self.P[i], self.N[i], self.S[i]
-        wS = self.X(Si[0], Si[1])
+        wS = self.Sx[i]
         xt = max(0.05, wS - self.R[i])
         c = self.CR[i]
         if a <= 1.0:
@@ -704,18 +777,21 @@ def _tri2d(poly):
 
 
 def _wheel2(m, x_out, yc, r, sx, seg, steel, lod, wst=0, rimm="rim", tyre="tyre"):
-    """Revolved tyre + rim; x_out = x of the outer sidewall plane, the wheel extends inward (toward x = 0)."""
+    """Revolved tyre + rim; x_out = x of the outer sidewall plane, the wheel extends inward (toward x = 0).
+    r9: sidewall = 34-40 % of the radius with a bulge (the tyre reads as rubber with a profile, not a painted ring),
+    rim barrel 70 mm deep with the spokes set inside the rim edge."""
     w = 0.205
-    rr = (0.60 if steel else 0.69) * r
+    rr = (0.60 if steel else 0.66) * r
     cen = np.array([x_out, yc, r])
 
-    def ring(rad, o):
+    def ring(rad, o, n=seg):
         return [np.array([x_out - sx * o, yc + rad * math.cos(t), r + rad * math.sin(t)])
-                for t in np.linspace(0, 2 * math.pi, seg + 1)[:-1]]
+                for t in np.linspace(0, 2 * math.pi, n + 1)[:-1]]
 
     def band(mat, A, B, radial=0.3, inward=False):
-        for k in range(seg):
-            k2 = (k + 1) % seg
+        n = len(A)
+        for k in range(n):
+            k2 = (k + 1) % n
             want = (A[k] + A[k2] + B[k] + B[k2]) / 4 - cen
             want[0] = 0
             want = want / max(np.linalg.norm(want), 1e-6) * (-1 if inward else 1)
@@ -727,7 +803,7 @@ def _wheel2(m, x_out, yc, r, sx, seg, steel, lod, wst=0, rimm="rim", tyre="tyre"
         m.add(mat, A, [(0, i, i + 1) if ok else (0, i + 1, i) for i in range(1, len(A) - 1)])
     X = np.array([sx, 0.0, 0.0])
     if lod == 0:
-        prof = [(rr, 0.014), (0.80 * r, 0.0), (0.95 * r, 0.010), (r, 0.04)]
+        prof = [(rr, 0.016), (0.86 * r, 0.0), (r, 0.038)]
         rings = [ring(*p) for p in prof]
         for A, B in zip(rings[:-1], rings[1:]):
             band(tyre, A, B)
@@ -739,31 +815,29 @@ def _wheel2(m, x_out, yc, r, sx, seg, steel, lod, wst=0, rimm="rim", tyre="tyre"
                 want[0] = 0
                 _quad(m, tyre, rings[-1][k], rings[-1][k2], inner[k2], inner[k], want)
         fan(tyre, inner[::2], -X)                               # r8 N-13: inner sidewall (seen under the body)
-        lip = ring(rr - 0.014, 0.014)
         rim = "rim_steel" if steel else ("rim" if wst == 3 else rimm)
-        band(rim, rings[0], lip, radial=0.0)
-        deep = ring(rr - 0.025, 0.03 if steel else 0.075)
-        band(rim if steel else "rim_dark", lip, deep, radial=0.7, inward=True)
-        fan(rim if steel else "car_trim", deep, X)
+        deep = ring(rr - 0.03, 0.045 if steel else 0.085)
+        band(rim if steel else "rim_dark", rings[0], deep, radial=0.7, inward=True)
+        fan(rim if steel else "car_trim", deep[::2], X)
         if steel:                                              # pressed-steel wheel: dished centre + plain hub cap
-            fan("rim_steel", ring(0.40 * r, 0.018)[::2], X)
-            fan("rim_dark", ring(0.16 * r, 0.010)[::2], X)
-        else:                                                  # five-spoke alloy + hub cap
+            fan("rim_steel", ring(0.42 * r, 0.024, 8), X)
+            fan("rim_dark", ring(0.17 * r, 0.014, 6), X)
+        else:
             # alloy styles (generic): 5 wide, 10 thin, 7 medium, 5 wide dark with a bright machined lip
-            ns, wi, wo, face = [(5, 0.050, 0.030, rimm), (10, 0.022, 0.015, rimm), (7, 0.036, 0.022, rimm),
-                                (5, 0.062, 0.046, "rim_dark")][wst]
+            ns, wi, wo, face = [(5, 0.052, 0.034, rimm), (10, 0.024, 0.016, rimm), (7, 0.038, 0.024, rimm),
+                                (5, 0.064, 0.048, "rim_dark")][wst]
             for s in range(ns):
                 t = 2 * math.pi * s / ns + 0.3
                 u = np.array([0, math.cos(t), math.sin(t)])
                 v = np.array([0, -math.sin(t), math.cos(t)])
-                c0 = np.array([x_out - sx * 0.022, yc, r])
-                r1 = rr - 0.016
-                _quad(m, face, c0 + u * 0.05 - v * wi, c0 + u * r1 - v * wo - X * 0.006,
-                      c0 + u * r1 + v * wo - X * 0.006, c0 + u * 0.05 + v * wi, X)
-            fan(face, ring(0.21 * r, 0.014)[::2], X)
-            fan("rim_dark", ring(0.08 * r, 0.011)[::2], X)
+                c0 = np.array([x_out - sx * 0.030, yc, r])
+                r1 = rr - 0.004
+                _quad(m, face, c0 + u * 0.05 - v * wi, c0 + u * r1 - v * wo + X * 0.012,
+                      c0 + u * r1 + v * wo + X * 0.012, c0 + u * 0.05 + v * wi, X)
+            fan(face, ring(0.22 * r, 0.026, 8), X)
+            fan("rim_dark", ring(0.085 * r, 0.022, 6), X)
     else:
-        A, B = ring((0.62 if steel else 0.70) * r, 0.004), ring(r, 0.03)
+        A, B = ring((0.62 if steel else 0.68) * r, 0.004), ring(r, 0.03)
         band(tyre, A, B)
         C2 = ring(r, w)                                  # tread: lower half only (the upper half is inside the arch)
         for k in range(seg):
@@ -775,9 +849,7 @@ def _wheel2(m, x_out, yc, r, sx, seg, steel, lod, wst=0, rimm="rim", tyre="tyre"
         fan(tyre, C2, -X)                                       # r8 N-13: inner sidewall (seen under the body)
         face = "rim_steel" if steel else ("rim_dark" if wst == 3 else rimm)
         fan(face, A, X)
-        # r8 N-14 (Low draws LOD1 from 16 m): a plain disc read as "no rim". Dark hub + dark windows between
-        # the spokes of the prototype's alloy style (pressed steel: hub cap ring only)
-        ra_ = (0.62 if steel else 0.70) * r
+        ra_ = (0.62 if steel else 0.68) * r
         c0 = np.array([x_out + sx * 0.002, yc, r])
         dark = "rim_dark" if not steel else "tyre"
         if steel:
@@ -803,9 +875,11 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     L, hw, H = d["L"], d["W"] / 2, d["H"]
     sill, belt, r = d["sill"], d["belt"], d["r"]
     cargo = d.get("cargo", False)
+    clad = d.get("clad", False)
     n = len(sh.P)
     gmat = "car_glass_tint" if lod == 0 else "car_glass"
-    matname = {"paint": paint, "glass": gmat, "trim": "car_trim"}
+    bmat = "car_sill" if d.get("blackbump") else paint          # bumper skins (unpainted plastic on the van)
+    matname = {"paint": paint, "glass": gmat, "trim": "car_trim", "bump": bmat}
     style = style or dict(dirt=0.5, wheel=0, uoff=0.0)
     dl = float(style["dirt"])                       # 0 fresh from the car wash .. 1 a month of winter streets
     dmat = f"car_dirt_{1 + min(2, int(dl * 3))}"
@@ -816,8 +890,6 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     priv = not cargo and bool(style.get("privacy", False))
 
     # ---- top shell: crowned centre + shoulder arcs
-    # r8: LOD0 crown 6 -> 4 quads across (pays for the inner skin); LOD1 shoulders 1 -> 2 segments (N-14: with one
-    # chord the wings and roof rails were flat bevels, "soap", on Low at 12-45 m)
     NT, NS = (2, 3) if lod == 0 else (1, 2)
     gs = ([-2 + k / NS for k in range(NS)] + [-1 + k / NT for k in range(2 * NT + 1)] + [1 + (k + 1) / NS for k in range(NS)])
     for i in range(n - 1):
@@ -837,10 +909,7 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
             else:
                 _quad(m, mm, A[j][0], A[j + 1][0], B[j + 1][0], B[j][0], nn)
 
-    # ---- r8 (REVIEW r7 N-13): inner skin of the greenhouse. The shell is single-sided, so a ray that entered through
-    # one pane left through the BACK of the far pillar / roof rail and showed the paving (car_holes_qa.py). Coarse
-    # (4 quads across, 5 mm inside the shell): roof lining and the inner faces of the pillars; beside the glass
-    # the pillar lining reaches 15 % into the pane so that no ray slips between the shell and its lining.
+    # ---- r8 (REVIEW r7 N-13): inner skin of the greenhouse (the shell is single-sided)
     if lod == 0:
         for i in range(sh.mid["G0"], sh.mid["G4"]):
             if matname[sh.emat[i]] == gmat:
@@ -881,11 +950,24 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
                 ua, ub = uv[0] + ga * uv[1], uv[0] + gb * uv[1]
                 _puv(m, mat, q, [(ua, v0), (ub, v0), (ub, 1.0), (ua, 1.0)], nn)
 
-    # ---- side: columns between the profile's side line and the sill / wheel-arch line
-    yfa = L / 2 - d["foh"]
-    yra = yfa - d["wb"]
-    ra = r + 0.05
-    aseg = 10 if lod == 0 else 6                # r8 N-14: LOD1 arches 4 -> 6 segments (Low draws LOD1 from 16 m)
+    def elen(name):
+        i = sh.seg[name]
+        return float(np.linalg.norm(sh.P[i + 1] - sh.P[i]))
+
+    def t_at_z(name, z):
+        i = sh.seg[name]
+        za, zb = sh.P[i][1], sh.P[i + 1][1]
+        return min(0.95, max(0.05, (z - za) / (zb - za))) if abs(zb - za) > 1e-6 else 0.5
+
+    def side_tris(mat, tris, lift=0.0):
+        for t in tris:
+            for sx in (1, -1):
+                q = [np.array([sx * (sh.X(y, z) + lift), y, z]) for y, z in t]
+                _oq(m, mat, q, [sx, 0, 0])
+
+    # ---- side: columns between the profile's side line and the sill / wheel-arch line, rows on the feature lines
+    yfa, yra, ra = sh.yfa, sh.yra, sh.ra
+    aseg = 10 if lod == 0 else 6
 
     def arch(yc):
         return [(yc - ra - 0.03, sill)] + [(yc - ra * math.cos(t), r + ra * math.sin(t))
@@ -893,7 +975,10 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     B = [tuple(sh.S[0])] + arch(yra) + arch(yfa) + [tuple(sh.S[-1])]
     By, Bz = np.array([b[0] for b in B]), np.array([b[1] for b in B])
     Sy, Sz = sh.S[:, 0], sh.S[:, 1]
-    ys = sorted(set(np.round(np.concatenate([Sy, By]), 4)))
+    Rf, _, Rr, _ = sh.pl
+    extra = [sh.y1 - Rf * (1 - u) for u in ((0.40, 0.58, 0.72) if lod == 0 else ())]
+    extra += [sh.y0 + Rr * (1 - u) for u in ((0.45, 0.70) if lod == 0 else ())]
+    ys = sorted(set(np.round(np.concatenate([Sy, By, extra]), 4)))
     ys = [float(y) for y in ys if Sy[0] - 1e-6 <= y <= Sy[-1] + 1e-6]
     ga0, ga1 = float(sh.bl0[0]), float(sh.bl1[0])
     NR = 4 if lod == 0 else 2
@@ -901,30 +986,42 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     def column(y):
         zt = float(np.interp(y, Sy, Sz))
         zb = float(np.interp(y, By, Bz))
-        zm = min(zt, sh.zbelt(y)) if ga0 - 1e-6 <= y <= ga1 + 1e-6 else zt
-        zm = max(zm, zb)
-        return [np.array([sh.X(y, z), y, z]) for z in (zb + (zm - zb) * k / NR for k in range(NR + 1))]
+        green = ga0 - 1e-6 <= y <= ga1 + 1e-6
+        zm = max(min(zt, sh.zbelt(y)) if green else zt, zb)
+        zz = sh.rows(y, zb, zm, NR)
+        col = [np.array([sh.X(y, z), y, z]) for z in zz[:-1]]
+        xt = sh.X(y, zm) if green else float(np.interp(y, Sy, sh.Sx))      # the top edge is shared with the shell
+        return col + [np.array([xt, y, zm])]
     cols = [column(y) for y in ys]
     for ca, cb in zip(cols[:-1], cols[1:]):
         for k in range(NR):
             for sx in (1, -1):
                 f = np.array([sx, 1, 1])
                 _quad(m, paint, ca[k] * f, cb[k] * f, cb[k + 1] * f, ca[k + 1] * f, [sx, 0, 0])
+    if d.get("blackbump"):                          # unpainted bumper corners on the side (in front of / behind the arches)
+        zbf = float(sh.S[sh.mid["F1"]][1]) + 0.05
+        zbr = float(sh.S[sh.mid["RB" if "RB" in sh.mid else "R2"]][1])
+        for ya, yb, zt_ in ((yfa + ra + 0.03, float(Sy[-1]), zbf), (float(Sy[0]), yra - ra - 0.03, zbr)):
+            yy = [ya + (yb - ya) * k / 3 for k in range(4)]
+            for y_a, y_b in zip(yy[:-1], yy[1:]):
+                za, zb_ = float(np.interp(y_a, By, Bz)), float(np.interp(y_b, By, Bz))
+                side_tris("car_sill", [[(y_a, za), (y_b, zb_), (y_b, max(zt_, zb_))],
+                                       [(y_a, za), (y_b, max(zt_, zb_)), (y_a, max(zt_, za))]], lift=0.004)
 
     # ---- road film (alpha overlay): sills, lower doors, spray fans behind the wheels, arch lips
-    ya_, yb_ = sh.y0 + 0.52, sh.y1 - 0.82                       # the straight part of the plan
+    ya_, yb_ = sh.y0 + 0.40, sh.y1 - 0.55                       # the straight part of the plan
     arch_top = r + ra
 
     def ztop(y):
-        # v4 (HANDOVER "sill dirt"): lower film line and smaller spray fans (a pale band up to mid-door read as a
-        # two-tone paint job, not as road film)
         z = sill + 0.12 + 0.14 * dl
         for yc in (yra, yfa):
             z += (0.12 + 0.18 * dl) * math.exp(-((y - (yc - ra - 0.24)) / 0.28) ** 2)
         return z
-    kd = 12 if lod == 0 else 3
+    kd = 8 if lod == 0 else 3
     if lod == 0:
-        runs = [sorted({round(float(y), 4) for y in By if ya_ < y < yb_} | {round(ya_ + (yb_ - ya_) * k / kd, 4) for k in range(kd + 1)})]
+        # r9: the film uses the body's own columns (with the arch flares a coarser overlay cut through the skin
+        # and showed as hard-edged polygons of clean paint)
+        runs = [sorted({round(float(y), 4) for y in ys if ya_ < y < yb_} | {round(ya_, 4), round(yb_, 4)})]
     else:                                    # LOD1: three plain runs between / beside the arches, no arch lips
         e = ra + 0.03
         runs = [[ya_, yra - e], [yra + e, yra + e + 0.45, (yra + yfa) / 2, yfa - e], [yfa + e, yb_]]
@@ -933,7 +1030,7 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     def dcol(y):
         zb = float(np.interp(y, By, Bz))
         zt = min(max(ztop(y), zb + 0.11), arch_top + 0.16)
-        return [(np.array([sh.X(y, zb + (zt - zb) * k / rows) + 0.008, y, zb + (zt - zb) * k / rows]), (y / 1.7 + uo, k / rows))
+        return [(np.array([sh.X(y, zb + (zt - zb) * k / rows) + 0.018, y, zb + (zt - zb) * k / rows]), (y / 1.7 + uo, k / rows))
                 for k in range(rows + 1)]
     for dys in runs:
         dc = [dcol(y) for y in dys]
@@ -949,8 +1046,8 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     topc = [(float(sh.S[i, 0]), float(sh.S[i, 1])) for i in range(ig0, ig4 + 1)]
     beltc = [(y, float(sh.zbelt(y))) for y in ys if ga0 + 1e-4 < y < ga1 - 1e-4][::-1]
     outer = Polygon(topc + beltc).buffer(0)
-    below = Polygon([(ga0 - 1, sh.zbelt(ga0 - 1) + 0.035), (ga1 + 1, sh.zbelt(ga1 + 1) + 0.035), (ga1 + 1, -1), (ga0 - 1, -1)])
-    inner = outer.buffer(-0.05, join_style=2).difference(below)
+    below = Polygon([(ga0 - 1, sh.zbelt(ga0 - 1) + 0.03), (ga1 + 1, sh.zbelt(ga1 + 1) + 0.03), (ga1 + 1, -1), (ga0 - 1, -1)])
+    inner = outer.buffer(-0.045, join_style=2).difference(below)
     yB = ga1 - d["bp"]
     bands = [(yB + 0.04, ga1 - d["ap"] * 0.3)]
     if not cargo:
@@ -964,12 +1061,6 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         got = [p for p in getattr(g, "geoms", [g]) if p.geom_type == "Polygon" and p.area > 0.01]
         wins += got
         wrear += [kb > 0] * len(got)
-
-    def side_tris(mat, tris, lift=0.0):
-        for t in tris:
-            for sx in (1, -1):
-                q = [np.array([sx * (sh.X(y, z) + lift), y, z]) for y, z in t]
-                _oq(m, mat, q, [sx, 0, 0])
     if lod == 0:
         frame = outer.difference(unary_union(wins))
         side_tris(paint, _tri2d(frame))
@@ -986,110 +1077,136 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         side_tris(paint, _tri2d(outer.simplify(0.003)))
         for wn in wins:
             side_tris(gmat, _tri2d(wn.simplify(0.02)), lift=0.008)
+    if lod == 0:                                    # weatherstrip along the belt under the side glass
+        wy = [ga0 + (d["cp"] if not cargo else (yB - ga0)) + 0.0, yB, ga1 - d["ap"] * 0.3] if not cargo else [yB + 0.04, ga1 - d["ap"] * 0.3]
+        wy = [wy[0]] + [wy[0] + (wy[-1] - wy[0]) * k / 4 for k in (1, 2, 3)] + [wy[-1]]
+        for ya, yb in zip(wy[:-1], wy[1:]):
+            za, zb_ = sh.zbelt(ya) + 0.012, sh.zbelt(yb) + 0.012
+            side_tris("car_trim", [[(ya, za), (yb, zb_), (yb, zb_ + 0.026)], [(ya, za), (yb, zb_ + 0.026), (ya, za + 0.026)]], lift=0.004)
+    # black B pillar (and the divider of the third side window): the side glazing reads as one dark graphic
+    if not cargo:
+        for yp in [yB] + ([yB - d["qp"]] if d["qp"] else []):
+            pil = inner.intersection(box(yp - 0.042, 0, yp + 0.042, 3))
+            if not pil.is_empty:
+                side_tris("car_trim", _tri2d(pil.simplify(0.01)), lift=0.005)
 
-    # ---- wheels in the arches, liners
+    # ---- wheels in the arches, liners, arch lips
+    lipo = 0.010 if lod == 0 else 0.0
     for yc in (yra, yfa):
         A = arch(yc)
-        xo = sh.X(yc, r) - 0.035
+        xo = sh.X(yc, r) - 0.030
         for sx in (-1, 1):
             _wheel2(m, sx * xo, yc, r, sx, 16 if lod == 0 else 10, steel, lod, style["wheel"],
                     "rim_dusty" if dl > 0.45 else "rim", "tyre_dusty" if dl > 0.3 else "tyre")
             dep = 0.28 if lod == 0 else 0.26
             # r8 N-13: back plate of the wheel housing (the gap above the tyre showed the cabin / the far side)
-            # (one quad over the whole housing: only the part inside the arch opening is ever seen)
             xp = sh.X(yc, r) - dep
             _quad(m, "car_trim", [sx * xp, yc - ra - 0.03, sill], [sx * xp, yc + ra + 0.03, sill],
                   [sx * xp, yc + ra + 0.03, r + ra], [sx * xp, yc - ra - 0.03, r + ra], [sx, 0, 0])
-            for (ya, za), (yb, zb_) in zip(A[:-1], A[1:]):
+            for k, ((ya, za), (yb, zb_)) in enumerate(zip(A[:-1], A[1:])):
                 mid = np.array([0, yc - (ya + yb) / 2, r - (za + zb_) / 2])
-                xa, xb = sh.X(ya, za), sh.X(yb, zb_)
+                xa, xb = sh.X(ya, za) + lipo, sh.X(yb, zb_) + lipo
                 _quad(m, "car_trim", [sx * xa, ya, za], [sx * xb, yb, zb_], [sx * (xb - dep), yb, zb_],
                       [sx * (xa - dep), ya, za], mid)
-                if d.get("clad") and lod == 0:
-                    k = (ra + 0.06) / ra
-                    y2a, z2a = yc + (ya - yc) * k, max(sill, r + (za - r) * k)
-                    y2b, z2b = yc + (yb - yc) * k, max(sill, r + (zb_ - r) * k)
-                    _quad(m, "car_sill", [sx * (xa + 0.006), ya, za], [sx * (xb + 0.006), yb, zb_],
-                          [sx * (sh.X(y2b, z2b) + 0.006), y2b, z2b], [sx * (sh.X(y2a, z2a) + 0.006), y2a, z2a], [sx, 0, 0])
+                if lod == 0 and 0 < k < len(A) - 2:
+                    # lip ring: 10 mm proud at the arch edge, flush 45 mm (cladding: 70 mm) outside it
+                    kk = (ra + (0.07 if clad else 0.045)) / ra
+                    y2a, z2a = yc + (ya - yc) * kk, max(sill, r + (za - r) * kk)
+                    y2b, z2b = yc + (yb - yc) * kk, max(sill, r + (zb_ - r) * kk)
+                    _quad(m, "car_sill" if clad else paint, [sx * xa, ya, za], [sx * xb, yb, zb_],
+                          [sx * (sh.X(y2b, z2b) + 0.003), y2b, z2b], [sx * (sh.X(y2a, z2a) + 0.003), y2a, z2a], [sx, 0, 0])
     zfl = sill + 0.06
-    # under-floor (r8: pulled inside the plan taper, its rear corners stuck out of the rounded tail)
     _quad(m, "car_trim", [hw - 0.16, -L / 2 + 0.4, zfl], [-hw + 0.16, -L / 2 + 0.4, zfl], [-hw + 0.16, L / 2 - 0.5, zfl],
           [hw - 0.16, L / 2 - 0.5, zfl], [0, 0, -1])
 
-    # ---- lamps, grille, intakes, plates (patches on the shell; lamps taper inward and wrap into the wing)
+    # ---- front: lamp units, grille, intakes, plate
     f = FACES[d.get("face", "swept")]
-    li0, li1, lo0, lo1 = f["lamp"]
-    lg = [0.40, 0.70, 1.0, 1.4, 1.8] if lod == 0 else [0.42, 1.0, 1.7]
+    ti0, ti1, to0, to1 = f["lamp"]
+    lg0, lg1 = f["lg"]
+    lgs = [g for g in ([lg0, 0.8, 1.0, 1.33, 1.66, lg1] if lod == 0 else [lg0, 1.0, lg1]) if lg0 - 1e-9 <= g <= lg1 + 1e-9]
 
-    def lamp_cols(sx, a, b):                         # a, b = fractions of the lamp height (0 top .. 1 bottom)
+    def lamp_cols(sx, a, b, gi=0.0, go=0.0):         # a, b = fractions of the lamp height (0 top .. 1 bottom)
         out = []
-        for g in lg:
-            k = (g - lg[0]) / (lg[-1] - lg[0])
-            top, bot = li0 + (lo0 - li0) * k, li1 + (lo1 - li1) * k
+        for g in lgs:
+            g = min(max(g, lg0 + gi), lg1 - go)
+            if out and abs(out[-1][0]) >= g - 1e-9:
+                continue
+            k = (g - lg0) / (lg1 - lg0)
+            top, bot = ti0 + (to0 - ti0) * k, ti1 + (to1 - ti1) * k
             out.append((sx * g, top + (bot - top) * a, top + (bot - top) * b))
         return out
-    tg = [0.34, 0.8, 1.0, 1.4, 1.8] if lod == 0 else [0.36, 1.0, 1.7]
+    iH = sh.seg["H1"]
+    lnH = elen("H1")
     for sx in (-1, 1):
         spatch("H1", lamp_cols(sx, 0.0, 1.0), "car_lamp")
-        spatch("H1", lamp_cols(sx, 0.06, 0.24)[:-1], "car_light_head", lift=0.009)       # running-light strip
-        # r8 W-N7 / N-14: two round projector lenses in the dark housing (LOD0 had one flat strip, "soap with a
-        # line"; LOD1 had the dark housing only, "no headlamps"). LOD1: one block where the two lenses sit.
-        i_ = sh.seg["H1"]
-        ln_ = float(np.linalg.norm(sh.P[i_ + 1] - sh.P[i_]))
-        xt_ = sh.pt(i_, 1.0)[0][0]
-
-        def lamp_t(g, a):
-            kk = (g - lg[0]) / (lg[-1] - lg[0])
-            top, bot = li0 + (lo0 - li0) * kk, li1 + (lo1 - li1) * kk
-            return top + (bot - top) * a, (bot - top) * ln_
+        spatch("H1", lamp_cols(sx, 0.10, 0.90, 0.045, 0.07), "car_light_head", lift=0.010)
+    if lg1 >= 1.85:                                  # the unit wraps into the wing (side surface)
+        pa, pb = sh.ptf(iH, to0, 2.0)[0], sh.ptf(iH, to1, 2.0)[0]
+        wrap = 0.20 if lod == 0 else 0.16
+        yc_ = pa[1] - wrap
+        zc_ = float(np.interp(yc_, sh.hy, sh.hz)) - 0.035
+        A_, B_, C_ = (pa[1], pa[2]), (pb[1], pb[2]), (yc_, zc_)
+        side_tris("car_lamp", [[A_, B_, C_]], lift=0.010)
         if lod == 0:
-            for gc in (0.66, 1.02):
-                tc_, hgt = lamp_t(gc, 0.64)
-                rl = 0.30 * hgt
-                hexa = []
-                for a_ in np.linspace(0, 2 * math.pi, 7)[:-1]:
-                    pp, nrm = sh.ptf(i_, tc_ + rl * math.sin(a_) / ln_, sx * (gc + rl * math.cos(a_) / xt_))
-                    hexa.append(pp + nrm * 0.010)
-                _oq(m, "car_light_head", hexa, sh.ptf(i_, tc_, sx * gc)[1])
-        else:
-            spatch("H1", [(sx * g, lamp_t(g, 0.38)[0], lamp_t(g, 0.90)[0]) for g in (0.54, 1.14)], "car_light_head",
-                   lift=0.009)
-        if cargo:
-            patch("R1", 0.30, 0.97, [sx * g for g in ([1.0, 1.35, 1.7] if lod == 0 else [1.0, 1.6])], "car_light_tail")
-        else:
-            spatch("R1", [(sx * g, 0.82 - 0.14 * (g - tg[0]) / (tg[-1] - tg[0]), 0.97) for g in tg], "car_light_tail")
-            if lod == 0:
-                patch("R1", 0.05, 0.11, [sx * 1.05, sx * 1.5], "car_light_tail")           # bumper reflector
-    if f["bar"] and not cargo and lod == 0:
-        patch("R1", 0.905, 0.945, [-0.34, 0.0, 0.34], "car_light_tail")                    # light bar across the boot
+            la = lambda p, q, t: (p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t)      # noqa: E731
+            side_tris("car_light_head", [[la(A_, B_, 0.16), la(A_, B_, 0.84), la(la(A_, B_, 0.4), C_, 0.62)]], lift=0.014)
     gw, gt = f["gw"], f["gt"]
     if lod == 0:
-        spatch("H1", [(-gw, gt + 0.10, 0.80), (-0.72 * gw, gt, 0.98), (0.0, gt, 0.98), (0.72 * gw, gt, 0.98),
-                      (gw, gt + 0.10, 0.80)], "car_trim")                                  # grille (chamfered corners)
-        spatch("F1", [(-0.80, 0.26, 0.78), (-0.58, 0.12, 0.92), (0.0, 0.12, 0.92), (0.58, 0.12, 0.92),
-                      (0.80, 0.26, 0.78)], "car_trim")                                     # lower intake
-    else:
-        patch("H1", gt + 0.03, 0.95, [-0.9 * gw, 0.0, 0.9 * gw], "car_trim")
-        patch("F1", 0.15, 0.90, [-0.72, 0.0, 0.72], "car_trim")
-    if lod == 0:
+        spatch("H1", [(-gw, gt + 0.10, 0.84), (-0.74 * gw, gt, 0.95), (0.0, gt, 0.95), (0.74 * gw, gt, 0.95),
+                      (gw, gt + 0.10, 0.84)], "car_trim")                                  # grille (chamfered corners)
         for k in (1, 2):
-            t = gt + (0.70 - gt) * k / 3
-            patch("H1", t, t + 0.03, [-0.70 * gw, 0.0, 0.70 * gw], "rim_dark", lift=0.009)  # grille slats
-        if d.get("face") == "wide":
-            patch("H1", gt - 0.035, gt, [-0.72 * gw, 0.0, 0.72 * gw], "rim_dark", lift=0.009)   # satin strip (r8: no chrome)
-        for t in (0.40, 0.66):                                                             # lower intake slats (r8)
-            patch("F1", t, t + 0.05, [-0.56, 0.0, 0.56], "rim_dark", lift=0.009)
-        for sx in (-1, 1):                                                                 # corner intakes
-            spatch("F1", [(sx * 1.05, 0.12, 0.62), (sx * 1.32, 0.06, 0.72), (sx * 1.62, 0.12, 0.56)], "car_trim")
-        patch("R1", 0.0, 0.13, [-0.72, 0.0, 0.72], "car_trim")                             # rear valance insert
+            t = gt + (0.90 - gt) * k / 3
+            patch("H1", t, t + 0.035, [-0.72 * gw, 0.0, 0.72 * gw], "rim_dark", lift=0.009)  # grille slats
+        spatch("F1", [(-0.78, 0.60, 0.86), (-0.58, 0.52, 0.95), (0.0, 0.52, 0.95), (0.58, 0.52, 0.95),
+                      (0.78, 0.60, 0.86)], "car_trim")                                     # lower intake
+        patch("F1", 0.70, 0.76, [-0.56, 0.0, 0.56], "rim_dark", lift=0.009)
+        for sx in (-1, 1):                                                                 # corner intakes / fog recesses
+            spatch("F1", [(sx * 1.05, 0.40, 0.80), (sx * 1.38, 0.34, 0.86), (sx * 1.72, 0.42, 0.74)], "car_trim")
+    else:
+        patch("H1", gt + 0.03, 0.93, [-0.9 * gw, 0.0, 0.9 * gw], "car_trim")
+        patch("F1", 0.52, 0.93, [-0.70, 0.0, 0.70], "car_trim")
+
+    # ---- rear: lamp clusters, plate recess, bumper reflectors and valance
+    tg = [0.52, 0.8, 1.0, 1.33, 1.66, 2.0] if lod == 0 else [0.55, 1.0, 2.0]
+    iR = sh.seg["R2"]
+    for sx in (-1, 1):
+        if cargo:
+            patch("R2", 0.26, 0.86, [sx * g for g in ([1.25, 1.6, 2.0] if lod == 0 else [1.25, 2.0])], "car_light_tail")
+            if lod == 0:
+                patch("R2", 0.30, 0.42, [sx * 1.33, sx * 1.9], "car_light_head", lift=0.009)   # reversing lamp
+        else:
+            spatch("R2", [(sx * g, 0.60 - 0.18 * (g - tg[0]) / (tg[-1] - tg[0]), 0.985) for g in tg], "car_light_tail")
+            if lod == 0:
+                patch("R2", 0.63, 0.71, [sx * 0.60, sx * 0.94], "car_light_head", lift=0.009)  # reversing lamp
+                patch("R1", 0.50, 0.62, [sx * 1.10, sx * 1.60], "car_light_tail")              # bumper reflector
+        # the cluster wraps into the rear wing
+        t1_, t0_ = (0.985, 0.42) if not cargo else (0.86, 0.26)
+        pa, pb = sh.ptf(iR, t1_, 2.0)[0], sh.ptf(iR, t0_, 2.0)[0]
+        if sx == 1:
+            wa, wb_ = (0.17, 0.09) if not cargo else (0.05, 0.05)
+            side_tris("car_light_tail", [[(pa[1], pa[2]), (pb[1], pb[2]), (pb[1] + wb_, pb[2] + 0.03)],
+                                         [(pa[1], pa[2]), (pb[1] + wb_, pb[2] + 0.03), (pa[1] + wa, pa[2] - 0.012)]], lift=0.012)
+    if f["bar"] and not cargo and lod == 0:
+        patch("R2", 0.80, 0.86, [-0.52, 0.0, 0.52], "car_light_tail")                      # light bar across the boot
+    if lod == 0:
+        patch("R1", 0.0, 0.34, [-0.80, 0.0, 0.80], "car_trim")                             # rear valance insert
+        zpl = float(sh.P[iR][1]) + 0.215
+        tpl = t_at_z("R2", zpl)
+        patch("R2", tpl, tpl + 0.045 / elen("R2"), [-0.40, 0.0, 0.40], "car_trim", lift=0.008)   # plate lamp / handle bar
         if not cargo:                                                                      # roof aerial fin
             pr = sh.pt(sh.mid["G1"], 0.0)[0]
             _box5(m, "car_trim", [0, pr[1] + 0.16, pr[2] + 0.025], 0.02, 0.075, 0.03, (0, 0, -1))
-    # r8 N-14: LOD1 carries the prototype's own plate too (Low draws LOD1 from 16 m, where a 520 mm plate is still
-    # ~60 px wide; the atlas mips blur the characters into the grey band that the far cell used to fake)
+        else:                                                                              # barn-door split
+            patch("R2", 0.02, 0.98, [-0.012, 0.012], "car_trim", lift=0.004)
+            patch("G0", 0.0, 1.0, [-0.012, 0.012], "car_trim", lift=0.004)
+    else:
+        patch("R1", 0.0, 0.34, [-0.80, 0.80], "car_trim")
+    # plates: the prototype's own cell on LOD0 and LOD1 (r8 N-14)
     pk = int(style.get("plate", 0))
     u0, v0, u1, v1 = plate_uv(pk)
-    for name, tc in (("H1", 0.80), ("R1", 0.30)):
+    zpf = float(sh.P[sh.seg["F1"]][1]) - 0.085
+    zpr = float(sh.P[iR][1]) + 0.135
+    for name, tc in (("F1", t_at_z("F1", zpf)), ("R2", t_at_z("R2", zpr))):
         i = sh.seg[name]
         ln = float(np.linalg.norm(sh.P[i + 1] - sh.P[i]))
         xt = sh.pt(i, 1.0)[0][0]
@@ -1101,64 +1218,119 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
             nn += nrm
         zlo = min(pp[2] for pp in q)
         zhi = max(pp[2] for pp in q)
-        front = name == "H1"                 # front plate seen from +y: its left (EU band) is +x; rear: -x
+        front = name == "F1"                 # front plate seen from +y: its left (EU band) is +x; rear: -x
         uv = [((u0 if (pp[0] > 0) == front else u1), (v0 if pp[2] < (zlo + zhi) / 2 else v1)) for pp in q]
         _puv(m, "car_plate", q, uv, nn)
     # road film on the tail (dirtiest face of a car) and the lower front bumper
-    dg = [-1.8, -1.0, -0.34, 0.34, 1.0, 1.8] if lod == 0 else [-1.7, 0.0, 1.7]
-    spatch("R1", [(g, 0.0, 0.55 + 0.40 * dl) for g in dg], dmat, lift=0.015, uv=(uo, 0.45))
+    dg = [-1.8, -0.7, 0.7, 1.8] if lod == 0 else [-1.7, 0.0, 1.7]
+    spatch("R1", [(g, 0.0, 1.0) for g in dg], dmat, lift=0.016, uv=(uo, 0.45), v0=0.0)
+    spatch("R2", [(g, 0.0, 0.25 + 0.45 * dl) for g in dg], dmat, lift=0.016, uv=(uo + 0.21, 0.45), v0=0.35)
     if lod == 0:
-        spatch("F1", [(g, 1.0, 0.0) for g in dg], dmat, lift=0.012, uv=(uo + 0.37, 0.45), v0=0.62 - 0.30 * dl)   # thin: splatter
+        spatch("F1", [(g, 1.0, 0.0) for g in dg], dmat, lift=0.016, uv=(uo + 0.37, 0.45), v0=0.62 - 0.30 * dl)   # thin: splatter
 
-    # ---- sills, seams, handles, mirrors, rails
-    def strip(mat, pts, wy, lift=0.004):            # vertical seam along (y, z) points, 2 * wy wide
+    # ---- sills, seams, handles, mirrors, rails, wipers
+    def strip(mat, pts, wy, lift=0.004):            # seam along (y, z) points, 2 * wy wide
         for (ya, za), (yb, zb_) in zip(pts[:-1], pts[1:]):
+            dy, dz = yb - ya, zb_ - za
+            ln = math.hypot(dy, dz) or 1.0
+            oy, oz = dz / ln * wy, -dy / ln * wy
             for sx in (-1, 1):
-                _quad(m, mat, [sx * (sh.X(ya, za) + lift), ya - wy, za], [sx * (sh.X(ya, za) + lift), ya + wy, za],
-                      [sx * (sh.X(yb, zb_) + lift), yb + wy, zb_], [sx * (sh.X(yb, zb_) + lift), yb - wy, zb_], [sx, 0, 0])
+                _quad(m, mat, [sx * (sh.X(ya, za) + lift), ya - oy, za - oz], [sx * (sh.X(ya, za) + lift), ya + oy, za + oz],
+                      [sx * (sh.X(yb, zb_) + lift), yb + oy, zb_ + oz], [sx * (sh.X(yb, zb_) + lift), yb - oy, zb_ - oz], [sx, 0, 0])
     ys0, ys1 = yra + ra + 0.04, yfa - ra - 0.04
-    zs = sill + (0.17 if d.get("clad") else 0.085)
-    nsl = 4 if lod == 0 else 1
+    zs = sill + (0.15 if clad else 0.06)
+    nsl = 3 if lod == 0 else 1
     for k in range(nsl):
         ya, yb = ys0 + (ys1 - ys0) * k / nsl, ys0 + (ys1 - ys0) * (k + 1) / nsl
         for sx in (-1, 1):
             _quad(m, "car_sill", [sx * (sh.X(ya, sill) + 0.005), ya, sill], [sx * (sh.X(yb, sill) + 0.005), yb, sill],
                   [sx * (sh.X(yb, zs) + 0.005), yb, zs], [sx * (sh.X(ya, zs) + 0.005), ya, zs], [sx, 0, 0])
-    yM = ga1 - 0.16
-    zM = sh.zbelt(yM) + 0.085
+    yM = ga1 - 0.13
+    zM = sh.zbelt(yM)
     for sx in (-1, 1):
-        c = [sx * (sh.X(yM, zM) + 0.085), yM, zM]
+        xm = sh.X(yM, zM)
+        c = [sx * (xm + 0.125), yM, zM + 0.055]
         if lod == 0:
-            _box5(m, paint, c, 0.085, 0.035, 0.055, (0, 0, 0))
-            _quad(m, "car_glass", [c[0] - 0.07, yM - 0.037, zM - 0.04], [c[0] + 0.07, yM - 0.037, zM - 0.04],
-                  [c[0] + 0.07, yM - 0.037, zM + 0.04], [c[0] - 0.07, yM - 0.037, zM + 0.04], [0, -1, 0])
+            xi_, xo_ = sx * (xm + 0.050), sx * (xm + 0.205)
+            zc = zM + 0.058
+            A_ = [[xi_, yM - 0.034, zc - 0.036], [xi_, yM + 0.040, zc - 0.030], [xi_, yM + 0.040, zc + 0.034], [xi_, yM - 0.034, zc + 0.040]]
+            B_ = [[xo_, yM - 0.034, zc - 0.052], [xo_, yM + 0.012, zc - 0.040], [xo_, yM + 0.012, zc + 0.040], [xo_, yM - 0.034, zc + 0.052]]
+            cen = (np.mean(A_, axis=0) + np.mean(B_, axis=0)) / 2
+            for k in range(4):
+                k2 = (k + 1) % 4
+                q = [A_[k], A_[k2], B_[k2], B_[k]]
+                _oq(m, "car_glass" if k == 3 else paint, q, np.mean(q, axis=0) - cen)       # k == 3: the mirror glass face
+            _oq(m, paint, A_, np.array([-sx, 0, 0]))
+            _oq(m, paint, B_, np.array([sx, 0, 0]))
+            _box5(m, "car_trim", [sx * (xm + 0.02), yM + 0.004, zM + 0.022], 0.045, 0.028, 0.022, (-sx, 0, 0))   # foot
         else:
             _box5(m, paint, c, 0.085, 0.03, 0.055, (0, 0, 0))
     if lod == 0:
-        def vline(y, za, zb_):
-            return [(y, za + (zb_ - za) * k / 4) for k in range(5)]
-        y1d = yfa + ra + 0.09
-        y3d = (yra + 0.14) if not cargo else (yB - 1.05)
-        strip("car_trim", vline(y1d, sill + 0.09, min(sh.zbelt(y1d), float(np.interp(y1d, Sy, Sz))) - 0.02), 0.006)
-        strip("car_trim", vline(yB, sill + 0.09, sh.zbelt(yB) - 0.004), 0.006)
-        strip("car_trim", vline(y3d, (r + ra + 0.02) if not cargo else sill + 0.09, sh.zbelt(y3d) - 0.004), 0.006)
-        for y in (yB + 0.10, y3d + 0.12):                       # door handles
-            zh = sh.zbelt(y) - 0.09
+        def vline(y, za, zb_, k=4):
+            return [(y, za + (zb_ - za) * j / k) for j in range(k + 1)]
+        zd0 = sill + 0.085
+        y1d = yfa + ra + 0.10
+        y3d = (yra + 0.12) if not cargo else (yB - 1.10)
+        strip("car_trim", vline(y1d, zd0, sh.ztop(y1d) - 0.02), 0.006)
+        strip("car_trim", vline(yB, zd0, sh.zbelt(yB) - 0.004), 0.006)
+        strip("car_trim", vline(y3d, (r + ra + 0.05) if not cargo else zd0, sh.zbelt(y3d) - 0.004), 0.006)
+        strip("car_trim", [(y1d, zd0), ((y1d + yB) / 2, zd0), (yB, zd0), ((yB + y3d) / 2, zd0), (y3d, zd0)]
+              if cargo else [(y1d, zd0), ((y1d + yB) / 2, zd0), (yB, zd0), (ys0 + 0.02, zd0)], 0.005)   # door bottoms
+        # bumper / wing seams: from the lamp's lower corner to the arch, from the tail lamp to the rear arch
+        pa = sh.ptf(iH, to1, 2.0)[0]
+        aa = math.radians(52)
+        strip("car_trim", [(pa[1] - 0.004, pa[2]), (yfa + ra * math.cos(aa) + 0.012, r + ra * math.sin(aa) + 0.03)], 0.005)
+        pb = sh.S[sh.mid["RB"]]
+        strip("car_trim", [(pb[0] + 0.004, pb[1] + 0.012), (yra - ra * math.cos(aa) - 0.012, r + ra * math.sin(aa) + 0.03)], 0.005)
+        if cargo:                                   # sliding-door track under the (blind) rear quarter
+            zt_ = sh.zbelt(y3d) - 0.16
+            strip("car_trim", [(y3d - 0.02, zt_), ((y3d + sh.y0 + 0.30) / 2, zt_), (sh.y0 + 0.30, zt_)], 0.014)
+        for y in (yB + 0.07, y3d + 0.09):                       # door handles: dark recess + body-colour grip
+            zh = sh.ztop(y) - sh.shd - 0.045
             for sx in (-1, 1):
-                x = sx * (sh.X(y, zh) + 0.012)
-                _quad(m, "car_trim" if cargo else paint, [x, y, zh], [x, y + 0.15, zh], [x, y + 0.15, zh + 0.028],
-                      [x, y, zh + 0.028], [sx, 0, 0])
-        for name, t in (("H0", 0.03), ("R2", 0.85)):            # bonnet shut line at the cowl, tailgate / boot line
-            ln = float(np.linalg.norm(sh.P[sh.seg[name] + 1] - sh.P[sh.seg[name]]))
-            patch(name, t, t + 0.012 / max(1e-3, ln), [-1.0, -0.5, 0.0, 0.5, 1.0], "car_trim", lift=0.003)
+                x = sx * (sh.X(y, zh) + 0.006)
+                _quad(m, "car_trim", [x, y - 0.012, zh - 0.022], [x, y + 0.185, zh - 0.022], [x, y + 0.185, zh + 0.036],
+                      [x, y - 0.012, zh + 0.036], [sx, 0, 0])
+                x = sx * (sh.X(y, zh) + 0.020)
+                _quad(m, "car_sill" if cargo else paint, [x, y, zh + 0.004], [x, y + 0.165, zh + 0.004],
+                      [x, y + 0.165, zh + 0.030], [x, y, zh + 0.030], [sx, 0, 0])
+        # bonnet shut lines along the wings + the cowl panel under the wipers
+        i0_, i1_ = sh.mid["G4"], sh.first["H1"] + 1
+        for i in range(i0_, i1_):
+            da, db = 0.006 / (sh.R[i] * 1.57), 0.006 / (sh.R[i + 1] * 1.57)
+            for sx in (-1, 1):
+                q, nn = [], np.zeros(3)
+                for ii, g in ((i, 1.12 - da), (i, 1.12 + da), (i + 1, 1.12 + db), (i + 1, 1.12 - db)):
+                    pp, nrm = sh.pt(ii, sx * g)
+                    nrm = nrm / np.linalg.norm(nrm)
+                    q.append(pp + nrm * 0.004)
+                    nn += nrm
+                _quad(m, "car_trim", *q, nn)
+        patch("H1", 0.0, 0.014 / lnH, [-1.0, -0.5, 0.0, 0.5, 1.0], "car_trim", lift=0.004)                  # bonnet front edge
+        lw = elen("G4")
+        patch("G4", 0.0, min(0.5, 0.055 / lw), [-0.96, -0.5, 0.0, 0.5, 0.96], "car_trim", lift=0.004)      # cowl panel
+        lg_ = elen("G3")
+        for ga_, gb_ in ((-0.80, -0.06), (0.0, 0.74)):                                     # wipers parked on the screen
+            i = sh.seg["G3"]
+            q, nn = [], np.zeros(3)
+            for t, g in ((1.0 - 0.050 / lg_, ga_), (1.0 - 0.020 / lg_, ga_), (1.0 - 0.075 / lg_, gb_), (1.0 - 0.105 / lg_, gb_)):
+                pp, nrm = sh.ptf(i, t, g)
+                q.append(pp + nrm * 0.016)
+                nn += nrm
+            _quad(m, "car_trim", q[0], q[1], q[2], q[3], nn)
+        if not cargo and not d["deck"]:                                                    # rear wiper
+            lr = elen("G0")
+            patch("G0", 0.06 / lr, 0.085 / lr, [-0.06, 0.52], "car_trim", lift=0.014)
+        if d["deck"]:                                                                      # boot lid shut line
+            patch("R3", 0.04, 0.04 + 0.012 / elen("R3"), [-0.97, -0.5, 0.0, 0.5, 0.97], "car_trim", lift=0.003)
         if d.get("rails"):
             g1, g3 = sh.P[sh.mid["G1"]], sh.P[sh.mid["G3"]]
             for sx in (-1, 1):
                 pr = sh.pt(sh.mid["G2"], sx * 0.93)[0]
-                _box5(m, "car_trim", [pr[0], (g1[0] + g3[0]) / 2 - 0.05, pr[2] + 0.015], 0.016,
-                      (g3[0] - g1[0]) / 2 - 0.25, 0.02, (0, 0, -1))
+                _box5(m, "rim_dark", [pr[0], (g1[0] + g3[0]) / 2 - 0.05, pr[2] + 0.016], 0.011,
+                      (g3[0] - g1[0]) / 2 - 0.25, 0.011, (0, 0, -1))
 
-        # ---- interior seen through the glass: tub, dashboard, seats with headrests, headliner
+        # ---- interior seen through the glass: tub, dashboard, seats with headrests
         it = "car_interior"
         yi0, yi1 = ga0 + 0.02, ga1 + 0.05                  # r8 N-13: the tub reaches the base of the rear glass
         xi = hw - 0.13
@@ -1168,50 +1340,51 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
             _quad(m, it, [sx * xi, yi0, zf0], [sx * xi, yi1, zf0], [sx * xi, yi1, sh.zbelt(yi1)],
                   [sx * xi, yi0, sh.zbelt(yi0)], [-sx, 0, 0])
         _quad(m, it, [-xi, yi0, zf0], [xi, yi0, zf0], [xi, yi0, sh.zbelt(yi0)], [-xi, yi0, sh.zbelt(yi0)], [0, 1, 0])
-        # r8 N-13: door tops between the cabin wall and the glass line (looking down through a side window showed
-        # the paving through the 0.12 m door cavity)
         if not cargo:                                # shelf from the tub's rear wall up to the base of the rear glass
             ib = sh.mid["G0"]
             ql = [sh.pt(ib, g)[0] - np.array([0, 0, 0.006]) for g in (-2.0, -1.0, 1.0, 2.0)]
             zb0 = sh.zbelt(yi0)
             _oq(m, it, [np.array([-xi, yi0, zb0]), np.array([xi, yi0, zb0]), ql[3], ql[2], ql[1], ql[0]], [0, 0.3, 1])
         yl = [yi0, min(ga0 + 0.55, (yi0 + yi1) / 2), yi1]
-        for sx in (-1, 1):
+        for sx in (-1, 1):                           # door tops between the cabin wall and the glass line
             for ya, yb in zip(yl[:-1], yl[1:]):
                 za, zb_ = sh.zbelt(ya), sh.zbelt(yb)
                 _quad(m, it, [sx * xi, ya, za], [sx * sh.X(ya, za), ya, za], [sx * sh.X(yb, zb_), yb, zb_],
                       [sx * xi, yb, zb_], [0, 0, 1])
-        zd = belt - 0.03
-        # dashboard: a slab above the front wheel housings (r8 N-13: down to the floor it stood inside the arches
-        # and showed in the gap over the tyre) + the bulkhead behind it, as wide as the body
+        zbl = float(sh.zbelt(yi1))
+        zd = zbl - 0.02
         zd0 = max(zf0, r + ra + 0.02)
         _box5(m, it, [0, yi1 - 0.27, (zd + zd0) / 2], xi - 0.03, 0.27, (zd - zd0) / 2, (0, 0, 0))
-        xb_, zb_ = sh.X(yi1, belt) - 0.03, sh.zbelt(yi1)
-        _oq(m, it, [np.array(q_) for q_ in ([-xb_, yi1, zd0], [xb_, yi1, zd0], [xb_, yi1, zb_ - 0.02],
-                                             [xb_ - 0.11, yi1, belt - 0.01], [-xb_ + 0.11, yi1, belt - 0.01],
-                                             [-xb_, yi1, zb_ - 0.02])], [0, -1, 0])
+        xb_ = sh.X(yi1, zbl) - 0.03
+        # bulkhead up to the bonnet skin at the cowl (r9: the cowl centre is crowned above the side belt)
+        zc0 = float(sh.pt(sh.mid["G4"], 0.0)[0][2]) - 0.014
+        zc1 = float(sh.pt(sh.mid["G4"], 0.9)[0][2]) - 0.014
+        _oq(m, it, [np.array(q_) for q_ in ([-xb_, yi1, zd0], [xb_, yi1, zd0], [xb_, yi1, zbl - 0.02],
+                                             [xb_ - 0.10, yi1, zc1], [0.0, yi1, zc0], [-xb_ + 0.10, yi1, zc1],
+                                             [-xb_, yi1, zbl - 0.02])], [0, -1, 0])
         xw_ = sh.X(yfa, r) - 0.30                              # between the wheel housings: down to the floor
         _quad(m, it, [-xw_, yi1, zf0], [xw_, yi1, zf0], [xw_, yi1, zd0], [-xw_, yi1, zd0], [0, -1, 0])
-        # (the flat headliner quad of v2-v4 is replaced by the inner skin above)
         ysb = yB + 0.02
         zs0 = zf0 + 0.20
+        zbb = float(sh.zbelt(ysb))
         for sx in (-1, 1):                                                                             # front seats
-            _box5(m, it, [sx * 0.37, ysb, (zs0 + belt + 0.12) / 2], 0.24, 0.07, (belt + 0.12 - zs0) / 2, (0, 0, -1))
-            _box5(m, it, [sx * 0.37, ysb + 0.02, belt + 0.25], 0.12, 0.05, 0.095, (0, 0, -1))
+            _box5(m, it, [sx * 0.37, ysb, (zs0 + zbb + 0.12) / 2], 0.24, 0.07, (zbb + 0.12 - zs0) / 2, (0, 0, -1))
+            _box5(m, it, [sx * 0.37, ysb + 0.02, zbb + 0.25], 0.12, 0.05, 0.095, (0, 0, -1))
             _box5(m, it, [sx * 0.37, ysb + 0.30, zf0 + 0.27], 0.24, 0.25, 0.07, (0, 0, -1))
         if cargo:
-            # bulkhead up to the roof lining (r8 N-13: the 0.15 m gap under the roof opened the empty cargo bay)
+            # bulkhead up to the roof lining (r8 N-13: the gap under the roof opened the empty cargo bay)
             xs_ = xi - 0.14
             _oq(m, it, [np.array(q_) for q_ in ([-xi, ysb - 0.12, zf0], [xi, ysb - 0.12, zf0],
                                                  [xi, ysb - 0.12, H - 0.20], [xs_, ysb - 0.12, H - 0.03],
                                                  [-xs_, ysb - 0.12, H - 0.03], [-xi, ysb - 0.12, H - 0.20])], [0, 1, 0])
         else:
             yrs = max(yra + 0.12, ga0 + 0.55)
-            _box5(m, it, [0, yrs, (zs0 + belt + 0.08) / 2], 0.56, 0.08, (belt + 0.08 - zs0) / 2, (0, 0, -1))
+            zrb = float(sh.zbelt(yrs))
+            _box5(m, it, [0, yrs, (zs0 + zrb + 0.08) / 2], 0.56, 0.08, (zrb + 0.08 - zs0) / 2, (0, 0, -1))
             for sx in (-1, 1):
-                _box5(m, it, [sx * 0.36, yrs + 0.02, belt + 0.17], 0.11, 0.05, 0.075, (0, 0, -1))
-            _quad(m, it, [-xi, yi0, sh.zbelt(yi0) - 0.02], [xi, yi0, sh.zbelt(yi0) - 0.02], [xi, yrs, belt - 0.02],
-                  [-xi, yrs, belt - 0.02], [0, 0, 1])                                                  # parcel shelf
+                _box5(m, it, [sx * 0.36, yrs + 0.02, zrb + 0.17], 0.11, 0.05, 0.075, (0, 0, -1))
+            _quad(m, it, [-xi, yi0, sh.zbelt(yi0) - 0.02], [xi, yi0, sh.zbelt(yi0) - 0.02], [xi, yrs, zrb - 0.02],
+                  [-xi, yrs, zrb - 0.02], [0, 0, 1])                                                  # parcel shelf
     return _paint_uv(m)
 
 
