@@ -12,7 +12,7 @@ $AndroidNdk   = Join-Path $AndroidPlayer 'NDK'
 $AndroidJdk   = Join-Path $AndroidPlayer 'OpenJDK'
 $Adb          = Join-Path $AndroidSdk 'platform-tools\adb.exe'
 $ProjectPath  = Join-Path $RepoRoot 'game'
-$ArtifactsDir = Join-Path $RepoRoot 'artifacts'
+$ArtifactsDir = if ($env:KAMION_ARTIFACTS_DIR) { $env:KAMION_ARTIFACTS_DIR } else { Join-Path $RepoRoot 'artifacts' }   # worktrees: point at the main checkout so evidence survives worktree removal
 $LogsDir      = Join-Path $ArtifactsDir 'logs'
 
 # App identity (must match Game.Editor.Setup.ProjectSetup).

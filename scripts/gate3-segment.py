@@ -29,6 +29,8 @@ REPO = Path(__file__).resolve().parents[1]
 EYE_M = 2.5          # driver eye height above road (art-source/truck/dims.json, GATE-1 report)
 EYE_STEP_M = 50.0    # driver-eye camera spacing along a segment
 LOOK_AHEAD_M = 40.0
+SPAWN_S_M = 12.0     # the game spawns the truck at s=12 m (WorldSceneBuilder spawnS); a camera there is INSIDE the cab (r6 W-N10)
+TRUCK_CLEAR_M = 18.0  # eye cameras at the spawn are moved this far ahead (cab front is ~6 m ahead of the truck origin)
 
 # (id, title, s_start, s_end) - s along route_start.json (m). Rationale in docs/plan/STAGE-3.md.
 SEGMENTS = [
@@ -200,9 +202,12 @@ def main() -> int:
         k = 0
         s = s0
         while s <= s1 - 10:
-            p, la = at(s), at(s + LOOK_AHEAD_M)
+            # id keeps the nominal s (comparable with earlier evidence); the camera itself is moved out of the truck if it sits at the spawn.
+            sc = s + TRUCK_CLEAR_M if abs(s - SPAWN_S_M) < 1.0 else s
+            p, la = at(sc), at(sc + LOOK_AHEAD_M)
+            moved = f" (moved +{TRUCK_CLEAR_M:.0f} m ahead of the spawn so it is not inside the truck, W-N10)" if sc != s else ""
             cam(f"{tag}_eye_s{int(round(s)):04d}", "driver_eye", sid, p, ground(p) + EYE_M, la, ground(la) + 2.0, 60.0,
-                f"driver eye {EYE_M} m on the autopilot line, {LOOK_AHEAD_M:.0f} m ahead, s={s:.0f} m (+{s - s0:.0f} m)", s_m=r3(s), truck_s_m=None)
+                f"driver eye {EYE_M} m on the autopilot line, {LOOK_AHEAD_M:.0f} m ahead, s={sc:.0f} m (+{sc - s0:.0f} m){moved}", s_m=r3(sc), truck_s_m=None)
             s += EYE_STEP_M
         # 3/4 exterior: truck centre at s_t, camera front-left
         marks = {"G3-A": [(40.0, "yard, hall and docks behind"), (214.0, "at the depot gate"), (338.0, "entering Rondo Bieżeństwa")],
