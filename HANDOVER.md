@@ -1,4 +1,4 @@
-# HANDOVER — kamion, sesja 7 (2026-11-10 ok. 23:00; limit 5 h 95 % — agenci dostali polecenie: commit WIP + STATUS.md i stop; nowa sesja startuje z docs/owner/START-PROMPT-S8.md)
+# HANDOVER — kamion, sesja 7 (2026-11-10 ok. 23:00; LIMIT WYCZERPANY ok. 23:10; 0070/0076/0082/0083 zapisani i zatrzymani, 0077/0078/0081 — potwierdzenia brak (stan z gita/STATUS.md); agenci dostali polecenie: commit WIP + STATUS.md i stop; nowa sesja startuje z docs/owner/START-PROMPT-S8.md)
 
 ## Najpierw
 - **main wypchnięty (ten commit).** Scalone w s7: **0082 ogranicznik/krawędź świata** `65e24d9`, **0080 oświetlenie** `5439ddf` (wariant 3 overcast wybrany przez właściciela: lookToe 0,9/0,4/0,6 + EV −0,2, kompensacja kabiny `rq_cabtoe`), **0071 Kwadrat Park** `c132f56` (szlaban działa i ma kolizję — test WorldCBarrierTests; plac bez osobówek, naczepy przy dokach). Main NIE zregenerowany po scaleniach (czeka na 0076: P0 korytarza s1432–1480 nadal czerwony na main).
@@ -10,7 +10,7 @@
 |---|---|---|---|---|
 | P0 korytarz trasy + MA-001/002/012 + latarnia/krawężnik z filmu | 0076 | agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | STOP na 95 %, `fcd74f9`, NIEscalone: korytarz 4790 stacji 0 uskoków/0 przeszkód, krawężniki w poprzek 29→0, latarnie na jezdni 2→0 (Putry OK), spójność 103→69. pytest gis 203/5 czerwone: ratchety fidelity (oś p95 1,745 m vs baseline 0,032 — skutek łącznic „abreast”; krawędzie 2,57; wysepki 7>4) = DECYZJA lidera/właściciela, `test_terrain_walls` szczelina przy j:n10015785253 (E −239 N −236) do naprawy. Brak ADR 0076. |
 | wysepki z OSM, MA-010, krawędzie | 0077 | agent-a2afb96d89584cca6 | artifacts/islands-r10 | w toku |
-| straż JRG2 r4 | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | w toku |
+| straż JRG2 r4 | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | STOP na 95 %, `5a84b4a`, NIEscalone (merge main OK). LOD 8864/2720/164. W tle mogła zostać runda Unity r4b — sprawdzić log `unity_round_r4b.log` (ROUND_DONE), potem `git checkout -- M_Sky.mat game/ProjectSettings`; obejrzeć r4b (kolor prętów płotu), uzupełnić ADR 0070. Następny krok w STATUS.md. |
 | osobówki r10 | 0078 | agent-a2215bcc98d109edc | artifacts/cars-r10 | w toku (WorldPBR.shader wspólny z 0080 — bloki rozdzielne) |
 | zabudowa r10 | 0081 | agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | w toku |
 | ogranicznik 90, koniec świata, kamera, rondo | 0082 | agent-acc0299ca0b0081b1 | artifacts/drive-fold-r10 | SCALONE 65e24d9 — po scaleniu na main wymagany import-region (zapory przy imporcie) + `test.ps1 -Platform PlayMode -Filter WorldEdgeRecoveryTests`; asfalt 89,4 km/h, zjazd 5 % 40 t ustala się na 94 (retarder od 94, `overrunBrakeOffsetKmh=4` WORKING_VALUE — decyzja właściciela); +4 km/h z filmu UNVERIFIED (potrzebna telemetria „Nagraj”); teren za krawędzią pusty (las/zabudowa do zrobienia) |
