@@ -396,6 +396,104 @@ def taper_forks(net: Network, report: list | None = None):
                                    "taper_m": round(L, 1)})
 
 
+FORK_ALIGN_MAX_DEG = 60.0      # branches of a diverge / merge within this angle of the main carriageway
+FORK_ALIGN_MIN_M = 40.0        # lateral shift taper: max(this, FORK_ALIGN_RATIO x shift) (WORKING_VALUE)
+FORK_ALIGN_RATIO = 20.0
+
+
+def align_forks(net: Network, report: list | None = None):
+    """Lane continuity at diverges and merges of one-way carriageways (ADR 0074).
+
+    OSM draws every carriageway on its own centre line and splits them in one node, so a 3-lane carriageway that
+    diverges into a 2-lane viaduct and a 1-lane link (Andersa before Rondo Putry) had the viaduct centred under its
+    middle lane: the left lane ran into the viaduct's kerb. Here the lanes of the single carriageway are dealt out
+    left to right to the branches ordered left to right (each branch takes as many lanes as it has), and every
+    branch centre line is shifted sideways at the node so its lanes lie under the lanes it takes, the shift fading
+    out with a smoothstep over max(FORK_ALIGN_MIN_M, FORK_ALIGN_RATIO x shift). Applies only when the branch lane
+    counts add up to the single carriageway's lanes (otherwise it is a lane gain / drop the data must describe)."""
+    from .markings import lane_layout
+    ends = {}
+    for c in net.chains:
+        if c.meta.get("absorbed") or c.roundabout or c.closed or len(c.line.s) < 8:
+            continue
+        ends.setdefault(c.node_a, []).append((c, "a"))
+        ends.setdefault(c.node_b, []).append((c, "b"))
+    secs = net.sec_list
+    for node, lst in sorted(ends.items(), key=lambda kv: kv[0]):
+        if len(lst) < 3:
+            continue
+        info = []
+        for c, e in lst:
+            s_in = min(1.0, c.length / 2) if e == "a" else c.length - min(1.0, c.length / 2)
+            sec = c.section(s_in, secs)
+            if not sec.oneway:
+                break
+            dn = int(c.dirn[c.idx(s_in)]) or 1
+            outward = (dn > 0) == (e == "a")          # traffic leaves the node along this chain
+            s15 = min(15.0, c.length * 0.5) if e == "a" else c.length - min(15.0, c.length * 0.5)
+            p0 = c.line.point(0.0 if e == "a" else c.length)
+            v = c.line.point(s15) - p0
+            v = v / max(float(np.hypot(*v)), 1e-9)
+            info.append((c, e, sec, dn, outward, v))
+        else:
+            outs = [x for x in info if x[4]]
+            ins = [x for x in info if not x[4]]
+            for single, branches in ((ins, outs), (outs, ins)):
+                if len(single) != 1 or len(branches) < 2:
+                    continue
+                sc, se, ssec, sdn, sout, sv = single[0]
+                travel = -sv if not sout else sv          # direction of travel of the single carriageway at the node
+                away = -travel if sout else travel        # where the branches lie: ahead (diverge) / behind (merge)
+                s_node = 0.0 if se == "a" else sc.length
+                _, n_s0 = sc.line.frame(s_node)
+                nl0 = n_s0 * (1.0 if sdn > 0 else -1.0)  # travel-left normal of the single carriageway
+                br = []
+                ok = True
+                for c, e, sec, dn, outw, v in branches:
+                    ang = math.degrees(math.atan2(away[0] * v[1] - away[1] * v[0], float(np.dot(away, v))))
+                    if abs(ang) > FORK_ALIGN_MAX_DEG:
+                        ok = False
+                    br.append((float(np.dot(v, nl0)), c, e, sec, dn))
+                if not ok or sum(b[3].lanes for b in br) != ssec.lanes:
+                    continue
+                br.sort(key=lambda b: -b[0])              # left to right in the direction of travel
+                hw_s = float(sc.hw_at(s_node))
+                _, _, cen = lane_layout(ssec, hw_s, sdn)
+                lanes_s = cen["fwd"]                      # left -> right in travel direction, chain lateral
+                # chain lateral -> travel-left lateral of the single carriageway
+                tl_sign = 1.0 if sdn > 0 else -1.0
+                k0 = 0
+                for ang, c, e, sec, dn in br:
+                    take = [lanes_s[i] * tl_sign for i in range(k0, k0 + sec.lanes)]
+                    k0 += sec.lanes
+                    s_b = 0.0 if e == "a" else c.length
+                    hw_b = float(c.hw_at(s_b))
+                    _, _, cb = lane_layout(sec, hw_b, dn)
+                    bl = [x * (1.0 if dn > 0 else -1.0) for x in cb["fwd"]]   # travel-left lateral in the branch
+                    p_s = sc.line.point(s_node)
+                    p_b = c.line.point(s_b)
+                    t_s, n_s = sc.line.frame(s_node)
+                    nl = n_s * tl_sign                    # travel-left normal of the single carriageway
+                    want = float(np.mean(take)) - float(np.mean(bl))   # branch centre lateral it should have
+                    have = float(np.dot(p_b - p_s, nl))
+                    shift = want - have                   # + = towards travel-left
+                    if abs(shift) < 0.3:
+                        continue
+                    L = max(FORK_ALIGN_MIN_M, FORK_ALIGN_RATIO * abs(shift))
+                    L = min(L, 0.8 * c.length)
+                    d = c.line.s if e == "a" else c.length - c.line.s
+                    f = np.clip(1.0 - d / L, 0.0, 1.0)
+                    f = f * f * (3 - 2 * f)
+                    # branch travel-left normal along the branch = chain normal * branch travel sign
+                    nb = c.line.n * (1.0 if dn > 0 else -1.0)
+                    pts = c.line.p + nb * (shift * f)[:, None]
+                    c.line = Polyline(pts)
+                    c.meta["fork_shift_m"] = round(shift, 2)
+                    if report is not None:
+                        report.append({"node": node, "chain": c.id, "shift_m": round(shift, 2), "taper_m": round(L, 1),
+                                       "lanes": [round(x, 2) for x in take]})
+
+
 # --------------------------------------------------------------------------------------------
 def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: list | None = None,
                  yards=None):

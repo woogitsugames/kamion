@@ -240,7 +240,8 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
         appr = {}   # stations of junction approaches for P-2a
         for end, sj in (("a", s0), ("b", s1)):
             info = arm_info.get((c.id, end))
-            if info and (info[0].signalized or any(net.sec_list[i].turn_fwd for i in np.unique(sidx))):
+            if info and (info[0].signalized or (any(net.sec_list[i].turn_fwd for i in np.unique(sidx))
+                                                and not _lanes_continue(c, end, info[0], secs))):
                 appr[end] = sj
         for a_, b_ in zip(cuts, cuts[1:]):
             sec = secs[int(sidx[a_])]
@@ -287,6 +288,12 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                 if len(lanes) != len(tl):
                     continue
                 end_s = sb if trav > 0 else sa
+                # the same turn:lanes continue past this point (an OSM way split at a minor junction or a section
+                # boundary): the lanes do not diverge here, so no arrows (they belong before the real divergence,
+                # ADR 0074 - arrows before the fire-station exit on Andersa)
+                if _turns_continue(c, sec, tl, trav, end_s, s0, s1, arm_info, secs):
+                    cnt("P-8 skipped (lanes continue)")
+                    continue
                 long = fast
                 spacing = S.ARROW_SPACING["long" if long else "short"]
                 L = (S.ARROW_LONG if long else S.ARROW_SHORT)["len"]
@@ -384,6 +391,34 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                     x += S.P13_BASE + S.P13_GAP
             cnt(kind)
     report["markings"] = counts
+
+
+def _way(sec):
+    return str(sec.edge_id).split(":")[0]
+
+
+def _lanes_continue(c, end, j, secs):
+    """True if an outbound arm of junction j continues this chain end's OSM way with the same turn:lanes."""
+    s_in = 1.0 if end == "a" else c.length - 1.0
+    sec = c.section(s_in, secs)
+    tl = sec.turn_fwd or sec.turn_bwd
+    if not tl:
+        return False
+    for a in j.arms:
+        if a.chain is c or a.inbound_dirn() > 0:
+            continue
+        so = a.chain.section(a.s(1.0), secs)
+        if _way(so) == _way(sec) and tl in (so.turn_fwd, so.turn_bwd):
+            return True
+    return False
+
+
+def _turns_continue(c, sec, tl, trav, end_s, s0, s1, arm_info, secs):
+    if (trav > 0 and end_s < s1 - 0.5) or (trav < 0 and end_s > s0 + 0.5):
+        nxt = c.section(end_s + trav * 1.0, secs)          # mid-chain section boundary
+        return nxt is not sec and tl in (nxt.turn_fwd, nxt.turn_bwd)
+    info = arm_info.get((c.id, "b" if trav > 0 else "a"))
+    return bool(info) and _lanes_continue(c, "b" if trav > 0 else "a", info[0], secs)
 
 
 def strip_cross(buf, c, s_mid, depth, lat0, lat1):

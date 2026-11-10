@@ -481,11 +481,15 @@ def direction_boards(pl, net, graph_attrs, report, boards):
 def signals(pl, net, juncs, report):
     n = 0
     for j in juncs:
-        if not j.signalized:
+        emerg = getattr(j, "emergency_signals", False)
+        if not (j.signalized or emerg):
             continue
         for k, a in enumerate(j.arms):
             if a.inbound_dirn() < 0 or a.is_ring():
                 continue
+            if emerg and a.cls(net.sec_list) in ("D",):
+                continue                    # emergency signals face the main road, not the fire-station exit
+
             d = (a.chain.t_a if a.end == "a" else a.chain.t_b) + 1.0
             if d > a.L - 1:
                 continue
@@ -498,10 +502,12 @@ def signals(pl, net, juncs, report):
             p = a.gutter(d, +1, extra=S.KERB_TOP_W + 0.6)
             face = a.direction(d)
             lit = "red" if (_h(j.id) + k) % 2 == 0 else "green"
+            if emerg:
+                lit = "off"                 # traffic_signals=emergency: dark at rest (ADR 0074)
             sec = c.section(s, net.sec_list)
             lanes_in = sec.lanes if sec.oneway else max(1, sec.lanes_fwd if a.end == "b" else sec.lanes_bwd)
             right = np.array([face[1], -face[0]])                # from the right kerb toward the carriageway
-            if lanes_in >= S.SIGNAL_CANTILEVER_LANES:
+            if lanes_in >= S.SIGNAL_CANTILEVER_LANES and not emerg:
                 z = pl.add("signal_mast", p, yaw_of(right), src=f"rule:signal:{j.id}")
                 head = p + right * 5.0
                 pl.add(f"signal_head_{lit}", head, yaw_of(face), z=z + S.SIGNAL_MAST_H - 1.25, src=f"rule:signal:{j.id}")
