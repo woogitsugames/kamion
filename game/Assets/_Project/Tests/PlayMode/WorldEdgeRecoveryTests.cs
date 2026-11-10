@@ -65,14 +65,19 @@ namespace Game.Tests
                 body.transform.position.x, body.transform.position.y, body.transform.position.z, body.Body.linearVelocity.magnitude * 3.6f,
                 body.Body.linearVelocity.y, net.ResetCount, net.LastReason);
 
-            // The recording: north edge on al. Tysiąclecia (E −857), 105 km/h, heading out. Start 25 m before the edge.
-            Vector3 edgeLocal = new Vector3(-857f, 0f, max.y - 25f);
-            Vector3 start = root.transform.TransformPoint(edgeLocal);
-            Assert.IsTrue(Gate3Cameras.TryGroundY(start.x, start.z, root.transform.position.y + 400f, new[] { body.transform }, out float gy), "collision 25 m before the edge");
+            // The recording: north edge on al. Tysiąclecia, 105 km/h, heading out. The outbound (eastern) carriageway
+            // runs (-844.3, 966.4) -> (-856.5, 1024.0) in roads.graph.json; start 25 m before the edge, along the road.
+            Vector2 edgeEN = new Vector2(-856.5f, max.y), roadDir = (edgeEN - new Vector2(-844.3f, 966.4f)).normalized;
+            Vector2 startEN = edgeEN - roadDir * 25f;
+            Vector3 start = root.transform.TransformPoint(new Vector3(startEN.x, 0f, startEN.y));
+            Vector3 fwd = root.transform.TransformDirection(new Vector3(roadDir.x, 0f, roadDir.y));
+            Assert.IsTrue(Physics.Raycast(start + Vector3.up * 300f, Vector3.down, out var startHit, 600f, ~0, QueryTriggerInteraction.Ignore), "collision 25 m before the edge");
+            Assert.AreEqual("col_asphalt", startHit.collider.name, "the start is on the carriageway");
+            float gy = startHit.point.y;
             start.y = gy;
             // The whole combination (tractor + coupled trailer), rolling in gear; the lab re-applies the parking brake
             // after a spawn, which cannot stop 105 km/h within 25 m.
-            boot.SpawnAt(boot.CurrentSpawn, start, Quaternion.LookRotation(Vector3.forward, Vector3.up));
+            boot.SpawnAt(boot.CurrentSpawn, start, Quaternion.LookRotation(fwd, Vector3.up));
             body.SetMoving(105f / 3.6f, 11);
             Physics.SyncTransforms();
             rig.AddLookDelta(new Vector2(400f, -300f));   // the driver's fingers on the look pad during the fall
@@ -82,7 +87,7 @@ namespace Game.Tests
             while (Time.time < tEnd && net.ResetCount == 0)
             {
                 yield return new WaitForFixedUpdate();
-                lowestY = Mathf.Min(lowestY, body.transform.position.y);
+                if (net.ResetCount == 0) lowestY = Mathf.Min(lowestY, body.transform.position.y);   // the pose after the reset is elsewhere
                 maxSpeed = Mathf.Max(maxSpeed, body.Body.linearVelocity.magnitude * 3.6f);
                 Row();
             }
@@ -150,13 +155,33 @@ namespace Game.Tests
                 if (Mathf.Abs(c.localPos.x + 860f) < 12f && c.localPos.z > 900f) tysiaclecia = true;
             }
             Assert.IsTrue(tysiaclecia, "al. Tysiąclecia Państwa Polskiego (the road of the recording) is closed before the north edge");
-            // Evidence: road surface profile of the recording's last 320 m (the 90 -> 94 km/h rise before the edge).
-            var prof = new System.Text.StringBuilder("north_m,road_y_m\n");
-            for (float n = 700f; n <= 1020f; n += 20f)
+            // Evidence: surface profile of the outbound carriageway of al. Tysiąclecia before the north edge (the
+            // recording's 90 -> 94 km/h). Line: artifacts/drive-fold-r10/tysiaclecia_outbound_line.json (the chain of
+            // roads.graph.json edges, ~960 m) when present, else the last 170 m.
+            var line = new[] { new Vector2(-820.5f, 858.0f), new Vector2(-827.3f, 885.6f), new Vector2(-831.9f, 906.3f), new Vector2(-842.2f, 955.2f), new Vector2(-844.3f, 966.4f), new Vector2(-856.5f, 1024.0f) };
+            string lineFile = EvidencePath("tysiaclecia_outbound_line.json");
+            if (File.Exists(lineFile))
             {
-                Vector3 w = root.transform.TransformPoint(new Vector3(-857f, 0f, n));
-                if (Gate3Cameras.TryGroundY(w.x, w.z, root.transform.position.y + 400f, System.Array.Empty<Transform>(), out float ry))
-                    prof.AppendFormat(CultureInfo.InvariantCulture, "{0:F0},{1:F2}\n", n, ry);
+                var nums = System.Text.RegularExpressions.Regex.Matches(File.ReadAllText(lineFile), @"-?\d+(\.\d+)?");
+                line = new Vector2[nums.Count / 2];
+                for (int k = 0; k < line.Length; k++)
+                    line[k] = new Vector2(float.Parse(nums[2 * k].Value, CultureInfo.InvariantCulture), float.Parse(nums[2 * k + 1].Value, CultureInfo.InvariantCulture));
+            }
+            var prof = new System.Text.StringBuilder("s_m,east_m,north_m,top_y_m,collider\n");
+            float sAlong = 0f;
+            for (int k = 0; k + 1 < line.Length; k++)
+            {
+                float segLen = Vector2.Distance(line[k], line[k + 1]);
+                for (float d = 0f; d < segLen; d += 2f)
+                {
+                    Vector2 en = Vector2.Lerp(line[k], line[k + 1], d / segLen);
+                    Vector3 w = root.transform.TransformPoint(new Vector3(en.x, 0f, en.y));
+                    float top = float.NegativeInfinity; string who = "";
+                    foreach (var h in Physics.RaycastAll(new Vector3(w.x, root.transform.position.y + 400f, w.z), Vector3.down, 800f, ~0, QueryTriggerInteraction.Ignore))
+                        if (h.collider.GetComponentInParent<WorldBoundary>() != null && h.collider.GetComponent<BoxCollider>() == null && h.point.y > top) { top = h.point.y; who = h.collider.name; }
+                    prof.AppendFormat(CultureInfo.InvariantCulture, "{0:F0},{1:F1},{2:F1},{3:F2},{4}\n", sAlong + d, en.x, en.y, top, who);
+                }
+                sAlong += segLen;
             }
             File.WriteAllText(EvidencePath("tysiaclecia-north-profile.csv"), prof.ToString());
             // Ground to the horizon: the apron renderer reaches far beyond the region.
