@@ -898,6 +898,37 @@ def power_supports(pl, P, hv, key, roads_poly, report):
     return np.array(out)
 
 
+WIRE_SAG_RATIO = 0.015       # mid-span sag / span of a level span (WORKING_VALUE: MV / HV lines at ~15-20 C, no source)
+WIRE_SAMPLE_M = 5.0          # max chord length of the sampled catenary (REVIEW r6 W-P0: <= 5 m, no zigzags)
+
+
+def catenary_span(L, za, zb, sag_ratio=WIRE_SAG_RATIO, step=WIRE_SAMPLE_M):
+    """Conductor between supports at heights za (x = 0) and zb (x = L): a catenary z = c (cosh((x - x0) / c) -
+    cosh(x0 / c)) + za whose parameter c gives a level span the sag sag_ratio * L (c = L^2 / (8 sag), the parabola
+    limit; exact enough for sag / span < 5 %) and whose vertex x0 makes it pass through zb (closed form). Sampled at
+    equal arc length, every <= step m of conductor (chords <= step also on steep spans). Returns (t = x / L, z, dz/dx)."""
+    sag = max(sag_ratio * L, 1e-3)
+    c = L * L / (8.0 * sag)
+    x0 = L / 2.0 - c * math.asinh((zb - za) / (2.0 * c * math.sinh(L / (2.0 * c))))
+    s0 = math.sinh(-x0 / c)
+    arc = c * (math.sinh((L - x0) / c) - s0)               # conductor length between the supports
+    k = max(2, int(math.ceil(arc / step - 1e-9)))
+    x = x0 + c * np.arcsinh(s0 + np.linspace(0.0, arc, k + 1) / c)
+    x[0], x[-1] = 0.0, L
+    z = za + c * (np.cosh((x - x0) / c) - math.cosh(x0 / c))
+    z[-1] = zb                                   # exact end (float round-off only)
+    return x / L, z, np.sinh((x - x0) / c)
+
+
+def _max_turn_deg(xz):
+    """Largest direction change (deg) between neighbouring segments of a polyline (n, 2|3)."""
+    d = np.diff(np.asarray(xz, float), axis=0)
+    if len(d) < 2:
+        return 0.0
+    d /= np.linalg.norm(d, axis=1, keepdims=True)
+    return float(np.degrees(np.arccos(np.clip((d[1:] * d[:-1]).sum(1), -1.0, 1.0))).max())
+
+
 def power_lines(lin, src, origin, report, pl=None, roads_poly=None):
     n = 0
     sup_rep = {}
@@ -918,18 +949,18 @@ def power_lines(lin, src, origin, report, pl=None, roads_poly=None):
             L = float(np.hypot(*(b - a)))
             if L < 5:
                 continue
-            k = max(2, int(L / 5))
-            t = np.linspace(0, 1, k + 1)
-            Q = a + (b - a) * t[:, None]
             za, zb = lin.z(a[None])[0] + h, lin.z(b[None])[0] + h
-            sag = 0.015 * L * 4 * t * (1 - t)
-            Z = za + (zb - za) * t - sag
+            t, Z, dz = catenary_span(L, za, zb)
+            Q = a + (b - a) * t[:, None]
             dvec = (b - a) / L
             nn = np.array([-dvec[1], dvec[0]])
-            # 3D tangent of the sagging wire per sample (engine ribbon, ADR 0022 / REVIEW r4 W-H2)
-            dz = np.gradient(Z, t * L) if len(t) > 1 else np.zeros_like(t)
+            # analytic 3D tangent of the catenary per sample (engine ribbon, ADR 0022 / REVIEW r6 W-P0)
             tan = np.column_stack([np.repeat(dvec[None], len(t), 0), dz])
             tan /= np.linalg.norm(tan, axis=1, keepdims=True)
+            turn = _max_turn_deg(np.column_stack([t * L, Z]))
+            report["wire_max_turn_deg"] = round(max(report.get("wire_max_turn_deg", 0.0), turn), 3)
+            report["wire_max_seg_m"] = round(max(report.get("wire_max_seg_m", 0.0),
+                                                 float(np.max(np.hypot(np.diff(t * L), np.diff(Z))))), 3)
             for o in (-sep, 0.0, sep):
                 QQ = Q + nn * o
                 V = np.concatenate([np.column_stack([QQ, Z - WIRE_HALF_W]), np.column_stack([QQ, Z + WIRE_HALF_W])])

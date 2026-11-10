@@ -28,7 +28,13 @@ param(
     # Editor GPU timing: N extra renders per camera (stats.txt, VISUALQA_TIMING lines in the log).
     [int]$TimeFrames = 0,
     # Render scale override (e.g. 0.80 = ADR 0046 adaptive floor); default = the tier's.
-    [string]$RenderScale = ''
+    [string]$RenderScale = '',
+    # REVIEW r6 W-P0 measurement: power-line conductors on (default), off, or solid (full opacity, black).
+    [ValidateSet('on', 'off', 'solid')] [string]$Wires = 'on',
+    # Adds the Stage 3 gate cameras (e.g. Data/Regions/<region>/gate3_cameras.json) to the scene's control cameras.
+    [string]$Gate3 = '',
+    # Parapet run-off A/B: off renders hall walls without the _RUNOFF streak layer.
+    [ValidateSet('on', 'off')] [string]$Runoff = 'on'
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -46,6 +52,9 @@ if ($NoGlass) { $qaArgs += @('-qaNoGlass', '1') }
 if ($CabFill -eq 'off') { $qaArgs += @('-qaCabFill', 'off') }
 if ($Rq) { $qaArgs += @('-qaRq', $Rq) }
 if ($RenderScale) { $qaArgs += @('-qaRenderScale', $RenderScale) }
+if ($Wires -ne 'on') { $qaArgs += @('-qaWires', $Wires) }
+if ($Runoff -ne 'on') { $qaArgs += @('-qaRunoff', $Runoff) }
+if ($Gate3) { $qaArgs += @('-qaGate3', [IO.Path]::GetFullPath($Gate3, (Get-Location).Path)) }
 if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
 $code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
 

@@ -296,3 +296,50 @@ def test_ground_props_off_the_carriageway(qa):
     """Lamp / sign / signal bases are pushed off the carriageway (the Unity importer counted 88 on the road)."""
     r = qa["furniture"]["props_off_carriageway"]
     assert r["moved"] > 0 and r["still_on_road"] <= 5
+
+
+# ------------------------------------------------------------------------------------------ wires / run-off (r6 W-P0)
+@pytest.mark.parametrize("L", [5.0, 7.3, 14.0, 41.0, 80.0, 123.0, 250.0, 350.0])
+@pytest.mark.parametrize("dz", [-8.0, 0.0, 2.5, 12.0])
+def test_wire_catenary_smooth(L, dz):
+    """Power-line conductor = catenary sampled every <= 5 m; no segment turns > 10 deg against its neighbour within
+    one span (REVIEW r6 W-P0: zigzags), ends exactly on the supports, level span sags sag_ratio * L."""
+    from streetscape import furniture as FU
+    za = 140.0
+    t, z, dzdx = FU.catenary_span(L, za, za + dz)
+    x = t * L
+    assert abs(z[0] - za) < 1e-6 and abs(z[-1] - (za + dz)) < 1e-6
+    seg = np.hypot(np.diff(x), np.diff(z))
+    assert seg.max() <= FU.WIRE_SAMPLE_M + 0.05
+    assert FU._max_turn_deg(np.column_stack([x, z])) <= 10.0
+    # analytic tangent agrees with the chord slopes (the engine ribbon expands across this tangent)
+    mid = 0.5 * (dzdx[1:] + dzdx[:-1])
+    assert np.abs(mid - np.diff(z) / np.diff(x)).max() < 0.02
+    if dz == 0.0:
+        sag = za - z.min()
+        assert abs(sag - FU.WIRE_SAG_RATIO * L) <= 0.03 * FU.WIRE_SAG_RATIO * L + 0.02
+
+
+def test_wires_in_region_smooth(qa):
+    f = qa["furniture"]
+    assert f["wire_max_seg_m"] <= 5.05
+    assert f["wire_max_turn_deg"] <= 10.0
+
+
+def test_runoff_uv1_half_float_safe():
+    """Wall-top TEXCOORD_1 is shifted by whole layer periods per quad: |u| stays small (half floats in the engine)
+    while the pattern position (u mod period) is unchanged."""
+    from streetscape import buildings_mesh as BM
+    P = BM.RUNOFF_PERIOD_M
+    for ua in (0.0, 13.7, 230.4, 1999.0):
+        uv = np.array(BM.runoff_uv1((10.0, 5.3, 0.8), ua, ua + 31.0, 4.0, 9.6))
+        assert 0.0 <= uv[0, 0] < P and abs(uv[1, 0] - uv[0, 0] - 31.0) < 1e-9
+        assert abs(((uv[0, 0] - (5.3 + ua)) / P) - round((uv[0, 0] - (5.3 + ua)) / P)) < 1e-9
+        assert abs(uv[0, 1] - (1 + 6.0 / 0.8)) < 1e-9 and abs(uv[2, 1] - (1 + 0.4 / 0.8)) < 1e-9
+    assert BM.runoff_uv1(None, 0, 1, 0, 1) is None
+
+
+def test_every_hall_wall_has_runoff_uv1(qa):
+    """Parapet run-off streaks need TEXCOORD_1 on every hall_wall_* triangle (LOD0 and LOD1)."""
+    r = qa["buildings"]["hall_wall_runoff_tris"]
+    assert r["with_uv1"] > 1000 and r["without_uv1"] == 0

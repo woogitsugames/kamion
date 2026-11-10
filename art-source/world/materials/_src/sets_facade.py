@@ -364,19 +364,22 @@ def parapet_runoff(nx=1024, ny=160, seed=521):
         x += rng.uniform(2.0, 3.0)
     for xj in xs:
         if rng.random() < 0.78:
-            L = float(np.clip(rng.lognormal(np.log(1.6), 0.5), 0.6, 3.8))
-            soot += streak(xj, rng.uniform(0.025, 0.06), L, rng.uniform(0.45, 0.95), rng.uniform(0.005, 0.03))
+            # v2 (REVIEW r6 / G3 wires-streaks-v2): the 2.5-6 cm runs of v1 were below one texel on Low (94 mm) and
+            # below one screen pixel from the road at 25-80 m, so the layer read as clean sheet; joint streaks are now
+            # 5-14 cm (a run spreads on ribbed cladding: it follows 1-3 ribs) and longer (lognormal median 2.0 m)
+            L = float(np.clip(rng.lognormal(np.log(2.0), 0.45), 0.8, 3.7))
+            soot += streak(xj, rng.uniform(0.05, 0.14), L, rng.uniform(0.5, 0.95), rng.uniform(0.005, 0.03))
             if rng.random() < 0.45:                                          # twin run beside the joint
                 soot += streak(xj + rng.uniform(-0.25, 0.25), rng.uniform(0.012, 0.03), 0.6 * L, rng.uniform(0.2, 0.5), 0.01)
         if rng.random() < 0.22:                                              # rusty fastener below the joint
             xr = xj + rng.uniform(-0.6, 0.6)
-            rust += streak(xr, rng.uniform(0.01, 0.025), rng.uniform(0.3, 1.1), rng.uniform(0.4, 0.8), 0.006, start=0.02)
+            rust += streak(xr, rng.uniform(0.025, 0.06), rng.uniform(0.4, 1.4), rng.uniform(0.4, 0.8), 0.006, start=0.02)
     # fine drip lines everywhere along the drip edge (~3 per metre)
-    for _ in range(int(3.0 * Lx)):
-        soot += streak(rng.uniform(0, Lx), rng.uniform(0.006, 0.016), rng.uniform(0.2, 1.2), rng.uniform(0.08, 0.3), 0.004)
+    for _ in range(int(1.5 * Lx)):
+        soot += streak(rng.uniform(0, Lx), rng.uniform(0.012, 0.03), rng.uniform(0.3, 1.4), rng.uniform(0.1, 0.3), 0.004)
     # broad smudges below sagging coping
-    for _ in range(5):
-        soot += streak(rng.uniform(0, Lx), rng.uniform(0.15, 0.45), rng.uniform(0.6, 2.4), rng.uniform(0.12, 0.3), 0.05)
+    for _ in range(6):
+        soot += streak(rng.uniform(0, Lx), rng.uniform(0.2, 0.55), rng.uniform(0.8, 2.8), rng.uniform(0.15, 0.35), 0.05)
     soot *= 0.55 + 0.45 * breaker
     # dirty band under the drip edge: uneven depth along the wall, soft lower edge
     bd = 0.05 + 0.30 * sstep(-1.2, 1.6, noise(c, 3, 0.6, 8.0, beta=1.0, aniso=1.0))   # depth varies along u

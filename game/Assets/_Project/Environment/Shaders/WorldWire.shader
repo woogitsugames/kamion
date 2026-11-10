@@ -8,7 +8,10 @@
 //   - the core is at least _MinPixels wide and the ribbon is widened by _AAPixels on each side; the fragment shader
 //     box-filters the core against a 1 px pixel from the interpolated cross coordinate in pixels, so the line never
 //     depends on which pixel centres (or MSAA samples) the triangle happens to hit: continuous, no crawl in motion;
-//   - alpha = physical width / core width (energy conserving: a 24 mm wire 300 m away is a faint continuous line);
+//   - alpha = (physical width / core width) ^ _AlphaGamma (REVIEW r6 W-P0, "alpha ~ coverage"): gamma 1 is energy
+//     conserving, but a 24 mm conductor 300 m away then covers 5 % of its 1.2 px core and vanishes against the sky,
+//     while the eye (and every photo, through lens blur and sharpening) still reads it as a thin dark line. Gamma 0.5
+//     keeps the order (nearer / thicker = darker) and lifts 5 % to 22 % (WORKING_VALUE, tuned on the gate3 frames);
 //   - fades out with the cull distance of the poles (global _KamionWireFade = (start, end) m, set by WorldInstances
 //     from the power-pole prototypes): a conductor never outlives its poles.
 Shader "Kamion/World Wire"
@@ -19,6 +22,7 @@ Shader "Kamion/World Wire"
         _MinPixels ("Minimum core width (px)", Float) = 1.2
         _AAPixels ("Anti-aliasing fringe per side (px)", Float) = 1.0
         _MaxAlpha ("Maximum opacity", Range(0, 1)) = 0.95
+        _AlphaGamma ("Coverage-to-alpha exponent (1 = energy conserving)", Range(0.25, 1)) = 0.5
     }
     SubShader
     {
@@ -41,7 +45,7 @@ Shader "Kamion/World Wire"
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseColor;
-                float _MinPixels, _AAPixels, _MaxAlpha;
+                float _MinPixels, _AAPixels, _MaxAlpha, _AlphaGamma;
             CBUFFER_END
             float4 _KamionWireFade;   // x start, y end (m); y <= 0: no fade
 
@@ -85,7 +89,7 @@ Shader "Kamion/World Wire"
                 pw += s * side * (outPx * px);
                 o.positionCS = TransformWorldToHClip(pw);
                 o.wline = float2(side * outPx, corePx);
-                half a = saturate(hwPx / corePx) * _MaxAlpha;
+                half a = pow(saturate(hwPx / corePx), _AlphaGamma) * _MaxAlpha;
                 if (_KamionWireFade.y > 0.0) a *= 1.0 - smoothstep(_KamionWireFade.x, _KamionWireFade.y, dist);
                 o.alpha = a;
                 // simple lighting of a thin cylinder: sky from above + half the sun

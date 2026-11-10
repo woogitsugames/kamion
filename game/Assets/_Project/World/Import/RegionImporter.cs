@@ -353,7 +353,9 @@ namespace Game.World.Import
             mat.enableInstancing = true;
             mat.SetVector("_BaseColor", new Vector4(albedo.r, albedo.g, albedo.b, 1f));
             mat.SetFloat("_MinPixels", 1.2f);
+            mat.SetFloat("_AAPixels", 1.0f);
             mat.SetFloat("_MaxAlpha", 0.95f);
+            mat.SetFloat("_AlphaGamma", 0.5f);   // REVIEW r6 W-P0: far conductors stay readable (WORKING_VALUE)
             EditorUtility.SetDirty(mat);
             return mat;
         }

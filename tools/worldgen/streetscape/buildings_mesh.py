@@ -132,8 +132,14 @@ class Acc:
         for f in faces:
             self.quad(layer, mat, *[P[i] for i in f])
 
+    # parapet run-off coverage (REVIEW G3 wires-streaks-v2): hall_wall_* triangles with / without wall-top TEXCOORD_1
+    runoff_tris = {"with_uv1": 0, "without_uv1": 0}
+
     def flush(self, buf, src):
         for (layer, mat), items in sorted(self.d.items()):
+            if str(mat).startswith("hall_wall"):
+                for it in items:
+                    Acc.runoff_tris["with_uv1" if it[3] is not None else "without_uv1"] += len(it[1])
             V = np.concatenate([it[0] for it in items])
             UV = np.concatenate([it[2] for it in items])
             UV1 = (np.concatenate([it[3] if it[3] is not None else np.zeros((len(it[0]), 2)) for it in items])
@@ -141,6 +147,25 @@ class Acc:
             off = np.cumsum([0] + [len(it[0]) for it in items[:-1]])
             T = np.concatenate([it[1] + o for it, o in zip(items, off)])
             buf.add(layer, mat, V, UV, T, src=src, UV1=UV1)
+
+
+RUNOFF_PERIOD_M = 24.0       # u period of the parapet_runoff layer (art-source/world/materials, sets_facade)
+
+
+def runoff_uv1(runoff, ua, ub, za, zb):
+    """TEXCOORD_1 of a wall quad [ua, ub] x [za, zb] for the parapet run-off streaks (Kamion/World PBR _RUNOFF):
+    (u_offset + u, 1 + (z_top - z) / length_scale). The engine stores TEXCOORD_1 as half floats (WorldMeshBake), so u is
+    shifted per quad by a whole number of layer periods: the pattern is unchanged (the layer tiles in u) but |u| stays
+    below period + quad length (< 1/16 m half-float step) instead of the building perimeter (0.25-1 m steps -> pattern
+    seams and smeared streaks on big halls). None when runoff is None."""
+    if runoff is None:
+        return None
+    zt_r, uo, ls = runoff
+    a = uo + ua
+    sh = RUNOFF_PERIOD_M * math.floor(a / RUNOFF_PERIOD_M)
+    a, b = a - sh, uo + ub - sh
+    ka, kb = 1 + (zt_r - za) / ls, 1 + (zt_r - zb) / ls
+    return [[a, ka], [b, ka], [b, kb], [a, kb]]
 
 
 def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0, vref=0.0, runoff=None):
@@ -169,11 +194,7 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
         if z < zt:
             segs.append((z, zt))
         for za, zb2 in segs:
-            uv1 = None
-            if runoff is not None:
-                zt_r, uo, ls = runoff
-                ka, kb = 1 + (zt_r - za) / ls, 1 + (zt_r - zb2) / ls
-                uv1 = [[uo + u0 + ua, ka], [uo + u0 + ub, ka], [uo + u0 + ub, kb], [uo + u0 + ua, kb]]
+            uv1 = runoff_uv1(runoff, u0 + ua, u0 + ub, za, zb2)
             acc.quad(layer, mat, P(ua, za), P(ub, za), P(ub, zb2), P(ua, zb2),
                      uv=[[u0 + ua, za - vref], [u0 + ub, za - vref], [u0 + ub, zb2 - vref], [u0 + ua, zb2 - vref]], uv1=uv1)
     n3 = np.append(nout[:2], 0.0)
@@ -513,9 +534,11 @@ def load(fc, origin, overrides):
     return out
 
 
-def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase, kind, pitched, zone_wall=None):
+def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase, kind, pitched, zone_wall=None,
+              runoff=None):
     """LOD1 wall edge: cheap (8-14 triangles) but not a box face - plinth, window zone (office / block: far facade
-    material, UV1 = (bay, storey) grid), wall above, projecting coping at the attic."""
+    material, UV1 = (bay, storey) grid), wall above, projecting coping at the attic. runoff: as wall_with_openings
+    (hall_wall_* bands get the same wall-top TEXCOORD_1 as LOD0, so the streaks do not pop at the LOD switch)."""
     lay = "buildings_low"
 
     def P(q, z):
@@ -524,6 +547,8 @@ def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh
     def band(z0, z1, mat, uv1=None):
         if z1 - z0 < 0.02:
             return
+        if uv1 is None and str(mat).startswith("hall_wall"):
+            uv1 = runoff_uv1(runoff, u_acc, u_acc + L, z0, z1)
         acc.quad(lay, mat, P(a, z0), P(c_, z0), P(c_, z1), P(a, z1),
                  uv=[[u_acc, z0 - zref], [u_acc + L, z0 - zref], [u_acc + L, z1 - zref], [u_acc, z1 - zref]], uv1=uv1)
     if pitched or typ not in ("hall", "office", "block") or L < 3.0:     # short jogs (half of all edges): plain
@@ -556,6 +581,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
     """Generate building meshes into buf; returns dock descriptions (for the paved aprons)."""
     all_docks = []
     counts = {}
+    Acc.runoff_tris = {"with_uv1": 0, "without_uv1": 0}
     signs = []
     for b in blds:
         poly, p, typ = b["poly"], b["props"], b["typ"]
@@ -685,8 +711,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                 # parapet run-off streaks (zacieki pod attyką): wall-top space in UV1, per-building pattern offset
                 # (one constant shift per building, so u stays continuous round the corners) and streak length
                 # scale (gutter halls shorter: the gutter takes most of the water)
-                ro = (zt - 0.4, 24.0 * FK.hfloat(key, "runoff_u"),
+                ro = (zt - 0.4, RUNOFF_PERIOD_M * FK.hfloat(key, "runoff_u"),
                       (0.55 if scheme["gutter"] else 0.8) + 0.7 * FK.hfloat(key, "runoff_l"))
+                lod1_ro = (zt - 0.25, ro[1], ro[2])                  # LOD1: coping ledge over the top 0.25 m
                 FK.wall_pieces(wall_with_openings, acc, a, d, nout, L, zbot, zt - 0.4, ops, u_acc, zref,
                                [zpl, zlow, ztopb], [], hall_mat, runoff=ro)
                 P3 = lambda q, z: [q[0], q[1], z]
@@ -729,6 +756,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                     if door:
                         um = (door[0][0] + door[0][1]) / 2
                         usplits = [FK.safe_u(um - 1.6, ops, L), FK.safe_u(um + 1.6, ops, L)]
+                lod1_ro = ((zt, RUNOFF_PERIOD_M * FK.hfloat(key, "runoff_u"), 0.6 + 0.7 * FK.hfloat(key, "runoff_l"))
+                           if str(wall).startswith("hall_wall") else None)
                 gable_accent = insulated and L < 16 and FK.hfloat(key, "gable") < 0.6
                 band_z = []                                            # (z0, z1) of each band
                 if bands and ei not in bal_edges and not gable_accent and typ in ("block", "office"):
@@ -759,8 +788,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                 FK.wall_pieces(wall_with_openings, acc, a, d, nout, L, zbot, zt, ops, u_acc, zref,
                                [zpl] + [z for b in band_z for z in b],
                                [u for u in usplits if u is not None] if None not in usplits else [], plaster_mat,
-                               runoff=(zt, 24.0 * FK.hfloat(key, "runoff_u"), 0.6 + 0.7 * FK.hfloat(key, "runoff_l"))
-                               if str(wall).startswith("hall_wall") else None)   # sheds / small halls clad in sheet
+                               runoff=lod1_ro)   # sheds / small halls clad in sheet
                 if typ in ("block", "office"):                       # attic coping (obróbka attyki): silhouette
                     FK.coping(acc, a, c_, nout, zt, mat="hall_flashing")
                 if typ == "block":
@@ -795,16 +823,21 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
             # LOD1 (v3.1): plinth band, window zone with the far facade material (window grid in UV1), wall above,
             # projecting coping at the attic; pitched houses keep the plain wall
             lod1_wall(acc, typ, lod1_main, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase,
-                      "ribbon" if variant["ribbon"] else typ, pitched, zone_wall=lod1_zone)
+                      "ribbon" if variant["ribbon"] else typ, pitched, zone_wall=lod1_zone, runoff=lod1_ro)
             u_acc += L
         if typ == "hall" and len(edges) >= 3:                       # corner flashings
             for i, (a, c_) in enumerate(edges):
                 FK.corner_trim(acc, a, nouts[i - 1], nouts[i], zref + 0.6, zeave - 0.4)
         # courtyard walls (holes), plain
+        hole_ro = ((zeave, RUNOFF_PERIOD_M * FK.hfloat(key, "runoff_u"), 0.6 + 0.7 * FK.hfloat(key, "runoff_l"))
+                   if str(wall).startswith("hall_wall") else None)   # courtyard sheet walls streak as well
         for hole in poly.interiors if not pitched else []:
+            uh = 0.0
             for a, c_ in ring_edges(hole):
                 L = float(np.linalg.norm(c_ - a))
-                acc.quad("buildings", wall, [a[0], a[1], zbot], [c_[0], c_[1], zbot], [c_[0], c_[1], zeave], [a[0], a[1], zeave])
+                acc.quad("buildings", wall, [a[0], a[1], zbot], [c_[0], c_[1], zbot], [c_[0], c_[1], zeave], [a[0], a[1], zeave],
+                         uv1=runoff_uv1(hole_ro, uh, uh + L, zbot, zeave))
+                uh += L
         if pitched:
             roof = hpick(key, ROOFS_PITCHED, "roof")
             for layer in ("buildings", "buildings_low"):
@@ -841,7 +874,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                 FK.machine_rooms(acc, poly, zeave - 0.3, "buildings")
         acc.flush(buf, key)
     report.update({"typologies": counts, "docks": sum(len(d["docks"]) for d in all_docks),
-                   "dock_facades": [d["id"] for d in all_docks], "facade_signs": len(signs)})
+                   "dock_facades": [d["id"] for d in all_docks], "facade_signs": len(signs),
+                   "hall_wall_runoff_tris": dict(Acc.runoff_tris)})
     if sign_out is not None:
         sign_out.extend(signs)
     return all_docks

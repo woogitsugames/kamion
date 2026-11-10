@@ -205,6 +205,40 @@ namespace Game.Editor.VisualQA
                     Shader.SetGlobalFloat("_CabGain", 1f);
                 }
                 else foreach (var cl in UnityEngine.Object.FindObjectsByType<CabInteriorLighting>(FindObjectsSortMode.None)) cl.Refresh(cam);
+                // REVIEW r6 W-P0 measurement: -qaWires off hides the power-line conductors, -qaWires solid draws them at
+                // full opacity in black (alpha = coverage of the >= 1.2 px core only); the differences of the three
+                // renders give the expected wire path and the drawn wire (gaps per 100 px, wires-streaks-v2 evidence).
+                string wiresArg = EditorTools.Arg("-qaWires", "on");
+                if (wiresArg == "off" || wiresArg == "solid")
+                    foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                    {
+                        var mats = r.sharedMaterials;
+                        bool any = false;
+                        for (int mi = 0; mi < mats.Length; mi++)
+                        {
+                            if (mats[mi] == null || mats[mi].shader == null || mats[mi].shader.name != "Kamion/World Wire") continue;
+                            var g = new Material(mats[mi]) { hideFlags = HideFlags.DontSave };
+                            if (wiresArg == "off") g.SetFloat("_MaxAlpha", 0f);
+                            else { g.SetFloat("_MaxAlpha", 1f); g.SetFloat("_AlphaGamma", 0f); g.SetVector("_BaseColor", Vector4.zero); }
+                            mats[mi] = g; any = true;
+                        }
+                        if (any) r.sharedMaterials = mats;
+                    }
+                // Parapet run-off A/B: -qaRunoff off renders the hall walls without the _RUNOFF streak layer.
+                if (EditorTools.Arg("-qaRunoff", "on") == "off")
+                    foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                    {
+                        var mats = r.sharedMaterials;
+                        bool any = false;
+                        for (int mi = 0; mi < mats.Length; mi++)
+                        {
+                            if (mats[mi] == null || !mats[mi].IsKeywordEnabled("_RUNOFF")) continue;
+                            var g = new Material(mats[mi]) { hideFlags = HideFlags.DontSave };
+                            g.DisableKeyword("_RUNOFF");
+                            mats[mi] = g; any = true;
+                        }
+                        if (any) r.sharedMaterials = mats;
+                    }
                 // ADR 0043 diagnostic: -qaNoGlass leaves only the grey Fresnel loss of the glazing (no body absorption,
                 // grime, film or interior reflection), so sky-through-glass can be compared with the real glass in one frame.
                 if (EditorTools.Arg("-qaNoGlass", null) == "1")

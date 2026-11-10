@@ -448,7 +448,10 @@ Shader "Kamion/World PBR"
             #if defined(_RUNOFF)
                 if (i.uv.w > 0.5)
                 {
-                    float2 ur = float2(i.uv.z / 24.0, min((i.uv.w - 1.0) * 0.25, 0.985));
+                    // PNG row 0 (right under the coping) is texture v = 1 in Unity: v = 1 - depth / 4 m. Before
+                    // (G3 wires-streaks-v2) v = depth / 4 sampled the faded last rows at the top and drew the streaks
+                    // upside down 3-4 m lower. LOD1 walls start 0.25 m above their coping (depth < 0): clamped.
+                    float2 ur = float2(i.uv.z / 24.0, 1.0 - clamp((i.uv.w - 1.0) * 0.25, 0.0, 0.985));
                     half3 ro = SAMPLE_TEXTURE2D(_RunoffMap, sampler_MacroMap, ur).rgb;
                     half k = _RunoffStrength * saturate(0.8 + (macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 1.0);
                     albedo = lerp(albedo, albedo * half3(0.22, 0.21, 0.2), ro.r * k);

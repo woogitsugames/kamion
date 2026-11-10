@@ -69,16 +69,40 @@ sectional doors), blocks (plaster, large-panel joints, brick) and props (curtain
   UNVERIFIED until the next device run; the Low path can drop the normal map if it costs > 1 ms.
 - Blender control renders keep their own procedural materials (`render_control.py`); `road_asphalt_new` added there.
 
-## Addendum 2026-11-10 — anti-aliased wires, parapet run-off (G3 visual review)
-- **Wires** (`WorldWire.shader`): the pixel size comes from `_ScaledScreenParams` (URP target after renderScale and the
-  ADR 0046 adaptive scale; `_ScreenParams` is the unscaled back buffer, so at 0.80 the 1.2 px floor was 0.96 px). The
-  core stays >= `_MinPixels` (1.2 px) wide, the ribbon is widened by `_AAPixels` (1 px) per side and the fragment shader
-  box-filters the core against a 1 px pixel from the interpolated cross coordinate in pixels: coverage no longer depends
-  on which pixel centres / MSAA samples the triangle hits (no dashes, no crawl in motion). Alpha = physical / core width
-  (energy conserving); the pole-cull distance fade is unchanged. Cost: same vertex count, 2 ALU in the fragment, ~2 px
-  more transparent fill per wire. Thin railings (6 cm galvanised slabs, opaque `Kamion/World PBR`) are NOT changed.
-- **Parapet run-off** (zacieki pod attyką): layer `parapet_runoff` (24 x 4 m, R soot, G rust; `sets_facade.parapet_runoff`)
-  in wall-top space: hall walls get TEXCOORD_1 = (u + per-building shift, 1 + depth below the fascia / per-building length
-  scale) in `buildings_mesh.py`; `hall_wall_*` materials enable `_RUNOFF` (one RGB sample, all tiers; Low texture 256 x 40,
-  ~10 KB ASTC). Strength per material from its luminance (light cladding shows more) and per wall from the macro map.
-  Look WORKING_VALUE (no measured data). LOD1 halls carry no UV1 and get no streaks.
+## Addendum 2026-11-10 — wires and parapet run-off (G3 / REVIEW r6 W-P0), corrected after verification
+The first version of this addendum (WIP a1d4e81) described both features as working; the control renders did not show
+either. What was wrong and what is in place now (evidence `artifacts/world-fixes/wires-streaks-v2/`):
+- **Wires, why they were invisible:** not a stripped variant or a missing material (the `wires` layer is baked on Low
+  and High with `Kamion/World Wire`): the energy-conserving alpha (physical width / core width) gave a 24 mm conductor
+  5 % opacity at 300 m and 15 % at 100 m, i.e. 1-4 levels against the sky - below what the eye (and the r6 crops) can
+  see, so on the phone only the aliased old geometry showed, as dots.
+- **Wires now** (`WorldWire.shader`): pixel size from `_ScaledScreenParams` (URP target after renderScale / ADR 0046
+  scale; `_ScreenParams` is the unscaled back buffer); core >= `_MinPixels` 1.2 px, + `_AAPixels` 1 px fringe per side,
+  fragment box-filters the core against a 1 px pixel (no dependence on pixel centres / MSAA samples); alpha =
+  (physical / core width) ^ `_AlphaGamma` 0.5 (keeps nearer = darker; 5 % -> 22 %, 15 % -> 39 %; WORKING_VALUE, judged
+  on the gate3 frames). Fade with the pole cull distance unchanged. Cost: same vertex count, ~3 ALU, ~2 px more
+  transparent fill per wire (not measured on the phone: UNVERIFIED).
+- **Sag geometry** (`furniture.catenary_span`): a real catenary through both supports (parameter from sag = 1.5 % of the
+  span for a level span, vertex from the closed form for uneven supports; WORKING_VALUE ratio), sampled at equal arc
+  length <= 5 m (the old parabola used int(L / 5) samples: up to 7 m chords on short spans), analytic tangent for the
+  ribbon. QA: `streetscape_qa.furniture.wire_max_turn_deg` (1.72 deg on tile C) and `wire_max_seg_m` (4.998 m); pytest
+  `test_wire_catenary_smooth` (<= 10 deg between neighbouring segments of one span, chords <= 5 m, ends on supports).
+- **Run-off, why it was invisible:** (1) the shader sampled v = depth / 4 m, but PNG row 0 (right under the coping) is
+  texture v = 1 in Unity, so the faded bottom rows were drawn under the coping and the streaks hung upside down 3-4 m
+  lower; (2) LOD1 hall walls (`buildings_lod1`, everything outside the Low LOD0 corridor) and courtyard walls had no
+  TEXCOORD_1 (no LOD1 band had it; with LOD1 fixed, 46 of 12 132 hall_wall triangles - courtyard walls - still
+  lacked it); (3) TEXCOORD_1 is baked as half floats and u ran
+  along the whole perimeter (0.25-1 m steps on big halls); (4) the v1 streaks (2.5-6 cm) were under one Low texel (94 mm).
+- **Run-off now:** v = 1 - depth / 4 m; every hall_wall triangle carries wall-top UV1 (LOD0, LOD1 bands, courtyard walls;
+  QA `buildings.hall_wall_runoff_tris.without_uv1` = 0, pytest `test_every_hall_wall_has_runoff_uv1`); u shifted per quad
+  by whole 24 m periods (`buildings_mesh.runoff_uv1`, pattern unchanged, |u| < period + quad length); joint streaks
+  5-14 cm wide, median 2 m long, rust runs 2.5-6 cm (`sets_facade.parapet_runoff` v2). Look WORKING_VALUE (no
+  measured data); structured streaks from the joint layout, no free noise (docs/06 §2).
+- QA switches: `visual-qa.ps1 -Wires on|off|solid -Runoff on|off -Gate3 <gate3_cameras.json>`; `scripts/wire_gaps.py`
+  counts wire gaps (> 2 px) per 100 px from the on/off/solid triple.
+- **Measured (editor, 2340 x 1080, tile C, gate3 + control cameras; `artifacts/world-fixes/wires-streaks-v2/`):** wire
+  gaps > 2 px against sky / light background: 0 on Low and High, overcast and clear (13.4-16.8 k wire px in 10-11
+  frames each). Remaining gaps (2-11 per tier/light, < 3 levels) are where the dark conductor crosses dark foliage,
+  where it really is almost invisible. Run-off A/B (`-Runoff off`): hall frames darkened by >= 3 levels on 1.2-20 k px,
+  p99 13-23 levels (Low and High), 59-72 % of the darkening in the upper half of each streak (hangs from the coping).
+  Phone (A16) not measured in this task: UNVERIFIED.
