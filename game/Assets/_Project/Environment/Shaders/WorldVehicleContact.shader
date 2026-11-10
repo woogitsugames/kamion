@@ -1,7 +1,7 @@
 // Kamion/World Vehicle Contact - contact shadow / ambient occlusion under instanced parked vehicles (cars, vans, tractor
 // units, semitrailers; ADR 0050). Same physics as Kamion/Contact Shadow (ADR 0021, the player's truck) but analytic in
-// the instance's object space, so one flat quad per prototype LOD (one extra submesh = +1 instanced draw per batch) and
-// no per-frame mesh work:
+// the instance's object space, so one flat quad per contact spec (its own instanced prototype "contact_<hash>" = +1
+// instanced draw per spec in view, <= 7) and no per-frame mesh work:
 //   occlusion  = 1 - Π (1 - s_i · Fx_i · Fz_i) over 2 body slabs + up to 4 axles of tyre contact blobs, F = 2D view
 //                factor of a strip of half size a at height h seen from ground offset x:
 //                F(x) = ½ [(a − x)/√((a − x)² + h²) + (a + x)/√((a + x)² + h²)]  (darkest between the wheels and under
@@ -117,12 +117,13 @@ Shader "Kamion/World Vehicle Contact"
                 half ys = dot(sky, half3(0.2126, 0.7152, 0.0722)), yd = dot(sun, half3(0.2126, 0.7152, 0.0722));
                 half atten = L.shadowAttenuation;
 
-                // Sky seen from under a body is a sliver near the horizon. Under an overcast sky (CIE standard overcast,
-                // L ∝ 1 + 2 sin e) that sliver is darker than the mean: cosine-weighted open fraction o of a horizon band
-                // carries o (1 + o) / 2 of the sky's light. Weighted by the diffuse share of the light (no direct sun ->
-                // full; clear noon, ~0.3 diffuse -> ~0.1).
+                // Sky seen from under a body is a band from the horizon up to elevation E. Under an overcast sky (CIE
+                // standard overcast, L ∝ 1 + 2 sin e) that band is darker than the mean: a uniform sky gives the
+                // cosine-weighted open fraction o = sin²E, the CIE sky ∫0^E (1 + 2 sin e) sin e cos e de / (7/6)
+                // = (3 sin²E + 4 sin³E) / 7 = o (3 + 4 √o) / 7 (-> 3/7 of o for a thin sliver, = o for an open sky).
+                // Weighted by the diffuse share of the light (no direct sun -> full; clear noon, ~0.3 diffuse -> ~0.1).
                 half diffuse = ys / max(ys + yd, 1e-4);
-                open = lerp(open, open * (1.0 + open) * 0.5, diffuse * diffuse);
+                open = lerp(open, open * (3.0 + 4.0 * sqrt(open)) * (1.0 / 7.0), diffuse * diffuse);
                 half occ = 1.0 - open;
 
                 // ---- analytic sun visibility through the lower box

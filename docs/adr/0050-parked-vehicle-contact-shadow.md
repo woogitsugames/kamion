@@ -35,8 +35,38 @@ truck has `Kamion/Contact Shadow` (ADR 0021) with a ray-cast mesh rebuilt per fr
    ground, and a sample below the casting ground self-shadowed in stripes (acne) that the ratio turned into dark bands.
    `tests/gis/test_vehicle_contact.py` ports the fragment function to numpy and checks the profile.
 
-## Measured
-See the section added after the visual loop (artifacts `artifacts/world-fixes/cars-ao/`).
+4. **Overcast sky gradation**: the sky seen from under a body is a band from the horizon up to elevation E. For the CIE
+   standard overcast sky (L ∝ 1 + 2 sin e) the band carries o (3 + 4 √o) / 7 of the horizontal irradiance, o = sin²E
+   the uniform-sky (SH) open fraction (→ 3/7 of o for a thin sliver; closed form checked against numerical integration
+   in `test_cie_overcast_band_fraction`). Applied weighted by the squared diffuse share of the light (overcast: full,
+   clear noon: ~0.1). The WIP formula o (1 + o) / 2 was not that integral and was replaced.
+
+## Measured (editor, RTX 5070, 2340x1080, 2026-11-10)
+Method: core = ground pixels whose linear luma drops below 0.6x of the strength-0 render of the *same* world
+(`before3` = shader returning 1, same build); display luma (Rec.709 weights on sRGB) p5 inside the core, before → after.
+
+| config | stretch-01 | glass_side_00 |
+|---|---|---|
+| Low clear | 28.0 → 4.2 % | 20.5 → 1.9 % |
+| High clear | 25.0 → 4.7 % | 24.5 → 3.2 % |
+| Low overcast | 41.1 → **9.0 %** | 45.8 → 5.5 % |
+| High overcast | 47.9 → **9.2 %** | 47.0 → 6.3 % |
+
+(WIP without the CIE term: overcast stretch-01 12.1 / 12.2 %, glass_side_00 8.2 / 8.9 %.) Target overcast p5 ≤ 8 % is met
+on the side view and **not met on stretch-01** (9.0 / 9.2 %). Splitting the stretch-01 core by image row gives 8.2-10.7 %
+in every distance band, so fog is not the limit: from that grazing view along the row the camera sees only the strip at
+the body edge (view factor ~0.5 by design), not the deep floor core. Reaching 8 % there would need darker body edges,
+which is not physical; left as is. Visual check (before3/after3 crops, `compare3/`): no patch outline, no doubled
+darkening inside the real LOD0 sun shadow (High clear), cars sit on the paving in overcast.
+
+Cost: instanced draws on Low stretch-01 = 558 with and without the contact term (the patch draws are inside that number;
+the "submesh per LOD" variant gave 619). Editor frame time Low stretch-01 6.25 ms vs 6.27 ms with the term returning 1
+(5 renders, noise level). Phone GPU cost: UNVERIFIED (not measured on A16 / flagship).
+
+Evidence: `artifacts/world-fixes/cars-ao/{before3,after3}/<Tier>-<lighting>/` (+ `stats.txt`), crops in `compare3/`;
+older `before` / `after` / `after2` = previous world build (not comparable 1:1 on glass_side_00).
+`EditMode VehicleContactImportTests` checks the imported set (≤ 7 contact prototypes, one quad, no shadows, vehicle cull,
+instanced material with the generator spec, one patch per vehicle instance).
 
 ## Consequences
 - Cast shadows of LOD1+ vehicles beyond the patch (long low-sun shadows onto the street) are still missing; the analytic
@@ -44,4 +74,6 @@ See the section added after the visual loop (artifacts `artifacts/world-fixes/ca
 - Vehicles parked across a kerb: the patch lies on the instance's ground plane; where the real ground is > 8 cm above it
   (kerb top) the patch is depth-rejected there (no darkening on the kerb top).
 - Phone GPU cost not measured yet (UNVERIFIED; expected well under 0.1 ms on A16 Low: ~40 ALU + 1 shadow tap per patch
-  pixel, patches are small on screen).
+  pixel, patches are small on screen). No quality-profile toggle yet: the term costs one draw per spec and is needed on
+  every tier; if the phone measurement shows a cost, gate it per tier.
+- Overcast p5 on grazing views along a parking row stays ~9 % (see Measured).

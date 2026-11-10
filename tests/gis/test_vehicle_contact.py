@@ -83,3 +83,16 @@ def test_trailer_darkest_at_axles_open_under_floor():
     tyre = occlusion(s, hw - 0.27, LP.TRAILER_AXLES[1])
     floor = occlusion(s, 0.0, 9.0)
     assert tyre > 0.85 and 0.4 < floor < 0.9, (tyre, floor)
+
+
+def test_cie_overcast_band_fraction():
+    """Shader overcast correction: a horizon band up to elevation E of the CIE standard overcast sky (L ~ 1 + 2 sin e)
+    carries o (3 + 4 sqrt(o)) / 7 of the horizontal irradiance, o = sin^2 E the uniform-sky cosine-weighted fraction."""
+    e = np.linspace(0, np.pi / 2, 20001)
+    w = (1 + 2 * np.sin(e)) * np.sin(e) * np.cos(e)
+    total = np.trapezoid(w, e)
+    for E in (0.05, 0.2, 0.5, 1.0, np.pi / 2):
+        m = e <= E
+        num = np.trapezoid(w[m], e[m]) / total
+        o = np.sin(E) ** 2
+        assert abs(num - o * (3 + 4 * np.sqrt(o)) / 7) < 1e-3, (E, num)

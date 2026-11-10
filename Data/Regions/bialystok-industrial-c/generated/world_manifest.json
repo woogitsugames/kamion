@@ -3536,7 +3536,7 @@
     "z_max_evrf2007": 154.43,
     "z_min_evrf2007": 123.95
    },
-   "bytes": 8845144,
+   "bytes": 8845148,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.glb",
    "forest_cells": [
     {
@@ -3655,9 +3655,9 @@
     "sha256": "69c41e5486c7746076037f9a46ba6f7b51ec7fd4e46bb2075668829138abf0ed"
    },
    "low": {
-    "bytes": 3567256,
+    "bytes": 3567260,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.low.glb",
-    "sha256": "94d8b0e55935fa7276ef6bcb5ad9f5910d4c6fab2ba14340784b438a0e700e94"
+    "sha256": "870cbce5d3929f8cce9f81d20909ad0bd39412c2dfafd0998ddbc2cc85f3b4fe"
    },
    "materials": [
     "balcony_slab",
@@ -3732,7 +3732,7 @@
     "yard_behaton",
     "yard_concrete"
    ],
-   "sha256": "26265ca6f5a7bb454fbd86e7431c036b508d9f4ca4d174bc47ac1992448012ea",
+   "sha256": "c5045dabe56908a57090001f87d8f36d195fd82d2c2cecbb44a20926986d0c8b",
    "triangles": {
     "bridge": 18241,
     "buildings": 9119,
@@ -11633,7 +11633,7 @@
    ],
    "dust": 0.35,
    "privacy_alpha": 0.8,
-   "reflect": 1.3,
+   "reflect": 1.0,
    "rough": 0.05,
    "shader": "car_glass"
   },
@@ -13760,6 +13760,15 @@
     0.038
    ],
    "rough": 0.95
+  },
+  "vehicle_contact": {
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rough": 1.0,
+   "shader": "vehicle_contact"
   },
   "verge_grass": {
    "color": [

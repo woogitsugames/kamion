@@ -184,16 +184,15 @@
 - Kerbside parking on streets without an OSM `parking:*` polygon (lane tags on ways are not in
   streetscape_sources yet).
 
-## AO aut — WIP (niezweryfikowane), 2026-11-10
-- Zrobione: kontaktowy cień / AO pod autami, dostawczakami, ciągnikami i naczepami (ADR 0050): shader
-  `Kamion/World Vehicle Contact` (analityczny view factor płyt podwozia + opon, analityczna widoczność słońca, mnożnik
-  tylko na części nieba tam, gdzie mapa cieni już ciemni), osobny prototyp `contact_<hash>` na spec (≤ 7 rysowań na
-  klatkę zamiast +1 na każdy batch auta), parametry `life_props.contact_spec` w extras węzła `<auto>.contact`.
-- Zmierzone (edytor, stretch-01 / glass_side_00, rdzeń pod autem, luma p5 przed → po): Low clear 28 → 3.9 / 27 → 1.9 %,
-  High clear 25 → 4.6 / 24 → 3.2 %, Low overcast 43 → 11.0 / 47 → 8.2 %, High overcast 48 → 11.4 / 48 → 8.2 %;
-  rysowania instancjonowane stretch-01 Low 558 (wersja „submesh na LOD” dawała 619).
-- Otwarte: overcast nie spełnia p5 ≤ 8 % - dodana (NIERENDEROWANA) korekta gradacji nieba CIE dla szczeliny pod
-  nadwoziem (`open (1 + open) / 2` ważone udziałem światła rozproszonego); trzeba: build_world + import + render 4
-  konfiguracji, ocena visual-critic, koszt Low w edytorze (-TimeFrames), test EditMode importera.
-- Dowody: `artifacts/world-fixes/cars-ao/{before,after,after2,compare}` (before = siła 0, after2 = wersja z osobnym
-  prototypem, bez korekty CIE); skrypty `scratchpad/ao-aut/{render.ps1,measure.py}` (sesyjny scratchpad).
+## AO aut (ADR 0050), 2026-11-10
+- Kontaktowy cień / AO pod autami, dostawczakami, ciągnikami i naczepami: shader `Kamion/World Vehicle Contact`
+  (analityczny view factor płyt podwozia i opon, analityczna widoczność słońca, mnożnik tylko na części nieba tam, gdzie
+  mapa cieni już ciemni), osobny prototyp `contact_<hash>` na spec (≤ 7 rysowań na klatkę), parametry
+  `life_props.contact_spec` w extras węzła `<auto>.contact`. Korekta gradacji nieba CIE (pochmurno) = całka pasma przy
+  horyzoncie `o (3 + 4 √o) / 7` (zastąpiła roboczą `o (1 + o) / 2`; test `test_cie_overcast_band_fraction`).
+- Zmierzone (edytor, ten sam świat, before3 = siła 0; rdzeń pod autem, luma p5 przed → po, stretch-01 / glass_side_00):
+  Low clear 28.0 → 4.2 / 20.5 → 1.9 %, High clear 25.0 → 4.7 / 24.5 → 3.2 %, Low overcast 41.1 → 9.0 / 45.8 → 5.5 %,
+  High overcast 47.9 → 9.2 / 47.0 → 6.3 %. Cel overcast ≤ 8 % spełniony w widoku z boku, na stretch-01 NIE (9 %):
+  widok wzdłuż rzędu widzi tylko pas przy krawędzi nadwozia, nie głęboki rdzeń (szczegóły w ADR 0050). Rysowania
+  instancjonowane Low stretch-01: 558 (z AO i bez), czas klatki w edytorze 6.25 vs 6.27 ms. Telefon: UNVERIFIED.
+- Dowody: `artifacts/world-fixes/cars-ao/{before3,after3,compare3}`; test EditMode `VehicleContactImportTests`.
