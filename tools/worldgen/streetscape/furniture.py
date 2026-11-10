@@ -36,6 +36,12 @@ from shapely.geometry import LineString, Point
 from roads import standards as S
 from roads.network import MEDIAN_RURAL, RURAL, URBAN, side_params, side_extent
 
+# Ground-standing poles are seated on the lowest surface under their footing (gate 3 audit: lamps / masts up to
+# 0.44 m in the air, sign posts buried > 0.6 m); the part on the high side goes into the ground like a real foundation.
+SEATED_POLES = ("lamp_", "signal_mast", "signal_pole", "sign_post", "power_pole")
+SEAT_R = 0.35                 # m, footing radius probed (WORKING_VALUE)
+SEAT_TOL = 0.30               # m, an explicit z this far below the local ground is raised to it (gate 3 tolerance)
+
 RANK = {"A": 0, "S": 1, "GP": 2, "G": 3, "Z": 4, "L": 5, "D": 6}
 
 
@@ -52,6 +58,7 @@ class Placer:
     def __init__(self, zsurf):
         self.items = []
         self.zsurf = zsurf
+        self.reseated = 0
         self.pts = {}
 
     def near(self, group, p, r):
@@ -60,7 +67,21 @@ class Placer:
                 return True
         return False
 
+    def ground_min(self, p, r=None):
+        """lowest surface under a pole footing: centre + 4 points at r (the bilinear surface at a kerb / footway edge
+        mixes the footway top with the terrain beside it, which left poles 0.2-0.44 m in the air, gate 3 audit)"""
+        r = SEAT_R if r is None else r
+        e = np.array([p[0], p[0] + r, p[0] - r, p[0], p[0]])
+        n = np.array([p[1], p[1], p[1], p[1] + r, p[1] - r])
+        return float(np.min(self.zsurf(e, n)))
+
     def add(self, proto, p, yaw, z=None, sz=1.0, src="", group=None):
+        if proto.startswith(SEATED_POLES):
+            zg = self.ground_min(p)
+            if z is None or z < zg - SEAT_TOL:          # an explicit z above the ground is a bridge deck: kept
+                if z is not None:
+                    self.reseated += 1
+                z = zg
         z = float(self.zsurf(np.array([p[0]]), np.array([p[1]]))[0]) if z is None else z
         it = {"p": proto, "e": round(float(p[0]), 3), "n": round(float(p[1]), 3), "z": round(z, 3),
               "yaw": round(float(yaw), 4), "src": src}
@@ -108,7 +129,8 @@ def clear_carriageway(pl, carriage, zsurf, report):
             left.append({"p": base[0]["p"], "at": [round(e, 1), round(n, 1)], "src": base[0].get("src", "")})
             drop.update(id(it) for it in items)      # a pole in the middle of a lane is worse than a missing one
             continue
-        z0 = float(zsurf(np.array([new[0]]), np.array([new[1]]))[0])
+        z0 = pl.ground_min(new) if base[0]["p"].startswith(SEATED_POLES) else \
+            float(zsurf(np.array([new[0]]), np.array([new[1]]))[0])
         dz = z0 - base[0]["z"]
         for it in items:
             it["e"], it["n"] = round(float(new[0]), 3), round(float(new[1]), 3)
