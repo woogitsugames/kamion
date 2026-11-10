@@ -104,8 +104,15 @@ def axis_metrics(ctx: Ctx, edges=None):
             pts = c.line.p[sel][::2]
             if not len(pts):
                 continue
+            off = c.meta.get("center_offset")
+            if off is not None:
+                # authored carriageway placement (ADR 0077, orthophoto evidence): the OSM way is reproduced when the
+                # generated centre minus the authored offset lies on it; the offset itself is reported separately
+                pts = (c.line.p - c.line.n * off[:, None])[sel][::2]
             d = np.array([ol.distance(Point(p)) for p in pts])
             out[eid] = stats(d)
+            if off is not None:
+                out[eid]["authored_center_offset_m"] = round(float(np.max(np.abs(off[sel]))), 2)
             # graph geometry vs fresh OSM (same snapshot -> ~0; > 0.05 m means the graph is stale)
             raw = np.array(c.raw)
             k = (np.r_[0, np.cumsum(np.hypot(*np.diff(raw, axis=0).T))] >= s0 - 1e-6) & \

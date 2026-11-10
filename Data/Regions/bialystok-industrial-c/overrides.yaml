@@ -322,3 +322,60 @@ overrides:
     reason: Same junction, 14 m2 corner leftover on asphalt (orthophoto road fraction 1.0).
     confidence: medium
     verify: Mapillary / owner drive
+  # ---------------------------------------------------------------- carriageway placement (network.prepare_chain, ADR 0077)
+  # center_offset = carriageway centre this many metres to the LEFT of the OSM way (in the way's travel direction).
+  # OSM draws one line per carriageway but not always on its centre (no placement=* tags in this tile). Values are
+  # measured on the GUGiK orthophoto with tools/worldgen/fidelity/edge_sides.py: (left edge offset - right edge offset)/2
+  # where both kerb lines were detected (medians, n in the reason). Width is NOT changed by these overrides.
+  - id: putry-ring-s-placement
+    target: {edge: "w180144451:2629251364-4075461271"}
+    reason: >-
+      MA-010 (artifacts/map-audit-r9/BUGS.md): the OSM way of this 46 m ring segment of Rondo Putry runs along the
+      real SOUTH kerb, so the symmetric 7 m carriageway put its right lane on the real grass triangle and left the
+      real left lane out. Orthophoto 0.08 m (artifacts/islands-r10/after3/ma010_chains.jpg): south kerb ~0.6 m right
+      of the way, two lanes to the left of it -> centre 2.9 m left.
+    confidence: medium
+    verify: Mapillary 987194858750300 / owner drive
+    set: {center_offset: 2.9}
+  - id: lacznica-biezenstwa-placement
+    target: {edge: "w177861600:1882953899-4391371827"}
+    reason: "edge_sides: left +1.06 m (n 70, verge-verified 48: +0.98), right -0.52 m (n 81)."
+    confidence: medium
+    verify: orthophoto overlay artifacts/islands-r10/fidelity/overlays/04_s610_ramps.jpg
+    set: {center_offset: 0.75}
+  - id: andersa-placement-s700-1060
+    target: {edge: "w552161976:3341716402-2367445386"}
+    reason: "edge_sides (chain frame, edge reversed): left +0.46 m (n 93), right -0.60 m (n 93, verge-verified 87: -0.68)."
+    confidence: medium
+    verify: orthophoto overlay 05_s900.jpg
+    set: {center_offset: -0.55}
+  - id: andersa-placement-s1060
+    target: {edge: "w560802658:2367445386-1882690822"}
+    reason: "edge_sides (edge reversed): left +0.62 m (n 21), right -1.32 m (n 28, verge-verified 25)."
+    confidence: medium
+    verify: orthophoto overlay 06_s1060_merge.jpg
+    set: {center_offset: -0.95}
+  - id: andersa-placement-s1100-1270
+    target: {edge: "w249640399:1881569071-131612943"}
+    reason: "edge_sides (edge reversed): left +0.46 m (n 67, verge 20: +0.70), right -1.16 m (n 67, verge 63)."
+    confidence: medium
+    verify: orthophoto overlay 07_s1270.jpg
+    set: {center_offset: -0.8}
+  - id: andersa-placement-s1300-1355
+    target: {edge: "w266084693:10015785253-12620261934"}
+    reason: "edge_sides: left -0.90 m (n 25, verge 21), right +0.68 m (n 28, verge 6: +1.24)."
+    confidence: medium
+    verify: orthophoto overlay 08_signals.jpg
+    set: {center_offset: -0.8}
+  - id: dk8-placement-a
+    target: {edge: "w882366266:2256069816-8205694666"}
+    reason: "edge_sides (edge reversed): left +0.70 m (n 93), right -0.36 m (n 93, verge 36: -0.28)."
+    confidence: low
+    verify: orthophoto overlay 11_dk8.jpg
+    set: {center_offset: -0.5}
+  - id: dk8-placement-b
+    target: {edge: "w238861874:8205694666-2081020082"}
+    reason: "edge_sides (edge reversed): left +0.94 m (n 162, verge 15: +1.02), right -0.20 m (n 164, verge 35)."
+    confidence: low
+    verify: orthophoto overlay 11_dk8.jpg
+    set: {center_offset: -0.55}
