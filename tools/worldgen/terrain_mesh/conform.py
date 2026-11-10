@@ -203,9 +203,9 @@ def terrain_walls(parts, zc, hf, thresh=WALL_MAX, mask=None):
 
     def note(p, P, h, kind):
         hs.append(h)
-        key = f"{kind}:{p.src.split(':')[0] if p.src.startswith('j:') else p.mat}"
+        key = f"{kind}:j:{p.mat}" if p.src.startswith('j:') else f"{kind}:{p.mat}"
         by[key] = by.get(key, 0) + len(h)
-        where.extend((kind, p.src, p.mat, float(q[0]), float(q[1]), float(v)) for q, v in zip(P[:3], h[:3]))
+        where.extend((kind, p.src, p.mat, float(q[0]), float(q[1]), float(v)) for q, v in zip(P, h))
 
     for p in parts:
         if p.layer not in ("road", "paved") or p.mat in WALL_SKIP_MATS or p.mat.startswith("collision"):
@@ -237,4 +237,4 @@ def terrain_walls(parts, zc, hf, thresh=WALL_MAX, mask=None):
     return {"thresh_m": thresh, "count": int(len(h)), "max_m": round(float(h.max()), 3),
             "p99_m": round(float(np.percentile(h, 99)), 3), "by_source": by,
             "worst": [{"kind": kd, "src": s, "mat": m, "e": round(e, 1), "n": round(n, 1), "h": round(v, 3)}
-                      for kd, s, m, e, n, v in where[:12]]}
+                      for kd, s, m, e, n, v in where[:30]]}
