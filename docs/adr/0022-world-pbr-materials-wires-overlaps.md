@@ -68,3 +68,17 @@ sectional doors), blocks (plaster, large-panel joints, brick) and props (curtain
 - Fragment cost on the A16 is not measured (no phone in this task): Low draws 4 texture samples on ground instead of 2.
   UNVERIFIED until the next device run; the Low path can drop the normal map if it costs > 1 ms.
 - Blender control renders keep their own procedural materials (`render_control.py`); `road_asphalt_new` added there.
+
+## Addendum 2026-11-10 — anti-aliased wires, parapet run-off (G3 visual review)
+- **Wires** (`WorldWire.shader`): the pixel size comes from `_ScaledScreenParams` (URP target after renderScale and the
+  ADR 0046 adaptive scale; `_ScreenParams` is the unscaled back buffer, so at 0.80 the 1.2 px floor was 0.96 px). The
+  core stays >= `_MinPixels` (1.2 px) wide, the ribbon is widened by `_AAPixels` (1 px) per side and the fragment shader
+  box-filters the core against a 1 px pixel from the interpolated cross coordinate in pixels: coverage no longer depends
+  on which pixel centres / MSAA samples the triangle hits (no dashes, no crawl in motion). Alpha = physical / core width
+  (energy conserving); the pole-cull distance fade is unchanged. Cost: same vertex count, 2 ALU in the fragment, ~2 px
+  more transparent fill per wire. Thin railings (6 cm galvanised slabs, opaque `Kamion/World PBR`) are NOT changed.
+- **Parapet run-off** (zacieki pod attyką): layer `parapet_runoff` (24 x 4 m, R soot, G rust; `sets_facade.parapet_runoff`)
+  in wall-top space: hall walls get TEXCOORD_1 = (u + per-building shift, 1 + depth below the fascia / per-building length
+  scale) in `buildings_mesh.py`; `hall_wall_*` materials enable `_RUNOFF` (one RGB sample, all tiers; Low texture 256 x 40,
+  ~10 KB ASTC). Strength per material from its luminance (light cladding shows more) and per wall from the macro map.
+  Look WORKING_VALUE (no measured data). LOD1 halls carry no UV1 and get no streaks.

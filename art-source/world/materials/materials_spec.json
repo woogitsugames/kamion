@@ -2022,6 +2022,72 @@
       "hf_ratio_albedo": 0.0002,
       "ao_mean": 1.0
     },
+    "parapet_runoff": {
+      "tile_m": [
+        24.0,
+        4.0
+      ],
+      "uv": "mesh_uv1 (u metres along the wall, v = 1 + metres below the attic fascia / length scale; v < 0.5 = no wall-top data)",
+      "slots": [
+        "_RunoffMap of hall_wall_* (keyword _RUNOFF, buildings_mesh.py hall walls)"
+      ],
+      "note": "Run-off streaks under the parapet coping of halls (zacieki pod attyka): R soot/dirt, G rust, linear. Long streaks below coping-sheet joints every 2-3 m, fine drip lines, broad smudges, uneven dirty band under the drip edge; fades to 0 at 4 m. One RGB sample on wall pixels, all tiers (Low 256x40). Look WORKING_VALUE (photo-judged, no measurements).",
+      "kind": "layer",
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            160
+          ],
+          "texel_mm": 23.4,
+          "dir": "parapet_runoff/High",
+          "files": [
+            "T_parapet_runoff.png"
+          ],
+          "png_bytes": 27032,
+          "gpu_bytes_astc_mips": 97211,
+          "astc": {
+            "Macro": "6x6"
+          }
+        },
+        "Medium": {
+          "res": [
+            512,
+            80
+          ],
+          "texel_mm": 46.9,
+          "dir": "parapet_runoff/Medium",
+          "files": [
+            "T_parapet_runoff.png"
+          ],
+          "png_bytes": 8699,
+          "gpu_bytes_astc_mips": 24302,
+          "astc": {
+            "Macro": "6x6"
+          }
+        },
+        "Low": {
+          "res": [
+            256,
+            40
+          ],
+          "texel_mm": 93.8,
+          "dir": "parapet_runoff/Low",
+          "files": [
+            "T_parapet_runoff.png"
+          ],
+          "png_bytes": 2766,
+          "gpu_bytes_astc_mips": 6075,
+          "astc": {
+            "Macro": "6x6"
+          }
+        }
+      },
+      "coverage": {
+        "soot_mean": 0.0227,
+        "rust_mean": 0.0001
+      }
+    },
     "paving_20x10_grey": {
       "tile_m": [
         4.0,

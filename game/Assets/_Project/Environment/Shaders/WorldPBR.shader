@@ -51,6 +51,8 @@ Shader "Kamion/World PBR"
         _AgeTint ("Patch age target / base albedo ratio", Float) = 2.0
         _DecalAlpha ("Decal opacity", Range(0, 1)) = 1
         _SplashHeight ("Splash zone height (m)", Float) = 0.6
+        _RunoffMap ("Parapet run-off (R soot, G rust; _RUNOFF)", 2D) = "black" {}
+        _RunoffStrength ("Parapet run-off strength", Range(0, 1)) = 0.5
         _GroundTint ("Terrain grass ground-mask strength", Range(0, 1)) = 1
         _GrassFill ("Grass refill albedo (_GRASS_DETILE, linear; Vector: no sRGB conversion)", Vector) = (0.079, 0.109, 0.037, 1)
         _Stripe ("Stripes (_STRIPES): xy direction in UV0 metres, z period m", Vector) = (1, 0, 1, 0)
@@ -76,7 +78,7 @@ Shader "Kamion/World PBR"
             float4 _Tile;
             float _AlbedoScale, _NormalStrength, _SmoothnessScale, _MetallicScale;
             float _ElementJitter, _ElementSize, _MacroSize, _MacroStrength, _MacroWear, _CrackStrength, _DetailFade;
-            float _WheelPolish, _GutterDirt, _AgeTint, _DecalAlpha, _SplashHeight, _GroundTint;
+            float _WheelPolish, _GutterDirt, _AgeTint, _DecalAlpha, _SplashHeight, _GroundTint, _RunoffStrength;
             float4 _Stripe, _StripeA, _StripeB;
             float4 _GrassFill;
             float _OffsetFactor, _OffsetUnits, _SrcBlend, _DstBlend, _ZWrite, _Cull, _ReceiveShadows;
@@ -110,6 +112,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _GROUNDMASKS
             #pragma shader_feature_local _GRASS_DETILE
             #pragma shader_feature_local _SPLASH
+            #pragma shader_feature_local _RUNOFF
             #pragma shader_feature_local _STRIPES
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -123,6 +126,7 @@ Shader "Kamion/World PBR"
             TEXTURE2D(_CrackNormal);
             TEXTURE2D(_DetailAlbedo); SAMPLER(sampler_DetailAlbedo);
             TEXTURE2D(_DetailNormal);
+            TEXTURE2D(_RunoffMap);
 
             struct Attributes
             {
@@ -435,6 +439,21 @@ Shader "Kamion/World PBR"
                     s *= 0.6 + 0.4 * macro.a;
                     albedo = lerp(albedo, albedo * half3(0.72, 0.70, 0.64), s);
                     smooth *= 1.0 - 0.5 * s;
+                }
+            #endif
+
+                // ---- halls: run-off streaks under the parapet coping (TEXCOORD_1 = u m, 1 + depth below the fascia /
+                // per-building length scale; < 0.5 = no wall-top data). 24 x 4 m layer, faded to 0 in its last 0.4 m.
+                // Strength varies along the wall and between halls with the macro map (no two halls alike).
+            #if defined(_RUNOFF)
+                if (i.uv.w > 0.5)
+                {
+                    float2 ur = float2(i.uv.z / 24.0, min((i.uv.w - 1.0) * 0.25, 0.985));
+                    half3 ro = SAMPLE_TEXTURE2D(_RunoffMap, sampler_MacroMap, ur).rgb;
+                    half k = _RunoffStrength * saturate(0.8 + (macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 1.0);
+                    albedo = lerp(albedo, albedo * half3(0.22, 0.21, 0.2), ro.r * k);
+                    albedo = lerp(albedo, half3(0.075, 0.042, 0.022), ro.g * k * 0.8);
+                    smooth *= 1.0 - 0.35 * ro.r * k;
                 }
             #endif
 

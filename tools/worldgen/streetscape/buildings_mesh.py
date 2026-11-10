@@ -143,9 +143,11 @@ class Acc:
             buf.add(layer, mat, V, UV, T, src=src, UV1=UV1)
 
 
-def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0, vref=0.0):
+def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0, vref=0.0, runoff=None):
     """Wall rectangle [0, L] x [zb, zt] in the vertical plane through p0 along d, minus rectangular
-    openings [(ua, ub, va, vb, depth, kind, mat_in)]. Adds reveals and the recessed infill."""
+    openings [(ua, ub, va, vb, depth, kind, mat_in)]. Adds reveals and the recessed infill.
+    runoff = (z_top, u_offset, length_scale): the wall face gets TEXCOORD_1 = (u_offset + u, 1 + (z_top - z) /
+    length_scale) for the parapet run-off streaks of halls (Kamion/World PBR _RUNOFF); otherwise no UV1."""
     p0, d, nout = (np.asarray(x, float) for x in (p0, d, nout))
     ops = sorted([o for o in openings if o[1] > o[0] + 0.05 and o[3] > o[2] + 0.05], key=lambda o: o[0])
     us = sorted({0.0, L, *[o[0] for o in ops], *[o[1] for o in ops]})
@@ -167,8 +169,13 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
         if z < zt:
             segs.append((z, zt))
         for za, zb2 in segs:
+            uv1 = None
+            if runoff is not None:
+                zt_r, uo, ls = runoff
+                ka, kb = 1 + (zt_r - za) / ls, 1 + (zt_r - zb2) / ls
+                uv1 = [[uo + u0 + ua, ka], [uo + u0 + ub, ka], [uo + u0 + ub, kb], [uo + u0 + ua, kb]]
             acc.quad(layer, mat, P(ua, za), P(ub, za), P(ub, zb2), P(ua, zb2),
-                     uv=[[u0 + ua, za - vref], [u0 + ub, za - vref], [u0 + ub, zb2 - vref], [u0 + ua, zb2 - vref]])
+                     uv=[[u0 + ua, za - vref], [u0 + ub, za - vref], [u0 + ub, zb2 - vref], [u0 + ua, zb2 - vref]], uv1=uv1)
     n3 = np.append(nout[:2], 0.0)
     d3 = np.append(d[:2], 0.0)
     for (ua, ub, va, vb, depth, kind, mat_in) in ops:
@@ -675,8 +682,13 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                     if ztopb is not None and z0 >= ztopb - 1e-6:
                         return scheme["top"][0]
                     return wall
+                # parapet run-off streaks (zacieki pod attyką): wall-top space in UV1, per-building pattern offset
+                # (one constant shift per building, so u stays continuous round the corners) and streak length
+                # scale (gutter halls shorter: the gutter takes most of the water)
+                ro = (zt - 0.4, 24.0 * FK.hfloat(key, "runoff_u"),
+                      (0.55 if scheme["gutter"] else 0.8) + 0.7 * FK.hfloat(key, "runoff_l"))
                 FK.wall_pieces(wall_with_openings, acc, a, d, nout, L, zbot, zt - 0.4, ops, u_acc, zref,
-                               [zpl, zlow, ztopb], [], hall_mat)
+                               [zpl, zlow, ztopb], [], hall_mat, runoff=ro)
                 P3 = lambda q, z: [q[0], q[1], z]
                 acc.quad("buildings", "hall_flashing", P3(a + nout * 0.03, zt - 0.4), P3(c_ + nout * 0.03, zt - 0.4),
                          P3(c_ + nout * 0.03, zt), P3(a + nout * 0.03, zt))
@@ -746,7 +758,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                     return wall
                 FK.wall_pieces(wall_with_openings, acc, a, d, nout, L, zbot, zt, ops, u_acc, zref,
                                [zpl] + [z for b in band_z for z in b],
-                               [u for u in usplits if u is not None] if None not in usplits else [], plaster_mat)
+                               [u for u in usplits if u is not None] if None not in usplits else [], plaster_mat,
+                               runoff=(zt, 24.0 * FK.hfloat(key, "runoff_u"), 0.6 + 0.7 * FK.hfloat(key, "runoff_l"))
+                               if str(wall).startswith("hall_wall") else None)   # sheds / small halls clad in sheet
                 if typ in ("block", "office"):                       # attic coping (obróbka attyki): silhouette
                     FK.coping(acc, a, c_, nout, zt, mat="hall_flashing")
                 if typ == "block":

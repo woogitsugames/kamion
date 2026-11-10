@@ -73,6 +73,7 @@ namespace Game.World.Import
             if ((kind == "modulation_set" || uv.StartsWith("mesh_uv0")) && def.Get("uv") as string != "planar") uv0 = true;
             if (def.Get("uv1") as string == "along_m") uv1 = true;
             if (id == "road_asphalt" || id == "road_asphalt_new") uv1 = true;           // _ROADWEAR
+            if (id.StartsWith("hall_wall") && Set("parapet_runoff") != null) uv1 = true;   // _RUNOFF (wall-top space)
             if (id == "decal_patch" || id == "decal_oil" || id == "decal_tyre") { uv0 = true; uv1 = true; }
             if (def.Get("procedural") as string == "grate" || Stripes(def) != null) uv0 = true;
             if (id == "terrain_grass") colors = true;
@@ -216,6 +217,20 @@ namespace Game.World.Import
             {
                 mat.EnableKeyword("_SPLASH");
                 mat.SetFloat("_SplashHeight", id == "hall_plinth" ? 0.35f : 0.6f);
+            }
+            if (id.StartsWith("hall_wall"))
+            {
+                // parapet run-off streaks (zacieki pod attyką): TEXCOORD_1 = (u m, 1 + metres below the fascia / length
+                // scale) from buildings_mesh.py hall walls; one RGB sample on all tiers
+                var ro = Layer(r, "parapet_runoff", "T_parapet_runoff.png", false, false);
+                if (ro != null)
+                {
+                    mat.SetTexture("_RunoffMap", ro);
+                    mat.EnableKeyword("_RUNOFF");
+                    // light cladding shows run-off most; dark graphite / accent sheet hides soot (rust still shows)
+                    float lum = 0.2126f * col.x + 0.7152f * col.y + 0.0722f * col.z;
+                    mat.SetFloat("_RunoffStrength", Mathf.Lerp(0.55f, 0.9f, Mathf.InverseLerp(0.08f, 0.5f, lum)));
+                }
             }
 
             if (Stripes(def) is var st && st != null)
