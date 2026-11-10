@@ -1,6 +1,7 @@
 # HANDOVER — kamion, sesja 8 (2026-11-10 ok. 22:00 UTC start; limit 5 h reset 2026-11-11 03:00 UTC)
 
 ## Najpierw
+- **Polecenie właściciela (s8, ~23:55 UTC): lider s8 NIE wznawia agentów po ich zakończeniu — pracę przejmuje sesja 9 wg `docs/owner/START-PROMPT-S9.md`: max 3 agentów naraz + zewnętrzny trigger co godzinę wybudzający sesję.** Agenci, którzy skończyli, zostają z raportem w STATUS.md swojego worktree.
 - **Limit 5 h na 83 % o ~23:50 UTC** (reset 03:00 UTC) — od teraz bez nowych agentów, dopóki działa ≥ 2.
 - main = ten commit. Start s8: 8 agentów Fable przejmuje/uruchomionych (tabela). GPT/Codex pracuje nad importem Megascans (ADR 0084, `gpt-megascans`, STATUS `artifacts/megascans-r1/STATUS.md`) — nie ruszać, scalić po REPORT.md. Antigravity (Argon 4) — zadanie `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` (tło za krawędzią świata, ADR 0085, gałąź `argon-edge`).
 - Decyzja właściciela D47: firanka bez pasa (B), osłony boczne zostają (ADR 0083).
