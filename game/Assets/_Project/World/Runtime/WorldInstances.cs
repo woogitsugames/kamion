@@ -72,11 +72,13 @@ namespace Game.World
             m_BatchCount = new int[slots];
             m_BatchBounds = new Bounds[slots];
             m_Thin = new bool[set.prototypes.Length];
+            m_FixedCull = new bool[set.prototypes.Length];
             m_Ends = new float[set.prototypes.Length][];
             for (int p = 0; p < set.prototypes.Length; p++)
             {
                 var pr = set.prototypes[p];
                 m_Thin[p] = pr.name.StartsWith("tree_");
+                m_FixedCull[p] = IsVehicle(pr.name);
                 m_Ends[p] = (float[])pr.lodEndM.Clone();
                 // Impostor forests: cap the cull distance (device measurement: DK8 forest 10 FPS on the A16 Medium,
                 // 14 FPS on the S24+ High before thinning and this cap).
@@ -343,7 +345,8 @@ namespace Game.World
                     var ends = m_Ends[run.prototype];
                     if (!m_Trees && m_Thin[run.prototype]) continue;
                     float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, m_TreeCard) : scale;
-                    int ln = LodAt(ends, dNear, ls, scale), lf = LodAt(ends, dFar, ls, scale);
+                    float cs = m_FixedCull[run.prototype] ? distanceScale : scale;   // vehicles: same cull on every tier
+                    int ln = LodAt(ends, dNear, ls, cs), lf = LodAt(ends, dFar, ls, cs);
                     bool thinnable = m_Thin[run.prototype];
                     int stride = thinnable ? ThinStride(dNear, scale) : 1;
                     if (ln == lf && (stride == ThinStride(dFar, scale) || !thinnable))
@@ -360,7 +363,7 @@ namespace Game.World
                         float dx = m.m03 - cp.x, dy = m.m13 - cp.y, dz = m.m23 - cp.z;
                         float d = Mathf.Sqrt(dx * dx + dy * dy + dz * dz);
                         if (thinnable && (i & (ThinStride(d, scale) - 1)) != 0) continue;
-                        int l = LodAt(ends, d, ls, scale);
+                        int l = LodAt(ends, d, ls, cs);
                         if (l >= 0) Append(run.prototype, l, mats, i, 1, b);
                     }
                 }
@@ -394,7 +397,16 @@ namespace Game.World
         public float treeLodScaleMax = 0.5f;
 
         bool[] m_Thin;
+        bool[] m_FixedCull;
         float[][] m_Ends;
+
+        /// <summary>Cull distance (m) of parked vehicles on every tier (ADR 0041 v4, REVIEW r6 W-N6: Low culled the truck
+        /// rigs at 60 m and the cars at 200 m, High at 180 / 600 m, so the same cab-dash frame showed different content).
+        /// Only the LOD switches scale with lodBias. WORKING_VALUE; mirrored in build_world.py VEHICLE_CULL_M.</summary>
+        public const float VehicleCullM = 300f;
+
+        public static bool IsVehicle(string proto) =>
+            proto.StartsWith("car_") || proto.StartsWith("van_") || proto.StartsWith("tractor_") || proto.StartsWith("trailer_");
         [Tooltip("Cull distance of trees and shrubs (m at lodBias 1), caps the baked impostor distance")]
         public float treeCullM = 600f;
 

@@ -4,7 +4,9 @@ z = up, origin = centre of the footprint on the ground.
 
 No make or model is reproduced: each body is a class average (lengths, wheelbases and heights below are typical
 values of the European B/C/D segments, B/C-SUV and car-derived light vans, all WORKING_VALUE) with no grille
-shape, lamp signature or badge of any real vehicle. Registration plates are blank white rectangles.
+shape, lamp signature or badge of any real vehicle. Registration plates: fictional strings in the Polish format
+(plate_atlas, REVIEW r6 W-N9), generated from a seed, not taken from any register; LOD1 shows only the EU band
+and a grey character band.
 
 A body is a closed side profile of named points (rear bumper -> tail -> rear glass -> roof -> windscreen -> hood
 -> nose -> front bumper), each with its own half width (plan taper at the nose and tail, tumblehome of the
@@ -62,6 +64,114 @@ FACES = {
     "wide": dict(drop=0.32, run=0.18, lamp=(0.03, 0.24, 0.00, 0.36), gw=0.62, gt=0.14, bar=True),
     "tall": dict(drop=0.42, run=0.14, lamp=(0.02, 0.20, 0.00, 0.32), gw=0.64, gt=0.10, bar=False),
 }
+
+
+# ------------------------------------------------------------------------------------------- registration plates
+# Polish plate 520 x 114 mm (EU band 40 mm, white retro-reflective field, black characters). Atlas of PLATE_COLS x
+# PLATE_ROWS cells (256 x 64 px, plate 248 x 54 px centred: the margin keeps the mips from bleeding); one cell per
+# prototype, the last cell is the far plate (EU band + grey character band) used by LOD1.
+PLATE_COLS, PLATE_ROWS = 4, 8
+PRIVACY_U = 4.0         # UV0 u offset of privacy-tinted panes (car_glass_tint, decoded in WorldCarGlass.shader)
+PLATE_FAR = PLATE_COLS * PLATE_ROWS - 1
+# district codes of Bialystok and the neighbouring powiats, WORKING_VALUE shares of a Bialystok car park
+PLATE_DISTRICTS = [("BI", 0.55), ("BIA", 0.28), ("BSK", 0.08), ("BMN", 0.05), ("BBI", 0.04)]
+# letters of the vehicle part: B D I O Z are not used there (confusable with 8 0 1 0 2; UNVERIFIED reading of the
+# registration ordinance). Characters come from a seeded generator, not from any register.
+PLATE_LETTERS = "ACEFGHJKLMNPRSTUVWXY"
+PLATE_FORMATS = {2: ["99999", "9999A", "999AA", "9A999", "9AA99"], 3: ["9999A", "999AA", "99999", "9A99", "99AA"]}
+
+
+def plate_text(k, seed=2026):
+    """Fictional plate string of atlas cell k (deterministic)."""
+    h = zlib.crc32(f"plate:{seed}:{k}".encode())
+    u = (h & 0xFFFF) / 65536.0
+    acc, code = 0.0, PLATE_DISTRICTS[-1][0]
+    for c, w in PLATE_DISTRICTS:
+        acc += w
+        if u < acc:
+            code = c
+            break
+    fm = PLATE_FORMATS[len(code)]
+    f = fm[(h >> 16) % len(fm)]
+    out = []
+    for j, ch in enumerate(f):
+        hj = zlib.crc32(f"plate:{seed}:{k}:{j}".encode())
+        if ch == "9":
+            out.append(str((hj % 9) + 1) if j == 0 else str(hj % 10))
+        else:
+            out.append(PLATE_LETTERS[hj % len(PLATE_LETTERS)])
+    return code, "".join(out)
+
+
+def plate_atlas(n=PLATE_FAR):
+    """RGB atlas (PIL) of n fictional plates + the far plate in the last cell."""
+    from PIL import Image, ImageDraw, ImageFilter
+    from .signs import _font
+    CW, CH, PW, PH, SS = 256, 64, 248, 54, 4
+    atlas = Image.new("RGB", (CW * PLATE_COLS, CH * PLATE_ROWS), (200, 201, 198))
+    W, H = PW * SS, PH * SS
+    eu = int(round(40 / 520 * W))
+
+    def blank(k):
+        im = Image.new("RGB", (W, H), (214, 215, 211))
+        d = ImageDraw.Draw(im)
+        d.rectangle([0, 0, eu, H], fill=(20, 52, 138))
+        cx, cy, r = eu / 2, H * 0.34, H * 0.17
+        for a in range(12):                                     # ring of stars (dots at this size)
+            t = a * math.pi / 6
+            x, y = cx + r * math.cos(t), cy + r * math.sin(t)
+            d.ellipse([x - SS * 1.1, y - SS * 1.1, x + SS * 1.1, y + SS * 1.1], fill=(214, 190, 40))
+        f = _font(int(H * 0.26))
+        bb = d.textbbox((0, 0), "PL", font=f)
+        d.text((cx - (bb[2] - bb[0]) / 2 - bb[0], H * 0.62 - bb[1]), "PL", font=f, fill=(225, 225, 225))
+        d.rectangle([0, 0, W - 1, H - 1], outline=(70, 70, 68), width=int(SS * 1.5))       # embossed rim
+        return im, d
+    for k in range(n + 1):
+        im, d = blank(k)
+        x0 = eu + SS * 6
+        if k < n:
+            code, rest = plate_text(k)
+            f = _font(int(H * 0.80))
+            # characters: rendered at the font's width, then condensed into the field (the plate font is narrow)
+            txt = f"{code} {rest}"
+            bb = d.textbbox((0, 0), txt, font=f)
+            rb = d.textbbox((0, 0), "BI 0123", font=f)          # cap height reference (no descenders: J, Q)
+            tw, th = bb[2] - bb[0], rb[3] - rb[1]
+            tl = Image.new("L", (tw + 8, th + 8), 0)
+            ImageDraw.Draw(tl).text((4 - bb[0], 4 - rb[1]), txt, font=f, fill=255)
+            fw = W - x0 - SS * 10
+            th2 = int(H * 0.62)
+            tl = tl.resize((min(fw, int(tw * th2 / th * 0.80)), th2), Image.LANCZOS)
+            ox = x0 + (fw - tl.size[0]) // 2
+            im.paste((24, 24, 24), (ox, (H - th2) // 2), tl)
+        else:                                                   # far plate: grey band where the characters are
+            rng = np.random.default_rng(7)
+            bw, bh = W - x0 - SS * 14, int(H * 0.58)
+            band = (rng.random((6, 30)) * 50 + 120).astype(np.uint8)
+            bimg = Image.fromarray(band, "L").resize((bw, bh), Image.BILINEAR).filter(ImageFilter.GaussianBlur(SS * 2))
+            mask = Image.new("L", (bw, bh), 0)
+            ImageDraw.Draw(mask).rectangle([SS * 3, SS * 3, bw - SS * 3, bh - SS * 3], fill=255)
+            mask = mask.filter(ImageFilter.GaussianBlur(SS * 3))
+            im.paste(Image.merge("RGB", (bimg, bimg, bimg)), (x0 + SS * 4, (H - bh) // 2), mask)
+        # road film: darker towards the lower edge, deterministic per plate
+        g = np.asarray(im, np.float32)
+        v = np.linspace(0, 1, H)[:, None, None]
+        amt = 0.05 + 0.10 * ((zlib.crc32(f"pdirt:{k}".encode()) & 255) / 255.0)
+        g = g * (1.0 - amt * v ** 2) + np.array([92, 82, 66], np.float32) * (amt * v ** 2)
+        im = Image.fromarray(np.clip(g, 0, 255).astype(np.uint8), "RGB").resize((PW, PH), Image.LANCZOS)
+        c, r = k % PLATE_COLS, k // PLATE_COLS
+        cell = im.resize((CW, CH), Image.LANCZOS)               # margin = edge texels of the plate (no bleed)
+        cell.paste(im, ((CW - PW) // 2, (CH - PH) // 2))
+        atlas.paste(cell, (c * CW, r * CH))
+    return atlas
+
+
+def plate_uv(k):
+    """(u0, v0, u1, v1) of the plate inside atlas cell k (generator UVs: v = 0 at the image bottom)."""
+    c, r = k % PLATE_COLS, k // PLATE_COLS
+    du, dv = 1.0 / PLATE_COLS, 1.0 / PLATE_ROWS
+    mu, mv = (256 - 248) / 2 / 256 * du, (64 - 54) / 2 / 64 * dv
+    return c * du + mu, 1.0 - (r + 1) * dv + mv, (c + 1) * du - mu, 1.0 - r * dv - mv
 
 
 # ------------------------------------------------------------------------------------------- geometry helpers
@@ -341,10 +451,14 @@ def _vehicle(d, paint, lod):
                 _oq(m, "tyre", [[hw - 0.01, yy, 0.0], [-hw + 0.01, yy, 0.0], [-hw + 0.01, yy, sill + 0.02],
                                 [hw - 0.01, yy, sill + 0.02]], [0, s, 0])
     else:
+        # LOD2 (far rows, 135-300 m High / 45-300 m Low): dark under-body band between the axles + one hexagonal
+        # tyre disc per wheel (the round wheels are what still reads at 15-40 px; a black band reads as "legs")
         ya, yb = yra - r, yfa + r
         for sx in (-1, 1):
-            _oq(m, "tyre", [[sx * (hw - 0.01), ya, 0], [sx * (hw - 0.01), yb, 0], [sx * (hw - 0.01), yb, sill + 0.02],
-                            [sx * (hw - 0.01), ya, sill + 0.02]], [sx, 0, 0])
+            _oq(m, "tyre", [[sx * (hw - 0.01), yra, 0.06], [sx * (hw - 0.01), yfa, 0.06],
+                            [sx * (hw - 0.01), yfa, sill + 0.02], [sx * (hw - 0.01), yra, sill + 0.02]], [sx, 0, 0])
+            for yc in (yra, yfa):
+                _disc(m, "tyre", [sx * (hw + 0.006), yc, r], r, 6, sx, math.pi / 6)
         for yy, s in ((ya, -1), (yb, 1)):
             _oq(m, "tyre", [[hw - 0.01, yy, 0.0], [-hw + 0.01, yy, 0.0], [-hw + 0.01, yy, sill + 0.02],
                             [hw - 0.01, yy, sill + 0.02]], [0, s, 0])
@@ -453,18 +567,25 @@ class _Shell:
         P, R, CR, tag = [], [], [], []           # dense points; tag = (control index, part) part: 0 QA, 1 M, 2 QB
         cp = np.array([[c[1], c[2]] for c in C])
         for k, c in enumerate(C):
-            if k in (0, len(C) - 1) or lod > 0:
+            # LOD1 (v4): the bonnet lip and the bumper peak keep a 3-point chamfer (Low sees LOD1
+            # from 12.5 m: unrounded they were knife edges with one flat facet mirroring the sky)
+            if k in (0, len(C) - 1) or (lod > 0 and c[0] not in ("H1", "F1")):
                 P.append(cp[k]); R.append(c[3]); CR.append(c[4]); tag.append((k, 1))
                 continue
             a, b = cp[k - 1] - cp[k], cp[k + 1] - cp[k]
             la, lb = np.linalg.norm(a), np.linalg.norm(b)
-            kl = min(0.25 * la, 0.25 * lb, 0.11 if c[0] in ("H1", "F1", "G1") else 0.07)
+            # v4 (HANDOVER "square fronts"): the bonnet lip and the bumper peak are 5-point quadratic Bezier rounds
+            # with a longer reach, the other corners 3-point chamfers (part 1 = the control's mid point)
+            soft = c[0] in ("H1", "F1") and lod == 0
+            kl = min(0.30 * la, 0.30 * lb, 0.16) if soft else min(0.25 * la, 0.25 * lb, 0.11 if c[0] == "G1" else 0.07)
             qa, qb = cp[k] + a / la * kl, cp[k] + b / lb * kl
-            for part, q in ((0, qa), (1, 0.25 * qa + 0.5 * cp[k] + 0.25 * qb), (2, qb)):
+            ts = ((0, 0.0), (3, 0.25), (1, 0.5), (4, 0.75), (2, 1.0)) if soft else ((0, 0.0), (1, 0.5), (2, 1.0))
+            for part, t in ts:
+                q = (1 - t) ** 2 * qa + 2 * t * (1 - t) * cp[k] + t * t * qb
                 P.append(q); R.append(c[3]); CR.append(c[4]); tag.append((k, part))
         self.C, self.P, self.R, self.CR, self.tag = C, np.array(P), np.array(R), np.array(CR), tag
         if lod > 0:
-            self.CR = self.CR * 0.0
+            self.CR = self.CR * 0.7             # v4: LOD1 keeps most of the crown (mid point of the top, g = 0)
         n = len(P)
         E = np.diff(self.P, axis=0)
         EN = np.column_stack([-E[:, 1], E[:, 0]])
@@ -634,7 +755,13 @@ def _wheel2(m, x_out, yc, r, sx, seg, steel, lod, wst=0, rimm="rim", tyre="tyre"
     else:
         A, B = ring((0.62 if steel else 0.70) * r, 0.004), ring(r, 0.03)
         band(tyre, A, B)
-        band(tyre, B, ring(r, w), radial=1.0)
+        C2 = ring(r, w)                                  # tread: lower half only (the upper half is inside the arch)
+        for k in range(seg):
+            k2 = (k + 1) % seg
+            if B[k][2] + B[k2][2] < 2 * r + 0.2 * r:
+                want = (B[k] + B[k2]) / 2 - cen
+                want[0] = 0
+                _quad(m, tyre, B[k], B[k2], C2[k2], C2[k], want)
         fan("rim_steel" if steel else ("rim_dark" if wst == 3 else rimm), A, X)
 
 
@@ -654,6 +781,9 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     dmat = f"car_dirt_{1 + min(2, int(dl * 3))}"
     uo = float(style["uoff"])
     ds = 0.70 + 0.30 * dl                           # glass dust reach (UV0 of car_glass_tint, see materials.py)
+    # factory privacy glass behind the B pillar (v4, WORKING_VALUE fleet look: SUVs / estates, half the hatches):
+    # UV0 u of those panes is offset by PRIVACY_U, WorldCarGlass.shader decodes it (no extra material / draw)
+    priv = not cargo and bool(style.get("privacy", False))
 
     # ---- top shell: crowned centre + shoulder arcs
     NT, NS = (3, 3) if lod == 0 else (1, 1)
@@ -668,8 +798,10 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
             nn = A[j][1] + A[j + 1][1] + B[j][1] + B[j + 1][1]
             if mm == gmat and lod == 0:             # dust mask: 1 at the lower edge and the sides, 0.75 at the top
                 va, vb = (-1.0, 0.75) if sh.P[i][1] < sh.P[i + 1][1] else (0.75, -1.0)
+                po = PRIVACY_U if (priv and sh.P[i][0] < 0) else 0.0          # rear screen
                 _puv(m, mm, [A[j][0], A[j + 1][0], B[j + 1][0], B[j][0]],
-                     [(gs[j] * ds, va * ds), (gs[j + 1] * ds, va * ds), (gs[j + 1] * ds, vb * ds), (gs[j] * ds, vb * ds)], nn)
+                     [(gs[j] * ds + po, va * ds), (gs[j + 1] * ds + po, va * ds), (gs[j + 1] * ds + po, vb * ds),
+                      (gs[j] * ds + po, vb * ds)], nn)
             else:
                 _quad(m, mm, A[j][0], A[j + 1][0], B[j + 1][0], B[j][0], nn)
 
@@ -734,9 +866,11 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     arch_top = r + ra
 
     def ztop(y):
-        z = sill + 0.15 + 0.20 * dl
+        # v4 (HANDOVER "sill dirt"): lower film line and smaller spray fans (a pale band up to mid-door read as a
+        # two-tone paint job, not as road film)
+        z = sill + 0.12 + 0.14 * dl
         for yc in (yra, yfa):
-            z += (0.18 + 0.26 * dl) * math.exp(-((y - (yc - ra - 0.24)) / 0.30) ** 2)
+            z += (0.12 + 0.18 * dl) * math.exp(-((y - (yc - ra - 0.24)) / 0.28) ** 2)
         return z
     kd = 12 if lod == 0 else 3
     if lod == 0:
@@ -774,10 +908,12 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
             bands += [(yB - d["qp"] + 0.035, yB - 0.04), (ga0 + d["cp"], yB - d["qp"] - 0.035)]
         else:
             bands += [(ga0 + d["cp"], yB - 0.04)]
-    wins = []
-    for ya, yb in bands:
+    wins, wrear = [], []
+    for kb, (ya, yb) in enumerate(bands):
         g = inner.intersection(box(ya, 0, yb, 3)).simplify(0.004)
-        wins += [p for p in getattr(g, "geoms", [g]) if p.geom_type == "Polygon" and p.area > 0.01]
+        got = [p for p in getattr(g, "geoms", [g]) if p.geom_type == "Polygon" and p.area > 0.01]
+        wins += got
+        wrear += [kb > 0] * len(got)
 
     def side_tris(mat, tris, lift=0.0):
         for t in tris:
@@ -786,11 +922,12 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
                 _oq(m, mat, q, [sx, 0, 0])
     if lod == 0:
         side_tris(paint, _tri2d(outer.difference(unary_union(wins))))
-        for wn in wins:                             # dust mask rises from the lower window edge
+        for wn, rear in zip(wins, wrear):           # dust mask rises from the lower window edge
+            po = PRIVACY_U if (priv and rear) else 0.0
             for t in _tri2d(wn):
                 for sx in (1, -1):
                     _puv(m, gmat, [np.array([sx * sh.X(y, z), y, z]) for y, z in t],
-                         [(0.0, ds * (1.0 - 0.8 * min(1.0, max(0.0, (z - sh.zbelt(y)) / 0.42)))) for y, z in t], [sx, 0, 0])
+                         [(po, ds * (1.0 - 0.8 * min(1.0, max(0.0, (z - sh.zbelt(y)) / 0.42)))) for y, z in t], [sx, 0, 0])
     else:
         side_tris(paint, _tri2d(outer.simplify(0.003)))
         for wn in wins:
@@ -866,11 +1003,23 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         if not cargo:                                                                      # roof aerial fin
             pr = sh.pt(sh.mid["G1"], 0.0)[0]
             _box5(m, "car_trim", [0, pr[1] + 0.16, pr[2] + 0.025], 0.02, 0.075, 0.03, (0, 0, -1))
+    pk = int(style.get("plate", 0)) if lod == 0 else PLATE_FAR       # LOD1: EU band + grey band only
+    u0, v0, u1, v1 = plate_uv(pk)
     for name, tc in (("H1", 0.80), ("R1", 0.30)):
         i = sh.seg[name]
         ln = float(np.linalg.norm(sh.P[i + 1] - sh.P[i]))
         xt = sh.pt(i, 1.0)[0][0]
-        patch(name, tc - 0.056 / ln, tc + 0.056 / ln, [-0.26 / xt, 0.26 / xt], "car_plate", lift=0.014)
+        q, nn = [], np.zeros(3)
+        for t, g in ((tc - 0.056 / ln, -0.26 / xt), (tc - 0.056 / ln, 0.26 / xt), (tc + 0.056 / ln, 0.26 / xt),
+                     (tc + 0.056 / ln, -0.26 / xt)):
+            pp, nrm = sh.ptf(i, t, g)
+            q.append(pp + nrm * 0.014)
+            nn += nrm
+        zlo = min(pp[2] for pp in q)
+        zhi = max(pp[2] for pp in q)
+        front = name == "H1"                 # front plate seen from +y: its left (EU band) is +x; rear: -x
+        uv = [((u0 if (pp[0] > 0) == front else u1), (v0 if pp[2] < (zlo + zhi) / 2 else v1)) for pp in q]
+        _puv(m, "car_plate", q, uv, nn)
     # road film on the tail (dirtiest face of a car) and the lower front bumper
     dg = [-1.8, -1.0, -0.34, 0.34, 1.0, 1.8] if lod == 0 else [-1.7, 0.0, 1.7]
     spatch("R1", [(g, 0.0, 0.55 + 0.40 * dl) for g in dg], dmat, lift=0.015, uv=(uo, 0.45))
@@ -962,17 +1111,26 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     return _paint_uv(m)
 
 
+def _plate_index(name):
+    """Atlas cell of a prototype (one fictional plate per prototype, 24 cars + 3 vans < PLATE_FAR)."""
+    names = [f"{b}_{c}" for b in CARS for c in CAR_COLOURS] + [f"van_{c}" for c in VAN_COLOURS]
+    return names.index(name) if name in names else zlib.crc32(name.encode()) % PLATE_FAR
+
+
 def _style(name):
-    """Per-prototype look (deterministic): dirt level, alloy style, film pattern offset."""
+    """Per-prototype look (deterministic): dirt level, alloy style, film pattern offset, plate."""
     h = zlib.crc32(name.encode())
-    return dict(dirt=(h & 255) / 255.0, wheel=(h >> 8) % 4, uoff=((h >> 16) & 255) / 255.0)
+    body = name.split("_")[0]
+    privacy = body in ("suv", "estate") or (body == "hatch" and (h >> 24) & 1 == 1)
+    return dict(dirt=(h & 255) / 255.0, wheel=(h >> 8) % 4, uoff=((h >> 16) & 255) / 255.0, plate=_plate_index(name),
+                privacy=privacy)
 
 
 def _build(d, paint, steel=False, name=""):
     col = Mesh()
     col.box("collision_vehicle", [0, 0, d["H"] / 2], d["W"] / 2, d["L"] / 2, d["H"] / 2)
     st = _style(name)
-    return _vehicle2(d, paint, 0, steel, st), _vehicle2(d, paint, 1, steel, st), col, _vehicle(d, paint, 1)
+    return _vehicle2(d, paint, 0, steel, st), _vehicle2(d, paint, 1, steel, st), col, _vehicle(d, paint, 2)
 
 
 def car(body, colour):

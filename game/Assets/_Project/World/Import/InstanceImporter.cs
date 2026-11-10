@@ -43,9 +43,15 @@ namespace Game.World.Import
             else if (proto == "pylon" || proto == "power_pole") e = new[] { 80f, 1500f };
             else if (proto.StartsWith("plate_") || proto.StartsWith("board_") || proto.StartsWith("sign_") || proto.StartsWith("signal_")) e = new[] { 50f, 250f };
             else if (proto == "bus_shelter" || proto.EndsWith("_gate")) e = new[] { 60f, 300f };
-            // Parked cars / vans: LOD0 detail, LOD1 simple wheels, LOD2 prism (~40 tris). Low (lodBias 0.5): 12 / 45 / 200 m.
-            else if (proto.StartsWith("car_") || proto.StartsWith("van_")) e = new[] { 25f, 90f, 400f };
-            else e = new[] { 30f, 120f };   // bench, bollard, waste bin, street cabinet
+            // Landmarks (chimneys): visible across the district, never culled inside the far plane.
+            else if (proto.StartsWith("landmark_")) e = new[] { 650f, 20000f };
+            // Vehicles (ADR 0041 v4, REVIEW r6 W-N6): LOD switches x lodBias, cull FIXED at VehicleCullM on every tier
+            // (WorldInstances.IsVehicle), so Low shows the same parked cars and truck rigs as High.
+            // Cars / vans: LOD0 detail, LOD1 simple wheels, LOD2 profile prism (~55 tris). Low (lodBias 0.5): 12 / 45 / 300 m.
+            else if (proto.StartsWith("car_") || proto.StartsWith("van_")) e = new[] { 25f, 90f, WorldInstances.VehicleCullM };
+            else if (proto.StartsWith("tractor_") || proto.StartsWith("trailer_")) e = new[] { 40f, WorldInstances.VehicleCullM };
+            else e = new[] { 30f, 120f };   // bench, bollard, waste bin, street cabinet, pallets, containers
+            // Mirror: tools/worldgen/roads/build_world.py instance_ends() (frame estimate) - keep the two in sync.
             if (e.Length > lodCount) e = new[] { e[0] }.Concat(e.Skip(e.Length - lodCount + 1)).ToArray();
             int shadows = proto.StartsWith("tree_") ? 0b011 : 0b001;
             return (e.Take(lodCount).ToArray(), shadows);

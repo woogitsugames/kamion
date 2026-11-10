@@ -645,20 +645,56 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
 #         LOD1 < 80 m, impostor < 1500 m; forest stands (trees with "fc") are replaced by their forest HLOD
 #         cell when the cell bbox is > 120 m away (v3.1); props LOD0 < 120 m, LOD1 < 650 m.
 #   Low : terrain LOD1 < 330 m, LOD2 < 600 m, LOD3 beyond; buildings LOD1; trees LOD1 < 35 m, impostor < 400 m,
-#         culled beyond; forest HLOD 70-1000 m, culled beyond; props LOD1 < 250 m, culled beyond;
-#         linear furniture < 400 m.
-#   Parked cars / vans (ADR 0041): InstanceImporter 25 / 90 / 400 m x lodBias (High 1.5, Low 0.5).
+#         culled beyond; forest HLOD 70-1000 m, culled beyond; linear furniture < 400 m.
+#   Point props (ADR 0041 v4): the estimate mirrors InstanceImporter.Policy (instance_ends below) x the tier lodBias
+#         (High 1.5, Low 0.5) exactly. The earlier blanket rule "props LOD0 < 120 m, LOD1 < 650 m" (High) predated the
+#         per-family policy and counted bins / pallets / trailers that the engine culls at 45-180 m.
+#   Vehicles (car_ / van_ / tractor_ / trailer_, REVIEW r6 W-N6): LOD switches x lodBias, cull FIXED at
+#         VEHICLE_CULL_M on every tier, so Low shows the same vehicles as High (LOD2 / LOD1 instead of a cull).
 # v3 had trees LOD0 < 80 m / LOD1 < 250 m and no forest HLOD (DK8 forest frame 8.2 M triangles on High).
+VEHICLE_CULL_M = 300.0     # m, all tiers (WORKING_VALUE: a 4.4 m car is ~17 px long there on a 1080 p phone)
+VEHICLE_PREFIX = ("car_", "van_", "tractor_", "trailer_")
+
+
+def instance_ends(proto, nlods):
+    """(LOD end distances at lodBias 1, fixed_cull) of a non-tree prototype: a copy of InstanceImporter.Policy
+    (game/Assets/_Project/World/Import/InstanceImporter.cs) incl. its LOD-count reduction. Keep the two in sync."""
+    if proto.startswith("lamp_"):
+        e = [60.0, 400.0]
+    elif proto in ("pylon", "power_pole"):
+        e = [80.0, 1500.0]
+    elif proto.startswith(("plate_", "board_", "sign_", "signal_")):
+        e = [50.0, 250.0]
+    elif proto == "bus_shelter" or proto.endswith("_gate"):
+        e = [60.0, 300.0]
+    elif proto.startswith("landmark_"):
+        e = [650.0, 20000.0]
+    elif proto.startswith(("car_", "van_")):
+        e = [25.0, 90.0, VEHICLE_CULL_M]
+    elif proto.startswith(("tractor_", "trailer_")):
+        e = [40.0, VEHICLE_CULL_M]
+    else:
+        e = [30.0, 120.0]
+    if len(e) > nlods:
+        e = [e[0]] + e[len(e) - nlods + 1:]
+    return e[:nlods], proto.startswith(VEHICLE_PREFIX)
+
+
+def instance_rule(proto, nlods, bias):
+    """[[end m, tris key]] of a non-tree prototype on a tier with this lodBias (WorldInstances.LodAt)."""
+    e, fixed = instance_ends(proto, nlods)
+    n = len(e)
+    return [[x * (1.0 if (fixed and k == n - 1) else bias), f"tris_lod{k}"] for k, x in enumerate(e)]
+
+
 LOD_POLICY = {
     "High": {"terrain": [[330, 0], [600, 1], [1e9, 2]], "bld": 700,
              "tree": [[35, "tris_lod0"], [80, "tris_lod1"], [1500, "tris_lod2"]],
              "forest_hlod_m": 120, "forest_hlod_cull_m": 1e9,
-             "prop": [[120, "tris_lod0"], [650, "tris_lod1"]], "furn": 1e9,
-             "car": [[37.5, "tris_lod0"], [135, "tris_lod1"], [600, "tris_lod2"]]},
+             "lod_bias": 1.5, "furn": 1e9},
     "Low": {"terrain": [[330, 1], [600, 2], [1e9, 3]], "bld": 0,
             "tree": [[35, "tris_lod1"], [400, "tris_lod2"]], "forest_hlod_m": 70, "forest_hlod_cull_m": 1000,
-            "prop": [[250, "tris_lod1"]], "furn": 400,
-            "car": [[12.5, "tris_lod0"], [45, "tris_lod1"], [200, "tris_lod2"]]},
+            "lod_bias": 0.5, "furn": 400},
 }
 
 
@@ -735,11 +771,11 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
                     if di > 200 and float(np.dot((np.array([it["e"], it["n"]]) - pos) / di, look)) < 0.5:
                         continue
                     is_tree = it["p"].startswith("tree_")
-                    rule = pol["tree"] if is_tree else pol["prop"]
-                    if it["p"].startswith(("car_", "van_")):   # 3 LODs, InstanceImporter.Policy 25/90/400 m x lodBias
-                        rule = pol["car"]
-                    if it["p"].startswith("landmark_"):       # landmarks are never culled (LOD1 beyond 650 m)
-                        rule = [[650, "tris_lod0"], [1e9, "tris_lod1"]]
+                    if is_tree:
+                        rule = pol["tree"]
+                    else:
+                        pm = props_meta.get(it["p"]) or {}
+                        rule = instance_rule(it["p"], 3 if "tris_lod2" in pm else 2, pol["lod_bias"])
                     key = next((k for lim, k in rule if di < lim), None)
                     if key:
                         add(("trees_" + key[5:]) if is_tree else "props", itris(it, key))
