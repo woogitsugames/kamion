@@ -1,7 +1,7 @@
 # HANDOVER — kamion, sesja 5 (aktualizacja 2026-11-10 ok. 22:10; lider zapisuje ten plik po każdym scaleniu/starcie agenta)
 
 ## Najpierw (sesja 5 → następna)
-- **main = `6382fc1`, wypchnięty.** Scalone w sesji 5: świat r8 ADR 0060 (p10 ov 32–34, cel ≤ 28 NIE — potrzebna decyzja właściciela o ekspozycji ov), skany CC0 ADR 0063. Przód 0061 i źródła 0066 (WIP) scalone wcześniej.
+- **main = `417283e`+, wypchnięty.** Limit 5 h: 55 % o 21:35 (reset 01:10) — od 85 % max 2 agentów naraz. Scalone w sesji 5: świat r8 ADR 0060 (p10 ov 32–34, cel ≤ 28 NIE — potrzebna decyzja właściciela o ekspozycji ov), skany CC0 ADR 0063. Przód 0061 i źródła 0066 (WIP) scalone wcześniej.
 - **Zgłoszenie właściciela:** pas ze strzałką wjeżdża w wysepkę z trawą (`artifacts/owner/bugs/2026-11-10-lane-into-island.webp`) + wymaganie: „drogi dosłownie jak w OSM, żeby mieszkaniec wiedział jak jechać” → agenci 0074/0075/audyt.
 - Zasady dla agentów: `artifacts/handover/AGENT-RULES-S5.md`. Ostatni przydzielony ADR: **0075**.
 - Przy przejęciu worktree: `git -C <wt> log main..HEAD`, STATUS.md (ścieżka poniżej), dokończ albo scal. Przed usunięciem: skopiuj `<wt>/artifacts`, `cmd /c rmdir` junctiony `<wt>/Data/raw/*`, `git worktree unlock`, `git worktree remove --force --force`, sprawdź `du -sh Data/raw/*` w main.
@@ -16,7 +16,7 @@
 | grill Low lowsun + szyba/dach/chrom | Opus | 0072 | agent-a473434b32a2511a1 | worktree-agent-a473434b32a2511a1 | artifacts/truckshade-r9 | w toku |
 | auta r9 sylwetki | Fable | 0073 | agent-adeef0c396335e1ed | worktree-agent-adeef0c396335e1ed | artifacts/cars-r9 | w toku |
 | spójność nawierzchni (pas w wysepkę) | Opus | 0074 | agent-a49b0ff53eade0b91 | worktree-agent-a49b0ff53eade0b91 | artifacts/roadgeo-r9 | w toku |
-| audyt mapy całej trasy | Opus | — | agent-a059a8b723e8c235e | worktree-agent-a059a8b723e8c235e | artifacts/map-audit-r9/BUGS.md | w toku |
+| audyt mapy całej trasy | Opus | — | (usunięty) | scalony 417283e | artifacts/map-audit-r9/BUGS.md | GOTOWE: 21 błędów (4 P0: MA-010, MA-001, MA-002, MA-012) → przekazane 0074 (geometria) i 0069 (ekrany, sygnalizator, szlaban) |
 | zgodność dróg z OSM/ortofoto | Opus | 0075 | agent-aee7234325983b8dc | fidelity-r9 | artifacts/fidelity-r9/DIFFS.md | w toku |
 
 ## Następne kroki
