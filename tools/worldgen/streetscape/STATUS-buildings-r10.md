@@ -21,3 +21,13 @@
 - UWAGA worktree: `git lfs checkout` konieczny (trees.glb był wskaźnikiem LFS -> import FAILED). Runda bazowa: `pwsh artifacts/buildings-r10/run_round.ps1 -Round base`.
 - NASTĘPNY KROK: podpiąć atlas w `buildings_mesh.py`/`facade_kit.py`/`materials.py` (okna jako komórki, rzędy LOD1), potem
   `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` i `pwsh artifacts/buildings-r10/run_round.ps1 -Round r1 -Configs High:overcast,Low:overcast`
+
+## krok 2 — przejęcie po agencie ubitym limitem: podpięcie atlasów (commit ea9f339)
+- LOD0: każde okno/drzwi/brama = komórka `facade_atlas` (bez geometrii ram i słupków: -20 tris/okno), ościeża i parapet zostają;
+  bloki/biura czytają plan rzędów `FA.far_plan` (ten sam co LOD1), okna skalują się z wysokością kondygnacji (k = sh/2,8).
+- LOD1: strefa okien = quady z rzędów `facade_far` (1 quad na paczkę kolejnych rzędów x 8 przęseł), UV0 w metrach atlasu; bez UV1.
+- Balkony: front z komórki `balf` (wariant = rząd LOD1), 14 % zabudów, 18 % anten, 30 % prania; klimatyzatory 5 % okien bloków / 10 % biur.
+- Płot betonowy: `furniture.concrete_fence` - przęsła 2 m poziome, schodkowane po terenie, 2 lica z różnych odlewów, słupki 12x14 cm.
+- Testy: `tests/gis/test_world_v31.py` (+4 nowe). STATUS kopiowany do `artifacts/buildings-r10/STATUS.md`.
+- NASTĘPNY KROK: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` ->
+  `uv run --project tools/worldgen pytest tests/gis -q` -> `pwsh artifacts/buildings-r10/run_round.ps1 -Round r1 -Configs High:overcast,Low:overcast`
