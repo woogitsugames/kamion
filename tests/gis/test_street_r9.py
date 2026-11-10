@@ -114,3 +114,17 @@ def test_generated_qa_street_r9():
     rows = [r for b in g["andersa-putry-cantilever-p37"]["boards"] for r in b["rows"]]
     assert [r[1] for r in rows][:2] == ["Warszawa", "Ełk"]
     assert not [s for s in q["furniture"]["landmarks"]["stale"] if "p37" in s or "p40" in s]
+    vg = q.get("vegetation", {}).get("tree_groups", {})
+    assert vg.get("trees", 0) >= 6, vg              # p26 clumps land on the grass beyond the cycle path (r9c)
+
+
+def test_zebras_inside_junction_patches():
+    """REFS-MAPILLARY #5 (p40 / p42): zebras at signalised mouths were skipped because the OSM crossing node lies
+    inside the generated junction patch; r9c drapes them on the patch mesh."""
+    p = REGION_DIR / "generated" / "roads_qa.json"
+    q = json.loads(p.read_text(encoding="utf-8"))["summary"]
+    if "P-10 crossing in junction" not in q["markings"]:
+        pytest.skip("roads_qa.json predates r9c (run build_world)")
+    assert q["markings"]["P-10 crossing in junction"] >= 8
+    assert {2882674819, 2882674820}.isdisjoint(q.get("crossings_skipped", []))
+    assert len(q.get("crossings_skipped", [])) <= 6
