@@ -1,3 +1,12 @@
+# HANDOVER — kamion, sesja 7 (2026-11-10 ok. 23:xx; start po ubiciu s6 limitem)
+
+## Najpierw
+- **main = `4c27a9b`, wypchnięty.** Żadnych scaleń w s7 jeszcze. Brak wiszących procesów Unity/Blender/build_world po s6.
+- s7: wznowiono 8 agentów s6 w ich istniejących worktree (tabela s6 niżej — te same worktree/gałęzie/STATUS) + 0083 zewnętrze TRAKT wystartowane od nowa (poprzedni worktree agent-a895ad2cc01f155bd nigdy nie powstał) w nowym worktree (ścieżka w raporcie agenta; STATUS `artifacts/truck-ext-r10/STATUS.md`). Wszyscy Fable 5.2. Razem 9 agentów.
+- Puste/osierocone katalogi w `.claude/worktrees/` (nie w `git worktree list`): a0c58…, a12755…, a48798…, a619ef…, a66ef6…, a9eaae…, ab1fb0… — do ręcznego usunięcia (sprawdzić junctiony przed rmdir).
+- Następne kroki bez zmian (s6 §Następne kroki): scalać 0076 → 0077 → 0070/0071 → 0078 → 0081 → 0080 → 0082 → 0083; po każdym regeneracja + pytest gis.
+
+---
 # HANDOVER — kamion, sesja 6 (2026-11-10 ok. 21:45 czasu właściciela; lider zapisuje po każdym scaleniu/starcie/końcu agenta)
 
 ## Najpierw
