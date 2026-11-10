@@ -7,6 +7,9 @@ private yard that neither OSM nor BDOT10k describe and the rules get wrong.
   lamps                 [{at: [x, y], face: [x, y], proto}] columns at the pole feet read off the orthophoto shadows,
                         arm toward `face`
   props                 [{proto, at: [x, y], yaw_deg | along: [dx, dy]}] containers and other static prototypes
+  dock_trailers         {building: <id fragment>, row: [{dock, proto, yaw_deg, off_m, lat_m}]} the trailers standing at
+                        that building's dock row (r11) - read by `dock_trailers()` for life.dock_trailers
+  wear                  authored wear of the yard (tyre tracks, relaid paving, oil, edge grime): streetscape.yard_wear
 Coordinates EPSG:2180. A prototype that the library does not know is reported in `stale`, never dropped silently.
 """
 
@@ -29,6 +32,12 @@ def no_parking(overrides, origin):
     o_ = np.asarray(origin, float)
     return [Polygon(np.asarray(r, float) - o_) for o in overrides if o.get("kind") == KIND
             for r in o.get("no_parking_epsg2180", [])]
+
+
+def dock_trailers(overrides):
+    """{building id fragment: row} of every `dock_trailers` block."""
+    return {str(o["dock_trailers"]["building"]): o["dock_trailers"]["row"] for o in overrides
+            if o.get("kind") == KIND and o.get("dock_trailers")}
 
 
 def apply(pl, overrides, origin, known, report):

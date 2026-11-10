@@ -48,6 +48,7 @@ ZREF, ZBOT, ZTOP = SPEC["zref"], SPEC["zbot"], SPEC["ztop"]
 ZPAR = ZTOP + PRM["parapet_h_m"]                 # top of the attic wall (coping sits on it)
 
 WALL, ACCENT, GLASSB, PLINTH, FLASH = "kp_wall", "kp_accent", "kp_glass_block", "hall_plinth", "hall_flashing"
+RUNOFF_PERIOD_M = 24.0       # u period of the parapet_runoff layer (streetscape.buildings_mesh.RUNOFF_PERIOD_M)
 
 _spec = importlib.util.spec_from_file_location("wm", REPO / "tools" / "worldgen" / "streetscape" / "materials.py")
 _wm = importlib.util.module_from_spec(_spec)
@@ -67,18 +68,22 @@ def hf(*key):
 # ---------------------------------------------------------------------------------------------------- mesh soup
 class MB:
     def __init__(self):
-        self.V, self.F, self.UV, self.M = [], [], [], []
+        self.V, self.F, self.UV, self.M, self.UV1 = [], [], [], [], []
 
-    def poly(self, P, UV, mat, hint=None):
+    def poly(self, P, UV, mat, hint=None, uv1=None):
+        """uv1: optional TEXCOORD_1 per corner (run-off space of the wall faces, r11); faces without it get (0, 0) =
+        "no wall-top data" in Kamion/World PBR _RUNOFF."""
         P = [np.asarray(p, float) for p in P]
         if hint is not None:
             n = np.cross(P[1] - P[0], P[-1] - P[0])
             if float(np.dot(n, hint)) < 0:
                 P, UV = P[::-1], UV[::-1]
+                uv1 = uv1[::-1] if uv1 is not None else None
         b = len(self.V)
         self.V += P
         self.F.append(tuple(range(b, b + len(P))))
         self.UV.append([tuple(map(float, u)) for u in UV])
+        self.UV1.append([tuple(map(float, u)) for u in uv1] if uv1 is not None else None)
         self.M.append(mat)
 
     def tris(self):
@@ -96,6 +101,13 @@ class MB:
             for u in uvs:
                 uvl.data[k].uv = u
                 k += 1
+        if any(u is not None for u in self.UV1):
+            uv2 = me.uv_layers.new(name="UVRunoff")
+            k = 0
+            for uvs, f in zip(self.UV1, self.F):
+                for j in range(len(f)):
+                    uv2.data[k].uv = uvs[j] if uvs is not None else (0.0, 0.0)
+                    k += 1
         names = sorted(set(self.M))
         for n in names:
             me.materials.append(material(n))
@@ -168,14 +180,23 @@ class Fr:
         q = self.a + self.d * u + self.n * o
         return np.array([q[0], q[1], z])
 
-    def front(self, mb, u0, u1, z0, z1, mat, o=0.0, uv=None):
+    def front(self, mb, u0, u1, z0, z1, mat, o=0.0, uv=None, run_top=None):
+        """run_top: z of the edge the rain runs off above this face (coping or a window sill): the face gets
+        TEXCOORD_1 = (u in the 24 m run-off period, 1 + metres below that edge), like buildings_mesh.runoff_uv1."""
         if u1 - u0 < 1e-4 or z1 - z0 < 1e-4:
             return
+        uv1 = None
+        if run_top is not None:
+            a = self.u_off + u0
+            sh = RUNOFF_PERIOD_M * math.floor(a / RUNOFF_PERIOD_M)       # half-float TEXCOORD_1: keep |u| small
+            a, b = a - sh, self.u_off + u1 - sh
+            ka, kb = 1.0 + (run_top - z0), 1.0 + (run_top - z1)
+            uv1 = [(a, ka), (b, ka), (b, kb), (a, kb)]
         if uv is None:
             uv = [(self.u_off + u0, z0 - ZREF), (self.u_off + u1, z0 - ZREF), (self.u_off + u1, z1 - ZREF),
                   (self.u_off + u0, z1 - ZREF)]
             # kp_wall uses the sandwich_ribbed set (horizontal 1 m courses, u along, v up): no UV swap
-        mb.poly([self.P(u0, z0, o), self.P(u1, z0, o), self.P(u1, z1, o), self.P(u0, z1, o)], uv, mat, self.n3)
+        mb.poly([self.P(u0, z0, o), self.P(u1, z0, o), self.P(u1, z1, o), self.P(u0, z1, o)], uv, mat, self.n3, uv1=uv1)
 
     def box(self, mb, u0, u1, z0, z1, o0, o1, mat, faces="flrt", uvs=1.0):
         """Box between offsets o0 (wall side) and o1 (front). faces: f front, k back, l / r ends, t top, B bottom."""
@@ -295,11 +316,15 @@ def build_wall(mb, e, fr, ua, ub, ops, lod):
         if z < ZPAR:
             spans.append((z, ZPAR))
         for z0, z1 in spans:
+            # r11 weathering: every cladding face knows the edge above it that sheds water down the sheet (the coping,
+            # or the sill of the opening above: strip windows, louvres), so soot streaks start there, not at the ground
             if z0 < zp < z1:
                 fr.front(mb, u0, u1, z0, zp, PLINTH)
-                fr.front(mb, u0, u1, zp, z1, WALL)
+                fr.front(mb, u0, u1, zp, z1, WALL, run_top=z1)
+            elif z1 <= zp:
+                fr.front(mb, u0, u1, z0, z1, PLINTH)
             else:
-                fr.front(mb, u0, u1, z0, z1, PLINTH if z1 <= zp else WALL)
+                fr.front(mb, u0, u1, z0, z1, WALL, run_top=z1)
 
 
 def build_dock(mb, fr, o, lod):

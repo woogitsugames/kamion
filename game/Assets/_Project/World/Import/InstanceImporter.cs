@@ -126,14 +126,21 @@ namespace Game.World.Import
                 foreach (var (g, n) in lodNodes)
                 {
                     starts.Add(materials.Count);
-                    bool uv = false;
+                    bool uv = false, uv1 = false;
                     foreach (var prim in n.Primitives)
                     {
                         var mat = ProtoMaterial(r, g, prim.Material, out bool textured);
                         materials.Add(mat);
                         uv |= textured;
+                        // ADR 0071 r11: wall-top / sill run-off space of the hero hall (TEXCOORD_1, only where the
+                        // material reads it and the primitive carries it)
+                        if (prim.Uv1 != null && prim.Material != null && r.MaterialDefs.TryGetValue(prim.Material, out var pd))
+                        {
+                            WorldPbrMaterials.Channels(pd, prim.Material, out _, out bool pu1, out _);
+                            uv1 |= pu1;
+                        }
                     }
-                    var mesh = WorldMeshBake.Compact(n.Name, n.Primitives, new WorldMeshBake.Options { Uv0 = uv });
+                    var mesh = WorldMeshBake.Compact(n.Name, n.Primitives, new WorldMeshBake.Options { Uv0 = uv, Uv1 = uv1 });
                     AssetDatabase.AddObjectToAsset(mesh, set);
                     bytes += WorldMeshBake.GpuBytes(mesh);
                     lods.Add(mesh);
@@ -177,6 +184,13 @@ namespace Game.World.Import
             {
                 var spec = cn.Extras != null ? cn.Extras.Get("contact") as Dictionary<string, object> : null;
                 var mat = ContactMaterial(r, spec, vehicle, out string id);
+                // ADR 0071 r11: static yard props (containers, gatehouse, barrier cabinets) also carry a contact spec.
+                // Their patch is culled with THEM (policy ends x lodBias), not at the fixed vehicle distance: the name
+                // must not start with "contact_" (WorldInstances.IsVehicle = fixed cull) or the patch would outlive its
+                // prop on Low.
+                bool vehicleOwner = WorldInstances.IsVehicle(vehicle);
+                if (!vehicleOwner) id = "prop" + id;
+                float cullM = vehicleOwner ? WorldInstances.VehicleCullM : Policy(vehicle, 3).Item1.Last();
                 if (protoIndex.TryGetValue(id, out int ci)) return ci;
                 var mesh = WorldMeshBake.Compact(id, cn.Primitives, new WorldMeshBake.Options());
                 AssetDatabase.AddObjectToAsset(mesh, set);
@@ -184,7 +198,7 @@ namespace Game.World.Import
                 var cp = new WorldInstanceSet.Prototype
                 {
                     name = id, lods = new[] { mesh }, materialStart = new[] { materials.Count },
-                    lodEndM = new[] { WorldInstances.VehicleCullM }, shadowLodMask = 0,
+                    lodEndM = new[] { cullM }, shadowLodMask = 0,
                 };
                 materials.Add(mat);
                 ci = protos.Count;

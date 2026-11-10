@@ -177,6 +177,7 @@ M = {
     "coupling_red": {"color": [0.35, 0.03, 0.02], "rough": 0.5},
     "coupling_yellow": {"color": [0.55, 0.40, 0.02], "rough": 0.5},
     "trailer_front": {"color": [0.40, 0.41, 0.41], "rough": 0.5, "metal": 0.3},
+    "trailer_front_dark": {"color": [0.075, 0.08, 0.085], "rough": 0.5, "metal": 0.3},
     "trailer_alu": {"color": [0.45, 0.46, 0.46], "rough": 0.4, "metal": 0.9},
     "trailer_doors": {"color": [0.50, 0.51, 0.50], "rough": 0.45, "metal": 0.3},
     "trailer_chassis": {"color": [0.03, 0.03, 0.032], "rough": 0.6, "metal": 0.5},
@@ -226,10 +227,26 @@ M = {
     "marking_yard": {"color": [0.46, 0.46, 0.45], "rough": 0.7, "surface": "paint", "decal": True},   # worn yard paint on light pavers; 0.36 (r7) dropped line/paver contrast 1.54 -> 1.14 (review r7 part 2), back to 0.46
     "drain_grate": {"color": [0.035, 0.033, 0.03], "rough": 0.6, "decal": True, "procedural": "grate"},  # cast iron
     "decal_patch": {"color": [0.062, 0.062, 0.06], "rough": 0.85, "decal": True, "texture_set": "asphalt_patch"},
+    # authored yard wear (streetscape.yard_wear, ADR 0071 r11). Relaid paving = the yard's own block set in another
+    # tone (new blocks lighter, re-sanded oily ones darker; world-planar, so the bond runs through the patch edge);
+    # soil washed against kerbs and wall feet is drawn with decal_tyre bands (no material of its own).
+    # Sealant = bitumen in the saw cuts of the induction loops at the gate. Worn dock apron: darker, soiled cast
+    # concrete with the 16 m crack layer (`cracks` = strength). WORKING_VALUE colours.
+    # +7 % / -10 % of yard_behaton 0.23: the first render at +24 % / -24 % read as a white sheet / a hole at overcast
+    # (the grading of ADR 0080 stretches mid-tone differences); the orthophoto rectangle is barely lighter than the yard
+    "decal_yard_patch_light": {"color": [0.248, 0.245, 0.236], "rough": 0.85, "decal": True, "texture_set": "behaton_i_grey"},
+    "decal_yard_patch_dark": {"color": [0.207, 0.205, 0.198], "rough": 0.85, "decal": True, "texture_set": "behaton_i_grey"},
+    "decal_sealant": {"color": [0.02, 0.02, 0.02], "rough": 0.4, "decal": True},
+    "yard_concrete_worn": {"color": [0.235, 0.232, 0.223], "rough": 0.85, "surface": "concrete",
+                           "texture_set": "concrete_cast_5m_joints", "cracks": 0.7},
     # bridges (roads.meshing bridge_style overrides; CC0 photos of the Andersa viaducts, docs/REFERENCES.md)
     # hero depot hall Kwadrat Park (ADR 0071, streetscape.hero_depot; colours read off CC0 photos by Rakoon, Commons:
     # light grey horizontally profiled sheet, vermilion window / louvre frames and portals, glass-block strip lights)
-    "kp_wall": {"color": [0.62, 0.63, 0.63], "rough": 0.5, "metal": 0.1, "texture_set": "sandwich_ribbed"},
+    # r11 (review 2026-11-10 A3 / A7): `weather` = splash zone above the ground (UV0.y = metres above the facade
+    # ground) + run-off streaks under the coping and the strip-window sills (TEXCOORD_1 of make_depot.py), like the
+    # generated hall walls. 0.62 -> 0.56: the wall, the sky and the apron were one light grey (WORKING_VALUE; the CC0
+    # photo 20210904_101250 shows the sheet clearly darker than the overcast sky).
+    "kp_wall": {"color": [0.56, 0.57, 0.57], "rough": 0.5, "metal": 0.1, "texture_set": "sandwich_ribbed", "weather": True},
     "kp_accent": {"color": [0.50, 0.075, 0.035], "rough": 0.55, "metal": 0.2},
     "kp_glass_block": {"color": [0.27, 0.29, 0.30], "rough": 0.3},
     "kp_roof_white": {"color": [0.52, 0.52, 0.50], "rough": 0.8},
