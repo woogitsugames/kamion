@@ -174,7 +174,7 @@ namespace Game.World.Import
             {
                 mat.EnableKeyword("_CARPAINT");
                 mat.SetVector("_CarPaint", new Vector4((float)Num(cp[0]), (float)Num(cp[1]), (float)Num(cp[2]), (float)Num(cp[3])));
-                mat.SetVector("_CarFlake", new Vector4(400f, 1f, 0f, 0f));   // 2.5 mm cells, gone when a pixel covers a cell
+                mat.SetVector("_CarFlake", new Vector4(400f, 1f, 0.08f, 0f));   // 2.5 mm cells, gone when a pixel covers a cell; z = flake reflectance above the pigment (WORKING_VALUE)
                 var pt = def.Get("pearl_tint") as List<object>;
                 mat.SetColor("_PearlTint", pt != null && pt.Count >= 3
                     ? new Color((float)Num(pt[0]), (float)Num(pt[1]), (float)Num(pt[2]), 1f) : Color.white);

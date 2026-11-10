@@ -606,6 +606,11 @@ Shader "Kamion/World PBR"
                 // base-coat metal comes off the diffuse term, not all of it. With (1 - metal) dark metallics kept 25-45 %
                 // of their albedo and went black under an overcast sky (review 0080 P1 #2). WORKING_VALUE.
                 diffColor = albedo * (1.0 - 0.5 * metal) * (1.0 - 0.04);
+                // The flakes (aluminium, mica) are not as dark as the pigment around them: their reflectance sits
+                // _CarFlake.z above the paint colour. Black / navy metallic turns charcoal where the base coat mirrors
+                // the sky instead of staying a black hole (door of the black hatch at overcast: sRGB 15 next to
+                // asphalt 70 before). WORKING_VALUE.
+                specColor = lerp(half3(0.04, 0.04, 0.04), albedo + _CarFlake.z, metal);
             #endif
 
                 float4 shadowCoord = TransformWorldToShadowCoord(pw);
