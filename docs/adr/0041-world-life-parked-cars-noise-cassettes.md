@@ -47,9 +47,29 @@
    - `test_life_prototypes_budget_and_lods` unpacked 3-tuples and broke when decision 2 added the fourth element;
      it now indexes the tuple and additionally bounds LOD2 (<= 60 tris, below LOD1). Budgets 600 / 120 unchanged.
 
+7. Second pass on the cars (2026-11-10, coordinator review: "flat low-poly boxes"):
+   - Budget raised: cars / vans LOD0 <= 4000, LOD1 <= 600, LOD2 <= 120 triangles (was 600 / 120 / ~40).
+     Justification: parked cars are seen from 5-12 m beside the route; LOD0 is drawn only below 12 m on Low and
+     38 m on High (policy 25 / 90 / 400 m x lodBias), so a frame holds only a few LOD0 cars. WORKING_VALUE: the
+     Samsung A16 measurement of a full car park is still pending; the cap moves only on that number.
+     Generated: LOD0 3.3-3.5k, LOD1 540-570, LOD2 112-120 (LOD2 = the first-pass LOD1).
+   - Shell: crowned roof / bonnet / glass, shoulder arcs, barrel sides with tumblehome, rounded plan corners,
+     bumpers wrapping into the sides; wheel arches cut into the side on LOD0 and LOD1 with liners and the tyres set
+     35 mm inside; revolved tyres, five-spoke alloy or pressed-steel wheels with hub caps; lamp clusters wrapping
+     the corners, grille + lower intake, shut lines, handles, mirrors; LOD0 glazing is alpha-blended dark tint
+     (`car_glass_tint`, manifest `"blend": true`, RegionImporter makes a transparent URP Lit material) over a dark
+     interior (tub, dashboard, seats, headrests, headliner); LOD1 / LOD2 glass is opaque and duller (rough 0.65)
+     so it no longer mirrors the sky as light grey on Low.
+   - Prop GLB normals: `export.crease_normals` welds corners by position per prototype and averages face normals
+     within 38 degrees (WORKING_VALUE), for ALL props: curved shells and >= 10-gon tubes shade smooth, boxes and
+     6-gon posts keep hard edges as before.
+   - Placement: `life.parking` now also cuts the dock manoeuvring zones (`dock_zones`, 35 m in front of every dock
+     row, the same rectangles `truck_yards` keeps free) out of every car-park region. The apron polygon alone did
+     not cover the case of a car-park polygon drawn over a truck yard (Kwadrat Park yard filled with cars).
+
 ## Not done / open
-- Car prototypes are flat-shaded facets (the prop GLB carries no normals) and have no interior; windows are opaque
-  dark glass. Smooth normals on the body strip would need a NORMAL attribute in `streetscape/export.py`.
+- Car grime is still only the `car_grime` texture set (weak at distance); no wheel / sill dirt geometry or decals.
+- Alpha-blended car glass is not sorted per instance (dark tint hides the order); cost on the phone not measured.
 - Transparent PMMA panels (photo `Andersa,_Maczka_streets_in_Białystok_2.jpg`) stand on the viaduct parapet,
   which is bridge geometry, and BDOT10k OT_OIKM_L has no material attribute. Open until a data source or an
   authored_override exists.

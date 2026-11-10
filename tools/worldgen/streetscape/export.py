@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import numpy as np
 from PIL import Image, ImageDraw
 
 from terrain_mesh.gltf import GLB
@@ -22,6 +23,64 @@ from .materials import M
 
 REPO = Path(__file__).resolve().parents[3]
 ART = REPO / "art-source" / "world"
+
+
+
+CREASE_DEG = 38.0       # WORKING_VALUE: faces meeting at more than this keep a hard edge (box corners, 6-gon posts)
+
+
+def crease_normals(prims, angle_deg=CREASE_DEG):
+    """Per-corner normals for one prototype (ADR 0041 par. 7): corners are welded by position (0.5 mm) across all
+    primitives of the mesh and averaged (area weighted) over the faces within `angle_deg` of the corner's own face,
+    so curved shells shade smooth and real creases stay hard. Returns new prims with "N" and re-indexed V / UV / T."""
+    if not prims:
+        return prims
+    cs = float(np.cos(np.radians(angle_deg)))
+    P, F, own = [], [], []
+    for k, p in enumerate(prims):
+        V, T = np.asarray(p["V"], float), np.asarray(p["T"], np.int64).reshape(-1, 3)
+        P.append(V[T])                                   # (m, 3, 3)
+        own += [k] * len(T)
+    C = np.concatenate(P) if P else np.zeros((0, 3, 3))
+    if len(C) == 0:
+        return prims
+    fn = np.cross(C[:, 1] - C[:, 0], C[:, 2] - C[:, 0])
+    ln = np.linalg.norm(fn, axis=1)
+    fu = fn / np.where(ln > 1e-12, ln, 1.0)[:, None]
+    key = np.round(C.reshape(-1, 3) / 0.0005).astype(np.int64)
+    _, pid = np.unique(key, axis=0, return_inverse=True)
+    pid = pid.reshape(-1)
+    face = np.repeat(np.arange(len(C)), 3)
+    order = np.argsort(pid, kind="stable")
+    bounds = np.flatnonzero(np.diff(pid[order])) + 1
+    N = np.zeros((len(C) * 3, 3))
+    for grp in np.split(order, bounds):
+        f = face[grp]
+        if len(grp) == 1:
+            N[grp[0]] = fu[f[0]]
+            continue
+        U = fu[f]
+        mask = (U @ U.T) >= cs
+        N[grp] = mask.astype(float) @ fn[f]
+    nl = np.linalg.norm(N, axis=1)
+    bad = nl < 1e-12
+    N[bad] = fu[face[bad]]
+    nl = np.linalg.norm(N, axis=1)
+    N[nl < 1e-12] = [0.0, 0.0, 1.0]
+    N /= np.linalg.norm(N, axis=1)[:, None]
+    N = N.reshape(-1, 3, 3)
+    out, off = [], 0
+    for p in prims:
+        V, T = np.asarray(p["V"], float), np.asarray(p["T"], np.int64).reshape(-1, 3)
+        UV = np.asarray(p["UV"], float) if p.get("UV") is not None else np.zeros((len(V), 2))
+        m = len(T)
+        rows = np.concatenate([V[T].reshape(-1, 3), np.round(N[off:off + m].reshape(-1, 3), 3), UV[T].reshape(-1, 2)], axis=1)
+        off += m
+        uniq, inv = np.unique(np.round(rows, 5), axis=0, return_inverse=True)
+        q = dict(p)
+        q["V"], q["N"], q["UV"], q["T"] = uniq[:, :3], uniq[:, 3:6], uniq[:, 6:8], inv.reshape(-1, 3)
+        out.append(q)
+    return out
 
 
 def fence_mesh_png():
@@ -93,17 +152,17 @@ def export(codes, boards, out_dir=None):
     for name in sorted(P):
         lod0, lod1, col, *more = P[name]
         t0 = glb_tris = 0
-        prims = lod0.out()
+        prims = crease_normals(lod0.out())
         glb.add_mesh(name, prims, {"lod": 0})
         t0 = sum(len(p["T"]) for p in prims)
-        p1 = lod1.out()
+        p1 = crease_normals(lod1.out())
         glb.add_mesh(name + ".lod1", p1, {"lod": 1})
         t1 = sum(len(p["T"]) for p in p1)
         if col is not None:
             glb.add_mesh(name + ".col", col.out(), {"collision": True})
         meta[name] = {"tris_lod0": int(t0), "tris_lod1": int(t1), "materials": sorted({p["mat"] for p in prims})}
         if more and more[0] is not None:          # optional third LOD (cars, vans: far parking rows)
-            p2 = more[0].out()
+            p2 = crease_normals(more[0].out())
             glb.add_mesh(name + ".lod2", p2, {"lod": 2})
             meta[name]["tris_lod2"] = int(sum(len(p["T"]) for p in p2))
         del glb_tris

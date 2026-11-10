@@ -144,9 +144,11 @@ def test_life_prototypes_budget_and_lods():
     for k, v in P.items():
         if k.startswith(("car_", "van_")):
             t2 = sum(len(p["T"]) for p in v[3].out())
-            assert 0 < t2 <= 60 and t2 < tris[k][1], k
-    assert max(t0 for k, (t0, _) in tris.items() if k.startswith(("car_", "van_"))) <= 600
-    assert max(t1 for k, (_, t1) in tris.items() if k.startswith(("car_", "van_"))) <= 120
+            assert 0 < t2 <= 120 and t2 < tris[k][1], k
+    # ADR 0041 par. 7 (WORKING_VALUE until the phone measurement): cars are seen from 5-12 m, LOD0 is drawn only
+    # below 12 m on Low / 38 m on High, so LOD0 <= 4000, LOD1 <= 600, LOD2 <= 120 triangles
+    assert max(t0 for k, (t0, _) in tris.items() if k.startswith(("car_", "van_"))) <= 4000
+    assert max(t1 for k, (_, t1) in tris.items() if k.startswith(("car_", "van_"))) <= 600
     assert max(t0 for k, (t0, _) in tris.items() if k.startswith("trailer_")) <= 1200
     assert max(t1 for k, (_, t1) in tris.items() if k.startswith("trailer_")) <= 250
 

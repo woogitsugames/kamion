@@ -290,20 +290,25 @@ def _edge_rows(poly, min_len):
 DOCK_MANOEUVRE_M = 35.0      # WORKING_VALUE: kept free in front of dock rows (13.6 m trailer + tractor turning in)
 
 
-def truck_yards(pl, paved, sp, report, docks=(), stalls=None):
-    """stalls (list, optional): collects (a, d, nin, u_from, u_to, mat) of every truck stand row for the painted
-    stall lines (yard_markings)."""
-    cnt = {"yard_trailers": 0, "coupled": 0, "solo_tractors": 0, "containers": 0}
-    k_rear, k_front = LP.tractor_extent()
+def dock_zones(docks):
+    """Union of the manoeuvring rectangles (DOCK_MANOEUVRE_M deep, 6 m past both ends) in front of every dock row."""
     zones = []
-    for dk in docks:                                   # manoeuvring area in front of every dock row stays free
+    for dk in docks:
         p, q = (np.asarray(x, float) for x in dk["edge"])
         d = (q - p) / np.linalg.norm(q - p)
         nout = np.array([d[1], -d[0]])
         a0 = p + d * (dk["docks"][0]["u"] - 6.0)
         a1 = p + d * (dk["docks"][-1]["u"] + 6.0)
         zones.append(Polygon([a0, a1, a1 + nout * DOCK_MANOEUVRE_M, a0 + nout * DOCK_MANOEUVRE_M]))
-    keep_free = shapely.union_all(zones) if zones else Polygon()
+    return shapely.union_all(zones) if zones else Polygon()
+
+
+def truck_yards(pl, paved, sp, report, docks=(), stalls=None):
+    """stalls (list, optional): collects (a, d, nin, u_from, u_to, mat) of every truck stand row for the painted
+    stall lines (yard_markings)."""
+    cnt = {"yard_trailers": 0, "coupled": 0, "solo_tractors": 0, "containers": 0}
+    k_rear, k_front = LP.tractor_extent()
+    keep_free = dock_zones(docks)                      # manoeuvring area in front of every dock row stays free
     shapely.prepare(keep_free)
     for item in paved:
         if item.get("parking") or item.get("source") == "dock_apron":
@@ -452,7 +457,7 @@ def _strip_bays(poly, key):
     return out
 
 
-def parking(pl, paved, sp, report, buf=None, zsurf=None, park_union=None):
+def parking(pl, paved, sp, report, buf=None, zsurf=None, park_union=None, docks=()):
     """Bays in every paved area that is (or overlaps) a car park: OSM amenity=parking (incl. parking=street_side
     strips) and BDOT10k OT_KUKO_A parking. A BDOT yard polygon earlier in the paved priority list used to swallow
     the OSM car park (parking flag lost -> empty lots in front of the route, REVIEW r5 W-H3+)."""
@@ -469,6 +474,17 @@ def parking(pl, paved, sp, report, buf=None, zsurf=None, park_union=None):
             for k, p in enumerate(getattr(g, "geoms", [g])):
                 if p.geom_type == "Polygon" and p.area > 25.0:
                     regions.append((f"{item['id']}~p{k}", p))
+    # ADR 0041 par. 1: no bays on dock aprons. The apron polygon alone is not enough: a car-park polygon (OSM / BDOT)
+    # drawn over a truck yard put cars in front of the dock doors, so the dock manoeuvring zones are cut out too.
+    free = dock_zones(docks)
+    if not free.is_empty:
+        cut = []
+        for rid, poly in regions:
+            g = poly.difference(free)
+            for k, p in enumerate(getattr(g, "geoms", [g])):
+                if p.geom_type == "Polygon" and p.area > 25.0:
+                    cut.append((rid if k == 0 else f"{rid}~d{k}", p))
+        regions = cut
     for rid, poly in regions:
         r = poly.minimum_rotated_rectangle
         ee = np.hypot(*np.diff(np.asarray(r.exterior.coords), axis=0).T)
@@ -620,7 +636,7 @@ def place(pl, docks, paved, blds, roads_poly, bpoly, route_P, report, buf=None, 
     if buf is not None and zsurf is not None:
         tyre_scrub(buf, docks, zsurf, rep)
     pu = shapely.union_all([shapely.make_valid(p) for p in park_polys]) if park_polys else None
-    parking(pl, paved, sp, rep, buf, zsurf, pu)
+    parking(pl, paved, sp, rep, buf, zsurf, pu, docks)
     stalls = []
     truck_yards(pl, paved, sp, rep, docks, stalls)
     yard_props(pl, blds, docks, sp, rep)
