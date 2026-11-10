@@ -174,7 +174,7 @@ namespace Game.Editor.VisualQA
                 for (int ci = 0; ci < ContactShadowCaster.Count; ci++)
                 {
                     var csc = ContactShadowCaster.Get(ci);
-                    Debug.Log($"[QA] contact shadow {csc.name}: {csc.LastVertices} vertices, {csc.LastHits} ground hits");
+                    Debug.Log($"[QA] contact shadow {csc.name}: {csc.LastVertices} vertices, {csc.LastHits} ground hits; {csc.LastDiagnostics}");
                 }
                 if (VehicleReflectionCapture.Active != null) VehicleReflectionCapture.Active.RenderAllNow();
                 foreach (var sl in UnityEngine.Object.FindObjectsByType<StreetLamps>(FindObjectsSortMode.None)) sl.RefreshLights(cam);

@@ -68,6 +68,8 @@ namespace Game.Rendering
         /// <summary>Diagnostics: vertices and ground hits of the last refresh.</summary>
         public int LastVertices { get; private set; }
         public int LastHits { get; private set; }
+        /// <summary>Diagnostics (visual QA log): per slab the occlusion height range h (m) and the ground offset below the vehicle origin.</summary>
+        public string LastDiagnostics { get; private set; } = "";
         public static int Count => s_All.Count;
         public static ContactShadowCaster Get(int i) => s_All[i];
 
@@ -153,6 +155,8 @@ namespace Game.Rendering
             var t = transform;
             var local = m_Go.transform;
             const float lift = 0.015f;
+            var diag = Application.isPlaying ? null : new System.Text.StringBuilder();
+            float hMin = 99f, hMax = 0f, gy = 0f;
 
             foreach (var s in slabs)
             {
@@ -172,8 +176,11 @@ namespace Game.Rendering
                         m_Pos.Add(local.InverseTransformPoint(g + Vector3.up * lift));
                         m_Uv0.Add(new Vector4(x, z, s.halfSize.x, s.halfSize.y));
                         m_Uv1.Add(new Vector2(h, ok ? s.strength : 0f));
+                        if (diag != null) { hMin = Mathf.Min(hMin, h); hMax = Mathf.Max(hMax, h); gy = g.y; }
                     }
                 }
+                if (diag != null) diag.Append($"slab z {s.centre.y:F1} ±{s.halfSize.y:F1} h {hMin:F2}..{hMax:F2} groundWorldY {gy:F3} layer {gameObject.layer} r {m_Renderer.enabled}; ");
+                hMin = 99f; hMax = 0f;
             }
 
             foreach (var w in wheels)
@@ -197,6 +204,7 @@ namespace Game.Rendering
                 }
             }
 
+            if (diag != null) LastDiagnostics = diag.ToString();
             int verts = m_Pos.Count;
             LastVertices = verts;
             m_Mesh.Clear(true);

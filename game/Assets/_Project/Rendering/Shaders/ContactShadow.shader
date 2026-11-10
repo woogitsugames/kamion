@@ -10,7 +10,7 @@ Shader "Kamion/Contact Shadow"
     Properties { }
     SubShader
     {
-        Tags { "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "Queue" = "Transparent-50" "IgnoreProjector" = "True" }
+        Tags { "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "Queue" = "Geometry+499" "IgnoreProjector" = "True" }
         Pass
         {
             Name "ContactShadow"
@@ -66,12 +66,12 @@ Shader "Kamion/Contact Shadow"
                 half3 sun = L.color * saturate(L.direction.y) * L.shadowAttenuation;
                 half ys = dot(sky, half3(0.2126, 0.7152, 0.0722)), yd = dot(sun, half3(0.2126, 0.7152, 0.0722));
                 half share = ys / max(ys + yd, 1e-4);
-                half m = 1.0 - occ * share;
+                half m = 1.0 - occ * share; m = 1.0 - occ; //DEBUG
                 // Fog: the darkened ground is fogged too; fade the multiplier towards 1 with the fog visibility.
                 #if defined(FOG_EXP) || defined(FOG_EXP2) || defined(FOG_LINEAR)
                     m = lerp(1.0, m, ComputeFogIntensity(i.fogFactor));
                 #endif
-                return half4(m, m, m, 1);
+                return half4(1, 0, 0, 1); //DEBUG2
             }
             ENDHLSL
         }
