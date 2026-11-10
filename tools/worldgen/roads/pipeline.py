@@ -78,6 +78,8 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     pts, foot = ctx_local(ctx, origin)
     tapers = []
     Nw.taper_forks(net, tapers)
+    fork_shifts = []
+    Nw.align_forks(net, fork_shifts)          # lane continuity at diverges / merges (ADR 0074)
     # walkways that make a road "urban" (kerbed): OSM footway/cycleway + BDOT10k paved paths (not forest paths)
     from shapely.geometry import LineString
     walk = [LineString(np.array(f["geometry"]) - np.array(origin)) for f in ctx["footways"] if f["highway"] != "path"]
@@ -113,4 +115,5 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     w = World(region=region, origin=origin, net=net, junctions=juncs, hf=hf, ctx={"points": pts, "foot": foot},
               buf=buf, profiles=prof, stats=stats)
     w.stats["fork_tapers"] = tapers
+    w.stats["fork_shifts"] = fork_shifts
     return w

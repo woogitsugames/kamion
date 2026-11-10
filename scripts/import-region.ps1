@@ -42,6 +42,13 @@ if ($Build -or -not (Test-Path $route)) {
     if ($LASTEXITCODE -ne 0) { throw "export-route.py failed ($LASTEXITCODE)" }
 }
 
+# CC0 scans (ADR 0063): fetch + sha256-verify the raw maps the scan-based sets are built from (not in git)
+$cc0Man = Join-Path $RepoRoot 'art-source/world/cc0/cc0_manifest.json'
+if (Test-Path $cc0Man) {
+    & uv run --project (Join-Path $RepoRoot 'tools/worldgen') python (Join-Path $RepoRoot 'art-source/world/materials/_src/cc0_fetch.py')
+    if ($LASTEXITCODE -ne 0) { throw "cc0_fetch.py failed ($LASTEXITCODE): scan files missing or sha256 mismatch" }
+}
+
 # PBR texture sets (ADR 0022): build when any file of the spec is missing for the tier
 $matRoot = Join-Path $RepoRoot 'art-source/world/materials'
 $spec = Get-Content (Join-Path $matRoot 'materials_spec.json') -Raw | ConvertFrom-Json

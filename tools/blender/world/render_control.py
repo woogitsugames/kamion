@@ -25,6 +25,7 @@ from mathutils import Matrix, Vector
 
 REPO = Path(__file__).resolve().parents[3]
 VEG = REPO / "art-source" / "world" / "vegetation"
+PROPS_GLB = REPO / "art-source" / "world" / "props" / "street_props.glb"
 
 
 def args():
@@ -41,6 +42,8 @@ def args():
     ap.add_argument("--no-grass", action="store_true")
     ap.add_argument("--bld-lod1", action="store_true", help="LOD1 buildings at every distance (Low/Medium look)")
     ap.add_argument("--suffix", default="", help="appended to the output file names")
+    ap.add_argument("--cams-file", default="", help="camera JSON (same schema) instead of generated/control_cameras.json")
+    ap.add_argument("--props-glb", default="", help="street_props.glb of a non-default build (world-root/../props)")
     return ap.parse_args(argv)
 
 
@@ -1027,7 +1030,7 @@ def load_protos(mats):
     coll = bpy.data.collections.new("protos")
     bpy.context.scene.collection.children.link(coll)
     protos = {}
-    files = [(REPO / "art-source/world/props/street_props.glb", True), (VEG / "trees.glb", False),
+    files = [(PROPS_GLB, True), (VEG / "trees.glb", False),
              (VEG / "trees_lod2.glb", False)]
     for path, rot in files:
         if not path.exists():
@@ -1437,7 +1440,11 @@ def look_at(obj, target):
 
 def main():
     a = args()
-    cams = json.loads((REPO / f"Data/Regions/{a.region}/generated/control_cameras.json").read_text(encoding="utf-8"))
+    cams = json.loads((Path(a.cams_file) if a.cams_file else
+                       REPO / f"Data/Regions/{a.region}/generated/control_cameras.json").read_text(encoding="utf-8"))
+    if a.props_glb:
+        global PROPS_GLB
+        PROPS_GLB = Path(a.props_glb)
     man = json.loads((REPO / f"Data/Regions/{a.region}/generated/world_manifest.json").read_text(encoding="utf-8"))
     wanted = [c for c in cams["cameras"] if not a.cams or c["id"] in a.cams.split(",")]
     out = Path(a.out)

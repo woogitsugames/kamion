@@ -233,12 +233,24 @@ def signal_head(lit):
 
 
 def signal_pole(h=S.SIGNAL_POLE_H, arm=0.0):
+    """S-1 pole, or (arm > 0) a mast with a curved arm (ADR 0069, Mapillary p42 / p45 / p47 2024: the tapered pole
+    bends over in a ~1.5 m radius into a horizontal arm; the arm is at h - 0.4). Arm along local +y."""
     m, l1, col = Mesh(), Mesh(), Mesh()
-    for mm, seg in ((m, 10), (l1, 5)):
-        mm.tube("steel_galv", [0, 0, -0.2], [0, 0, h], 0.07 if arm == 0 else 0.13, 0.06 if arm == 0 else 0.10, seg)
-        if arm:
-            mm.tube("steel_galv", [0, 0, h - 0.4], [0, arm, h - 0.4], 0.07, 0.05, seg)
-            mm.tube("steel_galv", [0, 0, h - 1.4], [0, arm * 0.5, h - 0.45], 0.03, 0.03, seg // 2)
+    R = S.SIGNAL_MAST_BEND_R
+    za = h - 0.4                                        # arm axis height
+    for mm, seg, nb in ((m, 10, 6), (l1, 5, 2)):
+        if not arm:
+            mm.tube("steel_galv", [0, 0, -0.2], [0, 0, h], 0.07, 0.06, seg)
+            continue
+        mm.tube("steel_galv", [0, 0, -0.2], [0, 0, za - R], 0.13, 0.11, seg, cap=False)
+        prev, r_prev = np.array([0.0, 0.0, za - R]), 0.11
+        for k in range(1, nb + 1):                      # quarter bend: centre (0, R, za - R)
+            a = 0.5 * math.pi * k / nb
+            q = np.array([0.0, R - R * math.cos(a), za - R + R * math.sin(a)])
+            r = 0.11 - 0.03 * k / nb
+            mm.tube("steel_galv", prev, q, r_prev, r, seg, cap=False)
+            prev, r_prev = q, r
+        mm.tube("steel_galv", prev, [0, arm, za], r_prev, 0.05, seg, cap=True)
     col.tube("collision_steel", [0, 0, 0], [0, 0, h], 0.15, None, 6)
     return m, l1, col
 
@@ -355,7 +367,7 @@ def build_all(sign_codes, boards):
         P[f"plate_{c}"] = plate(c)
     for c, (w, h) in sorted(boards.items()):
         P[f"board_{c}"] = board(c, w, h)
-    for lit in ("red", "green"):
+    for lit in ("red", "green", "off"):          # off: emergency signals at rest (ADR 0074)
         P[f"signal_head_{lit}"] = signal_head(lit)
     P["signal_pole"] = signal_pole()
     P["signal_mast"] = signal_pole(S.SIGNAL_MAST_H, 6.0)

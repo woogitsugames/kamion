@@ -10089,20 +10089,6 @@
     "span_m": 11.5
    },
    {
-    "chain": "c:w175157461:1883101816-1883469484",
-    "confidence": "low",
-    "note": "deck height interpolated between abutments; piers placed by rule (no data)",
-    "piers": 6,
-    "span_m": 195.9
-   },
-   {
-    "chain": "c:w177895177:1883101822-1883062831",
-    "confidence": "low",
-    "note": "deck height interpolated between abutments; piers placed by rule (no data)",
-    "piers": 6,
-    "span_m": 195.5
-   },
-   {
     "chain": "c:w197904073:2081020083-2081020081",
     "confidence": "low",
     "note": "deck height interpolated between abutments; piers placed by rule (no data)",
@@ -10134,30 +10120,55 @@
    "S": 5.0,
    "Z": 4.5
   },
-  "crossings_skipped": [
+  "crossings_in_junction": [
    1166108041,
+   8473985999,
+   1883043030,
+   1852129061,
    2881403132,
+   1882953932,
    5645859049,
+   5312688314,
    2882674819,
    2882674820,
-   3563106547,
+   3097201643,
+   1882953931,
+   3021817550,
+   3021817549,
+   1883043010,
+   1882953782,
+   1883483225,
+   1882953780,
    2441701386,
    5645859050,
+   5645777754,
+   5645777749,
    3032448284,
    1859438399,
    2882674807,
+   2882674810,
    3954799611,
+   1859438371,
+   2881403139,
+   1883463881,
+   3563106530,
    11499806841,
-   3032448286,
-   6337303569
+   5645777751,
+   1748446221,
+   6337303569,
+   9224916295
+  ],
+  "crossings_skipped": [
+   3563106547,
+   3032448286
   ],
   "crossings_snapped": 74,
   "decals": {
-   "gullies": 777,
+   "gullies": 781,
    "oil": 313,
    "patches": 323
   },
-  "footprint_nodes": 502739,
+  "footprint_nodes": 501055,
   "fork_tapers": [
    {
     "chain": "c:w69667331:1166107977-1166107980",
@@ -10728,7 +10739,8 @@
   "markings": {
    "P-1 centre line": 4,
    "P-1 lane line": 169,
-   "P-10 crossing": 59,
+   "P-10 crossing": 72,
+   "P-10 crossing in junction": 36,
    "P-13": 15,
    "P-14": 33,
    "P-7b edge line": 154,
@@ -10774,9 +10786,10 @@
     ]
    },
    {
-    "id": "kwadrat-park-hero",
+    "id": "andersa-viaduct-biezenstwa-hero",
     "targets": [
-     "bdot:9962cca0-95de-4200-a0c4-3922b8e40d9c"
+     "w175157461",
+     "w177895177"
     ]
    }
   ],

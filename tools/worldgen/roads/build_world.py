@@ -76,10 +76,11 @@ MATERIALS = {
     "apron_sett": {"color": [0.27, 0.24, 0.21], "rough": 0.9, "surface": "sett"},
     # viaducts: precast-concrete modulation map projected in world metres (the deck / pier meshes have no metric UV);
     # albedo from the CC0 Bieżeństwa photo (piers mid grey, soffit in its own shadow, REVIEW r3 W4). WORKING_VALUE
+    # sky_occ (ADR 0060): the soffit and the deck underside face a road the deck itself shades
     "bridge_concrete": {"color": [0.42, 0.42, 0.40], "rough": 0.85, "surface": "concrete",
-                        "texture_set": "concrete_precast", "uv": "planar"},
+                        "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.5, 0.0]},
     "bridge_soffit": {"color": [0.15, 0.15, 0.145], "rough": 0.9, "surface": "concrete",
-                      "texture_set": "concrete_precast", "uv": "planar"},
+                      "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.6, 0.0]},
     "barrier_steel": {"color": [0.55, 0.56, 0.57], "rough": 0.45, "metal": 0.9, "surface": "steel"},
     "verge_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
     "shoulder_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
@@ -497,8 +498,20 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         if 0 <= j < mask.shape[0] and 0 <= i < mask.shape[1]:
             return bool(mask[max(0, j - 2):j + 3, max(0, i - 2):i + 3].any())
         return False
+    # hero viaducts (override kind: hero_bridge, ADR 0067): authored asset instead of the generic dressing / supports
+    from streetscape import hero_bridge as HB
+
+    def zc_at(e, n):
+        i = min(max(int(round(e - w.hf.x0)), 0), zc.shape[1] - 1)
+        j = min(max(int(round(w.hf.y1 - n)), 0), zc.shape[0] - 1)
+        return float(zc[j, i])
+    heroes = HB.plan(w, region_id, pipeline.load_overrides(region_id), zc_at, on_ground_road, log)
+    hero_chains = HB.chain_ids(heroes)
     for c in w.net.chains:
-        M.build_bridge_supports(w.buf, c, w.hf, on_ground_road, w.bridges)
+        if c.id not in hero_chains:
+            M.build_bridge_supports(w.buf, c, w.hf, on_ground_road, w.bridges)
+    hero_tris = HB.apply(w, heroes, st["instances"], log)
+    log("hero bridges", {k: [x["id"] for x in v] for k, v in w.stats["hero_bridges"].items()})
 
     half = w.region["bbox"]["width_m"] / 2
     e0 = w.region["bbox"]["xmin"] - w.origin[0]
@@ -515,7 +528,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         ci_, cj_ = chunk_of(np.array([it["e"]]), np.array([it["n"]]), half)
         inst_by_chunk.setdefault((int(ci_[0]), int(cj_[0])), []).append(it)
     props_meta = PR.export(st["codes"], st["boards"], out_root.parent / "props" if out_root != DEFAULT_OUT(region_id) else None)
-    props_meta = {**props_meta, **st.get("hero_tris", {})}      # hero depot segments (art-source/world/landmarks), frame estimate
+    props_meta = {**props_meta, **hero_tris, **st.get("hero_tris", {})}      # hero viaduct + hero depot segments (art-source/world/landmarks), frame estimate
     chunks_meta = []
     for key in sorted(terrain):
         ci, cj = key
@@ -633,10 +646,15 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
                                               "frame": "local E,N,U (U absolute EVRF2007)", "cameras": cams})
     budget = mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams)
     write_json(gen / "streetscape_qa.json", {"schema": "truck-sim-pl/streetscape-qa/1", "region": region_id,
-                                             **st["report"], "mesh_budget": budget})
+                                             **st["report"], "hero_bridges": w.stats["hero_bridges"],
+                                             "mesh_budget": budget})
     walls = CF.terrain_walls(w.buf.parts, zc, w.hf, mask=mask)
     log("terrain walls > %.2f m:" % walls["thresh_m"], walls["count"], "max", walls["max_m"])
     write_json(gen / "terrain_walls_qa.json", walls)
+    from roads import consistency as CQ
+    cq = CQ.check(w, st["instances"], region_id, pipeline)
+    log("road consistency:", cq["count"], cq["by_kind"], "on route", cq["on_route"])
+    write_json(gen / "road_consistency_qa.json", cq)
     if os.environ.get("WORLDGEN_DUMP_WALLS"):     # debug: ground parts + conformed terrain for offline wall analysis
         import pickle
         keep = [(p.layer, p.mat, p.src, p.V, p.T) for p in w.buf.parts if p.layer in ("road", "paved")]
@@ -680,6 +698,8 @@ def instance_ends(proto, nlods):
         e = [60.0, 300.0]
     elif proto.startswith("landmark_depot"):       # hero depot hall segments (ADR 0071): LOD0 / LOD1 / silhouette
         e = [100.0, 400.0, 20000.0]
+    elif proto.startswith("landmark_viaduct"):      # hero viaduct segments (ADR 0067): LOD0 / LOD1 / silhouette
+        e = [90.0, 300.0, 20000.0]
     elif proto.startswith("landmark_"):
         e = [650.0, 20000.0]
     elif proto.startswith(("car_", "van_")):
@@ -854,6 +874,7 @@ def qa_report(w, mk_report, mask):
             "junctions_earclip": pstats.get("earclip_ids", []),
             "roundabout_junctions": sum(1 for j in w.junctions if j.roundabout),
             "signalised_junctions": sum(1 for j in w.junctions if j.signalized),
+            "emergency_signal_junctions": sorted(j.id for j in w.junctions if getattr(j, "emergency_signals", False)),
             "grade_over_limit": [c["id"] for c in over],
             "axis_smoothing_deviation_m": {"p50": r(np.percentile(dev_all, 50), 3),
                                            "p95": r(np.percentile(dev_all, 95), 3),
@@ -865,10 +886,12 @@ def qa_report(w, mk_report, mask):
             "decals": mk_report.get("decals", {}),
             "crossings_snapped": mk_report.get("crossings_snapped", 0),
             "crossings_skipped": mk_report.get("crossings_skipped", []),
+            "crossings_in_junction": mk_report.get("crossings_in_junction", []),
             "bridges": w.bridges,
             "walled_ramps": w.profiles.get("walled_ramps", []),
             "clearance_by_class_m": S.CLEARANCE_BY_CLASS,
             "fork_tapers": w.stats.get("fork_tapers", []),
+            "fork_shifts": w.stats.get("fork_shifts", []),
             "overrides_applied": net.overrides_applied, "overrides_stale": net.overrides_stale,
             "low_confidence": [
                 "bridge deck heights interpolated between abutments (NMT = ground under deck); piers by rule",

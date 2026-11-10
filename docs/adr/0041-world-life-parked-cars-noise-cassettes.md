@@ -230,3 +230,14 @@
 - **Testy.** pytest 201 zielonych, EditMode 147 / 147.
 - **Niezmierzone.** Koszt podłogi LOD0 16 m i bogatszego LOD1 na telefonie (A16 Low): UNVERIFIED.
 - Dowody: `artifacts/world-fixes/cars-r8/{before,after,compare,holes-before,holes-after-r8b,n13}`.
+
+## r9: sylwetki aut (REVIEW r8 „auta-mydelniczki”), 2026-11-10 — szczegóły w ADR 0073
+- Nowa bryła LOD0 / LOD1 (`life_cars._controls` / `_Shell` / `_vehicle2` / `_wheel2`): profil z łukiem maski, prawie pionowym
+  pasem lamp, licem zderzaka i półką zderzaka tylnego; narożniki rzutu superelipsą; przekrój z podcięciem progu, fasetą
+  barkową i wywinięciami nadkoli; klosze lamp, zespoły lamp tylnych, linie paneli, czarne słupki B, wycieraczki, klamki,
+  lusterka klinowe. Furgon średni 4,90 × 1,93 × 1,97 m zastąpił kombivana 4,5 m (pkt 6).
+- Trójkąty (27 prototypów): LOD0 3203–3449 (r8: 3528–3798; cel r9 ≤ 3500, test `test_cars_r9.py`), LOD1 844–882
+  (limit 900), LOD2 54–58. Dziury: 0 z 81 siatek (`car_holes_qa.py`, `artifacts/cars-r9/holes-it7.log`).
+- Budżet klatki (szacunek, High): `stretch_04` 1 997 615 → 1 997 661 (limit 2,0 M), `stretch_01` 1 661 414 → 1 635 529,
+  `stretch_05_docks` 1 742 105 → 1 723 446; Low maks. 962 150 → 961 666.
+- Lakier: `rough` koloru z manifestu steruje gładkością (`WorldPbrMaterials`, `_SmoothnessScale`), wcześniej ignorowany.

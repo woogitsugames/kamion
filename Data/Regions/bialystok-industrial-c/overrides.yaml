@@ -166,6 +166,23 @@ overrides:
       Pier diameter and spacing are not measured (WORKING_VALUE 1.2 m, rule spacing).
     confidence: medium
     verify: pier count / spacing and fascia height from a site photo
+  - id: andersa-viaduct-biezenstwa-hero
+    kind: hero_bridge
+    target: {osm_way: [175157461, 177895177]}
+    asset: viaduct_biezenstwa
+    reason: >-
+      Landmark object of route G3-A (ADR 0067): the Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r. gets an
+      authored Blender asset (art-source/world/landmarks/viaduct_biezenstwa, tools/blender/world/landmarks/
+      make_viaduct.py) instead of the generic deck dressing: concrete box girders with sloped webs and wide
+      cantilevers (one per carriageway), faded red cornice band, steel railing, rows of slim chamfered columns in
+      pairs with a red stripe, drainage collector, expansion joints, CCTV housing under the soffit. Axis, levels and
+      width come from the generated road (OSM + NMT + PTB2022 clearance); every structural dimension is a
+      WORKING_VALUE read by eye off Mapillary frames 2818555625124739, 504348097385466, 149248627179406,
+      3970163613102941 (richlv, CC BY-SA 4.0; reference only, no pixels used) - see hero_bridge.DEFAULTS.
+      Supersedes the look of andersa-viaduct-biezenstwa-style while the asset matches the spec; that entry stays
+      as the fallback.
+    confidence: medium
+    verify: span lengths, column size / spacing, girder depth, railing type from a site visit or drawings
   - id: andersa-viaduct-putry-style
     kind: bridge_style
     target: {osm_way: [1101181473, 173956078, 284022563, 606396460]}
@@ -225,7 +242,7 @@ overrides:
     reason: >-
       OSM has no barrier=hedge / flowerbed around Rondo Pamięci Bieżeństwa 1915 r. The CC0 photo 20201102_152339
       (Rakoon, docs/REFERENCES.md) shows clipped dark-red berberis hedges on the lawns beside the footpaths and a
-      bare soil / mulch bed with red shrubs in the roundabout centre; the GUGiK 2024-05-27 orthophoto (0.25 m) shows
+      bare soil / mulch bed in the roundabout centre (2020-08 Mapillary: loose stones, see islands); the GUGiK 2024-05-27 orthophoto (0.25 m) shows
       the same dark shrub masses (traced below, EPSG:2180, +-0.5 m; OSM centrelines overlay the orthophoto within
       1-2 m), the light-brown soil centre island under the viaduct and a paved splitter island between the two zebras
       of the northern arm. Hedge height 0.6-0.8 m, species and the shrub layout in the centre are WORKING_VALUE.
@@ -238,4 +255,91 @@ overrides:
       - {name: C, plant: berberis_red, rim_m: 0.4, ring: [[778556.0, 595567.5], [778560.0, 595568.6], [778567.0, 595568.8], [778573.0, 595568.2], [778574.2, 595566.5], [778572.0, 595563.8], [778565.0, 595563.2], [778559.0, 595563.6], [778556.5, 595565.0]]}
     islands:
       - {name: north-splitter, at: [778566.8, 595538.0], fill: paving}
-      - {name: ring-centre, at: [778549.7, 595506.5], fill: soil, shrubs: berberis_red, shrub_spacing_m: 2.2, shrub_share: 0.7}
+      # ADR 0067 / REFS-MAPILLARY-FINDINGS #1: Mapillary frames 2818555625124739 and 504348097385466 (richlv, 2020-08-15,
+      # CC BY-SA 4.0, reference only) show light crushed stone inside the kerb of the centre island under the viaduct,
+      # no shrubs (was: fill soil + berberis_red from the CC0 photo read; world-builder to confirm)
+      - {name: ring-centre, at: [778549.7, 595506.5], fill: gravel}
+  # ---------------------------------------------------------------- road furniture after Mapillary (ADR 0069)
+  # Mapillary photos (CC BY-SA 4.0, D42, ADR 0065) are references only: positions and forms read off them, no pixels.
+  # `mapillary` lists the image ids (Data/raw/mapillary/<region>/manifest.jsonl: author, date, lat/lon, compass).
+  - id: andersa-putry-cantilever-p37
+    kind: sign_gantry
+    form: cantilever
+    column_side: L
+    osm_way: 173956083
+    before_node: n1852129066
+    distance_m: 100.0
+    boards:
+      - lanes: [0, 1]
+        from_osm:
+          - {way: 1101181473, refs_extra: ["8", E67]}
+          - {way: 606396463, refs_extra: ["8", E67]}
+          - {way: 284541843}
+    mapillary: ["995780104564541", "1240467703063612"]
+    reason: >-
+      Mapillary 995780104564541 (richlv, 2020-08-15) shows one lattice column in the gore left of the link to Rondo
+      Putry (after the ramp to the viaduct splits off) and a lattice arm over both lanes carrying one direction board
+      (Warszawa / Ełk, Augustów / Kuźnica, Centrum); 1240467703063612 (2018) is taken under the arm. OSM has no
+      gantry; destinations and refs come from the OSM destination / destination:ref tags of the target ways; DK8 /
+      E67 (route relations, not in the road graph) are refs_extra. Station ~18 m after the split (100 m before node
+      1852129066) read off the photos, WORKING_VALUE. The board is our schematic drawing, not the real diagram board.
+    confidence: low
+    verify: station of the column and the board layout on site
+  - id: andersa-putry-portal-p40
+    kind: sign_gantry
+    osm_way: 173956083
+    before_node: n2629251371
+    distance_m: 55.0
+    boards:
+      - lanes: [0]
+        from_osm:
+          - {way: 1101181473, refs_extra: ["8", E67]}
+          - {way: 284541843}
+      - lanes: [1]
+        from_osm:
+          - {way: 606396463, refs_extra: ["8", E67]}
+    mapillary: ["1783751488818497", "1911352299378570"]
+    reason: >-
+      Mapillary 1783751488818497 and 1911352299378570 (kino, 2024-07-26) show a two-column lattice portal before the
+      Rondo Putry entry with a board over each lane: left Warszawa / Ełk + Centrum (675), right Augustów / Kuźnica.
+      Station 55 m before the ring node, WORKING_VALUE (read off the photo against the lamp spacing).
+    confidence: low
+    verify: station and board layout on site
+  - id: andersa-ne-noise-barrier-glazed
+    kind: noise_barrier_style
+    zones:
+      - {center_epsg2180: [777582.0, 596169.0], radius_m: 25.0, style: glazed, band_m: 1.0}
+      - {center_epsg2180: [777535.0, 596208.0], radius_m: 45.0, style: glazed, band_m: 1.6}
+      - {center_epsg2180: [777625.0, 596121.0], radius_m: 75.0, style: glazed, band_m: 1.0}   # MA-008 link
+      - {center_epsg2180: [777445.0, 596353.0], radius_m: 45.0, style: glazed, band_m: 1.0}   # MA-008/021 Tysiaclecia
+      - {center_epsg2180: [777445.0, 596438.0], radius_m: 45.0, style: glazed, band_m: 1.0}
+      - {center_epsg2180: [777445.0, 596523.0], radius_m: 60.0, style: glazed, band_m: 1.0}
+    mapillary: ["1911352299378570", "1783751488818497", "1240467703063612", "1424981177846267", "995780104564541",
+                "312705613662497", "1340597302993462"]
+    reason: >-
+      The NE barrier of the Andersa link to Rondo Putry (OSM 319142221-319142224 wall=noise_barrier / BDOT10k
+      OT_OIKM_L) is glazed from the bus stop to the ring on the 2024 photos (kino, p38: light plinth ~0.6 m, dark band
+      to ~1.0 m, clear panels above; p40: dark cassettes to ~1.6 m) and a dark solid wall further SE (czadzik 2018 at
+      g3b_eye_s1482). Heights read off the photos against the 0.15 m kerb, WORKING_VALUE. Everything else keeps the
+      default dark solid style.
+      Map audit r9 (MA-008 / MA-021): Mapillary 1424981177846267, 995780104564541 (link to Putry) and 312705613662497,
+      1340597302993462 (al. Tysiaclecia) show clear panels on green posts with a low solid plinth along these runs
+      too; zones 3-6 added (band 1.0 m WORKING_VALUE).
+    confidence: medium
+    verify: style change station and band heights on site
+  - id: andersa-p26-tree-groups
+    kind: tree_groups
+    lines:
+      - {line_epsg2180: [[778309.7, 595611.3], [778224.1, 595663.3]]}
+      - {line_epsg2180: [[778328.2, 595585.5], [778223.2, 595644.4]]}
+    group_size: [3, 5]
+    gap_m: [20.0, 45.0]
+    species: {linden: 0.6, maple: 0.4}
+    mapillary: ["1666299510882315", "2684818718445505"]
+    reason: >-
+      Mapillary 1666299510882315 (kino, 2024-07-26) and 2684818718445505 (richlv, 2020-08-15) at p26 show clumps of
+      large broadleaf trees on the verge beyond the westbound carriageway of Andersa with open grass between them;
+      BDOT10k / OSM have no trees there. Line 1 on the verge strip between the westbound kerb and the cycle path (OT_SKRP_L), line 2 on the grass (OT_PTTR_A) beyond it, 40-160 m ahead (r9c: first line lay on the carriageway; read off the photo,
+      WORKING_VALUE); species from the crown shape (linden / maple); only positions are authored.
+    confidence: low
+    verify: tree positions on site / orthophoto

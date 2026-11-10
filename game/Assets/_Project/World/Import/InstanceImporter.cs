@@ -45,6 +45,8 @@ namespace Game.World.Import
             else if (proto == "bus_shelter" || proto.EndsWith("_gate")) e = new[] { 60f, 300f };
             // Hero depot hall segments (ADR 0071, art-source/world/landmarks): LOD0 / LOD1 / silhouette, never culled.
             else if (proto.StartsWith("landmark_depot")) e = new[] { 100f, 400f, 20000f };
+            // Hero viaduct segments (ADR 0067, art-source/world/landmarks): LOD0 / LOD1 / silhouette, never culled.
+            else if (proto.StartsWith("landmark_viaduct")) e = new[] { 90f, 300f, 20000f };
             // Landmarks (chimneys): visible across the district, never culled inside the far plane.
             else if (proto.StartsWith("landmark_")) e = new[] { 650f, 20000f };
             // Vehicles (ADR 0041 v4, REVIEW r6 W-N6): LOD switches x lodBias, cull FIXED at VehicleCullM on every tier
@@ -57,8 +59,8 @@ namespace Game.World.Import
             else e = new[] { 30f, 120f };   // bench, bollard, waste bin, street cabinet, pallets, containers
             // Mirror: tools/worldgen/roads/build_world.py instance_ends() (frame estimate) - keep the two in sync.
             if (e.Length > lodCount) e = new[] { e[0] }.Concat(e.Skip(e.Length - lodCount + 1)).ToArray();
-            // A hall shades the yard in front of it: LOD1 keeps casting (the shadow must not pop off at the LOD switch).
-            int shadows = proto.StartsWith("tree_") || proto.StartsWith("landmark_depot") ? 0b011 : 0b001;
+            // A hall shades the yard in front of it, a viaduct the road under it: LOD1 keeps casting (no pop at the LOD switch).
+            int shadows = proto.StartsWith("tree_") || proto.StartsWith("landmark_depot") || proto.StartsWith("landmark_viaduct") ? 0b011 : 0b001;
             return (e.Take(lodCount).ToArray(), shadows);
         }
 

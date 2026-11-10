@@ -8,6 +8,8 @@ Positions (GUGiK "Modele 3D drzew" are not ingested - 1.07 GB, optional - so BDO
   forest edge  shrubs + young birch/alder within 5 m inside and 3 m outside the forest outline.
   single trees BDOT10k OT_OIPR_P (drzewo lub grupa drzew -> 1-3 trees, kępa krzewów -> shrubs, mały las -> clump),
                OSM natural=tree; rows: BDOT10k OT_OIPR_L rząd drzew (8 m spacing, linden/maple).
+  tree groups  authored `kind: tree_groups` lines (ADR 0069, Mapillary): clumps of 3-7 trees with open gaps; BDOT
+               rows near such a line are laid out as clumps too.
   self-seeded  sparse birch/pine saplings and shrubs on unmown land (BDOT10k OT_PTNZ_A / OT_PTTR_A) > 6 m from roads.
 Everything is kept >= 2.5 m from road surfaces, paved areas and buildings. Deterministic (seeded per polygon id).
 
@@ -54,7 +56,48 @@ def _scatter(poly, spacing, rng):
     return P[shapely.contains_xy(poly, P[:, 0], P[:, 1])] if len(P) else P
 
 
-def place(src, origin, hf, zc, blocked, report):
+# Roadside tree groups (ADR 0069, Mapillary p26 / p30 / p55: lindens / pines / birches stand in clumps of 3-7 with
+# open verge between, not in an even row). Defaults of the authored `kind: tree_groups` override; WORKING_VALUE read
+# off the photos (group length ~10-25 m, gaps ~15-40 m).
+TREE_GROUP_DEFAULTS = {"group_size": [3, 7], "in_group_m": [3.0, 5.5], "gap_m": [15.0, 40.0], "depth_m": 3.0,
+                       "rows_replace_m": 12.0, "species": {"linden": 0.5, "pine": 0.2, "birch": 0.2, "maple": 0.1}}
+
+
+def group_positions(line, rng, prm):
+    """Clumps along `line` (shapely LineString): n trees (group_size) spaced in_group_m along the line with lateral
+    scatter +-depth_m / 2, then an open gap (gap_m). Starts with a random part of a gap so neighbouring lines do not
+    start in phase. Returns (positions [k, 2], group index per tree)."""
+    L = line.length
+    s = float(rng.uniform(0, prm["gap_m"][1] * 0.5))
+    P, G, g = [], [], 0
+    while s < L:
+        n = int(rng.integers(prm["group_size"][0], prm["group_size"][1] + 1))
+        for _ in range(n):
+            if s >= L:
+                break
+            x, y = line.interpolate(s).coords[0]
+            p1 = np.array(line.interpolate(min(L, s + 0.5)).coords[0]) - np.array(line.interpolate(max(0, s - 0.5)).coords[0])
+            nrm = np.array([-p1[1], p1[0]]) / max(np.hypot(*p1), 1e-9)
+            P.append(np.array([x, y]) + nrm * rng.uniform(-prm["depth_m"] / 2, prm["depth_m"] / 2))
+            G.append(g)
+            s += float(rng.uniform(*prm["in_group_m"]))
+        s += float(rng.uniform(*prm["gap_m"]))
+        g += 1
+    return (np.array(P).reshape(-1, 2), np.array(G, int))
+
+
+def _tree_group_overrides(overrides, origin):
+    out = []
+    for o in overrides or []:
+        if o.get("kind") != "tree_groups":
+            continue
+        prm = {**TREE_GROUP_DEFAULTS, **{k: v for k, v in o.items() if k in TREE_GROUP_DEFAULTS}}
+        for k, ln in enumerate(o["lines"]):
+            out.append((shapely.LineString(np.asarray(ln["line_epsg2180"], float) - origin), prm, f"override:{o['id']}:{k}"))
+    return out
+
+
+def place(src, origin, hf, zc, blocked, report, overrides=None):
     """blocked: bool grid (1 m nodes) of roads + paved + buildings (dilated). Returns instance list."""
     out = []
     H, W = zc.shape
@@ -131,14 +174,36 @@ def place(src, origin, hf, zc, blocked, report):
             k = int(rng.integers(1, 4))
             P = q + rng.normal(0, 2.5, (k, 2)) * (k > 1)
             emit(P, pick(rng, [0.05, 0.3, 0.05, 0.3, 0.3, 0.0], k), rng, f"bdot:{f['id']}")
+    groups = _tree_group_overrides(overrides, np.asarray(origin, float))
+    grep = {"lines": len(groups), "trees": 0, "groups": 0, "rows_grouped": 0}
     for f in src["bdot10k"]["OT_OIPR_L"]:
         if f["props"].get("rodzaj") != "rząd drzew":
             continue
         line = shapely.LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
         rng = np.random.default_rng(_seed(f["id"]))
+        near = next((prm for gl, prm, _ in groups if line.distance(gl) <= prm["rows_replace_m"]), None)
+        if near is not None:                    # the photos show clumps here, not the BDOT row (ADR 0069)
+            P, _ = group_positions(line, rng, near)
+            names = list(near["species"])
+            w = np.array([near["species"][k] for k in names], float)
+            emit(P, rng.choice(names, size=len(P), p=w / w.sum()), rng, f"bdot:{f['id']}:groups")
+            grep["rows_grouped"] += 1
+            continue
         P = np.array([line.interpolate(s).coords[0] for s in np.arange(2.0, line.length, 8.0)]).reshape(-1, 2)
         sp = [["linden", "maple"][_seed(f["id"]) % 2]] * len(P)
         emit(P + rng.normal(0, 0.3, P.shape), sp, rng, f"bdot:{f['id']}")
+    for gl, prm, key in groups:
+        rng = np.random.default_rng(_seed(key))
+        P, G = group_positions(gl, rng, prm)
+        names = list(prm["species"])
+        w = np.array([prm["species"][k] for k in names], float)
+        # one species per clump (a clump of lindens, a clump of pines), as on the photos
+        gsp = rng.choice(names, size=int(G.max()) + 1 if len(G) else 0, p=w / w.sum())
+        n0 = len(out)
+        emit(P, [gsp[g] for g in G], rng, key)
+        grep["trees"] += len(out) - n0
+        grep["groups"] += int(G.max()) + 1 if len(G) else 0
+    report["tree_groups"] = grep
     for nd in src["osm"]["nodes"]:
         if nd["tags"].get("natural") == "tree":
             q = np.asarray(nd["geometry"]["coordinates"], float)[None] - origin

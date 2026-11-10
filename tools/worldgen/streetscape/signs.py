@@ -219,11 +219,12 @@ def overhead_board(rows, row_m=0.62):
         x = int(rh * 0.9)
         for r in refs:
             e = r.upper().startswith("E")
+            w3 = r.isdigit() and len(r) == 3        # voivodeship road: yellow shield, black digits (ADR 0069, p37 "675")
             d.rounded_rectangle([x, y0 + rh * 0.18, x + shield_w, y0 + rh * 0.82], radius=8,
-                                fill=GREEN if e else RED, outline=WHITE, width=5)
+                                fill=GREEN if e else YELLOW if w3 else RED, outline=BLACK if w3 else WHITE, width=5)
             bb = d.textbbox((0, 0), r, font=fs)
             d.text((x + shield_w / 2 - (bb[2] - bb[0]) / 2 - bb[0], y0 + rh / 2 - (bb[3] - bb[1]) / 2 - bb[1]), r,
-                   font=fs, fill=WHITE)
+                   font=fs, fill=BLACK if w3 else WHITE)
             x += shield_w + 12
         x = int(rh * 0.9 + nsh * (shield_w + 12) + rh * 0.15)
         bb = d.textbbox((0, 0), dest, font=f)

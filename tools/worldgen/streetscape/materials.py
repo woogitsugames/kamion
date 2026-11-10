@@ -7,6 +7,18 @@ texture set of the engine material (art-source/world/textures, procedural, see d
 The Blender control renders build equivalent procedural shaders (tools/blender/world/render_control.py).
 """
 
+
+def _set_mean(name, default):
+    """Mean linear albedo of a generated texture set (materials_spec.json), so a calibrated set gets tint 1."""
+    import json
+    from pathlib import Path
+    p = Path(__file__).resolve().parents[3] / "art-source" / "world" / "materials" / "materials_spec.json"
+    try:
+        return [round(float(x), 3) for x in json.loads(p.read_text(encoding="utf-8"))["sets"][name]["albedo"]["mean_rgb_linear"]]
+    except (OSError, KeyError, ValueError):
+        return default
+
+
 M = {
     # paved areas
     "yard_paving": {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones", "texture_set": "paving_20x10_grey"},
@@ -88,7 +100,15 @@ M = {
     "concrete_fence_post": {"color": [0.28, 0.28, 0.26], "rough": 0.9},
     "concrete_wall": {"color": [0.30, 0.30, 0.28], "rough": 0.9},
     "barrier_post": {"color": [0.40, 0.41, 0.41], "rough": 0.55, "metal": 0.9},
-    "noise_panel": {"color": [0.30, 0.33, 0.31], "rough": 0.6, "metal": 0.1, "texture_set": "noise_cassette"},
+    # ADR 0060 (r7 N-2, D42 Mapillary 2018-07 / 2024-07 at g3b_eye_s1482 / s1632, reference only): the absorbing
+    # cassettes along Andersa / Putry are dark powder-coated (anthracite / moss-green class), read near-black under the
+    # glass panes; 0.30 read as a light grey wall. WORKING_VALUE (no RAL plate seen).
+    "noise_panel": {"color": [0.05, 0.06, 0.055], "rough": 0.6, "metal": 0.1, "texture_set": "noise_cassette"},
+    # ADR 0069 noise barriers after Mapillary p38/p40 (2024, overcast): cassettes 36-40 sRGB next to a plinth of 105
+    # sRGB on the same vertical face -> linear ratio 0.135 x concrete_plinth 0.30 = 0.04; 0.07 keeps the cassette
+    # relief readable on Low overcast (0.17 + metal 0.3 read near-black in r5). Posts 98/108/100 sRGB (green-grey).
+    "noise_panel_dark": {"color": [0.068, 0.072, 0.070], "rough": 0.7, "metal": 0.05, "texture_set": "noise_cassette"},
+    "noise_post": {"color": [0.17, 0.21, 0.18], "rough": 0.55, "metal": 0.3},
     "car_sill": {"color": [0.035, 0.033, 0.03], "rough": 0.8},
     # contact shadow / AO patch under parked vehicles (ADR 0050): Kamion/World Vehicle Contact, parameters per
     # prototype from the LOD0 node extras ("contact", life_props.contact_spec)
@@ -99,13 +119,13 @@ M = {
     "paint_white_reflective": {"color": [0.7, 0.7, 0.7], "rough": 0.4},
     "cabinet_grey": {"color": [0.35, 0.36, 0.35], "rough": 0.6},
     # static life props (streetscape.life_props): vehicles, yard props, gate kit
-    "car_paint_silver": {"color": [0.42, 0.43, 0.44], "rough": 0.38, "metal": 0.6, "texture_set": "car_grime"},
-    "car_paint_grey": {"color": [0.13, 0.135, 0.14], "rough": 0.42, "metal": 0.5, "texture_set": "car_grime"},
-    "car_paint_black": {"color": [0.018, 0.018, 0.02], "rough": 0.3, "metal": 0.3, "texture_set": "car_grime"},
-    "car_paint_white": {"color": [0.68, 0.68, 0.66], "rough": 0.44, "texture_set": "car_grime"},
-    "car_paint_white2": {"color": [0.62, 0.63, 0.62], "rough": 0.50, "texture_set": "car_grime"},
-    "car_paint_blue": {"color": [0.03, 0.05, 0.12], "rough": 0.35, "metal": 0.4, "texture_set": "car_grime"},
-    "car_paint_red": {"color": [0.32, 0.03, 0.025], "rough": 0.46, "metal": 0.2, "texture_set": "car_grime"},
+    "car_paint_silver": {"color": [0.42, 0.43, 0.44], "rough": 0.28, "metal": 0.6, "texture_set": "car_grime"},
+    "car_paint_grey": {"color": [0.13, 0.135, 0.14], "rough": 0.26, "metal": 0.5, "texture_set": "car_grime"},
+    "car_paint_black": {"color": [0.018, 0.018, 0.02], "rough": 0.2, "metal": 0.3, "texture_set": "car_grime"},
+    "car_paint_white": {"color": [0.68, 0.68, 0.66], "rough": 0.3, "texture_set": "car_grime"},
+    "car_paint_white2": {"color": [0.62, 0.63, 0.62], "rough": 0.36, "texture_set": "car_grime"},
+    "car_paint_blue": {"color": [0.03, 0.05, 0.12], "rough": 0.24, "metal": 0.4, "texture_set": "car_grime"},
+    "car_paint_red": {"color": [0.32, 0.03, 0.025], "rough": 0.28, "metal": 0.2, "texture_set": "car_grime"},
     "car_paint_green": {"color": [0.035, 0.07, 0.045], "rough": 0.35, "metal": 0.4, "texture_set": "car_grime"},
     "car_paint_beige": {"color": [0.36, 0.32, 0.24], "rough": 0.4, "metal": 0.3, "texture_set": "car_grime"},
     "car_glass": {"color": [0.012, 0.014, 0.016], "rough": 0.65},     # opaque (LOD1 / LOD2): does not mirror the sky
@@ -120,7 +140,7 @@ M = {
     "car_dirt_3": {"color": [0.18, 0.165, 0.135], "rough": 1.0, "alpha": 0.78, "blend": True, "texture": "car_dirt"},
     "car_lamp": {"color": [0.045, 0.047, 0.05], "rough": 0.12, "metal": 0.5},     # smoked lamp housing behind the lens
     # alloy under brake dust (v4: 0.115 rendered as a black disc on LOD1 at 12-45 m on Low, read as "no rim")
-    "rim_dusty": {"color": [0.17, 0.155, 0.135], "rough": 0.62, "metal": 0.45},
+    "rim_dusty": {"color": [0.27, 0.25, 0.22], "rough": 0.58, "metal": 0.45},
     "tyre_dusty": {"color": [0.05, 0.045, 0.038], "rough": 0.95},
     "car_interior": {"color": [0.022, 0.022, 0.024], "rough": 0.9},
     "rim_dark": {"color": [0.05, 0.05, 0.052], "rough": 0.6, "metal": 0.5},
@@ -129,10 +149,10 @@ M = {
     "car_plate": {"color": [1.0, 1.0, 1.0], "rough": 0.45, "texture": "car_plates"},
     "car_trim": {"color": [0.025, 0.025, 0.025], "rough": 0.6},
     "car_light_head": {"color": [0.5, 0.5, 0.5], "rough": 0.1},
-    "car_light_tail": {"color": [0.35, 0.02, 0.02], "rough": 0.15},
+    "car_light_tail": {"color": [0.22, 0.010, 0.012], "rough": 0.12},
     "reflector_red": {"color": [0.4, 0.02, 0.02], "rough": 0.2},
     "tyre": {"color": [0.025, 0.025, 0.025], "rough": 0.85},
-    "rim": {"color": [0.35, 0.36, 0.36], "rough": 0.4, "metal": 0.8},
+    "rim": {"color": [0.50, 0.51, 0.52], "rough": 0.36, "metal": 0.7},
     "trailer_curtain_grey": {"color": [0.20, 0.21, 0.21], "rough": 0.7, "texture_set": "curtain_folds"},
     "trailer_curtain_blue": {"color": [0.03, 0.06, 0.14], "rough": 0.7, "texture_set": "curtain_folds"},
     "trailer_curtain_white": {"color": [0.55, 0.56, 0.55], "rough": 0.7, "texture_set": "curtain_folds"},
@@ -213,6 +233,14 @@ M = {
     "kp_accent": {"color": [0.50, 0.075, 0.035], "rough": 0.55, "metal": 0.2},
     "kp_glass_block": {"color": [0.27, 0.29, 0.30], "rough": 0.3},
     "kp_roof_white": {"color": [0.52, 0.52, 0.50], "rough": 0.8},
+    # hero viaduct asset (ADR 0067, streetscape.hero_bridge): strip atlas on a CC0 scan (colour = atlas mean, so the
+    # calibrated-set tint is 1), railing infill + galvanised steel, light crushed stone of the centre island
+    "viaduct_concrete": {"color": _set_mean("viaduct_concrete", [0.369, 0.324, 0.276]), "rough": 0.85,
+                         "surface": "concrete", "texture_set": "viaduct_concrete", "set_tile": True},
+    "viaduct_steel": {"color": [1.0, 1.0, 1.0], "rough": 0.9, "metal": 0.0, "texture": "viaduct_steel",
+                      "alpha_cutoff": 0.5},
+    "island_gravel": {"color": [0.30, 0.285, 0.26], "rough": 0.95, "surface": "gravel",
+                      "texture_set": "gravel_compacted"},
     "bridge_fascia_red": {"color": [0.30, 0.05, 0.04], "rough": 0.7},
     "bridge_fascia_green": {"color": [0.07, 0.17, 0.10], "rough": 0.7},
     "pier_yellow": {"color": [0.46, 0.40, 0.17], "rough": 0.85},
@@ -233,6 +261,10 @@ M = {
                               "texture": f"hedge_{kind}_{sp}", "alpha_cutoff": 0.5}
        for kind in ("shell", "sprig") for sp in ("berberis", "privet", "hornbeam", "thuja")},
     "bed_soil": {"color": [0.17, 0.13, 0.095], "rough": 0.9, "surface": "grass", "texture_set": "soil_bed"},
+    # roundabout centre under the viaduct: loose grey-beige river stones / coarse gravel on a slope (Mapillary CC BY-SA
+    # 201270605169291 / 2818555625124739, 2020-08, D42, reference only; ADR 0060). Set gravel_compacted (no pebble set
+    # yet), lighter than a road shoulder. WORKING_VALUE.
+    "bed_stones": {"color": [0.22, 0.21, 0.195], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     # sign gantry (streetscape.life_props.sign_gantry)
     "gantry_steel": {"color": [0.42, 0.43, 0.43], "rough": 0.55, "metal": 0.9},
     # landmarks
@@ -271,3 +303,33 @@ for _k, _ws in _FAR_WALLS.items():
             M[f"{_w}__far_{_k}"] = {"color": M[_w]["color"], "rough": M[_w]["rough"], "base": _w,
                                     "window_grid": dict(FAR_GRID[_k], uv="TEXCOORD_1"),
                                     "glass_color": [0.03, 0.035, 0.04]}
+
+# Sky occlusion (ADR 0060, review r7 N-2 "no dark accents"): the engine lights the world with the sky SH and a sky
+# reflection probe and has no screen-space AO, so (a) faces looking down (deck soffits, eaves, canopy and balcony
+# undersides, the head of window reveals) were lit by a ground that is in fact shaded by the same structure, and
+# (b) glazing mirrored the bright horizon where a real window sees the street, trees and the buildings opposite.
+# [x, y] = Kamion/World Surface / PBR _SkyOcc: x scales the ambient of down-facing faces by 1 - x * max(-n.y, 0),
+# y scales near-horizontal reflections (R.y < 0.45) by up to 1 - y. WORKING_VALUE, judged against the CC0 Bieżeństwa
+# photo (soffit / fascia ~20 % luma at overcast vs ~30 % before). Not on cars, ground, vegetation, decals or
+# collision (cars belong to the vehicle look work; ground faces up).
+SKY_OCC_GLASS = [0.0, 0.9]   # r8 after4: 0.6 left glazing at ~40 % luma (target 0.03-0.06 lin.)
+SKY_OCC_STRUCT = [0.5, 0.0]
+_NO_SKY_OCC = ("car_", "collision_", "decal_", "marking", "hedge_", "lamp_glass", "signal_", "tyre", "rim",
+               "trailer_", "tractor_", "vehicle_", "wire", "bed_soil", "noise_glass")
+_GLASSY = ("glass", "door_glass", "booth_glass", "shelter_glass", "canopy_glass", "skylight")
+
+
+def _sky_occ(k, v):
+    if k.startswith(_NO_SKY_OCC) or v.get("collision") or v.get("decal") or "surface" in v and v["surface"] in (
+            "grass", "asphalt", "paving_stones", "gravel", "sett"):
+        return None
+    if k in _GLASSY or "window_grid" in v:
+        return SKY_OCC_GLASS if k in _GLASSY else [SKY_OCC_STRUCT[0], SKY_OCC_GLASS[1]]
+    return SKY_OCC_STRUCT
+
+
+for _k, _v in M.items():
+    _so = _sky_occ(_k, _v)
+    if _so is not None:
+        _v.setdefault("sky_occ", _so)
+

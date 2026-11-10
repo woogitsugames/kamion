@@ -105,6 +105,7 @@ class Junction:
     corners: list = field(default_factory=list)
     trims: dict = field(default_factory=dict)       # arm index -> trim station d
     signalized: bool = False
+    emergency_signals: bool = False     # traffic_signals=emergency only (fire-station exit, ADR 0074)
     roundabout: bool = False
     give_way: bool = False
     boundary: list = field(default_factory=list)    # [(xy, tag)] CCW
@@ -257,6 +258,20 @@ def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
     for c in corners:
         if c.kind == "nose" and c.tau_k < 0:
             A, B = arms[c.k], arms[c.k1]
+            # abreast first (ADR 0074): with different trims (a kerb return on one carriageway only, e.g. the
+            # fire-station median crossing on Andersa) the "semicircle" on the diagonal end-to-end chord was a 13 m
+            # disc lying across the inner lane of the longer-trimmed carriageway.
+            u = A.direction(trims[c.k]) + B.direction(trims[c.k1])
+            u = u / max(float(np.hypot(*u)), 1e-9)
+            for _ in range(3):
+                xa = float(np.dot(A.gutter(trims[c.k], +1), u))
+                xb = float(np.dot(B.gutter(trims[c.k1], -1), u))
+                if abs(xa - xb) < 0.2:
+                    break
+                if xa < xb:
+                    trims[c.k] = min(trims[c.k] + (xb - xa), max_trim[c.k])
+                else:
+                    trims[c.k1] = min(trims[c.k1] + (xa - xb), max_trim[c.k1])
             gap = float(np.hypot(*(A.gutter(trims[c.k], +1) - B.gutter(trims[c.k1], -1))))
             need = gap / 2 + 0.5
             trims[c.k] = min(trims[c.k] + need, max_trim[c.k])
@@ -352,14 +367,32 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
         mt = max_trims(j)
         j.corners, j.trims = compute_corners(net, j, mt, _radius_override(net, j))
         j.roundabout = any(a.is_ring() for a in j.arms)
-        j.signalized = any(net.nodes[n]["signals"] or net.nodes[n]["feature"] == "highway=traffic_signals"
-                           for n in j.nodes)
+        # traffic_signals=emergency (fire-station exits: dark / flashing amber for road users, ADR 0074) is not a
+        # signal-controlled junction: no P-14, no P-2a, no arrows, no S-1 heads of a junction. roadgraph marks any
+        # signal within 15 m as `signals_nearby`, so that flag only counts when a non-emergency signal is near.
+        sig_pts = [p for p in (ctx_points or []) if p["kind"] == "highway=traffic_signals"]
+        real = [p for p in sig_pts if p.get("traffic_signals") != "emergency"]
+        emerg = [p for p in sig_pts if p.get("traffic_signals") == "emergency"]
+        emerg_ids = {f"n{p['osm_node']}" for p in emerg}
+
+        def node_sig(n):
+            nd = net.nodes[n]
+            if nd["feature"] == "highway=traffic_signals" and n not in emerg_ids:
+                return True
+            if not nd["signals"]:
+                return False
+            if not ctx_points:
+                return True
+            return any(math.hypot(p["e"] - nd["xy"][0], p["n"] - nd["xy"][1]) <= 16.0 for p in real)
+        j.signalized = any(node_sig(n) for n in j.nodes)
         j.give_way = any(net.nodes[n]["feature"] in ("highway=give_way", "highway=stop") for n in j.nodes)
         if ctx_points:
             r = 25.0 + max((float(np.hypot(*(net.nodes[n]["xy"] - j.center))) for n in j.nodes), default=0)
-            for p in ctx_points:
-                if p["kind"] == "highway=traffic_signals" and math.hypot(p["e"] - j.center[0], p["n"] - j.center[1]) < r:
+            for p in real:
+                if math.hypot(p["e"] - j.center[0], p["n"] - j.center[1]) < r:
                     j.signalized = True
+            j.emergency_signals = (not j.signalized) and any(
+                math.hypot(p["e"] - j.center[0], p["n"] - j.center[1]) < r for p in emerg)
     for j in juncs:
         for i, a in enumerate(j.arms):
             if a.end == "a":
