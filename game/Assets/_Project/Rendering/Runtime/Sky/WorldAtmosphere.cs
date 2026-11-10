@@ -12,7 +12,7 @@ namespace Game.Rendering
     public static class WorldAtmosphere
     {
         // ---- owner A/B overrides (launch args / visual QA -Rq; RenderOverrides): not defaults
-        /// <summary>rq_look: -1 = the preset's toe; 0 = none (variant A), 1 = variant B, 2 = variant C.</summary>
+        /// <summary>rq_look: -1 = the preset's toe; 0 = none (variant A), 1..4 = variants B..E.</summary>
         public static int LookVariant = -1;
         /// <summary>rq_wet: wetness 0..1 (null = the preset's).</summary>
         public static float? WetOverride;
@@ -29,6 +29,8 @@ namespace Game.Rendering
             new Vector4(0f, 0.12f, 0.30f, 0f),        // A: D23 curve unchanged
             new Vector4(0.5f, 0.12f, 0.30f, 0f),      // B: moderate toe, 0.30 held
             new Vector4(0.7f, 0.15f, 0.35f, 0f),      // C: strong toe, 0.35 held
+            new Vector4(0.8f, 0.30f, 0.50f, 0f),      // D: broad toe, 0.50 held (mid-tones down too)
+            new Vector4(0.9f, 0.40f, 0.60f, 0f),      // E: ~gamma 1.45 about the sky value 0.60 (photo p10 / p50 match)
         };
 
         public static void ResolveLook(LightingPreset p, out float toe, out float toeP, out float pivot)
