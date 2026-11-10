@@ -271,7 +271,7 @@ def rect_paving(n=2048):
 
 
 # ------------------------------------------------------------------------------------------- ground cover
-GRASS_CHROMA = 1.45          # D38: summer grass chroma gain (target rendered sat 35-40 HSV %)
+GRASS_CHROMA = 1.40          # D38: summer grass chroma gain (target rendered sat 35-40 HSV %)
 
 
 def grass_verge(n=2048, ss=2):

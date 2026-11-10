@@ -32,9 +32,9 @@ SPECIES = {
     # Berberis thunbergii 'Atropurpurea': obovate 1-3 cm, purple-red to brown-red, a few scarlet ones
     # tip: young shoot leaves above the last cut are lighter and more copper (photo: orange-brown highlights on the top
     # and the ends; ADR 0060, review r7 N-4), share of the outer leaves; deep: darkening of the inner leaves
-    "berberis": dict(col=(96, 44, 36), alt=[((114, 48, 32), 0.10), ((72, 36, 34), 0.25)], leaf=(0.012, 0.028),
+    "berberis": dict(col=(92, 46, 40), alt=[((112, 52, 36), 0.10), ((70, 38, 36), 0.25)], leaf=(0.012, 0.028),
                      ratio=0.55, kind="obovate", clumps=340, per_clump=(7, 14), cover=0.62,
-                     tip=((150, 80, 50), 0.4), deep=0.35),
+                     tip=((146, 88, 64), 0.4), deep=0.45, sprig_base=0.85),
     # Ligustrum vulgare: lanceolate 3-5 cm, dark glossy green, opposite pairs
     "privet": dict(col=(54, 72, 36), alt=[((70, 88, 42), 0.2), ((40, 56, 30), 0.25)], leaf=(0.028, 0.05),
                    ratio=0.38, kind="lanceolate", clumps=150, per_clump=(6, 10), cover=0.62),
@@ -194,7 +194,7 @@ def sprigs(sp, n=256, seed=0):
         for _ in range(int(30 * (0.028 / S["leaf"][1]) ** 0.7) + 6):
             px, py = n * rng.uniform(0.2, 0.8), n - rng.uniform(0, n * 0.25)
             L = rng.uniform(*S["leaf"]) * px_m
-            items.insert(0, ("leaf", (px, py), (L, rng.uniform(0, 2 * math.pi), 0.6)))
+            items.insert(0, ("leaf", (px, py), (L, rng.uniform(0, 2 * math.pi), S.get("sprig_base", 0.6))))
         for kind, p, q in items:
             if kind == "twig":
                 d.line([p, q], fill=(62, 44, 36, 255), width=1)

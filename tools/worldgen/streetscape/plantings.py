@@ -268,7 +268,9 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
         s += S["sprig"] * (0.5 + _h(key, "ss", j))
         j += 1
     idx = np.array(idx, int)
-    nt += _sprig_cards(buf, sprig_m, shell[-2][0][idx], N[idx], shell[-2][1][idx], (*key, "edge"), S, src, tilt=(0.2, 0.8))
+    # clipped band: edge shoots lean further out (ADR 0060: upright cards read as a dark seam along the arris)
+    etilt = (0.5, 1.1) if S.get("prof") == "clipped" else (0.2, 0.8)
+    nt += _sprig_cards(buf, sprig_m, shell[-2][0][idx], N[idx], shell[-2][1][idx], (*key, "edge"), S, src, tilt=etilt)
     # clipped band: few shoots on the side (a straight cut face, r7 N-4), cushion / box: 35 %
     nt += _sprig_cards(buf, sprig_m, shell[-3][0][idx] + N[idx] * 0.02, N[idx], shell[-3][1][idx] - 0.12 * h,
                        (*key, "side"), S, src, tilt=(1.0, 1.35), share=0.12 if S.get("prof") == "clipped" else 0.35)
