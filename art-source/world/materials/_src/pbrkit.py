@@ -204,6 +204,8 @@ class SurfaceSet:
     ao_scales: tuple = (0.004, 0.015, 0.05)
     ao_k: float = 1.0
     extra_albedo: dict = field(default_factory=dict)   # variant name -> albedo (e.g. late_autumn)
+    ao_extra: np.ndarray | None = None   # scan AO (CC0 sets, ADR 0063): multiplied into the height-derived cavity AO
+    scan_info: dict | None = None        # provenance of a scan-based set (written into materials_spec.json)
     aa_tiers: bool = False           # Gaussian low-pass (sigma 0.6 x factor) before each tier's box downsample: fine
                                      # periodic relief (perforation) vanishes instead of aliasing into big dimples
 
@@ -221,6 +223,8 @@ def write_set(s: SurfaceSet, out_root: Path, tiers=("High", "Medium", "Low")) ->
     slope2_hi = (n_hi[..., 0] / n_hi[..., 2]) ** 2 + (n_hi[..., 1] / n_hi[..., 2]) ** 2
     sx_hi, sy_hi = n_hi[..., 0] / n_hi[..., 2], n_hi[..., 1] / n_hi[..., 2]
     ao_hi = ao_from_height(h, c.px, s.ao_scales, s.ao_k)
+    if s.ao_extra is not None:
+        ao_hi = ao_hi * s.ao_extra
     conv = np.clip(0.5 + (h - blur(h, max(0.6, 0.01 / c.px))) / max(1e-4, (hmax - hmin)) * 4, 0, 1)
     info = {"files": {}, "height_range_m": [round(hmin, 5), round(hmax, 5)]}
     for t in tiers:
