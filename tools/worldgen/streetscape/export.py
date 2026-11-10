@@ -97,9 +97,38 @@ def fence_mesh_png():
     return im
 
 
+def car_dirt_png(w=512, h=128, seed=41):
+    """Road film of a parked car (ADR 0041 par. 8), white RGB + alpha, tiles in u. v = 0 (image bottom) is the sill /
+    bumper edge: dense film that thins upward into splatter and is gone at v = 1 (the top edge of the overlay
+    mesh must not show). Vertical run marks where melt water washed the film. WORKING_VALUE look, no measured data."""
+    rng = np.random.default_rng(seed)
+
+    def field(sx, sy):
+        a = rng.random((h, w))
+        for ax, n in ((1, sx), (0, sy)):
+            k = max(1, int(n))
+            c = np.cumsum(np.concatenate([a, a, a], axis=ax) if ax == 1 else np.pad(a, ((k, k), (0, 0)), mode="edge"), axis=ax)
+            if ax == 1:
+                a = (c[:, w + k:2 * w + k] - c[:, w - k:2 * w - k]) / (2 * k)
+            else:
+                a = (c[2 * k:2 * k + h] - c[:h]) / (2 * k)
+        return (a - a.min()) / max(1e-6, a.max() - a.min())
+    v = (1.0 - (np.arange(h) + 0.5) / h)[:, None]
+    big, mid, fine = field(40, 10), field(8, 6), field(1, 1)
+    runs = field(2, 40)
+    edge = 0.62 + 0.30 * big                                   # where the dense film ends (v)
+    film = np.clip((edge - v) / 0.30, 0, 1) ** 1.2 * (0.72 + 0.28 * mid)
+    splat = np.clip((fine * 0.6 + mid * 0.4 - 0.52 - 0.35 * v) * 6.0, 0, 1) * 0.55        # droplets above the film
+    a = np.clip(np.maximum(film, splat) * (1.0 - 0.45 * np.clip((runs - 0.62) * 5, 0, 1) * (v > 0.12)), 0, 1)
+    a *= np.clip((1.0 - v) / 0.12, 0, 1)                       # nothing at the top edge
+    rgb = np.clip(0.82 + 0.18 * mid + 0.10 * (fine - 0.5), 0, 1)
+    im = np.dstack([rgb * 255, rgb * 255, rgb * 250, a * 255]).astype(np.uint8)
+    return Image.fromarray(im, "RGBA")
+
+
 def textures():
     return {"fence_mesh": SG.png_bytes(fence_mesh_png()), "dock_digits": SG.png_bytes(SG.digits_atlas()),
-            "plate_back": SG.png_bytes(SG.plate_back())}
+            "plate_back": SG.png_bytes(SG.plate_back()), "car_dirt": SG.png_bytes(car_dirt_png())}
 
 
 def glb_materials():
