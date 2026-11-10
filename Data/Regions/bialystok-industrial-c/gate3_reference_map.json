@@ -1,0 +1,12 @@
+{
+ "schema": "truck-sim-pl/gate3-reference-map/1",
+ "region": "bialystok-industrial-c",
+ "note": "Camera id -> reference photo under data/photos (outside git; --photos-root overrides). Only CC0 / public domain photos are embedded in the evidence sheets (docs/LICENSES.md, section 'Fotografie referencyjne'); CC BY-SA photos (Borawski, Hiuppo) are reference-only and deliberately not mapped here. Framing is approximate: the photos were not taken from the gate camera positions.",
+ "references": [
+  {"camera": "g3a_rondo_bie_approach", "file": "nowe/20201102_152339_Rondo_Pamięci_Bieżeństwa_1915_roku_Białystok.jpg", "license": "CC0", "author": "Rakoon", "framing": "approximate (Andersa viaduct over Rondo Biezenstwa)"},
+  {"camera": "g3a_rondo_bie_above", "file": "nowe/20201102_152339_Rondo_Pamięci_Bieżeństwa_1915_roku_Białystok.jpg", "license": "CC0", "author": "Rakoon", "framing": "approximate (ground-level photo vs 45 m aerial camera)"},
+  {"camera": "biezenstwa_above", "file": "nowe/20201102_152339_Rondo_Pamięci_Bieżeństwa_1915_roku_Białystok.jpg", "license": "CC0", "author": "Rakoon", "framing": "approximate (named in docs/LICENSES.md as the comparison for this camera)"},
+  {"camera": "g3b_rondo_put_approach", "file": "nowe/7204_May_2021_in_Białystok.jpg", "license": "CC0", "author": "Rakoon", "framing": "approximate (viaduct at Rondo Putry)"},
+  {"camera": "g3b_rondo_putry_approach", "file": "nowe/7204_May_2021_in_Białystok.jpg", "license": "CC0", "author": "Rakoon", "framing": "approximate (photo_match camera; viaduct and gantry content)"}
+ ]
+}
