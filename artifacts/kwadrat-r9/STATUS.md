@@ -106,3 +106,23 @@ Worktree `.claude/worktrees/agent-a1409e374f8c12b4f`, gałąź `worktree-agent-a
 - Referencje bramy: `artifacts/refs/kwadrat-park/INDEX.md` (main, ADR 0066) potwierdza LUKĘ — brak otwartych zdjęć bramy/portierni/ramp;
   portiernia i szlabany zostają WORKING_VALUE do zdjęć właściciela.
 - NASTĘPNY KROK: obejrzeć `artifacts/kwadrat-r9/r10b/*/kwadrat-park-gate.jpg` (pasy belki), potem `pwsh scripts/test.ps1 -Platform PlayMode`, `pwsh scripts/test.ps1 -Platform EditMode`, ADR 0071, kopia dowodów do main/artifacts/kwadrat-r9.
+
+## Stan 2026-11-10 ~22:50 (r10b zakończony)
+- Import r10b OK; rendery `r10b/{High,Low}-{overcast,lowsun}/` (8 kamer, JPG 960 px). Belki w pasy czerwono-białe (było: cała czerwona / cała biała).
+- pytest gis r10b: 215 zielone, 5 czerwonych (`logs/pytest_r10b.log`) — żadne z tej gałęzi: 2x korytarz trasy s≈1432–1480 (P0 main, agent 0076),
+  3x ratchet fidelity (axis 0,129 > 0,052; edges 2,483 > 2,09; islands 6 > 4) po odświeżeniu raportu — gałąź nie zmienia geometrii dróg
+  (`git diff main -- tools/worldgen/roads` = 4 linie haka w build_world.py). Odświeżony raport: `logs/fidelity_qa_r10b_refreshed.json`;
+  w gicie zostaje `fidelity_qa.json` z main (więc `test_report_not_stale` czerwony w tej gałęzi do regeneracji na main).
+- PlayMode pełne: 111 / 100 zielone / 2 czerwone / 8 skip (`logs/playmode_full_r10b.log`): oba czerwone = `WorldCRouteTests` przy s≈1481–1483
+  (zderzak w `Chunk_2_4/col_asphalt` — ten sam P0 main); przejazd przez bramę bez szarpnięcia. `WorldCBarrierTests` 1/1, `DepotBarrierTests` 3/3.
+- EditMode: 176 / 164 zielone / 0 czerwonych / 7 skip / 5 inconclusive (TruckCabGlassTier x2, TruckDoorGlass x3 — prefab ciężarówki nie budowany w tym worktree).
+- Samokrytyka wg docs/06 (visual-critic NIE wołany — subagent nie tworzy subagentów; do zrobienia przez lidera):
+  1. Kostka behaton na placu czyta się w renderze jako elementy ~0,5 m (nie mierzone; prawdziwa ok. 0,2 m) — wygląda sztucznie; materiał globalny
+     (`_Tile`, wątek z HANDOVER), poza zakresem tej gałęzi.
+  2. Plac to jednolita, czysta płaszczyzna: brak śladów opon/plam przy dokach w kadrze stretch_05, brak odwodnienia liniowego widocznego z kabiny.
+  3. Naczepy przy dokach: 8 w rzędzie, równe odstępy i identyczne nogi podporowe — rytm zbyt regularny; kolory plandek zróżnicowane.
+  4. Obudowy szlabanów jaskrawożółte z czerwonymi pasami — WORKING_VALUE, bez zdjęcia; portiernia = szary kontener, generyczna.
+  5. Brak oznakowania placu (numery doków na elewacji są, brak tablic kierunkowych/regulaminu/ograniczenia przy bramie poza B-33 30) — brak źródła, nie zmyślane.
+  6. Niebo overcast płaskie, bez gradientu; cienie kontaktowe pod naczepami słabe na Low.
+- NASTĘPNY KROK (lider): scalić gałąź (konflikty możliwe: InstanceImporter.cs, build_world.py, materials.py, overrides.yaml z 0070), potem na main
+    uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c ; pwsh scripts/import-region.ps1 -Region bialystok-industrial-c ; pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCBarrierTests|DepotBarrierTests"

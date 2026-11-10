@@ -1,6 +1,6 @@
 # ADR 0071 - Hero depot hall: Kwadrat Park (player base) as an authored Blender asset
 
-Status: proposed (2026-11-10) - asset, generator hook and importer done; visual-critic review pending
+Status: proposed (2026-11-10) - asset, generator hook, importer, yard, automatic boom done and tested on WorldC; visual-critic review pending (leader)
 
 ## Context
 The route starts in the yard of Kwadrat Park. The main hall (`bdot:9962cca0…`, 21 399 m², LoD1 2024 height 10.16 m) was
