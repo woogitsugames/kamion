@@ -863,6 +863,7 @@ def qa_report(w, mk_report, mask):
             "decals": mk_report.get("decals", {}),
             "crossings_snapped": mk_report.get("crossings_snapped", 0),
             "crossings_skipped": mk_report.get("crossings_skipped", []),
+            "crossings_in_junction": mk_report.get("crossings_in_junction", []),
             "bridges": w.bridges,
             "walled_ramps": w.profiles.get("walled_ramps", []),
             "clearance_by_class_m": S.CLEARANCE_BY_CLASS,

@@ -19,7 +19,8 @@ Linear meshes (layer 'furniture' + 'collision'):
                concrete panel fence; cut where they cross a carriageway.
   guard rails  steel W-beam (U-11a family) on bridge caps, on rural medians, and on rural sides where the
                ground falls > GUARDRAIL_EMBANKMENT_H within 4 m of the shoulder.
-  noise walls  BDOT10k OT_OIKM_L ekran akustyczny (posts every 4 m, absorptive cassettes on a concrete plinth).
+  noise walls  BDOT10k OT_OIKM_L ekran akustyczny + OSM wall=noise_barrier (ADR 0069): dark absorbing cassettes on a
+               concrete plinth, or (authored zones from Mapillary photos) a cassette band with clear panels above.
   walls        BDOT10k OT_BUUO_L ściana oporowa / OSM retaining_wall + pedestrian railing (U-12a) on top.
   wires        BDOT10k OT_SULN_L power lines between the poles (catenary sag).
 """
@@ -373,14 +374,15 @@ def speed_signs(pl, net, report, codes):
     for c in net.chains:
         if c.meta.get("absorbed") or c.roundabout or c.length < 80:
             continue
-        sec = c.section(c.length / 2, net.sec_list)
-        v = sec.maxspeed
-        if not v or int(v) == 50:
-            continue
         dirs = [1] if (c.dirn > 0).mean() >= 0.5 else [-1] if (c.dirn < 0).mean() >= 0.5 else [1, -1]
         for dn in dirs:
             s = (c.t_a + S.SPEED_SIGN_AFTER_JUNCTION) if dn > 0 else (c.length - c.t_b - S.SPEED_SIGN_AFTER_JUNCTION)
             if not (0 < s < c.length) or c.bridge[c.idx(s)]:
+                continue
+            # the limit of the section the sign stands on (a chain spans several OSM ways: MA-007 showed 90 where
+            # the way under the sign has maxspeed=70)
+            v = c.section(s, net.sec_list).maxspeed
+            if not v or int(v) == 50:
                 continue
             side = "R" if dn > 0 else "L"
             sgn = -1.0 if side == "R" else 1.0
@@ -686,8 +688,8 @@ def fences(lin, src, origin, roads_poly, report):
     cutter = roads_poly.buffer(0.3) if roads_poly is not None else None
     for f in src["osm"]["ways"]:
         b = f["tags"].get("barrier")
-        if b not in ("fence", "yes", "wall", "retaining_wall"):
-            continue
+        if b not in ("fence", "yes", "wall", "retaining_wall") or is_noise_wall(f["tags"]):
+            continue                         # noise walls: noise_barriers() (ADR 0069)
         line = LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
         key = f"osm:way/{f['osm_way']}:{f['part']}"
         for part in cut_by(line, cutter):
@@ -831,20 +833,164 @@ def guardrails(lin, net, zground, report):
                                   "ground": "NMT (decks removed) at the profile end + 5 / 7 / 9 m"}
 
 
-def noise_barriers(lin, src, origin, roads_poly, report):
-    L = 0.0
+def is_noise_wall(tags):
+    """OSM barrier=wall + wall=noise_barrier (19 ways in tile C) is a noise barrier, not a plot fence."""
+    return tags.get("barrier") == "noise_barrier" or (tags.get("barrier") == "wall" and tags.get("wall") == "noise_barrier")
+
+
+# Noise-barrier styles (ADR 0069, Mapillary references p37/p38/p40 2018-2024, CC BY-SA, reference only; heights read off
+# the photos against the 0.15 m kerb and the 2.5 m car, WORKING_VALUE):
+#   solid    dark absorbing cassettes from a 0.5 m concrete plinth to the top (2018 photo at g3b_eye_s1482)
+#   glazed   light concrete plinth to 0.6 m, dark cassette band to `band_m` (p38 1.0 m, p40 1.6 m), clear panels above,
+#            green-grey steel posts every 4 m, a top rail (p38 / p40 2024)
+NOISE_STYLES = {
+    "solid": {"plinth_m": 0.5, "band_m": None, "post_mat": "noise_post", "panel": "noise_panel_dark"},
+    "glazed": {"plinth_m": 0.6, "band_m": 1.0, "post_mat": "noise_post", "panel": "noise_panel_dark"},
+}
+NOISE_DEFAULT_STYLE = "solid"
+NOISE_DEDUP_M = 4.0          # an OSM way within this of a BDOT10k barrier is the same object (BDOT geometry kept)
+
+
+def _noise_style_overrides(overrides, origin):
+    """kind: noise_barrier_style -> [(Point zone (local), radius, style dict, id)], kind: noise_barrier -> lines."""
+    zones, lines = [], []
+    for o in overrides or []:
+        if o.get("kind") == "noise_barrier_style":
+            for z in o.get("zones", []):
+                c = np.asarray(z["center_epsg2180"], float) - origin
+                st = dict(NOISE_STYLES[z.get("style", NOISE_DEFAULT_STYLE)])
+                if "band_m" in z:
+                    st["band_m"] = float(z["band_m"])
+                st["name"] = z.get("style", NOISE_DEFAULT_STYLE)
+                zones.append((c, float(z.get("radius_m", 30.0)), st, o["id"]))
+        elif o.get("kind") == "noise_barrier":
+            P = np.asarray(o["line_epsg2180"], float) - origin
+            lines.append((LineString(P), o.get("style", NOISE_DEFAULT_STYLE), float(o.get("height_m", S.NOISE_BARRIER_H)),
+                          f"override:{o['id']}"))
+    return zones, lines
+
+
+def _noise_runs(P, zones, default):
+    """Split the densified polyline P into runs of one style: (slice, style). Zones are circles; later zones win."""
+    names = []
+    for p in P:
+        st = default
+        for c, r, s, _ in zones:
+            if np.hypot(*(p - c)) <= r:
+                st = s
+        names.append(st)
+    runs, k = [], 0
+    while k < len(P):
+        kk = k
+        while kk + 1 < len(P) and names[kk + 1] is names[k]:
+            kk += 1
+        runs.append((slice(k, min(kk + 2, len(P))), names[k]))      # overlap one vertex: no gap at the style joint
+        k = kk + 1
+    return [(sl, st) for sl, st in runs if sl.stop - sl.start >= 2]
+
+
+def noise_wall(lin, P, Z, st, H, key):
+    """One noise-barrier run along P (densified, Z = ground). Collision: one wall ribbon to the top."""
+    zp = Z + st["plinth_m"]
+    lin.slab("concrete_plinth", P, Z - 0.4, zp, 0.2, key)
+    if st["band_m"] is None:                                   # solid absorbing cassettes to the top
+        lin.slab(st["panel"], P, zp, Z + H, 0.12, key)
+    else:
+        zb = Z + max(st["band_m"], st["plinth_m"] + 0.2)
+        lin.slab(st["panel"], P, zp, zb, 0.12, key)
+        # clear panel, one double-sided sheet (alpha blended). Kamion/World Car Glass dust mask as on the viaduct
+        # screens (roads.meshing): u = 0, v = 1 at the foot -> -0.25 at the top
+        lin.ribbon("noise_glass", P, zb, Z + H, 0.0, key, both=True)
+        for prt in lin.buf.parts[-2:]:
+            k = len(prt.V) // 2
+            prt.UV = np.column_stack([np.zeros(2 * k), np.concatenate([np.ones(k), np.full(k, -0.25)])])
+        lin.slab(st["post_mat"], P, Z + H - 0.08, Z + H, 0.10, key + ":rail")        # top rail
+    lin.ribbon("collision_fence", P, Z - 0.2, Z + H, 0.0, key, both=False)
+    lin.buf.parts[-1].layer = "collision"
+    lin.posts(st["post_mat"], P, S.NOISE_BARRIER_POST, 0.16, 0.16, H + 0.1, src=key)
+
+
+def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None):
+    """BDOT10k OT_OIKM_L + OSM barrier=wall/wall=noise_barrier (parts > NOISE_DEDUP_M from BDOT) + authored lines,
+    styled by authored zones (kind: noise_barrier_style, Mapillary image ids as provenance), default `solid`."""
+    L = {"bdot": 0.0, "osm": 0.0, "override": 0.0}
+    by_style = {}
     cutter = roads_poly.buffer(0.2) if roads_poly is not None else None
-    for f in src["bdot10k"]["OT_OIKM_L"]:
-        line = LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
+    zones, extra = _noise_style_overrides(overrides, np.asarray(origin, float))
+    default = dict(NOISE_STYLES[NOISE_DEFAULT_STYLE], name=NOISE_DEFAULT_STYLE)
+    bdot = [LineString(np.asarray(f["geometry"]["coordinates"], float) - origin) for f in src["bdot10k"]["OT_OIKM_L"]]
+    feats = [(ln, f"bdot:{f['id']}", "bdot", S.NOISE_BARRIER_H) for ln, f in zip(bdot, src["bdot10k"]["OT_OIKM_L"])]
+    near_bdot = shapely.union_all([b.buffer(NOISE_DEDUP_M) for b in bdot]) if bdot else None
+    for f in src["osm"]["ways"]:
+        if not is_noise_wall(f["tags"]):
+            continue
+        ln = LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
+        for part in cut_by(ln, near_bdot):
+            if part.length > 6.0:
+                feats.append((part, f"osm:way/{f['osm_way']}:{f['part']}", "osm", S.NOISE_BARRIER_H))
+    for ln, style, H, key in extra:
+        feats.append((ln, key, "override", H))
+    used_zones = set()
+    walls = []
+    for line, key, kind, H in feats:
         for part in cut_by(line, cutter):
+            walls.append(part)
             P = lin.dens(part, 2.0)
             Z = lin.z(P)
-            key = f"bdot:{f['id']}"
-            lin.slab("concrete_plinth", P, Z - 0.4, Z + 0.5, 0.2, key)
-            lin.slab("noise_panel", P, Z + 0.5, Z + S.NOISE_BARRIER_H, 0.12, key, collision="collision_fence")
-            lin.posts("steel_painted", P, S.NOISE_BARRIER_POST, 0.2, 0.2, S.NOISE_BARRIER_H + 0.1, src=key)
-            L += part.length
-    report["noise_barriers_m"] = round(L)
+            for sl, st in _noise_runs(P, zones, default):
+                noise_wall(lin, P[sl], Z[sl], st, H, key)
+                seg = float(np.sum(np.hypot(*np.diff(P[sl], axis=0).T)))
+                by_style[st["name"]] = by_style.get(st["name"], 0.0) + seg
+            for c, r, s, oid in zones:
+                if part.distance(shapely.Point(c)) <= r:
+                    used_zones.add(oid)
+            L[kind] += part.length
+    report["noise_barriers_m"] = round(sum(L.values()))
+    report["noise_barriers"] = {"m_by_source": {k: round(v) for k, v in L.items()},
+                                "m_by_style": {k: round(v) for k, v in by_style.items()},
+                                "zones_stale": sorted({z[3] for z in zones} - used_zones)}
+    if pl is not None:
+        report["noise_barriers"]["signs_moved_off_wall"] = _signs_off_walls(pl, walls, roads_poly)
+
+
+SIGN_WALL_CLEAR_M = 0.9     # sign post in front of a noise barrier, road side (map audit MA-007 / MA-021, WORKING_VALUE)
+
+
+def _signs_off_walls(pl, walls, roads_poly):
+    """Sign assemblies placed by rule before the barriers existed can stand in a barrier (map audit MA-007 / MA-021:
+    the B-33 plate cut by the panels). Moves the whole assembly (same src) to the road side of the wall,
+    SIGN_WALL_CLEAR_M in front of it, never onto the carriageway. Returns the moved assembly sources."""
+    if not walls or roads_poly is None:
+        return []
+    tree = shapely.STRtree(walls)
+    rb = roads_poly.boundary
+    moved = {}
+    for it in pl.items:
+        if not it["p"].startswith("sign_post") or it["src"] in moved:
+            continue
+        q = shapely.Point(it["e"], it["n"])
+        near = tree.query(q, predicate="dwithin", distance=SIGN_WALL_CLEAR_M)
+        if not len(near):
+            continue
+        w = min((walls[i] for i in near), key=q.distance)
+        on_w = np.array(w.interpolate(w.project(q)).coords[0])
+        kerb = np.array(rb.interpolate(rb.project(shapely.Point(*on_w))).coords[0])
+        to_road = kerb - on_w
+        gap = float(np.hypot(*to_road))
+        if gap < 1e-3:
+            continue
+        d = min(SIGN_WALL_CLEAR_M, max(0.0, gap - 0.5))
+        target = on_w + to_road / gap * d
+        moved[it["src"]] = target - np.array([it["e"], it["n"]])
+    for it in pl.items:
+        v = moved.get(it["src"])
+        if v is None:
+            continue
+        e0, n0 = it["e"], it["n"]
+        e1, n1 = e0 + v[0], n0 + v[1]
+        dz = float(pl.zsurf(np.array([e1]), np.array([n1]))[0] - pl.zsurf(np.array([e0]), np.array([n0]))[0])
+        it["e"], it["n"], it["z"] = round(float(e1), 3), round(float(n1), 3), round(it["z"] + dz, 3)
+    return sorted(moved)
 
 
 WIRE_HALF_W = 0.012          # m; conductor ~24 mm incl. sag ripple (WORKING_VALUE, AFL-6 70-120 mm2 class)

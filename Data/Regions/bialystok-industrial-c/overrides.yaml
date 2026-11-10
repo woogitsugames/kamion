@@ -149,3 +149,87 @@ overrides:
       # ADR 0060 (D42 Mapillary 2020-08-15, CC BY-SA, reference only): the ring centre under the viaduct is loose grey
       # river stones / gravel on a slope, no red shrubs (was soil + berberis clumps from the r6 reading of the orthophoto)
       - {name: ring-centre, at: [778549.7, 595506.5], fill: stones}
+  # ---------------------------------------------------------------- road furniture after Mapillary (ADR 0069)
+  # Mapillary photos (CC BY-SA 4.0, D42, ADR 0065) are references only: positions and forms read off them, no pixels.
+  # `mapillary` lists the image ids (Data/raw/mapillary/<region>/manifest.jsonl: author, date, lat/lon, compass).
+  - id: andersa-putry-cantilever-p37
+    kind: sign_gantry
+    form: cantilever
+    column_side: L
+    osm_way: 173956083
+    before_node: n1852129066
+    distance_m: 100.0
+    boards:
+      - lanes: [0, 1]
+        from_osm:
+          - {way: 1101181473, refs_extra: ["8", E67]}
+          - {way: 606396463, refs_extra: ["8", E67]}
+          - {way: 284541843}
+    mapillary: ["995780104564541", "1240467703063612"]
+    reason: >-
+      Mapillary 995780104564541 (richlv, 2020-08-15) shows one lattice column in the gore left of the link to Rondo
+      Putry (after the ramp to the viaduct splits off) and a lattice arm over both lanes carrying one direction board
+      (Warszawa / Ełk, Augustów / Kuźnica, Centrum); 1240467703063612 (2018) is taken under the arm. OSM has no
+      gantry; destinations and refs come from the OSM destination / destination:ref tags of the target ways; DK8 /
+      E67 (route relations, not in the road graph) are refs_extra. Station ~18 m after the split (100 m before node
+      1852129066) read off the photos, WORKING_VALUE. The board is our schematic drawing, not the real diagram board.
+    confidence: low
+    verify: station of the column and the board layout on site
+  - id: andersa-putry-portal-p40
+    kind: sign_gantry
+    osm_way: 173956083
+    before_node: n2629251371
+    distance_m: 55.0
+    boards:
+      - lanes: [0]
+        from_osm:
+          - {way: 1101181473, refs_extra: ["8", E67]}
+          - {way: 284541843}
+      - lanes: [1]
+        from_osm:
+          - {way: 606396463, refs_extra: ["8", E67]}
+    mapillary: ["1783751488818497", "1911352299378570"]
+    reason: >-
+      Mapillary 1783751488818497 and 1911352299378570 (kino, 2024-07-26) show a two-column lattice portal before the
+      Rondo Putry entry with a board over each lane: left Warszawa / Ełk + Centrum (675), right Augustów / Kuźnica.
+      Station 55 m before the ring node, WORKING_VALUE (read off the photo against the lamp spacing).
+    confidence: low
+    verify: station and board layout on site
+  - id: andersa-ne-noise-barrier-glazed
+    kind: noise_barrier_style
+    zones:
+      - {center_epsg2180: [777582.0, 596169.0], radius_m: 25.0, style: glazed, band_m: 1.0}
+      - {center_epsg2180: [777535.0, 596208.0], radius_m: 45.0, style: glazed, band_m: 1.6}
+      - {center_epsg2180: [777625.0, 596121.0], radius_m: 75.0, style: glazed, band_m: 1.0}   # MA-008 link
+      - {center_epsg2180: [777445.0, 596353.0], radius_m: 45.0, style: glazed, band_m: 1.0}   # MA-008/021 Tysiaclecia
+      - {center_epsg2180: [777445.0, 596438.0], radius_m: 45.0, style: glazed, band_m: 1.0}
+      - {center_epsg2180: [777445.0, 596523.0], radius_m: 60.0, style: glazed, band_m: 1.0}
+    mapillary: ["1911352299378570", "1783751488818497", "1240467703063612", "1424981177846267", "995780104564541",
+                "312705613662497", "1340597302993462"]
+    reason: >-
+      The NE barrier of the Andersa link to Rondo Putry (OSM 319142221-319142224 wall=noise_barrier / BDOT10k
+      OT_OIKM_L) is glazed from the bus stop to the ring on the 2024 photos (kino, p38: light plinth ~0.6 m, dark band
+      to ~1.0 m, clear panels above; p40: dark cassettes to ~1.6 m) and a dark solid wall further SE (czadzik 2018 at
+      g3b_eye_s1482). Heights read off the photos against the 0.15 m kerb, WORKING_VALUE. Everything else keeps the
+      default dark solid style.
+      Map audit r9 (MA-008 / MA-021): Mapillary 1424981177846267, 995780104564541 (link to Putry) and 312705613662497,
+      1340597302993462 (al. Tysiaclecia) show clear panels on green posts with a low solid plinth along these runs
+      too; zones 3-6 added (band 1.0 m WORKING_VALUE).
+    confidence: medium
+    verify: style change station and band heights on site
+  - id: andersa-p26-tree-groups
+    kind: tree_groups
+    lines:
+      - {line_epsg2180: [[778309.7, 595611.3], [778224.1, 595663.3]]}
+      - {line_epsg2180: [[778328.2, 595585.5], [778223.2, 595644.4]]}
+    group_size: [3, 5]
+    gap_m: [20.0, 45.0]
+    species: {linden: 0.6, maple: 0.4}
+    mapillary: ["1666299510882315", "2684818718445505"]
+    reason: >-
+      Mapillary 1666299510882315 (kino, 2024-07-26) and 2684818718445505 (richlv, 2020-08-15) at p26 show clumps of
+      large broadleaf trees on the verge beyond the westbound carriageway of Andersa with open grass between them;
+      BDOT10k / OSM have no trees there. Line 1 on the verge strip between the westbound kerb and the cycle path (OT_SKRP_L), line 2 on the grass (OT_PTTR_A) beyond it, 40-160 m ahead (r9c: first line lay on the carriageway; read off the photo,
+      WORKING_VALUE); species from the crown shape (linden / maple); only positions are authored.
+    confidence: low
+    verify: tree positions on site / orthophoto

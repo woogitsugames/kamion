@@ -31,7 +31,7 @@ DRIVABLE = {
 }
 RAW_TAGS = ("name", "ref", "lanes", "lanes:forward", "lanes:backward", "turn:lanes", "turn:lanes:forward",
             "turn:lanes:backward", "maxspeed", "oneway", "junction", "surface", "bridge", "tunnel", "layer",
-            "width", "maxweight", "maxheight", "hgv", "access", "service", "destination", "int_ref")
+            "width", "maxweight", "maxheight", "hgv", "access", "service", "destination", "destination:ref", "int_ref")
 GRAPH_SCHEMA = "truck-sim-pl/road-graph/1"
 # BDOT10k MATERIALNAWIERZCHNI -> OSM surface (used only when OSM has no surface tag)
 BDOT_SURFACE = {"masa bitumiczna": "asphalt", "kostka prefabrykowana": "paving_stones", "beton": "concrete",
@@ -107,7 +107,7 @@ def edge_attrs(tags: dict, length_m: float) -> dict:
         a["layer"] = _a(int(_num(tags["layer"])), "osm", "high")
     if tags.get("width") and _num(tags["width"]):
         a["width"] = _a(_num(tags["width"]), "osm", "medium")
-    for k in ("junction", "maxweight", "maxheight", "hgv", "access", "service", "destination"):
+    for k in ("junction", "maxweight", "maxheight", "hgv", "access", "service", "destination", "destination:ref"):
         if tags.get(k):
             a[k] = _a(tags[k], "osm", "high")
     return a
