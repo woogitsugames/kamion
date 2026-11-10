@@ -72,12 +72,20 @@
    0.852,
    0.309
   ],
+  "OB_0bfe6830": [
+   4.062,
+   2.038
+  ],
   "OB_26fd429a": [
    3.4,
    1.419
   ],
   "OB_8a02c9de": [
    4.025,
+   1.419
+  ],
+  "OB_f99035fb": [
+   4.794,
    1.419
   ]
  },
@@ -299,6 +307,15 @@
    "tris_lod0": 28,
    "tris_lod1": 28
   },
+  "board_OB_0bfe6830": {
+   "materials": [
+    "plate_back",
+    "sign_OB_0bfe6830",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
   "board_OB_26fd429a": {
    "materials": [
     "plate_back",
@@ -312,6 +329,15 @@
    "materials": [
     "plate_back",
     "sign_OB_8a02c9de",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_OB_f99035fb": {
+   "materials": [
+    "plate_back",
+    "sign_OB_f99035fb",
     "steel_galv"
    ],
    "tris_lod0": 28,
@@ -1309,6 +1335,13 @@
    "tris_lod0": 456,
    "tris_lod1": 456
   },
+  "sign_gantry_10_74": {
+   "materials": [
+    "gantry_steel"
+   ],
+   "tris_lod0": 688,
+   "tris_lod1": 36
+  },
   "sign_gantry_16_68": {
    "materials": [
     "gantry_steel"
@@ -1351,8 +1384,8 @@
    "materials": [
     "steel_galv"
    ],
-   "tris_lod0": 75,
-   "tris_lod1": 36
+   "tris_lod0": 170,
+   "tris_lod1": 45
   },
   "signal_pole": {
    "materials": [
