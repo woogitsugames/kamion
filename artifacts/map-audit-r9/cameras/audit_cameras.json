@@ -1,0 +1,6887 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-industrial-c",
+ "frame": "local E,N,U (EPSG:2180 minus region origin; U absolute EVRF2007 NMT + height, re-seated by raycast unless seat=file)",
+ "note": "map audit r9 cameras (scripts/map-audit-cameras.py)",
+ "cameras": [
+  {
+   "id": "au_f_s0000",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    735.699,
+    -385.401,
+    144.135
+   ],
+   "look_at": [
+    720.983,
+    -411.544,
+    142.581
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=0 m, edge w1090234585:8722811971-391997446"
+  },
+  {
+   "id": "au_f_s0020",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    725.888,
+    -402.83,
+    143.938
+   ],
+   "look_at": [
+    711.172,
+    -428.972,
+    142.467
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=20 m, edge w1090234585:8722811971-391997446"
+  },
+  {
+   "id": "au_f_s0040",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    716.077,
+    -420.258,
+    143.828
+   ],
+   "look_at": [
+    701.47,
+    -446.46,
+    142.36
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=40 m, edge w1090234585:8722811971-391997446"
+  },
+  {
+   "id": "au_f_s0060",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    706.267,
+    -437.686,
+    143.693
+   ],
+   "look_at": [
+    691.955,
+    -464.052,
+    142.233
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=60 m, edge w1090234585:8722811971-391997446"
+  },
+  {
+   "id": "au_f_s0080",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    696.712,
+    -455.256,
+    143.606
+   ],
+   "look_at": [
+    682.44,
+    -481.644,
+    142.299
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=80 m, edge w1090234585:8722811971-391997446"
+  },
+  {
+   "id": "au_f_s0100",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    687.197,
+    -472.848,
+    143.532
+   ],
+   "look_at": [
+    673.002,
+    -499.277,
+    142.435
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=100 m, edge w1090234585:8722811971-391997446"
+  },
+  {
+   "id": "au_f_s0120",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    677.705,
+    -490.452,
+    143.683
+   ],
+   "look_at": [
+    663.595,
+    -516.926,
+    142.513
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=120 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_f_s0140",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    668.298,
+    -508.101,
+    143.793
+   ],
+   "look_at": [
+    654.188,
+    -534.576,
+    142.599
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=140 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_f_s0160",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    658.891,
+    -525.751,
+    143.833
+   ],
+   "look_at": [
+    644.734,
+    -552.2,
+    142.519
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=160 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_f_s0180",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    649.485,
+    -543.401,
+    143.957
+   ],
+   "look_at": [
+    634.94,
+    -569.638,
+    142.285
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=180 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_f_s0200",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    639.837,
+    -560.919,
+    143.68
+   ],
+   "look_at": [
+    627.056,
+    -586.409,
+    142.131
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=200 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_f_s0220",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    630.043,
+    -578.356,
+    143.481
+   ],
+   "look_at": [
+    614.047,
+    -601.601,
+    141.827
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=220 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_f_s0240",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    620.551,
+    -594.005,
+    143.462
+   ],
+   "look_at": [
+    603.534,
+    -618.477,
+    141.585
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=240 m, edge w194536287:1882887381-1882954023"
+  },
+  {
+   "id": "au_f_s0260",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    608.149,
+    -609.606,
+    142.999
+   ],
+   "look_at": [
+    594.301,
+    -636.219,
+    141.388
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=260 m, edge w194536287:1882887381-1882954023"
+  },
+  {
+   "id": "au_f_s0280",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    598.918,
+    -627.348,
+    142.801
+   ],
+   "look_at": [
+    583.876,
+    -653.284,
+    141.133
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=280 m, edge w194536287:1882887381-1882954023"
+  },
+  {
+   "id": "au_f_s0300",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    589.118,
+    -644.768,
+    142.59
+   ],
+   "look_at": [
+    574.362,
+    -670.801,
+    140.946
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=300 m, edge w194536287:1882887381-1882954023"
+  },
+  {
+   "id": "au_f_s0320",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    579.082,
+    -662.057,
+    142.324
+   ],
+   "look_at": [
+    564.132,
+    -686.071,
+    140.791
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=320 m, edge w188397869:1882954023-1882887368"
+  },
+  {
+   "id": "au_f_s0340",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    568.887,
+    -677.274,
+    142.156
+   ],
+   "look_at": [
+    552.565,
+    -691.62,
+    140.797
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=340 m, edge w188397875:1882953956-1882953898"
+  },
+  {
+   "id": "au_f_s0360",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    561.607,
+    -692.74,
+    142.135
+   ],
+   "look_at": [
+    536.507,
+    -683.001,
+    140.775
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=360 m, edge w188397875:1882953956-1882953898"
+  },
+  {
+   "id": "au_f_s0380",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    545.146,
+    -688.037,
+    142.053
+   ],
+   "look_at": [
+    518.934,
+    -673.453,
+    140.89
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=380 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_f_s0400",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    527.72,
+    -678.227,
+    142.143
+   ],
+   "look_at": [
+    501.36,
+    -663.905,
+    140.95
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=400 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_f_s0420",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    510.147,
+    -668.679,
+    142.215
+   ],
+   "look_at": [
+    483.786,
+    -654.356,
+    141.031
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=420 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_f_s0440",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    492.573,
+    -659.13,
+    142.279
+   ],
+   "look_at": [
+    466.213,
+    -644.808,
+    141.096
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=440 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_f_s0460",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    474.999,
+    -649.582,
+    142.342
+   ],
+   "look_at": [
+    448.639,
+    -635.26,
+    141.215
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=460 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_f_s0480",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    457.426,
+    -640.034,
+    142.423
+   ],
+   "look_at": [
+    431.065,
+    -625.712,
+    141.255
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=480 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_f_s0500",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    439.852,
+    -630.486,
+    142.525
+   ],
+   "look_at": [
+    413.385,
+    -616.388,
+    141.395
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=500 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_f_s0520",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    422.279,
+    -620.938,
+    142.61
+   ],
+   "look_at": [
+    394.916,
+    -608.712,
+    141.604
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=520 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_f_s0540",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    404.15,
+    -612.55,
+    142.783
+   ],
+   "look_at": [
+    376.448,
+    -601.037,
+    141.792
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=540 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_f_s0560",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    385.682,
+    -604.875,
+    143.012
+   ],
+   "look_at": [
+    357.979,
+    -593.362,
+    141.933
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=560 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_f_s0580",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    367.213,
+    -597.199,
+    143.181
+   ],
+   "look_at": [
+    340.698,
+    -587.452,
+    142.108
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=580 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_f_s0600",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    348.745,
+    -589.524,
+    143.287
+   ],
+   "look_at": [
+    322.941,
+    -578.249,
+    142.396
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=600 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_f_s0620",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    331.819,
+    -582.851,
+    143.568
+   ],
+   "look_at": [
+    307.855,
+    -570.993,
+    142.683
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=620 m, edge w606396458:4391371827-3341716400"
+  },
+  {
+   "id": "au_f_s0640",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    315.562,
+    -574.033,
+    143.812
+   ],
+   "look_at": [
+    290.159,
+    -561.675,
+    142.977
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=640 m, edge w536419675:3341716400-3341716402"
+  },
+  {
+   "id": "au_f_s0660",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    299.007,
+    -566.334,
+    144.153
+   ],
+   "look_at": [
+    272.462,
+    -552.357,
+    143.23
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=660 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_f_s0680",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    281.31,
+    -557.016,
+    144.414
+   ],
+   "look_at": [
+    254.766,
+    -543.039,
+    143.396
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=680 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_f_s0700",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    263.614,
+    -547.698,
+    144.639
+   ],
+   "look_at": [
+    237.069,
+    -533.72,
+    143.402
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=700 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_f_s0720",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    245.917,
+    -538.379,
+    144.695
+   ],
+   "look_at": [
+    219.372,
+    -524.402,
+    143.261
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=720 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_f_s0740",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    228.221,
+    -529.061,
+    144.634
+   ],
+   "look_at": [
+    201.676,
+    -515.084,
+    143.166
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=740 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_f_s0760",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    210.524,
+    -519.743,
+    144.522
+   ],
+   "look_at": [
+    183.979,
+    -505.766,
+    143.052
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=760 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_f_s0780",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    192.827,
+    -510.425,
+    144.403
+   ],
+   "look_at": [
+    166.282,
+    -496.447,
+    142.887
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=780 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_f_s0800",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    175.131,
+    -501.106,
+    144.277
+   ],
+   "look_at": [
+    148.586,
+    -487.129,
+    142.65
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=800 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_f_s0820",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    157.434,
+    -491.788,
+    144.074
+   ],
+   "look_at": [
+    130.906,
+    -477.779,
+    142.423
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=820 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_f_s0840",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    139.738,
+    -482.47,
+    143.849
+   ],
+   "look_at": [
+    113.29,
+    -468.309,
+    142.215
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=840 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_f_s0860",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    122.098,
+    -473.044,
+    143.605
+   ],
+   "look_at": [
+    95.675,
+    -458.838,
+    141.801
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=860 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_f_s0880",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    104.483,
+    -463.574,
+    143.306
+   ],
+   "look_at": [
+    78.46,
+    -450.727,
+    141.432
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=880 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_f_s0900",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    86.867,
+    -454.103,
+    142.88
+   ],
+   "look_at": [
+    62.183,
+    -440.877,
+    141.043
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=900 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_f_s0920",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    69.644,
+    -446.007,
+    142.495
+   ],
+   "look_at": [
+    44.555,
+    -431.43,
+    140.619
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=920 m, edge w560802657:1882690822-1881569071"
+  },
+  {
+   "id": "au_f_s0940",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    53.369,
+    -436.154,
+    142.145
+   ],
+   "look_at": [
+    26.927,
+    -421.983,
+    140.202
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=940 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_f_s0960",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    35.741,
+    -426.706,
+    141.709
+   ],
+   "look_at": [
+    9.315,
+    -412.508,
+    139.758
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=960 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_f_s0980",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    18.113,
+    -417.259,
+    141.339
+   ],
+   "look_at": [
+    -7.745,
+    -402.07,
+    139.148
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=980 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_f_s1000",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    0.785,
+    -407.289,
+    140.756
+   ],
+   "look_at": [
+    -24.805,
+    -391.632,
+    138.563
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1000 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_f_s1020",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -16.275,
+    -396.851,
+    140.138
+   ],
+   "look_at": [
+    -41.092,
+    -380.027,
+    137.968
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1020 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_f_s1040",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -32.964,
+    -385.854,
+    139.56
+   ],
+   "look_at": [
+    -57.346,
+    -368.374,
+    137.36
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1040 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_f_s1060",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -49.219,
+    -374.201,
+    138.934
+   ],
+   "look_at": [
+    -73.201,
+    -356.184,
+    136.737
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1060 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_f_s1080",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -65.282,
+    -362.29,
+    138.344
+   ],
+   "look_at": [
+    -89.041,
+    -343.973,
+    136.119
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1080 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_f_s1100",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -81.121,
+    -350.078,
+    137.767
+   ],
+   "look_at": [
+    -104.88,
+    -331.761,
+    135.557
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1100 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_f_s1120",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -96.96,
+    -337.867,
+    137.094
+   ],
+   "look_at": [
+    -120.641,
+    -319.451,
+    134.972
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1120 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_f_s1140",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -112.8,
+    -325.656,
+    136.534
+   ],
+   "look_at": [
+    -136.289,
+    -306.995,
+    134.391
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1140 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_f_s1160",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -128.465,
+    -313.223,
+    135.981
+   ],
+   "look_at": [
+    -151.937,
+    -294.539,
+    133.726
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1160 m, edge w249640399:131612943-1852176912"
+  },
+  {
+   "id": "au_f_s1180",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -144.113,
+    -300.767,
+    135.34
+   ],
+   "look_at": [
+    -167.584,
+    -282.083,
+    133.155
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1180 m, edge w249640399:131612943-1852176912"
+  },
+  {
+   "id": "au_f_s1200",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -159.76,
+    -288.311,
+    134.757
+   ],
+   "look_at": [
+    -183.232,
+    -269.627,
+    132.727
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1200 m, edge w249640399:131612943-1852176912"
+  },
+  {
+   "id": "au_f_s1220",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -175.408,
+    -275.855,
+    134.234
+   ],
+   "look_at": [
+    -198.88,
+    -257.171,
+    132.287
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1220 m, edge w249640399:131612943-1852176912"
+  },
+  {
+   "id": "au_f_s1240",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -191.056,
+    -263.399,
+    133.784
+   ],
+   "look_at": [
+    -214.527,
+    -244.715,
+    131.84
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1240 m, edge w249640399:131612943-1852176912"
+  },
+  {
+   "id": "au_f_s1260",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -206.703,
+    -250.943,
+    133.351
+   ],
+   "look_at": [
+    -230.15,
+    -232.228,
+    131.504
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1260 m, edge w249640399:131612943-1852176912"
+  },
+  {
+   "id": "au_f_s1280",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -222.34,
+    -238.473,
+    132.959
+   ],
+   "look_at": [
+    -245.688,
+    -219.636,
+    131.305
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1280 m, edge w1093579590:1852176912-2359253621"
+  },
+  {
+   "id": "au_f_s1300",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -237.925,
+    -225.939,
+    132.709
+   ],
+   "look_at": [
+    -261.214,
+    -207.029,
+    131.189
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1300 m, edge w1093579589:2359253621-10015785253"
+  },
+  {
+   "id": "au_f_s1320",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -253.451,
+    -213.332,
+    132.544
+   ],
+   "look_at": [
+    -276.748,
+    -194.431,
+    131.208
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1320 m, edge w1093579589:2359253621-10015785253"
+  },
+  {
+   "id": "au_f_s1340",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -268.978,
+    -200.725,
+    132.496
+   ],
+   "look_at": [
+    -291.724,
+    -182.058,
+    131.321
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1340 m, edge w1093579589:2359253621-10015785253"
+  },
+  {
+   "id": "au_f_s1360",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -284.645,
+    -188.296,
+    132.576
+   ],
+   "look_at": [
+    -307.52,
+    -169.791,
+    131.553
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1360 m, edge w266084693:10015785253-12620261934"
+  },
+  {
+   "id": "au_f_s1380",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -299.622,
+    -175.925,
+    132.743
+   ],
+   "look_at": [
+    -323.316,
+    -157.524,
+    131.896
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1380 m, edge w266084693:12620261934-2840742308"
+  },
+  {
+   "id": "au_f_s1400",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -315.418,
+    -163.658,
+    133.015
+   ],
+   "look_at": [
+    -338.85,
+    -147.344,
+    132.353
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1400 m, edge w266084693:12620261934-2840742308"
+  },
+  {
+   "id": "au_f_s1420",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -331.214,
+    -151.39,
+    133.416
+   ],
+   "look_at": [
+    -346.227,
+    -132.945,
+    132.651
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1420 m, edge w266084693:12620261934-2840742308, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_f_s1440",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -340.635,
+    -140.674,
+    133.706
+   ],
+   "look_at": [
+    -360.493,
+    -118.928,
+    132.846
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1440 m, edge w606396463:2840742308-2840742310, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_f_s1460",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -353.36,
+    -125.937,
+    134.097
+   ],
+   "look_at": [
+    -374.759,
+    -104.911,
+    133.022
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1460 m, edge w606396463:2840742308-2840742310, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_f_s1480",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -367.626,
+    -111.919,
+    134.225
+   ],
+   "look_at": [
+    -386.988,
+    -90.931,
+    133.136
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1480 m, edge w606396463:2840742308-2840742310"
+  },
+  {
+   "id": "au_f_s1500",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -381.892,
+    -97.902,
+    134.332
+   ],
+   "look_at": [
+    -401.45,
+    -77.117,
+    133.223
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1500 m, edge w606396463:2840742308-2840742310"
+  },
+  {
+   "id": "au_f_s1520",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -394.219,
+    -84.024,
+    134.474
+   ],
+   "look_at": [
+    -415.913,
+    -63.303,
+    133.342
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1520 m, edge w173956083:2840742310-1852129066"
+  },
+  {
+   "id": "au_f_s1540",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -408.682,
+    -70.21,
+    134.613
+   ],
+   "look_at": [
+    -430.376,
+    -49.489,
+    133.536
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1540 m, edge w173956083:2840742310-1852129066"
+  },
+  {
+   "id": "au_f_s1560",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -423.145,
+    -56.396,
+    134.711
+   ],
+   "look_at": [
+    -444.805,
+    -35.64,
+    133.75
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1560 m, edge w173956083:2840742310-1852129066"
+  },
+  {
+   "id": "au_f_s1580",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -437.607,
+    -42.582,
+    134.943
+   ],
+   "look_at": [
+    -459.1,
+    -21.652,
+    134.037
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1580 m, edge w173956083:2840742310-1852129066"
+  },
+  {
+   "id": "au_f_s1600",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -451.953,
+    -28.646,
+    135.184
+   ],
+   "look_at": [
+    -473.568,
+    -7.846,
+    134.377
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1600 m, edge w173956083:2840742310-1852129066"
+  },
+  {
+   "id": "au_f_s1620",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -466.248,
+    -14.659,
+    135.501
+   ],
+   "look_at": [
+    -488.234,
+    5.752,
+    134.751
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1620 m, edge w173956083:2840742310-1852129066"
+  },
+  {
+   "id": "au_f_s1640",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -480.901,
+    -1.047,
+    135.86
+   ],
+   "look_at": [
+    -502.899,
+    19.351,
+    135.165
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1640 m, edge w173956083:2840742310-1852129066"
+  },
+  {
+   "id": "au_f_s1660",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -495.566,
+    12.552,
+    136.233
+   ],
+   "look_at": [
+    -517.565,
+    32.949,
+    135.566
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1660 m, edge w173956083:2840742310-1852129066"
+  },
+  {
+   "id": "au_f_s1680",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -510.232,
+    26.15,
+    136.641
+   ],
+   "look_at": [
+    -533.005,
+    45.597,
+    135.938
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1680 m, edge w173956083:2840742310-1852129066"
+  },
+  {
+   "id": "au_f_s1700",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -524.921,
+    39.723,
+    137.051
+   ],
+   "look_at": [
+    -540.362,
+    60.578,
+    136.376
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1700 m, edge w173956083:1852129066-2629251371"
+  },
+  {
+   "id": "au_f_s1720",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -538.087,
+    50.84,
+    137.411
+   ],
+   "look_at": [
+    -544.127,
+    80.216,
+    136.728
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1720 m, edge w237183783:2629251371-2466608897"
+  },
+  {
+   "id": "au_f_s1740",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -542.36,
+    70.373,
+    137.844
+   ],
+   "look_at": [
+    -545.904,
+    100.098,
+    136.971
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1740 m, edge w237183783:2629251371-2466608897"
+  },
+  {
+   "id": "au_f_s1760",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -545.509,
+    90.107,
+    138.171
+   ],
+   "look_at": [
+    -545.387,
+    120.081,
+    137.128
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1760 m, edge w237183783:2629251371-2466608897"
+  },
+  {
+   "id": "au_f_s1780",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -545.969,
+    110.098,
+    138.358
+   ],
+   "look_at": [
+    -544.449,
+    140.058,
+    137.281
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1780 m, edge w237183783:2466608897-2466608891"
+  },
+  {
+   "id": "au_f_s1800",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -544.858,
+    130.066,
+    138.491
+   ],
+   "look_at": [
+    -543.868,
+    160.049,
+    137.55
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1800 m, edge w237183783:2466608897-2466608891"
+  },
+  {
+   "id": "au_f_s1820",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -544.102,
+    150.051,
+    138.71
+   ],
+   "look_at": [
+    -543.4,
+    180.043,
+    137.764
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1820 m, edge w882366267:2466608891-2256069816"
+  },
+  {
+   "id": "au_f_s1840",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -543.634,
+    170.046,
+    138.992
+   ],
+   "look_at": [
+    -542.933,
+    200.038,
+    138.06
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1840 m, edge w882366267:2466608891-2256069816"
+  },
+  {
+   "id": "au_f_s1860",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -543.166,
+    190.04,
+    139.201
+   ],
+   "look_at": [
+    -542.465,
+    220.032,
+    138.325
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1860 m, edge w882366267:2466608891-2256069816"
+  },
+  {
+   "id": "au_f_s1880",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -542.699,
+    210.035,
+    139.493
+   ],
+   "look_at": [
+    -541.997,
+    240.027,
+    138.612
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1880 m, edge w882366267:2466608891-2256069816"
+  },
+  {
+   "id": "au_f_s1900",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -542.231,
+    230.03,
+    139.755
+   ],
+   "look_at": [
+    -541.597,
+    260.022,
+    138.992
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1900 m, edge w882366267:2466608891-2256069816"
+  },
+  {
+   "id": "au_f_s1920",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -541.763,
+    250.024,
+    140.088
+   ],
+   "look_at": [
+    -541.681,
+    280.022,
+    139.309
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1920 m, edge w882366267:2466608891-2256069816"
+  },
+  {
+   "id": "au_f_s1940",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -541.639,
+    270.022,
+    140.428
+   ],
+   "look_at": [
+    -541.803,
+    300.021,
+    139.64
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1940 m, edge w882366266:2256069816-8205694666"
+  },
+  {
+   "id": "au_f_s1960",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -541.724,
+    290.022,
+    140.748
+   ],
+   "look_at": [
+    -542.434,
+    320.011,
+    139.926
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1960 m, edge w882366266:2256069816-8205694666"
+  },
+  {
+   "id": "au_f_s1980",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -542.119,
+    310.016,
+    141.079
+   ],
+   "look_at": [
+    -544.067,
+    339.94,
+    140.241
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1980 m, edge w882366266:2256069816-8205694666"
+  },
+  {
+   "id": "au_f_s2000",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -543.187,
+    329.979,
+    141.396
+   ],
+   "look_at": [
+    -546.294,
+    359.813,
+    140.564
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2000 m, edge w882366266:2256069816-8205694666"
+  },
+  {
+   "id": "au_f_s2020",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -545.108,
+    349.884,
+    141.699
+   ],
+   "look_at": [
+    -549.527,
+    379.549,
+    140.86
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2020 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2040",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -547.886,
+    369.686,
+    142.015
+   ],
+   "look_at": [
+    -553.657,
+    399.118,
+    141.198
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2040 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2060",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -551.583,
+    389.336,
+    142.333
+   ],
+   "look_at": [
+    -558.531,
+    418.512,
+    141.504
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2060 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2080",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -555.993,
+    408.841,
+    142.647
+   ],
+   "look_at": [
+    -564.398,
+    437.623,
+    141.789
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2080 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2100",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -561.23,
+    428.141,
+    142.935
+   ],
+   "look_at": [
+    -570.891,
+    456.54,
+    142.102
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2100 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2120",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -567.653,
+    447.079,
+    143.254
+   ],
+   "look_at": [
+    -578.334,
+    475.101,
+    142.439
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2120 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2140",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -574.538,
+    465.851,
+    143.559
+   ],
+   "look_at": [
+    -586.528,
+    493.343,
+    142.903
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2140 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2160",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -582.292,
+    484.284,
+    143.978
+   ],
+   "look_at": [
+    -595.478,
+    511.223,
+    143.364
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2160 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2180",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -590.813,
+    502.377,
+    144.453
+   ],
+   "look_at": [
+    -604.965,
+    528.822,
+    143.913
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2180 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2200",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -600.126,
+    520.077,
+    144.942
+   ],
+   "look_at": [
+    -615.603,
+    545.752,
+    144.388
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2200 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2220",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -610.169,
+    537.362,
+    145.461
+   ],
+   "look_at": [
+    -626.97,
+    562.207,
+    144.778
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2220 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2240",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -621.242,
+    554.01,
+    145.883
+   ],
+   "look_at": [
+    -638.527,
+    578.528,
+    145.08
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2240 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2260",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -632.726,
+    570.385,
+    146.234
+   ],
+   "look_at": [
+    -650.804,
+    594.317,
+    145.36
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2260 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2280",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -644.666,
+    586.423,
+    146.525
+   ],
+   "look_at": [
+    -663.461,
+    609.802,
+    145.575
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2280 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2300",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -657.125,
+    602.066,
+    146.78
+   ],
+   "look_at": [
+    -676.134,
+    625.275,
+    145.073
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2300 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2320",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -669.798,
+    617.538,
+    146.994
+   ],
+   "look_at": [
+    -688.986,
+    640.598,
+    138.847
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2320 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_f_s2340",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -682.531,
+    632.961,
+    143.587
+   ],
+   "look_at": [
+    -701.897,
+    655.873,
+    140.589
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2340 m, edge w238861874:8205694666-2081020082, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_f_s2360",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -695.442,
+    648.235,
+    139.935
+   ],
+   "look_at": [
+    -714.754,
+    671.192,
+    146.554
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2360 m, edge w238861874:8205694666-2081020082, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_f_s2380",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -708.331,
+    663.528,
+    158.572
+   ],
+   "look_at": [
+    -727.601,
+    686.521,
+    158.842
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2380 m, edge w197904074:2081020082-2081020084, bridge:on"
+  },
+  {
+   "id": "au_f_s2400",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -721.178,
+    678.856,
+    159.981
+   ],
+   "look_at": [
+    -734.025,
+    694.185,
+    158.953
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=2400 m, edge w197904074:2081020082-2081020084, bridge:on"
+  },
+  {
+   "id": "au_fl_s0360",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    561.718,
+    -695.8,
+    142.219
+   ],
+   "look_at": [
+    534.251,
+    -685.758,
+    140.778
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=360 m, edge w188397875:1882953956-1882953898"
+  },
+  {
+   "id": "au_fl_s0400",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    525.464,
+    -680.984,
+    142.136
+   ],
+   "look_at": [
+    499.104,
+    -666.661,
+    141.005
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=400 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_fl_s0440",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    490.317,
+    -661.887,
+    142.349
+   ],
+   "look_at": [
+    463.957,
+    -647.564,
+    141.202
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=440 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_fl_s0480",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    455.17,
+    -642.79,
+    142.515
+   ],
+   "look_at": [
+    428.81,
+    -628.468,
+    141.352
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=480 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_fl_s0520",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    420.024,
+    -623.693,
+    142.667
+   ],
+   "look_at": [
+    392.625,
+    -611.544,
+    141.705
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=520 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_fl_s0560",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    383.39,
+    -607.708,
+    143.115
+   ],
+   "look_at": [
+    355.686,
+    -596.198,
+    142.003
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=560 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_fl_s0600",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    346.451,
+    -592.361,
+    143.352
+   ],
+   "look_at": [
+    322.027,
+    -577.775,
+    142.431
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=600 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_fl_s0640",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    313.702,
+    -577.172,
+    143.892
+   ],
+   "look_at": [
+    286.685,
+    -566.062,
+    143.125
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=640 m, edge w536419675:3341716400-3341716402"
+  },
+  {
+   "id": "au_fl_s0680",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    277.837,
+    -561.403,
+    144.597
+   ],
+   "look_at": [
+    251.292,
+    -547.426,
+    143.498
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=680 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_fl_s0720",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    242.444,
+    -542.766,
+    144.832
+   ],
+   "look_at": [
+    215.899,
+    -528.789,
+    143.373
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=720 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_fl_s0760",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    207.051,
+    -524.13,
+    144.644
+   ],
+   "look_at": [
+    180.506,
+    -510.153,
+    143.155
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=760 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_fl_s0800",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    171.657,
+    -505.493,
+    144.398
+   ],
+   "look_at": [
+    145.113,
+    -491.516,
+    142.755
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=800 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_fl_s0840",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    136.264,
+    -486.857,
+    143.953
+   ],
+   "look_at": [
+    109.821,
+    -472.688,
+    142.317
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=840 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_fl_s0880",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    101.013,
+    -467.953,
+    143.399
+   ],
+   "look_at": [
+    75.943,
+    -453.349,
+    141.498
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=880 m, edge w552161976:3341716402-2367445386"
+  },
+  {
+   "id": "au_fl_s0920",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    67.127,
+    -448.629,
+    142.547
+   ],
+   "look_at": [
+    41.092,
+    -435.813,
+    140.697
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=920 m, edge w560802657:1882690822-1881569071"
+  },
+  {
+   "id": "au_fl_s0960",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    32.278,
+    -431.09,
+    141.803
+   ],
+   "look_at": [
+    5.876,
+    -416.848,
+    139.862
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=960 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_fl_s1000",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -2.654,
+    -411.629,
+    140.859
+   ],
+   "look_at": [
+    -28.244,
+    -395.972,
+    138.659
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1000 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_fl_s1040",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -36.384,
+    -390.166,
+    139.666
+   ],
+   "look_at": [
+    -60.768,
+    -372.689,
+    137.445
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1040 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_fl_s1080",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -68.698,
+    -366.597,
+    138.444
+   ],
+   "look_at": [
+    -92.458,
+    -348.281,
+    136.264
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1080 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_fl_s1120",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -100.378,
+    -342.176,
+    137.263
+   ],
+   "look_at": [
+    -124.059,
+    -323.759,
+    135.085
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1120 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_fl_s1160",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -131.882,
+    -317.531,
+    136.1
+   ],
+   "look_at": [
+    -155.354,
+    -298.847,
+    133.863
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1160 m, edge w249640399:131612943-1852176912"
+  },
+  {
+   "id": "au_fl_s1200",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -163.178,
+    -292.62,
+    134.88
+   ],
+   "look_at": [
+    -186.65,
+    -273.936,
+    132.799
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1200 m, edge w249640399:131612943-1852176912"
+  },
+  {
+   "id": "au_fl_s1240",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -194.473,
+    -267.708,
+    133.872
+   ],
+   "look_at": [
+    -217.945,
+    -249.024,
+    131.951
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1240 m, edge w249640399:131612943-1852176912"
+  },
+  {
+   "id": "au_fl_s1280",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -225.758,
+    -242.782,
+    133.079
+   ],
+   "look_at": [
+    -249.106,
+    -223.945,
+    131.439
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1280 m, edge w1093579590:1852176912-2359253621"
+  },
+  {
+   "id": "au_fl_s1320",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -256.869,
+    -217.641,
+    132.678
+   ],
+   "look_at": [
+    -280.166,
+    -198.74,
+    131.307
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1320 m, edge w1093579589:2359253621-10015785253"
+  },
+  {
+   "id": "au_fl_s1360",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -288.063,
+    -192.605,
+    132.696
+   ],
+   "look_at": [
+    -311.653,
+    -175.023,
+    131.687
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1360 m, edge w266084693:10015785253-12620261934"
+  },
+  {
+   "id": "au_fl_s1400",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -319.551,
+    -168.889,
+    133.151
+   ],
+   "look_at": [
+    -341.08,
+    -150.216,
+    132.423
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1400 m, edge w266084693:12620261934-2840742308"
+  },
+  {
+   "id": "au_fl_s1520",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -396.331,
+    -86.155,
+    134.536
+   ],
+   "look_at": [
+    -418.025,
+    -65.434,
+    133.405
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1520 m, edge w173956083:2840742310-1852129066"
+  },
+  {
+   "id": "au_fl_s1560",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -425.257,
+    -58.527,
+    134.798
+   ],
+   "look_at": [
+    -446.917,
+    -37.771,
+    133.809
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1560 m, edge w173956083:2840742310-1852129066"
+  },
+  {
+   "id": "au_fl_s1600",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -454.065,
+    -30.777,
+    135.247
+   ],
+   "look_at": [
+    -475.68,
+    -9.977,
+    134.437
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1600 m, edge w173956083:2840742310-1852129066"
+  },
+  {
+   "id": "au_fl_s1640",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -483.013,
+    -3.178,
+    135.924
+   ],
+   "look_at": [
+    -505.012,
+    17.219,
+    135.165
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1640 m, edge w173956083:2840742310-1852129066"
+  },
+  {
+   "id": "au_fl_s1680",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -512.345,
+    24.018,
+    136.66
+   ],
+   "look_at": [
+    -535.143,
+    43.433,
+    135.903
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1680 m, edge w173956083:2840742310-1852129066"
+  },
+  {
+   "id": "au_fl_s1720",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -541.366,
+    50.589,
+    137.451
+   ],
+   "look_at": [
+    -547.381,
+    79.97,
+    136.809
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1720 m, edge w237183783:2629251371-2466608897"
+  },
+  {
+   "id": "au_fl_s1760",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -548.734,
+    89.865,
+    138.201
+   ],
+   "look_at": [
+    -548.657,
+    119.838,
+    137.182
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1760 m, edge w237183783:2629251371-2466608897"
+  },
+  {
+   "id": "au_fl_s1800",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -548.12,
+    129.823,
+    138.565
+   ],
+   "look_at": [
+    -547.125,
+    159.805,
+    137.595
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1800 m, edge w237183783:2466608897-2466608891"
+  },
+  {
+   "id": "au_fl_s1840",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -546.891,
+    169.803,
+    139.017
+   ],
+   "look_at": [
+    -546.189,
+    199.795,
+    138.103
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1840 m, edge w882366267:2466608891-2256069816"
+  },
+  {
+   "id": "au_fl_s1880",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -545.955,
+    209.792,
+    139.531
+   ],
+   "look_at": [
+    -545.253,
+    239.784,
+    138.69
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1880 m, edge w882366267:2466608891-2256069816"
+  },
+  {
+   "id": "au_fl_s1920",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -545.019,
+    249.781,
+    140.134
+   ],
+   "look_at": [
+    -544.93,
+    279.778,
+    139.237
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1920 m, edge w882366267:2466608891-2256069816"
+  },
+  {
+   "id": "au_fl_s1960",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -544.972,
+    289.778,
+    140.676
+   ],
+   "look_at": [
+    -545.677,
+    319.768,
+    139.856
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=1960 m, edge w882366266:2256069816-8205694666"
+  },
+  {
+   "id": "au_fl_s2000",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -546.427,
+    329.736,
+    141.307
+   ],
+   "look_at": [
+    -549.546,
+    359.569,
+    140.447
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=2000 m, edge w882366266:2256069816-8205694666"
+  },
+  {
+   "id": "au_fl_s2040",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -551.138,
+    369.441,
+    141.924
+   ],
+   "look_at": [
+    -556.938,
+    398.867,
+    141.09
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=2040 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_fl_s2080",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -559.275,
+    408.591,
+    142.566
+   ],
+   "look_at": [
+    -567.742,
+    437.354,
+    141.701
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=2080 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_fl_s2120",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -570.996,
+    446.81,
+    143.162
+   ],
+   "look_at": [
+    -581.745,
+    474.806,
+    142.355
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=2120 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_fl_s2160",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -585.735,
+    483.975,
+    143.879
+   ],
+   "look_at": [
+    -598.974,
+    510.886,
+    143.327
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=2160 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_fl_s2200",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -603.619,
+    519.743,
+    144.882
+   ],
+   "look_at": [
+    -619.247,
+    545.327,
+    144.313
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=2200 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_fl_s2240",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -624.887,
+    553.585,
+    145.827
+   ],
+   "look_at": [
+    -642.261,
+    578.038,
+    145.019
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=2240 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_fl_s2280",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -648.4,
+    585.932,
+    146.491
+   ],
+   "look_at": [
+    -667.235,
+    609.28,
+    145.622
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=2280 m, edge w238861874:8205694666-2081020082"
+  },
+  {
+   "id": "au_fl_s2320",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -673.571,
+    617.016,
+    147.04
+   ],
+   "look_at": [
+    -692.868,
+    639.984,
+    138.559
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=2320 m, edge w238861874:8205694666-2081020082, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_fl_s2360",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -699.373,
+    647.579,
+    140.02
+   ],
+   "look_at": [
+    -718.735,
+    670.494,
+    146.661
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=2360 m, edge w238861874:8205694666-2081020082, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_fl_s2400",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -725.159,
+    678.158,
+    160.113
+   ],
+   "look_at": [
+    -736.721,
+    691.953,
+    159.045
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward left lane s=2400 m, edge w197904074:2081020082-2081020084, bridge:on"
+  },
+  {
+   "id": "au_r_s0000",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -735.025,
+    695.377,
+    148.266
+   ],
+   "look_at": [
+    -753.071,
+    719.334,
+    147.346
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=0 m, edge w197904077:4075461403-2285127441"
+  },
+  {
+   "id": "au_r_s0020",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -747.236,
+    711.213,
+    148.516
+   ],
+   "look_at": [
+    -764.463,
+    735.762,
+    147.615
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=20 m, edge w197904077:4075461403-2285127441"
+  },
+  {
+   "id": "au_r_s0040",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -758.906,
+    727.456,
+    148.771
+   ],
+   "look_at": [
+    -775.013,
+    752.753,
+    147.873
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=40 m, edge w197904077:4075461403-2285127441"
+  },
+  {
+   "id": "au_r_s0060",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -769.738,
+    744.258,
+    149.031
+   ],
+   "look_at": [
+    -784.478,
+    770.371,
+    147.993
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=60 m, edge w197904077:4075461403-2285127441"
+  },
+  {
+   "id": "au_r_s0080",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -779.758,
+    761.555,
+    149.225
+   ],
+   "look_at": [
+    -793.257,
+    788.336,
+    148.098
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=80 m, edge w197904077:4075461403-2285127441"
+  },
+  {
+   "id": "au_r_s0100",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -788.976,
+    779.299,
+    149.329
+   ],
+   "look_at": [
+    -801.281,
+    806.652,
+    148.088
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=100 m, edge w197904077:4075461403-2285127441"
+  },
+  {
+   "id": "au_r_s0120",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -797.385,
+    797.442,
+    149.369
+   ],
+   "look_at": [
+    -808.516,
+    825.295,
+    147.991
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=120 m, edge w265888515:2285127441-2256069809"
+  },
+  {
+   "id": "au_r_s0140",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -804.967,
+    815.946,
+    149.332
+   ],
+   "look_at": [
+    -814.87,
+    844.255,
+    147.886
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=140 m, edge w265888515:2285127441-2256069809"
+  },
+  {
+   "id": "au_r_s0160",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -811.77,
+    834.749,
+    149.229
+   ],
+   "look_at": [
+    -821.754,
+    862.375,
+    147.95
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=160 m, edge w265888515:2285127441-2256069809"
+  },
+  {
+   "id": "au_r_s0180",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -817.699,
+    853.847,
+    149.161
+   ],
+   "look_at": [
+    -832.794,
+    851.842,
+    148.212
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=180 m, edge w265888515:2285127441-2256069809"
+  },
+  {
+   "id": "au_r_s0200",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -831.378,
+    859.941,
+    149.469
+   ],
+   "look_at": [
+    -827.369,
+    832.594,
+    148.006
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=200 m, edge w268470356:2256069832-2256069809"
+  },
+  {
+   "id": "au_r_s0220",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -830.144,
+    842.199,
+    149.399
+   ],
+   "look_at": [
+    -820.831,
+    813.703,
+    147.824
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=220 m, edge w771649420:2256069832-2081020087"
+  },
+  {
+   "id": "au_r_s0240",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -824.253,
+    823.092,
+    149.211
+   ],
+   "look_at": [
+    -813.094,
+    795.261,
+    147.586
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=240 m, edge w771649420:2256069832-2081020087"
+  },
+  {
+   "id": "au_r_s0260",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -816.999,
+    804.466,
+    149.005
+   ],
+   "look_at": [
+    -805.108,
+    776.926,
+    147.364
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=260 m, edge w771649420:2256069832-2081020087"
+  },
+  {
+   "id": "au_r_s0280",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -809.162,
+    786.066,
+    148.775
+   ],
+   "look_at": [
+    -796.281,
+    758.989,
+    147.175
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=280 m, edge w771649420:2256069832-2081020087"
+  },
+  {
+   "id": "au_r_s0300",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -800.877,
+    767.866,
+    148.566
+   ],
+   "look_at": [
+    -786.645,
+    741.465,
+    146.959
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=300 m, edge w771649420:2256069832-2081020087"
+  },
+  {
+   "id": "au_r_s0320",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -791.492,
+    750.211,
+    148.35
+   ],
+   "look_at": [
+    -776.238,
+    724.391,
+    146.695
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=320 m, edge w265888514:2081020087-2256069834"
+  },
+  {
+   "id": "au_r_s0340",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -781.523,
+    732.876,
+    148.122
+   ],
+   "look_at": [
+    -764.92,
+    707.905,
+    146.43
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=340 m, edge w265888514:2081020087-2256069834"
+  },
+  {
+   "id": "au_r_s0360",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -770.658,
+    716.093,
+    147.871
+   ],
+   "look_at": [
+    -752.958,
+    691.877,
+    146.141
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=360 m, edge w265888514:2081020087-2256069834"
+  },
+  {
+   "id": "au_r_s0380",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -758.972,
+    699.867,
+    147.574
+   ],
+   "look_at": [
+    -740.574,
+    676.178,
+    145.857
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=380 m, edge w265888514:2081020087-2256069834"
+  },
+  {
+   "id": "au_r_s0400",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -746.908,
+    683.915,
+    147.276
+   ],
+   "look_at": [
+    -727.854,
+    660.744,
+    145.572
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=400 m, edge w265888514:2081020087-2256069834"
+  },
+  {
+   "id": "au_r_s0420",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -734.214,
+    668.461,
+    147.02
+   ],
+   "look_at": [
+    -715.134,
+    645.31,
+    145.288
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=420 m, edge w265888514:2081020087-2256069834"
+  },
+  {
+   "id": "au_r_s0440",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -721.494,
+    653.027,
+    146.706
+   ],
+   "look_at": [
+    -702.361,
+    629.92,
+    138.045
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=440 m, edge w265888514:2081020087-2256069834"
+  },
+  {
+   "id": "au_r_s0460",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -708.766,
+    637.599,
+    144.808
+   ],
+   "look_at": [
+    -689.551,
+    614.561,
+    138.701
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=460 m, edge w882366264:2256069834-2081020083, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s0480",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -695.956,
+    622.24,
+    139.638
+   ],
+   "look_at": [
+    -676.788,
+    599.163,
+    144.385
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=480 m, edge w882366264:2256069834-2081020083"
+  },
+  {
+   "id": "au_r_s0500",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -683.155,
+    606.874,
+    156.526
+   ],
+   "look_at": [
+    -664.054,
+    583.741,
+    156.05
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=500 m, edge w197904073:2081020083-2081020081, bridge:on"
+  },
+  {
+   "id": "au_r_s0520",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -670.421,
+    591.452,
+    157.507
+   ],
+   "look_at": [
+    -651.453,
+    568.21,
+    155.754
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=520 m, edge w197904073:2081020083-2081020081, bridge:on"
+  },
+  {
+   "id": "au_r_s0540",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -657.705,
+    576.015,
+    145.169
+   ],
+   "look_at": [
+    -639.346,
+    552.296,
+    143.448
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=540 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0560",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -645.264,
+    560.358,
+    144.896
+   ],
+   "look_at": [
+    -628.235,
+    535.676,
+    143.103
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=560 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0580",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -633.651,
+    544.082,
+    144.602
+   ],
+   "look_at": [
+    -617.617,
+    518.735,
+    142.802
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=580 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0600",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -622.831,
+    527.261,
+    144.257
+   ],
+   "look_at": [
+    -608.057,
+    501.168,
+    142.432
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=600 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0620",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -612.837,
+    509.952,
+    143.904
+   ],
+   "look_at": [
+    -599.139,
+    483.27,
+    142.099
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=620 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0640",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -603.49,
+    492.273,
+    143.56
+   ],
+   "look_at": [
+    -591.144,
+    464.946,
+    141.743
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=640 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0660",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -594.927,
+    474.201,
+    143.217
+   ],
+   "look_at": [
+    -583.767,
+    446.358,
+    141.411
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=660 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0680",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -587.417,
+    455.666,
+    142.87
+   ],
+   "look_at": [
+    -577.342,
+    427.419,
+    141.063
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=680 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0700",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -580.477,
+    436.915,
+    142.548
+   ],
+   "look_at": [
+    -571.882,
+    408.183,
+    140.757
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=700 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0720",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -574.499,
+    417.834,
+    142.193
+   ],
+   "look_at": [
+    -567.129,
+    388.759,
+    140.492
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=720 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0740",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -569.361,
+    398.506,
+    141.91
+   ],
+   "look_at": [
+    -562.967,
+    369.199,
+    140.235
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=740 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0760",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -564.94,
+    379.002,
+    141.671
+   ],
+   "look_at": [
+    -560.074,
+    349.426,
+    139.982
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=760 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0780",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -561.161,
+    359.366,
+    141.426
+   ],
+   "look_at": [
+    -558.11,
+    329.525,
+    139.715
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=780 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0800",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -558.982,
+    339.486,
+    141.151
+   ],
+   "look_at": [
+    -556.91,
+    309.565,
+    139.454
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=800 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0820",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -557.339,
+    319.555,
+    140.869
+   ],
+   "look_at": [
+    -556.23,
+    289.577,
+    139.214
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=820 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_r_s0840",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -556.537,
+    299.572,
+    140.63
+   ],
+   "look_at": [
+    -558.314,
+    271.58,
+    139.016
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=840 m, edge w882366262:8205694665-2460796468"
+  },
+  {
+   "id": "au_r_s0860",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -558.092,
+    281.577,
+    140.378
+   ],
+   "look_at": [
+    -558.759,
+    251.585,
+    138.773
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=860 m, edge w266084696:2440731892-2466608894"
+  },
+  {
+   "id": "au_r_s0880",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -558.537,
+    261.582,
+    140.181
+   ],
+   "look_at": [
+    -559.203,
+    231.59,
+    138.457
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=880 m, edge w266084696:2440731892-2466608894"
+  },
+  {
+   "id": "au_r_s0900",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -558.981,
+    241.587,
+    139.858
+   ],
+   "look_at": [
+    -559.663,
+    211.595,
+    138.139
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=900 m, edge w266084696:2440731892-2466608894"
+  },
+  {
+   "id": "au_r_s0920",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -559.425,
+    221.592,
+    139.582
+   ],
+   "look_at": [
+    -560.383,
+    191.608,
+    137.886
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=920 m, edge w266084696:2440731892-2466608894"
+  },
+  {
+   "id": "au_r_s0940",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -560.023,
+    201.601,
+    139.34
+   ],
+   "look_at": [
+    -561.337,
+    171.631,
+    137.617
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=940 m, edge w266084696:2440731892-2466608894"
+  },
+  {
+   "id": "au_r_s0960",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -560.854,
+    181.619,
+    139.067
+   ],
+   "look_at": [
+    -562.922,
+    151.695,
+    137.34
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=960 m, edge w266084696:2440731892-2466608894"
+  },
+  {
+   "id": "au_r_s0980",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -562.083,
+    161.659,
+    138.776
+   ],
+   "look_at": [
+    -565.159,
+    131.821,
+    137.057
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=980 m, edge w266084696:2440731892-2466608894"
+  },
+  {
+   "id": "au_r_s1000",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -563.971,
+    141.75,
+    138.503
+   ],
+   "look_at": [
+    -567.681,
+    112.955,
+    136.818
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1000 m, edge w266084696:2440731892-2466608894"
+  },
+  {
+   "id": "au_r_s1020",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -565.902,
+    122.795,
+    138.241
+   ],
+   "look_at": [
+    -571.819,
+    93.389,
+    136.775
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1020 m, edge w266084696:2466608894-1847044961"
+  },
+  {
+   "id": "au_r_s1040",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -569.714,
+    103.165,
+    138.062
+   ],
+   "look_at": [
+    -574.359,
+    74.46,
+    136.945
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1040 m, edge w266084696:2466608894-1847044961"
+  },
+  {
+   "id": "au_r_s1060",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -572.514,
+    84.288,
+    138.151
+   ],
+   "look_at": [
+    -577.007,
+    54.663,
+    136.72
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1060 m, edge w302573219:1847044961-3890183128"
+  },
+  {
+   "id": "au_r_s1080",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -576.133,
+    64.624,
+    138.196
+   ],
+   "look_at": [
+    -577.925,
+    34.694,
+    136.406
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1080 m, edge w302573219:1847044961-3890183128"
+  },
+  {
+   "id": "au_r_s1100",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -577.719,
+    44.69,
+    137.825
+   ],
+   "look_at": [
+    -577.421,
+    14.711,
+    136.101
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1100 m, edge w257367425:3890183128-2629251364, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s1120",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -577.979,
+    24.694,
+    137.447
+   ],
+   "look_at": [
+    -570.612,
+    -2.265,
+    135.48
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1120 m, edge w257367425:3890183128-2629251364, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s1140",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -576.556,
+    4.749,
+    137.022
+   ],
+   "look_at": [
+    -554.096,
+    -13.52,
+    135.083
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1140 m, edge w257367425:3890183128-2629251364, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s1160",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -562.238,
+    -7.723,
+    136.678
+   ],
+   "look_at": [
+    -538.695,
+    -25.535,
+    134.755
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1160 m, edge w180144451:2629251364-4075461271, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s1180",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -546.362,
+    -19.86,
+    136.224
+   ],
+   "look_at": [
+    -526.05,
+    -36.943,
+    134.38
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1180 m, edge w180144451:2629251364-4075461271, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s1200",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -531.286,
+    -30.251,
+    135.907
+   ],
+   "look_at": [
+    -510.266,
+    -49.226,
+    133.956
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1200 m, edge w1360055407:4075461271-1852129061, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s1220",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -518.158,
+    -43.085,
+    135.466
+   ],
+   "look_at": [
+    -496.064,
+    -61.846,
+    133.537
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1220 m, edge w173985177:1852129061-1847044945"
+  },
+  {
+   "id": "au_r_s1240",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -503.868,
+    -55.593,
+    135.029
+   ],
+   "look_at": [
+    -480.456,
+    -74.351,
+    133.12
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1240 m, edge w268473387:1847044945-1847263308"
+  },
+  {
+   "id": "au_r_s1260",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -488.26,
+    -68.098,
+    134.627
+   ],
+   "look_at": [
+    -464.847,
+    -86.856,
+    132.686
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1260 m, edge w268473387:1847044945-1847263308"
+  },
+  {
+   "id": "au_r_s1280",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -472.652,
+    -80.604,
+    134.203
+   ],
+   "look_at": [
+    -449.385,
+    -97.955,
+    132.386
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1280 m, edge w268473387:1847044945-1847263308"
+  },
+  {
+   "id": "au_r_s1300",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -457.043,
+    -93.109,
+    133.788
+   ],
+   "look_at": [
+    -433.728,
+    -110.399,
+    132.259
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1300 m, edge w268473387:1847044945-1847263308"
+  },
+  {
+   "id": "au_r_s1320",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -441.556,
+    -104.177,
+    133.599
+   ],
+   "look_at": [
+    -418.805,
+    -123.708,
+    132.397
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1320 m, edge w268473388:1847263308-1847263303"
+  },
+  {
+   "id": "au_r_s1340",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -426.213,
+    -116.991,
+    133.623
+   ],
+   "look_at": [
+    -403.28,
+    -136.286,
+    132.597
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1340 m, edge w268473388:1847263308-1847263303"
+  },
+  {
+   "id": "au_r_s1360",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -411.259,
+    -130.258,
+    133.833
+   ],
+   "look_at": [
+    -386.728,
+    -147.453,
+    132.652
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1360 m, edge w268473388:1847263303-1847044938"
+  },
+  {
+   "id": "au_r_s1380",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -395.301,
+    -142.315,
+    133.955
+   ],
+   "look_at": [
+    -369.486,
+    -157.589,
+    132.634
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1380 m, edge w268473388:1847263303-1847044938"
+  },
+  {
+   "id": "au_r_s1400",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -378.107,
+    -152.521,
+    133.972
+   ],
+   "look_at": [
+    -350.699,
+    -162.151,
+    132.309
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1400 m, edge w268473388:1847263303-1847044938, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s1420",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -360.698,
+    -162.053,
+    133.75
+   ],
+   "look_at": [
+    -337.663,
+    -172.616,
+    131.969
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1420 m, edge w268473388:1847263303-1847044938, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s1440",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -345.499,
+    -166.402,
+    133.475
+   ],
+   "look_at": [
+    -321.992,
+    -185.042,
+    131.601
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1440 m, edge w560802655:1847044938-12620261936, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s1460",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -329.827,
+    -178.829,
+    133.096
+   ],
+   "look_at": [
+    -306.321,
+    -197.468,
+    131.365
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1460 m, edge w560802655:1847044938-12620261936"
+  },
+  {
+   "id": "au_r_s1480",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -314.156,
+    -191.255,
+    132.755
+   ],
+   "look_at": [
+    -290.651,
+    -209.897,
+    131.253
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1480 m, edge w560802655:1847044938-12620261936"
+  },
+  {
+   "id": "au_r_s1500",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -298.486,
+    -203.682,
+    132.591
+   ],
+   "look_at": [
+    -274.863,
+    -222.167,
+    131.247
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1500 m, edge w560802655:1847044938-12620261936"
+  },
+  {
+   "id": "au_r_s1520",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -282.817,
+    -216.111,
+    132.517
+   ],
+   "look_at": [
+    -258.51,
+    -233.68,
+    131.368
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1520 m, edge w560802655:1847044938-12620261936"
+  },
+  {
+   "id": "au_r_s1540",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -266.686,
+    -227.923,
+    132.564
+   ],
+   "look_at": [
+    -242.156,
+    -245.193,
+    131.605
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1540 m, edge w560802655:12620261936-1946476472"
+  },
+  {
+   "id": "au_r_s1560",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -250.333,
+    -239.437,
+    132.778
+   ],
+   "look_at": [
+    -226.306,
+    -257.387,
+    131.924
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1560 m, edge w560802655:12620261936-1946476472"
+  },
+  {
+   "id": "au_r_s1580",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -234.186,
+    -251.232,
+    133.043
+   ],
+   "look_at": [
+    -210.742,
+    -269.948,
+    132.286
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1580 m, edge w560802655:12620261936-1946476472"
+  },
+  {
+   "id": "au_r_s1600",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -218.524,
+    -263.667,
+    133.389
+   ],
+   "look_at": [
+    -195.178,
+    -282.509,
+    132.728
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1600 m, edge w560802655:12620261936-1946476472"
+  },
+  {
+   "id": "au_r_s1620",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -202.96,
+    -276.228,
+    133.804
+   ],
+   "look_at": [
+    -179.596,
+    -295.046,
+    133.228
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1620 m, edge w560802655:12620261936-1946476472"
+  },
+  {
+   "id": "au_r_s1640",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -187.396,
+    -288.788,
+    134.278
+   ],
+   "look_at": [
+    -163.997,
+    -307.563,
+    133.776
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1640 m, edge w266084684:1946476472-4103450292"
+  },
+  {
+   "id": "au_r_s1660",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -171.797,
+    -301.305,
+    134.778
+   ],
+   "look_at": [
+    -148.397,
+    -320.079,
+    134.367
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1660 m, edge w266084684:1946476472-4103450292"
+  },
+  {
+   "id": "au_r_s1680",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -156.197,
+    -313.821,
+    135.369
+   ],
+   "look_at": [
+    -132.798,
+    -332.595,
+    134.957
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1680 m, edge w266084684:1946476472-4103450292"
+  },
+  {
+   "id": "au_r_s1700",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -140.597,
+    -326.337,
+    135.955
+   ],
+   "look_at": [
+    -117.196,
+    -345.108,
+    135.532
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1700 m, edge w266084684:1946476472-4103450292"
+  },
+  {
+   "id": "au_r_s1720",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -124.998,
+    -338.853,
+    136.53
+   ],
+   "look_at": [
+    -101.511,
+    -357.518,
+    136.135
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1720 m, edge w266084684:1946476472-4103450292"
+  },
+  {
+   "id": "au_r_s1740",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -109.353,
+    -351.313,
+    137.167
+   ],
+   "look_at": [
+    -85.827,
+    -369.927,
+    136.724
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1740 m, edge w266084684:1946476472-4103450292"
+  },
+  {
+   "id": "au_r_s1760",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -93.669,
+    -363.723,
+    137.725
+   ],
+   "look_at": [
+    -70.117,
+    -382.304,
+    137.331
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1760 m, edge w266084684:1946476472-4103450292"
+  },
+  {
+   "id": "au_r_s1780",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -77.985,
+    -376.132,
+    138.385
+   ],
+   "look_at": [
+    -54.143,
+    -394.339,
+    137.91
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1780 m, edge w266084684:1946476472-4103450292"
+  },
+  {
+   "id": "au_r_s1800",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -62.13,
+    -388.322,
+    138.926
+   ],
+   "look_at": [
+    -37.824,
+    -405.889,
+    138.494
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1800 m, edge w560802656:4103450292-277320063"
+  },
+  {
+   "id": "au_r_s1820",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -46.121,
+    -400.306,
+    139.488
+   ],
+   "look_at": [
+    -21.231,
+    -417.055,
+    139.047
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1820 m, edge w560802656:4103450292-277320063"
+  },
+  {
+   "id": "au_r_s1840",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -29.528,
+    -411.472,
+    140.059
+   ],
+   "look_at": [
+    -4.195,
+    -425.887,
+    139.618
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1840 m, edge w560802656:4103450292-277320063"
+  },
+  {
+   "id": "au_r_s1860",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -12.837,
+    -420.856,
+    140.602
+   ],
+   "look_at": [
+    13.09,
+    -435.948,
+    140.096
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1860 m, edge w552161980:277320063-1852155195"
+  },
+  {
+   "id": "au_r_s1880",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    4.448,
+    -430.918,
+    141.143
+   ],
+   "look_at": [
+    30.641,
+    -445.526,
+    140.632
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1880 m, edge w552161980:277320063-1852155195"
+  },
+  {
+   "id": "au_r_s1900",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    21.761,
+    -440.928,
+    141.643
+   ],
+   "look_at": [
+    48.401,
+    -454.723,
+    141.066
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1900 m, edge w552161980:277320063-1852155195"
+  },
+  {
+   "id": "au_r_s1920",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    39.521,
+    -450.125,
+    142.136
+   ],
+   "look_at": [
+    66.195,
+    -463.853,
+    141.498
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1920 m, edge w552161980:277320063-1852155195"
+  },
+  {
+   "id": "au_r_s1940",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    57.288,
+    -459.307,
+    142.543
+   ],
+   "look_at": [
+    84.01,
+    -472.944,
+    141.82
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1940 m, edge w552161980:277320063-1852155195"
+  },
+  {
+   "id": "au_r_s1960",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    75.103,
+    -468.399,
+    142.927
+   ],
+   "look_at": [
+    101.824,
+    -482.036,
+    142.178
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1960 m, edge w552161980:277320063-1852155195"
+  },
+  {
+   "id": "au_r_s1980",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    92.917,
+    -477.49,
+    143.306
+   ],
+   "look_at": [
+    119.435,
+    -491.512,
+    142.417
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1980 m, edge w552161980:277320063-1852155195"
+  },
+  {
+   "id": "au_r_s2000",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    110.652,
+    -486.731,
+    143.592
+   ],
+   "look_at": [
+    137.0,
+    -501.076,
+    142.628
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2000 m, edge w552161979:1852155195-1852155193"
+  },
+  {
+   "id": "au_r_s2020",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    128.218,
+    -496.294,
+    143.824
+   ],
+   "look_at": [
+    154.566,
+    -510.639,
+    142.793
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2020 m, edge w552161979:1852155195-1852155193"
+  },
+  {
+   "id": "au_r_s2040",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    145.783,
+    -505.857,
+    143.982
+   ],
+   "look_at": [
+    172.131,
+    -520.202,
+    142.981
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2040 m, edge w552161979:1852155195-1852155193"
+  },
+  {
+   "id": "au_r_s2060",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    163.348,
+    -515.421,
+    144.162
+   ],
+   "look_at": [
+    189.728,
+    -529.706,
+    143.138
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2060 m, edge w552161979:1852155195-1852155193"
+  },
+  {
+   "id": "au_r_s2080",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    180.914,
+    -524.984,
+    144.327
+   ],
+   "look_at": [
+    206.1,
+    -539.446,
+    143.309
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2080 m, edge w552161979:1852155195-1852155193"
+  },
+  {
+   "id": "au_r_s2100",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    198.564,
+    -534.389,
+    144.555
+   ],
+   "look_at": [
+    223.861,
+    -548.64,
+    143.483
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2100 m, edge w439076941:1852155193-1852155191"
+  },
+  {
+   "id": "au_r_s2120",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    214.98,
+    -544.043,
+    144.738
+   ],
+   "look_at": [
+    241.622,
+    -557.834,
+    143.538
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2120 m, edge w266084694:1852155191-1882690750"
+  },
+  {
+   "id": "au_r_s2140",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    232.742,
+    -553.237,
+    144.785
+   ],
+   "look_at": [
+    259.384,
+    -567.028,
+    143.471
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2140 m, edge w266084694:1852155191-1882690750"
+  },
+  {
+   "id": "au_r_s2160",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    250.503,
+    -562.431,
+    144.79
+   ],
+   "look_at": [
+    277.145,
+    -576.222,
+    143.268
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2160 m, edge w266084694:1852155191-1882690750"
+  },
+  {
+   "id": "au_r_s2180",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    268.265,
+    -571.625,
+    144.668
+   ],
+   "look_at": [
+    294.907,
+    -585.417,
+    143.101
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2180 m, edge w266084694:1852155191-1882690750"
+  },
+  {
+   "id": "au_r_s2200",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    286.026,
+    -580.82,
+    144.449
+   ],
+   "look_at": [
+    309.134,
+    -594.263,
+    142.862
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2200 m, edge w266084694:1852155191-1882690750, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s2220",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    301.656,
+    -587.637,
+    144.338
+   ],
+   "look_at": [
+    325.396,
+    -605.881,
+    142.481
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2220 m, edge w177876102:1882690750-5749429981, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s2240",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    317.13,
+    -600.254,
+    143.978
+   ],
+   "look_at": [
+    341.916,
+    -617.155,
+    142.193
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2240 m, edge w177876102:1882690750-5749429981"
+  },
+  {
+   "id": "au_r_s2260",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    333.663,
+    -611.509,
+    143.628
+   ],
+   "look_at": [
+    358.431,
+    -628.434,
+    141.922
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2260 m, edge w177876102:1882690750-5749429981"
+  },
+  {
+   "id": "au_r_s2280",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    350.157,
+    -622.82,
+    143.376
+   ],
+   "look_at": [
+    375.41,
+    -639.003,
+    141.644
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2280 m, edge w177876102:1882690750-5749429981"
+  },
+  {
+   "id": "au_r_s2300",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    366.913,
+    -633.73,
+    143.101
+   ],
+   "look_at": [
+    390.165,
+    -649.916,
+    141.336
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2300 m, edge w177876102:1882690750-5749429981"
+  },
+  {
+   "id": "au_r_s2320",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    381.537,
+    -644.86,
+    142.77
+   ],
+   "look_at": [
+    407.439,
+    -659.995,
+    140.989
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2320 m, edge w606396459:5749429981-1882953825"
+  },
+  {
+   "id": "au_r_s2340",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    398.792,
+    -654.972,
+    142.481
+   ],
+   "look_at": [
+    424.93,
+    -669.694,
+    140.764
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2340 m, edge w606396459:5749429981-1882953825"
+  },
+  {
+   "id": "au_r_s2360",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    416.184,
+    -664.844,
+    142.159
+   ],
+   "look_at": [
+    442.419,
+    -679.396,
+    140.62
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2360 m, edge w606396459:5749429981-1882953825"
+  },
+  {
+   "id": "au_r_s2380",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    433.675,
+    -674.544,
+    141.977
+   ],
+   "look_at": [
+    460.017,
+    -688.898,
+    140.735
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2380 m, edge w606396459:5749429981-1882953825"
+  },
+  {
+   "id": "au_r_s2400",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    451.202,
+    -684.176,
+    141.994
+   ],
+   "look_at": [
+    477.646,
+    -698.343,
+    140.829
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2400 m, edge w606396459:5749429981-1882953825"
+  },
+  {
+   "id": "au_r_s2420",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    468.832,
+    -693.621,
+    142.073
+   ],
+   "look_at": [
+    495.276,
+    -707.788,
+    140.832
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2420 m, edge w606396459:5749429981-1882953825"
+  },
+  {
+   "id": "au_r_s2440",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    486.461,
+    -703.066,
+    142.152
+   ],
+   "look_at": [
+    512.905,
+    -717.233,
+    140.72
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2440 m, edge w606396459:5749429981-1882953825"
+  },
+  {
+   "id": "au_r_s2460",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    504.09,
+    -712.511,
+    142.121
+   ],
+   "look_at": [
+    530.679,
+    -726.401,
+    140.602
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2460 m, edge w606396459:5749429981-1882953825"
+  },
+  {
+   "id": "au_r_s2480",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    521.764,
+    -721.871,
+    141.912
+   ],
+   "look_at": [
+    543.103,
+    -738.711,
+    140.671
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2480 m, edge w606396459:5749429981-1882953825"
+  },
+  {
+   "id": "au_r_s2500",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    535.4,
+    -732.474,
+    141.891
+   ],
+   "look_at": [
+    562.469,
+    -740.267,
+    140.8
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2500 m, edge w552161978:1882953825-1882953821"
+  },
+  {
+   "id": "au_r_s2520",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    552.622,
+    -741.571,
+    142.042
+   ],
+   "look_at": [
+    577.121,
+    -727.521,
+    140.94
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2520 m, edge w536419680:1882953821-1882953792"
+  },
+  {
+   "id": "au_r_s2540",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    571.044,
+    -735.354,
+    142.181
+   ],
+   "look_at": [
+    578.223,
+    -708.115,
+    140.993
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2540 m, edge w177895161:1882953794-1882953865"
+  },
+  {
+   "id": "au_r_s2560",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    579.558,
+    -717.941,
+    142.319
+   ],
+   "look_at": [
+    575.444,
+    -694.016,
+    140.826
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2560 m, edge w177895161:1882953794-1882953865"
+  },
+  {
+   "id": "au_r_s2580",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    573.103,
+    -699.624,
+    142.202
+   ],
+   "look_at": [
+    584.741,
+    -676.338,
+    140.916
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2580 m, edge w553285004:1882953865-1882953869"
+  },
+  {
+   "id": "au_r_s2600",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    579.833,
+    -685.05,
+    142.149
+   ],
+   "look_at": [
+    594.155,
+    -658.692,
+    141.122
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2600 m, edge w177895178:1882953869-1882953937"
+  },
+  {
+   "id": "au_r_s2620",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    589.439,
+    -667.51,
+    142.34
+   ],
+   "look_at": [
+    602.328,
+    -641.55,
+    141.436
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2620 m, edge w177895178:1882953869-1882953937"
+  },
+  {
+   "id": "au_r_s2640",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    598.945,
+    -649.914,
+    142.596
+   ],
+   "look_at": [
+    611.043,
+    -624.056,
+    141.64
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2640 m, edge w188397871:1882953937-1882954015"
+  },
+  {
+   "id": "au_r_s2660",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    606.509,
+    -632.966,
+    142.851
+   ],
+   "look_at": [
+    619.469,
+    -605.929,
+    141.881
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2660 m, edge w188397866:1882954015-1882887381"
+  },
+  {
+   "id": "au_r_s2680",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    615.44,
+    -615.074,
+    143.063
+   ],
+   "look_at": [
+    626.948,
+    -587.38,
+    142.125
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2680 m, edge w188397866:1882954015-1882887381"
+  },
+  {
+   "id": "au_r_s2700",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    623.209,
+    -596.654,
+    143.348
+   ],
+   "look_at": [
+    637.116,
+    -571.889,
+    142.314
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2700 m, edge w188397866:1882954015-1882887381"
+  },
+  {
+   "id": "au_r_s2720",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    632.219,
+    -580.608,
+    143.509
+   ],
+   "look_at": [
+    646.91,
+    -554.451,
+    142.52
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2720 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_r_s2740",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    642.013,
+    -563.17,
+    143.728
+   ],
+   "look_at": [
+    656.382,
+    -536.837,
+    142.593
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2740 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_r_s2760",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    651.679,
+    -545.662,
+    143.952
+   ],
+   "look_at": [
+    665.789,
+    -519.187,
+    142.536
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2760 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_r_s2780",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    661.086,
+    -528.012,
+    143.841
+   ],
+   "look_at": [
+    675.196,
+    -501.538,
+    142.44
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2780 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_r_s2800",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    670.493,
+    -510.363,
+    143.795
+   ],
+   "look_at": [
+    684.629,
+    -483.902,
+    142.303
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2800 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_r_s2820",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    679.899,
+    -492.713,
+    143.68
+   ],
+   "look_at": [
+    694.144,
+    -466.31,
+    142.292
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2820 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_r_s2840",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    689.386,
+    -475.106,
+    143.529
+   ],
+   "look_at": [
+    703.659,
+    -448.719,
+    142.349
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2840 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_r_s2860",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    698.901,
+    -457.515,
+    143.616
+   ],
+   "look_at": [
+    713.348,
+    -431.223,
+    142.471
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2860 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_r_s2880",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    708.442,
+    -439.937,
+    143.71
+   ],
+   "look_at": [
+    723.158,
+    -413.795,
+    142.606
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2880 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_r_s2900",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    718.253,
+    -422.509,
+    143.793
+   ],
+   "look_at": [
+    732.969,
+    -396.366,
+    142.735
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2900 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_r_s2920",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    728.064,
+    -405.08,
+    143.922
+   ],
+   "look_at": [
+    737.874,
+    -387.652,
+    142.881
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=2920 m, edge w188397874:1882887381-391997446"
+  },
+  {
+   "id": "au_rl_s0000",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -737.781,
+    693.219,
+    148.338
+   ],
+   "look_at": [
+    -755.829,
+    717.176,
+    147.437
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=0 m, edge w197904077:4075461403-2285127441"
+  },
+  {
+   "id": "au_rl_s0040",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -761.663,
+    725.297,
+    148.87
+   ],
+   "look_at": [
+    -777.785,
+    750.585,
+    147.957
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=40 m, edge w197904077:4075461403-2285127441"
+  },
+  {
+   "id": "au_rl_s0080",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -782.557,
+    759.372,
+    149.332
+   ],
+   "look_at": [
+    -796.087,
+    786.137,
+    148.189
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=80 m, edge w197904077:4075461403-2285127441"
+  },
+  {
+   "id": "au_rl_s0120",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -800.248,
+    795.228,
+    149.469
+   ],
+   "look_at": [
+    -811.413,
+    823.067,
+    148.087
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=120 m, edge w265888515:2285127441-2256069809"
+  },
+  {
+   "id": "au_rl_s0160",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -814.709,
+    832.507,
+    149.339
+   ],
+   "look_at": [
+    -822.977,
+    861.103,
+    148.007
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=160 m, edge w265888515:2285127441-2256069809"
+  },
+  {
+   "id": "au_rl_s0240",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -821.3,
+    825.315,
+    149.131
+   ],
+   "look_at": [
+    -810.224,
+    797.453,
+    147.478
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=240 m, edge w771649420:2256069832-2081020087"
+  },
+  {
+   "id": "au_rl_s0280",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -806.293,
+    788.258,
+    148.674
+   ],
+   "look_at": [
+    -793.475,
+    761.15,
+    147.061
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=280 m, edge w771649420:2256069832-2081020087"
+  },
+  {
+   "id": "au_rl_s0320",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -788.685,
+    752.372,
+    148.247
+   ],
+   "look_at": [
+    -773.462,
+    726.534,
+    146.604
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=320 m, edge w265888514:2081020087-2256069834"
+  },
+  {
+   "id": "au_rl_s0360",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -767.882,
+    718.236,
+    147.765
+   ],
+   "look_at": [
+    -750.188,
+    694.016,
+    146.07
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=360 m, edge w265888514:2081020087-2256069834"
+  },
+  {
+   "id": "au_rl_s0400",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -744.138,
+    686.054,
+    147.213
+   ],
+   "look_at": [
+    -725.083,
+    662.884,
+    145.509
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=400 m, edge w265888514:2081020087-2256069834"
+  },
+  {
+   "id": "au_rl_s0440",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -718.723,
+    655.167,
+    146.68
+   ],
+   "look_at": [
+    -699.589,
+    632.061,
+    138.066
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=440 m, edge w265888514:2081020087-2256069834, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_rl_s0480",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -693.184,
+    624.381,
+    139.666
+   ],
+   "look_at": [
+    -674.076,
+    601.254,
+    144.454
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=480 m, edge w882366264:2256069834-2081020083, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_rl_s0520",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -667.756,
+    593.505,
+    157.585
+   ],
+   "look_at": [
+    -648.876,
+    570.191,
+    155.838
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=520 m, edge w197904073:2081020083-2081020081, bridge:on"
+  },
+  {
+   "id": "au_rl_s0560",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -642.687,
+    562.338,
+    145.007
+   ],
+   "look_at": [
+    -625.648,
+    537.663,
+    143.211
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=560 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_rl_s0600",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -620.246,
+    529.248,
+    144.366
+   ],
+   "look_at": [
+    -605.446,
+    503.169,
+    142.555
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=600 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_rl_s0640",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -600.864,
+    494.282,
+    143.663
+   ],
+   "look_at": [
+    -588.458,
+    466.982,
+    141.878
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=640 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_rl_s0680",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -584.734,
+    457.701,
+    142.978
+   ],
+   "look_at": [
+    -574.599,
+    429.476,
+    141.191
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=680 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_rl_s0720",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -571.704,
+    419.907,
+    142.331
+   ],
+   "look_at": [
+    -564.267,
+    390.849,
+    140.615
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=720 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_rl_s0760",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -562.078,
+    381.091,
+    141.799
+   ],
+   "look_at": [
+    -557.037,
+    351.544,
+    140.106
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=760 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_rl_s0800",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -555.947,
+    341.603,
+    141.3
+   ],
+   "look_at": [
+    -553.737,
+    311.693,
+    139.581
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=800 m, edge w197904079:2081020081-8205694665"
+  },
+  {
+   "id": "au_rl_s0840",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -553.364,
+    301.7,
+    140.757
+   ],
+   "look_at": [
+    -551.271,
+    273.469,
+    139.232
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=840 m, edge w882366262:8205694665-2460796468"
+  },
+  {
+   "id": "au_rl_s0880",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -551.493,
+    263.472,
+    140.373
+   ],
+   "look_at": [
+    -552.159,
+    233.479,
+    138.687
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=880 m, edge w266084696:2440731892-2466608894"
+  },
+  {
+   "id": "au_rl_s0920",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -552.381,
+    223.481,
+    139.861
+   ],
+   "look_at": [
+    -553.311,
+    193.496,
+    138.101
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=920 m, edge w266084696:2440731892-2466608894"
+  },
+  {
+   "id": "au_rl_s0960",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -553.755,
+    183.506,
+    139.266
+   ],
+   "look_at": [
+    -555.694,
+    153.573,
+    137.514
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=960 m, edge w266084696:2440731892-2466608894"
+  },
+  {
+   "id": "au_rl_s1000",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -556.728,
+    143.626,
+    138.676
+   ],
+   "look_at": [
+    -561.785,
+    114.656,
+    136.952
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1000 m, edge w266084696:2440731892-2466608894"
+  },
+  {
+   "id": "au_rl_s1040",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -563.726,
+    104.847,
+    138.182
+   ],
+   "look_at": [
+    -570.376,
+    76.671,
+    136.902
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1040 m, edge w266084696:2466608894-1847044961"
+  },
+  {
+   "id": "au_rl_s1080",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -572.311,
+    66.861,
+    138.219
+   ],
+   "look_at": [
+    -574.662,
+    36.976,
+    136.381
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1080 m, edge w302573219:1847044961-3890183128"
+  },
+  {
+   "id": "au_rl_s1120",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -574.718,
+    26.976,
+    137.458
+   ],
+   "look_at": [
+    -570.477,
+    1.754,
+    135.601
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1120 m, edge w257367425:3890183128-2629251364, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_rl_s1160",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -562.04,
+    -3.608,
+    136.752
+   ],
+   "look_at": [
+    -538.315,
+    -21.932,
+    134.838
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1160 m, edge w180144451:2629251364-4075461271, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_rl_s1240",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -502.351,
+    -49.761,
+    135.259
+   ],
+   "look_at": [
+    -478.939,
+    -68.519,
+    133.296
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1240 m, edge w268473387:1847044945-1847263308"
+  },
+  {
+   "id": "au_rl_s1280",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -471.135,
+    -74.771,
+    134.4
+   ],
+   "look_at": [
+    -448.023,
+    -93.561,
+    132.462
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1280 m, edge w268473387:1847044945-1847263308, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_rl_s1320",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -441.307,
+    -99.904,
+    133.671
+   ],
+   "look_at": [
+    -418.45,
+    -119.311,
+    132.453
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1320 m, edge w268473388:1847263308-1847263303"
+  },
+  {
+   "id": "au_rl_s1360",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -411.04,
+    -126.027,
+    133.819
+   ],
+   "look_at": [
+    -386.659,
+    -143.444,
+    132.705
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1360 m, edge w268473388:1847263308-1847263303"
+  },
+  {
+   "id": "au_rl_s1400",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -378.042,
+    -148.517,
+    134.035
+   ],
+   "look_at": [
+    -350.85,
+    -158.699,
+    132.44
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1400 m, edge w268473388:1847263303-1847044938, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_rl_s1440",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -342.198,
+    -162.0,
+    133.598
+   ],
+   "look_at": [
+    -318.691,
+    -180.64,
+    131.719
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1440 m, edge w560802655:1847044938-12620261936, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_rl_s1480",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -310.856,
+    -186.853,
+    132.883
+   ],
+   "look_at": [
+    -287.352,
+    -205.496,
+    131.399
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1480 m, edge w560802655:1847044938-12620261936"
+  },
+  {
+   "id": "au_rl_s1520",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -279.518,
+    -211.711,
+    132.663
+   ],
+   "look_at": [
+    -255.209,
+    -229.278,
+    131.495
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1520 m, edge w560802655:1847044938-12620261936"
+  },
+  {
+   "id": "au_rl_s1560",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -247.032,
+    -235.034,
+    132.891
+   ],
+   "look_at": [
+    -223.006,
+    -252.985,
+    132.03
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1560 m, edge w560802655:12620261936-1946476472"
+  },
+  {
+   "id": "au_rl_s1600",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -215.223,
+    -259.265,
+    133.504
+   ],
+   "look_at": [
+    -191.877,
+    -278.106,
+    132.874
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1600 m, edge w560802655:12620261936-1946476472"
+  },
+  {
+   "id": "au_rl_s1640",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -184.095,
+    -284.385,
+    134.404
+   ],
+   "look_at": [
+    -160.696,
+    -303.16,
+    133.888
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1640 m, edge w266084684:1946476472-4103450292"
+  },
+  {
+   "id": "au_rl_s1680",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -152.896,
+    -309.418,
+    135.471
+   ],
+   "look_at": [
+    -129.497,
+    -328.192,
+    135.069
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1680 m, edge w266084684:1946476472-4103450292"
+  },
+  {
+   "id": "au_rl_s1720",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -121.697,
+    -334.45,
+    136.661
+   ],
+   "look_at": [
+    -98.211,
+    -353.116,
+    136.228
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1720 m, edge w266084684:1946476472-4103450292"
+  },
+  {
+   "id": "au_rl_s1760",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -90.369,
+    -359.321,
+    137.845
+   ],
+   "look_at": [
+    -66.819,
+    -377.904,
+    137.46
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1760 m, edge w266084684:1946476472-4103450292"
+  },
+  {
+   "id": "au_rl_s1800",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -58.832,
+    -383.922,
+    139.066
+   ],
+   "look_at": [
+    -34.522,
+    -401.483,
+    138.636
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1800 m, edge w560802656:4103450292-277320063"
+  },
+  {
+   "id": "au_rl_s1840",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -26.225,
+    -407.066,
+    140.221
+   ],
+   "look_at": [
+    -2.191,
+    -423.004,
+    139.664
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1840 m, edge w560802656:4103450292-277320063"
+  },
+  {
+   "id": "au_rl_s1880",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    6.451,
+    -428.034,
+    141.213
+   ],
+   "look_at": [
+    32.652,
+    -442.628,
+    140.7
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1880 m, edge w552161980:277320063-1852155195"
+  },
+  {
+   "id": "au_rl_s1920",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    41.533,
+    -447.226,
+    142.244
+   ],
+   "look_at": [
+    68.209,
+    -460.951,
+    141.576
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1920 m, edge w552161980:277320063-1852155195"
+  },
+  {
+   "id": "au_rl_s1960",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    77.116,
+    -465.497,
+    143.018
+   ],
+   "look_at": [
+    103.837,
+    -479.134,
+    142.255
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=1960 m, edge w552161980:277320063-1852155195"
+  },
+  {
+   "id": "au_rl_s2000",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    112.66,
+    -483.84,
+    143.697
+   ],
+   "look_at": [
+    139.008,
+    -498.184,
+    142.668
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=2000 m, edge w552161979:1852155195-1852155193"
+  },
+  {
+   "id": "au_rl_s2040",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    147.791,
+    -502.966,
+    144.082
+   ],
+   "look_at": [
+    174.139,
+    -517.311,
+    143.055
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=2040 m, edge w552161979:1852155195-1852155193"
+  },
+  {
+   "id": "au_rl_s2080",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    182.922,
+    -522.092,
+    144.441
+   ],
+   "look_at": [
+    209.001,
+    -534.754,
+    143.423
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=2080 m, edge w552161979:1852155195-1852155193"
+  },
+  {
+   "id": "au_rl_s2120",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    217.882,
+    -539.351,
+    144.827
+   ],
+   "look_at": [
+    244.524,
+    -553.143,
+    143.677
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=2120 m, edge w266084694:1852155191-1882690750"
+  },
+  {
+   "id": "au_rl_s2160",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    253.404,
+    -557.74,
+    144.937
+   ],
+   "look_at": [
+    280.047,
+    -571.531,
+    143.386
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=2160 m, edge w266084694:1852155191-1882690750"
+  },
+  {
+   "id": "au_rl_s2200",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    288.927,
+    -576.128,
+    144.607
+   ],
+   "look_at": [
+    309.46,
+    -594.527,
+    142.859
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=2200 m, edge w266084694:1852155191-1882690750, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_rl_s2320",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    383.669,
+    -642.053,
+    142.842
+   ],
+   "look_at": [
+    409.576,
+    -657.178,
+    141.068
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=2320 m, edge w606396459:5749429981-1882953825"
+  },
+  {
+   "id": "au_rl_s2360",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    418.322,
+    -662.027,
+    142.215
+   ],
+   "look_at": [
+    444.556,
+    -676.579,
+    140.706
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=2360 m, edge w606396459:5749429981-1882953825"
+  },
+  {
+   "id": "au_rl_s2400",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    453.343,
+    -681.352,
+    142.056
+   ],
+   "look_at": [
+    479.787,
+    -695.52,
+    140.888
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=2400 m, edge w606396459:5749429981-1882953825, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_rl_s2440",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    488.602,
+    -700.242,
+    142.223
+   ],
+   "look_at": [
+    515.046,
+    -714.41,
+    140.751
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=2440 m, edge w606396459:5749429981-1882953825"
+  },
+  {
+   "id": "au_rl_s2480",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    523.91,
+    -719.036,
+    142.016
+   ],
+   "look_at": [
+    547.205,
+    -736.64,
+    140.753
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=2480 m, edge w606396459:5749429981-1882953825"
+  },
+  {
+   "id": "au_rl_s2520",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    556.983,
+    -738.029,
+    142.13
+   ],
+   "look_at": [
+    576.087,
+    -718.099,
+    141.069
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=2520 m, edge w553285005:1882953792-1882953794"
+  },
+  {
+   "id": "au_rl_s2560",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    574.655,
+    -708.289,
+    142.344
+   ],
+   "look_at": [
+    577.688,
+    -681.733,
+    140.921
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=2560 m, edge w177895161:1882953794-1882953865"
+  },
+  {
+   "id": "au_rl_s2600",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    582.604,
+    -673.024,
+    142.321
+   ],
+   "look_at": [
+    597.214,
+    -646.824,
+    141.359
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse left lane s=2600 m, edge w177895178:1882953869-1882953937"
+  },
+  {
+   "id": "au_top_n1882887381",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    627.592,
+    -585.783,
+    185.933
+   ],
+   "look_at": [
+    627.592,
+    -585.283,
+    140.933
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n1882887381"
+  },
+  {
+   "id": "au_top_n1882954023",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    593.876,
+    -637.036,
+    185.197
+   ],
+   "look_at": [
+    593.876,
+    -636.536,
+    140.197
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n1882954023"
+  },
+  {
+   "id": "au_top_n1882953956",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    574.417,
+    -670.831,
+    184.746
+   ],
+   "look_at": [
+    574.417,
+    -670.331,
+    139.746
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n1882953956"
+  },
+  {
+   "id": "au_top_n4391371827",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    346.755,
+    -590.592,
+    185.818
+   ],
+   "look_at": [
+    346.755,
+    -590.092,
+    140.818
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n4391371827"
+  },
+  {
+   "id": "au_top_n3341716402",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    307.04,
+    -573.672,
+    186.512
+   ],
+   "look_at": [
+    307.04,
+    -573.172,
+    141.512
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n3341716402"
+  },
+  {
+   "id": "au_top_n1882690822",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    81.178,
+    -454.167,
+    185.317
+   ],
+   "look_at": [
+    81.178,
+    -453.667,
+    140.317
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n1882690822"
+  },
+  {
+   "id": "au_top_n131612943",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -59.567,
+    -370.166,
+    181.155
+   ],
+   "look_at": [
+    -59.567,
+    -369.666,
+    136.155
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n131612943"
+  },
+  {
+   "id": "au_top_n1852176912",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -115.958,
+    -326.693,
+    179.059
+   ],
+   "look_at": [
+    -115.958,
+    -326.193,
+    134.059
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n1852176912"
+  },
+  {
+   "id": "au_top_n2359253621",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -217.518,
+    -245.849,
+    175.656
+   ],
+   "look_at": [
+    -217.518,
+    -245.349,
+    130.656
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n2359253621"
+  },
+  {
+   "id": "au_top_n12620261934",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -292.574,
+    -185.619,
+    175.175
+   ],
+   "look_at": [
+    -292.574,
+    -185.119,
+    130.175
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n12620261934"
+  },
+  {
+   "id": "au_top_n2840742308",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -339.982,
+    -148.802,
+    176.184
+   ],
+   "look_at": [
+    -339.982,
+    -148.302,
+    131.184
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n2840742308"
+  },
+  {
+   "id": "au_top_n1852129066",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -467.793,
+    -15.245,
+    178.043
+   ],
+   "look_at": [
+    -467.793,
+    -14.745,
+    133.043
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n1852129066"
+  },
+  {
+   "id": "au_top_n2466608897",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -547.007,
+    87.598,
+    180.664
+   ],
+   "look_at": [
+    -547.007,
+    88.098,
+    135.664
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n2466608897"
+  },
+  {
+   "id": "au_top_n2466608891",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -546.631,
+    126.468,
+    180.99
+   ],
+   "look_at": [
+    -546.631,
+    126.968,
+    135.99
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n2466608891"
+  },
+  {
+   "id": "au_top_n2256069809",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -821.651,
+    861.064,
+    191.758
+   ],
+   "look_at": [
+    -821.651,
+    861.564,
+    146.758
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n2256069809"
+  },
+  {
+   "id": "au_top_n2460796468",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -554.755,
+    295.382,
+    183.115
+   ],
+   "look_at": [
+    -554.755,
+    295.882,
+    138.115
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n2460796468"
+  },
+  {
+   "id": "au_top_n3890183128",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -574.513,
+    63.521,
+    180.666
+   ],
+   "look_at": [
+    -574.513,
+    64.021,
+    135.666
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n3890183128"
+  },
+  {
+   "id": "au_top_n4075461271",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -537.885,
+    -24.547,
+    178.566
+   ],
+   "look_at": [
+    -537.885,
+    -24.047,
+    133.566
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n4075461271"
+  },
+  {
+   "id": "au_top_n1847044945",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -507.404,
+    -49.236,
+    177.747
+   ],
+   "look_at": [
+    -507.404,
+    -48.736,
+    132.747
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n1847044945"
+  },
+  {
+   "id": "au_top_n1847263308",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -449.608,
+    -95.542,
+    176.23
+   ],
+   "look_at": [
+    -449.608,
+    -95.042,
+    131.23
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n1847263308"
+  },
+  {
+   "id": "au_top_n277320063",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -18.972,
+    -415.26,
+    182.915
+   ],
+   "look_at": [
+    -18.972,
+    -414.76,
+    137.915
+   ],
+   "fov_deg": 65.0,
+   "note": "audit r9 top-down over n277320063"
+  },
+  {
+   "id": "au_top_ring_bieżeństwa",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    554.676,
+    -716.554,
+    185.85
+   ],
+   "look_at": [
+    554.676,
+    -716.054,
+    140.85
+   ],
+   "fov_deg": 80.0,
+   "note": "audit r9 top-down over ring_bieżeństwa"
+  },
+  {
+   "id": "au_top_ring_putry",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -554.253,
+    21.455,
+    180.178
+   ],
+   "look_at": [
+    -554.253,
+    21.955,
+    135.178
+   ],
+   "fov_deg": 80.0,
+   "note": "audit r9 top-down over ring_putry"
+  }
+ ]
+}
