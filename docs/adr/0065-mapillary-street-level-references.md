@@ -10,7 +10,7 @@ Tiles pozostają zakazane (także zrzuty z Gemini).
 ## Decyzja
 - Narzędzie `tools/refs/mapillary_fetch.py` pobiera z Mapillary Graph API v4 (`graph.mapillary.com/images`) miniatury
   `thumb_2048_url` wraz z metadanymi (autor, data, azymut, geometria, sekwencja, flaga pano).
-- Token wyłącznie ze zmiennej środowiskowej `MAPILLARY_TOKEN`, wysyłany nagłówkiem `Authorization`; nie trafia do repo,
+- Token ze zmiennej środowiskowej `MAPILLARY_TOKEN`, a gdy jej brak z `%USERPROFILE%\.kamion\secrets.env` (poza repo), wysyłany nagłówkiem `Authorization`; nie trafia do repo,
   logów, argumentów ani manifestu. Brak tokenu daje czytelny błąd z instrukcją dla właściciela.
 - Dane surowe w `Data/raw/mapillary/<region>/` (poza gitem, jak inne surowe źródła), z `manifest.jsonl` (URL strony,
   autor, data, SHA256, licencja). Zapytania: kafle bbox <= 0,01 deg2, opóźnienie, backoff, cache, `--max`, panoramy

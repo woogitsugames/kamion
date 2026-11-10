@@ -3,9 +3,7 @@
 Pobiera zdjęcia uliczne z Mapillary API v4 (CC BY-SA 4.0, decyzja D42, ADR 0065) jako REFERENCJĘ: wzór, dopasowanie
 kadru, kalibracja koloru. Google Maps/Street View/Earth: zakaz. Zdjęcia surowe: `Data/raw/mapillary/<region>/` (poza gitem).
 
-Token tylko ze zmiennej środowiskowej (brak tokenu = komunikat z instrukcją dla właściciela):
-
-    $env:MAPILLARY_TOKEN = '<Client Token z mapillary.com/dashboard/developers>'
+Token: zmienna środowiskowa `MAPILLARY_TOKEN`, a gdy jej brak linia `MAPILLARY_TOKEN=...` w `%USERPROFILE%\.kamion\secrets.env` (poza repo). Brak = komunikat z instrukcją dla właściciela. Token z mapillary.com/dashboard/developers.
 
 Komendy (z korzenia repo):
 

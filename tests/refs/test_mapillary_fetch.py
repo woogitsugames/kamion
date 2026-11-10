@@ -81,9 +81,10 @@ def args(tmp_path, **kw):
 
 def test_missing_token_is_readable_error(monkeypatch, tmp_path):
     monkeypatch.delenv("MAPILLARY_TOKEN", raising=False)
+    monkeypatch.setattr(mf, "SECRETS_ENV", tmp_path / "absent.env")
     with pytest.raises(SystemExit) as e:
         mf.run(args(tmp_path))
-    assert "MAPILLARY_TOKEN" in str(e.value) and "developers" in str(e.value)
+    assert "MAPILLARY_TOKEN" in str(e.value) and "secrets.env" in str(e.value)
     with pytest.raises(mf.MapillaryError):
         mf.MapillaryClient("")
 
@@ -217,3 +218,18 @@ def test_latest_game_frame(tmp_path):
     os.utime(tmp_path / "20260101" / "S24" / "cam" / "camN.png", (1, 1))
     assert "20260102" in str(mf.latest_game_frame("camN", tmp_path))
     assert mf.latest_game_frame("nope", tmp_path) is None
+
+
+def test_token_resolution_env_then_secrets_file(tmp_path):
+    f = tmp_path / "secrets.env"
+    f.write_text("# comment
+
+OTHER=1
+MAPILLARY_TOKEN = \"MLY|fromfile\"
+", encoding="utf-8")
+    assert mf.resolve_token({}, f) == "MLY|fromfile"
+    assert mf.resolve_token({"MAPILLARY_TOKEN": "MLY|env"}, f) == "MLY|env"   # env wins
+    f.write_text("MAPILLARY_TOKEN=
+", encoding="utf-8")                       # empty value = none
+    assert mf.resolve_token({}, f) == ""
+    assert mf.resolve_token({}, tmp_path / "missing.env") == ""

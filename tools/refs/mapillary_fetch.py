@@ -1,7 +1,7 @@
 """Mapillary street-level reference fetcher (Graph API v4, CC BY-SA 4.0; owner decision D42, ADR 0065).
 
 Mapillary images are REFERENCE only (pattern, framing match, colour calibration). Google imagery stays banned.
-Token: environment variable MAPILLARY_TOKEN only (sent as an Authorization header; never logged, never in argv).
+Token: env MAPILLARY_TOKEN, else %USERPROFILE%\.kamion\secrets.env line MAPILLARY_TOKEN=... (sent as an Authorization header; never logged, never in argv).
 
 Examples (repo root):
   uv run --project tools/refs python tools/refs/mapillary_fetch.py --region bialystok-industrial-c --max 200
@@ -32,13 +32,51 @@ PAGE_LIMIT = 2000
 MIN_INTERVAL_S = 0.15
 USER_AGENT = "truck-sim-refs/0.1 (offline reference tooling)"
 
+SECRETS_ENV = Path(os.environ.get("USERPROFILE") or Path.home()) / ".kamion" / "secrets.env"
+
 TOKEN_HELP = (
-    "MAPILLARY_TOKEN is not set.\n"
-    "Owner action: create a free Mapillary developer app at https://www.mapillary.com/dashboard/developers,\n"
-    "copy its 'Client Token' (starts with MLY|), then in PowerShell run:\n"
-    "    $env:MAPILLARY_TOKEN = '<token>'\n"
-    "The token is read only from this environment variable; it is never written to the repo, logs or arguments."
+    "MAPILLARY_TOKEN not found (environment variable or secrets file).
+"
+    "Owner action: create a free Mapillary developer app at https://www.mapillary.com/dashboard/developers,
+"
+    "copy its 'Client Token' (starts with MLY|) and add this line to %USERPROFILE%\.kamion\secrets.env
+"
+    "(outside the repo; typically C:\Users\<you>\.kamion\secrets.env):
+"
+    "    MAPILLARY_TOKEN=<token>
+"
+    "Alternatively set the environment variable MAPILLARY_TOKEN (it takes precedence).
+"
+    "The token is never written to the repo, logs, manifests or arguments."
 )
+
+
+def read_secrets_env(path: Path) -> dict:
+    """Minimal KEY=VALUE parser: skips blank lines and # comments, strips optional quotes."""
+    out = {}
+    try:
+        text = Path(path).read_text(encoding="utf-8-sig")
+    except OSError:
+        return out
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        k, v = line.split("=", 1)
+        k, v = k.strip(), v.strip()
+        if len(v) >= 2 and v[0] == v[-1] and v[0] in "\"'":
+            v = v[1:-1]
+        out[k] = v
+    return out
+
+
+def resolve_token(env=None, secrets_path: Path | None = None) -> str:
+    """Environment variable first, then secrets.env; empty string = no token."""
+    env = os.environ if env is None else env
+    tok = (env.get("MAPILLARY_TOKEN") or "").strip()
+    if tok:
+        return tok
+    return (read_secrets_env(secrets_path or SECRETS_ENV).get("MAPILLARY_TOKEN") or "").strip()
 
 
 class MapillaryError(RuntimeError):
@@ -364,7 +402,7 @@ def run(args, client=None, now=None):
     offline_only = (args.attribution or args.use or args.contact_sheet_only) and not args.fetch
     if not offline_only:
         if client is None:
-            token = os.environ.get("MAPILLARY_TOKEN", "").strip()
+            token = resolve_token()
             if not token:
                 raise SystemExit(TOKEN_HELP)
             client = MapillaryClient(token, cache_dir=outdir / ".cache")
