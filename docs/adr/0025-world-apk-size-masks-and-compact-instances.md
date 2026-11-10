@@ -36,9 +36,21 @@ visible change (mean |Δ| ≤ 0.18/255).
   visible in the first metres of road from the cab.
 - Unity mesh compression on world meshes: decompresses to float32 channels at load (SNorm8 normals → 12 B), more PSS.
 
-## Remaining levers for E6 (need a full region re-import, i.e. Data/raw glb chunks; not in this worktree)
-- Render-mesh positions UNorm16×4 per chunk (chunk offset + per-axis scale in the renderer transform; ≈ 4 mm in xz,
-  < 1 mm in y): −4 B/vertex ≈ −10 MB raw of 73.5.
-- Collision positions UNorm16 storage expanded before `Physics.BakeMesh` (WorldCollisionCooker): ≈ −4 MB raw.
+## Remaining levers for E6
+- Render-mesh positions UNorm16×4 per mesh AABB: **rejected on precision** (measured on the Low meshes, 2026-11-10):
+  worst rounding error = half a step; only 109 of 505 meshes stay ≤ 1 mm, median 1.95 mm, worst 4.57 mm
+  (`7_7_buildings_lod1`, 299 m extent). Meeting ≤ 1 mm needs ≤ 131 m renderers (more draw calls) or 24-bit positions.
+- Terrain collision (5.9 MB raw of 11.9) is the 65 × 65 4 m grid of `terrain_lod2` + 260 skirt vertices with a fixed
+  triangulation: a height grid (16.9 kB/chunk) rebuilt at load before `Physics.BakeMesh` would save ≈ 5 MB raw; not
+  done (needs the glb vertex order mapped and a vehicle-physics check of the collider).
+- Collision positions UNorm16 storage expanded before `Physics.BakeMesh`: ≈ −3 MB raw of 6.5 MB positions; the same
+  1.95 mm median step at chunk scale, and per-chunk grids would open seams between chunk colliders unless snapped to
+  one region grid. Not done (needs a vehicle-physics review).
+- Impostor albedo atlases (since world v3.4, ADR 0023): 1536 × 384 imported with NPOT "to nearest" → 2048 × 512 ASTC
+  6x6, 614 kB each, 18 atlases = 11 MB raw (`world/Textures` 18.2 MB). Tried `npotScale = None`: Unity then stores
+  them uncompressed (3.0 MB each), reverted. Lever for world-builder: bake the atlases at 2048 × 512 (6 views × 341 px)
+  or 8 views × 256 = 2048 wide, or pack two trees per POT atlas.
+- Reproduction (2026-11-10, merged main 3e0f572, real `import-region.ps1 -Tiers Low` from Data/raw): MaskMap 1024²
+  341.5 kB → 85.5 kB in the build report, PBR 27.4 → 21.1 MB raw, Instances 10.6 MB raw.
 - Terrain as height grids rebuilt at load instead of three mesh LODs (terrain = 29 MB raw of the meshes).
 - Truck/trailer meshes (≈ 22.6 MB raw) are inside the measured share; the High tier as a Play Asset Delivery pack.
