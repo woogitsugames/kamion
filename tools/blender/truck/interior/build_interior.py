@@ -60,7 +60,7 @@ WHEEL_C = Vector((SEAT_X, 0.875, 2.12))        # steering-wheel centre
 BRAKE_PIVOT = Vector((SEAT_X + 0.07, 1.27, 1.86))    # pendant brake arm pivot (= export pivot PEDAL_Brake); r7b: y 1.33
 ACCEL_HINGE = Vector((SEAT_X + 0.235, 1.095, 1.42))  # organ pedal floor hinge (= export pivot PEDAL_Accel); r7b: y 1.16
 WHEEL_TILT = 38.0                              # rim plane vs horizontal (deg)
-WHEEL_R = 0.235                                # 470 mm diameter (class 450-500 mm)
+WHEEL_R = 0.235                                # rim centre line 470 mm, 499 mm over the leather (WORKING_VALUE, class 450-500 mm)
 RIM_R = (0.0175, 0.0145)                       # rim section half-axes: 35 x 29 mm
 TRIMS = {  # insert colour (linear albedo) — the only interior colour that changes with the brand
     "grafit": (0.050, 0.050, 0.053),
@@ -407,6 +407,11 @@ def build_materials(a):
     M.pbr("leather", (0.034, 0.033, 0.032), "leather", 0.12, nstr=1.0, wear=(0.26, 2.3), coat=0.0)
     # B2.2: rim leather has a soft satin sheen (hand oils), polished smoother at 10 and 2 o'clock
     M.pbr("leather_wheel", (0.030, 0.029, 0.028), "leather", 0.05, rough_mul=0.82, nstr=0.8, wear=(0.15, 2.1))
+    # r8: perforated grip leather on the rim sides (3 / 9 o'clock up to the cross seams), same hide
+    M.pbr("leather_wheel_perf", (0.030, 0.029, 0.028), "leather", 0.05, rough_mul=0.82, nstr=0.8,
+          wear=(0.15, 2.1), perforate=0.04)
+    # r8: hub wordmark embossed tone-on-tone (graphite satin, a step above the soft cover, not chrome)
+    M.simple("emboss", (0.120, 0.120, 0.124), rough=0.34)
     centre = (0.040, 0.039, 0.038) if a.trim == "grafit" else tuple(c * 0.85 for c in trim)
     M.pbr("leather_centre", centre, "leather", 0.12, nstr=0.7, perforate=0.04, wear=(0.34, 1.5))
     M.pbr("seat_fabric", tuple(c * 0.9 + 0.01 for c in trim), "seatfabric", 0.06, nstr=1.0, sheen=0.3)
@@ -451,6 +456,9 @@ def build_materials(a):
     # A6 r3: warm-grey thread, a step above the leather, not a white dotted line (critic r2 #5)
     M.decal("stitch", "stitch_rgba.png", (0.34, 0.31, 0.27), rough=0.7)
     M.decal("stitch_dark", "stitch_rgba.png", (0.27, 0.265, 0.25), rough=0.7)   # B2.2: thread reads on the rim
+    # r8: contrasting rim thread in the trim colour (koniak: tan), not a white dotted line
+    M.decal("stitch_wheel", "stitch_rgba.png", tuple(min(0.9, c * 6.0 + 0.02) for c in trim), rough=0.7)
+    M.simple("thread_wheel", tuple(min(0.9, c * 4.5 + 0.03) for c in trim), rough=0.8, spec=0.3)   # LOD0 stitches
     M.decal("icons", "icons_atlas.png", (0.80, 0.80, 0.76), rough=0.4, alpha_from="mask")
     M.decal("grille", "grille_mask.png", (0.02, 0.02, 0.02), rough=0.6, alpha_from="mask")
     M.decal("grille_dash", "grille_mask.png", (0.040, 0.041, 0.043), rough=0.65, alpha_from="mask")
@@ -1276,7 +1284,7 @@ def build_centre_stack():
 
 ICON_NAMES = ["low_beam", "fog_rear", "hazard", "diff_lock", "work_light", "beacon", "esp_off", "axle_lift",
               "ac", "fan", "defrost", "recirc", "seat_heat", "mirror_heat", "cab_light", "sun_blind",
-              "lane_assist", "idle_up", "ptos", "horn_air", "tyre", "eco", "hill", "blank",
+              "lane_assist", "idle_up", "ptos", "horn_air", "tyre", "eco", "hill", "cruise",
               "plus", "minus", "res", "ok", "arrow_l", "arrow_r", "phone", "vol"]
 
 
@@ -1382,54 +1390,156 @@ def wheel_frame():
 
 
 SPOKE_ANG = math.radians(-14.0)                 # side spokes dropped below 3/9 o'clock (opens the cluster window)
-HUB_DEPTH = -0.022                              # dish: hub face sits 22 mm behind the rim plane (towards the column)
+HUB_DEPTH = -0.026                              # dish: hub moulding datum 26 mm behind the rim plane (WORKING_VALUE)
+RIM_SEAM_B = math.pi - 0.62                     # long leather seam: inner side of the section, turned 35 deg to the driver
+RIM_XSEAM = (math.radians(54.0), math.radians(126.0))   # cross seams: perforated grip leather below, smooth above
 
 
 def hub_outline(scale=1.0, n=48):
-    """Hub / airbag cover plan shape: rounded shield, wider at the top (2-D, wheel plane: x = u, y = v)."""
+    """Airbag-cover plan shape: rounded trapezoid, 172 mm wide at the top, 124 mm at the bottom, 112 mm tall
+    (2-D, wheel plane: x = u, y = v). WORKING_VALUE (class: driver airbag module covers ~170-190 x 110-130 mm)."""
     pts = []
     for i in range(n):
         a = 2 * math.pi * i / n
         x, y = math.cos(a), math.sin(a)
-        w = 0.086 - 0.012 * max(0.0, -y)                       # narrower towards 6 o'clock
-        h = 0.066 if y > 0 else 0.060
-        r = (abs(x) ** 3.2 + abs(y) ** 3.2) ** (-1 / 3.2)       # superellipse: flat sides, crisp shoulders
-        pts.append((x * r * w * scale, y * r * h * scale - 0.004))
+        r = (abs(x) ** 3.4 + abs(y) ** 3.4) ** (-1 / 3.4)       # superellipse: flat sides, crisp shoulders
+        yn = y * r
+        w = 0.074 + 0.012 * yn                                  # slanted flanks: wider towards 12 o'clock
+        h = 0.058 if y > 0 else 0.054
+        pts.append((x * r * w * scale, yn * h * scale - 0.002))
     return pts
 
 
+def _dsec(w, tf, tb, crown=0.0015, rf=0.005, nf=3, nb=6, e=2.6):
+    """Closed spoke section (x across, y towards the driver, CCW): crowned front face at y = tf with rf edge radii,
+    back = half super-ellipse of depth tb (moulded shell, not a plank)."""
+    hw = w / 2
+    rf = min(rf, hw * 0.45, tf * 0.95)
+    pts = []
+    for i in range(nf + 1):
+        a = 0.5 * math.pi * i / nf
+        pts.append((hw - rf + rf * math.cos(a), tf - rf + rf * math.sin(a)))
+    pts += [(0.5 * (hw - rf), tf + 0.75 * crown), (0.0, tf + crown), (-0.5 * (hw - rf), tf + 0.75 * crown)]
+    for i in range(nf + 1):
+        a = 0.5 * math.pi * (1 + i / nf)
+        pts.append((-hw + rf + rf * math.cos(a), tf - rf + rf * math.sin(a)))
+    for j in range(nb + 1):
+        a = math.pi + math.pi * j / nb
+        c, s = math.cos(a), math.sin(a)
+        pts.append((hw * math.copysign(abs(c) ** (2 / e), c), -tb * abs(s) ** (2 / e)))
+    return pts
+
+
+def _ribbon(name, rows, mat, u_len, outward):
+    """Decal ribbon through parallel point rows (stitching across a seam): U = arc length of the middle row / u_len,
+    V = 0..1 across the rows. `outward` = a vector on the visible side of the first face."""
+    bm = bmesh.new()
+    uvl = bm.loops.layers.uv.new("UVMap")
+    R = [[bm.verts.new(p) for p in row] for row in rows]
+    mid = rows[len(rows) // 2]
+    s = [0.0]
+    for i in range(1, len(mid)):
+        s.append(s[-1] + (mid[i] - mid[i - 1]).length)
+    nv = len(rows) - 1
+    flip = (mid[1] - mid[0]).cross(rows[1][0] - rows[0][0]).dot(outward) < 0
+    for k in range(nv):
+        for i in range(len(mid) - 1):
+            vs = [R[k][i], R[k][i + 1], R[k + 1][i + 1], R[k + 1][i]]
+            uv = [(s[i] / u_len, k / nv), (s[i + 1] / u_len, k / nv), (s[i + 1] / u_len, (k + 1) / nv),
+                  (s[i] / u_len, (k + 1) / nv)]
+            if flip:
+                vs.reverse()
+                uv.reverse()
+            f = bm.faces.new(vs)
+            for lp, t in zip(f.loops, uv):
+                lp[uvl].uv = t
+    ob = G.finish(name, bm, mat, smooth=True, sharp=None, recalc=False)
+    ob["decal"] = True
+    return ob
+
+
 def build_wheel(badge):
-    """Truck steering wheel (A6, critic #10): 470 mm rim with finger grips and thumb contours, broad flat side spokes
-    carrying integrated switch pods (flush keys, ~0.8 mm gaps, shared bezel), wide lower spoke, firm hub moulding
-    with a crisp tear seam. Everything that turns is parented to the STEERING_WHEEL pivot at export (A6)."""
+    """Truck steering wheel, r8 (hero part of cab-dash / cab-driver). Four spokes, rim centre line 470 mm / 499 mm over
+    the leather (WORKING_VALUE; heavy-truck wheels are 450-500 mm). Rim: oval section 35 x 29 mm, fuller grip zones
+    with finger ridges at the back, thumb rests above the side spokes (3 / 9 o'clock), a real seam groove along the
+    inner side with two rows of contrasting thread, cross seams at 10:45 / 1:15 that end the perforated grip leather.
+    Spokes: moulded D-sections that rise from the dished hub and flare into the rim; the side spokes carry the switch
+    pods (gloss bezel, concave +/- rocker towards the thumb, four keys, generic pictograms), the lower pair keeps the
+    satin inlays (owner sheets B2.1). Hub: bowl-shaped back shell, bezel, 1.5 mm parting gap, low crowned airbag
+    cover with the TRAKT wordmark embossed tone-on-tone. Column: two-shell shroud with a wider combination-switch
+    housing, rubber gaiters, flattened stalks. Everything that turns is parented to the STEERING_WHEEL pivot at
+    export (A6); the pivot (WHEEL_C, wheel_frame) is unchanged. Detail scales with G.STATE['q'] (LOD0 / 1 / 2)."""
     group("wheel")
     n, u, v = wheel_frame()
     C = WHEEL_C
-    # ---- rim: egg-shaped section (35 x 29 mm), finger grips on the back, thumb rests above the side spokes
-    N, S = G.Q(96, 40), G.Q(16, 8)
-    thumb = [SPOKE_ANG + math.radians(24), math.pi - SPOKE_ANG - math.radians(24)]
-    loops = []
-    for i in range(N):
-        a = 2 * math.pi * i / N
-        radial = u * math.cos(a) + v * math.sin(a)
-        grip = 0.0022 * (0.5 + 0.5 * math.cos(9 * a)) * (1 - 0.6 * math.exp(-((math.sin(a) - 1) / 0.4) ** 2))
-        th = sum(math.exp(-((math.atan2(math.sin(a - t), math.cos(a - t))) / 0.16) ** 2) for t in thumb)
-        ring = []
-        for k in range(S):
-            b = 2 * math.pi * k / S
+    hi = G.STATE["q"] >= 0.75          # LOD0
+    mid = G.STATE["q"] >= 0.40         # LOD0 + LOD1
+
+    def adiff(a, b):
+        return math.atan2(math.sin(a - b), math.cos(a - b))
+
+    # ---- rim -------------------------------------------------------------------------------------------------
+    thumb = [SPOKE_ANG + math.radians(19), math.pi - SPOKE_ANG - math.radians(19)]
+
+    def side_x(a):
+        """Angle above the 3 o'clock (right) or 9 o'clock (left) position, whichever side `a` is on (rad)."""
+        return adiff(a, 0.0) if math.cos(a) >= 0 else adiff(math.pi, a)
+
+    def grip_zone(a):
+        x = side_x(a)
+        return smooth(-0.14, 0.06, x) * (1 - smooth(0.80, 0.94, x))
+
+    def rim_frame(a):
+        return u * math.cos(a) + v * math.sin(a)
+
+    def rim_off(a, b, groove=True):
+        """Section offset (radial, towards the driver) at wheel angle a, section angle b."""
+        cb, sb = math.cos(b), math.sin(b)
+        th = sum(math.exp(-(adiff(a, t) / 0.17) ** 2) for t in thumb)
+        gz = grip_zone(a)
+        rad = RIM_R[1] * (1.0 + 0.10 * gz + (0.10 + 0.62 * th) * max(0.0, -cb))   # fuller inner side, thumb pads
+        dep = RIM_R[0] * (1.0 + 0.08 * gz - 0.10 * max(0.0, sb) - 0.10 * th * max(0.0, sb) * max(0.0, -cb))
+        if sb < 0:      # finger ridges at the back of the grip zones
+            dep += 0.0024 * (0.5 + 0.5 * math.cos(11 * side_x(a) / 0.94 * math.pi)) * gz * (-sb)
+        k = 1.0
+        if groove and hi:
+            k -= 0.065 * math.exp(-(adiff(b, RIM_SEAM_B) / 0.075) ** 2)
+            k -= 0.045 * sum(math.exp(-(adiff(a, s) / 0.011) ** 2) for s in RIM_XSEAM)
+        return cb * rad * k, sb * dep * k
+
+    def rim_pt(a, b, groove=True, off=0.0):
+        r, z = rim_off(a, b, groove)
+        radial = rim_frame(a)
+        p = C + radial * (WHEEL_R + r) + n * z
+        if off:
             cb, sb = math.cos(b), math.sin(b)
-            rad = RIM_R[1] * (1.0 + (0.10 + 0.22 * th) * max(0.0, -cb))   # fuller inner side, thumb pads
-            dep = RIM_R[0] * (1.0 - 0.10 * max(0.0, sb))                # flatter face towards the driver
-            if sb < 0:
-                dep += grip
-            ring.append(C + radial * (WHEEL_R + cb * rad) + n * (sb * dep - 0.0015 * th * max(0.0, -cb)))
-        loops.append(ring)
+            p += (radial * (cb * RIM_R[0]) + n * (sb * RIM_R[1])).normalized() * off
+        return p
+
+    if hi:
+        N = 128
+        A = [2 * math.pi * i / N for i in range(N)]
+        for s in RIM_XSEAM:
+            A = [a for a in A if abs(adiff(a, s)) > 0.040] + [s + d for d in (-0.030, -0.012, 0.0, 0.012, 0.030)]
+        A.sort()
+        B = [2 * math.pi * k / 18 for k in range(18)]
+        B = sorted([b for b in B if abs(adiff(b, RIM_SEAM_B)) > 0.24] +
+                   [RIM_SEAM_B + d for d in (-0.20, -0.09, 0.0, 0.09, 0.20)])
+    else:
+        N, S = G.Q(96, 40), G.Q(16, 8)
+        A = [2 * math.pi * i / N for i in range(N)]
+        B = [2 * math.pi * k / S for k in range(S)]
+    loops = [[rim_pt(a, b) for b in B] for a in A]
     loops.append(loops[0])
-    rim = loft("wheel_rim", loops, "leather_wheel", closed=True, sharp=None)
-    # r6b (review r6 C-R2): hand patches instead of two soft gaussians with per-vertex hash noise (they averaged to a
-    # +15 % haze nobody read as wear). Leather polished where the palms sit: 10 and 2 o'clock down to the thumb rests
-    # (plateau ~17 cm of rim each, 6 deg soft edge), a lighter one-hand patch at 12; strongest on the face and the
-    # outer side of the section (palm), least on the finger side at the back.
+
+    def perf_seg(i, li):
+        x = side_x(0.5 * (A[li] + A[(li + 1) % len(A)]) if li + 1 < len(A) else A[li] + 0.01)
+        return 1 if -0.03 < x < RIM_XSEAM[0] else 0
+    rim = loft("wheel_rim", loops, ["leather_wheel", "leather_wheel_perf"], closed=True, sharp=None, mat_seg=perf_seg)
+
+    # r6b (review r6 C-R2): hand patches. Leather polished where the palms sit: 10 and 2 o'clock down to the thumb
+    # rests (plateau ~17 cm of rim each, 6 deg soft edge), a lighter one-hand patch at 12; strongest on the face and
+    # the outer side of the section (palm), least on the finger side at the back. r8: the thumb rests polish too.
     def rim_wear(co):
         d = co - C
         a = math.atan2(d.dot(v), d.dot(u))
@@ -1440,132 +1550,246 @@ def build_wheel(badge):
             return 1 - smooth(half, half + soft, abs(math.atan2(math.sin(a - a0), math.cos(a - a0))))
         hands = max(patch(math.radians(148), 0.36), patch(math.radians(32), 0.36))
         sec = 0.30 + 0.70 * smooth(-0.6, 0.5, 0.75 * sb + 0.45 * cb)
-        return 0.95 * sec * max(hands, 0.45 * patch(math.radians(90), 0.20))
+        th = max(patch(t, 0.10, 0.08) for t in thumb) * smooth(-0.2, 0.5, sb) * smooth(0.0, 0.8, -cb)
+        return max(0.95 * sec * max(hands, 0.45 * patch(math.radians(90), 0.20)), 0.8 * th)
     set_wear(rim, rim_wear)
-    # stitched seam along the inner side of the rim
-    pts, nrm = [], []
-    for i in range(121):
-        a = 2 * math.pi * i / 120
-        radial = u * math.cos(a) + v * math.sin(a)
-        th = sum(math.exp(-((math.atan2(math.sin(a - t), math.cos(a - t))) / 0.16) ** 2) for t in thumb)
-        pts.append(C + radial * (WHEEL_R - RIM_R[1] * (1.10 + 0.22 * th) * 0.995))
-        nrm.append(-radial)
-    strip("wheel_stitch", pts, nrm, 0.010, "stitch_dark", offset=0.0012, u_len=0.016)
 
-    # ---- spokes: flat plates (rounded-rect section), dished from the hub to the rim
-    def spoke(name, ang, widths, thick=0.019, r0=0.060, r1=WHEEL_R - 0.004, lift=0.0, mat="dash_dark", rr=0.0075,
-              t0=0.0, t1=1.0):
+    # Seam thread. LOD0: every stitch is a small ridge of geometry in an opaque thread material (r8: the alpha-tested
+    # decal rows were 1-2 px in cab-dash and vanished in the mips); two rows 3.9 mm either side of the groove,
+    # 6.5 mm pitch, 1.6 mm thread (a touch heavier than real 1 mm / 5 mm so the rows survive at phone resolution).
+    # LOD1: one decal ribbon over the seam; LOD2: none (a6_export LOD2_DROP 'wheel_stitch').
+    def stitch_bar(bm, a0, b0, a1, b1, w=0.0016, h=0.0004):
+        p0, p1 = rim_pt(a0, b0, False, 0.00015), rim_pt(a1, b1, False, 0.00015)
+        nr = (rim_pt(0.5 * (a0 + a1), 0.5 * (b0 + b1), False, 0.001) -
+              rim_pt(0.5 * (a0 + a1), 0.5 * (b0 + b1), False, 0.0)).normalized()
+        sd = nr.cross(p1 - p0).normalized() * (w / 2)
+        vs = [bm.verts.new(q) for q in (p0 - sd, p1 - sd, p1 + nr * h, p0 + nr * h, p1 + sd, p0 + sd)]
+        for f in ((0, 1, 2, 3), (3, 2, 4, 5)):
+            face = bm.faces.new([vs[i] for i in f])
+            face.normal_update()
+            if face.normal.dot(nr) < 0:
+                face.normal_flip()
+
+    if hi:
+        bm = bmesh.new()
+        n_st = 228
+        for i in range(n_st):
+            a0, a1 = 2 * math.pi * (i + 0.14) / n_st, 2 * math.pi * (i + 0.86) / n_st
+            if any(abs(adiff(0.5 * (a0 + a1), s)) < 0.016 for s in RIM_XSEAM):
+                continue        # the long rows stop at the cross seams
+            for db in (-0.26, 0.26):
+                stitch_bar(bm, a0, RIM_SEAM_B + db, a1, RIM_SEAM_B + db)
+        for s in RIM_XSEAM:      # cross seams round the section (not over the long seam)
+            nb = 13
+            for j in range(nb):
+                b0 = RIM_SEAM_B + 0.50 + (2 * math.pi - 1.00) * (j + 0.14) / nb
+                b1 = RIM_SEAM_B + 0.50 + (2 * math.pi - 1.00) * (j + 0.86) / nb
+                for da in (-0.017, 0.017):
+                    stitch_bar(bm, s + da, b0, s + da, b1)
+        G.finish("wheel_stitch", bm, "thread_wheel", smooth=False, recalc=False)
+    elif mid:
+        rows = [[], [], [], [], []]
+        for i in range(len(A) + 1):
+            a = 2 * math.pi * i / len(A)
+            for k, db in enumerate((-0.43, -0.20, 0.0, 0.20, 0.43)):
+                rows[k].append(rim_pt(a, RIM_SEAM_B + db, False, 0.0007))
+        _ribbon("wheel_stitch", rows, "stitch_wheel", 0.026, n - rim_frame(0.0))
+
+    # ---- spokes: moulded D-sections, flat round the hub, rising 12 deg to the rim, flared into it ------------------
+    d0 = HUB_DEPTH
+    ZF = [(0.045, d0 + 0.0065), (0.095, d0 + 0.0065), (0.110, d0 + 0.0095), (0.200, d0 + 0.0290),
+          (0.214, d0 + 0.0320), (0.226, d0 + 0.0345), (0.238, d0 + 0.0360)]            # front face height vs radius
+    nf, nb_ = (3, 6) if hi else (2, 4) if mid else (1, 3)
+
+    def spoke(name, ang, stations, wtab, tf, tb, dz=0.0, mat="dash_dark", crown=0.0008, rf=0.005, shift=None):
         radial = u * math.cos(ang) + v * math.sin(ang)
         side = n.cross(radial).normalized()
-        sec = []
-        nt = G.Q(9, 5)
-        for j in range(nt + 1):
-            t = t0 + (t1 - t0) * j / nt
-            r = r0 + (r1 - r0) * t
-            w = lerp_tab(widths, t)
-            dz = HUB_DEPTH + (0.0 - HUB_DEPTH) * smooth(0.70, 1.0, t) - 0.004 + lift
-            pc = C + radial * r + n * dz
-            sec.append([pc + side * px + n * py for px, py in rrect(w, thick, min(rr, thick / 2 - 1e-4), 3)])
-        return loft(name, sec, mat, closed=True, cap0=True, cap1=True, sharp=50), radial, side
+        if not hi:
+            stations = stations[::2] + ([stations[-1]] if len(stations) % 2 == 0 else [])
+        secs = []
+        for r in stations:
+            t_f, t_b = lerp_tab(tf, r), lerp_tab(tb, r)
+            pc = C + radial * r + n * (lerp_tab(ZF, r) + dz - t_f)
+            if shift:      # the upper edge sweeps up into the thumb rest
+                pc += side * lerp_tab(shift, r)
+            secs.append([pc + side * px + n * py for px, py in _dsec(lerp_tab(wtab, r), t_f, t_b, crown, rf, nf, nb_)])
+        return loft(name, secs, mat, closed=True, cap0=True, cap1=True, sharp=50), radial, side
 
     pods = {}
+    st_side = [0.080, 0.095, 0.110, 0.132, 0.156, 0.180, 0.193, 0.204, 0.214, 0.222, 0.230, 0.238]
     for sgn in (-1, 1):
         ang = SPOKE_ANG if sgn > 0 else math.pi - SPOKE_ANG
-        ob, radial, side = spoke(f"spoke_{sgn}", ang, [(0.0, 0.082), (0.30, 0.078), (0.62, 0.072), (0.80, 0.052),
-                                                       (1.0, 0.062)])
+        ob, radial, side = spoke(f"spoke_{sgn}", ang, st_side,
+                                 [(0.080, 0.094), (0.110, 0.088), (0.180, 0.074), (0.196, 0.064), (0.208, 0.060),
+                                  (0.218, 0.064), (0.228, 0.080), (0.238, 0.108)],
+                                 [(0.080, 0.0080), (0.200, 0.0080), (0.238, 0.0115)],
+                                 [(0.080, 0.0160), (0.200, 0.0125), (0.238, 0.0150)],
+                                 shift=[(0.200, 0.0), (0.220, sgn * 0.003), (0.238, sgn * 0.010)])
         pods[sgn] = (radial, side)
-    # B2.1 (owner sheets): four-spoke wheel - the single lower spoke became two slim spokes in a V (+-32 deg off
-    # 6 o'clock), each with a satin-silver insert along its face; the side spokes carry a satin strip under the pods
+    # B2.1 (owner sheets): four-spoke wheel - two slim lower spokes in a V (+-32 deg off 6 o'clock), each with a
+    # satin-silver inlay along its face
+    st_low = [0.055, 0.080, 0.105, 0.135, 0.165, 0.190, 0.204, 0.214, 0.222, 0.230, 0.238]
     for k, sg in enumerate((-1, 1)):
         ang = -math.pi / 2 + sg * math.radians(32)
-        spoke(f"spoke_low_{k}", ang, [(0.0, 0.040), (0.5, 0.030), (0.85, 0.028), (1.0, 0.044)], thick=0.017,
-              r0=0.062)
-        spoke(f"spoke_trim_low_{k}", ang, [(0.0, 0.012), (1.0, 0.010)], thick=0.0025, r0=0.062, lift=0.0085,
-              mat="satin", rr=0.0015, t0=0.10, t1=0.82)
-    for sgn in (-1, 1):
-        ang = SPOKE_ANG if sgn > 0 else math.pi - SPOKE_ANG
-        spoke(f"spoke_trim_side_{sgn}", ang, [(0.0, 0.016), (1.0, 0.020)], thick=0.0025, lift=0.0090, mat="satin",
-              rr=0.0012, t0=0.68, t1=0.93)
-    # switch pods integrated in the side spokes: recessed piano-black bezel + 2 x 3 flush keys (18 mm pitch)
+        spoke(f"spoke_low_{k}", ang, st_low,
+              [(0.055, 0.052), (0.105, 0.040), (0.190, 0.032), (0.210, 0.033), (0.224, 0.044), (0.238, 0.070)],
+              [(0.055, 0.0070), (0.200, 0.0070), (0.238, 0.0100)],
+              [(0.055, 0.0130), (0.200, 0.0110), (0.238, 0.0130)], dz=-0.0015)
+        if mid:
+            spoke(f"spoke_trim_low_{k}", ang, [0.088, 0.105, 0.135, 0.165, 0.186, 0.196],
+                  [(0.088, 0.0110), (0.196, 0.0090)], [(0.0, 0.0018)], [(0.0, 0.0010)], dz=-0.0015 + 0.0014,
+                  mat="satin", crown=0.0003, rf=0.0012)
+
+    # switch pods on the side spokes: gloss bezel on the 12 deg ramp (tilted to the thumb), concave +/- rocker on the
+    # rim side, four keys (18 mm pitch, ~1 mm gaps), generic pictograms; satin strip under the bezel (owner sheets)
+    r_c = 0.150
+    slope = (lerp_tab(ZF, r_c + 0.01) - lerp_tab(ZF, r_c - 0.01)) / 0.02
     for sgn, (radial, side) in pods.items():
-        r_c = 0.142
-        t = (r_c - 0.060) / (WHEEL_R - 0.004 - 0.060)
-        dz = HUB_DEPTH + (0.0 - HUB_DEPTH) * smooth(0.70, 1.0, t) - 0.004 + 0.0095
-        pc = C + radial * r_c + n * dz
-        # pod 'up' axis = along the spoke towards the rim (keys read radially)
-        panel(f"spoke_pod_{sgn}", rrect(0.042, 0.060, 0.007, 3), pc + n * 0.0006, n, radial, 0.004, "piano", bev=0.0008)
-        labels = ([["res", "plus", "phone"], ["ok", "minus", "vol"]] if sgn < 0 else
-                  [["arrow_l", "ok", "arrow_r"], ["eco", "minus", "plus"]])
+        np_ = (n - radial * slope).normalized()                  # pod face normal
+        out = (radial + n * slope).normalized()                  # along the spoke towards the rim
+        up = side * sgn                                          # across the spoke, towards 12 o'clock
+        pc = C + radial * r_c + n * (lerp_tab(ZF, r_c) + 0.0030)
+
+        def at(px, py, pz=0.0, pc=pc, out=out, up=up, np_=np_):
+            return pc + out * px + up * py + np_ * pz
+        # AO: the bezel buries the spoke face under it, so the pod parts take the occlusion of the open spoke face
+        # just inboard of the bezel (a6_export 'ao_probe') instead of the buried point under their centre
+        probe = tuple(at(-0.0345, 0.0, -0.0030))
+
+        def pod_panel(*a, probe=probe, **k):
+            ob = panel(*a, **k)
+            ob["ao_probe"] = probe
+            return ob
+
+        def pod_quad(*a, probe=probe, **k):
+            ob = plane_uv(*a, **k)
+            ob["ao_probe"] = probe
+            return ob
+        # the gloss bezel keeps the dark occlusion of its recess (black frame round the keys, as moulded)
+        panel(f"spoke_pod_{sgn}", rrect(0.060, 0.044, 0.0075, 3), pc, np_, up, 0.0050, "piano", bev=0.0009)
+        if not mid:      # LOD2: one key block
+            pod_panel(f"spoke_btn_{sgn}", rrect(0.053, 0.0372, 0.004, 1), at(0, 0, 0.0012), np_, up, 0.0016, "switch",
+                  bev=0.0)
+            continue
+        if hi:
+            pod_panel(f"spoke_trim_pod_{sgn}", rrect(0.050, 0.0020, 0.0009, 2), at(0.0, -0.0262, -0.0012), np_, up, 0.0030,
+                  "satin", bev=0.0004, bseg=1)
+        keys = ([["cruise", "res"], ["eco", "hill"]] if sgn < 0 else [["phone", "ok"], ["arrow_l", "arrow_r"]])
         for r in range(2):
-            for k in range(3):
-                q = pc + radial * (-0.018 + k * 0.018) * (1 if sgn > 0 else -1) + side * sgn * (0.0092 - r * 0.0184)
-                panel(f"spoke_btn_{sgn}_{r}_{k}", rrect(0.0172, 0.0176, 0.0028, 2), q + n * 0.0013, n, radial, 0.0016,
-                      "switch", bev=0.0005, bseg=1)
-                plane_uv(f"spoke_icon_{sgn}_{r}_{k}", quad_on(q, n, v, 0.010, 0.010, off=0.0015), "icons",
-                         uv=M_ICON(labels[r][k]))
-    # ---- hub: moulded shroud (dark) + firm airbag cover (soft-touch), crisp 2-3 mm edge radius, tear seam
+            for k in range(2):
+                # columns laid out left -> right as the driver sees them; the rocker takes the column next to the rim
+                px = -0.018 + k * 0.018 if sgn > 0 else -k * 0.018
+                q = at(px, 0.0092 - r * 0.0184, 0.0012)
+                kb = pod_panel(f"spoke_btn_{sgn}_{r}_{k}", rrect(0.0170, 0.0174, 0.0030, 2), q, np_, up, 0.0020, "switch",
+                           bev=0.0006, bseg=1)
+                use = {"cruise": 0.55, "res": 0.5, "ok": 0.6, "phone": 0.35}.get(keys[r][k], 0.2)
+                set_wear(kb, lambda co, use=use: use)
+                pod_quad(f"spoke_icon_{sgn}_{r}_{k}", quad_on(q, np_, up, 0.0098, 0.0098, off=0.0003), "icons",
+                         uv=M_ICON(keys[r][k]))
+        for h, lab in ((1, "plus"), (-1, "minus")):      # rocker: two halves tilted 5 deg to a shallow saddle
+            nt = (np_ * math.cos(math.radians(5)) - up * (h * math.sin(math.radians(5)))).normalized()
+            q = at(0.018, h * 0.0094, 0.0012 + 0.0008)
+            kb = pod_panel(f"spoke_btn_{sgn}_rk_{h}", rrect(0.0170, 0.0180, 0.0030, 2), q, nt, up, 0.0026, "switch",
+                       bev=0.0006, bseg=1)
+            set_wear(kb, lambda co: 0.7)
+            pod_quad(f"spoke_icon_{sgn}_rk_{h}", quad_on(q + up * (h * 0.0012), nt, up, 0.0086, 0.0086, off=0.0003),
+                     "icons", uv=M_ICON(lab))
+
+    # ---- hub: bowl-shaped back shell + bezel, parting gap, low crowned airbag cover ------------------------------
     def hub_ring(scale, depth):
-        return [C + n * depth + u * px + v * py for px, py in hub_outline(scale, G.Q(64, 24))]
-    shroud = [hub_ring(1.14, HUB_DEPTH - 0.050), hub_ring(1.16, HUB_DEPTH - 0.020), hub_ring(1.13, HUB_DEPTH - 0.004),
-              hub_ring(1.10, HUB_DEPTH - 0.001)]
-    loft("wheel_hub_shroud", shroud, "dash_dark", closed=True, cap0=True, cap1=True, sharp=60)
-    d0 = HUB_DEPTH
-    cover = [hub_ring(1.068, d0 - 0.004), hub_ring(1.072, d0 + 0.012), hub_ring(1.070, d0 + 0.0228),
-             hub_ring(1.062, d0 + 0.0262), hub_ring(1.046, d0 + 0.0279), hub_ring(0.95, d0 + 0.0291),
-             hub_ring(0.60, d0 + 0.0298), hub_ring(0.25, d0 + 0.0300)]
-    loft("wheel_hub", cover, "dash_soft", closed=True, cap0=True, cap1=True, sharp=80)
-    hub_face = d0 + 0.0300
-    # tear seam: U-shaped groove (deployment flap), crisp and narrow
-    pts = []
-    for (px, py) in hub_outline(0.80, 64):
-        pts.append(C + n * (d0 + 0.0287) + u * px + v * py)
-    pts.append(pts[0])
-    strip("hub_gap", pts, n, 0.0015, "gap", offset=0.0009)
-    # emblem (swappable): plain plate for 'none', otherwise mark polygons from art-source/truck/brand/*.svg
-    emblem(badge, C + n * (hub_face - 0.0005), n, v)
-    # column shroud + adjust collar
+        return [C + n * depth + u * px + v * py for px, py in hub_outline(scale, G.Q(72, 24))]
+    shell = [hub_ring(0.62, d0 - 0.046), hub_ring(1.00, d0 - 0.038), hub_ring(1.17, d0 - 0.016),
+             hub_ring(1.195, d0 - 0.002), hub_ring(1.19, d0 + 0.0042), hub_ring(1.16, d0 + 0.0070),
+             hub_ring(1.105, d0 + 0.0080), hub_ring(1.047, d0 + 0.0080), hub_ring(1.041, d0 + 0.0020)]
+    loft("wheel_hub_shroud", shell, "dash_dark", closed=True, cap0=True, cap1=True, sharp=60)
+    cover = [hub_ring(1.019, d0 + 0.0020), hub_ring(1.021, d0 + 0.0100), hub_ring(1.013, d0 + 0.0132),
+             hub_ring(0.992, d0 + 0.0152), hub_ring(0.935, d0 + 0.0164), hub_ring(0.60, d0 + 0.0176),
+             hub_ring(0.25, d0 + 0.0180)]
+    cov = loft("wheel_hub", cover, "dash_soft", closed=True, cap1=True, sharp=80)
+    # horn is pressed with the heel of the hand on the lower half of the pad: slight polish
+    set_wear(cov, lambda co: 0.35 * smooth(0.035, -0.02, (co - C).dot(v)) * smooth(d0 + 0.010, d0 + 0.016, (co - C).dot(n)))
+    # emblem (swappable): TRAKT wordmark embossed tone-on-tone on the cover (graphite satin, 0.6 mm proud)
+    emblem(badge, C + n * (d0 + 0.0176), n, v, mat="emboss", rise=0.0002, h=0.0016)
+
+    # ---- column: two-shell shroud (wider combination-switch housing), parting line, gaiters, adjust lever -------
     d = -n
     loops = []
-    for t, w, h in ((0.05, 0.090, 0.085), (0.12, 0.120, 0.115), (0.32, 0.130, 0.125)):
+    for t, w, h, rr in ((0.068, 0.118, 0.094, 0.034), (0.078, 0.150, 0.102, 0.036), (0.135, 0.150, 0.108, 0.036),
+                        (0.165, 0.130, 0.116, 0.034), (0.320, 0.136, 0.126, 0.032)):
         pc = C + d * t
-        loops.append([pc + u * px + v * py for px, py in rrect(w, h, 0.03, 3)])
+        loops.append([pc + u * px + v * py for px, py in rrect(w, h, rr, 4)])
     loft("column_shroud", loops, "dash_dark", closed=True, cap0=True, cap1=True)
+    for s in (-1, 1):
+        pts = [C + d * t + u * (s * w / 2) + v * (-0.010) for t, w in ((0.080, 0.150), (0.135, 0.150), (0.165, 0.130),
+                                                                       (0.318, 0.136))]
+        strip(f"column_parting_{s}", pts, u * s, 0.0016, "gap", offset=0.0004)
     rod("column_boot", C + d * 0.30, C + d * 0.42, 0.06, "rubber", seg=20)
+    box("column_adj_lever", tuple(C + d * 0.205 - u * 0.050 - v * 0.066), (0.016, 0.060, 0.010), "knob", bev=0.003,
+        rot=Matrix((u, d, v)).transposed())
     # stalks: left = indicators/wipers, right = retarder (upper) + AMT selector (lower)
     base = C + d * 0.10
 
-    def stalk(name, side, dz, length, ang_down, knob):
+    def capsule(name, p0, dirv, st, mat, seg=12):
+        e1 = (n - dirv * n.dot(dirv)).normalized()
+        e2 = dirv.cross(e1)
+        k = G.Q(seg, 8)
+        rings = [[p0 + dirv * s + e2 * (a * math.cos(2 * math.pi * i / k)) + e1 * (b * math.sin(2 * math.pi * i / k))
+                  for i in range(k)] for s, a, b in st]
+        return loft(name, rings, mat, closed=True, cap0=True, cap1=True, sharp=40)
+
+    def stalk(name, side, dz, L, ang_down, knob):
         p0 = base + u * (side * 0.06) + v * dz
         dirv = (u * side * math.cos(math.radians(ang_down)) - v * math.sin(math.radians(ang_down)) + n * 0.15).normalized()
-        p1 = p0 + dirv * length
-        arm = rod(name, p0, p1, 0.0075, "knob", seg=12, r1=0.0095)
+        p1 = p0 + dirv * L
+        # flattened arm (thin towards the driver), swelling into the grip
+        arm = capsule(name, p0, dirv, [(0.0, 0.0068, 0.0058), (0.035, 0.0070, 0.0052), (L * 0.62, 0.0080, 0.0050),
+                                       (L - 0.006, 0.0098, 0.0064), (L, 0.0104, 0.0090)], "knob")
         if knob == "ring":
-            end = rod(name + "_end", p1, p1 + dirv * 0.05, 0.0115, "knob", seg=16)
+            end = capsule(name + "_end", p1, dirv, [(0.0, 0.0108, 0.0104), (0.003, 0.0116, 0.0116),
+                                                    (0.046, 0.0116, 0.0116), (0.051, 0.0100, 0.0100),
+                                                    (0.054, 0.0062, 0.0062)], "knob", seg=16)
             set_wear_w(end, lambda co: 0.6)      # indicator stalk end: used at every junction
-            set_wear_w(arm, lambda co: 0.35 * smooth(0.02, length, (co - p0).dot(dirv)))
-            rod(name + "_band", p1 + dirv * 0.012, p1 + dirv * 0.026, 0.0122, "switch", seg=16)
+            set_wear_w(arm, lambda co: 0.35 * smooth(0.02, L, (co - p0).dot(dirv)))
+            if mid:
+                capsule(name + "_band", p1 + dirv * 0.012, dirv, [(0.0, 0.0118, 0.0118), (0.0015, 0.0128, 0.0128),
+                                                                  (0.0145, 0.0128, 0.0128), (0.016, 0.0118, 0.0118)],
+                        "switch", seg=16)
+                capsule(name + "_btn", p1 + dirv * 0.053, dirv, [(0.0, 0.0052, 0.0052), (0.0030, 0.0048, 0.0048)],
+                        "switch", seg=10)
         elif knob == "amt":
-            end = rod(name + "_end", p1, p1 + dirv * 0.06, 0.013, "knob", seg=16)
+            end = capsule(name + "_end", p1, dirv, [(0.0, 0.0110, 0.0104), (0.003, 0.0130, 0.0130),
+                                                    (0.056, 0.0130, 0.0130), (0.061, 0.0112, 0.0112),
+                                                    (0.064, 0.0070, 0.0070)], "knob", seg=16)
             # r4 wear: the selector is turned / pushed all day: grip polished, the arm towards it shinier too
             set_wear_w(end, lambda co: 0.85)
-            set_wear_w(arm, lambda co: 0.55 * smooth(0.02, length, (co - p0).dot(dirv)))
-            rod(name + "_rot", p1 + dirv * 0.02, p1 + dirv * 0.045, 0.0138, "satin", seg=20)
-            cyl(name + "_btn", p1 + dirv * 0.062, 0.008, 0.006, "switch", seg=12,
-                rot=dirv.to_track_quat("Z", "Y").to_matrix())
-        else:
-            end = rod(name + "_end", p1, p1 + dirv * 0.035, 0.010, "knob", seg=12, r1=0.008)
+            set_wear_w(arm, lambda co: 0.55 * smooth(0.02, L, (co - p0).dot(dirv)))
+            if mid:
+                capsule(name + "_rot", p1 + dirv * 0.020, dirv, [(0.0, 0.0132, 0.0132), (0.0015, 0.0141, 0.0141),
+                                                                 (0.0235, 0.0141, 0.0141), (0.025, 0.0132, 0.0132)],
+                        "satin", seg=20)
+                capsule(name + "_btn", p1 + dirv * 0.063, dirv, [(0.0, 0.0060, 0.0060), (0.0035, 0.0055, 0.0055)],
+                        "switch", seg=10)
+        else:   # retarder: flat paddle
+            end = capsule(name + "_end", p1, dirv, [(0.0, 0.0106, 0.0090), (0.005, 0.0135, 0.0072),
+                                                    (0.030, 0.0142, 0.0070), (0.036, 0.0118, 0.0058),
+                                                    (0.0385, 0.0070, 0.0034)], "knob")
             set_wear_w(end, lambda co: 0.7)      # retarder stalk: pulled before every braking
-            set_wear_w(arm, lambda co: 0.4 * smooth(0.02, length, (co - p0).dot(dirv)))
+            set_wear_w(arm, lambda co: 0.4 * smooth(0.02, L, (co - p0).dot(dirv)))
         return p1
 
     stalk("stalk_left", -1, 0.005, 0.15, 8, "ring")
     stalk("stalk_retarder", 1, 0.022, 0.12, -4, "plain")
     stalk("stalk_amt", 1, -0.018, 0.15, 10, "amt")
+    # rubber gaiters where the stalks leave the housing
     for s in (-1, 1):
-        cyl(f"stalk_boss_{s}", base + u * s * 0.06, 0.02, 0.03, "dash_dark", axis="X", seg=16)
+        pc = base + u * (s * 0.0745) + v * 0.004
+        rings = []
+        for o, w, h in ((0.0, 0.050, 0.060), (0.004, 0.046, 0.056), (0.0065, 0.034, 0.046), (0.0065, 0.026, 0.038)):
+            rings.append([pc + u * (s * o) + n * px + v * py for px, py in rrect(w, h, min(w, h) * 0.45, 3)])
+        loft(f"stalk_boss_{s}", rings, "rubber", closed=True, cap1=True, sharp=50)
 
 
-def hub_wordmark(c, n, v, width=0.064):
+def hub_wordmark(c, n, v, width=0.064, mat="satin", rise=0.0012, h=0.0018):
     """TRAKT wordmark on the hub (owner sheets): monoline letters from art-source/truck/brand/trakt.svg, satin metal,
     raised 1.2 mm, letter-spaced like the grille badge (exterior/body.py wordmark)."""
     path = os.path.join(REPO, "art-source", "truck", "brand", "trakt.svg")
@@ -1594,13 +1818,13 @@ def hub_wordmark(c, n, v, width=0.064):
                 continue
             ax = d.normalized()
             m3 = Matrix((ax, n.cross(ax).normalized(), n)).transposed()
-            box(f"emblem_wm_{k}_{j}", tuple((pa + pb) / 2 + n * 0.0012), (d.length + sw * sc, sw * sc, 0.0018), "satin",
+            box(f"emblem_wm_{k}_{j}", tuple((pa + pb) / 2 + n * rise), (d.length + sw * sc, sw * sc, h), mat,
                 rot=m3)
 
 
-def emblem(badge, c, n, v):
+def emblem(badge, c, n, v, mat="satin", rise=0.0012, h=0.0018):
     if badge == "trakt":
-        hub_wordmark(c, n, v)
+        hub_wordmark(c, n, v, mat=mat, rise=rise, h=h)
         return
     if badge == "none":
         panel("emblem_plate", rrect(0.050, 0.022, 0.008, 3), c + n * 0.002, n, v, 0.003, "metal_dark", bev=0.001)
@@ -2476,10 +2700,15 @@ def cameras():
         "kierownica": (V(-0.16, 0.66, 2.27), V(-0.50, 0.99, 2.05), 56),
         "fotel": (V(-0.98, 0.66, 2.24), V(-0.50, 0.36, 1.84), 55),
         "piasta": (WHEEL_C + n * 0.42 + V(0.05, 0, 0.0), WHEEL_C + n * 0.03 + V(0.02, 0, 0), 36),
+        # r8 wheel review: whole wheel square-on, right thumb rest / pod, rim seam from the eye
+        "kolo": (WHEEL_C + n * 0.80, WHEEL_C, 66),
+        "kciuk": (WHEEL_C + n * 0.30 + u * 0.20 + v * 0.10, WHEEL_C + u * 0.185 - v * 0.02, 40),
+        "szew": (EYE, WHEEL_C + v * 0.20 + u * 0.10, 22),
+        "kolumna": (WHEEL_C - u * 0.42 - n * 0.10 + v * 0.16, WHEEL_C - n * 0.11, 50),
     }
 
 
-EXTRA_CAMS = ["piasta"]
+EXTRA_CAMS = ["piasta", "kolo", "kciuk", "szew", "kolumna"]
 
 
 LIGHT_CAMS = {"overcast": ["kierowca", "zegary", "pasazer", "lezanka", "kierownica", "fotel"],

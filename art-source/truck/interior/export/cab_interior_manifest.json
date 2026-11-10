@@ -7,7 +7,7 @@
    "root": "CabInterior_LOD2",
    "objects": {
     "CAB_Interior_LOD2": {
-     "tris": 16019,
+     "tris": 16114,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -108,11 +108,10 @@
      }
     },
     "STEERING_WHEEL_LOD2": {
-     "tris": 3016,
+     "tris": 2174,
      "materials": [
       "MI_Cab_Plastic",
-      "MI_Cab_Leather",
-      "MI_Cab_Decal"
+      "MI_Cab_Leather"
      ],
      "pivot_unity_local": [
       -0.55,
@@ -133,7 +132,7 @@
      }
     },
     "STALK_Indicator_LOD2": {
-     "tris": 60,
+     "tris": 152,
      "materials": [
       "MI_Cab_Plastic"
      ],
@@ -165,7 +164,7 @@
      }
     },
     "STALK_Retarder_LOD2": {
-     "tris": 40,
+     "tris": 152,
      "materials": [
       "MI_Cab_Plastic"
      ],
@@ -188,10 +187,9 @@
      }
     },
     "STALK_AMT_LOD2": {
-     "tris": 88,
+     "tris": 152,
      "materials": [
-      "MI_Cab_Plastic",
-      "MI_Cab_Metal"
+      "MI_Cab_Plastic"
      ],
      "pivot_unity_local": [
       -0.49,
@@ -343,7 +341,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 21958,
+   "tris_total": 21479,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -381,12 +379,12 @@
     }
    },
    "ao_atlas_layout": {
-    "small_parts_inherit": 43,
+    "small_parts_inherit": 30,
     "packer": "skyline",
-    "islands": 548,
-    "sliver_islands_transferred": 98,
-    "uv_coverage": 0.6589,
-    "baked_texel_coverage": 0.935,
+    "islands": 553,
+    "sliver_islands_transferred": 97,
+    "uv_coverage": 0.6592,
+    "baked_texel_coverage": 0.9363,
     "angle": 66.0,
     "margin": 0.0025,
     "small_m2": 0.01,
@@ -531,17 +529,17 @@
      }
     }
    },
-   "hidden_faces_removed": 1133,
-   "tris_before_cleanup": 24164,
-   "build_s": 12.5,
-   "file_bytes": 2613340
+   "hidden_faces_removed": 1100,
+   "tris_before_cleanup": 23622,
+   "build_s": 12.4,
+   "file_bytes": 2538044
   },
   "LOD1": {
    "file": "art-source/truck/interior/export/SM_CabInterior_LOD1.fbx",
    "root": "CabInterior_LOD1",
    "objects": {
     "CAB_Interior_LOD1": {
-     "tris": 34620,
+     "tris": 34823,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -643,7 +641,7 @@
      }
     },
     "STEERING_WHEEL_LOD1": {
-     "tris": 4858,
+     "tris": 5124,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -669,7 +667,7 @@
      }
     },
     "STALK_Indicator_LOD1": {
-     "tris": 88,
+     "tris": 258,
      "materials": [
       "MI_Cab_Plastic"
      ],
@@ -701,7 +699,7 @@
      }
     },
     "STALK_Retarder_LOD1": {
-     "tris": 48,
+     "tris": 152,
      "materials": [
       "MI_Cab_Plastic"
      ],
@@ -724,7 +722,7 @@
      }
     },
     "STALK_AMT_LOD1": {
-     "tris": 124,
+     "tris": 274,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Metal"
@@ -903,7 +901,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 43297,
+   "tris_total": 44190,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -943,10 +941,10 @@
    "ao_atlas_layout": {
     "small_parts_inherit": 172,
     "packer": "skyline",
-    "islands": 728,
-    "sliver_islands_transferred": 201,
-    "uv_coverage": 0.6521,
-    "baked_texel_coverage": 0.8837,
+    "islands": 735,
+    "sliver_islands_transferred": 202,
+    "uv_coverage": 0.6499,
+    "baked_texel_coverage": 0.8839,
     "angle": 66.0,
     "margin": 0.0025,
     "small_m2": 0.01,
@@ -1151,17 +1149,17 @@
      }
     }
    },
-   "hidden_faces_removed": 4889,
-   "tris_before_cleanup": 52794,
-   "build_s": 30.4,
-   "file_bytes": 5139228
+   "hidden_faces_removed": 4838,
+   "tris_before_cleanup": 53588,
+   "build_s": 28.1,
+   "file_bytes": 5226540
   },
   "LOD0": {
    "file": "art-source/truck/interior/export/SM_CabInterior_LOD0.fbx",
    "root": "CabInterior_LOD0",
    "objects": {
     "CAB_Interior_LOD0": {
-     "tris": 81123,
+     "tris": 81647,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -1263,10 +1261,11 @@
      }
     },
     "STEERING_WHEEL_LOD0": {
-     "tris": 9432,
+     "tris": 14354,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
+      "MI_Cab_Fabric",
       "MI_Cab_Metal",
       "MI_Cab_Decal"
      ],
@@ -1289,7 +1288,7 @@
      }
     },
     "STALK_Indicator_LOD0": {
-     "tris": 164,
+     "tris": 432,
      "materials": [
       "MI_Cab_Plastic"
      ],
@@ -1321,7 +1320,7 @@
      }
     },
     "STALK_Retarder_LOD0": {
-     "tris": 88,
+     "tris": 232,
      "materials": [
       "MI_Cab_Plastic"
      ],
@@ -1344,7 +1343,7 @@
      }
     },
     "STALK_AMT_LOD0": {
-     "tris": 224,
+     "tris": 464,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Metal"
@@ -1523,7 +1522,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 97187,
+   "tris_total": 103285,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -1561,12 +1560,12 @@
     }
    },
    "ao_atlas_layout": {
-    "small_parts_inherit": 266,
+    "small_parts_inherit": 268,
     "packer": "skyline",
-    "islands": 880,
-    "sliver_islands_transferred": 219,
-    "uv_coverage": 0.6476,
-    "baked_texel_coverage": 0.7895,
+    "islands": 894,
+    "sliver_islands_transferred": 215,
+    "uv_coverage": 0.6488,
+    "baked_texel_coverage": 0.7916,
     "angle": 66.0,
     "margin": 0.0025,
     "small_m2": 0.01,
@@ -1775,10 +1774,10 @@
      }
     }
    },
-   "hidden_faces_removed": 13231,
-   "tris_before_cleanup": 125204,
-   "build_s": 152.6,
-   "file_bytes": 10842396
+   "hidden_faces_removed": 13127,
+   "tris_before_cleanup": 131102,
+   "build_s": 149.3,
+   "file_bytes": 11493772
   }
  },
  "tri_budget": {

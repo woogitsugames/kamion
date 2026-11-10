@@ -62,19 +62,19 @@ LOD2_DROP = LOD1_DROP + ("_cst_", "_ctr_", "_bst_", "_btr_", "rocker_icon_", "hv
                          "hvac_lcd_bezel", "stack_cubby", "socket_12v", "sun_visor_hinge_", "spoke_trim_",
                          "emblem_wm_", "sun_visor_clip_", "visor_centre_bracket", "_vane",
                          "wheel_stitch", "rear_lid_", "curtain_bunk_-1", "dash_top_stitch_",
-                         "glove_handle")   # modern cab (ADR 0047): larger glazing hides fewer faces, keeps LOD2 <= 22k
+                         "glove_handle", "column_parting_", "column_adj_")   # modern cab (ADR 0047): larger glazing hides fewer faces, keeps LOD2 <= 22k
 # (glove_handle: r7c, the crowned header fit left LOD2 at 22 001 against the limit 22 000)
 
 # ---------------------------------------------------------------- slots (game materials)
 SLOT_OF = {
     "MI_Cab_Plastic": ("dash_soft", "dash_lower", "dash_mid", "dash_dark", "trim_insert", "trim_light", "metal_dark",
-                       "piano", "grab_dark", "switch", "knob", "gap", "led_off", "lamp_lens", "yellow", "ext_plastic", "frit",
+                       "piano", "grab_dark", "switch", "knob", "gap", "led_off", "lamp_lens", "yellow", "ext_plastic", "frit", "emboss",
                        "hazard_red"),
-    "MI_Cab_Leather": ("leather", "leather_wheel", "leather_centre", "leather_trim"),
-    "MI_Cab_Fabric": ("headliner", "wall_fabric", "mattress", "curtain", "seat_fabric", "blind", "webbing"),
+    "MI_Cab_Leather": ("leather", "leather_wheel", "leather_wheel_perf", "leather_centre", "leather_trim"),
+    "MI_Cab_Fabric": ("headliner", "wall_fabric", "mattress", "curtain", "seat_fabric", "blind", "webbing", "thread_wheel"),
     "MI_Cab_Rubber": ("floor_mat", "rubber"),
     "MI_Cab_Metal": ("satin", "scuff_plate", "chrome", "paint"),
-    "MI_Cab_Decal": ("stitch", "stitch_dark", "icons", "grille", "grille_dash"),
+    "MI_Cab_Decal": ("stitch", "stitch_dark", "stitch_wheel", "icons", "grille", "grille_dash"),
     "MI_Cab_Glass": ("windscreen", "side_glass", "cover_glass"),
     "MI_Cab_Display": ("disp_cluster", "disp_info", "disp_din", "disp_gauges"),
     "MI_Cab_MirrorRT": ("mirror", "mirror_down"),
@@ -87,7 +87,7 @@ DETAIL_SET = {"MI_Cab_Plastic": ("dashgrain", 1024), "MI_Cab_Leather": ("leather
 # mouldings (knee polish, kick scuffs)
 # r6b (review r6 C-R2): rim 2.1 -> 2.5 with shaped hand patches, knob 1.4 -> 1.8 (the additive polish that made 1.9 a
 # chrome cap left the shader in ADR 0044 r6; wear is roughness + the <= 0.05 albedo cap now)
-WEAR_MUL = {"leather_trim": 1.9, "leather": 2.3, "leather_wheel": 2.5, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3,
+WEAR_MUL = {"leather_trim": 1.9, "leather": 2.3, "leather_wheel": 2.5, "leather_wheel_perf": 2.5, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3,
             "switch": 1.35, "grab_dark": 2.0, "knob": 1.8, "dash_lower": 1.45}
 BLACK_TINT = 0.04          # mean linear tint below this = black part: its worn spots are darkened so that the shader's
 BLACK_WEAR_DARKEN = 0.30   # worn albedo (lerp to max(base, 0.05)) stays <= 0.05 (ADR 0044 r6)
@@ -418,6 +418,7 @@ UV_CFG = dict(UV_DEFAULT)
 
 UV_STATS = {}
 _SMALL_ID = [0]
+_SMALL_PROBE = {}   # r8: small part id -> world point whose occlusion the part takes (object property 'ao_probe')
 # thin rubber channels, seals and tubes: long L/U-shaped islands that fill < 15 % of their box; their occlusion is the
 # occlusion of the panel they run along (UV1 transferred like a decal)
 INHERIT_AO = ("door_seal_", "win_channel_", "grab_A_", "drv_bellows", "pas_bellows", "dash_tray_lip_", "door_pull_",
@@ -668,6 +669,7 @@ def layout_bake_uv(objs, receivers):
         if o in rec:
             continue
         g = group_of(o.name)
+        probe = o.get("ao_probe")
         transfer = (o.get("decal") or o.get("fixed_uv") or o.get("small_ao")) and not o.name.startswith(NO_AO)             and not g.startswith(("CAB_Glass", "DISPLAY_", "MIRROR_"))
         tgt = (0.999, 0.9785) if o.name.startswith(NO_AO) else (0.999, 0.999)
         for d in o.data.uv_layers["Bake"].data:
@@ -676,8 +678,12 @@ def layout_bake_uv(objs, receivers):
             at = o.data.attributes.get("uv1_transfer") or o.data.attributes.new("uv1_transfer", "INT", "FACE")
             for d in at.data:
                 d.value = 1
-            if o.get("small_ao"):   # one occlusion value for the whole small part (no per-face streaks)
+            # r8: parts stacked on a panel that buries the receiver under them (switch-pod bezel, keys and pictograms
+            # on a spoke) name the open point of the receiver whose occlusion they take ('ao_probe', world)
+            if o.get("small_ao") or probe is not None:   # one occlusion value for the whole part (no per-face streaks)
                 _SMALL_ID[0] += 1
+                if probe is not None:
+                    _SMALL_PROBE[_SMALL_ID[0]] = Vector(probe)
                 ob_ = o.data.attributes.get("uv1_obj") or o.data.attributes.new("uv1_obj", "INT", "FACE")
                 for d in ob_.data:
                     d.value = _SMALL_ID[0]
@@ -719,10 +725,10 @@ def transfer_decal_uv1(obs):
             for p in me.polygons:
                 if oid.data[p.index].value:
                     parts.setdefault(oid.data[p.index].value, []).append(p)
-        for faces in parts.values():   # small parts: value at the panel point nearest to the part's centre
+        for pid, faces in parts.items():   # small parts: value at the panel point nearest to the part's centre
             a_ = sum(p.area for p in faces) or 1.0
             c = sum((p.center * p.area for p in faces), Vector()) / a_
-            hit = bvh.find_nearest(mw @ c, 0.30)
+            hit = bvh.find_nearest(_SMALL_PROBE.get(pid, mw @ c), 0.30)
             if hit[0] is None:
                 continue
             k = hit[2]
