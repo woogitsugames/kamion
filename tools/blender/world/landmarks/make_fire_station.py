@@ -1050,12 +1050,14 @@ def build_site(mb, lod):
     PROFS = [[(0.0, 0.50), (0.07, 0.90), (0.30, 1.0), (0.58, 0.88), (0.80, 0.62), (0.93, 0.32), (1.0, 0.05)],
              [(0.0, 0.60), (0.06, 1.0), (0.25, 0.92), (0.50, 0.66), (0.75, 0.40), (0.92, 0.18), (1.0, 0.04)],
              [(0.0, 0.40), (0.10, 0.80), (0.38, 1.0), (0.62, 0.95), (0.82, 0.70), (0.94, 0.38), (1.0, 0.06)]]
-    SPRUCE = [(0.0, 0.35), (0.07, 1.0), (0.22, 0.80), (0.27, 0.92), (0.48, 0.55), (0.53, 0.66), (0.76, 0.26), (0.92, 0.10), (1.0, 0.02)]
+    # r6b: the first spruce (10 sides, radial jitter +-35 %, hard tiers) rendered as a faceted paper cone; now a
+    # smooth 12-sided cone with shallow tiers and +-10 % jitter
+    SPRUCE = [(0.0, 0.30), (0.05, 0.95), (0.14, 1.0), (0.30, 0.80), (0.46, 0.62), (0.62, 0.44), (0.78, 0.27), (0.91, 0.12), (1.0, 0.02)]
     plants = [(t, False) for t in G["thuja"]] + [(t, True) for t in G.get("spruce", [])]
     for (e, n, z, hh, r, k), spruce in plants:
         k = k + (1000 if spruce else 0)
         if lod == 0:
-            sides, prof = (10, SPRUCE) if spruce else (8, PROFS[int(h01(k, "habit") * 2.999)])
+            sides, prof = (12, SPRUCE) if spruce else (8, PROFS[int(h01(k, "habit") * 2.999)])
         elif spruce:
             sides, prof = 6, [(0.0, 0.5), (0.08, 1.0), (0.55, 0.5), (1.0, 0.03)]
         else:
@@ -1070,7 +1072,7 @@ def build_site(mb, lod):
                 ring = []
                 for i in range(sides):
                     ang = 2 * math.pi * (i + 0.5 * (j % 2)) / sides + k
-                    rad = r * rr * ((0.65 + 0.70 * h01(k, i, j)) if spruce else (0.80 + 0.40 * h01(k, i, j))) + grow
+                    rad = r * rr * ((0.90 + 0.20 * h01(k, i, j)) if spruce else (0.80 + 0.40 * h01(k, i, j))) + grow
                     ring.append(P3(c[:2] + lean * f * f + np.array([math.cos(ang), math.sin(ang)]) * rad,
                                    c[2] - 0.05 + hh * f + (grow if j == len(prof) - 1 else 0.0) + 0.12 * hh * (h01(k, i, j, "z") - 0.5) * (0 < j < len(prof) - 1) / len(prof)))
                 rings.append(ring)
