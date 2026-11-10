@@ -1,0 +1,19 @@
+[project]
+name = "truck-refs"
+version = "0.1.0"
+description = "TRUCK SIM PL street-level reference fetcher (Mapillary, CC BY-SA 4.0, ADR 0065)"
+requires-python = "==3.12.*"
+dependencies = [
+    "pillow>=11.0",
+    "pyproj>=3.8.0",
+    "pyyaml>=6.0.3",
+    "requests>=2.34.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]
+
+[tool.uv]
+package = false
