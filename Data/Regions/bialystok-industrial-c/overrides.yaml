@@ -42,6 +42,97 @@ overrides:
     confidence: medium
     verify: owner photo session items 1-2 (gate, yard, hall elevations, docks)
     set: {typology: hall, hero: true, docks: true, wall_material: hall_wall_silver, max_docks_per_facade: 18}
+  - id: kwadrat-park-hero
+    kind: hero_depot
+    asset: kwadrat_park
+    building: "bdot:9962cca0-95de-4200-a0c4-3922b8e40d9c"
+    reason: >-
+      Player base (ADR 0071): the main Kwadrat Park hall gets an authored Blender asset
+      (art-source/world/landmarks/kwadrat_park, tools/blender/world/landmarks/make_depot.py) instead of the generic
+      hall. SEEN (footprint BDOT10k, height LoD1 2024 10.16 m; GUGiK orthophoto 2024-05-27 0.25 m; CC0 photos by
+      Rakoon on Wikimedia Commons, 20210904_101250 and 20241222_122132, reference only): light grey horizontally
+      profiled sheet on the SE and SW facades, thin dark coping, vermilion-framed strip of small-pane windows high
+      on the SE (yard) facade, vermilion-framed louvre panel on the SW facade next to the south corner, a tall
+      vermilion portal further north on the SE facade, red roofs of the two small SE protrusions, dark bitumen roof
+      with a staggered grid of small roof lights, a white membrane field behind the SE facade, a lighter lower roof
+      inside the inner ring, mushroom roof fans. NOT VISIBLE in any open source (private yard, facade base behind a
+      hedge / in shadow): the dock row. WORKING_VALUE: 11 docks on the first SE stretch at exactly the positions of
+      the previous generic rule (so the yard, the trailers and the route are unchanged), roads.standards dock
+      dimensions; doors, drive-in doors, downpipes, wall lights, the office window rows on the SW facade and
+      everything on the NW / NE facades are typical for a Polish sandwich-panel logistics hall. The orthophoto shows
+      truck rigs parked alongside this stretch, not backed onto it: the dock count is not confirmed by it.
+    confidence: medium
+    confidence_detail:
+      footprint_height: "BDOT10k + LoD1 2024: high"
+      cladding_colours_strip_windows_portal: "CC0 photos 2021 / 2024, orthophoto 2024: medium"
+      docks_doors_downpipes_lights: "WORKING_VALUE (typical): low"
+    verify: owner photo session items 1, 3, 7 (yard facade, dock count and type, doors, portal, strip windows)
+    facades:
+      # u_m = metres along the facade from its first vertex in counter-clockwise order (the building on the left)
+      - name: SE-yard
+        at: [778638.9, 595761.0]
+        tol_m: 8.0
+        # centre_on_len_m = length of the first footprint edge (south corner -> first protrusion): the generic rule
+        # centred the row on that edge, the asset keeps it there
+        docks: {count: 11, centre_on_len_m: 55.63, first_num: 1, open: {3: 1.0, 8: 0.35}, missing_guides: [6]}
+        strips: [{u0_m: 1.5, u1_m: 53.6}, {u0_m: 63.6, u1_m: 78.0}, {u0_m: 93.6, u1_m: 108.2}, {u0_m: 117.6, u1_m: 128.8}]
+        doors: [{u_m: 52.4, stairs: true}, {u_m: 70.5}, {u_m: 124.0}]
+        drive_doors: [{u_m: 101.0, w_m: 4.0, h_m: 4.5}]
+        downpipes: [0.6, 54.4, 78.9, 92.7, 108.9, 130.4]
+        wall_lights: [58.8, 72.0, 96.0, 121.0]
+      - name: SW
+        at: [778532.4, 595744.2]
+        louvres: [{u0_m: 149.0, u1_m: 170.6}]
+        strips: [{u0_m: 62.0, u1_m: 145.0}]
+        office_windows: {u0_m: 4.0, u1_m: 56.0, bay_m: 2.4, w_m: 1.5, h_m: 1.5, sills_m: [1.0, 4.4]}
+        doors: [{u_m: 30.0, canopy: true}, {u_m: 104.0, canopy: true}]
+        downpipes: [0.6, 24.0, 58.5, 84.0, 110.0, 136.0, 171.0]
+        wall_lights: [29.0, 76.0, 104.0, 140.0]
+      - name: NW
+        at: [778488.4, 595843.7]
+        strips: [{u0_m: 6.0, u1_m: 127.0}]
+        doors: [{u_m: 20.0}, {u_m: 112.0}]
+        drive_doors: [{u_m: 42.0, w_m: 4.0, h_m: 4.5}, {u_m: 94.0, w_m: 4.0, h_m: 4.5}]
+        downpipes: [0.6, 27.0, 54.0, 80.0, 107.0, 133.0]
+        wall_lights: [42.0, 94.0]
+      - name: NE
+        at: [778596.8, 595861.1]
+        party: true
+        note: abuts the neighbouring halls bdot:245cc9a8 / bdot:6693a8b5 for most of its length; plain cladding
+    annexes:
+      - {name: vestibule-1, at: [778638.0, 595753.9], h_m: 3.4, style: accent, door: personnel,
+         note: "orthophoto: red roof, 6.1 x 2.6 m"}
+      - {name: annex-2, at: [778651.8, 595777.3], h_m: 4.6, style: plain, door: double,
+         note: "orthophoto: 12.1 x 3.7 m, roof colour not readable (shadow)"}
+      - {name: portal-3, at: [778663.7, 595801.5], h_m: 12.6, style: portal, door: glazed,
+         note: "orthophoto: red roof 6.1 x 2.6 m; CC0 photo 20210904_101250: tall vermilion portal on the SE facade"}
+    roof:
+      skylights: true
+      vents: 16
+      patches:
+        # white membrane field behind the SE facade (orthophoto, +-1 m)
+        - {mat: kp_roof_white, ring_epsg2180: [[778638.3, 595759.9], [778661.0, 595802.0], [778647.0, 595809.6], [778624.3, 595767.5]]}
+  - id: kwadrat-park-units-forecourt
+    kind: paved_area
+    material: yard_asphalt
+    parking: true
+    polygon_epsg2180: [[778664.4, 595680.1], [778725.1, 595792.3], [778709.3, 595800.9], [778648.6, 595688.7]]
+    reason: >-
+      Forecourt between the yard lane and the row of trade units (bdot:7abd670e): BDOT10k has no paved polygon here,
+      so the generator laid grass. The GUGiK orthophoto (2024-05-27) shows a paved strip with cars parked nose-in
+      along the units; the CC0 photo 20210904_101250 (Rakoon, Commons) shows asphalt with white stall lines in front
+      of the units. Polygon = the units' NW wall line offset 18 m toward the lane (+-1 m); roads and buildings cut it.
+    confidence: medium
+    verify: owner photo session item 6 (surface, stall layout)
+  - id: kwadrat-park-trade-units
+    target: {building: "bdot:7abd670e-1a55-4ccb-9da0-9a2ad052ff32"}
+    reason: >-
+      Row of trade units east of the yard lane. CC0 photo 20210904_101250 (Rakoon, Commons): light grey walls with a
+      strip of windows under the eaves, shopfronts, a white end wall. The hashed pick gave ivory sheet. No docks
+      (the photo shows shopfronts and parked cars, not ramps).
+    confidence: medium
+    verify: owner photo session item 6
+    set: {typology: hall, wall_material: hall_wall_grey}
   - id: kwadrat-park-gate-kit
     kind: depot_gate
     node: n1882887381

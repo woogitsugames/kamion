@@ -19,6 +19,7 @@ from . import forest_hlod as FH
 from . import furniture as FU
 from . import signs_route as SR
 from . import gate as GT
+from . import hero_depot as HD
 from . import landmarks as LM
 from . import life as LF
 from . import paved as PV
@@ -54,7 +55,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     yard_union = shapely.union_all([shapely.make_valid(p) for p in yard_src] + [roads_poly])
     brep = {}
     facade_signs = []
-    docks = BM.build(w.buf, blds, hf, zsmooth, yard_union, roads_poly, brep, sign_out=facade_signs)
+    heroes = HD.plan(w, rid, overrides, blds, zsmooth, log)      # hero depot halls (override kind: hero_depot, ADR 0071)
+    docks = BM.build(w.buf, blds, hf, zsmooth, yard_union, roads_poly, brep, sign_out=facade_signs, heroes=heroes)
     rep["buildings"] = brep
     log("buildings", brep["typologies"], "docks", brep["docks"])
     bpoly = shapely.union_all([b["poly"] for b in blds])
@@ -152,6 +154,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FU.power_lines(lin, src, origin, frep, pl=pl, roads_poly=roads_poly)
     GT.build(pl, lin, w.net, graph, overrides, roads_poly, bpoly, origin, frep)
     pl.items.extend(facade_signs)
+    hero_tris = HD.apply(w, heroes, pl, log)
+    rep["hero_depots"] = w.stats.get("hero_depots", {})
     from roads import build_world as BW
     try:
         route_P = BW.route_polyline(rid, w)[0]
@@ -188,4 +192,4 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     log("forest hlod", vrep["forest_hlod"])
     col = VG.ground_masks(src, origin, hf, dist, forests)
     return {"zc": zc, "dist": dist, "mask": mask, "rmask": rmask, "col": col, "instances": pl.items + trees,
-            "codes": codes, "boards": boards, "report": rep, "docks": docks, "paved": paved, "forest_hlod": hlod}
+            "codes": codes, "boards": boards, "report": rep, "docks": docks, "paved": paved, "forest_hlod": hlod, "hero_tris": hero_tris}

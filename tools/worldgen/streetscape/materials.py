@@ -207,6 +207,12 @@ M = {
     "drain_grate": {"color": [0.035, 0.033, 0.03], "rough": 0.6, "decal": True, "procedural": "grate"},  # cast iron
     "decal_patch": {"color": [0.062, 0.062, 0.06], "rough": 0.85, "decal": True, "texture_set": "asphalt_patch"},
     # bridges (roads.meshing bridge_style overrides; CC0 photos of the Andersa viaducts, docs/REFERENCES.md)
+    # hero depot hall Kwadrat Park (ADR 0071, streetscape.hero_depot; colours read off CC0 photos by Rakoon, Commons:
+    # light grey horizontally profiled sheet, vermilion window / louvre frames and portals, glass-block strip lights)
+    "kp_wall": {"color": [0.47, 0.48, 0.48], "rough": 0.5, "metal": 0.25, "texture_set": "sandwich_ribbed"},
+    "kp_accent": {"color": [0.50, 0.075, 0.035], "rough": 0.55, "metal": 0.2},
+    "kp_glass_block": {"color": [0.27, 0.29, 0.30], "rough": 0.3},
+    "kp_roof_white": {"color": [0.52, 0.52, 0.50], "rough": 0.8},
     "bridge_fascia_red": {"color": [0.30, 0.05, 0.04], "rough": 0.7},
     "bridge_fascia_green": {"color": [0.07, 0.17, 0.10], "rough": 0.7},
     "pier_yellow": {"color": [0.46, 0.40, 0.17], "rough": 0.85},
