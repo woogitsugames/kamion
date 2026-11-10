@@ -166,6 +166,9 @@ namespace Game.Editor.Setup
             PlayerSettings.Android.preferredInstallLocation = AndroidPreferredInstallLocation.Auto;
             PlayerSettings.SetManagedStrippingLevel(android, ManagedStrippingLevel.Low);
             PlayerSettings.SetIl2CppCompilerConfiguration(android, Il2CppCompilerConfiguration.Release);
+            // Debug.Log without a stack trace: every [CONTROLS]/telemetry line otherwise carries a captured trace (cost +
+            // an extra logcat line). Warnings, errors, asserts and exceptions keep ScriptOnly traces (ADR 0058 note).
+            PlayerSettings.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
             // World MeshColliders are cooked at load (WorldCollisionCooker, parallel Physics.BakeMesh), not prebaked: the
             // prebaked PhysX data was ~17 MB of the APK (ADR 0012, lead decision 2026-11-09). Collision meshes stay readable.
             PlayerSettings.bakeCollisionMeshes = false;
