@@ -147,6 +147,17 @@ namespace Game.Tests
                 if (Mathf.Abs(c.localPos.x + 860f) < 12f && c.localPos.z > 900f) tysiaclecia = true;
             }
             Assert.IsTrue(tysiaclecia, "al. Tysiąclecia Państwa Polskiego (the road of the recording) is closed before the north edge");
+            // Evidence: road surface profile of the recording's last 320 m (the 90 -> 94 km/h rise before the edge).
+            var prof = new System.Text.StringBuilder("north_m,road_y_m
+");
+            for (float n = 700f; n <= 1020f; n += 20f)
+            {
+                Vector3 w = root.transform.TransformPoint(new Vector3(-857f, 0f, n));
+                if (Gate3Cameras.TryGroundY(w.x, w.z, root.transform.position.y + 400f, System.Array.Empty<Transform>(), out float ry))
+                    prof.AppendFormat(CultureInfo.InvariantCulture, "{0:F0},{1:F2}
+", n, ry);
+            }
+            File.WriteAllText(EvidencePath("tysiaclecia-north-profile.csv"), prof.ToString());
             // Ground to the horizon: the apron renderer reaches far beyond the region.
             var apron = root.transform.Find("WorldEdge/Apron").GetComponent<MeshRenderer>();
             Assert.Greater(apron.bounds.size.x, 2048f + 2f * 1400f, "apron beyond the far clip plane on both sides");
