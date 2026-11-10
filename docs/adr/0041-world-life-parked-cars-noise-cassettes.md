@@ -196,3 +196,37 @@
   widok wzdłuż rzędu widzi tylko pas przy krawędzi nadwozia, nie głęboki rdzeń (szczegóły w ADR 0050). Rysowania
   instancjonowane Low stretch-01: 558 (z AO i bez), czas klatki w edytorze 6.25 vs 6.27 ms. Telefon: UNVERIFIED.
 - Dowody: `artifacts/world-fixes/cars-ao/{before3,after3,compare3}`; test EditMode `VehicleContactImportTests`.
+
+## r8: dziury w autach, LOD aut na Low, przody (REVIEW r7 cz. 2: N-13, N-14, W-N7), 2026-11-10
+- **N-13, ustalenie.** „Auto z dziurą” w `cab-dash` (2340 px: x 1990–2340, y 300–460) to lusterko krawężnikowe kl. V
+  ciągnika (obudowa + ramię + szkło pokazujące kostkę) stojące w kadrze przed zaparkowanym autem, nie brak ścian auta.
+  Dowód: `artifacts/world-fixes/cars-r8/n13/N13_proof_{High,Low}.jpg` — ten sam kadr z `-Mask MIRROR_Kerb` (szkło:
+  8989 px magenty w polu recenzji, x 2118–2332, y 352–415) i z maską `MIRROR_;DOOR_;CAB_` (szkło + obudowa + ramię:
+  19 215 px, x 2100–2332, y 315–459); auto za lusterkiem ma komplet ścian (klapa, zderzak, tablica). Wygląd szkła
+  lusterka (odbicie nieodróżnialne od tła) należy do ciągnika / renderingu, nie do aut — otwarte, poza tym ADR.
+- **Test dziur** (kryterium r7 §14 pkt 3): `tools/worldgen/qa/car_holes_qa.py` — programowy z-bufor, rzut ortogonalny,
+  8 azymutów × 3 elewacje (8 / 30 / 55°), piksel 25 mm, reguły silnika (materiały kryjące rysują tylko przód ściany,
+  szyba i film drogowy niczego nie zasłaniają). Wada = promień wchodzi lub wychodzi przez TYŁ kryjącej ściany
+  (`see_through`) albo widzi kabinę bez szyby przed nią (`exposed`); liczą się plamy ≥ 3 px. Test znalazł prawdziwe
+  prześwity, których recenzja nie wskazała: przed r8 każde nadwozie × LOD miało wady (LOD0 1150–1700 cm² w najgorszym
+  widoku: tyły słupków i relingów, wnęka drzwi, podstawa tylnej szyby, szczelina nadkola; LOD1 96–268; LOD2 72–144).
+  Poprawki w `life_cars.py`: wewnętrzna skóra, góry drzwi, półka tylna, gródź, tylne płyty nadkoli, wewnętrzne
+  denka opon, LOD2 z zamkniętym fartuchem pod nadwoziem sięgającym za koła. Po r8: **0 z 81 siatek z wadami**
+  (27 prototypów × 3 LOD; `holes-after-r8b/`), pilnuje tego `tests/gis/test_cars_r8.py`.
+- **N-14.** `WorldInstances.VehicleLod0MinM = 16` m (WORKING_VALUE): LOD0 pojazdów kończy się na
+  max(polityka × lodBias, 16 m) na każdym tierze (Low miał 12,5 m), lustrzane `build_world.VEHICLE_LOD0_MIN_M`;
+  test EditMode `VehicleLodFloorTests`. LOD1 przebudowany (ramiona w 2 segmentach, koła 10-kątne z oknami szprych,
+  łuki nadkoli w 6 segmentach, blok klosza lampy, własna tablica, pudełkowe lusterka); koniec LOD1 90 → 85 m
+  (High 127,5 m, Low 42,5 m). Trójkąty: LOD0 3528–3798 (limit 4000 bez zmian), LOD1 824–864 (limit 650 → 900),
+  LOD2 54–58 (limit 60 bez zmian).
+- **W-N7.** Wyższe obudowy lamp, dwie sześciokątne soczewki projektorów na lampę, żaluzje dolnego wlotu, pas
+  grilla bez chromu. Zajętość rzędu przy kamerze (≥ 1 wolne miejsce na 8) bez zmian w r8 — otwarte.
+- **Budżet klatki (szacunek `streetscape_qa.json`, High).** `stretch_04` 1 992 951 → 1 997 615 (limit 2,0 M, zapas
+  2,4 tys. — każda kolejna zmiana geometrii aut wymaga ponownego sprawdzenia); `stretch_01` 1 646 902 → 1 661 414;
+  `stretch_05_docks` 1 722 465 → 1 742 105. Low: `stretch_01` 721 524 → 745 246, `stretch_04` 962 152 → 962 150.
+- **Koszt na Low (edytor, `stats.txt`, overcast, rysowania instancjonowane / trójkąty).** `truck-34` 491 → 542 / 68k → 79k,
+  `cab-dash` 491 → 553 / 57k → 76k, `stretch-01` 558 → 624 / 73k → 95k. Tablica pierwszego auta w `truck-34` Low
+  czytelna („BMN 8577”, `compare/Low-overcast_truck-34_plates_native.png`).
+- **Testy.** pytest 201 zielonych, EditMode 147 / 147.
+- **Niezmierzone.** Koszt podłogi LOD0 16 m i bogatszego LOD1 na telefonie (A16 Low): UNVERIFIED.
+- Dowody: `artifacts/world-fixes/cars-r8/{before,after,compare,holes-before,holes-after-r8b,n13}`.

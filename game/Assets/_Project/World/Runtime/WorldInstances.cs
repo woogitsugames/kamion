@@ -74,11 +74,13 @@ namespace Game.World
             m_Thin = new bool[set.prototypes.Length];
             m_FixedCull = new bool[set.prototypes.Length];
             m_Ends = new float[set.prototypes.Length][];
+            m_Lod0Min = new float[set.prototypes.Length];
             for (int p = 0; p < set.prototypes.Length; p++)
             {
                 var pr = set.prototypes[p];
                 m_Thin[p] = pr.name.StartsWith("tree_");
                 m_FixedCull[p] = IsVehicle(pr.name);
+                m_Lod0Min[p] = m_FixedCull[p] && pr.lods.Length > 1 ? VehicleLod0MinM : 0f;
                 m_Ends[p] = (float[])pr.lodEndM.Clone();
                 // Impostor forests: cap the cull distance (device measurement: DK8 forest 10 FPS on the A16 Medium,
                 // 14 FPS on the S24+ High before thinning and this cap).
@@ -346,7 +348,8 @@ namespace Game.World
                     if (!m_Trees && m_Thin[run.prototype]) continue;
                     float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, m_TreeCard) : scale;
                     float cs = m_FixedCull[run.prototype] ? distanceScale : scale;   // vehicles: same cull on every tier
-                    int ln = LodAt(ends, dNear, ls, cs), lf = LodAt(ends, dFar, ls, cs);
+                    float l0 = m_Lod0Min[run.prototype] * distanceScale;   // vehicles: LOD0 floor on every tier
+                    int ln = LodAt(ends, dNear, ls, cs, l0), lf = LodAt(ends, dFar, ls, cs, l0);
                     bool thinnable = m_Thin[run.prototype];
                     int stride = thinnable ? ThinStride(dNear, scale) : 1;
                     if (ln == lf && (stride == ThinStride(dFar, scale) || !thinnable))
@@ -363,7 +366,7 @@ namespace Game.World
                         float dx = m.m03 - cp.x, dy = m.m13 - cp.y, dz = m.m23 - cp.z;
                         float d = Mathf.Sqrt(dx * dx + dy * dy + dz * dz);
                         if (thinnable && (i & (ThinStride(d, scale) - 1)) != 0) continue;
-                        int l = LodAt(ends, d, ls, cs);
+                        int l = LodAt(ends, d, ls, cs, l0);
                         if (l >= 0) Append(run.prototype, l, mats, i, 1, b);
                     }
                 }
@@ -399,11 +402,18 @@ namespace Game.World
         bool[] m_Thin;
         bool[] m_FixedCull;
         float[][] m_Ends;
+        float[] m_Lod0Min;
 
         /// <summary>Cull distance (m) of parked vehicles on every tier (ADR 0041 v4, REVIEW r6 W-N6: Low culled the truck
         /// rigs at 60 m and the cars at 200 m, High at 180 / 600 m, so the same cab-dash frame showed different content).
         /// Only the LOD switches scale with lodBias. WORKING_VALUE; mirrored in build_world.py VEHICLE_CULL_M.</summary>
         public const float VehicleCullM = 300f;
+
+        /// <summary>Floor (m) of the LOD0 distance of parked vehicles on every tier (ADR 0041 r8, REVIEW r7 N-14): LOD0 ends
+        /// at max(policy x lodBias, this). Low (lodBias 0.5) switched cars to LOD1 at 12.5 m, so the cars next to the route
+        /// (8-12 m from the cab) had disc wheels and no lamps while High showed rims and plates. With 16 m a car parked
+        /// beside the lane is LOD0 on every tier. WORKING_VALUE; mirrored in build_world.py VEHICLE_LOD0_MIN_M.</summary>
+        public const float VehicleLod0MinM = 16f;
 
         /// <summary>Vehicle prototypes and their contact-shadow patch prototypes ("contact_&lt;spec hash&gt;", ADR 0050): fixed cull.</summary>
         public static bool IsVehicle(string proto) =>
@@ -420,12 +430,17 @@ namespace Game.World
             return d.magnitude;
         }
 
-        /// <summary>LOD index for distance d: switch distances × <paramref name="lodScale"/>, the cull distance (last end) × <paramref name="cullScale"/>.</summary>
-        static int LodAt(float[] ends, float d, float lodScale, float cullScale)
+        /// <summary>LOD index for distance d: switch distances × <paramref name="lodScale"/>, the cull distance (last end) × <paramref name="cullScale"/>;
+        /// LOD0 (when it is not the only LOD) reaches at least <paramref name="lod0Min"/> metres.</summary>
+        public static int LodAt(float[] ends, float d, float lodScale, float cullScale, float lod0Min = 0f)
         {
             int last = ends.Length - 1;
             for (int l = 0; l < ends.Length; l++)
-                if (d < ends[l] * (l == last ? cullScale : lodScale)) return l;
+            {
+                float e = ends[l] * (l == last ? cullScale : lodScale);
+                if (l == 0 && l != last && e < lod0Min) e = lod0Min;
+                if (d < e) return l;
+            }
             return -1;
         }
 
