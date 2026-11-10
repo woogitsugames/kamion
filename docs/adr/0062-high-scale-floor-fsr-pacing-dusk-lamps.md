@@ -35,16 +35,17 @@ exposure), review r4 L3 (street lamps). Answers review r8 N-24 (S24+ High 43-47 
    the floor (pixel model) and CPU p90 both < 80 % of the 60 FPS interval; each relapse within 2× the wait doubles it
    (max 160 s), so a scene that cannot hold 60 does not ping-pong. Owner ranking: (d) "43-47 FPS with judder" was "not
    recommended"; this governor makes (d) impossible. Off switch: `pacingFallbackFps = 0` or launch arg `rq_pacing 0`.
-4. **Upscaler: FSR 1.0** (`upscalingFilter = FSR`, `fsrSharpness = 0.6`) on High (URP asset written by
-   `ProjectSetup.CreateUrpTierAssets`; used only while scale < 1). Considered:
+4. **Upscaler: FSR 1.0** (`upscalingFilter = FSR`, `fsrSharpness = 0.75`) on High. Found during the run: `URP_High.asset`
+   already had FSR at 0.75, set outside the generator (so the r8 phone frames at 0.80-0.85 were FSR, not bilinear). It is
+   now owned by `ProjectSetup.CreateUrpTierAssets` with the same, already reviewed values (no visual change). Considered:
    - *Bilinear* (old): free, but at 0.70 (2184×1008 → 3120×1440) markings, kerb edges and the TRAKT lettering go soft.
    - *STP* (URP 17 spatial-temporal): best reconstruction on paper, but it is TAA-based - URP requires render graph,
      compute and **no MSAA**; our High relies on MSAA 2× + alpha-to-coverage leaf cards (ADR 0013), mirrors are separate
      cameras without history, and fast lateral motion of a cab view ghosts. Extra motion-vector + history bandwidth on a
      tiler. Rejected for mobile now.
    - *FSR 1.0* (EASU edge-adaptive upscale + RCAS sharpen): spatial, one full-res pass on top of the final blit, keeps
-     MSAA and A2C, no history/ghosting, supported on Vulkan (SM 4.5). Sharpness 0.6 instead of URP's 0.92: RCAS at 0.92
-     rings on high-contrast markings and wires (docs/06 "no HDR look / oversharpening"). WORKING_VALUE, phone crop check.
+     MSAA and A2C, no history/ghosting, supported on Vulkan (SM 4.5). Sharpness 0.75 instead of URP's 0.92 (RCAS at
+     0.92 rings on high-contrast markings and wires, docs/06). WORKING_VALUE, phone crop check at 0.70.
    - Cost of the EASU pass at 3120×1440 on Xclipse 940: UNVERIFIED (expected well under 1 ms; must be < the saving
      between 0.80 and 0.70, otherwise use `rq_upscale linear`).
    Low/Medium keep Auto/bilinear: Low has no post pass (FSR would add the final post pass on the A16), Medium has a fixed
@@ -71,16 +72,19 @@ exposure), review r4 L3 (street lamps). Answers review r8 N-24 (S24+ High 43-47 
 - Low/Medium had no pools at all (`streetLights = 0`: point lights are High-only).
 
 ### Decision
-1. **LP_Dusk = civil twilight, sun −4°** (az 300°, hazy as before). `SkyModel` keeps the 0.5° sky shape and colour
+1. **LP_Dusk = civil twilight, sun −5°** (az 300°, hazy as before). `SkyModel` keeps the 0.5° sky shape and colour
    (afterglow toward the sun's azimuth) and dims it by `TwilightFactorAt(el)`: log-linear from 1 at 0.5° to 3.4 lx at
    −6° (end of civil twilight, commonly quoted value, UNVERIFIED from memory of Bond and Henderson-type tables). No
    direct sun below the horizon (the sun light switches off), `TrueSunElevationDeg/TrueSunDirection` drive the sun light
-   transform (cab clock, auto dipped beam), the lamp switch and the exposure. At −4°: ≈ 21 lx sky.
+   transform (cab clock, auto dipped beam), the lamp switch and the exposure. At −5°: ≈ 8 lx sky. (−4° was tried first:
+   the rendered pools reached only ~1.4× the background in display luma, under the r8 acceptance.)
 2. **Exposure follows the twilight** (a phone lengthens its exposure): `ExposureTable.Ev100(el < 0.5)` =
-   EV(0.5°) + log2(twilight) + 0.2 EV by −4°. The ambient-lit scene stays ≈ 2.9 EV under overcast noon (r3 G3 range
+   EV(0.5°) + log2(twilight) + 0.2 EV by −4° and below. The ambient-lit scene stays ≈ 2.9 EV under overcast noon (r3 G3 range
    1.9-3.1 kept, test `ExposureTable_HighSunUnchanged_LowSunWalls_DuskDarker`), while emissive lamps (fixed cd/m²) and
-   their pools gain ~85× on the background.
-3. **Analytic lamp pools on every tier** (`lampPools`: Low 4, Medium 6, High/Ultra 8): `StreetLamps` sends the lamp heads
+   their pools gain ~250× on the background (−5° vs 0.5°).
+3. **Analytic lamp pools on every tier** (shared include `Rendering/Shaders/KamionLampPools.hlsl`, used by
+   `Kamion/World Surface` **and `Kamion/World PBR`** - the roads, kerbs and paving are World PBR, which never read any lamp
+   light, so even the High point lights could not light the asphalt; this was the second cause of N-20) (`lampPools`: Low 4, Medium 6, High/Ultra 8): `StreetLamps` sends the lamp heads
    nearest a focus 30 m ahead of the camera to `Kamion/World Surface` as a global array (xyz + fade weight; re-chosen
    4×/s; a lamp near the edge of the set fades out over the last 25 % of the distance to the first lamp left out, so
    re-choosing does not pop). The shader adds inverse-square Lambert light with a full-cutoff luminaire shape (constant
@@ -89,12 +93,21 @@ exposure), review r4 L3 (street lamps). Answers review r8 N-24 (S24+ High 43-47 
    (UNVERIFIED on the A16 - switch: `lampPools = 0` / `rq_lamppools 0`).
 4. The High point lights stay (4 nearest the camera) but light only vehicles and props; World Surface no longer reads
    URP additional lights, so nothing is lit twice.
-5. Expected pool contrast: 39 lx under an 8 m head on 21 lx ambient = 2.9× (test
-   `DuskPreset_IsCivilTwilight_LampsOn_PoolsReadOnTheRoad`); r8 acceptance ≥ 1.5×.
+5. Pool contrast: model 39 lx under an 8 m head on ≈ 8 lx (test `DuskPreset_IsCivilTwilight_LampsOn_PoolsReadOnTheRoad`);
+   rendered (editor, WorldC dusk, after/before luma smoothed 41 px, normalised by the median): Low 1.71-1.89×, High
+   1.66-1.80× (r8 acceptance ≥ 1.5×). Cab-view black (luma < 3 %): 0.03 % High / 0.18 % Low (limit 8 %). Exposure vs
+   overcast noon: 2.9 EV (range 1.9-3.1, EditMode test).
+6. Visual QA fix: `VisualQaRunner` looked StreetLamps up with `FindObjectsByType`, which skips `HideFlags.DontSave`
+   objects, so editor QA frames never had the lamp lights or pools (`[QA] street lamps: ... pools 0`). It now takes the
+   component from the EnvironmentLighting object.
 
 ### Not covered (other owners)
 Car lights and lit windows at dusk (world-builder / gameplay); lamp head position = top of LOD0 bounds over its centre,
 so the pool sits ~half an arm length toward the pole (world-builder can export the luminaire point).
 
-## Evidence
-See `artifacts/scale-r8/STATUS.md` (worktree) for test results, before/after control cameras and the editor cost table.
+## Evidence (worktree `artifacts/scale-r8/`, git-ignored)
+- before/after WorldC dusk Low/High (`before/`, `after/`, side-by-side 960 px in `montage/`), `STATUS.md`.
+- EditMode 154: all pass except 3 `TruckWheelLodGeometryTests` (worktree has LFS pointers instead of the truck FBX);
+  PlayMode 76: all pass except 2 `WorldCRouteTests` (missing TRAKT prefab, same LFS cause). Neither touches this change.
+- Editor cost (`artifacts/perf/tiercost-High-20261110-192225.tsv`, RTX desktop, CPU-bound, UNVERIFIED for the phone):
+  wall 8.2-9.0 ms at 1.0, 7.0-7.2 at 0.80, 6.8-7.3 at 0.70 (0.80 vs 0.70 within noise); 3 mirror renders 8.6-10.7 ms.

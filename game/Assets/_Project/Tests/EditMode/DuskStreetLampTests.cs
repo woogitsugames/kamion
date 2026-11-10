@@ -38,7 +38,7 @@ namespace Game.Tests
             {
                 var m = dusk.CreateModel();
                 Assert.Less(m.TrueSunElevationDeg, 0f, "dusk = after sunset");
-                Assert.That(m.HorizontalIlluminanceLux, Is.InRange(10f, 60f), "civil twilight ~25 lx");
+                Assert.That(m.HorizontalIlluminanceLux, Is.InRange(3.4f, 40f), "civil twilight: 3.4 lx at -6°, ~8 lx at -5°");
                 float pool = StreetLamps.DownIntensityCd / (LampHeightM * LampHeightM);
                 float ratio = (m.HorizontalIlluminanceLux + pool) / m.HorizontalIlluminanceLux;
                 Assert.GreaterOrEqual(ratio, 1.5f, $"pool under the lamp {pool:F0} lx on {m.HorizontalIlluminanceLux:F0} lx (r8 acceptance >= 1.5x)");

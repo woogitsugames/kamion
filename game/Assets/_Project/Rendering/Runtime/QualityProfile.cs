@@ -211,7 +211,7 @@ namespace Game.Rendering
                 cascade4Split = new Vector3(0.08f, 0.25f, 0.55f), softShadows = true, softShadowQuality = SoftShadowQuality.Low,
                 shadowDepthBias = 0.8f, shadowNormalBias = 0.8f,
                 anisotropic = 1, worldTextureAniso = 8, worldMipBias = 0f, lodBias = 1.5f, cameraFarClip = 2500f, adaptiveScaleMin = 0.70f, thermalFallbackFps = 30, pacingFallbackFps = 30,
-                upscalingFilter = UpscalingFilterSelection.FSR, fsrSharpness = 0.6f,
+                upscalingFilter = UpscalingFilterSelection.FSR, fsrSharpness = 0.75f,
                 worldDetail = true, additionalLightsPerObject = 4,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 120f, forestHlodCullM = 0f,

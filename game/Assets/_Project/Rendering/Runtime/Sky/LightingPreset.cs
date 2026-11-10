@@ -102,10 +102,10 @@ namespace Game.Rendering
         }
 
         /// <summary>
-        /// Dusk (track A7): civil twilight, sun 4 deg below the horizon at azimuth 300 deg (summer evening, ~25 min after
+        /// Dusk (track A7): civil twilight, sun 5 deg below the horizon at azimuth 300 deg (summer evening, ~30 min after
         /// sunset), hazy. ADR 0062 / review r8 N-20: at the old +1 deg the sky still gave ~2.4 klx, so a street lamp's
         /// ~30 lx pool was ~1 % of the background - physically invisible (and real lamps are often still off then). At
-        /// -4 deg the sky gives ~25 lx: the lamps are on in every Polish town (astronomical clocks / twilight switches) and
+        /// -5 deg the sky gives ~8 lx: the lamps are on in every Polish town (astronomical clocks / twilight switches) and
         /// their pools read at 1.5-2.5x the background. Screen brightness of the ambient-lit scene is kept (the exposure
         /// table follows the twilight, like a phone), so the r3 G3 "2-3 EV under overcast noon" still holds. WORKING_VALUE.
         /// </summary>
@@ -113,7 +113,7 @@ namespace Game.Rendering
         {
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_Dusk";
-            p.sunElevationDeg = -4f; p.sunAzimuthDeg = 300f; p.turbidity = 4f; p.overcast = 0.2f; p.visibilityKm = 12f;
+            p.sunElevationDeg = -5f; p.sunAzimuthDeg = 300f; p.turbidity = 4f; p.overcast = 0.2f; p.visibilityKm = 12f;
             p.lookSaturation = -3f;
             return p;
         }

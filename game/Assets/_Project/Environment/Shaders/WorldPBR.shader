@@ -78,6 +78,7 @@ Shader "Kamion/World PBR"
 
         HLSLINCLUDE
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+        #include "../../Rendering/Shaders/KamionLampPools.hlsl"
         CBUFFER_START(UnityPerMaterial)
             float4 _BaseMap_ST;
             float4 _Tint;
@@ -530,6 +531,7 @@ Shader "Kamion/World PBR"
                 half grazing = saturate(smooth + max(metal, 0.04));
                 half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, ao) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
                 color += ambient + env;
+                color += diffColor * KamionLampPools(pw, nw);   // dusk street-lamp pools (ADR 0062)
 
                 color = MixFog(color, i.fogFactor);
                 return half4(color, alpha);

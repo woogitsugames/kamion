@@ -69,9 +69,7 @@ Shader "Kamion/World Surface"
             float4 _Emission;
         CBUFFER_END
         float _KamionStreetLamps, _KamionLampLights, _KamionExposure;
-        float _KamionLampCount;
-        float4 _KamionLampColor;
-        float4 _KamionLampPos[8];
+        #include "KamionLampPools.hlsl"
         ENDHLSL
 
         Pass
@@ -238,24 +236,7 @@ Shader "Kamion/World Surface"
                 half grazing = saturate(smooth + 0.04);
                 half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, _Occlusion) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
                 color += ambient + env;
-                if (_KamionLampCount > 0.5)
-                {
-                    float3 pool = 0.0;
-                    int lampCount = (int)_KamionLampCount;
-                    for (int li = 0; li < 8; li++)
-                    {
-                        if (li >= lampCount) break;
-                        float4 lp = _KamionLampPos[li];
-                        float3 dv = lp.xyz - i.positionWS;
-                        float d2 = max(dot(dv, dv), 1.0);
-                        float3 l = dv * rsqrt(d2);
-                        // l.y = cos of the angle from the luminaire's nadir: full to 60° (0.5), cut off at 75° (0.2588).
-                        float shape = saturate((l.y - 0.2588) * 4.1356);
-                        float win = saturate(1.0 - (d2 * d2) * 6.664e-7);   // (1 - (d/35)^4)^2, URP-style smooth range
-                        pool += (lp.w * shape * win * win * saturate(dot(n, l)) / d2).xxx;
-                    }
-                    color += albedo * _KamionLampColor.rgb * pool;
-                }
+                color += albedo * KamionLampPools(i.positionWS, n);   // ADR 0062
                 color += _Emission.rgb * (_KamionStreetLamps * _KamionExposure);
 
                 color = MixFog(color, i.fogFactor);

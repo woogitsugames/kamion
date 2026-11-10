@@ -196,7 +196,11 @@ namespace Game.Editor.VisualQA
                     Debug.Log($"[QA] contact shadow {csc.name}: {csc.LastVertices} vertices, {csc.LastHits} ground hits; {csc.LastDiagnostics}");
                 }
                 if (VehicleReflectionCapture.Active != null) VehicleReflectionCapture.Active.RenderAllNow();
-                foreach (var sl in UnityEngine.Object.FindObjectsByType<StreetLamps>(FindObjectsSortMode.None)) sl.RefreshLights(cam);
+                // StreetLamps is added with HideFlags.DontSave, which FindObjectsByType skips (ADR 0062: the QA frames never
+                // refreshed the lamp lights / pools before): take it from the EnvironmentLighting object.
+                var lampsHost = UnityEngine.Object.FindAnyObjectByType<EnvironmentLighting>();
+                var lamps = lampsHost != null ? lampsHost.GetComponent<StreetLamps>() : null;
+                if (lamps != null) lamps.RefreshLights(cam);
                 Debug.Log("[QA] street lamps: " + StreetLamps.Diagnostics);
                 // -qaCabFill off: A/B frames without the cab fill and the cab-view lift (A7 before/after).
                 if (EditorTools.Arg("-qaCabFill", "on") == "off")
