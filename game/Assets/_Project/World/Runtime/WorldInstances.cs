@@ -226,13 +226,17 @@ namespace Game.World
             Vector3 o = transform.position;
             if (m_World != null && o == m_Origin) return;
             m_Origin = o;
-            var src = set.matrices;
-            if (m_World == null || m_World.Length != src.Length) m_World = new Matrix4x4[src.Length];
-            for (int i = 0; i < src.Length; i++)
+            int n = set.Count;
+            if (m_World == null || m_World.Length != n)
             {
-                var m = src[i];
-                m.m03 += o.x; m.m13 += o.y; m.m23 += o.z;
-                m_World[i] = m;
+                // rotation/scale decoded once (compact TRS, ADR 0025); only the translation follows the origin
+                m_World = new Matrix4x4[n];
+                for (int i = 0; i < n; i++) m_World[i] = set.LocalMatrix(i);
+            }
+            for (int i = 0; i < n; i++)
+            {
+                var p = set.LocalPosition(i);
+                m_World[i].m03 = p.x + o.x; m_World[i].m13 = p.y + o.y; m_World[i].m23 = p.z + o.z;
             }
             if (m_CellBounds == null || m_CellBounds.Length != set.cells.Length) m_CellBounds = new Bounds[set.cells.Length];
             for (int i = 0; i < set.cells.Length; i++) { var b = set.cells[i].bounds; b.center += o; m_CellBounds[i] = b; }

@@ -16,12 +16,16 @@ namespace Game.Controls
         public const string PrefKey = "controls.settings";
         /// <summary>Pre-settings-menu key: 0 = wheel 270, 1 = wheel 900, 2 = gyro (Stage 1/2 builds).</summary>
         public const string LegacySteerModeKey = "controls.steerMode";
-        public const int CurrentSchema = 1;
+        public const int CurrentSchema = 2;
 
         public const float RangeMin = 180f, RangeMax = 900f;
         public const float GainMin = 0.5f, GainMax = 2f;
         public const float CentreMin = 0f, CentreMax = 2f;
         public const float DeadMin = 0f, DeadMax = 0.15f;
+        public const float LookMin = 0.5f, LookMax = 2f;
+        public const float FovMin = 45f, FovMax = 75f;
+        /// <summary>CameraRig defaults the camera settings scale (Game.Cameras.CameraRig lookDegPerPixel, headGain).</summary>
+        public const float BaseLookDegPerPixel = 0.12f, BaseHeadGain = 0.006f;
 
         public int schema = CurrentSchema;
         /// <summary>On-screen wheel half range [deg]: 270 comfort, 900 simulator (docs/04 section 3).</summary>
@@ -41,6 +45,12 @@ namespace Game.Controls
         /// <summary>false = linear, true = progressive (fine modulation at small pedal travel).</summary>
         public bool throttleProgressive = true;
         public bool brakeProgressive = true;
+        /// <summary>Schema 2: gain of the look-around drag in the cab view.</summary>
+        public float lookSensitivity = 1f;
+        /// <summary>Schema 2: field of view of the cab camera [deg] (vertical).</summary>
+        public float cabFov = 55f;
+        /// <summary>Schema 2: head sway from accelerations (limited, see CameraRig); off for motion-sickness-prone players.</summary>
+        public bool headMotion = true;
 
         public const float ProgressiveThrottleExponent = 1.6f, ProgressiveBrakeExponent = 1.4f;
         public const float BaseGyroMaxTiltDeg = 35f;
@@ -59,6 +69,7 @@ namespace Game.Controls
             wheelRangeDeg = d.wheelRangeDeg; wheelSensitivity = d.wheelSensitivity; centreStrength = d.centreStrength;
             wheelDeadZone = d.wheelDeadZone; gyroEnabled = d.gyroEnabled; gyroInvert = d.gyroInvert;
             gyroSensitivity = d.gyroSensitivity; throttleProgressive = d.throttleProgressive; brakeProgressive = d.brakeProgressive;
+            lookSensitivity = d.lookSensitivity; cabFov = d.cabFov; headMotion = d.headMotion;
             schema = CurrentSchema;
         }
 
@@ -71,6 +82,8 @@ namespace Game.Controls
             centreStrength = Safe(centreStrength, CentreMin, CentreMax, d.centreStrength);
             wheelDeadZone = Safe(wheelDeadZone, DeadMin, DeadMax, d.wheelDeadZone);
             gyroSensitivity = Safe(gyroSensitivity, GainMin, GainMax, d.gyroSensitivity);
+            lookSensitivity = Safe(lookSensitivity, LookMin, LookMax, d.lookSensitivity);
+            cabFov = Safe(cabFov, FovMin, FovMax, d.cabFov);
         }
 
         static float Safe(float v, float lo, float hi, float fallback) => float.IsNaN(v) || float.IsInfinity(v) ? fallback : Mathf.Clamp(v, lo, hi);
@@ -92,12 +105,13 @@ namespace Game.Controls
         }
 
         /// <summary>
-        /// Schema migrations. v0 (no "schema" field in the JSON, never written by a release) has no fields that need
-        /// converting; the hook exists so a future v2 can rename or rescale a field without dropping the owner's choices.
+        /// Schema migrations. v0 (no "schema" field) and v1 (no camera fields) need no conversion: JsonUtility leaves the
+        /// missing fields at their defaults, so only the version is raised; the owner's other choices are kept.
         /// </summary>
         static void Migrate(ControlSettings s)
         {
             if (s.schema < 1) s.schema = 1;
+            if (s.schema < 2) s.schema = 2;   // v2: lookSensitivity, cabFov, headMotion
             if (s.schema > CurrentSchema) s.schema = CurrentSchema;   // saved by a newer build: keep known fields
         }
 
@@ -166,7 +180,10 @@ namespace Game.Controls
                 + " gyroInvert=" + (gyroInvert ? "on" : "off")
                 + " gyroSens=" + gyroSensitivity.ToString("F2", ci)
                 + " throttle=" + (throttleProgressive ? "progressive" : "linear")
-                + " brake=" + (brakeProgressive ? "progressive" : "linear");
+                + " brake=" + (brakeProgressive ? "progressive" : "linear")
+                + " lookSens=" + lookSensitivity.ToString("F2", ci)
+                + " cabFov=" + cabFov.ToString("F0", ci)
+                + " headMotion=" + (headMotion ? "on" : "off");
         }
 
         public void Log(string reason) => Debug.Log(LogLine(reason));

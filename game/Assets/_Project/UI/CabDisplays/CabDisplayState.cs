@@ -39,13 +39,15 @@ namespace Game.UI.CabDisplays
 
         // ---- lamps
         public bool LowBeam, HighBeam;
-        /// <summary>Turn signal lever: 0 off, -1 left, +1 right, 2 hazard (no input source yet: always 0).</summary>
+        /// <summary>Turn signal lever: 0 off, -1 left, +1 right, 2 hazard (from the turn-signal stalk, <c>TurnSignal</c>).</summary>
         public int Indicators;
         /// <summary>Flasher phase (true = lamp lit), for the indicator telltales.</summary>
         public bool FlasherOn;
 
         // ---- trip computer
         public float FuelLitres, FuelCapacityLitres, AdBlueFraction;
+        /// <summary>Coolant temperature [deg C] (first-order warm-up model, <c>CoolantModel</c>).</summary>
+        public float CoolantC;
         public float RangeKm;
         /// <summary>Trip average [l/100 km]; NaN until enough distance for a meaningful value.</summary>
         public float AvgConsumption;

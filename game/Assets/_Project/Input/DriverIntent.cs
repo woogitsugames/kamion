@@ -36,6 +36,8 @@ namespace Game.Controls
         public bool ToggleBrakeCruise;
         /// <summary>One-shot: reversing camera view on / auto.</summary>
         public bool ToggleReverseCamera;
+        /// <summary>One-shot: turn-signal stalk / hazard switch request.</summary>
+        public TurnSignalRequest TurnSignal;
 
         public void ClearCommands()
         {
@@ -48,6 +50,7 @@ namespace Game.Controls
             ToggleLandingGear = false;
             ToggleBrakeCruise = false;
             ToggleReverseCamera = false;
+            TurnSignal = TurnSignalRequest.None;
         }
     }
 

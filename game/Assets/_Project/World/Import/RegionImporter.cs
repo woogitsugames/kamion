@@ -533,7 +533,7 @@ namespace Game.World.Import
             sb.Append($"  \"terrain_band_fine_fraction\": {{ \"Low\": {lowFine.ToString("F3", ci)}, \"High\": {highFine.ToString("F3", ci)} }},\n");
             var instSet = AssetDatabase.LoadAssetAtPath<WorldInstanceSet>($"{r.Dir}/Instances.asset");
             sb.Append($"  \"pbr_textures_gpu_bytes_astc\": {WorldPbrMaterials.EstimatedGpuBytes()},\n");
-            sb.Append($"  \"instances\": {(instSet != null ? instSet.matrices.Length : 0)},\n  \"prop_colliders\": {(r.PropColliders != null ? r.PropColliders.Count : 0)}\n}}\n");
+            sb.Append($"  \"instances\": {(instSet != null ? instSet.Count : 0)},\n  \"prop_colliders\": {(r.PropColliders != null ? r.PropColliders.Count : 0)}\n}}\n");
             string dir = Path.Combine(EditorTools.RepoRoot, "artifacts", "world");
             Directory.CreateDirectory(dir);
             File.WriteAllText(Path.Combine(dir, r.Region + "-import.json"), sb.ToString());

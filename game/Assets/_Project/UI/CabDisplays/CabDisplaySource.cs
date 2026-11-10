@@ -1,4 +1,5 @@
 using System;
+using Game.Controls;
 using Game.Vehicle.Physics;
 using Game.Vehicle.Runtime;
 using UnityEngine;
@@ -14,12 +15,8 @@ namespace Game.UI.CabDisplays
     public sealed class CabDisplaySource
     {
         // ---- trip computer constants (no fuel model in the solver; display-side estimate) ----
-        /// <summary>Brake specific fuel consumption of a Euro VI heavy diesel near its best island [g/kWh]. WORKING_VALUE (typical 190-200).</summary>
-        public const double BsfcGPerKWh = 198;
-        /// <summary>Idle fuel flow [l/h]. WORKING_VALUE (13 l class engine at 600 rpm, typical 2-3 l/h).</summary>
-        public const double IdleLitresPerHour = 2.4;
-        /// <summary>Diesel density [kg/l] (EN 590: 0.820-0.845).</summary>
-        public const double DieselDensity = 0.835;
+        // Fuel flow: FuelFlowModel (BSFC map over load, idle floor); coolant: CoolantModel (first-order warm-up); clock: GameClock.
+        // All WORKING_VALUE, documented in Game.Controls.CabInstrumentModels.
         /// <summary>AdBlue dosing as a share of fuel volume. WORKING_VALUE (SCR Euro VI, typical 3-6 %).</summary>
         public const double AdBlueShare = 0.045;
         /// <summary>Tank sizes of the fictional TRAKT [l]. WORKING_VALUE (not modelled in the art yet).</summary>
@@ -33,8 +30,12 @@ namespace Game.UI.CabDisplays
         public float OutsideTempC = 7f;
         /// <summary>Optional clock override (minutes of the day); otherwise the clock follows the scene sun (<see cref="SolarClock"/>).</summary>
         public Func<int> ClockOverride;
-        /// <summary>Turn-signal lever (0 off, -1 left, +1 right, 2 hazard). There is no input source for it yet.</summary>
+        /// <summary>Turn-signal lever fallback (0 off, -1 left, +1 right, 2 hazard) when no <see cref="TruckLights"/> carries the live state.</summary>
         public int Indicators;
+        /// <summary>Start coolant temperature [deg C] of a new session (parked after a short stop). WORKING_VALUE.</summary>
+        public double CoolantC = 55.0;
+        /// <summary>Game clock (anchored to the scene sun, then follows the simulation time).</summary>
+        public readonly GameClock Clock = new GameClock();
 
         public double OdometerKm = 184327.0;   // WORKING_VALUE: start reading of the fictional truck (no save game yet)
         public double TripKm;
@@ -95,12 +96,14 @@ namespace Game.UI.CabDisplays
                 double dKm = Math.Abs(model.SpeedForward) * dt / 1000.0;
                 OdometerKm += dKm; TripKm += dKm;
                 double litres = 0;
+                double load = 0;
                 if (!model.Engine.Stalled)
                 {
                     double powerKw = Math.Max(0, model.EngineTorque * model.Engine.Omega) / 1000.0;
-                    double perHour = Math.Max(IdleLitresPerHour, powerKw * BsfcGPerKWh / 1000.0 / DieselDensity);
-                    litres = perHour * dt / 3600.0;
+                    load = model.EngineTorque / Math.Max(1.0, PeakTorque(model.Engine.Def));
+                    litres = FuelFlowModel.LitresPerHour(powerKw, load) * dt / 3600.0;
                 }
+                CoolantC = CoolantModel.Step(CoolantC, dt, !model.Engine.Stalled, load, OutsideTempC);
                 FuelLitres = Math.Max(0, FuelLitres - litres);
                 AdBlueLitres = Math.Max(0, AdBlueLitres - litres * AdBlueShare);
                 TripFuelLitres += litres;
@@ -108,6 +111,7 @@ namespace Game.UI.CabDisplays
             }
             s.OdometerKm = OdometerKm;
             s.TripKm = TripKm;
+            s.CoolantC = (float)CoolantC;
             s.FuelCapacityLitres = FuelTankLitres;
             s.FuelLitres = (float)FuelLitres;
             s.AdBlueFraction = (float)(AdBlueLitres / AdBlueTankLitres);
@@ -117,8 +121,10 @@ namespace Game.UI.CabDisplays
             s.DrivingMinutes = (int)(DrivingSeconds / 60.0);
 
             // ---- driver controls, lamps ----
-            s.Indicators = Indicators;
-            s.FlasherOn = Indicators != 0 && (time % 0.8) < 0.4;   // 75 flashes/min (ECE R48: 90 +/- 30)
+            bool live = lights != null && lights.indicatorLever != 0;
+            s.Indicators = live ? lights.indicatorLever : Indicators;
+            // Live: the flasher phase of the stalk (TurnSignal, 1.5 Hz); fallback without a stalk source: same rate on the sim clock.
+            s.FlasherOn = s.Indicators != 0 && (live ? lights.flasherLit : (time % 0.667) < 0.333);
             s.LowBeam = lights != null && lights.LowBeamOn;
             s.HighBeam = lights != null && lights.highBeam;
             // Night mode by the light sensor: sun below the automatic dipped-beam threshold (TruckLights, 6°). The sun
@@ -129,7 +135,7 @@ namespace Game.UI.CabDisplays
 
             // ---- environment ----
             s.OutsideTempC = OutsideTempC;
-            s.ClockMinutes = ClockOverride != null ? ClockOverride() : SunClock();
+            s.ClockMinutes = ClockOverride != null ? ClockOverride() : Clock.Advance(dt, SunClock());
 
             // ---- position for the navigation ----
             s.HasPosition = truck != null;
@@ -149,6 +155,17 @@ namespace Game.UI.CabDisplays
             s.BrakeCruiseKmh = (float)input.BrakeCruiseKmh;
             s.Selector = input.Selector == GearSelector.Reverse ? 'R' : input.Selector == GearSelector.Neutral ? 'N' : 'D';
             s.ManualMode |= input.ManualMode;
+        }
+
+        static double s_PeakDef; static EngineDefinition s_PeakFor;
+        static double PeakTorque(EngineDefinition def)
+        {
+            if (!ReferenceEquals(def, s_PeakFor))
+            {
+                s_PeakFor = def; s_PeakDef = 1;
+                for (int i = 0; i < def.torqueCurveNm.Length; i++) s_PeakDef = Math.Max(s_PeakDef, def.torqueCurveNm[i]);
+            }
+            return s_PeakDef;
         }
 
         static float SunElevation(Light sun) => Mathf.Asin(Mathf.Clamp(-sun.transform.forward.y, -1f, 1f)) * Mathf.Rad2Deg;
