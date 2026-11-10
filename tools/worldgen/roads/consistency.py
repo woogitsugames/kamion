@@ -34,6 +34,7 @@ from .markings import _lanes_continue, lane_layout
 CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
 OBSTACLE = {"curb_concrete": "kerb", "sidewalk_paving": "sidewalk", "verge_grass": "verge_grass",
             "shoulder_gravel": "shoulder", "bridge_concrete": "bridge_kerb"}
+DRIVABLE = ["carriageway", "yard", "apron"]     # a lane may run onto a flush yard or a roundabout apron
 PAINT = ("lane", "centre", "P-4", "P-7b", "P-8", "P-10", "P-13", "P-14")
 GROUND_PROPS = ("lamp_", "sign_post", "signal_pole", "signal_mast", "power_pole", "pylon", "bollard", "bus_shelter",
                 "bench", "waste_bin", "gantry_footing")
@@ -227,8 +228,12 @@ def check(w, instances, region_id, pipeline, report_extra=None):
         ss = np.arange(s0, s1 + 1e-6, STATION_M)
         P, meta = [], []
         for s in ss:
+            lim = float(c.hw_at(s)) - 0.15
             for li, trav, lat, hb, tl in _lane_bands(c, secs, s):
                 for off in (-hb, 0.0, hb):
+                    if abs(lat + off) > lim:      # lane gain / drop taper: the lane is still forming, not an obstacle
+                        stats["lane_samples_in_taper"] = stats.get("lane_samples_in_taper", 0) + 1
+                        continue
                     q = c.line.offset_point(s, lat + off)
                     P.append([q[0], q[1], float(c.crossfall_z(s, lat + off))])
                     meta.append((s, li, trav))
@@ -237,7 +242,7 @@ def check(w, instances, region_id, pipeline, report_extra=None):
         P = np.array(P)
         stats["lane_samples"] += len(P)
         lab = idx.classify(P)
-        for b in np.nonzero(lab != "carriageway")[0].tolist():
+        for b in np.nonzero(~np.isin(lab, DRIVABLE))[0].tolist():
             s, li, trav = meta[b]
             cases.add("obstacle_in_lane", P[b], {"what": str(lab[b]), "lane": li, "s": round(float(s), 1)},
                       chain=c.id, osm_ways=_osm_ways(c))
@@ -247,8 +252,9 @@ def check(w, instances, region_id, pipeline, report_extra=None):
             for s in ss:
                 for li, trav, lat, hb, tl in _lane_bands(c, secs, s):
                     if (li, trav) == li_key:
-                        pts_l.append(c.line.offset_point(s, lat + hb))
-                        pts_r.append(c.line.offset_point(s, lat - hb))
+                        lim = float(c.hw_at(s)) - 0.15
+                        pts_l.append(c.line.offset_point(s, min(lat + hb, lim)))
+                        pts_r.append(c.line.offset_point(s, max(lat - hb, -lim)))
             if len(pts_l) >= 2:
                 lane_poly.append((shapely.Polygon(np.vstack([pts_l, pts_r[::-1]])).buffer(0), c,
                                   float(np.mean([c.zc(s) for s in ss]))))
@@ -295,8 +301,18 @@ def check(w, instances, region_id, pipeline, report_extra=None):
                     continue
                 # straight on: march along the inbound direction until we are on an outbound ribbon past its trim
                 th = [x for x in outs if abs(x[0]) <= JUNCTION_THROUGH_DEG]
-                tgt = min(th, key=lambda x: abs(x[0]))[2]
-                k_t = min(th, key=lambda x: abs(x[0]))[1]
+                # the continuation of the same OSM way first (a side road running parallel is not "straight on")
+                way_in = str(c.section(s_end, secs).edge_id).split(":")[0]
+                same = [x for x in th
+                        if str(x[2].chain.section(x[2].s(1.0), secs).edge_id).split(":")[0] == way_in]
+                # otherwise only a road of the same kind straight ahead (a service road / living street meeting a
+                # link at a shallow angle is not a lane that continues into it)
+                hw_in = c.section(s_end, secs).highway
+                same_kind = [x for x in th if x[2].chain.section(x[2].s(1.0), secs).highway == hw_in]
+                if not (same or same_kind):
+                    continue
+                best = min(same or same_kind, key=lambda x: abs(x[0]))
+                tgt, k_t = best[2], best[1]
                 tt = float(j.trims.get(k_t, 0.0))
                 q_end = tgt.chain.line.point(tgt.s(tt + 3.0))
                 dist = float(np.dot(q_end - p0, d_in))
@@ -332,7 +348,7 @@ def check(w, instances, region_id, pipeline, report_extra=None):
                 hb2 = min(hb, 0.9)
                 PP = np.concatenate([np.column_stack([path + nrm * o, zz]) for o in (-hb2, 0.0, hb2)])
                 lab = idx.classify(PP)
-                bad = np.nonzero(lab != "carriageway")[0]
+                bad = np.nonzero(~np.isin(lab, DRIVABLE))[0]
                 if len(bad):
                     b = int(bad[0])
                     cases.add("lane_blind_end", PP[b], {"what": str(lab[b]), "lane": li, "turn_lanes": tl,

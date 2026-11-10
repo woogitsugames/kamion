@@ -399,6 +399,7 @@ def taper_forks(net: Network, report: list | None = None):
 FORK_ALIGN_MAX_DEG = 60.0      # branches of a diverge / merge within this angle of the main carriageway
 FORK_ALIGN_MIN_M = 40.0        # lateral shift taper: max(this, FORK_ALIGN_RATIO x shift) (WORKING_VALUE)
 FORK_ALIGN_RATIO = 20.0
+FORK_GORE_CLEAR_M = 6.0       # hold the shift until the branch edges are this far apart (WORKING_VALUE, ADR 0074)
 
 
 def align_forks(net: Network, report: list | None = None):
@@ -488,7 +489,7 @@ def align_forks(net: Network, report: list | None = None):
                         q = c.line.point(dd if e == "a" else c.length - dd)
                         hb = float(c.hw_at(dd if e == "a" else c.length - dd))
                         clear = min(Point(q).distance(o) for o in others) if others else 1e9
-                        if clear - abs(shift) > hb + oh + 1.0:  # branch edge > 1 m clear of the neighbour's edge
+                        if clear - abs(shift) > hb + oh + FORK_GORE_CLEAR_M:  # gore fully open (past the kerb returns)
                             break
                         hold = dd
                     L = max(FORK_ALIGN_MIN_M, FORK_ALIGN_RATIO * abs(shift))
@@ -501,7 +502,7 @@ def align_forks(net: Network, report: list | None = None):
                     c.line = Polyline(pts)
                     c.meta["fork_shift_m"] = round(shift, 2)
                     if report is not None:
-                        report.append({"node": node, "chain": c.id, "shift_m": round(shift, 2), "taper_m": round(L, 1),
+                        report.append({"node": node, "chain": c.id, "shift_m": round(shift, 2), "hold_m": round(float(hold), 1), "taper_m": round(L, 1),
                                        "lanes": [round(x, 2) for x in take]})
 
 
