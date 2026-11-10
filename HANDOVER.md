@@ -14,7 +14,11 @@
 | Kwadrat Park hero | Fable | 0071 | nowy | kwadrat-r9 |
 | grill Low lowsun + szyba/dach/chrom | Opus | 0072 | nowy | truckshade-r9 |
 | auta r9 sylwetki | Fable | 0073 | nowy | cars-r9 |
-- Ostatni przydzielony ADR: **0073**. Kolejność scalania: 0060 → 0063 → 0069 → 0067 → 0072 → 0073 → 0070/0071 → 0066; potem pełna integracja, telefony, r9, bramka 3.
+| spójność nawierzchni (pas w wysepkę — zgłoszenie właściciela) | Opus | 0074 | nowy | roadgeo-r9 |
+| audyt mapy całej trasy (lista błędów) | Opus | — | nowy | map-audit-r9/BUGS.md |
+| zgodność dróg z OSM/ortofoto („dosłownie jak w OSM”) | Opus | 0075 | nowy | fidelity-r9/DIFFS.md |
+- CC0 0063 GOTOWE (02f3d71), czeka na scalenie po 0060.
+- Ostatni przydzielony ADR: **0075**. Kolejność scalania: 0060 → 0063 → 0069 → 0067 → 0072 → 0073 → 0070/0071 → 0066; potem pełna integracja, telefony, r9, bramka 3.
 
 ---
 # HANDOVER — kamion (TRUCK SIM PL), stan 2026-11-10 ok. 20:00 (sesja 4, limit 86 %)
