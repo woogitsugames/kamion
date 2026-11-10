@@ -61,7 +61,7 @@ LOD2_DROP = LOD1_DROP + ("_cst_", "_ctr_", "_bst_", "_btr_", "rocker_icon_", "hv
                          "dash_insert_stitch_", "door_insert_stitch_", "stack_flank_stitch", "hvac_plate",
                          "hvac_lcd_bezel", "stack_cubby", "socket_12v", "sun_visor_hinge_", "spoke_trim_",
                          "emblem_wm_", "sun_visor_clip_", "visor_centre_bracket", "_vane",
-                         "wheel_stitch", "rear_lid_", "curtain_bunk_-1")   # modern cab (ADR 0047): larger glazing hides fewer faces, keeps LOD2 <= 22k
+                         "wheel_stitch", "rear_lid_", "curtain_bunk_-1", "dash_top_stitch_")   # modern cab (ADR 0047): larger glazing hides fewer faces, keeps LOD2 <= 22k
 
 # ---------------------------------------------------------------- slots (game materials)
 SLOT_OF = {
@@ -83,8 +83,12 @@ DETAIL_SET = {"MI_Cab_Plastic": ("dashgrain", 1024), "MI_Cab_Leather": ("leather
 # r4 (touch-point wear pass): rim 1.6 -> 2.1, door pull 1.7 -> 2.0, armrest leather 1.6 -> 1.9; new: knob (gear
 # selector, stalk ends, park-brake knob, light rotary; 1.9 read as a chrome cap in cab-dash) and the lower
 # mouldings (knee polish, kick scuffs)
-WEAR_MUL = {"leather_trim": 1.9, "leather": 2.3, "leather_wheel": 2.1, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3,
-            "switch": 1.35, "grab_dark": 2.0, "knob": 1.4, "dash_lower": 1.45}
+# r6b (review r6 C-R2): rim 2.1 -> 2.5 with shaped hand patches, knob 1.4 -> 1.8 (the additive polish that made 1.9 a
+# chrome cap left the shader in ADR 0044 r6; wear is roughness + the <= 0.05 albedo cap now)
+WEAR_MUL = {"leather_trim": 1.9, "leather": 2.3, "leather_wheel": 2.5, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3,
+            "switch": 1.35, "grab_dark": 2.0, "knob": 1.8, "dash_lower": 1.45}
+BLACK_TINT = 0.04          # mean linear tint below this = black part: its worn spots are darkened so that the shader's
+BLACK_WEAR_DARKEN = 0.30   # worn albedo (lerp to max(base, 0.05)) stays <= 0.05 (ADR 0044 r6)
 NO_AO = ("curtain_", "blind_", "hatch_blind",     # thin interpenetrating cloth (critic #15) and the rim, which
          "wheel_rim", "wheel_stitch",           # rotates (a baked occlusion pattern would turn with it): median value
          "ws_frit")                             # A6 r3: frit on the glass (no surface under it to inherit UV1 from)
@@ -334,6 +338,8 @@ def consolidate(objs):
                 me.uv_layers.new(name=nm)
         col = me.color_attributes.get("Col") or me.color_attributes.new("Col", "FLOAT_COLOR", "CORNER")
         wear = me.attributes.get("wear")
+        tadd = me.attributes.get("tint_add")     # r6b: authored zones (build_interior.set_attr_w)
+        radd = me.attributes.get("rough_add")
         uv0 = me.uv_layers["UVMap"].data
         d0 = me.uv_layers["Data0"].data
         d1 = me.uv_layers["Data1"].data
@@ -358,10 +364,15 @@ def consolidate(objs):
             tint = prm["tint"]
             for li in p.loop_indices:
                 vi = me.loops[li].vertex_index
-                col.data[li].color = (tint[0], tint[1], tint[2], max(0.02, min(1.0, rough)))
                 w = wear.data[vi].value if wear else 0.0
                 wm = WEAR_MUL.get(nm, 1.0)
-                d0[li].uv = (w * (wm - 1.0) / 1.5 if wm > 1.0 else 0.0, strength)
+                wn = w * (wm - 1.0) / 1.5 if wm > 1.0 else 0.0
+                tk = 1.0 + (tadd.data[vi].value if tadd else 0.0)
+                if sum(tint[:3]) / 3.0 < BLACK_TINT:
+                    tk *= 1.0 - BLACK_WEAR_DARKEN * min(1.0, wn)
+                col.data[li].color = (tint[0] * tk, tint[1] * tk, tint[2] * tk,
+                                      max(0.02, min(1.0, rough + (radd.data[vi].value if radd else 0.0))))
+                d0[li].uv = (wn, strength)
                 d1[li].uv = (perf, metal)
                 if slot == "MI_Cab_Decal":
                     uv0[li].uv = decal_uv(nm, tuple(uv0[li].uv))
@@ -916,8 +927,9 @@ def finalize_mesh(ob):
         ob.data.materials.append(m)
     for p, i in zip(ob.data.polygons, idx):
         p.material_index = i
-    if "wear" in ob.data.attributes:
-        ob.data.attributes.remove(ob.data.attributes["wear"])
+    for an in ("wear", "tint_add", "rough_add"):
+        if an in ob.data.attributes:
+            ob.data.attributes.remove(ob.data.attributes[an])
     ob.data.color_attributes.active_color = ob.data.color_attributes["Col"]
 
 

@@ -391,6 +391,18 @@ def set_wear_w(ob, fn, add=False):
         at.data[v.index].value = max(at.data[v.index].value, w) if add else w
 
 
+def set_attr_w(ob, name, fn, add=True):
+    """Per-vertex float attribute `name` from fn(world co, world normal). r6b: 'tint_add' (vertex tint x (1 + v)) and
+    'rough_add' (roughness + v) carry authored zones (dust, polish) into the export's vertex colour; no texture."""
+    me = ob.data
+    at = me.attributes.get(name) or me.attributes.new(name, "FLOAT", "POINT")
+    mw = ob.matrix_world.copy()
+    m3 = mw.to_3x3()
+    for v in me.vertices:
+        val = fn(mw @ v.co, (m3 @ v.normal).normalized())
+        at.data[v.index].value = at.data[v.index].value + val if add else val
+
+
 def vnoise(x, y, z=0.0):
     """Smooth value noise 0..1 (trilinear hash01 lattice): wear break-up that does not alias on the vertex grid."""
     xi, yi, zi = math.floor(x), math.floor(y), math.floor(z)
@@ -461,6 +473,26 @@ def build_shell():
             loops.append([V(xin - s * 0.003, ya, z), V(xin - s * 0.003, yb, z), V(xin + s * 0.045, yb, z),
                           V(xin + s * 0.045, ya, z)])
         loft(f"apillar_foot_{s}", loops, "dash_dark", closed=True, cap0=True, cap1=True, sharp=40)
+        # r6b (review r6 C-N7): footwell corner moulding. The headlamp bucket of the modern front (ADR 0047) reaches up
+        # to 75 mm inside the fitted interior wall in the lower front corner (plan radius 0.286 m about the corner
+        # centre against the trim's 0.346 m, x 0.87-1.2, z up to 1.545): the lit DRL guide stood inside the cab as a
+        # white L in cab-dash. A real cab has the lamp box / wheel-arch intrusion trimmed there: a quarter-round
+        # moulding (plan radius 0.262 m), floor to 1.60 m, shoulder rolled back to the wall.
+        yf_c, _, w_c, rf_c, _ = shell_sec(FLOOR + 0.06) if GLASS_IF and GLASS_IF.get("shell") else (1.395, 0, HALF_OUT, 0.38, 0)
+        ccx, ccy = w_c - rf_c, yf_c - rf_c
+        na = G.Q(12, 4)
+        loops = []
+        zs_c = (((FLOOR - 0.004, 0.0), (1.575, 0.0), (1.593, 0.007), (1.600, 0.022)) if G.STATE["q"] > 0.5 else
+                ((FLOOR - 0.004, 0.0), (1.600, 0.0)))     # LOD2: one band + cap (22k budget)
+        for z, ins in zs_c:
+            r = rf_c - 0.118 + ins
+            ring = [V(s * (ccx - 0.045 + ins), yf_c - 0.03, z), V(s * (ccx - 0.045 + ins), ccy + r - 0.004, z)]
+            ring += [V(s * (ccx + r * math.cos(a)), ccy + r * math.sin(a), z)
+                     for a in (math.radians(90 - 90 * i / na) for i in range(na + 1))]
+            ring += [V(s * (ccx + r), ccy - 0.03 + ins, z), V(s * (XI + 0.03), ccy - 0.065 + ins, z),
+                     V(s * (XI + 0.03), yf_c - 0.03, z)]
+            loops.append(ring if s > 0 else ring[::-1])
+        loft(f"footwell_wall_cnr_{s}", loops, "dash_dark", closed=True, cap1=True, sharp=40)
     # front: wall under the windscreen (outer) + inner footwell wall
     box_mm("front_skin", -HALF_OUT, HALF_OUT, FRONT_WALL_Y + 0.0, FRONT_WALL_Y + 0.10, SKIN_Z0, WS_Z0 - 0.02,
            "paint", bev=0.03)
@@ -814,6 +846,28 @@ def build_dash():
         hand += 0.7 * math.exp(-(((co.x + 1.02) / 0.06) ** 2 + ((co.z - 1.94) / 0.05) ** 2))
         return 0.75 * knees * (0.55 + 0.45 * vnoise(co.x * 17.0, co.z * 17.0, 1.0)) + 0.9 * kick + 0.5 * hand
     set_wear_w(d, dash_wear)
+
+    # r6b (review r6 C-R2): the soft top was one grey from the glass to the lip. Authored zones, no noise:
+    #  - dust band at the windscreen base (the cloth does not reach under the raked glass; thicker in the corners):
+    #    paler and matt;
+    #  - polish along the front lip where things get handled: right of the binnacle (hand on the way to the stack),
+    #    the passenger stretch (boots / forearms on the dash), the door end by the A-pillar. Gloss only: the black
+    #    pad keeps its albedo (ADR 0044 r6), flattened grain is slightly darker.
+    yg = ws_y(WS_Z0)
+
+    def top_zones(co, nr):
+        if co.y > FRONT_WALL_Y - 0.03 or nr.z < 0.35:
+            return 0.0, 0.0
+        up = smooth(0.35, 0.8, nr.z)
+        dust = up * (0.12 + 0.88 * smooth(yg - 0.26, yg - 0.07, co.y) * (0.45 + 0.55 * smooth(0.45, 1.05, abs(co.x))))
+        zone = max(math.exp(-((co.x - 0.13) / 0.17) ** 2), 0.9 * math.exp(-((co.x - 0.70) / 0.20) ** 2),
+                   0.7 * math.exp(-((co.x + 1.00) / 0.10) ** 2))
+        pol = up * (1 - smooth(dash_face_y(co.x) + 0.035, dash_face_y(co.x) + 0.105, co.y)) * (0.25 + 0.75 * zone)
+        return dust, pol
+    # dust film: tint x up to 1.6 (albedo 0.046 -> ~0.07 at the glass in the corners; a film on the pad, not wear of the
+    # black part), polish: tint x 0.88, roughness -0.42 (WORKING_VALUE, read in cab-dash at 1024 px)
+    set_attr_w(d, "tint_add", lambda co, nr: (lambda dp: 0.60 * dp[0] * (1 - dp[1]) - 0.12 * dp[1])(top_zones(co, nr)))
+    set_attr_w(d, "rough_add", lambda co, nr: (lambda dp: 0.10 * dp[0] * (1 - dp[1]) - 0.42 * dp[1])(top_zones(co, nr)))
     # parting line between the two mouldings
     pts = [lp[split] + V(0, -0.0015, 0) for lp in loops[1:-1]]
     strip("dash_parting", pts, V(0, -1, 0.2).normalized(), 0.003, "gap", offset=0.0005)
@@ -848,6 +902,17 @@ def build_dash():
     def drape(x, y, lift):
         return V(x, y, dash_surface_z(x, y) + lift)
 
+    # r6b C-R2: the soft pad is a wrapped skin, not a moulding: twin-needle seam 38 mm behind the front lip, from the
+    # binnacle to the passenger end and on the short stretch by the driver door
+    for k, (xa, xb) in enumerate(((CLUSTER_C.x + TUB_FADE + 0.03, 1.08), (-1.08, CLUSTER_C.x - TUB_FADE - 0.03))):
+        nseam = max(4, int(round((xb - xa) / (0.022 / max(0.35, G.STATE["q"])))))
+        pts, nrs = [], []
+        for i in range(nseam + 1):
+            x = xa + (xb - xa) * i / nseam
+            y = dash_face_y(x) + 0.038
+            pts.append(drape(x, y, 0.0))
+            nrs.append(V(0, -(dash_surface_z(x, y + 0.004) - dash_surface_z(x, y - 0.004)) / 0.008, 1).normalized())
+        strip(f"dash_top_stitch_{k}", pts, nrs, 0.006, "stitch_dark", offset=0.0005, u_len=0.017)
     for ti, (tx0, tx1) in enumerate(((0.00, 0.38), (0.44, 0.90))):    # centre tray + passenger tray
         ty0, ty1 = dash_face_y(0.6) + 0.085, dash_face_y(0.6) + 0.245
         nmx, nmy = G.Q(12, 5), G.Q(6, 3)
@@ -1274,9 +1339,22 @@ def build_wheel(badge):
         loops.append(ring)
     loops.append(loops[0])
     rim = loft("wheel_rim", loops, "leather_wheel", closed=True, sharp=None)
-    set_wear(rim, lambda co: 0.9 * max(math.exp(-((math.atan2((co - C).dot(v), (co - C).dot(u)) - math.radians(150)) / 0.30) ** 2),
-                                       math.exp(-((math.atan2((co - C).dot(v), (co - C).dot(u)) - math.radians(30)) / 0.30) ** 2))
-             * (0.7 + 0.3 * hash01(co.x, co.y, co.z)))
+    # r6b (review r6 C-R2): hand patches instead of two soft gaussians with per-vertex hash noise (they averaged to a
+    # +15 % haze nobody read as wear). Leather polished where the palms sit: 10 and 2 o'clock down to the thumb rests
+    # (plateau ~17 cm of rim each, 6 deg soft edge), a lighter one-hand patch at 12; strongest on the face and the
+    # outer side of the section (palm), least on the finger side at the back.
+    def rim_wear(co):
+        d = co - C
+        a = math.atan2(d.dot(v), d.dot(u))
+        sb = d.dot(n) / RIM_R[0]
+        cb = (math.hypot(d.dot(u), d.dot(v)) - WHEEL_R) / RIM_R[1]
+
+        def patch(a0, half, soft=0.10):
+            return 1 - smooth(half, half + soft, abs(math.atan2(math.sin(a - a0), math.cos(a - a0))))
+        hands = max(patch(math.radians(148), 0.36), patch(math.radians(32), 0.36))
+        sec = 0.30 + 0.70 * smooth(-0.6, 0.5, 0.75 * sb + 0.45 * cb)
+        return 0.95 * sec * max(hands, 0.45 * patch(math.radians(90), 0.20))
+    set_wear(rim, rim_wear)
     # stitched seam along the inner side of the rim
     pts, nrm = [], []
     for i in range(121):
@@ -1560,12 +1638,11 @@ def seat(prefix, cx, driver):
                 mat_idx=midx, sharp=70)
     cush.matrix_world = Mc
     if driver:  # entry wear on the left (door-side) bolster, front half
-        set_wear(cush, lambda co: smooth(c_w + 0.03, W2 - 0.01, -co.x) * smooth(-0.15, 0.15, co.y) *
-                 (0.6 + 0.4 * hash01(co.x * 3, co.y * 3, 0)) + 0.25 * smooth(0.18, 0.26, co.y)
-                 # r4: slide-in creases across the door-side bolster (lighter ridges), front edge rubbed by the thighs
-                 + 0.45 * smooth(c_w + 0.01, W2 - 0.02, -co.x)
-                 * smooth(0.55, 0.9, math.sin(co.y * 95.0 + 6.0 * co.x) * 0.5 + 0.5)
-                 + 0.35 * smooth(0.20, 0.27, co.y) * (0.5 + 0.5 * vnoise(co.x * 25.0, 0.0)))
+        # r6b (C-R2): one shaped patch, no hash / sine pattern: the door-side bolster is rubbed flat and shiny where the
+        # driver slides in and out (front two thirds, strongest on the crown and the outer flank), the front edge under
+        # the thighs a little
+        set_wear(cush, lambda co: 0.9 * smooth(c_w + 0.015, c_w + 0.05, -co.x) * smooth(-0.14, 0.02, co.y)
+                 * (1 - 0.35 * smooth(0.22, 0.28, co.y)) + 0.30 * smooth(0.20, 0.27, co.y) * (1 - smooth(c_w, c_w + 0.03, -co.x)))
     # stitch strips along the bolster seams and across the centre panel
     for sx in (-1, 1):
         x = sx * (c_w + 0.011)
@@ -1640,7 +1717,7 @@ def seat(prefix, cx, driver):
                 mat_idx=bidx, sharp=70)
     back.matrix_world = Mb
     if driver:
-        set_wear(back, lambda co: 0.7 * smooth(0.16, 0.25, -co.x) * smooth(0.05, 0.25, co.z) * (1 - smooth(0.45, 0.6, co.z)))
+        set_wear(back, lambda co: 0.85 * smooth(0.16, 0.22, -co.x) * smooth(0.05, 0.20, co.z) * (1 - smooth(0.45, 0.6, co.z)))
     for sx in (-1, 1):  # vertical stitch lines
         pts, nr = [], []
         for k in range(30):
