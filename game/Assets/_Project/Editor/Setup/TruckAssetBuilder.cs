@@ -342,6 +342,9 @@ namespace Game.Editor.Setup
                     m.SetTexture("_Normal", Tex<Texture2D>($"{it}/T_Cab_{slot}_Normal.png"));
                     m.SetTexture("_AO", ao);
                     m.SetFloat("_IsDecal", 0f);
+                    // ADR 0044 r8: worn black parts go neutral grey + satin (leather), see CabWearModel
+                    m.SetFloat("_WearBlackAlbedo", CabWearModel.WornBlackAlbedo);
+                    m.SetFloat("_WearRoughMin", CabWearModel.RoughMinFor(slot));
                     Add("MI_Cab_" + slot, m);
                 }
                 var dec = Mat(dir, "MI_Cab_Decal", cab);

@@ -115,3 +115,39 @@ Result Low (before -> after; High): dusk 8.7 -> 4.8 % / 13.9 -> 15.0 (2.1 % / 15
 (1.8 % / 22.1), lowsun 2.0 % / 16.9 (1.8 % / 17.5), clear 3.9 -> 1.8 %. Cost: ~12 ALU per cab pixel; editor Low 1755x810
 cab-dash 5.21 -> 4.94 ms (noise). A16 not measured. The world outside the cab on Low keeps plain sRGB (10-25 % darker
 in linear than High in the toe and mids): a global Low LUT would cost a full-screen pass, not done.
+
+## Addendum r8 (2026-11-10, rendering-perf): worn black leather - neutral grey lift + glossy polish (supersedes the r6 black wear cap 0.05); needs visual-critic review
+HANDOVER open point / r6b "Open (C-R2 not closed)": rim and seat wear invisible under the r6 cap (worn albedo of black
+parts <= 0.05 linear). Evidence: `artifacts/truck-fixes/wheel-wear/` (`before` = main 799b3af, `v1` = albedo 0.075 + leather
+roughness floor 0.30, `v2` = final values set by hand in the .mat, `iso-a015` = albedo 0.15 sensitivity, `after` = rebuilt;
+`metrics-*.json`, `measure.py`, `wornmask.py`, `white.py`, `rim_before_after_vs_s730.jpg`). WorldC, editor, 2340x1080.
+- **Why the cap was not the whole story (measured).** The worn zone is taken from the frames themselves (rim pixels whose
+  luma changes when only the wear model changes, `wornmask.py`), compared with unworn rim in the same height band. A
+  black rim in the cab is ~90 % specular: the probe reflection x AO (0.15, cloth block) x cab gain, while its diffuse light
+  is the enclosed sky (x 0.4) + fill x AO. Worn albedo 0.05 -> 0.085 adds +2.3 / 255 in overcast; even 0.15 (sRGB 108,
+  not plausible for black leather) adds only +6.5 and breaks D33 at low sun (rim lit R-B 6.0 %, worn part 6.9 %).
+- **Decision.** (a) Black parts (mean tint < ~0.1): a hand burnishes and thins the pigmented finish, so worn spots go
+  towards a NEUTRAL grey `_WearBlackAlbedo` = 0.085 linear (sRGB 81) x detail variation, lerped by the shaped wear wk - no
+  longer x the warm tint, no cap (WORKING_VALUE: no measured albedo of worn black automotive leather; new black leather
+  0.02-0.04). (b) Per-slot roughness floor of worn spots `_WearRoughMin`: leather 0.12 (hand-polished, glossy, not the
+  0.08 of lacquer), other slots 0.08 as before; a surface glossier than its floor keeps its value. 0.30 (satin) was tried
+  (v1) and read weaker: the grazing Fresnel of URP's EnvironmentBRDF is what makes a polished tube read. C# mirror
+  `Game.Rendering.CabWearModel` (constants used by TruckAssetBuilder), EditMode `CabInteriorWearTests` on the exported rim:
+  worn albedo 0.055-0.09 (rim: 0.0825), x >= 1.8 the unworn, chroma <= 6 %, roughness floor..unworn - 0.12. The generator's
+  `BLACK_WEAR_DARKEN` (a6_export) stays: the shader's lerp to the neutral target overrides it at full wear.
+- **Albedo audit.** The cab slots are not in the gate3 albedo audit (corridor world materials). Consistent with review
+  r7 N-11 / docs/06: unworn black leather 0.027 linear (sRGB ~46) >= 32 sRGB, worn 0.085 (81) inside 30..240. No exception.
+- **Measured (worn / unworn-neighbour luma of 255, ratio; before -> after).** overcast High 44.3 / 36.2 (1.22) ->
+  46.6 / 36.3 (1.29), Low 43.4 / 35.5 (1.22) -> 45.8 / 35.5 (1.29); low sun High 44.3 / 36.6 (1.21) -> 50.2 / 36.9 (1.36), worn p95 59 -> 67, Low 1.22 -> 1.36.
+  (The 1.22 before is geometry: the patches sit on the upper rim.) cab-dash black < 3 % unchanged on all four (High 1.44 /
+  1.34 %, Low 1.63 / 1.44 %); rim p50 overcast 41.9 -> 42.0 (High), 40.0 -> 41.0 (Low).
+- **D33 (low sun) PASS.** Rim lit third R-B High 4.1 -> 4.7 %, Low 3.5 -> 4.2 % (worn part 4.9 / 4.8 %) <= 6 %; sat
+  18.1 -> 19.0 % / 16.4 -> 18.0 % <= the white van in the same frame (sunlit side through the windscreen, 22.3 / 26.2 %).
+- **Open.** Overcast wear still reads only as a faint sheen (+~2.5 / 255): the in-cab reflection is the open-sky probe
+  x a constant AO (the rim rotates: cloth-block AO), so a smoother lobe has no structure to reflect. Physically the
+  reflection of a glossy interior part sees the sky only through the glazing and the dark interior elsewhere (and the
+  probe specular, unlike the SH diffuse, is not enclosed - `_CabEnclosure` applies to SH only). Fix = directional glazing
+  visibility of the probe specular in the cab frame (windscreen / door glass apertures already in CabInteriorLighting,
+  ~6-10 ALU) or a rotation-invariant rim AO per section angle (generator); both change every glossy interior surface
+  (rim p50, C-N6, black %) and need their own review. Seat bolster wear: same leather slot and model, but no control
+  camera sees the driver's bolster (UNVERIFIED in frame). Phone (A16): UNVERIFIED. Cost: +3 ALU / cab pixel, no texture.
