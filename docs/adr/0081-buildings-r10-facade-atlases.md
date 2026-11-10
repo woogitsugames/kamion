@@ -36,11 +36,32 @@ kwiaty, różne balustrady, zabudowy balkonów, anteny, pranie.
 6. **Koszt LOD1**: gzyms attyki LOD1 to jedna pochylona ściana zamiast czoła i wierzchu (−2 trójkąty na krawędź),
    maszynownie bez spodu — płaci za quady rzędów.
 
-## Liczby
-Patrz `tools/worldgen/streetscape/STATUS-buildings-r10.md` (tabela budżetu: `streetscape_qa.json` baza vs r10) i raport
-końcowy agenta. Pamięć tekstur (szacunek ASTC z mipami z `materials_spec.json`): `facade_atlas` 39,8 / 7,8 / 1,4 MB,
-`facade_far` i `fence_concrete` — wartości w `materials_spec.json` (High / Medium / Low). To nowy koszt pamięci;
-wcześniej LOD1 nie miał tekstury okien.
+7. **Budżet tekstur** (r2): `pbrkit.SurfaceSet.aux_div` — Normal / MaskMap / Var zapisane w 1/aux_div rozdzielczości
+   albedo (`aux_res` w `materials_spec.json`, estymata `gpu_bytes_astc_mips` to uwzględnia). `facade_atlas` albedo
+   4096 px + reszta 2048 px; `facade_far` albedo 2048 × 3428 + reszta 1/4 (zestaw płaski, bez reliefu);
+   `fence_concrete` 2048 × 576 (558 m płotu w regionie nie uzasadnia 4096), skalibrowany do 0,30 po nałożeniu skanu.
+8. **Kolor elewacji — `tint_linear`** (r2). Rendery r1 pokazały tynki ciemne i przesycone. Pomiar: `plaster_grey`
+   0,36 lin. wychodził na ekranie 0,095, `plaster_cream` [0,55; 0,48; 0,33] → [0,19; 0,15; 0,09], a cokół bez tekstury
+   (0,16, URP Lit) był jaśniejszy od ściany 0,36. Przyczyna: `_Tint` w `Kamion/World PBR` jest właściwością `Color`,
+   więc Unity linearyzuje wartość zapisaną przez importer drugi raz (≈ kolor^2,2). Materiały z flagą `tint_linear`
+   (`materials.py`: tynki, cokół, wielka płyta, cegła, ściany i cokoły hal, dachy, bramy, panel balkonu + warianty
+   `__far_*`) dostają w `WorldPbrMaterials.cs` wartość zakodowaną gamma — shader mnoży przez kolor z tabeli.
+   Zakres celowo ograniczony do powłoki budynków (to renderuje i ocenia to zadanie).
+9. **Cegła `set_tile`**: zestaw NF ma 1,506 m, a był próbkowany co 4 m (domyślny `_Tile`, znany brak z ADR 0067) —
+   warstwa cegły wychodziła ok. 20 cm. Cokół `plinth_dark` dostał zestaw `plaster` (był płaskim kolorem).
+10. **Zacieki pod attyką na tynku** (flaga `runoff`, LOD0 bloków i biur z dachem płaskim): ta sama warstwa
+    `parapet_runoff` co na halach, siła × 0,6 (WORKING_VALUE). LOD1 bez zacieków (strefa okien to atlas rzędów bez UV1).
+
+## Liczby (zmierzone / z generatora; nic z telefonu)
+- Pamięć tekstur, zestawy PBR świata razem (estymata ASTC z mipami, `materials_spec.json`), Low / Medium / High:
+  main 6,0 / 33,6 / 171,9 MB → r1 8,3 / 46,8 / 239,6 MB → **r2 7,3 / 39,5 / 197,1 MB** (budżet całej gry w
+  `docs/PERFORMANCE_BUDGETS.md`: 64 / 96 / 256 MB). `facade_atlas` 39,8 / 7,8 / 1,4 → 17,4 / 3,8 / 0,6 MB (H / M / L),
+  `facade_far` 16,7 / 3,3 / 0,6 → 4,9 / 1,6 / 0,6 MB, `fence_concrete` 11,2 / 2,2 / 0,4 → 2,8 / 0,55 / 0,1 MB.
+  Estymata jest górną granicą: na Androidzie MaskMap / Var i tak idą w połowie rozdzielczości (ADR 0025).
+- Geometria (estymata generatora, 19 kamer r10, baza → r1): Low trójkąty −487..+556 (maks. +0,07 %), materiały Low
+  −3..−7, High trójkąty −0,4..−4,4 %. Tabela r2 i `stats.txt` z edytora: `STATUS-buildings-r10.md`.
+- Testy: `tests/gis` 222 passed, 3 failed (te same co na main: `test_road_fidelity::test_report_not_stale`,
+  `test_route_corridor` × 2 — P0 korytarza, zadanie 0076), `test_cc0_scans` 6/6.
 
 ## Znane braki / UNVERIFIED
 - Nie zmierzone na telefonie (zakaz adb w tym zadaniu); budżet = estymata generatora + `stats.txt` z edytora.
@@ -49,3 +70,10 @@ wcześniej LOD1 nie miał tekstury okien.
 - Okna LOD0 są płaskie w ościeżu (rama namalowana); z bliska pod ostrym kątem widać brak głębi ramy.
 - `facade_far` jest zestawem modulacyjnym: zawartość okien i balustrady lekko przejmują kolor ściany.
 - `FarFacadeMaterial` / `window_grid` w `RegionImporter.cs` zostają jako martwa ścieżka (do usunięcia przez lidera).
+- **Do decyzji lidera:** podwójna linearyzacja `_Tint` dotyczy wszystkich zestawów modulacyjnych (ogrodzenia, ekrany,
+  wiadukt, rekwizyty) i zestawów kalibrowanych z tintem ≠ 1. Te materiały były oceniane wzrokowo z błędem, więc
+  globalne włączenie poprawki (zamiana `_Tint` na `Vector` albo zapis gamma dla wszystkich) wymaga osobnej rundy
+  przeglądu; tutaj zmieniona jest tylko powłoka budynków. `WorldPbrMaterials.cs` leży poza własnością world-buildera
+  (World/Import) — zmiana to 12 linii, do przejrzenia.
+- Zacieki na tynku znikają na LOD1 (możliwy „pop” przy przełączeniu LOD); kamera `r10_hall_3` stoi pod terenem
+  (błąd generatora kamer, nie zabudowy).
