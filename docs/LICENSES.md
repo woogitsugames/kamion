@@ -60,6 +60,10 @@ Licencje sprawdzone przez lidera (`docs/REFERENCES.md` na `main`). W r2 kafla C 
 
 Świat C v3 (world-builder, 2026-11-09): zdjęcia CC0 `20201102_152339…` i `7204_May_2021…` posłużyły do sprawdzenia skrajni pod obydwoma wiaduktami Andersa (pomost wyraźnie nad pierścieniem) i wysokości malowanego pasa krawędzi pomostu (ok. 0,55 m). Nic z nich nie wycięto. Nowe prototypy v3 to nasze własne proceduralne siatki z `tools/worldgen/streetscape`, bez tekstur zewnętrznych, marek i logo: ciągnik siodłowy 4×2, kontenery ISO 20/40 ft, druga rodzina latarni, lampa rampy i ślady opon.
 
+## Zdjęcia uliczne Mapillary (referencja, D42, ADR 0065)
+
+Źródło: Mapillary Graph API v4, licencja CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Pobierane narzędziem `tools/refs/mapillary_fetch.py` do `Data/raw/mapillary/` (poza gitem, nie trafiają do buildu). Użycie wyłącznie jako referencja (wzór, dopasowanie kadru, kalibracja koloru); piksele w teksturze zrobiłyby z niej pochodną CC BY-SA (ADR 0065). Autorzy zdjęć faktycznie użytych: [docs/ATTRIBUTION-mapillary.md](ATTRIBUTION-mapillary.md) (generowany; pojawi się po pierwszym `--use ... --attribution`).
+
 ## Pakiety Unity spoza szablonu
 
 | ID | Pakiet | Wersja | Licencja | Użycie |
