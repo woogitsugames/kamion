@@ -314,6 +314,13 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                         base = end_s - trav * (6.0 + L + m * spacing)
                         if not (sa + 1 <= base <= sb - 1 and sa + 1 <= base + trav * L <= sb - 1):
                             continue
+                        # the glyph must lie on this carriageway where it is painted (narrowing sections: a 2-lane
+                        # tag on a 4-5 m road put the arrow on the kerb, ADR 0074)
+                        gw = float(np.max(np.abs(np.array(g.exterior.coords)[:, 1])))
+                        hwb = float(min(c.hw_at(base), c.hw_at(base + trav * L)))
+                        if abs(lat) + gw > hwb - 0.1:
+                            cnt("P-8 skipped (off carriageway)")
+                            continue
                         polygon_mark(buf, c, g, base, lat, trav, trav, "P-8")
                         cnt("P-8 arrow")
         # crossings on this chain
