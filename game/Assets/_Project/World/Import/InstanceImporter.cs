@@ -29,6 +29,17 @@ namespace Game.World.Import
         {
             public readonly List<(string proto, Matrix4x4 m, Bounds local)> Items = new List<(string, Matrix4x4, Bounds)>();
             public int Count => Items.Count;
+            /// <summary>Automatic boom barriers (instances "barrier_boom" with a "barrier" object; DepotBarrier, MA-003).</summary>
+            public readonly List<Barrier> Barriers = new List<Barrier>();
+        }
+
+        /// <summary>One boom of a depot gate: transform of the hinge (region-root space), boom mesh + materials, drive data.</summary>
+        public sealed class Barrier
+        {
+            public Matrix4x4 M;
+            public Mesh Mesh;
+            public Material[] Materials;
+            public float Length = 5.85f, OpenDeg = 85f, Travel = 1f;
         }
 
         /// <summary>LOD end distances (m at lodBias 1; last = cull) and shadow mask per prototype family. WORKING_VALUE.</summary>
@@ -282,6 +293,17 @@ namespace Game.World.Import
                     }
                     int pi = Proto(p);
                     if (pi < 0) continue;
+                    // Boom of an automatic barrier: a GameObject with DepotBarrier (WorldSceneBuilder), not a static instance.
+                    if (it.Get("barrier") is Dictionary<string, object> bd)
+                    {
+                        var bp = protos[pi];
+                        var bar = new Barrier { M = m, Mesh = bp.lods[0], Materials = materials.Skip(bp.materialStart[0]).Take(bp.lods[0].subMeshCount).ToArray() };
+                        if (bd.Get("L") != null) bar.Length = (float)Num(bd.Get("L"));
+                        if (bd.Get("open_deg") != null) bar.OpenDeg = (float)Num(bd.Get("open_deg"));
+                        if (bd.Get("travel") != null) bar.Travel = (float)Num(bd.Get("travel"));
+                        colliders.Barriers.Add(bar);
+                        continue;
+                    }
                     items.Add((cellKey, forest, pi, m));
                     if (contactOf.TryGetValue(pi, out int cpi)) items.Add((cellKey, false, cpi, m));
                     if (colMeshes.TryGetValue(p, out var cb) && cb.HasValue && corridor.Any(c => e >= c.Min.x && e < c.Max.x && n >= c.Min.y && n < c.Max.y))

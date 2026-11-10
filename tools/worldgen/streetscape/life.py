@@ -143,7 +143,9 @@ def dock_trailers(pl, docks, sp, report):
                 continue
             base = p + d * dock["u"] + nout * 0.45
             body = rect(base + nout * 6.8, nout, 6.8, 1.3)
-            if not sp.vehicle_free(body):
+            # the hero depot (ADR 0071) is the player's base: its dock row is the first thing seen, so the trailers stand
+            # at its doors although the yard lies inside the start clearance (which still keeps yard rows / rigs away)
+            if not (sp.free(body) if hero else sp.vehicle_free(body)):
                 continue
             k = hf(dk["id"], dock["num"], "kind")
             if k < 0.70:

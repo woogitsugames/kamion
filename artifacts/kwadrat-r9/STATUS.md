@@ -73,3 +73,10 @@ Worktree `.claude/worktrees/agent-a1409e374f8c12b4f`, gałąź `worktree-agent-a
   (6) EditMode — patrz `logs/editmode.log`.
 - Po każdym Unity cofnąć: `git checkout -- game/Assets/_Project/Rendering/Settings/Lighting/M_Sky.mat game/ProjectSettings`;
   nie commitować `art-source/world/textures|signs|props` (różnice bajtowe buildu).
+
+## Stan 2026-11-10 ~22:30 (r10, WIP)
+- `git merge main` zrobione (0ded0fb), build_world po scaleniu OK (`logs/build_world_merged0.log`), Data/raw/derived = kopia (nie junction).
+- Naczepy przy dokach: znikły przez `life.START_CLEAR_*` (reguła r5: zero pojazdów ciężarowych 120 m od startu) — doki hero wyłączone z tej reguły.
+- Plac zastawiony osobówkami: BDOT `OT_KUKO_A rodzaj=parking` 8328 m² obejmuje cały plac (od 605,694 do 733,838) → rzędy aut na placu manewrowym; do wycięcia (TODO `no_parking`).
+- MA-003 (zgłoszenie właściciela): `game/Assets/_Project/World/Runtime/DepotBarrier.cs` (pętla obecności, otwieranie 3,5 s, kinematyczna belka = kolizja, break-away > 1,5 m/s), importer `InstanceImporter.Barrier` + `WorldSceneBuilder.BuildBarriers`, generator `barrier_base` + `barrier_boom` (gate.py). NIE skompilowane / nie testowane jeszcze.
+- NASTĘPNY KROK: testy PlayMode `DepotBarrierTests.cs`; `pwsh artifacts/kwadrat-r9/cycle.ps1 -Phase merged`; `pwsh scripts/test.ps1 -Platform PlayMode`.

@@ -561,6 +561,63 @@ def barrier_arm(L=6.0, raised=False):
     return m, l1, col
 
 
+BOOM_HINGE = (0.0, 0.0, 0.95)      # hinge of barrier_boom in the frame of barrier_base (m)
+BOOM_SIDE = 0.235                  # boom axis offset from the housing centre along prototype +y (m)
+BOOM_L = 5.85                      # boom length from the hinge (6 m lane clear width class, WORKING_VALUE)
+
+
+def barrier_base(L=BOOM_L):
+    """Housing of an automatic boom barrier WITHOUT the boom (the boom is its own prototype `barrier_boom`, driven in
+    the engine by Game.World.DepotBarrier; map audit MA-003): steel cabinet 0.40 x 0.35 x 1.05 m on a concrete
+    footing with a base flange, service door with a lock, sloped cap, flashing beacon, boom bracket on the hinge
+    shaft, and the rest post with a fork at the far end of the closed boom (+x). Shapes typical of Polish depot
+    entrances, no product copied; sizes WORKING_VALUE."""
+    m, l1, col = Mesh(), Mesh(), Mesh()
+    for mm, lod in ((m, 0), (l1, 1)):
+        mm.box("concrete_base", [0, 0, -0.06], 0.38, 0.33, 0.12)
+        mm.box("barrier_housing", [0, 0, 0.555], 0.20, 0.175, 0.495)
+        mm.box("barrier_housing", [0, 0, 1.065], 0.225, 0.20, 0.015)                  # cap overhang
+        if lod == 0:
+            mm.box("steel_galv", [0, 0, 0.07], 0.24, 0.215, 0.012)                    # base flange
+            for sx in (-1, 1):
+                for sy in (-1, 1):                                                    # anchor nuts
+                    mm.tube("steel_galv", [sx * 0.215, sy * 0.19, 0.08], [sx * 0.215, sy * 0.19, 0.105], 0.014, None, 6)
+            mm.box("barrier_housing", [0, -0.179, 0.56], 0.165, 0.004, 0.42)          # service door leaf (proud 4 mm)
+            mm.box("steel_galv", [0.12, -0.186, 0.62], 0.012, 0.004, 0.03)            # lock
+            mm.box("cabinet_grey", [0, 0, 1.095], 0.19, 0.165, 0.015)                 # top lid
+            mm.tube("steel_painted", [0, 0, 1.11], [0, 0, 1.16], 0.03, None, 8)       # beacon base
+            mm.tube("lamp_glass_sodium", [0, 0, 1.16], [0, 0, 1.25], 0.045, 0.035, 8)  # flashing beacon
+            mm.tube("steel_galv", [0, -0.2, 0.95], [0, 0.26, 0.95], 0.03, None, 8)    # hinge shaft
+            mm.box("steel_painted", [0.0, 0.235, 0.95], 0.11, 0.02, 0.07)             # boom bracket plate
+            for z in (0.25, 0.85):                                                    # reflective bands on the cabinet
+                mm.box("reflector_red", [0, 0, z], 0.202, 0.177, 0.03)
+        # rest post with a fork
+        mm.tube("steel_galv", [L - 0.25, 0.235, 0.0], [L - 0.25, 0.235, 0.84], 0.035, None, 8 if lod == 0 else 5)
+        mm.box("steel_galv", [L - 0.25, 0.235, 0.85], 0.03, 0.075, 0.012)
+        for sy in (-1, 1):
+            mm.box("steel_galv", [L - 0.25, 0.235 + sy * 0.07, 0.92], 0.03, 0.008, 0.07)
+        if lod == 0:
+            mm.box("concrete_base", [L - 0.25, 0.235, -0.05], 0.18, 0.18, 0.1)
+    col.box("collision_steel", [0, 0, 0.55], 0.2, 0.175, 0.55)
+    return m, l1, col
+
+
+def barrier_boom(L=BOOM_L):
+    """Boom of `barrier_base` in the hinge frame: origin = hinge axis, boom along +x (UV u = metres: 0.5 m red/white
+    bands of the material), octagonal 100 x 55 mm aluminium profile approximated by a tube, rubber edge underneath,
+    red end cap, counter-lever stub behind the hinge. Instances carry "barrier" (L, open_deg, travel) and become a
+    DepotBarrier in the engine; other renderers show the closed boom."""
+    m, l1 = Mesh(), Mesh()
+    y = 0.0                       # the instance is placed BOOM_SIDE to the side of the housing (gate.py)
+    for mm, seg in ((m, 10), (l1, 5)):
+        mm.tube("gate_boom", [-0.25, y, 0.0], [L, y, 0.0], 0.05, 0.045, seg)
+        if seg > 5:
+            mm.box("rubber_black", [L / 2 + 0.2, y, -0.06], L / 2 - 0.5, 0.012, 0.012)   # rubber edge
+            mm.tube("reflector_red", [L, y, 0.0], [L + 0.03, y, 0.0], 0.05, None, seg)    # end cap
+            mm.box("steel_painted", [-0.12, y, 0.0], 0.16, 0.035, 0.06)                   # clamp at the bracket
+    return m, l1, None
+
+
 def cantilever_gate(L=10.0, H=2.0):
     """Open cantilever sliding gate standing behind the fence: leaf from x=0 to x=-L (tail), steel frame with
     vertical bars and a bottom beam on two roller posts."""
@@ -669,6 +726,8 @@ def build_all():
     P["gatehouse"] = gatehouse()
     P["barrier_arm"] = barrier_arm()
     P["barrier_arm_raised"] = barrier_arm(raised=True)
+    P["barrier_base"] = barrier_base()
+    P["barrier_boom"] = barrier_boom()
     P["cantilever_gate"] = cantilever_gate()
     for code in SIGNS:
         P[f"facade_sign_{code}"] = facade_sign(code)
