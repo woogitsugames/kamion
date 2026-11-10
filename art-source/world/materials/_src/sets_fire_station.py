@@ -60,8 +60,10 @@ def _r(u0, v0, w, h):
 # v in metres from the bottom of the image. Bands are periodic along u (14 m).
 LAYOUT = {
     "tile_m": list(TILE),
-    "arch": {"w": 3.4, "spring": 2.4, "rise": 1.0, "trim": 0.16, "col": 0.85, "row": 1.20, "bar": 0.06},
-    "round": {"d": 2.4, "trim": 0.16, "cross": 0.16},
+    # real size of the gable openings (measured on the CC0 photo 7197: 27 px/m on the 12 m gable, WORKING_VALUE
+    # +-0.2 m); the atlas rects win_arch / win_round hold them scaled (rect size / real size)
+    "arch": {"w": 4.7, "spring": 3.3, "rise": 1.3, "trim": 0.24, "col": 1.175, "row": 1.5, "bar": 0.07},
+    "round": {"d": 3.4, "trim": 0.28, "cross": 0.24},
     "plaster": {"v0": 0.0, "h": 4.0, "base_h": 2.6, "mid": [1.2, 2.6]},     # top zone = [base_h, h]
     "roof": {"v0": 4.05, "h": 3.2, "mid": [0.6, 2.8], "rib_pitch": 0.25},
     "fascia": {"v0": 11.45, "h": 0.40},
@@ -370,15 +372,17 @@ def fire_station(nx=2048):
 
     # arched window 3.4 x 3.4: segmental arch (rise 1.0 m above the 2.4 m springing), blue trim band 0.16 m
     A = L["win_arch"]
-    au, av = X - A["u"][0], v - A["v"][0]
+    ga = L["arch"]
+    wA, hs_, rise = ga["w"], ga["spring"], ga["rise"]
+    au = (X - A["u"][0]) * wA / (A["u"][1] - A["u"][0])             # window metres (the rect holds the window scaled)
+    av = (v - A["v"][0]) * (hs_ + rise) / (A["v"][1] - A["v"][0])
     in_a = _gut(X, v, A)
-    wA, hs_, rise = 3.4, 2.4, 1.0
     rad = ((wA / 2) ** 2 + rise ** 2) / (2 * rise)
     darc = np.hypot(au - wA / 2, av - (hs_ + rise - rad))        # distance from the arc centre
     in_shape = ((av <= hs_) | (darc <= rad)) & (au >= 0) & (au <= wA) & (av >= 0)
-    trim_m = in_shape & (darc > rad - 0.16) & (av > hs_ + rise - rad)
+    trim_m = in_shape & (darc > rad - ga["trim"]) & (av > hs_ + rise - rad)
     # background outside the arch inside the rect = render (so the quad can cover the whole rect)
-    glazing(in_a, au, av, 0.85, 1.20, bar=0.06, shape=in_shape, trim=(trim_m, tblue * 1.0), blind_seed=3)
+    glazing(in_a, au, av, ga["col"], ga["row"], bar=ga["bar"], shape=in_shape, trim=(trim_m, tblue * 1.0), blind_seed=3)
     sill_a = in_a & in_shape & (av < 0.06)
     alb = np.where(sill_a[..., None], pvc * 0.8, alb)
     out_a = in_a & ~in_shape
@@ -388,13 +392,16 @@ def fire_station(nx=2048):
 
     # round window d 2.4 with a cross, blue ring 0.16 m
     Rw = L["win_round"]
-    ru, rv2 = X - Rw["u"][0] - 1.2, v - Rw["v"][0] - 1.2
+    gr = L["round"]
+    R0 = gr["d"] / 2
+    ksc = gr["d"] / (Rw["u"][1] - Rw["u"][0])
+    ru, rv2 = (X - Rw["u"][0]) * ksc - R0, (v - Rw["v"][0]) * ksc - R0
     in_rw = _gut(X, v, Rw)
     rr = np.hypot(ru, rv2)
-    in_circ = rr <= 1.2
-    ring = in_circ & (rr > 1.04)
-    cross = in_circ & ((np.abs(ru) < 0.08) | (np.abs(rv2) < 0.08))
-    glazing(in_rw, ru + 1.2, rv2 + 1.2, 9.0, 9.0, shape=in_circ, trim=(ring | cross, tblue), blind_seed=5)
+    in_circ = rr <= R0
+    ring = in_circ & (rr > R0 - gr["trim"])
+    cross = in_circ & ((np.abs(ru) < gr["cross"] / 2) | (np.abs(rv2) < gr["cross"] / 2))
+    glazing(in_rw, ru + R0, rv2 + R0, 9.0, 9.0, shape=in_circ, trim=(ring | cross, tblue), blind_seed=5)
     out_r = in_rw & ~in_circ
     alb = np.where(out_r[..., None], base * (det ** 0.8)[..., None], alb)
     rough = np.where(out_r, 0.9, rough)

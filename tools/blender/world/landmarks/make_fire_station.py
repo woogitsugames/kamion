@@ -370,8 +370,10 @@ def deep_window(mb, O, S, nout, hole, kind, u0, depth=0.20, proud=0.03):
     def W(x, y):
         return O + S * (s0 + x) + UP * (z0 + y)
 
+    kx, ky = (R_["u"][1] - R_["u"][0]) / (s1 - s0), (R_["v"][1] - R_["v"][0]) / H      # rect holds the window scaled
+
     def auv(p):
-        return (R_["u"][0] + p[0], R_["v"][0] + p[1])
+        return (R_["u"][0] + p[0] * kx, R_["v"][0] + p[1] * ky)
 
     def blue(a, b, lo=0.10, hi=0.26):
         return [(a, f["v0"] + lo), (b, f["v0"] + lo), (b, f["v0"] + hi), (a, f["v0"] + hi)]
@@ -833,7 +835,9 @@ def build_hall(mb, lod):
     ss[0], ss[-1] = 0.0, u1 - u0
     top = [(s, arc(s)) for s in ss]
     rw, lt, nb = h["round_window"], h["lettering"], h["number"]
-    ops = [(uu - u0, h["arch_window_sill_z"], 3.4, 3.4, "arch") for uu in h["arch_windows_u"]]
+    ga = LAY["arch"]
+    assert abs(rw["d"] - LAY["round"]["d"]) < 1e-6, "dims.json round_window.d != atlas_layout round.d"
+    ops = [(uu - u0, h["arch_window_sill_z"], ga["w"], ga["spring"] + ga["rise"], "arch") for uu in h["arch_windows_u"]]
     ops.append((rw["u"] - u0, rw["z"] - rw["d"] / 2, rw["d"], rw["d"], "round"))
     wall(mb, (u0, v0), (u1, v0), 0.0, ze, lod, ops, top=top, key="hsw")
     opn = [(3.0, 0.0, 1.1, 2.2, "entry"), (9.0, 0.0, 1.1, 2.2, "entry")] + [(s, 5.6, 1.5, 1.5, "plain") for s in (3.0, 6.0, 9.0)]

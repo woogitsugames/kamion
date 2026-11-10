@@ -129,6 +129,36 @@ def test_instance_lod_policy():
     assert BW.instance_ends("landmark_fire_station_jrg2", 3)[0] == [150.0, 450.0, 20000.0]
 
 
+def test_hero_landmark_mechanism_is_shared():
+    """One table per mechanism for every hero asset (ADR 0067 viaduct + ADR 0070 fire station): LOD ends, atlas flag."""
+    from roads import build_world as BW
+    assert BW.instance_ends("landmark_viaduct_biezenstwa_0", 3)[0] == [90.0, 300.0, 20000.0]
+    assert BW.instance_ends("landmark_chimney", 2)[0] == [650.0, 20000.0]
+    cs = (REPO / "game/Assets/_Project/World/Import/InstanceImporter.cs").read_text(encoding="utf-8")
+    for prefix, ends in BW.HERO_LOD_ENDS.items():      # mirror in InstanceImporter.Policy
+        assert f'proto.StartsWith("{prefix}")) e = new[] {{ {ends[0]:.0f}f, {ends[1]:.0f}f, {ends[2]:.0f}f }}' in cs, prefix
+    spec = json.loads((REPO / "art-source" / "world" / "materials" / "materials_spec.json").read_text(encoding="utf-8"))
+    assert spec["sets"]["fire_station"].get("atlas") is True and spec["sets"]["viaduct_concrete"].get("atlas") is True
+    pbr = (REPO / "game/Assets/_Project/World/Import/WorldPbrMaterials.cs").read_text(encoding="utf-8")
+    assert pbr.count('SetVector("_Tile"') == 1      # set_tile || atlas, one place
+
+
+def test_fence_cut_covers_the_authored_fence_and_opening(buildings_fc):
+    import shapely
+    from streetscape import hero_building as HB
+    o, rings = _override(), _rings(buildings_fc)
+    spec = HB.build_spec(REGION_ID, o, rings, lambda e, n: 131.0)
+    cut = shapely.union_all(HB.fence_cut([{"spec": spec}]))
+    g = spec["ground"]
+    for ln in g["fence"] + [g["gate"]]:
+        assert shapely.LineString([p[:2] for p in ln]).within(cut.buffer(0.05))
+    # continuous along the street front: lines + gate opening leave no gap for the generic fence
+    a, b = g["fence"][0][0][:2], g["fence"][-1][-1][:2]
+    front = shapely.LineString([a, b])
+    assert front.difference(cut.buffer(0.3)).length < 0.5
+
+
+
 # ------------------------------------------------------------------------------------------ outputs
 def test_asset_matches_spec_and_budget():
     from streetscape import hero_building as HB
