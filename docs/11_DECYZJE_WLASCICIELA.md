@@ -38,3 +38,10 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 | D21 | Audio (demo) | Kierunek zaakceptowany („brzmi jak ciężarówka”) |
 | D22 | Build Unity w CI | Później; na razie build lokalny |
 | D23 | Wygląd nieba/ekspozycji | **„Jak zdjęcie z telefonu”** — jaśniejsze niebo i obraz, łagodniejszy kontrast (zamiast ekspozycji światłomierzowej) |
+
+## Decyzje z 2026-11-10
+| # | Temat | Decyzja |
+|---|---|---|
+| D24 | Rozmiar świata w APK (E6) | Na razie **bez Play Asset Delivery**; limit podniesiony: świat (Low/Medium) w APK **≤ 110 MB** (WORKING_VALUE dla regionu startowego; zmierzone 94,4 MB górnej granicy po ADR 0025). Wracamy do tematu przy kolejnym regionie |
+| D25 | Test jazdy właściciela | **Po raporcie bramki 3** — APK ze wszystkimi poprawkami, instrukcja `docs/owner/FEEL-TEST.md` |
+| D26 | Modele 3D | Agenci modeli (truck-artist, Blender) na **Fable 5.2**; shadery/światło/świat na Opus |

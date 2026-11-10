@@ -26,7 +26,7 @@ Limity to WORKING_VALUE z `docs/PERFORMANCE_BUDGETS.md`. GPU/CPU p50/p95: ____. 
 | Rozmiar | Wartość | Limit |
 |---|---|---|
 | APK razem | ___ MB (Stage 2: 48,5 MB) | brak twardego limitu — raportuję |
-| Świat Low w APK | ___ MB | ≤ 60 MB (WORKING_VALUE, szacunek 55,6 MiB, UNVERIFIED) |
+| Świat Low w APK | ___ MB | ≤ 110 MB (WORKING_VALUE, decyzja D24 z 2026-11-10; wcześniej 60 MB) |
 | Draw calls / trójkąty w kadrze (z edytora, szacunek) | Low ___ / ___ · Medium ___ / ___ · High ___ / ___ | 250/350 k · 350/550 k · 800/1,5 M |
 
 ## Kamery kontrolne i porównanie ze zdjęciami (docs/06 §5)
