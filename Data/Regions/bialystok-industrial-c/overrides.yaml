@@ -333,6 +333,24 @@ overrides:
       painted P-21 zone (with U-25 separators), no kerb. Overlay artifacts/islands-r10/after4/ramps610.jpg.
     confidence: high
     verify: Mapillary / owner drive
+  # island_confirmed: generated islands checked by eye on the 0.08 m orthophoto that the fidelity colour classifier
+  # takes for road (grey paving / gravel). Read only by tools/worldgen/fidelity (verdict present_authored).
+  - id: island-biezenstwa-splitter-confirmed
+    kind: island_confirmed
+    at_en: [570.7, -688.2]
+    reason: >-
+      Rondo Biezenstwa, Kwadrat Park arm: kerbed splitter island paved with setts, zebra through it, P-21 chevrons in
+      front of its nose. Orthophoto crop artifacts/islands-r10/after3/biez_split_ortho.jpg.
+    confidence: high
+    verify: owner drive
+  - id: island-putry-n-barrier-strip-confirmed
+    kind: island_confirmed
+    at_en: [-538.0, 130.2]
+    reason: >-
+      DK8 north of Rondo Putry: grass strip with a noise barrier between the carriageway and the service road.
+      Overlay artifacts/islands-r10/after4/dk8.jpg (verdict present at 0.08 m; absent only on the 0.25 m sheet).
+    confidence: high
+    verify: owner drive
   # ---------------------------------------------------------------- carriageway placement (network.prepare_chain, ADR 0077)
   # center_offset = carriageway centre this many metres to the LEFT of the OSM way (in the way's travel direction).
   # OSM draws one line per carriageway but not always on its centre (no placement=* tags in this tile). Values are

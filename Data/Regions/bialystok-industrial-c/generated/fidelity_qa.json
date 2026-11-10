@@ -1230,7 +1230,7 @@
   "osm_drivable_ways_in_tile": 553
  },
  "inputs_sha256": {
-  "overrides.yaml": "38e4ad910dac62004b5d9a2adf4635585ee1115ea57f711067eb569ab3e232e2",
+  "overrides.yaml": "379592c30d67edd72d6eafd761c48a0abe4750f0bf6990aa669f4563292a14ce",
   "roads.graph.json": "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
   "route_start.json": "ca592648746e2ae73750a925a192ec6553dbe4b12ce589751e056760725896bb",
   "tools/worldgen/roads/__init__.py": "328cd6e70845296ce7e67aee4b775c310c3fb318b638111b8ea4d4ad9ca0157b",
@@ -1239,11 +1239,11 @@
   "tools/worldgen/roads/context.py": "c89b7fe82daaebd9d0c85bca4049fa33f1c38e250a74e7fcd043765a55d8a78c",
   "tools/worldgen/roads/decals.py": "5c63f4a5bf69b6a6e801e18a27f8b1569b6f1a773f4ce54627642c39590b4a6f",
   "tools/worldgen/roads/geom.py": "935f99c1c31659d12d501fef46b3b65dd818d9dcefe5b5748bb3a25803e2a65e",
-  "tools/worldgen/roads/gores.py": "27a3e377d143ef2bf4c0c0454693d75ce2078e73afdef904ae56791a0ef46690",
+  "tools/worldgen/roads/gores.py": "003b0ad78ff461f05fd5a62cf8a98a3124ce47eea8158c4fc50af8d1a59f7c6d",
   "tools/worldgen/roads/junctions.py": "23dc440847724cd418eaa1e31e02839a8501d551e0ae1163183025c7b4c55bf9",
   "tools/worldgen/roads/markings.py": "d2287ad99bca65cf92213fafd25c86fefb3610215cf4e0110c8bdab2a408da36",
   "tools/worldgen/roads/meshing.py": "53e4c88342636a8bbb081451768ce31c9461a9db897ff400e7b675f5040d0355",
-  "tools/worldgen/roads/network.py": "b02cd47abb5c0b24c5380d4f0ad22f23504aef3a2b6a9e557c341021ad6b1f9b",
+  "tools/worldgen/roads/network.py": "abd219a370ed8044e8937cdfa22475fffc89c2e864b96a764724006dfd8884ca",
   "tools/worldgen/roads/pipeline.py": "a15abcc514296495e083a87259cdbe1bac663fc39b2a2a4553d1cd0711570573",
   "tools/worldgen/roads/profile.py": "117561fca86ca4613f4807a9da42940b16b252ea1a45cfdcb8648dd4c606564c",
   "tools/worldgen/roads/qa_ortho.py": "3173a1dcac1107bcb905bc6062460818ab03e8286c9de397aa0c5ed3835a9d8d",
@@ -1937,7 +1937,7 @@
    "gen": {
     "bwd": 0,
     "fwd": 2,
-    "lane_w": 3.25,
+    "lane_w": 3.75,
     "lanes": 2,
     "oneway": true,
     "turn_bwd": null,
@@ -1945,8 +1945,8 @@
      "through",
      "right"
     ],
-    "width": 6.5,
-    "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "width": 7.5,
+    "width_src": "authored_override:lacznica-biezenstwa-placement"
    },
    "highway": "tertiary_link",
    "issues": [
@@ -2704,19 +2704,16 @@
    "edge": "w536419678:1882953898-1882953899",
    "edges": {
     "all_sides": {
-     "max": 1.16,
-     "n": 2,
-     "p50": 1.0,
-     "p95": 1.144
+     "max": 0.92,
+     "n": 1,
+     "p50": 0.92,
+     "p95": 0.92
     },
-    "detected_sides": 2,
-    "max": 1.16,
-    "n": 2,
-    "p50": 1.0,
-    "p95": 1.144,
-    "signed_p50": 1.0,
-    "stations": 2,
-    "valid_sides": 2
+    "detected_sides": 1,
+    "n": 0,
+    "signed_p50": null,
+    "stations": 1,
+    "valid_sides": 0
    },
    "lanes": {
     "edge": "w536419678:1882953898-1882953899",
@@ -2755,35 +2752,35 @@
   },
   {
    "axis": {
-    "authored_center_offset_m": 0.75,
-    "max": 0.128,
+    "authored_center_offset_m": 0.5,
+    "max": 0.136,
     "n": 231,
     "p50": 0.0,
-    "p95": 0.034
+    "p95": 0.038
    },
    "edge": "w177861600:1882953899-4391371827",
    "edges": {
     "all_sides": {
-     "max": 3.4,
-     "n": 147,
-     "p50": 0.58,
-     "p95": 3.16
+     "max": 3.78,
+     "n": 146,
+     "p50": 0.52,
+     "p95": 2.52
     },
-    "detected_sides": 147,
-    "max": 3.4,
-    "n": 73,
-    "p50": 0.58,
-    "p95": 3.24,
-    "signed_p50": 0.34,
+    "detected_sides": 146,
+    "max": 2.6,
+    "n": 51,
+    "p50": 1.14,
+    "p95": 2.52,
+    "signed_p50": 0.14,
     "stations": 81,
-    "valid_sides": 73
+    "valid_sides": 51
    },
    "lanes": {
     "edge": "w177861600:1882953899-4391371827",
     "gen": {
      "bwd": 0,
      "fwd": 2,
-     "lane_w": 3.25,
+     "lane_w": 3.75,
      "lanes": 2,
      "oneway": true,
      "turn_bwd": null,
@@ -2791,8 +2788,8 @@
       "through",
       "right"
      ],
-     "width": 6.5,
-     "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+     "width": 7.5,
+     "width_src": "authored_override:lacznica-biezenstwa-placement"
     },
     "highway": "tertiary_link",
     "issues": [
@@ -2808,59 +2805,68 @@
     "match": true,
     "name": null,
     "ortho": {
-     "agree": 0.5,
+     "agree": 0.43,
      "lanes": 1,
      "strips": [
       {
-       "frac_max": 0.92,
+       "frac_max": 0.997,
        "lines": [],
        "n_sep": 0,
        "s": 38.7,
-       "width": 7.28
+       "width": 7.2
       },
       {
-       "frac_max": 0.896,
+       "frac_max": 0.997,
        "lines": [],
        "n_sep": 0,
        "s": 62.7,
-       "width": 7.44
+       "width": 7.36
       },
       {
-       "frac_max": 0.705,
+       "frac_max": 0.934,
        "lines": [
-        -0.61
+        2.13
+       ],
+       "n_sep": 1,
+       "s": 86.7,
+       "width": 7.08
+      },
+      {
+       "frac_max": 0.663,
+       "lines": [
+        -0.39
        ],
        "n_sep": 1,
        "s": 110.7,
-       "width": 7.32
+       "width": 7.44
       },
       {
-       "frac_max": 0.438,
+       "frac_max": 0.447,
        "lines": [],
        "n_sep": 0,
        "s": 134.7,
-       "width": 5.04
+       "width": 5.24
       },
       {
        "frac_max": 0.174,
        "lines": [
-        -0.81,
-        0.95
+        -0.55,
+        1.21
        ],
        "n_sep": 2,
        "s": 158.7,
        "width": 6.92
       },
       {
-       "frac_max": 0.372,
+       "frac_max": 0.375,
        "lines": [
-        -3.39,
-        -2.29,
-        -0.53
+        -3.24,
+        -2.07,
+        -0.31
        ],
        "n_sep": 3,
        "s": 182.7,
-       "width": 6.64
+       "width": 6.6
       }
      ]
     },
@@ -4947,27 +4953,27 @@
   {
    "area_diffs_top": [
     {
-     "area_m2": 293.9,
-     "kind": "ortho_only",
-     "xy": [
-      500.812,
-      -660.59
-     ]
-    },
-    {
      "area_m2": 263.9,
      "kind": "ortho_only",
      "xy": [
-      624.712,
-      -723.707
+      624.713,
+      -723.708
+     ]
+    },
+    {
+     "area_m2": 220.0,
+     "kind": "ortho_only",
+     "xy": [
+      503.702,
+      -661.604
      ]
     },
     {
      "area_m2": 152.0,
      "kind": "ortho_only",
      "xy": [
-      628.838,
-      -746.114
+      628.845,
+      -746.117
      ]
     },
     {
@@ -4979,11 +4985,11 @@
      ]
     },
     {
-     "area_m2": 134.7,
+     "area_m2": 135.2,
      "kind": "ortho_only",
      "xy": [
-      584.621,
-      -763.54
+      584.665,
+      -763.568
      ]
     },
     {
@@ -5003,11 +5009,11 @@
      ]
     },
     {
-     "area_m2": 127.5,
+     "area_m2": 127.6,
      "kind": "ortho_only",
      "xy": [
-      662.713,
-      -804.905
+      662.714,
+      -804.906
      ]
     },
     {
@@ -5019,27 +5025,27 @@
      ]
     },
     {
-     "area_m2": 81.2,
-     "kind": "ortho_only",
-     "xy": [
-      616.882,
-      -816.096
-     ]
-    },
-    {
-     "area_m2": 80.8,
+     "area_m2": 80.9,
      "kind": "gen_only",
      "xy": [
-      578.535,
-      -715.877
+      578.536,
+      -715.878
      ]
     },
     {
-     "area_m2": 79.8,
+     "area_m2": 80.9,
      "kind": "ortho_only",
      "xy": [
-      551.99,
-      -590.333
+      616.905,
+      -816.072
+     ]
+    },
+    {
+     "area_m2": 79.9,
+     "kind": "ortho_only",
+     "xy": [
+      552.003,
+      -590.336
      ]
     }
    ],
@@ -5074,15 +5080,15 @@
      ]
     },
     {
-     "area_m2": 1005.2,
-     "half_width_m": 6.53,
-     "ortho_green_frac": 0.174,
-     "ortho_road_frac": 0.386,
-     "route_dist_m": 8.8,
+     "area_m2": 1003.4,
+     "half_width_m": 6.21,
+     "ortho_green_frac": 0.198,
+     "ortho_road_frac": 0.353,
+     "route_dist_m": 9.2,
      "verdict": "partial",
      "xy": [
-      474.465,
-      -641.229
+      475.956,
+      -641.591
      ]
     },
     {
@@ -5098,15 +5104,15 @@
      ]
     },
     {
-     "area_m2": 656.0,
-     "half_width_m": 3.04,
-     "ortho_green_frac": 0.269,
+     "area_m2": 626.7,
+     "half_width_m": 2.91,
+     "ortho_green_frac": 0.268,
      "ortho_road_frac": 0.211,
-     "route_dist_m": 6.9,
+     "route_dist_m": 7.1,
      "verdict": "present",
      "xy": [
-      485.723,
-      -665.288
+      485.649,
+      -665.389
      ]
     },
     {
@@ -5177,7 +5183,7 @@
      "route_dist_m": 11.5,
      "verdict": "partial",
      "xy": [
-      560.744,
+      560.745,
       -705.497
      ]
     },
@@ -5185,7 +5191,7 @@
      "area_m2": 146.0,
      "half_width_m": 2.08,
      "ortho_green_frac": 0.0,
-     "ortho_road_frac": 0.121,
+     "ortho_road_frac": 0.122,
      "route_dist_m": 24.2,
      "verdict": "present",
      "xy": [
@@ -5233,7 +5239,7 @@
      "area_m2": 430.4,
      "half_width_m": 2.01,
      "ortho_green_frac": 0.22,
-     "ortho_road_frac": 0.094,
+     "ortho_road_frac": 0.093,
      "route_dist_m": 89.0,
      "verdict": "present",
      "xy": [
@@ -5317,9 +5323,9 @@
    "half_m": 120,
    "id": "03_rondo_biezenstwa",
    "iou": {
-    "gen_m2": 14243.7,
-    "iou": 0.761,
-    "ortho_m2": 16047.7
+    "gen_m2": 14373.0,
+    "iou": 0.766,
+    "ortho_m2": 16070.4
    },
    "lane_into_island": [],
    "name": "Rondo Pamięci Bieżeństwa (dwupoziomowe)",
@@ -5330,8 +5336,8 @@
      "on_gen_carriageway": 0.697,
      "route_dist_m": 2.0,
      "xy": [
-      618.21,
-      -599.75
+      618.208,
+      -599.751
      ]
     },
     {
@@ -5347,7 +5353,7 @@
     {
      "area_m2": 9.3,
      "green_frac": 0.746,
-     "on_gen_carriageway": 0.833,
+     "on_gen_carriageway": 0.972,
      "route_dist_m": 1.3,
      "xy": [
       438.193,
@@ -5425,11 +5431,11 @@
   {
    "area_diffs_top": [
     {
-     "area_m2": 258.9,
+     "area_m2": 259.0,
      "kind": "gen_only",
      "xy": [
-      332.02,
-      -615.106
+      332.023,
+      -615.107
      ]
     },
     {
@@ -5441,35 +5447,27 @@
      ]
     },
     {
-     "area_m2": 202.4,
+     "area_m2": 199.3,
      "kind": "gen_only",
      "xy": [
-      350.9,
-      -534.49
+      350.693,
+      -534.893
      ]
     },
     {
-     "area_m2": 167.0,
+     "area_m2": 167.1,
      "kind": "ortho_only",
      "xy": [
       361.645,
-      -545.061
+      -545.062
      ]
     },
     {
-     "area_m2": 146.1,
+     "area_m2": 146.2,
      "kind": "gen_only",
      "xy": [
-      277.281,
-      -576.748
-     ]
-    },
-    {
-     "area_m2": 132.3,
-     "kind": "ortho_only",
-     "xy": [
-      362.796,
-      -591.368
+      277.285,
+      -576.751
      ]
     },
     {
@@ -5481,27 +5479,35 @@
      ]
     },
     {
+     "area_m2": 106.4,
+     "kind": "ortho_only",
+     "xy": [
+      362.056,
+      -590.439
+     ]
+    },
+    {
      "area_m2": 103.9,
      "kind": "gen_only",
      "xy": [
-      298.114,
-      -578.561
+      298.113,
+      -578.56
      ]
     },
     {
-     "area_m2": 73.2,
+     "area_m2": 73.0,
      "kind": "ortho_only",
      "xy": [
-      328.613,
-      -561.409
+      328.612,
+      -561.401
      ]
     },
     {
-     "area_m2": 72.5,
+     "area_m2": 72.7,
      "kind": "ortho_only",
      "xy": [
-      378.437,
-      -560.277
+      378.441,
+      -560.278
      ]
     },
     {
@@ -5516,8 +5522,8 @@
      "area_m2": 33.1,
      "kind": "ortho_only",
      "xy": [
-      309.464,
-      -581.015
+      309.46,
+      -581.013
      ]
     }
    ],
@@ -5528,21 +5534,21 @@
       -0.923,
       0.384
      ],
-     "lat": 1.625,
+     "lat": 1.875,
      "ortho": {
-      "best_frac": 0.47,
+      "best_frac": 0.492,
       "best_offset_m": 7.5,
-      "paint_here": 0.072,
+      "paint_here": 0.066,
       "present": true
      },
-     "s": 211.156,
+     "s": 211.472,
      "trav": 1.0,
      "turns": [
       "through"
      ],
      "xy": [
-      362.783,
-      -599.824
+      362.507,
+      -599.709
      ]
     },
     {
@@ -5551,21 +5557,21 @@
       -0.923,
       0.384
      ],
-     "lat": 1.625,
+     "lat": 1.875,
      "ortho": {
-      "best_frac": 0.062,
-      "best_offset_m": 6.5,
-      "paint_here": 0.016,
+      "best_frac": 0.052,
+      "best_offset_m": 7.0,
+      "paint_here": 0.018,
       "present": false
      },
-     "s": 196.156,
+     "s": 196.472,
      "trav": 1.0,
      "turns": [
       "through"
      ],
      "xy": [
-      376.635,
-      -605.58
+      376.359,
+      -605.465
      ]
     },
     {
@@ -5752,9 +5758,9 @@
    "half_m": 60,
    "id": "04_s610_ramps",
    "iou": {
-    "gen_m2": 5560.6,
-    "iou": 0.707,
-    "ortho_m2": 5605.6
+    "gen_m2": 5587.3,
+    "iou": 0.711,
+    "ortho_m2": 5602.8
    },
    "lane_into_island": [
     {
@@ -5821,53 +5827,53 @@
    "name": "Andersa: łącznice przy s 610",
    "ortho_islands_missing_in_gen": [
     {
-     "area_m2": 220.3,
-     "green_frac": 0.386,
+     "area_m2": 222.9,
+     "green_frac": 0.381,
      "on_gen_carriageway": 1.0,
      "route_dist_m": 51.3,
      "xy": [
-      350.408,
-      -534.701
+      350.419,
+      -534.72
      ]
     },
     {
-     "area_m2": 67.9,
+     "area_m2": 68.0,
      "green_frac": 0.0,
      "on_gen_carriageway": 1.0,
      "route_dist_m": 14.6,
      "xy": [
-      282.93,
-      -577.429
+      282.933,
+      -577.433
      ]
     },
     {
-     "area_m2": 46.8,
+     "area_m2": 46.9,
      "green_frac": 0.0,
      "on_gen_carriageway": 0.631,
      "route_dist_m": 21.2,
      "xy": [
-      321.694,
-      -601.432
+      321.704,
+      -601.435
      ]
     },
     {
-     "area_m2": 15.9,
+     "area_m2": 16.0,
      "green_frac": 0.613,
      "on_gen_carriageway": 1.0,
      "route_dist_m": 3.4,
      "xy": [
-      377.448,
-      -606.998
+      377.443,
+      -606.996
      ]
     },
     {
      "area_m2": 6.1,
-     "green_frac": 0.766,
+     "green_frac": 0.764,
      "on_gen_carriageway": 1.0,
      "route_dist_m": 30.0,
      "xy": [
       345.324,
-      -622.521
+      -622.52
      ]
     }
    ],
@@ -5878,14 +5884,14 @@
      "chain": "c:w177861600:1882953899-4391371827",
      "kind": "P-13",
      "ortho": {
-      "band_frac": 0.478,
-      "offset_m": 2.9,
+      "band_frac": 0.578,
+      "offset_m": -1.1,
       "present": true
      },
-     "s": 221.556,
+     "s": 221.872,
      "xy": [
-      354.897,
-      -591.701
+      354.908,
+      -590.894
      ]
     },
     {
@@ -7128,11 +7134,11 @@
      ]
     },
     {
-     "area_m2": 138.7,
+     "area_m2": 142.9,
      "kind": "ortho_only",
      "xy": [
-      -322.35,
-      -172.228
+      -323.244,
+      -171.549
      ]
     },
     {
@@ -7381,7 +7387,7 @@
      "area_m2": 428.5,
      "half_width_m": 2.7,
      "ortho_green_frac": 0.0,
-     "ortho_road_frac": 0.417,
+     "ortho_road_frac": 0.419,
      "route_dist_m": 8.0,
      "verdict": "partial",
      "xy": [
@@ -7430,8 +7436,8 @@
    "id": "08_signals",
    "iou": {
     "gen_m2": 5593.4,
-    "iou": 0.775,
-    "ortho_m2": 5966.5
+    "iou": 0.773,
+    "ortho_m2": 5979.3
    },
    "lane_into_island": [],
    "name": "Skrzyżowanie z sygnalizacją s 1355-1415",
@@ -8699,24 +8705,24 @@
    "axis_vs_osm_m": {
     "max": 3.25,
     "n": 2419,
-    "p50": 0.5,
-    "p95": 0.941
+    "p50": 0.0,
+    "p95": 0.13
    },
    "edge_vs_ortho_m": {
     "all_sides": {
      "max": 5.78,
-     "n": 1678,
+     "n": 1676,
      "p50": 0.5,
      "p95": 4.12
     },
-    "detected_sides": 1678,
+    "detected_sides": 1676,
     "max": 5.18,
-    "n": 640,
+    "n": 616,
     "p50": 0.46,
-    "p95": 3.08,
-    "signed_p50": 0.2,
-    "stations": 1002,
-    "valid_sides": 640
+    "p95": 2.52,
+    "signed_p50": 0.14,
+    "stations": 1001,
+    "valid_sides": 616
    },
    "edges": 29,
    "gen_islands_absent_on_ortho": 3,
@@ -8739,12 +8745,12 @@
    "sites_iou": {
     "01_gate": 0.717,
     "02_s230_approach": 0.782,
-    "03_rondo_biezenstwa": 0.761,
-    "04_s610_ramps": 0.707,
+    "03_rondo_biezenstwa": 0.766,
+    "04_s610_ramps": 0.711,
     "05_s900": 0.728,
     "06_s1060_merge": 0.725,
     "07_s1270": 0.746,
-    "08_signals": 0.775,
+    "08_signals": 0.773,
     "09_s1600": 0.73,
     "10_rondo_putry": 0.699,
     "11_dk8": 0.666
@@ -8762,11 +8768,11 @@
    "edge_vs_ortho_m": {
     "all_sides": {
      "max": 7.375,
-     "n": 4275,
+     "n": 4274,
      "p50": 0.84,
      "p95": 3.4
     },
-    "detected_sides": 4275,
+    "detected_sides": 4274,
     "max": 4.92,
     "n": 798,
     "p50": 0.76,

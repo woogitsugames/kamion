@@ -45,6 +45,7 @@ GORE_MERGE_MAX_LEN_M = 90.0    # WORKING_VALUE: longer same-direction strips are
 GORE_MIN_ISLAND_M2 = 5.0       # WORKING_VALUE: smaller enclosed islands are painted, not kerbed
 GORE_SLIVER_MIN_M2 = 1.5       # ignore numerical crumbs
 GORE_SLIVER_MAX_LEN_M = 60.0   # WORKING_VALUE: a longer uniformly narrow strip is a median, keep it
+GORE_HATCH_MIN_M2 = 12.0       # WORKING_VALUE: smaller merge tips carry no paint (two edge lines meet)
 P21_STRIPE_W_M = 0.5           # WORKING_VALUE: P-21 oblique stripe width / gap read off the 0.08 m orthophoto
 P21_STRIPE_GAP_M = 1.0
 P21_EDGE_INSET_M = 0.35        # border line this far inside the gore outline
@@ -245,7 +246,9 @@ def plan(net, juncs, overrides, origin) -> GorePlan:
         if pg.area < GORE_SLIVER_MIN_M2 or _length(pg) > GORE_MERGE_MAX_LEN_M:
             continue
         if surf.same_direction(pg):
-            cand.append(Gore(pg, "merge"))
+            # owner reference 2026-11-10 (docs/refs/owner-aerials-2026-11-10.md) + orthophoto (s 1440): the surface
+            # in front of a channelising island nose is a painted P-21 exclusion zone across the whole nose width
+            cand.append(Gore(pg, "merge", hatch=pg.area >= GORE_HATCH_MIN_M2))
     for body in _parts(U):
         for ring in body.interiors:
             hole = Polygon(ring)

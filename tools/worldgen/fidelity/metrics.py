@@ -57,6 +57,10 @@ class Ctx:
         self.net = g.world.net
         self.ox, self.oy = g.origin
         self.route = LineString(route_pts)
+        # islands the 0.08 m orthophoto was inspected for by hand (overrides.yaml kind: island_confirmed, ADR 0077):
+        # paved splitter islands and gravel / barrier strips are grey, the colour classifier takes them for road
+        from roads import pipeline as _pl
+        self.confirmed = [tuple(o["at_en"]) for o in _pl.load_overrides(g.world.region["id"]) if o.get("kind") == "island_confirmed"]
         self.ways = {w["id"]: w for w in osm["ways"]}
         self.chain_of_edge = {}
         for c in self.net.chains:
@@ -256,7 +260,8 @@ def window_masks(ctx: Ctx, center, half, res=0.1, yards=None, walk_tris=None):
         rings = [h for h in _parts_of(_sh.union_all([h.buffer(2.0) for h in hulls])) if h.intersects(win)]
         if rings:
             ring = _ft.rasterize([(h, 1) for h in rings], out_shape=gm.shape, transform=_fo(x0, y1, res, res)).astype(bool)
-    return {"rgb": rgb, "src": src, "res": res, "x0": x0, "y1": y1, "gen": gm, "ortho": om, "green": green, "deck": deck,
+    return {"confirmed": ctx.confirmed,
+            "rgb": rgb, "src": src, "res": res, "x0": x0, "y1": y1, "gen": gm, "ortho": om, "green": green, "deck": deck,
             "paint": paint, "other": other, "model": model, "ring": ring}
 
 
@@ -325,6 +330,11 @@ def separations(wm, close_m=7.0, min_m2=4.0):
             verdict = "outline_notch"
         elif half_w > 7.5:
             verdict = "enclosed_block"           # a block ringed by roads (yard, roundabout centre), not an island
+        if verdict == "absent_on_ortho":
+            for (ce, cn) in wm.get("confirmed", ()):
+                rr, cc = int((wm["y1"] - cn) / res), int((ce - wm["x0"]) / res)
+                if 0 <= rr < m.shape[0] and 0 <= cc < m.shape[1] and I.dilate(m, 2.0 / res)[rr, cc]:
+                    verdict = "present_authored"
         (bad_m if verdict == "absent_on_ortho" else ok_m)[m] = True
         gen_islands.append({"xy": [wm["x0"] + (c + 0.5) * res, wm["y1"] - (r + 0.5) * res], "area_m2": cpt["area_m2"],
                             "ortho_road_frac": round(rf, 3), "ortho_green_frac": round(gf, 3), "half_width_m": round(half_w, 2),
