@@ -441,10 +441,14 @@ def doors_and_gaps():
 
 
 # ---------------------------------------------------------------- front face: grille, brand, cowl, wipers
-def lane_dash(name, loft, zc, hgt, off):
-    """TRAKT motif: one dash of the road centre line (brushed aluminium) on the mask's centreline."""
+LOUVRE_TILT = 20.0   # deg, WORKING_VALUE: lamella faces look down at the road, not at the sky (ADR 0047 r4)
+
+
+def lane_dash(name, loft, zc, hgt, off, tilt=0.0):
+    """TRAKT motif: one dash of the road centre line (brushed aluminium) on the mask's centreline.
+    tilt: the dash lies on a face-down lamella (same angle), off is then measured at the lamella's mid height."""
     box(name, V(loft.front_pt(zc, 0.0, off)), (0.024, 0.005, hgt), "alu_brushed", bev=0.0015, seg=1,
-        rot=Matrix.Rotation(math.radians(RAKE), 3, "X"))
+        rot=Matrix.Rotation(math.radians(RAKE - tilt), 3, "X"))
 
 
 def front_face_modern(strokes):
@@ -459,8 +463,8 @@ def front_face_modern(strokes):
     for k in range(cnt):
         zc = z0 + pitch * k
         hw = st[1][0] + (st[2][0] - st[1][0]) * (zc - st[1][1]) / (st[2][1] - st[1][1]) - 0.006
-        grille_bar(f"grille_bar_l{k}", zc, hgt, 0.052, hw, "mask_gloss", nose=-0.004, nose_r=0.020)
-        lane_dash(f"lane_dash{k}", CAB, zc, hgt - 0.014, -0.002)
+        grille_bar(f"grille_bar_l{k}", zc, hgt, 0.052, hw, "mask_gloss", nose=-0.004, tilt=LOUVRE_TILT)
+        lane_dash(f"lane_dash{k}", CAB, zc, hgt - 0.016, louvre_mid(hgt) + 0.0015, tilt=LOUVRE_TILT)
     wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=16.0, mat="alu_brushed",
              name="badge_trakt", weight=1.6, depth=0.004, on_face=True, bev=0.0012)
     CAB.patch("cowl", "plastic_satin", "front", WS_Z0 - 0.082, WS_Z0 - 0.012, -1.21, 1.21, off=0.002, nz=3, npar=48)
@@ -557,12 +561,27 @@ def ribbon(name, poly, width, m, off=-0.004, thick=0.01, kind="front", loft=None
                        thick=thick, side=side)
 
 
-def grille_bar(name, zc, hgt, depth, hw, m, round_front=True, n=2, nose=-0.003, nose_r=0.015, loft=None):   # flat front: n=2 is exact
+def louvre_mid(hgt, nose=-0.004, tilt=None):
+    """Offset of a face-down lamella's face from the front surface at its mid height."""
+    return nose - 0.5 * hgt * math.tan(math.radians(LOUVRE_TILT if tilt is None else tilt))
+
+
+def grille_bar(name, zc, hgt, depth, hw, m, round_front=True, n=2, nose=-0.003, nose_r=0.015, loft=None,
+               tilt=0.0):   # flat front: n=2 is exact
     """Horizontal grille bar following the cab front: body-colour bars get a rounded nose, graphite bars a
     louvre face tilted up (different depth and section, so the field never reads as identical slats).
     nose = offset of the bar face from the cab surface (0 = flush, carries the wordmark decal)."""
     h = hgt / 2
-    if round_front:
+    if tilt:
+        # face-down lamella (modern mask): the top edge is the nose, the face falls back towards the bottom edge
+        # by hgt * tan(tilt), so its normal points forward and DOWN: it mirrors the road / the dark ground instead
+        # of the sky, and the top land (4 mm radius + the shadowed gap above) is all that looks up
+        t = hgt * math.tan(math.radians(tilt))
+        r = 0.004
+        fo = lambda dz: nose - t * (h - dz) / hgt          # noqa: E731  face offset at height dz
+        prof = [(-h, -depth), (-h, fo(-h)), (h - r, fo(h - r)), (h - r * 0.3, fo(h - r * 0.3) - r * 0.25),
+                (h, nose - r), (h, -depth)]
+    elif round_front:
         r = min(nose_r, h * 0.6)
         prof = [(-h, -depth), (-h, nose - r), (-h + r * 0.3, nose - r * 0.3), (-h + r, nose), (h - r, nose),
                 (h - r * 0.3, nose - r * 0.3), (h, nose - r), (h, -depth)]
@@ -1022,6 +1041,15 @@ def mirror_aim(c, view):
     return Matrix((right, fwd, up)).transposed()
 
 
+HOUSE_W = 0.222      # modern class II + IV head width, WORKING_VALUE (glass 0.198 m wide)
+# class VI front mirror (modern): the central ray from the eye point reflects to the middle of the ground field in
+# front of the cab. UN ECE R46 class VI field as remembered, regulation text NOT opened -> UNVERIFIED: ground strip
+# from the vehicle front plane to 2.0 m ahead, from the driver-side plane to 2.0 m outboard of the passenger side.
+FRONT_Z = 2.99               # head centre height, WORKING_VALUE (in front of the top of the windscreen)
+FRONT_FIELD_AHEAD = 1.0      # m ahead of the bumper face (strip middle)
+FRONT_FIELD_X = 0.75         # m towards the passenger side (strip middle is ~+1.0; pulled in to keep the bumper edge)
+
+
 def mirrors(kind="classic", front=True):
     set_group("mirrors" if kind == "classic" else "mirrors_cam")
     for s in (-1, 1):
@@ -1031,24 +1059,26 @@ def mirrors(kind="classic", front=True):
             xh, yh = s * 1.50, base.y - 0.10
             rot = mirror_aim(V((xh, yh, 2.60)), (s * 0.06, -1.0, -0.02))
             c = V((xh, yh, 2.47))
-            box(f"mirror_main_house_{s}", c, (0.25, 0.10, 0.76), "plastic_satin", bev=0.048, seg=4, rot=rot)
-            box(f"mirror_main_cap_{s}", c + rot @ V((0, 0.04, 0)), (0.242, 0.11, 0.745), "paint", bev=0.052, seg=5,
-                rot=rot)
+            # r4: slimmer head (0.25 x 0.15 -> HOUSE_W x ~0.115 m deep): seen from the eye point it must not hide
+            # more than the two B2 heads did (11.5 deg); measured with pillar_obstruction.py
+            box(f"mirror_main_house_{s}", c, (HOUSE_W, 0.080, 0.76), "plastic_satin", bev=0.038, seg=4, rot=rot)
+            box(f"mirror_main_cap_{s}", c + rot @ V((0, 0.030, 0)), (HOUSE_W - 0.008, 0.085, 0.745), "paint",
+                bev=0.040, seg=5, rot=rot)
             if s > 0:  # class V kerb mirror on the passenger side, under the housing, looking down
                 ck = V((s * 1.42, yh + 0.04, 1.98))
                 rk = mirror_aim(ck, (0.25, -0.35, -1.0))
                 box("mirror_kerb", ck, (0.20, 0.08, 0.14), "plastic_satin", bev=0.03, seg=3, rot=rk)
                 box("mirror_kerb_glass", ck + rk @ V((0, -0.041, 0)), (0.18, 0.006, 0.12), "mirror", bev=0.003,
                     rot=rk)
-            box(f"mirror_main_glass_{s}", c + rot @ V((0, -0.051, 0.13)), (0.215, 0.006, 0.44), "mirror", bev=0.004,
-                rot=rot)
-            box(f"mirror_wide_glass_{s}", c + rot @ V((0, -0.051, -0.24)), (0.215, 0.006, 0.20), "mirror", bev=0.004,
-                rot=rot)
+            box(f"mirror_main_glass_{s}", c + rot @ V((0, -0.041, 0.13)), (HOUSE_W - 0.024, 0.006, 0.44), "mirror",
+                bev=0.004, rot=rot)
+            box(f"mirror_wide_glass_{s}", c + rot @ V((0, -0.041, -0.24)), (HOUSE_W - 0.024, 0.006, 0.20), "mirror",
+                bev=0.004, rot=rot)
             for nm, zb, zh in (("top", 2.84, 2.74), ("bot", 2.26, 2.20)):
                 p0 = V(CAB.side_pt(zb, win_front(zb) + 0.012, s, -0.012))
-                p1 = V((xh - s * 0.09, yh + 0.012, zh))
+                p1 = V((xh - s * 0.08, yh + 0.012, zh))
                 d = p1 - p0
-                box(f"mirror_arm_{nm}_{s}", (p0 + p1) / 2, (d.length, 0.045, 0.085), "plastic_satin", bev=0.02, seg=2,
+                box(f"mirror_arm_{nm}_{s}", (p0 + p1) / 2, (d.length, 0.040, 0.070), "plastic_satin", bev=0.018, seg=2,
                     rot=d.to_track_quat("X", "Z").to_matrix())
         elif kind == "classic":
             xh = s * 1.50
@@ -1095,6 +1125,18 @@ def mirrors(kind="classic", front=True):
         return
     set_group("mirrors")
     p = V(CAB.front_pt(WS_Z1 + 0.29, 0.98, 0.0))     # above the sun visor
+    if modern():
+        # r4: the head hangs in front of the top of the windscreen below the visor nose (the old one sat above the
+        # visor: hidden from the seat by the header, and its glass was tilted at the sky)
+        c = V((0.98, face_y(FRONT_Z) + 0.235, FRONT_Z))
+        tgt = V((FRONT_FIELD_X, face_y(0.6) + FRONT_FIELD_AHEAD, 0.0))
+        rot = mirror_aim(c, tgt - c)
+        hb = c + rot @ V((0, 0.030, 0.045))
+        tube("front_mirror_arm", [p + V((0, -0.05, 0.10)), p + V((0, 0.13, 0.10)), V((p.x, hb.y + 0.01, p.z + 0.02)),
+                                  hb + V((0, 0.01, 0.10)), hb], 0.013, "plastic_satin", seg=10)
+        box("front_mirror", c, (0.26, 0.07, 0.17), "plastic_satin", bev=0.03, seg=3, rot=rot)
+        box("front_mirror_glass", c + rot @ V((0, -0.0355, 0)), (0.24, 0.006, 0.15), "mirror", bev=0.003, rot=rot)
+        return
     tube("front_mirror_arm", [p + V((0, -0.05, 0.10)), p + V((0, 0.12, 0.10)), p + V((0, 0.20, 0.0))], 0.014,
          "plastic_satin", seg=10)
     box("front_mirror", p + V((0, 0.22, -0.10)), (0.26, 0.07, 0.17), "plastic_satin", bev=0.03, seg=3,
@@ -1247,8 +1289,9 @@ def lower_fairing():
         _, pitch, _, hgt = CFG["louvres"]
         for k in range(3):
             zc = 1.152 - pitch * k
-            grille_bar(f"grille_bar_b{k}", zc, hgt, 0.026, hwz(zc), "mask_gloss", nose=-0.004, nose_r=0.020, loft=LOW)
-            lane_dash(f"lane_dash_b{k}", LOW, zc, hgt - 0.014, -0.002)
+            grille_bar(f"grille_bar_b{k}", zc, hgt, 0.026, hwz(zc), "mask_gloss", nose=-0.004, loft=LOW,
+                       tilt=LOUVRE_TILT)
+            lane_dash(f"lane_dash_b{k}", LOW, zc, hgt - 0.016, louvre_mid(hgt) + 0.0015, tilt=LOUVRE_TILT)
         grille_bar("grille_bar_plate", 0.835, 0.235, 0.026, hwz(0.835), "mask_gloss", nose=-0.004, nose_r=0.020,
                    loft=LOW)
     else:
