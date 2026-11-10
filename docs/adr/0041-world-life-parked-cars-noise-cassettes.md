@@ -158,3 +158,17 @@
   authored_override exists.
 - Kerbside parking on streets without an OSM `parking:*` polygon (lane tags on ways are not in
   streetscape_sources yet).
+
+## AO aut — WIP (niezweryfikowane), 2026-11-10
+- Zrobione: kontaktowy cień / AO pod autami, dostawczakami, ciągnikami i naczepami (ADR 0050): shader
+  `Kamion/World Vehicle Contact` (analityczny view factor płyt podwozia + opon, analityczna widoczność słońca, mnożnik
+  tylko na części nieba tam, gdzie mapa cieni już ciemni), osobny prototyp `contact_<hash>` na spec (≤ 7 rysowań na
+  klatkę zamiast +1 na każdy batch auta), parametry `life_props.contact_spec` w extras węzła `<auto>.contact`.
+- Zmierzone (edytor, stretch-01 / glass_side_00, rdzeń pod autem, luma p5 przed → po): Low clear 28 → 3.9 / 27 → 1.9 %,
+  High clear 25 → 4.6 / 24 → 3.2 %, Low overcast 43 → 11.0 / 47 → 8.2 %, High overcast 48 → 11.4 / 48 → 8.2 %;
+  rysowania instancjonowane stretch-01 Low 558 (wersja „submesh na LOD” dawała 619).
+- Otwarte: overcast nie spełnia p5 ≤ 8 % - dodana (NIERENDEROWANA) korekta gradacji nieba CIE dla szczeliny pod
+  nadwoziem (`open (1 + open) / 2` ważone udziałem światła rozproszonego); trzeba: build_world + import + render 4
+  konfiguracji, ocena visual-critic, koszt Low w edytorze (-TimeFrames), test EditMode importera.
+- Dowody: `artifacts/world-fixes/cars-ao/{before,after,after2,compare}` (before = siła 0, after2 = wersja z osobnym
+  prototypem, bez korekty CIE); skrypty `scratchpad/ao-aut/{render.ps1,measure.py}` (sesyjny scratchpad).

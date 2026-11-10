@@ -258,6 +258,8 @@ namespace Game.World.Import
                 return LitMaterial(path, albedo, rough, metal, t, edge, edge ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, edge, null);
             }
             if (m.Get("shader") as string == "wire") return WireMaterial(path, albedo);
+            // Parked-vehicle contact shadow (ADR 0050): shader defaults; InstanceImporter makes one copy per prototype spec.
+            if (m.Get("shader") as string == "vehicle_contact") return VehicleContactMaterial(path, null);
             if (m.Get("window_grid") is Dictionary<string, object> grid && m.Get("base") is string baseId)
                 return FarFacadeMaterial(r, path, baseId, albedo, rough, grid, m.Get("glass_color") as List<object>);
             // Tinted see-through glazing of prop LOD0 (ADR 0041 par. 7): manifest "blend": true + "alpha".
@@ -358,6 +360,38 @@ namespace Game.World.Import
             mat.SetFloat("_AAPixels", 1.0f);
             mat.SetFloat("_MaxAlpha", 0.95f);
             mat.SetFloat("_AlphaGamma", 0.5f);   // REVIEW r6 W-P0: far conductors stay readable (WORKING_VALUE)
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
+        /// <summary>Shader property of Kamion/World Vehicle Contact for each key of a generator contact spec (ADR 0050).</summary>
+        static readonly (string key, string prop)[] k_ContactProps =
+        {
+            ("slab0", "_Slab0"), ("slab1", "_Slab1"), ("strength", "_Strength"), ("tyre", "_Tyre"), ("axles", "_Axles"),
+            ("sun_box", "_SunBox"), ("sun_z", "_SunZ"), ("patch", "_Patch"),
+        };
+
+        /// <summary>
+        /// Parked-vehicle contact shadow / AO (Kamion/World Vehicle Contact, ADR 0050): multiplicative ground patch, instanced,
+        /// queue Geometry+499. <paramref name="spec"/> = the prototype's LOD0 node extras "contact" (null: shader defaults);
+        /// every vector is written, so a reimport always carries the generator's values.
+        /// </summary>
+        public static Material VehicleContactMaterial(string path, Dictionary<string, object> spec)
+        {
+            var shader = Shader.Find("Kamion/World Vehicle Contact") ?? throw new InvalidOperationException("Kamion/World Vehicle Contact not found (compile error?)");
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
+            mat.shader = shader;
+            mat.shaderKeywords = Array.Empty<string>();
+            mat.enableInstancing = true;
+            if (spec != null)
+                foreach (var (key, prop) in k_ContactProps)
+                {
+                    var v = Arr(spec.Get(key));
+                    if (v == null || v.Count < 4) throw new InvalidOperationException($"{path}: contact spec '{key}' missing");
+                    mat.SetVector(prop, new Vector4((float)Num(v[0]), (float)Num(v[1]), (float)Num(v[2]), (float)Num(v[3])));
+                }
+            mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 499;
             EditorUtility.SetDirty(mat);
             return mat;
         }

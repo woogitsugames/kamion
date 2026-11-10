@@ -183,6 +183,14 @@ def export(codes, boards, out_dir=None):
     for name in sorted(P):
         lod0, lod1, col, *more = P[name]
         t0 = glb_tris = 0
+        # Vehicles (ADR 0050): contact shadow / AO patch as its own node "<name>.contact" with the shader parameters in
+        # its extras; InstanceImporter turns every distinct spec into one instanced prototype (one draw per spec, not
+        # one per vehicle prototype and LOD).
+        cspec = LP.contact_spec(name)
+        if cspec is not None:
+            cm = PP.Mesh()
+            LP.contact_quad(cm, cspec)
+            glb.add_mesh(name + ".contact", cm.out(), {"contact": cspec})
         prims = crease_normals(lod0.out())
         glb.add_mesh(name, prims, {"lod": 0})
         t0 = sum(len(p["T"]) for p in prims)

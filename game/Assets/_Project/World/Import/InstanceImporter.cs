@@ -76,6 +76,7 @@ namespace Game.World.Import
             var protos = new List<WorldInstanceSet.Prototype>();
             var materials = new List<Material>();
             var colMeshes = new Dictionary<string, Bounds?>();
+            var contactOf = new Dictionary<int, int>();   // vehicle prototype -> its contact patch prototype (ADR 0050)
             long bytes = 0;
 
             int Proto(string name)
@@ -136,7 +137,32 @@ namespace Game.World.Import
                 idx = protos.Count;
                 protos.Add(p);
                 protoIndex[name] = idx;
+                // Contact shadow / AO patch of a vehicle (ADR 0050): node "<name>.contact"; every vehicle instance also
+                // becomes an instance of the patch prototype of its spec (one instanced draw per spec for all vehicles).
+                if (!tree && props.Find(name + ".contact") is GlbReader.MeshNode cn)
+                    contactOf[idx] = ContactProto(cn, name);
                 return idx;
+            }
+
+            // One prototype per distinct contact spec: a single LOD (the patch quad) culled with the vehicles, no shadows.
+            int ContactProto(GlbReader.MeshNode cn, string vehicle)
+            {
+                var spec = cn.Extras != null ? cn.Extras.Get("contact") as Dictionary<string, object> : null;
+                var mat = ContactMaterial(r, spec, vehicle, out string id);
+                if (protoIndex.TryGetValue(id, out int ci)) return ci;
+                var mesh = WorldMeshBake.Compact(id, cn.Primitives, new WorldMeshBake.Options());
+                AssetDatabase.AddObjectToAsset(mesh, set);
+                bytes += WorldMeshBake.GpuBytes(mesh);
+                var cp = new WorldInstanceSet.Prototype
+                {
+                    name = id, lods = new[] { mesh }, materialStart = new[] { materials.Count },
+                    lodEndM = new[] { WorldInstances.VehicleCullM }, shadowLodMask = 0,
+                };
+                materials.Add(mat);
+                ci = protos.Count;
+                protos.Add(cp);
+                protoIndex[id] = ci;
+                return ci;
             }
 
             // ---- instances ----
@@ -240,6 +266,7 @@ namespace Game.World.Import
                     int pi = Proto(p);
                     if (pi < 0) continue;
                     items.Add((cellKey, forest, pi, m));
+                    if (contactOf.TryGetValue(pi, out int cpi)) items.Add((cellKey, false, cpi, m));
                     if (colMeshes.TryGetValue(p, out var cb) && cb.HasValue && corridor.Any(c => e >= c.Min.x && e < c.Max.x && n >= c.Min.y && n < c.Max.y))
                         colliders.Items.Add((p, m, cb.Value));
                 }
@@ -342,6 +369,31 @@ namespace Game.World.Import
 
         // ------------------------------------------------------------------------------------------------- materials
         static readonly Dictionary<string, Material> s_ProtoMats = new Dictionary<string, Material>();
+
+        /// <summary>
+        /// Kamion/World Vehicle Contact material for a prototype's contact spec (ADR 0050). Prototypes with the same spec
+        /// (one body in six colours) share one asset, named after a hash of the spec so a reimport overwrites it in place.
+        /// </summary>
+        static Material ContactMaterial(RegionImporter.Result r, Dictionary<string, object> spec, string proto, out string id)
+        {
+            if (spec == null) Debug.LogWarning($"[IMPORT] {proto}: vehicle_contact patch without a contact spec - shader defaults");
+            var key = new System.Text.StringBuilder();
+            if (spec != null)
+                foreach (var k in spec.Keys.OrderBy(k => k, StringComparer.Ordinal))
+                {
+                    key.Append(k).Append('=');
+                    foreach (var x in Arr(spec[k])) key.Append(((float)Num(x)).ToString("R", System.Globalization.CultureInfo.InvariantCulture)).Append(',');
+                    key.Append(';');
+                }
+            string hash;
+            using (var sha = System.Security.Cryptography.SHA256.Create())
+                hash = BitConverter.ToString(sha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(key.ToString()))).Replace("-", "").ToLowerInvariant();
+            id = "contact_" + hash.Substring(0, 10);
+            if (s_ProtoMats.TryGetValue(id, out var cached) && cached != null) return cached;
+            var mat = RegionImporter.VehicleContactMaterial($"{r.Dir}/Materials/Proto/M_{id}.mat", spec);
+            s_ProtoMats[id] = mat;
+            return mat;
+        }
 
         /// <summary>
         /// Material of a prototype primitive: region materials (manifest) for plain parts; URP Lit with the library's own
