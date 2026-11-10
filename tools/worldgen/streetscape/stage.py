@@ -96,7 +96,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         return PV.bilinear(zc, hf, np.asarray(e, float), np.asarray(n, float))
 
     # furniture
-    pl = FU.Placer(zsurf, zground)
+    pl = FU.Placer(zsurf, zground, surf=FU.SurfaceTop(w.buf.parts),
+                   col=FU.SurfaceTop(w.buf.parts, collision=True))
     codes, boards = set(), {}
     frep = {}
     graph = json.loads((pipeline.REGIONS / rid / "roads.graph.json").read_text(encoding="utf-8"))
@@ -134,6 +135,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
     FU.clear_carriageway(pl, carriage, zsurf, frep)
     frep["poles_reseated"] = pl.reseated
+    frep["pole_footing_steps"] = {"count": len(pl.seat_log), "max_m": max([r["step_m"] for r in pl.seat_log], default=0.0),
+                                  "worst": sorted(pl.seat_log, key=lambda r: -r["step_m"])[:20]}
     SR.route_audit(pl.items, route_P, w.net, w.junctions, frep)
     rep["furniture"] = frep
     log("furniture", {k: v for k, v in frep.items() if k != "junction_signs"})

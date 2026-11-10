@@ -181,6 +181,7 @@ WALL_SKIP_MATS = ("curb_concrete", "edging_concrete", "bridge_concrete", "bridge
 
 GRASS_STEEP_NZ = 0.80     # grass faces steeper than ~1:1.33 (1:1.5 = n.z 0.83) count as walls too
 GRASS_MATS = ("verge_grass", "shoulder_gravel")
+SLIVER_M2 = 0.02          # exposed skirt face below this per source = sub-pixel sliver (~0.13 x 0.15 m; WORKING_VALUE)
 
 
 def terrain_walls(parts, zc, hf, thresh=WALL_MAX, mask=None):
@@ -191,7 +192,7 @@ def terrain_walls(parts, zc, hf, thresh=WALL_MAX, mask=None):
     b) grass / gravel faces steeper than ~1:1.33 with a vertical extent > `thresh` (squeezed ditch slopes).
     Kerb faces and edgings are real vertical faces and are skipped. Terrain sampled bilinearly (1 m grid)."""
     from streetscape.paved import bilinear    # local import: streetscape imports this module
-    hs, where, by = [], [], {}
+    hs, where, by, area, slivers = [], [], {}, {}, [0]
 
     def covered(P):
         if mask is None:
@@ -215,13 +216,37 @@ def terrain_walls(parts, zc, hf, thresh=WALL_MAX, mask=None):
         nrm = np.cross(b - a, c - a)
         ln = np.maximum(np.linalg.norm(nrm, axis=1), 1e-12)
         nz = np.abs(nrm[:, 2]) / ln
-        steep = nz < WALL_STEEP_NZ
+        # a face thinner than the threshold (2 * area / longest edge) cannot show a wall taller than it: slivers
+        # whose 3 vertices lie on one gutter / boundary line (Delaunay junction fills along a straight 50-200 m
+        # gutter: "steep" normal, 1-2 cm wide, hidden behind the kerb face) are not walls (ADR 0033 v3.5.2)
+        lmax = np.max(np.stack([np.linalg.norm(b - a, axis=1), np.linalg.norm(c - b, axis=1),
+                                np.linalg.norm(a - c, axis=1)]), axis=0)
+        thin = ln / np.maximum(lmax, 1e-9) < thresh
+        slivers[0] += int(((nz < WALL_STEEP_NZ) & thin).sum())
+        steep = (nz < WALL_STEEP_NZ) & ~thin
         if steep.any():
             P = V[np.unique(T[steep])]
             h = P[:, 2] - bilinear(zc, hf, P[:, 0], P[:, 1])
             k = (h > thresh) & ~covered(P)
             if k.any():
                 note(p, P[k], h[k], "skirt")
+                # exposed face area of the flagged faces (the part above the terrain), per source: separates real
+                # walls from sub-pixel slivers (a vertex 0.2 m up on a 2 cm wide face)
+                Ts = T[steep]
+                A3 = V[Ts]
+                hv = np.maximum(0.0, A3[:, :, 2] - bilinear(zc, hf, A3[:, :, 0].ravel(), A3[:, :, 1].ravel()).reshape(-1, 3))
+                dz = np.maximum(A3[:, :, 2].max(1) - A3[:, :, 2].min(1), 1e-6)
+                fa = 0.5 * ln[steep] * np.minimum(1.0, hv.mean(1) / dz)
+                run = np.hypot(*(A3[:, :, :2].max(1) - A3[:, :, :2].min(1)).T)
+                flag = (hv > thresh).any(1)
+                if flag.any():
+                    key = p.src.split(":corner")[0]
+                    r = area.setdefault(key, {"src": key, "mat": p.mat, "points": 0, "exposed_m2": 0.0, "run_m": 0.0,
+                                              "max_h": 0.0, "e": float(P[k][0, 0]), "n": float(P[k][0, 1])})
+                    r["points"] += int(k.sum())
+                    r["exposed_m2"] += float(fa[flag].sum())
+                    r["run_m"] += float(run[flag].sum())
+                    r["max_h"] = max(r["max_h"], float(h[k].max()))
         if p.mat in GRASS_MATS:
             g = (nz >= WALL_STEEP_NZ) & (nz < GRASS_STEEP_NZ)
             if g.any():
@@ -231,10 +256,16 @@ def terrain_walls(parts, zc, hf, thresh=WALL_MAX, mask=None):
                 if k.any():
                     note(p, V[T[g][k]].mean(1), ext[k], "steep_grass")
     if not hs:
-        return {"thresh_m": thresh, "count": 0, "max_m": 0.0, "p99_m": 0.0, "by_source": {}, "worst": []}
+        return {"thresh_m": thresh, "count": 0, "max_m": 0.0, "p99_m": 0.0, "by_source": {}, "worst": [],
+                "skirt_area": [], "thin_steep_faces_skipped": slivers[0]}
     h = np.concatenate(hs)
     where.sort(key=lambda t: -t[5])
+    rows = sorted(area.values(), key=lambda r: -r["exposed_m2"])
+    for r in rows:
+        r.update({k: round(r[k], 3) for k in ("exposed_m2", "run_m", "max_h")}, e=round(r["e"], 1), n=round(r["n"], 1),
+                 visible=r["exposed_m2"] >= SLIVER_M2)
     return {"thresh_m": thresh, "count": int(len(h)), "max_m": round(float(h.max()), 3),
             "p99_m": round(float(np.percentile(h, 99)), 3), "by_source": by,
+            "sliver_m2": SLIVER_M2, "skirt_area": rows, "thin_steep_faces_skipped": slivers[0],
             "worst": [{"kind": kd, "src": s, "mat": m, "e": round(e, 1), "n": round(n, 1), "h": round(v, 3)}
                       for kd, s, m, e, n, v in where[:30]]}
