@@ -454,7 +454,7 @@ def _vehicle(d, paint, lod):
     else:
         # LOD2 (far rows, 135-300 m High / 45-300 m Low): dark under-body band between the axles + one hexagonal
         # tyre disc per wheel (the round wheels are what still reads at 15-40 px; a black band reads as "legs")
-        ya, yb = yra - r, yfa + r
+        ya, yb = yra - r - 0.10, yfa + r + 0.10
         # r8 N-13: the dark under-body is a closed skirt (two side bands + two cross quads on one rectangle inside the
         # body's lower edge). Before: bands between the axles at hw - 0.01 and cross quads as wide, which stuck out
         # beside the tapered bumpers and left the far wheel discs' culled backs (= the paving) visible under the body.

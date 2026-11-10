@@ -8,7 +8,7 @@ Software z-buffer, orthographic, the engine's rules: opaque materials draw front
   exposed     : the nearest opaque front face is the cabin (`car_interior`) with no glass in front of it.
 Rays that cross glass only (in at one window, out at another) are the legitimate view through the greenhouse.
 
-  uv run --project tools/worldgen python tools/worldgen/qa/car_holes_qa.py [--out DIR] [--res 0.02] [--proto NAME]
+  uv run --project tools/worldgen python tools/worldgen/qa/car_holes_qa.py [--out DIR] [--res 0.025] [--proto NAME]
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ def view_basis(az, el):
     return right, up, d
 
 
-def raster(mesh, az, el, res=0.02):
+def raster(mesh, az, el, res=0.025):
     """-> kind per pixel: 0 background, 1 body, 2 glass only, 3 see_through, 4 exposed."""
     right, up, d = view_basis(az, el)
     prims = [p for p in mesh.out() if not p["mat"].startswith(OVERLAY)]
@@ -109,9 +109,10 @@ def erode(mask, n=1):
     return mask
 
 
-def defects(mesh, res=0.02, azimuths=AZIMUTHS, elevations=ELEVATIONS, images=None, tag=""):
+def defects(mesh, res=0.025, azimuths=AZIMUTHS, elevations=ELEVATIONS, images=None, tag=""):
     """-> {(az, el): (see_through cm2, exposed cm2)}; only blobs that survive a 1 px erosion count (>= 3 px wide:
-    single-pixel seams between abutting panels are rasteriser noise, not something a player can see through)."""
+    = 75 mm at the default 25 mm pixel;
+    thinner seams between abutting panels are below what the test resolves)."""
     out = {}
     for el in elevations:
         for az in azimuths:
@@ -136,7 +137,7 @@ def prototypes():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=None)
-    ap.add_argument("--res", type=float, default=0.02)
+    ap.add_argument("--res", type=float, default=0.025)
     ap.add_argument("--proto", default=None)
     a = ap.parse_args()
     if a.out:
