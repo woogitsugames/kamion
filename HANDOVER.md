@@ -1,3 +1,30 @@
+# HANDOVER — kamion, sesja 8 (2026-11-11 ok. 22:00 start; limit 5 h reset 03:00 UTC)
+
+## Najpierw
+- main = ten commit. Start s8: 8 agentów Fable przejmuje/uruchomionych (tabela). GPT/Codex pracuje nad importem Megascans (ADR 0084, `gpt-megascans`, STATUS `artifacts/megascans-r1/STATUS.md`) — nie ruszać, scalić po REPORT.md. Antigravity (Argon 4) — zadanie `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` (tło za krawędzią świata, ADR 0085, gałąź `argon-edge`).
+- Decyzja otwarta: ogranicznik na zjeździe twarde 90 czy ~94 (`overrunBrakeOffsetKmh`, ADR 0082).
+- Decyzja lidera s8 (0076): ratchety fidelity — abreast oceniane na ortofoto; jeśli bliżej rzeczywistości, osobna metryka i nowy baseline z uzasadnieniem w ADR 0076; inaczej abreast ograniczony do osi p95 ≤ 0,13 m.
+
+| zadanie | ADR | worktree (`.claude/worktrees/`) | STATUS | stan |
+|---|---|---|---|---|
+| P0 korytarz + ratchety | 0076 | agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | s8: agent Fable w toku |
+| wysepki z OSM | 0077 | agent-a2afb96d89584cca6 | tools/worldgen/fidelity/STATUS_islands_r10.md | s8: agent Fable w toku (merge main po 0076) |
+| straż JRG2 | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | s8: agent Fable w toku |
+| osobówki r10 | 0078 | agent-a2215bcc98d109edc | artifacts/cars-r10 | s8: agent Fable w toku |
+| zabudowa r10 | 0081 | agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | s8: agent Fable w toku |
+| zewnętrze TRAKT + naczepa | 0083 | agent-a4049e15e1ab8c681 | artifacts/truck-ext-r10 | s8: agent Fable w toku |
+| Kwadrat Park r11 (recenzja) | 0071 | kwadrat-r11 | artifacts/kwadrat-r11 | s8: nowy agent Fable |
+| światło r11 (recenzja) | 0080 | light-r11 | artifacts/light-r11 | s8: nowy agent Fable |
+| import Megascans | 0084 | gpt-megascans | artifacts/megascans-r1 | GPT/Codex w toku |
+| tło za krawędzią | 0085 | argon-edge (Argon tworzy) | artifacts/edge-far-r1 | Antigravity — do startu przez właściciela |
+
+## Następne kroki
+1. Scalanie: 0076 → 0077 → 0070 → 0078 → 0081 → 0083 → Kwadrat r11 → światło r11 → 0084 → 0085; po drogach: build_world → pytest gis → import-region → PlayMode WorldCBarrier|DepotBarrier|WorldCRoute.
+2. Sprzątanie: worktree 0080/0071, osierocone katalogi, nagranie → artifacts/owner/.
+3. Integracja, czyste buildy Low/High/Ultra, telefony, raport bramki 3.
+4. Ostatni przydzielony ADR: **0085**.
+
+---
 # HANDOVER — kamion, sesja 7 (2026-11-10 ok. 23:00; LIMIT WYCZERPANY ok. 23:10; wszyscy agenci (0070, 0076, 0077, 0078, 0081, 0082, 0083) zapisali WIP i są zatrzymani; agenci dostali polecenie: commit WIP + STATUS.md i stop; nowa sesja startuje z docs/owner/START-PROMPT-S8.md)
 
 ## Najpierw
