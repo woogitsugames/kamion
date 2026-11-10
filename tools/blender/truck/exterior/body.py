@@ -869,6 +869,9 @@ def _wordmark_on_face(strokes, z_c, height, spacing, mat, name, weight, depth, b
         bm.to_mesh(ob.data)
         bm.free()
         ob.data.shade_flat()
+        if ob.data.validate():      # what the FBX importer would drop (doubled / degenerate faces): drop it here, so
+            ob.data.update()        # the manifest counts the triangles that really reach the game
+            print(f"  {ob.name}: validate() removed invalid faces, {len(ob.data.polygons)} triangles left")
         out.append(ob)
     return out
 

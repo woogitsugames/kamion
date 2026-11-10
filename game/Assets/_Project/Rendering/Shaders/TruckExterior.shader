@@ -323,17 +323,12 @@ Shader "Kamion/Truck Exterior"
                     grime = CurtainGrime(TransformWorldToObject(i.positionWS), 1.0 - _KamionGrimeDetailOff);
                 else if (isTyre < 0.5)
                 {
-                    // r8 (ADR 0061), both scale with _Dirt like the rest (0 on a washed truck). WORKING_VALUE.
-                    // Settled dust on surfaces that face up (roof crown, deflector, tank and mudguard tops): nobody
-                    // washes a cab roof. At the fleet _Dirt 0.5 it takes ~13 % off the white and ~25 % off the coat
-                    // there: the roof crown no longer clips to 100 % under an overcast sky on High (review r7 N-17).
+                    // r8 (ADR 0061): settled dust on surfaces that face up (roof crown, deflector, tank and mudguard
+                    // tops): nobody washes a cab roof. Scales with _Dirt; at the fleet 0.5 it takes ~13 % off the white
+                    // and ~25 % off the coat there (review r7 N-17: roof pixels at 100 % on High overcast 4.8 -> 1.8 %;
+                    // the rest is the D23 white clip at 0.7, LookGrading). WORKING_VALUE.
                     half up = smoothstep(0.35, 0.9, normalize(i.normalWS).y);
                     grime = max(grime, 0.18 * up);
-                    // Dust haze on gloss dielectric trim (piano-black mask, louvres): the r2 shed left it with no film
-                    // at all above the spray band, a clean black hole (louvre faces 4.3 % at low sun on Low). ~10 %
-                    // dust at _Dirt 0.5 = albedo 0.018 -> 0.031, roughness 0.09 -> 0.17 (still the gloss-trim lobe).
-                    half glossy = (1.0 - _IsPaint) * (1.0 - saturate(m.b * 2.0)) * (1.0 - smoothstep(0.22, 0.32, c.a));
-                    grime = max(grime, 0.11 * glossy);
                 }
                 half dirt = saturate(grime * _Dirt * 1.8);
                 coat *= 1.0 - saturate(dirt * 1.5);
@@ -397,6 +392,10 @@ Shader "Kamion/Truck Exterior"
                     half hor = saturate(1.0 + 1.2 * dot(R, i.normalWS));
                     // WORKING_VALUE: reflections below ~25 deg elevation keep 30 % (street-level clutter), open sky above.
                     half obst = lerp(0.3, 1.0, smoothstep(-0.05, 0.42, R.y));
+                    // r8 (ADR 0061): a reflection that points steeply down (the face-down louvres: R.y ~ -0.7) sees the
+                    // road in front of the bumper, not street-level clutter: 0.3 -> 0.5 below ~35 deg (the bumper and
+                    // the truck's own shadow keep it under 1). Louvre faces at low sun: 4.3 % on Low, a black field.
+                    obst = max(obst, 0.5 * smoothstep(-0.30, -0.60, R.y));
                     half3 env = GlossyEnvironmentReflection(R, i.positionWS, max(rough, 0.05), m.r) * (hor * hor * obst);
                     half3 diff = input.bakedGI * albedo * (1.0 - F) * m.r;
                     col.rgb += (env * F + diff) * glossTrim;
