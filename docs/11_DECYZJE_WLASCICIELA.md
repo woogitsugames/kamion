@@ -48,3 +48,7 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 | D27 | Balans bieli przy niskim słońcu | **„Jak w telefonie” 0,5** w `LP_LowSun` (ADR 0043 opcja c); pozostałe presety bez adaptacji |
 | D28 | Kabina TRAKT | **Nowy nowoczesny front** (wariant `modern`, Fable 5.2): czarna maska „T”, wąskie LED w narożnikach, zderzak jedną bryłą, czapa dachu ze spojlerem, lekka wypukłość czoła R 10 m; zdjęcia prasowe właściciela tylko jako wzór stylu, bez cech cudzej marki |
 | D29 | Pochylenie przodu | **1,5°** w widoku z boku (zamiast 7°), przód w jednej płaszczyźnie |
+| D30 | Próg połysku lakieru ciężarówki (r6 E1, r7) | Refleks na płaskich drzwiach **4–10 pkt** (Volvo FH na zdjęciu 5–8; ≥ 15 odrzucony jako nieosiągalny) **+ nowy wymóg**: refleks na krzywiźnie (narożnik kabiny, deflektor dachu) **≥ 10 pkt High / ≥ 6 pkt Low** |
+| D31 | Szyba ciężarówki z zewnątrz (r6 E2, r7) | p50 jasności **33–45 %** (Fresnel; ≥ 60 % odrzucony) **+ wymóg treści odbicia σ ≥ 8** (r7: 4,5 = FAIL, do poprawy) |
+| D32 | Szyby aut osobowych (r7) | Prostopadle **≤ 32 % pochmurno / ≤ 26 % słońce**, kąt ostry / prostopadły **≥ 1,3×** (wg zdjęcia CC0 7197); model nieba ADR 0010 bez zmian |
+| D33 | Kierownica przy niskim słońcu (do D27) | Próg **względny**: R−B ≤ 6 % i nasycenie ≤ nasycenia białej powierzchni w tym samym świetle (zamiast sat ≤ 15 %); WB 0,5 bez zmian |

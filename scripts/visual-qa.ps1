@@ -64,7 +64,7 @@ $code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
 
 $result = Select-String -Path $log -Pattern 'VISUALQA_RESULT:.*' | Select-Object -Last 1
 
-# ADR 0050: Unity 6000.3.28f1 sporadically access-violates (0xC0000005 = -1073741819) AFTER the runner finished, inside
+# ADR 0051: Unity 6000.3.28f1 sporadically access-violates (0xC0000005 = -1073741819) AFTER the runner finished, inside
 # EditorApplication.Exit -> DestroyGfxDevice -> ~D3D12PipelineCache -> D3D12PipelineCacheLibrary::SaveCache (engine bug,
 # no managed/our resources on the stack). Accept the run only when ALL of this is proven: exit code is exactly that
 # access violation, the log has VISUALQA_RESULT: OK rendered=N, the crash stack contains the known signature, and N fresh
@@ -75,7 +75,7 @@ if ($code -eq -1073741819 -and $result -and $result.Line -match 'VISUALQA_RESULT
     $fresh = @(Get-ChildItem $OutputDir -Filter *.png -ErrorAction SilentlyContinue |
         Where-Object { $_.Name -notlike '*_mask.png' -and $_.LastWriteTime -ge $runStart }).Count
     if ($sig -and $fresh -ge $n) {
-        Write-Warning "Unity crashed on shutdown (0xC0000005 in D3D12PipelineCacheLibrary::SaveCache, known engine bug, ADR 0050) AFTER writing all $n frames; accepted."
+        Write-Warning "Unity crashed on shutdown (0xC0000005 in D3D12PipelineCacheLibrary::SaveCache, known engine bug, ADR 0051) AFTER writing all $n frames; accepted."
         $code = 0
     }
     else { Write-Host "shutdown crash NOT accepted: signature=$sig freshPng=$fresh expected=$n" -ForegroundColor Red }

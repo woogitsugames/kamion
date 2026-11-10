@@ -1,4 +1,4 @@
-# ADR 0050 - visual-qa: known Unity D3D12 pipeline-cache crash on shutdown is detected explicitly, not ignored
+# ADR 0051 - visual-qa: known Unity D3D12 pipeline-cache crash on shutdown is detected explicitly, not ignored
 
 Status: accepted (2026-11-10)
 
