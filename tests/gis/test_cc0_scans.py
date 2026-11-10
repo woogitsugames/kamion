@@ -52,7 +52,8 @@ def test_scan_sets_in_spec_keep_calibration(man):
     contrast and the r8 asphalt level rest on asphalt_worn = 0.08)."""
     sets = json.loads(SPEC.read_text(encoding="utf-8"))["sets"]
     ids = {a["id"] for a in man["assets"]}
-    scanned = {k: v for k, v in sets.items() if "source" in v}
+    # CC0 scan sets (ADR 0063) carry a dict source; hero atlases (viaduct_concrete, ADR 0067) a free-text source
+    scanned = {k: v for k, v in sets.items() if isinstance(v.get("source"), dict)}
     if not scanned:
         pytest.skip("spec built without scans (build_all.py --procedural or scans not fetched)")
     for name, s in scanned.items():
