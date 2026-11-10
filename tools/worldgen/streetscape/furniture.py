@@ -37,6 +37,8 @@ from shapely.geometry import LineString, Point
 from roads import standards as S
 from roads.network import MEDIAN_RURAL, RURAL, URBAN, side_params, side_extent
 
+from . import facade_atlas as FA
+
 # Ground-standing poles are seated on the lowest surface under their footing (gate 3 audit: lamps / masts up to
 # 0.44 m in the air, sign posts buried > 0.6 m); the part on the high side goes into the ground like a real foundation.
 SEATED_POLES = ("lamp_", "signal_mast", "signal_pole", "sign_post", "power_pole")
@@ -689,6 +691,77 @@ def cut_by(line, poly):
     return [p for p in getattr(g, "geoms", [g]) if p.geom_type == "LineString" and p.length > 1.0]
 
 
+def concrete_fence(lin, line, key, style_key):
+    """Prefabricated concrete fence (ADR 0081, typical plot fence of the Bialystok industrial area): bays of
+    S.CONCRETE_FENCE_POST between H-posts; every bay is level and steps at the posts with the ground (the plates are
+    cast flat, nobody rakes them), four stacked 0.5 m plates or one framed panel per bay from the fence_concrete atlas
+    (UV0 = atlas metres, facade_atlas.fence_uv), a different cast on the two faces, posts 12 x 14 cm standing 8 cm
+    above the plates. One fence = one style; sprayed / painted-over bays stay rare (1 in ~7). Returns the bay count."""
+    L = line.length
+    nb = max(1, int(round(L / S.CONCRETE_FENCE_POST)))
+    Q = np.array([line.interpolate(L * k / nb).coords[0] for k in range(nb + 1)])
+    Zg = lin.z(Q)
+    style = "frame" if _h(style_key + ":style") % 10 < 3 else "plate"
+    nv = FA.FENCE_VARIANTS[style]
+    marked = {"plate": (1, 5, 6), "frame": (3,)}[style]
+    H, T2 = S.CONCRETE_FENCE_H, 0.025
+    Vs, UVs, Ts, Cv = [], [], [], []
+
+    def quad(P4, uv):
+        b = len(Vs)
+        Vs.extend(P4)
+        UVs.extend(uv)
+        Ts.extend([(b, b + 1, b + 2), (b, b + 2, b + 3)])
+
+    pu, pv, pw, ph = FA.fence_post_uv()
+    tops = []
+    for i in range(nb):
+        q0, q1 = Q[i], Q[i + 1]
+        t = (q1 - q0) / max(np.hypot(*(q1 - q0)), 1e-6)
+        nn = np.array([-t[1], t[0]])
+        zb = min(Zg[i], Zg[i + 1]) - 0.05
+        zt = zb + H
+        tops.append(zt)
+        for side in (1, -1):
+            v_ = (_h(f"{key}:{i}:{side}") >> 3) % nv
+            if v_ in marked and _h(f"{key}:{i}:{side}:m") % 7:
+                v_ = [x for x in range(nv) if x not in marked][_h(f"{key}:{i}:{side}:p") % (nv - len(marked))]
+            u0, v0, w, h = FA.fence_uv(style, v_)
+            o = nn * T2 * side
+            A_, B_ = (q0, q1) if side < 0 else (q1, q0)             # CCW seen from the side the face looks at
+            quad([[A_[0] + o[0], A_[1] + o[1], zb], [B_[0] + o[0], B_[1] + o[1], zb],
+                  [B_[0] + o[0], B_[1] + o[1], zt], [A_[0] + o[0], A_[1] + o[1], zt]],
+                 [[u0, v0], [u0 + w, v0], [u0 + w, v0 + h], [u0, v0 + h]])
+        o = nn * T2                                                    # top edge of the upper plate
+        quad([[q0[0] - o[0], q0[1] - o[1], zt], [q1[0] - o[0], q1[1] - o[1], zt],
+              [q1[0] + o[0], q1[1] + o[1], zt], [q0[0] + o[0], q0[1] + o[1], zt]],
+             [[pu + 0.02, pv + 0.1], [pu + 0.02, pv + 1.9], [pu + 0.07, pv + 1.9], [pu + 0.07, pv + 0.1]])
+        Cv.append([[q0[0], q0[1], zb - 0.3], [q1[0], q1[1], zb - 0.3], [q1[0], q1[1], zt], [q0[0], q0[1], zt]])
+    for i in range(nb + 1):                                            # H-posts
+        q = Q[i]
+        t = Q[min(i + 1, nb)] - Q[max(i - 1, 0)]
+        t = t / max(np.hypot(*t), 1e-6)
+        nn = np.array([-t[1], t[0]])
+        z0 = Zg[i] - 0.3
+        z1 = max(tops[max(i - 1, 0)], tops[min(i, nb - 1)]) + 0.08
+        hx, hy = t * 0.06, nn * 0.07
+        c = [q + sx * hx + sy * hy for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+        vv = ph * min(1.0, (z1 - z0) / 2.4)
+        for j in range(4):
+            a_, b_ = c[j], c[(j + 1) % 4]
+            uu = pu + 0.02 + 0.07 * j
+            quad([[a_[0], a_[1], z0], [b_[0], b_[1], z0], [b_[0], b_[1], z1], [a_[0], a_[1], z1]],
+                 [[uu, pv], [uu + 0.06, pv], [uu + 0.06, pv + vv], [uu, pv + vv]])
+        quad([[c[0][0], c[0][1], z1], [c[1][0], c[1][1], z1], [c[2][0], c[2][1], z1], [c[3][0], c[3][1], z1]],
+             [[pu + 0.05, pv + 1.0], [pu + 0.15, pv + 1.0], [pu + 0.15, pv + 1.1], [pu + 0.05, pv + 1.1]])
+    T = np.array(Ts)
+    lin.buf.add("furniture", "concrete_fence", np.array(Vs, float), np.array(UVs, float), T, src=key)
+    CV = np.array(Cv, float).reshape(-1, 3)
+    CT = np.array([(4 * k + j[0], 4 * k + j[1], 4 * k + j[2]) for k in range(nb) for j in ((0, 1, 2), (0, 2, 3), (0, 2, 1), (0, 3, 2))])
+    lin.buf.add("collision", "collision_fence", CV, CV[:, :2], CT, src=key)
+    return nb
+
+
 def fences(lin, src, origin, roads_poly, report):
     n = {"panel_m": 0.0, "concrete_m": 0.0, "retaining_m": 0.0}
     cutter = roads_poly.buffer(0.3) if roads_poly is not None else None
@@ -709,8 +782,11 @@ def fences(lin, src, origin, roads_poly, report):
                 lin.posts(col, P, S.FENCE_PANEL_W, 0.06, 0.04, S.FENCE_H + 0.05, src=key)
                 n["panel_m"] += part.length
             elif b == "wall":
-                lin.slab("concrete_fence", P, Z - 0.2, Z + S.CONCRETE_FENCE_H, 0.05, key, collision="collision_fence")
-                lin.posts("concrete_fence_post", P, S.CONCRETE_FENCE_POST, 0.12, 0.12, S.CONCRETE_FENCE_H + 0.1, src=key)
+                cc = np.asarray(part.simplify(0.15).coords)            # bays run corner to corner
+                for si in range(len(cc) - 1):
+                    if np.hypot(*(cc[si + 1] - cc[si])) >= 0.8:
+                        n["concrete_bays"] = n.get("concrete_bays", 0) + concrete_fence(
+                            lin, LineString([cc[si], cc[si + 1]]), f"{key}:{si}", key)
                 n["concrete_m"] += part.length
             else:
                 retaining(lin, P, key)

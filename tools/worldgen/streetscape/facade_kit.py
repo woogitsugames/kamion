@@ -27,6 +27,8 @@ import math
 import numpy as np
 import shapely
 
+from . import facade_atlas as FA
+
 ACCENT_HALL = ["hall_wall_accent_blue", "hall_wall_accent_red", "hall_wall_accent_green", "hall_wall_graphite"]
 ACCENT_PLASTER = ["plaster_accent_terracotta", "plaster_accent_green", "plaster_accent_ochre", "plaster_accent_grey"]
 L0 = "buildings"
@@ -97,7 +99,12 @@ def wall_pieces(wwo, acc, a, d, nout, L, zb, zt, ops, u_acc, vref, zsplits, uspl
                 ua, ub = max(o[0], u0), min(o[1], u1)
                 va, vb = max(o[2], z0), min(o[3], z1)
                 if ub - ua > 0.05 and vb - va > 0.05:
-                    pc.append((ua - u0, ub - u0, va, vb, *o[4:]))
+                    m = o[6]
+                    if isinstance(m, tuple):          # atlas cells: keep the part of the cell this piece shows
+                        fu = lambda u, m=m, o=o: m[2] + (m[3] - m[2]) * (u - o[0]) / (o[1] - o[0])
+                        fv = lambda v, m=m, o=o: m[4] + (m[5] - m[4]) * (v - o[2]) / (o[3] - o[2])
+                        m = (m[0], m[1], fu(ua), fu(ub), fv(va), fv(vb))
+                    pc.append((ua - u0, ub - u0, va, vb, o[4], o[5], m))
             wwo(acc, layer, mat, a + d * u0, d, nout, u1 - u0, z0, z1, pc, u0=u_acc + u0, vref=vref, **kw)
 
 
@@ -219,17 +226,98 @@ def roof_vents(acc, poly, z, key, kind):
                         [0, 0, 1.1])
 
 
-def balcony(acc, a, d, nout, u, w, zf, depth=1.15):
-    """Slab at floor level zf + front and side sheet balustrades (1.0 m)."""
+def _aq(acc, P0, P1, P2, P3, uv):
+    acc.quad(L0, "facade_atlas", P0, P1, P2, P3, uv=uv)
+
+
+def _abox(acc, c, ax, ay, az, front=None, sw="pvc_white", skip=()):
+    """Box in the facade atlas: face +ay (the street side) shows `front` (uv corners), the others a swatch.
+    skip: 0 bottom, 1 top, 3 front, 4 -ax side, 5 +ax side."""
+    c, ax, ay, az = (np.asarray(x, float) for x in (c, ax, ay, az))
+    su = FA.swatch_uv(sw)
+    if 3 not in skip:
+        _aq(acc, c + ay - ax - az, c + ay + ax - az, c + ay + ax + az, c + ay - ax + az, front or su)
+    if 5 not in skip:
+        _aq(acc, c + ax + ay - az, c + ax - ay - az, c + ax - ay + az, c + ax + ay + az, su)
+    if 4 not in skip:
+        _aq(acc, c - ax - ay - az, c - ax + ay - az, c - ax + ay + az, c - ax - ay + az, su)
+    if 1 not in skip:
+        _aq(acc, c - ax + ay + az, c + ax + ay + az, c + ax - ay + az, c - ax - ay + az, su)
+    if 0 not in skip:
+        _aq(acc, c - ax - ay - az, c + ax - ay - az, c + ax + ay - az, c - ax + ay - az, su)
+
+
+def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key=""):
+    """Slab at floor level zf; balustrade front = a `balf` cell of the facade atlas (sheet, bars, boards, glass,
+    cloth - the same variant the LOD1 row shows), both faces; plain side sheets; ADR 0081: 14 % glazed in above the
+    balustrade, 18 % with a satellite dish, 30 % with a laundry line (shares WORKING_VALUE)."""
+    d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
     p = a + d * u + nout * (depth / 2)
-    acc.box(L0, "balcony_slab", v3(p, zf - 0.09), np.append(d * (w / 2 + 0.1), 0), np.append(nout * depth / 2, 0),
-            [0, 0, 0.09])
-    f = a + d * u + nout * (depth - 0.03)
-    acc.box(L0, "balcony_panel", v3(f, zf + 0.5), np.append(d * (w / 2 + 0.1), 0), np.append(nout * 0.03, 0),
-            [0, 0, 0.5])
+    acc.box(L0, "balcony_slab", v3(p, zf - 0.09), d3 * (w / 2 + 0.1), n3 * (depth / 2), [0, 0, 0.09])
+    f = v3(a + d * u + nout * (depth - 0.03), zf)
+    hw = w / 2 + 0.1
+    up = np.array([0, 0, 1.05])
+    _aq(acc, f - d3 * hw, f + d3 * hw, f + d3 * hw + up, f - d3 * hw + up, FA.uv_rect("balf", variant))
+    _aq(acc, f + d3 * hw - n3 * 0.04, f - d3 * hw - n3 * 0.04, f - d3 * hw - n3 * 0.04 + up, f + d3 * hw - n3 * 0.04 + up,
+        FA.uv_rect("balf", variant, flip=True))
+    su = FA.swatch_uv("steel_grey")
+    w0 = v3(a + d * u, zf)
     for sg in (-1, 1):
-        s = a + d * (u + sg * (w / 2 + 0.07)) + nout * (depth / 2)
-        acc.box(L0, "balcony_panel", v3(s, zf + 0.5), np.append(d * 0.03, 0), np.append(nout * depth / 2, 0), [0, 0, 0.5])
+        s0, s1 = w0 + d3 * sg * hw, w0 + d3 * sg * hw + n3 * (depth - 0.03)
+        if sg < 0:
+            s0, s1 = s1, s0
+        _aq(acc, s0, s1, s1 + up, s0 + up, su)
+        _aq(acc, s1, s0, s0 + up, s1 + up, su)
+    if hfloat(key, "glz") < 0.14:               # zabudowa balkonu: glazing above the balustrade, front + sides
+        gv = int(hfloat(key, "glzv") * 97)
+        g0 = f + up
+        gup = np.array([0, 0, 1.45])
+        _aq(acc, g0 - d3 * hw, g0 + d3 * hw, g0 + d3 * hw + gup, g0 - d3 * hw + gup, FA.uv_rect("balg", gv))
+        sg_ = FA.swatch_uv("glass_dark")
+        for sg in (-1, 1):
+            s0, s1 = w0 + up + d3 * sg * hw, w0 + up + d3 * sg * hw + n3 * (depth - 0.03)
+            if sg < 0:
+                s0, s1 = s1, s0
+            _aq(acc, s0, s1, s1 + gup, s0 + gup, sg_)
+    else:
+        if hfloat(key, "line") < 0.30:          # laundry: cloths hanging from a line under the slab above
+            x = -hw + 0.3
+            k = 0
+            while x < hw - 0.5:
+                cw = 0.35 + 0.45 * hfloat(key, "cw", k)
+                ch = 0.5 + 0.5 * hfloat(key, "ch", k)
+                col = hpick(["cloth_white", "cloth_red", "cloth_blue", "cloth_dark", "cloth_yellow", "cloth_green",
+                             "cloth_white"], key, "cc", k)
+                c0 = w0 + d3 * x + n3 * (depth - 0.35) + [0, 0, 1.95]
+                uvc = FA.swatch_uv(col)
+                _aq(acc, c0 - [0, 0, ch], c0 + d3 * cw - [0, 0, ch], c0 + d3 * cw, c0, uvc)
+                _aq(acc, c0 + d3 * cw - [0, 0, ch], c0 - [0, 0, ch], c0, c0 + d3 * cw, uvc)
+                x += cw + 0.08 + 0.3 * hfloat(key, "cg", k)
+                k += 1
+        if hfloat(key, "dish") < 0.18:          # satellite dish on the balustrade corner: octagon, turned and tilted
+            sgn = 1 if hfloat(key, "dside") < 0.5 else -1
+            c0 = f + d3 * sgn * (hw - 0.35) + n3 * 0.22 + [0, 0, 1.25]
+            t = d3 * math.cos(0.5) * sgn + n3 * math.sin(0.5)
+            upv = np.array([0, 0, 1.0]) * 0.94 + np.cross(t, [0, 0, 1.0]) * 0.34
+            r = 0.34
+            ring = [c0 + r * (math.cos(i * math.pi / 4) * t + math.sin(i * math.pi / 4) * upv) for i in range(8)]
+            uvd = FA.swatch_uv("dish", 3)
+            for i in range(1, 7):
+                for tri in ((0, i, i + 1), (0, i + 1, i)):
+                    acc.add(L0, "facade_atlas", [ring[j] for j in tri], [[0, 1, 2]], uvd)
+            acc.box(L0, "downpipe", f + d3 * sgn * (hw - 0.35) + n3 * 0.08 + [0, 0, 1.12], d3 * 0.02, n3 * 0.1, [0, 0, 0.02])
+
+
+def window_kit(acc, a, d, nout, o, key, p_ac):
+    """Facade equipment at a window (ADR 0081): an AC outdoor unit on two brackets below the sill (share p_ac)."""
+    if hfloat(key, "ac") >= p_ac:
+        return
+    d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
+    um = o[0] + 0.45 if hfloat(key, "acs") < 0.5 else o[1] - 0.45
+    c = v3(a + d * um + nout * 0.20, o[2] - 0.42)
+    _abox(acc, c, d3 * 0.425, n3 * 0.15, [0, 0, 0.30], front=FA.uv_rect("ac", int(hfloat(key, "acv") * 97)), skip=(0,))
+    for sg in (-1, 1):
+        acc.box(L0, "downpipe", c + d3 * sg * 0.3 - [0, 0, 0.32] - n3 * 0.02, d3 * 0.015, n3 * 0.17, [0, 0, 0.015])
 
 
 def chimney(acc, rect_poly, zridge, key):

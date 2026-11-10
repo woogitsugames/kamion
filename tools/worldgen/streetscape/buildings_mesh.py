@@ -28,8 +28,8 @@ from shapely.geometry import Polygon, shape
 
 from roads import standards as S
 
+from . import facade_atlas as FA
 from . import facade_kit as FK
-from .materials import FAR_GRID
 
 HALL_FUNCS = {"magazyn", "produkcyjny", "warsztat remontowo-naprawczy", "elektrociepłownia", "spalarnia śmieci",
               "industrial", "warehouse", "silos", "stacja pomp", "straż pożarna", "construction"}
@@ -151,6 +151,13 @@ class Acc:
             buf.add(layer, mat, V, UV, T, src=src, UV1=UV1)
 
 
+def cells(kind, *variants):
+    """Opening infill drawn from the facade atlas (ADR 0081): one cell per variant, side by side across the opening.
+    ("atlas", [(u0, v0, w, h) ...], fu0, fu1, fv0, fv1) - the f* fractions are the part of the opening a wall piece
+    keeps (facade_kit.wall_pieces clips openings)."""
+    return ("atlas", [FA.cell(kind, v) for v in variants], 0.0, 1.0, 0.0, 1.0)
+
+
 RUNOFF_PERIOD_M = 24.0       # u period of the parapet_runoff layer (art-source/world/materials, sets_facade)
 
 
@@ -201,7 +208,7 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
                      uv=[[u0 + ua, za - vref], [u0 + ub, za - vref], [u0 + ub, zb2 - vref], [u0 + ua, zb2 - vref]], uv1=uv1)
     n3 = np.append(nout[:2], 0.0)
     d3 = np.append(d[:2], 0.0)
-    for (ua, ub, va, vb, depth, kind, mat_in) in ops:
+    for (ua, ub, va, vb, depth, kind, mat_in) in [o[:7] for o in ops]:
         back = -n3 * depth
         A, B, C, D = (np.array(P(ua, va)), np.array(P(ub, va)), np.array(P(ub, vb)), np.array(P(ua, vb)))
         rv = reveal or "reveal_" + ("hall" if mat.startswith("hall") else "plaster")
@@ -211,8 +218,25 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
         acc.quad(layer, rv, A + back, D + back, D, A)          # left jamb (faces +d)
         acc.quad(layer, rv, B, C, C + back, B + back)          # right jamb (faces -d)
         w, h = ub - ua, vb - va
-        acc.quad(layer, mat_in, A + back, B + back, C + back, D + back, uv=[[0, 0], [w, 0], [w, h], [0, h]])
-        if kind in ("window", "balcony", "ribbon"):           # frame around the glass (PVC/alu profile, 7 cm face)
+        atlas = isinstance(mat_in, tuple)
+        if atlas:                    # the cell carries frame, sashes, glass and what is behind it: no frame geometry
+            _, rects, fa, fb, ga, gb = mat_in
+            nr = len(rects)
+            for j, (cu, cv, cw, ch) in enumerate(rects):
+                a0, a1 = max(fa, j / nr), min(fb, (j + 1) / nr)
+                if a1 - a0 < 1e-6:
+                    continue
+                t0, t1 = (a0 - fa) / (fb - fa), (a1 - fa) / (fb - fa)
+                Pa, Pb = A + back + (B - A) * t0, A + back + (B - A) * t1
+                lu0, lu1 = cu + cw * (a0 * nr - j), cu + cw * (a1 * nr - j)
+                lv0, lv1 = cv + ch * ga, cv + ch * gb
+                acc.quad(layer, "facade_atlas", Pa, Pb, Pb + (D - A), Pa + (D - A),
+                         uv=[[lu0, lv0], [lu1, lv0], [lu1, lv1], [lu0, lv1]])
+        else:
+            acc.quad(layer, mat_in, A + back, B + back, C + back, D + back, uv=[[0, 0], [w, 0], [w, h], [0, h]])
+        if atlas:
+            pass
+        elif kind in ("window", "balcony", "ribbon"):         # frame around the glass (PVC/alu profile, 7 cm face)
             fw = min(0.07, w / 5, h / 5)
             fr = back + n3 * 0.035
             Ao, Bo, Co, Do = A + fr, B + fr, C + fr, D + fr
@@ -223,11 +247,11 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
             acc.quad(layer, fm, Bo, Co, Ci, Bi)
             acc.quad(layer, fm, Co, Do, Di, Ci)
             acc.quad(layer, fm, Do, Ao, Ai, Di)
-        if kind in ("window", "balcony") and w > 1.25:      # mullion
+        if not atlas and kind in ("window", "balcony") and w > 1.25:      # mullion
             um = 0.5 * (ua + ub)
             c = np.array(P(um, 0.5 * (va + vb))) + back + n3 * 0.04
             acc.box(layer, "window_frame", c, d3 * 0.035, n3 * 0.035, [0, 0, h / 2])
-        if kind == "ribbon":                                 # ribbon window: mullions every ~1.35 m + transom
+        if not atlas and kind == "ribbon":                   # ribbon window: mullions every ~1.35 m + transom
             k = max(1, int(round(w / 1.35)))
             for i in range(1, k):
                 c = np.array(P(ua + w * i / k, 0.5 * (va + vb))) + back + n3 * 0.04
@@ -237,7 +261,7 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
         if kind in ("window", "ribbon"):                     # transom + sill flashing
             c = np.array(P(0.5 * (ua + ub), va)) + n3 * 0.03
             acc.box(layer, "hall_flashing" if mat.startswith("hall") else "window_sill", c, d3 * (w / 2 + 0.04),
-                    n3 * 0.05, [0, 0, 0.02])
+                    n3 * 0.05, [0, 0, 0.02], skip=(2,))           # the wall-side face is never seen
 
 
 def ring_edges(ring):
@@ -344,11 +368,15 @@ def gable(acc, layer, rect, zeave, zridge, wall_mat, roof_mat):
 
 # ------------------------------------------------------------------------------------------- facades
 def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, variant=None, sh=None, zbase=0.3):
-    """Openings for one wall edge (u along the edge from its start), in absolute z.
+    """Openings for one wall edge (u along the edge from its start), in absolute z:
+    (ua, ub, va, vb, depth, kind, infill[, meta]). infill: a material name or atlas cells (cells()).
     variant: ribbon (office: ribbon windows on the upper storeys), balcony (block: balcony doors every second
-    bay from the 1st floor), drive_door (hall: one 4.0 x 4.5 m sectional door on the main facade), main."""
+    bay from the 1st floor), drive_door (hall: one 4.0 x 4.5 m sectional door on the main facade), main.
+    Blocks and offices read the storey rows of the facade_far set (FA.far_plan), so LOD0 and LOD1 show the same
+    windows; sill and window height scale with the storey height (k = sh / FA.FAR_ROW_H) on both."""
     variant = variant or {}
     ops = []
+    hv = lambda *k: FA.hint(key, *k)
     if typ == "hall":
         if docks_here:
             return ops
@@ -356,16 +384,17 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
             n = max(1, int(L // 40))
             for i in range(n):
                 um = (i + 0.5) * L / n + (2.5 if i % 2 else -2.5)
-                ops.append((um - 0.5, um + 0.5, zref + 0.15, zref + 2.25, 0.08, "door", "door_steel"))
+                ops.append((um - 0.5, um + 0.5, zref + 0.15, zref + 2.25, 0.08, "door", cells("door_steel", hv("pd", i))))
         if L > 18 and hfloat(key, "win") < 0.55:
             zw = min(zref + 3.2, ztop - 1.6)
             pitch = 6.0
             n = int((L - 6) // pitch)
+            wv = hv("hw")                       # one window type per wall
             for i in range(n):
                 um = (L - (n - 1) * pitch) / 2 + i * pitch
                 if any(abs(um - (o[0] + o[1]) / 2) < 1.6 for o in ops):
                     continue
-                ops.append((um - 1.0, um + 1.0, zw, zw + 1.0, 0.12, "window", "glass"))
+                ops.append((um - 1.0, um + 1.0, zw, zw + 1.0, 0.12, "window", cells("hallw", wv)))
         if variant.get("drive_door") and variant.get("main") and L > 25 and ztop - zref > 5.5:
             um = L - 7.0
             ops = [o for o in ops if o[1] < um - 2.6 or o[0] > um + 2.6]
@@ -376,47 +405,65 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
             n = max(1, min(4, int(L // 3.2)))
             for i in range(n):
                 um = (i + 0.5) * L / n
-                ops.append((um - 1.25, um + 1.25, zref + 0.05, zref + 2.2, 0.1, "door", "garage_door"))
+                ops.append((um - 1.25, um + 1.25, zref + 0.05, zref + 2.2, 0.1, "door", cells("garage", hv("g", i))))
         elif is_main and L > 2:
-            ops.append((L / 2 - 0.45, L / 2 + 0.45, zref + 0.05, zref + 2.05, 0.06, "door", "door_steel"))
+            ops.append((L / 2 - 0.5, L / 2 + 0.5, zref + 0.05, zref + 2.15, 0.06, "door", cells("door_steel", hv("sd"))))
         return ops
     sh = sh or {"office": 3.5, "block": 2.8, "house": 2.9}[typ]
-    ww, wh, sill, pitch = {"office": (1.5, 1.6, 0.9, 3.0), "block": (1.5, 1.45, 0.9, 3.0),
-                           "house": (1.2, 1.4, 0.9, 3.6)}[typ]
+    pitch = {"office": 3.0, "block": 3.0, "house": 3.6}[typ]
     n = int((L - 1.0) // pitch)
     if typ == "house":
         n = min(n, 3)
     if n < 1:
         return ops
+    um0 = (L - (n - 1) * pitch) / 2
     door_i = n // 2 if is_main else -1
+    if typ == "house":
+        for s in range(storeys):
+            z0 = zref + zbase + s * sh
+            if z0 + 0.9 + 1.4 > ztop - 0.3:
+                break
+            for i in range(n):
+                um = um0 + i * pitch
+                if s == 0 and i == door_i:
+                    ops.append((um - 0.5, um + 0.5, zref + 0.15, zref + 2.4, 0.15, "door", cells("door_house", hv("hd"))))
+                    continue
+                ops.append((um - 0.6, um + 0.6, z0 + 0.9, z0 + 2.3, 0.14, "window", cells("house", hv("hw", s, i))))
+        return ops
+    k = sh / FA.FAR_ROW_H
     if typ == "block" and variant.get("basement") and zbase >= 0.8:   # basement windows in the high plinth
         for i in range(n):
-            if i == door_i:
+            if i == door_i or hv("bs", i) % 3 == 0:
                 continue
-            um = (L - (n - 1) * pitch) / 2 + i * pitch
-            ops.append((um - 0.45, um + 0.45, zref + 0.22, zref + zbase - 0.25, 0.10, "window", "glass"))
-    for s in range(storeys):
+            um = um0 + i * pitch
+            ops.append((um - 0.45, um + 0.45, zref + 0.25, zref + 0.70, 0.10, "window", cells("base", hv("b", i))))
+    groups = FA.far_groups(typ, storeys, variant.get("balcony"), variant.get("ribbon"))
+    ns = FA.far_storeys(groups, sh, ztop - 0.3 - zref - zbase)
+    plan = FA.far_plan(groups[:ns], key)
+    for s in range(ns):
         z0 = zref + zbase + s * sh
-        if z0 + sill + wh > ztop - 0.3:
-            break
+        group, row, off = FA.far_storey(plan, s)
+        if group == "ribbon":
+            vs = [v for i in range(n) for v in (FA.far_entry(group, row, off, i)[1],) * 2]
+            ops.append((um0 - 1.5, um0 + (n - 1) * pitch + 1.5, z0 + 0.9 * k, z0 + 2.5 * k, 0.12, "ribbon", cells("off", *vs)))
+            continue
         for i in range(n):
-            um = (L - (n - 1) * pitch) / 2 + i * pitch
-            if s == 0 and i == door_i:
-                dw = 1.6 if typ != "house" else 1.0
-                ops.append((um - dw / 2, um + dw / 2, zref + 0.15, zref + 2.4, 0.15, "door",
-                            "door_glass" if typ == "office" else "door_steel"))
+            um = um0 + i * pitch
+            if i == door_i:
+                if s == 0:
+                    ops.append((um - 0.8, um + 0.8, zref + 0.15, zref + 2.4, 0.15, "door",
+                                cells("door_block", hv("db") if typ == "block" else 1 + hv("db") % 2)))
+                    continue
+                if typ == "block":                # stairwell axis above the entrance
+                    ops.append((um - 0.6, um + 0.6, z0 + 0.9 * k, z0 + 2.1 * k, 0.14, "window", cells("stair", hv("st"))))
+                    continue
+            ck, cv = FA.far_entry(group, row, off, i)
+            if ck == "bal":                       # balcony door + window; the balcony itself: build() (meta)
+                ops.append((um - 1.05, um - 0.15, z0 + 0.05, z0 + 0.05 + 2.2 * k, 0.14, "bdoor", cells("bdoor", cv), cv))
+                ops.append((um - 0.15, um + 0.95, z0 + 0.05 + 0.85 * k, z0 + 0.05 + 2.2 * k, 0.14, "window", cells("bwin", cv)))
                 continue
-            if typ == "block" and variant.get("balcony") and s >= 1 and i % 2 == 0:
-                ops.append((um - 1.05, um + 0.95, z0 + 0.05, z0 + 2.25, 0.14, "balcony", "glass"))
-                continue
-            if typ == "office" and variant.get("ribbon") and s >= 1:
-                continue
-            w = ww if not (typ == "block" and i % 3 == 2) else 0.9
-            ops.append((um - w / 2, um + w / 2, z0 + sill, z0 + sill + wh, 0.14, "window", "glass"))
-        if typ == "office" and variant.get("ribbon") and s >= 1 and n >= 2:
-            u0 = (L - (n - 1) * pitch) / 2 - ww / 2
-            u1 = u0 + (n - 1) * pitch + ww
-            ops.append((u0, u1, z0 + sill, z0 + sill + wh, 0.12, "ribbon", "glass"))
+            w = FA.KINDS[ck][0]
+            ops.append((um - w / 2, um + w / 2, z0 + 0.9 * k, z0 + (0.9 + FA.KINDS[ck][1]) * k, 0.14, "window", cells(ck, cv)))
     return ops
 
 
@@ -571,7 +618,7 @@ def load(fc, origin, overrides):
 
 
 def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase, kind, pitched, zone_wall=None,
-              runoff=None, pieces=None):
+              runoff=None, pieces=None, fkey="", balcony=False):
     """LOD1 wall edge: cheap (8-14 triangles) but not a box face - plinth, window zone (office / block: far facade
     material, UV1 = (bay, storey) grid), wall above, projecting coping at the attic. runoff: as wall_with_openings
     (hall_wall_* bands get the same wall-top TEXCOORD_1 as LOD0, so the streaks do not pop at the LOD switch).
@@ -600,16 +647,37 @@ def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh
         band(zbot, zpl, "hall_plinth" if typ == "hall" else "plinth_dark")
         z = zpl
     if typ in ("office", "block") and L > 2.5:
-        g = FAR_GRID[kind]
-        n = int((L - 1.0) // g["pitch_m"])
+        # ADR 0081: the window zone is drawn from the storey rows of the facade_far set - one quad per chunk of
+        # storeys that are consecutive rows (FA.far_plan, the plan LOD0 reads its cells from) and per 8 bays (one
+        # atlas period: half-float UV), UV0 in row atlas metres; the wall left and right of the bays takes the plain
+        # strip of the same material (same tone as the zone)
+        n = int((L - 1.0) // FA.FAR_PITCH)
         zw0 = zref + zbase
-        zw1 = min(zw0 + storeys * sh, zt - 0.3)
-        if n >= 1 and zw1 - zw0 > 1.5:
-            um0 = (L - (n - 1) * g["pitch_m"]) / 2
-            u0 = (0.0 - um0) / g["pitch_m"] + 0.5
-            u1 = (L - um0) / g["pitch_m"] + 0.5
-            v0, v1 = (z - zw0) / sh, (zw1 - zw0) / sh          # v0 < 0: the strip below the ground floor
-            band(z, zw1, f"{zone_wall or wall}__far_{kind}", uv1=[[u0, v0], [u1, v0], [u1, v1], [u0, v1]])
+        groups = FA.far_groups(typ, storeys, balcony, kind == "ribbon")
+        ns = FA.far_storeys(groups, sh, zt - 0.3 - zw0)
+        if n >= 1 and ns >= 1:
+            far = f"{zone_wall or wall}__far_{kind}"
+            ua = (L - n * FA.FAR_PITCH) / 2
+            ub = ua + n * FA.FAR_PITCH
+            zw1 = min(zw0 + ns * sh, zt - 0.3)
+            d_ = (c_ - a) / L
+            pv0, pv1 = FA.FAR_PLAIN_V
+
+            def fq(u0, u1, z0, z1, uv):
+                acc.quad(lay, far, P(a + d_ * u0, z0), P(a + d_ * u1, z0), P(a + d_ * u1, z1), P(a + d_ * u0, z1), uv=uv)
+            plain = [[0.2, pv0], [1.2, pv0], [1.2, pv1], [0.2, pv1]]
+            fq(0.0, ua, z, zw1, plain)
+            fq(ub, L, z, zw1, plain)
+            kk = sh / FA.FAR_ROW_H
+            for s0, cnt, g, r0, off in FA.far_plan(groups[:ns], fkey):
+                z0 = z if s0 == 0 else zw0 + s0 * sh
+                z1 = min(zw0 + (s0 + cnt) * sh, zw1)
+                vr = FA.far_row_v(g, r0)
+                v0, v1 = vr + (z0 - zw0 - s0 * sh) / kk, vr + (z1 - zw0 - s0 * sh) / kk
+                for b0 in range(0, n, FA.FAR_BAYS):
+                    b1 = min(n, b0 + FA.FAR_BAYS)
+                    x0, x1 = off * FA.FAR_PITCH, (off + b1 - b0) * FA.FAR_PITCH       # periodic: bay b0 + 8 = bay b0
+                    fq(ua + b0 * FA.FAR_PITCH, ua + b1 * FA.FAR_PITCH, z0, z1, [[x0, v0], [x1, v0], [x1, v1], [x0, v1]])
             z = zw1
     if z < zt:
         band(z, zt, wall)
@@ -781,7 +849,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                     for u in FK.downpipe_positions(L, ops, f"{key}:{ei}", 22.0):
                         FK.downpipe(acc, a, d, nout, u, zbot + 0.4, zt - 0.75, hopper=True)
                 for o in ops:                                         # canopies over personnel doors
-                    if o[5] == "door" and o[6] == "door_steel":
+                    if o[5] == "door" and o[6] != "garage_door":
                         FK.canopy(acc, a, d, nout, (o[0] + o[1]) / 2, o[1] - o[0] + 0.8, o[3] + 0.35, 0.9)
                 if dk:
                     for dock in dk["docks"]:
@@ -816,13 +884,14 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                 gable_accent = insulated and L < 16 and FK.hfloat(key, "gable") < 0.6
                 band_z = []                                            # (z0, z1) of each band
                 if bands and ei not in bal_edges and not gable_accent and typ in ("block", "office"):
-                    wh_, sill_ = {"office": (1.6, 0.9), "block": (1.45, 0.9)}[typ]
-                    for st_ in range(storeys):
+                    kk_ = sh / FA.FAR_ROW_H                               # sill 0.9 k, head 2.35 k / 2.5 k (facade_openings)
+                    ns_ = FA.far_storeys(FA.far_groups(typ, storeys, False, variant["ribbon"]), sh, zt - 0.3 - zref - zbase)
+                    for st_ in range(ns_):
                         z0_ = zref + zbase + st_ * sh
-                        if typ == "block" and st_ >= 1 and z0_ + sill_ + wh_ + 0.12 < zt - 0.3:
-                            band_z.append((z0_ + sill_ - 0.12, z0_ + sill_ + wh_ + 0.12))
-                        if typ == "office" and st_ + 1 < storeys:
-                            band_z.append((z0_ + sill_ + wh_ + 0.08, z0_ + sh + sill_ - 0.08))
+                        if typ == "block" and st_ >= 1:
+                            band_z.append((z0_ + 0.9 * kk_ - 0.12, min(z0_ + 2.35 * kk_ + 0.12, zt - 0.2)))
+                        if typ == "office" and st_ + 1 < ns_:
+                            band_z.append((z0_ + 2.5 * kk_ + 0.08, z0_ + sh + 0.9 * kk_ - 0.08))
                 band_mat = accent if typ == "block" else "plaster_band_grey"
                 if gable_accent:
                     lod1_main = accent
@@ -851,12 +920,17 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                         for u in (0.35, L - 0.35):
                             FK.downpipe(acc, a, d, nout, u, zbot + 0.4, zt - 0.4, hopper=True)
                     for o in ops:
-                        if o[5] == "balcony":
-                            FK.balcony(acc, a, d, nout, (o[0] + o[1]) / 2, o[1] - o[0] + 0.4, o[2] - 0.03)
+                        okey = f"{key}:{ei}:{o[0]:.1f}:{o[2]:.1f}"
+                        if o[5] == "bdoor":
+                            FK.balcony(acc, a, d, nout, o[0] + 1.05, 2.4, o[2] - 0.03, variant=o[7], key=okey)
+                        elif o[5] == "window" and o[1] - o[0] > 1.0 and o[2] > zref + zbase:
+                            FK.window_kit(acc, a, d, nout, o, okey, 0.05)
                         elif o[5] == "door":
                             FK.canopy(acc, a, d, nout, (o[0] + o[1]) / 2, 2.6, o[3] + 0.3, 1.4, mat="balcony_slab")
                 elif typ == "office":
                     for o in ops:
+                        if o[5] == "window":
+                            FK.window_kit(acc, a, d, nout, o, f"{key}:{ei}:{o[0]:.1f}:{o[2]:.1f}", 0.10)
                         if o[5] == "door":
                             FK.canopy(acc, a, d, nout, (o[0] + o[1]) / 2, 3.2, o[3] + 0.45, 1.6, posts=False)
                             if not signed and zt - zref > 4.0:
@@ -879,7 +953,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
             # projecting coping at the attic; pitched houses keep the plain wall
             lod1_wall(acc, typ, lod1_main, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase,
                       "ribbon" if variant["ribbon"] else typ, pitched, zone_wall=lod1_zone, runoff=lod1_ro,
-                      pieces=lod1_pieces)
+                      pieces=lod1_pieces, fkey=f"{key}:{ei}", balcony=ei in bal_edges)
             u_acc += L
         if typ == "hall" and len(edges) >= 3:                       # corner flashings
             for i, (a, c_) in enumerate(edges):

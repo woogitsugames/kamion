@@ -137,6 +137,59 @@ def far_entry(group, row, off, bay):
     return FAR_ROWS[group][row][(bay + off) % FAR_BAYS]
 
 
+FAR_TOP = {"block": 2.35, "balcony": 2.35, "office": 2.5, "ribbon": 2.5}      # window head above the floor (m at FAR_ROW_H)
+FAR_PLAIN_V = (0.65, 0.95)      # v range of the plain wall strip below the rows (above the _SPLASH zone)
+
+
+def far_groups(typ, storeys, balcony=False, ribbon=False):
+    """Row group of every storey of one wall: blocks get balcony rows from the 1st floor on their balcony side,
+    ribbon offices get ribbon rows from the 1st floor."""
+    if typ == "block":
+        return ["block"] + ["balcony" if balcony else "block"] * (storeys - 1)
+    return ["office"] + ["ribbon" if ribbon else "office"] * (storeys - 1)
+
+
+def far_storeys(groups, sh, zbase_top):
+    """Number of storeys whose windows fit below zbase_top (= wall top - 0.3 m - ground floor level), counted from
+    the ground floor; the storey scale k = sh / FAR_ROW_H stretches sill and window height on both LODs."""
+    k = sh / FAR_ROW_H
+    n = 0
+    for s, g in enumerate(groups):
+        if s * sh + FAR_TOP[g] * k > zbase_top:
+            break
+        n += 1
+    return n
+
+
+def far_plan(groups, key):
+    """Chunks of consecutive storeys that are consecutive rows of one group in the row atlas, so LOD1 draws one quad
+    per chunk: [(first storey, storeys, group, first row, bay offset)]. LOD0 reads the same plan (far_storey)."""
+    out = []
+    s = c = 0
+    while s < len(groups):
+        g = groups[s]
+        rows = len(FAR_ROWS[g])
+        r0 = hint(key, g, "r0") % rows if (s == 0 or groups[s - 1] != g) else 0
+        n = 1
+        while s + n < len(groups) and groups[s + n] == g and r0 + n < rows:
+            n += 1
+        off = hint(key, g, c) % FAR_BAYS
+        if g == "balcony":
+            off -= off % 2                      # balconies stay on the even bays of the wall, storey above storey
+        out.append((s, n, g, r0, off))
+        s += n
+        c += 1
+    return out
+
+
+def far_storey(plan, s):
+    """(group, row, bay offset) of storey s."""
+    for s0, n, g, r0, off in plan:
+        if s0 <= s < s0 + n:
+            return g, r0 + (s - s0), off
+    raise IndexError(s)
+
+
 # ------------------------------------------------------------------------------------------- concrete fence
 FENCE_M = (16.0, 4.5)
 FENCE_BAY = (2.0, 2.0)          # one bay between post axes x height above the footing line
