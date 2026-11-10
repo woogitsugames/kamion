@@ -33,11 +33,10 @@ Scalone dziś już: TRAKT r3 (słupek A 7,0°), r4 (lamele grilla 20° w dół, 
 | Zadanie | Worktree (`.claude/worktrees/…`) | Uwagi |
 |---|---|---|
 | Fable 5.2: przetarcia wnętrza w generatorze + jasny klin u podstawy słupka A + koja/zasłonka/zagłówek pasażera (przeciw „akwarium”) | `agent-ab5e8add34b25c723` | dowody `artifacts/owner/interior-wear/`; po scaleniu skopiuj gitignorowany `art-source/truck/interior/export/SM_CabInterior_LOD0.fbx` |
-| Fable 5.2: auta v3 (ciemne szyby LOD0, brud, nowoczesne przody) | `agent-ae432b34eda9359b4` | dowody `artifacts/visual-qa/life-cars-v3/`; nie commituje `Data/Regions/*/generated` — po scaleniu wygeneruj świat na main (`build_world.py`) i zacommituj |
 | Opus: latarnie/słupki na terenie (audyt obiekty vs teren → PASS) + ścianki skrzyżowań (obniż ratchet) | `agent-adf7e8fce42acbbeb` | dowody `artifacts/world-fixes/`; jw. generated |
 | Opus: druty WN min. szerokość w px (P0 z r6) + zacieki pod attyką | `agent-a00eb437b0f666944` | dowody `artifacts/world-fixes/wires-streaks/`; jw. generated |
 
-Konflikty w `Data/Regions/bialystok-industrial-c/generated/*.json`: bierz `--ours` i wygeneruj świat ponownie po scaleniu wszystkich gałęzi świata.
+Scalone też: auta v3 (`b8c93ca`; felgi LOD1 „rim_dusty” przyciemnione w kodzie, nieprzerenderowane). Konflikty w `Data/Regions/bialystok-industrial-c/generated/*.json`: bierz `--ours` i wygeneruj świat ponownie po scaleniu wszystkich gałęzi świata.
 
 ## Recenzja r6 (docs/reports/visual/REVIEW-2026-11-10-r6.md) — top poprawek
 1. **P0** build ≥ obecny main na A16 (Low) i nowe 37 kadrów gate3 + `truck-34`/`cab-dash` (stare kadry są sprzed nowego frontu i aut). Akceptacja `cab-dash` < 3 % luma ≤ 8 %.
