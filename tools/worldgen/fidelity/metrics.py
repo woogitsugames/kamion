@@ -146,7 +146,7 @@ def chain_edge_profiles(ctx: Ctx, c, s_from, s_to, res_pref=0.08, step=PROFILE_S
         lab = I.rgb2lab(rgb)
         gm = G.rasterize(ctx.g.tris, x0, y1, res, rgb.shape[:2])
         green = I.exg(rgb) > I.EXG_GREEN
-        model = I.road_model(lab, ndi.binary_erosion(gm, structure=I.disk(1.0 / res)) & ~green)
+        model = I.road_model(lab, I.erode(gm, 1.0 / res) & ~green)
         if model is None:
             s = sb
             continue
@@ -232,7 +232,7 @@ def window_masks(ctx: Ctx, center, half, res=0.1, yards=None, walk_tris=None):
 
 def iou(wm, band_m=6.0):
     res = wm["res"]
-    band = ndi.binary_dilation(wm["gen"], structure=I.disk(band_m / res))
+    band = I.dilate(wm["gen"], band_m / res)
     g = wm["gen"] & band
     o = wm["ortho"] & band & ~(wm["other"] & ~wm["gen"])
     inter = (g & o).sum()
@@ -260,9 +260,7 @@ def separations(wm, close_m=7.0, min_m2=4.0):
     Ortho islands = closed-ortho minus ortho, overlapping generated carriageway."""
     res = wm["res"]
     gen, orth = wm["gen"], wm["ortho"]
-    st = I.disk(close_m / res)
-    g_closed = ndi.binary_closing(np.pad(gen, int(close_m / res) + 2), structure=st)[
-        int(close_m / res) + 2:-int(close_m / res) - 2, int(close_m / res) + 2:-int(close_m / res) - 2]
+    g_closed = I.close(gen, close_m / res)
     g_closed |= ndi.binary_fill_holes(gen)
     gsep = g_closed & ~gen
     comps, lbl = _components(gsep, res, min_m2)
@@ -272,7 +270,7 @@ def separations(wm, close_m=7.0, min_m2=4.0):
     miss_m = np.zeros_like(gen)
     for cpt in comps:
         m = lbl == cpt["label"]
-        inner = ndi.binary_erosion(m, structure=I.disk(0.4 / res))
+        inner = I.erode(m, 0.4 / res)
         if inner.sum() < 10:
             inner = m
         rf = float(orth[inner].mean())
@@ -282,8 +280,7 @@ def separations(wm, close_m=7.0, min_m2=4.0):
         (bad_m if verdict == "absent_on_ortho" else ok_m)[m] = True
         gen_islands.append({"xy": [wm["x0"] + (c + 0.5) * res, wm["y1"] - (r + 0.5) * res], "area_m2": cpt["area_m2"],
                             "ortho_road_frac": round(rf, 3), "ortho_green_frac": round(gf, 3), "verdict": verdict})
-    o_closed = ndi.binary_closing(np.pad(orth, int(close_m / res) + 2), structure=st)[
-        int(close_m / res) + 2:-int(close_m / res) - 2, int(close_m / res) + 2:-int(close_m / res) - 2]
+    o_closed = I.close(orth, close_m / res)
     o_closed |= ndi.binary_fill_holes(orth)
     osep = o_closed & ~orth
     comps, lbl = _components(osep, res, 6.0)
@@ -303,11 +300,11 @@ def separations(wm, close_m=7.0, min_m2=4.0):
 
 def area_diffs(wm, min_m2=8.0, band_m=6.0):
     res = wm["res"]
-    band = ndi.binary_dilation(wm["gen"], structure=I.disk(band_m / res))
+    band = I.dilate(wm["gen"], band_m / res)
     gen_only = wm["gen"] & ~wm["ortho"]
-    gen_only = ndi.binary_opening(gen_only, structure=I.disk(0.5 / res))
+    gen_only = I.dilate(I.erode(gen_only, 0.5 / res), 0.5 / res)
     o_only = wm["ortho"] & ~wm["gen"] & ~wm["other"] & band
-    o_only = ndi.binary_opening(o_only, structure=I.disk(0.5 / res))
+    o_only = I.dilate(I.erode(o_only, 0.5 / res), 0.5 / res)
     out = []
     for kind, m in (("gen_only", gen_only), ("ortho_only", o_only)):
         comps, _ = _components(m, res, min_m2)
@@ -392,7 +389,7 @@ def ortho_lane_count(ctx: Ctx, c, s0, s1, edges_found):
         rgb, _ = ctx.ortho.window(bbox, res)
         lab = I.rgb2lab(rgb)
         gm = G.rasterize(ctx.g.tris, x0, y1, res, rgb.shape[:2])
-        model = I.road_model(lab, ndi.binary_erosion(gm, structure=I.disk(1.0 / res)))
+        model = I.road_model(lab, I.erode(gm, 1.0 / res))
         if model is None:
             s += strip
             continue

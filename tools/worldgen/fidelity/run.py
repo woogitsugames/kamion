@@ -153,7 +153,7 @@ def arrow_on_ortho(ctx, arr, res=0.08):
     lab = I.rgb2lab(rgb)
     gm = G.rasterize(ctx.g.tris, xy[0] - half, xy[1] + half, res, rgb.shape[:2])
     from scipy import ndimage as ndi
-    model = I.road_model(lab, ndi.binary_erosion(gm, structure=I.disk(1.0 / res)))
+    model = I.road_model(lab, I.erode(gm, 1.0 / res))
     if model is None:
         return None
     paint = (lab[..., 0] > model["L_med"] + I.PAINT_DL).astype(np.float32)
@@ -189,7 +189,7 @@ def stopline_on_ortho(ctx, tr, res=0.08):
     lab = I.rgb2lab(rgb)
     gm = G.rasterize(ctx.g.tris, xy[0] - half, xy[1] + half, res, rgb.shape[:2])
     from scipy import ndimage as ndi
-    model = I.road_model(lab, ndi.binary_erosion(gm, structure=I.disk(1.0 / res)))
+    model = I.road_model(lab, I.erode(gm, 1.0 / res))
     if model is None:
         return None
     paint = (lab[..., 0] > model["L_med"] + I.PAINT_DL).astype(np.float32)
@@ -315,7 +315,7 @@ def main(argv=None):
     gmask_tile = G.rasterize(g.tris, gx0, gy1, full_res, (W, W))
     from scipy import ndimage as ndi
     r7 = int(7.0 / full_res)
-    gsep_tile = ndi.binary_closing(np.pad(gmask_tile, r7 + 2), structure=I.disk(r7))[r7 + 2:-r7 - 2, r7 + 2:-r7 - 2]
+    gsep_tile = I.close(gmask_tile, r7)
     gsep_tile = (gsep_tile | ndi.binary_fill_holes(gmask_tile)) & ~gmask_tile
     lii = lane_into_island(ctx, gmask_tile, gsep_tile, gx0, gy1, full_res)
     log(f"lane-into-island candidates: {len(lii)}")

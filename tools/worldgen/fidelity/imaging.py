@@ -3,6 +3,8 @@ interior, road / vegetation masks, lane-line (bright paint) mask. All thresholds
 the overlays (artifacts/fidelity-r9/overlays) and listed in DIFFS / ADR 0075 with their failure modes."""
 from __future__ import annotations
 
+import math
+
 import numpy as np
 from scipy import ndimage as ndi
 
@@ -69,11 +71,31 @@ def disk(r_px):
     return x * x + y * y <= r * r
 
 
+def dilate(m, r_px):
+    """Euclidean dilation by r pixels via distance transform (fast for large radii)."""
+    if not m.any():
+        return m.copy()
+    return ndi.distance_transform_edt(~m) <= r_px
+
+
+def erode(m, r_px):
+    if m.all():
+        return m.copy()
+    return ndi.distance_transform_edt(m) > r_px
+
+
+def close(m, r_px):
+    """Closing with a disk; padded so the image border does not erode the result."""
+    p = int(math.ceil(r_px)) + 2
+    mp = np.pad(m, p)
+    return erode(dilate(mp, r_px), r_px)[p:-p, p:-p]
+
+
 def road_mask(rgb, gen_mask, res):
     """(road, green, paint, model) masks for a north-up window. `gen_mask` = generated carriageway raster used
     only to learn the road colour (interior >= 1 m from its edge) and to keep road components touching it."""
     lab = rgb2lab(rgb)
-    interior = ndi.binary_erosion(gen_mask, structure=disk(1.0 / res))
+    interior = erode(gen_mask, 1.0 / res)
     green = exg(rgb) > EXG_GREEN
     model = road_model(lab, interior & ~green)
     if model is None:
