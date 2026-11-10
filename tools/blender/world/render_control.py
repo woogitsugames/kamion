@@ -821,6 +821,26 @@ def mat_forest(name):
     b.link(b.uv("UVMap"), tex.inputs["Vector"])
     b.bsdf.inputs["Roughness"].default_value = 0.95
     b.link(tex.outputs["Color"], b.bsdf.inputs["Base Color"])
+    npath = VEG / f"{name}_n.png"
+    if npath.exists():           # v3.4: albedo + sky visibility (the engine also uses the normals; ADR 0023)
+        nt_ = b.nt.nodes.new("ShaderNodeTexImage")
+        nt_.image = bpy.data.images.load(str(npath))
+        nt_.image.colorspace_settings.name = "Non-Color"
+        b.link(b.uv("UVMap"), nt_.inputs["Vector"])
+        sep = b.nt.nodes.new("ShaderNodeSeparateColor")
+        b.link(nt_.outputs["Color"], sep.inputs["Color"])
+        mix = b.nt.nodes.new("ShaderNodeMix")
+        mix.data_type = "RGBA"
+        mix.blend_type = "MULTIPLY"
+        b.link(sep.outputs["Blue"], mix.inputs["Factor"])
+        b.link(tex.outputs["Color"], mix.inputs[6])
+        mix.inputs[7].default_value = (0.35, 0.35, 0.35, 1.0)
+        inv = b.nt.nodes.new("ShaderNodeMath")
+        inv.operation = "SUBTRACT"
+        inv.inputs[0].default_value = 1.0
+        b.link(sep.outputs["Blue"], inv.inputs[1])
+        b.link(inv.outputs[0], mix.inputs["Factor"])
+        b.link(mix.outputs[2], b.bsdf.inputs["Base Color"])
     if name.startswith("forest_edge"):
         b.link(tex.outputs["Alpha"], b.bsdf.inputs["Alpha"])
         try:
@@ -1034,7 +1054,27 @@ def load_protos(mats):
                     s.material.surface_render_method = "DITHERED"
                 except AttributeError:
                     pass
+            if s.material and s.material.name.startswith("impostor") and not s.material.get("views_mapped"):
+                _impostor_view0(s.material)
     return protos
+
+
+def _impostor_view0(m):
+    """v3.4 impostors hold IMP_NF views side by side (make_trees.py); the Blender render turns each impostor quad to
+    the camera (place_trees) and shows view 0 (the engine blends the two views around the camera azimuth)."""
+    meta = json.loads((VEG / "trees_meta.json").read_text(encoding="utf-8"))["trees"]
+    name = m.name.split(".")[0][len("impostor_"):]
+    n = int(meta.get(name, {}).get("impostor_views", 1))
+    m["views_mapped"] = True
+    if n <= 1:
+        return
+    nt = m.node_tree
+    for tex in [x for x in nt.nodes if x.type == "TEX_IMAGE"]:
+        uv = nt.nodes.new("ShaderNodeUVMap")
+        mp = nt.nodes.new("ShaderNodeMapping")
+        mp.inputs["Scale"].default_value = (1.0 / n, 1.0, 1.0)
+        nt.links.new(uv.outputs["UV"], mp.inputs["Vector"])
+        nt.links.new(mp.outputs["Vector"], tex.inputs["Vector"])
 
 
 def place_props(insts, protos, cam_pos, radius):
@@ -1087,6 +1127,9 @@ def place_trees(insts, protos, cam_pos, radius, lod_m=(80.0, 250.0), far_cells=f
         rot = me.attributes.new("rot", "FLOAT_VECTOR", "POINT")
         flat = []
         for t in pts:
+            if lod == ".lod2":       # billboard: view 0 (camera at -Y of the tree) turned toward the camera
+                flat += [0.0, 0.0, math.atan2(cam_pos[0] - t["e"], -(cam_pos[1] - t["n"]))]
+                continue
             flat += [t["lean"] * math.cos(t["yaw"] * 3), t["lean"] * math.sin(t["yaw"] * 3), t["yaw"]]
         rot.data.foreach_set("vector", flat)
         ob = bpy.data.objects.new(f"trees_{name}{lod}", me)

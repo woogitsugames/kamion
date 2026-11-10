@@ -7,9 +7,10 @@
    },
    "edge": {
     "h_m": 24.0,
-    "h_median_m": 11.79,
+    "h_median_m": 12.03,
+    "normal_png": "forest_edge_broadleaf_n.png",
     "png": "forest_edge_broadleaf.png",
-    "trees": 46,
+    "trees": 58,
     "w_m": 48.0,
     "z0_m": -0.3
    }
@@ -21,9 +22,10 @@
    },
    "edge": {
     "h_m": 24.0,
-    "h_median_m": 15.81,
+    "h_median_m": 15.33,
+    "normal_png": "forest_edge_conifer_n.png",
     "png": "forest_edge_conifer.png",
-    "trees": 46,
+    "trees": 58,
     "w_m": 48.0,
     "z0_m": -0.3
    }
@@ -35,9 +37,10 @@
    },
    "edge": {
     "h_m": 24.0,
-    "h_median_m": 13.44,
+    "h_median_m": 14.63,
+    "normal_png": "forest_edge_mixed_n.png",
     "png": "forest_edge_mixed.png",
-    "trees": 46,
+    "trees": 58,
     "w_m": 48.0,
     "z0_m": -0.3
    }
@@ -47,7 +50,9 @@
  "trees": {
   "tree_alder_0": {
    "href_m": 13.96,
-   "impostor_frame_m": 18.07,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 22.57,
+   "impostor_views": 6,
    "species": "alder",
    "tris_lod0": 4248,
    "tris_lod1": 894,
@@ -56,7 +61,9 @@
   },
   "tree_alder_1": {
    "href_m": 12.47,
-   "impostor_frame_m": 16.75,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 22.91,
+   "impostor_views": 6,
    "species": "alder",
    "tris_lod0": 4248,
    "tris_lod1": 860,
@@ -65,7 +72,9 @@
   },
   "tree_alder_2": {
    "href_m": 13.66,
-   "impostor_frame_m": 18.43,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 25.5,
+   "impostor_views": 6,
    "species": "alder",
    "tris_lod0": 4248,
    "tris_lod1": 896,
@@ -74,7 +83,9 @@
   },
   "tree_birch_0": {
    "href_m": 15.03,
-   "impostor_frame_m": 20.09,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 25.11,
+   "impostor_views": 6,
    "species": "birch",
    "tris_lod0": 4048,
    "tris_lod1": 1272,
@@ -83,7 +94,9 @@
   },
   "tree_birch_1": {
    "href_m": 13.43,
-   "impostor_frame_m": 16.6,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 23.19,
+   "impostor_views": 6,
    "species": "birch",
    "tris_lod0": 4048,
    "tris_lod1": 1284,
@@ -92,7 +105,9 @@
   },
   "tree_birch_2": {
    "href_m": 14.71,
-   "impostor_frame_m": 17.67,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 22.96,
+   "impostor_views": 6,
    "species": "birch",
    "tris_lod0": 4048,
    "tris_lod1": 1262,
@@ -101,7 +116,9 @@
   },
   "tree_linden_0": {
    "href_m": 12.56,
-   "impostor_frame_m": 15.09,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 20.13,
+   "impostor_views": 6,
    "species": "linden",
    "tris_lod0": 3380,
    "tris_lod1": 724,
@@ -110,7 +127,9 @@
   },
   "tree_linden_1": {
    "href_m": 14.44,
-   "impostor_frame_m": 17.2,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 22.12,
+   "impostor_views": 6,
    "species": "linden",
    "tris_lod0": 3380,
    "tris_lod1": 696,
@@ -119,7 +138,9 @@
   },
   "tree_linden_2": {
    "href_m": 12.67,
-   "impostor_frame_m": 15.27,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 20.81,
+   "impostor_views": 6,
    "species": "linden",
    "tris_lod0": 3380,
    "tris_lod1": 728,
@@ -128,7 +149,9 @@
   },
   "tree_maple_0": {
    "href_m": 12.01,
-   "impostor_frame_m": 18.54,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 25.08,
+   "impostor_views": 6,
    "species": "maple",
    "tris_lod0": 2656,
    "tris_lod1": 574,
@@ -137,7 +160,9 @@
   },
   "tree_maple_1": {
    "href_m": 12.93,
-   "impostor_frame_m": 23.28,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 29.15,
+   "impostor_views": 6,
    "species": "maple",
    "tris_lod0": 2656,
    "tris_lod1": 564,
@@ -146,7 +171,9 @@
   },
   "tree_maple_2": {
    "href_m": 11.77,
-   "impostor_frame_m": 17.45,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 24.46,
+   "impostor_views": 6,
    "species": "maple",
    "tris_lod0": 2656,
    "tris_lod1": 586,
@@ -155,7 +182,9 @@
   },
   "tree_pine_0": {
    "href_m": 17.93,
+   "impostor_aspect": 0.6667,
    "impostor_frame_m": 18.83,
+   "impostor_views": 6,
    "species": "pine",
    "tris_lod0": 2446,
    "tris_lod1": 1098,
@@ -164,7 +193,9 @@
   },
   "tree_pine_1": {
    "href_m": 19.77,
+   "impostor_aspect": 0.6667,
    "impostor_frame_m": 20.76,
+   "impostor_views": 6,
    "species": "pine",
    "tris_lod0": 3376,
    "tris_lod1": 1538,
@@ -173,7 +204,9 @@
   },
   "tree_pine_2": {
    "href_m": 20.39,
-   "impostor_frame_m": 21.41,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 21.76,
+   "impostor_views": 6,
    "species": "pine",
    "tris_lod0": 2310,
    "tris_lod1": 1008,
@@ -182,7 +215,9 @@
   },
   "tree_shrub_0": {
    "href_m": 2.74,
-   "impostor_frame_m": 6.92,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 8.31,
+   "impostor_views": 6,
    "species": "shrub",
    "tris_lod0": 360,
    "tris_lod1": 274,
@@ -191,7 +226,9 @@
   },
   "tree_shrub_1": {
    "href_m": 2.61,
-   "impostor_frame_m": 5.69,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 7.16,
+   "impostor_views": 6,
    "species": "shrub",
    "tris_lod0": 480,
    "tris_lod1": 370,
@@ -200,7 +237,9 @@
   },
   "tree_shrub_2": {
    "href_m": 3.02,
-   "impostor_frame_m": 8.11,
+   "impostor_aspect": 0.6667,
+   "impostor_frame_m": 10.25,
+   "impostor_views": 6,
    "species": "shrub",
    "tris_lod0": 360,
    "tris_lod1": 282,
