@@ -81,7 +81,8 @@ MATERIALS = {
     "verge_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
     "shoulder_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     "terrain_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
-    "marking_white": {"color": [0.72, 0.72, 0.69], "rough": 0.6, "surface": "paint",
+    "marking_white": {"color": [0.60, 0.60, 0.57], "rough": 0.65,   # worn paint, albedo 0.55-0.65 (r4 W-H6), WORKING_VALUE
+                      "surface": "paint",
                       "decal": True, "depth_offset_m": S.MARKING_LIFT},
     "collision_asphalt": {"color": [1, 0, 1], "rough": 1.0, "surface": "asphalt", "collision": True},
     "collision_curb": {"color": [1, 0, 1], "rough": 1.0, "surface": "concrete_kerb", "collision": True},
@@ -615,6 +616,9 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
     budget = mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams)
     write_json(gen / "streetscape_qa.json", {"schema": "truck-sim-pl/streetscape-qa/1", "region": region_id,
                                              **st["report"], "mesh_budget": budget})
+    walls = CF.terrain_walls(w.buf.parts, zc, w.hf)
+    log("terrain walls > %.2f m:" % walls["thresh_m"], walls["count"], "max", walls["max_m"])
+    write_json(gen / "terrain_walls_qa.json", walls)
     np.save(out_root / "terrain_conformed.npy", zc.astype(np.float32))
     log("done")
     return w, manifest, qa
