@@ -52,7 +52,7 @@ LAYOUT = {
     "swatch_dark": {"u": [9.1, 9.9], "v": [7.1, 7.9]},        # elastomer bearings, expansion joint rubber
     "swatch_plain": {"u": [11.2, 13.8], "v": [7.1, 9.6]},     # bearing plinths, footings, pipe hangers' pads
     "u_shift": {"left": 0.0, "right": 11.0, "deck": 5.0},     # per side / per deck so features never line up
-    "albedo_concrete": 0.36, "paint_red_linear": [0.36, 0.060, 0.065],
+    "albedo_concrete": 0.36, "paint_red_linear": [0.40, 0.040, 0.050],
 }
 CONCRETE = 0.36               # WORKING_VALUE: weathered structural concrete (PCC 0.2-0.35 soiled .. 0.35+ clean,
                               # arXiv:2409.12242 p. 7; the deck underside is sheltered and stays light)
@@ -272,7 +272,7 @@ def viaduct_concrete(nx=4096):
     alb = alb * (1 - rust[..., None]) + np.array([0.20, 0.085, 0.035], np.float32) * rust[..., None]
     paint = np.array(L["paint_red_linear"], np.float32)
     pcol = paint[None, None, :] * (detail ** 0.35 * (1 + 0.02 * n_mid))[..., None]      # paint film hides the mottling
-    pcol = pcol + (np.array([0.55, 0.42, 0.42], np.float32) - pcol) * np.where(in_c, fade, 0.12)[..., None]      # chalky pink
+    pcol = pcol + (np.array([0.55, 0.42, 0.42], np.float32) - pcol) * np.where(in_c, fade * 0.45, 0.08)[..., None]      # chalky pink (r10: less, the reference band is saturated)
     pcol = pcol * (1 - np.where(in_c, grime_c, dirt)[..., None] * 0.8)
     pcol = pcol * (1 - 0.6 * joint[..., None])
     pcol = np.where((chip > 0.5)[..., None], alb, pcol)
@@ -294,7 +294,7 @@ def railing_texture(path: Path | None = None):
     W, H = 512, 256
     rng = np.random.default_rng(672)
     a = np.zeros((H, W), np.float32)
-    lum = np.where(np.arange(W)[None, :] < 0.75 * W, 0.17, 0.34).astype(np.float32) * np.ones((H, 1), np.float32)   # bars dark
+    lum = np.where(np.arange(W)[None, :] < 0.75 * W, 0.075, 0.095).astype(np.float32) * np.ones((H, 1), np.float32)   # bars dark
     # weathered galvanised / painted grey (reference frames), collector pipes and handrail lighter
     x = (np.arange(W) + 0.5) / W
     y = 1 - (np.arange(H) + 0.5) / H
@@ -305,6 +305,7 @@ def railing_texture(path: Path | None = None):
     a[bay & bars & (Yg > 0.10) & (Yg < 0.97)] = 1
     a[bay & (np.abs(Yg - 0.10) < 0.022)] = 1              # bottom rail
     a[bay & (np.abs(Yg - 0.955) < 0.02)] = 1              # top flat under the handrail
+    a[bay & (np.abs(Yg - 0.80) < 0.016)] = 1              # second rail (reference frame 201270605169291)
     a[~bay & (Xg > 0.75 + 2.0 / W)] = 1
     n = rng.standard_normal((H // 8, W // 8)).astype(np.float32)
     n = np.asarray(Image.fromarray(n).resize((W, H), Image.BICUBIC))

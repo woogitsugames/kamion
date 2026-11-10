@@ -222,10 +222,10 @@ M = {
     # hero viaduct asset (ADR 0067, streetscape.hero_bridge): strip atlas on a CC0 scan (colour = atlas mean, so the
     # calibrated-set tint is 1), railing infill + galvanised steel, light crushed stone of the centre island
     "viaduct_concrete": {"color": _set_mean("viaduct_concrete", [0.369, 0.324, 0.276]), "rough": 0.85,
-                         "surface": "concrete", "texture_set": "viaduct_concrete"},
-    "viaduct_steel": {"color": [1.0, 1.0, 1.0], "rough": 0.5, "metal": 0.5, "texture": "viaduct_steel",
+                         "surface": "concrete", "texture_set": "viaduct_concrete", "set_tile": True},
+    "viaduct_steel": {"color": [1.0, 1.0, 1.0], "rough": 0.55, "metal": 0.1, "texture": "viaduct_steel",
                       "alpha_cutoff": 0.5},
-    "island_gravel": {"color": [0.40, 0.385, 0.365], "rough": 0.95, "surface": "gravel",
+    "island_gravel": {"color": [0.30, 0.285, 0.26], "rough": 0.95, "surface": "gravel",
                       "texture_set": "gravel_compacted"},
     "bridge_fascia_red": {"color": [0.30, 0.05, 0.04], "rough": 0.7},
     "bridge_fascia_green": {"color": [0.07, 0.17, 0.10], "rough": 0.7},

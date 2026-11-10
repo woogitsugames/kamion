@@ -46,6 +46,13 @@ LAY = json.loads((OUT / "atlas_layout.json").read_text(encoding="utf-8"))
 PRM = SPEC["params"]
 CONC, STEEL = "viaduct_concrete", "viaduct_steel"
 STEEL_UV = ((0.80, 0.15), (0.96, 0.15), (0.96, 0.85), (0.80, 0.85))
+# pipes are painted with the concrete atlas (r10, reference frame 201270605169291): grey PVC collector = plain concrete
+# swatch, thin red conduit at the cantilever root = cornice paint band (between two plate joints)
+_sp = LAY["swatch_plain"]
+PIPE_UV = ((_sp["u"][0] + 0.2, _sp["v"][0] + 0.2), (_sp["u"][0] + 1.2, _sp["v"][0] + 0.2),
+           (_sp["u"][0] + 1.2, _sp["v"][0] + 0.8), (_sp["u"][0] + 0.2, _sp["v"][0] + 0.8))
+_cv = LAY["cornice"]["v0"]
+RED_UV = ((0.4, _cv + 0.15), (2.4, _cv + 0.15), (2.4, _cv + 0.42), (0.4, _cv + 0.42))
 
 
 def sha(obj):
@@ -86,7 +93,8 @@ class MB:
         if bottom:
             self.quad([(*p, z0) for p in cs], uv, mat, (0, 0, -1))
 
-    def tube(self, A, B, r, sides, mat, up=(0, 0, 1)):
+    def tube(self, A, B, r, sides, mat, up=(0, 0, 1), uv=None):
+        uv = uv or STEEL_UV
         A, B = np.asarray(A, float), np.asarray(B, float)
         d = B - A
         d /= np.linalg.norm(d)
@@ -99,12 +107,12 @@ class MB:
         ring = [x * math.cos(a) * r + y * math.sin(a) * r for a in ang]
         for k in range(sides):
             o = (ring[k] + ring[k + 1]) / 2
-            self.quad([A + ring[k], B + ring[k], B + ring[k + 1], A + ring[k + 1]], STEEL_UV, mat, o)
+            self.quad([A + ring[k], B + ring[k], B + ring[k + 1], A + ring[k + 1]], uv, mat, o)
 
     def tris(self):
         return sum(len(f) - 2 for f in self.F)
 
-    def to_object(self, name, anchor, smooth_angle=40.0):
+    def to_object(self, name, anchor, smooth_angle=50.0):   # 50: the 45 deg column chamfers shade round (reference)
         me = bpy.data.meshes.new(name)
         a = np.asarray(anchor, float)
         V = np.array(self.V) - a
@@ -293,7 +301,11 @@ def build_cell(mb, deck, di, c0, c1, lod, colmb):
             r = PRM["pipe_d_m"] / 2
             drop = np.array([0, 0, -(r + 0.12)])
             A, B = soffit_z(a, xp) + drop, soffit_z(b, xp) + drop
-            mb.tube(A, B, r, 6 if lod == 0 else 3, STEEL)
+            mb.tube(A, B, r, 6 if lod == 0 else 3, CONC, uv=PIPE_UV)
+            # thin red conduit under the cantilever root of the other side (reference frame: red line along the girder)
+            xr_ = -low_sgn * (PRM["cant_root_m"] + 0.25)
+            dr_ = np.array([0, 0, -0.10])
+            mb.tube(soffit_z(a, xr_) + dr_, soffit_z(b, xr_) + dr_, 0.055, 4 if lod == 0 else 3, CONC, uv=RED_UV)
             if lod == 0:               # hanger strap at the start of every interval
                 h0 = soffit_z(a, xp)
                 w = a.n * (r + 0.015)
@@ -360,8 +372,8 @@ def build_pier(mb, st, pr, lod, low_sgn, colmb):
         B[:2] = np.array(qc[:2]) + n2 * low_sgn * (hw + r + 0.03) + t2 * 0.0
         C = np.array([B[0], B[1], qc[2] + 0.15])
         sides = 6 if lod == 0 else 3
-        mb.tube(A, B, r, sides, STEEL, up=st.t)
-        mb.tube(B, C, r, sides, STEEL, up=st.t)
+        mb.tube(A, B, r, sides, CONC, up=st.t, uv=PIPE_UV)
+        mb.tube(B, C, r, sides, CONC, up=st.t, uv=PIPE_UV)
 
 
 def build_abutment(mb, st, inward, lod, colmb):

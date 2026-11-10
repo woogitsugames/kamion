@@ -124,6 +124,10 @@ Oświetlenie `--light overcast|lowsun|both`: AgX, bez bloomu, winiety i aberracj
 
 Przykład w repo (baza Kwadrat Park): droga dojazdowa do placu ma w OSM tylko `highway=service`, więc generator dał klasę D (2 × 2,50 m). Ortofoto pokazuje ok. 7 m asfaltu, więc override ustawia 2 × 3,50 m. Na placu nie ma krawężników (`flush`), a łuk wjazdu ma 15 m dla naczepy. Każdy wpis ma `reason`, `confidence` i `verify` (pozycję z listy zdjęć właściciela). Test `test_overrides_applied_and_not_stale` pilnuje, że wpisy działają po regeneracji.
 
+### Hero bridge (ADR 0067)
+
+Wpis `kind: hero_bridge` (pola: `id`, `osm_ways`, `asset`, opcjonalne `params`) zastępuje generyczny spód, fascia, balustradę i podpory łańcuchów mostu instancjami assetu z `art-source/world/landmarks/<asset>/<asset>.glb`. `streetscape/hero_bridge.py` zapisuje spec `Data/Regions/<id>/generated/landmarks/<asset>.spec.json` (krawędzie pomostu, linie podpór, cięcia) i sprawdza jego sha256 w `<asset>_meta.json`; przy rozjeździe uruchamia `tools/blender/world/landmarks/make_viaduct.py` (Blender z `KAMION_BLENDER` lub PATH; `KAMION_NO_BLENDER=1` wyłącza) albo zostawia generyk i zgłasza override w `overrides_stale`. Log: `hero bridges {'applied': [...], 'stale': [...]}`; raport `streetscape_qa.json` → `hero_bridges`. Ręcznie: `blender -b --factory-startup -P tools/blender/world/landmarks/make_viaduct.py -- --spec <spec> [--render <abs dir>]`. Wyspy `plantings` przyjmują `fill: gravel` (materiał `island_gravel`). Test: `tests/gis/test_hero_bridge.py`.
+
 ## Kontrola jakości
 
 - Testy: `tests/gis/test_world_roads.py` (szczelność szwów skrzyżowań: >300 szwów, każdy wspólny wierzchołek po wierzchołku i krawędź po krawędzi; pochylenia ≤ limit; brak szumu NMT w niwelecie; wierzchołki jezdni ≤ 0,2 m od wygenerowanego przekroju; przesunięcie osi przez wygładzanie p95 ≤ 0,5 m; teren ≥ 0,30 m pod drogą; wspólne krawędzie chunków; deterministyczność; struktura GLB; overrides; wymiary z rozporządzeń).
