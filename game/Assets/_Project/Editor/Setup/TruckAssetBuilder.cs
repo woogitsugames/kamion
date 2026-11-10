@@ -624,6 +624,13 @@ namespace Game.Editor.Setup
                 // ---- interior: CabInterior_LODn roots at CAB_MOUNT_REF (= CabBody), placeholders removed ----
                 var interiorLods = new List<Renderer>[3];
                 var ilods = Json.Obj(inn["lods"]);
+                // ---- seat H-point (interior manifest H_POINT, cab-local) as a marker on the cab-suspension pivot, so tests and the
+                // camera rig can assert eye - H-point (ADR 0052). Same cab frame as EYE_POINT: H = vehicle eye + (H_cab - EYE_cab). ----
+                {
+                    var emp = Json.Obj(Json.Obj(ilods["LOD0"])["empties_unity_local"]);
+                    Vector3 hCab = V3(emp["H_POINT"]), eCab = V3(emp["EYE_POINT"]);
+                    Child(cabSusp, "DriverHPoint", eyeLocal + (hCab - eCab) - mount);
+                }
                 var wheelCentre = V3(Json.Obj(Json.Obj(ilods["LOD0"])["empties_unity_local"])["WHEEL_CENTRE"]);
                 var steerAxis = new Vector3(0f, 0.78801f, -0.61566f);   // manifest STEERING_WHEEL steer axis_unity_cab (local +Y, towards the driver)
                 var column = Child(cabBody, "SteeringColumn", wheelCentre);
@@ -978,7 +985,7 @@ namespace Game.Editor.Setup
                 var qa = go.AddComponent<ControlCamera>();
                 qa.id = id; qa.note = note;
             }
-            Q("cab-driver", eye, Quaternion.Euler(6f, 0f, 0f), 62f, "A7: driver eye, straight ahead (windscreen base, frit, dash top, cluster in the rim window).");
+            Q("cab-driver", eye, Quaternion.Euler(Game.Cameras.DriverHead.RestPitchDownDeg, 0f, 0f), 62f, "A7: driver eye, straight ahead (windscreen base, frit, dash top, cluster in the rim window).");
             Q("cab-dash", eye, Quaternion.Euler(24f, 12f, 0f), 62f, "A7: cluster, steering wheel, centre stack, lower dash (low-sun black-cab check: lower dash > 8 %).");
             Q("cab-left", eye, Quaternion.Euler(4f, -68f, 0f), 62f, "A7: driver door card, door glass and the main/wide mirrors on the left.");
             Q("cab-right", eye, Quaternion.Euler(8f, 58f, 0f), 62f, "A7: passenger seat, passenger door card, right mirrors through the glass.");

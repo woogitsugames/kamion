@@ -36,6 +36,14 @@ namespace Game.Vehicle.Runtime
         /// <summary>Driver eye point in dims.json frame (x, y forward of front axle, z height).</summary>
         public Vector3 driverEyePointDims = new Vector3(-0.55f, 0.45f, 2.50f);
 
+        /// <summary>Driver seat H/R-point in dims.json frame (x, y forward of front axle, z height). WORKING_VALUE (R-point height).</summary>
+        public Vector3 driverHPointDims = new Vector3(-0.55f, 0.45f, 1.865f);
+        /// <summary>Ocular point above the H/R-point [m]: UNECE R46 635 mm (SOURCED); ADR 0052.</summary>
+        public float driverEyeAboveHPoint = 0.635f;
+
+        /// <summary>Driver seat H/R-point in the Unity vehicle frame.</summary>
+        public Vector3 HPointVehicle => new Vector3(driverHPointDims.x, driverHPointDims.z, driverHPointDims.y + wheelbase);
+
         /// <summary>Driver eye point in the Unity vehicle frame.</summary>
         public Vector3 EyePointVehicle => new Vector3(driverEyePointDims.x, driverEyePointDims.z, driverEyePointDims.y + wheelbase);
         public float CabRearZ => wheelbase - cabBackBehindFrontAxle;
