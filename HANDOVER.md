@@ -1,4 +1,4 @@
-# HANDOVER — kamion, sesja 8 (2026-11-11 ok. 22:00 start; limit 5 h reset 03:00 UTC)
+# HANDOVER — kamion, sesja 8 (2026-11-10 ok. 22:00 UTC start; limit 5 h reset 2026-11-11 03:00 UTC)
 
 ## Najpierw
 - main = ten commit. Start s8: 8 agentów Fable przejmuje/uruchomionych (tabela). GPT/Codex pracuje nad importem Megascans (ADR 0084, `gpt-megascans`, STATUS `artifacts/megascans-r1/STATUS.md`) — nie ruszać, scalić po REPORT.md. Antigravity (Argon 4) — zadanie `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` (tło za krawędzią świata, ADR 0085, gałąź `argon-edge`).
@@ -20,7 +20,7 @@
 
 ## Następne kroki
 1. Scalanie: 0076 → 0077 → 0070 → 0078 → 0081 → 0083 → Kwadrat r11 → światło r11 → 0084 → 0085; po drogach: build_world → pytest gis → import-region → PlayMode WorldCBarrier|DepotBarrier|WorldCRoute.
-2. Sprzątanie: worktree 0080/0071, osierocone katalogi, nagranie → artifacts/owner/.
+2. Sprzątanie ZROBIONE: worktree 0071/0080/0082 usunięte (artifacts skopiowane), 7 osieroconych katalogów usuniętych (junctiony odpięte, artifacts → artifacts/orphans/), nagranie → artifacts/owner/.
 3. Integracja, czyste buildy Low/High/Ultra, telefony, raport bramki 3.
 4. Ostatni przydzielony ADR: **0085**.
 
