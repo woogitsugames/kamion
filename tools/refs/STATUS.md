@@ -28,3 +28,4 @@ Gałąź: worktree-agent-ab1fb0a47d2f0a491 (nie scalona; integruje lider).
 - 19:59 commons: geosearch+imageinfo gotowe (cache 163), pobrano 83 plików, potem stoi na 429/Retry-After z upload.wikimedia.org. Następny krok: gdy proces skończy
   (lub po ubiciu) ponowić tę samą komendę (cache + manifest wznawiają bez duplikatów), potem openverse (API zwracało 504).
 - Openverse: 504 na każde zapytanie o 19:4x; ponowić `open_sources.py --source openverse --interval 1.5`.
+- 20:03 incremental manifest (co 10 pobran), adopt istniejących plików; commons ubity i wznawiany.
