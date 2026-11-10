@@ -14,7 +14,7 @@
 | osobówki r10 | 0078 | agent-a2215bcc98d109edc | artifacts/cars-r10 | w toku (WorldPBR.shader wspólny z 0080 — bloki rozdzielne) |
 | zabudowa r10 | 0081 | agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | w toku |
 | ogranicznik 90, koniec świata, kamera, rondo | 0082 | agent-acc0299ca0b0081b1 | artifacts/drive-fold-r10 | SCALONE 65e24d9 — po scaleniu na main wymagany import-region (zapory przy imporcie) + `test.ps1 -Platform PlayMode -Filter WorldEdgeRecoveryTests`; asfalt 89,4 km/h, zjazd 5 % 40 t ustala się na 94 (retarder od 94, `overrunBrakeOffsetKmh=4` WORKING_VALUE — decyzja właściciela); +4 km/h z filmu UNVERIFIED (potrzebna telemetria „Nagraj”); teren za krawędzią pusty (las/zabudowa do zrobienia) |
-| zewnętrze TRAKT + naczepa r10 (start s7) | 0083 | agent-a4049e15e1ab8c681 | artifacts/truck-ext-r10 | w toku |
+| zewnętrze TRAKT + naczepa r10 (start s7) | 0083 | agent-a4049e15e1ab8c681 | artifacts/truck-ext-r10 | STOP na 95 %, `672893a`, NIEscalone: osłony boczne, owiewki, lampy tylne, wyposażenie pod naczepą, pas na firance (LOD0 104,5k/89k, w budżecie). Otwarte: r4 nieobejrzane (dach naczepy albedo 0,36), Low lowsun exit 1, EditMode nieuruchomione, ADR 0083 szkic; decyzja właściciela: pas na firance + osłony boczne. Następny krok w STATUS.md. |
 | oświetlenie r10 | 0080 | agent-ac7c9571184d27443 | STATUS.md | SCALONE (worktree do usunięcia) |
 | Kwadrat Park r10 | 0071 | agent-a1409e374f8c12b4f | artifacts/kwadrat-r9 | SCALONE (worktree do usunięcia) |
 
