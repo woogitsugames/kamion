@@ -313,6 +313,20 @@ def check(w, instances, region_id, pipeline, report_extra=None):
                     continue
                 best = min(same or same_kind, key=lambda x: abs(x[0]))
                 tgt, k_t = best[2], best[1]
+                # diverge (lanes of the branches add up to the approach lanes): lanes are dealt out from the left,
+                # as network.align_forks lays the branches out
+                fan = sorted([x for x in outs if abs(x[0]) <= 60.0], key=lambda x: -x[0])
+                fan_l = [[b for b in _lane_bands(x[2].chain, secs, float(x[2].s(float(j.trims.get(x[1], 0.0)) + 3.0)))
+                          if b[1] == (1 if x[2].end == "a" else -1)] for x in fan]
+                forced = None
+                if len(fan) >= 2 and sum(len(f) for f in fan_l) == len(bands):
+                    k = li
+                    for x, fl in zip(fan, fan_l):
+                        if k < len(fl):
+                            tgt, k_t = x[2], x[1]
+                            forced = sorted(fl, key=lambda b: b[0])[k][2]
+                            break
+                        k -= len(fl)
                 tt = float(j.trims.get(k_t, 0.0))
                 q_end = tgt.chain.line.point(tgt.s(tt + 3.0))
                 dist = float(np.dot(q_end - p0, d_in))
@@ -329,7 +343,9 @@ def check(w, instances, region_id, pipeline, report_extra=None):
                       if b[1] == (1 if tgt.end == "a" else -1)]
                 nl_in, nl_out = len(bands), len(ob)
                 k_r = nl_in - 1 - li
-                if nl_out and k_r < nl_out:
+                if forced is not None:
+                    q1 = tgt.chain.line.offset_point(tgt.s(tt + 3.0), forced)
+                elif nl_out and k_r < nl_out:
                     lat_o = sorted(ob, key=lambda b: b[0])[nl_out - 1 - k_r][2]
                     q1 = tgt.chain.line.offset_point(tgt.s(tt + 3.0), lat_o)
                 else:

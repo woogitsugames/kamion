@@ -399,7 +399,8 @@ def taper_forks(net: Network, report: list | None = None):
 FORK_ALIGN_MAX_DEG = 60.0      # branches of a diverge / merge within this angle of the main carriageway
 FORK_ALIGN_MIN_M = 40.0        # lateral shift taper: max(this, FORK_ALIGN_RATIO x shift) (WORKING_VALUE)
 FORK_ALIGN_RATIO = 20.0
-FORK_GORE_CLEAR_M = 6.0       # hold the shift until the branch edges are this far apart (WORKING_VALUE, ADR 0074)
+FORK_GORE_CLEAR_M = 1.0       # hold the shift until the branch edges are this far apart (WORKING_VALUE, ADR 0074)
+FORK_HOLD_MAX_M = 40.0        # ... but never longer (parallel carriageways of a long viaduct never "separate")
 
 
 def align_forks(net: Network, report: list | None = None):
@@ -491,7 +492,7 @@ def align_forks(net: Network, report: list | None = None):
                         clear = min(Point(q).distance(o) for o in others) if others else 1e9
                         if clear - abs(shift) > hb + oh + FORK_GORE_CLEAR_M:  # gore fully open (past the kerb returns)
                             break
-                        hold = dd
+                        hold = min(dd, FORK_HOLD_MAX_M)
                     L = max(FORK_ALIGN_MIN_M, FORK_ALIGN_RATIO * abs(shift))
                     L = min(L, max(0.8 * c.length - hold, 5.0))
                     f = np.clip(1.0 - (d - hold) / L, 0.0, 1.0)
