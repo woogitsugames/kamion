@@ -59,7 +59,7 @@ namespace Game.World.Import
             var dims = new TrailerDimensions();
             // Box length from the rear end (bounds also hold the coupler and cables ahead of the front wall).
             TruckAssetBuilder.AddContactShadow(trailer.gameObject, tv != null ? tv.wheelPivots : null, dims.width * 0.5f,
-                new[] { (0f, dims.beamBottom + 0.08f, 0.85f, 10) }, dims.length, 0.42f, 0.42f, columns: 5);   // r6 T-N2: 6 x 1 quads sank under the road crown
+                new[] { (0f, dims.beamBottom - 0.07f, 0.9f, 10) }, dims.length, 0.42f, 0.42f, columns: 5);   // r6 T-N2: 6 x 1 quads sank under the road crown; underside 1.00 -> 0.85 m (side guards, tanks, pallet box hang below the beams; WORKING_VALUE)
         }
 
         public static void InstallInScene(string scenePath)
