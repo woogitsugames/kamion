@@ -85,6 +85,54 @@ def _output_file(root, name):
     return p.is_relative_to(safe) and p.is_file()
 
 
+def _atlas(assets=None, path=None, root=ROOT):
+    """Use an atlas only while every contributing source remains approved/pinned."""
+    if os.environ.get("KAMION_DISABLE_FAB") == "1":
+        return None
+    assets = load_ready() if assets is None else assets
+    path = Path(path) if path is not None else Path(root) / "art-source/world/megascans/_generated/drainage_atlas_manifest.json"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if data.get("schema") != 1:
+            return None
+        atlas = data["materials"]["fab_drainage"]
+        sources = atlas["sources"]
+        ids = {source["id"] for source in sources}
+        if not ids or len(ids) != len(sources):
+            return None
+        for source in sources:
+            pin = source.get("sha256")
+            if not pin or assets.get(source["id"], {}).get("source_sha256") != pin:
+                return None
+        rects = atlas["uv_rects"]
+        if set(rects) != ids:
+            return None
+        for rect in rects.values():
+            if len(rect) != 4 or not all(math.isfinite(float(v)) for v in rect):
+                return None
+            u0, v0, u1, v1 = rect
+            if not (0 <= u0 < u1 <= 1 and 0 <= v0 < v1 <= 1):
+                return None
+        for tier in ("Low", "High"):
+            maps = atlas["textures"][tier]
+            if not maps.get("basecolor") or not all(_output_file(root, name) for name in maps.values()):
+                return None
+            # Geometry UVs must address exactly the same cells on both tiers.
+            if atlas.get("uv_rects_by_tier", {}).get(tier, rects) != rects:
+                return None
+        return atlas
+    except (OSError, ValueError, TypeError, AttributeError, KeyError):
+        return None
+
+
+def _decal_uv(aid, uv, atlas):
+    uv = np.asarray(uv, float)
+    if atlas is not None and aid in atlas["uv_rects"]:
+        u0, v0, u1, v1 = atlas["uv_rects"][aid]
+        return "fab_drainage", np.array([u0, v0]) + uv * np.array([u1 - u0, v1 - v0])
+    return key(aid), uv
+
+
 def materials(assets=None):
     """Manifest material descriptors; Unity FabMaterials resolves local texture maps.
 
@@ -99,6 +147,9 @@ def materials(assets=None):
                             "surface": "steel" if is_decal else "detail"}
         if is_decal:
             result[key(aid)].update({"decal": True, "depth_offset_m": LIFT_PATCH})
+    if _atlas(assets) is not None:
+        result["fab_drainage"] = {"color": [1., 1., 1.], "rough": 0.85, "surface": "steel",
+                                   "decal": True, "depth_offset_m": LIFT_PATCH}
     return result
 
 
@@ -127,11 +178,13 @@ def drainage(buf, net, assets, report):
     """
     drains = [a for a in ("square-rusty-drain", "round-drain-cover") if a in assets]
     covers = [a for a in ("round-manhole-cover", "metal-manhole-cover") if a in assets]
-    count = {"gully_replacements": 0, "manholes": 0}
+    atlas = _atlas(assets)
+    count = {"gully_replacements": 0, "manholes": 0, "drainage_atlas": atlas is not None}
     if drains:
         for p in buf.parts:
             if p.mat == "drain_grate" and p.src.startswith("gully:"):
-                p.mat = key(drains[int(hf(p.src, "fab") * len(drains)) % len(drains)])
+                aid = drains[int(hf(p.src, "fab") * len(drains)) % len(drains)]
+                p.mat, p.UV = _decal_uv(aid, p.UV, atlas)
                 count["gully_replacements"] += 1
     if covers:
         for c in sorted(net.chains, key=lambda c: c.id):
@@ -158,8 +211,9 @@ def drainage(buf, net, assets, report):
                 aid = covers[int(hf(c.id, round(s, 2), "cover-kind") * len(covers)) % len(covers)]
                 ss = s + np.array([-r, r, r, -r])
                 ll = lat + np.array([-r, -r, r, r])
-                buf.add("markings", key(aid), _surf(c, ss, ll, LIFT_PATCH),
-                        [[0, 0], [1, 0], [1, 1], [0, 1]], [[0, 1, 2], [0, 2, 3]],
+                mat, uv = _decal_uv(aid, [[0, 0], [1, 0], [1, 1], [0, 1]], atlas)
+                buf.add("markings", mat, _surf(c, ss, ll, LIFT_PATCH),
+                        uv, [[0, 1, 2], [0, 2, 3]],
                         src=f"fab:manhole:{c.id}:{s:.2f}:WORKING_VALUE")
                 count["manholes"] += 1
     report.update(count)

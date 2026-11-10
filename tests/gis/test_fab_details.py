@@ -223,3 +223,48 @@ def test_production_loader_rereads_review_without_output_rebuild(tmp_path):
     review['items']['asset']['status'] = 'pending-review'
     review_path.write_text(json.dumps(review))
     assert F.load_ready(p, tmp_path) == {}
+
+
+def test_drainage_atlas_requires_pins_paths_and_matching_tier_rects(tmp_path):
+    out = tmp_path / 'art-source/world/megascans/_generated'
+    out.mkdir(parents=True)
+    color = 'art-source/world/megascans/_generated/atlas.png'
+    (out / 'atlas.png').write_bytes(b'test')
+    atlas = {'sources': [{'id': 'square-rusty-drain', 'sha256': 'a'*64}],
+             'uv_rects': {'square-rusty-drain': [.02, .02, .48, .48]},
+             'textures': {tier: {'basecolor': color} for tier in ('Low', 'High')}}
+    p = out / 'drainage_atlas_manifest.json'
+    p.write_text(json.dumps({'schema': 1, 'materials': {'fab_drainage': atlas}}))
+    assets = {'square-rusty-drain': {'source_sha256': 'a'*64}}
+    assert F._atlas(assets, p, tmp_path) is not None
+    assert F._atlas({}, p, tmp_path) is None
+    assert F._atlas({'square-rusty-drain': {'source_sha256': 'b'*64}}, p, tmp_path) is None
+    atlas['uv_rects_by_tier'] = {'High': {'square-rusty-drain': [0, 0, .5, .5]}}
+    p.write_text(json.dumps({'schema': 1, 'materials': {'fab_drainage': atlas}}))
+    assert F._atlas(assets, p, tmp_path) is None
+    atlas.pop('uv_rects_by_tier')
+    atlas['textures']['High']['basecolor'] = '../external.png'
+    p.write_text(json.dumps({'schema': 1, 'materials': {'fab_drainage': atlas}}))
+    assert F._atlas(assets, p, tmp_path) is None
+
+
+def test_drainage_atlas_remaps_existing_gully_uv_without_geometry_changes(monkeypatch):
+    from roads.decals import gullies
+    b = MeshBuf()
+    net = network()
+    gullies(b, net, {})
+    geometry = [p.V.copy() for p in b.parts]
+    atlas = {'uv_rects': {'square-rusty-drain': [.1, .2, .4, .8],
+                         'metal-manhole-cover': [.55, .55, .95, .95]}}
+    monkeypatch.setattr(F, '_atlas', lambda assets: atlas)
+    report = {}
+    F.drainage(b, net, {'square-rusty-drain': {}, 'metal-manhole-cover': {}}, report)
+    assert report['drainage_atlas'] is True
+    assert all(p.mat == 'fab_drainage' for p in b.parts)
+    for p, v in zip(b.parts, geometry):
+        assert np.array_equal(p.V, v)
+        assert np.allclose(p.UV.min(0), [.1, .2])
+        assert np.allclose(p.UV.max(0), [.4, .8])
+    for p in b.parts[len(geometry):]:
+        assert np.allclose(p.UV.min(0), [.55, .55])
+        assert np.allclose(p.UV.max(0), [.95, .95])

@@ -76,6 +76,8 @@ namespace Game.World.Import
                 s_Surfaces = Read("surfaces_manifest.json", "materials");
                 foreach (var kv in Read("drainage_atlas_manifest.json", "materials")) s_Surfaces[kv.Key] = kv.Value;
             }
+            bool billboard = id.EndsWith("_billboard", StringComparison.Ordinal);
+            string sourceId = billboard ? id.Substring(0, id.Length - "_billboard".Length) : id;
             Dictionary<string, object> entry = null;
             if (s_Surfaces.Get(id) is Dictionary<string, object> surface)
             {
@@ -87,8 +89,8 @@ namespace Game.World.Import
                 }
                 entry = surface;
             }
-            else if (id.StartsWith("fab_") && Items.Get(id.Substring(4).Replace('_', '-')) is Dictionary<string, object> item && item.Get("status") as string == "ready" && Approved(id.Substring(4).Replace('_', '-'), item)) entry = item;
-            if (!(entry?.Get("textures") is Dictionary<string, object> tiers)) return null;
+            else if (sourceId.StartsWith("fab_") && Items.Get(sourceId.Substring(4).Replace('_', '-')) is Dictionary<string, object> item && item.Get("status") as string == "ready" && Approved(sourceId.Substring(4).Replace('_', '-'), item)) entry = item;
+            if (!(entry?.Get(billboard ? "billboard_textures" : "textures") is Dictionary<string, object> tiers)) return null;
             // Medium consumes the mobile tier as well; never silently promote Low to 1k.
             string tier = EditorTools.Arg("-materialTier", "Medium") == "High" ? "High" : "Low";
             return tiers.Get(tier) as Dictionary<string, object>;
