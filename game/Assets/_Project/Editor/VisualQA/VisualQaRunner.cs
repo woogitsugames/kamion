@@ -216,7 +216,7 @@ namespace Game.Editor.VisualQA
                             g.SetVector("_InteriorAlbedo", Vector4.zero);
                             mats[mi] = g; any = true;
                         }
-                        if (any) r.sharedMaterials = mats;
+                        if (any) { r.sharedMaterials = mats; Debug.Log($"[QA] no-glass: {r.name} enabled={r.enabled} visible={r.isVisible} layer={r.gameObject.layer}"); }
                     }
 
                 // UI is rendered in its own pass (UI layer only, transparent clear) and composited over the world

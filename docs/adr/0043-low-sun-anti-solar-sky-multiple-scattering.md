@@ -37,15 +37,19 @@ model) and ADR 0016 (exposure, unchanged). Option (c) below is **not** a default
    or B ≥ R. Measured in the 1024 × 472 editor renders, see Evidence. This criterion is **not met**. The analytic sky
    itself fails it in linear light (1.10/0.99/0.79: R−G 0.11 < (R−B)/2 0.155), so it can only be met by a white-balance
    change (option c) or by changing the colour away from what the physics gives. The EditMode test
-   `LowSun_AntiSunHorizon_IsNotOlive_AndHillaireMakesItLessWarm` guards the physical bounds instead: R−B < 0.35 and
-   G − R < 0.05 (rgb/max) at 2–10° and Δaz 90–180°.
+   `LowSun_AntiSunHorizon_IsNotOlive_AndHillaireMakesItLessWarm` guards the physical bounds instead, in rgb/max at
+   2–10° and Δaz 90–180°: R−B < 0.35, and no olive (if R−B > 0.1 then R ≥ G; a blue sky with G > R is cyan, not olive).
 3. **Option (c): phone-style partial white-balance adaptation**, implemented but **off** (`LightingPreset.whiteBalanceAdaptation` = 0
    in every preset, asserted by a test). It is a von Kries transform in Bradford cone space (Lam 1985; as used in
    CIECAM97s and ICC v4) with degree D toward the horizontal scene illuminant (sun + sky dome). It is applied in
    `SkyModel` to the sun colour, the sky LUT, the overcast/ground neutral (`AdaptedWhite`, `_SkyOvercastColor`), the
    ambient, the fog and the reflections. That keeps the agreement between these five (ADR 0010), the luminance and the
    exposure (ADR 0016), and costs no GPU time. A/B renders at D 0.5: `-WbAdapt 0.5` on `scripts/visual-qa.ps1`.
-4. **Glazing**: see Evidence. The transmitted scene through `Kamion/Truck Glass` is grey by construction (premultiplied
+4. **Glazing: no change.** The `-qaNoGlass` diagnostic (body absorption, grime, film and interior reflection set to 0)
+   gives a **byte-identical** Low `cab-dash`. The log shows why: on Low the cab LOD0 renderers (`GLASS_Windscreen_LOD0`,
+   `CAB_Body_LOD0`) are disabled and the LOD2 windscreen does not reach those pixels. So the khaki "through the glass"
+   is the sky itself, and the glass does not tint it. Open point for the glass/truck owner: the Low cab view draws no
+   windscreen at all, so there is no inside reflection. The transmitted scene through `Kamion/Truck Glass` is grey by construction (premultiplied
    "over", the tint shows only in the outside body term). Typical laminated green windscreen glass (2 × 2.1 mm float
    + 0.76 mm PVB) is specified by its visible transmittance: UN ECE Regulation No. 43 requires T_v ≥ 70 % for windscreens.
    Fe²⁺ absorption makes it slightly green-blue (transmittance higher at 500–550 nm than at 650 nm). The per-band values
@@ -60,7 +64,12 @@ Mean sRGB of the top 25 rows of `cab-dash` (through the windscreen, 1/8-width co
 | before Low | 126–138 / 122–132 / 104–110 | −22 … −28 | 117–126 / 128–136 / 128–138 | +11 … +14 |
 | Hillaire Low | 124–135 / 122–132 / 110–117 | −14 … −19 | 116–124 / 128–136 / 133–143 | +18 … +20 |
 | WB 0.5 Low (A/B only) | 122–133 / 122–133 / 113–120 | −9 … −13 | 113–122 / 128–136 / 137–147 | +24 … +27 |
-| before High | 117–140 / 113–136 / 98–117 | −19 … −24 | | |
+| before High | 117–140 / 113–136 / 98–117 | −19 … −24 | 124–132 / 133–140 / 134–142 | +10 … +12 |
+| Hillaire High | 113–138 / 111–136 / 101–123 | −12 … −16 | 122–130 / 133–141 / 137–146 | +15 … +18 |
+| WB 0.5 High (A/B only) | 111–136 / 111–136 / 103–127 | −8 … −11 | 120–128 / 134–141 / 141–150 | +21 … +24 |
+
+The olive criterion (R−G ≥ (R−B)/2) fails in every `cab-dash` column, WB 0.5 included (e.g. 135/135/124). The
+truck-34 open sky passes everywhere except toward the sun, which is legitimately warm.
 
 ## Consequences
 - The anti-solar low sky is 5–8 points less warm on both tiers. It is still yellow-white rather than blue: physically

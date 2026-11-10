@@ -97,7 +97,8 @@ namespace Game.Tests
                 c /= c.maxColorComponent;
                 Debug.Log($"[TEST] ADR0043 anti-sun dAz {dAz} el {elDeg}: rgb/max {c.r:F3} {c.g:F3} {c.b:F3} R-B {c.r - c.b:F3}");
                 Assert.Less(c.r - c.b, 0.35f, $"anti-sun horizon too warm at dAz {dAz} el {elDeg}");
-                Assert.Less(c.g - c.r, 0.05f, $"anti-sun horizon green (olive) at dAz {dAz} el {elDeg}");
+                // Olive = warm (R > B) and yellow-green (G >= R). A blue sky with G > R (cyan side) is not olive.
+                if (c.r - c.b > 0.1f) Assert.GreaterOrEqual(c.r - c.g, 0f, $"anti-sun horizon olive at dAz {dAz} el {elDeg}");
             }
         }
 
