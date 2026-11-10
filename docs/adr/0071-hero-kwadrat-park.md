@@ -115,3 +115,21 @@ orthophoto neither confirms nor refutes it.
    and keeps 5.99 m/s.
    Open: the released boom is a free body (no bent hinge / shear-pin joint); a straight loop box can see a vehicle
    on the neighbouring lane behind the island nose; the OSM `lift_gate` props elsewhere are still static.
+
+## r10b (2026-11-10): verification on the world scene
+- **Boom on WorldC.** `WorldCBarrierTests` (PlayMode, imported scene, 40 t combination on the start route with the
+  path follower): both imported booms are closed and solid (a ray along the lane hits the boom collider, boom
+  0.7-1.3 m over the road); the boom on the route lane (s = 247.4 m) starts opening with the tractor at s = 216.5 m,
+  is fully open after 3.49 s (85 deg with the tractor origin 8 m before it at 20.0 km/h), is never touched, closes
+  with the combination at s = 308.4 m; the other lane's boom does not move; max |dv| per 10 ms step 0.050 m/s; the
+  loop query returns at most 11 colliders (buffer 128).
+- **Script-mode stepping.** The first run of that test failed (boom still closed, |dv| 6.06 m/s): tests that step
+  `Physics.Simulate` themselves do not run the boom's FixedUpdate per step. `DepotBarrier.Tick(dt)` is now public and
+  FixedUpdate only calls it in `SimulationMode.FixedUpdate` (same contract as `VehicleBody`); `WorldCRouteTests` and
+  `WorldCBarrierTests` step every boom. In the game (FixedUpdate mode) nothing changes.
+- **Boom bands.** `Mesh.tube` maps the length to v, the `boom_red_white` stripes follow u: one boom rendered all
+  red, the other all white. `life_props._boom_tube` writes u = metres along the boom (`test_boom_bands_run_along_the_boom`).
+- **Still WORKING_VALUE / open.** Gatehouse, housings and boom positions on the exit lane: no open photo of the gate
+  exists (`artifacts/refs/kwadrat-park/INDEX.md`, ADR 0066: gap), the orthophoto shows one thin line across the entry
+  lane only. A hit that is not predicted by the loop sensor (kinematic boom, first contact) still stops the vehicle
+  for one step before the boom is released; the sensor path covers bodies with convex / primitive colliders.
