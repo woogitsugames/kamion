@@ -35,6 +35,10 @@ param(
     [int]$LoadSeconds = 25,
     [int]$CameraWaitSeconds = 30,
     [string]$CameraFilter = '',
+    # Truck-mounted control cameras (TruckAssetBuilder: truck-34, cab-dash) framed on the phone under each lighting preset (r6 section 8 #1).
+    # Taken only for segment A (they do not depend on the segment); pass -TruckCameras @() to skip.
+    [string[]]$TruckCameras = @('truck-34', 'cab-dash'),
+    [string[]]$TruckLightings = @('overcast', 'lowsun', 'dusk'),
     [switch]$DryRun
 )
 $ErrorActionPreference = 'Stop'
@@ -172,17 +176,25 @@ if ($m.frameTime) {
 }
 
 # ---------------------------------------------------------------- 3. control cameras (device frames)
-$camResults = @()
+$camResults = @(); $ids = @()
 if (-not $SkipCameras) {
     $ids = @($cams | ForEach-Object { $_ }) + @($reuse | Where-Object { $_ -match $CameraFilter } | ForEach-Object { [pscustomobject]@{ id = $_; truck_s_m = $null; kind = 'existing' } })
+    if ($Segment -eq 'A') {
+        foreach ($tc in $TruckCameras) { foreach ($lg in $TruckLightings) {
+            if ($CameraFilter -and ($tc -notmatch $CameraFilter)) { continue }
+            $ids += [pscustomobject]@{ id = $tc; truck_s_m = $null; kind = 'truck'; lighting = $lg } } }
+    }
     foreach ($c in $ids) {
-        if (-not (Assert-PhoneReady "before camera $($c.id)")) { $camResults += [ordered]@{ id = $c.id; status = 'REJECTED_LOCKED' }; $exit = 5; break }
+        $lightTag = if ($c.PSObject.Properties['lighting']) { $c.lighting } else { '' }
+        $frameId = if ($lightTag) { "$($c.id)_$lightTag" } else { $c.id }
+        if (-not (Assert-PhoneReady "before camera $($c.id)")) { $camResults += [ordered]@{ id = $frameId; status = 'REJECTED_LOCKED' }; $exit = 5; break }
         $ex = @()
         if ($null -ne $c.truck_s_m) {
-            if (-not $hasRouteS) { $camResults += [ordered]@{ id = $c.id; status = 'SKIPPED_NEEDS_route_s' }; continue }
+            if (-not $hasRouteS) { $camResults += [ordered]@{ id = $frameId; status = 'SKIPPED_NEEDS_route_s' }; continue }
             $ex += "route_s=$($c.truck_s_m)"
         }
         if ($c.id -like 'g3*' -and $hasGate3Cams) { $ex += 'qacam_set=gate3' }
+        if ($lightTag) { $ex += "lighting=$lightTag" }
         & $Adb -s $Serial logcat -c
         $cmArgs = @('-NoProfile', '-File', (Join-Path $PSScriptRoot 'device-metrics.ps1'), '-Serial', $Serial, '-Launch', '-DurationSeconds', "$CameraWaitSeconds",
             '-Tier', $Tier, '-Fps', "$Fps", '-Scene', 'WorldC', '-QaCamera', $c.id)
@@ -192,19 +204,19 @@ if (-not $SkipCameras) {
         $lg = (& $Adb -s $Serial logcat -d -v threadtime -s Unity:V) -join "`n"
         $locked2 = -not (Assert-PhoneReady "after camera $($c.id)")
         $d = Get-ChildItem (Join-Path $ArtifactsDir "device/$Serial") -Directory | Where-Object { $b4 -notcontains $_.Name } | Sort-Object Name | Select-Object -Last 1
-        $png = Join-Path $outRoot "cam/$($c.id).png"
+        $png = Join-Path $outRoot "cam/$frameId.png"
         $active = $lg -match [regex]::Escape("control camera $($c.id) active")
         if ($d -and (Test-Path (Join-Path $d.FullName 'screen.png'))) { Copy-Item (Join-Path $d.FullName 'screen.png') $png -Force }
         $status = if ($locked2) { 'REJECTED_LOCKED' } elseif (-not $active) { 'MISSING_IN_SCENE' } elseif (Test-Path $png) { 'CAPTURED' } else { 'NO_SCREENSHOT' }
         if ($status -eq 'MISSING_IN_SCENE') { Remove-Item $png -ErrorAction SilentlyContinue }   # a frame of the wrong camera is not evidence
-        $camResults += [ordered]@{ id = $c.id; status = $status; png = $(if ($status -eq 'CAPTURED') { $png } else { $null }) }
-        Write-Host ("  cam {0,-28} {1}" -f $c.id, $status)
+        $camResults += [ordered]@{ id = $frameId; status = $status; png = $(if ($status -eq 'CAPTURED') { $png } else { $null }) }
+        Write-Host ("  cam {0,-28} {1}" -f $frameId, $status)
         if ($locked2) { $exit = 5; break }
     }
 }
 $result.cameras = $camResults
 $result.camerasCaptured = @($camResults | Where-Object { $_.status -eq 'CAPTURED' }).Count
-$result.camerasPlanned = $cams.Count + $reuse.Count
+$result.camerasPlanned = $ids.Count
 $result | ConvertTo-Json -Depth 8 | Set-Content (Join-Path $outRoot 'gate3-result.json') -Encoding utf8
 Write-Host "result $(Join-Path $outRoot 'gate3-result.json'): valid=$($result.valid), cameras $($result.camerasCaptured)/$($result.camerasPlanned)"
 if (-not $result.valid -and $exit -eq 0) { $exit = 6 }

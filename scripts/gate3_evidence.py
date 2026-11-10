@@ -46,6 +46,14 @@ LINEAR_BASECOLOR_SHADERS = ("Kamion/World Wire",)   # importer writes the linear
 TEXEL_EXEMPT = re.compile(r"^M_impostor_", re.I)               # distance billboards of whole trees, low density by design
 VEGETATION = re.compile(r"^(tree|shrub|bush|hedge)_", re.I)   # planted: trunk base may sit below the terrain
 VEGETATION_SUNK_OK_M = 1.0
+# Frame exposure (r6 W-N10 / section 8 #1): a frame inside geometry or with a black hole is not evidence.
+FRAME_P50_MIN = 0.15        # median luma (sRGB Rec.709, 0..1) must be above this
+FRAME_DARK_LUMA = 0.03      # a pixel below this luma is "black"
+FRAME_DARK_MAX_FRAC = 0.20  # at most this share of black pixels
+# Cab interior views (cab-dash ...) are dark by nature: the median rule does not apply, they carry their own criterion
+# (r6 L1-r5): at most 8 % of pixels below 3 % luma.
+FRAME_INTERIOR = re.compile(r"(^|[ _-])cab-", re.I)
+FRAME_INTERIOR_DARK_MAX_FRAC = 0.08
 TIER_ORDER = ["Low", "Medium", "High", "Ultra"]
 CC_OK = re.compile(r"^(CC0|PD|public domain|domena publiczna)", re.I)
 
@@ -225,6 +233,40 @@ def check_ground(audit: dict) -> dict:
             "failing_renderers": ren_bad[:25], "failing_instance_examples": inst_bad[:15]}
 
 
+# ---------------------------------------------------------------- frame exposure (W-N10)
+def frame_exposure(im, interior: bool = False) -> dict:
+    """p50 luma and share of pixels < FRAME_DARK_LUMA of one frame (PIL image or HxWx3/4 array, sRGB 0..255)."""
+    a = np.asarray(im.convert("RGB") if hasattr(im, "convert") else im, dtype=np.float64)[..., :3]
+    y = srgb_luma(a) / 255.0
+    p50 = float(np.median(y))
+    dark = float(np.mean(y < FRAME_DARK_LUMA))
+    if interior:
+        ok = dark <= FRAME_INTERIOR_DARK_MAX_FRAC
+    else:
+        ok = p50 > FRAME_P50_MIN and dark <= FRAME_DARK_MAX_FRAC
+    return {"p50": round(p50, 4), "dark_frac": round(dark, 4), "ok": bool(ok), "interior": interior}
+
+
+def check_frame_exposure(files: dict) -> dict:
+    """files: label -> Path of a png/jpg frame. FAIL when any frame has p50 <= 15 % or > 20 % of pixels < 3 % luma."""
+    rows, bad = [], []
+    for label, f in sorted(files.items()):
+        try:
+            with Image.open(f) as im:
+                r = frame_exposure(im, interior=bool(FRAME_INTERIOR.search(label)))
+        except Exception as e:  # unreadable frame is a failure, never silently skipped
+            r = {"p50": None, "dark_frac": None, "ok": False, "error": str(e)}
+        r["frame"] = label
+        r["path"] = str(f)
+        rows.append(r)
+        if not r["ok"]:
+            bad.append(r)
+    return {"verdict": "PASS" if rows and not bad else "FAIL",
+            "rule": f"every editor render and phone frame: p50 luma > {FRAME_P50_MIN:.0%} and <= {FRAME_DARK_MAX_FRAC:.0%} of pixels below {FRAME_DARK_LUMA:.0%} luma (camera inside geometry / black hole = FAIL; r6 W-N10); cab-* interior frames: only <= {FRAME_INTERIOR_DARK_MAX_FRAC:.0%} of pixels below {FRAME_DARK_LUMA:.0%} luma (r6 L1-r5)",
+            "frames_checked": len(rows), "failing_count": len(bad), "failing": bad[:60],
+            "worst_p50": sorted(rows, key=lambda r: (r["p50"] is None, r["p50"] if r["p50"] is not None else 0))[:5]}
+
+
 # ---------------------------------------------------------------- sheets
 def find_renders(out: Path, tiers, lights):
     res = {}
@@ -241,7 +283,9 @@ def find_phone(phone_dir: Path, cam_id: str):
     if not phone_dir.exists():
         return []
     n = norm(cam_id)
-    hits = [f for f in sorted(phone_dir.rglob("*")) if f.suffix.lower() in (".png", ".jpg", ".jpeg") and norm(f.stem).startswith(n)]
+    # the id may be preceded by a device/tier prefix (a16_low_<id>.png, s24_high_<id>.png) and followed by a suffix (_<lighting>, _1024)
+    pat = re.compile(r"(^|-)" + re.escape(n) + r"($|-)")
+    hits = [f for f in sorted(phone_dir.rglob("*")) if f.suffix.lower() in (".png", ".jpg", ".jpeg") and "small" not in f.parts and pat.search(norm(f.stem))]
     return hits
 
 
@@ -386,6 +430,16 @@ def main():
                                          "expected": expected, "rendered": got,
                                          "missing": [f"{c}:{t}-{l}" for c in cams for t in tiers for l in lights if (t, l) not in renders.get(norm(c), {})][:40]}
 
+    frames = {}
+    for n, rr in renders.items():
+        for (tt, ll), f in rr.items():
+            frames[f"editor {tt}-{ll} {n}"] = f
+    if phone_dir.exists():   # every phone frame in the folder, also truck-34 / cab-dash ones that are not gate3 cameras
+        for f in sorted(phone_dir.rglob("*")):
+            if f.suffix.lower() in (".png", ".jpg", ".jpeg") and "small" not in f.parts:
+                frames[f"phone {f.name}"] = f
+    checks["frame_exposure"] = check_frame_exposure(frames)
+
     verdicts = {k: v["verdict"] for k, v in checks.items()}
     overall = "PASS" if all(v == "PASS" for v in verdicts.values()) and checks else "FAIL"
     result = {"schema": "truck-sim-pl/gate3-evidence/1", "region": a.region, "git_sha": a.git_sha, "overall": overall, "checks": checks, "verdicts": verdicts,
@@ -435,6 +489,10 @@ def write_md(res: dict, audit: dict | None, out: Path):
             L += [f"- FAIL renderer {r['name']}: {r['detail']}" for r in c["failing_renderers"][:12]]
             if c["exempt_prototypes"]:
                 L += ["", "Exempt (mounted by design): " + ", ".join(r["name"] for r in c["exempt_prototypes"][:15])]
+        elif k == "frame_exposure":
+            L += [f"{c['frames_checked']} frames checked, {c['failing_count']} FAIL."] + [
+                f"- FAIL {r['frame']}: p50 {r['p50']}, dark {r['dark_frac']}" for r in c["failing"][:25]]
+            L += ["", "Lowest p50: " + ", ".join(f"{r['frame']} ({r['p50']})" for r in c["worst_p50"])]
         elif k == "editor_renders_complete":
             L += [f"{c['rendered']}/{c['expected']} renders."] + [f"- missing {m}" for m in c["missing"][:10]]
         L.append("")
