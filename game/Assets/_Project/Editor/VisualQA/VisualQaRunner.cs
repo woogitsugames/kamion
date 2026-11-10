@@ -140,6 +140,10 @@ namespace Game.Editor.VisualQA
                 }
                 msaa = Mathf.Max(1, tierSettings.msaa);
                 scale = tierSettings.renderScale;
+                // -qaRenderScale 0.80: render at another scale than the tier's (ADR 0046 adaptive floor, wire / AA checks)
+                if (float.TryParse(EditorTools.Arg("-qaRenderScale", ""), System.Globalization.NumberStyles.Float,
+                        System.Globalization.CultureInfo.InvariantCulture, out float rsArg) && rsArg > 0.1f && rsArg <= 2f)
+                    scale = rsArg;
             }
             var stats = new System.Text.StringBuilder();
             // Warm-up: the very first Camera.Render after opening a scene in batchmode can draw with

@@ -26,7 +26,9 @@ param(
     # ADR 0043 diagnostic: hide the glazing.
     [switch]$NoGlass,
     # Editor GPU timing: N extra renders per camera (stats.txt, VISUALQA_TIMING lines in the log).
-    [int]$TimeFrames = 0
+    [int]$TimeFrames = 0,
+    # Render scale override (e.g. 0.80 = ADR 0046 adaptive floor); default = the tier's.
+    [string]$RenderScale = ''
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -43,6 +45,7 @@ if ($WbAdapt) { $qaArgs += @('-qaWbAdapt', $WbAdapt) }
 if ($NoGlass) { $qaArgs += @('-qaNoGlass', '1') }
 if ($CabFill -eq 'off') { $qaArgs += @('-qaCabFill', 'off') }
 if ($Rq) { $qaArgs += @('-qaRq', $Rq) }
+if ($RenderScale) { $qaArgs += @('-qaRenderScale', $RenderScale) }
 if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
 $code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
 
