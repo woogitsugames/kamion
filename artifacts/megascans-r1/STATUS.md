@@ -38,3 +38,6 @@
 
 - Krok 13: EditMode194:182 PASS,0 FAIL,7 skipped,5 inconclusive. Odświeżenie fidelity ujawniło3odziedziczone porażki ratchet (axis0,129m,edge2,483m,6wysp); pipeline/markings/graph/overrides identyczne z main2df87f1, fidelity nie używa etapu Fab. Bez obniżania progów i bez zmian w cudzych drogach. Raport pozostaje jawnie FAIL względem pełnego DoD.
 - NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` po after-build.
+
+- Krok 14: after-build OK:64 chunki. Fab:773 podmienione wpusty,197 włazów,320propsów (161 kęp trawy,41dzikiej trawy,41bzu,5bukszpanów,54kamienie,18worków). Wszystkie miejsca WORKING_VALUE. Unity ładuje tylko rzeczywiście użyte biblioteki Fab, nie nieużywane siatki źródeł materiałowych. Trwa import i pełny GIS final.
+- NASTĘPNY KROK: `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -OutputDir artifacts/megascans-r1/after/Low-overcast` po imporcie.

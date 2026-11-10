@@ -36,21 +36,17 @@ namespace Game.World.Import
             string p = Path.GetFullPath(Path.Combine(EditorTools.RepoRoot, relative));
             return p.StartsWith(Path.GetFullPath(Root) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) && File.Exists(p) ? p : null;
         }
-        public static IEnumerable<string> Libraries()
+        public static string Library(string prototype)
         {
-            var paths = new SortedSet<string>(StringComparer.Ordinal);
             foreach (var item in Items.Values.OfType<Dictionary<string, object>>())
             {
-                if (item.Get("status") as string != "ready" || !Approved(Str(item.Get("prototype")).Substring(4).Replace('_', '-'), item)) continue;
+                if (item.Get("prototype") as string != prototype || item.Get("status") as string != "ready") continue;
+                if (!Approved(prototype.Substring(4).Replace('_', '-'), item)) continue;
                 if (!(item.Get("models") is List<object> models)) continue;
-                // Placement currently selects the first variant. Load one combined
-                // LOD library instead of every individual LOD and unused variant.
                 var model = models.OfType<Dictionary<string, object>>().FirstOrDefault();
-                if (model == null) continue;
-                string path = Resolve(model.Get("path"));
-                if (path != null) paths.Add(path);
+                if (model != null) return Resolve(model.Get("path"));
             }
-            return paths;
+            return null;
         }
         static bool Approved(string id, Dictionary<string, object> item)
         {

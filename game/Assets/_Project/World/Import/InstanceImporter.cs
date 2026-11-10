@@ -85,7 +85,6 @@ namespace Game.World.Import
             // Authored landmark assets (ADR 0067 / 0071): art-source/world/landmarks/<asset>/<asset>.glb, prototypes
             // "landmark_<...>" (+ .lod1 / .lod2) in the same frame as street_props.glb.
             var landmarkLibs = new List<GlbReader>();
-            foreach (var f in FabMaterials.Libraries()) landmarkLibs.Add(GlbReader.Load(f));
             string lmDir = Path.Combine(art, "landmarks");
             if (Directory.Exists(lmDir))
                 foreach (var f in Directory.GetFiles(lmDir, "*.glb", SearchOption.AllDirectories).OrderBy(x => x, StringComparer.Ordinal))
@@ -116,6 +115,11 @@ namespace Game.World.Import
                 if (n0 == null && !tree)
                     foreach (var lib in landmarkLibs)
                         if (lib.Find(name) is GlbReader.MeshNode ln) { src = lib; n0 = ln; break; }
+                if (n0 == null && name.StartsWith("fab_") && FabMaterials.Library(name) is string fabPath)
+                {
+                    src = GlbReader.Load(fabPath);
+                    n0 = src.Find(name);
+                }
                 if (n0 == null) { Debug.LogWarning($"[IMPORT] prototype '{name}' not in the library - instances skipped"); protoIndex[name] = -1; return -1; }
                 lodNodes.Add((src, n0));
                 var n1 = src.Find(name + ".lod1");
