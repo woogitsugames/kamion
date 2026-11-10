@@ -1,6 +1,8 @@
 # ADR 0084 — Optional reviewed Fab Megascans world details
 
-Status: implemented on `gpt-megascans`, validation in progress; **not cleared for merge**.
+Status: implemented and exercised through four visual rounds on `gpt-megascans`;
+**not cleared for merge**: full visual realism and strict per-view Low cost gates
+remain unmet, with inherited GIS failures documented below.
 
 ## Context
 
@@ -80,6 +82,22 @@ and independent critic PASS are required before merge. No phone numbers are
 claimed: this task forbids phones/adb. Do not infer Android performance from
 editor scene estimates. Fab EULA legal review before store release remains as
 already recorded in `docs/LICENSES.md`.
+
+Final GIS run: 282 passed, 5 failed, 2 xfailed. Failures are the inherited three
+road-fidelity ratchets and two route-corridor checks; no thresholds were weakened.
+Nine grass-surface cases added after full-suite collection passed separately
+(all focused Fab tests: 76 passed). EditMode: 197 passed, zero failed, seven
+ignored, five inconclusive; native Unity exit 2 / wrapper exit 1 also occur in
+the baseline. Controlled no-Fab build/import and six matched before captures
+succeeded. Final source-world SHA verification matched 192/192 files.
+
+Low peak estimates remain 956 draws / 333k triangles across 28 views, while
+individual views increase by up to four draws / 4k triangles. Thus unchanged
+peak is not a strict per-view budget pass. High local deltas reach eight draws /
+20k triangles. Import mesh/instance memory increases by about 0.9 MiB. The visual
+critic accepts the local grass/material/detail improvements but rejects a large
+whole-scene realism claim. Low cover contrast and vegetation LOD compromises,
+inherited dark tree crowns and procedural large surfaces remain visible limits.
 
 Expected integration conflicts: build_world.py, streetscape stage/materials,
 plantings/life_props changes by other world agents and Unity instance/material
