@@ -204,6 +204,8 @@ cam("row34r", (-4.5, -7.5, 1.6), (cx * 0.7, -0.3, 0.7), lens=32)
 cam("cab", (cx + 3.0, 11.0, 2.5), (cx - 1.5, 0.0, 0.6), lens=28)
 cam("close", (-3.3, 5.2, 1.55), (0.3, 0.6, 0.72), lens=35, res=(1600, 900))
 cam("closer", (PITCH * 2 - 2.6, -5.6, 1.55), (PITCH * 2 + 0.2, -0.6, 0.72), lens=35, res=(1600, 900))
+cam("tail", (PITCH * 3 - 2.3, -4.0, 1.25), (PITCH * 3 - 0.75, -2.1, 0.9), lens=50, res=(1600, 900))      # r10: lamp wrap
+cam("nose", (PITCH * 1 - 2.0, 4.2, 1.0), (PITCH * 1 - 0.6, 2.1, 0.62), lens=50, res=(1600, 900))       # r10: headlamp bucket
 # side elevations: cars rotated so that each is seen from its right side, two rows
 if not CAMS or "side" in CAMS:
     obs = [o for o in sc.objects if o.name in names]

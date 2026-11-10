@@ -940,7 +940,7 @@ def _wheel2(m, x_out, yc, r, sx, seg, steel, lod, wst=0, rimm="rim", tyre="tyre"
 
 
 def _vehicle2(d, paint, lod, steel=False, style=None):
-    from shapely.geometry import Polygon, box
+    from shapely.geometry import LineString, Polygon, box
     from shapely.ops import unary_union
     m = Mesh()
     sh = _Shell(d, lod)
@@ -1100,7 +1100,7 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     def side_tris(mat, tris, lift=0.0):
         for t in tris:
             for sx in (1, -1):
-                q = [np.array([sx * (sh.X(y, z) + lift), y, z]) for y, z in t]
+                q = [np.array([sx * (sh.X(p_[0], p_[1]) + lift), p_[0], p_[1]]) for p_ in t]
                 _oq(m, mat, q, [sx, 0, 0])
 
     # ---- side: columns between the profile's side line and the sill / wheel-arch line, rows on the feature lines
@@ -1131,6 +1131,106 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         xt = sh.X(y, zm) if green else float(np.interp(y, Sy, sh.Sx))      # the top edge is shared with the shell
         return col + [np.array([xt, y, zm])]
     cols = [column(y) for y in ys]
+    side_quads = [(ca[k], cb[k], cb[k + 1], ca[k + 1]) for ca, cb in zip(cols[:-1], cols[1:]) for k in range(NR)]
+
+    def MX(y, z):
+        """Half width of the side MESH at (y, z) (r10): the outer of the two triangulations of the skin quad under the
+        point. Below the belt the skin is facets between columns whose top edge is the shell's side line, not sh.X -
+        seams and lamp wraps laid on sh.X stood off the wings or sank into them. Off the columns (greenhouse): sh.X."""
+        best = None
+        for q in side_quads:
+            if not (min(p_[1] for p_ in q) - 1e-4 <= y <= max(p_[1] for p_ in q) + 1e-4
+                    and min(p_[2] for p_ in q) - 1e-4 <= z <= max(p_[2] for p_ in q) + 1e-4):
+                continue
+            for tri in ((0, 1, 2), (0, 2, 3), (1, 2, 3), (1, 3, 0)):
+                A, B, C = (q[i_] for i_ in tri)
+                den = (B[1] - A[1]) * (C[2] - A[2]) - (C[1] - A[1]) * (B[2] - A[2])
+                if abs(den) < 1e-10:
+                    continue
+                u = ((y - A[1]) * (C[2] - A[2]) - (C[1] - A[1]) * (z - A[2])) / den
+                v = ((B[1] - A[1]) * (z - A[2]) - (y - A[1]) * (B[2] - A[2])) / den
+                if u >= -1e-3 and v >= -1e-3 and u + v <= 1 + 1e-3:
+                    x = float(A[0] + (B[0] - A[0]) * u + (C[0] - A[0]) * v)
+                    best = x if best is None else max(best, x)
+        return sh.X(y, z) if best is None else best
+
+    def skin_tris(sx):
+        """The side skin's triangles exactly as emitted for side sx (each side has its own diagonals, see _oq)."""
+        for q in side_quads:
+            qq = [p_ * np.array([sx, 1, 1]) for p_ in q]
+            nrm = sum(np.cross(qq[i_] - qq[0], qq[i_ + 1] - qq[0]) for i_ in (1, 2))
+            if float(nrm[0]) * sx < 0:
+                qq = qq[::-1]
+            for tri in ((qq[0], qq[1], qq[2]), (qq[0], qq[2], qq[3])):
+                yield tri
+
+    def drape_line(mat, a_, b_, wy, lift, tol=0.0015):
+        """Seam 2 * wy wide along the (y, z) segment a_ -> b_, ON the skin: the line is cut by the skin triangles, the
+        resulting 3D polyline simplified to `tol` (so a seam costs a few quads, not one per facet of a corner)."""
+        ln_ = LineString([a_, b_])
+        dy, dz = (b_[0] - a_[0]) / ln_.length, (b_[1] - a_[1]) / ln_.length
+        for sx in (1, -1):
+            pts = {}
+            for A, B, C in skin_tris(sx):
+                den = (B[1] - A[1]) * (C[2] - A[2]) - (C[1] - A[1]) * (B[2] - A[2])
+                if abs(den) < 1e-9:
+                    continue
+                piece = ln_.intersection(Polygon([(A[1], A[2]), (B[1], B[2]), (C[1], C[2])]))
+                for g_ in getattr(piece, "geoms", [piece]):
+                    if g_.geom_type != "LineString" or g_.length < 1e-4:
+                        continue
+                    for y, z in (g_.coords[0], g_.coords[-1]):
+                        u = ((y - A[1]) * (C[2] - A[2]) - (C[1] - A[1]) * (z - A[2])) / den
+                        v = ((B[1] - A[1]) * (z - A[2]) - (y - A[1]) * (B[2] - A[2])) / den
+                        s_ = round((y - a_[0]) * dy + (z - a_[1]) * dz, 4)
+                        x = abs(float(A[0] + (B[0] - A[0]) * u + (C[0] - A[0]) * v))
+                        pts[s_] = max(pts.get(s_, 0.0), x)
+            P_ = sorted(pts.items())
+            if len(P_) < 2:
+                continue
+            keep = [0, len(P_) - 1]                 # Douglas-Peucker on x(s)
+            stack = [(0, len(P_) - 1)]
+            while stack:
+                i0, i1 = stack.pop()
+                if i1 - i0 < 2:
+                    continue
+                (s0, x0), (s1, x1) = P_[i0], P_[i1]
+                dev = [abs(P_[k_][1] - (x0 + (x1 - x0) * (P_[k_][0] - s0) / max(s1 - s0, 1e-9))) for k_ in range(i0 + 1, i1)]
+                km = int(np.argmax(dev))
+                if dev[km] > tol:
+                    keep.append(i0 + 1 + km)
+                    stack += [(i0, i0 + 1 + km), (i0 + 1 + km, i1)]
+            keep = sorted(set(keep))
+            oy, oz = dz * wy, -dy * wy
+            for ka, kb in zip(keep[:-1], keep[1:]):
+                (sa, xa), (sb, xb) = P_[ka], P_[kb]
+                ya, za, yb, zb2 = a_[0] + dy * sa, a_[1] + dz * sa, a_[0] + dy * sb, a_[1] + dz * sb
+                _quad(m, mat, [sx * (xa + lift), ya - oy, za - oz], [sx * (xa + lift), ya + oy, za + oz],
+                      [sx * (xb + lift), yb + oy, zb2 + oz], [sx * (xb + lift), yb - oy, zb2 - oz], [sx, 0, 0])
+
+    def drape(mat, poly, lift):
+        """Overlay laid ON the side skin (r10): the (y, z) polygon is cut by the skin's own triangles (each side has its
+        own diagonals, see _oq) and every piece lies in its triangle's plane, `lift` outside it. A flat overlay over
+        the crease under the shoulder band was half buried (tail-lamp wrap) or stood off the wing."""
+        bx = poly.bounds
+        for sx in (1, -1):
+            for A, B, C in skin_tris(sx):
+                if (max(A[1], B[1], C[1]) < bx[0] or min(A[1], B[1], C[1]) > bx[2]
+                        or max(A[2], B[2], C[2]) < bx[1] or min(A[2], B[2], C[2]) > bx[3]):
+                    continue
+                den = (B[1] - A[1]) * (C[2] - A[2]) - (C[1] - A[1]) * (B[2] - A[2])
+                if abs(den) < 1e-9:
+                    continue
+                piece = poly.intersection(Polygon([(A[1], A[2]), (B[1], B[2]), (C[1], C[2])]))
+                if piece.is_empty or piece.area < 2e-6:
+                    continue
+                for t in _tri2d(piece):
+                    pts = []
+                    for y, z in t:
+                        u = ((y - A[1]) * (C[2] - A[2]) - (C[1] - A[1]) * (z - A[2])) / den
+                        v = ((B[1] - A[1]) * (z - A[2]) - (y - A[1]) * (B[2] - A[2])) / den
+                        pts.append(np.array([float(A[0] + (B[0] - A[0]) * u + (C[0] - A[0]) * v) + sx * lift, y, z]))
+                    _oq(m, mat, pts, [sx, 0, 0])
     for ca, cb in zip(cols[:-1], cols[1:]):
         for k in range(NR):
             for sx in (1, -1):
@@ -1349,10 +1449,12 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         yc_ = pa[1] - wrap
         zc_ = float(np.interp(yc_, sh.hy, sh.hz)) - 0.035
         A_, B_, C_ = (pa[1], pa[2]), (pb[1], pb[2]), (yc_, zc_)
-        side_tris("car_lamp", [[A_, B_, C_]], lift=0.010)
         if lod == 0:
             la = lambda p, q, t: (p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t)      # noqa: E731
-            side_tris("car_light_head", [[la(A_, B_, 0.16), la(A_, B_, 0.84), la(la(A_, B_, 0.4), C_, 0.62)]], lift=0.014)
+            drape("car_lamp", Polygon([A_, B_, C_]), 0.006)
+            drape("car_light_head", Polygon([la(A_, B_, 0.16), la(A_, B_, 0.84), la(la(A_, B_, 0.4), C_, 0.62)]), 0.010)
+        else:
+            side_tris("car_lamp", [[A_, B_, C_]], lift=0.010)
 
     def slats(i, cols, fr, depth, hh, mat="rim_dark"):
         """Horizontal bars inside an opening: front face + top face (the top catches the sky). fr = fractions of the
@@ -1417,8 +1519,11 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         pa, pb = sh.ptf(iR, t1_, 2.0)[0], sh.ptf(iR, t0_, 2.0)[0]
         if sx == 1:
             wa, wb_ = (0.17, 0.09) if not cargo else (0.05, 0.05)
-            side_tris("car_light_tail", [[(pa[1], pa[2]), (pb[1], pb[2]), (pb[1] + wb_, pb[2] + 0.03)],
-                                         [(pa[1], pa[2]), (pb[1] + wb_, pb[2] + 0.03), (pa[1] + wa, pa[2] - 0.012)]], lift=0.012)
+            wq = [(pa[1], pa[2]), (pb[1], pb[2]), (pb[1] + wb_, pb[2] + 0.03), (pa[1] + wa, pa[2] - 0.012)]
+            if lod == 0:
+                drape("car_light_tail", Polygon(wq).buffer(0), 0.006)
+            else:
+                side_tris("car_light_tail", [[wq[0], wq[1], wq[2]], [wq[0], wq[2], wq[3]]], lift=0.012)
     if f["bar"] and not cargo and lod == 0:
         patch("R2", 0.80, 0.86, [-0.52, 0.0, 0.52], "car_light_tail")                      # light bar across the boot
     if lod == 0:
@@ -1470,7 +1575,8 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     spatch("R1", [(g, 0.0, 1.0) for g in dg], dmat, lift=0.016, uv=(uo, 0.45), v0=0.0)
     spatch("R2", [(g, 0.0, 0.25 + 0.45 * dl) for g in dg], dmat, lift=0.016, uv=(uo + 0.21, 0.45), v0=0.35)
     if lod == 0:
-        spatch("F1", [(g, 1.0, 0.0) for g in dg], dmat, lift=0.016, uv=(uo + 0.37, 0.45), v0=0.62 - 0.30 * dl)   # thin: splatter
+        for half in ([g for g in dg if g <= -0.5 + 1e-9], [g for g in dg if g >= 0.5 - 1e-9]):   # not over the plate
+            spatch("F1", [(g, 1.0, 0.0) for g in half], dmat, lift=0.016, uv=(uo + 0.37, 0.45), v0=0.62 - 0.30 * dl)   # thin: splatter
 
     # ---- sills, seams, handles, mirrors, rails, wipers
     def strip(mat, pts, wy, lift=0.004):            # seam along (y, z) points, 2 * wy wide
@@ -1479,8 +1585,8 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
             ln = math.hypot(dy, dz) or 1.0
             oy, oz = dz / ln * wy, -dy / ln * wy
             for sx in (-1, 1):
-                _quad(m, mat, [sx * (sh.X(ya, za) + lift), ya - oy, za - oz], [sx * (sh.X(ya, za) + lift), ya + oy, za + oz],
-                      [sx * (sh.X(yb, zb_) + lift), yb + oy, zb_ + oz], [sx * (sh.X(yb, zb_) + lift), yb - oy, zb_ - oz], [sx, 0, 0])
+                _quad(m, mat, [sx * (MX(ya, za) + lift), ya - oy, za - oz], [sx * (MX(ya, za) + lift), ya + oy, za + oz],
+                      [sx * (MX(yb, zb_) + lift), yb + oy, zb_ + oz], [sx * (MX(yb, zb_) + lift), yb - oy, zb_ - oz], [sx, 0, 0])
     ys0, ys1 = yra + ra + 0.04, yfa - ra - 0.04
     zs = sill + (0.15 if clad else 0.06)
     nsl = 3 if lod == 0 else 1
@@ -1513,7 +1619,8 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         def vline(y, za, zb_, k=4):
             return [(y, za + (zb_ - za) * j / k) for j in range(k + 1)]
         zd0 = sill + 0.085
-        y1d = yfa + ra + 0.10
+        y1d = yfa - ra - 0.14                       # r10: front door's leading edge is BEHIND the front arch (r9 had it
+        #                                             ahead of the arch: a stray seam on the wing, a line across the wheel)
         y3d = (yra + 0.12) if not cargo else (yB - 1.10)
         strip("car_trim", vline(y1d, zd0, sh.ztop(y1d) - 0.02), 0.006)
         strip("car_trim", vline(yB, zd0, sh.zbelt(yB) - 0.004), 0.006)
@@ -1522,10 +1629,13 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
               if cargo else [(y1d, zd0), ((y1d + yB) / 2, zd0), (yB, zd0), (ys0 + 0.02, zd0)], 0.005)   # door bottoms
         # bumper / wing seams: from the lamp's lower corner to the arch, from the tail lamp to the rear arch
         pa = sh.ptf(iH, to1, 2.0)[0]
-        aa = math.radians(52)
-        strip("car_trim", [(pa[1] - 0.004, pa[2]), (yfa + ra * math.cos(aa) + 0.012, r + ra * math.sin(aa) + 0.03)], 0.005)
+        aa = math.radians(54)                       # an arch-lip vertex (aseg = 10: every 18 deg)
+
+        def seam(a_, b_):                           # r10: draped (a single 0.4 m chord stood off the wing)
+            drape_line("car_trim", a_, b_, 0.004, 0.004)
+        seam((pa[1] - 0.004, pa[2]), (yfa + ra * math.cos(aa) + 0.004, r + ra * math.sin(aa) + 0.006))
         pb = sh.S[sh.mid["RB"]]
-        strip("car_trim", [(pb[0] + 0.004, pb[1] + 0.012), (yra - ra * math.cos(aa) - 0.012, r + ra * math.sin(aa) + 0.03)], 0.005)
+        seam((pb[0] + 0.004, pb[1] + 0.012), (yra - ra * math.cos(aa) - 0.004, r + ra * math.sin(aa) + 0.006))
         if cargo:                                   # sliding-door track under the (blind) rear quarter
             zt_ = sh.zbelt(y3d) - 0.16
             strip("car_trim", [(y3d - 0.02, zt_), ((y3d + sh.y0 + 0.30) / 2, zt_), (sh.y0 + 0.30, zt_)], 0.014)
