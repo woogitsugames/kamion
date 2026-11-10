@@ -105,6 +105,17 @@
    "tris_lod0": 129,
    "tris_lod1": 75
   },
+  "barrier_arm_raised": {
+   "materials": [
+    "barrier_housing",
+    "concrete_base",
+    "gate_boom",
+    "lamp_glass",
+    "steel_painted"
+   ],
+   "tris_lod0": 129,
+   "tris_lod1": 75
+  },
   "bench": {
    "materials": [
     "bench_wood",
@@ -1273,15 +1284,6 @@
    "materials": [
     "plate_back",
     "sign_B-33_70",
-    "steel_galv"
-   ],
-   "tris_lod0": 240,
-   "tris_lod1": 64
-  },
-  "plate_B-33_90": {
-   "materials": [
-    "plate_back",
-    "sign_B-33_90",
     "steel_galv"
    ],
    "tris_lod0": 240,
