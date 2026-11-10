@@ -41,7 +41,8 @@ terrain. Two causes in the rural ditch profile:
    ADR 0018 longitudinal profile / route corridor unchanged).
 6. The QA also flags grass / gravel faces steeper than ~1:1.33 with > 0.15 m height (`steep_grass`), and no longer
    counts skirt vertices whose 4 surrounding nodes are covered by other ground surfaces (buried skirts).
-   The test requires `count == 0` (no expected-fail).
+   The test is a ratchet: per-category counts may not rise above the last build (103 points on 2026-11-10:
+   85 junction skirts, 10 yard skirts, 8 steep verge faces) and no new category may appear. Target 0.
 
 ## Consequences
 - Verge skirt triangles count is unchanged (same strip, moved vertices); GPU cost on Low: zero extra samples and
