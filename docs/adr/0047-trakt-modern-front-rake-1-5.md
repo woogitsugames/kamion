@@ -102,3 +102,42 @@ European premium tractor were shown as a reference for proportion, roundness and
   (`modern-front/pillar_obstruction_r4.json`).
 - r4 export: exterior LOD0 101 592 / LOD1 43 000 / LOD2 15 297, `exterior/check_export.py` PASS. Interior not touched.
   Unity frames: `artifacts/owner/modern-front/unity4/`. Phone cost not measured: UNVERIFIED (triangle counts lower).
+
+## Addendum r6 geometry (2026-11-10, review r6 E-N2 / E-N3 / E-N4 / E7 / T-N2 + mirror follow-ups of ADR 0042)
+Frames: `artifacts/owner/modern-front/r6-geo/` (`before` = main with the r4 export, `v3` = this change; `small/` = sheets;
+`geo_measure.py` = the regions, 1024 x 473 space, display luminance %). truck-34, editor, High / Low overcast.
+- **E-N2 T bar corners.** `mask_bar()` replaces the flat `grille_bar` face: flat middle band (letters), top and bottom
+  40 mm roll back 10 mm (top mirrors the sky, bottom the ground), 72 columns (< 3 deg per facet round the R 0.36 m
+  corner), 14 mm chamfer at both wrapped ends and a 16 mm brushed-aluminium end cap (same metal as the letters and the
+  lane dashes; own motif, WORKING_VALUE). `mask_gloss` albedo 0.010 -> 0.018 linear. Corner box 458-480 x 232-247:
+  p50 / p99 High 7.1 / 23.7 -> 8.0 / 36.4 (target >= 8 / >= 30: met, p50 at the limit), Low 5.5 / 12.2 -> 5.5 / 34.1
+  (**p50 not met**). On Low the whole bar is that dark (flat face beside the letters: 4.3 %, High 17.5 %), i.e. it is
+  the Low gloss-trim environment term (analytic cube x obstruction, r3 shader), not the corner geometry: open,
+  rendering-perf.
+- **E-N3 louvres.** No new change: the r4 face-down louvres were not in the r6 frames (main's generated prefab was
+  stale). Louvre field 390-455 x 247-283: sRGB mean High 43.2 / Low 38.6 (target <= 45), bright stripes 6.1 / 10.9 %
+  (target <= 20 %). The r6 box 380-440 x 240-290 also covers the white corner panel in this frame (57.7 / 51.4).
+- **E-N4 wordmark.** Letters stay geometry with a chamfer; cap height 100 -> 150 mm, stroke 1.6x -> 1.8x, wider
+  spacing. Readable in truck-34 Low lowsun and Low overcast (before: "TIuKT").
+- **E7 mirror back.** Door-mirror back shell: body colour -> dark grained plastic (display 69.8 -> 27.4 %).
+- **T-N2 bright parallelograms under the trailer.** Not trailer geometry: the contact-shadow patch
+  (`ContactShadowCaster`) was 6 flat quads spanning ~6 m across; on the crowned road their middle sank below the
+  asphalt and the depth test cut holes. `Slab.columns` (tractor 3, trailer 5 x 10 rows; 0 = 2 keeps old scenes),
+  trailer underside 1.00 -> 0.85 m, strength 0.85 -> 0.9 (WORKING_VALUE). Asphalt under the trailer / beside
+  (655-690 x 285-291 vs 250-330 x 380-420): High 80 % -> 45 %, Low 77 % -> 41 % (target <= 50 %), max under the
+  trailer 53 -> 30 % (asphalt 50 %). Raycasts per frame ~28 -> ~76: phone cost not measured, UNVERIFIED.
+  The scenes need `WorldTruckInstaller.InstallBatch` to pick the new slabs up.
+- **Mirrors (hand-over from the mirror task).** New tool `tools/blender/truck/mirror_visibility.py` (rays from the eye
+  point to every MIRROR_* glass, exterior LOD0 + interior LOD1, glass transparent;
+  `modern-front/mirror_visibility_r6.json`). Class V kerb glass: 0 % visible (line of sight ended in the passenger
+  door) -> 100 %: the head moved from under the door-mirror housing (z 1.98 m) to a short stalk at the passenger
+  corner, centre (1.22, 1.42, 2.20) m, seen through the wrapped lower corner of the windscreen (below 2.15 m the dash
+  hides it), aimed at the ground 1.05 m outboard of the cab side. Class VI: centre 2.99 -> 2.89 m, clear of the
+  folded-down passenger sun visor in `cab-mirror-front`. Passenger class II: 100 % visible in the ray test (class IV
+  right 86 %, left 95 %: the cab side / door edge), no change. EditMode incl. `MirrorFieldOfVisionTests`: 107 / 107.
+- Export: exterior LOD0 103 367 / LOD1 42 996 / LOD2 15 434 (r4: 101 592 / 43 000 / 15 297; +1.7 % / 0 / +0.9 %),
+  `exterior/check_export.py` PASS (wheels within 2 %). `NO_DECIMATE` keeps the sill cladding and the end caps whole.
+- **Open:** (1) LOD1 still shows a dark wedge across the driver-side corner panel and door
+  (`docs/reports/visual/truck-A6-exterior/lod1_34przod.jpg`, already in the r4 export; not the sill cladding);
+  (2) Low corner p50 (above); (3) Low lowsun corner p50 / p99 1.6 / 19.9 %; (4) no phone frame: UNVERIFIED on device;
+  (5) not reviewed by `visual-critic` yet.

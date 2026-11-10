@@ -1158,6 +1158,9 @@ SILHOUETTE_W = 4.0
 # pieces that break below this share of their LOD0 triangles (locked slot borders leave the collapse too little room:
 # the lower fairing at 0.15 pulled black trim triangles from the bumper corner to the wheel arch)
 MIN_RATIO = {"lower_fairing": 0.3, "door_shell": 0.30}   # modern door: below ~0.2 the window opening collapsed down to the sill (LOD2)
+# r6: thin dark strips on the paint; the collapse dragged one corner of the sill cladding across the corner panel and the
+# door (a black wedge in LOD1) and the T bar end caps turned into shards
+NO_DECIMATE = ("sill_clad_", "door_skirt_clad_", "grille_bar_endcap")
 ROUND_KEYS = ("_tyre", "_rim")
 ROUND_SEGMENTS = {2: 24, 3: 16}
 
@@ -1288,7 +1291,7 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0):
     for o in rounds:
         before, after = reduce_round(o, round_seg)
         print(f"  round {o.name}: {before} -> {after} segments, {tris_of(o)} tris")
-    dec = [o for o in pieces if tris_of(o) > floor_tris and not o.name.startswith(("decal_", "MIRROR_"))
+    dec = [o for o in pieces if tris_of(o) > floor_tris and not o.name.startswith(("decal_", "MIRROR_") + NO_DECIMATE)
            and o not in rounds]
     fixed = sum(tris_of(o) for o in pieces if o not in dec)
     base = {o.name: tris_of(o) for o in dec}

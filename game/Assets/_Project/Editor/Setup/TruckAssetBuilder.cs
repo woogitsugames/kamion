@@ -776,7 +776,8 @@ namespace Game.Editor.Setup
         /// <paramref name="maxLength"/> > 0 limits the footprint to that length from the rear end.
         /// </summary>
         public static ContactShadowCaster AddContactShadow(GameObject root, Transform[] wheelPivots, float maxHalfWidth,
-            (float length, float clearance, float strength, int rows)[] sections, float maxLength = 0f, float dualWidth = 0.66f, float singleWidth = 0.34f)
+            (float length, float clearance, float strength, int rows)[] sections, float maxLength = 0f, float dualWidth = 0.66f, float singleWidth = 0.34f,
+            int columns = 3)
         {
             var t = root.transform;
             var pivots = (wheelPivots ?? new Transform[0]).Where(w => w != null).ToArray();
@@ -814,7 +815,7 @@ namespace Game.Editor.Setup
             {
                 float z0 = sct.length > 0f ? Mathf.Max(zMin, z1 - sct.length) : zMin;
                 slabs.Add(new ContactShadowCaster.Slab { centre = new Vector2(b.center.x, 0.5f * (z0 + z1)), halfSize = new Vector2(hw - 0.05f, 0.5f * (z1 - z0) - 0.05f),
-                    undersideY = ground + sct.clearance, strength = sct.strength, rows = sct.rows });
+                    undersideY = ground + sct.clearance, strength = sct.strength, rows = sct.rows, columns = columns });
                 z1 = z0;
             }
             var cs = root.GetComponent<ContactShadowCaster>();

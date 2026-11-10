@@ -168,7 +168,7 @@ MODERN = {
         # r2 (owner: lamps too small at distance): lens 0.19-0.28 m tall (was 0.12-0.18), 100 mm modules, half-T DRL
         "lamp": [(0.875, 1.318), (1.360, 1.268), (1.385, 1.545), (0.875, 1.505)],
         "louvres": (1.272, 0.075, 5, 0.050),   # first centre z, pitch, count, height (cab); the bumper continues it
-        "wordmark_z": 1.748, "wordmark_h": 0.100,
+        "wordmark_z": 1.742, "wordmark_h": 0.150,   # r6 E-N4: 100 -> 150 mm cap height, 1.8x stroke (Low tier legibility)
         "bumper_split": 0.45,
     },
 }
@@ -457,16 +457,22 @@ def front_face_modern(strokes):
     CAB.quad_patch("grille_back_stem", "grille_honey", "front", st, off=-0.066, nu=24, nv=4)
     CAB.quad_patch("grille_back_bar", "plastic", "front", br, off=-0.066, nu=48, nv=2)
     zb0, zb1 = br[0][1] + 0.004, br[2][1] - 0.004
-    grille_bar("grille_bar_mask", (zb0 + zb1) / 2, zb1 - zb0, 0.060, br[1][0] - 0.004, "mask_gloss", nose=-0.002,
-               nose_r=0.016, n=40)
+    hw_bar = br[1][0] - 0.004 - MASK_CAP_W - 0.0012
+    mask_bar("grille_bar_mask", (zb0 + zb1) / 2, zb1 - zb0, 0.060, hw_bar)
+    for s in (-1, 1):   # brushed-aluminium end cap of the T bar (same metal as the letters and the lane dashes)
+        x0, x1 = s * (hw_bar + 0.0012), s * (hw_bar + 0.0012 + MASK_CAP_W)
+        cap = CAB.quad_patch(f"grille_bar_endcap_{s}", "alu_brushed", "front",
+                             [(min(x0, x1), zb0 + 0.010), (max(x0, x1), zb0 + 0.010), (max(x0, x1), zb1 - 0.010),
+                              (min(x0, x1), zb1 - 0.010)], off=-0.014, thick=0.0125, nu=1, nv=6)
+        G.apply_mods(bevel(cap, 0.003, seg=2, angle=50))
     z0, pitch, cnt, hgt = CFG["louvres"]
     for k in range(cnt):
         zc = z0 + pitch * k
         hw = st[1][0] + (st[2][0] - st[1][0]) * (zc - st[1][1]) / (st[2][1] - st[1][1]) - 0.006
         grille_bar(f"grille_bar_l{k}", zc, hgt, 0.052, hw, "mask_gloss", nose=-0.004, tilt=LOUVRE_TILT)
         lane_dash(f"lane_dash{k}", CAB, zc, hgt - 0.016, louvre_mid(hgt) + 0.0015, tilt=LOUVRE_TILT)
-    wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=16.0, mat="alu_brushed",
-             name="badge_trakt", weight=1.6, depth=0.004, on_face=True, bev=0.0012)
+    wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=24.0, mat="alu_brushed",
+             name="badge_trakt", weight=1.8, depth=0.004, on_face=True, bev=0.0012)
     CAB.patch("cowl", "plastic_satin", "front", WS_Z0 - 0.082, WS_Z0 - 0.012, -1.21, 1.21, off=0.002, nz=3, npar=48)
     wipers()
 
@@ -559,6 +565,42 @@ def ribbon(name, poly, width, m, off=-0.004, thick=0.01, kind="front", loft=None
         (ia, ka), (ib, kb) = inner[i], inner[j]
         (loft or CAB).quad_patch(f"{name}_{i}", m, kind, [(xa, za), (xb, zb), (ib, kb), (ia, ka)], off=off, nu=nu, nv=1,
                        thick=thick, side=side)
+
+
+MASK_ROLL = 0.010      # m, WORKING_VALUE: the T bar's top and bottom 40 mm roll back by this much (r6 E-N2)
+MASK_FLAT = 0.080      # m: half height of the flat band that carries the letters
+MASK_CHAMFER = 0.014   # m: chamfer at the bar's two wrapped ends
+MASK_CAP_W = 0.016     # m: brushed-aluminium end cap
+
+
+def mask_bar(name, zc, hgt, depth, hw, m="mask_gloss", nose=0.001, n=72, nose_r=0.016):
+    """Gloss-black T bar of the modern mask (review r6 E-N2: its wrapped corners read as flat black holes with a knife
+    edge against the paint). The section is no longer one flat face: the middle band (letters) stays flat, the top
+    and bottom 40 mm roll back (the top mirrors the sky, the bottom the ground: a vertical gradient instead of one
+    horizon-coloured slab); 72 columns keep the R 0.36 m corner at < 3 deg per facet; both ends finish in a 14 mm
+    chamfer facing outboard."""
+    h = hgt / 2
+    r = min(nose_r, h * 0.3)
+
+    def fo(dz):
+        t = max(0.0, (abs(dz) - MASK_FLAT) / (h - MASK_FLAT))
+        return nose - MASK_ROLL * t * t
+    zs = [-h + r, -h + r + 0.008, -h + r + 0.016, -MASK_FLAT, 0.0, MASK_FLAT, h - r - 0.016, h - r - 0.008, h - r]
+    e = fo(h - r)
+    sec = ([(-h, -depth, 0), (-h, e - r, 1), (-h + r * 0.3, e - r * 0.3, 1)] + [(dz, fo(dz), 1) for dz in zs]
+           + [(h - r * 0.3, e - r * 0.3, 1), (h, e - r, 1), (h, -depth, 0)])
+    c = MASK_CHAMFER
+    cols = [(-hw, -c)] + [(-hw + c + 2 * (hw - c) * j / n, 0.0) for j in range(n + 1)] + [(hw, -c)]
+    bm = bmesh.new()
+    rows = [[bm.verts.new(CAB.front_pt(zc + dz, x, o + d * k)) for x, d in cols] for dz, o, k in sec]
+    k = len(rows)
+    for a in range(k):
+        r0, r1 = rows[a], rows[(a + 1) % k]
+        for j in range(len(cols) - 1):
+            bm.faces.new((r0[j], r0[j + 1], r1[j + 1], r1[j]))
+    for j in (0, len(cols) - 1):
+        bm.faces.new([rw[j] for rw in rows])
+    return G.obj_from_bm(name, bm, m, sharp=40)
 
 
 def louvre_mid(hgt, nose=-0.004, tilt=None):
@@ -1045,7 +1087,9 @@ HOUSE_W = 0.222      # modern class II + IV head width, WORKING_VALUE (glass 0.1
 # class VI front mirror (modern): the central ray from the eye point reflects to the middle of the ground field in
 # front of the cab. UN ECE R46 class VI field as remembered, regulation text NOT opened -> UNVERIFIED: ground strip
 # from the vehicle front plane to 2.0 m ahead, from the driver-side plane to 2.0 m outboard of the passenger side.
-FRONT_Z = 2.99               # head centre height, WORKING_VALUE (in front of the top of the windscreen)
+# r6: 2.99 -> 2.89 m: from the eye point the folded-down passenger sun visor covered the upper half of the head
+FRONT_Z = 2.89               # head centre height, WORKING_VALUE (in front of the top of the windscreen)
+KERB_C = (1.22, 1.42, 2.20)  # class V head centre, WORKING_VALUE (0.15 m off the passenger corner; below 2.15 m the dash hides it)
 FRONT_FIELD_AHEAD = 1.0      # m ahead of the bumper face (strip middle)
 FRONT_FIELD_X = 0.75         # m towards the passenger side (strip middle is ~+1.0; pulled in to keep the bumper edge)
 
@@ -1062,11 +1106,21 @@ def mirrors(kind="classic", front=True):
             # r4: slimmer head (0.25 x 0.15 -> HOUSE_W x ~0.115 m deep): seen from the eye point it must not hide
             # more than the two B2 heads did (11.5 deg); measured with pillar_obstruction.py
             box(f"mirror_main_house_{s}", c, (HOUSE_W, 0.080, 0.76), "plastic_satin", bev=0.038, seg=4, rot=rot)
-            box(f"mirror_main_cap_{s}", c + rot @ V((0, 0.030, 0)), (HOUSE_W - 0.008, 0.085, 0.745), "paint",
+            # r6 E7: the back shell is dark grained plastic, not body colour (a white back read as a blank card)
+            box(f"mirror_main_cap_{s}", c + rot @ V((0, 0.030, 0)), (HOUSE_W - 0.008, 0.085, 0.745), "plastic",
                 bev=0.040, seg=5, rot=rot)
-            if s > 0:  # class V kerb mirror on the passenger side, under the housing, looking down
-                ck = V((s * 1.42, yh + 0.04, 1.98))
-                rk = mirror_aim(ck, (0.25, -0.35, -1.0))
+            if s > 0:
+                # class V kerb mirror. r6: the old head hung under the housing at z 1.98 m, below the belt line: its
+                # image was right but the line of sight from the eye point ended in the passenger door. Now it stands
+                # on a short stalk at the passenger corner just above the windscreen's lower edge, seen through the
+                # wrapped corner of the screen, and looks back and down along the cab side (mirror_visibility.py)
+                ck = V(KERB_C)
+                rk = mirror_aim(ck, V((CAB_HALF_W + 1.05, EYE.y - 0.25, 0.0)) - ck)
+                foot = V(CAB.front_pt(WS_Z0 - 0.045, 1.215, 0.0))
+                hb = ck + rk @ V((0, 0.030, -0.030))
+                out = V((ck.x - foot.x, ck.y - foot.y, 0.0)).normalized()
+                tube("mirror_kerb_arm", [foot - out * 0.01, foot + out * 0.05 + V((0, 0, 0.02)), hb + V((0, 0, -0.03)),
+                                         hb], 0.011, "plastic_satin", seg=8)
                 box("mirror_kerb", ck, (0.20, 0.08, 0.14), "plastic_satin", bev=0.03, seg=3, rot=rk)
                 box("mirror_kerb_glass", ck + rk @ V((0, -0.041, 0)), (0.18, 0.006, 0.12), "mirror", bev=0.003,
                     rot=rk)

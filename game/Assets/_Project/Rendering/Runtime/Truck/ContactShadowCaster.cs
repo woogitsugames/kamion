@@ -18,7 +18,7 @@ namespace Game.Rendering
     /// (exact for an infinite strip: the cosine-weighted fraction of the sky hidden by the slab) and multiplies only the
     /// ambient share of the ground lighting (sky SH vs. sun x shadow map at that pixel): under the truck in sun the real
     /// shadow map already removes the sun, so the occlusion acts on the sky light only, as in reality.
-    /// Raycasts: (rows + 1) x 2 per slab + 1 per wheel, ~40 for a tractor-trailer; no allocations after the first frame.
+    /// Raycasts: (rows + 1) x columns per slab + 1 per wheel, ~90 for a tractor-trailer (r6: 3 / 5 columns); no allocations after the first frame.
     /// </summary>
     [ExecuteAlways]
     [DefaultExecutionOrder(950)]
@@ -32,6 +32,9 @@ namespace Game.Rendering
             [Tooltip("Underside height in this transform's frame (y of the lowest broad surface), m")] public float undersideY;
             [Tooltip("Occlusion strength (1 = opaque slab; chassis with gaps < 1)")] public float strength;
             [Tooltip("Rows along z (ground conformity)")] public int rows;
+            [Tooltip("Vertex columns across x (0 = 2). Two columns span the whole patch with one flat quad: on a crowned or " +
+                     "cambered road its middle sinks below the asphalt and the depth test cuts bright holes into the shadow (r6 T-N2)")]
+            public int columns;
         }
 
         [Serializable]
@@ -255,12 +258,13 @@ namespace Game.Rendering
                 float hRest = Mathf.Max(0.1f, s.undersideY);
                 float grow = hRest * heightScale * sideClosure;
                 float mx = s.halfSize.x + grow + hRest * 1.2f, mz = s.halfSize.y + grow + hRest * 1.2f;
+                int cols = Mathf.Max(2, s.columns);
                 for (int r = 0; r <= rows; r++)
                 {
                     float z = Mathf.Lerp(-mz, mz, r / (float)rows);
-                    for (int c = 0; c < 2; c++)
+                    for (int c = 0; c < cols; c++)
                     {
-                        float x = c == 0 ? -mx : mx;
+                        float x = Mathf.Lerp(-mx, mx, c / (float)(cols - 1));
                         Vector3 under = t.TransformPoint(new Vector3(s.centre.x + x, s.undersideY, s.centre.y + z));
                         bool ok = Ground(under + Vector3.up * 0.05f, out var g);
                         float h = ok ? Mathf.Max(0.05f, under.y - g.y) * heightScale : 9f;
@@ -311,9 +315,11 @@ namespace Game.Rendering
                 int v = 0;
                 foreach (var s in slabs)
                 {
-                    int rows = Mathf.Max(1, s.rows);
-                    for (int r = 0; r < rows; r++) Quad(v + r * 2, v + r * 2 + 1, v + r * 2 + 3, v + r * 2 + 2);
-                    v += (rows + 1) * 2;
+                    int rows = Mathf.Max(1, s.rows), cols = Mathf.Max(2, s.columns);
+                    for (int r = 0; r < rows; r++)
+                        for (int c = 0; c < cols - 1; c++)
+                            Quad(v + r * cols + c, v + r * cols + c + 1, v + (r + 1) * cols + c + 1, v + (r + 1) * cols + c);
+                    v += (rows + 1) * cols;
                 }
                 foreach (var w in wheels) { if (w.centre == null) continue; Quad(v, v + 1, v + 3, v + 2); v += 4; }
                 m_IndexedVerts = verts;
