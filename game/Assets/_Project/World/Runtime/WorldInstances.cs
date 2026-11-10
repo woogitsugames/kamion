@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Game.Core;
 using Game.Rendering;
 
 namespace Game.World
@@ -116,14 +117,14 @@ namespace Game.World
             float cull = ok ? t.treeCullM : treeCullM;
             m_TreeCard = ok ? t.treeCardLodScale : treeLodScaleMax;
             m_ThinStart = ok ? t.treeThinStartM : thinStartM;
-            m_TreeShadowMask = ok ? t.treeShadowLodMask : (QualitySettings.lodBias < 1f ? 1 : 3);
+            m_TreeShadowMask = ok ? t.treeShadowLodMask : (TierLodBias < 1f ? 1 : 3);
             // forestHlodM: > 0 switch distance, < 0 off (rq_hlod=0), 0 = not set (profile before ADR 0015) → fallback field.
             m_HlodSwitch = ok && t.forestHlodM != 0f ? Mathf.Max(t.forestHlodM, 0f) : forestHlodM;
             m_HlodCull = ok && t.forestHlodM != 0f ? t.forestHlodCullM : forestHlodCullM;
             m_Trees = !RenderOverrides.Trees.HasValue || RenderOverrides.Trees.Value;
             // Impostor view cross-fade (Kamion/Vegetation _IMPOSTOR): 2 views on Medium and up, the nearest view on Low
             // (half the texture fetches; ADR 0023 cost table). Tier = LOD bias (Low 0.5).
-            Shader.SetGlobalFloat(k_ImpostorBlend, QualitySettings.lodBias >= 0.75f ? 1f : 0f);
+            Shader.SetGlobalFloat(k_ImpostorBlend, TierLodBias >= 0.75f ? 1f : 0f);
             bool a2c = !ok || t.leafAlphaToCoverage;
             bool simple = ok && t.simpleFoliage;
             if (m_Mats == null || simple != m_SimpleFoliage) BuildMaterials(simple);
@@ -267,6 +268,9 @@ namespace Game.World
             StreetLamps.SetHeads(m_LampHeads, k);
         }
 
+        /// <summary>The tier LOD bias (not the temporary extra-view bias while a mirror renders; ADR 0068).</summary>
+        static float TierLodBias => ExtraViewLod.Swapped ? ExtraViewLod.BaseLodBias : QualitySettings.lodBias;
+
         void OnBeginCamera(ScriptableRenderContext ctx, Camera cam)
         {
             if (set == null || set.cells == null || set.cells.Length == 0) return;
@@ -284,7 +288,9 @@ namespace Game.World
             SyncOrigin();
             GeometryUtility.CalculateFrustumPlanes(cam, m_Planes);
             Vector3 cp = cam.transform.position;
-            float scale = Mathf.Max(0.05f, QualitySettings.lodBias * distanceScale);
+            // ADR 0068: extra views (mirrors) use their own LOD scale on the tier bias (Game.Core.ExtraViewLod), whatever
+            // the order of the beginCameraRendering handlers.
+            float scale = Mathf.Max(0.05f, ExtraViewLod.EffectiveLodBias(cam) * distanceScale);
             float far = cam.farClipPlane, far2 = far;   // far2: the chunk-merge loop runs before cells (same limit)
             // Power-line conductors (Kamion/World Wire) fade out with the cull distance of the poles that carry them
             // (REVIEW r4 W-H2: wires hung in the air over the DK8 forest on Low after the poles were culled).

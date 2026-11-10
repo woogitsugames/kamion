@@ -16,6 +16,12 @@ namespace Game.Rendering
     /// ADR 0062: rq_scalemin (adaptive render-scale floor, e.g. 0.8 vs 0.7 A/B), rq_upscale (linear / fsr / stp / auto / point),
     /// rq_fsrsharp (FSR RCAS sharpness 0..1), rq_pacing (0 = no frame-pacing 30 FPS fallback), rq_lamppools (analytic
     /// street-lamp pools on world surfaces, 0 = off).
+    /// ADR 0068: rq_mirror_cap (mirror renders per frame), rq_mirror_lod (class II mirror LOD scale, 1 = main-view LOD),
+    /// rq_mirror_far (class II far clip m), rq_mirror_res (mirror texture height multiplier), rq_mirror_rate (0 = ADR 0046
+    /// fill schedule, 1 = due-based), rq_mirror_legacy (1 = whole pre-0068 mirror configuration), rq_mirror_off (1 = no
+    /// mirror renders), rq_envcap_iv (capture: one face every N frames), rq_envcap_lod (capture LOD scale), rq_shadowcasc
+    /// (cascade count), rq_shadowres (main-light shadow map px), rq_ab (interleaved A/B of one pass: mirrors, mirrorcfg,
+    /// mirrorlod, envcap, shadows, shadowcasc; ExtraViewCostMonitor) with rq_ab_period (s).
     /// </summary>
     public static class RenderOverrides
     {
@@ -41,12 +47,20 @@ namespace Game.Rendering
         public static int? LampPools;
         public static bool? WorldGi;
         public static bool? WorldSun;
+        public static int? EnvCaptureInterval;
+        public static float? EnvCaptureLod;
+        public static int? ShadowCascades;
+        public static int? ShadowResolution;
+        public static string Ab;
+        public static float? AbPeriod;
 
         public static bool Any => Msaa.HasValue || RenderScale.HasValue || ShadowDistance.HasValue || Post.HasValue || Hdr.HasValue ||
                                   LeafA2C.HasValue || Trees.HasValue || TreeShadowMask.HasValue || TreeCardScale.HasValue ||
                                   TreeCull.HasValue || TreeThin.HasValue || SimpleFoliage.HasValue || ForestHlod.HasValue ||
                                   VehicleLook.HasValue || EnvCapture.HasValue || ScaleMin.HasValue || Upscale != null ||
-                                  FsrSharpness.HasValue || Pacing.HasValue || LampPools.HasValue ||
+                                  FsrSharpness.HasValue || Pacing.HasValue || LampPools.HasValue || EnvCaptureInterval.HasValue ||
+                                  EnvCaptureLod.HasValue || ShadowCascades.HasValue || ShadowResolution.HasValue || Ab != null ||
+                                  Game.Core.MirrorOverrides.Any ||
                                   WorldGi.HasValue || WorldSun.HasValue;
 
         /// <summary>Reads the overrides through a launch-argument getter (platform services). Returns a log line.</summary>
@@ -59,11 +73,27 @@ namespace Game.Rendering
             VehicleLook = B(arg("rq_a8")); EnvCapture = I(arg("rq_envcap"));
             WorldGi = B(arg("rq_worldgi")); WorldSun = B(arg("rq_worldsun"));   // ADR 0064
             ScaleMin = F(arg("rq_scalemin")); FsrSharpness = F(arg("rq_fsrsharp")); Pacing = B(arg("rq_pacing")); LampPools = I(arg("rq_lamppools"));
+            EnvCaptureInterval = I(arg("rq_envcap_iv")); EnvCaptureLod = F(arg("rq_envcap_lod"));
+            ShadowCascades = I(arg("rq_shadowcasc")); ShadowResolution = I(arg("rq_shadowres"));
+            string ab = arg("rq_ab");
+            Ab = string.IsNullOrEmpty(ab) ? null : ab.ToLowerInvariant();
+            AbPeriod = F(arg("rq_ab_period"));
+            Game.Core.MirrorOverrides.Cap = I(arg("rq_mirror_cap"));
+            Game.Core.MirrorOverrides.LodScale = F(arg("rq_mirror_lod"));
+            Game.Core.MirrorOverrides.FarClip = F(arg("rq_mirror_far"));
+            Game.Core.MirrorOverrides.Resolution = F(arg("rq_mirror_res"));
+            Game.Core.MirrorOverrides.DueSchedule = B(arg("rq_mirror_rate"));
+            Game.Core.MirrorOverrides.Legacy = B(arg("rq_mirror_legacy")) == true;
+            Game.Core.MirrorOverrides.Suspended = B(arg("rq_mirror_off")) == true;
             string up = arg("rq_upscale");
             Upscale = string.IsNullOrEmpty(up) ? null : up.ToLowerInvariant();
             return Any ? $"msaa={Msaa} scale={RenderScale} shadow={ShadowDistance} post={Post} hdr={Hdr} a2c={LeafA2C} trees={Trees} " +
                          $"treeshadow={TreeShadowMask} card={TreeCardScale} cull={TreeCull} thin={TreeThin} vegshader={SimpleFoliage} hlod={ForestHlod} a8={VehicleLook} envcap={EnvCapture} " +
-                         $"scalemin={ScaleMin} upscale={Upscale} fsrsharp={FsrSharpness} pacing={Pacing} lamppools={LampPools} worldgi={WorldGi} worldsun={WorldSun}" : null;
+                         $"scalemin={ScaleMin} upscale={Upscale} fsrsharp={FsrSharpness} pacing={Pacing} lamppools={LampPools} " +
+                         $"envcap_iv={EnvCaptureInterval} envcap_lod={EnvCaptureLod} shadowcasc={ShadowCascades} shadowres={ShadowResolution} ab={Ab} ab_period={AbPeriod} " +
+                         $"mirror_cap={Game.Core.MirrorOverrides.Cap} mirror_lod={Game.Core.MirrorOverrides.LodScale} mirror_far={Game.Core.MirrorOverrides.FarClip} " +
+                         $"mirror_res={Game.Core.MirrorOverrides.Resolution} mirror_rate={Game.Core.MirrorOverrides.DueSchedule} mirror_legacy={Game.Core.MirrorOverrides.Legacy} " +
+                         $"mirror_off={Game.Core.MirrorOverrides.Suspended} worldgi={WorldGi} worldsun={WorldSun}" : null;
         }
 
         /// <summary>The tier with the overrides applied (vegetation + camera fields; URP asset fields by the applier).</summary>
@@ -87,6 +117,9 @@ namespace Game.Rendering
             if (FsrSharpness.HasValue) t.fsrSharpness = FsrSharpness.Value;
             if (Pacing.HasValue && !Pacing.Value) t.pacingFallbackFps = 0;
             if (LampPools.HasValue) t.lampPools = LampPools.Value;
+            if (EnvCaptureInterval.HasValue) t.envCaptureInterval = Math.Max(1, EnvCaptureInterval.Value);
+            if (ShadowCascades.HasValue) t.shadowCascades = Math.Max(1, Math.Min(4, ShadowCascades.Value));
+            if (ShadowResolution.HasValue) t.shadowResolution = ShadowResolution.Value;
             if (Upscale != null)
             {
                 switch (Upscale)

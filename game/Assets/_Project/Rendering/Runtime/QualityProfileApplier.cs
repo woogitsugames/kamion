@@ -32,6 +32,8 @@ namespace Game.Rendering
         {
             // ADR 0046: adaptive render scale + thermal fallback (only tiers that enable them; play mode / player only).
             if (Application.isPlaying && GetComponent<AdaptiveFrameDriver>() == null) gameObject.AddComponent<AdaptiveFrameDriver>();
+            // ADR 0068: per-pass cost for the [DIAG] line and the rq_ab on-device A/B.
+            if (Application.isPlaying && GetComponent<ExtraViewCostMonitor>() == null) gameObject.AddComponent<ExtraViewCostMonitor>();
             ApplyNow();
         }
 
@@ -63,6 +65,8 @@ namespace Game.Rendering
             if (RenderOverrides.Msaa.HasValue) urp.msaaSampleCount = t.msaa;
             if (RenderOverrides.RenderScale.HasValue) urp.renderScale = t.renderScale;
             if (RenderOverrides.ShadowDistance.HasValue) urp.shadowDistance = t.shadowDistance;
+            if (RenderOverrides.ShadowCascades.HasValue) urp.shadowCascadeCount = t.shadowCascades;   // ADR 0068 A/B
+            if (RenderOverrides.ShadowResolution.HasValue) urp.mainLightShadowmapResolution = t.shadowResolution;
             if (RenderOverrides.Hdr.HasValue) urp.supportsHDR = t.hdr;
             if (RenderOverrides.Upscale != null) urp.upscalingFilter = t.upscalingFilter;   // ADR 0062 A/B
             if (RenderOverrides.FsrSharpness.HasValue) { urp.fsrOverrideSharpness = true; urp.fsrSharpness = t.fsrSharpness; }
