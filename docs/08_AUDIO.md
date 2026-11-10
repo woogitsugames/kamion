@@ -23,5 +23,7 @@ Decyzja właściciela: na start darmowe źródła i dźwięki generowane (AI / s
 ## 4. Muzyka
 Radio w kabinie (opcjonalne, później): utwory z prawami komercyjnymi; fikcyjne stacje radiowe. Muzyka menu — subtelna albo żadna; lepiej cisza i dźwięk silnika na postoju niż generyczny „epicki” utwór.
 
+**Kandydat (2026-11-10, decyzja właściciela: notatka na później, po bramce 3):** [YuE](https://github.com/multimodal-art-projection/YuE) — otwarty model tekst → piosenka (wokal + podkład), lokalnie. Przed użyciem: zweryfikować licencję wag i kodu (`UNVERIFIED`: prawdopodobnie Apache 2.0), pochodzenie danych treningowych, jakość polskiego wokalu (próbki do oceny właściciela), wymagania GPU (nie w czasie renderów/pomiarów). Zastosowanie tylko fikcyjne stacje radia w kabinie; anti-slop jak w docs/06.
+
 ## 5. Bramka audio (Etap 5)
 Wszystkie warstwy z sekcji 2 obecne, brak kliknięć/pętli słyszalnych, płynne przejścia RPM, różnica wnętrze/zewnątrz, zgodność z fizyką (obroty, obciążenie, retarder), rejestr licencji kompletny, oznaczenia `PROTOTYPE_ONLY` wypisane.
