@@ -262,7 +262,7 @@ def _edges(buf, item, zgrid, hf, roads_poly=None):
             D = np.column_stack([P, Z])
             rows = [D, A, B, C]
         else:
-            rows = [np.column_stack([P, Z]), np.column_stack([P + nout * 0.02, Z - S.PAVED_FLANGE])]
+            rows = [np.column_stack([P, Z]), np.column_stack([P + nout * (S.PAVED_FLANGE * S.EMBANKMENT_SLOPE), Z - S.PAVED_FLANGE])]   # battered skirt (W-H5)
         V = np.concatenate(rows)
         UV = np.column_stack([np.tile(s, len(rows)), np.repeat(np.arange(len(rows)) * 0.1, n)])
         # no edging / flange where the area meets a road surface (the road owns that edge)

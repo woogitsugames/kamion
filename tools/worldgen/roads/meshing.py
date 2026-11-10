@@ -207,10 +207,17 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
         mats = [pr[k][4] for pr in profs]
         mat = max(set(mats), key=mats.count)
         rows = []
+        # grass verge skirt: battered 1:EMBANKMENT_SLOPE outward instead of a vertical flange, so a terrain node
+        # left lower than the verge edge shows a grass slope, not a green wall (REVIEW r4 W-H5). Plan footprint
+        # and the carriageway profile are unchanged (the skirt is not rasterised into the conform).
+        batter = (not coarse and k == nseg - 1 and mat == "verge_grass"
+                  and abs(profs[0][k][2] - profs[0][k][0]) < 1e-6)
         for i in range(n):
             u0, d0, u1, d1, _ = profs[i][k]
             p0 = G[i] + OUT[i] * (u0 * scale[i])
             p1 = G[i] + OUT[i] * (u1 * scale[i])
+            if batter and (br is None or not br[i]):
+                p1 = p1 + OUT[i] * (abs(d1 - d0) * S.EMBANKMENT_SLOPE)
             rows.append([[p0[0], p0[1], zg[i] + d0], [p1[0], p1[1], zg[i] + d1]])
         V = np.array(rows).reshape(-1, 3)
         # UV: u = along (cumulative), v = across profile
