@@ -18,7 +18,7 @@
 | oświetlenie r10 | 0080 | agent-ac7c9571184d27443 | STATUS.md | SCALONE (worktree do usunięcia) |
 | Kwadrat Park r10 | 0071 | agent-a1409e374f8c12b4f | artifacts/kwadrat-r9 | SCALONE (worktree do usunięcia) |
 
-Przejęcie po ubiciu: jak w s6 — nowy agent Fable z briefem „pracuj WYŁĄCZNIE w <wt>, najpierw docs/owner/AGENT-RULES.md i STATUS.md, dokończ”.
+Prompt startowy następnej sesji: `docs/owner/START-PROMPT-S8.md`. Przejęcie po ubiciu: jak w s6 — nowy agent Fable z briefem „pracuj WYŁĄCZNIE w <wt>, najpierw docs/owner/AGENT-RULES.md i STATUS.md, dokończ”.
 
 ## Następne kroki
 1. Scalać w miarę kończenia: 0076 → 0077 → 0070 → 0078 → 0081 → 0082 → 0083. Po 0076: na main build_world → pytest gis → import-region → `pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCBarrierTests|DepotBarrierTests"`.
