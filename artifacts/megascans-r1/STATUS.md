@@ -75,3 +75,6 @@
 - Testy nowego modulu:9 PASS (plan, piksele brzegowe, paleta, maks.rozmiar, fallback, review/hash, junction); powtorny realny bake exit0. Wrapper prepare-megascans wywoluje bake po korze/atlasie. NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` i render R4 z aktualnym grass_surface_manifest.json.
 
 - Krok24b: kalibracja4roślin+billboardów przetestowana, licencyjna baza hash obejmuje850członków źródeł i aktualne pochodne. NASTĘPNY: pwsh artifacts/megascans-r1/run-final-proof.ps1.
+
+- Krok23a: sprawdzono HEAD i worktree ? SetSurfaceBase przyjmuje ju? string id (nie Vector2), zgodnie z wywo?aniem produkcyjnym i testem. Testy wzmocniono typowanym GetMethod oraz kontrol? w?a?ciwo?ci rzeczywistego Environment/Shaders/WorldPBR.shader; wszystkie u?ywane nazwy istniej?. Diff-check PASS; bez Unity, pe?ny EditMode lidera nadal wymagany.
+- NAST?PNY KROK: `pwsh artifacts/megascans-r1/run-final-proof.ps1`.

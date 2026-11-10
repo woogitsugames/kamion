@@ -20,6 +20,8 @@ namespace Game.Tests
             var replacement = new Texture2D(2, 2);
             try
             {
+                foreach (string property in new[] { "_BaseMap", "_Tile", "_Tint", "_MacroStrength" })
+                    Assert.That(material.HasProperty(property), Is.True, property);
                 var slots = new[] { "_NormalMap", "_MaskMap", "_MacroMap", "_VarMap" };
                 foreach (string slot in slots)
                 {
@@ -33,8 +35,11 @@ namespace Game.Tests
                 material.EnableKeyword("_UV_MESH0");
                 string[] keywords = material.shaderKeywords.OrderBy(k => k).ToArray();
                 var importer = Type.GetType("Game.World.Import.FabMaterials, Game.World.Import.Editor", true);
-                var method = importer.GetMethod("SetSurfaceBase", BindingFlags.NonPublic | BindingFlags.Static);
-                Assert.That(method, Is.Not.Null);
+                // Look up the actual policy contract, not any overload with the same name.
+                // A regression to Vector2 would fail this assertion before Invoke receives a string.
+                var method = importer.GetMethod("SetSurfaceBase", BindingFlags.NonPublic | BindingFlags.Static,
+                    null, new[] { typeof(Material), typeof(Texture2D), typeof(string) }, null);
+                Assert.That(method, Is.Not.Null, "Expected SetSurfaceBase(Material, Texture2D, string id)");
                 method.Invoke(null, new object[] { material, replacement, id });
                 Assert.That(material.shader, Is.SameAs(shader));
                 Assert.That(material.GetTexture("_BaseMap"), Is.SameAs(replacement));
