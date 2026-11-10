@@ -192,6 +192,7 @@ Shader "Kamion/Cab Interior"
                 // phone's local tone mapping lifts luminance, not the chroma of deep shade. z = desaturation of that share.
                 col.rgb = lerp(col.rgb * g, (yl * g).xxx, _CabShadowLift.z * (1.0 - 1.0 / g));
                 col.rgb = KamionToeParity(col.rgb);   // D23 toe on the tiers without the LUT (cab view only)
+                col.rgb = KamionCabToeInverse(col.rgb, _KamionCabToeInv);   // ADR 0080: world contrast toe compensated in the cab view
                 col.rgb = KamionMixFog(col.rgb, i.fogFactor);
                 return half4(col.rgb, 1);
             }

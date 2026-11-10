@@ -55,6 +55,7 @@ namespace Game.Rendering
         public static bool? GroundHaze;  // rq_haze
         public static bool? Ssao;        // rq_ssao
         public static bool Look;         // any of rq_look / rq_ev / rq_wet / rq_grassvar given
+        public static float? CabToe;     // ADR 0080: rq_cabtoe 0..1 cab-view compensation of the world contrast toe (A/B)
         public static string Ab;
         public static float? AbPeriod;
 
@@ -66,7 +67,7 @@ namespace Game.Rendering
                                   EnvCaptureLod.HasValue || ShadowCascades.HasValue || ShadowResolution.HasValue || Ab != null ||
                                   Game.Core.MirrorOverrides.Any ||
                                   WorldGi.HasValue || WorldSun.HasValue ||
-                                  Clouds.HasValue || GroundHaze.HasValue || Ssao.HasValue || Look;
+                                  Clouds.HasValue || GroundHaze.HasValue || Ssao.HasValue || Look || CabToe.HasValue;
 
         /// <summary>Reads the overrides through a launch-argument getter (platform services). Returns a log line.</summary>
         public static string Parse(Func<string, string> arg)
@@ -86,6 +87,7 @@ namespace Game.Rendering
             int? look = I(arg("rq_look")); float? ev = F(arg("rq_ev")); float? wet = F(arg("rq_wet")); float? gvar = F(arg("rq_grassvar"));
             Look = look.HasValue || ev.HasValue || wet.HasValue || gvar.HasValue;
             WorldAtmosphere.LookVariant = look ?? -1;
+            CabToe = F(arg("rq_cabtoe"));
             LightingPreset.ExposureBiasOverride = ev ?? 0f;
             WorldAtmosphere.WetOverride = wet;
             WorldAtmosphere.GrassOverride = gvar;
