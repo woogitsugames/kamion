@@ -13,7 +13,7 @@
 | otwarte źródła + Kwadrat Park/straż | Sonnet | 0066 | agent-ab1fb0a47d2f0a491 | worktree-agent-ab1fb0a47d2f0a491 | artifacts/refs-opensources, artifacts/refs/{kwadrat-park,fire-station} | w toku (pobieranie) |
 | straż pożarna hero (ref. `Data/photos/nowe/7197_May_2021_in_Białystok.jpg`) | Fable | 0070 | agent-aa9c74c62497e5d1f | worktree-agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | w toku |
 | Kwadrat Park hero | Fable | 0071 | agent-a1409e374f8c12b4f | worktree-agent-a1409e374f8c12b4f | artifacts/kwadrat-r9 | w toku |
-| grill Low lowsun + szyba/dach/chrom | Opus | 0072 | agent-a473434b32a2511a1 | worktree-agent-a473434b32a2511a1 | artifacts/truckshade-r9 | w toku |
+| grill Low lowsun + szyba/dach/chrom | Opus | 0072 | (usunięty) | scalony | artifacts/truckshade-r9 | GOTOWE częściowo: toe D23 na Low poza kabiną (`exteriorToeParity`); otwarte: σ szyby słońce 4–6 < 8, N-8 prostokąt, dach High 8,4 % ≥ 97 % (decyzja D23 vs N-17), lamele LOD2 bez warg (truck-artist) |
 | auta r9 sylwetki | Fable | 0073 | agent-adeef0c396335e1ed | worktree-agent-adeef0c396335e1ed | artifacts/cars-r9 | w toku |
 | spójność nawierzchni (pas w wysepkę) | Opus | 0074 | agent-a49b0ff53eade0b91 | worktree-agent-a49b0ff53eade0b91 | artifacts/roadgeo-r9 | w toku |
 | audyt mapy całej trasy | Opus | — | (usunięty) | scalony 417283e | artifacts/map-audit-r9/BUGS.md | GOTOWE: 21 błędów (4 P0: MA-010, MA-001, MA-002, MA-012) → przekazane 0074 (geometria) i 0069 (ekrany, sygnalizator, szlaban) |
@@ -23,7 +23,7 @@
 1. Scalanie: 0069 → 0067 → 0072 → 0073 → 0074/0075 → 0070/0071 → 0066 (konflikty: generated/*.json = `--ours` + regeneracja; shadery/QualityProfile/RenderOverrides/LICENSES = unia).
 2. Pełna integracja na main: build_region → build_world → import-region (CC0: najpierw `cc0_fetch.py`), Truck/Trailer BuildBatch, InstallBatch, pytest/EditMode/PlayMode/physics, czysty build Low + High. Uwaga: EditMode 2 inconclusive `TruckCabGlassTierTests` — sprawdzić.
 3. Telefony pod `artifacts/locks/PHONE_RUN` (S24+ 46 %/33 °C o 21:15; A16 80 %): A16 Low gate3 + kabiny × 3 pory + świat ov; S24+ High A/B (cel 60 kl./s).
-4. APK High właścicielowi (FEEL-TEST), recenzja r9 (visual-critic) + decyzje (ekspozycja ov dla p10, wynik audytu mapy), raport bramki 3.
+4. Decyzje właściciela do zebrania w r9: ekspozycja ov (p10, ADR 0060), D23 biel 0,7 vs przepał dachu N-17 (ADR 0072). APK High właścicielowi (FEEL-TEST), recenzja r9 (visual-critic) + decyzje (ekspozycja ov dla p10, wynik audytu mapy), raport bramki 3.
 
 ---
 # HANDOVER — kamion (TRUCK SIM PL), stan 2026-11-10 ok. 20:00 (sesja 4, limit 86 %)
