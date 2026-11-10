@@ -1,7 +1,7 @@
 # HANDOVER — kamion, sesja 5 (aktualizacja 2026-11-10 ok. 22:10; lider zapisuje ten plik po każdym scaleniu/starcie agenta)
 
 ## Najpierw (sesja 5 → następna)
-- **main = `417283e`+, wypchnięty.** Limit 5 h: 55 % o 21:35 (reset 01:10) — od 85 % max 2 agentów naraz. Scalone w sesji 5: świat r8 ADR 0060 (p10 ov 32–34, cel ≤ 28 NIE — potrzebna decyzja właściciela o ekspozycji ov), skany CC0 ADR 0063. Przód 0061 i źródła 0066 (WIP) scalone wcześniej.
+- **main = `417283e`+, wypchnięty.** Limit 5 h: 85 % o 21:52 (reset 01:10) — od 85 % max 2 agentów naraz. Scalone w sesji 5: świat r8 ADR 0060 (p10 ov 32–34, cel ≤ 28 NIE — potrzebna decyzja właściciela o ekspozycji ov), skany CC0 ADR 0063. Przód 0061 i źródła 0066 (WIP) scalone wcześniej.
 - **Zgłoszenie właściciela:** pas ze strzałką wjeżdża w wysepkę z trawą (`artifacts/owner/bugs/2026-11-10-lane-into-island.webp`) + wymaganie: „drogi dosłownie jak w OSM, żeby mieszkaniec wiedział jak jechać” → agenci 0074/0075/audyt.
 - Zasady dla agentów: `artifacts/handover/AGENT-RULES-S5.md`. Ostatni przydzielony ADR: **0075**.
 - Przy przejęciu worktree: `git -C <wt> log main..HEAD`, STATUS.md (ścieżka poniżej), dokończ albo scal. Przed usunięciem: skopiuj `<wt>/artifacts`, `cmd /c rmdir` junctiony `<wt>/Data/raw/*`, `git worktree unlock`, `git worktree remove --force --force`, sprawdź `du -sh Data/raw/*` w main.
@@ -20,6 +20,7 @@
 | zgodność dróg z OSM/ortofoto | Opus | 0075 | agent-aee7234325983b8dc | fidelity-r9 | artifacts/fidelity-r9/DIFFS.md | w toku |
 
 ## Następne kroki
+0. **Fab (fab.com) — decyzja właściciela: najpierw sprawdzić licencję** (agent Sonnet, bez logowania i pobierania): Fab Standard License + Megascans + CC BY na Fab — użycie w Unity, gra komercyjna Android, publiczne repo (pliki źródłowe poza gitem?), atrybucja; lista przydatnych darmowych pozycji (sosny, lipy, krzewy, trawa, kamienie, krawężniki, śmieci). Wynik → pytanie klikalne do właściciela o rozszerzenie D40. YuE: notatka w docs/08 (po bramce 3).
 1. Scalanie: 0069 → 0067 → 0072 → 0073 → 0074/0075 → 0070/0071 → 0066 (konflikty: generated/*.json = `--ours` + regeneracja; shadery/QualityProfile/RenderOverrides/LICENSES = unia).
 2. Pełna integracja na main: build_region → build_world → import-region (CC0: najpierw `cc0_fetch.py`), Truck/Trailer BuildBatch, InstallBatch, pytest/EditMode/PlayMode/physics, czysty build Low + High. Uwaga: EditMode 2 inconclusive `TruckCabGlassTierTests` — sprawdzić.
 3. Telefony pod `artifacts/locks/PHONE_RUN` (S24+ 46 %/33 °C o 21:15; A16 80 %): A16 Low gate3 + kabiny × 3 pory + świat ov; S24+ High A/B (cel 60 kl./s).
