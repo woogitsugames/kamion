@@ -43,14 +43,20 @@ if ($Build -or -not (Test-Path $route)) {
 # PBR texture sets (ADR 0022): build when any file of the spec is missing for the tier
 $matRoot = Join-Path $RepoRoot 'art-source/world/materials'
 $spec = Get-Content (Join-Path $matRoot 'materials_spec.json') -Raw | ConvertFrom-Json
-$missing = 0
+$missing = 0; $stale = 0
+# The PNGs are generated and outside git: a changed generator (_src/*.py) must rebuild them, not only missing files
+# (r7: asphalt_worn 0.13 -> 0.08 was committed in _src but the old PNGs stayed in use).
+$srcTime = (Get-ChildItem (Join-Path $matRoot '_src') -Filter *.py | Measure-Object LastWriteTimeUtc -Maximum).Maximum
 foreach ($p in $spec.sets.PSObject.Properties) {
     $f = $p.Value.files.$MaterialTier
     if (-not $f) { continue }
-    foreach ($n in $f.files) { if (-not (Test-Path (Join-Path $matRoot "$($f.dir)/$n"))) { $missing++ } }
+    foreach ($n in $f.files) {
+        $png = Join-Path $matRoot "$($f.dir)/$n"
+        if (-not (Test-Path $png)) { $missing++ } elseif ((Get-Item $png).LastWriteTimeUtc -lt $srcTime) { $stale++ }
+    }
 }
-if ($missing -gt 0) {
-    Write-Host "PBR sets: $missing files missing for $MaterialTier - running art-source/world/materials/_src/build_all.py"
+if ($missing -gt 0 -or $stale -gt 0) {
+    Write-Host "PBR sets: $missing missing, $stale older than _src for $MaterialTier - running art-source/world/materials/_src/build_all.py"
     & uv run --project (Join-Path $RepoRoot 'tools/worldgen') python (Join-Path $matRoot '_src/build_all.py')
     if ($LASTEXITCODE -ne 0) { throw "build_all.py failed ($LASTEXITCODE)" }
 }
