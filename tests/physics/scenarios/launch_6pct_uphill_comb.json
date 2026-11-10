@@ -79,10 +79,27 @@
       "max": 250
     },
     {
+      "metric": "time_to_kmh",
+      "status": "WORKING_VALUE",
+      "source": "regression guard = PlayMode CombinationLabTests.HillStart_6pct_40t (runner 4.5 s +-10 %); 6.2 s after ADR 0019 was a 3-2-3 shift, ADR 0024",
+      "min": 4.05,
+      "max": 4.95,
+      "arg": 15,
+      "variant": "laden40"
+    },
+    {
       "metric": "shift_count",
       "status": "WORKING_VALUE",
       "source": "no gear hunting on the climb (Stage 2 fix: up-shift lands above the grade down-shift line)",
       "max": 14
+    },
+    {
+      "metric": "downshift_count",
+      "status": "WORKING_VALUE",
+      "source": "full throttle and still accelerating: no down-shift (predictive down-shift hold, ADR 0024)",
+      "max": 0,
+      "from": 2,
+      "to": 25
     },
     {
       "metric": "min_speed_kmh",
