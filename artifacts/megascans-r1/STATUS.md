@@ -67,3 +67,6 @@
 - Krok22: odtworzono wygenerowany światafter (archiwum1989plików); KAMION_DISABLE_FAB wyłączone. NASTĘPNY: powtórny raycast i sanityrender after, walidacja SHA192plików.
 
 - Krok24: pełny build rundy4 zakończony (64chunki); prawdziwy fallback build ma exit0 (fallback-build-exit.json), import i6PNG before poprawne. Fallback EditMode:200PASS/0FAIL/7skipped/5inconclusive; wrapper1/nativeUnity2, identyczny mechanizm jak baseline. Próba BlendProbes nie poprawiła ciemnej roślinności i została cofnięta; kalibracja sRGB→linear zachowuje dokładny kanałalpha, źródłowy odcień i detale. NASTĘPNY: pwsh artifacts/megascans-r1/run-final-proof.ps1 po gotowej powierzchni trawy.
+
+- Krok23: routing C# dla grass_surface_manifest.json: terrain_grass/verge_grass zachowuj? WorldPBR, normal/mask/macro/var i kolor wierzcho?k?w; podmieniana wy??cznie fotograficzna baza 4?4m (kraw??nik2?0,5m). Og?lny Lit nie przechwytuje tych alias?w, tak?e przy brakuj?cym starym PBR. Channels wczesne FabUV0 ograniczono do fab_. Trzy testy regresji materia?u dodane; diff-check PASS, Unity nie uruchamiano ? kompilacja/testy czekaj? na lidera.
+- NAST?PNY KROK: `pwsh artifacts/megascans-r1/run-final-proof.ps1` (lider: import + EditMode + rzeczywiste PNG).

@@ -66,7 +66,7 @@ namespace Game.World.Import
         public static void Channels(Dictionary<string, object> def, string id, out bool uv0, out bool uv1, out bool colors)
         {
             uv0 = uv1 = colors = false;
-            if (FabMaterials.Has(id)) { uv0 = true; return; }
+            if (id != null && id.StartsWith("fab_", StringComparison.Ordinal) && FabMaterials.Has(id)) { uv0 = true; return; }
             if (!Has(def, id)) return;
             var s = Set(def.Get("texture_set") as string);
             string kind = s != null ? Str(s.Get("kind")) : "decal";

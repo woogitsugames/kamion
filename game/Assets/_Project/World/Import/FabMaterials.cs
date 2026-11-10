@@ -71,6 +71,7 @@ namespace Game.World.Import
             {
                 s_Surfaces = Read("surfaces_manifest.json", "materials");
                 foreach (var kv in Read("drainage_atlas_manifest.json", "materials")) s_Surfaces[kv.Key] = kv.Value;
+                foreach (var kv in Read("grass_surface_manifest.json", "materials")) s_Surfaces[kv.Key] = kv.Value;
             }
             bool billboard = id.EndsWith("_billboard", StringComparison.Ordinal);
             string sourceId = billboard ? id.Substring(0, id.Length - "_billboard".Length) : id;
@@ -92,19 +93,33 @@ namespace Game.World.Import
             return tiers.Get(tier) as Dictionary<string, object>;
         }
         public static bool Has(string id) => Maps(id) is Dictionary<string, object> m && Resolve(m.Get("basecolor")) != null;
+        /// <summary>Only the photographic base is replaced; the existing world PBR contract owns all other channels.</summary>
+        public static bool IsBaseSurface(string id) => id == "curb_concrete" || id == "terrain_grass" || id == "verge_grass";
+
+        static void SetSurfaceBase(Material material, Texture2D baseMap, string id)
+        {
+            material.SetTexture("_BaseMap", baseMap);
+            var tileM = id == "terrain_grass" || id == "verge_grass" ? new Vector2(4f, 4f) : new Vector2(2f, 0.5f);
+            var tile = material.GetVector("_Tile");
+            tile.x = tileM.x; tile.y = tileM.y;
+            material.SetVector("_Tile", tile);   // preserve macro/variation components z/w
+        }
+
         public static bool ApplySurfaceBase(RegionImporter.Result r, string id, Material material)
         {
             var maps = Maps(id);
             if (maps == null || Resolve(maps.Get("basecolor")) == null) return false;
-            material.SetTexture("_BaseMap", Texture(r, id, "basecolor", Resolve(maps.Get("basecolor")), false, false, false, false));
-            // Two 1 m units in the scan tile align with the existing kerb normal,
-            // mask and variation maps. Keep macro grime and PBR lighting intact.
-            material.SetVector("_Tile", new Vector4(2f, 0.5f, 16f, 1f));
+            var baseMap = Texture(r, id, "basecolor", Resolve(maps.Get("basecolor")), false, false, false, false);
+            // Existing metric UVs, normal/mask/variation maps and macro lighting remain authoritative.
+            // Curbs: two 1 m units; photographic grass: its explicit 4 x 4 m tile (WORKING_VALUE).
+            SetSurfaceBase(material, baseMap, id);
             EditorUtility.SetDirty(material);
             return true;
         }
         public static Material Create(RegionImporter.Result r, string id, string path)
         {
+            // These aliases must never fall through to generic URP Lit, even when their PBR set is absent.
+            if (IsBaseSurface(id)) return null;
             var maps = Maps(id);
             if (maps == null || Resolve(maps.Get("basecolor")) == null) return null;
             if (s_Mats.TryGetValue(path, out var cached)) return cached;
