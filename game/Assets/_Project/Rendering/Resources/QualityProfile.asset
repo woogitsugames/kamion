@@ -34,6 +34,8 @@ MonoBehaviour:
     worldMipBias: 0
     lodBias: 0.5
     cameraFarClip: 900
+    adaptiveScaleMin: 0
+    thermalFallbackFps: 0
     worldDetail: 0
     additionalLightsPerObject: 2
     treeCardLodScale: 0.5
@@ -78,6 +80,8 @@ MonoBehaviour:
     worldMipBias: 0
     lodBias: 0.8
     cameraFarClip: 1400
+    adaptiveScaleMin: 0
+    thermalFallbackFps: 0
     worldDetail: 1
     additionalLightsPerObject: 4
     treeCardLodScale: 0.5
@@ -102,7 +106,7 @@ MonoBehaviour:
     budgetShadowMs: 1.5
     budgetStatus: UNMEASURED
   - name: High
-    renderScale: 0.85
+    renderScale: 1
     msaa: 2
     postAntialiasing: 0
     hdr: 1
@@ -122,6 +126,8 @@ MonoBehaviour:
     worldMipBias: 0
     lodBias: 1.5
     cameraFarClip: 2500
+    adaptiveScaleMin: 0.8
+    thermalFallbackFps: 30
     worldDetail: 1
     additionalLightsPerObject: 4
     treeCardLodScale: 0.5
@@ -166,6 +172,8 @@ MonoBehaviour:
     worldMipBias: 0
     lodBias: 2
     cameraFarClip: 3500
+    adaptiveScaleMin: 0
+    thermalFallbackFps: 0
     worldDetail: 1
     additionalLightsPerObject: 8
     treeCardLodScale: 0.5

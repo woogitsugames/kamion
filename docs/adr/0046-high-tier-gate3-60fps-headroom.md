@@ -33,23 +33,38 @@ Result: `docs/reports/perf/tiercost-High-20261110-093732.tsv` (RTX 5070, shared 
 3. **Shadows**: 100 m, 3 cascades, 2048, soft Medium (9-tap), LOD0+LOD1 tree casters (Medium: 60 m, 2 cascades, hard,
    LOD0). Soft Low (4-tap) and LOD0-only tree casters: est. 0.6-1.2 ms. Distance/cascades kept (visible on the road).
 
-## Decision (High only)
-- `renderScale` 1.0 -> **0.85** (2652x1224 on QHD+; ~440 ppi effective, still above FHD+ native 2340x1080).
-- `softShadowQuality` Medium -> **Low**; `treeShadowLodMask` 3 -> **1**.
+## Decision (High only; revision 2 after the coordinator / owner priority "quality first")
+A fixed 0.85 would pay the softer image on every frame, also where the GPU has slack. Instead:
+- **Adaptive render scale** (`AdaptiveRenderScaleController`, `AdaptiveFrameDriver`; tier fields `adaptiveScaleMin` 0.80,
+  `renderScale` stays 1.00): FrameTimingManager GPU time, tumbling 2 s windows, p90. p90 < 0.78 of the frame interval
+  (13 ms at 60 FPS) -> step up 0.05 towards 1.00 if the pixel model (GPU ~ scale^2) keeps the next step under the
+  step-down line; p90 > 0.90 of the interval (15 ms) -> step down to the scale the model puts at 12.5 ms, at least 0.05;
+  in between hold. At most one change per 2 s, multiples of 0.05, floor 0.80. Devices without GPU timings stay at 1.00.
+  Disabled with the profiling override `rq_scale`; not active in the editor (it writes the URP asset).
+- **Thermal fallback** (`ThermalFpsGovernor`, tier field `thermalFallbackFps` 30): thermal status >= 2 for 30 s -> 30 FPS
+  cap; back to the requested cap after status <= 1 for 60 s. Status polled every 5 s (JNI call, a small allocation per
+  poll; nothing per frame). 30 rather than 40/45: the CSV shows 60 Hz quantisation, so 40 would judder.
+- **Shadows soft Low + LOD0-only tree casters: kept.** A/B frames (below) show no visible difference: mean abs diff vs soft
+  Medium + LOD0/1 casters <= 0.25/255 on every crop (0.00 overcast), penumbra identical by eye at 1:1 low sun.
 - Kept: MSAA 2x, HDR, shadow 100 m / 3 cascades / 2048, HLOD 120 m, LOD bias 1.5, far clip 2500 m, reflection capture.
-- Proposed to the vehicle owner (not in this change, `Vehicle/Runtime/RenderTextureMirror.cs` MirrorsPerFrame):
-  High 3 -> 2 mirror renders per frame (main mirrors still refresh >= 30 Hz at 60 FPS).
-Estimate: 14.8 ms -> ~11.5-12.0 ms GPU p50 (scale -2.9, shadows -0.6..1.2) before the mirror change. UNVERIFIED.
-Trade: slightly softer image on QHD+ (render-scale upscale, no sharpening) and harder shadow penumbra; needs a
-visual-critic pass on High G3 renders before merge.
+- Low / Medium: unchanged (fields 0 = off).
+Estimate on the S24+ G3 views: at 14.8 ms the controller holds 1.00 (band 13-15 ms); spikes of the hot run (GPU p95
+19.3 ms, fefd804) step to 0.85 (~13.9 ms) - UNVERIFIED.
 
-## 60 FPS cap vs adaptive
-Recommendation: keep the 60 FPS cap on High and add an **adaptive render scale** (0.75-0.90, from FrameTimingManager GPU
-p90 over ~1 s, step 0.05 with hysteresis, only downward when GPU p90 > 14 ms, up when < 11 ms) - URP render scale, not
-`ScalableBufferManager` (Vulkan dynamic resolution needs per-camera opt-in and gave no measured benefit yet). If thermal
-status >= 2 persists, fall back to 30 FPS rather than an uneven 40-50 FPS (60 Hz quantisation seen in the CSV).
-Not implemented here: needs a phone A/B (owner's consent).
+## A/B frames (editor, for visual-critic)
+`C:/Users/matma/Documents/Claude/kamion/artifacts/perf-high-ab/` (README.txt, diff.tsv): 4 G3 eye cameras x overcast/lowsun,
+scale 1.00 / 0.85 / 0.80 with the new shadows, plus 1.00 with the old shadows, 1024 px crops near/mid/far.
+Scale 0.85/0.80 vs 1.00: mean abs diff 1.0-3.5/255, visibly softer thin lines on 1:1 crops (railings, overhead wires,
+pylon lattice) - the trade the controller only takes under GPU load. Phone view UNVERIFIED.
+
+## Open items
+- **Mirrors 3 -> 2 renders per frame on High** (`Vehicle/Runtime/RenderTextureMirror.cs`, `VehicleCameraBudget.MirrorsPerFrame`,
+  owner: vehicle / lead). Editor proxy: 3 mirror renders 6.3 ms vs 5.6 ms main view (CPU culling + submit of the whole
+  world 3x). With 2/frame the main mirrors still refresh >= 30 Hz at 60 FPS (weighted round-robin, ADR 0042).
+  Est. -0.8..1.5 ms GPU and a larger CPU main saving (S24+ CPU main p95 18.4-20.7 ms is also over 16.7). Needs a
+  phone A/B and a check that the wide-angle mirror stays usable (docs/06: mirrors always usable).
+- Adaptive thresholds are WORKING_VALUE; tune from the phone log lines `[PERF] adaptive render scale`.
 
 ## Verification needed
-S24+ High G3-A/G3-B with this tier (`gate3-run.ps1 -Tier High -Fps 60 -WorldHigh`), then the same with
-`-e rq_scale 1.0` for the A/B; 30 min thermal run.
+S24+ High G3-A/G3-B (`gate3-run.ps1 -Tier High -Fps 60 -WorldHigh`) with logcat `[PERF]` lines; A/B with `-e rq_scale 1.0`
+(adaptive off); 30 min thermal run for the fallback. Owner's consent for the phone.
