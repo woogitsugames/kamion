@@ -4,22 +4,23 @@
 - **main = `ffcc7b7`, wypchnięty.** Scalone w s6: auta r9 (ADR 0073, generated = ours → wymagana regeneracja), fidelity dróg (ADR 0075). Main NIE zregenerowany po scaleniach; pytest gis na main: 2 czerwone P0 korytarza (agent 0076).
 - Polecenie właściciela s6: **max 10 agentów, wszystkie Fable 5.2**, mocny skok jakości wyglądu. Limit 5 h: reset 01:20 (start s6 0 %).
 - Zgłoszenia właściciela s6: (1) HUD na Fold 8 Ultra (ekran ~1:1) rozjechany, ustawienia ucięte → ADR 0079; (2) film jazdy `Screen_Recording_20261110_210126_Kamion.mp4` (127 s, klatki `artifacts/owner/fold-video-2026-11-10/`): brak ogranicznika (95–105 km/h), koniec świata ~116 s — biała pustka, spadek do 179 km/h, kamera w desce; przejazd po wyspie ronda Bieżeństwa ~30 s → ADR 0082.
+- Przejęcie po ubiciu sesji: worktree w `.claude/worktrees/<id>`, STATUS.md w `<wt>/artifacts/<dir>/` (dir z kolumny dowody); nowy agent Fable z briefem „pracuj WYŁĄCZNIE w <wt>, najpierw docs/owner/AGENT-RULES.md i STATUS.md, dokończ”. Agenci commitują WIP co krok (przypomnienie wysłane 22:xx).
 - Nowe worktree agentów: Data/raw/derived ma być KOPIĄ (robocopy), nie junction — inaczej build_world nadpisuje main.
 - Ostatni przydzielony ADR: **0082**. D45 Fab (Megascans + CC BY, pliki poza gitem) — przyjęta; właściciel pobiera na koncie Epic do 12.11. 0066 scalone; pusty katalog worktree agent-ab1fb0a47d2f0a491 (kopie Data/raw) do ręcznego usunięcia.
 - Dodatkowe zgłoszenia właściciela s6 przekazane: latarnia na lewym pasie estakady (~93–100 s) i krawężnik w poprzek jezdni (~105–112 s) → 0076; szlaban Kwadrat Park nie otwiera się, brak kolizji → 0071.
 
 | zadanie | model | ADR | worktree / gałąź | dowody | stan |
 |---|---|---|---|---|---|
-| P0 korytarz trasy s1432–1480 + MA-001/002/012 | Fable | 0076 | nowy (isolation) | artifacts/roads-p0-r10 | w toku |
-| wysepki z OSM (compute_corners), MA-010, krawędzie p95 | Fable | 0077 | nowy | artifacts/islands-r10 | w toku |
+| P0 korytarz trasy s1432–1480 + MA-001/002/012 | Fable | 0076 | agent-ad6af5501cb259d76 / worktree-agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | w toku |
+| wysepki z OSM (compute_corners), MA-010, krawędzie p95 | Fable | 0077 | agent-a2afb96d89584cca6 / worktree-agent-a2afb96d89584cca6 | artifacts/islands-r10 | w toku |
 | straż JRG2 dokończenie + merge main | Fable | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | w toku |
 | Kwadrat Park dokończenie + brama/naczepy | Fable | 0071 | agent-a1409e374f8c12b4f | artifacts/kwadrat-r9 | w toku |
-| HUD adaptacyjny (Fold, 1:1–21:9) | Fable | 0079 | nowy | artifacts/hud-r10 | w toku |
-| auta r10 (lampy, płatek, LOD2) | Fable | 0078 | nowy | artifacts/cars-r10 | w toku |
-| oświetlenie/atmosfera r10 + warianty ekspozycji ov | Fable | 0080 | nowy | artifacts/light-r10 | w toku |
-| zabudowa typologia r10 | Fable | 0081 | nowy | artifacts/buildings-r10 | w toku |
+| HUD adaptacyjny (Fold, 1:1–21:9) | Fable | 0079 | agent-ab59e33f0c7faaa00 / worktree-agent-ab59e33f0c7faaa00 | artifacts/hud-r10 | w toku |
+| auta r10 (lampy, płatek, LOD2) | Fable | 0078 | agent-a2215bcc98d109edc / worktree-agent-a2215bcc98d109edc | artifacts/cars-r10 | w toku |
+| oświetlenie/atmosfera r10 + warianty ekspozycji ov | Fable | 0080 | agent-ac7c9571184d27443 / worktree-agent-ac7c9571184d27443 | artifacts/light-r10 | w toku |
+| zabudowa typologia r10 | Fable | 0081 | agent-ac404823e7d8b56e7 / worktree-agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | w toku |
 | licencja Fab/Patch + refs 0066 | Fable | 0066 | usunięty | docs/reports/FAB-PATCH-LICENSE-2026-11-10.md | SCALONE |
-| ogranicznik 90, koniec świata, kamera, rondo (film Fold) | Fable | 0082 | nowy | artifacts/drive-fold-r10 | w toku |
+| ogranicznik 90, koniec świata, kamera, rondo (film Fold) | Fable | 0082 | agent-acc0299ca0b0081b1 / worktree-agent-acc0299ca0b0081b1 | artifacts/drive-fold-r10 | w toku |
 
 ## Następne kroki
 1. Scalać po kolei w miarę kończenia: 0076 → 0077 → 0070/0071 → 0078 → 0081 → 0080 → 0079/0082 → 0066. Po każdym: regeneracja świata na main, pytest gis.
