@@ -35,4 +35,25 @@ Evidence: `artifacts/cc0-r8/` (worktree of this task; STATUS.md, before/after co
    glass, vehicles. `sidewalk_slab_35` is built but no manifest material uses it yet.
 
 ## Consequences
-FILLED_BELOW
+Measured on WorldC control cameras (9 frames per condition, bottom-centre road ROI, sRGB median; `artifacts/cc0-r8/measure.csv`):
+
+| condition | asphalt before | asphalt after | paint/asphalt before | after | paint p-max before/after |
+|---|---|---|---|---|---|
+| Low overcast | 100 | 101 | 1.52 | 1.51 | 184 / 184 |
+| High overcast | 105 | 105 | 1.53 | 1.52 | 203 / 204 |
+| Low lowsun | 52 | 52 | 1.65 | 1.56 | 92 / 89 |
+| High lowsun | 55 | 55 | 1.60 | 1.57 | 94 / 96 |
+
+- Calibration kept: asphalt Low ov ~100 / High ov ~105, paint/asphalt >= 1.5 everywhere, no paint clipping (max <= 217).
+  The 1.8 target of D37 is not reached by this change (paint material untouched); lowsun ratio dropped 0.03-0.09 because
+  the scan asphalt carries lighter aggregate. Open for the paint/calibration owner.
+- Look: pavers (holland 20 x 10, behaton) and concrete read as photographed surfaces, no visible tile repetition in
+  close crops (`artifacts/cc0-r8/closeup/`); asphalt gains blotchy aggregate and patches, but the fine-scale texture
+  sigma is lower (High ov 2.72 % vs 3.57 %), so the frame-level change on asphalt is subtle. **Not solved here:** the
+  light-grey asphalt with wheel-path rut streaks and patch lines seen on Mapillary (findings #7) is a macro/wear layer
+  (lane-aware masks), not a 4 m scan tile; it needs a follow-up in the road wear generator.
+- Size: world/Textures/PBR 23.01 -> 20.80 MB raw; APK 156.52 MB -> ~155.4 MB; `-noWorld` APK 55.34 MB, so the world
+  share is ~100.1 MB (D24 limit 110 MB). No shader change, so no GPU cost change expected (not measured on phone).
+- Pipeline: `import-region.ps1` now needs network once (cc0_fetch, 162 MB, sha256-verified) or a filled
+  `art-source/world/cc0/_raw/`; `build_all.py --procedural` reproduces the old sets.
+- Tests: `tests/gis` (incl. `test_cc0_scans.py`) and EditMode green (2 inconclusive truck-glass tests, unrelated).
