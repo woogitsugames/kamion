@@ -68,7 +68,7 @@ orthophoto neither confirms nor refutes it.
 | Gate, boom barriers, gatehouse, fence (`kwadrat-park-gate-kit`, unchanged) | WORKING_VALUE; the 2021 CC0 photo shows an open access road without a visible gate at its station - to be verified |
 
 ## Numbers
-- Asset: 17 prototypes, LOD0 / LOD1 / LOD2 = 13 088 / 2 034 / 652 triangles for the whole hall (budget in the test:
+- Asset: 17 prototypes, LOD0 / LOD1 / LOD2 = 13 648 / 2 034 / 652 triangles for the whole hall (budget in the test:
   60 000 / 6 000 / 1 200), 30 materials, all existing world materials + 4 new (`kp_wall`, `kp_accent`,
   `kp_glass_block`, `kp_roof_white`); GLB 1.3 MB.
 - Frame estimate `kwadrat_park_gate` and the Unity control renders: see `artifacts/kwadrat-r9/STATUS.md` (measured

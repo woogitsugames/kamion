@@ -140,7 +140,7 @@ def material(name):
         mix.inputs[1].default_value = (c[0] * 0.6, c[1] * 0.6, c[2] * 0.6, 1)
         mix.inputs[2].default_value = (c[0], c[1], c[2], 1)
         nt.links.new(tc.outputs["UV"], sep.inputs[0])
-        nt.links.new(sep.outputs["X" if name == WALL else "Y"], mul.inputs[0])
+        nt.links.new(sep.outputs["Y"], mul.inputs[0])
         nt.links.new(mul.outputs[0], mth.inputs[0])
         nt.links.new(mth.outputs[0], gt.inputs[0])
         nt.links.new(gt.outputs[0], mix.inputs[0])
@@ -174,8 +174,7 @@ class Fr:
         if uv is None:
             uv = [(self.u_off + u0, z0 - ZREF), (self.u_off + u1, z0 - ZREF), (self.u_off + u1, z1 - ZREF),
                   (self.u_off + u0, z1 - ZREF)]
-            if mat == WALL:           # trapezoid_sheet has vertical ribs along u: swapped UV lays the sheet horizontally
-                uv = [(v, u) for u, v in uv]
+            # kp_wall uses the sandwich_ribbed set (horizontal 1 m courses, u along, v up): no UV swap
         mb.poly([self.P(u0, z0, o), self.P(u1, z0, o), self.P(u1, z1, o), self.P(u0, z1, o)], uv, mat, self.n3)
 
     def box(self, mb, u0, u1, z0, z1, o0, o1, mat, faces="flrt", uvs=1.0):

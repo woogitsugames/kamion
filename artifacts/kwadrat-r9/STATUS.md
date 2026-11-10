@@ -56,3 +56,20 @@ Worktree `.claude/worktrees/agent-a1409e374f8c12b4f`, gałąź `worktree-agent-a
     pwsh scripts/import-region.ps1 -Region bialystok-industrial-c
     pwsh artifacts/kwadrat-r9/qa_runs.ps1 -Phase after2
     pwsh scripts/test.ps1 -Platform EditMode
+
+## Stan 2026-11-10 ~21:50 (cykl after2 zakończony)
+- Asset przebudowany automatycznie przez build_world (drabina, koryto kablowe, szafka hydrantowa; blacha jaśniejsza
+  `kp_wall` 0,62 / metal 0,1, bez zamiany UV — w after1 poziome łączenia płyt wyszły pionowo): LOD0/1/2 = 13 648 / 2 034 / 652.
+- Szacunek klatki: kwadrat_park_gate High 930 206 / Low 333 827 (baseline 922 881 / 331 911); max High = stretch_04 1 997 449
+  (bez zmian, < 2,0 M); stretch_02 High 1 595 056 (+62 k: auta na parkingu przed lokalami). overrides_stale = [].
+- Import: Low 113,0 MB, High 249,7 MB (render_meshes 77,7 / 214,4; instances 18,3).
+- Rendery Unity WorldC: `after1/` (ciemna blacha, przed poprawką) i `after2/` — Low+High × overcast+lowsun, kamery
+  g3a_eye_s0012/0062/0112/0162/0212, g3a_ext34_s0040, kwadrat_park_gate, stretch_05_docks (JPG 960 px obok PNG).
+  Montaże: `montage/before_after_g3a_eye_s0012_High-overcast.jpg`, `after2_lowsun.jpg`, `after2_photo_vs_unity.jpg`.
+- pytest tests/gis: 172 zielone (pełny przebieg przed after2; po after2 powtórzone hero_depot + prototypes: 10/10).
+- OTWARTE: (1) visual-critic nie wołany; (2) MA-003 szlaban bramy — nie ruszony; (3) przy dokach hali hero nie stoją już
+  naczepy, a plac jest gęsto zastawiony osobówkami (system life; nie badane); (4) brama/portiernia/ogrodzenie, lampy i
+  oznakowanie placu = stary zestaw generyczny, bez zmian; (5) tekstury = zestawy proceduralne (skany CC0 dopiero z ADR 0063);
+  (6) EditMode — patrz `logs/editmode.log`.
+- Po każdym Unity cofnąć: `git checkout -- game/Assets/_Project/Rendering/Settings/Lighting/M_Sky.mat game/ProjectSettings`;
+  nie commitować `art-source/world/textures|signs|props` (różnice bajtowe buildu).

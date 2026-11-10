@@ -209,7 +209,7 @@ M = {
     # bridges (roads.meshing bridge_style overrides; CC0 photos of the Andersa viaducts, docs/REFERENCES.md)
     # hero depot hall Kwadrat Park (ADR 0071, streetscape.hero_depot; colours read off CC0 photos by Rakoon, Commons:
     # light grey horizontally profiled sheet, vermilion window / louvre frames and portals, glass-block strip lights)
-    "kp_wall": {"color": [0.47, 0.48, 0.48], "rough": 0.5, "metal": 0.25, "texture_set": "sandwich_ribbed"},
+    "kp_wall": {"color": [0.62, 0.63, 0.63], "rough": 0.5, "metal": 0.1, "texture_set": "sandwich_ribbed"},
     "kp_accent": {"color": [0.50, 0.075, 0.035], "rough": 0.55, "metal": 0.2},
     "kp_glass_block": {"color": [0.27, 0.29, 0.30], "rough": 0.3},
     "kp_roof_white": {"color": [0.52, 0.52, 0.50], "rough": 0.8},
