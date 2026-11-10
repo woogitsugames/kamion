@@ -12,6 +12,8 @@
   Output : game/Assets/_Generated/World/<id>/ (gitignored): Meshes/{Low,High}/*.asset, Collision/*.asset, Materials/,
            Textures/, Instances.asset, WorldC.unity (Low/Medium content, in the build list), WorldC_High.unity (High
            content, shipped only with build-android.ps1 -WorldHigh). Memory report: artifacts/world/<id>-import.json.
+  Baked ground lighting (ADR 0064): WorldGI_1m.asset / WorldGI_2m.asset + WorldSkyVisibility on both scenes (WorldSkyBake,
+           ~20 s); alone: -executeMethod Game.World.Import.WorldSkyBake.BakeBatch -region <id>. Maps: artifacts/bake-r8/maps/.
   PBR texture sets (ADR 0022): art-source/world/materials/<set>/<tier>/*.png are not versioned; when any file listed in
   materials_spec.json is missing for -MaterialTier (default Medium) the generator _src/build_all.py runs first (all
   tiers, deterministic, ~4 min), then Unity copies the tier into _Generated/.../Textures/PBR with ASTC per the spec.

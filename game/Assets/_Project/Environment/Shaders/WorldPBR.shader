@@ -124,6 +124,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _STRIPES
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Assets/_Project/Rendering/Shaders/KamionWorldGI.hlsl"   // ADR 0064 baked sky visibility + far ground shadows
 
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
             TEXTURE2D(_NormalMap); SAMPLER(sampler_NormalMap);
@@ -514,7 +515,9 @@ Shader "Kamion/World PBR"
 
                 float4 shadowCoord = TransformWorldToShadowCoord(pw);
                 Light L = GetMainLight(shadowCoord, pw, half4(1, 1, 1, 1));
-                half atten = L.distanceAttenuation * lerp(1.0, L.shadowAttenuation, _ReceiveShadows);
+                half giK, giSun;
+                KamionWorldGI(pw, n, giK, giSun);
+                half atten = L.distanceAttenuation * lerp(1.0, KamionFarShadow(L.shadowAttenuation, giSun, pw), _ReceiveShadows);
                 half NoL = saturate(dot(nw, L.direction));
                 // geometric normal terminator: no light through the back of a bumpy surface
                 NoL *= saturate(dot(n, L.direction) * 8.0 + 0.5);
@@ -525,11 +528,11 @@ Shader "Kamion/World PBR"
                 half spec = r2 / ((d * d) * max(0.1, LoH * LoH) * (r * 4.0 + 2.0));
                 half3 color = (diffColor + specColor * spec) * L.color * (atten * NoL);
 
-                half3 ambient = SampleSH(nw) * diffColor * ao;
+                half3 ambient = SampleSH(nw) * diffColor * (ao * giK);
                 half3 R = reflect(-V, nw);
                 half fresnel = Pow4(1.0 - NoV);
                 half grazing = saturate(smooth + max(metal, 0.04));
-                half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, ao) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
+                half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, ao * giK) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
                 color += ambient + env;
                 color += diffColor * KamionLampPools(pw, nw);   // dusk street-lamp pools (ADR 0062)
 

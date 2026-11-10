@@ -39,12 +39,15 @@ namespace Game.Rendering
         public static float? FsrSharpness;
         public static bool? Pacing;
         public static int? LampPools;
+        public static bool? WorldGi;
+        public static bool? WorldSun;
 
         public static bool Any => Msaa.HasValue || RenderScale.HasValue || ShadowDistance.HasValue || Post.HasValue || Hdr.HasValue ||
                                   LeafA2C.HasValue || Trees.HasValue || TreeShadowMask.HasValue || TreeCardScale.HasValue ||
                                   TreeCull.HasValue || TreeThin.HasValue || SimpleFoliage.HasValue || ForestHlod.HasValue ||
                                   VehicleLook.HasValue || EnvCapture.HasValue || ScaleMin.HasValue || Upscale != null ||
-                                  FsrSharpness.HasValue || Pacing.HasValue || LampPools.HasValue;
+                                  FsrSharpness.HasValue || Pacing.HasValue || LampPools.HasValue ||
+                                  WorldGi.HasValue || WorldSun.HasValue;
 
         /// <summary>Reads the overrides through a launch-argument getter (platform services). Returns a log line.</summary>
         public static string Parse(Func<string, string> arg)
@@ -54,12 +57,13 @@ namespace Game.Rendering
             TreeShadowMask = I(arg("rq_treeshadow")); TreeCardScale = F(arg("rq_card")); TreeCull = F(arg("rq_cull"));
             TreeThin = F(arg("rq_thin")); SimpleFoliage = B(arg("rq_vegshader")); ForestHlod = F(arg("rq_hlod"));
             VehicleLook = B(arg("rq_a8")); EnvCapture = I(arg("rq_envcap"));
+            WorldGi = B(arg("rq_worldgi")); WorldSun = B(arg("rq_worldsun"));   // ADR 0064
             ScaleMin = F(arg("rq_scalemin")); FsrSharpness = F(arg("rq_fsrsharp")); Pacing = B(arg("rq_pacing")); LampPools = I(arg("rq_lamppools"));
             string up = arg("rq_upscale");
             Upscale = string.IsNullOrEmpty(up) ? null : up.ToLowerInvariant();
             return Any ? $"msaa={Msaa} scale={RenderScale} shadow={ShadowDistance} post={Post} hdr={Hdr} a2c={LeafA2C} trees={Trees} " +
                          $"treeshadow={TreeShadowMask} card={TreeCardScale} cull={TreeCull} thin={TreeThin} vegshader={SimpleFoliage} hlod={ForestHlod} a8={VehicleLook} envcap={EnvCapture} " +
-                         $"scalemin={ScaleMin} upscale={Upscale} fsrsharp={FsrSharpness} pacing={Pacing} lamppools={LampPools}" : null;
+                         $"scalemin={ScaleMin} upscale={Upscale} fsrsharp={FsrSharpness} pacing={Pacing} lamppools={LampPools} worldgi={WorldGi} worldsun={WorldSun}" : null;
         }
 
         /// <summary>The tier with the overrides applied (vegetation + camera fields; URP asset fields by the applier).</summary>
@@ -94,6 +98,8 @@ namespace Game.Rendering
                     default: t.upscalingFilter = UpscalingFilterSelection.Auto; break;
                 }
             }
+            if (WorldGi.HasValue) t.worldSkyVisOff = !WorldGi.Value;
+            if (WorldSun.HasValue) t.worldBakedSunOff = !WorldSun.Value;
             return t;
         }
 
