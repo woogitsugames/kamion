@@ -64,6 +64,30 @@ Licencje sprawdzone przez lidera (`docs/REFERENCES.md` na `main`). W r2 kafla C 
 
 Źródło: Mapillary Graph API v4, licencja CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Pobierane narzędziem `tools/refs/mapillary_fetch.py` do `Data/raw/mapillary/` (poza gitem, nie trafiają do buildu). Użycie wyłącznie jako referencja (wzór, dopasowanie kadru, kalibracja koloru); piksele w teksturze zrobiłyby z niej pochodną CC BY-SA (ADR 0065). Autorzy zdjęć faktycznie użytych: [docs/ATTRIBUTION-mapillary.md](ATTRIBUTION-mapillary.md) (generowany; pojawi się po pierwszym `--use ... --attribution`).
 
+## Skany materiałów CC0 (Poly Haven), świat (ADR 0063, decyzja D40)
+
+Licencja sprawdzona 2026-11-10 na stronie https://polyhaven.com/license: wszystkie zasoby Poly Haven (HDRI, tekstury, modele) są na **CC0 1.0 Universal**, z prawem do użycia komercyjnego, modyfikacji i redystrybucji, bez wymogu atrybucji (podajemy ją mimo to, w napisach gry). Każdy plik jest przypięty w `art-source/world/cc0/cc0_manifest.json` (URL, rozmiar, md5 z API, **SHA256**, data pobrania). Surowe mapy 2k JPG (Diffuse, nor_gl, Rough, AO, Displacement; 65 plików, 162 MB) leżą w `art-source/world/cc0/_raw/` (**poza gitem**, pobiera i weryfikuje `art-source/world/materials/_src/cc0_fetch.py`). Do buildu trafiają wyłącznie przetworzone zestawy PBR (`_src/sets_scan.py` → `art-source/world/materials/<zestaw>/`, generowane, poza gitem), nigdy surowe pliki. ambientCG (CC0 1.0, https://docs.ambientcg.com/license/) dopuszczony przez D40, w tej wersji nieużyty (przejrzany: brak wymiarów fizycznych przy większości materiałów). Bez Google, bez generatorów AI.
+
+Kolumna SHA256 = mapa Diffuse; SHA256 pozostałych 4 map każdego zasobu są w manifeście (test `tests/gis/test_cc0_scans.py` pilnuje, by każdy plik miał SHA256 i każdy zasób był w tej tabeli).
+
+| ID | Zasób (rozmiar fizyczny) | URL | Autor | Licencja | Pobrano | SHA256 (Diffuse 2k) | Zestaw w grze |
+|---|---|---|---|---|---|---|---|
+| `asphalt_04` | Asphalt 04 (4,04 × 4,04 m) | https://polyhaven.com/a/asphalt_04 | Jenelle van Heerden (obróbka), Sergej Majboroda (zdjęcia) | CC0 1.0 | 2026-11-10 | `e02ac16d23ea97008c2507cf58bfad7c18a3b5933b5bdea14f7f90f33a784976` | `asphalt_worn` |
+| `asphalt_pit_lane` | Asphalt Pit Lane (2,00 × 2,00 m) | https://polyhaven.com/a/asphalt_pit_lane | Dimitrios Savva | CC0 1.0 | 2026-11-10 | `35f41f618a4342454b9a46d136b5086e8f1872a866aa1a7db2f813be3c6059d3` | `asphalt_sma_fresh` |
+| `clean_asphalt` | Clean Asphalt (2,10 × 2,10 m) | https://polyhaven.com/a/clean_asphalt | Dimitrios Savva | CC0 1.0 | 2026-11-10 | `9d58f263b695c268e391aa39ea2f6b30ab9f36d279715cc78593a4d43368039c` | `asphalt_patch` |
+| `concrete_pavers` | Concrete Pavers (1,92 × 1,92 m) | https://polyhaven.com/a/concrete_pavers | Amal Kumar | CC0 1.0 | 2026-11-10 | `ac772172824543ce53a9ad60e0b7a00c02fcaf875ec6a65ae49806f6ae25539a` | `behaton_i_grey` |
+| `pavement_04` | Pavement 04 (3,10 × 3,10 m; przeskalowane do kostki 20 × 10 cm → 2,28 m) | https://polyhaven.com/a/pavement_04 | Jan Burghardt | CC0 1.0 | 2026-11-10 | `1b23c4d027f59b7891ecad7e1c1e8a4c441063e407f7442a8dde4d7b4d7e095b` | `paving_20x10_grey` |
+| `concrete_pavement_02` | Concrete Pavement 02 (1,80 × 1,80 m; przeskalowane do płyt 35 × 35 cm) | https://polyhaven.com/a/concrete_pavement_02 | Charlotte Baglioni | CC0 1.0 | 2026-11-10 | `a634f169ef1bb928585340f7feac69375b2bbbdfc0448e316dbaebe03bd5bf89` | `sidewalk_slab_35` (jeszcze nieprzypisany) |
+| `brushed_concrete` | Brushed Concrete (2,50 × 2,50 m) | https://polyhaven.com/a/brushed_concrete | Dario Barresi (obróbka), Dimitrios Savva (zdjęcia) | CC0 1.0 | 2026-11-10 | `5af96604b20e29862b449d86981b196b18ba5cbcb8659c451dd8976411a36130` | `concrete_cast_5m_joints` (hybryda) |
+| `concrete_floor_worn_001` | Concrete Floor Worn 001 (3,00 × 3,00 m) | https://polyhaven.com/a/concrete_floor_worn_001 | Dimitrios Savva (zdjęcia), Rico Cilliers (obróbka) | CC0 1.0 | 2026-11-10 | `e29b45cdcd6d02fae3c087c456196ffa750779a9b62e7071aa3831dc322a0cc4` | `concrete_slab_3x1.5`, `kerb_concrete_1m`, `concrete_precast`, `large_panel_joints` (hybrydy) |
+| `painted_plaster_wall` | Painted Plaster Wall (2,00 × 2,00 m) | https://polyhaven.com/a/painted_plaster_wall | Amal Kumar | CC0 1.0 | 2026-11-10 | `6fd812ed8dd5be1873c29aeef38ce9bf1fb30a22c6d4b3a12db725e98c26a1be` | `plaster` |
+| `red_brick` | Red Brick (1,40 × 1,40 m; przeskalowane do warstwy NF 75 mm → 1,51 m) | https://polyhaven.com/a/red_brick | Rob Tuytel | CC0 1.0 | 2026-11-10 | `a1ae5ba7e63026971ceaf68ebbcf8982d9c2dadde1c99996c49b8ac1160af995` | `brick` |
+| `corrugated_iron_03` | Corrugated Iron 03 (2,00 × 2,00 m; przetłoczenia usunięte filtrem) | https://polyhaven.com/a/corrugated_iron_03 | Charlotte Baglioni | CC0 1.0 | 2026-11-10 | `7b3f4f849dd634f54548b3b552ebeae723266f782163341185c94094e2eb7991` | `trapezoid_sheet` (hybryda) |
+| `gravel_floor_02` | Gravel Floor 02 (2,00 × 2,00 m) | https://polyhaven.com/a/gravel_floor_02 | Jenelle van Heerden (obróbka), Dimitrios Savva (zdjęcia) | CC0 1.0 | 2026-11-10 | `27c8953655dd2f289106106bb2c2c4845f77152bf1621b3d7091bd43b5083ffc` | `gravel_compacted` |
+| `pine_bark` | Pine Bark (2,00 × 2,00 m) | https://polyhaven.com/a/pine_bark | Dimitrios Savva | CC0 1.0 | 2026-11-10 | `741f333ab9f8a0996d8a53905b5ac792fab77d7ccb8cac5fbaed8c99b9f6abd5` | `bark_pine` (tylko przetworzony; drzewa = zakres world-buildera) |
+
+Modyfikacje (wszystkie w kodzie, odtwarzalne): częściowe usunięcie cieniowania (AO), spłaszczenie zmian jasności dłuższych niż ~0,35–1,5 m, balans bieli do średniej poprzedniego zestawu, kalibracja średniego albedo, wysokość całkowana z map normalnych, „bombardowanie” tekstury (4 m kafel z 16 łat obróconych o 90°), segmentacja kostek i płyt, skalowanie do polskich wymiarów (NF, 20 × 10, 35 × 35), hybrydy z naszymi generatorami układu.
+
 ## Pakiety Unity spoza szablonu
 
 | ID | Pakiet | Wersja | Licencja | Użycie |
@@ -100,7 +124,7 @@ Tylko pipeline, nie trafiają do buildu: numpy (BSD-3), scipy (BSD-3), soundfile
 
 ## Świat — otoczenie kafla C (world-builder, 2026-11-09)
 
-Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z cudzych modeli, tekstur, zdjęć ani generatorów AI. Tekstur CC0 (Poly Haven, ambientCG) nie użyto, wszystko jest proceduralne. Wyjątek (2026-11-09): `world-ground-asphalt-detail` jest pochodną zdjęcia z domeny publicznej (wiersz niżej).
+Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z cudzych modeli, tekstur, zdjęć ani generatorów AI. Do 2026-11-10 tekstur CC0 nie używano; od ADR 0063 (D40) zestawy nawierzchni i fasad wymienione w sekcji „Skany materiałów CC0” biorą mikrodetal ze skanów Poly Haven, a układ i zużycie nadal z naszych generatorów. Wyjątek (2026-11-09): `world-ground-asphalt-detail` jest pochodną zdjęcia z domeny publicznej (wiersz niżej).
 
 | ID | Źródło | Licencja | W gicie? | Użycie |
 |---|---|---|---|---|

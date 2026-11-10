@@ -176,6 +176,13 @@ namespace Game.World.Import
             if (setName == "behaton_i_grey" || setName == "paving_20x10_grey") { mat.SetFloat("_ElementJitter", 0.12f); mat.SetFloat("_ElementSize", 0.17f); }
             if (setName == "concrete_cast_5m_joints" || setName == "concrete_slab_3x1.5") { mat.SetFloat("_ElementJitter", 0.07f); mat.SetFloat("_ElementSize", 2.0f); }
             if (setName == "large_panel_joints" || setName == "brick") { mat.SetFloat("_ElementJitter", 0.05f); mat.SetFloat("_ElementSize", setName == "brick" ? 0.25f : 2.8f); }
+            // CC0 scan sets (ADR 0063): the photo already carries per-element tone; jitter only where the scan was
+            // segmented into elements (Var.G ids). A scan without ids would get one tone step per tile (visible grid).
+            if (set != null && set.Get("source") is Dictionary<string, object> src && !Str(src.Get("mode") ?? "").StartsWith("hybrid")
+                && src.Get("elements_per_tile") == null)
+                mat.SetFloat("_ElementJitter", 0f);
+            else if (set != null && set.Get("source") is Dictionary<string, object> src2 && src2.Get("elements_per_tile") != null)
+                mat.SetFloat("_ElementJitter", mat.GetFloat("_ElementJitter") * 0.5f);   // scan tone + half the jitter
 
             bool asphalt = setName == "asphalt_worn" || setName == "asphalt_sma_fresh" || setName == "asphalt_patch";
             if (id == "road_asphalt" || id == "road_asphalt_new")

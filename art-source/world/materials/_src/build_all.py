@@ -21,6 +21,7 @@ import pbrkit as K  # noqa: E402
 import sets_asphalt as A  # noqa: E402
 import sets_other as O  # noqa: E402
 import sets_facade as F  # noqa: E402
+import sets_scan as SC  # noqa: E402
 
 OUT = HERE.parent
 REPO = OUT.parents[2]
@@ -223,11 +224,25 @@ def build_detail(photo: Path):
     return info
 
 
+def _scan_entry(entry: dict, s, scan: bool):
+    """Spec fields of a scan-based set: real tile size (scans keep their physical size) and provenance."""
+    entry.pop("source", None)
+    if not scan:
+        return
+    if (s.scan_info or {}).get("mode", "").startswith("hybrid"):
+        entry["tile_m"] = [round(s.c.Lx, 4), round(s.c.Ly, 4)] if entry.get("tile_m") is None else entry["tile_m"]
+    else:
+        entry["tile_m"] = [round(s.c.Lx, 4), round(s.c.Ly, 4)]
+    entry["source"] = s.scan_info
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--photo", type=Path, default=DEFAULT_PHOTO)
     ap.add_argument("--only", default="")
     ap.add_argument("--tier", default="High,Medium,Low", help="comma list of High,Medium,Low")
+    ap.add_argument("--procedural", action="store_true",
+                    help="ignore the CC0 scans (ADR 0063) and build the purely procedural sets (A/B comparison)")
     a = ap.parse_args()
     import time
     t_all = time.perf_counter()
@@ -244,7 +259,9 @@ def main():
             continue
         print("set", name, flush=True)
         t0 = time.perf_counter()
-        s = meta["fn"]()
+        s = None if a.procedural else SC.build(name)
+        scan = s is not None
+        s = s or meta["fn"]()
         s.name = name
         info = K.write_set(s, OUT, tiers=TIERS_SEL)
         print(f"  {time.perf_counter() - t0:.1f} s", flush=True)
@@ -254,6 +271,7 @@ def main():
         entry = {k: v for k, v in meta.items() if k != "fn"}
         entry["kind"] = "decal_atlas" if s.alpha is not None else "tiling_set"
         entry["albedo_target_mean_lum_linear"] = meta["target"]
+        _scan_entry(entry, s, scan)
         entry.update(info)
         sets[name] = entry
     for name, meta in F.FACADE_SETS.items():
@@ -261,7 +279,9 @@ def main():
             continue
         print("facade set", name, flush=True)
         t0 = time.perf_counter()
-        s = meta["fn"]()
+        s = None if a.procedural else SC.build(name)
+        scan = s is not None
+        s = s or meta["fn"]()
         s.name = name
         info = K.write_set(s, OUT, tiers=TIERS_SEL)
         print(f"  {time.perf_counter() - t0:.1f} s", flush=True)
@@ -272,6 +292,24 @@ def main():
         entry["uv"] = "mesh_uv0_metres (u along, v up)"
         entry["kind"] = "modulation_set"
         entry["albedo_target_mean_lum_linear"] = F.MOD_MEAN
+        _scan_entry(entry, s, scan)
+        entry.update(info)
+        sets[name] = entry
+    for name, meta in SC.SCAN_ONLY_META.items():
+        if a.procedural or (only and name not in only):
+            continue
+        s = SC.build(name)
+        if s is None:
+            print(f"  SKIP {name}: scans not fetched (cc0_fetch.py)", flush=True)
+            continue
+        print("scan-only set", name, flush=True)
+        info = K.write_set(s, OUT, tiers=TIERS_SEL)
+        for t, fi in info["files"].items():
+            fi["astc"] = ASTC[t]
+            fi["gpu_bytes_astc_mips"] = int(gpu_estimate(fi, t))
+        entry = {"tile_m": None, "slots": meta["slots"], "note": meta["note"], "uv": meta["uv"], "kind": meta["kind"],
+                 "albedo_target_mean_lum_linear": meta["target"]}
+        _scan_entry(entry, s, True)
         entry.update(info)
         sets[name] = entry
     for name, meta in LAYERS.items():
@@ -311,6 +349,11 @@ def main():
             "albedo_source": SRC_ALB,
             "grass_albedo_source": "WORKING_VALUE (visible-band albedo of mown grass; no measured source in "
                                    "repo)",
+            "cc0_scans": "ADR 0063: sets with a `source` entry are built from CC0 scans (Poly Haven, manifest "
+                         "art-source/world/cc0/cc0_manifest.json, processing _src/sets_scan.py): de-lit, flattened "
+                         "above ~1 m, white-balanced to the previous set mean and calibrated to the same target; "
+                         "height integrated from the scan normals; isotropic scans re-assembled (texture bombing) "
+                         "into 4 m tiles; hybrids keep the procedural layout and take the scan micro-detail",
         },
         "sets": dict(sorted(sets.items())),
     }
