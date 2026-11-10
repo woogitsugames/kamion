@@ -51,7 +51,7 @@ def parse():
     p.add_argument("--tag", default="")
     p.add_argument("--no-analysis", action="store_true")
     p.add_argument("--beam", default="", choices=["", "low"], help="a4: QA render with the dipped beam lit")
-    p.add_argument("--shape", default="b2", choices=["b2", "round", "modern"],
+    p.add_argument("--shape", default=B.DEFAULT_SHAPE, choices=["b2", "round", "modern"],
                    help="cab surfacing: b2 = exported cab, round = rounding-pass proposal (owner approval pending)")
     p.add_argument("--rake", type=float, default=None, help="modern only: front plane rake in degrees (default 7)")
     p.add_argument("--vis", action="store_true", help="a4: eye-point views + visibility map (widocznosc_*)")
@@ -64,17 +64,13 @@ def build(a):
     S.setup_render(a.res, a.samples)
     clay = a.mode == "a3"
     M.build_library(a.liveries.split(",")[0], clay=clay)
-    M.principled("mask_gloss", "TRIM", (0.010, 0.010, 0.011), 0.09, coat=0.5)   # --shape modern: gloss-black mask
     if clay:
         for k in ("tyre_steer", "tyre_drive"):
             M.principled(k, "TYRE", (0.03, 0.03, 0.03), 0.85)
     else:
         C.make_tyre_materials()
     subpaths, strokes = G.load_svg_mark(os.path.join(G.REPO, "art-source", "truck", "brand", "trakt.svg"))
-    B.set_shape(a.shape)
-    if a.rake is not None:
-        assert a.shape == "modern", "--rake is a modern-front proposal option"
-        B.set_rake(a.rake)
+    B.set_shape(a.shape, a.rake)
     B.cab_shell()
     B.glazing()
     B.doors_and_gaps()
@@ -185,7 +181,7 @@ def main():
     os.makedirs(a.out, exist_ok=True)
     fig = build(a)
     S.measure(os.path.join(a.out, "wymiary.json"))
-    if a.shape == "b2":   # the interior reads this contract; the 'round' proposal must not move it before approval
+    if a.shape == B.DEFAULT_SHAPE and a.rake is None:   # the interior reads this contract: default variant only
         B.door_interface(os.path.join(G.REPO, "art-source", "truck", "exterior", "door_interface.json"))
     else:
         B.door_interface(os.path.join(a.out, f"door_interface_{a.shape}.json"))

@@ -579,6 +579,7 @@ def build_library(livery="white", clay=False):
     if not clay:
         micro_bump(nt, b, 900.0, 0.25, 0.0003)
         grime(nt, b, trim_rgb, 0.62, h0=1.4, amount=0.9, film=1.2, streak=0.3)
+    principled("mask_gloss", "TRIM", (0.010, 0.010, 0.011) if not clay else (0.2, 0.2, 0.2), 0.09, coat=0.5)   # modern front: gloss-black mask
     m, nt, b = principled("plastic_satin", "TRIM", (0.028, 0.029, 0.03) if not clay else (0.25, 0.25, 0.25), 0.36)
     principled("rubber", "TRIM", (0.018, 0.018, 0.018), 0.82, spec=0.3)
     principled("gap", "TRIM", (0.004, 0.004, 0.004), 0.9, spec=0.2)
