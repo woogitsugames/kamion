@@ -1130,7 +1130,7 @@
      "role": "CHASSIS",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 11934,
+     "tris": 11854,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Metal",
@@ -1153,7 +1153,7 @@
      "role": "CAB_Body",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 17917,
+     "tris": 17881,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Paint",
@@ -1176,7 +1176,7 @@
      "role": "DOOR_L",
      "rig_parent": "CAB_Body_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 572,
+     "tris": 778,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Paint"
@@ -1208,7 +1208,7 @@
      "role": "DOOR_R",
      "rig_parent": "CAB_Body_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 573,
+     "tris": 777,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Paint"
@@ -1240,7 +1240,7 @@
      "role": "WHEEL_FL",
      "rig_parent": "STEER_FL_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 1938,
+     "tris": 1890,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1274,7 +1274,7 @@
      "role": "WHEEL_FR",
      "rig_parent": "STEER_FR_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 1937,
+     "tris": 1891,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1370,7 +1370,7 @@
      "role": "MUDFLAP_FL",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 78,
+     "tris": 76,
      "materials": [
       "MI_Ext_Trim"
      ],
@@ -1401,7 +1401,7 @@
      "role": "MUDFLAP_FR",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 78,
+     "tris": 76,
      "materials": [
       "MI_Ext_Trim"
      ],
@@ -1532,7 +1532,7 @@
      "role": "WHEEL_RL",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 3379,
+     "tris": 3286,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1566,7 +1566,7 @@
      "role": "WHEEL_RR",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 3377,
+     "tris": 3286,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1594,13 +1594,13 @@
       }
      },
      "tyre_outer_radius_m": 0.5414,
-     "width_m": 0.6571
+     "width_m": 0.6572
     },
     "GLASS_Windscreen_LOD1": {
      "role": "GLASS_Windscreen",
      "rig_parent": "CAB_Body_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 290,
+     "tris": 282,
      "materials": [
       "MI_Ext_Glass"
      ],
@@ -2209,11 +2209,11 @@
     }
    },
    "collision": {},
-   "tris_total": 42996,
+   "tris_total": 43000,
    "tris_before_decimation": 97424,
-   "decimate_area_budget_k": 152.77,
-   "file_bytes": 4240604,
-   "build_s": 2.8
+   "decimate_area_budget_k": 148.61,
+   "file_bytes": 4241244,
+   "build_s": 2.9
   },
   "LOD2": {
    "file": "art-source/truck/exterior/export/SM_TruckExterior_LOD2.fbx",

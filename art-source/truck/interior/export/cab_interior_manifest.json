@@ -7,7 +7,7 @@
    "root": "CabInterior_LOD2",
    "objects": {
     "CAB_Interior_LOD2": {
-     "tris": 16021,
+     "tris": 16043,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -24,7 +24,7 @@
      "role": "CAB_Interior"
     },
     "CAB_ShellPlaceholder_LOD2": {
-     "tris": 2285,
+     "tris": 2287,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Metal"
@@ -343,7 +343,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 21960,
+   "tris_total": 21984,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -383,10 +383,10 @@
    "ao_atlas_layout": {
     "small_parts_inherit": 44,
     "packer": "skyline",
-    "islands": 541,
-    "sliver_islands_transferred": 85,
-    "uv_coverage": 0.6781,
-    "baked_texel_coverage": 0.9466,
+    "islands": 552,
+    "sliver_islands_transferred": 88,
+    "uv_coverage": 0.659,
+    "baked_texel_coverage": 0.9275,
     "angle": 66.0,
     "margin": 0.0025,
     "small_m2": 0.01,
@@ -394,7 +394,7 @@
    },
    "fit_to_exterior": {
     "source": "art-source/truck/exterior/glass_interface.json",
-    "verts_moved": 873,
+    "verts_moved": 881,
     "max_move_m": 0.5579,
     "objects": {
      "floor_slab": {
@@ -425,6 +425,10 @@
       "verts_moved": 28,
       "max_move_m": 0.2385
      },
+     "footwell_wall_cnr_-1": {
+      "verts_moved": 4,
+      "max_move_m": 0.2497
+     },
      "side_rear_1": {
       "verts_moved": 12,
       "max_move_m": 0.0353
@@ -440,6 +444,10 @@
      "apillar_foot_1": {
       "verts_moved": 28,
       "max_move_m": 0.2385
+     },
+     "footwell_wall_cnr_1": {
+      "verts_moved": 4,
+      "max_move_m": 0.2497
      },
      "footwell_wall": {
       "verts_moved": 8,
@@ -519,17 +527,17 @@
      }
     }
    },
-   "hidden_faces_removed": 1137,
-   "tris_before_cleanup": 24146,
-   "build_s": 14.3,
-   "file_bytes": 2582316
+   "hidden_faces_removed": 1155,
+   "tris_before_cleanup": 24202,
+   "build_s": 12.9,
+   "file_bytes": 2596748
   },
   "LOD1": {
    "file": "art-source/truck/interior/export/SM_CabInterior_LOD1.fbx",
    "root": "CabInterior_LOD1",
    "objects": {
     "CAB_Interior_LOD1": {
-     "tris": 34449,
+     "tris": 34648,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -546,7 +554,7 @@
      "role": "CAB_Interior"
     },
     "CAB_ShellPlaceholder_LOD1": {
-     "tris": 2951,
+     "tris": 2953,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Rubber",
@@ -891,7 +899,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 43128,
+   "tris_total": 43329,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -931,10 +939,10 @@
    "ao_atlas_layout": {
     "small_parts_inherit": 172,
     "packer": "skyline",
-    "islands": 714,
-    "sliver_islands_transferred": 192,
-    "uv_coverage": 0.6675,
-    "baked_texel_coverage": 0.8993,
+    "islands": 720,
+    "sliver_islands_transferred": 194,
+    "uv_coverage": 0.6669,
+    "baked_texel_coverage": 0.893,
     "angle": 66.0,
     "margin": 0.0025,
     "small_m2": 0.01,
@@ -942,7 +950,7 @@
    },
    "fit_to_exterior": {
     "source": "art-source/truck/exterior/glass_interface.json",
-    "verts_moved": 1074,
+    "verts_moved": 1090,
     "max_move_m": 0.5579,
     "objects": {
      "floor_slab": {
@@ -973,6 +981,10 @@
       "verts_moved": 28,
       "max_move_m": 0.2385
      },
+     "footwell_wall_cnr_-1": {
+      "verts_moved": 8,
+      "max_move_m": 0.2497
+     },
      "side_rear_1": {
       "verts_moved": 12,
       "max_move_m": 0.0353
@@ -988,6 +1000,10 @@
      "apillar_foot_1": {
       "verts_moved": 28,
       "max_move_m": 0.2385
+     },
+     "footwell_wall_cnr_1": {
+      "verts_moved": 8,
+      "max_move_m": 0.2497
      },
      "footwell_wall": {
       "verts_moved": 8,
@@ -1115,17 +1131,17 @@
      }
     }
    },
-   "hidden_faces_removed": 4848,
-   "tris_before_cleanup": 52534,
-   "build_s": 29.8,
-   "file_bytes": 5059148
+   "hidden_faces_removed": 4875,
+   "tris_before_cleanup": 52788,
+   "build_s": 29.4,
+   "file_bytes": 5112620
   },
   "LOD0": {
    "file": "art-source/truck/interior/export/SM_CabInterior_LOD0.fbx",
    "root": "CabInterior_LOD0",
    "objects": {
     "CAB_Interior_LOD0": {
-     "tris": 80753,
+     "tris": 81041,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Leather",
@@ -1142,7 +1158,7 @@
      "role": "CAB_Interior"
     },
     "CAB_ShellPlaceholder_LOD0": {
-     "tris": 4682,
+     "tris": 4686,
      "materials": [
       "MI_Cab_Plastic",
       "MI_Cab_Rubber",
@@ -1487,7 +1503,7 @@
      "role": "MIRROR_Front"
     }
    },
-   "tris_total": 96811,
+   "tris_total": 97103,
    "empties_unity_local": {
     "EYE_POINT": [
      -0.55,
@@ -1527,10 +1543,10 @@
    "ao_atlas_layout": {
     "small_parts_inherit": 266,
     "packer": "skyline",
-    "islands": 853,
-    "sliver_islands_transferred": 209,
-    "uv_coverage": 0.6425,
-    "baked_texel_coverage": 0.7821,
+    "islands": 866,
+    "sliver_islands_transferred": 208,
+    "uv_coverage": 0.6491,
+    "baked_texel_coverage": 0.7894,
     "angle": 66.0,
     "margin": 0.0025,
     "small_m2": 0.01,
@@ -1538,7 +1554,7 @@
    },
    "fit_to_exterior": {
     "source": "art-source/truck/exterior/glass_interface.json",
-    "verts_moved": 5758,
+    "verts_moved": 5774,
     "max_move_m": 0.5579,
     "objects": {
      "floor_slab": {
@@ -1569,6 +1585,10 @@
       "verts_moved": 28,
       "max_move_m": 0.2385
      },
+     "footwell_wall_cnr_-1": {
+      "verts_moved": 8,
+      "max_move_m": 0.2497
+     },
      "side_rear_1": {
       "verts_moved": 28,
       "max_move_m": 0.0358
@@ -1584,6 +1604,10 @@
      "apillar_foot_1": {
       "verts_moved": 28,
       "max_move_m": 0.2385
+     },
+     "footwell_wall_cnr_1": {
+      "verts_moved": 8,
+      "max_move_m": 0.2497
      },
      "footwell_wall": {
       "verts_moved": 8,
@@ -1715,10 +1739,10 @@
      }
     }
    },
-   "hidden_faces_removed": 13221,
-   "tris_before_cleanup": 124814,
-   "build_s": 138.4,
-   "file_bytes": 10695356
+   "hidden_faces_removed": 13267,
+   "tris_before_cleanup": 125198,
+   "build_s": 140.5,
+   "file_bytes": 10785020
   }
  },
  "tri_budget": {

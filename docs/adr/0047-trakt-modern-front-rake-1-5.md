@@ -141,3 +141,15 @@ Frames: `artifacts/owner/modern-front/r6-geo/` (`before` = main with the r4 expo
   (`docs/reports/visual/truck-A6-exterior/lod1_34przod.jpg`, already in the r4 export; not the sill cladding);
   (2) Low corner p50 (above); (3) Low lowsun corner p50 / p99 1.6 / 19.9 %; (4) no phone frame: UNVERIFIED on device;
   (5) not reviewed by `visual-critic` yet.
+## Addendum r6b (2026-11-10, truck-artist): LOD1 dark wedge - root cause and fix
+- **Cause.** `decimate_pieces.ratio_for` applied the per-piece floor `MIN_RATIO` only when it was *larger* than
+  `lights_min`. At LOD1 `lights_min` is 0.5 and the door floor 0.30, so `door_shell_*` had no floor and collapsed
+  2029 -> 402 triangles (0.2): the outer skin between the diagonal front shut line and the window folded onto the dark
+  rim / inner faces. Measured against the LOD0 piece (`artifacts/owner/modern-front/r6b/lod1_diag.py`, nearest-face
+  test): 0.86-0.91 m2 of 3.2 m2 per door with the wrong slot and 0.86-0.88 m2 facing backwards. Not normals, UVs or
+  the sill cladding (`NO_DECIMATE` of r6 stays, it was a second, smaller effect).
+- **Fix.** The floor applies on its own (`lo = max(lo, MIN_RATIO * n)`): doors 608 / 607 triangles, wrong-slot area
+  0, back-facing 0.002 m2. LOD1 42 996 -> 43 000 (budget moved from other pieces, k 152.8 -> 148.6); LOD0 103 367 and
+  LOD2 15 434 unchanged (their FBX and the atlases are the committed r6 files: the re-bake differs by a few pixels
+  only). `exterior/check_export.py` PASS. Frames: `artifacts/owner/modern-front/r6b/lod1/lod1_34przod_{before,after}.jpg`
+  (Cycles, game materials), in engine `before-ext/` vs `after-ext/` `Medium-overcast/truck-34.png` (Medium shows LOD1).

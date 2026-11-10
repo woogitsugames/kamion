@@ -1300,8 +1300,11 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0):
     def ratio_for(o, k):
         sl = o.get("slots", [])
         n = base[o.name]
-        lm = max(lights_min, next((m for key, m in MIN_RATIO.items() if key in o.name), 0.0))
-        lo = max(lm * n, floor_tris) if ("Lights" in sl or "Glass" in sl or lm > lights_min) else floor_tris
+        # r6b: the piece floor (MIN_RATIO) applies on its own. It used to count only when it exceeded lights_min, so at
+        # LOD1 (lights_min 0.5 > 0.30) the door shells had no floor at all and collapsed to 0.2
+        mr = next((m for key, m in MIN_RATIO.items() if key in o.name), 0.0)
+        lo = max(lights_min * n, floor_tris) if ("Lights" in sl or "Glass" in sl) else floor_tris
+        lo = max(lo, mr * n)
         w = SILHOUETTE_W if any(t in o.name for t in SILHOUETTE_KEYS) else 1.0
         want = max(lo, k * w * area[o.name] ** 0.6)
         return min(1.0, want / n)
