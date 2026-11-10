@@ -44,3 +44,4 @@
 - NASTĘPNY KROK: `uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only fence_concrete` ->
   sprawdź `artifacts/buildings-r10/r1/round.log` (jeśli brak "round done": `pwsh artifacts/buildings-r10/run_round.ps1 -Round r1 -Configs High:overcast,Low:overcast`)
   -> obejrzyj `artifacts/buildings-r10/r1/*/960/r10_*.jpg` vs `artifacts/buildings-r10/refs/` i `base/`, visual-critic, stats.txt Low vs base, uzupełnij ADR 0081.
+- Runda r1 ZAKOŃCZONA po stopie (import + kamery High/Low overcast, exit 0); rendery w `artifacts/buildings-r10/r1/` nadal NIE obejrzane - krok 2 z listy pominąć, zacząć od oglądania.
