@@ -149,14 +149,44 @@ namespace Game.World.Import
                 var n = Obj(no);
                 if (n.Get("boundary") is bool b && b) boundaryNodes.Add(Str(n.Get("id")));
             }
-            foreach (var eo in Arr(g.Get("edges")))
+            // Edges per node: a boundary edge is often a short piece (the graph splits a road where an attribute
+            // changes), so the setback walks on through nodes where the road simply continues (degree 2).
+            var edgeList = Arr(g.Get("edges")).Select(Obj).ToList();
+            var atNode = new Dictionary<string, List<Dictionary<string, object>>>();
+            foreach (var e in edgeList)
+                foreach (string key in new[] { Str(e.Get("from")), Str(e.Get("to")) })
+                {
+                    if (!atNode.TryGetValue(key, out var l)) atNode[key] = l = new List<Dictionary<string, object>>();
+                    l.Add(e);
+                }
+            List<Vector2> Points(Dictionary<string, object> e) =>
+                Arr(e.Get("geometry")).Select(p => new Vector2((float)(Num(Arr(p)[0]) - r.AnchorX), (float)(Num(Arr(p)[1]) - r.AnchorY))).ToList();
+            foreach (var e in edgeList)
             {
-                var e = Obj(eo);
                 bool fromB = boundaryNodes.Contains(Str(e.Get("from"))), toB = boundaryNodes.Contains(Str(e.Get("to")));
                 if (!fromB && !toB) continue;
-                var pts = Arr(e.Get("geometry")).Select(p => new Vector2((float)(Num(Arr(p)[0]) - r.AnchorX), (float)(Num(Arr(p)[1]) - r.AnchorY))).ToList();
+                var pts = Points(e);
                 if (pts.Count < 2) continue;
                 if (fromB) pts.Reverse();            // now the last point is on the region edge
+                float have = 0f;
+                for (int i = 1; i < pts.Count; i++) have += Vector2.Distance(pts[i - 1], pts[i]);
+                var cur = e;
+                string inner = Str(e.Get(fromB ? "to" : "from"));
+                for (int guard = 0; guard < 16 && have < ClosureSetbackM / 0.8f; guard++)
+                {
+                    if (boundaryNodes.Contains(inner) || !atNode.TryGetValue(inner, out var l) || l.Count != 2) break;
+                    var next = l[0] == cur ? l[1] : l[0];
+                    if (next == cur) break;
+                    var np = Points(next);
+                    if (np.Count < 2) break;
+                    bool endsHere = Str(next.Get("to")) == inner;
+                    if (!endsHere) np.Reverse();     // now np ends at the shared node
+                    for (int i = 1; i < np.Count; i++) have += Vector2.Distance(np[i - 1], np[i]);
+                    np.RemoveAt(np.Count - 1);
+                    pts.InsertRange(0, np);
+                    inner = Str(next.Get(endsHere ? "from" : "to"));
+                    cur = next;
+                }
                 var attrs = e.Get("attrs") as Dictionary<string, object>;
                 float width = AttrNum(attrs, "width");
                 if (width <= 0f) width = Mathf.Max(1f, AttrNum(attrs, "lanes")) * 3.5f;

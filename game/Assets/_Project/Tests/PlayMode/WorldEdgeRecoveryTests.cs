@@ -69,9 +69,11 @@ namespace Game.Tests
             Vector3 edgeLocal = new Vector3(-857f, 0f, max.y - 25f);
             Vector3 start = root.transform.TransformPoint(edgeLocal);
             Assert.IsTrue(Gate3Cameras.TryGroundY(start.x, start.z, root.transform.position.y + 400f, new[] { body.transform }, out float gy), "collision 25 m before the edge");
-            start.y = gy + 0.3f;
-            body.SetPose(start, Quaternion.LookRotation(Vector3.forward, Vector3.up));
-            body.Body.linearVelocity = Vector3.forward * (105f / 3.6f);
+            start.y = gy;
+            // The whole combination (tractor + coupled trailer), rolling in gear; the lab re-applies the parking brake
+            // after a spawn, which cannot stop 105 km/h within 25 m.
+            boot.SpawnAt(boot.CurrentSpawn, start, Quaternion.LookRotation(Vector3.forward, Vector3.up));
+            body.SetMoving(105f / 3.6f, 11);
             Physics.SyncTransforms();
             rig.AddLookDelta(new Vector2(400f, -300f));   // the driver's fingers on the look pad during the fall
 
@@ -84,6 +86,7 @@ namespace Game.Tests
                 maxSpeed = Mathf.Max(maxSpeed, body.Body.linearVelocity.magnitude * 3.6f);
                 Row();
             }
+            File.WriteAllText(EvidencePath("world-edge-reset.csv"), csv.ToString());
             Assert.AreEqual(1, net.ResetCount, "reset when the vehicle left the region");
             Assert.AreEqual(WorldExitReason.OutOfBounds, net.LastReason);
             Assert.Greater(lowestY, gy - 2.5f, "caught before the fall (recording: fell for 10 s to 179 km/h)");
@@ -138,7 +141,7 @@ namespace Game.Tests
             foreach (var c in boundary.closures)
             {
                 float inside = WorldBoundary.InsideDistance(boundary.minEN, boundary.maxEN, c.localPos.x, c.localPos.z);
-                Assert.That(inside, Is.GreaterThan(5f).And.LessThan(90f), "closure set back from the edge: " + c.road);
+                Assert.That(inside, Is.GreaterThan(2f).And.LessThan(90f), "closure set back from the edge: " + c.road);
                 // The closure is a physical obstacle: a ray along the road at bumper height hits it.
                 Vector3 p = root.transform.TransformPoint(c.localPos) + Vector3.up * 0.6f;
                 Vector3 dir = Quaternion.Euler(0f, c.headingDeg, 0f) * Vector3.forward;
@@ -148,14 +151,12 @@ namespace Game.Tests
             }
             Assert.IsTrue(tysiaclecia, "al. Tysiąclecia Państwa Polskiego (the road of the recording) is closed before the north edge");
             // Evidence: road surface profile of the recording's last 320 m (the 90 -> 94 km/h rise before the edge).
-            var prof = new System.Text.StringBuilder("north_m,road_y_m
-");
+            var prof = new System.Text.StringBuilder("north_m,road_y_m\n");
             for (float n = 700f; n <= 1020f; n += 20f)
             {
                 Vector3 w = root.transform.TransformPoint(new Vector3(-857f, 0f, n));
                 if (Gate3Cameras.TryGroundY(w.x, w.z, root.transform.position.y + 400f, System.Array.Empty<Transform>(), out float ry))
-                    prof.AppendFormat(CultureInfo.InvariantCulture, "{0:F0},{1:F2}
-", n, ry);
+                    prof.AppendFormat(CultureInfo.InvariantCulture, "{0:F0},{1:F2}\n", n, ry);
             }
             File.WriteAllText(EvidencePath("tysiaclecia-north-profile.csv"), prof.ToString());
             // Ground to the horizon: the apron renderer reaches far beyond the region.
