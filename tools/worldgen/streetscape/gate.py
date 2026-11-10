@@ -7,7 +7,7 @@ graph is reported in the streetscape QA (`gates.stale`), never dropped silently.
 
 The kit (prototypes in streetscape.life_props, fence meshes like streetscape.furniture.fences):
   * gatehouse (portiernia) on the island where it is >= island_min_w wide, glazed side toward the entry lane;
-  * one striped boom barrier per lane, housing on the island kerb, boom across the lane (closed position);
+  * one striped boom barrier per lane, housing on the island kerb, boom raised (open position, map audit MA-003);
   * cantilever sliding gate across the two-way road `gate_offset_m` inside the depot, standing open
     behind the fence on the side given by `gate_side`;
   * panel fence returns (anthracite 3D panels on a concrete plinth) from both gate posts along the gate line,
@@ -91,7 +91,7 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
         k = min(ok[0] + int(o.get("barrier_past_nose_m", 3.0) / 0.5), len(dd) - 1)
         m = 0.5 * (pe[k] + px[k])
         free = shapely.union_all([roads_poly.buffer(0.3), bpoly.buffer(0.8)])
-        # --- barriers: housing on the median kerb, boom across each lane (prototype +x = boom, closed)
+        # --- barriers: housing on the median kerb, boom over each lane, raised (MA-003)
         bars = []
         for (c, s0, g), name in (((ce, se, ge), "entry"), ((cx, sx, gx), "exit")):
             s = s0 + g * dd[k]
@@ -100,7 +100,7 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
             across /= max(np.hypot(*across), 1e-9)
             hw = float(c.hw_at(s))
             base = p_c - across * (hw + S.KERB_TOP_W + 0.3)
-            pl.add("barrier_arm", base, math.atan2(across[1], across[0]), src=f"{src}:{name}", group="barrier")
+            pl.add("barrier_arm_raised", base, math.atan2(across[1], across[0]), src=f"{src}:{name}", group="barrier")
             bars.append((c, s, g, across, hw))
             # oil stains where vehicles wait in front of the boom (approach side)
             for mm_ in range(2):

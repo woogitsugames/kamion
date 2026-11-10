@@ -532,15 +532,25 @@ def gatehouse():
     return m, l1, col
 
 
-def barrier_arm(L=6.0):
+BOOM_OPEN_DEG = 85.0       # raised boom (WORKING_VALUE; drives stop at 85-90 deg)
+
+
+def barrier_arm(L=6.0, raised=False):
     """Boom barrier: drive housing (0.4 x 0.35 x 1.05 m) at the origin, boom along +x at 0.95 m, rest post
-    with a fork at the far end. The boom has UV u = metres (0.5 m red/white bands in the material)."""
+    with a fork at the far end. The boom has UV u = metres (0.5 m red/white bands in the material).
+    raised=True: boom up at BOOM_OPEN_DEG about the hinge (map audit MA-003: the booms have no collider, so a closed
+    boom across the lane was driven through; the depot gate stands open in gameplay)."""
     m, l1, col = Mesh(), Mesh(), Mesh()
     for mm, seg in ((m, 10), (l1, 5)):
         mm.box("concrete_base", [0, 0, -0.05], 0.35, 0.3, 0.1)
         mm.box("barrier_housing", [0, 0, 0.55], 0.2, 0.175, 0.5)
         mm.box("barrier_housing", [0, 0, 1.06], 0.22, 0.19, 0.02)
-        p0, p1 = np.array([0.15, 0.0, 0.95]), np.array([L, 0.0, 0.95])
+        p0 = np.array([0.15, 0.0, 0.95])
+        if raised:
+            a = math.radians(BOOM_OPEN_DEG)
+            p1 = p0 + (L - 0.15) * np.array([math.cos(a), 0.0, math.sin(a)])
+        else:
+            p1 = np.array([L, 0.0, 0.95])
         mm.tube("gate_boom", p0, p1, 0.05, 0.04, seg)
         mm.tube("steel_painted", [L - 0.1, 0.0, 0.0], [L - 0.1, 0.0, 0.88], 0.04, None, max(4, seg // 2))
         mm.box("steel_painted", [L - 0.1, 0.0, 0.9], 0.08, 0.02, 0.04)
@@ -658,6 +668,7 @@ def build_all():
     P["cone"] = cone()
     P["gatehouse"] = gatehouse()
     P["barrier_arm"] = barrier_arm()
+    P["barrier_arm_raised"] = barrier_arm(raised=True)
     P["cantilever_gate"] = cantilever_gate()
     for code in SIGNS:
         P[f"facade_sign_{code}"] = facade_sign(code)
