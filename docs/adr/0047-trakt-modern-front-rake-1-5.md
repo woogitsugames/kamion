@@ -70,3 +70,17 @@ European premium tractor were shown as a reference for proportion, roundness and
   truck-34 grille mean sRGB: Low overcast 51 -> 44, High overcast 60 -> 51, lowsun 25-29 -> 19-24; paint, glass, lamps
   unchanged. Cost: one extra env sample on gloss-trim pixels only (~1-2 % of the truck-34 frame); not measured on a phone.
   Evidence: artifacts/owner/modern-front/shader/. Geometry follow-up (truck-artist): louvre faces tilted face-down.
+
+## Revision r3 (2026-11-10): what the driver really sees at the left A-pillar
+- New tool `tools/blender/truck/pillar_obstruction.py`: rays from the eye point against the exported exterior LOD0 +
+  interior LOD1 (glass transparent), azimuth step 0.25 deg, pitch -6 / 0 / +6 deg. Pillar wedge (contiguous blocked
+  span between the windscreen and the door glass) at pitch 0: B2 11.0 deg, modern r2 16.25 deg, modern r3 7.0 deg
+  (full export; all pitches in `modern-front/pillar_obstruction_r3.json`: 7.0 / 7.0 / 6.75 deg).
+  The r2 "4.6 deg" was the exterior opening only; the wedge in the cab came from interior parts built for the old
+  box corner: the box pillar trim, the parked windscreen curtain and grab handle beside it, the side-frit print at
+  x 1.11 m (now clear glass) and the door-glass channel that the exterior fit smeared across the corner arc.
+- `build_interior.py`: the pillar trim is lofted along the strip between the two glass edges (`apillar_frame`),
+  62 mm deep along the sight line and 10 mm wider than the opaque strip per side; grab handle, tweeter and the
+  parked curtain sit on the sight line behind it; the frit print and the door-glass channel follow the exterior
+  opening / corner arc. Old interface files (no opening data) still build the A6 box pillar.
+- Door-mirror housing seen from the seat: 12.5 deg (B2 11.5 deg, two separate heads) - not changed here.

@@ -458,11 +458,55 @@ def side_win_front(z):
     return y0 + (y1 - y0) * (z - z0) / (z1 - z0)
 
 
+def shell_in_x(y, z, inset=0.0):
+    """|x| of the exterior shell's inner face at (y, z) on the side wall / front corner arc (glass_interface.json
+    sections); None without the interface."""
+    if GLASS_IF is None or not GLASS_IF.get("shell"):
+        return None
+    yf, yb, w, rf, rb = shell_sec(min(max(z, GLASS_IF["shell"][0][0]), GLASS_IF["shell"][-1][0]))
+    r = max(0.01, rf - GLASS_IF["wall"])
+    return (w - rf) + math.sqrt(max(0.0, r * r - min(r, max(0.0, y - (yf - rf))) ** 2)) - inset
+
+
+def ws_open_x(z):
+    """|x| of the exterior windscreen's visible opening edge at height z (glass_interface.json), else None."""
+    if GLASS_IF is None or not GLASS_IF.get("opening_x"):
+        return None
+    zc = min(max(z, WS_Z0), WS_Z1)
+    zs, ox = GLASS_IF["zs"], GLASS_IF["opening_x"]
+    f = (zc - zs[0]) / (zs[-1] - zs[0]) * (len(zs) - 1)
+    k = min(len(zs) - 2, int(f))
+    return ox[k] + (ox[k + 1] - ox[k]) * (f - k)
+
+
+def apillar_frame(s, z):
+    """Modern cab (ADR 0047 r3): the A-pillar as the driver sees it = the strip between the windscreen's clear edge and
+    the side-glass front edge on the rounded corner. Returns (A, B, t, n) in plan (x, y): A = inner glass face just
+    inside the windscreen's side frit, B = shell inner face at the side-glass front edge, t = unit A->B, n = unit
+    normal pointing into the cab (almost exactly along the driver's sight line, so trim depth costs no view angle).
+    None when the exterior publishes no opening (old interface): the A6 box pillar is built instead."""
+    if GLASS_IF is None or not GLASS_IF.get("opening_x") or not GLASS_IF.get("shell"):
+        return None
+    zc = min(max(z, WS_Z0), WS_Z1)
+    xe = ws_open_x(z) - 0.014          # 14 mm in x = behind the 28 mm side frit on the arc
+    a = V(xe, glass_y(xe, zc) - 0.004, 0)
+    ys = side_win_front(z) + 0.006
+    b = V(shell_in_x(ys, zc), ys, 0)
+    t = (b - a).normalized()
+    n = V(-t.y, t.x, 0)
+    if n.x > 0:
+        n = -n
+    m = lambda v: V(s * v.x, v.y, 0)  # noqa: E731
+    return m(a), m(b), m(t), m(n)
+
+
 # ---------------------------------------------------------------- windscreen, A-pillars, side glass
 def build_glass():
     group("glass")
     # windscreen: one sheet, curved into the pillars at the outer 120 mm (slight wrap)
     hw = XI - 0.055
+    if ws_open_x(WS_Z0) is not None and GLASS_IF.get("shell"):
+        hw = max(hw, ws_open_x(WS_Z0))       # r3: the placeholder screen and its frit follow the exterior opening
     nwx, nwz = G.Q(40, 10), G.Q(8, 3)
     xs = [-1 + 2 * i / nwx for i in range(nwx + 1)]
     loops = []
@@ -485,6 +529,9 @@ def build_glass():
         x = s * (XI + 0.035)
         yf0, yf1 = side_win_front(WIN_Z0), side_win_front(WIN_Z1)
         corners = [V(x, DOOR_Y0 + 0.07, WIN_Z0), V(x, yf0, WIN_Z0), V(x, yf1, WIN_Z1), V(x, DOOR_Y0 + 0.07, WIN_Z1)]
+        if apillar_frame(s, 2.5) is not None:   # r3: the glass front edge sits on the corner arc of the modern cab
+            corners[1] = V(s * min(abs(x), shell_in_x(yf0, WIN_Z0, 0.004)), yf0, WIN_Z0)
+            corners[2] = V(s * min(abs(x), shell_in_x(yf1, WIN_Z1, 0.004)), yf1, WIN_Z1)
         bm = bmesh.new()
         vs = [bm.verts.new(c) for c in corners]
         bm.faces.new(vs)
@@ -500,6 +547,38 @@ def build_glass():
         box_mm(f"bpillar_skin_{s}", s * (XI + 0.02), s * HALF_OUT, DOOR_Y0, DOOR_Y0 + 0.07, WIN_Z0, WIN_Z1 + 0.07, "paint")
     # A-pillars: inner trim lofted along the windscreen edge, outer skin behind it
     for s in (-1, 1):
+        if apillar_frame(s, 2.5) is not None:
+            # slim padded pillar following the glass edges of the rounded corner: 62 mm deep along the sight line,
+            # only 10 mm wider than the opaque strip on each side; grab handle and tweeter sit in its shadow
+            loops, skin = [], []
+            for zi in range(9):
+                z = WS_Z0 - 0.06 + (WS_Z1 + 0.08 - WS_Z0 + 0.06) * zi / 8
+                a, b, t, n = apillar_frame(s, z)
+                mid = (a + b) / 2
+                sec = [a - t * 0.010 + n * 0.006, a + t * 0.004 + n * 0.040, mid + n * 0.062, b - t * 0.004 + n * 0.040,
+                       b + t * 0.010 + n * 0.006, b + t * 0.006 - n * 0.004, a - t * 0.006 - n * 0.004]
+                loops.append([V(q.x, q.y, z) for q in sec])
+                skin.append([V(q.x, q.y, z) for q in (a - n * 0.004, b - n * 0.004, b - n * 0.028, a - n * 0.028)])
+            ap = loft(f"apillar_trim_{s}", loops, "trim_light", closed=True, cap0=True, cap1=True)
+            bevel(ap, 0.008, 2, angle=30)
+            loft(f"apillar_skin_{s}", skin, "paint", closed=True, cap0=True, cap1=True)
+            z0, z1 = 2.22, 2.80
+
+            def on_pillar(z, depth):
+                # along the driver's sight line through the pillar centre: hidden in the pillar's shadow
+                a, b, t, n = apillar_frame(s, z)
+                mid = (a + b) / 2
+                d = V(EYE[0] - mid.x, EYE[1] - mid.y, 0).normalized()
+                q = mid + n * min(depth, 0.058) + d * max(0.0, depth - 0.058)
+                return V(q.x, q.y, z)
+            pts = [on_pillar(z0, 0.058), on_pillar(z0 + 0.04, 0.098), on_pillar(z1 - 0.04, 0.098), on_pillar(z1, 0.058)]
+            tube(f"grab_A_{s}", G.polyline_smooth(pts, 6), 0.0135, "dash_dark", seg=12)
+            a, b, t, n = apillar_frame(s, 2.08)
+            c = on_pillar(2.08, 0.060)
+            cyl(f"tweeter_{s}", c, 0.022, 0.008, "dash_dark", seg=20, rot=n.to_track_quat("Z", "Y").to_matrix())
+            plane_uv(f"tweeter_grille_{s}", quad_on(c, n, V(0, 0, 1), 0.04, 0.04, off=0.0045), "grille",
+                     uv=((0, 0), (1, 0), (1, 1), (0, 1)))
+            continue
         loops = []
         for zi in range(7):
             z = WS_Z0 - 0.06 + (WS_Z1 + 0.08 - WS_Z0 + 0.06) * zi / 6
@@ -584,6 +663,22 @@ def build_frit(hw):
     patch("ws_frit_bottom", -hw, hw, WS_Z0 - 0.02, zb, G.Q(40, 10), 1)
     patch("ws_frit_top", -hw, hw, zt, WS_Z1 + 0.02, G.Q(40, 10), 1)
     for s in (-1, 1):
+        if ws_open_x(zb) is not None and GLASS_IF.get("shell"):
+            # r3: side band on the wrapped part of the glass, following the opening edge row by row (16 mm in x
+            # = the exterior's 28 mm band on the ~55 deg arc); the old band at +-1.11 m stood in the clear glass
+            nz = G.Q(8, 3)
+            bm = bmesh.new()
+            rows = []
+            for j in range(nz + 1):
+                z = zb + (zt - zb) * j / nz
+                xo = ws_open_x(z)
+                xa, xb = sorted((s * (xo + 0.004), s * (xo - 0.016)))
+                rows.append([bm.verts.new(V(x, gy(x, z), z)) for x in (xa, xb)])
+            for j in range(nz):
+                bm.faces.new((rows[j][0], rows[j][1], rows[j + 1][1], rows[j + 1][0]))
+            ob = G.finish(f"ws_frit_side_{s}", bm, "frit", smooth=True, sharp=None, recalc=False)
+            ob["fixed_uv"] = True
+            continue
         xa, xb = sorted((s * hw, s * (hw - FRIT_SIDE)))
         patch(f"ws_frit_side_{s}", xa, xb, zb, zt, 1, G.Q(8, 3))
     # dot-matrix fade above the bottom band and below the top band: two rows of shrinking hexagonal dots
@@ -1830,8 +1925,16 @@ def build_curtains():
         return c
 
     for s in (-1, 1):  # windscreen curtains parked at the A-pillars, side curtains at the B-pillars
-        b = V(s * (XI - 0.06), ws_y(WS_Z1) - 0.13, 0)
-        bunched(f"curtain_ws_{s}", b, V(-s, 0.25, 0).normalized(), V(0, 1, 0), 0.10, 2.05, WS_Z1 + 0.02)
+        fr = apillar_frame(s, 2.5)
+        if fr is not None:   # parked in the pillar's shadow: bunched along the sight line behind the trim
+            a_, b_, t_, n_ = fr
+            mid_ = (a_ + b_) / 2
+            d_ = V(EYE[0] - mid_.x, EYE[1] - mid_.y, 0).normalized()
+            b = mid_ + n_ * 0.058 + d_ * 0.065
+            bunched(f"curtain_ws_{s}", V(b.x, b.y, 0), d_, V(-d_.y, d_.x, 0), 0.09, 2.05, WS_Z1 + 0.02, folds=5)
+        else:
+            b = V(s * (XI - 0.06), ws_y(WS_Z1) - 0.13, 0)
+            bunched(f"curtain_ws_{s}", b, V(-s, 0.25, 0).normalized(), V(0, 1, 0), 0.10, 2.05, WS_Z1 + 0.02)
         b = V(s * (XI - 0.025), DOOR_Y0 - 0.02, 0)
         bunched(f"curtain_side_{s}", b, V(0, -1, 0), V(-s, 0, 0), 0.11, 2.02, WIN_Z1 + 0.07)
     # electric roller blinds in a cassette over the windscreen; driver side pulled down a little
