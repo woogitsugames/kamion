@@ -25,8 +25,8 @@ Limity to WORKING_VALUE z `docs/PERFORMANCE_BUDGETS.md`. GPU/CPU p50/p95: ____. 
 
 | Rozmiar | Wartość | Limit |
 |---|---|---|
-| APK razem | ___ MB (Stage 2: 48,5 MB) | brak twardego limitu — raportuję |
-| Świat Low w APK | ___ MB | ≤ 110 MB (WORKING_VALUE, decyzja D24 z 2026-11-10; wcześniej 60 MB) |
+| APK razem | Low 159,7 MB (`c59209e`, SHA256 `9e39e370...f5880a2f`) · High `-WorldHigh` 302,2 MB (`fefd804`, SHA256 `fae53320...e8657d`) (Stage 2: 48,5 MB) | brak twardego limitu — raportuję |
+| Świat Low w APK | 140,0 MB (`world_bytes` z `*.content.json`, w tym siatki 97,4 MB; **ponad limit**, szacunek build report, nie z telefonu) | ≤ 110 MB (WORKING_VALUE, decyzja D24 z 2026-11-10; wcześniej 60 MB) |
 | Draw calls / trójkąty w kadrze (z edytora, szacunek) | Low ___ / ___ · Medium ___ / ___ · High ___ / ___ | 250/350 k · 350/550 k · 800/1,5 M |
 
 ## Kamery kontrolne i porównanie ze zdjęciami (docs/06 §5)
@@ -77,3 +77,13 @@ Przejedź odcinek ręcznie (nie autopilotem), A16 Low i S24+ High. Do każdego p
 - Jedna próbka (G3-A) czy dwie (A + B)?
 - Czy robimy sesję zdjęciową (brama, plac, hale, przekrój Andersa) przed oceną wizualną?
 - ____
+
+## Pomiary z telefonu: dopisek wykonawcy (build-qa, 2026-11-10)
+- Źródła: `artifacts/gate3/20261110-085644/RFGL34SJYDZ` (A16 G3-A), `.../20261110-091317/RFGL34SJYDZ` (A16 G3-B), `.../20261110-075407/RZCX60VE8ZY` (S24+ G3-A), `.../20261110-082229/RZCX60VE8ZY` (S24+ G3-B). Wszystkie `valid=true`, klucz ekranu sprawdzony przed każdym krokiem.
+- **Różne buildy:** A16 z `c59209e` (po merge main: koła LOD, szyby, cień kontaktowy, regeneracja świata); S24+ z wcześniejszego `fefd804`. Wyniki High nie obejmują poprawek z `c59209e`.
+- Kamery: A16 21/21 (G3-A) i 23/23 (G3-B). S24+ G3-A 17/21 (2x MISSING_IN_SCENE: `g3a_eye_s0012`, `g3a_eye_s0362`; 2x NO_SCREENSHOT: `s0262`, `s0312`), G3-B 23/23. Zrzuty: `artifacts/gate3/final/{s24_high_,a16_low_}*.png`, kopie ≤1024 px w `final/small/`.
+- S24+ High: p50 16,7 ms, ale p95/p99 ≈ 50 ms (skok do ok. 20 FPS), GPU p95 19,3 ms (G3-A) / 18,5 ms (G3-B), CPU main p95 20,7 / 19,0 ms. Przyczyny nie rozdzielono (UNVERIFIED): GPU p95 jest bliski budżetowi klatki 16,7 ms, a temperatura rosła do 38,5 °C (thermal 2).
+- DK8 (nagrania 10 s, S24+ High, kamera statyczna `dk8-dk19-exit`, nie jazda): `final/dk8/s24_high_dk8_msaa_default.mp4` i `..._msaa_2.mp4`. Obie wersje dają ok. 39 FPS średnio, p50 16,7 / p95 50,0 ms, PSS 1,3 GB, GPU p95 26,4 ms (domyślne MSAA) / 27,0 ms (MSAA 2x). **Różnicy MSAA 2x vs domyślne w FPS nie widać; ocena wizualna: UNVERIFIED (nikt nie obejrzał klipów).** Pomiar przy 36 °C, jeden przebieg każdy.
+- E5: A16 temperatura start → koniec 27,7 → 27,6 °C (G3-A), 28,0 → 28,1 °C (G3-B), thermal 0. Test 30 min poza zakresem bramki.
+- Draw calls i trójkąty (E7) i test feelingu: nie mierzone.
+- Bateria S24+ na koniec: 54 % (po ostatnim przebiegu), gra zamknięta (`am force-stop`).
