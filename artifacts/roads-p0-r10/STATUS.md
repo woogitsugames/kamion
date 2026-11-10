@@ -72,3 +72,10 @@ Galaz: worktree-agent-ad6af5501cb259d76.
   terrain_walls 6 -> 5 (yard_concrete 4 -> 3, max 0,345 m); cull: kerb_tris 1262 / side_tris 132 / parts 151.
   import-region OK (exit 0, Medium 112,0 MB), 13 kamer wyrenderowane do artifacts/roads-p0-r10/renders.
 - NASTEPNY KROK: pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCRouteTests|WorldCBarrierTests" ; pwsh scripts/test.ps1 -Platform EditMode
+- 01:05 PlayMode WorldCRouteTests|WorldCBarrierTests 3/3 (40 t: 2390/2394 m, max |dv| 0,152 m/s, bez kontaktu nadwozia);
+  EditMode 176 passed / 0 failed / 7 skipped. 13 kamer obejrzanych (renders_1280/) vs abreast_ortho: brak kraweznika w
+  poprzek, szczelina j:n10015785253 zamknieta, latarnie poza jezdnia. Bez rundy poprawek (nic blokujacego trase).
+  Otwarte (ADR 0076 "Konsekwencje"): brak jodelki P-21 / linii na latach wlaczen, strzalka na linii (fork_putry),
+  lico kraweznika 0,16-0,25 m na nosie klina (E 324 N -575; scripts/xsec.py), n1882887385 nakladki. Brak oceny
+  visual-critic (lider). ADR 0076 uzupelniony (Runda 3). Efekty uboczne Unity cofniete. Dowody skopiowane do main.
+- NASTEPNY KROK (lider): git merge worktree-agent-ad6af5501cb259d76 ; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c ; uv run --project tools/worldgen python scripts/export-route.py --region bialystok-industrial-c ; pwsh scripts/import-region.ps1 -Region bialystok-industrial-c

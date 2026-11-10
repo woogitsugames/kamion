@@ -36,7 +36,10 @@ ADR 0075 (wierność względem OSM / ortofoto). Dowody: `artifacts/roads-p0-r10/
    - drugi przebieg `assign_sides(trims=True)`: krawędź dotykająca innej jezdni (szczelina < 0,5 m) jest „flush”
      (`MAT_FLUSH_ROAD`: asfalt, bez krawężnika), a pasek asfaltu **sięga sąsiedniej jezdni** (szerokość = szczelina,
      ≤ 1,5 m); to samo dla narożników łat (`meshing._corner_gaps`). Wcześniej dwa paski po 0,15 m zostawiały szczelinę
-     0,3–0,9 m do terenu 0,5 m niżej (j:n10015785253, `terrain_walls` 2 pkt → 0).
+     0,3–0,9 m do terenu 0,5 m niżej (j:n10015785253, `terrain_walls` 2 pkt → 0). Pasek narożnika pochyla się na krawędź
+     sąsiada (`_corner_gaps` zwraca też różnicę wysokości; `side_profile` dla flush: `h` = wznios zewnętrznej krawędzi),
+     ale tylko gdy różnica ≤ `CORNER_FILL_DZ_M` 0,15 m — łącznice 0,4–0,5 m obok jezdni głównej (j:n1883469484)
+     zachowują krawężnik.
    - `meshing.PatchHeight.arm_plane`: punkt obok przyciętej części ramienia bierze wysokość z jego krawędzi, a nie
      z płaszczyzny przekroju końcowego niesionej 15–40 m po zmiennym spadku.
    - `profile.shifted_end_heights` (krok 1c): koniec łańcucha odsunięty od węzła przez `align_forks` startuje z
@@ -96,6 +99,24 @@ Cel właściciela (oś p95 ≤ 1,0 m) spełniony; cel lidera dla tej rundy (≤ 
   n1847044938 (MA-012) komórki odstające > 5 cm od średniej 4 sąsiadów 119 (max 0,238 m) → **0** (max 0,049 m).
 - `terrain_walls_qa.json`: kategoria `skirt:j:road_asphalt` 2 → 0; `steep_grass:verge_grass` 4 → 0.
 
+### Runda 3 (build 2026-11-11 00:29, pasek narożnika ze wzniosem) — stan końcowy gałęzi
+- `pytest tests/gis`: **222 passed, 2 xfailed**; `route_corridor.py`: 2394 m, 4789 stacji, 0 uskoków, 0 przeszkód.
+- `road_consistency_qa.json`: 69 (arrow_no_exit 8, furniture_in_lane 1, lane_blind_end 55, marking_off_carriageway 3,
+  obstacle_in_lane 2; kerb_on_carriageway 0, prop_on_carriageway 0, prop_through_deck 0).
+- `terrain_walls_qa.json`: 6 → **5** (yard_concrete 4 → 3, max 0,364 → 0,345 m; `skirt:j:road_asphalt` 0).
+- `cull_sides_on_carriageway`: 1262 trójkąty krawężnika, 132 poboczy w 151 częściach (było 1297 / 134 / 158).
+- `check_poles.py`: 1125 obiektów na gruncie (700 latarni), 0 na jezdni, 0 przez pomost, 0 latarni w |lat| < hw.
+- `overlap_dz.py` (`final/overlap_dz_r3.json`): bez zmian względem poprzedniego buildu (n1847044938: 0 komórek > 5 cm,
+  max 0,049 m).
+- Unity 6000.3.28f1: `import-region` OK (Medium 112,0 MB, High 248,6 MB siatek + instancji + kolizji);
+  PlayMode `WorldCRouteTests|WorldCBarrierTests` **3/3** — trasa 2390/2394 m ukończona: zestaw 40 t max |dv|/krok
+  0,152 m/s (s = 359 m), solo 0,080 m/s, bez kontaktu nadwozia, max odchyłka poprzeczna 0,75 m; EditMode 176 passed,
+  0 failed, 7 skipped (188).
+- Kamery (13, Medium, overcast; `renders/*.png`, `renders_1280/*.jpg`) obejrzane i porównane z
+  `abreast_ortho/*_h32.jpg`: brak krawężnika w poprzek pasa na włączeniach Andersa (au_f_s0620/0640, p0_ma001_top) i
+  z Ronda Putry (au_r_s1380/1400, p0_ma012_top), szczelina przy j:n10015785253 zamknięta asfaltem (nos pasa dzielącego
+  kończy się krawężnikiem), latarnie poza jezdnią. Ocena `visual-critic` nie wykonana (agent bez subagentów) — lider.
+
 ## Konsekwencje i otwarte
 - Jezdnie włączeń nachodzą na siebie w planie (jedna nawierzchnia, dwie siatki): przy Rondzie Bieżeństwa 88 m² z
   różnicą wysokości do 0,145 m w (345, −562) (łącznica w282244180 / j:n1882887385, poza pasem trasy) — do ADR 0077.
@@ -105,5 +126,14 @@ Cel właściciela (oś p95 ≤ 1,0 m) spełniony; cel lidera dla tej rundy (≤ 
   się ~40 m wcześniej niż na zdjęciu) — to zakres ADR 0075 / 0077 (krawędź p95 2,50 m, cel 0,75 m).
 - Kod przesunięcia (`_push_abreast`, poszerzenie) zostaje za flagą `ABREAST_PUSH` do odtworzenia nakładek
   (`scripts/abreast_overlay.py`, `abreast_vs_ortho.py` włączają ją lokalnie); do usunięcia, gdy ADR 0077 zamknie kliny.
-- WORKING_VALUE: `FLUSH_FILL_MAX_M` 1,5 m, `ABREAST_TIE_DOT` 0,7, `LANE_CHANGE_RATIO` 12, `JOINT_ROUND_M` 4 / 10 m,
+- Widoczne na kamerach rundy 3, nienaprawione (zakres ADR 0077 / oznakowanie):
+  - łata 45 m przy n1847044938 (p0_ma012_top, au_r_s1380/1400) i jezdnia przy (−782, 77) (p0_kerb_merge_top) to goły
+    asfalt bez linii pasów; na ortofoto klin jest powierzchnią wyłączoną z ruchu malowaną w jodełkę (P-21) — brak
+    tego oznakowania i ciągłości linii przez łatę;
+  - strzałka „prosto + w prawo” na p0_fork_putry_eye leży na linii krawędziowej pasa (pas w klinie węższy od strzałki);
+  - nos klina trawy przy włączeniu z Ronda Bieżeństwa (au_f_s0620, E 324 N −575): teren 0,04–0,13 m poniżej jezdni,
+    więc lico krawężnika ma tam 0,16–0,25 m (pomiar `scripts/xsec.py`, siatka renderu `terrain_lod0`); poza jezdnią;
+  - nakładające się jezdnie serwisowe przy n1882887385 (p0_n1882887385_top): linie krawędziowe jednej jezdni biegną
+    przez drugą.
+- WORKING_VALUE: `CORNER_FILL_DZ_M` 0,15 m, `FLUSH_FILL_MAX_M` 1,5 m, `ABREAST_TIE_DOT` 0,7, `LANE_CHANGE_RATIO` 12, `JOINT_ROUND_M` 4 / 10 m,
   `CULL_RING_M` 0,30 m, wysokości słupów `standards.GROUND_PROP_H`.
