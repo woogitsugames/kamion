@@ -1,7 +1,7 @@
 # HANDOVER — kamion (TRUCK SIM PL), stan 2026-11-10 ok. 20:00 (sesja 4, limit 86 %)
 
 ## Najpierw (sesja 4 → następna)
-- **main = `0e45111`, wypchnięty.** Scalone w sesji 4: metadane gate3 (gitSha z APK, `-Apk`, duplikaty md5), kamery gate3 jedna poza edytor/telefon + kadry kabiny na telefonie, auta r8 (0/81 dziur, LOD0 16 m, ADR 0041 r8), szkło r8 (ADR 0059: brak stożka/prążków lowsun, szyba drzwi), skala 0,70 + FSR + pacing 30 + plamy latarni dusk −5° (ADR 0062), wypiekana widoczność nieba + dalekie cienie (ADR 0064), Mapillary (ADR 0065, `tools/refs`), lista ujęć + pokrycie, recenzja r8, różnice gra vs Mapillary (`docs/reports/visual/REFS-MAPILLARY-FINDINGS-2026-11-10.md`).
+- **main = `1ff9fb5`, wypchnięty** (po 0e45111 doszły lusterka ADR 0068).** Scalone w sesji 4: metadane gate3 (gitSha z APK, `-Apk`, duplikaty md5), kamery gate3 jedna poza edytor/telefon + kadry kabiny na telefonie, auta r8 (0/81 dziur, LOD0 16 m, ADR 0041 r8), szkło r8 (ADR 0059: brak stożka/prążków lowsun, szyba drzwi), skala 0,70 + FSR + pacing 30 + plamy latarni dusk −5° (ADR 0062), wypiekana widoczność nieba + dalekie cienie (ADR 0064), Mapillary (ADR 0065, `tools/refs`), lista ujęć + pokrycie, recenzja r8, różnice gra vs Mapillary (`docs/reports/visual/REFS-MAPILLARY-FINDINGS-2026-11-10.md`).
 - **Decyzje D36–D44** w `docs/11` (skala 0,70; próg farby względny; albedo trawy 35–40; panel dev zostaje; CC0 tak; właściciel NIE robi zdjęć — tylko otwarte źródła; Mapillary tak; σ szyby ≥ 8 tylko przy słońcu). Google Maps/3D Tiles/Street View — odmowa wyjaśniona właścicielowi (ToS + koszt + jakość).
 - **Pomiary:** A16 Low e3671b4 `artifacts/gate3/20261110-a16-low-e3671b4/` (G3-A p99 50 ms > 40; cab-dash czerń 2,8–3,8 %; 0 duplikatów). S24+ High e3671b4: 43–47 kl./s (G3-A/G3-B w `artifacts/gate3/20261110-172908`, `-175241`).
 - **Token Mapillary** w `C:\Users\matma\.kamion\secrets.env` (czyta `tools/refs/mapillary_fetch.py`; nigdy nie wypisywać).
@@ -15,7 +15,7 @@
 | a173ed44d3c378718 | Opus | skany CC0 (Poly Haven/ambientCG) jako baza materiałów świata | 0063 | cc0-r8 |
 | ab1fb0a47d2f0a491 | Sonnet | otwarte źródła referencji (KartaView, Panoramax, Commons, Openverse, ortofoto GUGiK, dane miasta) | 0066 | refs |
 | a1ec6028c4e13f527 | Fable | wiadukt jako hero asset wg Mapillary | 0067 | viaduct-r9 |
-| a165b14c05122bf57 | Opus | koszt lusterek/capture/cieni → 60 kl./s S24+ | 0068 | mirror-r9 |
+| ~~a165b14c05122bf57~~ | Opus | lusterka — SCALONE 1ff9fb5 (A/B na S24+: `rq_ab mirrorcfg|mirrors|envcap|shadows|shadowcasc`, `rq_scale 1.0 rq_pacing 0`, ≥ 90 s) | 0068 | mirror-r9 |
 | a6651051778fa221f | Opus | wyposażenie drogi wg Mapillary (ekrany, bramownice, bariery, sygnalizacja, strzałki) | 0069 | street-r9 |
 Przy przejęciu: `git -C <wt> log main..HEAD`, przeczytaj STATUS.md, dokończ albo scal; konflikty możliwe w `tools/worldgen/build_world.py`, `WorldSurface.shader`, `QualityProfile.cs`/`RenderOverrides.cs` (unia pól). Przed usunięciem worktree: skopiuj artifacts, `cmd /c rmdir` junctiony Data/raw, potem `git worktree remove --force --force`.
 
