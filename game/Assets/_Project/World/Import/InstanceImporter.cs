@@ -43,6 +43,8 @@ namespace Game.World.Import
             else if (proto == "pylon" || proto == "power_pole") e = new[] { 80f, 1500f };
             else if (proto.StartsWith("plate_") || proto.StartsWith("board_") || proto.StartsWith("sign_") || proto.StartsWith("signal_")) e = new[] { 50f, 250f };
             else if (proto == "bus_shelter" || proto.EndsWith("_gate")) e = new[] { 60f, 300f };
+            // Parked cars / vans: LOD0 detail, LOD1 simple wheels, LOD2 prism (~40 tris). Low (lodBias 0.5): 12 / 45 / 200 m.
+            else if (proto.StartsWith("car_") || proto.StartsWith("van_")) e = new[] { 25f, 90f, 400f };
             else e = new[] { 30f, 120f };   // bench, bollard, waste bin, street cabinet
             if (e.Length > lodCount) e = new[] { e[0] }.Concat(e.Skip(e.Length - lodCount + 1)).ToArray();
             int shadows = proto.StartsWith("tree_") ? 0b011 : 0b001;
@@ -82,6 +84,7 @@ namespace Game.World.Import
                 var n1 = src.Find(name + ".lod1");
                 if (n1 != null) lodNodes.Add((src, n1));
                 if (tree && impostors.Find(name + ".lod2") is GlbReader.MeshNode n2) lodNodes.Add((impostors, n2));
+                else if (!tree && n1 != null && src.Find(name + ".lod2") is GlbReader.MeshNode p2) lodNodes.Add((src, p2));
                 var p = new WorldInstanceSet.Prototype { name = name };
                 var lods = new List<Mesh>();
                 var starts = new List<int>();

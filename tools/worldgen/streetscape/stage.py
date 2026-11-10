@@ -126,7 +126,11 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     except Exception as e:                      # no candidate route for this region: no corridor
         log("life: no start route", e)
         route_P = None
-    LF.place(pl, docks, paved, blds, roads_poly, bpoly, route_P, frep, buf=w.buf, zsurf=zsurf)
+    park_polys = [PV._poly_local(a["geometry"]["coordinates"], w.origin) for a in src["osm"]["areas"]
+                  if a["tags"].get("amenity") == "parking" and a["geometry"]["type"] == "Polygon"]
+    park_polys += [PV._poly_local(f["geometry"]["coordinates"], w.origin) for f in src["bdot10k"]["OT_KUKO_A"]
+                   if f["props"].get("rodzaj") == "parking" and f["geometry"]["type"] == "Polygon"]
+    LF.place(pl, docks, paved, blds, roads_poly, bpoly, route_P, frep, buf=w.buf, zsurf=zsurf, park_polys=park_polys)
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
     FU.clear_carriageway(pl, carriage, zsurf, frep)
     frep["poles_reseated"] = pl.reseated

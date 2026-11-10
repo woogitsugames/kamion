@@ -351,6 +351,15 @@ def cameras(region_id, w):
         cams.append({"id": "stretch_05_docks", "type": "persp", "fov_deg": 60.0,
                      "pos": [r(pos[0]), r(pos[1]), r(hd["z"] + 2.5)], "look_at": [r(tgt[0]), r(tgt[1]), r(hd["z"] + 2.0)],
                      "note": f"reference stretch: Kwadrat Park loading docks ({hd['n']} doors) from the yard, eye 2.5 m"})
+    # Gate 3 street / roundabout views (r5 W-H3+ evidence: parked cars, shelters, bins, noise barriers) as editor
+    # control cameras, copied from Data/Regions/<id>/gate3_cameras.json (scripts/gate3-segment.py) by id.
+    g3 = pipeline.REGIONS / region_id / "gate3_cameras.json"
+    if g3.exists():
+        want = ("g3a_rondo_bie_approach", "g3a_eye_s0262", "g3b_eye_s1482", "g3b_rondo_putry_approach")
+        for c in json.loads(g3.read_text(encoding="utf-8"))["cameras"]:
+            if c["id"] in want:
+                cams.append({"id": c["id"], "type": "persp", "fov_deg": c.get("fov_deg", 60.0),
+                             "pos": c["pos"], "look_at": c["look_at"], "note": "gate3: " + c.get("note", "")})
     cams.append({"id": "ortho_putry", "type": "ortho", "center": [r(ctr[0]), r(ctr[1])], "size_m": 260.0,
                  "height": r(zc + 120), "note": "orthographic top view for overlay on the GUGiK orthophoto"})
     return cams

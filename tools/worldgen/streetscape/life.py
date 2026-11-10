@@ -49,6 +49,7 @@ START_CLEAR_R = 120.0        # m around the route start kept free of parked vehi
 START_CLEAR_L = 250.0        # m of route from the start ...
 START_CLEAR_W = 45.0         # ... buffered by this half width (covers the yard seen from g3a_eye_s0012..s0212)
 BODY_SHARE = [("hatch", 0.38), ("sedan", 0.24), ("estate", 0.38)]
+OCCUPANCY = 0.72      # weekday daytime share of occupied bays (WORKING_VALUE; Polish city lots are mostly full)
 
 
 def hf(*key):
@@ -424,13 +425,58 @@ def _bays(poly, key):
     return out
 
 
-def parking(pl, paved, sp, report, buf=None, zsurf=None):
+def _strip_bays(poly, key):
+    """One row of bays in a narrow parking strip (OSM parking=street_side / lane polygons, short side < 7 m):
+    short side < 3.6 m -> parallel bays 6.0 m pitch (car axis along the strip), else perpendicular bays 2.5 m pitch
+    (nose to a hashed side). Returns (centre, nose, overhang_ok)."""
+    r = poly.minimum_rotated_rectangle
+    c = np.asarray(r.exterior.coords)
+    e = np.diff(c, axis=0)
+    k = int(np.argmax(np.hypot(e[:, 0], e[:, 1])))
+    f = e[k] / np.hypot(*e[k])
+    nrm = np.array([-f[1], f[0]])
+    w = float(np.hypot(*e[(k + 1) % 4]))
+    L = float(np.hypot(*e[k]))
+    a = c[k] + nrm * (w / 2) * (1 if np.dot(c[(k + 2) % 4] - c[k], nrm) > 0 else -1)
+    parallel = w < 3.6
+    pitch = 6.0 if parallel else 2.5
+    side = 1.0 if hf(key, "side") < 0.5 else -1.0
+    out = []
+    t = 0.6 + hf(key, "ph") * 1.0 + pitch / 2
+    inner = poly.buffer(0.6)
+    shapely.prepare(inner)
+    while t + pitch / 2 < L:
+        cc = a + f * t
+        if inner.contains(Point(cc)):
+            out.append((cc, f.copy() if parallel else nrm * side))
+        t += pitch
+    return out
+
+
+def parking(pl, paved, sp, report, buf=None, zsurf=None, park_union=None):
+    """Bays in every paved area that is (or overlaps) a car park: OSM amenity=parking (incl. parking=street_side
+    strips) and BDOT10k OT_KUKO_A parking. A BDOT yard polygon earlier in the paved priority list used to swallow
+    the OSM car park (parking flag lost -> empty lots in front of the route, REVIEW r5 W-H3+)."""
     cars = vans = bays = 0
     oil = 0
+    regions = []
     for item in paved:
-        if not item.get("parking"):
+        if item.get("source") == "dock_apron":
             continue
-        for i, (c, nose) in enumerate(_bays(item["poly"], item["id"])):
+        if item.get("parking"):
+            regions.append((item["id"], item["poly"]))
+        elif park_union is not None and item["poly"].intersects(park_union):
+            g = item["poly"].intersection(park_union)
+            for k, p in enumerate(getattr(g, "geoms", [g])):
+                if p.geom_type == "Polygon" and p.area > 25.0:
+                    regions.append((f"{item['id']}~p{k}", p))
+    for rid, poly in regions:
+        r = poly.minimum_rotated_rectangle
+        ee = np.hypot(*np.diff(np.asarray(r.exterior.coords), axis=0).T)
+        strip = float(min(ee[:2])) < 7.0
+        layout = [(c, n, True) for c, n in _strip_bays(poly, rid)] if strip else [(c, n, False) for c, n in _bays(poly, rid)]
+        item = {"id": rid}
+        for i, (c, nose, strip_bay) in enumerate(layout):
             bays += 1
             key = (item["id"], i)
             if buf is not None and hf(*key, "oil") < 0.35:      # drip stain under the engine bay
@@ -440,18 +486,22 @@ def parking(pl, paved, sp, report, buf=None, zsurf=None):
                     return zsurf(V2[:, 0], V2[:, 1]) + S.PAVED_LIFT + 0.008     # yard mesh is linear on 4 m cells
                 DC.stain(buf, P0, z_of, 0.2 + hf(*key, "or") * 0.3, key, f"oil:{item['id']}:{i}")
                 oil += 1
-            if hf(*key, "occ") > 0.60:
+            if hf(*key, "occ") > OCCUPANCY:
                 continue
             jit = (hf(*key, "jx") - 0.5) * 0.3
             c2 = c + np.array([nose[1], -nose[0]]) * jit + nose * (hf(*key, "jy") - 0.5) * 0.4
             yaw = yaw_of(nose) + (hf(*key, "yaw") - 0.5) * 0.08
             if hf(*key, "van") < 0.15:
                 proto = f"van_{pick([('white', 0.5), ('silver', 0.25), ('white2', 0.25)], hf(*key, 'col'))}"
-                fp = rect(c2, nose, 2.75, 1.05)
+                hl = 2.75
             else:
-                proto = f"car_{pick(BODY_SHARE, hf(*key, 'body'))}_{pick(CAR_SHARE, hf(*key, 'col'))}"
-                fp = rect(c2, nose, 2.4, 0.95)
-            if not sp.free(fp):
+                body = pick(BODY_SHARE, hf(*key, 'body'))
+                proto = f"car_{body}_{pick(CAR_SHARE, hf(*key, 'col'))}"
+                hl = LP.CARS[body]["L"] / 2 + 0.05
+            # strip bays: nose / tail may overhang the kerb line by up to 0.45 m (as parked cars do), so the
+            # free-space test uses a footprint shortened by that much; lots keep the full footprint
+            fp = rect(c2, nose, hl - (0.45 if strip_bay else 0.0), 1.05 if proto.startswith("van") else 0.95)
+            if not sp.free(fp, need_paved=not strip_bay):
                 continue
             pl.add(proto, c2, yaw, src=f"life:parking:{item['id']}")
             sp.take(fp)
@@ -562,7 +612,7 @@ def yard_props(pl, blds, docks, sp, report):
     report.update(cnt)
 
 
-def place(pl, docks, paved, blds, roads_poly, bpoly, route_P, report, buf=None, zsurf=None):
+def place(pl, docks, paved, blds, roads_poly, bpoly, route_P, report, buf=None, zsurf=None, park_polys=None):
     rep = {}
     union = shapely.union_all([p["poly"] for p in paved])
     route = LineString(route_P) if route_P is not None and len(route_P) > 1 else None
@@ -570,7 +620,8 @@ def place(pl, docks, paved, blds, roads_poly, bpoly, route_P, report, buf=None, 
     dock_trailers(pl, docks, sp, rep)
     if buf is not None and zsurf is not None:
         tyre_scrub(buf, docks, zsurf, rep)
-    parking(pl, paved, sp, rep, buf, zsurf)
+    pu = shapely.union_all([shapely.make_valid(p) for p in park_polys]) if park_polys else None
+    parking(pl, paved, sp, rep, buf, zsurf, pu)
     stalls = []
     truck_yards(pl, paved, sp, rep, docks, stalls)
     yard_props(pl, blds, docks, sp, rep)

@@ -245,6 +245,81 @@ def box_panel(n=1024):
     return _finish("box_panel", c, lum, h, rough, np.zeros_like(X), seam, ao_k=0.3)
 
 
+def noise_cassette(n=1024):
+    """Absorbing noise-barrier cassettes (ekran akustyczny, aluminium/steel kasety): 4.0 m bays between HEB posts
+    (vertical gap at u = 0, the post covers it), horizontal elements 0.5 m high with a lip joint, perforated road
+    face (micro-slot rows every 25 mm read as a fine horizontal grain), per-cassette tone (fading, replaced
+    elements), road-spray grime on the lowest 0.4-0.7 m and run-off streaks below every joint. v = metres above
+    the top of the 0.5 m concrete plinth (furniture.noise_barriers UV). Element size WORKING_VALUE (typical Polish
+    products: 3.96-4.96 x 0.5 m; BDOT10k OT_OIKM_L carries no type). Tile 4 x 4 m."""
+    L = 4.0
+    c = Ctx(n, n, L, L, seed=512)
+    X, Y = c.xy()
+    v = L - Y
+    pv = v % 0.5
+    row = np.floor(v / 0.5).astype(int)
+    dj = np.minimum(pv, 0.5 - pv)
+    joint = sstep(0.010, 0.004, dj)
+    lip = sstep(0.03, 0.012, np.abs(pv - 0.035)) * (1 - joint)          # pressed lip just above each joint
+    du = np.minimum(X, L - X)
+    gap = sstep(0.02, 0.008, du)                                          # bay end (behind the post flange)
+    slots = 0.5 + 0.5 * np.cos(2 * np.pi * v / 0.025)
+    tone = hash01(row, 11)
+    tone = 0.08 * (tone - 0.5) + 0.08 * (tone > 0.9)                       # ~10 % visibly newer elements
+    lum = (1.0 + tone - 0.05 * slots + 0.025 * noise(c, 2, 0.1, 2.0)) * (1 - 0.5 * joint) * (1 + 0.06 * lip) * (1 - 0.6 * gap)
+    # run-off: streaks start at every joint and fade downward within the element, plus long streaks from the cap
+    s = noise(c, 3, 0.04, 1.2, beta=0.9, aniso=1.0 / 8.0)
+    under = sstep(0.0, 0.25, 0.5 - pv)                                    # strongest right under a joint
+    lum *= 1 - 0.10 * sstep(0.5, 1.8, s) * under
+    lum *= _streaks(c, 4, 0.08)
+    # road spray on the lowest part: a soft gradient (strongest at the plinth, gone by ~0.9 m), broken up by fine
+    # droplet noise and stretched spray fans; no hard blobs (r5 W-N3: one-scale stains read as a pattern)
+    fan = noise(c, 5, 0.08, 1.0, beta=1.0, aniso=3.0)
+    top = 0.75 + 0.15 * fan
+    splash = sstep(top, 0.0, v) ** 1.5
+    drops = sstep(-0.5, 1.5, noise(c, 6, c.px * 2, 0.03, beta=0.3))
+    splash = np.clip(splash * (0.75 + 0.25 * drops), 0, 1)
+    lum *= 1 - 0.32 * splash
+    lum *= 1 - 0.05 * sstep(0.5, 2.0, noise(c, 7, 0.3, 3.0, beta=1.2))     # cloudy weathering
+    h = -6e-3 * joint + 1.2e-3 * lip - 0.25e-3 * slots - 8e-3 * gap
+    rough = 0.55 + 0.12 * splash + 0.1 * joint + 0.05 * noise(c, 8, 0.1, 1.0)
+
+    def grime(a):
+        brown = np.array([1.0, 0.93, 0.80], np.float32)                   # road dust is warm grey-brown
+        k = np.clip(splash, 0, 1)[..., None]
+        return a * (1 - k) + a * brown * k
+    return _finish("noise_cassette", c, lum, h, rough, tone + 0.5, np.maximum(joint, gap), extra=grime, ao_k=0.5)
+
+
+def car_grime(n=1024):
+    """Parked-car paint film: road spray on the sills and bumpers (v < 0.55 m, warm grey-brown, strongest at the
+    bottom edge), dust film and pollen on horizontal-ish upper surfaces, rain runs below the belt line and the roof
+    edge, faint orange peel. u = metres along the body, v = metres above the ground (life_props car/van UV).
+    Polish cars outside a car wash cycle: WORKING_VALUE look, no measured data. Tile 5 x 2.5 m."""
+    Lx, Ly = 5.0, 2.5
+    c = Ctx(n, n // 2, Lx, Ly, seed=513)
+    X, Y = c.xy()
+    v = Ly - Y
+    fan = noise(c, 1, 0.1, 1.2, beta=1.0, aniso=4.0)
+    film = sstep(0.62 + 0.1 * fan, 0.15, v) ** 1.3
+    drops = sstep(-0.6, 1.6, noise(c, 2, c.px * 2, 0.02, beta=0.3))
+    film = np.clip(film * (0.7 + 0.3 * drops), 0, 1)
+    runs = sstep(0.6, 1.8, noise(c, 3, 0.02, 0.6, beta=0.9, aniso=1.0 / 10.0))
+    belt = sstep(1.0, 0.75, v) * sstep(0.35, 0.6, v)
+    peel = noise(c, 4, c.px * 2, 0.01, beta=0.4)
+    dust = sstep(1.1, 1.5, v) * (0.5 + 0.5 * sstep(-1, 1, noise(c, 5, 0.05, 0.8)))
+    lum = (1 + 0.01 * peel) * (1 - 0.30 * film) * (1 - 0.07 * runs * belt) * (1 + 0.05 * dust)
+    h = 0.03e-3 * peel
+    rough = 0.32 + 0.35 * film + 0.15 * dust
+
+    def tint(a):
+        k = np.clip(film, 0, 1)[..., None]
+        kd = np.clip(dust, 0, 1)[..., None] * 0.5
+        a = a * (1 - k) + a * np.array([1.0, 0.92, 0.78], np.float32) * k
+        return a * (1 - kd) + a * np.array([1.0, 0.97, 0.90], np.float32) * kd
+    return _finish("car_grime", c, lum, h, rough, np.zeros_like(X), np.zeros_like(X), extra=tint, ao_k=0.2)
+
+
 FACADE_SETS = {
     "sandwich_ribbed": dict(fn=sandwich_ribbed, tile_m=[6.0, 6.0],
         slots=["hall_wall_grey", "hall_wall_silver", "hall_wall_white", "hall_wall_ivory", "booth_panel"],
@@ -266,6 +341,10 @@ FACADE_SETS = {
         note="Curtainsider tarpaulin folds, sag between straps, grime on the lower third."),
     "container_corrugation": dict(fn=container_corrugation, tile_m=[2.78, 2.6], slots=["container_*"],
         note="Container side corrugation 0.278 m pitch, dents, rust spots."),
+    "noise_cassette": dict(fn=noise_cassette, tile_m=[4.0, 4.0], slots=["noise_panel"],
+        note="Absorbing noise-barrier cassettes 4.0 x 0.5 m, perforated face, joint lips, splash grime, run-off."),
+    "car_grime": dict(fn=car_grime, tile_m=[5.0, 2.5], slots=["car_paint_*"],
+        note="Parked-car paint film: road spray on sills, dust on top, rain runs (u along body, v = height)."),
     "box_panel": dict(fn=box_panel, tile_m=[4.8, 2.7], slots=["trailer_box_white"],
         note="Box body panels with seam profiles every 1.2 m, road film low down."),
 }
