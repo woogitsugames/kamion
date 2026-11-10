@@ -128,7 +128,14 @@ namespace Game.UI.Driving
             r.DevToggle = new Rect(w - Margin - DevToggleSize.x, top - DevToggleSize.y, DevToggleSize.x, DevToggleSize.y);
             r.DevPanel = new Rect(w - Margin - DevPanelSize.x, r.DevToggle.y - 8f - DevPanelSize.y, DevPanelSize.x, DevPanelSize.y);
             r.ShowDevPanel = s.DevPanelOpen;
-            if (s.DevPanelOpen && r.ShowMirrorRight && r.DevPanel.x < r.MirrorRight.xMax + Gap) r.ShowMirrorRight = false;
+            if (s.DevPanelOpen && r.ShowMirrorRight && r.DevPanel.x < r.MirrorRight.xMax + Gap)
+            {
+                // Narrow canvas: the panel moves under the inset when the screen is tall enough for that (near-square
+                // foldables), otherwise the inset gives way.
+                float below = r.MirrorRight.y - 8f - DevPanelSize.y;
+                if (below >= r.Throttle.yMax + Gap) r.DevPanel.y = below;
+                else r.ShowMirrorRight = false;
+            }
 
             // ---- top left: telemetry (developer). Beside the left mirror inset when that leaves a usable width,
             // otherwise the inset gives way while telemetry is shown.

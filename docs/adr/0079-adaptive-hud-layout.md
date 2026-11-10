@@ -44,7 +44,8 @@ the APK) is kept.
    - bottom centre: developer status / coupling text (was top left, over the horizon).
    Low zones cover the dashboard in the cab view, not the road - a simulator HUD, not a mobile-game button wall.
 4. **Developer overlays yield nothing to the driver, the mirror insets yield to them**: when the open developer panel
-   or the telemetry panel does not fit beside a mirror inset (narrow canvases), that inset is hidden while the overlay
+   or the telemetry panel does not fit beside a mirror inset (narrow canvases), the panel first moves under the inset
+   when the screen is tall enough (near-square foldables); otherwise that inset is hidden while the overlay
    is shown and comes back when it closes. While driving (no overlay) both insets are always shown.
 5. **Settings panel** always fits the safe area: two columns when ≥ 1520 units are available, otherwise one; rows
    scroll (ScrollRect, slim position bar) between a fixed title and a fixed footer; rebuilt on a viewport change.
