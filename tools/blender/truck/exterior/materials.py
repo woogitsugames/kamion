@@ -669,6 +669,9 @@ def build_library(livery="white", clay=False):
     principled("lamp_inner", "LIGHTS", (0.025, 0.025, 0.027), 0.35, spec=0.5)
     principled("reflector", "LIGHTS", (0.85, 0.86, 0.88), 0.08, metal=1.0)
     principled("dark_chrome", "LIGHTS", (0.20, 0.205, 0.21), 0.18, metal=1.0)
+    # B2.2: headlamp housing / module shrouds = black glossy PC-ABS (moulded, not metallised): a dark chrome shroud
+    # mirrored the overcast sky and turned the whole lamp cavity grey
+    principled("lamp_housing", "LIGHTS", (0.010, 0.010, 0.011), 0.16, spec=0.45)
     drl = PARAMS["drl"]
     principled("led_drl", "LIGHTS", (0.9, 0.9, 0.9), 0.3, emit=(1.0, 0.97, 0.92), emit_s=14.0 * drl)
     principled("led_off", "LIGHTS", (0.75, 0.75, 0.76), 0.25, spec=0.6)
@@ -677,7 +680,7 @@ def build_library(livery="white", clay=False):
     principled("lens_amber", "LIGHTS", (0.95, 0.42, 0.04), 0.05, transm=0.85, ior=1.49)
     principled("lens_red", "LIGHTS", (0.55, 0.02, 0.015), 0.05, transm=0.85, ior=1.49)
     # r4: smoked projector lens, opaque in the bake (transmission baked the env as a blue cast in the game atlas)
-    m, nt, b = principled("projector", "LIGHTS", (0.045, 0.045, 0.048), 0.03, spec=0.7)
+    m, nt, b = principled("projector", "LIGHTS", (0.045, 0.045, 0.048), 0.07, spec=0.35)   # B2.2: AR-coated, less sky
     # B2.2 refraction fake (the game bakes the lens opaque into the Lights atlas): a real LED projector lens shows
     # the inverted image of its chrome reflector - bright lower half, the sharp shield cut-off line just under the
     # middle, a dark upper half with a faint blue cast of the coated optics. Gradient over the lens' own height

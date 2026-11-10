@@ -50,6 +50,7 @@ def parse():
     p.add_argument("--blend", default="")
     p.add_argument("--tag", default="")
     p.add_argument("--no-analysis", action="store_true")
+    p.add_argument("--beam", default="", choices=["", "low"], help="a4: QA render with the dipped beam lit")
     p.add_argument("--vis", action="store_true", help="a4: eye-point views + visibility map (widocznosc_*)")
     return p.parse_args(argv)
 
@@ -86,12 +87,35 @@ def build(a):
         e.empty_display_size = 0.15
         G.link(e)
     set_mirrors(a.mirrors)
+    if a.beam == "low" and not clay:
+        light_low_beam()
     if clay:
         S.studio()
     else:
         S.yard()
     fig = S.mannequin()
     return fig
+
+
+def light_low_beam(strength=60.0):
+    """QA only (--beam low): the two inner projector lenses get an emissive copy of the lens material, the
+    emission follows the lens' own refraction gradient (bright below the cut-off line). The bake is unaffected."""
+    src = bpy.data.materials.get("projector")
+    lit = src.copy()
+    lit.name = "projector_lit"
+    nt = lit.node_tree
+    b = nt.nodes["Principled BSDF"]
+    col = b.inputs["Base Color"]
+    if col.is_linked:
+        nt.links.new(col.links[0].from_socket, b.inputs["Emission Color"])
+    else:
+        b.inputs["Emission Color"].default_value = (1.0, 0.97, 0.92, 1)
+    b.inputs["Emission Strength"].default_value = strength
+    for o in bpy.data.objects:
+        if o.name.startswith("proj_lens_"):
+            for sl in o.material_slots:
+                if sl.material == src:
+                    sl.material = lit
 
 
 def set_mirrors(kind):
