@@ -317,8 +317,11 @@ def main():
             fi["gpu_bytes_astc_mips"] = int(gpu_estimate(fi, t))
         entry = {k: v for k, v in meta.items() if k != "fn"}
         entry["albedo_target_mean_lum_linear"] = meta["target"]
-        if s.scan_info:
-            entry["source"] = s.scan_info
+        if s.scan_info:                               # hybrid with a CC0 scan: same provenance fields as SC.build
+            src = dict(s.scan_info)
+            src["assets"] = [{"id": i, "page": SC.asset(i)["page"], "authors": SC.asset(i)["authors"],
+                              "license": SC.asset(i)["license"]} for i in [src["source"]]]
+            entry["source"] = src
         entry.update(info)
         sets[name] = entry
     for name, meta in SC.SCAN_ONLY_META.items():

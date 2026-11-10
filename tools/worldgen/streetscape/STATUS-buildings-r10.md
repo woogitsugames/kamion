@@ -31,3 +31,16 @@
 - Testy: `tests/gis/test_world_v31.py` (+4 nowe). STATUS kopiowany do `artifacts/buildings-r10/STATUS.md`.
 - NASTĘPNY KROK: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` ->
   `uv run --project tools/worldgen pytest tests/gis -q` -> `pwsh artifacts/buildings-r10/run_round.ps1 -Round r1 -Configs High:overcast,Low:overcast`
+
+## krok 3 — stop na LIMIT 95 % (WIP)
+- Kod: 14 rzędów `facade_far` (balkon 4, blok 4, biuro białe 2, biuro antracyt 2, wstęga 2), LOD1 = 1 quad na paczkę rzędów + 2 marginesy,
+  attyka dopięta; akcent tylko na szczytach; czerpnie + drabina z koszem na halach; ADR `docs/adr/0081-buildings-r10-facade-atlases.md` (szkic).
+- build_world OK (260 s). Budżet estymaty (`streetscape_qa.json` baza -> teraz, 19 kamer): Low tris -487..+556 (max +0,07 %),
+  materiały Low -3..-7, High tris -0,4..-4,4 % (zabudowa High -20..-30 %). Pamięć tekstur nowa: facade_atlas 39,8/7,8/1,4 MB (H/M/L).
+- pytest gis: 204 passed, 3 failed (te same 3 co na main wg HANDOVER: road_fidelity stale, route_corridor x2), + `test_cc0_scans::test_scan_sets_in_spec_keep_calibration`
+  czerwony do czasu przebudowy zestawu fence_concrete (poprawka provenance w `build_all.py` już jest, spec nie przegenerowany).
+- Runda r1 (import + kamery High/Low overcast) WYSTARTOWANA, w chwili stopu niezakończona; rendery NIE obejrzane, brak porównania ze zdjęciami,
+  brak oceny visual-critic. Po rundzie skrypt sam cofa efekty uboczne Unity.
+- NASTĘPNY KROK: `uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only fence_concrete` ->
+  sprawdź `artifacts/buildings-r10/r1/round.log` (jeśli brak "round done": `pwsh artifacts/buildings-r10/run_round.ps1 -Round r1 -Configs High:overcast,Low:overcast`)
+  -> obejrzyj `artifacts/buildings-r10/r1/*/960/r10_*.jpg` vs `artifacts/buildings-r10/refs/` i `base/`, visual-critic, stats.txt Low vs base, uzupełnij ADR 0081.
