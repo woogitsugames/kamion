@@ -2,15 +2,15 @@
 
 ## Najpierw
 - Zasady s9: `docs/owner/START-PROMPT-S9.md` — max 3 agentów naraz, trigger co godzinę (CronCreate w sesji s9, :17 każdej godziny, wygasa po 7 dniach / z zamknięciem sesji).
-- Agenci 0076 i 0077 z s8 nadal pracowali w swoich worktree o 00:24 (pliki zmieniane) — s9 ich nie rusza, scala po STATUS „KONIEC/GOTOWE”.
+- Agenci 0076 i 0077 z s8 zostali ubici limitem (info właściciela 00:40) — s9 przejęła ich nowymi agentami Fable (world-builder) w tych samych worktree o 00:40.
 - s9: visual-critic (1 agent) recenzuje 0070 r6, 0078 r10b, 0081 r2, Kwadrat r11, światło r11 → `docs/reports/visual/REVIEW-2026-11-11-s9.md`; potem scalenia.
 - Konflikty przy scalaniu sekwencyjnym (próba 00:35): 0081 → `build_all.py` (unia importów FS + B), `materials_spec.json` (generowany → build_all); Kwadrat r11 → `WorldPbrMaterials.cs` (unia), `street_props.glb` (regen); generated/*.json → ours + regeneracja.
 - Worktree 0083 usunięty (artifacts już były w main), gałąź skasowana.
 
 | zadanie | ADR | worktree | STATUS | stan s9 |
 |---|---|---|---|---|
-| P0 korytarz + ratchety | 0076 | agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | agent s8 w toku (ADR 0076 jest, pytest gis 222 ✓; zostało import-region + kamery + PlayMode) |
-| wysepki z OSM | 0077 | agent-a2afb96d89584cca6 | tools/worldgen/fidelity/STATUS_islands_r10.md | agent s8 w toku (regen + pytest zrobione; import + kamery) |
+| P0 korytarz + ratchety | 0076 | agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | s9: agent przejmujący w toku (ADR 0076 jest, pytest gis 222 ✓; zostało import-region + kamery + PlayMode) |
+| wysepki z OSM | 0077 | agent-a2afb96d89584cca6 | tools/worldgen/fidelity/STATUS_islands_r10.md | s9: agent przejmujący w toku (regen + pytest zrobione; import + kamery) |
 | straż JRG2 r6 | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | GOTOWE `ff40d3e`, recenzja s9 w toku |
 | osobówki r10b | 0078 | agent-a2215bcc98d109edc | artifacts/cars-r10 | GOTOWE `032af23`, recenzja s9 w toku |
 | zabudowa r2 | 0081 | agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | GOTOWE `70ef3ba`, recenzja s9 w toku |
