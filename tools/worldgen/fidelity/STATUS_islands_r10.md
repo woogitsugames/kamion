@@ -33,3 +33,23 @@ Gałąź: worktree-agent-a2afb96d89584cca6 (worktree .claude/worktrees/agent-a2a
   `uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art artifacts/islands-r10/fidelity` →
   obejrzeć artifacts/islands-r10/after4/*.jpg → `uv run --project tools/worldgen pytest tests/gis -q` → ratchet w tests/gis/test_road_fidelity.py
   → `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` → `pwsh scripts/visual-qa.ps1 -Scene WorldC ...`.
+- 23:00 STOP na polecenie lidera (limit 95 %). Zrobione i zacommitowane: gores + 8 override s610 (w tym P-21 sama farba),
+  `center_offset` / `width` override (MA-010 putry-ring-s-placement +2,9 m; 7 odcinków trasy z edge_sides), P-21 na klinach
+  włączeń (ref. właściciela), werdykt `island_confirmed` (2 wpisy), tests/gis/test_gores.py, pooled axis bez authored offset.
+  Ostatni PEŁNY pomiar (kod bez hatch-merge i island_confirmed; generated/*.json w HEAD): oś p95 0,13 (przed 0,129),
+  krawędź p50 0,46 (przed 0,76), p95 2,52 (przed 2,48; cel 0,75 NIE), wysepki bez pokrycia 3 (przed 4; 2 z 3 to błąd
+  klasyfikatora → island_confirmed, trzecia s1440 = korytarz 0076), pas→wysepka 0. Nakładki after4/*.jpg obejrzane
+  (MA-010: jezdnia na miejscu, sliver abs32 zniknął; s610: została 1 resztka 32 m² → override gore-s610-centre-hatch).
+- NIE zrobione: ostatni build_world (ubity w trakcie) → generated/*.json w HEAD są sprzed 2 ostatnich zmian kodu
+  (test_report_not_stale będzie czerwony do regeneracji); pytest gis nieuruchomiony; ratchet w test_road_fidelity.py
+  nie zaostrzony (BASELINE tam jest nieaktualny: realnie oś 0,13 / krawędź 2,52 / wysepki 3→oczekiwane 1 / lane bug 0);
+  import Unity + kamery (1. próba padła na LFS — naprawione `git lfs checkout`); ADR 0077 sekcje Wynik/Otwarte = TBD;
+  s1440 P-21 (−366/−119, −391/−135) zostawione agentowi 0076.
+- NASTĘPNY KROK:
+  `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` →
+  `uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art artifacts/islands-r10/fidelity` →
+  `uv run --project tools/worldgen tools/worldgen/fidelity/summary.py` → zaktualizować BASELINE/MET w tests/gis/test_road_fidelity.py →
+  `uv run --project tools/worldgen pytest tests/gis -q` → `git checkout -- art-source` →
+  `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` →
+  `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting clear -Gate3 artifacts/islands-r10/cameras.json -Cameras au_f_s0580,au_f_s0600,au_f_s0620,au_f_s1040,au_f_s1060,au_f_s1080,au_r_s1140,au_r_s1160,au_r_s1180,top_s610,top_merge,top_ma010,top_putry_n -OutputDir artifacts/islands-r10/renders`
+  → obejrzeć vs after3/*_ortho.jpg → visual-critic → uzupełnić ADR 0077 (Wynik/Otwarte) → cofnąć M_Sky.mat/QualitySettings.
