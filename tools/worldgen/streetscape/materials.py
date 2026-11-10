@@ -265,3 +265,33 @@ for _k, _ws in _FAR_WALLS.items():
             M[f"{_w}__far_{_k}"] = {"color": M[_w]["color"], "rough": M[_w]["rough"], "base": _w,
                                     "window_grid": dict(FAR_GRID[_k], uv="TEXCOORD_1"),
                                     "glass_color": [0.03, 0.035, 0.04]}
+
+# Sky occlusion (ADR 0060, review r7 N-2 "no dark accents"): the engine lights the world with the sky SH and a sky
+# reflection probe and has no screen-space AO, so (a) faces looking down (deck soffits, eaves, canopy and balcony
+# undersides, the head of window reveals) were lit by a ground that is in fact shaded by the same structure, and
+# (b) glazing mirrored the bright horizon where a real window sees the street, trees and the buildings opposite.
+# [x, y] = Kamion/World Surface / PBR _SkyOcc: x scales the ambient of down-facing faces by 1 - x * max(-n.y, 0),
+# y scales near-horizontal reflections (R.y < 0.45) by up to 1 - y. WORKING_VALUE, judged against the CC0 Bieżeństwa
+# photo (soffit / fascia ~20 % luma at overcast vs ~30 % before). Not on cars, ground, vegetation, decals or
+# collision (cars belong to the vehicle look work; ground faces up).
+SKY_OCC_GLASS = [0.0, 0.6]
+SKY_OCC_STRUCT = [0.5, 0.0]
+_NO_SKY_OCC = ("car_", "collision_", "decal_", "marking", "hedge_", "lamp_glass", "signal_", "tyre", "rim",
+               "trailer_", "tractor_", "vehicle_", "wire", "bed_soil", "noise_glass")
+_GLASSY = ("glass", "door_glass", "booth_glass", "shelter_glass", "canopy_glass", "skylight")
+
+
+def _sky_occ(k, v):
+    if k.startswith(_NO_SKY_OCC) or v.get("collision") or v.get("decal") or "surface" in v and v["surface"] in (
+            "grass", "asphalt", "paving_stones", "gravel", "sett"):
+        return None
+    if k in _GLASSY or "window_grid" in v:
+        return SKY_OCC_GLASS if k in _GLASSY else [SKY_OCC_STRUCT[0], SKY_OCC_GLASS[1]]
+    return SKY_OCC_STRUCT
+
+
+for _k, _v in M.items():
+    _so = _sky_occ(_k, _v)
+    if _so is not None:
+        _v.setdefault("sky_occ", _so)
+

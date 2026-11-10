@@ -31,7 +31,8 @@ import shapely
 from shapely import affinity
 from shapely.geometry import Point, Polygon
 
-HEDGE_H = (0.6, 0.8)        # m, clipped berberis hedge (review r6: 0.6-0.8 m)
+HEDGE_H = (0.5, 0.65)       # m, clipped berberis hedge (review r7 N-4: low 0.5-0.7 m band, CC0 Bieżeństwa photo)
+BAND_M = (1.1, 1.4)         # m, width of the clipped band laid along a traced bed (r7 N-4: narrow strip, not the bed)
 SOIL_BELOW_KERB = 0.03      # m, bed soil level under the kerb top
 SHRUB_R = (0.45, 0.9)        # m, clump radius
 ISLAND_MAX_M2 = 2500.0      # roundabout centre islands are holes too
@@ -75,8 +76,11 @@ def _fill(ring, spacing):
 # width / height ranges (m). Typical Polish clipped hedges (WORKING_VALUE, general horticultural knowledge).
 SPECIES = {
     # low roundabout berberis is clipped into a cushion (CC0 Bieżeństwa photo): barrel sides, wide rounded shoulder
-    "berberis_red": dict(tex="berberis", h=HEDGE_H, plant=(0.55, 0.85), bulge=0.08, dome=0.2, gap_p=0.07, sigma=0.33,
-                         sprig=0.17, sprig_wh=((0.18, 0.32), (0.12, 0.24)), prof="cushion"),
+    # ADR 0060 (review r7 N-4, "red sofa"): the r7 cushion (barrel sides, 0.4 m shoulder, 0.08 m lump per plant) read
+    # as a couch of sausages. The photo shows a low band clipped to a straight, slightly battered side and a flat top
+    # with a small rounded arris; shoots grow out lighter (copper) above the cut. Lumps 0.015 m, dome 0.05.
+    "berberis_red": dict(tex="berberis", h=HEDGE_H, plant=(0.55, 0.85), bulge=0.015, dome=0.05, gap_p=0.03, sigma=0.5,
+                         sprig=0.13, sprig_wh=((0.16, 0.28), (0.10, 0.20)), prof="clipped", band=BAND_M),
     "privet": dict(tex="privet", h=(1.2, 1.7), plant=(0.45, 0.65), bulge=0.04, dome=0.04, gap_p=0.04, sigma=0.36,
                    sprig=0.30, sprig_wh=((0.14, 0.24), (0.10, 0.18))),
     "hornbeam": dict(tex="hornbeam", h=(1.4, 2.0), plant=(0.5, 0.7), bulge=0.04, dome=0.03, gap_p=0.04, sigma=0.38,
@@ -89,6 +93,9 @@ PROFILES = {
     "box": [(-0.04, -0.03, 0.2), (0.0, 0.45, 0.8), (0.05, 0.86, 1.0), (0.14, 0.97, 0.7), (0.24, 1.0, 0.4)],
     "cushion": [(-0.03, -0.03, 0.2), (-0.04, 0.32, 0.8), (0.0, 0.62, 1.0), (0.09, 0.84, 0.9), (0.22, 0.95, 0.6),
                 (0.40, 1.0, 0.3)],
+    # clipped low band (ADR 0060): straight side with ~6 deg batter, 0.08-0.12 m rounded arris, flat top
+    "clipped": [(-0.02, -0.03, 0.3), (0.0, 0.30, 0.6), (0.025, 0.72, 0.8), (0.045, 0.88, 0.7), (0.09, 0.97, 0.5),
+                (0.16, 1.0, 0.3)],
 }
 SHELL_D = 0.05              # m, alpha leaf shell outside the opaque core
 SHELL_FOOT = 0.14           # share of h below which the shell is open: dark stems / core at the base
@@ -262,8 +269,9 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
         j += 1
     idx = np.array(idx, int)
     nt += _sprig_cards(buf, sprig_m, shell[-2][0][idx], N[idx], shell[-2][1][idx], (*key, "edge"), S, src, tilt=(0.2, 0.8))
+    # clipped band: few shoots on the side (a straight cut face, r7 N-4), cushion / box: 35 %
     nt += _sprig_cards(buf, sprig_m, shell[-3][0][idx] + N[idx] * 0.02, N[idx], shell[-3][1][idx] - 0.12 * h,
-                       (*key, "side"), S, src, tilt=(1.0, 1.35), share=0.35)
+                       (*key, "side"), S, src, tilt=(1.0, 1.35), share=0.12 if S.get("prof") == "clipped" else 0.35)
     if stats is not None:
         stats["tris"] = stats.get("tris", 0) + nt
     return 1
@@ -331,6 +339,34 @@ def _hedge_species(t):
     return "thuja" if t.get("leaf_type") == "needleleaved" else "privet"
 
 
+def band_of(poly, width, key=None):
+    """Clipped hedge band ~`width` m wide along an elongated bed (ADR 0060, review r7 N-4): the bed polygon is inset
+    until its mean width (2 A / P, exact for a long strip) matches; ends follow the bed taper, corners softened.
+    Beds already narrower than the band are returned as they are."""
+    def wmean(g):
+        return 2.0 * g.area / max(g.length, 1e-6) if not g.is_empty else 0.0
+    if wmean(poly) <= width * 1.05:
+        return poly
+    lo, hi = 0.0, 0.5 * wmean(poly) * 2.0
+    best = poly
+    for _ in range(24):
+        d = 0.5 * (lo + hi)
+        g = poly.buffer(-d, join_style="mitre")
+        if g.is_empty or g.area < 0.5:
+            hi = d
+            continue
+        g = max(getattr(g, "geoms", [g]), key=lambda q: q.area)
+        best = g
+        if wmean(g) > width:
+            lo = d
+        else:
+            hi = d
+    best = best.buffer(-0.15).buffer(0.15, quad_segs=3)
+    if best.is_empty:
+        return poly
+    return max(getattr(best, "geoms", [best]), key=lambda q: q.area)
+
+
 def _island_holes(roads_poly):
     holes = []
     for g in getattr(roads_poly, "geoms", [roads_poly]):
@@ -358,10 +394,18 @@ def build(buf, overrides, origin, roads_poly, road_parts, zground, deck_mask_at,
         for bi, bed in enumerate(o.get("beds", [])):
             poly = Polygon(np.asarray(bed["ring"], float) - [ox, oy])
             poly = shapely.make_valid(poly).buffer(-float(bed.get("rim_m", 0.6))).buffer(0.25)
+            S_ = species(bed.get("plant", "berberis_red"))
             for gi, g in enumerate(getattr(poly, "geoms", [poly])):
                 if g.geom_type != "Polygon" or g.area < 1.0:
                     continue
                 key = (o["id"], bi, gi)
+                band = bed.get("band_m")
+                if band is None and S_.get("band"):
+                    band = S_["band"][0] + _h(*key, "band") * (S_["band"][1] - S_["band"][0])
+                if band:
+                    g = band_of(g, float(band))
+                    if g.geom_type != "Polygon" or g.area < 0.5:
+                        continue
                 rep["hedges"] += hedge_mass(buf, g, zground, key, h=bed.get("height_m"), src=f"override:{o['id']}:bed{bi}",
                                              plant=bed.get("plant", "berberis_red"), stats=rep)
                 rep["hedge_m2"] += g.area

@@ -183,6 +183,18 @@ namespace Game.World.Import
                 mat.EnableKeyword("_ROADWEAR");
                 mat.SetFloat("_WheelPolish", id == "road_asphalt" ? 0.6f : 0.25f);
                 mat.SetFloat("_GutterDirt", id == "road_asphalt" ? 0.55f : 0.3f);
+                // ADR 0060: oil / soot band between the wheel paths of aged roads (resurfaced SMA: barely)
+                mat.SetFloat("_DripBand", id == "road_asphalt" ? 0.22f : 0.06f);
+            }
+            // ADR 0060 (review r7 N-2): dirty joints and damp / oily hollows on yards and footways (not on carriageways:
+            // their wear comes from _ROADWEAR). WORKING_VALUE, judged against the CC0 Bieżeństwa / Andersa photos.
+            if (setName == "behaton_i_grey" || setName == "paving_20x10_grey" || setName == "concrete_cast_5m_joints"
+                || setName == "concrete_slab_3x1.5" || (setName == "asphalt_worn" && id != "road_asphalt"))
+            {
+                bool blocks = setName == "behaton_i_grey" || setName == "paving_20x10_grey";
+                mat.EnableKeyword("_GRIME");
+                // x damp darkening, y macro-pool threshold (~0.62 = 16 % of the area), z joint dirt, w damp gloss
+                mat.SetVector("_Grime", new Vector4(blocks ? 0.42f : 0.38f, 0.62f, blocks ? 0.45f : 0.3f, 0.5f));
             }
             if (setName == "asphalt_worn")
             {

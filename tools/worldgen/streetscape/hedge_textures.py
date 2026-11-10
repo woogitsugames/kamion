@@ -30,8 +30,11 @@ SPRIG_CELL_M = 0.30         # m per sprig atlas cell (square)
 # leaf colour (sRGB), leaf length m, leaf width / length, drawing kind
 SPECIES = {
     # Berberis thunbergii 'Atropurpurea': obovate 1-3 cm, purple-red to brown-red, a few scarlet ones
+    # tip: young shoot leaves above the last cut are lighter and more copper (photo: orange-brown highlights on the top
+    # and the ends; ADR 0060, review r7 N-4), share of the outer leaves; deep: darkening of the inner leaves
     "berberis": dict(col=(96, 44, 36), alt=[((114, 48, 32), 0.10), ((72, 36, 34), 0.25)], leaf=(0.012, 0.028),
-                     ratio=0.55, kind="obovate", clumps=340, per_clump=(7, 14), cover=0.62),
+                     ratio=0.55, kind="obovate", clumps=340, per_clump=(7, 14), cover=0.62,
+                     tip=((150, 80, 50), 0.4), deep=0.35),
     # Ligustrum vulgare: lanceolate 3-5 cm, dark glossy green, opposite pairs
     "privet": dict(col=(54, 72, 36), alt=[((70, 88, 42), 0.2), ((40, 56, 30), 0.25)], leaf=(0.028, 0.05),
                    ratio=0.38, kind="lanceolate", clumps=150, per_clump=(6, 10), cover=0.62),
@@ -123,7 +126,11 @@ def shell(sp, n=512, seed=0):
             if u < acc:
                 c = alt
                 break
-        c = _jit(c, rng) * (0.5 + 0.5 * np.clip(depth, 0, 1))        # deeper leaves darker
+        tip = S.get("tip")
+        if tip and depth > 0.72 and rng.uniform() < tip[1]:
+            c = tip[0]
+        dk = S.get("deep", 0.5)
+        c = _jit(c, rng) * ((1.0 - dk) + dk * np.clip(depth, 0, 1) ** 1.3)   # deeper leaves darker
         col = tuple(int(v) for v in np.clip(c, 0, 255))
         for ox in (0, n, 2 * n):
             for oy in (0, n, 2 * n):
@@ -196,6 +203,8 @@ def sprigs(sp, n=256, seed=0):
             c = S["col"]
             if rng.uniform() < S["alt"][0][1]:
                 c = S["alt"][0][0]
+            if S.get("tip") and lit > 0.7 and rng.uniform() < S["tip"][1] * 1.4:
+                c = S["tip"][0]
             col = tuple(int(v) for v in np.clip(_jit(c, rng) * (0.5 + 0.4 * lit), 0, 255))
             if S["kind"] == "spray":
                 _spray(d, rng, p[0], p[1], L, ang, col)
