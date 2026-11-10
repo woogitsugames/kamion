@@ -246,6 +246,36 @@ namespace Game.Tests
         }
 
         [Test]
+        public void Instruments_FollowSimulationAndStalk()
+        {
+            var screens = SpawnTruckWithScreens(true);
+            var lights = m_Body.GetComponent<TruckLights>();
+            screens.lights = lights;
+            m_Body.Input = new DriverInput { Selector = GearSelector.Drive, Throttle = 0.5 };
+            Step(20);
+            screens.RenderNow();
+            float coolant0 = screens.State.CoolantC;
+            double fuel0 = screens.Source.FuelLitres;
+            int clock0 = (int)screens.Source.Clock.Minutes;
+            Step(300);
+            screens.RenderNow();
+            Assert.Greater(screens.State.CoolantC, coolant0, "coolant warms while the engine runs");
+            Assert.Less(screens.Source.FuelLitres, fuel0, "fuel burns from the engine flow");
+            Assert.GreaterOrEqual((int)screens.Source.Clock.Minutes, clock0, "clock follows game time");
+
+            lights.indicatorLever = -1; lights.flasherLit = true;
+            screens.RenderNow(); lights.Refresh();
+            Assert.AreEqual(-1, screens.State.Indicators);
+            Assert.IsTrue(screens.State.FlasherOn);
+            Assert.Greater(lights.StateTexture.GetPixel(4, 0).r, 0.5f, "left indicator lamp lit");
+            Assert.AreEqual(0f, lights.StateTexture.GetPixel(5, 0).r, "right indicator lamp dark");
+            lights.flasherLit = false;
+            screens.RenderNow(); lights.Refresh();
+            Assert.IsFalse(screens.State.FlasherOn);
+            Assert.AreEqual(0f, lights.StateTexture.GetPixel(4, 0).r, "left indicator dark in the off phase");
+        }
+
+        [Test]
         public void Screens_NightModeWithTheLightSensor()
         {
             var screens = SpawnTruckWithScreens(false);
@@ -370,6 +400,7 @@ namespace Game.Tests
             string dir0 = System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.dataPath, "..", "..", "artifacts", "visual-qa", "cab-screens"));
             System.IO.Directory.CreateDirectory(dir0);
             var lights = m_Body.GetComponent<TruckLights>();
+            lights.indicatorLever = -1; lights.flasherLit = true;   // left turn signal in the lit phase (arrow in the cluster)
             var prevSun = RenderSettings.sun;
             RenderSettings.sun = null;   // no sun: night mode follows the (forced) dipped beam
             foreach (bool night in new[] { false, true })

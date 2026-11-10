@@ -16,7 +16,7 @@ namespace Game.Gameplay
     /// - tyre rolling per surface (six loops cross-faded by the contact load on each SurfaceKind, tractor + trailer wheels),
     ///   tyre squeal from combined slip, wind by speed; every loop in an exterior and a prerendered cabin perspective;
     /// - retarder whine (Retarder.Fill), air compressor (Air.CompressorLoaded, pitch by rpm), parking-brake release,
-    ///   flasher relay tick/tock (<see cref="SetIndicators"/>, no input source in the game yet), industrial-yard ambience
+    ///   flasher relay tick/tock (<see cref="OnFlasherEdge"/>, driven by the turn-signal stalk's flasher so the click and the lamps share one phase), industrial-yard ambience
     ///   (<see cref="AmbientAudio"/>).
     /// Clips come from <see cref="VehicleAudioLibrary.LoadDefault"/>; without the generated library the truck is silent
     /// and a single warning is logged. No allocations after Start.
@@ -44,8 +44,7 @@ namespace Game.Gameplay
         readonly float[] m_SurfaceTarget = new float[LayerMath.SurfaceCount];
         readonly float[] m_SurfaceWeight = new float[LayerMath.SurfaceCount];
         AmbientAudio m_Ambient;
-        IndicatorClock m_Clock;
-        int m_Indicators;
+        int m_RelayEdge;
         bool m_PurgeAlt, m_SurfaceInit;
         float m_SquealGain, m_RetarderGain, m_CompressorGain;
         float m_Interior = 1f;
@@ -189,18 +188,19 @@ namespace Game.Gameplay
             }
             m_PrevPark = park; m_PrevCompressor = comp; m_PrevAmt = amt; m_HasPrev = true;
 
-            // ---- flasher relay ----
-            int ev = m_Clock.Advance(dt, m_Indicators != 0);
+            // ---- flasher relay (edges queued by OnFlasherEdge from the stalk's flasher) ----
+            int ev = m_RelayEdge;
+            m_RelayEdge = 0;
             if (ev != 0)
             {
-                var pair = ev == 1 ? m_Lib.indicatorTick : m_Lib.indicatorTock;
+                var pair = ev > 0 ? m_Lib.indicatorTick : m_Lib.indicatorTock;
                 Play(pair.ext, pair.cab, cabView, relayVolume * (cabView ? 1f : extRelayFactor));
             }
         }
 
-        /// <summary>Turn-signal lever state for the flasher relay sound: 0 = off, -1 left, +1 right, 2 = hazard.
-        /// The game has no turn-signal input yet; call this from the future lights/input system.</summary>
-        public void SetIndicators(int state) { m_Indicators = state; }
+        /// <summary>Flasher relay edge for the click: +1 contact closes (tick), -1 opens (tock). Called by the gameplay layer
+        /// with the return value of <c>TurnSignal.Step</c>; played in the next audio update.</summary>
+        public void OnFlasherEdge(int edge) { if (edge != 0) m_RelayEdge = edge; }
 
         void Play(AudioClip ext, AudioClip cab, bool cabView, float volume)
         {
