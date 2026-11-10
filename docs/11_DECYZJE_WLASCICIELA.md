@@ -45,3 +45,4 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 | D24 | Rozmiar świata w APK (E6) | Na razie **bez Play Asset Delivery**; limit podniesiony: świat (Low/Medium) w APK **≤ 110 MB** (WORKING_VALUE dla regionu startowego; zmierzone 94,4 MB górnej granicy po ADR 0025). Wracamy do tematu przy kolejnym regionie |
 | D25 | Test jazdy właściciela | **Po raporcie bramki 3** — APK ze wszystkimi poprawkami, instrukcja `docs/owner/FEEL-TEST.md` |
 | D26 | Modele 3D | Agenci modeli (truck-artist, Blender) na **Fable 5.2**; shadery/światło/świat na Opus |
+| D27 | Balans bieli przy niskim słońcu | **„Jak w telefonie” 0,5** w `LP_LowSun` (ADR 0043 opcja c); pozostałe presety bez adaptacji |

@@ -78,3 +78,6 @@ truck-34 open sky passes everywhere except toward the sun, which is legitimately
   set `whiteBalanceAdaptation` in the presets and drop the test assertion that it is 0.
 - `-qaNoGlass` (visual QA diagnostic) leaves only the grey Fresnel loss of the glazing, for comparing glass with no glass.
 - Not verified on a phone. The sky path is the same shader on every tier, so there is no per-tier difference to expect.
+
+## Owner decision 2026-11-10 (D27)
+Option (c) accepted: `LP_LowSun.whiteBalanceAdaptation = 0.5`; Clear/Overcast/Dusk stay 0. Test `SkyModelTests` pins it.

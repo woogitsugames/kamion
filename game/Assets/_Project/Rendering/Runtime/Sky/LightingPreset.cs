@@ -46,7 +46,7 @@ namespace Game.Rendering
         [Tooltip("Colour grading saturation (-100..100). Natural colours: 0 or slightly negative (docs/06 §2).")]
         [Range(-30f, 20f)] public float lookSaturation = 0f;
         [Tooltip("Phone-style partial white-balance adaptation toward the scene illuminant (0 = fixed daylight WB). ADR 0043 " +
-                 "option (c): owner art-direction decision, 0 in every preset until decided.")]
+                 "option (c): owner decision D27 = 0.5 in LP_LowSun only.")]
         [Range(0f, 1f)] public float whiteBalanceAdaptation = 0f;
         [Tooltip("Display black level (sRGB 0..1) of an albedo-0 pixel, applied after the tone curve (review r3 G1: ≤ 2 %).")]
         [Range(0f, 0.04f)] public float lookBlackLevel = 0.015f;
@@ -96,6 +96,7 @@ namespace Game.Rendering
             p.name = "LP_LowSun";
             p.sunElevationDeg = 9f; p.sunAzimuthDeg = 60f; p.turbidity = 3f; p.overcast = 0f; p.visibilityKm = 15f;
             p.lookSaturation = -3f;
+            p.whiteBalanceAdaptation = 0.5f; // owner decision D27 (2026-11-10): phone-style WB at low sun, ADR 0043
             return p;
         }
 
