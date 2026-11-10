@@ -318,7 +318,8 @@ def build_materials(a):
     # B2.1: koniak leather inserts (passenger dash, door cards, armrests, stack flank), stitched; slight wear
     M.pbr("leather_trim", tuple(c * 1.05 for c in trim), "leather", 0.12, nstr=0.9, wear=(0.20, 1.6))
     M.pbr("leather", (0.034, 0.033, 0.032), "leather", 0.12, nstr=1.0, wear=(0.26, 2.3), coat=0.0)
-    M.pbr("leather_wheel", (0.030, 0.029, 0.028), "leather", 0.05, nstr=0.8, wear=(0.26, 1.6))
+    # B2.2: rim leather has a soft satin sheen (hand oils), polished smoother at 10 and 2 o'clock
+    M.pbr("leather_wheel", (0.030, 0.029, 0.028), "leather", 0.05, rough_mul=0.82, nstr=0.8, wear=(0.19, 1.6))
     centre = (0.040, 0.039, 0.038) if a.trim == "grafit" else tuple(c * 0.85 for c in trim)
     M.pbr("leather_centre", centre, "leather", 0.12, nstr=0.7, perforate=0.04, wear=(0.34, 1.5))
     M.pbr("seat_fabric", tuple(c * 0.9 + 0.01 for c in trim), "seatfabric", 0.06, nstr=1.0, sheen=0.3)
@@ -333,6 +334,8 @@ def build_materials(a):
     M.pbr("scuff_plate", (0.42, 0.42, 0.42), "brushed", 0.08, metal=0.9, rough_add=0.10, nstr=0.5,
           wear=(0.18, 1.3), dust=(0.5, (0.12, 0.11, 0.09), 0.04))
     M.simple("piano", (0.010, 0.010, 0.011), rough=0.16, spec=0.5)
+    # B2.2: grab handles (door pulls) - same moulding as dash_dark, but they polish where the hand closes
+    M.pbr("grab_dark", (0.030, 0.030, 0.032), "hardgrain", 0.06, nstr=1.0, rough_add=0.04, wear=(0.17, 1.7))
     M.simple("rubber", (0.028, 0.028, 0.028), rough=0.82)
     M.simple("gap", (0.004, 0.004, 0.004), rough=0.9)
     # B2.2: keys are textured matt ABS that polishes where the thumb lands (wear -> smoother, a touch lighter)
@@ -1653,7 +1656,10 @@ def build_doors():
         # pull handle (vertical grab) under the armrest front
         pts = [V(xw - s * 0.07, 0.42, 1.93), V(xw - s * 0.125, 0.44, 1.91), V(xw - s * 0.125, 0.62, 1.91),
                V(xw - s * 0.07, 0.64, 1.93)]
-        tube(f"door_pull_{s}", G.polyline_smooth(pts, 4), 0.013, "dash_dark", seg=10)
+        pull = tube(f"door_pull_{s}", G.polyline_smooth(pts, 4), 0.013, "grab_dark", seg=10)
+        mw = pull.matrix_world
+        set_wear(pull, lambda co, mw=mw: 0.85 * smooth(0.46, 0.50, (mw @ co).y) * (1 - smooth(0.58, 0.62, (mw @ co).y)) *
+                 (0.7 + 0.3 * hash01(co.x * 40, co.y * 40, co.z * 40)))
         # interior opener lever (satin) near the front top
         lp = V(xw - s * 0.072, door_y(0.92, 2.06, 0.08), 2.06)
         panel(f"opener_cup_{s}", rrect(0.10, 0.045, 0.015, 3), lp, V(-s, 0, 0), V(0, 0, 1), 0.006, "dash_dark", bev=0.002)
@@ -1688,6 +1694,13 @@ def build_floor():
     group("floor")
     m = box_mm("floor_mat", -XI + 0.01, XI - 0.01, -0.12, FRONT_WALL_Y - 0.03, FLOOR - 0.004, FLOOR + 0.006, "floor_mat",
                bev=0.004)
+    # B2.2: the mat was 8 vertices, so the heel / entry wear below could not show; give the top a ~6 cm grid
+    bm = bmesh.new()
+    bm.from_mesh(m.data)
+    top = [e for e in bm.edges if all(v.co.z > FLOOR + 0.005 - m.location.z for v in e.verts)]
+    bmesh.ops.subdivide_edges(bm, edges=top, cuts=G.Q(36, 12), use_grid_fill=True)
+    bm.to_mesh(m.data)
+    bm.free()
     # mat is worn in the driver's heel area and the entry path
     set_wear(m, lambda co: 0.9 * math.exp(-(((co.x + 0.48) / 0.10) ** 2 + ((co.y - 1.14) / 0.08) ** 2)) +
              0.5 * math.exp(-(((co.x + 0.95) / 0.20) ** 2 + ((co.y - 0.45) / 0.35) ** 2)))
