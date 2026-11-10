@@ -1,4 +1,5 @@
-# STATUS map-audit-r9
-- 403 kamery (oba kierunki + lewe pasy + 23 z gory), render WorldC High overcast OK, 310 nowych Mapillary.
-- BUGS.md: 21 bledow (P0 4, P1 12, P2 5), montaze w artifacts/map-audit-r9/montage, kopia w main artifacts/map-audit-r9.
-- NASTEPNY KROK: naprawiacz czyta C:\Users\matma\Documents\Claude\kamion\artifacts\map-audit-r9\BUGS.md; ponowny audyt: pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting overcast -Gate3 artifacts/map-audit-r9/cameras/audit_cameras.json -OutputDir artifacts/map-audit-r9/renders/High-overcast
+# STATUS hud-r10 (ADR 0079 — adaptacyjny układ HUD, gałąź worktree-agent-ab59e33f0c7faaa00)
+
+- [krok 1, WIP — NIE KOMPILOWANE jeszcze w Unity] Kod: `UI/Layout/UiScale.cs` (skala wg krótszego boku + DPI, min. 1680 jednostek szerokości), `UI/Layout/UiViewport.cs` (skala + safe area, wykrywa zmianę ekranu), `UI/Driving/HudLayout.cs` (czysty solver stref), przebudowany `DrivingHud.cs` (strefy, panel dev zwijany do 1 przycisku, klaster 440x156 zamiast 560x242, biegi obok pedałów), `ControlSettingsPanel.cs` (mieści się w safe area, 1/2 kolumny, przewijanie), `BootMenu.cs` i `DiagnosticsOverlay.cs` na wspólnej skali.
+- Bez zmian w ProjectSettings/Packages/asmdef. Brakuje: .meta nowych plików (wygeneruje Unity), testy PlayMode, zrzuty, ADR 0079, 1 linia w `Editor/VisualQA/VisualQaRunner.cs` (hud.RefreshNow() przed renderem UI).
+- NASTĘPNY KROK: sprawdź blokadę `C:\Users\matma\Documents\Claude\kamion\artifacts\locks\PHONE_RUN`, potem `pwsh scripts/test.ps1 -Platform PlayMode -Filter HudLayout` (po dopisaniu `game/Assets/_Project/Tests/PlayMode/HudLayoutTests.cs`).
