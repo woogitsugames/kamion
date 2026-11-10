@@ -88,7 +88,7 @@ namespace Game.Tests
             // ADR 0043 (b): sun < 10 deg, sky 1-10 deg above the horizon opposite the sun: "peach/white, no olive" in the
             // analytic sky itself (the render adds glass and grading). Logged per azimuth for the record.
             var p = LightingPreset.CreateLowSun();
-            var m = p.CreateModel();
+            var m = p.CreateModel(0f); // analytic sky only; the D27 phone-style WB (0.5) is grading, tested separately
             foreach (float dAz in new[] { 90f, 135f, 180f })
             foreach (float elDeg in new[] { 2f, 5f, 10f })
             {
@@ -112,8 +112,9 @@ namespace Game.Tests
             var c = new SkyModel(9f, 60f, 3f, 0f, 12f, 0.5f);
             Assert.Less(c.SunColor.r / c.SunColor.b, a.SunColor.r / a.SunColor.b, "adaptation cools the low sun");
             Assert.Greater(c.AdaptedWhite.b, c.AdaptedWhite.r, "a neutral surface turns slightly blue under adaptation");
-            foreach (var p in new[] { LightingPreset.CreateClear(), LightingPreset.CreateOvercast(), LightingPreset.CreateLowSun(), LightingPreset.CreateDusk() })
-                Assert.AreEqual(0f, p.whiteBalanceAdaptation, p.name + ": WB adaptation is an owner decision (ADR 0043), off");
+            foreach (var p in new[] { LightingPreset.CreateClear(), LightingPreset.CreateOvercast(), LightingPreset.CreateDusk() })
+                Assert.AreEqual(0f, p.whiteBalanceAdaptation, p.name + ": WB adaptation off outside low sun (owner decision D27, ADR 0043)");
+            Assert.AreEqual(0.5f, LightingPreset.CreateLowSun().whiteBalanceAdaptation, "LP_LowSun: phone-style WB 0.5 (owner decision D27)");
         }
 
         [Test]
