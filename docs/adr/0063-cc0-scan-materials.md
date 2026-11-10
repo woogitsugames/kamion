@@ -56,4 +56,4 @@ Measured on WorldC control cameras (9 frames per condition, bottom-centre road R
   share is ~100.1 MB (D24 limit 110 MB). No shader change, so no GPU cost change expected (not measured on phone).
 - Pipeline: `import-region.ps1` now needs network once (cc0_fetch, 162 MB, sha256-verified) or a filled
   `art-source/world/cc0/_raw/`; `build_all.py --procedural` reproduces the old sets.
-- Tests: `tests/gis` (incl. `test_cc0_scans.py`) and EditMode green (2 inconclusive truck-glass tests, unrelated).
+- Tests: `tests/gis` 167 passed (incl. `test_cc0_scans.py`), EditMode 137 passed / 0 failed (2 inconclusive truck-glass tests, unrelated).
