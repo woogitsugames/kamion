@@ -76,11 +76,11 @@ i biały SUV pod chmurami).
   (b) albedo: czarny 0,018 → 0,035, granat 0,03/0,05/0,12 → 0,045/0,085/0,21, szary 0,13 → 0,16;
   (c) płatek odbija jaśniej niż pigment: `specColor = lerp(0,04, albedo + _CarFlake.z, metal)`, `_CarFlake.z` = 0,08.
   Wszystko WORKING_VALUE (brak pomiaru lakieru). Zmierzone sRGB 8-bit, średnia z wycinka kadru zmniejszonego do
-  1100 px (ten sam wycinek we wszystkich przebiegach):
+  1100 px (granatowy SUV: 1280 px); ten sam wycinek we wszystkich przebiegach:
 
   | kadr | przed | po (m3) | tło w kadrze |
   |---|---|---|---|
-  | granatowy SUV, drzwi, High overcast (`r10_front_04`) | 18/19/21 (m1) | 19/22/33 (m2) | opona 39/35/31 |
+  | granatowy SUV, drzwi, High overcast (`r10_front_04`) | 18/19/21 (m1) | 28/30/40 | opona 39/35/31 |
   | czarny hatchback, drzwi, High overcast (`r10b_black_05`) | 15/15/15 (m2) | 20/21/20 | asfalt 70/68/65, niebo 184 |
   | czarny hatchback, maska / dach, High overcast | 60/61/64 · 74/75/77 (m2) | 67/68/78 · 82/83/92 | opona 57/55/51 |
   | czarny hatchback, drzwi, High clear | 41/42/40 (m2) | 49/50/49 | opona 96/94/88 |
