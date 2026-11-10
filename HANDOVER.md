@@ -10,12 +10,12 @@
 |---|---|---|---|---|
 | P0 korytarz + ratchety | 0076 | agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | s8: agent Fable w toku |
 | wysepki z OSM | 0077 | agent-a2afb96d89584cca6 | tools/worldgen/fidelity/STATUS_islands_r10.md | s8: agent Fable w toku (merge main po 0076) |
-| straż JRG2 | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | s8: agent Fable w toku |
+| straż JRG2 | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | s8: r5 gotowe (a2761cf), recenzja PASS warunkowy → runda r6 (tynk P0) w toku |
 | osobówki r10 | 0078 | agent-a2215bcc98d109edc | artifacts/cars-r10 | s8: agent Fable w toku |
-| zabudowa r10 | 0081 | agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | s8: agent Fable w toku |
-| zewnętrze TRAKT + naczepa | 0083 | agent-a4049e15e1ab8c681 | artifacts/truck-ext-r10 | s8: agent Fable w toku |
+| zabudowa r10 | 0081 | agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | s8: GOTOWE do scalenia `70ef3ba` (r2, facade_atlas High 17,4 MB). Znalezisko: `_Tint` (Color) linearyzowany 2× we WSZYSTKICH zestawach World PBR — poprawione tylko dla budynków (`tint_linear`); globalnie → osobne zadanie ADR 0086 po scaleniach |
+| zewnętrze TRAKT + naczepa | 0083 | agent-a4049e15e1ab8c681 | artifacts/truck-ext-r10 | s8: D47 (bez pasa), recenzja PASS warunkowy → runda r8 w toku |
 | Kwadrat Park r11 (recenzja) | 0071 | kwadrat-r11 | artifacts/kwadrat-r11 | s8: nowy agent Fable |
-| światło r11 (recenzja) | 0080 | light-r11 | artifacts/light-r11 | s8: nowy agent Fable |
+| światło r11 (recenzja) | 0080 | light-r11 | artifacts/light-r11 | s8: raport `195eb5a` (niebo 6800 K, korony, mgiełka, szyba); kończy w tle |
 | import Megascans | 0084 | gpt-megascans | artifacts/megascans-r1 | GPT/Codex w toku |
 | tło za krawędzią | 0085 | argon-edge (Argon tworzy) | artifacts/edge-far-r1 | Antigravity — do startu przez właściciela |
 
@@ -23,7 +23,7 @@
 1. Scalanie: 0076 → 0077 → 0070 → 0078 → 0081 → 0083 → Kwadrat r11 → światło r11 → 0084 → 0085; po drogach: build_world → pytest gis → import-region → PlayMode WorldCBarrier|DepotBarrier|WorldCRoute.
 2. Sprzątanie ZROBIONE: worktree 0071/0080/0082 usunięte (artifacts skopiowane), 7 osieroconych katalogów usuniętych (junctiony odpięte, artifacts → artifacts/orphans/), nagranie → artifacts/owner/.
 3. Integracja, czyste buildy Low/High/Ultra, telefony, raport bramki 3.
-4. Ostatni przydzielony ADR: **0085**.
+4. Ostatni przydzielony ADR: **0086** (0086 = globalna poprawka `_Tint` gamma w World PBR, do zlecenia po scaleniach).
 
 ---
 # HANDOVER — kamion, sesja 7 (2026-11-10 ok. 23:00; LIMIT WYCZERPANY ok. 23:10; wszyscy agenci (0070, 0076, 0077, 0078, 0081, 0082, 0083) zapisali WIP i są zatrzymani; agenci dostali polecenie: commit WIP + STATUS.md i stop; nowa sesja startuje z docs/owner/START-PROMPT-S8.md)
