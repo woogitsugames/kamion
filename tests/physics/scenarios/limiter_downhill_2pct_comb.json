@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "limiter_downhill_2pct_comb",
+  "description": "40 t, 2% down, full throttle from 85 km/h: fuel cut at the limiter, the speed creeps above 90 km/h (the limiter does not brake) and the overrun protection caps it (ADR 0082)",
+  "spec": "docs/04 s6.4 / s6.6",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": -2,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 85
+  },
+  "duration": 180,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "max_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "overrun protection: limiter 90 km/h (S3) + 4 km/h offset, overshoot below 2 km/h",
+      "max": 96
+    },
+    {
+      "metric": "min_speed_kmh",
+      "status": "SOURCED",
+      "source": "S3: the limiter only cuts fuelling, it does not brake - no speed drop below the limiter band on a descent",
+      "min": 88,
+      "from": 60
+    },
+    {
+      "metric": "max_service_demand",
+      "status": "WORKING_VALUE",
+      "source": "service brake not used by the overrun protection",
+      "max": 0
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

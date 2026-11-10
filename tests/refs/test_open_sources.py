@@ -123,6 +123,36 @@ def test_http_gives_up_after_retries(tmp_path):
     assert http.requests_made == 2
 
 
+def test_http_retries_network_error_then_gives_up(tmp_path):
+    n = {"c": 0}
+
+    def h(params, data):
+        n["c"] += 1
+        if n["c"] == 1:
+            raise ConnectionResetError("reset")
+        return {"ok": True}
+
+    http = http_for([("x.test", h)], tmp_path)
+    assert http.get_json("https://x.test/a") == {"ok": True}
+    assert n["c"] == 2
+
+    def always(params, data):
+        raise TimeoutError("slow")
+
+    http = http_for([("y.test", always)], tmp_path, retries=1)
+    with pytest.raises(rc.SourceError):
+        http.get_json("https://y.test/a")
+    assert http.requests_made == 2
+
+
+def test_http_does_not_swallow_programming_errors(tmp_path):
+    def h(params, data):
+        raise ValueError("bug")
+
+    with pytest.raises(ValueError):
+        http_for([("x.test", h)], tmp_path).get_json("https://x.test/a")
+
+
 # ---------------------------------------------------------------- KartaView
 
 KV1 = {"currentPageItems": [

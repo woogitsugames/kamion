@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "limiter_downhill_5pct_comb",
+  "description": "40 t, 5% down, driver keeps full throttle from 85 km/h: the limiter cuts fuelling at 90 km/h, the overrun protection holds limiter + 4 km/h with engine brake + retarder (ADR 0082)",
+  "spec": "docs/04 s6.4 / s6.6",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": -5,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 85
+  },
+  "duration": 180,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "max_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "overrun protection: limiter 90 km/h (S3) + 4 km/h offset, overshoot below 2 km/h",
+      "max": 96
+    },
+    {
+      "metric": "mean_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "settles at limiter + offset; the limiter itself never brakes, so the speed stays above 90 km/h on the grade",
+      "min": 92.5,
+      "max": 95,
+      "from": 60
+    },
+    {
+      "metric": "speed_range_kmh",
+      "status": "WORKING_VALUE",
+      "source": "no hunting / limit cycle of the overrun control",
+      "max": 1.5,
+      "from": 60
+    },
+    {
+      "metric": "max_retarder_torque_nm",
+      "status": "SOURCED",
+      "source": "S2: Intarder up to 4000 Nm / 600 kW (class reference)",
+      "min": 300,
+      "max": 4000
+    },
+    {
+      "metric": "max_service_demand",
+      "status": "WORKING_VALUE",
+      "source": "service brake not used by the overrun protection",
+      "max": 0
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

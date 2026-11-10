@@ -7,7 +7,8 @@ graph is reported in the streetscape QA (`gates.stale`), never dropped silently.
 
 The kit (prototypes in streetscape.life_props, fence meshes like streetscape.furniture.fences):
   * gatehouse (portiernia) on the island where it is >= island_min_w wide, glazed side toward the entry lane;
-  * one striped boom barrier per lane, housing on the island kerb, boom raised (open position, map audit MA-003);
+  * one striped boom barrier per lane, housing on the island kerb: `barrier_base` + `barrier_boom` (closed; the
+    engine drives it: Game.World.DepotBarrier opens it for an approaching vehicle, map audit MA-003);
   * cantilever sliding gate across the two-way road `gate_offset_m` inside the depot, standing open
     behind the fence on the side given by `gate_side`;
   * panel fence returns (anthracite 3D panels on a concrete plinth) from both gate posts along the gate line,
@@ -27,6 +28,8 @@ from shapely.geometry import LineString, Point
 from roads import decals as DC
 from roads import standards as S
 from roads.network import side_extent, side_params
+
+from . import life_props as LP
 
 
 def _yaw(f):
@@ -100,7 +103,16 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
             across /= max(np.hypot(*across), 1e-9)
             hw = float(c.hw_at(s))
             base = p_c - across * (hw + S.KERB_TOP_W + 0.3)
-            pl.add("barrier_arm_raised", base, math.atan2(across[1], across[0]), src=f"{src}:{name}", group="barrier")
+            # automatic barrier (MA-003): static housing + the boom as its own instance in the hinge frame; the engine
+            # turns the boom into a Game.World.DepotBarrier (opens for an approaching vehicle, solid when closed)
+            yaw_b = math.atan2(across[1], across[0])
+            zb = pl.add("barrier_base", base, yaw_b, src=f"{src}:{name}", group="barrier")
+            side_y = np.array([-math.sin(yaw_b), math.cos(yaw_b)])            # prototype +y in E, N
+            t_lane = c.line.frame(s)[0] * g                                   # away from the split node along the lane
+            travel_dir = t_lane if name == "exit" else -t_lane                # entry traffic runs toward the node
+            pl.add("barrier_boom", base + side_y * LP.BOOM_SIDE, yaw_b, z=zb + LP.BOOM_HINGE[2], src=f"{src}:{name}:boom")
+            pl.items[-1]["barrier"] = {"L": LP.BOOM_L, "open_deg": LP.BOOM_OPEN_DEG, "lane": name,
+                                       "travel": 1.0 if float(np.dot(travel_dir, side_y)) >= 0 else -1.0}
             bars.append((c, s, g, across, hw))
             # oil stains where vehicles wait in front of the boom (approach side)
             for mm_ in range(2):
@@ -128,8 +140,9 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
         post = c2.line.offset_point(sg, side * open_w)
         # leaf behind the fence line (depot side), +x of the prototype = closing direction (toward the road)
         into = t * g2
-        pl.add("cantilever_gate", post + into * 0.25, math.atan2(-side * nn[1], -side * nn[0]), src=f"{src}:gate",
-               group="gate")
+        if o.get("sliding_gate", True):
+            pl.add("cantilever_gate", post + into * 0.25, math.atan2(-side * nn[1], -side * nn[0]), src=f"{src}:gate",
+                   group="gate")
         # --- gatehouse: just inside the fence next to the gate post opposite the gate leaf, glazed side to the
         #     road; fallback: beside the entry lane before the barrier
         def box_at(ctr, along):
@@ -160,7 +173,7 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
         flen = o.get("fence_return_m", 30.0)
         cutter = shapely.union_all([roads_poly.buffer(0.4), bpoly.buffer(0.5)])
         total = 0.0
-        for sd in (1.0, -1.0):
+        for sd in ((1.0, -1.0) if o.get("fence", True) else ()):
             a = c2.line.offset_point(sg, sd * (ow[sd] + 0.4))
             b = c2.line.offset_point(sg, sd * (ow[sd] + 0.4 + flen))
             line = LineString([a, b])
@@ -177,7 +190,7 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
                 lin.posts("fence_anthracite", P, S.FENCE_PANEL_W, 0.06, 0.04, S.FENCE_H + 0.05, src=src)
                 total += part.length
         # gate posts (0.12 m steel) at both sides of the opening
-        for sd in (1.0, -1.0):
+        for sd in ((1.0, -1.0) if o.get("fence", True) or o.get("sliding_gate", True) else ()):
             p = c2.line.offset_point(sg, sd * (ow[sd] + 0.2))
             P = np.array([p, p + into * 0.01])
             lin.posts("fence_anthracite", P, 1.0, 0.14, 0.14, S.FENCE_H + 0.25, src=src)

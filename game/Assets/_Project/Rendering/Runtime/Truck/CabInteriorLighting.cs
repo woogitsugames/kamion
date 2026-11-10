@@ -68,7 +68,13 @@ namespace Game.Rendering
         static readonly int k_Fill = Shader.PropertyToID("_CabFill"), k_Gain = Shader.PropertyToID("_CabGain"),
             k_Lift = Shader.PropertyToID("_CabShadowLift"), k_Enclosure = Shader.PropertyToID("_CabEnclosure"),
             k_Parity = Shader.PropertyToID("_KamionToeParity"),
-            k_CamOutside = Shader.PropertyToID("_KamionCamOutside");
+            k_CamOutside = Shader.PropertyToID("_KamionCamOutside"),
+            k_ToeInv = Shader.PropertyToID("_KamionCabToeInv"), k_ToeInvDisplay = Shader.PropertyToID("_KamionCabToeInvDisplay");
+
+        [Tooltip("ADR 0080: share (0..1) of the world contrast toe (LightingPreset.lookToe, overcast variant 3) that the cab " +
+                 "view undoes on the interior and the cluster, so the dash, wheel and gauges keep their ADR 0044 display " +
+                 "instead of falling close to black. 0 = interior takes the full world curve. WORKING_VALUE")]
+        [Range(0f, 1f)] public float toeCompensation = 1f;
 
         [Tooltip("Cab view on the tiers without post-processing: write the D23 toe in the cab shaders (KamionToeParity.hlsl, " +
                  "ADR 0044 addendum r7); off = plain sRGB toe on Low (A/B)")]
@@ -90,6 +96,7 @@ namespace Game.Rendering
             if (s_RefKey < 0f)
             {
                 var p = LightingPreset.CreateOvercast();
+                p.exposureCompensation = 0f;   // ADR 0080: the reference stays the table exposure (variant 3 biases the preset by -0.2 EV)
                 var rm = p.CreateModel();
                 float eSky = rm.SkyHorizontalIlluminanceLux * 0.5f, flux = 0f;
                 for (int i = 0; i < k_WinA.Length; i++) flux += k_WinA[i] * eSky;
@@ -116,6 +123,8 @@ namespace Game.Rendering
             Shader.SetGlobalFloat(k_Enclosure, 0f);
             Shader.SetGlobalVector(k_Parity, Vector4.zero);
             Shader.SetGlobalFloat(k_CamOutside, 0f);
+            Shader.SetGlobalVector(k_ToeInv, Vector4.zero);
+            Shader.SetGlobalVector(k_ToeInvDisplay, Vector4.zero);
         }
 
         void LateUpdate() => RefreshForView();
@@ -169,6 +178,7 @@ namespace Game.Rendering
                 fill = new Vector3(c.r, c.g, c.b);
             }
             float gain = 1f, lift = 0f, enc = exteriorEnclosure, outside = 1f;
+            Vector4 toeInv = Vector4.zero;
             bool post = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.postProcessing;
             // ADR 0072: outside the cab the truck shaders write the D23 toe too (the world keeps plain sRGB on Low).
             Vector4 parity = !post && exteriorToeParity ? LookGrading.NoPostToeParity : Vector4.zero;
@@ -179,6 +189,12 @@ namespace Game.Rendering
                 parity = !post && toeParity ? LookGrading.NoPostToeParity : Vector4.zero;
                 gain = Mathf.Pow(2f, cabViewEv + CabMeterEv(m, fill));
                 outside = 0f;
+                float comp = Mathf.Clamp01(RenderOverrides.CabToe ?? toeCompensation);
+                if (env != null && env.Active != null && comp > 0f)
+                {
+                    WorldAtmosphere.ResolveLook(env.Active, out float toe, out float toeP, out float pivot);
+                    if (toe > 0f) toeInv = new Vector4(toe, toeP, LookGrading.ToeGain(toe, toeP, pivot), comp);
+                }
                 enc = enclosure;
                 // Phone-like local tone mapping of the cab view (review r4 L1): only the interior surfaces, only in the
                 // cab view, strongest in the deepest shade - the sky through the glass and the lit dash are untouched.
@@ -194,6 +210,8 @@ namespace Game.Rendering
             Shader.SetGlobalVector(k_Lift, new Vector4(lift, Mathf.Max(1e-4f, shadowLiftKnee), Mathf.Clamp01(shadowLiftNeutral), 0f));
             Shader.SetGlobalFloat(k_Enclosure, Mathf.Clamp01(enc));
             Shader.SetGlobalVector(k_Parity, parity);
+            Shader.SetGlobalVector(k_ToeInv, toeInv);
+            Shader.SetGlobalVector(k_ToeInvDisplay, post ? toeInv : Vector4.zero);
             // ADR 0059: Kamion/Truck Glass dims the far pane of the see-through path only for views from outside the cab.
             Shader.SetGlobalFloat(k_CamOutside, outside);
         }

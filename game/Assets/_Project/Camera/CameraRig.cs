@@ -32,6 +32,22 @@ namespace Game.Cameras
         public float headDamping = 0.7f;
         public float lookDegPerPixel = 0.12f;
         public float lookReturnDelay = 2f, lookReturnRate = 60f;
+        /// <summary>
+        /// Driving look limits (ADR 0082, owner recording 2026-11-10 at 69.9 s: a stray drag beside the steering wheel
+        /// pitched the view ~30 deg up into the headliner for 2 s at 90 km/h). Above <see cref="drivingLookSpeedKmh"/>
+        /// the vertical look range shrinks to what a driver uses with the road in sight (overhead signs, instruments)
+        /// and the view returns to the road sooner. Yaw stays free (mirrors, junctions). WORKING_VALUE, feel item.
+        /// </summary>
+        public float drivingLookSpeedKmh = 20f, drivingPitchUpDeg = 12f, drivingPitchDownDeg = 25f, drivingLookReturnDelay = 0.8f;
+        /// <summary>Forward speed of the target [km/h] (from the Rigidbody in FixedUpdate; tests set it directly).</summary>
+        public float speedKmh;
+        /// <summary>Acceleration fed to the head sway is limited to this [m/s^2] (crash / fall spikes do not throw the head).</summary>
+        public float headMaxAccel = 12f;
+        /// <summary>
+        /// Box (half extents, anchor frame, m) the eye never leaves relative to the seated eye point: neck parallax
+        /// (DriverHead.EyeFromNeckPivot, up to ~0.14 m) plus sway. Keeps the camera inside the cab whatever the inputs. WORKING_VALUE.
+        /// </summary>
+        public Vector3 eyeBoxHalfExtents = new Vector3(0.20f, 0.12f, 0.20f);
 
         [Header("Chase")]
         public float chaseDistance = 13f, chaseHeight = 4.5f, chaseFov = 50f, chaseSmooth = 0.25f;
@@ -58,6 +74,24 @@ namespace Game.Cameras
 
         public void SetMode(CameraMode m) { mode = m; m_ChaseInit = false; }
 
+        /// <summary>Re-centres the cab view and clears the head sway state (after a vehicle reset / teleport).</summary>
+        public void ResetView()
+        {
+            m_LookYaw = 0f; m_LookPitch = 0f; m_LookIdle = 0f;
+            m_HeadPos = Vector3.zero; m_HeadVel = Vector3.zero; m_AccFiltered = Vector3.zero;
+            m_HasPrevVel = false;
+            m_ChaseInit = false;
+        }
+
+        bool Driving => Mathf.Abs(speedKmh) > drivingLookSpeedKmh;
+
+        /// <summary>Look pitch (positive = down) limited to the driving range above the driving speed, else to the neck limits.</summary>
+        public float ClampLookPitch(float deg)
+        {
+            deg = DriverHead.ClampPitch(deg);
+            return Driving ? Mathf.Clamp(deg, -drivingPitchUpDeg, drivingPitchDownDeg) : deg;
+        }
+
         /// <summary>Chase / orbit framing for a tractor alone or with a 13.6 m semi-trailer behind it.</summary>
         public void SetCombination(bool withTrailer)
         {
@@ -73,7 +107,7 @@ namespace Game.Cameras
             if (mode == CameraMode.Cab)
             {
                 m_LookYaw = DriverHead.ClampYaw(m_LookYaw + px.x * lookDegPerPixel);
-                m_LookPitch = DriverHead.ClampPitch(m_LookPitch - px.y * lookDegPerPixel);
+                m_LookPitch = ClampLookPitch(m_LookPitch - px.y * lookDegPerPixel);
                 m_LookIdle = 0f;
             }
             else if (mode == CameraMode.Orbit)
@@ -93,10 +127,12 @@ namespace Game.Cameras
         {
             if (targetBody == null) return;
             Vector3 v = targetBody.linearVelocity;
+            speedKmh = Vector3.Dot(v, targetBody.transform.forward) * 3.6f;
             if (m_HasPrevVel)
             {
                 Vector3 aWorld = (v - m_PrevVel) / Time.fixedDeltaTime;
-                Vector3 aLocal = targetBody.transform.InverseTransformDirection(aWorld);
+                Vector3 aLocal = Vector3.ClampMagnitude(targetBody.transform.InverseTransformDirection(aWorld), headMaxAccel);
+                if (!IsFinite(aLocal)) aLocal = Vector3.zero;
                 m_AccFiltered = Vector3.Lerp(m_AccFiltered, aLocal, 1f - Mathf.Exp(-Time.fixedDeltaTime / 0.12f));
             }
             m_PrevVel = v;
@@ -126,20 +162,36 @@ namespace Game.Cameras
             m_HeadVel += acc * dt;
             m_HeadPos += m_HeadVel * dt;
             m_HeadPos = Vector3.ClampMagnitude(m_HeadPos, headMaxOffset * 1.5f);
+            if (!IsFinite(m_HeadPos) || !IsFinite(m_HeadVel)) { m_HeadPos = Vector3.zero; m_HeadVel = Vector3.zero; }
 
             m_LookIdle += dt;
-            if (m_LookIdle > lookReturnDelay)
+            bool driving = Driving;
+            if (driving)
+            {
+                // Picking up speed with the head tilted: ease into the driving range instead of snapping.
+                float limited = Mathf.Clamp(m_LookPitch, -drivingPitchUpDeg, drivingPitchDownDeg);
+                m_LookPitch = Mathf.MoveTowards(m_LookPitch, limited, lookReturnRate * dt);
+            }
+            if (m_LookIdle > (driving ? Mathf.Min(lookReturnDelay, drivingLookReturnDelay) : lookReturnDelay))
             {
                 m_LookYaw = Mathf.MoveTowards(m_LookYaw, 0f, lookReturnRate * dt);
                 m_LookPitch = Mathf.MoveTowards(m_LookPitch, 0f, lookReturnRate * dt);
             }
             // The anchor is a child of the cab-suspension pivot: the head follows the sprung cab. Look-around turns the head
             // about the neck pivot (DriverHead), within neck limits.
-            cam.transform.SetPositionAndRotation(anchor.TransformPoint(DriverHead.LocalEyePosition(m_LookYaw, m_LookPitch, m_HeadPos)),
-                anchor.rotation * DriverHead.LookRotation(m_LookYaw, m_LookPitch));
+            Vector3 eyeLocal = DriverHead.LocalEyePosition(m_LookYaw, m_LookPitch, m_HeadPos);
+            eyeLocal = new Vector3(Mathf.Clamp(eyeLocal.x, -eyeBoxHalfExtents.x, eyeBoxHalfExtents.x),
+                Mathf.Clamp(eyeLocal.y, -eyeBoxHalfExtents.y, eyeBoxHalfExtents.y),
+                Mathf.Clamp(eyeLocal.z, -eyeBoxHalfExtents.z, eyeBoxHalfExtents.z));
+            Vector3 eyeWorld = anchor.TransformPoint(eyeLocal);
+            Quaternion rot = anchor.rotation * DriverHead.LookRotation(m_LookYaw, m_LookPitch);
+            if (!IsFinite(eyeWorld) || float.IsNaN(rot.x + rot.y + rot.z + rot.w)) return;   // never feed a broken pose to the renderer
+            cam.transform.SetPositionAndRotation(eyeWorld, rot);
             cam.fieldOfView = cabFov;
             cam.nearClipPlane = 0.05f;
         }
+
+        static bool IsFinite(Vector3 v) => !(float.IsNaN(v.x) || float.IsNaN(v.y) || float.IsNaN(v.z) || float.IsInfinity(v.x) || float.IsInfinity(v.y) || float.IsInfinity(v.z));
 
         void UpdateChase(float dt)
         {

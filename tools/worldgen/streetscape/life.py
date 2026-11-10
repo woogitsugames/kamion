@@ -143,7 +143,9 @@ def dock_trailers(pl, docks, sp, report):
                 continue
             base = p + d * dock["u"] + nout * 0.45
             body = rect(base + nout * 6.8, nout, 6.8, 1.3)
-            if not sp.vehicle_free(body):
+            # the hero depot (ADR 0071) is the player's base: its dock row is the first thing seen, so the trailers stand
+            # at its doors although the yard lies inside the start clearance (which still keeps yard rows / rigs away)
+            if not (sp.free(body) if hero else sp.vehicle_free(body)):
                 continue
             k = hf(dk["id"], dock["num"], "kind")
             if k < 0.70:
@@ -521,7 +523,7 @@ def _parking_proto(key, t):
     return f"car_{body}_{pick(CAR_SHARE, hf(*key, 'col', t))}", LP.CARS[body]["L"] / 2 + 0.05
 
 
-def parking(pl, paved, sp, report, buf=None, zsurf=None, park_union=None, docks=()):
+def parking(pl, paved, sp, report, buf=None, zsurf=None, park_union=None, docks=(), no_parking=None):
     """Bays in every paved area that is (or overlaps) a car park: OSM amenity=parking (incl. parking=street_side
     strips) and BDOT10k OT_KUKO_A parking. A BDOT yard polygon earlier in the paved priority list used to swallow
     the OSM car park (parking flag lost -> empty lots in front of the route, REVIEW r5 W-H3+)."""
@@ -541,6 +543,8 @@ def parking(pl, paved, sp, report, buf=None, zsurf=None, park_union=None, docks=
     # ADR 0041 par. 1: no bays on dock aprons. The apron polygon alone is not enough: a car-park polygon (OSM / BDOT)
     # drawn over a truck yard put cars in front of the dock doors, so the dock manoeuvring zones are cut out too.
     free = dock_zones(docks)
+    if no_parking:
+        free = shapely.union_all([free] + [shapely.make_valid(p) for p in no_parking])
     if not free.is_empty:
         cut = []
         for rid, poly in regions:
@@ -710,7 +714,9 @@ def yard_props(pl, blds, docks, sp, report):
     report.update(cnt)
 
 
-def place(pl, docks, paved, blds, roads_poly, bpoly, route_P, report, buf=None, zsurf=None, park_polys=None):
+def place(pl, docks, paved, blds, roads_poly, bpoly, route_P, report, buf=None, zsurf=None, park_polys=None,
+          no_parking=None):
+    """no_parking: polygons (authored, streetscape.depot_yard) where no rule car bay is laid out."""
     rep = {}
     union = shapely.union_all([p["poly"] for p in paved])
     route = LineString(route_P) if route_P is not None and len(route_P) > 1 else None
@@ -719,7 +725,7 @@ def place(pl, docks, paved, blds, roads_poly, bpoly, route_P, report, buf=None, 
     if buf is not None and zsurf is not None:
         tyre_scrub(buf, docks, zsurf, rep)
     pu = shapely.union_all([shapely.make_valid(p) for p in park_polys]) if park_polys else None
-    parking(pl, paved, sp, rep, buf, zsurf, pu, docks)
+    parking(pl, paved, sp, rep, buf, zsurf, pu, docks, no_parking=no_parking)
     stalls = []
     truck_yards(pl, paved, sp, rep, docks, stalls)
     yard_props(pl, blds, docks, sp, rep)
