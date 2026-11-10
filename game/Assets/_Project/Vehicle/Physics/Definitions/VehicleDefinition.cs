@@ -221,6 +221,13 @@ namespace Game.Vehicle.Physics
         public double trailerSupplyLimitBar = 8.5;
         /// <summary>Maximum trailer control (yellow) line pressure at full service demand [bar].</summary>
         public double trailerControlMaxBar = 7.5;
+        /// <summary>
+        /// Trailer control line pressure with the parking lever in the park position [bar], 0 = trailer not braked
+        /// by the tractor parking brake. European hand control valves with a trailer-control function brake the
+        /// trailer through the yellow line in park (the "test" position releases it to check the tractor alone);
+        /// WORKING_VALUE, UNVERIFIED (ADR 0004 addendum 2026-11-10).
+        /// </summary>
+        public double trailerControlParkBar = 7.5;
         public double lowPressureWarningBar = 5.5;
         /// <summary>Spring brake chamber: releasing starts / complete [bar].</summary>
         public double springReleaseStartBar = 3.0;

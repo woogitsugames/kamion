@@ -195,7 +195,10 @@ namespace Game.Vehicle.Physics
 
             // --- trailer lines ---
             TrailerSupplyLine = trailerConnected ? Math.Min(ParkTrailer, _a.trailerSupplyLimitBar) : 0;
-            double controlTarget = trailerConnected ? Math.Min(serviceDemand * _a.trailerControlMaxBar, Math.Max(Front, Rear)) : 0;
+            // Parking lever in park also brakes the trailer through the control line (hand control valve with
+            // trailer control, ADR 0004 addendum 2026-11-10); fed from circuit 3 like the trailer supply.
+            double parkControl = parkingApplied ? Math.Min(_a.trailerControlParkBar, ParkTrailer) : 0;
+            double controlTarget = trailerConnected ? Math.Max(Math.Min(serviceDemand * _a.trailerControlMaxBar, Math.Max(Front, Rear)), parkControl) : 0;
             TrailerControlLine = MathUtil.FirstOrder(TrailerControlLine, controlTarget, controlTarget > TrailerControlLine ? 0.06 : 0.10, dt);
 
             // --- spring brake chambers (fed from circuit 3 through the pressure limiter) ---
@@ -258,6 +261,8 @@ namespace Game.Vehicle.Physics
         {
             foreach (var w in wheels.Wheels)
                 w.SpringChamberPressure = applied || w.Axle.parkingBrakeTorque <= 0 ? 0 : Math.Min(ParkTrailer, _a.trailerSupplyLimitBar);
+            // Parked: the hand control valve also holds the trailer control line (zeroed by Update when no trailer).
+            TrailerControlLine = applied ? Math.Min(_a.trailerControlParkBar, ParkTrailer) : 0;
         }
 
         /// <summary>Charges a trailer reservoir through the red line; returns nothing, updates both sides.</summary>
@@ -389,6 +394,22 @@ namespace Game.Vehicle.Physics
         {
             foreach (var w in wheels.Wheels)
                 w.SpringChamberPressure = ParkValveApplied || w.Axle.parkingBrakeTorque <= 0 ? 0 : Math.Min(Reservoir, 8.5);
+        }
+
+        /// <summary>
+        /// Service chambers start at the pressure the control line asks for (vehicle parked before the scenario with
+        /// the trailer braked through the tractor's hand control valve): no apply lag at t = 0.
+        /// </summary>
+        public void InitServiceChambers(WheelGroup wheels, double controlLine)
+        {
+            double pMax = _d.maxChamberPressureBar;
+            double demand = Math.Min(controlLine * _d.relayGain, pMax);
+            foreach (var w in wheels.Wheels)
+            {
+                w.ChamberPressure = demand * LoadFactor(wheels, w.AxleIndex);
+                w.BrakePressure = w.ChamberPressure / pMax;
+                w.BrakeTorque = Pneumatics.BrakeTorque(w, _d.thresholdPressureBar, pMax, _d.springReleaseStartBar, _d.springReleaseFullBar);
+            }
         }
     }
 

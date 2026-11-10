@@ -87,6 +87,10 @@ sc("launch_flat_comb", "Standstill on flat, release brake, full throttle, AMT au
     chk("time_to_kmh", arg=80, mn=40, mx=95, variant="laden40", status=D, source="as above, 22.2 m/s: 38 s + shifts + rolling + aero"),
     chk("max_speed_kmh", mx=90.5, status=S, source="S3: 90 km/h limiter"),
     chk("max_rpm_in_gear", arg=6, mx=1900, frm=1, source="Stage 2 fix: no over-rev to the 1900-2100 rpm governor in the low gears"),
+    chk("max_shift_retard_torque_nm", mx=1, frm=1,
+        source="owner feel test 2026-11-10: no wheel brake / retarder / engine brake torque during an up-shift unless commanded (ADR 0004 addendum 2026-11-10)"),
+    chk("min_accel_shift_gap_ms2", mn=-0.3, frm=1, status=D,
+        source="per-gap mean dv/dt with the clutch open: only rolling (cr 0.005-0.0055 x g = 0.05 m/s2) + aero (~0.05 laden / ~0.15 empty at 88 km/h) may decelerate; limit ~1.5x the worst case"),
     chk("max_clutch_temp_c", mx=250, source="clutch below the warning temperature on a flat start")] + stable,
    variants=COMB)
 

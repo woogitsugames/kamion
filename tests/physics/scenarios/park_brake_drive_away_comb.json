@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "park_brake_drive_away_comb",
+  "description": "Owner feel test 2026-11-10: parked on flat with the parking brake (P) ON, D selected, full throttle for 10 s. The truck must not drive away; then P released, full throttle: normal launch.",
+  "spec": "docs/04 s6.1, s6.2; ADR 0004 addendum 2026-11-10 (parking-brake interlock)",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 40,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      { "t": 0, "throttle": 0, "brake": 0, "steer": 0, "parkingBrake": true, "selector": "D" },
+      { "t": 1.0, "throttle": 1, "brake": 0, "steer": 0, "parkingBrake": true, "selector": "D" },
+      { "t": 11.0, "throttle": 0, "brake": 0, "steer": 0, "parkingBrake": false, "selector": "D" },
+      { "t": 12.0, "throttle": 1, "brake": 0, "steer": 0, "parkingBrake": false, "selector": "D" }
+    ]
+  },
+  "checks": [
+    { "metric": "max_speed_kmh", "from": 0, "to": 11, "max": 0.5, "status": "WORKING_VALUE", "source": "owner requirement 2026-11-10: with P applied the truck must not drive off (speed stays ~0 for 10 s of full throttle)" },
+    { "metric": "creep_m", "from": 0, "to": 11, "max": 0.05, "status": "WORKING_VALUE", "source": "no creep through the parking brake (tyre/driveline wind-up only)" },
+    { "metric": "park_warning", "from": 1.1, "to": 11, "min": 1, "status": "WORKING_VALUE", "source": "drive-away interlock raises the parking-brake warning (cluster/HUD, chime)" },
+    { "metric": "park_warning", "from": 13, "max": 0, "status": "WORKING_VALUE", "source": "no warning once P is released" },
+    { "metric": "max_clutch_temp_c", "max": 120, "status": "WORKING_VALUE", "source": "interlock keeps the clutch open: no slip heating against the spring brakes" },
+    { "metric": "stalled", "max": 0, "status": "WORKING_VALUE", "source": "engine must not stall against the parking brake" },
+    { "metric": "min_speed_kmh", "from": 30, "min": 25, "variant": "laden40", "status": "WORKING_VALUE", "source": "after P release the launch is normal (launch_flat_comb laden40 reaches ~30 km/h ~15 s after the start)" },
+    { "metric": "max_dv_step_ms", "max": 0.35, "status": "WORKING_VALUE", "source": "no solver explosion against the brakes" }
+  ]
+}

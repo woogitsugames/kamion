@@ -249,6 +249,27 @@ The PlayMode hill start (`CombinationLabTests.HillStart_6pct_40t`, 6.27 s agains
 
 Note (fixed 2026-11-10): the generator now carries the strict kerb checks of curb_strike_5cm/14cm and kerb_step_27cm (it used to emit looser ceilings, e.g. Fz 4.0 instead of 2.2 for 5 cm, 4.5 instead of 4.2 for 14 cm, wheel-off 0.1 instead of 0.08). It derives the kerb block from `art-source/truck/dims.json` (left tyre patches of front, dual rear and trailer tridem; combination 16.47 m, ADR 0019) and exits with the numbers if the block no longer fits. `tests/physics/test_scenario_strictness.py` fails when the generator drifts from the committed JSON or a kerb ceiling is raised. Runner after the change: 99 scenarios / 493 checks green.
 
+### 6c. Parking brake drive-away and shift gap, ADR 0004 addendum (2026-11-10)
+
+Owner feel test: "braked when accelerating and shifting" was P left on. The truck spawns parked, and at full throttle the
+40 t combination dragged through the 2 x 16 kN m tractor spring brakes in launch gear 4 (45 kN m) up to 15.9 km/h on the
+phone and 16.9 km/h in the runner. Each up-shift then fell at -1.55 m/s². New scenarios: `park_brake_drive_away_comb`
+(empty, laden40), `park_brake_hold_no_interlock_comb`, `park_low_air_drive_away_comb`. `launch_flat_comb` also checks
+`max_shift_retard_torque_nm` <= 1 N m and `min_accel_shift_gap_ms2` >= -0.3 m/s². All of them fail on 111f437.
+
+| Run (laden40 unless noted) | before (111f437) | after |
+|---|---|---|
+| P on, full throttle 10 s: max speed | 15.6 km/h (empty 16.4, stall) | 0.003 km/h (empty 0.0006) |
+| P on, interlock off: max speed / clutch temp | n/a | 0.05 km/h / 135 °C |
+| Up-shift with P on: gap dv/dt, wheel brake torque | -1.55 m/s², 32 kN m | no shift (no movement) |
+| P off: brake + retarder + engine brake torque in shifts | 0 | 0 |
+| P off: worst per-gap mean dv/dt | -0.126 (empty -0.207) m/s² | unchanged |
+| Shift interruption | 0.63 s | 0.63 s |
+| 0-60 / 0-80 km/h | 26.9 / 46.2 s | unchanged |
+| park_12pct trailer / tractor creep after 5 s (limit 5 mm) | 1.3-3.6 / 0.04-0.27 mm | 3.5-4.8 / 1.0-2.1 mm |
+
+Evidence: `artifacts/physics/shift-brake/` (before/, after/ CSV + PNG, suite-before/, suite-after/ summaries).
+
 ## 7. Known gaps / not modelled
 
 - **Not run in Unity or on the phone.** PhysX integration of two bodies with this constraint, cost on the Samsung A, and the feel test (docs/03 Stage 2 gate) are still open.
@@ -258,6 +279,7 @@ Note (fixed 2026-11-10): the generator now carries the strict kerb checks of cur
 - **Ruts are not modelled**: rays are in the wheel plane only. No dynamic load sharing between interconnected bellows (only static equalisation by levelling). A trial on the kerb strike made no difference (§3a). **No trailer frame torsion**: on a one-sided step the rigid frame lets a tridem axle hang at full droop (0.21 s, empty, §3a). **No unsprung mass**: wheel ends are massless, and the tire is in series with the suspension, so there is no wheel hop.
 - **Brakes:** no thermal model or fade; no EBS coupling-force control; ABS uses the true contact-point speed as the reference speed (a real ECU estimates it); the trailer ABS is one generic layout. Compressed-air response is checked against R13 Annex 4 §4.1.1, but the Annex 6 method was not read.
 - **Endurance brakes:** the retarder has no oil-temperature derating (only the 600 kW power cap); the EPG-only exhaust brake stage is not separate.
+- **Parking brake:** the interlock is a design rule (production AMT behaviour UNVERIFIED). The "trailer test" position of the hand valve is not modelled. The HUD/chime hookup of `ParkingBrakeWarning` is open (gameplay-ui).
 - **AMT:** no GPS predictive strategy; mass and grade are taken from the model, not estimated; the creep function is a fixed torque.
 - **Unsourced numbers:** most trailer, air and brake parameters are WORKING_VALUE (see the reference data). The rollover threshold and rearward amplification bands rest on unopened literature.
 
@@ -269,6 +291,7 @@ Note (fixed 2026-11-10): the generator now carries the strict kerb checks of cur
 4. Reversing to the ramp with the trailer camera (needs Unity scene): articulation response, the stop at 90°.
 5. Long descent with the retarder lever and brake cruise: speed held, no service brake.
 6. Coupling to a parked trailer at walking pace: a bump, but not a hit.
+7. Full accelerator with P on: no movement, engine at idle, parking-brake warning. Release P, wait ~1 s, accelerate: normal launch, no braking felt in the up-shifts.
 
 Note for each item: mass feel, braking, steering wheel feedback, trailer behaviour.
 

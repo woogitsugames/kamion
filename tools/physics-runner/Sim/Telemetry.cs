@@ -40,6 +40,9 @@ namespace PhysicsRunner.Sim
         public double CabPitch, CabRoll, CabHeave;
         public double LandingGearLoad;
         public double ParkingState;
+        public bool ParkWarning;
+        /// <summary>Sum of the brake torque capacity on every wheel (service + spring, tractor + trailer) [N m].</summary>
+        public double WheelBrakeTorque;
     }
 
     /// <summary>CSV telemetry writer (docs/04 section 4).</summary>
@@ -56,7 +59,7 @@ namespace PhysicsRunner.Sim
             _w = new StreamWriter(path, false, new UTF8Encoding(false));
             _configId = configId; _commit = commit;
             _sb.Append("t,x,y,z,speed_kmh,v_fwd,a_long,a_lat,yaw_rate_dps,heading_deg,pitch_deg,roll_deg,");
-            _sb.Append("throttle_in,brake_in,steer_in,parking_in,retarder_lever,throttle_eff,brake_demand,parking_state,hill_hold,");
+            _sb.Append("throttle_in,brake_in,steer_in,parking_in,retarder_lever,throttle_eff,brake_demand,parking_state,hill_hold,park_warning,park_interlock,");
             _sb.Append("rpm,gear,amt_state,clutch_cmd,engine_torque,clutch_torque,boost,asr_factor,clutch_temp_c,");
             _sb.Append("engine_brake_cmd,engine_brake_torque,retarder_cmd,retarder_torque,retarder_power_kw,");
             _sb.Append("air_supply_bar,air_front_bar,air_rear_bar,air_park_bar,air_red_bar,air_yellow_bar,air_trailer_res_bar,low_air_warning,compressor_on,trailer_emergency,");
@@ -85,7 +88,7 @@ namespace PhysicsRunner.Sim
             F(m.Time); F(b.Position.x); F(b.Position.y); F(b.Position.z);
             F(b.Velocity.Magnitude * 3.6); F(m.SpeedForward); F(m.LocalAcceleration.z); F(m.LocalAcceleration.x + m.SpeedForward * m.YawRate);
             F(m.YawRate * MathUtil.Rad2Deg); F(heading); F(pitch); F(roll);
-            F(inp.Throttle); F(inp.Brake); F(inp.Steer); F(inp.ParkingBrake ? 1 : 0); F(inp.RetarderLever); F(m.ThrottleDemand); F(m.BrakeDemand); F(m.ParkingBrakeState); F(m.HillHoldActive ? 1 : 0);
+            F(inp.Throttle); F(inp.Brake); F(inp.Steer); F(inp.ParkingBrake ? 1 : 0); F(inp.RetarderLever); F(m.ThrottleDemand); F(m.BrakeDemand); F(m.ParkingBrakeState); F(m.HillHoldActive ? 1 : 0); F(m.ParkingBrakeWarning ? 1 : 0); F(m.Amt.ParkingInterlockActive ? 1 : 0);
             F(m.Engine.Rpm); F(m.Amt.Gear); F((int)m.Amt.State); F(m.Amt.ClutchCommand); F(m.EngineTorque); F(m.ClutchTorque); F(m.Engine.Boost); F(m.AsrFactor); F(m.Amt.ClutchTempC);
             F(m.EngineBrakeCommand); F(m.Engine.EngineBrakeTorque); F(m.RetarderCommand); F(m.Retarder.Torque); F(m.Retarder.Power / 1000);
             var a = m.Air;

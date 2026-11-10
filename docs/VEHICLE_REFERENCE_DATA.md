@@ -149,6 +149,8 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 | Service brake torque per wheel end front / rear / trailer | 20 000 / 24 000 / 18 000 | N m | WORKING_VALUE | Laden rear needs ≥ 22 kN m to reach μ = 0.8 (DERIVED: 55 kN × 0.8 × 0.51 m) |
 | Spring brake torque per wheel end, tractor rear | 16 000 | N m | DERIVED + WORKING margin | S5 2.3.2: the tractor alone must hold 40 t on 12 %: 40 t × 9.81 × 0.119 × 0.51 m / 2 = 11.9 kN m; ×1.35 margin |
 | Spring brake torque per wheel end, trailer axles 1–2 | 12 000 | N m | WORKING_VALUE | |
+| Trailer control (yellow) line with the parking lever in park | 7.5 | bar | WORKING_VALUE | European hand control valve with trailer control brakes the trailer in park (UNVERIFIED, data sheet not opened); ADR 0004 addendum 2026-11-10 |
+| AMT drive-away interlock: parking brake counts as applied above / launch allowed below | spring state 0.05 / 1.0 m/s | – | WORKING_VALUE | Design rule, production behaviour UNVERIFIED; ADR 0004 addendum 2026-11-10 |
 | EBS load sensing (laden axle load / minimum factor) | rear 112.8 kN / 0.25; trailer axles 78.5 kN / 0.2; front none | – | WORKING_VALUE | Signal = levelled bellows force |
 | ABS: release slip / re-apply slip | 0.16 / 0.06 (+0.6 m/s slip-speed floor) | – | WORKING_VALUE | |
 | ABS: wheel decel (hold) / re-accel (end dump) | 12 / 4 | m/s² | WORKING_VALUE | |
