@@ -322,6 +322,17 @@ overrides:
     reason: Same junction, 14 m2 corner leftover on asphalt (orthophoto road fraction 1.0).
     confidence: medium
     verify: Mapillary / owner drive
+  - id: gore-s610-centre-hatch
+    kind: paved_gore
+    at_en: [346.9, -557.5]
+    radius_m: 10.0
+    close_m: 7.0
+    hatch: true
+    reason: >-
+      Same junction, 32 m2 triangle left between the junction patches in its centre: on the orthophoto the tip of the
+      painted P-21 zone (with U-25 separators), no kerb. Overlay artifacts/islands-r10/after4/ramps610.jpg.
+    confidence: high
+    verify: Mapillary / owner drive
   # ---------------------------------------------------------------- carriageway placement (network.prepare_chain, ADR 0077)
   # center_offset = carriageway centre this many metres to the LEFT of the OSM way (in the way's travel direction).
   # OSM draws one line per carriageway but not always on its centre (no placement=* tags in this tile). Values are

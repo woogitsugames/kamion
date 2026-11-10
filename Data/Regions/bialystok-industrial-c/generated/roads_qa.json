@@ -1930,7 +1930,7 @@
     2
    ],
    "length_m": 571.4,
-   "max_grade": 0.0502,
+   "max_grade": 0.0504,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.0,
    "sidewalk_frac": 1.0,
@@ -2195,7 +2195,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.13,
+   "axis_smoothing_dev_max_m": 0.14,
    "bridge_m": 0.0,
    "grade_limit": 0.07,
    "highway": [
@@ -2206,17 +2206,17 @@
     2
    ],
    "length_m": 229.5,
-   "max_grade": 0.0119,
+   "max_grade": 0.0117,
    "overrides": [
     "lacznica-biezenstwa-placement"
    ],
-   "profile_rms_vs_nmt_m": 0.01,
+   "profile_rms_vs_nmt_m": 0.009,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.5
+    7.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "authored_override:lacznica-biezenstwa-placement"
    ]
   },
   {
@@ -10183,7 +10183,7 @@
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 503281,
+  "footprint_nodes": 503501,
   "fork_shifts": [
    {
     "chain": "c:w1360055407:4075461271-1852129061",
@@ -10980,14 +10980,14 @@
      ]
     },
     {
-     "area_m2": 200.2,
+     "area_m2": 191.1,
      "built": true,
      "hatch": true,
      "note": "P-21 hatch, 1 paint parts",
      "why": "override:gore-s610-hatch-south",
      "xy": [
       337.5,
-      -574.5
+      -574.2
      ]
     },
     {
@@ -11118,8 +11118,8 @@
      "note": "",
      "why": "sliver",
      "xy": [
-      377.0,
-      -608.2
+      379.1,
+      -609.3
      ]
     },
     {
@@ -11278,14 +11278,14 @@
     }
    ],
    "islands": [],
-   "kerb_dropped_m": 703.0,
+   "kerb_dropped_m": 702.0,
    "paved": {
     "merge": {
      "area_m2": 308.0,
      "count": 6
     },
     "override": {
-     "area_m2": 933.3,
+     "area_m2": 924.2,
      "count": 8
     },
     "sliver": {
@@ -11337,7 +11337,7 @@
     {
      "area_m2": 74.1,
      "reason": "carriageways at different heights",
-     "step_m": 1.1,
+     "step_m": 1.08,
      "why": "merge",
      "xy": [
       395.3,
@@ -11347,11 +11347,11 @@
     {
      "area_m2": 67.9,
      "reason": "carriageways at different heights",
-     "step_m": 0.19,
+     "step_m": 0.23,
      "why": "merge",
      "xy": [
-      387.7,
-      -613.3
+      389.7,
+      -614.4
      ]
     },
     {
@@ -11470,8 +11470,8 @@
    "P-8 skipped (lanes continue)": 10,
    "P-8 skipped (off carriageway)": 62
   },
-  "markings_overlap_removed_tris": 121,
-  "nmt_nodes_replaced_under_decks": 2093,
+  "markings_overlap_removed_tris": 123,
+  "nmt_nodes_replaced_under_decks": 2085,
   "overrides_applied": [
    {
     "id": "kwadrat-park-yard-access-width",
@@ -11607,7 +11607,9 @@
     ]
    }
   ],
-  "overrides_stale": [],
+  "overrides_stale": [
+   "gore-s610-centre-hatch"
+  ],
   "roundabout_junctions": 12,
   "signalised_junctions": 11,
   "walled_ramps": [
@@ -11628,7 +11630,7 @@
    {
     "chain": "c:w175157461:1883101816-1883469484",
     "confidence": "medium",
-    "max_wall_h_m": 3.98,
+    "max_wall_h_m": 3.96,
     "nmt_fill_max_m": 0.86,
     "walled_m": 110.5
    },
