@@ -548,6 +548,31 @@ def build_downpipe(mb, e, fr, u, lod):
         fr.box(mb, u - r, u + r, zg, zt + 0.25, 0.0, 0.04 + 2 * r, "downpipe", faces="flr")
 
 
+def build_ladder(mb, e, fr, u):
+    """Fixed roof-access ladder: stringers 0.5 m apart from 2.4 m above the ground to 1.1 m over the coping, rungs every
+    0.3 m, safety cage (hoops every 0.9 m + 3 verticals) from 3.0 m up, wall brackets."""
+    zg = ground_at(e, u)
+    z0, z1 = zg + 2.4, ZPAR + PRM["coping_h_m"] + 1.1
+    for uu in (u - 0.25, u + 0.25):
+        fr.box(mb, uu - 0.025, uu + 0.025, z0, z1, 0.2, 0.26, "steel_galv", faces="flrkB")
+        for zb in np.arange(z0 + 0.6, ZPAR - 0.2, 2.4):
+            fr.box(mb, uu - 0.02, uu + 0.02, zb, zb + 0.04, 0.0, 0.2, "steel_galv", faces="lrtB")
+    for zr in np.arange(z0 + 0.15, ZPAR + PRM["coping_h_m"] + 0.05, 0.3):
+        fr.box(mb, u - 0.25, u + 0.25, zr - 0.012, zr + 0.012, 0.215, 0.245, "steel_galv", faces="ftB")
+    zc0 = zg + 3.0
+    P = fr.P
+    ring = [(-0.36, 0.26), (-0.36, 0.72), (-0.2, 0.92), (0.2, 0.92), (0.36, 0.72), (0.36, 0.26)]
+    for zh in np.arange(zc0, z1 + 0.01, 0.9):
+        for (ua_, oa), (ub_, ob) in zip(ring[:-1], ring[1:]):
+            mid_out = np.array([fr.d[0] * (ua_ + ub_) / 2 + fr.n[0] * ((oa + ob) / 2 - 0.5),
+                                fr.d[1] * (ua_ + ub_) / 2 + fr.n[1] * ((oa + ob) / 2 - 0.5), 0.0])
+            for hn in (mid_out, -mid_out):
+                mb.poly([P(u + ua_, zh, oa), P(u + ub_, zh, ob), P(u + ub_, zh + 0.05, ob), P(u + ua_, zh + 0.05, oa)],
+                        [(0, 0), (0.3, 0), (0.3, 0.05), (0, 0.05)], "steel_galv", hn)
+    for uu, oo in ((-0.36, 0.5), (0.0, 0.92), (0.36, 0.5)):
+        fr.box(mb, u + uu - 0.015, u + uu + 0.015, zc0, z1, oo - 0.015, oo + 0.015, "steel_galv", faces="flrk")
+
+
 def build_annex(mb, ax, lod):
     q = [np.asarray(p, float) for p in ax["quad"]]            # p0 (on the wall), p1, p2 (front), p3 (on the wall)
     zg = ZREF
@@ -672,8 +697,28 @@ def build_segment(seg, lod):
                 P = fr.P
                 mb.poly([P(u - 0.18, z - 0.102, 0.37), P(u + 0.18, z - 0.102, 0.37), P(u + 0.18, z - 0.102, 0.68),
                          P(u - 0.18, z - 0.102, 0.68)], [(0, 0), (1, 0), (1, 1), (0, 1)], "lamp_glass", (0, 0, -1))
-        if "docks" in f:                                         # yellow corner bollards at both ends of the dock row
+        for u in f.get("ladders") or []:
+            if ua <= u < ub:
+                build_ladder(mb, e, fr, u)
+        if "docks" in f:
             dk = f["docks"]
+            zf = dk["yard_z"] + PRM["dock_floor_h_m"]
+            u_first, u_last = dk["first_u_m"], dk["first_u_m"] + (dk["count"] - 1) * dk["pitch_m"]
+            # galvanised conduit run feeding the dock lights and signal boxes, with a drop to every control box
+            zc = zf + PRM["dock_shelter_h_m"] + 0.62
+            c0, c1 = max(u_first - 1.3, ua), min(u_last + 2.4, ub)
+            if c1 - c0 > 0.2:
+                fr.box(mb, c0, c1, zc - 0.025, zc + 0.025, 0.02, 0.07, "steel_galv", faces="ftB")
+                for k in range(dk["count"]):
+                    ul = u_first + k * dk["pitch_m"] + PRM["dock_door_w_m"] / 2 + (PRM["dock_shelter_w_m"] - PRM["dock_door_w_m"]) / 2 + 0.43
+                    if c0 < ul < c1:
+                        fr.box(mb, ul - 0.015, ul + 0.015, zf + 1.95, zc - 0.025, 0.02, 0.05, "steel_galv", faces="flr")
+            # red hydrant cabinet between the last dock and the stair door
+            uh = u_last + 2.75
+            if ua <= uh < ub:
+                fr.box(mb, uh - 0.32, uh + 0.32, zf + 0.55, zf + 1.4, 0.0, 0.2, ACCENT, faces="flrtB")
+                fr.front(mb, uh - 0.24, uh + 0.24, zf + 0.7, zf + 1.25, "plate_white", o=0.203)
+            # yellow corner bollards at both ends of the dock row
             for u in (dk["first_u_m"] - 2.6, dk["first_u_m"] + (dk["count"] - 1) * dk["pitch_m"] + 2.6):
                 if ua <= u < ub:
                     fr.box(mb, u - 0.09, u + 0.09, dk["yard_z"] - 0.1, dk["yard_z"] + 1.1, 0.5, 0.68, "paint_yellow", faces="flrtk")

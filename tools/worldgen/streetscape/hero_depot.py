@@ -151,7 +151,7 @@ def build_spec(o, bld, zsample, origin) -> tuple[dict | None, list]:
                 used.add(k)
                 e["name"] = f["name"]
                 feats = {key: f[key] for key in ("docks", "strips", "louvres", "doors", "drive_doors", "office_windows",
-                                                 "downpipes", "wall_lights", "party", "note") if key in f}
+                                                 "downpipes", "wall_lights", "ladders", "party", "note") if key in f}
                 if "docks" in feats:
                     dk = dict(feats["docks"])
                     cnt = int(dk["count"])

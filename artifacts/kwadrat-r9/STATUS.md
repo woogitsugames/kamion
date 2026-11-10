@@ -34,3 +34,25 @@ Worktree `.claude/worktrees/agent-a1409e374f8c12b4f`, gałąź `worktree-agent-a
     bash artifacts/kwadrat-r9/render.sh itN [kamery]        # iteracja assetu (render kontrolny)
     blender -b --factory-startup -P tools/blender/world/landmarks/make_depot.py -- --spec Data/Regions/bialystok-industrial-c/generated/landmarks/kwadrat_park.spec.json   # eksport GLB + meta
     KAMION_BLENDER=<blender.exe> uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+
+## Stan 2026-11-10 ~21:00 (WIP zapisany na polecenie lidera)
+- Asset wyeksportowany: `art-source/world/landmarks/kwadrat_park/kwadrat_park.glb` LOD0/1/2 = 13 088 / 2 034 / 652 tr., 17 prototypów.
+- build_world z hero OK (`logs/build_world_hero1.log`): `hero depot kwadrat-park-hero applied`, overrides_stale = [].
+  Szacunek klatki kwadrat_park_gate High 922 881 → 930 134, Low 331 911 → 333 827; stretch_04 High 1 997 449 (< 2,0 M);
+  stretch_02 High +61 k (auta na nowym parkingu przed lokalami).
+- pytest tests/gis: 172 zielone (nowy `test_hero_depot.py` 7; `test_streetscape` zna prototypy z landmarks). UWAGA: w nowym
+  worktree trzeba `git lfs checkout` (trees.glb / PNG były wskaźnikami LFS → import Unity i 2 testy padały).
+- Unity import OK (`logs/import2.log`): Low 113,0 MB, High 249,7 MB. Rendery WorldC w toku: `artifacts/kwadrat-r9/after1/<Tier>-<światło>/`.
+- W źródłach, ale JESZCZE NIE w GLB: drabina na dach, koryto kablowe nad dokami, szafka hydrantowa (`make_depot.py`,
+  `overrides.yaml: ladders`). Najbliższy build_world sam przebuduje asset (potrzebny `KAMION_BLENDER`).
+- MA-003 (szlaban bramy opuszczony, bez kolizji): NIE ruszone — `kwadrat-park-gate-kit` bez zmian (`streetscape/gate.py`,
+  prototyp `barrier_arm` w `life_props.py`). Do zrobienia: ramię w pozycji otwartej (pionowo) w prototypie albo kolizja ramienia.
+- EditMode nie puszczony, visual-critic nie wołany, ADR 0071 = proposed.
+
+## NASTĘPNY KROK (po kolei)
+    git lfs checkout
+    $env:KAMION_BLENDER='C:\Users\matma\AppData\Local\Programs\Blender4.2\blender-4.2.9-windows-x64\blender.exe'; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+    uv run --project tools/worldgen pytest tests/gis -q
+    pwsh scripts/import-region.ps1 -Region bialystok-industrial-c
+    pwsh artifacts/kwadrat-r9/qa_runs.ps1 -Phase after2
+    pwsh scripts/test.ps1 -Platform EditMode
