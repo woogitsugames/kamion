@@ -1,0 +1,109 @@
+{
+  "feature_counts": {
+    "buildings": 6697,
+    "buildings_by_typology": {
+      "block": 1368,
+      "hall": 1733,
+      "house": 1007,
+      "office": 2589
+    },
+    "chimneys": 11,
+    "forest_polygons": 167,
+    "power_lines": 38,
+    "pylons": 224
+  },
+  "region": "bialystok-industrial-c",
+  "schema": "truck-sim-pl/far-field-qa/1",
+  "tiers": {
+    "High": {
+      "bytes": 7583256,
+      "file": "Data/raw/derived/bialystok-industrial-c/world/far_field.glb",
+      "sectors": {
+        "far_east": {
+          "by_material": {
+            "far_field_buildings": 22494,
+            "forest_edge_mixed": 2254
+          },
+          "submeshes": 2,
+          "triangles": 24748,
+          "vertices": 48170
+        },
+        "far_north": {
+          "by_material": {
+            "far_field_buildings": 3687,
+            "forest_edge_mixed": 11068
+          },
+          "submeshes": 2,
+          "triangles": 14755,
+          "vertices": 19131
+        },
+        "far_south": {
+          "by_material": {
+            "far_field_buildings": 32272,
+            "forest_edge_mixed": 2112
+          },
+          "submeshes": 2,
+          "triangles": 34384,
+          "vertices": 67036
+        },
+        "far_west": {
+          "by_material": {
+            "far_field_buildings": 5622,
+            "forest_edge_mixed": 8642
+          },
+          "submeshes": 2,
+          "triangles": 14264,
+          "vertices": 20676
+        }
+      },
+      "sha256": "32224fd53e070c68c908e8f057b158d9df64ee1f46c5f88731997d2f9e575606",
+      "total_triangles": 88151,
+      "total_vertices": 155013
+    },
+    "Low": {
+      "bytes": 1677364,
+      "file": "Data/raw/derived/bialystok-industrial-c/world/far_field.low.glb",
+      "sectors": {
+        "far_east": {
+          "by_material": {
+            "far_field_buildings": 5157,
+            "forest_edge_mixed": 936
+          },
+          "submeshes": 2,
+          "triangles": 6093,
+          "vertices": 11549
+        },
+        "far_north": {
+          "by_material": {
+            "far_field_buildings": 1230,
+            "forest_edge_mixed": 4744
+          },
+          "submeshes": 2,
+          "triangles": 5974,
+          "vertices": 7646
+        },
+        "far_south": {
+          "by_material": {
+            "far_field_buildings": 8618,
+            "forest_edge_mixed": 874
+          },
+          "submeshes": 2,
+          "triangles": 9492,
+          "vertices": 18262
+        },
+        "far_west": {
+          "by_material": {
+            "far_field_buildings": 1847,
+            "forest_edge_mixed": 3712
+          },
+          "submeshes": 2,
+          "triangles": 5559,
+          "vertices": 7915
+        }
+      },
+      "sha256": "31e0a6388c8539f718d3a6bba34ea12d1c78e0f575c465f7573d82d14916ce5c",
+      "total_triangles": 27118,
+      "total_vertices": 45372
+    }
+  }
+}

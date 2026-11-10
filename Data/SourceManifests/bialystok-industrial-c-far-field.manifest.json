@@ -1,0 +1,48 @@
+{
+  "adr": "0085-far-field-backdrop",
+  "feature_counts": {
+    "buildings": 6697,
+    "buildings_by_typology": {
+      "block": 1368,
+      "hall": 1733,
+      "house": 1007,
+      "office": 2589
+    },
+    "chimneys": 11,
+    "forest_polygons": 167,
+    "power_lines": 38,
+    "pylons": 224
+  },
+  "id": "bialystok-industrial-c-far-field",
+  "region": "bialystok-industrial-c",
+  "ring_bounds_local_m": {
+    "inner_half_m": 1024.0,
+    "outer_half_m": 4200.0
+  },
+  "schema": "truck-sim-pl/source-manifest/1",
+  "sources": [
+    {
+      "dataset": "BDOT10k powiat 2061 (m. Białystok): OT_PTLZ_A, OT_BUBD_A, OT_BUWT_P, OT_SULN_L",
+      "files": {},
+      "id": "gugik-bdot10k-2061",
+      "license": "Open public data — Art. 40a ust. 2 pkt 1 lit. a Prawa geodezyjnego i kartograficznego (Dz.U. 2020 poz. 276)",
+      "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)"
+    },
+    {
+      "dataset": "Modele 3D budynków LoD1 (2024) powiat 2061 (m. Białystok)",
+      "files": {},
+      "id": "gugik-lod1-2024-2061",
+      "license": "Open public data — Art. 40a ust. 2 pkt 1 lit. i Prawa geodezyjnego i kartograficznego",
+      "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)"
+    },
+    {
+      "dataset": "podlaskie-261108.osm.pbf (ring outside tile incl. powiat 2002)",
+      "files": {
+        "osm/podlaskie-261108.osm.pbf": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d"
+      },
+      "id": "geofabrik-osm-podlaskie-261108",
+      "license": "ODbL 1.0 (© OpenStreetMap contributors)",
+      "provider": "OpenStreetMap contributors / Geofabrik GmbH"
+    }
+  ]
+}

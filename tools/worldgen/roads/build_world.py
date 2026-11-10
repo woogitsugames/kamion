@@ -661,6 +661,11 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         with open(os.environ["WORLDGEN_DUMP_WALLS"], "wb") as fh:
             pickle.dump({"parts": keep, "zc": zc, "mask": mask, "x0": w.hf.x0, "y1": w.hf.y1}, fh)
     np.save(out_root / "terrain_conformed.npy", zc.astype(np.float32))
+    from streetscape import far_field as FF
+    ff_qa = FF.build_far_field(region_id, out_root=out_root)
+    manifest["far_field"] = ff_qa["tiers"]
+    write_json(gen / "world_manifest.json", manifest)
+    log("far_field:", {k: v["total_triangles"] for k, v in ff_qa["tiers"].items()})
     log("done")
     return w, manifest, qa
 
