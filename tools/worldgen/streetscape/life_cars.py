@@ -1464,7 +1464,9 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         uv = [((u0 if (pp[0] > 0) == front else u1), (v0 if pp[2] < (zlo + zhi) / 2 else v1)) for pp in q]
         _puv(m, "car_plate", q, uv, nn)
     # road film on the tail (dirtiest face of a car) and the lower front bumper
-    dg = [-2.0, -0.7, 0.7, 2.0] if lod == 0 else [-1.9, 0.0, 1.9]
+    # r10: the film follows the shell's own columns (a quad from g = 0.7 to 2.0 was a chord through the shoulder arc:
+    # half of it sank into the body and the rest stood off the corner as a hard-edged rectangle)
+    dg = list(gs)
     spatch("R1", [(g, 0.0, 1.0) for g in dg], dmat, lift=0.016, uv=(uo, 0.45), v0=0.0)
     spatch("R2", [(g, 0.0, 0.25 + 0.45 * dl) for g in dg], dmat, lift=0.016, uv=(uo + 0.21, 0.45), v0=0.35)
     if lod == 0:
