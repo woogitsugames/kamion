@@ -8,14 +8,15 @@ Bieżeństwa → al. Tysiąclecia Państwa Polskiego (`Screen_Recording_20261110
 | czas | obserwacja | przyczyna |
 |---|---|---|
 | 62–109 s | pełny gaz, 86 → 89–90 km/h, potem stałe 89–90 | ogranicznik **już był** (`driveline.speedLimiterKmh = 90`, pasmo 2 km/h); runner: 89,2 km/h (40 t), 89,4 (pusta) |
-| 110–116 s | 90 → 94 km/h przy pełnym gazie | zjazd przed krawędzią regionu; ogranicznik tylko odcina paliwo, nic nie trzymało prędkości |
+| 110–116 s | 90 → 94 km/h przy pełnym gazie, w trakcie zmiany pasów | **przyczyna nieustalona (UNVERIFIED)**. Pierwsza hipoteza „zjazd przed krawędzią” nie potwierdziła się: zmierzony profil jezdni wylotowej (kolizja `col_asphalt`, 960 m do krawędzi, `tysiaclecia-north-profile.csv`) wznosi się +1,1…+2,8 %, ostatnie 150 m +1,3 %, największy spadek −0,3 %. Ogranicznik w adapterze Unity trzyma 88,9–89,4 km/h także przy zmianach pasa i na trawie (test niżej). Toru jazdy właściciela z nagrania nie da się odtworzyć co do metra (możliwy zjazd z nasypu / inna jezdnia); potrzebna telemetria z telefonu (przycisk „Nagraj”) |
 | 116,5–127 s | biała pustka, 97 → 179 km/h, widok na deskę i kierownicę | koniec danych regionu (bbox ±1024 m, tu N = +1024, E ≈ −857), brak czegokolwiek za krawędzią; spadek swobodny; widok „w deskę” to przeciąganie palcem po polu rozglądania (pitch do limitu szyi 50° w dół + yaw) podczas spadku |
 | 69,9–72,3 s | u góry czarny pas z kropkami (fryta / podsufitka), horyzont nisko | **nie ruch głowy**: skok widoku ~30° w górę w < 0,25 s, trzymany 2 s, powrót 60°/s = `lookReturnDelay`/`lookReturnRate` rozglądania; palec lewej ręki wylądował obok kierownicy na `LookPad` |
 | 31,5–34,5 s | przejazd przez wysepkę rozdzielającą (szary blok kostki) i wyspę środkową Ronda Bieżeństwa (ziemia / żwir z berberysem) | wyspa ma kolizję, ale klasy „kostka” (tarcie 0,85, opór ×1,3); krawężnik ~0,14–0,2 m działa tylko na koła |
 
 Krawędź regionu: `Data/Regions/bialystok-industrial-c/region.yaml` bbox 2048 × 2048 m, wszystkie 64 chunki mają
 teren i kolizję — to **koniec danych, nie dziura w kolizji**. `roads.graph.json` ma 37 węzłów `boundary`
-(drogi przycięte na bbox), m.in. obie jezdnie al. Tysiąclecia (E −857 / −869, N +1024), Maczka, Andersa.
+(36 krawędzi dróg przyciętych na bbox), m.in. obie jezdnie al. Tysiąclecia (E −856,5 wylotowa / −868,7 wlotowa,
+N +1024; jezdnie biegną skośnie, ok. 12° na zachód od północy), Maczka, Andersa.
 
 ## Decyzja
 
@@ -35,7 +36,9 @@ teren i kolizję — to **koniec danych, nie dziura w kolizji**. `roads.graph.js
 ### 2. Krawędź regionu
 - **Dane:** `Game.World.WorldBoundary` na korzeniu regionu (prostokąt E/N, lista zamknięć), budowany przy imporcie
   przez `WorldEdgeBuilder` (wywołany z `WorldSceneBuilder.Build`).
-- **Zamknięcia dróg:** na każdej drodze przyciętej przez bbox, 60 m przed krawędzią (wzdłuż osi drogi): rząd
+- **Zamknięcia dróg:** na każdej drodze przyciętej przez bbox (36), 60 m przed krawędzią wzdłuż osi drogi — odcinek
+  cofania przechodzi przez węzły stopnia 2 (graf dzieli drogę przy zmianie atrybutu; krawędzie brzegowe mają 4–200 m);
+  gdy bliżej jest skrzyżowanie, zapora stoi w 80 % długości odcinka od krawędzi (najmniej ~3 m): rząd
   betonowych barier (0,6 × 0,81 m, elementy 2 m) + tablica zapory U-20 (pola biało-czerwone 0,5 m, wysokość 0,25 m,
   na słupkach) + `BoxCollider` (szerokość jezdni + 5 m, 2,5 m wysokości). Wymiary WORKING_VALUE (nie zmierzone
   z rozporządzenia o znakach). Brief mówił „U-21”; U-21 to tablice kierujące, poprzeczne zamknięcie to U-20.
@@ -75,10 +78,19 @@ teren i kolizję — to **koniec danych, nie dziura w kolizji**. `roads.graph.js
 - Runner: `artifacts/drive-fold-r10/physics/limiter/` (CSV + PNG): `limiter_downhill_5pct_comb@laden40` maks. 95,1,
   ustalone 94,0 km/h (hamulec silnikowy 180 kW + retarder 190 kW, bieg 11, hamulec roboczy 0);
   `limiter_downhill_2pct_comb@laden40` 93,9–94,3; `top_speed_flat_comb` 89,2 / 89,4. `dotnet test` 153/153.
-- Unity: EditMode `WorldEdgeLogicTests` (8), PlayMode `WorldEdgeRecoveryTests` (3), telemetria powrotu
-  `artifacts/drive-fold-r10/world-edge-reset.csv`; kadry krawędzi `artifacts/drive-fold-r10/edge/`.
+- Unity, ogranicznik: PlayMode `CombinationLabTests.SpeedLimiter_FullThrottle_LaneChanges` (3): pełny gaz 36 s,
+  od 14 s zmiany pasa (okres 4 s): asfalt pusty maks. 89,40; 40 t 89,18; trawa 88,90 km/h.
+- Unity, krawędź: EditMode `WorldEdgeLogicTests` (8), PlayMode `WorldEdgeRecoveryTests` (3): zestaw 25 m przed
+  krawędzią na jezdni wylotowej, 105 km/h → `OutOfBounds` przy N = 1023,6 (97 km/h), po 0,5 s stoi zaparkowany na
+  ostatniej bezpiecznej pozie, kamera w punkcie oczu; telemetria `artifacts/drive-fold-r10/world-edge-reset.csv`;
+  profil jezdni `tysiaclecia-north-profile.csv`; kadry krawędzi `artifacts/drive-fold-r10/edge/`.
+- Import: `import-region.ps1` w worktree wymaga `git lfs checkout` (inaczej `street_props.glb: not a GLB`).
 
 ## Otwarte
+- **Skąd +4 km/h w nagraniu (90 → 94 na 110–116 s):** nieodtworzone. Model i adapter trzymają ≤ 89,4 km/h na płaskim
+  i na trawie; jezdnia wylotowa się wznosi. Do sprawdzenia na telefonie z nagraną telemetrią (prędkość, pochylenie,
+  `SpeedLimiterFactor`, `OverrunBrakeActive`). Ochrona przed rozpędzaniem ogranicza skutek do 94 km/h (na zjeździe);
+  czy na zjeździe ma być twarde 90 (offset 0–1 km/h) — decyzja właściciela, jedna liczba `overrunBrakeOffsetKmh`.
 - Powrót ustawia zestaw przodem do krawędzi (ostatnia poza z jazdy); na jezdni jednokierunkowej trzeba użyć
   „Reset” / menu. Docelowo: graf pasów w runtime i powrót na pas w stronę mapy.
 - Fartuch nie ma lasu ani zabudowy (goła trawa + mgła); przy zamknięciach brak znaków B-1 / U-3 i świateł U-35.
