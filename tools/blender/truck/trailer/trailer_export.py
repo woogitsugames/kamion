@@ -54,7 +54,7 @@ TRI_TARGET = {0: 89000, 1: 24500, 2: 7850}
 MAT_SLOT = {"trl_paint": "Paint",
             "curtain_pvc": "Curtain", "roof_tarp": "Curtain", "strap": "Curtain",
             "galv": "Metal", "alu_extr": "Metal", "steel_wheel": "Metal", "steel": "Metal", "satin_alu": "Metal",
-            "chrome": "Metal",
+            "chrome": "Metal", "hub_cast": "Metal",
             "lens_red_o": "Lights", "lens_amber_o": "Lights", "lens_white_o": "Lights", "lamp_body": "Lights"}
 PRIORITY = {"roof_tarp": 0.30, "gap": 0.5, "trl_chassis": 0.7, "grease": 0.6, "flap_rubber": 0.8, "interior": 0.12,
             "plywood": 0.25}
@@ -70,7 +70,7 @@ LIVERIES = {   # _PaintColor / _CurtainColor multiply the baked albedo (front wa
 DUST = A.DUST
 URP_LIT_DIRT = 0.5
 PARTS_MOVING = ("WHEEL_", "DOOR_", "LEG_", "CRANK", "MUDFLAP_")
-LOD1_DROP = ("_nutind", "hinge_bolt", "lash_", "toolbox_latch", "socket_lid", "palm_lip", "hanger_bush", "damper_rod",
+LOD1_DROP = ("_nutind", "_nutwasher", "_stud", "hinge_bolt", "lash_", "toolbox_latch", "socket_lid", "palm_lip", "hanger_bush", "damper_rod",
              "ubolt", "keeper_", "lockguide", "lockcatch", "buckle_lever", "buckle_hook", "doc_tube_clamp",
              "air_tank_strap", "mudflap_rib", "leg_foot_lug", "leg_foot_pin", "hubcap_plug", "kingpin_grease",
              "door_groove", "sideguard_groove", "top_rail_groove", "rear_led_", "brake_hose", "ebs_hose",

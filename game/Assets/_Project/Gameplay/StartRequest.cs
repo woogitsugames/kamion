@@ -17,10 +17,21 @@ namespace Game.Gameplay
         public static float RouteEndS { get; private set; } = -1f;
         public static string Label { get; private set; } = "";
 
-        public static void Set(string label, float routeS, float routeEndS)
+        /// <summary>Lighting preset id from the start menu (overcast | lowsun | dusk); "" = scene default. Read once by
+        /// <see cref="ConsumeLighting"/>; an explicit launch argument lighting=... still wins.</summary>
+        public static string Lighting { get; private set; } = "";
+
+        public static void Set(string label, float routeS, float routeEndS, string lighting = "")
         {
-            Pending = true; Label = label; RouteS = routeS; RouteEndS = routeEndS;
-            Debug.Log($"[START] menu choice '{label}' route_s={routeS} route_end={routeEndS}");
+            Pending = true; Label = label; RouteS = routeS; RouteEndS = routeEndS; Lighting = lighting ?? "";
+            Debug.Log($"[START] menu choice '{label}' route_s={routeS} route_end={routeEndS} lighting={Lighting}");
+        }
+
+        /// <summary>Returns the menu's lighting choice once and clears it.</summary>
+        public static string ConsumeLighting()
+        {
+            string l = Lighting; Lighting = "";
+            return l;
         }
 
         /// <summary>Returns the pending request once and clears it.</summary>

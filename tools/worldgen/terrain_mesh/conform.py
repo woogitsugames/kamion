@@ -172,3 +172,69 @@ def conform(hf, road, mask, soft=None):
         relax = soft & ~ndimage.binary_dilation(hard, iterations=SOFT_CLEAR_CELLS)
         out[relax] = road[relax] - SOFT_UNDER
     return out, d
+
+
+WALL_MAX = 0.15            # m: visible vertical step between a ground surface edge and the terrain (REVIEW r4 W-H5)
+WALL_STEEP_NZ = 0.26       # |normal.z| below this = "vertical" face (steeper than ~75 deg)
+WALL_SKIP_MATS = ("curb_concrete", "edging_concrete", "bridge_concrete", "bridge_soffit", "apron_sett")
+
+
+GRASS_STEEP_NZ = 0.80     # grass faces steeper than ~1:1.33 (1:1.5 = n.z 0.83) count as walls too
+GRASS_MATS = ("verge_grass", "shoulder_gravel")
+
+
+def terrain_walls(parts, zc, hf, thresh=WALL_MAX, mask=None):
+    """QA "vertical terrain wall > 0.15 m" (REVIEW r4 W-H5):
+    a) steep faces (|n.z| < 0.26) of ground-level surfaces (road / paved layers: skirts, flanges) whose vertex stands
+       more than `thresh` above the conformed terrain, unless the plan position is covered by other ground surfaces
+       (all 4 surrounding nodes in the footprint `mask`: the skirt is buried under a neighbouring strip);
+    b) grass / gravel faces steeper than ~1:1.33 with a vertical extent > `thresh` (squeezed ditch slopes).
+    Kerb faces and edgings are real vertical faces and are skipped. Terrain sampled bilinearly (1 m grid)."""
+    from streetscape.paved import bilinear    # local import: streetscape imports this module
+    hs, where, by = [], [], {}
+
+    def covered(P):
+        if mask is None:
+            return np.zeros(len(P), bool)
+        fi = np.clip(P[:, 0] - hf.x0, 0, mask.shape[1] - 1.001)
+        fj = np.clip(hf.y1 - P[:, 1], 0, mask.shape[0] - 1.001)
+        i0, j0 = np.floor(fi).astype(int), np.floor(fj).astype(int)
+        return mask[j0, i0] & mask[j0, i0 + 1] & mask[j0 + 1, i0] & mask[j0 + 1, i0 + 1]
+
+    def note(p, P, h, kind):
+        hs.append(h)
+        key = f"{kind}:{p.src.split(':')[0] if p.src.startswith('j:') else p.mat}"
+        by[key] = by.get(key, 0) + len(h)
+        where.extend((kind, p.src, p.mat, float(q[0]), float(q[1]), float(v)) for q, v in zip(P[:3], h[:3]))
+
+    for p in parts:
+        if p.layer not in ("road", "paved") or p.mat in WALL_SKIP_MATS or p.mat.startswith("collision"):
+            continue
+        V, T = p.V, p.T
+        a, b, c = V[T[:, 0]], V[T[:, 1]], V[T[:, 2]]
+        nrm = np.cross(b - a, c - a)
+        ln = np.maximum(np.linalg.norm(nrm, axis=1), 1e-12)
+        nz = np.abs(nrm[:, 2]) / ln
+        steep = nz < WALL_STEEP_NZ
+        if steep.any():
+            P = V[np.unique(T[steep])]
+            h = P[:, 2] - bilinear(zc, hf, P[:, 0], P[:, 1])
+            k = (h > thresh) & ~covered(P)
+            if k.any():
+                note(p, P[k], h[k], "skirt")
+        if p.mat in GRASS_MATS:
+            g = (nz >= WALL_STEEP_NZ) & (nz < GRASS_STEEP_NZ)
+            if g.any():
+                Tz = V[T[g]][:, :, 2]
+                ext = Tz.max(1) - Tz.min(1)
+                k = ext > thresh
+                if k.any():
+                    note(p, V[T[g][k]].mean(1), ext[k], "steep_grass")
+    if not hs:
+        return {"thresh_m": thresh, "count": 0, "max_m": 0.0, "p99_m": 0.0, "by_source": {}, "worst": []}
+    h = np.concatenate(hs)
+    where.sort(key=lambda t: -t[5])
+    return {"thresh_m": thresh, "count": int(len(h)), "max_m": round(float(h.max()), 3),
+            "p99_m": round(float(np.percentile(h, 99)), 3), "by_source": by,
+            "worst": [{"kind": kd, "src": s, "mat": m, "e": round(e, 1), "n": round(n, 1), "h": round(v, 3)}
+                      for kd, s, m, e, n, v in where[:12]]}

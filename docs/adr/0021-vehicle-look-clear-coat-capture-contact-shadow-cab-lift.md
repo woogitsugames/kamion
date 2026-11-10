@@ -38,3 +38,31 @@ Status: Accepted (rendering-perf), 2026-11-09. Review: `docs/reports/visual/REVI
 - All constants are WORKING_VALUE until compared with owner photos.
 - The capture has no shadows and no instanced props/trees; in a forest the reflections show sky where trees would be.
 - The world generator's lamp glass quad faces up; the glass is drawn double-sided until world-builder flips it.
+
+## Amendment 2026-11-10 (r4 E2, glass)
+- `Kamion/Truck Glass` is a thin pane, not one interface: reflectance R2 = 2R/(1+R) from Schlick F0 0.04 (0.08 at normal
+  incidence, ~0.1 at a 3/4 view, ~0.3 at 70 deg) on the capture (High) or sky cubemap (Low/Medium); transmittance
+  (1 − R2) · (1 − _Opacity)^(1/cos θt) (n 1.52), so the interior darkens towards grazing angles. From the cab only the
+  first surface carries the analytic dash reflection (no ghost) and the tint body term is off (no milky veil). Cost
+  ~14 ALU per glass pixel, no texture, all tiers.
+- Measured (editor, truck-34 overcast, windscreen median / sky median, display): High 0.402 → 0.411, Low 0.395 → 0.405,
+  lowsun 0.344 → 0.372. A dielectric pane cannot reach "≥ 60 % of the sky" (r5) at a 3/4 view: that needs R2 ≈ 0.3
+  (≥ 70 deg incidence). What remains is interior radiance seen from outside (cab SH share / fill) and the clipped sky
+  (display 1.0), both outside the glass shader. WORKING_VALUE until compared with owner photos.
+
+## Amendment 2026-11-10 (review r5 E-N1: contact shadow too weak on phones)
+- **Bug:** `Kamion/Contact Shadow` ran in `Transparent-50`; `Mobile_Renderer` has transparent receive shadows off, so URP
+  turned the main-light shadow keywords off for that pass, the shadow map was never sampled and the sun under the truck
+  counted as unshadowed (ambient share << 1). Fix: queue `Geometry+499` (end of the opaque pass, same single draw).
+  Editor High lowsun A/B, ground / adjacent asphalt (sRGB display): under bumper 60 → 32 %, under frame 49 → 21 %.
+- **Edit-mode QA ground:** the wheel-plane fallback sat up to ~10 cm off the rendered road (trailer patch hidden under the
+  asphalt). `VisualQaRunner` now cooks the world colliders like the player (`WorldCollisionCooker.Cook`), so the QA frames
+  ray-cast like the phone; the fallback plane uses the lowest tyre renderer points. The vertex shader adds an 8 cm
+  view-ray depth bias (the patch can still sit a few cm under the road mesh).
+- **Enclosure:** occluder grows by `sideClosure` × h on each side (1.0, WORKING_VALUE: wheels, tanks, steps and bumper close
+  the sides of the gap); wheel blob `wheelContactHeight` 0.05 m (was 0.18) and half contact length 0.3 × radius (was 0.45),
+  i.e. a tight dark core at the tyre patch. Renamed fields, so the old serialized values in the prefab are ignored.
+- Editor `truck-34` overcast after the fix (ground / adjacent asphalt, display): Low 34 / 27 / 25 % (bumper / frame / front
+  tyre), Medium 35 / 29 / 28 %, High 35 / 29 / 28 %; under the trailer front 51–57 %. Phone numbers: pending (no device run).
+- Cost: same draw count; +1 hard shadow-map tap (Low: no soft shadows) per patch pixel and a slightly larger patch
+  (margin + h). Phone GPU delta not measured yet (UNVERIFIED, expected well under 0.1 ms on A16 Low).

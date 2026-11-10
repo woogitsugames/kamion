@@ -232,6 +232,9 @@ namespace Game.Editor.Setup
                     m.SetFloat("_IsPaint", slot == "Paint" ? 1f : 0f);
                     m.SetFloat("_Dirt", 0.5f);
                     m.SetColor("_DirtColor", new Color(0.15f, 0.135f, 0.11f, 1f));
+                    // ADR 0038: coated base lobe, orange peel, procedural road grime (vehicle frame from ContactShadowCaster). WORKING_VALUE.
+                    m.SetFloat("_CoatedBaseRoughness", 0.6f); m.SetFloat("_OrangePeel", 0.012f);
+                    m.SetFloat("_GrimeHeight", 0.8f); m.SetFloat("_GrimeChassis", 1.3f);
                     if (slot == "Paint")
                     {
                         // Livery "white" (biel flotowa), manifest liveries.white; colours are linear.
@@ -273,7 +276,10 @@ namespace Game.Editor.Setup
                 // Interior: tier = LOD (High LOD0, Medium LOD1, Low LOD2); AO atlas of that LOD at the tier size.
                 int il = TruckVisualRig.InteriorLodFor(tier);
                 string it = $"{SrcInt}/Textures/{tier}";
-                var ao = Tex<Texture2D>($"{it}/T_Cab_AO_LOD{il}.png");
+                // AO atlas no smaller than Medium (1024): the LOD0 atlas is packed for 4096, and at the Low 512 the thin
+                // islands (A-pillar trim, steering-wheel rim) fall into the black gutter - review r4 L1, Low cab-dash
+                // overcast < 3 %: 12.1 % of the frame (512) vs 2.1 % (1024). Cost on Low: +0.26 MB (ASTC 8x8 with mips).
+                var ao = Tex<Texture2D>($"{SrcInt}/Textures/{(tier == "Low" ? "Medium" : tier)}/T_Cab_AO_LOD{il}.png");
                 foreach (var slot in new[] { "Plastic", "Leather", "Fabric", "Rubber", "Metal" })
                 {
                     var m = Mat(dir, "MI_Cab_" + slot, cab);
@@ -392,7 +398,7 @@ namespace Game.Editor.Setup
                 var lod0ByRole = new Dictionary<string, Transform>();
                 var eyeLocal = Vector3.zero;
                 var rendererSlots = new List<TruckVisualRig.RendererSlots>();
-                Renderer mirrorL = null, mirrorR = null;
+                var mirrorGlass = new Dictionary<string, Renderer>();
                 var mirrorInfo = new Dictionary<string, Dictionary<string, object>>();
                 for (int lod = 0; lod < 3; lod++)
                 {
@@ -446,13 +452,11 @@ namespace Game.Editor.Setup
                             if (isMirror)
                             {
                                 mirrorInfo[role] = o;
-                                bool main = role == "MIRROR_MainL" || role == "MIRROR_MainR";
-                                r.sharedMaterial = sets["Low"].Get(main ? "MI_Ext_MirrorRT" : "MI_Ext_MirrorProbe");
+                                // Every mirror gets a render texture (review r5 C5: the wide-angle mirror was a grey probe card).
+                                r.sharedMaterial = sets["Low"].Get("MI_Ext_MirrorRT");
                                 r.shadowCastingMode = ShadowCastingMode.Off;
                                 r.receiveShadows = false;
-                                if (role == "MIRROR_MainL") mirrorL = r;
-                                else if (role == "MIRROR_MainR") mirrorR = r;
-                                else rendererSlots.Add(new TruckVisualRig.RendererSlots { renderer = r, slots = new[] { "MI_Ext_MirrorProbe" } });
+                                mirrorGlass[role] = r;
                                 continue;   // mirror quads are outside the LODGroup (one per mirror, 2 tris)
                             }
                             var slotNames = r.sharedMaterials.Select(m => m != null ? m.name.Replace(" (Instance)", "") : "MI_Ext_Trim").ToArray();
@@ -569,29 +573,46 @@ namespace Game.Editor.Setup
                     }
                 }
 
-                // ---- mirrors: render texture on the main mirrors, camera at the mirror image of the eye ----
+                // ---- mirrors: render texture on every mirror, camera at the mirror image of the eye (ADR 0042) ----
+                // UN ECE R46 classes: main II (r >= 1200 mm), wide-angle IV, kerb V, front VI (r >= 300 mm). Radii are
+                // WORKING_VALUE within those minima, chosen so the class II / IV fields of vision (R46 Annex/para 15.2.4,
+                // paragraph numbers UNVERIFIED) are covered from the design eye point (ADR 0042 table).
                 Vector3 eyeW = root.transform.TransformPoint(eyeLocal);
                 int phase = 0;
-                foreach (var (role, r) in new[] { ("MIRROR_MainL", mirrorL), ("MIRROR_MainR", mirrorR) })
+                foreach (var (role, radius, main) in new[]
+                         {
+                             ("MIRROR_MainL", 1.8f, true), ("MIRROR_MainR", 1.8f, true),
+                             ("MIRROR_WideL", 0.35f, false), ("MIRROR_WideR", 0.35f, false),
+                             ("MIRROR_Kerb", 0.3f, false), ("MIRROR_Front", 0.3f, false),
+                         })
                 {
-                    if (r == null) { Debug.LogWarning("[TRUCK] " + role + " missing"); continue; }
+                    if (!mirrorGlass.TryGetValue(role, out var r)) { Debug.LogWarning("[TRUCK] " + role + " missing"); continue; }
                     var o = mirrorInfo[role];
                     var size = Json.Arr(o["size_m"]);
                     float gw = (float)Json.Num(size[0]), gh = (float)Json.Num(size[1]);
                     Vector3 q = r.transform.position;
-                    Vector3 n = V3(o["normal_unity_vehicle"]).normalized;   // towards the eye
+                    Vector3 n = root.transform.TransformDirection(V3(o["normal_unity_vehicle"])).normalized;   // towards the eye
+                    Vector3 up = root.transform.TransformDirection(V3(Json.Obj(o["axes_unity_vehicle"])["Y"])).normalized;
                     Vector3 eyeImage = eyeW - 2f * Vector3.Dot(eyeW - q, n) * n;
                     Vector3 look = (q - eyeImage).normalized;
                     float dist = Vector3.Distance(eyeImage, q);
                     var camT = Child(lod0ByRole["CAB_Body"], role + "_Camera", Vector3.zero);
                     camT.position = eyeImage;
-                    camT.rotation = Quaternion.LookRotation(look, Vector3.up);
-                    float fov = 2f * Mathf.Atan(gh * 0.5f / dist) * Mathf.Rad2Deg;
+                    camT.rotation = Quaternion.LookRotation(look, up);
+                    // Convex mirror of radius R: the surface normal at the glass edge (half size s) turns by s / R, so the
+                    // reflected ray turns by 2 s / R on top of the flat-mirror angle atan(s / d).
+                    float hh = Mathf.Atan(gw * 0.5f / dist) + gw / radius;
+                    float vh = Mathf.Atan(gh * 0.5f / dist) + gh / radius;
                     var cam = camT.gameObject.AddComponent<Camera>();
-                    RenderTextureMirror.ConfigureCheapCamera(cam, fov, Mathf.Max(0.1f, dist * 0.98f), 250f);
+                    RenderTextureMirror.ConfigureCheapCamera(cam, 2f * vh * Mathf.Rad2Deg, Mathf.Max(0.1f, dist * 0.98f), 250f);
                     var mir = camT.gameObject.AddComponent<RenderTextureMirror>();
                     mir.glass = r;
                     mir.aspect = gw / gh;
+                    mir.fovAspect = Mathf.Tan(hh) / Mathf.Tan(vh);
+                    mir.main = main;
+                    mir.weight = main ? 1f : 0.5f;
+                    // Convex images are minified: about the main mirror's pixels per glass metre, capped at 0.6 of its height.
+                    mir.resolutionScale = main ? 1f : Mathf.Clamp(gh / 0.386f * 1.4f, 0.35f, 0.6f);
                     mir.phase = phase++;
                 }
 

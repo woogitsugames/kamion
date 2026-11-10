@@ -625,7 +625,7 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
         u0 = ps + sw
         u2 = u0 + d * S.DITCH_SLOPE
         u3 = u2 + S.DITCH_BOTTOM_W
-        u4 = u3 + (d + z1) * S.DITCH_SLOPE
+        u4 = u3 + (d - z1) * S.DITCH_SLOPE      # back slope rises d - z1 (z1 < 0): 1:1.5, was (d + z1) = 1:1.2
         return [(0.0, 0.0, ps, zp, "road_asphalt"),
                 (ps, zp, u0, z1, "shoulder_gravel"),
                 (u0, z1, u2, z1 - d, "verge_grass"),

@@ -1,3 +1,4 @@
+using Game.Controls;
 using UnityEngine;
 using P = Game.UI.CabDisplays.DisplayPalette;
 using T = Game.UI.CabDisplays.CabDisplayText;
@@ -197,9 +198,15 @@ namespace Game.UI.CabDisplays
         void Levels(DisplayCanvas d, in CabDisplayState s)
         {
             float fuel = s.FuelCapacityLitres > 0f ? Mathf.Clamp01(s.FuelLitres / s.FuelCapacityLitres) : 0f;
-            Bar(d, 470f, T.Fuel, fuel, fuel < 0.1f ? P.TellAmber : P.White);
+            Bar(d, 446f, T.Fuel, fuel, fuel < 0.1f ? P.TellAmber : P.White);
             float ad = Mathf.Clamp01(s.AdBlueFraction);
-            Bar(d, 522f, T.AdBlue, ad, ad < 0.1f ? P.TellAmber : P.AdBlue);
+            Bar(d, 494f, T.AdBlue, ad, ad < 0.1f ? P.TellAmber : P.AdBlue);
+            // Coolant temperature: gauge range 40..120 C, red above the overheat threshold (CoolantModel, WORKING_VALUE).
+            bool hot = s.CoolantC >= (float)CoolantModel.WarnC;
+            float cf = Mathf.Clamp01((s.CoolantC - (float)CoolantModel.GaugeMinC) / (float)(CoolantModel.GaugeMaxC - CoolantModel.GaugeMinC));
+            Bar(d, 542f, T.Coolant, cf, hot ? P.TellRed : P.White);
+            m_B.Clear().Append(Mathf.RoundToInt(s.CoolantC)).Append(T.DegC);
+            d.Text(m_B, 368f, 559f, 26f, C(hot ? P.TellRed : P.Grey));
         }
 
         void Bar(DisplayCanvas d, float y, string label, float frac, Color32 col)
@@ -255,6 +262,7 @@ namespace Game.UI.CabDisplays
                 BatteryLamp(d, X(Lamp.Battery), C(P.TellRed));
                 OilLamp(d, X(Lamp.Oil), C(P.TellRed));
             }
+            if (s.CoolantC >= (float)CoolantModel.WarnC) CoolantLamp(d, X(Lamp.Coolant), C(P.TellRed));
             if (s.HighBeam) BeamLamp(d, X(Lamp.Beam), C(P.TellBlue), true);
             else if (s.LowBeam) BeamLamp(d, X(Lamp.Beam), C(P.TellGreen), false);
             // Turn signals: green arrows at both ends of the row, flashing with the relay.
@@ -279,6 +287,15 @@ namespace Game.UI.CabDisplays
             d.Ring(x + 10f, TY + 33f, 3.5f, 6.5f, c);
             d.Ring(x + 22f, TY + 33f, 3.5f, 6.5f, c);
             d.Text("ABS", x + 18f, TY + 23f, 11f, c, DisplayCanvas.Align.Center);
+        }
+
+        void CoolantLamp(DisplayCanvas d, float x, Color32 c)
+        {
+            // Thermometer in coolant (ISO 2575): stem, bulb, two wavy level lines.
+            d.Rect(x + 12f, TY + 6f, 6f, 24f, c);
+            d.Disc(x + 15f, TY + 34f, 7f, c);
+            d.Line(x + 22f, TY + 16f, x + 40f, TY + 16f, 3f, c);
+            d.Line(x + 22f, TY + 25f, x + 40f, TY + 25f, 3f, c);
         }
 
         void BatteryLamp(DisplayCanvas d, float x, Color32 c)

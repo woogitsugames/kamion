@@ -205,6 +205,13 @@ namespace Game.World.Import
                 }
             }
             if (id == "terrain_grass") { mat.EnableKeyword("_GROUNDMASKS"); mat.SetFloat("_GroundTint", 1f); }
+            if (id == "terrain_grass" || id == "verge_grass")
+            {
+                // Review r5 W-N3: macro-masked bare soil + rotated second sample (ADR 0042). Refill = linear mean of
+                // the grass_verge texels without bare soil (Var.B < 0.1), measured from the Medium BaseColor.
+                mat.EnableKeyword("_GRASS_DETILE");
+                mat.SetVector("_GrassFill", new Vector4(0.079f, 0.109f, 0.037f, 1f));   // linear, no sRGB conversion
+            }
             if (id.StartsWith("hall_wall") || id.StartsWith("plaster_") || id == "panel_concrete" || id == "brick_red" || id == "hall_plinth")
             {
                 mat.EnableKeyword("_SPLASH");
@@ -318,7 +325,13 @@ namespace Game.World.Import
                 if (a.Get(k) is string s) astc = s;
                 else if (a.Get("MaskMap") is string s2) astc = s2;
             }
-            string sig = $"pbr2|{normal}|{srgb}|{var}|{hasAlpha}|{maxRes}|{astc}";
+            // APK size (gate 3 E6, ADR 0025): MaskMap (metallic/occlusion/detail/smoothness) and Var (height/id/joint/convexity)
+            // carry low-frequency data; on Android they ship at half the BaseColor/Normal resolution (= mip 1 of the same
+            // tier, so the Toksvig-adjusted smoothness of the tier is kept). BaseColor, Normal, crack and detail layers keep
+            // the full tier size. -fullPbrMasks restores the old behaviour (comparison builds).
+            bool lowFreq = (file.EndsWith("_MaskMap.png") || var) && !EditorTools.HasArg("-fullPbrMasks");
+            int apkMax = Mathf.Max(lowFreq ? maxRes / 2 : maxRes, 32);
+            string sig = $"pbr3|{normal}|{srgb}|{var}|{hasAlpha}|{maxRes}|{astc}|{apkMax}";
             if (copy || ti.userData != sig)
             {
                 ti.textureType = normal ? TextureImporterType.NormalMap : TextureImporterType.Default;
@@ -334,7 +347,7 @@ namespace Game.World.Import
                 ti.textureCompression = TextureImporterCompression.CompressedHQ;
                 ti.SetPlatformTextureSettings(new TextureImporterPlatformSettings
                 {
-                    name = "Android", overridden = true, maxTextureSize = Mathf.Max(maxRes, 32),
+                    name = "Android", overridden = true, maxTextureSize = apkMax,
                     format = AstcFormat(astc), compressionQuality = 50,
                 });
                 ti.userData = sig;

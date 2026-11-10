@@ -310,14 +310,16 @@ def build_materials(a):
     # 2000s cab); still a clear step above the soft top so the parting lines and grain read in the URP look
     M.pbr("dash_lower", (0.088, 0.087, 0.085), "hardgrain", 0.08, nstr=0.9, rough_add=0.05, spec=0.42,
           dust=(0.22, (0.105, 0.100, 0.090), 0.06))
-    M.pbr("dash_mid", (0.066, 0.066, 0.066), "dashgrain", 0.10, nstr=0.9, rough_add=0.08, spec=0.40)
+    # B2.2: grain normal up on the stack / lower mouldings (read as smooth paint in the r4 frames)
+    M.pbr("dash_mid", (0.066, 0.066, 0.066), "dashgrain", 0.08, nstr=1.2, rough_add=0.08, spec=0.40)
     M.pbr("trim_light", (0.270, 0.262, 0.245), "hardgrain", 0.08, nstr=0.7, rough_add=0.06, spec=0.40)
-    M.pbr("dash_dark", (0.030, 0.030, 0.032), "hardgrain", 0.08, nstr=0.6)
+    M.pbr("dash_dark", (0.030, 0.030, 0.032), "hardgrain", 0.06, nstr=1.0, rough_add=0.04)
     M.pbr("trim_insert", trim, "dashgrain", 0.10, nstr=0.8)
     # B2.1: koniak leather inserts (passenger dash, door cards, armrests, stack flank), stitched; slight wear
     M.pbr("leather_trim", tuple(c * 1.05 for c in trim), "leather", 0.12, nstr=0.9, wear=(0.20, 1.6))
     M.pbr("leather", (0.034, 0.033, 0.032), "leather", 0.12, nstr=1.0, wear=(0.26, 2.3), coat=0.0)
-    M.pbr("leather_wheel", (0.030, 0.029, 0.028), "leather", 0.05, nstr=0.8, wear=(0.26, 1.6))
+    # B2.2: rim leather has a soft satin sheen (hand oils), polished smoother at 10 and 2 o'clock
+    M.pbr("leather_wheel", (0.030, 0.029, 0.028), "leather", 0.05, rough_mul=0.82, nstr=0.8, wear=(0.19, 1.6))
     centre = (0.040, 0.039, 0.038) if a.trim == "grafit" else tuple(c * 0.85 for c in trim)
     M.pbr("leather_centre", centre, "leather", 0.12, nstr=0.7, perforate=0.04, wear=(0.34, 1.5))
     M.pbr("seat_fabric", tuple(c * 0.9 + 0.01 for c in trim), "seatfabric", 0.06, nstr=1.0, sheen=0.3)
@@ -332,9 +334,12 @@ def build_materials(a):
     M.pbr("scuff_plate", (0.42, 0.42, 0.42), "brushed", 0.08, metal=0.9, rough_add=0.10, nstr=0.5,
           wear=(0.18, 1.3), dust=(0.5, (0.12, 0.11, 0.09), 0.04))
     M.simple("piano", (0.010, 0.010, 0.011), rough=0.16, spec=0.5)
+    # B2.2: grab handles (door pulls) - same moulding as dash_dark, but they polish where the hand closes
+    M.pbr("grab_dark", (0.030, 0.030, 0.032), "hardgrain", 0.06, nstr=1.0, rough_add=0.04, wear=(0.17, 1.7))
     M.simple("rubber", (0.028, 0.028, 0.028), rough=0.82)
     M.simple("gap", (0.004, 0.004, 0.004), rough=0.9)
-    M.simple("switch", (0.020, 0.020, 0.021), rough=0.42)
+    # B2.2: keys are textured matt ABS that polishes where the thumb lands (wear -> smoother, a touch lighter)
+    M.pbr("switch", (0.021, 0.021, 0.022), "hardgrain", 0.03, nstr=0.6, rough_add=0.10, spec=0.40, wear=(0.20, 1.35))
     M.simple("knob", (0.025, 0.025, 0.026), rough=0.36)
     M.simple("webbing", (0.062, 0.062, 0.066), rough=0.78, spec=0.3)
     M.simple("led_off", (0.16, 0.15, 0.13), rough=0.35)        # A6.1: unlit LED slit, not a white dot
@@ -358,7 +363,7 @@ def build_materials(a):
     M.display("disp_din", "display_din.png", strength=1.0, rough=0.2)
     # A6 r3: warm-grey thread, a step above the leather, not a white dotted line (critic r2 #5)
     M.decal("stitch", "stitch_rgba.png", (0.34, 0.31, 0.27), rough=0.7)
-    M.decal("stitch_dark", "stitch_rgba.png", (0.20, 0.20, 0.20), rough=0.7)
+    M.decal("stitch_dark", "stitch_rgba.png", (0.27, 0.265, 0.25), rough=0.7)   # B2.2: thread reads on the rim
     M.decal("icons", "icons_atlas.png", (0.80, 0.80, 0.76), rough=0.4, alpha_from="mask")
     M.decal("grille", "grille_mask.png", (0.02, 0.02, 0.02), rough=0.6, alpha_from="mask")
     M.decal("grille_dash", "grille_mask.png", (0.040, 0.041, 0.043), rough=0.65, alpha_from="mask")
@@ -873,15 +878,33 @@ def build_centre_stack():
     for k, du in enumerate((-0.171, 0.171)):
         vent_rect(f"vent_stack_{k}", at(du, 0.100, 0.004), n, w=0.060, h=0.118)
     # screen (10.1 in, 225 x 135 mm), with bezel: kept for the runtime navigation UI (DISPLAY_Infotainment)
+    # B2.2 (lead: nav canvas corner read as hidden behind the bezel): thin, even 7 mm frame (was 12.5/11.5 mm with a
+    # 10 mm deep proud plate whose side walls ate the driver-near edge at 35-40 deg), 4 mm proud of the face, the
+    # glass-flush canvas 0.6 mm above the frame lip. Canvas size/UV contract unchanged (225 x 135 mm, 0-1 UV, ADR 0020);
+    # sightline_test.py gates the whole canvas + its four corners from the driver head box.
     cs = at(0, 0.098, 0.006)
-    panel("info_bezel", rrect(0.250, 0.158, 0.010, 3), cs + n * 0.008, n, up, 0.010, "piano", bev=0.002)
-    plane_uv("info_screen", quad_on(cs, n, up, 0.225, 0.135, off=0.0085), "disp_info")
+    bw, bh = 0.225 + 2 * 0.007, 0.135 + 2 * 0.007
+    panel("info_bezel", rrect(bw, bh, 0.006, 3), cs + n * 0.0045, n, up, 0.0045, "piano", bev=0.0012)
+    plane_uv("info_screen", quad_on(cs, n, up, 0.225, 0.135, off=0.0051), "disp_info")
+    # 1 mm shadow gap where the bezel module sits in the stack face (separate part, not a moulded-in frame)
+    ring = [cs + n * 0.0002 + u * x + v * y for (x, y) in rrect(bw + 0.0024, bh + 0.0024, 0.0072, 3)]
+    strip("info_bezel_gap", ring + ring[:1], n, 0.0016, "gap", offset=0.0)
+
+    # how often a driver presses each key (polish on the pressed half; WORKING_VALUE, judged from fleet cabs)
+    USE = {"work_light": 0.75, "mirror_heat": 0.55, "cab_light": 0.65, "diff_lock": 0.35, "axle_lift": 0.5,
+           "seat_heat": 0.6, "fog_rear": 0.3, "beacon": 0.45, "idle_up": 0.2, "plus": 0.55, "res": 0.4, "minus": 0.55,
+           "blank": 0.0}
 
     def module(name, du, dv, w, h, icon, kind="rocker", tip=0, led=False):
         p = at(du, dv, 0.006)
         if kind == "rocker":
             nt = (Matrix.Rotation(math.radians(5 * tip), 3, u) @ n).normalized()
             sw = panel(name, rrect(w, h, 0.0035, 2), p + n * 0.013, nt, up, 0.013, "switch", bev=0.002)
+            use = USE.get(icon, 0.15)
+            if use > 0:
+                pc = p + n * 0.013 + v * (h * 0.22 * (1 if tip >= 0 else -1))
+                set_wear(sw, lambda co, pc=pc, use=use, h=h: use * max(0.0, 1.0 - (co - pc).length / (0.6 * h)) *
+                         (0.75 + 0.25 * hash01(co.x * 9, co.y * 9, co.z * 9)))
             ic = quad_on(p + n * 0.0135 + v * (h / 2 - 0.0115 if h > 0.05 else 0.004 if icon != "blank" else 0.0), nt,
                          up, 0.014, 0.014, off=0.0)
         else:   # hazard push button: red, triangle icon
@@ -903,6 +926,8 @@ def build_centre_stack():
     for r, (dv, mods) in enumerate(rows):
         panel(f"swpack_{r}", rrect(widths + 0.012, 0.042, 0.005, 2), at(du_c, dv, 0.010), n, up, 0.004, "dash_dark",
               bev=0.0015)
+        ring = [at(du_c, dv, 0.0062) + u * x + v * y for (x, y) in rrect(widths + 0.0145, 0.0445, 0.006, 2)]
+        strip(f"swpack_gap_{r}", ring + ring[:1], n, 0.0014, "gap", offset=0.0)
         for k, (icon, tip, led) in enumerate(mods):
             du = du_c - widths / 2 + w / 2 + k * (w + gap)
             if icon == "hazard":
@@ -1631,7 +1656,10 @@ def build_doors():
         # pull handle (vertical grab) under the armrest front
         pts = [V(xw - s * 0.07, 0.42, 1.93), V(xw - s * 0.125, 0.44, 1.91), V(xw - s * 0.125, 0.62, 1.91),
                V(xw - s * 0.07, 0.64, 1.93)]
-        tube(f"door_pull_{s}", G.polyline_smooth(pts, 4), 0.013, "dash_dark", seg=10)
+        pull = tube(f"door_pull_{s}", G.polyline_smooth(pts, 4), 0.013, "grab_dark", seg=10)
+        mw = pull.matrix_world
+        set_wear(pull, lambda co, mw=mw: 0.85 * smooth(0.46, 0.50, (mw @ co).y) * (1 - smooth(0.58, 0.62, (mw @ co).y)) *
+                 (0.7 + 0.3 * hash01(co.x * 40, co.y * 40, co.z * 40)))
         # interior opener lever (satin) near the front top
         lp = V(xw - s * 0.072, door_y(0.92, 2.06, 0.08), 2.06)
         panel(f"opener_cup_{s}", rrect(0.10, 0.045, 0.015, 3), lp, V(-s, 0, 0), V(0, 0, 1), 0.006, "dash_dark", bev=0.002)
@@ -1666,6 +1694,13 @@ def build_floor():
     group("floor")
     m = box_mm("floor_mat", -XI + 0.01, XI - 0.01, -0.12, FRONT_WALL_Y - 0.03, FLOOR - 0.004, FLOOR + 0.006, "floor_mat",
                bev=0.004)
+    # B2.2: the mat was 8 vertices, so the heel / entry wear below could not show; give the top a ~6 cm grid
+    bm = bmesh.new()
+    bm.from_mesh(m.data)
+    top = [e for e in bm.edges if all(v.co.z > FLOOR + 0.005 - m.location.z for v in e.verts)]
+    bmesh.ops.subdivide_edges(bm, edges=top, cuts=G.Q(36, 12), use_grid_fill=True)
+    bm.to_mesh(m.data)
+    bm.free()
     # mat is worn in the driver's heel area and the entry path
     set_wear(m, lambda co: 0.9 * math.exp(-(((co.x + 0.48) / 0.10) ** 2 + ((co.y - 1.14) / 0.08) ** 2)) +
              0.5 * math.exp(-(((co.x + 0.95) / 0.20) ** 2 + ((co.y - 0.45) / 0.35) ** 2)))

@@ -12,19 +12,29 @@ namespace Game.Vehicle.Runtime
     public static class VehicleCameraBudget
     {
         public static int Level => Mathf.Clamp(QualitySettings.GetQualityLevel(), 0, 3);
-        /// <summary>Mirror render-texture height in pixels (width follows the glass aspect).</summary>
+        /// <summary>Main-mirror render-texture height in pixels (width follows the glass aspect; convex mirrors scale it).</summary>
         public static int MirrorHeight => Level switch { 0 => 224, 1 => 288, 2 => 384, _ => 512 };
-        /// <summary>Render each mirror every N frames (mirrors are phase-shifted, so N = 2 means one mirror per frame).</summary>
-        public static int MirrorInterval => Level switch { 0 => 4, 1 => 2, _ => 1 };
+        /// <summary>
+        /// Hard cap of mirror camera renders per frame (ADR 0042). All mirrors share it through a weighted round-robin:
+        /// main mirrors (UN R46 class II) weight 1, wide-angle / kerb / front (classes IV, V, VI) weight 0.5. With all six
+        /// mirrors on screen on Low each main mirror refreshes every 4th frame and each convex mirror every 8th; with only
+        /// the left pair on screen, every 2nd / 3rd. Mirror cost per frame is bounded by the cap, not by the mirror count.
+        /// WORKING_VALUE until measured on the Galaxy A16.
+        /// </summary>
+        public static int MirrorsPerFrame => Level switch { 0 => 1, 1 => 2, 2 => 3, _ => 6 };
         public static float MirrorFarClip => Level switch { 0 => 150f, 1 => 250f, _ => 400f };
+        /// <summary>Convex mirrors show a small, minified image; their far clip is this fraction of MirrorFarClip.</summary>
+        public const float ConvexFarClipScale = 0.5f;
         public static int ReverseCamHeight => Level switch { 0 => 180, 1 => 216, 2 => 288, _ => 360 };
         public static int ReverseCamInterval => Level <= 1 ? 2 : 1;
     }
 
     /// <summary>
-    /// Flat rear-view mirror: a camera at the mirror head looking along the reflection of the driver's line of sight,
-    /// rendering a low-resolution render texture shown (horizontally flipped) on the glass quad. Static geometry
-    /// (computed for the design eye point by the builder), not a per-frame reflection of the head position.
+    /// Rear-view / convex mirror: a camera at the mirror image of the design eye point looking along the reflected line
+    /// of sight, rendering a low-resolution render texture shown (horizontally flipped) on the glass quad. Convex
+    /// mirrors (UN R46 classes IV-VI) get the wider field of view of their radius of curvature (computed by the
+    /// builder). Static geometry, not a per-frame reflection of the head position. All mirrors share one per-frame
+    /// render budget (VehicleCameraBudget.MirrorsPerFrame, weighted round-robin; ADR 0042).
     /// </summary>
     [RequireComponent(typeof(Camera))]
     public sealed class RenderTextureMirror : MonoBehaviour
@@ -37,8 +47,21 @@ namespace Game.Vehicle.Runtime
         public Renderer glass;
         /// <summary>Glass width / height (render-texture aspect).</summary>
         public float aspect = 0.55f;
-        /// <summary>Frame phase so that two mirrors alternate.</summary>
+        /// <summary>Order among the mirrors (main left 0, main right 1, then the convex mirrors); ties in the schedule.</summary>
         public int phase;
+        /// <summary>Main mirror (class II): HUD inset, full far clip. Convex mirrors (classes IV-VI): false.</summary>
+        public bool main = true;
+        /// <summary>Share of the shared round-robin budget (main 1, convex 0.5).</summary>
+        public float weight = 1f;
+        /// <summary>Camera aspect (tan of the horizontal / vertical half field) for convex mirrors; 0 = render-texture aspect.</summary>
+        public float fovAspect;
+        /// <summary>Render-texture height relative to VehicleCameraBudget.MirrorHeight.</summary>
+        public float resolutionScale = 1f;
+
+        static readonly System.Collections.Generic.List<RenderTextureMirror> s_All = new System.Collections.Generic.List<RenderTextureMirror>(8);
+        static MirrorScheduler s_Scheduler;
+        float m_Debt;
+        bool m_Candidate;
 
         Camera m_Cam;
         RenderTexture m_Rt;
@@ -58,9 +81,26 @@ namespace Game.Vehicle.Runtime
 
         void Awake() { var c = Cam; c.enabled = false; }
 
+        void OnEnable()
+        {
+            if (!s_All.Contains(this)) s_All.Add(this);
+            if (s_Scheduler == null && Application.isPlaying)
+            {
+                var go = new GameObject("MirrorScheduler") { hideFlags = HideFlags.HideAndDontSave };
+                DontDestroyOnLoad(go);
+                s_Scheduler = go.AddComponent<MirrorScheduler>();
+            }
+        }
+
+        void OnDisable()
+        {
+            s_All.Remove(this);
+            if (m_Cam != null) m_Cam.enabled = false;
+        }
+
         void EnsureTarget()
         {
-            int h = VehicleCameraBudget.MirrorHeight;
+            int h = Mathf.Max(16, Mathf.RoundToInt(VehicleCameraBudget.MirrorHeight * resolutionScale));
             if (m_Rt != null && m_Height == h) return;
             Release();
             m_Height = h;
@@ -69,7 +109,8 @@ namespace Game.Vehicle.Runtime
             m_Rt.Create();
             var cam = Cam;
             cam.targetTexture = m_Rt;
-            cam.farClipPlane = VehicleCameraBudget.MirrorFarClip;
+            if (fovAspect > 0f) cam.aspect = fovAspect; else cam.ResetAspect();
+            cam.farClipPlane = VehicleCameraBudget.MirrorFarClip * (main ? 1f : VehicleCameraBudget.ConvexFarClipScale);
             if (glass != null)
             {
                 if (m_Mat == null)
@@ -86,16 +127,39 @@ namespace Game.Vehicle.Runtime
 
         void LateUpdate()
         {
-            var cam = Cam;
-            if (!GlobalEnabled || glass == null || !ForceRender && !glass.isVisible && m_Rt != null)
+            // Candidate this frame: mirrors on, glass on screen (or the main pair shown as HUD insets), or no image yet.
+            m_Candidate = GlobalEnabled && glass != null && (main && ForceRender || glass.isVisible || m_Rt == null);
+            if (m_Candidate) EnsureTarget();
+            else Cam.enabled = false;
+        }
+
+        /// <summary>
+        /// Picks the mirrors that render this frame (called once per frame after every mirror's LateUpdate): each
+        /// candidate accrues its weight, the MirrorsPerFrame largest debts render and are reset. Cameras enabled in
+        /// LateUpdate render this frame, before the main camera (they target a texture). No allocation.
+        /// </summary>
+        internal static void Schedule()
+        {
+            int cap = Mathf.Max(1, VehicleCameraBudget.MirrorsPerFrame);
+            for (int i = 0; i < s_All.Count; i++)
             {
-                cam.enabled = false;
-                return;
+                var m = s_All[i];
+                m.m_Debt = m.m_Candidate ? m.m_Debt + Mathf.Max(0.05f, m.weight) : 0f;
+                m.Cam.enabled = false;
             }
-            EnsureTarget();
-            int n = Mathf.Max(1, VehicleCameraBudget.MirrorInterval);
-            // Cameras enabled in LateUpdate render this frame, before the main camera (they target a texture).
-            cam.enabled = Time.frameCount % n == phase % n;
+            for (int k = 0; k < cap; k++)
+            {
+                RenderTextureMirror best = null;
+                for (int i = 0; i < s_All.Count; i++)
+                {
+                    var m = s_All[i];
+                    if (!m.m_Candidate || m.Cam.enabled) continue;
+                    if (best == null || m.m_Debt > best.m_Debt || m.m_Debt == best.m_Debt && m.phase < best.phase) best = m;
+                }
+                if (best == null) break;
+                best.Cam.enabled = true;
+                best.m_Debt = 0f;
+            }
         }
 
         /// <summary>Renders once now (visual QA in the editor, where LateUpdate does not run).</summary>
@@ -141,5 +205,12 @@ namespace Game.Vehicle.Runtime
             urp.requiresColorOption = CameraOverrideOption.Off;
             urp.SetRenderer(0);
         }
+    }
+
+    /// <summary>Runs the shared mirror schedule after every mirror's LateUpdate.</summary>
+    [DefaultExecutionOrder(32000)]
+    sealed class MirrorScheduler : MonoBehaviour
+    {
+        void LateUpdate() => RenderTextureMirror.Schedule();
     }
 }

@@ -59,6 +59,10 @@ namespace Game.Editor.Build
                 if (File.Exists(Path.Combine(EditorTools.ProjectRoot, worldHigh))) scenes.Add(worldHigh);
                 else Debug.LogWarning("[BUILD] -worldHigh: " + worldHigh + " missing (scripts/import-region.ps1)");
             }
+            // Measurement only (APK world share, gate 3 E6): -noWorld drops the generated world scenes, so
+            // APK(default) - APK(-noWorld) = bytes the world content costs in the APK after LZ4HC.
+            if (EditorTools.HasArg("-noWorld"))
+                scenes.RemoveAll(s => s.StartsWith("Assets/_Generated/World/"));
             if (scenes.Count == 0)
             {
                 Debug.LogError("BUILD_RESULT: Failed (no scenes in build settings)");
