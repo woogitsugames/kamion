@@ -40,6 +40,10 @@ OBJECTS = {
         "openverse": ["Kwadrat Park Białystok", "Białystok magazyn Andersa"],
         "ortho_windows": [(400, "ogolny"), (160, "kompleks"), (70, "brama-rampy")],
         "plan_radius": 220,
+        "footer": ["LUKA: w otwartych zrodlach nie znaleziono zdjec samego Kwadrat Parku (hale, brama, portiernia, rampy) - KartaView/Panoramax 0 trafien "
+                   "w promieniu 120 m od 5 punktow (teren prywatny), Commons: tylko otoczenie (droga dojazdowa, wiadukt, sasiednie obiekty).",
+                   "Geometria: ortofotomapa GUGiK (okna 400/160/70 m, 0,5/0,2/0,09 m/px) i plan_budynki.jpg (BDOT10k + LoD1/LoD2). Detale (bramy segmentowe, odbojniki, "
+                   "portiernia) pozostaja UNVERIFIED do czasu zrodla; tekstury: wlasne proceduralne."],
     },
     "fire-station": {
         "title": "JRG nr 2 Białystok, ul. gen. Andersa (OSM " + FIRE_STATION["osm"] + ")",
