@@ -135,8 +135,8 @@ def frames():
     for g, side, dz in (("STALK_Indicator", -1, 0.005), ("STALK_Retarder", 1, 0.022), ("STALK_AMT", 1, -0.018)):
         piv[g] = (base + u * (side * 0.06) + v * dz, u, v, n)
     X, Y, Z = V(1, 0, 0), V(0, 1, 0), V(0, 0, 1)
-    piv["PEDAL_Brake"] = (V(BI.SEAT_X + 0.07, 1.33, 1.86), X, Y, Z)
-    piv["PEDAL_Accel"] = (V(BI.SEAT_X + 0.235, 1.16, 1.42), X, Y, Z)
+    piv["PEDAL_Brake"] = (V(*BI.BRAKE_PIVOT), X, Y, Z)
+    piv["PEDAL_Accel"] = (V(*BI.ACCEL_HINGE), X, Y, Z)
     x = -0.205
     piv["LEVER_ParkBrake"] = (V(x, BI.dash_face_y(x) - 0.004, 1.90) + V(0, -0.005, -0.03), X, Y, Z)
     return piv

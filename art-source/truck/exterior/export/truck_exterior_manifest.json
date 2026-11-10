@@ -3,7 +3,7 @@
  "generator": "tools/blender/truck/exterior/a6_export.py",
  "lods": {
   "LOD0": {
-   "file": "art-source/truck/exterior/export/SM_TruckExterior_LOD0.fbx",
+   "file": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/SM_TruckExterior_LOD0.fbx",
    "root": "TruckExterior_LOD0",
    "objects": {
     "CHASSIS_LOD0": {
@@ -33,7 +33,7 @@
      "role": "CAB_Body",
      "rig_parent": "TruckExterior_LOD0",
      "fbx_parent": "TruckExterior_LOD0",
-     "tris": 37308,
+     "tris": 37376,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Metal",
@@ -869,12 +869,12 @@
      "rig_parent": "CAB_Body_LOD0",
      "fbx_parent": "TruckExterior_LOD0",
      "position_unity_vehicle": [
-      -1.02733,
+      -1.02669,
       1.398,
       4.95925
      ],
      "rig_local_position_unity": [
-      -1.02733,
+      -1.02669,
       0.248,
       1.03425
      ]
@@ -925,12 +925,12 @@
      "rig_parent": "CAB_Body_LOD0",
      "fbx_parent": "TruckExterior_LOD0",
      "position_unity_vehicle": [
-      1.02733,
+      1.02669,
       1.398,
       4.95925
      ],
      "rig_local_position_unity": [
-      1.02733,
+      1.02669,
       0.248,
       1.03425
      ]
@@ -1116,21 +1116,21 @@
      "parent": "TruckExterior_LOD0"
     }
    },
-   "tris_total": 103367,
-   "tris_before_decimation": 103367,
+   "tris_total": 103435,
+   "tris_before_decimation": 103435,
    "decimate_area_budget_k": 1.0,
-   "file_bytes": 8743852,
-   "build_s": 2.2
+   "file_bytes": 8741932,
+   "build_s": 1.6
   },
   "LOD1": {
-   "file": "art-source/truck/exterior/export/SM_TruckExterior_LOD1.fbx",
+   "file": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/SM_TruckExterior_LOD1.fbx",
    "root": "TruckExterior_LOD1",
    "objects": {
     "CHASSIS_LOD1": {
      "role": "CHASSIS",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 11854,
+     "tris": 11859,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Metal",
@@ -1153,7 +1153,7 @@
      "role": "CAB_Body",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 17881,
+     "tris": 17843,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Paint",
@@ -1240,7 +1240,7 @@
      "role": "WHEEL_FL",
      "rig_parent": "STEER_FL_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 1890,
+     "tris": 1894,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1274,7 +1274,7 @@
      "role": "WHEEL_FR",
      "rig_parent": "STEER_FR_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 1891,
+     "tris": 1896,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1532,7 +1532,7 @@
      "role": "WHEEL_RL",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 3286,
+     "tris": 3295,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1566,7 +1566,7 @@
      "role": "WHEEL_RR",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 3286,
+     "tris": 3296,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1600,7 +1600,7 @@
      "role": "GLASS_Windscreen",
      "rig_parent": "CAB_Body_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 282,
+     "tris": 284,
      "materials": [
       "MI_Ext_Glass"
      ],
@@ -1987,12 +1987,12 @@
      "rig_parent": "CAB_Body_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
      "position_unity_vehicle": [
-      -1.02733,
+      -1.02669,
       1.398,
       4.95925
      ],
      "rig_local_position_unity": [
-      -1.02733,
+      -1.02669,
       0.248,
       1.03425
      ]
@@ -2043,12 +2043,12 @@
      "rig_parent": "CAB_Body_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
      "position_unity_vehicle": [
-      1.02733,
+      1.02669,
       1.398,
       4.95925
      ],
      "rig_local_position_unity": [
-      1.02733,
+      1.02669,
       0.248,
       1.03425
      ]
@@ -2209,21 +2209,21 @@
     }
    },
    "collision": {},
-   "tris_total": 43000,
-   "tris_before_decimation": 97424,
-   "decimate_area_budget_k": 148.61,
-   "file_bytes": 4241244,
-   "build_s": 2.9
+   "tris_total": 42997,
+   "tris_before_decimation": 97492,
+   "decimate_area_budget_k": 148.98,
+   "file_bytes": 4237148,
+   "build_s": 2.2
   },
   "LOD2": {
-   "file": "art-source/truck/exterior/export/SM_TruckExterior_LOD2.fbx",
+   "file": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/SM_TruckExterior_LOD2.fbx",
    "root": "TruckExterior_LOD2",
    "objects": {
     "CHASSIS_LOD2": {
      "role": "CHASSIS",
      "rig_parent": "TruckExterior_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
-     "tris": 3270,
+     "tris": 3427,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Paint",
@@ -2246,7 +2246,7 @@
      "role": "CAB_Body",
      "rig_parent": "TruckExterior_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
-     "tris": 5259,
+     "tris": 7358,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Paint",
@@ -2395,7 +2395,7 @@
      "role": "MUDFLAP_RL",
      "rig_parent": "TruckExterior_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
-     "tris": 16,
+     "tris": 20,
      "materials": [
       "MI_Ext_Trim"
      ],
@@ -2426,7 +2426,7 @@
      "role": "MUDFLAP_RR",
      "rig_parent": "TruckExterior_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
-     "tris": 16,
+     "tris": 20,
      "materials": [
       "MI_Ext_Trim"
      ],
@@ -2806,12 +2806,12 @@
      "rig_parent": "CAB_Body_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
      "position_unity_vehicle": [
-      -1.02733,
+      -1.02669,
       1.398,
       4.95925
      ],
      "rig_local_position_unity": [
-      -1.02733,
+      -1.02669,
       0.248,
       1.03425
      ]
@@ -2862,12 +2862,12 @@
      "rig_parent": "CAB_Body_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
      "position_unity_vehicle": [
-      1.02733,
+      1.02669,
       1.398,
       4.95925
      ],
      "rig_local_position_unity": [
-      1.02733,
+      1.02669,
       0.248,
       1.03425
      ]
@@ -3028,17 +3028,17 @@
     }
    },
    "collision": {},
-   "tris_total": 15434,
-   "tris_before_decimation": 80980,
-   "decimate_area_budget_k": 0.01,
-   "file_bytes": 1639324,
-   "build_s": 2.8
+   "tris_total": 17698,
+   "tris_before_decimation": 81048,
+   "decimate_area_budget_k": 20.85,
+   "file_bytes": 1826092,
+   "build_s": 2.0
   }
  },
  "tri_budget": {
   "LOD0": 140000,
   "LOD1": 45000,
-  "LOD2": 15500,
+  "LOD2": 17900,
   "note": "triangle limits; LOD0 100k -> 140k (owner/lead 2026-11-09, quality first, phone headroom: A16 Low cab GPU 16 ms / 33 ms), LOD1/LOD2 unchanged (Medium/Low)"
  },
  "units": "metres",
@@ -3071,7 +3071,7 @@
  "lod_targets": {
   "LOD0": "<= ~100k",
   "LOD1": "40-45k",
-  "LOD2": "14-15k",
+  "LOD2": "17-18k (15k + the undecimated T bar)",
   "LOD3": "draft, not exported by default (~5k traffic LOD; wheels break at that budget)"
  },
  "lod_screen_size_suggestion": {
@@ -3081,9 +3081,9 @@
   "cull": 0.006
  },
  "hidden_faces": {
-  "removed": 11499,
-  "tested": 57438,
-  "tris_before_cleanup": 127936,
+  "removed": 11620,
+  "tested": 56506,
+  "tris_before_cleanup": 128272,
   "method": "ray visibility from ~400 exterior points (3 rings x 24 azimuths, 0.3-8 m high, top views) + in-cab eye points; moving parts (doors, wheels, steering, wipers, mudflaps) tested only against themselves; glass treated as transparent"
  },
  "slots": {
@@ -3104,99 +3104,99 @@
   "Paint": {
    "C": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Paint_C.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Paint_C.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Paint_C.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Paint_C.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Paint_C.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Paint_C.png",
      "size": 512
     }
    },
    "N": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Paint_N.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Paint_N.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Paint_N.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Paint_N.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Paint_N.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Paint_N.png",
      "size": 512
     }
    },
    "M": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Paint_M.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Paint_M.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Paint_M.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Paint_M.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Paint_M.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Paint_M.png",
      "size": 512
     }
    },
    "BaseMap_white": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Paint_BaseMap_white.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Paint_BaseMap_white.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Paint_BaseMap_white.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Paint_BaseMap_white.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Paint_BaseMap_white.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Paint_BaseMap_white.png",
      "size": 512
     }
    },
    "MaskMap_white": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Paint_MaskMap_white.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Paint_MaskMap_white.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Paint_MaskMap_white.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Paint_MaskMap_white.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Paint_MaskMap_white.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Paint_MaskMap_white.png",
      "size": 512
     }
    },
    "BaseMap_dark": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Paint_BaseMap_dark.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Paint_BaseMap_dark.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Paint_BaseMap_dark.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Paint_BaseMap_dark.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Paint_BaseMap_dark.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Paint_BaseMap_dark.png",
      "size": 512
     }
    },
    "MaskMap_dark": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Paint_MaskMap_dark.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Paint_MaskMap_dark.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Paint_MaskMap_dark.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Paint_MaskMap_dark.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Paint_MaskMap_dark.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Paint_MaskMap_dark.png",
      "size": 512
     }
    }
@@ -3204,71 +3204,71 @@
   "Trim": {
    "C": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Trim_C.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Trim_C.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Trim_C.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Trim_C.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Trim_C.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Trim_C.png",
      "size": 512
     }
    },
    "N": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Trim_N.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Trim_N.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Trim_N.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Trim_N.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Trim_N.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Trim_N.png",
      "size": 512
     }
    },
    "M": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Trim_M.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Trim_M.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Trim_M.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Trim_M.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Trim_M.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Trim_M.png",
      "size": 512
     }
    },
    "BaseMap": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Trim_BaseMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Trim_BaseMap.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Trim_BaseMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Trim_BaseMap.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Trim_BaseMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Trim_BaseMap.png",
      "size": 512
     }
    },
    "MaskMap": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Trim_MaskMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Trim_MaskMap.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Trim_MaskMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Trim_MaskMap.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Trim_MaskMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Trim_MaskMap.png",
      "size": 512
     }
    }
@@ -3276,71 +3276,71 @@
   "Metal": {
    "C": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Metal_C.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Metal_C.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Metal_C.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Metal_C.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Metal_C.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Metal_C.png",
      "size": 512
     }
    },
    "N": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Metal_N.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Metal_N.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Metal_N.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Metal_N.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Metal_N.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Metal_N.png",
      "size": 512
     }
    },
    "M": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Metal_M.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Metal_M.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Metal_M.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Metal_M.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Metal_M.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Metal_M.png",
      "size": 512
     }
    },
    "BaseMap": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Metal_BaseMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Metal_BaseMap.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Metal_BaseMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Metal_BaseMap.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Metal_BaseMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Metal_BaseMap.png",
      "size": 512
     }
    },
    "MaskMap": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Metal_MaskMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Metal_MaskMap.png",
      "size": 4096
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Metal_MaskMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Metal_MaskMap.png",
      "size": 1024
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Metal_MaskMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Metal_MaskMap.png",
      "size": 512
     }
    }
@@ -3348,71 +3348,71 @@
   "Lights": {
    "C": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Lights_C.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Lights_C.png",
      "size": 2048
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Lights_C.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Lights_C.png",
      "size": 512
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Lights_C.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Lights_C.png",
      "size": 256
     }
    },
    "N": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Lights_N.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Lights_N.png",
      "size": 2048
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Lights_N.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Lights_N.png",
      "size": 512
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Lights_N.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Lights_N.png",
      "size": 256
     }
    },
    "M": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Lights_M.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Lights_M.png",
      "size": 2048
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Lights_M.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Lights_M.png",
      "size": 512
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Lights_M.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Lights_M.png",
      "size": 256
     }
    },
    "BaseMap": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Lights_BaseMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Lights_BaseMap.png",
      "size": 2048
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Lights_BaseMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Lights_BaseMap.png",
      "size": 512
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Lights_BaseMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Lights_BaseMap.png",
      "size": 256
     }
    },
    "MaskMap": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Lights_MaskMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Lights_MaskMap.png",
      "size": 2048
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Lights_MaskMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Lights_MaskMap.png",
      "size": 512
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Lights_MaskMap.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Lights_MaskMap.png",
      "size": 256
     }
    }
@@ -3420,15 +3420,15 @@
   "Decal": {
    "RGBA": {
     "High": {
-     "path": "art-source/truck/exterior/export/textures/High/T_Ext_Decal.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/High/T_Ext_Decal.png",
      "size": 1024
     },
     "Medium": {
-     "path": "art-source/truck/exterior/export/textures/Medium/T_Ext_Decal.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Medium/T_Ext_Decal.png",
      "size": 512
     },
     "Low": {
-     "path": "art-source/truck/exterior/export/textures/Low/T_Ext_Decal.png",
+     "path": "../../../../../../AppData/Local/Temp/claude/6508c6524165da2c/cc102ed0-2103-48b0-9859-f6305f5648c9/scratchpad/belka-maski/ext-export3/textures/Low/T_Ext_Decal.png",
      "size": 256
     }
    }
@@ -3583,7 +3583,7 @@
     }
    },
    "Trim": {
-    "area_m2": 98.57,
+    "area_m2": 98.73,
     "uv_coverage": 0.339,
     "px_per_m": {
      "High": 240,
@@ -3593,7 +3593,7 @@
    },
    "Metal": {
     "area_m2": 13.09,
-    "uv_coverage": 0.638,
+    "uv_coverage": 0.637,
     "px_per_m": {
      "High": 904,
      "Medium": 226,
@@ -3601,12 +3601,12 @@
     }
    },
    "Lights": {
-    "area_m2": 1.14,
-    "uv_coverage": 0.639,
+    "area_m2": 1.26,
+    "uv_coverage": 0.62,
     "px_per_m": {
-     "High": 1531,
-     "Medium": 383,
-     "Low": 191
+     "High": 1440,
+     "Medium": 360,
+     "Low": 180
     }
    }
   }
@@ -3732,29 +3732,5 @@
    }
   ]
  },
- "dims_reference": "art-source/truck/dims.json",
- "qa_renders": [
-  "docs/reports/visual/truck-A6-exterior/34przod_white_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/34przod_dark_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/zbl_reflektor_white_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/zbl_drzwi_white_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/bok_white_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/34tyl_white_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/zbl_kolo_white_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/zbl_tyl_white_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/34przod_p_white_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/zbl_wydech_white_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/przod_white_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/zbl_reflektor_dark_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/34przod_white_lowsun_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/zbl_reflektor_white_lowsun_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/34przod_dark_lowsun_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/zbl_reflektor_dark_lowsun_lod0.jpg",
-  "docs/reports/visual/truck-A6-exterior/34przod_white_lod0_urp.jpg",
-  "docs/reports/visual/truck-A6-exterior/lod0_34przod.jpg",
-  "docs/reports/visual/truck-A6-exterior/lod1_34przod.jpg",
-  "docs/reports/visual/truck-A6-exterior/lod2_34przod.jpg",
-  "docs/reports/visual/truck-A6-exterior/pivoty_34.jpg",
-  "docs/reports/visual/truck-A6-exterior/pivoty_gora.jpg"
- ]
+ "dims_reference": "art-source/truck/dims.json"
 }

@@ -57,6 +57,8 @@ WS_Y0 = 1.345                                  # windscreen inner surface at bot
 FRONT_WALL_Y = 1.43                            # footwell front wall
 SEAT_X = HPT.x                                 # -0.55 driver seat centreline
 WHEEL_C = Vector((SEAT_X, 0.875, 2.12))        # steering-wheel centre
+BRAKE_PIVOT = Vector((SEAT_X + 0.07, 1.27, 1.86))    # pendant brake arm pivot (= export pivot PEDAL_Brake); r7b: y 1.33
+ACCEL_HINGE = Vector((SEAT_X + 0.235, 1.095, 1.42))  # organ pedal floor hinge (= export pivot PEDAL_Accel); r7b: y 1.16
 WHEEL_TILT = 38.0                              # rim plane vs horizontal (deg)
 WHEEL_R = 0.235                                # 470 mm diameter (class 450-500 mm)
 RIM_R = (0.0175, 0.0145)                       # rim section half-axes: 35 x 29 mm
@@ -132,6 +134,7 @@ def load_glass_interface():
             "rake": w.get("rake_deg_from_vertical"),
             "shell": sh.get("z_yf_yb_w_rf_rb"), "wall": sh.get("wall_m", 0.03),
             "opening_x": g.get("opening_edge_abs_x_per_row"),
+            "crown": sh.get("front_crown_r_m"), "pockets": sh.get("front_pockets") or [],
             "source": os.path.relpath(GLASS_IF_PATH, REPO).replace("\\", "/")}
 
 
@@ -172,6 +175,53 @@ def shell_sec(z):
     return tab[-1][1:]
 
 
+# r7b: parts cut after the first fit (name -> bisect planes), see fit_to_exterior(). The footwell wall gets vertices at
+# the top and bottom of the T bar pocket band and 0.92 m either side of the centre line (inside of it the wall is
+# > 85 mm behind the skin and does not move).
+FIT_CUTS = {"footwell_wall": [((0.92, 0, 0), (1, 0, 0)), ((-0.92, 0, 0), (1, 0, 0)),
+                              ((0, 0, 1.60), (0, 0, 1)), ((0, 0, 1.88), (0, 0, 1))]}
+POCKET_CLEAR = 0.015   # m: the interior stays this far behind the floor of an exterior front pocket
+POCKET_EDGE = (0.02, 0.03)   # m: full pocket depth this far beyond the pocket outline, then a ramp back to the wall
+
+
+def front_wall(p, z, wall):
+    """Wall thickness the interior has to respect at front-skin parameter p (arc length from the centre line) and
+    height z: `wall` on the skin, pocket depth + POCKET_CLEAR behind the published mask pockets (r7b, ADR 0047)."""
+    we = wall
+    for pk in GLASS_IF.get("pockets") or []:
+        ps, zs = [c[0] for c in pk["param_z_quad"]], [c[1] for c in pk["param_z_quad"]]   # bounding box of the quad
+        p0, p1, z0, z1 = min(ps), max(ps), min(zs), max(zs)
+        pp = abs(p) if pk.get("mirror") else p
+        full, ramp = POCKET_EDGE
+        k = min(1.0 - max(0.0, max(p0 - pp, pp - p1) - full) / ramp,
+                1.0 - max(0.0, max(z0 - z, z - z1) - full) / ramp)
+        if k > 0.0:
+            we = max(we, wall + (pk["depth_m"] + POCKET_CLEAR - wall) * min(1.0, k))
+    return we
+
+
+def front_fit(ax, y, z, wall):
+    """Crowned front of the exterior (r7b): (|x|, y) pulled back inside the real skin at height z. The skin is
+    exterior/geom.Loft.plan(): a crowned face of plan radius R about (0, yf - R) up to the tangent angle th0, then the
+    corner arc rf about (w - rf, cyc). Both parts are clamped radially about their own centre (the old flat section
+    moved y only, which throws a vertex near the side of the arc a long way), by the wall of front_wall()."""
+    yf, yb, w, rf, rb = shell_sec(z)
+    R = GLASS_IF["crown"]
+    cx = w - rf
+    d = math.sqrt((R - rf) ** 2 - cx ** 2)
+    th0, cyc, ycr = math.atan2(cx, d), yf - R + d, yf - R
+    if math.atan2(ax, y - ycr) <= th0:                       # crowned face
+        lim, rho = R - front_wall(ax, z, wall), math.hypot(ax, y - ycr)
+        return (ax, y) if rho <= lim else (ax * lim / rho, ycr + (y - ycr) * lim / rho)
+    dx, dy = ax - cx, y - cyc
+    if dy <= 0.0:                                            # behind the corner centre: the side wall
+        return min(ax, w - wall), y
+    a = math.atan2(dx, dy)
+    lim, rho = max(0.002, rf - front_wall(R * math.sin(th0) + rf * (a - th0), z, wall)), math.hypot(dx, dy)
+    # (front_wall takes the unsigned parameter: every published pocket is symmetric about the centre line)
+    return (ax, y) if rho <= lim else (cx + dx * lim / rho, cyc + dy * lim / rho)
+
+
 def fit_to_exterior(objs, margin=0.004):
     """A6 fit (glass_interface.json): pull every vertex that lies outside the exterior cab (shell inner surface =
     outer - wall, or the windscreen inner face inside the glazed opening) back inside, by `margin`. Run on the
@@ -193,7 +243,8 @@ def fit_to_exterior(objs, margin=0.004):
             return ox[k] + (ox[k + 1] - ox[k]) * (f - k) - 0.005
         return GLASS_IF["rows"][k][-1][0] - 0.03
     out = {}
-    for o in objs:
+
+    def fit_obj(o):
         me = o.data
         n, dmax = 0, 0.0
         for v in me.vertices:
@@ -216,6 +267,16 @@ def fit_to_exterior(objs, margin=0.004):
                     yl = (yf - rf) + math.sqrt(max(0.0, r * r - min(r, ax - cx) ** 2))
                     if ax - cx > r:
                         nx = min(nx, cx + r)
+                if GLASS_IF.get("crown") and z < WS_Z0:
+                    # r7b (review r6 E-N2): below the glazing the limit follows the real skin - crowned face, corner
+                    # arc behind it, mask pockets. The flat section above put the dash carcass up to 5 mm outside
+                    # the skin at the corner start and 36 mm in front of the pocket floor: the game camera saw the
+                    # cab through the T bar. Faded into the old section over the last 40 mm below the glass edge
+                    # (the pillar trims above it were fitted and reviewed against that one). Applied on top of the
+                    # old clamp, so that everything already inside the real skin stays where it was reviewed.
+                    t = smooth(WS_Z0 - 0.04, WS_Z0, z)
+                    xc, yc = front_fit(nx, min(y, yl), z, wall)
+                    nx, yl = xc + (nx - xc) * t, yc + (min(y, yl) - yc) * t
             ny = min(ny, yl)
             # back: flat + plan corner arc
             cxb, r = w - rb, max(0.002, rb - wall)
@@ -229,7 +290,29 @@ def fit_to_exterior(objs, margin=0.004):
                 dmax = max(dmax, d)
         if n:
             me.update()
-            out[o.name] = {"verts_moved": n, "max_move_m": round(dmax, 4)}
+            prev = out.get(o.name, {"verts_moved": 0, "max_move_m": 0.0})
+            out[o.name] = {"verts_moved": prev["verts_moved"] + n,
+                           "max_move_m": max(prev["max_move_m"], round(dmax, 4))}
+
+    for o in objs:
+        fit_obj(o)
+        cuts = FIT_CUTS.get(o.name)
+        if cuts and GLASS_IF.get("pockets"):
+            # r7b: a part with too few vertices for the vertex clamp (the footwell wall is one box across the whole
+            # cab: its corners were fitted, its end edges still ran through the wrapped ends of the T bar pocket).
+            # Cut after the first fit (the reviewed plane stays where it was), keep the cab-facing sheet (the other
+            # faces of the box face the skin) and clamp the new vertices.
+            bm = bmesh.new()
+            bm.from_mesh(o.data)
+            for co, no in cuts:
+                bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=co, plane_no=no,
+                                       dist=1e-5)
+            bm.normal_update()
+            bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.normal.y > -0.5], context="FACES")
+            bm.to_mesh(o.data)
+            bm.free()
+            o.data.update()
+            fit_obj(o)
     return out
 
 
@@ -1553,8 +1636,11 @@ def emblem(badge, c, n, v):
 def build_pedals():
     group("pedals")
     # brake: pendant pedal, large pad (truck brake pedal ~ 120 x 90 mm)
+    # r7b (ADR 0047): the firewall behind the mask is the floor of the exterior's T pocket (85 mm inside the crowned
+    # skin, was a flat 34 mm); arm pivot, accelerator and footrest moved back with it so that fit_to_exterior does
+    # not flatten them against it. All three pads now stand 0.74-0.75 m ahead of the H-point (the brake pad did).
     x = SEAT_X + 0.07
-    top = V(x, 1.33, 1.86)
+    top = BRAKE_PIVOT
     pad = V(x, 1.20, 1.60)
     rod("brake_arm", top, pad + V(0, 0.03, 0.02), 0.012, "metal_dark", seg=10)
     pn = V(0, -1, 0.55).normalized()
@@ -1562,13 +1648,13 @@ def build_pedals():
     # accelerator: floor-hinged organ pedal
     x = SEAT_X + 0.235
     a = math.radians(48)
-    p = V(x, 1.255, 1.415 + 0.13 * math.sin(a))
+    p = V(x, ACCEL_HINGE.y + 0.095, 1.415 + 0.13 * math.sin(a))
     pn = V(0, -math.sin(a), math.cos(a))
     panel("accel_pad", rrect(0.085, 0.27, 0.014, 3), p, pn, V(0, 1, 0), 0.022, "rubber", bev=0.004)
-    box("accel_hinge", (x, 1.16, 1.42), (0.09, 0.03, 0.03), "metal_dark", bev=0.006)
+    box("accel_hinge", tuple(ACCEL_HINGE), (0.09, 0.03, 0.03), "metal_dark", bev=0.006)
     # driver footrest (dead pedal) left
     x = SEAT_X - 0.23
-    panel("footrest", rrect(0.10, 0.22, 0.012, 3), V(x, 1.27, 1.50), V(0, -0.8, 0.6).normalized(), V(0, 1, 1).normalized(),
+    panel("footrest", rrect(0.10, 0.22, 0.012, 3), V(x, 1.185, 1.50), V(0, -0.8, 0.6).normalized(), V(0, 1, 1).normalized(),
           0.03, "rubber", bev=0.004)
 
 

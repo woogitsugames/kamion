@@ -154,7 +154,6 @@ Frames: `artifacts/owner/modern-front/r6-geo/` (`before` = main with the r4 expo
   only). `exterior/check_export.py` PASS. Frames: `artifacts/owner/modern-front/r6b/lod1/lod1_34przod_{before,after}.jpg`
   (Cycles, game materials), in engine `before-ext/` vs `after-ext/` `Medium-overcast/truck-34.png` (Medium shows LOD1).
 
-
 ## Addendum r7 (2026-11-10, rendering-perf): E-N2 on Low is a hole, not the env term
 Evidence `artifacts/world-fixes/glass-plastic/` (`tmask/`, `bar_rays_LOD0.txt`, `bar_rays_LOD2.txt`, `sheets/`).
 - Debug renders of `Kamion/Truck Exterior` (glossTrim / roughness / normal written as colour) left the Low bar black:
@@ -168,3 +167,55 @@ Evidence `artifacts/world-fixes/glass-plastic/` (`tmask/`, `bar_rays_LOD0.txt`, 
 - No shader change can fix this. Geometry (truck-artist): close the corner gap (bar end cap / chamfer meets the corner
   panel) and keep the bar in LOD2 (`a6_export.NO_DECIMATE += "grille_bar_mask"`, ~2 k tris on LOD2, or its own column
   reduction like `reduce_round`). Then re-measure E-N2 (Low = High within 3 pts, lowsun Low corner now 1.6 / 19.9).
+
+## Addendum r7b (2026-11-10, truck-artist): the T bar holes closed - measured, not yet reviewed by `visual-critic`
+Evidence: `artifacts/owner/modern-front/r7-maskbar/` (`before/` and `after/`: ray maps `leak/`, `checks/`, engine frames
+`<tier>-<light>/`, `sheets/`; `measure.py`, `wip-logs/`; `export/SM_CabInterior_LOD0.fbx` = the final interior LOD0,
+which is outside git, sha1 58c964b4...; `after-7rays/` = engine frames of the intermediate export).
+- **Root cause (measured, `tools/blender/truck/front_leak.py`, new).** Not a gap between the bar and the corner panel.
+  (1) The interior fit (`build_interior.fit_to_exterior`) used the flat rounded-rectangle section: it ignored the
+  10 m plan crown of the modern front (dash carcass up to 5 mm outside the skin at the corner start) and the mask
+  pockets (carcass 34 mm behind the skin, pocket back at 66 mm). (2) The pockets are holes through the 30 mm shell
+  with a flat back panel only: a 36 mm slot stayed open all round it. (3) LOD2 collapsed `grille_bar_mask`.
+  Before: 1946 / 20444 leaking rays (truck-34, LOD0), 5808 (LOD2); engine mask px in the bar box Low 8604, High 2823.
+- **Done in code.** Exterior: `body.mask_tray` (back panels of stem, bar and headlamps are trays with a rim),
+  `MASK_POCKET` / `LAMP_POCKET`, `glass_interface.json` `shell_sections.front_crown_r_m` + `front_pockets`;
+  `a6_export`: `NO_DECIMATE_FAR` (bar whole from LOD2), `HIDDEN_KEEP` / `keep_face` (trays and shell walls of the mask
+  band survive hidden-face removal), `MIN_RATIO` for the trays, LOD2 target 17 700 / limit 17 900. Interior:
+  `front_wall` / `front_fit` (crowned skin, pocket depth + 15 mm, below the glazing only), brake pivot, accelerator
+  and footrest moved back 60-85 mm (`BRAKE_PIVOT`, `ACCEL_HINGE`; pads 0.74-0.75 m ahead of the H-point).
+- **Exported (committed files).** Exterior LOD0 103 435 / LOD1 42 997 / LOD2 17 698 (was 103 367 / 43 000 / 15 434:
+  +0.07 % / 0 / +2 264), with its atlases (re-packed: new pieces); interior 97 055 / 43 256 / 21 973 (limits 120 000 /
+  45 000 / 22 000).
+- **Measured so far.** Interior fix alone with the old exterior: leaks 1946 -> 65 (LOD0). With the bar kept and the
+  shell walls kept (no trays yet): LOD0 60, LOD2 78: the rest were the slots round the back panels -> trays.
+- **Last 7 rays (found on the final export).** With trays and the lamp pocket 7 / 19 099 rays still leaked (LOD0 and
+  LOD2, truck-34; engine mask px in the bar box Low 6, High 25: a 1 px line beside the end cap). Cause: `footwell_wall`
+  is one box across the cab, 8 vertices, none inside the bar band: the vertex clamp fitted its corners, its end edges
+  ran 0.1-8 mm in front of the tray floor at |x| 1.11-1.15 m. Fix: `build_interior.FIT_CUTS` - after the first fit
+  the wall is cut at z 1.60 / 1.88 m and x +-0.92 m, only the cab-facing sheet is kept (the other faces of the
+  20 mm box face the skin) and the new vertices are clamped: the end strips step back up to 42 mm in the bar band, the wall
+  between x +-0.92 m does not move. Widening `POCKET_EDGE` (0.02 -> 0.08) did nothing, `POCKET_CLEAR` 0.025 left 5.
+- **Measured (final export; `front_leak.py`, 6 eye points, 19 099 rays each; the before runs used a taller zone,
+  20 444 rays).** truck-34: LOD0 1946 -> 0, LOD1 2100 -> 0, LOD2 5808 -> 0; all six eyes 0 on LOD0 and LOD1 (PASS);
+  LOD2 FAIL by 1 ray from `front-high` at x 1.34, z 1.47 m (interior behind a culled `CAB_Body` trim face on the cab
+  side at y 0.87 m, not the mask: open). Interior LOD1 and LOD2 against exterior LOD0: PASS. Exterior
+  `check_export.py` PASS, interior `check_export.py` PASS, `check_fit.py` PASS for interior LOD0 / LOD1 / LOD2 (0
+  vertices outside). EditMode 113 / 113.
+- **In engine (WorldC, truck-34, `-qaMask CAB_Interior`, after `TruckAssetBuilder.BuildBatch` +
+  `WorldTruckInstaller.InstallBatch`).** Interior pixels in the bar box, before -> after: Low overcast 8604 -> 0, High
+  overcast 2823 -> 0, Low lowsun 8948 -> 0, High lowsun 2815 -> 0 (whole front below the windscreen: 9845 / 3621 /
+  10529 / 3639 -> 0). Corner p50 / p99: Low overcast 5.5 / 34.1 -> 15.7 / 37.8, High overcast 8.2 / 36.4 -> 17.3 /
+  43.8, Low lowsun 1.6 / 20.0 -> 7.8 / 43.6, High lowsun 3.9 / 34.6 -> 9.0 / 47.0. Bar face p50 Low 4.3 -> 15.7, High
+  17.3 -> 17.3 (overcast): Low = High within 1.6 pts (target 3). cab-dash share of pixels under 2 % luma: High
+  overcast 1.32 -> 1.21 %, High lowsun 1.21 -> 1.09 %; Low 2.53 -> 1.05 % and 2.45 -> 0.85 %, but the Low numbers
+  include the toe parity of main (b1b05bb), merged between the two runs: UNVERIFIED as an effect of this change.
+  cab-driver and cab-dash look unchanged (`after/sheets/full_*`).
+- **Open.** (1) `visual-critic` has not seen the frames. (2) The footwell is in no engine control camera: the pedals
+  moved back 60-85 mm and the wall's end strips are UNVERIFIED in engine; clay renders of the FBX only
+  (`after/sheets/fw_*.jpg`: the left end strip reads as a slanted facet behind the footrest). (3) With the hole gone
+  the left wiper pivot cap (`WIPER_L`, x -1.00 m) shows as a light 6 px block on High: geometry, normals and the trim
+  atlas there are the same as in r6b (light streak texels inside its 12 px island, also in the old atlas); in the old
+  frames it was dark, probably the dash carcass in front of it (not verified). Needs a clean re-bake of that island. (4) Roof marker pockets leak
+  (~40 rays, z 3.23-3.53 m, outside the test zone) and the tilt joint under the cab shows the floor slab from below
+  (zone starts at 1.25 m): not touched. (5) The LOD2 ray above.

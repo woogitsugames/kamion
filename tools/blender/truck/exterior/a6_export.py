@@ -58,8 +58,10 @@ ATLAS_RES = {"Paint": 4096, "Trim": 4096, "Metal": 4096, "Lights": 2048}
 DECAL_RES = 1024
 TIERS = {"High": 1, "Medium": 4, "Low": 8}          # divisor of the High size (Decal: 1 / 2 / 4)
 DECAL_TIERS = {"High": 1, "Medium": 2, "Low": 4}
-TRI_TARGET = {1: 43000, 2: 15300, 3: 5000}   # LOD2: 200 under the 15.5k limit (round wheels cost ~3.5k, ADR 0039)
-TRI_LIMIT = {0: 140000, 1: 45000, 2: 15500, 3: 6000}   # LOD0 100k -> 140k: owner/lead 2026-11-09 (quality first; phone headroom)
+# LOD2: 15.3k + the undecimated T bar (NO_DECIMATE_FAR, 2.2 k) + the pocket trays (r7b) = 17.7k, limit 17.9k (round
+# wheels cost ~3.5k, ADR 0039)
+TRI_TARGET = {1: 43000, 2: 17700, 3: 5000}
+TRI_LIMIT = {0: 140000, 1: 45000, 2: 17900, 3: 6000}   # LOD0 100k -> 140k: owner/lead 2026-11-09 (quality first; phone headroom)
 
 MAT_SLOT = {
     "paint": "Paint",
@@ -601,6 +603,25 @@ def occluder_bvh(objs):
     return BVHTree.FromPolygons(verts, polys, all_triangles=False, epsilon=0.0)
 
 
+# r7b (review r6 E-N2, ADR 0047 r7): the mask pockets stay watertight. The view-point test dropped pocket walls and
+# back-panel faces that only show through the 4 mm joint round the T bar or between the louvres at a grazing angle;
+# through those holes the game camera saw the cab interior. The two back trays (body.mask_tray) are kept whole, and
+# so is every non-paint face of the cab shell in the mask band (the 30 mm walls of the T bar, stem and lamp openings).
+# MIN_RATIO keeps the trays' rims closed in LOD1 / LOD2.
+HIDDEN_KEEP = ("grille_back_stem", "grille_back_bar", "lamp_back_")
+MASK_BAND_Z = (1.20, 1.89)     # m (A2): stem bottom .. T bar top, with the joint
+MASK_BAND_BACK = 0.45          # m behind the front plane: the wrapped ends of the bar
+
+
+def keep_face(o, p, slot):
+    if o.name.startswith(HIDDEN_KEEP):
+        return True
+    if o.name.startswith("cab_shell") and slot != "Paint":
+        c = p.center
+        return MASK_BAND_Z[0] <= c.z <= MASK_BAND_Z[1] and c.y > B.FACE_Y0 - MASK_BAND_BACK
+    return False
+
+
 def remove_hidden(pieces):
     t0 = time.time()
     vps = viewpoints()
@@ -625,6 +646,8 @@ def remove_hidden(pieces):
             hidden = []
             for p in me.polygons:
                 if sl and sl[p.material_index] in TRANSPARENT_SLOTS:
+                    continue
+                if keep_face(o, p, sl[p.material_index] if sl else ""):
                     continue
                 tested += 1
                 n = p.normal
@@ -1157,10 +1180,15 @@ SILHOUETTE_W = 4.0
 # the LOD0 ones) down to ROUND_SEGMENTS around the circumference; the pieces are then fixed in the budget.
 # pieces that break below this share of their LOD0 triangles (locked slot borders leave the collapse too little room:
 # the lower fairing at 0.15 pulled black trim triangles from the bumper corner to the wheel arch)
-MIN_RATIO = {"lower_fairing": 0.3, "door_shell": 0.30}   # modern door: below ~0.2 the window opening collapsed down to the sill (LOD2)
+MIN_RATIO = {"lower_fairing": 0.3, "door_shell": 0.30, "grille_back_": 0.35, "lamp_back_": 0.35}   # modern door: below ~0.2 the window opening collapsed down to the sill (LOD2)
 # r6: thin dark strips on the paint; the collapse dragged one corner of the sill cladding across the corner panel and the
 # door (a black wedge in LOD1) and the T bar end caps turned into shards
 NO_DECIMATE = ("sill_clad_", "door_skirt_clad_", "grille_bar_endcap")
+# r7b (review r6 E-N2): the gloss-black T bar itself, from LOD2 on. There the area budget collapsed its 2 k triangles
+# to a sliver and the game camera looked through the mask into the cab (ADR 0047 r7); the bar is the face of the truck
+# on the Low tier, so it keeps its LOD0 grid (TRI_TARGET / TRI_LIMIT of LOD2 raised by its triangle count). LOD1 is
+# untouched: its collapse leaves the bar whole.
+NO_DECIMATE_FAR = ("grille_bar_mask",)
 ROUND_KEYS = ("_tyre", "_rim")
 ROUND_SEGMENTS = {2: 24, 3: 16}
 
@@ -1281,7 +1309,7 @@ def reduce_round(o, target_seg, profile_tol=0.004, tyre_tol=0.02):
     return nseg, nseg // k
 
 
-def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0):
+def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, keep=()):
     """Area-weighted budget: each piece wants k * area^0.6 triangles (clamped to [floor, own count]); k is bisected
     on the evaluated (collapsed) meshes until the total meets the target. A uniform global ratio (A6 wip) crushed
     the dense grille / honeycomb pieces into black triangles at LOD2-3 while big smooth panels kept spare tris.
@@ -1291,7 +1319,7 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0):
     for o in rounds:
         before, after = reduce_round(o, round_seg)
         print(f"  round {o.name}: {before} -> {after} segments, {tris_of(o)} tris")
-    dec = [o for o in pieces if tris_of(o) > floor_tris and not o.name.startswith(("decal_", "MIRROR_") + NO_DECIMATE)
+    dec = [o for o in pieces if tris_of(o) > floor_tris and not o.name.startswith(("decal_", "MIRROR_") + NO_DECIMATE + tuple(keep))
            and o not in rounds]
     fixed = sum(tris_of(o) for o in pieces if o not in dec)
     base = {o.name: tris_of(o) for o in dec}
@@ -1550,7 +1578,8 @@ def export_lod(lod, master, mirrors, a, manifest, coll):
     ratio = 1.0
     if lod in TRI_TARGET:
         ratio = decimate_pieces(pieces, TRI_TARGET[lod], floor_tris={1: 40, 2: 16, 3: 8}[lod],
-                                lights_min={1: 0.5, 2: 0.15, 3: 0.1}[lod], round_seg=ROUND_SEGMENTS.get(lod, 0))
+                                lights_min={1: 0.5, 2: 0.15, 3: 0.1}[lod], round_seg=ROUND_SEGMENTS.get(lod, 0),
+                                keep=NO_DECIMATE_FAR if lod >= 2 else ())
     by_part = {}
     for o in master:
         by_part.setdefault(o["part"], []).append(o)
@@ -1762,6 +1791,18 @@ def glass_interface(master, path):
                     "inwards. The interior must stay inside (outer - wall_m) and behind the glass inner face; "
                     "tools/blender/truck/check_fit.py tests it on the exported FBX files.",
             "wall_m": 0.03,
+            # r7b (review r6 E-N2, ADR 0047): the two things the rounded-rectangle section does not say. The modern
+            # front face is crowned in plan (radius front_crown_r_m about (0, yf - R); the corner arc starts where
+            # the crown ends, so its centre lies behind yf - rf), and the mask pockets are deeper than wall_m.
+            "front_crown_r_m": getattr(B.CAB, "crown", 0.0) or None,
+            "front_pockets": ([{"name": k, "depth_m": B.MASK_POCKET, "mirror": False,
+                                "param_z_quad": [[round(c, 4) for c in pt] for pt in B.CFG[k]],
+                                "param": "arc length along the front skin from the centre line (body.front_pt)"}
+                               for k in ("stem", "bar")]
+                              + [{"name": "lamp", "depth_m": B.LAMP_POCKET, "mirror": True,
+                                  "param_z_quad": [[round(c, 4) for c in pt] for pt in B.CFG["lamp"]],
+                                  "param": "right-hand lamp; mirror = the same quad at -param"}]
+                              if B.modern() else []),
             "z_yf_yb_w_rf_rb": [[round(z, 4)] + [round(v, 4) for v in B.CAB.sec(z)]
                                 for z in [B.CAB_Z0 + 0.025 * i for i in range(int((B.ROOF_Z - B.CAB_Z0) / 0.025) + 1)]],
         },
@@ -2353,7 +2394,7 @@ def meta(tex, td, removed, tested, tri_pieces, gi):
                     "mirrors; DOOR_x carries GLASS_Doorx; STEER_Fx carries WHEEL_Fx. For LOD1-3 parent each part mesh "
                     "under the LOD0 transform of the same role and put the renderers in a LODGroup. LOD3 merges doors, wipers, door glass and mudflaps into CAB_Body / GLASS_Windscreen / "
                     "CHASSIS and has no MIRROR_* quads (LOD2 neither).",
-        "lod_targets": {"LOD0": "<= ~100k", "LOD1": "40-45k", "LOD2": "14-15k",
+        "lod_targets": {"LOD0": "<= ~100k", "LOD1": "40-45k", "LOD2": "17-18k (15k + the undecimated T bar)",
                         "LOD3": "draft, not exported by default (~5k traffic LOD; wheels break at that budget)"},
         "lod_screen_size_suggestion": {"LOD0": 0.45, "LOD1": 0.18, "LOD2": 0.07, "cull": 0.006},
         "hidden_faces": {"removed": removed, "tested": tested, "tris_before_cleanup": tri_pieces,

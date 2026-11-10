@@ -339,7 +339,8 @@ def cab_shell():
                              thick=0.15, side=s, nz=2, npar=2))
     for k in ("stem", "bar"):
         if modern():   # the T bar wraps the corners: dense quad cutter
-            cut.append(CAB.quad_patch("cut_" + k, "plastic", "front", CFG[k], off=-0.07, thick=0.20, nu=48, nv=3))
+            cut.append(CAB.quad_patch("cut_" + k, "plastic", "front", CFG[k], off=-MASK_POCKET, thick=0.20, nu=48,
+                                      nv=3))
         else:
             cut.append(CAB.poly_patch("cut_" + k, "grille_mesh", "front", CFG[k], off=-0.07, thick=0.20, sub=5))
     boolean(sh, cut)
@@ -451,11 +452,46 @@ def lane_dash(name, loft, zc, hgt, off, tilt=0.0):
         rot=Matrix.Rotation(math.radians(RAKE - tilt), 3, "X"))
 
 
+def mask_tray(name, m, quad, nu, nv, off=-0.066, rim=-0.026, grow=0.002):
+    """Back of a mask pocket as a tray: the panel `off` below the skin plus a rim up to the inner face of the 30 mm
+    shell wall (r7b, review r6 E-N2). The pockets are holes through the shell; with a flat panel alone a 36 mm slot
+    stayed open all round between the wall and the panel, and a camera looking along the 4 mm joint of the T bar or
+    between the louvres at an angle saw past the panel into the cab. The tray is 2 mm wider than the opening, so its
+    rim hides behind the wall edge."""
+    (p00, z00), (p10, z10), (p11, z11), (p01, z01) = quad
+    g = grow
+    q = [(p00 - g, z00 - g), (p10 + g, z10 - g), (p11 + g, z11 + g), (p01 - g, z01 + g)]
+
+    def at(u, v):
+        pp = (q[0][0] * (1 - u) + q[1][0] * u) * (1 - v) + (q[3][0] * (1 - u) + q[2][0] * u) * v
+        zz = (q[0][1] * (1 - u) + q[1][1] * u) * (1 - v) + (q[3][1] * (1 - u) + q[2][1] * u) * v
+        return pp, zz
+    bm = bmesh.new()
+    grid = [[bm.verts.new(CAB.front_pt(at(j / nu, i / nv)[1], at(j / nu, i / nv)[0], off)) for j in range(nu + 1)]
+            for i in range(nv + 1)]
+    for i in range(nv):
+        for j in range(nu):
+            bm.faces.new((grid[i][j], grid[i][j + 1], grid[i + 1][j + 1], grid[i + 1][j]))
+    edge = ([(0, j) for j in range(nu)] + [(i, nu) for i in range(nv)] + [(nv, j) for j in range(nu, 0, -1)]
+            + [(i, 0) for i in range(nv, 0, -1)])
+    top = [bm.verts.new(CAB.front_pt(at(j / nu, i / nv)[1], at(j / nu, i / nv)[0], rim)) for i, j in edge]
+    k = len(edge)
+    for e in range(k):
+        (i0, j0), (i1, j1) = edge[e], edge[(e + 1) % k]
+        bm.faces.new((grid[i0][j0], grid[i1][j1], top[(e + 1) % k], top[e]))
+    ob = G.obj_from_bm(name, bm, m, sharp=60)
+    me = ob.data          # the tray is seen from the front: the panel faces forward, the rim faces the pocket
+    mid = me.polygons[(nv // 2) * nu + nu // 2]
+    if mid.normal.dot(CAB.normal_front(at(0.5, 0.5)[1], at(0.5, 0.5)[0])) < 0:
+        me.flip_normals()
+    return ob
+
+
 def front_face_modern(strokes):
     """Gloss-black road-T mask (see MODERN): T bar panel + louvred stem with the lane-line dashes."""
     st, br = CFG["stem"], CFG["bar"]
-    CAB.quad_patch("grille_back_stem", "grille_honey", "front", st, off=-0.066, nu=24, nv=4)
-    CAB.quad_patch("grille_back_bar", "plastic", "front", br, off=-0.066, nu=48, nv=2)
+    mask_tray("grille_back_stem", "grille_honey", st, nu=24, nv=4)
+    mask_tray("grille_back_bar", "plastic", br, nu=48, nv=2)
     zb0, zb1 = br[0][1] + 0.004, br[2][1] - 0.004
     hw_bar = br[1][0] - 0.004 - MASK_CAP_W - 0.0012
     mask_bar("grille_bar_mask", (zb0 + zb1) / 2, zb1 - zb0, 0.060, hw_bar)
@@ -571,6 +607,11 @@ MASK_ROLL = 0.010      # m, WORKING_VALUE: the T bar's top and bottom 40 mm roll
 MASK_FLAT = 0.080      # m: half height of the flat band that carries the letters
 MASK_CHAMFER = 0.014   # m: chamfer at the bar's two wrapped ends
 MASK_CAP_W = 0.016     # m: brushed-aluminium end cap
+# m: depth of the mask pockets (T bar and stem) below the cab skin. Deeper than the 30 mm wall of the shell contract, so
+# it is published to the interior (glass_interface.json shell_sections.front_pockets, ADR 0047 r7b): the interior has to
+# stay behind the pocket floor there, or the game camera sees it past the bar and between the louvres.
+MASK_POCKET = 0.070
+LAMP_POCKET = 0.052    # m: back of the headlamp housing below the skin (published the same way)
 
 
 def mask_bar(name, zc, hgt, depth, hw, m="mask_gloss", nose=0.001, n=72, nose_r=0.016):
@@ -932,7 +973,9 @@ def _headlamps_modern():
     set_group("cab")
     for s in (-1, 1):
         poly = CFG["lamp"] if s > 0 else mirror_poly(CFG["lamp"])
-        CAB.poly_patch(f"lamp_back_{s}", "lamp_inner", "front", poly, off=-0.052, sub=6)
+        # r7b: housing back as a tray like the mask pockets (the clear lens showed the cab past the flat back plate)
+        mask_tray(f"lamp_back_{s}", "lamp_inner", poly if s > 0 else [poly[2], poly[3], poly[0], poly[1]], nu=12, nv=3,
+                  off=-LAMP_POCKET)
         # light signature = half of the road-T per lamp: a 24 mm bar along the top round the corner + a stem down
         # the inner (mask) side; both lamps and the black T mask read as the brand mark at distance
         drl_guide(f"drl_{s}_0", s, (0.895, 1.478), (1.352, 1.512), wdt=0.024, n=24)
