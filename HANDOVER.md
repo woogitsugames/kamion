@@ -1,3 +1,31 @@
+# HANDOVER — kamion, sesja 6 (2026-11-10 ok. 21:45 czasu właściciela; lider zapisuje po każdym scaleniu/starcie/końcu agenta)
+
+## Najpierw
+- **main = `ffcc7b7`, wypchnięty.** Scalone w s6: auta r9 (ADR 0073, generated = ours → wymagana regeneracja), fidelity dróg (ADR 0075). Main NIE zregenerowany po scaleniach; pytest gis na main: 2 czerwone P0 korytarza (agent 0076).
+- Polecenie właściciela s6: **max 10 agentów, wszystkie Fable 5.2**, mocny skok jakości wyglądu. Limit 5 h: reset 01:20 (start s6 0 %).
+- Zgłoszenia właściciela s6: (1) HUD na Fold 8 Ultra (ekran ~1:1) rozjechany, ustawienia ucięte → ADR 0079; (2) film jazdy `Screen_Recording_20261110_210126_Kamion.mp4` (127 s, klatki `artifacts/owner/fold-video-2026-11-10/`): brak ogranicznika (95–105 km/h), koniec świata ~116 s — biała pustka, spadek do 179 km/h, kamera w desce; przejazd po wyspie ronda Bieżeństwa ~30 s → ADR 0082.
+- Nowe worktree agentów: Data/raw/derived ma być KOPIĄ (robocopy), nie junction — inaczej build_world nadpisuje main.
+- Ostatni przydzielony ADR: **0082**.
+
+| zadanie | model | ADR | worktree / gałąź | dowody | stan |
+|---|---|---|---|---|---|
+| P0 korytarz trasy s1432–1480 + MA-001/002/012 | Fable | 0076 | nowy (isolation) | artifacts/roads-p0-r10 | w toku |
+| wysepki z OSM (compute_corners), MA-010, krawędzie p95 | Fable | 0077 | nowy | artifacts/islands-r10 | w toku |
+| straż JRG2 dokończenie + merge main | Fable | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | w toku |
+| Kwadrat Park dokończenie + brama/naczepy | Fable | 0071 | agent-a1409e374f8c12b4f | artifacts/kwadrat-r9 | w toku |
+| HUD adaptacyjny (Fold, 1:1–21:9) | Fable | 0079 | nowy | artifacts/hud-r10 | w toku |
+| auta r10 (lampy, płatek, LOD2) | Fable | 0078 | nowy | artifacts/cars-r10 | w toku |
+| oświetlenie/atmosfera r10 + warianty ekspozycji ov | Fable | 0080 | nowy | artifacts/light-r10 | w toku |
+| zabudowa typologia r10 | Fable | 0081 | nowy | artifacts/buildings-r10 | w toku |
+| licencja Fab/Patch + dokończenie refs 0066 | Fable | 0066 | agent-ab1fb0a47d2f0a491 | docs/reports/FAB-PATCH-LICENSE-2026-11-10.md | w toku |
+| ogranicznik 90, koniec świata, kamera, rondo (film Fold) | Fable | 0082 | nowy | artifacts/drive-fold-r10 | w toku |
+
+## Następne kroki
+1. Scalać po kolei w miarę kończenia: 0076 → 0077 → 0070/0071 → 0078 → 0081 → 0080 → 0079/0082 → 0066. Po każdym: regeneracja świata na main, pytest gis.
+2. Pełna integracja + czyste buildy Low/High/Ultra, telefony (A16 Low gate3, S24+ High A/B) — tylko gdy żaden Unity nie działa.
+3. Decyzje klikalne: Fab/Patch (D40), ekspozycja ov (warianty z 0080), D23 vs dach N-17, wynik audytu mapy. Recenzja r9/r10, raport bramki 3.
+
+---
 # HANDOVER — kamion, sesja 5 (aktualizacja 2026-11-10 ok. 22:10; lider zapisuje ten plik po każdym scaleniu/starcie agenta)
 
 ## Najpierw (sesja 5 → następna)
