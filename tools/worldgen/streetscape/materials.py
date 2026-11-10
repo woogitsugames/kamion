@@ -105,7 +105,12 @@ M = {
     "car_paint_red": {"color": [0.32, 0.03, 0.025], "rough": 0.35, "metal": 0.2, "texture_set": "car_grime"},
     "car_paint_green": {"color": [0.035, 0.07, 0.045], "rough": 0.35, "metal": 0.4, "texture_set": "car_grime"},
     "car_paint_beige": {"color": [0.36, 0.32, 0.24], "rough": 0.4, "metal": 0.3, "texture_set": "car_grime"},
-    "car_glass": {"color": [0.02, 0.022, 0.025], "rough": 0.05},
+    "car_glass": {"color": [0.012, 0.014, 0.016], "rough": 0.65},     # opaque (LOD1 / LOD2): does not mirror the sky
+    # LOD0 car glazing: dark tint, alpha blended (importer: "blend"), the dark interior shows through
+    "car_glass_tint": {"color": [0.010, 0.013, 0.015], "rough": 0.40, "alpha": 0.86, "blend": True},
+    "car_interior": {"color": [0.022, 0.022, 0.024], "rough": 0.9},
+    "rim_dark": {"color": [0.05, 0.05, 0.052], "rough": 0.6, "metal": 0.5},
+    "rim_steel": {"color": [0.07, 0.07, 0.072], "rough": 0.55, "metal": 0.6},
     "car_plate": {"color": [0.72, 0.72, 0.70], "rough": 0.45},      # blank registration plate (no characters)
     "car_trim": {"color": [0.025, 0.025, 0.025], "rough": 0.6},
     "car_light_head": {"color": [0.5, 0.5, 0.5], "rough": 0.1},

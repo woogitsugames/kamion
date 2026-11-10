@@ -260,6 +260,26 @@ namespace Game.World.Import
             if (m.Get("shader") as string == "wire") return WireMaterial(path, albedo);
             if (m.Get("window_grid") is Dictionary<string, object> grid && m.Get("base") is string baseId)
                 return FarFacadeMaterial(r, path, baseId, albedo, rough, grid, m.Get("glass_color") as List<object>);
+            // Tinted see-through glazing of prop LOD0 (ADR 0041 par. 7): manifest "blend": true + "alpha".
+            if (m.Get("blend") is bool bl && bl && m.Get("alpha") != null)
+            {
+                var gm = LitMaterial(path, albedo, rough, metal, null, false, 0.5f, false, null);
+                var gc = new Color(albedo.r, albedo.g, albedo.b, 1f).gamma;
+                gc.a = (float)Num(m.Get("alpha"));
+                gm.SetColor("_BaseColor", gc);
+                gm.SetFloat("_Surface", 1f);
+                gm.SetFloat("_Blend", 0f);
+                gm.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                gm.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                gm.SetFloat("_ZWrite", 0f);
+                gm.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+                gm.SetOverrideTag("RenderType", "Transparent");
+                gm.SetShaderPassEnabled("ShadowCaster", false);
+                gm.SetShaderPassEnabled("DepthOnly", false);
+                gm.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                EditorUtility.SetDirty(gm);
+                return gm;
+            }
             // Generated PBR sets (ADR 0022): ground, facades, props, decals with a set in materials_spec.json.
             var pbr = WorldPbrMaterials.Create(r, id, m, path);
             if (pbr != null) return pbr;
