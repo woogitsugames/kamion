@@ -272,7 +272,7 @@ def main(argv=None):
     ap.add_argument("--art", help=argparse.SUPPRESS)
     a = ap.parse_args(argv)
     root = Path(a.root) if a.root else rc.RAW_ROOT / "objects"
-    artroot = Path(a.art) if a.art else rc.ART_ROOT.parent
+    artroot = Path(a.art) if a.art else rc.ART_ROOT
     for name in a.object:
         http = rc.Http(cache_dir=root / name / ".cache", min_interval=a.interval)
         art = artroot / name
