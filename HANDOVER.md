@@ -24,7 +24,7 @@ Prompt startowy następnej sesji: `docs/owner/START-PROMPT-S8.md`. Przejęcie po
 1. Scalać w miarę kończenia: 0076 → 0077 → 0070 → 0078 → 0081 → 0082 → 0083. Po 0076: na main build_world → pytest gis → import-region → `pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCBarrierTests|DepotBarrierTests"`.
 2. Telefon: A/B oświetlenia na Samsungu A (`-e rq_clouds -1 -e rq_haze 0 -e rq_look 0 -e rq_cabtoe 0`), tylko gdy żaden Unity nie działa.
 3. Agent importu Megascans (po resecie limitu). Usunąć worktree 0080/0071 (kopia artifacts, junctiony).
-4. Ostatni przydzielony ADR: **0083**.
+4. Ostatni przydzielony ADR: **0084** (0084 = import Megascans, zlecony agentowi GPT/Codex: `docs/owner/GPT-TASK-01-MEGASCANS.md`, gałąź `gpt-megascans`, worktree `.claude/worktrees/gpt-megascans`, STATUS `artifacts/megascans-r1/STATUS.md`).
 
 ---
 # HANDOVER — kamion, sesja 6 (2026-11-10 ok. 21:45 czasu właściciela; lider zapisuje po każdym scaleniu/starcie/końcu agenta)
