@@ -11,6 +11,11 @@ $AndroidSdk   = Join-Path $AndroidPlayer 'SDK'
 $AndroidNdk   = Join-Path $AndroidPlayer 'NDK'
 $AndroidJdk   = Join-Path $AndroidPlayer 'OpenJDK'
 $Adb          = Join-Path $AndroidSdk 'platform-tools\adb.exe'
+# Three different adb.exe builds live on this PC (Unity SDK, scrcpy, WinGet platform-tools). A client whose
+# build differs from the running daemon kills and restarts it, which drops the A16 into `offline` mid-run.
+# Put the Unity SDK adb first so a bare `adb` in any script that dot-sources this file is the same binary.
+$env:PATH = (Split-Path $Adb) + [IO.Path]::PathSeparator + $env:PATH
+$env:ADB = $Adb   # scrcpy honours ADB: use the same binary instead of its bundled one
 $ProjectPath  = Join-Path $RepoRoot 'game'
 $ArtifactsDir = if ($env:KAMION_ARTIFACTS_DIR) { $env:KAMION_ARTIFACTS_DIR } else { Join-Path $RepoRoot 'artifacts' }   # worktrees: point at the main checkout so evidence survives worktree removal
 $LogsDir      = Join-Path $ArtifactsDir 'logs'
