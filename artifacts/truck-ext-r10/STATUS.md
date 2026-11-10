@@ -25,3 +25,11 @@ NEXT (if killed): rerun r4 = trailer export + `pwsh artifacts/truck-ext-r10/tool
   Exported art (FBX + atlases + manifests, r2 exterior / r4 trailer) is committed in this commit. EditMode tests NOT run. ADR 0083 "Measured" not filled. No visual-critic review, no phone.
 NEXT: look at `artifacts/truck-ext-r10/r4/High-overcast/chase.png` (roof), then
   `pwsh artifacts/truck-ext-r10/tools/unity.ps1 -Step test` ; `bash artifacts/truck-ext-r10/tools/sheets.sh before r4` ; fill ADR 0083 Measured ; rerun `-Step render -Out r4 -Tiers Low -Lights lowsun`.
+- 23:20 (takeover agent) r4 viewed: roof at albedo 0.36 still 95.2 % luma (overcast chase) and featureless. Cause found: `TruckExterior.shader` replaces the
+  baked dirt mask on the Curtain slot (`CurtainGrime`), so `_roof_stains` never reached the game; brightness = grazing sky reflection + D23 clip, not albedo.
+  r5: ROOF_RGB 0.50 (aged white PVC, CRRC 0.68-0.70 aged / Miller 2002 30-50 % loss; WORKING_VALUE), ROOF_ROUGH 0.72, soiling baked into C.rgb / C.a
+  (`ROOF_STAIN_ALBEDO`), `a6_export.emit_override` rdm reads a linked clean roughness. Trailer r5 export PASS (89 000 / 24 500 / 7 850), frames `r5/`.
+  Roof box luma r4 -> r5: High overcast 95.2 -> 93.3 (sd 3.2 -> 4.9, 0 % >= 97 %), High clear 97.9 -> 96.0, Low overcast 90.2 -> 89.5. Pooled dirt now visible.
+  Render exit 1 = shutdown flake (frames complete, mono cleanup abort_threads, no crash stack; hit High clear in r5, Low lowsun in r4): narrow accept rule in `scripts/visual-qa.ps1`.
+NEXT: band A/B: `KAMION_LIVERY_BAND=0 blender -b ... trailer_export.py -- --no-renders` -> `unity.ps1 -Step build` -> render `-Out cmp-noband -Tiers High -Lights overcast -Cameras trailer-side,truck-rear34,chase`
+  -> `git checkout -- art-source/truck/trailer/export` -> `unity.ps1 -Step build`; then `git merge main`, `unity.ps1 -Step test`, ADR Measured, copy to main artifacts.

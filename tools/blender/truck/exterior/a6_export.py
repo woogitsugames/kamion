@@ -934,7 +934,8 @@ def emit_override(mats, mode):
         elif mode == "rdm":
             cc = nt.nodes.new("ShaderNodeCombineColor")
             cc.name = "BAKE_V_cc"
-            rough = gr.inputs[1].default_value if gr is not None else src(bsdf, "Roughness", 0.5)
+            # r10: the clean roughness may be a link (trailer roof sheet: soiling baked into C.a)
+            rough = src(gr, 1, 0.5) if gr is not None else src(bsdf, "Roughness", 0.5)
             feed(cc.inputs[0], rough)
             if gm is not None and gm.inputs[0].links:
                 feed(cc.inputs[1], gm.inputs[0].links[0].from_socket)

@@ -161,7 +161,7 @@ def _road_band(nt, band, z0):
 # the untinted fabric white (tint mask 0), so every curtain colour of the game gets a two-tone livery from one bake.
 # (u = distance from the front edge minus 0.8 x height above the hem; both sides share the same y, so the band leans
 # back on both.) LIVERY_BAND = False restores the plain r9 curtain. WORKING_VALUE (art direction, owner may veto).
-LIVERY_BAND = True
+LIVERY_BAND = os.environ.get("KAMION_LIVERY_BAND", "1") != "0"   # env 0 = owner A/B export without the band
 LIVERY_BANDS = ((1.00, 2.60), (2.95, 3.22))
 
 
@@ -186,8 +186,17 @@ def _livery_mask(nt):
 
 
 ROOF_OWN_COLOUR = True
-# r2 had 0.62: clipped to white through the D23 curve in the chase view (roof luma 100 %); WORKING_VALUE
-ROOF_RGB = (0.36, 0.365, 0.37)
+# Clean-sheet albedo of an aged white PVC roof sheet. Source (building membranes, the closest published data): white PVC
+# single-ply solar reflectance 0.87-0.88 new, 0.68-0.70 after 3 years (CRRC listings quoted in the Duro-Last and Siplast
+# Parasolo data sheets); independent field work reports 30-50 % loss in 3 years (Miller et al. 2002, cited by ORNL)
+# = 0.44-0.61. A trailer sheet is never washed and runs in road soot: 0.50 = lower half of that range. WORKING_VALUE
+# (no measurement of a trailer sheet found). History: 0.62 / 0.44 / 0.36 all clipped in the chase view because the game
+# shader replaces the baked dirt mask on the Curtain slot (CurtainGrime) - the roof was rendered clean; r5 puts the
+# soiling into the albedo and roughness of the roof islands instead (ROOF_STAIN_ALBEDO).
+ROOF_RGB = (0.50, 0.505, 0.51)
+ROOF_ROUGH = 0.72           # chalked, weathered PVC (the curtain is 0.55); WORKING_VALUE
+ROOF_STAIN_ALBEDO = 0.85    # share of the stain factor that goes into the baked albedo (pool centres -> soot colour)
+ROOF_SOOT = (0.105, 0.10, 0.09)
 ROOF_BOWS = 18              # = top_rails_and_roof nb
 
 
@@ -222,6 +231,17 @@ def _roof_stains(nt, amount=1.0):
     r_in = rr.inputs[0].links[0].from_socket if rr.inputs[0].links else None
     if r_in is not None:
         M.L(nt, mn(nt, "ADD", r_in, mn(nt, "MULTIPLY", s_, 0.25)), rr.inputs[0])
+    # r5: Kamion/Truck Exterior ignores the baked dirt mask on the Curtain slot (CurtainGrime replaces it), so the roof
+    # soiling also goes into the CLEAN colour and roughness (what the export bakes into C.rgb / C.a): nobody washes a
+    # trailer roof, the dirt slider does not need to remove it.
+    if ROOF_STAIN_ALBEDO > 0:
+        fa = mn(nt, "MULTIPLY", mn(nt, "ADD", mn(nt, "ADD", pool, edge), film), ROOF_STAIN_ALBEDO * amount, clamp=True)
+        cm = N(nt, "ShaderNodeMix", _data_type="RGBA")
+        cm.inputs[6].default_value = tuple(mix.inputs[6].default_value)
+        cm.inputs[7].default_value = (*ROOF_SOOT, 1)
+        M.L(nt, fa, cm.inputs[0])
+        M.L(nt, cm.outputs[2], mix.inputs[6])
+        M.L(nt, mn(nt, "ADD", float(rr.inputs[1].default_value), mn(nt, "MULTIPLY", fa, 0.22), clamp=True), rr.inputs[1])
 
 
 def materials():
@@ -241,8 +261,8 @@ def materials():
         _livery_mask(nt)
     # r10 (ADR 0083): the roof sheet is its own light-grey PVC (not the curtain colour: tint mask 0), with dirt pooled
     # in the sags between the bows and along the edges - what the chase camera looks down on
-    m, nt, b = P("roof_tarp", "CURTAIN", ROOF_RGB, 0.62)
-    _grime(nt, b, ROOF_RGB, 0.62, h0=5.0, amount=0.25, cav=0.6)
+    m, nt, b = P("roof_tarp", "CURTAIN", ROOF_RGB, ROOF_ROUGH)
+    _grime(nt, b, ROOF_RGB, ROOF_ROUGH, h0=5.0, amount=0.25, cav=0.6)
     if ROOF_OWN_COLOUR:
         _roof_stains(nt)
         z = nt.nodes.new("ShaderNodeValue")
