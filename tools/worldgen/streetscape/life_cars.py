@@ -64,10 +64,10 @@ VAN = dict(L=4.90, W=1.93, H=1.97, wb=3.00, foh=0.93, r=0.345, sill=0.27, belt=1
 # bumper peak): lamp top / bottom at the inner and outer end; g = across coordinate of the shell (1 = where the
 # corner arc starts, 2 = the side line): lamp inner / outer end, grille half width, grille top; bar = light bar.
 FACES = {
-    "swept": dict(lean=0.085, band=0.28, lamp=(0.10, 0.70, 0.00, 0.78), lg=(0.52, 1.95), gw=0.44, gt=0.30, bar=False),
-    "wide": dict(lean=0.080, band=0.27, lamp=(0.06, 0.62, 0.00, 0.70), lg=(0.58, 1.95), gw=0.52, gt=0.16, bar=True),
-    "tall": dict(lean=0.060, band=0.31, lamp=(0.04, 0.56, 0.00, 0.60), lg=(0.62, 1.92), gw=0.56, gt=0.12, bar=False),
-    "van": dict(lean=0.070, band=0.30, lamp=(0.06, 0.80, 0.02, 0.74), lg=(0.66, 1.92), gw=0.60, gt=0.14, bar=False),
+    "swept": dict(lean=0.060, band=0.28, lamp=(0.10, 0.70, 0.00, 0.78), lg=(0.52, 1.95), gw=0.44, gt=0.30, bar=False),
+    "wide": dict(lean=0.055, band=0.27, lamp=(0.06, 0.62, 0.00, 0.70), lg=(0.58, 1.95), gw=0.52, gt=0.16, bar=True),
+    "tall": dict(lean=0.040, band=0.31, lamp=(0.04, 0.56, 0.00, 0.60), lg=(0.62, 1.92), gw=0.56, gt=0.12, bar=False),
+    "van": dict(lean=0.050, band=0.30, lamp=(0.06, 0.80, 0.02, 0.74), lg=(0.66, 1.92), gw=0.60, gt=0.14, bar=False),
 }
 
 
@@ -582,8 +582,8 @@ def _controls(d):
           c("G4", yA, belt, 0.06, 0.03, "paint", 1),
           c("H0", *hood(0.36), 0.055, 0.04, "paint", 0),
           c("H0b", *hood(0.72), 0.06, 0.045, "paint", 0),
-          c("H1", yL, zl, 0.09, 0.06, "paint", 2),
-          c("F1", y1 - 0.004, zp, 0.16, 0.085, bump, 1),
+          c("H1", yL, zl, 0.075, 0.055, "paint", 2),
+          c("F1", y1 - 0.004, zp, 0.14, 0.085, bump, 1),
           c("F2", y1 - 0.022, zf + 0.085, 0.14, 0.075, "trim", 1),
           c("F3", y1 - 0.15, zf, 0.03, 0.0, "trim", 0)]
     return C
@@ -594,7 +594,7 @@ class _Shell:
         self.d, self.lod = d, lod
         C = _controls(d)
         if lod > 0:                              # LOD1: no intermediate roof / bonnet stations
-            C = [c for c in C if c["n"] not in ("G2r", "H0b")]
+            C = [c for c in C if c["n"] not in ("G2r", "H0b", "RB")]
         P, R, CR, tag = [], [], [], []           # dense points; tag = (control index, part) part: 0 QA, 1 M, 2 QB
         cp = np.array([[c["y"], c["z"]] for c in C])
         for k, c in enumerate(C):
@@ -607,7 +607,7 @@ class _Shell:
             a, b = cp[k - 1] - cp[k], cp[k + 1] - cp[k]
             la, lb = np.linalg.norm(a), np.linalg.norm(b)
             soft = rnd == 2
-            kl = min(0.30 * la, 0.30 * lb, 0.085) if soft else min(0.25 * la, 0.25 * lb, 0.11 if c["n"] == "G1" else 0.07)
+            kl = min(0.30 * la, 0.30 * lb, 0.055) if soft else min(0.25 * la, 0.25 * lb, 0.11 if c["n"] == "G1" else 0.07)
             qa, qb = cp[k] + a / la * kl, cp[k] + b / lb * kl
             ts = ((0, 0.0), (3, 0.25), (1, 0.5), (4, 0.75), (2, 1.0)) if soft else ((0, 0.0), (1, 0.5), (2, 1.0))
             for part, t in ts:
@@ -982,8 +982,8 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     By, Bz = np.array([b[0] for b in B]), np.array([b[1] for b in B])
     Sy, Sz = sh.S[:, 0], sh.S[:, 1]
     Rf, _, Rr, _ = sh.pl
-    extra = [sh.y1 - Rf * (1 - u) for u in ((0.40, 0.58, 0.72) if lod == 0 else (0.55,))]
-    extra += [sh.y0 + Rr * (1 - u) for u in ((0.45, 0.70) if lod == 0 else (0.6,))]
+    extra = [sh.y1 - Rf * (1 - u) for u in ((0.40, 0.58, 0.72) if lod == 0 else ())]
+    extra += [sh.y0 + Rr * (1 - u) for u in ((0.45, 0.70) if lod == 0 else ())]
     ys = sorted(set(np.round(np.concatenate([Sy, By, extra]), 4)))
     ys = [float(y) for y in ys if Sy[0] - 1e-6 <= y <= Sy[-1] + 1e-6]
     ga0, ga1 = float(sh.bl0[0]), float(sh.bl1[0])
@@ -1006,7 +1006,7 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
                 _quad(m, paint, ca[k] * f, cb[k] * f, cb[k + 1] * f, ca[k + 1] * f, [sx, 0, 0])
     if d.get("blackbump"):                          # unpainted bumper corners on the side (in front of / behind the arches)
         zbf = float(sh.S[sh.mid["F1"]][1]) + 0.05
-        zbr = float(sh.S[sh.mid["RB"]][1])
+        zbr = float(sh.S[sh.mid["RB" if "RB" in sh.mid else "R2"]][1])
         for ya, yb, zt_ in ((yfa + ra + 0.03, float(Sy[-1]), zbf), (float(Sy[0]), yra - ra - 0.03, zbr)):
             yy = [ya + (yb - ya) * k / 3 for k in range(4)]
             for y_a, y_b in zip(yy[:-1], yy[1:]):
@@ -1144,18 +1144,6 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     for sx in (-1, 1):
         spatch("H1", lamp_cols(sx, 0.0, 1.0), "car_lamp")
         spatch("H1", lamp_cols(sx, 0.10, 0.90, 0.045, 0.07), "car_light_head", lift=0.010)
-        if lod == 0:
-            # projector unit: a dark hexagon in the inner third of the lens
-            gc = lg0 + 0.30 * (lg1 - lg0)
-            kq = (gc - lg0) / (lg1 - lg0)
-            top, bot = ti0 + (to0 - ti0) * kq, ti1 + (to1 - ti1) * kq
-            tc_, rl = (top + bot) / 2, 0.30 * (bot - top) * lnH
-            xt_ = sh.pt(iH, 1.0)[0][0]
-            hexa = []
-            for a_ in np.linspace(0, 2 * math.pi, 7)[:-1]:
-                pp, nrm = sh.ptf(iH, tc_ + rl * math.sin(a_) / lnH, sx * (gc + rl * math.cos(a_) / xt_))
-                hexa.append(pp + nrm * 0.014)
-            _oq(m, "car_lamp", hexa, sh.ptf(iH, tc_, sx * gc)[1])
     if lg1 >= 1.85:                                  # the unit wraps into the wing (side surface)
         pa, pb = sh.ptf(iH, to0, 2.0)[0], sh.ptf(iH, to1, 2.0)[0]
         wrap = 0.20 if lod == 0 else 0.16
@@ -1267,10 +1255,18 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         xm = sh.X(yM, zM)
         c = [sx * (xm + 0.125), yM, zM + 0.055]
         if lod == 0:
-            _box5(m, paint, c, 0.078, 0.036, 0.058, (0, 0, 0))
-            _quad(m, "car_glass", [c[0] - 0.066, yM - 0.038, c[2] - 0.046], [c[0] + 0.066, yM - 0.038, c[2] - 0.046],
-                  [c[0] + 0.066, yM - 0.038, c[2] + 0.046], [c[0] - 0.066, yM - 0.038, c[2] + 0.046], [0, -1, 0])
-            _box5(m, "car_trim", [sx * (xm + 0.02), yM + 0.004, zM + 0.02], 0.045, 0.026, 0.024, (-sx, 0, 0))   # foot
+            xi_, xo_ = sx * (xm + 0.050), sx * (xm + 0.205)
+            zc = zM + 0.058
+            A_ = [[xi_, yM - 0.034, zc - 0.036], [xi_, yM + 0.040, zc - 0.030], [xi_, yM + 0.040, zc + 0.034], [xi_, yM - 0.034, zc + 0.040]]
+            B_ = [[xo_, yM - 0.034, zc - 0.052], [xo_, yM + 0.012, zc - 0.040], [xo_, yM + 0.012, zc + 0.040], [xo_, yM - 0.034, zc + 0.052]]
+            cen = (np.mean(A_, axis=0) + np.mean(B_, axis=0)) / 2
+            for k in range(4):
+                k2 = (k + 1) % 4
+                q = [A_[k], A_[k2], B_[k2], B_[k]]
+                _oq(m, "car_glass" if k == 3 else paint, q, np.mean(q, axis=0) - cen)       # k == 3: the mirror glass face
+            _oq(m, paint, A_, np.array([-sx, 0, 0]))
+            _oq(m, paint, B_, np.array([sx, 0, 0]))
+            _box5(m, "car_trim", [sx * (xm + 0.02), yM + 0.004, zM + 0.022], 0.045, 0.028, 0.022, (-sx, 0, 0))   # foot
         else:
             _box5(m, paint, c, 0.085, 0.03, 0.055, (0, 0, 0))
     if lod == 0:
@@ -1305,15 +1301,16 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         # bonnet shut lines along the wings + the cowl panel under the wipers
         i0_, i1_ = sh.mid["G4"], sh.first["H1"] + 1
         for i in range(i0_, i1_):
-            xa, xb = sh.pt(i, 1.0)[0][0], sh.pt(i + 1, 1.0)[0][0]
+            da, db = 0.006 / (sh.R[i] * 1.57), 0.006 / (sh.R[i + 1] * 1.57)
             for sx in (-1, 1):
                 q, nn = [], np.zeros(3)
-                for ii, g in ((i, 0.965 - 0.006 / xa), (i, 0.965 + 0.006 / xa), (i + 1, 0.965 + 0.006 / xb), (i + 1, 0.965 - 0.006 / xb)):
+                for ii, g in ((i, 1.12 - da), (i, 1.12 + da), (i + 1, 1.12 + db), (i + 1, 1.12 - db)):
                     pp, nrm = sh.pt(ii, sx * g)
                     nrm = nrm / np.linalg.norm(nrm)
                     q.append(pp + nrm * 0.004)
                     nn += nrm
                 _quad(m, "car_trim", *q, nn)
+        patch("H1", 0.0, 0.014 / lnH, [-1.0, -0.5, 0.0, 0.5, 1.0], "car_trim", lift=0.004)                  # bonnet front edge
         lw = elen("G4")
         patch("G4", 0.0, min(0.5, 0.055 / lw), [-0.96, -0.5, 0.0, 0.5, 0.96], "car_trim", lift=0.004)      # cowl panel
         lg_ = elen("G3")
