@@ -247,7 +247,7 @@ namespace Game.UI.CabDisplays
         {
             float x0 = (Width - TP * 12f - TS) * 0.5f;
             float X(Lamp l) => x0 + (int)l * TP;
-            if (s.ParkingBrake) RingLamp(d, X(Lamp.Park), C(P.TellRed), "P", 24f);
+            if (s.ParkingBrake && (!s.ParkingBrakeWarning || s.ParkingBrakeFlashOn)) RingLamp(d, X(Lamp.Park), C(P.TellRed), "P", 24f);
             if (s.AirLowWarning) RingLamp(d, X(Lamp.Brake), C(P.TellRed), "!", 24f);
             if (s.AirLowWarning)
             {
