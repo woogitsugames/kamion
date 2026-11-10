@@ -269,6 +269,14 @@ def course_period(lum: np.ndarray, axis: int, px: float, lo_m: float, hi_m: floa
 
 
 # ----------------------------------------------------------------------------------------------- set builders
+def soft_ao(ao: np.ndarray, gamma: float = 0.4) -> np.ndarray:
+    """Scan AO as a gentle multiplier of the height-derived cavity AO: normalised to its 90th percentile (open surface
+    = 1) and softened, because the diffuse map was already de-lit by it and the engine adds ambient occlusion again
+    (a raw multiply darkened the overcast asphalt by 3 sRGB levels and gravel AO to 0.6)."""
+    a = np.clip(ao / max(1e-3, float(np.percentile(ao, 90))), 0.05, 1.0)
+    return (a ** gamma).astype(np.float32)
+
+
 def _cavity(h: np.ndarray, px: float) -> np.ndarray:
     c = ndimage.gaussian_filter(h, 0.01 / px, mode="wrap") - h
     return np.clip(c / (np.std(c) * 3 + 1e-9), 0, 1).astype(np.float32)
@@ -336,7 +344,7 @@ def tiling_from_scan(name: str, aid: str, *, target: float, hue, out_L: float, o
     else:
         alb, _ = calibrate(alb, target)
     s = SurfaceSet(name, c, alb.astype(np.float32), h.astype(np.float32), rough, eid.astype(np.float32),
-                   joint.astype(np.float32), ao_extra=np.clip(ao, 0.05, 1).astype(np.float32))
+                   joint.astype(np.float32), ao_extra=soft_ao(ao))
     s.scan_info = info
     return s
 
@@ -388,7 +396,7 @@ def hybrid(s: SurfaceSet, aid: str, seed: int, *, alb_k=1.0, h_k=1.0, rough_k=0.
     s.albedo = np.clip(alb, 0, 1).astype(np.float32)
     s.height = (s.height + h_k * (d["h"] - d["h"].mean())).astype(np.float32)
     s.rough = np.clip(s.rough * (1 + rough_k * (d["rr"] - 1)), 0.05, 1).astype(np.float32)
-    s.ao_extra = np.clip(1 - ao_k_mix * (1 - d["ao"]), 0.05, 1).astype(np.float32)
+    s.ao_extra = soft_ao(d["ao"], 0.4 * ao_k_mix)
     s.scan_info = {"source": aid, "mode": "hybrid (procedural layout + scan micro-detail)"}
     return s
 
@@ -444,7 +452,7 @@ SCAN_SETS = {
         flat_m=0.35, flat_k=0.95, hue_keep=0.5)),
     "asphalt_sma_fresh": (["asphalt_pit_lane"], lambda: tiling_from_scan(
         "asphalt_sma_fresh", "asphalt_pit_lane", target=0.075, hue=HUE_ASPHALT_SMA, out_L=4.0, out_n=2048, seed=6312,
-        bomb_cells=4, flat_m=0.6, flat_k=0.85, hue_keep=0.4)),
+        bomb_cells=4, flat_m=0.6, flat_k=0.85, hue_keep=0.4, rough_add=-0.15)),
     "asphalt_patch": (["clean_asphalt"], lambda: tiling_from_scan(
         "asphalt_patch", "clean_asphalt", target=0.062, hue=HUE_ASPHALT_PATCH, out_L=4.0, out_n=2048, seed=6313,
         bomb_cells=4, flat_m=0.6, flat_k=0.85, hue_keep=0.5)),
