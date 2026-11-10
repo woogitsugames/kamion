@@ -206,7 +206,11 @@ namespace Game.Editor.VisualQA
                 }
                 else foreach (var cl in UnityEngine.Object.FindObjectsByType<CabInteriorLighting>(FindObjectsSortMode.None))
                 {
-                    cl.Refresh(cam);
+                    // -qaCabView none: the phone path before ADR 0044 r9 (Camera.main null under qacam -> no cab-view
+                    // state, A/B of the phone/editor mismatch). The build's per-frame path is RefreshForView (EditMode
+                    // CabViewCameraTests); here the camera is passed explicitly.
+                    if (EditorTools.Arg("-qaCabView", "explicit") == "none") cl.Refresh(null);
+                    else cl.Refresh(cam);
                     Debug.Log($"[QA] cab light {qa.id}: fill {cl.LastFill.ToString("F4")} gain {cl.LastGain:F2} (meter {cl.LastMeterEv:F2} EV)");
                 }
                 // REVIEW r6 W-P0 measurement: -qaWires off hides the power-line conductors, -qaWires solid draws them at

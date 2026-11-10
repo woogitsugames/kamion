@@ -82,7 +82,7 @@ namespace Game.Rendering
         {
             if (Time.unscaledTime < m_NextPick) return;
             m_NextPick = Time.unscaledTime + 0.25f;
-            RefreshLights(viewCamera != null ? viewCamera : Camera.main);
+            RefreshLights(ViewCameraResolver.Resolve(viewCamera));   // not Camera.main: null under qacam (ADR 0044 r9)
         }
 
         /// <summary>Re-chooses the nearest lamps for the point lights (visual QA calls it per camera).</summary>
