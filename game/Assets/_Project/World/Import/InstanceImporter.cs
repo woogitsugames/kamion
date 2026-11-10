@@ -54,10 +54,11 @@ namespace Game.World.Import
             else if (proto == "pylon" || proto == "power_pole") e = new[] { 80f, 1500f };
             else if (proto.StartsWith("plate_") || proto.StartsWith("board_") || proto.StartsWith("sign_") || proto.StartsWith("signal_")) e = new[] { 50f, 250f };
             else if (proto == "bus_shelter" || proto.EndsWith("_gate")) e = new[] { 60f, 300f };
-            // Hero depot hall segments (ADR 0071, art-source/world/landmarks): LOD0 / LOD1 / silhouette, never culled.
+            // Hero landmark assets (ADR 0067 viaduct, ADR 0070 fire station, ADR 0071 depot; art-source/world/landmarks):
+            // LOD0 / LOD1 / silhouette, never culled. One line per asset family, most specific prefix first.
             else if (proto.StartsWith("landmark_depot")) e = new[] { 100f, 400f, 20000f };
-            // Hero viaduct segments (ADR 0067, art-source/world/landmarks): LOD0 / LOD1 / silhouette, never culled.
             else if (proto.StartsWith("landmark_viaduct")) e = new[] { 90f, 300f, 20000f };
+            else if (proto.StartsWith("landmark_fire_station")) e = new[] { 150f, 450f, 20000f };
             // Landmarks (chimneys): visible across the district, never culled inside the far plane.
             else if (proto.StartsWith("landmark_")) e = new[] { 650f, 20000f };
             // Vehicles (ADR 0041 v4, REVIEW r6 W-N6): LOD switches x lodBias, cull FIXED at VehicleCullM on every tier
@@ -81,8 +82,8 @@ namespace Game.World.Import
             var props = GlbReader.Load(Path.Combine(art, "props", "street_props.glb"));
             var trees = GlbReader.Load(Path.Combine(art, "vegetation", "trees.glb"));
             var impostors = GlbReader.Load(Path.Combine(art, "vegetation", "trees_lod2.glb"));
-            // Authored landmark assets (ADR 0067 / 0071): art-source/world/landmarks/<asset>/<asset>.glb, prototypes
-            // "landmark_<...>" (+ .lod1 / .lod2) in the same frame as street_props.glb.
+            // Authored landmark assets (ADR 0067 / 0070 / 0071): art-source/world/landmarks/<asset>/<asset>.glb,
+            // prototypes "landmark_<...>" (+ .lod1 / .lod2) in the same frame as street_props.glb.
             var landmarkLibs = new List<GlbReader>();
             string lmDir = Path.Combine(art, "landmarks");
             if (Directory.Exists(lmDir))

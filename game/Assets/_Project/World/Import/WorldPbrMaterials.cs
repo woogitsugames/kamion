@@ -153,7 +153,10 @@ namespace Game.World.Import
             // the 4 m default every block came out 1.3-2.1x too large (behaton 0.42 m instead of 0.20 m). Their element
             // size is a scale cue, so they always get their real tile.
             bool elementScan = set != null && set.Get("source") is Dictionary<string, object> esrc && esrc.Get("elements_per_tile") != null;
-            if ((def.Get("set_tile") is bool stl && stl) || elementScan) mat.SetVector("_Tile", tile);
+            // ADR 0070: authored atlases ("atlas": true in materials_spec.json: viaduct, fire station) address the atlas in
+            // metres through mesh UV0, so they also need the set's own tile size.
+            bool isAtlasSet = set != null && set.Get("atlas") is bool isAtlas && isAtlas;
+            if ((def.Get("set_tile") is bool stl && stl) || elementScan || isAtlasSet) mat.SetVector("_Tile", tile);
 
             float scale = 1f;
             Vector3 tint = Vector3.one;

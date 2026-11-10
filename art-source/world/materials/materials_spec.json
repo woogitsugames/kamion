@@ -3842,6 +3842,115 @@
         0.3726,
         0.3586,
         0.3062
+      ],
+      "atlas": true
+    },
+    "fire_station": {
+      "tile_m": [
+        14.0,
+        14.0
+      ],
+      "target": 0.57,
+      "atlas": true,
+      "uv": "mesh_uv0_metres (atlas position in metres; layout in art-source/world/landmarks/fire_station_jrg2/atlas_layout.json)",
+      "slots": [
+        "fire_station (hero fire station asset, ADR 0070)"
+      ],
+      "note": "Atlas 14 x 14 m (2048 x 2048 High, 6.8 mm/texel): pale blue render band with splash zone and run-off, blue trapezoidal roof sheet, flashing, plinth, sectional door, clinker pier, windows, swatches. Detail / relief / roughness from CC0 scans (Poly Haven: Painted Plaster Wall, Brick Wall 006, Concrete Wall 008); colours WORKING_VALUE by eye from CC0 photos. albedo_target_mean_lum_linear applies to the clean render, not the atlas mean.",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.57,
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 6.84,
+          "dir": "fire_station/High",
+          "png_bytes": 10009057,
+          "files": [
+            "T_fire_station_BaseColor.png",
+            "T_fire_station_MaskMap.png",
+            "T_fire_station_Normal.png",
+            "T_fire_station_Var.png"
+          ],
+          "smoothness_mean": 0.329,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 9954481
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 13.67,
+          "dir": "fire_station/Medium",
+          "png_bytes": 2711085,
+          "files": [
+            "T_fire_station_BaseColor.png",
+            "T_fire_station_MaskMap.png",
+            "T_fire_station_Normal.png",
+            "T_fire_station_Var.png"
+          ],
+          "smoothness_mean": 0.308,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1943360
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 27.34,
+          "dir": "fire_station/Low",
+          "png_bytes": 670164,
+          "files": [
+            "T_fire_station_BaseColor.png",
+            "T_fire_station_MaskMap.png",
+            "T_fire_station_Normal.png",
+            "T_fire_station_Var.png"
+          ],
+          "smoothness_mean": 0.283,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 349525
+        }
+      },
+      "height_range_m": [
+        -0.02956,
+        0.03727
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.2169,
+        "p05": 0.0636,
+        "p95": 0.6162,
+        "mean_rgb_linear": [
+          0.1907,
+          0.2142,
+          0.2841
+        ]
+      },
+      "hf_ratio_albedo": 0.0034,
+      "ao_mean": 0.961,
+      "source": "polyhaven:painted_plaster_wall (CC0); polyhaven:concrete_wall_008 (CC0); polyhaven:brick_wall_006 (CC0)",
+      "render_mean_rgb_linear": [
+        0.185,
+        0.2592,
+        0.364
       ]
     }
   }

@@ -24,6 +24,7 @@ import sets_facade as F  # noqa: E402
 import sets_scan as SC  # noqa: E402
 import sets_viaduct as V  # noqa: E402
 import sets_buildings as B  # noqa: E402
+import sets_fire_station as FS  # noqa: E402
 
 OUT = HERE.parent
 REPO = OUT.parents[2]
@@ -92,6 +93,11 @@ SETS = {
 }
 
 SETS.update(V.VIADUCT_SETS)      # hero viaduct strip atlas (ADR 0067)
+SETS.update(FS.FIRE_STATION_SETS)      # hero fire station atlas (ADR 0070)
+# Hero atlases on external CC0 scans (ADR 0067 / 0070): set name -> (module with write_layout(), spec key of the
+# clean-material mean). One table for every authored landmark atlas; add new hero sets here.
+HERO_ATLASES = {**{n: (V, "concrete_mean_rgb_linear") for n in V.VIADUCT_SETS},
+                **{n: (FS, "render_mean_rgb_linear") for n in FS.FIRE_STATION_SETS}}
 
 LAYERS = {
     "asphalt_cracks_layer": dict(tile_m=[16.0, 16.0], uv="world_xy_planar",
@@ -278,10 +284,11 @@ def main():
         entry["albedo_target_mean_lum_linear"] = meta["target"]
         _scan_entry(entry, s, scan)
         entry.update(info)
-        if hasattr(s, "source"):            # sets with an external CC0 base (sets_viaduct)
+        if name in HERO_ATLASES:            # authored landmark atlas (source text, clean-material mean, layout json)
+            mod, mean_key = HERO_ATLASES[name]
             entry["source"] = s.source
-            entry["concrete_mean_rgb_linear"] = s.concrete_mean
-            V.write_layout()
+            entry[mean_key] = s.concrete_mean
+            mod.write_layout()
         sets[name] = entry
     for name, meta in F.FACADE_SETS.items():
         if only and name not in only:

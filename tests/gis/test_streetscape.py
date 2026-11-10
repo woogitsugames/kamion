@@ -122,6 +122,11 @@ def test_instances_reference_existing_prototypes():
         for seg in json.loads(mf.read_text(encoding="utf-8")).get("segments", []):
             props[seg["name"]] = {"tris_lod0": seg["tris"][0]}
     man = json.loads((REGION_DIR / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
+    # authored landmark libraries (ADR 0067 / 0070): art-source/world/landmarks/<asset>/<asset>_meta.json
+    landmarks = set()
+    for mp in (REPO / "art-source/world/landmarks").glob("*/*_meta.json"):
+        m = json.loads(mp.read_text(encoding="utf-8"))
+        landmarks |= {m["prototype"]} if "prototype" in m else {sg["name"] for sg in m.get("segments", [])}
     n = 0
     for ch in man["chunks"]:
         data = json.loads((REPO / ch["instances"]["file"]).read_text(encoding="utf-8"))
@@ -129,12 +134,10 @@ def test_instances_reference_existing_prototypes():
         for it in data["instances"]:
             if it["p"].startswith("tree_"):
                 assert f"{it['p']}_{it['v']}" in trees
-            elif it["p"].startswith("landmark_") and it["p"] not in props:                      # hero assets (ADR 0067): own GLB + meta
-                lm = {s["name"] for f in (REPO / "art-source/world/landmarks").glob("*/*_meta.json")
-                      for s in json.loads(f.read_text(encoding="utf-8"))["segments"]}
-                assert it["p"] in lm, it["p"]
+            elif it["p"].startswith("landmark_") and it["p"] not in props:      # hero assets (ADR 0067 / 0070): own GLB + meta
+                assert it["p"] in landmarks, it["p"]
             else:
-                assert it["p"] in props, it["p"]
+                assert it["p"] in props or it["p"] in landmarks, it["p"]
             assert b["e_min"] - 0.01 <= it["e"] <= b["e_max"] + 0.01 or b["e_min"] <= -1024 or b["e_max"] >= 1024
             assert 100.0 < it["z"] < 200.0
             n += 1

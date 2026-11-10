@@ -290,6 +290,12 @@ M = {
     "bed_stones": {"color": [0.22, 0.21, 0.195], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     # sign gantry (streetscape.life_props.sign_gantry)
     "gantry_steel": {"color": [0.42, 0.43, 0.43], "rough": 0.55, "metal": 0.9},
+    # hero fire station asset (ADR 0070, streetscape.hero_building): atlas on CC0 scans (colour = atlas mean, so the
+    # calibrated-set tint is 1), alpha-tested fence / gate / lettering
+    "fire_station": {"color": _set_mean("fire_station", [0.30, 0.33, 0.39]), "rough": 0.8,
+                     "surface": "concrete", "texture_set": "fire_station"},
+    "fire_station_alpha": {"color": [1.0, 1.0, 1.0], "rough": 0.6, "texture": "fire_station_alpha",
+                           "alpha_cutoff": 0.5},
     # landmarks
     "chimney_concrete": {"color": [0.40, 0.40, 0.38], "rough": 0.9},
     "chimney_red": {"color": [0.35, 0.05, 0.04], "rough": 0.85},
