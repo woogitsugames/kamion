@@ -16,7 +16,11 @@ change project settings, packages, shared scenes, phone policy or the licence.
   imports the selected highest source meshes, bakes transforms and produces our
   own decimated LOD0/1/2. Every result, intermediate and provenance file stays in
   ignored `art-source/world/megascans/_generated/`. No downloads or account access.
-- Low/Medium consume 512 px maps; High consumes 1024 px. Per-prototype initial
+- `-MaterialTier Low/Medium` consumes 512 px maps; `-MaterialTier High` consumes
+  1024 px. Both geometry scenes share materials in the existing importer, so
+  the final matched Low/High profile QA uses the mobile-safe Medium material
+  import. This does not validate the separate 1024 px import on a device.
+  Per-prototype initial
   caps are2400/800/200 triangles (props),8000/24/8 (shrubs) and4000/24/8 (grass), WORKING_VALUE. Near plants retain optimized true geometry; far LODs use silhouette billboards with their own source atlas.
   Actual counts and source dimensions are recorded in the local output manifest.
   Aggressive collapse and leaf removal failed visual review and are not used for active plant variants. Judge silhouettes and coverage in visual QA before accepting them.

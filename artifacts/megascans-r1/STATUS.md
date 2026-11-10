@@ -90,3 +90,5 @@
 - Visual-critic R4: obejrzano28+28kadrów oraz6rzeczywistych par detali. Lokalna poprawa trawy/odwodnienia PASS; duży skok realizmu całej sceny/docs06 FAIL. Low studzienka jest obecna z małym kontrastem; pierwotna hipoteza braku odrzucona po kontroliPNG/ROI. Raport round4/CRITIC.md; bez zmian kodu i licencjonowanych obrazów w commicie.
 - NASTĘPNY KROK (lider): `Get-Content artifacts/megascans-r1/round4/CRITIC.md` i uwzględnij ograniczony werdykt w końcowym REPORT.md.
 
+
+- Krok28: samokrytyka po4rundach: detale i fotograficzna baza trawy poprawione, ale niezależny CRITIC nie potwierdza dużego skoku całej sceny. Low peak956draw/333ktris bez wzrostu, lokalnie+4draw/+4ktris; dlatego ścisłe zero regresji Low NIE jest zaliczone. GIS282PASS/5odziedziczonychFAIL/2xfail; EditMode197PASS/0FAIL/7skip/5inconclusive, wrapper1 jakbaseline. Guard licencji3/3PASS po dodaniu hashy zaimportowanych siatek Unity (650lokalnychproduktów). Odtworzono192SHA plików świata, cofnięto efekty uboczne Unity w ustawieniach i oświetleniu. NASTĘPNY: raport końcowy, git diff --check i końcowa kontrola indeksu.

@@ -30,6 +30,18 @@ def build(root=ROOT):
             with path.open('rb') as stream:
                 for block in iter(lambda:stream.read(1<<20),b''):h.update(block)
             derivatives.add(h.hexdigest())
+    # Unity meshes can mix reviewed scan data with generated world geometry.
+    # Include serialized meshes from the local region as a conservative superset, so
+    # renaming a serialized mesh/material cannot evade the public index guard.
+    imported = root/'game/Assets/_Generated/World/bialystok-industrial-c'
+    for path in imported.rglob('*'):
+        # Ordinary copied signs/CC0 maps are not licensed Fab derivatives.
+        fab_texture = '/Textures/Fab/' in path.as_posix()
+        if path.is_file() and (path.suffix.lower() == '.asset' or (fab_texture and path.suffix.lower() == '.png')):
+            h = hashlib.sha256()
+            with path.open('rb') as stream:
+                for block in iter(lambda:stream.read(1<<20),b''): h.update(block)
+            derivatives.add(h.hexdigest())
     output=root/'Data/SourceManifests/fab-content-hashes.json'
     output.write_text(json.dumps({'schema':1,'items':[], 'purpose':'Hash-only denylist; no licensed payload. Exact byte matches only, not arbitrary transformed derivatives.', 'member_sha256':sorted(hashes),'derivative_sha256':sorted(derivatives)},indent=2)+'\n')
     print(f'Fab inventory: {len(hashes)} source members, {len(derivatives)} local products')
