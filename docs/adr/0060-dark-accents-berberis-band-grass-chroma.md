@@ -1,6 +1,6 @@
 # ADR 0060 - Dark accents of the world (sky occlusion, ground grime, dark noise cassettes), clipped berberis band, grass chroma (D38), stones in the Bieżeństwa ring centre
 
-Status: accepted (2026-11-10), numbers in the evidence section
+Status: accepted (2026-11-10); N-2 target not met, see Evidence
 
 ## Context
 Review r7 §10 / §14 (pkt 5, 7) and r8: N-2 "milky" world - p10 of the overcast control frames 35-37 % luma against
@@ -44,9 +44,46 @@ photos as reference only).
 8. **D37**: no QA / test had a hard 217 cap (only a comment in `test_streetscape_r6.py`, updated to the relative rule).
 
 ## Evidence
-See the addendum below (filled from `artifacts/world-r8/`).
+Editor renders, `scripts/visual-qa.ps1 -Scene WorldC`, 50 world cameras (cab-/truck-/hedge_ excluded), metric
+`scripts/dark-accents.py` (Rec.709 luma on sRGB, %, mean over frames); data in `artifacts/world-r8/*_metrics.json`,
+frames in `artifacts/world-r8/{before,after1..after4}/<Tier>-<light>/`, montages in `artifacts/world-r8/montage/`.
+
+| set | p10 ov Low / Med / High | p50 ov Low / Med / High | p10 clear Low / High (p50) | grass sat ov Low / High |
+|---|---|---|---|---|
+| before (f9143ba) | 34.0 / 36.4 / 36.0 | 50.2 / 52.2 / 52.0 | not rendered | 26.7 / 25.0 |
+| after2 (49eabe6) | 32.3 / 34.6 / 34.4 | 50.0 / 52.1 / 51.9 | - | 39.5 / 37.3 |
+| after3 (0657910) | 32.3 / 34.6 / 34.4 | 50.0 / 52.1 / 51.9 | - | 38.5 / 36.2 |
+| after4 (8338bc3) | 32.3 / - / 34.4 | 49.9 / - / 51.9 | 26.9 / 27.8 (46.9 / 48.9) | 38.4 / 36.2 (clear 43.4 / 40.8) |
+
+- **N-2 NOT met** (target p10 ov <= 28, clear <= 25 at p50 +-3): -1.7 / -1.6 p10 at unchanged p50 (overcast); clear
+  26.9 / 27.8. Diagnosis (p10 pixel masks, after3): in the G3-A / Kwadrat frames (p10 38-42, about 30 of 50 cameras)
+  the darkest 10 % of the frame IS the near carriageway (asphalt_worn albedo 0.08, already at the low end of aged AC;
+  luma ~38-42 at overcast). There is no darker 10 % to promote; the accents of this ADR (soffits, glazing, crown,
+  grime, drip band) cover < 3 % of those frames. G3-B frames with the dark cassettes are already at p10 20-25.
+  The Mapillary set (90 images in `Data/raw/mapillary/bialystok-industrial-c`, 2018-2024, mostly sunny) has median
+  p10 13.9 / p50 47.0 / road 28.3 / sky 56.3: the photo darks are tree belts, cast shadows and an exposure that keeps
+  the sky at ~56 instead of our ~90 (overcast, tonemapped near white). Asphalt was NOT darkened further: road / sky
+  ratio game 42 / 90 = 0.47 vs photos 28 / 56 = 0.50. Reaching 28 at overcast needs global exposure / tonemap contrast
+  (rendering-perf, owner decision) or more dark masses placed from data - both outside this ADR.
+- **Glazing**: horizon occlusion 0.6 -> 0.9 (after4): office pane at g3a_ext34_s0214 sRGB 103 -> 84 (lin ~0.137 ->
+  0.087); target 0.03-0.06 lin. not reached - what remains is the sky above R.y 0.45 (kept, physically right).
+- **Berberis (N-4 / N-22)**, `scripts/hedge-metrics.py`, High overcast mask: s0362 p50 24.1, sigma 5.35, R-B 10.4,
+  sat 33.8; hedge_a_close 22.5 / 5.1 / 8.9 / 31.4; photo-ground 24.5 / 3.5 / 9.8 / 31.6 (photo baseline p50 22.8).
+  Height 0.5-0.65 m, 1.1-1.4 m band, no full-width seams (montage `hedge_a_close_before_after4.jpg`). Open: sigma < 5
+  at distance, close-up R-B 8.9 (target 9-13). Mapillary p13 (2020-08-15) shows loose stones with a kerb on the bank
+  right of the road under the viaduct where g3a_eye_s0362 has a hedge bed: needs a position check before replacing it
+  (`montage/g3a_eye_s0362_vs_mapillary_p13.jpg`).
+- **Grass (D38)**: sat overcast 36-38 (target 35-40), clear 41-43 (slightly above: the clear sky SH adds chroma).
+- Tests: `pytest tests/gis` 165 passed; EditMode 137 passed / 0 failed / 2 inconclusive (TruckCabGlassTier, not this
+  change) / 7 ignored. Frame budget (`streetscape_qa.json` mesh_budget): stretch_04 High 1.984 M tris (before 1.993 M,
+  limit 2.0 M), Low 0.953 M.
 
 ## Consequences
-- Draw calls / triangles: hedge band smaller than the r7 masses (fewer tris); no new materials except `bed_stones`.
+- The p10 gap of ~4-6 points stays open as N-2; the next lever is not material work but overcast exposure / tonemap
+  contrast (rendering-perf) and data-driven dark masses (tree groups per Mapillary p26 / p30 / p55, contact shadows
+  under parked cars).
+- Triangles: hedge band -9.3 k tris per frame; one new material (`bed_stones`).
 - Shader: one more `shader_feature_local` (_GRIME) in WorldPBR; `_SkyOcc` / `_DripBand` / `_CrownShade` are uniforms.
-- Phone: UNVERIFIED (no A16 / S24+ frames in this change).
+- `_CrownShade` is serialized per material at creation (0.5); changing the shader default does not reach imported
+  materials - drive it from the manifest if it is ever tuned.
+- Phone: UNVERIFIED (no A16 / S24+ frames in this change). visual-critic review: pending (lider).
