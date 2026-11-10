@@ -7,6 +7,18 @@ texture set of the engine material (art-source/world/textures, procedural, see d
 The Blender control renders build equivalent procedural shaders (tools/blender/world/render_control.py).
 """
 
+
+def _set_mean(name, default):
+    """Mean linear albedo of a generated texture set (materials_spec.json), so a calibrated set gets tint 1."""
+    import json
+    from pathlib import Path
+    p = Path(__file__).resolve().parents[3] / "art-source" / "world" / "materials" / "materials_spec.json"
+    try:
+        return [round(float(x), 3) for x in json.loads(p.read_text(encoding="utf-8"))["sets"][name]["albedo"]["mean_rgb_linear"]]
+    except (OSError, KeyError, ValueError):
+        return default
+
+
 M = {
     # paved areas
     "yard_paving": {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones", "texture_set": "paving_20x10_grey"},
@@ -215,6 +227,14 @@ M = {
     "drain_grate": {"color": [0.035, 0.033, 0.03], "rough": 0.6, "decal": True, "procedural": "grate"},  # cast iron
     "decal_patch": {"color": [0.062, 0.062, 0.06], "rough": 0.85, "decal": True, "texture_set": "asphalt_patch"},
     # bridges (roads.meshing bridge_style overrides; CC0 photos of the Andersa viaducts, docs/REFERENCES.md)
+    # hero viaduct asset (ADR 0067, streetscape.hero_bridge): strip atlas on a CC0 scan (colour = atlas mean, so the
+    # calibrated-set tint is 1), railing infill + galvanised steel, light crushed stone of the centre island
+    "viaduct_concrete": {"color": _set_mean("viaduct_concrete", [0.369, 0.324, 0.276]), "rough": 0.85,
+                         "surface": "concrete", "texture_set": "viaduct_concrete", "set_tile": True},
+    "viaduct_steel": {"color": [1.0, 1.0, 1.0], "rough": 0.9, "metal": 0.0, "texture": "viaduct_steel",
+                      "alpha_cutoff": 0.5},
+    "island_gravel": {"color": [0.30, 0.285, 0.26], "rough": 0.95, "surface": "gravel",
+                      "texture_set": "gravel_compacted"},
     "bridge_fascia_red": {"color": [0.30, 0.05, 0.04], "rough": 0.7},
     "bridge_fascia_green": {"color": [0.07, 0.17, 0.10], "rough": 0.7},
     "pier_yellow": {"color": [0.46, 0.40, 0.17], "rough": 0.85},

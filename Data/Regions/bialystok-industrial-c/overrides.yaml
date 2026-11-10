@@ -74,6 +74,23 @@ overrides:
       Pier diameter and spacing are not measured (WORKING_VALUE 1.2 m, rule spacing).
     confidence: medium
     verify: pier count / spacing and fascia height from a site photo
+  - id: andersa-viaduct-biezenstwa-hero
+    kind: hero_bridge
+    target: {osm_way: [175157461, 177895177]}
+    asset: viaduct_biezenstwa
+    reason: >-
+      Landmark object of route G3-A (ADR 0067): the Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r. gets an
+      authored Blender asset (art-source/world/landmarks/viaduct_biezenstwa, tools/blender/world/landmarks/
+      make_viaduct.py) instead of the generic deck dressing: concrete box girders with sloped webs and wide
+      cantilevers (one per carriageway), faded red cornice band, steel railing, rows of slim chamfered columns in
+      pairs with a red stripe, drainage collector, expansion joints, CCTV housing under the soffit. Axis, levels and
+      width come from the generated road (OSM + NMT + PTB2022 clearance); every structural dimension is a
+      WORKING_VALUE read by eye off Mapillary frames 2818555625124739, 504348097385466, 149248627179406,
+      3970163613102941 (richlv, CC BY-SA 4.0; reference only, no pixels used) - see hero_bridge.DEFAULTS.
+      Supersedes the look of andersa-viaduct-biezenstwa-style while the asset matches the spec; that entry stays
+      as the fallback.
+    confidence: medium
+    verify: span lengths, column size / spacing, girder depth, railing type from a site visit or drawings
   - id: andersa-viaduct-putry-style
     kind: bridge_style
     target: {osm_way: [1101181473, 173956078, 284022563, 606396460]}
@@ -146,9 +163,10 @@ overrides:
       - {name: C, plant: berberis_red, rim_m: 0.4, ring: [[778556.0, 595567.5], [778560.0, 595568.6], [778567.0, 595568.8], [778573.0, 595568.2], [778574.2, 595566.5], [778572.0, 595563.8], [778565.0, 595563.2], [778559.0, 595563.6], [778556.5, 595565.0]]}
     islands:
       - {name: north-splitter, at: [778566.8, 595538.0], fill: paving}
-      # ADR 0060 (D42 Mapillary 2020-08-15, CC BY-SA, reference only): the ring centre under the viaduct is loose grey
-      # river stones / gravel on a slope, no red shrubs (was soil + berberis clumps from the r6 reading of the orthophoto)
-      - {name: ring-centre, at: [778549.7, 595506.5], fill: stones}
+      # ADR 0067 / REFS-MAPILLARY-FINDINGS #1: Mapillary frames 2818555625124739 and 504348097385466 (richlv, 2020-08-15,
+      # CC BY-SA 4.0, reference only) show light crushed stone inside the kerb of the centre island under the viaduct,
+      # no shrubs (was: fill soil + berberis_red from the CC0 photo read; world-builder to confirm)
+      - {name: ring-centre, at: [778549.7, 595506.5], fill: gravel}
   # ---------------------------------------------------------------- road furniture after Mapillary (ADR 0069)
   # Mapillary photos (CC BY-SA 4.0, D42, ADR 0065) are references only: positions and forms read off them, no pixels.
   # `mapillary` lists the image ids (Data/raw/mapillary/<region>/manifest.jsonl: author, date, lat/lon, compass).

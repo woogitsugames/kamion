@@ -498,8 +498,20 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         if 0 <= j < mask.shape[0] and 0 <= i < mask.shape[1]:
             return bool(mask[max(0, j - 2):j + 3, max(0, i - 2):i + 3].any())
         return False
+    # hero viaducts (override kind: hero_bridge, ADR 0067): authored asset instead of the generic dressing / supports
+    from streetscape import hero_bridge as HB
+
+    def zc_at(e, n):
+        i = min(max(int(round(e - w.hf.x0)), 0), zc.shape[1] - 1)
+        j = min(max(int(round(w.hf.y1 - n)), 0), zc.shape[0] - 1)
+        return float(zc[j, i])
+    heroes = HB.plan(w, region_id, pipeline.load_overrides(region_id), zc_at, on_ground_road, log)
+    hero_chains = HB.chain_ids(heroes)
     for c in w.net.chains:
-        M.build_bridge_supports(w.buf, c, w.hf, on_ground_road, w.bridges)
+        if c.id not in hero_chains:
+            M.build_bridge_supports(w.buf, c, w.hf, on_ground_road, w.bridges)
+    hero_tris = HB.apply(w, heroes, st["instances"], log)
+    log("hero bridges", {k: [x["id"] for x in v] for k, v in w.stats["hero_bridges"].items()})
 
     half = w.region["bbox"]["width_m"] / 2
     e0 = w.region["bbox"]["xmin"] - w.origin[0]
@@ -516,6 +528,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         ci_, cj_ = chunk_of(np.array([it["e"]]), np.array([it["n"]]), half)
         inst_by_chunk.setdefault((int(ci_[0]), int(cj_[0])), []).append(it)
     props_meta = PR.export(st["codes"], st["boards"], out_root.parent / "props" if out_root != DEFAULT_OUT(region_id) else None)
+    props_meta = {**props_meta, **hero_tris}      # hero viaduct segments (art-source/world/landmarks), frame estimate
     chunks_meta = []
     for key in sorted(terrain):
         ci, cj = key
@@ -633,7 +646,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
                                               "frame": "local E,N,U (U absolute EVRF2007)", "cameras": cams})
     budget = mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams)
     write_json(gen / "streetscape_qa.json", {"schema": "truck-sim-pl/streetscape-qa/1", "region": region_id,
-                                             **st["report"], "mesh_budget": budget})
+                                             **st["report"], "hero_bridges": w.stats["hero_bridges"],
+                                             "mesh_budget": budget})
     walls = CF.terrain_walls(w.buf.parts, zc, w.hf, mask=mask)
     log("terrain walls > %.2f m:" % walls["thresh_m"], walls["count"], "max", walls["max_m"])
     write_json(gen / "terrain_walls_qa.json", walls)
@@ -678,6 +692,8 @@ def instance_ends(proto, nlods):
         e = [50.0, 250.0]
     elif proto == "bus_shelter" or proto.endswith("_gate"):
         e = [60.0, 300.0]
+    elif proto.startswith("landmark_viaduct"):      # hero viaduct segments (ADR 0067): LOD0 / LOD1 / silhouette
+        e = [90.0, 300.0, 20000.0]
     elif proto.startswith("landmark_"):
         e = [650.0, 20000.0]
     elif proto.startswith(("car_", "van_")):

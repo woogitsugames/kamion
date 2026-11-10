@@ -141,6 +141,10 @@ namespace Game.World.Import
                 var tm = Arr(set.Get("tile_m"));
                 tile.x = (float)Num(tm[0]); tile.y = (float)Num(tm[1]);
             }
+            // ADR 0067: `tile` was never written to the material (every set is sampled at the shader default 4 x 4 m,
+            // whatever tile_m says). Strip atlases (non-square, UV0 in atlas metres) need the real size; the other sets
+            // keep the 4 m look they were reviewed with until the lead decides (see ADR 0067, "znane").
+            if (def.Get("set_tile") is bool stl && stl) mat.SetVector("_Tile", tile);
 
             float scale = 1f;
             Vector3 tint = Vector3.one;
