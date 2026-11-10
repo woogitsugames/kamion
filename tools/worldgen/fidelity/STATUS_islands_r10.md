@@ -20,3 +20,16 @@ Gałąź: worktree-agent-a2afb96d89584cca6 (worktree .claude/worktrees/agent-a2a
   `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` →
   `uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art artifacts/islands-r10/fidelity` →
   `uv run --project tools/worldgen pytest tests/gis -q`; zaostrzyć ratchet w tests/gis/test_road_fidelity.py.
+- 22:45 (przejęcie po limicie) Stan zastany: overrides s610 + regeneracja były zrobione, niezacommitowane → commit ebebfd8.
+  Uczciwy „przed” na tym samym kodzie (WORLDGEN_NO_GORES=1, artifacts/islands-r10/fidelity_before_qa.json): oś p95 0,129
+  (max 3,25 = align_forks z 0074, nie nasze), krawędź p95 2,483 (n 618), wysepki bez pokrycia 4, pas→wysepka 0, brakujące 16.
+  (BASELINE 2,04 / 0,032 w teście pochodził z raportu sprzed scalenia 0074 — raport na main był nieaktualny.)
+- MA-010 zdiagnozowane (after3/ma010_chains.jpg): oś OSM w180144451 biegnie po południowym krawężniku → symetryczna
+  jezdnia 7 m kładła prawy pas na prawdziwym trawniku. edge_sides: na Andersa/DK8 jezdnia jest przesunięta względem osi
+  OSM o 0,5–1,0 m (L+ / R−). Nowy override `set: {center_offset: m}` (network.apply_edge_overrides + prepare_chain;
+  NIE dotyka align_forks/taper_forks/assign_sides agenta 0076) + 8 wpisów w overrides.yaml. Commit: patrz git log.
+- s1440 (−366,−119 506 m² i −391,−135): na ortofoto P-21 + bariera; to korytarz agenta 0076 (s1432–1480) — NIE ruszam.
+- NASTĘPNY KROK (w toku): `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` →
+  `uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art artifacts/islands-r10/fidelity` →
+  obejrzeć artifacts/islands-r10/after4/*.jpg → `uv run --project tools/worldgen pytest tests/gis -q` → ratchet w tests/gis/test_road_fidelity.py
+  → `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` → `pwsh scripts/visual-qa.ps1 -Scene WorldC ...`.
