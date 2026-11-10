@@ -35,9 +35,14 @@ def test_fab_derivative_paths_and_hashes_not_tracked():
 
     tracked = _tracked()
     forbidden = ('Data/raw/fab/', 'art-source/world/megascans/_generated/', 'game/Assets/_Generated/')
-    assert not [p for p in tracked if p.startswith(forbidden)]
+    assert not [p for p in tracked if p.casefold().startswith(tuple(x.casefold() for x in forbidden))]
     hashes = set()
     source_archives = []
+    inventory = ROOT / "Data/SourceManifests/fab-content-hashes.json"
+    if inventory.exists():
+        deny = json.loads(inventory.read_text(encoding="utf-8"))
+        hashes.update(deny["member_sha256"])
+        hashes.update(deny["derivative_sha256"])
     for manifest in (ROOT / 'Data/SourceManifests').glob('fab-*.json'):
         for item in json.loads(manifest.read_text(encoding='utf-8'))['items']:
             hashes.add(item['sha256'])
@@ -59,15 +64,34 @@ def test_fab_derivative_paths_and_hashes_not_tracked():
                 path = ROOT / value
                 if path.is_file(): hashes.add(hashlib.sha256(path.read_bytes()).hexdigest())
         walk(json.loads(manifest.read_text(encoding='utf-8')))
-    # Hash tracked worktree content including staged additions; pointer files do
-    # not conceal an accidentally checked-out source in local LFS storage.
+    # Inspect index blobs, not worktree bytes: a staged source cannot hide behind
+    # an innocuous subsequent edit. Also examine LFS oid sha256 references.
+    entries = subprocess.run(['git', 'ls-files', '--stage', '-z'], cwd=ROOT,
+                             capture_output=True, check=True).stdout.split(b'\0')
+    blobs = []
+    for entry in entries:
+        if not entry: continue
+        metadata, name = entry.split(b'\t', 1)
+        mode, oid, stage = metadata.split()
+        blobs.append((name.decode('utf-8'), oid.decode('ascii')))
+    query = ''.join(oid + '\n' for _, oid in blobs).encode('ascii')
+    raw = subprocess.run(['git', 'cat-file', '--batch'], input=query, cwd=ROOT,
+                         capture_output=True, check=True).stdout
     tracked_hashes = {}
     by_size = {}
-    for name in sorted(tracked):
-        path = ROOT / name
-        if path.is_file():
-            by_size.setdefault(path.stat().st_size, []).append(name)
-            tracked_hashes[name] = hashlib.sha256(path.read_bytes()).hexdigest()
+    cursor = 0
+    for name, oid in blobs:
+        end = raw.index(b'\n', cursor)
+        header = raw[cursor:end].split()
+        size = int(header[2])
+        content = raw[end + 1:end + 1 + size]
+        cursor = end + 2 + size
+        by_size.setdefault(size, []).append(name)
+        tracked_hashes[name] = hashlib.sha256(content).hexdigest()
+        if content.startswith(b'version https://git-lfs.github.com/spec/v1'):
+            for line in content.splitlines():
+                if line.startswith(b'oid sha256:'):
+                    assert line[11:].decode('ascii') not in hashes, f'Fab LFS object tracked: {name}'
     assert not [p for p, h in tracked_hashes.items() if h in hashes]
     # Detect even renamed raw ZIP members. Only decompress members whose size
     # occurs in tracked files, keeping the guard cheap for large local libraries.

@@ -30,17 +30,36 @@ def key(asset_id):
     return "fab_" + asset_id.replace("-", "_")
 
 
-def load_ready(path=MANIFEST, root=ROOT):
-    """Fail closed on absent, unreviewed or partly deleted local outputs."""
+def load_ready(path=MANIFEST, root=ROOT, review=None, sources=None):
+    """Fail closed unless output, current approval and source pin all agree.
+
+    Consumption needs prepared outputs, not the original ZIP. ``review`` and
+    ``sources`` optionally inject id-keyed records for isolated tests; production
+    always rereads the owning tracked review and source manifest on each load.
+    """
     if os.environ.get("KAMION_DISABLE_FAB") == "1":
         return {}
     try:
+        root = Path(root)
+        if review is None:
+            review_data = json.loads((root / "tools/worldgen/fab/review.json").read_text(encoding="utf-8"))
+            if review_data.get("schema") != 1:
+                return {}
+            review = review_data.get("items", {})
+        if sources is None:
+            source_data = json.loads((root / "Data/SourceManifests/fab-megascans-2026-11-10.json").read_text(encoding="utf-8"))
+            sources = {item["id"]: item for item in source_data["items"]}
         data = json.loads(Path(path).read_text(encoding="utf-8"))
         if data.get("schema") != 1:
             raise ValueError("unsupported schema")
         ready = {}
         for aid, item in data.get("items", {}).items():
-            if item.get("status") != "ready":
+            approval = review.get(aid, {})
+            source = sources.get(aid, {})
+            pin = source.get("sha256")
+            if (item.get("status") != "ready" or approval.get("status") != "approved"
+                    or not isinstance(pin, str) or len(pin) != 64
+                    or approval.get("source_sha256") != pin or item.get("source_sha256") != pin):
                 continue
             color = item.get("textures", {}).get("Low", {}).get("basecolor")
             if not color or not _output_file(root, color):
@@ -54,7 +73,7 @@ def load_ready(path=MANIFEST, root=ROOT):
                     continue
             ready[aid] = item
         return ready
-    except (OSError, ValueError, TypeError, AttributeError):
+    except (OSError, ValueError, TypeError, AttributeError, KeyError):
         return {}
 
 

@@ -17,3 +17,6 @@
 
 - Krok 6: ADR 0084 a użycia/odrzucenia 19 pozycji zapisane w LICENSES. Budżet Python obejmuje zmierzone LOD Fab; UV0/alpha/AO poprawione. Baseline import regeneruje istniejące PBR (stemple świeżego worktree); nadal trwa.
 - NASTĘPNY KROK: `Get-Content artifacts/megascans-r1/before-import.log -Tail 10`.
+
+- Krok 7: 38 testów Fab PASS. Dodano denylistę samych hashy (850 członków ZIP, lokalne pochodne), kontrolę blobów indeksu i LFS oid — działa też w publicznym klonie. Stare zatwierdzenia są unieważniane przy zmianie review/SHA. Wykryto błędną skalę/osiowanie FBX małego kamienia; poprawka oparta o jego metadane 0,26×0,18×0,08 m w toku.
+- NASTĘPNY KROK: `uv run --project tools/worldgen python tools/worldgen/fab/audit_inventory.py` (po korekcie kamienia).

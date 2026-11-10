@@ -15,7 +15,12 @@ namespace Game.World.Import
         static Dictionary<string, object> s_Items, s_Surfaces;
         static readonly Dictionary<string, Material> s_Mats = new Dictionary<string, Material>();
         static string Root => Path.Combine(EditorTools.RepoRoot, "art-source/world/megascans/_generated");
-        public static void Reset() { s_Items = null; s_Surfaces = null; s_Mats.Clear(); }
+        public static void Reset()
+        {
+            s_Items = null; s_Surfaces = null; s_Mats.Clear();
+            if (!File.Exists(Path.Combine(Root, "manifest.json")) || Environment.GetEnvironmentVariable("KAMION_DISABLE_FAB") == "1")
+                Debug.LogWarning("[IMPORT] Optional Fab assets unavailable/disabled; existing world fallback retained");
+        }
         static Dictionary<string, object> Read(string file, string key)
         {
             if (Environment.GetEnvironmentVariable("KAMION_DISABLE_FAB") == "1") return new Dictionary<string, object>();
@@ -36,7 +41,7 @@ namespace Game.World.Import
             var paths = new SortedSet<string>(StringComparer.Ordinal);
             foreach (var item in Items.Values.OfType<Dictionary<string, object>>())
             {
-                if (item.Get("status") as string != "ready") continue;
+                if (item.Get("status") as string != "ready" || !Approved(Str(item.Get("prototype")).Substring(4).Replace('_', '-'), item)) continue;
                 if (!(item.Get("models") is List<object> models)) continue;
                 foreach (var model in models.OfType<Dictionary<string, object>>())
                 {
@@ -49,12 +54,38 @@ namespace Game.World.Import
             }
             return paths;
         }
+        static bool Approved(string id, Dictionary<string, object> item)
+        {
+            var reviews = ReadReview();
+            string pin = item.Get("source_sha256") as string;
+            string sourcePath = Path.Combine(EditorTools.RepoRoot, "Data/SourceManifests/fab-megascans-2026-11-10.json");
+            if (pin == null || pin.Length != 64 || !File.Exists(sourcePath)) return false;
+            var sources = Arr(Obj(Parse(File.ReadAllText(sourcePath))).Get("items"));
+            if (!sources.OfType<Dictionary<string, object>>().Any(src => src.Get("id") as string == id && src.Get("sha256") as string == pin)) return false;
+            return reviews.Get(id) is Dictionary<string, object> review &&
+                review.Get("status") as string == "approved" &&
+                review.Get("source_sha256") as string == item.Get("source_sha256") as string;
+        }
+        static Dictionary<string, object> ReadReview()
+        {
+            string path = Path.Combine(EditorTools.RepoRoot, "tools/worldgen/fab/review.json");
+            return File.Exists(path) ? Obj(Obj(Parse(File.ReadAllText(path))).Get("items")) : new Dictionary<string, object>();
+        }
         static Dictionary<string, object> Maps(string id)
         {
             s_Surfaces = s_Surfaces ?? Read("surfaces_manifest.json", "materials");
             Dictionary<string, object> entry = null;
-            if (s_Surfaces.Get(id) is Dictionary<string, object> surface) entry = surface;
-            else if (id.StartsWith("fab_") && Items.Get(id.Substring(4).Replace('_', '-')) is Dictionary<string, object> item && item.Get("status") as string == "ready") entry = item;
+            if (s_Surfaces.Get(id) is Dictionary<string, object> surface)
+            {
+                if (!(surface.Get("sources") is List<object> sources) || sources.Count == 0) return null;
+                foreach (var src in sources.OfType<Dictionary<string, object>>())
+                {
+                    var source = new Dictionary<string, object> { ["source_sha256"] = src.Get("sha256") };
+                    if (!Approved(Str(src.Get("id")), source)) return null;
+                }
+                entry = surface;
+            }
+            else if (id.StartsWith("fab_") && Items.Get(id.Substring(4).Replace('_', '-')) is Dictionary<string, object> item && item.Get("status") as string == "ready" && Approved(id.Substring(4).Replace('_', '-'), item)) entry = item;
             if (!(entry?.Get("textures") is Dictionary<string, object> tiers)) return null;
             // Medium consumes the mobile tier as well; never silently promote Low to 1k.
             string tier = EditorTools.Arg("-materialTier", "Medium") == "High" ? "High" : "Low";

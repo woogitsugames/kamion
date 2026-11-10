@@ -42,7 +42,7 @@ def test_manifest_rejects_unreviewed_missing_or_unsafe_output(tmp_path):
     out.mkdir(parents=True)
     (out / 'color.png').write_bytes(b'test')
     color = 'art-source/world/megascans/_generated/color.png'
-    item = {"status": "ready", "textures": {"Low": {"basecolor": color}}}
+    item = {"status": "ready", "source_sha256": "a" * 64, "textures": {"Low": {"basecolor": color}}}
     p = out / 'manifest.json'
     p.write_text(json.dumps({"schema": 1, "items": {"ok": item,
         "unreviewed": {**item, "status": "pending-review"},
@@ -53,7 +53,9 @@ def test_manifest_rejects_unreviewed_missing_or_unsafe_output(tmp_path):
     data = json.loads(p.read_text())
     data['items']['unsafe']['textures']['Low']['basecolor'] = '../escape.png'
     p.write_text(json.dumps(data))
-    assert set(F.load_ready(p, tmp_path)) == {'ok'}
+    review = {aid: {"status": "approved", "source_sha256": "a" * 64} for aid in data['items']}
+    sources = {aid: {"sha256": "a" * 64} for aid in data['items']}
+    assert set(F.load_ready(p, tmp_path, review=review, sources=sources)) == {'ok'}
 
 
 def test_fallback_leaves_buffers_and_instances_unchanged(monkeypatch):
@@ -175,3 +177,49 @@ def test_prototype_stats_read_actual_first_variant_counts():
 def test_disable_switch_avoids_local_assets(monkeypatch, tmp_path):
     monkeypatch.setenv('KAMION_DISABLE_FAB', '1')
     assert F.load_ready(tmp_path / 'manifest.json') == {}
+
+
+
+def test_stale_ready_outputs_require_current_approval_and_matching_pins(tmp_path):
+    out = tmp_path / 'art-source/world/megascans/_generated'
+    out.mkdir(parents=True)
+    (out / 'color.png').write_bytes(b'test')
+    color = 'art-source/world/megascans/_generated/color.png'
+    item = {'status': 'ready', 'source_sha256': 'a' * 64,
+            'textures': {'Low': {'basecolor': color}}}
+    p = out / 'manifest.json'
+    p.write_text(json.dumps({'schema': 1, 'items': {'asset': item}}))
+    review = {'asset': {'status': 'approved', 'source_sha256': 'a' * 64}}
+    sources = {'asset': {'sha256': 'a' * 64}}
+    assert set(F.load_ready(p, tmp_path, review=review, sources=sources)) == {'asset'}
+    # No ZIP is required by the consuming loader; only pinned prepared output.
+    review['asset']['status'] = 'rejected'
+    assert F.load_ready(p, tmp_path, review=review, sources=sources) == {}
+    review['asset']['status'] = 'approved'
+    review['asset']['source_sha256'] = 'b' * 64
+    assert F.load_ready(p, tmp_path, review=review, sources=sources) == {}
+    review['asset']['source_sha256'] = 'a' * 64
+    sources['asset']['sha256'] = 'c' * 64
+    assert F.load_ready(p, tmp_path, review=review, sources=sources) == {}
+    assert F.load_ready(p, tmp_path, review=review, sources={}) == {}
+
+
+def test_production_loader_rereads_review_without_output_rebuild(tmp_path):
+    out = tmp_path / 'art-source/world/megascans/_generated'
+    out.mkdir(parents=True)
+    (out / 'color.png').write_bytes(b'test')
+    p = out / 'manifest.json'
+    p.write_text(json.dumps({'schema': 1, 'items': {'asset': {
+        'status': 'ready', 'source_sha256': 'a' * 64,
+        'textures': {'Low': {'basecolor': 'art-source/world/megascans/_generated/color.png'}}}}}))
+    review_path = tmp_path / 'tools/worldgen/fab/review.json'
+    review_path.parent.mkdir(parents=True)
+    source_path = tmp_path / 'Data/SourceManifests/fab-megascans-2026-11-10.json'
+    source_path.parent.mkdir(parents=True)
+    source_path.write_text(json.dumps({'items': [{'id': 'asset', 'sha256': 'a' * 64}]}))
+    review = {'schema': 1, 'items': {'asset': {'status': 'approved', 'source_sha256': 'a' * 64}}}
+    review_path.write_text(json.dumps(review))
+    assert set(F.load_ready(p, tmp_path)) == {'asset'}
+    review['items']['asset']['status'] = 'pending-review'
+    review_path.write_text(json.dumps(review))
+    assert F.load_ready(p, tmp_path) == {}
