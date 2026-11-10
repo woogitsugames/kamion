@@ -159,6 +159,9 @@ namespace PhysicsRunner.Sim
         public double pumpPeriod;
         /// <summary>soak: cycle period [s].</summary>
         public double cyclePeriod = 90;
+        /// <summary>path: [x, z, vKmh] per point (sim frame), followed by the steer-axle centre (Stanley gain).</summary>
+        public double[][] path;
+        public double stanleyGain = 1.5;
     }
 
     public sealed class KeySpec
