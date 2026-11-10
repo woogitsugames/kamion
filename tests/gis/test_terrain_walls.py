@@ -10,8 +10,9 @@ import pytest
 from conftest import REGION_DIR
 
 QA = REGION_DIR / "generated" / "terrain_walls_qa.json"
-RATCHET = {"skirt:j": 85, "skirt:yard_asphalt": 1, "skirt:yard_concrete": 8, "skirt:yard_slabs": 1,
-           "steep_grass:verge_grass": 8}     # 103 points, build of 2026-11-10 (e81fbfe)
+RATCHET = {"skirt:j:road_asphalt": 79, "skirt:j:road_concrete": 1, "skirt:j:road_paving": 5,
+           "skirt:yard_asphalt": 1, "skirt:yard_concrete": 8, "skirt:yard_slabs": 1,
+           "steep_grass:verge_grass": 8}     # 103 points, build of 2026-11-10
 
 
 def test_no_vertical_terrain_walls():
