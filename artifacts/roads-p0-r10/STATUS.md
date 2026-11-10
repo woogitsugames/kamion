@@ -31,3 +31,7 @@ Galaz: worktree-agent-ad6af5501cb259d76.
   furniture.clear_level_carriageways (slup na jezdni na swoim poziomie, takze na pomoscie) -> consistency 103 -> 69:
   kerb_on_carriageway 29 -> 0, prop_on_carriageway 2 -> 0, prop_through_deck 0. Trasa: zaokraglenie 10 m na lagodnych stykach.
 - NASTEPNY KROK: uv run --project tools/worldgen python tests/gis/route_corridor.py ; uv run --project tools/worldgen python tools/worldgen/fidelity/run.py --region bialystok-industrial-c ; uv run --project tools/worldgen pytest tests/gis -q
+- route_corridor po build #3: 4790 stacji, 0 uskokow, 0 przeszkod. fidelity/run.py odswiezony. W toku: pytest tests/gis,
+  import-region (Unity, Library skopiowane z main), check_poles.py (kryterium wlasciciela: latarnie tylko na krawedzi
+  pomostu / w pasie dzielacym). Kamery: artifacts/roads-p0-r10/p0_cameras.json (17).
+- NASTEPNY KROK: pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Medium -Lighting overcast -Gate3 artifacts/roads-p0-r10/p0_cameras.json -Cameras p0_fork_putry_eye,p0_fork_putry_eye2,p0_lamp_putry_eye,p0_kerb_merge_eye,p0_lamp_w1101181473_eye,p0_fork_putry_top,p0_lamp_putry_top,p0_kerb_merge_top,p0_ma001_top,p0_n4103450295_top,p0_n1882887385_top,p0_ma012_top,au_f_s0620,au_f_s0640,au_r_s1380,au_r_s1400,au_r_s1420 -OutputDir artifacts/roads-p0-r10/renders

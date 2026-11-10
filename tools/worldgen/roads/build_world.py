@@ -889,6 +889,8 @@ def qa_report(w, mk_report, mask):
             "walled_ramps": w.profiles.get("walled_ramps", []),
             "clearance_by_class_m": S.CLEARANCE_BY_CLASS,
             "fork_tapers": w.stats.get("fork_tapers", []),
+            "fork_abreast": w.stats.get("fork_abreast", []),
+            "sides_on_carriageway_culled": w.stats.get("sides_on_carriageway_culled", {}),
             "fork_shifts": w.stats.get("fork_shifts", []),
             "overrides_applied": net.overrides_applied, "overrides_stale": net.overrides_stale,
             "low_confidence": [
