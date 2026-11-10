@@ -4,13 +4,14 @@ import json
 import os
 import subprocess
 import struct
+import numpy as np
 from pathlib import Path
 from zipfile import ZipFile, ZipInfo
 
 import pytest
 from PIL import Image
 
-from fab.prepare import OUTPUT, _meshes, prepare, safe_members, select_maps, sync_glb_textures, validate_crossed_billboard
+from fab.prepare import OUTPUT, _meshes, prepare, safe_members, select_maps, sync_glb_textures, validate_crossed_billboard, calibrate_plant_basecolor, PLANT_LUMINANCE_TARGETS
 
 
 def setup_source(tmp_path, approved=True):
@@ -237,3 +238,66 @@ def test_simplified_billboard_cannot_float_above_ground():
         validate_crossed_billboard([[-1, .02, 0], [1, .02, 0], [1, 2, 0], [-1, 2, 0],
                                    [0, .02, -1], [0, .02, 1], [0, 2, 1], [0, 2, -1]],
                                   [0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7])
+
+
+def test_foliage_calibration_linear_target_exact_alpha_and_padding(tmp_path):
+    pixels = np.array([[[20, 40, 10, 255], [30, 60, 15, 128]],
+                       [[255, 255, 255, 0], [255, 0, 255, 64]]], dtype=np.uint8)
+    path = tmp_path / "foliage.png"
+    Image.fromarray(pixels).save(path)
+    result = calibrate_plant_basecolor(path, "elderberry")
+    actual = np.asarray(Image.open(path))
+    assert np.array_equal(actual[:, :, 3], pixels[:, :, 3])
+    opaque = actual[:, :, 3] >= 128
+    srgb = actual[:, :, :3][opaque] / 255
+    linear = np.where(srgb <= .04045, srgb / 12.92, ((srgb + .055) / 1.055) ** 2.4)
+    mean = np.mean(linear @ np.array([.2126, .7152, .0722]))
+    assert abs(mean - .08) < .001
+    assert result["clipped_opaque_pixel_fraction"] == 0
+    assert actual[:, :, :3].max() < 255
+    assert result["target_status"] == "WORKING_VALUE"
+    # Padding must be a neighbouring leaf colour, not the original magenta/white.
+    assert np.array_equal(actual[1, 0, :3], actual[0, 0, :3])
+    assert np.array_equal(actual[1, 1, :3], actual[0, 1, :3])
+
+
+@pytest.mark.parametrize("asset_id", ["granite-rock", "trash-bag-pack", "metal-manhole-cover", "silver-birch-bark"])
+def test_nonfoliage_calibration_does_not_touch_bytes(tmp_path, asset_id):
+    path = tmp_path / "basecolor.png"
+    Image.new("RGBA", (4, 4), (20, 30, 10, 255)).save(path)
+    original = path.read_bytes()
+    assert calibrate_plant_basecolor(path, asset_id) is None
+    assert path.read_bytes() == original
+
+
+def test_translucency_remains_rgb_colour(tmp_path):
+    archive = setup_source(tmp_path)
+    colour = tmp_path / "translucency.png"
+    Image.new("RGB", (32, 32), (23, 117, 234)).save(colour)
+    with ZipFile(archive, "a") as zf:
+        zf.write(colour, "test_4K_Translucency.png")
+    digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+    for path in (tmp_path / "Data/SourceManifests/fab-megascans-2026-11-10.json",
+                 tmp_path / "tools/worldgen/fab/review.json"):
+        data = json.loads(path.read_text())
+        if isinstance(data["items"], list):
+            data["items"][0]["sha256"] = digest
+        else:
+            data["items"]["test"]["source_sha256"] = digest
+        path.write_text(json.dumps(data))
+    texture = prepare(tmp_path)["items"]["test"]["textures"]["Low"]["translucency"]
+    with Image.open(tmp_path / texture) as image:
+        assert image.mode == "RGB"
+        assert image.getpixel((1, 1)) == (23, 117, 234)
+
+
+def test_dry_grass_target_preserves_source_reference_lightness(tmp_path):
+    assert PLANT_LUMINANCE_TARGETS == {"grass-clumps": .08, "wild-grass": .18,
+                                       "boxwood": .08, "elderberry": .08}
+    path = tmp_path / "dry-grass.png"
+    Image.new("RGBA", (8, 8), (110, 120, 70, 255)).save(path)
+    result = calibrate_plant_basecolor(path, "wild-grass")
+    assert result["target_mean_linear_luminance"] == .18
+    assert abs(result["achieved_mean_linear_luminance"] - .18) < .002
+    assert "Dry/straw" in result["target_basis"]
+    assert result["target_status"] == "WORKING_VALUE"

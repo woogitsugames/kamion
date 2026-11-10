@@ -73,3 +73,5 @@
 
 - Grass photobase: wypalono 4x4m ze skanu grass-clumps (256 deterministycznych kep + 168 kopii okresowych), emissive baseColor/alpha bez swiatla i cieni. Low512/High1024, tylko ignorowane _generated; zachowano srednia liniowa RGB [.08,.105,.038] WORKING_VALUE, clipping0. Obejrzano grass-surface-dense-preview.png: mniej odkrytego podloza, miejscami pozostaja naturalne luki; ocena calego swiata dopiero po imporcie.
 - Testy nowego modulu:9 PASS (plan, piksele brzegowe, paleta, maks.rozmiar, fallback, review/hash, junction); powtorny realny bake exit0. Wrapper prepare-megascans wywoluje bake po korze/atlasie. NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` i render R4 z aktualnym grass_surface_manifest.json.
+
+- Krok24b: kalibracja4roślin+billboardów przetestowana, licencyjna baza hash obejmuje850członków źródeł i aktualne pochodne. NASTĘPNY: pwsh artifacts/megascans-r1/run-final-proof.ps1.

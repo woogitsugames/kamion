@@ -25,6 +25,9 @@ ROOT = Path(__file__).resolve().parents[3]
 OUTPUT = Path("art-source/world/megascans/_generated")
 MANIFEST = Path("Data/SourceManifests/fab-megascans-2026-11-10.json")
 TIERS = {"Low": 512, "High": 1024}
+PLANT_LUMINANCE_TARGETS = {"grass-clumps": 0.08, "wild-grass": 0.18,
+                           "boxwood": 0.08, "elderberry": 0.08}
+CALIBRATED_PLANTS = set(PLANT_LUMINANCE_TARGETS)
 CHANNELS = {"basecolor": ("basecolor", "diffuse"), "normal": ("normal",),
             "roughness": ("roughness",), "ao": ("ao",), "opacity": ("opacity",),
             "metalness": ("metalness",), "displacement": ("displacement",),
@@ -45,6 +48,73 @@ def sha256(path: Path) -> str:
         for chunk in iter(lambda: stream.read(1 << 20), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def calibrate_plant_basecolor(path: Path, asset_id: str, target=None):
+    """Working leaf-albedo calibration in linear light, keeping exact alpha.
+
+    This is a project look-development target, not a Quixel physical measurement.
+    Source metadata labels these maps sRGB; a common linear gain preserves hue
+    and relative detail until the explicitly reported clipping limit is reached.
+    """
+    if asset_id not in CALIBRATED_PLANTS:
+        return None
+    if target is None:
+        target = PLANT_LUMINANCE_TARGETS[asset_id]
+    from scipy.ndimage import distance_transform_edt
+    rgba = np.array(Image.open(path).convert("RGBA"), dtype=np.uint8)
+    alpha = rgba[:, :, 3].copy()
+    opaque = alpha >= 128
+    if not np.any(opaque):
+        raise ValueError(f"No opaque foliage pixels to calibrate: {asset_id}")
+    srgb = rgba[:, :, :3].astype(np.float64) / 255
+    linear = np.where(srgb <= 0.04045, srgb / 12.92, ((srgb + 0.055) / 1.055) ** 2.4)
+    weights = np.array([0.2126, 0.7152, 0.0722])
+    selected = linear[opaque]
+    source_mean = float(np.mean(selected @ weights))
+    if source_mean <= 0:
+        raise ValueError(f"Black foliage cannot be calibrated while preserving hue: {asset_id}")
+    gain = target / source_mean
+    def mean_after(value):
+        return float(np.mean(np.clip(selected * value, 0, 1) @ weights))
+    if abs(mean_after(gain) - target) > 1e-7:
+        lower, upper = 0.0, max(1.0, gain)
+        while mean_after(upper) < target:
+            upper *= 2
+            if upper > 1e6:
+                raise ValueError("Foliage target cannot be reached with a finite common gain")
+        for _ in range(28):
+            mid = (lower + upper) / 2
+            if mean_after(mid) < target:
+                lower = mid
+            else:
+                upper = mid
+        gain = (lower + upper) / 2
+    scaled = linear * gain
+    clipped_fraction = float(np.mean(np.any(selected * gain > 1, axis=1)))
+    calibrated = np.clip(scaled, 0, 1)
+    encoded = np.where(calibrated <= 0.0031308, calibrated * 12.92,
+                       1.055 * calibrated ** (1 / 2.4) - 0.055)
+    rgb = np.clip(np.rint(encoded * 255), 0, 255).astype(np.uint8)
+    # Replace transparent RGB with neighbouring opaque colour, retaining alpha.
+    # This prevents unrelated source padding leaking into filtered leaf edges.
+    if not np.all(opaque):
+        nearest = distance_transform_edt(~opaque, return_distances=False, return_indices=True)
+        rgb[~opaque] = rgb[nearest[0][~opaque], nearest[1][~opaque]]
+    rgba[:, :, :3] = rgb
+    rgba[:, :, 3] = alpha
+    Image.fromarray(rgba).save(path)
+    actual_srgb = rgb[opaque].astype(np.float64) / 255
+    actual_linear = np.where(actual_srgb <= 0.04045, actual_srgb / 12.92,
+                             ((actual_srgb + 0.055) / 1.055) ** 2.4)
+    return {"source_mean_linear_luminance": source_mean, "gain_linear": float(gain),
+            "target_mean_linear_luminance": target, "target_status": "WORKING_VALUE",
+            "target_basis": ("Dry/straw grass in reviewed reference; near-source mean 0.18358 lies within project vegetation 0.05–0.20, rounded target 0.18 preserves its lightness"
+                             if asset_id == "wild-grass" else "Project vegetation albedo working calibration for under-range green foliage sources"),
+            "source_color_space": "sRGB per source JSON", "alpha_mask_cutoff": 0.5,
+            "achieved_mean_linear_luminance": float(np.mean(actual_linear @ weights)),
+            "clipped_opaque_pixel_fraction": clipped_fraction,
+            "alpha_preserved_bit_exact": True, "transparent_rgb_padding": "nearest opaque pixel"}
 
 
 def safe_members(zf: ZipFile):
@@ -281,7 +351,7 @@ def prepare(root: Path = ROOT, blender: Path | None = None, only: set[str] | Non
                             # Fab scalar JPEGs may be red-only RGB, not grey.
                             # Luminance conversion would multiply opacity by .299
                             # and make every leaf fail the .5 alpha cutoff.
-                            image = (original.convert("RGB") if channel in {"basecolor", "normal"}
+                            image = (original.convert("RGB") if channel in {"basecolor", "normal", "translucency"}
                                      else original.convert("RGB").getchannel("R"))
                             image.thumbnail((maximum, maximum), Image.Resampling.LANCZOS)
                             if channel == "normal":
@@ -310,6 +380,13 @@ def prepare(root: Path = ROOT, blender: Path | None = None, only: set[str] | Non
                             if entry["path"] == paths["basecolor"]:
                                 entry["sha256"] = sha256(base_path)
                                 entry["opacity_source_member"] = maps["opacity"].filename
+                    if "basecolor" in paths:
+                        calibration = calibrate_plant_basecolor(root / paths["basecolor"], aid)
+                        if calibration:
+                            record.setdefault("basecolor_calibration", {}).setdefault(texture_group, {})[tier] = calibration
+                            for entry in record["provenance"]:
+                                if entry["path"] == paths["basecolor"]:
+                                    entry["sha256"] = sha256(root / entry["path"])
                     if "roughness" in paths:
                         rough = Image.open(root / paths["roughness"]).convert("L")
                         metallic = (Image.open(root / paths["metalness"]).convert("L") if "metalness" in paths
