@@ -32,37 +32,37 @@ sources:
   license: ODbL 1.0
   attribution: © OpenStreetMap contributors
   manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
-  manifest_sha256: 3a63ebb442f2e09904c18a62cbf1eec9bce2fccf8c8d0dfd6264bef37843b3c0
+  manifest_sha256: 908e1138300c429a2acc8ea875036fd4fffa2350059686992786340ead9fc409
 - id: gugik-nmt-2025-bialystok-industrial-c
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
   manifest: Data/SourceManifests/gugik-nmt-2025-bialystok-industrial-c.json
-  manifest_sha256: 97cfa62f5674cfcc7a75f7e5b2634e821ed2001e07c28c44f62bae23011c5f52
+  manifest_sha256: 0a6a161404b968a424eca85a05332a01d3d38d3cb23e9fb78c2b53fb4235830a
 - id: gugik-orto-2024-rgb-0p25-bialystok-industrial-c
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
   manifest: Data/SourceManifests/gugik-orto-2024-rgb-0p25-bialystok-industrial-c.json
-  manifest_sha256: 2a425aba2ff924ca22852df42b3d45634382baef306e97619104de27fe1db4ac
+  manifest_sha256: a4d40d65ea1bddc4857ba72c7b9ad43f65df8a64831bbbad0be0f7b8f198cca5
 - id: gugik-bdot10k-2061
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
   manifest: Data/SourceManifests/gugik-bdot10k-2061.json
-  manifest_sha256: a8f0f31b701953f8718d55592c817a8d737d74ed9ef42ad9136d190e0d9fe303
+  manifest_sha256: 21e3c8b0aac8c6d89ff0ac3a1ebb470b4e38c165dd5a0d70acf9e5d49e9c37a0
 - id: gugik-lod1-2024-2061
   license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
     bezpłatnie i możliwe do dowolnego wykorzystania'''
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
   manifest: Data/SourceManifests/gugik-lod1-2024-2061.json
-  manifest_sha256: da3a0e254a8e4076d29469a92a167e18b8b769d80560eafe99f50ef3a8aebb7b
+  manifest_sha256: a902303c4e8f2991023abcd49b7047ab69ac238ef87847789b31bbbf9a4587bb
 - id: gugik-lod2-2017-2061
   license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
     bezpłatnie i możliwe do dowolnego wykorzystania'''
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
   manifest: Data/SourceManifests/gugik-lod2-2017-2061.json
-  manifest_sha256: e33f858b3afcd65150b12b7eaf990c8da4fd02e5891210f53f0bed24ad3ad2d5
+  manifest_sha256: 83d7e116a99855aa166430d1eece6fd0a7981287210704621a6dfccb5438e57e
 rebuild:
 - uv run --project tools/worldgen tools/worldgen/ingest.py --region bialystok-industrial-c
 - uv run --project tools/worldgen tools/worldgen/build_region.py --region bialystok-industrial-c
