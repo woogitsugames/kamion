@@ -1,0 +1,279 @@
+# tier=High scene=WorldC_High 3120x1440 frames=10 lighting=clear gpu=NVIDIA GeForce RTX 5070 cameras=10
+variant	camera	wall_ms	cpu_submit_ms	mirror3_ms	draws_est	tris_k_est
+base	g3a_eye_s0012	5,007	4,046	6,360	inst_draws=135 inst_tris_k=7 hlod=0	g3a_eye_s0012: objects=84 drawsEst=643 shadowDrawsEst=543 trisK=1303 (estimate, before SRP batching)
+base	g3a_eye_s0112	6,115	4,961	7,331	inst_draws=172 inst_tris_k=12 hlod=0	g3a_eye_s0112: objects=67 drawsEst=557 shadowDrawsEst=474 trisK=1067 (estimate, before SRP batching)
+base	g3a_eye_s0212	6,629	4,960	8,127	inst_draws=200 inst_tris_k=13 hlod=0	g3a_eye_s0212: objects=58 drawsEst=511 shadowDrawsEst=363 trisK=1067 (estimate, before SRP batching)
+base	g3a_eye_s0312	6,358	4,902	6,622	inst_draws=150 inst_tris_k=8 hlod=0	g3a_eye_s0312: objects=41 drawsEst=364 shadowDrawsEst=279 trisK=905 (estimate, before SRP batching)
+base	g3a_eye_s0412	6,153	3,863	5,803	inst_draws=117 inst_tris_k=6 hlod=0	g3a_eye_s0412: objects=151 drawsEst=992 shadowDrawsEst=555 trisK=1551 (estimate, before SRP batching)
+base	g3b_eye_s1232	6,339	4,096	6,677	inst_draws=151 inst_tris_k=13 hlod=4	g3b_eye_s1232: objects=88 drawsEst=534 shadowDrawsEst=399 trisK=1331 (estimate, before SRP batching)
+base	g3b_eye_s1332	6,140	4,029	6,176	inst_draws=130 inst_tris_k=11 hlod=0	g3b_eye_s1332: objects=69 drawsEst=409 shadowDrawsEst=399 trisK=859 (estimate, before SRP batching)
+base	g3b_eye_s1432	5,032	3,822	6,074	inst_draws=113 inst_tris_k=21 hlod=4	g3b_eye_s1432: objects=67 drawsEst=400 shadowDrawsEst=216 trisK=932 (estimate, before SRP batching)
+base	g3b_eye_s1532	3,993	2,780	5,053	inst_draws=78 inst_tris_k=5 hlod=8	g3b_eye_s1532: objects=68 drawsEst=404 shadowDrawsEst=390 trisK=976 (estimate, before SRP batching)
+base	g3b_eye_s1632	4,351	3,307	4,589	inst_draws=88 inst_tris_k=6 hlod=8	g3b_eye_s1632: objects=57 drawsEst=336 shadowDrawsEst=528 trisK=816 (estimate, before SRP batching)
+scale085	g3a_eye_s0012	5,185	3,745	5,415	inst_draws=135 inst_tris_k=7 hlod=0	
+scale085	g3a_eye_s0112	5,707	4,531	7,408	inst_draws=172 inst_tris_k=12 hlod=0	
+scale085	g3a_eye_s0212	5,519	4,262	8,135	inst_draws=200 inst_tris_k=13 hlod=0	
+scale085	g3a_eye_s0312	5,878	4,562	6,163	inst_draws=150 inst_tris_k=8 hlod=0	
+scale085	g3a_eye_s0412	5,398	3,867	5,919	inst_draws=117 inst_tris_k=6 hlod=0	
+scale085	g3b_eye_s1232	4,989	3,630	6,186	inst_draws=151 inst_tris_k=13 hlod=4	
+scale085	g3b_eye_s1332	6,053	4,105	6,534	inst_draws=130 inst_tris_k=11 hlod=0	
+scale085	g3b_eye_s1432	5,429	3,983	6,033	inst_draws=113 inst_tris_k=21 hlod=4	
+scale085	g3b_eye_s1532	4,223	3,283	4,896	inst_draws=78 inst_tris_k=5 hlod=8	
+scale085	g3b_eye_s1632	5,084	3,598	5,047	inst_draws=88 inst_tris_k=6 hlod=8	
+scale075	g3a_eye_s0012	4,595	3,516	5,804	inst_draws=135 inst_tris_k=7 hlod=0	
+scale075	g3a_eye_s0112	5,199	4,043	7,191	inst_draws=172 inst_tris_k=12 hlod=0	
+scale075	g3a_eye_s0212	5,738	4,741	7,682	inst_draws=200 inst_tris_k=13 hlod=0	
+scale075	g3a_eye_s0312	4,879	3,916	5,701	inst_draws=150 inst_tris_k=8 hlod=0	
+scale075	g3a_eye_s0412	5,045	3,744	6,125	inst_draws=117 inst_tris_k=6 hlod=0	
+scale075	g3b_eye_s1232	6,132	4,743	7,571	inst_draws=151 inst_tris_k=13 hlod=4	
+scale075	g3b_eye_s1332	5,334	4,113	8,312	inst_draws=130 inst_tris_k=11 hlod=0	
+scale075	g3b_eye_s1432	13,646	12,819	10,042	inst_draws=113 inst_tris_k=21 hlod=4	
+scale075	g3b_eye_s1532	6,289	5,373	6,779	inst_draws=78 inst_tris_k=5 hlod=8	
+scale075	g3b_eye_s1632	15,709	10,910	10,439	inst_draws=88 inst_tris_k=6 hlod=8	
+msaa1	g3a_eye_s0012	8,295	7,579	10,518	inst_draws=135 inst_tris_k=7 hlod=0	
+msaa1	g3a_eye_s0112	12,224	11,462	12,726	inst_draws=172 inst_tris_k=12 hlod=0	
+msaa1	g3a_eye_s0212	14,789	13,923	7,344	inst_draws=200 inst_tris_k=13 hlod=0	
+msaa1	g3a_eye_s0312	5,401	4,389	7,765	inst_draws=150 inst_tris_k=8 hlod=0	
+msaa1	g3a_eye_s0412	5,130	4,094	6,863	inst_draws=117 inst_tris_k=6 hlod=0	
+msaa1	g3b_eye_s1232	5,714	4,635	7,257	inst_draws=151 inst_tris_k=13 hlod=4	
+msaa1	g3b_eye_s1332	5,411	4,083	6,504	inst_draws=130 inst_tris_k=11 hlod=0	
+msaa1	g3b_eye_s1432	5,266	4,193	7,936	inst_draws=113 inst_tris_k=21 hlod=4	
+msaa1	g3b_eye_s1532	4,233	3,468	5,289	inst_draws=78 inst_tris_k=5 hlod=8	
+msaa1	g3b_eye_s1632	4,013	3,311	5,143	inst_draws=88 inst_tris_k=6 hlod=8	
+hdr0	g3a_eye_s0012	5,642	3,912	5,986	inst_draws=135 inst_tris_k=7 hlod=0	
+hdr0	g3a_eye_s0112	5,729	4,154	6,257	inst_draws=172 inst_tris_k=12 hlod=0	
+hdr0	g3a_eye_s0212	5,760	4,284	7,257	inst_draws=200 inst_tris_k=13 hlod=0	
+hdr0	g3a_eye_s0312	5,840	4,504	6,244	inst_draws=150 inst_tris_k=8 hlod=0	
+hdr0	g3a_eye_s0412	6,723	4,788	7,832	inst_draws=117 inst_tris_k=6 hlod=0	
+hdr0	g3b_eye_s1232	6,494	4,776	7,135	inst_draws=151 inst_tris_k=13 hlod=4	
+hdr0	g3b_eye_s1332	6,224	4,207	6,949	inst_draws=130 inst_tris_k=11 hlod=0	
+hdr0	g3b_eye_s1432	5,357	3,560	5,848	inst_draws=113 inst_tris_k=21 hlod=4	
+hdr0	g3b_eye_s1532	4,817	3,151	4,887	inst_draws=78 inst_tris_k=5 hlod=8	
+hdr0	g3b_eye_s1632	5,195	3,624	5,338	inst_draws=88 inst_tris_k=6 hlod=8	
+post0	g3a_eye_s0012	5,314	3,802	5,983	inst_draws=135 inst_tris_k=7 hlod=0	
+post0	g3a_eye_s0112	5,978	4,349	7,151	inst_draws=172 inst_tris_k=12 hlod=0	
+post0	g3a_eye_s0212	6,294	4,804	7,300	inst_draws=200 inst_tris_k=13 hlod=0	
+post0	g3a_eye_s0312	5,334	3,867	5,919	inst_draws=150 inst_tris_k=8 hlod=0	
+post0	g3a_eye_s0412	5,096	3,607	6,055	inst_draws=117 inst_tris_k=6 hlod=0	
+post0	g3b_eye_s1232	5,466	3,939	7,308	inst_draws=151 inst_tris_k=13 hlod=4	
+post0	g3b_eye_s1332	6,216	4,356	6,827	inst_draws=130 inst_tris_k=11 hlod=0	
+post0	g3b_eye_s1432	5,557	3,803	6,543	inst_draws=113 inst_tris_k=21 hlod=4	
+post0	g3b_eye_s1532	4,231	3,124	5,007	inst_draws=78 inst_tris_k=5 hlod=8	
+post0	g3b_eye_s1632	4,529	3,419	5,044	inst_draws=88 inst_tris_k=6 hlod=8	
+shadow0	g3a_eye_s0012	3,753	2,955	5,957	inst_draws=135 inst_tris_k=7 hlod=0	
+shadow0	g3a_eye_s0112	4,740	3,837	8,350	inst_draws=172 inst_tris_k=12 hlod=0	
+shadow0	g3a_eye_s0212	8,204	5,356	19,800	inst_draws=200 inst_tris_k=13 hlod=0	
+shadow0	g3a_eye_s0312	4,905	3,988	10,469	inst_draws=150 inst_tris_k=8 hlod=0	
+shadow0	g3a_eye_s0412	8,245	7,119	11,423	inst_draws=117 inst_tris_k=6 hlod=0	
+shadow0	g3b_eye_s1232	10,010	7,148	10,128	inst_draws=151 inst_tris_k=13 hlod=4	
+shadow0	g3b_eye_s1332	5,292	4,072	8,890	inst_draws=130 inst_tris_k=11 hlod=0	
+shadow0	g3b_eye_s1432	6,586	4,526	11,490	inst_draws=113 inst_tris_k=21 hlod=4	
+shadow0	g3b_eye_s1532	3,977	3,174	4,555	inst_draws=78 inst_tris_k=5 hlod=8	
+shadow0	g3b_eye_s1632	4,214	3,352	5,431	inst_draws=88 inst_tris_k=6 hlod=8	
+shadow60c2	g3a_eye_s0012	4,569	3,624	5,779	inst_draws=135 inst_tris_k=7 hlod=0	
+shadow60c2	g3a_eye_s0112	5,017	3,937	6,805	inst_draws=172 inst_tris_k=12 hlod=0	
+shadow60c2	g3a_eye_s0212	5,645	4,520	7,705	inst_draws=200 inst_tris_k=13 hlod=0	
+shadow60c2	g3a_eye_s0312	6,679	5,437	7,749	inst_draws=150 inst_tris_k=8 hlod=0	
+shadow60c2	g3a_eye_s0412	5,373	4,101	6,499	inst_draws=117 inst_tris_k=6 hlod=0	
+shadow60c2	g3b_eye_s1232	5,797	4,472	6,786	inst_draws=151 inst_tris_k=13 hlod=4	
+shadow60c2	g3b_eye_s1332	6,093	4,106	6,347	inst_draws=130 inst_tris_k=11 hlod=0	
+shadow60c2	g3b_eye_s1432	5,257	3,485	6,331	inst_draws=113 inst_tris_k=21 hlod=4	
+shadow60c2	g3b_eye_s1532	5,349	3,268	5,345	inst_draws=78 inst_tris_k=5 hlod=8	
+shadow60c2	g3b_eye_s1632	4,199	2,990	4,946	inst_draws=88 inst_tris_k=6 hlod=8	
+shadow80c3	g3a_eye_s0012	5,039	3,498	5,322	inst_draws=135 inst_tris_k=7 hlod=0	
+shadow80c3	g3a_eye_s0112	5,609	4,008	5,815	inst_draws=172 inst_tris_k=12 hlod=0	
+shadow80c3	g3a_eye_s0212	6,558	4,226	6,593	inst_draws=200 inst_tris_k=13 hlod=0	
+shadow80c3	g3a_eye_s0312	5,182	3,874	6,481	inst_draws=150 inst_tris_k=8 hlod=0	
+shadow80c3	g3a_eye_s0412	5,551	3,784	6,059	inst_draws=117 inst_tris_k=6 hlod=0	
+shadow80c3	g3b_eye_s1232	5,717	4,054	6,177	inst_draws=151 inst_tris_k=13 hlod=4	
+shadow80c3	g3b_eye_s1332	6,253	3,819	6,221	inst_draws=130 inst_tris_k=11 hlod=0	
+shadow80c3	g3b_eye_s1432	4,840	3,520	5,582	inst_draws=113 inst_tris_k=21 hlod=4	
+shadow80c3	g3b_eye_s1532	3,978	2,672	4,257	inst_draws=78 inst_tris_k=5 hlod=8	
+shadow80c3	g3b_eye_s1632	4,396	2,935	4,317	inst_draws=88 inst_tris_k=6 hlod=8	
+softOff	g3a_eye_s0012	6,273	5,173	6,093	inst_draws=135 inst_tris_k=7 hlod=0	
+softOff	g3a_eye_s0112	5,311	4,324	6,546	inst_draws=172 inst_tris_k=12 hlod=0	
+softOff	g3a_eye_s0212	5,971	4,822	7,186	inst_draws=200 inst_tris_k=13 hlod=0	
+softOff	g3a_eye_s0312	5,170	3,974	5,842	inst_draws=150 inst_tris_k=8 hlod=0	
+softOff	g3a_eye_s0412	5,457	4,251	7,023	inst_draws=117 inst_tris_k=6 hlod=0	
+softOff	g3b_eye_s1232	6,558	5,383	6,953	inst_draws=151 inst_tris_k=13 hlod=4	
+softOff	g3b_eye_s1332	5,504	4,149	6,821	inst_draws=130 inst_tris_k=11 hlod=0	
+softOff	g3b_eye_s1432	4,999	3,695	5,924	inst_draws=113 inst_tris_k=21 hlod=4	
+softOff	g3b_eye_s1532	3,943	2,645	4,610	inst_draws=78 inst_tris_k=5 hlod=8	
+softOff	g3b_eye_s1632	4,219	3,064	4,452	inst_draws=88 inst_tris_k=6 hlod=8	
+softLow	g3a_eye_s0012	4,522	3,298	5,389	inst_draws=135 inst_tris_k=7 hlod=0	
+softLow	g3a_eye_s0112	5,740	3,896	6,074	inst_draws=172 inst_tris_k=12 hlod=0	
+softLow	g3a_eye_s0212	5,541	4,173	6,788	inst_draws=200 inst_tris_k=13 hlod=0	
+softLow	g3a_eye_s0312	5,680	3,914	5,170	inst_draws=150 inst_tris_k=8 hlod=0	
+softLow	g3a_eye_s0412	5,125	3,234	5,871	inst_draws=117 inst_tris_k=6 hlod=0	
+softLow	g3b_eye_s1232	5,141	3,236	6,934	inst_draws=151 inst_tris_k=13 hlod=4	
+softLow	g3b_eye_s1332	5,605	3,621	5,898	inst_draws=130 inst_tris_k=11 hlod=0	
+softLow	g3b_eye_s1432	4,742	3,166	6,573	inst_draws=113 inst_tris_k=21 hlod=4	
+softLow	g3b_eye_s1532	3,861	2,809	4,328	inst_draws=78 inst_tris_k=5 hlod=8	
+softLow	g3b_eye_s1632	4,356	3,281	5,206	inst_draws=88 inst_tris_k=6 hlod=8	
+shadowRes1024	g3a_eye_s0012	4,693	3,432	5,164	inst_draws=135 inst_tris_k=7 hlod=0	
+shadowRes1024	g3a_eye_s0112	5,276	3,636	6,234	inst_draws=172 inst_tris_k=12 hlod=0	
+shadowRes1024	g3a_eye_s0212	6,198	4,417	7,235	inst_draws=200 inst_tris_k=13 hlod=0	
+shadowRes1024	g3a_eye_s0312	5,313	3,677	6,830	inst_draws=150 inst_tris_k=8 hlod=0	
+shadowRes1024	g3a_eye_s0412	5,752	3,647	5,811	inst_draws=117 inst_tris_k=6 hlod=0	
+shadowRes1024	g3b_eye_s1232	6,040	3,945	6,465	inst_draws=151 inst_tris_k=13 hlod=4	
+shadowRes1024	g3b_eye_s1332	6,183	4,081	6,705	inst_draws=130 inst_tris_k=11 hlod=0	
+shadowRes1024	g3b_eye_s1432	5,273	3,642	5,938	inst_draws=113 inst_tris_k=21 hlod=4	
+shadowRes1024	g3b_eye_s1532	3,912	2,717	4,756	inst_draws=78 inst_tris_k=5 hlod=8	
+shadowRes1024	g3b_eye_s1632	4,407	3,211	4,814	inst_draws=88 inst_tris_k=6 hlod=8	
+treeShadowLod0	g3a_eye_s0012	4,393	3,270	5,039	inst_draws=135 inst_tris_k=7 hlod=0	
+treeShadowLod0	g3a_eye_s0112	5,586	4,434	8,652	inst_draws=172 inst_tris_k=12 hlod=0	
+treeShadowLod0	g3a_eye_s0212	11,010	9,841	11,779	inst_draws=200 inst_tris_k=13 hlod=0	
+treeShadowLod0	g3a_eye_s0312	10,416	8,603	6,520	inst_draws=150 inst_tris_k=8 hlod=0	
+treeShadowLod0	g3a_eye_s0412	7,195	5,729	11,107	inst_draws=117 inst_tris_k=6 hlod=0	
+treeShadowLod0	g3b_eye_s1232	6,831	4,858	8,058	inst_draws=151 inst_tris_k=13 hlod=4	
+treeShadowLod0	g3b_eye_s1332	10,998	9,239	7,141	inst_draws=130 inst_tris_k=11 hlod=0	
+treeShadowLod0	g3b_eye_s1432	6,138	5,065	10,438	inst_draws=113 inst_tris_k=21 hlod=4	
+treeShadowLod0	g3b_eye_s1532	3,872	2,872	4,664	inst_draws=78 inst_tris_k=5 hlod=8	
+treeShadowLod0	g3b_eye_s1632	4,455	3,486	5,117	inst_draws=88 inst_tris_k=6 hlod=8	
+hlod70	g3a_eye_s0012	4,930	3,781	6,011	inst_draws=135 inst_tris_k=7 hlod=0	
+hlod70	g3a_eye_s0112	5,539	4,407	6,040	inst_draws=172 inst_tris_k=12 hlod=0	
+hlod70	g3a_eye_s0212	5,878	4,687	7,268	inst_draws=200 inst_tris_k=13 hlod=0	
+hlod70	g3a_eye_s0312	7,008	5,502	7,183	inst_draws=150 inst_tris_k=8 hlod=0	
+hlod70	g3a_eye_s0412	5,527	4,198	5,650	inst_draws=117 inst_tris_k=6 hlod=0	
+hlod70	g3b_eye_s1232	5,449	3,745	6,361	inst_draws=153 inst_tris_k=13 hlod=5	
+hlod70	g3b_eye_s1332	6,109	4,109	6,005	inst_draws=134 inst_tris_k=10 hlod=2	
+hlod70	g3b_eye_s1432	5,038	3,810	6,366	inst_draws=113 inst_tris_k=21 hlod=4	
+hlod70	g3b_eye_s1532	4,411	3,151	5,320	inst_draws=78 inst_tris_k=5 hlod=8	
+hlod70	g3b_eye_s1632	5,031	3,681	5,688	inst_draws=88 inst_tris_k=6 hlod=8	
+hlod90	g3a_eye_s0012	5,146	3,754	6,112	inst_draws=135 inst_tris_k=7 hlod=0	
+hlod90	g3a_eye_s0112	5,445	3,952	6,297	inst_draws=172 inst_tris_k=12 hlod=0	
+hlod90	g3a_eye_s0212	6,006	4,354	7,394	inst_draws=200 inst_tris_k=13 hlod=0	
+hlod90	g3a_eye_s0312	6,099	4,389	7,314	inst_draws=150 inst_tris_k=8 hlod=0	
+hlod90	g3a_eye_s0412	6,194	3,904	5,840	inst_draws=117 inst_tris_k=6 hlod=0	
+hlod90	g3b_eye_s1232	6,299	3,877	6,538	inst_draws=153 inst_tris_k=13 hlod=5	
+hlod90	g3b_eye_s1332	5,822	3,891	6,119	inst_draws=132 inst_tris_k=11 hlod=1	
+hlod90	g3b_eye_s1432	5,541	3,723	5,857	inst_draws=113 inst_tris_k=21 hlod=4	
+hlod90	g3b_eye_s1532	4,276	3,052	4,745	inst_draws=78 inst_tris_k=5 hlod=8	
+hlod90	g3b_eye_s1632	4,638	3,154	5,260	inst_draws=88 inst_tris_k=6 hlod=8	
+trees0	g3a_eye_s0012	4,482	3,218	5,141	inst_draws=132 inst_tris_k=7 hlod=0	
+trees0	g3a_eye_s0112	5,422	3,714	6,673	inst_draws=169 inst_tris_k=12 hlod=0	
+trees0	g3a_eye_s0212	6,114	4,193	6,937	inst_draws=195 inst_tris_k=13 hlod=0	
+trees0	g3a_eye_s0312	4,768	3,516	5,861	inst_draws=147 inst_tris_k=8 hlod=0	
+trees0	g3a_eye_s0412	4,968	3,395	5,098	inst_draws=102 inst_tris_k=6 hlod=0	
+trees0	g3b_eye_s1232	4,851	3,159	5,524	inst_draws=123 inst_tris_k=10 hlod=0	
+trees0	g3b_eye_s1332	4,494	3,008	4,933	inst_draws=110 inst_tris_k=8 hlod=0	
+trees0	g3b_eye_s1432	4,205	2,844	4,901	inst_draws=91 inst_tris_k=17 hlod=0	
+trees0	g3b_eye_s1532	3,834	2,394	3,461	inst_draws=52 inst_tris_k=2 hlod=0	
+trees0	g3b_eye_s1632	3,729	2,726	3,475	inst_draws=63 inst_tris_k=3 hlod=0	
+lod10	g3a_eye_s0012	4,266	2,773	4,850	inst_draws=82 inst_tris_k=4 hlod=0	
+lod10	g3a_eye_s0112	4,304	2,920	4,586	inst_draws=96 inst_tris_k=5 hlod=0	
+lod10	g3a_eye_s0212	4,339	2,875	5,709	inst_draws=140 inst_tris_k=8 hlod=0	
+lod10	g3a_eye_s0312	4,493	3,026	4,652	inst_draws=99 inst_tris_k=4 hlod=0	
+lod10	g3a_eye_s0412	5,151	3,713	4,914	inst_draws=94 inst_tris_k=4 hlod=0	
+lod10	g3b_eye_s1232	4,688	3,072	5,054	inst_draws=105 inst_tris_k=9 hlod=4	
+lod10	g3b_eye_s1332	5,221	3,449	5,522	inst_draws=110 inst_tris_k=9 hlod=0	
+lod10	g3b_eye_s1432	6,332	3,976	7,458	inst_draws=100 inst_tris_k=20 hlod=4	
+lod10	g3b_eye_s1532	5,858	3,703	7,840	inst_draws=76 inst_tris_k=5 hlod=8	
+lod10	g3b_eye_s1632	6,945	4,970	8,459	inst_draws=88 inst_tris_k=6 hlod=8	
+lod12	g3a_eye_s0012	4,765	3,784	5,906	inst_draws=92 inst_tris_k=5 hlod=0	
+lod12	g3a_eye_s0112	11,257	10,222	13,889	inst_draws=134 inst_tris_k=8 hlod=0	
+lod12	g3a_eye_s0212	9,248	7,037	13,478	inst_draws=141 inst_tris_k=8 hlod=0	
+lod12	g3a_eye_s0312	11,300	10,214	6,597	inst_draws=106 inst_tris_k=5 hlod=0	
+lod12	g3a_eye_s0412	4,547	3,293	5,395	inst_draws=97 inst_tris_k=5 hlod=0	
+lod12	g3b_eye_s1232	4,966	3,727	5,588	inst_draws=119 inst_tris_k=10 hlod=4	
+lod12	g3b_eye_s1332	5,256	3,583	5,648	inst_draws=116 inst_tris_k=10 hlod=0	
+lod12	g3b_eye_s1432	4,457	3,464	5,574	inst_draws=102 inst_tris_k=20 hlod=4	
+lod12	g3b_eye_s1532	3,594	2,681	4,451	inst_draws=78 inst_tris_k=5 hlod=8	
+lod12	g3b_eye_s1632	5,241	4,238	5,176	inst_draws=88 inst_tris_k=6 hlod=8	
+far1400	g3a_eye_s0012	4,621	3,603	5,785	inst_draws=135 inst_tris_k=7 hlod=0	
+far1400	g3a_eye_s0112	5,494	4,302	7,245	inst_draws=172 inst_tris_k=12 hlod=0	
+far1400	g3a_eye_s0212	7,319	5,179	7,835	inst_draws=200 inst_tris_k=13 hlod=0	
+far1400	g3a_eye_s0312	6,253	4,821	6,154	inst_draws=150 inst_tris_k=8 hlod=0	
+far1400	g3a_eye_s0412	5,526	3,681	5,568	inst_draws=117 inst_tris_k=6 hlod=0	
+far1400	g3b_eye_s1232	5,666	4,062	6,172	inst_draws=151 inst_tris_k=13 hlod=4	
+far1400	g3b_eye_s1332	5,738	3,669	5,724	inst_draws=130 inst_tris_k=11 hlod=0	
+far1400	g3b_eye_s1432	5,502	3,999	6,337	inst_draws=113 inst_tris_k=21 hlod=4	
+far1400	g3b_eye_s1532	5,253	3,317	5,258	inst_draws=78 inst_tris_k=5 hlod=8	
+far1400	g3b_eye_s1632	4,687	3,387	5,374	inst_draws=88 inst_tris_k=6 hlod=8	
+addl0	g3a_eye_s0012	5,100	3,502	5,129	inst_draws=135 inst_tris_k=7 hlod=0	
+addl0	g3a_eye_s0112	5,322	3,829	6,069	inst_draws=172 inst_tris_k=12 hlod=0	
+addl0	g3a_eye_s0212	6,297	5,002	10,635	inst_draws=200 inst_tris_k=13 hlod=0	
+addl0	g3a_eye_s0312	9,882	8,003	11,610	inst_draws=150 inst_tris_k=8 hlod=0	
+addl0	g3a_eye_s0412	7,344	5,959	9,095	inst_draws=117 inst_tris_k=6 hlod=0	
+addl0	g3b_eye_s1232	6,404	5,009	11,453	inst_draws=151 inst_tris_k=13 hlod=4	
+addl0	g3b_eye_s1332	13,377	11,927	10,616	inst_draws=130 inst_tris_k=11 hlod=0	
+addl0	g3b_eye_s1432	12,450	10,002	13,091	inst_draws=113 inst_tris_k=21 hlod=4	
+addl0	g3b_eye_s1532	5,184	4,233	4,663	inst_draws=78 inst_tris_k=5 hlod=8	
+addl0	g3b_eye_s1632	4,879	3,876	4,916	inst_draws=88 inst_tris_k=6 hlod=8	
+detail0	g3a_eye_s0012	4,135	3,101	5,311	inst_draws=135 inst_tris_k=7 hlod=0	
+detail0	g3a_eye_s0112	5,415	4,317	6,725	inst_draws=172 inst_tris_k=12 hlod=0	
+detail0	g3a_eye_s0212	6,481	5,336	6,975	inst_draws=200 inst_tris_k=13 hlod=0	
+detail0	g3a_eye_s0312	5,488	4,097	5,920	inst_draws=150 inst_tris_k=8 hlod=0	
+detail0	g3a_eye_s0412	5,079	3,498	6,019	inst_draws=117 inst_tris_k=6 hlod=0	
+detail0	g3b_eye_s1232	5,208	3,425	5,963	inst_draws=151 inst_tris_k=13 hlod=4	
+detail0	g3b_eye_s1332	5,139	3,601	5,784	inst_draws=130 inst_tris_k=11 hlod=0	
+detail0	g3b_eye_s1432	4,699	3,492	6,121	inst_draws=113 inst_tris_k=21 hlod=4	
+detail0	g3b_eye_s1532	4,325	3,072	4,691	inst_draws=78 inst_tris_k=5 hlod=8	
+detail0	g3b_eye_s1632	4,594	3,216	4,708	inst_draws=88 inst_tris_k=6 hlod=8	
+aniso4	g3a_eye_s0012	4,839	3,533	5,438	inst_draws=135 inst_tris_k=7 hlod=0	
+aniso4	g3a_eye_s0112	6,215	4,739	6,343	inst_draws=172 inst_tris_k=12 hlod=0	
+aniso4	g3a_eye_s0212	5,935	4,738	7,940	inst_draws=200 inst_tris_k=13 hlod=0	
+aniso4	g3a_eye_s0312	6,390	5,091	5,973	inst_draws=150 inst_tris_k=8 hlod=0	
+aniso4	g3a_eye_s0412	5,629	4,099	5,473	inst_draws=117 inst_tris_k=6 hlod=0	
+aniso4	g3b_eye_s1232	5,371	3,970	6,747	inst_draws=151 inst_tris_k=13 hlod=4	
+aniso4	g3b_eye_s1332	14,013	12,554	7,499	inst_draws=130 inst_tris_k=11 hlod=0	
+aniso4	g3b_eye_s1432	7,909	6,346	12,237	inst_draws=113 inst_tris_k=21 hlod=4	
+aniso4	g3b_eye_s1532	6,694	5,267	11,320	inst_draws=78 inst_tris_k=5 hlod=8	
+aniso4	g3b_eye_s1632	10,361	9,389	9,719	inst_draws=88 inst_tris_k=6 hlod=8	
+proposed	g3a_eye_s0012	10,832	7,969	5,593	inst_draws=135 inst_tris_k=7 hlod=0	
+proposed	g3a_eye_s0112	11,322	10,426	8,622	inst_draws=172 inst_tris_k=12 hlod=0	
+proposed	g3a_eye_s0212	7,352	6,459	7,470	inst_draws=200 inst_tris_k=13 hlod=0	
+proposed	g3a_eye_s0312	4,940	4,039	5,597	inst_draws=150 inst_tris_k=8 hlod=0	
+proposed	g3a_eye_s0412	4,779	3,644	6,103	inst_draws=117 inst_tris_k=6 hlod=0	
+proposed	g3b_eye_s1232	5,043	3,960	6,398	inst_draws=151 inst_tris_k=13 hlod=4	
+proposed	g3b_eye_s1332	5,096	3,797	8,169	inst_draws=130 inst_tris_k=11 hlod=0	
+proposed	g3b_eye_s1432	5,013	4,024	6,525	inst_draws=113 inst_tris_k=21 hlod=4	
+proposed	g3b_eye_s1532	4,882	3,959	4,330	inst_draws=78 inst_tris_k=5 hlod=8	
+proposed	g3b_eye_s1632	4,507	3,714	5,447	inst_draws=88 inst_tris_k=6 hlod=8	
+proposedB	g3a_eye_s0012	5,483	3,975	5,541	inst_draws=135 inst_tris_k=7 hlod=0	
+proposedB	g3a_eye_s0112	4,985	3,846	6,587	inst_draws=172 inst_tris_k=12 hlod=0	
+proposedB	g3a_eye_s0212	5,863	4,816	7,476	inst_draws=200 inst_tris_k=13 hlod=0	
+proposedB	g3a_eye_s0312	5,380	3,881	5,423	inst_draws=150 inst_tris_k=8 hlod=0	
+proposedB	g3a_eye_s0412	4,985	3,805	5,158	inst_draws=117 inst_tris_k=6 hlod=0	
+proposedB	g3b_eye_s1232	5,054	3,688	7,000	inst_draws=151 inst_tris_k=13 hlod=4	
+proposedB	g3b_eye_s1332	5,159	3,882	6,042	inst_draws=130 inst_tris_k=11 hlod=0	
+proposedB	g3b_eye_s1432	4,939	3,514	6,085	inst_draws=113 inst_tris_k=21 hlod=4	
+proposedB	g3b_eye_s1532	6,086	3,921	7,359	inst_draws=78 inst_tris_k=5 hlod=8	
+proposedB	g3b_eye_s1632	11,319	10,494	9,778	inst_draws=88 inst_tris_k=6 hlod=8	
+base	g3a_eye_s0012	9,012	7,590	8,023	inst_draws=135 inst_tris_k=7 hlod=0	
+base	g3a_eye_s0112	5,818	4,732	5,800	inst_draws=172 inst_tris_k=12 hlod=0	
+base	g3a_eye_s0212	5,764	4,571	7,649	inst_draws=200 inst_tris_k=13 hlod=0	
+base	g3a_eye_s0312	5,221	4,004	5,845	inst_draws=150 inst_tris_k=8 hlod=0	
+base	g3a_eye_s0412	6,694	5,328	8,702	inst_draws=117 inst_tris_k=6 hlod=0	
+base	g3b_eye_s1232	5,608	4,281	7,759	inst_draws=151 inst_tris_k=13 hlod=4	
+base	g3b_eye_s1332	6,032	4,474	7,312	inst_draws=130 inst_tris_k=11 hlod=0	
+base	g3b_eye_s1432	4,873	3,416	5,769	inst_draws=113 inst_tris_k=21 hlod=4	
+base	g3b_eye_s1532	4,423	2,728	4,506	inst_draws=78 inst_tris_k=5 hlod=8	
+base	g3b_eye_s1632	4,706	3,485	4,929	inst_draws=88 inst_tris_k=6 hlod=8	
+
+variant	mean_wall_ms	mean_cpu_submit_ms	mean_mirror3_ms	wall_vs_base_%
+base	5,612	4,077	6,281	-1,8
+scale085	5,346	3,956	6,174	-6,4
+scale075	7,257	5,792	7,565	+27,0
+msaa1	7,048	6,114	7,734	+23,4
+hdr0	5,778	4,096	6,373	+1,1
+post0	5,402	3,907	6,314	-5,5
+shadow0	5,993	4,553	9,649	+4,9
+shadow60c2	5,398	3,994	6,429	-5,5
+shadow80c3	5,312	3,639	5,682	-7,0
+softOff	5,340	4,148	6,145	-6,5
+softLow	5,031	3,463	5,823	-11,9
+shadowRes1024	5,305	3,640	5,995	-7,2
+treeShadowLod0	7,089	5,740	7,852	+24,1
+hlod70	5,492	4,107	6,189	-3,9
+hlod90	5,547	3,805	6,148	-2,9
+trees0	4,687	3,217	5,200	-18,0
+lod10	5,160	3,448	5,904	-9,7
+lod12	6,463	5,224	7,170	+13,1
+far1400	5,606	4,002	6,145	-1,9
+addl0	7,624	6,134	8,728	+33,4
+detail0	5,057	3,716	5,822	-11,5
+aniso4	7,335	5,973	7,869	+28,4
+proposed	6,377	5,199	6,425	+11,6
+proposedB	5,925	4,582	6,645	+3,7
+base	5,815	4,461	6,630	+1,8

@@ -102,7 +102,7 @@ MonoBehaviour:
     budgetShadowMs: 1.5
     budgetStatus: UNMEASURED
   - name: High
-    renderScale: 1
+    renderScale: 0.85
     msaa: 2
     postAntialiasing: 0
     hdr: 1
@@ -114,7 +114,7 @@ MonoBehaviour:
     cascade2Split: 0.25
     cascade4Split: {x: 0.08, y: 0.25, z: 0.55}
     softShadows: 1
-    softShadowQuality: 2
+    softShadowQuality: 1
     shadowDepthBias: 0.8
     shadowNormalBias: 0.8
     anisotropic: 1
@@ -127,7 +127,7 @@ MonoBehaviour:
     treeCardLodScale: 0.5
     treeThinStartM: 90
     treeCullM: 600
-    treeShadowLodMask: 3
+    treeShadowLodMask: 1
     leafAlphaToCoverage: 1
     simpleFoliage: 1
     forestHlodM: 120
