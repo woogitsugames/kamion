@@ -24,8 +24,8 @@ namespace Game.Cameras
 
         [Header("Cab")]
         public float cabFov = 55f;
-        /// <summary>Default downward look in the cab so the dashboard top and steering-wheel rim are in view.</summary>
-        public float cabPitchDown = 7f;
+        /// <summary>Informational: the rest gaze is DriverHead.RestPitchDownDeg (same as the A7 control cameras).</summary>
+        public float CabPitchDown => DriverHead.RestPitchDownDeg;
         public float headGain = 0.006f;      // m per m/s^2
         public float headMaxOffset = 0.04f;  // m
         public float headFrequency = 1.8f;   // Hz
@@ -47,6 +47,8 @@ namespace Game.Cameras
         float m_OrbitYaw = 210f, m_OrbitPitch = 18f;
 
         public Vector3 HeadOffset => m_HeadPos;
+        public float LookYaw => m_LookYaw;
+        public float LookPitch => m_LookPitch;
 
         public void NextMode()
         {
@@ -70,8 +72,8 @@ namespace Game.Cameras
         {
             if (mode == CameraMode.Cab)
             {
-                m_LookYaw = Mathf.Clamp(m_LookYaw + px.x * lookDegPerPixel, -130f, 130f);
-                m_LookPitch = Mathf.Clamp(m_LookPitch - px.y * lookDegPerPixel, -35f, 25f);
+                m_LookYaw = DriverHead.ClampYaw(m_LookYaw + px.x * lookDegPerPixel);
+                m_LookPitch = DriverHead.ClampPitch(m_LookPitch - px.y * lookDegPerPixel);
                 m_LookIdle = 0f;
             }
             else if (mode == CameraMode.Orbit)
@@ -113,7 +115,8 @@ namespace Game.Cameras
             }
         }
 
-        void UpdateCab(float dt)
+        /// <summary>Public for tests; called from LateUpdate in Cab mode.</summary>
+        public void UpdateCab(float dt)
         {
             var anchor = eyeAnchor != null ? eyeAnchor : target;
             // Head lags behind the cab: braking (a_z < 0) moves the head forward, cornering moves it outward.
@@ -130,7 +133,10 @@ namespace Game.Cameras
                 m_LookYaw = Mathf.MoveTowards(m_LookYaw, 0f, lookReturnRate * dt);
                 m_LookPitch = Mathf.MoveTowards(m_LookPitch, 0f, lookReturnRate * dt);
             }
-            cam.transform.SetPositionAndRotation(anchor.TransformPoint(m_HeadPos), anchor.rotation * Quaternion.Euler(cabPitchDown + m_LookPitch, m_LookYaw, 0f));
+            // The anchor is a child of the cab-suspension pivot: the head follows the sprung cab. Look-around turns the head
+            // about the neck pivot (DriverHead), within neck limits.
+            cam.transform.SetPositionAndRotation(anchor.TransformPoint(DriverHead.LocalEyePosition(m_LookYaw, m_LookPitch, m_HeadPos)),
+                anchor.rotation * DriverHead.LookRotation(m_LookYaw, m_LookPitch));
             cam.fieldOfView = cabFov;
             cam.nearClipPlane = 0.05f;
         }

@@ -313,6 +313,14 @@ namespace Game.Editor.Setup
                 var e = new Vector3(float.Parse(eye.Groups[1].Value, CultureInfo.InvariantCulture), float.Parse(eye.Groups[2].Value, CultureInfo.InvariantCulture), float.Parse(eye.Groups[3].Value, CultureInfo.InvariantCulture));
                 if ((e - d.driverEyePointDims).sqrMagnitude > 1e-8f) errors.Add($"driver_eye_point_m {e} != {d.driverEyePointDims}");
             }
+            Check("driver_eye_above_h_point_m", d.driverEyeAboveHPoint);
+            var hp = Regex.Match(json, "\"driver_h_point_m\"\\s*:\\s*\\{\\s*\"value\"\\s*:\\s*\\[\\s*(-?[0-9.]+)\\s*,\\s*(-?[0-9.]+)\\s*,\\s*(-?[0-9.]+)");
+            if (!hp.Success) errors.Add("driver_h_point_m missing");
+            else
+            {
+                var h = new Vector3(float.Parse(hp.Groups[1].Value, CultureInfo.InvariantCulture), float.Parse(hp.Groups[2].Value, CultureInfo.InvariantCulture), float.Parse(hp.Groups[3].Value, CultureInfo.InvariantCulture));
+                if ((h - d.driverHPointDims).sqrMagnitude > 1e-8f) errors.Add($"driver_h_point_m {h} != {d.driverHPointDims}");
+            }
             if (errors.Count > 0) throw new InvalidDataException("TractorDimensions out of sync with art-source/truck/dims.json: " + string.Join("; ", errors));
             return d;
         }

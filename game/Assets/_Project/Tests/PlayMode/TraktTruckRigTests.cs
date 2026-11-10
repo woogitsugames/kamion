@@ -42,6 +42,9 @@ namespace Game.Tests
             foreach (var s in vis.wheelSpinners)
                 Assert.That(s.GetComponentsInChildren<Renderer>(true).Length, Is.GreaterThan(0), "art wheel under the physics spinner " + s.parent.name);
             Assert.IsNotNull(vis.cabPivot.Find("DriverEyePoint"), "eye point on the cab-suspension pivot");
+            var hPoint = vis.cabPivot.Find("DriverHPoint");
+            Assert.IsNotNull(hPoint, "seat H-point marker on the cab-suspension pivot (ADR 0052)");
+            Assert.That((vis.cabPivot.Find("DriverEyePoint").position - hPoint.position - m_Truck.transform.up * 0.635f).magnitude, Is.LessThan(0.003f), "eye = H-point + 0.635 m (UNECE R46)");
             Assert.IsNull(m_Truck.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name.StartsWith("CAB_ShellPlaceholder")), "interior shell placeholder removed");
             var mirrors = m_Truck.GetComponentsInChildren<RenderTextureMirror>(true);
             Assert.That(mirrors.Length, Is.EqualTo(6), "render texture on every mirror (R46 classes II x2, IV x2, V, VI; review r5 C5)");
