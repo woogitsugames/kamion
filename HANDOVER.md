@@ -1,6 +1,7 @@
 # HANDOVER — kamion, sesja 8 (2026-11-10 ok. 22:00 UTC start; limit 5 h reset 2026-11-11 03:00 UTC)
 
 ## Najpierw
+- **Limit 5 h na 83 % o ~23:50 UTC** (reset 03:00 UTC) — od teraz bez nowych agentów, dopóki działa ≥ 2.
 - main = ten commit. Start s8: 8 agentów Fable przejmuje/uruchomionych (tabela). GPT/Codex pracuje nad importem Megascans (ADR 0084, `gpt-megascans`, STATUS `artifacts/megascans-r1/STATUS.md`) — nie ruszać, scalić po REPORT.md. Antigravity (Argon 4) — zadanie `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` (tło za krawędzią świata, ADR 0085, gałąź `argon-edge`).
 - Decyzja właściciela D47: firanka bez pasa (B), osłony boczne zostają (ADR 0083).
 - Decyzja właściciela D46: ogranicznik na zjeździe dopuszcza ~94 km/h (`overrunBrakeOffsetKmh = 4` zostaje, ADR 0082).
@@ -13,7 +14,7 @@
 | straż JRG2 | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | s8: r5 gotowe (a2761cf), recenzja PASS warunkowy → runda r6 (tynk P0) w toku |
 | osobówki r10 | 0078 | agent-a2215bcc98d109edc | artifacts/cars-r10 | s8: GOTOWE do scalenia `032af23` (mora usunięta, lakier jaśniejszy; bok czarnego auta nadal ciemniejszy od opony; Low +0,69 %) — recenzja visual-critic m3 do zrobienia |
 | zabudowa r10 | 0081 | agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | s8: GOTOWE do scalenia `70ef3ba` (r2, facade_atlas High 17,4 MB). Znalezisko: `_Tint` (Color) linearyzowany 2× we WSZYSTKICH zestawach World PBR — poprawione tylko dla budynków (`tint_linear`); globalnie → osobne zadanie ADR 0086 po scaleniach |
-| zewnętrze TRAKT + naczepa | 0083 | agent-a4049e15e1ab8c681 | artifacts/truck-ext-r10 | s8: D47 (bez pasa), recenzja PASS warunkowy → runda r8 w toku |
+| zewnętrze TRAKT + naczepa | 0083 | agent-a4049e15e1ab8c681 | artifacts/truck-ext-r10 | SCALONE `68e5335` (r8, wariant B, dach < 90 % luminancji). Na main wymagane TruckAssetBuilder.BuildBatch + WorldTruckInstaller.InstallBatch. Otwarte → nowe zadanie: lakier kabiny, szyba czołowa, reflektory w dzień (TruckExterior.shader/TruckLights.cs). Worktree do usunięcia |
 | Kwadrat Park r11 (recenzja) | 0071 | kwadrat-r11 | artifacts/kwadrat-r11 | s8: nowy agent Fable |
 | światło r11 (recenzja) | 0080 | light-r11 | artifacts/light-r11 | s8: raport `195eb5a` (niebo 6800 K, korony, mgiełka, szyba); kończy w tle |
 | import Megascans | 0084 | gpt-megascans | artifacts/megascans-r1 | GPT/Codex w toku |
