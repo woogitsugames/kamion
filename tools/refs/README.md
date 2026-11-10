@@ -23,3 +23,15 @@ cache odpowiedzi `.cache/`, arkusze `artifacts/refs/mapillary/<region>/sheet_<ka
 `--max`, `--pano` włącza panoramy.
 
 Testy (bez sieci i tokenu): `uv run --project tools/refs pytest tests/refs -q`
+
+## Otwarte źródła referencji (D43, ADR 0066)
+
+Bez kluczy i kont. Trasa = 55 ujęć z `docs/owner/PHOTO-LIST.md` (`refs_common.parse_photo_list`). Wyniki w `Data/raw/refs/<źródło>/`
+(poza gitem, `manifest.jsonl`), montaże w `artifacts/refs/<źródło>/shot_NN.jpg`. Tylko CC0/PDM/CC BY/CC BY-SA; NC/ND odrzucane.
+
+    uv run --project tools/refs python tools/refs/open_sources.py --source kartaview|panoramax|commons|openverse [--only-weak]
+    uv run --project tools/refs python tools/refs/open_sources.py --source commons --categories
+    uv run --project tools/refs python tools/refs/gugik_ortho.py            # WMS GUGiK, okno 160 m, EPSG:2180
+    uv run --project tools/refs python tools/refs/bialystok_open_data.py --catalog   # ArcGIS Online Miasta Białystok
+
+Przegląd wyników: `docs/REFERENCES.md` (tabela źródeł). Testy: `uv run --project tools/refs pytest tests/refs -q`.
