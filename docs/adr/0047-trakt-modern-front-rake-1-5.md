@@ -84,3 +84,21 @@ European premium tractor were shown as a reference for proportion, roundness and
   parked curtain sit on the sight line behind it; the frit print and the door-glass channel follow the exterior
   opening / corner arc. Old interface files (no opening data) still build the A6 box pillar.
 - Door-mirror housing seen from the seat: 12.5 deg (B2 11.5 deg, two separate heads) - not changed here.
+
+## Revision r4 (2026-11-10): face-down louvres, class VI mirror that shows the ground, slimmer door-mirror head
+- Louvres (5 in the mask stem + 3 in the bumper): the face is tilted 20 deg face-down (`LOUVRE_TILT`, WORKING_VALUE;
+  top edge = nose with a 4 mm land, the face falls back 18 mm over its 50 mm height), so it mirrors the road and the
+  dark ground instead of the sky; the lane-line dashes lie on the tilted faces. The r3 shader env term stays.
+- Class VI front mirror: the old head sat above the sun visor (z 3.28 m; from the eye point the header hid it) with
+  the glass tilted 35 deg up at the sky. Now it hangs in front of the top of the windscreen on the passenger side
+  (centre 0.96 / 1.58 / 2.96 m, visible from the eye point through the glass), aimed with `mirror_aim`: the central
+  ray from the eye reflects to the ground 1.0 m ahead of the bumper face, 0.76 m to the passenger side. Field
+  requirement used for the target: UN ECE R46 class VI = ground strip from the front plane to 2.0 m ahead, from the
+  driver-side plane to 2.0 m outboard of the passenger side - regulation text not opened, UNVERIFIED. The mirror
+  camera frame travels in `truck_exterior_manifest.json` (`MIRROR_Front` pivot / normal / axes), regenerated.
+- Door-mirror head: 0.25 x ~0.15 m -> 0.222 x ~0.115 m (glass 0.198 m wide), blades 40 x 70 mm. Obstruction from
+  the eye point (`pillar_obstruction.py`, full export, pitch -6 / 0 / +6): r3 12.5 / 12.5 / 12.75 deg ->
+  r4 10.75 / 11.25 / 11.25 deg (B2 11.5 deg); A-pillar wedge unchanged 7.0 / 7.0 / 6.75
+  (`modern-front/pillar_obstruction_r4.json`).
+- r4 export: exterior LOD0 101 592 / LOD1 43 000 / LOD2 15 297, `exterior/check_export.py` PASS. Interior not touched.
+  Unity frames: `artifacts/owner/modern-front/unity4/`. Phone cost not measured: UNVERIFIED (triangle counts lower).
