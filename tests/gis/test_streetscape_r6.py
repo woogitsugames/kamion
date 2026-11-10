@@ -86,10 +86,63 @@ def test_hedge_mass_is_closed_and_tall_enough():
     buf = MeshBuf()
     poly = Polygon([(0, 0), (8, 0), (9, 2), (7, 3.5), (1, 3), (-0.5, 1.5)]).buffer(0.3)
     assert PT.hedge_mass(buf, poly, lambda e, n: np.zeros(len(np.atleast_1d(e))), ("t",)) == 1
-    V = np.vstack([p.V for p in buf.parts])
-    assert PT.HEDGE_H[0] - 0.1 <= V[:, 2].max() <= PT.HEDGE_H[1] + 0.15
+    solid = [p for p in buf.parts if p.mat != "hedge_sprig_berberis"]
+    V = np.vstack([p.V for p in solid])
+    assert PT.HEDGE_H[0] - 0.1 <= V[:, 2].max() <= PT.HEDGE_H[1] + 0.2
     assert V[:, 2].min() < 0.0                                   # foot tucked into the ground
-    assert all(p.mat == "hedge_berberis" for p in buf.parts)
+    assert {p.mat for p in buf.parts} == {"hedge_berberis", "hedge_shell_berberis", "hedge_sprig_berberis"}
+
+
+def test_hedge_reads_as_plants_not_a_box():
+    """ADR 0049 addendum: alpha shell outside a darker core, open foot, lumpy top, loose shoots above the top."""
+    from shapely.geometry import Polygon
+    from roads.meshing import MeshBuf
+    from streetscape import plantings as PT
+    buf = MeshBuf()
+    poly = Polygon([(0, 0), (12, 0), (12, 1.6), (0, 1.6)])
+    st = {}
+    PT.hedge_mass(buf, poly, lambda e, n: np.zeros(len(np.atleast_1d(e))), ("box",), h=0.7, stats=st)
+    core = np.vstack([p.V for p in buf.parts if p.mat == "hedge_berberis"])
+    shell = np.vstack([p.V for p in buf.parts if p.mat == "hedge_shell_berberis"])
+    sprig = np.vstack([p.V for p in buf.parts if p.mat == "hedge_sprig_berberis"])
+    assert shell[:, 2].min() > 0.04                              # shell open at the foot: dark core / stems
+    assert core[:, 2].max() < shell[:, 2].max() - 0.03           # core inside the leaf shell
+    assert sprig[:, 2].max() > shell[:, 2].max() + 0.03          # shoots break the top silhouette
+    top = shell[shell[:, 2] > 0.5]
+    assert np.std(top[:, 2]) > 0.02                              # lumpy, not a flat slab
+    side = shell[(np.abs(shell[:, 1] - 0.8) > 0.7) & (shell[:, 2] > 0.3) & (shell[:, 2] < 0.6)]
+    assert np.ptp(np.abs(side[:, 1] - 0.8)) > 0.06               # bulging plants along the face
+    assert 500 < st["tris"] < 6000                               # 12 m hedge: budget per metre ~40-500 tris
+
+
+def test_osm_hedge_gaps_at_gates_and_species():
+    from roads.meshing import MeshBuf
+    from streetscape import plantings as PT
+    buf = MeshBuf()
+    src = {"osm": {"ways": [{"osm_way": 1, "part": 0, "tags": {"barrier": "hedge", "species": "Thuja occidentalis"},
+                             "geometry": {"coordinates": [[0, 0], [30, 0]]}}],
+                   "nodes": [{"tags": {"barrier": "gate"}, "geometry": {"coordinates": [10, 0]}},
+                             {"tags": {"barrier": "sliding_gate"}, "geometry": {"coordinates": [20, 0.3]}}]}}
+    rep = {}
+    PT.osm_hedges(buf, src, (0.0, 0.0), None, lambda e, n: np.zeros(len(np.atleast_1d(e))), rep)
+    r = rep["osm_hedges"]
+    assert r["gaps"] == 2 and r["hedges"] == 3
+    assert abs(r["m"] - (30 - 1.2 - 4.0)) < 0.2
+    assert {p.mat for p in buf.parts} == {"hedge_thuja", "hedge_shell_thuja", "hedge_sprig_thuja"}
+    V = np.vstack([p.V for p in buf.parts if p.mat == "hedge_shell_thuja"])
+    assert not np.any((np.abs(V[:, 0] - 10) < 0.3)) and not np.any(np.abs(V[:, 0] - 20) < 1.5)   # open gates
+    assert 1.4 < V[:, 2].max() < 2.6
+    assert PT._hedge_species({"genus": "Ligustrum"}) == "privet" and PT._hedge_species({}) == "privet"
+
+
+def test_hedge_textures_alpha_coverage():
+    from streetscape import hedge_textures as HT
+    tx = HT.textures()
+    for sp in HT.SPECIES:
+        assert 0.5 < HT.coverage(tx[f"hedge_shell_{sp}"]) < 0.92      # holes: the dark core shows through
+        a = np.asarray(tx[f"hedge_sprig_{sp}"])[..., 3]
+        assert 0.15 < (a > 127).mean() < 0.7
+        assert a[:2].max() == 0 and a[:, :2].max() == 0 and a[:, -2:].max() == 0   # no straight clip edges
 
 
 # ------------------------------------------------------------------------------------------ outputs

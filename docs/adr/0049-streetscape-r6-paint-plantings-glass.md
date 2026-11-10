@@ -72,3 +72,52 @@ the road's 1025 /m).
   (`decal_tyre`) render on High but not in the Low WorldC frame (pre-existing, cause not found); paint/asphalt
   contrast ~1.5 (critic asks >= 1.8, i.e. darker asphalt - not touched here); concrete fence (`concrete_fence`, OSM
   barrier=wall) got the missing `concrete_fence_panel` set but stays plain.
+
+## Addendum 2026-11-10 - hedges read as plants, not boxes
+Context: the 0.6-0.8 m berberis masses of Decision 2 read as solid boxes ("bryły") in WorldC: one closed smooth mesh,
+straight silhouette, flat top, uniform side, nothing at the foot. Reference: CC0 Commons photo 20201102_152339 (Rakoon),
+clipped red berberis cushions on the lawns of Rondo Pamięci Bieżeństwa. No Google sources.
+
+Decision (generator only, `streetscape.plantings` + new `streetscape.hedge_textures`; no Unity code change, the
+importer's existing `texture` + `alpha_cutoff` path = URP Lit alpha clip, double sided, coverage-preserving mips):
+1. Hedge = **dark opaque core** (`hedge_<sp>`, hedge_foliage set, albedo ~0.4 x leaf, half the perimeter vertices, 1.3 x
+   5 cm inside the shell) + **alpha leaf shell** 5 cm outside it (`hedge_shell_<sp>`, 0.6 m tile of drawn leaves at
+   true size, berberis coverage 0.73, gaps show the core = depth; shell open below 14 % of the height so the foot
+   reads dark / woody) + **loose-shoot alpha cards** (`hedge_sprig_<sp>`, 2 x 2 atlas of leafy tufts under a ragged
+   top outline, cell 0.3 m) on the top edge (every ~0.17 m for berberis), the upper sides (35 %) and the crown
+   (~1.4 /m2), rooted 25 % inside the shell, leaning out, random yaw: ragged top and end silhouettes.
+2. **One plant every 0.55-0.85 m** along the perimeter: outward lump (0.08 m) and crown height (dome 0.2 h); 7 % thin /
+   missing plants become dips; lumpy 2-D crown on the top fill (0.6 m). Cross-section per species: berberis
+   `cushion` (barrel sides, rounded 0.4 m shoulder, like the photo), privet / hornbeam / thuja `box`.
+3. **Species table** (`SPECIES`: berberis_red, privet, hornbeam, thuja; heights 0.6-0.8 / 1.2-1.7 / 1.4-2.0 /
+   1.6-2.2 m, WORKING_VALUE) chosen per bed (`plant` in the override) or per OSM way; per-hedge hashed height, UV
+   offset and rotation, so no two neighbouring beds repeat.
+4. **OSM `barrier=hedge`** (`osm_hedges`, none in tile C): hedge along the way, cut at the road footprint, opened at
+   every gate / entrance node within 1 m (tag `width`, else 1.2 m wicket, 4 m sliding / vehicle gate), square
+   softened ends at the gate posts; species from species/genus tags, needleleaved -> thuja, default privet.
+5. Textures are our own drawings (leaves from primitives), `docs/LICENSES.md` `world-misc-textures`.
+
+Numbers (WorldC editor, 1600 x 740; stats.txt draw/tri estimates before SRP batching):
+
+| | before (r6) | after |
+|---|---|---|
+| hedge tris, 4 beds (flat ground, same polygons) | 5 678 | 16 929 (core 4 711, shell 9 408, shoots 2 810) |
+| hedge + 25 island shrubs, whole region | ~9 200 | 27 645 (one chunk) |
+| `hedge_a_close` Low: draws / shadow draws / tris | 197 / 73 / 257 k | 199 / 75 / 276 k |
+| `hedge_a_close` High | 219 / 453 / 327 k | 221 / 459 / 346 k |
+| `photo_biezenstwa_ground` Low draws / tris | 285 / 288 k | 287 / 306 k |
+| `photo_biezenstwa_ground` p10, Low clear / overcast | 22.4 % / 36.5 % | 22.7 % / 36.5 % |
+| hedge side mean sRGB, Low overcast (photo 64, 46, 37) | 40, 26, 26 | 68, 46, 43 |
+| furniture mesh memory Low / High | 6.6 / 6.6 MB | 7.0 / 7.0 MB |
+| new textures (8 PNG, 512 px) | - | 1.3 MB in art-source; 2 used in tile C |
+
+Low budget (`docs/06` §6, 300-400 draws, 400-600 k tris) holds: +2 draws, +2 shadow draws, +19 k tris in the frames
+that see the roundabout. Iterations: (1) shell pink and glossy, shoots invisible (twigs lost in the mips), slab
+profile; (2) cushion profile, browner leaves, rough 0.97, dense leafy tufts; (3) core halved, colour tuned to the photo.
+Evidence: `artifacts/world-fixes/hedges/` (before/, after/, sheets/before_after_*.jpg, sheets/reference_montage.jpg,
+hedge_cameras.json = two extra close-up cameras via `visual-qa.ps1 -Gate3`).
+
+Open: no phone measurement (alpha-clip overdraw on the A16 `UNVERIFIED`; furniture is in LOD0-1 on both tiers, a
+Low-only shell / shoot cut-off needs an importer layer split - leader); shell gaps read as dark speckles at 10-20 m on
+Low; the beds are wider than the photo's (traced from the orthophoto, heights / species still to confirm at the
+owner's photo session); independent `visual-critic` review not done in this task (subagents not allowed here).
