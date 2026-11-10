@@ -100,9 +100,24 @@ sc("launch_6pct_uphill_comb", "Standstill facing uphill on 6% held by the servic
     chk("time_to_kmh", arg=15, mn=3, mx=35, variant="laden40",
         source="40 t on 6%: traction-limited (~0.8 x 11 t on the drive axle = 90 kN) minus 25 kN grade -> ~1.6 m/s^2 -> 2.6 s + clutch engagement; plausibility"),
     chk("max_clutch_temp_c", mx=250, source="hill start must not overheat the clutch (thermal model WORKING_VALUE)"),
+    chk("time_to_kmh", arg=15, mn=4.05, mx=4.95, variant="laden40",
+        source="regression guard = PlayMode CombinationLabTests.HillStart_6pct_40t (runner 4.5 s +-10 %); 6.2 s after ADR 0019 was a 3-2-3 shift, ADR 0024"),
     chk("shift_count", mx=14, source="no gear hunting on the climb (Stage 2 fix: up-shift lands above the grade down-shift line)"),
+    chk("downshift_count", mx=0, frm=2, to=25,
+        source="full throttle and still accelerating: no down-shift (predictive down-shift hold, ADR 0024)"),
     chk("min_speed_kmh", mn=10, frm=20, source="keeps climbing after the start (no stall-out from hunting)")] + stable,
    variants=COMB, ground={"gradePercent": 6, "surface": "dry_asphalt"})
+
+sc("launch_12pct_uphill_comb", "40 t hill start on 12% (steep ramp), full throttle: climbs without gear hunting",
+   "docs/04 s6.2", 45,
+   {"type": "timeline", "keys": [key(0, brake=1), key(2.0, throttle=1)]},
+   [chk("rollback_m", mx=0.05, source="no rollback"), chk("stalled", mx=0, source="no stall"),
+    chk("time_to_kmh", arg=15, mn=5, mx=15, source="plausibility; 8.7 s measured with ADR 0024 strategy (WORKING_VALUE)"),
+    chk("shift_count", mx=6, source="no gear hunting: 1-2-3-4-5 then hold (17 shifts / 7 down-shifts 4-5-4 before ADR 0024)"),
+    chk("downshift_count", mx=0, frm=2, source="full throttle and still accelerating or on the governor: no down-shift (ADR 0024)"),
+    chk("min_speed_kmh", mn=18, frm=20, source="power-limited climb: 0.92 x 368 kW / (40 t x 9.81 x 0.125) = 6.9 m/s (25 km/h) upper bound; "
+        "18 km/h floor = 13.2 km/h with hunting before ADR 0024")] + stable,
+   variants=["laden40"], ground={"gradePercent": 12, "surface": "dry_asphalt"})
 
 sc("launch_6pct_uphill_light_comb", "6% hill start with 35 % throttle (gentle driver)", "docs/04 s6.2", 60,
    {"type": "timeline", "keys": [key(0, brake=1), key(2.0, throttle=0.35)]},

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "id": "launch_12pct_uphill_comb",
+  "description": "40 t hill start on 12% (steep ramp), full throttle: climbs without gear hunting",
+  "spec": "docs/04 s6.2",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 12,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 45,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 2.0,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "rollback_m",
+      "status": "WORKING_VALUE",
+      "source": "no rollback",
+      "max": 0.05
+    },
+    {
+      "metric": "stalled",
+      "status": "WORKING_VALUE",
+      "source": "no stall",
+      "max": 0
+    },
+    {
+      "metric": "time_to_kmh",
+      "status": "WORKING_VALUE",
+      "source": "plausibility; 8.7 s measured with ADR 0024 strategy (WORKING_VALUE)",
+      "min": 5,
+      "max": 15,
+      "arg": 15
+    },
+    {
+      "metric": "shift_count",
+      "status": "WORKING_VALUE",
+      "source": "no gear hunting: 1-2-3-4-5 then hold (17 shifts / 7 down-shifts 4-5-4 before ADR 0024)",
+      "max": 6
+    },
+    {
+      "metric": "downshift_count",
+      "status": "WORKING_VALUE",
+      "source": "full throttle and still accelerating or on the governor: no down-shift (ADR 0024)",
+      "max": 0,
+      "from": 2
+    },
+    {
+      "metric": "min_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "power-limited climb: 0.92 x 368 kW / (40 t x 9.81 x 0.125) = 6.9 m/s (25 km/h) upper bound; 18 km/h floor = 13.2 km/h with hunting before ADR 0024",
+      "min": 18,
+      "from": 20
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

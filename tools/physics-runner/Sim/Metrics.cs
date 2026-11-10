@@ -169,6 +169,19 @@ namespace PhysicsRunner.Sim
                 case "final_gear": return s[i1].Gear;
                 case "max_gear": return Max(s, i0, i1, x => x.Gear);
                 case "shift_count": return r.ShiftCount;
+                case "downshift_count":
+                {
+                    // Engaged forward gear lower than the previous engaged forward gear (neutral during a shift skipped).
+                    int n = 0, last = 0;
+                    for (int i = i0; i <= i1; i++)
+                    {
+                        int g = s[i].Gear;
+                        if (g <= 0) continue;
+                        if (last > 0 && g < last) n++;
+                        last = g;
+                    }
+                    return n;
+                }
                 case "rejected_shifts": return r.RejectedShifts;
                 case "max_yaw_rate_dps": return Max(s, i0, i1, x => Math.Abs(x.YawRate)) * MathUtil.Rad2Deg;
                 // ---------------- combination ----------------
