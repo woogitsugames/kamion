@@ -52,8 +52,9 @@ widoczne na elewacji (krój DejaVu Sans Bold); **bez logo PSP, herbu, znaku słu
    więc brud siedzi tam, gdzie siedzi w rzeczywistości, a środek nie kafelkuje widocznie. Drugi materiał
    `fire_station_alpha` (alpha test): przęsła płotu, brama, napisy. Tuje: istniejące `hedge_thuja` + `hedge_shell_thuja`.
 4. **LOD i budżet**: `landmark_fire_station*` → końce LOD [150, 450, 20000] m × lodBias (InstanceImporter.Policy i
-   `build_world.instance_ends`, trzymane w parze). LOD0 8 240 trójkątów (budżet zadania ≤ 15 000), LOD1 2 950
-   (bez ościeży, rur, słupków, powłoki tuj), LOD2 164 (bryły + dachy + okna szczytu). Cztery materiały.
+   `build_world.instance_ends`, tabela `HERO_LOD_ENDS`, trzymane w parze). Stan r5: LOD0 **8 864** trójkątów (budżet
+   zadania ≤ 15 000), LOD1 **2 720** (bez ościeży, rur, słupków, powłoki tuj; tuje z próbki atlasu `thuja_far`),
+   LOD2 **164** (bryły + dachy + okna szczytu). Cztery materiały. Liczby z `logs/build_world_r5.log`.
 5. **Unity**: `InstanceImporter` czyta biblioteki `art-source/world/landmarks/*/*.glb` (ten sam mechanizm co ADR 0067;
    hunk identyczny, żeby scalenie z gałęzią wiaduktu było trywialne).
 6. **Kamery QA** (`build_world.cameras`, gdy istnieje spec): `fire_station_route` (oko kierowcy 60 m przed), `fire_station_abeam`
@@ -62,7 +63,7 @@ widoczne na elewacji (krój DejaVu Sans Bold); **bez logo PSP, herbu, znaku słu
 ## Czego nie wiemy (WORKING_VALUE, do weryfikacji na miejscu)
 Elewacje od podwórza (NE, NW), tylne bramy wozowni, ściana SE hali, elewacje budynku gospodarczego, dokładna linia
 ogrodzenia (±3 m) i położenie bramy, liczba tuj; przesunięcie układu wysokości LoD2 (KRON86) względem EVRF2007 przyjęte
-+0,17 m. Okna szczytu są płaskie (głębia tylko w normal mapie): z trasy (≥ 45 m) nieodróżnialne, z bliska widać.
++0,17 m. Albedo szkła hali i odcień napisu dobrane do jednego pochmurnego zdjęcia (7197).
 
 ## Konsekwencje
 - Mechanizm jest ogólny: kolejny budynek hero = `dims.json` + generator + wpis w `BLENDER_SCRIPTS`.
@@ -78,8 +79,32 @@ krytyczny (pierwszy render: atlas powielony co 4 m), więc zestaw z `"atlas": tr
 `_Tile` = `tile_m`. Pozostałych zestawów ta zmiana nie dotyka: naprawa ogólna zmienia wygląd całego świata i wymaga
 osobnej decyzji lidera (dotyczy też atlasu wiaduktu z ADR 0067, który trzeba oznaczyć `atlas`).
 
+## Wynik (rundy r3–r5, 2026-11-10)
+- **r3**: dach nasycony (chalk 0,02), okna szczytu z prawdziwą głębią (ościeże 0,20 m, opaska, szprosy) przemierzone na
+  zdjęciu 7197, rynny, lampy, ogrodzenie na linii OSM way 258562003 + `hero_building.fence_cut` (generyczny płot wycięty).
+- **r4**: tynk równiejszy, okna łukowe 3 pola + szare szkło, biały ślemię w oknie okrągłym, „998” 0,6 m, 4 kratki pod
+  okapem, tuje LOD1/2 z próbki atlasu (na Low były czarne).
+- **r4b**: przęsła płotu jednościenne (zdublowana lustrzana ściana przy Cull Off dawała blade pręty 141,146,161);
+  pomiar po poprawce na High overcast: pręty 69,79,94 (ciemnoniebieskie). Obróbka szczytu 0,22 m, napis karmazynowy.
+- **r5** (po `git merge main`, obok hero depot ADR 0071): albedo szkła hali ×2. Pomiar szyby (surowy PNG, High overcast):
+  104 → 115 sRGB przy ścianie ok. 180; na zdjęciu szkło jest bliżej ściany (0,45–1,0 × liniowo), u nas ok. 0,37 ×.
+- **LOD**: 8 864 / 2 720 / 164 trójkątów, końce 150 / 450 / 20000 m × lodBias.
+- **Koszt kadru** (`unity/r5/*/stats.txt`, szacunek edytora przed SRP batchingiem, NIE pomiar z telefonu):
+  `fire-station-route` High 516 tys. trójkątów / 350 drawów, Low 209 tys. / 205; `fire-station-ref7197` High 424 tys. /
+  138, Low 364 tys. / 132. Wpływ na FPS na telefonie: `UNVERIFIED` (brak przebiegu na urządzeniu w tej gałęzi).
+
+### Samokrytyka wg docs/06 (r5, bez visual-critic)
+- Szkło hali nadal ciemniejsze względem ściany niż na zdjęciu; brak firan/odbić (jednolite szare pola).
+- Tynk z bliska lekko „chmurkowy” (detal skanu ok. 1 m); na zdjęciu farba jest równa. Z trasy (≥ 45 m) niewidoczne.
+- Tuje: jeden kształt w trzech wysokościach, rytm zbyt równy; na zdjęciu są też świerki przed szczytem (brak u nas).
+- Płot z góry pod kątem (kamera `above`) zlewa się w pełny niebieski pas (alpha test + mipy); od podwórza nie oglądany z bliska.
+- Elewacje podwórza i budynek gospodarczy pozostają `WORKING_VALUE`.
+
 ## Dowody
-`artifacts/firestation-r9/`: `blender/it{1,2,3}/` (3 iteracje, `compare_it3.jpg` obok referencji),
-`unity/r2/{High,Low}-{overcast,lowsun}/` (`compare_unity_r2.jpg`), `plan_overlay.jpg` (rzut na ortofoto), logi `logs/`.
-pytest `tests/gis`: 173 passed; EditMode: 164 passed, 0 failed (5 inconclusive: brak prefabrykatu TRAKT w worktree).
+`artifacts/firestation-r9/`: `unity/r4b/view/`, `unity/r5/{High,Low}-{overcast,lowsun}/`, `unity/r5/view/`,
+`unity/r5/compare_unity_r5.jpg` (zdjęcie 7197 / High / Low), `atlas_base_r5.jpg`, logi `logs/*_r5.log`.
+pytest `tests/gis` (r5): 229 passed, 3 failed, 2 xfailed — wszystkie 3 odziedziczone z main (`test_route_corridor` ×2:
+P0 z HANDOVER, wiadukt s≈1432–1480; `test_report_not_stale`: `fidelity_qa.json` w wersji main). EditMode (r5): 188,
+176 passed, 0 failed, 7 skipped, 5 inconclusive (brak prefabrykatu TRAKT w worktree).
+Wcześniejsze: `blender/it{1..6}/`, `unity/r2..r4/`, `plan_overlay.jpg`.
 Przegląd `visual-critic`: do zrobienia przez lidera (subagent nie tworzy subagentów).
