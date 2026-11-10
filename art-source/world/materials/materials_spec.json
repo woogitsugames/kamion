@@ -2897,6 +2897,113 @@
       },
       "hf_ratio_albedo": 0.0051,
       "ao_mean": 0.977
+    },
+    "viaduct_concrete": {
+      "tile_m": [
+        24.0,
+        12.0
+      ],
+      "target": 0.36,
+      "uv": "mesh_uv0_metres (u along the bridge, v = band position; layout in art-source/world/landmarks/viaduct_biezenstwa/atlas_layout.json)",
+      "slots": [
+        "viaduct_concrete (hero viaduct asset, ADR 0067)"
+      ],
+      "note": "Strip atlas 24 x 12 m (4096 x 2048 High): red cornice band, unrolled box-girder half section, unrolled column, abutment wall, swatches. Base detail / relief / roughness from the CC0 scan 'Concrete Wall 008' (Poly Haven); pours, formwork, drains, drips, soot, leak streaks generated. albedo_target_mean_lum_linear applies to the clean concrete of the girder band, not the atlas mean.",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.36,
+      "files": {
+        "High": {
+          "res": [
+            4096,
+            2048
+          ],
+          "texel_mm": 5.86,
+          "dir": "viaduct_concrete/High",
+          "png_bytes": 16877382,
+          "files": [
+            "T_viaduct_concrete_BaseColor.png",
+            "T_viaduct_concrete_MaskMap.png",
+            "T_viaduct_concrete_Normal.png",
+            "T_viaduct_concrete_Var.png"
+          ],
+          "smoothness_mean": 0.132,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 19908962
+        },
+        "Medium": {
+          "res": [
+            2048,
+            1024
+          ],
+          "texel_mm": 11.72,
+          "dir": "viaduct_concrete/Medium",
+          "png_bytes": 4593496,
+          "files": [
+            "T_viaduct_concrete_BaseColor.png",
+            "T_viaduct_concrete_MaskMap.png",
+            "T_viaduct_concrete_Normal.png",
+            "T_viaduct_concrete_Var.png"
+          ],
+          "smoothness_mean": 0.131,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 3886721
+        },
+        "Low": {
+          "res": [
+            1024,
+            512
+          ],
+          "texel_mm": 23.44,
+          "dir": "viaduct_concrete/Low",
+          "png_bytes": 1107225,
+          "files": [
+            "T_viaduct_concrete_BaseColor.png",
+            "T_viaduct_concrete_MaskMap.png",
+            "T_viaduct_concrete_Normal.png",
+            "T_viaduct_concrete_Var.png"
+          ],
+          "smoothness_mean": 0.131,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 699050
+        }
+      },
+      "height_range_m": [
+        -0.01406,
+        0.00062
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.3362,
+        "p05": 0.1767,
+        "p95": 0.4081,
+        "mean_rgb_linear": [
+          0.3803,
+          0.337,
+          0.2225
+        ]
+      },
+      "hf_ratio_albedo": 0.0127,
+      "ao_mean": 0.998,
+      "source": "polyhaven:concrete_wall_008 (CC0)",
+      "concrete_mean_rgb_linear": [
+        0.3789,
+        0.3643,
+        0.2311
+      ]
     }
   }
 }
