@@ -1147,14 +1147,104 @@ def rel(p):
 # ---------------------------------------------------------------- 6. LODs, pivots, hierarchy
 SILHOUETTE_KEYS = ("_tyre", "_rim", "_disc")    # round parts: the silhouette shows every missing segment
 SILHOUETTE_W = 4.0
+# Lathe parts of the wheels (tyre, rim) at LOD2+: edge collapse is NOT used on them. With B2.1's extra LOD0 detail the
+# area budget gave the LOD2 wheels 170-320 tris and the quadric collapse moved vertices off the torus (tyre radius
+# 0.638 m vs 0.538 m, spikes and flipped black triangles on the A16 Low build, REVIEW r5 R-W1, ADR 0039). Instead every
+# k-th radial column of the lathe grid is kept (vertices stay exactly on the LOD0 surface, UVs of the kept corners are
+# the LOD0 ones) down to ROUND_SEGMENTS around the circumference; the pieces are then fixed in the budget.
+ROUND_KEYS = ("_tyre", "_rim")
+ROUND_SEGMENTS = {2: 24, 3: 16}
 
 
-def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5):
+def is_round_wheel_piece(o):
+    return o.name.startswith("wheel_") and any(k in o.name for k in ROUND_KEYS)
+
+
+def reduce_round(o, target_seg, profile_tol=0.004):
+    """Dissolve radial columns of a lathe piece (axis = vehicle X through the wheel centre) so that `target_seg`
+    columns remain. Returns the number of segments before/after."""
+    mw = o.matrix_world
+    yc = -WB if "wheel_R" in o.name else 0.0
+    zc = G.WHEEL_Z
+    bm = bmesh.new()
+    bm.from_mesh(o.data)
+    ang = {}
+    for v in bm.verts:
+        p = mw @ v.co
+        if math.hypot(p.y - yc, p.z - zc) < 1e-4:
+            continue
+        ang[v] = math.atan2(p.z - zc, p.y - yc) % (2 * math.pi)
+    vals = sorted(set(round(a, 5) for a in ang.values()))
+    steps = [b - a for a, b in zip(vals, vals[1:]) if b - a > 1e-4]
+    if not steps:
+        bm.free()
+        return 0, 0
+    step = min(steps)
+    nseg = int(round(2 * math.pi / step))
+    k = max(1, int(round(nseg / target_seg)))
+    while k > 1 and nseg // k < 16:
+        k -= 1
+    a0 = min(ang.values())
+    col = {v: int(round((a - a0) / step)) % nseg for v, a in ang.items()}
+    drop = {v for v, i in col.items() if i % k != 0}
+    # profile (meridian) reduction: Douglas-Peucker on the (radius, axial) polyline of column 0 with tolerance
+    # profile_tol; rings whose profile point is dropped are dissolved everywhere (vertices stay on the surface)
+    key = {v: (round(math.hypot((mw @ v.co).y - yc, (mw @ v.co).z - zc), 3), round((mw @ v.co).x, 3)) for v in ang}
+    c0 = {v for v, i in col.items() if i == 0}
+    adj = {v: [e.other_vert(v) for e in v.link_edges if e.other_vert(v) in c0] for v in c0}
+    ends = [v for v, a in adj.items() if len(a) == 1]
+    if c0 and len(ends) == 2 and all(len(a) <= 2 for a in adj.values()):
+        path, prev, cur = [ends[0]], None, ends[0]
+        while True:
+            nxt = [w for w in adj[cur] if w is not prev]
+            if not nxt:
+                break
+            prev, cur = cur, nxt[0]
+            path.append(cur)
+        if len(path) == len(c0):
+            pts = [key[v] for v in path]
+            keep = set()
+
+            def dp(i0, i1):
+                keep.add(i0)
+                keep.add(i1)
+                (r0, x0), (r1, x1) = pts[i0], pts[i1]
+                L = math.hypot(r1 - r0, x1 - x0) or 1e-9
+                best, bi = 0.0, -1
+                for i in range(i0 + 1, i1):
+                    r, x = pts[i]
+                    d = abs((r1 - r0) * (x0 - x) - (r0 - r) * (x1 - x0)) / L
+                    if d > best:
+                        best, bi = d, i
+                if bi >= 0 and best > profile_tol:
+                    dp(i0, bi)
+                    dp(bi, i1)
+            dp(0, len(pts) - 1)
+            kept = {pts[i] for i in keep}
+            drop |= {v for v in ang if key[v] not in kept}
+    if not drop:
+        bm.free()
+        return nseg, nseg
+    bmesh.ops.dissolve_verts(bm, verts=list(drop), use_face_split=False, use_boundary_tear=False)
+    bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method="BEAUTY", ngon_method="BEAUTY")
+    bm.to_mesh(o.data)
+    bm.free()
+    o.data.update()
+    return nseg, nseg // k
+
+
+def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0):
     """Area-weighted budget: each piece wants k * area^0.6 triangles (clamped to [floor, own count]); k is bisected
     on the evaluated (collapsed) meshes until the total meets the target. A uniform global ratio (A6 wip) crushed
     the dense grille / honeycomb pieces into black triangles at LOD2-3 while big smooth panels kept spare tris.
-    Emissive / glass pieces keep >= lights_min of their triangles."""
-    dec = [o for o in pieces if tris_of(o) > floor_tris and not o.name.startswith(("decal_", "MIRROR_"))]
+    Emissive / glass pieces keep >= lights_min of their triangles. round_seg > 0: tyre / rim lathes are reduced by
+    column (reduce_round) and kept out of the collapse."""
+    rounds = [o for o in pieces if is_round_wheel_piece(o)] if round_seg else []
+    for o in rounds:
+        before, after = reduce_round(o, round_seg)
+        print(f"  round {o.name}: {before} -> {after} segments, {tris_of(o)} tris")
+    dec = [o for o in pieces if tris_of(o) > floor_tris and not o.name.startswith(("decal_", "MIRROR_"))
+           and o not in rounds]
     fixed = sum(tris_of(o) for o in pieces if o not in dec)
     base = {o.name: tris_of(o) for o in dec}
     area = {o.name: max(1e-6, sum(p.area for p in o.data.polygons)) for o in dec}
@@ -1406,7 +1496,7 @@ def export_lod(lod, master, mirrors, a, manifest, coll):
     ratio = 1.0
     if lod in TRI_TARGET:
         ratio = decimate_pieces(pieces, TRI_TARGET[lod], floor_tris={1: 40, 2: 16, 3: 8}[lod],
-                                lights_min={1: 0.5, 2: 0.3, 3: 0.15}[lod])
+                                lights_min={1: 0.5, 2: 0.3, 3: 0.15}[lod], round_seg=ROUND_SEGMENTS.get(lod, 0))
     by_part = {}
     for o in master:
         by_part.setdefault(o["part"], []).append(o)

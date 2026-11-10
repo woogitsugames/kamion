@@ -128,6 +128,20 @@ def main():
                 errors.append(f"{lod}: empty {e} missing")
         notes.append(f"{lod}: {total} tris, {len(info['objects'])} objects OK" if total <= TRI_LIMIT.get(lod, 1e9)
                      else f"{lod}: {total} tris")
+    # Wheel geometry per LOD vs LOD0 (REVIEW r5 R-W1, ADR 0039): collapse decimation pushed the B2.1 LOD2 tyres to
+    # r 0.638 m (LOD0 0.538) -> shredded wheels on every Low device. Radius within +-2 %, width 75-105 % (hub dropped at LOD2).
+    lod0w = {oi["role"]: oi for oi in m["lods"]["LOD0"]["objects"].values() if oi["role"].startswith("WHEEL_")}
+    for lod, info in sorted(m["lods"].items()):
+        for name, oi in info["objects"].items():
+            ref = lod0w.get(oi["role"])
+            if ref is None or "tyre_outer_radius_m" not in oi:
+                continue
+            r0, r = ref["tyre_outer_radius_m"], oi["tyre_outer_radius_m"]
+            if abs(r / r0 - 1) > 0.02:
+                errors.append(f"{lod}: {name} tyre radius {r} m vs LOD0 {r0} m (> 2 %, broken decimation)")
+            w0, w = ref["width_m"], oi["width_m"]
+            if w > 1.05 * w0 or w < 0.75 * w0:   # LOD2 drops hub / nuts (front width -18 % by design)
+                errors.append(f"{lod}: {name} width {w} m vs LOD0 {w0} m (outside 75-105 %)")
     for slot, kinds in m["textures"].items():
         for kind, tiers in kinds.items():
             for tier, t in tiers.items():

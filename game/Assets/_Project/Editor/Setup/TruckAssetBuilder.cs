@@ -125,6 +125,16 @@ namespace Game.Editor.Setup
             {
                 string p = AssetDatabase.GUIDToAssetPath(guid);
                 if (!(AssetImporter.GetAtPath(p) is ModelImporter mi)) continue;
+                if (ApplyModelSettings(mi)) mi.SaveAndReimport();
+            }
+            ConfigureTextureImporters();
+        }
+
+        /// <summary>Model importer settings of the vehicle FBX (also used by the wheel-geometry regression test,
+        /// ADR 0039). Returns true when something changed (caller reimports).</summary>
+        public static bool ApplyModelSettings(ModelImporter mi)
+        {
+            {
                 bool dirty = false;
                 void Set<T>(T cur, T want, Action<T> apply) { if (!EqualityComparer<T>.Default.Equals(cur, want)) { apply(want); dirty = true; } }
                 Set(mi.globalScale, 1f, v => mi.globalScale = v);
@@ -144,8 +154,12 @@ namespace Game.Editor.Setup
                 Set(mi.importTangents, ModelImporterTangents.CalculateMikk, v => mi.importTangents = v);
                 Set(mi.generateSecondaryUV, false, v => mi.generateSecondaryUV = v);
                 Set(mi.addCollider, false, v => mi.addCollider = v);
-                if (dirty) mi.SaveAndReimport();
+                return dirty;
             }
+        }
+
+        static void ConfigureTextureImporters()
+        {
             foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { Root + "/Source" }))
             {
                 string p = AssetDatabase.GUIDToAssetPath(guid);
