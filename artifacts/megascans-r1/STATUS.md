@@ -92,3 +92,6 @@
 
 
 - Krok28: samokrytyka po4rundach: detale i fotograficzna baza trawy poprawione, ale niezależny CRITIC nie potwierdza dużego skoku całej sceny. Low peak956draw/333ktris bez wzrostu, lokalnie+4draw/+4ktris; dlatego ścisłe zero regresji Low NIE jest zaliczone. GIS282PASS/5odziedziczonychFAIL/2xfail; EditMode197PASS/0FAIL/7skip/5inconclusive, wrapper1 jakbaseline. Guard licencji3/3PASS po dodaniu hashy zaimportowanych siatek Unity (650lokalnychproduktów). Odtworzono192SHA plików świata, cofnięto efekty uboczne Unity w ustawieniach i oświetleniu. NASTĘPNY: raport końcowy, git diff --check i końcowa kontrola indeksu.
+
+- Krok28: audyt rzeczywistych referencji GUID materialow M*.mat i metadanych Fab: 59 unikalnych aktywnych tekstur, wszystkie Android512/ASTC6x6; pelne lancuchy mipow = 9 111 280 B (8,689 MiB), bez nieuzytych normal. Dotychczasowe PBR 32 611 231 B NIE obejmuje Fab; konserwatywna suma 41 722 511 B. High1024 z kanonicznych map = 36 017 104 B dla Fab, tylko projekcja UNVERIFIED runtime. To statyczny payload zasobow materialow, nie pomiar rezydencji GPU/telefonu. Raport: round4/fab-textures-budget.json; self-check PASS; bez C#/Unity.
+- NASTEPNY KROK: uwzglednic audyt Fab w `artifacts/megascans-r1/REPORT.md`; odtworzenie: `uv run --project tools/worldgen python artifacts/megascans-r1/measure-fab-textures.py`.
