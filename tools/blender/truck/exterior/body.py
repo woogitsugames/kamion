@@ -170,6 +170,16 @@ MODERN = {
 }
 
 
+def set_rake(deg):
+    """Owner 2026-11-10 ('z profilu zbyt duzy kat'): rake of the single front plane for the modern proposal. The plane
+    pivots at the cab lower edge (FACE_Y0 fixed), so the bumper stays and the header moves forward."""
+    global RAKE, TAN, WS_Y0
+    RAKE = float(deg)
+    TAN = math.tan(math.radians(RAKE))
+    WS_Y0 = face_y(2.04)
+    CFG["front"] = [(z, face_y(z)) for z in (CAB_Z0, WS_Z0 - 0.08, WS_Z0, WS_Z1 + 0.02, ROOF_Z)]
+
+
 def set_shape(name):
     global SHAPE
     assert name in ("b2", "round", "modern"), name

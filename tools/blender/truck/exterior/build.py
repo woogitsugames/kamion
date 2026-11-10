@@ -53,6 +53,7 @@ def parse():
     p.add_argument("--beam", default="", choices=["", "low"], help="a4: QA render with the dipped beam lit")
     p.add_argument("--shape", default="b2", choices=["b2", "round", "modern"],
                    help="cab surfacing: b2 = exported cab, round = rounding-pass proposal (owner approval pending)")
+    p.add_argument("--rake", type=float, default=None, help="modern only: front plane rake in degrees (default 7)")
     p.add_argument("--vis", action="store_true", help="a4: eye-point views + visibility map (widocznosc_*)")
     return p.parse_args(argv)
 
@@ -71,6 +72,9 @@ def build(a):
         C.make_tyre_materials()
     subpaths, strokes = G.load_svg_mark(os.path.join(G.REPO, "art-source", "truck", "brand", "trakt.svg"))
     B.set_shape(a.shape)
+    if a.rake is not None:
+        assert a.shape == "modern", "--rake is a modern-front proposal option"
+        B.set_rake(a.rake)
     B.cab_shell()
     B.glazing()
     B.doors_and_gaps()
@@ -152,7 +156,7 @@ def render_view(a, v, light, livery, fig, suffix=""):
             ob.hide_render = not (a.mode == "a3" and w == "wall_" + v)
     lv = M.LIVERIES["clay" if a.mode == "a3" else livery][3]
     mode = "A3 blockout w skali (clay)" if a.mode == "a3" else (
-        "A4 zewnętrze" + ({"round": " | PROPOZYCJA: zaokrąglenia", "modern": " | PROPOZYCJA: nowy front"}.get(a.shape, "")))
+        "A4 zewnętrze" + ({"round": " | PROPOZYCJA: zaokrąglenia", "modern": " | PROPOZYCJA: nowy front" + (f" {a.rake:g}°" if a.rake is not None else "")}.get(a.shape, "")))
     S.stamp(f"TRAKT (koncepcja B) | {LABEL.get(v, v)} | {lv} | {LIGHT_LABEL[light]} | {mode}"
             + (" | figura 1,80 m" if f else ""))
     name = f"{v}_{livery}_{light}{suffix}.jpg" if a.mode == "a4" else f"{v}{suffix}.jpg"
