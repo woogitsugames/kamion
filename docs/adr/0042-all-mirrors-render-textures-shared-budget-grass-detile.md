@@ -43,3 +43,31 @@ Status: accepted (2026-11-10). Answers review r5 C5 (blank wide-angle mirror) an
 - The `MI_Ext_MirrorProbe` material is still generated but unused by the art truck (kept for the graybox fallback).
 - Evidence: `docs/reports/visual/r5-c5-wn3/cmp_*.jpg` (editor, overcast, before/after, Low and High). Phone frames and
   GPU timing pending (build-qa / next device run).
+
+## Addendum 2026-11-10 (review r6 C-N8): modern cab mirrors, R46 check, glass adjustment
+- **Source of the fields:** UN Regulation No 46, para 15.2.4.2 (class II: 5 m wide from 30 m behind the ocular points
+  to the horizon + 1 m wide from 4 m behind), 15.2.4.4 (IV: 15 m wide 10-25 m behind + 4.5 m wide from 1.5 m behind),
+  15.2.4.5 (V: 2 m outside the passenger-side cab plane, 1.75 m behind to 1 m ahead of the ocular points or the bumper),
+  15.2.4.6 (VI: from the front plane 2 m ahead, driver-side plane to 2 m outside the passenger side). Consolidated text
+  OJ EU L 237, 8.8.2014 (CELEX 42014X0808(02)); read via the lexaris.de mirror of that text. This replaces the
+  "paragraph numbers UNVERIFIED" note above.
+- **Check as code:** `MirrorOptics` (Vehicle/Runtime) is the camera model the builder uses (eye image, convex s/R);
+  EditMode `MirrorFieldOfVisionTests` projects an 11x11 road grid of each R46 field (flat road, vehicle side 1.275 m =
+  2.55 m trailer, front = `TractorDimensions.FrontFaceZ`) into each mirror view. Own-vehicle occlusion is not in the test.
+- **Modern cab, modelled glass (art r4):** II L 100/100 %, II R 100 / **91 %** (1 m strip at 4 m just below the view),
+  IV L **93/97 %**, IV R **92/98 %** (glass looked along the own cab side: axis 5 deg out, half the image was the truck),
+  V 100 %, **VI 100 %: the front mirror looks at the road (axis 74 deg down), the "front mirror aims at the sky" item is
+  closed** (fixed by the art r4 re-aim; upper edge of its view 43 deg below the horizon).
+- **Decision: glass adjustment in the builder, not in the geometry.** `TruckAssetBuilder.MirrorAim` gives the reflected
+  axis per mirror (vehicle yaw/pitch); `MirrorAdjustment` turns only the glass quad about its centre (what the driver does
+  with the electric adjuster), limited to +-10 deg (WORKING_VALUE), warning + clamp beyond. MainR (4.3, -2.7) = 1.0 deg,
+  WideL (-17.7, -19.5) = 6.0 deg, WideR (16.6, -10.8) = 6.0 deg; MainL, Kerb, Front keep the modelled glass.
+  Result: every class 100 % of its R46 field. If the housing changes (truck-artist), the targets still hold; the test
+  fails if the adjuster range is exceeded.
+- **Control cameras:** `cab-mirrors-left`, `cab-mirrors-right`, `cab-mirror-front` (eye point, 30 deg, aimed at the glass
+  centres) next to `cab-left` / `cab-right`. Frames: `artifacts/owner/mirrors-modern/` (before/after, Low/High, overcast).
+- **Open (art, truck-artist):** (1) the class V kerb glass (1.39, 1.95, 4.78) is not visible from the design eye: the
+  line of sight (yaw 72 deg right, 15 deg down) runs into the passenger door / A-pillar base below the window sill. Its
+  image is right (field 100 %), but the driver cannot see the glass: move it into the lower right windscreen corner or
+  give the door a lower window. (2) The class VI glass is half behind the passenger sun visor from the eye; it shows the
+  cab nose and the road ahead, no sky. (3) The passenger class II glass is partly behind the A-pillar from the eye.

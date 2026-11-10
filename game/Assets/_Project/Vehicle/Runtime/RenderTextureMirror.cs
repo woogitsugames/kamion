@@ -21,7 +21,17 @@ namespace Game.Vehicle.Runtime
         /// the left pair on screen, every 2nd / 3rd. Mirror cost per frame is bounded by the cap, not by the mirror count.
         /// WORKING_VALUE until measured on the Galaxy A16.
         /// </summary>
-        public static int MirrorsPerFrame => Level switch { 0 => 1, 1 => 2, 2 => 3, _ => 6 };
+        /// <remarks>High 3 -> 2 (ADR 0046 addendum): one slot reserved for the class II pair (MainMirrorSlots), one rotating
+        /// through the convex mirrors. Editor proxy: 3 mirror renders cost more CPU than the main view.</remarks>
+        public static int MirrorsPerFrame => MirrorsPerFrameFor(Level);
+        public static int MirrorsPerFrameFor(int level) => level switch { 0 => 1, 1 => 2, 2 => 2, _ => 6 };
+        /// <summary>
+        /// Slots of MirrorsPerFrame reserved for the main (class II) mirrors; the rest go to the convex mirrors first
+        /// (MirrorRefreshSchedule). 0 = plain weighted round-robin (Low / Medium / Ultra unchanged). High 1: each class II
+        /// mirror refreshes every 2nd frame at a steady interval, each convex mirror every 4th (all six on screen).
+        /// </summary>
+        public static int MainMirrorSlots => MainMirrorSlotsFor(Level);
+        public static int MainMirrorSlotsFor(int level) => level == 2 ? 1 : 0;
         public static float MirrorFarClip => Level switch { 0 => 150f, 1 => 250f, _ => 400f };
         /// <summary>Convex mirrors show a small, minified image; their far clip is this fraction of MirrorFarClip.</summary>
         public const float ConvexFarClipScale = 0.5f;
@@ -59,9 +69,12 @@ namespace Game.Vehicle.Runtime
         public float resolutionScale = 1f;
 
         static readonly System.Collections.Generic.List<RenderTextureMirror> s_All = new System.Collections.Generic.List<RenderTextureMirror>(8);
+        static MirrorRefreshSchedule.Entry[] s_Entries = new MirrorRefreshSchedule.Entry[8];
         static MirrorScheduler s_Scheduler;
         float m_Debt;
         bool m_Candidate;
+        /// <summary>Frame count of the last scheduled render (diagnostics; -1 = never).</summary>
+        public int LastRenderFrame { get; private set; } = -1;
 
         Camera m_Cam;
         RenderTexture m_Rt;
@@ -84,6 +97,7 @@ namespace Game.Vehicle.Runtime
         void OnEnable()
         {
             if (!s_All.Contains(this)) s_All.Add(this);
+            if (s_Entries.Length < s_All.Count) System.Array.Resize(ref s_Entries, s_All.Count * 2);   // on enable only, never per frame
             if (s_Scheduler == null && Application.isPlaying)
             {
                 var go = new GameObject("MirrorScheduler") { hideFlags = HideFlags.HideAndDontSave };
@@ -134,31 +148,32 @@ namespace Game.Vehicle.Runtime
         }
 
         /// <summary>
-        /// Picks the mirrors that render this frame (called once per frame after every mirror's LateUpdate): each
-        /// candidate accrues its weight, the MirrorsPerFrame largest debts render and are reset. Cameras enabled in
+        /// Picks the mirrors that render this frame (called once per frame after every mirror's LateUpdate) through
+        /// MirrorRefreshSchedule: MirrorsPerFrame cap, MainMirrorSlots reserved for class II. Cameras enabled in
         /// LateUpdate render this frame, before the main camera (they target a texture). No allocation.
         /// </summary>
         internal static void Schedule()
         {
-            int cap = Mathf.Max(1, VehicleCameraBudget.MirrorsPerFrame);
-            for (int i = 0; i < s_All.Count; i++)
+            int count = s_All.Count;
+            if (s_Entries.Length < count) System.Array.Resize(ref s_Entries, count * 2);   // safety; normally sized in OnEnable
+            for (int i = 0; i < count; i++)
             {
                 var m = s_All[i];
-                m.m_Debt = m.m_Candidate ? m.m_Debt + Mathf.Max(0.05f, m.weight) : 0f;
-                m.Cam.enabled = false;
+                s_Entries[i].debt = m.m_Debt;
+                s_Entries[i].weight = m.weight;
+                s_Entries[i].phase = m.phase;
+                s_Entries[i].main = m.main;
+                s_Entries[i].candidate = m.m_Candidate;
             }
-            for (int k = 0; k < cap; k++)
+            MirrorRefreshSchedule.Step(s_Entries, count, VehicleCameraBudget.MirrorsPerFrame, VehicleCameraBudget.MainMirrorSlots);
+            int frame = Time.frameCount;
+            for (int i = 0; i < count; i++)
             {
-                RenderTextureMirror best = null;
-                for (int i = 0; i < s_All.Count; i++)
-                {
-                    var m = s_All[i];
-                    if (!m.m_Candidate || m.Cam.enabled) continue;
-                    if (best == null || m.m_Debt > best.m_Debt || m.m_Debt == best.m_Debt && m.phase < best.phase) best = m;
-                }
-                if (best == null) break;
-                best.Cam.enabled = true;
-                best.m_Debt = 0f;
+                var m = s_All[i];
+                m.m_Debt = s_Entries[i].debt;
+                bool on = s_Entries[i].selected;
+                m.Cam.enabled = on;
+                if (on) m.LastRenderFrame = frame;
             }
         }
 
