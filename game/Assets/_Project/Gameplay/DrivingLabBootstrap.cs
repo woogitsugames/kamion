@@ -198,6 +198,15 @@ namespace Game.Gameplay
             if (ap == "route") { if (!StartRouteDriver(platform.GetLaunchArgument("speed"))) ap = null; }
             else if (!string.IsNullOrEmpty(ap)) { ConfigureAutopilot(ap, platform.GetLaunchArgument("speed")); m_AutopilotStart = true; }
             Spawn(m_Spawn);
+            // World scenes: edge-of-region warning and recovery when the vehicle leaves the world (ADR 0082).
+            var regionRoot = FindAnyObjectByType<Game.World.WorldRegionRoot>();
+            if (regionRoot != null)
+            {
+                SafetyNet = gameObject.AddComponent<WorldSafetyNet>();
+                SafetyNet.bootstrap = this;
+                SafetyNet.vehicle = vehicle;
+                SafetyNet.region = regionRoot;
+            }
             // lighting=<preset> (clear | overcast | lowsun | dusk): device frames of the control set under the same light (A7).
             string menuLighting = StartRequest.ConsumeLighting();   // start menu choice; a launch argument wins
             string lighting = platform.GetLaunchArgument("lighting");
@@ -455,6 +464,36 @@ namespace Game.Gameplay
         }
 
         void Flash(string s) { m_Status = s; m_StatusUntil = Time.unscaledTime + 3f; }
+
+        /// <summary>World-edge safety net of world scenes (null in the lab).</summary>
+        public WorldSafetyNet SafetyNet { get; private set; }
+
+        /// <summary>HUD status line for <paramref name="seconds"/> (safety net, other systems).</summary>
+        public void ShowStatus(string s, float seconds = 3f) { m_Status = s; m_StatusUntil = Time.unscaledTime + seconds; }
+        public string StatusText => Time.unscaledTime < m_StatusUntil ? m_Status : "";
+
+        /// <summary>
+        /// Recovery after the vehicle left the world (ADR 0082): the current preset, parked, on a ground point and heading.
+        /// The cab camera look and head state are re-centred; autopilots keep running from the new pose.
+        /// </summary>
+        public void RecoverTo(Vector3 groundPos, Quaternion heading, string message)
+        {
+            SpawnAt(m_Spawn, groundPos, heading);
+            m_Rig.ResetView();
+            Touch.ThrottleRaw = 0f;
+            Touch.BrakeRaw = 0f;
+            ShowStatus(message, 6f);
+            m_InputLog.Event(Time.unscaledTime, "safety-reset");
+        }
+
+        /// <summary>Recovery when no safe pose is known yet: the scene spawn (route start or spawn point).</summary>
+        public void RecoverToSpawn(string message)
+        {
+            Spawn(m_Spawn);
+            m_Rig.ResetView();
+            ShowStatus(message, 6f);
+            m_InputLog.Event(Time.unscaledTime, "safety-reset");
+        }
 
         bool m_AutoRecord;
 
