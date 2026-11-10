@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebb5f2c9cd8fb448904925716220ba2, type: 3}
   m_Name: LP_Overcast
   m_EditorClassIdentifier: Game.Rendering::Game.Rendering.LightingPreset
-  sunElevationDeg: 30
+  sunElevationDeg: 41
   sunAzimuthDeg: 200
   turbidity: 4
   overcast: 1
@@ -20,6 +20,16 @@ MonoBehaviour:
   groundAlbedo: {r: 0.15, g: 0.155, b: 0.135, a: 1}
   ambientSkySaturation: 0.55
   lowSunAmbientCool: 0.8
+  overcastDirectional: 0.6
+  overcastSunLeak: 0.05
+  cloudContrast: 0.3
+  cloudScale: 0.16
+  cloudWind: {x: 0.0035, y: 0.0015}
+  hazeGroundFactor: 1.2
+  hazeScaleHeightM: 60
+  wetness: 0
+  puddles: 0.3
+  grassVariation: 1
   autoExposure: 1
   ev100: 15
   exposureCompensation: 0

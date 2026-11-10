@@ -79,6 +79,13 @@ namespace Game.Rendering
             public bool worldSkyVisOff;
             [Tooltip("Off = no baked ground sun shadows beyond the realtime shadow distance (ADR 0064)")]
             public bool worldBakedSunOff;
+            [Header("Sky and atmosphere (ADR 0080)")]
+            [Tooltip("Cloud deck of the overcast sky: 0 = 2 texture fetches per sky pixel, 1 = + fine detail (3), 2 = + relief toward the sun (5)")]
+            public int cloudQuality;
+            [Tooltip("Off = flat overcast dome. Inverted so tiers saved before ADR 0080 keep the clouds")] public bool cloudsOff;
+            [Tooltip("Off = uniform fog only, no ground haze layer (the per-vertex optical depth costs the same either way)")] public bool groundHazeOff;
+            [Tooltip("Screen-space ambient occlusion after opaques (URP SSAO, depth source; needs the renderer feature - Ultra's renderer only)")]
+            public bool ssao;
             [Header("Budget assumptions (UNMEASURED until the phone is measured)")]
             public int budgetDrawCalls;
             public int budgetTrianglesK;
@@ -91,7 +98,7 @@ namespace Game.Rendering
         [Tooltip("Migration revision (ProjectSetup.LoadTiers applies the changes of later revisions to an existing asset)")]
         public int revision;
         /// <summary>ADR 0062: High floor 0.70, FSR upscaling, pacing fallback, lamp pools.</summary>
-        public const int CurrentRevision = 62;
+        public const int CurrentRevision = 80;   // ADR 0080: cloudQuality, ssao
 
         /// <summary>
         /// First-launch tier by device (no launch argument, nothing saved by the player). Rules are checked in order; a rule
@@ -206,6 +213,7 @@ namespace Game.Rendering
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 70f, forestHlodCullM = 1000f,
                 clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 64, envCaptureInterval = 6, envCaptureFarClip = 150f, envCaptureMinMove = 2f, envCaptureMaxAge = 20f, contactShadows = true, cabShadowLift = 8f, streetLights = 0, lampPools = 6,
+                cloudQuality = 1,
                 budgetDrawCalls = 350, budgetTrianglesK = 550, budgetTextureMB = 96, budgetShadowMs = 1.5f, budgetStatus = "UNMEASURED",
             },
             new Tier
@@ -221,6 +229,7 @@ namespace Game.Rendering
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 120f, forestHlodCullM = 0f,
                 clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 128, envCaptureInterval = 3, envCaptureFarClip = 200f, envCaptureMinMove = 0.5f, envCaptureMaxAge = 10f, contactShadows = true, cabShadowLift = 8f, streetLights = 4, lampPools = 8,
+                cloudQuality = 1,
                 budgetDrawCalls = 800, budgetTrianglesK = 1500, budgetTextureMB = 256, budgetShadowMs = 2.0f, budgetStatus = "UNMEASURED (no flagship attached)",
             },
             new Tier
@@ -235,6 +244,7 @@ namespace Game.Rendering
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 120f, forestHlodCullM = 0f,
                 clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 256, envCaptureInterval = 2, envCaptureFarClip = 300f, envCaptureMinMove = 0.5f, envCaptureMaxAge = 10f, contactShadows = true, cabShadowLift = 8f, streetLights = 6, lampPools = 8,
+                cloudQuality = 2, ssao = true,
                 budgetDrawCalls = 1000, budgetTrianglesK = 2000, budgetTextureMB = 384, budgetShadowMs = 3.0f, budgetStatus = "UNMEASURED (no flagship attached)",
             },
         };
