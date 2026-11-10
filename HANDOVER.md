@@ -8,7 +8,7 @@
 
 | zadanie | ADR | worktree (`.claude/worktrees/`), gałąź `worktree-<id>` | STATUS | stan |
 |---|---|---|---|---|
-| P0 korytarz trasy + MA-001/002/012 + latarnia/krawężnik z filmu | 0076 | agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | w toku (korytarz 0 uskoków/0 trafień lokalnie) |
+| P0 korytarz trasy + MA-001/002/012 + latarnia/krawężnik z filmu | 0076 | agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | STOP na 95 %, `fcd74f9`, NIEscalone: korytarz 4790 stacji 0 uskoków/0 przeszkód, krawężniki w poprzek 29→0, latarnie na jezdni 2→0 (Putry OK), spójność 103→69. pytest gis 203/5 czerwone: ratchety fidelity (oś p95 1,745 m vs baseline 0,032 — skutek łącznic „abreast”; krawędzie 2,57; wysepki 7>4) = DECYZJA lidera/właściciela, `test_terrain_walls` szczelina przy j:n10015785253 (E −239 N −236) do naprawy. Brak ADR 0076. |
 | wysepki z OSM, MA-010, krawędzie | 0077 | agent-a2afb96d89584cca6 | artifacts/islands-r10 | w toku |
 | straż JRG2 r4 | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | w toku |
 | osobówki r10 | 0078 | agent-a2215bcc98d109edc | artifacts/cars-r10 | w toku (WorldPBR.shader wspólny z 0080 — bloki rozdzielne) |
