@@ -156,6 +156,11 @@ namespace Game.World.Import
             }
             mat.SetVector("_Tint", new Vector4(tint.x, tint.y, tint.z, 1f));
             mat.SetFloat("_AlbedoScale", scale);
+            // Authored atlases (ADR 0070: "atlas": true in materials_spec.json): mesh UV0 addresses the atlas in metres, so
+            // the shader must divide by the set's own tile size. (Other sets keep the shader default 4 m: `tile` was never
+            // written to the material before; changing that for every set is a separate, visible decision.)
+            if (set != null && set.Get("atlas") is bool isAtlas && isAtlas)
+                mat.SetVector("_Tile", new Vector4(tile.x, tile.y, tile.z, tile.w));
             mat.SetFloat("_NormalStrength", 1f);
             mat.SetFloat("_SmoothnessScale", 1f);
             mat.SetFloat("_MetallicScale", 0f);

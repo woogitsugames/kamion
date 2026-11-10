@@ -546,7 +546,6 @@ def alpha_texture(path: Path | None = None):
         m1 = m4.reshape(y1 - y0, 4, x1 - x0, 4).mean((1, 3))
         a[y0:y1, x0:x1] = m1
         rgb[y0:y1, x0:x1] = red * (1 + 0.10 * n[y0:y1, x0:x1, None])
-        ALPHA_LAYOUT[key]["text_px"] = px // 4
     img = np.dstack([K.srgb_encode(np.clip(rgb, 0, 1)), a])
     path = path or (REPO / "art-source" / "world" / "textures" / "fire_station_alpha.png")
     K.save_png(path, img, "RGBA")
@@ -563,7 +562,7 @@ def write_layout():
 
 
 FIRE_STATION_SETS = {
-    "fire_station": dict(fn=fire_station, tile_m=list(TILE), target=0.57,
+    "fire_station": dict(fn=fire_station, tile_m=list(TILE), target=0.57, atlas=True,
         uv="mesh_uv0_metres (atlas position in metres; layout in art-source/world/landmarks/fire_station_jrg2/"
            "atlas_layout.json)",
         slots=["fire_station (hero fire station asset, ADR 0070)"],
