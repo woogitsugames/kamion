@@ -377,7 +377,9 @@ def fire_station(nx=2048):
 
     # r4: the hall windows read mid grey on the overcast CC0 photo 7197 (sky reflection + light interior), far lighter
     # than the office glazing. Linear albedo WORKING_VALUE by eye.
-    hall_glass = np.array([0.085, 0.090, 0.095], np.float32)
+    # r5: measured on the Unity r4b render (High overcast) the glass was 0.27-0.34 x the wall (linearised sRGB), on the
+    # photo 0.45-1.0 x (mean ~0.7): doubled. Still a WORKING_VALUE (one overcast photo).
+    hall_glass = np.array([0.170, 0.180, 0.195], np.float32)
     # arched window 3.4 x 3.4: segmental arch (rise 1.0 m above the 2.4 m springing), blue trim band 0.16 m
     A = L["win_arch"]
     ga = L["arch"]
