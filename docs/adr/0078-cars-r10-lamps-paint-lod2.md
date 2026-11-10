@@ -26,13 +26,15 @@
    - poprawka błędu r9: krawędź przednich drzwi była 10 cm PRZED przednim nadkolem (`y1d = yfa + ra + 0,10`), a linia
      dołu drzwi przecinała wnękę koła; teraz `yfa − ra − 0,14`.
 2. **LOD1** bez otworów (nakładki jak w r9) + listwy; **LOD2** = sylwetka (`_vehicle_far`): profil boczny z szybami,
-   pas lamp, koła jako ciemne pasy — zamiast pudełka.
+   pas lamp, koła jako płaskie tarcze — zamiast pudełka.
 3. **Lakier** (`_CARPAINT` w `Kamion/World PBR`, wypełniany przez `WorldPbrMaterials` z pola `paint` manifestu
    = [metal bazy, pochylenie płatka, perła, szorstkość bazy], opcjonalnie `pearl_tint`):
    baza (płatek aluminium / mika; kolory lite mają metal 0) + clear coat F0 0,04 z ostrym odbiciem otoczenia przy
    gładkości zestawu (film drogowy i kurz nadal go matowią). Medium+ (`_KAMION_WORLD_DETAIL`): iskrzenie płatka —
-   pochylenie normalnej bazy per komórka w przestrzeni obiektu (900 komórek / m), wygaszane po śladzie piksela
-   (bez migotania z daleka). Low: bez płatka, 0 dodatkowych próbek tekstur; koszt = jeden płat GGX i jedna próbka
+   pochylenie normalnej bazy per komórka w przestrzeni obiektu (400 komórek / m = 2,5 mm), wygaszane, gdy piksel
+   pokrywa komórkę (pełne przy śladzie ≤ pół komórki, zero przy ≥ komórce). Pierwsza wersja (900 komórek / m, hash
+   na `sin`, wygaszanie dopiero przy 8 mm) dawała na High widoczną „tkaninę” (mora) na całym srebrnym aucie z 4 m —
+   patrz `artifacts/cars-r10/after1`; hash zastąpiony wersją bez `sin`. Low: bez płatka, 0 dodatkowych próbek tekstur; koszt = jeden płat GGX i jedna próbka
    otoczenia. Typy (WORKING_VALUE, brak polskiego rejestru rodzajów lakieru): srebrny, szary, niebieski — metalik;
    czarny — perła; biały, biały flotowy, czerwony — lite.
    **Zmiany w `WorldPBR.shader` są wydzielone**: 1 akapit komentarza w nagłówku, 3 właściwości, 1 linia CBUFFER,

@@ -24,7 +24,7 @@
 // metal (aluminium flake / mica; 0 = solid colour) at roughness _CarPaint.w; clear coat = F0 0.04 GGX + sharp
 // environment reflection at the set's smoothness (so road film and dust still matt it). Medium+ (_KAMION_WORLD_DETAIL):
 // flake sparkle, a per-cell (object space, _CarFlake.x cells / m) tilt of the base-coat normal by _CarPaint.y, faded
-// out by the pixel footprint (no shimmer at distance). Pearl (_CarPaint.z): base-coat reflection shifts towards
+// out once a pixel covers a cell (no shimmer / moire at distance; at 1080 rows that is beyond ~3.5 m). Pearl (_CarPaint.z): base-coat reflection shifts towards
 // _PearlTint at grazing angles. Low: no flake, 0 extra fetches; cost = one more GGX lobe and env sample.
 // Global tier keyword _KAMION_WORLD_DETAIL (Medium and up): element tone jitter, crack layer, second rotated macro
 // octave, close-range photo detail (asphalt) - Low draws base + normal + mask + one macro sample only.
@@ -74,7 +74,7 @@ Shader "Kamion/World PBR"
         _PaintColor ("Paint film albedo (linear, _DECAL_PAINT), a = smoothness", Vector) = (0.6, 0.6, 0.57, 0.35)
         _PaintWear ("Paint wear: x wheel-path, y age, z dirt film, w line width m", Vector) = (0.85, 0.25, 0.3, 0.12)
         _CarPaint ("Car paint (_CARPAINT): x base metal, y flake tilt, z pearl, w base-coat roughness", Vector) = (0, 0, 0, 0.5)
-        _CarFlake ("Car flake: x cells per m, y fade footprint m", Vector) = (900, 0.004, 0, 0)
+        _CarFlake ("Car flake: x cells per m, y fade scale (1 = gone when a pixel covers a cell)", Vector) = (400, 1, 0, 0)
         _PearlTint ("Pearl grazing tint (linear)", Color) = (1, 1, 1, 1)
         _OffsetFactor ("Depth offset factor", Float) = 0
         _OffsetUnits ("Depth offset units", Float) = 0
@@ -581,9 +581,12 @@ Shader "Kamion/World PBR"
                 {
                     float3 po = TransformWorldToObject(pw) * _CarFlake.x;
                     float3 cell = floor(po);
-                    float3 hsh = frac(sin(float3(dot(cell, float3(127.1, 311.7, 74.7)), dot(cell, float3(269.5, 183.3, 246.1)),
-                                                 dot(cell, float3(113.5, 271.9, 124.6)))) * 43758.5453);
-                    half ffade = saturate(_CarFlake.y / max(length(fwidth(pw)), 1e-5) - 0.5);
+                    // sin-free hash (the sin hash of cell indices in the thousands banded into a visible weave)
+                    float3 p3 = frac(cell * float3(0.1031, 0.1030, 0.0973));
+                    p3 += dot(p3, p3.yxz + 33.33);
+                    float3 hsh = frac((p3.xxy + p3.yxx) * p3.zyx);
+                    // a flake cell must cover more than a pixel: full at footprint <= cell / 2, none at >= cell
+                    half ffade = saturate(_CarFlake.y / (_CarFlake.x * max(length(fwidth(pw)), 1e-5)) - 1.0);
                     nb = normalize(nw + (half3)(hsh * 2.0 - 1.0) * (_CarPaint.y * ffade * clean));
                 }
               #endif
