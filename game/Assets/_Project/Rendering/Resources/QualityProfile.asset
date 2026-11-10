@@ -48,9 +48,11 @@ MonoBehaviour:
     forestHlodCullM: 1000
     clearCoat: 1
     vehicleGrimeDetail: 1
-    envCaptureSize: 0
-    envCaptureInterval: 2
-    envCaptureFarClip: 250
+    envCaptureSize: 64
+    envCaptureInterval: 10
+    envCaptureFarClip: 150
+    envCaptureMinMove: 2
+    envCaptureMaxAge: 20
     contactShadows: 1
     cabShadowLift: 8
     streetLights: 0
@@ -94,9 +96,11 @@ MonoBehaviour:
     forestHlodCullM: 1000
     clearCoat: 1
     vehicleGrimeDetail: 1
-    envCaptureSize: 0
-    envCaptureInterval: 2
-    envCaptureFarClip: 250
+    envCaptureSize: 64
+    envCaptureInterval: 6
+    envCaptureFarClip: 150
+    envCaptureMinMove: 2
+    envCaptureMaxAge: 20
     contactShadows: 1
     cabShadowLift: 8
     streetLights: 0
@@ -141,8 +145,10 @@ MonoBehaviour:
     clearCoat: 1
     vehicleGrimeDetail: 1
     envCaptureSize: 128
-    envCaptureInterval: 2
+    envCaptureInterval: 3
     envCaptureFarClip: 200
+    envCaptureMinMove: 0.5
+    envCaptureMaxAge: 10
     contactShadows: 1
     cabShadowLift: 8
     streetLights: 4
@@ -187,8 +193,10 @@ MonoBehaviour:
     clearCoat: 1
     vehicleGrimeDetail: 1
     envCaptureSize: 256
-    envCaptureInterval: 1
+    envCaptureInterval: 2
     envCaptureFarClip: 300
+    envCaptureMinMove: 0.5
+    envCaptureMaxAge: 10
     contactShadows: 1
     cabShadowLift: 8
     streetLights: 6

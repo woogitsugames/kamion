@@ -36,7 +36,9 @@ param(
     # Parapet run-off A/B: off renders hall walls without the _RUNOFF streak layer.
     [ValidateSet('on', 'off')] [string]$Runoff = 'on',
     # Measurement mask: '<renderer>[:<slot>][;...]' also writes <id>_mask.png with those slots flat magenta.
-    [string]$Mask = ''
+    [string]$Mask = '',
+    # ADR 0056: also write <id>_envcube.png (the vehicle reflection cube of that frame, 6 faces).
+    [switch]$EnvDump
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -59,6 +61,7 @@ if ($Runoff -ne 'on') { $qaArgs += @('-qaRunoff', $Runoff) }
 if ($Gate3) { $qaArgs += @('-qaGate3', [IO.Path]::GetFullPath($Gate3, (Get-Location).Path)) }
 if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
 if ($Mask) { $qaArgs += @('-qaMask', $Mask) }
+if ($EnvDump) { $qaArgs += @('-qaEnvDump', '1') }
 $runStart = Get-Date
 $code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
 

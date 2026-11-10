@@ -81,3 +81,8 @@ grey plastic) and E4 (truck sterile clean). Builds on ADR 0021. Frames: `docs/re
   Fresnel is ~0.07: 0.07 x (horizon - ground) ~ 2-3 pts on a white solid paint. Raising it would need a non-physical F0.
   The lacquer now reads where the horizon crosses curved panels (cab corners, roof deflector); a dark livery or a lower
   camera shows it more. Evidence: `artifacts/owner/modern-front/r6-shading/{before,after,compare}/`.
+
+## Addendum r7 (2026-11-10, D30)
+The coat now mirrors a real capture on every tier (ADR 0056). Coat values unchanged (F0 0.04, roughness 0.08). Corner
+p99-p50 overcast is 6.1 High / 2.4 Low (the r7 corner box reflects ground below the camera height), roof deflector 24 / 19.
+See ADR 0056 for the numbers and the proposed D30 region.
