@@ -18,6 +18,10 @@ foreach ($script in @('tools/worldgen/fab_tree_surfaces.py', 'tools/worldgen/fab
     & uv run --project (Join-Path $RepoRoot 'tools/worldgen') python (Join-Path $RepoRoot $script)
     if ($LASTEXITCODE -ne 0) { throw "$script failed" }
 }
+$grass = @('run', '--project', (Join-Path $RepoRoot 'tools/worldgen'), 'python', (Join-Path $RepoRoot 'tools/worldgen/fab/grass_surface.py'))
+if (Test-Path -LiteralPath $Blender) { $grass += @('--blender', $Blender) }
+& uv @grass
+if ($LASTEXITCODE -ne 0) { throw 'Fab grass surface bake failed; do not import partial output' }
 if ($UpdateHashInventory) {
     & uv run --project (Join-Path $RepoRoot 'tools/worldgen') python (Join-Path $RepoRoot 'tools/worldgen/fab/audit_inventory.py')
     if ($LASTEXITCODE -ne 0) { throw 'Fab hash-only inventory update failed' }
