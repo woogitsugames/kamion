@@ -37,6 +37,9 @@ PHOTOS = {
     "p40": "1783751488818497", "p42": "1523897771888181", "p43": "494288258686575", "p45": "1026342955666337",
     "p47": "1050297706629492", "p55": "2895327727389806",
 }
+# photos whose GPS lies nearer a parallel service road than the carriageway they were taken on (p38 / p40: the
+# living street behind the noise barrier); the snap is restricted to this OSM way
+PHOTO_WAY = {"p38": 173956083, "p40": 173956083}
 HFOV = {"richlv": 100.0, "kino": 78.0, "grobin": 90.0, "strudel": 72.0, "szurek": 70.0}   # WORKING_VALUE (deg)
 ASPECT = 4 / 3
 
@@ -81,14 +84,14 @@ DRIVABLE = {"motorway", "trunk", "primary", "secondary", "tertiary", "unclassifi
             "trunk_link", "primary_link", "secondary_link", "tertiary_link", "living_street"}
 
 
-def snap_to_road(x, y, az_deg, graph, max_d=20.0, max_dev=35.0):
+def snap_to_road(x, y, az_deg, graph, max_d=20.0, max_dev=35.0, way=None):
     """Photo GPS is off by several metres (first renders stood behind the noise barrier): move the pose onto the
     nearest drivable OSM centreline whose direction matches the compass (oneway: travel direction; two-way: either,
     then 1.75 m to the right of travel). Returns (x, y, info)."""
     best = None
     p = np.array([x, y])
     for e in graph["edges"]:
-        if e["attrs"]["highway"]["v"] not in DRIVABLE:
+        if e["attrs"]["highway"]["v"] not in DRIVABLE or (way is not None and e["osm_way"] != way):
             continue
         G = np.asarray(e["geometry"], float)
         oneway = str(e["attrs"].get("oneway", {}).get("v", "no")) in ("yes", "1", "true")
@@ -124,7 +127,7 @@ def cameras(out):
     for pid, img in PHOTOS.items():
         r = m[img]
         x, y = TO_PL.transform(r["lon"], r["lat"])
-        x, y, snap = snap_to_road(x, y, r["compass_angle"], graph)
+        x, y, snap = snap_to_road(x, y, r["compass_angle"], graph, way=PHOTO_WAY.get(pid))
         e, n = x - OX, y - OY
         az = math.radians(r["compass_angle"])
         z = H.z(x, y) + 1.7

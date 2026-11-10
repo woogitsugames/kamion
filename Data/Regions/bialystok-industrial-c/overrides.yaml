@@ -207,3 +207,18 @@ overrides:
       default dark solid style.
     confidence: medium
     verify: style change station and band heights on site
+  - id: andersa-p26-tree-groups
+    kind: tree_groups
+    lines:
+      - {line_epsg2180: [[778338.0, 595599.4], [778239.8, 595668.2]]}
+    group_size: [3, 5]
+    gap_m: [20.0, 45.0]
+    species: {linden: 0.6, maple: 0.4}
+    mapillary: ["1666299510882315", "2684818718445505"]
+    reason: >-
+      Mapillary 1666299510882315 (kino, 2024-07-26) and 2684818718445505 (richlv, 2020-08-15) at p26 show clumps of
+      large broadleaf trees on the verge beyond the westbound carriageway of Andersa with open grass between them;
+      BDOT10k / OSM have no trees there. Line ~30 m left of the photo pose, 40-160 m ahead (read off the photo,
+      WORKING_VALUE); species from the crown shape (linden / maple); only positions are authored.
+    confidence: low
+    verify: tree positions on site / orthophoto
