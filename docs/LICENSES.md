@@ -116,3 +116,17 @@ Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z c
 | `world-facade-pbr-life` | `art-source/world/materials/_src/sets_facade.py` (`noise_cassette`, `car_grime`; proceduralnie, stałe ziarna) → `art-source/world/materials/{noise_cassette,car_grime}/` | własna (projekt) | nie (generowane) | kasety ekranów akustycznych 4,0 × 0,5 m z brudem i zaciekami; film brudu lakieru zaparkowanych aut (2026-11-10, ADR 0041) |
 | `world-ground-pbr-renders` | `art-source/world/materials/_src/render_test.py` (Blender 4.2.9) → `art-source/world/materials/_renders/` | własna; montaż `compare_street_vs_photo.jpg` zawiera wycinek zdjęcia CC0 (Rakoon, `20201102_152339_Rondo_Pamięci_Bieżeństwa…jpg`) | tak (JPG ≤ 300 KB) | rendery kontrolne nawierzchni i porównanie ze zdjęciem; nie trafia do buildu |
 | `world-streetscape-data` | `Data/Regions/bialystok-industrial-c/generated/streetscape_sources.json` (OSM + BDOT10k) | ODbL 1.0 (© OpenStreetMap contributors) + dane GUGiK (BDOT10k, art. 40a ust. 2 pkt 1 Pgik) | tak | place, ogrodzenia, drzewa, ekrany, słupy. Ta sama uwaga `LEGAL_REVIEW_REQUIRED` co dla grafu dróg |
+
+## Referencje z otwartych zrodel (D43, ADR 0066)
+
+Pobierane do `Data/raw/refs/` (poza gitem, nie trafiaja do buildu). Manifest z autorem, licencja, URL i SHA256 przy kazdym pliku (`manifest.jsonl`). Bramka: tylko CC0 / domena publiczna / CC BY / CC BY-SA (`tools/refs/refs_common.normalize_license`); NC, ND, nieznane i obiekty z ograniczeniami sa odrzucane. Wygenerowane montaze w `artifacts/refs/` zawieraja miniatury z podpisem autora i licencji (do uzytku wewnetrznego, nie w repo gry).
+
+| ID | Zrodlo | Licencja | W gicie? | Uzycie |
+|---|---|---|---|---|
+| `refs-kartaview` | KartaView (api.kartaview.org, openstreetcam), autorzy w manifescie | CC BY-SA 4.0 | nie | tylko referencja wizualna; pochodna (tekstura) = CC BY-SA, zabronione |
+| `refs-panoramax` | Panoramax (api.panoramax.xyz), autorzy w manifescie | licencja per zdjecie (zaobserwowano CC BY-SA 4.0) | nie | tylko referencja |
+| `refs-commons` | Wikimedia Commons (geosearch, kategorie, wyszukiwanie), glownie Rakoon (CC0/CC BY 3.0), Henryk Borawski (CC BY-SA), Podlaski Urzad Wojewodzki (CC BY 3.0 pl) | CC0 / CC BY / CC BY-SA, wg `extmetadata` pliku | nie | CC0 moze byc zrodlem tekstur (osobny wpis przy uzyciu); BY wymaga atrybucji; BY-SA tylko referencja |
+| `refs-openverse` | Openverse (api.openverse.org), autorzy i dostawcy w manifescie | CC0 / CC BY / CC BY-SA | nie | j.w. |
+| `refs-gugik-ortho` | GUGiK Geoportal WMS ORTO HighResolution | dane otwarte GUGiK (art. 40a ust. 2 pkt 1 Pgik); atrybucja: Zrodlo danych: Glowny Urzad Geodezji i Kartografii | nie | referencja i dopasowanie ukladu; rozdzielczosc mozaiki WMS UNVERIFIED |
+| `refs-bialystok-open-data` | Miasto Bialystok, publiczne uslugi ArcGIS Online | dane otwarte miasta (warunki wg portalu: UNVERIFIED) | nie | kontrola pozycji obiektow (np. straz pozarna) |
+| `refs-object-sheets` | `tools/refs/object_refs.py` -> `artifacts/refs/{kwadrat-park,fire-station,dusk-sodium}/` (INDEX.md z autorem, licencja, URL per plik) | kompilacja powyzszych; plan_budynki.jpg: ODbL/GUGiK (nasze dane regionu) | nie | przeglad, nie do builda |
