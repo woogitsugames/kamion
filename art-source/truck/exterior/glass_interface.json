@@ -4095,6 +4095,81 @@
  "shell_sections": {
   "note": "cab shell outer surface in plan, per height (A2): front y, back y, half width, front / back plan corner radius (rounded-rectangle section, roof rounding included). The skin is wall_m thick inwards. The interior must stay inside (outer - wall_m) and behind the glass inner face; tools/blender/truck/check_fit.py tests it on the exported FBX files.",
   "wall_m": 0.03,
+  "front_crown_r_m": 10.0,
+  "front_pockets": [
+   {
+    "name": "stem",
+    "depth_m": 0.07,
+    "mirror": false,
+    "param_z_quad": [
+     [
+      -0.795,
+      1.221
+     ],
+     [
+      0.795,
+      1.221
+     ],
+     [
+      0.85,
+      1.64
+     ],
+     [
+      -0.85,
+      1.64
+     ]
+    ],
+    "param": "arc length along the front skin from the centre line (body.front_pt)"
+   },
+   {
+    "name": "bar",
+    "depth_m": 0.07,
+    "mirror": false,
+    "param_z_quad": [
+     [
+      -1.21,
+      1.618
+     ],
+     [
+      1.21,
+      1.618
+     ],
+     [
+      1.21,
+      1.866
+     ],
+     [
+      -1.21,
+      1.866
+     ]
+    ],
+    "param": "arc length along the front skin from the centre line (body.front_pt)"
+   },
+   {
+    "name": "lamp",
+    "depth_m": 0.052,
+    "mirror": true,
+    "param_z_quad": [
+     [
+      0.875,
+      1.318
+     ],
+     [
+      1.36,
+      1.268
+     ],
+     [
+      1.385,
+      1.545
+     ],
+     [
+      0.875,
+      1.505
+     ]
+    ],
+    "param": "right-hand lamp; mirror = the same quad at -param"
+   }
+  ],
   "z_yf_yb_w_rf_rb": [
    [
     1.225,

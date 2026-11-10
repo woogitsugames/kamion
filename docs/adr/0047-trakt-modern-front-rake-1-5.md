@@ -153,3 +153,28 @@ Frames: `artifacts/owner/modern-front/r6-geo/` (`before` = main with the r4 expo
   LOD2 15 434 unchanged (their FBX and the atlases are the committed r6 files: the re-bake differs by a few pixels
   only). `exterior/check_export.py` PASS. Frames: `artifacts/owner/modern-front/r6b/lod1/lod1_34przod_{before,after}.jpg`
   (Cycles, game materials), in engine `before-ext/` vs `after-ext/` `Medium-overcast/truck-34.png` (Medium shows LOD1).
+
+## Addendum r7b WIP (2026-11-10, truck-artist) - NOT VERIFIED, stopped at the usage limit
+Evidence: `artifacts/owner/modern-front/r7-maskbar/` (`before/` ray maps + engine frames, `measure.py`, `wip-logs/`,
+`export/SM_CabInterior_LOD0.fbx` = the new interior LOD0, which is outside git).
+- **Root cause (measured, `tools/blender/truck/front_leak.py`, new).** Not a gap between the bar and the corner panel.
+  (1) The interior fit (`build_interior.fit_to_exterior`) used the flat rounded-rectangle section: it ignored the
+  10 m plan crown of the modern front (dash carcass up to 5 mm outside the skin at the corner start) and the mask
+  pockets (carcass 34 mm behind the skin, pocket back at 66 mm). (2) The pockets are holes through the 30 mm shell
+  with a flat back panel only: a 36 mm slot stayed open all round it. (3) LOD2 collapsed `grille_bar_mask`.
+  Before: 1946 / 20444 leaking rays (truck-34, LOD0), 5808 (LOD2); engine mask px in the bar box Low 8604, High 2823.
+- **Done in code.** Exterior: `body.mask_tray` (back panels of stem, bar and headlamps are trays with a rim),
+  `MASK_POCKET` / `LAMP_POCKET`, `glass_interface.json` `shell_sections.front_crown_r_m` + `front_pockets`;
+  `a6_export`: `NO_DECIMATE_FAR` (bar whole from LOD2), `HIDDEN_KEEP` / `keep_face` (trays and shell walls of the mask
+  band survive hidden-face removal), `MIN_RATIO` for the trays, LOD2 target 17 700 / limit 17 900. Interior:
+  `front_wall` / `front_fit` (crowned skin, pocket depth + 15 mm, below the glazing only), brake pivot, accelerator
+  and footrest moved back 60-85 mm (`BRAKE_PIVOT`, `ACCEL_HINGE`; pads 0.74-0.75 m ahead of the H-point).
+- **Exported (committed files).** Exterior LOD0 103 435 / LOD1 42 997 / LOD2 17 698 (was 103 367 / 43 000 / 15 434:
+  +0.07 % / 0 / +2 264), with its atlases (re-packed: new pieces); interior 97 045 / 43 261 / 21 967. The interior
+  `check_export` PASS is from the export before the lamp pocket was added, not this one.
+- **Measured so far.** Interior fix alone with the old exterior: leaks 1946 -> 65 (LOD0). With the bar kept and the
+  shell walls kept (no trays yet): LOD0 60, LOD2 78: the rest were the slots round the back panels -> trays.
+- **NOT done.** `front_leak.py` on the final export (trays + lamp pocket); both `check_export.py`, `check_fit.py`;
+  `TruckAssetBuilder.BuildBatch` + `WorldTruckInstaller.InstallBatch`; engine frames after (mask px, corner p50 / p99,
+  cab-dash / cab-driver against `before/unity/`); `visual-critic`. Known and left open: roof marker pockets leak
+  (~40 rays, z 3.23-3.53 m), the tilt joint under the cab shows the floor slab from below (test zone starts at 1.25 m).
