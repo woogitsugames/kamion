@@ -74,3 +74,9 @@ Gałąź: worktree-agent-a2afb96d89584cca6 (worktree .claude/worktrees/agent-a2a
 - NASTĘPNY KROK: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` →
   `uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art artifacts/islands-r10/fidelity` →
   `uv run --project tools/worldgen pytest tests/gis -q` → import-region → visual-qa (komendy wyżej).
+- 2026-11-11 (nr 3) Pełna regeneracja po poprawce stacji granicznej: terrain_walls 21 → 9 (steep_grass 16 → 4 = poziom
+  bazy; ratchet 8 zielony), obstacle_in_lane 28 → 27, marking_off 13; fidelity bez zmian (wysepki 1, krawędź p50 0,46 /
+  p95 2,52, n 616). pytest gis: 212 zielonych, 3 czerwone, wszystkie z zakresu 0076 (2× korytarz s1432–1480,
+  test_start_route_is_consistent — latarnia na pomoście); hero_bridge zielone.
+- NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` →
+  `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Medium -Lighting overcast -Gate3 artifacts/islands-r10/cameras.json -Cameras au_f_s0580,au_f_s0600,au_f_s0620,au_f_s1040,au_f_s1060,au_f_s1080,au_r_s1140,au_r_s1160,au_r_s1180,top_s610,top_merge,top_ma010,top_putry_n -OutputDir artifacts/islands-r10/renders`

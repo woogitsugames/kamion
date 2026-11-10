@@ -4,7 +4,7 @@
   "furniture_in_lane": 5,
   "lane_blind_end": 56,
   "marking_off_carriageway": 13,
-  "obstacle_in_lane": 28,
+  "obstacle_in_lane": 27,
   "prop_on_carriageway": 1
  },
  "cases": [
@@ -2004,23 +2004,6 @@
    "what": "kerb"
   },
   {
-   "chain": "c:w177895172:5749429979-1882953865",
-   "e": 787.21,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1506943,
-   "lon": 23.1708993,
-   "n": -830.12,
-   "on_route": false,
-   "osm_ways": [
-    177895172,
-    606396457
-   ],
-   "s": 244.1,
-   "what": "verge_grass"
-  },
-  {
    "chain": "c:w177948307:1883483212-1883101800",
    "e": 983.8,
    "junction": null,
@@ -2037,7 +2020,7 @@
    "what": "verge_grass"
   }
  ],
- "count": 111,
+ "count": 110,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
   "lane_blind_end": 2,
