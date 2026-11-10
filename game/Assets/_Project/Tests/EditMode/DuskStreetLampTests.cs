@@ -1,0 +1,65 @@
+using Game.Rendering;
+using NUnit.Framework;
+using UnityEngine;
+
+namespace Game.Tests
+{
+    /// <summary>
+    /// ADR 0062 / review r8 N-20: at dusk the street lamps must read - lamps on, and their pools on the road at least 1.5×
+    /// the ambient-lit background. Cause of the r8 FAIL: LP_Dusk had the sun at +1° (~2.4 klx of sky), so a lamp's ~30 lx
+    /// pool was ~1 % of the background.
+    /// </summary>
+    public class DuskStreetLampTests
+    {
+        const float LampHeightM = 8f;   // typical urban road luminaire mounting height (WORKING_VALUE)
+
+        [Test]
+        public void TwilightFactor_IsOneAboveHalfDegree_MonotoneAndEndsAtCivilTwilight()
+        {
+            Assert.AreEqual(1f, SkyModel.TwilightFactorAt(0.5f), 1e-6f);
+            Assert.AreEqual(1f, SkyModel.TwilightFactorAt(10f), 1e-6f);
+            float prev = 2f;
+            for (float el = 0.5f; el >= -6f; el -= 0.25f)
+            {
+                float f = SkyModel.TwilightFactorAt(el);
+                Assert.Less(f, prev + 1e-6f, $"monotone at {el}");
+                prev = f;
+            }
+            var m = new SkyModel(-6f, 300f, 4f, 0f, 5f);
+            Assert.AreEqual(SkyModel.CivilTwilightEndLux, m.HorizontalIlluminanceLux, 0.2f, "end of civil twilight");
+            Assert.AreEqual(0f, m.SunNormalIlluminanceLux, "sun below the horizon: no direct light");
+        }
+
+        [Test]
+        public void DuskPreset_IsCivilTwilight_LampsOn_PoolsReadOnTheRoad()
+        {
+            var dusk = LightingPreset.CreateDusk();
+            try
+            {
+                var m = dusk.CreateModel();
+                Assert.Less(m.TrueSunElevationDeg, 0f, "dusk = after sunset");
+                Assert.That(m.HorizontalIlluminanceLux, Is.InRange(10f, 60f), "civil twilight ~25 lx");
+                float pool = StreetLamps.DownIntensityCd / (LampHeightM * LampHeightM);
+                float ratio = (m.HorizontalIlluminanceLux + pool) / m.HorizontalIlluminanceLux;
+                Assert.GreaterOrEqual(ratio, 1.5f, $"pool under the lamp {pool:F0} lx on {m.HorizontalIlluminanceLux:F0} lx (r8 acceptance >= 1.5x)");
+                StreetLamps.SetSunElevation(m.TrueSunElevationDeg);
+                Assert.AreEqual(1f, StreetLamps.On, 1e-6f, "lamps fully on");
+                // The old preset (+1°): the cause of N-20.
+                var old = new SkyModel(1f, 300f, 4f, 0.2f, 11f);
+                Assert.Less((old.HorizontalIlluminanceLux + pool) / old.HorizontalIlluminanceLux, 1.05f, "+1° sun: pool invisible");
+            }
+            finally { Object.DestroyImmediate(dusk); }
+        }
+
+        [Test]
+        public void DuskExposure_FollowsTheTwilight_ScreenBrightnessContinuous()
+        {
+            // Ambient-lit grey on screen (E·k) at 0.5° and at -4° differs only by the 0.2 EV deepening.
+            float e05 = new SkyModel(0.5f, 300f, 4f, 0.2f, 0f).HorizontalIlluminanceLux;
+            float e4 = new SkyModel(-4f, 300f, 4f, 0.2f, 0f).HorizontalIlluminanceLux;
+            float k05 = SkyModel.ExposureFromEv100(ExposureTable.Ev100(0.5f, 0.2f));
+            float k4 = SkyModel.ExposureFromEv100(ExposureTable.Ev100(-4f, 0.2f));
+            Assert.AreEqual(-0.2f, Mathf.Log(e4 * k4 / (e05 * k05), 2f), 0.05f);
+        }
+    }
+}

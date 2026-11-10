@@ -64,6 +64,8 @@ namespace Game.Rendering
             if (RenderOverrides.RenderScale.HasValue) urp.renderScale = t.renderScale;
             if (RenderOverrides.ShadowDistance.HasValue) urp.shadowDistance = t.shadowDistance;
             if (RenderOverrides.Hdr.HasValue) urp.supportsHDR = t.hdr;
+            if (RenderOverrides.Upscale != null) urp.upscalingFilter = t.upscalingFilter;   // ADR 0062 A/B
+            if (RenderOverrides.FsrSharpness.HasValue) { urp.fsrOverrideSharpness = true; urp.fsrSharpness = t.fsrSharpness; }
         }
 
         /// <summary>Raised after a tier was applied (vegetation reads <see cref="Current"/>).</summary>

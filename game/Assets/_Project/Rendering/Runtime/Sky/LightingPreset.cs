@@ -12,7 +12,8 @@ namespace Game.Rendering
     public sealed class LightingPreset : ScriptableObject
     {
         [Header("Sun")]
-        [Range(0.5f, 89.5f)] public float sunElevationDeg = 42f;
+        [Tooltip("Sun altitude; below 0.5° the sky keeps its 0.5° shape and dims as civil twilight (SkyModel.TwilightFactorAt, ADR 0062)")]
+        [Range(-6f, 89.5f)] public float sunElevationDeg = 42f;
         [Tooltip("Compass azimuth, 0 = north, 90 = east (world X = east, Z = north)")]
         [Range(0f, 360f)] public float sunAzimuthDeg = 200f;
 
@@ -59,7 +60,7 @@ namespace Game.Rendering
 
         /// <summary>Camera EV100 of this preset (table from sun elevation and cloud, minus the bias). No per-frame pass.</summary>
         public float ResolveEv100(SkyModel probe) =>
-            (autoExposure ? ExposureTable.Ev100(probe.SunElevationDeg, probe.Overcast) : ev100) - exposureCompensation;
+            (autoExposure ? ExposureTable.Ev100(probe.TrueSunElevationDeg, probe.Overcast) : ev100) - exposureCompensation;
 
         /// <summary>Builds the sky model with the resolved exposure (two passes: illuminance does not depend on exposure).</summary>
         public SkyModel CreateModel(float wbOverride = -1f)
@@ -100,12 +101,19 @@ namespace Game.Rendering
             return p;
         }
 
-        /// <summary>Dusk (track A7): sun 1 deg above the horizon at azimuth 300 deg (summer evening), hazy. WORKING_VALUE.</summary>
+        /// <summary>
+        /// Dusk (track A7): civil twilight, sun 4 deg below the horizon at azimuth 300 deg (summer evening, ~25 min after
+        /// sunset), hazy. ADR 0062 / review r8 N-20: at the old +1 deg the sky still gave ~2.4 klx, so a street lamp's
+        /// ~30 lx pool was ~1 % of the background - physically invisible (and real lamps are often still off then). At
+        /// -4 deg the sky gives ~25 lx: the lamps are on in every Polish town (astronomical clocks / twilight switches) and
+        /// their pools read at 1.5-2.5x the background. Screen brightness of the ambient-lit scene is kept (the exposure
+        /// table follows the twilight, like a phone), so the r3 G3 "2-3 EV under overcast noon" still holds. WORKING_VALUE.
+        /// </summary>
         public static LightingPreset CreateDusk()
         {
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_Dusk";
-            p.sunElevationDeg = 1f; p.sunAzimuthDeg = 300f; p.turbidity = 4f; p.overcast = 0.2f; p.visibilityKm = 12f;
+            p.sunElevationDeg = -4f; p.sunAzimuthDeg = 300f; p.turbidity = 4f; p.overcast = 0.2f; p.visibilityKm = 12f;
             p.lookSaturation = -3f;
             return p;
         }
@@ -117,7 +125,11 @@ namespace Game.Rendering
     /// - high sun: unchanged from ADR 0010 + D23 (clear 42° → 13.9, overcast 30° → 11.1);
     /// - low sun: a phone meters the scene, where sunlit walls are bright, so it exposes ~1.4 EV less than the horizontal
     ///   meter would (9°: 13.1 instead of 11.1 - a 0.6-albedo wall facing the sun ≈ 0.7 linear, ~90 %, instead of 2.8);
-    /// - dusk: no compensation of the falling light - sun 1° hazy lands 2-2.5 EV darker on screen than an overcast noon.
+    /// - dusk: no compensation of the falling light down to 0.5° - sun 1° hazy lands 2-2.5 EV darker on screen than an
+    ///   overcast noon;
+    /// - civil twilight (sun below 0.5°, ADR 0062): the exposure follows the dimming sky (a phone lengthens its exposure),
+    ///   with the scene 0.2 EV darker by -4° (higher EV100), so the ambient-lit scene stays ~2.9 EV under overcast noon while emissive lamps
+    ///   (fixed cd/m²) and their pools gain on the background.
     /// WORKING_VALUE (to be compared with owner photos at the same times).
     /// </summary>
     public static class ExposureTable
@@ -128,6 +140,12 @@ namespace Game.Rendering
 
         public static float Ev100(float sunElevationDeg, float overcast)
         {
+            if (sunElevationDeg < 0.5f)
+            {
+                float twilight = SkyModel.TwilightFactorAt(sunElevationDeg);
+                float deepen = 0.2f * Mathf.Clamp01((0.5f - sunElevationDeg) / 4.5f);
+                return Ev100(0.5f, overcast) + Mathf.Log(twilight, 2f) + deepen;
+            }
             float el = Mathf.Clamp(sunElevationDeg, k_El[0], k_El[k_El.Length - 1]);
             int i = 0;
             while (i < k_El.Length - 2 && el > k_El[i + 1]) i++;
