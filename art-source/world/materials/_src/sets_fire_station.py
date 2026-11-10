@@ -60,6 +60,8 @@ def _r(u0, v0, w, h):
 # v in metres from the bottom of the image. Bands are periodic along u (14 m).
 LAYOUT = {
     "tile_m": list(TILE),
+    "arch": {"w": 3.4, "spring": 2.4, "rise": 1.0, "trim": 0.16, "col": 0.85, "row": 1.20, "bar": 0.06},
+    "round": {"d": 2.4, "trim": 0.16, "cross": 0.16},
     "plaster": {"v0": 0.0, "h": 4.0, "base_h": 2.6, "mid": [1.2, 2.6]},     # top zone = [base_h, h]
     "roof": {"v0": 4.05, "h": 3.2, "mid": [0.6, 2.8], "rib_pitch": 0.25},
     "fascia": {"v0": 11.45, "h": 0.40},
@@ -81,7 +83,7 @@ LAYOUT = {
     "ochre": _r(10.35, 12.60, 1.6, 1.35),
     # linear albedo, WORKING_VALUE read by eye off the CC0 photos (overcast frame 7197 + sunny frame 20240626)
     "render_blue_linear": [0.47, 0.545, 0.65],
-    "roof_blue_linear": [0.030, 0.095, 0.34],
+    "roof_blue_linear": [0.022, 0.085, 0.36],
     "trim_blue_linear": [0.022, 0.060, 0.22],
     "clinker_linear": [0.47, 0.29, 0.115],
 }
@@ -231,21 +233,23 @@ def fire_station(nx=2048):
     crown = ss(0.18, 0.26, ph) * ss(0.74, 0.66, ph)
     prof = 0.035 * crown
     rblue = np.array(L["roof_blue_linear"], np.float32)
-    chalk = 0.10 + 0.06 * n_big + 0.05 * ss(0.0, 1.0, crown) + 0.03 * n_mid       # chalking: crowns fade first
+    # chalking: crowns fade first. r3: 0.10 -> 0.02 base and a darker chalk tone; the Unity frames (r2) showed a pale
+    # lavender roof next to the saturated blue of the CC0 photos (7197, 20240626). WORKING_VALUE by eye.
+    chalk = 0.02 + 0.03 * n_big + 0.025 * ss(0.0, 1.0, crown) + 0.015 * n_mid
     rcol = rblue[None, None, :] * (1 + 0.05 * n_mid)[..., None]
-    rcol = rcol + (np.array([0.30, 0.36, 0.50], np.float32) - rcol) * np.clip(chalk, 0, 0.35)[..., None]
+    rcol = rcol + (np.array([0.16, 0.24, 0.46], np.float32) - rcol) * np.clip(chalk, 0, 0.12)[..., None]
     # dirt collects in the pans and towards the eave; lap joint of the sheets every 1.0 m (4 ribs) and at mid length
     pan = 1 - crown
-    rdirt = pan * (0.18 + 0.30 * ss(1.2, 0.0, rv) + 0.12 * ss(-0.3, 1.0, n_run)) + 0.35 * ss(0.10, 0.0, rv)
+    rdirt = pan * (0.06 + 0.22 * ss(1.2, 0.0, rv) + 0.08 * ss(-0.3, 1.0, n_run)) + 0.30 * ss(0.10, 0.0, rv)
     lap_u = ss(0.012, 0.004, np.abs(((X + 0.5) % 1.0) - 0.5) - 0.0)
     lap_v = ss(0.010, 0.003, np.abs(rv - 1.7))
     screws = ss(0.016, 0.008, np.hypot(((X / R["rib_pitch"]) % 1.0 - 0.46) * R["rib_pitch"], ((rv - 0.2) % 0.75) - 0.375))
-    rdirt = np.clip(rdirt + 0.35 * lap_v + 0.2 * lap_u * pan, 0, 0.85)
+    rdirt = np.clip(rdirt + 0.30 * lap_v + 0.15 * lap_u * pan, 0, 0.85)
     rcol = rcol * (1 - rdirt[..., None]) + dirt_col * rdirt[..., None]
     rcol = np.where(screws[..., None] > 0.5, np.array([0.25, 0.25, 0.26], np.float32), rcol)
     alb = np.where(in_r[..., None], rcol, alb)
     h = np.where(in_r, prof + 0.002 * screws - 0.0015 * lap_v + 0.0002 * n_fine, h)
-    rough = np.where(in_r, np.clip(0.48 + 0.25 * rdirt + 0.12 * np.clip(chalk, 0, 0.3), 0.3, 0.95), rough)
+    rough = np.where(in_r, np.clip(0.60 + 0.25 * rdirt + 0.5 * np.clip(chalk, 0, 0.12), 0.55, 0.95), rough)   # r3: weathered coil coat ~0.6
     joint = np.where(in_r, np.clip(lap_v + lap_u * pan, 0, 1), joint)
 
     # ------------------------------------------------------------------ blue flashing / fascia strip
@@ -256,11 +260,11 @@ def fire_station(nx=2048):
     fj = ss(0.008, 0.003, np.abs(((X + 0.3) % 2.0) - 1.0) - 0.0)
     fdrip = ss(0.4, 1.2, n_run) * ss(F["h"], 0.0, fv) * 0.4 + 0.3 * ss(0.05, 0.0, fv)
     fcol = tblue[None, None, :] * (1 + 0.06 * n_mid + 0.04 * n_big)[..., None]
-    fcol = fcol + (np.array([0.22, 0.27, 0.42], np.float32) - fcol) * np.clip(0.10 + 0.08 * n_big, 0, 0.3)[..., None]
+    fcol = fcol + (np.array([0.14, 0.20, 0.38], np.float32) - fcol) * np.clip(0.03 + 0.04 * n_big, 0, 0.12)[..., None]
     fcol = fcol * (1 - np.clip(fdrip + 0.5 * fj, 0, 0.8)[..., None] * 0.7)
     alb = np.where(in_f[..., None], fcol, alb)
     h = np.where(in_f, -0.001 * fj + 0.006 * ss(0.03, 0.05, fv) * ss(F["h"] - 0.03, F["h"] - 0.05, fv) * 0.2, h)
-    rough = np.where(in_f, 0.5 + 0.2 * fdrip, rough)
+    rough = np.where(in_f, 0.6 + 0.2 * fdrip, rough)
 
     # ------------------------------------------------------------------ concrete plinth strip
     Pl = L["plinth"]
@@ -372,9 +376,9 @@ def fire_station(nx=2048):
     rad = ((wA / 2) ** 2 + rise ** 2) / (2 * rise)
     darc = np.hypot(au - wA / 2, av - (hs_ + rise - rad))        # distance from the arc centre
     in_shape = ((av <= hs_) | (darc <= rad)) & (au >= 0) & (au <= wA) & (av >= 0)
-    trim_m = in_shape & (((av > hs_) & (darc > rad - 0.16)) | (au < 0.16) | (au > wA - 0.16))
+    trim_m = in_shape & (darc > rad - 0.16) & (av > hs_ + rise - rad)
     # background outside the arch inside the rect = render (so the quad can cover the whole rect)
-    glazing(in_a, au, av, 0.77, 0.80, bar=0.05, shape=in_shape, trim=(trim_m, tblue * 1.0), blind_seed=3)
+    glazing(in_a, au, av, 0.85, 1.20, bar=0.06, shape=in_shape, trim=(trim_m, tblue * 1.0), blind_seed=3)
     sill_a = in_a & in_shape & (av < 0.06)
     alb = np.where(sill_a[..., None], pvc * 0.8, alb)
     out_a = in_a & ~in_shape
@@ -389,7 +393,7 @@ def fire_station(nx=2048):
     rr = np.hypot(ru, rv2)
     in_circ = rr <= 1.2
     ring = in_circ & (rr > 1.04)
-    cross = in_circ & ((np.abs(ru) < 0.07) | (np.abs(rv2) < 0.07))
+    cross = in_circ & ((np.abs(ru) < 0.08) | (np.abs(rv2) < 0.08))
     glazing(in_rw, ru + 1.2, rv2 + 1.2, 9.0, 9.0, shape=in_circ, trim=(ring | cross, tblue), blind_seed=5)
     out_r = in_rw & ~in_circ
     alb = np.where(out_r[..., None], base * (det ** 0.8)[..., None], alb)

@@ -341,6 +341,136 @@ WIN = {  # opening kind -> (atlas rect, inset m)
 }
 
 
+def _bar(mb, W, back, nout, p, q, hw, proud, uvr):
+    """Glazing bar from p to q (window-local x, y), 2 hw wide, `proud` in front of the glass: front + two sides."""
+    p, q = np.asarray(p, float), np.asarray(q, float)
+    d = (q - p) / max(np.linalg.norm(q - p), 1e-9)
+    n2 = np.array([-d[1], d[0]]) * hw
+    (u0, v0), (u1, v1) = uvr
+    uv = [(u0, v0), (u1, v0), (u1, v1), (u0, v1)]
+    fr = back + nout * proud
+    c = [p - n2, p + n2, q + n2, q - n2]
+    mb.face([W(*x) + fr for x in c], uv, MAT, nout)
+    for a, b, sgn in ((c[0], c[3], -1.0), (c[1], c[2], 1.0)):
+        side = W(*(a + n2 * sgn)) - W(*a)
+        mb.face([W(*a) + back, W(*b) + back, W(*b) + fr, W(*a) + fr], uv, MAT, side)
+
+
+def deep_window(mb, O, S, nout, hole, kind, u0, depth=0.20, proud=0.03):
+    """LOD0 gable window with real depth (r3; the flat quad read as a sticker from the fence line): render spandrels
+    up to the outline, blue trim band `proud` of the wall, reveal `depth` back to the glazing, glazing n-gon mapped
+    into the atlas rect, mullions as bars in front of the glass. Shapes from atlas_layout.json (arch / round)."""
+    s0, s1, z0, z1 = hole
+    R_ = LAY["win_arch" if kind == "arch" else "win_round"]
+    f, pv = LAY["fascia"], LAY["pvc_white"]
+    pm = LAY["plaster"]["v0"] + LAY["plaster"]["mid"][0]
+    back, out = -nout * depth, nout * proud
+    H = z1 - z0
+
+    def W(x, y):
+        return O + S * (s0 + x) + UP * (z0 + y)
+
+    def auv(p):
+        return (R_["u"][0] + p[0], R_["v"][0] + p[1])
+
+    def blue(a, b, lo=0.10, hi=0.26):
+        return [(a, f["v0"] + lo), (b, f["v0"] + lo), (b, f["v0"] + hi), (a, f["v0"] + hi)]
+    white = ((pv["u"][0] + 0.2, pv["v"][0] + 0.05), (pv["u"][0] + 0.26, pv["v"][1] - 0.05))
+    if kind == "arch":
+        g = LAY["arch"]
+        w, sp, rise, tr = g["w"], g["spring"], g["rise"], g["trim"]
+        rad = ((w / 2) ** 2 + rise ** 2) / (2 * rise)
+        cy, ri, n = sp + rise - rad, rad - tr, 10
+        ao, ai = math.asin(w / 2 / rad), math.asin(min(w / 2 / ri, 1.0))
+        Po = [(w / 2 + rad * math.sin(-ao + 2 * ao * k / n), cy + rad * math.cos(-ao + 2 * ao * k / n)) for k in range(n + 1)]
+        Pi = [(w / 2 + ri * math.sin(-ai + 2 * ai * k / n), cy + ri * math.cos(-ai + 2 * ai * k / n)) for k in range(n + 1)]
+        Po[0], Po[-1] = (0.0, sp), (w, sp)
+        Pi[0], Pi[-1] = (0.0, Pi[0][1]), (w, Pi[-1][1])
+        yj = Pi[0][1]
+        ctr = W(w / 2, cy)
+        for a, b in zip(Po[:-1], Po[1:]):          # render between the arch and the square hole
+            q = [a, b, (b[0], H), (a[0], H)]
+            mb.face([W(*p) for p in q], [(u0 + 5.0 + p[0], pm + 0.1 + p[1] - sp) for p in q], MAT, nout)
+        run = 0.0
+        for k in range(n):                          # trim band on the arch head, its reveal and its outer lip
+            L = math.dist(Po[k], Po[k + 1])
+            mb.face([W(*p) + out for p in (Pi[k], Pi[k + 1], Po[k + 1], Po[k])], blue(run, run + L), MAT, nout)
+            a3, b3 = W(*Pi[k]), W(*Pi[k + 1])
+            mb.face([a3 + out, b3 + out, b3 + back, a3 + back], blue(run, run + L, 0.08, 0.31), MAT, ctr - (a3 + b3) / 2)
+            mb.face([W(*Po[k]) + out, W(*Po[k + 1]) + out, W(*Po[k + 1]), W(*Po[k])], blue(run, run + L, 0.30, 0.33), MAT,
+                    (W(*Po[k]) + W(*Po[k + 1])) / 2 - ctr)
+            run += L
+        for x, hint in ((0.0, S), (w, -S)):         # jamb reveals (render)
+            mb.face([W(x, 0), W(x, yj), W(x, yj) + back, W(x, 0) + back],
+                    [(u0 + 3.0, pm + 0.05), (u0 + 3.0, pm + 1.3), (u0 + 3.0 + depth, pm + 1.3), (u0 + 3.0 + depth, pm + 0.05)], MAT, hint)
+        sl = nout * 0.05                            # sheet sill, 5 cm proud with a drip edge
+        pu, pvv = pv["u"][0], pv["v"][0]
+        mb.face([W(0, 0) + sl, W(w, 0) + sl, W(w, 0.03) + back, W(0, 0.03) + back],
+                [(pu, pvv), (pu + 0.9, pvv), (pu + 0.9, pvv + 0.25), (pu, pvv + 0.25)], MAT, UP)
+        mb.face([W(0, -0.03) + sl, W(w, -0.03) + sl, W(w, 0) + sl, W(0, 0) + sl],
+                [(pu, pvv), (pu + 0.9, pvv), (pu + 0.9, pvv + 0.03), (pu, pvv + 0.03)], MAT, nout)
+        poly = [(0.0, 0.03), (w, 0.03)] + Pi[::-1]
+        mb.face([W(*p) + back for p in poly], [auv(p) for p in poly], MAT, nout)
+
+        def top(x):
+            return cy + math.sqrt(max(ri * ri - (x - w / 2) ** 2, 0.0))
+        k = 1
+        while k * g["col"] < w - 0.1:               # mullions on the painted ones
+            x = k * g["col"]
+            _bar(mb, W, back, nout, (x, 0.03), (x, top(x)), g["bar"] / 2, 0.05, white)
+            k += 1
+        k = 1
+        while k * g["row"] < top(w / 2) - 0.3:
+            y = k * g["row"]
+            hw_ = w / 2 if y <= yj else math.sqrt(max(ri * ri - (y - cy) ** 2, 0.0))
+            _bar(mb, W, back, nout, (w / 2 - hw_, y), (w / 2 + hw_, y), g["bar"] / 2, 0.055, white)
+            k += 1
+        for x in (0.035, w - 0.035):                # frame stiles
+            _bar(mb, W, back, nout, (x, 0.03), (x, yj), 0.035, 0.05, white)
+        return
+    g = LAY["round"]
+    R0, n = g["d"] / 2, 16
+    ri = R0 - g["trim"]
+    ang = [2 * math.pi * k / n for k in range(n + 1)]
+    Po = [(R0 + R0 * math.cos(a), R0 + R0 * math.sin(a)) for a in ang]
+    Pi = [(R0 + ri * math.cos(a), R0 + ri * math.sin(a)) for a in ang]
+
+    def sq(a):
+        cs, sn = math.cos(a), math.sin(a)
+        m = max(abs(cs), abs(sn))
+        return (R0 + R0 * cs / m, R0 + R0 * sn / m)
+    ctr = W(R0, R0)
+    run = 0.0
+    for k in range(n):
+        q = [Po[k], Po[k + 1], sq(ang[k + 1]), sq(ang[k])]
+        if _area(q) > 1e-4:
+            mb.face([W(*p) for p in q], [(u0 + 5.0 + p[0], pm + 0.1 + p[1] * 0.5) for p in q], MAT, nout)
+        L = math.dist(Po[k], Po[k + 1])
+        mb.face([W(*p) + out for p in (Pi[k], Pi[k + 1], Po[k + 1], Po[k])], blue(run, run + L), MAT, nout)
+        a3, b3 = W(*Pi[k]), W(*Pi[k + 1])
+        mb.face([a3 + out, b3 + out, b3 + back, a3 + back], blue(run, run + L, 0.08, 0.31), MAT, ctr - (a3 + b3) / 2)
+        mb.face([W(*Po[k]) + out, W(*Po[k + 1]) + out, W(*Po[k + 1]), W(*Po[k])], blue(run, run + L, 0.30, 0.33), MAT,
+                (W(*Po[k]) + W(*Po[k + 1])) / 2 - ctr)
+        run += L
+    mb.face([W(*p) + back for p in Pi[:-1]], [auv(p) for p in Pi[:-1]], MAT, nout)
+    bl = ((0.3, f["v0"] + 0.10), (0.3 + 2 * ri, f["v0"] + 0.26))
+    _bar(mb, W, back, nout, (R0 - ri, R0), (R0 + ri, R0), g["cross"] / 2, 0.07, bl)
+    _bar(mb, W, back, nout, (R0, R0 - ri), (R0, R0 + ri), g["cross"] / 2, 0.07, bl)
+
+
+def wall_light(mb, c, d, z, lod, w=0.30):
+    """Bulkhead / flood light on the wall (LOD0): dark housing with a pale lens face underneath."""
+    if lod > 0:
+        return
+    dk, pv = LAY["dark"], LAY["pvc_white"]
+    c, d = np.asarray(c, float), np.asarray(d, float)
+    mb.box(c, d, w / 2, 0.06, z, z + 0.13, MAT, ((dk["u"][0] + 0.1, dk["v"][0] + 0.1), (dk["u"][0] + 0.4, dk["v"][0] + 0.25)), top=True)
+    ay = np.array([-d[1], d[0]])
+    cs = [c + d * sx * w / 2 + ay * sy * 0.06 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+    mb.face([P3(p, z) for p in cs], [(pv["u"][0] + 0.1, pv["v"][0] + 0.1), (pv["u"][0] + 0.4, pv["v"][0] + 0.1),
+                                     (pv["u"][0] + 0.4, pv["v"][0] + 0.2), (pv["u"][0] + 0.1, pv["v"][0] + 0.2)], MAT, -UP)
+
+
 def wall(mb, p0, p1, z0, z1, lod, openings=(), ground=True, top=None, plinth=None, key=""):
     """Rendered wall from p0 to p1 (u, v); outward = right of the direction. openings: [(s centre, z bottom, w, h,
     kind)]. top: optional [(s, z)] polyline (left to right) replacing the flat top. plinth: default = ground."""
@@ -363,6 +493,11 @@ def wall(mb, p0, p1, z0, z1, lod, openings=(), ground=True, top=None, plinth=Non
     surface(mb, O, S, UP, poly, segs, u0, MAT, nout, holes, t_base=zb)
     pm = LAY["plaster"]["v0"] + LAY["plaster"]["mid"][0]
     for o, h in zip(ops, holes):
+        if lod == 0 and o[4] in ("arch", "round"):
+            deep_window(mb, O, S, nout, h, o[4], u0)
+            continue
+        if o[4] == "entry":      # bulkhead light over every entrance door
+            wall_light(mb, p0 + d * o[0] + np.array([d[1], -d[0]]) * 0.06, d, o[1] + o[3] + 0.22, lod, w=0.24)
         rk, inset = WIN[o[4]]
         inset = inset if lod == 0 else 0.0
         back = -nout * inset
@@ -448,10 +583,22 @@ def swatch_face(mb, pts, rk, hint, key="", two_sided=False, scale=1.0):
     mb.face(pts, uv, MAT, hint, two_sided=two_sided)
 
 
-def fascia(mb, a, b, outward, lod, h=0.38, soffit=0.0, key=""):
-    """Blue fascia board hanging below the roof edge a-b (3D), facing `outward`; optional soffit back to the wall."""
+def fascia(mb, a, b, outward, lod, h=0.38, soffit=0.0, key="", gutter=False):
+    """Blue fascia board hanging below the roof edge a-b (3D), facing `outward`; optional soffit back to the wall;
+    gutter = coated steel box gutter in front of the fascia (LOD0, r3)."""
     if lod >= 2:
         return
+    if gutter and lod == 0:
+        f_ = LAY["fascia"]
+        a_, b_ = np.asarray(a, float), np.asarray(b, float)
+        o_ = np.asarray(outward, float)
+        o_ = o_ / np.linalg.norm(o_)
+        Lg = float(np.linalg.norm(b_ - a_))
+        prof = [(0.005, -0.035), (0.025, -0.125), (0.105, -0.125), (0.130, -0.025)]
+        for i, ((xa, za), (xb, zb)) in enumerate(zip(prof[:-1], prof[1:])):
+            va = f_["v0"] + 0.05 + 0.09 * i
+            mb.face([a_ + o_ * xa + UP * za, b_ + o_ * xa + UP * za, b_ + o_ * xb + UP * zb, a_ + o_ * xb + UP * zb],
+                    [(1.0, va), (1.0 + Lg, va), (1.0 + Lg, va + 0.09), (1.0, va + 0.09)], MAT, None, two_sided=True)
     f = LAY["fascia"]
     a, b = np.asarray(a, float), np.asarray(b, float)
     L = float(np.linalg.norm(b - a))
@@ -474,7 +621,7 @@ def mono_roof(mb, ua, ub, v_eave, z_eave, v_top, z_top, lod, key, oh=0.25, ends=
     ve, ze = v_eave - sgn * oh, z_eave - k * oh
     e0, e1 = (ua, ub) if sgn > 0 else (ub, ua)
     roof(mb, [P3((e0, ve), ze), P3((e1, ve), ze), P3((e1, v_top), z_top), P3((e0, v_top), z_top)], lod, key)
-    fascia(mb, P3((e0, ve), ze), P3((e1, ve), ze), np.array([0, -sgn, 0.0]), lod, soffit=oh, key=key)
+    fascia(mb, P3((e0, ve), ze), P3((e1, ve), ze), np.array([0, -sgn, 0.0]), lod, soffit=oh, key=key, gutter=True)
     for flag, uu, o in ((ends[0], ua, -1.0), (ends[1], ub, 1.0)):
         if flag:
             fascia(mb, P3((uu, ve), ze), P3((uu, v_top), z_top), np.array([o, 0, 0.0]), lod, h=0.30, key=key + "e")
@@ -542,6 +689,8 @@ def build_garage(mb, lod):
                 c = A + d * (k * (dw + pier) + pier / 2) + nout2 * (g["pier_proud"] / 2 - 0.02)
                 mb.box(c, d, pier / 2, g["pier_proud"] / 2 + 0.02, -0.4, dh + 0.0, MAT,
                        ((b["u"][0] + 0.09, b["v"][0]), (b["u"][0] + 0.09 + pier, b["v"][0] + dh + 0.0)), top=True)
+            for k in range(1, n):          # flood lights over the inner piers (r3)
+                wall_light(mb, A + d * (k * (dw + pier) + pier / 2) + nout2 * 0.07, d, dh + 0.62, lod)
             # lintel band: blue flashing over the doors
             fascia(mb, P3(A + nout2 * 0.06, dh + 0.26), P3(B + nout2 * 0.06, dh + 0.26), nout, lod, h=0.26, key="lint" + side)
         # rake flashing
@@ -567,8 +716,8 @@ def build_garage(mb, lod):
             if k % 2:
                 uvs = [uvs[1], uvs[0], uvs[3], uvs[2]]
             mb.face([P3((ua, va), za), P3((ua, vb), za), P3((ub, vb), zb), P3((ub, va), zb)], uvs, MAT, UP)
-    fascia(mb, P3((u0 - oh, v1 + oh), ze), P3((u0 - oh, v0 - oh), ze), np.array([-1.0, 0, 0]), lod, h=0.34, soffit=oh, key="geave")
-    fascia(mb, P3((u1 + oh, vne), ze), P3((u1 + oh, v1 + oh), ze), np.array([1.0, 0, 0]), lod, h=0.34, soffit=oh, key="geave2")
+    fascia(mb, P3((u0 - oh, v1 + oh), ze), P3((u0 - oh, v0 - oh), ze), np.array([-1.0, 0, 0]), lod, h=0.34, soffit=oh, key="geave", gutter=True)
+    fascia(mb, P3((u1 + oh, vne), ze), P3((u1 + oh, v1 + oh), ze), np.array([1.0, 0, 0]), lod, h=0.34, soffit=oh, key="geave2", gutter=True)
     downpipe(mb, (u0, v0 + 0.5), (-1, 0), PL_H, ze - 0.3, lod)
     downpipe(mb, (u0, v1 - 0.5), (-1, 0), PL_H, ze - 0.3, lod)
 
@@ -638,7 +787,7 @@ def build_middle(mb, lod):
     for i in range(4):
         a, b = c[i], c[(i + 1) % 4]
         roof(mb, [P3(a, zc), P3(b, zc), ap], lod, "troof%d" % i)
-        fascia(mb, P3(a, zc), P3(b, zc), np.array([outs[i][0], outs[i][1], 0.0]), lod, h=0.36, soffit=oh, key="tf%d" % i)
+        fascia(mb, P3(a, zc), P3(b, zc), np.array([outs[i][0], outs[i][1], 0.0]), lod, h=0.36, soffit=oh, key="tf%d" % i, gutter=True)
         hip_cap(mb, P3(a, zc), ap, lod)
     # chimneys (clinker) and the radio mast
     chimney(mb, (tu0 + 2.6, tv0 - 0.75), zts - 0.5, zts + 1.25, lod)
@@ -746,8 +895,8 @@ def build_hall(mb, lod):
                             [(run, f["v0"] + 0.1), (run + L, f["v0"] + 0.1), (run + L, f["v0"] + 0.3), (run, f["v0"] + 0.3)], MAT, -UP)
                 run += L
         ez = ze - oh * 0.6 * math.tan(a_max)
-        fascia(mb, P3((u1 + oh * 0.6, v0 - oh), ez), P3((u1 + oh * 0.6, v1 + oh), ez), np.array([1.0, 0, 0]), lod, h=0.36, soffit=oh * 0.6, key="he")
-        fascia(mb, P3((u0 - oh * 0.6, v1 + oh), ez), P3((u0 - oh * 0.6, v0 - oh), ez), np.array([-1.0, 0, 0]), lod, h=0.36, soffit=oh * 0.6, key="hw")
+        fascia(mb, P3((u1 + oh * 0.6, v0 - oh), ez), P3((u1 + oh * 0.6, v1 + oh), ez), np.array([1.0, 0, 0]), lod, h=0.36, soffit=oh * 0.6, key="he", gutter=True)
+        fascia(mb, P3((u0 - oh * 0.6, v1 + oh), ez), P3((u0 - oh * 0.6, v0 - oh), ez), np.array([-1.0, 0, 0]), lod, h=0.36, soffit=oh * 0.6, key="hw", gutter=True)
         # lettering (alpha test), 3 cm proud of the gable
         for r, a in ((lt, ALAY["lettering"]), (nb, ALAY["number"])):
             q = [P3((r["u"][0], v0 - 0.03), r["z"][0]), P3((r["u"][1], v0 - 0.03), r["z"][0]),
@@ -801,7 +950,7 @@ def build_outbuilding(mb, lod):
         zee = ze - k * oh
         e0, e1 = (-oh, La + oh) if sgn > 0 else (La + oh, -oh)
         roof(mb, [P3(q(e0, ye), zee), P3(q(e1, ye), zee), P3(q(e1, yr), zr), P3(q(e0, yr), zr)], lod, "o" + key)
-        fascia(mb, P3(q(e0, ye), zee), P3(q(e1, ye), zee), -b3 * sgn, lod, h=0.36, soffit=oh, key="of" + key)
+        fascia(mb, P3(q(e0, ye), zee), P3(q(e1, ye), zee), -b3 * sgn, lod, h=0.36, soffit=oh, key="of" + key, gutter=True)
         for xx, oo in ((-oh, -1.0), (La + oh, 1.0)):
             fascia(mb, P3(q(xx, ye), zee), P3(q(xx, yr), zr), a3 * oo, lod, h=0.30, key="og" + key)
     # turret over the rear NW part: blue sheet cladding, pyramid roof

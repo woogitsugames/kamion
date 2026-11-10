@@ -362,14 +362,16 @@ def cameras(region_id, w):
         s_ab = float(s[int(np.argmin(np.hypot(*(P - fs_en(24.0, 0.0)).T)))])
         for cid, st, tgt_uvz, fov, note in (
                 ("fire_station_route", s_ab - 60.0, (40.0, 0.0, 5.0), 60.0, "driver eye 2.5 m, 60 m before the fire station JRG2 (hero asset)"),
-                ("fire_station_abeam", s_ab, (28.0, 0.0, 4.5), 60.0, "driver eye 2.5 m abeam of the fire station JRG2 (52 m right of the route)")):
+                ("fire_station_abeam", s_ab + 9.0, (30.0, 0.0, 4.5), 60.0, "driver eye 2.5 m abeam of the fire station JRG2 (52 m right of the route)")):
             q, z, t = lane_point(st)
             g_ = fs_en(tgt_uvz[0], tgt_uvz[1])
             cams.append({"id": cid, "type": "persp", "fov_deg": fov, "route_s_m": r(st),
                          "pos": [r(q[0]), r(q[1]), r(z + 2.5)], "look_at": [r(g_[0]), r(g_[1]), r(zf + tgt_uvz[2])], "note": note})
-        p_ = fs_en(36.0, -82.0)
-        g_ = fs_en(39.0, 0.0)
-        cams.append({"id": "fire_station_ref7197", "type": "persp", "fov_deg": 36.0,
+        # r3: the photo shows the SE side wall of the hall ~9 % of the gable width -> eye ~4.6 m SE of the gable
+        # corner; fov_deg is vertical in the engine (36 deg horizontal on the 3:2 photo = 24.5 deg vertical)
+        p_ = fs_en(53.0, -82.0)
+        g_ = fs_en(40.0, 0.0)
+        cams.append({"id": "fire_station_ref7197", "type": "persp", "fov_deg": 24.5,
                      "pos": [r(p_[0]), r(p_[1]), r(zf + 1.6)], "look_at": [r(g_[0]), r(g_[1]), r(zf + 6.5)],
                      "note": "frame of the CC0 photo 'File:7197 May 2021 in Bialystok.jpg' (Rakoon): the arched gable from across Andersa"})
         p_ = fs_en(-35.0, -70.0)

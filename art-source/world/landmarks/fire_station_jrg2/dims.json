@@ -6,7 +6,7 @@
   "plan": "BDOT10k footprints bdot:2BE4B431-C784-1BF0-E053-CC2BA8C0D140 (1317.7 m2) and bdot:2BE4B431-C7B4-1BF0-E053-CC2BA8C0D140 (245.2 m2); GUGiK orthophoto 0.25 m (2024)",
   "heights": "GUGiK LoD2 2017 roof planes (lod2_roofs.json, CC BY 4.0), relative to the lowest LoD2 vertex of each building",
   "facades": "by eye from CC0 photos (Wikimedia Commons, Rakoon: '7197 May 2021 in Białystok', '20240626 103137 June 2024 in Białystok') and CC BY-SA 4.0 street-level frames used as pattern only (Mapillary 767523907280643, 171742518208129 richlv; 471355742447021 strudel; 2934972690092373 grobin; KartaView kv993066550): WORKING_VALUE unless a LoD2 / BDOT source is named",
-  "unverified": "NE and NW facades, garage rear doors, hall SE wall, outbuilding facades, fence line position (+-3 m), thuja count: not visible in any open photo - WORKING_VALUE"
+  "unverified": "NE and NW facades, garage rear doors, hall SE wall, outbuilding facades, gate position, thuja count: not visible in any open photo - WORKING_VALUE"
  },
  "axis": {"origin_en": [-262.92, -142.67], "u": [0.7912, -0.6115], "note": "u along the SW (street) facade towards SE, v = left normal (towards NE, away from Andersa); origin = W corner of the BDOT footprint"},
  "floor_above_ground_m": 0.12,
@@ -28,8 +28,10 @@
  "outbuilding": {"ring_uv": [[58.86, 27.65], [77.77, 26.32], [78.67, 39.22], [59.76, 40.56]], "eave_z": 9.0, "ridge_z": 10.55,
                  "turret_along": [0.0, 6.1], "turret_eave_z": 12.05, "turret_apex_z": 13.04, "lod2_zmin_offset_m": -0.07},
  "fence": {"h": 1.6, "bay": 2.5, "plinth_h": 0.25,
-           "lines_uv": [[[-7.0, 12.0], [-5.0, -28.0]], [[5.0, -29.5], [74.0, -33.0], [80.0, 6.0]]],
-           "gate_parked_uv": [[5.3, -29.1], [17.8, -29.75]]},
- "thuja": {"h": [2.7, 5.2], "r": [0.40, 0.62], "row_uv": [[9.0, -28.4], [72.0, -31.7]], "count": 24},
+           "lines_uv": [[[-28.4, -27.4], [-5.0, -27.57]], [[5.0, -27.64], [82.3, -28.2]]],
+           "gate_parked_uv": [[5.3, -27.2], [17.8, -27.3]],
+           "opening_uv": [[-5.0, -27.57], [5.0, -27.64]],
+           "source": "front run of OSM way 258562003 (barrier=fence) between its vertices (-28.4, -27.4) and (82.3, -28.2) in the building frame; the generic panel fence of that way is cut along these lines (hero_building.fence_cut). Gate position and the blue steel type: WORKING_VALUE from Mapillary 767523907280643 (pattern only)"},
+ "thuja": {"h": [2.7, 5.2], "r": [0.40, 0.62], "row_uv": [[9.0, -25.9], [79.0, -26.4]], "count": 26},
  "flagpoles": {"uv": [[33.2, -3.2], [34.6, -3.4]], "h": 8.0}
 }

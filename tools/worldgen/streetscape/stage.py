@@ -147,7 +147,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FU.misc_points(pl, w.net, src, origin, frep, codes)
     FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep)
     lin = FU.Lin(w.buf, zsurf)
-    FU.fences(lin, src, origin, roads_poly, frep)
+    # authored fences of hero buildings replace the generic panel fence of the same OSM way (ADR 0070 r3)
+    FU.fences(lin, src, origin, shapely.union_all([roads_poly] + HBD.fence_cut(heroes)), frep)
     def znat(e, n):                              # natural ground (NMT, decks removed): embankment height
         return PV.bilinear(hf.z, hf, np.asarray(e, float), np.asarray(n, float))
     FU.guardrails(lin, w.net, znat, frep)

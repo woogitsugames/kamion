@@ -212,6 +212,25 @@ def keepout(heroes) -> list:
     return out
 
 
+def fence_cut(heroes) -> list:
+    """Polygons (region-local) along the authored fence lines, the parked gate and the gate opening: the generic OSM
+    fence (furniture.fences) is cut there, so a surveyed barrier way is not drawn twice."""
+    import shapely
+    out = []
+    for h in heroes:
+        g, d = h["spec"]["ground"], h["spec"]["dims"]
+        lines = [[p[:2] for p in ln] for ln in g["fence"] + ([g["gate"]] if g["gate"] else [])]
+        op = d.get("fence", {}).get("opening_uv")
+        if op:
+            A = np.array(d["axis"]["origin_en"], float)
+            U = np.array(d["axis"]["u"], float)
+            U /= np.linalg.norm(U)
+            V = np.array([-U[1], U[0]])
+            lines.append([list(A + U * p[0] + V * p[1]) for p in op])
+        out += [shapely.LineString(ln).buffer(1.2, cap_style="flat") for ln in lines if len(ln) >= 2]
+    return out
+
+
 def apply(buf, heroes, instances: list, report, log=lambda *a: None) -> dict:
     """Add the instances and the fence collision. Returns {prototype: {tris_lod0, tris_lod1, tris_lod2}}."""
     from roads import meshing as M
