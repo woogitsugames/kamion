@@ -74,6 +74,7 @@ namespace Game.Gameplay
         ControlSettingsPanel m_SettingsPanel;
         ControlInputLogger m_InputLog;
         CameraMode m_LoggedCamMode;
+        static readonly string[] k_CamModeEvents = { "camera mode=Cab", "camera mode=Chase", "camera mode=Orbit" };   // cached: no string building at runtime
         public SteerMode CurrentSteerMode => m_SteerMode;
         public LabSpawn CurrentSpawn => m_Spawn;
         public DriverInputMixer Mixer => m_Mixer;
@@ -269,7 +270,8 @@ namespace Game.Gameplay
         /// <summary>HUD "Menu" and the Android back key: back to the start menu (Boot scene) without restarting the app.</summary>
         public void ReturnToMenu()
         {
-            Debug.Log("[CONTROLS] event menu-return");
+            m_InputLog.Event(Time.unscaledTime, "menu-return");
+            m_InputLog.Flush(Time.unscaledTime);
             SceneManager.LoadScene("Boot");
         }
 
@@ -457,7 +459,8 @@ namespace Game.Gameplay
             };
             var intent = m_Mixer.Sample(Time.deltaTime, fb);
             if (!Autopilot.Enabled && !RouteDriver.Enabled) m_InputLog.Observe(Time.unscaledTime, intent, vehicle.SpeedKmh);
-            if (m_Rig.mode != m_LoggedCamMode) { m_LoggedCamMode = m_Rig.mode; m_InputLog.Event(Time.unscaledTime, "camera mode=" + m_LoggedCamMode); }
+            if (m_Rig.mode != m_LoggedCamMode) { m_LoggedCamMode = m_Rig.mode; m_InputLog.Event(Time.unscaledTime, k_CamModeEvents[(int)m_LoggedCamMode]); }
+            m_InputLog.TryFlush(Time.unscaledTime, intent.Throttle < 0.01f && intent.Brake < 0.01f && !intent.SteerActive);   // batched; allocates only on that frame
             var kb = UnityEngine.InputSystem.Keyboard.current;   // Android back key arrives as Escape
             if (kb != null && kb.escapeKey.wasPressedThisFrame)
             {
@@ -579,11 +582,14 @@ namespace Game.Gameplay
         void OnApplicationPause(bool paused)
         {
             if (!paused) return;
+            m_InputLog?.Flush(Time.unscaledTime);
             Gyro.Suspend();
             Touch.ThrottleRaw = 0f;
             Touch.BrakeRaw = 0f;
             Wheel.PointerUp();
         }
+
+        void OnDestroy() { m_InputLog?.Flush(Time.unscaledTime); }
 
         void OnApplicationFocus(bool focus) { if (!focus) OnApplicationPause(true); }
     }
