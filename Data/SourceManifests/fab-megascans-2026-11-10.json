@@ -3,13 +3,7 @@
   "decision": "D45",
   "report": "docs/reports/FAB-PATCH-LICENSE-2026-11-10.md",
   "rule": "Files are NOT redistributable: never tracked by git, never in public repo; only this manifest is public.",
-  "skipped": [
-    {
-      "title": "Urban Trash",
-      "listing_url": "https://www.fab.com/listings/4eb4b87c-92bf-495a-b68a-5877fc07094f",
-      "reason": "listing gated as mature content behind re-login; not acquired"
-    }
-  ],
+  "skipped": [],
   "items": [
     {
       "id": "street-curbs",
@@ -262,6 +256,20 @@
       "file": "Data/raw/fab/small-granite-rock/small_granite_rock_wgyxecr_high.zip",
       "bytes": 14055536,
       "sha256": "dc7fe40bae15ad1ce28df5acd4d6c384ea060f97f0fc4e2d48851864e0537680"
+    },
+    {
+      "id": "urban-trash",
+      "title": "Urban Trash",
+      "kind": "3d",
+      "publisher": "Quixel Megascans",
+      "listing_url": "https://www.fab.com/listings/4eb4b87c-92bf-495a-b68a-5877fc07094f",
+      "license": "Fab Standard License",
+      "ai_usage_allowed": "UNVERIFIED (card gated as mature)",
+      "acquired": "2026-11-10",
+      "acquired_by": "owner, own browser (mid quality)",
+      "file": "Data/raw/fab/urban-trash/urban_trash_mid.zip",
+      "bytes": 741215128,
+      "sha256": "89aab0683b618a66040d49d40241cae63db9a9eeda0d18ce1c4e61f032e96383"
     }
   ]
 }
