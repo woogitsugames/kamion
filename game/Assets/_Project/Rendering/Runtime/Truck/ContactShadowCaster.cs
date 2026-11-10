@@ -45,12 +45,19 @@ namespace Game.Rendering
         public Slab[] slabs = Array.Empty<Slab>();
         public Wheel[] wheels = Array.Empty<Wheel>();
         [Tooltip("Wheel blob strength")] public float wheelStrength = 0.9f;
-        [Tooltip("Effective height of the tyre sidewall above the contact patch for the occlusion (m)")] public float wheelOcclusionHeight = 0.18f;
+        [Tooltip("Effective occluder height above the tyre contact patch (m): the tyre bulge closes the gap within a few cm of the patch, " +
+                 "so the core is tight and dark (r5 E-N1). Replaces wheelOcclusionHeight 0.18 (too soft, too wide). WORKING_VALUE")]
+        public float wheelContactHeight = 0.05f;
+        [Tooltip("Half contact length / tyre radius (loaded truck tyre: ~0.2-0.3 m patch). WORKING_VALUE")] public float wheelContactLength = 0.3f;
         [Tooltip("Ground layers (the vehicle layer is excluded)")] public LayerMask groundMask = ~((1 << 8) | (1 << 5) | (1 << 2));
         public float maxGroundDistance = 3f;
         [Tooltip("Effective occlusion height / real underside clearance: wheels, tanks and skirts close the sides of the gap, " +
                  "so the open strip formula with the full clearance under-darkens (photo Volvo FH: almost black under the frame). WORKING_VALUE")]
         public float heightScale = 0.6f;
+        [Tooltip("Side closure (r5 E-N1): wheels, tanks, steps, fenders and bumper hang down around the underside, so the occluder is " +
+                 "effectively wider than the flat slab by sideClosure x h on each side; with 0 the open-strip formula gives only 50 % " +
+                 "occlusion at the footprint edge (phone: 76 % / 49 % asphalt brightness under the bumper). WORKING_VALUE")]
+        public float sideClosure = 1.0f;
 
         static Material s_Material;
         static readonly List<ContactShadowCaster> s_All = new List<ContactShadowCaster>();
@@ -189,17 +196,39 @@ namespace Game.Rendering
             if (Physics.Raycast(from, Vector3.down, out var h, maxGroundDistance, groundMask, QueryTriggerInteraction.Ignore))
             { hit = h.point; LastHits++; return true; }
             // No collider (edit mode: WorldCollisionCooker cooks the world colliders on Awake in play mode only): the
-            // plane through the wheel contact points (wheel centre - radius), or the vehicle frame origin without wheels.
-            var t = transform;
-            Vector3 onPlane = t.position;
-            int nw = 0; Vector3 sum = Vector3.zero;
-            foreach (var w in wheels) if (w.centre != null) { sum += w.centre.position - t.up * w.radius; nw++; }
-            if (nw > 0) onPlane = sum / nw;
-            var plane = new Plane(t.up, onPlane);
+            // fallback plane (FallbackPlane), once per refresh.
+            if (!m_PlaneValid) { m_Plane = FallbackPlane(); m_PlaneValid = true; }
             var ray = new Ray(from, Vector3.down);
-            if (plane.Raycast(ray, out float d) && d <= maxGroundDistance) { hit = ray.GetPoint(d); return true; }
+            if (m_Plane.Raycast(ray, out float d) && d <= maxGroundDistance) { hit = ray.GetPoint(d); return true; }
             hit = from + Vector3.down * maxGroundDistance;
             return false;
+        }
+
+        Plane m_Plane;
+        bool m_PlaneValid;
+
+        /// <summary>
+        /// Plane through the lowest points of the tyre renderers (where the tyres meet the rendered road), oriented with
+        /// this transform. Wheel centre − radius was 5–20 cm under the road in WorldC (trailer patch hidden under the
+        /// asphalt in edit-mode QA, r5 E-N1). Edit mode only (renderer lookups allocate); vehicle origin without wheels.
+        /// </summary>
+        Plane FallbackPlane()
+        {
+            var t = transform;
+            Vector3 sum = Vector3.zero; int nw = 0;
+            foreach (var w in wheels)
+            {
+                if (w.centre == null) continue;
+                Vector3 p = w.centre.position - t.up * w.radius;
+                if (!Application.isPlaying)
+                {
+                    float minY = float.MaxValue;
+                    foreach (var r in w.centre.GetComponentsInChildren<Renderer>()) if (r.enabled && r.gameObject.activeInHierarchy) minY = Mathf.Min(minY, r.bounds.min.y);
+                    if (minY < float.MaxValue && Mathf.Abs(minY - p.y) < 0.5f) p.y = minY;
+                }
+                sum += p; nw++;
+            }
+            return new Plane(t.up, nw > 0 ? sum / nw : t.position);
         }
 
         /// <summary>Rebuilds the patch for the current pose.</summary>
@@ -207,6 +236,7 @@ namespace Game.Rendering
         {
             PublishGrime();
             EnsureObjects();
+            m_PlaneValid = false;
             if (m_Go == null) return;
             m_Renderer.enabled = GlobalEnabled;
             if (!GlobalEnabled) return;
@@ -223,7 +253,8 @@ namespace Game.Rendering
                 int rows = Mathf.Max(1, s.rows);
                 // Margin beyond the footprint: the occlusion falls to ~15 % at one underside height outside the edge.
                 float hRest = Mathf.Max(0.1f, s.undersideY);
-                float mx = s.halfSize.x + hRest * 1.2f, mz = s.halfSize.y + hRest * 1.2f;
+                float grow = hRest * heightScale * sideClosure;
+                float mx = s.halfSize.x + grow + hRest * 1.2f, mz = s.halfSize.y + grow + hRest * 1.2f;
                 for (int r = 0; r <= rows; r++)
                 {
                     float z = Mathf.Lerp(-mz, mz, r / (float)rows);
@@ -234,11 +265,14 @@ namespace Game.Rendering
                         bool ok = Ground(under + Vector3.up * 0.05f, out var g);
                         float h = ok ? Mathf.Max(0.05f, under.y - g.y) * heightScale : 9f;
                         m_Pos.Add(local.InverseTransformPoint(g + Vector3.up * lift));
-                        m_Uv0.Add(new Vector4(x, z, s.halfSize.x, s.halfSize.y));
+                        float gw = ok ? h * sideClosure : 0f;
+                        m_Uv0.Add(new Vector4(x, z, s.halfSize.x + gw, s.halfSize.y + gw));
                         m_Uv1.Add(new Vector2(h, ok ? s.strength : 0f));
                         if (diag != null) { hMin = Mathf.Min(hMin, h); hMax = Mathf.Max(hMax, h); gy = g.y; }
                     }
                 }
+                if (diag != null && !m_PlaneValid) { m_Plane = FallbackPlane(); m_PlaneValid = true; }
+                if (diag != null) diag.Append($"plane {-m_Plane.distance:F3} ");
                 if (diag != null) diag.Append($"slab z {s.centre.y:F1} ±{s.halfSize.y:F1} h {hMin:F2}..{hMax:F2} groundWorldY {gy:F3} layer {gameObject.layer} r {m_Renderer.enabled}; ");
                 hMin = 99f; hMax = 0f;
             }
@@ -248,9 +282,9 @@ namespace Game.Rendering
                 if (w.centre == null) continue;
                 Vector3 c = w.centre.position;
                 bool ok = Ground(c, out var g);
-                float h = ok ? Mathf.Max(0.02f, (c.y - w.radius) - g.y) + wheelOcclusionHeight : 9f;
-                float a = w.width * 0.5f, b = w.radius * 0.45f;
-                float mx = a + 0.25f, mz = b + 0.3f;
+                float h = ok ? Mathf.Max(0.0f, (c.y - w.radius) - g.y) + wheelContactHeight : 9f;
+                float a = w.width * 0.5f, b = w.radius * wheelContactLength;
+                float mx = a + 0.15f, mz = b + 0.2f;
                 Vector3 right = Vector3.ProjectOnPlane(w.centre.right, Vector3.up).normalized;
                 Vector3 fwd = Vector3.Cross(right, Vector3.up);
                 for (int r = 0; r <= 1; r++)

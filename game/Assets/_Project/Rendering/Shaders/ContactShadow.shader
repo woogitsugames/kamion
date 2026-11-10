@@ -5,6 +5,10 @@
 //   ambientShare = E_sky / (E_sky + E_sun · NdotL · shadow) at this pixel (main-light shadow map sampled here), so in
 //                 direct sun only the sky part is occluded and the real cast shadow does the rest.
 // Fog fades the effect with distance like the ground it darkens. No depth write, Cull Off, one draw per vehicle.
+// Queue Geometry+499 (last in the opaque pass, after alpha-tested foliage): the renderer has transparent receive shadows
+// off, and URP then disables the main-light shadow keywords for the transparent pass, so in Transparent-50 the shadow map
+// was never sampled (shadow = 1 everywhere) and under the truck the sun counted as unshadowed: share << 1, AO too weak in
+// sun (r5 E-N1; High lowsun A/B: ground under bumper 60 % -> 32 % of asphalt, frame 49 % -> 21 %).
 Shader "Kamion/Contact Shadow"
 {
     Properties { }
@@ -41,7 +45,13 @@ Shader "Kamion/Contact Shadow"
             {
                 V o;
                 VertexPositionInputs p = GetVertexPositionInputs(v.positionOS.xyz);
-                o.positionCS = p.positionCS;
+                // Depth bias towards the camera (8 cm along the view ray, same pixel): the patch sits on the ray-cast ground
+                // (or, without colliders, on the wheel-contact plane), which can be a few cm under the rendered road mesh
+                // (terrain LOD, camber, tyre sink); a fixed polygon offset alone let whole patches vanish under the road.
+                // Truck surfaces within 8 cm of the ground (tyre bottoms) get the contact darkening too, as they would.
+                float3 toCam = _WorldSpaceCameraPos - p.positionWS;
+                float3 biased = p.positionWS + toCam * min(0.08 * rsqrt(max(dot(toCam, toCam), 1e-4)), 0.5);
+                o.positionCS = TransformWorldToHClip(biased);
                 o.positionWS = p.positionWS;
                 o.slab = v.uv0;
                 o.hs = v.uv1;
@@ -66,12 +76,12 @@ Shader "Kamion/Contact Shadow"
                 half3 sun = L.color * saturate(L.direction.y) * L.shadowAttenuation;
                 half ys = dot(sky, half3(0.2126, 0.7152, 0.0722)), yd = dot(sun, half3(0.2126, 0.7152, 0.0722));
                 half share = ys / max(ys + yd, 1e-4);
-                half m = 1.0 - occ * share; m = 1.0 - occ; //DEBUG
+                half m = 1.0 - occ * share;
                 // Fog: the darkened ground is fogged too; fade the multiplier towards 1 with the fog visibility.
                 #if defined(FOG_EXP) || defined(FOG_EXP2) || defined(FOG_LINEAR)
                     m = lerp(1.0, m, ComputeFogIntensity(i.fogFactor));
                 #endif
-                return half4(1, 0, 0, 1); //DEBUG2
+                return half4(m, m, m, 1);
             }
             ENDHLSL
         }
