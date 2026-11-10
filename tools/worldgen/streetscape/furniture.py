@@ -418,6 +418,8 @@ def misc_points(pl, net, src, origin, report, codes):
         t, nn = c.line.frame(s)
         p = c.line.offset_point(s, sgn * (hw + max(ext, 2.2) + 1.0))
         pl.add("bus_shelter", p, yaw_of(-nn * sgn), src="bus_stop")
+        pb = c.line.offset_point(s + (2.9 if hash(round(float(s), 1)) % 2 else -2.9), sgn * (hw + max(ext, 2.2) + 0.4))
+        pl.add("waste_bin", pb, yaw_of(-nn * sgn), src="bus_stop:bin")
         dn = -1 if side == "L" else 1          # traffic on this side travels +s on the right side
         ps = c.line.offset_point(s + dn * 4.0, sgn * (hw + S.KERB_TOP_W + 0.6))
         sign_assembly(pl, ps, -t * dn, ["D-15"], "bus_stop", sidewalk=True)

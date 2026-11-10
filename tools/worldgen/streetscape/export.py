@@ -91,7 +91,7 @@ def export(codes, boards, out_dir=None):
     glb = GLB(mats)
     meta = {}
     for name in sorted(P):
-        lod0, lod1, col = P[name]
+        lod0, lod1, col, *more = P[name]
         t0 = glb_tris = 0
         prims = lod0.out()
         glb.add_mesh(name, prims, {"lod": 0})
@@ -102,6 +102,10 @@ def export(codes, boards, out_dir=None):
         if col is not None:
             glb.add_mesh(name + ".col", col.out(), {"collision": True})
         meta[name] = {"tris_lod0": int(t0), "tris_lod1": int(t1), "materials": sorted({p["mat"] for p in prims})}
+        if more and more[0] is not None:          # optional third LOD (cars, vans: far parking rows)
+            p2 = more[0].out()
+            glb.add_mesh(name + ".lod2", p2, {"lod": 2})
+            meta[name]["tris_lod2"] = int(sum(len(p["T"]) for p in p2))
         del glb_tris
     data = glb.bytes({"library": "street_props", "frame": "x right, y front, z up (glTF: x=-x, y=z, z=y)"})
     (out_dir / "street_props.glb").write_bytes(data)

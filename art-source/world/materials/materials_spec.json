@@ -746,6 +746,106 @@
       "hf_ratio_albedo": 0.0167,
       "ao_mean": 0.945
     },
+    "car_grime": {
+      "tile_m": [
+        5.0,
+        2.5
+      ],
+      "slots": [
+        "car_paint_*"
+      ],
+      "note": "Parked-car paint film: road spray on sills, dust on top, rain runs (u along body, v = height).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            512
+          ],
+          "texel_mm": 4.88,
+          "dir": "car_grime/High",
+          "png_bytes": 2059975,
+          "files": [
+            "T_car_grime_BaseColor.png",
+            "T_car_grime_MaskMap.png",
+            "T_car_grime_Normal.png",
+            "T_car_grime_Var.png"
+          ],
+          "smoothness_mean": 0.586,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1244310
+        },
+        "Medium": {
+          "res": [
+            512,
+            256
+          ],
+          "texel_mm": 9.77,
+          "dir": "car_grime/Medium",
+          "png_bytes": 482140,
+          "files": [
+            "T_car_grime_BaseColor.png",
+            "T_car_grime_MaskMap.png",
+            "T_car_grime_Normal.png",
+            "T_car_grime_Var.png"
+          ],
+          "smoothness_mean": 0.586,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 242920
+        },
+        "Low": {
+          "res": [
+            256,
+            128
+          ],
+          "texel_mm": 19.53,
+          "dir": "car_grime/Low",
+          "png_bytes": 105996,
+          "files": [
+            "T_car_grime_BaseColor.png",
+            "T_car_grime_MaskMap.png",
+            "T_car_grime_Normal.png",
+            "T_car_grime_Var.png"
+          ],
+          "smoothness_mean": 0.586,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 43690
+        }
+      },
+      "height_range_m": [
+        -6e-05,
+        7e-05
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3744,
+        "p95": 0.5342,
+        "mean_rgb_linear": [
+          0.5063,
+          0.4995,
+          0.4864
+        ]
+      },
+      "hf_ratio_albedo": 0.0069,
+      "ao_mean": 1.0
+    },
     "concrete_cast_5m_joints": {
       "tile_m": [
         10.0,
@@ -1720,6 +1820,106 @@
           }
         }
       }
+    },
+    "noise_cassette": {
+      "tile_m": [
+        4.0,
+        4.0
+      ],
+      "slots": [
+        "noise_panel"
+      ],
+      "note": "Absorbing noise-barrier cassettes 4.0 x 0.5 m, perforated face, joint lips, splash grime, run-off.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 3.91,
+          "dir": "noise_cassette/High",
+          "png_bytes": 893805,
+          "files": [
+            "T_noise_cassette_BaseColor.png",
+            "T_noise_cassette_MaskMap.png",
+            "T_noise_cassette_Normal.png",
+            "T_noise_cassette_Var.png"
+          ],
+          "smoothness_mean": 0.439,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 7.81,
+          "dir": "noise_cassette/Medium",
+          "png_bytes": 282155,
+          "files": [
+            "T_noise_cassette_BaseColor.png",
+            "T_noise_cassette_MaskMap.png",
+            "T_noise_cassette_Normal.png",
+            "T_noise_cassette_Var.png"
+          ],
+          "smoothness_mean": 0.432,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 15.62,
+          "dir": "noise_cassette/Low",
+          "png_bytes": 82937,
+          "files": [
+            "T_noise_cassette_BaseColor.png",
+            "T_noise_cassette_MaskMap.png",
+            "T_noise_cassette_Normal.png",
+            "T_noise_cassette_Var.png"
+          ],
+          "smoothness_mean": 0.43,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.01402,
+        0.00118
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.4075,
+        "p95": 0.5558,
+        "mean_rgb_linear": [
+          0.502,
+          0.4998,
+          0.4958
+        ]
+      },
+      "hf_ratio_albedo": 0.0119,
+      "ao_mean": 0.988
     },
     "oil_stain_alpha": {
       "tile_m": [
