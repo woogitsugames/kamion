@@ -611,6 +611,7 @@ def facade_atlas(nx=4096):
         rough[r0:r0 + a.shape[0], c0:c0 + a.shape[1]] = np.pad(p.rgh, g, mode="edge")
     z = np.zeros((c.ny, c.nx), F32)
     s = K.SurfaceSet("facade_atlas", c, alb, h, np.clip(rough, 0.04, 1), z, z, ao_k=0.35, ao_scales=(0.02, 0.06))
+    s.aux_div = 2          # texture budget (ADR 0081): relief / mask / var at half the albedo size
     return s
 
 
@@ -675,11 +676,12 @@ def facade_far(nx=2048):
     z = np.zeros((ny, nx), F32)
     s = K.SurfaceSet("facade_far", c, alb, h, np.clip(rough, 0.04, 1).astype(F32), z, z, ao_k=0.0)
     s.aa_tiers = True
+    s.aux_div = 4          # flat set (no relief): normal / mask / var at a quarter of the albedo size (ADR 0081 budget)
     return s
 
 
 # ------------------------------------------------------------------------------------------- concrete fence
-def fence_concrete(nx=4096):
+def fence_concrete(nx=2048):
     Lx, Ly = A.FENCE_M
     ny = int(round(nx * Ly / Lx)) // 4 * 4
     c = K.Ctx(nx, ny, Lx, Ly, seed=813)
@@ -799,6 +801,8 @@ def fence_concrete(nx=4096):
             s = SC.hybrid(s, "concrete_floor_worn_001", 6381, alb_k=1.3, h_k=0.7)
     except Exception as e:      # noqa: BLE001 - the set must build offline too
         print("  fence_concrete: scan detail skipped:", e)
+    # calibrated set: the scan detail shifts the mean, bring it back to the 0.30 target (test_cc0_scans)
+    s.albedo = (s.albedo * (0.30 / float((s.albedo @ K.LUM).mean()))).astype(F32)
     # content-free spray scribbles (after the scan detail: paint covers the concrete tone), on 3 bays
     canvas = P(Lx, Ly, c.px, 4200)
     canvas.alb, canvas.rgh = s.albedo, s.rough

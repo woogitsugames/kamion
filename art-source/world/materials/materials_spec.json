@@ -1738,7 +1738,7 @@
           ],
           "texel_mm": 3.91,
           "dir": "facade_atlas/High",
-          "png_bytes": 5425909,
+          "png_bytes": 4402107,
           "files": [
             "T_facade_atlas_BaseColor.png",
             "T_facade_atlas_MaskMap.png",
@@ -1746,13 +1746,17 @@
             "T_facade_atlas_Var.png"
           ],
           "smoothness_mean": 0.57,
+          "aux_res": [
+            2048,
+            2048
+          ],
           "astc": {
             "BaseColor": "6x6",
             "Normal": "5x5",
             "MaskMap": "6x6",
             "Var": "8x8"
           },
-          "gpu_bytes_astc_mips": 39817925
+          "gpu_bytes_astc_mips": 17420342
         },
         "Medium": {
           "res": [
@@ -1761,7 +1765,7 @@
           ],
           "texel_mm": 7.81,
           "dir": "facade_atlas/Medium",
-          "png_bytes": 2183160,
+          "png_bytes": 1722328,
           "files": [
             "T_facade_atlas_BaseColor.png",
             "T_facade_atlas_MaskMap.png",
@@ -1769,13 +1773,17 @@
             "T_facade_atlas_Var.png"
           ],
           "smoothness_mean": 0.536,
+          "aux_res": [
+            1024,
+            1024
+          ],
           "astc": {
             "BaseColor": "6x6",
             "Normal": "6x6",
             "MaskMap": "8x8",
             "Var": "8x8"
           },
-          "gpu_bytes_astc_mips": 7773443
+          "gpu_bytes_astc_mips": 3809826
         },
         "Low": {
           "res": [
@@ -1784,7 +1792,7 @@
           ],
           "texel_mm": 15.62,
           "dir": "facade_atlas/Low",
-          "png_bytes": 849891,
+          "png_bytes": 656423,
           "files": [
             "T_facade_atlas_BaseColor.png",
             "T_facade_atlas_MaskMap.png",
@@ -1792,13 +1800,17 @@
             "T_facade_atlas_Var.png"
           ],
           "smoothness_mean": 0.509,
+          "aux_res": [
+            512,
+            512
+          ],
           "astc": {
             "BaseColor": "8x8",
             "Normal": "8x8",
             "MaskMap": "8x8",
             "Var": "8x8"
           },
-          "gpu_bytes_astc_mips": 1398101
+          "gpu_bytes_astc_mips": 611669
         }
       },
       "height_range_m": [
@@ -1839,7 +1851,7 @@
           ],
           "texel_mm": 11.72,
           "dir": "facade_far/High",
-          "png_bytes": 1657664,
+          "png_bytes": 1428231,
           "files": [
             "T_facade_far_BaseColor.png",
             "T_facade_far_MaskMap.png",
@@ -1847,13 +1859,17 @@
             "T_facade_far_Var.png"
           ],
           "smoothness_mean": 0.322,
+          "aux_res": [
+            512,
+            857
+          ],
           "astc": {
             "BaseColor": "6x6",
             "Normal": "5x5",
             "MaskMap": "6x6",
             "Var": "8x8"
           },
-          "gpu_bytes_astc_mips": 16662091
+          "gpu_bytes_astc_mips": 4946558
         },
         "Medium": {
           "res": [
@@ -1862,7 +1878,7 @@
           ],
           "texel_mm": 23.44,
           "dir": "facade_far/Medium",
-          "png_bytes": 619030,
+          "png_bytes": 558581,
           "files": [
             "T_facade_far_BaseColor.png",
             "T_facade_far_MaskMap.png",
@@ -1870,13 +1886,17 @@
             "T_facade_far_Var.png"
           ],
           "smoothness_mean": 0.322,
+          "aux_res": [
+            512,
+            857
+          ],
           "astc": {
             "BaseColor": "6x6",
             "Normal": "6x6",
             "MaskMap": "8x8",
             "Var": "8x8"
           },
-          "gpu_bytes_astc_mips": 3252852
+          "gpu_bytes_astc_mips": 1594248
         },
         "Low": {
           "res": [
@@ -1934,17 +1954,28 @@
       "albedo_target_mean_lum_linear": 0.3,
       "source": {
         "source": "concrete_floor_worn_001",
-        "mode": "hybrid (procedural layout + scan micro-detail)"
+        "mode": "hybrid (procedural layout + scan micro-detail)",
+        "assets": [
+          {
+            "id": "concrete_floor_worn_001",
+            "page": "https://polyhaven.com/a/concrete_floor_worn_001",
+            "authors": {
+              "Dimitrios Savva": "Photography",
+              "Rico Cilliers": "Processing"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
       },
       "files": {
         "High": {
           "res": [
-            4096,
-            1152
+            2048,
+            576
           ],
-          "texel_mm": 3.91,
+          "texel_mm": 7.81,
           "dir": "fence_concrete/High",
-          "png_bytes": 26268447,
+          "png_bytes": 6235915,
           "files": [
             "T_fence_concrete_BaseColor.png",
             "T_fence_concrete_MaskMap.png",
@@ -1958,71 +1989,71 @@
             "MaskMap": "6x6",
             "Var": "8x8"
           },
-          "gpu_bytes_astc_mips": 11198791
+          "gpu_bytes_astc_mips": 2799697
         },
         "Medium": {
           "res": [
-            2048,
-            576
+            1024,
+            288
           ],
-          "texel_mm": 7.81,
+          "texel_mm": 15.62,
           "dir": "fence_concrete/Medium",
-          "png_bytes": 6360172,
+          "png_bytes": 1380545,
           "files": [
             "T_fence_concrete_BaseColor.png",
             "T_fence_concrete_MaskMap.png",
             "T_fence_concrete_Normal.png",
             "T_fence_concrete_Var.png"
           ],
-          "smoothness_mean": 0.112,
+          "smoothness_mean": 0.117,
           "astc": {
             "BaseColor": "6x6",
             "Normal": "6x6",
             "MaskMap": "8x8",
             "Var": "8x8"
           },
-          "gpu_bytes_astc_mips": 2186280
+          "gpu_bytes_astc_mips": 546570
         },
         "Low": {
           "res": [
-            1024,
-            288
+            512,
+            144
           ],
-          "texel_mm": 15.62,
+          "texel_mm": 31.25,
           "dir": "fence_concrete/Low",
-          "png_bytes": 1345040,
+          "png_bytes": 297596,
           "files": [
             "T_fence_concrete_BaseColor.png",
             "T_fence_concrete_MaskMap.png",
             "T_fence_concrete_Normal.png",
             "T_fence_concrete_Var.png"
           ],
-          "smoothness_mean": 0.108,
+          "smoothness_mean": 0.115,
           "astc": {
             "BaseColor": "8x8",
             "Normal": "8x8",
             "MaskMap": "8x8",
             "Var": "8x8"
           },
-          "gpu_bytes_astc_mips": 393216
+          "gpu_bytes_astc_mips": 98304
         }
       },
       "height_range_m": [
-        -0.0155,
-        0.00792
+        -0.013,
+        0.00789
       ],
       "albedo": {
-        "mean_lum_linear": 0.2593,
-        "p05": 0.1637,
-        "p95": 0.34,
+        "mean_lum_linear": 0.2993,
+        "p05": 0.196,
+        "p95": 0.3854,
         "mean_rgb_linear": [
-          0.2654,
-          0.2594,
-          0.2408
+          0.3075,
+          0.2991,
+          0.2778
         ]
       },
-      "hf_ratio_albedo": 0.0254,
-      "ao_mean": 0.971
+      "hf_ratio_albedo": 0.0251,
+      "ao_mean": 0.978
     },
     "grass_verge": {
       "tile_m": [

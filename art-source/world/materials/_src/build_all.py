@@ -132,7 +132,8 @@ def gpu_estimate(files_info, tier, kind_map=None):
     tot = 0.0
     for f in files_info["files"]:
         kind = next((k for k in ("BaseColor", "Normal", "MaskMap", "Var") if f"_{k}" in f), "Var")
-        tot += astc_bytes(files_info["res"], ASTC[tier][kind])
+        res = files_info["res"] if kind == "BaseColor" else files_info.get("aux_res", files_info["res"])
+        tot += astc_bytes(res, ASTC[tier][kind])
     return tot
 
 

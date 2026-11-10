@@ -206,6 +206,8 @@ class SurfaceSet:
     extra_albedo: dict = field(default_factory=dict)   # variant name -> albedo (e.g. late_autumn)
     ao_extra: np.ndarray | None = None   # scan AO (CC0 sets, ADR 0063): multiplied into the height-derived cavity AO
     scan_info: dict | None = None        # provenance of a scan-based set (written into materials_spec.json)
+    aux_div: int = 1                 # Normal / MaskMap / Var written at 1/aux_div of the BaseColor size (cell atlases,
+                                     # ADR 0081: the painted albedo needs the texels, the relief does not)
     aa_tiers: bool = False           # Gaussian low-pass (sigma 0.6 x factor) before each tier's box downsample: fine
                                      # periodic relief (perforation) vanishes instead of aliasing into big dimples
 
@@ -253,16 +255,29 @@ def write_set(s: SurfaceSet, out_root: Path, tiers=("High", "Medium", "Low")) ->
             save_png(d / f"{base}_BaseColor.png", srgb_encode(alb), "RGB")
         for vn, va in s.extra_albedo.items():
             save_png(d / f"{base}_BaseColor_{vn}.png", srgb_encode(down(va, f)), "RGB")
-        save_png(d / f"{base}_Normal.png", nrm * 0.5 + 0.5, "RGB")
-        save_png(d / f"{base}_MaskMap.png", np.dstack([metal, ao, dmask, 1 - rough]), "RGBA")
         hn = (hh - hmin) / max(1e-9, hmax - hmin)
         idd = s.elem_id[::f, ::f]                        # ids must not be averaged
-        save_png(d / f"{base}_Var.png", np.dstack([hn, idd, down(s.joint, f), down(conv, f)]), "RGBA")
+        mask = np.dstack([metal, ao, dmask, 1 - rough])
+        var4 = np.dstack([hn, idd, down(s.joint, f), down(conv, f)])
+        q = int(s.aux_div)
+        while q > 1 and (nx % q or ny % q or min(nx, ny) // q < 64):
+            q //= 2
+        if q > 1:
+            nrm = normals_from_height(down(hh, q), px * q)
+            mask = down(mask, q)
+            var4 = np.dstack([down(hn, q), idd[::q, ::q], down(var4[..., 2], q), down(var4[..., 3], q)])
+        else:
+            q = 1
+        save_png(d / f"{base}_Normal.png", nrm * 0.5 + 0.5, "RGB")
+        save_png(d / f"{base}_MaskMap.png", mask, "RGBA")
+        save_png(d / f"{base}_Var.png", var4, "RGBA")
         files = sorted(p.name for p in d.glob("*.png"))
         size = sum((d / p).stat().st_size for p in files)
         info["files"][t] = {"res": [nx, ny], "texel_mm": round(px * 1000, 2), "dir": f"{s.name}/{t}",
                             "png_bytes": size, "files": files,
                             "smoothness_mean": round(float(1 - rough.mean()), 3)}
+        if q > 1:
+            info["files"][t]["aux_res"] = [nx // q, ny // q]
     w = s.alpha if s.alpha is not None else None
     info["albedo"] = albedo_stats(s.albedo, w)
     info["hf_ratio_albedo"] = hf_ratio(s.albedo @ LUM)
