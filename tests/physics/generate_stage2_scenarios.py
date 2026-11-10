@@ -306,23 +306,81 @@ sc("curb_15cm_left_comb", "Left wheels of the whole combination over a 15 cm cur
    variants=COMB, initial={"speedKmh": 8},
    ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [{"minX": -3, "maxX": -0.5, "minZ": 6, "maxZ": 9, "height": 0.15}]})
 
-# Kerb strike at 50 km/h. Thresholds are regression guards taken from the 2026-11-09 baseline of the core with 15 contact
-# rays (WORKING_VALUE, not requirements): 5 cm lift <= 0.05 s, 14 cm: empty 0.70 s / laden 0.25 s. The 14 cm hop is a known
-# weakness (phone telemetry saw ~0.4 s axle lift); lower these when the contact / droop model improves.
-for h_cm, ft, off_e, off_l, fzmax in [(5, 0.05, 0.1, 0.1, 4), (14, 0.14, 0.8, 0.3, 4.5)]:
+# ---- Kerb block geometry, derived from art-source/truck/dims.json (single source of truth, ADR 0014/0019) ----
+# The block must cover the contact patches of ALL left wheels (tractor front, tractor dual rear, trailer tridem) and must
+# not touch a right wheel, otherwise the scenario silently tests a different event. If dims.json changes so that this
+# stops holding, generation FAILS with the numbers instead of widening the block or the checks.
+DIMS = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "art-source", "truck", "dims.json"), encoding="utf-8"))["values"]
+
+
+def dv(k):
+    return DIMS[k]["value"]
+
+
+def left_wheel_x_extent():
+    """(min_x, max_x) of every left tyre contact patch (vehicle centreline x = 0, left = -x), from dims.json."""
+    ext = []
+    hs = dv("tyre_section_width_m") / 2
+    ts = dv("trailer_tyre_section_width_m") / 2
+    ext.append((-dv("front_track_m") / 2 - hs, -dv("front_track_m") / 2 + hs))
+    for sgn in (-1, 1):  # dual rear: two tyres at +-dual_spacing/2 around the track centre
+        c = -dv("rear_track_m") / 2 + sgn * dv("dual_spacing_m") / 2
+        ext.append((c - hs, c + hs))
+    ext.append((-dv("trailer_track_m") / 2 - ts, -dv("trailer_track_m") / 2 + ts))
+    return min(e[0] for e in ext), max(e[1] for e in ext)
+
+
+def kerb_box(h, z0, z1):
+    lo, hi = left_wheel_x_extent()
+    box = {"minX": -3, "maxX": -0.5, "minZ": z0, "maxZ": z1, "height": h}
+    errs = []
+    if box["minX"] > lo: errs.append(f"block minX {box['minX']} does not cover the outermost left tyre edge {lo:.4f} m")
+    if box["maxX"] < hi: errs.append(f"block maxX {box['maxX']} does not cover the innermost left tyre edge {hi:.4f} m")
+    if box["maxX"] > 0: errs.append(f"block maxX {box['maxX']} reaches the centreline, right wheels would be hit")
+    if dv("artic_length_m") > dv("max_artic_length_m"):
+        errs.append(f"combination {dv('artic_length_m')} m exceeds the legal {dv('max_artic_length_m')} m")
+    if abs(dv("artic_length_m") - 16.47) > 1e-6:
+        errs.append(f"dims.json artic_length_m = {dv('artic_length_m')} (expected 16.47, ADR 0019); re-derive the scenario geometry")
+    if z1 - z0 < dv("tyre_diameter_m"):
+        errs.append("block shorter than a tyre diameter: wheels never fully climb it")
+    if errs:
+        sys.exit("generate_stage2_scenarios: kerb geometry check FAILED (not loosening anything):\n  " + "\n  ".join(errs))
+    return box
+
+
+def airtime(mx, variant, arg=0, src=""):
+    return chk("max_wheel_airtime_s", mx=mx, arg=arg, variant=variant, source=src)
+
+
+# Kerb strike at 50 km/h. Thresholds are regression guards on the 2026-11-09 baseline of the core (WORKING_VALUE, not
+# requirements) and are STRICT: do not raise them to make a run pass. A failing run is a physics finding, report it
+# (test_scenario_strictness.py fails if these are loosened). The 14 cm hop is a known weakness (phone saw ~0.4 s axle lift).
+KERB = {  # h_cm: (height, fz_ceiling, fz_src, off_empty, off_laden, tractor_axle_empty, all_empty, tractor_axle_laden, all_laden)
+    5: (0.05, 2.2, "sim 2026-11-09: 1.79 empty / 1.67 laden", 0.08, 0.03, 0.03, 0.05, 0.03, 0.03),
+    14: (0.14, 4.2, "sim 2026-11-09: 3.90 empty / 3.53 laden", 0.75, 0.28, 0.15, 0.25, 0.12, 0.12),
+}
+OFFSRC = "regression guard on measured value 2026-11-09 (union over 10 wheel ends; dominated by the drop off the kerb end, see PHYSICS_VALIDATION)"
+AXSRC = "axle flight: longest single-wheel unload; tractor target < 0.15 s (lead brief 2026-11-09)"
+ALLSRC = "axle flight: longest single-wheel unload; target < 0.15 s (lead brief 2026-11-09)"
+TRIDEM = "regression guard on measured value 2026-11-09 (empty tridem: axle 1 hangs at full droop while axles 2-3 are still on the kerb; frame torsion not modelled)"
+for h_cm, (ft, fzmax, fzsrc, off_e, off_l, ax_e, all_e, ax_l, all_l) in KERB.items():
     base = [chk("max_dv_step_ms", mx=0.35, source="no impulse spikes (phone single-step jolt was 0.6-0.7 m/s; sim baseline <= 0.1)"),
             chk("max_pos_jump_m", mx=1e-6, source="no teleport"),
-            chk("max_fz_ratio", mx=fzmax, source="bounded wheel load peaks (sim baseline 1.8 / 3.9 for 5 / 14 cm; phone saw 6.8)"),
+            chk("max_fz_ratio", mx=fzmax, source=f"bounded wheel load peaks ({fzsrc}; phone saw 6.8)"),
             chk("max_trailer_roll_deg", mx=8, source="geometric roll plus overshoot"),
             chk("max_fifth_wheel_error_mm", mx=5, source="constraint holds"),
-            chk("wheel_off_ground_time_s", mx=off_e, variant="empty", source="regression guard on measured baseline (WORKING_VALUE)"),
-            chk("wheel_off_ground_time_s", mx=off_l, variant="laden40", source="regression guard on measured baseline (WORKING_VALUE)")]
+            chk("wheel_off_ground_time_s", mx=off_e, variant="empty", source=OFFSRC),
+            chk("wheel_off_ground_time_s", mx=off_l, variant="laden40", source=OFFSRC),
+            airtime(ax_e, "empty", 1, AXSRC),
+            airtime(all_e, "empty", 0, TRIDEM if h_cm == 14 else ALLSRC),
+            airtime(ax_l, "laden40", 1, AXSRC),
+            airtime(all_l, "laden40", 0, ALLSRC)]
     sc(f"curb_strike_{h_cm}cm_50kmh_comb",
        f"Left wheels of the whole combination hit a {h_cm} cm kerb face at 50 km/h",
        "docs/04 s6.11", 10,
        {"type": "speedhold", "targetKmh": 50}, base,
        variants=["empty", "laden40"], initial={"speedKmh": 50},
-       ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [{"minX": -3, "maxX": -0.5, "minZ": 30, "maxZ": 33, "height": ft}]})
+       ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [kerb_box(ft, 30, 33)]})
 
 # Phone event reconstruction (DEVICE-RUN-2026-11-09 r3, s = 598 m): the per-step suspension + tyre travel on the phone
 # shows a ~27 cm effective step at 42 km/h with 40 t, not a 14 cm kerb (PHYSICS_VALIDATION s3a). Regression guards.
@@ -336,7 +394,7 @@ sc("kerb_step_27cm_42kmh_comb",
     chk("max_wheel_airtime_s", mx=0.5, arg=1, source="regression guard on measured 0.42 s (phone: both front wheels unloaded ~0.4 s)"),
     chk("max_fifth_wheel_error_mm", mx=5, source="constraint holds")],
    variants=["laden40"], initial={"speedKmh": 42},
-   ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [{"minX": -3, "maxX": -0.5, "minZ": 30, "maxZ": 33, "height": 0.27}]})
+   ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [kerb_box(0.27, 30, 33)]})
 
 sc("speed_bump_comb","Speed bump 7 cm x 0.5 m across the lane at 15 km/h", "docs/04 s6.11", 12,
    {"type": "speedhold", "targetKmh": 15},
