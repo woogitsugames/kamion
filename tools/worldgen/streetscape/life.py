@@ -34,6 +34,7 @@ import math
 
 import numpy as np
 import shapely
+import shapely.ops
 from shapely import affinity
 from shapely.geometry import LineString, Point, Polygon
 
@@ -44,6 +45,9 @@ from . import life_props as LP
 
 CAR_SHARE = [("silver", 0.22), ("grey", 0.20), ("black", 0.18), ("white", 0.18), ("blue", 0.09), ("red", 0.07),
              ("green", 0.03), ("beige", 0.03)]
+START_CLEAR_R = 120.0        # m around the route start kept free of parked vehicles (r5, WORKING_VALUE, interim)
+START_CLEAR_L = 250.0        # m of route from the start ...
+START_CLEAR_W = 45.0         # ... buffered by this half width (covers the yard seen from g3a_eye_s0012..s0212)
 BODY_SHARE = [("hatch", 0.38), ("sedan", 0.24), ("estate", 0.38)]
 
 
@@ -84,6 +88,23 @@ class Space:
         shapely.prepare(self.block)
         self.taken = []
         self.tree = None
+        # r5 P1: the parked tractor / trailer prototypes are still generic boxes; until they are replaced by the
+        # static LOD1/LOD2 of the real tractor and curtainsider exports they stay out of the player's first frames:
+        # no parked vehicle within START_CLEAR_R of the route start or START_CLEAR_W of its first START_CLEAR_L.
+        self.start_clear = Polygon()
+        if route is not None and route.length > 1:
+            head = shapely.ops.substring(route, 0.0, min(START_CLEAR_L, route.length))
+            self.start_clear = shapely.union_all([Point(route.coords[0]).buffer(START_CLEAR_R),
+                                                  head.buffer(START_CLEAR_W)])
+        shapely.prepare(self.start_clear)
+        self.start_cleared = 0
+
+    def vehicle_free(self, poly, need_paved=True):
+        """free() for parked tractors / trailers: also outside the start view."""
+        if self.start_clear.intersects(poly):
+            self.start_cleared += 1
+            return False
+        return self.free(poly, need_paved)
 
     def free(self, poly, need_paved=True):
         if need_paved and not self.paved.contains(poly):
@@ -113,7 +134,7 @@ def dock_trailers(pl, docks, sp, report):
                 continue
             base = p + d * dock["u"] + nout * 0.45
             body = rect(base + nout * 6.8, nout, 6.8, 1.3)
-            if not sp.free(body):
+            if not sp.vehicle_free(body):
                 continue
             k = hf(dk["id"], dock["num"], "kind")
             if k < 0.70:
@@ -315,7 +336,7 @@ def truck_yards(pl, paved, sp, report, docks=(), stalls=None):
                                 kp = base + nin * LP.TRAILER_KINGPIN
                                 body = shapely.union_all([body, rect(kp + nin * (k_rear + k_front) / 2, nin,
                                                                      (k_front - k_rear) / 2 + 0.2, 1.35)])
-                            if keep_free.intersects(body) or not sp.free(body):
+                            if keep_free.intersects(body) or not sp.vehicle_free(body):
                                 continue
                             k = hf(*key, "kind")
                             if k < 0.70:
@@ -334,7 +355,7 @@ def truck_yards(pl, paved, sp, report, docks=(), stalls=None):
                         else:                                   # solo tractor, nose into the yard
                             o = base - nin * k_rear + nin * 0.2
                             body = rect(o + nin * (k_rear + k_front) / 2, nin, (k_front - k_rear) / 2 + 0.2, 1.35)
-                            if keep_free.intersects(body) or not sp.free(body):
+                            if keep_free.intersects(body) or not sp.vehicle_free(body):
                                 continue
                             tc = LP.TRACTOR_COLOURS[int(hf(*key, "tc") * len(LP.TRACTOR_COLOURS)) % len(LP.TRACTOR_COLOURS)]
                             pl.add(f"tractor_{tc}", o, yaw, src=f"life:yard:{ykey}")
@@ -556,5 +577,6 @@ def place(pl, docks, paved, blds, roads_poly, bpoly, route_P, report, buf=None, 
     if buf is not None and zsurf is not None:
         yard_markings(buf, stalls, zsurf, rep)
         yard_drains(buf, paved, bpoly, zsurf, rep)
+    rep["start_view_vehicles_skipped"] = sp.start_cleared
     report["life"] = rep
     return rep

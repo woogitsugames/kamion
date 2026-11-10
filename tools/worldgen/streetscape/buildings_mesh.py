@@ -561,16 +561,21 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
         ztop = zref + h
         key = b["id"]
         acc = Acc()
-        if typ == "roof":            # canopy on columns (fuel station)
+        if typ == "roof":            # canopy on columns (fuel station, market / parking roof)
+            # Both layers (W-H4): the LOD1 tier draws the same deck, fascia and columns, so
+            # a tier switch never removes a roof structure from the street.
             zc = zref + min(max(h, 4.8), 6.0)
-            roof_flat(acc, "buildings", poly, zc + 0.6, mat="hall_flashing", attic=0.0)
-            for g in [poly]:
-                acc.box("buildings", "canopy_fascia", [*g.centroid.coords[0], zc + 0.3], [0.01, 0, 0], [0, 0.01, 0], [0, 0, 0.01])
             cc = np.asarray(poly.minimum_rotated_rectangle.exterior.coords)[:4]
-            for q in cc:
-                v = np.asarray(poly.centroid.coords[0]) + (q - np.asarray(poly.centroid.coords[0])) * 0.7
-                acc.box("buildings", "steel_painted", [v[0], v[1], (zref + zc) / 2], [0.15, 0, 0], [0, 0.15, 0],
-                        [0, 0, (zc - zref) / 2 + 0.3])
+            cen = np.asarray(poly.centroid.coords[0])
+            for layer in ("buildings", "buildings_low"):
+                roof_flat(acc, layer, poly, zc + 0.6, mat="hall_flashing", attic=0.0)
+                for a, c_ in ring_edges(poly.exterior):      # 0.6 m fascia band all round (was a 1 cm box)
+                    acc.quad(layer, "canopy_fascia", [a[0], a[1], zc], [c_[0], c_[1], zc], [c_[0], c_[1], zc + 0.6],
+                             [a[0], a[1], zc + 0.6])
+                for q in cc:
+                    v = cen + (q - cen) * 0.7
+                    acc.box(layer, "steel_painted", [v[0], v[1], (zref + zc) / 2], [0.15, 0, 0], [0, 0.15, 0],
+                            [0, 0, (zc - zref) / 2 + 0.3])
             acc.flush(buf, key)
             continue
         if typ == "hall":
