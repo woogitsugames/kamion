@@ -55,7 +55,8 @@ def yaw_of(f):
 
 
 class Placer:
-    def __init__(self, zsurf):
+    def __init__(self, zsurf, zground=None):
+        self.zground = zground          # conformed terrain (= the collision under verges and footway edges)
         self.items = []
         self.zsurf = zsurf
         self.reseated = 0
@@ -67,17 +68,21 @@ class Placer:
                 return True
         return False
 
-    def ground_min(self, p, r=None):
+    def ground_min(self, p, r=None, on_verge=True):
         """lowest surface under a pole footing: centre + 4 points at r (the bilinear surface at a kerb / footway edge
         mixes the footway top with the terrain beside it, which left poles 0.2-0.44 m in the air, gate 3 audit)"""
         r = SEAT_R if r is None else r
         e = np.array([p[0], p[0] + r, p[0] - r, p[0], p[0]])
         n = np.array([p[1], p[1], p[1], p[1] + r, p[1] - r])
-        return float(np.min(self.zsurf(e, n)))
+        z = np.min(self.zsurf(e, n))
+        if self.zground is not None and on_verge:   # verge grass ribbons sit above the terrain collider
+            z = min(z, np.min(self.zground(e, n)))
+        return float(z)
 
     def add(self, proto, p, yaw, z=None, sz=1.0, src="", group=None):
         if proto.startswith(SEATED_POLES):
-            zg = self.ground_min(p)
+            # sign posts stand in paved islands / footways (terrain 0.35 m under them): surface only (audit: 20 sunk)
+            zg = self.ground_min(p, on_verge=not proto.startswith("sign_post"))
             if z is None or z < zg - SEAT_TOL:          # an explicit z above the ground is a bridge deck: kept
                 if z is not None:
                     self.reseated += 1

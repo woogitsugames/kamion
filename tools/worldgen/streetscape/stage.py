@@ -96,7 +96,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         return PV.bilinear(zc, hf, np.asarray(e, float), np.asarray(n, float))
 
     # furniture
-    pl = FU.Placer(zsurf)
+    pl = FU.Placer(zsurf, zground)
     codes, boards = set(), {}
     frep = {}
     graph = json.loads((pipeline.REGIONS / rid / "roads.graph.json").read_text(encoding="utf-8"))

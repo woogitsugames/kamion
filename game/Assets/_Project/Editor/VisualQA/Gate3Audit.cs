@@ -208,7 +208,7 @@ namespace Game.Editor.VisualQA
                     float firstScale = 1f; bool haveScale = false;
                     for (int k = 0; k < run.count; k++)
                     {
-                        var m = l2w * setAsset.matrices[run.start + k];
+                        var m = l2w * setAsset.LocalMatrix(run.start + k);   // compact TRS or full matrices (ADR 0025)
                         Vector3 p = m.GetColumn(3);
                         if (!InCorridor(p)) continue;
                         corridorCount++; instCorridor++;
