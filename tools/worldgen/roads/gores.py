@@ -25,6 +25,7 @@ generated carriageway surface, visual + collision (`build`, after meshing).
 from __future__ import annotations
 
 import math
+import os
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -225,6 +226,8 @@ def _slope_ok(V, Z, T, authored=False):
 def plan(net, juncs, overrides, origin) -> GorePlan:
     """Decide which gaps are paved, drop the kerbs facing them. Call after junctions + profiles, before meshing."""
     gp = GorePlan()
+    if os.environ.get("WORLDGEN_NO_GORES"):      # A/B switch for the fidelity "before" measurement (ADR 0077)
+        return gp
     U = carriageway_union(net, juncs)
     surf = _ChainSurface(net)
     cand = []
