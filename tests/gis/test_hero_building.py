@@ -24,8 +24,8 @@ def _override():
 
 
 def _rings(buildings_fc):
-    import regions
-    reg = regions.get(REGION_ID)
+    from roads import pipeline
+    reg = pipeline.load_region(REGION_ID)
     ox, oy = reg["origin"]["x"], reg["origin"]["y"]
     return {f["id"]: [[x - ox, y - oy] for x, y in f["geometry"]["coordinates"][0][0]] for f in buildings_fc["features"]}
 
@@ -87,10 +87,10 @@ def test_dims_fit_the_bdot_footprint(buildings_fc):
         return shapely.Polygon([A + U * a + V * b for a, b in ((u[0], v[0]), (u[1], v[0]), (u[1], v[1]), (u[0], v[1]))])
     m = d["middle"]
     blocks = shapely.union_all([rect(d["garage"]["u"], d["garage"]["v"]), rect(m["u"], [m["v_sw"], m["v_ne"]]),
-                                rect(d["hall"]["u"], d["hall"]["v"])])
+                                rect(d["hall"]["u"], d["hall"]["v"])]).buffer(0.05).buffer(-0.05)      # dissolve the shared edges
     foot = shapely.Polygon(rings[o["buildings"][0]])
     assert blocks.symmetric_difference(foot).area < 0.08 * foot.area
-    assert shapely.hausdorff_distance(blocks.exterior, foot.exterior) < 2.0
+    assert shapely.hausdorff_distance(blocks.exterior, foot.exterior, densify=0.02) < 2.0
     out = shapely.Polygon([A + U * a + V * b for a, b in d["outbuilding"]["ring_uv"]])
     assert out.symmetric_difference(shapely.Polygon(rings[o["buildings"][1]])).area < 0.05 * out.area
 
@@ -126,7 +126,7 @@ def test_materials_registered():
 
 def test_instance_lod_policy():
     from roads import build_world as BW
-    assert BW.instance_ends("landmark_fire_station_jrg2", 3) == [150.0, 450.0, 20000.0]
+    assert BW.instance_ends("landmark_fire_station_jrg2", 3)[0] == [150.0, 450.0, 20000.0]
 
 
 # ------------------------------------------------------------------------------------------ outputs
