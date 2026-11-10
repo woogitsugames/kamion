@@ -28,6 +28,7 @@
    - `car_grime`: road film on sills and bumpers, dust on top, rain runs. Paint UV = (y, z) in metres. LOD0 also
      gets a dark sill strip.
 4. Every bus shelter gets a litter bin next to it.
+5. `noise_panel` colour is 0.30 / 0.33 / 0.31 with metal 0.1. At 0.17 and metal 0.3 the cassettes rendered near-black on Low overcast.
 
 ## Not done / open
 - Transparent PMMA panels (photo `Andersa,_Maczka_streets_in_Białystok_2.jpg`) stand on the viaduct parapet,
@@ -35,3 +36,4 @@
   authored_override exists.
 - Kerbside parking on streets without an OSM `parking:*` polygon (lane tags on ways are not in
   streetscape_sources yet).
+- Car LOD1 (Low 12-45 m) reads as a roof wedge on wheel boxes (stretch_01, 2026-11-10). It needs a body remodel before the r6 review.

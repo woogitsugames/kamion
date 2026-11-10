@@ -88,7 +88,7 @@ M = {
     "concrete_fence_post": {"color": [0.28, 0.28, 0.26], "rough": 0.9},
     "concrete_wall": {"color": [0.30, 0.30, 0.28], "rough": 0.9},
     "barrier_post": {"color": [0.40, 0.41, 0.41], "rough": 0.55, "metal": 0.9},
-    "noise_panel": {"color": [0.17, 0.19, 0.18], "rough": 0.6, "metal": 0.3, "texture_set": "noise_cassette"},
+    "noise_panel": {"color": [0.30, 0.33, 0.31], "rough": 0.6, "metal": 0.1, "texture_set": "noise_cassette"},
     "car_sill": {"color": [0.035, 0.033, 0.03], "rough": 0.8},
     "wire": {"color": [0.11, 0.11, 0.105], "rough": 0.5, "shader": "wire"},   # weathered aluminium conductor, ribbon
     "concrete_pole": {"color": [0.33, 0.33, 0.31], "rough": 0.9},
