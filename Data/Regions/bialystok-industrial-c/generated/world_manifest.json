@@ -11268,6 +11268,20 @@
  "lod_policy": {
   "High": {
    "bld": 700,
+   "car": [
+    [
+     37.5,
+     "tris_lod0"
+    ],
+    [
+     135,
+     "tris_lod1"
+    ],
+    [
+     600,
+     "tris_lod2"
+    ]
+   ],
    "forest_hlod_cull_m": 1000000000.0,
    "forest_hlod_m": 120,
    "furn": 1000000000.0,
@@ -11312,6 +11326,20 @@
   },
   "Low": {
    "bld": 0,
+   "car": [
+    [
+     12.5,
+     "tris_lod0"
+    ],
+    [
+     45,
+     "tris_lod1"
+    ],
+    [
+     200,
+     "tris_lod2"
+    ]
+   ],
    "forest_hlod_cull_m": 1000,
    "forest_hlod_m": 70,
    "furn": 400,
