@@ -84,11 +84,14 @@ def test_manhole_is_lane_centred_draped_deterministic_and_skips_bridges():
         assert np.array_equal(p.V, q.V)
         lat = np.mean(p.V[:, 1])
         assert abs(abs(lat) - net.sec_list[0].lane_w / 2) < .001
-        assert np.allclose(p.V[:, 2], c.crossfall_z(p.V[:, 0], p.V[:, 1]) + F.LIFT_PATCH)
+        assert np.allclose(p.V[:, 2], c.crossfall_z(p.V[:, 0], p.V[:, 1]) + F.COVER_LIFT)
         assert np.all(np.cross(p.V[p.T][:, 1] - p.V[p.T][:, 0], p.V[p.T][:, 2] - p.V[p.T][:, 0])[:, 2] > 0)
     blocked = MeshBuf()
     F.drainage(blocked, network(bridge=True), assets, {})
     assert not blocked.parts
+    from roads.decals import LIFT_PATCH, LIFT_OIL
+    from roads.standards import MARKING_LIFT
+    assert LIFT_PATCH < LIFT_OIL < F.COVER_LIFT < MARKING_LIFT
 
 
 def test_gullies_replace_material_without_duplicate_geometry():
@@ -268,6 +271,59 @@ def test_drainage_atlas_remaps_existing_gully_uv_without_geometry_changes(monkey
     for p in b.parts[len(geometry):]:
         assert np.allclose(p.UV.min(0), [.55, .55])
         assert np.allclose(p.UV.max(0), [.95, .95])
+
+
+def test_yard_and_road_grates_share_atlas_preserving_geometry_and_depth(monkeypatch):
+    from roads.decals import gullies
+    from streetscape.life import yard_drains
+    net, buf = network(), MeshBuf()
+    gullies(buf, net, {})
+    yard_drains(buf, [{'id': 'yard', 'mat': 'yard_concrete', 'poly': box(0, 10, 100, 110)}],
+                Polygon(), lambda e, n: np.full_like(e, 7.125), {})
+    before = [(p.V.copy(), p.T.copy(), p.UV.copy(), p.src) for p in buf.parts]
+    assert any(src.startswith('drain:') for _, _, _, src in before)
+    atlas = {'uv_rects': {'square-rusty-drain': [.1, .2, .4, .8]}}
+    monkeypatch.setattr(F, '_atlas', lambda assets: atlas)
+    report = {}
+    F.drainage(buf, net, {'square-rusty-drain': {}}, report)
+    assert report['gully_replacements'] > 0 and report['yard_drain_replacements'] > 0
+    assert report['drainage_replacements'] == len(before) == len(buf.parts)
+    assert report['drainage_source_counts'] == {'square-rusty-drain': len(before)}
+    assert report['added_drainage_triangles'] == 0
+    assert {p.mat for p in buf.parts} == {'fab_drainage'}
+    for p, (vertices, triangles, uv, src) in zip(buf.parts, before):
+        np.testing.assert_array_equal(p.V, vertices)
+        np.testing.assert_array_equal(p.T, triangles)
+        np.testing.assert_allclose(p.UV, [.1, .2] + uv * [.3, .6])
+        assert p.src == src
+
+
+def test_grate_replacement_skips_trenches_unknown_sources_and_metric_uv(monkeypatch):
+    buf = MeshBuf()
+    uv, triangles = [[0, 0], [1, 0], [1, 1], [0, 1]], [[0, 1, 2], [0, 2, 3]]
+    small = np.array([[0, 0, 4], [.5, 0, 4], [.5, .6, 4], [0, .6, 4]])
+    long = small.copy(); long[[1, 2], 0] = 12
+    for v, texture_uv, source in ((small, uv, 'unknown:grate'),
+                                 (long, uv, 'drain:trench'),
+                                 (small, np.asarray(uv) * 4, 'gully:metric')):
+        buf.add('markings', 'drain_grate', v, texture_uv, triangles, src=source)
+    report = {}
+    F.drainage(buf, network(), {'square-rusty-drain': {}}, report)
+    assert report['drainage_replacements'] == 0
+    assert all(p.mat == 'drain_grate' for p in buf.parts)
+
+
+def test_apply_reports_overall_placed_source_counts(monkeypatch):
+    monkeypatch.setattr(F, 'load_ready', lambda: {'square-rusty-drain': {}})
+    monkeypatch.setattr(F, 'drainage', lambda buf, net, assets, rep:
+                        rep.update({'drainage_source_counts': {'square-rusty-drain': 4}}))
+    monkeypatch.setattr(F, 'props', lambda *args, **kwargs: args[8].update({'props': {'grass-clumps': 3}}))
+    report = {}
+    F.apply(SimpleNamespace(buf=MeshBuf(), net=network()), SimpleNamespace(items=[]),
+            Polygon(), Polygon(), [], [], None, report, lambda *args: None)
+    rep = report['megascans']
+    assert rep['placed_source_count'] == 2
+    assert rep['placed_source_counts'] == {'grass-clumps': 3, 'square-rusty-drain': 4}
 
 
 

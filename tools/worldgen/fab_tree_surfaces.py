@@ -149,8 +149,10 @@ def build(root: Path = ROOT):
                   "normal_convention": "UNVERIFIED; map retained as supplied, require directional-light review before enabling",
                   "textures": {}}
         if name == "curb_concrete":
+            record["tile_m"] = [2.0, .5]
             record["kerb_joints"] = {"period_m": 1.0, "gap_m": .008, "status": "WORKING_VALUE",
-                                      "channels": ["basecolor", "ao"], "uv": "U cumulative metres"}
+                                      "units_per_tile": 2, "channels": ["basecolor", "ao"],
+                                      "uv": "U cumulative metres; 2 x .5 m PBR tile"}
         for tier, size in (("Low", 512), ("High", 1024)):
             textures = {}
             for channel in CHANNELS:
@@ -171,6 +173,13 @@ def build(root: Path = ROOT):
                         a *= (1 - .55 * seam)[..., None]
                     else:
                         a *= 1 - .7 * seam
+                if name == "curb_concrete":
+                    # Original kerb PBR Normal/Mask/Var use a 2 x .5 m tile with
+                    # two 1 m units. Keep that contract for the scan override.
+                    # Area-filter each pair of source columns before repeating,
+                    # preserving physical joint width and all channel alignment.
+                    half = (a[:, ::2] + a[:, 1::2]) * .5
+                    a = np.concatenate([half, half], axis=1)
                 if channel == "normal":
                     n = a * 2 - 1
                     n /= np.maximum(np.linalg.norm(n, axis=2, keepdims=True), .001)

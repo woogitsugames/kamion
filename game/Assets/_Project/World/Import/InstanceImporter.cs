@@ -25,6 +25,32 @@ namespace Game.World.Import
     {
         public const float CellM = 64f;
 
+
+        /// <summary>
+        /// Keep every pre-Fab matrix at its legacy sorted index. Runtime forest thinning uses the absolute
+        /// matrix index, so inserting licensed details into the old sort changes the selected trees. Sort the
+        /// unchanged legacy input separately with precisely the old comparison (including its equal-key order),
+        /// then append the separately sorted Fab matrices. Cell runs may point into either storage partition.
+        /// This pure helper also permits an asset-free regression test without importing editor assemblies.
+        /// </summary>
+        public static int[] LegacyStorageOrder(long[] cells, bool[] forests, int[] prototypes, bool[] fab)
+        {
+            if (cells == null || forests == null || prototypes == null || fab == null)
+                throw new ArgumentNullException("Instance sort keys");
+            int count = cells.Length;
+            if (forests.Length != count || prototypes.Length != count || fab.Length != count)
+                throw new ArgumentException("Instance sort key lengths differ");
+            var legacy = new List<int>();
+            var details = new List<int>();
+            for (int i = 0; i < count; i++) (fab[i] ? details : legacy).Add(i);
+            int Compare(int a, int b) => cells[a] != cells[b] ? cells[a].CompareTo(cells[b])
+                : forests[a] != forests[b] ? forests[a].CompareTo(forests[b]) : prototypes[a].CompareTo(prototypes[b]);
+            legacy.Sort(Compare);
+            details.Sort(Compare);
+            legacy.AddRange(details);
+            return legacy.ToArray();
+        }
+
         public sealed class Colliders
         {
             public readonly List<(string proto, Matrix4x4 m, Bounds local)> Items = new List<(string, Matrix4x4, Bounds)>();
@@ -317,29 +343,40 @@ namespace Game.World.Import
                 }
             }
 
-            items.Sort((a, b) => a.cell != b.cell ? a.cell.CompareTo(b.cell) : a.forest != b.forest ? a.forest.CompareTo(b.forest) : a.proto.CompareTo(b.proto));
+            var storageOrder = LegacyStorageOrder(items.Select(it => it.cell).ToArray(), items.Select(it => it.forest).ToArray(),
+                items.Select(it => it.proto).ToArray(), items.Select(it => protos[it.proto].name.StartsWith("fab_", StringComparison.Ordinal)).ToArray());
+            var stored = storageOrder.Select(i => items[i]).ToArray();
+            var mats = stored.Select(it => it.m).ToArray();
+            // Each partition is already sorted. Record its contiguous runs before merging the run order;
+            // sorting individual matrices again would reintroduce the unstable equal-key permutation.
+            var orderedRuns = new List<(long cell, bool forest, int proto, int start, int count)>();
+            for (int i = 0; i < stored.Length;)
+            {
+                int start = i;
+                var first = stored[i++];
+                while (i < stored.Length && stored[i].cell == first.cell && stored[i].forest == first.forest && stored[i].proto == first.proto) i++;
+                orderedRuns.Add((first.cell, first.forest, first.proto, start, i - start));
+            }
+            orderedRuns.Sort((a, b) => a.cell != b.cell ? a.cell.CompareTo(b.cell) : a.forest != b.forest ? a.forest.CompareTo(b.forest) : a.proto.CompareTo(b.proto));
             var cells = new List<WorldInstanceSet.Cell>();
             var runs = new List<WorldInstanceSet.Run>();
-            var mats = new Matrix4x4[items.Count];
             var hlodUsed = new bool[hlods.Count];
-            for (int i = 0; i < items.Count;)
+            for (int ri = 0; ri < orderedRuns.Count;)
             {
-                long cell = items[i].cell;
+                long cell = orderedRuns[ri].cell;
                 var c = new WorldInstanceSet.Cell { runStart = runs.Count };
                 bool first = true;
-                while (i < items.Count && items[i].cell == cell)
+                while (ri < orderedRuns.Count && orderedRuns[ri].cell == cell)
                 {
-                    int pr = items[i].proto, start = i;
-                    bool forest = items[i].forest;
-                    while (i < items.Count && items[i].cell == cell && items[i].proto == pr && items[i].forest == forest)
+                    var run = orderedRuns[ri++];
+                    int pr = run.proto;
+                    for (int i = run.start; i < run.start + run.count; i++)
                     {
-                        mats[i] = items[i].m;
-                        var wb = Transform(protos[pr].lods[0].bounds, items[i].m);
+                        var wb = Transform(protos[pr].lods[0].bounds, mats[i]);
                         if (first) { c.bounds = wb; first = false; } else c.bounds.Encapsulate(wb);
-                        i++;
                     }
-                    runs.Add(new WorldInstanceSet.Run { prototype = pr, start = start, count = i - start, forest = forest });
-                    protos[pr].count += i - start;
+                    runs.Add(new WorldInstanceSet.Run { prototype = pr, start = run.start, count = run.count, forest = run.forest });
+                    protos[pr].count += run.count;
                 }
                 c.runCount = runs.Count - c.runStart;
                 if (hlodOfKey.TryGetValue(cell, out int hi))

@@ -15,7 +15,7 @@ import numpy as np
 import shapely
 from shapely.geometry import Point, LineString
 
-from roads.decals import _surf, hf, LIFT_PATCH
+from roads.decals import _surf, hf, LIFT_PATCH, GULLY_SIZE
 from roads.markings import lane_layout
 from roads.network import side_params, side_extent
 
@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[3]
 MANIFEST = ROOT / "art-source/world/megascans/_generated/manifest.json"
 MAX_PROPS = 320  # region cap, WORKING_VALUE; final budget is gated by visual-QA
 MANHOLE_SPACING_M = 90.0  # WORKING_VALUE, longitudinal utility run
+COVER_LIFT = .0045  # m, above patch .002 / oil .0035 and below paint .006; WORKING_VALUE
 GROUND_IDS = ("grass-clumps", "wild-grass", "boxwood", "elderberry", "granite-rock", "small-granite-rock")
 
 
@@ -170,7 +171,7 @@ def prototype_stats(assets=None):
 
 
 def drainage(buf, net, assets, report):
-    """Reuse existing 35 m gully quads; add covers on a lane's centre line.
+    """Reuse existing 35 m gully and small yard grate quads; add lane covers.
 
     Replacing a material avoids duplicate coplanar grate geometry. Native gully
     rules retain 35 m spacing, kerb and low-side constraints. Covers skip bridge
@@ -179,13 +180,35 @@ def drainage(buf, net, assets, report):
     drains = [a for a in ("square-rusty-drain", "round-drain-cover") if a in assets]
     covers = [a for a in ("round-manhole-cover", "metal-manhole-cover") if a in assets]
     atlas = _atlas(assets)
-    count = {"gully_replacements": 0, "manholes": 0, "drainage_atlas": atlas is not None}
+    count = {"gully_replacements": 0, "yard_drain_replacements": 0, "manholes": 0,
+             "drainage_atlas": atlas is not None, "drainage_source_counts": {}}
+
+    def used(aid):
+        counts = count["drainage_source_counts"]
+        counts[aid] = counts.get(aid, 0) + 1
+
+    def compact_grate(p):
+        # Only the known compact 500 x 600 mm normalized quads from gullies()
+        # and life.yard_drains(). Never remap a trench or arbitrary repeated UVs.
+        if p.V.shape != (4, 3) or p.UV.shape != (4, 2) or p.T.shape != (2, 3):
+            return False
+        corners = np.array([[0, 0], [1, 0], [1, 1], [0, 1]])
+        if not all(any(np.allclose(uv, corner, atol=1e-6) for corner in corners) for uv in p.UV):
+            return False
+        if len(np.unique(p.UV.round(6), axis=0)) != 4:
+            return False
+        edges = np.linalg.norm(np.diff(p.V[[0, 1, 2, 3, 0], :2], axis=0), axis=1)
+        return np.allclose(np.sort(edges), sorted(GULLY_SIZE * 2), rtol=.1, atol=.005)
+
     if drains:
         for p in buf.parts:
-            if p.mat == "drain_grate" and p.src.startswith("gully:"):
+            if (p.mat == "drain_grate" and p.src.startswith(("gully:", "drain:"))
+                    and compact_grate(p)):
                 aid = drains[int(hf(p.src, "fab") * len(drains)) % len(drains)]
                 p.mat, p.UV = _decal_uv(aid, p.UV, atlas)
-                count["gully_replacements"] += 1
+                field = "gully_replacements" if p.src.startswith("gully:") else "yard_drain_replacements"
+                count[field] += 1
+                used(aid)
     if covers:
         for c in sorted(net.chains, key=lambda c: c.id):
             if c.meta.get("absorbed") or c.roundabout:
@@ -212,10 +235,13 @@ def drainage(buf, net, assets, report):
                 ss = s + np.array([-r, r, r, -r])
                 ll = lat + np.array([-r, -r, r, r])
                 mat, uv = _decal_uv(aid, [[0, 0], [1, 0], [1, 1], [0, 1]], atlas)
-                buf.add("markings", mat, _surf(c, ss, ll, LIFT_PATCH),
+                buf.add("markings", mat, _surf(c, ss, ll, COVER_LIFT),
                         uv, [[0, 1, 2], [0, 2, 3]],
                         src=f"fab:manhole:{c.id}:{s:.2f}:WORKING_VALUE")
                 count["manholes"] += 1
+                used(aid)
+    count["drainage_replacements"] = count["gully_replacements"] + count["yard_drain_replacements"]
+    count["added_drainage_triangles"] = count["manholes"] * 2
     report.update(count)
 
 
@@ -411,4 +437,10 @@ def apply(w, pl, roads_poly, bpoly, paved, park_polys, route, report, log, overr
                 if polygons:
                     islands.append({"id": src, "poly": shapely.union_all(polygons), "assets": choices})
         props(pl, w.net, assets, roads_poly, bpoly, paved, park_polys, route, rep, islands=islands, deck_at=deck_at)
+        counts = dict(rep.get("drainage_source_counts", {}))
+        for aid, number in rep.get("props", {}).items():
+            counts[aid] = counts.get(aid, 0) + number
+        rep["placed_source_counts"] = dict(sorted(counts.items()))
+        rep["placed_sources"] = sorted(counts)
+        rep["placed_source_count"] = len(counts)
     report["megascans"] = rep

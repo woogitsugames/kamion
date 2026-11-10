@@ -44,3 +44,6 @@
 
 - Krok 15: pierwsze56PNG after obejrzane: brak wyraźnego skoku całej sceny, a goły Lit na krawężniku usunął brud/makrowariację — FAIL i poprawka na dotychczasowy WorldPBR+fotograficzną bazę. Lowłączne estymaty +do17draw/+4ktris; znaleziono stare kratki na placach pozostawione obok nowego atlasu oraz zmianę fazy przerzedzania lasu przez nowe indeksy instancji. Oba mechanizmy poprawiane w rundzie2; nie ukrywam regresji.
 - NASTĘPNY KROK: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` po poprawkach atlasu/indeksów.
+
+- Krok 16: druga runda przygotowana: wspólny atlas również dla kratek na placach, nowe włazy4,5mm nad podłożem. Odtworzono WorldPBR krawężnika z2metrowym kaflem/2spoinami. Testy powierzchni+rozmieszczenia28/28 PASS. Testy indeksowania legacy11/11 PASS w Unity (zero wpływu nowych Fab na dawną kolejność i przerzedzanie lasu). Trwa ponowny build.
+- NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` po round2-build.

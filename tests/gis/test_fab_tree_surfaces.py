@@ -65,10 +65,19 @@ def test_outputs_mobile_sizes_and_generated_only(tmp_path):
         color = np.asarray(image)
         assert color[:, 0].mean() < color[:, 100].mean() * .6
         np.testing.assert_array_equal(color[:, 0], color[:, -1])
+        np.testing.assert_array_equal(color[:, :256], color[:, 256:])
+        assert color[:, 256].mean() < color[:, 100].mean() * .6
     with Image.open(tmp_path / paths["ao"]) as image:
         ao = np.asarray(image)
         assert ao[:, 0].mean() < ao[:, 100].mean() * .4
     assert result["materials"]["curb_concrete"]["kerb_joints"]["gap_m"] == .008
+    assert result["materials"]["curb_concrete"]["kerb_joints"]["units_per_tile"] == 2
+    assert result["materials"]["curb_concrete"]["tile_m"] == [2.0, .5]
+    for tier in ("Low", "High"):
+        for path in result["materials"]["curb_concrete"]["textures"][tier].values():
+            with Image.open(tmp_path / path) as image:
+                a = np.asarray(image)
+                np.testing.assert_array_equal(a[:, :a.shape[1]//2], a[:, a.shape[1]//2:])
 
 
 def test_urp_metallic_gloss_encodes_smoothness_endpoints():
