@@ -186,6 +186,9 @@ namespace Game.Editor.Setup
                     m.SetTexture("_DecalMap", Texture2D.blackTexture);   // uv1 unused on the trailer (manifest)
                     m.SetFloat("_Dirt", 0.5f);
                     m.SetColor("_DirtColor", dirtColor);
+                    // ADR 0038: coated base lobe, orange peel, procedural road grime (vehicle frame from ContactShadowCaster). WORKING_VALUE.
+                    m.SetFloat("_CoatedBaseRoughness", 0.6f); m.SetFloat("_OrangePeel", 0.012f);
+                    m.SetFloat("_GrimeHeight", 0.8f); m.SetFloat("_GrimeChassis", 1.3f);
                     // Paint / Curtain: the tint slots (M.b = tint mask): albedo = C.rgb * colour where the mask is set.
                     bool tinted = slot == "Paint" || slot == "Curtain";
                     m.SetFloat("_IsPaint", tinted ? 1f : 0f);
@@ -201,6 +204,8 @@ namespace Game.Editor.Setup
                         // Kamion/Truck Exterior replaces the roughness under the tint mask: PVC-coated polyester curtain, the
                         // mean C.a of the curtain atlas under the mask (0.58, measured on the Medium atlas). WORKING_VALUE.
                         m.SetFloat("_PaintRoughness", 0.58f);
+                        // ADR 0038: a PVC curtain has no lacquer layer (lowsun r4: the curtain shone like a painted panel).
+                        m.SetFloat("_ClearCoat", 0f);
                     }
                     m.SetFloat("_Lamps", slot == "Lights" ? 1f : 0f);
                     if (slot == "Lights") m.EnableKeyword("_KAMION_TRUCK_LAMPS");

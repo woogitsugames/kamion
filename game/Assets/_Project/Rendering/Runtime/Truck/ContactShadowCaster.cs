@@ -83,6 +83,9 @@ namespace Game.Rendering
         void OnDisable()
         {
             s_All.Remove(this);
+            foreach (var r in m_GrimeRenderers) if (r != null) r.SetShaderUserValue(0u);
+            m_GrimeRenderers.Clear(); m_GrimeSlot = 0u;
+            foreach (var c in s_All) c.m_GrimeSlot = 0u;   // slots are list indices: re-tag the others
             QualityProfileApplier.Applied -= OnTier;
             if (m_Go != null) { if (Application.isPlaying) Destroy(m_Go); else DestroyImmediate(m_Go); }
             if (m_Mesh != null) { if (Application.isPlaying) Destroy(m_Mesh); else DestroyImmediate(m_Mesh); }
@@ -99,6 +102,62 @@ namespace Game.Rendering
         }
 
         void LateUpdate() => Refresh();
+
+        // ---- Road grime frame (ADR 0038): Kamion/Truck Exterior reads the vehicle frame of its renderer's slot ----------
+        public const int MaxGrimeSlots = 4;
+        static readonly int k_GrimeRight = Shader.PropertyToID("_KamionGrimeRight");
+        static readonly int k_GrimeUp = Shader.PropertyToID("_KamionGrimeUp");
+        static readonly int k_GrimeFwd = Shader.PropertyToID("_KamionGrimeFwd");
+        static readonly int k_GrimeAxle = Shader.PropertyToID("_KamionGrimeAxle");
+        static readonly Vector4[] s_Right = new Vector4[MaxGrimeSlots], s_Up = new Vector4[MaxGrimeSlots], s_Fwd = new Vector4[MaxGrimeSlots];
+        static readonly Vector4[] s_Axle = new Vector4[MaxGrimeSlots * 4];
+        readonly List<MeshRenderer> m_GrimeRenderers = new List<MeshRenderer>();   // SetShaderUserValue: MeshRenderer / SkinnedMeshRenderer only
+        uint m_GrimeSlot;
+
+        /// <summary>
+        /// Publishes this vehicle's frame (origin on the wheel-contact plane, axes of this transform; z forward) and up to 4
+        /// axles (forward offset, wheel-centre height, radius) into grime slot (index in the caster list + 1), and tags the
+        /// vehicle's renderers with that slot as renderer user value (SRP-batcher compatible, no property blocks).
+        /// </summary>
+        void PublishGrime()
+        {
+            int index = s_All.IndexOf(this);
+            if (index < 0 || index >= MaxGrimeSlots) return;
+            uint slot = (uint)index + 1u;
+            if (slot != m_GrimeSlot || m_GrimeRenderers.Count == 0)
+            {
+                m_GrimeRenderers.Clear();
+                GetComponentsInChildren(true, m_GrimeRenderers);
+                for (int i = m_GrimeRenderers.Count - 1; i >= 0; i--)
+                    if (m_GrimeRenderers[i].GetComponentInParent<ContactShadowCaster>() != this) m_GrimeRenderers.RemoveAt(i);
+                foreach (var r in m_GrimeRenderers) r.SetShaderUserValue(slot);
+                m_GrimeSlot = slot;
+            }
+            var t = transform;
+            Vector3 origin = t.position; int nw = 0; Vector3 sum = Vector3.zero;
+            foreach (var w in wheels) if (w.centre != null) { sum += w.centre.position - t.up * w.radius; nw++; }
+            if (nw > 0) origin = sum / nw;
+            Vector3 r0 = t.right, u0 = t.up, f0 = t.forward;
+            s_Right[index] = new Vector4(r0.x, r0.y, r0.z, -Vector3.Dot(r0, origin));
+            s_Up[index] = new Vector4(u0.x, u0.y, u0.z, -Vector3.Dot(u0, origin));
+            s_Fwd[index] = new Vector4(f0.x, f0.y, f0.z, -Vector3.Dot(f0, origin));
+            // Axles: wheels grouped by forward offset (dual tyres and left/right share one axle).
+            int na = 0;
+            for (int k = 0; k < 4; k++) s_Axle[index * 4 + k] = Vector4.zero;
+            foreach (var w in wheels)
+            {
+                if (w.centre == null) continue;
+                Vector3 c = w.centre.position;
+                float z = Vector3.Dot(f0, c) + s_Fwd[index].w, y = Vector3.Dot(u0, c) + s_Up[index].w;
+                int found = -1;
+                for (int k = 0; k < na; k++) if (Mathf.Abs(s_Axle[index * 4 + k].x - z) < 0.3f) { found = k; break; }
+                if (found < 0) { if (na >= 4) continue; found = na++; s_Axle[index * 4 + found] = new Vector4(z, y, w.radius, 1f); }
+            }
+            Shader.SetGlobalVectorArray(k_GrimeRight, s_Right);
+            Shader.SetGlobalVectorArray(k_GrimeUp, s_Up);
+            Shader.SetGlobalVectorArray(k_GrimeFwd, s_Fwd);
+            Shader.SetGlobalVectorArray(k_GrimeAxle, s_Axle);
+        }
 
         void EnsureObjects()
         {
@@ -146,6 +205,7 @@ namespace Game.Rendering
         /// <summary>Rebuilds the patch for the current pose.</summary>
         public void Refresh()
         {
+            PublishGrime();
             EnsureObjects();
             if (m_Go == null) return;
             m_Renderer.enabled = GlobalEnabled;

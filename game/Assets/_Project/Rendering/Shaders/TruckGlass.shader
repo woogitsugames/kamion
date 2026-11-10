@@ -101,7 +101,14 @@ Shader "Kamion/Truck Glass"
                 half3 n = normalize(i.normalWS);
                 float3 V = GetWorldSpaceNormalizeViewDir(i.positionWS);
                 half NoV = saturate(abs(dot(n, V)));
-                half F = 0.04 + 0.96 * Pow4(1.0 - NoV) * (1.0 - NoV);
+                // One air-glass interface (Schlick, F0 0.04), then the pane: two interfaces with incoherent
+                // inter-reflection, R2 = 2R / (1 + R) (r4 E2: 0.08 at normal incidence, ~0.1 at a 3/4 view, ~0.3 at 70 deg).
+                half F1 = 0.04 + 0.96 * Pow4(1.0 - NoV) * (1.0 - NoV);
+                half F = 2.0 * F1 / (1.0 + F1);
+                // Body absorption over the refracted path (n 1.52): T_abs = (1 - _Opacity)^(1 / cos theta_t), so the
+                // interior seen through the glass darkens towards grazing angles.
+                half cosT = sqrt(saturate(1.0 - (1.0 - NoV * NoV) * 0.4328));
+                half tAbs = exp2(log2(1.0 - _Opacity) / max(cosT, 0.1));
                 Light L = GetMainLight();
                 half3 amb = SampleSH(n);
 
@@ -144,11 +151,16 @@ Shader "Kamion/Truck Glass"
                 half d = NoH * NoH * (r * r - 1.0) + 1.00001;
                 half spec = (r * r) / (4.0 * PI * d * d) * saturate(dot(n, L.direction)) * F * 4.0;
 
-                half absorb = saturate(_Opacity + grime * 0.25);
-                // Body colour of the glass (what is absorbed and scattered) + grime / film haze lit by sun and sky.
-                half3 body = i.tint * amb * _Opacity * 0.5 + grime * (amb + L.color * saturate(dot(n, L.direction))) * 0.18;
-                half3 col = body + env * F + L.color * spec * (1.0 - i.inside * 0.7);
-                half alpha = saturate(absorb + F);
+                // Transmittance of the pane: reflection loss x body absorption x grime / film (the film also scatters).
+                half trans = (1.0 - F) * tAbs * (1.0 - saturate(grime * 0.25));
+                // Body colour (the tint the blend cannot apply to the transmitted scene) - outside face only, small: from
+                // the cab it reads as a milky veil over the road (r4 E2). Grime / film haze lit by sun and sky on both faces.
+                half3 body = i.tint * amb * (1.0 - tAbs) * 0.25 * (1.0 - i.inside)
+                           + grime * (amb + L.color * saturate(dot(n, L.direction))) * 0.18;
+                // From the cab only the first surface carries the dash reflection (no ghost from the outer face: docs/06,
+                // r4 E2 "no double reflection"); from outside both surfaces mirror the sky.
+                half3 col = body + env * lerp(F, F1, i.inside) + L.color * spec * (1.0 - i.inside * 0.7);
+                half alpha = saturate(1.0 - trans);
                 col = MixFog(col, i.fogFactor);
                 // Premultiplied "over": transmission is grey (1 - alpha); the tint shows in the body term only.
                 return half4(col, alpha);

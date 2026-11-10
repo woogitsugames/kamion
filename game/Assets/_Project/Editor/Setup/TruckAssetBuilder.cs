@@ -232,6 +232,9 @@ namespace Game.Editor.Setup
                     m.SetFloat("_IsPaint", slot == "Paint" ? 1f : 0f);
                     m.SetFloat("_Dirt", 0.5f);
                     m.SetColor("_DirtColor", new Color(0.15f, 0.135f, 0.11f, 1f));
+                    // ADR 0038: coated base lobe, orange peel, procedural road grime (vehicle frame from ContactShadowCaster). WORKING_VALUE.
+                    m.SetFloat("_CoatedBaseRoughness", 0.6f); m.SetFloat("_OrangePeel", 0.012f);
+                    m.SetFloat("_GrimeHeight", 0.8f); m.SetFloat("_GrimeChassis", 1.3f);
                     if (slot == "Paint")
                     {
                         // Livery "white" (biel flotowa), manifest liveries.white; colours are linear.
@@ -273,7 +276,10 @@ namespace Game.Editor.Setup
                 // Interior: tier = LOD (High LOD0, Medium LOD1, Low LOD2); AO atlas of that LOD at the tier size.
                 int il = TruckVisualRig.InteriorLodFor(tier);
                 string it = $"{SrcInt}/Textures/{tier}";
-                var ao = Tex<Texture2D>($"{it}/T_Cab_AO_LOD{il}.png");
+                // AO atlas no smaller than Medium (1024): the LOD0 atlas is packed for 4096, and at the Low 512 the thin
+                // islands (A-pillar trim, steering-wheel rim) fall into the black gutter - review r4 L1, Low cab-dash
+                // overcast < 3 %: 12.1 % of the frame (512) vs 2.1 % (1024). Cost on Low: +0.26 MB (ASTC 8x8 with mips).
+                var ao = Tex<Texture2D>($"{SrcInt}/Textures/{(tier == "Low" ? "Medium" : tier)}/T_Cab_AO_LOD{il}.png");
                 foreach (var slot in new[] { "Plastic", "Leather", "Fabric", "Rubber", "Metal" })
                 {
                     var m = Mat(dir, "MI_Cab_" + slot, cab);
