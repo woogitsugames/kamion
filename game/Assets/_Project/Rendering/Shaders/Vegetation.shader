@@ -62,6 +62,9 @@ Shader "Kamion/Vegetation"
         TEXTURE2D(_NormalOcc); SAMPLER(sampler_NormalOcc);
         // Global (WorldInstances, per tier): 1 = cross-fade the two nearest impostor views, 0 = nearest view.
         half _KamionImpostorBlend;
+        // ADR 0080 r11 (WorldAtmosphere): x = 1: the ambient includes the sky light transmitted through the leaf,
+        // y = sheen: share of the ambient radiance mirrored by the leaf surface (0 = off, unset).
+        half4 _KamionLeafAmbient;
 
         // Cylindrical billboard of an impostor quad (object space) and its two view UVs + blend weight. The quad's
         // corners are (+-w, h) in object space; the turn uses the instance matrix only (lean and yaw included).
@@ -191,6 +194,18 @@ Shader "Kamion/Vegetation"
             #pragma multi_compile_instancing
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
+            // ADR 0080 r11: ambient of a thin leaf = sky / ground light on the lit face + the light arriving on the other
+            // face and passing through the leaf, SH(n) + t SH(-n). The L0 and L2 bands are even in n and L1 is odd, so
+            // this is one SH evaluation with scaled bands (no second evaluation; per vertex on cards and impostors).
+            // Without it the underside of a crown saw only the ground bounce and fell to black under the overcast toe.
+            half3 LeafAmbient(half3 n)
+            {
+                half t = _Transmission * _KamionLeafAmbient.x * step(_Cull, 0.5h);   // two-sided = leaf cards / impostors, not bark
+                half3 l0 = half3(unity_SHAr.w, unity_SHAg.w, unity_SHAb.w);
+                half3 l1 = half3(dot(unity_SHAr.xyz, n), dot(unity_SHAg.xyz, n), dot(unity_SHAb.xyz, n));
+                half3 l2 = SHEvalLinearL2(n, unity_SHBr, unity_SHBg, unity_SHBb, unity_SHC);
+                return max((l0 + l2) * (1.0h + t) + l1 * (1.0h - t), half3(0.0h, 0.0h, 0.0h));
+            }
             struct A { float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct V
             {
@@ -222,16 +237,16 @@ Shader "Kamion/Vegetation"
                 o.upWS = iv.upWS;
                 // Ambient from the sky SH towards the camera, up and down per vertex, blended by the texel normal below
                 // (per-pixel L2 SH costs ~30 ALU; the crown normals of the bake are smooth).
-                o.ambient = SampleSH(iv.toCamWS);
-                o.ambUpT = half4(SampleSH(iv.upWS), iv.t);
-                o.ambDown = SampleSH(-iv.upWS);
+                o.ambient = LeafAmbient(iv.toCamWS);
+                o.ambUpT = half4(LeafAmbient(iv.upWS), iv.t);
+                o.ambDown = LeafAmbient(-iv.upWS);
             #else
                 float3 pOS = v.positionOS.xyz;
                 float2 u = TRANSFORM_TEX(v.uv, _BaseMap);
                 o.uv = float4(u, u);
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
                 // Ambient per vertex: crown normals are smooth (generator), so per-pixel SH adds nothing visible.
-                o.ambient = SampleSH(o.normalWS);
+                o.ambient = LeafAmbient(o.normalWS);
             #endif
                 o.positionWS = TransformObjectToWorld(pOS);
                 o.positionCS = TransformWorldToHClip(o.positionWS);
@@ -297,7 +312,7 @@ Shader "Kamion/Vegetation"
                     float3 B = dp2perp * duv1.y + dp1perp * duv2.y;
                     float inv = rsqrt(max(max(dot(T, T), dot(B, B)), 1e-12));
                     n = normalize(T * inv * nxy.x + B * inv * nxy.y + n * nz);
-                    ambient = SampleSH(n);
+                    ambient = LeafAmbient(n);
                     occA = lerp(1.0, nm.b, _Impostor.y);
                     occS = lerp(1.0, nm.b, _Impostor.z);
                 }
@@ -305,7 +320,10 @@ Shader "Kamion/Vegetation"
                 Light L = GetMainLight(TransformWorldToShadowCoord(i.positionWS));
                 half NoL = dot(n, L.direction);
                 half sun = saturate(NoL) + _Transmission * saturate(-NoL);
-                half3 color = albedo * (L.color * (sun * L.shadowAttenuation * L.distanceAttenuation * occS) + ambient * occA);
+                // r11 sheen: the waxy leaf / needle surface mirrors a few percent of the sky whatever its pigment (the
+                // grey-green of foliage under an overcast sky); dark needles (albedo 0.035) were black under the toe.
+                half3 color = albedo * (L.color * (sun * L.shadowAttenuation * L.distanceAttenuation * occS))
+                            + (albedo + _KamionLeafAmbient.y * step(_Cull, 0.5h)) * (ambient * occA);
                 color = KamionMixFog(color, i.fogFactor);
                 return half4(color, alpha);
             }

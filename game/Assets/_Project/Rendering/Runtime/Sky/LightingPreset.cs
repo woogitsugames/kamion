@@ -40,6 +40,8 @@ namespace Game.Rendering
         [Range(0f, 2f)] public float overcastDirectional;
         [Tooltip("Share of the direct beam passing a thin overcast (soft directional light and faint shadows; taken out of the diffuse)")]
         [Range(0f, 0.3f)] public float overcastSunLeak;
+        [Tooltip("Colour temperature of the overcast dome (K; 0 = achromatic D65). Fixed daylight white balance: > 6500 K reads cool (ADR 0080 r11)")]
+        [Range(0f, 12000f)] public float overcastCctK;
         [Tooltip("Cloud deck contrast of the overcast dome (0 = flat dome): thick parts darker, thin parts lighter, mean 1")]
         [Range(0f, 0.6f)] public float cloudContrast;
         [Tooltip("Cloud texture tiles per unit of the cloud plane (plane at height 1; smaller = larger cloud masses)")]
@@ -92,13 +94,16 @@ namespace Game.Rendering
 
         /// <summary>ADR 0080 owner A/B renders only (rq_ev): extra exposure bias in stops, 0 = none. Not a default.</summary>
         public static float ExposureBiasOverride;
+        /// <summary>ADR 0080 r11 A/B (rq_skycct): overcast dome colour temperature in K, 0 = achromatic; &lt; 0 = the preset's.</summary>
+        public static float OvercastCctOverride = -1f;
 
         /// <summary>Builds the sky model with the resolved exposure (two passes: illuminance does not depend on exposure).</summary>
         public SkyModel CreateModel(float wbOverride = -1f)
         {
             var probe = new SkyModel(sunElevationDeg, sunAzimuthDeg, turbidity, overcast, 0f);
             return new SkyModel(sunElevationDeg, sunAzimuthDeg, turbidity, overcast, ResolveEv100(probe),
-                wbOverride >= 0f ? wbOverride : whiteBalanceAdaptation, overcastDirectional, overcastSunLeak);
+                wbOverride >= 0f ? wbOverride : whiteBalanceAdaptation, overcastDirectional, overcastSunLeak,
+                OvercastCctOverride >= 0f ? OvercastCctOverride : overcastCctK);
         }
 
         public static LightingPreset CreateClear()
@@ -119,6 +124,9 @@ namespace Game.Rendering
             p.overcastDirectional = 0.6f; p.overcastSunLeak = 0.05f;
             p.cloudContrast = 0.21f;
             p.hazeGroundFactor = 1.6f; p.hazeScaleHeightM = 60f;
+            // ADR 0080 r11: the dome is slightly cool against the fixed daylight white balance (reference photos: sky
+            // B - R +7..+16). WORKING_VALUE, tuned on the control cameras against those photos.
+            p.overcastCctK = 6800f;
             // Owner decision 2026-11-10 (ADR 0080): contrast variant 3 "deep" - broad toe about the sky value and -0.2 EV.
             p.lookToe = 0.9f; p.lookToeP = 0.4f; p.lookTonePivot = 0.6f; p.exposureCompensation = -0.2f;
             return p;
