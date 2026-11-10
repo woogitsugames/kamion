@@ -257,6 +257,9 @@ Shader "Kamion/Truck Exterior"
                     }
                     else
                         proc = KamionGrime(lp, slot, 1.0 - _KamionGrimeDetailOff) * (_IsPaint > 0.5 ? 1.0 : _GrimeChassis);
+                    // Gloss trim (baked roughness < ~0.3: piano-black mask, lamp surrounds) sheds the road film: the
+                    // chassis-weighted film (x _GrimeChassis) turned the gloss-black TRAKT mask matte grey (ADR 0047 r2).
+                    if (_IsPaint < 0.5 && isTyre < 0.5) proc *= lerp(0.25, 1.0, smoothstep(0.18, 0.42, c.a));
                     // Cavities hold more: x 1.4 in full occlusion, x 0.85 on open panels.
                     proc *= lerp(1.4, 0.85, m.r);
                     grime = max(grime * 0.8, proc);
