@@ -380,7 +380,13 @@ Shader "Kamion/World PBR"
                     half lum = dot(base.rgb, half3(0.2126, 0.7152, 0.0722));
                     half detl = saturate(lum / 0.095);
                     albedo = lerp(albedo, albedo * half3(1.22, 1.10, 0.92), k.b * 0.8 * _GroundTint);
-                    albedo = lerp(albedo, half3(0.085, 0.072, 0.045) * (0.6 + 0.8 * detl), k.g * _GroundTint);
+                    // Pine-forest floor (bór sosnowy): needle litter in patches with feather moss and bilberry, not a
+                    // uniform beige (review r3 W2 / r4 W-H8). Linear albedo: litter 0.045/0.035/0.021, moss + bilberry
+                    // 0.034/0.049/0.019 (WORKING_VALUE, judged against the CC0 Tysiąclecia photos); patches from the
+                    // 64 m macro map.
+                    half mossy = saturate((macro.a - 0.30) * 3.0 + (macro.r - 0.5) + (detl - 0.5) * 0.6);
+                    half3 floorAlb = lerp(half3(0.045, 0.035, 0.021), half3(0.034, 0.049, 0.019), mossy);
+                    albedo = lerp(albedo, floorAlb * (0.6 + 0.8 * detl), k.g * _GroundTint);
                     albedo = lerp(albedo, half3(0.13, 0.11, 0.085) * (0.6 + 0.8 * detl), k.a * _GroundTint);
                     half grit = (1.0 - smoothstep(0.03, 0.07, k.r)) * 0.6 * _GroundTint;
                     albedo = lerp(albedo, half3(0.19, 0.17, 0.14) * (0.7 + 0.6 * detl), grit);
