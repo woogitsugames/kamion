@@ -29,7 +29,7 @@ LABEL = {
     "34przod": "3/4 przód", "bok": "bok lewy (ortho)", "przod": "przód (ortho)", "34tyl": "3/4 tył (prawa strona)",
     "zbl_reflektor": "zbliżenie: reflektor", "zbl_stopnie": "zbliżenie: nadkole i stopnie",
     "zbl_tyl": "zbliżenie: tył kabiny, siodło, przewody", "zbl_kolo": "zbliżenie: koła tylne, błotnik",
-    "top": "widok z góry", "tilt": "test uchylania kabiny 50° (ortho)",
+    "top": "widok z góry", "top_kabina": "kabina z góry (ortho)", "tilt": "test uchylania kabiny 50° (ortho)",
     "oko_przod": "z punktu oczu: na wprost", "oko_lewo": "z punktu oczu: szyba lewa",
     "oko_prawo": "z punktu oczu: szyba prawa i lusterka",
 }
@@ -51,6 +51,8 @@ def parse():
     p.add_argument("--tag", default="")
     p.add_argument("--no-analysis", action="store_true")
     p.add_argument("--beam", default="", choices=["", "low"], help="a4: QA render with the dipped beam lit")
+    p.add_argument("--shape", default="b2", choices=["b2", "round"],
+                   help="cab surfacing: b2 = exported cab, round = rounding-pass proposal (owner approval pending)")
     p.add_argument("--vis", action="store_true", help="a4: eye-point views + visibility map (widocznosc_*)")
     return p.parse_args(argv)
 
@@ -67,6 +69,7 @@ def build(a):
     else:
         C.make_tyre_materials()
     subpaths, strokes = G.load_svg_mark(os.path.join(G.REPO, "art-source", "truck", "brand", "trakt.svg"))
+    B.set_shape(a.shape)
     B.cab_shell()
     B.glazing()
     B.doors_and_gaps()
@@ -147,7 +150,8 @@ def render_view(a, v, light, livery, fig, suffix=""):
         if ob:
             ob.hide_render = not (a.mode == "a3" and w == "wall_" + v)
     lv = M.LIVERIES["clay" if a.mode == "a3" else livery][3]
-    mode = "A3 blockout w skali (clay)" if a.mode == "a3" else "A4 zewnętrze"
+    mode = "A3 blockout w skali (clay)" if a.mode == "a3" else (
+        "A4 zewnętrze" + (" | PROPOZYCJA: zaokrąglenia" if a.shape == "round" else ""))
     S.stamp(f"TRAKT (koncepcja B) | {LABEL.get(v, v)} | {lv} | {LIGHT_LABEL[light]} | {mode}"
             + (" | figura 1,80 m" if f else ""))
     name = f"{v}_{livery}_{light}{suffix}.jpg" if a.mode == "a4" else f"{v}{suffix}.jpg"
@@ -176,7 +180,10 @@ def main():
     os.makedirs(a.out, exist_ok=True)
     fig = build(a)
     S.measure(os.path.join(a.out, "wymiary.json"))
-    B.door_interface(os.path.join(G.REPO, "art-source", "truck", "exterior", "door_interface.json"))
+    if a.shape == "b2":   # the interior reads this contract; the 'round' proposal must not move it before approval
+        B.door_interface(os.path.join(G.REPO, "art-source", "truck", "exterior", "door_interface.json"))
+    else:
+        B.door_interface(os.path.join(a.out, "door_interface_round.json"))
     if a.mode == "a4":
         lods = S.lod_estimate()
         S.tri_stats(os.path.join(a.out, "stats.json"), extra={"lod_plan_measured": lods})

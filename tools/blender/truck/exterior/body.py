@@ -122,6 +122,39 @@ CFG = {
     "ws_bottom_x": 1.22, "ws_top_x": 1.12,
 }
 CAB = None    # Loft of the cab shell
+
+# ---------------------------------------------------------------- rounding pass (owner 2026-11-10, STAGE 1 proposal)
+# 'ciezarowka jest zbyt kanciasta, aktualne sa bardziej zaokraglone'. SHAPE 'b2' = the exported cab (default until the
+# owner approves, so the door/glass interfaces and the A6 export stay untouched); 'round' = the proposal, selected with
+# build.py --shape round. Kept owner constraints: the centreline front is still one 7 deg plane, glass 1.94-3.12 m,
+# roof 3.75 m, all dims.json values. Every radius is a WORKING_VALUE read off photos of 2020+ European long-haul cabs
+# (docs/REFERENCES.md, 'Zaokraglenia kabiny'): reference for the amount of rounding only, no maker's design is copied.
+SHAPE = "b2"
+ROUND = {
+    "crown": 10.0,                    # plan radius of the front face: 40 mm sagitta at the corner start (x = 0.89 m)
+    # plan corner (deflector) radius bumper-to-roof: one continuous R 0.32-0.36 wrap into the doors (was 0.16-0.28)
+    "rf": [(CAB_Z0, 0.36), (WS_Z0 - 0.10, 0.36), (WS_Z0 - 0.015, 0.34), (WS_Z1 + 0.02, 0.32), (ROOF_Z, 0.34)],
+    "roof_h": 0.22,                   # height of the roof-edge zone (painted header stays flat up to 3.53 m)
+    "roof_rr": (0.24, 0.20, 0.07),    # roof edge radius to the front / to the sides / to the rear wall (was 0.10)
+    "low_rf": [(0.38, 0.40), (FAIR_TOP, 0.37)],   # bumper ends wrap with the cab corner (was 0.22-0.17)
+    "ws_bottom_x": 1.16, "ws_top_x": 1.07,        # glass stops ~46 deg round the corner; painted A-pillar wraps the rest
+    "win_front": 0.08,                # side glass front edge ahead of the corner arc centre (flat part of the door)
+    "marker_dz": 0.27,                # roof marker lamps below the roof radius
+}
+
+
+def set_shape(name):
+    global SHAPE
+    assert name in ("b2", "round"), name
+    SHAPE = name
+    if name == "round":
+        for k in ("rf", "ws_bottom_x", "ws_top_x"):
+            CFG[k] = ROUND[k]
+        CFG["roof_r"] = ROUND["roof_h"]
+
+
+def rounded():
+    return SHAPE == "round"
 LOW = None    # Loft of the lower fairing
 
 
@@ -137,6 +170,8 @@ def full_grille(poly_r):
 def win_front(z):
     """Side window front edge (y): just onto the corner arc, parallel to the A-pillar."""
     yf, yb, w, rf, rb = CAB.sec(z)
+    if rounded():
+        return CAB.plan(z)[6] + ROUND["win_front"]
     return yf - rf + 0.15
 
 
@@ -159,6 +194,10 @@ def cab_shell():
     set_group("cab")
     CAB = Loft(CFG["front"], CAB_BACK_Y, CFG["w"], CFG["rf"], CFG["rb"], CAB_Z0, ROOF_Z, roof_r=CFG["roof_r"],
                arc_n=16, step=0.035, flat_n=6, roof_n=9)   # B2 v2: denser shell (smooth corner highlights, budget 140k)
+    if rounded():   # 2 cm arc chords on the R 0.34 corners and 3 cm on the roof radius: no facets in the highlights
+        CAB = Loft(CFG["front"], CAB_BACK_Y, CFG["w"], CFG["rf"], CFG["rb"], CAB_Z0, ROOF_Z, roof_r=CFG["roof_r"],
+                   arc_n=26, step=0.035, flat_n=6, roof_n=12, crown=ROUND["crown"], roof_rr=ROUND["roof_rr"],
+                   front_n=12)
     sh = CAB.build("cab_shell", "paint", sharp=50, cap_bottom=False)
     sh.data.materials.append(G.mat("interior"))
     so = sh.modifiers.new("solid", "SOLIDIFY")
@@ -367,6 +406,8 @@ def grille_bar(name, zc, hgt, depth, hw, m, round_front=True, n=2, nose=-0.003, 
         prof = [(-h, -depth), (-h, -0.024), (-h * 0.6, -0.022), (h, -0.011), (h, -depth)]
     bm = bmesh.new()
     rows = []
+    if rounded():
+        n = max(n, 16)            # crowned face: the bar follows the plan curve
     for dz, o in prof:
         rows.append([bm.verts.new(CAB.front_pt(zc + dz, -hw + 2 * hw * j / n, o)) for j in range(n + 1)])
     k = len(rows)
@@ -719,7 +760,7 @@ def corners_roof_rear():
     # clear lens with real thickness standing 22 mm proud; tilted with the 7 deg front plane
     rot = Matrix.Rotation(math.radians(RAKE), 3, "X")
     for i, xm in enumerate((-0.80, -0.40, 0.0, 0.40, 0.80)):
-        p = V(CAB.front_pt(ROOF_Z - 0.16, xm, 0.0))
+        p = V(CAB.front_pt(ROOF_Z - (ROUND["marker_dz"] if rounded() else 0.16), xm, 0.0))
         box(f"marker_front_base_{i}", p + rot @ V((0, 0.004, 0)), (0.124, 0.012, 0.050), "plastic_satin", bev=0.005,
             seg=3, rot=rot)
         box(f"marker_front_gasket_{i}", p + rot @ V((0, 0.0005, 0)), (0.128, 0.004, 0.054), "rubber", bev=0.002, rot=rot)
@@ -796,9 +837,14 @@ def mirrors(kind="classic", front=True):
                                       ("wide", 2.20, 0.20, (s * 0.40, -1.0, -0.22))):
                 c = V((xh, yh, zc))
                 rot = mirror_aim(c, view)
-                box(f"mirror_{nm}_{s}", c, (0.24, 0.085, hgt), "plastic_satin", bev=0.03, seg=4, rot=rot)
-                box(f"mirror_{nm}_cap_{s}", c + rot @ V((0, 0.02, 0)), (0.235, 0.06, hgt - 0.01), "paint", bev=0.03,
-                    seg=4, rot=rot)
+                if rounded():   # aero housing: fully rounded rim (R 42 mm) and a deeper, domed body-colour back
+                    box(f"mirror_{nm}_{s}", c, (0.24, 0.085, hgt), "plastic_satin", bev=0.042, seg=7, rot=rot)
+                    box(f"mirror_{nm}_cap_{s}", c + rot @ V((0, 0.035, 0)), (0.232, 0.10, hgt - 0.012), "paint",
+                        bev=0.049, seg=8, rot=rot)
+                else:
+                    box(f"mirror_{nm}_{s}", c, (0.24, 0.085, hgt), "plastic_satin", bev=0.03, seg=4, rot=rot)
+                    box(f"mirror_{nm}_cap_{s}", c + rot @ V((0, 0.02, 0)), (0.235, 0.06, hgt - 0.01), "paint",
+                        bev=0.03, seg=4, rot=rot)
                 box(f"mirror_{nm}_glass_{s}", c + rot @ V((0, -0.044, 0)), (0.215, 0.006, hgt - 0.03), "mirror",
                     bev=0.004, rot=rot)
             if s > 0:  # class V kerb mirror on the passenger side, under the main mirrors, looking down
@@ -838,8 +884,9 @@ def lower_fairing():
     # B2/owner: the bumper face continues the cab's front plane (one line in side view), tucking under at the lip
     LOW = Loft(front=[(0.38, 1.530), (0.55, face_y(0.55)), (FAIR_TOP, face_y(FAIR_TOP) + 0.002)], back=FAIR_BACK,
                w=[(0.38, CAB_HALF_W - 0.02), (0.55, CAB_HALF_W), (sp, CAB_HALF_W), (FAIR_TOP, CAB_HALF_W)],
-               rf=[(0.38, 0.22), (FAIR_TOP, 0.17)], rb=0.05, z0=0.38, ztop=FAIR_TOP, roof_r=0.015, arc_n=14,
-               step=0.04, flat_n=8, roof_n=3)
+               rf=ROUND["low_rf"] if rounded() else [(0.38, 0.22), (FAIR_TOP, 0.17)], rb=0.05, z0=0.38,
+               ztop=FAIR_TOP, roof_r=0.015, arc_n=24 if rounded() else 14, step=0.04, flat_n=8, roof_n=3,
+               crown=ROUND["crown"] if rounded() else 0.0, front_n=12 if rounded() else None)
     lo = LOW.build("lower_fairing", "plastic", sharp=45)
     lo.data.materials.append(G.mat("paint"))
     cuts = [G.box_mm("cut_centre", -0.94, 0.94, FAIR_BACK - 0.2, 1.17, 0.2, 1.4, "gap")]
@@ -852,7 +899,8 @@ def lower_fairing():
         xo, xi = s * (CAB_HALF_W + 0.1), s * (CAB_HALF_W - STEP_DEPTH)
         for k, (z, y0, y1) in enumerate(STEPS):
             cuts.append(box_mm(f"cut_step{k}_{s}", min(xo, xi), max(xo, xi), y0, y1, z,
-                               z + (0.30 if k == 2 else 0.24), "plastic", bev=0.045, seg=3))
+                               z + (0.30 if k == 2 else 0.24), "plastic", bev=0.07 if rounded() else 0.045,
+                               seg=5 if rounded() else 3))
     # bumper pockets: lower intake, the T 'road' continued in the bumper, fog lamps, two cleaning steps
     cuts.append(LOW.patch("cut_intake", "grille_honey_coarse", "front", 0.45, 0.62, -0.80, 0.80, off=-0.06,
                           thick=0.15, nz=2, npar=24))
@@ -886,8 +934,13 @@ def lower_fairing():
     # renders); edges stay crisp via sharp-edge smoothing, the bevel comes back with the A6 retopo
     for s in (-1, 1):
         # arch flare (defined edge, ~65 mm) and inner wheelhouse liner
-        arch(f"arch_flare_{s}", 0.0, WHEEL_Z, ARCH_R - 0.004, ARCH_OUT, s * (CAB_HALF_W - 0.03),
-             s * (CAB_HALF_W + 0.006), -12, 192, "plastic")
+        if rounded():   # body-colour flare, 20 mm proud (2.54 m over the flares, inside 2.55 m) with an R 14 mm soft lip (was a square-edged black band)
+            fl = arch(f"arch_flare_{s}", 0.0, WHEEL_Z, ARCH_R - 0.004, ARCH_OUT + 0.02, s * (CAB_HALF_W - 0.03),
+                      s * (CAB_HALF_W + 0.020), -12, 192, "paint", n=56)
+            G.apply_mods(bevel(fl, 0.014, seg=4, angle=50))
+        else:
+            arch(f"arch_flare_{s}", 0.0, WHEEL_Z, ARCH_R - 0.004, ARCH_OUT, s * (CAB_HALF_W - 0.03),
+                 s * (CAB_HALF_W + 0.006), -12, 192, "plastic")
         arch(f"arch_liner_{s}", 0.0, WHEEL_Z, ARCH_R - 0.012, ARCH_R, s * 0.93, s * (CAB_HALF_W - 0.02), -12, 192,
              "plastic")
         # spray-suppression brush strip inside the flare lip and a front mud flap behind the wheel (R2 #4)

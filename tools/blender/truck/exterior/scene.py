@@ -498,6 +498,8 @@ CAMS = {
     "34przod_p": dict(loc=(8.4, 10.6, 1.65), target=(0.1, -0.9, 1.72), lens=42, fig=None),
     "zbl_wydech": dict(loc=(4.6, 0.9, 2.2), target=(1.05, -1.25, 2.05), lens=32, fig=None),
     "top": dict(loc=(0.0, 3.0, 40), rot=(0, 0, 0), ortho=28.0, fig=None),
+    # rounding pass: plan view of the cab only (corner radii, front crown, roof edge)
+    "top_kabina": dict(loc=(0.0, 0.2, 40), rot=(0, 0, 0), ortho=5.6, fig=None),
     "tilt": dict(loc=(-30, -0.4, 2.3), rot=(math.radians(90), 0, math.radians(-90)), ortho=10.0, fig=None),
 }
 EYE_CAMS = {"oko_przod": (0, -6), "oko_lewo": (72, -8), "oko_prawo": (-48, -6)}

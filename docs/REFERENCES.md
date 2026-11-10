@@ -64,3 +64,12 @@ Real photographs from Wikimedia Commons, 1600-1920 px previews, licence read fro
 | `trailer_W2427-Semi_Tautliner_OuvertureLaterale_3743N8.jpg` | W2427-Semi Tautliner OuvertureLaterale 3743N8.jpg | Llann Wé² | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:W2427-Semi_Tautliner_OuvertureLaterale_3743N8.jpg | side opened: posts, lath pockets, sill |
 | `trailer_WieltonCurtainSider.jpg` | WieltonCurtainSider.jpg | Cekay | CC0 | https://commons.wikimedia.org/wiki/File:WieltonCurtainSider.jpg | side 3/4: curtain, buckles, side guards, landing gear (may be a texture source: CC0) |
 | `trailer_Wielton_Trailer_Test.jpg` | Wielton Trailer Test.jpg | Cekay | Public domain | https://commons.wikimedia.org/wiki/File:Wielton_Trailer_Test.jpg | whole rig proportions |
+
+### Zaokrąglenia kabiny — current-generation European tractors (added 2026-11-10, rounding pass STAGE 1)
+Wikimedia Commons, 1920 px previews, licence read from the Commons API (`extmetadata`). **Reference only** for the amount of rounding and surface flow (plan corner radius, roof edge, front crown, bumper wrap, arch flares); no maker's design, lamp graphics, grille signature or badge is copied; files are never shipped or used as texture sources. Radii in `tools/blender/truck/exterior/body.py` (`ROUND`) are `WORKING_VALUE`s estimated by eye against the 2.5 m cab width in these photos (not measured): plan corner R ≈ 0.30–0.40 m, roof edge R ≈ 0.15–0.30 m, front crown sagitta ≈ 30–50 mm.
+
+| File (`Data/photos/nowe/`) | Commons title | Author | Licence | URL | Use |
+|---|---|---|---|---|---|
+| `cab_2022_DAF_XG_530.jpg` | 2022 DAF XG 530.jpg | MrWalkr | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:2022_DAF_XG_530.jpg | front 3/4: corner deflector wrap bumper-to-roof, roof edge radius, body-colour arch flare |
+| `cab_DAF_XG_530_RED_Edition_IAA_2022_DSC03843_.jpg` | DAF XG+ 530 RED Edition IAA 2022 (DSC03843).jpg | MarcelX42 | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:DAF_XG%2B_530_RED_Edition_IAA_2022_(DSC03843).jpg | gloss paint: unbroken reflections over corner and roof radii |
+| `cab_6-365_Volvo_FH.jpg` | 6-365 Volvo FH.jpg | dickinsonjohn02 | Public domain | https://commons.wikimedia.org/wiki/File:6-365_Volvo_FH.jpg | working tractor (2013 registration, 2012+ cab generation): corner-to-door wrap, rounded mirror housings, bumper ends |
