@@ -890,6 +890,7 @@ def qa_report(w, mk_report, mask):
             "clearance_by_class_m": S.CLEARANCE_BY_CLASS,
             "fork_tapers": w.stats.get("fork_tapers", []),
             "fork_shifts": w.stats.get("fork_shifts", []),
+            "gores": w.stats.get("gores", {}),
             "overrides_applied": net.overrides_applied, "overrides_stale": net.overrides_stale,
             "low_confidence": [
                 "bridge deck heights interpolated between abutments (NMT = ground under deck); piers by rule",

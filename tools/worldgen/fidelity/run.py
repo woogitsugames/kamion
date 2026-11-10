@@ -105,6 +105,8 @@ def lane_into_island(ctx, gmask, gsep, x0, y1, res, ahead=20.0):
             c = a.chain
             if c.meta.get("absorbed") or a.is_ring():
                 continue
+            if jn.roundabout:
+                continue      # entering a roundabout the lane follows the ring: straight ahead is the central island
             inb = a.inbound_dirn()
             t = jn.trims[ai]
             if t >= a.L - 2:
