@@ -77,3 +77,18 @@ pylon lattice) - the trade the controller only takes under GPU load. Phone view 
 ## Verification needed
 S24+ High G3-A/G3-B (`gate3-run.ps1 -Tier High -Fps 60 -WorldHigh`) with logcat `[PERF]` lines; A/B with `-e rq_scale 1.0`
 (adaptive off); 30 min thermal run for the fallback. Owner's consent for the phone.
+
+## Addendum 2026-11-10: mirrors 3 -> 2 renders per frame on High (implemented)
+- `VehicleCameraBudget.MirrorsPerFrame` High 3 -> **2**; new `MainMirrorSlots` (High 1, others 0). `MirrorRefreshSchedule`
+  (pure, allocation-free, EditMode `MirrorRefreshScheduleTests`): the reserved slot alternates the class II pair, the other
+  slot rotates the four convex mirrors first (falls back to class II when no convex glass is on screen).
+- Cadence with all six on screen at 60 FPS: class II every 2nd frame **at a steady interval** (30 Hz; old cap 3: 1-2
+  frames jittering), convex every 4th (15 Hz; old: every 3rd). One side on screen: its class II and IV every frame.
+  Low (cap 1: main every 4th, convex every 8th) and Medium (cap 2: 2nd / 4th) unchanged, asserted by the test.
+- Editor estimate (`Game.Editor.VisualQA.MirrorBudgetProfiler.Run`, WorldC_High, real truck mirror cameras + cab-driver
+  view 3120x1440 MSAA 2x, synced per frame, 240 frames x 2 runs per policy, RTX 5070; file
+  `artifacts/owner/mirrors-modern/perf/mirrorbudget-High-20261110-120358.tsv`). **Editor estimate, CPU-bound, UNVERIFIED on
+  the phone:** mirror work p50 7.71 / 7.95 -> 5.46 / 5.55 ms (-30 %), p95 9.8-10.3 -> 7.0-7.4 ms; whole simulated frame
+  p50 13.8-14.5 -> 11.8-11.9 ms, p95 17.8-18.3 -> 13.9-14.7 ms, p99 21.6-33.5 -> 15.7-16.2 ms. Max render interval:
+  class II 2 frames in both (old jitters 1-2), convex 3 -> 4.
+- Phone A/B on the S24+ (cab view, `gate3-run.ps1 -Tier High -Fps 60`) still required (rule 2): GPU ms and CPU main p95.

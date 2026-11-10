@@ -45,6 +45,45 @@ namespace Game.Editor.Setup
         const string ExtManifest = "art-source/truck/exterior/export/truck_exterior_manifest.json";
         const string IntManifest = "art-source/truck/interior/export/cab_interior_manifest.json";
 
+        /// <summary>
+        /// Mirror adjustment (ADR 0042 addendum, review r6 C-N8): reflected axis of the eye ray through the glass centre,
+        /// vehicle frame, yaw from straight back (+ towards +X / passenger side), pitch (+ up). Chosen so the UN ECE R46
+        /// para 15.2.4 fields are covered from the design eye point (EditMode MirrorFieldOfVisionTests); mirrors not listed
+        /// keep the modelled glass. Class IV turned outwards (the modelled glass looked along the own cab side: 92 % of the
+        /// 15 m field), class II right 1.6 deg down (the 1 m strip from 4 m behind the eye: 91 %). WORKING_VALUE.
+        /// </summary>
+        public static readonly IReadOnlyDictionary<string, (float yaw, float pitch)> MirrorAim = new Dictionary<string, (float yaw, float pitch)>
+        {
+            { "MIRROR_MainR", (4.3f, -2.7f) },
+            { "MIRROR_WideL", (-17.7f, -19.5f) },
+            { "MIRROR_WideR", (16.6f, -10.8f) },
+        };
+        /// <summary>Glass adjuster travel about the modelled orientation (typical electric adjusters +-10 deg; WORKING_VALUE).</summary>
+        public const float AdjustRangeDeg = 10f;
+
+        /// <summary>Radius of curvature per mirror role (UN R46 minima: class II >= 1.2 m, IV-VI >= 0.3 m; values WORKING_VALUE, ADR 0042).</summary>
+        public static float MirrorRadius(string role) => role.StartsWith("MIRROR_Main", StringComparison.Ordinal) ? 1.8f
+            : role.StartsWith("MIRROR_Wide", StringComparison.Ordinal) ? 0.35f : 0.3f;
+
+        /// <summary>
+        /// Rotation of the glass about its centre that reflects the eye ray along the MirrorAim axis (identity for roles not
+        /// listed), clamped to AdjustRangeDeg. <paramref name="vehicleRotation"/> maps the vehicle frame of MirrorAim to the
+        /// frame of the other inputs.
+        /// </summary>
+        public static Quaternion MirrorAdjustment(string role, Vector3 eye, Vector3 glassCentre, Vector3 normal, Quaternion vehicleRotation,
+            out float angleDeg, out bool clamped)
+        {
+            angleDeg = 0f; clamped = false;
+            if (!MirrorAim.TryGetValue(role, out var aim)) return Quaternion.identity;
+            Vector3 want = MirrorOptics.AimNormal(eye, glassCentre, vehicleRotation * MirrorOptics.RearDirection(aim.yaw, aim.pitch));
+            var turn = Quaternion.FromToRotation(normal.normalized, want);
+            turn.ToAngleAxis(out float ang, out var axis);
+            if (ang > 180f) ang -= 360f;
+            angleDeg = Mathf.Abs(ang);
+            if (angleDeg > AdjustRangeDeg) { clamped = true; turn = Quaternion.AngleAxis(Mathf.Sign(ang) * AdjustRangeDeg, axis); }
+            return turn;
+        }
+
         // ------------------------------------------------------------------ entry points
 
         public static void BuildBatch()
@@ -631,13 +670,10 @@ namespace Game.Editor.Setup
                 // paragraph numbers UNVERIFIED) are covered from the design eye point (ADR 0042 table).
                 Vector3 eyeW = root.transform.TransformPoint(eyeLocal);
                 int phase = 0;
-                foreach (var (role, radius, main) in new[]
-                         {
-                             ("MIRROR_MainL", 1.8f, true), ("MIRROR_MainR", 1.8f, true),
-                             ("MIRROR_WideL", 0.35f, false), ("MIRROR_WideR", 0.35f, false),
-                             ("MIRROR_Kerb", 0.3f, false), ("MIRROR_Front", 0.3f, false),
-                         })
+                foreach (var role in new[] { "MIRROR_MainL", "MIRROR_MainR", "MIRROR_WideL", "MIRROR_WideR", "MIRROR_Kerb", "MIRROR_Front" })
                 {
+                    float radius = MirrorRadius(role);
+                    bool main = role.StartsWith("MIRROR_Main", StringComparison.Ordinal);
                     if (!mirrorGlass.TryGetValue(role, out var r)) { Debug.LogWarning("[TRUCK] " + role + " missing"); continue; }
                     var o = mirrorInfo[role];
                     var size = Json.Arr(o["size_m"]);
@@ -645,22 +681,31 @@ namespace Game.Editor.Setup
                     Vector3 q = r.transform.position;
                     Vector3 n = root.transform.TransformDirection(V3(o["normal_unity_vehicle"])).normalized;   // towards the eye
                     Vector3 up = root.transform.TransformDirection(V3(Json.Obj(o["axes_unity_vehicle"])["Y"])).normalized;
-                    Vector3 eyeImage = eyeW - 2f * Vector3.Dot(eyeW - q, n) * n;
-                    Vector3 look = (q - eyeImage).normalized;
-                    float dist = Vector3.Distance(eyeImage, q);
+                    // Mirror adjustment (what the driver does with the electric adjuster): turn the glass about its centre so
+                    // the eye ray through the centre reflects along the class target axis (MirrorAim), at most AdjustRangeDeg
+                    // from the modelled glass. Geometry of the housing is untouched (art), only the glass quad turns.
+                    var turn = MirrorAdjustment(role, eyeW, q, n, root.transform.rotation, out float adj, out bool clamped);
+                    if (clamped) Debug.LogWarning($"[TRUCK] {role}: adjustment {adj:F1} deg exceeds the adjuster range {AdjustRangeDeg} deg (re-aim the modelled glass); clamped");
+                    if (adj > 0f)
+                    {
+                        r.transform.rotation = turn * r.transform.rotation;
+                        n = (turn * n).normalized; up = (turn * up).normalized;
+                        Debug.Log($"[TRUCK] {role}: glass adjusted {adj:F1} deg (target axis yaw {MirrorAim[role].yaw} pitch {MirrorAim[role].pitch})");
+                    }
+                    var view = MirrorOptics.Build(eyeW, q, n, up, gw, gh, radius);
+                    float dist = view.distance;
                     var camT = Child(lod0ByRole["CAB_Body"], role + "_Camera", Vector3.zero);
-                    camT.position = eyeImage;
-                    camT.rotation = Quaternion.LookRotation(look, up);
+                    camT.position = view.position;
+                    camT.rotation = Quaternion.LookRotation(view.forward, up);
                     // Convex mirror of radius R: the surface normal at the glass edge (half size s) turns by s / R, so the
-                    // reflected ray turns by 2 s / R on top of the flat-mirror angle atan(s / d).
-                    float hh = Mathf.Atan(gw * 0.5f / dist) + gw / radius;
-                    float vh = Mathf.Atan(gh * 0.5f / dist) + gh / radius;
+                    // reflected ray turns by 2 s / R on top of the flat-mirror angle atan(s / d) (MirrorOptics.Build).
                     var cam = camT.gameObject.AddComponent<Camera>();
-                    RenderTextureMirror.ConfigureCheapCamera(cam, 2f * vh * Mathf.Rad2Deg, Mathf.Max(0.1f, dist * 0.98f), 250f);
+                    RenderTextureMirror.ConfigureCheapCamera(cam, 2f * view.HalfVDeg, Mathf.Max(0.1f, dist * 0.98f), 250f);
+                    Debug.Log($"[TRUCK] {role}: axis {view.forward:F3}, field {2f * view.HalfHDeg:F1} x {2f * view.HalfVDeg:F1} deg");
                     var mir = camT.gameObject.AddComponent<RenderTextureMirror>();
                     mir.glass = r;
                     mir.aspect = gw / gh;
-                    mir.fovAspect = Mathf.Tan(hh) / Mathf.Tan(vh);
+                    mir.fovAspect = view.tanHalfH / view.tanHalfV;
                     mir.main = main;
                     mir.weight = main ? 1f : 0.5f;
                     // Convex images are minified: about the main mirror's pixels per glass metre, capped at 0.6 of its height.
@@ -934,6 +979,23 @@ namespace Game.Editor.Setup
             Q("cab-dash", eye, Quaternion.Euler(24f, 12f, 0f), 62f, "A7: cluster, steering wheel, centre stack, lower dash (low-sun black-cab check: lower dash > 8 %).");
             Q("cab-left", eye, Quaternion.Euler(4f, -68f, 0f), 62f, "A7: driver door card, door glass and the main/wide mirrors on the left.");
             Q("cab-right", eye, Quaternion.Euler(8f, 58f, 0f), 62f, "A7: passenger seat, passenger door card, right mirrors through the glass.");
+            // Mirror checks (review r6 C-N8, ADR 0042 addendum): from the eye, narrow field onto the glass of each side and the
+            // front mirror, so the image in every class II / IV / V / VI glass is readable in the control frame.
+            void QMirrors(string id, string note, params string[] glass)
+            {
+                Vector3 c = Vector3.zero; int k = 0;
+                foreach (var g in glass)
+                {
+                    var t = FindDeep(truck, g + "_LOD0") ?? FindDeep(truck, g);
+                    if (t == null) continue;
+                    c += truck.InverseTransformPoint(t.position); k++;
+                }
+                if (k == 0) { Debug.LogWarning("[TRUCK] control camera " + id + ": no mirror glass found"); return; }
+                Q(id, eye, Quaternion.LookRotation(c / k - eye, Vector3.up), 30f, note);
+            }
+            QMirrors("cab-mirrors-left", "C-N8: driver-side class II (main) + class IV (wide-angle) glass from the eye.", "MIRROR_MainL", "MIRROR_WideL");
+            QMirrors("cab-mirrors-right", "C-N8: passenger-side class II + IV + V (kerb) glass from the eye, through the door glass.", "MIRROR_MainR", "MIRROR_WideR", "MIRROR_Kerb");
+            QMirrors("cab-mirror-front", "C-N8: class VI front mirror from the eye (must show the road in front of the bumper, not the sky).", "MIRROR_Front");
             Vector3 p34 = new Vector3(-6.8f, 2.1f, 11.5f), look = new Vector3(0f, 1.7f, 2.6f);
             Q("truck-34", p34, Quaternion.LookRotation(look - p34, Vector3.up), 45f, "A7: TRAKT front 3/4, driver side (paint, lamps, glass, wheels on the ground).");
             Vector3 pr = new Vector3(-7.5f, 2.3f, -17.5f), lookR = new Vector3(0f, 1.9f, -7.0f);
