@@ -248,6 +248,13 @@ namespace Game.World.Import
                 // walls to Kamion/Vegetation at run time, like leaf cards.
                 bool edge = m.Get("alpha_cutoff") != null;
                 var t = InstanceImporter.ImportTexture(r, Path.Combine(EditorTools.RepoRoot, Str(m.Get("texture_ref"))), clamp: false);
+                // v3.4 (ADR 0023): edge walls with a wall-space normal / sky-visibility map are lit like the trees.
+                if (edge && m.Get("normal_ref") is string nref && File.Exists(Path.Combine(EditorTools.RepoRoot, nref)))
+                {
+                    var vis = InstanceImporter.EdgeVisibility;
+                    return InstanceImporter.VegetationMaterial(path, t, InstanceImporter.ImportTexture(r, Path.Combine(EditorTools.RepoRoot, nref), clamp: false, linear: true),
+                        "_HLOD_EDGE", new Vector4(1f, vis.x, vis.y, 0f), (float)Num(m.Get("alpha_cutoff")));
+                }
                 return LitMaterial(path, albedo, rough, metal, t, edge, edge ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, edge, null);
             }
             if (m.Get("shader") as string == "wire") return WireMaterial(path, albedo);

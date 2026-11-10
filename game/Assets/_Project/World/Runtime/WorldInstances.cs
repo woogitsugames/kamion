@@ -93,6 +93,7 @@ namespace Game.World
         }
 
         static readonly int k_WireFade = Shader.PropertyToID("_KamionWireFade");
+        static readonly int k_ImpostorBlend = Shader.PropertyToID("_KamionImpostorBlend");
         float m_PoleCull;
 
         // Vegetation settings of the active tier (QualityProfile, ADR 0012 / device runs); the serialized fields below are
@@ -116,6 +117,9 @@ namespace Game.World
             m_HlodSwitch = ok && t.forestHlodM != 0f ? Mathf.Max(t.forestHlodM, 0f) : forestHlodM;
             m_HlodCull = ok && t.forestHlodM != 0f ? t.forestHlodCullM : forestHlodCullM;
             m_Trees = !RenderOverrides.Trees.HasValue || RenderOverrides.Trees.Value;
+            // Impostor view cross-fade (Kamion/Vegetation _IMPOSTOR): 2 views on Medium and up, the nearest view on Low
+            // (half the texture fetches; ADR 0023 cost table). Tier = LOD bias (Low 0.5).
+            Shader.SetGlobalFloat(k_ImpostorBlend, QualitySettings.lodBias >= 0.75f ? 1f : 0f);
             bool a2c = !ok || t.leafAlphaToCoverage;
             bool simple = ok && t.simpleFoliage;
             if (m_Mats == null || simple != m_SimpleFoliage) BuildMaterials(simple);
@@ -178,8 +182,15 @@ namespace Game.World
             for (int i = 0; i < m_Mats.Length; i++)
             {
                 var m = m_Mats[i];
-                if (!IsFoliage(m)) continue;
-                if (!copies.TryGetValue(m, out var c))
+                if (!IsFoliage(m) && !(m != null && m.shader == m_FoliageShader)) continue;
+                if (!copies.TryGetValue(m, out var c) && m.shader == m_FoliageShader)
+                {
+                    // Generated on Kamion/Vegetation already (impostors, HLOD edge walls; ADR 0023): copy as is.
+                    c = new Material(m) { name = m.name + " (simple)", hideFlags = HideFlags.DontSave, enableInstancing = true };
+                    c.SetFloat("_AlphaToMask", m_LeafA2C ? 1f : 0f);
+                    copies[m] = c;
+                }
+                else if (!copies.TryGetValue(m, out c))
                 {
                     c = new Material(template) { name = m.name + " (simple)", hideFlags = HideFlags.DontSave, enableInstancing = true, renderQueue = m.renderQueue };
                     c.SetTexture("_BaseMap", m.GetTexture("_BaseMap"));
@@ -366,6 +377,8 @@ namespace Game.World
         int ThinStride(float d, float scale)
         {
             float s = m_ThinStart * scale;
+            // v3.4 kept the strides: a later start (1.5x, +25 % instances in the DK8 view) did not fit the A16 Low budget
+            // with certainty (editor timing noise > the gain; ADR 0023). The forest edge reads dense through the HLOD.
             return d < s ? 1 : d < 2.5f * s ? 2 : 4;
         }
 
@@ -405,6 +418,7 @@ namespace Game.World
 
         bool[] m_GroupFar;
 
+
         /// <summary>A forest HLOD mesh (cell or chunk merge), region-root space, no shadows (beyond every tier's shadow distance).</summary>
         void DrawMesh(Mesh mesh, int materialStart, Bounds b)
         {
@@ -415,6 +429,7 @@ namespace Game.World
             {
                 var mat = mats[materialStart + s];
                 if (mat == null) continue;
+
                 var rp = new RenderParams(mat)
                 {
                     camera = m_Camera,
