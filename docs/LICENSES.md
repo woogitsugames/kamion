@@ -145,3 +145,17 @@ Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z c
 | `road-fidelity-qa` | `tools/worldgen/fidelity/run.py` → `Data/Regions/<id>/generated/fidelity_qa.json` (metryki zgodności dróg; OSM ways/tagi z wycinka Geofabrik 261108 + pomiary na ortofoto GUGiK) i nakładki `artifacts/fidelity-r9/overlays/*.jpg` (poza gitem) | ODbL 1.0 („© OpenStreetMap contributors”; JSON = baza pochodna, nakładki = Produced Work) + dane GUGiK (ortofotomapa, art. 40a ust. 2 pkt 1 Pgik; „Źródło danych: GUGiK”) | JSON tak, nakładki nie | QA, ADR 0075; nie trafia do buildu. Ta sama uwaga `LEGAL_REVIEW_REQUIRED` co dla grafu dróg |
 | `gugik-ortho-hr-cells` | GUGiK WMS `ORTO/WMS/HighResolution` (EPSG:2180, komórki 128 m, 0,08 m/px) → `Data/raw/refs/gugik-ortho-hr/<region>/c_XX_YY.jpg` + `manifest.jsonl` (URL, czas, SHA256, bbox) | dane GUGiK, art. 40a ust. 2 pkt 1 Pgik; WMS bez ograniczeń dostępu; „Źródło danych: Główny Urząd Geodezji i Kartografii” | nie (poza gitem) | tylko referencja i pomiar zgodności (ADR 0075), nigdy tekstura w grze; data nalotu mozaiki WMS `UNVERIFIED` |
 | `world-streetscape-data` | `Data/Regions/bialystok-industrial-c/generated/streetscape_sources.json` (OSM + BDOT10k) | ODbL 1.0 (© OpenStreetMap contributors) + dane GUGiK (BDOT10k, art. 40a ust. 2 pkt 1 Pgik) | tak | place, ogrodzenia, drzewa, ekrany, słupy. Ta sama uwaga `LEGAL_REVIEW_REQUIRED` co dla grafu dróg |
+
+## Referencje z otwartych zrodel (D43, ADR 0066)
+
+Pobierane do `Data/raw/refs/` (poza gitem, nie trafiaja do buildu). Manifest z autorem, licencja, URL i SHA256 przy kazdym pliku (`manifest.jsonl`). Bramka: tylko CC0 / domena publiczna / CC BY / CC BY-SA (`tools/refs/refs_common.normalize_license`); NC, ND, nieznane i obiekty z ograniczeniami sa odrzucane. Wygenerowane montaze w `artifacts/refs/` zawieraja miniatury z podpisem autora i licencji (do uzytku wewnetrznego, nie w repo gry).
+
+| ID | Zrodlo | Licencja | W gicie? | Uzycie |
+|---|---|---|---|---|
+| `refs-kartaview` | KartaView (api.kartaview.org, openstreetcam), autorzy w manifescie | CC BY-SA 4.0 | nie | tylko referencja wizualna; pochodna (tekstura) = CC BY-SA, zabronione |
+| `refs-panoramax` | Panoramax (api.panoramax.xyz), autorzy w manifescie | licencja per zdjecie (zaobserwowano CC BY-SA 4.0) | nie | tylko referencja |
+| `refs-commons` | Wikimedia Commons (geosearch, kategorie, wyszukiwanie), glownie Rakoon (CC0/CC BY 3.0), Henryk Borawski (CC BY-SA), Podlaski Urzad Wojewodzki (CC BY 3.0 pl) | CC0 / CC BY / CC BY-SA, wg `extmetadata` pliku | nie | CC0 moze byc zrodlem tekstur (osobny wpis przy uzyciu); BY wymaga atrybucji; BY-SA tylko referencja |
+| `refs-openverse` | Openverse (api.openverse.org), autorzy i dostawcy w manifescie | CC0 / CC BY / CC BY-SA | nie | j.w. |
+| `refs-gugik-ortho` | GUGiK Geoportal WMS ORTO HighResolution | dane otwarte GUGiK (art. 40a ust. 2 pkt 1 Pgik); atrybucja: Zrodlo danych: Glowny Urzad Geodezji i Kartografii | nie | referencja i dopasowanie ukladu; rozdzielczosc mozaiki WMS UNVERIFIED |
+| `refs-bialystok-open-data` | Miasto Bialystok, publiczne uslugi ArcGIS Online | dane otwarte miasta (warunki wg portalu: UNVERIFIED) | nie | kontrola pozycji obiektow (np. straz pozarna) |
+| `refs-object-sheets` | `tools/refs/object_refs.py` -> `artifacts/refs/{kwadrat-park,fire-station,dusk-sodium}/` (INDEX.md z autorem, licencja, URL per plik) | kompilacja powyzszych; plan_budynki.jpg: ODbL/GUGiK (nasze dane regionu) | nie | przeglad, nie do builda |

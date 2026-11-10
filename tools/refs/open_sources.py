@@ -288,7 +288,7 @@ def fetch_text_source(source, items, fn, http, outdir, per_item=8, max_total=150
             entries[c["id"]] = rc.make_entry(source, c, key, sha, size, {shot["nr"]}, now)
             entries[c["id"]]["query"] = label
             n_new += 1
-            if n_new % 10 == 0:
+            if n_new % 3 == 0:
                 rc.write_manifest(Path(outdir) / "manifest.jsonl", entries)
     rc.write_manifest(Path(outdir) / "manifest.jsonl", entries)
     log(f"[{source}] licence-rejected {n_rej}, new downloads {n_new}, requests {http.requests_made}")
