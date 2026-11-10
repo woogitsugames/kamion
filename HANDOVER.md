@@ -6,7 +6,7 @@
 - Zgłoszenia właściciela s6: (1) HUD na Fold 8 Ultra (ekran ~1:1) rozjechany, ustawienia ucięte → ADR 0079; (2) film jazdy `Screen_Recording_20261110_210126_Kamion.mp4` (127 s, klatki `artifacts/owner/fold-video-2026-11-10/`): brak ogranicznika (95–105 km/h), koniec świata ~116 s — biała pustka, spadek do 179 km/h, kamera w desce; przejazd po wyspie ronda Bieżeństwa ~30 s → ADR 0082.
 - Przejęcie po ubiciu sesji: worktree w `.claude/worktrees/<id>`, STATUS.md w `<wt>/artifacts/<dir>/` (dir z kolumny dowody); nowy agent Fable z briefem „pracuj WYŁĄCZNIE w <wt>, najpierw docs/owner/AGENT-RULES.md i STATUS.md, dokończ”. Agenci commitują WIP co krok (przypomnienie wysłane 22:xx).
 - Nowe worktree agentów: Data/raw/derived ma być KOPIĄ (robocopy), nie junction — inaczej build_world nadpisuje main.
-- Ostatni przydzielony ADR: **0082**. D45 Fab (Megascans + CC BY, pliki poza gitem) — przyjęta; właściciel pobiera na koncie Epic do 12.11. 0066 scalone; pusty katalog worktree agent-ab1fb0a47d2f0a491 (kopie Data/raw) do ręcznego usunięcia.
+- Ostatni przydzielony ADR: **0083**. D45 Fab (Megascans + CC BY, pliki poza gitem) — przyjęta; właściciel pobiera na koncie Epic do 12.11. 0066 scalone; pusty katalog worktree agent-ab1fb0a47d2f0a491 (kopie Data/raw) do ręcznego usunięcia.
 - Dodatkowe zgłoszenia właściciela s6 przekazane: latarnia na lewym pasie estakady (~93–100 s) i krawężnik w poprzek jezdni (~105–112 s) → 0076; szlaban Kwadrat Park nie otwiera się, brak kolizji → 0071.
 
 | zadanie | model | ADR | worktree / gałąź | dowody | stan |
@@ -20,6 +20,7 @@
 | oświetlenie/atmosfera r10 + warianty ekspozycji ov | Fable | 0080 | agent-ac7c9571184d27443 / worktree-agent-ac7c9571184d27443 | artifacts/light-r10 | w toku |
 | zabudowa typologia r10 | Fable | 0081 | agent-ac404823e7d8b56e7 / worktree-agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | w toku |
 | licencja Fab/Patch + refs 0066 | Fable | 0066 | usunięty | docs/reports/FAB-PATCH-LICENSE-2026-11-10.md | SCALONE |
+| zewnętrze TRAKT + naczepa r10 | Fable | 0083 | agent-a895ad2cc01f155bd / worktree-agent-a895ad2cc01f155bd | artifacts/truck-ext-r10 | w toku |
 | ogranicznik 90, koniec świata, kamera, rondo (film Fold) | Fable | 0082 | agent-acc0299ca0b0081b1 / worktree-agent-acc0299ca0b0081b1 | artifacts/drive-fold-r10 | w toku |
 
 ## Następne kroki
