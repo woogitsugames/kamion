@@ -65,6 +65,13 @@ Hala Kwadrat Park (ADR 0071): zdjęcia Rakoon `20210904_101250_September_2021_in
 referencja kształtu i kolorów; asset `art-source/world/landmarks/kwadrat_park/` jest wygenerowany naszym kodem
 (`tools/blender/world/landmarks/make_depot.py`), nie zawiera pikseli zdjęć ani własnych tekstur (materiały świata po nazwie).
 
+Zabudowa r10 (ADR 0081): zdjęcia Rakoon z Wikimedia Commons (CC0; identyfikatory stron 121537425, 121530695, 121537427,
+121530694, 121537432, 104322581, 104322582, 104322590 — blok przy Rondzie Putry i okolice; kopie robocze w
+`artifacts/buildings-r10/refs/`, poza gitem) posłużyły wyłącznie jako referencja wzrokowa (kolor tynku, balustrady,
+zabudowy balkonów, stolarka). Atlasy `facade_atlas`, `facade_far` i `fence_concrete` są malowane kodem
+(`art-source/world/materials/_src/sets_buildings.py`); `fence_concrete` bierze mikrodetal ze skanu CC0
+`concrete_floor_worn_001` (Poly Haven, wpis w tabeli skanów ADR 0063). Żadne zdjęcie nie trafia do tekstur ani do buildu.
+
 ## Zdjęcia uliczne Mapillary (referencja, D42, ADR 0065)
 
 Źródło: Mapillary Graph API v4, licencja CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Pobierane narzędziem `tools/refs/mapillary_fetch.py` do `Data/raw/mapillary/` (poza gitem, nie trafiają do buildu). Użycie wyłącznie jako referencja (wzór, dopasowanie kadru, kalibracja koloru); piksele w teksturze zrobiłyby z niej pochodną CC BY-SA (ADR 0065). Autorzy zdjęć faktycznie użytych: [docs/ATTRIBUTION-mapillary.md](ATTRIBUTION-mapillary.md) (generowany; pojawi się po pierwszym `--use ... --attribution`).

@@ -108,18 +108,83 @@ def test_storeys_from_bdot_when_plausible():
 
 
 def test_lod1_wall_is_not_a_box_face():
-    """A LOD1 office edge has a plinth, a far-facade window zone (UV1 grid) and a coping ledge."""
+    """A LOD1 office edge has a plinth, a far-facade window zone (storey rows of the facade_far set, ADR 0081) and a
+    coping ledge."""
     import numpy as np
     from streetscape import buildings_mesh as B
+    from streetscape import facade_atlas as FA
     acc = B.Acc()
     B.lod1_wall(acc, "office", "plaster_grey", np.array([0.0, 0.0]), np.array([30.0, 0.0]), np.array([0.0, -1.0]),
-                30.0, 99.5, 100.0, 112.0, 0.0, 3, 3.5, 0.45, "office", False)
+                30.0, 99.5, 100.0, 112.0, 0.0, 3, 3.5, 0.45, "office", False, fkey="t:0")
     mats = {m for (_, m) in acc.d}
-    assert {"plinth_dark", "plaster_grey__far_office", "plaster_grey", "hall_flashing"} <= mats
-    win = acc.d[("buildings_low", "plaster_grey__far_office")][0]
-    assert win[3] is not None and win[3][:, 1].max() == pytest.approx(3.0)      # 3 storeys in UV1 v
+    assert mats == {"plinth_dark", "plaster_grey__far_office", "hall_flashing"}       # the plain wall rides on the far set
+    win = acc.d[("buildings_low", "plaster_grey__far_office")]
+    uv = np.concatenate([it[2] for it in win])
+    assert all(it[3] is None for it in win)                                   # no UV1 grid any more
+    assert uv[:, 0].min() >= 0
+    assert uv[:, 1].min() >= FA.FAR_PLAIN_V[0] and uv[:, 1].max() <= FA.FAR_M[1]
+    z = np.concatenate([it[0][:, 2] for it in win])
+    assert z.max() == pytest.approx(112.0)                                    # the attic band rides on the last chunk
     tris = sum(len(it[1]) for items in acc.d.values() for it in items)
-    assert tris <= 14
+    assert tris <= 18
+
+
+def test_far_plan_is_shared_by_both_lods():
+    """LOD0 cells and LOD1 rows come from one plan: chunks cover every storey once, rows stay inside their group,
+    balcony offsets are even (balconies stack), and a LOD0 block wall opens exactly the cells of its rows."""
+    from streetscape import buildings_mesh as B
+    from streetscape import facade_atlas as FA
+    groups = FA.far_groups("block", 11, balcony=True)
+    plan = FA.far_plan(groups, "b:3")
+    assert sum(n for _, n, *_ in plan) == 11 and [p[0] for p in plan] == sorted(p[0] for p in plan)
+    for s0, n, g, r0, off in plan:
+        assert r0 + n <= len(FA.FAR_ROWS[g]) and (g != "balcony" or off % 2 == 0)
+    ops = B.facade_openings("block", 40.0, 100.0, 100.0 + 1.0 + 5 * 2.8 + 0.6, 5, "b:3", False, False,
+                            {"balcony": True, "basement": True}, sh=2.8, zbase=1.0)
+    plan = FA.far_plan(FA.far_groups("block", 5, balcony=True), "b:3")
+    n = int((40.0 - 1.0) // 3.0)
+    want = sum(1 for s in range(5) for i in range(n) if FA.far_entry(*FA.far_storey(plan, s), i)[0] == "bal")
+    assert want > 0 and sum(1 for o in ops if o[5] == "bdoor") == want
+    assert all(isinstance(o[6], tuple) and o[6][0] == "atlas" for o in ops)   # every opening is an atlas cell
+
+
+def test_facade_atlas_layout():
+    from streetscape import facade_atlas as FA
+    rects = sorted(FA.CELLS.values())
+    for u0, v0, w, h in rects:
+        assert u0 >= FA.GUTTER - 1e-6 and u0 + w <= FA.ATLAS_M[0] - FA.GUTTER + 1e-6
+        assert v0 >= FA.GUTTER - 1e-6 and v0 + h <= FA.ATLAS_M[1] - FA.GUTTER + 1e-6
+    for i, a in enumerate(rects):                                            # no two cells overlap (gutter between)
+        for b in rects[i + 1:]:
+            assert (a[0] + a[2] + FA.GUTTER <= b[0] + 1e-6 or b[0] + b[2] + FA.GUTTER <= a[0] + 1e-6 or
+                    a[1] + a[3] + FA.GUTTER <= b[1] + 1e-6 or b[1] + b[3] + FA.GUTTER <= a[1] + 1e-6)
+    for st, nv in FA.FENCE_VARIANTS.items():
+        for v in range(nv):
+            u0, v0, w, h = FA.fence_uv(st, v)
+            assert 0 <= u0 and u0 + w <= FA.FENCE_M[0] + 1e-6 and v0 + h <= FA.FENCE_M[1] + 1e-6
+
+
+def test_concrete_fence_steps_with_the_ground():
+    """Prefabricated fence: level 2 m bays between posts, stepping with the terrain; two faces per bay."""
+    import numpy as np
+    from shapely.geometry import LineString
+    from streetscape import furniture as F
+
+    class Buf:
+        def __init__(self):
+            self.parts = []
+
+        def add(self, layer, mat, V, UV, T, src=""):
+            self.parts.append((layer, mat, np.asarray(V), np.asarray(UV), np.asarray(T)))
+    lin = F.Lin(Buf(), lambda x, y: 100.0 + 0.1 * np.asarray(x))              # 10 % slope along x
+    nb = F.concrete_fence(lin, LineString([(0, 0), (20, 0)]), "t", "t")
+    assert nb == 10
+    layer, mat, V, UV, T = lin.buf.parts[0]
+    assert (layer, mat) == ("furniture", "concrete_fence")
+    face = V[:8 * 0 + 4]                                                      # first face of bay 0: level
+    assert np.ptp(face[:2, 2]) == pytest.approx(0.0) and np.ptp(face[:, 2]) == pytest.approx(F.S.CONCRETE_FENCE_H)
+    assert len(T) == nb * 6 + (nb + 1) * 10
+    assert lin.buf.parts[1][0] == "collision"
 
 
 def test_tractor_silhouette_budget():

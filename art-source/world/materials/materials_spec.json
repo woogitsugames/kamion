@@ -1717,6 +1717,344 @@
       "hf_ratio_albedo": 0.0009,
       "ao_mean": 0.993
     },
+    "facade_atlas": {
+      "tile_m": [
+        16.0,
+        16.0
+      ],
+      "target": null,
+      "kind": "tiling_set",
+      "uv": "mesh_uv0_metres (atlas cells, layout tools/worldgen/streetscape/facade_atlas.py)",
+      "slots": [
+        "facade_atlas (windows, doors, garage doors, balustrades, facade equipment; ADR 0081)"
+      ],
+      "note": "Cell atlas 16 x 16 m. Calibrated: every cell carries its real albedo (tint 1).",
+      "albedo_target_mean_lum_linear": null,
+      "files": {
+        "High": {
+          "res": [
+            4096,
+            4096
+          ],
+          "texel_mm": 3.91,
+          "dir": "facade_atlas/High",
+          "png_bytes": 4402107,
+          "files": [
+            "T_facade_atlas_BaseColor.png",
+            "T_facade_atlas_MaskMap.png",
+            "T_facade_atlas_Normal.png",
+            "T_facade_atlas_Var.png"
+          ],
+          "smoothness_mean": 0.57,
+          "aux_res": [
+            2048,
+            2048
+          ],
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 17420342
+        },
+        "Medium": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 7.81,
+          "dir": "facade_atlas/Medium",
+          "png_bytes": 1722328,
+          "files": [
+            "T_facade_atlas_BaseColor.png",
+            "T_facade_atlas_MaskMap.png",
+            "T_facade_atlas_Normal.png",
+            "T_facade_atlas_Var.png"
+          ],
+          "smoothness_mean": 0.536,
+          "aux_res": [
+            1024,
+            1024
+          ],
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 3809826
+        },
+        "Low": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 15.62,
+          "dir": "facade_atlas/Low",
+          "png_bytes": 656423,
+          "files": [
+            "T_facade_atlas_BaseColor.png",
+            "T_facade_atlas_MaskMap.png",
+            "T_facade_atlas_Normal.png",
+            "T_facade_atlas_Var.png"
+          ],
+          "smoothness_mean": 0.509,
+          "aux_res": [
+            512,
+            512
+          ],
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 611669
+        }
+      },
+      "height_range_m": [
+        -0.04,
+        0.03
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.241,
+        "p05": 0.0241,
+        "p95": 0.6556,
+        "mean_rgb_linear": [
+          0.2338,
+          0.2279,
+          0.2205
+        ]
+      },
+      "hf_ratio_albedo": 0.0027,
+      "ao_mean": 0.977
+    },
+    "facade_far": {
+      "tile_m": [
+        24.0,
+        40.199999999999996
+      ],
+      "target": 0.5,
+      "kind": "modulation_set",
+      "uv": "mesh_uv0_metres (u = bay x 3 m, v = row; layout facade_atlas.FAR_*)",
+      "slots": [
+        "<wall>__far_block / __far_office / __far_ribbon (LOD1 window zone; ADR 0081)"
+      ],
+      "note": "Storey rows of 8 bays composed from the facade_atlas cells; wall = neutral 0.5 tinted by the wall colour.",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            3428
+          ],
+          "texel_mm": 11.72,
+          "dir": "facade_far/High",
+          "png_bytes": 1428231,
+          "files": [
+            "T_facade_far_BaseColor.png",
+            "T_facade_far_MaskMap.png",
+            "T_facade_far_Normal.png",
+            "T_facade_far_Var.png"
+          ],
+          "smoothness_mean": 0.322,
+          "aux_res": [
+            512,
+            857
+          ],
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 4946558
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1714
+          ],
+          "texel_mm": 23.44,
+          "dir": "facade_far/Medium",
+          "png_bytes": 558581,
+          "files": [
+            "T_facade_far_BaseColor.png",
+            "T_facade_far_MaskMap.png",
+            "T_facade_far_Normal.png",
+            "T_facade_far_Var.png"
+          ],
+          "smoothness_mean": 0.322,
+          "aux_res": [
+            512,
+            857
+          ],
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1594248
+        },
+        "Low": {
+          "res": [
+            512,
+            857
+          ],
+          "texel_mm": 46.88,
+          "dir": "facade_far/Low",
+          "png_bytes": 226125,
+          "files": [
+            "T_facade_far_BaseColor.png",
+            "T_facade_far_MaskMap.png",
+            "T_facade_far_Normal.png",
+            "T_facade_far_Var.png"
+          ],
+          "smoothness_mean": 0.322,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 585045
+        }
+      },
+      "height_range_m": [
+        0.0,
+        0.0
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.4028,
+        "p05": 0.0264,
+        "p95": 0.5304,
+        "mean_rgb_linear": [
+          0.4015,
+          0.4029,
+          0.3966
+        ]
+      },
+      "hf_ratio_albedo": 0.0036,
+      "ao_mean": 1.0
+    },
+    "fence_concrete": {
+      "tile_m": [
+        16.0,
+        4.5
+      ],
+      "target": 0.3,
+      "kind": "tiling_set",
+      "uv": "mesh_uv0_metres (bay cells, layout facade_atlas.fence_uv)",
+      "slots": [
+        "concrete_fence, concrete_fence_post (prefabricated fence; ADR 0081)"
+      ],
+      "note": "Strip atlas 16 x 4.5 m: 8 bays of stacked 0.5 m plates, 5 framed panels, post strip. Micro detail from the CC0 scan concrete_floor_worn_001 (Poly Haven) when fetched.",
+      "albedo_target_mean_lum_linear": 0.3,
+      "source": {
+        "source": "concrete_floor_worn_001",
+        "mode": "hybrid (procedural layout + scan micro-detail)",
+        "assets": [
+          {
+            "id": "concrete_floor_worn_001",
+            "page": "https://polyhaven.com/a/concrete_floor_worn_001",
+            "authors": {
+              "Dimitrios Savva": "Photography",
+              "Rico Cilliers": "Processing"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            576
+          ],
+          "texel_mm": 7.81,
+          "dir": "fence_concrete/High",
+          "png_bytes": 6235915,
+          "files": [
+            "T_fence_concrete_BaseColor.png",
+            "T_fence_concrete_MaskMap.png",
+            "T_fence_concrete_Normal.png",
+            "T_fence_concrete_Var.png"
+          ],
+          "smoothness_mean": 0.118,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2799697
+        },
+        "Medium": {
+          "res": [
+            1024,
+            288
+          ],
+          "texel_mm": 15.62,
+          "dir": "fence_concrete/Medium",
+          "png_bytes": 1380545,
+          "files": [
+            "T_fence_concrete_BaseColor.png",
+            "T_fence_concrete_MaskMap.png",
+            "T_fence_concrete_Normal.png",
+            "T_fence_concrete_Var.png"
+          ],
+          "smoothness_mean": 0.117,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 546570
+        },
+        "Low": {
+          "res": [
+            512,
+            144
+          ],
+          "texel_mm": 31.25,
+          "dir": "fence_concrete/Low",
+          "png_bytes": 297596,
+          "files": [
+            "T_fence_concrete_BaseColor.png",
+            "T_fence_concrete_MaskMap.png",
+            "T_fence_concrete_Normal.png",
+            "T_fence_concrete_Var.png"
+          ],
+          "smoothness_mean": 0.115,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 98304
+        }
+      },
+      "height_range_m": [
+        -0.013,
+        0.00789
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.2993,
+        "p05": 0.196,
+        "p95": 0.3854,
+        "mean_rgb_linear": [
+          0.3075,
+          0.2991,
+          0.2778
+        ]
+      },
+      "hf_ratio_albedo": 0.0251,
+      "ao_mean": 0.978
+    },
     "grass_verge": {
       "tile_m": [
         3.0,
