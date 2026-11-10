@@ -1,5 +1,21 @@
 {
  "boards_m": {
+  "E-1_57412": [
+   2.444,
+   2.0
+  ],
+  "E-1_79161": [
+   2.444,
+   2.0
+  ],
+  "E-1_82686": [
+   2.444,
+   2.0
+  ],
+  "E-1_92106": [
+   2.444,
+   2.0
+  ],
   "E-2_41037": [
    1.16,
    0.183
@@ -25,6 +41,34 @@
    0.309
   ],
   "E-2_90339": [
+   0.852,
+   0.309
+  ],
+  "E-2a_32638": [
+   0.973,
+   0.183
+  ],
+  "E-2a_41037": [
+   1.16,
+   0.183
+  ],
+  "E-2a_57737": [
+   1.429,
+   0.309
+  ],
+  "E-2a_60520": [
+   1.049,
+   0.309
+  ],
+  "E-2a_71003": [
+   1.45,
+   0.309
+  ],
+  "E-2a_80201": [
+   1.232,
+   0.309
+  ],
+  "E-2a_90339": [
    0.852,
    0.309
   ],
@@ -93,6 +137,42 @@
    "tris_lod0": 154,
    "tris_lod1": 34
   },
+  "board_E-1_57412": {
+   "materials": [
+    "plate_back",
+    "sign_E-1_57412",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_E-1_79161": {
+   "materials": [
+    "plate_back",
+    "sign_E-1_79161",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_E-1_82686": {
+   "materials": [
+    "plate_back",
+    "sign_E-1_82686",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_E-1_92106": {
+   "materials": [
+    "plate_back",
+    "sign_E-1_92106",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
   "board_E-2_41037": {
    "materials": [
     "plate_back",
@@ -151,6 +231,69 @@
    "materials": [
     "plate_back",
     "sign_E-2_90339",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_E-2a_32638": {
+   "materials": [
+    "plate_back",
+    "sign_E-2a_32638",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_E-2a_41037": {
+   "materials": [
+    "plate_back",
+    "sign_E-2a_41037",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_E-2a_57737": {
+   "materials": [
+    "plate_back",
+    "sign_E-2a_57737",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_E-2a_60520": {
+   "materials": [
+    "plate_back",
+    "sign_E-2a_60520",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_E-2a_71003": {
+   "materials": [
+    "plate_back",
+    "sign_E-2a_71003",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_E-2a_80201": {
+   "materials": [
+    "plate_back",
+    "sign_E-2a_80201",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_E-2a_90339": {
+   "materials": [
+    "plate_back",
+    "sign_E-2a_90339",
     "steel_galv"
    ],
    "tris_lod0": 28,
@@ -886,81 +1029,100 @@
   "plate_A-7": {
    "materials": [
     "plate_back",
-    "sign_A-7"
+    "sign_A-7",
+    "steel_galv"
    ],
-   "tris_lod0": 6,
+   "tris_lod0": 66,
    "tris_lod1": 6
   },
   "plate_B-33_20": {
    "materials": [
     "plate_back",
-    "sign_B-33_20"
+    "sign_B-33_20",
+    "steel_galv"
    ],
-   "tris_lod0": 64,
+   "tris_lod0": 240,
    "tris_lod1": 64
   },
   "plate_B-33_30": {
    "materials": [
     "plate_back",
-    "sign_B-33_30"
+    "sign_B-33_30",
+    "steel_galv"
    ],
-   "tris_lod0": 64,
+   "tris_lod0": 240,
    "tris_lod1": 64
   },
   "plate_B-33_40": {
    "materials": [
     "plate_back",
-    "sign_B-33_40"
+    "sign_B-33_40",
+    "steel_galv"
    ],
-   "tris_lod0": 64,
+   "tris_lod0": 240,
    "tris_lod1": 64
   },
   "plate_B-33_70": {
    "materials": [
     "plate_back",
-    "sign_B-33_70"
+    "sign_B-33_70",
+    "steel_galv"
    ],
-   "tris_lod0": 64,
+   "tris_lod0": 240,
    "tris_lod1": 64
   },
   "plate_B-33_90": {
    "materials": [
     "plate_back",
-    "sign_B-33_90"
+    "sign_B-33_90",
+    "steel_galv"
    ],
-   "tris_lod0": 64,
+   "tris_lod0": 240,
    "tris_lod1": 64
   },
   "plate_C-12": {
    "materials": [
     "plate_back",
-    "sign_C-12"
+    "sign_C-12",
+    "steel_galv"
    ],
-   "tris_lod0": 64,
+   "tris_lod0": 240,
+   "tris_lod1": 64
+  },
+  "plate_C-9": {
+   "materials": [
+    "plate_back",
+    "sign_C-9",
+    "steel_galv"
+   ],
+   "tris_lod0": 240,
    "tris_lod1": 64
   },
   "plate_D-1": {
    "materials": [
     "plate_back",
-    "sign_D-1"
+    "sign_D-1",
+    "steel_galv"
    ],
-   "tris_lod0": 8,
+   "tris_lod0": 72,
    "tris_lod1": 8
   },
   "plate_D-15": {
    "materials": [
     "plate_back",
-    "sign_D-15"
+    "sign_D-15",
+    "steel_galv"
    ],
-   "tris_lod0": 8,
+   "tris_lod0": 72,
    "tris_lod1": 8
   },
   "plate_D-6": {
    "materials": [
     "plate_back",
-    "sign_D-6"
+    "sign_D-6",
+    "steel_galv"
    ],
-   "tris_lod0": 8,
+   "tris_lod0": 72,
    "tris_lod1": 8
   },
   "power_pole": {

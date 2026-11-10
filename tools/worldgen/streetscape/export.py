@@ -39,7 +39,8 @@ def fence_mesh_png():
 
 
 def textures():
-    return {"fence_mesh": SG.png_bytes(fence_mesh_png()), "dock_digits": SG.png_bytes(SG.digits_atlas())}
+    return {"fence_mesh": SG.png_bytes(fence_mesh_png()), "dock_digits": SG.png_bytes(SG.digits_atlas()),
+            "plate_back": SG.png_bytes(SG.plate_back())}
 
 
 def glb_materials():
@@ -63,12 +64,12 @@ def export(codes, boards, out_dir=None):
     sign_png = {}
     for c in sorted(codes):
         _, im = SG.face(c)
-        sign_png[c] = SG.png_bytes(im, (256, 256))
+        sign_png[c] = SG.png_bytes(SG.weather(im.resize((256, 256), SG.Image.LANCZOS), c))
         mats[f"sign_{c}"] = {"color": [1, 1, 1], "rough": 0.45, "texture_png": sign_png[c], "alpha_cutoff": 0.5}
     for c, (w, h, im) in sorted(boards.items()):
         ww = 512
         hh = max(32, int(round(ww * im.size[1] / im.size[0])))
-        sign_png[c] = SG.png_bytes(im, (ww, hh))
+        sign_png[c] = SG.png_bytes(SG.weather(im.resize((ww, hh), SG.Image.LANCZOS), c, 0.7))
         mats[f"sign_{c}"] = {"color": [1, 1, 1], "rough": 0.45, "texture_png": sign_png[c]}
     from . import life_props as LP
     for c in sorted(LP.SIGNS):

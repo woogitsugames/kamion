@@ -327,6 +327,15 @@ def cameras(region_id, w):
     cams.append({"id": "route_onramp_andersa", "type": "persp", "fov_deg": 60.0, "route_s_m": 540.0,
                  "pos": [r(q[0]), r(q[1]), r(z + 2.5)], "look_at": [r(tgt[0]), r(tgt[1]), r(zt + 1.0)],
                  "note": "driver eye 2.5 m on the on-ramp beside the Andersa westbound ramp (r4 blocker, s 571 / 604 m)"})
+    # v3.4 signs (ADR 0023): the Andersa approach to Rondo Putry (E-1 diagram, A-7 + C-12, C-9 on the island) and a
+    # close look at the entry plates (rim, weathering) from the driver's seat
+    for cid, st, look, note in (("route_putry_approach", 1540.0, 120.0, "driver eye, Andersa approach to Rondo Putry: E-1 diagram, A-7 + C-12"),
+                                ("route_putry_entry_signs", 1648.0, 16.0, "driver eye 12 m before the Putry entry: A-7 + C-12 plates, C-9")):
+        q, z, t = lane_point(st)
+        tgt = at(st + look)
+        _, _, _, zt = surface_at(w, tgt)
+        cams.append({"id": cid, "type": "persp", "fov_deg": 60.0, "route_s_m": st,
+                     "pos": [r(q[0]), r(q[1]), r(z + 2.5)], "look_at": [r(tgt[0]), r(tgt[1]), r(zt + 2.0)], "note": note})
     q2 = at(585.0)
     _, _, _, z2 = surface_at(w, q2)
     t2 = at(590.0) - at(580.0)

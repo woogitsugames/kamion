@@ -18,7 +18,11 @@ param(
     [ValidateSet('', 'clear', 'overcast', 'lowsun', 'dusk')] [string]$Lighting = '',
     [string]$Cameras = '',
     # A7 before/after: 'off' renders without the cab fill and the cab-view lift (CabInteriorLighting).
-    [ValidateSet('on', 'off')] [string]$CabFill = 'on'
+    [ValidateSet('on', 'off')] [string]$CabFill = 'on',
+    # Ablation overrides (RenderOverrides keys), e.g. 'rq_hlod=0,rq_trees=0'.
+    [string]$Rq = '',
+    # Editor GPU timing: N extra renders per camera (stats.txt, VISUALQA_TIMING lines in the log).
+    [int]$TimeFrames = 0
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -32,6 +36,8 @@ $qaArgs = @(
 if ($Lighting) { $qaArgs += @('-qaLighting', $Lighting) }
 if ($Cameras) { $qaArgs += @('-qaCameras', $Cameras) }
 if ($CabFill -eq 'off') { $qaArgs += @('-qaCabFill', 'off') }
+if ($Rq) { $qaArgs += @('-qaRq', $Rq) }
+if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
 $code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
 
 $result = Select-String -Path $log -Pattern 'VISUALQA_RESULT:.*' | Select-Object -Last 1

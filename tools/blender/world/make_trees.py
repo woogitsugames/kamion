@@ -23,6 +23,7 @@ import sys
 from pathlib import Path
 
 import bpy
+import numpy as np
 from mathutils import Matrix, Vector
 
 REPO = Path(__file__).resolve().parents[3]
@@ -295,16 +296,61 @@ def material(name):
     return m
 
 
-def bake_setup(transparent=True, res=(256, 384), samples=16):
-    """Bake lighting (v3.1): uniform white sky, no sun. The texture is then albedo x self-occlusion and the
-    engine lights it like any other surface (the old sun-lit bake made birch stems glow in the distance)."""
+# ------------------------------------------------------------------------------------------- bakes (v3.4)
+# Impostors and forest HLOD textures are baked as three passes (Cycles, orthographic), so the engine lights them
+# with the same sun + sky SH as the near trees instead of a lighting baked into the colour (review r3 W1/W2:
+# black spots and a beige "camouflage" at low sun; ADR 0023):
+#   alb  emission of the materials' base colour (Standard view = the sRGB albedo of the leaf / bark textures, so
+#        the far colour equals the near colour under the same light and tone curve, ADR 0016), alpha = coverage
+#   nrm  camera-space shading normal (crown-spherical normals of the cards, bark tubes) * 0.5 + 0.5, Raw view
+#   occ  white diffuse under a uniform white sky, direct only (Raw): sky visibility of each texel - dark inside the
+#        crown and inside the stand, 1 on the sunny outer leaves
+# tools/blender/world/pack_vegetation.py (uv, numpy + scipy) then dilates the colour under the alpha, removes isolated
+# specks from the silhouette and packs <name>.png (RGB albedo + A coverage) and <name>_n.png (RG normal, B occlusion).
+IMP_NF = 6                       # impostor views around the tree (60 degrees apart), blended in the shader
+IMP_RES = (256, 384)             # one view
+RAW = REPO / "artifacts" / "vegetation_bake"     # raw passes (not versioned)
+_passmats = {}
+
+
+def _engine(sc):
+    sc.render.engine = "CYCLES"
+    sc.cycles.device = "CPU"
+    try:                                  # GPU when present (same images, only faster)
+        prefs = bpy.context.preferences.addons["cycles"].preferences
+        for kind in ("OPTIX", "CUDA", "HIP"):
+            try:
+                prefs.compute_device_type = kind
+            except TypeError:
+                continue
+            prefs.get_devices()
+            if any(d.type == kind for d in prefs.devices):
+                for d in prefs.devices:
+                    d.use = d.type == kind
+                sc.cycles.device = "GPU"
+                break
+    except Exception:
+        pass
+    sc.cycles.use_denoising = False
+    sc.cycles.seed = 7
+    sc.cycles.max_bounces = 0            # occ: direct sky visibility only
+    sc.cycles.diffuse_bounces = 0
+    sc.cycles.transparent_max_bounces = 128
+    sc.cycles.use_adaptive_sampling = False
+    sc.cycles.pixel_filter_type = "BLACKMAN_HARRIS"
+    sc.cycles.filter_width = 1.2
+
+
+def bake_setup(transparent=True, res=IMP_RES, samples=24):
     sc = bpy.context.scene
-    sc.render.engine = "BLENDER_EEVEE_NEXT"
+    _engine(sc)
+    sc.cycles.samples = samples
     sc.render.film_transparent = transparent
     sc.render.resolution_x, sc.render.resolution_y = res
     sc.render.resolution_percentage = 100
-    sc.eevee.taa_render_samples = samples
-    sc.view_settings.view_transform = "Standard"
+    sc.render.image_settings.file_format = "PNG"
+    sc.render.image_settings.color_mode = "RGBA"
+    sc.render.image_settings.color_depth = "16"
     sc.view_settings.look = "None"
     sc.view_settings.exposure = 0.0
     if sc.world is None:
@@ -322,26 +368,115 @@ def bake_setup(transparent=True, res=(256, 384), samples=16):
     return sc, cam
 
 
+def _pass_material(m, kind):
+    """Copy of material m that renders pass `kind` (alb / nrm / occ) with the same coverage (alpha)."""
+    key = (m.name, kind)
+    if key in _passmats:
+        return _passmats[key]
+    d = m.copy()
+    d.name = f"{m.name}__{kind}"
+    nt = d.node_tree
+    bsdf = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
+    out = next(n for n in nt.nodes if n.type == "OUTPUT_MATERIAL")
+    col_src = alpha_src = None
+    col_val = (0.5, 0.5, 0.5, 1.0)
+    if bsdf is not None:
+        lk = [l for l in nt.links if l.to_socket == bsdf.inputs["Base Color"]]
+        col_src = lk[0].from_socket if lk else None
+        col_val = tuple(bsdf.inputs["Base Color"].default_value)
+        la = [l for l in nt.links if l.to_socket == bsdf.inputs["Alpha"]]
+        alpha_src = la[0].from_socket if la else None
+    for l in [l for l in nt.links if l.to_node == out]:
+        nt.links.remove(l)
+    if kind == "alb":
+        sh = nt.nodes.new("ShaderNodeEmission")
+        if col_src is not None:
+            nt.links.new(col_src, sh.inputs["Color"])
+        else:
+            sh.inputs["Color"].default_value = col_val
+    elif kind == "nrm":
+        geo = nt.nodes.new("ShaderNodeNewGeometry")
+        vt = nt.nodes.new("ShaderNodeVectorTransform")
+        vt.vector_type, vt.convert_from, vt.convert_to = "NORMAL", "WORLD", "CAMERA"
+        ma = nt.nodes.new("ShaderNodeVectorMath")
+        ma.operation = "MULTIPLY_ADD"
+        ma.inputs[1].default_value = (0.5, 0.5, -0.5)      # Blender camera space looks down -Z: z toward camera
+        ma.inputs[2].default_value = (0.5, 0.5, 0.5)
+        nt.links.new(geo.outputs["Normal"], vt.inputs["Vector"])
+        nt.links.new(vt.outputs["Vector"], ma.inputs[0])
+        sh = nt.nodes.new("ShaderNodeEmission")
+        nt.links.new(ma.outputs["Vector"], sh.inputs["Color"])
+    else:
+        sh = nt.nodes.new("ShaderNodeBsdfDiffuse")
+        sh.inputs["Color"].default_value = (1.0, 1.0, 1.0, 1.0)
+    if alpha_src is not None:
+        tr = nt.nodes.new("ShaderNodeBsdfTransparent")
+        mix = nt.nodes.new("ShaderNodeMixShader")
+        # hard coverage at the 0.5 cut-off the engine uses (soft alpha would leave grey veils in the occlusion pass)
+        mt = nt.nodes.new("ShaderNodeMath")
+        mt.operation = "GREATER_THAN"
+        mt.inputs[1].default_value = 0.5
+        nt.links.new(alpha_src, mt.inputs[0])
+        nt.links.new(mt.outputs[0], mix.inputs["Fac"])
+        nt.links.new(tr.outputs[0], mix.inputs[1])
+        nt.links.new(sh.outputs[0], mix.inputs[2])
+        sh = mix
+    nt.links.new(sh.outputs[0], out.inputs["Surface"])
+    _passmats[key] = d
+    return d
+
+
+def _set_pass(objs, kind):
+    """Object-level material override (the mesh data stays shared with the exported trees)."""
+    for o in objs:
+        for slot in o.material_slots:
+            key = f"mat_{slot.slot_index}"
+            if key not in o:
+                o[key] = o.data.materials[slot.slot_index].name
+            slot.link = "OBJECT"
+            slot.material = _pass_material(bpy.data.materials[o[key]], kind)
+
+
+def _clear_pass(objs):
+    for o in objs:
+        for slot in o.material_slots:
+            slot.material = None
+            slot.link = "DATA"
+
+
+def render_passes(objs, path_stem):
+    """Renders alb / nrm / occ of the visible objects to RAW/<stem>_<pass>.png."""
+    sc = bpy.context.scene
+    RAW.mkdir(parents=True, exist_ok=True)
+    for kind in ("alb", "nrm", "occ"):
+        _set_pass(objs, kind)
+        sc.view_settings.view_transform = "Standard" if kind == "alb" else "Raw"
+        sc.render.filepath = str(RAW / f"{path_stem}_{kind}.png")
+        bpy.ops.render.render(write_still=True)
+
+
 def bake_impostor(ob, name, H):
-    """Orthographic side render of LOD0 with transparent background -> impostor texture. The frame covers the
-    whole crown (v3.1: broad birch / maple crowns were clipped at the sides of the 256 x 384 frame).
-    Returns (png path, frame height S in model metres)."""
-    sc, cam = bake_setup(True, (256, 384), 16)
+    """IMP_NF orthographic views of LOD0 around the tree (frame k: camera at azimuth 2 pi k / IMP_NF from -Y,
+    counter-clockwise seen from above), each covering the whole crown. Returns frame height S (model metres)."""
+    sc, cam = bake_setup(True, IMP_RES, 24)
     for o in sc.objects:
         o.hide_render = o is not ob and o.type == "MESH"
-    half_w = max(max(abs(v[0]), abs(v[1])) for v in ob.bound_box)
-    S = max(H * 1.05, 2.0 * half_w * 1.04 * 384 / 256)
+    ob.hide_render = False
+    half_w = max(math.hypot(v[0], v[1]) for v in ob.bound_box)
+    S = max(H * 1.05, 2.0 * half_w * 1.04 * IMP_RES[1] / IMP_RES[0])
     cam.data.ortho_scale = S
-    cam.location = (0, -60, S / 2 - 0.3)
-    cam.rotation_euler = (math.pi / 2, 0, 0)
-    path = VEG / f"impostor_{name}.png"
-    sc.render.filepath = str(path)
-    bpy.ops.render.render(write_still=True)
+    for k in range(IMP_NF):
+        a = 2 * math.pi * k / IMP_NF
+        cam.location = (60 * math.sin(a), -60 * math.cos(a), S / 2 - 0.3)
+        cam.rotation_euler = (math.pi / 2, 0, a)
+        render_passes([ob], f"impostor_{name}_{k}")
+    _clear_pass([ob])
     ob.hide_render = True
-    return path, S
+    return S
 
 
 def impostor_object(name, H, png, S):
+    """One quad (the engine turns it to the camera and picks / blends the views, Kamion/Vegetation _IMPOSTOR)."""
     m = bpy.data.materials.new(f"impostor_{name}")
     m.use_nodes = True
     nt = m.node_tree
@@ -350,14 +485,12 @@ def impostor_object(name, H, png, S):
     tex.image = bpy.data.images.load(str(png))
     nt.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
     nt.links.new(tex.outputs["Alpha"], bsdf.inputs["Alpha"])
-    w = S * (256 / 384) / 2            # quads match the 256 x 384 bake frame (S = ortho scale, its height)
+    w = S * (IMP_RES[0] / IMP_RES[1]) / 2       # quad matches one bake view (S = ortho scale, its height)
     verts, faces, uvs = [], [], []
-    for k in range(2):
-        a = k * math.pi / 2
-        c, s = math.cos(a), math.sin(a)
+    for k in range(1):
         base = len(verts)
         for x, z, uv in ((-w, 0, (0, 0)), (w, 0, (1, 0)), (w, S, (1, 1)), (-w, S, (0, 1))):
-            verts.append((x * c, x * s, z - 0.3))
+            verts.append((x, 0.0, z - 0.3))
             uvs.append(uv)
         faces.append((base, base + 1, base + 2, base + 3))
     me = bpy.data.meshes.new(name + ".lod2")
@@ -386,9 +519,11 @@ EDGE_W, EDGE_H, EDGE_DEPTH = 48.0, 24.0, 16.0   # edge texture covers 48 m x 24 
 CANOPY_W = 48.0                                  # canopy texture tile, 48 x 48 m (tileable both ways)
 
 
-def _stand(mix, seed, w, depth, edge_row):
+def _stand(mix, seed, w, depth, edge_row, under=True):
     """Tree list (species, variant, x, y, h, yaw) for a w x depth stand; jittered 4.5 m grid like
-    vegetation._scatter, plus an edge row of shrubs / young birch and alder in front when edge_row."""
+    vegetation._scatter, an edge row of shrubs / young birch, alder and pine in front when edge_row, and the
+    understorey of streetscape/vegetation.py UNDERSTOREY (young pine / birch, hazel), so the boles do not stand in
+    an empty hall (review r3 X4 "trunks like a fence")."""
     rng = random.Random(seed)
     sp, wt = zip(*FOREST_MIX[mix].items())
     out = []
@@ -398,40 +533,29 @@ def _stand(mix, seed, w, depth, edge_row):
             y = (gy + 0.5) * 4.5 + rng.uniform(-2.0, 2.0)
             s = rng.choices(sp, wt)[0]
             out.append((s, rng.randrange(3), x % w, y, rng.uniform(*TREE_H[s]), rng.uniform(0, 2 * math.pi)))
+    if under:
+        names = list(UNDER_SPECIES)
+        for _ in range(int(w * depth / UNDER_M2)):
+            s = rng.choices(names, [UNDER_SPECIES[n][2] for n in names])[0]
+            lo, hi = UNDER_SPECIES[s][:2]
+            out.append((s, rng.randrange(3), rng.uniform(0, w), rng.uniform(0, depth), rng.uniform(lo, hi),
+                        rng.uniform(0, 2 * math.pi)))
     if edge_row:
         for k in range(int(w / 3.0)):
             x = (k + rng.random()) * 3.0
-            s = rng.choices(["shrub", "birch", "alder"], [0.55, 0.3, 0.15])[0]
-            h = rng.uniform(*TREE_H[s]) * (0.6 if s != "shrub" else 1.0)
+            s = rng.choices(["shrub", "birch", "alder", "pine"], [0.5, 0.25, 0.1, 0.15])[0]
+            h = rng.uniform(*TREE_H[s]) * (0.5 if s != "shrub" else 1.0)
             out.append((s, rng.randrange(3), x % w, rng.uniform(-3.0, 1.0), h, rng.uniform(0, 2 * math.pi)))
     return out
 
 
-_dark = {}
+# understorey of a Podlasie pine stand (WORKING_VALUE, same table as streetscape/vegetation.py UNDERSTOREY):
+# species -> (h min, h max, weight); one plant per UNDER_M2 square metres
+UNDER_SPECIES = {"shrub": (1.2, 3.5, 0.55), "pine": (3.0, 7.0, 0.2), "birch": (3.0, 8.0, 0.25)}
+UNDER_M2 = 60.0
 
 
-def _dark_mat(m, k=0.30):
-    """Copy of a tree material with the base colour scaled by k (stand interior in shade, same alpha)."""
-    if m.name in _dark:
-        return _dark[m.name]
-    d = m.copy()
-    d.name = m.name + "_shade"
-    nt = d.node_tree
-    bsdf = nt.nodes["Principled BSDF"]
-    lk = [l for l in nt.links if l.to_socket == bsdf.inputs["Base Color"]]
-    mul = nt.nodes.new("ShaderNodeMix")
-    mul.data_type = "RGBA"
-    mul.blend_type = "MULTIPLY"
-    mul.inputs["Factor"].default_value = 1.0
-    mul.inputs[7].default_value = (k, k, k, 1.0)
-    if lk:
-        nt.links.new(lk[0].from_socket, mul.inputs[6])
-    nt.links.new(mul.outputs[2], bsdf.inputs["Base Color"])
-    _dark[m.name] = d
-    return d
-
-
-def _place_stand(trees, src, href, offsets, shade=False):
+def _place_stand(trees, src, href, offsets):
     objs = []
     for s, v, x, y, h, yaw in trees:
         o0 = src[f"tree_{s}_{v}"]
@@ -442,10 +566,6 @@ def _place_stand(trees, src, href, offsets, shade=False):
             o.rotation_euler = (0, 0, yaw)
             o.scale = (k, k, k)
             bpy.context.scene.collection.objects.link(o)
-            if shade:
-                for slot in o.material_slots:
-                    slot.link = "OBJECT"
-                    slot.material = _dark_mat(o0.data.materials[slot.slot_index])
             objs.append(o)
     return objs
 
@@ -464,48 +584,180 @@ def _flat(name, verts, col):
     return ob
 
 
+# ------------------------------------------------------------------------------------------- packing (numpy)
+def _load(path):
+    img = bpy.data.images.load(str(path))
+    img.colorspace_settings.name = "Non-Color"
+    w, h = img.size
+    a = np.empty(w * h * 4, np.float32)
+    img.pixels.foreach_get(a)
+    bpy.data.images.remove(img)
+    return a.reshape(h, w, 4)
+
+
+def _save(arr, path):
+    h, w = arr.shape[:2]
+    img = bpy.data.images.new(Path(path).stem, w, h, alpha=True)
+    img.colorspace_settings.name = "Non-Color"
+    img.pixels.foreach_set(np.clip(arr, 0, 1).astype(np.float32).ravel())
+    img.filepath_raw = str(path)
+    img.file_format = "PNG"
+    img.save()
+    bpy.data.images.remove(img)
+
+
+def _shift(a, dy, dx):
+    return np.roll(np.roll(a, dy, 0), dx, 1)
+
+
+N8 = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+
+
+def _dilate_colour(img, mask, iters=48):
+    """Colour under the alpha = mean of the covered neighbours, grown outward (no dark / white fringe when
+    coverage-preserving mips or alpha-to-coverage turn a half-covered texel on far away; review r3 W1)."""
+    img = img.copy()
+    m = mask.astype(np.float32)
+    for _ in range(iters):
+        if m.min() > 0:
+            break
+        acc = np.zeros_like(img)
+        cnt = np.zeros_like(m)
+        for dy, dx in N8:
+            acc += _shift(img * m[..., None], dy, dx)
+            cnt += _shift(m, dy, dx)
+        new = (cnt > 0) & (m == 0)
+        img[new] = acc[new] / cnt[new][:, None]
+        m[new] = 1.0
+    if m.min() == 0 and m.max() > 0:
+        img[m == 0] = img[m > 0].mean(0)
+    return img
+
+
+def _open(mask, r=1):
+    """Morphological opening (3x3, r times): drops 1-2 texel specks and hair-thin twigs that shimmer far away."""
+    e = mask.copy()
+    for _ in range(r):
+        e = e & np.all([_shift(e, dy, dx) for dy, dx in N8], axis=0)
+    d = e.copy()
+    for _ in range(r):
+        d = d | np.any([_shift(d, dy, dx) for dy, dx in N8], axis=0)
+    return mask & d
+
+
+def _components_min(mask, min_px):
+    """Removes 8-connected alpha islands smaller than min_px (floating crown specks above the stand silhouette,
+    the "lollipops" of review r4 W-H8). Label propagation by repeated min over neighbours."""
+    h, w = mask.shape
+    big = np.int64(h * w)
+    lab = np.where(mask, np.arange(h * w, dtype=np.int64).reshape(h, w), big)
+    for _ in range(4 * max(h, w)):
+        nb = lab.copy()
+        for dy, dx in N8:
+            nb = np.minimum(nb, _shift(lab, dy, dx))
+        nb = np.where(mask, nb, big)
+        if np.array_equal(nb, lab):
+            break
+        lab = nb
+    cnt = np.bincount(lab[mask], minlength=h * w + 1)
+    return mask & (cnt[np.minimum(lab, big)] >= min_px)
+
+
+def _srgb_to_lin(c):
+    return np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+
+
+def _lin_to_srgb(c):
+    c = np.clip(c, 0, 1)
+    return np.where(c <= 0.0031308, c * 12.92, 1.055 * c ** (1 / 2.4) - 0.055)
+
+
+def pack(stems, out_png, out_n, min_island=0, open_r=1, canopy=False):
+    """Packs raw passes (stems laid out left to right) into out_png: RGB albedo (sRGB) + A coverage and
+    out_n: R, G normal x, y (camera / view space, 0.5 bias), B sky visibility, A 1 (linear).
+    canopy: opaque, albedo x visibility^0.7 in one RGB texture (the canopy stays an opaque URP Lit surface)."""
+    cols, nrms, alphas = [], [], []
+    for stem in stems:
+        alb = _load(RAW / f"{stem}_alb.png")
+        nrm = _load(RAW / f"{stem}_nrm.png")
+        occ = _load(RAW / f"{stem}_occ.png")
+        a = alb[..., 3]
+        cov = a > 0.5
+        if open_r:
+            cov = _open(cov, open_r)
+        if min_island:
+            cov = _components_min(cov, min_island)
+        # the 50 % coverage edge texels mix leaf and background in the pixel filter -> rebuild them (and every
+        # transparent texel) from the fully covered interior
+        inner = cov & (a > 0.9)
+        seed = inner if inner.any() else cov
+        rgb = _dilate_colour(alb[..., :3], seed)
+        n = _dilate_colour(np.concatenate([nrm[..., :2], occ[..., :1]], -1), seed)
+        cols.append(rgb)
+        nrms.append(n)
+        # outside the kept coverage the alpha is 0 except a one-texel anti-aliasing ring: the soft alpha of removed
+        # twigs / specks (0.1-0.45) was raised over the cut-off by the coverage-preserving mips far away and drew
+        # dotted arcs along the HLOD wall tops (artifacts/vqa/abl: gone with the edge walls skipped)
+        ring = np.any([_shift(cov, dy, dx) for dy, dx in N8], axis=0) & ~cov
+        alphas.append(np.where(cov, np.maximum(a, 0.5), np.where(ring, np.minimum(a, 0.45), 0.0)))
+    rgb = np.concatenate(cols, 1)
+    n = np.concatenate(nrms, 1)
+    al = np.concatenate(alphas, 1)
+    if canopy:
+        lin = _srgb_to_lin(rgb) * np.clip(n[..., 2:3], 0.05, 1) ** 0.7
+        _save(np.concatenate([_lin_to_srgb(lin), np.ones_like(al)[..., None]], -1), out_png)
+        return
+    _save(np.concatenate([rgb, al[..., None]], -1), out_png)
+    # normal / visibility at half resolution (smooth crown normals; texture budget, ADR 0023): 2x2 box filter
+    h2, w2 = n.shape[0] // 2, n.shape[1] // 2
+    n = n[:h2 * 2, :w2 * 2].reshape(h2, 2, w2, 2, 3).mean((1, 3))
+    _save(np.concatenate([n, np.ones((h2, w2, 1), np.float32)], -1), out_n)
+
+
 def bake_forest(mix, src, href, seed):
-    """Edge wall (side view, RGBA 1024 x 512, tileable in u) and canopy (top view, RGB 512 x 512, tileable)."""
+    """Edge wall (side view, 1024 x 512, tileable in u) and canopy (top view, 512 x 512, tileable): alb / nrm / occ
+    passes packed into forest_edge_<mix>.png + forest_edge_<mix>_n.png and forest_canopy_<mix>.png."""
     sc = bpy.context.scene
     for o in sc.objects:
         if o.type == "MESH":
             o.hide_render = True
     info = {}
-    # edge: the outermost 16 m of a stand seen from outside; a dark backdrop below the crowns stands for the
-    # shaded stand interior (looking into a forest from 150 m+ you see trunks against darkness, not daylight)
+    # edge: the outermost 16 m of a stand seen from outside, the stand interior behind it (16-52 m) and a dark
+    # backdrop at 56 m. The interior is no longer darkened by hand (the v3.1 copies at x0.3 were the black spots of
+    # review r3 W1): its darkness is the sky visibility of the occlusion pass, lit by the engine.
     trees = _stand(mix, seed, EDGE_W, EDGE_DEPTH, True)
     objs = _place_stand(trees, src, href, [(-EDGE_W, 0), (0, 0), (EDGE_W, 0)])
-    hs = sorted(t[4] for t in trees if t[0] != "shrub")
+    hs = sorted(t[4] for t in trees if t[0] != "shrub" and t[4] > 8)
     h_med = hs[len(hs) // 2]
-    # stand interior 16-52 m deep: the same trees with the colour in shade (x0.3), so gaps between the edge
-    # trees show crown-shaped darkness instead of a straight backdrop edge; a low dark plane closes the bottom
     deep = [(s, v, x, y + EDGE_DEPTH, h, yaw) for s, v, x, y, h, yaw in _stand(mix, seed + 7, EDGE_W, 36.0, False)]
-    objs += _place_stand(deep, src, href, [(-EDGE_W, 0), (0, 0), (EDGE_W, 0)], shade=True)
-    back = _flat("st_back", [(-20, 56, -0.5), (EDGE_W + 20, 56, -0.5), (EDGE_W + 20, 56, h_med * 0.25),
-                             (-20, 56, h_med * 0.25)], (0.020, 0.024, 0.016))
-    sc, cam = bake_setup(True, (1024, 512), 32)
+    objs += _place_stand(deep, src, href, [(-EDGE_W, 0), (0, 0), (EDGE_W, 0)])
+    back = _flat("st_back", [(-60, 56, -0.5), (EDGE_W + 60, 56, -0.5), (EDGE_W + 60, 56, h_med * 0.6),
+                             (-60, 56, h_med * 0.6)], (0.030, 0.032, 0.022))
+    floor = _flat("st_floor", [(-60, -6, -0.05), (EDGE_W + 60, -6, -0.05), (EDGE_W + 60, 60, -0.05),
+                               (-60, 60, -0.05)], (0.045, 0.040, 0.026))
+    sc, cam = bake_setup(True, (1024, 512), 24)
     cam.data.ortho_scale = EDGE_W
     cam.location = (EDGE_W / 2, -120, EDGE_H / 2 - 0.3)
     cam.rotation_euler = (math.pi / 2, 0, 0)
-    sc.render.filepath = str(VEG / f"forest_edge_{mix}.png")
-    bpy.ops.render.render(write_still=True)
-    for o in objs + [back]:
+    render_passes(objs + [back, floor], f"forest_edge_{mix}")
+    for o in objs + [back, floor]:
         bpy.data.objects.remove(o, do_unlink=True)
-    info["edge"] = {"png": f"forest_edge_{mix}.png", "w_m": EDGE_W, "h_m": EDGE_H, "z0_m": -0.3,
-                    "h_median_m": round(h_med, 2), "trees": len(trees)}
-    # canopy: 48 x 48 m tile from above over a dark forest floor, wrapped copies at the borders
+    pack([f"forest_edge_{mix}"], VEG / f"forest_edge_{mix}.png", VEG / f"forest_edge_{mix}_n.png", min_island=600)
+    info["edge"] = {"png": f"forest_edge_{mix}.png", "normal_png": f"forest_edge_{mix}_n.png", "w_m": EDGE_W,
+                    "h_m": EDGE_H, "z0_m": -0.3, "h_median_m": round(h_med, 2), "trees": len(trees)}
+    # canopy: 48 x 48 m tile from above over the forest floor, wrapped copies at the borders
     trees = _stand(mix, seed + 1, CANOPY_W, CANOPY_W, False)
     off = [(dx, dy) for dx in (-CANOPY_W, 0, CANOPY_W) for dy in (-CANOPY_W, 0, CANOPY_W)]
     objs = _place_stand(trees, src, href, off)
-    floor = _flat("st_floor", [(-60, -60, 0), (110, -60, 0), (110, 110, 0), (-60, 110, 0)], (0.035, 0.034, 0.022))
-    sc, cam = bake_setup(False, (512, 512), 32)
+    floor = _flat("st_floor", [(-60, -60, 0), (110, -60, 0), (110, 110, 0), (-60, 110, 0)], (0.045, 0.040, 0.026))
+    sc, cam = bake_setup(False, (512, 512), 24)
     cam.data.ortho_scale = CANOPY_W
     cam.location = (CANOPY_W / 2, CANOPY_W / 2, 120)
     cam.rotation_euler = (0, 0, 0)
-    sc.render.filepath = str(VEG / f"forest_canopy_{mix}.png")
-    bpy.ops.render.render(write_still=True)
+    render_passes(objs + [floor], f"forest_canopy_{mix}")
     for o in objs + [floor]:
         bpy.data.objects.remove(o, do_unlink=True)
+    pack([f"forest_canopy_{mix}"], VEG / f"forest_canopy_{mix}.png", None, open_r=0, canopy=True)
     info["canopy"] = {"png": f"forest_canopy_{mix}.png", "w_m": CANOPY_W}
     return info
 
@@ -515,22 +767,32 @@ def main():
     meta = {}
     objs = []
     src = {}
+    # --quick <name>: bake one tree's impostor only (look development), nothing exported
+    argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+    quick = argv[argv.index("--quick") + 1] if "--quick" in argv else None
     for sp in ("pine", "birch", "alder", "maple", "linden", "shrub"):
         for v in range(3):
             name = f"tree_{sp}_{v}"
+            if quick and name != quick:
+                continue
             g0, H = grow(sp, v, 0)
             o0 = to_object(name, g0)
             g1, _ = grow(sp, v, 1)
             o1 = to_object(name + ".lod1", g1)
             o1.hide_render = True
-            png, S = bake_impostor(o0, name, H)
+            S = bake_impostor(o0, name, H)
+            png = VEG / f"impostor_{name}.png"
+            pack([f"impostor_{name}_{k}" for k in range(IMP_NF)], png, VEG / f"impostor_{name}_n.png")
             o2 = impostor_object(name, H, png, S)
             o2.hide_render = True
             objs += [o0, o1, o2]
             src[name] = o0
             meta[name] = {"species": sp, "variant": v, "href_m": round(H, 2), "impostor_frame_m": round(S, 2),
+                          "impostor_views": IMP_NF, "impostor_aspect": round(IMP_RES[0] / IMP_RES[1], 4),
                           "tris_lod0": sum(len(p.vertices) - 2 for p in o0.data.polygons),
                           "tris_lod1": sum(len(p.vertices) - 2 for p in o1.data.polygons), "tris_lod2": 4}
+    if quick:
+        return
     href = {k: v["href_m"] for k, v in meta.items()}
     forest = {mix: bake_forest(mix, src, href, 1000 + i) for i, mix in enumerate(FOREST_MIX)}
     for fn, sel in (("trees.glb", [o for o in objs if not o.name.endswith(".lod2")]),

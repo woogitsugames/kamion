@@ -34,6 +34,12 @@ MIX = {"iglasty": [0.82, 0.12, 0.02, 0.02, 0.02, 0.0], "mieszany": [0.45, 0.25, 
        "liściasty": [0.08, 0.32, 0.25, 0.20, 0.15, 0.0], None: [0.4, 0.3, 0.1, 0.1, 0.1, 0.0]}
 HEIGHT = {"pine": (14, 24), "birch": (9, 19), "alder": (9, 17), "maple": (8, 16), "linden": (9, 18), "shrub": (1.5, 4.0)}
 SPACING = {"las": 4.5, "zagajnik": 3.2, "zadrzewienie": 6.0}
+# Understorey of a Podlasie pine / mixed stand (v3.4, review r3 X4 "trunks like a fence", r4 W-H8): hazel and
+# young pine / birch under the canopy, so the boles do not stand in an empty, swept hall. species -> (h min, h max,
+# weight), one plant per UNDER_SPACING^2 (~60 m2). WORKING_VALUE (forest-inventory classes, not measured here);
+# tools/blender/world/make_trees.py UNDER_SPECIES bakes the same mix into the HLOD edge texture.
+UNDERSTOREY = {"shrub": (1.2, 3.5, 0.55), "pine": (3.0, 7.0, 0.2), "birch": (3.0, 7.5, 0.25)}
+UNDER_SPACING = 7.75
 
 
 def _seed(key):
@@ -91,6 +97,16 @@ def place(src, origin, hf, zc, blocked, report):
         P = _scatter(poly, SPACING.get(rodzaj, 4.5), rng)
         sp = pick(rng, MIX.get(kat, MIX[None]), len(P))
         emit(P, sp, rng, f"bdot:{f['id']}", 0.7 if rodzaj == "zagajnik" else 1.0, fk=fk)
+        if rodzaj == "las":
+            P = _scatter(poly.buffer(-2.0), UNDER_SPACING, rng)
+            names = list(UNDERSTOREY)
+            w = np.array([UNDERSTOREY[k][2] for k in names])
+            sp = rng.choice(names, size=len(P), p=w / w.sum())
+            n0 = len(out)
+            emit(P, sp, rng, f"bdot:{f['id']}:under", 1.0, fk=fk)
+            for t in out[n0:]:
+                lo, hi = UNDERSTOREY[t["p"][5:]][:2]
+                t["h"] = round(float(lo + (hi - lo) * ((_seed(f"{t['e']},{t['n']}") % 1000) / 999.0)), 1)
         # edge: shrubs + young deciduous along the outline
         edge = poly.buffer(3.0).difference(poly.buffer(-5.0))
         P = _scatter(edge, 3.0, rng)
@@ -151,6 +167,7 @@ def place(src, origin, hf, zc, blocked, report):
     for t in out:
         cnt[t["p"]] = cnt.get(t["p"], 0) + 1
     report["trees"] = cnt
+    report["understorey"] = sum(1 for t in out if t["src"].endswith(":under"))
     report["_forest_mix"] = forest_mix
     return out, forests
 

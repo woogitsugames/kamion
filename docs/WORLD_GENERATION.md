@@ -162,3 +162,26 @@ Przykład w repo (baza Kwadrat Park): droga dojazdowa do placu ma w OSM tylko `h
   procedural grate). Signal repeaters on the left of one-way approaches with ≥ 2 lanes. Terrain only 4 cm under grass
   verge strips away from hard surfaces (`conform.SOFT_UNDER`).
 - Frames: `docs/reports/visual/world-c/v33/README.md`. Tests: `tests/gis/test_world_v33.py`.
+
+## v3.4 (ADR 0023): lit forest impostors and HLOD walls, understorey, signs from OSM, roundabout signing
+
+- `make_trees.py` (Blender 5.2, Cycles GPU, ~4 min): impostors from 6 azimuths, three passes (albedo, view-space
+  normal, sky visibility) packed with dilated colour, opened coverage and no soft alpha outside a 1-texel ring:
+  `impostor_<tree>.png` (6 × 256 × 384) + `impostor_<tree>_n.png` (half resolution). HLOD edge / canopy from the same
+  passes (`forest_edge_<mix>_n.png`, manifest `normal_ref`); stand interior darkened only by the visibility pass, crown
+  specks < 600 texels removed. Raw passes in `artifacts/vegetation_bake/` (not versioned).
+- Unity: `Kamion/Vegetation` `_IMPOSTOR` (camera-facing quad, two views cross-faded on Medium+, nearest on Low) and
+  `_HLOD_EDGE` (wall-space normal map); impostor / edge materials are generated on that shader. Edge textures: U repeat,
+  V clamp (the wrapped bottom rows drew the dotted arcs over the forest).
+- `vegetation.UNDERSTOREY`: hazel and young pine / birch (1.2–7.5 m, one per ~60 m²) in BDOT10k forests (QA
+  `vegetation.understorey`); `Kamion/World PBR` forest floor = needle litter / moss patches.
+- Signs (`streetscape/signs_route.py`): OSM `traffic_sign=PL:*` nodes, give-way / stop nodes with a direction,
+  C-9 on roundabout splitter islands, E-2a style boards at roundabout exits (OSM `destination` / `ref` / `name`),
+  E-1 diagram boards 80 m before GP/G entries of rings ≥ 18 m (kept in front of noise barriers). Faces aged
+  (`signs.weather`), plates with a 25 mm rim, mill-finish back and clamps; plate and board faces now face the driver
+  (the v3.3 discs and boards showed their grey back) and their texture is no longer mirrored. Route shields: DK red,
+  DW yellow. QA: `furniture.route_signs` (every sign within 12 m of the start route, by chainage, with facing),
+  `route_checks` (A-7 + C-12 [+ E-1] before each roundabout on the route), `roundabout_signs`, `osm_signs`.
+- Control cameras `route_putry_approach`, `route_putry_entry_signs`. `visual-qa.ps1 -Rq 'rq_trees=0'` (ablation) and
+  `-TimeFrames N` (editor GPU timing in `stats.txt`).
+- Frames and costs: `docs/reports/visual/world-c/v34/README.md`. Tests: `tests/gis/test_world_v34.py`.

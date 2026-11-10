@@ -56,7 +56,8 @@ def materials():
     out = {}
     for mix in ("conifer", "mixed", "broadleaf"):
         out[f"forest_edge_{mix}"] = {"color": [1, 1, 1], "rough": 0.95, "alpha_cutoff": 0.5, "hlod": True,
-                                     "texture_ref": TEX_REF.format(f"forest_edge_{mix}")}
+                                     "texture_ref": TEX_REF.format(f"forest_edge_{mix}"),
+                                     "normal_ref": TEX_REF.format(f"forest_edge_{mix}_n")}
         out[f"forest_canopy_{mix}"] = {"color": [1, 1, 1], "rough": 0.95, "hlod": True,
                                        "texture_ref": TEX_REF.format(f"forest_canopy_{mix}")}
     return out

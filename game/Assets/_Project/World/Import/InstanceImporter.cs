@@ -368,6 +368,22 @@ namespace Game.World.Import
                 if (File.Exists(png)) tex = ImportTexture(r, png, clamp: sign || name.StartsWith("impostor_"));
                 else Debug.LogWarning($"[IMPORT] {name}: texture {png} missing");
             }
+            // Impostors (ADR 0023): N views + view-space normal / sky visibility, drawn by Kamion/Vegetation _IMPOSTOR.
+            if (name.StartsWith("impostor_") && png != null)
+            {
+                string npng = Path.Combine(Path.GetDirectoryName(png), Path.GetFileNameWithoutExtension(png) + "_n.png");
+                var tm = Obj(Obj(Parse(File.ReadAllText(Path.Combine(art, "vegetation", "trees_meta.json")))).Get("trees"));
+                float views = tm.Get(name.Substring("impostor_".Length)) is Dictionary<string, object> e && e.Get("impostor_views") != null
+                    ? (float)Num(e.Get("impostor_views")) : 1f;
+                if (File.Exists(npng) && views > 1f)
+                {
+                    var vm = VegetationMaterial($"{r.Dir}/Materials/Proto/M_{name}.mat", tex, ImportTexture(r, npng, clamp: true, linear: true),
+                        "_IMPOSTOR", new Vector4(views, ImpostorVisibility.x, ImpostorVisibility.y, 0f), info != null ? info.AlphaCutoff : 0.5f);
+                    s_ProtoMats[name] = vm;
+                    return vm;
+                }
+                Debug.LogWarning($"[IMPORT] {name}: no multi-view bake ({npng}) - drawn as a flat card");
+            }
             bool foliage = name.StartsWith("leaves_") || name.StartsWith("impostor_");
             bool clip = foliage || sign || (info != null && info.AlphaMode != "OPAQUE");
             bool twoSided = foliage || name == "bark_twig";
@@ -379,8 +395,40 @@ namespace Game.World.Import
             return mat;
         }
 
+        /// <summary>
+        /// Sky-visibility strength of the impostor bake (Kamion/Vegetation _Impostor.y ambient, .z sun). Chosen so that the
+        /// impostor crown matches the LOD1 cards (no occlusion term) in mean luminance at the switch distance:
+        /// WORKING_VALUE, measured in artifacts/vqa (ADR 0023 table).
+        /// </summary>
+        public static readonly Vector2 ImpostorVisibility = new Vector2(0.45f, 0.25f);
+        /// <summary>HLOD edge walls: the stand interior is dark only through the visibility map, so it applies fully.</summary>
+        public static readonly Vector2 EdgeVisibility = new Vector2(1.0f, 0.6f);
+
+        /// <summary>Kamion/Vegetation material asset (impostor / HLOD edge variant), alpha-to-coverage, double sided, instanced.</summary>
+        public static Material VegetationMaterial(string path, Texture2D tex, Texture2D normalOcc, string keyword, Vector4 impostor, float cutoff)
+        {
+            var shader = Shader.Find("Kamion/Vegetation");
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
+            mat.shader = shader;
+            mat.shaderKeywords = new string[0];
+            mat.EnableKeyword(keyword);
+            mat.EnableKeyword("_ALPHATEST_ON");      // WorldInstances.IsFoliage / SetLeafAlphaToCoverage
+            mat.enableInstancing = true;
+            mat.SetTexture("_BaseMap", tex);
+            mat.SetTexture("_NormalOcc", normalOcc);
+            mat.SetColor("_BaseColor", Color.white);
+            mat.SetVector("_Impostor", impostor);
+            mat.SetFloat("_Cutoff", cutoff);
+            mat.SetFloat("_Cull", 0f);
+            mat.SetFloat("_AlphaToMask", 1f);
+            mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.AlphaTest;
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
         /// <summary>Copies an art-source PNG into the generated textures folder with mobile import settings.</summary>
-        public static Texture2D ImportTexture(RegionImporter.Result r, string png, bool clamp)
+        public static Texture2D ImportTexture(RegionImporter.Result r, string png, bool clamp, bool linear = false)
         {
             string file = Path.GetFileName(png);
             string dst = $"{r.Dir}/Textures/{file}";
@@ -391,23 +439,28 @@ namespace Game.World.Import
                 AssetDatabase.ImportAsset(dst, ImportAssetOptions.ForceSynchronousImport);
             }
             var ti = (TextureImporter)AssetImporter.GetAtPath(dst);
-            bool alpha = file.StartsWith("leaves_") || file.StartsWith("impostor_") || file.StartsWith("fence_") || file.StartsWith("dock_") || !file.StartsWith("bark_");
+            bool alpha = !linear && (file.StartsWith("leaves_") || file.StartsWith("impostor_") || file.StartsWith("fence_") || file.StartsWith("dock_") || !file.StartsWith("bark_"));
             bool text = file.StartsWith("dock_") || file.Contains("-");   // sign faces (A-7, B-33_30, E-2_*) and dock numbers: legible
             ti.textureType = TextureImporterType.Default;
-            ti.sRGBTexture = true;
+            ti.sRGBTexture = !linear;          // normal / visibility maps (_n.png) are data
             ti.mipmapEnabled = true;
             ti.alphaSource = TextureImporterAlphaSource.FromInput;
             ti.alphaIsTransparency = alpha;
             ti.mipMapsPreserveCoverage = alpha;
             ti.alphaTestReferenceValue = 0.5f;
             ti.wrapMode = clamp ? TextureWrapMode.Clamp : TextureWrapMode.Repeat;
+            // Forest HLOD edge walls tile along the edge (u) but not vertically: with v repeating, the filter / mips at the
+            // wall top (v = 1) fetched the opaque bottom rows (trunks, floor) and drew dotted arcs along every wall top in
+            // the sky (review r4 / v3.3 README "kropkowane łuki"; ADR 0023).
+            if (file.StartsWith("forest_edge")) { ti.wrapModeU = TextureWrapMode.Repeat; ti.wrapModeV = TextureWrapMode.Clamp; }
             ti.filterMode = FilterMode.Trilinear;
             ti.anisoLevel = text ? 4 : 2;
             ti.maxTextureSize = 2048;
             ti.textureCompression = TextureImporterCompression.Compressed;
             ti.SetPlatformTextureSettings(new TextureImporterPlatformSettings
             {
-                name = "Android", overridden = true, maxTextureSize = 1024,
+                // impostor atlases are 6 views x 256 px wide (1536): keep them whole on the phone (ADR 0023)
+                name = "Android", overridden = true, maxTextureSize = file.StartsWith("impostor_") && !linear ? 2048 : 1024,
                 format = text ? TextureImporterFormat.ASTC_4x4 : TextureImporterFormat.ASTC_6x6,
                 compressionQuality = 50,
             });
