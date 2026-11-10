@@ -224,6 +224,8 @@ def equipment():
         for y in (-1.5, -2.5):
             box_mm(f"fairing_brk_{s}_{y}", s * FRAME_HALF_W, s * (CAB_HALF_W - 0.03), y - 0.02, y + 0.02, 0.40,
                    0.44, "chassis")
+        if SIDE_SKIRTS:
+            side_skirt(s)
     # catwalk with checker plate + access ladder on the left behind the cab steps
     box_mm("catwalk", -0.46, 0.46, -1.72, -1.02, FRAME_TOP + 0.02, FRAME_TOP + 0.034, "checker", bev=0.004)
     for y in (-1.06, -1.68):
@@ -236,6 +238,57 @@ def equipment():
     tube("catwalk_grab", [(-1.18, CAB_BACK_Y - 0.01, 1.35), (-1.18, CAB_BACK_Y - 0.06, 1.40),
                           (-1.18, CAB_BACK_Y - 0.06, 2.10), (-1.18, CAB_BACK_Y - 0.01, 2.15)], 0.014, "plastic_satin")
     set_group("frame")
+
+
+# ---------------------------------------------------------------- side skirts (r10, ADR 0083)
+# Body-colour side skirts between the step box and the drive-axle mudguard (long-haul aero kit): they close the bare
+# gap under the cab-to-trailer line that made the tractor read as a stripped chassis in the side / chase views. The
+# tank, AdBlue tank, aftertreatment and battery box stay behind them (visible from behind and through the filler
+# notch). All sizes WORKING_VALUE (class-typical, not measured on a vehicle). SIDE_SKIRTS = False restores r9.
+SIDE_SKIRTS = True
+SKIRT_Y = (-1.158, -3.07)      # front edge (18 mm joint to the step box), rear edge ahead of the drive tyre
+SKIRT_Z = (0.482, 1.205)       # above the dark sill strip (side_fairing), top just under the step-box top (1.21)
+SKIRT_ARCH_R = 0.68            # rear cut-out radius about the drive axle (mudguard lip 0.64)
+
+
+def side_skirt(s):
+    xo = s * (CAB_HALF_W - 0.012)          # outer face, 2 mm inside the sill strip
+    th = 0.016
+    y0, y1 = SKIRT_Y
+    z0, z1 = SKIRT_Z
+    a0 = math.asin((0.80 - WHEEL_Z) / SKIRT_ARCH_R)
+    arc = [(-WB + SKIRT_ARCH_R * math.cos(a0 + (math.radians(60) - a0) * k / 8),
+            WHEEL_Z + SKIRT_ARCH_R * math.sin(a0 + (math.radians(60) - a0) * k / 8)) for k in range(9)]
+    top = [(arc[-1][0], z1), (y0, z1)]
+    if s < 0:    # fuel filler notch (cap at y -1.35, top of the tank 1.04 m): R 40 mm corners
+        n1, nz, r = -1.50, 1.01, 0.04      # open towards the step box (the cap is 0.19 m behind the joint)
+        top = [(arc[-1][0], z1), (n1 - r, z1), (n1 - 0.3 * r, z1 - 0.3 * r), (n1, z1 - r), (n1, nz + r),
+               (n1 + 0.3 * r, nz + 0.3 * r), (n1 + r, nz), (y0, nz)]
+    prof = [(y0, z0), (y1, z0)] + arc + top
+    extrude_poly(f"skirt_panel_{s}", prof, th, "paint", plane="YZ", origin=(xo - (th if s > 0 else 0), 0, 0),
+                 bev=0.005, bseg=2)
+    xf = xo + s * 0.0008
+    # panel joint (two hinged panels), pressed swage line, top return flange, quarter-turn latches
+    ysplit = -2.16
+    box_mm(f"skirt_gap_{s}", xf - 0.0006, xf + 0.0006, ysplit - 0.004, ysplit + 0.004, z0 + 0.01, z1 - 0.01, "gap")
+    for k, (ya, yb) in enumerate(((y0 - 0.05, ysplit + 0.05), (ysplit - 0.05, y1 + 0.06))):
+        box_mm(f"skirt_swage_{s}_{k}", xf - 0.0006, xf + 0.0006, yb, ya, 0.648, 0.656, "gap")
+        for yl in (ya - 0.10, yb + 0.10):
+            if s < 0 and -1.56 < yl < -1.16:
+                continue
+            cyl(f"skirt_latch_{s}_{k}_{yl:.2f}", (xf + s * 0.002, yl, z1 - 0.085), 0.017, 0.006, "plastic_satin",
+                axis="X", seg=12)
+    ytop = [(y0, -1.56 if s < 0 else arc[-1][0])] if s > 0 else [(-1.56, arc[-1][0])]
+    for k, (ya, yb) in enumerate(ytop):
+        box_mm(f"skirt_flange_{s}_{k}", xo - s * 0.075, xo - s * 0.004, yb, ya, z1 - 0.012, z1 - 0.002, "plastic",
+               bev=0.003)
+    if s > 0:   # heat vents over the aftertreatment box (6 slots)
+        for k in range(6):
+            zc = 0.72 + k * 0.055
+            box_mm(f"skirt_vent_{k}", xf - 0.0006, xf + 0.0006, -1.98, -1.36, zc - 0.009, zc + 0.009, "gap")
+    # stays to the frame (behind the panel) and the amber side markers moved onto the sill stay where they were
+    for y in (-1.62, -2.30, -2.95):
+        box_mm(f"skirt_stay_{s}_{y}", s * FRAME_HALF_W, xo - s * th, y - 0.015, y + 0.015, 1.06, 1.09, "chassis")
 
 
 # ---------------------------------------------------------------- vertical exhaust stack (B2.1, owner sheets)
@@ -393,11 +446,19 @@ def fifth_wheel_and_rear():
         tube(f"flap_arm_{s}", [(s * FRAME_HALF_W, -WB - 0.62, 0.80), (s * 0.95, -WB - 0.64, 0.84)], 0.02, "chassis")
         # rear combination lamps on brackets at the frame end
         box_mm(f"rear_lamp_brk_{s}", s * 0.42, s * 1.18, Y_END + 0.04, Y_END + 0.12, 0.78, 0.82, "chassis")
-        box_mm(f"rear_lamp_{s}", s * 0.74, s * 1.18, Y_END - 0.02, Y_END + 0.06, 0.74, 0.90, "plastic_satin",
-               bev=0.01)
-        for k, (a, b_, m_) in enumerate(((0.76, 0.92, "lens_amber"), (0.92, 1.08, "lens_red"),
-                                         (1.08, 1.16, "lens_clear"))):
-            box_mm(f"rear_lens_{s}_{k}", s * a, s * b_, Y_END - 0.026, Y_END - 0.016, 0.755, 0.885, m_, bev=0.003)
+        # r10 (ADR 0083): multi-chamber LED combination lamp in a deep moulded housing (was a slab with three flat
+        # tiles): black bezel lip, four crowned chambers 1.5 mm apart - indicator (outboard), tail / stop, reverse,
+        # retro-reflector strip - and an amber side marker in the housing's outboard end. WORKING_VALUE sizes.
+        box_mm(f"rear_lamp_{s}", s * 0.72, s * 1.185, Y_END - 0.035, Y_END + 0.06, 0.735, 0.905, "plastic_satin",
+               bev=0.016, seg=3)
+        box_mm(f"rear_lamp_bezel_{s}", s * 0.735, s * 1.17, Y_END - 0.041, Y_END - 0.030, 0.748, 0.892, "plastic",
+               bev=0.004)
+        for k, (a, b_, m_) in enumerate(((1.035, 1.160, "lens_amber"), (0.880, 1.0335, "lens_red"),
+                                         (0.800, 0.8785, "lens_clear"), (0.745, 0.7985, "lens_red"))):
+            box_mm(f"rear_lens_{s}_{k}", s * a, s * b_, Y_END - 0.052, Y_END - 0.038, 0.757, 0.883, m_, bev=0.005,
+                   seg=3)
+        box_mm(f"side_marker_rear_{s}", s * 1.183, s * 1.190, Y_END - 0.012, Y_END + 0.04, 0.80, 0.84, "lens_amber",
+               bev=0.002)
     G.plate_uv(box_mm("rear_plate", 0.42, 0.94, Y_END - 0.03, Y_END - 0.02, 0.60, 0.714, "plate"), -1)
     box_mm("trailer_socket_brk", -0.20, 0.20, Y_END - 0.01, Y_END + 0.02, 0.86, 0.94, "chassis")
 

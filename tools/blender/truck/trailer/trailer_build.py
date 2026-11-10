@@ -157,6 +157,216 @@ def _road_band(nt, band, z0):
     return tot
 
 
+# r10 (ADR 0083): fleet graphic on the curtain without any name or logo - a broad diagonal band and a pinstripe left in
+# the untinted fabric white (tint mask 0), so every curtain colour of the game gets a two-tone livery from one bake.
+# (u = distance from the front edge minus 0.8 x height above the hem; both sides share the same y, so the band leans
+# back on both.) LIVERY_BAND = False restores the plain r9 curtain. WORKING_VALUE (art direction, owner may veto).
+# Owner decision D47 (2026-11-10): plain curtain, NO band. The band code stays behind the flag (env 1 = with the band).
+LIVERY_BAND = os.environ.get("KAMION_LIVERY_BAND", "0") == "1"
+LIVERY_BANDS = ((1.00, 2.60), (2.95, 3.22))
+
+
+def _livery_mask(nt):
+    N, mn = M.N, M.math_node
+    geo = N(nt, "ShaderNodeNewGeometry")
+    sep = N(nt, "ShaderNodeSeparateXYZ")
+    M.L(nt, geo.outputs["Position"], sep.inputs[0])
+    u = mn(nt, "SUBTRACT", mn(nt, "SUBTRACT", Y_FRONT, sep.outputs[1]),
+           mn(nt, "MULTIPLY", mn(nt, "SUBTRACT", sep.outputs[2], CURT_Z0), 0.8))
+    w = 0.010
+    tot = None
+    for a, b in LIVERY_BANDS:
+        t = mn(nt, "MULTIPLY", mn(nt, "DIVIDE", mn(nt, "SUBTRACT", u, a), w, clamp=True),
+               mn(nt, "DIVIDE", mn(nt, "SUBTRACT", b, u), w, clamp=True))
+        tot = t if tot is None else mn(nt, "MAXIMUM", tot, t)
+    out = nt.nodes.new("ShaderNodeMath")
+    out.operation = "SUBTRACT"
+    out.label = "tint_mask"
+    out.inputs[0].default_value = 1.0
+    M.L(nt, tot, out.inputs[1])
+
+
+ROOF_OWN_COLOUR = True
+# Clean-sheet albedo of an aged white PVC roof sheet. Source (building membranes, the closest published data): white PVC
+# single-ply solar reflectance 0.87-0.88 new, 0.68-0.70 after 3 years (CRRC listings quoted in the Duro-Last and Siplast
+# Parasolo data sheets); independent field work reports 30-50 % loss in 3 years (Miller et al. 2002, cited by ORNL)
+# = 0.44-0.61. A trailer sheet is never washed and runs in road soot: 0.50 = lower half of that range. WORKING_VALUE
+# (no measurement of a trailer sheet found). History: 0.62 / 0.44 / 0.36 all clipped in the chase view because the game
+# shader replaces the baked dirt mask on the Curtain slot (CurtainGrime) - the roof was rendered clean; r5 puts the
+# soiling into the albedo and roughness of the roof islands instead (ROOF_STAIN_ALBEDO).
+# r7 (review 0083 no. 4): 0.44 (lower end of the cited range) and a matt, dusty surface (0.92): at the chase angle the
+# sky reflection, not the albedo, drove the roof to 93-96 %.
+ROOF_RGB = (0.44, 0.445, 0.45)
+ROOF_ROUGH = 0.92           # chalked, dusty PVC that is never washed (the curtain is 0.55); WORKING_VALUE
+ROOF_SAG_RNG = random.Random(4107)
+ROOF_SAGS = [0.003 + 0.008 * ROOF_SAG_RNG.random() for _ in range(18)]   # m, per bay (was 10 mm everywhere)
+ROOF_STAIN_ALBEDO = 0.85    # share of the stain factor that goes into the baked albedo (pool centres -> soot colour)
+ROOF_SOOT = (0.105, 0.10, 0.09)
+ROOF_BOWS = 18              # = top_rails_and_roof nb
+
+
+def _roof_stains(nt, amount=1.0):
+    """Dirt on the roof sheet: pooled in the sag between two bows (strongest mid-bay, fading to the edges where the
+    sheet runs off over the rail), a dusty film overall and darker run-off along both edges. Added to the grime
+    factor like the spray term (the bake labels grime_mix / grime_rough see it)."""
+    mn, N = M.math_node, M.N
+    mix = next(n for n in nt.nodes if n.label == "grime_mix")
+    rr = next(n for n in nt.nodes if n.label == "grime_rough")
+    geo = N(nt, "ShaderNodeNewGeometry")
+    sep = N(nt, "ShaderNodeSeparateXYZ")
+    M.L(nt, geo.outputs["Position"], sep.inputs[0])
+    pitch = (LEN - 0.25) / ROOF_BOWS
+    t = mn(nt, "FRACT", mn(nt, "DIVIDE", mn(nt, "SUBTRACT", Y_FRONT - 0.13, sep.outputs[1]), pitch))
+    sag = mn(nt, "POWER", mn(nt, "SINE", mn(nt, "MULTIPLY", t, math.pi)), 3.0)
+    ax = mn(nt, "ABSOLUTE", sep.outputs[0])
+    mid = mn(nt, "SUBTRACT", 1.0, mn(nt, "POWER", mn(nt, "DIVIDE", ax, 1.22, clamp=True), 2.0))
+    n1 = N(nt, "ShaderNodeTexNoise", Scale=1.7, Detail=9.0, Roughness=0.66)
+    M.L(nt, geo.outputs["Position"], n1.inputs["Vector"])
+    m1 = N(nt, "ShaderNodeMapRange", **{"From Min": 0.36, "From Max": 0.68})
+    M.L(nt, n1.outputs["Fac"], m1.inputs["Value"])
+    # r7: every bay has its own amount (most light, one or two much dirtier) and its pool sits off-centre
+    bay = mn(nt, "FLOOR", mn(nt, "DIVIDE", mn(nt, "SUBTRACT", Y_FRONT - 0.13, sep.outputs[1]), pitch))
+    w1 = N(nt, "ShaderNodeTexWhiteNoise", _noise_dimensions="1D")
+    M.L(nt, mn(nt, "ADD", bay, 0.37), w1.inputs["W"])
+    w2 = N(nt, "ShaderNodeTexWhiteNoise", _noise_dimensions="1D")
+    M.L(nt, mn(nt, "ADD", bay, 31.71), w2.inputs["W"])
+    amp = mn(nt, "ADD", 0.38, mn(nt, "MULTIPLY", mn(nt, "POWER", w1.outputs["Value"], 3.0), 2.4))
+    xo = mn(nt, "MULTIPLY", mn(nt, "SUBTRACT", w2.outputs["Value"], 0.5), 1.1)
+    axo = mn(nt, "ABSOLUTE", mn(nt, "SUBTRACT", sep.outputs[0], xo))
+    mid = mn(nt, "SUBTRACT", 1.0, mn(nt, "POWER", mn(nt, "DIVIDE", axo, 1.0, clamp=True), 2.0))
+    pool = mn(nt, "MULTIPLY", mn(nt, "MULTIPLY", mn(nt, "MULTIPLY", sag, mid), m1.outputs[0]), amp, clamp=True)
+    # run-off over the rails: streaks across the sheet (noise stretched in x), not an even border
+    scv = N(nt, "ShaderNodeVectorMath", _operation="MULTIPLY")
+    scv.inputs[1].default_value = (0.5, 7.0, 1.0)
+    M.L(nt, geo.outputs["Position"], scv.inputs[0])
+    n3 = N(nt, "ShaderNodeTexNoise", Scale=1.0, Detail=5.0, Roughness=0.6)
+    M.L(nt, scv.outputs[0], n3.inputs["Vector"])
+    m3 = N(nt, "ShaderNodeMapRange", **{"From Min": 0.35, "From Max": 0.70, "To Min": 0.15})
+    M.L(nt, n3.outputs["Fac"], m3.inputs["Value"])
+    edge = mn(nt, "MULTIPLY", mn(nt, "MULTIPLY", mn(nt, "DIVIDE", mn(nt, "SUBTRACT", ax, 0.80), 0.45, clamp=True),
+                                 m3.outputs[0]), 0.80)
+    n2 = N(nt, "ShaderNodeTexNoise", Scale=9.0, Detail=8.0, Roughness=0.6)
+    M.L(nt, geo.outputs["Position"], n2.inputs["Vector"])
+    film = mn(nt, "MULTIPLY", n2.outputs["Fac"], 0.50)
+    s_ = mn(nt, "MULTIPLY", mn(nt, "ADD", mn(nt, "ADD", pool, edge), film), amount * M.PARAMS["dirt"])
+    old = mix.inputs[0].links[0].from_socket
+    tot = mn(nt, "ADD", old, s_, clamp=True)
+    M.L(nt, tot, mix.inputs[0])
+    r_in = rr.inputs[0].links[0].from_socket if rr.inputs[0].links else None
+    if r_in is not None:
+        M.L(nt, mn(nt, "ADD", r_in, mn(nt, "MULTIPLY", s_, 0.25)), rr.inputs[0])
+    # r5: Kamion/Truck Exterior ignores the baked dirt mask on the Curtain slot (CurtainGrime replaces it), so the roof
+    # soiling also goes into the CLEAN colour and roughness (what the export bakes into C.rgb / C.a): nobody washes a
+    # trailer roof, the dirt slider does not need to remove it.
+    if ROOF_STAIN_ALBEDO > 0:
+        fa = mn(nt, "MULTIPLY", mn(nt, "ADD", mn(nt, "ADD", pool, edge), film), ROOF_STAIN_ALBEDO * amount, clamp=True)
+        cm = N(nt, "ShaderNodeMix", _data_type="RGBA")
+        cm.inputs[6].default_value = tuple(mix.inputs[6].default_value)
+        cm.inputs[7].default_value = (*ROOF_SOOT, 1)
+        M.L(nt, fa, cm.inputs[0])
+        M.L(nt, cm.outputs[2], mix.inputs[6])
+        M.L(nt, mn(nt, "ADD", float(rr.inputs[1].default_value), mn(nt, "MULTIPLY", fa, 0.22), clamp=True), rr.inputs[1])
+
+
+CURTAIN_WEAR = True
+CURTAIN_WIDTH = 2.72        # welded fabric widths along the curtain (13.6 m / 5); WORKING_VALUE
+# welded repair patches: (side +1 / -1, y0, y1, z0, z1) - different on the two sides
+CURTAIN_PATCHES = ((1, -4.35, -3.93, 1.78, 2.24), (-1, -9.62, -9.14, 2.30, 2.66), (-1, -1.22, -0.90, 1.62, 1.98))
+
+
+def _curtain_wear(nt):
+    """Review 0083 no. 3 (plain curtain = 13.6 m of one grey): what a used sheet shows without any graphic, all in the
+    CLEAN colour / roughness (the game shader replaces the baked dirt mask on the Curtain slot, the tint multiplies
+    this albedo): tone steps between the welded widths + the weld lines, low-frequency blotches, chalked upper part,
+    horizontal scuffs at loading height, two or three welded patches (newer, glossier, dirt along the weld), and a
+    continuous road-film band along the hem, heavier behind the axles and towards the rear."""
+    mn, N = M.math_node, M.N
+    mix = next(n for n in nt.nodes if n.label == "grime_mix")
+    rr = next(n for n in nt.nodes if n.label == "grime_rough")
+    geo = N(nt, "ShaderNodeNewGeometry")
+    sep = N(nt, "ShaderNodeSeparateXYZ")
+    M.L(nt, geo.outputs["Position"], sep.inputs[0])
+    x, y, z = sep.outputs[0], sep.outputs[1], sep.outputs[2]
+    side = mn(nt, "GREATER_THAN", x, 0.0)
+
+    def noise(scale, detail=4.0, rough=0.6, mul=None):
+        n = N(nt, "ShaderNodeTexNoise", Scale=scale, Detail=detail, Roughness=rough)
+        if mul is None:
+            M.L(nt, geo.outputs["Position"], n.inputs["Vector"])
+        else:
+            v = N(nt, "ShaderNodeVectorMath", _operation="MULTIPLY")
+            v.inputs[1].default_value = mul
+            M.L(nt, geo.outputs["Position"], v.inputs[0])
+            M.L(nt, v.outputs[0], n.inputs["Vector"])
+        return n.outputs["Fac"]
+
+    def ramp(v, a, b):          # clamp((v - a) / (b - a))
+        return mn(nt, "DIVIDE", mn(nt, "SUBTRACT", v, a), b - a, clamp=True)
+
+    # welded widths
+    u = mn(nt, "DIVIDE", mn(nt, "SUBTRACT", Y_FRONT, y), CURTAIN_WIDTH)
+    wn = N(nt, "ShaderNodeTexWhiteNoise", _noise_dimensions="1D")
+    M.L(nt, mn(nt, "ADD", mn(nt, "FLOOR", u), mn(nt, "MULTIPLY", side, 17.3)), wn.inputs["W"])
+    tone = mn(nt, "ADD", 0.92, mn(nt, "MULTIPLY", wn.outputs["Value"], 0.11))
+    fr = mn(nt, "FRACT", u)
+    dseam = mn(nt, "MULTIPLY", mn(nt, "SUBTRACT", 0.5, mn(nt, "ABSOLUTE", mn(nt, "SUBTRACT", fr, 0.5))), CURTAIN_WIDTH)
+    seam = mn(nt, "SUBTRACT", 1.0, mn(nt, "DIVIDE", dseam, 0.022, clamp=True))
+    tone = mn(nt, "MULTIPLY", tone, mn(nt, "SUBTRACT", 1.0, mn(nt, "MULTIPLY", seam, 0.13)))
+    # blotches (handling, old dirt washed unevenly)
+    tone = mn(nt, "MULTIPLY", tone, mn(nt, "ADD", 0.93, mn(nt, "MULTIPLY", noise(0.55, 3.0, 0.55), 0.14)))
+    # lower half holds more old film
+    tone = mn(nt, "MULTIPLY", tone, mn(nt, "SUBTRACT", 1.0, mn(nt, "MULTIPLY", ramp(z, 2.3, 1.5), 0.07)))
+    # patches
+    pin_all, pout_all = None, None
+    for sd, y0, y1, z0, z1 in CURTAIN_PATCHES:
+        ons = side if sd > 0 else mn(nt, "SUBTRACT", 1.0, side)
+
+        def box(i, e=0.006):
+            a = mn(nt, "MULTIPLY", ramp(y, y0 + i, y0 + i + e), ramp(y, y1 - i, y1 - i - e))
+            b = mn(nt, "MULTIPLY", ramp(z, z0 + i, z0 + i + e), ramp(z, z1 - i, z1 - i - e))
+            return mn(nt, "MULTIPLY", mn(nt, "MULTIPLY", a, b), ons)
+        outer, inner = box(0.0), box(0.022)
+        ring = mn(nt, "SUBTRACT", outer, inner, clamp=True)
+        pin_all = inner if pin_all is None else mn(nt, "MAXIMUM", pin_all, inner)
+        pout_all = ring if pout_all is None else mn(nt, "MAXIMUM", pout_all, ring)
+    tone = mn(nt, "MULTIPLY", tone, mn(nt, "ADD", 1.0, mn(nt, "MULTIPLY", pin_all, 0.07)))
+    tone = mn(nt, "MULTIPLY", tone, mn(nt, "SUBTRACT", 1.0, mn(nt, "MULTIPLY", pout_all, 0.20)))
+    base = tuple(mix.inputs[6].default_value)
+    c1 = N(nt, "ShaderNodeVectorMath", _operation="SCALE")
+    c1.inputs[0].default_value = base[:3]
+    M.L(nt, tone, c1.inputs["Scale"])
+    # chalked top + scuffs -> lighter
+    fade = mn(nt, "MULTIPLY", ramp(z, 2.9, 3.8), 0.30)
+    sm = N(nt, "ShaderNodeMapRange", **{"From Min": 0.60, "From Max": 0.74})
+    M.L(nt, noise(2.6, 5.0, 0.6, (0.22, 0.22, 16.0)), sm.inputs["Value"])
+    scuff = mn(nt, "MULTIPLY", mn(nt, "MULTIPLY", sm.outputs[0], ramp(z, 1.45, 1.75)), ramp(z, 2.75, 2.35))
+    light = mn(nt, "ADD", fade, mn(nt, "MULTIPLY", scuff, 0.22), clamp=True)
+    c2 = N(nt, "ShaderNodeMix", _data_type="RGBA")
+    c2.inputs[7].default_value = (0.90, 0.90, 0.89, 1)
+    M.L(nt, light, c2.inputs[0])
+    M.L(nt, c1.outputs[0], c2.inputs[6])
+    # road film along the hem: uneven top edge, heavier behind each axle and towards the rear
+    top = mn(nt, "ADD", CURT_Z0 + 0.28, mn(nt, "MULTIPLY", noise(1.6, 6.0, 0.65, (1.0, 0.45, 1.0)), 0.50))
+    hz = mn(nt, "POWER", mn(nt, "DIVIDE", mn(nt, "SUBTRACT", top, z), 0.42, clamp=True), 1.5)
+    along = mn(nt, "ADD", 0.58, mn(nt, "MULTIPLY", ramp(y, Y_FRONT, Y_REAR), 0.25))
+    for a in AXLES:
+        g = mn(nt, "SUBTRACT", 1.0, mn(nt, "DIVIDE", mn(nt, "ABSOLUTE", mn(nt, "SUBTRACT", y, a - 0.9)), 1.3, clamp=True))
+        along = mn(nt, "MAXIMUM", along, mn(nt, "ADD", 0.45, mn(nt, "MULTIPLY", g, 0.55)))
+    stm = N(nt, "ShaderNodeMapRange", **{"From Min": 0.30, "From Max": 0.70, "To Min": 0.45})
+    M.L(nt, noise(3.0, 7.0, 0.62, (6.0, 6.0, 0.8)), stm.inputs["Value"])      # vertical streaks
+    film = mn(nt, "MULTIPLY", mn(nt, "MULTIPLY", hz, along), stm.outputs[0], clamp=True)
+    c3 = N(nt, "ShaderNodeMix", _data_type="RGBA")
+    c3.inputs[7].default_value = (0.34, 0.31, 0.26, 1)
+    M.L(nt, mn(nt, "MULTIPLY", film, 0.62), c3.inputs[0])
+    M.L(nt, c2.outputs[2], c3.inputs[6])
+    M.L(nt, c3.outputs[2], mix.inputs[6])
+    r0 = float(rr.inputs[1].default_value)
+    r = mn(nt, "ADD", r0, mn(nt, "MULTIPLY", film, 0.28))
+    r = mn(nt, "ADD", r, mn(nt, "MULTIPLY", light, 0.10))
+    r = mn(nt, "SUBTRACT", r, mn(nt, "MULTIPLY", pin_all, 0.13), clamp=True)
+    M.L(nt, r, rr.inputs[1])
+
+
 def materials():
     """Trailer authoring library on top of the TRAKT library (rubber, chassis, steel, lenses, plate, ...)."""
     M.build_library("white")
@@ -170,8 +380,19 @@ def materials():
     b.inputs["Sheen Weight"].default_value = 0.15
     _grime(nt, b, (0.80, 0.80, 0.80), 0.55, h0=2.1, amount=0.45, film=1.3, streak=1.15, cav=1.3, spray=1.7,
            dust=(0.17, 0.15, 0.12), band=0.9, band_z0=CURT_Z0)
-    m, nt, b = P("roof_tarp", "CURTAIN", (0.80, 0.80, 0.80), 0.62)
-    _grime(nt, b, (0.80, 0.80, 0.80), 0.62, h0=5.0, amount=0.25, cav=0.6)
+    if LIVERY_BAND:
+        _livery_mask(nt)
+    if CURTAIN_WEAR:
+        _curtain_wear(nt)
+    # r10 (ADR 0083): the roof sheet is its own light-grey PVC (not the curtain colour: tint mask 0), with dirt pooled
+    # in the sags between the bows and along the edges - what the chase camera looks down on
+    m, nt, b = P("roof_tarp", "CURTAIN", ROOF_RGB, ROOF_ROUGH)
+    _grime(nt, b, ROOF_RGB, ROOF_ROUGH, h0=5.0, amount=0.25, cav=0.6)
+    if ROOF_OWN_COLOUR:
+        _roof_stains(nt)
+        z = nt.nodes.new("ShaderNodeValue")
+        z.label = "tint_mask"
+        z.outputs[0].default_value = 0.0
     # webbing straps welded to the curtain: same coated fabric, a shade darker (tinted with the curtain in game)
     m, nt, b = P("strap", "CURTAIN", (0.52, 0.52, 0.52), 0.68, spec=0.35)
     M.micro_bump(nt, b, 900.0, 0.3, 0.0003)
@@ -490,6 +711,69 @@ def frame():
         box_mm(f"doc_tube_clamp_{yy}", -1.05, -0.91, yy - 0.015, yy + 0.015, 1.02, 1.12, "galv")
 
 
+# ---------------------------------------------------------------- under-floor equipment (r10, ADR 0083)
+def underfloor_equipment():
+    """Fills the empty bay between the landing gear and the tridem (kerb side): spare wheel in a hanging carrier and
+    a two-door pallet box behind the side guard. Sizes class-typical, WORKING_VALUE (no manufacturer drawing used)."""
+    part("CHASSIS", "frame")
+    # spare wheel 385/65 R22.5 lying flat, disc down, in a galvanised carrier
+    cx, cy, z0 = 0.65, -3.32, 0.372
+    zc = z0 + TYRE_W / 2
+    prof, v, _, _ = tyre_profile()
+    lathe("spare_tyre", prof, V((cx, cy, zc)), "tyre_trailer", seg=40, side=1, axis="Z", uv_v=v, sharp=60)
+    k = 1.30
+    rim = [(0.300, 0.112 * k), (0.302, 0.124 * k), (0.294, 0.128 * k), (0.284, 0.100 * k),
+           (0.262, 0.080 * k), (0.256, 0.050), (0.256, -0.050), (0.262, -0.080 * k), (0.284, -0.100 * k),
+           (0.294, -0.128 * k), (0.302, -0.124 * k), (0.300, -0.112 * k)]
+    lathe("spare_rim", rim, V((cx, cy, zc)), "steel_wheel", seg=32, side=1, axis="Z", sharp=45)
+    et = 0.120
+    dprof = [(0.110, et - 0.008), (0.150, et - 0.008), (0.172, et - 0.020), (0.235, et - 0.030), (0.250, et - 0.040),
+             (0.250, et - 0.052), (0.232, et - 0.042), (0.168, et - 0.032), (0.146, et - 0.020), (0.110, et - 0.020)]
+    lathe("spare_disc", dprof, V((cx, cy, zc)), "steel_wheel", seg=32, side=-1, axis="Z", sharp=40)
+    for j, dy in enumerate((-0.30, 0.30)):
+        box_mm(f"spare_carrier_bar_{j}", cx - 0.56, cx + 0.56, cy + dy - 0.03, cy + dy + 0.03, z0 - 0.03, z0 - 0.004,
+               "galv", bev=0.003)
+        rod(f"spare_hanger_in_{j}", (cx - 0.545, cy + dy, z0 - 0.01), (cx - 0.545, cy + dy, 1.20), 0.011, "galv", seg=8)
+        rod(f"spare_hanger_out_{j}", (cx + 0.545, cy + dy, z0 - 0.01), (cx + 0.545, cy + dy, 1.09), 0.011, "galv", seg=8)
+    box_mm("spare_clamp", cx - 0.13, cx + 0.13, cy - 0.035, cy + 0.035, zc + et - 0.006, zc + et + 0.006, "galv",
+           bev=0.003)
+    rod("spare_rod", (cx, cy, zc + et), (cx, cy, 1.22), 0.012, "galv", seg=8)
+    cyl("spare_nut", (cx, cy, zc + et + 0.02), 0.028, 0.03, "steel", axis="Z", seg=6)
+    # pallet box: black powder-coated steel body, two galvanised drop-down doors with pressed ribs and paddle latches
+    ya, yb, zb, zt = -3.98, -5.50, 0.50, 1.06
+    ym = (ya + yb) / 2
+    for s, sd in ((-1, "L"), (1, "R")):
+        x0, x1 = s * 0.62, s * 1.165
+        box_mm(f"pallet_box_{sd}", min(x0, x1), max(x0, x1), yb, ya, zb, zt, "trl_chassis", bev=0.008)
+        for j, (d0, d1) in enumerate(((ya - 0.025, ym + 0.006), (ym - 0.006, yb + 0.025))):
+            xa, xb = sorted((x1, x1 + s * 0.006))
+            box_mm(f"pallet_door_{sd}_{j}", xa, xb, d1, d0, zb + 0.03, zt - 0.03, "galv", bev=0.002, seg=1)
+            xa, xb = sorted((x1 + s * 0.006, x1 + s * 0.011))
+            for z in (0.66, 0.90):
+                box_mm(f"pallet_rib_{sd}_{j}_{z}", xa, xb, d1 + 0.06, d0 - 0.06, z - 0.018, z + 0.018, "galv",
+                       bev=0.004, seg=1)
+            yl = (d0 + d1) / 2
+            xa, xb = sorted((x1 + s * 0.0062, x1 + s * 0.0072))
+            box_mm(f"pallet_latch_pan_{sd}_{j}", xa, xb, yl - 0.055, yl + 0.055, zt - 0.14, zt - 0.07, "gap")
+            xa, xb = sorted((x1 + s * 0.007, x1 + s * 0.013))
+            box_mm(f"pallet_latch_{sd}_{j}", xa, xb, yl - 0.035, yl + 0.035, zt - 0.125, zt - 0.085, "steel",
+                   bev=0.002, seg=1)
+            for yh in (d0 - 0.12, d1 + 0.12):
+                cyl(f"pallet_hinge_{sd}_{j}_{yh:.2f}", (x1 + s * 0.008, yh, zb + 0.03), 0.010, 0.09, "galv", axis="Y",
+                    seg=8)
+        for j, yy in enumerate((ya - 0.10, yb + 0.10)):   # hanger straps up to the outriggers
+            xa, xb = sorted((x0 - s * 0.004, x1 + s * 0.002))
+            box_mm(f"pallet_strap_{sd}_{j}", xa, xb, yy - 0.02, yy + 0.02, zt - 0.004, 1.17, "galv")
+    # two wheel chocks in a holder between the landing gear and the toolbox (driver side)
+    for j, yy in enumerate((-2.70, -2.90)):
+        extrude_poly(f"chock_{j}", [(yy + 0.07, 0.66), (yy - 0.07, 0.66), (yy - 0.07, 0.69), (yy + 0.045, 0.84),
+                                    (yy + 0.07, 0.84)], 0.16, "trl_plastic", plane="YZ", origin=(-1.13, 0, 0),
+                     bev=0.006).data.shade_flat()
+    box_mm("chock_holder", -1.15, -0.95, -2.98, -2.62, 0.635, 0.66, "galv", bev=0.002)
+    for yy in (-2.96, -2.64):
+        box_mm(f"chock_holder_arm_{yy}", -1.05, -1.03, yy - 0.012, yy + 0.012, 0.66, 1.17, "galv")
+
+
 # ---------------------------------------------------------------- running gear
 def axles_and_suspension():
     part("CHASSIS", "frame")
@@ -635,8 +919,8 @@ def side_guards():
         box_mm(f"side_reflector_{s}", x + s * 0.013, x + s * 0.017, (y0 + y1) / 2 - 0.04, (y0 + y1) / 2 + 0.04, 0.88,
                0.92, "lens_amber_o")
     # toolbox behind the left guard (black plastic, two latches)
-    box_mm("toolbox", -1.15, -0.82, -4.60, -3.85, 0.60, 1.07, "trl_plastic", bev=0.02)
-    for yy in (-4.42, -4.03):
+    box_mm("toolbox", -1.15, -0.82, -3.80, -3.05, 0.60, 1.07, "trl_plastic", bev=0.02)   # r10: 0.80 m forward
+    for yy in (-3.62, -3.23):
         box_mm(f"toolbox_latch_{yy}", -1.16, -1.145, yy - 0.03, yy + 0.03, 0.96, 1.02, "steel")
 
 
@@ -766,16 +1050,16 @@ def top_rails_and_roof():
     for k in range(nb):
         ya, yb = Y_FRONT - 0.13 - k * (LEN - 0.25) / nb, Y_FRONT - 0.13 - (k + 1) * (LEN - 0.25) / nb
         for j in range(4):
-            ys.append((ya + (yb - ya) * j / 4, j / 4))
-    ys.append((Y_REAR + 0.12, 0.0))
+            ys.append((ya + (yb - ya) * j / 4, j / 4, k))
+    ys.append((Y_REAR + 0.12, 0.0, nb - 1))
     xs = [-1.274, -1.262, -1.22, -0.8, -0.4, 0.0, 0.4, 0.8, 1.22, 1.262, 1.274]
     zx = {-1.274: ROOF - 0.08, -1.262: ROOF - 0.018, 1.262: ROOF - 0.018, 1.274: ROOF - 0.08}
     segs = 6      # 6 roof panels (UV islands), cut on bow ridges
     for p in range(segs):
         sl = ys[p * len(ys) // segs: (p + 1) * len(ys) // segs + 1]
         rows = []
-        for y, t in sl:
-            sag = 0.010 * math.sin(math.pi * t)
+        for y, t, kb in sl:
+            sag = ROOF_SAGS[kb] * math.sin(math.pi * t)
             row = []
             for x in xs:
                 z = zx.get(x, ROOF - 0.004 - sag * (1 - (abs(x) / 1.22) ** 4))
@@ -1111,7 +1395,7 @@ def build(hi=True):
     G.STATE["coll"] = bpy.context.scene.collection
     materials()
     before = {o.name for o in bpy.data.objects}
-    steps = [frame, axles_and_suspension, wheels, mudguards, side_guards, landing_gear, front_wall,
+    steps = [frame, axles_and_suspension, wheels, mudguards, side_guards, underfloor_equipment, landing_gear, front_wall,
              top_rails_and_roof, rear_portal_and_doors, rear_lamps_and_rup]
     for fn in steps:
         b0 = {o.name for o in bpy.data.objects}
