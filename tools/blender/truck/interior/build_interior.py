@@ -267,14 +267,18 @@ def fit_to_exterior(objs, margin=0.004):
                     yl = (yf - rf) + math.sqrt(max(0.0, r * r - min(r, ax - cx) ** 2))
                     if ax - cx > r:
                         nx = min(nx, cx + r)
-                if GLASS_IF.get("crown") and z < WS_Z0:
+                if GLASS_IF.get("crown") and (z < WS_Z0 or z > WS_Z1):
                     # r7b (review r6 E-N2): below the glazing the limit follows the real skin - crowned face, corner
                     # arc behind it, mask pockets. The flat section above put the dash carcass up to 5 mm outside
                     # the skin at the corner start and 36 mm in front of the pocket floor: the game camera saw the
                     # cab through the T bar. Faded into the old section over the last 40 mm below the glass edge
                     # (the pillar trims above it were fitted and reviewed against that one). Applied on top of the
                     # old clamp, so that everything already inside the real skin stays where it was reviewed.
-                    t = smooth(WS_Z0 - 0.04, WS_Z0, z)
+                    # r7c: the same above the glazing. With the flat section the header shelf, the visor mounts and
+                    # the roof lining reached the OUTER skin 0.83-0.97 m off the centre line (crown sag there 34-47 mm
+                    # > the 30 mm wall): front_leak.py saw them from outside at z 3.23-3.53 m (42-52 rays per eye,
+                    # the "roof marker pockets" of r7b). Faded in over the first 40 mm above the glass edge.
+                    t = smooth(WS_Z0 - 0.04, WS_Z0, z) if z < WS_Z0 else 1.0 - smooth(WS_Z1, WS_Z1 + 0.04, z)
                     xc, yc = front_fit(nx, min(y, yl), z, wall)
                     nx, yl = xc + (nx - xc) * t, yc + (min(y, yl) - yc) * t
             ny = min(ny, yl)

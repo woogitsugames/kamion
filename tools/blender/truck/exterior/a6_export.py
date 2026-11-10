@@ -484,6 +484,7 @@ def game_materials():
 
 
 PRIORITY = {"interior": 0.30, "curtain": 0.30, "gap": 0.5, "chassis": 0.75, "grease": 0.75}
+PIECE_PRIORITY = {"cab_floor_pan": 0.2}    # r7c: 5.5 m2 seen only through the tilt joint from below
 
 
 def to_game_piece(o, gm):
@@ -524,7 +525,7 @@ def to_game_piece(o, gm):
         grp = light_group(o.name, mn, p.center.x) if sl == "Lights" else "NONE"
         gi = LIGHT_GROUPS.index(grp)
         pname_refl = o.name.startswith(("proj_refl", "hb_refl"))
-        pr = PRIORITY.get(mn, 1.0)
+        pr = PRIORITY.get(mn, 1.0) * next((k for nm, k in PIECE_PRIORITY.items() if o.name.startswith(nm)), 1.0)
         if o.get("group") == "frame" and p.normal.z < -0.6:
             pr *= 0.6
         if "Ri_" in o.name or "Li_" in o.name:
@@ -608,7 +609,7 @@ def occluder_bvh(objs):
 # through those holes the game camera saw the cab interior. The two back trays (body.mask_tray) are kept whole, and
 # so is every non-paint face of the cab shell in the mask band (the 30 mm walls of the T bar, stem and lamp openings).
 # MIN_RATIO keeps the trays' rims closed in LOD1 / LOD2.
-HIDDEN_KEEP = ("grille_back_stem", "grille_back_bar", "lamp_back_")
+HIDDEN_KEEP = ("grille_back_stem", "grille_back_bar", "lamp_back_", "cab_floor_pan")   # r7c: + the cab underside
 MASK_BAND_Z = (1.20, 1.89)     # m (A2): stem bottom .. T bar top, with the joint
 MASK_BAND_BACK = 0.45          # m behind the front plane: the wrapped ends of the bar
 
@@ -1180,7 +1181,7 @@ SILHOUETTE_W = 4.0
 # the LOD0 ones) down to ROUND_SEGMENTS around the circumference; the pieces are then fixed in the budget.
 # pieces that break below this share of their LOD0 triangles (locked slot borders leave the collapse too little room:
 # the lower fairing at 0.15 pulled black trim triangles from the bumper corner to the wheel arch)
-MIN_RATIO = {"lower_fairing": 0.3, "door_shell": 0.30, "grille_back_": 0.35, "lamp_back_": 0.35}   # modern door: below ~0.2 the window opening collapsed down to the sill (LOD2)
+MIN_RATIO = {"lower_fairing": 0.3, "door_shell": 0.30, "grille_back_": 0.35, "lamp_back_": 0.35, "wiper_blade": 0.5}   # modern door: below ~0.2 the window opening collapsed down to the sill (LOD2)
 # r6: thin dark strips on the paint; the collapse dragged one corner of the sill cladding across the corner panel and the
 # door (a black wedge in LOD1) and the T bar end caps turned into shards
 NO_DECIMATE = ("sill_clad_", "door_skirt_clad_", "grille_bar_endcap")
@@ -1188,7 +1189,9 @@ NO_DECIMATE = ("sill_clad_", "door_skirt_clad_", "grille_bar_endcap")
 # to a sliver and the game camera looked through the mask into the cab (ADR 0047 r7); the bar is the face of the truck
 # on the Low tier, so it keeps its LOD0 grid (TRI_TARGET / TRI_LIMIT of LOD2 raised by its triangle count). LOD1 is
 # untouched: its collapse leaves the bar whole.
-NO_DECIMATE_FAR = ("grille_bar_mask",)
+# r7c: + the wiper arms (thin rods: the collapse left dark shards across the cowl on Low; the blades keep half of
+# their triangles, MIN_RATIO)
+NO_DECIMATE_FAR = ("grille_bar_mask", "wiper_arm")
 ROUND_KEYS = ("_tyre", "_rim")
 ROUND_SEGMENTS = {2: 24, 3: 16}
 
@@ -1309,7 +1312,195 @@ def reduce_round(o, target_seg, profile_tol=0.004, tyre_tol=0.02):
     return nseg, nseg // k
 
 
-def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, keep=()):
+# r7c (review r7 N-1: "the front falls apart on Low"): pieces that are surface-following GRIDS are not collapsed. The
+# quadric collapse turned the eight louvres of the mask into ~40 unrelated triangles each (their 4 mm top land, the
+# only part that mirrors the sky, came out as a dashed line), the wheel-arch flare into a ragged fan, the sun visor
+# and the cowl into shards. reduce_grid() keeps every row of the generator's section and thins the COLUMNS only, with
+# LOD0 vertices and LOD0 loop data, so the section, the UVs and the bake stay exact.
+# name prefix -> (kind, chord tolerance [m] at LOD1, LOD2; None = not at that LOD). kind "front" = columns along the
+# front surface of the cab loft (parameter of geom.Loft.front_pt), "low" = the same on the lower fairing loft,
+# "arc" = columns round the front wheel centre (geom.arch). The columns that stay are the Douglas-Peucker subset of the
+# plan curve: the crowned face (R 10 m) keeps a few, the R 0.36 m corners and the arch keep one every 9-15 deg.
+# The T bar (r7b: whole from LOD2 on, 1910 triangles) gives most of its 72 columns back at LOD2: that pays for the
+# louvres, the arch and the wipers inside the same LOD2 limit.
+GRID_PIECES = {"grille_bar_l": ("front", 0.001, 0.003), "grille_bar_b": ("low", 0.001, 0.003),
+               "sun_visor": ("front", 0.0015, 0.004),
+               "cowl": ("front", 0.0015, 0.004), "arch_flare_": ("arc", 0.003, 0.006),
+               "arch_liner_": ("arc", 0.005, 0.011), "grille_bar_mask": ("front", None, 0.004)}
+
+
+# r7c: louvres at LOD2 lose their top (the 4 mm land and the 48 mm top face). From the game cameras both together are
+# a 7-8 mm bright line (they mirror the sky): 1 px on High, under a pixel at the Low tier's 0.75 render scale, where it
+# breaks into dashes whatever the mesh. Without it the lamella is its face-down face only and the gap above it shows
+# the dark tray: bands of 5 px and 3 px on Low instead of a sub-pixel highlight.
+GRID_OPEN_TOP = {"grille_bar_l": 0.006, "grille_bar_b": 0.006}     # strips within this of the top row are dropped
+
+
+def grid_spec(o):
+    return next((v for k, v in GRID_PIECES.items() if o.name.startswith(k)), None)
+
+
+def reduce_grid(o, kind, tol_m, open_top=0.0):
+    """Thin the columns of a grid piece (see GRID_PIECES). Every vertex gets (column, row): column = clustered
+    parameter along the surface (or angle round the wheel centre), row = its place in the section (height + offset
+    from the surface, or radius + x). A face is a cell when it is a quad over two neighbouring columns and two rows.
+    Columns are kept when anything but a full run of cells meets them: the two ends, non-cell faces (bevelled end
+    caps), holes of the hidden-face cleanup, UV island borders; between those the Douglas-Peucker subset of the column
+    centres stays (chord error <= tol_m), the same for every strip (no T junctions). The cells between two kept
+    columns become one quad that takes its four corners
+    (vertices and loop data) from the LOD0 cells. Returns columns before / after."""
+    me = o.data
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    uvl = bm.loops.layers.uv["Atlas"]
+    loft = B.LOW if kind == "low" else B.CAB
+    cval, row = {}, {}
+    for v in bm.verts:
+        if not v.link_faces:
+            continue
+        x, y, z = v.co
+        if kind == "arc":
+            ang = math.atan2(z - G.WHEEL_Z, y)
+            cval[v] = ang + 2 * math.pi if ang < -math.pi / 2 else ang     # the band runs from -12 to 192 deg
+            row[v] = (round(math.hypot(y, z - G.WHEEL_Z), 3), round(x, 3))
+        else:
+            par, off = loft.front_param(z, x, y)
+            cval[v] = par
+            row[v] = (round(z, 3), round(off, 3))
+    tol = 0.004 if kind == "arc" else 0.003
+    vals = sorted(set(cval.values()))
+    if len(vals) < 3:
+        bm.free()
+        return 0, 0
+    cents, cur = [], [vals[0]]
+    for a in vals[1:]:
+        if a - cur[-1] > tol:
+            cents.append(sum(cur) / len(cur))
+            cur = []
+        cur.append(a)
+    cents.append(sum(cur) / len(cur))
+    ncol = len(cents)
+
+    def col_of(v):
+        a = cval[v]
+        lo, hi = 0, ncol - 1
+        while lo < hi:
+            mid = (lo + hi) // 2
+            if cents[mid] < a - tol:
+                lo = mid + 1
+            else:
+                hi = mid
+        return lo if lo == 0 or abs(cents[lo] - a) <= abs(cents[lo - 1] - a) else lo - 1
+    col = {v: col_of(v) for v in cval}
+    forced, why = {0, ncol - 1}, {}
+    strips = {}                              # (row a, row b, material) -> {left column: face}
+    for f in bm.faces:
+        cs = sorted({col[v] for v in f.verts})
+        rs = sorted({row[v] for v in f.verts})
+        key = (rs[0], rs[-1], f.material_index)
+        if len(f.verts) == 4 and len(cs) == 2 and cs[1] == cs[0] + 1 and len(rs) == 2 and \
+                cs[0] not in strips.setdefault(key, {}):
+            strips[key][cs[0]] = f
+        else:
+            forced.update(cs)
+            why["face"] = why.get("face", 0) + 1
+    for key, cells in strips.items():
+        for c, f in cells.items():
+            if c - 1 not in cells:
+                forced.add(c)
+            g = cells.get(c + 1)
+            if g is None:
+                forced.add(c + 1)
+                why["hole"] = why.get("hole", 0) + 1
+                continue
+            # same vertices and the same UVs on the shared column: else the column is an island border
+            fl = {lp.vert: lp for lp in f.loops if col[lp.vert] == c + 1}
+            gl = {lp.vert: lp for lp in g.loops if col[lp.vert] == c + 1}
+            if set(fl) != set(gl) or any((fl[v][uvl].uv - gl[v][uvl].uv).length > 1e-5 for v in fl):
+                forced.add(c + 1)
+                why["uv"] = why.get("uv", 0) + 1
+    fs = sorted(forced)
+    if os.environ.get("GRID_DEBUG"):
+        print(f"    grid debug {o.name}: {ncol} columns, forced {fs}, why {why}, strips {len(strips)}: "
+              f"{sorted((k, len(v)) for k, v in strips.items())}")
+    acc = {}
+    for v, c in col.items():
+        q = acc.setdefault(c, [0.0, 0.0, 0])
+        q[0] += v.co.y if kind == "arc" else v.co.x
+        q[1] += v.co.z if kind == "arc" else v.co.y
+        q[2] += 1
+    cpt = {c: (q[0] / q[2], q[1] / q[2]) for c, q in acc.items()}
+    keepc = set(fs)
+
+    def worst(i0, i1):
+        (x0, y0), (x1, y1) = cpt[i0], cpt[i1]
+        L = math.hypot(x1 - x0, y1 - y0) or 1e-9
+        best, bi = 0.0, -1
+        for i in range(i0 + 1, i1):
+            x, y = cpt[i]
+            d = abs((x1 - x0) * (y0 - y) - (x0 - x) * (y1 - y0)) / L
+            if d > best:
+                best, bi = d, i
+        return best, bi
+
+    def dp(i0, i1, out):
+        best, bi = worst(i0, i1)
+        if bi >= 0 and best > tol_m:
+            out.add(bi)
+            dp(i0, bi, out)
+            dp(bi, i1, out)
+    for a, b in zip(fs, fs[1:]):
+        # two candidates per run: Douglas-Peucker (mixed curvature: crowned face + corner) and the coarsest EVEN
+        # split within the tolerance (constant curvature: DP only halves, an arch wants every 3rd column)
+        cand = set()
+        dp(a, b, cand)
+        for nseg in range(1, b - a):
+            idx = [a + int(round((b - a) * i / nseg)) for i in range(nseg + 1)]
+            if all(worst(i, j)[0] <= tol_m for i, j in zip(idx, idx[1:])):
+                if nseg - 1 < len(cand):
+                    cand = set(idx[1:-1])
+                break
+        keepc |= cand
+    kc = sorted(keepc)
+    kill = []
+    if open_top:
+        ztop = max(r[0] for r in row.values())
+        for key in [k for k in strips if min(k[0][0], k[1][0]) >= ztop - open_top]:
+            kill += list(strips.pop(key).values())
+    for key, cells in strips.items():
+        for a, b in zip(kc, kc[1:]):
+            if b == a + 1 or any(c not in cells for c in range(a, b)):
+                continue
+            fa, fb = cells[a], cells[b - 1]
+            swap = {}
+            for lp in fa.loops:
+                if col[lp.vert] == a + 1:
+                    swap[lp.vert] = next(l2 for l2 in fb.loops if col[l2.vert] == b and row[l2.vert] == row[lp.vert])
+            lps = [swap.get(lp.vert, lp) for lp in fa.loops]
+            try:
+                nf = bm.faces.new([lp.vert for lp in lps], fa)
+            except ValueError:
+                continue
+            nf.normal_update()
+            if nf.normal.dot(fa.normal) < 0:
+                nf.normal_flip()
+            by_vert = {lp.vert: lp for lp in lps}
+            for lp in nf.loops:
+                lp.copy_from(by_vert[lp.vert])
+            kill += [cells[c] for c in range(a, b)]
+    if kill:
+        bmesh.ops.delete(bm, geom=list(set(kill)), context="FACES")
+        loose = [v for v in bm.verts if not v.link_faces]
+        if loose:
+            bmesh.ops.delete(bm, geom=loose, context="VERTS")
+    bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method="BEAUTY", ngon_method="BEAUTY")
+    bm.to_mesh(me)
+    bm.free()
+    me.update()
+    return ncol, len(kc)
+
+
+def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, keep=(), grid_lod=0):
     """Area-weighted budget: each piece wants k * area^0.6 triangles (clamped to [floor, own count]); k is bisected
     on the evaluated (collapsed) meshes until the total meets the target. A uniform global ratio (A6 wip) crushed
     the dense grille / honeycomb pieces into black triangles at LOD2-3 while big smooth panels kept spare tris.
@@ -1317,10 +1508,20 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, 
     column (reduce_round) and kept out of the collapse."""
     rounds = [o for o in pieces if is_round_wheel_piece(o)] if round_seg else []
     for o in rounds:
-        before, after = reduce_round(o, round_seg)
+        # r7c: the inner dual rims (hidden behind the outer wheel but for the view from under the frame) keep a
+        # coarser meridian: 402 -> ~200 triangles each, spent on the front of the cab
+        inner = o.name.startswith(("wheel_RLi_rim", "wheel_RRi_rim"))
+        before, after = reduce_round(o, round_seg, profile_tol=0.012 if inner else 0.004)
         print(f"  round {o.name}: {before} -> {after} segments, {tris_of(o)} tris")
+    grids = [o for o in pieces if grid_lod and grid_spec(o) and grid_spec(o)[grid_lod] is not None]
+    for o in grids:
+        spec = grid_spec(o)
+        t_before = tris_of(o)
+        ot = next((v for k, v in GRID_OPEN_TOP.items() if o.name.startswith(k)), 0.0) if grid_lod == 2 else 0.0
+        before, after = reduce_grid(o, spec[0], spec[grid_lod], open_top=ot)
+        print(f"  grid {o.name}: {before} -> {after} columns, {t_before} -> {tris_of(o)} tris")
     dec = [o for o in pieces if tris_of(o) > floor_tris and not o.name.startswith(("decal_", "MIRROR_") + NO_DECIMATE + tuple(keep))
-           and o not in rounds]
+           and o not in rounds and o not in grids]
     fixed = sum(tris_of(o) for o in pieces if o not in dec)
     base = {o.name: tris_of(o) for o in dec}
     area = {o.name: max(1e-6, sum(p.area for p in o.data.polygons)) for o in dec}
@@ -1579,7 +1780,7 @@ def export_lod(lod, master, mirrors, a, manifest, coll):
     if lod in TRI_TARGET:
         ratio = decimate_pieces(pieces, TRI_TARGET[lod], floor_tris={1: 40, 2: 16, 3: 8}[lod],
                                 lights_min={1: 0.5, 2: 0.15, 3: 0.1}[lod], round_seg=ROUND_SEGMENTS.get(lod, 0),
-                                keep=NO_DECIMATE_FAR if lod >= 2 else ())
+                                keep=NO_DECIMATE_FAR if lod >= 2 else (), grid_lod=lod if lod in (1, 2) else 0)
     by_part = {}
     for o in master:
         by_part.setdefault(o["part"], []).append(o)
