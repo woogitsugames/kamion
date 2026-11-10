@@ -172,3 +172,40 @@ def conform(hf, road, mask, soft=None):
         relax = soft & ~ndimage.binary_dilation(hard, iterations=SOFT_CLEAR_CELLS)
         out[relax] = road[relax] - SOFT_UNDER
     return out, d
+
+
+WALL_MAX = 0.15            # m: visible vertical step between a ground surface edge and the terrain (REVIEW r4 W-H5)
+WALL_STEEP_NZ = 0.26       # |normal.z| below this = "vertical" face (steeper than ~75 deg)
+WALL_SKIP_MATS = ("curb_concrete", "edging_concrete", "bridge_concrete", "bridge_soffit", "apron_sett")
+
+
+def terrain_walls(parts, zc, hf, thresh=WALL_MAX):
+    """QA "vertical terrain wall > 0.15 m": steep faces of ground-level surfaces (road / paved layers: verge and yard
+    flanges) whose top stands more than `thresh` above the conformed terrain at the same plan position. Kerb faces
+    and edgings are real vertical faces and are skipped. Terrain sampled bilinearly from the conformed 1 m grid."""
+    from streetscape.paved import bilinear    # local import: streetscape imports this module
+    hs, where = [], []
+    for p in parts:
+        if p.layer not in ("road", "paved") or p.mat in WALL_SKIP_MATS or p.mat.startswith("collision"):
+            continue
+        V, T = p.V, p.T
+        a, b, c = V[T[:, 0]], V[T[:, 1]], V[T[:, 2]]
+        nrm = np.cross(b - a, c - a)
+        ln = np.linalg.norm(nrm, axis=1)
+        steep = np.abs(nrm[:, 2]) < WALL_STEEP_NZ * np.maximum(ln, 1e-12)
+        if not steep.any():
+            continue
+        P = V[np.unique(T[steep])]
+        h = P[:, 2] - bilinear(zc, hf, P[:, 0], P[:, 1])
+        k = h > thresh
+        if k.any():
+            hs.append(h[k])
+            where += [(p.src, p.mat, float(P[i, 0]), float(P[i, 1]), float(h[i])) for i in np.flatnonzero(k)[:3]]
+    if not hs:
+        return {"thresh_m": thresh, "count": 0, "max_m": 0.0, "p99_m": 0.0, "worst": []}
+    h = np.concatenate(hs)
+    where.sort(key=lambda t: -t[4])
+    return {"thresh_m": thresh, "count": int(len(h)), "max_m": round(float(h.max()), 3),
+            "p99_m": round(float(np.percentile(h, 99)), 3),
+            "worst": [{"src": s, "mat": m, "e": round(e, 1), "n": round(n, 1), "h": round(v, 3)}
+                      for s, m, e, n, v in where[:12]]}

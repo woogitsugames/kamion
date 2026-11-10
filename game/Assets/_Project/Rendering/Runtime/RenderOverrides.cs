@@ -63,7 +63,7 @@ namespace Game.Rendering
             if (TreeThin.HasValue) t.treeThinStartM = TreeThin.Value;
             if (SimpleFoliage.HasValue) t.simpleFoliage = SimpleFoliage.Value;
             if (ForestHlod.HasValue) t.forestHlodM = ForestHlod.Value > 0f ? ForestHlod.Value : -1f;   // -1 = off
-            if (VehicleLook == false) { t.clearCoat = false; t.envCaptureSize = 0; t.contactShadows = false; t.cabShadowLift = 0f; t.streetLights = 0; }
+            if (VehicleLook == false) { t.clearCoat = false; t.vehicleGrimeDetail = false; t.envCaptureSize = 0; t.contactShadows = false; t.cabShadowLift = 0f; t.streetLights = 0; }
             if (EnvCapture.HasValue) t.envCaptureSize = EnvCapture.Value;
             return t;
         }

@@ -56,6 +56,7 @@ namespace Game.Controls
                 result.ToggleLandingGear |= it.ToggleLandingGear;
                 result.ToggleBrakeCruise |= it.ToggleBrakeCruise;
                 result.ToggleReverseCamera |= it.ToggleReverseCamera;
+                if (it.TurnSignal != TurnSignalRequest.None) result.TurnSignal = it.TurnSignal;
             }
             if (!steered) SteeringSource = "-";
             return result;

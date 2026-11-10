@@ -43,6 +43,9 @@ namespace Game.UI.Driving
         public Func<float> BrakeCruiseKmh;
         /// <summary>One line about the trailer (coupled / parked, jaw-to-kingpin guide), empty without a trailer.</summary>
         public Func<string> CouplingStatus;
+        /// <summary>Turn-signal lever (0 off, -1 left, +1 right, 2 hazard) and the flasher phase, for the lit buttons.</summary>
+        public Func<int> TurnSignalLever;
+        public Func<bool> TurnSignalLit;
         /// <summary>Texture of the active reversing camera, or null when the view is hidden.</summary>
         public Func<Texture> ReverseCameraTexture;
         public Func<string> ReverseCameraLabel;
@@ -71,6 +74,7 @@ namespace Game.UI.Driving
         static readonly Color k_PedalPanel = new Color(0.06f, 0.065f, 0.07f, 0.97f);
         static readonly Color k_Panel = new Color(0.06f, 0.065f, 0.07f, 0.88f);
         static readonly Color k_Button = new Color(0.16f, 0.17f, 0.18f, 0.95f);
+        static readonly Color k_TurnLit = new Color(0.30f, 0.52f, 0.28f, 0.95f);   // ISO 2575 green telltale family
         static readonly Color k_ButtonOn = new Color(0.30f, 0.36f, 0.30f, 0.92f);
         static readonly Color k_Text = new Color(0.95f, 0.95f, 0.91f, 1f);
         static readonly Color k_Muted = new Color(0.70f, 0.70f, 0.67f, 1f);
@@ -95,6 +99,7 @@ namespace Game.UI.Driving
         readonly Image[] m_StalkCells = new Image[6];
         readonly Image[] m_SpawnBtns = new Image[4];
         Image m_CruiseBtn;
+        Image m_TurnLeftBtn, m_TurnRightBtn, m_HazardBtn;
         int m_LastAir1 = int.MinValue, m_LastAir2 = int.MinValue;
         static readonly string[] k_AirStrings = BuildAirStrings();
         static readonly string[] k_CruiseStrings = BuildCruiseStrings();
@@ -315,6 +320,12 @@ namespace Game.UI.Driving
             m_Air1Bar = Bar(strip, "Air1Bar", new Vector2(346f, 46f));
             m_Air2Bar = Bar(strip, "Air2Bar", new Vector2(346f, 4f));
 
+            // ---- turn signals: left / hazard / right above the steering wheel (lit with the flasher; self-cancel like a stalk) ----
+            const float th = 84f;
+            Button(m_SafeArea, "TurnLeft", Vector2.zero, new Vector2(70f, 506f), new Vector2(140f, th), () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Left), out m_TurnLeftBtn).text = "←";
+            Button(m_SafeArea, "Hazard", Vector2.zero, new Vector2(222f, 506f), new Vector2(156f, th), () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Hazard), out m_HazardBtn).text = "AWAR.";
+            Button(m_SafeArea, "TurnRight", Vector2.zero, new Vector2(390f, 506f), new Vector2(140f, th), () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Right), out m_TurnRightBtn).text = "→";
+
             // ---- coupling status (under the status line) ----
             m_Coupling = Label(m_SafeArea, "Coupling", "", SmallFont, TextAnchor.UpperLeft, Vector2.zero, new Vector2(1100f, 34f));
             Place((RectTransform)m_Coupling.transform, new Vector2(0f, 1f), new Vector2(24f, -620f), new Vector2(1100f, 34f));
@@ -532,6 +543,11 @@ namespace Game.UI.Driving
         {
             int lever = m_Ctx.RetarderLever != null ? m_Ctx.RetarderLever() : 0;
             for (int i = 0; i < m_StalkCells.Length; i++) m_StalkCells[i].color = i == lever ? (i == 0 ? k_ButtonOn : new Color(0.42f, 0.36f, 0.20f, 0.95f)) : k_Button;
+            int sig = m_Ctx.TurnSignalLever != null ? m_Ctx.TurnSignalLever() : 0;
+            bool lit = sig != 0 && m_Ctx.TurnSignalLit != null && m_Ctx.TurnSignalLit();
+            m_TurnLeftBtn.color = lit && (sig == -1 || sig == 2) ? k_TurnLit : k_Button;
+            m_TurnRightBtn.color = lit && (sig == 1 || sig == 2) ? k_TurnLit : k_Button;
+            m_HazardBtn.color = lit && sig == 2 ? k_TurnLit : k_Button;
             float cruise = m_Ctx.BrakeCruiseKmh != null ? m_Ctx.BrakeCruiseKmh() : 0f;
             string cl = cruise > 0f ? k_CruiseStrings[Mathf.Clamp(Mathf.RoundToInt(cruise), 0, k_CruiseStrings.Length - 1)] : k_CruiseOff;
             if (!ReferenceEquals(m_CruiseLabel.text, cl)) m_CruiseLabel.text = cl;

@@ -21,6 +21,7 @@ namespace Game.Controls
         SelectorRequest m_Selector;
         int m_Shift, m_Retarder;
         bool m_Park, m_Manual, m_Couple, m_Legs, m_Cruise, m_RevCam;
+        TurnSignalRequest m_Turn;
 
         public void RequestSelector(SelectorRequest s) => m_Selector = s;
         public void RequestShift(int delta) => m_Shift += delta;
@@ -31,6 +32,7 @@ namespace Game.Controls
         public void RequestLandingGearToggle() => m_Legs = true;
         public void RequestBrakeCruiseToggle() => m_Cruise = true;
         public void RequestReverseCameraToggle() => m_RevCam = true;
+        public void RequestTurnSignal(TurnSignalRequest r) => m_Turn = r;
 
         public static float Shape(float raw, float exponent) => Mathf.Pow(Mathf.Clamp01(raw), Mathf.Max(0.1f, exponent));
 
@@ -48,8 +50,9 @@ namespace Game.Controls
             intent.ToggleLandingGear = m_Legs;
             intent.ToggleBrakeCruise = m_Cruise;
             intent.ToggleReverseCamera = m_RevCam;
+            intent.TurnSignal = m_Turn;
             m_Selector = SelectorRequest.None; m_Shift = 0; m_Park = false; m_Manual = false;
-            m_Retarder = 0; m_Couple = false; m_Legs = false; m_Cruise = false; m_RevCam = false;
+            m_Retarder = 0; m_Couple = false; m_Legs = false; m_Cruise = false; m_RevCam = false; m_Turn = TurnSignalRequest.None;
         }
     }
 }

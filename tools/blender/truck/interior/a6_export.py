@@ -65,7 +65,7 @@ LOD2_DROP = LOD1_DROP + ("_cst_", "_ctr_", "_bst_", "_btr_", "rocker_icon_", "hv
 # ---------------------------------------------------------------- slots (game materials)
 SLOT_OF = {
     "MI_Cab_Plastic": ("dash_soft", "dash_lower", "dash_mid", "dash_dark", "trim_insert", "trim_light", "metal_dark",
-                       "piano", "switch", "knob", "gap", "led_off", "lamp_lens", "yellow", "ext_plastic", "frit",
+                       "piano", "grab_dark", "switch", "knob", "gap", "led_off", "lamp_lens", "yellow", "ext_plastic", "frit",
                        "hazard_red"),
     "MI_Cab_Leather": ("leather", "leather_wheel", "leather_centre", "leather_trim"),
     "MI_Cab_Fabric": ("headliner", "wall_fabric", "mattress", "curtain", "seat_fabric", "blind", "webbing"),
@@ -79,7 +79,8 @@ SLOT_OF = {
 SLOT = {m: s for s, ms in SLOT_OF.items() for m in ms}
 DETAIL_SET = {"MI_Cab_Plastic": ("dashgrain", 1024), "MI_Cab_Leather": ("leather", 1024),
               "MI_Cab_Fabric": ("fabric", 512), "MI_Cab_Rubber": ("rubbermat", 1024), "MI_Cab_Metal": ("brushed", 512)}
-WEAR_MUL = {"leather_trim": 1.6, "leather": 2.3, "leather_wheel": 1.6, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3}
+WEAR_MUL = {"leather_trim": 1.6, "leather": 2.3, "leather_wheel": 1.6, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3,
+            "switch": 1.35, "grab_dark": 1.7}
 NO_AO = ("curtain_", "blind_", "hatch_blind",     # thin interpenetrating cloth (critic #15) and the rim, which
          "wheel_rim", "wheel_stitch",           # rotates (a baked occlusion pattern would turn with it): median value
          "ws_frit")                             # A6 r3: frit on the glass (no surface under it to inherit UV1 from)

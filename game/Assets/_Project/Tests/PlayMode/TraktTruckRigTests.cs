@@ -43,7 +43,10 @@ namespace Game.Tests
                 Assert.That(s.GetComponentsInChildren<Renderer>(true).Length, Is.GreaterThan(0), "art wheel under the physics spinner " + s.parent.name);
             Assert.IsNotNull(vis.cabPivot.Find("DriverEyePoint"), "eye point on the cab-suspension pivot");
             Assert.IsNull(m_Truck.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name.StartsWith("CAB_ShellPlaceholder")), "interior shell placeholder removed");
-            Assert.That(m_Truck.GetComponentsInChildren<RenderTextureMirror>(true).Length, Is.EqualTo(2), "two render-texture main mirrors");
+            var mirrors = m_Truck.GetComponentsInChildren<RenderTextureMirror>(true);
+            Assert.That(mirrors.Length, Is.EqualTo(6), "render texture on every mirror (R46 classes II x2, IV x2, V, VI; review r5 C5)");
+            Assert.That(mirrors.Count(m => m.main), Is.EqualTo(2), "two class II main mirrors");
+            Assert.That(mirrors.Where(m => !m.main).All(m => m.weight < 1f && m.resolutionScale < 1f), "convex mirrors share the budget at lower rate / res");
 
             var late = typeof(VehicleVisuals).GetMethod("LateUpdate", BindingFlags.Instance | BindingFlags.NonPublic);
             late.Invoke(vis, null);

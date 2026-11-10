@@ -101,8 +101,18 @@ namespace Game.Editor.VisualQA
             var worldTextures = applier != null ? applier.worldTextures : null;
             string[] filter = string.IsNullOrEmpty(onlyCameras) ? null : onlyCameras.Split(',');
 
+            // -qaGate3 <gate3_cameras.json>: adds the Stage 3 gate cameras (same code as the phone's qacam_set=gate3,
+            // re-seated on the road collision) so scripts/gate3-evidence.ps1 can render them in the editor.
+            string gate3Json = EditorTools.Arg("-qaGate3", null);
+            if (!string.IsNullOrEmpty(gate3Json))
+            {
+                // Colliders are saved disabled and cooked by the player at load; do the same so the cameras seat like on the phone.
+                foreach (var ck in UnityEngine.Object.FindObjectsByType<Game.World.WorldCollisionCooker>(FindObjectsInactive.Include, FindObjectsSortMode.None)) ck.Cook();
+                Physics.SyncTransforms();
+                Game.Gameplay.Gate3Cameras.CreateAll(UnityEngine.Object.FindAnyObjectByType<Game.World.WorldRegionRoot>(), null, File.ReadAllText(gate3Json));
+            }
             var cams = UnityEngine.Object.FindObjectsByType<ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None)
-                .Where(c => filter == null || filter.Contains(c.id))
+                .Where(c => filter == null || filter.Any(f => Game.Gameplay.Gate3Cameras.Norm(f) == Game.Gameplay.Gate3Cameras.Norm(c.id)))
                 .OrderBy(c => c.id, StringComparer.Ordinal).ToArray();
             int msaa = 1; float scale = 1f;
             if (hasTier)
@@ -239,6 +249,7 @@ namespace Game.Editor.VisualQA
                         foreach (var mir in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None))
                         {
                             var mt = mir.Texture;
+                            if (!mir.main) continue;
                             if (mir.phase == 0) ctx.LeftMirrorTexture = () => mt; else ctx.RightMirrorTexture = () => mt;
                         }
                     }

@@ -90,6 +90,7 @@ namespace Game.Gameplay
             }
 
             // The imported world (WorldC) is in the build only when it was generated (scripts/import-region.ps1).
+            var options = StartMenuOptions.Load();
             var entries = new System.Collections.Generic.List<(string, System.Action)>
             {
                 ("DrivingLab — plac testowy", () => SceneManager.LoadScene(DrivingLabLayout.SceneName)),
@@ -99,18 +100,19 @@ namespace Game.Gameplay
                 // Same values as the launch arguments route_s / route_end (consumed by DrivingLabBootstrap in WorldC).
                 entries.Add(("Trasa G3-A — Kwadrat Park, brama, Bieżeństwa", () =>
                 {
-                    StartRequest.Set("G3-A", StartRequest.G3AStartS, StartRequest.G3AEndS);
+                    StartRequest.Set("G3-A", StartRequest.G3AStartS, StartRequest.G3AEndS, options.LightingId);
                     SceneManager.LoadScene(WorldCSceneForTier());
                 }));
                 entries.Add(("Trasa G3-B — Andersa, Rondo Putry", () =>
                 {
-                    StartRequest.Set("G3-B", StartRequest.G3BStartS, StartRequest.G3BEndS);
+                    StartRequest.Set("G3-B", StartRequest.G3BStartS, StartRequest.G3BEndS, options.LightingId);
                     SceneManager.LoadScene(WorldCSceneForTier());
                 }));
             }
-            entries.Add(("Ustawienia sterowania", OpenControlSettings));
             ControlSettings.Load().Log("boot");
-            BootMenu.Create(Camera.main, entries.ToArray()).transform.SetParent(transform, false);
+            m_Menu = BootMenu.Create(Camera.main, options, entries, OpenControlSettings);
+            m_Menu.transform.SetParent(transform, false);
+            Debug.Log("[CONTROLS] menu shown light=" + options.LightingId + " tier=" + options.Tier + " fps=" + options.Fps);
 
             // Launch argument "scene" (adb: -e scene DrivingLab) jumps straight into a scene; the remaining
             // arguments (autopilot, speed) are read by that scene's bootstrap.
@@ -119,6 +121,9 @@ namespace Game.Gameplay
         }
 
         ControlSettingsPanel m_Settings;
+        BootMenu m_Menu;
+
+        public BootMenu Menu => m_Menu;
 
         void OpenControlSettings()
         {

@@ -168,10 +168,20 @@ namespace Game.Rendering
         /// illuminance / π) into Unity's L2 ambient probe. Each sample acts as a directional light of intensity L·k·dω/π,
         /// which reproduces the irradiance E(n)·k/π a Unity Lambert surface expects. The sun is NOT included (real light).
         /// </summary>
-        public UnityEngine.Rendering.SphericalHarmonicsL2 AmbientProbe(Color groundAlbedo, int resolution = 24, float skySaturation = 1f)
+        /// <param name="lowSunCool">Review r4 L2 (olive low-sun shade): 0..1 share of the low-sun sky samples whose chroma is
+        /// taken from the zenith instead of their own (luminance kept). Faded in below 15 deg sun elevation (full at 5 deg),
+        /// clear part only. A shadow at low sun is lit by the whole blue dome, but the L2 probe is dominated by the bright warm
+        /// aureole/horizon band next to the sun, which turned the plaza shade olive (R-B +9). Only the directional sun stays
+        /// warm. 0 = the plain analytic sky (tests).</param>
+        public UnityEngine.Rendering.SphericalHarmonicsL2 AmbientProbe(Color groundAlbedo, int resolution = 24, float skySaturation = 1f,
+            float lowSunCool = 0f)
         {
             var sh = new UnityEngine.Rendering.SphericalHarmonicsL2();
             Color ground = groundAlbedo * (HorizontalIlluminanceLux * Exposure / Mathf.PI);
+            float cool = Mathf.Clamp01(lowSunCool) * Mathf.Clamp01((15f - SunElevationDeg) / 10f) * (1f - Overcast);
+            Color zc = ExposedRadiance(Vector3.up);
+            float zy = 0.2126f * zc.r + 0.7152f * zc.g + 0.0722f * zc.b;
+            zc = zy > 1e-8f ? zc / zy : Color.white;
             // Equal-area sampling: rows in z = cosθ, columns in φ.
             int rows = resolution * 2, cols = resolution * 4;
             float dOmega = 4f * Mathf.PI / (rows * cols);
@@ -183,7 +193,17 @@ namespace Game.Rendering
                 {
                     float phi = 2f * Mathf.PI * (c + 0.5f) / cols;
                     var d = new Vector3(s * Mathf.Cos(phi), z, s * Mathf.Sin(phi));
-                    Color L = z > 0f ? Desaturate(ExposedRadiance(d), skySaturation) : ground;
+                    Color L = ground;
+                    if (z > 0f)
+                    {
+                        L = ExposedRadiance(d);
+                        if (cool > 0f)
+                        {
+                            float y = 0.2126f * L.r + 0.7152f * L.g + 0.0722f * L.b;
+                            L = Color.LerpUnclamped(L, zc * y, cool);
+                        }
+                        L = Desaturate(L, skySaturation);
+                    }
                     sh.AddDirectionalLight(d, L, dOmega / Mathf.PI);
                 }
             }

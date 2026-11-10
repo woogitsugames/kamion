@@ -275,7 +275,8 @@ namespace Game.World.Import
             set.materials = materials.ToArray();
             set.cells = cells.ToArray();
             set.runs = runs.ToArray();
-            set.matrices = mats;
+            // compact TRS in the asset (26 B instead of 64 B per instance, ADR 0025); full matrices only when a matrix does not round-trip
+            if (!set.Pack(mats)) Debug.LogWarning("[IMPORT] instances: a matrix does not round-trip as compact TRS, full matrices kept");
             set.hlods = hlods.ToArray();
             set.hlodGroups = groups.ToArray();
             Debug.Log($"[IMPORT] forest HLOD: {hlods.Count} cells, {hlods.Sum(h => Enumerable.Range(0, h.mesh.subMeshCount).Sum(k => (long)h.mesh.GetIndexCount(k) / 3))} triangles, " +

@@ -209,6 +209,7 @@ def oil_atlas(n=2048):
         wet = cov * fresh * sstep(0.3, 0.9, cov)
         # oil-soaked asphalt: near-black brown; iridescence is not modelled (WORKING_VALUE)
         col = np.array([0.020, 0.017, 0.013], np.float32) * (1 + 0.25 * noise(c, 5, 0.01, 0.2))[..., None]
+        col = np.maximum(col, 0.0135)   # gate 3 albedo check (docs/06): never below sRGB 30 (linear 0.0130) after the noise modulation
         sl = (slice((v // 2) * half, (v // 2 + 1) * half), slice((v % 2) * half, (v % 2 + 1) * half))
         alb[sl] = col
         alpha[sl] = np.clip(cov * 0.92, 0, 1)

@@ -14,6 +14,7 @@ namespace Game.UI.CabDisplays
         public const string RpmUnit = "1/min x100";
         public const string Fuel = "ON";               // olej napędowy
         public const string AdBlue = "AdBlue";
+        public const string Coolant = "Chł";          // płyn chłodzący
         public const string AvgPrefix = "Ø ";
         public const string AvgUnit = " l/100 km";
         public const string AvgNone = "Ø –,– l/100 km";

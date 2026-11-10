@@ -148,7 +148,10 @@ Shader "Kamion/Cab Interior"
                 // in luminance (Y * gain stays monotone for k < 16), ~1 above 3 x the knee.
                 half yl = dot(col.rgb, half3(0.2126, 0.7152, 0.0722));
                 half q = _CabShadowLift.y / (yl + _CabShadowLift.y + 1e-5);
-                col.rgb *= 1.0 + _CabShadowLift.x * q * q * q;
+                half g = 1.0 + _CabShadowLift.x * q * q * q;
+                // The lifted share is neutral (review r5 L2: black plastics turned brown under the warm low-sun fill); a
+                // phone's local tone mapping lifts luminance, not the chroma of deep shade. z = desaturation of that share.
+                col.rgb = lerp(col.rgb * g, (yl * g).xxx, _CabShadowLift.z * (1.0 - 1.0 / g));
                 col.rgb = MixFog(col.rgb, i.fogFactor);
                 return half4(col.rgb, 1);
             }

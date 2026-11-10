@@ -120,11 +120,30 @@ namespace Game.Tests
         }
 
         [Test]
+        public void Migration_V1Json_GainsCameraDefaultsAndKeepsOwnerChoices()
+        {
+            // A save written by a Stage 3 build (schema 1, no camera fields).
+            var v1 = ControlSettings.FromJson("{\"schema\":1,\"wheelRangeDeg\":540,\"gyroEnabled\":true,\"throttleProgressive\":false}");
+            Assert.AreEqual(2, v1.schema);
+            Assert.AreEqual(540f, v1.wheelRangeDeg); Assert.IsTrue(v1.gyroEnabled); Assert.IsFalse(v1.throttleProgressive);
+            Assert.AreEqual(1f, v1.lookSensitivity); Assert.AreEqual(55f, v1.cabFov); Assert.IsTrue(v1.headMotion);
+        }
+
+        [Test]
+        public void CameraSettings_AreClampedAndRoundTrip()
+        {
+            var s = ControlSettings.FromJson("{\"schema\":2,\"lookSensitivity\":9,\"cabFov\":5,\"headMotion\":false}");
+            Assert.AreEqual(ControlSettings.LookMax, s.lookSensitivity); Assert.AreEqual(ControlSettings.FovMin, s.cabFov); Assert.IsFalse(s.headMotion);
+            var back = ControlSettings.FromJson(s.ToJson());
+            Assert.AreEqual(s.ToJson(), back.ToJson());
+        }
+
+        [Test]
         public void LogLine_ContainsAllChoices()
         {
             string l = Custom().LogLine("saved");
-            StringAssert.StartsWith("[CONTROLS] saved v1", l);
-            foreach (string part in new[] { "steer=gyro", "wheelRange=540", "wheelSens=1.40", "centre=0.60", "deadZone=0.040", "gyroInvert=on", "gyroSens=1.50", "throttle=linear", "brake=progressive" })
+            StringAssert.StartsWith("[CONTROLS] saved v2", l);
+            foreach (string part in new[] { "steer=gyro", "wheelRange=540", "wheelSens=1.40", "centre=0.60", "deadZone=0.040", "gyroInvert=on", "gyroSens=1.50", "throttle=linear", "brake=progressive", "lookSens=1.00", "cabFov=55", "headMotion=on" })
                 StringAssert.Contains(part, l);
         }
 
