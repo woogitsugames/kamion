@@ -80,7 +80,7 @@ LAYOUT = {
     "glass": _r(9.25, 12.60, 0.9, 1.35),
     "ochre": _r(10.35, 12.60, 1.6, 1.35),
     # linear albedo, WORKING_VALUE read by eye off the CC0 photos (overcast frame 7197 + sunny frame 20240626)
-    "render_blue_linear": [0.50, 0.565, 0.66],
+    "render_blue_linear": [0.47, 0.545, 0.65],
     "roof_blue_linear": [0.030, 0.095, 0.34],
     "trim_blue_linear": [0.022, 0.060, 0.22],
     "clinker_linear": [0.47, 0.29, 0.115],
@@ -201,12 +201,12 @@ def fire_station(nx=2048):
     det, hs, rd, _, ok = _scan_fields("painted_plaster_wall", c, n_mask, 0.45e-3)
     sources.append("polyhaven:painted_plaster_wall (CC0)" if ok else "painted_plaster_wall: procedural fallback")
     base = np.array(L["render_blue_linear"], np.float32)
-    tone = det ** 0.8 * (1 + 0.025 * n_mid + 0.045 * n_big)
+    tone = det ** 0.9 * (1 + 0.03 * n_mid + 0.06 * n_big - 0.035 * ss(0.2, 1.4, n_run))
     # repainted areas: slightly different batch of paint on a few big soft patches
     tone *= 1 + 0.035 * ss(0.6, 1.1, n_pat) - 0.03 * ss(0.7, 1.3, -n_pat)
     pcol = base[None, None, :] * tone[..., None]
     # splash zone above the plinth: soil splash + algae on the bottom 0.5 m, stronger in patches
-    splash = ss(0.55, 0.0, pv) * (0.55 + 0.45 * ss(-0.5, 0.8, n_big)) * (0.7 + 0.3 * n_mid.clip(-1, 1))
+    splash = ss(0.75, 0.0, pv) * (0.6 + 0.4 * ss(-0.5, 0.8, n_big)) * (0.75 + 0.25 * n_mid.clip(-1, 1))
     splash = np.clip(splash, 0, 0.8)
     # run-off under the top edge (flashing / sills above): streaks hanging 0.3-1.1 m below the top
     g_top = P["h"] - pv
@@ -216,7 +216,7 @@ def fire_station(nx=2048):
     # hairline shrinkage cracks, sparse
     crk = ss(0.012, 0.004, np.abs(noise(c, 7, 0.5, 4.0, beta=1.4))) * ss(0.2, 0.9, noise(c, 8, 1.5, 6.0, beta=1.0))
     pcol = pcol * (1 - 0.55 * splash[..., None]) + (0.6 * dirt_col + 0.4 * green_col) * 0.55 * splash[..., None]
-    pcol = pcol * (1 - 0.5 * streak[..., None]) + dirt_col * 0.5 * streak[..., None]
+    pcol = pcol * (1 - 0.62 * streak[..., None]) + dirt_col * 0.62 * streak[..., None]
     pcol = pcol * (1 - 0.35 * crk[..., None])
     alb = np.where(in_p[..., None], pcol, alb)
     h = np.where(in_p, hs - 0.25e-3 * crk, h)
@@ -499,7 +499,7 @@ def alpha_texture(path: Path | None = None):
     x = (np.arange(W) + 0.5) / W
     y = 1 - (np.arange(H) + 0.5) / H
     Xg, Yg = np.meshgrid(x, y)
-    blue = np.array(LAYOUT["trim_blue_linear"], np.float32) * 1.25
+    blue = np.array(LAYOUT["trim_blue_linear"], np.float32) * 0.85
     n = np.asarray(Image.fromarray(rng.standard_normal((H // 8, W // 8)).astype(np.float32)).resize((W, H), Image.BICUBIC))
 
     for key in ("fence_bay", "gate_bay"):

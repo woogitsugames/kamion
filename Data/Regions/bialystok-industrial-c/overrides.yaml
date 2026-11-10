@@ -127,6 +127,24 @@ overrides:
       base diameter from the OSM footprint (8.3 m), top diameter WORKING_VALUE.
     confidence: medium
     verify: as above
+  - id: andersa-jrg2-fire-station-hero
+    kind: hero_building
+    osm_way: 211035271
+    buildings: ["bdot:2BE4B431-C784-1BF0-E053-CC2BA8C0D140", "bdot:2BE4B431-C7B4-1BF0-E053-CC2BA8C0D140"]
+    asset: fire_station_jrg2
+    reason: >-
+      Landmark of the start route (ADR 0070): the State Fire Service station JRG nr 2 at Andersa 46 (OSM way
+      211035271, amenity=fire_station), 52 m right of the route axis at station 1335 m. The rule facade of the
+      BDOT footprints (main building + outbuilding) is replaced by an authored Blender asset
+      (art-source/world/landmarks/fire_station_jrg2, tools/blender/world/landmarks/make_fire_station.py): garage
+      with four sectional doors between clinker piers, two-storey wing with blue sheet roofs and a hipped tower,
+      hall with a segmental barrel roof and the arched gable facing the street, outbuilding with a turret, blue
+      steel fence with a sliding gate, thuja row, flag poles. Plan from BDOT10k + orthophoto, heights from GUGiK
+      LoD2 (2017), facades by eye from CC0 photos (Commons, Rakoon) and CC BY-SA street-level frames (pattern
+      only) - see dims.json. The lettering is the generic name of the service and the emergency number as on the
+      facade; no emblem.
+    confidence: medium
+    verify: yard-side facades, fence line and gate position, thuja count from a site visit
   # ---------------------------------------------------------------- plantings (streetscape.plantings, review r6 W-N12)
   - id: biezenstwa-plantings
     kind: plantings

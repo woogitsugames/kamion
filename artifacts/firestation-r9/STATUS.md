@@ -15,3 +15,7 @@ Worktree `.claude/worktrees/agent-aa9c74c62497e5d1f`, gałąź `worktree-agent-a
 ## Dziennik
 - Znaleziony obiekt (`tools/worldgen/streetscape/find_fire_station.py`), LoD2 (`lod2_extract.py`), referencje obejrzane.
 - NASTĘPNY KROK: `tools/blender/world/landmarks/make_fire_station.py` + spec JSON, render kontrolny.
+- Lider wskazał CC0 `Data/photos/nowe/7197_May_2021_in_Białystok.jpg` — potwierdzone: to JRG2 (kategoria Commons "Fire station JRG 2 Białystok (Andersa Street)" ma tylko 2 pliki, oba mamy). Główna referencja.
+- Atlas `fire_station` 14x14 m (2048 High; skany CC0 Poly Haven painted_plaster_wall, brick_wall_006, concrete_wall_008) + `art-source/world/textures/fire_station_alpha.png`; `dims.json`; `tools/worldgen/streetscape/hero_building.py` (spec/plan/apply); `tools/blender/world/landmarks/make_fire_station.py`.
+- Blender it1/it2 obejrzane (`artifacts/firestation-r9/blender/it2/compare_it2.jpg`), it3: hala NW blacha, tuje smuklejsze, płot ciemniejszy, gąsiory. GLB: trójkąty LOD0/1/2 = 8246/2956/164.
+- NASTĘPNY KROK: hooki worldgen (stage.py, buildings_mesh.py, build_world.py, materials.py, export.py), InstanceImporter (biblioteki landmarków), kamera QA, potem `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c`.
