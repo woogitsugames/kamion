@@ -901,6 +901,11 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                         usplits = [FK.safe_u(um - 1.6, ops, L), FK.safe_u(um + 1.6, ops, L)]
                 lod1_ro = ((zt, RUNOFF_PERIOD_M * FK.hfloat(key, "runoff_u"), 0.6 + 0.7 * FK.hfloat(key, "runoff_l"))
                            if str(wall).startswith("hall_wall") else None)
+                # r10 r2: flat-roofed blocks and offices streak under the attic coping too (LOD0 only: the LOD1 window
+                # zone is the row atlas, it has no wall-top UV1)
+                lod0_ro = lod1_ro
+                if lod0_ro is None and typ in ("block", "office") and not pitched:
+                    lod0_ro = (zt, RUNOFF_PERIOD_M * FK.hfloat(key, "runoff_u"), 0.5 + 0.6 * FK.hfloat(key, "runoff_l"))
                 # accent colour on the gable ends only: an edge across the long axis, about as long as the block is
                 # deep (before r10 every edge < 16 m qualified, so stepped blocks came out accent-coloured all round)
                 gable_accent = (insulated and L < 16 and FK.hfloat(key, "gable") < 0.6 and L > 0.7 * rect_short and
@@ -935,7 +940,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                 FK.wall_pieces(wall_with_openings, acc, a, d, nout, L, zbot, zt, ops, u_acc, zref,
                                [zpl] + [z for b in band_z for z in b],
                                [u for u in usplits if u is not None] if None not in usplits else [], plaster_mat,
-                               runoff=lod1_ro)   # sheds / small halls clad in sheet
+                               runoff=lod0_ro)   # sheds / small halls clad in sheet; plaster of blocks / offices
                 if typ in ("block", "office"):                       # attic coping (obróbka attyki): silhouette
                     FK.coping(acc, a, c_, nout, zt, mat="hall_flashing")
                 if typ == "block":

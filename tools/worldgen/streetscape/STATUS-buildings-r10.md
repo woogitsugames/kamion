@@ -45,3 +45,17 @@
   sprawdź `artifacts/buildings-r10/r1/round.log` (jeśli brak "round done": `pwsh artifacts/buildings-r10/run_round.ps1 -Round r1 -Configs High:overcast,Low:overcast`)
   -> obejrzyj `artifacts/buildings-r10/r1/*/960/r10_*.jpg` vs `artifacts/buildings-r10/refs/` i `base/`, visual-critic, stats.txt Low vs base, uzupełnij ADR 0081.
 - Runda r1 ZAKOŃCZONA po stopie (import + kamery High/Low overcast, exit 0); rendery w `artifacts/buildings-r10/r1/` nadal NIE obejrzane - krok 2 z listy pominąć, zacząć od oglądania.
+
+## krok 4 — przejęcie nr 2 (2026-11-10): przegląd r1, budżet tekstur, przyczyna „ciemnych” elewacji
+- Szum regeneracji (61 plików art-source/world/{signs,textures,props,landmarks}) cofnięty `git checkout --`.
+- r1 obejrzane (19 kamer High + Low): elewacje tynkowe ciemne i przesycone (blok `plaster_grey` 0,36 lin. -> na ekranie 0,095; cokół bez
+  tekstury 0,16 jaśniejszy niż ściana 0,36). Przyczyna zmierzona: `_Tint` w Kamion/World PBR to właściwość Color, Unity linearyzuje ją drugi raz
+  (kolor^2,2). Poprawka: flaga `tint_linear` (materials.py, tylko powłoka budynków) + `WorldPbrMaterials.cs` zapisuje wartość gamma.
+- Cegła: `set_tile` (zestaw 1,506 m był próbkowany co 4 m -> warstwa cegły ~20 cm). Cokół `plinth_dark` dostał zestaw `plaster`.
+- Zacieki pod attyką także na tynku/płycie bloków i biur (LOD0; flaga `runoff`, siła x0,6).
+- Budżet tekstur (docs/PERFORMANCE_BUDGETS: 64/96/256 MB Low/Medium/High): zestawy świata na main 6,0/33,6/171,9 MB; r1 8,3/46,8/239,6 MB;
+  teraz 7,3/39,5/197,1 MB. facade_atlas 39,8/7,8/1,4 -> 17,4/3,8/0,6 MB (Normal/Mask/Var w 1/2 rozdzielczości albedo, `aux_div`),
+  facade_far 16,7 -> 4,9 MB High (aux 1/4), fence_concrete 11,2 -> 2,8 MB High (2048 px, kalibracja do 0,30).
+- `test_cc0_scans`: 6 passed.
+- NASTĘPNY KROK: `git merge main` (generated -> --ours) -> `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c`
+  -> `uv run --project tools/worldgen pytest tests/gis -q` -> `pwsh artifacts/buildings-r10/run_round.ps1 -Round r2 -Configs High:overcast,Low:overcast`

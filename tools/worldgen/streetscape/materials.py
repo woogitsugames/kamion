@@ -44,8 +44,9 @@ M = {
     "plaster_beige": {"color": [0.50, 0.44, 0.34], "rough": 0.9, "texture_set": "plaster"},
     "plaster_cream": {"color": [0.55, 0.48, 0.33], "rough": 0.9, "texture_set": "plaster"},
     "plaster_pastel_blue": {"color": [0.36, 0.42, 0.47], "rough": 0.9, "texture_set": "plaster"},
-    "brick_red": {"color": [0.26, 0.10, 0.07], "rough": 0.9, "texture_set": "brick"},
-    "plinth_dark": {"color": [0.16, 0.16, 0.16], "rough": 0.9},
+    # set_tile (ADR 0067): the NF brick set is 1.506 m, at the shader default 4 m a course read as 20 cm (r10 r1 render)
+    "brick_red": {"color": [0.26, 0.10, 0.07], "rough": 0.9, "texture_set": "brick", "set_tile": True},
+    "plinth_dark": {"color": [0.16, 0.16, 0.16], "rough": 0.9, "texture_set": "plaster"},   # r10: was a flat colour
     "roof_tiles_red": {"color": [0.22, 0.07, 0.04], "rough": 0.7, "texture_set": "roof_tiles"},
     "roof_tiles_brown": {"color": [0.12, 0.06, 0.04], "rough": 0.7, "texture_set": "roof_tiles"},
     "roof_metal_graphite": {"color": [0.05, 0.05, 0.055], "rough": 0.5, "metal": 0.5, "texture_set": "roof_metal_tile"},
@@ -222,7 +223,7 @@ M = {
     "plaster_accent_grey": {"color": [0.20, 0.21, 0.22], "rough": 0.9, "texture_set": "plaster"},
     "wood_planks": {"color": [0.22, 0.15, 0.09], "rough": 0.85, "texture_set": "wood_siding"},
     "wood_planks_green": {"color": [0.08, 0.14, 0.10], "rough": 0.85, "texture_set": "wood_siding"},
-    "chimney_brick": {"color": [0.22, 0.09, 0.06], "rough": 0.9, "texture_set": "brick"},
+    "chimney_brick": {"color": [0.22, 0.09, 0.06], "rough": 0.9, "texture_set": "brick", "set_tile": True},
     # behaton (I-shaped interlocking blocks) in truck yards (streetscape.paved)
     "yard_behaton": {"color": [0.23, 0.228, 0.22], "rough": 0.85, "surface": "paving_stones", "texture_set": "behaton_i_grey"},
     # decals on roads (markings layer, depth offset like the markings)
@@ -285,6 +286,25 @@ M = {
     "ramp_wall_blocks": {"color": [0.34, 0.33, 0.31], "rough": 0.9, "texture_set": "concrete_blocks_split"},
 }
 
+# ADR 0081 (r10 r2): Kamion/World PBR declares _Tint as a Color property, so Unity converts the value written by the
+# importer from sRGB to linear a second time: every modulation material rendered at about colour ^ 2.2 (measured on
+# the r1 renders: plaster_grey 0.36 -> 0.095, plaster_cream [0.55, 0.48, 0.33] -> [0.19, 0.15, 0.09]; an untextured
+# material of 0.16 came out LIGHTER than the 0.36 wall above it). `tint_linear` makes the importer write the tint
+# gamma-encoded so the shader multiplies by the linear colour of this table. Scoped to the building envelope (walls,
+# roofs, doors) - the materials this task renders and reviews; the other modulation materials keep the look they
+# were reviewed with until the lead switches the flag on globally (open point in the ADR).
+_TINT_LINEAR = ("plaster_", "plinth_dark", "panel_concrete", "brick_red", "chimney_brick", "hall_wall_", "hall_plinth",
+                "roof_tiles_", "roof_metal_", "wood_planks", "garage_door", "dock_door", "balcony_panel")
+for _k, _v in M.items():
+    if _k.startswith(_TINT_LINEAR) and "texture_set" in _v:
+        _v["tint_linear"] = True
+
+# ADR 0081 (r10 r2): run-off streaks under the attic coping also on the render / panel walls of flat-roofed blocks
+# and offices (LOD0 only; the wall-top TEXCOORD_1 comes from buildings_mesh, the importer enables _RUNOFF)
+for _k, _v in M.items():
+    if (_k.startswith("plaster_") or _k == "panel_concrete") and "texture_set" in _v:
+        _v["runoff"] = True
+
 # LOD1 far facade materials <wall>__far_<kind> (buildings_mesh.lod1_wall): the wall colour + a window grid the
 # shader draws from TEXCOORD_1 (one unit = one window bay x one storey; extras.window_grid in those units).
 # Keep in sync with buildings_mesh.FAR_GRID / BLOCK_WALLS / OFFICE_WALLS (test_far_facade_materials).
@@ -303,7 +323,7 @@ for _k, _ws in _FAR_WALLS.items():
             # ADR 0081: the window zone is drawn from the storey rows of the facade_far set (modulation: wall colour x
             # neutral map, UV0 = row atlas metres, streetscape.facade_atlas.FAR_*), not from a shader grid
             M[f"{_w}__far_{_k}"] = {"color": M[_w]["color"], "rough": M[_w]["rough"], "base": _w,
-                                    "texture_set": "facade_far", "set_tile": True,
+                                    "texture_set": "facade_far", "set_tile": True, "tint_linear": True,
                                     "sky_occ": [SKY_OCC_STRUCT_X, 0.9]}
 
 # Sky occlusion (ADR 0060, review r7 N-2 "no dark accents"): the engine lights the world with the sky SH and a sky
