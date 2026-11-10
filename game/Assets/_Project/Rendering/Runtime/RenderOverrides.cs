@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using UnityEngine.Rendering.Universal;
 
 namespace Game.Rendering
 {
@@ -11,7 +12,10 @@ namespace Game.Rendering
     /// rq_hdr (0/1), rq_a2c (0/1 leaf alpha-to-coverage), rq_trees (0 = no instanced trees), rq_treeshadow (LOD mask),
     /// rq_card (tree card LOD scale), rq_cull (tree cull m), rq_thin (tree thinning start m), rq_vegshader (0/1 simple foliage),
     /// rq_hlod (forest HLOD switch distance m, 0 = off; ADR 0015), rq_a8 (0 = clear coat, reflection capture, contact
-        /// shadows, cab shadow lift and street-lamp lights off: A8 before/after in one APK), rq_envcap (capture face px, 0 = off).
+    /// shadows, cab shadow lift and street-lamp lights off: A8 before/after in one APK), rq_envcap (capture face px, 0 = off),
+    /// ADR 0062: rq_scalemin (adaptive render-scale floor, e.g. 0.8 vs 0.7 A/B), rq_upscale (linear / fsr / stp / auto / point),
+    /// rq_fsrsharp (FSR RCAS sharpness 0..1), rq_pacing (0 = no frame-pacing 30 FPS fallback), rq_lamppools (analytic
+    /// street-lamp pools on world surfaces, 0 = off).
     /// </summary>
     public static class RenderOverrides
     {
@@ -30,11 +34,17 @@ namespace Game.Rendering
         public static float? ForestHlod;
         public static bool? VehicleLook;
         public static int? EnvCapture;
+        public static float? ScaleMin;
+        public static string Upscale;
+        public static float? FsrSharpness;
+        public static bool? Pacing;
+        public static int? LampPools;
 
         public static bool Any => Msaa.HasValue || RenderScale.HasValue || ShadowDistance.HasValue || Post.HasValue || Hdr.HasValue ||
                                   LeafA2C.HasValue || Trees.HasValue || TreeShadowMask.HasValue || TreeCardScale.HasValue ||
                                   TreeCull.HasValue || TreeThin.HasValue || SimpleFoliage.HasValue || ForestHlod.HasValue ||
-                                  VehicleLook.HasValue || EnvCapture.HasValue;
+                                  VehicleLook.HasValue || EnvCapture.HasValue || ScaleMin.HasValue || Upscale != null ||
+                                  FsrSharpness.HasValue || Pacing.HasValue || LampPools.HasValue;
 
         /// <summary>Reads the overrides through a launch-argument getter (platform services). Returns a log line.</summary>
         public static string Parse(Func<string, string> arg)
@@ -44,8 +54,12 @@ namespace Game.Rendering
             TreeShadowMask = I(arg("rq_treeshadow")); TreeCardScale = F(arg("rq_card")); TreeCull = F(arg("rq_cull"));
             TreeThin = F(arg("rq_thin")); SimpleFoliage = B(arg("rq_vegshader")); ForestHlod = F(arg("rq_hlod"));
             VehicleLook = B(arg("rq_a8")); EnvCapture = I(arg("rq_envcap"));
+            ScaleMin = F(arg("rq_scalemin")); FsrSharpness = F(arg("rq_fsrsharp")); Pacing = B(arg("rq_pacing")); LampPools = I(arg("rq_lamppools"));
+            string up = arg("rq_upscale");
+            Upscale = string.IsNullOrEmpty(up) ? null : up.ToLowerInvariant();
             return Any ? $"msaa={Msaa} scale={RenderScale} shadow={ShadowDistance} post={Post} hdr={Hdr} a2c={LeafA2C} trees={Trees} " +
-                         $"treeshadow={TreeShadowMask} card={TreeCardScale} cull={TreeCull} thin={TreeThin} vegshader={SimpleFoliage} hlod={ForestHlod} a8={VehicleLook} envcap={EnvCapture}" : null;
+                         $"treeshadow={TreeShadowMask} card={TreeCardScale} cull={TreeCull} thin={TreeThin} vegshader={SimpleFoliage} hlod={ForestHlod} a8={VehicleLook} envcap={EnvCapture} " +
+                         $"scalemin={ScaleMin} upscale={Upscale} fsrsharp={FsrSharpness} pacing={Pacing} lamppools={LampPools}" : null;
         }
 
         /// <summary>The tier with the overrides applied (vegetation + camera fields; URP asset fields by the applier).</summary>
@@ -65,6 +79,21 @@ namespace Game.Rendering
             if (ForestHlod.HasValue) t.forestHlodM = ForestHlod.Value > 0f ? ForestHlod.Value : -1f;   // -1 = off
             if (VehicleLook == false) { t.clearCoat = false; t.vehicleGrimeDetail = false; t.envCaptureSize = 0; t.contactShadows = false; t.cabShadowLift = 0f; t.streetLights = 0; }
             if (EnvCapture.HasValue) t.envCaptureSize = EnvCapture.Value;
+            if (ScaleMin.HasValue) t.adaptiveScaleMin = ScaleMin.Value;
+            if (FsrSharpness.HasValue) t.fsrSharpness = FsrSharpness.Value;
+            if (Pacing.HasValue && !Pacing.Value) t.pacingFallbackFps = 0;
+            if (LampPools.HasValue) t.lampPools = LampPools.Value;
+            if (Upscale != null)
+            {
+                switch (Upscale)
+                {
+                    case "linear": case "bilinear": t.upscalingFilter = UpscalingFilterSelection.Linear; break;
+                    case "fsr": t.upscalingFilter = UpscalingFilterSelection.FSR; break;
+                    case "stp": t.upscalingFilter = UpscalingFilterSelection.STP; break;
+                    case "point": t.upscalingFilter = UpscalingFilterSelection.Point; break;
+                    default: t.upscalingFilter = UpscalingFilterSelection.Auto; break;
+                }
+            }
             return t;
         }
 

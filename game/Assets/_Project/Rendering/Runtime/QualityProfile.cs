@@ -45,6 +45,9 @@ namespace Game.Rendering
             public float cameraFarClip;
             [Tooltip("Adaptive render scale floor (ADR 0046; GPU p90 driven, 0 = fixed renderScale)")] public float adaptiveScaleMin;
             [Tooltip("Frame cap after thermal status >= 2 for 30 s (ADR 0046; 0 = off)")] public int thermalFallbackFps;
+            [Tooltip("ADR 0062: frame cap when the scale is at its floor and > 10 % of frames still miss vsync for 6 s (0 = off)")] public int pacingFallbackFps;
+            [Tooltip("ADR 0062: upscaler when the render scale is below 1 (URP asset; FSR 1.0 = EASU + RCAS, spatial, keeps MSAA)")] public UpscalingFilterSelection upscalingFilter;
+            [Tooltip("ADR 0062: FSR RCAS sharpness 0..1 (URP default 0.92 halos on markings and wires)")] public float fsrSharpness;
             [Tooltip("Enable the world surface detail layer (second albedo scale + macro variation)")] public bool worldDetail;
             public int additionalLightsPerObject;
             [Header("Vegetation (WorldInstances; device-measured, DK8 forest)")]
@@ -68,7 +71,9 @@ namespace Game.Rendering
             [Tooltip("ADR 0056: ... and while the cube is younger than this (s; sky / sun drift)")] public float envCaptureMaxAge;
             [Tooltip("Contact shadow / ambient occlusion blobs under the tractor, trailer and wheels (one draw per vehicle)")] public bool contactShadows;
             [Tooltip("Cab-view local shadow lift strength (CabInteriorLighting, review r4 L1; 0 = off)")] public float cabShadowLift;
-            [Tooltip("Real point lights at the nearest street lamps at dusk (0 = emission only)")] public int streetLights;
+            [Tooltip("Real point lights at the nearest street lamps at dusk (0 = emission only); they light vehicles and props")] public int streetLights;
+            [Tooltip("ADR 0062: analytic light pools of the N lamps nearest the view on Kamion/World Surface at dusk (no lights, " +
+                     "a uniform-branch loop in the world shader; 0 = off, max 8)")] public int lampPools;
             [Header("Budget assumptions (UNMEASURED until the phone is measured)")]
             public int budgetDrawCalls;
             public int budgetTrianglesK;
@@ -78,6 +83,10 @@ namespace Game.Rendering
         }
 
         public Tier[] tiers = Defaults();
+        [Tooltip("Migration revision (ProjectSetup.LoadTiers applies the changes of later revisions to an existing asset)")]
+        public int revision;
+        /// <summary>ADR 0062: High floor 0.70, FSR upscaling, pacing fallback, lamp pools.</summary>
+        public const int CurrentRevision = 62;
 
         /// <summary>
         /// First-launch tier by device (no launch argument, nothing saved by the player). Rules are checked in order; a rule
@@ -160,7 +169,9 @@ namespace Game.Rendering
         /// High is MSAA 2× too: S24+ DK8 forest, cool phone, 38.7 ms at 4× vs 21.6 ms at 2× (Lit), no visible edge difference
         /// on native crops (ADR 0013 addendum r4, review r3 §7; accepted on condition of a 10 s motion recording).
         /// High gate 3 (ADR 0046): adaptive render scale 0.80-1.00 (GPU p90, 2 s windows) and a thermal 30 FPS fallback -
-        /// S24+ GPU p50 14.8 ms at the 60 FPS cap left no vsync margin.
+        /// S24+ GPU p50 14.8 ms at the 60 FPS cap left no vsync margin. ADR 0062 (owner D36): floor 0.70, FSR 1.0 upscaling
+        /// below 1.0 (High/Ultra; Low/Medium keep bilinear - Low has no post pass, Medium is unmeasured on the A16), a
+        /// frame-pacing 30 FPS fallback when 0.70 is still not enough, analytic lamp pools on all tiers at dusk.
         /// </summary>
         public static Tier[] Defaults() => new[]
         {
@@ -175,7 +186,7 @@ namespace Game.Rendering
                 worldDetail = false, additionalLightsPerObject = 2,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 70f, forestHlodCullM = 1000f,
-                clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 64, envCaptureInterval = 10, envCaptureFarClip = 150f, envCaptureMinMove = 2f, envCaptureMaxAge = 20f, contactShadows = true, cabShadowLift = 8f, streetLights = 0,
+                clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 64, envCaptureInterval = 10, envCaptureFarClip = 150f, envCaptureMinMove = 2f, envCaptureMaxAge = 20f, contactShadows = true, cabShadowLift = 8f, streetLights = 0, lampPools = 4,
                 budgetDrawCalls = 250, budgetTrianglesK = 350, budgetTextureMB = 64, budgetShadowMs = 1.0f, budgetStatus = "UNMEASURED",
             },
             new Tier
@@ -189,7 +200,7 @@ namespace Game.Rendering
                 worldDetail = true, additionalLightsPerObject = 4,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 70f, forestHlodCullM = 1000f,
-                clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 64, envCaptureInterval = 6, envCaptureFarClip = 150f, envCaptureMinMove = 2f, envCaptureMaxAge = 20f, contactShadows = true, cabShadowLift = 8f, streetLights = 0,
+                clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 64, envCaptureInterval = 6, envCaptureFarClip = 150f, envCaptureMinMove = 2f, envCaptureMaxAge = 20f, contactShadows = true, cabShadowLift = 8f, streetLights = 0, lampPools = 6,
                 budgetDrawCalls = 350, budgetTrianglesK = 550, budgetTextureMB = 96, budgetShadowMs = 1.5f, budgetStatus = "UNMEASURED",
             },
             new Tier
@@ -199,11 +210,12 @@ namespace Game.Rendering
                 shadowDistance = 100f, shadowResolution = 2048, shadowCascades = 3, cascade2Split = 0.25f,
                 cascade4Split = new Vector3(0.08f, 0.25f, 0.55f), softShadows = true, softShadowQuality = SoftShadowQuality.Low,
                 shadowDepthBias = 0.8f, shadowNormalBias = 0.8f,
-                anisotropic = 1, worldTextureAniso = 8, worldMipBias = 0f, lodBias = 1.5f, cameraFarClip = 2500f, adaptiveScaleMin = 0.80f, thermalFallbackFps = 30,
+                anisotropic = 1, worldTextureAniso = 8, worldMipBias = 0f, lodBias = 1.5f, cameraFarClip = 2500f, adaptiveScaleMin = 0.70f, thermalFallbackFps = 30, pacingFallbackFps = 30,
+                upscalingFilter = UpscalingFilterSelection.FSR, fsrSharpness = 0.75f,
                 worldDetail = true, additionalLightsPerObject = 4,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 120f, forestHlodCullM = 0f,
-                clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 128, envCaptureInterval = 3, envCaptureFarClip = 200f, envCaptureMinMove = 0.5f, envCaptureMaxAge = 10f, contactShadows = true, cabShadowLift = 8f, streetLights = 4,
+                clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 128, envCaptureInterval = 3, envCaptureFarClip = 200f, envCaptureMinMove = 0.5f, envCaptureMaxAge = 10f, contactShadows = true, cabShadowLift = 8f, streetLights = 4, lampPools = 8,
                 budgetDrawCalls = 800, budgetTrianglesK = 1500, budgetTextureMB = 256, budgetShadowMs = 2.0f, budgetStatus = "UNMEASURED (no flagship attached)",
             },
             new Tier
@@ -217,7 +229,7 @@ namespace Game.Rendering
                 worldDetail = true, additionalLightsPerObject = 8,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 120f, forestHlodCullM = 0f,
-                clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 256, envCaptureInterval = 2, envCaptureFarClip = 300f, envCaptureMinMove = 0.5f, envCaptureMaxAge = 10f, contactShadows = true, cabShadowLift = 8f, streetLights = 6,
+                clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 256, envCaptureInterval = 2, envCaptureFarClip = 300f, envCaptureMinMove = 0.5f, envCaptureMaxAge = 10f, contactShadows = true, cabShadowLift = 8f, streetLights = 6, lampPools = 8,
                 budgetDrawCalls = 1000, budgetTrianglesK = 2000, budgetTextureMB = 384, budgetShadowMs = 3.0f, budgetStatus = "UNMEASURED (no flagship attached)",
             },
         };

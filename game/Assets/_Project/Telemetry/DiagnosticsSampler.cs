@@ -49,6 +49,8 @@ namespace Game.Telemetry
         public long unityAllocatedBytes;
         public long unityReservedBytes;
         public int systemMemoryMb;
+        public float renderScale;
+        public string capFallback;
     }
 
     /// <summary>
@@ -74,6 +76,7 @@ namespace Game.Telemetry
         float[] m_PendingMs;
         float[] m_PendingCpu;
         float[] m_PendingGpu;
+        float[] m_PendingScale;
         // FrameTimingManager (PlayerSettings "Frame Timing Stats"): GPU time of the frame on Vulkan/GLES devices that report
         // it (Mali, Xclipse); 0 when unsupported. Reported for the frame that finished a few frames earlier.
         readonly FrameTiming[] m_Timing = new FrameTiming[1];
@@ -107,6 +110,7 @@ namespace Game.Telemetry
             m_PendingFrame = new long[pendingCap];
             m_PendingCpu = new float[pendingCap];
             m_PendingGpu = new float[pendingCap];
+            m_PendingScale = new float[pendingCap];
             m_SessionStart = Time.realtimeSinceStartup;
             OpenFiles();
         }
@@ -118,7 +122,7 @@ namespace Game.Telemetry
                 OutputDirectory = Path.Combine(Application.persistentDataPath, "diag");
                 Directory.CreateDirectory(OutputDirectory);
                 m_Csv = new StreamWriter(Path.Combine(OutputDirectory, "frametimes.csv"), false, new UTF8Encoding(false));
-                m_Csv.WriteLine("frame,t_s,frame_ms,cpu_main_ms,gpu_ms");
+                m_Csv.WriteLine("frame,t_s,frame_ms,cpu_main_ms,gpu_ms,render_scale");
                 m_SummaryPath = Path.Combine(OutputDirectory, "summary.json");
             }
             catch (Exception e)
@@ -147,6 +151,7 @@ namespace Game.Telemetry
             {
                 m_PendingCpu[m_PendingCount] = cpuMs;
                 m_PendingGpu[m_PendingCount] = gpuMs;
+                m_PendingScale[m_PendingCount] = Game.Core.RenderState.RenderScale;   // ADR 0062: A/B of the scale floor
                 m_PendingFrame[m_PendingCount] = m_Frame;
                 m_PendingTime[m_PendingCount] = now - m_SessionStart;
                 m_PendingMs[m_PendingCount] = dtMs;
@@ -196,7 +201,8 @@ namespace Game.Telemetry
                     .Append(m_PendingTime[i].ToString("F4", ci)).Append(',')
                     .Append(m_PendingMs[i].ToString("F3", ci)).Append(',')
                     .Append(m_PendingCpu[i].ToString("F3", ci)).Append(',')
-                    .Append(m_PendingGpu[i].ToString("F3", ci)).Append('\n');
+                    .Append(m_PendingGpu[i].ToString("F3", ci)).Append(',')
+                    .Append(m_PendingScale[i].ToString("F2", ci)).Append('\n');
             }
             m_PendingCount = 0;
             m_Csv.Write(m_Sb);
@@ -231,12 +237,14 @@ namespace Game.Telemetry
             j.unityAllocatedBytes = s.UnityAllocatedBytes;
             j.unityReservedBytes = s.UnityReservedBytes;
             j.systemMemoryMb = SystemInfo.systemMemorySize;
+            j.renderScale = Game.Core.RenderState.RenderScale;
+            j.capFallback = Game.Core.RenderState.ThermalFallback ? "thermal" : Game.Core.RenderState.PacingFallback ? "pacing" : "none";
 
             var ci = CultureInfo.InvariantCulture;
             Debug.Log(string.Format(ci,
-                "[DIAG] t={0:F0}s tier={1} target={2} fps={3:F1} p50={4:F2} p95={5:F2} p99={6:F2} max={7:F2}ms temp={8:F1}C thermal={9} headroom={10:F2} pss={11}MB",
+                "[DIAG] t={0:F0}s tier={1} target={2} fps={3:F1} p50={4:F2} p95={5:F2} p99={6:F2} max={7:F2}ms temp={8:F1}C thermal={9} headroom={10:F2} pss={11}MB scale={12:F2} fallback={13}",
                 j.sessionSeconds, j.qualityTier, j.targetFps, j.meanFps, j.p50Ms, j.p95Ms, j.p99Ms, j.maxMs,
-                j.batteryTempC, j.thermalStatus, j.thermalHeadroom, j.pssKb >= 0 ? j.pssKb / 1024 : -1));
+                j.batteryTempC, j.thermalStatus, j.thermalHeadroom, j.pssKb >= 0 ? j.pssKb / 1024 : -1, j.renderScale, j.capFallback));
 
             if (m_SummaryPath == null) return;
             try { File.WriteAllText(m_SummaryPath, JsonUtility.ToJson(j, true)); }

@@ -41,17 +41,36 @@ namespace Game.Tests.EditMode
             Assert.Less(s, 1.0f);
             Assert.AreEqual(0f, (s / 0.05f) - UnityEngine.Mathf.Round(s / 0.05f), 1e-3f, "scale is a multiple of 0.05");
             Assert.AreEqual(0.80f, Run(c, ref t, 30f, 40f), 1e-4f, "clamped at the floor");
+            Assert.IsTrue(c.AtFloor);
         }
 
         [Test]
-        public void FirstStepIs085ThenFloorOnlyIfStillOverBudget()
+        public void FirstStepIs085UnderModerateLoad_HeavyLoadJumpsToTheFloor()
         {
-            var c = NewScale(); float t = 0f;
-            Assert.AreEqual(0.85f, Run(c, ref t, 2.2f, 30f), 1e-4f, "1.00 -> 0.85 first, even under heavy load");
-            Assert.AreEqual(0.80f, Run(c, ref t, 2.0f, 30f), 1e-4f, "still > 15 ms at 0.85 -> 0.80 after the next window");
-            var d = NewScale(); t = 0f;
-            Assert.AreEqual(0.85f, Run(d, ref t, 2.2f, 17.5f), 1e-4f);
+            var d = NewScale(); float t = 0f;
+            Assert.AreEqual(0.85f, Run(d, ref t, 2.2f, 17.5f), 1e-4f, "17.5 ms: the pixel model needs 0.89 -> the 0.85 first step");
             Assert.Greater(Run(d, ref t, 20f, 17.5f), 0.85f - 1e-4f, "12.6 ms at 0.85 is under budget: never drops to 0.80");
+            // ADR 0062: S24+ r8 had GPU p90 25.8 ms at 1.0; the old walk needed 2 windows per step and stopped at 0.80.
+            var c = NewScale(); t = 0f;
+            Assert.AreEqual(0.80f, Run(c, ref t, 2.2f, 30f), 1e-4f, "30 ms at 1.0 needs 0.68: straight to the floor in one window");
+            var h = new AdaptiveRenderScaleController { MinScale = 0.70f, MaxScale = 1.00f }; t = 0f;
+            Assert.AreEqual(0.70f, Run(h, ref t, 2.2f, 25.8f), 1e-4f, "High floor 0.70 (D36) reached in the first window");
+        }
+
+        [Test]
+        public void HighTierDefaults_D36()
+        {
+            QualityProfile.Tier high = default;
+            foreach (var x in QualityProfile.Defaults()) if (x.name == "High") high = x;
+            Assert.AreEqual(0.70f, high.adaptiveScaleMin, 1e-4f, "owner decision D36: High floor 0.70");
+            Assert.AreEqual(UnityEngine.Rendering.Universal.UpscalingFilterSelection.FSR, high.upscalingFilter, "ADR 0062: FSR 1.0 below scale 1");
+            Assert.AreEqual(30, high.pacingFallbackFps);
+            foreach (var x in QualityProfile.Defaults())
+            {
+                Assert.Greater(x.lampPools, 0, x.name + ": lamp pools on every tier (review r8 N-20)");
+                Assert.LessOrEqual(x.lampPools, StreetLamps.MaxPools);
+                if (x.name == "Low") Assert.AreEqual(0, x.streetLights, "Low: no point lights");
+            }
         }
 
         [Test]
@@ -100,6 +119,66 @@ namespace Game.Tests.EditMode
         {
             var c = NewScale(); float t = 0f;
             Assert.AreEqual(1.00f, Run(c, ref t, 20f, 20f, fps: 30), 1e-4f, "20 ms is fine at a 30 FPS cap");
+        }
+
+        /// <summary>Feeds the pacing governor: frames at <paramref name="frameMs"/>, GPU time <paramref name="gpuMs"/>.</summary>
+        static int RunPacing(FramePacingGovernor g, ref float t, float seconds, float frameMs, float gpuMs, bool atFloor, int req = 60,
+            float scale = 0.70f, float floor = 0.70f)
+        {
+            int fps = req;
+            float dt = frameMs / 1000f;
+            int n = (int)(seconds / dt);
+            for (int i = 0; i < n; i++) { t += dt; fps = g.Update(t, frameMs, gpuMs, 10f, atFloor, scale, floor, req); }
+            return fps;
+        }
+
+        [Test]
+        public void Pacing_JudderAtTheFloorDropsTo30_NotBeforeTheScaleIsSpent()
+        {
+            // S24+ r8: every 3rd frame 33 ms (43-47 FPS). Alternate 16.7/16.7/33.3.
+            var g = new FramePacingGovernor(); float t = 0f;
+            int fps = 60;
+            for (int i = 0; i < 400; i++) { float ms = i % 3 == 2 ? 33.3f : 16.7f; t += ms / 1000f; fps = g.Update(t, ms, 19f, 12f, false, 0.85f, 0.70f, 60); }
+            Assert.AreEqual(60, fps, "scale not at the floor yet: the render scale acts first");
+            t = 0f; g.Reset();
+            float tDrop = -1f;
+            for (int i = 0; i < 600; i++)
+            {
+                float ms = i % 3 == 2 ? 33.3f : 16.7f; t += ms / 1000f;
+                fps = g.Update(t, ms, 19f, 12f, true, 0.70f, 0.70f, 60);
+                if (fps == 30 && tDrop < 0f) tDrop = t;
+            }
+            Assert.AreEqual(30, fps);
+            Assert.That(tDrop, Is.InRange(5.9f, 8.5f), "three bad 2 s windows");
+        }
+
+        [Test]
+        public void Pacing_SteadyFramesNeverDrop()
+        {
+            var g = new FramePacingGovernor(); float t = 0f;
+            Assert.AreEqual(60, RunPacing(g, ref t, 60f, 16.7f, 14f, true));
+            Assert.IsFalse(g.Throttled);
+        }
+
+        [Test]
+        public void Pacing_RecoversWhenTheGpuHasRoom_AndBacksOffAfterARelapse()
+        {
+            var g = new FramePacingGovernor(); float t = 0f;
+            Assert.AreEqual(30, RunPacing(g, ref t, 8f, 33.3f, 19f, true));
+            // At 30 FPS the scale climbs back to 1.0: GPU 19 ms at 1.0 projects to 9.3 ms at 0.70 (optimistic model).
+            Assert.AreEqual(30, RunPacing(g, ref t, 15f, 33.3f, 19f, false, scale: 1.0f), "not before 20 s of headroom");
+            Assert.AreEqual(60, RunPacing(g, ref t, 10f, 33.3f, 19f, false, scale: 1.0f), "projected 9.3 ms < 13.3 ms for 20 s");
+            Assert.AreEqual(30, RunPacing(g, ref t, 8f, 33.3f, 19f, true), "relapse");
+            Assert.AreEqual(40f, g.RecoverAfterS, 1e-3f, "relapse soon after a recovery doubles the wait");
+            Assert.AreEqual(30, RunPacing(g, ref t, 60f, 33.3f, 30f, false, scale: 0.70f), "30 ms at the floor: stays at 30");
+        }
+
+        [Test]
+        public void Pacing_IgnoresA30FpsRequest()
+        {
+            var g = new FramePacingGovernor(); float t = 0f;
+            Assert.AreEqual(30, RunPacing(g, ref t, 20f, 50f, 40f, true, req: 30));
+            Assert.IsFalse(g.Throttled);
         }
 
         [Test]

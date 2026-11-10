@@ -46,6 +46,8 @@ namespace Game.Editor.VisualQA
             V("base");
             V("scale085", t => { t.renderScale = 0.85f; return t; });
             V("scale075", t => { t.renderScale = 0.75f; return t; });
+            V("scale080", t => { t.renderScale = 0.80f; return t; });   // ADR 0046 floor
+            V("scale070", t => { t.renderScale = 0.70f; return t; });   // ADR 0062 floor (D36); upscaler cost not included
             V("msaa1", t => { t.msaa = 1; return t; });
             V("hdr0", t => { t.hdr = false; return t; }, u => SetB(u, "m_SupportsHDR", false));
             V("post0", t => { t.postProcessing = false; return t; });

@@ -15,9 +15,11 @@
 //   tone from a hash of the bay/storey index (blinds, curtains, dark rooms). Rows with storey index < 0 (plinth strip)
 //   have no panes.
 // - Street lamps at dusk (review r4 L3): _Emission (luminance cd/m^2, linear RGB; lamp glass materials, StreetLamps)
-//   x global _KamionStreetLamps (0..1, from the sun elevation) x _KamionExposure; and, while _KamionLampLights > 0
-//   (StreetLamps point lights near the camera, High), a Lambert loop over URP's per-object additional lights - a uniform
-//   branch, no extra variants.
+//   x global _KamionStreetLamps (0..1, from the sun elevation) x _KamionExposure; and (ADR 0062, every tier) analytic
+//   light pools of the _KamionLampCount lamp heads nearest the view (_KamionLampPos xyz + fade weight, _KamionLampColor =
+//   I·k/π): inverse-square Lambert with a full-cutoff luminaire (constant to 60° from the nadir, zero at 75°) and URP's
+//   smooth range window (35 m) - a uniform-branch loop, no extra variants, no lights. The StreetLamps point lights
+//   (High) light vehicles and props only; this shader no longer reads URP's additional lights.
 Shader "Kamion/World Surface"
 {
     Properties
@@ -67,6 +69,7 @@ Shader "Kamion/World Surface"
             float4 _Emission;
         CBUFFER_END
         float _KamionStreetLamps, _KamionLampLights, _KamionExposure;
+        #include "KamionLampPools.hlsl"
         ENDHLSL
 
         Pass
@@ -233,15 +236,7 @@ Shader "Kamion/World Surface"
                 half grazing = saturate(smooth + 0.04);
                 half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, _Occlusion) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
                 color += ambient + env;
-                if (_KamionLampLights > 0.0)
-                {
-                    uint nl = GetAdditionalLightsCount();
-                    for (uint li = 0u; li < nl; li++)
-                    {
-                        Light A = GetAdditionalLight(li, i.positionWS);
-                        color += albedo * A.color * (A.distanceAttenuation * saturate(dot(n, A.direction)));
-                    }
-                }
+                color += albedo * KamionLampPools(i.positionWS, n);   // ADR 0062
                 color += _Emission.rgb * (_KamionStreetLamps * _KamionExposure);
 
                 color = MixFog(color, i.fogFactor);
