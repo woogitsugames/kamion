@@ -151,7 +151,10 @@ ROUND = {
 # down the stem's centre. Slim wrap-round LED lamps sit low in the corner panels beside the stem. No maker's
 # signature is used (no lamp brows, no stepped bar signature, no roof-lamp pods). All values WORKING_VALUE.
 MODERN = {
+    # r2 (owner: A-pillar too wide from the seat): left pillar 15.3 deg of azimuth at eye height -> 4.5 deg (b2: 4.2):
+    # the screen wraps ~60 deg round the R 0.36 corner and the door glass starts 0.17 m ahead of the arc centre
     "round": {"roof_h": 0.30, "roof_rr": (0.34, 0.26, 0.08), "marker_dz": 0.40,
+              "ws_bottom_x": 1.25, "ws_top_x": 1.16, "win_front": 0.17,
               "rf": [(CAB_Z0, 0.38), (WS_Z0 - 0.10, 0.38), (WS_Z0 - 0.015, 0.36), (WS_Z1 + 0.02, 0.34), (ROOF_Z, 0.36)],
               "low_rf": [(0.38, 0.40), (FAIR_TOP, 0.38)]},
     "cfg": {
@@ -159,10 +162,11 @@ MODERN = {
         "w": [(CAB_Z0, CAB_HALF_W), (BELT_Z, CAB_HALF_W), (WIN_TOP, CAB_HALF_W - 0.022),
               (3.45, CAB_HALF_W - 0.05), (ROOF_Z, CAB_HALF_W - 0.06)],
         "stem": [(-0.795, 1.221), (0.795, 1.221), (0.85, 1.640), (-0.85, 1.640)],     # T stem (cab part), tapered
-        "bar": [(-1.12, 1.618), (1.12, 1.618), (1.12, 1.866), (-1.12, 1.866)],       # T bar under the windscreen
+        "bar": [(-1.21, 1.618), (1.21, 1.618), (1.21, 1.866), (-1.21, 1.866)],       # T bar under the windscreen
         "bumper_road": [(-0.72, 0.70), (0.72, 0.70), (0.793, 1.216), (-0.793, 1.216)],  # T stem (bumper part)
         # slim wrap-round lamp low in the corner panel beside the stem (taller towards the corner)
-        "lamp": [(0.880, 1.336), (1.345, 1.300), (1.365, 1.478), (0.880, 1.458)],
+        # r2 (owner: lamps too small at distance): lens 0.19-0.28 m tall (was 0.12-0.18), 100 mm modules, half-T DRL
+        "lamp": [(0.875, 1.318), (1.360, 1.268), (1.385, 1.545), (0.875, 1.505)],
         "louvres": (1.272, 0.075, 5, 0.050),   # first centre z, pitch, count, height (cab); the bumper continues it
         "wordmark_z": 1.748, "wordmark_h": 0.100,
         "bumper_split": 0.45,
@@ -243,6 +247,37 @@ def full_grille(poly_r):
     return poly_r[:-1] + [(0.0, poly_r[-1][1])] + left
 
 
+def round_poly(pts, r, n=4):
+    """Convex polygon [(a, b)] with every corner replaced by an arc of radius r tangent to both edges."""
+    out = []
+    m = len(pts)
+    for i in range(m):
+        p0, p1, p2 = V((*pts[i - 1], 0)), V((*pts[i], 0)), V((*pts[(i + 1) % m], 0))
+        u, w = (p0 - p1).normalized(), (p2 - p1).normalized()
+        half = math.acos(max(-1.0, min(1.0, u.dot(w)))) / 2
+        t = r / math.tan(half)
+        c = p1 + (u + w).normalized() * (r / math.sin(half))
+        a, b = p1 + u * t - c, p1 + w * t - c
+        ang = a.angle(b)
+        axis = 1.0 if a.cross(b).z > 0 else -1.0
+        for k in range(n + 1):
+            q = Matrix.Rotation(axis * ang * k / n, 3, "Z") @ a
+            out.append((c.x + q.x, c.y + q.y))
+    return out
+
+
+WIN_R = 0.08     # side window corner radius (modern, owner r2: R 60-100 mm)
+
+
+def win_outline(grow=0.0, front=None, rear=None):
+    """Side window outline (y, z), CCW; modern: rounded corners. grow = outward offset (frame outer edge)."""
+    y0 = (WIN_REAR if rear is None else rear) - grow
+    zb, zt = BELT_Z - grow * 0.85, WIN_TOP + grow
+    wf = lambda z: (win_front(z) if front is None else front(z)) + grow  # noqa: E731
+    quad = [(y0, zb), (wf(zb), zb), (wf(zt), zt), (y0, zt)]
+    return round_poly(quad, WIN_R + grow, 4) if modern() else quad
+
+
 def win_front(z):
     """Side window front edge (y): just onto the corner arc, parallel to the A-pillar."""
     yf, yb, w, rf, rb = CAB.sec(z)
@@ -290,10 +325,14 @@ def cab_shell():
     cut.append(CAB.quad_patch("cut_ws", "gap", "front", [(-xb, WS_Z0), (xb, WS_Z0), (xt, WS_Z1), (-xt, WS_Z1)],
                               off=-0.10, thick=0.25, nu=40, nv=8))
     for s in (-1, 1):
-        cut.append(CAB.quad_patch(f"cut_win_{s}", "gap", "side",
-                                  [(WIN_REAR, BELT_Z), (win_front(BELT_Z), BELT_Z),
-                                   (win_front(WIN_TOP), WIN_TOP), (WIN_REAR, WIN_TOP)],
-                                  off=-0.10, thick=0.25, side=s, nu=28, nv=6))
+        if modern():
+            cut.append(CAB.poly_patch(f"cut_win_{s}", "gap", "side", win_outline(), off=-0.10, thick=0.25, side=s,
+                                      sub=4))
+        else:
+            cut.append(CAB.quad_patch(f"cut_win_{s}", "gap", "side",
+                                      [(WIN_REAR, BELT_Z), (win_front(BELT_Z), BELT_Z),
+                                       (win_front(WIN_TOP), WIN_TOP), (WIN_REAR, WIN_TOP)],
+                                      off=-0.10, thick=0.25, side=s, nu=28, nv=6))
         lamp = CFG["lamp"] if s > 0 else mirror_poly(CFG["lamp"])
         cut.append(lamp_loft().poly_patch(f"cut_lamp_{s}", "lamp_inner", "front", lamp, off=-0.07, thick=0.20, sub=6))
         cut.append(CAB.patch(f"cut_handle_{s}", "plastic", "side", 1.38, 2.32, HANDLE_Y[0], HANDLE_Y[1], off=-0.06,
@@ -330,6 +369,13 @@ def glazing():
                        off=0.0055, nu=3, nv=10)
         # side glass in a black frame (door window channel)
         y0 = WIN_REAR
+        if modern():   # rounded glass + one frame band following the rounded outline
+            ribbon(f"win_frame_r_{s}", win_outline(grow=0.034), 0.044, "plastic_satin", off=0.002, thick=0.0,
+                   kind="side", side=s, nu=1)
+            CAB.poly_patch(f"side_glass_{s}", "glass", "side", win_outline(), off=0.0045, side=s, sub=4)
+            CAB.gap_h(f"belt_seal_{s}", s, BELT_Z - 0.012, y0 - 0.03 + WIN_R, win_front(BELT_Z) + 0.03 - WIN_R,
+                      w=0.012, off=0.006, m="rubber")
+            continue
         # black frame as a ring (4 strips) round the door glass
         fb, ft, fr = BELT_Z - 0.03, WIN_TOP + 0.035, y0 - 0.035
         wf = lambda z: win_front(z) + 0.035
@@ -417,7 +463,7 @@ def front_face_modern(strokes):
         lane_dash(f"lane_dash{k}", CAB, zc, hgt - 0.014, -0.002)
     wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=16.0, mat="alu_brushed",
              name="badge_trakt", weight=1.6, depth=0.004, on_face=True, bev=0.0012)
-    CAB.patch("cowl", "plastic_satin", "front", WS_Z0 - 0.082, WS_Z0 - 0.012, -1.12, 1.12, off=0.002, nz=3, npar=48)
+    CAB.patch("cowl", "plastic_satin", "front", WS_Z0 - 0.082, WS_Z0 - 0.012, -1.21, 1.21, off=0.002, nz=3, npar=48)
     wipers()
 
 
@@ -483,7 +529,7 @@ def emblem(subpaths):
         extrude_poly(f"emblem_dash{k}", hp, 0.0075, "plastic_satin", plane="XZ", origin=(0, y + 0.0002, 0))
 
 
-def ribbon(name, poly, width, m, off=-0.004, thick=0.01, kind="front", loft=None):
+def ribbon(name, poly, width, m, off=-0.004, thick=0.01, kind="front", loft=None, side=1, nu=6):
     """Frame band of `width` running inside a closed CCW polygon [(x, z)] on the cab surface (one strip per
     edge, mitred corners), raised `thick` from `off`. `width` may be a list with one width per edge i -> i+1."""
     n = len(poly)
@@ -507,8 +553,8 @@ def ribbon(name, poly, width, m, off=-0.004, thick=0.01, kind="front", loft=None
         j = (i + 1) % n
         (xa, za), (xb, zb) = poly[i], poly[j]
         (ia, ka), (ib, kb) = inner[i], inner[j]
-        (loft or CAB).quad_patch(f"{name}_{i}", m, kind, [(xa, za), (xb, zb), (ib, kb), (ia, ka)], off=off, nu=6, nv=1,
-                       thick=thick)
+        (loft or CAB).quad_patch(f"{name}_{i}", m, kind, [(xa, za), (xb, zb), (ib, kb), (ia, ka)], off=off, nu=nu, nv=1,
+                       thick=thick, side=side)
 
 
 def grille_bar(name, zc, hgt, depth, hw, m, round_front=True, n=2, nose=-0.003, nose_r=0.015, loft=None):   # flat front: n=2 is exact
@@ -826,11 +872,14 @@ def _headlamps_modern():
     for s in (-1, 1):
         poly = CFG["lamp"] if s > 0 else mirror_poly(CFG["lamp"])
         CAB.poly_patch(f"lamp_back_{s}", "lamp_inner", "front", poly, off=-0.052, sub=6)
-        drl_guide(f"drl_{s}_0", s, (0.900, 1.444), (1.340, 1.461), wdt=0.014, n=24)
-        for k, (x0, x1, beam) in enumerate(((0.902, 1.020, "low"), (1.032, 1.150, "low"), (1.162, 1.280, "high"))):
-            lamp_cell(f"{s}_{k}", s, x0, x1, 1.350, 1.428, beam)
+        # light signature = half of the road-T per lamp: a 24 mm bar along the top round the corner + a stem down
+        # the inner (mask) side; both lamps and the black T mask read as the brand mark at distance
+        drl_guide(f"drl_{s}_0", s, (0.895, 1.478), (1.352, 1.512), wdt=0.024, n=24)
+        drl_guide(f"drl_{s}_1", s, (0.905, 1.462), (0.905, 1.338), wdt=0.020, n=6)
+        for k, (x0, x1, beam) in enumerate(((0.936, 1.058, "low"), (1.070, 1.192, "low"), (1.204, 1.326, "high"))):
+            lamp_cell(f"{s}_{k}", s, x0, x1, 1.348, 1.448, beam)
         CAB.quad_patch(f"indicator_{s}", "led_amber", "front",
-                       [(s * 0.900, 1.3395), (s * 1.335, 1.3080), (s * 1.335, 1.3215), (s * 0.900, 1.3475)],
+                       [(s * 0.940, 1.3215), (s * 1.345, 1.2800), (s * 1.345, 1.2980), (s * 0.940, 1.3375)],
                        off=-0.030, nu=20, nv=1, thick=0.004)
         lens_dome(f"lamp_lens_{s}", poly, "lens_clear", crown=0.011, thick=0.006, sub=12)
         ribbon(f"lamp_gasket_{s}", poly, 0.007, "plastic_satin", off=-0.004, thick=0.006)
@@ -887,7 +936,7 @@ def sun_visor():
     prof = [(z_root + 0.030, -0.004), (z_root + 0.026, 0.040), (z_root + 0.010, 0.086), (z_root + 0.002, 0.090),
             (z_root - 0.006, 0.084), (z_root - 0.012, 0.040), (z_root - 0.018, -0.004)]
     if modern():   # soft bulged visor: deeper rounded section, wraps the R 0.34 corners with the glass
-        hw, n = 1.20, 48
+        hw, n = 1.27, 48
         prof = [(z_root + 0.075, -0.004), (z_root + 0.070, 0.026), (z_root + 0.052, 0.063), (z_root + 0.028, 0.087),
                 (z_root + 0.006, 0.094), (z_root - 0.010, 0.088), (z_root - 0.020, 0.045), (z_root - 0.026, -0.004)]
     bm = bmesh.new()

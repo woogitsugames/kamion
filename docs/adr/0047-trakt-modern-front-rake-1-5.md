@@ -40,3 +40,21 @@ European premium tractor were shown as a reference for proportion, roundness and
 - dims sync 9/9, physics runner 147/147 (no physics value changed).
 - Phone cost not measured in this task (no device): `UNVERIFIED`; LOD budgets are unchanged.
 - Evidence: `docs/reports/visual/truck-A6-exterior/` (export QA renders, `fit_*.jpg`, `modern-front/`).
+
+## Revision r2 (2026-11-10, owner review of the first Unity frames)
+- A-pillar: obstruction from the driver eye point (azimuth between the windscreen's clear edge and the side-glass
+  front edge, z 2.25 / 2.50 / 2.75 m): B2 2.6 / 4.2 / 5.8 deg, modern r1 14.7 / 15.3 / 16.0 deg, modern r2
+  4.0 / 4.6 / 5.2 deg (target <= B2 + 1 deg: met at and above eye height, +1.4 deg at 2.25 m). These are the
+  exterior openings; the interior A-pillar trim (build_interior) is what the driver sees and was not re-measured. Means: windscreen wraps ~60 deg round the R 0.36 m corner
+  (`ws_bottom_x` 1.25, `ws_top_x` 1.16), door glass starts 0.17 m ahead of the corner-arc centre (`win_front`).
+  Right pillar (seen from the left seat) at eye height: B2 2.1 deg, r1 7.9 deg, r2 2.4 deg.
+- Headlamps: lens 0.19-0.28 m tall (was 0.12-0.18), 100 mm modules, light signature = half road-T per lamp (24 mm
+  bar along the top round the corner + stem down the mask side).
+- Side windows: rounded corners R 0.08 m (shell opening, glass and one frame band follow the outline).
+- Gloss-black mask rendered matte grey in Unity: the atlas is correct (albedo sRGB 0.10, roughness 0.16-0.20, baked
+  dirt 0.00); the cause was the procedural road film of `TruckExterior.shader` (ADR 0038), weighted x1.3
+  (`_GrimeChassis`) on every non-paint slot, plus the sky reflection of a smooth dielectric. Fix in the shader: gloss
+  trim (baked roughness < ~0.3) keeps 25 % of the film. The remaining lift is the physical 4 % sky reflection.
+- r2 exports: exterior LOD0 102 062 / LOD1 42 999 / LOD2 15 300, interior LOD0 93 345 / LOD1 42 175 / LOD2 21 906
+  (`rear_lid_` dropped at LOD2); both check_export PASS, sightline PASS, check_fit PASS (12 vertices = 0.051 % outside,
+  0 in the glass zone). Unity frames: `docs/reports/visual/truck-A6-exterior/modern-front/unity2/`.
