@@ -30,10 +30,28 @@
 4. Every bus shelter gets a litter bin next to it.
 5. `noise_panel` colour is 0.30 / 0.33 / 0.31 with metal 0.1. At 0.17 and metal 0.3 the cassettes rendered near-black on Low overcast.
 
+6. Car bodies remodelled (2026-11-10, `streetscape/life_cars.py`; replaces the box lofts that read as "a roof wedge
+   on wheel boxes" at LOD1). A body is a named side profile (bumper, tail, rear glass, roof, windscreen, hood, nose)
+   with a half width per point (plan taper, greenhouse tumblehome), swept across x; the sides are the profile
+   polygon. Mix (WORKING_VALUE shares in `life.BODY_SHARE`): hatch 4.06 m, sedan 4.62 m, estate 4.68 m, small SUV
+   4.36 m, car-derived light van 4.50 m (replaces the 5.4 m panel van). All dimensions are class-typical
+   WORKING_VALUE (B/C/D segment, B/C-SUV, light van), no make or model is reproduced, no badges or grille
+   signatures; plates are blank (`car_plate`, the placeholder-string plate texture is no longer used on cars).
+   Palette cut to silver, grey, black, white, dark blue, red (24 car + 3 van prototypes, as before).
+   - LOD0 434-514 tris (budget 600): chamfered shoulders (body-coloured pillars), wheel-arch cut-outs with liners,
+     recessed wheels, framed side windows split at the B pillar, shut lines, handles, lamps, grille, mirrors, dark
+     valances and sills, roof rails (estate, SUV), arch cladding (SUV).
+   - LOD1 112-120 tris (budget 120): same profile, round tyre and rim discs, framed windows, lamps, plates,
+     mirrors, sills.
+   - LOD2 38-42 tris: LOD1 body, glazed greenhouse, one dark under-body block.
+   - `test_life_prototypes_budget_and_lods` unpacked 3-tuples and broke when decision 2 added the fourth element;
+     it now indexes the tuple and additionally bounds LOD2 (<= 60 tris, below LOD1). Budgets 600 / 120 unchanged.
+
 ## Not done / open
+- Car prototypes are flat-shaded facets (the prop GLB carries no normals) and have no interior; windows are opaque
+  dark glass. Smooth normals on the body strip would need a NORMAL attribute in `streetscape/export.py`.
 - Transparent PMMA panels (photo `Andersa,_Maczka_streets_in_Białystok_2.jpg`) stand on the viaduct parapet,
   which is bridge geometry, and BDOT10k OT_OIKM_L has no material attribute. Open until a data source or an
   authored_override exists.
 - Kerbside parking on streets without an OSM `parking:*` polygon (lane tags on ways are not in
   streetscape_sources yet).
-- Car LOD1 (Low 12-45 m) reads as a roof wedge on wheel boxes (stretch_01, 2026-11-10). It needs a body remodel before the r6 review.
