@@ -21,6 +21,10 @@ param(
     [ValidateSet('on', 'off')] [string]$CabFill = 'on',
     # Ablation overrides (RenderOverrides keys), e.g. 'rq_hlod=0,rq_trees=0'.
     [string]$Rq = '',
+    # ADR 0043 option (c) owner A/B: phone-style white-balance adaptation strength 0..1 ('' = preset value, 0).
+    [string]$WbAdapt = '',
+    # ADR 0043 diagnostic: hide the glazing.
+    [switch]$NoGlass,
     # Editor GPU timing: N extra renders per camera (stats.txt, VISUALQA_TIMING lines in the log).
     [int]$TimeFrames = 0
 )
@@ -35,6 +39,8 @@ $qaArgs = @(
     '-qaScene', $Scene, '-qaWidth', $Width, '-qaHeight', $Height, '-qaTier', $Tier, '-qaOutput', $OutputDir)
 if ($Lighting) { $qaArgs += @('-qaLighting', $Lighting) }
 if ($Cameras) { $qaArgs += @('-qaCameras', $Cameras) }
+if ($WbAdapt) { $qaArgs += @('-qaWbAdapt', $WbAdapt) }
+if ($NoGlass) { $qaArgs += @('-qaNoGlass', '1') }
 if ($CabFill -eq 'off') { $qaArgs += @('-qaCabFill', 'off') }
 if ($Rq) { $qaArgs += @('-qaRq', $Rq) }
 if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
