@@ -1046,8 +1046,20 @@ def build_site(mb, lod):
         for p in (G["gate"][0], G["gate"][-1]):
             post([p[0], p[1], p[2] - ph + 0.1], fh + 0.15, w=0.05)
     # thujas: lumpy columns = opaque dark core + alpha leaf shell 7 cm outside (LOD0), as the generated hedges
-    sides, prof = (8, [(0.0, 0.50), (0.07, 0.90), (0.30, 1.0), (0.58, 0.88), (0.80, 0.62), (0.93, 0.32), (1.0, 0.05)]) if lod == 0 else                   (5, [(0.0, 0.6), (0.2, 1.0), (0.7, 0.72), (1.0, 0.05)])
-    for e, n, z, hh, r, k in G["thuja"]:
+    # r6 (review P1 #6): three thuja habits (column / cone / egg) picked per plant + spruces (broad tiered cone)
+    PROFS = [[(0.0, 0.50), (0.07, 0.90), (0.30, 1.0), (0.58, 0.88), (0.80, 0.62), (0.93, 0.32), (1.0, 0.05)],
+             [(0.0, 0.60), (0.06, 1.0), (0.25, 0.92), (0.50, 0.66), (0.75, 0.40), (0.92, 0.18), (1.0, 0.04)],
+             [(0.0, 0.40), (0.10, 0.80), (0.38, 1.0), (0.62, 0.95), (0.82, 0.70), (0.94, 0.38), (1.0, 0.06)]]
+    SPRUCE = [(0.0, 0.35), (0.07, 1.0), (0.22, 0.80), (0.27, 0.92), (0.48, 0.55), (0.53, 0.66), (0.76, 0.26), (0.92, 0.10), (1.0, 0.02)]
+    plants = [(t, False) for t in G["thuja"]] + [(t, True) for t in G.get("spruce", [])]
+    for (e, n, z, hh, r, k), spruce in plants:
+        k = k + (1000 if spruce else 0)
+        if lod == 0:
+            sides, prof = (10, SPRUCE) if spruce else (8, PROFS[int(h01(k, "habit") * 2.999)])
+        elif spruce:
+            sides, prof = 6, [(0.0, 0.5), (0.08, 1.0), (0.55, 0.5), (1.0, 0.03)]
+        else:
+            sides, prof = 5, [(0.0, 0.6), (0.2, 1.0), (0.7, 0.72), (1.0, 0.05)]
         c = en_to_uvz([e, n, z])
         lean = np.array([h01(k, "lx") - 0.5, h01(k, "ly") - 0.5]) * 0.3
         for layer, grow, mat, tile in ((0, 0.0, HEDGE, 1.0), (1, 0.07, SHELL, 0.6)):
@@ -1058,7 +1070,7 @@ def build_site(mb, lod):
                 ring = []
                 for i in range(sides):
                     ang = 2 * math.pi * (i + 0.5 * (j % 2)) / sides + k
-                    rad = r * rr * (0.80 + 0.40 * h01(k, i, j)) + grow
+                    rad = r * rr * ((0.65 + 0.70 * h01(k, i, j)) if spruce else (0.80 + 0.40 * h01(k, i, j))) + grow
                     ring.append(P3(c[:2] + lean * f * f + np.array([math.cos(ang), math.sin(ang)]) * rad,
                                    c[2] - 0.05 + hh * f + (grow if j == len(prof) - 1 else 0.0) + 0.12 * hh * (h01(k, i, j, "z") - 0.5) * (0 < j < len(prof) - 1) / len(prof)))
                 rings.append(ring)

@@ -85,8 +85,8 @@ LAYOUT = {
     "ochre": _r(10.35, 12.60, 1.6, 1.35),
     "thuja_far": _r(12.15, 12.60, 1.75, 1.35),     # r4: far-LOD thuja body (LOD1/2 have no leaf shell)
     # linear albedo, WORKING_VALUE read by eye off the CC0 photos (overcast frame 7197 + sunny frame 20240626)
-    "render_blue_linear": [0.47, 0.545, 0.65],
-    "roof_blue_linear": [0.022, 0.085, 0.36],
+    "render_blue_linear": [0.185, 0.26, 0.365],      # r6: measured against photo 7197 (review P0), was 0.47/0.545/0.65
+    "roof_blue_linear": [0.024, 0.085, 0.235],        # r6: B -35 % linear (review P1 #3)
     "trim_blue_linear": [0.022, 0.060, 0.22],
     "clinker_linear": [0.47, 0.29, 0.115],
 }
@@ -207,9 +207,10 @@ def fire_station(nx=2048):
     sources.append("polyhaven:painted_plaster_wall (CC0)" if ok else "painted_plaster_wall: procedural fallback")
     base = np.array(L["render_blue_linear"], np.float32)
     # r4: the scan detail is damped (0.9 -> 0.5) and the big tone noise halved: photo 7197 shows an even matt paint
-    tone = det ** 0.5 * (1 + 0.02 * n_mid + 0.03 * n_big - 0.03 * ss(0.2, 1.4, n_run))
+    # r6 (review P1 #2): cloudy noise visible from 60 m -> isotropic variation cut 3x+, only run-off / splash stay
+    tone = det ** 0.15 * (1 + 0.006 * n_mid + 0.008 * n_big - 0.01 * ss(0.2, 1.4, n_run))
     # repainted areas: slightly different batch of paint on a few big soft patches
-    tone *= 1 + 0.02 * ss(0.6, 1.1, n_pat) - 0.02 * ss(0.7, 1.3, -n_pat)
+    tone *= 1 + 0.006 * ss(0.6, 1.1, n_pat) - 0.006 * ss(0.7, 1.3, -n_pat)
     pcol = base[None, None, :] * tone[..., None]
     # splash zone above the plinth: soil splash + algae on the bottom 0.5 m, stronger in patches
     splash = ss(0.75, 0.0, pv) * (0.6 + 0.4 * ss(-0.5, 0.8, n_big)) * (0.75 + 0.25 * n_mid.clip(-1, 1))
@@ -241,7 +242,7 @@ def fire_station(nx=2048):
     # lavender roof next to the saturated blue of the CC0 photos (7197, 20240626). WORKING_VALUE by eye.
     chalk = 0.02 + 0.03 * n_big + 0.025 * ss(0.0, 1.0, crown) + 0.015 * n_mid
     rcol = rblue[None, None, :] * (1 + 0.05 * n_mid)[..., None]
-    rcol = rcol + (np.array([0.16, 0.24, 0.46], np.float32) - rcol) * np.clip(chalk, 0, 0.12)[..., None]
+    rcol = rcol + (np.array([0.16, 0.22, 0.33], np.float32) - rcol) * np.clip(chalk, 0, 0.12)[..., None]
     # dirt collects in the pans and towards the eave; lap joint of the sheets every 1.0 m (4 ribs) and at mid length
     pan = 1 - crown
     rdirt = pan * (0.06 + 0.22 * ss(1.2, 0.0, rv) + 0.08 * ss(-0.3, 1.0, n_run)) + 0.30 * ss(0.10, 0.0, rv)
@@ -253,7 +254,7 @@ def fire_station(nx=2048):
     rcol = np.where(screws[..., None] > 0.5, np.array([0.25, 0.25, 0.26], np.float32), rcol)
     alb = np.where(in_r[..., None], rcol, alb)
     h = np.where(in_r, prof + 0.002 * screws - 0.0015 * lap_v + 0.0002 * n_fine, h)
-    rough = np.where(in_r, np.clip(0.60 + 0.25 * rdirt + 0.5 * np.clip(chalk, 0, 0.12), 0.55, 0.95), rough)   # r3: weathered coil coat ~0.6
+    rough = np.where(in_r, np.clip(0.48 + 0.30 * rdirt + 0.5 * np.clip(chalk, 0, 0.12), 0.42, 0.95), rough)   # r3: weathered coil coat ~0.6
     joint = np.where(in_r, np.clip(lap_v + lap_u * pan, 0, 1), joint)
 
     # ------------------------------------------------------------------ blue flashing / fascia strip
@@ -340,10 +341,10 @@ def fire_station(nx=2048):
     eid = np.where(in_d, (pid % 8) / 8.0, eid)
 
     # ------------------------------------------------------------------ windows
-    glass_col = np.array([0.030, 0.040, 0.052], np.float32)
-    pvc = np.array([0.66, 0.66, 0.64], np.float32)
+    glass_col = np.array([0.055, 0.070, 0.090], np.float32)     # r6: was 0.030/0.040/0.052 (read as holes)
+    pvc = np.array([0.74, 0.74, 0.72], np.float32)
 
-    def glazing(mask, gu, gv, wpane, hpane, bar=0.035, frame=0.07, wtot=None, htot=None, shape=None, trim=None,
+    def glazing(mask, gu, gv, wpane, hpane, bar=0.06, frame=0.10, wtot=None, htot=None, shape=None, trim=None,
                 blind_seed=0, glass=None):
         """Window in a rect: gu/gv = local metres, panes of wpane x hpane, PVC frame, glass with blinds in some."""
         nonlocal alb, h, rough
@@ -359,10 +360,15 @@ def fire_station(nx=2048):
         hsh = K.hash01(pane, 17)
         blind = (hsh > 0.62)[..., None] * np.array([0.30, 0.30, 0.28], np.float32) * (0.75 + 0.25 * np.cos(2 * np.pi * gv / 0.05))[..., None]
         dark_in = (0.6 + 0.8 * K.hash01(pane, 19))[..., None]
+        # r6: baked sky gradient - darker towards the sill (ground / interior), brighter at the head (sky)
+        gmax = float(gv[mask & inside].max()) if (mask & inside).any() else 1.0
+        sky = (0.55 + 0.9 * np.clip(gv / max(gmax, 1e-3), 0, 1) ** 1.3)[..., None]
         if glass is not None:                      # big hall glazing: grey daylight reflection, no blinds (photo 7197)
-            gcol = glass[None, None, :] * (0.85 + 0.3 * K.hash01(pane, 19))[..., None] * (1 + 0.10 * n_big)[..., None]
-        else:
-            gcol = np.where((hsh > 0.62)[..., None], blind * 0.35 + glass_col * 0.65, glass_col * dark_in)
+            gcol = glass[None, None, :] * sky * (0.85 + 0.3 * K.hash01(pane, 19))[..., None] * (1 + 0.10 * n_big)[..., None]
+        else:                                      # three states: blind / net curtain / dark interior
+            curtain = np.array([0.36, 0.36, 0.34], np.float32) * (0.85 + 0.15 * np.cos(2 * np.pi * gu / 0.11))[..., None]
+            gcol = np.where((hsh > 0.66)[..., None], blind * 0.75 + glass_col * 0.25,
+                            np.where((hsh > 0.36)[..., None], curtain * 0.55 + glass_col * sky * 0.45, glass_col * sky * dark_in))
         col = np.where((fr | bars)[..., None], pvc * (1 - 0.15 * ss(0.3, 0.0, gv)[..., None]), gcol)
         ro = np.where(fr | bars, 0.45, 0.07)
         hh = np.where(fr | bars, 0.0, -0.025)
@@ -534,7 +540,8 @@ def alpha_texture(path: Path | None = None):
     x = (np.arange(W) + 0.5) / W
     y = 1 - (np.arange(H) + 0.5) / H
     Xg, Yg = np.meshgrid(x, y)
-    blue = np.array(LAYOUT["trim_blue_linear"], np.float32) * 0.85
+    # r6 (review P1 #7): real fence is dark navy, target ~45/55/85 sRGB in the frame (was trim blue x 0.85: toy blue)
+    blue = np.array([0.022, 0.032, 0.075], np.float32)
     n = np.asarray(Image.fromarray(rng.standard_normal((H // 8, W // 8)).astype(np.float32)).resize((W, H), Image.BICUBIC))
 
     for key in ("fence_bay", "gate_bay"):
@@ -556,7 +563,7 @@ def alpha_texture(path: Path | None = None):
     m = (Xg >= r["u"][0] - 0.01) & (Xg < r["u"][1] + 0.01) & (Yg >= r["v"][0] - 0.03) & (Yg < r["v"][1] + 0.03)
     a[m] = 1
     rgb[m] = blue
-    rgb *= (1 + 0.08 * n - 0.25 * (Yg < 0.56) * (Yg > 0.5))[..., None]     # road spray at the foot
+    rgb *= (1 + 0.14 * n - 0.30 * (Yg < 0.56) * (Yg > 0.5))[..., None]     # road spray at the foot
     # rust blooms on the fence
     rust = (n > 1.6) & (Yg > 0.5)
     rgb[rust] = np.array([0.16, 0.07, 0.03], np.float32)

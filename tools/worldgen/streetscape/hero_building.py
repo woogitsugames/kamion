@@ -104,12 +104,15 @@ def build_spec(region_id, o, footprints, zground) -> dict | None:
         a, b = np.array(th["row_uv"][0], float), np.array(th["row_uv"][1], float)
         n = th["count"]
         for k in range(n):
-            t = (k + 0.5) / n + (_hash01(asset, "t", k) - 0.5) * 0.35 / n
+            t = (k + 0.5) / n + (_hash01(asset, "t", k) - 0.5) * th.get("jitter", 0.35) / n
             p = a + (b - a) * t + np.array([0.0, (_hash01(asset, "o", k) - 0.5) * 0.5])
             hh = th["h"][0] + (th["h"][1] - th["h"][0]) * _hash01(asset, "h", k)
             rr = th.get("r", [0.5, 0.78])
             shrubs.append(pz(p) + [_r(hh, 2), _r(rr[0] + (rr[1] - rr[0]) * _hash01(asset, "r", k), 2), k])
     ground["thuja"] = shrubs
+    # r6: single conifers (spruce) of the plot: [e, n, z, height, radius, index]
+    ground["spruce"] = [pz(it[:2]) + [_r(it[2], 2), _r(it[3], 2), k]
+                        for k, it in enumerate(dims.get("spruce", {}).get("items", []))]
     return {
         "schema": SCHEMA, "id": o["id"], "asset": asset, "region": region_id,
         "osm_way": o.get("osm_way"), "buildings": list(o["buildings"]),
@@ -208,6 +211,7 @@ def keepout(heroes) -> list:
             if len(ln) >= 2:
                 out.append(shapely.LineString([p[:2] for p in ln]).buffer(1.5))
         out += [shapely.Point(t[0], t[1]).buffer(1.6) for t in g["thuja"]]
+        out += [shapely.Point(t[0], t[1]).buffer(t[4] + 1.0) for t in g.get("spruce", [])]
         out += [shapely.Point(t[0], t[1]).buffer(1.5) for t in g["flagpoles"]]
     return out
 
