@@ -2,27 +2,26 @@
 
 ## Najpierw (sesja 5 → następna)
 - **Prompt startowy następnej sesji:** `docs/owner/START-PROMPT-S6.md`.
-- **main = `417283e`+, wypchnięty.** Limit 5 h: 85 % o 21:52 (reset 01:10) — od 85 % max 2 agentów naraz. Scalone w sesji 5: świat r8 ADR 0060 (p10 ov 32–34, cel ≤ 28 NIE — potrzebna decyzja właściciela o ekspozycji ov), skany CC0 ADR 0063. Przód 0061 i źródła 0066 (WIP) scalone wcześniej.
+- **main = `cf0c625`, wypchnięty.** Limit 5 h: 94 % o 22:00 (reset 01:10) — przy 95 % nie startujemy agentów (reset 01:10) — od 85 % max 2 agentów naraz. Scalone w sesji 5: świat r8 ADR 0060 (p10 ov 32–34, cel ≤ 28 NIE — potrzebna decyzja właściciela o ekspozycji ov), skany CC0 ADR 0063. Przód 0061 i źródła 0066 (WIP) scalone wcześniej.
 - **Zgłoszenie właściciela:** pas ze strzałką wjeżdża w wysepkę z trawą (`artifacts/owner/bugs/2026-11-10-lane-into-island.webp`) + wymaganie: „drogi dosłownie jak w OSM, żeby mieszkaniec wiedział jak jechać” → agenci 0074/0075/audyt.
 - Zasady dla agentów: `artifacts/handover/AGENT-RULES-S5.md`. Ostatni przydzielony ADR: **0075**.
 - Przy przejęciu worktree: `git -C <wt> log main..HEAD`, STATUS.md (ścieżka poniżej), dokończ albo scal. Przed usunięciem: skopiuj `<wt>/artifacts`, `cmd /c rmdir` junctiony `<wt>/Data/raw/*`, `git worktree unlock`, `git worktree remove --force --force`, sprawdź `du -sh Data/raw/*` w main.
 
 | zadanie | model | ADR | worktree `.claude/worktrees/` | gałąź | STATUS / dowody | stan |
 |---|---|---|---|---|---|---|
-| wyposażenie drogi wg Mapillary | Opus | 0069 | agent-a6651051778fa221f | worktree-agent-a6651051778fa221f | artifacts/street-r9 | w toku (import/render) |
-| wiadukt hero | Fable | 0067 | agent-a1ec6028c4e13f527 | worktree-agent-a1ec6028c4e13f527 | artifacts/viaduct-r9 | w toku (build→import→render) |
-| otwarte źródła + Kwadrat Park/straż | Sonnet | 0066 | agent-ab1fb0a47d2f0a491 | worktree-agent-ab1fb0a47d2f0a491 | artifacts/refs-opensources, artifacts/refs/{kwadrat-park,fire-station} | w toku (pobieranie) |
+| otwarte źródła + Kwadrat Park/straż | Sonnet | 0066 | agent-ab1fb0a47d2f0a491 | worktree-agent-ab1fb0a47d2f0a491 | artifacts/refs-opensources, artifacts/refs/{kwadrat-park,fire-station} | w toku |
 | straż pożarna hero (ref. `Data/photos/nowe/7197_May_2021_in_Białystok.jpg`) | Fable | 0070 | agent-aa9c74c62497e5d1f | worktree-agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | w toku |
-| Kwadrat Park hero | Fable | 0071 | agent-a1409e374f8c12b4f | worktree-agent-a1409e374f8c12b4f | artifacts/kwadrat-r9 | w toku |
-| grill Low lowsun + szyba/dach/chrom | Opus | 0072 | (usunięty) | scalony | artifacts/truckshade-r9 | GOTOWE częściowo: toe D23 na Low poza kabiną (`exteriorToeParity`); otwarte: σ szyby słońce 4–6 < 8, N-8 prostokąt, dach High 8,4 % ≥ 97 % (decyzja D23 vs N-17), lamele LOD2 bez warg (truck-artist) |
+| Kwadrat Park hero | Fable | 0071 | agent-a1409e374f8c12b4f | worktree-agent-a1409e374f8c12b4f | artifacts/kwadrat-r9 | w toku (after2) |
 | auta r9 sylwetki | Fable | 0073 | agent-adeef0c396335e1ed | worktree-agent-adeef0c396335e1ed | artifacts/cars-r9 | w toku |
-| spójność nawierzchni (pas w wysepkę) | Opus | 0074 | agent-a49b0ff53eade0b91 | worktree-agent-a49b0ff53eade0b91 | artifacts/roadgeo-r9 | w toku |
-| audyt mapy całej trasy | Opus | — | (usunięty) | scalony 417283e | artifacts/map-audit-r9/BUGS.md | GOTOWE: 21 błędów (4 P0: MA-010, MA-001, MA-002, MA-012) → przekazane 0074 (geometria) i 0069 (ekrany, sygnalizator, szlaban) |
 | zgodność dróg z OSM/ortofoto | Opus | 0075 | agent-aee7234325983b8dc | fidelity-r9 | artifacts/fidelity-r9/DIFFS.md | w toku |
+| SCALONE w s5: 0060 świat, 0063 CC0, audyt mapy, 0072 toe Low, 0069 ulica r9e, 0067 wiadukt, 0074 spójność dróg | | | usunięte | | artifacts/{world-r8,cc0-r8,map-audit-r9,truckshade-r9,street-r9,viaduct-r9,roadgeo-r9} | |
+
+**Otwarte po scaleniach:** mapa — MA-001/002 (krawężnik w poprzek łącznicy do Andersa), MA-010 (wysepka pod wiaduktem Putry; kontrola 0074 jej NIE łapie), MA-011/012/015, 2 przypadki na trasie (brama Kwadrat j:n1882954015, droga straży j:n4103450295); MA-005 częściowo. Miejsce ze zrzutu właściciela = wyjazd straży pożarnej na Andersa (s≈1330), naprawione w generatorze (0074). Wiadukt: prześwit 3,3–5,0 m vs ok. 6 m na zdjęciu (niweleta). `_Tile` w WorldPbrMaterials naprawione tylko dla `set_tile` — decyzja o globalnej naprawie. Pierścień Bieżeństwa = `gravel` (0067) zamiast `stones` (0060). Zebra N-21 i linia postojowa 1,35 — decyzja §9-3 / ciemniejsza kostka.
+**Regeneracja świata na main uruchomiona** (log `artifacts/logs/s5-main-regen.log`: cc0_fetch → build_region → build_world → pytest; koniec = `EXIT n`). Jeśli nie ma EXIT 0 — powtórz. Potem import-region + Unity (punkt 2 niżej).
 
 ## Następne kroki
 0. **Fab (fab.com) — decyzja właściciela: najpierw sprawdzić licencję** (agent Sonnet, bez logowania i pobierania): Fab Standard License + Megascans + CC BY na Fab — użycie w Unity, gra komercyjna Android, publiczne repo (pliki źródłowe poza gitem?), atrybucja; lista przydatnych darmowych pozycji (sosny, lipy, krzewy, trawa, kamienie, krawężniki, śmieci). Wynik → pytanie klikalne do właściciela o rozszerzenie D40. YuE: notatka w docs/08 (po bramce 3).
-1. Scalanie: 0069 → 0067 → 0072 → 0073 → 0074/0075 → 0070/0071 → 0066 (konflikty: generated/*.json = `--ours` + regeneracja; shadery/QualityProfile/RenderOverrides/LICENSES = unia).
+1. Scalanie pozostałych: 0073 → 0075 → 0070/0071 → 0066 (konflikty: generated/*.json = `--ours` + regeneracja; shadery/QualityProfile/RenderOverrides/LICENSES = unia).
 2. Pełna integracja na main: build_region → build_world → import-region (CC0: najpierw `cc0_fetch.py`), Truck/Trailer BuildBatch, InstallBatch, pytest/EditMode/PlayMode/physics, czysty build Low + High. Uwaga: EditMode 2 inconclusive `TruckCabGlassTierTests` — sprawdzić.
 3. Telefony pod `artifacts/locks/PHONE_RUN` (S24+ 46 %/33 °C o 21:15; A16 80 %): A16 Low gate3 + kabiny × 3 pory + świat ov; S24+ High A/B (cel 60 kl./s).
 4. Decyzje właściciela do zebrania w r9: ekspozycja ov (p10, ADR 0060), D23 biel 0,7 vs przepał dachu N-17 (ADR 0072). APK High właścicielowi (FEEL-TEST), recenzja r9 (visual-critic) + decyzje (ekspozycja ov dla p10, wynik audytu mapy), raport bramki 3.

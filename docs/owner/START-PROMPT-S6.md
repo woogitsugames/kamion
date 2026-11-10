@@ -13,7 +13,7 @@ Zasady (cały czas):
 - Telefony: zawsze -Serial, tylko $Adb z scripts/env.ps1, jeden agent telefonowy naraz, pomiar tylko bez Unity.exe (blokada artifacts/locks/PHONE_RUN). S24+ (RZCX60VE8ZY): bateria nigdy < 20 %, pomiar przy ≥ 40 % i < 36 °C, po pomiarze am force-stop. A16 (RFGL34SJYDZ) bez ograniczeń. Nigdy nie usypiaj/blokuj telefonu, nie wpisuj PIN-u.
 
 Zadania (kolejność):
-1. `git worktree list`, `git log --oneline -15`, STATUS.md każdego agenta z tabeli HANDOVER.md. Niedokończonych dokończ (agent per worktree, ten sam model). Scalaj: 0069 → 0067 → 0073 → 0074/0075 → 0070/0071 → 0066.
+1. `git worktree list`, `git log --oneline -15`, STATUS.md każdego agenta z tabeli HANDOVER.md. Niedokończonych dokończ (agent per worktree, ten sam model). Scalaj: 0073 → 0075 → 0070/0071 → 0066. Sprawdź log regeneracji artifacts/logs/s5-main-regen.log.
 2. Zgłoszenie właściciela: drogi „dosłownie jak w OSM” (pas ze strzałką wjeżdża w wysepkę, artifacts/owner/bugs/). Audyt: 21 błędów (4 P0: MA-010, MA-001, MA-002, MA-012). Zweryfikuj powtórzonym audytem (kamery artifacts/map-audit-r9/cameras/audit_cameras.json), że P0 = 0, a testy zgodności z OSM/ortofoto (ADR 0075) przechodzą.
 3. Fab (fab.com): agent Sonnet sprawdza licencję (bez logowania/pobierania) → klikalne pytanie o rozszerzenie D40.
 4. Pełna integracja na main: cc0_fetch → build_region → build_world → import-region, Truck/Trailer BuildBatch, WorldTruckInstaller.InstallBatch, pytest, EditMode (sprawdź 2 inconclusive TruckCabGlassTierTests), PlayMode, physics; czysty build Low + High (+ Ultra, właściciel ma Folda 8 Ultra — instaluje sam z pliku).
