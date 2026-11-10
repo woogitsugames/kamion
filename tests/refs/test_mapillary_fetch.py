@@ -228,3 +228,13 @@ def test_token_resolution_env_then_secrets_file(tmp_path):
     f.write_text("MAPILLARY_TOKEN=" + chr(10), encoding="utf-8")                # empty value = none
     assert mf.resolve_token({}, f) == ""
     assert mf.resolve_token({}, tmp_path / "missing.env") == ""
+
+
+def test_points_wgs84_format(tmp_path):
+    f = tmp_path / "pts.json"
+    f.write_text(json.dumps({"points": [
+        {"id": "p01", "lat": 53.1, "lon": 23.1, "azimuth": 370.0},
+        {"id": "p02", "lat": 53.2, "lon": 23.2, "azimuth": None},
+    ]}), encoding="utf-8")
+    pts = mf.load_points(f, REGION)
+    assert pts == [{"id": "p01", "lon": 23.1, "lat": 53.1, "azimuth": pytest.approx(10.0)}]

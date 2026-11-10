@@ -376,7 +376,64 @@ def row(sh):
     cams_txt = (" Kamery: `" + "`, `".join(sh["cams"]) + "`.") if sh["cams"] else ""
     return (f"| {sh['nr']} | {KIND_PL[sh['kind']]}{ACCESS_PL[sh['access']]} | {sh['place']}<br>`{sh['lat']:.6f}, {sh['lon']:.6f}` "
             f"(s={sh['s']:.0f} m) | {dirtxt} | {sh['h']} | {TIME_PL[sh['time']]} | {sh['goal']}{cams_txt} | "
-            f"[OSM]({osm_link(sh['lat'], sh['lon'])}) · [Mapillary]({mly_link(sh['lat'], sh['lon'])}) | P{sh['pri']} |")
+            f"{mly_cell(sh)} | [OSM]({osm_link(sh['lat'], sh['lon'])}) · [mapa Mapillary]({mly_link(sh['lat'], sh['lon'])}) | P{sh['pri']} |")
+
+
+COV_FILE = REG / "generated/photo_coverage.json"
+COV = {int(k): v for k, v in json.load(open(COV_FILE, encoding="utf-8")).items()} if COV_FILE.exists() else {}
+STATUS_PL = {"DOBRE": "DOBRE", "SLABE": "SŁABE", "BRAK": "BRAK"}
+
+
+def cov_of(sh):
+    """Ocena pokrycia Mapillary (reczna, z miniatur). Ujecia bez punktu (pod stopami) = BRAK."""
+    return COV.get(sh["nr"]) or {"status": "BRAK", "note": "ujęcie z góry/pod stopami: Mapillary nie pokrywa"}
+
+
+def mly_cell(sh):
+    c = cov_of(sh)
+    st = STATUS_PL[c["status"]]
+    if c.get("best"):
+        return f"**{st}** [{c['dist']:.0f} m, {c['dev']:.0f}°, {c['date'][:4]}]({c['page']})"
+    return f"**{st}**"
+
+
+def gaps_section():
+    rows = []
+    for sh in SHOTS:
+        c = cov_of(sh)
+        if c["status"] == "DOBRE":
+            continue
+        az = sh["az"]
+        why = c.get("note", "")
+        if c.get("best"):
+            why = f"najlepsze {c['dist']:.0f} m / {c['dev']:.0f}° / {c['date'][:4]}" + (f"; {why}" if why else "")
+        need = {"F": "fasada prostopadle (tekstura)", "N": "nawierzchnia z góry", "Z": "zmierzch/latarnie", "K": "kadr gate3",
+                "L": "latarnia/znak", "D": "detal", "P": "auta"}[sh["kind"]]
+        rows.append(f"| {sh['nr']} | {need}{ACCESS_PL[sh['access']]} | {sh['place']} | `{sh['lat']:.5f}, {sh['lon']:.5f}` | {az:.0f}° | "
+                    f"{STATUS_PL[c['status']]} | {why} |")
+    n = {k: sum(1 for s in SHOTS if cov_of(s)["status"] == k) for k in ("DOBRE", "SLABE", "BRAK")}
+    head = (f"## Luki w referencjach (D43)\n\n"
+            f"Właściciel **nie robi własnych zdjęć** (D43). Pokrycie Mapillary sprawdzono API (zdjęcia 2048 px, bez panoram; "
+            f"promień 30 m, azymut ±40°, a dla braków 70 m / ±60°) i oceniono z miniatur: **DOBRE {n['DOBRE']}**, **SŁABE {n['SLABE']}**, **BRAK {n['BRAK']}** z {len(SHOTS)}. "
+            f"Kryterium DOBRE: ≤ 15 m, azymut ±30°, ostre, ≥ 2019, bez prześwietlenia. Poniższe ujęcia trzeba uzupełnić z innych otwartych źródeł "
+            f"(KartaView, Panoramax, Wikimedia Commons, Openverse, GUGiK) lub zostają jako proceduralne z OSM/BDOT10k. "
+            f"Mapillary (kamery samochodowe) **nie zastąpi** tekstur fasad z bliska, nawierzchni z góry ani zmierzchu: te ujęcia i tak są w tabeli. "
+            f"Dane maszynowe: `artifacts/refs/coverage.json`, `Data/Regions/bialystok-industrial-c/generated/photo_coverage.json`. "
+            f"Zdjęcia Mapillary = tylko referencje (nie wchodzą do builda, ADR 0065).\n\n"
+            f"| Nr | Czego brakuje | Miejsce | WGS84 | Azymut | Mapillary | Uwagi |\n|---|---|---|---|---|---|---|")
+    return head + "\n" + "\n".join(rows) + "\n"
+
+
+def write_coverage_json(path):
+    out = []
+    for sh in SHOTS:
+        c = cov_of(sh)
+        out.append({"id": f"p{sh['nr']:02d}", "nr": sh["nr"], "key": sh["key"], "lat": round(sh["lat"], 7), "lon": round(sh["lon"], 7),
+                    "azimuth": round(sh["az"], 1), "kind": sh["kind"], "mapillary_status": c["status"],
+                    "best_image_id": c.get("best"), "best_dist_m": c.get("dist"), "best_dev_deg": c.get("dev"),
+                    "best_date": c.get("date"), "other_image_ids": c.get("others", []), "note": c.get("note", "")})
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"shots": out}, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def appendix_rows():
@@ -478,8 +535,11 @@ TEMPLATE_TAIL = (Path(__file__).parent / "photo_list_tail.md").read_text(encodin
 
 
 def build():
-    out = [TEMPLATE_HEAD.replace("{{N}}", str(len(SHOTS)))]
-    hdr = "| Nr | Typ | Miejsce i współrzędne WGS84 | Kierunek patrzenia | Wys. | Pora | Cel / co ma być na zdjęciu | Mapy | Pri |\n|---|---|---|---|---|---|---|---|---|"
+    first, rest = TEMPLATE_HEAD.replace("{{N}}", str(len(SHOTS))).split("\n", 1)
+    banner = ("\n> **D43: właściciel nie robi własnych zdjęć.** Sekcje 1, 2, 4, 5 i Załącznik B poniżej opisują pierwotny plan i są **nieaktualne** "
+              "(zostają jako opis standardu ujęć dla innych źródeł). Aktualne zadanie: sekcja „Luki w referencjach”.\n")
+    out = [first, banner, gaps_section(), rest]
+    hdr = "| Nr | Typ | Miejsce i współrzędne WGS84 | Kierunek patrzenia | Wys. | Pora | Cel / co ma być na zdjęciu | Mapillary | Mapy | Pri |\n|---|---|---|---|---|---|---|---|---|---|"
     for code, title, lo, hi in SECTIONS:
         sec = [s for s in SHOTS if lo <= s["s"] < hi] if lo >= 0 else [s for s in SHOTS if s["s"] < hi]
         if not sec:
@@ -495,7 +555,18 @@ def build():
     return "\n".join(out)
 
 
+def export_points(path):
+    """Punkty WGS84 + azymut dla tools/refs/mapillary_fetch.py --points (ujecia 'z gory' pomijane)."""
+    pts = [{"id": f"p{sh['nr']:02d}", "nr": sh["nr"], "kind": sh["kind"], "lat": round(sh["lat"], 7),
+            "lon": round(sh["lon"], 7), "azimuth": round(sh["az"], 1)}
+           for sh in SHOTS if sh["az"] is not None and not sh.get("down")]
+    path.write_text(json.dumps({"points": pts}, indent=1) + "\n", encoding="utf-8")
+    return pts
+
+
 if __name__ == "__main__":
+    export_points(REG / "generated/photo_points.json")
+    write_coverage_json(REPO / "artifacts/refs/coverage.json")
     draw_map(REPO / "docs/owner/img/photo-list-map.png")
     (REPO / "docs/owner/PHOTO-LIST.md").write_text(build(), encoding="utf-8")
     print(len(SHOTS), "ujec")

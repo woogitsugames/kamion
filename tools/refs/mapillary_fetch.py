@@ -139,9 +139,16 @@ def load_points(path: Path, region_id: str):
     """
     from pyproj import Transformer
     data = json.loads(Path(path).read_text(encoding="utf-8"))
+    out = []
+    # WGS84 format (photo list): {"points": [{"id", "lat", "lon", "azimuth"}]}; azimuth null = any direction is skipped.
+    for p in data.get("points", []):
+        if p.get("azimuth") is None:
+            continue
+        out.append({"id": str(p["id"]), "lon": float(p["lon"]), "lat": float(p["lat"]), "azimuth": float(p["azimuth"]) % 360.0})
+    if "cameras" not in data:
+        return out
     o = _region_yaml(region_id)["origin"]
     t = Transformer.from_crs("EPSG:2180", "EPSG:4326", always_xy=True)
-    out = []
     for c in data["cameras"]:
         e, n = c["pos"][0], c["pos"][1]
         le, ln = c["look_at"][0], c["look_at"][1]
