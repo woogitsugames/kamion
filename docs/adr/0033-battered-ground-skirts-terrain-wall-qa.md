@@ -29,6 +29,20 @@ Fresh editor frames (main import of 2026-11-09 23:47, `WorldC_High`, overcast) a
 `terrain_walls_qa.json`: 179 vertices > 0.15 m (max 1.44 m, p99 0.73 m), the 12 worst all on junction-patch skirts (`j:<node>`);
 the per-source split beyond the worst 12 is not recorded yet. The test passes for verges / yards and xfails on the junction remainder.
 
+## Addendum (v3.5.1): the actual Andersa wall
+The battered skirt did not change the `driver-andersa-to-putry` frame. A ray cast of the pixel band against the
+generated GLBs hit `road / verge_grass` with normal (−0.50, −0.61, 0.61): a 52° grass face, not a skirt and not the
+terrain. Two causes in the rural ditch profile:
+4. Inside a curve `_emit_strip` squeezes the side profile horizontally (fold protection) but kept the depths, so the
+   0.6 m ditch steepened from 1:1.5 to ~1:0.8. Rural / rural-median stations now scale their depths with the same
+   factor (shallower ditch, slopes kept); the bottom skirt keeps its full depth.
+5. The ditch back slope used a run of `(d + z1)·1.5` with `z1 < 0` (rise `d − z1`): 1:1.2 everywhere. Now
+   `(d − z1)·1.5`; the rural side profile is ~0.2 m wider (cross-section width only; carriageway, kerbs and the
+   ADR 0018 longitudinal profile / route corridor unchanged).
+6. The QA also flags grass / gravel faces steeper than ~1:1.33 with > 0.15 m height (`steep_grass`), and no longer
+   counts skirt vertices whose 4 surrounding nodes are covered by other ground surfaces (buried skirts).
+   The test requires `count == 0` (no expected-fail).
+
 ## Consequences
 - Verge skirt triangles count is unchanged (same strip, moved vertices); GPU cost on Low: zero extra samples and
   draws, a few % more skirt overdraw where it is visible (estimate, UNVERIFIED on the A16).

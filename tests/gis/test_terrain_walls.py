@@ -17,11 +17,8 @@ def test_no_vertical_terrain_walls():
         pytest.skip("terrain_walls_qa.json missing: run roads/build_world.py")
     q = json.loads(QA.read_text(encoding="utf-8"))
     assert q["thresh_m"] <= 0.15
-    # verge / yard skirts (W-H5) must be clean; junction-patch skirts ("j:" sources) are a known remainder (ADR 0033)
-    bad = [w for w in q["worst"] if not w["src"].startswith("j:")]
-    assert not bad, f"verge / yard walls > {q['thresh_m']} m: {bad[:5]}"
-    if q["count"]:
-        pytest.xfail(f"{q['count']} junction-skirt vertices > {q['thresh_m']} m (max {q['max_m']} m), ADR 0033 open item")
+    assert "by_source" in q, "old QA format: rebuild the region"
+    assert q["count"] == 0, f"{q['count']} wall points > {q['thresh_m']} m {q['by_source']}, worst {q['worst'][:5]}"
 
 
 def test_marking_paint_is_worn():
