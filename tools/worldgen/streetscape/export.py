@@ -18,6 +18,7 @@ from PIL import Image, ImageDraw
 from terrain_mesh.gltf import GLB
 
 from . import props as PP
+from . import life_cars as LC
 from . import signs as SG
 from .materials import M
 
@@ -128,7 +129,8 @@ def car_dirt_png(w=512, h=128, seed=41):
 
 def textures():
     return {"fence_mesh": SG.png_bytes(fence_mesh_png()), "dock_digits": SG.png_bytes(SG.digits_atlas()),
-            "plate_back": SG.png_bytes(SG.plate_back()), "car_dirt": SG.png_bytes(car_dirt_png())}
+            "plate_back": SG.png_bytes(SG.plate_back()), "car_dirt": SG.png_bytes(car_dirt_png()),
+            "car_plates": SG.png_bytes(LC.plate_atlas())}
 
 
 def glb_materials():

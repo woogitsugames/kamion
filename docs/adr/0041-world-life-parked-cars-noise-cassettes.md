@@ -90,8 +90,67 @@
      alloy styles (5 wide, 10 thin, 7 medium, 5 dark with a machined lip) + pressed steel.
    - Generated: LOD0 3378-3664, LOD1 576-600, LOD2 112-120 (budgets 4000 / 600 / 120 unchanged).
 
+9. Fourth pass (2026-11-10, REVIEW r6 W-N6 / W-N7 / W-N8 / W-N9, HANDOVER "red frame-budget test"):
+   - Frame estimate (`build_world.mesh_budget`): point props now use `instance_ends()`, a copy of
+     `InstanceImporter.Policy` (incl. the LOD-count reduction) times the tier lodBias (`LOD_POLICY.<tier>.lod_bias`,
+     High 1.5, Low 0.5). The previous blanket High rule "props LOD0 < 120 m, LOD1 < 650 m" predated the per-family
+     policy: it counted bins, pallets and truck rigs out to 650 m that the engine culls at 180 m (High) / 60 m (Low),
+     and it disagreed with the engine for cars, lamps, signs and pylons. The limits of
+     `test_frame_budget_with_forest_hlod` are unchanged (High <= 2.0 M everywhere, DK8 Low <= 0.6 M).
+   - Vehicles (`car_`, `van_`, `tractor_`, `trailer_`): LOD switches still scale with lodBias, the cull distance is
+     FIXED at `VehicleCullM` = 300 m on every tier (`WorldInstances.IsVehicle`, `build_world.VEHICLE_CULL_M`, a test
+     checks they match). Before: cars culled at 200 m on Low / 600 m on High, truck rigs (default policy 30 / 120 m)
+     at 60 m / 180 m, so the same frame showed different vehicles per tier (W-N6). Cars 25 / 90 / 300 m (Low
+     12.5 / 45 / 300), tractors / trailers 40 / 300 m. Landmarks get their own 650 / 20000 m (the engine fell back
+     to 30 / 120 m: the EC chimneys were culled at 60 m on Low).
+   - LOD2 of cars / vans is now the cheap first-pass body (`_vehicle(lod=2)`: glazed greenhouse, under-body band,
+     hexagonal tyre discs), 54-58 triangles. `_build` called `_vehicle(lod=1)` (112-120 triangles) since par. 7.
+   - Result (estimate, generated 2026-11-10): max High frame 2.06 M (stretch_04, red) -> 1.965 M
+     (route_onramp_andersa_above); max Low frame 911 k -> 910 k (stretch_04; roads 644 k of it, docs/06 hypothesis
+     400-600 k is exceeded by roads, not by vehicles: cars + rigs 25 k there); DK8 Low 356 k -> 357 k.
+   - Placement (W-N7, `life.parking`): occupancy drawn per row of bays 0.55-0.90 (`OCC_ROW`), the same prototype at
+     most once in any 4 consecutive stalls of a row (deterministic re-draws, `REPEAT_GAP`), yaw +-3 deg, offset
+     +-0.25 m across / +-0.40 m along the bay, 12 % reversed into perpendicular bays (never on parallel kerb
+     strips), body mix hatch 33 / sedan 15 / estate 24 / SUV 28 % of cars, vans 12 % (WORKING_VALUE; r6: the Polish
+     2026 fleet is mostly hatchbacks, estates and small SUVs, sedans <= 25 %). Generated: 968 cars + 131 vans in
+     1630 bays; shares hatch 30.4 / SUV 23.8 / estate 19.2 / sedan 14.6 / van 11.9 %, reversed 11.7 %.
+   - Glass (W-N8, `WorldCarGlass.shader`, `car_glass_tint`): alpha 0.84 -> 0.65 (transmission 0.35 per face),
+     both faces drawn (`Cull Off`; with back faces culled the far pane was missing, so a car was a clear window
+     onto the paving behind it), inner face reflects the dark cabin (env x 0.15, no glint, diffuse x 0.3), horizon
+     darkening starts below the horizon (`_Horizon` 0.30 at r.y <= -0.30, full at r.y >= 0.12; it was 0.22 already
+     at the horizon, so grazing panes stayed dark), dust film only on the outer quarter of the UV0 mask and lit at
+     half strength, dust 0.6 -> 0.35. Measured with `tools/worldgen/qa/car_glass_qa.py` (projected LOD0 glass
+     triangles, per-pixel incidence angle, Rec.709 luma of the PNG; 7 cameras around one parked estate next to
+     stretch_01). Privacy glass behind the B pillar (SUV, estate, half the hatches; `_PrivacyOpacity` 0.80, decoded
+     from a UV0 u offset of 4, no extra draw); the sheet's own tint term x 0.2 (clean glass has no diffuse body);
+     RegionImporter writes every look constant (an existing material asset kept its saved values).
+     Result, p50 luma, criterion < 45 deg <= 20 % / >= 70 deg >= 40 %: High clear 25.4 / 33.6, High overcast
+     32.5 / 46.9, Low clear 23.5 / 31.5, Low overcast 30.2 / 44.8 (before this pass, same cameras: High clear
+     27.5 / 36.6). NOT MET for < 45 deg on any tier / light and for >= 70 deg in clear light. Diagnostic: with
+     `_Opacity` = `_PrivacyOpacity` = 0.98, `_Reflect` = 0 and `_Dust` = 0 the panes still show a bright, textured,
+     sun-lit pattern (artifacts world-fixes/cars-v4/glass/tune5), so that content does not come from the glass blend;
+     the darkest 1 % of every frame is 13-16 % luma (grading floor). Open for rendering-perf.
+   - Plates (W-N9): `life_cars.plate_atlas()` -> `art-source/world/textures/car_plates.png`, 4 x 8 cells of
+     520 x 114 mm Polish plates (EU band, white field, black characters), one per prototype (`_plate_index`), the
+     last cell is the far plate (EU band + soft grey character band) used by LOD1. Strings are seeded
+     (`plate_text`): district codes BI / BIA / BSK / BMN / BBI (WORKING_VALUE shares), vehicle part without B D I O Z
+     (UNVERIFIED reading of the registration ordinance), not taken from any register. `car_plate` is textured.
+   - Shapes (HANDOVER "square fronts"): LOD0 bonnet lip and bumper peak are 5-point quadratic Bezier rounds (reach
+     0.16 m, was a 3-point 0.11 m chamfer); LOD1 keeps a 3-point chamfer there and 70 % of the crown (it had
+     knife edges and one flat facet per panel that mirrored the sky: the "identical white sheen on every bonnet"
+     of r6). LOD1 tread only on the lower half of the tyre (the upper half is inside the arch). Generated: LOD0
+     3538-3784, LOD1 600-632, LOD2 54-58 triangles; LOD1 cap 600 -> 650 (LOD1 is the Low car from 12.5 to 45 m;
+     cost in the Low frame estimate below 3 k triangles).
+   - Paint roughness spread 0.30-0.50 per colour (it was 0.35 for all but white2); road film darker grey-brown,
+     alpha 0.45 / 0.62 / 0.78 (level 3 at 1.0 read as beige two-tone paint), film line and spray fans lower;
+     `rim_dusty` 0.115 -> 0.17 (black disc on LOD1).
+
 ## Not done / open
+- r6 W-N8 glass criterion not met (numbers in par. 9); the bright textured pane content is unexplained.
+- Fixed vehicle cull and the Low LOD2 at 45-300 m are not measured on the A16.
 - Road film and glass dust are per prototype, not per instance; the paint `car_grime` set is unchanged.
+- r6 W-N6 parity was checked on the editor frames only (fixed vehicle cull); on Low the panel fence is opaque, so
+  cars behind a fence are hidden on Low and visible on High (`kwadrat-park-gate`): furniture, not the vehicle LOD.
 - `Kamion/World Car Glass` and the film overlays are not measured on the phone (two more transparent draws per LOD0 car).
 - Alpha-blended car glass is not sorted per instance (dark tint hides the order); cost on the phone not measured.
 - Transparent PMMA panels (photo `Andersa,_Maczka_streets_in_Białystok_2.jpg`) stand on the viaduct parapet,

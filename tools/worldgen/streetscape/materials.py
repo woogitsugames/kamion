@@ -96,30 +96,34 @@ M = {
     "paint_white_reflective": {"color": [0.7, 0.7, 0.7], "rough": 0.4},
     "cabinet_grey": {"color": [0.35, 0.36, 0.35], "rough": 0.6},
     # static life props (streetscape.life_props): vehicles, yard props, gate kit
-    "car_paint_silver": {"color": [0.42, 0.43, 0.44], "rough": 0.35, "metal": 0.6, "texture_set": "car_grime"},
-    "car_paint_grey": {"color": [0.13, 0.135, 0.14], "rough": 0.35, "metal": 0.5, "texture_set": "car_grime"},
+    "car_paint_silver": {"color": [0.42, 0.43, 0.44], "rough": 0.38, "metal": 0.6, "texture_set": "car_grime"},
+    "car_paint_grey": {"color": [0.13, 0.135, 0.14], "rough": 0.42, "metal": 0.5, "texture_set": "car_grime"},
     "car_paint_black": {"color": [0.018, 0.018, 0.02], "rough": 0.3, "metal": 0.3, "texture_set": "car_grime"},
-    "car_paint_white": {"color": [0.68, 0.68, 0.66], "rough": 0.35, "texture_set": "car_grime"},
-    "car_paint_white2": {"color": [0.62, 0.63, 0.62], "rough": 0.4, "texture_set": "car_grime"},
+    "car_paint_white": {"color": [0.68, 0.68, 0.66], "rough": 0.44, "texture_set": "car_grime"},
+    "car_paint_white2": {"color": [0.62, 0.63, 0.62], "rough": 0.50, "texture_set": "car_grime"},
     "car_paint_blue": {"color": [0.03, 0.05, 0.12], "rough": 0.35, "metal": 0.4, "texture_set": "car_grime"},
-    "car_paint_red": {"color": [0.32, 0.03, 0.025], "rough": 0.35, "metal": 0.2, "texture_set": "car_grime"},
+    "car_paint_red": {"color": [0.32, 0.03, 0.025], "rough": 0.46, "metal": 0.2, "texture_set": "car_grime"},
     "car_paint_green": {"color": [0.035, 0.07, 0.045], "rough": 0.35, "metal": 0.4, "texture_set": "car_grime"},
     "car_paint_beige": {"color": [0.36, 0.32, 0.24], "rough": 0.4, "metal": 0.3, "texture_set": "car_grime"},
     "car_glass": {"color": [0.012, 0.014, 0.016], "rough": 0.65},     # opaque (LOD1 / LOD2): does not mirror the sky
     # LOD0 car glazing: dark tint, alpha blended (importer: "blend"), the dark interior shows through
-    "car_glass_tint": {"color": [0.010, 0.017, 0.015], "rough": 0.05, "alpha": 0.84, "blend": True, "shader": "car_glass",
-                       "dust": 0.6},
+    # v4 (REVIEW r6 W-N8): transmission 0.35 per face onto the dark interior (both faces drawn), thinner dust film
+    "car_glass_tint": {"color": [0.010, 0.016, 0.016], "rough": 0.05, "alpha": 0.65, "blend": True, "shader": "car_glass",
+                       "dust": 0.35, "privacy_alpha": 0.80, "reflect": 1.3},
     # road film overlays of car LOD0 / LOD1 (ADR 0041 par. 8): alpha texture x per-level alpha, three dirt levels
-    "car_dirt_1": {"color": [0.17, 0.14, 0.10], "rough": 1.0, "alpha": 0.55, "blend": True, "texture": "car_dirt"},
-    "car_dirt_2": {"color": [0.19, 0.16, 0.115], "rough": 1.0, "alpha": 0.80, "blend": True, "texture": "car_dirt"},
-    "car_dirt_3": {"color": [0.25, 0.22, 0.17], "rough": 1.0, "alpha": 1.0, "blend": True, "texture": "car_dirt"},
+    # v4: darker grey-brown, lower alpha (the salt-pale level 3 at alpha 1.0 read as beige paint on red / dark cars)
+    "car_dirt_1": {"color": [0.15, 0.13, 0.10], "rough": 1.0, "alpha": 0.45, "blend": True, "texture": "car_dirt"},
+    "car_dirt_2": {"color": [0.16, 0.14, 0.11], "rough": 1.0, "alpha": 0.62, "blend": True, "texture": "car_dirt"},
+    "car_dirt_3": {"color": [0.18, 0.165, 0.135], "rough": 1.0, "alpha": 0.78, "blend": True, "texture": "car_dirt"},
     "car_lamp": {"color": [0.045, 0.047, 0.05], "rough": 0.12, "metal": 0.5},     # smoked lamp housing behind the lens
-    "rim_dusty": {"color": [0.115, 0.105, 0.092], "rough": 0.62, "metal": 0.45},    # alloy under brake dust
+    # alloy under brake dust (v4: 0.115 rendered as a black disc on LOD1 at 12-45 m on Low, read as "no rim")
+    "rim_dusty": {"color": [0.17, 0.155, 0.135], "rough": 0.62, "metal": 0.45},
     "tyre_dusty": {"color": [0.05, 0.045, 0.038], "rough": 0.95},
     "car_interior": {"color": [0.022, 0.022, 0.024], "rough": 0.9},
     "rim_dark": {"color": [0.05, 0.05, 0.052], "rough": 0.6, "metal": 0.5},
     "rim_steel": {"color": [0.07, 0.07, 0.072], "rough": 0.55, "metal": 0.6},
-    "car_plate": {"color": [0.72, 0.72, 0.70], "rough": 0.45},      # blank registration plate (no characters)
+    # fictional Polish plates (life_cars.plate_atlas, REVIEW r6 W-N9): one atlas cell per prototype, LOD1 the far cell
+    "car_plate": {"color": [1.0, 1.0, 1.0], "rough": 0.45, "texture": "car_plates"},
     "car_trim": {"color": [0.025, 0.025, 0.025], "rough": 0.6},
     "car_light_head": {"color": [0.5, 0.5, 0.5], "rough": 0.1},
     "car_light_tail": {"color": [0.35, 0.02, 0.02], "rough": 0.15},

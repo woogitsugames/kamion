@@ -6,9 +6,10 @@ Rules (deterministic: every decision is a hash of a stable id, no RNG state; WOR
                   curtainsider 70 % (6 plain fictional colours), dry box 15 %, reefer 15 %.
   parking         bays 2.5 x 5.0 m laid out in rows (5 m bay, 6 m aisle, 5 m bay = 16 m module) along the
                   dominant direction of every OSM amenity=parking / BDOT10k OT_KUKO_A parking polygon; a bay is
-                  used only if its rectangle lies inside the polygon; occupancy 60 % (weekday staff parking).
-                  85 % cars (hatch / sedan / estate), 15 % panel vans; colour shares of the Polish fleet
-                  (silver/grey/black/white dominate, WORKING_VALUE).
+                  used only if its rectangle lies inside the polygon; occupancy drawn per row 55-90 %.
+                  88 % cars (hatch / sedan <= 25 % / estate / SUV), 12 % panel vans; colour shares of the Polish
+                  fleet (silver/grey/black/white dominate, WORKING_VALUE). Same prototype at most once in 4
+                  consecutive stalls, +-3 deg yaw, +-0.25 m across / +-0.4 m along, 12 % reversed in (ADR 0041 v4).
   pallets         clusters of 2-6 stacks (empty EUR pallets 4-16 high, wrapped loads) against yard-facing hall
                   walls, 2-9 m from a corner (doors sit mid-wall), and beyond both ends of dock rows.
   bins            groups of 2-4 1100 l containers on paving next to blocks and offices (one corner per building).
@@ -47,8 +48,15 @@ CAR_SHARE = [("silver", 0.22), ("grey", 0.20), ("black", 0.18), ("white", 0.18),
 START_CLEAR_R = 120.0        # m around the route start kept free of parked vehicles (r5, WORKING_VALUE, interim)
 START_CLEAR_L = 250.0        # m of route from the start ...
 START_CLEAR_W = 45.0         # ... buffered by this half width (covers the yard seen from g3a_eye_s0012..s0212)
-BODY_SHARE = [("hatch", 0.34), ("sedan", 0.16), ("estate", 0.22), ("suv", 0.28)]    # WORKING_VALUE street mix
-OCCUPANCY = 0.72      # weekday daytime share of occupied bays (WORKING_VALUE; Polish city lots are mostly full)
+# Body mix of the parked cars (WORKING_VALUE, REVIEW r6 W-N7: the Polish 2026 fleet is mostly hatchbacks, estates
+# and small SUVs; sedans <= 25 %). Vans 12 % of the vehicles on top.
+BODY_SHARE = [("hatch", 0.33), ("sedan", 0.15), ("estate", 0.24), ("suv", 0.28)]
+VAN_SHARE = 0.12
+OCC_ROW = (0.55, 0.90)  # occupancy drawn per row of bays (weekday daytime, WORKING_VALUE; r6 W-N7: 100 % rows read fake)
+REPEAT_GAP = 4          # the same prototype at most once in any REPEAT_GAP consecutive stalls of a row
+YAW_DEG = 3.0           # +- yaw scatter (deg)
+JIT_LAT, JIT_LON = 0.25, 0.40   # +- offset across / along the bay (m)
+REVERSED = 0.12         # share reversed into perpendicular bays (r6: 10-15 %)
 
 
 def hf(*key):
@@ -422,7 +430,7 @@ def _bays(poly, key):
                 if inner.contains(bay):
                     cx, cy = x + 1.25, yc
                     out.append((np.array([cx * ca - cy * sa, cx * sa + cy * ca]),
-                                np.array([-sa * nose, ca * nose])))
+                                np.array([-sa * nose, ca * nose]), (row, nose > 0), int(round((x - x0) / 2.5))))
                 x += 2.5
         y += 16.0
         row += 1
@@ -432,7 +440,7 @@ def _bays(poly, key):
 def _strip_bays(poly, key):
     """One row of bays in a narrow parking strip (OSM parking=street_side / lane polygons, short side < 7 m):
     short side < 3.6 m -> parallel bays 6.0 m pitch (car axis along the strip), else perpendicular bays 2.5 m pitch
-    (nose to a hashed side). Returns (centre, nose, overhang_ok)."""
+    (nose to a hashed side). Returns ([(centre, nose, row key, stall index)], parallel)."""
     r = poly.minimum_rotated_rectangle
     c = np.asarray(r.exterior.coords)
     e = np.diff(c, axis=0)
@@ -449,12 +457,22 @@ def _strip_bays(poly, key):
     t = 0.6 + hf(key, "ph") * 1.0 + pitch / 2
     inner = poly.buffer(0.6)
     shapely.prepare(inner)
+    k = 0
     while t + pitch / 2 < L:
         cc = a + f * t
         if inner.contains(Point(cc)):
-            out.append((cc, f.copy() if parallel else nrm * side))
+            out.append((cc, f.copy() if parallel else nrm * side, ("s", True), k))
         t += pitch
-    return out
+        k += 1
+    return out, parallel
+
+
+def _parking_proto(key, t):
+    """(prototype, half length + 0.05) of draw t for bay key (t > 0: re-draw after a neighbour repeat)."""
+    if hf(*key, "van", t) < VAN_SHARE:
+        return f"van_{pick([('white', 0.5), ('silver', 0.25), ('white2', 0.25)], hf(*key, 'col', t))}", LP.VAN["L"] / 2 + 0.05
+    body = pick(BODY_SHARE, hf(*key, "body", t))
+    return f"car_{body}_{pick(CAR_SHARE, hf(*key, 'col', t))}", LP.CARS[body]["L"] / 2 + 0.05
 
 
 def parking(pl, paved, sp, report, buf=None, zsurf=None, park_union=None, docks=()):
@@ -485,13 +503,20 @@ def parking(pl, paved, sp, report, buf=None, zsurf=None, park_union=None, docks=
                 if p.geom_type == "Polygon" and p.area > 25.0:
                     cut.append((rid if k == 0 else f"{rid}~d{k}", p))
         regions = cut
+    shares = {"body": {}, "rev": 0}
     for rid, poly in regions:
         r = poly.minimum_rotated_rectangle
         ee = np.hypot(*np.diff(np.asarray(r.exterior.coords), axis=0).T)
         strip = float(min(ee[:2])) < 7.0
-        layout = [(c, n, True) for c, n in _strip_bays(poly, rid)] if strip else [(c, n, False) for c, n in _bays(poly, rid)]
+        parallel = False
+        if strip:
+            sb, parallel = _strip_bays(poly, rid)
+            layout = [(c, n, rk, k, True) for c, n, rk, k in sb]
+        else:
+            layout = [(c, n, rk, k, False) for c, n, rk, k in _bays(poly, rid)]
         item = {"id": rid}
-        for i, (c, nose, strip_bay) in enumerate(layout):
+        recent = {}                     # row key -> {stall index: prototype} (REVIEW r6 W-N7: no neighbour repeats)
+        for i, (c, nose, rk, k, strip_bay) in enumerate(layout):
             bays += 1
             key = (item["id"], i)
             if buf is not None and hf(*key, "oil") < 0.35:      # drip stain under the engine bay
@@ -501,30 +526,42 @@ def parking(pl, paved, sp, report, buf=None, zsurf=None, park_union=None, docks=
                     return zsurf(V2[:, 0], V2[:, 1]) + S.PAVED_LIFT + 0.008     # yard mesh is linear on 4 m cells
                 DC.stain(buf, P0, z_of, 0.2 + hf(*key, "or") * 0.3, key, f"oil:{item['id']}:{i}")
                 oil += 1
-            if hf(*key, "occ") > OCCUPANCY:
+            occ = OCC_ROW[0] + (OCC_ROW[1] - OCC_ROW[0]) * hf(item["id"], *rk, "rowocc")
+            if hf(*key, "occ") > occ:
                 continue
-            jit = (hf(*key, "jx") - 0.5) * 0.3
-            c2 = c + np.array([nose[1], -nose[0]]) * jit + nose * (hf(*key, "jy") - 0.5) * 0.4
-            yaw = yaw_of(nose) + (hf(*key, "yaw") - 0.5) * 0.08
-            if hf(*key, "van") < 0.15:
-                proto = f"van_{pick([('white', 0.5), ('silver', 0.25), ('white2', 0.25)], hf(*key, 'col'))}"
-                hl = LP.VAN["L"] / 2 + 0.05
-            else:
-                body = pick(BODY_SHARE, hf(*key, 'body'))
-                proto = f"car_{body}_{pick(CAR_SHARE, hf(*key, 'col'))}"
-                hl = LP.CARS[body]["L"] / 2 + 0.05
+            # the same prototype at most once in any REPEAT_GAP consecutive stalls of a row (deterministic re-draws)
+            row = recent.setdefault(rk, {})
+            near = {row[j] for j in range(k - REPEAT_GAP + 1, k + REPEAT_GAP) if j != k and j in row}
+            for t in range(12):
+                proto, hl = _parking_proto(key, t)
+                if proto not in near:
+                    break
+            lat = (hf(*key, "jx") - 0.5) * 2 * JIT_LAT
+            c2 = c + np.array([nose[1], -nose[0]]) * lat + nose * (hf(*key, "jy") - 0.5) * 2 * JIT_LON
+            nose2 = nose
+            if not parallel and hf(*key, "rev") < REVERSED:   # reversed into the bay (never on a parallel kerb strip)
+                nose2 = -nose
+            yaw = yaw_of(nose2) + (hf(*key, "yaw") - 0.5) * 2 * math.radians(YAW_DEG)
             # strip bays: nose / tail may overhang the kerb line by up to 0.45 m (as parked cars do), so the
             # free-space test uses a footprint shortened by that much; lots keep the full footprint
-            fp = rect(c2, nose, hl - (0.45 if strip_bay else 0.0), 1.05 if proto.startswith("van") else 0.95)
+            fp = rect(c2, nose2, hl - (0.45 if strip_bay else 0.0), 1.05 if proto.startswith("van") else 0.95)
             if not sp.free(fp, need_paved=not strip_bay):
                 continue
             pl.add(proto, c2, yaw, src=f"life:parking:{item['id']}")
             sp.take(fp)
+            row[k] = proto
+            if nose2 is not nose:
+                shares["rev"] += 1
+            b = proto.split("_")[1] if proto.startswith("car_") else "van"
+            shares["body"][b] = shares["body"].get(b, 0) + 1
             if proto.startswith("van"):
                 vans += 1
             else:
                 cars += 1
-    report["parking"] = {"bays": bays, "cars": cars, "vans": vans, "oil_stains": oil}
+    n = max(1, cars + vans)
+    report["parking"] = {"bays": bays, "cars": cars, "vans": vans, "oil_stains": oil,
+                         "body_share": {b: round(v / n, 3) for b, v in sorted(shares["body"].items())},
+                         "reversed_share": round(shares["rev"] / n, 3)}
 
 
 def _wall_edges(poly):

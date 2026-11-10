@@ -144,11 +144,12 @@ def test_life_prototypes_budget_and_lods():
     for k, v in P.items():
         if k.startswith(("car_", "van_")):
             t2 = sum(len(p["T"]) for p in v[3].out())
-            assert 0 < t2 <= 120 and t2 < tris[k][1], k
-    # ADR 0041 par. 7 (WORKING_VALUE until the phone measurement): cars are seen from 5-12 m, LOD0 is drawn only
-    # below 12 m on Low / 38 m on High, so LOD0 <= 4000, LOD1 <= 600, LOD2 <= 120 triangles
+            assert 0 < t2 <= 60 and t2 < tris[k][1], k
+    # ADR 0041 par. 7 / 9 (WORKING_VALUE until the phone measurement): cars are seen from 5-12 m, LOD0 is drawn only
+    # below 12.5 m on Low / 37.5 m on High, so LOD0 <= 4000; LOD1 is the Low car from 12.5 to 45 m (rounded bonnet
+    # lip and bumper peak, par. 9) <= 650; LOD2 (45 / 135 - 300 m) <= 60 triangles
     assert max(t0 for k, (t0, _) in tris.items() if k.startswith(("car_", "van_"))) <= 4000
-    assert max(t1 for k, (_, t1) in tris.items() if k.startswith(("car_", "van_"))) <= 600
+    assert max(t1 for k, (_, t1) in tris.items() if k.startswith(("car_", "van_"))) <= 650
     assert max(t0 for k, (t0, _) in tris.items() if k.startswith("trailer_")) <= 1200
     assert max(t1 for k, (_, t1) in tris.items() if k.startswith("trailer_")) <= 250
 
@@ -174,8 +175,12 @@ def test_parked_cars_road_film_glass_mask_and_wheels():
         f = m0[film[0]]
         assert f["UV"][:, 1].min() >= 0.0 and f["UV"][:, 1].max() <= 1.0 + 1e-9
         assert f["V"][:, 2].min() > 0.15 and f["V"][:, 2].max() < 1.25, k        # sills .. below the belt line
-        g = np.abs(m0["car_glass_tint"]["UV"])
+        g = np.array(m0["car_glass_tint"]["UV"], float)
+        pv = np.abs(g[:, 0]) > 2.0                                                # privacy panes: u offset (par. 9)
+        g[pv, 0] -= np.sign(g[pv, 0]) * LC.PRIVACY_U
+        g = np.abs(g)
         assert 0.69 <= g.max() <= 1.0 + 1e-9, k
+        assert pv.any() == (LC._style(k[4:])["privacy"] and not k.startswith("van_")), k
         assert "car_glass_tint" not in m1 and "car_lamp" in m0
         wheels.add(LC._style(k[4:])["wheel"])
     assert levels == {"car_dirt_1", "car_dirt_2", "car_dirt_3"} and len(wheels) >= 3

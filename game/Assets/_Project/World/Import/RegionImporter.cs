@@ -266,7 +266,9 @@ namespace Game.World.Import
                 // Parked-car glazing (ADR 0041 par. 8): dark tinted sheet with a Fresnel sky reflection and a dust film
                 // from UV0. URP Lit blended glass mirrored the whole sky at rough 0.4 and read milky grey on High.
                 if (m.Get("shader") as string == "car_glass")
-                    return CarGlassMaterial(path, albedo, rough, (float)Num(m.Get("alpha")), m.Get("dust") != null ? (float)Num(m.Get("dust")) : 0f);
+                    return CarGlassMaterial(path, albedo, rough, (float)Num(m.Get("alpha")), m.Get("dust") != null ? (float)Num(m.Get("dust")) : 0f,
+                        m.Get("privacy_alpha") != null ? (float)Num(m.Get("privacy_alpha")) : 0.80f,
+                        m.Get("reflect") != null ? (float)Num(m.Get("reflect")) : 1f);
                 // Optional alpha texture (road film overlays of parked cars): matt, no sky mirror.
                 Texture2D bt = null;
                 if (m.Get("texture") is string btex)
@@ -361,7 +363,7 @@ namespace Game.World.Import
         }
 
         /// <summary>Parked-car glass (Kamion/World Car Glass): premultiplied tint + capped Fresnel reflection + UV0 dust.</summary>
-        static Material CarGlassMaterial(string path, Color tintLinear, float rough, float opacity, float dust)
+        static Material CarGlassMaterial(string path, Color tintLinear, float rough, float opacity, float dust, float privacy, float reflect)
         {
             var shader = Shader.Find("Kamion/World Car Glass") ?? throw new InvalidOperationException("Kamion/World Car Glass not found (compile error?)");
             var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
@@ -373,6 +375,13 @@ namespace Game.World.Import
             mat.SetFloat("_Opacity", opacity);
             mat.SetFloat("_Smoothness", Mathf.Clamp01(1f - rough));
             mat.SetFloat("_Dust", dust);
+            // ADR 0041 par. 9: every look constant is written (an existing material asset keeps its saved values, so a
+            // changed shader default alone never reaches a reimported world)
+            mat.SetFloat("_PrivacyOpacity", privacy);
+            mat.SetFloat("_Reflect", reflect);
+            mat.SetFloat("_ReflectMax", 0.55f);
+            mat.SetFloat("_Horizon", 0.30f);
+            mat.SetColor("_DustColor", new Color(0.36f, 0.34f, 0.30f, 1f));
             mat.SetOverrideTag("RenderType", "Transparent");
             mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
             EditorUtility.SetDirty(mat);
