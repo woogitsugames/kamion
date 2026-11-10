@@ -80,6 +80,10 @@
    3.4,
    1.419
   ],
+  "OB_6bbf26a1": [
+   4.794,
+   3.275
+  ],
   "OB_8a02c9de": [
    4.025,
    1.419
@@ -320,6 +324,15 @@
    "materials": [
     "plate_back",
     "sign_OB_26fd429a",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_OB_6bbf26a1": {
+   "materials": [
+    "plate_back",
+    "sign_OB_6bbf26a1",
     "steel_galv"
    ],
    "tris_lod0": 28,
@@ -1334,6 +1347,13 @@
    ],
    "tris_lod0": 456,
    "tris_lod1": 456
+  },
+  "sign_cantilever_L8_86": {
+   "materials": [
+    "gantry_steel"
+   ],
+   "tris_lod0": 528,
+   "tris_lod1": 24
   },
   "sign_gantry_10_74": {
    "materials": [
