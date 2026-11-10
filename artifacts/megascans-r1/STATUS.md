@@ -56,3 +56,8 @@
 - NASTĘPNY KROK awaryjny: `uv run --project tools/worldgen python artifacts/megascans-r1/reversible_qa_state.py restore`; następnie wyczyścić KAMION_DISABLE_FAB i sprawdzić manifest/PNG.
 
 - Krok22: odtworzono wygenerowany światafter (archiwum1989plików); KAMION_DISABLE_FAB wyłączone. NASTĘPNY: powtórny raycast i sanityrender after, walidacja SHA192plików.
+
+- Korekta testu fallback: pierwszy proces wypisał done, ale zwrócił1 bez tracebacku; przerwano przed importem i automatycznie odtworzonoafter. To nie jest PASS. Powtarzam z zapisem rzeczywistego kodu procesu Python w fallback-build-exit.json. Równolegle testuję światło instancji Fab na prawdziwym kadrze (dotąd czarna sylwetka).
+- NASTĘPNY: pwsh artifacts/megascans-r1/run-fallback-proof.ps1; po nim potwierdzić restore i kolory.
+
+- Krok19: build z KAMION_DISABLE_FAB=1 OK. NASTĘPNY: pwsh scripts/import-region.ps1 -Region bialystok-industrial-c (wciąż fallback); kopiaafter zabezpieczona.
