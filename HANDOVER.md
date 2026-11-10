@@ -1,11 +1,30 @@
-# HANDOVER — kamion, sesja 7 (2026-11-10 ok. 23:xx; start po ubiciu s6 limitem)
+# HANDOVER — kamion, sesja 7 (2026-11-10 ok. 22:50; limit 5 h ok. 84 % — nowych agentów nie startować, przy 95 % WIP+push)
 
 ## Najpierw
-- **main = `4c27a9b`, wypchnięty.** Żadnych scaleń w s7 jeszcze. Brak wiszących procesów Unity/Blender/build_world po s6.
-- s7: wznowiono 8 agentów s6 w ich istniejących worktree (tabela s6 niżej — te same worktree/gałęzie/STATUS) + 0083 zewnętrze TRAKT wystartowane od nowa (poprzedni worktree agent-a895ad2cc01f155bd nigdy nie powstał) w nowym worktree (ścieżka w raporcie agenta; STATUS `artifacts/truck-ext-r10/STATUS.md`). Wszyscy Fable 5.2. Razem 9 agentów.
-- Puste/osierocone katalogi w `.claude/worktrees/` (nie w `git worktree list`): a0c58…, a12755…, a48798…, a619ef…, a66ef6…, a9eaae…, ab1fb0… — do ręcznego usunięcia (sprawdzić junctiony przed rmdir).
-- 0080 oświetlenie GOTOWE `ea6f1d1` (gałąź worktree-agent-ac7c9571184d27443), NIEscalone — DECYZJA WŁAŚCICIELA 2026-11-10: WARIANT 3 (lookToe 0,9 / P 0,4 / pivot 0,6 + exposure −0,2); agent wznowiony: wpis do presetu + lift kabiny + QA final, PNG `artifacts/light-r10/owner/`. Po wyborze: wpisać do LP_Overcast.asset + LightingPreset.Overcast(), lift kabiny (ADR 0044). Mokro NIE włączać.
-- Następne kroki bez zmian (s6 §Następne kroki): scalać 0076 → 0077 → 0070/0071 → 0078 → 0081 → 0080 → 0082 → 0083; po każdym regeneracja + pytest gis.
+- **main wypchnięty (ten commit).** Scalone w s7: **0080 oświetlenie** `5439ddf` (wariant 3 overcast wybrany przez właściciela: lookToe 0,9/0,4/0,6 + EV −0,2, kompensacja kabiny `rq_cabtoe`), **0071 Kwadrat Park** `c132f56` (szlaban działa i ma kolizję — test WorldCBarrierTests; plac bez osobówek, naczepy przy dokach). Main NIE zregenerowany po scaleniach (czeka na 0076: P0 korytarza s1432–1480 nadal czerwony na main).
+- **Fab Megascans (D45): 19/19 pobrane** (EULA zaakceptowana na koncie Epic właściciela za jego zgodą) → `Data/raw/fab/<id>/*.zip` (poza gitem, ok. 1,7 GB), manifest SHA256 `Data/SourceManifests/fab-megascans-2026-11-10.json`, tabela w `docs/LICENSES.md`, test `tests/gis/test_fab_not_tracked.py`. Jakość: 3D/rośliny `_high` FBX, dekale/kora `4k`, Urban Trash `mid`. **Jeszcze nieużyte** — następny agent: import do generatorów (krawężniki, studzienki, kosze, trawa, krzewy, kora, kamienie), wyniki w `_Generated`, nic do gita.
+- **Zdjęcia właściciela:** 10 własnych z centrum → `Data/photos/owner-2026-11-10-centrum/` (poza gitem; osoby/dzieci w kadrze — tylko referencja), wpis w `docs/REFERENCES.md`. ~25 zdjęć z internetu wklejonych w czacie — tylko opis `docs/refs/owner-aerials-2026-11-10.md` (Putry: latarnie na krawędziach/pasie dzielącym; P-21 przed nosem wyspy; S8/DK8).
+- Recenzja visual-critic 0071+0080 w toku → `artifacts/reviews/2026-11-10-0071-0080.md`.
+
+| zadanie | ADR | worktree (`.claude/worktrees/`), gałąź `worktree-<id>` | STATUS | stan |
+|---|---|---|---|---|
+| P0 korytarz trasy + MA-001/002/012 + latarnia/krawężnik z filmu | 0076 | agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | w toku (korytarz 0 uskoków/0 trafień lokalnie) |
+| wysepki z OSM, MA-010, krawędzie | 0077 | agent-a2afb96d89584cca6 | artifacts/islands-r10 | w toku |
+| straż JRG2 r4 | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | w toku |
+| osobówki r10 | 0078 | agent-a2215bcc98d109edc | artifacts/cars-r10 | w toku (WorldPBR.shader wspólny z 0080 — bloki rozdzielne) |
+| zabudowa r10 | 0081 | agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | w toku |
+| ogranicznik 90, koniec świata, kamera, rondo | 0082 | agent-acc0299ca0b0081b1 | artifacts/drive-fold-r10 | w toku |
+| zewnętrze TRAKT + naczepa r10 (start s7) | 0083 | agent-a4049e15e1ab8c681 | artifacts/truck-ext-r10 | w toku |
+| oświetlenie r10 | 0080 | agent-ac7c9571184d27443 | STATUS.md | SCALONE (worktree do usunięcia) |
+| Kwadrat Park r10 | 0071 | agent-a1409e374f8c12b4f | artifacts/kwadrat-r9 | SCALONE (worktree do usunięcia) |
+
+Przejęcie po ubiciu: jak w s6 — nowy agent Fable z briefem „pracuj WYŁĄCZNIE w <wt>, najpierw docs/owner/AGENT-RULES.md i STATUS.md, dokończ”.
+
+## Następne kroki
+1. Scalać w miarę kończenia: 0076 → 0077 → 0070 → 0078 → 0081 → 0082 → 0083. Po 0076: na main build_world → pytest gis → import-region → `pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCBarrierTests|DepotBarrierTests"`.
+2. Telefon: A/B oświetlenia na Samsungu A (`-e rq_clouds -1 -e rq_haze 0 -e rq_look 0 -e rq_cabtoe 0`), tylko gdy żaden Unity nie działa.
+3. Agent importu Megascans (po resecie limitu). Usunąć worktree 0080/0071 (kopia artifacts, junctiony).
+4. Ostatni przydzielony ADR: **0083**.
 
 ---
 # HANDOVER — kamion, sesja 6 (2026-11-10 ok. 21:45 czasu właściciela; lider zapisuje po każdym scaleniu/starcie/końcu agenta)
