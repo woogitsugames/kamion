@@ -141,7 +141,7 @@ class Http:
     `session` and `sleep` are injectable so tests never touch the network."""
 
     def __init__(self, cache_dir: Path | None = None, session=None, sleep=time.sleep, min_interval=0.5,
-                 retries=4, headers=None):
+                 retries=2, headers=None):
         if session is None:
             import requests
             session = requests.Session()
@@ -164,16 +164,25 @@ class Http:
             self._last = time.monotonic()
             self.requests_made += 1
             h = {**self.headers, **(headers or {})}
-            if data is not None:
-                r = self.session.post(url, data=data, headers=h, timeout=90)
-            else:
-                r = self.session.get(url, params=params, headers=h, timeout=90)
-            code = r.status_code
+            try:
+                if data is not None:
+                    r = self.session.post(url, data=data, headers=h, timeout=90)
+                else:
+                    r = self.session.get(url, params=params, headers=h, timeout=90)
+                code = r.status_code
+            except Exception as exc:  # connection reset / timeout: retry like a 5xx
+                if "requests" not in type(exc).__module__ and not isinstance(exc, OSError):
+                    raise
+                if attempt == self.retries:
+                    raise SourceError(f"network error after {self.retries} retries: {url.split('?')[0]}: {type(exc).__name__}")
+                self._sleep(delay)
+                delay = min(delay * 2, 60.0)
+                continue
             if code == 429 or code >= 500:
                 if attempt == self.retries:
                     raise SourceError(f"HTTP {code} after {self.retries} retries: {url.split('?')[0]}")
                 ra = (getattr(r, "headers", None) or {}).get("Retry-After")
-                self._sleep(float(ra) if ra and str(ra).isdigit() else delay)
+                self._sleep(min(float(ra), 120.0) if ra and str(ra).isdigit() else delay)
                 delay = min(delay * 2, 60.0)
                 continue
             if code != 200:
