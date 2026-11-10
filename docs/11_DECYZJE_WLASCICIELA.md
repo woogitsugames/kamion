@@ -60,3 +60,4 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 | D39 | Panel deweloperski w APK | **Zostaje widoczny** — na razie grają tylko właściciel i lider |
 | D40 | Skany CC0 (zmiana ADR 0010) | **Zgoda**: skany CC0 z Poly Haven i ambientCG jako baza materiałów świata (licencja każdego zasobu sprawdzana i wpisana do `docs/LICENSES.md`); generatory dalej robią rozkład, zużycie i warianty |
 | D41 | Zdjęcia trasy startowej | Właściciel **zrobi własne zdjęcia** trasy (Kwadrat Park → Andersa → Rondo Putry → DK8) wg listy ujęć od lidera — do tekstur fasad i dopasowania kadrów |
+| D42 | Źródła referencji ulicznych | **Mapillary** (CC BY-SA 4.0) dozwolone jako referencja i do dopasowania kadrów — z atrybucją autorów w `docs/LICENSES.md`; Google Maps/Street View/Earth nadal zakazane (także zrzuty z Gemini) |
