@@ -35,3 +35,16 @@ Galaz: worktree-agent-ad6af5501cb259d76.
   import-region (Unity, Library skopiowane z main), check_poles.py (kryterium wlasciciela: latarnie tylko na krawedzi
   pomostu / w pasie dzielacym). Kamery: artifacts/roads-p0-r10/p0_cameras.json (17).
 - NASTEPNY KROK: pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Medium -Lighting overcast -Gate3 artifacts/roads-p0-r10/p0_cameras.json -Cameras p0_fork_putry_eye,p0_fork_putry_eye2,p0_lamp_putry_eye,p0_kerb_merge_eye,p0_lamp_w1101181473_eye,p0_fork_putry_top,p0_lamp_putry_top,p0_kerb_merge_top,p0_ma001_top,p0_n4103450295_top,p0_n1882887385_top,p0_ma012_top,au_f_s0620,au_f_s0640,au_r_s1380,au_r_s1400,au_r_s1420 -OutputDir artifacts/roads-p0-r10/renders
+- 23:00 STOP (limit 95 %). Stan: build_world + import-region + 19 kamer (artifacts/roads-p0-r10/renders_960/*.jpg) obejrzane:
+  MA-001/002 (au_f_s0620/0640, p0_ma001_top) i MA-012 (au_r_s1380/1400, p0_ma012_top) bez kraweznika w poprzek i bez garbu;
+  wiadukt Putry (p0_lamp_putry_*) latarnie tylko na krawedziach; check_poles.py: 1126 slupow, 0 na jezdni, 0 przez pomost,
+  0 latarni w |lat| < hw. route_corridor: 4790 stacji, 0 uskokow, 0 przeszkod. consistency 103 -> 69 (kerb 29 -> 0, prop 2 -> 0).
+- pytest tests/gis: 203 passed, 5 failed, 2 xfailed. CZERWONE (NIE ruszalem ratchetow - decyzja lidera/wlasciciela):
+  test_road_fidelity ratchet_axis / target_axis_p95 (p95 1,745 m; bez abreast 0,129 - juz 0074 lamie baseline 0,052),
+  ratchet_edges (2,57; bez abreast 2,50; baseline 2,09), ratchet_islands (7; bez abreast 6; baseline 4),
+  test_terrain_walls (nowa kategoria skirt:j:road_asphalt 2 pkt przy j:n10015785253 E -239 N -236: szczelina 0,3-0,9 m
+  miedzy jezdniami z flush-naroznikiem; yard_concrete 4 > 3), test_road_consistency::test_tile_ratchet przechodzi dopiero po
+  dopisaniu nowych kategorii = 0 do RATCHET (nie zrobione). Porownanie: artifacts/roads-p0-r10/fidelity_{abreast,no_abreast}.json.
+- Brak: ADR docs/adr/0076-*.md, ocena visual-critic, kopia dowodow do main artifacts/roads-p0-r10, obejrzenie
+  p0_median_slot_eye / p0_n10015785253_top / p0_n4103450295_top / p0_n1882887385_top / p0_lamp_w1101181473_eye.
+- NASTEPNY KROK: uv run --project tools/worldgen pytest tests/gis/test_road_fidelity.py tests/gis/test_terrain_walls.py tests/gis/test_road_consistency.py -q   (po decyzji o ratchetach / naprawie szczeliny j:n10015785253), potem ADR 0076
