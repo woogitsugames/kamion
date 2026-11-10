@@ -16,11 +16,12 @@ def _tris(mesh):
     return sum(len(p["T"]) for p in mesh.out())
 
 
-def test_lod0_within_3500_and_lod1_within_900():
+def test_lod0_within_4200_and_lod1_within_900():
+    """r10 (ADR 0078): modelled lamp buckets, openings, tyre shoulders: LOD0 <= 4200 (r9: 3500; draped lamp wraps and seams), LOD2 <= 96 (r9: 60)."""
     for name, _, P in _protos():
-        assert _tris(P[0]) <= 3500, (name, _tris(P[0]))
+        assert _tris(P[0]) <= 4200, (name, _tris(P[0]))
         assert _tris(P[1]) <= 900, (name, _tris(P[1]))
-        assert _tris(P[3]) <= 60, name
+        assert _tris(P[3]) <= 96, name
 
 
 def test_front_is_a_face_not_a_wedge():
@@ -56,9 +57,9 @@ def test_arch_flares_shoulder_and_details():
         m0 = {p["mat"]: p for p in P[0].out()}
         lens = _area(m0["car_light_head"])
         housing = _area(m0["car_lamp"])
-        assert lens >= 0.5 * housing > 0.02, (name, lens, housing)     # a lens in a housing, not a slit
-        assert _area(m0["car_light_tail"]) >= 0.10, name
-        tyre = m0.get("tyre_dusty") or m0["tyre"]
+        assert lens >= 0.04 and housing > 0.02, (name, lens, housing)  # reflector + projector in a housing, not a slit
+        assert _area(m0["car_light_tail"]) >= 0.07, name                # r10: the tray behind the opening (tapered)
+        tyre = m0.get("car_tyre_dusty") or m0["car_tyre"]
         x = np.abs(tyre["V"][:, 0])
         assert x.max() - x.min() >= 0.20, name                          # tyre has width and a sidewall bulge
 

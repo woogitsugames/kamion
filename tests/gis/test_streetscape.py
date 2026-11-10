@@ -156,12 +156,12 @@ def test_life_prototypes_budget_and_lods():
     for k, v in P.items():
         if k.startswith(("car_", "van_")):
             t2 = sum(len(p["T"]) for p in v[3].out())
-            assert 0 < t2 <= 60 and t2 < tris[k][1], k
+            assert 0 < t2 <= 96 and t2 < tris[k][1], k        # r10 (ADR 0078): silhouette LOD2 (was the <= 60 box)
     # ADR 0041 par. 7 / 9 / r8 (WORKING_VALUE until the phone measurement): cars are seen from 5-12 m, LOD0 is drawn
     # only below 16 m on Low / 37.5 m on High, so LOD0 <= 4000; LOD1 is the Low car from 16 to 45 m (r8, REVIEW r7
     # N-14: rounded shoulders, 10-gon wheels with spoke windows, lamp lenses, housing back plates; the frame limits
     # of test_frame_budget_with_forest_hlod are unchanged) <= 900 (was 650); LOD2 (42.5 / 127.5 - 300 m) <= 60 triangles
-    assert max(t0 for k, (t0, _) in tris.items() if k.startswith(("car_", "van_"))) <= 4000
+    assert max(t0 for k, (t0, _) in tris.items() if k.startswith(("car_", "van_"))) <= 4200
     assert max(t1 for k, (_, t1) in tris.items() if k.startswith(("car_", "van_"))) <= 900
     assert max(t0 for k, (t0, _) in tris.items() if k.startswith("trailer_")) <= 1200
     assert max(t1 for k, (_, t1) in tris.items() if k.startswith("trailer_")) <= 250
@@ -190,7 +190,11 @@ def test_parked_cars_road_film_glass_mask_and_wheels():
         assert f["V"][:, 2].min() > 0.15 and f["V"][:, 2].max() < 1.25, k        # sills .. below the belt line
         g = np.array(m0["car_glass_tint"]["UV"], float)
         pv = np.abs(g[:, 0]) > 2.0                                                # privacy panes: u offset (par. 9)
+        ln = np.abs(g[:, 0]) > 6.0                                                # clear lamp covers (r10, LENS_U)
+        assert ln.any(), k
+        pv &= ~ln
         g[pv, 0] -= np.sign(g[pv, 0]) * LC.PRIVACY_U
+        g[ln, 0] -= np.sign(g[ln, 0]) * LC.LENS_U
         g = np.abs(g)
         assert 0.69 <= g.max() <= 1.0 + 1e-9, k
         assert pv.any() == (LC._style(k[4:])["privacy"] and not k.startswith("van_")), k

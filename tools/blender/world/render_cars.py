@@ -49,8 +49,30 @@ def material(name, spec):
             mul.inputs[1].default_value = float(spec.get("alpha", 1.0))
             nt.links.new(im.outputs["Alpha"], mul.inputs[0])
             nt.links.new(mul.outputs[0], b.inputs["Alpha"])
-        else:
-            nt.links.new(im.outputs["Color"], b.inputs["Base Color"])
+        else:                                   # texture x manifest colour (the engine's _BaseMap x _BaseColor)
+            mx = nt.nodes.new("ShaderNodeMixRGB")
+            mx.blend_type = "MULTIPLY"
+            mx.inputs[0].default_value = 1.0
+            mx.inputs[2].default_value = col
+            nt.links.new(im.outputs["Color"], mx.inputs[1])
+            nt.links.new(mx.outputs[0], b.inputs["Base Color"])
+    elif spec.get("shader") == "car_glass":
+        # UV0 u codes of WorldCarGlass.shader: >= 6 clear lamp cover (life_cars.LENS_U), >= 2 privacy pane
+        uv = nt.nodes.new("ShaderNodeUVMap")
+        sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+        nt.links.new(uv.outputs["UV"], sep.inputs[0])
+        ab = nt.nodes.new("ShaderNodeMath")
+        ab.operation = "ABSOLUTE"
+        nt.links.new(sep.outputs["X"], ab.inputs[0])
+        gt = nt.nodes.new("ShaderNodeMath")
+        gt.operation = "GREATER_THAN"
+        gt.inputs[1].default_value = 6.0
+        nt.links.new(ab.outputs[0], gt.inputs[0])
+        mix = nt.nodes.new("ShaderNodeMapRange")
+        mix.inputs["To Min"].default_value = float(spec.get("alpha", 1.0))
+        mix.inputs["To Max"].default_value = float(spec.get("lens_alpha", 0.10))
+        nt.links.new(gt.outputs[0], mix.inputs["Value"])
+        nt.links.new(mix.outputs["Result"], b.inputs["Alpha"])
     elif spec.get("blend"):
         b.inputs["Alpha"].default_value = float(spec.get("alpha", 1.0))
     if spec.get("blend"):
@@ -182,6 +204,8 @@ cam("row34r", (-4.5, -7.5, 1.6), (cx * 0.7, -0.3, 0.7), lens=32)
 cam("cab", (cx + 3.0, 11.0, 2.5), (cx - 1.5, 0.0, 0.6), lens=28)
 cam("close", (-3.3, 5.2, 1.55), (0.3, 0.6, 0.72), lens=35, res=(1600, 900))
 cam("closer", (PITCH * 2 - 2.6, -5.6, 1.55), (PITCH * 2 + 0.2, -0.6, 0.72), lens=35, res=(1600, 900))
+cam("tail", (PITCH * 3 - 2.3, -4.0, 1.25), (PITCH * 3 - 0.75, -2.1, 0.9), lens=50, res=(1600, 900))      # r10: lamp wrap
+cam("nose", (PITCH * 1 - 2.0, 4.2, 1.0), (PITCH * 1 - 0.6, 2.1, 0.62), lens=50, res=(1600, 900))       # r10: headlamp bucket
 # side elevations: cars rotated so that each is seen from its right side, two rows
 if not CAMS or "side" in CAMS:
     obs = [o for o in sc.objects if o.name in names]

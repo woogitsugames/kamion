@@ -283,7 +283,8 @@ namespace Game.World.Import
                 if (m.Get("shader") as string == "car_glass")
                     return CarGlassMaterial(path, albedo, rough, (float)Num(m.Get("alpha")), m.Get("dust") != null ? (float)Num(m.Get("dust")) : 0f,
                         m.Get("privacy_alpha") != null ? (float)Num(m.Get("privacy_alpha")) : 0.80f,
-                        m.Get("reflect") != null ? (float)Num(m.Get("reflect")) : 1f);
+                        m.Get("reflect") != null ? (float)Num(m.Get("reflect")) : 1f,
+                        m.Get("lens_alpha") != null ? (float)Num(m.Get("lens_alpha")) : -1f);
                 // Optional alpha texture (road film overlays of parked cars): matt, no sky mirror.
                 Texture2D bt = null;
                 if (m.Get("texture") is string btex)
@@ -410,7 +411,7 @@ namespace Game.World.Import
         }
 
         /// <summary>Parked-car glass (Kamion/World Car Glass): premultiplied tint + capped Fresnel reflection + UV0 dust.</summary>
-        static Material CarGlassMaterial(string path, Color tintLinear, float rough, float opacity, float dust, float privacy, float reflect)
+        static Material CarGlassMaterial(string path, Color tintLinear, float rough, float opacity, float dust, float privacy, float reflect, float lens = -1f)
         {
             var shader = Shader.Find("Kamion/World Car Glass") ?? throw new InvalidOperationException("Kamion/World Car Glass not found (compile error?)");
             var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
@@ -425,6 +426,7 @@ namespace Game.World.Import
             // ADR 0041 par. 9: every look constant is written (an existing material asset keeps its saved values, so a
             // changed shader default alone never reaches a reimported world)
             mat.SetFloat("_PrivacyOpacity", privacy);
+            mat.SetFloat("_LensOpacity", lens);     // ADR 0078: clear lamp covers (UV0 u offset 8); -1 = code off
             mat.SetFloat("_Reflect", reflect);
             mat.SetFloat("_ReflectMax", 0.55f);
             mat.SetFloat("_Horizon", 0.30f);

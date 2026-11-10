@@ -19,6 +19,8 @@
 // v5 (ADR 0041 par. 10): sun glint = mirror image of the sun disk in float (the half-precision pow 900 was the "bright
 // textured pattern"), reflection = sky above ~15 deg / street clutter (diffuse ground radiance) below, both faces of the
 // sheet R = F (1 + T^2) instead of the free x 1.3; _Horizon is only the fallback when the ground globals are unset.
+// r10 (ADR 0078): clear lamp covers. Panes whose UV0 u is offset by 8 (life_cars.LENS_U: the covers over the modelled
+// headlamp and tail-lamp buckets) use _LensOpacity (clear polycarbonate) when it is >= 0; same material, same draw.
 // Neither casts nor receives shadows. GPU instancing (prop instances).
 Shader "Kamion/World Car Glass"
 {
@@ -27,6 +29,7 @@ Shader "Kamion/World Car Glass"
         _Tint ("Tint (body colour of the sheet)", Color) = (0.1, 0.14, 0.13, 1)
         _Opacity ("Absorption at normal incidence", Range(0, 1)) = 0.84
         _PrivacyOpacity ("Absorption of privacy panes", Range(0, 1)) = 0.80
+        _LensOpacity ("Absorption of clear lamp covers (< 0: no lens code)", Range(-1, 1)) = -1
         _Smoothness ("Smoothness", Range(0, 1)) = 0.95
         _Reflect ("Reflection strength", Range(0, 2)) = 1.0
         _ReflectMax ("Fresnel cap", Range(0, 1)) = 0.55
@@ -58,7 +61,7 @@ Shader "Kamion/World Car Glass"
 
             CBUFFER_START(UnityPerMaterial)
                 half4 _Tint, _DustColor;
-                half _Opacity, _PrivacyOpacity, _Smoothness, _Reflect, _ReflectMax, _Dust, _Horizon;
+                half _Opacity, _PrivacyOpacity, _Smoothness, _Reflect, _ReflectMax, _Dust, _Horizon, _LensOpacity;
             CBUFFER_END
 
             struct Attributes
@@ -112,9 +115,10 @@ Shader "Kamion/World Car Glass"
                 half3 env = lerp(clutter, envSky, open) * lerp(0.15h, 1.0h, front);   // inner face: the dark cabin
 
                 float2 muv = i.uv;
-                half priv = step(2.0, abs(muv.x));
-                muv.x -= sign(muv.x) * 4.0 * priv;
-                half op = lerp(_Opacity, _PrivacyOpacity, priv);
+                half lens = step(6.0, abs(muv.x)) * step(0.0h, _LensOpacity);
+                half priv = step(2.0, abs(muv.x)) * (1.0h - lens);
+                muv.x -= sign(muv.x) * (4.0 * priv + 8.0 * lens);
+                half op = lerp(lerp(_Opacity, _PrivacyOpacity, priv), _LensOpacity, lens);
                 // Both faces of the sheet reflect; the inner one is seen through the body tint twice: R = F (1 + T^2),
                 // T = 1 - op (clear 0.35 -> x 1.12, privacy 0.20 -> x 1.04). Replaces the free _Reflect gain (1.3).
                 half tb = 1.0h - op;

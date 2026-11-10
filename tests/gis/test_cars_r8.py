@@ -39,7 +39,7 @@ def test_lod1_keeps_wheels_lamps_and_its_own_plate():
     for name, P in _protos():
         m1 = {p["mat"]: p for p in P[1].out()}
         assert "car_light_head" in m1 and "car_lamp" in m1 and "car_light_tail" in m1, name
-        assert "rim_dark" in m1 or "rim_steel" in m1 or "rim" in m1, name       # spoke windows / hub
+        assert {"rim_dark", "rim_steel", "rim", "rim_dusty"} & set(m1), name    # spoke windows / hub / wheel cover
         tyre = m1.get("tyre_dusty") or m1["tyre"]
         assert len(tyre["T"]) >= 4 * 10 * 2, name                              # 4 wheels x 10 sidewall quads
         u0, v0, u1, v1 = LC.plate_uv(LC._plate_index(name[4:] if name.startswith("car_") else name))
