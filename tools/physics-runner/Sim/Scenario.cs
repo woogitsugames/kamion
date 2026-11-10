@@ -89,6 +89,8 @@ namespace PhysicsRunner.Sim
         public bool? absEnabled;
         public bool? trailerAbsEnabled;
         public bool enduranceBrakes = true;
+        /// <summary>false = AMT parking-brake drive-away interlock off (tests that the brakes alone hold).</summary>
+        public bool parkingInterlock = true;
         /// <summary>false = EBS fault: no load-sensing (pneumatic back-up pressure on every axle).</summary>
         public bool loadSensing = true;
         /// <summary>Initial pressure of all reservoirs [bar] (default: charged to cut-out).</summary>

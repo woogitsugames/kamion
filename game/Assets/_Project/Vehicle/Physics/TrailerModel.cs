@@ -153,7 +153,7 @@ namespace Game.Vehicle.Physics
             _prevVelocityLocal = vLocal; _hasPrev = true;
 
             Group.UpdateContacts(dt, chassis, up, ground, null);
-            RelaxStickAtStandstill(dt);
+            RelaxStickAtStandstill(dt, chassis);
             Group.UpdateLevelling(dt);
             Brakes.Update(dt, redLine, controlLine, Group);
 
@@ -216,11 +216,30 @@ namespace Game.Vehicle.Physics
         /// <summary>Set by <see cref="CombinationModel"/>: the kingpin is in the jaw, so the tractor can take the load the relaxed trailer wheels give up.</summary>
         public bool Coupled;
 
-        void RelaxStickAtStandstill(double dt)
+        void RelaxStickAtStandstill(double dt, in ChassisState chassis)
         {
             if (StandstillRelaxTau <= 0 || !Coupled || Math.Abs(SpeedForward) > RelaxMaxSpeed) return;
             double k = Math.Exp(-dt / StandstillRelaxTau);
-            for (int i = 0; i < Wheels.Length; i++) Wheels[i].Ux *= k;
+            // A braked wheel keeps holding its own share of the grade force (Fz tan(theta), capped by the brake):
+            // the relaxation bleeds only the geometry-mismatch preload above that. Unbraked wheels relax to 0 as
+            // before. Without this, a trailer braked through the tractor's hand control valve (park position,
+            // ADR 0004 addendum 2026-11-10) handed its whole grade force to the kingpin and the combination crept
+            // ~6-9 mm on 12 % before the tractor took it.
+            double gs = MathUtil.Clamp((chassis.Rotation * Vec3.Forward).y, -0.5, 0.5);
+            double tanTheta = gs / Math.Sqrt(1 - gs * gs);
+            for (int i = 0; i < Wheels.Length; i++)
+            {
+                var w = Wheels[i];
+                double target = 0;
+                if (w.Contact && w.BrakeTorque > 0 && w.Fz > 0)
+                {
+                    double cap = w.BrakeTorque / w.Radius;
+                    double f = MathUtil.Clamp(w.Fz * tanTheta, -cap, cap);
+                    double kx = w.Tire.LongitudinalDeflectionStiffness(w.Fz, w.TireCount);
+                    if (kx > 0) target = f / kx;
+                }
+                w.Ux = target + (w.Ux - target) * k;
+            }
         }
 
         void LegContact(int k, in ChassisState c, Vec3 footLocal, Vec3 up, IGroundQuery ground, double dt, ref int count, ref Vec3 totalF, ref Vec3 totalT)

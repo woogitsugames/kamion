@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "park_low_air_drive_away_comb",
+  "description": "Air system nearly empty (2 bar, spring brakes applied by low pressure), parking lever RELEASED, D, full throttle for 12 s: the AMT interlock must also refuse the drive-away (spring brakes not released) and raise the parking-brake warning.",
+  "spec": "docs/04 s6.1 (air loss = real consequences); ADR 0004 addendum 2026-11-10 (parking-brake interlock)",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "overrides": {
+    "initialAirBar": 2.0
+  },
+  "duration": 13,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      { "t": 0, "throttle": 0, "brake": 0, "steer": 0, "parkingBrake": false, "selector": "D" },
+      { "t": 1.0, "throttle": 1, "brake": 0, "steer": 0, "parkingBrake": false, "selector": "D" }
+    ]
+  },
+  "checks": [
+    { "metric": "max_speed_kmh", "max": 0.5, "status": "WORKING_VALUE", "source": "spring brakes applied by low air: no drive-away until the system is charged (S5 / docs/04: air loss has real consequences)" },
+    { "metric": "park_warning", "from": 1.1, "min": 1, "status": "WORKING_VALUE", "source": "interlock warning also for spring brakes applied by low air" },
+    { "metric": "max_clutch_temp_c", "max": 60, "status": "WORKING_VALUE", "source": "clutch stays open" }
+  ]
+}

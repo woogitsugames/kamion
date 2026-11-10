@@ -38,6 +38,18 @@ namespace Game.Vehicle.Physics
         public bool AbsActive;
         /// <summary>Set by the vehicle each step: the driver requests endurance braking (engine brake).</summary>
         public bool EngineBrakeRequest;
+        /// <summary>
+        /// Set by the vehicle each step: parking brake lever applied or spring brakes not fully released
+        /// (also low circuit-3 air). Drives the drive-away interlock (ADR 0004 addendum 2026-11-10).
+        /// </summary>
+        public bool ParkingBrakeApplied;
+        /// <summary>Drive-away interlock switch (default on). Off only to test that the brakes alone hold the truck.</summary>
+        public bool ParkingInterlockEnabled = true;
+        /// <summary>
+        /// True while the interlock is refusing a drive-away: parking brake applied, D/R selected, accelerator
+        /// pressed, (near) standstill. The clutch stays open and the accelerator is ignored (engine idles).
+        /// </summary>
+        public bool ParkingInterlockActive { get; private set; }
 
         public double ClutchTempC { get; private set; } = 25;
         public double ClutchEnergyJ { get; private set; }
@@ -144,6 +156,32 @@ namespace Game.Vehicle.Physics
 
             bool reverse = _lastSelector == GearSelector.Reverse;
             bool ebMode = EngineBrakeRequest && throttle < 0.02 && !reverse;
+
+            // --- drive-away interlock (ADR 0004 addendum 2026-11-10) ---
+            // Modern AMTs do not pull away against applied spring brakes: the 40 t combination otherwise drags
+            // through the tractor spring brakes in the launch gear (4th: ~45 kN m at the drive axle vs 32 kN m of
+            // spring brake). At (near) standstill with the parking brake applied the clutch stays open and the
+            // accelerator is ignored; the vehicle raises a warning. Above walking pace (P pulled while rolling,
+            // emergency use) the gearbox is left alone and the spring brakes just brake.
+            bool interlock = ParkingInterlockEnabled && ParkingBrakeApplied && Math.Abs(vehicleSpeed) < 1.0
+                && (State == AmtState.Idle || State == AmtState.Launch || State == AmtState.Drive);
+            ParkingInterlockActive = interlock && throttle > 0.02;
+            if (interlock && (State != AmtState.Drive || throttle > 0.02))
+            {
+                State = AmtState.Idle;
+                TorqueScale = 0; EngineTargetOmega = 0;
+                ClutchCommand = MathUtil.MoveTowards(ClutchCommand, 0, dt * 6);
+                if (Manual)
+                {
+                    if (upEdge) _manualGear = Math.Min(_manualGear + 1, Def.maxLaunchGear);
+                    if (downEdge) _manualGear = Math.Max(_manualGear - 1, 1);
+                }
+                // Pre-select the launch gear (cluster shows it, clutch open) so the release is an ordinary launch.
+                if (Gear == 0 || Manual || reverse)
+                    Gear = reverse ? -1 : Manual ? _manualGear
+                        : ChooseLaunchGear(massKg, gradeSin, wheelRadius, engine.FullLoadTorque(Def.launchRpmFull * MathUtil.RpmToRadS));
+                return;
+            }
 
             switch (State)
             {

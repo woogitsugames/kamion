@@ -145,6 +145,7 @@ namespace PhysicsRunner.Sim
             bool coupled = sc.overrides.coupled;
             var combo = new CombinationModel(tractor, trailer, trailer != null && coupled);
             tractor.EnduranceBrakesEnabled = sc.overrides.enduranceBrakes;
+            tractor.Amt.ParkingInterlockEnabled = sc.overrides.parkingInterlock;
             tractor.Air.LoadSensingEnabled = sc.overrides.loadSensing;
             if (trailer != null) trailer.Brakes.LoadSensingEnabled = sc.overrides.loadSensing;
             if (sc.overrides.absEnabled.HasValue) tractor.Air.AbsEnabled = sc.overrides.absEnabled.Value;
@@ -221,6 +222,7 @@ namespace PhysicsRunner.Sim
             bool park0 = sc.initial.parkingBrake || (sc.driver.type == "timeline" && sc.driver.keys.Length > 0 && sc.driver.keys[0].parkingBrake);
             tractor.InitParking(park0);
             if (trailer != null) trailer.Brakes.InitSpringChambers(trailer.Group);
+            if (trailer != null && sc.overrides.coupled) trailer.Brakes.InitServiceChambers(trailer.Group, tractor.Air.TrailerControlLine);
             return ctx;
         }
 
@@ -415,7 +417,10 @@ namespace PhysicsRunner.Sim
                 ClutchTemp = m.Amt.ClutchTempC, AmtState = (int)m.Amt.State,
                 CabPitch = m.Cab.Pitch, CabRoll = m.Cab.Roll, CabHeave = m.Cab.Heave,
                 ParkingState = m.ParkingBrakeState,
+                ParkWarning = m.ParkingBrakeWarning,
             };
+            foreach (var w in m.Wheels) smp.WheelBrakeTorque += w.BrakeTorque;
+            if (s.Trailer != null) foreach (var w in s.Trailer.Wheels) smp.WheelBrakeTorque += w.BrakeTorque;
             var tr = s.Trailer;
             if (tr != null)
             {

@@ -70,6 +70,13 @@ namespace Game.Vehicle.Physics
         public double RetarderCommand { get; private set; }
         public double ParkingBrakeState { get; private set; }
         public bool HillHoldActive { get; private set; }
+        /// <summary>
+        /// Cluster / HUD warning "hamulec postojowy": parking brake applied (lever or spring brakes not released)
+        /// while the driver tries to drive away (AMT interlock) or the vehicle is rolling. ADR 0004 addendum 2026-11-10.
+        /// </summary>
+        public bool ParkingBrakeWarning { get; private set; }
+        /// <summary>Increments on every rising edge of <see cref="ParkingBrakeWarning"/> (chime event; poll and compare, zero GC).</summary>
+        public int ParkingBrakeWarningCount { get; private set; }
         public double AligningTorqueTotal { get; private set; }
         public double ClutchSlipPower { get; private set; }
 
@@ -197,10 +204,16 @@ namespace Game.Vehicle.Physics
             amtInput.Throttle = pedal;
             Amt.AbsActive = Air.AbsAnyActive;
             Amt.EngineBrakeRequest = EngineBrakeCommand > 0.01;
+            // Spring brakes count as applied until fully released (the AMT waits for the release, ~0.7 s).
+            bool parked = input.ParkingBrake || ParkingBrakeState > 0.05;
+            Amt.ParkingBrakeApplied = parked;
             double mass = TotalMass;
             double resistance = mass * 9.81 * (GradeSin + 0.0055) + 0.5 * Def.aero.airDensity * DragArea * SpeedForward * Math.Abs(SpeedForward);
             Amt.Update(dt, amtInput, SpeedForward, drivelineOmega, Engine, mass, GradeSin, _wheelRadiusRef, resistance, Def.driveline.finalDriveEfficiency);
             if (Engine.Stalled && Amt.ClutchCommand <= 0.01) Engine.Restart();
+            bool warn = parked && input.Selector != GearSelector.Neutral && (Amt.ParkingInterlockActive || Math.Abs(SpeedForward) > 1.5);
+            if (warn && !ParkingBrakeWarning) ParkingBrakeWarningCount++;
+            ParkingBrakeWarning = warn;
             double demand = pedal * Amt.TorqueScale;
             ThrottleDemand = demand;
             Engine.UpdateEngineBrake(demand < 0.02 && Amt.Gear != 0 && Amt.State == AmtState.Drive ? EngineBrakeCommand : 0, dt);

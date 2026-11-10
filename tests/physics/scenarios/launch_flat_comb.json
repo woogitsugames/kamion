@@ -105,6 +105,20 @@
       "from": 1
     },
     {
+      "metric": "max_shift_retard_torque_nm",
+      "status": "WORKING_VALUE",
+      "source": "owner feel test 2026-11-10: no wheel brake / retarder / engine brake torque during an up-shift unless commanded (ADR 0004 addendum 2026-11-10)",
+      "max": 1,
+      "from": 1
+    },
+    {
+      "metric": "min_accel_shift_gap_ms2",
+      "status": "DERIVED",
+      "source": "per-gap mean dv/dt with the clutch open: only rolling (cr 0.005-0.0055 x g = 0.05 m/s2) + aero (~0.05 laden / ~0.15 empty at 88 km/h) may decelerate; limit ~1.5x the worst case",
+      "min": -0.3,
+      "from": 1
+    },
+    {
       "metric": "max_clutch_temp_c",
       "status": "WORKING_VALUE",
       "source": "clutch below the warning temperature on a flat start",

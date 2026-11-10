@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "park_brake_hold_no_interlock_comb",
+  "description": "Brakes-only layer: 40 t on flat, parking brake ON, AMT drive-away interlock switched OFF, full throttle for 10 s in the launch gear. Tractor spring brakes + trailer braked through the hand control valve (park position) must hold the combination; the engine is pulled down to idle by the launch anti-stall instead of driving through.",
+  "spec": "docs/04 s6.1; ADR 0004 addendum 2026-11-10 (parking-brake interlock)",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "overrides": {
+    "parkingInterlock": false
+  },
+  "duration": 12,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      { "t": 0, "throttle": 0, "brake": 0, "steer": 0, "parkingBrake": true, "selector": "D" },
+      { "t": 1.0, "throttle": 1, "brake": 0, "steer": 0, "parkingBrake": true, "selector": "D" }
+    ]
+  },
+  "checks": [
+    { "metric": "max_speed_kmh", "max": 1.0, "status": "WORKING_VALUE", "source": "owner requirement 2026-11-10: 40 t must not move against the applied parking brake even under full engine torque in the launch gear" },
+    { "metric": "creep_m", "from": 0, "to": 12, "max": 0.15, "status": "WORKING_VALUE", "source": "only tyre / driveline wind-up, no drive-through" },
+    { "metric": "max_dv_step_ms", "max": 0.35, "status": "WORKING_VALUE", "source": "no solver explosion against the brakes" }
+  ]
+}

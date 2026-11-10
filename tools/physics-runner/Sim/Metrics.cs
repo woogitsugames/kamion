@@ -283,6 +283,35 @@ namespace PhysicsRunner.Sim
                 case "max_cab_pitch_deg": return Max(s, i0, i1, x => Math.Abs(x.CabPitch)) * MathUtil.Rad2Deg;
                 case "max_cab_heave_mm": return Max(s, i0, i1, x => Math.Abs(x.CabHeave)) * 1000;
                 case "parking_state_min": return Min(s, i0, i1, x => x.ParkingState);
+                case "park_warning": { for (int i = i0; i <= i1; i++) if (s[i].ParkWarning) return 1; return 0; }
+                // ---------------- shift interruption (ADR 0004 addendum 2026-11-10) ----------------
+                case "max_shift_retard_torque_nm":
+                {
+                    // Wheel brakes (service + spring, all axles) + retarder + engine brake while an up-/down-shift
+                    // is in progress: must be 0 unless the driver commands braking.
+                    double m = 0;
+                    for (int i = i0; i <= i1; i++)
+                        if (s[i].AmtState >= (int)AmtState.ShiftTorqueRamp)
+                            m = Math.Max(m, s[i].WheelBrakeTorque + s[i].RetarderTorque + s[i].EngineBrakeTorque);
+                    return m;
+                }
+                case "min_accel_shift_gap_ms2":
+                {
+                    // Mean longitudinal acceleration (forward speed change / time) of each clutch-open gap (neutral +
+                    // synchronisation), worst gap: only rolling resistance + aero (+ grade) may act. Per-gap mean, not
+                    // the instantaneous value: the fifth-wheel surge when the driveline unloads swings the tractor
+                    // a_long by +/-0.5-1 m/s2 for ~0.2 s with zero net impulse (real cab/trailer jolt, not braking).
+                    double m = double.MaxValue; int g0 = -1;
+                    for (int i = i0; i <= i1 + 1; i++)
+                    {
+                        bool gap = i <= i1 && (s[i].AmtState == (int)AmtState.ShiftNeutral || s[i].AmtState == (int)AmtState.ShiftSync);
+                        if (gap) { if (g0 < 0) g0 = i; continue; }
+                        if (g0 >= 0 && i - 1 > g0)
+                            m = Math.Min(m, (s[i - 1].SpeedFwd - s[g0].SpeedFwd) / (s[i - 1].T - s[g0].T));
+                        g0 = -1;
+                    }
+                    return m == double.MaxValue ? 0 : m;
+                }
                 // ---------------- soak ----------------
                 case "max_kinetic_energy_j": return Max(s, i0, i1, x => x.KineticEnergy);
                 case "max_roll_rate_proxy_deg":
