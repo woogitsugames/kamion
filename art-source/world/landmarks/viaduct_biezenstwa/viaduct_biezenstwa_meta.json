@@ -1,0 +1,123 @@
+{
+ "asset": "viaduct_biezenstwa",
+ "axes": "glTF (x, y, z) = (-dE, dU, dN) relative to the segment anchor (local E, N, U)",
+ "blender": "4.2.9 LTS",
+ "camera_station_m": 297.568,
+ "glb_sha256": "2c6788aabe40b6d3965e1c7ea0567e4dec2f0329b77db78991c2bc767e68f375",
+ "materials": [
+  "viaduct_concrete",
+  "viaduct_steel"
+ ],
+ "schema": "truck-sim-pl/hero-bridge-asset/1",
+ "segments": [
+  {
+   "anchor": [
+    437.166,
+    -660.48,
+    142.893
+   ],
+   "name": "landmark_viaduct_biezenstwa_00",
+   "s_lead": [
+    126.46,
+    192.21
+   ],
+   "tris": [
+    1172,
+    460,
+    104
+   ]
+  },
+  {
+   "anchor": [
+    487.499,
+    -688.084,
+    144.923
+   ],
+   "name": "landmark_viaduct_biezenstwa_01",
+   "s_lead": [
+    192.21,
+    241.272
+   ],
+   "tris": [
+    2074,
+    938,
+    316
+   ]
+  },
+  {
+   "anchor": [
+    530.556,
+    -711.605,
+    145.73
+   ],
+   "name": "landmark_viaduct_biezenstwa_02",
+   "s_lead": [
+    241.272,
+    290.335
+   ],
+   "tris": [
+    2218,
+    1014,
+    316
+   ]
+  },
+  {
+   "anchor": [
+    573.614,
+    -735.123,
+    145.9
+   ],
+   "name": "landmark_viaduct_biezenstwa_03",
+   "s_lead": [
+    290.335,
+    339.397
+   ],
+   "tris": [
+    2196,
+    912,
+    300
+   ]
+  },
+  {
+   "anchor": [
+    616.676,
+    -758.636,
+    145.415
+   ],
+   "name": "landmark_viaduct_biezenstwa_04",
+   "s_lead": [
+    339.397,
+    388.46
+   ],
+   "tris": [
+    2144,
+    980,
+    292
+   ]
+  },
+  {
+   "anchor": [
+    657.79,
+    -780.851,
+    144.279
+   ],
+   "name": "landmark_viaduct_biezenstwa_05",
+   "s_lead": [
+    388.46,
+    432.862
+   ],
+   "tris": [
+    740,
+    288,
+    68
+   ]
+  }
+ ],
+ "spec": "Data/Regions/bialystok-industrial-c/generated/landmarks/viaduct_biezenstwa.spec.json",
+ "spec_sha256": "cccf7fb96668c994499e00e11cf19bfd718dc7a8747f3414a33b56726496a308",
+ "tris_total": [
+  10544,
+  4592,
+  1396
+ ]
+}
