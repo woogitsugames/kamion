@@ -111,6 +111,7 @@ Shader "Kamion/Truck Exterior"
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "KamionVehicleEnv.hlsl"
+            #include "KamionToeParity.hlsl"
 
             TEXTURE2D(_CMap); SAMPLER(sampler_CMap);
             TEXTURE2D(_NMap);
@@ -418,6 +419,7 @@ Shader "Kamion/Truck Exterior"
                 half ql = _CabShadowLift.y / (yl + _CabShadowLift.y + 1e-5);
                 half gl = 1.0 + _CabShadowLift.x * ql * ql * ql;
                 col.rgb = lerp(col.rgb * gl, (yl * gl).xxx, _CabShadowLift.z * (1.0 - 1.0 / gl));   // neutral lift (r5 L2)
+                col.rgb = KamionToeParity(col.rgb);   // cab view on the tiers without the D23 LUT (identity elsewhere)
                 col.rgb = MixFog(col.rgb, i.fogFactor);
                 return half4(col.rgb, 1);
             }

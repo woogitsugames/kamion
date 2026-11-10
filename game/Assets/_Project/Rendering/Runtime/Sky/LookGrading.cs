@@ -70,6 +70,20 @@ namespace Game.Rendering
             return LinearToSrgb(v / (1f - v));
         }
 
+        /// <summary>
+        /// Cab-view display parity of the tiers without post-processing (KamionToeParity.hlsl, ADR 0044 addendum r7):
+        /// (a, k, f, k2) of c' = c (1 + a k / (c + k)) + f k2 / (c + k2), the linear value whose plain sRGB equals the
+        /// master curve's display of c (black 0.015, white clip 0.7, the values of every LP_* preset). Least-squares fit
+        /// (relative error, 0..0.5): within 0.45 display points for c &lt;= 0.2 (CabToeParityTests).
+        /// </summary>
+        public static readonly Vector4 NoPostToeParity = new Vector4(0.21129f, 0.206849f, 0.001319f, 0.000598f);
+
+        public static float ToeParity(Vector4 p, float c)
+        {
+            c = Mathf.Max(c, 0f);
+            return c * (1f + p.x * p.y / (c + p.y)) + p.z * p.w / (c + p.w);
+        }
+
         /// <summary>Lum-vs-saturation keys (0.5 = unchanged): desaturate towards white above ~0.6 of the clip.</summary>
         public static Keyframe[] HighlightDesaturationKeys(float amount, float whiteClip)
         {

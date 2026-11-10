@@ -66,7 +66,12 @@ namespace Game.Rendering
         static float s_RefKey = -1f;
 
         static readonly int k_Fill = Shader.PropertyToID("_CabFill"), k_Gain = Shader.PropertyToID("_CabGain"),
-            k_Lift = Shader.PropertyToID("_CabShadowLift"), k_Enclosure = Shader.PropertyToID("_CabEnclosure");
+            k_Lift = Shader.PropertyToID("_CabShadowLift"), k_Enclosure = Shader.PropertyToID("_CabEnclosure"),
+            k_Parity = Shader.PropertyToID("_KamionToeParity");
+
+        [Tooltip("Cab view on the tiers without post-processing: write the D23 toe in the cab shaders (KamionToeParity.hlsl, " +
+                 "ADR 0044 addendum r7); off = plain sRGB toe on Low (A/B)")]
+        public bool toeParity = true;
 
         /// <summary>Interior ambient key: open-sky SH on an upward normal through the enclosure + first-bounce fill (exposed).</summary>
         float Key(SkyModel m, Vector3 fill) =>
@@ -103,6 +108,7 @@ namespace Game.Rendering
             Shader.SetGlobalFloat(k_Gain, 1f);
             Shader.SetGlobalVector(k_Lift, Vector4.zero);
             Shader.SetGlobalFloat(k_Enclosure, 0f);
+            Shader.SetGlobalVector(k_Parity, Vector4.zero);
         }
 
         void LateUpdate() => Refresh(viewCamera != null ? viewCamera : Camera.main);
@@ -135,8 +141,13 @@ namespace Game.Rendering
                 fill = new Vector3(c.r, c.g, c.b);
             }
             float gain = 1f, lift = 0f, enc = exteriorEnclosure;
+            Vector4 parity = Vector4.zero;
             if (cam != null && interiorBounds.Contains(t.InverseTransformPoint(cam.transform.position)))
             {
+                // Tiers without the D23 LUT (Low): the cab surfaces write the D23 toe themselves (ADR 0044 addendum r7),
+                // so the cab view reads the same on Low and High (review r6: Low dusk black < 3 % 8.4 % vs High 1.8 %).
+                bool post = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.postProcessing;
+                if (!post && toeParity) parity = LookGrading.NoPostToeParity;
                 gain = Mathf.Pow(2f, cabViewEv + CabMeterEv(m, fill));
                 enc = enclosure;
                 // Phone-like local tone mapping of the cab view (review r4 L1): only the interior surfaces, only in the
@@ -152,6 +163,7 @@ namespace Game.Rendering
             Shader.SetGlobalFloat(k_Gain, gain);
             Shader.SetGlobalVector(k_Lift, new Vector4(lift, Mathf.Max(1e-4f, shadowLiftKnee), Mathf.Clamp01(shadowLiftNeutral), 0f));
             Shader.SetGlobalFloat(k_Enclosure, Mathf.Clamp01(enc));
+            Shader.SetGlobalVector(k_Parity, parity);
         }
     }
 }
