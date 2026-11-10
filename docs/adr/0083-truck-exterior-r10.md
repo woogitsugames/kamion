@@ -1,7 +1,7 @@
 # ADR 0083 — TRAKT exterior + curtainsider r10: side skirts, under-floor equipment, curtain livery band, roof sheet, rear lamps
 
-Status: proposed (truck-artist, 2026-11-10). **Not reviewed by `visual-critic`** (the author does not approve his own
-work). Editor frames only (WorldC, tiers High / Low, overcast / clear / lowsun): **UNVERIFIED on a phone**.
+Status: proposed (truck-artist, 2026-11-10). `visual-critic`: **conditional PASS**
+(`docs/reports/visual/REVIEW-2026-11-10-0070-0083.md`, section 2). Owner decision **D47: no curtain band, skirts stay**. Editor frames only (WorldC, tiers High / Low, overcast / clear / lowsun): **UNVERIFIED on a phone**.
 Source: owner order for session 6 ("strong jump in look quality"), lead brief r10. Continues ADR 0061 / 0072 (front,
 low sun: not touched here).
 Evidence: `artifacts/truck-ext-r10/` (`before/` = main 4c27a9b built in the worktree, `r1/` .. `r5/` = rounds, `r5-merged/` = after `git merge main`, `cmp-noband/` + `owner-band/` = curtain band A/B,
@@ -96,9 +96,33 @@ curtain; High overcast, same build otherwise). B is exported with `KAMION_LIVERY
 - Skirt panel is flat with one swage line; the latches are small. Clean, slightly "new".
 - Tractor rear lamp lenses are saturated flat tiles in daylight (shader side).
 
+## D47 and the review round (r6 - r8, trailer only; exterior export unchanged)
+- **D47 (owner, 2026-11-10): variant B.** `LIVERY_BAND` is off by default; the band code stays behind
+  `KAMION_LIVERY_BAND=1`. The committed trailer export is B: the tint mask (`T_Trl_Curtain_M`, blue channel) has no
+  diagonal band any more (checked against the A export of commit 46f09b6). Sections above that describe the band
+  describe variant A.
+- Review P0 no. 1: frame matrix of B in `artifacts/truck-ext-r10/r6/` (High / Low x overcast / clear / lowsun; chase,
+  trailer-side, truck-side, trailer-34; 24 frames, all six runs exit 0).
+- Review P1 no. 3 (plain curtain = one grey): `_curtain_wear` bakes into the curtain albedo: tone steps between five
+  welded widths (2.72 m, WORKING_VALUE) with weld lines, low-frequency blotches, chalked upper part, horizontal scuffs
+  at loading height, three welded patches (one on the driver side, two on the kerb side), a road-film band along the
+  hem that is heavier behind each axle and towards the rear. No graphic. The folds were already in the geometry and
+  the normal map. Author's view: the result is still restrained; the hem band on the front half is weak.
+- Review P1 no. 4 (roof): per-bay random dirt amount and off-centre pools (one or two bays clearly dirtier), run-off
+  streaks instead of an even border, per-bay sag 3-11 mm (was 10 mm everywhere), albedo 0.44 (lower end of the cited
+  range), roughness 0.92 (dusty, matt: the grazing sky reflection was the main term).
+  Roof box in the chase frame, grey mean / sd: High overcast 83.6 / 4.3, High clear 89.0 / 4.3 (0.2 % >= 97 %),
+  High lowsun 70.0 / 2.0, Low overcast 83.3 / 2.8, Low clear 86.7 / 2.1, Low lowsun 70.0 / 1.6.
+- Trailer r8 export: 89 000 / 24 500 / 7 850, check PASS. EditMode 188 / 188.
+- **Not done, not in the truck-artist ownership** (shader / runtime, each with its own ADR history; left for
+  rendering-perf / vehicle): review P1 no. 5 cab paint reflections (`TruckExterior.shader`; the paint already has
+  clear coat 1.0 at roughness 0.08, the chalk look comes from the dirt / tone path), no. 6 windscreen
+  (`Kamion/Truck Glass`), no. 7 headlamps in daylight (`TruckLights.cs` light state + Lights slot emission).
+  P2 no. 8 - 13 not started.
+
 ## Open
 1. `visual-critic` review; phone frames (A16 Low, S24+ High) of `chase`, `truck-side`, `trailer-side`.
-2. Owner decision on the curtain band (A/B above) and on the skirts (they hide the tank the A4 sheets showed).
+2. (closed by D47: no band, skirts stay.)
 3. Low tier: trailer LOD2 wheel discs are visibly broken by decimation (present before r10, not touched).
 4. Tractor lens colours are flat saturated tiles in daylight (shader / Lights slot, not geometry).
 5. Cab side below the window is still a plain pressed panel (no crease); cab shell shape is owner-approved (D28 / D29)

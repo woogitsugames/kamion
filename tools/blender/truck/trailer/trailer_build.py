@@ -194,8 +194,12 @@ ROOF_OWN_COLOUR = True
 # (no measurement of a trailer sheet found). History: 0.62 / 0.44 / 0.36 all clipped in the chase view because the game
 # shader replaces the baked dirt mask on the Curtain slot (CurtainGrime) - the roof was rendered clean; r5 puts the
 # soiling into the albedo and roughness of the roof islands instead (ROOF_STAIN_ALBEDO).
-ROOF_RGB = (0.50, 0.505, 0.51)
-ROOF_ROUGH = 0.72           # chalked, weathered PVC (the curtain is 0.55); WORKING_VALUE
+# r7 (review 0083 no. 4): 0.44 (lower end of the cited range) and a matt, dusty surface (0.92): at the chase angle the
+# sky reflection, not the albedo, drove the roof to 93-96 %.
+ROOF_RGB = (0.44, 0.445, 0.45)
+ROOF_ROUGH = 0.92           # chalked, dusty PVC that is never washed (the curtain is 0.55); WORKING_VALUE
+ROOF_SAG_RNG = random.Random(4107)
+ROOF_SAGS = [0.003 + 0.008 * ROOF_SAG_RNG.random() for _ in range(18)]   # m, per bay (was 10 mm everywhere)
 ROOF_STAIN_ALBEDO = 0.85    # share of the stain factor that goes into the baked albedo (pool centres -> soot colour)
 ROOF_SOOT = (0.105, 0.10, 0.09)
 ROOF_BOWS = 18              # = top_rails_and_roof nb
@@ -220,11 +224,30 @@ def _roof_stains(nt, amount=1.0):
     M.L(nt, geo.outputs["Position"], n1.inputs["Vector"])
     m1 = N(nt, "ShaderNodeMapRange", **{"From Min": 0.36, "From Max": 0.68})
     M.L(nt, n1.outputs["Fac"], m1.inputs["Value"])
-    pool = mn(nt, "MULTIPLY", mn(nt, "MULTIPLY", sag, mid), m1.outputs[0])
-    edge = mn(nt, "MULTIPLY", mn(nt, "DIVIDE", mn(nt, "SUBTRACT", ax, 0.95), 0.30, clamp=True), 0.55)
+    # r7: every bay has its own amount (most light, one or two much dirtier) and its pool sits off-centre
+    bay = mn(nt, "FLOOR", mn(nt, "DIVIDE", mn(nt, "SUBTRACT", Y_FRONT - 0.13, sep.outputs[1]), pitch))
+    w1 = N(nt, "ShaderNodeTexWhiteNoise", _noise_dimensions="1D")
+    M.L(nt, mn(nt, "ADD", bay, 0.37), w1.inputs["W"])
+    w2 = N(nt, "ShaderNodeTexWhiteNoise", _noise_dimensions="1D")
+    M.L(nt, mn(nt, "ADD", bay, 31.71), w2.inputs["W"])
+    amp = mn(nt, "ADD", 0.38, mn(nt, "MULTIPLY", mn(nt, "POWER", w1.outputs["Value"], 3.0), 2.4))
+    xo = mn(nt, "MULTIPLY", mn(nt, "SUBTRACT", w2.outputs["Value"], 0.5), 1.1)
+    axo = mn(nt, "ABSOLUTE", mn(nt, "SUBTRACT", sep.outputs[0], xo))
+    mid = mn(nt, "SUBTRACT", 1.0, mn(nt, "POWER", mn(nt, "DIVIDE", axo, 1.0, clamp=True), 2.0))
+    pool = mn(nt, "MULTIPLY", mn(nt, "MULTIPLY", mn(nt, "MULTIPLY", sag, mid), m1.outputs[0]), amp, clamp=True)
+    # run-off over the rails: streaks across the sheet (noise stretched in x), not an even border
+    scv = N(nt, "ShaderNodeVectorMath", _operation="MULTIPLY")
+    scv.inputs[1].default_value = (0.5, 7.0, 1.0)
+    M.L(nt, geo.outputs["Position"], scv.inputs[0])
+    n3 = N(nt, "ShaderNodeTexNoise", Scale=1.0, Detail=5.0, Roughness=0.6)
+    M.L(nt, scv.outputs[0], n3.inputs["Vector"])
+    m3 = N(nt, "ShaderNodeMapRange", **{"From Min": 0.35, "From Max": 0.70, "To Min": 0.15})
+    M.L(nt, n3.outputs["Fac"], m3.inputs["Value"])
+    edge = mn(nt, "MULTIPLY", mn(nt, "MULTIPLY", mn(nt, "DIVIDE", mn(nt, "SUBTRACT", ax, 0.80), 0.45, clamp=True),
+                                 m3.outputs[0]), 0.80)
     n2 = N(nt, "ShaderNodeTexNoise", Scale=9.0, Detail=8.0, Roughness=0.6)
     M.L(nt, geo.outputs["Position"], n2.inputs["Vector"])
-    film = mn(nt, "MULTIPLY", n2.outputs["Fac"], 0.28)
+    film = mn(nt, "MULTIPLY", n2.outputs["Fac"], 0.50)
     s_ = mn(nt, "MULTIPLY", mn(nt, "ADD", mn(nt, "ADD", pool, edge), film), amount * M.PARAMS["dirt"])
     old = mix.inputs[0].links[0].from_socket
     tot = mn(nt, "ADD", old, s_, clamp=True)
@@ -245,6 +268,105 @@ def _roof_stains(nt, amount=1.0):
         M.L(nt, mn(nt, "ADD", float(rr.inputs[1].default_value), mn(nt, "MULTIPLY", fa, 0.22), clamp=True), rr.inputs[1])
 
 
+CURTAIN_WEAR = True
+CURTAIN_WIDTH = 2.72        # welded fabric widths along the curtain (13.6 m / 5); WORKING_VALUE
+# welded repair patches: (side +1 / -1, y0, y1, z0, z1) - different on the two sides
+CURTAIN_PATCHES = ((1, -4.35, -3.93, 1.78, 2.24), (-1, -9.62, -9.14, 2.30, 2.66), (-1, -1.22, -0.90, 1.62, 1.98))
+
+
+def _curtain_wear(nt):
+    """Review 0083 no. 3 (plain curtain = 13.6 m of one grey): what a used sheet shows without any graphic, all in the
+    CLEAN colour / roughness (the game shader replaces the baked dirt mask on the Curtain slot, the tint multiplies
+    this albedo): tone steps between the welded widths + the weld lines, low-frequency blotches, chalked upper part,
+    horizontal scuffs at loading height, two or three welded patches (newer, glossier, dirt along the weld), and a
+    continuous road-film band along the hem, heavier behind the axles and towards the rear."""
+    mn, N = M.math_node, M.N
+    mix = next(n for n in nt.nodes if n.label == "grime_mix")
+    rr = next(n for n in nt.nodes if n.label == "grime_rough")
+    geo = N(nt, "ShaderNodeNewGeometry")
+    sep = N(nt, "ShaderNodeSeparateXYZ")
+    M.L(nt, geo.outputs["Position"], sep.inputs[0])
+    x, y, z = sep.outputs[0], sep.outputs[1], sep.outputs[2]
+    side = mn(nt, "GREATER_THAN", x, 0.0)
+
+    def noise(scale, detail=4.0, rough=0.6, mul=None):
+        n = N(nt, "ShaderNodeTexNoise", Scale=scale, Detail=detail, Roughness=rough)
+        if mul is None:
+            M.L(nt, geo.outputs["Position"], n.inputs["Vector"])
+        else:
+            v = N(nt, "ShaderNodeVectorMath", _operation="MULTIPLY")
+            v.inputs[1].default_value = mul
+            M.L(nt, geo.outputs["Position"], v.inputs[0])
+            M.L(nt, v.outputs[0], n.inputs["Vector"])
+        return n.outputs["Fac"]
+
+    def ramp(v, a, b):          # clamp((v - a) / (b - a))
+        return mn(nt, "DIVIDE", mn(nt, "SUBTRACT", v, a), b - a, clamp=True)
+
+    # welded widths
+    u = mn(nt, "DIVIDE", mn(nt, "SUBTRACT", Y_FRONT, y), CURTAIN_WIDTH)
+    wn = N(nt, "ShaderNodeTexWhiteNoise", _noise_dimensions="1D")
+    M.L(nt, mn(nt, "ADD", mn(nt, "FLOOR", u), mn(nt, "MULTIPLY", side, 17.3)), wn.inputs["W"])
+    tone = mn(nt, "ADD", 0.92, mn(nt, "MULTIPLY", wn.outputs["Value"], 0.11))
+    fr = mn(nt, "FRACT", u)
+    dseam = mn(nt, "MULTIPLY", mn(nt, "SUBTRACT", 0.5, mn(nt, "ABSOLUTE", mn(nt, "SUBTRACT", fr, 0.5))), CURTAIN_WIDTH)
+    seam = mn(nt, "SUBTRACT", 1.0, mn(nt, "DIVIDE", dseam, 0.022, clamp=True))
+    tone = mn(nt, "MULTIPLY", tone, mn(nt, "SUBTRACT", 1.0, mn(nt, "MULTIPLY", seam, 0.13)))
+    # blotches (handling, old dirt washed unevenly)
+    tone = mn(nt, "MULTIPLY", tone, mn(nt, "ADD", 0.93, mn(nt, "MULTIPLY", noise(0.55, 3.0, 0.55), 0.14)))
+    # lower half holds more old film
+    tone = mn(nt, "MULTIPLY", tone, mn(nt, "SUBTRACT", 1.0, mn(nt, "MULTIPLY", ramp(z, 2.3, 1.5), 0.07)))
+    # patches
+    pin_all, pout_all = None, None
+    for sd, y0, y1, z0, z1 in CURTAIN_PATCHES:
+        ons = side if sd > 0 else mn(nt, "SUBTRACT", 1.0, side)
+
+        def box(i, e=0.006):
+            a = mn(nt, "MULTIPLY", ramp(y, y0 + i, y0 + i + e), ramp(y, y1 - i, y1 - i - e))
+            b = mn(nt, "MULTIPLY", ramp(z, z0 + i, z0 + i + e), ramp(z, z1 - i, z1 - i - e))
+            return mn(nt, "MULTIPLY", mn(nt, "MULTIPLY", a, b), ons)
+        outer, inner = box(0.0), box(0.022)
+        ring = mn(nt, "SUBTRACT", outer, inner, clamp=True)
+        pin_all = inner if pin_all is None else mn(nt, "MAXIMUM", pin_all, inner)
+        pout_all = ring if pout_all is None else mn(nt, "MAXIMUM", pout_all, ring)
+    tone = mn(nt, "MULTIPLY", tone, mn(nt, "ADD", 1.0, mn(nt, "MULTIPLY", pin_all, 0.07)))
+    tone = mn(nt, "MULTIPLY", tone, mn(nt, "SUBTRACT", 1.0, mn(nt, "MULTIPLY", pout_all, 0.20)))
+    base = tuple(mix.inputs[6].default_value)
+    c1 = N(nt, "ShaderNodeVectorMath", _operation="SCALE")
+    c1.inputs[0].default_value = base[:3]
+    M.L(nt, tone, c1.inputs["Scale"])
+    # chalked top + scuffs -> lighter
+    fade = mn(nt, "MULTIPLY", ramp(z, 2.9, 3.8), 0.30)
+    sm = N(nt, "ShaderNodeMapRange", **{"From Min": 0.60, "From Max": 0.74})
+    M.L(nt, noise(2.6, 5.0, 0.6, (0.22, 0.22, 16.0)), sm.inputs["Value"])
+    scuff = mn(nt, "MULTIPLY", mn(nt, "MULTIPLY", sm.outputs[0], ramp(z, 1.45, 1.75)), ramp(z, 2.75, 2.35))
+    light = mn(nt, "ADD", fade, mn(nt, "MULTIPLY", scuff, 0.22), clamp=True)
+    c2 = N(nt, "ShaderNodeMix", _data_type="RGBA")
+    c2.inputs[7].default_value = (0.90, 0.90, 0.89, 1)
+    M.L(nt, light, c2.inputs[0])
+    M.L(nt, c1.outputs[0], c2.inputs[6])
+    # road film along the hem: uneven top edge, heavier behind each axle and towards the rear
+    top = mn(nt, "ADD", CURT_Z0 + 0.28, mn(nt, "MULTIPLY", noise(1.6, 6.0, 0.65, (1.0, 0.45, 1.0)), 0.50))
+    hz = mn(nt, "POWER", mn(nt, "DIVIDE", mn(nt, "SUBTRACT", top, z), 0.42, clamp=True), 1.5)
+    along = mn(nt, "ADD", 0.58, mn(nt, "MULTIPLY", ramp(y, Y_FRONT, Y_REAR), 0.25))
+    for a in AXLES:
+        g = mn(nt, "SUBTRACT", 1.0, mn(nt, "DIVIDE", mn(nt, "ABSOLUTE", mn(nt, "SUBTRACT", y, a - 0.9)), 1.3, clamp=True))
+        along = mn(nt, "MAXIMUM", along, mn(nt, "ADD", 0.45, mn(nt, "MULTIPLY", g, 0.55)))
+    stm = N(nt, "ShaderNodeMapRange", **{"From Min": 0.30, "From Max": 0.70, "To Min": 0.45})
+    M.L(nt, noise(3.0, 7.0, 0.62, (6.0, 6.0, 0.8)), stm.inputs["Value"])      # vertical streaks
+    film = mn(nt, "MULTIPLY", mn(nt, "MULTIPLY", hz, along), stm.outputs[0], clamp=True)
+    c3 = N(nt, "ShaderNodeMix", _data_type="RGBA")
+    c3.inputs[7].default_value = (0.34, 0.31, 0.26, 1)
+    M.L(nt, mn(nt, "MULTIPLY", film, 0.62), c3.inputs[0])
+    M.L(nt, c2.outputs[2], c3.inputs[6])
+    M.L(nt, c3.outputs[2], mix.inputs[6])
+    r0 = float(rr.inputs[1].default_value)
+    r = mn(nt, "ADD", r0, mn(nt, "MULTIPLY", film, 0.28))
+    r = mn(nt, "ADD", r, mn(nt, "MULTIPLY", light, 0.10))
+    r = mn(nt, "SUBTRACT", r, mn(nt, "MULTIPLY", pin_all, 0.13), clamp=True)
+    M.L(nt, r, rr.inputs[1])
+
+
 def materials():
     """Trailer authoring library on top of the TRAKT library (rubber, chassis, steel, lenses, plate, ...)."""
     M.build_library("white")
@@ -260,6 +382,8 @@ def materials():
            dust=(0.17, 0.15, 0.12), band=0.9, band_z0=CURT_Z0)
     if LIVERY_BAND:
         _livery_mask(nt)
+    if CURTAIN_WEAR:
+        _curtain_wear(nt)
     # r10 (ADR 0083): the roof sheet is its own light-grey PVC (not the curtain colour: tint mask 0), with dirt pooled
     # in the sags between the bows and along the edges - what the chase camera looks down on
     m, nt, b = P("roof_tarp", "CURTAIN", ROOF_RGB, ROOF_ROUGH)
@@ -926,16 +1050,16 @@ def top_rails_and_roof():
     for k in range(nb):
         ya, yb = Y_FRONT - 0.13 - k * (LEN - 0.25) / nb, Y_FRONT - 0.13 - (k + 1) * (LEN - 0.25) / nb
         for j in range(4):
-            ys.append((ya + (yb - ya) * j / 4, j / 4))
-    ys.append((Y_REAR + 0.12, 0.0))
+            ys.append((ya + (yb - ya) * j / 4, j / 4, k))
+    ys.append((Y_REAR + 0.12, 0.0, nb - 1))
     xs = [-1.274, -1.262, -1.22, -0.8, -0.4, 0.0, 0.4, 0.8, 1.22, 1.262, 1.274]
     zx = {-1.274: ROOF - 0.08, -1.262: ROOF - 0.018, 1.262: ROOF - 0.018, 1.274: ROOF - 0.08}
     segs = 6      # 6 roof panels (UV islands), cut on bow ridges
     for p in range(segs):
         sl = ys[p * len(ys) // segs: (p + 1) * len(ys) // segs + 1]
         rows = []
-        for y, t in sl:
-            sag = 0.010 * math.sin(math.pi * t)
+        for y, t, kb in sl:
+            sag = ROOF_SAGS[kb] * math.sin(math.pi * t)
             row = []
             for x in xs:
                 z = zx.get(x, ROOF - 0.004 - sag * (1 - (abs(x) / 1.22) ** 4))

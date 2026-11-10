@@ -41,3 +41,7 @@ NEXT (lead): visual-critic on `r5/` + `owner-band/`; owner decision band / skirt
 - 23:35 D47 (owner): variant B, NO band, skirts stay. `LIVERY_BAND` default off (env `KAMION_LIVERY_BAND=1` = band). Trailer r6 export PASS (89 000 / 24 500 / 7 850),
   build OK, frames `r6/High-overcast/{chase,trailer-side,truck-rear34}` viewed (plain curtain, roof 93.0 / sd 5.9), EditMode 188/188.
 NEXT: visual-critic conditional PASS (docs/reports/visual/REVIEW-2026-11-10-0070-0083.md, section 0083): P0 confirm default export = B + frames Low/High x overcast/clear/lowsun; P1 curtain folds / dirt / patches, roof < 90 %, cab paint gloss, windscreen, headlamps.
+- 23:55 review round (trailer r7, r8): `_curtain_wear` (widths, weld lines, patches, scuffs, hem film) baked into curtain albedo; roof per-bay dirt + sag, albedo 0.44, roughness 0.92.
+  Roof chase luma: High overcast 83.6, High clear 89.0, Low clear 86.7. B confirmed in the tint mask. Matrix B in `r6/` (24 frames). Trailer 89 000 / 24 500 / 7 850 PASS. EditMode 188/188.
+  NOT done (shader / runtime, not truck-artist files): review P1 5 cab paint reflections, 6 windscreen, 7 daylight headlamps; P2 8-13.
+NEXT (lead): hand P1 5-7 to rendering-perf; phone frames (P0 no. 2); re-review `r6/` by visual-critic; merge.
