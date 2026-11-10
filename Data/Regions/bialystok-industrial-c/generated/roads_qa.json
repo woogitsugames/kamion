@@ -10160,7 +10160,133 @@
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 503732,
+  "footprint_nodes": 503733,
+  "fork_abreast": [
+   {
+    "beside": "c:w173956078:1847263293-5749429982",
+    "chain": "c:w173956079:1832975577-2256069814",
+    "far_node_moved_m": 0.0,
+    "node": "n1832975577",
+    "pushed_m": 120.0,
+    "shift_max_m": 9.14,
+    "side": "right"
+   },
+   {
+    "chain": "c:w257367423:1847317043-1832975577",
+    "node": "n1832975577",
+    "taper_m": 73.3,
+    "widen_left_m": 0.0,
+    "widen_right_m": 9.4
+   },
+   {
+    "beside": "c:w1101181473:10076968415-1847263305",
+    "chain": "c:w240542867:1847044963-1832991672",
+    "far_node_moved_m": 0.0,
+    "node": "n1832991672",
+    "pushed_m": 110.5,
+    "shift_max_m": 7.63,
+    "side": "right"
+   },
+   {
+    "chain": "c:w262140922:1832991672-1847317049",
+    "node": "n1832991672",
+    "taper_m": 59.5,
+    "widen_left_m": 0.0,
+    "widen_right_m": 4.96
+   },
+   {
+    "beside": "c:w173956078:1847263293-5749429982",
+    "chain": "c:w268473388:1847263303-1847044938",
+    "far_node_moved_m": 0.0,
+    "node": "n1847044938",
+    "pushed_m": 27.0,
+    "shift_max_m": 7.97,
+    "side": "right"
+   },
+   {
+    "chain": "c:w560802655:1847044938-12620261936",
+    "node": "n1847044938",
+    "taper_m": 47.3,
+    "widen_left_m": 0.0,
+    "widen_right_m": 4.24
+   },
+   {
+    "beside": "c:w613026608:3890183128-1847044957",
+    "chain": "c:w173956080:1847044961-1847044957",
+    "far_node_moved_m": 0.0,
+    "node": "n1847044957",
+    "pushed_m": 23.5,
+    "shift_max_m": 5.31,
+    "side": "right"
+   },
+   {
+    "chain": "c:w240542867:1847044963-1832991672",
+    "node": "n1847044957",
+    "taper_m": 46.3,
+    "widen_left_m": 0.0,
+    "widen_right_m": 3.86
+   },
+   {
+    "beside": "c:w23982184:1847317040-1847317043",
+    "chain": "c:w606396470:5749429995-1847317043",
+    "far_node_moved_m": 3.37,
+    "node": "n1847317043",
+    "pushed_m": 42.0,
+    "shift_max_m": 7.6,
+    "side": "right"
+   },
+   {
+    "chain": "c:w257367423:1847317043-1832975577",
+    "node": "n1847317043",
+    "taper_m": 59.0,
+    "widen_left_m": 0.0,
+    "widen_right_m": 4.92
+   },
+   {
+    "beside": "c:w177895177:1883101822-1883062831",
+    "chain": "c:w536419675:3341716400-3341716402",
+    "far_node_moved_m": 3.15,
+    "node": "n3341716402",
+    "pushed_m": 15.0,
+    "shift_max_m": 7.1,
+    "side": "right"
+   },
+   {
+    "chain": "c:w282244180:2861852207-3341716400",
+    "dragged_m": 3.15,
+    "node": "n3341716400"
+   },
+   {
+    "beside": "c:w177895177:1883101822-1883062831",
+    "chain": "c:w606396458:4391371827-3341716400",
+    "far_node_moved_m": 1.0,
+    "node": "n3341716400",
+    "pushed_m": 30.0,
+    "shift_max_m": 3.15,
+    "side": "right"
+   },
+   {
+    "beside": "c:w177895177:1883101822-1883062831",
+    "chain": "c:w177861600:1882953899-4391371827",
+    "far_node_moved_m": 0.0,
+    "node": "n4391371827",
+    "pushed_m": 26.0,
+    "shift_max_m": 1.23,
+    "side": "right"
+   },
+   {
+    "chain": "c:w536419670:4391371827-1882887385",
+    "dragged_m": 1.0,
+    "node": "n4391371827"
+   },
+   {
+    "chain": "c:w552161976:3341716402-2367445386",
+    "node": "n3341716402",
+    "taper_m": 61.8,
+    "widen_left_m": 0.0,
+    "widen_right_m": 5.15
+   }
+  ],
   "fork_shifts": [
    {
     "chain": "c:w1360055407:4075461271-1852129061",
@@ -11015,6 +11141,11 @@
   ],
   "overrides_stale": [],
   "roundabout_junctions": 12,
+  "sides_on_carriageway_culled": {
+   "kerb_tris": 950,
+   "parts": 119,
+   "side_tris": 132
+  },
   "signalised_junctions": 11,
   "walled_ramps": [
    {
