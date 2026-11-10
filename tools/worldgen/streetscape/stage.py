@@ -17,6 +17,7 @@ from terrain_mesh import conform as CF
 from . import buildings_mesh as BM
 from . import forest_hlod as FH
 from . import furniture as FU
+from . import signs_route as SR
 from . import gate as GT
 from . import landmarks as LM
 from . import life as LF
@@ -105,6 +106,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FU.speed_signs(pl, w.net, frep, codes)
     FU.crossing_signs(pl, w.net, w.ctx["points"], frep, codes)
     FU.direction_boards(pl, w.net, attrs, frep, boards)
+    SR.osm_signs(pl, w.net, src, origin, w.junctions, frep, codes)
+    SR.roundabout_signs(pl, w.net, w.junctions, attrs, frep, codes, boards, src=src, origin=origin)
     LM.build(pl, w.net, graph, overrides, origin, boards, frep)
     FU.misc_points(pl, w.net, src, origin, frep, codes)
     FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep)
@@ -126,6 +129,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     LF.place(pl, docks, paved, blds, roads_poly, bpoly, route_P, frep, buf=w.buf, zsurf=zsurf)
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
     FU.clear_carriageway(pl, carriage, zsurf, frep)
+    SR.route_audit(pl.items, route_P, w.net, w.junctions, frep)
     rep["furniture"] = frep
     log("furniture", {k: v for k, v in frep.items() if k != "junction_signs"})
 

@@ -151,6 +151,17 @@ def square(sym):
     return im
 
 
+def shield_colours(ref):
+    """Route number shield (E-15a/b/c of [ZNAKI-Z1]): national road (1-2 digits) red with white numerals, voivodeship
+    road (3 digits) yellow with black numerals, E-roads green. Returns (field, text)."""
+    r = ref.strip().upper()
+    if r.startswith("E"):
+        return GREEN, WHITE
+    if r.isdigit() and len(r) == 3:
+        return YELLOW, BLACK
+    return RED, WHITE
+
+
 def direction_board(dests, refs, green):
     """E-2 style board (schematic): arrow + destinations (+ red route shields). Returns (image, w_m, h_m)."""
     lines = [x.strip() for x in dests if x.strip()][:3]
@@ -173,10 +184,11 @@ def direction_board(dests, refs, green):
         d.text((x, 26 + 90 * i), t, font=f, fill=fg)
     sx = x + tw + 40
     for r in shields:
-        d.rounded_rectangle([sx, H / 2 - 40, sx + 110, H / 2 + 40], radius=10, fill=RED, outline=WHITE, width=5)
+        bgc, txc = shield_colours(r)
+        d.rounded_rectangle([sx, H / 2 - 40, sx + 110, H / 2 + 40], radius=10, fill=bgc, outline=WHITE, width=5)
         fr = _font(52 if len(r) < 3 else 40)
         bb = d.textbbox((0, 0), r, font=fr)
-        d.text((sx + 55 - (bb[2] - bb[0]) / 2 - bb[0], H / 2 - (bb[3] - bb[1]) / 2 - bb[1]), r, font=fr, fill=WHITE)
+        d.text((sx + 55 - (bb[2] - bb[0]) / 2 - bb[0], H / 2 - (bb[3] - bb[1]) / 2 - bb[1]), r, font=fr, fill=txc)
         sx += 130
     return im, W * px / 64 * 0.36, H * px / 64 * 0.36
 
@@ -219,10 +231,22 @@ def overhead_board(rows, row_m=0.62):
     return im, W / px_m, H / px_m
 
 
-def plate_back(shape):
-    im = _img(64, 64)
-    ImageDraw.Draw(im).rectangle([0, 0, 63, 63], fill=GREY_BACK)
-    return im
+def plate_back(shape=None):
+    """Back of an aluminium sign plate (256 px = 1 m): mill-finish grey with faint horizontal rolling marks, road
+    grime toward the bottom and a small producer label (blank: no third-party mark). Deterministic."""
+    import numpy as np
+    n = 256
+    rng = np.random.default_rng(2311)
+    rows = rng.normal(0, 1, (n, 1)) * 2.0 + rng.normal(0, 1, (n, n)) * 1.2
+    yy = np.linspace(0, 1, n)[:, None]
+    shade = 1.0 - 0.10 * np.clip((yy - 0.5) / 0.5, 0, 1)                  # (n, 1)
+    img = np.array(GREY_BACK, np.float32)[None, None, :] * shade[..., None] * np.ones((1, n, 1), np.float32)
+    img = img + rows[..., None]
+    img[96:128, 150:200] = (225, 226, 222)                     # label
+    img[100:104, 156:194] = (150, 150, 150)
+    img[110:113, 156:186] = (165, 165, 165)
+    a = np.full((n, n, 1), 255.0)
+    return Image.fromarray(np.clip(np.concatenate([img, a], -1), 0, 255).astype(np.uint8), "RGBA")
 
 
 def digits_atlas():
@@ -236,8 +260,128 @@ def digits_atlas():
     return im
 
 
+def b1():
+    im, d = disc(WHITE, RED)
+    return im
+
+
+def b2():
+    im, d = disc(RED)
+    d.rectangle([S * 0.17, S * 0.42, S * 0.83, S * 0.58], fill=WHITE)
+    return im
+
+
+def b36():
+    im, d = disc(BLUE, RED)
+    w = int(S * 0.085)
+    c, r = S / 2, S * 0.40
+    for a in (math.pi / 4, -math.pi / 4):
+        d.line([(c - r * math.cos(a), c - r * math.sin(a)), (c + r * math.cos(a), c + r * math.sin(a))], fill=RED, width=w)
+    return im
+
+
+def c9():
+    """C-9 nakaz jazdy z prawej strony znaku: white arrow pointing down to the right (splitter islands)."""
+    im, d = disc(BLUE)
+    w = S * 0.085
+    a0 = (S * 0.31, S * 0.31)
+    tip = (S * 0.70, S * 0.70)
+    d.line([a0, (S * 0.60, S * 0.60)], fill=WHITE, width=int(w))
+    k = S * 0.15
+    d.polygon([tip, (tip[0] - k * 1.35, tip[1] - k * 0.05), (tip[0] - k * 0.05, tip[1] - k * 1.35)], fill=WHITE)
+    return im
+
+
 FACES = {"A-7": ("triangle", a7), "B-20": ("octagon", b20), "C-12": ("disc", c12), "D-1": ("diamond", d1),
-         "D-6": ("square", lambda: square("D-6")), "D-15": ("square", lambda: square("D-15"))}
+         "D-6": ("square", lambda: square("D-6")), "D-15": ("square", lambda: square("D-15")),
+         "B-1": ("disc", b1), "B-2": ("disc", b2), "B-36": ("disc", b36), "C-9": ("disc", c9)}
+KNOWN = set(FACES)
+
+
+def roundabout_diagram(items, px_m=360):
+    """E-1 style diagram board (tablica przeddrogowskazowa) before a roundabout: ring, the approach from the
+    bottom, every other arm at its real bearing (ang degrees, 0 = straight on, + = left) with its destinations and
+    route shields. items = [(ang, [lines], [refs])]. Green field when a national road number is signed (as the
+    gantry boards on the CC0 photo of the Andersa / Rondo Putry approach), else white. Returns (image, w_m, h_m)."""
+    green = any(r for _, _, r in items)
+    bg, fg = (GREEN, WHITE) if green else (WHITE, BLACK)
+    W, H = 1100, 900
+    im = Image.new("RGBA", (W, H), (*bg, 255))
+    d = ImageDraw.Draw(im)
+    d.rectangle([8, 8, W - 9, H - 9], outline=fg, width=12)
+    cx, cy, R, lw = W / 2, H * 0.58, 92, 30
+    d.ellipse([cx - R, cy - R, cx + R, cy + R], outline=fg, width=lw)
+    d.line([(cx, H - 30), (cx, cy + R)], fill=fg, width=lw)                      # approach (no arrow)
+    f = _font(46)
+    fs = _font(34)
+    for ang, lines, refs in items:
+        a = math.radians(90.0 + ang)
+        ux, uy = math.cos(a), -math.sin(a)
+        p0 = (cx + ux * R, cy + uy * R)
+        L = 150 if abs(ang) < 60 else 120
+        p1 = (cx + ux * (R + L), cy + uy * (R + L))
+        d.line([p0, p1], fill=fg, width=lw)
+        hx, hy = ux * 46, uy * 46
+        nx, ny = -uy * 34, ux * 34
+        d.polygon([(p1[0] + hx, p1[1] + hy), (p1[0] + nx, p1[1] + ny), (p1[0] - nx, p1[1] - ny)], fill=fg)
+        # label block at the arm end
+        texts = [t for t in lines[:2]]
+        tw = max([d.textbbox((0, 0), t, font=f)[2] for t in texts] + [0])
+        sw = 96 * len(refs[:2])
+        bw, bh = max(tw, sw), 56 * len(texts) + (60 if refs else 0)
+        if abs(uy) >= 0.5:                           # mostly up / down: label beyond the arrow head, centred
+            lx = p1[0] + hx - bw / 2
+            ly = p1[1] + hy + (-bh - 12 if uy < 0 else 12)
+        else:                                        # sideways: label above the arm, clear of the arrow head
+            lx = p1[0] + hx - (bw if ux < 0 else 0) + (-8 if ux < 0 else 8)
+            ly = min(p0[1], p1[1]) - bh - 26
+        lx = min(max(lx, 24), W - 24 - bw)
+        ly = min(max(ly, 24), H - 24 - bh)
+        y = ly
+        if refs:
+            x = lx
+            for r in refs[:2]:
+                bgc, txc = shield_colours(r)
+                d.rounded_rectangle([x, y, x + 86, y + 50], radius=8, fill=bgc, outline=WHITE, width=4)
+                bb = d.textbbox((0, 0), r, font=fs)
+                d.text((x + 43 - (bb[2] - bb[0]) / 2 - bb[0], y + 25 - (bb[3] - bb[1]) / 2 - bb[1]), r, font=fs, fill=txc)
+                x += 96
+            y += 60
+        for t in texts:
+            d.text((lx, y), t, font=f, fill=fg)
+            y += 56
+    return im, W / px_m * 0.8, H / px_m * 0.8
+
+
+def weather(im, key, strength=1.0):
+    """Light ageing of a sign face (review r4 W-H6: signs and lines must not be factory-new): road film and dust
+    settling toward the lower edge, a faint mottle, a few specks, the red slightly faded (UV) and a darker rim where
+    dirt collects at the folded edge. Deterministic per key. Only covered texels change; alpha is kept."""
+    import hashlib
+    import numpy as np
+    a = np.asarray(im.convert("RGBA")).astype(np.float32) / 255.0
+    h, w = a.shape[:2]
+    rng = np.random.default_rng(int(hashlib.sha1(key.encode()).hexdigest()[:8], 16))
+    low = Image.fromarray((rng.random((8, 8)) * 255).astype(np.uint8)).resize((w, h), Image.BICUBIC)
+    mott = np.asarray(low).astype(np.float32) / 255.0
+    yy = np.linspace(0, 1, h)[:, None]
+    film = 0.05 + 0.10 * np.clip((yy - 0.45) / 0.55, 0, 1) ** 1.5         # more at the bottom
+    k = 1.0 - strength * film * (0.6 + 0.8 * mott)
+    speck = rng.random((h, w)) < 0.0025 * strength
+    k = np.where(speck, k * 0.82, k)
+    rgb = a[..., :3]
+    red = (rgb[..., 0] > 0.55) & (rgb[..., 1] < 0.35)
+    rgb = np.where(red[..., None], rgb * np.array([0.93, 1.08, 1.08]) + 0.015, rgb)
+    lum = rgb @ np.array([0.2126, 0.7152, 0.0722])
+    rgb = rgb * 0.94 + lum[..., None] * 0.06
+    cov = a[..., 3] > 0.5
+    edge = cov.copy()
+    for dy, dx in ((-6, 0), (6, 0), (0, -6), (0, 6)):
+        edge &= np.roll(np.roll(cov, dy, 0), dx, 1)
+    rim = cov & ~edge
+    k = np.where(rim, k * 0.93, k)
+    out = np.concatenate([np.clip(rgb * k[..., None], 0, 1), a[..., 3:]], -1)
+    return Image.fromarray((out * 255 + 0.5).astype(np.uint8), "RGBA")
 
 
 def face(code):

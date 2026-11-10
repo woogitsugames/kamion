@@ -136,11 +136,16 @@ def sign_post():
 
 
 def plate(code):
-    """Sign plate centred at (0, 0, 0), facing +y, 0.04 m in front of the post axis."""
+    """Sign plate centred at (0, 0, 0), facing +y, on the post (axis at y = 0).
+
+    Polish plates are aluminium sheet with a folded (double-bent) edge, ~25 mm deep (catalogue practice,
+    WORKING_VALUE): face (retroreflective foil, our weathered texture), rim, grey mill-finish back with a label
+    (signs.plate_back) and two galvanised clamps (obejmy) around the Ø60 mm post."""
     shape, _ = SG.face(code)
     size = S.SIGN_SIZE[shape]
     m, l1 = Mesh(), Mesh()
-    y = S.SIGN_POST_D / 2 + 0.01
+    rim = 0.025
+    y = S.SIGN_POST_D / 2 + 0.012 + rim             # face; the back clears the post by 12 mm
     n = {"disc": 32, "octagon": 8, "triangle": 3, "diamond": 4, "square": 4}[shape]
     r = size / 2
     if shape == "triangle":         # inverted triangle (A-7), side = size
@@ -155,23 +160,50 @@ def plate(code):
         if shape == "square":
             pts2 = [(max(-r, min(r, x)), max(-r, min(r, z))) for x, z in pts2]
         uvs = [(0.5 + x / size, 0.5 + z / size) for x, z in pts2]
-    for mm in (m, l1):
+    # one winding for every shape (clockwise in (x, z), as the triangle): the counter-clockwise discs / octagons /
+    # squares had their face culled from the front, so B-33 / C-12 showed the grey back to the driver (review r4 W-H3:
+    # "one grey plate seen from behind")
+    area2 = sum(pts2[k][0] * pts2[(k + 1) % len(pts2)][1] - pts2[(k + 1) % len(pts2)][0] * pts2[k][1] for k in range(len(pts2)))
+    if area2 > 0:
+        pts2, uvs = pts2[::-1], uvs[::-1]
+    k_ = len(pts2)
+    for mm, full in ((m, True), (l1, False)):
         V = [[0, y, 0]] + [[x, y, z] for x, z in pts2]
-        UV = [(0.5, 0.5)] + uvs
-        T = [(0, 1 + (k + 1) % len(pts2), 1 + k) for k in range(len(pts2))]
+        # u runs against local +x: seen from the front (+y) in Unity, local +x is on the viewer's left (the C-12 arrows
+        # turned clockwise and digits would read mirrored; checked on route-putry-entry-signs, ADR 0023)
+        UV = [(0.5, 0.5)] + [(1.0 - u, v) for u, v in uvs]
+        T = [(0, 1 + (k + 1) % k_, 1 + k) for k in range(k_)]
         T = [(a, c, b) for a, b, c in T]        # face +y
         mm.add(f"sign_{code}", V, T, UV)
-        Vb = [[0, y - 0.004, 0]] + [[x, y - 0.004, z] for x, z in pts2]
-        mm.add("plate_back", Vb, [(0, 1 + (k + 1) % len(pts2), 1 + k) for k in range(len(pts2))])
+        yb = y - rim if full else y - 0.004
+        Vb = [[0, yb, 0]] + [[x, yb, z] for x, z in pts2]
+        UVb = [(0.5, 0.5)] + [(0.5 - x / size, 0.5 + z / size) for x, z in pts2]
+        mm.add("plate_back", Vb, [(0, 1 + (k + 1) % k_, 1 + k) for k in range(k_)], UVb)
+        if full:                                    # folded rim (outward normals)
+            Vr, Tr, UVr = [], [], []
+            for k in range(k_):
+                (x0, z0), (x1, z1) = pts2[k], pts2[(k + 1) % k_]
+                o = len(Vr)
+                Vr += [[x0, y, z0], [x1, y, z1], [x1, yb, z1], [x0, yb, z0]]
+                L = math.hypot(x1 - x0, z1 - z0)
+                UVr += [(0, 0), (L, 0), (L, rim), (0, rim)]
+                Tr += [(o, o + 2, o + 1), (o, o + 3, o + 2), (o, o + 1, o + 2), (o, o + 2, o + 3)]   # both sides
+            mm.add("plate_back", Vr, Tr, UVr)
+    hh = size * (math.sqrt(3) / 2 if shape == "triangle" else 1.0)
+    for zc in (-hh * 0.28, hh * 0.22):              # clamps around the post, behind the plate
+        m.box("steel_galv", [0, 0.0, zc], S.SIGN_POST_D / 2 + 0.008, S.SIGN_POST_D / 2 + 0.008, 0.022)
+        m.box("steel_galv", [0, (S.SIGN_POST_D / 2 + y - rim) / 2 + 0.004, zc], 0.06, (y - rim - S.SIGN_POST_D / 2) / 2, 0.018)
     return m, l1, None
 
 
 def board(code, w, h):
     m = Mesh()
     y = 0.06
-    m.quad(f"sign_{code}", [-w / 2, y, -h / 2], [w / 2, y, -h / 2], [w / 2, y, h / 2], [-w / 2, y, h / 2])
-    m.quad("plate_back", [w / 2, y - 0.01, -h / 2], [-w / 2, y - 0.01, -h / 2], [-w / 2, y - 0.01, h / 2],
-           [w / 2, y - 0.01, h / 2])
+    # face normal +y like the plates (the old winding showed every E-2 / gantry board's grey back to the driver)
+    m.quad(f"sign_{code}", [-w / 2, y, -h / 2], [-w / 2, y, h / 2], [w / 2, y, h / 2], [w / 2, y, -h / 2],
+           uv=((1, 0), (1, 1), (0, 1), (0, 0)))   # u mirrored as on the plates
+    m.quad("plate_back", [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
+           [-w / 2, y - 0.01, -h / 2], uv=((0, 0), (0, h), (w, h), (w, 0)))
     for sx in (-1, 1):
         m.box("steel_galv", [sx * w / 2 * 0.7, 0.02, 0], 0.03, 0.03, h / 2)   # rails (Z-profile)
     return m, m, None

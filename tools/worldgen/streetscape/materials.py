@@ -64,7 +64,7 @@ M = {
     "luminaire_old": {"color": [0.30, 0.31, 0.30], "rough": 0.55, "metal": 0.2},
     "lamp_glass_sodium": {"color": [0.42, 0.33, 0.20], "rough": 0.25},
     "lamp_glass": {"color": [0.35, 0.35, 0.33], "rough": 0.2},
-    "plate_back": {"color": [0.38, 0.39, 0.39], "rough": 0.5, "metal": 0.8},
+    "plate_back": {"color": [1, 1, 1], "rough": 0.5, "metal": 0.6, "texture": "plate_back"},
     "signal_housing": {"color": [0.03, 0.03, 0.03], "rough": 0.6},
     "signal_backplate": {"color": [0.02, 0.02, 0.02], "rough": 0.7},
     "signal_border": {"color": [0.7, 0.7, 0.7], "rough": 0.5},
