@@ -309,7 +309,7 @@ def build_materials(a):
     # B2.1 (owner sheets D19/D20): charcoal mouldings round the koniak leather (r3 warm-grey lower dash read as a
     # 2000s cab); still a clear step above the soft top so the parting lines and grain read in the URP look
     M.pbr("dash_lower", (0.088, 0.087, 0.085), "hardgrain", 0.08, nstr=0.9, rough_add=0.05, spec=0.42,
-          dust=(0.22, (0.105, 0.100, 0.090), 0.06))
+          wear=(0.30, 1.45), dust=(0.22, (0.105, 0.100, 0.090), 0.06))
     # B2.2: grain normal up on the stack / lower mouldings (read as smooth paint in the r4 frames)
     M.pbr("dash_mid", (0.066, 0.066, 0.066), "dashgrain", 0.08, nstr=1.2, rough_add=0.08, spec=0.40)
     M.pbr("trim_light", (0.270, 0.262, 0.245), "hardgrain", 0.08, nstr=0.7, rough_add=0.06, spec=0.40)
@@ -319,7 +319,7 @@ def build_materials(a):
     M.pbr("leather_trim", tuple(c * 1.05 for c in trim), "leather", 0.12, nstr=0.9, wear=(0.20, 1.6))
     M.pbr("leather", (0.034, 0.033, 0.032), "leather", 0.12, nstr=1.0, wear=(0.26, 2.3), coat=0.0)
     # B2.2: rim leather has a soft satin sheen (hand oils), polished smoother at 10 and 2 o'clock
-    M.pbr("leather_wheel", (0.030, 0.029, 0.028), "leather", 0.05, rough_mul=0.82, nstr=0.8, wear=(0.19, 1.6))
+    M.pbr("leather_wheel", (0.030, 0.029, 0.028), "leather", 0.05, rough_mul=0.82, nstr=0.8, wear=(0.15, 2.1))
     centre = (0.040, 0.039, 0.038) if a.trim == "grafit" else tuple(c * 0.85 for c in trim)
     M.pbr("leather_centre", centre, "leather", 0.12, nstr=0.7, perforate=0.04, wear=(0.34, 1.5))
     M.pbr("seat_fabric", tuple(c * 0.9 + 0.01 for c in trim), "seatfabric", 0.06, nstr=1.0, sheen=0.3)
@@ -381,6 +381,30 @@ def set_wear(ob, fn):
         at.data[v.index].value = max(0.0, min(1.0, fn(v.co)))
 
 
+def set_wear_w(ob, fn, add=False):
+    """Like set_wear, but fn gets world coordinates; add=True keeps the larger of the old and the new value."""
+    me = ob.data
+    at = me.attributes.get("wear") or me.attributes.new("wear", "FLOAT", "POINT")
+    mw = ob.matrix_world.copy()
+    for v in me.vertices:
+        w = max(0.0, min(1.0, fn(mw @ v.co)))
+        at.data[v.index].value = max(at.data[v.index].value, w) if add else w
+
+
+def vnoise(x, y, z=0.0):
+    """Smooth value noise 0..1 (trilinear hash01 lattice): wear break-up that does not alias on the vertex grid."""
+    xi, yi, zi = math.floor(x), math.floor(y), math.floor(z)
+    fx, fy, fz = x - xi, y - yi, z - zi
+    fx, fy, fz = fx * fx * (3 - 2 * fx), fy * fy * (3 - 2 * fy), fz * fz * (3 - 2 * fz)
+    r = 0.0
+    for dx in (0, 1):
+        for dy in (0, 1):
+            for dz in (0, 1):
+                r += (hash01(xi + dx, yi + dy, zi + dz) * (fx if dx else 1 - fx) * (fy if dy else 1 - fy)
+                      * (fz if dz else 1 - fz))
+    return r
+
+
 def hash01(x, y, z):
     s = math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453
     return s - math.floor(s)
@@ -424,6 +448,19 @@ def build_shell():
         box_mm(f"skin_front_{s}", xin + s * 0.02, xout, DOOR_Y1 - 0.02, FRONT_WALL_Y + 0.10, SKIN_Z0, WS_Z0, "paint",
                bev=0.02)
         box_mm(f"side_front_{s}", xin, xin + s * 0.02, DOOR_Y1 - 0.02, FRONT_WALL_Y, FLOOR, WS_Z0, "dash_dark")
+        # r4: A-pillar foot trim. Since the modern cab (ADR 0047) the door shut line runs diagonally to the pillar, and
+        # between it, the dash end and the pillar base the painted corner skin (body colour) and the lit top of
+        # side_front showed as a light wedge from the driver's eye. A dark moulding from the floor to the beltline
+        # (kick panel ahead of the door) closes it.
+        zs_f = [FLOOR + 0.01 + (WIN_Z0 - 0.004 - FLOOR - 0.01) * i / 12 for i in range(13)]
+        loops = []
+        for z in zs_f:
+            ya, yb = door_front(z) + 0.004, FRONT_WALL_Y - 0.16
+            if yb - ya < 0.02:
+                yb = ya + 0.02
+            loops.append([V(xin - s * 0.003, ya, z), V(xin - s * 0.003, yb, z), V(xin + s * 0.045, yb, z),
+                          V(xin + s * 0.045, ya, z)])
+        loft(f"apillar_foot_{s}", loops, "dash_dark", closed=True, cap0=True, cap1=True, sharp=40)
     # front: wall under the windscreen (outer) + inner footwell wall
     box_mm("front_skin", -HALF_OUT, HALF_OUT, FRONT_WALL_Y + 0.0, FRONT_WALL_Y + 0.10, SKIN_Z0, WS_Z0 - 0.02,
            "paint", bev=0.03)
@@ -760,6 +797,23 @@ def build_dash():
         return 0 if i < split else 1
 
     d = loft("dash_main", loops, ["dash_soft", "dash_lower"], closed=True, cap0=True, cap1=True, mat_seg=mat_seg, sharp=50)
+
+    # r4 wear (lower moulding only; the soft top has no wear channel): trouser polish where the knees rest left and
+    # right of the column, boot scuffs along the kick edge under it, hand rub round the park brake / light switch
+    def dash_wear(co):
+        if co.y > FRONT_WALL_Y - 0.06:      # back of the loft (hidden)
+            return 0.0
+        ky, kz = knee(co.x)
+        h = co.z - kz                        # height above the knee edge
+        knees = (sum(math.exp(-((co.x - kx) / 0.11) ** 2) for kx in (-0.80, -0.36)) * smooth(-0.02, 0.03, h)
+                 * (1 - smooth(0.10, 0.24, h)))
+        streak = vnoise(co.x * 34.0, co.z * 7.0) * 0.6 + vnoise(co.x * 11.0, co.z * 3.0, 3.0) * 0.4
+        kick = (smooth(-1.10, -0.95, co.x) * (1 - smooth(-0.30, -0.18, co.x)) * (1 - smooth(-0.02, 0.05, h))
+                * smooth(0.25, 0.7, streak))
+        hand = math.exp(-(((co.x + 0.21) / 0.07) ** 2 + ((co.z - 1.90) / 0.06) ** 2))
+        hand += 0.7 * math.exp(-(((co.x + 1.02) / 0.06) ** 2 + ((co.z - 1.94) / 0.05) ** 2))
+        return 0.75 * knees * (0.55 + 0.45 * vnoise(co.x * 17.0, co.z * 17.0, 1.0)) + 0.9 * kick + 0.5 * hand
+    set_wear_w(d, dash_wear)
     # parting line between the two mouldings
     pts = [lp[split] + V(0, -0.0015, 0) for lp in loops[1:-1]]
     strip("dash_parting", pts, V(0, -1, 0.2).normalized(), 0.003, "gap", offset=0.0005)
@@ -1129,7 +1183,11 @@ def build_dash_switches():
     n = V(0.15, -1, 0.1).normalized()
     rotm = n.to_track_quat("Z", "Y").to_matrix()
     cyl("light_rotary_base", c, 0.034, 0.008, "dash_dark", seg=32, bev=0.002, rot=rotm)
-    cyl("light_rotary", c + n * 0.014, 0.026, 0.02, "knob", seg=32, bev=0.003, rot=rotm)
+    lr = cyl("light_rotary", c + n * 0.014, 0.026, 0.02, "knob", seg=32, bev=0.003, rot=rotm)
+    lc = c + n * 0.014
+    # r4 wear: thumb / forefinger pinch on the upper right of the rim of the rotary
+    set_wear_w(lr, lambda co: 0.6 * smooth(0.012, 0.024, ((co - lc) - n * (co - lc).dot(n)).length)
+               * smooth(-0.6, 0.5, (co - lc).normalized().dot(V(0.6, 0, 0.8).normalized())))
     plane_uv("light_icon", quad_on(c + V(0, 0, 0.048), n, V(0, 0, 1), 0.018, 0.018, off=0.0), "icons",
              uv=M_ICON("low_beam"))
     p = V(-0.80, dash_face_y(-0.80) - 0.006, 1.90)
@@ -1140,7 +1198,10 @@ def build_dash_switches():
     panel("pbrake_gate", rrect(0.06, 0.12, 0.012, 3), p, V(-0.2, -1, 0.1).normalized(), V(0, 0, 1), 0.012, "dash_dark",
           bev=0.003)
     rod("pbrake_lever", p + V(0, -0.005, -0.03), p + V(-0.005, -0.075, 0.035), 0.0065, "metal_dark", seg=12)
-    G.sphere("pbrake_knob", p + V(-0.006, -0.083, 0.043), 0.016, "knob", scale=(1, 1.3, 0.9))
+    kn = G.sphere("pbrake_knob", p + V(-0.006, -0.083, 0.043), 0.016, "knob", scale=(1, 1.3, 0.9))
+    kc = p + V(-0.006, -0.083, 0.043)
+    # r4 wear: palm side (towards the driver, top) polished to a shine, the underside keeps the moulding texture
+    set_wear_w(kn, lambda co: 0.45 + 0.5 * smooth(-0.3, 0.6, (co - kc).normalized().dot(V(0.1, -0.75, 0.65).normalized())))
     cyl("pbrake_ring", p + V(-0.006, -0.083, 0.030), 0.0125, 0.006, "yellow", seg=16)
     # engine start/stop button + key slot right of the column
     p = V(-0.30, dash_face_y(-0.30) - 0.006, 1.84)
@@ -1312,17 +1373,24 @@ def build_wheel(badge):
         p0 = base + u * (side * 0.06) + v * dz
         dirv = (u * side * math.cos(math.radians(ang_down)) - v * math.sin(math.radians(ang_down)) + n * 0.15).normalized()
         p1 = p0 + dirv * length
-        rod(name, p0, p1, 0.0075, "knob", seg=12, r1=0.0095)
+        arm = rod(name, p0, p1, 0.0075, "knob", seg=12, r1=0.0095)
         if knob == "ring":
-            rod(name + "_end", p1, p1 + dirv * 0.05, 0.0115, "knob", seg=16)
+            end = rod(name + "_end", p1, p1 + dirv * 0.05, 0.0115, "knob", seg=16)
+            set_wear_w(end, lambda co: 0.6)      # indicator stalk end: used at every junction
+            set_wear_w(arm, lambda co: 0.35 * smooth(0.02, length, (co - p0).dot(dirv)))
             rod(name + "_band", p1 + dirv * 0.012, p1 + dirv * 0.026, 0.0122, "switch", seg=16)
         elif knob == "amt":
-            rod(name + "_end", p1, p1 + dirv * 0.06, 0.013, "knob", seg=16)
+            end = rod(name + "_end", p1, p1 + dirv * 0.06, 0.013, "knob", seg=16)
+            # r4 wear: the selector is turned / pushed all day: grip polished, the arm towards it shinier too
+            set_wear_w(end, lambda co: 0.85)
+            set_wear_w(arm, lambda co: 0.55 * smooth(0.02, length, (co - p0).dot(dirv)))
             rod(name + "_rot", p1 + dirv * 0.02, p1 + dirv * 0.045, 0.0138, "satin", seg=20)
             cyl(name + "_btn", p1 + dirv * 0.062, 0.008, 0.006, "switch", seg=12,
                 rot=dirv.to_track_quat("Z", "Y").to_matrix())
         else:
-            rod(name + "_end", p1, p1 + dirv * 0.035, 0.010, "knob", seg=12, r1=0.008)
+            end = rod(name + "_end", p1, p1 + dirv * 0.035, 0.010, "knob", seg=12, r1=0.008)
+            set_wear_w(end, lambda co: 0.7)      # retarder stalk: pulled before every braking
+            set_wear_w(arm, lambda co: 0.4 * smooth(0.02, length, (co - p0).dot(dirv)))
         return p1
 
     stalk("stalk_left", -1, 0.005, 0.15, 8, "ring")
@@ -1493,7 +1561,11 @@ def seat(prefix, cx, driver):
     cush.matrix_world = Mc
     if driver:  # entry wear on the left (door-side) bolster, front half
         set_wear(cush, lambda co: smooth(c_w + 0.03, W2 - 0.01, -co.x) * smooth(-0.15, 0.15, co.y) *
-                 (0.6 + 0.4 * hash01(co.x * 3, co.y * 3, 0)) + 0.25 * smooth(0.18, 0.26, co.y))
+                 (0.6 + 0.4 * hash01(co.x * 3, co.y * 3, 0)) + 0.25 * smooth(0.18, 0.26, co.y)
+                 # r4: slide-in creases across the door-side bolster (lighter ridges), front edge rubbed by the thighs
+                 + 0.45 * smooth(c_w + 0.01, W2 - 0.02, -co.x)
+                 * smooth(0.55, 0.9, math.sin(co.y * 95.0 + 6.0 * co.x) * 0.5 + 0.5)
+                 + 0.35 * smooth(0.20, 0.27, co.y) * (0.5 + 0.5 * vnoise(co.x * 25.0, 0.0)))
     # stitch strips along the bolster seams and across the centre panel
     for sx in (-1, 1):
         x = sx * (c_w + 0.011)
@@ -1710,6 +1782,8 @@ def build_doors():
             lp += [V(xw, y0 + (y1(WIN_Z0 - 0.01) - y0) * t, WIN_Z0 - 0.01), V(xw, y0 + (y1(FLOOR + 0.05) - y0) * t, FLOOR + 0.05)]
             loops.append(lp)
         dp = loft(f"door_trim_{s}", loops, "dash_lower", closed=True, cap0=True, cap1=True)
+        set_wear_w(dp, lambda co, s=s: (0.8 if s < 0 else 0.45) * (1 - smooth(1.48, 1.72, co.z)) * smooth(-0.10, 0.25, co.y)
+                   * smooth(0.2, 0.75, vnoise(co.y * 16.0, co.z * 5.0, 2.0)) * (1.0 if abs(co.x) < XI - 0.01 else 0.0))
         bevel(dp, 0.006, 2, angle=30)
         # sill cap (soft) along the beltline
         loops = []
@@ -1738,7 +1812,9 @@ def build_doors():
             h = 0.055
             loops.append([V(xw - s * (0.060 + px), y, 1.955 + pz) for px, pz in rrect(0.085, h, 0.022, 3, 0.04, 0)])
         arm = loft(f"door_armrest_{s}", loops, "leather_trim", closed=True, cap0=True, cap1=True, sharp=60)
-        set_wear(arm, lambda co: 0.6 * smooth(1.97, 1.982, co.z))      # elbow polish on the top
+        # elbow polish on the top: strongest where the forearm lies (driver door), light everywhere else
+        set_wear_w(arm, lambda co, s=s: smooth(1.97, 1.982, co.z) * (0.35 + (0.6 if s < 0 else 0.25) *
+                   math.exp(-((co.y - 0.50) / 0.17) ** 2)) * (0.75 + 0.25 * vnoise(co.x * 30, co.y * 30)))
         pts = [V(xw - s * 0.1015, door_y(-0.01 + 0.76 * i / 14, 1.93, 0.04), 1.979) for i in range(15)]
         strip(f"door_arm_stitch_{s}", pts, V(-s * 0.4, 0, 1).normalized(), 0.005, "stitch", offset=0.0007,
               u_len=0.017)
@@ -1924,6 +2000,47 @@ def build_curtains():
         c.modifiers["solid"].use_even_offset = False
         return c
 
+    def ceil_z(x):
+        return CEIL_SIDE + (CEIL - CEIL_SIDE) * (1 - min(1.0, abs(x) / XI) ** 2.4) ** 0.8
+
+    def hung(name, p0, along, normal, width, z0, top_z, folds, depth=0.030, seed=0.0):
+        """Drawn (not bunched) curtain: irregular pleats that are tight at the gliders and open towards the hem."""
+        lod2 = G.STATE["q"] <= 0.4
+        nn = 3 if lod2 else G.Q(folds * 6, folds * 3)
+        rows = 2 if lod2 else G.Q(8, 4)
+        loops = []
+        for zi in range(rows + 1):
+            f = zi / rows                                   # 0 = hem, 1 = track
+            lp = []
+            for i in range(nn + 1):
+                t = i / nn
+                tw = t + 0.035 * math.sin(2 * math.pi * (1.7 * t + seed))          # uneven pleat spacing
+                amp = 0.0 if lod2 else depth * (0.55 + 0.45 * (1 - f)) * (0.75 + 0.25 * math.sin(11.0 * t + 3.0 * seed))
+                d = amp * math.sin(2 * math.pi * folds * tw + 0.8 * math.sin(2.2 * f + 5.0 * t))
+                q = p0 + along * (width * t) + normal * d
+                zt = top_z(q.x)
+                lp.append(V(q.x, q.y, z0 + (zt - z0) * f + (0.012 * math.sin(2 * math.pi * folds * tw) * (1 - f) if not lod2 else 0)))
+            loops.append(lp)
+        c = loft(name, loops, "curtain", closed=False, sharp=None)
+        solidify(c, 0.003, 0.0)
+        c.modifiers["solid"].use_even_offset = False
+        return c
+
+    # r4 (lead, "aquarium" from outside): a real long-haul cab is not see-through. Sleeper privacy curtain on a ceiling
+    # track just ahead of the bunk: drawn behind the passenger seat (x >= 0.45: outside the bunk camera's frame and
+    # behind the driver, so no driver sight line crosses it), parked and tied back at the driver-side wall
+    yt = -0.075
+    tube("curtain_rail_bunk", [V(-XI + 0.04 + (2 * XI - 0.08) * i / 12, yt, ceil_z(-XI + 0.04 + (2 * XI - 0.08) * i / 12) - 0.012)
+                           for i in range(13)], 0.007, "satin", seg=6)
+    hung("curtain_bunk_1", V(0.45, yt, 0), V(1, 0, 0), V(0, 1, 0), XI - 0.05 - 0.45, 1.93, lambda x: ceil_z(x) - 0.022,
+         folds=9, seed=0.3)
+    bunched("curtain_bunk_-1", V(-XI + 0.045, yt, 0), V(1, 0, 0), V(0, 1, 0), 0.12, 1.96, ceil_z(-XI + 0.10) - 0.022, folds=6)
+    box_mm("bunk_strap_tie", -XI + 0.035, -XI + 0.175, yt - 0.05, yt + 0.05, 2.52, 2.56, "webbing", bev=0.006)
+    # passenger door curtain left a third drawn from the B-pillar (rear part of the glass only: the right mirrors
+    # are seen through the front part) - breaks the line of sight through both door windows
+    hung("curtain_pass", V(XI - 0.028, DOOR_Y0 - 0.02, 0), V(0, 1, 0), V(-1, 0, 0), 0.60, WIN_Z0 + 0.01,
+         lambda x: WIN_Z1 + 0.07, folds=7, depth=0.022, seed=0.7)
+
     for s in (-1, 1):  # windscreen curtains parked at the A-pillars, side curtains at the B-pillars
         fr = apillar_frame(s, 2.5)
         if fr is not None:   # parked in the pillar's shadow: bunched along the sight line behind the trim
@@ -1936,7 +2053,8 @@ def build_curtains():
             b = V(s * (XI - 0.06), ws_y(WS_Z1) - 0.13, 0)
             bunched(f"curtain_ws_{s}", b, V(-s, 0.25, 0).normalized(), V(0, 1, 0), 0.10, 2.05, WS_Z1 + 0.02)
         b = V(s * (XI - 0.025), DOOR_Y0 - 0.02, 0)
-        bunched(f"curtain_side_{s}", b, V(0, -1, 0), V(-s, 0, 0), 0.11, 2.02, WIN_Z1 + 0.07)
+        if s < 0:   # r4: the passenger one is "curtain_pass" (partly drawn)
+            bunched(f"curtain_side_{s}", b, V(0, -1, 0), V(-s, 0, 0), 0.11, 2.02, WIN_Z1 + 0.07)
     # electric roller blinds in a cassette over the windscreen; driver side pulled down a little
     yb = ws_y(WS_Z1) - 0.035
     box_mm("blind_cassette", -XI + 0.07, XI - 0.07, yb - 0.035, yb + 0.015, WS_Z1 - 0.005, WS_Z1 + 0.04, "dash_dark",

@@ -108,6 +108,7 @@ Shader "Kamion/Cab Interior"
                 half3 albedo;
                 half rough;
                 half3 nTS = half3(0, 0, 1);
+                half wearGloss = 0.0;
             #if defined(_KAMION_CAB_DECAL)
                 half4 d = SAMPLE_TEXTURE2D(_DecalAtlas, sampler_DecalAtlas, i.uv01.xy);
                 // Legend band of the atlas (icons, v < 0.5; manifest "MI_Cab_Decal" notes). A 10-13 mm legend is ~8-12 px
@@ -128,6 +129,14 @@ Shader "Kamion/Cab Interior"
                 half wk = saturate(wear * 2.4 * (0.55 + 0.9 * det.r * mixD + 0.45 * (1.0 - mixD)));
                 albedo = tint * lerp(1.0, (0.7 + 0.6 * det.r) * (0.4 + 0.6 * det.g), mixD) * lerp(1.0, det.a, perf) * (1.0 + 1.5 * wear + 1.3 * wk);
                 rough = clamp(i.color.a + (det.b - 0.5) * 0.6 * mixD - 0.25 * wear - 0.3 * wk, 0.08, 1.0);
+                // Touch-point wear on black parts (rim, selector, knobs: tint < ~0.1). In the cab view they sit on the
+                // plateau of the local shadow lift below (Y * gain is almost flat under the knee), so neither the albedo /
+                // roughness wear above nor a x2.2 gain before the lift changed the frame (cab-dash before/after diff
+                // 0-2 / 255, wear pass r4). A phone's local tone mapping lifts regions, not pixels: local contrast
+                // survives it. The polish (a black surface mirroring the glazing: ambient-scaled, additive) is applied
+                // after the lift; a multiplier there did nothing either (the lit value of these parts is ~0).
+                // WORKING_VALUE.
+                wearGloss = wk * (1.0 - saturate(dot(tint, half3(0.3333, 0.3333, 0.3333)) * 8.0));
                 // Panel gaps and creases: the AO atlas is ambient-only in URP, so in direct light a 2 mm gap had the
                 // brightness of its panels. Deep AO also darkens the albedo: gaps read as thin dark lines.
                 albedo *= lerp(0.4, 1.0, smoothstep(0.04, 0.28, ao));
@@ -173,6 +182,7 @@ Shader "Kamion/Cab Interior"
                 // The lifted share is neutral (review r5 L2: black plastics turned brown under the warm low-sun fill); a
                 // phone's local tone mapping lifts luminance, not the chroma of deep shade. z = desaturation of that share.
                 col.rgb = lerp(col.rgb * g, (yl * g).xxx, _CabShadowLift.z * (1.0 - 1.0 / g));
+                col.rgb += input.bakedGI * (ao * wearGloss * 4.5);
                 col.rgb = MixFog(col.rgb, i.fogFactor);
                 return half4(col.rgb, 1);
             }
