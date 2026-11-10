@@ -166,6 +166,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
     FU.clear_carriageway(pl, carriage, zsurf, frep)
     FU.clear_under_decks(pl, w.buf.parts, frep)
+    FU.clear_level_carriageways(pl, w.buf.parts, frep)
     frep["poles_reseated"] = pl.reseated
     frep["pole_footing_steps"] = {"count": len(pl.seat_log), "max_m": max([r["step_m"] for r in pl.seat_log], default=0.0),
                                   "worst": sorted(pl.seat_log, key=lambda r: -r["step_m"])[:20]}

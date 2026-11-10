@@ -125,6 +125,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     for j in juncs:
         M.build_patch(buf, net, j, stats=stats["patch"])
         M.build_patch(buf, net, j, coarse=True)
+    stats["sides_on_carriageway_culled"] = M.cull_sides_on_carriageway(buf)
     w = World(region=region, origin=origin, net=net, junctions=juncs, hf=hf, ctx={"points": pts, "foot": foot},
               buf=buf, profiles=prof, stats=stats)
     w.stats.update(net_stats)

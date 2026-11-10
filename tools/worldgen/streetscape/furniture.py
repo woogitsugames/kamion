@@ -271,6 +271,34 @@ def clear_under_decks(pl, parts, report):
     report["poles_under_decks"] = {"removed": len(removed), "items": removed[:40]}
 
 
+def clear_level_carriageways(pl, parts, report):
+    """Ground-standing props whose base stands on a carriageway at its own level are removed with everything
+    stacked on them (ADR 0076). clear_carriageway works on the 2D footprint of the ground roads only: a lamp of
+    one deck carriageway placed 0.6 m beyond its edge landed in the lane of the carriageway laid abreast of it,
+    and a ground lamp at a junction corner under another ribbon stayed (consistency.prop_on_carriageway: 2).
+    Same criterion as that check: carriageway under the base and under 4 points PROP_INSET_M around it, within
+    DZ_M of the base height, nothing else (kerb, sidewalk, island) on top."""
+    from roads import consistency as CQ
+    idx = CQ.SurfaceIndex(parts)
+    groups = {}
+    for it in pl.items:
+        groups.setdefault((round(it["e"], 2), round(it["n"], 2)), []).append(it)
+    ring = [(0.0, 0.0), (CQ.PROP_INSET_M, 0.0), (-CQ.PROP_INSET_M, 0.0), (0.0, CQ.PROP_INSET_M), (0.0, -CQ.PROP_INSET_M)]
+    drop, removed = set(), []
+    for (e, n), items in groups.items():
+        base = [it for it in items if it["p"].startswith(CQ.GROUND_PROPS)]
+        if not base:
+            continue
+        b = min(base, key=lambda it: it["z"])
+        lab = idx.classify(np.array([[e + dx, n + dy, b["z"]] for dx, dy in ring]))
+        if all(x == "carriageway" for x in lab):
+            drop.update(id(it) for it in items)
+            removed.append({"p": b["p"], "at": [round(e, 1), round(n, 1)], "src": b.get("src", "")})
+    if drop:
+        pl.items[:] = [it for it in pl.items if id(it) not in drop]
+    report["props_on_level_carriageway"] = {"removed": len(removed), "items": removed[:40]}
+
+
 # ------------------------------------------------------------------------------------------- lamps
 def lamps(pl, net, osm_nodes, origin, report):
     n0 = 0

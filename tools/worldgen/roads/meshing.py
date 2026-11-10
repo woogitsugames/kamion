@@ -896,3 +896,79 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
                     kap[m] = 1.0 / (0.8 / 0.9 * corner.R)
         # the corner polyline runs CCW around the patch, outward = right of travel -> mirrored strip
         _emit_strip(buf, G, OUT, Z, params, kap, hwz, True, None, coarse, j.id + f":corner{i}")
+
+
+# ---------------------------------------------------------------------------------------------
+CULL_CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
+CULL_KERB = {"curb_concrete", "collision_curb"}
+CULL_SIDE = {"sidewalk_paving", "verge_grass", "shoulder_gravel", "collision_paving", "collision_grass"}
+CULL_RING_M = 0.30          # = consistency.KERB_RING_M: carriageway under the kerb and all around it at this radius
+CULL_DZ_M = 0.8             # = consistency.DZ_M: decks / underpasses are further apart
+
+
+def cull_sides_on_carriageway(buf: MeshBuf) -> dict:
+    """Kerbs / side strips of one ribbon or junction corner that lie on the carriageway of another (ADR 0076).
+
+    Where two elements overlap (a junction patch over a service road, two patches of a split junction, the gore of
+    a merge) each used to keep its own kerb, so a 12-15 cm kerb ran across the neighbour's lane: wheel collider in
+    Unity, the truck was launched at speed (owner 2026-11-10, MA-001 / MA-002). network.assign_sides(trims=True)
+    already makes ribbon edges flush beside another carriageway; this pass removes what is left, by the same
+    criterion as consistency.kerb_on_carriageway: a kerb triangle (top or face, render and collision) with a
+    carriageway under its centre and under 8 points around it at CULL_RING_M; a sidewalk / verge / shoulder
+    triangle with a carriageway under its centre and its three vertices. The asphalt under it stays."""
+    import shapely
+    polys, zs = [], []
+    for p in buf.parts:
+        if p.layer not in ("road", "bridge") or p.mat not in CULL_CARRIAGEWAY or len(p.T) == 0:
+            continue
+        tri = p.V[p.T]
+        a2 = 0.5 * np.abs((tri[:, 1, 0] - tri[:, 0, 0]) * (tri[:, 2, 1] - tri[:, 0, 1])
+                          - (tri[:, 2, 0] - tri[:, 0, 0]) * (tri[:, 1, 1] - tri[:, 0, 1]))
+        tri = tri[a2 > 1e-4]
+        if len(tri):
+            polys.append(shapely.polygons(np.concatenate([tri[:, :, :2], tri[:, :1, :2]], axis=1)))
+            zs.append(tri[:, :, 2].mean(1))
+    out = {"kerb_tris": 0, "side_tris": 0, "parts": 0}
+    if not polys:
+        return out
+    polys, zs = np.concatenate(polys), np.concatenate(zs)
+    tree = shapely.STRtree(polys)
+
+    def on_cw(P):
+        res = np.zeros(len(P), bool)
+        pi, ti = tree.query(shapely.points(P[:, :2]), predicate="intersects")
+        ok = np.abs(zs[ti] - P[pi, 2]) < CULL_DZ_M
+        res[np.unique(pi[ok])] = True
+        return res
+
+    ang = np.arange(8) * (math.pi / 4)
+    ring = np.column_stack([np.cos(ang), np.sin(ang)]) * CULL_RING_M
+    keep_parts = []
+    for p in buf.parts:
+        kerb, side = p.mat in CULL_KERB, p.mat in CULL_SIDE
+        if p.layer not in ("road", "bridge", "collision") or not (kerb or side) or len(p.T) == 0:
+            keep_parts.append(p)
+            continue
+        tri = p.V[p.T]
+        cen = tri.mean(1)
+        drop = on_cw(cen)
+        if kerb:
+            for o in ring:
+                if not drop.any():
+                    break
+                q = cen.copy()
+                q[:, :2] += o
+                drop &= on_cw(q)
+        else:
+            for k in range(3):
+                if not drop.any():
+                    break
+                drop &= on_cw(tri[:, k])
+        if drop.any():
+            out["kerb_tris" if kerb else "side_tris"] += int(drop.sum())
+            out["parts"] += 1
+            p.T = p.T[~drop]
+        if len(p.T):
+            keep_parts.append(p)
+    buf.parts[:] = keep_parts
+    return out

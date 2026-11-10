@@ -27,3 +27,7 @@ Galaz: worktree-agent-ad6af5501cb259d76.
 - Otwarte z consistency: kerb_on_carriageway 29, prop_on_carriageway 2, furniture_in_lane 1, obstacle_in_lane 2 (poza trasa;
   kandydaci na zgloszenia z filmu: latarnia (-588.9, 19.5), furniture (-694, 69), kraweznik (-781.7, 77.5)).
 - NASTEPNY KROK: uv run --project tools/worldgen pytest tests/gis -q
+- build_world #3 (281 s): meshing.cull_sides_on_carriageway (kraweznik/pobocze jednego elementu na jezdni drugiego) +
+  furniture.clear_level_carriageways (slup na jezdni na swoim poziomie, takze na pomoscie) -> consistency 103 -> 69:
+  kerb_on_carriageway 29 -> 0, prop_on_carriageway 2 -> 0, prop_through_deck 0. Trasa: zaokraglenie 10 m na lagodnych stykach.
+- NASTEPNY KROK: uv run --project tools/worldgen python tests/gis/route_corridor.py ; uv run --project tools/worldgen python tools/worldgen/fidelity/run.py --region bialystok-industrial-c ; uv run --project tools/worldgen pytest tests/gis -q

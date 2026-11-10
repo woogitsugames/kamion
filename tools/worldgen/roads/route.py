@@ -15,7 +15,8 @@ built from:
   * at real turns (junction, roundabout entry, diverge onto a link) the lane lines of the two pieces cross or
     overshoot each other by up to the lateral lane offset (the route ran 1-2 m forward and back: 10 false "steps"
     in test_route_profile_has_no_steps): both pieces are cut at their crossing (or the overshooting points are
-    dropped) and the corner is rounded with a quadratic Bezier over JOINT_ROUND_M each side.
+    dropped) and the corner is rounded with a quadratic Bezier over JOINT_ROUND_M each side
+    (JOINT_ROUND_MILD_M at turns up to JOINT_MILD_TURN_DEG).
 """
 
 from __future__ import annotations
@@ -32,6 +33,8 @@ LANE_CHANGE_MIN_M = 20.0
 LANE_CHANGE_MAX_TURN_DEG = 30.0
 JOINT_SEARCH_M = 8.0         # how far from a joint the two lane lines are searched for their crossing
 JOINT_ROUND_M = 4.0          # WORKING_VALUE: corner rounding length each side of a turning joint
+JOINT_ROUND_MILD_M = 10.0    # WORKING_VALUE: the same at mild turns (a diverge onto a link), <= JOINT_MILD_TURN_DEG
+JOINT_MILD_TURN_DEG = 60.0
 
 
 def _seg_x(p, q, a, b):
@@ -163,7 +166,7 @@ def lane_route(net, path_edges, node_xy, step=2.0):
         gap = b - a
         g = float(np.hypot(*gap))
         if turn > LANE_CHANGE_MAX_TURN_DEG:
-            corners.append(k)
+            corners.append((k, JOINT_ROUND_MILD_M if turn <= JOINT_MILD_TURN_DEG else JOINT_ROUND_M))
             continue
         if g < 0.3:
             continue
@@ -175,8 +178,8 @@ def lane_route(net, path_edges, node_xy, step=2.0):
             m = (np.arange(len(P)) >= k) & (s - s[k] < L)
             shift[m] -= gap[None, :] * _smoothstep(1.0 - (s[m] - s[k]) / L)[:, None]
     P = P + shift
-    for k in corners:
-        _round_corner(P, k)
+    for k, d in corners:
+        _round_corner(P, k, d)
     d = np.hypot(*np.diff(P, axis=0).T)
     keep = np.concatenate([[True], d > 0.05])
     P, E = P[keep], [e for e, kk in zip(E, keep) if kk]

@@ -3,6 +3,7 @@
     uv run --project tools/worldgen python artifacts/roads-p0-r10/scripts/ortho_overlay.py <outdir> name:E:N:half [...]
 
 yellow = generated carriageway edges (between the junction trims), cyan = junction patch boundary,
+circles = consistency cases (orange kerb, white prop, blue furniture, green obstacle),
 magenta = OSM way geometry (roads.graph.json), red = route_start.json, white ticks every 10 m.
 """
 import json
@@ -25,6 +26,9 @@ w = pipeline.build(RID)
 ox, oy = w.origin
 graph = json.loads((REPO / "Data/Regions" / RID / "roads.graph.json").read_text(encoding="utf-8"))
 route = json.loads((REPO / "Data/Regions" / RID / "route_start.json").read_text(encoding="utf-8"))["points_en"]
+cases = json.loads((REPO / "Data/Regions" / RID / "generated/road_consistency_qa.json").read_text(encoding="utf-8"))["cases"]
+COL = {"kerb_on_carriageway": (255, 80, 0), "prop_on_carriageway": (255, 255, 255), "furniture_in_lane": (0, 120, 255),
+       "obstacle_in_lane": (0, 255, 0), "prop_through_deck": (255, 255, 255)}
 tif = REPO / "Data/raw/derived" / RID / "ortho_0p25m.tif"
 
 for spec in sys.argv[2:]:
@@ -64,6 +68,10 @@ for spec in sys.argv[2:]:
             B = [px(p) for p, _ in j.boundary]
             d.line(B + [B[0]], fill=(0, 255, 255), width=2)
     d.line([px(p) for p in route], fill=(255, 0, 0), width=2)
+    for cs in cases:                                   # road_consistency_qa.json: kerb / prop / furniture cases
+        if cs["kind"] in COL and abs(cs["e"] - e0) < half and abs(cs["n"] - n0) < half:
+            x, y = px((cs["e"], cs["n"]))
+            d.ellipse([x - 5, y - 5, x + 5, y + 5], outline=COL[cs["kind"]], width=2)
     for k in range(int(-half), int(half) + 1, 10):
         x = (k + half) * ppm
         d.line([(x, 952), (x, 960)], fill=(255, 255, 255))
