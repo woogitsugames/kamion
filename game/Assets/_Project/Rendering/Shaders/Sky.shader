@@ -32,6 +32,7 @@ Shader "Kamion/Sky"
             float4 _SkySunDir;      // xyz towards the sun
             float4 _SkySunColor;    // linear, luminance 1
             float4 _SkyFogColor;    // exposed horizon colour
+            float4 _SkyOvercastColor; // rgb: neutral after the optional WB adaptation (ADR 0043), a = 1 when set
             float _SunDiscScale;
             TEXTURE2D(_SkyChroma); SAMPLER(sampler_SkyChroma);   // u = γ/π, v = sqrt(cos θ); rgb of luminance 1
 
@@ -77,7 +78,8 @@ Shader "Kamion/Sky"
                     clear = SAMPLE_TEXTURE2D_LOD(_SkyChroma, sampler_SkyChroma, uv, 0).rgb * Y;
                 }
                 float over = _SkyZenith.w * (1.0 + 2.0 * cosTheta) / 3.0;
-                return lerp(clear, over.xxx, _SkyMisc.x);
+                float3 oc = _SkyOvercastColor.a > 0.5 ? _SkyOvercastColor.rgb : float3(1.0, 1.0, 1.0);
+                return lerp(clear, over * oc, _SkyMisc.x);
             }
 
             half4 frag(Varyings i) : SV_Target

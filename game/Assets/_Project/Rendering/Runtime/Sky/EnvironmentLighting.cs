@@ -21,6 +21,8 @@ namespace Game.Rendering
         public float fogDensityScale = 1f;
 
         public static EnvironmentLighting Instance { get; private set; }
+        /// <summary>ADR 0043 option (c) A/B renders only: &lt; 0 = the preset's value (0 for every preset). Not a default.</summary>
+        public static float WhiteBalanceOverride = -1f;
         public SkyModel Model { get; private set; }
         public LightingPreset Active => presets != null && presets.Length > 0 ? presets[Mathf.Clamp(activeIndex, 0, presets.Length - 1)] : null;
 
@@ -38,7 +40,7 @@ namespace Game.Rendering
             k_PerezYc = Shader.PropertyToID("_SkyPerezYc"), k_PerezE = Shader.PropertyToID("_SkyPerezE"),
             k_Zenith = Shader.PropertyToID("_SkyZenith"), k_Misc = Shader.PropertyToID("_SkyMisc"),
             k_SunDir = Shader.PropertyToID("_SkySunDir"), k_SunColor = Shader.PropertyToID("_SkySunColor"),
-            k_FogColor = Shader.PropertyToID("_SkyFogColor"), k_Chroma = Shader.PropertyToID("_SkyChroma");
+            k_FogColor = Shader.PropertyToID("_SkyFogColor"), k_OvercastColor = Shader.PropertyToID("_SkyOvercastColor"), k_Chroma = Shader.PropertyToID("_SkyChroma");
         Texture2D m_ChromaTex;
         static readonly int k_Exposure = Shader.PropertyToID("_KamionExposure");
 
@@ -86,7 +88,7 @@ namespace Game.Rendering
         {
             var p = Active;
             if (p == null) return;
-            Model = p.CreateModel();
+            Model = p.CreateModel(WhiteBalanceOverride);
             var m = Model;
             // Display value per cd/m^2: emissive surfaces (truck lamps, A7) are authored in physical luminance.
             Shader.SetGlobalFloat(k_Exposure, m.Exposure);
@@ -116,6 +118,7 @@ namespace Game.Rendering
                 skyMaterial.SetVector(k_SunDir, m.SunDirection);
                 skyMaterial.SetVector(k_SunColor, (Vector4)m.SunColor);
                 skyMaterial.SetVector(k_FogColor, (Vector4)fog);
+                var ow = m.AdaptedWhite; skyMaterial.SetVector(k_OvercastColor, new Vector4(ow.r, ow.g, ow.b, 1f));
                 if (m_ChromaTex != null) { if (Application.isPlaying) Destroy(m_ChromaTex); else DestroyImmediate(m_ChromaTex); }
                 m_ChromaTex = m.CreateChromaTexture();
                 skyMaterial.SetTexture(k_Chroma, m_ChromaTex);

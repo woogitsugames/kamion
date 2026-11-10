@@ -40,6 +40,8 @@ namespace Game.Rendering
         public readonly float SkyHorizontalIlluminanceLux;
         public readonly Color SunColor;          // linear Rec.709, luminance 1
         public readonly float Exposure;          // k: display value per cd/m²
+        public readonly float WhiteBalanceAdaptation;   // 0 = fixed daylight WB (default); ADR 0043 option (c)
+        public readonly Color AdaptedWhite;      // colour of a neutral (overcast / ground) radiance after the WB adaptation, luminance 1
 
         // Perez coefficients (A..E) for Y, x, y and zenith values (clear part).
         readonly float[] m_PY = new float[5], m_Px = new float[5], m_Py = new float[5];
@@ -55,7 +57,10 @@ namespace Game.Rendering
         /// <param name="turbidity">Linke-like turbidity of the Preetham model, 2 (very clear) … 6 (hazy)</param>
         /// <param name="overcast">0 clear … 1 fully overcast (CIE)</param>
         /// <param name="ev100">exposure value at ISO 100; k = 1 / (1.2 · 2^EV100) (Lagarde and de Rousiers 2014)</param>
-        public SkyModel(float sunElevationDeg, float sunAzimuthDeg, float turbidity, float overcast, float ev100)
+        /// <param name="wbAdaptation">0 = fixed daylight white balance (default, all presets). &gt; 0: phone-style partial
+        /// white-balance adaptation (Bradford von Kries, degree D) toward the scene illuminant (sun + sky on a horizontal
+        /// plane), applied to sun, sky, ambient, fog and reflections alike. Option (c) of ADR 0043: owner A/B only.</param>
+        public SkyModel(float sunElevationDeg, float sunAzimuthDeg, float turbidity, float overcast, float ev100, float wbAdaptation = 0f)
         {
             SunElevationDeg = Mathf.Clamp(sunElevationDeg, 0.5f, 89.5f);
             Turbidity = Mathf.Clamp(turbidity, 1.7f, 10f);
@@ -90,7 +95,16 @@ namespace Game.Rendering
             m_OvercastZenith = overKh * 9f / (7f * Mathf.PI);
 
             SunColor = SunColorFromTurbidity(T, m);
+            AdaptedWhite = Color.white;
             if (Overcast < 1f) BuildChroma();
+            WhiteBalanceAdaptation = Mathf.Clamp01(wbAdaptation);
+            if (WhiteBalanceAdaptation > 0f)
+            {
+                var A = AdaptationMatrix(SceneIlluminantRgb(), WhiteBalanceAdaptation);
+                SunColor = NormaliseLum(Mul(A, SunColor));
+                AdaptedWhite = NormaliseLum(Mul(A, Color.white));
+                for (int i = 0; i < m_Chroma.Length; i++) m_Chroma[i] = NormaliseLum(Mul(A, m_Chroma[i]));
+            }
         }
 
         public static float ExposureFromEv100(float ev100) => 1f / (1.2f * Mathf.Pow(2f, ev100));
@@ -127,7 +141,7 @@ namespace Game.Rendering
             if (Overcast > 0f)
             {
                 float L = m_OvercastZenith * (1f + 2f * dir.y) / 3f;
-                c += new Color(L, L, L) * Overcast;
+                c += AdaptedWhite * (L * Overcast);
             }
             return c;
         }
@@ -177,7 +191,7 @@ namespace Game.Rendering
             float lowSunCool = 0f)
         {
             var sh = new UnityEngine.Rendering.SphericalHarmonicsL2();
-            Color ground = groundAlbedo * (HorizontalIlluminanceLux * Exposure / Mathf.PI);
+            Color ground = groundAlbedo * AdaptedWhite * (HorizontalIlluminanceLux * Exposure / Mathf.PI);
             float cool = Mathf.Clamp01(lowSunCool) * Mathf.Clamp01((15f - SunElevationDeg) / 10f) * (1f - Overcast);
             Color zc = ExposedRadiance(Vector3.up);
             float zy = 0.2126f * zc.r + 0.7152f * zc.g + 0.0722f * zc.b;
@@ -252,7 +266,7 @@ namespace Game.Rendering
         /// <summary>Exposed irradiance/π (what <c>SampleSH(up)</c> should return) of sky + ground for a normal.</summary>
         public Color ExpectedAmbient(Vector3 n, Color groundAlbedo, int resolution = 48)
         {
-            Color ground = groundAlbedo * (HorizontalIlluminanceLux * Exposure / Mathf.PI);
+            Color ground = groundAlbedo * AdaptedWhite * (HorizontalIlluminanceLux * Exposure / Mathf.PI);
             int rows = resolution * 2, cols = resolution * 4;
             float dOmega = 4f * Mathf.PI / (rows * cols);
             Color sum = Color.black;
@@ -276,7 +290,7 @@ namespace Game.Rendering
         public Cubemap ReflectionCubemap(Color groundAlbedo, int size = 64)
         {
             var cube = new Cubemap(size, TextureFormat.RGBAHalf, true) { name = "SkyReflection", filterMode = FilterMode.Trilinear, wrapMode = TextureWrapMode.Clamp };
-            Color ground = groundAlbedo * (HorizontalIlluminanceLux * Exposure / Mathf.PI);
+            Color ground = groundAlbedo * AdaptedWhite * (HorizontalIlluminanceLux * Exposure / Mathf.PI);
             Color horizon = HorizonColorExposed();
             var px = new Color[size * size];
             for (int f = 0; f < 6; f++)
@@ -452,6 +466,14 @@ namespace Game.Rendering
             for (int k = 0; k < Bands; k++)
                 amb[k] += 0.2f * (sol[k] * Mathf.Exp(-SunOd(ObserverH, k)) * Mathf.Max(cosS, 0f) / Mathf.PI + amb[k]);
 
+            // Orders ≥ 3 (ADR 0043): Hillaire, "A Scalable and Production Ready Sky and Atmosphere Rendering Technique"
+            // (EGSR 2020, §5.5): with an isotropic phase the higher orders form a geometric series, Ψ_ms = L_2nd / (1 − f_ms),
+            // f_ms = (1/4π) ∫_sphere ∫ σ_s T dt dω = the share of isotropic light a point re-scatters back to itself.
+            // Evaluated once at the observer (bottom of the atmosphere, where f_ms is largest); ground rays end at the
+            // ground 150 m below. f_ms ≈ 0.40 (410 nm) … 0.20 (696 nm) at T 3, so the higher orders are bluer.
+            var fms = MultipleScatteringFraction(ray, mie, oz);
+            for (int k = 0; k < Bands; k++) amb[k] /= 1f - Mathf.Min(fms[k], 0.9f);
+
             // White balance: the extraterrestrial sun maps to the same near-white (0.98, 1, 0.96) the sun light uses
             // (SunColorFromTurbidity), so sky and sunlight share one reference white - like a camera on daylight WB.
             Vector3 sunXyz = Vector3.zero;
@@ -479,6 +501,84 @@ namespace Game.Rendering
                 float lum = 0.2126f * c.r + 0.7152f * c.g + 0.0722f * c.b;
                 m_Chroma[j * ChromaWidth + i] = lum > 0f ? new Color(c.r / lum, c.g / lum, c.b / lum, 1f) : Color.white;
             }
+        }
+
+        // ---------------------------------------------------------------- white-balance adaptation (option c, ADR 0043)
+        static readonly Matrix4x4 s_ToXyz = Rows(0.4124564f, 0.3575761f, 0.1804375f, 0.2126729f, 0.7151522f, 0.0721750f, 0.0193339f, 0.1191920f, 0.9503041f);
+        // Bradford cone response (Lam 1985; CIECAM97s / ICC v4).
+        static readonly Matrix4x4 s_Bradford = Rows(0.8951f, 0.2664f, -0.1614f, -0.7502f, 1.7135f, 0.0367f, 0.0389f, -0.0685f, 1.0296f);
+        static Matrix4x4 Rows(float a, float b, float c, float d, float e, float f, float g, float h, float i)
+        {
+            var m = Matrix4x4.identity;
+            m.SetRow(0, new Vector4(a, b, c, 0f)); m.SetRow(1, new Vector4(d, e, f, 0f)); m.SetRow(2, new Vector4(g, h, i, 0f));
+            return m;
+        }
+        static Color Mul(Matrix4x4 m, Color c) { Vector3 v = m.MultiplyVector(new Vector3(c.r, c.g, c.b)); return new Color(v.x, v.y, v.z, c.a); }
+        static Color NormaliseLum(Color c)
+        {
+            c = new Color(Mathf.Max(c.r, 0f), Mathf.Max(c.g, 0f), Mathf.Max(c.b, 0f), 1f);
+            float y = 0.2126f * c.r + 0.7152f * c.g + 0.0722f * c.b;
+            return y > 1e-8f ? c / y : Color.white;
+        }
+
+        /// <summary>Horizontal illuminance colour (direct sun + sky dome), linear Rec.709, before adaptation.</summary>
+        Color SceneIlluminantRgb()
+        {
+            Color sky = Color.black;
+            const int rows = 12, cols = 24;
+            for (int r = 0; r < rows; r++)
+            {
+                float z = (r + 0.5f) / rows, s = Mathf.Sqrt(1f - z * z);
+                for (int c = 0; c < cols; c++)
+                {
+                    float phi = (c + 0.5f) * 2f * Mathf.PI / cols;
+                    sky += Radiance(new Vector3(s * Mathf.Cos(phi), z, s * Mathf.Sin(phi))) * (z / rows * 2f * Mathf.PI / cols);
+                }
+            }
+            return SunColor * (SunNormalIlluminanceLux * Mathf.Max(SunDirection.y, 0f)) + sky;
+        }
+
+        /// <summary>Von Kries in Bradford space, degree D: illuminant → D65 white, luminance of the illuminant kept.</summary>
+        static Matrix4x4 AdaptationMatrix(Color illuminant, float D)
+        {
+            Matrix4x4 toCone = s_Bradford * s_ToXyz;
+            Vector3 w = toCone.MultiplyVector(new Vector3(illuminant.r, illuminant.g, illuminant.b) / Mathf.Max(1e-6f,
+                0.2126f * illuminant.r + 0.7152f * illuminant.g + 0.0722f * illuminant.b));
+            Vector3 n = toCone.MultiplyVector(Vector3.one);
+            var g = Matrix4x4.identity;
+            g.m00 = 1f + D * (n.x / w.x - 1f); g.m11 = 1f + D * (n.y / w.y - 1f); g.m22 = 1f + D * (n.z / w.z - 1f);
+            return toCone.inverse * g * toCone;
+        }
+
+        /// <summary>Hillaire 2020 f_ms per band at the observer (16 zenith bands over the sphere, 32 steps per ray).</summary>
+        static float[] MultipleScatteringFraction(float[] ray, float[] mie, float[] oz)
+        {
+            var f = new float[Bands];
+            var od = new float[Bands];
+            const int zr = 16, n = 32;
+            float r0 = EarthR + ObserverH;
+            for (int a = 0; a < zr; a++)
+            {
+                float z = -1f + 2f * (a + 0.5f) / zr;
+                float len = z >= 0f ? RayLengthToTop(r0, z) : ObserverH / -z;
+                // The ray integral depends on z only (equal-area bands in z), so azimuth needs no samples.
+                System.Array.Clear(od, 0, Bands);
+                float prev = 0f;
+                for (int i = 0; i < n; i++)
+                {
+                    float t1 = len * ((i + 1f) / n) * ((i + 1f) / n), dt = t1 - prev, tm = 0.5f * (prev + t1);
+                    prev = t1;
+                    float h = Mathf.Max(0f, Mathf.Sqrt(r0 * r0 + tm * tm + 2f * r0 * tm * z) - EarthR);
+                    float dR = Mathf.Exp(-h / RayleighH), dM = Mathf.Exp(-h / MieH), dO = OzoneDensity(h);
+                    for (int k = 0; k < Bands; k++)
+                    {
+                        float e = (ray[k] * dR + mie[k] * dM * MieExtinctionPerScattering + oz[k] * dO) * dt;
+                        f[k] += Mathf.Exp(-od[k] - 0.5f * e) * (ray[k] * dR + mie[k] * dM) * dt / zr;
+                        od[k] += e;
+                    }
+                }
+            }
+            return f;
         }
 
         /// <summary>Clear-sky colour of luminance 1 (linear Rec.709) for a view direction (y = cos θ) and angle to the sun.</summary>

@@ -36,6 +36,9 @@ namespace Game.Editor.VisualQA
                 string outDir = EditorTools.Arg("-qaOutput", Path.Combine(EditorTools.RepoRoot, "artifacts", "visual-qa", scene));
                 string lighting = EditorTools.Arg("-qaLighting", null);
                 string only = EditorTools.Arg("-qaCameras", null);
+                // ADR 0043 option (c) A/B: phone-style white-balance adaptation strength (not a default).
+                string wb = EditorTools.Arg("-qaWbAdapt", null);
+                if (!string.IsNullOrEmpty(wb)) EnvironmentLighting.WhiteBalanceOverride = float.Parse(wb, System.Globalization.CultureInfo.InvariantCulture);
                 int count = Render(scene, w, h, tier, outDir, lighting, only);
                 exit = count > 0 ? 0 : 1;
                 Debug.Log($"VISUALQA_RESULT: {(exit == 0 ? "OK" : "NO_CAMERAS")} rendered={count} dir={outDir}");
@@ -196,6 +199,23 @@ namespace Game.Editor.VisualQA
                     Shader.SetGlobalFloat("_CabGain", 1f);
                 }
                 else foreach (var cl in UnityEngine.Object.FindObjectsByType<CabInteriorLighting>(FindObjectsSortMode.None)) cl.Refresh(cam);
+                // ADR 0043 diagnostic: -qaNoGlass leaves only the grey Fresnel loss of the glazing (no body absorption,
+                // grime, film or interior reflection), so sky-through-glass can be compared with the real glass in one frame.
+                if (EditorTools.Arg("-qaNoGlass", null) == "1")
+                    foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                    {
+                        var mats = r.sharedMaterials;
+                        bool any = false;
+                        for (int mi = 0; mi < mats.Length; mi++)
+                        {
+                            if (mats[mi] == null || mats[mi].shader == null || mats[mi].shader.name != "Kamion/Truck Glass") continue;
+                            var g = new Material(mats[mi]) { hideFlags = HideFlags.DontSave };
+                            g.SetFloat("_Opacity", 0f); g.SetFloat("_Grime", 0f); g.SetFloat("_Wiper", 0f);
+                            g.SetVector("_InteriorAlbedo", Vector4.zero);
+                            mats[mi] = g; any = true;
+                        }
+                        if (any) r.sharedMaterials = mats;
+                    }
 
                 // UI is rendered in its own pass (UI layer only, transparent clear) and composited over the world
                 // image (premultiplied "over"), exactly like the runtime Screen Space - Overlay canvas: world geometry

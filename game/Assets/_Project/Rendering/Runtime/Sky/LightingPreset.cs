@@ -45,6 +45,9 @@ namespace Game.Rendering
         [Header("Look (owner decision D23: like a phone photo; ADR 0016)")]
         [Tooltip("Colour grading saturation (-100..100). Natural colours: 0 or slightly negative (docs/06 §2).")]
         [Range(-30f, 20f)] public float lookSaturation = 0f;
+        [Tooltip("Phone-style partial white-balance adaptation toward the scene illuminant (0 = fixed daylight WB). ADR 0043 " +
+                 "option (c): owner art-direction decision, 0 in every preset until decided.")]
+        [Range(0f, 1f)] public float whiteBalanceAdaptation = 0f;
         [Tooltip("Display black level (sRGB 0..1) of an albedo-0 pixel, applied after the tone curve (review r3 G1: ≤ 2 %).")]
         [Range(0f, 0.04f)] public float lookBlackLevel = 0.015f;
         [Tooltip("Scene value (exposed linear) where the tone curve reaches display white and clips. Phones clip an overcast " +
@@ -59,10 +62,11 @@ namespace Game.Rendering
             (autoExposure ? ExposureTable.Ev100(probe.SunElevationDeg, probe.Overcast) : ev100) - exposureCompensation;
 
         /// <summary>Builds the sky model with the resolved exposure (two passes: illuminance does not depend on exposure).</summary>
-        public SkyModel CreateModel()
+        public SkyModel CreateModel(float wbOverride = -1f)
         {
             var probe = new SkyModel(sunElevationDeg, sunAzimuthDeg, turbidity, overcast, 0f);
-            return new SkyModel(sunElevationDeg, sunAzimuthDeg, turbidity, overcast, ResolveEv100(probe));
+            return new SkyModel(sunElevationDeg, sunAzimuthDeg, turbidity, overcast, ResolveEv100(probe),
+                wbOverride >= 0f ? wbOverride : whiteBalanceAdaptation);
         }
 
         public static LightingPreset CreateClear()
