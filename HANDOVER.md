@@ -5,7 +5,8 @@
 - Polecenie właściciela s6: **max 10 agentów, wszystkie Fable 5.2**, mocny skok jakości wyglądu. Limit 5 h: reset 01:20 (start s6 0 %).
 - Zgłoszenia właściciela s6: (1) HUD na Fold 8 Ultra (ekran ~1:1) rozjechany, ustawienia ucięte → ADR 0079; (2) film jazdy `Screen_Recording_20261110_210126_Kamion.mp4` (127 s, klatki `artifacts/owner/fold-video-2026-11-10/`): brak ogranicznika (95–105 km/h), koniec świata ~116 s — biała pustka, spadek do 179 km/h, kamera w desce; przejazd po wyspie ronda Bieżeństwa ~30 s → ADR 0082.
 - Nowe worktree agentów: Data/raw/derived ma być KOPIĄ (robocopy), nie junction — inaczej build_world nadpisuje main.
-- Ostatni przydzielony ADR: **0082**.
+- Ostatni przydzielony ADR: **0082**. D45 Fab (Megascans + CC BY, pliki poza gitem) — przyjęta; właściciel pobiera na koncie Epic do 12.11. 0066 scalone; pusty katalog worktree agent-ab1fb0a47d2f0a491 (kopie Data/raw) do ręcznego usunięcia.
+- Dodatkowe zgłoszenia właściciela s6 przekazane: latarnia na lewym pasie estakady (~93–100 s) i krawężnik w poprzek jezdni (~105–112 s) → 0076; szlaban Kwadrat Park nie otwiera się, brak kolizji → 0071.
 
 | zadanie | model | ADR | worktree / gałąź | dowody | stan |
 |---|---|---|---|---|---|
@@ -17,7 +18,7 @@
 | auta r10 (lampy, płatek, LOD2) | Fable | 0078 | nowy | artifacts/cars-r10 | w toku |
 | oświetlenie/atmosfera r10 + warianty ekspozycji ov | Fable | 0080 | nowy | artifacts/light-r10 | w toku |
 | zabudowa typologia r10 | Fable | 0081 | nowy | artifacts/buildings-r10 | w toku |
-| licencja Fab/Patch + dokończenie refs 0066 | Fable | 0066 | agent-ab1fb0a47d2f0a491 | docs/reports/FAB-PATCH-LICENSE-2026-11-10.md | w toku |
+| licencja Fab/Patch + refs 0066 | Fable | 0066 | usunięty | docs/reports/FAB-PATCH-LICENSE-2026-11-10.md | SCALONE |
 | ogranicznik 90, koniec świata, kamera, rondo (film Fold) | Fable | 0082 | nowy | artifacts/drive-fold-r10 | w toku |
 
 ## Następne kroki
