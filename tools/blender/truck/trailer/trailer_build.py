@@ -88,10 +88,12 @@ def smooth01(e0, e1, x):
 
 # ---------------------------------------------------------------- authoring materials
 def _grime(nt, b, rgb, rough, h0=1.2, amount=0.6, film=0.0, streak=0.0, back=0.0, spray=0.0, cav=0.8,
-           dust=(0.15, 0.135, 0.11)):
+           dust=(0.15, 0.135, 0.11), band=0.0, band_z0=0.0):
     """M.grime + tyre spray over the tridem (y between the first-axle front and the last-axle rear, low z):
     the spray term is added to the same grime factor so the A6 bake (labels grime_mix / grime_rough) sees it."""
     f = M.grime(nt, b, rgb, rough, h0=h0, amount=amount, film=film, streak=streak, back=back, cav=cav, dust=dust)
+    if band > 0:
+        f = _road_band(nt, band, band_z0)
     if spray <= 0:
         return f
     mix = next(n for n in nt.nodes if n.label == "grime_mix")
@@ -121,6 +123,40 @@ def _grime(nt, b, rgb, rough, h0=1.2, amount=0.6, film=0.0, streak=0.0, back=0.0
     return tot
 
 
+def _road_band(nt, band, z0):
+    """Road film on the lowest 0.6 m of a surface that starts at z0 (curtain hem): the spray mist from the tractor
+    drive axle and the own tridem settles as a soft band with an uneven upper edge, streaky along y (airflow),
+    denser towards the rear (wake). Added to the grime factor like the spray term (the A6 bake sees it)."""
+    mix = next(n for n in nt.nodes if n.label == "grime_mix")
+    rr = next(n for n in nt.nodes if n.label == "grime_rough")
+    geo = M.N(nt, "ShaderNodeNewGeometry")
+    sep = M.N(nt, "ShaderNodeSeparateXYZ")
+    M.L(nt, geo.outputs["Position"], sep.inputs[0])
+    sc = M.N(nt, "ShaderNodeVectorMath", _operation="MULTIPLY")
+    sc.inputs[1].default_value = (3.0, 0.35, 7.0)          # long along y (airflow), tight in z
+    M.L(nt, geo.outputs["Position"], sc.inputs[0])
+    n = M.N(nt, "ShaderNodeTexNoise", Scale=2.2, Detail=10.0, Roughness=0.68)
+    M.L(nt, sc.outputs[0], n.inputs["Vector"])
+    top = M.math_node(nt, "ADD", z0 + 0.30, M.math_node(nt, "MULTIPLY", n.outputs["Fac"], 0.45))
+    hz = M.math_node(nt, "DIVIDE", M.math_node(nt, "SUBTRACT", top, sep.outputs[2]), 0.45, clamp=True)
+    hz = M.math_node(nt, "POWER", hz, 1.6)
+    rw = M.math_node(nt, "ADD", 0.45, M.math_node(nt, "MULTIPLY", M.math_node(
+        nt, "DIVIDE", M.math_node(nt, "SUBTRACT", Y_FRONT, sep.outputs[1]), LEN, clamp=True), 0.55))
+    n2 = M.N(nt, "ShaderNodeTexNoise", Scale=11.0, Detail=8.0, Roughness=0.62)
+    M.L(nt, geo.outputs["Position"], n2.inputs["Vector"])
+    m2 = M.N(nt, "ShaderNodeMapRange", **{"From Min": 0.30, "From Max": 0.66, "To Min": 0.35})
+    M.L(nt, n2.outputs["Fac"], m2.inputs["Value"])
+    s = M.math_node(nt, "MULTIPLY", M.math_node(nt, "MULTIPLY", hz, rw),
+                    M.math_node(nt, "MULTIPLY", m2.outputs[0], band * M.PARAMS["dirt"]))
+    old = mix.inputs[0].links[0].from_socket
+    tot = M.math_node(nt, "ADD", old, s, clamp=True)
+    M.L(nt, tot, mix.inputs[0])
+    r_in = rr.inputs[0].links[0].from_socket if rr.inputs[0].links else None
+    if r_in is not None:
+        M.L(nt, M.math_node(nt, "ADD", r_in, M.math_node(nt, "MULTIPLY", s, 0.30)), rr.inputs[0])
+    return tot
+
+
 def materials():
     """Trailer authoring library on top of the TRAKT library (rubber, chassis, steel, lenses, plate, ...)."""
     M.build_library("white")
@@ -132,13 +168,15 @@ def materials():
     # curtain: PVC-coated polyester ~900 g/m2, satin; albedo white (tinted in game by _CurtainColor)
     m, nt, b = P("curtain_pvc", "CURTAIN", (0.80, 0.80, 0.80), 0.55, spec=0.45)
     b.inputs["Sheen Weight"].default_value = 0.15
-    _grime(nt, b, (0.80, 0.80, 0.80), 0.55, h0=2.1, amount=0.45, film=1.3, streak=1.15, cav=1.3, spray=1.7)
+    _grime(nt, b, (0.80, 0.80, 0.80), 0.55, h0=2.1, amount=0.45, film=1.3, streak=1.15, cav=1.3, spray=1.7,
+           dust=(0.17, 0.15, 0.12), band=0.9, band_z0=CURT_Z0)
     m, nt, b = P("roof_tarp", "CURTAIN", (0.80, 0.80, 0.80), 0.62)
     _grime(nt, b, (0.80, 0.80, 0.80), 0.62, h0=5.0, amount=0.25, cav=0.6)
     # webbing straps welded to the curtain: same coated fabric, a shade darker (tinted with the curtain in game)
     m, nt, b = P("strap", "CURTAIN", (0.52, 0.52, 0.52), 0.68, spec=0.35)
     M.micro_bump(nt, b, 900.0, 0.3, 0.0003)
-    _grime(nt, b, (0.52, 0.52, 0.52), 0.68, h0=2.0, amount=0.7, film=1.0, streak=0.5, spray=1.2)
+    _grime(nt, b, (0.52, 0.52, 0.52), 0.68, h0=2.0, amount=0.7, film=1.0, streak=0.5, spray=1.2,
+           band=0.9, band_z0=CURT_Z0)
     # galvanised steel (lock bars, portal, hinges, buckles, side guard brackets): spangle + white rust spots
     rgb = (0.52, 0.53, 0.53)
     m, nt, b = P("galv", "METAL", rgb, 0.42, metal=0.85)
@@ -152,7 +190,13 @@ def materials():
     rgb = (0.55, 0.56, 0.57)
     m, nt, b = P("steel_wheel", "METAL", rgb, 0.40, metal=0.45, coat=0.2)
     # brake dust + rust bloom round the hand holes and nuts (cavity term), road film low down
-    _grime(nt, b, rgb, 0.40, h0=1.2, amount=2.1, dust=(0.085, 0.060, 0.038), film=1.0, cav=2.6)
+    _grime(nt, b, rgb, 0.40, h0=1.2, amount=1.6, dust=(0.060, 0.045, 0.032), film=1.0, cav=2.6)
+    # hub barrel + bearing cover: cast steel, dark grey paint; grease weep and brake dust darken it (on a working
+    # trailer the hub reads dark, not beige)
+    rgb = (0.060, 0.061, 0.063)
+    m, nt, b = P("hub_cast", "METAL", rgb, 0.48, metal=0.55)
+    M.micro_bump(nt, b, 180.0, 0.10, 0.0003)
+    _grime(nt, b, rgb, 0.48, h0=1.2, amount=0.9, dust=(0.035, 0.028, 0.022), cav=1.8)
     # black chassis paint, heavier road dirt than the tractor (no mudguard spray guard over the frame)
     rgb = (0.022, 0.022, 0.023)
     m, nt, b = P("trl_chassis", "TRIM", rgb, 0.5)
@@ -391,11 +435,13 @@ def frame():
         r = extrude_poly(f"side_rail_{s}", pts, LEN - 0.02, "trl_chassis", plane="XZ",
                          origin=(0, Y_FRONT - 0.01, 0), normal_sign=-1)
         r.data.shade_flat()
-        # contour marking: broken yellow line on the rail face (ECE R48/R104, WORKING_VALUE layout)
+        # side line marking (UN R48 6.21, UN R104 class C retro-reflective tape, yellow, 50 mm) along the rail face,
+        # interrupted only where the curtain buckles hook under the rail (90 mm gaps at the straps): the elements
+        # cover ~85 % of the body length (R48 6.21.4: >= 80 % - UNVERIFIED, regulation text not opened here)
         st = strap_positions()
-        for k in range(0, len(st) - 1, 2):
-            box_mm(f"contour_side_{s}_{k}", s * (RAIL_OUT + 0.0008), s * (RAIL_OUT + 0.0018), st[k + 1] + 0.05,
-                   st[k] - 0.05, 1.125, 1.175, "reflex_yellow")
+        for k in range(len(st) - 1):
+            box_mm(f"contour_side_{s}_{k}", s * (RAIL_OUT + 0.0008), s * (RAIL_OUT + 0.0018), st[k + 1] + 0.045,
+                   st[k] - 0.045, 1.125, 1.175, "reflex_yellow")
         # lashing pockets under the rail lip (every ~0.6 m)
         for j in range(21):
             yy = Y_FRONT - 0.5 - j * 0.62
@@ -511,17 +557,18 @@ def wheel(name, xc, ya, out, seg=48):
     for j in range(10):
         a = 2 * math.pi * j / 10
         p = (xf + out * 0.016, ya + PCD_R * math.cos(a), WC + PCD_R * math.sin(a))
-        cyl(f"{name}_nut{j}", p, 0.0165, 0.030, "steel", seg=6, axis="X")
-        # loose-wheel-nut indicators (moulded orange arrows), every nut, pointing tangentially
-        if True:
-            t = V((0, -math.sin(a), math.cos(a)))
-            q = V(p) + V((out * 0.012, 0, 0))
-            tip = q + t * 0.055
-            rod(f"{name}_nutind{j}", tuple(q), tuple(tip), 0.007, "coupling_yellow", seg=4)
-    # bearing cover: short flat-faced dome (not a chrome bulb)
-    lathe(name + "_hubcap", [(0.092, 0.0), (0.092, 0.035), (0.084, 0.058), (0.060, 0.068), (0.0, 0.070)],
-          V((xf, ya, WC)), "galv", seg=24, side=out, sharp=40)
-    cyl(f"{name}_hubcap_plug", (xf + out * 0.072, ya, WC), 0.016, 0.008, "steel", seg=6, axis="X")
+        # M22x1.5 flange nut (32 mm hex + captive washer) on a stud protruding ~12 mm. No loose-nut indicators:
+        # rare on PL fleets, and at game distance they read as yellow sticks
+        cyl(f"{name}_nutwasher{j}", (xf + out * 0.003, p[1], p[2]), 0.0205, 0.006, "steel", seg=12, axis="X")
+        cyl(f"{name}_nut{j}", p, 0.0165, 0.026, "steel", seg=6, axis="X")
+        cyl(f"{name}_stud{j}", (xf + out * 0.034, p[1], p[2]), 0.0095, 0.012, "hub_cast", seg=8, axis="X")
+    # hub barrel visible inside the disc centre bore (dark cast steel)
+    cyl(f"{name}_hub", (xf - out * 0.004, ya, WC), 0.108, 0.020, "hub_cast", seg=24, axis="X")
+    # bearing cover: short flat-faced dome with a hex boss (cast, dark: not a chrome bulb, not beige)
+    lathe(name + "_hubcap", [(0.090, 0.0), (0.090, 0.030), (0.084, 0.050), (0.066, 0.062), (0.040, 0.066),
+                             (0.0, 0.066)], V((xf, ya, WC)), "hub_cast", seg=24, side=out, sharp=40)
+    cyl(f"{name}_hubcap_hex", (xf + out * 0.074, ya, WC), 0.026, 0.016, "hub_cast", seg=6, axis="X")
+    cyl(f"{name}_hubcap_plug", (xf + out * 0.083, ya, WC), 0.010, 0.004, "steel", seg=8, axis="X")
 
 
 def wheels():
@@ -749,6 +796,12 @@ def rear_portal_and_doors():
         part("CHASSIS", "body")
     box_mm("rear_header", -POST_IN, POST_IN, yo, yo + 0.12, DOOR_Z1 + 0.01, ROOF - 0.005, "galv", bev=0.006)
     box_mm("contour_rear_header", -1.10, 1.10, yo - 0.0012, yo - 0.0002, 3.905, 3.955, "reflex_red")
+    # lower horizontal of the rear full contour (UN R48 6.21: full contour at the rear of O3/O4 wider than 2.10 m),
+    # red on the sill face, broken at the 4 door keepers
+    xs = [-1.17, -0.90, -0.82, -0.30, -0.22, 0.22, 0.30, 0.82, 0.90, 1.17]
+    for j in range(0, len(xs), 2):
+        box_mm(f"contour_rear_sill_{j}", xs[j], xs[j + 1], Y_REAR + 0.0105, Y_REAR + 0.0118, 1.17, 1.22,
+               "reflex_red")
     for s, sd in ((1, "RR"), (-1, "RL")):
         part(f"DOOR_{sd}", "body")
         x0, x1 = s * 0.003, s * (POST_IN - 0.004)
@@ -951,6 +1004,20 @@ def curtain_offset(y, z, bays, hi=False):
     return off
 
 
+def curtain_lift(y, z, bays):
+    """Vertical hem scallop: each ratchet pulls the hem down at its strap; between two buckles the tensioned fabric
+    rides up as a shallow catenary (8-15 mm at mid bay, fading out 0.55 m above the hem)."""
+    ys = bays["ys"]
+    k = 0
+    while k < len(ys) - 2 and y < ys[k + 1]:
+        k += 1
+    ya, yb = ys[k], ys[k + 1]
+    t = min(max((ya - y) / (ya - yb), 0.0), 1.0) if ya != yb else 0.0
+    end = k == 0 or k == len(ys) - 2       # front post / rear pole bays are held along their edge
+    rise = (0.0 if end else bays["lift"][k]) * math.sin(math.pi * t) ** 1.4
+    return rise * (1.0 - smooth01(CURT_Z0, CURT_Z0 + 0.55, z))
+
+
 def soft_cap(off, lim=HW - 0.0015 - CURT_X):
     """Keep the fabric inside the 2.55 m envelope: outward offsets saturate smoothly at lim (tanh)."""
     return lim * math.tanh(off / lim) if off > 0 else off
@@ -963,7 +1030,8 @@ def curtain_side(s, sd, hi=False):
     rng = random.Random(77 + (s > 0))
     bays = {"ys": ys, "straps": straps, "strapset": set(straps), "amp": [(0.013 + 0.007 * rng.random()) for _ in ys],
             "folds": [rng.choice((2, 3, 3, 4)) for _ in ys], "fphi": [rng.random() * 6.28 for _ in ys],
-            "phi": rng.random() * 6.28, "fan": [0.6 + 0.6 * rng.random() for _ in range(7)]}
+            "phi": rng.random() * 6.28, "fan": [0.6 + 0.6 * rng.random() for _ in range(7)],
+            "lift": [0.008 + 0.007 * rng.random() for _ in ys]}
     bays["amp"][0] *= 0.6
     bays["amp"][-2] *= 0.6
     nseg = 22 if hi else 8
@@ -990,7 +1058,8 @@ def curtain_side(s, sd, hi=False):
     for p in range(4):
         sl = yl[cuts[p]: cuts[p + 1] + 1]
         # low mesh carries the folds too (one shared shape function): the normal map holds only the residual
-        rows = [[V((s * (CURT_X + soft_cap(curtain_offset(y, z, bays, True))), y, z)) for y in sl] for z in zl]
+        rows = [[V((s * (CURT_X + soft_cap(curtain_offset(y, z, bays, True))), y, z + curtain_lift(y, z, bays)))
+                 for y in sl] for z in zl]
         nm = f"curtain{'_hi' if hi else ''}_{sd}_{p}"
         ob = sheet(nm, rows, "curtain_pvc", flip=(s > 0), smooth=True, sharp=None)
         if hi:
