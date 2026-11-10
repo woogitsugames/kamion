@@ -114,12 +114,13 @@ namespace Game.Editor.VisualQA
                 return a;
             }
 
-            // Ground = terrain + road surface colliders only (not buildings / kerbs / steel), highest surface below the probe.
+            // Ground = terrain + road surface + kerb colliders only (not buildings / steel), highest surface below the probe.
             var ground = new List<Collider>();
             foreach (var col in UnityEngine.Object.FindObjectsByType<Collider>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
             {
                 string n = col.gameObject.name;
-                if (n == "col_terrain" || n == "col_asphalt" || n == "col_paving_stones" || n == "col_grass" || n == "col_concrete") ground.Add(col);
+                // kerb tops / raised island tops are ground a pole stands on (C-9 posts on splitter islands, lamps behind a kerb)
+                if (n == "col_terrain" || n == "col_asphalt" || n == "col_paving_stones" || n == "col_grass" || n == "col_concrete" || n == "col_concrete_kerb") ground.Add(col);
             }
             var groundSet = new HashSet<Collider>(ground);
             Physics.queriesHitBackfaces = true;   // the cooked collision meshes may be wound for the road normal; accept either side
@@ -302,7 +303,7 @@ namespace Game.Editor.VisualQA
                 $"{{\"name\":{J(s.name)},\"path\":{J(s.path)},\"vertices\":{s.verts},\"submeshes\":{s.subs},\"has_normals\":{(s.normals ? "true" : "false")},\"has_uv0\":{(s.uv0 ? "true" : "false")},\"nan_vertices\":{s.nan},\"textured_without_uv0\":{(s.texturedNoUv ? "true" : "false")},\"degenerate_tris\":{s.degenerate}}}")));
             sb.Append($"\n],\n\"mesh_summary\":{{\"checked\":{meshInfo.Count},\"missing_normals\":{meshInfo.Values.Count(s => !s.normals)},\"missing_uv0\":{meshInfo.Values.Count(s => !s.uv0)},\"nan\":{meshInfo.Values.Count(s => s.nan > 0)},\"unreadable_by_api\":{meshInfo.Values.Count(s => s.apiFailed)}}},\n");
             sb.Append($"\"ground_check\":{{\"probe\":{J(probe)},\"ground_colliders\":{ground.Count},\"renderers_checked\":{objChecked},\"renderers_merged_skipped\":{objMerged},\"renderers_no_ground\":{objNoGround},\"renderers_floating\":{objFloating},\"renderers_sunk\":{objSunk},\"instances_probed\":{instChecked},\"instances_no_ground\":{instNoGround},\"instances_floating\":{instFloating},\"instances_sunk\":{instSunk},\"tolerance\":{{\"float_m\":0.30,\"sunk_m\":0.60,\"note\":\"WORKING_VALUE; ground = terrain+road surface colliders; floating = lowest point above the surface below it (renderers: all 5 probes); sunk = ground above the lowest point and nothing below\"}}}},\n");
-            sb.Append("\"offenders\":[\n" + string.Join(",\n", offenders.OrderByDescending(o => Mathf.Abs(o.dy)).Take(60).Select(o =>
+            sb.Append("\"offenders\":[\n" + string.Join(",\n", offenders.GroupBy(o => o.name).SelectMany(g => g.OrderByDescending(o => Mathf.Abs(o.dy)).Take(6)).OrderByDescending(o => Mathf.Abs(o.dy)).Take(150).Select(o =>
                 $"{{\"kind\":{J(o.kind)},\"name\":{J(o.name)},\"dy_m\":{F(o.dy)},\"pos\":[{F(o.pos.x)},{F(o.pos.y)},{F(o.pos.z)}],\"detail\":{J(o.detail)}}}")) + "\n],\n");
             sb.Append("\"prototype_ground\":[" + string.Join(",", protoRows.Values.OrderByDescending(r => r.floating + r.sunk).Select(r => $"{{\"name\":{J(r.name)},\"probed\":{r.n},\"floating\":{r.floating},\"sunk\":{r.sunk},\"mean_bottom_above_ground_m\":{F(r.n > 0 ? r.sumDy / r.n : 0)},\"max_bottom_above_ground_m\":{F(r.maxDy)},\"max_sunk_depth_m\":{F(r.maxSunkDepth)}}}")) + "],\n");
             sb.Append("\"instances_by_prototype\":{" + string.Join(",", instByProto.OrderByDescending(kv => kv.Value).Select(kv => $"{J(kv.Key)}:{kv.Value}")) + "}\n}\n");

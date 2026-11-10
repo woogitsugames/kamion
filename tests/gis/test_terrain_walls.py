@@ -10,9 +10,9 @@ import pytest
 from conftest import REGION_DIR
 
 QA = REGION_DIR / "generated" / "terrain_walls_qa.json"
-RATCHET = {"skirt:j:road_asphalt": 79, "skirt:j:road_concrete": 1, "skirt:j:road_paving": 5,
-           "skirt:yard_asphalt": 1, "skirt:yard_concrete": 8, "skirt:yard_slabs": 1,
-           "steep_grass:verge_grass": 8}     # 103 points, build of 2026-11-10
+RATCHET = {"skirt:j:road_asphalt": 1,
+           "skirt:yard_asphalt": 1, "skirt:yard_concrete": 3, "skirt:yard_slabs": 1,
+           "steep_grass:verge_grass": 8}     # 14 points, build of 2026-11-10 (v3.5.2: faces < 0.15 m thick are slivers)
 
 
 def test_no_vertical_terrain_walls():
@@ -26,6 +26,8 @@ def test_no_vertical_terrain_walls():
         assert cat in RATCHET, f"new wall category {cat} ({n} points), worst {q['worst'][:5]}"
         assert n <= RATCHET[cat], f"{cat}: {n} wall points > {q['thresh_m']} m (ratchet {RATCHET[cat]})"
     assert q["count"] <= sum(RATCHET.values())
+    # every remaining wall is listed with its exposed face area (real wall vs sliver, ADR 0033 v3.5.2)
+    assert "skirt_area" in q and "thin_steep_faces_skipped" in q
 
 
 def test_marking_paint_is_worn():

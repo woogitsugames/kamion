@@ -129,8 +129,10 @@ def lamp_old(h, kind):
 
 def sign_post():
     m, l1, col = Mesh(), Mesh(), Mesh()
-    m.tube("steel_galv", [0, 0, -0.3], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 10)
-    l1.tube("steel_galv", [0, 0, -0.3], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 4)
+    # embed 0.1 of the unit post: the instance scales z by its height (sz up to ~5), a -0.3 embed became 1.1-1.5 m
+    # below the base and the gate 3 audit read the posts as buried 0.85 m (Rondo Bieżeństwa / Putry approaches)
+    m.tube("steel_galv", [0, 0, -0.1], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 10)
+    l1.tube("steel_galv", [0, 0, -0.1], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 4)
     col.tube("collision_steel", [0, 0, 0], [0, 0, 1.0], 0.05, None, 4)
     return m, l1, col
 

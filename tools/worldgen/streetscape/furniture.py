@@ -40,7 +40,8 @@ from roads.network import MEDIAN_RURAL, RURAL, URBAN, side_params, side_extent
 # 0.44 m in the air, sign posts buried > 0.6 m); the part on the high side goes into the ground like a real foundation.
 SEATED_POLES = ("lamp_", "signal_mast", "signal_pole", "sign_post", "power_pole")
 SEAT_R = 0.35                 # m, footing radius probed (WORKING_VALUE)
-SEAT_TOL = 0.30               # m, an explicit z this far below the local ground is raised to it (gate 3 tolerance)
+SEAT_MAX_BURY = 0.40          # m, deepest the pole axis is set below the surface at its centre (WORKING_VALUE)
+SEAT_TOL = 0.30              # m, an explicit z this far below the local ground is raised to it (gate 3 tolerance)
 
 RANK = {"A": 0, "S": 1, "GP": 2, "G": 3, "Z": 4, "L": 5, "D": 6}
 
@@ -54,13 +55,102 @@ def yaw_of(f):
     return math.atan2(f[1], f[0]) - math.pi / 2
 
 
+class SurfaceTop:
+    """Exact top of the generated ground meshes (road + paved layers: carriageway, kerb tops, island tops, aprons,
+    footways, verges, yards) at plan points. The 1 m raster `zsurf` blends an island top with the carriageway and
+    the terrain beside it, which left lamps 0.35 m in the air and C-9 posts on splitter islands buried 0.86 m
+    (gate 3 audit). Upward faces only (|n.z| >= 0.5); bridge decks are a separate layer and are not sampled."""
+    CELL = 4.0
+
+    def __init__(self, parts, collision=False):
+        tris = []
+        for p in parts:
+            if collision:                 # the smooth collision surfaces (4 m stations) the player and the audit stand on
+                if p.layer != "collision" or p.mat not in ("collision_asphalt", "collision_curb", "collision_paving",
+                                                             "collision_grass"):
+                    continue
+            elif p.layer not in ("road", "paved") or p.mat.startswith("collision") or p.mat.startswith("marking"):
+                continue
+            A = p.V[p.T]
+            nrm = np.cross(A[:, 1] - A[:, 0], A[:, 2] - A[:, 0])
+            ln = np.linalg.norm(nrm, axis=1)
+            ok = (ln > 1e-9) & (np.abs(nrm[:, 2]) >= 0.5 * np.maximum(ln, 1e-12))
+            if ok.any():
+                tris.append(A[ok])
+        self.A = np.concatenate(tris) if tris else np.zeros((0, 3, 3))
+        self.grid = {}
+        if not len(self.A):
+            return
+        lo = np.floor(self.A[:, :, :2].min(1) / self.CELL).astype(int)
+        hi = np.floor(self.A[:, :, :2].max(1) / self.CELL).astype(int)
+        for t, (a, b) in enumerate(zip(lo, hi)):
+            for i in range(a[0], b[0] + 1):
+                for j in range(a[1], b[1] + 1):
+                    self.grid.setdefault((i, j), []).append(t)
+
+    def top(self, e, n, below=None):
+        """highest surface at (e, n) (optionally only surfaces <= below), NaN where no ground mesh covers it"""
+        ids = self.grid.get((int(math.floor(e / self.CELL)), int(math.floor(n / self.CELL))))
+        if not ids:
+            return float("nan")
+        A = self.A[ids]
+        a, b, c = A[:, 0], A[:, 1], A[:, 2]
+        d = (b[:, 1] - c[:, 1]) * (a[:, 0] - c[:, 0]) + (c[:, 0] - b[:, 0]) * (a[:, 1] - c[:, 1])
+        ok = np.abs(d) > 1e-12
+        d = np.where(ok, d, 1.0)
+        l1 = ((b[:, 1] - c[:, 1]) * (e - c[:, 0]) + (c[:, 0] - b[:, 0]) * (n - c[:, 1])) / d
+        l2 = ((c[:, 1] - a[:, 1]) * (e - c[:, 0]) + (a[:, 0] - c[:, 0]) * (n - c[:, 1])) / d
+        l3 = 1.0 - l1 - l2
+        eps = -1e-6
+        inside = ok & (l1 >= eps) & (l2 >= eps) & (l3 >= eps)
+        if not inside.any():
+            return float("nan")
+        z = l1 * a[:, 2] + l2 * b[:, 2] + l3 * c[:, 2]
+        z = z[inside]
+        if below is not None:
+            z = z[z <= below]
+            if not len(z):
+                return float("nan")
+        return float(z.max())
+
+
+# footing radius per pole family (m): the part of the footprint that must stand on the surface
+FOOT_R = {"lamp_": 0.25, "signal_mast": 0.30, "signal_pole": 0.10, "sign_post": 0.04, "power_pole": 0.15}
+
+
 class Placer:
-    def __init__(self, zsurf, zground=None):
+    def __init__(self, zsurf, zground=None, surf=None, col=None):
+        self.col = col                  # SurfaceTop of the collision surfaces (coarser: may lie under the visual top)
         self.zground = zground          # conformed terrain (= the collision under verges and footway edges)
+        self.surf = surf                # SurfaceTop of the generated ground meshes (exact kerb / island tops)
         self.items = []
         self.zsurf = zsurf
         self.reseated = 0
+        self.seat_log = []
         self.pts = {}
+
+    def seat(self, proto, p):
+        """Base height of a ground-standing pole: the actual surface under its footing (mesh top: island / kerb /
+        footway / verge / yard, else the conformed terrain), lowest of the centre + 4 footing points so no part of
+        the base hangs in the air; the high side goes into the ground like a foundation. Returns (z, step)."""
+        r = next((v for k, v in FOOT_R.items() if proto.startswith(k)), SEAT_R)
+        e = np.array([p[0], p[0] + r, p[0] - r, p[0], p[0]])
+        n = np.array([p[1], p[1], p[1], p[1] + r, p[1] - r])
+        zt = self.zground(e, n) if self.zground is not None else self.zsurf(e, n)
+        z = []
+        for k in range(5):
+            m = self.surf.top(float(e[k]), float(n[k])) if self.surf is not None else float("nan")
+            if self.col is not None:     # never above the collision the pole is audited / driven against
+                c = self.col.top(float(e[k]), float(n[k]), below=(m + 0.05) if math.isfinite(m) else None)
+                if math.isfinite(c) and (not math.isfinite(m) or c < m):
+                    m = c
+                elif not math.isfinite(c) and math.isfinite(m):   # no collision here (verge ribbon): terrain collider
+                    m = min(m, float(zt[k]))
+            z.append(m if math.isfinite(m) else float(zt[k]))
+        # on a ditch / embankment slope the footing reaches down to the low side, but the axis never goes more than
+        # SEAT_MAX_BURY into the ground at its centre (a 12 m lamp 1.6 m shorter reads wrong; audit sunk tolerance 0.6)
+        zs = max(min(z), z[0] - SEAT_MAX_BURY)
+        return float(zs), float(max(z) - min(z))
 
     def near(self, group, p, r):
         for q in self.pts.get(group, []):
@@ -81,8 +171,13 @@ class Placer:
 
     def add(self, proto, p, yaw, z=None, sz=1.0, src="", group=None):
         if proto.startswith(SEATED_POLES):
-            # sign posts stand in paved islands / footways (terrain 0.35 m under them): surface only (audit: 20 sunk)
-            zg = self.ground_min(p, on_verge=not proto.startswith("sign_post"))
+            if self.surf is not None:
+                zg, step = self.seat(proto, p)
+                if step > 0.05:
+                    self.seat_log.append({"p": proto, "e": round(float(p[0]), 1), "n": round(float(p[1]), 1),
+                                          "step_m": round(step, 3)})
+            else:   # legacy raster seat (no meshes)
+                zg = self.ground_min(p, on_verge=not proto.startswith("sign_post"))
             if z is None or z < zg - SEAT_TOL:          # an explicit z above the ground is a bridge deck: kept
                 if z is not None:
                     self.reseated += 1
@@ -134,7 +229,8 @@ def clear_carriageway(pl, carriage, zsurf, report):
             left.append({"p": base[0]["p"], "at": [round(e, 1), round(n, 1)], "src": base[0].get("src", "")})
             drop.update(id(it) for it in items)      # a pole in the middle of a lane is worse than a missing one
             continue
-        z0 = pl.ground_min(new) if base[0]["p"].startswith(SEATED_POLES) else \
+        z0 = (pl.seat(base[0]["p"], new)[0] if pl.surf is not None else pl.ground_min(new)) \
+            if base[0]["p"].startswith(SEATED_POLES) else \
             float(zsurf(np.array([new[0]]), np.array([new[1]]))[0])
         dz = z0 - base[0]["z"]
         for it in items:

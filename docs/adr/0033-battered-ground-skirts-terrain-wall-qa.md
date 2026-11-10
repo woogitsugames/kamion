@@ -49,3 +49,25 @@ terrain. Two causes in the rural ditch profile:
   draws, a few % more skirt overdraw where it is visible (estimate, UNVERIFIED on the A16).
 - Open: streaks under hall parapets and sectional door frames / bumpers at the player's start frame (W-H1 remainder),
   6×6 m concrete slabs only where BDOT10k says `beton` (Kwadrat Park yard is block paving in BDOT10k).
+
+## Addendum (v3.5.2): junction "walls" were slivers; poles seated on the mesh surface
+7. Plan-area log (`terrain_walls_qa.json` -> `skirt_area`: per source exposed face m², horizontal run, max h). 84 of the
+   85 junction points (`j:<node>`) came from Delaunay fill triangles whose 3 vertices lie on one gutter line: 12-266 m
+   runs, 1-3 cm wide, hidden under the kerb face. A face thinner than the threshold (2·area / longest edge < 0.15 m)
+   cannot show a wall taller than 0.15 m, so the QA skips it (`thin_steep_faces_skipped`, 130 faces on 2026-11-10).
+   The same rule removed 5 yard-edge points (8 -> 3 concrete). Ratchet 103 -> 14: 1 junction, 6 yard skirts,
+   8 steep verge faces. Open: `j:n1847044961` (Rondo Putry, e -578 n 85): a 23 m fill triangle 0.16 m thick along a
+   gutter with a vertical curve (a 0.14 m fin / dip at the kerb); an inner point ring for the Delaunay fill did not
+   remove it and was reverted (route patch tessellation unchanged).
+8. Ground-standing poles (lamps, signal poles / masts, sign posts, power poles) are seated on the exact top of the
+   generated ground meshes (road + paved layers: carriageway, kerb top, island top, apron, footway, verge, yard;
+   `streetscape.furniture.SurfaceTop`) instead of the 1 m raster, lowest of the centre + 4 footing points at the
+   family's footing radius (lamp 0.25 m, sign post 0.04 m), the axis at most 0.40 m below the centre surface
+   (`SEAT_MAX_BURY`, WORKING_VALUE), never above the collision surface there (or the terrain collider where only a
+   visual verge ribbon covers the point). Footing steps > 5 cm are logged (`streetscape_qa.json` -> `pole_footing_steps`).
+   The sign post prototype embeds 0.1 instead of 0.3 of its unit height: instances scale z by the post height
+   (`sz` 3-5), so the old embed put the bottom 1.1-1.5 m under the base and the audit read the A-7 / C-12 / E-1 posts at
+   the Bieżeństwa and Putry approaches as buried 0.85 m.
+9. The gate 3 audit counts kerb colliders (`col_concrete_kerb`) as ground: kerb and raised island tops are what a
+   C-9 post on a splitter island or a lamp behind the kerb stands on. Offenders are listed up to 6 per prototype
+   (the 60 largest were all plates / signal heads exempt by design, hiding the lamps).

@@ -20,6 +20,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import sys
 import time
 from pathlib import Path
@@ -628,6 +629,11 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
     walls = CF.terrain_walls(w.buf.parts, zc, w.hf, mask=mask)
     log("terrain walls > %.2f m:" % walls["thresh_m"], walls["count"], "max", walls["max_m"])
     write_json(gen / "terrain_walls_qa.json", walls)
+    if os.environ.get("WORLDGEN_DUMP_WALLS"):     # debug: ground parts + conformed terrain for offline wall analysis
+        import pickle
+        keep = [(p.layer, p.mat, p.src, p.V, p.T) for p in w.buf.parts if p.layer in ("road", "paved")]
+        with open(os.environ["WORLDGEN_DUMP_WALLS"], "wb") as fh:
+            pickle.dump({"parts": keep, "zc": zc, "mask": mask, "x0": w.hf.x0, "y1": w.hf.y1}, fh)
     np.save(out_root / "terrain_conformed.npy", zc.astype(np.float32))
     log("done")
     return w, manifest, qa
