@@ -347,7 +347,32 @@ def cab_shell():
     sh.data.shade_smooth()
     if hasattr(sh.data, "set_sharp_from_angle"):
         sh.data.set_sharp_from_angle(angle=math.radians(50))
+    cab_floor_pan()
     return sh
+
+
+FLOOR_PAN_DZ = 0.025     # m above the cab's lower edge (interior floor slab underside: +0.075 m)
+
+
+def cab_floor_pan():
+    """r7c (ADR 0047): underside of the cab. The shell is a tube without a bottom; through the 15 mm tilt joint
+    between the cab and the frame-mounted fairing a low camera in front of the truck looked up at the underside of
+    the interior floor slab (front_leak.py, eye front-low: 65 rays). One dark sheet 25 mm above the cab's lower edge,
+    its outline 18 mm inside the skin (within the 30 mm wall), facing down."""
+    z = CAB_Z0 + FLOOR_PAN_DZ
+    ring = CAB.ring(z)
+    xs, ys = [p[0] for p in ring], [p[1] for p in ring]
+    cy = (max(ys) + min(ys)) / 2
+    fx = 1.0 - 0.018 / max(xs)
+    fy = 1.0 - 0.018 / ((max(ys) - min(ys)) / 2)
+    pts = [(x * fx, cy + (y - cy) * fy) for x, y in ring[::3]]   # chords of the corner arcs lie inside them
+    bm = bmesh.new()
+    bm.faces.new([bm.verts.new((x, y, z)) for x, y in pts])
+    bmesh.ops.triangulate(bm, faces=bm.faces[:])
+    ob = G.obj_from_bm("cab_floor_pan", bm, "interior", smooth=False)
+    if ob.data.polygons[0].normal.z > 0:
+        ob.data.flip_normals()
+    return ob
 
 
 # ---------------------------------------------------------------- glazing
@@ -509,7 +534,9 @@ def front_face_modern(strokes):
         lane_dash(f"lane_dash{k}", CAB, zc, hgt - 0.016, louvre_mid(hgt) + 0.0015, tilt=LOUVRE_TILT)
     wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=24.0, mat="alu_brushed",
              name="badge_trakt", weight=1.8, depth=0.004, on_face=True, bev=0.0012)
-    CAB.patch("cowl", "plastic_satin", "front", WS_Z0 - 0.082, WS_Z0 - 0.012, -1.21, 1.21, off=0.002, nz=3, npar=48)
+    # r7c: 2 -> 4 mm off the skin. The hidden-face test starts 3 mm above a face, so the paint under a 2 mm cowl
+    # counted as visible, stayed in the mesh and came through the cowl as white shards once LOD2 had collapsed it
+    CAB.patch("cowl", "plastic_satin", "front", WS_Z0 - 0.082, WS_Z0 - 0.012, -1.21, 1.21, off=0.004, nz=3, npar=48)
     wipers()
 
 
@@ -792,6 +819,42 @@ def _wordmark_on_face(strokes, z_c, height, spacing, mat, name, weight, depth, b
                 rot=tilt @ Matrix.Rotation(-ang, 3, "Y"))
 
 
+def wiper_boss(name, px, z, r=0.022, h0=0.0025, h1=0.029, seg=16):
+    """Spindle boss of a wiper: a short drum standing on the cowl along the surface normal (= the sweep axis of
+    WIPER_L / WIPER_R in a6_export.frames), top edge chamfered, no bottom face.
+    r7c (ADR 0047): the old cap was a vertical drum half sunk into the skin (at x -1.00 m the corner slopes away, so
+    its rear and inboard faces lay inside the 30 mm shell). Wipers are moving parts and keep all their faces, and
+    the selected-to-active bake gave those buried faces the colour of the first surface on the ray: the white paint
+    of the shell. 4 of the 12 texel rows of the cap's atlas island were white (sRGB 0.78 beside 0.19); from 12 m
+    the mips blend them and the cap showed as a light block on the dark cowl."""
+    n = CAB.normal_front(WS_Z0, px)          # exactly the sweep axis: the boss turns about itself
+    base = V(CAB.front_pt(z, px, 0.0))
+    t = n.cross(V((0, 0, 1))).normalized()
+    b = t.cross(n).normalized()
+    ch = 0.004
+    prof = [(r, h0), (r, h1 - ch), (r - ch, h1)]
+    bm = bmesh.new()
+    rings = [[bm.verts.new(base + n * h + (t * math.cos(2 * math.pi * i / seg) + b * math.sin(2 * math.pi * i / seg))
+                           * rr) for i in range(seg)] for rr, h in prof]
+    for r0, r1 in zip(rings, rings[1:]):
+        for i in range(seg):
+            bm.faces.new((r0[i], r0[(i + 1) % seg], r1[(i + 1) % seg], r1[i]))
+    bm.faces.new(rings[-1])
+    ob = G.obj_from_bm(name, bm, "plastic_satin", sharp=40)
+    # an open shell: recalc_face_normals may turn it inside out. Outward = away from the axis, +n on the lid
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    for f in bm.faces:
+        c = f.calc_center_median()
+        radial = (c - base) - n * (c - base).dot(n)
+        out = n if radial.length < r * 0.5 else radial
+        if f.normal.dot(out) < 0:
+            f.normal_flip()
+    bm.to_mesh(ob.data)
+    bm.free()
+    return ob
+
+
 def wipers():
     # A6.1 (interior critic r2 #7): parked blades lie on the glass just above the 75 mm bottom frit (frit top 2.135 m),
     # rising 16 mm towards the tip, so the driver sees them along the bottom of the screen as in real cabs (they were
@@ -800,9 +863,7 @@ def wipers():
     for k, (px, length) in enumerate(((-1.00, 0.86), (-0.08, 0.86))):
         y = CAB.front_pt(WS_Z0 + 0.025, px, 0.02)[1]
         p0 = V((px, y + 0.01, WS_Z0 - 0.025))
-        cyl(f"wiper_pivot{k}", (px, CAB.front_pt(WS_Z0 - 0.04, px, 0)[1] + 0.012, WS_Z0 - 0.04), 0.022, 0.03,
-            "plastic_satin",
-            axis="Z", seg=16)
+        wiper_boss(f"wiper_pivot{k}", px, WS_Z0 - 0.04)
         zt = zb0 + rise + 0.018
         tip = V((px + length, CAB.front_pt(zt, px + length, 0.03)[1], zt))
         rod(f"wiper_arm{k}", p0, tip, 0.008, "plastic_satin", seg=8)

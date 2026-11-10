@@ -28,9 +28,10 @@ import check_fit as CF  # noqa: E402
 
 EXT_ORIGIN = (0.0, -3.70, 0.0)
 GRID_Y = 1.40
-# x0, x1, z0, z1 [m] on the plane y = GRID_Y: mask + T bar + corners + cowl, from just above the cab's lower edge
-# (1.225 m; the tilt joint to the bumper below it is not part of the front face) to the windscreen daylight opening
-ZONE = (-1.34, 1.34, 1.25, 1.95)
+# x0, x1, z0, z1 [m] on the plane y = GRID_Y. r7b: mask + T bar + corners + cowl (z 1.25-1.95 m). r7c: the whole
+# front of the cab, from the bumper below the tilt joint (cab lower edge 1.225 m) to the roof: the header above the
+# windscreen and the joint leaked too. Rays through the windscreen do not count (they pass a window).
+ZONE = (-1.34, 1.34, 1.00, 3.72)
 STEP = 0.01
 EYES = {   # A2 frame (y forward, z up, origin under the front axle)
     "truck-34": (-6.8, 7.8, 2.1),

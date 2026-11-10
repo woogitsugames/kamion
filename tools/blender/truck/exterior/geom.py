@@ -508,6 +508,24 @@ class Loft:
         py = cy + (rf + off) * math.cos(a) - extra
         return (sg * px, py, z)
 
+    def front_param(self, z, x, y):
+        """Inverse of front_pt(): (signed parameter along the front / corner surface, offset from it) of the point
+        (x, y) at height z. Vertices of one column of a surface-following grid share the parameter whatever their
+        offset, so a6_export.reduce_grid can index them (r7c)."""
+        yf, yb, w, rf, rb, x0, cyc, th0 = self.plan(z)
+        ax, sg = abs(x), (1 if x >= 0 else -1)
+        cx = w - rf
+        if self.crown:
+            ycr = yf - self.crown
+            if math.atan2(ax, y - ycr) <= th0 + 1e-9:
+                return sg * self.crown * math.sin(math.atan2(ax, y - ycr)), math.hypot(ax, y - ycr) - self.crown
+        elif ax <= x0:
+            return x, y - yf
+        if y >= cyc:
+            a = math.atan2(ax - cx, y - cyc)
+            return sg * (x0 + (a - th0) * rf), math.hypot(ax - cx, y - cyc) - rf
+        return sg * (x0 + rf * (math.pi / 2 - th0) + (cyc - y)), ax - cx - rf
+
     def side_pt(self, z, y, side, off):
         yf, yb, w, rf, rb, x0, cyc, th0 = self.plan(z)
         if y > cyc:

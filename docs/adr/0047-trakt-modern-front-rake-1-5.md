@@ -219,3 +219,51 @@ which is outside git, sha1 58c964b4...; `after-7rays/` = engine frames of the in
   frames it was dark, probably the dash carcass in front of it (not verified). Needs a clean re-bake of that island. (4) Roof marker pockets leak
   (~40 rays, z 3.23-3.53 m, outside the test zone) and the tilt joint under the cab shows the floor slab from below
   (zone starts at 1.25 m): not touched. (5) The LOD2 ray above.
+
+## Addendum r7c (2026-11-10, truck-artist): class VI check, wiper cap, header and joint leaks, LOD1 / LOD2 front - measured, not yet reviewed by `visual-critic`
+Evidence: `artifacts/owner/modern-front/r7c/` (`after/<tier>-<light>/` engine frames + `_mask`, `sheets/` before / after
+against `r7-maskbar/after`, `checks/` validator output, `metrics_{before,after}.txt` from `measure_r7c.py`, `tools/`,
+`export/SM_CabInterior_LOD0.fbx` = the interior LOD0 of this change, outside git).
+- **Class VI front mirror: no geometry change.** After r6 the head (glass centre 0.957 / 1.583 / 2.859 m) hangs below the
+  folded passenger visor in `cab-mirror-front` on all four tier / light frames and shows the cab nose, the asphalt and
+  the kerb. New tool `tools/blender/truck/mirror_field.py`: the field of UN R46 para 15.2.4.6.1 (OJ EU L 237, 8.8.2014,
+  the source ADR 0042 cites: front plane to 2.0 m ahead, driver-side plane to 2.0 m outside the passenger side, far
+  passenger corner rounded R 2.0 m), 1498 road points, through the `MirrorOptics` camera (R 0.30 m) with the own vehicle
+  in the way: glass seen from the eye 100 %, field in the view 100 %, field past the cab nose / visor / bumper 100 %
+  (front plane = visor nose y 1.443 m). `MirrorFieldOfVisionTests` covers the same field without occlusion.
+- **Wiper cap.** Cause measured in the atlas: the cap was a vertical drum half inside the shell; wipers keep all faces,
+  and the selected-to-active bake gave the buried ones the shell's paint (sRGB 0.78 beside 0.19 in a 12 px island; the
+  mips mix them). `body.wiper_boss`: a drum on the cowl along the sweep axis, no bottom. truck-34 High overcast, cap box:
+  pixels over 45 % 30 -> 3, p95 35.8 -> 28.2 (cowl 25); High lowsun max 41.4 -> 31.6. The 3 remaining pixels (78 %) were
+  not traced: UNVERIFIED (the dotted arm texture is the suspect).
+- **"Roof marker pockets" were the interior header.** `fit_to_exterior` used the crowned skin below the glazing only;
+  above it the header shelf, visor mounts and lining reached the outer skin 0.83-0.97 m off the centre line (crown sag
+  34-47 mm > the 30 mm wall). Crowned fit also above `WS_Z1` (faded in over 40 mm). Interior LOD2 22 001 -> 21 958
+  (`glove_handle` dropped at LOD2).
+- **Tilt joint.** `body.cab_floor_pan`: one dark sheet 25 mm above the cab's lower edge (the shell had no bottom).
+- **front_leak.py, default zone now the whole cab front (z 1.00-3.72 m, 73 437 rays x 6 eyes).** Exterior LOD0 x
+  interior LOD0, before: 42 / 35 / 52 / 110 / 50 / 40 -> 0 for every eye; exterior LOD1 0; interior LOD1 and LOD2
+  against exterior LOD0 0. **Exterior LOD2 still FAILS by the one ray of r7b** (front-high, x 1.34, z 1.47 m): it
+  enters through the passenger lamp lens and crosses a back-facing wall triangle of the collapsed `cab_shell` pocket.
+  Keeping the lamp trays whole did not change it; locking the pocket walls in the collapse closed it but opened
+  5 400-8 500 rays in the header (the shell's budget), so both were taken out: open.
+  In engine (`-qaMask CAB_Interior`, truck-34) interior pixels on the cab above the windscreen: Low overcast 81 -> 0,
+  High overcast 65 -> 0, Low lowsun 138 -> 0, High lowsun 79 -> 0.
+- **LOD1 / LOD2 front (review r7 N-1).** `a6_export.reduce_grid` (`GRID_PIECES`): louvres, sun visor, cowl, arch flare
+  and liner are thinned by COLUMN with LOD0 vertices and UVs (chord tolerance 1-5 mm at LOD1, 3-11 mm at LOD2) instead
+  of the quadric collapse; the T bar likewise at LOD2 (1910 -> 526 triangles, which pays for the rest); LOD2 louvres
+  lose their top land + top face (`GRID_OPEN_TOP`: a 7-8 mm sky highlight, under one pixel at the Low render scale);
+  wiper arms whole, blades >= 50 %; inner dual rims coarser at LOD2 (402 -> 238); cowl 2 -> 4 mm off the skin (the
+  paint under it survived the hidden-face test and came through as white shards on LOD2).
+  truck-34 Low overcast: dark clusters (> 3x3 px under 5 %) in the grille / mask box 0 -> 0, louvre line columns
+  0.917 -> 1.0 (bands, no dashes), arch flare regular (sheets). Low lowsun: clusters 8 -> 10, largest 5272 -> 3665 px
+  (the shaded mask: **not met**, was not met before; the acceptance names no lighting).
+- **Export.** Exterior LOD0 103 161 / LOD1 43 000 / LOD2 17 699 (r7b 103 435 / 42 997 / 17 698; limits 140 000 / 45 000 /
+  17 900), interior 97 187 / 43 297 / 21 958. Both `check_export.py` PASS, `check_fit.py` PASS for interior LOD0 / 1 / 2,
+  EditMode 118 / 118. Wear textures not touched; interior AO atlases, LOD1 / LOD2 FBX and manifest re-exported.
+- **Open.** (1) the LOD2 ray. (2) On Low the TRAKT letters and the dotted wiper arms alias more than in r7b
+  (`sheets/front_before_after_Low-overcast.jpg`); cause not isolated (re-packed Metal atlas or the coarser bar):
+  UNVERIFIED. (3) High: faint angular lighter shapes on the cowl round the wiper bosses (new bake of the moved cowl).
+  (4) High lowsun: the headlamp reads duller than in the r7b frame, not investigated. (5) `front-low` workbench view
+  shows sky through two cells of the bumper louvre back (`road_back`), LOD0 and LOD2, not in `front_leak.py`'s scope.
+  (6) No phone frame: UNVERIFIED on device. (7) Not reviewed by `visual-critic`.
