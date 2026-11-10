@@ -263,7 +263,22 @@ namespace Game.World.Import
             // Tinted see-through glazing of prop LOD0 (ADR 0041 par. 7): manifest "blend": true + "alpha".
             if (m.Get("blend") is bool bl && bl && m.Get("alpha") != null)
             {
-                var gm = LitMaterial(path, albedo, rough, metal, null, false, 0.5f, false, null);
+                // Parked-car glazing (ADR 0041 par. 8): dark tinted sheet with a Fresnel sky reflection and a dust film
+                // from UV0. URP Lit blended glass mirrored the whole sky at rough 0.4 and read milky grey on High.
+                if (m.Get("shader") as string == "car_glass")
+                    return CarGlassMaterial(path, albedo, rough, (float)Num(m.Get("alpha")), m.Get("dust") != null ? (float)Num(m.Get("dust")) : 0f);
+                // Optional alpha texture (road film overlays of parked cars): matt, no sky mirror.
+                Texture2D bt = null;
+                if (m.Get("texture") is string btex)
+                    bt = InstanceImporter.ImportTexture(r, Path.Combine(EditorTools.RepoRoot, "art-source", "world", "textures", btex + ".png"), clamp: false);
+                var gm = LitMaterial(path, albedo, rough, metal, bt, false, 0.5f, false, null);
+                if (bt != null)
+                {
+                    gm.SetFloat("_SpecularHighlights", 0f);
+                    gm.SetFloat("_EnvironmentReflections", 0f);
+                    gm.EnableKeyword("_SPECULARHIGHLIGHTS_OFF");
+                    gm.EnableKeyword("_ENVIRONMENTREFLECTIONS_OFF");
+                }
                 var gc = new Color(albedo.r, albedo.g, albedo.b, 1f).gamma;
                 gc.a = (float)Num(m.Get("alpha"));
                 gm.SetColor("_BaseColor", gc);
@@ -339,6 +354,25 @@ namespace Game.World.Import
             mat.SetVector("_BaseColor", new Vector4(albedo.r, albedo.g, albedo.b, 1f));
             mat.SetFloat("_MinPixels", 1.2f);
             mat.SetFloat("_MaxAlpha", 0.95f);
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
+        /// <summary>Parked-car glass (Kamion/World Car Glass): premultiplied tint + capped Fresnel reflection + UV0 dust.</summary>
+        static Material CarGlassMaterial(string path, Color tintLinear, float rough, float opacity, float dust)
+        {
+            var shader = Shader.Find("Kamion/World Car Glass") ?? throw new InvalidOperationException("Kamion/World Car Glass not found (compile error?)");
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
+            mat.shader = shader;
+            mat.shaderKeywords = Array.Empty<string>();
+            mat.enableInstancing = true;
+            mat.SetColor("_Tint", new Color(tintLinear.r, tintLinear.g, tintLinear.b, 1f).gamma);
+            mat.SetFloat("_Opacity", opacity);
+            mat.SetFloat("_Smoothness", Mathf.Clamp01(1f - rough));
+            mat.SetFloat("_Dust", dust);
+            mat.SetOverrideTag("RenderType", "Transparent");
+            mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
             EditorUtility.SetDirty(mat);
             return mat;
         }

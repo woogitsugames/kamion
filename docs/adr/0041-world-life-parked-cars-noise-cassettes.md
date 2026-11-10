@@ -67,8 +67,32 @@
      row, the same rectangles `truck_yards` keeps free) out of every car-park region. The apron polygon alone did
      not cover the case of a car-park polygon drawn over a truck yard (Kwadrat Park yard filled with cars).
 
+8. Third pass on the cars (2026-11-10, coordinator review: milky glass, no visible dirt, dated boxy fronts):
+   - Glass: `car_glass_tint` now carries `"shader": "car_glass"` and RegionImporter builds a `Kamion/World Car Glass`
+     material (`Environment/Shaders/WorldCarGlass.shader`): premultiplied dark green-grey tint (alpha 0.84), Schlick
+     F0 0.04 reflection of the environment probe capped at 0.55 and darkened for rays below the horizon, sun glint,
+     GPU instancing. Cause of the milky light grey on High: URP Lit blended glass at rough 0.40 mirrored the blurred
+     sky dome into every pane (grazing term = smoothness + reflectivity). Dust film on the pane edges comes from UV0
+     (mask coordinate written by the generator: 1 at the lower / side edges, per-car reach 0.70-1.0).
+   - Road film: alpha overlays `car_dirt_1..3` (three levels: alpha 0.55 / 0.80 / 1.0, grey-brown to salt-pale;
+     shared generated texture `art-source/world/textures/car_dirt.png`, `export.car_dirt_png`) on the sills and
+     lower doors with spray fans behind both wheels and a ring on the arch lips, on the tail face and (thin
+     splatter) the lower front bumper; LOD0 and LOD1 (LOD1: three plain runs, tail). Blend materials with a
+     `texture` are URP Lit transparent with specular highlights and environment reflections off. Brake dust:
+     `rim_dusty` / `tyre_dusty` on the dirtier cars. Level, alloy style and film offset are a CRC of the prototype
+     name (`life_cars._style`), so the 27 prototypes differ; instances of one prototype are identical.
+     All colours and amounts WORKING_VALUE (no measured reference), look: Polish winter street.
+   - Shapes (generic 2015-2024 class averages, no make reproduced): cowl-forward raked windscreens (run 0.86-0.96 m),
+     bonnet falling to a rounded leading edge, a slanted fascia down to the bumper peak (`FACES`: swept / wide /
+     tall), slim tapered lamp housings (`car_lamp`) with a reflector strip and a main-beam unit wrapping into the
+     wing, chamfered grille with slats, lower and corner intakes, tapered wrap-around tail lamps, light bar (sedan),
+     bumper reflectors, roof aerial fin, higher belt lines, plan corner radius 0.80 m. Wheels: rim 0.69 r, four
+     alloy styles (5 wide, 10 thin, 7 medium, 5 dark with a machined lip) + pressed steel.
+   - Generated: LOD0 3378-3664, LOD1 576-600, LOD2 112-120 (budgets 4000 / 600 / 120 unchanged).
+
 ## Not done / open
-- Car grime is still only the `car_grime` texture set (weak at distance); no wheel / sill dirt geometry or decals.
+- Road film and glass dust are per prototype, not per instance; the paint `car_grime` set is unchanged.
+- `Kamion/World Car Glass` and the film overlays are not measured on the phone (two more transparent draws per LOD0 car).
 - Alpha-blended car glass is not sorted per instance (dark tint hides the order); cost on the phone not measured.
 - Transparent PMMA panels (photo `Andersa,_Maczka_streets_in_Białystok_2.jpg`) stand on the viaduct parapet,
   which is bridge geometry, and BDOT10k OT_OIKM_L has no material attribute. Open until a data source or an
