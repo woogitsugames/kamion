@@ -94,6 +94,7 @@ Shader "Kamion/World Surface"
             #pragma shader_feature_local _FAR_FACADE
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
             #include "Assets/_Project/Rendering/Shaders/KamionWorldGI.hlsl"   // ADR 0064 baked sky visibility + far ground shadows
 
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
@@ -131,7 +132,7 @@ Shader "Kamion/World Surface"
                 o.positionCS = p.positionCS;
                 o.positionWS = p.positionWS;
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
-                o.fogFactor = ComputeFogFactor(p.positionCS.z);
+                o.fogFactor = KamionFogTau(p.positionWS, p.positionCS.w);
                 o.masks = v.color;
             #if defined(_FAR_FACADE)
                 o.uv1 = v.uv1;
@@ -213,6 +214,10 @@ Shader "Kamion/World Surface"
                 }
             #endif
 
+                {
+                    half3 tnWet = half3(0, 0, 1);
+                    KamionWetSurface(n, macro, _GroundMasks > 0.5 ? 0.0 : step(0.95, n.y), albedo, smooth, tnWet);   // ADR 0080
+                }
                 float3 V = GetWorldSpaceNormalizeViewDir(i.positionWS);
                 half NoV = saturate(dot(n, V));
                 half perceptualRoughness = 1.0 - smooth;
@@ -246,7 +251,7 @@ Shader "Kamion/World Surface"
                 color += albedo * KamionLampPools(i.positionWS, n);   // ADR 0062
                 color += _Emission.rgb * (_KamionStreetLamps * _KamionExposure);
 
-                color = MixFog(color, i.fogFactor);
+                color = KamionMixFog(color, i.fogFactor);
                 return half4(color, 1.0);
             }
             ENDHLSL

@@ -53,6 +53,7 @@ Shader "Kamion/Cab Interior"
             #define _NORMALMAP 1
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
             #include "KamionToeParity.hlsl"
 
             TEXTURE2D(_Detail); SAMPLER(sampler_Detail);
@@ -99,7 +100,7 @@ Shader "Kamion/Cab Interior"
                 o.uv01 = float4(v.uv0, v.uv1);
                 o.uv23 = float4(v.uv2, v.uv3);
                 o.color = half4(SRGBToLinear(v.color.rgb), v.color.a);
-                o.fogFactor = ComputeFogFactor(p.positionCS.z);
+                o.fogFactor = KamionFogTau(p.positionWS, p.positionCS.w);
                 return o;
             }
 
@@ -191,7 +192,7 @@ Shader "Kamion/Cab Interior"
                 // phone's local tone mapping lifts luminance, not the chroma of deep shade. z = desaturation of that share.
                 col.rgb = lerp(col.rgb * g, (yl * g).xxx, _CabShadowLift.z * (1.0 - 1.0 / g));
                 col.rgb = KamionToeParity(col.rgb);   // D23 toe on the tiers without the LUT (cab view only)
-                col.rgb = MixFog(col.rgb, i.fogFactor);
+                col.rgb = KamionMixFog(col.rgb, i.fogFactor);
                 return half4(col.rgb, 1);
             }
             ENDHLSL

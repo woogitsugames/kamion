@@ -130,6 +130,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _GRIME
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
             #include "Assets/_Project/Rendering/Shaders/KamionWorldGI.hlsl"   // ADR 0064 baked sky visibility + far ground shadows
 
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
@@ -174,7 +175,7 @@ Shader "Kamion/World PBR"
                 o.positionCS = p.positionCS;
                 o.positionWS = p.positionWS;
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
-                o.fogFactor = ComputeFogFactor(p.positionCS.z);
+                o.fogFactor = KamionFogTau(p.positionWS, p.positionCS.w);
                 o.masks = v.color;
                 o.uv = float4(v.uv0, v.uv1);
                 return o;
@@ -278,6 +279,40 @@ Shader "Kamion/World PBR"
                     half lumA = dot(albedo, half3(0.2126, 0.7152, 0.0722));
                     half3 refill = _GrassFill.rgb * clamp(lumA / max(glum, 1e-3), 0.6, 1.4);
                     albedo = lerp(albedo, refill, saturate(soil * 1.6) * (1.0 - keep));
+                    // ---- ADR 0080: a lawn is not one green. _KamionWet.z = strength (0 = the old look; set per preset).
+                    // No extra fetch: the 64 m macro map and the tile's own luminance drive everything.
+                    //  - clumps: lusher, darker, greener tufts (clover / fresh growth) in 0.5-4 m mottling;
+                    //  - scorched patches: straw-coloured, lighter (sun-burnt / trampled / dog spots) where the 8-64 m
+                    //    tone and the wear mask agree, edges broken by the mottling;
+                    //  - micro shading: blade tips lighter, gaps between tufts darker (the tile's luminance as height);
+                    //  - Medium+: daisies / dandelions as 4-5 cm dots in the lush clumps, faded out by pixel footprint
+                    //    (gone by ~12 m), never on the scorched patches.
+                    half gv = (half)_KamionWet.z;
+                    if (gv > 0.0)
+                    {
+                        half lumG = dot(albedo, half3(0.2126, 0.7152, 0.0722));
+                        half clump = smoothstep(0.42, 0.68, macro.a * 0.7 + macro.g * 0.3);
+                        albedo *= lerp(half3(1, 1, 1), half3(0.74, 0.86, 0.70), clump * gv);
+                        half burn = smoothstep(0.56, 0.66, macro.r * 0.55 + macro.b * 0.45 - (macro.a - 0.5) * 0.35);
+                        half3 straw = half3(1.55, 1.30, 0.72) * lumG * 1.15;
+                        albedo = lerp(albedo, straw, burn * 0.75 * gv);
+                        half micro = saturate(lumG / max(glum, 1e-3) - 0.5);          // 0 gaps .. 1 tips
+                        albedo *= lerp(1.0, lerp(0.72, 1.16, micro), gv * saturate(0.06 / footprint));
+                    #if defined(_KAMION_WORLD_DETAIL)
+                        half ff = saturate(0.022 / footprint - 0.6) * gv;
+                        if (ff > 0.0)
+                        {
+                            float2 cu = pw.xz / 0.09;
+                            float2 ci = floor(cu);
+                            float hsh = Hash12(ci);
+                            float2 cf = cu - ci - 0.5 - (float2(Hash12(ci + 7.3), Hash12(ci + 3.1)) - 0.5) * 0.5;
+                            half dot1 = saturate(1.0 - dot(cf, cf) / 0.05);
+                            half present = step(0.965, hsh) * smoothstep(0.5, 0.75, clump) * (1.0 - burn);
+                            half3 petal = hsh > 0.983 ? half3(0.62, 0.50, 0.04) : half3(0.66, 0.66, 0.60);
+                            albedo = lerp(albedo, petal, saturate(dot1 * 3.0) * present * ff);
+                        }
+                    #endif
+                    }
                 }
             #endif
                 half tone = (macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 0.6 + (macro.a - 0.5) * 0.4;
@@ -531,6 +566,13 @@ Shader "Kamion/World PBR"
                 }
             #endif
 
+                // ---- ADR 0080: wet surface parameter (global _KamionWet; no effect at 0). Standing water in the macro
+                // low spots of paved / asphalt sets only (grass, decals with their own film: no puddles).
+            #if defined(_GRASS_DETILE) || defined(_DECAL_ALPHA) || defined(_DECAL_TYRE) || defined(_GROUNDMASKS)
+                KamionWetSurface(n, 0.0, 0.0, albedo, smooth, tn);
+            #else
+                KamionWetSurface(n, macro.b * 0.6 + macro.a * 0.4, step(0.95, n.y), albedo, smooth, tn);
+            #endif
                 albedo = saturate(albedo);
                 smooth = saturate(smooth);
                 half3 nw = normalize(tn.x * T + tn.y * B + tn.z * n);
@@ -569,7 +611,7 @@ Shader "Kamion/World PBR"
                 color += ambient + env;
                 color += diffColor * KamionLampPools(pw, nw);   // dusk street-lamp pools (ADR 0062)
 
-                color = MixFog(color, i.fogFactor);
+                color = KamionMixFog(color, i.fogFactor);
                 return half4(color, alpha);
             }
             ENDHLSL

@@ -190,6 +190,7 @@ Shader "Kamion/Vegetation"
             #pragma multi_compile_fog
             #pragma multi_compile_instancing
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
             struct A { float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct V
             {
@@ -234,7 +235,7 @@ Shader "Kamion/Vegetation"
             #endif
                 o.positionWS = TransformObjectToWorld(pOS);
                 o.positionCS = TransformWorldToHClip(o.positionWS);
-                o.fogFactor = ComputeFogFactor(o.positionCS.z);
+                o.fogFactor = KamionFogTau(o.positionWS, o.positionCS.w);
                 return o;
             }
             half4 frag(V i, bool front : SV_IsFrontFace) : SV_Target
@@ -305,7 +306,7 @@ Shader "Kamion/Vegetation"
                 half NoL = dot(n, L.direction);
                 half sun = saturate(NoL) + _Transmission * saturate(-NoL);
                 half3 color = albedo * (L.color * (sun * L.shadowAttenuation * L.distanceAttenuation * occS) + ambient * occA);
-                color = MixFog(color, i.fogFactor);
+                color = KamionMixFog(color, i.fogFactor);
                 return half4(color, alpha);
             }
             ENDHLSL
