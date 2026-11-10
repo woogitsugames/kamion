@@ -77,13 +77,54 @@ class Heights:
         return float((h[i, j] * (1 - fu) + h[i, j + 1] * fu) * (1 - fv) + (h[i + 1, j] * (1 - fu) + h[i + 1, j + 1] * fu) * fv)
 
 
+DRIVABLE = {"motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "motorway_link",
+            "trunk_link", "primary_link", "secondary_link", "tertiary_link", "living_street"}
+
+
+def snap_to_road(x, y, az_deg, graph, max_d=20.0, max_dev=35.0):
+    """Photo GPS is off by several metres (first renders stood behind the noise barrier): move the pose onto the
+    nearest drivable OSM centreline whose direction matches the compass (oneway: travel direction; two-way: either,
+    then 1.75 m to the right of travel). Returns (x, y, info)."""
+    best = None
+    p = np.array([x, y])
+    for e in graph["edges"]:
+        if e["attrs"]["highway"]["v"] not in DRIVABLE:
+            continue
+        G = np.asarray(e["geometry"], float)
+        oneway = str(e["attrs"].get("oneway", {}).get("v", "no")) in ("yes", "1", "true")
+        for a, b in zip(G[:-1], G[1:]):
+            d = b - a
+            L = float(np.hypot(*d))
+            if L < 0.5:
+                continue
+            t = float(np.clip(np.dot(p - a, d) / L ** 2, 0, 1))
+            q = a + d * t
+            dist = float(np.hypot(*(p - q)))
+            if dist > max_d:
+                continue
+            hd = math.degrees(math.atan2(d[0], d[1])) % 360
+            dev = abs((hd - az_deg + 180) % 360 - 180)
+            fwd = dev <= max_dev
+            if not fwd and (oneway or abs(dev - 180) > max_dev):
+                continue
+            u = d / L * (1 if fwd else -1)
+            q2 = q if oneway else q + np.array([u[1], -u[0]]) * 1.75
+            if best is None or dist < best[0]:
+                best = (dist, q2, e["osm_way"])
+    if best is None:
+        return x, y, None
+    return float(best[1][0]), float(best[1][1]), {"snapped_m": round(best[0], 1), "osm_way": best[2]}
+
+
 def cameras(out):
     m = manifest()
     H = Heights()
+    graph = json.loads((REPO / "Data/Regions" / REGION / "roads.graph.json").read_text(encoding="utf-8"))
     cams = []
     for pid, img in PHOTOS.items():
         r = m[img]
         x, y = TO_PL.transform(r["lon"], r["lat"])
+        x, y, snap = snap_to_road(x, y, r["compass_angle"], graph)
         e, n = x - OX, y - OY
         az = math.radians(r["compass_angle"])
         z = H.z(x, y) + 1.7
@@ -92,7 +133,7 @@ def cameras(out):
         cams.append({"id": f"ph_{pid}", "type": "persp", "kind": "photo_match", "seat": "road",
                      "pos": [round(e, 3), round(n, 3), round(z, 3)],
                      "look_at": [round(e + 40 * math.sin(az), 3), round(n + 40 * math.cos(az), 3), round(z - 0.6, 3)],
-                     "fov_deg": round(vf, 1), "mapillary_id": img, "author": r["author"], "captured_at": r["captured_at"],
+                     "fov_deg": round(vf, 1), "mapillary_id": img, "snap": snap, "author": r["author"], "captured_at": r["captured_at"],
                      "note": f"pose of Mapillary {img} ({r['author']}, {r['captured_at']}, CC BY-SA 4.0, reference only); "
                              f"hfov {hf} deg WORKING_VALUE"})
     doc = {"schema": "truck-sim-pl/gate3-cameras/1", "region": REGION,
