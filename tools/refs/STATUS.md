@@ -42,3 +42,11 @@ Gałąź: worktree-agent-ab1fb0a47d2f0a491 (nie scalona; integruje lider).
   NASTEPNY KROK: uv run --project tools/refs python tools/refs/object_refs.py --object kwadrat-park dusk-sodium  (wznawia z cache)
   potem: ... open_sources.py --source commons --radius 600 --categories --interval 1.5 ; ... --source openverse --interval 1.5 ; summarize.py ;
   object_refs.py --object fire-station kwadrat-park dusk-sodium --index-only ; docs/REFERENCES.md + docs/LICENSES.md ; pytest tests/refs -q
+
+## Log 2026-11-10 (domkniecie, agent Fab/Patch)
+- Commit 306fd3a: retry na bledy sieci, Retry-After <= 120 s, zapis manifestu co 3 pobrania. Dodane 2 testy klienta HTTP; `pytest tests/refs -q`: 50 zielonych.
+- summarize.py: kartaview 79 (41/55), panoramax 23 (17/55), commons 134 (cc0 92, by 17, by-sa 25; 54/55), openverse 0, gugik-ortho 55, miasto 11 warstw. Bez obrazu tylko ujecie 2.
+- ADR 0066 uzupelniony o stan koncowy; REFERENCES: dusk-sodium poprawione na 0 obrazow (bylo opisane jak gotowe).
+- artifacts/refs skopiowane do glownego `artifacts/refs` (kwadrat-park, dusk-sodium, coverage).
+- OTWARTE: openverse (504), dusk-sodium (0 obrazow), detale Kwadrat Parku UNVERIFIED.
+  NASTEPNY KROK: uv run --project tools/refs python tools/refs/object_refs.py --object dusk-sodium ; uv run --project tools/refs python tools/refs/open_sources.py --source openverse --interval 1.5 ; uv run --project tools/refs python tools/refs/summarize.py

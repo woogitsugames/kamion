@@ -93,4 +93,4 @@ Bez zdjec wlasnych (D43) referencje trasy C pochodza wylacznie z otwartych zrode
 |---|---|---|
 | Kwadrat Park | `artifacts/refs/kwadrat-park/INDEX.md` | 11 zdjec Commons (okolica: droga dojazdowa, wiadukt, mokry asfalt, sasiednie obiekty) + 3 ortofoto (400/160/70 m) + plan budynkow. LUKA: zadnych otwartych zdjec hal/bramy/ramp/portierni (teren prywatny; KartaView/Panoramax 0 trafien) - detale UNVERIFIED |
 | Straz pozarna (JRG nr 2, Andersa; OSM way/211035271, 53.157322, 23.156306) | `artifacts/refs/fire-station/INDEX.md` | 17 zdjec (KartaView z Andersa, Commons) + 2 ortofoto + plan; kontrola z danymi miasta (Andersa 46) |
-| Zmierzch / swiatla sodowe | `artifacts/refs/dusk-sodium/INDEX.md` | zdjecia nocne i wieczorne Bialegostoku z Commons/Openverse (nastroj, barwa, kontrast); brak zdjec sodowych z trasy C: UNVERIFIED |
+| Zmierzch / swiatla sodowe | `artifacts/refs/dusk-sodium/INDEX.md` | stan 2026-11-10: 0 obrazow (INDEX pusty; Openverse 504, Commons 429) - OTWARTE, ponowic `object_refs.py --object dusk-sodium`; barwa i kontrast swiatel sodowych: UNVERIFIED |
