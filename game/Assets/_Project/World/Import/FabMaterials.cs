@@ -18,6 +18,7 @@ namespace Game.World.Import
         public static void Reset() { s_Items = null; s_Surfaces = null; s_Mats.Clear(); }
         static Dictionary<string, object> Read(string file, string key)
         {
+            if (Environment.GetEnvironmentVariable("KAMION_DISABLE_FAB") == "1") return new Dictionary<string, object>();
             string path = Path.Combine(Root, file);
             if (!File.Exists(path)) return new Dictionary<string, object>();
             return Obj(Parse(File.ReadAllText(path))).Get(key) as Dictionary<string, object> ?? new Dictionary<string, object>();
@@ -69,10 +70,11 @@ namespace Game.World.Import
             bool decal = id.Contains("cover") || id.Contains("drain");
             var tex = Texture(r, id, "basecolor", Resolve(maps.Get("basecolor")), false, false, foliage || decal, decal);
             var mat = RegionImporter.LitMaterial(path, Color.white, 0.85f, decal ? 0.65f : 0f, tex, foliage || decal, 0.5f, foliage, null);
-            var normal = Texture(r, id, "normal", Resolve(maps.Get("normal")), true, true, false, decal);
-            if (normal != null) { mat.SetTexture("_BumpMap", normal); mat.EnableKeyword("_NORMALMAP"); }
+            // Compact world meshes carry no tangent attribute. Never enable URP normal mapping
+            // with a missing tangent basis; retain normal products for a later reviewed bake.
+            mat.DisableKeyword("_NORMALMAP");
             var ao = Texture(r, id, "ao", Resolve(maps.Get("ao")), true, false, false, decal);
-            if (ao != null) mat.SetTexture("_OcclusionMap", ao);
+            if (ao != null) { mat.SetTexture("_OcclusionMap", ao); mat.EnableKeyword("_OCCLUSIONMAP"); mat.SetFloat("_OcclusionStrength", 1f); }
             // Generated processor packs roughness as URP smoothness in alpha of metallic_gloss.
             var mask = Texture(r, id, "metallic_gloss", Resolve(maps.Get("metallic_gloss")), true, false, false, decal);
             if (mask != null) { mat.SetTexture("_MetallicGlossMap", mask); mat.EnableKeyword("_METALLICSPECGLOSSMAP"); mat.SetFloat("_Smoothness", 1f); }

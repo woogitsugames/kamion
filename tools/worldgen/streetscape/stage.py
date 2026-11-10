@@ -17,6 +17,7 @@ from terrain_mesh import conform as CF
 from . import buildings_mesh as BM
 from . import forest_hlod as FH
 from . import furniture as FU
+from . import fab_details as FD
 from . import signs_route as SR
 from . import gate as GT
 from . import depot_yard as DY
@@ -170,6 +171,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
                    if f["props"].get("rodzaj") == "parking" and f["geometry"]["type"] == "Polygon"]
     LF.place(pl, docks, paved, blds, roads_poly, bpoly, route_P, frep, buf=w.buf, zsurf=zsurf, park_polys=park_polys,
              no_parking=DY.no_parking(overrides, origin))
+    FD.apply(w, pl, roads_poly, bpoly, paved, park_polys, route_P, frep, log, overrides=overrides, deck_at=deck_at)
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
     FU.clear_carriageway(pl, carriage, zsurf, frep)
     frep["poles_reseated"] = pl.reseated

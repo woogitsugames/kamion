@@ -49,6 +49,14 @@ def linear_to_srgb(c):
     return np.where(c <= .0031308, c * 12.92, 1.055 * c ** (1 / 2.4) - .055)
 
 
+def pack_metallic_gloss(roughness):
+    """URP Lit: nonmetallic RGB, linear smoothness in A (inverse roughness)."""
+    roughness = np.clip(np.asarray(roughness), 0, 255).astype(np.uint8)
+    packed = np.zeros((*roughness.shape, 4), np.uint8)
+    packed[..., 3] = 255 - roughness
+    return packed
+
+
 def stitch_edges(a, width=16):
     """Blend opposite borders symmetrically, preserving the interior scan detail."""
     a = a.copy()
@@ -140,6 +148,11 @@ def build(root: Path = ROOT):
                 path.parent.mkdir(parents=True, exist_ok=True)
                 Image.fromarray(np.round(np.clip(a, 0, 1) * 255).astype(np.uint8)).save(path, optimize=True)
                 textures[channel] = path.relative_to(root).as_posix()
+                if channel == "roughness":
+                    packed = pack_metallic_gloss(np.round(np.clip(a, 0, 1) * 255))
+                    packed_path = path.with_name("metallic_gloss.png")
+                    Image.fromarray(packed).save(packed_path, optimize=True)
+                    textures["metallic_gloss"] = packed_path.relative_to(root).as_posix()
             record["textures"][tier] = textures
         result["materials"][name] = record
     out.mkdir(parents=True, exist_ok=True)

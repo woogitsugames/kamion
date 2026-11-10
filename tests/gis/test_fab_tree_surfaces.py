@@ -52,6 +52,20 @@ def test_outputs_mobile_sizes_and_generated_only(tmp_path):
                 with Image.open(tmp_path / path) as image:
                     assert image.size == (size, size)
     assert "linden-leaves" in result["not_used"]
+    paths = result["materials"]["curb_concrete"]["textures"]["Low"]
+    with Image.open(tmp_path / paths["roughness"]) as image:
+        roughness = np.asarray(image)
+    with Image.open(tmp_path / paths["metallic_gloss"]) as image:
+        packed = np.asarray(image)
+    assert packed.shape == (512, 512, 4)
+    assert not np.any(packed[..., :3])
+    np.testing.assert_array_equal(packed[..., 3], 255 - roughness)
+
+
+def test_urp_metallic_gloss_encodes_smoothness_endpoints():
+    packed = fab.pack_metallic_gloss(np.array([[0, 127, 255]], dtype=np.uint8))
+    np.testing.assert_array_equal(packed[..., 3], [[255, 128, 0]])
+    assert not np.any(packed[..., :3])
 
 
 def test_archive_digest_failure(tmp_path):
