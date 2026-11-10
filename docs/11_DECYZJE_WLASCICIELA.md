@@ -52,3 +52,5 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 | D31 | Szyba ciężarówki z zewnątrz (r6 E2, r7) | p50 jasności **33–45 %** (Fresnel; ≥ 60 % odrzucony) **+ wymóg treści odbicia σ ≥ 8** (r7: 4,5 = FAIL, do poprawy) |
 | D32 | Szyby aut osobowych (r7) | Prostopadle **≤ 32 % pochmurno / ≤ 26 % słońce**, kąt ostry / prostopadły **≥ 1,3×** (wg zdjęcia CC0 7197); model nieba ADR 0010 bez zmian |
 | D33 | Kierownica przy niskim słońcu (do D27) | Próg **względny**: R−B ≤ 6 % i nasycenie ≤ nasycenia białej powierzchni w tym samym świetle (zamiast sat ≤ 15 %); WB 0,5 bez zmian |
+| D34 | Korekta D31 (po naprawie capture odbić, ADR 0056) | Szyba z zewnątrz p50 **23–45 %** (dolna granica wg zdjęcia Volvo FH; 33 % zakładało odbicie samego nieba); σ ≥ 8 zostaje celem |
+| D35 | Korekta D30 — gdzie mierzyć krzywiznę | Refleks ≥ 10 pkt High / ≥ 6 pkt Low mierzony na **deflektorze dachu**; narożnik kabiny tylko przy niskim słońcu / słońcu (pionowa ściana poniżej kamery odbija ziemię) |
