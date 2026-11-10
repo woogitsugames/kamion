@@ -88,7 +88,10 @@ M = {
     "concrete_fence_post": {"color": [0.28, 0.28, 0.26], "rough": 0.9},
     "concrete_wall": {"color": [0.30, 0.30, 0.28], "rough": 0.9},
     "barrier_post": {"color": [0.40, 0.41, 0.41], "rough": 0.55, "metal": 0.9},
-    "noise_panel": {"color": [0.30, 0.33, 0.31], "rough": 0.6, "metal": 0.1, "texture_set": "noise_cassette"},
+    # ADR 0060 (r7 N-2, D42 Mapillary 2018-07 / 2024-07 at g3b_eye_s1482 / s1632, reference only): the absorbing
+    # cassettes along Andersa / Putry are dark powder-coated (anthracite / moss-green class), read near-black under the
+    # glass panes; 0.30 read as a light grey wall. WORKING_VALUE (no RAL plate seen).
+    "noise_panel": {"color": [0.05, 0.06, 0.055], "rough": 0.6, "metal": 0.1, "texture_set": "noise_cassette"},
     "car_sill": {"color": [0.035, 0.033, 0.03], "rough": 0.8},
     # contact shadow / AO patch under parked vehicles (ADR 0050): Kamion/World Vehicle Contact, parameters per
     # prototype from the LOD0 node extras ("contact", life_props.contact_spec)
