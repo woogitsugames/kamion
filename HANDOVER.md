@@ -8,7 +8,7 @@
 
 | zadanie | ADR | worktree | STATUS | stan s9 |
 |---|---|---|---|---|
-| P0 korytarz + ratchety | 0076 | agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | s9: agent przejmujący w toku (import + kamery + PlayMode) |
+| P0 korytarz + ratchety | 0076 | agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | GOTOWE `cddbbc8` (pytest gis 222 ✓, korytarz 4789 st. 0 uskoków/0 przeszkód, PlayMode Route/Barrier 3/3, EditMode 176/0); recenzja visual-critic w toku; scalenie po końcu regeneracji main |
 | wysepki z OSM | 0077 | agent-a2afb96d89584cca6 | tools/worldgen/fidelity/STATUS_islands_r10.md | s9: agent przejmujący w toku (steep_grass, import, kamery) |
 | zabudowa r3 (domy dwuspadowe, balkony, tynk, cegła) | 0091 | buildings-r11 (z d205d4a) | artifacts/buildings-r11 | s9: agent Fable start 01:05 |
 | import Megascans | 0084 | gpt-megascans | artifacts/megascans-r1 | GPT w toku |
