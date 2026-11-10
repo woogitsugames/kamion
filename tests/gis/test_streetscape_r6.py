@@ -110,8 +110,10 @@ def test_hedge_reads_as_plants_not_a_box():
     assert sprig[:, 2].max() > shell[:, 2].max() + 0.03          # shoots break the top silhouette
     top = shell[shell[:, 2] > 0.5]
     assert np.std(top[:, 2]) > 0.02                              # lumpy, not a flat slab
-    side = shell[(np.abs(shell[:, 1] - 0.8) > 0.7) & (shell[:, 2] > 0.3) & (shell[:, 2] < 0.6)]
-    assert np.ptp(np.abs(side[:, 1] - 0.8)) > 0.06               # bulging plants along the face
+    # ADR 0060 (review r7 N-4): clipped berberis = a straight cut face, no "sausage" lumps along it
+    ring = shell[(np.abs(shell[:, 1] - 0.8) > 0.7) & (np.abs(shell[:, 2] - 0.3 * 0.7) < 0.02)
+                 & (shell[:, 0] > 1.0) & (shell[:, 0] < 11.0)]
+    assert len(ring) > 20 and np.ptp(np.abs(ring[:, 1] - 0.8)) < 0.05
     assert 500 < st["tris"] < 6000                               # 12 m hedge: budget per metre ~40-500 tris
 
 
@@ -150,8 +152,9 @@ def test_marking_paint_material():
     m = _manifest()["marking_white"]
     assert m["texture_set"] == "asphalt_worn" and isinstance(m.get("paint"), dict)
     assert 0.55 <= max(m["color"][:3]) <= 0.65                   # film albedo 0.55-0.65 (r6 W-H6)
-    # under the traffic film the mean effective albedo stays in EN 1436 white B2..B3 (0.30-0.40) and below the
-    # Low-tier clip budget (ADR 0049 addendum r7: clear <= 217, overcast <= 190 sRGB)
+    # under the traffic film the mean effective albedo stays in EN 1436 white B2..B3 (0.30-0.40); the display caps
+    # are relative since D37 (docs/11, ADR 0060): paint / asphalt 1.7-2.3 in sun, <= 235 sRGB in sun, <= 217 overcast
+    # (measured on renders by scripts/paint-contrast.py, not here)
     eff = max(m["color"][:3]) * (1.0 - m["paint"]["dirt"])
     assert 0.30 <= eff <= 0.40
 

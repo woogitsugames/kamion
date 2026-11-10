@@ -25,7 +25,13 @@ def frame_stats(p: Path, width=1024):
     y = luma(a)
     mx, mn = a.max(-1), a.min(-1)
     sat = np.where(mx > 1e-6, (mx - mn) / np.maximum(mx, 1e-6), 0) * 100
-    return {"p05": float(np.percentile(y, 5)), "p10": float(np.percentile(y, 10)), "p50": float(np.percentile(y, 50)),
+    # grass (D38): green-hue pixels (hue 60-160 deg, G the largest channel, chroma > 0.04) below the horizon half
+    r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    hue = (np.degrees(np.arctan2(np.sqrt(3) * (g - b), 2 * r - g - b)) + 360) % 360
+    gm = (hue > 60) & (hue < 160) & (g >= r) & (g >= b) & ((mx - mn) > 0.04)
+    gm[: int(a.shape[0] * 0.45)] = False
+    gsat = float(np.median(sat[gm])) if gm.sum() > 400 else float("nan")
+    return {"grass_sat": gsat, "grass_px": float(gm.mean() * 100), "p05": float(np.percentile(y, 5)), "p10": float(np.percentile(y, 10)), "p50": float(np.percentile(y, 50)),
             "lt28": float((y < 28).mean() * 100), "sat50": float(np.median(sat))}
 
 
@@ -37,6 +43,9 @@ def set_stats(d: Path):
         frames[p.stem] = frame_stats(p)
     keys = ["p05", "p10", "p50", "lt28", "sat50"]
     mean = {k: round(float(np.mean([f[k] for f in frames.values()])), 2) for k in keys}
+    gs = [f["grass_sat"] for f in frames.values() if f["grass_sat"] == f["grass_sat"] and f["grass_px"] > 2.0]
+    mean["grass_sat"] = round(float(np.mean(gs)), 2) if gs else None
+    mean["grass_frames"] = len(gs)
     return {"dir": str(d), "n": len(frames), "mean": mean,
             "p50_min": round(min(f["p50"] for f in frames.values()), 1),
             "p50_max": round(max(f["p50"] for f in frames.values()), 1),
