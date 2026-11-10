@@ -74,7 +74,7 @@ def safe_u(u, ops, L):
     return u if 0.3 < u < L - 0.3 else None
 
 
-def wall_pieces(wwo, acc, a, d, nout, L, zb, zt, ops, u_acc, vref, zsplits, usplits, mat_fn, layer=L0):
+def wall_pieces(wwo, acc, a, d, nout, L, zb, zt, ops, u_acc, vref, zsplits, usplits, mat_fn, layer=L0, **kw):
     """Wall split into rectangles (u ranges x z ranges) of different materials; openings are clipped to every
     piece (splits are moved off the openings beforehand, so no fake jambs or sills appear)."""
     zs = [zb] + sorted({z for z in zsplits if z is not None and zb + 0.05 < z < zt - 0.05}) + [zt]
@@ -88,7 +88,7 @@ def wall_pieces(wwo, acc, a, d, nout, L, zb, zt, ops, u_acc, vref, zsplits, uspl
                 va, vb = max(o[2], z0), min(o[3], z1)
                 if ub - ua > 0.05 and vb - va > 0.05:
                     pc.append((ua - u0, ub - u0, va, vb, *o[4:]))
-            wwo(acc, layer, mat, a + d * u0, d, nout, u1 - u0, z0, z1, pc, u0=u_acc + u0, vref=vref)
+            wwo(acc, layer, mat, a + d * u0, d, nout, u1 - u0, z0, z1, pc, u0=u_acc + u0, vref=vref, **kw)
 
 
 # ------------------------------------------------------------------------------------------- details

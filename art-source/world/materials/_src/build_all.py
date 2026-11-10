@@ -101,6 +101,13 @@ LAYERS = {
         slots=["_MacroMap of every ground material"],
         note="R 8-64 m tone, G 2-16 m tone (both drop-in for the current _MacroMap R/G), B wear/dirt "
              "patches 1.5-24 m, A 0.5-4 m mottling. All centred on 0.5, linear (import sRGB off)."),
+    "parapet_runoff": dict(tile_m=[24.0, 4.0], uv="mesh_uv1 (u metres along the wall, v = 1 + metres below the "
+                           "attic fascia / length scale; v < 0.5 = no wall-top data)",
+        slots=["_RunoffMap of hall_wall_* (keyword _RUNOFF, buildings_mesh.py hall walls)"],
+        note="Run-off streaks under the parapet coping of halls (zacieki pod attyka): R soot/dirt, G rust, linear. "
+             "Long streaks below coping-sheet joints every 2-3 m, fine drip lines, broad smudges, uneven dirty "
+             "band under the drip edge; fades to 0 at 4 m. One RGB sample on wall pixels, all tiers (Low 256x40). "
+             "Look WORKING_VALUE (photo-judged, no measurements)."),
     "asphalt_detail_photo": dict(tile_m=[1.0, 1.0], uv="world_xy_planar x1 (close-range detail, fade out "
                                  "beyond ~25 m)",
         slots=["URP-style detail albedo + detail normal on asphalt_worn, asphalt_patch, asphalt_sma_fresh"],
@@ -167,6 +174,24 @@ def build_macro():
         info["files"][t] = {"res": res, "texel_mm": round(c.px * f * 1000, 1), "dir": f"macro_variation/{t}",
                             "files": files, "png_bytes": (d / files[0]).stat().st_size,
                             "gpu_bytes_astc_mips": int(astc_bytes(res, "8x8")), "astc": {"Macro": "8x8"}}
+    return info
+
+
+def build_runoff():
+    c, m = F.parapet_runoff()
+    out = OUT / "parapet_runoff"
+    info = {"files": {}}
+    for t, f in K.TIERS.items():
+        if t not in TIERS_SEL:
+            continue
+        d = out / t
+        K.save_png(d / "T_parapet_runoff.png", K.down(m, f), "RGB")
+        files = ["T_parapet_runoff.png"]
+        res = [c.nx // f, c.ny // f]
+        info["files"][t] = {"res": res, "texel_mm": round(c.px * f * 1000, 1), "dir": f"parapet_runoff/{t}",
+                            "files": files, "png_bytes": (d / files[0]).stat().st_size,
+                            "gpu_bytes_astc_mips": int(astc_bytes(res, "6x6")), "astc": {"Macro": "6x6"}}
+    info["coverage"] = {"soot_mean": round(float(m[..., 0].mean()), 4), "rust_mean": round(float(m[..., 1].mean()), 4)}
     return info
 
 
@@ -254,7 +279,8 @@ def main():
             continue
         print("layer", name, flush=True)
         info = {"asphalt_cracks_layer": lambda: build_cracks(None), "macro_variation": build_macro,
-                "asphalt_detail_photo": lambda: build_detail(a.photo)}[name]()
+                "asphalt_detail_photo": lambda: build_detail(a.photo),
+                "parapet_runoff": build_runoff}[name]()
         if info is None:
             continue
         entry = dict(meta)

@@ -320,6 +320,79 @@ def car_grime(n=1024):
     return _finish("car_grime", c, lum, h, rough, np.zeros_like(X), np.zeros_like(X), extra=tint, ao_k=0.2)
 
 
+def parapet_runoff(nx=1024, ny=160, seed=521):
+    """Run-off streaks under the parapet coping of industrial halls (zacieki pod attyką). Not a tiling facade set
+    but a layer in "wall-top space": u = metres along the wall (periodic, 24 m), v = metres below the bottom of the
+    attic fascia (row 0 = right under the coping / fascia, row ny-1 = 4 m down; the shader clamps v and fades it
+    out). Physical story (photo look of 1970s-2000s Białystok halls, WORKING_VALUE, no measured data): rain water
+    with roof dust and soot runs off the coping drip edge, collects at the sheet joints (every 2-3 m) and at
+    sagging spots, and leaves
+      - a dirty band right under the drip edge (5-35 cm, uneven),
+      - a strong long streak below most coping joints (0.6-3.8 m, tapering, slightly meandering, broken),
+      - many faint fine drip lines in between (0.2-1.2 m),
+      - a few broad soft smudges (sagging coping, 0.3-1.2 m wide),
+      - rust-brown streaks below some fixings (steel coping fasteners), shorter.
+    Channels (linear, RGB): R soot / dirt run-off amount 0..1, G rust amount 0..1, B 0 (reserved).
+    The shader scales R per wall by the macro map and per building by TEXCOORD_1.y (streak length scale)."""
+    Lx, Ly = 24.0, 4.0
+    c = Ctx(nx, ny, Lx, Ly, seed=seed)
+    X, Y = c.xy()                                   # Y = metres below the top (row 0 = top)
+    rng = c.rng(1)
+    soot = np.zeros_like(X)
+    rust = np.zeros_like(X)
+
+    def wrapdx(x0):
+        return (X - x0 + Lx / 2) % Lx - Lx / 2
+
+    def streak(x0, w, length, inten, meander, start=0.0, wobble_k=0):
+        """Tapering vertical run: gaussian across (sigma w), fades over length, meanders with depth, broken into
+        runs by stretched noise (kept periodic via the shared noise fields)."""
+        ph = rng.uniform(0, 2 * np.pi)
+        f = rng.uniform(1.2, 3.5)
+        dx = wrapdx(x0 + meander * np.sin(f * Y + ph) + rng.uniform(-0.02, 0.02) * Y)
+        sig = w * (1.0 + 0.6 * np.clip(Y / max(length, 1e-3), 0, 1.5))           # widens a little going down
+        across = np.exp(-0.5 * (dx / sig) ** 2)
+        t = (Y - start) / max(length, 1e-3)
+        along = np.where(t < 0, 0.0, (1 - sstep(0.15, 1.0, t)) * (1 - 0.35 * t))
+        return np.clip(inten * across * along, 0, None)
+
+    breaker = sstep(-0.9, 0.8, noise(c, 2, 0.08, 1.2, beta=0.8, aniso=1.0 / 10.0))   # broken runs (vertical)
+    # joints of the coping sheets: 2.0-3.0 m apart (periodic over 24 m)
+    xs, x = [], 0.0
+    while x < Lx - 1.0:
+        xs.append(x)
+        x += rng.uniform(2.0, 3.0)
+    for xj in xs:
+        if rng.random() < 0.78:
+            # v2 (REVIEW r6 / G3 wires-streaks-v2): the 2.5-6 cm runs of v1 were below one texel on Low (94 mm) and
+            # below one screen pixel from the road at 25-80 m, so the layer read as clean sheet; joint streaks are now
+            # 5-14 cm (a run spreads on ribbed cladding: it follows 1-3 ribs) and longer (lognormal median 2.0 m)
+            L = float(np.clip(rng.lognormal(np.log(2.0), 0.45), 0.8, 3.7))
+            soot += streak(xj, rng.uniform(0.05, 0.14), L, rng.uniform(0.5, 0.95), rng.uniform(0.005, 0.03))
+            if rng.random() < 0.45:                                          # twin run beside the joint
+                soot += streak(xj + rng.uniform(-0.25, 0.25), rng.uniform(0.012, 0.03), 0.6 * L, rng.uniform(0.2, 0.5), 0.01)
+        if rng.random() < 0.22:                                              # rusty fastener below the joint
+            xr = xj + rng.uniform(-0.6, 0.6)
+            rust += streak(xr, rng.uniform(0.025, 0.06), rng.uniform(0.4, 1.4), rng.uniform(0.4, 0.8), 0.006, start=0.02)
+    # fine drip lines everywhere along the drip edge (~3 per metre)
+    for _ in range(int(1.5 * Lx)):
+        soot += streak(rng.uniform(0, Lx), rng.uniform(0.012, 0.03), rng.uniform(0.3, 1.4), rng.uniform(0.1, 0.3), 0.004)
+    # broad smudges below sagging coping
+    for _ in range(6):
+        soot += streak(rng.uniform(0, Lx), rng.uniform(0.2, 0.55), rng.uniform(0.8, 2.8), rng.uniform(0.15, 0.35), 0.05)
+    soot *= 0.55 + 0.45 * breaker
+    # dirty band under the drip edge: uneven depth along the wall, soft lower edge
+    bd = 0.05 + 0.30 * sstep(-1.2, 1.6, noise(c, 3, 0.6, 8.0, beta=1.0, aniso=1.0))   # depth varies along u
+    band = (1 - sstep(0.05 * bd, 1.4 * bd, Y)) ** 1.5 * (0.22 + 0.3 * sstep(-1.0, 1.5, noise(c, 4, 0.1, 3.0)))
+    soot = soot + band
+    soot = 1 - np.exp(-1.25 * soot)                                          # soft saturation of overlaps
+    rust = 1 - np.exp(-1.6 * rust * (0.6 + 0.4 * breaker))
+    # nothing reaches the clamp row: fade the last 0.4 m so the clamped sample is 0
+    fade = 1 - sstep(Ly - 0.4, Ly - 0.05, Y)
+    out = np.dstack([soot * fade, rust * fade, np.zeros_like(X)]).astype(np.float32)
+    return c, out
+
+
 FACADE_SETS = {
     "sandwich_ribbed": dict(fn=sandwich_ribbed, tile_m=[6.0, 6.0],
         slots=["hall_wall_grey", "hall_wall_silver", "hall_wall_white", "hall_wall_ivory", "booth_panel"],
