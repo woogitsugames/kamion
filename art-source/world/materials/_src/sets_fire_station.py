@@ -518,7 +518,7 @@ ALPHA_LAYOUT = {
     "gate_bay": {"u": [0.3125, 0.625], "v": [0.5, 1.0], "size_m": [2.5, 1.6]},
     "swatch_blue": {"u": [0.64, 0.70], "v": [0.55, 0.95]},
     "lettering": {"u": [0.0, 1.0], "v": [0.27, 0.48], "size_m": [7.6, 0.80]},
-    "number": {"u": [0.0, 0.34], "v": [0.02, 0.25], "size_m": [2.4, 0.80]},     # r4: roundel + digits 0.6 m (photo 7197)
+    "number": {"u": [0.0, 0.24], "v": [0.02, 0.25], "size_m": [1.7, 0.80]},     # r4: digits 0.6 m (photo 7197)
 }
 
 
@@ -575,20 +575,15 @@ def alpha_texture(path: Path | None = None):
             f = _font(px)
         bb = dr.textbbox((0, 0), text, font=f)
         dr.text(((w4 - (bb[2] - bb[0])) / 2 - bb[0], (h4 - (bb[3] - bb[1])) / 2 - bb[1]), text, fill=255, font=f)
-        if key == "number":                        # r4: digits right of a generic handset roundel (ring + receiver arc)
-            im = Image.new("L", (w4, h4), 0)
-            dr = ImageDraw.Draw(im)
+        if key == "number":                        # r4: digits 0.6 m tall as on photo 7197. The handset roundel left of
+            im = Image.new("L", (w4, h4), 0)       # them on the facade is deliberately NOT drawn (ADR 0070: no emblems /
+            dr = ImageDraw.Draw(im)                # pictograms)
             f = _font(int(h4 * 0.98))
             bb = dr.textbbox((0, 0), text, font=f)
-            sc = min(1.0, (w4 * 0.70) / (bb[2] - bb[0]), (h4 * 0.76) / (bb[3] - bb[1]))
+            sc = min(1.0, (w4 * 0.96) / (bb[2] - bb[0]), (h4 * 0.76) / (bb[3] - bb[1]))
             f = _font(int(h4 * 0.98 * sc))
             bb = dr.textbbox((0, 0), text, font=f)
-            dr.text((w4 - (bb[2] - bb[0]) - bb[0] - w4 * 0.01, (h4 - (bb[3] - bb[1])) / 2 - bb[1]), text, fill=255, font=f)
-            rr_ = h4 * 0.30
-            cx_, cy_ = w4 * 0.02 + rr_, h4 / 2
-            lw = max(2, int(h4 * 0.055))
-            dr.ellipse((cx_ - rr_, cy_ - rr_, cx_ + rr_, cy_ + rr_), outline=255, width=lw)
-            dr.arc((cx_ - rr_ * 0.55, cy_ - rr_ * 0.55, cx_ + rr_ * 0.55, cy_ + rr_ * 0.55), 110, 250, fill=255, width=int(lw * 1.6))
+            dr.text(((w4 - (bb[2] - bb[0])) / 2 - bb[0], (h4 - (bb[3] - bb[1])) / 2 - bb[1]), text, fill=255, font=f)
         m4 = np.asarray(im, np.float32) / 255
         m1 = m4.reshape(y1 - y0, 4, x1 - x0, 4).mean((1, 3))
         a[y0:y1, x0:x1] = m1
