@@ -61,3 +61,5 @@
 - NASTĘPNY: pwsh artifacts/megascans-r1/run-fallback-proof.ps1; po nim potwierdzić restore i kolory.
 
 - Krok19: build z KAMION_DISABLE_FAB=1 OK. NASTĘPNY: pwsh scripts/import-region.ps1 -Region bialystok-industrial-c (wciąż fallback); kopiaafter zabezpieczona.
+
+- Krok20: import fallback Low+High OK. NASTĘPNY: pwsh artifacts/megascans-r1/run-camera-proof.ps1 -Stage before; potem identyczne kadry before i odtworzenieafter.
