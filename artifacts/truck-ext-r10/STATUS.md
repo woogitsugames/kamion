@@ -33,3 +33,8 @@ NEXT: look at `artifacts/truck-ext-r10/r4/High-overcast/chase.png` (roof), then
   Render exit 1 = shutdown flake (frames complete, mono cleanup abort_threads, no crash stack; hit High clear in r5, Low lowsun in r4): narrow accept rule in `scripts/visual-qa.ps1`.
 NEXT: band A/B: `KAMION_LIVERY_BAND=0 blender -b ... trailer_export.py -- --no-renders` -> `unity.ps1 -Step build` -> render `-Out cmp-noband -Tiers High -Lights overcast -Cameras trailer-side,truck-rear34,chase`
   -> `git checkout -- art-source/truck/trailer/export` -> `unity.ps1 -Step build`; then `git merge main`, `unity.ps1 -Step test`, ADR Measured, copy to main artifacts.
+- 23:27 band A/B rendered (`cmp-noband/`, sheets `owner-band/band_AB_{trailer-side,truck-rear34}.jpg`; B via `KAMION_LIVERY_BAND=0`, committed export = A with band).
+  `git merge main` (e76aae5) clean, no conflicts. After merge: build OK, frames `r5-merged/` OK, EditMode 188/188, PlayMode TraktTruckRig + TrailerCargoSwap 2/2.
+  Budgets: ext 104 514 / 43 000 / 17 689 (r2 export, unchanged), trailer 89 000 / 24 500 / 7 850; both check_export PASS. ADR 0083 Measured / Self-critique filled.
+  Unity side effects reverted (LP_*.asset reserialised by the build after the merge, M_Sky, Quality/ProjectSettings).
+NEXT (lead): visual-critic on `r5/` + `owner-band/`; owner decision band / skirts; phone frames; then merge the branch.

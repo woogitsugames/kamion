@@ -1,10 +1,10 @@
 # ADR 0083 — TRAKT exterior + curtainsider r10: side skirts, under-floor equipment, curtain livery band, roof sheet, rear lamps
 
 Status: proposed (truck-artist, 2026-11-10). **Not reviewed by `visual-critic`** (the author does not approve his own
-work). Editor frames only (WorldC, tiers High / Low, overcast / clear): **UNVERIFIED on a phone**.
+work). Editor frames only (WorldC, tiers High / Low, overcast / clear / lowsun): **UNVERIFIED on a phone**.
 Source: owner order for session 6 ("strong jump in look quality"), lead brief r10. Continues ADR 0061 / 0072 (front,
 low sun: not touched here).
-Evidence: `artifacts/truck-ext-r10/` (`before/` = main 4c27a9b built in the worktree, `r1/`, `r2/`, `r3/` = rounds,
+Evidence: `artifacts/truck-ext-r10/` (`before/` = main 4c27a9b built in the worktree, `r1/` .. `r5/` = rounds, `r5-merged/` = after `git merge main`, `cmp-noband/` + `owner-band/` = curtain band A/B,
 `sheets/` = before / after pairs, `blender/` = Cycles check renders, `logs/`, `STATUS.md`).
 
 ## What was wrong (seen in the `before/` frames, by impact from the chase / exterior cameras)
@@ -36,9 +36,18 @@ Evidence: `artifacts/truck-ext-r10/` (`before/` = main 4c27a9b built in the work
   mask (`_livery_mask`, node label `tint_mask`, read by `trailer_export.emit_tint_mask`). No name, no logo; every curtain
   colour of the game gets the two-tone graphic from the same bake. Art-direction choice: the owner may veto
   (`LIVERY_BAND = False` restores the plain curtain).
-- Roof sheet (`ROOF_OWN_COLOUR`): own light-grey PVC (albedo 0.44, tint mask 0) with dirt pooled between the bows and
-  run-off along the edges (`_roof_stains`, goes into the baked dirt mask). r2 used albedo 0.62: the roof clipped to white
-  through the D23 curve in the chase frame (luma mean 97.6 %, 95 % of the box >= 97 %), hence 0.44.
+- Roof sheet (`ROOF_OWN_COLOUR`): own white PVC, tint mask 0. Clean-sheet albedo **0.50**, roughness 0.72. Source for
+  the albedo (building membranes, the closest published data; no measurement of a trailer sheet found, so
+  **WORKING_VALUE**): white PVC single-ply solar reflectance 0.87-0.88 new and 0.68-0.70 after three years (CRRC values
+  in the Duro-Last and Siplast Parasolo data sheets); field studies report a 30-50 % loss in three years (Miller et al.
+  2002, cited by ORNL) = 0.44-0.61. A trailer roof is never washed: lower half of that range.
+  History: 0.62 (r2), 0.44 (r3) and 0.36 (r4) all gave a featureless near-white roof in the chase frame (95.2 % luma at
+  0.36). Cause found in r5: `TruckExterior.shader` replaces the baked dirt mask on the Curtain slot with the procedural
+  `CurtainGrime` (curtain faces only), so the roof was rendered clean, and at the chase angle (about 10 deg grazing) the
+  sky reflection plus the D23 white clip dominate over the albedo. Fix without touching the shader: the soiling (dirt
+  pooled in the sag between the bows, run-off along the edges, dusty film; `_roof_stains`) is baked into the roof
+  islands' **albedo and roughness** (`ROOF_STAIN_ALBEDO`, soot 0.10), not only into the dirt mask.
+  `a6_export.emit_override` (rdm) now reads a linked clean roughness (was: default value only).
 - Curtain AO: the sheets' own AO replaces the static AO inside the curtain islands (max of the two), so dropped straps
   leave no black line; the strap colour stays in the albedo there.
 - Control cameras (`TruckAssetBuilder.AddControlCameras`): new `chase` (CameraRig framing with a trailer: 26 m behind,
@@ -46,16 +55,54 @@ Evidence: `artifacts/truck-ext-r10/` (`before/` = main 4c27a9b built in the work
 - LOD lists: skirt panel kept to LOD3, skirt / box small parts dropped at LOD1 / LOD2. No new material, slot, texture,
   shader property or keyword: draw calls per tier unchanged (same parts and slots).
 
-## Measured
-See the table at the end of `artifacts/truck-ext-r10/STATUS.md` (filled from the final export logs and manifests).
+## Measured (final state: exterior r2 export, trailer r5 export, after `git merge main` e76aae5)
+| what | main 4c27a9b | r10 | limit (validator) |
+|---|---|---|---|
+| exterior LOD0 / LOD1 / LOD2 tris | 102 729 / 42 999 / 17 690 | 104 514 / 43 000 / 17 689 | 140 000 / 45 000 / 17 900 (`TRI_LIMIT`), check PASS |
+| trailer LOD0 / LOD1 / LOD2 tris | 89 000 / 24 497 / 7 850 | 89 000 / 24 500 / 7 850 | 90 000 / 25 000 / 8 000, check PASS |
+| materials / slots / textures / keywords | - | unchanged | - |
 
-## Self-critique (docs/06 §2), author's view only
-See `artifacts/truck-ext-r10/STATUS.md` "Self-critique".
+Exterior LOD0 grew by 1 785 triangles (skirts, lamps); the trailer stayed at its decimation target.
+Roof box in the chase frame (130 x 110 px at 2340 px, grey mean / sd, share of pixels >= 97 %):
+| frame | r4 (0.36, stains lost) | r5 (0.50, stains baked) |
+|---|---|---|
+| High overcast | 95.2 / 3.2 | 93.3 / 4.9, 0 % |
+| High clear | 97.9 / 2.9 | 96.0 / 4.1, 28 % (sunlit white sheet) |
+| High lowsun | 72.8 / 1.3 | 72.4 / 2.1, 0 % |
+| Low overcast | 90.2 / 1.9 | 89.5 / 2.6, 0 % |
+After the merge (main's new overcast): High overcast 93.0 / 5.9, Low overcast 89.5 / 3.4.
+Tests after the merge: EditMode 188 / 188 passed (15 Truck / Trailer / Trakt cases among them); PlayMode
+`TraktTruckRigTests` + `TrailerCargoSwapTests` 2 / 2 passed. Frame time, draw calls on a phone: **not measured**.
+
+## Render exit 1 (r4 Low lowsun, r5 High clear)
+Not a render fault: 2 of 18 visual-qa runs ended with a non-zero Unity exit code AFTER `VISUALQA_RESULT: OK rendered=8`
+and all eight PNGs on disk; the log stops in `Cleanup mono` / `abort_threads: Failed aborting id ...` /
+`debugger-agent: Unable to listen`, with no crash stack (different from the ADR 0051 D3D12 SaveCache crash). The same
+tier / light passed on the next run. `scripts/visual-qa.ps1` now accepts exactly this case (result OK, N fresh PNGs,
+`Cleanup mono` and `abort_threads` after the result line, no crash marker in the log) and prints a warning with the exit
+code; everything else still fails. The exit code itself was not captured (the wrapper printed only the last lines).
+`scripts/` is outside the truck-artist ownership: lead / build-qa to confirm.
+
+## Curtain band A/B for the owner
+`artifacts/truck-ext-r10/owner-band/band_AB_trailer-side.jpg`, `band_AB_truck-rear34.jpg` (A = with the band, B = plain
+curtain; High overcast, same build otherwise). B is exported with `KAMION_LIVERY_BAND=0` (env switch of
+`trailer_build.py`); the committed export is A. The skirts are in both.
+
+## Self-critique (docs/06 par. 2), author's view only
+- The band is a generic "fleet swoosh": it breaks the 13.6 m grey sheet, but it is also the most game-like element of
+  the round. Plain B is closer to the anonymous rental curtainsiders in the references; A reads better at chase distance.
+- Roof: pooled dirt is regular (three bays per panel, same phase on every panel); a real sheet has one or two bays much
+  worse than the rest and patches. Acceptable at chase distance, visible from a bridge.
+- Skirt panel is flat with one swage line; the latches are small. Clean, slightly "new".
+- Tractor rear lamp lenses are saturated flat tiles in daylight (shader side).
 
 ## Open
 1. `visual-critic` review; phone frames (A16 Low, S24+ High) of `chase`, `truck-side`, `trailer-side`.
-2. Owner decision on the curtain band (art direction) and on the skirts (they hide the tank the A4 sheets showed).
+2. Owner decision on the curtain band (A/B above) and on the skirts (they hide the tank the A4 sheets showed).
 3. Low tier: trailer LOD2 wheel discs are visibly broken by decimation (present before r10, not touched).
 4. Tractor lens colours are flat saturated tiles in daylight (shader / Lights slot, not geometry).
 5. Cab side below the window is still a plain pressed panel (no crease); cab shell shape is owner-approved (D28 / D29)
    and was not touched.
+6. Shader: the Curtain slot ignores the baked dirt mask everywhere, so the dirt slider does not change the roof
+   (rendering-perf, if a washed roof is ever wanted).
+7. `LICENSES.md`: no new asset, texture or third-party data in this round (procedural only).
