@@ -442,6 +442,10 @@ def bake_atlases(pieces, high, high_curtain, a):
             run("PM", "EMIT", key, 8, TINTED, hs)
         A.emit_restore(high_mats)
         run("AO", "AO", key, a.ao_samples, only)
+    # r10 (ADR 0083): the curtain sheets' own AO (folds only). The STATIC AO has the straps as occluders 2 mm off the
+    # sheet: black lines that showed wherever the straps are dropped (LOD2 = the Low tier) and wobbled with the
+    # decimated sheet. The strap colour is still in the albedo there (selected-to-active hits the strap first).
+    run("AO", "AO", "CURTAIN", a.ao_samples, ("Curtain",))
     for o in bpy.data.objects:
         o.hide_render = False
     raw = {s: {k: A.img_array(im) for k, im in imgs[s].items()} for s in BAKED}
@@ -469,6 +473,8 @@ def bake_atlases(pieces, high, high_curtain, a):
             others = cov_static & ~cov_c
             reg = dilate(cov_c, 10) & ~others
             o["N"][reg] = raw[s]["N@CURTAIN"][reg]
+            if "AO@CURTAIN" in raw[s] and "AO" in o:
+                o["AO"][reg] = np.maximum(o["AO"][reg], raw[s]["AO@CURTAIN"][reg])
         out[s] = o
     for px in list(proxies.values()) + hs_static + hs_wheel + hs_curt:
         bpy.data.objects.remove(px)

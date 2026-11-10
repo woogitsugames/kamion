@@ -15,3 +15,8 @@ NEXT: `bash artifacts/truck-ext-r10/tools/full.sh r1` (exports both, Unity build
   r1 self-critique: left trailer bay still empty (boxes were kerb side only), roof from the chase camera is a flat curtain-coloured sheet, tractor rear lamps are slabs.
 - r2 code (not exported yet): pallet boxes both sides, toolbox 0.8 m forward, chocks, roof tarp own light grey + pooled dirt (ROOF_OWN_COLOUR), tractor multi-chamber rear lamps.
 NEXT: `bash artifacts/truck-ext-r10/tools/full.sh r2` then look at r2/High-overcast/{chase,trailer-side,truck-rear34}.png; exported art is NOT committed yet (commit after the final round).
+- 22:50 r2 + r3 done (frames `r2/`, `r3/`): pallet boxes both sides OK, tractor lamps OK; roof albedo 0.62 clipped white in chase (luma 97.6 %), 0.44 still 93.8 % ov / 97.7 % clear -> r4 uses 0.36.
+  r3: curtain-only AO merged into the curtain islands: the black wavy strap lines on Low (present in `before/`) are gone.
+- r4 running: `trailer_export` (roof 0.36, stains x1.0) -> build -> frames High/Low x overcast/clear/lowsun into `r4/`.
+NEXT (if killed): rerun r4 = trailer export + `pwsh artifacts/truck-ext-r10/tools/unity.ps1 -Step build` + `-Step render -Out r4 -Lights overcast,clear,lowsun -Cameras truck-34,truck-front,trailer-34,chase,truck-side,truck-rear34,trailer-side,truck-34r`;
+  then `-Step test`, fill ADR 0083 "Measured", `git add art-source/truck/*/export` (LFS) and commit, copy artifacts/truck-ext-r10 to the main checkout.

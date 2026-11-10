@@ -186,10 +186,12 @@ def _livery_mask(nt):
 
 
 ROOF_OWN_COLOUR = True
+# r2 had 0.62: clipped to white through the D23 curve in the chase view (roof luma 100 %); WORKING_VALUE
+ROOF_RGB = (0.36, 0.365, 0.37)
 ROOF_BOWS = 18              # = top_rails_and_roof nb
 
 
-def _roof_stains(nt, amount=0.75):
+def _roof_stains(nt, amount=1.0):
     """Dirt on the roof sheet: pooled in the sag between two bows (strongest mid-bay, fading to the edges where the
     sheet runs off over the rail), a dusty film overall and darker run-off along both edges. Added to the grime
     factor like the spray term (the bake labels grime_mix / grime_rough see it)."""
@@ -239,8 +241,8 @@ def materials():
         _livery_mask(nt)
     # r10 (ADR 0083): the roof sheet is its own light-grey PVC (not the curtain colour: tint mask 0), with dirt pooled
     # in the sags between the bows and along the edges - what the chase camera looks down on
-    m, nt, b = P("roof_tarp", "CURTAIN", (0.62, 0.63, 0.63), 0.62)
-    _grime(nt, b, (0.62, 0.63, 0.63), 0.62, h0=5.0, amount=0.25, cav=0.6)
+    m, nt, b = P("roof_tarp", "CURTAIN", ROOF_RGB, 0.62)
+    _grime(nt, b, ROOF_RGB, 0.62, h0=5.0, amount=0.25, cav=0.6)
     if ROOF_OWN_COLOUR:
         _roof_stains(nt)
         z = nt.nodes.new("ShaderNodeValue")
