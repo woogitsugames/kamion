@@ -434,7 +434,7 @@ def build(buf, overrides, origin, roads_poly, road_parts, zground, deck_mask_at,
                 rep["stale"].append(f"{o['id']}:island{ii}:no_kerb")
                 continue
             zk[~ok] = np.interp(np.flatnonzero(~ok), np.flatnonzero(ok), zk[ok])
-            fill = isl.get("fill", "soil")
+            fill = isl.get("fill", "soil")             # paving | soil | stones (ADR 0060: river stones / gravel)
             dz = 0.0 if fill == "paving" else -SOIL_BELOW_KERB
             P2, T = _fill(ring, 1.5)
             # interior heights: inverse-distance mean of the kerb tops (islands are small and near flat)
@@ -445,10 +445,10 @@ def build(buf, overrides, origin, roads_poly, road_parts, zground, deck_mask_at,
             z += dz
             if fill != "paving":            # a mounded centre island: the bed follows the terrain where it is higher
                 z = np.maximum(z, zground(P2[:, 0], P2[:, 1]) + 0.05)
-            mat = "sidewalk_paving" if fill == "paving" else "bed_soil"
+            mat = {"paving": "sidewalk_paving", "stones": "bed_stones"}.get(fill, "bed_soil")
             V = np.column_stack([P2, z])
             buf.add("paved", mat, V, P2.copy(), T, src=f"override:{o['id']}:island{ii}")
-            buf.add("collision", "collision_paving" if fill == "paving" else "collision_grass", V, P2.copy(), T,
+            buf.add("collision", "collision_paving" if fill in ("paving", "stones") else "collision_grass", V, P2.copy(), T,
                     src=f"override:{o['id']}:island{ii}")
             n_sh = 0
             if isl.get("shrubs"):

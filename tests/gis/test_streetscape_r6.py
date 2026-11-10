@@ -187,4 +187,5 @@ def test_biezenstwa_plantings_applied():
     assert not pl["stale"], pl["stale"]
     assert pl["hedges"] >= 4 and pl["hedge_m2"] > 40.0
     fills = {i["fill"] for i in pl["islands"]}
-    assert fills == {"paving", "soil"} and pl["shrubs"] >= 3
+    # ADR 0060: the ring centre is loose stones without shrubs (Mapillary 2020-08, D42)
+    assert fills == {"paving", "stones"} and pl["shrubs"] == 0
