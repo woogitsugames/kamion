@@ -200,7 +200,9 @@
 ## r8: dziury w autach, LOD aut na Low, przody (REVIEW r7 cz. 2: N-13, N-14, W-N7), 2026-11-10
 - **N-13, ustalenie.** „Auto z dziurą” w `cab-dash` (2340 px: x 1990–2340, y 300–460) to lusterko krawężnikowe kl. V
   ciągnika (obudowa + ramię + szkło pokazujące kostkę) stojące w kadrze przed zaparkowanym autem, nie brak ścian auta.
-  Dowód: `artifacts/world-fixes/cars-r8/n13/` (ten sam kadr z maską renderera lusterka i bez lusterek). Wygląd szkła
+  Dowód: `artifacts/world-fixes/cars-r8/n13/N13_proof_{High,Low}.jpg` — ten sam kadr z `-Mask MIRROR_Kerb` (szkło:
+  8989 px magenty w polu recenzji, x 2118–2332, y 352–415) i z maską `MIRROR_;DOOR_;CAB_` (szkło + obudowa + ramię:
+  19 215 px, x 2100–2332, y 315–459); auto za lusterkiem ma komplet ścian (klapa, zderzak, tablica). Wygląd szkła
   lusterka (odbicie nieodróżnialne od tła) należy do ciągnika / renderingu, nie do aut — otwarte, poza tym ADR.
 - **Test dziur** (kryterium r7 §14 pkt 3): `tools/worldgen/qa/car_holes_qa.py` — programowy z-bufor, rzut ortogonalny,
   8 azymutów × 3 elewacje (8 / 30 / 55°), piksel 25 mm, reguły silnika (materiały kryjące rysują tylko przód ściany,
@@ -222,5 +224,9 @@
 - **Budżet klatki (szacunek `streetscape_qa.json`, High).** `stretch_04` 1 992 951 → 1 997 615 (limit 2,0 M, zapas
   2,4 tys. — każda kolejna zmiana geometrii aut wymaga ponownego sprawdzenia); `stretch_01` 1 646 902 → 1 661 414;
   `stretch_05_docks` 1 722 465 → 1 742 105. Low: `stretch_01` 721 524 → 745 246, `stretch_04` 962 152 → 962 150.
+- **Koszt na Low (edytor, `stats.txt`, overcast, rysowania instancjonowane / trójkąty).** `truck-34` 491 → 542 / 68k → 79k,
+  `cab-dash` 491 → 553 / 57k → 76k, `stretch-01` 558 → 624 / 73k → 95k. Tablica pierwszego auta w `truck-34` Low
+  czytelna („BMN 8577”, `compare/Low-overcast_truck-34_plates_native.png`).
+- **Testy.** pytest 201 zielonych, EditMode 147 / 147.
 - **Niezmierzone.** Koszt podłogi LOD0 16 m i bogatszego LOD1 na telefonie (A16 Low): UNVERIFIED.
 - Dowody: `artifacts/world-fixes/cars-r8/{before,after,compare,holes-before,holes-after-r8b,n13}`.
