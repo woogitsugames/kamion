@@ -248,7 +248,8 @@ def box_panel(n=1024):
 def noise_cassette(n=1024):
     """Absorbing noise-barrier cassettes (ekran akustyczny, aluminium/steel kasety): 4.0 m bays between HEB posts
     (vertical gap at u = 0, the post covers it), horizontal elements 0.5 m high with a lip joint, perforated road
-    face (micro-slot rows every 25 mm read as a fine horizontal grain), per-cassette tone (fading, replaced
+    face (round holes 10 mm on a staggered 25 mm grid, relief only: normal map / AO, never albedo, and low-passed per
+    tier so Medium / Low carry no aliased dimples - review r6 W-N2), per-cassette tone (fading, replaced
     elements), road-spray grime on the lowest 0.4-0.7 m and run-off streaks below every joint. v = metres above
     the top of the 0.5 m concrete plinth (furniture.noise_barriers UV). Element size WORKING_VALUE (typical Polish
     products: 3.96-4.96 x 0.5 m; BDOT10k OT_OIKM_L carries no type). Tile 4 x 4 m."""
@@ -263,10 +264,15 @@ def noise_cassette(n=1024):
     lip = sstep(0.03, 0.012, np.abs(pv - 0.035)) * (1 - joint)          # pressed lip just above each joint
     du = np.minimum(X, L - X)
     gap = sstep(0.02, 0.008, du)                                          # bay end (behind the post flange)
-    slots = 0.5 + 0.5 * np.cos(2 * np.pi * v / 0.025)
+    # perforation: holes d = 10 mm (8-12 mm class) on a 25 mm staggered grid (rows offset by half a pitch)
+    P_ = 0.025
+    prow = np.floor(v / P_)
+    hu = (X + 0.5 * P_ * (prow % 2)) % P_ - 0.5 * P_
+    hv = v % P_ - 0.5 * P_
+    slots = sstep(0.0058, 0.0042, np.hypot(hu, hv)) * (1 - joint)
     tone = hash01(row, 11)
     tone = 0.08 * (tone - 0.5) + 0.08 * (tone > 0.9)                       # ~10 % visibly newer elements
-    lum = (1.0 + tone - 0.05 * slots + 0.025 * noise(c, 2, 0.1, 2.0)) * (1 - 0.5 * joint) * (1 + 0.06 * lip) * (1 - 0.6 * gap)
+    lum = (1.0 + tone + 0.025 * noise(c, 2, 0.1, 2.0)) * (1 - 0.5 * joint) * (1 + 0.06 * lip) * (1 - 0.6 * gap)
     # run-off: streaks start at every joint and fade downward within the element, plus long streaks from the cap
     s = noise(c, 3, 0.04, 1.2, beta=0.9, aniso=1.0 / 8.0)
     under = sstep(0.0, 0.25, 0.5 - pv)                                    # strongest right under a joint
@@ -281,14 +287,16 @@ def noise_cassette(n=1024):
     splash = np.clip(splash * (0.75 + 0.25 * drops), 0, 1)
     lum *= 1 - 0.32 * splash
     lum *= 1 - 0.05 * sstep(0.5, 2.0, noise(c, 7, 0.3, 3.0, beta=1.2))     # cloudy weathering
-    h = -6e-3 * joint + 1.2e-3 * lip - 0.25e-3 * slots - 8e-3 * gap
+    h = -6e-3 * joint + 1.2e-3 * lip - 0.6e-3 * slots - 8e-3 * gap
     rough = 0.55 + 0.12 * splash + 0.1 * joint + 0.05 * noise(c, 8, 0.1, 1.0)
 
     def grime(a):
         brown = np.array([1.0, 0.93, 0.80], np.float32)                   # road dust is warm grey-brown
         k = np.clip(splash, 0, 1)[..., None]
         return a * (1 - k) + a * brown * k
-    return _finish("noise_cassette", c, lum, h, rough, tone + 0.5, np.maximum(joint, gap), extra=grime, ao_k=0.5)
+    st = _finish("noise_cassette", c, lum, h, rough, tone + 0.5, np.maximum(joint, gap), extra=grime, ao_k=0.5)
+    st.aa_tiers = True
+    return st
 
 
 def car_grime(n=1024):
@@ -320,6 +328,92 @@ def car_grime(n=1024):
     return _finish("car_grime", c, lum, h, rough, np.zeros_like(X), np.zeros_like(X), extra=tint, ao_k=0.2)
 
 
+def concrete_fence_panel(n=1024):
+    """Prefabricated concrete panel fence (plot walls, OSM barrier=wall): 2.0 m bays between posts (u = 0, 2 under the
+    post), 0.5 m panels stacked 4 high with a shallow V joint, cast face with fine pores and sparse air holes, per-panel
+    tone (different casts), road spray on the lowest ~0.6 m and run-off below every joint. Smooth plain panels (no stone
+    relief: not visible on any reference). v = metres above the slab base (0.2 m below ground). Tile 4 x 2 m.
+    Review r6 W-N2: the set was referenced but missing, the fallback detail map shimmered into large dimples on Low."""
+    Lx, Ly = 4.0, 2.0
+    c = Ctx(n, n // 2, Lx, Ly, seed=533)
+    X, Y = c.xy()
+    v = Ly - Y
+    pv = v % 0.5
+    row = np.floor(v / 0.5).astype(int)
+    bay = np.floor(X / 2.0).astype(int)
+    dj = np.minimum(pv, 0.5 - pv)
+    joint = sstep(0.012, 0.004, dj)
+    du = np.minimum(X % 2.0, 2.0 - X % 2.0)
+    gap = sstep(0.03, 0.012, du)
+    tone = hash01(row * 7 + bay, 13)
+    pores = noise(c, 1, 0.004, 0.03, beta=0.5)
+    holes = sstep(2.2, 3.2, -noise(c, 2, 0.004, 0.012, beta=0.2))
+    lum = (1.0 + 0.07 * (tone - 0.5) + 0.02 * pores) * (1 - 0.35 * joint) * (1 - 0.5 * gap) * (1 - 0.25 * holes)
+    s = noise(c, 3, 0.04, 1.0, beta=0.9, aniso=1.0 / 8.0)
+    under = sstep(0.0, 0.3, 0.5 - pv)
+    lum *= 1 - 0.08 * sstep(0.5, 1.8, s) * under
+    lum *= _streaks(c, 4, 0.06)
+    fan = noise(c, 5, 0.08, 1.0, beta=1.0, aniso=3.0)
+    splash = sstep(0.8 + 0.15 * fan, 0.2, v) ** 1.5
+    lum *= 1 - 0.25 * splash
+    lum *= 1 - 0.05 * sstep(0.5, 2.0, noise(c, 7, 0.3, 3.0, beta=1.2))
+    h = -4e-3 * joint - 6e-3 * gap - 0.6e-3 * holes + 0.15e-3 * pores
+    rough = 0.85 + 0.08 * splash
+
+    def grime(a):
+        k = np.clip(splash, 0, 1)[..., None]
+        return a * (1 - k) + a * np.array([1.0, 0.94, 0.82], np.float32) * k
+    st = _finish("concrete_fence_panel", c, lum, h, rough, tone, np.maximum(joint, gap), extra=grime, ao_k=0.5)
+    st.aa_tiers = True
+    return st
+
+
+def hedge_foliage(n=512):
+    """Clipped hedge face (Berberis thunbergii 'Atropurpurea' type, the red roundabout hedges of the CC0 Bieżeństwa
+    photo): leaf clusters 15-60 mm on a 1-3 cm leaf scale, dark gaps between them, sparse lighter tips on the cut
+    surface, a few deeper holes where the hedge is thin. Modulation map (mean 0.5) tinted by the manifest colour.
+    u = metres along the hedge, v = metres over the cross-section (streetscape.plantings). Tile 1.5 x 1.5 m.
+    WORKING_VALUE look (no measured scan)."""
+    L = 1.5
+    c = Ctx(n, n, L, L, seed=531)
+    leaves = noise(c, 1, 0.012, 0.06, beta=0.6)
+    clumps = noise(c, 2, 0.08, 0.35, beta=1.0)
+    holes = sstep(1.3, 2.4, -noise(c, 3, 0.15, 0.6, beta=1.0))
+    gaps = sstep(0.2, -0.9, leaves + 0.6 * clumps)                      # shadowed voids between clusters
+    tips = sstep(1.0, 2.2, leaves) * sstep(-0.2, 0.8, clumps)
+    lum = (1.0 + 0.10 * clumps + 0.10 * tips) * (1 - 0.55 * gaps) * (1 - 0.6 * holes)
+    h = 0.02 * (0.5 * leaves + clumps) - 0.05 * holes
+    rough = 0.75 + 0.15 * gaps
+    def tint(a):                                                         # tips greener-brown, voids neutral
+        k = np.clip(tips, 0, 1)[..., None] * 0.35
+        return a * (1 - k) + a * np.array([0.85, 1.25, 0.9], np.float32) * k
+    return _finish("hedge_foliage", c, lum, h, rough, np.zeros_like(lum), np.clip(gaps + holes, 0, 1), extra=tint,
+                   ao_k=1.0)
+
+
+def soil_bed(n=512):
+    """Planting bed on a traffic island: dark loam with pine-bark mulch chips (20-60 mm), a few pale stones, leaf
+    litter in patches. Modulation map tinted by the manifest colour (bed_soil). u, v = plan metres. Tile 2 x 2 m.
+    WORKING_VALUE look."""
+    L = 2.0
+    c = Ctx(n, n, L, L, seed=532)
+    d1, d2, i1, _, nsites = voronoi(c, 1, 0.035, 1.0)
+    chip = hash01(i1, 5)
+    crack = sstep(0.006, 0.0015, d2 - d1)
+    clods = noise(c, 2, 0.05, 0.4, beta=1.0)
+    stones = (hash01(i1, 7) > 0.992).astype(np.float32) * sstep(0.004, 0.012, d2 - d1)
+    litter = sstep(0.6, 1.6, noise(c, 3, 0.1, 0.8, beta=1.0))
+    lum = (0.9 + 0.18 * chip * sstep(-1.0, 1.0, clods) + 0.15 * clods) * (1 - 0.18 * crack) * (1 + 0.35 * stones) * (1 + 0.2 * litter)
+    h = 0.006 * chip + 0.01 * clods - 0.006 * crack
+    rough = 0.85 + 0.1 * crack
+    def tint(a):
+        k = np.clip(stones, 0, 1)[..., None]
+        a = a * (1 - k) + a * np.array([1.0, 1.1, 1.2], np.float32) * k
+        kl = np.clip(litter, 0, 1)[..., None] * 0.5
+        return a * (1 - kl) + a * np.array([1.1, 0.95, 0.7], np.float32) * kl
+    return _finish("soil_bed", c, lum, h, rough, chip, crack, extra=tint, ao_k=0.8)
+
+
 FACADE_SETS = {
     "sandwich_ribbed": dict(fn=sandwich_ribbed, tile_m=[6.0, 6.0],
         slots=["hall_wall_grey", "hall_wall_silver", "hall_wall_white", "hall_wall_ivory", "booth_panel"],
@@ -343,6 +437,12 @@ FACADE_SETS = {
         note="Container side corrugation 0.278 m pitch, dents, rust spots."),
     "noise_cassette": dict(fn=noise_cassette, tile_m=[4.0, 4.0], slots=["noise_panel"],
         note="Absorbing noise-barrier cassettes 4.0 x 0.5 m, perforated face, joint lips, splash grime, run-off."),
+    "concrete_fence_panel": dict(fn=concrete_fence_panel, tile_m=[4.0, 2.0], slots=["concrete_fence"],
+        note="Prefab concrete panel fence: 2 m bays, 0.5 m panels, pores, joints, splash grime, run-off."),
+    "hedge_foliage": dict(fn=hedge_foliage, tile_m=[1.5, 1.5], slots=["hedge_berberis"],
+        note="Clipped red berberis hedge face: leaf clusters, dark voids, thin holes (u along, v over the section)."),
+    "soil_bed": dict(fn=soil_bed, tile_m=[2.0, 2.0], slots=["bed_soil"],
+        note="Island planting bed: loam with bark mulch chips, a few stones, leaf litter (u, v plan metres)."),
     "car_grime": dict(fn=car_grime, tile_m=[5.0, 2.5], slots=["car_paint_*"],
         note="Parked-car paint film: road spray on sills, dust on top, rain runs (u along body, v = height)."),
     "box_panel": dict(fn=box_panel, tile_m=[4.8, 2.7], slots=["trailer_box_white"],

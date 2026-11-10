@@ -203,7 +203,15 @@ M = {
     "bridge_fascia_red": {"color": [0.30, 0.05, 0.04], "rough": 0.7},
     "bridge_fascia_green": {"color": [0.07, 0.17, 0.10], "rough": 0.7},
     "pier_yellow": {"color": [0.46, 0.40, 0.17], "rough": 0.85},
-    "noise_glass": {"color": [0.55, 0.60, 0.60], "rough": 0.1, "alpha": 0.22},
+    # transparent noise screens (PMMA / laminated glass, viaduct decks): clear sheet with a faint green edge tint, sky
+    # reflection, road-spray film on the lowest ~0.9 m (Kamion/World Car Glass; UV0 v = 1 at the foot -> -0.25 at the
+    # top, roads.meshing). Review r6 W-N2: the flat 0.55/0.60/0.60 alpha 0.22 sheet read as solid mint. WORKING_VALUE
+    "noise_glass": {"color": [0.030, 0.042, 0.040], "rough": 0.04, "alpha": 0.10, "blend": True, "shader": "car_glass",
+                    "dust": 0.75},
+    # authored plantings (streetscape.plantings, review r6 W-N12): red berberis hedge, island bed soil / bark mulch.
+    # Linear albedo WORKING_VALUE from the CC0 Bieżeństwa photo (hedge vs asphalt luminance ratio, overcast).
+    "hedge_berberis": {"color": [0.20, 0.046, 0.055], "rough": 0.8, "surface": "grass", "texture_set": "hedge_foliage"},
+    "bed_soil": {"color": [0.17, 0.13, 0.095], "rough": 0.9, "surface": "grass", "texture_set": "soil_bed"},
     # sign gantry (streetscape.life_props.sign_gantry)
     "gantry_steel": {"color": [0.42, 0.43, 0.43], "rough": 0.55, "metal": 0.9},
     # landmarks

@@ -22,6 +22,7 @@ from . import gate as GT
 from . import landmarks as LM
 from . import life as LF
 from . import paved as PV
+from . import plantings as PT
 from . import sources as SRC
 from . import vegetation as VG
 
@@ -95,8 +96,36 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     def zground(e, n):
         return PV.bilinear(zc, hf, np.asarray(e, float), np.asarray(n, float))
 
+    # terrain collider (RegionImporter: the 4 m terrain_lod2 grid of terrain_mesh.chunks, min-filtered next to roads):
+    # a pole on a verge must not stand above it either (3 lamps hung 0.30 m over it at the 1 m conformed terrain)
+    from terrain_mesh import chunks as CH
+    z4 = CH.lod_grid(zc, mask, 4)
+
+    def zcollider(e, n):
+        e = np.asarray(e, float)
+        n = np.asarray(n, float)
+        fi = np.clip((e - hf.x0) / 4.0, 0, z4.shape[1] - 1.001)
+        fj = np.clip((hf.y1 - n) / 4.0, 0, z4.shape[0] - 1.001)
+        i0, j0 = np.floor(fi).astype(int), np.floor(fj).astype(int)
+        fx, fy = fi - i0, fj - j0
+        za, zb = z4[j0, i0], z4[j0, i0 + 1]
+        zd, ze = z4[j0 + 1, i0], z4[j0 + 1, i0 + 1]
+        # chunks.grid_mesh diagonal a -> e: triangles (a, d, e) and (a, e, b)
+        return np.where(fx >= fy, za + fx * (zb - za) + fy * (ze - zb), za + fy * (zd - za) + fx * (ze - zd))
+
+    def zground_col(e, n):
+        return np.minimum(zground(e, n), zcollider(e, n))
+
+    # authored plantings (hedges traced from the orthophoto, kerb-enclosed islands filled to the kerb top; r6 W-N12)
+    def deck_at(e, n):
+        i, j = int(round(e - hf.x0)), int(round(hf.y1 - n))
+        return bool(0 <= j < deck_mask.shape[0] and 0 <= i < deck_mask.shape[1] and deck_mask[j, i])
+    plant_blocked = PT.build(w.buf, overrides, origin, roads_poly, road_parts, zground, deck_at, rep)
+    if rep.get("plantings", {}).get("hedges") or rep.get("plantings", {}).get("islands"):
+        log("plantings", {k: v for k, v in rep["plantings"].items() if k != "islands"})
+
     # furniture
-    pl = FU.Placer(zsurf, zground, surf=FU.SurfaceTop(w.buf.parts),
+    pl = FU.Placer(zsurf, zground_col, surf=FU.SurfaceTop(w.buf.parts),
                    col=FU.SurfaceTop(w.buf.parts, collision=True))
     codes, boards = set(), {}
     frep = {}
@@ -143,6 +172,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
 
     # vegetation
     blocked = ndimage.binary_dilation(mask | bmask, iterations=3)
+    if plant_blocked:
+        blocked |= PV.rasterize_polys(plant_blocked, hf)
     vrep = {}
     trees, forests = VG.place(src, origin, hf, zc, blocked, vrep)
     forest_mix = vrep.pop("_forest_mix")

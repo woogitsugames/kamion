@@ -127,3 +127,23 @@ overrides:
       base diameter from the OSM footprint (8.3 m), top diameter WORKING_VALUE.
     confidence: medium
     verify: as above
+  # ---------------------------------------------------------------- plantings (streetscape.plantings, review r6 W-N12)
+  - id: biezenstwa-plantings
+    kind: plantings
+    reason: >-
+      OSM has no barrier=hedge / flowerbed around Rondo Pamięci Bieżeństwa 1915 r. The CC0 photo 20201102_152339
+      (Rakoon, docs/REFERENCES.md) shows clipped dark-red berberis hedges on the lawns beside the footpaths and a
+      bare soil / mulch bed with red shrubs in the roundabout centre; the GUGiK 2024-05-27 orthophoto (0.25 m) shows
+      the same dark shrub masses (traced below, EPSG:2180, +-0.5 m; OSM centrelines overlay the orthophoto within
+      1-2 m), the light-brown soil centre island under the viaduct and a paved splitter island between the two zebras
+      of the northern arm. Hedge height 0.6-0.8 m, species and the shrub layout in the centre are WORKING_VALUE.
+    confidence: medium
+    verify: owner photo session (roundabout islands, hedge heights, splitter island surface)
+    beds:
+      - {name: E1, plant: berberis_red, rim_m: 0.5, ring: [[778575.4, 595530.5], [778577.9, 595529.7], [778580.4, 595527.2], [778582.9, 595523.8], [778585.4, 595519.7], [778586.9, 595515.9], [778586.7, 595513.8], [778584.6, 595514.7], [778581.2, 595517.2], [778577.9, 595519.7], [778575.8, 595522.6], [778575.0, 595526.3]]}
+      - {name: E2, plant: berberis_red, rim_m: 0.3, ring: [[778580.8, 595535.1], [778583.8, 595535.5], [778585.8, 595533.8], [778587.5, 595530.9], [778588.8, 595527.2], [778590.8, 595523.0], [778593.3, 595519.7], [778595.0, 595517.2], [778593.3, 595517.6], [778590.0, 595520.5], [778586.7, 595524.2], [778583.3, 595529.2], [778581.2, 595532.6]]}
+      - {name: A, plant: berberis_red, rim_m: 0.6, ring: [[778536.5, 595540.5], [778540.0, 595543.0], [778546.0, 595543.7], [778552.0, 595543.5], [778557.0, 595542.5], [778558.5, 595540.0], [778556.0, 595537.0], [778550.0, 595535.0], [778543.0, 595535.0], [778538.0, 595537.0]]}
+      - {name: C, plant: berberis_red, rim_m: 0.4, ring: [[778556.0, 595567.5], [778560.0, 595568.6], [778567.0, 595568.8], [778573.0, 595568.2], [778574.2, 595566.5], [778572.0, 595563.8], [778565.0, 595563.2], [778559.0, 595563.6], [778556.5, 595565.0]]}
+    islands:
+      - {name: north-splitter, at: [778566.8, 595538.0], fill: paving}
+      - {name: ring-centre, at: [778549.7, 595506.5], fill: soil, shrubs: berberis_red, shrub_spacing_m: 2.2, shrub_share: 0.7}

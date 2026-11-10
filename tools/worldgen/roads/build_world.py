@@ -82,8 +82,12 @@ MATERIALS = {
     "verge_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
     "shoulder_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     "terrain_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
-    "marking_white": {"color": [0.60, 0.60, 0.57], "rough": 0.65,   # worn paint, albedo 0.55-0.65 (r4 W-H6), WORKING_VALUE
-                      "surface": "paint",
+    # road paint film, albedo 0.60 (0.55-0.65, r4/r6 W-H6, WORKING_VALUE) over the asphalt_worn set of the road beneath:
+    # Kamion/World PBR _DECAL_PAINT wears it through to that asphalt on the aggregate peaks in the wheel paths of
+    # transverse marks (TEXCOORD_1, roads.markings._paint_uv1), adds a grey-brown traffic film by age and keeps the
+    # distance pre-filter towards the real asphalt albedo (0.12 m line < 1 px). ADR 0049.
+    "marking_white": {"color": [0.60, 0.60, 0.59], "rough": 0.65, "surface": "paint", "texture_set": "asphalt_worn",
+                      "paint": {"wheel_wear": 0.85, "age_wear": 0.25, "dirt": 0.43, "line_w_m": 0.12},
                       "decal": True, "depth_offset_m": S.MARKING_LIFT},
     "collision_asphalt": {"color": [1, 0, 1], "rough": 1.0, "surface": "asphalt", "collision": True},
     "collision_curb": {"color": [1, 0, 1], "rough": 1.0, "surface": "concrete_kerb", "collision": True},

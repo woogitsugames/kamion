@@ -74,6 +74,7 @@ namespace Game.World.Import
             if (def.Get("uv1") as string == "along_m") uv1 = true;
             if (id == "road_asphalt" || id == "road_asphalt_new") uv1 = true;           // _ROADWEAR
             if (id == "decal_patch" || id == "decal_oil" || id == "decal_tyre") { uv0 = true; uv1 = true; }
+            if (def.Get("paint") is Dictionary<string, object>) uv1 = true;              // _DECAL_PAINT wear data (ADR 0049)
             if (def.Get("procedural") as string == "grate" || Stripes(def) != null) uv0 = true;
             if (id == "terrain_grass") colors = true;
         }
@@ -261,6 +262,16 @@ namespace Game.World.Import
                 {
                     mat.EnableKeyword("_DECAL_GRATE");
                     mat.renderQueue = (int)RenderQueue.Geometry + 15;
+                }
+                else if (def.Get("paint") is Dictionary<string, object> pd)
+                {
+                    // road markings (ADR 0049): paint film over the road's own asphalt set (calibrated, tint 1)
+                    mat.EnableKeyword("_DECAL_PAINT");
+                    mat.SetVector("_Tint", Vector4.one);
+                    float rough = def.Get("rough") != null ? (float)Num(def.Get("rough")) : 0.65f;
+                    mat.SetVector("_PaintColor", new Vector4(col.x, col.y, col.z, Mathf.Clamp01(1f - rough)));
+                    float P(string k, float d) => pd.Get(k) != null ? (float)Num(pd.Get(k)) : d;
+                    mat.SetVector("_PaintWear", new Vector4(P("wheel_wear", 0.85f), P("age_wear", 0.25f), P("dirt", 0.3f), P("line_w_m", 0.12f)));
                 }
                 else if (id == "decal_tyre")
                 {

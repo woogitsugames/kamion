@@ -204,6 +204,8 @@ class SurfaceSet:
     ao_scales: tuple = (0.004, 0.015, 0.05)
     ao_k: float = 1.0
     extra_albedo: dict = field(default_factory=dict)   # variant name -> albedo (e.g. late_autumn)
+    aa_tiers: bool = False           # Gaussian low-pass (sigma 0.6 x factor) before each tier's box downsample: fine
+                                     # periodic relief (perforation) vanishes instead of aliasing into big dimples
 
 
 def write_set(s: SurfaceSet, out_root: Path, tiers=("High", "Medium", "Low")) -> dict:
@@ -228,14 +230,14 @@ def write_set(s: SurfaceSet, out_root: Path, tiers=("High", "Medium", "Low")) ->
             continue
         px = c.px * f
         alb = down(s.albedo, f)
-        hh = down(h, f)
+        hh = down(blur(h, 0.6 * f) if (s.aa_tiers and f > 1) else h, f)
         nrm = normals_from_height(hh, px)
         # Toksvig-style: slope variance lost by the downsample goes into roughness, so far surfaces don't sparkle
         var = down(slope2_hi, f) - down(sx_hi, f) ** 2 - down(sy_hi, f) ** 2
         alpha = down(s.rough, f) ** 2
         rough = np.sqrt(np.sqrt(alpha ** 2 + 2 * np.maximum(var, 0)))
         rough = np.clip(rough, 0.02, 1)
-        ao = down(ao_hi, f)
+        ao = down(blur(ao_hi, 0.6 * f) if (s.aa_tiers and f > 1) else ao_hi, f)
         metal = down(s.metal, f) if s.metal is not None else np.zeros_like(ao)
         dmask = down(s.detail_mask, f) if s.detail_mask is not None else np.ones_like(ao)
         d = out / t
