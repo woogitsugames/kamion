@@ -99,7 +99,7 @@ Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z c
 
 | ID | Źródło | Licencja | W gicie? | Użycie |
 |---|---|---|---|---|
-| `world-street-props` | `tools/worldgen/streetscape/props.py` + `export.py` → `art-source/world/props/street_props.glb` | własna (projekt) | tak | latarnie, słupki, tablice znaków, sygnalizatory S-1, wiaty, szlabany, bramy, słupki U-12, słupy, kratownice, ławki, kosze, szafki; generyczne auta osobowe i dostawcze bez marek (3 LOD, `life_props.py`) |
+| `world-street-props` | `tools/worldgen/streetscape/props.py` + `export.py` → `art-source/world/props/street_props.glb` | własna (projekt) | tak | latarnie, słupki, tablice znaków, sygnalizatory S-1, wiaty, szlabany, bramy, słupki U-12, słupy, kratownice, ławki, kosze, szafki; generyczne auta osobowe (hatch, sedan, kombi, SUV) i lekki dostawczy bez marek, puste tablice (3 LOD, `life_cars.py`) |
 | `world-sign-faces` | `tools/worldgen/streetscape/signs.py` → `art-source/world/signs/*.png` | własna; wzory znaków wg rozporządzenia (Dz.U. 2019 poz. 2311, zał. 1), narysowane od zera z prymitywów | tak | A-7, B-20, B-33, C-12, D-1, D-6, D-15, schematyczne E-2 |
 | `font-dejavu-sans` | DejaVu Sans Bold (dołączony do matplotlib, `mpl-data/fonts/ttf`) | Bitstream Vera License + public domain (DejaVu): wolno osadzać i rasteryzować, z zakazem sprzedaży samego fontu | rasteryzowany w PNG | cyfry B-33, „STOP”, napisy na schematycznych E-2, numery ramp. Nie jest to krój „Drogowskaz” z rozporządzenia: tablice E są schematyczne |
 | `world-trees` | `tools/blender/world/make_trees.py` → `art-source/world/vegetation/trees.glb`, `trees_lod2.glb`, `impostor_*.png` | własna (projekt) | tak | sosna, brzoza, olsza, klon, lipa, krzew (3 warianty, LOD0/LOD1/impostor) |

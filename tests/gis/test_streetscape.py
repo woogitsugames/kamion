@@ -137,9 +137,14 @@ def test_life_prototypes_budget_and_lods():
     """Static life props: LOD1 well below LOD0, mobile-sized LOD0 (docs/06 par. 6), every prototype buildable."""
     from streetscape import life_props as LP
     P = LP.build_all()
-    tris = {k: (sum(len(p["T"]) for p in a.out()), sum(len(p["T"]) for p in b.out())) for k, (a, b, _) in P.items()}
+    # prototypes are (lod0, lod1, collision[, lod2]); the optional third LOD came with ADR 0041
+    tris = {k: (sum(len(p["T"]) for p in v[0].out()), sum(len(p["T"]) for p in v[1].out())) for k, v in P.items()}
     for k, (t0, t1) in tris.items():
         assert t1 <= t0, k
+    for k, v in P.items():
+        if k.startswith(("car_", "van_")):
+            t2 = sum(len(p["T"]) for p in v[3].out())
+            assert 0 < t2 <= 60 and t2 < tris[k][1], k
     assert max(t0 for k, (t0, _) in tris.items() if k.startswith(("car_", "van_"))) <= 600
     assert max(t1 for k, (_, t1) in tris.items() if k.startswith(("car_", "van_"))) <= 120
     assert max(t0 for k, (t0, _) in tris.items() if k.startswith("trailer_")) <= 1200

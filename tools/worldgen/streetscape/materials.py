@@ -106,6 +106,7 @@ M = {
     "car_paint_green": {"color": [0.035, 0.07, 0.045], "rough": 0.35, "metal": 0.4, "texture_set": "car_grime"},
     "car_paint_beige": {"color": [0.36, 0.32, 0.24], "rough": 0.4, "metal": 0.3, "texture_set": "car_grime"},
     "car_glass": {"color": [0.02, 0.022, 0.025], "rough": 0.05},
+    "car_plate": {"color": [0.72, 0.72, 0.70], "rough": 0.45},      # blank registration plate (no characters)
     "car_trim": {"color": [0.025, 0.025, 0.025], "rough": 0.6},
     "car_light_head": {"color": [0.5, 0.5, 0.5], "rough": 0.1},
     "car_light_tail": {"color": [0.35, 0.02, 0.02], "rough": 0.15},

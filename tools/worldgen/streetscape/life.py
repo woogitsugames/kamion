@@ -43,12 +43,11 @@ from roads import standards as S
 
 from . import life_props as LP
 
-CAR_SHARE = [("silver", 0.22), ("grey", 0.20), ("black", 0.18), ("white", 0.18), ("blue", 0.09), ("red", 0.07),
-             ("green", 0.03), ("beige", 0.03)]
+CAR_SHARE = [("silver", 0.22), ("grey", 0.20), ("black", 0.18), ("white", 0.18), ("blue", 0.12), ("red", 0.10)]
 START_CLEAR_R = 120.0        # m around the route start kept free of parked vehicles (r5, WORKING_VALUE, interim)
 START_CLEAR_L = 250.0        # m of route from the start ...
 START_CLEAR_W = 45.0         # ... buffered by this half width (covers the yard seen from g3a_eye_s0012..s0212)
-BODY_SHARE = [("hatch", 0.38), ("sedan", 0.24), ("estate", 0.38)]
+BODY_SHARE = [("hatch", 0.34), ("sedan", 0.16), ("estate", 0.22), ("suv", 0.28)]    # WORKING_VALUE street mix
 OCCUPANCY = 0.72      # weekday daytime share of occupied bays (WORKING_VALUE; Polish city lots are mostly full)
 
 
@@ -493,7 +492,7 @@ def parking(pl, paved, sp, report, buf=None, zsurf=None, park_union=None):
             yaw = yaw_of(nose) + (hf(*key, "yaw") - 0.5) * 0.08
             if hf(*key, "van") < 0.15:
                 proto = f"van_{pick([('white', 0.5), ('silver', 0.25), ('white2', 0.25)], hf(*key, 'col'))}"
-                hl = 2.75
+                hl = LP.VAN["L"] / 2 + 0.05
             else:
                 body = pick(BODY_SHARE, hf(*key, 'body'))
                 proto = f"car_{body}_{pick(CAR_SHARE, hf(*key, 'col'))}"

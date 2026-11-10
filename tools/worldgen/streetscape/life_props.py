@@ -1,8 +1,9 @@
 """Static "life" prototypes and the depot gate kit (our own procedural meshes, same frame as streetscape.props):
 x = right, y = front, z = up, origin on the ground.
 
-  car_<body>_<colour>     passenger cars (hatch / sedan / estate), origin = centre of the footprint, +y = nose
-  van_<colour>            panel van (3.5 t class), origin = centre, +y = nose
+  car_<body>_<colour>     passenger cars (hatch / sedan / estate / suv), origin = centre of the footprint,
+                          +y = nose; built in streetscape.life_cars (profile bodies, LOD0 / LOD1 / LOD2)
+  van_<colour>            car-derived light van (4.5 m), origin = centre, +y = nose (life_cars)
   trailer_<kind>_<k>      13.6 m semitrailer standing on its landing legs (dropped at a dock or in a yard),
                           origin = centre of the REAR edge on the ground, +y = toward the kingpin, so a trailer
                           backed onto a dock door is placed at the door with yaw = wall outward normal.
@@ -36,17 +37,12 @@ import math
 import numpy as np
 
 from .props import Mesh
+from .life_cars import CARS, CAR_COLOURS, VAN, VAN_COLOURS, car, van, _paint_uv  # noqa: F401  (ADR 0041 par. 6)
 
-CAR_COLOURS = ["silver", "grey", "black", "white", "blue", "red", "green", "beige"]
-VAN_COLOURS = ["white", "silver", "white2"]
 CURTAIN_COLOURS = ["grey", "blue", "white", "red", "green", "silver"]
 TRACTOR_COLOURS = ["white", "silver", "blue", "red", "green", "black"]
 CONTAINER_COLOURS = ["rust", "blue", "grey", "green", "beige", "white"]
 BIN_COLOURS = ["green", "grey", "yellow", "blue"]
-# body dims: L, W, H, belt z, roof start/end (fractions of L from the rear), windscreen base, hood z at the nose
-CARS = {"hatch": dict(L=4.10, W=1.78, H=1.48, belt=0.93, yC=0.04, yR=0.12, yF=0.55, yA=0.72, nose=0.78, tail=0.95),
-        "sedan": dict(L=4.70, W=1.82, H=1.45, belt=0.92, yC=0.17, yR=0.30, yF=0.60, yA=0.74, nose=0.76, tail=0.90),
-        "estate": dict(L=4.70, W=1.82, H=1.50, belt=0.93, yC=0.03, yR=0.08, yF=0.60, yA=0.74, nose=0.76, tail=0.96)}
 SIGNS = {"hala_a": "HALA A", "hala_b": "HALA B", "hala_c": "HALA C", "hala_d": "HALA D", "biuro": "BIURO",
          "recepcja": "RECEPCJA", "dostawy": "DOSTAWY", "portiernia": "PORTIERNIA", "magazyn": "MAGAZYN",
          "serwis": "SERWIS"}
@@ -112,183 +108,6 @@ def wheel(m, c, r, w, seg, axis=(1, 0, 0), tyre="tyre", rim="rim", rim_r=0.62, o
 
 def bx(m, mat, x0, x1, y0, y1, z0, z1):
     m.box(mat, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], abs(x1 - x0) / 2, abs(y1 - y0) / 2, abs(z1 - z0) / 2)
-
-
-# ------------------------------------------------------------------------------------------- cars
-def _paint_uv(m):
-    """UV of every car_paint_* primitive = (y, z) in metres (side projection), so the car_grime set puts road
-    film on the sills and bumpers and dust on the roof whatever helper built the part."""
-    for mat, p in m.prims.items():
-        if mat.startswith("car_paint_"):
-            p[2] = [np.asarray(V, float)[:, [1, 2]] for V in p[0]]
-    return m
-
-
-def _lod2_body(m, paint, L, W, zb, zt, belt, H, yR, yF, glass_inset=0.18):
-    """LOD2 (impostor distance, ~40 tris): body prism, greenhouse frustum, dark band for the wheels."""
-    hw = W / 2
-    loft(m, paint, [np.array([(hw, zb), (hw, zt), (-hw, zt), (-hw, zb)])[::-1]] * 2, [-L / 2, L / 2])
-    wt = hw - glass_inset
-    P = {"cl": [-hw + 0.04, -L / 2 + 0.15, belt], "cr": [hw - 0.04, -L / 2 + 0.15, belt],
-         "al": [-hw + 0.04, L / 2 - 0.9, belt], "ar": [hw - 0.04, L / 2 - 0.9, belt],
-         "rl": [-wt, yR, H], "rr": [wt, yR, H], "fl": [-wt, yF, H], "fr": [wt, yF, H]}
-    g = "car_glass"
-    m.quad(g, P["ar"], P["al"], P["fl"], P["fr"])
-    m.quad(g, P["cl"], P["cr"], P["rr"], P["rl"])
-    m.quad(g, P["cr"], P["ar"], P["fr"], P["rr"])
-    m.quad(g, P["al"], P["cl"], P["rl"], P["fl"])
-    m.quad(paint, P["rl"], P["rr"], P["fr"], P["fl"])
-    bx(m, "tyre", -hw + 0.02, hw - 0.02, -L / 2 + 0.35, L / 2 - 0.35, 0.0, zb + 0.01)
-    return _paint_uv(m)
-
-
-def car(body, colour):
-    d = CARS[body]
-    L, W, H = d["L"], d["W"], d["H"]
-    paint = f"car_paint_{colour}"
-    out = []
-    for lod in (0, 1):
-        m = Mesh()
-        hw = W / 2
-        if lod == 0:
-            fr = [0.0, 0.03, 0.12, 0.3, 0.55, 0.78, 0.9, 0.97, 1.0]
-        else:
-            fr = [0.0, 0.08, 0.9, 1.0]
-        ys, secs = [], []
-        for f in fr:
-            y = -L / 2 + f * L
-            end = min(f, 1 - f)
-            w = hw - 0.12 * max(0.0, 1 - end / 0.06) if lod == 0 else hw - (0.08 if end < 0.01 else 0.0)
-            zt = d["tail"] + (d["nose"] - d["tail"]) * min(1.0, max(0.0, (f - 0.5) / 0.45)) if f > 0.5 else \
-                d["tail"] - 0.04 * max(0.0, 1 - f / 0.08)
-            zt = min(zt, d["belt"] + 0.02) if 0.2 < f < 0.75 else zt
-            zb = 0.30 if end < 0.12 else 0.20
-            if end < 0.005:
-                zb, zt = zb + 0.10, zt - 0.12
-            ys.append(y)
-            secs.append(rounded_rect(w, zb, zt, 0.10 if lod == 0 else 0.0, 0.06 if lod == 0 else 0.0) if lod == 0
-                        else np.array([(w, zb), (w, zt), (-w, zt), (-w, zb)])[::-1])
-        loft(m, paint, secs, ys)
-        # greenhouse: frustum between belt and roof
-        wb, wt = hw - 0.06, hw - 0.20
-        yC, yA = -L / 2 + d["yC"] * L, -L / 2 + d["yA"] * L
-        yR, yF = -L / 2 + d["yR"] * L, -L / 2 + d["yF"] * L
-        zb, zr = d["belt"], H
-        P = {"cl": [-wb, yC, zb], "cr": [wb, yC, zb], "al": [-wb, yA, zb], "ar": [wb, yA, zb],
-             "rl": [-wt, yR, zr], "rr": [wt, yR, zr], "fl": [-wt, yF, zr], "fr": [wt, yF, zr]}
-        g = "car_glass"
-        m.quad(g, P["ar"], P["al"], P["fl"], P["fr"])          # windscreen
-        m.quad(g, P["cl"], P["cr"], P["rr"], P["rl"])          # rear window
-        m.quad(g, P["cr"], P["ar"], P["fr"], P["rr"])          # right side
-        m.quad(g, P["al"], P["cl"], P["rl"], P["fl"])          # left side
-        m.quad(paint, P["rl"], P["rr"], P["fr"], P["fl"])      # roof
-        if lod == 0:
-            # pillars (body colour strips slightly proud of the glass): A, B, C each side
-            for sx in (-1, 1):
-                for (ya, za), (yb, zbb), wpil in (((yA, zb), (yF, zr), 0.09), ((yC, zb), (yR, zr), 0.16),
-                                                   ((yC + (yA - yC) * 0.48, zb), (yR + (yF - yR) * 0.45, zr), 0.08)):
-                    xa = sx * (wb + 0.004)
-                    xb = sx * (wt + 0.004)
-                    q = [[xa, ya - wpil / 2, za], [xa, ya + wpil / 2, za], [xb, yb + wpil / 2, zbb], [xb, yb - wpil / 2, zbb]]
-                    if sx < 0:
-                        q = q[::-1]
-                    m.quad(paint, *q)
-            # lights, plates, bumpers, mirrors
-            for sx in (-1, 1):
-                x0 = sx * (hw - 0.22)
-                m.quad("car_light_head", [x0 - 0.17, L / 2 + 0.002, 0.62], [x0 + 0.17, L / 2 + 0.002, 0.62],
-                       [x0 + 0.15, L / 2 + 0.002, 0.70], [x0 - 0.15, L / 2 + 0.002, 0.70])
-                m.quad("car_light_tail", [x0 + 0.16, -L / 2 - 0.002, 0.78], [x0 - 0.16, -L / 2 - 0.002, 0.78],
-                       [x0 - 0.16, -L / 2 - 0.002, 0.88], [x0 + 0.16, -L / 2 - 0.002, 0.88])
-                m.box("car_trim", [sx * (wb + 0.10), yA - 0.05, zb + 0.08], 0.07, 0.04, 0.05)
-            for y, sgn in ((L / 2 + 0.004, 1), (-L / 2 - 0.004, -1)):
-                q = [[-0.26, y, 0.42], [0.26, y, 0.42], [0.26, y, 0.53], [-0.26, y, 0.53]]
-                m.add("plate_pl", q if sgn > 0 else [q[1], q[0], q[3], q[2]], [(0, 1, 2), (0, 2, 3)],
-                      [[0, 0], [1, 0], [1, 1], [0, 1]] if sgn > 0 else [[1, 0], [0, 0], [0, 1], [1, 1]])
-                bx(m, "car_trim", -hw + 0.02, hw - 0.02, y - sgn * 0.06, y + sgn * 0.0, 0.26, 0.40)
-            seg = 10
-        else:
-            seg = 6
-        r = 0.31
-        for sy in (-1, 1):
-            yy = sy * (L / 2 - (0.80 if sy > 0 else 0.72) - (0.05 if body != "hatch" else 0.0))
-            for sx in (-1, 1):
-                wheel(m, [sx * (hw - 0.14), yy, r], r, 0.2, seg, out_sign=sx, simple=lod > 0)
-            if lod == 0:
-                # sill / lower-door cladding (dark, matte, road-film soiled): breaks the one-colour body
-                q = [[sx * (hw + 0.004), -L / 2 + 0.55, 0.24], [sx * (hw + 0.004), L / 2 - 0.62, 0.24],
-                     [sx * (hw + 0.004), L / 2 - 0.62, 0.33], [sx * (hw + 0.004), -L / 2 + 0.55, 0.33]]
-                m.quad("car_sill", *(q if sx > 0 else q[::-1]))
-        out.append(_paint_uv(m))
-    lod2 = _lod2_body(Mesh(), paint, L, W, 0.24, d["tail"], d["belt"], H, -L / 2 + d["yR"] * L, -L / 2 + d["yF"] * L)
-    col = Mesh()
-    col.box("collision_vehicle", [0, 0, 0.75], W / 2, L / 2, 0.75)
-    return out[0], out[1], col, lod2
-
-
-def van(colour):
-    L, W, H = 5.40, 2.02, 2.45
-    paint = f"car_paint_{colour}"
-    out = []
-    for lod in (0, 1):
-        m = Mesh()
-        hw = W / 2
-        yN = L / 2 - 0.85                 # windscreen base (hood length)
-        # body: one loft with a high roof, the nose part lowered to the hood
-        fr = [0.0, 0.02, 0.5, 0.80, 0.84, 0.97, 1.0] if lod == 0 else [0.0, 0.84, 1.0]
-        secs, ys = [], []
-        for f in fr:
-            y = -L / 2 + f * L
-            if y <= yN - 0.65:
-                zt = H
-            elif y <= yN:
-                zt = 1.10 + (H - 1.10) * (yN - y) / 0.65
-            else:
-                zt = 1.10 - 0.18 * (y - yN) / 0.85
-            zb = 0.32 if (f < 0.02 or f > 0.95) else 0.24
-            w = hw - (0.08 if f > 0.97 else 0.0)
-            ys.append(y)
-            secs.append(rounded_rect(w, zb, zt, 0.12 if lod == 0 else 0.0, 0.05 if lod == 0 else 0.0) if lod == 0 else
-                        np.array([(w, zb), (w, zt), (-w, zt), (-w, zb)])[::-1])
-        loft(m, paint, secs, ys)
-        # windscreen + cab side windows (glass quads just proud of the body)
-        y0, y1 = yN - 0.62, yN - 0.02
-        m.quad("car_glass", [hw - 0.12, y1 + 0.003, 1.13], [-hw + 0.12, y1 + 0.003, 1.13],
-               [-hw + 0.12, y0 + 0.05 + 0.003, H - 0.12], [hw - 0.12, y0 + 0.05 + 0.003, H - 0.12])
-        for sx in (-1, 1):
-            q = [[sx * (hw + 0.003), yN - 1.45, 1.15], [sx * (hw + 0.003), yN - 0.15, 1.15],
-                 [sx * (hw + 0.003), yN - 0.6, 1.95], [sx * (hw + 0.003), yN - 1.45, 1.95]]
-            m.quad("car_glass", *(q if sx > 0 else q[::-1]))
-        if lod == 0:
-            for sx in (-1, 1):
-                x0 = sx * (hw - 0.25)
-                m.quad("car_light_head", [x0 - 0.18, L / 2 + 0.003, 0.80], [x0 + 0.18, L / 2 + 0.003, 0.80],
-                       [x0 + 0.16, L / 2 + 0.003, 0.92], [x0 - 0.16, L / 2 + 0.003, 0.92])
-                m.quad("car_light_tail", [x0 + 0.08, -L / 2 - 0.003, 0.70], [x0 - 0.08, -L / 2 - 0.003, 0.70],
-                       [x0 - 0.08, -L / 2 - 0.003, 1.30], [x0 + 0.08, -L / 2 - 0.003, 1.30])
-                m.box("car_trim", [sx * (hw + 0.12), yN - 0.3, 1.6], 0.09, 0.05, 0.13)
-            # rear door split, side door rail
-            m.quad("car_trim", [0.01, -L / 2 - 0.004, 0.35], [-0.01, -L / 2 - 0.004, 0.35],
-                   [-0.01, -L / 2 - 0.004, H - 0.1], [0.01, -L / 2 - 0.004, H - 0.1])
-            for y, sgn in ((L / 2 + 0.005, 1), (-L / 2 - 0.005, -1)):
-                q = [[-0.26, y, 0.48], [0.26, y, 0.48], [0.26, y, 0.59], [-0.26, y, 0.59]]
-                m.add("plate_pl", q if sgn > 0 else [q[1], q[0], q[3], q[2]], [(0, 1, 2), (0, 2, 3)],
-                      [[0, 0], [1, 0], [1, 1], [0, 1]] if sgn > 0 else [[1, 0], [0, 0], [0, 1], [1, 1]])
-                bx(m, "car_trim", -hw + 0.02, hw - 0.02, y - sgn * 0.07, y, 0.30, 0.46)
-        for yy in (L / 2 - 0.95, -L / 2 + 1.25):
-            for sx in (-1, 1):
-                wheel(m, [sx * (hw - 0.16), yy, 0.34], 0.34, 0.22, 10, out_sign=sx, simple=lod > 0)
-        out.append(_paint_uv(m))
-    lod2 = Mesh()
-    loft(lod2, paint, [np.array([(hw, 0.26), (hw, H), (-hw, H), (-hw, 0.26)])[::-1]] * 2, [-L / 2, yN - 0.65])
-    loft(lod2, paint, [np.array([(hw, 0.26), (hw, 1.05), (-hw, 1.05), (-hw, 0.26)])[::-1]] * 2, [yN - 0.65, L / 2])
-    lod2.quad("car_glass", [hw - 0.12, yN + 0.003, 1.1], [-hw + 0.12, yN + 0.003, 1.1],
-              [-hw + 0.12, yN - 0.6, H - 0.12], [hw - 0.12, yN - 0.6, H - 0.12])
-    bx(lod2, "tyre", -hw + 0.02, hw - 0.02, -L / 2 + 0.4, L / 2 - 0.4, 0.0, 0.27)
-    _paint_uv(lod2)
-    col = Mesh()
-    col.box("collision_vehicle", [0, 0, H / 2], W / 2, L / 2, H / 2)
-    return out[0], out[1], col, lod2
 
 
 # ------------------------------------------------------------------------------------------- trailer
