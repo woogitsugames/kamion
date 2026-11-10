@@ -222,14 +222,9 @@ def test_latest_game_frame(tmp_path):
 
 def test_token_resolution_env_then_secrets_file(tmp_path):
     f = tmp_path / "secrets.env"
-    f.write_text("# comment
-
-OTHER=1
-MAPILLARY_TOKEN = \"MLY|fromfile\"
-", encoding="utf-8")
+    f.write_text(chr(10).join(["# comment", "", "OTHER=1", 'MAPILLARY_TOKEN = "MLY|fromfile"', ""]), encoding="utf-8")
     assert mf.resolve_token({}, f) == "MLY|fromfile"
     assert mf.resolve_token({"MAPILLARY_TOKEN": "MLY|env"}, f) == "MLY|env"   # env wins
-    f.write_text("MAPILLARY_TOKEN=
-", encoding="utf-8")                       # empty value = none
+    f.write_text("MAPILLARY_TOKEN=" + chr(10), encoding="utf-8")                # empty value = none
     assert mf.resolve_token({}, f) == ""
     assert mf.resolve_token({}, tmp_path / "missing.env") == ""

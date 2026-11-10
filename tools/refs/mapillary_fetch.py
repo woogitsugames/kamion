@@ -1,4 +1,4 @@
-"""Mapillary street-level reference fetcher (Graph API v4, CC BY-SA 4.0; owner decision D42, ADR 0065).
+r"""Mapillary street-level reference fetcher (Graph API v4, CC BY-SA 4.0; owner decision D42, ADR 0065).
 
 Mapillary images are REFERENCE only (pattern, framing match, colour calibration). Google imagery stays banned.
 Token: env MAPILLARY_TOKEN, else %USERPROFILE%\.kamion\secrets.env line MAPILLARY_TOKEN=... (sent as an Authorization header; never logged, never in argv).
@@ -35,18 +35,12 @@ USER_AGENT = "truck-sim-refs/0.1 (offline reference tooling)"
 SECRETS_ENV = Path(os.environ.get("USERPROFILE") or Path.home()) / ".kamion" / "secrets.env"
 
 TOKEN_HELP = (
-    "MAPILLARY_TOKEN not found (environment variable or secrets file).
-"
-    "Owner action: create a free Mapillary developer app at https://www.mapillary.com/dashboard/developers,
-"
-    "copy its 'Client Token' (starts with MLY|) and add this line to %USERPROFILE%\.kamion\secrets.env
-"
-    "(outside the repo; typically C:\Users\<you>\.kamion\secrets.env):
-"
-    "    MAPILLARY_TOKEN=<token>
-"
-    "Alternatively set the environment variable MAPILLARY_TOKEN (it takes precedence).
-"
+    "MAPILLARY_TOKEN not found (environment variable or secrets file).\n"
+    "Owner action: create a free Mapillary developer app at https://www.mapillary.com/dashboard/developers,\n"
+    "copy its 'Client Token' (starts with MLY|) and add this line to %USERPROFILE%/.kamion/secrets.env\n"
+    "(outside the repo; typically C:/Users/<you>/.kamion/secrets.env):\n"
+    "    MAPILLARY_TOKEN=<token>\n"
+    "Alternatively set the environment variable MAPILLARY_TOKEN (it takes precedence).\n"
     "The token is never written to the repo, logs, manifests or arguments."
 )
 
