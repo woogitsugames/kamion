@@ -157,8 +157,8 @@ Verdict of the review: FAIL (quality) - "plac wygląda jak gra mobilna z okolic 
    driving lines of articulated trucks (`decal_tyre` bands, 2 wheel paths x passes), relaid paving and a cable trench
    (`decal_yard_patch_light / _dark`: the yard's own block set in another tone, world-planar so the bond runs through),
    oil and grease where tractors stand coupled and under the axles (`decal_oil`, 2-5 per dock), soil washed against
-   every edge of the paved yard that is not a flush road edge and along authored lines (`decal_grime`, a soft
-   noise-broken band: manifest `band: true`, drawn with the `_DECAL_TYRE` path of Kamion/World PBR). SEEN on the GUGiK
+   every edge of the paved yard that is not a flush road edge and along authored lines (`decal_tyre` bands at low opacity: a soft
+   noise-broken film, no material of its own = no extra draw). SEEN on the GUGiK
    orthophoto 2024-05-27: the dark soil line from the lane edge toward the containers and the lighter rectangle in the
    middle of the yard; everything else is WORKING_VALUE (typical logistics yard; no open ground photo exists). The
    dock apron of the hero hall is `yard_concrete_worn` (darker, soiled cast concrete with the 16 m crack layer;

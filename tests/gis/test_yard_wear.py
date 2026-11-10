@@ -80,7 +80,7 @@ def test_yard_wear_synthetic():
     assert 22 <= c["oil"] <= 55 and c["grime_bands"] >= 8
     assert r["stale"] == ["y:wear:patch1:off_the_block_paving"]
     mats = {p.mat for p in buf.parts}
-    assert mats == {"decal_tyre", "decal_grime", "decal_oil", "decal_yard_patch_light", "decal_yard_patch_dark"}
+    assert mats == {"decal_tyre", "decal_oil", "decal_yard_patch_light", "decal_yard_patch_dark"}
     assert mats <= set(SM.M) and all(SM.M[m].get("decal") for m in mats)
     for p in buf.parts:
         assert p.layer == "markings"
@@ -90,7 +90,7 @@ def test_yard_wear_synthetic():
         assert 0.0015 <= lift.min() and lift.max() <= 0.0085, (p.src, lift.min(), lift.max())
         a, b, cc = p.V[p.T[:, 0]], p.V[p.T[:, 1]], p.V[p.T[:, 2]]
         assert (np.cross(b - a, cc - a)[:, 2] > 0).all(), p.src
-        if p.mat in ("decal_tyre", "decal_grime"):            # band contract of Kamion/World PBR _DECAL_TYRE
+        if p.mat == "decal_tyre":            # band contract of Kamion/World PBR _DECAL_TYRE
             assert p.UV1 is not None and np.ptp(p.UV1[:, 0]) < 1e-9 and p.UV[:, 0].max() == pytest.approx(p.UV1[0, 0])
             assert set(np.round(p.UV[:, 1], 6)) == {0.0, 1.0} and 0.3 <= p.UV1[0, 1] <= 1.5
     # deterministic
@@ -139,8 +139,13 @@ def test_trailer_detail_and_budget():
     """Review A4: landing gear, mudguards, side markers, pallet box, spare wheel, road film - within the LOD budget."""
     for kind in ("curtain", "box", "reefer"):
         l0, l1, col = LP.trailer(kind, "grey")
-        assert {"steel_galv_dark", "rubber_black", "lamp_glass_sodium"} <= set(l0.prims)
-        assert any(k.startswith("car_dirt_") for k in l0.prims) and any(k.startswith("car_dirt_") for k in l1.prims)
+        # the detail costs one extra submesh (draw) on LOD0 - the road film - and none on LOD1
+        assert any(k.startswith("car_dirt_") for k in l0.prims) and not any(k.startswith("car_dirt_") for k in l1.prims)
+        known = {"trailer_alu", "trailer_chassis", "trailer_doors", "trailer_strap", "trailer_front", "trailer_front_dark",
+                 "trailer_box_white", "trailer_curtain_grey", "coupling_red", "coupling_yellow", "car_trim", "car_light_head",
+                 "car_light_tail", "reflector_red", "plate_pl", "tyre", "rim", "reefer_unit", "reefer_grille"}
+        assert {k for k in l0.prims if not k.startswith("car_dirt_")} <= known, set(l0.prims) - known
+        assert set(l1.prims) <= known, set(l1.prims) - known
         assert _tris(l0) <= 2600 and _tris(l1) <= 260, (kind, _tris(l0), _tris(l1))
         # landing legs: slim (<= 0.12 m) telescopic legs with a sand shoe on the ground
         V = np.concatenate(l1.prims["trailer_chassis"][0])

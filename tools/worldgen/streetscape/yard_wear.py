@@ -14,9 +14,9 @@ regeneration and never depends on hand-edited meshes:
   trenches_uo     [{a: [u, o], b: [u, o], w, tone}] relaid cable trenches (a lamp column to the hall)
   oil_per_dock    [min, max] oil / grease stains per dock where tractors stand coupled (fifth wheel, engine, gearbox)
                   and under the trailer axles (`decal_oil`, 4 stain shapes)
-  grime_lines_uo  [{pts: [[u, o], ...], w, strength}] dark soil / damp lines seen on the orthophoto (`decal_grime`)
+  grime_lines_uo  [{pts: [[u, o], ...], w, strength}] dark soil / damp lines seen on the orthophoto (`decal_tyre`)
   grime_edges     true: soil washed against kerbs, edgings and wall feet: soft bands along every edge of the paved
-                  yard inside the zone that is not a flush road edge (`decal_grime`)
+                  yard inside the zone that is not a flush road edge (`decal_tyre`)
   zone_epsg2180   polygon of the yard (default: the first `no_parking_epsg2180` ring)
 
 Everything is hashed from the override id (no RNG state): two builds give the same bytes. Counts go to the streetscape
@@ -39,6 +39,9 @@ LIFT_PATCH = 0.002
 LIFT_GRIME = 0.003
 LIFT_TYRE = 0.008
 TRACK_GAUGE = 2.04          # m between the wheel-path centres of a truck / semitrailer (WORKING_VALUE)
+# Soil bands use the tyre-scrub band material (dark grey film, same shader path): one draw less per chunk than a
+# material of their own, and at the opacities used here (0.3-0.6) a soil film and a rubber film read the same.
+GRIME_MAT = "decal_tyre"
 PATCH_TONES = {"light": "decal_yard_patch_light", "dark": "decal_yard_patch_dark"}
 
 
@@ -172,30 +175,31 @@ def apply(buf, overrides, origin, docks, paved, roads_poly, zsurf, report):
 
         # ---- driving lines
         for ti, tr in enumerate(wr.get("tracks_uo", [])):
-            C0 = _resample(_smooth(xy(np.asarray(tr["pts"], float))), 1.5)
+            C0 = _resample(_smooth(xy(np.asarray(tr["pts"], float))), 3.0)     # the yard is level within ~0.1 m
             t = np.gradient(C0, axis=0)
             t /= np.maximum(np.linalg.norm(t, axis=1, keepdims=True), 1e-9)
             nn = np.column_stack([-t[:, 1], t[:, 0]])
             for k in range(int(tr.get("passes", 2))):
                 key = (oid, "track", ti, k)
                 drift = (hf(*key, "j") - 0.5) * 1.1 + 0.5 * np.sin(np.linspace(0, math.pi * (1 + 2 * hf(*key, "f")), len(C0)) + 6.28 * hf(*key, "ph"))
-                strength = float(tr.get("strength", 1.0)) * (0.55 + 0.85 * hf(*key, "s"))
+                # 0.35-0.85 of the dock scrub opacity: a driving line is a faint darkening, not a skid mark
+                strength = float(tr.get("strength", 1.0)) * (0.35 + 0.5 * hf(*key, "s"))
                 for wx in (-1.0, 1.0):
                     C = C0 + nn * (wx * TRACK_GAUGE / 2 + drift)[:, None]
                     ok = shapely.contains_xy(drivable, C[:, 0], C[:, 1])
                     for ri, run in enumerate(_runs(C, ok)):
-                        w = 0.42 + 0.22 * hf(*key, wx, "w")
+                        w = 0.36 + 0.16 * hf(*key, wx, "w")
                         cnt["tris"] += band(buf, "decal_tyre", run, w, zsurf, LIFT_TYRE, min(strength, 1.5),
                                             f"wear:{oid}:track{ti}:{k}:{int(wx)}:{ri}")
                         cnt["track_bands"] += 1
 
         # ---- dark soil / damp lines read off the orthophoto
         for gi, gl in enumerate(wr.get("grime_lines_uo", [])):
-            C = _resample(_smooth(xy(np.asarray(gl["pts"], float))), 1.5)
+            C = _resample(_smooth(xy(np.asarray(gl["pts"], float))), 3.0)
             ok = shapely.contains_xy(drivable, C[:, 0], C[:, 1])
             for ri, run in enumerate(_runs(C, ok)):
-                wv = float(gl.get("w", 1.2)) * (0.75 + 0.5 * np.array([hf(oid, "gl", gi, ri, k // 4) for k in range(len(run))]))
-                cnt["tris"] += band(buf, "decal_grime", run, wv, zsurf, LIFT_GRIME, float(gl.get("strength", 1.0)),
+                wv = float(gl.get("w", 1.2)) * (0.75 + 0.5 * np.array([hf(oid, "gl", gi, ri, k // 2) for k in range(len(run))]))
+                cnt["tris"] += band(buf, GRIME_MAT, run, wv, zsurf, LIFT_GRIME, float(gl.get("strength", 1.0)),
                                     f"wear:{oid}:grime_line{gi}:{ri}")
                 cnt["grime_bands"] += 1
 
@@ -268,7 +272,7 @@ def apply(buf, overrides, origin, docks, paved, roads_poly, zsurf, report):
                                 s0 += seg
                                 continue
                             w = 0.7 + 1.0 * hf(*key, "w") ** 2
-                            C = np.array([piece.interpolate(s).coords[0] for s in np.arange(s0, s0 + seg + 0.01, 1.0)])
+                            C = np.array([piece.interpolate(s).coords[0] for s in np.linspace(s0, s0 + seg, max(5, int(seg / 2.5) + 1))])
                             t = np.gradient(C, axis=0)
                             t /= np.maximum(np.linalg.norm(t, axis=1, keepdims=True), 1e-9)
                             nn = np.column_stack([-t[:, 1], t[:, 0]])
@@ -279,7 +283,7 @@ def apply(buf, overrides, origin, docks, paved, roads_poly, zsurf, report):
                                 C = C[::-1]
                             ok = shapely.contains_xy(yard, C[:, 0], C[:, 1])
                             for run in _runs(C, ok, 5):
-                                cnt["tris"] += band(buf, "decal_grime", run, w, zsurf, LIFT_GRIME, 0.6 + 0.8 * hf(*key, "s"),
+                                cnt["tris"] += band(buf, GRIME_MAT, run, w, zsurf, LIFT_GRIME, 0.6 + 0.8 * hf(*key, "s"),
                                                     f"wear:{oid}:grime:{gi}:{ri}:{li}:{k}")
                                 cnt["grime_bands"] += 1
                             s0 += seg

@@ -184,6 +184,13 @@ namespace Game.World.Import
             {
                 var spec = cn.Extras != null ? cn.Extras.Get("contact") as Dictionary<string, object> : null;
                 var mat = ContactMaterial(r, spec, vehicle, out string id);
+                // ADR 0071 r11: static yard props (containers, gatehouse, barrier cabinets) also carry a contact spec.
+                // Their patch is culled with THEM (policy ends x lodBias), not at the fixed vehicle distance: the name
+                // must not start with "contact_" (WorldInstances.IsVehicle = fixed cull) or the patch would outlive its
+                // prop on Low.
+                bool vehicleOwner = WorldInstances.IsVehicle(vehicle);
+                if (!vehicleOwner) id = "prop" + id;
+                float cullM = vehicleOwner ? WorldInstances.VehicleCullM : Policy(vehicle, 3).Item1.Last();
                 if (protoIndex.TryGetValue(id, out int ci)) return ci;
                 var mesh = WorldMeshBake.Compact(id, cn.Primitives, new WorldMeshBake.Options());
                 AssetDatabase.AddObjectToAsset(mesh, set);
@@ -191,7 +198,7 @@ namespace Game.World.Import
                 var cp = new WorldInstanceSet.Prototype
                 {
                     name = id, lods = new[] { mesh }, materialStart = new[] { materials.Count },
-                    lodEndM = new[] { WorldInstances.VehicleCullM }, shadowLodMask = 0,
+                    lodEndM = new[] { cullM }, shadowLodMask = 0,
                 };
                 materials.Add(mat);
                 ci = protos.Count;

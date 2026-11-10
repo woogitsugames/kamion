@@ -55,7 +55,7 @@ namespace Game.World.Import
         /// <summary>True when the manifest material has a generated set whose files exist for the tier.</summary>
         public static bool Has(Dictionary<string, object> def, string id)
         {
-            if (id == "decal_tyre" || Band(def)) return true;   // procedural strip profile, no set
+            if (id == "decal_tyre") return true;   // procedural strip profile, no set
             if (def.Get("procedural") as string == "grate") return true;   // gully grates (drain_grate)
             if (Stripes(def) != null) return true;                         // painted bands (boom, hazard)
             var s = Set(def.Get("texture_set") as string);
@@ -74,15 +74,11 @@ namespace Game.World.Import
             if (def.Get("uv1") as string == "along_m") uv1 = true;
             if (id == "road_asphalt" || id == "road_asphalt_new") uv1 = true;           // _ROADWEAR
             if ((id.StartsWith("hall_wall") || Runoff(def)) && Set("parapet_runoff") != null) uv1 = true;   // _RUNOFF (wall-top space)
-            if (id == "decal_patch" || id == "decal_oil" || id == "decal_tyre" || Band(def)) { uv0 = true; uv1 = true; }
+            if (id == "decal_patch" || id == "decal_oil" || id == "decal_tyre") { uv0 = true; uv1 = true; }
             if (def.Get("paint") is Dictionary<string, object>) uv1 = true;              // _DECAL_PAINT wear data (ADR 0049)
             if (def.Get("procedural") as string == "grate" || Stripes(def) != null) uv0 = true;
             if (id == "terrain_grass") colors = true;
         }
-
-        /// <summary>ADR 0071 r11: soft noise-broken band decals (yard tyre tracks, grime along kerbs and wall feet):
-        /// manifest "band": true, drawn like decal_tyre with the material's own colour and "alpha".</summary>
-        static bool Band(Dictionary<string, object> def) => def.Get("band") is bool b && b;
 
         /// <summary>ADR 0071 r11: manifest "weather": true = wall material of an authored asset that carries the splash
         /// zone (UV0.y = metres above ground) and run-off space (TEXCOORD_1) of the generated hall walls.</summary>
@@ -332,11 +328,11 @@ namespace Game.World.Import
                     float P(string k, float d) => pd.Get(k) != null ? (float)Num(pd.Get(k)) : d;
                     mat.SetVector("_PaintWear", new Vector4(P("wheel_wear", 0.85f), P("age_wear", 0.25f), P("dirt", 0.3f), P("line_w_m", 0.12f)));
                 }
-                else if (id == "decal_tyre" || Band(def))
+                else if (id == "decal_tyre")
                 {
                     mat.EnableKeyword("_DECAL_TYRE");
                     mat.SetVector("_Tint", new Vector4(col.x, col.y, col.z, 1f));
-                    mat.SetFloat("_DecalAlpha", def.Get("alpha") != null ? (float)Num(def.Get("alpha")) : 0.45f);
+                    mat.SetFloat("_DecalAlpha", 0.45f);
                     SetBlend(mat, true);
                     mat.renderQueue = (int)RenderQueue.Geometry + 20;
                 }

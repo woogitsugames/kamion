@@ -229,14 +229,15 @@ M = {
     "decal_patch": {"color": [0.062, 0.062, 0.06], "rough": 0.85, "decal": True, "texture_set": "asphalt_patch"},
     # authored yard wear (streetscape.yard_wear, ADR 0071 r11). Relaid paving = the yard's own block set in another
     # tone (new blocks lighter, re-sanded oily ones darker; world-planar, so the bond runs through the patch edge);
-    # `band` = soft noise-broken strip like decal_tyre with its own colour / opacity: soil washed against kerbs and wall
-    # feet. Sealant = bitumen in the saw cuts of the induction loops at the gate. Worn dock apron: darker, soiled cast
+    # soil washed against kerbs and wall feet is drawn with decal_tyre bands (no material of its own).
+    # Sealant = bitumen in the saw cuts of the induction loops at the gate. Worn dock apron: darker, soiled cast
     # concrete with the 16 m crack layer (`cracks` = strength). WORKING_VALUE colours.
-    "decal_yard_patch_light": {"color": [0.285, 0.28, 0.268], "rough": 0.85, "decal": True, "texture_set": "behaton_i_grey"},
-    "decal_yard_patch_dark": {"color": [0.175, 0.172, 0.165], "rough": 0.85, "decal": True, "texture_set": "behaton_i_grey"},
-    "decal_grime": {"color": [0.060, 0.054, 0.045], "rough": 0.9, "decal": True, "band": True, "alpha": 0.55},
+    # +7 % / -10 % of yard_behaton 0.23: the first render at +24 % / -24 % read as a white sheet / a hole at overcast
+    # (the grading of ADR 0080 stretches mid-tone differences); the orthophoto rectangle is barely lighter than the yard
+    "decal_yard_patch_light": {"color": [0.248, 0.245, 0.236], "rough": 0.85, "decal": True, "texture_set": "behaton_i_grey"},
+    "decal_yard_patch_dark": {"color": [0.207, 0.205, 0.198], "rough": 0.85, "decal": True, "texture_set": "behaton_i_grey"},
     "decal_sealant": {"color": [0.02, 0.02, 0.02], "rough": 0.4, "decal": True},
-    "yard_concrete_worn": {"color": [0.215, 0.212, 0.203], "rough": 0.85, "surface": "concrete",
+    "yard_concrete_worn": {"color": [0.235, 0.232, 0.223], "rough": 0.85, "surface": "concrete",
                            "texture_set": "concrete_cast_5m_joints", "cracks": 0.7},
     # bridges (roads.meshing bridge_style overrides; CC0 photos of the Andersa viaducts, docs/REFERENCES.md)
     # hero depot hall Kwadrat Park (ADR 0071, streetscape.hero_depot; colours read off CC0 photos by Rakoon, Commons:

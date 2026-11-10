@@ -197,64 +197,63 @@ def trailer(kind, colour):
             # shoe 0.24 x 0.28 m, diagonal braces to the beam, cross shaft and the crank on the right side
             leg_x = sx * 0.92
             bx(m, "trailer_chassis", leg_x - 0.055, leg_x + 0.055, 11.47, 11.58, 0.52, zf - 0.14)
-            bx(m, "steel_galv_dark", leg_x - 0.042, leg_x + 0.042, 11.483, 11.567, 0.05, 0.54)
+            bx(m, "trailer_alu", leg_x - 0.042, leg_x + 0.042, 11.483, 11.567, 0.05, 0.54)
             bx(m, "trailer_chassis", leg_x - 0.12, leg_x + 0.12, 11.385, 11.665, 0.0, 0.045)
             if lod == 0:
-                m.tube("trailer_chassis", [leg_x, 11.50, 0.60], [leg_x, 10.72, zf - 0.20], 0.022, None, 5)
-                m.tube("trailer_chassis", [leg_x, 11.50, 0.62], [sx * 0.55, 11.50, zf - 0.20], 0.022, None, 5)
+                m.tube("trailer_chassis", [leg_x, 11.50, 0.60], [leg_x, 10.72, zf - 0.20], 0.022, None, 4, cap=False)
+                m.tube("trailer_chassis", [leg_x, 11.50, 0.62], [sx * 0.55, 11.50, zf - 0.20], 0.022, None, 4, cap=False)
                 # mudguards over the axle group (three quarter shells approximated by a bent strip)
                 xw = sx * (hw - 0.27)
                 for ya in TRAILER_AXLES:
-                    pts = [(ya - 0.62, 0.72), (ya - 0.50, 1.02), (ya - 0.22, 1.13), (ya + 0.22, 1.13), (ya + 0.50, 1.02),
-                           (ya + 0.62, 0.72)]
+                    # seen from outside / above only (the tyre fills the inside): single-sided, 3 strips
+                    pts = [(ya - 0.62, 0.80), (ya - 0.36, 1.12), (ya + 0.36, 1.12), (ya + 0.62, 0.80)]
                     for (y0, z0), (y1, z1) in zip(pts[:-1], pts[1:]):
-                        q = [[xw - 0.21, y0, z0], [xw + 0.21, y0, z0], [xw + 0.21, y1, z1], [xw - 0.21, y1, z1]]
-                        m.quad("rubber_black", *q)
-                        m.quad("rubber_black", *q[::-1])
-                bx(m, "rubber_black", xw - 0.2, xw + 0.2, TRAILER_AXLES[0] - 0.66, TRAILER_AXLES[0] - 0.645, 0.20, 0.74)   # flap
+                        m.quad("trailer_chassis", [xw + 0.21, y0, z0], [xw - 0.21, y0, z0], [xw - 0.21, y1, z1], [xw + 0.21, y1, z1])
+                bx(m, "trailer_chassis", xw - 0.2, xw + 0.2, TRAILER_AXLES[0] - 0.66, TRAILER_AXLES[0] - 0.645, 0.20, 0.74)   # flap
                 # amber side marker lamps along the bottom rail (ECE R48: every <= 3 m)
                 for y in np.arange(1.0, L - 0.5, 2.9):
                     x = sx * (hw + 0.024)
                     q = [[x, y - 0.05, zf - 0.02], [x, y + 0.05, zf - 0.02], [x, y + 0.05, zf + 0.03], [x, y - 0.05, zf + 0.03]]
-                    m.quad("lamp_glass_sodium", *(q if sx > 0 else q[::-1]))
+                    m.quad("coupling_yellow", *(q if sx > 0 else q[::-1]))
             # road film on the lower third of the body sides (blend overlay, car_dirt: dense at the bottom edge,
-            # thinning upward; LOD0 + LOD1 so it does not pop at the LOD switch)
-            x = sx * (hw + 0.028)
-            q = [[x, 0.1, zf - 0.12], [x, L - 0.1, zf - 0.12], [x, L - 0.1, zf + 1.25], [x, 0.1, zf + 1.25]]
-            uvq = [[0, 0], [3, 0], [3, 1], [0, 1]]
-            m.add("car_dirt_3" if kind != "curtain" else "car_dirt_2", q if sx > 0 else q[::-1], [(0, 1, 2), (0, 2, 3)],
-                  uvq if sx > 0 else uvq[::-1])
+            # thinning upward). LOD0 only: it is the one extra submesh (= draw) the r11 detail costs per prototype; every
+            # other new part reuses a material the trailer already has (Low budget, review 2026-11-10)
+            if lod == 0:
+                x = sx * (hw + 0.028)
+                q = [[x, 0.1, zf - 0.12], [x, L - 0.1, zf - 0.12], [x, L - 0.1, zf + 1.25], [x, 0.1, zf + 1.25]]
+                uvq = [[0, 0], [3, 0], [3, 1], [0, 1]]
+                m.add("car_dirt_3" if kind != "curtain" else "car_dirt_2", q if sx > 0 else q[::-1], [(0, 1, 2), (0, 2, 3)],
+                      uvq if sx > 0 else uvq[::-1])
         if lod == 0:
-            m.tube("steel_galv_dark", [-0.92, 11.525, 0.78], [0.92, 11.525, 0.78], 0.018, None, 5)       # cross shaft
-            m.tube("steel_galv_dark", [1.0, 11.525, 0.78], [1.21, 11.525, 0.78], 0.014, None, 5)         # crank
-            m.tube("steel_galv_dark", [1.21, 11.525, 0.78], [1.21, 11.36, 0.60], 0.014, None, 5)
+            m.tube("trailer_alu", [-0.92, 11.525, 0.78], [0.92, 11.525, 0.78], 0.018, None, 4, cap=False)   # cross shaft
+            m.tube("trailer_alu", [1.0, 11.525, 0.78], [1.21, 11.525, 0.78], 0.014, None, 4, cap=False)     # crank
+            m.tube("trailer_alu", [1.21, 11.525, 0.78], [1.21, 11.36, 0.60], 0.014, None, 4, cap=False)
             bx(m, "trailer_chassis", 1.19, 1.23, 11.30, 11.37, 0.55, 0.61)                                # crank handle
             # pallet box (left) and spare wheel in a carrier (right) between the legs and the axle group
             bx(m, "trailer_chassis", -hw + 0.06, -hw + 0.70, 7.2, 9.6, 0.50, zf - 0.16)
-            bx(m, "trailer_alu", -hw + 0.045, -hw + 0.06, 7.25, 9.55, 0.55, zf - 0.21)
-            wheel(m, [0.35, 8.4, 0.66], 0.50, 0.30, 10, axis=(0, 0, 1), out_sign=-1)
-            bx(m, "trailer_chassis", 0.30, 0.40, 7.85, 8.95, zf - 0.42, zf - 0.38)
+            m.quad("trailer_alu", [-hw + 0.055, 9.55, 0.55], [-hw + 0.055, 7.25, 0.55], [-hw + 0.055, 7.25, zf - 0.21],
+                   [-hw + 0.055, 9.55, zf - 0.21])                                                # lid
+            m.tube("tyre", [0.35, 8.4, 0.52], [0.35, 8.4, 0.80], 0.50, None, 8)                    # spare wheel, lying flat
             # front bulkhead: document box, registration plate holder, two reflectors, spiral-hose bracket
-            bx(m, "trailer_chassis", -1.05, -0.62, L + 0.025, L + 0.075, zf + 0.35, zf + 0.75)
+            bx(m, "trailer_alu", -1.02, -0.70, L + 0.025, L + 0.065, zf + 0.40, zf + 0.64)
             for sx in (-1, 1):
                 q = [[sx * (hw - 0.2) - 0.05, L + 0.031, zf + 0.12], [sx * (hw - 0.2) + 0.05, L + 0.031, zf + 0.12],
                      [sx * (hw - 0.2) + 0.05, L + 0.031, zf + 0.22], [sx * (hw - 0.2) - 0.05, L + 0.031, zf + 0.22]]
-                m.quad("plate_white", *q[::-1])
-            bx(m, "steel_galv_dark", -0.5, 0.4, L + 0.02, L + 0.05, zf + 0.26, zf + 0.30)
-            for x in (-0.35, -0.15, 0.15):
-                m.tube("rubber_black", [x, L + 0.04, zf + 0.28], [x, L + 0.10, zf - 0.12], 0.016, None, 5)   # hanging hoses
+                m.quad("car_light_head", *q[::-1])
+            for x in (-0.35, -0.15):
+                m.tube("trailer_chassis", [x, L + 0.04, zf + 0.28], [x, L + 0.10, zf - 0.12], 0.016, None, 4, cap=False)   # hoses
         bx(m, "trailer_chassis", -hw + 0.1, hw - 0.1, 2.3, 6.4, zf - 0.30, zf - 0.05)         # axle bed
         for ya in TRAILER_AXLES:
             for sx in (-1, 1):
                 if lod == 0:
-                    wheel(m, [sx * (hw - 0.27), ya, 0.535], 0.535, 0.385, 12, out_sign=sx)
+                    wheel(m, [sx * (hw - 0.27), ya, 0.535], 0.535, 0.385, 10, out_sign=sx)
         if lod > 0:                              # LOD1: one prism per side spanning the axle group
             for sx in (-1, 1):
                 m.tube("tyre", [sx * (hw - 0.27), TRAILER_AXLES[0] - 0.5, 0.5], [sx * (hw - 0.27), TRAILER_AXLES[-1] + 0.5, 0.5],
                        0.38, None, 4)
             if lod == 0:
                 for sx in (-1, 1):               # mudflaps
-                    bx(m, "rubber_black", sx * (hw - 0.27) - 0.2, sx * (hw - 0.27) + 0.2, 2.28, 2.3, 0.18, 0.80)
+                    bx(m, "trailer_chassis", sx * (hw - 0.27) - 0.2, sx * (hw - 0.27) + 0.2, 2.28, 2.3, 0.18, 0.80)
         out.append(m)
     col = Mesh()
     col.box("collision_vehicle", [0, L / 2, (H + 0.2) / 2], hw, L / 2, (H - 0.2) / 2 + 0.1)

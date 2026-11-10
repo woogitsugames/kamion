@@ -302,10 +302,21 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
             # yellow steel bollards at both noses of the island (protect the housings from a cut corner)
             ex = np.asarray(isl_poly.exterior.coords)
             t_m = ce.line.frame(se + ge * dd[k])[0]
+            n_m = np.array([-t_m[1], t_m[0]])
             a_ = (ex - m) @ t_m
-            for q in (ex[np.argmin(a_)] + t_m * 0.45, ex[np.argmax(a_)] - t_m * 0.45):
+            for a0 in (a_.min() + 0.55, a_.max() - 0.55):         # on the island's centre line, 0.55 m from each end
+                cut = isl_poly.intersection(LineString([m + t_m * a0 - n_m * 6.0, m + t_m * a0 + n_m * 6.0]))
+                if cut.is_empty:
+                    continue
+                q = np.asarray(cut.centroid.coords[0])
                 lin.posts("paint_yellow", np.array([q, q + t_m * 0.01]), 1.0, 0.11, 0.11, 0.95,
                           zb=np.array([isl_z, isl_z]), src=f"{src}:bollard")
+            # asphalt repair patches hashed onto the lanes right at the booms sat under the loops like pasted
+            # rectangles (review A6): none within 14 m of the housing line
+            keep = [p_ for p_ in lin.buf.parts
+                    if not (p_.mat == "decal_patch" and float(np.hypot(*(p_.V[:, :2].mean(axis=0) - m))) < 14.0)]
+            rep["patches_removed_at_gate"] = len(lin.buf.parts) - len(keep)
+            lin.buf.parts[:] = keep
         rep["applied"].append({"id": o["id"], "node": o["node"], "fence_m": round(total, 1),
                                "island_m2": round(float(isl_poly.area), 1) if isl_poly is not None else 0.0,
                                "gatehouse": [round(float(v), 2) for v in placed[0]] if placed is not None else None,
