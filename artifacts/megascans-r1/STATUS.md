@@ -68,13 +68,13 @@
 
 - Krok24: pełny build rundy4 zakończony (64chunki); prawdziwy fallback build ma exit0 (fallback-build-exit.json), import i6PNG before poprawne. Fallback EditMode:200PASS/0FAIL/7skipped/5inconclusive; wrapper1/nativeUnity2, identyczny mechanizm jak baseline. Próba BlendProbes nie poprawiła ciemnej roślinności i została cofnięta; kalibracja sRGB→linear zachowuje dokładny kanałalpha, źródłowy odcień i detale. NASTĘPNY: pwsh artifacts/megascans-r1/run-final-proof.ps1 po gotowej powierzchni trawy.
 
-- Krok23: routing C# dla grass_surface_manifest.json: terrain_grass/verge_grass zachowuj? WorldPBR, normal/mask/macro/var i kolor wierzcho?k?w; podmieniana wy??cznie fotograficzna baza 4?4m (kraw??nik2?0,5m). Og?lny Lit nie przechwytuje tych alias?w, tak?e przy brakuj?cym starym PBR. Channels wczesne FabUV0 ograniczono do fab_. Trzy testy regresji materia?u dodane; diff-check PASS, Unity nie uruchamiano ? kompilacja/testy czekaj? na lidera.
-- NAST?PNY KROK: `pwsh artifacts/megascans-r1/run-final-proof.ps1` (lider: import + EditMode + rzeczywiste PNG).
+- Krok23: routing C# dla grass_surface_manifest.json: terrain_grass/verge_grass zachowuja WorldPBR, normal/mask/macro/var i kolor wierzcholkow; podmieniana wylacznie fotograficzna baza 4x4m (kraweznik 2x0,5m). Ogolny Lit nie przechwytuje tych aliasow, takze przy brakujacym starym PBR. Channels wczesne FabUV0 ograniczono do fab_. Trzy testy regresji materialu dodane; diff-check PASS, Unity nie uruchamiano - kompilacja/testy czekaja na lidera.
+- NASTEPNY KROK: `pwsh artifacts/megascans-r1/run-final-proof.ps1` (lider: import + EditMode + rzeczywiste PNG).
 
 - Grass photobase: wypalono 4x4m ze skanu grass-clumps (256 deterministycznych kep + 168 kopii okresowych), emissive baseColor/alpha bez swiatla i cieni. Low512/High1024, tylko ignorowane _generated; zachowano srednia liniowa RGB [.08,.105,.038] WORKING_VALUE, clipping0. Obejrzano grass-surface-dense-preview.png: mniej odkrytego podloza, miejscami pozostaja naturalne luki; ocena calego swiata dopiero po imporcie.
 - Testy nowego modulu:9 PASS (plan, piksele brzegowe, paleta, maks.rozmiar, fallback, review/hash, junction); powtorny realny bake exit0. Wrapper prepare-megascans wywoluje bake po korze/atlasie. NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` i render R4 z aktualnym grass_surface_manifest.json.
 
 - Krok24b: kalibracja4roślin+billboardów przetestowana, licencyjna baza hash obejmuje850członków źródeł i aktualne pochodne. NASTĘPNY: pwsh artifacts/megascans-r1/run-final-proof.ps1.
 
-- Krok23a: sprawdzono HEAD i worktree ? SetSurfaceBase przyjmuje ju? string id (nie Vector2), zgodnie z wywo?aniem produkcyjnym i testem. Testy wzmocniono typowanym GetMethod oraz kontrol? w?a?ciwo?ci rzeczywistego Environment/Shaders/WorldPBR.shader; wszystkie u?ywane nazwy istniej?. Diff-check PASS; bez Unity, pe?ny EditMode lidera nadal wymagany.
-- NAST?PNY KROK: `pwsh artifacts/megascans-r1/run-final-proof.ps1`.
+- Krok23a: sprawdzono HEAD i worktree - SetSurfaceBase przyjmuje juz string id (nie Vector2), zgodnie z wywolaniem produkcyjnym i testem. Testy wzmocniono typowanym GetMethod oraz kontrola wlasciwosci rzeczywistego Environment/Shaders/WorldPBR.shader; wszystkie uzywane nazwy istnieja. Diff-check PASS; bez Unity, pelny EditMode lidera nadal wymagany.
+- NASTEPNY KROK: `pwsh artifacts/megascans-r1/run-final-proof.ps1`.
