@@ -214,7 +214,15 @@ M = {
                     "dust": 0.75},
     # authored plantings (streetscape.plantings, review r6 W-N12): red berberis hedge, island bed soil / bark mulch.
     # Linear albedo WORKING_VALUE from the CC0 Bieżeństwa photo (hedge vs asphalt luminance ratio, overcast).
-    "hedge_berberis": {"color": [0.20, 0.046, 0.055], "rough": 0.8, "surface": "grass", "texture_set": "hedge_foliage"},
+    # Clipped hedges = opaque dark core (interior shade + stems, hedge_foliage set) + alpha leaf shell + loose shoot
+    # cards (streetscape.hedge_textures, colours in the texture, sRGB; ADR 0049 addendum). Core albedo ~0.4 x leaf.
+    "hedge_berberis": {"color": [0.085, 0.034, 0.024], "rough": 0.85, "surface": "grass", "texture_set": "hedge_foliage"},
+    "hedge_privet": {"color": [0.020, 0.030, 0.012], "rough": 0.85, "surface": "grass", "texture_set": "hedge_foliage"},
+    "hedge_hornbeam": {"color": [0.026, 0.036, 0.014], "rough": 0.85, "surface": "grass", "texture_set": "hedge_foliage"},
+    "hedge_thuja": {"color": [0.016, 0.028, 0.012], "rough": 0.85, "surface": "grass", "texture_set": "hedge_foliage"},
+    **{f"hedge_{kind}_{sp}": {"color": [1.0, 1.0, 1.0], "rough": 0.9 if sp == "privet" else 0.97,
+                              "texture": f"hedge_{kind}_{sp}", "alpha_cutoff": 0.5}
+       for kind in ("shell", "sprig") for sp in ("berberis", "privet", "hornbeam", "thuja")},
     "bed_soil": {"color": [0.17, 0.13, 0.095], "rough": 0.9, "surface": "grass", "texture_set": "soil_bed"},
     # sign gantry (streetscape.life_props.sign_gantry)
     "gantry_steel": {"color": [0.42, 0.43, 0.43], "rough": 0.55, "metal": 0.9},

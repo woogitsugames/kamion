@@ -123,6 +123,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     plant_blocked = PT.build(w.buf, overrides, origin, roads_poly, road_parts, zground, deck_at, rep)
     if rep.get("plantings", {}).get("hedges") or rep.get("plantings", {}).get("islands"):
         log("plantings", {k: v for k, v in rep["plantings"].items() if k != "islands"})
+    # OSM barrier=hedge (fence hedges, gaps at gates); none in tile C
+    PT.osm_hedges(w.buf, src, origin, roads_poly, zground, rep)
 
     # furniture
     pl = FU.Placer(zsurf, zground_col, surf=FU.SurfaceTop(w.buf.parts),

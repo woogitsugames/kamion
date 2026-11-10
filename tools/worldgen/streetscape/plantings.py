@@ -5,10 +5,13 @@ OSM has no barrier=hedge / landuse=flowerbed in tile C, so beds are traced from 
 and checked against the CC0 photo of Rondo Pamięci Bieżeństwa (20201102_152339, docs/REFERENCES.md). The override
 carries plain geometry in EPSG:2180 plus what grows there; everything else is rule:
 
-  hedges   `beds[].ring`: clipped hedge mass (Berberis thunbergii 'Atropurpurea' type, dark red) inset `rim_m` from
-           the traced bed edge so a lawn rim stays, height 0.6-0.8 m with a gentle wavy top, battered and rounded
-           sides (3 rings: foot, shoulder, top edge), top triangulated with interior points. UV0 metres (u along the
-           perimeter / plan x, v up / plan y) for the hedge_foliage modulation set.
+  hedges   `beds[].ring` (+ `plant`: berberis_red | privet | hornbeam | thuja, SPECIES): clipped hedge inset `rim_m`
+           from the traced bed edge so a lawn rim stays. ADR 0049 addendum (the r6 masses read as solid boxes): a dark
+           opaque core (hedge_<sp>, hedge_foliage set), an alpha leaf shell 5 cm outside it (hedge_shell_<sp>, open
+           below 14 % of the height so the foot reads dark), one lump / crown per plant along the perimeter with thin or
+           missing plants as dips, a lumpy crown, and loose-shoot alpha cards (hedge_sprig_<sp>) on the top edge, the
+           upper sides and the top that break the silhouette. Textures: streetscape.hedge_textures.
+  osm      barrier=hedge ways (osm_hedges): the same hedge along the line, cut at roads and opened at gates.
   islands  `islands[].at`: the hole of the road footprint (kerb-enclosed island) containing the point is filled up
            to its kerb top: `fill: paving` flush with the kerb top (sidewalk_paving), `fill: soil` 3 cm below it
            (bed_soil) with optional sparse shrubs (`shrubs`, clumps 0.8-1.4 m, 0.5-0.7 m high, never under a deck:
@@ -66,49 +69,266 @@ def _fill(ring, spacing):
     return ring.copy(), np.array(ear_clip(ring))
 
 
-def hedge_mass(buf, poly, zground, key, h=None, src=""):
-    """Closed hedge volume over plan polygon `poly` (local metres) standing on zground."""
-    h = h if h is not None else HEDGE_H[0] + _h(key, "h") * (HEDGE_H[1] - HEDGE_H[0])
-    R = _ccw_ring(poly.buffer(0), 0.5)
+# species presets: tex = hedge_textures species, h = clipped height range (m), plant = plant spacing along the hedge (m),
+# bulge = outward lump per plant (m), dome = top relief as a share of h, gap_p = share of thin / missing plants (dips),
+# sigma = plant crown width / spacing, sprig = mean spacing of loose shoots on the top edge (m), sprig_wh = shoot card
+# width / height ranges (m). Typical Polish clipped hedges (WORKING_VALUE, general horticultural knowledge).
+SPECIES = {
+    # low roundabout berberis is clipped into a cushion (CC0 Bieżeństwa photo): barrel sides, wide rounded shoulder
+    "berberis_red": dict(tex="berberis", h=HEDGE_H, plant=(0.55, 0.85), bulge=0.08, dome=0.2, gap_p=0.07, sigma=0.33,
+                         sprig=0.17, sprig_wh=((0.18, 0.32), (0.12, 0.24)), prof="cushion"),
+    "privet": dict(tex="privet", h=(1.2, 1.7), plant=(0.45, 0.65), bulge=0.04, dome=0.04, gap_p=0.04, sigma=0.36,
+                   sprig=0.30, sprig_wh=((0.14, 0.24), (0.10, 0.18))),
+    "hornbeam": dict(tex="hornbeam", h=(1.4, 2.0), plant=(0.5, 0.7), bulge=0.04, dome=0.03, gap_p=0.04, sigma=0.38,
+                     sprig=0.34, sprig_wh=((0.16, 0.28), (0.12, 0.22))),
+    "thuja": dict(tex="thuja", h=(1.6, 2.2), plant=(0.6, 0.8), bulge=0.06, dome=0.16, gap_p=0.05, sigma=0.27,
+                  sprig=0.40, sprig_wh=((0.12, 0.2), (0.12, 0.2))),
+}
+# cross-sections (inset m, height share, bulge share), foot first
+PROFILES = {
+    "box": [(-0.04, -0.03, 0.2), (0.0, 0.45, 0.8), (0.05, 0.86, 1.0), (0.14, 0.97, 0.7), (0.24, 1.0, 0.4)],
+    "cushion": [(-0.03, -0.03, 0.2), (-0.04, 0.32, 0.8), (0.0, 0.62, 1.0), (0.09, 0.84, 0.9), (0.22, 0.95, 0.6),
+                (0.40, 1.0, 0.3)],
+}
+SHELL_D = 0.05              # m, alpha leaf shell outside the opaque core
+SHELL_FOOT = 0.14           # share of h below which the shell is open: dark stems / core at the base
+
+
+def species(name):
+    return SPECIES.get(name or "berberis_red", SPECIES["berberis_red"])
+
+
+def hedge_mats(sp):
+    t = species(sp)["tex"]
+    return f"hedge_{t}", f"hedge_shell_{t}", f"hedge_sprig_{t}"
+
+
+def _plants(per, P, key, S):
+    """per-vertex outward bulge (m) and top relief (share of h) from individual clipped plants along the perimeter"""
+    s, i = 0.0, 0
+    pos, amp, top = [], [], []
+    while s < P - 0.2:
+        sp = S["plant"][0] + _h(key, "ps", i) * (S["plant"][1] - S["plant"][0])
+        pos.append(s)
+        gap = _h(key, "gap", i) < S["gap_p"]
+        amp.append(-1.2 if gap else 0.35 + 0.65 * _h(key, "pa", i))
+        top.append(-1.6 if gap else 0.55 + 0.45 * _h(key, "pt", i))
+        s += sp
+        i += 1
+    pos, amp, top = np.array(pos), np.array(amp), np.array(top)
+    ds = np.abs(per[:, None] - pos[None, :])
+    ds = np.minimum(ds, P - ds)
+    sig = S["sigma"] * (P / max(len(pos), 1))
+    w = np.exp(-0.5 * (ds / sig) ** 2)
+    return (w * amp).sum(1) * S["bulge"], (w * top).sum(1)
+
+
+def _sprig_cards(buf, mat, B, N, z, key, S, src, tilt=(0.15, 0.7), share=1.0):
+    """loose shoots: double-sided alpha cards rooted 25 % inside the shell, leaning outward (N), random yaw"""
+    V, UV, T = [], [], []
+    for j in range(len(B)):
+        if _h(key, "su", j) > share:
+            continue
+        w = S["sprig_wh"][0][0] + _h(key, "sw", j) * (S["sprig_wh"][0][1] - S["sprig_wh"][0][0])
+        hh = S["sprig_wh"][1][0] + _h(key, "sh", j) * (S["sprig_wh"][1][1] - S["sprig_wh"][1][0])
+        th = tilt[0] + _h(key, "st", j) * (tilt[1] - tilt[0])
+        n = np.array([N[j][0], N[j][1], 0.0])
+        n /= max(np.linalg.norm(n), 1e-9)
+        up = np.array([0.0, 0.0, 1.0]) * math.cos(th) + n * math.sin(th)
+        t = np.array([-n[1], n[0], 0.0])
+        yaw = (_h(key, "sy", j) - 0.5) * 1.4
+        a = t * math.cos(yaw) + n * math.sin(yaw)
+        a[2] = 0.0
+        a /= max(np.linalg.norm(a), 1e-9)
+        base = np.array([B[j][0], B[j][1], z[j]]) - up * 0.25 * hh
+        q = [base - a * w / 2, base + a * w / 2, base + a * w / 2 + up * hh, base - a * w / 2 + up * hh]
+        cell = int(_h(key, "sc", j) * 4) % 4
+        u0, v0 = (cell % 2) * 0.5, 0.5 - (cell // 2) * 0.5      # UV v up (image row 0 = top cells)
+        flip = _h(key, "sf", j) < 0.5
+        us = [u0 + 0.5, u0] if flip else [u0, u0 + 0.5]
+        k = len(V)
+        V += q
+        UV += [(us[0], v0), (us[1], v0), (us[1], v0 + 0.5), (us[0], v0 + 0.5)]
+        T += [(k, k + 1, k + 2), (k, k + 2, k + 3)]
+    if T:
+        buf.add("furniture", mat, np.array(V), np.array(UV), np.array(T), src=src)
+    return len(T)
+
+
+def _crown(P, ph, lam):
+    """2-D lumpy relief (-1..1) of the clipped top (plant crowns ~lam apart)"""
+    x, y = P[:, 0], P[:, 1]
+    r = 0.0
+    for k, (ax, ay) in enumerate(((1.0, 0.3), (-0.4, 1.0), (0.7, -0.8))):
+        r = r + np.sin((ax * x + ay * y) * 6.283 / (lam * (0.9 + 0.15 * k)) + ph[k])
+    return r / 3.0
+
+
+def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", stats=None):
+    """Clipped hedge over plan polygon `poly` (local metres) standing on zground (review r6 W-N12, ADR 0049 addendum):
+    an opaque dark core (interior shade, stems visible at the foot), an alpha leaf shell SHELL_D outside it (silhouette
+    and surface broken into leaves, open below SHELL_FOOT so the base reads dark), per-plant lumps and dips along the
+    perimeter (thin / missing plants), a lumpy crown and loose shoot cards on the top edge, sides and top."""
+    from .hedge_textures import HEDGE_TILE_M
+    S = species(plant)
+    core_m, shell_m, sprig_m = hedge_mats(plant)
+    h = h if h is not None else S["h"][0] + _h(key, "h") * (S["h"][1] - S["h"][0])
+    R = _ccw_ring(poly.buffer(0), 0.3)
     if len(R) < 3:
         return 0
     N = _ring_normals(R)
     zg = zground(R[:, 0], R[:, 1])
     per = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(np.vstack([R, R[:1]]), axis=0).T))])[:-1]
-    ph1, ph2, ph3 = _h(key, "p1") * 6.283, _h(key, "p2") * 6.283, _h(key, "p3") * 6.283
-    # lumpy outline (clipped shrubs bulge between the cuts) and a wavy top: no straight slab edges
-    R = R + N * (0.05 * np.sin(per / 0.9 + ph3) + 0.03 * np.sin(per / 0.37 + ph1))[:, None]
-    wave = 0.05 * np.sin(per / 3.1 + ph1) + 0.03 * np.sin(per / 1.1 + ph2)
-    # rounded cross-section (foot slightly outside: foliage overhangs the soil); insets shrink on narrow beds
+    P = float(per[-1] + np.hypot(*(R[0] - R[-1])))
+    ph = (_h(key, "p1") * 6.283, _h(key, "p2") * 6.283, _h(key, "p3") * 6.283)
+    bulge, topm = _plants(per, P, key, S)
+    bulge = bulge + 0.015 * np.sin(per / 0.21 + ph[2])
+    hl = np.maximum(h * (1.0 + S["dome"] * (topm - 0.8)), 0.45 * h)      # local edge height per vertex
     inr = 2.0 * poly.area / max(poly.length, 1e-6)
-    k = min(1.0, 0.8 * inr / 0.24)
-    prof = [(-0.04, -0.03, 0.0), (0.0, 0.45, 0.5), (0.05, 0.86, 0.85), (0.14, 0.97, 1.0), (0.24, 1.0, 1.0)]   # clipped: steep sides, flat top
-    rings = [(R - N * (d * k), zg + f * h + w * wave) for d, f, w in prof]
-    V = np.vstack([np.column_stack([P, z]) for P, z in rings])
+    k = min(1.0, 0.8 * inr / max(d for d, _, _ in PROFILES[S.get("prof", "box")]))
+    # (inset m, height share, bulge share): clipped = steep sides, rounded shoulder, flat-ish top
+    prof = PROFILES[S.get("prof", "box")]
     n = len(R)
-    T = []
-    for kk in range(len(rings) - 1):
-        b0, b1 = kk * n, (kk + 1) * n
-        for i in range(n):
-            i1 = (i + 1) % n
-            T += [(b0 + i, b0 + i1, b1 + i1), (b0 + i, b1 + i1, b1 + i)]
-    vs = np.concatenate([np.full(n, f * h + 0.35 * d) for d, f, _ in prof])
-    UV = np.column_stack([np.tile(per, len(rings)), vs])
-    buf.add("furniture", "hedge_berberis", V, UV, np.array(T), src=src)
-    # top: triangulated inner polygon at the top-edge heights + a soft crown inside
-    top = rings[-1][0]
+    nt = 0
+
+    def rings(R0, hh, prof_, sel=slice(None)):
+        return [(R0[sel] + N[sel] * (b * bulge[sel] - d * k)[:, None], zg[sel] + f * hh[sel]) for d, f, b in prof_]
+
+    def strip(rg, mat, UV):
+        n = len(rg[0][0])
+        V = np.vstack([np.column_stack([Pp, z]) for Pp, z in rg])
+        T = []
+        for kk in range(len(rg) - 1):
+            b0, b1 = kk * n, (kk + 1) * n
+            for i in range(n):
+                i1 = (i + 1) % n
+                T += [(b0 + i, b0 + i1, b1 + i1), (b0 + i, b1 + i1, b1 + i)]
+        buf.add("furniture", mat, V, UV, np.array(T), src=src)
+        return len(T)
+
+    # core: inset and lowered by SHELL_D, dark interior material (modulation set hedge_foliage)
+    # (half the perimeter vertices: it only shows through the leaf gaps; 1.3 x SHELL_D keeps the chords inside)
+    cs = slice(None, None, 2) if n >= 16 else slice(None)
+    core = rings(R - N * 1.3 * SHELL_D, hl - SHELL_D, prof, cs)
+    nc = len(core[0][0])
+    nt += strip(core, core_m, np.column_stack([np.tile(per[cs], len(core)),
+                                               np.concatenate([np.full(nc, f * h) for _, f, _ in prof])]))
     try:
-        P2, Tt = _fill(top, 1.2)
+        P2, Tt = _fill(core[-1][0], 1.0)
+        zt = zground(P2[:, 0], P2[:, 1])
+        z2 = zt + h * (1.0 - 0.6 * S["dome"]) - SHELL_D           # below the lowest crown: never pokes through
+        z2[:nc] = core[-1][1]
+        buf.add("furniture", core_m, np.column_stack([P2, z2]), P2.copy(), Tt, src=src)
+        nt += len(Tt)
     except Exception:
-        return 1
-    zt = zground(P2[:, 0], P2[:, 1])
-    ztop = np.empty(len(P2))
-    ztop[:n] = rings[-1][1]
-    if len(P2) > n:
-        inner = P2[n:]
-        ztop[n:] = zt[n:] + h + 0.04 + 0.04 * np.sin(inner[:, 0] * 1.7 + ph1) * np.cos(inner[:, 1] * 1.3 + ph2)
-    buf.add("furniture", "hedge_berberis", np.column_stack([P2, ztop]), P2.copy(), Tt, src=src)
+        pass
+    # shell: open foot; UV in shell tiles with a per-hedge offset / rotation (no aligned repeats between beds)
+    sprof = [(0.02, SHELL_FOOT, 0.6)] + prof[1:]
+    shell = rings(R, hl, sprof)
+    uo, vo = _h(key, "uo"), _h(key, "vo")
+    nt += strip(shell, shell_m, np.column_stack([
+        np.tile(per / HEDGE_TILE_M + uo, len(shell)),
+        np.concatenate([(z - zg) / HEDGE_TILE_M + vo for _, z in shell])]))
+    stop = shell[-1][0]
+    try:
+        P2, Tt = _fill(stop, 0.6)
+        zt = zground(P2[:, 0], P2[:, 1])
+        z2 = np.empty(len(P2))
+        z2[:n] = shell[-1][1]
+        if len(P2) > n:
+            inner = P2[n:]
+            dmin = np.sqrt(((inner[:, None, :] - stop[None, :, :]) ** 2).sum(-1).min(1))
+            lam = 0.65 * (S["plant"][0] + S["plant"][1])
+            z2[n:] = (zt[n:] + float(np.median(hl)) + 0.035 * np.minimum(dmin / 0.5, 1.0)
+                      + 0.5 * S["dome"] * h * _crown(inner, ph, lam))
+        ang = _h(key, "ua") * 6.283
+        c, s_ = math.cos(ang), math.sin(ang)
+        UVt = np.column_stack([c * P2[:, 0] - s_ * P2[:, 1], s_ * P2[:, 0] + c * P2[:, 1]]) / HEDGE_TILE_M
+        buf.add("furniture", shell_m, np.column_stack([P2, z2]), UVt, Tt, src=src)
+        nt += len(Tt)
+        if len(P2) > n:            # loose shoots on the crown, ~1.4 per m2 (fill spacing 0.6 m)
+            sel = np.array([j for j in range(len(P2) - n) if _h(key, "tc", j) < 0.45], int)
+            if len(sel):
+                a2 = np.array([_h(key, "ta", j) * 6.283 for j in sel])
+                nt += _sprig_cards(buf, sprig_m, P2[n:][sel], np.column_stack([np.cos(a2), np.sin(a2)]),
+                                   z2[n:][sel], (*key, "top"), S, src, tilt=(0.0, 0.35))
+    except Exception:
+        pass
+    # loose shoots along the top edge (shoulder ring) and a few on the upper sides: ragged silhouette
+    idx, s, j = [], 0.0, 0
+    while s < P:
+        idx.append(int(np.searchsorted(per, s)) % n)
+        s += S["sprig"] * (0.5 + _h(key, "ss", j))
+        j += 1
+    idx = np.array(idx, int)
+    nt += _sprig_cards(buf, sprig_m, shell[-2][0][idx], N[idx], shell[-2][1][idx], (*key, "edge"), S, src, tilt=(0.2, 0.8))
+    nt += _sprig_cards(buf, sprig_m, shell[-3][0][idx] + N[idx] * 0.02, N[idx], shell[-3][1][idx] - 0.12 * h,
+                       (*key, "side"), S, src, tilt=(1.0, 1.35), share=0.35)
+    if stats is not None:
+        stats["tris"] = stats.get("tris", 0) + nt
     return 1
+
+
+def osm_hedges(buf, src, origin, roads_poly, zground, report):
+    """OSM barrier=hedge ways -> clipped hedges, cut at the road footprint and opened at every barrier=gate /
+    swing_gate / sliding_gate / lift_gate or entrance=* node within 1 m of the line (gap = `width` tag, else 1.2 m
+    wicket, 4 m for a sliding or vehicle gate). Species from species / genus tags (berberis, privet, hornbeam, thuja),
+    leaf_type=needleleaved -> thuja, else privet (the commonest clipped fence hedge in Polish towns). Width from
+    `width`, height from `height`, else the species ranges. Tile C has none (ADR 0049); unit-tested."""
+    from shapely.geometry import LineString
+    rep = {"ways": 0, "m": 0.0, "gaps": 0, "hedges": 0}
+    ways = [f for f in src.get("osm", {}).get("ways", []) if f["tags"].get("barrier") == "hedge"]
+    if not ways:
+        report["osm_hedges"] = rep
+        return rep
+    ox, oy = float(origin[0]), float(origin[1])
+    gates = []
+    for nd in src["osm"].get("nodes", []):
+        t = nd["tags"]
+        if t.get("barrier") in ("gate", "swing_gate", "sliding_gate", "lift_gate") or t.get("entrance"):
+            x, y = nd["geometry"]["coordinates"][:2]
+            veh = t.get("barrier") in ("sliding_gate", "lift_gate") or t.get("motor_vehicle") in ("yes", "private", "destination")
+            wdt = _num(t.get("width")) or (4.0 if veh else 1.2)
+            gates.append(Point(x - ox, y - oy).buffer(wdt / 2))
+    cutter = roads_poly.buffer(0.4) if roads_poly is not None else None
+    for f in ways:
+        t = f["tags"]
+        sp = _hedge_species(t)
+        line = LineString(np.asarray(f["geometry"]["coordinates"], float)[:, :2] - [ox, oy])
+        g = line.difference(cutter) if cutter is not None else line
+        for gp in gates:
+            if gp.centroid.distance(line) < 1.0:
+                g = g.difference(gp)
+                rep["gaps"] += 1
+        rep["ways"] += 1
+        key0 = f"osm:way/{f.get('osm_way')}:{f.get('part', 0)}"
+        wdt = _num(t.get("width")) or (0.5 + 0.3 * _h(key0, "w") if sp == "berberis_red" else 0.7 + 0.4 * _h(key0, "w"))
+        for pi, part in enumerate(getattr(g, "geoms", [g])):
+            if part.geom_type != "LineString" or part.length < 1.0:
+                continue
+            # clipped square ends at gate posts / kerbs, corners softened (no rounded tongue into the opening)
+            poly = part.buffer(wdt / 2, cap_style="flat").buffer(-0.12).buffer(0.12, quad_segs=2)
+            rep["hedges"] += hedge_mass(buf, poly, zground, (key0, pi), h=_num(t.get("height")), src=key0, plant=sp)
+            rep["m"] += part.length
+    rep["m"] = round(rep["m"], 1)
+    report["osm_hedges"] = rep
+    return rep
+
+
+def _num(v):
+    try:
+        return float(str(v).replace(",", ".").split()[0]) if v not in (None, "") else None
+    except (ValueError, IndexError):
+        return None
+
+
+def _hedge_species(t):
+    s = " ".join(t.get(k, "") for k in ("species", "genus", "species:pl", "taxon")).lower()
+    for k, name in (("berber", "berberis_red"), ("ligustr", "privet"), ("carpin", "hornbeam"), ("grab", "hornbeam"),
+                    ("thuja", "thuja"), ("żywotn", "thuja")):
+        if k in s:
+            return name
+    return "thuja" if t.get("leaf_type") == "needleleaved" else "privet"
 
 
 def _island_holes(roads_poly):
@@ -123,7 +343,7 @@ def _island_holes(roads_poly):
 
 def build(buf, overrides, origin, roads_poly, road_parts, zground, deck_mask_at, report):
     from .furniture import SurfaceTop
-    rep = {"hedges": 0, "hedge_m2": 0.0, "islands": [], "shrubs": 0, "stale": []}
+    rep = {"hedges": 0, "hedge_m2": 0.0, "islands": [], "shrubs": 0, "stale": [], "tris": 0}
     plans = [o for o in overrides if o.get("kind") == "plantings"]
     if not plans:
         report["plantings"] = rep
@@ -142,7 +362,8 @@ def build(buf, overrides, origin, roads_poly, road_parts, zground, deck_mask_at,
                 if g.geom_type != "Polygon" or g.area < 1.0:
                     continue
                 key = (o["id"], bi, gi)
-                rep["hedges"] += hedge_mass(buf, g, zground, key, h=bed.get("height_m"), src=f"override:{o['id']}:bed{bi}")
+                rep["hedges"] += hedge_mass(buf, g, zground, key, h=bed.get("height_m"), src=f"override:{o['id']}:bed{bi}",
+                                             plant=bed.get("plant", "berberis_red"), stats=rep)
                 rep["hedge_m2"] += g.area
                 blocked.append(g)
         for ii, isl in enumerate(o.get("islands", [])):
@@ -207,7 +428,9 @@ def build(buf, overrides, origin, roads_poly, road_parts, zground, deck_mask_at,
                                 d = ((np.column_stack([e, n])[:, None, :] - _P[None, :, :]) ** 2).sum(-1)
                                 return _z[np.argmin(d, axis=1)]
                             hedge_mass(buf, blob, zbed, k, h=0.35 + 0.3 * _h(*k, "hh"),
-                                       src=f"override:{o['id']}:island{ii}:shrub")
+                                       src=f"override:{o['id']}:island{ii}:shrub",
+                                       plant=isl["shrubs"] if isinstance(isl.get("shrubs"), str) else "berberis_red",
+                                       stats=rep)
                             n_sh += 1
             rep["shrubs"] += n_sh
             rep["islands"].append({"id": f"{o['id']}:island{ii}", "fill": fill, "area_m2": round(hole.area, 1),
