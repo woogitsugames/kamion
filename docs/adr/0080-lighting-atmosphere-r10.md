@@ -114,3 +114,76 @@ Pomiar na telefonie (koszt nieba / toe / `sqrt` w kabinie na Low; wygląd kabiny
 nawierzchnia; SSAO Ultra na flagowcu; trawniki; siła `toeCompensation` do oceny właściciela w ruchu.
 Testy: `LookToeTests` (toe, odwrotność = postać zamknięta shadera, preset = wariant 3, `FogTau`); EditMode 174/180 —
 6 porażek to wskaźniki LFS zamiast FBX ciężarówki w worktree (niezwiązane ze zmianą).
+
+## r11 — poprawki po recenzji visual-critic (2026-11-10, `docs/reports/visual/REVIEW-2026-11-10-0071-0080.md` część B)
+Wariant 3 właściciela (toe 0,9 / 0,4 / 0,6, −0,2 EV) **bez zmian** (`LookToeTests`); zmiany są w jego ramach. Liczby z renderów
+edytora (WorldC, 2340×1080, 19 kamer świata), **telefon UNVERIFIED** (zakaz adb). Pomiar: nowy `scripts/road-sky-metrics.py`
+(ten sam kod dla renderów i zdjęć: średni kolor nieba, mediana szarych pikseli w polu jezdni x 0,30–0,70 / y 0,62–0,92,
+udział pikseli o lumie < 16 i < 24, 10. i 50. percentyl roślinności stykającej się z niebem; poziomy sRGB 0–255).
+
+### Pomiar: render a zdjęcia overcast
+| zestaw | niebo RGB (B−R) | asfalt RGB | niebo − asfalt p25/p50/p75 | < 16 śr. | roślinność p10 / p50 |
+|---|---|---|---|---|---|
+| Commons, 53 zdjęcia overcast (`Data/raw/refs/commons`) | 222/225/229 (+7) | 113/114/108 (n = 23) | 90 / 121 / 148 | 1,4 % | 38 / 58 |
+| Mapillary, 82 klatki overcast (`Data/raw/mapillary`; w kadrze bywa maska auta) | 186/192/202 (+16) | 80/81/86 (n = 46) | 110 / 116 / 131 | 2,2 % | 42 / 61 |
+| High overcast przed r11 | 197/197/197 (0) | 83/82/78 | 108 / 123 / 136 | 0,3 % (dk8-dk19-exit 3,5 %) | 44 / 60 (dk8: 18 / 36) |
+| **High overcast po r11** | 193/197/202 (+9) | 82/82/82 | 106 / 120 / 133 | 0,1 % (dk8 0,3 %) | 47 / 61 (dk8: 27 / 44) |
+| Low overcast przed r11 | 188/188/188 (0) | 78/76/73 | 106 / 119 / 132 | 0,4 % (dk8 6,4 %) | 46 / 57 (dk8: 15 / 34) |
+| **Low overcast po r11** | 184/187/192 (+8) | 78/77/76 | 104 / 117 / 129 | 0,1 % (dk8 1,1 %) | 45 / 59 (dk8: 23 / 41) |
+| High clear przed → po | 128/145/162 → bez zmian | 108/108/106 → bez zmian | 43 → 43 | 0,0 % | 50 / 63 → 50 / 63 |
+
+`light-metrics.py`: High overcast p10 24,8 → 25,3, p50 42,2 → 42,5 (wybór właściciela zachowany); Low 23,6 → 24,1 / 41,1 → 41,3.
+Pełne wyniki: `artifacts/light-r11/metrics/`.
+
+**Asfalt (recenzja B1: „25–50 poziomów za ciemny”) — pomiar tego nie potwierdza w tej skali.** Względem nieba asfalt jest
+2–7 poziomów za ciemny (różnica niebo − asfalt 123 wobec 116–121 na zdjęciach); bezwzględnie −32 tylko wobec jaśniejszych
+zdjęć z Commons, których niebo też jest o 29 jaśniejsze (to wariant 3, nie materiał), a wobec klatek Mapillary 0. Trzy
+zdjęcia z recenzji mają mokrą jezdnię i niebo 220–241. Realna różnica to barwa: jezdnia była ciepła (B−R −4) pod
+neutralnym niebem — naprawione (82/82/82). Albedo `asphalt_worn` = 0,08 (ADR 0049 r7: kontrast farby; było 0,13) —
+**nie zmieniane**. Jeśli lider chce jaśniejszej jezdni mimo pomiaru: `_Tint` 1,25 (albedo 0,10; szacunek z krzywej, nie render: ok. +9 poziomów
+w overcast i ok. +8 w clear) w `WorldPbrMaterials.Create` + reimport regionu; decyzja z autorem ADR 0049.
+
+### Decyzje r11
+1. **Chłodna kopuła overcast** (`LightingPreset.overcastCctK` = 6800 K, `SkyModel.DaylightRgb`: miejsce geometryczne światła
+   dziennego CIE, luminancja 1): balans bieli kamery jest stały (D65), więc pokład chmur wychodzi lekko chłodny jak na
+   zdjęciach (B−R +7…+16). Ten sam kolor ma światło otoczenia, mgła i kostka odbić; natężenie i ekspozycja bez zmian
+   (`OvercastDomeTests`). Obcięcie nasycenia ambientu (`ambientSkySaturation`) dotyczy już tylko udziału czystego nieba.
+   WORKING_VALUE (7000 K dawało +14).
+2. **Światło nieba przez liście + połysk liści** (`Kamion/Vegetation`, `LeafAmbient`): ambient liścia = SH(n) + t·SH(−n)
+   (t = `_Transmission`; pasma L0 i L2 parzyste, L1 nieparzyste — jedna ewaluacja SH z przeskalowanymi pasmami, per
+   wierzchołek) oraz 2 % radiancji otoczenia odbite od powierzchni liścia (`WorldAtmosphere.LeafSheen`, WORKING_VALUE).
+   Spód koron widział dotąd tylko odbicie od gruntu, a igły sosny mają albedo 0,035 — pod krzywą wychodziła czerń.
+   Kora (materiały jednostronne) bez zmian.
+3. **Mgiełka przy ziemi gęstsza i płytsza**: a 1,6 → 2,4, H 60 → 40 m (udział koloru horyzontu na wysokości oczu:
+   15 / 38 / 55 % na 100 / 300 / 500 m, było 12 / 31 / 46 %; 3 % na 20 m). Widzialność przy gruncie ok. 2,4 km (wilgotny,
+   pochmurny dzień); wysokie dalekie obiekty ponad warstwą zmieniają się mniej (szczyt komina 60 m na 1 km: 67 % głębokości
+   optycznej podstawy). Koszt per piksel bez zmian (te same uniformy). WORKING_VALUE.
+4. **Szyba kabiny pod słońce** (`Kamion/Truck Glass`, recenzja B6): granica śladu wycieraczek to przejście 12 cm / 16°
+   (było 2 cm / 2° — ostry łuk i pionowa krawędź na niebie), usunięte okresowe łuki 1,5 cm (prążki), odblask filmu
+   ograniczony do 2× izotropowego (było 4×). Mniej instrukcji niż przed zmianą (bez `sin` i dwóch `fwidth`).
+5. **Szyby aut parkingowych** (`Kamion/World Car Glass`): mgła i krzywa Low z `KamionAtmosphere.hlsl` zamiast mgły Unity —
+   na Low szyby nie dostawały krzywej kontrastu, którą ma karoseria.
+
+### Koszt (edytor; telefon UNVERIFIED)
+`stats.txt` Low overcast przed / po identyczne (draw calle, trójkąty, instancje). Shadery: roślinność +1 dodawanie
+wektorowe na fragment i kilka operacji na wierzchołek; niebo, nawierzchnie, mgła — bez zmian; szyba kabiny taniej; szyby
+aut na Low +1 dzielenie wektorowe (krzywa). Bez nowych tekstur, przebiegów i słów kluczowych. `docs/PERFORMANCE_BUDGETS.md`
+bez zmian do pomiaru na telefonie.
+
+### A/B na telefonie (lider)
+r11 włączone (domyślnie) kontra stan r10 w jednym APK:
+`pwsh scripts/device-metrics.ps1 -Launch -DurationSeconds 90 -Tier Low -Scene WorldC -QaCamera dk8-dk19-exit -Extra "lighting=overcast"`
+kontra `-Extra "lighting=overcast,rq_skycct=0,rq_leafamb=0,rq_hazegf=1.6,rq_hazeh=60"`; to samo z `-Tier High` na S24+
+i z `-Uncapped` dla zapasu GPU. Pojedynczo: `rq_skycct` (K, 0 = neutralna kopuła), `rq_leafamb` (0 / 1), `rq_hazegf`,
+`rq_hazeh` (m). Szyba kabiny i szyby aut nie mają przełącznika (zmiana stała).
+
+### Samokrytyka r11 (docs/06) i otwarte
+- Ciemne auta nadal są ciemnymi bryłami (`final/jpg/cmp-*-truck-at-gate.jpg`): lakier `_CARPAINT` należy do ADR 0078,
+  tu poprawione tylko szyby i otoczenie. Do sprawdzenia po scaleniu 0078.
+- Kierunkowy kontrast nieba (recenzja B5: jasna lewa, burzowa prawa strona) i trawa (B7) — poza zakresem r11, bez zmian.
+- Las w `dk8-dk19-exit` na Low: 1,1 % pikseli < 16 (było 6,4 %), wciąż ciemniejszy niż na High (0,3 %).
+- `LeafSheen`, 6800 K i parametry mgiełki dobrane na kamerach kontrolnych do statystyk zdjęć, nie do zdjęć tych samych
+  miejsc; zdjęcia właściciela (`Data/photos/owner-2026-11-10-centrum`, niebo 135–143 / 140–147 / 145–150) potwierdzają
+  kierunek (chłodne niebo), nie wartość.
+- Testy: EditMode 188/191; 3 porażki `TruckDoorGlassTests` (brak `MI_Ext_DoorGlass*` w zestawie materiałów) są też w
+  ostatnim przebiegu na main (181/184), niezwiązane ze zmianą.

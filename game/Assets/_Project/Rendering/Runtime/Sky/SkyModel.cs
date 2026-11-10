@@ -56,6 +56,10 @@ namespace Game.Rendering
         /// (soft form shading and faint shadows). Taken out of the overcast diffuse, so the total horizontal illuminance
         /// (and the exposure) stays at the handbook overcast value.</summary>
         public readonly float OvercastSunLeak;
+        /// <summary>ADR 0080 r11: correlated colour temperature of the overcast dome (K; 0 = achromatic D65, the CIE
+        /// standard overcast). The camera's white balance is fixed daylight (D65), so a dome above 6500 K reads slightly
+        /// cool, as in the reference photos (sky B - R +7..+16 at 190-225, review 2026-11-10 B4).</summary>
+        public readonly float OvercastCctK;
 
         // ---------------------------------------------------------------- twilight (ADR 0062)
         public const float MinTwilightElevationDeg = -8f;
@@ -93,8 +97,9 @@ namespace Game.Rendering
         /// white-balance adaptation (Bradford von Kries, degree D) toward the scene illuminant (sun + sky on a horizontal
         /// plane), applied to sun, sky, ambient, fog and reflections alike. Option (c) of ADR 0043: owner A/B only.</param>
         public SkyModel(float sunElevationDeg, float sunAzimuthDeg, float turbidity, float overcast, float ev100, float wbAdaptation = 0f,
-            float overcastDirectional = 0f, float overcastSunLeak = 0f)
+            float overcastDirectional = 0f, float overcastSunLeak = 0f, float overcastCctK = 0f)
         {
+            OvercastCctK = overcastCctK;
             OvercastDirectional = Mathf.Clamp(overcastDirectional, 0f, 2f);
             OvercastSunLeak = Mathf.Clamp(overcastSunLeak, 0f, 0.3f);
             SunElevationDeg = Mathf.Clamp(sunElevationDeg, 0.5f, 89.5f);
@@ -145,16 +150,37 @@ namespace Game.Rendering
             }
 
             SunColor = SunColorFromTurbidity(T, m);
-            AdaptedWhite = Color.white;
+            // r11: the overcast share of the "neutral" radiance (dome, the ground it lights, fog) takes the dome's colour.
+            AdaptedWhite = OvercastCctK > 0f ? NormaliseLum(Color.LerpUnclamped(Color.white, DaylightRgb(OvercastCctK), Overcast)) : Color.white;
             if (Overcast < 1f) BuildChroma();
             WhiteBalanceAdaptation = Mathf.Clamp01(wbAdaptation);
             if (WhiteBalanceAdaptation > 0f)
             {
                 var A = AdaptationMatrix(SceneIlluminantRgb(), WhiteBalanceAdaptation);
                 SunColor = NormaliseLum(Mul(A, SunColor));
-                AdaptedWhite = NormaliseLum(Mul(A, Color.white));
+                AdaptedWhite = NormaliseLum(Mul(A, AdaptedWhite));
                 for (int i = 0; i < m_Chroma.Length; i++) m_Chroma[i] = NormaliseLum(Mul(A, m_Chroma[i]));
             }
+        }
+
+        /// <summary>
+        /// Linear Rec.709 colour (luminance 1, D65 = white) of a CIE daylight illuminant of the given correlated colour
+        /// temperature (4000-25000 K): chromaticity from the CIE daylight locus (CIE 015:2004, eq. 3.3-3.4; Wyszecki and
+        /// Stiles 1982), xyY -> XYZ -> Rec.709.
+        /// </summary>
+        public static Color DaylightRgb(float cctK)
+        {
+            double T = Mathf.Clamp(cctK, 4000f, 25000f);
+            double x = T <= 7000.0
+                ? -4.6070e9 / (T * T * T) + 2.9678e6 / (T * T) + 0.09911e3 / T + 0.244063
+                : -2.0064e9 / (T * T * T) + 1.9018e6 / (T * T) + 0.24748e3 / T + 0.237040;
+            double y = -3.000 * x * x + 2.870 * x - 0.275;
+            double X = x / y, Z = (1.0 - x - y) / y;
+            var c = new Color(
+                (float)(3.2404542 * X - 1.5371385 - 0.4985314 * Z),
+                (float)(-0.9692660 * X + 1.8760108 + 0.0415560 * Z),
+                (float)(0.0556434 * X - 0.2040259 + 1.0572252 * Z), 1f);
+            return NormaliseLum(c);
         }
 
         public static float ExposureFromEv100(float ev100) => 1f / (1.2f * Mathf.Pow(2f, ev100));
@@ -266,7 +292,9 @@ namespace Game.Rendering
                             float y = 0.2126f * L.r + 0.7152f * L.g + 0.0722f * L.b;
                             L = Color.LerpUnclamped(L, zc * y, cool);
                         }
-                        L = Desaturate(L, skySaturation);
+                        // r11: the cut models missing inter-reflections under a blue clear sky; the overcast dome's own
+                        // (slight) colour is the colour of the light and stays.
+                        L = Desaturate(L, Mathf.Lerp(skySaturation, 1f, Overcast));
                     }
                     sh.AddDirectionalLight(d, L, dOmega / Mathf.PI);
                 }

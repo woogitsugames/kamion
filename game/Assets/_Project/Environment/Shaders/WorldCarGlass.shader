@@ -52,6 +52,7 @@ Shader "Kamion/World Car Glass"
             #pragma multi_compile_fog
             #pragma multi_compile_instancing
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 r11: same haze and Low tone toe as the car body
             float4 _KamionGroundEnv;    // rgb: diffuse ground radiance (exposed), EnvironmentLighting
             float4 _KamionHorizonEnv;   // a = 1 when set
 
@@ -86,7 +87,7 @@ Shader "Kamion/World Car Glass"
                 o.positionCS = TransformWorldToHClip(o.positionWS);
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
                 o.uv = v.uv0;
-                o.fogFactor = ComputeFogFactor(o.positionCS.z);
+                o.fogFactor = KamionFogTau(o.positionWS, o.positionCS.w);
                 return o;
             }
 
@@ -141,8 +142,9 @@ Shader "Kamion/World Car Glass"
                 half d = smoothstep(0.75h, 1.0h, e) * _Dust;
                 col = col * (1.0h - 0.6h * d) + _DustColor.rgb * diffuse * (0.5h * d);
                 alpha = alpha + (1.0h - alpha) * d;
-                half fog = ComputeFogIntensity(i.fogFactor);
-                col = lerp(unity_FogColor.rgb * alpha, col, fog);
+                // premultiplied: the haze in front of the pane is weighted by its coverage; then the Low tone toe
+                half fog = exp(-i.fogFactor);
+                col = KamionTone(lerp((half3)_KamionHazeColor.rgb * alpha, col, fog));
                 return half4(col, alpha);
             }
             ENDHLSL

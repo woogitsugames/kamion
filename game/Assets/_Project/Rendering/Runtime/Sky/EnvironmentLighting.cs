@@ -57,11 +57,12 @@ namespace Game.Rendering
         // ADR 0080: atmosphere globals before every frame; a changed owner A/B override (exposure bias, look variant)
         // rebuilds the model / curve once.
         Color m_FogExposed;
-        float m_AppliedEvBias;
+        float m_AppliedEvBias, m_AppliedCct = -1f;
         int m_AppliedLook = -1;
         void OnBeginRendering(ScriptableRenderContext ctx, System.Collections.Generic.List<Camera> cams)
         {
-            if (m_AppliedEvBias != LightingPreset.ExposureBiasOverride || m_AppliedLook != WorldAtmosphere.LookVariant) Apply();
+            if (m_AppliedEvBias != LightingPreset.ExposureBiasOverride || m_AppliedLook != WorldAtmosphere.LookVariant ||
+                m_AppliedCct != LightingPreset.OvercastCctOverride) Apply();
             WorldAtmosphere.Push(this, m_FogExposed);
         }
 
@@ -107,6 +108,7 @@ namespace Game.Rendering
             var m = Model;
             m_AppliedEvBias = LightingPreset.ExposureBiasOverride;
             m_AppliedLook = WorldAtmosphere.LookVariant;
+            m_AppliedCct = LightingPreset.OvercastCctOverride;
             // Display value per cd/m^2: emissive surfaces (truck lamps, A7) are authored in physical luminance.
             Shader.SetGlobalFloat(k_Exposure, m.Exposure);
             StreetLamps.SetSunElevation(m.TrueSunElevationDeg);

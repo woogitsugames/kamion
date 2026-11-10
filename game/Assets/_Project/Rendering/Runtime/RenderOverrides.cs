@@ -88,6 +88,14 @@ namespace Game.Rendering
             Look = look.HasValue || ev.HasValue || wet.HasValue || gvar.HasValue;
             WorldAtmosphere.LookVariant = look ?? -1;
             CabToe = F(arg("rq_cabtoe"));
+            // ADR 0080 r11 A/B: rq_skycct overcast dome colour temperature K (0 = achromatic, the r10 dome), rq_hazegf /
+            // rq_hazeh ground haze factor / scale height m (r10: 1.6 / 60), rq_leafamb 0 = no sky light through the leaves.
+            float? cct = F(arg("rq_skycct")); float? hgf = F(arg("rq_hazegf")); float? hh = F(arg("rq_hazeh")); float? leaf = F(arg("rq_leafamb"));
+            Look |= cct.HasValue || hgf.HasValue || hh.HasValue || leaf.HasValue;
+            LightingPreset.OvercastCctOverride = cct ?? -1f;
+            WorldAtmosphere.HazeFactorOverride = hgf;
+            WorldAtmosphere.HazeHeightOverride = hh;
+            WorldAtmosphere.LeafAmbientOverride = leaf;
             LightingPreset.ExposureBiasOverride = ev ?? 0f;
             WorldAtmosphere.WetOverride = wet;
             WorldAtmosphere.GrassOverride = gvar;

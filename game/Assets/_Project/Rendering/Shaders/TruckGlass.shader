@@ -9,9 +9,12 @@
 //   lower hemisphere of the reflected ray, headliner above) lit by the sky irradiance and the sun on the dash top, so the
 //   windscreen carries the faint dash reflection a driver sees (docs/06 §4) instead of an outdoor horizon.
 // Dirt (_Wiper > 0, windscreen only): a thin road film outside the two wiper sweeps (pivots and blade radii in the glass
-// object space, from the exterior manifest), denser towards the bottom edge, with faint arc streaks at the sweep borders,
-// faded out when the streak period falls below a pixel. The film scatters sky and sun light (haze) and roughens the
-// reflection. Optional grime texture (interior T_Cab_GlassGrime on uv0) as before.
+// object space, from the exterior manifest), denser towards the bottom edge. The film scatters sky and sun light (haze)
+// and roughens the reflection. Optional grime texture (interior T_Cab_GlassGrime on uv0) as before.
+// ADR 0080 r11 (review 2026-11-10 B6): the sweep border is a 12 cm / 16 deg feathered transition (a blade leaves a
+// ragged, smeared edge; the 2 cm / 2 deg border drew a sharp arc and a vertical line across the sky against the sun), the
+// periodic 1.5 cm blade arcs are gone (concentric banding in the sky), and the sun glare of the film is capped at 2x
+// isotropic (was 4x).
 Shader "Kamion/Truck Glass"
 {
     Properties
@@ -97,8 +100,8 @@ Shader "Kamion/Truck Glass"
                 float2 d = p - pivot.xy;
                 r = length(d);
                 float a = degrees(atan2(d.y, d.x));
-                half inR = smoothstep(pivot.z - 0.02, pivot.z + 0.02, r) * (1.0 - smoothstep(pivot.w - 0.02, pivot.w + 0.02, r));
-                half inA = smoothstep(sweepDeg.x - 2.0, sweepDeg.x + 2.0, a) * (1.0 - smoothstep(sweepDeg.y - 2.0, sweepDeg.y + 2.0, a));
+                half inR = smoothstep(pivot.z - 0.06, pivot.z + 0.06, r) * (1.0 - smoothstep(pivot.w - 0.06, pivot.w + 0.06, r));
+                half inA = smoothstep(sweepDeg.x - 8.0, sweepDeg.x + 8.0, a) * (1.0 - smoothstep(sweepDeg.y - 8.0, sweepDeg.y + 8.0, a));
                 return inR * inA;
             }
 
@@ -122,7 +125,7 @@ Shader "Kamion/Truck Glass"
                 half3 amb = SampleSH(nOut);
 
                 // ---- road film outside the wiper sweeps (windscreen) ----
-                half film = 0, arcGlare = 0;
+                half film = 0;
                 if (_Wiper > 0.0)
                 {
                     float2 p = i.positionOS.xy;
@@ -132,13 +135,7 @@ Shader "Kamion/Truck Glass"
                     float h = saturate((p.y - _WiperSweep.z) / max(_WiperSweep.w - _WiperSweep.z, 0.01));
                     // Film: densest at the bottom edge (spray from the road), a light veil elsewhere.
                     half outside = (1.0 - wiped) * (0.35 + 0.65 * (1.0 - h) * (1.0 - h));
-                    // Faint arcs left by the blades inside the sweep (period 1.5 cm), faded below the pixel scale.
-                    float per = max(fwidth(rA), fwidth(rB)) * 66.0;
-                    half arcs = wiped * (0.5 + 0.5 * sin(rA * 418.9)) * saturate(1.0 - per * 2.0) * 0.12 * (1.0 - h);
-                    // ADR 0059: the arcs are a trace of streaks, not a film - they show only as glare against the sun (below),
-                    // they neither dim the transmitted scene nor scatter the sky (r7 N-16 / r8: 8-12 px stripes over the road).
                     film = outside * _Wiper * onScreen;
-                    arcGlare = arcs * _Wiper * onScreen;
                 }
 
                 half grime = SAMPLE_TEXTURE2D(_GrimeMap, sampler_GrimeMap, i.uv).r * _Grime + film;
@@ -196,9 +193,9 @@ Shader "Kamion/Truck Glass"
                 // arcs fine diagonal stripes across the sky. Sun term = sun on the outer surface x a Henyey-Greenstein
                 // phase (g 0.5, relative to isotropic, capped): bright veiling glare only against the sun, as in a real cab.
                 half cosScatter = dot(-L.direction, V);   // light travels along -L, leaves towards the eye along V
-                half phase = min(0.75 / pow(max(1.25 - cosScatter, 0.05), 1.5), 4.0);
+                half phase = min(0.75 / pow(max(1.25 - cosScatter, 0.05), 1.5), 2.0);
                 half3 body = i.tint * amb * (1.0 - tAbs) * 0.25 * (1.0 - i.inside)
-                           + (grime * amb + (grime + arcGlare) * L.color * saturate(dot(nOut, L.direction)) * phase) * 0.18;
+                           + (grime * amb + grime * L.color * saturate(dot(nOut, L.direction)) * phase) * 0.18;
                 // From the cab only the first surface carries the dash reflection (no ghost from the outer face: docs/06,
                 // r4 E2 "no double reflection"); from outside both surfaces mirror the sky.
                 half3 col = body + env * lerp(F, F1, i.inside) + L.color * spec * (1.0 - i.inside * 0.7);
