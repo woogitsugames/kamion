@@ -161,7 +161,8 @@ def _road_band(nt, band, z0):
 # the untinted fabric white (tint mask 0), so every curtain colour of the game gets a two-tone livery from one bake.
 # (u = distance from the front edge minus 0.8 x height above the hem; both sides share the same y, so the band leans
 # back on both.) LIVERY_BAND = False restores the plain r9 curtain. WORKING_VALUE (art direction, owner may veto).
-LIVERY_BAND = os.environ.get("KAMION_LIVERY_BAND", "1") != "0"   # env 0 = owner A/B export without the band
+# Owner decision D47 (2026-11-10): plain curtain, NO band. The band code stays behind the flag (env 1 = with the band).
+LIVERY_BAND = os.environ.get("KAMION_LIVERY_BAND", "0") == "1"
 LIVERY_BANDS = ((1.00, 2.60), (2.95, 3.22))
 
 

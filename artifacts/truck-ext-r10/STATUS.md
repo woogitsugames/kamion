@@ -38,3 +38,6 @@ NEXT: band A/B: `KAMION_LIVERY_BAND=0 blender -b ... trailer_export.py -- --no-r
   Budgets: ext 104 514 / 43 000 / 17 689 (r2 export, unchanged), trailer 89 000 / 24 500 / 7 850; both check_export PASS. ADR 0083 Measured / Self-critique filled.
   Unity side effects reverted (LP_*.asset reserialised by the build after the merge, M_Sky, Quality/ProjectSettings).
 NEXT (lead): visual-critic on `r5/` + `owner-band/`; owner decision band / skirts; phone frames; then merge the branch.
+- 23:35 D47 (owner): variant B, NO band, skirts stay. `LIVERY_BAND` default off (env `KAMION_LIVERY_BAND=1` = band). Trailer r6 export PASS (89 000 / 24 500 / 7 850),
+  build OK, frames `r6/High-overcast/{chase,trailer-side,truck-rear34}` viewed (plain curtain, roof 93.0 / sd 5.9), EditMode 188/188.
+NEXT: visual-critic conditional PASS (docs/reports/visual/REVIEW-2026-11-10-0070-0083.md, section 0083): P0 confirm default export = B + frames Low/High x overcast/clear/lowsun; P1 curtain folds / dirt / patches, roof < 90 %, cab paint gloss, windscreen, headlamps.
