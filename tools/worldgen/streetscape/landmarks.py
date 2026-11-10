@@ -32,16 +32,16 @@ def _yaw(f):
     return math.atan2(f[1], f[0]) - math.pi / 2
 
 
-def _chain(net, way, xy):
-    best = None
+def _chains(net, way, xy):
+    """Chains of OSM way `way` near xy, nearest first: [(lateral distance, chain, s)]. A node shared by two chains
+    of the same way (p37: node 1852129066) is tried on both (ADR 0069)."""
+    out = []
     for c in net.chains:
         if c.meta.get("absorbed") or not any(str(e).startswith(f"w{way}:") for e, _ in c.edges):
             continue
         s, lat = c.line.project(xy)
-        d = abs(lat)
-        if best is None or d < best[0]:
-            best = (d, c, float(s))
-    return best
+        out.append((abs(lat), c, float(s)))
+    return sorted(out, key=lambda t: t[0])
 
 
 def _board_rows(graph, bd, rep, oid):
@@ -75,16 +75,19 @@ def build(pl, net, graph, overrides, origin, boards, report):
     for o in overrides:
         if o.get("kind") == "sign_gantry":
             nd = nodes.get(o["before_node"])
-            hit = _chain(net, o["osm_way"], np.array([nd["x"] - ox, nd["y"] - oy])) if nd else None
-            if hit is None or hit[0] > 15:
+            hit = None
+            for d_, c, s_node in (_chains(net, o["osm_way"], np.array([nd["x"] - ox, nd["y"] - oy])) if nd else []):
+                if d_ > 15:
+                    break
+                dirn = int(c.dirn[c.idx(s_node)]) or 1
+                s = s_node - dirn * o["distance_m"]
+                if 0 < s < c.length:
+                    hit = (c, s, dirn)
+                    break
+            if hit is None:
                 rep["stale"].append(o["id"])
                 continue
-            _, c, s_node = hit
-            dirn = int(c.dirn[c.idx(s_node)]) or 1
-            s = s_node - dirn * o["distance_m"]
-            if not (0 < s < c.length):
-                rep["stale"].append(o["id"])
-                continue
+            c, s, dirn = hit
             sec = c.section(s, net.sec_list)
             hw = float(c.hw_at(s))
             _, _, lanes = lane_layout(sec, hw, dirn)
