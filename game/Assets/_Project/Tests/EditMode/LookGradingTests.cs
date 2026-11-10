@@ -43,7 +43,8 @@ namespace Game.Tests
                 var mc = clear.CreateModel(); var mo = over.CreateModel(); var ml = low.CreateModel(); var md = dusk.CreateModel();
                 // High sun: incident meter + D23 1 EV (ADR 0010 / D23 v1) within 0.15 EV.
                 Assert.AreEqual(SkyModel.IncidentEv100(mc.HorizontalIlluminanceLux) - 1f, clear.ResolveEv100(mc), 0.15f);
-                Assert.AreEqual(SkyModel.IncidentEv100(mo.HorizontalIlluminanceLux) - 1f, over.ResolveEv100(mo), 0.15f);
+                // overcast: owner variant 3 biases the preset by -0.2 EV (ADR 0080)
+                Assert.AreEqual(SkyModel.IncidentEv100(mo.HorizontalIlluminanceLux) - 1f - over.exposureCompensation, over.ResolveEv100(mo), 0.15f);
                 // Low sun: 0.6-albedo wall facing the sun around 1.0 linear (was 2.8 → flat white).
                 float wall = 0.6f * (ml.SunNormalIlluminanceLux + 0.5f * ml.SkyHorizontalIlluminanceLux) / Mathf.PI * ml.Exposure;
                 Assert.That(wall, Is.InRange(0.45f, 0.7f), "sunlit wall at 9° sun");

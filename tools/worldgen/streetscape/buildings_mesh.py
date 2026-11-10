@@ -692,8 +692,10 @@ def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh
     acc.quad(lay, "hall_flashing", P(a + o, za), P(c_ + o, za), P(c_, zb_), P(a, zb_))
 
 
-def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None):
-    """Generate building meshes into buf; returns dock descriptions (for the paved aprons)."""
+def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None, heroes=None):
+    """Generate building meshes into buf; returns dock descriptions (for the paved aprons).
+    heroes: streetscape.hero_depot.plan() result - a hero building takes its dock rows from the asset spec and, when
+    the asset is ready, keeps only its collision prism (the visible hall is the asset, ADR 0071)."""
     all_docks = []
     counts = {}
     Acc.runoff_tris = {"with_uv1": 0, "without_uv1": 0}
@@ -739,7 +741,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
         hero = b["ovr"].get("hero")
         docks = []
         if typ == "hall" and (p.get("function") in WAREHOUSE_FUNCS or b["ovr"].get("docks")) and poly.area > 800:
-            docks = docks_for(b, poly, yard_union, b["ovr"] if hero else None, zsample)
+            hero_h = (heroes or {}).get(b["id"])
+            docks = hero_h["docks"] if hero_h else docks_for(b, poly, yard_union, b["ovr"] if hero else None, zsample)
             all_docks += docks
         storeys, sh, zbase = storey_plan(typ, h, p)
         pitched = typ == "house" and (p.get("roof_type_lod2") in (None, "1030", "1040", "1130", "1050"))
@@ -1030,6 +1033,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                 FK.roof_vents(acc, poly, zeave - 0.3, key, "block")
             elif tall_office:
                 FK.machine_rooms(acc, poly, zeave - 0.3, "buildings")
+        hero_h = (heroes or {}).get(key)
+        if hero_h and hero_h["meta"] is not None:       # the authored asset replaces the visible hall
+            acc.d = {k: v for k, v in acc.d.items() if k[0] not in ("buildings", "buildings_low")}
         acc.flush(buf, key)
     report.update({"typologies": counts, "docks": sum(len(d["docks"]) for d in all_docks),
                    "dock_facades": [d["id"] for d in all_docks], "facade_signs": len(signs),

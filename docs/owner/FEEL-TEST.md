@@ -9,7 +9,7 @@ Cel: ocenić, jak ciężarówka **czuje się w dłoniach** i czy odcinek wygląd
    - **Pora dnia** (tylko trasy): Pochmurno / Niskie słońce / Zmierzch.
    - **Jakość grafiki**: Low / Medium / High / Ultra. Zalecenie: słabszy telefon Low lub Medium, flagowiec High.
    - **Limit klatek**: 30 lub 60 FPS (zalecenie: 30 na słabszym, 60 na flagowcu).
-4. **Ustawienia sterowania** (też z jazdy, przycisk „Ustawienia”): zakres kierownicy, czułość, samocentrowanie, przełożenie (stałe / od prędkości — domyślnie od prędkości: przy manewrach mały obrót palcem daje pełny skręt, przy prędkości 1° palcem = 1° kierownicy w kabinie), krzywe pedałów, gyro (włącz/wyłącz, czułość, kalibracja), kamera (czułość rozglądania, pole widzenia, ruch głowy). Zacznij od ustawień domyślnych; jeśli coś Ci nie pasuje, zmień **jedną rzecz naraz** i zapamiętaj co.
+4. **Ustawienia sterowania** (też z jazdy: „Panel” → „Ustawienia”): zakres kierownicy, czułość, samocentrowanie, przełożenie (stałe / od prędkości — domyślnie od prędkości: przy manewrach mały obrót palcem daje pełny skręt, przy prędkości 1° palcem = 1° kierownicy w kabinie), krzywe pedałów, gyro (włącz/wyłącz, czułość, kalibracja), kamera (czułość rozglądania, pole widzenia, ruch głowy). Zacznij od ustawień domyślnych; jeśli coś Ci nie pasuje, zmień **jedną rzecz naraz** i zapamiętaj co.
 
 ## Co przejechać
 Każdy odcinek zrób **ręcznie** (bez autopilota), minimum 2 razy: raz w trybie kierownicy dotykowej, raz w gyro. Zmieniaj pory dnia między podejściami.
@@ -20,7 +20,7 @@ Każdy odcinek zrób **ręcznie** (bez autopilota), minimum 2 razy: raz w trybie
 | 2 | **Trasa G3-A** (Kwadrat Park, brama, Bieżeństwa, ok. 440 m) | Przejedź całość płynnie, bez zatrzymywania. Raz w pochmurno, raz w niskim słońcu. |
 | 3 | **Trasa G3-B** (Andersa, Rondo Putry, ok. 490 m) | Rondo, straż pożarna przy poboczu. Raz w zmierzchu. |
 
-Do menu wracasz przyciskiem **Menu** (górny rząd) lub klawiszem „wstecz” telefonu — **bez restartu aplikacji**; zmień opcje i startuj ponownie. Przycisk „Reset” w jeździe stawia zestaw na starcie odcinka.
+Do menu wracasz przyciskiem **Panel → Menu** (prawy górny róg; przyciski deweloperskie są zwinięte pod jednym przyciskiem „Panel”, ADR 0079) lub klawiszem „wstecz” telefonu — **bez restartu aplikacji**; zmień opcje i startuj ponownie. Przycisk „Reset” w jeździe stawia zestaw na starcie odcinka.
 
 ## Co oceniasz (tak / nie / uwaga)
 Sterowanie (najważniejsze):

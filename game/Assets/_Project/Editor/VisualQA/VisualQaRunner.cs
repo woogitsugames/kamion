@@ -370,6 +370,7 @@ namespace Game.Editor.VisualQA
                     {
                         // Lay the canvases out for the capture resolution (the camera now targets the texture).
                         if (overlay != null) overlay.RefreshNow();
+                        if (hud != null) hud.RefreshNow();   // adaptive layout (ADR 0079) follows the capture size
                         Canvas.ForceUpdateCanvases();
                     });
                     for (int i = 0; i < pixels.Length; i++)

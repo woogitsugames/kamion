@@ -68,6 +68,10 @@ namespace Game.Vehicle.Physics
         /// <summary>Endurance brake commands 0..1 (engine brake, retarder) after lever, blending and ABS cut-off.</summary>
         public double EngineBrakeCommand { get; private set; }
         public double RetarderCommand { get; private set; }
+        /// <summary>Speed limiter fuelling factor 0..1 (1 = no intervention, 0 = fuel cut at / above the set speed).</summary>
+        public double SpeedLimiterFactor { get; private set; } = 1;
+        /// <summary>Overrun protection is applying the endurance brakes (speed above limiter + offset, e.g. downhill).</summary>
+        public bool OverrunBrakeActive { get; private set; }
         public double ParkingBrakeState { get; private set; }
         public bool HillHoldActive { get; private set; }
         /// <summary>
@@ -88,7 +92,7 @@ namespace Game.Vehicle.Physics
         bool _hasPrevVelocity;
         bool _hsaArmed;
         double _hsaTimer;
-        double _cruiseIntegral;
+        double _cruiseIntegral, _overrunIntegral;
 
         public VehicleModel(VehicleDefinition def, EngineDefinition engine, GearboxDefinition gearbox,
             IDictionary<string, TireDefinition> tires, SolverSettings settings = null)
@@ -185,6 +189,10 @@ namespace Game.Vehicle.Physics
             Group.UpdateLevelling(dt);
 
             // ---------------- brakes: blending, hill hold, air system, ABS ----------------
+            // Speed limiter (Directive 92/6/EEC): fuelling fades to zero over the band below the set speed. It never
+            // brakes; above the set speed (downhill) only the overrun protection in UpdateBrakeDemands acts.
+            double vKmh = SpeedForward * 3.6;
+            SpeedLimiterFactor = MathUtil.Clamp01((Def.driveline.speedLimiterKmh - Math.Abs(vKmh)) / Def.driveline.speedLimiterBand);
             UpdateBrakeDemands(dt, input);
             Air.Update(dt, Engine.Rpm, !Engine.Stalled, BrakeDemand, input.ParkingBrake, TrailerConnected, Group);
             ParkingBrakeState = 0;
@@ -196,10 +204,8 @@ namespace Game.Vehicle.Physics
             foreach (int i in _driven) drivelineOmega += Wheels[i].Omega;
             drivelineOmega /= _driven.Length;
 
-            double vKmh = SpeedForward * 3.6;
-            double limiter = MathUtil.Clamp01((Def.driveline.speedLimiterKmh - Math.Abs(vKmh)) / Def.driveline.speedLimiterBand);
             UpdateAsr(dt);
-            double pedal = Math.Min(MathUtil.Clamp01(input.Throttle), limiter) * AsrFactor;
+            double pedal = Math.Min(MathUtil.Clamp01(input.Throttle), SpeedLimiterFactor) * AsrFactor;
             DriverInput amtInput = input;
             amtInput.Throttle = pedal;
             Amt.AbsActive = Air.AbsAnyActive;
@@ -385,10 +391,25 @@ namespace Game.Vehicle.Physics
                 if (u > 0.05) { eb = 1; ret = Math.Max(ret, MathUtil.Clamp01((u - 0.05) / 0.95)); }
             }
             else _cruiseIntegral = 0;
+            // Overrun protection: fuelling is already cut by the limiter and the vehicle still gains speed (downhill).
+            // Same PI law as the brake cruise, set point = limiter + offset; the driver's foot on the accelerator does
+            // not cancel it (the limiter has taken the pedal away), a pedal the limiter still honours does.
+            double effThrottle = Math.Min(MathUtil.Clamp01(input.Throttle), SpeedLimiterFactor);
+            OverrunBrakeActive = false;
+            var dl = Def.driveline;
+            if (dl.overrunBrakeOffsetKmh > 0 && input.Selector != GearSelector.Reverse)
+            {
+                double e = SpeedForward * 3.6 - (dl.speedLimiterKmh + dl.overrunBrakeOffsetKmh);
+                _overrunIntegral = MathUtil.Clamp(_overrunIntegral + 0.08 * e * dt, 0, 1.2);
+                double u = 0.35 * e + _overrunIntegral;
+                if (u > 0.05) { eb = 1; ret = Math.Max(ret, MathUtil.Clamp01((u - 0.05) / 0.95)); OverrunBrakeActive = true; }
+            }
+            else _overrunIntegral = 0;
             // Throttle or ABS on the drive axle cancels endurance braking (it would lock the driven wheels).
-            if (input.Throttle > 0.02 || Air.AbsDriveAxleActive || Math.Abs(SpeedForward) < 1.0) { eb = 0; ret = 0; }
+            if (effThrottle > 0.02 || Air.AbsDriveAxleActive || Math.Abs(SpeedForward) < 1.0) { eb = 0; ret = 0; }
             if (input.Selector == GearSelector.Reverse) ret = 0;
             if (!EnduranceBrakesEnabled) { eb = 0; ret = 0; }
+            if (eb <= 0 && ret <= 0) OverrunBrakeActive = false;
             EngineBrakeCommand = eb;
             RetarderCommand = ret;
         }

@@ -33,3 +33,20 @@ Gałąź: worktree-agent-ab1fb0a47d2f0a491 (nie scalona; integruje lider).
   Pokrycie ujęć ulicznych+Commons: 54/55 (brak tylko #2). Podsumowanie: `uv run --project tools/refs python tools/refs/summarize.py`.
   NASTĘPNY KROK: dokończyć commons/openverse (te same komendy z sekcji Komendy; wznawiają się), potem `summarize.py`, docs/REFERENCES.md (tabela źródeł),
   docs/LICENSES.md (wpisy źródeł), skopiować artifacts/refs z worktree do głównego artifacts/refs, odpiąć junctiony, raport <= 20 linii.
+
+## Log 20:55 (przejecie sesji 5)
+- Nowe: tools/refs/object_refs.py (obiekty kwadrat-park, fire-station, dusk-sodium), tools/refs/curation/<obj>.json (odrzucenia po przegladzie), matplotlib+shapely w pyproject.
+- STRAZ POZARNA: OSM way/211035271 JRG nr 2, ul. Andersa, 53.157322, 23.156306 (miasto: Andersa 46, 53.157380, 23.155985). fire-station: 17 refs + 2 ortho + plan, INDEX.md gotowy.
+- kwadrat-park: kartaview/panoramax 0 trafien (teren prywatny), commons-geo 5, commons-search w toku (429 z thumb bywa wolne).
+- Commons ogolny: 140 plikow; openverse 1 (API wolne).
+  NASTEPNY KROK: uv run --project tools/refs python tools/refs/object_refs.py --object kwadrat-park dusk-sodium  (wznawia z cache)
+  potem: ... open_sources.py --source commons --radius 600 --categories --interval 1.5 ; ... --source openverse --interval 1.5 ; summarize.py ;
+  object_refs.py --object fire-station kwadrat-park dusk-sodium --index-only ; docs/REFERENCES.md + docs/LICENSES.md ; pytest tests/refs -q
+
+## Log 2026-11-10 (domkniecie, agent Fab/Patch)
+- Commit 306fd3a: retry na bledy sieci, Retry-After <= 120 s, zapis manifestu co 3 pobrania. Dodane 2 testy klienta HTTP; `pytest tests/refs -q`: 50 zielonych.
+- summarize.py: kartaview 79 (41/55), panoramax 23 (17/55), commons 134 (cc0 92, by 17, by-sa 25; 54/55), openverse 0, gugik-ortho 55, miasto 11 warstw. Bez obrazu tylko ujecie 2.
+- ADR 0066 uzupelniony o stan koncowy; REFERENCES: dusk-sodium poprawione na 0 obrazow (bylo opisane jak gotowe).
+- artifacts/refs skopiowane do glownego `artifacts/refs` (kwadrat-park, dusk-sodium, coverage).
+- OTWARTE: openverse (504), dusk-sodium (0 obrazow), detale Kwadrat Parku UNVERIFIED.
+  NASTEPNY KROK: uv run --project tools/refs python tools/refs/object_refs.py --object dusk-sodium ; uv run --project tools/refs python tools/refs/open_sources.py --source openverse --interval 1.5 ; uv run --project tools/refs python tools/refs/summarize.py

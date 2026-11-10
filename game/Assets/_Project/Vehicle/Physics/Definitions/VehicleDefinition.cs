@@ -260,6 +260,12 @@ namespace Game.Vehicle.Physics
         /// <summary>Legal vehicle speed limiter set speed [km/h].</summary>
         public double speedLimiterKmh = 90;
         public double speedLimiterBand = 2.0;
+        /// <summary>
+        /// Overrun protection: when the vehicle runs this far above the limiter set speed with the fuelling already cut
+        /// (downhill), the endurance brakes (engine brake, then retarder) are applied automatically and modulated to hold
+        /// set speed + offset. 0 = off. WORKING_VALUE (docs/VEHICLE_REFERENCE_DATA.md, ADR 0082).
+        /// </summary>
+        public double overrunBrakeOffsetKmh = 4.0;
     }
 
     [Serializable]

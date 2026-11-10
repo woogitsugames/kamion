@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Game.Core;
 using Game.Rendering;
+using Game.UI.Layout;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
@@ -13,6 +14,8 @@ namespace Game.UI
     /// Start menu (Polish), same flat dark language as the settings panel. Left column: one large button per start
     /// (DrivingLab, routes); right column: time of day, graphics tier, frame-rate cap and the control settings.
     /// Choosing a start logs one <c>[CONTROLS] menu-start ...</c> line with the whole choice.
+    /// Scale and safe area: <see cref="UiViewport"/> (ADR 0079) - the 1600-unit block always fits, also on a
+    /// near-square foldable screen, and follows rotation / folding.
     /// </summary>
     public sealed class BootMenu : MonoBehaviour
     {
@@ -29,6 +32,17 @@ namespace Game.UI
         readonly List<Action> m_Refresh = new List<Action>();
         Font m_Font;
         RectTransform m_Safe;
+        UiViewport m_View;
+
+        /// <summary>The safe-area rect all menu items live in (tests).</summary>
+        public RectTransform SafeAreaRect => m_Safe;
+
+        /// <summary>Tests / captures: lay out for a device screen (pixels, safe area in pixels, DPI; 0 = unknown).</summary>
+        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi); m_View.Refresh(); }
+
+        void Update() { m_View?.Refresh(); }   // rotation, fold / unfold: scale + safe area follow, the block stays centred
+
+        void OnRectTransformDimensionsChange() { m_View?.Invalidate(); }
 
         /// <summary>Builds the menu. <paramref name="cam"/> null = screen-space overlay; a camera = capture/test.</summary>
         public static BootMenu Create(Camera cam, StartMenuOptions options, IReadOnlyList<(string label, Action action)> starts, Action openSettings)
@@ -47,16 +61,12 @@ namespace Game.UI
             canvas.worldCamera = cam;
             canvas.planeDistance = cam != null ? Mathf.Max(cam.nearClipPlane * 2f, 0.5f) : 1f;
             canvas.sortingOrder = 1100;
-            var scaler = gameObject.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.matchWidthOrHeight = 1f;
             gameObject.AddComponent<GraphicRaycaster>();
             m_Font = UiFonts.Default;
 
-            m_Safe = Rect("SafeArea", transform);
-            m_Safe.anchorMin = Vector2.zero; m_Safe.anchorMax = Vector2.one; m_Safe.offsetMin = m_Safe.offsetMax = Vector2.zero;
-            ApplySafeArea();
+            m_View = new UiViewport(canvas);
+            m_Safe = m_View.SafeArea;
+            m_View.Refresh();
 
             // Centred block: left column starts, gap 80, right column options.
             float total = 2 * ColW + 80f, left = -total * 0.5f, right = left + ColW + 80f;
@@ -120,14 +130,6 @@ namespace Game.UI
             }
             m_Refresh.Add(() => { int c = current(); for (int i = 0; i < images.Length; i++) images[i].color = i == c ? k_ButtonOn : k_Button; });
             y -= h + 22f;
-        }
-
-        void ApplySafeArea()
-        {
-            Rect sa = Screen.safeArea;
-            if (Screen.width <= 0 || Screen.height <= 0) return;
-            m_Safe.anchorMin = new Vector2(sa.xMin / Screen.width, sa.yMin / Screen.height);
-            m_Safe.anchorMax = new Vector2(sa.xMax / Screen.width, sa.yMax / Screen.height);
         }
 
         static RectTransform Rect(string name, Transform parent)

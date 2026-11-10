@@ -49,6 +49,7 @@ Shader "Kamion/Truck Glass"
             #pragma fragment frag
             #pragma multi_compile_fog
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
             #include "KamionVehicleEnv.hlsl"
             float _KamionCamOutside;    // CabInteriorLighting: 1 = view camera outside the cab, 0 = cab view or no cab lighting
             float4 _KamionGrimeUp[4];   // vehicle frames (ContactShadowCaster): height above the wheel-contact plane
@@ -83,7 +84,7 @@ Shader "Kamion/Truck Glass"
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
                 o.tint = _Tint.rgb * (_UseVertexColor > 0.5 ? SRGBToLinear(v.color.rgb) : half3(1, 1, 1));
                 o.uv = v.uv0;
-                o.fogFactor = ComputeFogFactor(p.positionCS.z);
+                o.fogFactor = KamionFogTau(p.positionWS, p.positionCS.w);
                 o.positionOS = v.positionOS.xyz;
                 // Inner face of the glass: its normal points towards the cab centre.
                 o.inside = dot(v.normalOS, _CabCentreOS.xyz - v.positionOS.xyz) > 0.0 ? 1.0 : 0.0;
@@ -202,7 +203,7 @@ Shader "Kamion/Truck Glass"
                 // r4 E2 "no double reflection"); from outside both surfaces mirror the sky.
                 half3 col = body + env * lerp(F, F1, i.inside) + L.color * spec * (1.0 - i.inside * 0.7);
                 half alpha = saturate(1.0 - trans);
-                col = MixFog(col, i.fogFactor);
+                col = KamionMixFog(col, i.fogFactor);
                 // Premultiplied "over": transmission is grey (1 - alpha); the tint shows in the body term only.
                 return half4(col, alpha);
             }

@@ -78,6 +78,19 @@ namespace Game.Editor.Setup
                         qp.tiers[i].fsrSharpness = d.fsrSharpness;
                         qp.tiers[i].lampPools = d.lampPools;
                     }
+                qp.revision = 62;
+                dirty = true;
+            }
+            if (qp.revision < 80)
+            {
+                // ADR 0080: cloud deck quality and SSAO per tier (new fields deserialize as 0 / false).
+                for (int i = 0; i < qp.tiers.Length; i++)
+                    foreach (var d in defs)
+                    {
+                        if (!string.Equals(d.name, qp.tiers[i].name, StringComparison.OrdinalIgnoreCase)) continue;
+                        qp.tiers[i].cloudQuality = d.cloudQuality;
+                        qp.tiers[i].ssao = d.ssao;
+                    }
                 qp.revision = QualityProfile.CurrentRevision;
                 dirty = true;
             }

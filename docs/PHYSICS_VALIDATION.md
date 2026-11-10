@@ -95,7 +95,8 @@ Values are for solo / empty / 40 t where the item has variants. ✅ = all checks
 | 2 | launch_6pct_uphill_comb (full throttle, HSA) | rollback 2.1 / 2.3 mm; 0–15 km/h 2.5 / 4.5 s; clutch 30 / 37 °C; 7 / 5 shifts | ≤ 5 cm; ≤ 250 °C; ≤ 14 shifts | WORKING ✅ |
 | 2 | launch_6pct_uphill_light_comb (35 % pedal, 40 t) | rollback 2.3 mm, 0–10 km/h 19.7 s | ≤ 5 cm | WORKING ✅ |
 | 3 | launch_0_80_flat / launch_flat_comb | 0–60: 9.7 / 13.3 / 26.9 s; 0–80: 13.8 / 20.5 / 46.2 s | 40 t: 25–60 / 40–95 s | DERIVED (power-to-weight + shift losses) ✅ |
-| 4 | top_speed_flat_comb | 89.4 / 89.2 km/h in 12th | ≤ 90.5, settles 87–90 | **SOURCED** S3 ✅ |
+| 4 | top_speed_flat_comb | 89.4 / 89.2 km/h in 12th | ≤ 90.5, settles 88–90 (ADR 0082) | **SOURCED** S3 ✅ |
+| 4a | limiter_downhill_2pct_comb / limiter_downhill_5pct_comb (40 t, full throttle held; ADR 0082) | 2 %: max 94.3, settled 93.9; 5 %: max 95.1, settled 94.0 km/h, service brake 0 | max ≤ 96, no drop below 88 | WORKING_VALUE (overrun offset 4 km/h) ✅ |
 | 4 | grade_5pct_steady (40 t) | 50.2 km/h steady, ±0.03 km/h, 1516 rpm | 44–60 km/h | DERIVED: η P / (m g (sin α + f_r) + aero) ≈ 54 km/h ✅ |
 | 5 | brake_80_0_dry (ABS) | 34.9 / 39.0 / 40.5 m; MFDD 7.41 / 7.48 / 7.07 m/s² | ≤ 61.2 m; 5.0–8.0 | WORKING (R13 N3 type-0 figures UNVERIFIED) ✅ |
 | 5 | brake_80_0_wet (ABS) | 50.9 (solo, Stage 1 file) / 54.9 / 56.5 m; MFDD 5.0 / 4.8 / 4.7 | 45–95 m | WORKING ✅ |
