@@ -123,17 +123,20 @@ M = {
     # Kamion/World PBR (clear coat = "rough"). Types, WORKING_VALUE (no Polish register of paint types): silver, grey
     # and blue metallic (aluminium flake), black pearl (mica, blue-violet at grazing angles), white and red solid
     # (white is the no-surcharge base colour of most ranges; the vans' whites are solid fleet paint).
+    # r10b: dark paints lifted (black 0.018 -> 0.035, blue 0.03 / 0.05 / 0.12 -> 0.045 / 0.085 / 0.21, grey 0.13 -> 0.16):
+    # under the ADR 0080 overcast the old values rendered as black silhouettes (review 0080 P1 #2); the Mapillary
+    # crops in artifacts/cars-r9/refs show black / dark grey bodies clearly above the tyres. WORKING_VALUE.
     "car_paint_silver": {"color": [0.42, 0.43, 0.44], "rough": 0.28, "metal": 0.6, "texture_set": "car_grime",
                          "paint": [0.85, 0.30, 0.0, 0.50]},
-    "car_paint_grey": {"color": [0.13, 0.135, 0.14], "rough": 0.26, "metal": 0.5, "texture_set": "car_grime",
+    "car_paint_grey": {"color": [0.16, 0.165, 0.17], "rough": 0.26, "metal": 0.5, "texture_set": "car_grime",
                        "paint": [0.75, 0.28, 0.0, 0.50]},
-    "car_paint_black": {"color": [0.018, 0.018, 0.02], "rough": 0.2, "metal": 0.3, "texture_set": "car_grime",
+    "car_paint_black": {"color": [0.035, 0.035, 0.038], "rough": 0.2, "metal": 0.3, "texture_set": "car_grime",
                         "paint": [0.55, 0.22, 0.8, 0.45], "pearl_tint": [1.6, 1.9, 3.2]},
     "car_paint_white": {"color": [0.68, 0.68, 0.66], "rough": 0.3, "texture_set": "car_grime",
                         "paint": [0.0, 0.0, 0.0, 0.5]},
     "car_paint_white2": {"color": [0.62, 0.63, 0.62], "rough": 0.36, "texture_set": "car_grime",
                          "paint": [0.0, 0.0, 0.0, 0.5]},
-    "car_paint_blue": {"color": [0.03, 0.05, 0.12], "rough": 0.24, "metal": 0.4, "texture_set": "car_grime",
+    "car_paint_blue": {"color": [0.045, 0.085, 0.21], "rough": 0.24, "metal": 0.4, "texture_set": "car_grime",
                        "paint": [0.70, 0.30, 0.0, 0.48]},
     "car_paint_red": {"color": [0.32, 0.03, 0.025], "rough": 0.28, "metal": 0.2, "texture_set": "car_grime",
                       "paint": [0.0, 0.0, 0.0, 0.5]},

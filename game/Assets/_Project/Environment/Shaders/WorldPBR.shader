@@ -601,6 +601,12 @@ Shader "Kamion/World PBR"
             #endif
                 half3 specColor = lerp(half3(0.04, 0.04, 0.04), albedo, metal);
                 half3 diffColor = albedo * (1.0 - metal) * (1.0 - 0.04);
+            #if defined(_CARPAINT)
+                // r10b: the pigment between the flakes still scatters (a metallic paint is not a bare metal): half of the
+                // base-coat metal comes off the diffuse term, not all of it. With (1 - metal) dark metallics kept 25-45 %
+                // of their albedo and went black under an overcast sky (review 0080 P1 #2). WORKING_VALUE.
+                diffColor = albedo * (1.0 - 0.5 * metal) * (1.0 - 0.04);
+            #endif
 
                 float4 shadowCoord = TransformWorldToShadowCoord(pw);
                 Light L = GetMainLight(shadowCoord, pw, half4(1, 1, 1, 1));
@@ -655,7 +661,9 @@ Shader "Kamion/World PBR"
                     // coat reflects a blurred environment in its own (flake) colour
                     half coat = (0.04 + 0.96 * fresnel * (1.0 - NoV)) * clean;
                     half3 envCoat = GlossyEnvironmentReflection(R, perceptualRoughness, ao * giK) * coat;
-                    half3 Rb = reflect(-V, nb);
+                    // r10b: the flake tilt belongs to the sun lobe (sparkle); the sky seen in the base coat is a wide
+                    // lobe, a full per-cell tilt of it read as salt-and-pepper grain on silver from 1.5 m
+                    half3 Rb = reflect(-V, normalize(lerp(nw, nb, 0.3)));
                     half3 envBase = GlossyEnvironmentReflection(Rb, _CarPaint.w, ao * giK) * baseSpecCol * (metal * (1.0 - coat));
                     half3 envDull = GlossyEnvironmentReflection(R, perceptualRoughness, ao * giK) * (0.04 * (1.0 - clean)) / (r2 + 1.0);
                     env = envCoat + envBase + envDull;
