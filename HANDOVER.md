@@ -1,3 +1,30 @@
+# HANDOVER — kamion, sesja 9 (start 2026-11-11 00:30 czasu lokalnego / 23:30 UTC; limit 5 h reset 04:30 UTC)
+
+## Najpierw
+- Zasady s9: `docs/owner/START-PROMPT-S9.md` — max 3 agentów naraz, trigger co godzinę (CronCreate w sesji s9, :17 każdej godziny, wygasa po 7 dniach / z zamknięciem sesji).
+- Agenci 0076 i 0077 z s8 nadal pracowali w swoich worktree o 00:24 (pliki zmieniane) — s9 ich nie rusza, scala po STATUS „KONIEC/GOTOWE”.
+- s9: visual-critic (1 agent) recenzuje 0070 r6, 0078 r10b, 0081 r2, Kwadrat r11, światło r11 → `docs/reports/visual/REVIEW-2026-11-11-s9.md`; potem scalenia.
+- Konflikty przy scalaniu sekwencyjnym (próba 00:35): 0081 → `build_all.py` (unia importów FS + B), `materials_spec.json` (generowany → build_all); Kwadrat r11 → `WorldPbrMaterials.cs` (unia), `street_props.glb` (regen); generated/*.json → ours + regeneracja.
+- Worktree 0083 usunięty (artifacts już były w main), gałąź skasowana.
+
+| zadanie | ADR | worktree | STATUS | stan s9 |
+|---|---|---|---|---|
+| P0 korytarz + ratchety | 0076 | agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | agent s8 w toku (ADR 0076 jest, pytest gis 222 ✓; zostało import-region + kamery + PlayMode) |
+| wysepki z OSM | 0077 | agent-a2afb96d89584cca6 | tools/worldgen/fidelity/STATUS_islands_r10.md | agent s8 w toku (regen + pytest zrobione; import + kamery) |
+| straż JRG2 r6 | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | GOTOWE `ff40d3e`, recenzja s9 w toku |
+| osobówki r10b | 0078 | agent-a2215bcc98d109edc | artifacts/cars-r10 | GOTOWE `032af23`, recenzja s9 w toku |
+| zabudowa r2 | 0081 | agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | GOTOWE `70ef3ba`, recenzja s9 w toku |
+| Kwadrat r11 | 0071 | kwadrat-r11 | artifacts/kwadrat-r11 | GOTOWE `bd28b1e`, recenzja s9 w toku |
+| światło r11 | 0080 | light-r11 | artifacts/light-r11 | GOTOWE `195eb5a`, recenzja s9 w toku |
+| import Megascans | 0084 | gpt-megascans | artifacts/megascans-r1 | GPT w toku (runda 3, dowód fallback) |
+| tło za krawędzią | 0085 | argon-edge | artifacts/edge-far-r1 | Argon w toku (krok 1/…) |
+
+## Następne kroki
+1. Po recenzji: scal 0070 → 0078 → 0081 → Kwadrat r11 → światło r11 (FAIL → runda poprawek w tym samym worktree), potem 0076 → 0077 gdy skończą; na main: build_all.py → build_world → pytest gis → import-region → Truck/Trailer BuildBatch + InstallBatch → EditMode/PlayMode.
+2. Integracja, czyste buildy Low/High, telefony (A16 Low gate3, S24+ High), raport bramki 3.
+3. Ostatni przydzielony ADR: **0088**.
+
+---
 # HANDOVER — kamion, sesja 8 (2026-11-10 ok. 22:00 UTC start; limit 5 h reset 2026-11-11 03:00 UTC)
 
 ## Najpierw
