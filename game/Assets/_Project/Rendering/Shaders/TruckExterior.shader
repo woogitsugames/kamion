@@ -257,9 +257,16 @@ Shader "Kamion/Truck Exterior"
                     }
                     else
                         proc = KamionGrime(lp, slot, 1.0 - _KamionGrimeDetailOff) * (_IsPaint > 0.5 ? 1.0 : _GrimeChassis);
-                    // Gloss trim (baked roughness < ~0.3: piano-black mask, lamp surrounds) sheds the road film: the
+                    // Gloss trim (baked roughness < ~0.3: piano-black mask, lamp surrounds) sheds the light dust film: the
                     // chassis-weighted film (x _GrimeChassis) turned the gloss-black TRAKT mask matte grey (ADR 0047 r2).
-                    if (_IsPaint < 0.5 && isTyre < 0.5) proc *= lerp(0.25, 1.0, smoothstep(0.18, 0.42, c.a));
+                    // Only above the spray band: in the solid band and the wheel arches (polished tanks, chrome steps,
+                    // lamp lenses at bumper height) wet road spray sticks to gloss surfaces too (ADR 0047 r3).
+                    if (_IsPaint < 0.5 && isTyre < 0.5)
+                    {
+                        half shed = lerp(0.25, 1.0, smoothstep(0.18, 0.42, c.a));
+                        half spray = 1.0 - smoothstep(0.5 * _GrimeHeight, 1.1 * _GrimeHeight, lp.y);
+                        proc *= lerp(shed, 1.0, spray);
+                    }
                     // Cavities hold more: x 1.4 in full occlusion, x 0.85 on open panels.
                     proc *= lerp(1.4, 0.85, m.r);
                     grime = max(grime * 0.8, proc);
@@ -309,7 +316,27 @@ Shader "Kamion/Truck Exterior"
                     nBase = normalize(nWS + (half3(hsh) - 0.5) * 0.6 * fade);
                     input.normalWS = nBase;
                 }
+                // Gloss dielectric trim (piano-black mask, grille louvres, PC-ABS lamp shrouds: non-paint, non-metal, baked
+                // roughness < ~0.3, ADR 0047 r3). A 4 % mirror of the open sky is what made the black louvres mid-grey: the
+                // Low analytic cube and the High capture (no instanced trees / props) put open sky where a parked truck's
+                // near-horizon reflections see buildings, trees and ground. Own env term for these pixels: Schlick F,
+                // AO, horizon occlusion and a near-horizon obstruction; URP keeps the direct light (sun highlight).
+                half glossTrim = (1.0 - _IsPaint) * (1.0 - isTyre) * (1.0 - saturate(metal * 2.0)) * (1.0 - smoothstep(0.22, 0.32, rough));
+                if (glossTrim > 0.001) s.occlusion = m.r * (1.0 - glossTrim);
                 half4 col = UniversalFragmentPBR(input, s);
+                if (glossTrim > 0.001)
+                {
+                    half3 v = input.viewDirectionWS;
+                    half NoV = saturate(dot(nWS, v));
+                    half F = 0.04 + 0.96 * Pow4(1.0 - NoV) * (1.0 - NoV);
+                    half3 R = reflect(-v, nWS);
+                    half hor = saturate(1.0 + 1.2 * dot(R, i.normalWS));
+                    // WORKING_VALUE: reflections below ~25 deg elevation keep 30 % (street-level clutter), open sky above.
+                    half obst = lerp(0.3, 1.0, smoothstep(-0.05, 0.42, R.y));
+                    half3 env = GlossyEnvironmentReflection(R, i.positionWS, max(rough, 0.05), m.r) * (hor * hor * obst);
+                    half3 diff = input.bakedGI * albedo * (1.0 - F) * m.r;
+                    col.rgb += (env * F + diff) * glossTrim;
+                }
                 if (coat > 0.001)
                 {
                     half3 v = input.viewDirectionWS;
