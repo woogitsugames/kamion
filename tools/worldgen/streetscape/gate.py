@@ -52,6 +52,86 @@ def _chain_at_node(net, xy, way):
     return best
 
 
+ISLAND_H = 0.16            # m, island top above the lane edge (kerb 15x30 laid proud; WORKING_VALUE)
+ISLAND_BEFORE_M = 2.5      # m of island before / after the housing line along the lanes (WORKING_VALUE)
+ISLAND_AFTER_M = 3.5
+LOOP_SIZE = (2.0, 1.0)     # m, saw-cut induction loop (along x across the lane), sealant line 4 cm (WORKING_VALUE)
+
+
+def _island(lin, P_e, P_x, z_lane, src):
+    """Raised kerbed refuge the barrier housings stand on (review 2026-11-10 A6: the booms stood on flush paving that
+    could be driven round). Outline = the median between the two kerb backs (rows P_e / P_x, same stations) with rounded
+    corners; precast kerb ring 0.15 m (curb_concrete) with a vertical face, block-paved top, hard collision. Returns
+    (polygon, top z) or (None, None) when the median is too narrow."""
+    poly = shapely.Polygon(np.vstack([P_e, P_x[::-1]]))
+    poly = shapely.make_valid(poly).buffer(-0.35, join_style="mitre").buffer(0.35, quad_segs=3)
+    if poly.is_empty or poly.geom_type != "Polygon" or poly.area < 1.5:
+        return None, None
+    poly = shapely.geometry.polygon.orient(poly, 1.0).simplify(0.02)
+    R = np.asarray(poly.exterior.coords)[:-1]
+    n = len(R)
+    inner = poly.buffer(-S.KERB_TOP_W, join_style="mitre")
+    if inner.is_empty or inner.geom_type != "Polygon":
+        return None, None
+    ib = inner.exterior
+    Ri = np.array([ib.interpolate(ib.project(Point(*q))).coords[0] for q in R])
+    zt = float(z_lane) + ISLAND_H
+    zb = float(z_lane) - 0.08
+    s_arc = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(np.vstack([R, R[:1]]), axis=0).T))])
+    buf = lin.buf
+    for k in range(n):
+        j = (k + 1) % n
+        u0, u1 = s_arc[k], s_arc[k + 1]
+        # kerb top (CCW seen from above = faces up) and the outer vertical face (faces out of a CCW ring)
+        V = np.array([[*R[k], zt], [*R[j], zt], [*Ri[j], zt], [*Ri[k], zt]])
+        buf.add("paved", "curb_concrete", V, [[u0, 0.0], [u1, 0.0], [u1, S.KERB_TOP_W], [u0, S.KERB_TOP_W]],
+                [(0, 1, 2), (0, 2, 3)], src=src)
+        F = np.array([[*R[k], zb], [*R[j], zb], [*R[j], zt], [*R[k], zt]])
+        buf.add("paved", "curb_concrete", F, [[u0, 0.25], [u1, 0.25], [u1, 0.0], [u0, 0.0]], [(0, 1, 2), (0, 2, 3)], src=src)
+    c = Ri.mean(axis=0)
+    Vf = np.vstack([[*c, zt], np.column_stack([Ri, np.full(n, zt)])])
+    Tf = [(0, 1 + k, 1 + (k + 1) % n) for k in range(n)]
+    buf.add("paved", "sidewalk_paving", Vf, Vf[:, :2].copy(), Tf, src=src)
+    # collider: the island as a low prism (top + skirt), kerb surface
+    Vc = np.vstack([[*R.mean(axis=0), zt], np.column_stack([R, np.full(n, zt)]), np.column_stack([R, np.full(n, zb)])])
+    Tc = [(0, 1 + k, 1 + (k + 1) % n) for k in range(n)]
+    for k in range(n):
+        j = (k + 1) % n
+        Tc += [(1 + n + k, 1 + n + j, 1 + j), (1 + n + k, 1 + j, 1 + k)]
+    buf.add("collision", "collision_curb", Vc, Vc[:, :2].copy(), Tc, src=src)
+    return poly, zt
+
+
+def _loop(buf, c, s, g, lat_feed, src):
+    """Saw-cut induction loop in the lane: a rectangle of bitumen-sealed cuts with chamfered corners and a feeder cut
+    toward the island (lat_feed = lateral position of the housing in the chain frame)."""
+    hl, hw_ = LOOP_SIZE[0] / 2, LOOP_SIZE[1] / 2
+    ch = 0.25
+    pts = [(-hl + ch, -hw_), (hl - ch, -hw_), (hl, -hw_ + ch), (hl, hw_ - ch), (hl - ch, hw_), (-hl + ch, hw_),
+           (-hl, hw_ - ch), (-hl, -hw_ + ch)]
+    sgn = 1.0 if lat_feed >= 0 else -1.0
+    segs = list(zip(pts, pts[1:] + pts[:1])) + [((0.0, sgn * hw_), (0.0, lat_feed))]
+    hw = float(c.hw_at(s))
+    for k, (a, b) in enumerate(segs):
+        A = np.array([[s + g * a[0], a[1]], [s + g * b[0], b[1]]])
+        d = A[1] - A[0]
+        L = float(np.hypot(*d))
+        if L < 0.05:
+            continue
+        nn = np.array([-d[1], d[0]]) / L * 0.02
+        Q = np.array([A[0] - nn, A[1] - nn, A[1] + nn, A[0] + nn])
+        V = []
+        for q in Q:
+            lat = float(np.clip(q[1], -hw + 0.02, hw - 0.02))
+            V.append([*c.line.offset_point(float(q[0]), lat), float(c.crossfall_z(float(q[0]), lat)) + DC.LIFT_OIL])
+        V = np.array(V)
+        T = [(0, 1, 2), (0, 2, 3)]
+        e1, e2 = V[1, :2] - V[0, :2], V[3, :2] - V[0, :2]
+        if e1[0] * e2[1] - e1[1] * e2[0] < 0:
+            T = [(0, 2, 1), (0, 3, 2)]
+        buf.add("markings", "decal_sealant", V, [[0, 0], [L, 0], [L, 1], [0, 1]], T, src=f"{src}:{k}")
+
+
 def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
     rep = {"applied": [], "stale": [], "replaced_osm": 0}
     nodes = {n["id"]: n for n in graph["nodes"]}
@@ -94,6 +174,23 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
         k = min(ok[0] + int(o.get("barrier_past_nose_m", 3.0) / 0.5), len(dd) - 1)
         m = 0.5 * (pe[k] + px[k])
         free = shapely.union_all([roads_poly.buffer(0.3), bpoly.buffer(0.8)])
+        # --- raised kerbed island under the two housings (r11): the median between the kerb backs, ISLAND_BEFORE_M
+        #     before to ISLAND_AFTER_M after the housing line (WORKING_VALUE: no open photo of the gate, ADR 0071)
+        isl_z = None
+        isl_poly = None
+        if o.get("island", True):
+            j0 = max(int(ok[0]), k - int(ISLAND_BEFORE_M / 0.5))
+            j1 = min(len(dd) - 1, k + int(ISLAND_AFTER_M / 0.5))
+            u = px[j0:j1 + 1] - pe[j0:j1 + 1]
+            u /= np.maximum(np.hypot(*u.T), 1e-9)[:, None]
+            P_e = pe[j0:j1 + 1] + u * (hwe[j0:j1 + 1] + S.KERB_TOP_W - 0.03)[:, None]
+            P_x = px[j0:j1 + 1] - u * (hwx[j0:j1 + 1] + S.KERB_TOP_W - 0.03)[:, None]
+            s_k = se + ge * dd[k]
+            lat_k = float(ce.line.project(pe[k] + u[k - j0] * hwe[k])[1])
+            z_lane = max(float(ce.crossfall_z(s_k, lat_k)), float(lin.z(m[None, :])[0]))
+            isl_poly, isl_z = _island(lin, P_e, P_x, z_lane, f"{src}:island")
+            if isl_poly is None:
+                rep["stale"].append(o["id"] + ":island")
         # --- barriers: housing on the median kerb, boom over each lane, raised (MA-003)
         bars = []
         for (c, s0, g), name in (((ce, se, ge), "entry"), ((cx, sx, gx), "exit")):
@@ -106,7 +203,14 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
             # automatic barrier (MA-003): static housing + the boom as its own instance in the hinge frame; the engine
             # turns the boom into a Game.World.DepotBarrier (opens for an approaching vehicle, solid when closed)
             yaw_b = math.atan2(across[1], across[0])
-            zb = pl.add("barrier_base", base, yaw_b, src=f"{src}:{name}", group="barrier")
+            on_island = isl_poly is not None and isl_poly.contains(Point(*base))
+            zb = pl.add("barrier_base", base, yaw_b,
+                        z=isl_z if on_island else None, src=f"{src}:{name}", group="barrier")
+            if on_island:      # saw-cut presence / safety loops before and after the boom
+                lat_h = float(c.line.project(base)[1])
+                appr = g if name == "entry" else -g
+                _loop(lin.buf, c, s + appr * 3.4, g, lat_h, f"loop:{src}:{name}:a")
+                _loop(lin.buf, c, s - appr * 1.9, g, lat_h, f"loop:{src}:{name}:b")
             side_y = np.array([-math.sin(yaw_b), math.cos(yaw_b)])            # prototype +y in E, N
             t_lane = c.line.frame(s)[0] * g                                   # away from the split node along the lane
             travel_dir = t_lane if name == "exit" else -t_lane                # entry traffic runs toward the node
@@ -194,7 +298,16 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
             p = c2.line.offset_point(sg, sd * (ow[sd] + 0.2))
             P = np.array([p, p + into * 0.01])
             lin.posts("fence_anthracite", P, 1.0, 0.14, 0.14, S.FENCE_H + 0.25, src=src)
+        if isl_poly is not None:
+            # yellow steel bollards at both noses of the island (protect the housings from a cut corner)
+            ex = np.asarray(isl_poly.exterior.coords)
+            t_m = ce.line.frame(se + ge * dd[k])[0]
+            a_ = (ex - m) @ t_m
+            for q in (ex[np.argmin(a_)] + t_m * 0.45, ex[np.argmax(a_)] - t_m * 0.45):
+                lin.posts("paint_yellow", np.array([q, q + t_m * 0.01]), 1.0, 0.11, 0.11, 0.95,
+                          zb=np.array([isl_z, isl_z]), src=f"{src}:bollard")
         rep["applied"].append({"id": o["id"], "node": o["node"], "fence_m": round(total, 1),
+                               "island_m2": round(float(isl_poly.area), 1) if isl_poly is not None else 0.0,
                                "gatehouse": [round(float(v), 2) for v in placed[0]] if placed is not None else None,
                                "barrier_median_w": round(float(gap[k]), 2)})
     report["gates"] = rep

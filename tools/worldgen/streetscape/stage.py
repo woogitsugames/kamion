@@ -27,6 +27,7 @@ from . import paved as PV
 from . import plantings as PT
 from . import sources as SRC
 from . import vegetation as VG
+from . import yard_wear as YW
 
 
 def run(w, road_z, rmask, deck, deck_mask, thick, log):
@@ -169,7 +170,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     park_polys += [PV._poly_local(f["geometry"]["coordinates"], w.origin) for f in src["bdot10k"]["OT_KUKO_A"]
                    if f["props"].get("rodzaj") == "parking" and f["geometry"]["type"] == "Polygon"]
     LF.place(pl, docks, paved, blds, roads_poly, bpoly, route_P, frep, buf=w.buf, zsurf=zsurf, park_polys=park_polys,
-             no_parking=DY.no_parking(overrides, origin))
+             no_parking=DY.no_parking(overrides, origin), authored_trailers=DY.dock_trailers(overrides))
+    YW.apply(w.buf, overrides, origin, docks, paved, roads_poly, zsurf, frep)     # authored yard wear (ADR 0071 r11)
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
     FU.clear_carriageway(pl, carriage, zsurf, frep)
     frep["poles_reseated"] = pl.reseated

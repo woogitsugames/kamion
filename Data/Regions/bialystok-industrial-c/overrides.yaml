@@ -189,6 +189,48 @@ overrides:
     props:
       - {proto: container_40_3, at: [778689.0, 595789.6], along: [0.49, 0.87]}
       - {proto: container_40_2, at: [778693.6, 595787.6], along: [0.49, 0.87]}
+    # r11 (review 2026-11-10 A4 / A7): the trailers at the hero dock row are authored - kinds and plain colours mixed
+    # (curtain 0 grey, 1 blue, 2 white, 3 red, 4 green, 5 silver; dry box; reefer), each left the way a driver leaves
+    # it: up to ~1 deg off square, a few cm sideways, 0-0.3 m off the bumpers. Docks 4, 7, 10 stay empty (door 3 is the
+    # open one, door 8 half open). WORKING_VALUE: no open photo of the dock row exists (ADR 0071).
+    dock_trailers:
+      building: "9962cca0"
+      row:
+        - {dock: 1, proto: trailer_curtain_1, yaw_deg: 0.6, off_m: 0.05, lat_m: -0.06}
+        - {dock: 2, proto: trailer_box_0, yaw_deg: -0.4, off_m: 0.0, lat_m: 0.04}
+        - {dock: 3, proto: trailer_curtain_0, yaw_deg: 1.1, off_m: 0.12, lat_m: 0.10}
+        - {dock: 5, proto: trailer_reefer_0, yaw_deg: -0.8, off_m: 0.0, lat_m: -0.05}
+        - {dock: 6, proto: trailer_curtain_3, yaw_deg: 0.3, off_m: 0.30, lat_m: 0.08}
+        - {dock: 8, proto: trailer_curtain_4, yaw_deg: -1.2, off_m: 0.06, lat_m: -0.12}
+        - {dock: 9, proto: trailer_curtain_5, yaw_deg: 0.9, off_m: 0.0, lat_m: 0.03}
+        - {dock: 11, proto: trailer_curtain_0, yaw_deg: -0.5, off_m: 0.18, lat_m: 0.06}
+    # r11 (review 2026-11-10 A2): wear of the yard, authored in the frame of the dock wall (u = metres along the SE
+    # wall from the south corner, o = metres out of the wall; streetscape.yard_wear). SEEN on the GUGiK orthophoto
+    # 2024-05-27 (0.25 m): a dark soil / damp line running from the lane edge toward the containers (grime_lines_uo,
+    # +-1.5 m) and a lighter rectangle with a visible outline in the middle of the yard (first patch, +-2 m, relaid or
+    # re-sanded paving). WORKING_VALUE (typical of a logistics yard, not visible at 0.25 m): the driving lines of
+    # articulated trucks swinging off the lane to the docks and back, the cable trench from the lamp column to the
+    # hall, the small repairs, oil where tractors stand coupled, soil against the edges.
+    wear:
+      building: "9962cca0"
+      tracks_uo:
+        - {pts: [[98, 43], [82, 40], [66, 33], [54, 27], [42, 24], [30, 24], [18, 26], [8, 30]], passes: 3, strength: 1.0}
+        - {pts: [[10, 22], [22, 27], [36, 31], [52, 36], [68, 40], [86, 44]], passes: 3, strength: 0.9}
+        - {pts: [[150, 39], [130, 34], [112, 27], [96, 23], [80, 22], [64, 24], [50, 23]], passes: 2, strength: 0.8}
+        - {pts: [[32, 40], [20, 38], [10, 33], [7, 25], [12, 19], [22, 20], [34, 24]], passes: 2, strength: 1.1}
+      grime_lines_uo:
+        - {pts: [[47, 39.5], [70, 37], [92, 34], [113, 31.5]], w: 1.5, strength: 1.2}
+        - {pts: [[2, 19.2], [28, 19.0], [53, 19.3]], w: 1.1, strength: 0.9}     # joint of the apron and the block paving
+      patches_uo:
+        - {at: [68, 23], size: [12, 9], rot_deg: 4, tone: light}
+        - {at: [24, 31], size: [4.2, 3.0], rot_deg: -12, tone: dark}
+        - {at: [101, 33], size: [5.0, 2.2], rot_deg: 3, tone: dark}
+        - {at: [36, 36.5], size: [1.6, 1.4], rot_deg: 40, tone: light}
+        - {at: [86, 27], size: [2.4, 2.0], rot_deg: 25, tone: dark}
+      trenches_uo:
+        - {a: [49.4, 40.4], b: [52.2, 19.6], w: 0.9, tone: dark}
+      oil_per_dock: [2, 5]
+      grime_edges: true
   - id: andersa-viaduct-biezenstwa-style
     kind: bridge_style
     target: {osm_way: [175157461, 177895177]}

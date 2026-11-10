@@ -68,6 +68,7 @@ DEFAULTS = {
     "skylight_pitch_m": [6.0, 6.0],   # orthophoto: staggered grid of small roof lights
     "skylight_size_m": 1.2,
     "court_roof_h_m": 5.0,         # light roof inside the inner ring (orthophoto: lighter, lower surface)
+    "weathering": 1,               # generator revision of the wall run-off space (r11): bump to rebuild the asset
     "lod_ends_m": [100.0, 400.0, 20000.0],   # at lodBias 1 (InstanceImporter.Policy / build_world.instance_ends)
 }
 

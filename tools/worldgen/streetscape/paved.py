@@ -57,7 +57,8 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
         ring = np.asarray(o["polygon_epsg2180"], float) - origin
         cand.append((o["id"], Polygon(ring), o["material"], "authored_override", bool(o.get("parking"))))
     for d in docks:
-        cand.append((d["id"], d["apron"], "yard_concrete", "dock_apron", False))
+        # the hero depot's apron (ADR 0071 r11): decades of trailers on the bumpers - darker, cracked, soiled concrete
+        cand.append((d["id"], d["apron"], "yard_concrete_worn" if d.get("hero") else "yard_concrete", "dock_apron", False))
     osm_park = [a for a in src["osm"]["areas"] if a["tags"].get("amenity") == "parking" or "area:highway" in a["tags"]]
     for a in osm_park:
         if a["tags"].get("surface") in OSM_SURFACE:
