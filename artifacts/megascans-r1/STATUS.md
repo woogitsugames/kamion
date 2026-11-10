@@ -63,3 +63,5 @@
 - Krok19: build z KAMION_DISABLE_FAB=1 OK. NASTĘPNY: pwsh scripts/import-region.ps1 -Region bialystok-industrial-c (wciąż fallback); kopiaafter zabezpieczona.
 
 - Krok20: import fallback Low+High OK. NASTĘPNY: pwsh artifacts/megascans-r1/run-camera-proof.ps1 -Stage before; potem identyczne kadry before i odtworzenieafter.
+
+- Krok22: odtworzono wygenerowany światafter (archiwum1989plików); KAMION_DISABLE_FAB wyłączone. NASTĘPNY: powtórny raycast i sanityrender after, walidacja SHA192plików.
