@@ -10183,7 +10183,7 @@
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 503501,
+  "footprint_nodes": 503505,
   "fork_shifts": [
    {
     "chain": "c:w1360055407:4075461271-1852129061",
@@ -10958,6 +10958,17 @@
      ]
     },
     {
+     "area_m2": 51.6,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "override:gore-s610-north-carriageway",
+     "xy": [
+      345.2,
+      -556.5
+     ]
+    },
+    {
      "area_m2": 481.0,
      "built": true,
      "hatch": false,
@@ -10966,17 +10977,6 @@
      "xy": [
       358.0,
       -520.3
-     ]
-    },
-    {
-     "area_m2": 19.6,
-     "built": true,
-     "hatch": false,
-     "note": "",
-     "why": "override:gore-s610-north-carriageway",
-     "xy": [
-      342.5,
-      -554.9
      ]
     },
     {
@@ -11038,7 +11038,7 @@
      "area_m2": 127.3,
      "built": true,
      "hatch": true,
-     "note": "P-21 hatch, 2 paint parts",
+     "note": "P-21 hatch, 1 paint parts",
      "why": "merge",
      "xy": [
       -83.7,
@@ -11211,6 +11211,17 @@
      ]
     },
     {
+     "area_m2": 3.4,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -186.6,
+      -305.8
+     ]
+    },
+    {
      "area_m2": 3.0,
      "built": true,
      "hatch": false,
@@ -11222,6 +11233,17 @@
      ]
     },
     {
+     "area_m2": 2.5,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      971.4,
+      -930.8
+     ]
+    },
+    {
      "area_m2": 2.4,
      "built": true,
      "hatch": false,
@@ -11230,6 +11252,17 @@
      "xy": [
       -442.6,
       -425.8
+     ]
+    },
+    {
+     "area_m2": 2.1,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -190.2,
+      -301.9
      ]
     },
     {
@@ -11278,19 +11311,19 @@
     }
    ],
    "islands": [],
-   "kerb_dropped_m": 702.0,
+   "kerb_dropped_m": 725.0,
    "paved": {
     "merge": {
      "area_m2": 308.0,
      "count": 6
     },
     "override": {
-     "area_m2": 924.2,
+     "area_m2": 956.2,
      "count": 8
     },
     "sliver": {
-     "area_m2": 107.5,
-     "count": 16
+     "area_m2": 115.5,
+     "count": 19
     }
    },
    "rejected": [
@@ -11600,6 +11633,12 @@
     ]
    },
    {
+    "id": "gore-s610-centre-hatch",
+    "targets": [
+     "gap@347,-558"
+    ]
+   },
+   {
     "id": "andersa-viaduct-biezenstwa-hero",
     "targets": [
      "w175157461",
@@ -11607,9 +11646,7 @@
     ]
    }
   ],
-  "overrides_stale": [
-   "gore-s610-centre-hatch"
-  ],
+  "overrides_stale": [],
   "roundabout_junctions": 12,
   "signalised_junctions": 11,
   "walled_ramps": [

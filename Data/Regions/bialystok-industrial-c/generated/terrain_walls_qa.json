@@ -1,11 +1,11 @@
 {
  "by_source": {
   "skirt:yard_asphalt": 1,
-  "skirt:yard_concrete": 3,
+  "skirt:yard_concrete": 4,
   "skirt:yard_slabs": 1,
   "steep_grass:verge_grass": 16
  },
- "count": 21,
+ "count": 22,
  "max_m": 0.715,
  "p99_m": 0.715,
  "skirt_area": [
@@ -18,6 +18,17 @@
    "points": 2,
    "run_m": 0.889,
    "src": "bdot:2BE4B432-FD5C-1BF0-E053-CC2BA8C0D140:0#0:edge",
+   "visible": true
+  },
+  {
+   "e": -168.1,
+   "exposed_m2": 0.061,
+   "mat": "yard_concrete",
+   "max_h": 0.364,
+   "n": -178.6,
+   "points": 1,
+   "run_m": 1.208,
+   "src": "bdot:2BE4B432-6D7F-1BF0-E053-CC2BA8C0D140:0#0:edge",
    "visible": true
   },
   {
@@ -185,6 +196,14 @@
    "mat": "verge_grass",
    "n": -830.3,
    "src": "c:w177895177:1883101822-1883062831:R:1"
+  },
+  {
+   "e": -168.1,
+   "h": 0.364,
+   "kind": "skirt",
+   "mat": "yard_concrete",
+   "n": -178.6,
+   "src": "bdot:2BE4B432-6D7F-1BF0-E053-CC2BA8C0D140:0#0:edge"
   },
   {
    "e": 461.1,

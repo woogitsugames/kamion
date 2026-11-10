@@ -5,7 +5,7 @@
   "lane_blind_end": 56,
   "marking_off_carriageway": 13,
   "obstacle_in_lane": 28,
-  "prop_on_carriageway": 3
+  "prop_on_carriageway": 2
  },
  "cases": [
   {
@@ -1222,23 +1222,23 @@
   },
   {
    "chain": "c:w536419670:4391371827-1882887385",
-   "dist_from_stop_m": 1.0,
-   "e": 349.12,
+   "dist_from_stop_m": 6.1,
+   "e": 351.06,
    "junction": "j:n1882887385",
    "kind": "lane_blind_end",
    "lane": 0,
    "lanes_in": 1,
    "lanes_out": 1,
-   "lat": 53.1533531,
-   "lon": 23.1645994,
-   "n": -559.19,
+   "lat": 53.1533951,
+   "lon": 23.1646325,
+   "n": -554.4,
    "on_route": false,
    "osm_ways": [
     536419670
    ],
    "to_chain": "c:w537184112:1882887385-2840742181",
    "turn_lanes": null,
-   "what": "none"
+   "what": "kerb"
   },
   {
    "chain": "c:w178208423:2284431973-3954799593",
@@ -2048,22 +2048,9 @@
    "osm_ways": [],
    "src": "rule:c:w173956078:1847263293-5749429982",
    "what": "lamp_12m"
-  },
-  {
-   "chain": null,
-   "e": 777.38,
-   "junction": null,
-   "kind": "prop_on_carriageway",
-   "lat": 53.150497,
-   "lon": 23.170733,
-   "n": -852.69,
-   "on_route": false,
-   "osm_ways": [],
-   "src": "rule:c:w175157461:1883101816-1883469484",
-   "what": "lamp_12m"
   }
  ],
- "count": 113,
+ "count": 112,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
   "lane_blind_end": 2,
@@ -2094,6 +2081,6 @@
   "lane_samples": 80628,
   "lane_samples_in_taper": 48,
   "marking_tris": 21505,
-  "props_checked": 1126
+  "props_checked": 1125
  }
 }

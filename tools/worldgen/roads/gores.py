@@ -129,7 +129,14 @@ def carriageway_union(net, juncs):
         if len(j.boundary) >= 3 and not all(
                 bool(a.chain.bridge[a.chain.idx(a.s(j.trims[i]))]) for i, a in enumerate(j.arms)):
             pg = Polygon(np.array([p for p, _ in j.boundary]))
-            polys.append(pg if pg.is_valid else pg.buffer(0))
+            if pg.is_valid:
+                polys.append(pg)
+            else:
+                # self-intersecting outline: exactly the lobes meshing._repair_fill triangulates (make_valid, parts
+                # > 0.3 m2). buffer(0) kept a different set (non-zero winding), so a 32 m2 hole of the visual patch of
+                # j:n1882887385 (s 610) was "carriageway" here and its paved_gore override went stale.
+                fixed = shapely.make_valid(pg)
+                polys += [g for g in getattr(fixed, "geoms", [fixed]) if g.geom_type == "Polygon" and g.area > 0.3]
     return shapely.union_all(polys)
 
 
