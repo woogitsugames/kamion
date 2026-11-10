@@ -17,10 +17,9 @@ change project settings, packages, shared scenes, phone policy or the licence.
   own decimated LOD0/1/2. Every result, intermediate and provenance file stays in
   ignored `art-source/world/megascans/_generated/`. No downloads or account access.
 - Low/Medium consume 512 px maps; High consumes 1024 px. Per-prototype initial
-  caps are 2400/800/200 triangles (props), 1800/700/180 (plants), WORKING_VALUE.
+  caps are2400/800/200 triangles (props),8000/16/4 (shrubs) and4000/16/4 (grass), WORKING_VALUE. Near plants retain optimized true geometry; far LODs use silhouette billboards with their own source atlas.
   Actual counts and source dimensions are recorded in the local output manifest.
-  Disconnected plant islands may need deterministic thinning to reach the cap;
-  judge silhouettes and coverage in visual QA before accepting them.
+  Aggressive collapse and leaf removal failed visual review and are not used for active plant variants. Judge silhouettes and coverage in visual QA before accepting them.
 - `fab_tree_surfaces.py` crops clean atlas regions into bark_birch, bark_linden
   and curb_concrete. It keeps our trees and Polish kerb geometry. Bark UV scale,
   colour calibration, cropping and source mixing are WORKING_VALUE, not surveyed.

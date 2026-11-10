@@ -130,6 +130,7 @@ namespace Game.World.Import
             ti.textureType = normal ? TextureImporterType.NormalMap : TextureImporterType.Default;
             ti.sRGBTexture = !linear;
             ti.mipmapEnabled = true;
+            ti.streamingMipmaps = true;
             ti.isReadable = false;
             ti.alphaIsTransparency = alpha;
             ti.mipMapsPreserveCoverage = alpha;

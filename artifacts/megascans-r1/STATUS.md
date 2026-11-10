@@ -27,5 +27,7 @@
 - Krok 9: EditMode188:176 PASS,0 FAIL,7 skipped,5 inconclusive (nie zatajono bramek bez danych). Obejrzano komplet56 ujęć baseline na arkuszach Low/High oraz realne referencje CC0. Samokrytyka: świat nadal zbyt równy i czysty; detal ma być lokalny, nie zasypywać utrzymanych poboczy śmieciami. Cofnięto efekty uboczne Unity w QualitySettings i Lighting.
 - NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis -q` po wygenerowaniu rundy after.
 
-- Krok 10: atlas512/1024 se společnými UV napojen na všechny3schválené utility, bez dalších materiálů po jednotlivých skenech. Near křoviny přecházejí na méně agresivní skutečnou geometrii; vzdálené LOD budou billboardy se samostatným správným atlasem, místo zničených listů. Úplný GIS baseline běží; dosud i existující chyby, k určení po výpisu.
-- NASTĘPNY KROK: `Get-Content artifacts/megascans-r1/gis-baseline.log -Tail 100`.
+- Krok 10: atlas512/1024 ze wsp?lnymi UV pod??czono do3zatwierdzonych studzienek i kratek, bez oddzielnych materia??w na poszczeg?lne skany. Krzewy z bliska otrzymaj? mniej agresywnie zredukowan? geometri?; dalsze LOD b?d? billboardami z prawid?owym, osobnym atlasem. Pe?ny GIS baseline trwa; dotychczasowe b??dy wymagaj? weryfikacji po otrzymaniu pe?nego wyniku.
+
+- Krok 11: rozpoznano i naprawiono czerwony kanał masek Quixel. Faktyczne LOD0/1/2: boxwood7062/9/3, elderberry7139/11/3, grass3660/6/3, wildgrass3588/8/3. Atlas po zmianie map odtworzony; spoiny krawężnika zachowane. Low używa istniejącego simpleFoliage również dla Fab; fallback czyści poprzednie mapy/metalki z materiałów.
+- NASTĘPNY KROK: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c`.

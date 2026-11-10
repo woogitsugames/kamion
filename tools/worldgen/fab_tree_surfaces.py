@@ -57,6 +57,23 @@ def pack_metallic_gloss(roughness):
     return packed
 
 
+def kerb_joint_mask(size, gap_m=.008, period_m=1.0):
+    """Area-filter an 8 mm joint over the metric U tile's opposite edges.
+
+    WORKING_VALUE. Road meshing stores cumulative metres in U. The cropped scan
+    face covers one metre; the seam stays 8 mm wide independently of mobile size.
+    Pixel-area filtering prevents a subpixel seam from disappearing on Low.
+    """
+    if not 0 < gap_m < period_m:
+        raise ValueError("kerb joint gap must lie within the tile period")
+    left = np.arange(size, dtype=np.float64) / size
+    right = left + 1.0 / size
+    half = gap_m / period_m / 2
+    coverage = (np.maximum(0, np.minimum(right, half) - left) +
+                np.maximum(0, right - np.maximum(left, 1 - half))) * size
+    return np.tile(coverage.astype(np.float32), (size, 1))
+
+
 def stitch_edges(a, width=16):
     """Blend opposite borders symmetrically, preserving the interior scan detail."""
     a = a.copy()
@@ -86,7 +103,10 @@ def load_crop(archive: Path, channel: str, crop, size: int):
             mode = "RGB" if channel in ("basecolor", "normal") else "L"
             w, h = image.size
             bounds = tuple(round(c * (w if k % 2 == 0 else h)) for k, c in enumerate(crop))
-            image = image.convert(mode).crop(bounds).resize((size, size), Image.Resampling.LANCZOS)
+            # Quixel scalar maps can be red-only RGB. Luminance conversion would
+            # scale them by ~0.299, corrupting AO / roughness and packed gloss.
+            image = image.convert("RGB").getchannel("R") if mode == "L" else image.convert(mode)
+            image = image.crop(bounds).resize((size, size), Image.Resampling.LANCZOS)
             return np.asarray(image, np.float32) / 255
 
 
@@ -128,6 +148,9 @@ def build(root: Path = ROOT):
                   "texture_scale": "WORKING_VALUE; existing procedural UV and kerb mesh retained",
                   "normal_convention": "UNVERIFIED; map retained as supplied, require directional-light review before enabling",
                   "textures": {}}
+        if name == "curb_concrete":
+            record["kerb_joints"] = {"period_m": 1.0, "gap_m": .008, "status": "WORKING_VALUE",
+                                      "channels": ["basecolor", "ao"], "uv": "U cumulative metres"}
         for tier, size in (("Low", 512), ("High", 1024)):
             textures = {}
             for channel in CHANNELS:
@@ -140,6 +163,14 @@ def build(root: Path = ROOT):
                     a *= target / np.maximum(a.mean((0, 1)), .001)
                     a = linear_to_srgb(a)
                 a = stitch_edges(a)
+                if name == "curb_concrete" and channel in ("basecolor", "ao"):
+                    seam = kerb_joint_mask(size)
+                    # A dark narrow joint, not an extrusion or displaced curb.
+                    # Symmetric U-edge mask preserves the seamless wrapped tile.
+                    if channel == "basecolor":
+                        a *= (1 - .55 * seam)[..., None]
+                    else:
+                        a *= 1 - .7 * seam
                 if channel == "normal":
                     n = a * 2 - 1
                     n /= np.maximum(np.linalg.norm(n, axis=2, keepdims=True), .001)

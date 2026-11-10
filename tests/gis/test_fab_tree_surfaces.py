@@ -1,5 +1,6 @@
 """Photographic surface crop processing: fallback and output isolation."""
 import hashlib
+import io
 import json
 from pathlib import Path
 import zipfile
@@ -60,12 +61,38 @@ def test_outputs_mobile_sizes_and_generated_only(tmp_path):
     assert packed.shape == (512, 512, 4)
     assert not np.any(packed[..., :3])
     np.testing.assert_array_equal(packed[..., 3], 255 - roughness)
+    with Image.open(tmp_path / paths["basecolor"]) as image:
+        color = np.asarray(image)
+        assert color[:, 0].mean() < color[:, 100].mean() * .6
+        np.testing.assert_array_equal(color[:, 0], color[:, -1])
+    with Image.open(tmp_path / paths["ao"]) as image:
+        ao = np.asarray(image)
+        assert ao[:, 0].mean() < ao[:, 100].mean() * .4
+    assert result["materials"]["curb_concrete"]["kerb_joints"]["gap_m"] == .008
 
 
 def test_urp_metallic_gloss_encodes_smoothness_endpoints():
     packed = fab.pack_metallic_gloss(np.array([[0, 127, 255]], dtype=np.uint8))
     np.testing.assert_array_equal(packed[..., 3], [[255, 128, 0]])
     assert not np.any(packed[..., :3])
+
+
+@pytest.mark.parametrize("size", [512, 1024])
+def test_kerb_joint_has_eight_mm_coverage_in_both_tiers(size):
+    mask = fab.kerb_joint_mask(size)
+    assert mask.mean() == pytest.approx(.008, abs=1e-7)
+    np.testing.assert_allclose(mask[:, 0], mask[:, -1])
+    assert not mask[:, size // 2].any()
+
+
+def test_scalar_maps_read_red_channel_without_luminance_scaling(tmp_path):
+    archive = tmp_path / "source.zip"
+    image_bytes = io.BytesIO()
+    Image.new("RGB", (16, 16), (200, 0, 0)).save(image_bytes, format="PNG")
+    with zipfile.ZipFile(archive, "w") as z:
+        z.writestr("map_4K_AO.jpg", image_bytes.getvalue())
+    ao = fab.load_crop(archive, "ao", (0, 0, 1, 1), 32)
+    assert ao.mean() == pytest.approx(200 / 255, abs=1e-6)
 
 
 def test_archive_digest_failure(tmp_path):

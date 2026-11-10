@@ -9,7 +9,7 @@ from zipfile import ZipFile, ZipInfo
 import pytest
 from PIL import Image
 
-from fab.prepare import OUTPUT, prepare, safe_members, select_maps
+from fab.prepare import OUTPUT, _meshes, prepare, safe_members, select_maps
 
 
 def setup_source(tmp_path, approved=True):
@@ -168,3 +168,41 @@ def test_output_symlink_rejected(tmp_path):
     with pytest.raises(ValueError, match="symlink/junction"):
         prepare(tmp_path)
     assert not list(target.iterdir())
+
+
+def test_red_only_scalar_source_is_not_luminance(tmp_path):
+    archive = setup_source(tmp_path)
+    red = tmp_path / "red.png"
+    Image.new("RGB", (256, 256), (255, 0, 0)).save(red)
+    with ZipFile(archive, "a") as zf:
+        for name in ("Opacity", "Roughness", "AO"):
+            zf.write(red, f"test_4K_{name}.png")
+    digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+    for path in (tmp_path / "Data/SourceManifests/fab-megascans-2026-11-10.json",
+                 tmp_path / "tools/worldgen/fab/review.json"):
+        data = json.loads(path.read_text())
+        if isinstance(data["items"], list):
+            data["items"][0]["sha256"] = digest
+        else:
+            data["items"]["test"]["source_sha256"] = digest
+        path.write_text(json.dumps(data))
+    textures = prepare(tmp_path)["items"]["test"]["textures"]["Low"]
+    for name in ("opacity", "roughness", "ao"):
+        with Image.open(tmp_path / textures[name]) as image:
+            assert image.getextrema() == (255, 255)
+    with Image.open(tmp_path / textures["basecolor"]) as image:
+        assert image.getextrema()[3] == (255, 255)
+
+
+def test_plant_source_lods_keep_true_geometry_and_billboard_separate(tmp_path):
+    path = tmp_path / "plant.zip"
+    with ZipFile(path, "w") as zf:
+        for variant in ("VarA", "VarB"):
+            for lod in range(4):
+                zf.writestr(f"Boxwood_{variant}_LOD{lod}.fbx", f"{variant} sourceLOD{lod}")
+    with ZipFile(path) as zf:
+        models = _meshes(zf, tmp_path / "generated", "boxwood", first_variant_only=True)
+    assert len(models) == 1
+    assert models[0]["variant"] == "VarA"
+    assert models[0]["source"].read_text() == "VarA sourceLOD2"
+    assert models[0]["billboard_source"].read_text() == "VarA sourceLOD3"

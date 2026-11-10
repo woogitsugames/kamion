@@ -1,11 +1,12 @@
 """Blender worker for fab/prepare.py; local licensed outputs only, never tracked."""
 import json
+import math
 import sys
 from pathlib import Path
 
 import bpy
 import bmesh
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 
 def triangles(obj):
@@ -50,37 +51,11 @@ def thin_cards(obj, budget):
     bm.free()
 
 
-def main(request):
-    bpy.ops.object.select_all(action="SELECT")
-    bpy.ops.object.delete(use_global=False)
-    bpy.ops.import_scene.fbx(filepath=request["source"], use_anim=False)
-    meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
-    if not meshes:
-        raise ValueError("No meshes in Fab FBX")
-    bpy.ops.object.select_all(action="DESELECT")
-    for obj in meshes:
-        obj.select_set(True)
-    bpy.context.view_layer.objects.active = meshes[0]
-    bpy.ops.object.join()
-    source = bpy.context.object
-    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-    # Metric dimensions come from FBX importer, not guessed per asset.
-    lo = Vector(tuple(min(v.co[i] for v in source.data.vertices) for i in range(3)))
-    hi = Vector(tuple(max(v.co[i] for v in source.data.vertices) for i in range(3)))
-    center = Vector(((lo.x + hi.x) / 2, (lo.y + hi.y) / 2, lo.z))
-    for vertex in source.data.vertices:
-        vertex.co -= center
-        # Project props use glTF (-East, Up, North). Blender exporter maps
-        # (x,y,z) -> (x,z,-y), so bake the XY half-turn into vertices.
-        vertex.co.x *= -1
-        vertex.co.y *= -1
-    dims = list(hi - lo)
-    before = triangles(source)
-    mat = bpy.data.materials.new(request["prototype"])
+def make_material(name, textures):
+    mat = bpy.data.materials.new(name)
     mat.use_nodes = True
     nodes = mat.node_tree.nodes
     bsdf = nodes.get("Principled BSDF")
-    textures = request.get("textures", {})
     for channel, socket in (("basecolor", "Base Color"), ("roughness", "Roughness"),
                             ("metalness", "Metallic"), ("opacity", "Alpha")):
         if channel not in textures:
@@ -99,18 +74,58 @@ def main(request):
         mat.node_tree.links.new(normal.outputs["Normal"], bsdf.inputs["Normal"])
     if "opacity" in textures:
         mat.surface_render_method = "DITHERED"
-    # Do not clear materials (project rule). Every face points to our final slot.
-    source.data.materials.append(mat)
-    index = len(source.data.materials) - 1
-    for face in source.data.polygons:
-        face.material_index = index
+    return mat
+
+
+def main(request):
+    bpy.ops.object.select_all(action="SELECT")
+    bpy.ops.object.delete(use_global=False)
+    def load(path, name, textures, correction):
+        existing = set(bpy.data.objects)
+        bpy.ops.import_scene.fbx(filepath=path, use_anim=False)
+        meshes = [o for o in bpy.context.scene.objects if o.type == "MESH" and o not in existing]
+        if not meshes:
+            raise ValueError("No meshes in Fab FBX")
+        bpy.ops.object.select_all(action="DESELECT")
+        for obj in meshes:
+            obj.select_set(True)
+        bpy.context.view_layer.objects.active = meshes[0]
+        if len(meshes) > 1:
+            bpy.ops.object.join()
+        source = bpy.context.object
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        old_normals = [v.vector.copy() for v in source.data.corner_normals]
+        transform = Matrix.Rotation(math.radians(correction.get("rotate_x_degrees", 0)), 4, "X") @ Matrix.Scale(correction.get("scale", 1), 4)
+        transformed = [transform @ v.co for v in source.data.vertices]
+        lo = Vector(tuple(min(v[i] for v in transformed) for i in range(3)))
+        hi = Vector(tuple(max(v[i] for v in transformed) for i in range(3)))
+        center = Vector(((lo.x + hi.x) / 2, (lo.y + hi.y) / 2, lo.z))
+        baked = Matrix.Rotation(math.pi, 4, "Z") @ Matrix.Translation(-center) @ transform
+        source.data.transform(baked)
+        source.data.update()
+        normal_matrix = baked.to_3x3().inverted().transposed()
+        source.data.normals_split_custom_set([(normal_matrix @ n).normalized() for n in old_normals])
+        mat = make_material(name, textures)
+        # Never clear material slots (project rule).
+        source.data.materials.append(mat)
+        index = len(source.data.materials) - 1
+        for face in source.data.polygons:
+            face.material_index = index
+        return source, list(hi - lo)
+    correction = request.get("source_transform", {})
+    source, dims = load(request["source"], request["prototype"], request.get("textures", {}), correction)
+    before = triangles(source)
+    billboard = None
+    if request.get("billboard_source"):
+        billboard, _ = load(request["billboard_source"], request["prototype"] + "_billboard", request["billboard_textures"], {})
     destination = Path(request["output"])
     destination.mkdir(parents=True, exist_ok=True)
     lods = []
     objects = []
     for lod, budget in enumerate(request["budgets"]):
-        obj = source.copy()
-        obj.data = source.data.copy()
+        original = billboard if billboard and lod else source
+        obj = original.copy()
+        obj.data = original.data.copy()
         bpy.context.collection.objects.link(obj)
         bpy.ops.object.select_all(action="DESELECT")
         obj.select_set(True)
@@ -152,8 +167,10 @@ def main(request):
                               export_lights=False, export_materials="EXPORT")
     report = {"variant": request["variant"], "source_triangles": before,
               "path": str(combined),
+              "source_transform": correction,
               "dimensions_m": dims, "scale_status": "FBX declared units; placement scale WORKING_VALUE",
-              "foliage_reduction": "collapse then smallest disconnected card removal when required",
+              "foliage_reduction": "source optimized true geometry near; dedicated billboard atlas far" if billboard else "collapse",
+              "billboard_source_triangles": triangles(billboard) if billboard else None,
               "lods": lods}
     (destination / "report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 

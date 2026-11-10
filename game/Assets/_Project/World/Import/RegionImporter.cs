@@ -445,6 +445,12 @@ namespace Game.World.Import
             var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
             mat.shader = shader;
+            // Optional scanned materials can fall back at the same asset path on
+            // reimport. Clear the scan-only state before restoring plain Lit.
+            foreach (var keyword in new[] { "_NORMALMAP", "_OCCLUSIONMAP", "_METALLICSPECGLOSSMAP" }) mat.DisableKeyword(keyword);
+            mat.SetTexture("_BumpMap", null);
+            mat.SetTexture("_OcclusionMap", null);
+            mat.SetTexture("_MetallicGlossMap", null);
             mat.enableInstancing = true;
             mat.SetColor("_BaseColor", new Color(linear.r, linear.g, linear.b, 1f).gamma);
             mat.SetTexture("_BaseMap", tex);
