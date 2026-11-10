@@ -54,6 +54,7 @@ def make_tyre_materials():
 RIM_PROF = [(0.300, 0.112), (0.302, 0.124), (0.294, 0.128), (0.286, 0.121), (0.284, 0.100), (0.264, 0.082),
             (0.258, 0.050), (0.258, -0.050), (0.264, -0.082), (0.284, -0.100), (0.286, -0.121), (0.294, -0.128),
             (0.302, -0.124), (0.300, -0.112)]
+RIM_INNER = [(0.290, 0.118), (0.270, 0.095), (0.248, 0.05), (0.248, -0.05), (0.270, -0.095), (0.290, -0.118)]
 
 
 def wheel(name, xc, y, out, et, tyre_mat, nuts=True, hub="front", seg=48):
@@ -62,8 +63,7 @@ def wheel(name, xc, y, out, et, tyre_mat, nuts=True, hub="front", seg=48):
     c = V((xc, y, WHEEL_Z))
     prof, v, _, _ = tyre_profile()
     lathe(name + "_tyre", prof, c, tyre_mat, seg=seg, side=out, uv_v=v, sharp=60)
-    inner = [(0.290, 0.118), (0.270, 0.095), (0.248, 0.05), (0.248, -0.05), (0.270, -0.095), (0.290, -0.118)]
-    lathe(name + "_rim", RIM_PROF + inner[::-1], c, "alu_wheel", seg=min(40, seg), side=out, sharp=45)
+    lathe(name + "_rim", RIM_PROF + RIM_INNER[::-1], c, "alu_wheel", seg=min(40, seg), side=out, sharp=45)
     xd = et
     # dish: barrel -> disc
     sgn = 1 if et >= 0 else -1

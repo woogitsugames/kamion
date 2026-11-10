@@ -4911,49 +4911,5 @@
   "windscreen inner trim (A-pillar trims, header, dash top edge) must end on the inner glass face = inner_face_grid_a2_13x49 (= outer surface - 6 mm along the true normal); visible opening z 1.94-3.12 m (A2), glass edge 1.928-3.132 m",
   "interior frit band (ws_frit*): same widths as frit_on_exterior_glass_m.inside_visible_opening_m, on the inner face (inner_face_grid_a2_13x49 - 1.5 mm), facing the cab",
   "door glass: interior door card window opening = side_glass outline minus the 35 mm black frame"
- ],
- "measured_vs_interior_lod2": {
-  "interior_windscreen_z_range_m": [
-   2.0338,
-   2.1347
-  ],
-  "interior_windscreen_behind_exterior_m": {
-   "min": null,
-   "max": null,
-   "mean": null,
-   "samples": 0
-  },
-  "interior_mirror_quad_centres_a2": {
-   "MIRROR_Front": [
-    0.9789,
-    1.4132,
-    3.2734
-   ],
-   "MIRROR_Kerb": [
-    1.4186,
-    1.0584,
-    1.9788
-   ],
-   "MIRROR_MainL": [
-    -1.499,
-    1.0455,
-    2.5999
-   ],
-   "MIRROR_MainR": [
-    1.4988,
-    1.0456,
-    2.5999
-   ],
-   "MIRROR_WideL": [
-    -1.4991,
-    1.0455,
-    2.2003
-   ],
-   "MIRROR_WideR": [
-    1.4988,
-    1.0456,
-    2.2001
-   ]
-  }
- }
+ ]
 }

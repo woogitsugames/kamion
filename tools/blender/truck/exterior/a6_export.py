@@ -58,7 +58,7 @@ ATLAS_RES = {"Paint": 4096, "Trim": 4096, "Metal": 4096, "Lights": 2048}
 DECAL_RES = 1024
 TIERS = {"High": 1, "Medium": 4, "Low": 8}          # divisor of the High size (Decal: 1 / 2 / 4)
 DECAL_TIERS = {"High": 1, "Medium": 2, "Low": 4}
-TRI_TARGET = {1: 43000, 2: 14500, 3: 5000}
+TRI_TARGET = {1: 43000, 2: 15300, 3: 5000}   # LOD2: 200 under the 15.5k limit (round wheels cost ~3.5k, ADR 0039)
 TRI_LIMIT = {0: 140000, 1: 45000, 2: 15500, 3: 6000}   # LOD0 100k -> 140k: owner/lead 2026-11-09 (quality first; phone headroom)
 
 MAT_SLOT = {
@@ -1150,14 +1150,146 @@ def rel(p):
 # ---------------------------------------------------------------- 6. LODs, pivots, hierarchy
 SILHOUETTE_KEYS = ("_tyre", "_rim", "_disc")    # round parts: the silhouette shows every missing segment
 SILHOUETTE_W = 4.0
+# Lathe parts of the wheels (tyre, rim) at LOD2+: edge collapse is NOT used on them. With B2.1's extra LOD0 detail the
+# area budget gave the LOD2 wheels 170-320 tris and the quadric collapse moved vertices off the torus (tyre radius
+# 0.638 m vs 0.538 m, spikes and flipped black triangles on the A16 Low build, REVIEW r5 R-W1, ADR 0039). Instead every
+# k-th radial column of the lathe grid is kept (vertices stay exactly on the LOD0 surface, UVs of the kept corners are
+# the LOD0 ones) down to ROUND_SEGMENTS around the circumference; the pieces are then fixed in the budget.
+# pieces that break below this share of their LOD0 triangles (locked slot borders leave the collapse too little room:
+# the lower fairing at 0.15 pulled black trim triangles from the bumper corner to the wheel arch)
+MIN_RATIO = {"lower_fairing": 0.3}
+ROUND_KEYS = ("_tyre", "_rim")
+ROUND_SEGMENTS = {2: 24, 3: 16}
 
 
-def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5):
+def is_round_wheel_piece(o):
+    return o.name.startswith("wheel_") and any(k in o.name for k in ROUND_KEYS)
+
+
+def reduce_round(o, target_seg, profile_tol=0.004, tyre_tol=0.02):
+    """Rebuild a wheel lathe piece (tyre / rim, axis = vehicle X through the wheel centre) on a coarser grid: every
+    k-th radial column (`target_seg` remain) and the Douglas-Peucker subset of the generator's own meridian
+    (chassis.tyre_profile / RIM_PROF). Every vertex is indexed (column, ring) on the generator grid, so the new quads
+    use LOD0 vertices and LOD0 loop data (Atlas UVs) only - nothing leaves the LOD0 surface. A coarse cell is emitted
+    when any LOD0 cell under it survived the hidden-face cleanup; where a corner cell is missing the LOD0 cells of
+    that block are kept as they are. (The first version dissolved vertices: bmesh merged whole bands into n-gons and
+    the tyres came out as 130 triangles of garbage.) Returns segments before / after."""
+    mw = o.matrix_world
+    yc = -WB if o.name.startswith("wheel_R") else 0.0
+    zc = G.WHEEL_Z
+    sgn = -1.0 if o.name[7] == "L" else 1.0
+    if o.name.startswith("wheel_F"):
+        xc = sgn * G.FRONT_TRACK / 2
+    else:   # lathe centre in x as chassis.wheels() places it
+        xc = sgn * (G.REAR_TRACK / 2 + (G.DUAL_SPACING / 2 if o.name[8] == "o" else -G.DUAL_SPACING / 2))
+    is_tyre = "_tyre" in o.name
+    prof = C.tyre_profile()[0] if is_tyre else C.RIM_PROF + C.RIM_INNER[::-1]
+    pts = [(r, xc + sgn * x) for r, x in prof]
+    bm = bmesh.new()
+    bm.from_mesh(o.data)
+    used = [v for v in bm.verts if v.link_faces]
+    ang, ring = {}, {}
+    for v in used:
+        p = mw @ v.co
+        r = math.hypot(p.y - yc, p.z - zc)
+        ang[v] = math.atan2(p.z - zc, p.y - yc) % (2 * math.pi)
+        j = min(range(len(pts)), key=lambda i: (pts[i][0] - r) ** 2 + (pts[i][1] - p.x) ** 2)
+        if (pts[j][0] - r) ** 2 + (pts[j][1] - p.x) ** 2 > 1e-6:
+            print(f"  WARNING round {o.name}: vertex off the generator profile, piece left at LOD0 density")
+            bm.free()
+            return 0, 0
+        ring[v] = j
+    vals = sorted(set(round(a, 5) for a in ang.values()))
+    steps = [b - a for a, b in zip(vals, vals[1:]) if b - a > 1e-4]
+    if not steps:
+        bm.free()
+        return 0, 0
+    nseg = int(round(2 * math.pi / min(steps)))
+    step = 2 * math.pi / nseg
+    k = max(1, int(round(nseg / target_seg)))
+    while k > 1 and (nseg % k or nseg // k < 16):
+        k -= 1
+    col = {v: int(round(a / step)) % nseg for v, a in ang.items()}
+    keep = set()
+    tol = tyre_tol if is_tyre else profile_tol     # tyres: tread grooves (16 mm) are carried by the normal map
+
+    def dp(i0, i1):
+        keep.add(i0)
+        keep.add(i1)
+        (r0, x0), (r1, x1) = pts[i0], pts[i1]
+        L = math.hypot(r1 - r0, x1 - x0) or 1e-9
+        best, bi = 0.0, -1
+        for i in range(i0 + 1, i1):
+            r, x = pts[i]
+            d = abs((r1 - r0) * (x0 - x) - (r0 - r) * (x1 - x0)) / L
+            if d > best:
+                best, bi = d, i
+        if bi >= 0 and best > tol:
+            dp(i0, bi)
+            dp(bi, i1)
+    dp(0, len(pts) - 1)
+    rings = sorted(keep)
+    cells, corner = {}, {}
+    for f in bm.faces:
+        cs, rs = {col[v] for v in f.verts}, {ring[v] for v in f.verts}
+        a_, b_ = (sorted(cs) + [-1])[:2]
+        if len(cs) != 2 or len(rs) != 2 or max(rs) - min(rs) != 1 or ((a_ + 1) % nseg != b_ and (b_ + 1) % nseg != a_):
+            print(f"  WARNING round {o.name}: face off the lathe grid, piece left at LOD0 density")
+            bm.free()
+            return nseg, nseg
+        ci = a_ if (a_ + 1) % nseg == b_ else b_
+        cells.setdefault((ci, min(rs)), []).append(f)
+        for lp in f.loops:
+            corner[(ci, min(rs), col[lp.vert], ring[lp.vert])] = lp
+    kill, made = set(), 0
+    for c0 in range(0, nseg, k):
+        c1 = (c0 + k) % nseg
+        cl = (c0 + k - 1) % nseg
+        for r0, r1 in zip(rings, rings[1:]):
+            block = [(c % nseg, r) for c in range(c0, c0 + k) for r in range(r0, r1)]
+            present = [cells[b] for b in block if b in cells]
+            if not present or (k == 1 and r1 == r0 + 1):
+                continue
+            lps = [corner.get((c0, r0, c0, r0)), corner.get((cl, r0, c1, r0)),
+                   corner.get((cl, r1 - 1, c1, r1)), corner.get((c0, r1 - 1, c0, r1))]
+            if any(lp is None for lp in lps):
+                continue                      # corner culled: the LOD0 cells of this block stay
+            src = lps[0].face
+            try:
+                nf = bm.faces.new([lp.vert for lp in lps], src)
+            except ValueError:
+                continue
+            nf.normal_update()
+            if nf.normal.dot(src.normal) < 0:
+                nf.normal_flip()
+            by_vert = {lp.vert: lp for lp in lps}
+            for lp in nf.loops:
+                lp.copy_from(by_vert[lp.vert])
+            made += 1
+            for fs in present:
+                kill.update(fs)
+    if kill:
+        bmesh.ops.delete(bm, geom=list(kill), context="FACES")
+    bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method="BEAUTY", ngon_method="BEAUTY")
+    bm.to_mesh(o.data)
+    bm.free()
+    o.data.update()
+    o.data.set_sharp_from_angle(angle=math.radians(60 if is_tyre else 45))
+    return nseg, nseg // k
+
+
+def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0):
     """Area-weighted budget: each piece wants k * area^0.6 triangles (clamped to [floor, own count]); k is bisected
     on the evaluated (collapsed) meshes until the total meets the target. A uniform global ratio (A6 wip) crushed
     the dense grille / honeycomb pieces into black triangles at LOD2-3 while big smooth panels kept spare tris.
-    Emissive / glass pieces keep >= lights_min of their triangles."""
-    dec = [o for o in pieces if tris_of(o) > floor_tris and not o.name.startswith(("decal_", "MIRROR_"))]
+    Emissive / glass pieces keep >= lights_min of their triangles. round_seg > 0: tyre / rim lathes are reduced by
+    column (reduce_round) and kept out of the collapse."""
+    rounds = [o for o in pieces if is_round_wheel_piece(o)] if round_seg else []
+    for o in rounds:
+        before, after = reduce_round(o, round_seg)
+        print(f"  round {o.name}: {before} -> {after} segments, {tris_of(o)} tris")
+    dec = [o for o in pieces if tris_of(o) > floor_tris and not o.name.startswith(("decal_", "MIRROR_"))
+           and o not in rounds]
     fixed = sum(tris_of(o) for o in pieces if o not in dec)
     base = {o.name: tris_of(o) for o in dec}
     area = {o.name: max(1e-6, sum(p.area for p in o.data.polygons)) for o in dec}
@@ -1165,7 +1297,8 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5):
     def ratio_for(o, k):
         sl = o.get("slots", [])
         n = base[o.name]
-        lo = max(lights_min * n, floor_tris) if ("Lights" in sl or "Glass" in sl) else floor_tris
+        lm = max(lights_min, next((m for key, m in MIN_RATIO.items() if key in o.name), 0.0))
+        lo = max(lm * n, floor_tris) if ("Lights" in sl or "Glass" in sl or lm > lights_min) else floor_tris
         w = SILHOUETTE_W if any(t in o.name for t in SILHOUETTE_KEYS) else 1.0
         want = max(lo, k * w * area[o.name] ** 0.6)
         return min(1.0, want / n)
@@ -1207,6 +1340,8 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5):
     for o in dec:
         o.modifiers["lod"].ratio = ratio_for(o, lo_r)
     apply_modifiers(dec)
+    for o in sorted(pieces, key=lambda o: -tris_of(o))[:45]:      # budget table (largest pieces)
+        print(f"  lod piece {o.name}: {base.get(o.name, tris_of(o))} -> {tris_of(o)} tris, slots {list(o.get('slots', []))}")
     for o in dec:
         o.data.set_sharp_from_angle(angle=math.radians(42))
         vg = o.vertex_groups.get("lod_keep")
@@ -1409,7 +1544,7 @@ def export_lod(lod, master, mirrors, a, manifest, coll):
     ratio = 1.0
     if lod in TRI_TARGET:
         ratio = decimate_pieces(pieces, TRI_TARGET[lod], floor_tris={1: 40, 2: 16, 3: 8}[lod],
-                                lights_min={1: 0.5, 2: 0.3, 3: 0.15}[lod])
+                                lights_min={1: 0.5, 2: 0.15, 3: 0.1}[lod], round_seg=ROUND_SEGMENTS.get(lod, 0))
     by_part = {}
     for o in master:
         by_part.setdefault(o["part"], []).append(o)
