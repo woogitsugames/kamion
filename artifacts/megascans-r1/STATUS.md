@@ -50,3 +50,7 @@
 
 - Krok 17: runda2 obejrzana w56kadrach: WorldPBR usuwa rażącą jasność ściany, ale Low nadal do+19draw/+4ktris — kolejna korekta. Diagnostyka46oryginalnych wpustów: szerokość0,500m, długość0,056–1,012m, UV poprawne; materiał obejmuje je teraz bez ruszania geometrii. Wszystkie773 odtworzone zcache:V/T identyczne. Nowe Fab mają własne komórki cullingu (12/12 EditMode); billboardy skrzyżowane i osadzone naY=0 (22/22 procesora). GISr2:270PASS,5odziedziczonychFAIL,2xfail. Trwa runda3.
 - NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` po round3-build.
+
+- Krok 18: runda3 import+56PNG OK. Low szczyt956drawEst/333ktris bez wzrostu; lokalnie do+4draw/+4ktris. EditMode206:194PASS,0FAIL,7skipped,5inconclusive. GISr3:275PASS,5odziedziczonychFAIL,2xfail. Trzy dodatkowe kamery na faktycznej trasie: raycast3/3 PASS, wysokość2,300m. Zapisano1989plików stanu after w prywatnym art-source/world/megascans/_generated/qa-after-r3.zip.
+- TRWA TERAZ: prawdziwy build/import fallback z KAMION_DISABLE_FAB=1 i osobne kadry before. Po nim KONIECZNIE odtworzyć after (Unity musi być zamknięte).
+- NASTĘPNY KROK awaryjny: `uv run --project tools/worldgen python artifacts/megascans-r1/reversible_qa_state.py restore`; następnie wyczyścić KAMION_DISABLE_FAB i sprawdzić manifest/PNG.

@@ -1,0 +1,119 @@
+{
+  "selection": [
+    {
+      "kind": "manhole",
+      "asset": "metal-manhole-cover",
+      "pos": [
+        43.98099994659424,
+        -434.2419891357422,
+        139.49474716186523
+      ],
+      "s_m": 935.9435729453942,
+      "lateral_route_distance_m": 0.00010399568879616164,
+      "source_glb": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_5.low.glb",
+      "uv_centre": [
+        0.25,
+        0.75
+      ],
+      "vertex_count": 4,
+      "camera_s_m": 927.9435729453942,
+      "camera_ground_z": 139.65472380954006,
+      "camera_id": "megascans_eye_manhole_s0928",
+      "camera_pos": [
+        51.032243525359114,
+        -438.0208730184143,
+        141.95472380954007
+      ],
+      "camera_look_at": [
+        28.996934156251417,
+        -426.2121841814032,
+        141.45753148048144
+      ],
+      "distance_camera_to_asset_m": 8.369676487947281,
+      "along_route_behind_asset_m": 8.0,
+      "camera_lateral_offset_from_exported_route_m": 0.0,
+      "eye_height_above_asphalt_collision_m": 2.3,
+      "status": "WORKING_VALUE QA camera; generated geometry, not surveyed asset position"
+    },
+    {
+      "kind": "gully",
+      "asset": "square-rusty-drain",
+      "pos": [
+        443.7979965209961,
+        -631.2632598876953,
+        140.0057487487793
+      ],
+      "s_m": 489.7368393403359,
+      "lateral_route_distance_m": 2.949627466576472,
+      "source_glb": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.low.glb",
+      "uv_centre": [
+        0.25,
+        0.25
+      ],
+      "vertex_count": 4,
+      "camera_s_m": 481.7368393403359,
+      "camera_ground_z": 140.01921097639917,
+      "camera_id": "megascans_eye_gully_s0482",
+      "camera_pos": [
+        449.4185777439313,
+        -637.6745544627158,
+        142.31921097639918
+      ],
+      "camera_look_at": [
+        427.45175310280723,
+        -625.7389523396935,
+        142.42930013994845
+      ],
+      "distance_camera_to_asset_m": 8.834463135353674,
+      "along_route_behind_asset_m": 8.0,
+      "camera_lateral_offset_from_exported_route_m": 0.0,
+      "eye_height_above_asphalt_collision_m": 2.3,
+      "status": "WORKING_VALUE QA camera; generated geometry, not surveyed asset position"
+    },
+    {
+      "kind": "verge",
+      "asset": "fab_elderberry",
+      "pos": [
+        403.975,
+        -619.216,
+        139.909
+      ],
+      "s_m": 530.9951318499568,
+      "camera_s_m": 522.9951318499568,
+      "camera_ground_z": 140.2248258076657,
+      "lateral_route_distance_m": 4.47584772647145,
+      "source_instances": "Data/raw/derived/bialystok-industrial-c/world/instances_5_6.json",
+      "source_instance": {
+        "e": 403.975,
+        "n": -619.216,
+        "p": "fab_elderberry",
+        "src": "fab:verge:c:w177861600:1882953899-4391371827:L:165.73:WORKING_VALUE",
+        "yaw": 0.5667,
+        "z": 139.909
+      },
+      "camera_id": "megascans_eye_verge_s0523",
+      "camera_pos": [
+        413.0804876577507,
+        -618.1520822692072,
+        142.5248258076657
+      ],
+      "camera_look_at": [
+        389.99421583468376,
+        -608.5591676196088,
+        142.78706976307865
+      ],
+      "distance_camera_to_asset_m": 9.533329485515312,
+      "along_route_behind_asset_m": 8.0,
+      "camera_lateral_offset_from_exported_route_m": 0.0,
+      "eye_height_above_asphalt_collision_m": 2.3,
+      "status": "WORKING_VALUE QA camera; generated geometry, not surveyed asset position"
+    }
+  ],
+  "drainage_features_considered": 971,
+  "source_glb_sha256": {
+    "Data/raw/derived/bialystok-industrial-c/world/chunk_4_5.low.glb": "7e1018a557c360bd26f9e96de3d78af31cdafb72c2150b508e9cf5b5e45d0028",
+    "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.low.glb": "87c1a60b9cadba9620d8612cbd3c8bec8ed923c94a05d9b7f7afc9d2abfe2ab1"
+  },
+  "route_sha256": "ca592648746e2ae73750a925a192ec6553dbe4b12ce589751e056760725896bb",
+  "onroad_proof": "Each camera plan point hits actual exported road_collision collision_asphalt triangles via existing streetscape.furniture.SurfaceTop, collision=True; cameraU=highest asphalttriangle+2.3; no bareNMT guess. Unityphysicalproof at capturestillrequired."
+}

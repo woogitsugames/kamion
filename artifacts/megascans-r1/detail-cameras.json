@@ -1,0 +1,69 @@
+{
+  "schema": "truck-sim-pl/gate3-cameras/1",
+  "region": "bialystok-industrial-c",
+  "frame": "local E,N,U; E/N region metres, U absolute EVRF2007",
+  "status": "WORKING_VALUE QA-only cameras, not surveyed",
+  "height_note": "Explicit seat=file: exact generated asphalt collider height +2.3 m. Existing Gate3 driver_eye road reseat is hard-coded2.5 m. At capture verify with Gate3Cameras.TryGroundY then retain2.3 m; do not silentlyreseat2.5 m.",
+  "cameras": [
+    {
+      "id": "megascans_eye_manhole_s0928",
+      "type": "persp",
+      "kind": "driver_eye",
+      "seat": "file",
+      "pos": [
+        51.032244,
+        -438.020873,
+        141.954724
+      ],
+      "look_at": [
+        28.996934,
+        -426.212184,
+        141.457531
+      ],
+      "fov_deg": 70.0,
+      "s_m": 927.943573,
+      "truck_s_m": null,
+      "note": "WORKING_VALUE driver QA: actual exported start-route line; 2.3 m above generated collision_asphalt; 8 m before existing metal-manhole-cover; no placement edits. seat=file preserves 2.3 m because Gate3 driver_eye reseat is fixed at 2.5 m."
+    },
+    {
+      "id": "megascans_eye_gully_s0482",
+      "type": "persp",
+      "kind": "driver_eye",
+      "seat": "file",
+      "pos": [
+        449.418578,
+        -637.674554,
+        142.319211
+      ],
+      "look_at": [
+        427.451753,
+        -625.738952,
+        142.4293
+      ],
+      "fov_deg": 70.0,
+      "s_m": 481.736839,
+      "truck_s_m": null,
+      "note": "WORKING_VALUE driver QA: actual exported start-route line; 2.3 m above generated collision_asphalt; 8 m before existing square-rusty-drain; no placement edits. seat=file preserves 2.3 m because Gate3 driver_eye reseat is fixed at 2.5 m."
+    },
+    {
+      "id": "megascans_eye_verge_s0523",
+      "type": "persp",
+      "kind": "driver_eye",
+      "seat": "file",
+      "pos": [
+        413.080488,
+        -618.152082,
+        142.524826
+      ],
+      "look_at": [
+        389.994216,
+        -608.559168,
+        142.78707
+      ],
+      "fov_deg": 70.0,
+      "s_m": 522.995132,
+      "truck_s_m": null,
+      "note": "WORKING_VALUE driver QA: actual exported start-route line; 2.3 m above generated collision_asphalt; 8 m before existing fab_elderberry; no placement edits. seat=file preserves 2.3 m because Gate3 driver_eye reseat is fixed at 2.5 m."
+    }
+  ]
+}

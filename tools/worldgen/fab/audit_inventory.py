@@ -25,7 +25,7 @@ def build(root=ROOT):
     generated = root/'art-source/world/megascans/_generated'
     derivatives=set()
     for path in generated.rglob('*'):
-        if path.is_file() and path.suffix.lower() in {'.png','.fbx','.glb','.gltf','.asset','.jpg','.jpeg','.exr','.tga'}:
+        if path.is_file() and path.suffix.lower() in {'.png','.fbx','.glb','.gltf','.asset','.jpg','.jpeg','.exr','.tga','.zip'}:
             h=hashlib.sha256()
             with path.open('rb') as stream:
                 for block in iter(lambda:stream.read(1<<20),b''):h.update(block)
