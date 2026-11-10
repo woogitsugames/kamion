@@ -5,7 +5,7 @@
   "lane_blind_end": 56,
   "marking_off_carriageway": 13,
   "obstacle_in_lane": 28,
-  "prop_on_carriageway": 2
+  "prop_on_carriageway": 1
  },
  "cases": [
   {
@@ -2035,22 +2035,9 @@
    ],
    "s": 11.7,
    "what": "verge_grass"
-  },
-  {
-   "chain": null,
-   "e": -588.58,
-   "junction": null,
-   "kind": "prop_on_carriageway",
-   "lat": 53.1590327,
-   "lon": 23.1511114,
-   "n": 19.56,
-   "on_route": false,
-   "osm_ways": [],
-   "src": "rule:c:w173956078:1847263293-5749429982",
-   "what": "lamp_12m"
   }
  ],
- "count": 112,
+ "count": 111,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
   "lane_blind_end": 2,
@@ -2081,6 +2068,6 @@
   "lane_samples": 80628,
   "lane_samples_in_taper": 48,
   "marking_tris": 21505,
-  "props_checked": 1125
+  "props_checked": 1124
  }
 }

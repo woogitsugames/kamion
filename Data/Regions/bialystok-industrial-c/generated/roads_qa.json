@@ -10183,7 +10183,7 @@
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 503505,
+  "footprint_nodes": 503513,
   "fork_shifts": [
    {
     "chain": "c:w1360055407:4075461271-1852129061",
@@ -10958,14 +10958,25 @@
      ]
     },
     {
-     "area_m2": 51.6,
+     "area_m2": 47.5,
+     "built": true,
+     "hatch": true,
+     "note": "P-21 hatch, 1 paint parts",
+     "why": "override:gore-s610-centre-hatch",
+     "xy": [
+      345.7,
+      -556.7
+     ]
+    },
+    {
+     "area_m2": 4.0,
      "built": true,
      "hatch": false,
      "note": "",
      "why": "override:gore-s610-north-carriageway",
      "xy": [
-      345.2,
-      -556.5
+      339.8,
+      -553.9
      ]
     },
     {
@@ -11318,8 +11329,8 @@
      "count": 6
     },
     "override": {
-     "area_m2": 956.2,
-     "count": 8
+     "area_m2": 956.1,
+     "count": 9
     },
     "sliver": {
      "area_m2": 115.5,
@@ -11597,6 +11608,12 @@
     ]
    },
    {
+    "id": "gore-s610-centre-hatch",
+    "targets": [
+     "gap@347,-558"
+    ]
+   },
+   {
     "id": "gore-s610-north-carriageway",
     "targets": [
      "gap@348,-540"
@@ -11630,12 +11647,6 @@
     "id": "gore-s610-corner-w",
     "targets": [
      "gap@336,-563"
-    ]
-   },
-   {
-    "id": "gore-s610-centre-hatch",
-    "targets": [
-     "gap@347,-558"
     ]
    },
    {

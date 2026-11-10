@@ -268,6 +268,18 @@ overrides:
       chevrons on asphalt between the two carriageways, no kerb. Overlay artifacts/islands-r10/before/ramps610.jpg.
     confidence: high
     verify: Mapillary / owner drive (paint layout is WORKING_VALUE, 0.5 m stripes, 1.0 m gaps, 45 deg)
+  - id: gore-s610-centre-hatch
+    kind: paved_gore
+    at_en: [346.9, -557.5]
+    radius_m: 7.0
+    close_m: 7.0
+    hatch: true
+    # listed before gore-s610-north-carriageway (radius 45 m): the first override that claims a gap keeps its paint
+    reason: >-
+      Same junction, 32 m2 triangle left between the junction patches in its centre: on the orthophoto the tip of the
+      painted P-21 zone (with U-25 separators), no kerb. Overlay artifacts/islands-r10/after4/ramps610.jpg.
+    confidence: high
+    verify: Mapillary / owner drive
   - id: gore-s610-north-carriageway
     kind: paved_gore
     at_en: [348.5, -539.8]
@@ -321,17 +333,6 @@ overrides:
     close_m: 7.0
     reason: Same junction, 14 m2 corner leftover on asphalt (orthophoto road fraction 1.0).
     confidence: medium
-    verify: Mapillary / owner drive
-  - id: gore-s610-centre-hatch
-    kind: paved_gore
-    at_en: [346.9, -557.5]
-    radius_m: 10.0
-    close_m: 7.0
-    hatch: true
-    reason: >-
-      Same junction, 32 m2 triangle left between the junction patches in its centre: on the orthophoto the tip of the
-      painted P-21 zone (with U-25 separators), no kerb. Overlay artifacts/islands-r10/after4/ramps610.jpg.
-    confidence: high
     verify: Mapillary / owner drive
   # island_confirmed: generated islands checked by eye on the 0.08 m orthophoto that the fidelity colour classifier
   # takes for road (grey paving / gravel). Read only by tools/worldgen/fidelity (verdict present_authored).

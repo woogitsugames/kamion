@@ -337,9 +337,13 @@ def _drop_kerbs(net, gp):
         for side, sgn in (("L", 1.0), ("R", -1.0)):
             d = c.side[side]
             probe = c.line.p + c.line.n * (sgn * (c.hw + 0.3))[:, None]
+            # all side kinds: a shoulder / verge side left as it was pokes through the fill (33 verge_grass / shoulder
+            # obstacle_in_lane cases when only kerbed sides were dropped, measured 2026-11-11)
             m = shapely.contains_xy(zone, probe[:, 0], probe[:, 1]) & ~c.bridge
             if not m.any():
                 continue
+            kind0 = d["kind"].copy()
+            h0, w0, depth0 = d["h"].copy(), d["w"].copy(), d["depth"].copy()
             d["kind"][m] = URBAN
             d["mat"][m] = 0
             d["raw"]["h"][m] = -GORE_KERB_DROP_M
@@ -348,6 +352,14 @@ def _drop_kerbs(net, gp):
             d["h"], d["w"], d["depth"] = (smooth_1d(d["raw"]["h"], sig), smooth_1d(d["raw"]["w"], sig),
                                           smooth_1d(d["raw"]["depth"], sig))
             d["h"][m] = -GORE_KERB_DROP_M          # no kerb ridge inside the paved zone (smoothing ramps outside it)
+            # outside the zone only the kerb of a kerbed side ramps down; strip width / depth and the whole profile
+            # of shoulder sides (embankments of the viaduct ramps) stay as they were. Smoothing them too narrowed
+            # the verge next to the gore nose to nothing: 12 new steep grass faces of 0.5-0.7 m (terrain_walls_qa,
+            # E 786 N -831, E 321 N -603, E 48 N -460).
+            out = ~m
+            d["w"][out], d["depth"][out] = w0[out], depth0[out]
+            keep = out & (kind0 != URBAN)
+            d["h"][keep] = h0[keep]
             gp.flush_m += float(m.sum() * DENSE)
             touched = True
         if touched:

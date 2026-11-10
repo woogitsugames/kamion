@@ -55,10 +55,55 @@ Pomiar wyjściowy (ADR 0075, main ffcc7b7): 4 wysepki generatora bez pokrycia na
 4. Krawędzie jezdni: patrz „Wynik”.
 
 ## Wynik
-WYNIK_TBD
+Pomiar: `tools/worldgen/fidelity/run.py`, trasa startowa, ortofoto GUGiK 0,08 m; „przed" = ten sam kod z
+`WORLDGEN_NO_GORES=1` i bez override (`artifacts/islands-r10/fidelity_before_qa.json`), „po" = 2026-11-11
+(`Data/Regions/bialystok-industrial-c/generated/fidelity_qa.json`, nakładki `artifacts/islands-r10/after5/*.jpg`,
+`artifacts/islands-r10/fidelity/overlays/`).
+
+| miara (trasa) | przed | po | cel właściciela |
+|---|---|---|---|
+| wysepki generatora bez pokrycia na ortofoto | 4 | **1** | 0 |
+| pas wjeżdżający w wysepkę (błąd generatora) | 0 (3 wg starej miary) | 0 | 0 |
+| krawędź jezdni vs ortofoto p50 / p95 (n) | 0,76 / 2,48 m (618) | **0,46** / 2,52 m (616) | p95 ≤ 0,75 — NIE |
+| krawędź, wszystkie strony p50 / p95 | 0,70 / 4,25 m | 0,50 / 4,12 m | — |
+| oś vs OSM p95 / max | 0,129 / 3,25 m | 0,13 / 3,25 m | ≤ 1,0 — tak |
+| IoU jezdni, średnia z 11 okien | 0,723 | 0,731 | — |
+| spójność dróg (kafel): obstacle_in_lane / marking_off_carriageway | 58 / 17 | 28 / 13 | 0 |
+
+- Wypełnienia: 34 (9 z override 956 m², 6 klinów włączeń 308 m² z P-21, 19 pasków 116 m²), 12 odrzuconych (różne
+  wysokości jezdni), krawężnik schowany na 725 m.
+- Jedyna pozostała „wysepka bez pokrycia" na trasie: E −366 N −119 (373 m², s ≈ 1440) — na ortofoto P-21 + bariera;
+  to korytarz ADR 0076 (s 1432–1480), tu nie ruszany.
+- s 610 (j:n1882887385): pola P-21 jako sama farba, bez krawężnika; środkowy trójkąt 32 m² został dopiero po poprawce
+  `carriageway_union` (samoprzecinający się obrys łaty: `buffer(0)` liczył dziurę siatki jako jezdnię, więc override był
+  „stale"; teraz te same płaty `make_valid`, co w `meshing._repair_fill`).
+- MA-010 (Rondo Putry, pierścień S): oś OSM w180144451 biegnie po południowym krawężniku. Override
+  `set: {center_offset: 2.9}` (nowy klucz, `network.prepare_chain`, wygładzenie 20 m) — jezdnia leży na jezdni z ortofoto,
+  prawy pas nie leży już na trawniku (`after5/ma010.jpg`). 7 dalszych odcinków trasy dostało `center_offset`
+  0,5–0,95 m z `fidelity/edge_sides.py` (mediany lewej / prawej krawędzi, n w uzasadnieniu każdego wpisu), łącznica
+  w177861600 szerokość 7,5 m. Stąd p50 krawędzi 0,76 → 0,46 m.
+- Dlaczego p95 krawędzi nie spadło: ogon to miejscowe poszerzenia, których generator nie buduje (jedna szerokość na
+  odcinek OSM). Mediany stron z potwierdzoną krawędzią trawnika po zmianach: w188397874 L +2,32 m (n 14), w177861600
+  R +2,36 (18), w1093579590 R +1,96 (11; +1,92 na 62 stacjach = dodatkowy pas), w266084693:12620261934 R +1,96 (5),
+  w606396463 L −1,98 / R +3,72 (12 / 6, korytarz 0076), w173956083 p95 5,12 (rozwidlenie), w249640399:131612943
+  L −1,06 (20). Naprawa = zmienna szerokość / pasy dodatkowe wzdłuż odcinka, nie kolejne override szerokości.
+- Ratchet: `tests/gis/test_road_fidelity.py` BASELINE odświeżony na pomiarze (oś 0,13, krawędź 2,52, wysepki 1, błąd
+  pasa 0) — poprzedni (0,032 / 2,04 / 4 / 3) pochodził z raportu sprzed scalenia ADR 0074 i był nie do odtworzenia na
+  main. `tests/gis/test_gores.py`: każdy planowany klin zbudowany, override zastosowane, P-21 = tylko farba.
 
 ## Konsekwencje
 - Nowa kategoria `authored_overrides` (`paved_gore`, `traffic_island`) — przeżywa reimport, nieaktualny cel trafia do
   `roads_qa.json → overrides_stale`. Raport etapu: `roads_qa.json → summary.gores` (lista wypełnień, odrzucone z powodem).
 - Farba P-21 jest generowana tylko z override (ortofoto); układ pasów to WORKING_VALUE.
-- Otwarte: OTWARTE_TBD
+- Otwarte: (1) Krawędź p95 2,52 m (cel 0,75) — wymaga zmiennej szerokości jezdni / pasów dodatkowych (lista wyżej).
+  (2) Wysepka P-21 przy s 1440 (E −366 N −119) i E −395 N −132 — po scaleniu ADR 0076. (3) Koszt uboczny klinów:
+  12 nowych stromych ścianek trawy 0,5–0,7 m w 3 miejscach na końcach wypełnień przy nasypach ramp (E 786 N −831,
+  E 321 N −603, E 48 N −460; `terrain_walls_qa.json` steep_grass 4 → 16, ratchet 8 — test czerwony, limitu nie
+  podniesiono). Próba „chowaj tylko strony z krawężnikiem" usuwała 8 z nich, ale przywracała 33 przypadki pobocza /
+  trawy w pasie (obstacle_in_lane 28 → 61), więc cofnięta. (4) Skrajnia pod wiaduktem Putry: pierścień przesunięty
+  o 2,9 m leży pod pomostem na 113 zamiast 81 stacjach, margines −0,154 m względem wymagania z zapasem 0,30 m
+  (prześwit 4,65 m ≥ 4,50 m PTB2022 § 80); wyjątek z uzasadnieniem w `test_grade_separation_clearance`. (5) Latarnia
+  lamp_12m na pomoście wiaduktu Bieżeństwa (E 525,3 N −711,5): w bazie ta sama reguła stawiała ją 4,8 m dalej i
+  `props_off_carriageway` ją usuwał; logika w `streetscape/furniture.py` (ADR 0076). (6) Układ pasów P-21 i progi
+  2,0 / 4,0 / 60 / 90 m = WORKING_VALUE. (7) 16 „brakujących" wysepek z ortofoto: głównie pojazdy / cienie; realne
+  dłuższe nosy median (brama Kwadrat Park E 619 N −599, wyjazd straży) nie zrobione.

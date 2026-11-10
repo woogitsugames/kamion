@@ -53,3 +53,17 @@ Gałąź: worktree-agent-a2afb96d89584cca6 (worktree .claude/worktrees/agent-a2a
   `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` →
   `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting clear -Gate3 artifacts/islands-r10/cameras.json -Cameras au_f_s0580,au_f_s0600,au_f_s0620,au_f_s1040,au_f_s1060,au_f_s1080,au_r_s1140,au_r_s1160,au_r_s1180,top_s610,top_merge,top_ma010,top_putry_n -OutputDir artifacts/islands-r10/renders`
   → obejrzeć vs after3/*_ortho.jpg → visual-critic → uzupełnić ADR 0077 (Wynik/Otwarte) → cofnąć M_Sky.mat/QualitySettings.
+- 2026-11-11 00:55 (przejęcie nr 2) Regeneracja + fidelity + pytest gis zrobione. Wynik trasy: wysepki bez pokrycia 4 → 1
+  (zostaje s1440 = korytarz 0076), krawędź p50 0,76 → 0,46, p95 2,48 → 2,52 (cel 0,75 NIE), oś p95 0,13 (bez zmian),
+  pas→wysepka 0. Naprawione: override gore-s610-centre-hatch był „stale" (carriageway_union: buffer(0) ≠ make_valid z
+  meshing._repair_fill) → trójkąt 32 m² przy s610 to teraz P-21 (47,5 m²); krawężnik chowany bez zwężania poboczy poza
+  strefą. BASELINE w test_road_fidelity.py odświeżony (0,13 / 2,52 / 1 / 0) z uzasadnieniem; wyjątek skrajni Putry
+  (−0,154 m od wymagania z zapasem 0,30; MA-010 przesuwa pierścień pod pomost) w test_world_roads.py.
+  A/B na kodzie bazy ffcc7b7 (artifacts/islands-r10/base_regen/): ścianki 9 → 21 (steep_grass 4 → 16 w 3 miejscach na
+  końcach klinów: E 786 N −831, E 321 N −603, E 48 N −460), obstacle_in_lane 58 → 28, marking_off 17 → 13.
+  pytest gis: 209 zielonych, 6 czerwonych: 2× korytarz s1432–1480 (P0 z main, 0076), terrain_walls steep_grass 16 > 8
+  (MOJE, otwarte), test_start_route_is_consistent 3 > 2 (latarnia na pomoście E 525,3 N −711,5 — furniture.py, 0076),
+  2× hero_bridge (asset wiaduktu nieaktualny względem profilu → zregenerowany glb+meta commitowane w tym kroku).
+- NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` →
+  `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Medium -Lighting overcast -Gate3 artifacts/islands-r10/cameras.json -Cameras au_f_s0580,au_f_s0600,au_f_s0620,au_f_s1040,au_f_s1060,au_f_s1080,au_r_s1140,au_r_s1160,au_r_s1180,top_s610,top_merge,top_ma010,top_putry_n -OutputDir artifacts/islands-r10/renders`
+  → obejrzeć → cofnąć M_Sky.mat/QualitySettings/ProjectSettings → po scaleniu 0076: `git merge main`, build_world, pytest gis.
