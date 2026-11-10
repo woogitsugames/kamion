@@ -178,6 +178,15 @@ namespace Game.Editor.VisualQA
                 var tr = r.transform; var parent = tr;
                 while (parent.parent != null && parent.parent.parent != null) parent = parent.parent;
                 string key = (parent.parent != null ? parent.parent.name + "/" : "") + parent.name;
+                if (key.StartsWith("Tractor", StringComparison.Ordinal))
+                {
+                    // Own truck: one level deeper (LOD / interior / glass groups under CabSuspension)
+                    var sub = tr;
+                    while (sub.parent != null && sub.parent != parent) sub = sub.parent;
+                    if (sub != parent) key += "/" + sub.name;
+                    var lg = r.GetComponentInParent<LODGroup>();
+                    if (lg != null) key += " [" + lg.name + "]";
+                }
                 byKey.TryGetValue(key, out var cur);
                 byKey[key] = (cur.tris + t, cur.draws + mf.sharedMesh.subMeshCount);
             }

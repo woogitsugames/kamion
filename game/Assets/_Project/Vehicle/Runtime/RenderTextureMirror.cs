@@ -129,6 +129,12 @@ namespace Game.Vehicle.Runtime
         /// <summary>Frame count of the last scheduled render (diagnostics; -1 = never).</summary>
         public int LastRenderFrame { get; private set; } = -1;
 
+        // ADR 0068: own-cab interior renderers, not drawn while a class II / IV mirror renders (81 k triangles in every
+        // mirror view, seen only at a grazing angle through the side glass). null = not looked up yet.
+        Renderer[] m_HideInMirror;
+        static RenderTextureMirror s_Hiding;
+        static bool s_Hooked;
+
         Camera m_Cam;
         RenderTexture m_Rt;
         Material m_Mat;
@@ -151,9 +157,51 @@ namespace Game.Vehicle.Runtime
 
         void Awake() { var c = Cam; c.enabled = false; }
 
-        void OnEnable()
+        static void HookCulling()
         {
             ExtraViewLod.Hook();
+            if (s_Hooked) return;
+            s_Hooked = true;
+            UnityEngine.Rendering.RenderPipelineManager.beginCameraRendering += OnBeginCamera;
+            UnityEngine.Rendering.RenderPipelineManager.endCameraRendering += OnEndCamera;
+        }
+
+        static void OnBeginCamera(UnityEngine.Rendering.ScriptableRenderContext ctx, Camera cam)
+        {
+            if (s_Hiding != null) s_Hiding.SetHidden(false);
+            if (!cam.TryGetComponent(out RenderTextureMirror m) || MirrorOverrides.Legacy) return;
+            // Classes II and IV look back along the cab side (interior only at a grazing angle through the side glass).
+            // Class VI looks down through the windscreen and V near the door glass: they keep the interior
+            // (editor frame cab-mirror-front: the class VI image showed the empty cab without it).
+            int c = m.Class;   // r46Class is cached in OnEnable (play mode); edit-mode QA reads the name
+            if (c == 2 || c == 4) m.SetHidden(true);
+        }
+
+        static void OnEndCamera(UnityEngine.Rendering.ScriptableRenderContext ctx, Camera cam)
+        {
+            if (s_Hiding != null) s_Hiding.SetHidden(false);
+        }
+
+        void SetHidden(bool hide)
+        {
+            if (m_HideInMirror == null) m_HideInMirror = FindInterior();
+            for (int i = 0; i < m_HideInMirror.Length; i++) if (m_HideInMirror[i] != null) m_HideInMirror[i].forceRenderingOff = hide;
+            s_Hiding = hide ? this : null;
+        }
+
+        /// <summary>Interior renderers of the own truck (TruckVisualRig.interiorGroup), looked up once.</summary>
+        Renderer[] FindInterior()
+        {
+            var rig = GetComponentInParent<TruckVisualRig>();
+            if (rig == null || rig.interiorGroup == null) return new Renderer[0];
+            var list = new System.Collections.Generic.List<Renderer>();
+            foreach (var lod in rig.interiorGroup.GetLODs()) foreach (var r in lod.renderers) if (r != null && !list.Contains(r)) list.Add(r);
+            return list.ToArray();
+        }
+
+        void OnEnable()
+        {
+            HookCulling();
             if (!s_All.Contains(this)) s_All.Add(this);
             if (s_Entries.Length < s_All.Count) System.Array.Resize(ref s_Entries, s_All.Count * 2);   // on enable only, never per frame
             if (r46Class <= 0) r46Class = Class;   // name lookup once, not per frame
@@ -168,6 +216,7 @@ namespace Game.Vehicle.Runtime
 
         void OnDisable()
         {
+            if (s_Hiding == this) SetHidden(false);
             s_All.Remove(this);
             if (m_Cam != null) m_Cam.enabled = false;
         }
@@ -269,7 +318,7 @@ namespace Game.Vehicle.Runtime
         /// <summary>Renders once now (visual QA in the editor, where LateUpdate does not run).</summary>
         public void RenderNow()
         {
-            ExtraViewLod.Hook();
+            HookCulling();
             EnsureTarget();
             Cam.Render();
         }
