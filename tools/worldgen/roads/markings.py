@@ -168,8 +168,9 @@ def drop_overlapping(buf, net, first):
     removed = 0
     for pi in range(first, len(buf.parts)):
         p = buf.parts[pi]
-        if p.layer != "markings" or "@" not in p.src:
-            continue
+        if p.layer != "markings" or "@" not in p.src or p.src.startswith("P-10J@"):
+            continue        # a zebra draped on a junction patch crosses the neighbour ribbon there by design (r9d:
+                            # its stripes came out cut diagonally, half triangles dropped)
         own = p.src.split("@", 1)[1]
         cen = p.V[p.T].mean(1)
         hits = tree.query(shapely.points(cen[:, :2]), predicate="intersects")
@@ -449,7 +450,7 @@ def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of):
         uv = np.column_stack([np.repeat(ss - ss[0], 2), np.tile([0.0, 1.0], len(ss))])
         sv = np.repeat(ss, 2)
         lv = np.tile([lat - S.P10_STRIPE / 2, lat + S.P10_STRIPE / 2], len(ss))
-        buf.add("markings", "marking_white", V, uv, np.array(T), src=f"P-10@{c.id}", UV1=_paint_uv1(c, sv, lv, "P-10"))
+        buf.add("markings", "marking_white", V, uv, np.array(T), src=f"P-10J@{c.id}", UV1=_paint_uv1(c, sv, lv, "P-10"))
     return True
 
 
