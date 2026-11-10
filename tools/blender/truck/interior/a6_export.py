@@ -61,7 +61,7 @@ LOD2_DROP = LOD1_DROP + ("_cst_", "_ctr_", "_bst_", "_btr_", "rocker_icon_", "hv
                          "dash_insert_stitch_", "door_insert_stitch_", "stack_flank_stitch", "hvac_plate",
                          "hvac_lcd_bezel", "stack_cubby", "socket_12v", "sun_visor_hinge_", "spoke_trim_",
                          "emblem_wm_", "sun_visor_clip_", "visor_centre_bracket", "_vane",
-                         "wheel_stitch", "rear_lid_")   # modern cab (ADR 0047): larger glazing hides fewer faces, keeps LOD2 <= 22k
+                         "wheel_stitch", "rear_lid_", "curtain_bunk_-1")   # modern cab (ADR 0047): larger glazing hides fewer faces, keeps LOD2 <= 22k
 
 # ---------------------------------------------------------------- slots (game materials)
 SLOT_OF = {
@@ -80,8 +80,11 @@ SLOT_OF = {
 SLOT = {m: s for s, ms in SLOT_OF.items() for m in ms}
 DETAIL_SET = {"MI_Cab_Plastic": ("dashgrain", 1024), "MI_Cab_Leather": ("leather", 1024),
               "MI_Cab_Fabric": ("fabric", 512), "MI_Cab_Rubber": ("rubbermat", 1024), "MI_Cab_Metal": ("brushed", 512)}
-WEAR_MUL = {"leather_trim": 1.6, "leather": 2.3, "leather_wheel": 1.6, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3,
-            "switch": 1.35, "grab_dark": 1.7}
+# r4 (touch-point wear pass): rim 1.6 -> 2.1, door pull 1.7 -> 2.0, armrest leather 1.6 -> 1.9; new: knob (gear
+# selector, stalk ends, park-brake knob, light rotary; 1.9 read as a chrome cap in cab-dash) and the lower
+# mouldings (knee polish, kick scuffs)
+WEAR_MUL = {"leather_trim": 1.9, "leather": 2.3, "leather_wheel": 2.1, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3,
+            "switch": 1.35, "grab_dark": 2.0, "knob": 1.4, "dash_lower": 1.45}
 NO_AO = ("curtain_", "blind_", "hatch_blind",     # thin interpenetrating cloth (critic #15) and the rim, which
          "wheel_rim", "wheel_stitch",           # rotates (a baked occlusion pattern would turn with it): median value
          "ws_frit")                             # A6 r3: frit on the glass (no surface under it to inherit UV1 from)
