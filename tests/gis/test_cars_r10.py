@@ -81,3 +81,25 @@ def test_lod2_keeps_the_silhouette():
         hood = paint[(paint[:, 1] > d["L"] / 2 - d["hood"] * 0.5) & (paint[:, 2] > d["sill"] + 0.3)]
         assert hood[:, 2].max() <= d["belt"] + 0.02, name
         assert "car_light_tail" in m2 and "car_light_head" in m2 and ("rim" in m2 or "rim_steel" in m2), name
+
+
+def test_door_seams_start_behind_the_front_arch():
+    """r9 put the front door's leading seam 0.10 m AHEAD of the front arch (a stray line on the wing, the door-bottom
+    line crossed the wheel opening); r10: no low trim on the side just ahead of the arch."""
+    from streetscape import life_cars as LC
+    for name, d, P in _protos():
+        sh = LC._Shell(d, 0)
+        v = _by(P[0])["car_trim"]["V"]
+        side = v[(np.abs(v[:, 0]) > 0.3 * d["W"]) & (v[:, 2] < sh.sill + 0.12)]
+        ahead = side[(side[:, 1] > sh.yfa + sh.ra + 0.05) & (side[:, 1] < sh.yfa + sh.ra + 0.15)]
+        assert len(ahead) == 0, (name, ahead[:3])
+
+
+def test_tail_film_follows_the_shell_columns():
+    """The road film on the tail is cut on the shell's own columns (a quad from g = 0.7 to 2.0 was a chord through the
+    shoulder arc: hard-edged rectangles on the bumper)."""
+    for name, d, P in _protos():
+        dirt = [p for k, p in _by(P[0]).items() if k.startswith("car_dirt_")]
+        v = np.concatenate([p["V"] for p in dirt])
+        tail = v[v[:, 1] < -d["L"] / 2 + 0.25]
+        assert len(np.unique(np.round(np.abs(tail[:, 0]), 3))) >= 6, name
