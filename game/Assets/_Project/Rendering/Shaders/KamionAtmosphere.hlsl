@@ -54,7 +54,7 @@ void KamionWetSurface(half3 n, half pool, half puddles, half film, inout half3 a
     half w = (half)_KamionWet.x * lerp(0.33h, 1.0h, up);
     half porous = saturate(1.0h - smooth * 1.6h);
     albedo *= lerp(1.0h, lerp(0.82h, 0.58h, porous), w * lerp(0.4h, 1.0h, film));
-    smooth = lerp(smooth, max(smooth, 0.70h), w * up * film);   // film: 1 paved, ~0.15 grass / soil (no water sheet)
+    smooth = lerp(smooth, max(smooth, 0.52h), w * up * film);   // film: 1 paved, ~0.15 grass / soil (no water sheet)
     half t = 1.0h - (half)_KamionWet.y * (half)_KamionWet.x;
     half pud = smoothstep(t, t + 0.05h, pool) * up * puddles;
     smooth = lerp(smooth, 0.96h, pud);
