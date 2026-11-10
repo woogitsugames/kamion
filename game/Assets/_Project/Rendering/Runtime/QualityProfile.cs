@@ -69,6 +69,11 @@ namespace Game.Rendering
             [Tooltip("Contact shadow / ambient occlusion blobs under the tractor, trailer and wheels (one draw per vehicle)")] public bool contactShadows;
             [Tooltip("Cab-view local shadow lift strength (CabInteriorLighting, review r4 L1; 0 = off)")] public float cabShadowLift;
             [Tooltip("Real point lights at the nearest street lamps at dusk (0 = emission only)")] public int streetLights;
+            [Header("Baked world lighting (ADR 0064)")]
+            [Tooltip("Off = no baked sky visibility (ambient / reflection occlusion) on the world surfaces. Inverted so tiers saved before ADR 0064 keep it on")]
+            public bool worldSkyVisOff;
+            [Tooltip("Off = no baked ground sun shadows beyond the realtime shadow distance (ADR 0064)")]
+            public bool worldBakedSunOff;
             [Header("Budget assumptions (UNMEASURED until the phone is measured)")]
             public int budgetDrawCalls;
             public int budgetTrianglesK;

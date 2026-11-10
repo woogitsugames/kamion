@@ -42,6 +42,7 @@ namespace Game.World.Import
                 string only = EditorTools.Arg("-tiers", "Low,High");
                 var r = Import(region, only.Split(','));
                 foreach (var t in r.TiersBuilt) WorldSceneBuilder.Build(r, t);
+                WorldSkyBake.Bake(region);   // ADR 0064: ground sky visibility + far sun shadows, attached to the scenes
                 Game.Editor.Setup.BuildScenes.Apply();
                 WriteReport(r);
                 exit = 0;

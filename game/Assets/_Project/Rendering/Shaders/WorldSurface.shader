@@ -89,6 +89,7 @@ Shader "Kamion/World Surface"
             #pragma shader_feature_local _FAR_FACADE
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Assets/_Project/Rendering/Shaders/KamionWorldGI.hlsl"   // ADR 0064 baked sky visibility + far ground shadows
 
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
             TEXTURE2D(_MacroMap); SAMPLER(sampler_MacroMap);
@@ -217,7 +218,9 @@ Shader "Kamion/World Surface"
                 // Sun
                 float4 shadowCoord = TransformWorldToShadowCoord(i.positionWS);
                 Light L = GetMainLight(shadowCoord, i.positionWS, half4(1, 1, 1, 1));
-                half atten = L.distanceAttenuation * lerp(1.0, L.shadowAttenuation, _ReceiveShadows);
+                half giK, giSun;
+                KamionWorldGI(i.positionWS, n, giK, giSun);
+                half atten = L.distanceAttenuation * lerp(1.0, KamionFarShadow(L.shadowAttenuation, giSun, i.positionWS), _ReceiveShadows);
                 half NoL = saturate(dot(n, L.direction));
                 float3 H = SafeNormalize(float3(L.direction) + V);
                 half NoH = saturate(dot(n, H));
@@ -227,11 +230,11 @@ Shader "Kamion/World Surface"
                 half3 color = (albedo * (1.0 - 0.04) + specColor * spec) * L.color * (atten * NoL);
 
                 // Ambient: L2 SH (sky + ground) and environment reflection
-                half3 ambient = SampleSH(n) * albedo * _Occlusion;
+                half3 ambient = SampleSH(n) * albedo * (_Occlusion * giK);
                 half3 R = reflect(-V, n);
                 half fresnel = Pow4(1.0 - NoV);
                 half grazing = saturate(smooth + 0.04);
-                half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, _Occlusion) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
+                half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, _Occlusion * giK) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
                 color += ambient + env;
                 if (_KamionLampLights > 0.0)
                 {
