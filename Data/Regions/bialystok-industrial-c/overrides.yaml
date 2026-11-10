@@ -339,10 +339,13 @@ overrides:
     set: {center_offset: 2.9}
   - id: lacznica-biezenstwa-placement
     target: {edge: "w177861600:1882953899-4391371827"}
-    reason: "edge_sides: left +1.06 m (n 70, verge-verified 48: +0.98), right -0.52 m (n 81)."
+    reason: >-
+      edge_sides: left kerb +1.06 m (n 70, verge-verified 48: +0.98); right -0.52 m (n 81, mostly pavement edge),
+      verge-verified part of the right side +2.32 m (n 24, local widening not reproduced). BDOT10k 6.5 m is clamped;
+      7.5 m with the centre 0.5 m left puts the left kerb on the orthophoto and leaves the right one where it was.
     confidence: medium
     verify: orthophoto overlay artifacts/islands-r10/fidelity/overlays/04_s610_ramps.jpg
-    set: {center_offset: 0.75}
+    set: {center_offset: 0.5, width: 7.5}
   - id: andersa-placement-s700-1060
     target: {edge: "w552161976:3341716402-2367445386"}
     reason: "edge_sides (chain frame, edge reversed): left +0.46 m (n 93), right -0.60 m (n 93, verge-verified 87: -0.68)."

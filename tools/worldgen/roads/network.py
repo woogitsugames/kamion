@@ -249,6 +249,11 @@ def apply_edge_overrides(net: Network, edges, overrides):
             if any(k in st for k in ("lanes", "lane_width", "edge_strip")):
                 sec.width = round(sec.lanes * sec.lane_w + 2 * sec.edge_strip, 3)
                 sec.width_src = f"authored_override:{ov['id']}"
+            if "width" in st:
+                # measured carriageway width (orthophoto): lanes keep their count, lane width follows
+                sec.width = float(st["width"])
+                sec.lane_w = round((sec.width - 2 * sec.edge_strip) / max(sec.lanes, 1), 3)
+                sec.width_src = f"authored_override:{ov['id']}"
             if "center_offset" in st:
                 # the OSM way is not the carriageway centre here (like OSM placement=*): measured on the orthophoto
                 sec.center_offset = float(st["center_offset"])
