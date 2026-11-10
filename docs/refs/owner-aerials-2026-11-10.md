@@ -1,0 +1,15 @@
+# Zdjęcia lotnicze/uliczne wklejone przez właściciela w czacie (s7, 2026-11-10)
+
+Status prawny: zdjęcia z internetu, z podpisami autorów (m.in. Marcin Jakowiak/UM Białystok, Dawid Gromadzki/UM Białystok, Adam Ludwiczak, „Poland On Air”, znaki wodne stocków). **Tylko referencja wzrokowa** — nie zapisywać plików, nie wycinać, nie śledzić tekstur, nie cytować w buildzie. Plików nie ma na dysku (były tylko w czacie); poniżej opis obserwacji lidera.
+
+## W regionie `bialystok-industrial-c` (ważne teraz)
+- **Wiadukt przy Rondzie Putry (fot. Jakowiak, wiosna, bez liści):** dwupoziomowo — górą 2×2 pasy z pasem dzielącym (bariera betonowa + krawężniki), dołem pierścień ronda z wyspą trawiastą i pojedynczymi drzewami; krawędź pomostu **zielona** (balustrada z pochwytem), **żółte filary** prostokątne; latarnie stoją **na krawędziach i w pasie dzielącym, nigdy w pasie ruchu**; ekrany przezroczyste na zjazdach; zjazdy z barierą stalową; po lewej bocznica PKP i hale z dachami z blachy; zabudowa: biurowce 3–5 kond. z dużymi szyldami, parking na dachu/obok. Zgodne z override `andersa-viaduct-putry-style`.
+- **Węzeł S8/DK8 (fot. Gromadzki/UM, zima bez śniegu):** jezdnie dwujezdniowe z szerokim trawiastym pasem dzielącym, łącznice o dużych promieniach, latarnie pojedyncze w pasach zieleni, bariery stalowe na łukach, nawierzchnia świeża ciemna z jasnymi liniami, pobocza z gruntem/trawą wypłowiałą (brązowo-oliwkowe), hale magazynowe płaskie jasnoszare, parkingi pełne aut, zabudowa jednorodzinna z czerwonymi/brązowymi dachami za drogą.
+- **Nowa ulica z wyspą kanalizującą (zdjęcie naziemne, lato):** wyspa z krawężnikiem + trawa, przed nią **powierzchnia wyłączona — szewrony P-21** białe na całej szerokości nosa; bariery drogowe plastikowe czerwono-białe (tymczasowe); latarnie podwójne (dwa wysięgniki) szare ocynk; ścieżka rowerowa **czerwona** (asfalt barwiony) obok chodnika z płyt; znaki D-6 na niebieskim tle przed zebrą. Przydatne dla 0077 (gore/hatch).
+- **Arterie z wiaduktem kolejowym i tunelami (lato, z drona):** jezdnie w wykopie z murami oporowymi, czerwone DDR po obu stronach, ekrany akustyczne, komin ciepłowni biało-czerwony w tle, las sosnowy.
+
+## Poza regionem (przyszły region „centrum”, typologia, światło)
+- Rynek Kościuszki, Ratusz, Lipowa, katedra (cegła, wieże z zieloną miedzią), Pałac Branickich z bramą i ogrodem, rondo z kwietnikiem przy Bramie Wielkiej, ul. Sienkiewicza, Kościół św. Rocha, Cerkiew św. Mikołaja, ortofoto centrum.
+- Typologia: kamienice 2–4 kond. z mansardami i dachami z czerwonej dachówki, bloki z wielkiej płyty 5 i 11 kond. (szare/białe, dachy płaskie z wywietrznikami), osiedla nowe 6–8 kond. z jasnym tynkiem, domy jednorodzinne kostki z dachami czerwonymi/brązowymi.
+- Kolory: dachy dominują czerwień/ceglasta pomarańcz, elewacje kremowe/żółte/białe, zieleń drzew bardzo gęsta (dużo lip i klonów), latem nasycona.
+- Światło: niebo przy overcast mlecznoszare z jasnym horyzontem; przy pogodzie cumulusy na błękitnym niebie, mgiełka na horyzoncie (daleka zabudowa niebieskawa).

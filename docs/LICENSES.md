@@ -60,6 +60,11 @@ Licencje sprawdzone przez lidera (`docs/REFERENCES.md` na `main`). W r2 kafla C 
 
 Świat C v3 (world-builder, 2026-11-09): zdjęcia CC0 `20201102_152339…` i `7204_May_2021…` posłużyły do sprawdzenia skrajni pod obydwoma wiaduktami Andersa (pomost wyraźnie nad pierścieniem) i wysokości malowanego pasa krawędzi pomostu (ok. 0,55 m). Nic z nich nie wycięto. Nowe prototypy v3 to nasze własne proceduralne siatki z `tools/worldgen/streetscape`, bez tekstur zewnętrznych, marek i logo: ciągnik siodłowy 4×2, kontenery ISO 20/40 ft, druga rodzina latarni, lampa rampy i ślady opon.
 
+Hala Kwadrat Park (ADR 0071): zdjęcia Rakoon `20210904_101250_September_2021_in_Białystok.jpg` i
+`20241222_122132_December_2024_in_Białystok.jpg` (CC0, Wikimedia Commons) oraz ortofoto GUGiK 2024 posłużyły wyłącznie jako
+referencja kształtu i kolorów; asset `art-source/world/landmarks/kwadrat_park/` jest wygenerowany naszym kodem
+(`tools/blender/world/landmarks/make_depot.py`), nie zawiera pikseli zdjęć ani własnych tekstur (materiały świata po nazwie).
+
 ## Zdjęcia uliczne Mapillary (referencja, D42, ADR 0065)
 
 Źródło: Mapillary Graph API v4, licencja CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Pobierane narzędziem `tools/refs/mapillary_fetch.py` do `Data/raw/mapillary/` (poza gitem, nie trafiają do buildu). Użycie wyłącznie jako referencja (wzór, dopasowanie kadru, kalibracja koloru); piksele w teksturze zrobiłyby z niej pochodną CC BY-SA (ADR 0065). Autorzy zdjęć faktycznie użytych: [docs/ATTRIBUTION-mapillary.md](ATTRIBUTION-mapillary.md) (generowany; pojawi się po pierwszym `--use ... --attribution`).
@@ -161,3 +166,29 @@ Pobierane do `Data/raw/refs/` (poza gitem, nie trafiaja do buildu). Manifest z a
 | `refs-gugik-ortho` | GUGiK Geoportal WMS ORTO HighResolution | dane otwarte GUGiK (art. 40a ust. 2 pkt 1 Pgik); atrybucja: Zrodlo danych: Glowny Urzad Geodezji i Kartografii | nie | referencja i dopasowanie ukladu; rozdzielczosc mozaiki WMS UNVERIFIED |
 | `refs-bialystok-open-data` | Miasto Bialystok, publiczne uslugi ArcGIS Online | dane otwarte miasta (warunki wg portalu: UNVERIFIED) | nie | kontrola pozycji obiektow (np. straz pozarna) |
 | `refs-object-sheets` | `tools/refs/object_refs.py` -> `artifacts/refs/{kwadrat-park,fire-station,dusk-sodium}/` (INDEX.md z autorem, licencja, URL per plik) | kompilacja powyzszych; plan_budynki.jpg: ODbL/GUGiK (nasze dane regionu) | nie | przeglad, nie do builda |
+
+## Quixel Megascans z Fab (decyzja D45, 2026-11-10)
+
+Licencja **Fab Standard License** (Quixel Megascans; karta pozycji: „Licencja standardowa”, „Zezwala na użycie przy pomocy SI: Tak”). EULA zaakceptowana na koncie Epic właściciela 2026-11-10 (lider w przeglądarce aplikacji, zgoda właściciela w czacie). Użycie w grze komercyjnej (Unity, Android/iOS) bez atrybucji. **Pliki nie mogą trafić do publicznego repo** — ani źródła, ani pochodne (importy, atlasy, wypalone mapy): źródła w `Data/raw/fab/<id>/` (poza gitem), wyniki importu w `game/Assets/_Generated/` (poza gitem). W gicie tylko manifest `Data/SourceManifests/fab-megascans-2026-11-10.json` (URL, data, rozmiar, SHA256). Test `tests/gis/test_fab_not_tracked.py` pilnuje, że nic z Fab nie jest śledzone i że każda pozycja jest w tej tabeli. Pełny tekst EULA przed wydaniem w sklepie: `LEGAL_REVIEW_REQUIRED` (raport `docs/reports/FAB-PATCH-LICENSE-2026-11-10.md`). „Urban Trash” pobrał właściciel w wersji mid (karta oznaczona „Mature” — sprawdzić zawartość przed użyciem).
+
+| id | Pozycja | Źródło | Licencja | Data | SHA256 (zip) |
+|---|---|---|---|---|---|
+| `street-curbs` | Street Curbs (3d) | https://www.fab.com/listings/30f9c32a-7ddb-44ce-8ac1-5c878dd752a2 | Fab Standard | 2026-11-10 | `b173f6f281577e9ce425af2b9efff0312df195658eddf4a419e7b828fb7c9178` |
+| `modular-curb` | Modular Curb (3d) | https://www.fab.com/listings/5debfb8f-59d4-456f-b074-6ead0ce343aa | Fab Standard | 2026-11-10 | `81c8bd31c6ed47daf954c1b30d0eab52b2f573f0b2243677a071398387e6817a` |
+| `round-manhole-cover` | Round Manhole Cover (decal) | https://www.fab.com/listings/2e07c844-34c4-4e4b-acee-b7869a66494f | Fab Standard | 2026-11-10 | `3d18d7242dfcad3c103a583e122837379621b0c1a2cf32a644d46075a0ee6eab` |
+| `metal-manhole-cover` | Metal Manhole Cover (decal) | https://www.fab.com/listings/11eb03b4-09a9-475a-9721-1a4cc09b4839 | Fab Standard | 2026-11-10 | `64f151d9b6db4b6087db88bcd7a9dbc87be1b71ea6288edb491c75ec974899ed` |
+| `round-drain-cover` | Round Drain Cover (decal) | https://www.fab.com/listings/16f36535-a188-4989-8d1c-5bb790290378 | Fab Standard | 2026-11-10 | `a89dc6b6bad950027ef406b7b5d7d658ff016d67dcedc4f3ca477506784c323a` |
+| `square-rusty-drain` | Square Rusty Drain (decal) | https://www.fab.com/listings/2ae59500-f274-4ca6-9684-692a6957af53 | Fab Standard | 2026-11-10 | `ec67559697fb0b5df78bafa2ab9f74879836679181c693cafc000f8ad1ae38f5` |
+| `trash-bag-pack` | Trash Bag Pack (3d) | https://www.fab.com/listings/e735f250-bc37-42bc-9828-0af395974b77 | Fab Standard | 2026-11-10 | `04f0b16ae3e4ecf70c4ac703c729296349ed5fc20580f191296df4a374ccb667` |
+| `trash-can` | Trash Can (3d) | https://www.fab.com/listings/35267674-3634-4fd2-bca2-423fbc7da4b3 | Fab Standard | 2026-11-10 | `c94ba814a011dc81bb36c049d7da08d98b8725bacd4e1db13a28007896f8d85b` |
+| `grass-clumps` | Grass Clumps (plant) | https://www.fab.com/listings/d22b2fc3-9389-4d39-894c-5369a7e49ddf | Fab Standard | 2026-11-10 | `3542bded154fbe4e946cb634dbb5ace08cb3e36c212f21d01b957bac8873f6f8` |
+| `wild-grass` | Wild Grass (plant) | https://www.fab.com/listings/5848d16a-f6ab-45a7-b69f-fe21dcbe4669 | Fab Standard | 2026-11-10 | `ff6fb1b4a07768a34482f2a2c13f5f888245059a9a2cc455e34d5149a7f35533` |
+| `boxwood` | Boxwood (plant) | https://www.fab.com/listings/ae90090d-cafb-4431-a74f-8cded15f93e1 | Fab Standard | 2026-11-10 | `c11a7c455f086bc71f4ad18a0762f6bd6cdb20cbe9cac12a5c7a24ad1b5a98d0` |
+| `elderberry` | Elderberry (plant) | https://www.fab.com/listings/d72dd7bb-d514-4a14-8b4b-3333c99057fb | Fab Standard | 2026-11-10 | `70b9076f24d3852b8a2068dfd373048e4bcc427d233dc15b3ee2d90ff871cc75` |
+| `silver-birch-bark` | Silver Birch Bark (surface) | https://www.fab.com/listings/eb28e8b4-3198-4cf3-a42b-b3e12b612d06 | Fab Standard | 2026-11-10 | `2a3030a7c07ad56dc14ba4e515032815fdfd38c4cf1f3cf9f0f21c7506dee6c4` |
+| `birch-tree-trunk` | Birch Tree Trunk (3d) | https://www.fab.com/listings/a2289955-a389-4fdb-a17b-b27c4146b03d | Fab Standard | 2026-11-10 | `b65fc13b280b0041b32029c32555dd22df39deeabc4623ca2352ba3ebe8b7635` |
+| `pine-bark` | Pine Bark (surface) | https://www.fab.com/listings/5f6f6a17-3b21-470a-b74b-fbbf80c6dc11 | Fab Standard | 2026-11-10 | `b80cd5d01cae4070e71cfe3b917eed994ca022b426575855ef7ea81553fd8c4b` |
+| `linden-branch` | Linden Branch (plant) | https://www.fab.com/listings/d8c3a5b3-7212-45b7-93b2-6c630333ec13 | Fab Standard | 2026-11-10 | `20973973e53d2f6fa97ba9e9abbd8f37d84e8401d986bc2708549b96b183fe71` |
+| `granite-rock` | Granite Rock (3d) | https://www.fab.com/listings/01d40602-eb64-448b-af63-a7896924280a | Fab Standard | 2026-11-10 | `9acf14177d29d6f33909719e13d0af4430c5be109f55b9effb847cd211d378a8` |
+| `small-granite-rock` | Small Granite Rock (3d) | https://www.fab.com/listings/d4de5337-7536-41df-9706-2825dc0a9dad | Fab Standard | 2026-11-10 | `dc7fe40bae15ad1ce28df5acd4d6c384ea060f97f0fc4e2d48851864e0537680` |
+| `urban-trash` | Urban Trash (3d, mid) | https://www.fab.com/listings/4eb4b87c-92bf-495a-b68a-5877fc07094f | Fab Standard | 2026-11-10 | `89aab0683b618a66040d49d40241cae63db9a9eeda0d18ce1c4e61f032e96383` |

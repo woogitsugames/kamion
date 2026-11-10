@@ -105,6 +105,7 @@ namespace Game.Tests
                 float maxDvTrailer = 0f;
                 string hitInfo = null, peakInfo = null;
                 var probe = body.gameObject.AddComponent<ContactProbe>();
+                var barriers = Object.FindObjectsByType<DepotBarrier>(FindObjectsSortMode.None);
                 double[] fzPrev = new double[body.Model.Wheels.Length];
 
                 while (!driver.Finished && steps * Dt < simLimit)
@@ -130,6 +131,7 @@ namespace Game.Tests
                         body.Input = input;
 
                         body.Tick(Dt);
+                        foreach (var b in barriers) b.Tick(Dt);     // automatic gate booms (script mode: the owner of the loop steps them)
                         Physics.Simulate(Dt);
                         steps++;
 

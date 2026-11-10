@@ -460,7 +460,11 @@ def build(buf, overrides, origin, roads_poly, road_parts, zground, deck_mask_at,
             mat = {"paving": "sidewalk_paving", "stones": "bed_stones", "gravel": "island_gravel"}.get(fill, "bed_soil")
             V = np.column_stack([P2, z])
             buf.add("paved", mat, V, P2.copy(), T, src=f"override:{o['id']}:island{ii}")
-            buf.add("collision", "collision_paving" if fill in ("paving", "stones", "gravel") else "collision_grass", V, P2.copy(), T,
+            # Loose beds (soil, river stones, crushed stone) are soft ground for a wheel: collision_grass (low grip, high
+            # rolling resistance - same class as yard_gravel in standards.SURFACE_OF); only paved islands are hard.
+            # ADR 0082: the owner drove a 40 t combination across the gravel island of Rondo Bieżeństwa with the
+            # grip and rolling resistance of block paving.
+            buf.add("collision", "collision_paving" if fill == "paving" else "collision_grass", V, P2.copy(), T,
                     src=f"override:{o['id']}:island{ii}")
             n_sh = 0
             if isl.get("shrubs"):

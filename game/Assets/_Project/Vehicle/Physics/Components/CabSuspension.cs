@@ -77,6 +77,23 @@ namespace Game.Vehicle.Physics
                 double hAcc = fVertDev - 2 * z * _wh * HeaveRate - _wh * _wh * kh * Heave;
                 HeaveRate += hAcc * h; Heave += HeaveRate * h;
             }
+            // Hard end stops beyond the progressive rubber stops (ADR 0082): a crash, a roll-over or a free fall feeds
+            // accelerations far outside the working range of the mounts; the cab (and the eye point on it) must stay
+            // on the frame. Never reached in normal driving (the soft stops act from 0.8 x limit).
+            Pitch = HardStop(Pitch, ref PitchRate, _maxPitch * HardStopFactor);
+            Roll = HardStop(Roll, ref RollRate, _maxRoll * HardStopFactor);
+            Heave = HardStop(Heave, ref HeaveRate, _maxHeave * HardStopFactor);
+        }
+
+        /// <summary>Hard stop as a multiple of the soft-stop limit (travel end of the cab mounts). WORKING_VALUE.</summary>
+        public const double HardStopFactor = 1.5;
+
+        static double HardStop(double x, ref double rate, double limit)
+        {
+            if (double.IsNaN(x) || double.IsInfinity(x) || double.IsNaN(rate) || double.IsInfinity(rate)) { rate = 0; return 0; }
+            if (x > limit) { if (rate > 0) rate = 0; return limit; }
+            if (x < -limit) { if (rate < 0) rate = 0; return -limit; }
+            return x;
         }
 
         /// <summary>Stiffness multiplier: 1 inside the limit, rising steeply beyond it (rubber stop).</summary>

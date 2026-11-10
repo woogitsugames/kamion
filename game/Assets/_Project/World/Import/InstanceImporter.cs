@@ -29,6 +29,17 @@ namespace Game.World.Import
         {
             public readonly List<(string proto, Matrix4x4 m, Bounds local)> Items = new List<(string, Matrix4x4, Bounds)>();
             public int Count => Items.Count;
+            /// <summary>Automatic boom barriers (instances "barrier_boom" with a "barrier" object; DepotBarrier, MA-003).</summary>
+            public readonly List<Barrier> Barriers = new List<Barrier>();
+        }
+
+        /// <summary>One boom of a depot gate: transform of the hinge (region-root space), boom mesh + materials, drive data.</summary>
+        public sealed class Barrier
+        {
+            public Matrix4x4 M;
+            public Mesh Mesh;
+            public Material[] Materials;
+            public float Length = 5.85f, OpenDeg = 85f, Travel = 1f;
         }
 
         /// <summary>LOD end distances (m at lodBias 1; last = cull) and shadow mask per prototype family. WORKING_VALUE.</summary>
@@ -43,8 +54,9 @@ namespace Game.World.Import
             else if (proto == "pylon" || proto == "power_pole") e = new[] { 80f, 1500f };
             else if (proto.StartsWith("plate_") || proto.StartsWith("board_") || proto.StartsWith("sign_") || proto.StartsWith("signal_")) e = new[] { 50f, 250f };
             else if (proto == "bus_shelter" || proto.EndsWith("_gate")) e = new[] { 60f, 300f };
-            // Hero landmark assets (ADR 0067 viaduct, ADR 0070 fire station; art-source/world/landmarks): LOD0 / LOD1 /
-            // silhouette, never culled. One line per asset family, most specific prefix first.
+            // Hero landmark assets (ADR 0067 viaduct, ADR 0070 fire station, ADR 0071 depot; art-source/world/landmarks):
+            // LOD0 / LOD1 / silhouette, never culled. One line per asset family, most specific prefix first.
+            else if (proto.StartsWith("landmark_depot")) e = new[] { 100f, 400f, 20000f };
             else if (proto.StartsWith("landmark_viaduct")) e = new[] { 90f, 300f, 20000f };
             else if (proto.StartsWith("landmark_fire_station")) e = new[] { 150f, 450f, 20000f };
             // Landmarks (chimneys): visible across the district, never culled inside the far plane.
@@ -59,8 +71,8 @@ namespace Game.World.Import
             else e = new[] { 30f, 120f };   // bench, bollard, waste bin, street cabinet, pallets, containers
             // Mirror: tools/worldgen/roads/build_world.py instance_ends() (frame estimate) - keep the two in sync.
             if (e.Length > lodCount) e = new[] { e[0] }.Concat(e.Skip(e.Length - lodCount + 1)).ToArray();
-            // A viaduct shades the road under it: LOD1 keeps casting (the shadow must not pop off at the LOD switch).
-            int shadows = proto.StartsWith("tree_") || proto.StartsWith("landmark_viaduct") ? 0b011 : 0b001;
+            // A hall shades the yard in front of it, a viaduct the road under it: LOD1 keeps casting (no pop at the LOD switch).
+            int shadows = proto.StartsWith("tree_") || proto.StartsWith("landmark_depot") || proto.StartsWith("landmark_viaduct") ? 0b011 : 0b001;
             return (e.Take(lodCount).ToArray(), shadows);
         }
 
@@ -70,8 +82,8 @@ namespace Game.World.Import
             var props = GlbReader.Load(Path.Combine(art, "props", "street_props.glb"));
             var trees = GlbReader.Load(Path.Combine(art, "vegetation", "trees.glb"));
             var impostors = GlbReader.Load(Path.Combine(art, "vegetation", "trees_lod2.glb"));
-            // Authored landmark assets (ADR 0067 / 0070): art-source/world/landmarks/<asset>/<asset>.glb, prototypes
-            // "landmark_<asset>..." (+ .lod1 / .lod2) in the same frame as street_props.glb.
+            // Authored landmark assets (ADR 0067 / 0070 / 0071): art-source/world/landmarks/<asset>/<asset>.glb,
+            // prototypes "landmark_<...>" (+ .lod1 / .lod2) in the same frame as street_props.glb.
             var landmarkLibs = new List<GlbReader>();
             string lmDir = Path.Combine(art, "landmarks");
             if (Directory.Exists(lmDir))
@@ -282,6 +294,17 @@ namespace Game.World.Import
                     }
                     int pi = Proto(p);
                     if (pi < 0) continue;
+                    // Boom of an automatic barrier: a GameObject with DepotBarrier (WorldSceneBuilder), not a static instance.
+                    if (it.Get("barrier") is Dictionary<string, object> bd)
+                    {
+                        var bp = protos[pi];
+                        var bar = new Barrier { M = m, Mesh = bp.lods[0], Materials = materials.Skip(bp.materialStart[0]).Take(bp.lods[0].subMeshCount).ToArray() };
+                        if (bd.Get("L") != null) bar.Length = (float)Num(bd.Get("L"));
+                        if (bd.Get("open_deg") != null) bar.OpenDeg = (float)Num(bd.Get("open_deg"));
+                        if (bd.Get("travel") != null) bar.Travel = (float)Num(bd.Get("travel"));
+                        colliders.Barriers.Add(bar);
+                        continue;
+                    }
                     items.Add((cellKey, forest, pi, m));
                     if (contactOf.TryGetValue(pi, out int cpi)) items.Add((cellKey, false, cpi, m));
                     if (colMeshes.TryGetValue(p, out var cb) && cb.HasValue && corridor.Any(c => e >= c.Min.x && e < c.Max.x && n >= c.Min.y && n < c.Max.y))

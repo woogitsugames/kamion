@@ -561,7 +561,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         ci_, cj_ = chunk_of(np.array([it["e"]]), np.array([it["n"]]), half)
         inst_by_chunk.setdefault((int(ci_[0]), int(cj_[0])), []).append(it)
     props_meta = PR.export(st["codes"], st["boards"], out_root.parent / "props" if out_root != DEFAULT_OUT(region_id) else None)
-    # hero assets (art-source/world/landmarks), frame estimate: viaduct segments (ADR 0067) + hero buildings (ADR 0070)
+    # hero assets (art-source/world/landmarks), frame estimate: viaduct segments (ADR 0067), hero buildings (ADR 0070),
+    # hero depot halls (ADR 0071)
     props_meta = {**props_meta, **hero_tris, **st.get("hero_tris", {})}
     chunks_meta = []
     for key in sorted(terrain):
@@ -722,6 +723,7 @@ VEHICLE_LOD0_MIN_M = 16.0
 # Hero landmark assets (art-source/world/landmarks): prototype prefix -> LOD end distances at lodBias 1 (last = never
 # culled). Mirror of InstanceImporter.Policy; one entry per asset family (ADR 0067 viaduct, ADR 0070 fire station).
 HERO_LOD_ENDS = {
+    "landmark_depot": (100.0, 400.0, 20000.0),
     "landmark_viaduct": (90.0, 300.0, 20000.0),
     "landmark_fire_station": (150.0, 450.0, 20000.0),
 }

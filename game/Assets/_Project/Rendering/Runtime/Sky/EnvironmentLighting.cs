@@ -50,12 +50,25 @@ namespace Game.Rendering
             // Dusk street lighting (review r4 L3) lives next to the sun that switches it.
             if (GetComponent<StreetLamps>() == null) gameObject.AddComponent<StreetLamps>().hideFlags = HideFlags.DontSave;
             QualityProfileApplier.Applied += OnTierApplied;
+            RenderPipelineManager.beginContextRendering += OnBeginRendering;
             Apply();
+        }
+
+        // ADR 0080: atmosphere globals before every frame; a changed owner A/B override (exposure bias, look variant)
+        // rebuilds the model / curve once.
+        Color m_FogExposed;
+        float m_AppliedEvBias;
+        int m_AppliedLook = -1;
+        void OnBeginRendering(ScriptableRenderContext ctx, System.Collections.Generic.List<Camera> cams)
+        {
+            if (m_AppliedEvBias != LightingPreset.ExposureBiasOverride || m_AppliedLook != WorldAtmosphere.LookVariant) Apply();
+            WorldAtmosphere.Push(this, m_FogExposed);
         }
 
         void OnDisable()
         {
             QualityProfileApplier.Applied -= OnTierApplied;
+            RenderPipelineManager.beginContextRendering -= OnBeginRendering;
             if (Instance == this) Instance = null;
         }
 
@@ -92,6 +105,8 @@ namespace Game.Rendering
             if (p == null) return;
             Model = p.CreateModel(WhiteBalanceOverride);
             var m = Model;
+            m_AppliedEvBias = LightingPreset.ExposureBiasOverride;
+            m_AppliedLook = WorldAtmosphere.LookVariant;
             // Display value per cd/m^2: emissive surfaces (truck lamps, A7) are authored in physical luminance.
             Shader.SetGlobalFloat(k_Exposure, m.Exposure);
             StreetLamps.SetSunElevation(m.TrueSunElevationDeg);
@@ -113,6 +128,7 @@ namespace Game.Rendering
 
             // ---- sky ----
             Color fog = m.HorizonColorExposed();
+            m_FogExposed = fog;
             if (skyMaterial != null)
             {
                 m.GetShaderParameters(out var py, out var px, out var pyc, out var pe, out var zen, out var misc);
@@ -156,6 +172,7 @@ namespace Game.Rendering
             Shader.SetGlobalVector(k_GroundEnv, new Vector4(g.r, g.g, g.b, RenderSettings.fogDensity));
             Shader.SetGlobalVector(k_HorizonEnv, new Vector4(fog.r, fog.g, fog.b, 1f));
             ApplySkyCap();
+            WorldAtmosphere.Push(this, m_FogExposed);
         }
 
         static readonly int k_GroundEnv = Shader.PropertyToID("_KamionGroundEnv"), k_HorizonEnv = Shader.PropertyToID("_KamionHorizonEnv"),
@@ -178,14 +195,20 @@ namespace Game.Rendering
             var p = Active;
             if (p == null) return;
             bool post = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.postProcessing;
+            WorldAtmosphere.ResolveLook(p, out float toe, out float toeP, out float pivot);   // ADR 0080 contrast variant
             float h, z;
             if (post)
             {
-                var curve = new AnimationCurve(LookGrading.MasterCurveKeys(p.lookBlackLevel, p.lookWhiteClip));
+                var curve = new AnimationCurve(LookGrading.MasterCurveKeys(p.lookBlackLevel, p.lookWhiteClip, toe, toeP, pivot));
                 h = InverseDisplay(curve, SkyCapHorizonDisplay, p.lookWhiteClip);
                 z = InverseDisplay(curve, SkyCapZenithDisplay, p.lookWhiteClip);
             }
-            else { h = LookGrading.SrgbToLinear(SkyCapHorizonDisplay); z = LookGrading.SrgbToLinear(SkyCapZenithDisplay); }
+            else
+            {
+                // no LUT: the shaders apply the toe themselves (KamionTone), so the cap is the toe's pre-image
+                h = LookGrading.InverseToe(LookGrading.SrgbToLinear(SkyCapHorizonDisplay), toe, toeP, pivot);
+                z = LookGrading.InverseToe(LookGrading.SrgbToLinear(SkyCapZenithDisplay), toe, toeP, pivot);
+            }
             Shader.SetGlobalVector(k_SkyCap, new Vector4(h, z, 1f, 0f));
         }
 
@@ -232,7 +255,8 @@ namespace Game.Rendering
             m_Tonemap.mode.Override(TonemappingMode.None);
             m_Master?.Release();
             m_LumSat?.Release();
-            m_Master = new TextureCurve(LookGrading.MasterCurveKeys(p.lookBlackLevel, p.lookWhiteClip), 0f, false, new Vector2(0f, 1f));
+            WorldAtmosphere.ResolveLook(p, out float toe, out float toeP, out float pivot);   // ADR 0080 contrast variant
+            m_Master = new TextureCurve(LookGrading.MasterCurveKeys(p.lookBlackLevel, p.lookWhiteClip, toe, toeP, pivot), 0f, false, new Vector2(0f, 1f));
             m_LumSat = new TextureCurve(LookGrading.HighlightDesaturationKeys(p.lookHighlightDesaturation, p.lookWhiteClip), 0.5f, false, new Vector2(0f, 1f));
             m_Curves.master.Override(m_Master);
             m_Curves.lumVsSat.Override(m_LumSat);
