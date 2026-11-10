@@ -42,6 +42,9 @@ namespace Game.Editor.Setup
         const string MatDir = Root + "/Materials";
         const string ResDir = Root + "/Resources/TRAKT";
         static readonly string[] Tiers = { "High", "Medium", "Low" };
+        /// <summary>Near-pane exterior transmission of the cab glazing (ADR 0048 r6 0.42; ADR 0059 experiment via -extTrans).</summary>
+        static float ExtTransmission => float.TryParse(EditorTools.Arg("-extTrans", "0.42"), System.Globalization.NumberStyles.Float,
+            System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : 0.42f;
         const string ExtManifest = "art-source/truck/exterior/export/truck_exterior_manifest.json";
         const string IntManifest = "art-source/truck/interior/export/cab_interior_manifest.json";
 
@@ -314,7 +317,8 @@ namespace Game.Editor.Setup
                 g.SetFloat("_WindscreenMinZ", 0.95f);
                 g.SetVector("_CabCentreOS", new Vector4(0f, 1.0f, -0.6f, 0f));
                 // Review r6 E2: from outside only ~0.7 x cab occlusion 0.6 of the cab behind the glazing reaches the eye (shader).
-                g.SetFloat("_ExteriorTransmission", 0.42f);
+                g.SetFloat("_ExteriorTransmission", ExtTransmission);
+                g.SetFloat("_SeeThroughClutter", 0.35f);
                 g.renderQueue = (int)RenderQueue.Transparent;
                 Add("MI_Ext_Glass", g);
                 // ADR 0059 (r7 N-3): door glass = toughened side glass, no wiper film (the windscreen film made the door
@@ -378,6 +382,7 @@ namespace Game.Editor.Setup
                 cg.SetFloat("_Grime", 0f);
                 cg.renderQueue = (int)RenderQueue.Transparent;
                 cg.SetFloat("_ExteriorTransmission", 1f);   // cluster cover glass: no exterior attenuation
+                cg.SetFloat("_SeeThroughClutter", 1f);
                 Add("MI_Cab_Glass", cg);
                 foreach (var d in DisplayObjects)
                 {

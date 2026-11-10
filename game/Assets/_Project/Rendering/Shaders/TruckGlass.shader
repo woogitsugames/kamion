@@ -30,6 +30,7 @@ Shader "Kamion/Truck Glass"
         _WiperSweep ("Sweep start, end (deg from +X towards +Y), windscreen min/max object y", Vector) = (-5, 100, 0.8, 2.0)
         _WindscreenMinZ ("Windscreen: object z above this (front face of the cab)", Float) = 0.95
         _ExteriorTransmission ("Seen from outside: share of the cab behind the pane that reaches the eye (0.7 x cab occlusion)", Range(0, 1)) = 0.42
+        _SeeThroughClutter ("Seen from outside: share of the far pane (path through the cab) not blocked by seats / curtains (ADR 0059)", Range(0, 1)) = 0.35
     }
     SubShader
     {
@@ -56,7 +57,7 @@ Shader "Kamion/Truck Glass"
                 float4 _Tint;
                 float4 _GrimeMap_ST;
                 float4 _CabCentreOS, _InteriorAlbedo, _WiperPivotA, _WiperPivotB, _WiperSweep;
-                float _Opacity, _Smoothness, _Grime, _UseVertexColor, _Wiper, _WindscreenMinZ, _ExteriorTransmission;
+                float _Opacity, _Smoothness, _Grime, _UseVertexColor, _Wiper, _WindscreenMinZ, _ExteriorTransmission, _SeeThroughClutter;
             CBUFFER_END
             TEXTURE2D(_GrimeMap); SAMPLER(sampler_GrimeMap);
 
@@ -114,7 +115,10 @@ Shader "Kamion/Truck Glass"
                 half cosT = sqrt(saturate(1.0 - (1.0 - NoV * NoV) * 0.4328));
                 half tAbs = exp2(log2(1.0 - _Opacity) / max(cosT, 0.1));
                 Light L = GetMainLight();
-                half3 amb = SampleSH(n);
+                // ADR 0059: ambient on the OUTWARD normal (inside face: -n). The film sits on the outer surface; the body tint term
+                // below exists on outside faces only, where nOut = n, so one SH evaluation serves both (no extra cost).
+                half3 nOut = i.inside > 0.5 ? -n : n;
+                half3 amb = SampleSH(nOut);
 
                 // ---- road film outside the wiper sweeps (windscreen) ----
                 half film = 0, arcGlare = 0;
@@ -180,8 +184,9 @@ Shader "Kamion/Truck Glass"
                 // ADR 0059 (r7/r8 N-8): seen from OUTSIDE the cab (CabInteriorLighting: _KamionCamOutside), an inside face is the far pane at the end of
                 // the path through the cab: the eye looked across the empty cab and out of the opposite door glass at the
                 // lit hall - the sharp bright "rectangle" in the windscreen. Seats, headrests, the passenger and the bunk
-                // curtain block most of that path in a real cab; the same unmodelled-clutter factor as the near pane.
-                trans *= lerp(1.0, saturate(_ExteriorTransmission), glazing * i.inside * saturate(_KamionCamOutside));
+                // curtain block most of that path in a real cab (WORKING_VALUE 0.35: from the 3/4 front view the passenger
+                // seat back, headrest and B-pillar trim cover roughly two thirds of the far door glass).
+                trans *= lerp(1.0, saturate(_SeeThroughClutter), glazing * i.inside * saturate(_KamionCamOutside));
                 // Body colour (the tint the blend cannot apply to the transmitted scene) - outside face only, small: from
                 // the cab it reads as a milky veil over the road (r4 E2). Grime / film haze lit by sun and sky on both faces.
                 // ADR 0059 (r7 N-16): the road film sits on the OUTER surface, so it is lit with the outward normal on both
@@ -189,11 +194,10 @@ Shader "Kamion/Truck Glass"
                 // driver's seat (sun "through" the back wall): the wiper sweep borders drew a bright cone and the blade
                 // arcs fine diagonal stripes across the sky. Sun term = sun on the outer surface x a Henyey-Greenstein
                 // phase (g 0.5, relative to isotropic, capped): bright veiling glare only against the sun, as in a real cab.
-                half3 nOut = i.inside > 0.5 ? -n : n;
                 half cosScatter = dot(-L.direction, V);   // light travels along -L, leaves towards the eye along V
                 half phase = min(0.75 / pow(max(1.25 - cosScatter, 0.05), 1.5), 4.0);
                 half3 body = i.tint * amb * (1.0 - tAbs) * 0.25 * (1.0 - i.inside)
-                           + (grime * SampleSH(nOut) + (grime + arcGlare) * L.color * saturate(dot(nOut, L.direction)) * phase) * 0.18;
+                           + (grime * amb + (grime + arcGlare) * L.color * saturate(dot(nOut, L.direction)) * phase) * 0.18;
                 // From the cab only the first surface carries the dash reflection (no ghost from the outer face: docs/06,
                 // r4 E2 "no double reflection"); from outside both surfaces mirror the sky.
                 half3 col = body + env * lerp(F, F1, i.inside) + L.color * spec * (1.0 - i.inside * 0.7);
