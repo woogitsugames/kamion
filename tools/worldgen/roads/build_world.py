@@ -641,15 +641,18 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
 #   Low : terrain LOD1 < 330 m, LOD2 < 600 m, LOD3 beyond; buildings LOD1; trees LOD1 < 35 m, impostor < 400 m,
 #         culled beyond; forest HLOD 70-1000 m, culled beyond; props LOD1 < 250 m, culled beyond;
 #         linear furniture < 400 m.
+#   Parked cars / vans (ADR 0041): InstanceImporter 25 / 90 / 400 m x lodBias (High 1.5, Low 0.5).
 # v3 had trees LOD0 < 80 m / LOD1 < 250 m and no forest HLOD (DK8 forest frame 8.2 M triangles on High).
 LOD_POLICY = {
     "High": {"terrain": [[330, 0], [600, 1], [1e9, 2]], "bld": 700,
              "tree": [[35, "tris_lod0"], [80, "tris_lod1"], [1500, "tris_lod2"]],
              "forest_hlod_m": 120, "forest_hlod_cull_m": 1e9,
-             "prop": [[120, "tris_lod0"], [650, "tris_lod1"]], "furn": 1e9},
+             "prop": [[120, "tris_lod0"], [650, "tris_lod1"]], "furn": 1e9,
+             "car": [[37.5, "tris_lod0"], [135, "tris_lod1"], [600, "tris_lod2"]]},
     "Low": {"terrain": [[330, 1], [600, 2], [1e9, 3]], "bld": 0,
             "tree": [[35, "tris_lod1"], [400, "tris_lod2"]], "forest_hlod_m": 70, "forest_hlod_cull_m": 1000,
-            "prop": [[250, "tris_lod1"]], "furn": 400},
+            "prop": [[250, "tris_lod1"]], "furn": 400,
+            "car": [[12.5, "tris_lod0"], [45, "tris_lod1"], [200, "tris_lod2"]]},
 }
 
 
@@ -727,6 +730,8 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
                         continue
                     is_tree = it["p"].startswith("tree_")
                     rule = pol["tree"] if is_tree else pol["prop"]
+                    if it["p"].startswith(("car_", "van_")):   # 3 LODs, InstanceImporter.Policy 25/90/400 m x lodBias
+                        rule = pol["car"]
                     if it["p"].startswith("landmark_"):       # landmarks are never culled (LOD1 beyond 650 m)
                         rule = [[650, "tris_lod0"], [1e9, "tris_lod1"]]
                     key = next((k for lim, k in rule if di < lim), None)
