@@ -4,7 +4,7 @@
 - **main = `4c27a9b`, wypchnięty.** Żadnych scaleń w s7 jeszcze. Brak wiszących procesów Unity/Blender/build_world po s6.
 - s7: wznowiono 8 agentów s6 w ich istniejących worktree (tabela s6 niżej — te same worktree/gałęzie/STATUS) + 0083 zewnętrze TRAKT wystartowane od nowa (poprzedni worktree agent-a895ad2cc01f155bd nigdy nie powstał) w nowym worktree (ścieżka w raporcie agenta; STATUS `artifacts/truck-ext-r10/STATUS.md`). Wszyscy Fable 5.2. Razem 9 agentów.
 - Puste/osierocone katalogi w `.claude/worktrees/` (nie w `git worktree list`): a0c58…, a12755…, a48798…, a619ef…, a66ef6…, a9eaae…, ab1fb0… — do ręcznego usunięcia (sprawdzić junctiony przed rmdir).
-- 0080 oświetlenie GOTOWE `ea6f1d1` (gałąź worktree-agent-ac7c9571184d27443), NIEscalone — czeka na wybór wariantu overcast przez właściciela (rekomendacja 2: lookToe 0,9 / P 0,4 / pivot 0,6; 3 = +exposure −0,2), PNG `artifacts/light-r10/owner/`. Po wyborze: wpisać do LP_Overcast.asset + LightingPreset.Overcast(), lift kabiny (ADR 0044). Mokro NIE włączać.
+- 0080 oświetlenie GOTOWE `ea6f1d1` (gałąź worktree-agent-ac7c9571184d27443), NIEscalone — DECYZJA WŁAŚCICIELA 2026-11-10: WARIANT 3 (lookToe 0,9 / P 0,4 / pivot 0,6 + exposure −0,2); agent wznowiony: wpis do presetu + lift kabiny + QA final, PNG `artifacts/light-r10/owner/`. Po wyborze: wpisać do LP_Overcast.asset + LightingPreset.Overcast(), lift kabiny (ADR 0044). Mokro NIE włączać.
 - Następne kroki bez zmian (s6 §Następne kroki): scalać 0076 → 0077 → 0070/0071 → 0078 → 0081 → 0080 → 0082 → 0083; po każdym regeneracja + pytest gis.
 
 ---
