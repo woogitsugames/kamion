@@ -34,7 +34,7 @@ Scalone dziś już: TRAKT r3 (słupek A 7,0°), r4 (lamele grilla 20° w dół, 
 |---|---|---|
 | (scalone `ffbe6cf`) wnętrze: polerowanie wieńca/wybieraka, listwa u stopy słupka A, zasłony koi i drzwi pasażera; **sprawdzić**: przy lowsun zasłona pasażera przyciemnia piastę/konsolę (próg czerni `cab-dash` ≤ 8 %), połysk addytywny w CabInterior.shader do przeglądu rendering-perf; fotel/mata/drzwi poza kadrem — nieocenione | — | gotowe |
 | Opus: latarnie/słupki na terenie (audyt obiekty vs teren → PASS) + ścianki skrzyżowań (obniż ratchet) | `agent-adf7e8fce42acbbeb` | dowody `artifacts/world-fixes/`; jw. generated |
-| Opus: druty WN min. szerokość w px (P0 z r6) + zacieki pod attyką | `agent-a00eb437b0f666944` | **WIP `a1d4e81`, NIE scalać bez weryfikacji**: kod drutów (`_ScaledScreenParams`, rdzeń ≥1,2 px, AA) i zacieków (`parapet_runoff`, UV1, `_RUNOFF`) jest, ale rendery nie potwierdzają efektu; część ścian `hall_wall` bez TEXCOORD_1; addendum ADR 0022 opisuje to jako działające — poprawić. Dowody `artifacts/world-fixes/wires-streaks/` |
+| Opus: druty WN min. szerokość w px (P0 z r6) + zacieki pod attyką | `agent-a00eb437b0f666944` (kopia: `origin/wip/wires-streaks`) | **WIP `a1d4e81`, NIE scalać bez weryfikacji**: kod drutów (`_ScaledScreenParams`, rdzeń ≥1,2 px, AA) i zacieków (`parapet_runoff`, UV1, `_RUNOFF`) jest, ale rendery nie potwierdzają efektu; część ścian `hall_wall` bez TEXCOORD_1; addendum ADR 0022 opisuje to jako działające — poprawić. Dowody `artifacts/world-fixes/wires-streaks/` |
 
 Scalone też: auta v3 (`b8c93ca`; felgi LOD1 „rim_dusty” przyciemnione w kodzie, nieprzerenderowane). Konflikty w `Data/Regions/bialystok-industrial-c/generated/*.json`: bierz `--ours` i wygeneruj świat ponownie po scaleniu wszystkich gałęzi świata.
 
