@@ -328,6 +328,7 @@ def emit_tint_mask(mats):
         tm = next((n for n in nt.nodes if n.label == "tint_mask"), None)     # r10: procedural livery mask (curtain band)
         if tm is not None and m.name in tinted:
             nt.links.new(tm.outputs[0], em.inputs["Color"])
+            em.inputs["Color"].default_value = (0, 0, 0, 1)
         em.inputs["Strength"].default_value = 1.0
         nt.links.new(em.outputs[0], out.inputs["Surface"])
 

@@ -185,6 +185,43 @@ def _livery_mask(nt):
     M.L(nt, tot, out.inputs[1])
 
 
+ROOF_OWN_COLOUR = True
+ROOF_BOWS = 18              # = top_rails_and_roof nb
+
+
+def _roof_stains(nt, amount=0.75):
+    """Dirt on the roof sheet: pooled in the sag between two bows (strongest mid-bay, fading to the edges where the
+    sheet runs off over the rail), a dusty film overall and darker run-off along both edges. Added to the grime
+    factor like the spray term (the bake labels grime_mix / grime_rough see it)."""
+    mn, N = M.math_node, M.N
+    mix = next(n for n in nt.nodes if n.label == "grime_mix")
+    rr = next(n for n in nt.nodes if n.label == "grime_rough")
+    geo = N(nt, "ShaderNodeNewGeometry")
+    sep = N(nt, "ShaderNodeSeparateXYZ")
+    M.L(nt, geo.outputs["Position"], sep.inputs[0])
+    pitch = (LEN - 0.25) / ROOF_BOWS
+    t = mn(nt, "FRACT", mn(nt, "DIVIDE", mn(nt, "SUBTRACT", Y_FRONT - 0.13, sep.outputs[1]), pitch))
+    sag = mn(nt, "POWER", mn(nt, "SINE", mn(nt, "MULTIPLY", t, math.pi)), 3.0)
+    ax = mn(nt, "ABSOLUTE", sep.outputs[0])
+    mid = mn(nt, "SUBTRACT", 1.0, mn(nt, "POWER", mn(nt, "DIVIDE", ax, 1.22, clamp=True), 2.0))
+    n1 = N(nt, "ShaderNodeTexNoise", Scale=1.7, Detail=9.0, Roughness=0.66)
+    M.L(nt, geo.outputs["Position"], n1.inputs["Vector"])
+    m1 = N(nt, "ShaderNodeMapRange", **{"From Min": 0.36, "From Max": 0.68})
+    M.L(nt, n1.outputs["Fac"], m1.inputs["Value"])
+    pool = mn(nt, "MULTIPLY", mn(nt, "MULTIPLY", sag, mid), m1.outputs[0])
+    edge = mn(nt, "MULTIPLY", mn(nt, "DIVIDE", mn(nt, "SUBTRACT", ax, 0.95), 0.30, clamp=True), 0.55)
+    n2 = N(nt, "ShaderNodeTexNoise", Scale=9.0, Detail=8.0, Roughness=0.6)
+    M.L(nt, geo.outputs["Position"], n2.inputs["Vector"])
+    film = mn(nt, "MULTIPLY", n2.outputs["Fac"], 0.28)
+    s_ = mn(nt, "MULTIPLY", mn(nt, "ADD", mn(nt, "ADD", pool, edge), film), amount * M.PARAMS["dirt"])
+    old = mix.inputs[0].links[0].from_socket
+    tot = mn(nt, "ADD", old, s_, clamp=True)
+    M.L(nt, tot, mix.inputs[0])
+    r_in = rr.inputs[0].links[0].from_socket if rr.inputs[0].links else None
+    if r_in is not None:
+        M.L(nt, mn(nt, "ADD", r_in, mn(nt, "MULTIPLY", s_, 0.25)), rr.inputs[0])
+
+
 def materials():
     """Trailer authoring library on top of the TRAKT library (rubber, chassis, steel, lenses, plate, ...)."""
     M.build_library("white")
@@ -200,8 +237,15 @@ def materials():
            dust=(0.17, 0.15, 0.12), band=0.9, band_z0=CURT_Z0)
     if LIVERY_BAND:
         _livery_mask(nt)
-    m, nt, b = P("roof_tarp", "CURTAIN", (0.80, 0.80, 0.80), 0.62)
-    _grime(nt, b, (0.80, 0.80, 0.80), 0.62, h0=5.0, amount=0.25, cav=0.6)
+    # r10 (ADR 0083): the roof sheet is its own light-grey PVC (not the curtain colour: tint mask 0), with dirt pooled
+    # in the sags between the bows and along the edges - what the chase camera looks down on
+    m, nt, b = P("roof_tarp", "CURTAIN", (0.62, 0.63, 0.63), 0.62)
+    _grime(nt, b, (0.62, 0.63, 0.63), 0.62, h0=5.0, amount=0.25, cav=0.6)
+    if ROOF_OWN_COLOUR:
+        _roof_stains(nt)
+        z = nt.nodes.new("ShaderNodeValue")
+        z.label = "tint_mask"
+        z.outputs[0].default_value = 0.0
     # webbing straps welded to the curtain: same coated fabric, a shade darker (tinted with the curtain in game)
     m, nt, b = P("strap", "CURTAIN", (0.52, 0.52, 0.52), 0.68, spec=0.35)
     M.micro_bump(nt, b, 900.0, 0.3, 0.0003)
@@ -549,33 +593,42 @@ def underfloor_equipment():
     rod("spare_rod", (cx, cy, zc + et), (cx, cy, 1.22), 0.012, "galv", seg=8)
     cyl("spare_nut", (cx, cy, zc + et + 0.02), 0.028, 0.03, "steel", axis="Z", seg=6)
     # pallet box: black powder-coated steel body, two galvanised drop-down doors with pressed ribs and paddle latches
-    x0, x1, ya, yb, zb, zt = 0.62, 1.165, -3.98, -5.50, 0.50, 1.06
-    box_mm("pallet_box", x0, x1, yb, ya, zb, zt, "trl_chassis", bev=0.008)
+    ya, yb, zb, zt = -3.98, -5.50, 0.50, 1.06
     ym = (ya + yb) / 2
-    for j, (d0, d1) in enumerate(((ya - 0.025, ym + 0.006), (ym - 0.006, yb + 0.025))):
-        box_mm(f"pallet_door_{j}", x1, x1 + 0.006, d1, d0, zb + 0.03, zt - 0.03, "galv", bev=0.002, seg=1)
-        for z in (0.66, 0.90):
-            box_mm(f"pallet_rib_{j}_{z}", x1 + 0.006, x1 + 0.011, d1 + 0.06, d0 - 0.06, z - 0.018, z + 0.018, "galv",
-                   bev=0.004, seg=1)
-        yl = (d0 + d1) / 2
-        box_mm(f"pallet_latch_pan_{j}", x1 + 0.0062, x1 + 0.0072, yl - 0.055, yl + 0.055, zt - 0.14, zt - 0.07, "gap")
-        box_mm(f"pallet_latch_{j}", x1 + 0.007, x1 + 0.013, yl - 0.035, yl + 0.035, zt - 0.125, zt - 0.085, "steel",
-               bev=0.002, seg=1)
-        for yh in (d0 - 0.12, d1 + 0.12):
-            cyl(f"pallet_hinge_{j}_{yh:.2f}", (x1 + 0.008, yh, zb + 0.03), 0.010, 0.09, "galv", axis="Y", seg=8)
-    for j, yy in enumerate((ya - 0.10, yb + 0.10)):   # hanger straps up to the outriggers
-        box_mm(f"pallet_strap_{j}", x0 - 0.004, x1 + 0.002, yy - 0.02, yy + 0.02, zt - 0.004, 1.17, "galv")
-    # two wheel chocks in a holder ahead of the toolbox (driver side)
-    for j, yy in enumerate((-3.52, -3.72)):
+    for s, sd in ((-1, "L"), (1, "R")):
+        x0, x1 = s * 0.62, s * 1.165
+        box_mm(f"pallet_box_{sd}", min(x0, x1), max(x0, x1), yb, ya, zb, zt, "trl_chassis", bev=0.008)
+        for j, (d0, d1) in enumerate(((ya - 0.025, ym + 0.006), (ym - 0.006, yb + 0.025))):
+            xa, xb = sorted((x1, x1 + s * 0.006))
+            box_mm(f"pallet_door_{sd}_{j}", xa, xb, d1, d0, zb + 0.03, zt - 0.03, "galv", bev=0.002, seg=1)
+            xa, xb = sorted((x1 + s * 0.006, x1 + s * 0.011))
+            for z in (0.66, 0.90):
+                box_mm(f"pallet_rib_{sd}_{j}_{z}", xa, xb, d1 + 0.06, d0 - 0.06, z - 0.018, z + 0.018, "galv",
+                       bev=0.004, seg=1)
+            yl = (d0 + d1) / 2
+            xa, xb = sorted((x1 + s * 0.0062, x1 + s * 0.0072))
+            box_mm(f"pallet_latch_pan_{sd}_{j}", xa, xb, yl - 0.055, yl + 0.055, zt - 0.14, zt - 0.07, "gap")
+            xa, xb = sorted((x1 + s * 0.007, x1 + s * 0.013))
+            box_mm(f"pallet_latch_{sd}_{j}", xa, xb, yl - 0.035, yl + 0.035, zt - 0.125, zt - 0.085, "steel",
+                   bev=0.002, seg=1)
+            for yh in (d0 - 0.12, d1 + 0.12):
+                cyl(f"pallet_hinge_{sd}_{j}_{yh:.2f}", (x1 + s * 0.008, yh, zb + 0.03), 0.010, 0.09, "galv", axis="Y",
+                    seg=8)
+        for j, yy in enumerate((ya - 0.10, yb + 0.10)):   # hanger straps up to the outriggers
+            xa, xb = sorted((x0 - s * 0.004, x1 + s * 0.002))
+            box_mm(f"pallet_strap_{sd}_{j}", xa, xb, yy - 0.02, yy + 0.02, zt - 0.004, 1.17, "galv")
+    # two wheel chocks in a holder between the landing gear and the toolbox (driver side)
+    for j, yy in enumerate((-2.70, -2.90)):
         extrude_poly(f"chock_{j}", [(yy + 0.07, 0.66), (yy - 0.07, 0.66), (yy - 0.07, 0.69), (yy + 0.045, 0.84),
                                     (yy + 0.07, 0.84)], 0.16, "trl_plastic", plane="YZ", origin=(-1.13, 0, 0),
                      bev=0.006).data.shade_flat()
-    box_mm("chock_holder", -1.15, -0.95, -3.80, -3.44, 0.635, 0.66, "galv", bev=0.002)
-    for yy in (-3.78, -3.46):
+    box_mm("chock_holder", -1.15, -0.95, -2.98, -2.62, 0.635, 0.66, "galv", bev=0.002)
+    for yy in (-2.96, -2.64):
         box_mm(f"chock_holder_arm_{yy}", -1.05, -1.03, yy - 0.012, yy + 0.012, 0.66, 1.17, "galv")
 
 
-# ---------------------------------------------------------------- running geardef axles_and_suspension():
+# ---------------------------------------------------------------- running gear
+def axles_and_suspension():
     part("CHASSIS", "frame")
     for i, ya in enumerate(AXLES):
         cyl(f"axle_beam_{i}", (0, ya, WC), 0.073, 1.72, "trl_chassis", axis="X", seg=16)
@@ -719,8 +772,8 @@ def side_guards():
         box_mm(f"side_reflector_{s}", x + s * 0.013, x + s * 0.017, (y0 + y1) / 2 - 0.04, (y0 + y1) / 2 + 0.04, 0.88,
                0.92, "lens_amber_o")
     # toolbox behind the left guard (black plastic, two latches)
-    box_mm("toolbox", -1.15, -0.82, -4.60, -3.85, 0.60, 1.07, "trl_plastic", bev=0.02)
-    for yy in (-4.42, -4.03):
+    box_mm("toolbox", -1.15, -0.82, -3.80, -3.05, 0.60, 1.07, "trl_plastic", bev=0.02)   # r10: 0.80 m forward
+    for yy in (-3.62, -3.23):
         box_mm(f"toolbox_latch_{yy}", -1.16, -1.145, yy - 0.03, yy + 0.03, 0.96, 1.02, "steel")
 
 

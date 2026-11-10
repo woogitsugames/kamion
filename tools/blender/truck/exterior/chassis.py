@@ -446,11 +446,19 @@ def fifth_wheel_and_rear():
         tube(f"flap_arm_{s}", [(s * FRAME_HALF_W, -WB - 0.62, 0.80), (s * 0.95, -WB - 0.64, 0.84)], 0.02, "chassis")
         # rear combination lamps on brackets at the frame end
         box_mm(f"rear_lamp_brk_{s}", s * 0.42, s * 1.18, Y_END + 0.04, Y_END + 0.12, 0.78, 0.82, "chassis")
-        box_mm(f"rear_lamp_{s}", s * 0.74, s * 1.18, Y_END - 0.02, Y_END + 0.06, 0.74, 0.90, "plastic_satin",
-               bev=0.01)
-        for k, (a, b_, m_) in enumerate(((0.76, 0.92, "lens_amber"), (0.92, 1.08, "lens_red"),
-                                         (1.08, 1.16, "lens_clear"))):
-            box_mm(f"rear_lens_{s}_{k}", s * a, s * b_, Y_END - 0.026, Y_END - 0.016, 0.755, 0.885, m_, bev=0.003)
+        # r10 (ADR 0083): multi-chamber LED combination lamp in a deep moulded housing (was a slab with three flat
+        # tiles): black bezel lip, four crowned chambers 1.5 mm apart - indicator (outboard), tail / stop, reverse,
+        # retro-reflector strip - and an amber side marker in the housing's outboard end. WORKING_VALUE sizes.
+        box_mm(f"rear_lamp_{s}", s * 0.72, s * 1.185, Y_END - 0.035, Y_END + 0.06, 0.735, 0.905, "plastic_satin",
+               bev=0.016, seg=3)
+        box_mm(f"rear_lamp_bezel_{s}", s * 0.735, s * 1.17, Y_END - 0.041, Y_END - 0.030, 0.748, 0.892, "plastic",
+               bev=0.004)
+        for k, (a, b_, m_) in enumerate(((1.035, 1.160, "lens_amber"), (0.880, 1.0335, "lens_red"),
+                                         (0.800, 0.8785, "lens_clear"), (0.745, 0.7985, "lens_red"))):
+            box_mm(f"rear_lens_{s}_{k}", s * a, s * b_, Y_END - 0.052, Y_END - 0.038, 0.757, 0.883, m_, bev=0.005,
+                   seg=3)
+        box_mm(f"side_marker_rear_{s}", s * 1.183, s * 1.190, Y_END - 0.012, Y_END + 0.04, 0.80, 0.84, "lens_amber",
+               bev=0.002)
     G.plate_uv(box_mm("rear_plate", 0.42, 0.94, Y_END - 0.03, Y_END - 0.02, 0.60, 0.714, "plate"), -1)
     box_mm("trailer_socket_brk", -0.20, 0.20, Y_END - 0.01, Y_END + 0.02, 0.86, 0.94, "chassis")
 
