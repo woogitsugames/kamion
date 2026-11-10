@@ -20,3 +20,10 @@ Galaz: worktree-agent-ad6af5501cb259d76.
   profile 1b (abreast ground), furniture.clear_under_decks (latarnie przebijajace pomost), consistency:
   prop_through_deck + kerb_on_carriageway. Nakladki: artifacts/roads-p0-r10/wip1/*.jpg (MA-012: latka 45 m -> ~15 m).
 - NASTEPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c ; uv run --project tools/worldgen python tests/gis/route_corridor.py
+- (przejecie po limicie) build_world #1 (283 s): route_corridor 0 przeszkod / 10 uskokow. Przyczyny: (a) trasa cofala sie
+  1-2 m na stykach kawalkow pasa (wezel rozwidlenia, wjazd/zjazd z ronda) -> roads/route.py: _trim_joint + _round_corner;
+  (b) koniec lacznicy przesuniety o 3,25 m od wezla startowal z wysokosci wezla (0,11 m nad jezdnia Andersa) ->
+  profile.shifted_end_heights (krok 1c). build_world #2 (304 s): route_corridor 4792 stacje, 0 uskokow, 0 przeszkod.
+- Otwarte z consistency: kerb_on_carriageway 29, prop_on_carriageway 2, furniture_in_lane 1, obstacle_in_lane 2 (poza trasa;
+  kandydaci na zgloszenia z filmu: latarnia (-588.9, 19.5), furniture (-694, 69), kraweznik (-781.7, 77.5)).
+- NASTEPNY KROK: uv run --project tools/worldgen pytest tests/gis -q

@@ -11,7 +11,11 @@ built from:
     paint), on one-way carriageways and on two-way roads alike (a truck keeps right; a 1-lane link = its centre),
   * where two consecutive pieces do not meet (lane count changes, a merge lane ends, a diverge) and the heading
     does not turn, the lateral gap is taken up as a lane change on the wider carriageway, smoothstep over
-    LANE_CHANGE_RATIO x gap (>= LANE_CHANGE_MIN_M); at real turns the pieces are simply joined, as before.
+    LANE_CHANGE_RATIO x gap (>= LANE_CHANGE_MIN_M),
+  * at real turns (junction, roundabout entry, diverge onto a link) the lane lines of the two pieces cross or
+    overshoot each other by up to the lateral lane offset (the route ran 1-2 m forward and back: 10 false "steps"
+    in test_route_profile_has_no_steps): both pieces are cut at their crossing (or the overshooting points are
+    dropped) and the corner is rounded with a quadratic Bezier over JOINT_ROUND_M each side.
 """
 
 from __future__ import annotations
@@ -26,6 +30,64 @@ SAMPLE_M = 0.5
 LANE_CHANGE_RATIO = 12.0     # WORKING_VALUE: lane change length = 12 x lateral offset (3.5 m -> 42 m, ~2.5 s at 60 km/h)
 LANE_CHANGE_MIN_M = 20.0
 LANE_CHANGE_MAX_TURN_DEG = 30.0
+JOINT_SEARCH_M = 8.0         # how far from a joint the two lane lines are searched for their crossing
+JOINT_ROUND_M = 4.0          # WORKING_VALUE: corner rounding length each side of a turning joint
+
+
+def _seg_x(p, q, a, b):
+    """Intersection of segments pq and ab (None if they do not cross)."""
+    r, d = q - p, b - a
+    den = r[0] * d[1] - r[1] * d[0]
+    if abs(den) < 1e-12:
+        return None
+    w = a - p
+    t = (w[0] * d[1] - w[1] * d[0]) / den
+    u = (w[0] * r[1] - w[1] * r[0]) / den
+    return p + t * r if (0.0 <= t <= 1.0 and 0.0 <= u <= 1.0) else None
+
+
+def _unit(v):
+    n = float(np.hypot(*v))
+    return v / n if n > 1e-9 else None
+
+
+def _trim_joint(A, hA, B, hB):
+    """Cut piece A (ends at the joint) and piece B (starts there) so the path does not run back on itself."""
+    m = int(JOINT_SEARCH_M / SAMPLE_M)
+    for i in range(len(A) - 2, max(len(A) - 2 - m, -1), -1):          # crossing nearest the joint first
+        for j in range(0, min(m, len(B) - 1)):
+            X = _seg_x(A[i], A[i + 1], B[j], B[j + 1])
+            if X is not None and i >= 1 and j + 2 < len(B):
+                return (np.vstack([A[:i + 1], X]), np.append(hA[:i + 1], hA[i + 1]),
+                        np.vstack([X, B[j + 1:]]), np.append(hB[j], hB[j + 1:]))
+    ta = _unit(A[-1] - A[max(len(A) - 5, 0)])
+    tb = _unit(B[min(4, len(B) - 1)] - B[0])
+    if ta is None or tb is None:
+        return A, hA, B, hB
+    turn = math.degrees(math.acos(float(np.clip(np.dot(ta, tb), -1, 1))))
+    if turn <= LANE_CHANGE_MAX_TURN_DEG and float(np.hypot(*(B[0] - A[-1]))) >= 0.3:
+        return A, hA, B, hB                                            # a lane change, handled by the caller
+    j = 0
+    while j < min(m, len(B) - 3) and float(np.dot(B[j] - A[-1], ta)) < 0.0:   # B starts behind the end of A
+        j += 1
+    B, hB = B[j:], hB[j:]
+    i = len(A)
+    while i > max(len(A) - m, 3) and float(np.dot(A[i - 1] - B[0], tb)) > 0.0:   # A ends ahead of the start of B
+        i -= 1
+    return A[:i], hA[:i], B, hB
+
+
+def _round_corner(P, k, d=JOINT_ROUND_M):
+    """Replace the points within d of the joint P[k-1] | P[k] by a quadratic Bezier (in place, same count)."""
+    s = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
+    sk = 0.5 * (s[k - 1] + s[k])
+    m = np.where(np.abs(s - sk) <= d)[0]
+    if len(m) < 3 or m[0] == 0 or m[-1] == len(P) - 1:
+        return
+    a, b = P[m[0]].copy(), P[m[-1]].copy()
+    c = 0.5 * (P[k - 1] + P[k])
+    u = (s[m] - s[m[0]]) / max(s[m[-1]] - s[m[0]], 1e-9)
+    P[m] = ((1 - u) ** 2)[:, None] * a + (2 * u * (1 - u))[:, None] * c + (u ** 2)[:, None] * b
 
 
 def _smoothstep(x):
@@ -73,6 +135,10 @@ def lane_route(net, path_edges, node_xy, step=2.0):
         lat = np.array([_right_lane_lat(c, sec, float(s), trav) for s in ss])
         P = c.line.offset_point(ss, lat)
         hw = np.asarray(c.hw_at(ss), float)
+        if pieces:
+            A, hA, e0 = pieces[-1]
+            A, hA, P, hw = _trim_joint(A, hA, P, hw)
+            pieces[-1] = (A, hA, e0)
         pieces.append((P, hw, eid))
     # lane changes at joints that do not turn
     P = np.concatenate([p for p, _, _ in pieces])
@@ -80,6 +146,7 @@ def lane_route(net, path_edges, node_xy, step=2.0):
     E = [e for p, _, e in pieces for _ in range(len(p))]
     starts = np.cumsum([0] + [len(p) for p, _, _ in pieces])
     shift = np.zeros_like(P)
+    corners = []
     seg = np.hypot(*np.diff(P, axis=0).T)
     for k in starts[1:-1]:
         seg[k - 1] = 0.0                       # the joint itself is not travelled
@@ -95,7 +162,10 @@ def lane_route(net, path_edges, node_xy, step=2.0):
         turn = math.degrees(math.acos(float(np.clip(np.dot(ta, tb), -1, 1))))
         gap = b - a
         g = float(np.hypot(*gap))
-        if g < 0.3 or turn > LANE_CHANGE_MAX_TURN_DEG:
+        if turn > LANE_CHANGE_MAX_TURN_DEG:
+            corners.append(k)
+            continue
+        if g < 0.3:
             continue
         L = max(LANE_CHANGE_MIN_M, LANE_CHANGE_RATIO * g)
         if HW[k - 1] >= HW[k]:                 # the approach is the wider carriageway: change lanes before the joint
@@ -105,6 +175,8 @@ def lane_route(net, path_edges, node_xy, step=2.0):
             m = (np.arange(len(P)) >= k) & (s - s[k] < L)
             shift[m] -= gap[None, :] * _smoothstep(1.0 - (s[m] - s[k]) / L)[:, None]
     P = P + shift
+    for k in corners:
+        _round_corner(P, k)
     d = np.hypot(*np.diff(P, axis=0).T)
     keep = np.concatenate([[True], d > 0.05])
     P, E = P[keep], [e for e, kk in zip(E, keep) if kk]
