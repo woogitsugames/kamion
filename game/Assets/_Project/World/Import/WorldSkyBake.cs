@@ -253,7 +253,7 @@ namespace Game.World.Import
             File.WriteAllText(Path.Combine(evDir, region + "_bake.json"), string.Format(ci,
                 "{{\n \"region\": \"{0}\", \"source\": \"{1}\", \"texel_m\": {2}, \"size\": [{3}, {4}],\n \"origin_local\": [{5}, {6}],\n" +
                 " \"height_base\": {7}, \"height_step\": {8}, \"triangles\": {9}, \"instances_solid\": {10}, \"instances_crown\": {11},\n" +
-                " \"seconds\": {{\"raster\": {12:F1}, \"sky\": {13:F1}, \"sun\": {14:F1}, \"total\": {15:F1}}},\n" +
+                " \"seconds\": {{\"raster\": {12:F1}, \"sky\": {13:F1}, \"sun\": {14:F1}, \"total\": {15:F1} }},\n" +
                 " \"vis_mean\": {16:F3}, \"vis_road_median_before_normalise\": {26:F3}, \"bytes_1m_with_mips\": {17}, \"bytes_2m_with_mips\": {18},\n" +
                 " \"sun_dirs_local\": [[{19:F4}, {20:F4}, {21:F4}], [{22:F4}, {23:F4}, {24:F4}]],\n \"material_kinds\": {{{25}}}\n}}\n",
                 region, src, TexelM, w, h, mn.x, mn.y, hBase, hStep, tris, instSolid, instCrown, tRaster, tVis - tRaster, tSun - tVis,

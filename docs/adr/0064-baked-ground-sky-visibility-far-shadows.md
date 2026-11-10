@@ -41,7 +41,7 @@ Evidence: `artifacts/bake-r8/` (STATUS.md, maps, renders before/after, montages,
      again for the zenith part.
    - G, B: ground sun visibility for LP_LowSun and LP_Clear (ray march to 300 m, crowns `exp(-0.35 · path)`,
      WORKING_VALUE), 3×3 box (penumbra ≈ 1-2 m). Dusk / overcast: no baked sun.
-   - A: ground height, 8 bit, `base + A · step` (step ≈ 0.3 m for this region).
+   - A: ground height, 8 bit, `base + A · step` (step 0.18 m for this region).
    - Output: `WorldGI_1m.asset` on `WorldC_High`, `WorldGI_2m.asset` (2×2 mean) on `WorldC` (Low + Medium), RGBA32
      linear + mips, gitignored with the rest of `_Generated`; component `Game.Rendering.WorldSkyVisibility` on the region
      root writes the globals before every frame (follows floating-origin shifts and preset switches; no allocation).
@@ -60,8 +60,27 @@ Evidence: `artifacts/bake-r8/` (STATUS.md, maps, renders before/after, montages,
    asmdefs, URP assets, materials, textures of surfaces (ADR 0063), vegetation shading (ADR 0060), glass, render scale
    (ADR 0062).
 
-## Results
-See `artifacts/bake-r8/STATUS.md` (filled with the measured numbers of this branch).
+## Results (editor, RTX 5070, D3D12, Android build target; phone UNVERIFIED)
+- Bake of bialystok-industrial-c: 6.44 M triangles + 82 solid instances + 121 813 crowns, 2048 x 2048 at 1 m,
+  **17 s** (raster 8.8, sky 5.8, sun 0.8). Road median visibility before normalisation 0.921.
+- Memory: `WorldGI_1m` 22.4 MB (High scene only), `WorldGI_2m` 5.6 MB (Low/Medium scene) with mips; 0 new shader
+  variants, 0 extra draws, +3 SetGlobal per frame.
+- 9 control cameras x {Low, High} x {overcast, lowsun, dusk}, before = `rq_worldgi 0, rq_worldsun 0` on the same build:
+  | set | p10 before -> after | p50 before -> after | pixels darkened > 3 % | contact pixels after/before |
+  |---|---|---|---|---|
+  | Low overcast | 31.3 -> 30.6 | 47.5 -> 46.6 | 9.2 % | 0.87 |
+  | Low lowsun | 15.8 -> 15.2 | 28.0 -> 27.3 | 6.3 % | 0.80 |
+  | Low dusk | 15.9 -> 15.4 | 23.6 -> 23.2 | 4.2 % | 0.80 |
+  | High overcast | 33.2 -> 32.5 | 50.3 -> 49.2 | 9.5 % | 0.87 |
+  | High lowsun | 17.2 -> 17.0 | 29.8 -> 29.2 | 3.7 % | 0.81 |
+  | High dusk | 17.4 -> 17.0 | 25.8 -> 25.3 | 4.6 % | 0.81 |
+- Asphalt (max sRGB channel, grey road ROI, 4 cameras) Low overcast 101/99/99/101 -> 101/99/98/101, High overcast
+  106/106/105/106 -> 106/106/104/106: D23 calibration kept (the road normalisation holds the open carriageway).
+- Where it acts: under the DK8 overpass, around hedges and tree crowns, at hall and office wall feet, between noise
+  barriers; at low sun the overpass and the halls cast ground shadows beyond the realtime distance (Low 35 m).
+  Evidence: `artifacts/bake-r8/montages/*.jpg` (photo | before | after), `artifacts/bake-r8/metrics_r2.csv`.
+- Editor frame time cannot resolve one fetch (CPU-bound, 2-5 ms per view): GPU cost on Mali-G57 / Xclipse is UNVERIFIED.
+
 
 ## Consequences / open
 - Phone: A16 Low and S24+ High A/B `rq_worldgi 0` vs default (GPU p50/p90, PSS). Expected cost < 0.3 ms on the A16

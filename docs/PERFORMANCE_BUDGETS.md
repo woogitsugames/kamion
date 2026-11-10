@@ -56,6 +56,7 @@ batching, `artifacts/visual-qa/WorldC/it5/*/stats.txt`, 2026-11-09) — they are
 | Estimate: Rondo Putry from 40 m | 54 / 445 k | 66 / 653 k (over) | 85 / 1.06 M | — |
 | Estimate: truck at the gate (draws / shadow-caster draws) | 186 / 170 | 186 / 340 | 189 / 510 | — |
 | World textures (8 × 512² / 256², ASTC 6×6 on Android) | ≈ 1.3 MB | same | same | same |
+| Baked ground sky visibility + far sun (ADR 0064, RGBA32 + mips; region bialystok-industrial-c) | 5.6 MB (2 m) | 5.6 MB (2 m) | 22.4 MB (1 m) | 22.4 MB (1 m) |
 | Status | UNMEASURED | UNMEASURED | UNMEASURED (no flagship) | UNMEASURED (no flagship) |
 
 Findings to act on once the A16 is measured:
