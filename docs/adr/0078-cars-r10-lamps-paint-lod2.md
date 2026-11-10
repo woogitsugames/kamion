@@ -61,3 +61,51 @@
   wielokąty maski i błotników.
 - Pomiar kosztu `_CARPAINT` i LOD0 4200 na telefonie (Low / Medium).
 - Wnętrze: bryły foteli bez detalu.
+
+## Wynik r10b (2026-11-10, po scaleniu `main` z ADR 0080; trzeci agent)
+Dowody: `artifacts/cars-r10/{m1,m2,m3}/<Tier>-<światło>/` (m1 = przed zmianami lakieru, m3 = stan końcowy), kamery
+`r10b_<black|grey|blue|silver>_<05|20|45>` z `artifacts/cars-r10/add_dark_cams.py` (przód 3/4 z 5, 20 i 45 m, oko 1,7 m).
+Referencje (Mapillary, otwarte): `artifacts/cars-r9/refs/mapillary_*_crop.jpg` (czarny van w słońcu, szary hatchback
+i biały SUV pod chmurami).
+
+- **Mora płatka: usunięta.** High overcast i clear, srebrny SUV z 1,5–5 m i z 20–45 m: brak „tkaniny”. W m1 została
+  ziarnistość „sól z pieprzem” na srebrnym z 1,5 m (pochylenie płatka działało też na odbicie nieba w bazie);
+  w m3 pochylenie płatka w pełni tylko w płacie słońca, w odbiciu otoczenia × 0,3.
+- **Ciemne auta „w czerni” (recenzja 0080 P1 #2): przyczyna po stronie lakieru potwierdzona i poprawiona częściowo.**
+  (a) `diffColor = albedo · (1 − metal)` zostawiało ciemnym metalikom 25–45 % albedo → teraz `1 − 0,5 · metal`;
+  (b) albedo: czarny 0,018 → 0,035, granat 0,03/0,05/0,12 → 0,045/0,085/0,21, szary 0,13 → 0,16;
+  (c) płatek odbija jaśniej niż pigment: `specColor = lerp(0,04, albedo + _CarFlake.z, metal)`, `_CarFlake.z` = 0,08.
+  Wszystko WORKING_VALUE (brak pomiaru lakieru). Zmierzone sRGB 8-bit, średnia z wycinka kadru zmniejszonego do
+  1100 px (ten sam wycinek we wszystkich przebiegach):
+
+  | kadr | przed | po (m3) | tło w kadrze |
+  |---|---|---|---|
+  | granatowy SUV, drzwi, High overcast (`r10_front_04`) | 18/19/21 (m1) | 19/22/33 (m2) | opona 39/35/31 |
+  | czarny hatchback, drzwi, High overcast (`r10b_black_05`) | 15/15/15 (m2) | 20/21/20 | asfalt 70/68/65, niebo 184 |
+  | czarny hatchback, maska / dach, High overcast | 60/61/64 · 74/75/77 (m2) | 67/68/78 · 82/83/92 | opona 57/55/51 |
+  | czarny hatchback, drzwi, High clear | 41/42/40 (m2) | 49/50/49 | opona 96/94/88 |
+  | czarny hatchback, drzwi, Low overcast | 13/13/12 (m2) | 17/18/17 | opona 62/59/56 |
+
+  Maska i dach odbijają niebo i czytają bryłę; granat jest granatowy, szary — szary; z 20–45 m auta nie zlewają się
+  w plamę. **Bok czarnego auta w overcast nadal jest ciemniejszy od opony** (20 wobec 57): pionowa, płaska blacha
+  widziana z 1,7 m odbija w clear coacie grunt (R.y < 0), a nie niebo, i dostaje połowę światła otoczenia; resztę
+  robi krzywa tonalna ADR 0080. Tego nie da się uczciwie podnieść lakierem bez zawyżania albedo — zostaje dla światła
+  (r11) albo dla geometrii (wypukły bok z pochyleniem ku górze).
+- **Lampy:** reflektory z 4–5 m czytają się jako kubeł z jasnym odbłyśnikiem pod kloszem; z 20 m jako jasny klin —
+  akceptowalne. **Lampy tylne nadal płaskie**: jednolita czerwona taca z jasnym prostokątem lampy cofania, klosz
+  daje tylko mleczny nalot w clear; z 4 m to wciąż „naklejka pod szkłem”. Nie poprawiane w tej rundzie.
+- **Szwy / drzwi a nadkole:** w m3 krawędź drzwi leży za nadkolem, szwy zderzaka nie odstają (`r10_wheel_02`,
+  `r10_front_04`). Rant brudu na dole drzwi ma twardą, schodkową krawędź.
+- **Budżet:** geometria bez zmian w tej rundzie (LOD0 3936–4158, limit 4200 zostaje). Estymata klatki Low
+  (`streetscape_qa.json`, 19 kamer kontrolnych) względem `main`: suma +0,69 % (10 815 289 → 10 890 317), High
+  +0,47 %; największa pojedyncza kamera Low +1,80 % (`route_onramp_andersa_above`, +14 804), kolejne +1,52 %
+  (`kwadrat_park_gate`), +1,28 % (`stretch_05_docks`), +1,02 % (`stretch_02`). Przyrost pochodzi z kategorii `props`,
+  głównie z LOD1 / LOD2 (LOD2 60 → 86–90), nie z limitu LOD0 — obniżenie limitu LOD0 do 3500 nie zmieniłoby tych
+  czterech kamer istotnie (rozbicia na LOD nie mierzono: UNVERIFIED).
+- **Testy:** EditMode 188/188. `pytest tests/gis`: 225 passed, 3 failed, 2 xfailed — te same 3 padają na `main`
+  (`test_road_fidelity::test_report_not_stale`, `test_route_corridor::test_route_corridor_is_clear`,
+  `::test_route_profile_has_no_steps`); nie dotyczą aut.
+- **Scalenie z `main`:** `WorldPBR.shader` scalony automatycznie (bloki `_CARPAINT` i ADR 0080 obok siebie),
+  pliki generowane `--ours` + regeneracja (`build_world_4.log`).
+- Koszt shadera na telefonie: nadal **UNVERIFIED**. Recenzja `visual-critic` r10b: do zlecenia przez lidera.
+
