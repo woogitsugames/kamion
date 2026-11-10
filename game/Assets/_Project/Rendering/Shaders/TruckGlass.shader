@@ -29,6 +29,7 @@ Shader "Kamion/Truck Glass"
         _WiperPivotB ("Wiper B pivot (object xy) + inner, outer radius", Vector) = (-0.08, 0.87, 0.18, 0.95)
         _WiperSweep ("Sweep start, end (deg from +X towards +Y), windscreen min/max object y", Vector) = (-5, 100, 0.8, 2.0)
         _WindscreenMinZ ("Windscreen: object z above this (front face of the cab)", Float) = 0.95
+        _ExteriorTransmission ("Seen from outside: share of the cab behind the pane that reaches the eye (0.7 x cab occlusion)", Range(0, 1)) = 0.42
     }
     SubShader
     {
@@ -47,12 +48,14 @@ Shader "Kamion/Truck Glass"
             #pragma fragment frag
             #pragma multi_compile_fog
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "KamionVehicleEnv.hlsl"
+            float4 _KamionGrimeUp[4];   // vehicle frames (ContactShadowCaster): height above the wheel-contact plane
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _Tint;
                 float4 _GrimeMap_ST;
                 float4 _CabCentreOS, _InteriorAlbedo, _WiperPivotA, _WiperPivotB, _WiperSweep;
-                float _Opacity, _Smoothness, _Grime, _UseVertexColor, _Wiper, _WindscreenMinZ;
+                float _Opacity, _Smoothness, _Grime, _UseVertexColor, _Wiper, _WindscreenMinZ, _ExteriorTransmission;
             CBUFFER_END
             TEXTURE2D(_GrimeMap); SAMPLER(sampler_GrimeMap);
 
@@ -132,6 +135,10 @@ Shader "Kamion/Truck Glass"
                 half grime = SAMPLE_TEXTURE2D(_GrimeMap, sampler_GrimeMap, i.uv).r * _Grime + film;
                 half pr = saturate(1.0 - _Smoothness + film * 0.25);
                 half3 R = reflect(-V, n);
+                // Height above the wheel-contact plane (vehicle frame of ContactShadowCaster; 2 m when the renderer has none).
+                uint slot = unity_RendererUserValue;
+                bool hasFrame = slot >= 1u && slot <= 4u;
+                float h = hasFrame ? dot(i.positionWS, _KamionGrimeUp[slot - 1u].xyz) + _KamionGrimeUp[slot - 1u].w : 2.0;
                 half3 env;
                 if (i.inside > 0.5)
                 {
@@ -143,16 +150,29 @@ Shader "Kamion/Truck Glass"
                     env = lerp(roof, dash, smoothstep(0.1, -0.2, R.y));
                 }
                 else
-                    env = GlossyEnvironmentReflection(R, i.positionWS, pr, 1.0);
+                {
+                    // r6 E2: analytic ground below the horizon on the tiers without the vehicle capture (KamionVehicleEnv).
+                    env = KamionVehicleEnv(R, i.positionWS, pr, 1.0, h);
+                }
 
-                half r = max(pr * pr, 0.002);
+                // Float GGX with the sun-disc alpha floor 0.01 (r6, as Kamion/Truck Exterior CoatDirect): the half form
+                // cancelled to ~0 at the highlight centre (alpha^2 ~ 4e-6) and overflowed fp16 on phone GPUs.
+                float r = max(pr * pr, 0.01);
                 float3 H = SafeNormalize(float3(L.direction) + V);
-                half NoH = saturate(dot(n, H));
-                half d = NoH * NoH * (r * r - 1.0) + 1.00001;
-                half spec = (r * r) / (4.0 * PI * d * d) * saturate(dot(n, L.direction)) * F * 4.0;
+                float NoH = saturate(dot(float3(n), H));
+                float d = 1.0 - NoH * NoH * (1.0 - r * r);
+                half spec = (half)min((r * r) / (4.0 * PI * d * d) * saturate(dot(n, L.direction)) * F * 4.0, 2048.0);
 
                 // Transmittance of the pane: reflection loss x body absorption x grime / film (the film also scatters).
                 half trans = (1.0 - F) * tAbs * (1.0 - saturate(grime * 0.25));
+                // r6 E2 "aquarium": from outside, the eye looks through the pane into a cab that our interior model leaves
+                // nearly empty (no headrest curtains, bunk curtain, clutter) and out again through the far door glass. A
+                // real cab stops most of that path: ~0.7 of the light that crosses the cab survives the second pane and the
+                // interior clutter, times the cab occlusion (~0.6). WORKING_VALUE; inside faces (driver view) unchanged.
+                // Cab glazing band only (1.6-3.2 m above the road): the lamp lenses share this material and must not dim
+                // their reflectors / LEDs (headlamps ~1 m, roof marker lamps ~3.7 m).
+                half glazing = hasFrame ? step(1.6, h) * step(h, 3.2) : 0.0;
+                trans *= lerp(1.0, saturate(_ExteriorTransmission), glazing * (1.0 - i.inside));
                 // Body colour (the tint the blend cannot apply to the transmitted scene) - outside face only, small: from
                 // the cab it reads as a milky veil over the road (r4 E2). Grime / film haze lit by sun and sky on both faces.
                 half3 body = i.tint * amb * (1.0 - tAbs) * 0.25 * (1.0 - i.inside)

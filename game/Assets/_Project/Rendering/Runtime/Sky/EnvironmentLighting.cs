@@ -49,11 +49,13 @@ namespace Game.Rendering
             Instance = this;
             // Dusk street lighting (review r4 L3) lives next to the sun that switches it.
             if (GetComponent<StreetLamps>() == null) gameObject.AddComponent<StreetLamps>().hideFlags = HideFlags.DontSave;
+            QualityProfileApplier.Applied += OnTierApplied;
             Apply();
         }
 
         void OnDisable()
         {
+            QualityProfileApplier.Applied -= OnTierApplied;
             if (Instance == this) Instance = null;
         }
 
@@ -147,6 +149,55 @@ namespace Game.Rendering
             // RenderSettings.fogColor is specified in sRGB like other colours and linearised by Unity.
             var fogClamped = new Color(Mathf.Min(fog.r, 1f), Mathf.Min(fog.g, 1f), Mathf.Min(fog.b, 1f), 1f);
             RenderSettings.fogColor = fogClamped.gamma;
+
+            // ---- vehicle reflections (r6 E1/E2, KamionVehicleEnv.hlsl): ground plane + horizon for the analytic env ----
+            Color g = p.groundAlbedo * m.AdaptedWhite * (m.HorizontalIlluminanceLux * m.Exposure / Mathf.PI);
+            Shader.SetGlobalVector(k_GroundEnv, new Vector4(g.r, g.g, g.b, RenderSettings.fogDensity));
+            Shader.SetGlobalVector(k_HorizonEnv, new Vector4(fog.r, fog.g, fog.b, 1f));
+            ApplySkyCap();
+        }
+
+        static readonly int k_GroundEnv = Shader.PropertyToID("_KamionGroundEnv"), k_HorizonEnv = Shader.PropertyToID("_KamionHorizonEnv"),
+            k_SkyCap = Shader.PropertyToID("_KamionSkyCap");
+
+        /// <summary>Display caps of the sky dome at the horizon and towards the zenith (review r6 L4: phone local tone mapping).</summary>
+        public const float SkyCapHorizonDisplay = 0.98f, SkyCapZenithDisplay = 0.875f;
+
+        void OnTierApplied(QualityProfile.Tier t) => ApplySkyCap();
+
+        /// <summary>
+        /// Review r6 L4: the overcast dome clipped to 254/254/254 on the post-processing tiers (the D23 curve clips at
+        /// lookWhiteClip = 0.7 and the overcast sky is &gt; 0.7 above ~5 deg). A phone keeps the cloud deck's tone with local
+        /// tone mapping: here the sky shader compresses the dome (soft knee) to the exposed value that the active tone curve
+        /// maps to 98 % at the horizon and 87.5 % towards the zenith. Low (no post): the same display targets through plain
+        /// sRGB. The surfaces, fog and reflection cubes keep the physical radiance (D23/D27 unchanged for everything else).
+        /// </summary>
+        void ApplySkyCap()
+        {
+            var p = Active;
+            if (p == null) return;
+            bool post = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.postProcessing;
+            float h, z;
+            if (post)
+            {
+                var curve = new AnimationCurve(LookGrading.MasterCurveKeys(p.lookBlackLevel, p.lookWhiteClip));
+                h = InverseDisplay(curve, SkyCapHorizonDisplay, p.lookWhiteClip);
+                z = InverseDisplay(curve, SkyCapZenithDisplay, p.lookWhiteClip);
+            }
+            else { h = LookGrading.SrgbToLinear(SkyCapHorizonDisplay); z = LookGrading.SrgbToLinear(SkyCapZenithDisplay); }
+            Shader.SetGlobalVector(k_SkyCap, new Vector4(h, z, 1f, 0f));
+        }
+
+        /// <summary>Exposed scene value that the D23 master curve maps to <paramref name="display"/> (sRGB), by bisection.</summary>
+        public static float InverseDisplay(AnimationCurve master, float display, float whiteClip)
+        {
+            float lo = 0f, hi = Mathf.Max(whiteClip, 0.75f) + 0.05f;
+            for (int i = 0; i < 40; i++)
+            {
+                float mid = 0.5f * (lo + hi);
+                if (LookGrading.Display(master, mid) < display) lo = mid; else hi = mid;
+            }
+            return 0.5f * (lo + hi);
         }
 
         void ApplyLook(LightingPreset p)

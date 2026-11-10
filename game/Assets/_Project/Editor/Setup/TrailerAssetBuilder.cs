@@ -207,6 +207,13 @@ namespace Game.Editor.Setup
                         // ADR 0038: a PVC curtain has no lacquer layer (lowsun r4: the curtain shone like a painted panel).
                         m.SetFloat("_ClearCoat", 0f);
                     }
+                    // Review r6 T-N1: the curtain's soiling comes from the spray / wake / post-runoff model in the shader
+                    // (trailer frame: curtain bottom = floor 1.30 m + 1 cm, top under the top rail, rear z, axles from
+                    // dims.json), not from the baked mask (dark blotches on the rear third). Posts every 3.4 m from the rear
+                    // portal: WORKING_VALUE.
+                    m.SetVector("_CurtainGrime", slot == "Curtain" ? new Vector4(1f, 1.31f, 3.88f, -12.0f) : Vector4.zero);
+                    m.SetVector("_CurtainAxles", new Vector4(-6.39f, -7.70f, -9.01f, 0f));
+                    m.SetVector("_CurtainPosts", new Vector4(3.4f, 0f, 0.22f, 0.7f));
                     m.SetFloat("_Lamps", slot == "Lights" ? 1f : 0f);
                     if (slot == "Lights") m.EnableKeyword("_KAMION_TRUCK_LAMPS");
                     EditorUtility.SetDirty(m);

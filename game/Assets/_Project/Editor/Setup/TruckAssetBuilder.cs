@@ -313,6 +313,8 @@ namespace Game.Editor.Setup
                 g.SetVector("_WiperSweep", new Vector4(-5f, 100f, 0.8f, 2.0f));
                 g.SetFloat("_WindscreenMinZ", 0.95f);
                 g.SetVector("_CabCentreOS", new Vector4(0f, 1.0f, -0.6f, 0f));
+                // Review r6 E2: from outside only ~0.7 x cab occlusion 0.6 of the cab behind the glazing reaches the eye (shader).
+                g.SetFloat("_ExteriorTransmission", 0.42f);
                 g.renderQueue = (int)RenderQueue.Transparent;
                 Add("MI_Ext_Glass", g);
                 // Main mirrors: unlit, the render texture replaces the idle colour (RenderTextureMirror).
@@ -356,6 +358,7 @@ namespace Game.Editor.Setup
                 // Cluster cover glass: no grime - the haze texture over the screen read as a grey noisy slab (review r3 C1).
                 cg.SetFloat("_Grime", 0f);
                 cg.renderQueue = (int)RenderQueue.Transparent;
+                cg.SetFloat("_ExteriorTransmission", 1f);   // cluster cover glass: no exterior attenuation
                 Add("MI_Cab_Glass", cg);
                 foreach (var d in DisplayObjects)
                 {
