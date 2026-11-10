@@ -110,14 +110,27 @@ Shader "Kamion/Cab Interior"
                 half3 nTS = half3(0, 0, 1);
             #if defined(_KAMION_CAB_DECAL)
                 half4 d = SAMPLE_TEXTURE2D(_DecalAtlas, sampler_DecalAtlas, i.uv01.xy);
-                clip(d.a - _Cutoff);
-                albedo = tint * d.rgb;
+                // Legend band of the atlas (icons, v < 0.5; manifest "MI_Cab_Decal" notes). A 10-13 mm legend is ~8-12 px
+                // on the phone: the mip-averaged alpha of a 9 px stroke falls under 0.5 and the print vanished. Lower
+                // clip keeps the stroke; printed legends are near-white paint and sit proud of the key, so they take the
+                // key's AO only in part (interior legibility pass, ADR 0044).
+                half legend = i.uv01.y < 0.5 ? 1.0 : 0.0;
+                clip(d.a - lerp(_Cutoff, 0.16, legend));
+                albedo = tint * d.rgb * (1.0 + 0.45 * legend);
                 rough = i.color.a;
+                ao = lerp(ao, max(ao, 0.8), legend);
             #else
                 half4 det = SAMPLE_TEXTURE2D(_Detail, sampler_Detail, i.uv01.xy);
                 half mixD = strength > 0.0 ? 1.0 : 0.0;
-                albedo = tint * lerp(1.0, (0.7 + 0.6 * det.r) * (0.4 + 0.6 * det.g), mixD) * lerp(1.0, det.a, perf) * (1.0 + 1.5 * wear);
-                rough = saturate(i.color.a + (det.b - 0.5) * 0.4 * mixD - 0.25 * wear);
+                // Wear (uv2.x, 0..~0.9): polished touch points. At phone resolution the authored 1 + 1.5 w / -0.25 w did not
+                // read (ADR 0044): the wear is shaped (wk), broken up by the detail variation so it is not a vertex
+                // gradient, and mostly a gloss change (hand-polished leather and plastic get shiny before they get pale).
+                half wk = saturate(wear * 2.4 * (0.55 + 0.9 * det.r * mixD + 0.45 * (1.0 - mixD)));
+                albedo = tint * lerp(1.0, (0.7 + 0.6 * det.r) * (0.4 + 0.6 * det.g), mixD) * lerp(1.0, det.a, perf) * (1.0 + 1.5 * wear + 1.3 * wk);
+                rough = clamp(i.color.a + (det.b - 0.5) * 0.6 * mixD - 0.25 * wear - 0.3 * wk, 0.08, 1.0);
+                // Panel gaps and creases: the AO atlas is ambient-only in URP, so in direct light a 2 mm gap had the
+                // brightness of its panels. Deep AO also darkens the albedo: gaps read as thin dark lines.
+                albedo *= lerp(0.4, 1.0, smoothstep(0.04, 0.28, ao));
                 nTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_Normal, sampler_Detail, i.uv01.xy), 1.25 * strength);
             #endif
                 half sgn = i.tangentWS.w;
@@ -143,6 +156,14 @@ Shader "Kamion/Cab Interior"
                 s.alpha = 1;
                 s.normalTS = nTS;
                 half4 col = UniversalFragmentPBR(input, s);
+                // Grazing sheen: the windscreen and side glass are a large bright source in front of every cab surface;
+                // the cab has no probe that sees them, so edges of keys, the wheel rim and seat bolsters had no highlight
+                // and leather read like matte plastic. Fresnel-weighted ambient, scaled by smoothness (worn leather and
+                // satin keys catch it, grained dash plastic does not), occluded by the AO atlas. ~8 ALU, no sample.
+                half nv = saturate(dot(nWS, input.viewDirectionWS));
+                half fr = 1.0 - nv; fr *= fr * fr;
+                half sm = s.smoothness;
+                col.rgb += input.bakedGI * (fr * sm * (0.4 + sm) * 3.0 * ao * (1.0 - metal));
                 col.rgb *= _CabGain > 0.0 ? _CabGain : 1.0;   // unset global (0) = no gain
                 // Local shadow lift (review r4 L1): a phone's local tone mapping lifts deep shade in a backlit cab. Smooth
                 // in luminance (Y * gain stays monotone for k < 16), ~1 above 3 x the knee.
