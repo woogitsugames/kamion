@@ -29,3 +29,7 @@ Gałąź: worktree-agent-ab1fb0a47d2f0a491 (nie scalona; integruje lider).
   (lub po ubiciu) ponowić tę samą komendę (cache + manifest wznawiają bez duplikatów), potem openverse (API zwracało 504).
 - Openverse: 504 na każde zapytanie o 19:4x; ponowić `open_sources.py --source openverse --interval 1.5`.
 - 20:03 incremental manifest (co 10 pobran), adopt istniejących plików; commons ubity i wznawiany.
+- 20:15 STAN: manifesty: kartaview 79 (by-sa), panoramax 23 (by-sa), commons 74+ (cc0 53, by 11, by-sa 10; wznawiany w tle), gugik-ortho 55, bialystok-open-data 11 warstw, openverse 0 (proces w tle, API wróciło).
+  Pokrycie ujęć ulicznych+Commons: 54/55 (brak tylko #2). Podsumowanie: `uv run --project tools/refs python tools/refs/summarize.py`.
+  NASTĘPNY KROK: dokończyć commons/openverse (te same komendy z sekcji Komendy; wznawiają się), potem `summarize.py`, docs/REFERENCES.md (tabela źródeł),
+  docs/LICENSES.md (wpisy źródeł), skopiować artifacts/refs z worktree do głównego artifacts/refs, odpiąć junctiony, raport <= 20 linii.
