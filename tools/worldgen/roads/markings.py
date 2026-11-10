@@ -67,15 +67,18 @@ def strip(buf, c, s0, s1, lat, w, kind):
         return
     n = max(1, int(math.ceil((s1 - s0) / 2.0)))
     ss = np.linspace(s0, s1, n + 1)
-    a = _surface_pts(c, ss, np.full(len(ss), lat - w / 2))
-    b = _surface_pts(c, ss, np.full(len(ss), lat + w / 2))
+    # lat may follow the carriageway edge (callable of s): edge lines and one-way lane lines keep their distance
+    # to the gutter where the width changes inside a section (ADR 0074: P-7b drawn on the kerb of the link)
+    la = np.asarray(lat(ss), float) if callable(lat) else np.full(len(ss), float(lat))
+    a = _surface_pts(c, ss, la - w / 2)
+    b = _surface_pts(c, ss, la + w / 2)
     V = np.concatenate([a[:, None], b[:, None]], axis=1).reshape(-1, 3)
     T = []
     for i in range(n):
         T += [(2 * i, 2 * i + 2, 2 * i + 3), (2 * i, 2 * i + 3, 2 * i + 1)]
     uv = np.column_stack([np.repeat(ss - s0, 2), np.tile([0.0, 1.0], len(ss))])
     sv = np.repeat(ss, 2)
-    lv = np.tile([lat - w / 2, lat + w / 2], len(ss))
+    lv = np.column_stack([la - w / 2, la + w / 2]).ravel()
     buf.add("markings", "marking_white", V, uv, np.array(T), src=f"{kind}@{c.id}", UV1=_paint_uv1(c, sv, lv, kind))
 
 
@@ -262,6 +265,9 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                 for end, sj in appr.items():
                     cont.append((sj, sj + S.P2A_MIN_LEN) if end == "a" else (sj - S.P2A_MIN_LEN, sj))
                 for lat in bounds:
+                    if sec.oneway:            # one-way lane lines are laid out from the left gutter: follow it
+                        dl = float(lat) - hw
+                        lat = (lambda ss_, dl=dl: c.hw_at(ss_) + dl)
                     _segmented(buf, c, sa, sb, lat, S.LINE_W_NARROW, dash, gap, cont, "lane")
                     cnt("P-1 lane line")
                 if lat_c is not None and sec.width >= S.SEGREGATION_MIN_CARRIAGEWAY:
@@ -274,7 +280,8 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                         cnt("P-1 centre line")
                 if sec.cls in ("A", "S", "GP") and sec.edge_strip > 0 and not sec.roundabout:
                     for sg in (-1, 1):
-                        strip(buf, c, sa, sb, sg * (hw - sec.edge_strip + S.LINE_W_WIDE / 2), S.LINE_W_WIDE, "P-7b")
+                        strip(buf, c, sa, sb, (lambda ss_, sg=sg, e=sec.edge_strip:
+                                               sg * (c.hw_at(ss_) - e + S.LINE_W_WIDE / 2)), S.LINE_W_WIDE, "P-7b")
                     cnt("P-7b edge line", 2)
             # arrows from turn:lanes at the downstream end of this section
             for tl, tdir in ((sec.turn_fwd, 1), (sec.turn_bwd, -1)):

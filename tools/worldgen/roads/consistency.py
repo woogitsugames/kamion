@@ -29,7 +29,7 @@ import numpy as np
 import shapely
 
 from . import standards as S
-from .markings import lane_layout
+from .markings import _lanes_continue, lane_layout
 
 CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
 OBSTACLE = {"curb_concrete": "kerb", "sidewalk_paving": "sidewalk", "verge_grass": "verge_grass",
@@ -282,12 +282,13 @@ def check(w, instances, region_id, pipeline, report_extra=None):
             has = {"through": any(abs(x[0]) <= JUNCTION_THROUGH_DEG for x in outs),
                    "slight_left": any(5 <= x[0] <= 75 for x in outs), "slight_right": any(-75 <= x[0] <= -5 for x in outs),
                    "left": any(35 <= x[0] <= 160 for x in outs), "right": any(-160 <= x[0] <= -35 for x in outs)}
+            passes = _lanes_continue(c, a.end, j, secs)     # same turn:lanes continue: arrows belong further on
             for li, trav, lat, hb, tl in bands:
                 stats["approach_lanes"] += 1
                 turns = _turns(tl)
                 p0 = c.line.offset_point(s_end, lat)
                 for tn in turns & set(has):
-                    if not has[tn] and tl:
+                    if not has[tn] and tl and not passes:
                         cases.add("arrow_no_exit", p0, {"what": tn, "lane": li, "turn_lanes": tl}, chain=c.id,
                                   junction=j.id, osm_ways=_osm_ways(c))
                 if "through" not in turns or not has["through"]:

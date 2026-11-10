@@ -855,6 +855,7 @@ def qa_report(w, mk_report, mask):
             "junctions_earclip": pstats.get("earclip_ids", []),
             "roundabout_junctions": sum(1 for j in w.junctions if j.roundabout),
             "signalised_junctions": sum(1 for j in w.junctions if j.signalized),
+            "emergency_signal_junctions": sorted(j.id for j in w.junctions if getattr(j, "emergency_signals", False)),
             "grade_over_limit": [c["id"] for c in over],
             "axis_smoothing_deviation_m": {"p50": r(np.percentile(dev_all, 50), 3),
                                            "p95": r(np.percentile(dev_all, 95), 3),

@@ -479,10 +479,21 @@ def align_forks(net: Network, report: list | None = None):
                     shift = want - have                   # + = towards travel-left
                     if abs(shift) < 0.3:
                         continue
-                    L = max(FORK_ALIGN_MIN_M, FORK_ALIGN_RATIO * abs(shift))
-                    L = min(L, 0.8 * c.length)
+                    # hold the full shift until the branch has left its neighbours (gore), then fade it out
                     d = c.line.s if e == "a" else c.length - c.line.s
-                    f = np.clip(1.0 - d / L, 0.0, 1.0)
+                    others = [LineString(o.line.p) for _, o, _, _, _ in br if o is not c]
+                    oh = max([float(np.max(o.hw)) for _, o, _, _, _ in br if o is not c] or [0.0])
+                    hold = 0.0
+                    for dd in np.arange(0.0, 0.6 * c.length, 2.0):
+                        q = c.line.point(dd if e == "a" else c.length - dd)
+                        hb = float(c.hw_at(dd if e == "a" else c.length - dd))
+                        clear = min(Point(q).distance(o) for o in others) if others else 1e9
+                        if clear - abs(shift) > hb + oh + 1.0:  # branch edge > 1 m clear of the neighbour's edge
+                            break
+                        hold = dd
+                    L = max(FORK_ALIGN_MIN_M, FORK_ALIGN_RATIO * abs(shift))
+                    L = min(L, max(0.8 * c.length - hold, 5.0))
+                    f = np.clip(1.0 - (d - hold) / L, 0.0, 1.0)
                     f = f * f * (3 - 2 * f)
                     # branch travel-left normal along the branch = chain normal * branch travel sign
                     nb = c.line.n * (1.0 if dn > 0 else -1.0)
