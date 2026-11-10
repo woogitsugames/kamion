@@ -616,7 +616,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
     budget = mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams)
     write_json(gen / "streetscape_qa.json", {"schema": "truck-sim-pl/streetscape-qa/1", "region": region_id,
                                              **st["report"], "mesh_budget": budget})
-    walls = CF.terrain_walls(w.buf.parts, zc, w.hf)
+    walls = CF.terrain_walls(w.buf.parts, zc, w.hf, mask=mask)
     log("terrain walls > %.2f m:" % walls["thresh_m"], walls["count"], "max", walls["max_m"])
     write_json(gen / "terrain_walls_qa.json", walls)
     np.save(out_root / "terrain_conformed.npy", zc.astype(np.float32))

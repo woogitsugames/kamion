@@ -12,7 +12,7 @@ import numpy as np
 
 from . import standards as S
 from .geom import ear_clip, polygon_area
-from .network import ISLAND, URBAN, side_params, side_profile
+from .network import ISLAND, MEDIAN_RURAL, RURAL, URBAN, side_params, side_profile
 
 
 @dataclass
@@ -202,6 +202,10 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
         R = 1.0 / np.maximum(kap_toward[inside], 1e-6)
         allow = np.maximum(0.3, 0.9 * R - hw[inside] if np.ndim(hw) else 0.9 * R - hw)
         scale[inside] = np.minimum(1.0, allow / np.maximum(umax[inside], 1e-6))
+    # rural ditch profiles squeezed on the inside of a curve keep their 1:1.5 slopes: depths shrink with the
+    # widths (a shallower ditch), otherwise a 0.6 m ditch compressed to 40 % reads as a 55-60 deg green wall
+    # (REVIEW r4 W-H5, Andersa slip lane, ADR 0033). The bottom skirt keeps its full depth.
+    vscale = np.where(np.array([p[0] in (RURAL, MEDIAN_RURAL) for p in params]), scale, 1.0)
     layer = "collision" if coarse else "road"
     for k in range(nseg):
         mats = [pr[k][4] for pr in profs]
@@ -214,6 +218,9 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
                   and abs(profs[0][k][2] - profs[0][k][0]) < 1e-6)
         for i in range(n):
             u0, d0, u1, d1, _ = profs[i][k]
+            if vscale[i] < 1.0:
+                vert = abs(u1 - u0) < 1e-6 and k == nseg - 1
+                d0, d1 = d0 * vscale[i], (d0 * vscale[i] + (d1 - d0)) if vert else d1 * vscale[i]
             p0 = G[i] + OUT[i] * (u0 * scale[i])
             p1 = G[i] + OUT[i] * (u1 * scale[i])
             if batter and (br is None or not br[i]):
