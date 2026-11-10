@@ -175,6 +175,11 @@ def shell_sec(z):
     return tab[-1][1:]
 
 
+# r7b: parts cut after the first fit (name -> bisect planes), see fit_to_exterior(). The footwell wall gets vertices at
+# the top and bottom of the T bar pocket band and 0.92 m either side of the centre line (inside of it the wall is
+# > 85 mm behind the skin and does not move).
+FIT_CUTS = {"footwell_wall": [((0.92, 0, 0), (1, 0, 0)), ((-0.92, 0, 0), (1, 0, 0)),
+                              ((0, 0, 1.60), (0, 0, 1)), ((0, 0, 1.88), (0, 0, 1))]}
 POCKET_CLEAR = 0.015   # m: the interior stays this far behind the floor of an exterior front pocket
 POCKET_EDGE = (0.02, 0.03)   # m: full pocket depth this far beyond the pocket outline, then a ramp back to the wall
 
@@ -238,7 +243,8 @@ def fit_to_exterior(objs, margin=0.004):
             return ox[k] + (ox[k + 1] - ox[k]) * (f - k) - 0.005
         return GLASS_IF["rows"][k][-1][0] - 0.03
     out = {}
-    for o in objs:
+
+    def fit_obj(o):
         me = o.data
         n, dmax = 0, 0.0
         for v in me.vertices:
@@ -284,7 +290,29 @@ def fit_to_exterior(objs, margin=0.004):
                 dmax = max(dmax, d)
         if n:
             me.update()
-            out[o.name] = {"verts_moved": n, "max_move_m": round(dmax, 4)}
+            prev = out.get(o.name, {"verts_moved": 0, "max_move_m": 0.0})
+            out[o.name] = {"verts_moved": prev["verts_moved"] + n,
+                           "max_move_m": max(prev["max_move_m"], round(dmax, 4))}
+
+    for o in objs:
+        fit_obj(o)
+        cuts = FIT_CUTS.get(o.name)
+        if cuts and GLASS_IF.get("pockets"):
+            # r7b: a part with too few vertices for the vertex clamp (the footwell wall is one box across the whole
+            # cab: its corners were fitted, its end edges still ran through the wrapped ends of the T bar pocket).
+            # Cut after the first fit (the reviewed plane stays where it was), keep the cab-facing sheet (the other
+            # faces of the box face the skin) and clamp the new vertices.
+            bm = bmesh.new()
+            bm.from_mesh(o.data)
+            for co, no in cuts:
+                bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=co, plane_no=no,
+                                       dist=1e-5)
+            bm.normal_update()
+            bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.normal.y > -0.5], context="FACES")
+            bm.to_mesh(o.data)
+            bm.free()
+            o.data.update()
+            fit_obj(o)
     return out
 
 
