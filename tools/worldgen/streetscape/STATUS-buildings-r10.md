@@ -13,3 +13,11 @@
   rury, rampy, żaluzje; (4) balkony/klimatyzatory/anteny/wejścia; (5) garaże.
 - NASTĘPNY KROK: napisać `tools/worldgen/streetscape/facade_atlas.py` i `art-source/world/materials/_src/sets_buildings.py`, potem
   `uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only facade_atlas,facade_far`
+
+## krok 1 — atlasy (kod + pierwsze PNG)
+- `tools/worldgen/streetscape/facade_atlas.py` (układ 103 komórek 16x16 m, rzędy LOD1 24x23,4 m, płot 16x4,5 m), `art-source/world/materials/_src/sets_buildings.py`
+  (malarze okien/drzwi/bram/balustrad/płotu), wpis w `build_all.py`; budowa 3 zestawów 60 s; podglądy `artifacts/buildings-r10/atlas/*_v1.jpg`.
+- Kamery kontrolne: `tools/worldgen/qa/buildings_cameras.py` -> `Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json` (19 kamer).
+- UWAGA worktree: `git lfs checkout` konieczny (trees.glb był wskaźnikiem LFS -> import FAILED). Runda bazowa: `pwsh artifacts/buildings-r10/run_round.ps1 -Round base`.
+- NASTĘPNY KROK: podpiąć atlas w `buildings_mesh.py`/`facade_kit.py`/`materials.py` (okna jako komórki, rzędy LOD1), potem
+  `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` i `pwsh artifacts/buildings-r10/run_round.ps1 -Round r1 -Configs High:overcast,Low:overcast`
