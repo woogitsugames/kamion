@@ -72,6 +72,8 @@ namespace Game.Gameplay
         /// <summary>Player control settings (settings menu); loaded from PlayerPrefs at start, saved on every change.</summary>
         public ControlSettings Controls { get; private set; }
         ControlSettingsPanel m_SettingsPanel;
+        ControlInputLogger m_InputLog;
+        CameraMode m_LoggedCamMode;
         public SteerMode CurrentSteerMode => m_SteerMode;
         public LabSpawn CurrentSpawn => m_Spawn;
         public DriverInputMixer Mixer => m_Mixer;
@@ -109,6 +111,7 @@ namespace Game.Gameplay
             Controls = ControlSettings.Load();
             ApplyControls();
             Controls.Log("loaded");
+            m_InputLog = new ControlInputLogger();
 
             if (!vehicle.TryGetComponent(out m_Recorder)) m_Recorder = vehicle.gameObject.AddComponent<VehicleTelemetryRecorder>();
             m_Recorder.body = vehicle;
@@ -119,6 +122,8 @@ namespace Game.Gameplay
             m_Rig.targetBody = vehicle.GetComponent<Rigidbody>();
             var visuals = vehicle.GetComponent<VehicleVisuals>();
             m_Rig.eyeAnchor = visuals != null && visuals.cabPivot != null ? visuals.cabPivot.Find("DriverEyePoint") : null;
+            ApplyControls();   // the rig exists now: camera settings (look gain, FOV, head motion)
+            m_LoggedCamMode = m_Rig.mode;
             m_TractorCam = vehicle.GetComponentInChildren<ReversingCamera>(true);
             m_TrailerCam = trailer != null ? trailer.GetComponentInChildren<ReversingCamera>(true) : null;
             foreach (var mir in vehicle.GetComponentsInChildren<RenderTextureMirror>(true))
@@ -140,7 +145,7 @@ namespace Game.Gameplay
                 ToggleSteeringMode = () => SetSteerMode((SteerMode)(((int)m_SteerMode + 1) % 3)),
                 OpenSettings = OpenControlSettings,
                 ResetVehicle = () => Spawn(m_Spawn),
-                OpenMenu = () => SceneManager.LoadScene("Boot"),
+                OpenMenu = ReturnToMenu,
                 StatusLine = () => Time.unscaledTime < m_StatusUntil ? m_Status : (Autopilot.Enabled || RouteDriver.Enabled ? "AUTOPILOT (pomiar)" : ""),
                 Spawn = i => Spawn((LabSpawn)i, persist: true),
                 CurrentSpawn = () => (int)m_Spawn,
@@ -178,9 +183,12 @@ namespace Game.Gameplay
             else if (!string.IsNullOrEmpty(ap)) { ConfigureAutopilot(ap, platform.GetLaunchArgument("speed")); m_AutopilotStart = true; }
             Spawn(m_Spawn);
             // lighting=<preset> (clear | overcast | lowsun | dusk): device frames of the control set under the same light (A7).
+            string menuLighting = StartRequest.ConsumeLighting();   // start menu choice; a launch argument wins
             string lighting = platform.GetLaunchArgument("lighting");
+            if (string.IsNullOrEmpty(lighting)) lighting = menuLighting;
             if (!string.IsNullOrEmpty(lighting))
             {
+                Debug.Log($"[CONTROLS] session lighting={lighting} tier={QualityTiers.Current} fps={Application.targetFrameRate}");
                 var env = FindAnyObjectByType<EnvironmentLighting>();
                 if (env == null || !env.SetPreset(lighting)) Debug.LogWarning($"[LAB] lighting={lighting}: no such preset");
             }
@@ -249,7 +257,20 @@ namespace Game.Gameplay
             m_SteerMode = Controls.gyroEnabled ? SteerMode.Gyro : (Controls.wheelRangeDeg >= 600f ? SteerMode.Wheel900 : SteerMode.Wheel270);
             if (Gyro.Enabled && !wasGyro) Gyro.Calibrate();
             if (!Controls.gyroEnabled) Gyro.Suspend();
+            if (m_Rig != null)
+            {
+                m_Rig.lookDegPerPixel = ControlSettings.BaseLookDegPerPixel * Controls.lookSensitivity;
+                m_Rig.cabFov = Controls.cabFov;
+                m_Rig.headGain = Controls.headMotion ? ControlSettings.BaseHeadGain : 0f;
+            }
             m_Hud?.RefreshNow();
+        }
+
+        /// <summary>HUD "Menu" and the Android back key: back to the start menu (Boot scene) without restarting the app.</summary>
+        public void ReturnToMenu()
+        {
+            Debug.Log("[CONTROLS] event menu-return");
+            SceneManager.LoadScene("Boot");
         }
 
         void OpenControlSettings()
@@ -435,6 +456,13 @@ namespace Game.Gameplay
                 Forward = vehicle.transform.forward,
             };
             var intent = m_Mixer.Sample(Time.deltaTime, fb);
+            if (!Autopilot.Enabled && !RouteDriver.Enabled) m_InputLog.Observe(Time.unscaledTime, intent, vehicle.SpeedKmh);
+            if (m_Rig.mode != m_LoggedCamMode) { m_LoggedCamMode = m_Rig.mode; m_InputLog.Event(Time.unscaledTime, "camera mode=" + m_LoggedCamMode); }
+            var kb = UnityEngine.InputSystem.Keyboard.current;   // Android back key arrives as Escape
+            if (kb != null && kb.escapeKey.wasPressedThisFrame)
+            {
+                if (m_SettingsPanel != null) m_SettingsPanel.Close(); else ReturnToMenu();
+            }
             ApplyCommands(intent);
 
             var input = vehicle.Input;

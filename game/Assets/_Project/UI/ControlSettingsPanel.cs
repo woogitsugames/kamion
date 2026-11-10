@@ -25,7 +25,7 @@ namespace Game.UI
         static readonly Color k_Muted = new Color(0.70f, 0.70f, 0.67f, 1f);
         static readonly Color k_Amber = new Color(0.95f, 0.66f, 0.18f, 1f);
 
-        const float RowH = 76f, ColW = 700f;
+        const float RowH = 66f, ColW = 700f, PanelH = 1040f;
 
         public ControlSettings Settings { get; private set; }
         Action m_OnChanged, m_OnClose, m_OnCalibrate;
@@ -93,14 +93,14 @@ namespace Game.UI
 
             var panel = Rect("Panel", m_Safe);
             panel.anchorMin = panel.anchorMax = panel.pivot = new Vector2(0.5f, 0.5f);
-            panel.sizeDelta = new Vector2(2 * ColW + 120f, 900f);
+            panel.sizeDelta = new Vector2(2 * ColW + 120f, PanelH);
             panel.anchoredPosition = Vector2.zero;
             panel.gameObject.AddComponent<Image>().color = k_Panel;
 
-            Label(panel, "Title", "USTAWIENIA STEROWANIA", 38, TextAnchor.MiddleLeft, k_Text, new Vector2(40f, 818f), new Vector2(900f, 60f));
-            Label(panel, "Hint", "Zmiany działają od razu i zapisują się same.", 24, TextAnchor.MiddleRight, k_Muted, new Vector2(1000f, 818f), new Vector2(360f, 60f));
+            Label(panel, "Title", "USTAWIENIA: STEROWANIE I KAMERA", 38, TextAnchor.MiddleLeft, k_Text, new Vector2(40f, PanelH - 82f), new Vector2(900f, 60f));
+            Label(panel, "Hint", "Zmiany działają od razu i zapisują się same.", 24, TextAnchor.MiddleRight, k_Muted, new Vector2(1000f, PanelH - 82f), new Vector2(360f, 60f));
 
-            float left = 40f, right = 40f + ColW + 40f, top = 800f;
+            float left = 40f, right = 40f + ColW + 40f, top = PanelH - 100f;
 
             // Left column: wheel + pedals
             float y = top;
@@ -124,6 +124,11 @@ namespace Game.UI
             var calib = TextButton(panel, "Kalibruj", new Vector2(right, y - RowH), new Vector2(ColW, 64f), () => m_OnCalibrate?.Invoke());
             calib.GetComponent<Image>().color = k_Button;
             Label(panel, "CalibHint", "Trzymaj telefon tak, jak chcesz jechać prosto, i dotknij Kalibruj.", 22, TextAnchor.UpperLeft, k_Muted, new Vector2(right, y - RowH - 90f), new Vector2(ColW, 70f)).horizontalOverflow = HorizontalWrapMode.Wrap;
+            y -= RowH + 90f + 20f;
+            Header(panel, "KAMERA (WIDOK Z KABINY)", right, ref y);
+            Stepper(panel, right, ref y, "Czułość rozglądania", () => Pct(Settings.lookSensitivity), d => Settings.lookSensitivity = Step(Settings.lookSensitivity, d, 0.1f, ControlSettings.LookMin, ControlSettings.LookMax));
+            Stepper(panel, right, ref y, "Pole widzenia", () => F0(Settings.cabFov) + "°", d => Settings.cabFov = Step(Settings.cabFov, d, 5f, ControlSettings.FovMin, ControlSettings.FovMax));
+            Segment(panel, right, ref y, "Ruch głowy", "włączony", "wyłączony", () => !Settings.headMotion, v => Settings.headMotion = !v);
 
             // Footer
             TextButton(panel, "Przywróć domyślne", new Vector2(40f, 28f), new Vector2(420f, 72f), ResetToDefaults);
