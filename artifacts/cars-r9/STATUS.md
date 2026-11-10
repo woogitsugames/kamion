@@ -37,3 +37,19 @@ Stray empty dir created by mistake (first Blender run resolved a relative path):
 3. `uv run --project tools/worldgen pytest tests/gis -q`; `pwsh scripts/test.ps1 -Platform EditMode`.
 4. Fill ADR 0073 placeholders + ADR 0041 r9 addendum; `git checkout game/Assets/_Project/Rendering/Settings/Lighting/M_Sky.mat game/ProjectSettings`;
    final commit; `robocopy artifacts\cars-r9 C:\Users\matma\Documents\Claude\kamion\artifacts\cars-r9 /E`.
+
+## Step 3 (DONE 21:20) - waiting for visual-critic / leader
+- Road film now uses the body's own columns (first engine pass showed hard polygons of clean paint through the arch flares).
+- Final tris LOD0 3195-3497, LOD1 844-882, LOD2 54-58; holes 0 of 81 (`holes-final.log`).
+- build_world x2, import-region OK, InstallBatch OK, visual-qa Low+High x overcast+lowsun: `after/<Tier>-<light>/`,
+  montages r8 vs r9 `compare/<tier>-<light>_<cam>.jpg`, native crops `compare/*_native.jpg`, Blender vs refs `compare/it5_cab_vs_refs.jpg`.
+- pytest tests/gis 170 passed (cars + budget subset re-run on the final build: 88 passed); EditMode 176 / 176.
+- M_Sky.mat and materials_spec.json restored. LFS files in the worktree were copied from main as real files (they show as
+  modified; NOT committed). ADR 0073 + ADR 0041 r9 addendum written.
+- Open: see ADR 0073 "Konsekwencje / otwarte" (flat lamp overlays, no metallic flake, LOD2 box, phone cost UNVERIFIED,
+  Mapillary attribution command for the leader, stray empty `C:\artifacts\cars-r9\it0`).
+
+## NEXT
+`visual-critic` on `artifacts/cars-r9/compare/`; leader: `git merge worktree-agent-adeef0c396335e1ed`, then
+`uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` and
+`pwsh scripts/import-region.ps1 -Region bialystok-industrial-c`.

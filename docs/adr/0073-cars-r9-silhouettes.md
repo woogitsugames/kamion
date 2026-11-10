@@ -36,7 +36,26 @@
    overcast / lowsun). Referencje proporcji typów: Mapillary (CC BY-SA) z trasy, wyłącznie jako wzór proporcji.
 
 ## Zmierzone
-WYNIKI_PLACEHOLDER
+- Trójkąty (27 prototypów, `props_meta.json`): LOD0 3195–3497 (r8: 3528–3798; cel ≤ 3500), LOD1 844–882 (limit 900),
+  LOD2 54–58 (limit 60).
+- Dziury (`car_holes_qa.py`, 8 azymutów × 3 elewacje, 25 mm): 0 z 81 siatek (`artifacts/cars-r9/holes-final.log`).
+- Budżet klatki (szacunek `streetscape_qa.json`): High maks. 1 997 661 (`stretch_04`, limit 2,0 M; r8 1 997 615),
+  `stretch_01` 1 661 414 → 1 636 945, `stretch_05_docks` 1 742 105 → 1 724 078; Low maks. 962 150 → 961 666, DK8 Low 357 442.
+- Koszt Low w edytorze (`stats.txt`, overcast, rysowania instancjonowane / trójkąty; pierwszy przebieg r9): `cab-dash`
+  553 → 542 / 76k → 73k, `stretch-01` 624 → 624 / 95k → 91k, `car_lod_08` 597 → 593 / 99k → 97k. Telefon: UNVERIFIED.
+- Testy: pytest `tests/gis` 170 zielonych (w tym nowy `test_cars_r9.py`), EditMode 176 / 176.
+- Rendery: Blender `artifacts/cars-r9/it0` (r8) … `it8`, montaż z referencją `compare/it5_cab_vs_refs.jpg`; silnik
+  `artifacts/cars-r9/after/{Low,High}-{overcast,lowsun}/`, montaże r8 / r9 `compare/<tier>-<light>_<kamera>.jpg`.
 
 ## Konsekwencje / otwarte
-OTWARTE_PLACEHOLDER
+- Bryły są wiarygodne klasowo, ale nadal proceduralne: lampy i grill to płaskie nakładki bez głębi, lusterka i klamki
+  uproszczone; z 3–5 m widać to. Auto „starsze ~2005” jako osobny typ nie powstało (27 prototypów bez zmian: każdy
+  nowy prototyp to dodatkowe rysowania na Low, a `stretch_04` High ma 2,3 tys. trójkątów zapasu).
+- Lakier metaliczny: `car_grime` nie ma kanału metalu, więc srebrny i szary są dielektrykiem z jasnym albedo; odbicie
+  nieba rośnie tylko przez Fresnela. Prawdziwy płatek wymaga kanału w zestawie albo osobnego shadera (rendering-perf).
+- LOD2 (Low od 42,5 m) pozostał pierwszą, pudełkową bryłą (≤ 60 trójkątów) w nowych wymiarach.
+- Film drogowy i kurz na szybach są na prototyp, nie na instancję (bez zmian).
+- Koszt na A16 / S24+ niezmierzony (UNVERIFIED); trójkątów LOD0 jest mniej niż w r8, rysowań tyle samo lub mniej.
+- Atrybucja Mapillary dla zdjęć użytych jako wzór proporcji (1523897771888181, 513486983365569, 364149059846390):
+  `uv run --project tools/refs python tools/refs/mapillary_fetch.py --region bialystok-industrial-c --use <id>… --attribution`
+  (wymaga `Data/raw/mapillary` z main) — do wykonania przez lidera.
