@@ -1019,7 +1019,9 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         return z
     kd = 8 if lod == 0 else 3
     if lod == 0:
-        runs = [sorted({round(float(y), 4) for y in By if ya_ < y < yb_} | {round(ya_ + (yb_ - ya_) * k / kd, 4) for k in range(kd + 1)})]
+        # r9: the film uses the body's own columns (with the arch flares a coarser overlay cut through the skin
+        # and showed as hard-edged polygons of clean paint)
+        runs = [sorted({round(float(y), 4) for y in ys if ya_ < y < yb_} | {round(ya_, 4), round(yb_, 4)})]
     else:                                    # LOD1: three plain runs between / beside the arches, no arch lips
         e = ra + 0.03
         runs = [[ya_, yra - e], [yra + e, yra + e + 0.45, (yra + yfa) / 2, yfa - e], [yfa + e, yb_]]
@@ -1028,7 +1030,7 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     def dcol(y):
         zb = float(np.interp(y, By, Bz))
         zt = min(max(ztop(y), zb + 0.11), arch_top + 0.16)
-        return [(np.array([sh.X(y, zb + (zt - zb) * k / rows) + 0.014, y, zb + (zt - zb) * k / rows]), (y / 1.7 + uo, k / rows))
+        return [(np.array([sh.X(y, zb + (zt - zb) * k / rows) + 0.018, y, zb + (zt - zb) * k / rows]), (y / 1.7 + uo, k / rows))
                 for k in range(rows + 1)]
     for dys in runs:
         dc = [dcol(y) for y in dys]
@@ -1152,8 +1154,8 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     if lod == 0:
         spatch("H1", [(-gw, gt + 0.10, 0.84), (-0.74 * gw, gt, 0.95), (0.0, gt, 0.95), (0.74 * gw, gt, 0.95),
                       (gw, gt + 0.10, 0.84)], "car_trim")                                  # grille (chamfered corners)
-        for k in (1, 2, 3):
-            t = gt + (0.90 - gt) * k / 4
+        for k in (1, 2):
+            t = gt + (0.90 - gt) * k / 3
             patch("H1", t, t + 0.035, [-0.72 * gw, 0.0, 0.72 * gw], "rim_dark", lift=0.009)  # grille slats
         spatch("F1", [(-0.78, 0.60, 0.86), (-0.58, 0.52, 0.95), (0.0, 0.52, 0.95), (0.58, 0.52, 0.95),
                       (0.78, 0.60, 0.86)], "car_trim")                                     # lower intake
@@ -1220,7 +1222,7 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         uv = [((u0 if (pp[0] > 0) == front else u1), (v0 if pp[2] < (zlo + zhi) / 2 else v1)) for pp in q]
         _puv(m, "car_plate", q, uv, nn)
     # road film on the tail (dirtiest face of a car) and the lower front bumper
-    dg = [-1.8, -1.0, -0.34, 0.34, 1.0, 1.8] if lod == 0 else [-1.7, 0.0, 1.7]
+    dg = [-1.8, -0.7, 0.7, 1.8] if lod == 0 else [-1.7, 0.0, 1.7]
     spatch("R1", [(g, 0.0, 1.0) for g in dg], dmat, lift=0.016, uv=(uo, 0.45), v0=0.0)
     spatch("R2", [(g, 0.0, 0.25 + 0.45 * dl) for g in dg], dmat, lift=0.016, uv=(uo + 0.21, 0.45), v0=0.35)
     if lod == 0:
