@@ -290,7 +290,10 @@ def front_face(feathers, strokes):
         emblem(feathers)
     # B2 v2: real satin-silver letters (3 mm) on the black band - kept as game geometry ('badge_'), not the
     # paint-slot decal (a decal can only tint the Paint slot, it cannot draw light letters on dark trim)
-    wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=14.0, mat="satin_alu", name="badge_trakt")
+    # B2.2: letters lie in the raked band, 1.6x stroke (12 mm at 80 mm cap height), 4 mm deep, 1.2 mm chamfer,
+    # brushed aluminium (bright, anisotropic) so the A crossbar and the R leg survive a 3/4 view on a phone
+    wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=16.0, mat="alu_brushed",
+             name="badge_trakt", weight=1.6, depth=0.004, on_face=True, bev=0.0012)
     # flush cowl (wiper panel) in the same plane, between the service flap and the glass edge
     CAB.patch("cowl", "plastic", "front", WS_Z0 - 0.082, WS_Z0 - 0.012, -1.12, 1.12, off=0.002, nz=3, npar=40)
     # B2 v2: no slot row - in the game atlas it baked into a black/grey comb; the plain black cowl now merges with
@@ -363,8 +366,13 @@ def grille_bar(name, zc, hgt, depth, hw, m, round_front=True, n=2, nose=-0.003):
     return G.obj_from_bm(name, bm, m, sharp=55)
 
 
-def wordmark(strokes, z_c=1.918, height=0.052, spacing=30.0, mat="wordmark", name="wordmark", origin=None):
-    """TRAKT letters from the SVG polylines (own geometric monoline), letter-spaced, extruded 3 mm."""
+def wordmark(strokes, z_c=1.918, height=0.052, spacing=30.0, mat="wordmark", name="wordmark", origin=None,
+             weight=1.0, depth=0.003, on_face=False, bev=0.0):
+    """TRAKT letters from the SVG polylines (own geometric monoline), letter-spaced, extruded `depth`.
+    weight scales the SVG stroke width; on_face=True lays every stroke in the raked front plane (each stroke
+    centred on the face at its own height and tilted by RAKE) instead of an upright box at the plane's z_c point."""
+    if on_face:
+        return _wordmark_on_face(strokes, z_c, height, spacing, mat, name, weight, depth, bev)
     ys = [p[1] for pl, w in strokes for p in pl]
     y0, y1 = min(ys), max(ys)
     sc = height / (y1 - y0 + strokes[0][1])
@@ -393,6 +401,44 @@ def wordmark(strokes, z_c=1.918, height=0.052, spacing=30.0, mat="wordmark", nam
             hw = w * sc / 2
             box(f"{name}_{k}_{j}", ((ax + bx) / 2, yfr + 0.0015, (az + bz) / 2), (ln + 2 * hw, 0.003, 2 * hw), mat,
                 rot=Matrix.Rotation(-ang, 3, "Y"))
+
+
+def _wordmark_on_face(strokes, z_c, height, spacing, mat, name, weight, depth, bev):
+    """B2.2 badge letters (REVIEW: 'TPAKT' at 3/4 on a 1080p frame - the A lost its crossbar, the R its leg).
+    Cause: the upright 3 mm letter boxes sat on the 7 deg raked band at the z_c point only, so the lower ~40 % of
+    every letter was buried in the band and the top stood 8 mm proud; the 7.7 mm strokes were < 1 px at game
+    distance. Now each stroke lies in the face plane (centred at its own height, tilted by RAKE), strokes are
+    `weight` x the SVG width and chamfered, so the edges catch a highlight line on the dark band."""
+    ys = [p[1] for pl, w in strokes for p in pl]
+    y0, y1 = min(ys), max(ys)
+    wmax = max(w for _, w in strokes) * weight
+    sc = height / (y1 - y0 + wmax)
+    bounds = [192, 239, 293, 347, 401, 460]  # letter x-ranges in trakt.svg: T R A K T
+
+    def idx(x):
+        for i, b in enumerate(bounds[1:]):
+            if x < b:
+                return i
+        return len(bounds) - 2
+    allx = [x + idx(min(p[0] for p in pl)) * spacing for pl, w in strokes for x, _ in pl]
+    xc = (min(allx) + max(allx)) / 2
+    tilt = Matrix.Rotation(math.radians(RAKE), 3, "X")     # +z -> (0, -sin, cos): leans back with the face
+    for k, (pl, w) in enumerate(strokes):
+        off = idx(min(p[0] for p in pl)) * spacing
+        for j, (a, b) in enumerate(zip(pl, pl[1:])):
+            ax, az = -(a[0] + off - xc) * sc, z_c - (a[1] - (y0 + y1) / 2) * sc   # viewer's left = +X
+            bx, bz = -(b[0] + off - xc) * sc, z_c - (b[1] - (y0 + y1) / 2) * sc
+            d = V((bx - ax, 0, bz - az))
+            ln = d.length
+            if ln < 1e-6:
+                continue
+            ang = math.atan2(d.z, d.x)
+            hw = w * weight * sc / 2
+            mx, mz = (ax + bx) / 2, (az + bz) / 2
+            # strokes overlap at the joints: stagger depth 0.15 mm per stroke so coplanar faces never z-fight
+            c = V(CAB.front_pt(mz, mx, depth / 2 + 0.0004 + 0.00015 * ((k + j) % 3)))
+            box(f"{name}_{k}_{j}", c, (ln + 2 * hw, depth, 2 * hw), mat, bev=bev, seg=1,
+                rot=tilt @ Matrix.Rotation(-ang, 3, "Y"))
 
 
 def wipers():
@@ -497,20 +543,43 @@ def lens_dome(name, poly, m, crown=0.008, thick=0.005, rim_off=-0.001, sub=8):
     return G.obj_from_bm(name, bm, m, sharp=55)
 
 
+def reflector_funnel(name, s, cx, zc, rings, m="reflector"):
+    """Faceted chrome funnel through rounded-rectangle rings [(w, h, r, off)] (front projection, centre (cx, zc),
+    side s): flat-shaded facets between rings, normals facing out of the lamp (+y)."""
+    bm = bmesh.new()
+    vs = []
+    for w, h, r, off in rings:
+        pts = [(cx + px, zc + pz) for px, pz in rrect(w, h, r, 3)]
+        vs.append([bm.verts.new(CAB.front_pt(z, s * x, off)) for x, z in pts])
+    n = len(vs[0])
+    for ra, rb in zip(vs, vs[1:]):
+        for i in range(n):
+            j = (i + 1) % n
+            bm.faces.new((ra[i], ra[j], rb[j], rb[i]))
+    bm.normal_update()
+    if sum(f.normal.y * f.calc_area() for f in bm.faces) < 0:
+        bmesh.ops.reverse_faces(bm, faces=bm.faces)
+    return G.obj_from_bm(name, bm, m, sharp=20)
+
+
 def lamp_cell(tag, s, x0, x1, z0, z1, beam):
     """One LED reflector module (rectangular, not a round 'eyeball'): dark-chrome frame with depth, faceted
     reflector floor, and either a slim projector lens (low beam) or an LED bar (high beam)."""
     rect = [(x0, z0), (x1, z0), (x1, z1), (x0, z1)]
     poly = rect if s > 0 else mirror_poly(rect)
     sx = lambda x: s * x  # noqa: E731
-    # reflector floor: two facets meeting in a shallow ridge (reads as a stamped reflector, not a flat plate)
     zm = (z0 + z1) / 2
-    CAB.quad_patch(f"proj_bowl_{tag}_a", "lamp_inner", "front", [(sx(x0), z0), (sx(x1), z0), (sx(x1), zm),
-                                                               (sx(x0), zm)], off=-0.044, nu=4, nv=1)
-    CAB.quad_patch(f"proj_bowl_{tag}_b", "lamp_inner", "front", [(sx(x0), zm), (sx(x1), zm), (sx(x1), z1),
-                                                               (sx(x0), z1)], off=-0.040, nu=4, nv=1)
+    # black module floor behind everything (the gap between reflector and lens holder reads as depth)
+    CAB.quad_patch(f"proj_bowl_{tag}", "lamp_inner", "front", [(sx(x0), z0), (sx(x1), z0), (sx(x1), z1),
+                                                             (sx(x0), z1)], off=-0.050, nu=4, nv=1)
     ribbon(f"proj_shroud_{tag}", poly, 0.007, "dark_chrome", off=-0.044, thick=0.026)
     cx, w, h = (x0 + x1) / 2, (x1 - x0), (z1 - z0)
+    # B2.2 (lead: 'headlamp lenses read flat grey'): vacuum-metallised free-form reflector - a faceted chrome funnel
+    # from the shroud's inner edge (-22 mm) down to the lens holder (-46 mm) in three rings with different
+    # slopes, so each facet mirrors a different part of the sky/ground (the sparkle of a real LED lamp)
+    reflector_funnel(f"proj_refl_{tag}" if beam == "low" else f"hb_refl_{tag}", s, cx, zm,
+                     [(w - 0.015, h - 0.015, 0.003, -0.022), (w - 0.019, h - 0.021, 0.006, -0.031),
+                      (w - 0.024, h - 0.024, 0.010, -0.039), (w - 0.022, h - 0.022, 0.012, -0.046)])
     # B2.1 (owner sheets: rectangular LED modules): every module carries a rectangular projector lens - a crowned
     # rounded-rectangle block of smoked polycarbonate (real thickness, two surfaces + wall, so it catches a
     # highlight on its crown and a lit edge at an angle) in a thin dark-chrome bezel. Low beam = the two inner
@@ -523,7 +592,7 @@ def lamp_cell(tag, s, x0, x1, z0, z1, beam):
     # strongly crowned (14 mm over a 44 mm block): the sky reflects only on the upper half, the lower half mirrors
     # the black lamp floor - reads as a lens with depth, not a flat grey pane under overcast light
     lens_dome(f"{nm}_{tag}", rr, "projector", crown=0.014, thick=0.012, rim_off=-0.040, sub=2)
-    ribbon(f"proj_bezel_{tag}", rr, 0.0035, "dark_chrome", off=-0.041, thick=0.004)
+    ribbon(f"proj_bezel_{tag}", rr, 0.0035, "reflector", off=-0.041, thick=0.005)   # B2.2: bright lens holder ring
     # LED emitter strip at the top edge of the high-beam module (reads as a different module, not a third copy)
     if beam != "low":
         CAB.quad_patch(f"hb_led_{tag}", "led_off", "front", [(sx(x0 + 0.012), z1 - 0.0085), (sx(x1 - 0.012), z1 - 0.0085),
