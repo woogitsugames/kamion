@@ -37,6 +37,7 @@ Shader "Kamion/Vegetation"
         _Transmission ("Back-lit transmission", Range(0, 1)) = 0.25
         [NoScaleOffset] _NormalOcc ("Normal XY (RG), sky visibility (B) - impostor / HLOD edge", 2D) = "bump" {}
         _Impostor ("Impostor: x views, y visibility strength (ambient), z visibility strength (sun)", Vector) = (6, 0.6, 0.35, 0)
+        _CrownShade ("Leaf cards: sky occlusion of the lower crown (ambient; ADR 0060)", Range(0, 1)) = 0.5
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 0
         [Toggle] _AlphaToMask ("Alpha to coverage", Float) = 0
     }
@@ -55,6 +56,7 @@ Shader "Kamion/Vegetation"
             half _Cull;
             half _AlphaToMask;
             float4 _Impostor;
+            half _CrownShade;
         CBUFFER_END
         TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
         TEXTURE2D(_NormalOcc); SAMPLER(sampler_NormalOcc);
@@ -267,6 +269,12 @@ Shader "Kamion/Vegetation"
             #endif
                 half3 ambient = i.ambient;
                 half occA = 1.0, occS = 1.0;
+            #if !defined(_IMPOSTOR) && !defined(_HLOD_EDGE)
+                // ADR 0060 (review r7 N-2): leaf-card normals point away from the crown centre (make_trees.py), so their
+                // height on the crown is known: the lower half sees less sky through the leaves above it (the impostors
+                // and HLOD walls carry a baked visibility instead). Unflipped normal: a card seen from its back keeps its place.
+                occA = lerp(1.0 - _CrownShade, 1.0, smoothstep(-0.6, 0.75, normalize(i.normalWS).y));
+            #endif
             #if defined(_IMPOSTOR)
                 // View-space normal of the bake: x right, y up, z towards the camera.
                 half2 nxy = no.xy * 2.0 - 1.0;

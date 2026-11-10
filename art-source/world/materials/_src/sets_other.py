@@ -271,6 +271,9 @@ def rect_paving(n=2048):
 
 
 # ------------------------------------------------------------------------------------------- ground cover
+GRASS_CHROMA = 1.40          # D38: summer grass chroma gain (target rendered sat 35-40 HSV %)
+
+
 def grass_verge(n=2048, ss=2):
     """Mown roadside verge seen from above: blades by z-buffer splatting (supersampled ss x), tufted, with
     thatch, bare soil, plantain/dandelion rosettes and clover. Tile 3 m. Albedo summer + late_autumn."""
@@ -393,7 +396,13 @@ def grass_verge(n=2048, ss=2):
         sh = a.shape
         return a.reshape(n, ss, n, ss, *sh[2:]).mean(axis=(1, 3))
     c2 = Ctx(n, n, L, L, seed=306)
-    alb, _ = calibrate(ds(out["summer"]), 0.095)
+    # D38 (owner, docs/11; ADR 0060): renders read washed out (grass sat 24-29 HSV % vs 33-58 in the Bialystok photos)
+    # -> chroma of the summer albedo x GRASS_CHROMA about its own luminance (hue and mean luminance kept; the engine
+    # takes the hue from the set). Material only, no post-processing / exposure change. WORKING_VALUE.
+    summer = ds(out["summer"])
+    lum = (summer @ LUM)[..., None]
+    summer = np.clip(lum + GRASS_CHROMA * (summer - lum), 0.004, 1.0)
+    alb, _ = calibrate(summer, 0.095)
     alb2, _ = calibrate(ds(out["late_autumn"]), 0.095)
     s = SurfaceSet("grass_verge", c2, alb.astype(np.float32), ds(h).astype(np.float32), ds(rough),
                    hash01(idx, 5)[::ss, ::ss].astype(np.float32), ds(bare), detail_mask=1 - ds(bare),

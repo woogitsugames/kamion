@@ -5,7 +5,8 @@ Placed:
   lane lines P-1a/P-1b (P-2a in the last 20 m before a signalised / turn-lane approach),
   centre lines of two-way roads (none if the carriageway is < 5.80 m), edge lines P-7b on GP roads,
   P-14 at signalised approaches, P-13 at roundabout entries and minor approaches to G/GP roads,
-  P-10 at OSM crossing nodes (crossing != unmarked/no), P-8 arrows from turn:lanes.
+  P-10 at OSM crossing nodes (crossing != unmarked/no; inside a junction patch draped on the patch mesh, ADR 0069),
+  P-8 arrows from turn:lanes.
 """
 
 from __future__ import annotations
@@ -67,15 +68,18 @@ def strip(buf, c, s0, s1, lat, w, kind):
         return
     n = max(1, int(math.ceil((s1 - s0) / 2.0)))
     ss = np.linspace(s0, s1, n + 1)
-    a = _surface_pts(c, ss, np.full(len(ss), lat - w / 2))
-    b = _surface_pts(c, ss, np.full(len(ss), lat + w / 2))
+    # lat may follow the carriageway edge (callable of s): edge lines and one-way lane lines keep their distance
+    # to the gutter where the width changes inside a section (ADR 0074: P-7b drawn on the kerb of the link)
+    la = np.asarray(lat(ss), float) if callable(lat) else np.full(len(ss), float(lat))
+    a = _surface_pts(c, ss, la - w / 2)
+    b = _surface_pts(c, ss, la + w / 2)
     V = np.concatenate([a[:, None], b[:, None]], axis=1).reshape(-1, 3)
     T = []
     for i in range(n):
         T += [(2 * i, 2 * i + 2, 2 * i + 3), (2 * i, 2 * i + 3, 2 * i + 1)]
     uv = np.column_stack([np.repeat(ss - s0, 2), np.tile([0.0, 1.0], len(ss))])
     sv = np.repeat(ss, 2)
-    lv = np.tile([lat - w / 2, lat + w / 2], len(ss))
+    lv = np.column_stack([la - w / 2, la + w / 2]).ravel()
     buf.add("markings", "marking_white", V, uv, np.array(T), src=f"{kind}@{c.id}", UV1=_paint_uv1(c, sv, lv, kind))
 
 
@@ -167,8 +171,9 @@ def drop_overlapping(buf, net, first):
     removed = 0
     for pi in range(first, len(buf.parts)):
         p = buf.parts[pi]
-        if p.layer != "markings" or "@" not in p.src:
-            continue
+        if p.layer != "markings" or "@" not in p.src or p.src.startswith("P-10J@"):
+            continue        # a zebra draped on a junction patch crosses the neighbour ribbon there by design (r9d:
+                            # its stripes came out cut diagonally, half triangles dropped)
         own = p.src.split("@", 1)[1]
         cen = p.V[p.T].mean(1)
         hits = tree.query(shapely.points(cen[:, :2]), predicate="intersects")
@@ -210,6 +215,13 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
 
     # ---- crossings: snap to chains
     crossings = {}
+    _top = []
+
+    def top_of(e, n):           # exact top of the road / junction-patch meshes built so far (lazy, one index)
+        if not _top:
+            from streetscape.furniture import SurfaceTop
+            _top.append(SurfaceTop([p for p in buf.parts if p.layer == "road"]))
+        return _top[0].top(e, n)
     for p in ctx_points:
         if p["kind"] != "highway=crossing" or p.get("crossing") in ("unmarked", "no", "informal"):
             continue
@@ -240,7 +252,8 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
         appr = {}   # stations of junction approaches for P-2a
         for end, sj in (("a", s0), ("b", s1)):
             info = arm_info.get((c.id, end))
-            if info and (info[0].signalized or any(net.sec_list[i].turn_fwd for i in np.unique(sidx))):
+            if info and (info[0].signalized or (any(net.sec_list[i].turn_fwd for i in np.unique(sidx))
+                                                and not _lanes_continue(c, end, info[0], secs))):
                 appr[end] = sj
         for a_, b_ in zip(cuts, cuts[1:]):
             sec = secs[int(sidx[a_])]
@@ -261,6 +274,9 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                 for end, sj in appr.items():
                     cont.append((sj, sj + S.P2A_MIN_LEN) if end == "a" else (sj - S.P2A_MIN_LEN, sj))
                 for lat in bounds:
+                    if sec.oneway:            # one-way lane lines are laid out from the left gutter: follow it
+                        dl = float(lat) - hw
+                        lat = (lambda ss_, dl=dl: c.hw_at(ss_) + dl)
                     _segmented(buf, c, sa, sb, lat, S.LINE_W_NARROW, dash, gap, cont, "lane")
                     cnt("P-1 lane line")
                 if lat_c is not None and sec.width >= S.SEGREGATION_MIN_CARRIAGEWAY:
@@ -273,7 +289,8 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                         cnt("P-1 centre line")
                 if sec.cls in ("A", "S", "GP") and sec.edge_strip > 0 and not sec.roundabout:
                     for sg in (-1, 1):
-                        strip(buf, c, sa, sb, sg * (hw - sec.edge_strip + S.LINE_W_WIDE / 2), S.LINE_W_WIDE, "P-7b")
+                        strip(buf, c, sa, sb, (lambda ss_, sg=sg, e=sec.edge_strip:
+                                               sg * (c.hw_at(ss_) - e + S.LINE_W_WIDE / 2)), S.LINE_W_WIDE, "P-7b")
                     cnt("P-7b edge line", 2)
             # arrows from turn:lanes at the downstream end of this section
             for tl, tdir in ((sec.turn_fwd, 1), (sec.turn_bwd, -1)):
@@ -287,6 +304,12 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                 if len(lanes) != len(tl):
                     continue
                 end_s = sb if trav > 0 else sa
+                # the same turn:lanes continue past this point (an OSM way split at a minor junction or a section
+                # boundary): the lanes do not diverge here, so no arrows (they belong before the real divergence,
+                # ADR 0074 - arrows before the fire-station exit on Andersa)
+                if _turns_continue(c, sec, tl, trav, end_s, s0, s1, arm_info, secs):
+                    cnt("P-8 skipped (lanes continue)")
+                    continue
                 long = fast
                 spacing = S.ARROW_SPACING["long" if long else "short"]
                 L = (S.ARROW_LONG if long else S.ARROW_SHORT)["len"]
@@ -300,6 +323,13 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                         base = end_s - trav * (6.0 + L + m * spacing)
                         if not (sa + 1 <= base <= sb - 1 and sa + 1 <= base + trav * L <= sb - 1):
                             continue
+                        # the glyph must lie on this carriageway where it is painted (narrowing sections: a 2-lane
+                        # tag on a 4-5 m road put the arrow on the kerb, ADR 0074)
+                        gw = float(np.max(np.abs(np.array(g.exterior.coords)[:, 1])))
+                        hwb = float(min(c.hw_at(base), c.hw_at(base + trav * L)))
+                        if abs(lat) + gw > hwb - 0.1:
+                            cnt("P-8 skipped (off carriageway)")
+                            continue
                         polygon_mark(buf, c, g, base, lat, trav, trav, "P-8")
                         cnt("P-8 arrow")
         # crossings on this chain
@@ -307,7 +337,15 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
             hw = float(c.hw_at(s_c))
             half = S.P10_WIDTH / 2
             if s_c - half < s0 + 0.5 or s_c + half > s1 - 0.5:
-                # inside a junction patch: move onto the ribbon if close, else skip
+                # inside a junction patch (wide signalised mouths, roundabout entries: Mapillary p40 / p42 show the
+                # zebra right at the mouth, REFS-MAPILLARY #5): drape it on the generated patch at its OSM station
+                # (ADR 0069); only where that fails move it onto the ribbon if close, else skip
+                if _drape_crossing(buf, c, s_c, hw, s0, s1, top_of):
+                    cnt("P-10 crossing")
+                    cnt("P-10 crossing in junction")
+                    report.setdefault("crossings_in_junction", []).append(osm)
+                    c.meta.setdefault("crossings", []).append(round(float(s_c), 2))
+                    continue
                 if s_c < s0 and s0 - s_c < 8:
                     s_c = s0 + half + 0.5
                 elif s_c > s1 and s_c - s1 < 8:
@@ -384,6 +422,85 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                     x += S.P13_BASE + S.P13_GAP
             cnt(kind)
     report["markings"] = counts
+
+
+# A zebra is draped on a junction patch only this far from the node (m): closer, it would cross the other arms.
+P10_NODE_CLEAR_M = 3.0      # WORKING_VALUE (clear of the stripes' own half length)
+P10_DRAPE_STEP_M = 0.5      # vertices along a stripe on a patch (patch facets are not planar)
+P10_DRAPE_MAX_STEP_M = 0.06  # a larger height step between samples 0.5 m apart is a kerb, not the carriageway
+
+
+def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of):
+    """P-10 inside a junction patch: stripes in the chain frame at the OSM station, z = top of the patch mesh + lift.
+    False (nothing added) when the station is too close to the node or any vertex is off the road meshes."""
+    half = S.P10_WIDTH / 2
+    d_node = s_c if s_c < s0 else c.length - s_c
+    if d_node - half < P10_NODE_CLEAR_M:
+        return False
+    W = 2 * hw - 2 * 0.25
+    n = int(math.floor((W + S.P10_GAP) / (S.P10_STRIPE + S.P10_GAP)))
+    if n < 2:
+        return False
+    used = n * S.P10_STRIPE + (n - 1) * S.P10_GAP
+    ss = np.linspace(s_c - half, s_c + half, int(round(S.P10_WIDTH / P10_DRAPE_STEP_M)) + 1)
+    # stripes parallel to the arm at the crossing (tangent at s_c), not fanned along the chain's bend into the node
+    o = np.asarray(c.line.offset_point(np.array([s_c]), np.array([0.0])), float).reshape(-1)[:2]
+    a_ = np.asarray(c.line.offset_point(np.array([s_c - half]), np.array([0.0])), float).reshape(-1)[:2]
+    b_ = np.asarray(c.line.offset_point(np.array([s_c + half]), np.array([0.0])), float).reshape(-1)[:2]
+    t = (b_ - a_) / max(float(np.hypot(*(b_ - a_))), 1e-9)
+    nrm = np.array([-t[1], t[0]])
+    l_probe = np.asarray(c.line.offset_point(np.array([s_c]), np.array([1.0])), float).reshape(-1)[:2] - o
+    if float(np.dot(l_probe, nrm)) < 0:                 # keep the chain's lateral sign convention
+        nrm = -nrm
+    meshes = []
+    for k_ in range(n):
+        lat = -used / 2 + k_ * (S.P10_STRIPE + S.P10_GAP) + S.P10_STRIPE / 2
+        sides = []
+        for l_ in (lat - S.P10_STRIPE / 2, lat + S.P10_STRIPE / 2):
+            p = o + np.outer(ss - s_c, t) + nrm * l_       # rigid rectangle: the chain bends into the node
+            z = np.array([top_of(float(e), float(nn)) for e, nn in p])
+            if not np.all(np.isfinite(z)) or np.max(np.abs(np.diff(z))) > P10_DRAPE_MAX_STEP_M:
+                return False        # off the road meshes, or onto a kerb / island top
+            sides.append(np.column_stack([p, z + S.MARKING_LIFT]))
+        meshes.append((lat, sides))
+    for lat, (a, b) in meshes:
+        V = np.concatenate([a[:, None], b[:, None]], axis=1).reshape(-1, 3)
+        T = []
+        for i in range(len(ss) - 1):
+            T += [(2 * i, 2 * i + 2, 2 * i + 3), (2 * i, 2 * i + 3, 2 * i + 1)]
+        uv = np.column_stack([np.repeat(ss - ss[0], 2), np.tile([0.0, 1.0], len(ss))])
+        sv = np.repeat(ss, 2)
+        lv = np.tile([lat - S.P10_STRIPE / 2, lat + S.P10_STRIPE / 2], len(ss))
+        buf.add("markings", "marking_white", V, uv, np.array(T), src=f"P-10J@{c.id}", UV1=_paint_uv1(c, sv, lv, "P-10"))
+    return True
+
+
+def _way(sec):
+    return str(sec.edge_id).split(":")[0]
+
+
+def _lanes_continue(c, end, j, secs):
+    """True if an outbound arm of junction j continues this chain end's OSM way with the same turn:lanes."""
+    s_in = 1.0 if end == "a" else c.length - 1.0
+    sec = c.section(s_in, secs)
+    tl = sec.turn_fwd or sec.turn_bwd
+    if not tl:
+        return False
+    for a in j.arms:
+        if a.chain is c or a.inbound_dirn() > 0:
+            continue
+        so = a.chain.section(a.s(1.0), secs)
+        if _way(so) == _way(sec) and tl in (so.turn_fwd, so.turn_bwd):
+            return True
+    return False
+
+
+def _turns_continue(c, sec, tl, trav, end_s, s0, s1, arm_info, secs):
+    if (trav > 0 and end_s < s1 - 0.5) or (trav < 0 and end_s > s0 + 0.5):
+        nxt = c.section(end_s + trav * 1.0, secs)          # mid-chain section boundary
+        return nxt is not sec and tl in (nxt.turn_fwd, nxt.turn_bwd)
+    info = arm_info.get((c.id, "b" if trav > 0 else "a"))
+    return bool(info) and _lanes_continue(c, "b" if trav > 0 else "a", info[0], secs)
 
 
 def strip_cross(buf, c, s_mid, depth, lat0, lat1):

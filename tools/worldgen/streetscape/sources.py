@@ -62,7 +62,7 @@ KEEP_TAGS = ("amenity", "area:highway", "landuse", "natural", "leisure", "highwa
              "barrier", "fence_type", "material", "height", "traffic_sign", "direction", "traffic_signals",
              "crossing", "power", "man_made", "operator", "access", "area", "access", "support", "lamp_mount",
              "light:count", "maxspeed", "ref", "shelter", "bench", "bin", "public_transport", "covered", "leaf_type",
-             "genus", "species", "leaf_cycle", "denotation", "layer", "location", "advertising")
+             "genus", "species", "leaf_cycle", "denotation", "layer", "location", "advertising", "wall")
 
 BDOT_LAYERS = {
     "OT_PTPL_A": ("MATERIALNAWIERZCHNI",), "OT_KUKO_A": ("RODZAJ",), "OT_PTKM_A": (),

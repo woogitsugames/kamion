@@ -141,6 +141,13 @@ namespace Game.World.Import
                 var tm = Arr(set.Get("tile_m"));
                 tile.x = (float)Num(tm[0]); tile.y = (float)Num(tm[1]);
             }
+            // `tile` is written to the material only for authored atlases (mesh UV0 addresses the atlas in metres, so the
+            // shader must divide by the set's own tile size): the set says "atlas": true in materials_spec.json (ADR 0067
+            // viaduct, ADR 0070 fire station) or the material says "set_tile": true in the manifest (ADR 0067). Every
+            // other set keeps the shader default 4 x 4 m it was reviewed with; changing that is a separate, visible
+            // decision of the lead (ADR 0067 "znane", ADR 0070 dodatek).
+            bool setTile = (def.Get("set_tile") is bool stl && stl) || (set != null && set.Get("atlas") is bool isAtlas && isAtlas);
+            if (setTile) mat.SetVector("_Tile", tile);
 
             float scale = 1f;
             Vector3 tint = Vector3.one;
@@ -156,13 +163,13 @@ namespace Game.World.Import
             }
             mat.SetVector("_Tint", new Vector4(tint.x, tint.y, tint.z, 1f));
             mat.SetFloat("_AlbedoScale", scale);
-            // Authored atlases (ADR 0070: "atlas": true in materials_spec.json): mesh UV0 addresses the atlas in metres, so
-            // the shader must divide by the set's own tile size. (Other sets keep the shader default 4 m: `tile` was never
-            // written to the material before; changing that for every set is a separate, visible decision.)
-            if (set != null && set.Get("atlas") is bool isAtlas && isAtlas)
-                mat.SetVector("_Tile", new Vector4(tile.x, tile.y, tile.z, tile.w));
             mat.SetFloat("_NormalStrength", 1f);
             mat.SetFloat("_SmoothnessScale", 1f);
+            // Parked-car paint (ADR 0073): the car_grime set carries clean paint at roughness 0.32 (smoothness 0.68) plus
+            // film / dust; the manifest "rough" of the colour is the CLEAN clear coat, so scale the set to it. Before, the
+            // manifest value was ignored and every paint rendered at 0.59 mean smoothness ("primer", REVIEW r8).
+            if (id.StartsWith("car_paint_") && def.Get("rough") != null)
+                mat.SetFloat("_SmoothnessScale", Mathf.Clamp((1f - (float)Num(def.Get("rough"))) / 0.68f, 0.5f, 1.4f));
             mat.SetFloat("_MetallicScale", 0f);
             mat.SetFloat("_MacroSize", 64f);
             mat.SetFloat("_MacroStrength", kind == "modulation_set" ? 0.06f : 0.16f);
@@ -181,6 +188,13 @@ namespace Game.World.Import
             if (setName == "behaton_i_grey" || setName == "paving_20x10_grey") { mat.SetFloat("_ElementJitter", 0.12f); mat.SetFloat("_ElementSize", 0.17f); }
             if (setName == "concrete_cast_5m_joints" || setName == "concrete_slab_3x1.5") { mat.SetFloat("_ElementJitter", 0.07f); mat.SetFloat("_ElementSize", 2.0f); }
             if (setName == "large_panel_joints" || setName == "brick") { mat.SetFloat("_ElementJitter", 0.05f); mat.SetFloat("_ElementSize", setName == "brick" ? 0.25f : 2.8f); }
+            // CC0 scan sets (ADR 0063): the photo already carries per-element tone; jitter only where the scan was
+            // segmented into elements (Var.G ids). A scan without ids would get one tone step per tile (visible grid).
+            if (set != null && set.Get("source") is Dictionary<string, object> src && !Str(src.Get("mode") ?? "").StartsWith("hybrid")
+                && src.Get("elements_per_tile") == null)
+                mat.SetFloat("_ElementJitter", 0f);
+            else if (set != null && set.Get("source") is Dictionary<string, object> src2 && src2.Get("elements_per_tile") != null)
+                mat.SetFloat("_ElementJitter", mat.GetFloat("_ElementJitter") * 0.5f);   // scan tone + half the jitter
 
             bool asphalt = setName == "asphalt_worn" || setName == "asphalt_sma_fresh" || setName == "asphalt_patch";
             if (id == "road_asphalt" || id == "road_asphalt_new")
@@ -188,6 +202,18 @@ namespace Game.World.Import
                 mat.EnableKeyword("_ROADWEAR");
                 mat.SetFloat("_WheelPolish", id == "road_asphalt" ? 0.6f : 0.25f);
                 mat.SetFloat("_GutterDirt", id == "road_asphalt" ? 0.55f : 0.3f);
+                // ADR 0060: oil / soot band between the wheel paths of aged roads (resurfaced SMA: barely)
+                mat.SetFloat("_DripBand", id == "road_asphalt" ? 0.22f : 0.06f);
+            }
+            // ADR 0060 (review r7 N-2): dirty joints and damp / oily hollows on yards and footways (not on carriageways:
+            // their wear comes from _ROADWEAR). WORKING_VALUE, judged against the CC0 Bieżeństwa / Andersa photos.
+            if (setName == "behaton_i_grey" || setName == "paving_20x10_grey" || setName == "concrete_cast_5m_joints"
+                || setName == "concrete_slab_3x1.5" || (setName == "asphalt_worn" && id != "road_asphalt"))
+            {
+                bool blocks = setName == "behaton_i_grey" || setName == "paving_20x10_grey";
+                mat.EnableKeyword("_GRIME");
+                // x damp darkening, y macro-pool threshold (~0.62 = 16 % of the area), z joint dirt, w damp gloss
+                mat.SetVector("_Grime", new Vector4(blocks ? 0.42f : 0.38f, 0.62f, blocks ? 0.45f : 0.3f, 0.5f));
             }
             if (setName == "asphalt_worn")
             {
@@ -217,7 +243,8 @@ namespace Game.World.Import
                 // Review r5 W-N3: macro-masked bare soil + rotated second sample (ADR 0042). Refill = linear mean of
                 // the grass_verge texels without bare soil (Var.B < 0.1), measured from the Medium BaseColor.
                 mat.EnableKeyword("_GRASS_DETILE");
-                mat.SetVector("_GrassFill", new Vector4(0.079f, 0.109f, 0.037f, 1f));   // linear, no sRGB conversion
+                // D38 (ADR 0060): grass chroma x1.45 in the set -> refill re-measured (Medium, Var.B < 0.1)
+                mat.SetVector("_GrassFill", new Vector4(0.072f, 0.114f, 0.011f, 1f));   // linear, no sRGB conversion
             }
             if (id.StartsWith("hall_wall") || id.StartsWith("plaster_") || id == "panel_concrete" || id == "brick_red" || id == "hall_plinth")
             {

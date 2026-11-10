@@ -44,6 +44,7 @@ Shader "Kamion/World Surface"
         [Toggle] _ReceiveShadows ("Receive shadows", Float) = 1
         _WindowGrid ("Far facade pane rect in a bay (u0, u1, v0, v1)", Vector) = (0.25, 0.75, 0.3, 0.8)
         _GlassColor ("Far facade glass albedo (linear)", Color) = (0.03, 0.035, 0.04, 1)
+        _SkyOcc ("Sky occlusion: x down-facing ambient, y horizon reflection (0 = off; ADR 0060)", Vector) = (0, 0, 0, 0)
         _Emission ("Emission luminance (cd/m2, linear; street lamp glass)", Color) = (0, 0, 0, 0)
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull (lamp glass: Off - the generator's glass quad faces up)", Float) = 2
         [Toggle] _GroundMasks ("Terrain ground masks from COLOR_0 (R road distance/20 m, G forest floor, B unmown, A bare soil)", Float) = 0
@@ -67,6 +68,7 @@ Shader "Kamion/World Surface"
             float4 _WindowGrid;
             float4 _GlassColor;
             float4 _Emission;
+            float4 _SkyOcc;
         CBUFFER_END
         float _KamionStreetLamps, _KamionLampLights, _KamionExposure;
         #include "KamionLampPools.hlsl"
@@ -233,11 +235,13 @@ Shader "Kamion/World Surface"
                 half3 color = (albedo * (1.0 - 0.04) + specColor * spec) * L.color * (atten * NoL);
 
                 // Ambient: L2 SH (sky + ground) and environment reflection
-                half3 ambient = SampleSH(n) * albedo * (_Occlusion * giK);
+                // sky occlusion (ADR 0060) on top of baked sky visibility giK (ADR 0064)
+                half3 ambient = SampleSH(n) * albedo * (_Occlusion * giK) * (1.0 - _SkyOcc.x * saturate(-n.y));
                 half3 R = reflect(-V, n);
                 half fresnel = Pow4(1.0 - NoV);
                 half grazing = saturate(smooth + 0.04);
                 half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, _Occlusion * giK) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
+                env *= 1.0 - _SkyOcc.y * (1.0 - smoothstep(0.05, 0.45, R.y));
                 color += ambient + env;
                 color += albedo * KamionLampPools(i.positionWS, n);   // ADR 0062
                 color += _Emission.rgb * (_KamionStreetLamps * _KamionExposure);

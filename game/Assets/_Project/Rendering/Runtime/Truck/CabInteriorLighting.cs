@@ -74,6 +74,11 @@ namespace Game.Rendering
                  "ADR 0044 addendum r7); off = plain sRGB toe on Low (A/B)")]
         public bool toeParity = true;
 
+        [Tooltip("ADR 0072: views from outside the cab on the tiers without post-processing also write the D23 toe in the truck " +
+                 "shaders (Kamion/Truck Exterior, cab interior through the glass), so the shaded TRAKT front reads on Low as on " +
+                 "High (Low lowsun: louvre faces 1.2 display points under High). Off = plain sRGB outside the cab view (A/B)")]
+        public bool exteriorToeParity = true;
+
         /// <summary>Interior ambient key: open-sky SH on an upward normal through the enclosure + first-bounce fill (exposed).</summary>
         float Key(SkyModel m, Vector3 fill) =>
             (1f - Mathf.Clamp01(enclosure)) * m.SkyHorizontalIlluminanceLux * m.Exposure / Mathf.PI + (0.2126f * fill.x + 0.7152f * fill.y + 0.0722f * fill.z);
@@ -164,13 +169,14 @@ namespace Game.Rendering
                 fill = new Vector3(c.r, c.g, c.b);
             }
             float gain = 1f, lift = 0f, enc = exteriorEnclosure, outside = 1f;
-            Vector4 parity = Vector4.zero;
+            bool post = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.postProcessing;
+            // ADR 0072: outside the cab the truck shaders write the D23 toe too (the world keeps plain sRGB on Low).
+            Vector4 parity = !post && exteriorToeParity ? LookGrading.NoPostToeParity : Vector4.zero;
             if (cam != null && interiorBounds.Contains(t.InverseTransformPoint(cam.transform.position)))
             {
                 // Tiers without the D23 LUT (Low): the cab surfaces write the D23 toe themselves (ADR 0044 addendum r7),
                 // so the cab view reads the same on Low and High (review r6: Low dusk black < 3 % 8.4 % vs High 1.8 %).
-                bool post = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.postProcessing;
-                if (!post && toeParity) parity = LookGrading.NoPostToeParity;
+                parity = !post && toeParity ? LookGrading.NoPostToeParity : Vector4.zero;
                 gain = Mathf.Pow(2f, cabViewEv + CabMeterEv(m, fill));
                 outside = 0f;
                 enc = enclosure;

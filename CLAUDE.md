@@ -41,6 +41,8 @@ Mobilny (Android → iOS) realistyczny symulator ciężarówki z naczepą. Unity
 
 ## Agenci
 Definicje w `.claude/agents/`. Lider = jedyny integrator. Worktree + gałąź na zadanie. Subagenci nie tworzą subagentów. Kontrakt zadania i format raportu: `docs/09`.
+- **Tempo i limit (polecenie właściciela, każda sesja):** pracuj na maksa do końca limitu 5-godzinnego. Przy ≥ 85 % limitu nowy agent tylko gdy działa < 2; przy ≥ 95 % żadnych nowych — agenci zapisują WIP (commit + STATUS.md), lider aktualizuje `HANDOVER.md` i pushuje.
+- **Ciągły zapis:** każdy agent commituje WIP i dopisuje STATUS.md (z następnym krokiem jako komendą) po każdym kroku; lider aktualizuje górę `HANDOVER.md` (main sha, tabela agentów: worktree, gałąź, STATUS, stan; następne kroki; licznik ADR) po każdym scaleniu/starcie/końcu agenta i pushuje — nowa sesja musi móc kontynuować z samego `HANDOVER.md`. Zasady dla agentów: `docs/owner/AGENT-RULES.md` (wersja w gicie).
 
 ## Definition of Done (każde zadanie)
 Kompiluje się na Androidzie · testy zielone · brak nowych krytycznych ostrzeżeń · dowód (log/zrzut/telemetria) · budżet wydajności nie pogorszony · review innego agenta · docs/ADR/licencje zaktualizowane · commit.

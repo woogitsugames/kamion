@@ -1,0 +1,852 @@
+{
+ "schema": "kamion.world.cc0/1",
+ "note": "CC0 surface scans (owner decision D40, ADR 0063). Raw files in art-source/world/cc0/_raw/<id>/ (not in git), fetched by art-source/world/materials/_src/cc0_fetch.py and verified by sha256. Processing: art-source/world/materials/_src/sets_scan.py (build_all.py).",
+ "licenses": {
+  "polyhaven": {
+   "license": "CC0 1.0 Universal",
+   "page": "https://polyhaven.com/license",
+   "checked_utc": "2026-11-10T18:13Z"
+  }
+ },
+ "assets": [
+  {
+   "id": "asphalt_04",
+   "source": "polyhaven",
+   "name": "Asphalt 04",
+   "page": "https://polyhaven.com/a/asphalt_04",
+   "authors": {
+    "Jenelle van Heerden": "Processing",
+    "Sergej Majboroda": "Photography"
+   },
+   "dimensions_mm": [
+    4040.0,
+    4040.0
+   ],
+   "date_published_unix": 1700092800,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "asphalt_worn"
+   ],
+   "why": "weathered grey AC with fine light aggregate, dry discoloration (aged city asphalt)",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/asphalt_04/asphalt_04_diff_2k.jpg",
+     "md5_api": "a9c6f84cfd568368607898351fce9b51",
+     "bytes": 3999385,
+     "sha256": "e02ac16d23ea97008c2507cf58bfad7c18a3b5933b5bdea14f7f90f33a784976",
+     "fetched_utc": "2026-11-10T18:13:11Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/asphalt_04/asphalt_04_nor_gl_2k.jpg",
+     "md5_api": "7c908104ea09ed7749d287a85bdae485",
+     "bytes": 4581129,
+     "sha256": "16ab393a8e9135ff1f30545bc0bc46b7b7f79da8db881bcb0da22cd12d528257",
+     "fetched_utc": "2026-11-10T18:13:11Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/asphalt_04/asphalt_04_rough_2k.jpg",
+     "md5_api": "804e7744df23ce11b2936d1c657dd1a6",
+     "bytes": 2281861,
+     "sha256": "4a5090564b400e481af564f97e2f8ba0db820a61f6b2d50d0cfe92160a7161ab",
+     "fetched_utc": "2026-11-10T18:13:12Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/asphalt_04/asphalt_04_ao_2k.jpg",
+     "md5_api": "c14ac15614876aff2e22aaac1f9b7e06",
+     "bytes": 2143804,
+     "sha256": "ba98b9ec276e8eee68a5b01b411207f386471ac898bac641380f4f5a5ae7b6ce",
+     "fetched_utc": "2026-11-10T18:13:13Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/asphalt_04/asphalt_04_disp_2k.jpg",
+     "md5_api": "b5eec308b9a246373c254037dc9f4ed5",
+     "bytes": 1812846,
+     "sha256": "8cd3db77f2d618cb0c6ed46f043355541cc9e2b725fa335d10e0d2b0511f0aea",
+     "fetched_utc": "2026-11-10T18:13:14Z"
+    }
+   ]
+  },
+  {
+   "id": "asphalt_pit_lane",
+   "source": "polyhaven",
+   "name": "Asphalt Pit Lane",
+   "page": "https://polyhaven.com/a/asphalt_pit_lane",
+   "authors": {
+    "Dimitrios Savva": "All"
+   },
+   "dimensions_mm": [
+    2000,
+    2000
+   ],
+   "date_published_unix": 1723593600,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "asphalt_sma_fresh"
+   ],
+   "why": "dark tarmac with fine chips and binder film (recent wearing course)",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/asphalt_pit_lane/asphalt_pit_lane_diff_2k.jpg",
+     "md5_api": "45339b41f99b4b5424882f8b4ae5d908",
+     "bytes": 4187951,
+     "sha256": "35f41f618a4342454b9a46d136b5086e8f1872a866aa1a7db2f813be3c6059d3",
+     "fetched_utc": "2026-11-10T18:13:14Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/asphalt_pit_lane/asphalt_pit_lane_nor_gl_2k.jpg",
+     "md5_api": "26c9cde27e15ce966abf0189e1b836b8",
+     "bytes": 4348614,
+     "sha256": "ff7aea390e34d05cb41afb93b90f043711736c252e9c5766e412efe756bf3660",
+     "fetched_utc": "2026-11-10T18:13:15Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/asphalt_pit_lane/asphalt_pit_lane_rough_2k.jpg",
+     "md5_api": "c6a6b989c3679028d42ea89837a738c3",
+     "bytes": 1971034,
+     "sha256": "cf54b6ad76bd641cc5e9fc2fa0378899839c1e2a95630f844e6ed825510d0644",
+     "fetched_utc": "2026-11-10T18:13:15Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/asphalt_pit_lane/asphalt_pit_lane_ao_2k.jpg",
+     "md5_api": "7b9845e2204907f1d49c444a0df766fe",
+     "bytes": 2804038,
+     "sha256": "970e4caab74698cda10ce7cd44a71fe65e27c57812b6cf2cf0689ebdaef70a9b",
+     "fetched_utc": "2026-11-10T18:13:18Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/asphalt_pit_lane/asphalt_pit_lane_disp_2k.jpg",
+     "md5_api": "ed423bc8b688a87fc3da6283e75624cd",
+     "bytes": 1019156,
+     "sha256": "48e0a29f7dd2735f89d89334c0ae46d1eadcfc89a96554a87fe8ec921ba7666b",
+     "fetched_utc": "2026-11-10T18:13:20Z"
+    }
+   ]
+  },
+  {
+   "id": "clean_asphalt",
+   "source": "polyhaven",
+   "name": "Clean Asphalt",
+   "page": "https://polyhaven.com/a/clean_asphalt",
+   "authors": {
+    "Dimitrios Savva": "All"
+   },
+   "dimensions_mm": [
+    2100.0,
+    2100.0
+   ],
+   "date_published_unix": 1768262400,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "asphalt_patch"
+   ],
+   "why": "dark fine-grained asphalt (newer patch fill)",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/clean_asphalt/clean_asphalt_diff_2k.jpg",
+     "md5_api": "d3afa117daf0846a743bbf5b4eb2464d",
+     "bytes": 3314999,
+     "sha256": "9d58f263b695c268e391aa39ea2f6b30ab9f36d279715cc78593a4d43368039c",
+     "fetched_utc": "2026-11-10T18:13:20Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/clean_asphalt/clean_asphalt_nor_gl_2k.jpg",
+     "md5_api": "f9d4e1b14ac5b231748b600dcd59f20e",
+     "bytes": 3923727,
+     "sha256": "ee6e217a75851a73ab0ce54501e787b63707e0cf8dfd7293989adf7d3e325162",
+     "fetched_utc": "2026-11-10T18:13:20Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/clean_asphalt/clean_asphalt_rough_2k.jpg",
+     "md5_api": "b2dfdcd35bd5462dd8b275c6adc68d74",
+     "bytes": 2898463,
+     "sha256": "3b5afbcee7e27fa8908b0e191dd7eda5d4239bbfe68f9ce0b84e4f55f708d2e7",
+     "fetched_utc": "2026-11-10T18:13:21Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/clean_asphalt/clean_asphalt_ao_2k.jpg",
+     "md5_api": "72b00076439b3aff9819e51ad6a8dbf9",
+     "bytes": 3141137,
+     "sha256": "581a6b5a1d40b599d1ce73a9eb1125acaa5ac09cb4dbaf33c5e0b1bcfdc8dae3",
+     "fetched_utc": "2026-11-10T18:13:21Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/clean_asphalt/clean_asphalt_disp_2k.jpg",
+     "md5_api": "3650d19a3975a4ee9e4fff94dde3fcae",
+     "bytes": 1453317,
+     "sha256": "8e2f7d89de668a9c1da7d0cc3fbcaeade21f942cf92d2d3f04829e674ef1e6cf",
+     "fetched_utc": "2026-11-10T18:13:22Z"
+    }
+   ]
+  },
+  {
+   "id": "concrete_pavers",
+   "source": "polyhaven",
+   "name": "Concrete Pavers",
+   "page": "https://polyhaven.com/a/concrete_pavers",
+   "authors": {
+    "Amal Kumar": "All"
+   },
+   "dimensions_mm": [
+    1920.0,
+    1920.0
+   ],
+   "date_published_unix": 1715040000,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "behaton_i_grey"
+   ],
+   "why": "grey interlocking double-T concrete pavers (behaton)",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_pavers/concrete_pavers_diff_2k.jpg",
+     "md5_api": "3d816c59181f0a67d194b33aa22d0cb0",
+     "bytes": 3086820,
+     "sha256": "ac772172824543ce53a9ad60e0b7a00c02fcaf875ec6a65ae49806f6ae25539a",
+     "fetched_utc": "2026-11-10T18:13:22Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_pavers/concrete_pavers_nor_gl_2k.jpg",
+     "md5_api": "f083a123bf9f6c90e9d5c825a8a7d37a",
+     "bytes": 3724095,
+     "sha256": "e2c582e8cfbd1fd05a344fecba7d8cade8590ab2ebf24088118618a721c66149",
+     "fetched_utc": "2026-11-10T18:13:22Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_pavers/concrete_pavers_rough_2k.jpg",
+     "md5_api": "4bda2eeae3a96417364e148ae731d7fd",
+     "bytes": 1324873,
+     "sha256": "b885c369528efb5c999577a49f60aeaa4c48b57f4a727c47d22fe3253f828f8d",
+     "fetched_utc": "2026-11-10T18:13:23Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_pavers/concrete_pavers_ao_2k.jpg",
+     "md5_api": "0a6fd78b540b2666bd6f9b2ea11b2b47",
+     "bytes": 2554098,
+     "sha256": "070b0be7448970134114e961a74af5a3a1fbd5f14a14be213b7e1e719f94be0e",
+     "fetched_utc": "2026-11-10T18:13:23Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_pavers/concrete_pavers_disp_2k.jpg",
+     "md5_api": "62b194a99bd3549ba2a4eaa03ff1df2d",
+     "bytes": 1209544,
+     "sha256": "8dc910e4bb8d115105f1091a441af40584a1cb5d04ff7a09094090ddbb3974a5",
+     "fetched_utc": "2026-11-10T18:13:25Z"
+    }
+   ]
+  },
+  {
+   "id": "pavement_04",
+   "source": "polyhaven",
+   "name": "Pavement 04",
+   "page": "https://polyhaven.com/a/pavement_04",
+   "authors": {
+    "Jan Burghardt": "All"
+   },
+   "dimensions_mm": [
+    3100.0,
+    3100.0
+   ],
+   "date_published_unix": 1681948800,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "paving_20x10_grey"
+   ],
+   "why": "dark grey rectangular concrete pavers, running bond (holland 20x10)",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/pavement_04/pavement_04_diff_2k.jpg",
+     "md5_api": "7c5800babfbb7a0276e9a61736239e81",
+     "bytes": 4059951,
+     "sha256": "1b23c4d027f59b7891ecad7e1c1e8a4c441063e407f7442a8dde4d7b4d7e095b",
+     "fetched_utc": "2026-11-10T18:13:27Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/pavement_04/pavement_04_nor_gl_2k.jpg",
+     "md5_api": "b30761d53461027050ba359763ee89af",
+     "bytes": 2240432,
+     "sha256": "267790e647bc8ef5672f5a0d1a6c2ae60955d0755211d11bcdf10e8a33f7ad75",
+     "fetched_utc": "2026-11-10T18:13:29Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/pavement_04/pavement_04_rough_2k.jpg",
+     "md5_api": "79ef4145253a5c0f05ca81d521dba712",
+     "bytes": 1327087,
+     "sha256": "e3019d9f48f8d2b5526a2a1884e41d931d49b5609fd899f0325760e1f565b7dc",
+     "fetched_utc": "2026-11-10T18:13:32Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/pavement_04/pavement_04_ao_2k.jpg",
+     "md5_api": "930fda8aeaad88a345e687d56fb7ab42",
+     "bytes": 3813468,
+     "sha256": "4525f7d87d2c90290caa64b106fbb27381fb49c6f5bdb94a05ab2ba856b8549c",
+     "fetched_utc": "2026-11-10T18:13:33Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/pavement_04/pavement_04_disp_2k.jpg",
+     "md5_api": "d4cb696dd08df0ba75011d0c8e7b5cca",
+     "bytes": 1403125,
+     "sha256": "35c51c9e591c9594fe2d7bc3a83f616e6cf9cdad4a832f9f735e6b40e22c7ced",
+     "fetched_utc": "2026-11-10T18:13:35Z"
+    }
+   ]
+  },
+  {
+   "id": "concrete_pavement_02",
+   "source": "polyhaven",
+   "name": "Concrete Pavement 02",
+   "page": "https://polyhaven.com/a/concrete_pavement_02",
+   "authors": {
+    "Charlotte Baglioni": "All"
+   },
+   "dimensions_mm": [
+    1800.0,
+    1800.0
+   ],
+   "date_published_unix": 1711670400,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "sidewalk_slab_35"
+   ],
+   "why": "square concrete sidewalk slabs ~0.30 m, scaled to 35x35 (plyty chodnikowe)",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_pavement_02/concrete_pavement_02_diff_2k.jpg",
+     "md5_api": "d0aa888aa34ab72209591e0190d23b67",
+     "bytes": 4215026,
+     "sha256": "a634f169ef1bb928585340f7feac69375b2bbbdfc0448e316dbaebe03bd5bf89",
+     "fetched_utc": "2026-11-10T18:13:36Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_pavement_02/concrete_pavement_02_nor_gl_2k.jpg",
+     "md5_api": "6d631458c9c41566ece8ffd479cdf41f",
+     "bytes": 5429141,
+     "sha256": "5bd05a222f82cceb6001847dcdf3b75b623ddb38b9cd00acbf4663299553c366",
+     "fetched_utc": "2026-11-10T18:13:36Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_pavement_02/concrete_pavement_02_rough_2k.jpg",
+     "md5_api": "1444bb4d7474d80f61d250839b973ec7",
+     "bytes": 2243259,
+     "sha256": "788dcdd015bafdf8759b83294628dc6cce464a5d38bc98e8f4458373941f8bc7",
+     "fetched_utc": "2026-11-10T18:13:36Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_pavement_02/concrete_pavement_02_ao_2k.jpg",
+     "md5_api": "2a3242291fff60dc10f29eea8fded23c",
+     "bytes": 2904164,
+     "sha256": "b7e90bb77056bb4ffbe1b082b49862068d6a062f607e24585ed249d3ca92e598",
+     "fetched_utc": "2026-11-10T18:13:36Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_pavement_02/concrete_pavement_02_disp_2k.jpg",
+     "md5_api": "cbe82ee353a44b3690478281f4e68309",
+     "bytes": 1944191,
+     "sha256": "1cd3a62c7301db8b679ccc166572ece298b8d4685642bdffc45ddfb516e066e7",
+     "fetched_utc": "2026-11-10T18:13:37Z"
+    }
+   ]
+  },
+  {
+   "id": "brushed_concrete",
+   "source": "polyhaven",
+   "name": "Brushed Concrete ",
+   "page": "https://polyhaven.com/a/brushed_concrete",
+   "authors": {
+    "Dario Barresi": "Processing",
+    "Dimitrios Savva": "Photography"
+   },
+   "dimensions_mm": [
+    2500,
+    2500
+   ],
+   "date_published_unix": 1658793600,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "concrete_cast_5m_joints"
+   ],
+   "why": "broom-finished cast concrete (yards, concrete roads, viaducts)",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brushed_concrete/brushed_concrete_diff_2k.jpg",
+     "md5_api": "341c593c794bf18b0a49c542f6e381b7",
+     "bytes": 3590812,
+     "sha256": "5af96604b20e29862b449d86981b196b18ba5cbcb8659c451dd8976411a36130",
+     "fetched_utc": "2026-11-10T18:13:38Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brushed_concrete/brushed_concrete_nor_gl_2k.jpg",
+     "md5_api": "ca0204e32c2f2afad5f4bbe8c6b436ed",
+     "bytes": 3524683,
+     "sha256": "3d1f1c7a5f20a5f7a15f3bc5c5f58c0fdcaf49e71e65a5f17e086b551895c00c",
+     "fetched_utc": "2026-11-10T18:13:39Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brushed_concrete/brushed_concrete_rough_2k.jpg",
+     "md5_api": "7d9994bceb82c437a753cedfba55c434",
+     "bytes": 3219426,
+     "sha256": "1100fc9e5c363144aff1b0872d7ed426ca143b63b90a4cbf15e2ab89a14ca905",
+     "fetched_utc": "2026-11-10T18:13:39Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brushed_concrete/brushed_concrete_ao_2k.jpg",
+     "md5_api": "46bb4144797a33b65f250749cdf899eb",
+     "bytes": 2856456,
+     "sha256": "d0ef88ae30c09a2f6af1183e321c0be5b5432a12a27ad9226325d88d78148427",
+     "fetched_utc": "2026-11-10T18:13:40Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brushed_concrete/brushed_concrete_disp_2k.jpg",
+     "md5_api": "4e021c0e9e42c309502ff7aa7c32bbc2",
+     "bytes": 1512623,
+     "sha256": "d56916fb872959a0829ff85b8320a0ea5c0ffe5b6efd51ac4f1e425ca56910ed",
+     "fetched_utc": "2026-11-10T18:13:40Z"
+    }
+   ]
+  },
+  {
+   "id": "concrete_floor_worn_001",
+   "source": "polyhaven",
+   "name": "Concrete Floor Worn 001",
+   "page": "https://polyhaven.com/a/concrete_floor_worn_001",
+   "authors": {
+    "Dimitrios Savva": "Photography",
+    "Rico Cilliers": "Processing"
+   },
+   "dimensions_mm": [
+    3000,
+    3000.0
+   ],
+   "date_published_unix": 1627948800,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "concrete_slab_3x1.5",
+    "kerb_concrete_1m",
+    "concrete_precast",
+    "large_panel_joints"
+   ],
+   "why": "worn grey precast concrete surface (JOMB plates, kerbs, plinths, large-panel blocks)",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_floor_worn_001/concrete_floor_worn_001_diff_2k.jpg",
+     "md5_api": "6a3645f19f2ac4b7f60f43419c5d09ec",
+     "bytes": 482906,
+     "sha256": "e29b45cdcd6d02fae3c087c456196ffa750779a9b62e7071aa3831dc322a0cc4",
+     "fetched_utc": "2026-11-10T18:13:40Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_floor_worn_001/concrete_floor_worn_001_nor_gl_2k.jpg",
+     "md5_api": "210fbc9fe40492177e79fdb4afda268e",
+     "bytes": 870609,
+     "sha256": "3b782137e34d63fd59b2e92b4e27b2ee4d082caf9dd23f00dc7ab4da5513daef",
+     "fetched_utc": "2026-11-10T18:13:41Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_floor_worn_001/concrete_floor_worn_001_rough_2k.jpg",
+     "md5_api": "169cac76d6499d7d70d1dbb237fcc976",
+     "bytes": 735249,
+     "sha256": "b904992f0d75da2c41edf832bbb838622cca076f48f7913065a152c3b640690e",
+     "fetched_utc": "2026-11-10T18:13:41Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_floor_worn_001/concrete_floor_worn_001_ao_2k.jpg",
+     "md5_api": "2515023779ca2c7a1e55721001859ecf",
+     "bytes": 689586,
+     "sha256": "94ac734a35df1d1ca15bbb4970f4bf56f9f827930b5532d8a5b971de63ec58b5",
+     "fetched_utc": "2026-11-10T18:13:41Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_floor_worn_001/concrete_floor_worn_001_disp_2k.jpg",
+     "md5_api": "6e46161e741bf9a18e8f96d1def46f03",
+     "bytes": 666150,
+     "sha256": "793a833047c28b17344ca7543c32de39fb5d86d17e33ab380cf8639040d3a637",
+     "fetched_utc": "2026-11-10T18:13:42Z"
+    }
+   ]
+  },
+  {
+   "id": "painted_plaster_wall",
+   "source": "polyhaven",
+   "name": "Painted Plaster Wall",
+   "page": "https://polyhaven.com/a/painted_plaster_wall",
+   "authors": {
+    "Amal Kumar": "All"
+   },
+   "dimensions_mm": [
+    2000,
+    2000
+   ],
+   "date_published_unix": 1706140800,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "plaster"
+   ],
+   "why": "weathered painted exterior plaster (blocks, houses)",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/painted_plaster_wall/painted_plaster_wall_diff_2k.jpg",
+     "md5_api": "32f4f4e5ded7d20e55e337004d0d9691",
+     "bytes": 3132937,
+     "sha256": "6fd812ed8dd5be1873c29aeef38ce9bf1fb30a22c6d4b3a12db725e98c26a1be",
+     "fetched_utc": "2026-11-10T18:13:42Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/painted_plaster_wall/painted_plaster_wall_nor_gl_2k.jpg",
+     "md5_api": "18faf9f7949aefdb3ae7cef7195cba04",
+     "bytes": 4048392,
+     "sha256": "2d601a46ed5ce2af866741c53cafa3cba472620c272e633b6484d4de16a80eb1",
+     "fetched_utc": "2026-11-10T18:13:42Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/painted_plaster_wall/painted_plaster_wall_rough_2k.jpg",
+     "md5_api": "7cdd5fbbe56f7becb757fc5b52d11d28",
+     "bytes": 1595466,
+     "sha256": "35aad595469533cc3b7cc209cc6c7e065d660211f02c867f4492d3b371b1fee1",
+     "fetched_utc": "2026-11-10T18:13:43Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/painted_plaster_wall/painted_plaster_wall_ao_2k.jpg",
+     "md5_api": "b911e43133db837371f58983f5270586",
+     "bytes": 2176195,
+     "sha256": "3d89b5ea1f9d93d611ab0015d887b620ec9c6623e19effadba84ee9345c4c6fc",
+     "fetched_utc": "2026-11-10T18:13:43Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/painted_plaster_wall/painted_plaster_wall_disp_2k.jpg",
+     "md5_api": "b7823671e9faf44796354ef65b1dbe76",
+     "bytes": 1565195,
+     "sha256": "80859875e00fde2c883d37a4eb47728bece60f9eb7c8a907ce40b20d8faf5ed1",
+     "fetched_utc": "2026-11-10T18:13:43Z"
+    }
+   ]
+  },
+  {
+   "id": "red_brick",
+   "source": "polyhaven",
+   "name": "Red Brick",
+   "page": "https://polyhaven.com/a/red_brick",
+   "authors": {
+    "Rob Tuytel": "All"
+   },
+   "dimensions_mm": [
+    1400.0,
+    1400.0
+   ],
+   "date_published_unix": 1729123200,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "brick"
+   ],
+   "why": "red brick, stretcher bond, recessed mortar",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/red_brick/red_brick_diff_2k.jpg",
+     "md5_api": "d38aaa7b2c8533c033919bc566c62c37",
+     "bytes": 3169072,
+     "sha256": "a1ae5ba7e63026971ceaf68ebbcf8982d9c2dadde1c99996c49b8ac1160af995",
+     "fetched_utc": "2026-11-10T18:13:43Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/red_brick/red_brick_nor_gl_2k.jpg",
+     "md5_api": "f10a21aa51b3a0950d1ca0f1fbb8e707",
+     "bytes": 4327452,
+     "sha256": "dd2ce5b5c42f04f02fce555d53eae42503733a0a42e76ae9a18bfb9d0680da5b",
+     "fetched_utc": "2026-11-10T18:13:44Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/red_brick/red_brick_rough_2k.jpg",
+     "md5_api": "30d1018e087a2ee81328b331edefb2d5",
+     "bytes": 552848,
+     "sha256": "b8b6b882b467647162433914b3e4db16e91852a0bdf866e6bcea4a76683ea00d",
+     "fetched_utc": "2026-11-10T18:13:45Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/red_brick/red_brick_ao_2k.jpg",
+     "md5_api": "c05df560b5cb7eb2a62343b89184b69a",
+     "bytes": 2989135,
+     "sha256": "5527fb221bf4506a2c5eb78d0b94e442ea4ec91cfa2ae17ae93bc78e88bd05ed",
+     "fetched_utc": "2026-11-10T18:13:47Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/red_brick/red_brick_disp_2k.jpg",
+     "md5_api": "3e1d76e5c1873b5f75e99ab25f529ce7",
+     "bytes": 1005806,
+     "sha256": "6fbe5a45fb9fb303d66c2a9b9ac8c93b3246a7484ab3babaca493d35f22d8bd4",
+     "fetched_utc": "2026-11-10T18:13:48Z"
+    }
+   ]
+  },
+  {
+   "id": "corrugated_iron_03",
+   "source": "polyhaven",
+   "name": "Corrugated Iron 03",
+   "page": "https://polyhaven.com/a/corrugated_iron_03",
+   "authors": {
+    "Charlotte Baglioni": "All"
+   },
+   "dimensions_mm": [
+    2000,
+    2000
+   ],
+   "date_published_unix": 1747094400,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "trapezoid_sheet"
+   ],
+   "why": "galvanised sheet weathering (scratches, rust spots); ribs notched out",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/corrugated_iron_03/corrugated_iron_03_diff_2k.jpg",
+     "md5_api": "5eb86304eada29624fc1e3c3a1fa2ff7",
+     "bytes": 1908641,
+     "sha256": "7b3f4f849dd634f54548b3b552ebeae723266f782163341185c94094e2eb7991",
+     "fetched_utc": "2026-11-10T18:13:49Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/corrugated_iron_03/corrugated_iron_03_nor_gl_2k.jpg",
+     "md5_api": "7c642a1e9c99d75066c45073c2141d03",
+     "bytes": 1950629,
+     "sha256": "9f865a4de4753a9cc0987c4e665ec935c7dd28d3c6cd80c4dd2000d64c2fcfc3",
+     "fetched_utc": "2026-11-10T18:13:51Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/corrugated_iron_03/corrugated_iron_03_rough_2k.jpg",
+     "md5_api": "ad7d2c598e1bce2162342adae6adc938",
+     "bytes": 763498,
+     "sha256": "614013a559732b9525095575bdc41b3f8eff91cd37ac7231583a849aa7799a80",
+     "fetched_utc": "2026-11-10T18:13:53Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/corrugated_iron_03/corrugated_iron_03_ao_2k.jpg",
+     "md5_api": "651687e5233184beea1fc506001d3606",
+     "bytes": 1163695,
+     "sha256": "0a432496f5a974c37b4fc6d436243348237f8e0deb2aa538dd6c152da5884f99",
+     "fetched_utc": "2026-11-10T18:13:55Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/corrugated_iron_03/corrugated_iron_03_disp_2k.jpg",
+     "md5_api": "148fcb7828495e2337ca013ea51fa6e0",
+     "bytes": 1069485,
+     "sha256": "43c1872f30630c3c54b03b8f444b0b9c978ae766cc07ef1ba557234f1d4c33a2",
+     "fetched_utc": "2026-11-10T18:13:56Z"
+    }
+   ]
+  },
+  {
+   "id": "gravel_floor_02",
+   "source": "polyhaven",
+   "name": "Gravel Floor 02",
+   "page": "https://polyhaven.com/a/gravel_floor_02",
+   "authors": {
+    "Jenelle van Heerden": "Processing",
+    "Dimitrios Savva": "Photography"
+   },
+   "dimensions_mm": [
+    2000,
+    2000
+   ],
+   "date_published_unix": 1709164800,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "gravel_compacted"
+   ],
+   "why": "grey crushed-stone driveway gravel (shoulders, yards)",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/gravel_floor_02/gravel_floor_02_diff_2k.jpg",
+     "md5_api": "db7865191e53523b2b9eabc85a7f73c3",
+     "bytes": 4698557,
+     "sha256": "27c8953655dd2f289106106bb2c2c4845f77152bf1621b3d7091bd43b5083ffc",
+     "fetched_utc": "2026-11-10T18:13:57Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/gravel_floor_02/gravel_floor_02_nor_gl_2k.jpg",
+     "md5_api": "6d1c9823f61e798fe15388e99668be7a",
+     "bytes": 5894173,
+     "sha256": "90f2f22016142f5ad725f8fc5540d8c9ad347db233b7540e2ab33f25ba9298e4",
+     "fetched_utc": "2026-11-10T18:13:57Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/gravel_floor_02/gravel_floor_02_rough_2k.jpg",
+     "md5_api": "e523a3ce827dc5dee008d8ff7f318246",
+     "bytes": 2698006,
+     "sha256": "76f84ef27c72cffb1b1906c6a5b06cb06db664d2d6cb6c0ba2ee996c04e2607d",
+     "fetched_utc": "2026-11-10T18:13:58Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/gravel_floor_02/gravel_floor_02_ao_2k.jpg",
+     "md5_api": "90923e99cfe6e2e686b8efdf82a04fa2",
+     "bytes": 4279088,
+     "sha256": "f40680eaf50c5c456b72d1b7466c2c32e26e04559c2b188e92c1adf87ce614d7",
+     "fetched_utc": "2026-11-10T18:13:58Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/gravel_floor_02/gravel_floor_02_disp_2k.jpg",
+     "md5_api": "3b1b0ad87e97f3723c48d1229eb81870",
+     "bytes": 2160182,
+     "sha256": "0fdfd2961efadaba61e65c2a2557f17cdeb34c0b49b5ce82bef4824618be499f",
+     "fetched_utc": "2026-11-10T18:13:58Z"
+    }
+   ]
+  },
+  {
+   "id": "pine_bark",
+   "source": "polyhaven",
+   "name": "Pine Bark",
+   "page": "https://polyhaven.com/a/pine_bark",
+   "authors": {
+    "Dimitrios Savva": "All"
+   },
+   "dimensions_mm": [
+    2000.0,
+    2000.0
+   ],
+   "date_published_unix": 1693872000,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "bark_pine"
+   ],
+   "why": "Scots-pine-like plated bark (processed only; trees are another agent's scope)",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/pine_bark/pine_bark_diff_2k.jpg",
+     "md5_api": "d10980446d36a65a73081cf61bc84992",
+     "bytes": 3167561,
+     "sha256": "741f333ab9f8a0996d8a53905b5ac792fab77d7ccb8cac5fbaed8c99b9f6abd5",
+     "fetched_utc": "2026-11-10T18:13:58Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/pine_bark/pine_bark_nor_gl_2k.jpg",
+     "md5_api": "ee1de039967165665060653a0e12e571",
+     "bytes": 4637035,
+     "sha256": "e91d024441a698523472ef2001be2eade2f73005d798466c7acd3ec5d585667f",
+     "fetched_utc": "2026-11-10T18:13:59Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/pine_bark/pine_bark_rough_2k.jpg",
+     "md5_api": "9ea974ea3e298b30ee3b7a21ec05b566",
+     "bytes": 2085022,
+     "sha256": "a86618f6358a97410b15d226d0b3d52bb203aed8d9a29cfa355769b95df94d03",
+     "fetched_utc": "2026-11-10T18:13:59Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/pine_bark/pine_bark_ao_2k.jpg",
+     "md5_api": "604da5925849b0270b7ec46c211d909d",
+     "bytes": 2874296,
+     "sha256": "c76f03e24de9f5bb826676b0c34bfa49e5d1ca240166a2811d2d3874d47d21bd",
+     "fetched_utc": "2026-11-10T18:13:59Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/pine_bark/pine_bark_disp_2k.jpg",
+     "md5_api": "4f46a23fd05aed2f2c5ab948abb1e589",
+     "bytes": 1259109,
+     "sha256": "066b021e6192eb49019bde474bf55323d7f0f13706f32c308d96ac1dbcba7c3c",
+     "fetched_utc": "2026-11-10T18:13:59Z"
+    }
+   ]
+  }
+ ]
+}

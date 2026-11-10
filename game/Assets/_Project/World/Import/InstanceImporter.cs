@@ -43,7 +43,9 @@ namespace Game.World.Import
             else if (proto == "pylon" || proto == "power_pole") e = new[] { 80f, 1500f };
             else if (proto.StartsWith("plate_") || proto.StartsWith("board_") || proto.StartsWith("sign_") || proto.StartsWith("signal_")) e = new[] { 50f, 250f };
             else if (proto == "bus_shelter" || proto.EndsWith("_gate")) e = new[] { 60f, 300f };
-            // Hero building assets (ADR 0070, art-source/world/landmarks): LOD0 / LOD1 / silhouette, never culled.
+            // Hero landmark assets (ADR 0067 viaduct, ADR 0070 fire station; art-source/world/landmarks): LOD0 / LOD1 /
+            // silhouette, never culled. One line per asset family, most specific prefix first.
+            else if (proto.StartsWith("landmark_viaduct")) e = new[] { 90f, 300f, 20000f };
             else if (proto.StartsWith("landmark_fire_station")) e = new[] { 150f, 450f, 20000f };
             // Landmarks (chimneys): visible across the district, never culled inside the far plane.
             else if (proto.StartsWith("landmark_")) e = new[] { 650f, 20000f };
@@ -57,7 +59,8 @@ namespace Game.World.Import
             else e = new[] { 30f, 120f };   // bench, bollard, waste bin, street cabinet, pallets, containers
             // Mirror: tools/worldgen/roads/build_world.py instance_ends() (frame estimate) - keep the two in sync.
             if (e.Length > lodCount) e = new[] { e[0] }.Concat(e.Skip(e.Length - lodCount + 1)).ToArray();
-            int shadows = proto.StartsWith("tree_") ? 0b011 : 0b001;
+            // A viaduct shades the road under it: LOD1 keeps casting (the shadow must not pop off at the LOD switch).
+            int shadows = proto.StartsWith("tree_") || proto.StartsWith("landmark_viaduct") ? 0b011 : 0b001;
             return (e.Take(lodCount).ToArray(), shadows);
         }
 

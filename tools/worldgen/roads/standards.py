@@ -226,7 +226,9 @@ LAMP_OFFSET = 0.80          # WORKING_VALUE: column axis behind the kerb face (s
 # Placement -> WORKING_VALUE until read.
 SIGNAL_POLE_H = 4.0         # WORKING_VALUE
 SIGNAL_MAST_H = 6.8         # WORKING_VALUE: cantilever mast, head >= 5.0 m over the carriageway
-SIGNAL_CANTILEVER_LANES = 3 # WORKING_VALUE: approaches with >= 3 lanes get a cantilever head
+SIGNAL_CANTILEVER_LANES = 2 # WORKING_VALUE: approaches with >= 2 lanes get a cantilever head (ADR 0069: Mapillary
+                            # p42 / p45 / p47 show curved mast arms over the 2-lane entries of Rondo Putry; was 3)
+SIGNAL_MAST_BEND_R = 1.5    # WORKING_VALUE: bend radius of the mast arm, read off p42 against the 0.36 m head
 # Road restraint systems. GDDKiA "Wytyczne stosowania drogowych barier ochronnych na drogach krajowych"
 # (2010): barrier warranted on embankments higher than ~2 m – WORKING_VALUE until the text is read.
 GUARDRAIL_EMBANKMENT_H = 2.0

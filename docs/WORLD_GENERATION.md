@@ -124,6 +124,10 @@ Oświetlenie `--light overcast|lowsun|both`: AgX, bez bloomu, winiety i aberracj
 
 Przykład w repo (baza Kwadrat Park): droga dojazdowa do placu ma w OSM tylko `highway=service`, więc generator dał klasę D (2 × 2,50 m). Ortofoto pokazuje ok. 7 m asfaltu, więc override ustawia 2 × 3,50 m. Na placu nie ma krawężników (`flush`), a łuk wjazdu ma 15 m dla naczepy. Każdy wpis ma `reason`, `confidence` i `verify` (pozycję z listy zdjęć właściciela). Test `test_overrides_applied_and_not_stale` pilnuje, że wpisy działają po regeneracji.
 
+### Hero bridge (ADR 0067)
+
+Wpis `kind: hero_bridge` (pola: `id`, `osm_ways`, `asset`, opcjonalne `params`) zastępuje generyczny spód, fascia, balustradę i podpory łańcuchów mostu instancjami assetu z `art-source/world/landmarks/<asset>/<asset>.glb`. `streetscape/hero_bridge.py` zapisuje spec `Data/Regions/<id>/generated/landmarks/<asset>.spec.json` (krawędzie pomostu, linie podpór, cięcia) i sprawdza jego sha256 w `<asset>_meta.json`; przy rozjeździe uruchamia `tools/blender/world/landmarks/make_viaduct.py` (Blender z `KAMION_BLENDER` lub PATH; `KAMION_NO_BLENDER=1` wyłącza) albo zostawia generyk i zgłasza override w `overrides_stale`. Log: `hero bridges {'applied': [...], 'stale': [...]}`; raport `streetscape_qa.json` → `hero_bridges`. Ręcznie: `blender -b --factory-startup -P tools/blender/world/landmarks/make_viaduct.py -- --spec <spec> [--render <abs dir>]`. Wyspy `plantings` przyjmują `fill: gravel` (materiał `island_gravel`). Test: `tests/gis/test_hero_bridge.py`.
+
 ## Kontrola jakości
 
 - Testy: `tests/gis/test_world_roads.py` (szczelność szwów skrzyżowań: >300 szwów, każdy wspólny wierzchołek po wierzchołku i krawędź po krawędzi; pochylenia ≤ limit; brak szumu NMT w niwelecie; wierzchołki jezdni ≤ 0,2 m od wygenerowanego przekroju; przesunięcie osi przez wygładzanie p95 ≤ 0,5 m; teren ≥ 0,30 m pod drogą; wspólne krawędzie chunków; deterministyczność; struktura GLB; overrides; wymiary z rozporządzeń).
@@ -185,3 +189,25 @@ Przykład w repo (baza Kwadrat Park): droga dojazdowa do placu ma w OSM tylko `h
 - Control cameras `route_putry_approach`, `route_putry_entry_signs`. `visual-qa.ps1 -Rq 'rq_trees=0'` (ablation) and
   `-TimeFrames N` (editor GPU timing in `stats.txt`).
 - Frames and costs: `docs/reports/visual/world-c/v34/README.md`. Tests: `tests/gis/test_world_v34.py`.
+
+## street-r9 (ADR 0069): road furniture after Mapillary references
+- Noise barriers (`streetscape/furniture.py` `noise_barriers`, `noise_wall`): BDOT10k OT_OIKM_L + OSM
+  `barrier=wall` + `wall=noise_barrier` (`sources.py` keeps the `wall` tag; OSM parts > 4 m from BDOT only). Styles
+  `solid` (dark cassettes, default) and `glazed` (plinth, dark band, `noise_glass`, top rail, posts every 4 m) per zone:
+  override `kind: noise_barrier_style` (`zones[]` with centre / radius in EPSG:2180, `style`, Mapillary ids). QA:
+  `furniture.noise_barriers` (`m_by_style`, `zones_stale`).
+- Gantries (`streetscape/landmarks.py`): override `form: cantilever` (one lattice column, `column_side`) or `portal`;
+  board rows `from_osm` (`destination` + `destination:ref`; the road graph keeps `destination:ref`, the OSM cache key
+  depends on the tag list, so after a tag change run `build_region.py` first). QA: `furniture.landmarks.gantries`, `stale`.
+- Signals: mast with an arc (R 1.5 m) into the horizontal arm from 2 approach lanes (`standards.SIGNAL_CANTILEVER_LANES`).
+- Tree groups (`streetscape/vegetation.py`): override `kind: tree_groups` (`lines[]` in EPSG:2180, `group_size`,
+  `gap_m`, `species`); BDOT rows within 12 m of such a line are re-placed as clumps. Lines must lie on open ground
+  (not the carriageway, cycle path or paved areas, which are blocked + 3 m): check with the BDOT layers before
+  authoring. QA: `vegetation.tree_groups` (`lines`, `groups`, `trees`, `rows_grouped`).
+- Zebras at junction mouths (`roads/markings.py` `_drape_crossing`): a P-10 whose OSM node lies inside the generated
+  junction patch is drawn there as a rigid rectangle (stripes parallel to the arm at the node) draped on the patch mesh
+  (+ `MARKING_LIFT`), not moved up to 8 m along the arm; refused within 3 m of the node or over a kerb step > 6 cm.
+  QA: `roads_qa.json` `summary.markings["P-10 crossing in junction"]`, `crossings_in_junction`, `crossings_skipped`.
+- Photo-pose cameras: `tools/worldgen/photolist/photo_cameras.py` (pose from Mapillary lat/lon/compass, snapped to the
+  road centreline) and `montage` (photo | before | after). Evidence: `artifacts/street-r9/`. Tests:
+  `tests/gis/test_street_r9.py`.

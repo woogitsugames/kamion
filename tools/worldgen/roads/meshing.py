@@ -328,12 +328,15 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
         if c.meta.get("walled") is not None:      # no soffit over walled ramps (hidden between the walls)
             open_ = c.interp(c.meta["walled"].astype(float), ss) < 0.5
             Ts = Ts[open_[np.minimum(Ts // 2, len(ss) - 1)].any(axis=1)]
-        buf.add("bridge", "bridge_soffit", V, V[:, :2], Ts, src=c.id + ":soffit")
+        hero = bool(c.meta.get("hero"))    # authored viaduct asset (streetscape.hero_bridge, ADR 0067): the asset
+        # brings its own girder, cornice, railing and supports; only the ramp walls below stay generated
+        if not hero:
+            buf.add("bridge", "bridge_soffit", V, V[:, :2], Ts, src=c.id + ":soffit")
         tt0, nn0 = c.line.frame(ss)
         for side, sgn in (("L", 1.0), ("R", -1.0)):
             bot, top = outer[side]
             off = np.column_stack([nn0 * sgn * 0.015, np.zeros(len(ss))])
-            if style["fascia"]:          # painted band at the cap edge (top FASCIA_BAND_H of the edge), 1.5 cm proud;
+            if style["fascia"] and not hero:          # painted band at the cap edge (top FASCIA_BAND_H of the edge), 1.5 cm proud;
                 # below it the bare concrete edge beam, as on both CC0 photos of the Andersa viaducts
                 fb = np.column_stack([bot[:, :2], np.maximum(bot[:, 2], top[:, 2] - FASCIA_BAND_H)])
                 _strip(buf, "bridge", f"bridge_fascia_{style['fascia']}", fb + off, top + off + [0, 0, 0.02],
@@ -341,7 +344,7 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                 # winding: the strip faces outward (left side reversed)
                 if sgn > 0:
                     buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
-            if style["noise_screen"]:    # transparent noise screen on posts at the deck edge (both sides)
+            if style["noise_screen"] and not hero:    # transparent noise screen on posts at the deck edge (both sides)
                 e = top - np.column_stack([nn0 * sgn * 0.05, np.zeros(len(ss))])
                 _strip(buf, "bridge", "noise_glass", e + [0, 0, 0.25], e + [0, 0, style["screen_h"]], c.id + ":screen")
                 # glass dust mask (Kamion/World Car Glass: film where max(|u|, |v|) > 0.58): v = 1 at the foot of the
@@ -380,7 +383,7 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
         # balustrade on both cap edges (WORKING_VALUE geometry, low confidence): open steel railing =
         # handrail band at 1.0-1.1 m + mid rail at 0.45-0.60 m + posts every 2 m, set 0.15 m in from the edge
         tt, nn = c.line.frame(ss)
-        for side, sgn in (("L", 1.0), ("R", -1.0)):
+        for side, sgn in (() if hero else (("L", 1.0), ("R", -1.0))):
             top = outer[side][1].copy()
             top[:, :2] -= nn * sgn * 0.15
             for z0, z1, th in ((S.BRIDGE_PARAPET_H - 0.10, S.BRIDGE_PARAPET_H, 0.06), (0.45, 0.60, 0.04)):
