@@ -14,8 +14,8 @@ Zasady (obowiązują cały czas):
 - Telefony: zawsze -Serial, sprawdzaj blokadę ekranu i temperaturę, nigdy nie usypiaj ani nie blokuj telefonu, nigdy nie wpisuj PIN-u. S24+ (RZCX60VE8ZY) to mój telefon roboczy (połączenia i SMS): bateria nigdy poniżej 20 %, pomiary tylko przy ≥ 40 % i tylko za moją zgodą, po pomiarze zamknij grę. A16 (RFGL34SJYDZ) bez ograniczeń.
 
 Zadania:
-1. Sprawdź stan repo i dwie prace w toku z HANDOVER.md (worktree agent-a7bf651b0c37426a5: okładzina słupka A w TRAKT; agent-a97376698478165f6: shader grilla/brudu) — dokończ lub scal.
-2. Testy wszystkich zestawów na main, recenzja wizualna r6 (visual-critic, Opus) nowego frontu TRAKT, aut i wnętrza.
+1. Sprawdź stan repo i cztery prace w toku z HANDOVER.md (worktree w .claude/worktrees/: wnętrze TRAKT, auta v3, latarnie/ścianki, druty WN/zacieki) — skopiuj ich artifacts/ do main, dokończ lub scal, potem wygeneruj świat na main.
+2. Testy wszystkich zestawów na main, nowy build Low na A16 z kadrami gate3 (recenzja r6, P0), potem poprawki z listy r6 w HANDOVER.md i recenzja r7.
 3. Przygotuj pomiar S24+ High z nowym buildem (ADR 0046) i zapytaj mnie o zgodę, zanim go uruchomisz.
 4. Dokończ raport bramki 3 i przygotuj APK do mojego testu jazdy (docs/owner/FEEL-TEST.md).
 5. Potem lista otwartych poprawek z HANDOVER.md (punkt 5).
