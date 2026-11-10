@@ -476,13 +476,6 @@ namespace Game.Editor.Setup
                                 continue;   // mirror quads are outside the LODGroup (one per mirror, 2 tris)
                             }
                             var slotNames = r.sharedMaterials.Select(m => m != null ? m.name.Replace(" (Instance)", "") : "MI_Ext_Trim").ToArray();
-                            // One glass layer (ADR 0046): the glazing is the GLASS_* LOD group; the old glass faces baked into the body
-                            // meshes (CAB_Body_LODn slot MI_Ext_Glass) would draw a second layer on top of it.
-                            if (EditorTools.Arg("-keepBodyGlass", null) != "1" && !transparent && slotNames.Length > 1 && slotNames.Contains("MI_Ext_Glass") && r.GetComponent<MeshFilter>() is MeshFilter bmf)
-                            {
-                                var stripped = StripGlassSubmeshes(bmf.sharedMesh, slotNames, out var keptSlots);
-                                if (stripped != null) { bmf.sharedMesh = stripped; slotNames = keptSlots; }
-                            }
                             rendererSlots.Add(new TruckVisualRig.RendererSlots { renderer = r, slots = slotNames });
                             r.sharedMaterials = slotNames.Select(s => sets["Low"].Get(s)).ToArray();
                             bool glassish = transparent || slotNames.All(s => s == "MI_Ext_Glass");
@@ -506,6 +499,27 @@ namespace Game.Editor.Setup
                         if (e.Key == "EYE_POINT") eyeLocal = V3(Json.Obj(e.Value)["position_unity_vehicle"]);
                     }
                     UnityEngine.Object.DestroyImmediate(model);
+                }
+
+                // ---- one glass layer (ADR 0048): drop only the body glass faces that duplicate the GLASS_* glazing (centroid inside a
+                // glazing renderer's bounds + 2 cm); lamp lens covers (also MI_Ext_Glass, a6_export slot_of lens_clear) are kept. ----
+                if (EditorTools.Arg("-keepBodyGlass", null) != "1")
+                {
+                    var gb = glassLods.SelectMany(l => l).Where(g => g != null).Select(g => { var b = g.bounds; b.Expand(0.04f); return b; }).ToArray();
+                    for (int si = 0; si < rendererSlots.Count; si++)
+                    {
+                        var rs = rendererSlots[si];
+                        var br = rs.renderer;
+                        if (br == null || br.name.StartsWith("GLASS_", StringComparison.Ordinal) || !rs.slots.Contains("MI_Ext_Glass")) continue;
+                        var bmf = br.GetComponent<MeshFilter>();
+                        if (bmf == null) continue;
+                        var stripped = StripGlassSubmeshes(bmf.sharedMesh, rs.slots, br.transform.localToWorldMatrix, gb, out var keptSlots);
+                        if (stripped == null) continue;
+                        bmf.sharedMesh = stripped;
+                        rs.slots = keptSlots;
+                        rendererSlots[si] = rs;
+                        br.sharedMaterials = keptSlots.Select(n => sets["Low"].Get(n)).ToArray();
+                    }
                 }
 
                 // ---- cab glazing seen from the eye (ADR 0045): the exterior FBX glass is a single outward-facing sheet, so with
@@ -765,22 +779,41 @@ namespace Game.Editor.Setup
         }
 
         /// <summary>
-        /// ADR 0046: copy of a body mesh without the submeshes whose material slot is MI_Ext_Glass (saved under
-        /// Assets/_Generated/Truck/Meshes), or null when nothing is stripped. <paramref name="keptSlots"/> are the remaining slot names.
+        /// ADR 0048: copy of a body mesh without the MI_Ext_Glass triangles whose centroid (world space via <paramref name="l2w"/>) lies inside
+        /// one of <paramref name="glazing"/> (bounds of the GLASS_* renderers): those duplicate the glazing. Other glass-slot
+        /// triangles (lamp lens covers) stay; a submesh left empty is dropped. Saved under Assets/_Generated/Truck/Meshes; null when
+        /// nothing is stripped. <paramref name="keptSlots"/> = remaining slot names.
         /// </summary>
-        public static Mesh StripGlassSubmeshes(Mesh src, string[] slotNames, out string[] keptSlots, bool save = true)
+        public static Mesh StripGlassSubmeshes(Mesh src, string[] slotNames, Matrix4x4 l2w, Bounds[] glazing, out string[] keptSlots, bool save = true)
         {
             keptSlots = slotNames;
             if (src == null || src.subMeshCount != slotNames.Length) return null;
-            var keep = Enumerable.Range(0, slotNames.Length).Where(i => slotNames[i] != "MI_Ext_Glass").ToArray();
-            if (keep.Length == 0 || keep.Length == slotNames.Length) return null;
+            var v = src.vertices;
+            var tris = new List<int[]>(); var names = new List<string>(); bool removed = false;
+            for (int sm = 0; sm < slotNames.Length; sm++)
+            {
+                var t = src.GetTriangles(sm);
+                if (slotNames[sm] == "MI_Ext_Glass")
+                {
+                    var k = new List<int>();
+                    for (int i = 0; i < t.Length; i += 3)
+                    {
+                        var c = l2w.MultiplyPoint3x4((v[t[i]] + v[t[i + 1]] + v[t[i + 2]]) / 3f);
+                        if (glazing.Any(b => b.Contains(c))) { removed = true; continue; }
+                        k.Add(t[i]); k.Add(t[i + 1]); k.Add(t[i + 2]);
+                    }
+                    t = k.ToArray();
+                    if (t.Length == 0) continue;
+                }
+                tris.Add(t); names.Add(slotNames[sm]);
+            }
+            if (!removed || tris.Count == 0) return null;
             var m = UnityEngine.Object.Instantiate(src);
             m.name = src.name + "_NoGlass";
-            var tris = keep.Select(i => src.GetTriangles(i)).ToArray();
-            m.subMeshCount = keep.Length;
-            for (int i = 0; i < keep.Length; i++) m.SetTriangles(tris[i], i);
+            m.subMeshCount = tris.Count;
+            for (int i = 0; i < tris.Count; i++) m.SetTriangles(tris[i], i);
             m.bounds = src.bounds;
-            keptSlots = keep.Select(i => slotNames[i]).ToArray();
+            keptSlots = names.ToArray();
             if (!save) return m;
             string dir = Root + "/Meshes";
             Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, dir));
