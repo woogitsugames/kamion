@@ -51,6 +51,7 @@ Shader "Kamion/Cab Interior"
             #define _NORMALMAP 1
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "KamionToeParity.hlsl"
 
             TEXTURE2D(_Detail); SAMPLER(sampler_Detail);
             TEXTURE2D(_Normal);
@@ -180,6 +181,7 @@ Shader "Kamion/Cab Interior"
                 // The lifted share is neutral (review r5 L2: black plastics turned brown under the warm low-sun fill); a
                 // phone's local tone mapping lifts luminance, not the chroma of deep shade. z = desaturation of that share.
                 col.rgb = lerp(col.rgb * g, (yl * g).xxx, _CabShadowLift.z * (1.0 - 1.0 / g));
+                col.rgb = KamionToeParity(col.rgb);   // D23 toe on the tiers without the LUT (cab view only)
                 col.rgb = MixFog(col.rgb, i.fogFactor);
                 return half4(col.rgb, 1);
             }

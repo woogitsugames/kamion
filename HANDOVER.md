@@ -1,4 +1,27 @@
-# HANDOVER — kamion (TRUCK SIM PL), stan 2026-11-10 ok. 10:30
+# HANDOVER — kamion (TRUCK SIM PL), stan 2026-11-10 ok. 14:15 (sesja 2, limit 92 %)
+
+## Najpierw (sesja 2 → następna)
+- **main = `0eb8b84`, wypchnięty.** Scalone w sesji 2: lusterka R46 + High 2 RT/klatkę (ea8ba23), druty WN min. px + łańcuchówka + zacieki attyki v2 (e7c6bae), shadery zewn. (firanka, niebo High, szyba, fp16 glint; 28f9a64), geometria TRAKT r6 (2e12e8c), wnętrze r6 kierownica (03e539d), auta v4 + naprawiony test budżetu (bb7549d), gate3 W-N10 + S24 checklista (29f4dfd), ulice r6 ADR 0049 + TRAKT r6b (8eb64fe), szkło aut + toe parity (0eb8b84).
+- **Integracja na main zrobiona:** świat zregenerowany, Truck/Trailer BuildBatch, import-region, WorldTruckInstaller. Testy: pytest 185/185, EditMode 112/112, PlayMode 63+5 skip, physics 147/147. APK Low `artifacts/apk/kamion-0.1.0-0eb8b84a74.apk` (164,6 MB, SHA256 442ed5a6…a936e) — kompiluje się, **NIE zainstalowany**.
+- **A16 `RFGL34SJYDZ` OFFLINE w adb** od ok. 12:40 (po przebiegu gate3; możliwe, że gra nadal działa — po podłączeniu `am force-stop com.woogitsugames.kamion`). Właściciel musi przepiąć kabel / zatwierdzić debugowanie USB. Demon adb bywa zabijany przez równoległe adb (scrcpy vs Unity SDK) — używaj tylko `$Adb` z `scripts/env.ps1`, jeden agent telefonowy naraz.
+- **Dwa agenty w toku (worktree od 8eb64fe, jeszcze niescalone):** `agent-a6910633040021c05` (Fable: dziura w belce maski `grille_bar_mask` LOD0/LOD2, r6 E-N2 — ADR 0047 addendum r7) i `agent-ae69268ea41cf7bcc` (Opus: AO kontaktowe pod zaparkowanymi autami). **Oba zapisały WIP (niezweryfikowane):** belka `10dc12e` (ADR 0047 „Addendum r7b WIP”, kroki dalej tam; nowe wnętrze LOD0 w `artifacts/owner/modern-front/r7-maskbar/export/` → skopiuj do `art-source/truck/interior/export/`), AO aut `1b14744` (ADR 0050 + ADR 0041 „AO aut — WIP”; overcast p5 8–11 % > 8 %; sprawdź `test_parking_mix_and_neighbours` KeyError). Sprawdź `git -C <wt> log main..HEAD`, skopiuj `artifacts/`, scal `--no-ff`, potem regeneracja świata + BuildBatch/InstallBatch. **Uwaga przy sprzątaniu worktree:** agenci robią junctiony `Data/raw/gugik` i `Data/raw/osm` do main — najpierw `cmd /c rmdir` na junctionach, dopiero potem `git worktree remove --force`.
+aw\gugik`/`osm` do main — najpierw `cmd /c rmdir` na junctionach, dopiero potem `git worktree remove --force`.
+- `SM_CabInterior_LOD0.fbx` (poza gitem) skopiowany do `art-source/truck/interior/export/` z r6b — nie nadpisuj starszym.
+- Stash `stash@{0}` = lokalne wyniki regeneracji sprzed sesji 2 (do wyrzucenia).
+- Do usunięcia ręcznie (auto-mode zablokował): gałąź zdalna `origin/wip/wires-streaks` (zastąpiona), puste katalogi w `.claude/worktrees/`.
+
+## Następne kroki
+1. Scal dwa agenty powyżej, regeneruj, testy, build Low.
+2. A16 Low: `pwsh scripts/gate3-run.ps1 -Serial RFGL34SJYDZ -Tier Low -Fps 30` (G3-A, G3-B) + `-TruckCameras`/`-TruckLightings` (truck-34, cab-dash × overcast/lowsun/dusk); potem `gate3-evidence.ps1 -PhoneDir <nowe>`. Ostatni pomiar A16 (`ecfd03b`, sprzed poprawek r6): p50/p95/p99 33,3/33,5/33,7 ms, PSS 675–701 MB, thermal 0; CPU main p99 42–45 ms (> 40, przyczyna UNVERIFIED); cab-dash z telefonu 30–47 % czerni (sprzed poprawek wnętrza).
+3. Recenzja **r7** (`visual-critic`, Opus): kadry edytora już są — `artifacts/gate3/r7-editor-0eb8b84/` (246 renderów Low/High × overcast/lowsun/clear, wszystkie frame_exposure PASS; FAIL tylko albedo_histogram — głównie szkło, które audyt powinien wyłączyć — i texel_density płotów). Dorzuć kadry A16 i montaże ze zdjęciami (Scania R/S730, Bieżeństwa).
+4. **Decyzje do właściciela (klikalnie) po r7:** progi r6 E2 szyba ≥60 % i E1 lakier ≥15 pkt (agent: fizycznie nieosiągalne w tym kadrze; szyba 38–41 %, akwarium zniknęło); szyby aut ≤20/≥40 % (jest 23–31/31–44 %, fizyczne odbicie nieba — albo przyciemnić model nieba ADR 0010); kierownica przy lowsun sat 18–19 % (próg 15; to kolor słońca LP_LowSun przy WB 0,5, D27).
+5. S24+ High za zgodą (`docs/owner/S24-HIGH-RUN.md`; bateria ≥ 40 %; przy ostatnim sprawdzeniu 62 %).
+6. Raport bramki 3 (`docs/reports/GATE-3-draft.md`) → APK do testu jazdy (D25, `docs/owner/FEEL-TEST.md`).
+7. Otwarte: żywopłoty Bieżeństw wyglądają jak bryły; kontrast farba/asfalt 1,5 (krytyk chce ≥ 1,8 → ciemniejszy asfalt); ślady opon w dokach nie renderują się na Low; przetarcia kierownicy niewidoczne przy limicie albedo czarnego 0,05 (decyzja rendering-perf); Low/High różna geometria hal (rynny/doki tylko High); kamera na fotel kierowcy; lusterko kl. VI w całości pod osłoną przeciwsłoneczną w `cab-mirror-front` (sprawdzić po r6 geometry); visual-qa High lowsun crash przy zamykaniu Unity (−1073741819, kadr zapisany).
+
+---
+
+# (poprzednia wersja, sesja 1)
 
 Dla nowej sesji Claude Code na tym samym komputerze (`C:\Users\matma\Documents\Claude\kamion`), inne konto Claude. Czytaj w kolejności: ten plik → `CLAUDE.md` → `docs/11_DECYZJE_WLASCICIELA.md` (D1–D29) → `docs/reports/GATE-3-draft.md` → `docs/reports/visual/REVIEW-2026-11-10-r5.md` → `docs/REFERENCES.md`.
 Pamięć poprzednich sesji: `C:\Users\matma\.claude\projects\C--Users-matma-Documents-Claude-kamion\memory\` (MEMORY.md + pliki) — jeśli nowe konto jej nie ładuje automatycznie, przeczytaj ją ręcznie.
