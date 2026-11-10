@@ -82,3 +82,5 @@
 - Krok25: import rundy4 Low+High OK; albedo roślin skalibrowane, fotograficzna baza trawy zachowuje WorldPBR. NASTĘPNY: pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -OutputDir artifacts/megascans-r1/round4/Low-overcast
 
 - Krok26Low: 28 PNG rundy4 Low zapisane. NASTĘPNY: pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting overcast -OutputDir artifacts/megascans-r1/round4/High-overcast; następnie kamery detali.
+
+- Krok26High: 28 PNG rundy4 High zapisane. NASTĘPNY: pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting overcast -OutputDir artifacts/megascans-r1/round4/High-overcast; następnie kamery detali.
