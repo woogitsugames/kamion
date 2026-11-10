@@ -78,3 +78,5 @@
 
 - Krok23a: sprawdzono HEAD i worktree - SetSurfaceBase przyjmuje juz string id (nie Vector2), zgodnie z wywolaniem produkcyjnym i testem. Testy wzmocniono typowanym GetMethod oraz kontrola wlasciwosci rzeczywistego Environment/Shaders/WorldPBR.shader; wszystkie uzywane nazwy istnieja. Diff-check PASS; bez Unity, pelny EditMode lidera nadal wymagany.
 - NASTEPNY KROK: `pwsh artifacts/megascans-r1/run-final-proof.ps1`.
+
+- Krok25: import rundy4 Low+High OK; albedo roślin skalibrowane, fotograficzna baza trawy zachowuje WorldPBR. NASTĘPNY: pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -OutputDir artifacts/megascans-r1/round4/Low-overcast
