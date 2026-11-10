@@ -41,3 +41,6 @@
 
 - Krok 14: after-build OK:64 chunki. Fab:773 podmienione wpusty,197 włazów,320propsów (161 kęp trawy,41dzikiej trawy,41bzu,5bukszpanów,54kamienie,18worków). Wszystkie miejsca WORKING_VALUE. Unity ładuje tylko rzeczywiście użyte biblioteki Fab, nie nieużywane siatki źródeł materiałowych. Trwa import i pełny GIS final.
 - NASTĘPNY KROK: `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -OutputDir artifacts/megascans-r1/after/Low-overcast` po imporcie.
+
+- Krok 15: pierwsze56PNG after obejrzane: brak wyraźnego skoku całej sceny, a goły Lit na krawężniku usunął brud/makrowariację — FAIL i poprawka na dotychczasowy WorldPBR+fotograficzną bazę. Lowłączne estymaty +do17draw/+4ktris; znaleziono stare kratki na placach pozostawione obok nowego atlasu oraz zmianę fazy przerzedzania lasu przez nowe indeksy instancji. Oba mechanizmy poprawiane w rundzie2; nie ukrywam regresji.
+- NASTĘPNY KROK: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` po poprawkach atlasu/indeksów.

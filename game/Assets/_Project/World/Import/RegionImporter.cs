@@ -255,6 +255,11 @@ namespace Game.World.Import
             float metal = m.Get("metal") != null ? (float)Num(m.Get("metal")) : 0f;
             string surface = Str(m.Get("surface"));
             string path = $"{r.Dir}/Materials/M_{id}.mat";
+            if (id == "curb_concrete" && FabMaterials.Has(id))
+            {
+                var curb = WorldPbrMaterials.Create(r, id, m, path);
+                if (curb != null && FabMaterials.ApplySurfaceBase(r, id, curb)) return curb;
+            }
             var fab = FabMaterials.Create(r, id, path);
             if (fab != null) return fab;
             if (m.Get("hlod") is bool hl && hl)

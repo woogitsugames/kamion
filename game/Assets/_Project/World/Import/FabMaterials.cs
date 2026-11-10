@@ -92,6 +92,17 @@ namespace Game.World.Import
             return tiers.Get(tier) as Dictionary<string, object>;
         }
         public static bool Has(string id) => Maps(id) is Dictionary<string, object> m && Resolve(m.Get("basecolor")) != null;
+        public static bool ApplySurfaceBase(RegionImporter.Result r, string id, Material material)
+        {
+            var maps = Maps(id);
+            if (maps == null || Resolve(maps.Get("basecolor")) == null) return false;
+            material.SetTexture("_BaseMap", Texture(r, id, "basecolor", Resolve(maps.Get("basecolor")), false, false, false, false));
+            // Two 1 m units in the scan tile align with the existing kerb normal,
+            // mask and variation maps. Keep macro grime and PBR lighting intact.
+            material.SetVector("_Tile", new Vector4(2f, 0.5f, 16f, 1f));
+            EditorUtility.SetDirty(material);
+            return true;
+        }
         public static Material Create(RegionImporter.Result r, string id, string path)
         {
             var maps = Maps(id);
