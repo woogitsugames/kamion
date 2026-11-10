@@ -1,5 +1,25 @@
-# HANDOVER — kamion (TRUCK SIM PL), stan 2026-11-10 ok. 14:15 (sesja 2, limit 92 %)
+# HANDOVER — kamion (TRUCK SIM PL), stan 2026-11-10 ok. 16:00 UTC (sesja 3, limit 5 h 81 %)
 
+## Najpierw (sesja 3 → następna)
+- **main = `166fa76`, wypchnięty.** Scalone w sesji 3: crash visual-qa D3D12 (ADR 0051), kamera fotela/H-point (ADR 0052), belka maski r7b + przód r7c (ADR 0047), AO aut (ADR 0050), żywopłoty + kontrast farby (ADR 0049 r7), hale Low/High (ADR 0012 r7), capture odbić na wszystkich tierach (ADR 0056), przetarcia skóry (ADR 0044 r8), **ciemna kabina tylko w kadrach QA** (ADR 0044 r9, `ViewCameraResolver`), kierownica — model ręki/szybkość (ADR 0058), **hamulec postojowy trzyma + blokada ruszania AMT** (ADR 0004 addendum), Log bez stack trace, audyt albedo bez szkła/łat AO, `import-region` przebudowuje tekstury gdy `_src` nowsze.
+- **Decyzje właściciela D30–D35** (progi r7) w `docs/11`. Zgoda na pomiar S24+ High **jest** (sesja 3), warunki z `docs/owner/S24-HIGH-RUN.md`.
+- **W toku (worktree):** `agent-a6929d46dce94eb64` (Fable: nowa kierownica — ramiona, przyciski, przeszycie; eksport wnętrza), `agent-a140cf18e9d148e78` (gameplay-ui: (HUD „Hamulec postojowy!”, gong, kontrolka P). Sprawdź `git -C <wt> log main..HEAD`, skopiuj artifacts, scal.
+- **Tekstury PBR na main przebudowane** (asfalt 0,080), ale świat NIE zaimportowany po tym — zrób pełną integrację.
+- **Pomiary telefonów:** A16 G3-A/G3-B na `f6abb8b` w `artifacts/gate3/20261110-a16-low-f6abb8b/` (p95 33,5 ms, PSS 739/769 MB, CPU p99 41,8–42 ms > 40). **cab-dash z telefonu nieważne** (błąd QA kamery, naprawiony w r9). A16 bywa `offline` → właściciel przepina kabel.
+- **ADB: daemon zabija Unity** (każdy batch Unity). Pomiary telefonów tylko gdy ŻADEN Unity nie działa. `env.ps1` przypina adb z SDK Unity. `gate3-run -SkipBuild` instaluje NAJNOWSZY plik z `artifacts/apk` — pilnuj.
+- Owner feel-test S24+ (f6abb8b): hamowało przez P (naprawione), kierownica za szybka (naprawione ADR 0058) — do ponownego testu.
+
+## Następne kroki
+1. Scal kierownicę (Fable) i HUD P; pełna integracja na main: build_region → build_world → import-region, Truck/Trailer BuildBatch, InstallBatch, wszystkie testy; **czysty (nie -dirty) build** Low + High.
+2. Bez innych Unity: A16 Low gate3 G3-A + G3-B + kamery kabiny (cab-dash ≤ 8 % czerni, logcat `[CAB] view camera … cabView=True`), gate3-evidence. Potem S24+ High wg checklisty (bateria ≥ 40 %, < 36 °C, am force-stop na końcu).
+3. Recenzja r8 (visual-critic) z kadrami telefonu; zainstaluj APK właścicielowi do testu jazdy (FEEL-TEST.md: P, kierownica).
+4. r7 cz. 2 top (docs/reports/visual/REVIEW-2026-11-10-r7.md §9–14): auto z dziurą w cab-dash + toporny LOD aut na Low 8–12 m; szyba drzwi od środka + **regres: stożek/prążki w szybie przy lowsun (ADR 0056?)**; ciemne akcenty świata p10 ≤ 28; przód Low lowsun + aliasing TRAKT/wycieraczek; berberys kształt; σ szyby ≥ 8, jasny prostokąt w szybie, chrom lusterek.
+5. Metadane gate3: `gitSha` = sha APK, nie HEAD; `g3b_eye_s1532` == `s1482` (duplikat); `putry_approach` poza.
+6. Otwarte z sesji 2 (pkt 7 niżej) częściowo zrobione: żywopłoty, kontrast, ślady w dokach (nie odtworzone), hale, kamera fotela, lusterko kl. VI (OK), crash visual-qa.
+
+---
+
+# (sesja 2)
 ## Najpierw (sesja 2 → następna)
 - **main = `0eb8b84`, wypchnięty.** Scalone w sesji 2: lusterka R46 + High 2 RT/klatkę (ea8ba23), druty WN min. px + łańcuchówka + zacieki attyki v2 (e7c6bae), shadery zewn. (firanka, niebo High, szyba, fp16 glint; 28f9a64), geometria TRAKT r6 (2e12e8c), wnętrze r6 kierownica (03e539d), auta v4 + naprawiony test budżetu (bb7549d), gate3 W-N10 + S24 checklista (29f4dfd), ulice r6 ADR 0049 + TRAKT r6b (8eb64fe), szkło aut + toe parity (0eb8b84).
 - **Integracja na main zrobiona:** świat zregenerowany, Truck/Trailer BuildBatch, import-region, WorldTruckInstaller. Testy: pytest 185/185, EditMode 112/112, PlayMode 63+5 skip, physics 147/147. APK Low `artifacts/apk/kamion-0.1.0-0eb8b84a74.apk` (164,6 MB, SHA256 442ed5a6…a936e) — kompiluje się, **NIE zainstalowany**.
@@ -18,6 +38,7 @@ aw\gugik`/`osm` do main — najpierw `cmd /c rmdir` na junctionach, dopiero pote
 5. S24+ High za zgodą (`docs/owner/S24-HIGH-RUN.md`; bateria ≥ 40 %; przy ostatnim sprawdzeniu 62 %).
 6. Raport bramki 3 (`docs/reports/GATE-3-draft.md`) → APK do testu jazdy (D25, `docs/owner/FEEL-TEST.md`).
 7. Otwarte: żywopłoty Bieżeństw wyglądają jak bryły; kontrast farba/asfalt 1,5 (krytyk chce ≥ 1,8 → ciemniejszy asfalt); ślady opon w dokach nie renderują się na Low; przetarcia kierownicy niewidoczne przy limicie albedo czarnego 0,05 (decyzja rendering-perf); Low/High różna geometria hal (rynny/doki tylko High); kamera na fotel kierowcy; lusterko kl. VI w całości pod osłoną przeciwsłoneczną w `cab-mirror-front` (sprawdzić po r6 geometry); visual-qa High lowsun crash przy zamykaniu Unity (−1073741819, kadr zapisany).
+
 
 ---
 
