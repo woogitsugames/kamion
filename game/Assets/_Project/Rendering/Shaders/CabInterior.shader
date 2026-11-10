@@ -19,6 +19,8 @@ Shader "Kamion/Cab Interior"
         _AO ("AO atlas (uv1)", 2D) = "white" {}
         _DecalAtlas ("Decal atlas (uv0, RGB tint x, A clip)", 2D) = "white" {}
         _Cutoff ("Decal alpha clip", Range(0, 1)) = 0.5
+        _WearBlackAlbedo ("Worn black albedo (linear, neutral)", Range(0, 0.2)) = 0.085
+        _WearRoughMin ("Worn roughness floor", Range(0.08, 1)) = 0.08
         [Toggle(_KAMION_CAB_DECAL)] _IsDecal ("Decal slot", Float) = 0
     }
     SubShader
@@ -29,7 +31,7 @@ Shader "Kamion/Cab Interior"
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         CBUFFER_START(UnityPerMaterial)
             float4 _Detail_ST;
-            float _Cutoff, _IsDecal;
+            float _Cutoff, _IsDecal, _WearBlackAlbedo, _WearRoughMin;
         CBUFFER_END
         ENDHLSL
 
@@ -129,12 +131,19 @@ Shader "Kamion/Cab Interior"
                 half wk = saturate(wear * 2.4 * (0.55 + 0.9 * det.r * mixD + 0.45 * (1.0 - mixD)));
                 half3 base = tint * lerp(1.0, (0.7 + 0.6 * det.r) * (0.4 + 0.6 * det.g), mixD) * lerp(1.0, det.a, perf);
                 half3 worn = base * (1.0 + 1.5 * wear + 1.3 * wk);
-                // Black parts (rim, selector, knobs, stalks: tint < ~0.1) get glossy, not pale: worn black leather and
-                // plastic stay at albedo <= 0.05 linear (review r6 C-N5: the x2.7 wear albedo plus the warm sun made the
-                // rim beige). Their wear reads through the roughness (polish) only.
+                // Black parts (rim, selector, knobs, stalks, seat leather: tint < ~0.1): a hand burnishes and thins the
+                // pigmented finish, so the spot goes slightly lighter and GREYER, towards a neutral _WearBlackAlbedo
+                // (0.085 linear = sRGB 81, x detail variation; WORKING_VALUE, ADR 0044 r8), never x the warm tint (review
+                // r6 C-N5: the x2.7 lift read beige at low sun; the r6 cap at 0.05 left the wear at +5 / 255, r6b).
+                // Mirror: Game.Rendering.CabWearModel (EditMode CabInteriorWearTests).
                 half dark = 1.0 - saturate(dot(tint, half3(0.3333, 0.3333, 0.3333)) * 8.0);
-                albedo = lerp(worn, min(worn, max(base, 0.05)), dark);
-                rough = clamp(i.color.a + (det.b - 0.5) * 0.6 * mixD - 0.25 * wear - 0.3 * wk, 0.08, 1.0);
+                half wornGrey = max(dot(base, half3(0.3333, 0.3333, 0.3333)),
+                    _WearBlackAlbedo * (0.85 + 0.3 * (det.r * mixD + 0.5 * (1.0 - mixD))));
+                albedo = lerp(worn, lerp(base, wornGrey.xxx, wk), dark);
+                // Polish: smoother, floored per slot (_WearRoughMin: hand-polished leather 0.12, glossy but not the 0.08 of
+                // lacquer; plastics 0.08). A surface already glossier than the floor keeps its value.
+                half roughU = i.color.a + (det.b - 0.5) * 0.6 * mixD;
+                rough = clamp(min(roughU, max(roughU - 0.25 * wear - 0.3 * wk, _WearRoughMin)), 0.08, 1.0);
                 // Panel gaps and creases: the AO atlas is ambient-only in URP, so in direct light a 2 mm gap had the
                 // brightness of its panels. Deep AO also darkens the albedo: gaps read as thin dark lines.
                 albedo *= lerp(0.4, 1.0, smoothstep(0.04, 0.28, ao));
