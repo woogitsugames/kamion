@@ -12,7 +12,9 @@ Checks the generated geometry, not the input data, so it catches every layer tha
   arrow_no_exit             a P-8 arrow direction (turn:lanes) with no outbound arm in that direction;
   prop_on_carriageway       a ground-standing prop (lamp, sign post, signal pole / mast, power pole, pylon, bollard,
                             bus shelter, bench, bin, gantry footing) whose base lies on a carriageway;
-  furniture_in_lane         a fence / guard rail / wall vertex standing inside a lane band.
+  furniture_in_lane         a fence / guard rail / wall vertex standing inside a lane band;
+  prop_through_deck         a ground-standing pole whose shaft pierces a carriageway above its base (viaduct deck);
+  kerb_on_carriageway       a kerb top with carriageway under it and all around it (kerb across / along a lane).
 
 Surfaces are looked up in 2D triangle indices (shapely STRtree) with a height window, so a road passing under a
 viaduct is not confused with the deck. Every case carries local E/N, WGS84 lat/lon, the chain / junction id, the OSM
@@ -41,6 +43,7 @@ GROUND_PROPS = ("lamp_", "sign_post", "signal_pole", "signal_mast", "power_pole"
 LANE_INSET_M = 0.45        # lane band = centre +- (lane_w / 2 - inset): a 2.55 m truck in a 3.5 m lane has 0.47 m
 STATION_M = 2.0            # lane band sampling along chains
 DZ_M = 0.8                 # surface height window (bridges / underpasses are further apart)
+KERB_RING_M = 0.30         # a kerb with carriageway all around it at this radius lies inside a carriageway
 PROP_INSET_M = 0.20        # a pole base this far inside the carriageway edge is "on the road"
 ROUTE_BAND_M = 30.0        # cases within this distance of the start route polyline (both carriageways) are on route
 JUNCTION_THROUGH_DEG = 35.0
@@ -79,6 +82,27 @@ class SurfaceIndex:
         self.cls = np.array(cls)
         self.z = np.concatenate(zs)
         self.tree = shapely.STRtree(self.polys)
+
+    def carriageway_levels(self, P):
+        """Per point (E, N): heights of every carriageway surface over / under it (bridge decks included)."""
+        P = np.asarray(P, float).reshape(-1, 3)
+        out = [[] for _ in range(len(P))]
+        if len(P):
+            pi, ti = self.tree.query(shapely.points(P[:, :2]), predicate="intersects")
+            for a, b in zip(pi.tolist(), ti.tolist()):
+                if self.cls[b] == "carriageway":
+                    out[a].append(float(self.z[b]))
+        return out
+
+    def on_carriageway(self, P):
+        """Per point (E, N, U): a carriageway surface lies within DZ_M of it (whatever is drawn on top)."""
+        P = np.asarray(P, float).reshape(-1, 3)
+        out = np.zeros(len(P), bool)
+        if len(P):
+            pi, ti = self.tree.query(shapely.points(P[:, :2]), predicate="intersects")
+            ok = (self.cls[ti] == "carriageway") & (np.abs(self.z[ti] - P[pi, 2]) < DZ_M)
+            out[np.unique(pi[ok])] = True
+        return out
 
     def classify(self, P):
         """Per point (E, N, U): 'carriageway', an obstacle class, or 'none' (no surface = island / terrain).
@@ -389,6 +413,47 @@ def check(w, instances, region_id, pipeline, report_extra=None):
         for b in np.nonzero(on)[0].tolist():
             it = names[b]
             cases.add("prop_on_carriageway", P[b], {"what": it["p"], "src": it.get("src")}, cell=0.5)
+        # a pole whose shaft pierces a carriageway above its base (a lamp of the road below coming up through a
+        # viaduct deck: owner 2026-11-10 "lamp in the middle of the lane"), ADR 0076
+        ring5 = [np.array([0.0, 0.0])] + ring
+        for b, it in enumerate(names):
+            h = S.ground_prop_height(it["p"])
+            lv = idx.carriageway_levels(np.column_stack([P[b, :2] + np.array(ring5), np.full(5, P[b, 2])]))
+            hit = [z for zs in lv for z in zs if P[b, 2] + 0.5 < z < P[b, 2] + h]
+            if hit:
+                cases.add("prop_through_deck", P[b], {"what": it["p"], "src": it.get("src"),
+                                                      "deck_dz_m": round(min(hit) - float(P[b, 2]), 2)}, cell=0.5)
+
+    # ---- 5. kerbs lying inside a carriageway (owner 2026-11-10 "kerbs in the middle of the road"; MA-001 / MA-002):
+    #         a kerb-top triangle with carriageway under it and all around it (ring of KERB_RING_M). A kerb at the
+    #         edge of a ribbon / patch, or a narrow raised separator between two carriageways, has no carriageway
+    #         on at least one side.
+    ang = np.linspace(0.0, 2 * math.pi, 8, endpoint=False)
+    ring8 = np.column_stack([np.cos(ang), np.sin(ang)]) * KERB_RING_M
+    for p in w.buf.parts:
+        if p.layer not in ("road", "bridge") or p.mat != "curb_concrete" or len(p.T) == 0:
+            continue
+        tri = p.V[p.T]
+        a2 = 0.5 * np.abs((tri[:, 1, 0] - tri[:, 0, 0]) * (tri[:, 2, 1] - tri[:, 0, 1])
+                          - (tri[:, 2, 0] - tri[:, 0, 0]) * (tri[:, 1, 1] - tri[:, 0, 1]))
+        cen = tri[a2 > 1e-4].mean(1)
+        if not len(cen):
+            continue
+        stats["kerb_tris"] = stats.get("kerb_tris", 0) + len(cen)
+        inside = idx.on_carriageway(cen)
+        for o in ring8:
+            if not inside.any():
+                break
+            q = cen.copy()
+            q[:, :2] += o
+            inside &= idx.on_carriageway(q)
+        owner = p.src.split(":L")[0].split(":R")[0]
+        c = next((x for x in chains if x.id == owner), None)
+        for b in np.nonzero(inside)[0].tolist():
+            cases.add("kerb_on_carriageway", cen[b], {"what": "kerb", "src": p.src}, chain=c.id if c else None,
+                      junction=owner if owner.startswith("j:") else None, osm_ways=_osm_ways(c) if c else None,
+                      cell=4.0)
+
     if lane_poly:
         tree = shapely.STRtree([lp[0] for lp in lane_poly])
         V = []
@@ -415,7 +480,7 @@ def check(w, instances, region_id, pipeline, report_extra=None):
     out = {"schema": "truck-sim-pl/road-consistency-qa/1", "region": region_id,
            "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
            "route_segments_s_m": route[2] if route else None, "route_band_m": ROUTE_BAND_M,
-           "params": {"lane_inset_m": LANE_INSET_M, "station_m": STATION_M, "dz_m": DZ_M,
+           "params": {"kerb_ring_m": KERB_RING_M, "lane_inset_m": LANE_INSET_M, "station_m": STATION_M, "dz_m": DZ_M,
                       "prop_inset_m": PROP_INSET_M, "through_deg": JUNCTION_THROUGH_DEG},
            "stats": stats, "count": len(items), "by_kind": dict(sorted(by_kind.items())),
            "on_route": dict(sorted(on_route.items())), "cases": items}

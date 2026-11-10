@@ -12,7 +12,7 @@ import numpy as np
 
 from . import standards as S
 from .geom import ear_clip, polygon_area
-from .network import ISLAND, MEDIAN_RURAL, RURAL, URBAN, side_params, side_profile
+from .network import ISLAND, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, side_params, side_profile
 
 
 @dataclass
@@ -165,16 +165,18 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
     kap = c.line.curvature(st) * sgn
     zg = c.crossfall_z(st, sgn * hw)
     G = P + N * (sgn * hw)[:, None]
-    kl = [p[0] for p in params]
-    if len(kinds) > 1 and len(kinds - {URBAN, ISLAND}) > 0:
+    # flush edge shared with another carriageway (asphalt, no kerb): its own strip, like a profile family
+    kl = [(p[0], p[4] == MAT_FLUSH_ROAD) for p in params]
+    if len(set(kl)) > 1 and (len(kinds - {URBAN, ISLAND}) > 0 or any(k[1] for k in kl)):
         # rural/urban mix (e.g. a bridge on a rural road): one strip per run of the same profile family,
         # sharing the boundary station so the strips meet
         cuts = [0] + [i for i in range(1, len(kl)) if kl[i] != kl[i - 1]] + [len(kl)]
         for r, (a, b) in enumerate(zip(cuts, cuts[1:])):
             lo, hi = max(0, a - 1) if r else a, b
             sl = slice(lo, hi)
-            kr = kl[a]
-            prm = [(kr, *p[1:]) for p in params[lo:hi]]
+            kr, fl = kl[a]
+            prm = [(kr, p[1], p[2], p[3], MAT_FLUSH_ROAD if fl else (0 if p[4] == MAT_FLUSH_ROAD else p[4]))
+                   for p in params[lo:hi]]
             _emit_strip(buf, G[sl], (N * sgn)[sl], zg[sl], prm, kap[sl], hw[sl], side == "R",
                         br[sl] if br is not None else None, coarse, f"{c.id}:{side}:{r}")
         return
@@ -243,8 +245,9 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
         T = grid_tris(n, 2, flip=flip)
         vertical = abs(profs[0][k][2] - profs[0][k][0]) < 1e-6
         is_flange = vertical and k == nseg - 1 and not coarse
-        cmat = ("collision_" + ("curb" if mat == "curb_concrete" else "paving" if mat in
-                                ("sidewalk_paving", "apron_sett", "bridge_concrete") else "grass")) if coarse else mat
+        cmat = ("collision_" + ("curb" if mat == "curb_concrete" else "asphalt" if mat.startswith("road_") else
+                                "paving" if mat in ("sidewalk_paving", "apron_sett", "bridge_concrete") else
+                                "grass")) if coarse else mat
         if br is not None and np.any(br):
             tri_st = np.minimum(T.min(1) // 2, n - 2)
             onb = br[tri_st] | br[np.minimum(tri_st + 1, n - 1)]

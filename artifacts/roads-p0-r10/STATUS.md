@@ -14,3 +14,9 @@ Galaz: worktree-agent-ad6af5501cb259d76.
 - Funkcje, ktore zmieniam (dla ADR 0077): network.align_forks (+ nowa abreast), scripts/export-route.py, consistency.py,
   streetscape/furniture.py (lamps/clear_carriageway). NIE ruszam junctions.compute_corners.
 - NASTEPNY KROK: uv run --project tools/worldgen python artifacts/roads-p0-r10/scripts/ortho_overlay.py artifacts/roads-p0-r10/after fork_putry:-355:-125:60 ma001:320:-578:45 ma012:-395:-140:60
+- 23:00 Kod (bez pelnego buildu jeszcze): network.abreast_forks/_push_abreast (wlaczenia z przyrostem pasow ukladane obok
+  siebie, poszerzenie jezdni pojedynczej + skos), pipeline.build_network (wspolne z export-route), roads/route.py (trasa =
+  srodek prawego pasa wygenerowanej jezdni), drugi przebieg assign_sides(trims=True), flush = asfalt (MAT_FLUSH_ROAD),
+  profile 1b (abreast ground), furniture.clear_under_decks (latarnie przebijajace pomost), consistency:
+  prop_through_deck + kerb_on_carriageway. Nakladki: artifacts/roads-p0-r10/wip1/*.jpg (MA-012: latka 45 m -> ~15 m).
+- NASTEPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c ; uv run --project tools/worldgen python tests/gis/route_corridor.py

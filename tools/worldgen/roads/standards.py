@@ -295,3 +295,21 @@ def surface_material(chain, sec):
         return m
     h = int(hashlib.sha1(f"{chain.id}:asphalt_new".encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
     return "road_asphalt_new" if h < NEW_ASPHALT_SHARE else m
+
+
+# Height of ground-standing props above their base (m), for "does it pierce a deck above" checks (ADR 0076).
+# Lamps carry their height in the prototype name; the rest are WORKING_VALUEs read off the prop generator.
+GROUND_PROP_H = {"signal_mast": SIGNAL_MAST_H, "signal_pole": SIGNAL_POLE_H, "sign_post": 3.6, "power_pole": 10.0,
+                 "pylon": 30.0, "bollard": 1.0, "bus_shelter": 2.8, "bench": 0.9, "waste_bin": 1.0,
+                 "street_cabinet": 1.4, "gantry_footing": 1.0}
+
+
+def ground_prop_height(proto: str) -> float:
+    import re
+    if proto.startswith("lamp_"):
+        m = re.search(r"_(\d+)m$", proto)
+        return float(m.group(1)) if m else 10.0
+    for k, v in GROUND_PROP_H.items():
+        if proto.startswith(k):
+            return v
+    return 3.0

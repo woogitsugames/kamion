@@ -359,6 +359,20 @@ def build_profiles(net, hf: Heightfield) -> dict:
             continue
         c.z, stats[c.id] = chain_profile(c, hf, zn.get(c.node_a), zn.get(c.node_b), rmin_of[c.id], el_of[c.id])
         ground[c.id] = c.z
+    # 1b) a ground chain laid abreast of another ground road (network.abreast_forks, ADR 0076) takes that road's
+    #     surface height at the shared edge, like an elevated ramp does in step 3
+    by_id = {c.id: c for c in net.chains}
+    for c in net.chains:
+        nb = by_id.get(c.meta.get("abreast_of"))
+        if c.id not in ground or nb is None or nb.id not in ground:
+            continue
+        nb.e = crossfall(nb)
+        adj = adjacent_targets(c, [nb], el_of[c.id])
+        if adj:
+            c.z, stats[c.id] = chain_profile(c, hf, zn.get(c.node_a), zn.get(c.node_b), rmin_of[c.id], el_of[c.id],
+                                             adj=adj)
+            stats[c.id]["adjacent_edge"] = {"stations": len(adj)}
+            ground[c.id] = c.z
     # 2) grade separation: deck heights over the ground roads
     req = clearance_requirements(net, el_of, ground)
     ground_chains = [c for c in net.chains if c.id in ground]
