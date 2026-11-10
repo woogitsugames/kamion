@@ -119,6 +119,8 @@ namespace Game.Rendering
             p.overcastDirectional = 0.6f; p.overcastSunLeak = 0.05f;
             p.cloudContrast = 0.21f;
             p.hazeGroundFactor = 1.6f; p.hazeScaleHeightM = 60f;
+            // Owner decision 2026-11-10 (ADR 0080): contrast variant 3 "deep" - broad toe about the sky value and -0.2 EV.
+            p.lookToe = 0.9f; p.lookToeP = 0.4f; p.lookTonePivot = 0.6f; p.exposureCompensation = -0.2f;
             return p;
         }
 
