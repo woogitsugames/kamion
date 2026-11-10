@@ -51,3 +51,33 @@ grey plastic) and E4 (truck sterile clean). Builds on ADR 0021. Frames: `docs/re
   the horizon reflection on the doors now reads. If not, the next lever is the reflection content (capture/box
   projection, lighting owner), not a bigger F0.
 - All constants are WORKING_VALUE until compared with owner photos of a fleet truck after a wet week.
+
+## Addendum r6 (2026-11-10): coat lobe width, analytic ground, fp16 GGX, curtain soiling (review r6 E1, T-N1)
+- **Coat lobe.** The orange-peel term added `4 * slope` to the *perceptual* roughness squared (alpha 0.054, a satin coat
+  that blurred horizon and ground into one grey). Now three crossed ripples of slope s give an RMS slope ~1.22 s, i.e.
+  GGX alpha ~1.75 s, added in quadrature to the coat alpha (alpha ~0.022 when the ripple is sub-pixel).
+- **Ground in the reflection (Low/Medium).** `KamionVehicleEnv.hlsl`: below the horizon the coat (and the glass) see an
+  analytic ground plane from the point's height above the road (vehicle frame), hazed by the scene fog over the hit
+  distance, instead of the direction-only SkyModel cube that fades from horizon colour to ground over ~15 deg. High/Ultra
+  keep the vehicle capture (`_KamionVehicleCapture = 1`), which already holds the real ground. Cost: one extra cube
+  sample + ~15 ALU per coat / glass pixel on Low/Medium (rides on the `clearCoat` tier switch for paint); phone cost
+  UNVERIFIED.
+- **fp16 GGX bug.** `CoatDirect` evaluated `NoH^2 (a2 - 1) + 1` in half: at alpha^2 ~ 4e-5 it cancels to ~0 and the peak
+  overflows fp16 -> inf/NaN = black blotches on the sun-grazed cab side and curtain top at low sun (already speckled at
+  HEAD, solid once the coat got sharper). Now float, `1 - NoH^2 (1 - a2)`, alpha floor 0.01 (sun disc as an area light),
+  clamp 2048. Same fix in `Kamion/Truck Glass`. On phone GPUs half is real fp16, so this matters more on device.
+  Side effect: the inflated low-sun glare is gone (High lowsun door max 92 -> 86 %, curtain mid 68 -> 61 %).
+- **Curtain (T-N1).** The baked M.g of the curtain atlas held a blotchy patch on the rear third ("mould"). The curtain
+  material now ignores it (`_CurtainGrime.x = 1`) and uses a low-frequency model in the trailer object frame: tyre spray
+  band 0.3-0.5 m above the curtain bottom (undulating top edge >= 1.5 m wavelength, densest 0.9 m behind each axle and
+  from the bogie to the rear), wake film over the rear 1.3 m, runoff streaks below the roof rail at posts every 3.4 m
+  (energy-preserving below a pixel). Values WORKING_VALUE (`TrailerAssetBuilder`, axles/floor from dims.json).
+- **Measured (editor, truck-34 1024 px, before -> after):** curtain middle (1.7-2.6 m) cell deviation after removing the
+  smooth view-angle gradient 5.7-9.0 -> 1.6-4.0 pts; bottom 0.4 m darker than middle by 3.2/4.2 -> 8.9/9.1 pts (Low/High
+  overcast), 14-16 at low sun; dark clusters > 3x3 px below 50 % of the local mean: 0 (low sun before the fp16 fix: 2).
+  Door vertical profile (x 512-535, y 218-262) max - min: 3.1/5.3 -> 2.8/5.3 pts overcast. **E1's >= 15 pts is not met
+  and is not reachable physically in this frame**: the camera is at 2.1 m, i.e. at the belt line, so the whole door
+  panel below it reflects ground (the horizon reflection sits under the window seal), and at the 60 deg view the coat
+  Fresnel is ~0.07: 0.07 x (horizon - ground) ~ 2-3 pts on a white solid paint. Raising it would need a non-physical F0.
+  The lacquer now reads where the horizon crosses curved panels (cab corners, roof deflector); a dark livery or a lower
+  camera shows it more. Evidence: `artifacts/owner/modern-front/r6-shading/{before,after,compare}/`.

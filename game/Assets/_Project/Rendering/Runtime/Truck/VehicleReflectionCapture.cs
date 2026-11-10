@@ -121,10 +121,14 @@ namespace Game.Rendering
                 RenderAllNow();   // first frame: complete cube, no half-black faces
             }
             m_Root.SetActive(true);
+            Shader.SetGlobalFloat(k_Capture, 1f);   // KamionVehicleEnv.hlsl: unity_SpecCube0 holds the real ground
         }
+
+        static readonly int k_Capture = Shader.PropertyToID("_KamionVehicleCapture"), k_SkyCapOff = Shader.PropertyToID("_KamionSkyCapOff");
 
         void Release()
         {
+            Shader.SetGlobalFloat(k_Capture, 0f);
             if (m_Probe != null) m_Probe.customBakedTexture = null;
             if (m_Cube != null) { m_Cube.Release(); DestroySafe(m_Cube); m_Cube = null; }
             if (m_Root != null) { DestroySafe(m_Root); m_Root = null; m_Cam = null; m_Probe = null; }
@@ -161,8 +165,11 @@ namespace Game.Rendering
             m_Cam.transform.rotation = k_Face[face];
             m_Request.face = (CubemapFace)face;
             m_Request.mipLevel = 0;
-            if (RenderPipeline.SupportsRenderRequest(m_Cam, m_Request))
-                RenderPipeline.SubmitRenderRequest(m_Cam, m_Request);
+            if (!RenderPipeline.SupportsRenderRequest(m_Cam, m_Request)) return;
+            // r6 L4: the reflection sees the physical sky radiance, not the phone-compressed dome of the main view.
+            Shader.SetGlobalFloat(k_SkyCapOff, 1f);
+            RenderPipeline.SubmitRenderRequest(m_Cam, m_Request);
+            Shader.SetGlobalFloat(k_SkyCapOff, 0f);
         }
 
         /// <summary>Renders all six faces now (first frame, visual QA in edit mode).</summary>

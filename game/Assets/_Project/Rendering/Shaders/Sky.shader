@@ -34,6 +34,11 @@ Shader "Kamion/Sky"
             float4 _SkyFogColor;    // exposed horizon colour
             float4 _SkyOvercastColor; // rgb: neutral after the optional WB adaptation (ADR 0043), a = 1 when set
             float _SunDiscScale;
+            // Phone sky tone mapping (review r6 L4, D23): display caps of the dome as exposed luminance, x at the horizon,
+            // y towards the zenith, z = 1 when set (EnvironmentLighting, from the tier's tone curve). _KamionSkyCapOff = 1
+            // while the vehicle reflection capture renders (reflections keep the physical sky radiance).
+            float4 _KamionSkyCap;
+            float _KamionSkyCapOff;
             TEXTURE2D(_SkyChroma); SAMPLER(sampler_SkyChroma);   // u = γ/π, v = sqrt(cos θ); rgb of luminance 1
 
             struct Attributes { float4 positionOS : POSITION; UNITY_VERTEX_INPUT_INSTANCE_ID };
@@ -86,6 +91,17 @@ Shader "Kamion/Sky"
             {
                 float3 d = normalize(i.dir);
                 float3 sky = SkyRadiance(d);
+                // A phone keeps cloud-deck tone in an overcast sky (local tone mapping of the bright sky region) instead of
+                // clipping the whole dome to 254: soft knee from 80 % of the cap, cap rising from the horizon value (matches
+                // the fog, no seam) to the zenith value by ~30 deg elevation. Clear blue sky is below the knee: unchanged.
+                if (_KamionSkyCap.z > 0.5 && _KamionSkyCapOff < 0.5)
+                {
+                    float cap = lerp(_KamionSkyCap.x, _KamionSkyCap.y, smoothstep(0.0, 0.5, d.y));
+                    float Y = dot(sky, float3(0.2126, 0.7152, 0.0722));
+                    float k = 0.8 * cap;
+                    float Yc = Y <= k ? Y : k + (cap - k) * (1.0 - exp(-(Y - k) / max(cap - k, 1e-4)));
+                    sky *= Yc / max(Y, 1e-5);
+                }
                 // Sun disc (0.53° nominal, slightly enlarged so it survives render scale), with limb darkening.
                 float cosSun = dot(d, _SkySunDir.xyz);
                 float r = 0.00465 * _SunDiscScale;               // angular radius in radians

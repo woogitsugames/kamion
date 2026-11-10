@@ -81,3 +81,13 @@ truck-34 open sky passes everywhere except toward the sun, which is legitimately
 
 ## Owner decision 2026-11-10 (D27)
 Option (c) accepted: `LP_LowSun.whiteBalanceAdaptation = 0.5`; Clear/Overcast/Dusk stay 0. Test `SkyModelTests` pins it.
+
+## Addendum r6 (2026-11-10): phone sky tone mapping on the dome (review r6 L4)
+The overcast dome clipped to 254/254/254 on the post-processing tiers: the D23 curve clips at `lookWhiteClip` 0.7 and the
+CIE overcast sky is > 0.7 above ~5 deg. A phone keeps the cloud deck's tone with local tone mapping, so `Kamion/Sky`
+now compresses the dome only (soft knee from 80 % of the cap) to the exposed value that the active tone curve maps to
+98 % at the horizon and 87.5 % towards the zenith (cap rises by ~30 deg elevation; `EnvironmentLighting.ApplySkyCap`,
+bisection on `LookGrading.Display`; Low: the same display targets through plain sRGB). Surfaces, fog, SH and the
+reflection cubes keep the physical radiance; the vehicle capture renders with `_KamionSkyCapOff = 1`. Clear blue sky is
+below the knee (unchanged); D27 white balance untouched. Measured, truck-34 top 40 rows p50: High overcast 100 -> 92.1 %,
+Low 94.5 -> 89.8 %; lowsun 55.6 / 53.9 unchanged. Test `SkyDisplayCapTests`. Cost: ~10 ALU per sky pixel. Phone UNVERIFIED.

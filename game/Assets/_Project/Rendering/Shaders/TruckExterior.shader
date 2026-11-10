@@ -27,6 +27,8 @@
 //   vertical streak noise, x cavity (1 - AO). Heavier on non-paint slots (chassis, tanks) and on the wheels (radial
 //   sidewall dust). Without a frame (slot 0) only the baked mask is used. Tier switch _KamionGrimeDetailOff (1 = height
 //   gradient only, no arch loop / streak noise).
+// - r6 (ADR 0038 addendum): coat env through KamionVehicleEnv.hlsl (analytic ground below the horizon on Low/Medium),
+//   orange-peel lobe added in alpha, fp16-safe coat GGX, curtain soiling model (_CurtainGrime, trailer object frame).
 Shader "Kamion/Truck Exterior"
 {
     Properties
@@ -53,6 +55,9 @@ Shader "Kamion/Truck Exterior"
         _OrangePeel ("Orange peel slope (coat normal)", Range(0, 0.05)) = 0.012
         _GrimeHeight ("Road grime height above the wheel contact (m)", Range(0, 2)) = 0.8
         _GrimeChassis ("Grime multiplier on non-paint slots", Range(0, 3)) = 1.3
+        _CurtainGrime ("Curtain soiling model: on, bottom y, top y, rear z (object space m; 0 = off)", Vector) = (0, 1.31, 3.88, -12)
+        _CurtainAxles ("Curtain soiling: axle z (object space m) x3", Vector) = (-6.39, -7.7, -9.01, 0)
+        _CurtainPosts ("Curtain soiling: post pitch, first post from rear, streak strength, overall scale", Vector) = (3.4, 0, 0.22, 0.7)
         [Toggle(_KAMION_TRUCK_LAMPS)] _Lamps ("Lamp emission from uv2 (Lights slot)", Float) = 0
     }
     SubShader
@@ -67,6 +72,7 @@ Shader "Kamion/Truck Exterior"
             float _NormalStrength, _IsPaint, _PaintRoughness, _PaintMetallic, _DecalMetallic, _DecalRoughness, _Dirt, _Lamps;
             float _ClearCoat, _ClearCoatRoughness, _Flake, _FlakeScale;
             float _CoatedBaseRoughness, _OrangePeel, _GrimeHeight, _GrimeChassis;
+            float4 _CurtainGrime, _CurtainAxles, _CurtainPosts;
         CBUFFER_END
         float _KamionTyreFlatRadius;          // global (TruckVisualRig: tractor physics rolling radius 0.51 m), 0 = off
         float _KamionTrailerTyreFlatRadius;   // global (TrailerVisualRig: trailer physics rolling radius 0.515 m), 0 = off
@@ -104,6 +110,7 @@ Shader "Kamion/Truck Exterior"
             #define _NORMALMAP 1
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "KamionVehicleEnv.hlsl"
 
             TEXTURE2D(_CMap); SAMPLER(sampler_CMap);
             TEXTURE2D(_NMap);
@@ -160,17 +167,57 @@ Shader "Kamion/Truck Exterior"
                 return g;
             }
 
+            // Curtain soiling (review r6 T-N1: the baked mask put a dark blotchy "mould" on the rear third, 1.5-2.5 m up).
+            // A PVC curtain gets dirty from where the dirt comes from, at low frequency only (no texel noise on the face):
+            // (1) tyre spray band along the curtain bottom, 0.3-0.5 m with an undulating top edge (>= 1.5 m wavelength),
+            //     densest ~0.9 m behind each axle and from the bogie to the rear end; (2) the wake film of the rear 1.3 m
+            //     (low-pressure zone behind the box), heavier low; (3) runoff streaks down from the roof rail at the posts
+            //     behind the curtain, fading over 1.3 m, energy-preserving when narrower than a pixel. Object space = the
+            //     trailer frame (origin on the ground below the kingpin, +Z forward). Values WORKING_VALUE.
+            half CurtainGrime(float3 os, half detail)
+            {
+                float hb = os.y - _CurtainGrime.y;
+                float H = max(_CurtainGrime.z - _CurtainGrime.y, 0.5);
+                float edge = lerp(0.30, 0.50, KNoise(float2(os.z * 0.55, 7.3)));
+                half along = 0.45;
+                [unroll] for (int k = 0; k < 3; k++)
+                {
+                    float dz = (os.z - (_CurtainAxles[k] - 0.9)) / 1.3;
+                    along = max(along, exp(-dz * dz));
+                }
+                along = max(along, 0.85 * smoothstep(_CurtainAxles.z - 0.6, _CurtainAxles.z - 1.6, os.z));
+                half spray = along * ((1.0 - smoothstep(0.55 * edge, edge, hb)) + 0.15 * (1.0 - smoothstep(edge, 1.6 * edge, hb)));
+                float dr = os.z - _CurtainGrime.w;
+                half wake = (1.0 - smoothstep(0.0, 1.3, dr)) * (0.18 + 0.22 * (1.0 - saturate(hb / H)));
+                half g = max(spray, wake);
+                if (detail > 0.5)
+                {
+                    float pitch = max(_CurtainPosts.x, 0.5);
+                    float dzp = abs(frac((dr - _CurtainPosts.y) / pitch + 0.5) - 0.5) * pitch;
+                    float width = max(0.08, fwidth(os.z) * 1.5);
+                    half streak = saturate(exp(-dzp * dzp / (width * width)) * (0.08 / width));
+                    half down = 1.0 - smoothstep(0.0, 1.3, _CurtainGrime.z - os.y);
+                    g = max(g, streak * down * _CurtainPosts.z);
+                }
+                return g * _CurtainPosts.w;
+            }
+
             // GGX specular of one smooth dielectric layer for the main light (D * Vis * F * NdotL), Unity light units.
             half3 CoatDirect(Light L, half3 n, half3 v, half rough, half F0)
             {
-                half3 h = SafeNormalize(L.direction + v);
-                half NoH = saturate(dot(n, h)), NoL = saturate(dot(n, L.direction)), LoH = saturate(dot(L.direction, h));
-                half a2 = max(rough * rough, 0.0016); a2 *= a2;
-                half d = NoH * NoH * (a2 - 1.0) + 1.00001;
-                half F = F0 + (1.0 - F0) * Pow4(1.0 - LoH) * (1.0 - LoH);
+                // r6: float, not half. With alpha^2 ~ 4e-5 the half term NoH^2 (a2 - 1) + 1 cancels to ~0 or below at the
+                // highlight centre and the peak (~1 / a2) overflows half: inf / NaN = the black blotches on the sun-grazed
+                // cab side and curtain top at low sun (already speckled before; a sharper coat made them solid). On phone
+                // GPUs half is real fp16, so the fix matters more there. The alpha floor 0.01 is the sun disc (0.53 deg)
+                // seen as an area light: a mirror cannot concentrate the sun below its own angular size.
+                float3 h = SafeNormalize(float3(L.direction) + float3(v));
+                float NoH = saturate(dot(float3(n), h)), NoL = saturate(dot(n, L.direction)), LoH = saturate(dot(float3(L.direction), h));
+                float a = max(rough * rough, 0.01), a2 = a * a;
+                float d = 1.0 - NoH * NoH * (1.0 - a2);
+                float F = F0 + (1.0 - F0) * Pow4(1.0 - LoH) * (1.0 - LoH);
                 // Normalised GGX * Kelemen visibility (as URP DirectBRDFSpecular), * PI because Unity lights carry no 1/PI.
-                half spec = a2 / (4.0 * d * d * max(0.1, LoH * LoH));
-                return L.color * (spec * F * NoL * L.distanceAttenuation * L.shadowAttenuation);
+                float spec = a2 / (4.0 * d * d * max(0.1, LoH * LoH));
+                return L.color * (half)min(spec * F * NoL * L.distanceAttenuation * L.shadowAttenuation, 2048.0);
             }
 
             struct Attributes
@@ -271,6 +318,8 @@ Shader "Kamion/Truck Exterior"
                     proc *= lerp(1.4, 0.85, m.r);
                     grime = max(grime * 0.8, proc);
                 }
+                if (_CurtainGrime.x > 0.5)
+                    grime = CurtainGrime(TransformWorldToObject(i.positionWS), 1.0 - _KamionGrimeDetailOff);
                 half dirt = saturate(grime * _Dirt * 1.8);
                 coat *= 1.0 - saturate(dirt * 1.5);
                 albedo = lerp(albedo, _DirtColor.rgb, dirt);
@@ -346,13 +395,19 @@ Shader "Kamion/Truck Exterior"
                     half fade = saturate(1.2 - max(max(fwidth(ph.x), fwidth(ph.y)), fwidth(ph.z)) * 0.35);
                     half3 tilt = cos(ph.x) * half3(0.83, 0.31, 0.46) + cos(ph.y) * half3(-0.27, 0.77, 0.58) + cos(ph.z) * half3(0.44, -0.52, 0.73);
                     half3 nCoat = normalize(nWS + (tilt - dot(tilt, nWS) * nWS) * (_OrangePeel * fade));
-                    half coatRough = sqrt(_ClearCoatRoughness * _ClearCoatRoughness + (1.0 - fade) * 4.0 * _OrangePeel);
+                    // Sub-pixel ripples widen the lobe: three crossed sinusoids of slope s have an RMS slope ~1.22 s, i.e. a
+                    // GGX alpha ~1.75 s, added in quadrature to the coat alpha (r6 E1: the old 4 s added to the *perceptual*
+                    // roughness squared gave alpha 0.054 = a satin coat that blurred the horizon and ground into one grey).
+                    half aCoat = _ClearCoatRoughness * _ClearCoatRoughness, aPeel = 1.75 * _OrangePeel;
+                    half coatRough = sqrt(sqrt(aCoat * aCoat + (1.0 - fade) * aPeel * aPeel));
                     half NoV = saturate(dot(nCoat, v));
                     half Fc = (0.04 + 0.96 * Pow4(1.0 - NoV) * (1.0 - NoV)) * coat;
                     half3 R = reflect(-v, nCoat);
                     // Horizon occlusion: reflection directions under the geometric surface see the body, not the sky.
                     half hor = saturate(1.0 + 1.2 * dot(R, i.normalWS));
-                    half3 env = GlossyEnvironmentReflection(R, i.positionWS, coatRough, m.r) * (hor * hor);
+                    // r6 E1: ground plane below the horizon seen from this height (dark ground band under the belt line,
+                    // bright horizon at eye height) on the tiers without the vehicle capture.
+                    half3 env = KamionVehicleEnv(R, i.positionWS, coatRough, m.r, hasFrame ? lp.y : 1.5) * (hor * hor);
                     Light L = GetMainLight(input.shadowCoord, i.positionWS, input.shadowMask);
                     half3 direct = CoatDirect(L, nCoat, v, coatRough, 0.04) * coat;
                     col.rgb = col.rgb * (1.0 - Fc) + env * Fc + direct;
