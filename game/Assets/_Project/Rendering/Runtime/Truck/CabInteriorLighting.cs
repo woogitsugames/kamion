@@ -111,7 +111,28 @@ namespace Game.Rendering
             Shader.SetGlobalVector(k_Parity, Vector4.zero);
         }
 
-        void LateUpdate() => Refresh(viewCamera != null ? viewCamera : Camera.main);
+        void LateUpdate() => RefreshForView();
+
+        /// <summary>
+        /// Per-frame path: the view camera is resolved with <see cref="ViewCameraResolver"/>, never plain Camera.main
+        /// (ADR 0044 addendum r9: under the on-device control camera Camera.main was null, the cab view state was never
+        /// applied and the phone cab-dash frames were 25-44 % black against ~1.5 % in the editor).
+        /// </summary>
+        public void RefreshForView()
+        {
+            var cam = ViewCameraResolver.Resolve(viewCamera);
+            Refresh(cam);
+            bool inCab = LastGain > 1f;
+            if (cam != m_LoggedCam || inCab != m_LoggedInCab)
+            {
+                m_LoggedCam = cam; m_LoggedInCab = inCab;
+                if (Application.isPlaying)
+                    Debug.Log($"[CAB] view camera {(cam != null ? cam.name : "none")} cabView={inCab} gain {LastGain:F2} meter {LastMeterEv:F2} EV");
+            }
+        }
+
+        Camera m_LoggedCam;
+        bool m_LoggedInCab;
 
         /// <summary>Recomputes the fill (visual QA calls it per control camera).</summary>
         public void Refresh(Camera cam)

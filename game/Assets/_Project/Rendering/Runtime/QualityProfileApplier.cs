@@ -50,7 +50,7 @@ namespace Game.Rendering
                 t = RenderOverrides.ApplyTo(t);
                 ApplyPipelineOverrides(t);
             }
-            Apply(t, targetCamera != null ? targetCamera : Camera.main, volume, worldTextures, ref m_Tonemapping);
+            Apply(t, targetCamera != null ? targetCamera : ViewCameraResolver.Resolve(null), volume, worldTextures, ref m_Tonemapping);
         }
 
         /// <summary>

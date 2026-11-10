@@ -151,3 +151,27 @@ roughness floor 0.30, `v2` = final values set by hand in the .mat, `iso-a015` = 
   ~6-10 ALU) or a rotation-invariant rim AO per section angle (generator); both change every glossy interior surface
   (rim p50, C-N6, black %) and need their own review. Seat bolster wear: same leather slot and model, but no control
   camera sees the driver's bolster (UNVERIFIED in frame). Phone (A16): UNVERIFIED. Cost: +3 ALU / cab pixel, no texture.
+
+## Addendum r9 (2026-11-10, rendering-perf): phone cab-dash black = cab-view state never applied under the control camera
+Symptom: A16 (Low, Vulkan, Mali-G57) gate 3 frames `cab-dash` 25.4 / 38.2 / 44.4 % of pixels < 3 % luma (overcast /
+lowsun / dusk, limit 8 %), editor Low 1.4-2.8 %. Root cause (reproduced in the editor, not yet re-measured on a phone):
+on the phone the frame is taken by `DrivingLabBootstrap.ActivateControlCamera` (`qacam=cab-dash`), which enables the
+untagged `QA_cab-dash` camera and DISABLES the tagged main camera. `CabInteriorLighting.LateUpdate` used
+`viewCamera ?? Camera.main`; `Camera.main` is null then, `Refresh(null)` took the exterior branch: no cab-view gain
+(x1 instead of x2^(1 + meter)), enclosure 0.88 instead of 0.6, no shadow lift, no Low toe parity (r7). The editor runner
+calls `Refresh(cam)` with the control camera explicitly, so it never saw the bug. Normal driving (tagged rig camera`r
+enabled) was not affected: only the on-device control-camera frames, i.e. the gate evidence, were wrong. Same defect in `StreetLamps` (no lamp
+point lights in phone dusk frames) and the `QualityProfileApplier` fallback. Not the cause (checked): shader precision,
+tier (logcat `tier=Low`), env cube (exterior and windscreen region match the editor within 0.01), SH/probe stripping.
+Proof (`artifacts/truck-fixes/cab-dark-phone/compare-phone-editor.json`): editor with `-CabView none` (= the phone path)
+24.3 / 35.8 / 43.5 % vs phone 25.4 / 38.2 / 44.4 %, lower-half mean luma 0.074 / 0.059 / 0.025 vs 0.072 / 0.054 /
+0.023; editor explicit (= fixed path) 1.7 / 1.4 / 2.8 %. Residual phone - emulation 1-2.4 points: unexplained
+(device sRGB/Vulkan path or the dirty f6abb8b build), to be re-measured.
+Fix: `ViewCameraResolver.Resolve(explicit)` = the explicit camera if enabled, else `Camera.main`, else the enabled
+on-screen game camera with the highest depth (render-texture, overlay and scene cameras excluded; no allocation).
+Used by CabInteriorLighting (`RefreshForView`, logs `[CAB] view camera <name> cabView=<bool> gain <g>` on change),
+StreetLamps and QualityProfileApplier. Guard: EditMode `CabViewCameraTests` (qacam setup -> cab-view gain and in-cab
+enclosure applied; exterior camera keeps the exterior state; no `Camera.main` in `Rendering/Runtime` outside the
+resolver). Visual QA A/B: `scripts/visual-qa.ps1 -CabView none`. No shader, material or cost change.
+Phone verification: gate3 truck cameras on the A16 (Low) and S24+ (High) -> logcat must show
+`[CAB] view camera QA_cab-dash cabView=True`, `cab-dash` dark < 8 % for overcast / lowsun / dusk (expected ~2-4 %).

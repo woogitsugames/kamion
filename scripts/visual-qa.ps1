@@ -19,6 +19,8 @@ param(
     [string]$Cameras = '',
     # A7 before/after: 'off' renders without the cab fill and the cab-view lift (CabInteriorLighting).
     [ValidateSet('on', 'off')] [string]$CabFill = 'on',
+    # ADR 0044 r9 A/B: 'none' renders the cab with the state the phone had before r9 (no view camera -> exterior cab state).
+    [ValidateSet('explicit', 'none')] [string]$CabView = 'explicit',
     # Ablation overrides (RenderOverrides keys), e.g. 'rq_hlod=0,rq_trees=0'.
     [string]$Rq = '',
     # ADR 0043 option (c) owner A/B: phone-style white-balance adaptation strength 0..1 ('' = preset value, 0).
@@ -54,6 +56,7 @@ if ($Cameras) { $qaArgs += @('-qaCameras', $Cameras) }
 if ($WbAdapt) { $qaArgs += @('-qaWbAdapt', $WbAdapt) }
 if ($NoGlass) { $qaArgs += @('-qaNoGlass', '1') }
 if ($CabFill -eq 'off') { $qaArgs += @('-qaCabFill', 'off') }
+if ($CabView -ne 'explicit') { $qaArgs += @('-qaCabView', $CabView) }
 if ($Rq) { $qaArgs += @('-qaRq', $Rq) }
 if ($RenderScale) { $qaArgs += @('-qaRenderScale', $RenderScale) }
 if ($Wires -ne 'on') { $qaArgs += @('-qaWires', $Wires) }
