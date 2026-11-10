@@ -271,3 +271,26 @@ Note (fixed 2026-11-10): the generator now carries the strict kerb checks of cur
 6. Coupling to a parked trailer at walking pace: a bump, but not a hit.
 
 Note for each item: mass feel, braking, steering wheel feedback, trailer behaviour.
+
+## 9. Gate 3 swept path (G3-A, G3-B, Rondo Bieżeństwa lap), 2026-11-10
+
+Script `tests/physics/swept_path_gate3.py`, test `tests/physics/test_swept_path_gate3.py`. The runner's `path` driver
+uses Stanley steering on the steer axle and a PI speed controller; laden 40 t, flat ground. Geometry: the visual
+`road`/`paved` meshes of the world build, rasterised at 0.10 m into carriageway / apron / kerb / off. Speed profile:
+a_lat 1.2, decel 0.8, accel 0.4 m/s², ring capped at 15 or 25 km/h (all WORKING_VALUE). Driver lines: `lane` = route
+smoothed σ 4 m (the raw route has kinks at OSM nodes; following it saturated the steering at 40° and made loops),
+`wide` = steer axle moved outward by 0.5 × steady-state off-tracking (≤ 1.75 m). Both roundabout passages on the route
+are first-exit right turns, so the ring is also checked with a 1.25-lap run on the Bieżeństwa ring centreline
+(R 23.36 m).
+
+| run | min tyre clearance to kerb line | where | apron use | body / props |
+|---|---|---|---|---|
+| G3-A lane, 15/25 km/h | **-1.10 m** (tridem, inner side) | Bieżeństwa exit corner, s 366-369 | 0 | trailer rear corner 0.6 m over the corner; props ≥ 0.93 m |
+| G3-A wide, 15/25 km/h | -0.10 / +0.10 m (within raster tolerance) | same corner | 0 | props ≥ 0.81 m (gate, s 248) |
+| G3-B lane / wide | +1.21 / +1.27 m | Putry entry s 1709-1714 / trunk_link s 1430 | 0 | props ≥ 3.07 m |
+| Bieżeństwa lap 15/25 km/h | +1.61 m (steer, outer); tridem inner +2.6/+2.9 m from the apron edge | ring | 0 (apron not reached) | props ≥ 1.84 m |
+
+Max articulation 32.8° (G3-A), steer 27°. Conclusion: the geometry can be driven. At the Bieżeństwa exit corner the
+driver has to take a wide line; the AI or assist path should swing out there. The 2 m apron is never used because the
+ring is wide for this vehicle. Guidance: WR-D-31-3 "Ronda" (Ministerstwo Infrastruktury, valid from 2022-11-30),
+chapter "Jezdnia i pierścień". Its numeric widths and the design-vehicle definition were not read (UNVERIFIED).

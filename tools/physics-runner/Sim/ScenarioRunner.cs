@@ -282,6 +282,11 @@ namespace PhysicsRunner.Sim
                     double wb = s.Tractor.Def.axles[0].positionZ - s.Tractor.Def.axles[1].positionZ;
                     return new SoakDriver(d, s.Body.Position, s.Body.Rotation * Vec3.Forward, wb);
                 }
+                case "path":
+                {
+                    double wb = s.Tractor.Def.axles[0].positionZ - s.Tractor.Def.axles[1].positionZ;
+                    return new PathDriver(d, wb);
+                }
                 default: throw new ArgumentException($"Unknown driver type '{d.type}'");
             }
         }
