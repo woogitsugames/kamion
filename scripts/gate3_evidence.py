@@ -36,6 +36,13 @@ ELEVATED_BY_DESIGN = re.compile(
     r"^(signal_head|board_|facade_sign|plate_|sign_face|banner|wire|cable|lamp_head|luminaire|mirror_|gantry_|bracket|camera_|clock|flag)", re.I)
 # Documented exemptions (each is listed in the report, never silent):
 ALBEDO_EXEMPT = re.compile(r"^M_(sign|plate)_", re.I)          # traffic-sign faces: retroreflective white and black print by design
+# Shader-procedural albedo: _BaseColor is white (drain_grate, gate_boom), the real albedo is in the shader / importer.
+# Constants (linear) from WorldPBR.shader (_DECAL_GRATE iron) and WorldPbrMaterials.Stripes (boom_red_white).
+PROCEDURAL_LINEAR = {
+    "M_drain_grate": [(0.035, 0.033, 0.03), (0.07 * 1.25, 0.045 * 1.25, 0.03 * 1.25)],   # cast-iron frame/bars; slots are deliberate near-black holes (0.006) = water below
+    "M_gate_boom": [(0.45, 0.025, 0.02), (0.68, 0.68, 0.66)],                              # red / white bands, 0.5 m each
+}
+LINEAR_BASECOLOR_SHADERS = ("Kamion/World Wire",)   # importer writes the linear value with SetVector, the shader reads it as linear
 TEXEL_EXEMPT = re.compile(r"^M_impostor_", re.I)               # distance billboards of whole trees, low density by design
 VEGETATION = re.compile(r"^(tree|shrub|bush|hedge)_", re.I)   # planted: trunk base may sit below the terrain
 VEGETATION_SUNK_OK_M = 1.0
@@ -66,8 +73,19 @@ def srgb_luma(rgb: np.ndarray) -> np.ndarray:
 def check_albedo(audit: dict, repo: Path, out: Path) -> dict:
     mats = audit["materials"]
     rows, glob_hist, glob_w = [], np.zeros(256), 0.0
+    def enc(x):
+        return np.where(x <= 0.0031308, x * 12.92, 1.055 * np.power(np.maximum(x, 1e-9), 1 / 2.4) - 0.055) * 255
     for m in mats:
         base = np.array(m["base_color_srgb"], dtype=np.float64)
+        if m["shader"] in LINEAR_BASECOLOR_SHADERS:            # stored value is linear: encode (0.11 linear = sRGB 92)
+            base = enc(base / 255)
+        if m["name"] in PROCEDURAL_LINEAR:                     # evaluate the shader's own colours, not the white _BaseColor
+            e = enc(np.array(PROCEDURAL_LINEAR[m["name"]]))
+            lum = srgb_luma(e)
+            ok = bool(lum.min() >= ALBEDO_LO and lum.max() <= ALBEDO_HI)
+            rows.append({"name": m["name"], "shader": m["shader"], "textured": False, "procedural": True, "mean_srgb": round(float(lum.mean()), 1),
+                         "p1": round(float(lum.min()), 1), "p99": round(float(lum.max()), 1), "outside_frac": 0.0, "status": "PASS" if ok else "FAIL"})
+            continue
         weight = max(float(m["area_m2"]), 1.0)
         if m["base_map"]:
             p = repo / "game" / m["base_map"]
