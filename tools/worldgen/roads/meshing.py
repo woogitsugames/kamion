@@ -344,6 +344,11 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
             if style["noise_screen"]:    # transparent noise screen on posts at the deck edge (both sides)
                 e = top - np.column_stack([nn0 * sgn * 0.05, np.zeros(len(ss))])
                 _strip(buf, "bridge", "noise_glass", e + [0, 0, 0.25], e + [0, 0, style["screen_h"]], c.id + ":screen")
+                # glass dust mask (Kamion/World Car Glass: film where max(|u|, |v|) > 0.58): v = 1 at the foot of the
+                # sheet -> -0.25 at the top, so road spray covers the lowest ~0.9 m; u = 0 (posts hide the panel ends)
+                for prt in buf.parts[-2:]:
+                    k = len(prt.V) // 2
+                    prt.UV = np.column_stack([np.zeros(2 * k), np.concatenate([np.ones(k), np.full(k, -0.25)])])
                 run_len = float(ss[-1] - ss[0])
                 for k in range(int(run_len // 3.0) + 1):
                     s_p = float(ss[0]) + 3.0 * k
@@ -673,9 +678,16 @@ def build_patch(buf, net, j, coarse=False, stats=None):
             V = np.column_stack([P2, np.concatenate([zb, [ph.blend(q) for q in P2[len(poly):]]])])
             kind = "delaunay"
         else:
-            T = np.array(ear_clip(poly))
+            # narrow patches (forks: no interior point survives the inset, boundary edges not recovered): constrained
+            # Delaunay of the outline before ear clipping. Ear clipping fanned j:n1847044961 (Rondo Putry) into a
+            # 23 m triangle through three near-collinear outline vertices at different heights: a 0.13 m fin standing
+            # 0.2-0.45 m over the terrain (ADR 0033 v3.5.2 open point, fixed in ADR 0049)
+            T = _cdt_fill(poly)
+            kind = "cdt"
+            if T is None:
+                T = np.array(ear_clip(poly))
+                kind = "earclip"
             V = np.column_stack([poly, zb])
-            kind = "earclip"
         buf.add(layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id)
         if stats is not None:
             stats[kind] = stats.get(kind, 0) + 1
@@ -727,6 +739,36 @@ def _delaunay_fill(poly, spacing):
     return P2, T
 
 
+def _cdt_fill(poly):
+    """Constrained Delaunay of a simple outline (no Steiner points: the vertex set and heights stay the seam with the
+    ribbons). Returns CCW triangles indexing `poly`, or None when the outline is invalid / a vertex is not reused."""
+    import shapely
+    from shapely.geometry import Polygon
+    pg = Polygon(poly)
+    if not pg.is_valid or pg.area < 0.05:
+        return None
+    try:
+        g = shapely.constrained_delaunay_triangles(pg)
+    except Exception:
+        return None
+    key = {(round(float(x), 5), round(float(y), 5)): i for i, (x, y) in enumerate(poly)}
+    T = []
+    for tri in getattr(g, "geoms", []):
+        ids = [key.get((round(float(x), 5), round(float(y), 5))) for x, y in np.asarray(tri.exterior.coords)[:3]]
+        if None in ids:
+            return None
+        T.append(ids)
+    if not T:
+        return None
+    T = np.array(T)
+    a, b, c = poly[T[:, 0]], poly[T[:, 1]], poly[T[:, 2]]
+    cr = (b[:, 0] - a[:, 0]) * (c[:, 1] - a[:, 1]) - (b[:, 1] - a[:, 1]) * (c[:, 0] - a[:, 0])
+    T[cr < 0] = T[cr < 0][:, [0, 2, 1]]
+    if abs(0.5 * np.abs(cr).sum() - pg.area) > 1e-3 * pg.area + 1e-3:
+        return None
+    return T
+
+
 def _repair_fill(poly, zb, ph, spacing):
     """Self-intersecting patch outline (overlapping forks / dense clusters): fill the valid union of
     its lobes. Seam vertices that end up on the outline keep their exact heights; the rest overlaps the
@@ -745,7 +787,8 @@ def _repair_fill(poly, zb, ph, spacing):
             ring = ring[::-1]
         res = _delaunay_fill(ring, spacing)
         if res is None:
-            P2, T = ring, np.array(ear_clip(ring))
+            T = _cdt_fill(ring)          # constrained Delaunay before ear clipping (no 23 m fins, ADR 0049)
+            P2, T = ring, (T if T is not None else np.array(ear_clip(ring)))
         else:
             P2, T = res
         if len(T) == 0:

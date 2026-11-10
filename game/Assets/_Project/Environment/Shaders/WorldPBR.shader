@@ -12,9 +12,13 @@
 // Layers (keywords): _ROADWEAR (TEXCOORD_1 = lane coordinate, distance to the carriageway edge: polished wheel paths,
 // gutter grime), _CRACKS (16 m crack layer, faded by the macro wear mask so whole stretches stay sound),
 // _DECAL_PATCH (TEXCOORD_1.x = age: new black patch -> greyed like the road), _DECAL_ALPHA (alpha-blended decals:
-// oil atlas 2x2 picked by TEXCOORD_1.y, tyre scrub profile across TEXCOORD_0.y), _GROUNDMASKS (terrain COLOR_0:
+// oil atlas 2x2 picked by TEXCOORD_1.y, tyre scrub profile across TEXCOORD_0.y, opacity x TEXCOORD_1.y), _GROUNDMASKS (terrain COLOR_0:
 // R road distance / 20 m, G forest floor, B unmown, A bare soil), _SPLASH (walls: splash / dirt zone above the ground
 // from TEXCOORD_0.y = metres above ground).
+// _DECAL_PAINT (road markings, review r6 W-H6, ADR 0049): the base set is the road's own asphalt_worn in the same world
+// planar UV; the paint film (_PaintColor) covers it except where TEXCOORD_1 (lane coordinate, exposure + age) says
+// the wheels wore it through on the aggregate peaks (Var.R); grey-brown traffic film by age; distance pre-filter
+// towards the asphalt by the line's pixel coverage.
 // _GRASS_DETILE (grass sets: macro-masked bare soil, rotated second sample on Medium+; review r5 W-N3, ADR 0042).
 // Global tier keyword _KAMION_WORLD_DETAIL (Medium and up): element tone jitter, crack layer, second rotated macro
 // octave, close-range photo detail (asphalt) - Low draws base + normal + mask + one macro sample only.
@@ -58,6 +62,8 @@ Shader "Kamion/World PBR"
         _Stripe ("Stripes (_STRIPES): xy direction in UV0 metres, z period m", Vector) = (1, 0, 1, 0)
         _StripeA ("Stripe colour A (linear)", Color) = (0.55, 0.03, 0.02, 1)
         _StripeB ("Stripe colour B (linear)", Color) = (0.7, 0.7, 0.68, 1)
+        _PaintColor ("Paint film albedo (linear, _DECAL_PAINT), a = smoothness", Vector) = (0.6, 0.6, 0.57, 0.35)
+        _PaintWear ("Paint wear: x wheel-path, y age, z dirt film, w line width m", Vector) = (0.85, 0.25, 0.3, 0.12)
         _OffsetFactor ("Depth offset factor", Float) = 0
         _OffsetUnits ("Depth offset units", Float) = 0
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("Src blend", Float) = 1
@@ -81,6 +87,7 @@ Shader "Kamion/World PBR"
             float _WheelPolish, _GutterDirt, _AgeTint, _DecalAlpha, _SplashHeight, _GroundTint, _RunoffStrength;
             float4 _Stripe, _StripeA, _StripeB;
             float4 _GrassFill;
+            float4 _PaintColor, _PaintWear;
             float _OffsetFactor, _OffsetUnits, _SrcBlend, _DstBlend, _ZWrite, _Cull, _ReceiveShadows;
         CBUFFER_END
         ENDHLSL
@@ -108,7 +115,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _ROADWEAR
             #pragma shader_feature_local _CRACKS
             #pragma shader_feature_local _PHOTO_DETAIL
-            #pragma shader_feature_local _ _DECAL_PATCH _DECAL_ALPHA _DECAL_TYRE _DECAL_GRATE
+            #pragma shader_feature_local _ _DECAL_PATCH _DECAL_ALPHA _DECAL_TYRE _DECAL_GRATE _DECAL_PAINT
             #pragma shader_feature_local _GROUNDMASKS
             #pragma shader_feature_local _GRASS_DETILE
             #pragma shader_feature_local _SPLASH
@@ -372,7 +379,38 @@ Shader "Kamion/World PBR"
                     smooth = 0.42 * _SmoothnessScale;
                     ao = 1.0;
                     tn = half3(0, 0, 1);
-                    alpha = prof * ends * brk * _DecalAlpha;
+                    // TEXCOORD_1.y = per-pass strength 0.6..1.4 (review r6 W-N11; older data without it: seed 0..1)
+                    alpha = saturate(prof * ends * brk * _DecalAlpha * clamp(i.uv.w, 0.3, 1.5));
+                }
+            #endif
+
+            #if defined(_DECAL_PAINT)
+                {
+                    // road paint over the asphalt beneath (albedo / smooth / tn hold that asphalt here)
+                    float ex = i.uv.w;                                   // [0,1) longitudinal, [2,3) transverse; frac = age
+                    half transverse = step(1.5, ex);
+                    half age = (half)frac(ex);
+                    half known = step(-0.5, i.uv.z);                     // (-1, 5) = no wear data
+                    float lc = frac(i.uv.z);
+                    half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.13) * known;
+                    half peaks = SAMPLE_TEXTURE2D(_VarMap, sampler_BaseMap, uvb).r;     // aggregate tops wear first
+                    half mott = (macro.a - 0.5) * 2.0;
+                    half worn = _PaintWear.x * wp * transverse * (0.55 + 0.9 * age)     // tyres scrub the crossed marks
+                              + _PaintWear.y * (0.35 + age) * (0.6 + 0.4 * wp)          // weathering everywhere
+                              + 0.10 * mott;
+                    // chipped, not faded: a narrow threshold on the peak-weighted wear gives sharp-edged bare spots
+                    half cover = 1.0 - smoothstep(0.42, 0.58, saturate(worn) * (0.35 + 1.3 * peaks));
+                    // traffic film: tyre soot and road dust, grey-brown, heavier on old marks and soiled patches
+                    half dirt = saturate(_PaintWear.z * (0.75 + 0.5 * age) * (0.85 + 0.3 * macro.b) * (1.0 + 0.4 * wp * transverse));
+                    half3 film = _PaintColor.rgb * (1.0 - dirt * half3(1.0, 1.0, 1.03));   // neutral grey film (r6 critic: beige read as concrete)
+                    half3 asph = albedo;
+                    albedo = lerp(asph, film, cover);
+                    // pre-filter: a 0.12 m line (0.4 m for transverse marks) under a pixel blends to the asphalt beneath
+                    float fp = max(length(fwidth(pw.xz)), 1e-4);
+                    half lw = lerp(_PaintWear.w, 0.4, transverse);
+                    albedo = lerp(asph, albedo, saturate(lw * 1.5 / fp));
+                    smooth = lerp(smooth, _PaintColor.a * (1.0 - 0.3 * dirt), cover);
+                    tn = normalize(lerp(tn, half3(0, 0, 1), cover * 0.75));   // the film fills the fine texture
                 }
             #endif
 

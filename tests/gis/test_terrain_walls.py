@@ -10,9 +10,9 @@ import pytest
 from conftest import REGION_DIR
 
 QA = REGION_DIR / "generated" / "terrain_walls_qa.json"
-RATCHET = {"skirt:j:road_asphalt": 1,
-           "skirt:yard_asphalt": 1, "skirt:yard_concrete": 3, "skirt:yard_slabs": 1,
-           "steep_grass:verge_grass": 8}     # 14 points, build of 2026-11-10 (v3.5.2: faces < 0.15 m thick are slivers)
+RATCHET = {"skirt:yard_asphalt": 1, "skirt:yard_concrete": 3, "skirt:yard_slabs": 1,
+           "steep_grass:verge_grass": 8}     # 13 points, build of 2026-11-10 (v3.5.2: faces < 0.15 m thick are slivers;
+                                              # ADR 0049: constrained-Delaunay junction fill removed j:n1847044961)
 
 
 def test_no_vertical_terrain_walls():

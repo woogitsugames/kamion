@@ -11,6 +11,7 @@ Placed:
 from __future__ import annotations
 
 import math
+import zlib
 
 import numpy as np
 import shapely
@@ -24,6 +25,34 @@ from .meshing import MeshBuf
 MARKED = {"motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link", "secondary",
           "secondary_link", "tertiary", "tertiary_link"}
 RANK = {"A": 0, "S": 1, "GP": 2, "G": 3, "Z": 4, "L": 5, "D": 6}
+
+
+# Paint wear data (TEXCOORD_1 of marking_white, Kamion/World PBR _DECAL_PAINT, review r6 W-H6):
+#   x = lane coordinate, the same convention as the carriageway ribbon (meshing: |lat| / lane width on two-way roads,
+#       from the edge strip on one-way / ring roads), so the wheel paths at ~0.26 / 0.74 of a lane line up with the
+#       polished wheel paths of the asphalt beneath;
+#   y = traffic exposure + age: [0, 1) longitudinal lines (lane, centre, edge: rarely run over), [2, 3) transverse
+#       marks and glyphs (P-8 arrows, P-10, P-13, P-14: every wheel crosses them); fractional part = age 0..1 of
+#       that mark (deterministic hash of the mark), which scales dirt and wear.
+TRANSVERSE = ("P-8", "P-10", "P-13", "P-14")
+_SECS = []          # net.sec_list of the network being marked (set by _build_markings)
+
+
+def _paint_uv1(c, s, lat, kind):
+    s = np.asarray(s, float)
+    lat = np.asarray(lat, float)
+    sm = float(np.mean(s))
+    if _SECS:
+        sec = c.section(sm, _SECS)
+        lw, edge, ring = max(float(sec.lane_w), 2.0), float(sec.edge_strip), bool(sec.oneway or sec.roundabout)
+    else:
+        lw, edge, ring = 3.5, 0.0, False
+    hw = np.asarray(c.hw_at(s), float)
+    lanec = (lat + hw - edge) / lw if ring else np.abs(lat) / lw
+    key = f"{kind}@{c.id}:{sm:.1f}:{float(np.mean(lat)):.1f}".encode()
+    age = (zlib.crc32(key) % 1000) / 1000.0 * 0.98
+    y = (2.0 if kind.split("-P-2a")[0] in TRANSVERSE else 0.0) + age
+    return np.column_stack([lanec, np.full(len(lanec), y)])
 
 
 def _surface_pts(c, s, lat):
@@ -45,7 +74,9 @@ def strip(buf, c, s0, s1, lat, w, kind):
     for i in range(n):
         T += [(2 * i, 2 * i + 2, 2 * i + 3), (2 * i, 2 * i + 3, 2 * i + 1)]
     uv = np.column_stack([np.repeat(ss - s0, 2), np.tile([0.0, 1.0], len(ss))])
-    buf.add("markings", "marking_white", V, uv, np.array(T), src=f"{kind}@{c.id}")
+    sv = np.repeat(ss, 2)
+    lv = np.tile([lat - w / 2, lat + w / 2], len(ss))
+    buf.add("markings", "marking_white", V, uv, np.array(T), src=f"{kind}@{c.id}", UV1=_paint_uv1(c, sv, lv, kind))
 
 
 def dashed(buf, c, s0, s1, lat, w, dash, gap, kind):
@@ -68,7 +99,7 @@ def polygon_mark(buf, c, poly_xy, origin_s, lat0, fwd, left, kind):
     # chain frame (s, lat) is right-handed; flips if exactly one of fwd/left is negative
     if fwd * left < 0:
         T = T[:, [0, 2, 1]]
-    buf.add("markings", "marking_white", V, ring.copy(), T, src=f"{kind}@{c.id}")
+    buf.add("markings", "marking_white", V, ring.copy(), T, src=f"{kind}@{c.id}", UV1=_paint_uv1(c, s, lat, kind))
 
 
 def arrow_glyph(turns: list, long: bool):
@@ -166,6 +197,7 @@ def drop_overlapping(buf, net, first):
 
 def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
     secs = net.sec_list
+    _SECS[:] = secs
     arm_info = {}
     for j in juncs:
         maxrank = min(RANK[a.cls(secs)] for a in j.arms)
@@ -360,7 +392,9 @@ def strip_cross(buf, c, s_mid, depth, lat0, lat1):
     b = _surface_pts(c, s, np.full(2, lat1))
     V = np.vstack([a, b])          # 0:(s0,lat0) 1:(s1,lat0) 2:(s0,lat1) 3:(s1,lat1)
     T = np.array([(0, 1, 3), (0, 3, 2)])
-    buf.add("markings", "marking_white", V, np.array([[0, 0], [0, 1], [1, 0], [1, 1]], float), T, src=f"P-14@{c.id}")
+    uv1 = _paint_uv1(c, np.concatenate([s, s]), np.array([lat0, lat0, lat1, lat1]), "P-14")
+    buf.add("markings", "marking_white", V, np.array([[0, 0], [0, 1], [1, 0], [1, 1]], float), T, src=f"P-14@{c.id}",
+            UV1=uv1)
 
 
 def _segmented(buf, c, sa, sb, lat, w, dash, gap, cont, kind):

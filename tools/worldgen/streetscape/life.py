@@ -21,9 +21,10 @@ Rules (deterministic: every decision is a hash of a stable id, no RNG state; WOR
                   (tractor colours plain, no lettering); nothing within 35 m in front of a dock row.
   containers      25 % of concrete / gravel / asphalt yards >= 1200 m2: one row of 2-6 ISO containers (20/40 ft)
                   along an edge, 30 % of them with a second container stacked on top.
-  tyre scrub      decals (`decal_tyre`) in front of every dock door: 2-3 passes of the two trailer wheel tracks
-                  (+-1.0 m), straight for the last 2-9 m before the bumpers, then bending to the side the trucks
-                  swing in from (one side per dock row, R 22-45 m) up to 16-24 m out; lifted like oil stains.
+  tyre scrub      decals (`decal_tyre`) in front of ~75 % of the dock doors: 1-3 passes of the two trailer wheel
+                  tracks (+-1.0 m) in one of 5 shapes per door (arc to the side the trucks swing in from, R 22-45 m;
+                  wider arc from the other end; S-jog; skewed straight; tight hook), never the same shape as the door
+                  beside it, opacity 0.6-1.4x per pass (review r6 W-N11); lifted like oil stains.
 Everything keeps clear of road surfaces (incl. flush yard roads), buildings and a 5 m corridor along the start
 route, and must stand on a paved area. Liveries are plain colours; no lettering or logos.
 """
@@ -157,29 +158,73 @@ def dock_trailers(pl, docks, sp, report):
     report["dock_trailers"] = n
 
 
+# Dock tyre-scrub shapes (review r6 W-N11: one arc repeated at every door read as a stamp). Lateral offset of the
+# track centre (m, + = towards `side`) as a function of the distance from the bumpers. WORKING_VALUE geometry of
+# how articulated trucks back onto a dock: most swing in from the side they approach (arc), some straighten with
+# an S-jog, some come in slightly skewed, a few hook in tight; ~25 % of the doors carry no visible scrub.
+TYRE_SHAPES = ("none", "arc", "arc_far", "jog", "skew", "hook")
+TYRE_WEIGHTS = (0.25, 0.30, 0.08, 0.15, 0.14, 0.08)
+TYRE_STRENGTH = (0.6, 1.4)          # per-pass opacity factor (+-40 % around 1.0), TEXCOORD_1.y
+
+
+def _tyre_shape(prev, *key):
+    """Weighted pick of a scrub shape that differs from the neighbouring door's (adjacent docks never look alike)."""
+    ids = [i for i in range(len(TYRE_SHAPES)) if i != prev]
+    w = np.array([TYRE_WEIGHTS[i] for i in ids])
+    u = hf(*key, "shape") * w.sum()
+    return ids[int(np.searchsorted(np.cumsum(w), u, side="right").clip(0, len(ids) - 1))]
+
+
+def _tyre_offset(shape, ss, key):
+    if shape == 1 or shape == 2:          # arc: straight for the last 4-10 m (reversing square onto the door), then
+        s_str = 4.0 + hf(*key, "str") * 6.0  # a circular swing (R 22-45 m / 14-24 m)
+        R = (22.0 + hf(*key, "r") * 23.0) if shape == 1 else (14.0 + hf(*key, "r") * 10.0)
+        return np.where(ss > s_str, (ss - s_str) ** 2 / (2 * R), 0.0)
+    if shape == 3:                        # S-jog: the driver straightened up, track shifted 1.2-2.8 m
+        s_str = 1.5 + hf(*key, "str") * 3.0
+        D = 1.2 + hf(*key, "D") * 1.6
+        t = np.clip((ss - s_str) / max(ss[-1] - s_str, 1e-3), 0.0, 1.0)
+        return D * t * t * (3.0 - 2.0 * t)
+    if shape == 4:                        # skewed straight approach, 3-8 deg
+        return np.tan(np.radians(3.0 + hf(*key, "a") * 5.0)) * ss
+    # hook: short straight, tight radius 10-15 m
+    s_str = 1.0 + hf(*key, "str") * 2.0
+    R = 10.0 + hf(*key, "r") * 5.0
+    return np.where(ss > s_str, (ss - s_str) ** 2 / (2 * R), 0.0)
+
+
 def tyre_scrub(buf, docks, zsurf, report):
     """Tyre-scrub decals on the dock aprons (see module docstring). UV.x = metres along the track, UV.y = 0..1
-    across, UV1 = (track length, pass seed): the material fades the ends and breaks the band with noise."""
+    across, UV1 = (track length, pass strength 0.6..1.4): the material fades the ends, breaks the band with noise and
+    scales its opacity by the strength. One shape per door (TYRE_SHAPES), never the same as the door beside it."""
     n = 0
+    shapes = {}
     for dk in docks:
         p, q = (np.asarray(x, float) for x in dk["edge"])
         d = (q - p) / np.linalg.norm(q - p)
         nout = np.array([d[1], -d[0]])
         side = 1.0 if hf(dk["id"], "swing") < 0.5 else -1.0     # trucks swing in from one end of the row
-        for dock in dk["docks"]:
+        prev = -1
+        for dock in sorted(dk["docks"], key=lambda x: x["u"]):
+            shape = _tyre_shape(prev, dk["id"], dock["num"])
+            prev = shape
+            shapes[TYRE_SHAPES[shape]] = shapes.get(TYRE_SHAPES[shape], 0) + 1
+            if shape == 0:
+                continue
             base = p + d * dock["u"] + nout * 0.45
-            for k in range(2 + int(hf(dk["id"], dock["num"], "passes") > 0.5)):
+            dside = -side if shape == 2 else side * (1.0 if hf(dk["id"], dock["num"], "flip") < 0.8 else -1.0)
+            npass = 1 + int(hf(dk["id"], dock["num"], "passes") * 3.0)         # 1-3 passes
+            for k in range(npass):
                 key = (dk["id"], dock["num"], k)
                 s0 = 1.2 + hf(*key, "s0") * 1.5
-                s_str = 2.0 + hf(*key, "str") * 7.0                    # straight part
-                L = 16.0 + hf(*key, "len") * 8.0
-                R = 22.0 + hf(*key, "r") * 23.0
+                L = (16.0 + hf(*key, "len") * 8.0) if shape != 5 else (11.0 + hf(*key, "len") * 5.0)
                 jit = (hf(*key, "j") - 0.5) * 0.35
-                ss = np.arange(s0, L + 0.01, 1.5)
-                bend = np.where(ss > s_str, (ss - s_str) ** 2 / (2 * R), 0.0)   # lateral offset of the arc
+                ss = np.arange(s0, L + 0.01, 1.0 if shape == 5 else 1.5)
+                bend = _tyre_offset(shape, ss, key)
+                strength = TYRE_STRENGTH[0] + hf(*key, "strength") * (TYRE_STRENGTH[1] - TYRE_STRENGTH[0])
                 for wx in (-1.0, 1.0):
                     w = 0.30 + hf(*key, wx, "w") * 0.16
-                    lat = wx * 1.0 + jit + side * bend
+                    lat = wx * 1.0 + jit + dside * bend
                     C = base[None, :] + nout[None, :] * ss[:, None] + d[None, :] * lat[:, None]
                     t = np.gradient(C, axis=0)
                     t /= np.maximum(np.linalg.norm(t, axis=1, keepdims=True), 1e-9)
@@ -192,11 +237,12 @@ def tyre_scrub(buf, docks, zsurf, report):
                     if np.cross(np.append(t[0], 0), np.append(nn[0], 0))[2] < 0:
                         T = T[:, [0, 2, 1]]
                     uv = np.column_stack([np.tile(ss - s0, 2), np.repeat([0.0, 1.0], m)])
-                    uv1 = np.column_stack([np.full(2 * m, L - s0), np.full(2 * m, hf(*key, wx, "seed"))])
+                    uv1 = np.column_stack([np.full(2 * m, L - s0), np.full(2 * m, strength)])
                     buf.add("markings", "decal_tyre", np.column_stack([V2, Z]), uv, T,
-                            src=f"tyre:{dk['id']}:{dock['num']}:{k}", UV1=uv1)
+                            src=f"tyre:{dk['id']}:{dock['num']}:{k}:{TYRE_SHAPES[shape]}", UV1=uv1)
                     n += 1
     report["tyre_scrub_tracks"] = n
+    report["tyre_scrub_shapes"] = shapes
 
 
 STALL_LINE_W = 0.12          # P-1e-like solid line 0.12 m (stand boundaries on private yards, WORKING_VALUE)

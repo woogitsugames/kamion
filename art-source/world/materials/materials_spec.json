@@ -949,6 +949,106 @@
       "hf_ratio_albedo": 0.1398,
       "ao_mean": 0.992
     },
+    "concrete_fence_panel": {
+      "tile_m": [
+        4.0,
+        2.0
+      ],
+      "slots": [
+        "concrete_fence"
+      ],
+      "note": "Prefab concrete panel fence: 2 m bays, 0.5 m panels, pores, joints, splash grime, run-off.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            512
+          ],
+          "texel_mm": 3.91,
+          "dir": "concrete_fence_panel/High",
+          "png_bytes": 1863634,
+          "files": [
+            "T_concrete_fence_panel_BaseColor.png",
+            "T_concrete_fence_panel_MaskMap.png",
+            "T_concrete_fence_panel_Normal.png",
+            "T_concrete_fence_panel_Var.png"
+          ],
+          "smoothness_mean": 0.132,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1244310
+        },
+        "Medium": {
+          "res": [
+            512,
+            256
+          ],
+          "texel_mm": 7.81,
+          "dir": "concrete_fence_panel/Medium",
+          "png_bytes": 346282,
+          "files": [
+            "T_concrete_fence_panel_BaseColor.png",
+            "T_concrete_fence_panel_MaskMap.png",
+            "T_concrete_fence_panel_Normal.png",
+            "T_concrete_fence_panel_Var.png"
+          ],
+          "smoothness_mean": 0.131,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 242920
+        },
+        "Low": {
+          "res": [
+            256,
+            128
+          ],
+          "texel_mm": 15.62,
+          "dir": "concrete_fence_panel/Low",
+          "png_bytes": 75458,
+          "files": [
+            "T_concrete_fence_panel_BaseColor.png",
+            "T_concrete_fence_panel_MaskMap.png",
+            "T_concrete_fence_panel_Normal.png",
+            "T_concrete_fence_panel_Var.png"
+          ],
+          "smoothness_mean": 0.131,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 43690
+        }
+      },
+      "height_range_m": [
+        -0.01026,
+        0.00044
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3612,
+        "p95": 0.5727,
+        "mean_rgb_linear": [
+          0.5051,
+          0.4996,
+          0.4885
+        ]
+      },
+      "hf_ratio_albedo": 0.0061,
+      "ao_mean": 0.989
+    },
     "concrete_precast": {
       "tile_m": [
         6.0,
@@ -1558,6 +1658,106 @@
       "hf_ratio_albedo": 0.0991,
       "ao_mean": 0.962
     },
+    "hedge_foliage": {
+      "tile_m": [
+        1.5,
+        1.5
+      ],
+      "slots": [
+        "hedge_berberis"
+      ],
+      "note": "Clipped red berberis hedge face: leaf clusters, dark voids, thin holes (u along, v over the section).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 2.93,
+          "dir": "hedge_foliage/High",
+          "png_bytes": 1994694,
+          "files": [
+            "T_hedge_foliage_BaseColor.png",
+            "T_hedge_foliage_MaskMap.png",
+            "T_hedge_foliage_Normal.png",
+            "T_hedge_foliage_Var.png"
+          ],
+          "smoothness_mean": 0.192,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 622155
+        },
+        "Medium": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 5.86,
+          "dir": "hedge_foliage/Medium",
+          "png_bytes": 575556,
+          "files": [
+            "T_hedge_foliage_BaseColor.png",
+            "T_hedge_foliage_MaskMap.png",
+            "T_hedge_foliage_Normal.png",
+            "T_hedge_foliage_Var.png"
+          ],
+          "smoothness_mean": 0.01,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 121460
+        },
+        "Low": {
+          "res": [
+            128,
+            128
+          ],
+          "texel_mm": 11.72,
+          "dir": "hedge_foliage/Low",
+          "png_bytes": 151460,
+          "files": [
+            "T_hedge_foliage_BaseColor.png",
+            "T_hedge_foliage_MaskMap.png",
+            "T_hedge_foliage_Normal.png",
+            "T_hedge_foliage_Var.png"
+          ],
+          "smoothness_mean": 0.0,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 21845
+        }
+      },
+      "height_range_m": [
+        -0.09821,
+        0.08426
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.2447,
+        "p95": 0.7416,
+        "mean_rgb_linear": [
+          0.4983,
+          0.5007,
+          0.4986
+        ]
+      },
+      "hf_ratio_albedo": 0.0175,
+      "ao_mean": 0.542
+    },
     "kerb_concrete_1m": {
       "tile_m": [
         2.0,
@@ -1841,7 +2041,7 @@
           ],
           "texel_mm": 3.91,
           "dir": "noise_cassette/High",
-          "png_bytes": 893805,
+          "png_bytes": 1040521,
           "files": [
             "T_noise_cassette_BaseColor.png",
             "T_noise_cassette_MaskMap.png",
@@ -1864,7 +2064,7 @@
           ],
           "texel_mm": 7.81,
           "dir": "noise_cassette/Medium",
-          "png_bytes": 282155,
+          "png_bytes": 353258,
           "files": [
             "T_noise_cassette_BaseColor.png",
             "T_noise_cassette_MaskMap.png",
@@ -1887,14 +2087,14 @@
           ],
           "texel_mm": 15.62,
           "dir": "noise_cassette/Low",
-          "png_bytes": 82937,
+          "png_bytes": 94826,
           "files": [
             "T_noise_cassette_BaseColor.png",
             "T_noise_cassette_MaskMap.png",
             "T_noise_cassette_Normal.png",
             "T_noise_cassette_Var.png"
           ],
-          "smoothness_mean": 0.43,
+          "smoothness_mean": 0.428,
           "astc": {
             "BaseColor": "8x8",
             "Normal": "8x8",
@@ -1905,21 +2105,21 @@
         }
       },
       "height_range_m": [
-        -0.01402,
-        0.00118
+        -0.0138,
+        0.0012
       ],
       "albedo": {
         "mean_lum_linear": 0.5,
-        "p05": 0.4075,
-        "p95": 0.5558,
+        "p05": 0.4067,
+        "p95": 0.5536,
         "mean_rgb_linear": [
           0.502,
           0.4998,
-          0.4958
+          0.4957
         ]
       },
-      "hf_ratio_albedo": 0.0119,
-      "ao_mean": 0.988
+      "hf_ratio_albedo": 0.012,
+      "ao_mean": 0.986
     },
     "oil_stain_alpha": {
       "tile_m": [
@@ -1942,7 +2142,7 @@
           ],
           "texel_mm": 0.98,
           "dir": "oil_stain_alpha/High",
-          "png_bytes": 6040451,
+          "png_bytes": 5564607,
           "files": [
             "T_oil_stain_alpha_BaseColor.png",
             "T_oil_stain_alpha_MaskMap.png",
@@ -1965,7 +2165,7 @@
           ],
           "texel_mm": 1.95,
           "dir": "oil_stain_alpha/Medium",
-          "png_bytes": 2040100,
+          "png_bytes": 1936352,
           "files": [
             "T_oil_stain_alpha_BaseColor.png",
             "T_oil_stain_alpha_MaskMap.png",
@@ -1988,7 +2188,7 @@
           ],
           "texel_mm": 3.91,
           "dir": "oil_stain_alpha/Low",
-          "png_bytes": 662920,
+          "png_bytes": 645375,
           "files": [
             "T_oil_stain_alpha_BaseColor.png",
             "T_oil_stain_alpha_MaskMap.png",
@@ -2010,13 +2210,13 @@
         0.00013
       ],
       "albedo": {
-        "mean_lum_linear": 0.0173,
-        "p05": 0.0102,
+        "mean_lum_linear": 0.0179,
+        "p05": 0.0135,
         "p95": 0.0246,
         "mean_rgb_linear": [
-          0.02,
-          0.017,
-          0.013
+          0.0202,
+          0.0175,
+          0.0146
         ]
       },
       "hf_ratio_albedo": 0.0002,
@@ -2495,6 +2695,106 @@
       },
       "hf_ratio_albedo": 0.0353,
       "ao_mean": 0.991
+    },
+    "soil_bed": {
+      "tile_m": [
+        2.0,
+        2.0
+      ],
+      "slots": [
+        "bed_soil"
+      ],
+      "note": "Island planting bed: loam with bark mulch chips, a few stones, leaf litter (u, v plan metres).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 3.91,
+          "dir": "soil_bed/High",
+          "png_bytes": 1828355,
+          "files": [
+            "T_soil_bed_BaseColor.png",
+            "T_soil_bed_MaskMap.png",
+            "T_soil_bed_Normal.png",
+            "T_soil_bed_Var.png"
+          ],
+          "smoothness_mean": 0.124,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 622155
+        },
+        "Medium": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 7.81,
+          "dir": "soil_bed/Medium",
+          "png_bytes": 554204,
+          "files": [
+            "T_soil_bed_BaseColor.png",
+            "T_soil_bed_MaskMap.png",
+            "T_soil_bed_Normal.png",
+            "T_soil_bed_Var.png"
+          ],
+          "smoothness_mean": 0.083,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 121460
+        },
+        "Low": {
+          "res": [
+            128,
+            128
+          ],
+          "texel_mm": 15.62,
+          "dir": "soil_bed/Low",
+          "png_bytes": 151416,
+          "files": [
+            "T_soil_bed_BaseColor.png",
+            "T_soil_bed_MaskMap.png",
+            "T_soil_bed_Normal.png",
+            "T_soil_bed_Var.png"
+          ],
+          "smoothness_mean": 0.04,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 21845
+        }
+      },
+      "height_range_m": [
+        -0.04084,
+        0.04312
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3404,
+        "p95": 0.6782,
+        "mean_rgb_linear": [
+          0.5053,
+          0.4995,
+          0.4895
+        ]
+      },
+      "hf_ratio_albedo": 0.0122,
+      "ao_mean": 0.796
     },
     "trapezoid_sheet": {
       "tile_m": [
