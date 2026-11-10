@@ -77,7 +77,8 @@ def report(rows, title):
     for key in ("lt16", "lt24", "veg_p10", "veg_p50"):
         v, n = med(key)
         if v is not None:
-            print(f"  median {key} = {v:.1f} (mean {np.mean([r[key] for r in rows if key in r]):.1f}, n={n})")
+            q = [r[key] for r in rows if key in r]
+            print(f"  {key}: p25/p50/p75 = {np.percentile(q, 25):.1f}/{v:.1f}/{np.percentile(q, 75):.1f} (mean {np.mean(q):.1f}, n={n})")
 
 
 if __name__ == "__main__":

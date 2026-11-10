@@ -123,7 +123,10 @@ namespace Game.Rendering
             p.sunElevationDeg = 41f; p.sunAzimuthDeg = 200f; p.turbidity = 4f; p.overcast = 1f; p.visibilityKm = 8f;
             p.overcastDirectional = 0.6f; p.overcastSunLeak = 0.05f;
             p.cloudContrast = 0.21f;
-            p.hazeGroundFactor = 1.6f; p.hazeScaleHeightM = 60f;
+            // r11: denser and shallower ground layer (was 1.6 / 60 m): the tree line at 100-500 m lifts toward the sky
+            // (15 / 39 / 55 % horizon colour at 100 / 300 / 500 m at eye height) while tall distant objects, above the
+            // layer, change little. Ground-level visibility ~2.4 km, a damp overcast day. WORKING_VALUE.
+            p.hazeGroundFactor = 2.4f; p.hazeScaleHeightM = 40f;
             // ADR 0080 r11: the dome is slightly cool against the fixed daylight white balance (reference photos: sky
             // B - R +7..+16). WORKING_VALUE, tuned on the control cameras against those photos.
             p.overcastCctK = 6800f;
