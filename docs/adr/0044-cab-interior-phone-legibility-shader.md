@@ -151,3 +151,35 @@ roughness floor 0.30, `v2` = final values set by hand in the .mat, `iso-a015` = 
   ~6-10 ALU) or a rotation-invariant rim AO per section angle (generator); both change every glossy interior surface
   (rim p50, C-N6, black %) and need their own review. Seat bolster wear: same leather slot and model, but no control
   camera sees the driver's bolster (UNVERIFIED in frame). Phone (A16): UNVERIFIED. Cost: +3 ALU / cab pixel, no texture.
+
+## Addendum r8b (2026-11-10, truck-artist): steering wheel remodelled (generator + export only, shader untouched); needs visual-critic review
+Context: in `cab-dash` / `cab-driver` the wheel read as a plain smooth ring on plank spokes with a pillow hub
+(`artifacts/truck-fixes/wheel-wear/rim_before_after_vs_s730.jpg`). Reference = style only (`Scania_S730_dash.jpg`,
+CC BY-SA 3.0, docs/REFERENCES.md); no brand shape copied: own trapezoid pad, twin lower spokes with satin inlays (owner
+sheets B2.1), TRAKT wordmark.
+- **Model (`build_interior.build_wheel`).** Pivot / axis unchanged (`WHEEL_C`, `wheel_frame`, STEERING_WHEEL group
+  prefixes). Rim centre line 470 mm, 499 mm over the leather (WORKING_VALUE, class 450-500 mm), section 35 x 29 mm with
+  fuller grip zones (+10 % / +8 %), finger ridges at the back, thumb rests above the side spokes (+9 mm inner bulge),
+  a 1 mm seam groove on the inner side turned 35 deg to the driver, cross seams at 10:45 / 1:15 ending the perforated
+  grip leather (`leather_wheel_perf`, same hide, perforation flag). Spokes: moulded D-sections rising 12 deg from a
+  26 mm dish and flaring into the rim; switch pods (gloss bezel, concave +/- rocker on the thumb side, four keys,
+  generic pictograms; `cruise` drawn into the free cell 23 of the icon atlas). Hub: bowl shell, bezel, 1.5 mm parting
+  gap, low crowned cover, wordmark embossed tone-on-tone (`emboss` 0.12, 0.6 mm proud) instead of satin letters.
+  Column: two-shell shroud with a wider switch housing, parting line, rubber gaiters, flattened stalks.
+- **Thread = geometry on LOD0.** The alpha-tested stitch decal is 1-2 px in `cab-dash` and vanished in the mips, so each
+  stitch is a ridge (2 quads) in an opaque `thread_wheel` material (Fabric slot, trim colour x 4.5): 1.6 mm thread,
+  6.5 mm pitch (real ~1 mm / 5 mm: WORKING_VALUE, heavier for phone resolution), ~1.9 k tris. LOD1 keeps one decal
+  ribbon, LOD2 none.
+- **AO probe (`a6_export`, object property `ao_probe`).** Parts stacked on a panel that buries the receiver under them
+  took the occlusion of the buried point (keys and pictograms rendered black on the first export); they now take the
+  value at a named open point of the receiver. The gloss bezel keeps its recess value (black frame round the keys).
+- **Budgets.** Interior LOD0 / 1 / 2: 103 285 / 44 190 / 21 479 (was 97 187 / 43 297 / 21 958; limits 120 000 / 45 000 /
+  22 000). STEERING_WHEEL 9 432 -> 14 354 / 4 858 -> 5 124 / 3 016 -> 2 174 (LOD2 pods = one key block). Draw calls,
+  textures and material slots unchanged (decal atlas re-exported for the new pictogram). `check_export.py` PASS,
+  `check_fit.py` PASS on LOD0 / 1 / 2 (0 vertices outside).
+- **Limits (honest).** At 2340 x 1080 the rim is ~0.8 mm / px: the stitch rows are 1-2 px and read as a fine dashed
+  line, the perforation does not resolve (it does in close views), the wordmark is deliberately faint. Phone (A16 /
+  S24+): UNVERIFIED. Stalk pictograms: none (no atlas cell free).
+Evidence: `artifacts/owner/interior/wheel-r8/` (Blender control cameras `kolo`, `piasta`, `kciuk`, `szew`, `zegary`,
+`kierownica`; Unity WorldC `cab-dash` / `cab-driver` Low / High x overcast / lowsun before / after, 1:1 crops, montage
+against the S730 reference).

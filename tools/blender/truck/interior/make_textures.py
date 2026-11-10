@@ -505,7 +505,7 @@ def din_displays():
 # --- switch icon atlas: 8x4 cells, white symbols on black (ISO 2575-style, drawn here)
 ICONS = ["low_beam", "fog_rear", "hazard", "diff_lock", "work_light", "beacon", "esp_off", "axle_lift",
          "ac", "fan", "defrost", "recirc", "seat_heat", "mirror_heat", "cab_light", "sun_blind",
-         "lane_assist", "idle_up", "ptos", "horn_air", "tyre", "eco", "hill", "blank",
+         "lane_assist", "idle_up", "ptos", "horn_air", "tyre", "eco", "hill", "cruise",
          "plus", "minus", "res", "ok", "arrow_l", "arrow_r", "phone", "vol"]
 
 
@@ -633,6 +633,12 @@ def icon_atlas():
                        (cx - 34, cy + 10)], fill=255)
             d.arc([cx - 10, cy - 22, cx + 22, cy + 22], 300, 60, fill=255, width=6)
             d.arc([cx - 10, cy - 36, cx + 36, cy + 36], 300, 60, fill=255, width=6)
+        elif name == "cruise":   # r8: cruise control (ISO 2575-style: speedometer dial with a set-speed arrow)
+            d.arc([cx - 34, cy - 26, cx + 34, cy + 42], 150, 390, fill=255, width=w)
+            d.line([(cx, cy + 8), (cx + 16, cy - 10)], fill=255, width=7)
+            d.ellipse([cx - 6, cy + 2, cx + 6, cy + 14], fill=255)
+            d.polygon([(cx + 22, cy - 22), (cx + 42, cy - 40), (cx + 18, cy - 42)], fill=255)
+            d.line([(cx + 30, cy - 32), (cx + 44, cy - 46)], fill=255, width=6)
         elif name == "hill":
             d.polygon([(cx - 40, cy + 30), (cx + 40, cy + 30), (cx + 40, cy - 20)], outline=255, width=w)
     img = img.filter(ImageFilter.GaussianBlur(0.8))
