@@ -45,6 +45,7 @@ namespace Game.Vehicle.Physics
 
         double _timer, _sinceUpshift = 100, _sinceShift = 100;
         double _rpmRate, _prevRpm;
+        bool _rpmRateValid; // false until the first Update after construction / ForceState (no 0 -> rpm spike)
         bool _prevUp, _prevDown;
         int _manualGear;
         GearSelector _lastSelector = GearSelector.Neutral;
@@ -78,6 +79,7 @@ namespace Game.Vehicle.Physics
             TorqueScale = 1;
             EngineTargetOmega = 0;
             _sinceUpshift = _sinceShift = Def.shiftCooldown;
+            _rpmRateValid = false;
         }
 
         /// <summary>Chooses the highest launch gear able to deliver the resistance force with margin.</summary>
@@ -110,6 +112,7 @@ namespace Game.Vehicle.Physics
             double rpm = engOmega * MathUtil.RadSToRpm;
             double idle = engine.IdleOmega;
             _sinceUpshift += dt; _sinceShift += dt;
+            if (!_rpmRateValid) { _prevRpm = rpm; _rpmRate = 0; _rpmRateValid = true; }
             double rr = (rpm - _prevRpm) / dt;
             _rpmRate += (rr - _rpmRate) * Math.Min(1.0, dt / 0.15);
             _prevRpm = rpm;
@@ -288,7 +291,10 @@ namespace Game.Vehicle.Physics
                         // Mass/grade awareness: the truck must still accelerate in the new gear.
                         double fAfter = Tractive(engine, Gear + k, after * MathUtil.RpmToRadS, throttle, wheelRadius, fdEff);
                         double accel = (fAfter - resistance) / Math.Max(massKg, 1);
-                        if (accel < Def.minAccelAfterUpshift * throttle && !(k == 1 && overRev)) continue;
+                        // At the governor the next gear is taken even with little reserve, but only if it can at
+                        // least hold the speed: on a steep climb the engine stays on the governor instead of
+                        // up-shifting into a gear that drops back down (4-5-4 hunting at 12 %, ADR 0024).
+                        if (accel < Def.minAccelAfterUpshift * throttle && !(k == 1 && overRev && accel >= 0)) continue;
                     }
                     best = Gear + k;
                 }
@@ -308,8 +314,22 @@ namespace Game.Vehicle.Physics
                 downRpm = MathUtil.Lerp(Def.downshiftRpmLight, Def.downshiftRpmFull, throttle);
                 if (gradeSin > Def.gradeDownshiftThreshold && throttle > 0.5) downRpm += Def.gradeDownshiftBonusRpm;
             }
-            bool lugging = rpm < downRpm - 150;
-            if (rpm < downRpm && (_sinceUpshift > Def.shiftCooldown || lugging))
+            // Down-shift hold while pulling (ADR 0024). The up-shift only picks a gear in which the truck still
+            // accelerates by at least minAccelAfterUpshift x throttle; the down-shift is the exact mirror: while the
+            // same force balance (full-load torque x throttle in the current gear minus grade + rolling + aero) still
+            // gives that acceleration, the engine is pulling, not lugging, and a shift would only cost a torque
+            // interruption on the grade and bring the up-shift straight back (3-2-3 after an ASR-limited hill start,
+            // 5-4-5 on 12 %). Model-based on purpose: the measured rpm trend is distorted for ~0.5 s after every clutch
+            // close. If the model is optimistic (ASR, wrong mass) the engine keeps falling and the lugging guard below
+            // fires; it judges the engine speed one shift duration ahead (mirror of the up-shift rpm prediction), so a
+            // fast-rising engine just after the launch clutch closes is not "lugging", a falling one downshifts at once.
+            // Not in engine-brake mode: there a rising rpm means the truck runs away downhill and wants the lower gear.
+            bool pulling = !ebMode && throttle > 0.3 &&
+                (Tractive(engine, Gear, rpm * MathUtil.RpmToRadS, throttle, wheelRadius, fdEff) - resistance) / Math.Max(massKg, 1)
+                >= Def.minAccelAfterUpshift * throttle;
+            double rpmDown = ebMode ? rpm : rpm + Math.Max(0, _rpmRate) * totalShift;
+            bool lugging = rpmDown < downRpm - 150;
+            if (rpm < downRpm && (lugging || (!pulling && _sinceUpshift > Def.shiftCooldown)))
             {
                 double ceiling = ebMode ? Def.engineBrakeUpshiftRpm - 100 : MathUtil.Lerp(Def.upshiftRpmLight, Def.upshiftRpmFull, throttle) - 100;
                 int target = Gear - 1;
