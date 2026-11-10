@@ -121,3 +121,60 @@ Open: no phone measurement (alpha-clip overdraw on the A16 `UNVERIFIED`; furnitu
 Low-only shell / shoot cut-off needs an importer layer split - leader); shell gaps read as dark speckles at 10-20 m on
 Low; the beds are wider than the photo's (traced from the orthophoto, heights / species still to confirm at the
 owner's photo session); independent `visual-critic` review not done in this task (subagents not allowed here).
+
+## Addendum r7 (2026-11-10): paint / asphalt contrast (review r6 W-H6, critic asks >= 1.8)
+
+Measured first. The Low tier has no tone curve (plain sRGB clip), so the display ratio is the albedo ratio ^ (1/2.2)
+plus a small additive specular term on the asphalt; the paint cap (Low clear <= 217, overcast <= 190 sRGB) and a 1.8
+ratio together allow at most ~105 sRGB of asphalt in Low overcast. Before: asphalt ~121 (Low clear) - 128 (High
+overcast), so the ratio could not reach 1.8 by changing the paint alone.
+
+Decision (WORKING_VALUE, all in the generators, no shader change):
+- **Aged AC albedo 0.13 -> 0.08**: `asphalt_worn` target (`_src/build_all.py`, `sets_asphalt.worn`) and the manifest
+  colour of `road_asphalt` / `yard_asphalt` / `path_asphalt` (`build_world.py`, `streetscape/materials.py`) - they
+  must stay equal: the importer tints a calibrated set by colour / set mean, and the `_DECAL_PAINT` base under worn
+  marks samples the set untinted. Source: new asphalt concrete ~0.05, rising with ageing and soiling to ~0.15
+  ('Cool Pavements' review, arXiv:2409.12242, p. 7; broadband solar albedo, not visible-band). 0.08 sits in the
+  lower half of the aged range; 0.09 was tried and gave median 1.71-1.78 (`after2/`).
+- **Paint film 0.60 / traffic film 0.43 -> 0.55 / 0.38**: mean effective albedo 0.55 x 0.62 = 0.34 (per-mark range
+  ~0.28-0.41 by age, soiling and wheel paths), i.e. EN 1436 white in-service luminance factor class B2 (beta >= 0.30)
+  to B3 (>= 0.40) (class limits as tabulated in a thermoplastic maker's EN 1436 data sheet; the standard text itself
+  not read here, UNVERIFIED). Film 0.55 keeps the critic's 0.55-0.65 range; wear, chips, age and dirt variation unchanged.
+- **Yard stall paint** (`marking_yard`, flat, no film): 0.46 -> 0.36 (was 220 sRGB in Low clear by estimate).
+- Test `tests/gis/test_streetscape_r6.py::test_asphalt_albedo_matches_set_and_contrast` (colour = set mean +-3 %,
+  target 0.07-0.12, nominal paint/asphalt >= 4) and the effective film 0.30-0.40 check.
+
+Evidence (editor, Unity 6000.3.28f1, 2340x1080, WorldC; `artifacts/world-fixes/paint-contrast/{before,after1,after2,final}/<tier>_<light>/`
++ `metrics.json`, before/after sheets in `sheets/`). Estimator `scripts/paint-contrast.py`: paint = the
+`-Mask ':marking_white'` pixels eroded 2 px in the lower 60 % of the frame, asphalt = a 4-14 px ring around them
+(sat < 0.25), display luma Rec.709 on sRGB values; 5 cameras (g3a_eye_s0262, g3b_eye_s1382 / s1432 / s1582 where
+present, g3b_rondo_putry_approach, photo_biezenstwa_ground). Ratio = median over frames; paint = max over frames of the
+per-frame paint median; p99 = max channel, worst frame.
+
+| tier / light | ratio before | ratio after | paint median before -> after | paint p99 max ch. before -> after | asphalt before -> after |
+|---|---|---|---|---|---|
+| Low clear | 1.46 | **1.75** | 195 -> **194** (<= 217) | 218 -> 218 | 121 -> 100 |
+| Low overcast | 1.50 | **1.77** | 191 -> **191** (<= 190: at the cap) | 204 -> 202 | 122 -> 103 |
+| Low lowsun | 1.47 | 1.80 | 100 -> 101 | 119 -> 118 | 65 -> 54 |
+| Low dusk | 1.57 | 1.86 | 95 -> 95 | 119 -> 119 | 57 -> 49 |
+| High clear | 1.51 | 1.78 | 221 -> 220 | 247 -> 247 | 125 -> 109 |
+| High overcast | 1.54 | 1.77 | 213 -> 214 | 238 -> 235 | 128 -> 112 |
+| High lowsun | 1.45 | 1.71 | 107 -> 108 | 128 -> 127 | 71 -> 61 |
+| High dusk | 1.51 | 1.75 | 102 -> 102 | 125 -> 126 | 64 -> 56 |
+
+Best single frames reach 1.86-1.99 (g3b_eye_s1582); `photo_biezenstwa_ground` stays ~1.05-1.1 (its P-10 zebra is
+mostly worn through in the wheel paths and far away, so the masked pixels are largely asphalt).
+
+Consequences / open:
+- The median is 1.71-1.86, not >= 1.8 everywhere. At asphalt 0.08 the Low overcast paint cap (190) is the limit:
+  more ratio needs darker asphalt than aged AC literature supports or a narrower per-mark dirt spread (the age
+  variation lowers some frames' median). Left for the owner's photo session (measure real paint / asphalt in
+  Bialystok at overcast) rather than tuned to the number.
+- High tier: the tone curve (ADR 0016, white clip 0.7) lifts paint ~25 levels above Low; High clear p99 247 on
+  `g3a_eye_s0262` / `photo_biezenstwa_ground` is close to clip (unchanged by this addendum, curve not touched).
+- Darker asphalt makes the whole road frame darker (Low clear asphalt 0.47 -> 0.39 display) against the r5 photo
+  match (0.48); phone A16 / S24+ confirmation UNVERIFIED (no phone frames in this change).
+- Cost: none (same textures, same draws; asphalt_worn PNG bytes ~ -1.5 %).
+- `world_manifest.json`: only the 5 material entries changed (a full `build_world.py` run gave the same material
+  values; its GLB hashes and an unrelated +-2 road triangles were not committed). The lead's next world regeneration
+  rewrites the hashes. `_renders/tiling_asphalt_worn.jpg` preview not re-rendered (Blender).

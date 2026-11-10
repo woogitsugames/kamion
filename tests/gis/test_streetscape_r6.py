@@ -150,6 +150,26 @@ def test_marking_paint_material():
     m = _manifest()["marking_white"]
     assert m["texture_set"] == "asphalt_worn" and isinstance(m.get("paint"), dict)
     assert 0.55 <= max(m["color"][:3]) <= 0.65                   # film albedo 0.55-0.65 (r6 W-H6)
+    # under the traffic film the mean effective albedo stays in EN 1436 white B2..B3 (0.30-0.40) and below the
+    # Low-tier clip budget (ADR 0049 addendum r7: clear <= 217, overcast <= 190 sRGB)
+    eff = max(m["color"][:3]) * (1.0 - m["paint"]["dirt"])
+    assert 0.30 <= eff <= 0.40
+
+
+def test_asphalt_albedo_matches_set_and_contrast():
+    """ADR 0049 addendum r7: aged AC 0.08 (paint/asphalt contrast >= ~1.8 display); the manifest colour equals the
+    asphalt_worn set mean (engine tint ~1) so the paint shader's untinted base under worn marks matches the road."""
+    spec = json.loads((REGION_DIR.parents[2] / "art-source" / "world" / "materials" / "materials_spec.json")
+                      .read_text(encoding="utf-8"))
+    target = spec["sets"]["asphalt_worn"]["albedo_target_mean_lum_linear"]
+    mats = _manifest()
+    for k in ("road_asphalt", "yard_asphalt", "path_asphalt"):
+        c = mats[k]["color"]
+        lum = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+        assert abs(lum / target - 1.0) < 0.03, (k, lum, target)
+    assert 0.07 <= target <= 0.12                                  # aged AC (arXiv:2409.12242: new 0.05 -> aged 0.15)
+    paint = mats["marking_white"]
+    assert max(paint["color"][:3]) * (1.0 - paint["paint"]["dirt"]) / target >= 4.0   # nominal linear ratio
 
 
 def test_noise_screen_is_glass_with_dust():
