@@ -1160,7 +1160,7 @@ def is_round_wheel_piece(o):
     return o.name.startswith("wheel_") and any(k in o.name for k in ROUND_KEYS)
 
 
-def reduce_round(o, target_seg, profile_tol=0.004):
+def reduce_round(o, target_seg, profile_tol=0.004, tyre_tol=0.012):
     """Dissolve radial columns of a lathe piece (axis = vehicle X through the wheel centre) so that `target_seg`
     columns remain. Returns the number of segments before/after."""
     mw = o.matrix_world
@@ -1187,41 +1187,98 @@ def reduce_round(o, target_seg, profile_tol=0.004):
     a0 = min(ang.values())
     col = {v: int(round((a - a0) / step)) % nseg for v, a in ang.items()}
     drop = {v for v, i in col.items() if i % k != 0}
-    # profile (meridian) reduction: Douglas-Peucker on the (radius, axial) polyline of column 0 with tolerance
-    # profile_tol; rings whose profile point is dropped are dissolved everywhere (vertices stay on the surface)
-    key = {v: (round(math.hypot((mw @ v.co).y - yc, (mw @ v.co).z - zc), 3), round((mw @ v.co).x, 3)) for v in ang}
-    c0 = {v for v, i in col.items() if i == 0}
-    adj = {v: [e.other_vert(v) for e in v.link_edges if e.other_vert(v) in c0] for v in c0}
-    ends = [v for v, a in adj.items() if len(a) == 1]
-    if c0 and len(ends) == 2 and all(len(a) <= 2 for a in adj.values()):
-        path, prev, cur = [ends[0]], None, ends[0]
+    # profile (meridian) reduction: Douglas-Peucker on the (radius, axial) polyline of the longest intact column
+    # (hidden-face removal leaves gaps in some columns, e.g. the inner dual tyre) with tolerance profile_tol; every
+    # vertex is matched to its nearest profile point and dissolved when that point is dropped (rings stay on the
+    # LOD0 surface). Vertices farther than 1 mm from the chosen column's profile are kept.
+    rx = {v: (math.hypot((mw @ v.co).y - yc, (mw @ v.co).z - zc), (mw @ v.co).x) for v in ang}
+    best_path = []
+    for ci in range(nseg):
+        cv = {v for v, i in col.items() if i == ci}
+        if len(cv) <= len(best_path):
+            continue
+        adj = {v: [e.other_vert(v) for e in v.link_edges if e.other_vert(v) in cv] for v in cv}
+        ends = [v for v, a_ in adj.items() if len(a_) == 1]
+        if any(len(a_) > 2 for a_ in adj.values()) or len(ends) not in (0, 2):
+            continue
+        # open profile: walk end to end; closed (no culled faces in this column): start at the outermost vertex and
+        # come back to it (DP keeps both copies of the start point)
+        start = ends[0] if ends else max(cv, key=lambda v: rx[v][0])
+        path, prev, cur = [start], None, start
         while True:
             nxt = [w for w in adj[cur] if w is not prev]
-            if not nxt:
+            if not nxt or nxt[0] is start:
                 break
             prev, cur = cur, nxt[0]
             path.append(cur)
-        if len(path) == len(c0):
-            pts = [key[v] for v in path]
-            keep = set()
+        if not ends and len(path) == len(cv):
+            path.append(start)
+            cv = cv | {None}
+        if len(path) == len(cv) and len(path) > len(best_path):
+            best_path = path
+    if "_tyre" in o.name:
+        # tyres: the generator's own meridian (chassis.tyre_profile, symmetric in x) - culled faces break the
+        # columns of the inner dual tyre. Matched on (r, |x - centre|); tread grooves are carried by the normal map.
+        # lathe centre in x as chassis.wheels() places it (culled faces make the bbox centre unreliable)
+        sgn = -1.0 if o.name[7] == "L" else 1.0
+        if o.name.startswith("wheel_F"):
+            xc = sgn * G.FRONT_TRACK / 2
+        else:
+            xc = sgn * (G.REAR_TRACK / 2 + (G.DUAL_SPACING / 2 if o.name[8] == "o" else -G.DUAL_SPACING / 2))
+        prof = C.tyre_profile()[0]
+        keep = set()
+        pts = [(r, x) for r, x in prof]
 
-            def dp(i0, i1):
-                keep.add(i0)
-                keep.add(i1)
-                (r0, x0), (r1, x1) = pts[i0], pts[i1]
-                L = math.hypot(r1 - r0, x1 - x0) or 1e-9
-                best, bi = 0.0, -1
-                for i in range(i0 + 1, i1):
-                    r, x = pts[i]
-                    d = abs((r1 - r0) * (x0 - x) - (r0 - r) * (x1 - x0)) / L
-                    if d > best:
-                        best, bi = d, i
-                if bi >= 0 and best > profile_tol:
-                    dp(i0, bi)
-                    dp(bi, i1)
-            dp(0, len(pts) - 1)
-            kept = {pts[i] for i in keep}
-            drop |= {v for v in ang if key[v] not in kept}
+        def dp_t(i0, i1):
+            keep.add(i0)
+            keep.add(i1)
+            (r0, x0), (r1, x1) = pts[i0], pts[i1]
+            L = math.hypot(r1 - r0, x1 - x0) or 1e-9
+            best, bi = 0.0, -1
+            for i in range(i0 + 1, i1):
+                r, x = pts[i]
+                d = abs((r1 - r0) * (x0 - x) - (r0 - r) * (x1 - x0)) / L
+                if d > best:
+                    best, bi = d, i
+            if bi >= 0 and best > tyre_tol:
+                dp_t(i0, bi)
+                dp_t(bi, i1)
+        dp_t(0, len(pts) - 1)
+        for v in ang:
+            r, x = rx[v]
+            ax = abs(x - xc)
+            j = min(range(len(pts)), key=lambda i: (pts[i][0] - r) ** 2 + (abs(pts[i][1]) - ax) ** 2)
+            twins = [i for i in range(len(pts)) if abs(pts[i][0] - pts[j][0]) < 1e-6 and abs(abs(pts[i][1]) - abs(pts[j][1])) < 1e-6]
+            if not any(i in keep for i in twins) and (pts[j][0] - r) ** 2 + (abs(pts[j][1]) - ax) ** 2 < 4e-6:
+                drop.add(v)
+        best_path = []
+    elif len(best_path) <= 2:
+        degs = sorted({len([e for e in v.link_edges if col.get(e.other_vert(v)) == 0]) for v, i in col.items() if i == 0})
+        print(f"  round {o.name}: no intact profile column (column 0 degrees {degs}), rings kept")
+    if len(best_path) > 2:
+        pts = [rx[v] for v in best_path]
+        keep = set()
+
+        def dp(i0, i1):
+            keep.add(i0)
+            keep.add(i1)
+            (r0, x0), (r1, x1) = pts[i0], pts[i1]
+            L = math.hypot(r1 - r0, x1 - x0) or 1e-9
+            best, bi = 0.0, -1
+            for i in range(i0 + 1, i1):
+                r, x = pts[i]
+                d = abs((r1 - r0) * (x0 - x) - (r0 - r) * (x1 - x0)) / L
+                if d > best:
+                    best, bi = d, i
+            if bi >= 0 and best > profile_tol:
+                dp(i0, bi)
+                dp(bi, i1)
+        dp(0, len(pts) - 1)
+        for v in ang:
+            r, x = rx[v]
+            j = min(range(len(pts)), key=lambda i: (pts[i][0] - r) ** 2 + (pts[i][1] - x) ** 2)
+            if j not in keep and (pts[j][0] - r) ** 2 + (pts[j][1] - x) ** 2 < 1e-6:
+                drop.add(v)
     if not drop:
         bm.free()
         return nseg, nseg
@@ -1496,7 +1553,7 @@ def export_lod(lod, master, mirrors, a, manifest, coll):
     ratio = 1.0
     if lod in TRI_TARGET:
         ratio = decimate_pieces(pieces, TRI_TARGET[lod], floor_tris={1: 40, 2: 16, 3: 8}[lod],
-                                lights_min={1: 0.5, 2: 0.3, 3: 0.15}[lod], round_seg=ROUND_SEGMENTS.get(lod, 0))
+                                lights_min={1: 0.5, 2: 0.15, 3: 0.1}[lod], round_seg=ROUND_SEGMENTS.get(lod, 0))
     by_part = {}
     for o in master:
         by_part.setdefault(o["part"], []).append(o)
