@@ -19,6 +19,7 @@ from . import forest_hlod as FH
 from . import furniture as FU
 from . import signs_route as SR
 from . import gate as GT
+from . import hero_building as HBD
 from . import landmarks as LM
 from . import life as LF
 from . import paved as PV
@@ -44,7 +45,9 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
 
     # buildings (+ docks facing yards described by the raw paved sources)
     fc = json.loads((pipeline.REGIONS / rid / "buildings.geojson").read_text(encoding="utf-8"))
-    blds = BM.load(fc, w.origin, overrides)
+    # hero buildings (override kind: hero_building, ADR 0070): authored asset instead of the rule facade
+    heroes = HBD.plan(rid, overrides, fc, w.origin, lambda e, n: float(np.asarray(zsmooth(e, n)).ravel()[0]), rep, log)
+    blds = BM.load(fc, w.origin, overrides, hero=HBD.targets(heroes))
     yard_src = [PV._poly_local(f["geometry"]["coordinates"], w.origin) for f in src["bdot10k"]["OT_PTPL_A"]
                 if f["props"].get("materialnawierzchni") != "grunt naturalny"]
     yard_src += [PV._poly_local(a["geometry"]["coordinates"], w.origin) for a in src["osm"]["areas"]
@@ -176,6 +179,9 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     blocked = ndimage.binary_dilation(mask | bmask, iterations=3)
     if plant_blocked:
         blocked |= PV.rasterize_polys(plant_blocked, hf)
+    hero_keepout = HBD.keepout(heroes)
+    if hero_keepout:
+        blocked |= PV.rasterize_polys(hero_keepout, hf)
     vrep = {}
     trees, forests = VG.place(src, origin, hf, zc, blocked, vrep)
     forest_mix = vrep.pop("_forest_mix")
@@ -187,5 +193,10 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     hlod = FH.build(trees, forest_mix, no_forest, zground, half, vrep)
     log("forest hlod", vrep["forest_hlod"])
     col = VG.ground_masks(src, origin, hf, dist, forests)
-    return {"zc": zc, "dist": dist, "mask": mask, "rmask": rmask, "col": col, "instances": pl.items + trees,
+    instances = pl.items + trees
+    hero_tris = HBD.apply(w.buf, heroes, instances, rep, log)
+    if heroes or rep.get("hero_buildings", {}).get("stale"):
+        log("hero buildings", {k: [x["id"] for x in v] for k, v in rep["hero_buildings"].items()})
+    return {"zc": zc, "dist": dist, "mask": mask, "rmask": rmask, "col": col, "instances": instances,
+            "hero_tris": hero_tris,
             "codes": codes, "boards": boards, "report": rep, "docks": docks, "paved": paved, "forest_hlod": hlod}

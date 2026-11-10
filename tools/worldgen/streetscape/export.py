@@ -132,6 +132,8 @@ def textures():
     return {"fence_mesh": SG.png_bytes(fence_mesh_png()), "dock_digits": SG.png_bytes(SG.digits_atlas()),
             "plate_back": SG.png_bytes(SG.plate_back()), "car_dirt": SG.png_bytes(car_dirt_png()),
             "car_plates": SG.png_bytes(LC.plate_atlas()),
+            # hero fire station (ADR 0070): fence / gate / lettering, art-source/world/materials/_src/sets_fire_station.py --alpha
+            "fire_station_alpha": (ART / "textures" / "fire_station_alpha.png").read_bytes(),
             **{k: SG.png_bytes(im) for k, im in HT.textures().items()}}
 
 

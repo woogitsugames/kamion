@@ -345,6 +345,37 @@ def cameras(region_id, w):
         _, _, _, zt = surface_at(w, tgt)
         cams.append({"id": cid, "type": "persp", "fov_deg": 60.0, "route_s_m": st,
                      "pos": [r(q[0]), r(q[1]), r(z + 2.5)], "look_at": [r(tgt[0]), r(tgt[1]), r(zt + 2.0)], "note": note})
+    # hero fire station JRG2 (ADR 0070): driver eye on the approach and abeam, the frame of the CC0 reference photo
+    # (Commons '7197 May 2021 in Bialystok': from across Andersa at the gable) and an oblique view from above
+    fs = REPO / "Data" / "Regions" / region_id / "generated" / "landmarks" / "fire_station_jrg2.spec.json"
+    if fs.exists():
+        sp = json.loads(fs.read_text(encoding="utf-8"))
+        A0 = np.array(sp["dims"]["axis"]["origin_en"], float)
+        U0 = np.array(sp["dims"]["axis"]["u"], float)
+        U0 /= np.hypot(*U0)
+        V0 = np.array([-U0[1], U0[0]])
+        zf = sp["anchor"][2]
+
+        def fs_en(u_, v_):
+            return A0 + U0 * u_ + V0 * v_
+        s_ab = float(s[int(np.argmin(np.hypot(*(P - fs_en(24.0, 0.0)).T)))])
+        for cid, st, tgt_uvz, fov, note in (
+                ("fire_station_route", s_ab - 60.0, (40.0, 0.0, 5.0), 60.0, "driver eye 2.5 m, 60 m before the fire station JRG2 (hero asset)"),
+                ("fire_station_abeam", s_ab, (28.0, 0.0, 4.5), 60.0, "driver eye 2.5 m abeam of the fire station JRG2 (52 m right of the route)")):
+            q, z, t = lane_point(st)
+            g_ = fs_en(tgt_uvz[0], tgt_uvz[1])
+            cams.append({"id": cid, "type": "persp", "fov_deg": fov, "route_s_m": r(st),
+                         "pos": [r(q[0]), r(q[1]), r(z + 2.5)], "look_at": [r(g_[0]), r(g_[1]), r(zf + tgt_uvz[2])], "note": note})
+        p_ = fs_en(36.0, -82.0)
+        g_ = fs_en(39.0, 0.0)
+        cams.append({"id": "fire_station_ref7197", "type": "persp", "fov_deg": 36.0,
+                     "pos": [r(p_[0]), r(p_[1]), r(zf + 1.6)], "look_at": [r(g_[0]), r(g_[1]), r(zf + 6.5)],
+                     "note": "frame of the CC0 photo 'File:7197 May 2021 in Bialystok.jpg' (Rakoon): the arched gable from across Andersa"})
+        p_ = fs_en(-35.0, -70.0)
+        g_ = fs_en(35.0, 12.0)
+        cams.append({"id": "fire_station_above", "type": "persp", "fov_deg": 50.0,
+                     "pos": [r(p_[0]), r(p_[1]), r(zf + 48.0)], "look_at": [r(g_[0]), r(g_[1]), r(zf + 3.0)],
+                     "note": "fire station JRG2 from ~48 m: roofs, yard, fence line"})
     q2 = at(585.0)
     _, _, _, z2 = surface_at(w, q2)
     t2 = at(590.0) - at(580.0)
@@ -515,6 +546,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         ci_, cj_ = chunk_of(np.array([it["e"]]), np.array([it["n"]]), half)
         inst_by_chunk.setdefault((int(ci_[0]), int(cj_[0])), []).append(it)
     props_meta = PR.export(st["codes"], st["boards"], out_root.parent / "props" if out_root != DEFAULT_OUT(region_id) else None)
+    props_meta = {**props_meta, **st.get("hero_tris", {})}      # hero building assets (art-source/world/landmarks), frame estimate
     chunks_meta = []
     for key in sorted(terrain):
         ci, cj = key
@@ -677,6 +709,8 @@ def instance_ends(proto, nlods):
         e = [50.0, 250.0]
     elif proto == "bus_shelter" or proto.endswith("_gate"):
         e = [60.0, 300.0]
+    elif proto.startswith("landmark_fire_station"):      # hero building (ADR 0070): LOD0 / LOD1 / silhouette
+        e = [150.0, 450.0, 20000.0]
     elif proto.startswith("landmark_"):
         e = [650.0, 20000.0]
     elif proto.startswith(("car_", "van_")):

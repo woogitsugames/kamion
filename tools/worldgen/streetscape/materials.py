@@ -7,6 +7,18 @@ texture set of the engine material (art-source/world/textures, procedural, see d
 The Blender control renders build equivalent procedural shaders (tools/blender/world/render_control.py).
 """
 
+
+def _mean_of_set(name, default):
+    """Mean linear albedo of a generated texture set (materials_spec.json), so a calibrated atlas gets tint 1."""
+    import json
+    from pathlib import Path
+    p = Path(__file__).resolve().parents[3] / "art-source" / "world" / "materials" / "materials_spec.json"
+    try:
+        return [round(float(x), 3) for x in json.loads(p.read_text(encoding="utf-8"))["sets"][name]["albedo"]["mean_rgb_linear"]]
+    except (OSError, KeyError, ValueError):
+        return default
+
+
 M = {
     # paved areas
     "yard_paving": {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones", "texture_set": "paving_20x10_grey"},
@@ -229,6 +241,12 @@ M = {
     "bed_soil": {"color": [0.17, 0.13, 0.095], "rough": 0.9, "surface": "grass", "texture_set": "soil_bed"},
     # sign gantry (streetscape.life_props.sign_gantry)
     "gantry_steel": {"color": [0.42, 0.43, 0.43], "rough": 0.55, "metal": 0.9},
+    # hero fire station asset (ADR 0070, streetscape.hero_building): atlas on CC0 scans (colour = atlas mean, so the
+    # calibrated-set tint is 1), alpha-tested fence / gate / lettering
+    "fire_station": {"color": _mean_of_set("fire_station", [0.30, 0.33, 0.39]), "rough": 0.8,
+                     "surface": "concrete", "texture_set": "fire_station"},
+    "fire_station_alpha": {"color": [1.0, 1.0, 1.0], "rough": 0.6, "texture": "fire_station_alpha",
+                           "alpha_cutoff": 0.5},
     # landmarks
     "chimney_concrete": {"color": [0.40, 0.40, 0.38], "rough": 0.9},
     "chimney_red": {"color": [0.35, 0.05, 0.04], "rough": 0.85},

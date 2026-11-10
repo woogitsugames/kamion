@@ -198,6 +198,20 @@ def targets(heroes) -> dict:
     return {b: h["spec"]["asset"] for h in heroes for b in h["spec"]["buildings"]}
 
 
+def keepout(heroes) -> list:
+    """Polygons (region-local) where generated trees must not stand: the fence lines and the shrub row."""
+    import shapely
+    out = []
+    for h in heroes:
+        g = h["spec"]["ground"]
+        for ln in g["fence"] + ([g["gate"]] if g["gate"] else []):
+            if len(ln) >= 2:
+                out.append(shapely.LineString([p[:2] for p in ln]).buffer(1.5))
+        out += [shapely.Point(t[0], t[1]).buffer(1.6) for t in g["thuja"]]
+        out += [shapely.Point(t[0], t[1]).buffer(1.5) for t in g["flagpoles"]]
+    return out
+
+
 def apply(buf, heroes, instances: list, report, log=lambda *a: None) -> dict:
     """Add the instances and the fence collision. Returns {prototype: {tris_lod0, tris_lod1, tris_lod2}}."""
     from roads import meshing as M

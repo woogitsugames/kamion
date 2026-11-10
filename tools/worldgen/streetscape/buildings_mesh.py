@@ -549,7 +549,7 @@ def build_dock_lod1(acc, p, d, nout, u, zy, num, layer="buildings_low"):
 
 
 # ------------------------------------------------------------------------------------------- main
-def load(fc, origin, overrides):
+def load(fc, origin, overrides, hero=None):
     ox, oy = origin
     ovr = {o["target"]["building"]: o["set"] for o in overrides if o.get("target", {}).get("building")}
     out = []
@@ -565,6 +565,8 @@ def load(fc, origin, overrides):
             pl = shapely.orient_polygons(pl) if hasattr(shapely, "orient_polygons") else shapely.geometry.polygon.orient(pl)
             bid = f["id"] if k == 0 else f"{f['id']}#{k}"
             o = ovr.get(f["id"], {})
+            if hero and f["id"] in hero:      # replaced by an authored asset (streetscape.hero_building)
+                o = {**o, "hero_asset": hero[f["id"]]}
             out.append({"id": bid, "poly": pl, "props": p, "ovr": o, "typ": "roof" if p.get("is_roof_only") else
                         classify(p, pl.area, o)})
     return out
@@ -637,6 +639,15 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
         ztop = zref + h
         key = b["id"]
         acc = Acc()
+        if b["ovr"].get("hero_asset"):      # authored asset: only the collision prism of the footprint
+            counts[typ] -= 1
+            counts["hero_asset"] = counts.get("hero_asset", 0) + 1
+            for a, c_ in ring_edges(poly.exterior):
+                acc.quad("collision", "collision_building", [a[0], a[1], zbot], [c_[0], c_[1], zbot],
+                         [c_[0], c_[1], ztop], [a[0], a[1], ztop])
+            roof_flat(acc, "collision", poly, ztop, mat="collision_building", attic=0.0)
+            acc.flush(buf, key)
+            continue
         if typ == "roof":            # canopy on columns (fuel station, market / parking roof)
             # Both layers (W-H4): the LOD1 tier draws the same deck, fascia and columns, so
             # a tier switch never removes a roof structure from the street.
