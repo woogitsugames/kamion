@@ -7,46 +7,46 @@
    "type": "persp",
    "kind": "driver_eye",
    "pos": [
-    -857,
+    -818.6,
     850,
     200.0
    ],
    "look_at": [
-    -857,
-    890,
+    -827.3,
+    885.6,
     199.5
    ],
    "fov_deg": 60,
-   "note": "al. Tysiaclecia PP northbound, 174 m before the north edge (recording 110 s)"
+   "note": "al. Tysiaclecia PP outbound carriageway, ~180 m before the north edge"
   },
   {
    "id": "edge_tys_n0930",
    "type": "persp",
    "kind": "driver_eye",
    "pos": [
-    -857,
+    -837.0,
     930,
     200.0
    ],
    "look_at": [
-    -857,
-    970,
+    -844.3,
+    966.4,
     199.5
    ],
    "fov_deg": 60,
-   "note": "34 m before the closure"
+   "note": "~35 m before the closure"
   },
   {
    "id": "edge_tys_n1000",
    "type": "persp",
    "kind": "driver_eye",
    "pos": [
-    -857,
+    -851.4,
     1000,
     200.0
    ],
    "look_at": [
-    -857,
+    -859.9,
     1040,
     199.5
    ],
@@ -54,38 +54,55 @@
    "note": "past the closure, 24 m before the edge: the white void of the recording (116 s)"
   },
   {
-   "id": "edge_tys_n1022_back",
+   "id": "edge_tys_n1060_back",
    "type": "persp",
    "kind": "driver_eye",
    "pos": [
-    -857,
+    -864.1,
     1060,
     200.0
    ],
    "look_at": [
-    -857,
+    -855.6,
     1020,
     199.5
    ],
    "fov_deg": 60,
-   "note": "from outside the region looking back south"
+   "note": "on the road stub outside the region, looking back"
   },
   {
    "id": "edge_tys_above",
    "type": "persp",
    "kind": "rondo_above",
    "pos": [
-    -857,
+    -830,
     880,
     200.0
    ],
    "look_at": [
-    -857,
+    -852,
     1010,
     155.0
    ],
    "fov_deg": 60,
-   "note": "45 m above the road looking at the closure and the apron"
+   "note": "45 m above the road looking at the closures and the apron"
+  },
+  {
+   "id": "edge_maczka_w",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -900,
+    50,
+    200.0
+   ],
+   "look_at": [
+    -940,
+    50,
+    199.5
+   ],
+   "fov_deg": 60,
+   "note": "gen. Maczka, 124 m before the west edge, looking west"
   },
   {
    "id": "edge_ne_corner_above",
