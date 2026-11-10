@@ -582,6 +582,13 @@ def build_library(livery="white", clay=False):
     principled("mask_gloss", "TRIM", (0.018, 0.018, 0.019) if not clay else (0.2, 0.2, 0.2), 0.09, coat=0.5)   # modern front: gloss-black mask (r6: albedo 0.010 -> 0.018, piano-black plastic is not a black hole; WORKING_VALUE)
     m, nt, b = principled("plastic_satin", "TRIM", (0.028, 0.029, 0.03) if not clay else (0.25, 0.25, 0.25), 0.36)
     principled("rubber", "TRIM", (0.018, 0.018, 0.018), 0.82, spec=0.3)
+    # r8 (ADR 0061): wiper arms are matt black powder coat, not satin plastic (0.36 mirrored the sky on the arm). WORKING_VALUE
+    # r8 (review r7 E7 / r8): mirror housings, arms, kerb and front mirror heads were satin plastic (0.36): from the
+    # seat, at grazing angles, they mirrored the sky like chrome. Grained black ABS, roughness 0.58 (review: 0.5-0.6)
+    m, nt, b = principled("mirror_plastic", "TRIM", (0.030, 0.031, 0.032) if not clay else (0.22, 0.22, 0.22), 0.58, spec=0.4)
+    if not clay:
+        micro_bump(nt, b, 900.0, 0.25, 0.0003)
+    principled("wiper_black", "TRIM", (0.022, 0.022, 0.023) if not clay else (0.22, 0.22, 0.22), 0.60, spec=0.4)
     principled("gap", "TRIM", (0.004, 0.004, 0.004), 0.9, spec=0.2)
     ch_rgb = (0.022, 0.022, 0.023) if not clay else (0.16, 0.16, 0.16)
     m, nt, b = principled("chassis", "TRIM", ch_rgb, 0.45)

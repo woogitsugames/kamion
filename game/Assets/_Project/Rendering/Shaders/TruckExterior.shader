@@ -321,6 +321,15 @@ Shader "Kamion/Truck Exterior"
                 }
                 if (_CurtainGrime.x > 0.5)
                     grime = CurtainGrime(TransformWorldToObject(i.positionWS), 1.0 - _KamionGrimeDetailOff);
+                else if (isTyre < 0.5)
+                {
+                    // r8 (ADR 0061): settled dust on surfaces that face up (roof crown, deflector, tank and mudguard
+                    // tops): nobody washes a cab roof. Scales with _Dirt; at the fleet 0.5 it takes ~13 % off the white
+                    // and ~25 % off the coat there (review r7 N-17: roof pixels at 100 % on High overcast 4.8 -> 1.8 %;
+                    // the rest is the D23 white clip at 0.7, LookGrading). WORKING_VALUE.
+                    half up = smoothstep(0.35, 0.9, normalize(i.normalWS).y);
+                    grime = max(grime, 0.18 * up);
+                }
                 half dirt = saturate(grime * _Dirt * 1.8);
                 coat *= 1.0 - saturate(dirt * 1.5);
                 albedo = lerp(albedo, _DirtColor.rgb, dirt);
@@ -383,6 +392,10 @@ Shader "Kamion/Truck Exterior"
                     half hor = saturate(1.0 + 1.2 * dot(R, i.normalWS));
                     // WORKING_VALUE: reflections below ~25 deg elevation keep 30 % (street-level clutter), open sky above.
                     half obst = lerp(0.3, 1.0, smoothstep(-0.05, 0.42, R.y));
+                    // r8 (ADR 0061): a reflection that points steeply down (the face-down louvres: R.y ~ -0.7) sees the
+                    // road in front of the bumper, not street-level clutter: 0.3 -> 0.5 below ~35 deg (the bumper and
+                    // the truck's own shadow keep it under 1). Louvre faces at low sun: 4.3 % on Low, a black field.
+                    obst = max(obst, 0.5 * smoothstep(-0.30, -0.60, R.y));
                     half3 env = GlossyEnvironmentReflection(R, i.positionWS, max(rough, 0.05), m.r) * (hor * hor * obst);
                     half3 diff = input.bakedGI * albedo * (1.0 - F) * m.r;
                     col.rgb += (env * F + diff) * glossTrim;

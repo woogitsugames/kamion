@@ -1061,6 +1061,10 @@ namespace Game.Editor.Setup
             QMirrors("cab-mirror-front", "C-N8: class VI front mirror from the eye (must show the road in front of the bumper, not the sky).", "MIRROR_Front");
             Vector3 p34 = new Vector3(-6.8f, 2.1f, 11.5f), look = new Vector3(0f, 1.7f, 2.6f);
             Q("truck-34", p34, Quaternion.LookRotation(look - p34, Vector3.up), 45f, "A7: TRAKT front 3/4, driver side (paint, lamps, glass, wheels on the ground).");
+            // r8 (ADR 0061): the cab front nearly head-on, 30 deg field (mask, TRAKT letters, wipers and louvres at twice
+            // the truck-34 pixel scale): aliasing of thin front detail is judged here and in truck-34.
+            Vector3 pf = new Vector3(0.8f, 1.9f, 10.6f), lookF = new Vector3(0f, 1.85f, 5.4f);
+            Q("truck-front", pf, Quaternion.LookRotation(lookF - pf, Vector3.up), 30f, "r8: cab front head-on (mask bar, TRAKT letters, parked wipers, louvres, lamps).");
             Vector3 pr = new Vector3(-7.5f, 2.3f, -17.5f), lookR = new Vector3(0f, 1.9f, -7.0f);
             Q("trailer-34", pr, Quaternion.LookRotation(lookR - pr, Vector3.up), 45f, "Curtainsider rear 3/4, driver side (curtain, doors, tridem on the ground, landing gear, lamps).");
         }

@@ -63,6 +63,52 @@ def raw_fbx_globals(path):
     return {models[u][0]: (glob(u), models[par[u]][0] if u in par else None) for u in models}
 
 
+def uv_overlaps(objs):
+    """r8 (ADR 0061): polygons of the baked slots whose 'Atlas' UV centre lies inside a polygon of ANOTHER UV island
+    of the same slot (two surfaces baked into the same texels). The right wheels / right caliper reuse the left ones'
+    UVs on purpose and are skipped. -> {material: count}"""
+    from mathutils.bvhtree import BVHTree
+    by_mat = {}
+    for o in objs:
+        if o.type != "MESH" or o.name.startswith(("WHEEL_", "STEER_")) or "Atlas" not in o.data.uv_layers:
+            continue
+        me = o.data
+        uv = me.uv_layers["Atlas"].data
+        for p in me.polygons:
+            mat = me.materials[p.material_index].name.split(".")[0] if me.materials else ""
+            if mat in BAKED_MATS:
+                by_mat.setdefault(mat, []).append((o.name, [Vector((uv[i].uv.x, uv[i].uv.y, 0.0)) for i in p.loop_indices]))
+    out = {}
+    for mat, polys in by_mat.items():
+        verts, faces = [], []
+        for _, pts in polys:
+            faces.append(list(range(len(verts), len(verts) + len(pts))))
+            verts.extend(pts)
+        bvh = BVHTree.FromPolygons(verts, faces, all_triangles=False)
+        parent = list(range(len(polys)))
+
+        def find(a):
+            while parent[a] != a:
+                parent[a] = parent[parent[a]]
+                a = parent[a]
+            return a
+        seen = {}
+        for i, (name, pts) in enumerate(polys):
+            for q in pts:
+                key = (name, round(q.x, 6), round(q.y, 6))
+                if key in seen:
+                    parent[find(i)] = find(seen[key])
+                else:
+                    seen[key] = i
+        n = 0
+        for i, (name, pts) in enumerate(polys):
+            ctr = sum(pts, Vector()) / len(pts)
+            if any(j is not None and find(j) != find(i) for _, _, j, _ in bvh.find_nearest_range(ctr, 1e-6)):
+                n += 1
+        out[mat] = n
+    return out
+
+
 def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     man = argv[argv.index("--manifest") + 1] if "--manifest" in argv else os.path.join(
@@ -119,6 +165,9 @@ def main():
                 zr = 0.0 if role[6] == "R" else wb
                 if abs(u[2] - zr) > 0.002 or abs(u[1] - 0.5) > 0.03:
                     errors.append(f"{lod}: {name} pivot {u} not on the {'rear' if zr == 0 else 'front'} axle")
+        ov = uv_overlaps([o for o in objs.values() if o.name in info["objects"]])
+        if sum(ov.values()):
+            errors.append(f"{lod}: atlas UV islands overlap: " + ", ".join(f"{k} {v}" for k, v in ov.items() if v))
         if total > TRI_LIMIT.get(lod, 1e9):
             errors.append(f"{lod}: {total} tris > budget {TRI_LIMIT[lod]}")
         if total != info["tris_total"]:

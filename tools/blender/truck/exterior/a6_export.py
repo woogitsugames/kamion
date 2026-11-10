@@ -60,7 +60,8 @@ TIERS = {"High": 1, "Medium": 4, "Low": 8}          # divisor of the High size (
 DECAL_TIERS = {"High": 1, "Medium": 2, "Low": 4}
 # LOD2: 15.3k + the undecimated T bar (NO_DECIMATE_FAR, 2.2 k) + the pocket trays (r7b) = 17.7k, limit 17.9k (round
 # wheels cost ~3.5k, ADR 0039)
-TRI_TARGET = {1: 43000, 2: 17700, 3: 5000}
+# r8 (ADR 0061): LOD2 17 700 -> 17 690: the r7c export was 17 699 and the Low budget must not grow
+TRI_TARGET = {1: 43000, 2: 17690, 3: 5000}
 TRI_LIMIT = {0: 140000, 1: 45000, 2: 17900, 3: 6000}   # LOD0 100k -> 140k: owner/lead 2026-11-09 (quality first; phone headroom)
 
 MAT_SLOT = {
@@ -102,7 +103,7 @@ LOD1_DROP = ("_nut", "_washer", "_hubbolt", "battery_latch", "door_lock_", "embl
 LOD2_DROP = LOD1_DROP + ("coil", "damper_", "brake_chamber", "caliper_", "tie_rod", "drag_link", "steering_box",
                          "propshaft", "anti_roll", "leaf_", "handle_bar", "handle_back", "door_handle", "mirror_strut",
                          "horn", "flap_arm", "catwalk", "gooseneck", "step_nose", "eats_band", "fuel_cap", "oil_pan",
-                         "gearbox", "engine", "radiator", "cab_pivot", "frame_horn", "frame_front_cross",
+                         "gearbox", "engine", "radiator", "frame_front_cross",
                          "frame_cross", "axle_arm", "trailing_arm", "guard_arm", "hb_mask", "proj_bowl", "proj_refl", "hb_refl", "socket",
                          "brake_disc", "_dish", "belt_seal", "wiper_pivot", "arch_brush", "bstep_tread", "fog_back",
                          "fog_bowl", "battery_lid", "adblue_cap", "diff", "front_axle", "axle_rear", "bellow_",
@@ -731,6 +732,57 @@ def uv_islands(me, uvl, faces):
     return list(isl.values())
 
 
+# r8 (ADR 0061): parts of the front whose atlas islands were narrower than the texture can hold. At the uniform density
+# (manifest texel_density: Trim 29 px/m, Metal 113 px/m on Low) the TRAKT strokes were 2.8 texels wide on the Low atlas
+# (512 px, ASTC 8x8), a wiper arm facet 0.4-0.7 texel and a 50 mm louvre face 1.5 texels: block compression, bilinear
+# taps and the first mips mixed them with their neighbours' albedo, roughness, AO and dirt. In the frame: dark blotches
+# in the letters, a dotted arm, and louvre faces whose roughness crossed the shader's gloss-trim limit texel by texel
+# (blotches under 5 % at low sun on Low). Every island of these pieces is stretched across its narrow direction (in
+# the smart-project space, before packing) to a width worth THIN_PIECES texels on the Low atlas of its slot (x 8 on
+# High). The parts carry flat colours (AO / dirt only), so the stretch shows nowhere. WORKING_VALUE
+THIN_PIECES = {"badge_trakt": 6, "wiper_arm": 6, "wiper_blade": 6, "wiper_pivot": 6, "washer_nozzle": 6,
+               "lane_dash": 6, "grille_bar_endcap": 6, "grille_bar_l": 6, "grille_bar_b": 6}      # texels on Low
+THIN_LOW_PX_PER_M = {"MI_Ext_Trim": 29.0, "MI_Ext_Metal": 113.0, "MI_Ext_Paint": 80.0, "MI_Ext_Lights": 180.0}
+
+
+def widen_thin_islands(objs, mname):
+    n = 0
+    for o in objs:
+        texels = next((v for k, v in THIN_PIECES.items() if o.name.startswith(k)), 0)
+        if not texels:
+            continue
+        thin_min = texels / THIN_LOW_PX_PER_M[mname]       # metres of surface at this slot's density
+        me = o.data
+        mi = [m.name for m in me.materials].index(mname)
+        faces = [p.index for p in me.polygons if p.material_index == mi]
+        uvl = me.uv_layers["Atlas"].data
+        for isl in uv_islands(me, uvl, faces):
+            lis = [li for f in isl for li in me.polygons[f].loop_indices]
+            uv = np.array([uvl[li].uv[:] for li in lis], dtype=np.float64)
+            world = sum(me.polygons[f].area for f in isl)
+            ua = 0.0
+            for f in isl:
+                q = np.array([uvl[li].uv[:] for li in me.polygons[f].loop_indices], dtype=np.float64)
+                ua += 0.5 * abs(np.sum(q[:, 0] * np.roll(q[:, 1], -1) - np.roll(q[:, 0], -1) * q[:, 1]))
+            if world < 1e-10 or ua < 1e-14:
+                continue
+            k = math.sqrt(ua / world)                      # UV units per metre in this island
+            c = uv.mean(axis=0)
+            d = uv - c
+            w, vec = np.linalg.eigh(d.T @ d)               # principal axes of the island; vec[:, 0] = narrow one
+            for ax in (0, 1):
+                t = d @ vec[:, ax]
+                ext = (t.max() - t.min()) / k              # metres at the island's own density
+                if ext < thin_min:
+                    g = thin_min / max(ext, 1e-6)
+                    d = d + np.outer(t * (g - 1.0), vec[:, ax])
+            uv = c + d
+            for li, (u, v) in zip(lis, uv):
+                uvl[li].uv = (float(u), float(v))
+            n += 1
+    print(f"  thin islands widened: {n} ({mname})")
+
+
 def unwrap_atlases(pieces):
     t0 = time.time()
     for slot in BAKED:
@@ -770,6 +822,7 @@ def unwrap_atlases(pieces):
                 for li in lis:
                     u, v = uvl[li].uv
                     uvl[li].uv = (cu + (u - cu) * sc, cv + (v - cv) * sc)
+        widen_thin_islands(objs, mname)
         bpy.ops.object.mode_set(mode="EDIT")
         for o in objs:
             bm = bmesh.from_edit_mesh(o.data)
@@ -777,7 +830,12 @@ def unwrap_atlases(pieces):
             for f in bm.faces:
                 f.select = f.material_index == mi
             bmesh.update_edit_mesh(o.data)
-        margin = 0.004 if ATLAS_RES[slot] >= 2048 else 0.006
+        margin = 0.002 if ATLAS_RES[slot] >= 2048 else 0.004      # r8: 8 px of 4096 (was 0.004 / 0.006, never applied)
+        # r8: the UVs were edited through the mesh API above (priority scale, thin islands). Without a fresh UV
+        # selection Blender 4.2 packs the islands by their smart-project outlines: shrunk islands kept their old slot
+        # (Trim atlas 33 % used) and WIDENED ones were laid over their neighbours (3 500 polygons of the first r8
+        # export shared texels with another island; check_export.py now tests for that)
+        bpy.ops.uv.select_all(action="SELECT")
         bpy.ops.uv.pack_islands(rotate=True, margin_method="FRACTION", margin=margin, shape_method="CONCAVE")
         bpy.ops.object.mode_set(mode="OBJECT")
         print(f"atlas {slot}: {len(objs)} pieces, {time.time() - t0:.0f} s")
@@ -1181,17 +1239,19 @@ SILHOUETTE_W = 4.0
 # the LOD0 ones) down to ROUND_SEGMENTS around the circumference; the pieces are then fixed in the budget.
 # pieces that break below this share of their LOD0 triangles (locked slot borders leave the collapse too little room:
 # the lower fairing at 0.15 pulled black trim triangles from the bumper corner to the wheel arch)
-MIN_RATIO = {"lower_fairing": 0.3, "door_shell": 0.30, "grille_back_": 0.35, "lamp_back_": 0.35, "wiper_blade": 0.5}   # modern door: below ~0.2 the window opening collapsed down to the sill (LOD2)
+MIN_RATIO = {"lower_fairing": 0.3, "door_shell": 0.30, "grille_back_": 0.35, "lamp_back_": 0.35}   # modern door: below ~0.2 the window opening collapsed down to the sill (LOD2)
 # r6: thin dark strips on the paint; the collapse dragged one corner of the sill cladding across the corner panel and the
 # door (a black wedge in LOD1) and the T bar end caps turned into shards
-NO_DECIMATE = ("sill_clad_", "door_skirt_clad_", "grille_bar_endcap")
+# r8 (ADR 0061): + the TRAKT letters (one welded prism each, ~40-110 triangles) and the wiper arms and blades (flat
+# strap 20, five-sided blade 46 triangles): light / thin shapes on the dark mask, every collapsed vertex shows
+NO_DECIMATE = ("sill_clad_", "door_skirt_clad_", "grille_bar_endcap", "badge_trakt", "wiper_arm", "wiper_blade")
 # r7b (review r6 E-N2): the gloss-black T bar itself, from LOD2 on. There the area budget collapsed its 2 k triangles
 # to a sliver and the game camera looked through the mask into the cab (ADR 0047 r7); the bar is the face of the truck
 # on the Low tier, so it keeps its LOD0 grid (TRI_TARGET / TRI_LIMIT of LOD2 raised by its triangle count). LOD1 is
 # untouched: its collapse leaves the bar whole.
 # r7c: + the wiper arms (thin rods: the collapse left dark shards across the cowl on Low; the blades keep half of
 # their triangles, MIN_RATIO)
-NO_DECIMATE_FAR = ("grille_bar_mask", "wiper_arm")
+NO_DECIMATE_FAR = ("grille_bar_mask",)
 ROUND_KEYS = ("_tyre", "_rim")
 ROUND_SEGMENTS = {2: 24, 3: 16}
 
@@ -1334,6 +1394,10 @@ GRID_PIECES = {"grille_bar_l": ("front", 0.001, 0.003), "grille_bar_b": ("low", 
 # breaks into dashes whatever the mesh. Without it the lamella is its face-down face only and the gap above it shows
 # the dark tray: bands of 5 px and 3 px on Low instead of a sub-pixel highlight.
 GRID_OPEN_TOP = {"grille_bar_l": 0.006, "grille_bar_b": 0.006}     # strips within this of the top row are dropped
+# r8 (ADR 0061): with the top gone the gap between two LOD2 lamellae showed 25 mm of the dark tray: 3 px on Low, under
+# 5 % at low sun, i.e. the "clusters" of review r7 N-1. The face-down face is drawn out by this share of its height
+# (50 -> 65 mm, along its own slope): the gap is a 1.5 px shadow line, the rhythm stays. LOD0 / LOD1 keep the section.
+GRID_FACE_EXT = {"grille_bar_l": 0.30, "grille_bar_b": 0.30}
 
 
 def grid_spec(o):
@@ -1463,6 +1527,18 @@ def reduce_grid(o, kind, tol_m, open_top=0.0):
         keepc |= cand
     kc = sorted(keepc)
     kill = []
+    ext = next((v for k, v in GRID_FACE_EXT.items() if o.name.startswith(k)), 0.0) if open_top else 0.0
+    if ext:
+        zmin = min(r[0] for r in row.values())
+        low = [v for v in row if abs(row[v][0] - zmin) < 0.0015]
+        offmax = max(row[v][1] for v in low)
+        for v in low:
+            if row[v][1] < offmax - 0.004:
+                continue                      # rear edge of the underside stays on the tray
+            ups = [e.other_vert(v) for e in v.link_edges if e.other_vert(v) in row and row[e.other_vert(v)][0] > zmin + 0.02]
+            if ups:
+                top = max(ups, key=lambda u: row[u][1])
+                v.co = v.co + (v.co - top.co) * ext
     if open_top:
         ztop = max(r[0] for r in row.values())
         for key in [k for k in strips if min(k[0][0], k[1][0]) >= ztop - open_top]:

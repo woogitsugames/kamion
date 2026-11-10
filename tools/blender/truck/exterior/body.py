@@ -467,6 +467,9 @@ def doors_and_gaps():
 
 
 # ---------------------------------------------------------------- front face: grille, brand, cowl, wipers
+# r8 (ADR 0061): stroke = 2.2 x the SVG width = 28 mm at the 150 mm cap height (1.8 = 24 mm): 3.5 px in truck-34 at the
+# Low tier's 0.75 render scale. Counters stay open (R bowl 36 x 57 mm). WORKING_VALUE
+WORDMARK_WEIGHT = 2.2
 LOUVRE_TILT = 20.0   # deg, WORKING_VALUE: lamella faces look down at the road, not at the sky (ADR 0047 r4)
 
 
@@ -533,7 +536,7 @@ def front_face_modern(strokes):
         grille_bar(f"grille_bar_l{k}", zc, hgt, 0.052, hw, "mask_gloss", nose=-0.004, tilt=LOUVRE_TILT)
         lane_dash(f"lane_dash{k}", CAB, zc, hgt - 0.016, louvre_mid(hgt) + 0.0015, tilt=LOUVRE_TILT)
     wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=24.0, mat="alu_brushed",
-             name="badge_trakt", weight=1.8, depth=0.004, on_face=True, bev=0.0012)
+             name="badge_trakt", weight=WORDMARK_WEIGHT, depth=0.004, on_face=True)
     # r7c: 2 -> 4 mm off the skin. The hidden-face test starts 3 mm above a face, so the paint under a 2 mm cowl
     # counted as visible, stayed in the mesh and came through the cowl as white shards once LOD2 had collapsed it
     CAB.patch("cowl", "plastic_satin", "front", WS_Z0 - 0.082, WS_Z0 - 0.012, -1.21, 1.21, off=0.004, nz=3, npar=48)
@@ -751,11 +754,15 @@ def wordmark(strokes, z_c=1.918, height=0.052, spacing=30.0, mat="wordmark", nam
 
 
 def _wordmark_on_face(strokes, z_c, height, spacing, mat, name, weight, depth, bev):
-    """B2.2 badge letters (REVIEW: 'TPAKT' at 3/4 on a 1080p frame - the A lost its crossbar, the R its leg).
-    Cause: the upright 3 mm letter boxes sat on the 7 deg raked band at the z_c point only, so the lower ~40 % of
-    every letter was buried in the band and the top stood 8 mm proud; the 7.7 mm strokes were < 1 px at game
-    distance. Now each stroke lies in the face plane (centred at its own height, tilted by RAKE), strokes are
-    `weight` x the SVG width and chamfered, so the edges catch a highlight line on the dark band."""
+    """Badge letters lying in the front face: ONE welded prism per letter (`name`_<letter index>).
+    r8 (ADR 0061): until r7c every stroke was its own bevelled box, overlapping its neighbours at the joints with a
+    0.15-0.2 mm depth stagger. In the game frames the joints showed as dark notches (AO baked on the buried part of
+    the lower stroke, depth fighting at 12 m), every stroke had its own 3 px atlas island and its own 1.2 mm chamfer
+    (a highlight line far below a pixel): the letters crawled and broke up on the Low tier. Now the strokes of a
+    letter are united (EXACT boolean on prisms that share the front and back plane), the front is one flat face, the
+    4 mm walls are plain (bev is ignored: a chamfer that never reaches a pixel only aliases).
+    Stroke ends as before (B2.2): square cap at a free end, mitre at an inner joint; an end that butts into another
+    stroke runs into it."""
     ys = [p[1] for pl, w in strokes for p in pl]
     y0, y1 = min(ys), max(ys)
     wmax = max(w for _, w in strokes) * weight
@@ -769,11 +776,12 @@ def _wordmark_on_face(strokes, z_c, height, spacing, mat, name, weight, depth, b
         return len(bounds) - 2
     allx = [x + idx(min(p[0] for p in pl)) * spacing for pl, w in strokes for x, _ in pl]
     xc = (min(allx) + max(allx)) / 2
-    tilt = Matrix.Rotation(math.radians(RAKE), 3, "X")     # +z -> (0, -sin, cos): leans back with the face
+
     def turn(p0, p1, p2):   # turn angle at p1 between segments p0-p1 and p1-p2 (0 = straight on)
         u = V((p1[0] - p0[0], 0, p1[1] - p0[1])).normalized()
         v = V((p2[0] - p1[0], 0, p2[1] - p1[1])).normalized()
         return math.acos(max(-1.0, min(1.0, u.dot(v))))
+
     def butts(p, k, j):     # does point p (SVG units) lie on a segment other than its own (k, j)?
         for k2, (pl2, _) in enumerate(strokes):
             for j2, (q0, q1) in enumerate(zip(pl2, pl2[1:])):
@@ -784,39 +792,88 @@ def _wordmark_on_face(strokes, z_c, height, spacing, mat, name, weight, depth, b
                 if math.hypot(p[0] - q0[0] - t * ex, p[1] - q0[1] - t * ey) < 0.5:
                     return True
         return False
-    seen, local = {}, []          # index of each polyline within its letter
-    for pl, _ in strokes:
-        li = idx(min(p[0] for p in pl))
-        local.append(seen.get(li, 0))
-        seen[li] = local[-1] + 1
+    letters = {}            # letter index -> stroke rectangles in the letter plane: (centre x, centre z, len, 2 hw, angle)
     for k, (pl, w) in enumerate(strokes):
-        off = idx(min(p[0] for p in pl)) * spacing
+        li = idx(min(p[0] for p in pl))
+        off = li * spacing
         for j, (a, b) in enumerate(zip(pl, pl[1:])):
-            ax, az = -(a[0] + off - xc) * sc, z_c - (a[1] - (y0 + y1) / 2) * sc   # viewer's left = +X
-            bx, bz = -(b[0] + off - xc) * sc, z_c - (b[1] - (y0 + y1) / 2) * sc
+            ax, az = -(a[0] + off - xc) * sc, -(a[1] - (y0 + y1) / 2) * sc   # viewer's left = +X
+            bx, bz = -(b[0] + off - xc) * sc, -(b[1] - (y0 + y1) / 2) * sc
             d = V((bx - ax, 0, bz - az))
             ln = d.length
             if ln < 1e-6:
                 continue
-            ang = math.atan2(d.z, d.x)
             hw = w * weight * sc / 2
-            # B2.2: square cap (hw) only at the free ends; at an inner joint extend by the mitre length
-            # hw * tan(turn / 2) - a full square cap on a 45 deg shoulder poked out as a notch (A, R bowl)
-            # (capped at hw: an acute apex would otherwise grow a spike). An end that butts into another stroke
-            # (R leg, K arms, A crossbar, T stem) gets no cap: its square corner stuck out of the stroke it meets
             e0 = (0.0 if butts(a, k, j) else hw) if j == 0 else hw * min(1.0, math.tan(turn(pl[j - 1], a, b) / 2))
             e1 = ((0.0 if butts(b, k, j) else hw) if j == len(pl) - 2
                   else hw * min(1.0, math.tan(turn(a, b, pl[j + 2]) / 2)))
+            # a butting end runs 40 % of a stroke width into the stroke it meets: the union needs a real overlap
+            e0 = e0 if e0 > 0 else 0.4 * hw
+            e1 = e1 if e1 > 0 else 0.4 * hw
             dn = d / ln
             ax, az = ax - dn.x * e0, az - dn.z * e0
             bx, bz = bx + dn.x * e1, bz + dn.z * e1
-            ln = ln + e0 + e1
-            mx, mz = (ax + bx) / 2, (az + bz) / 2
-            # strokes overlap at the joints: stagger depth 0.15 mm per stroke so coplanar faces never z-fight
-            # later polylines of a letter (crossbar, R leg, T stem) sit 0.2 mm lower so their caps hide inside
-            c = V(CAB.front_pt(mz, mx, depth / 2 + 0.0010 - 0.0002 * min(local[k], 3) + 0.00005 * (j % 2)))
-            box(f"{name}_{k}_{j}", c, (ln, depth, 2 * hw), mat, bev=bev, seg=1,
-                rot=tilt @ Matrix.Rotation(-ang, 3, "Y"))
+            letters.setdefault(li, []).append(((ax + bx) / 2, (az + bz) / 2, ln + e0 + e1, 2 * hw,
+                                               math.atan2(d.z, d.x)))
+    out = []
+    for li, rects in sorted(letters.items()):
+        cx = sum(r[0] for r in rects) / len(rects)
+        prisms = []
+        for q, (mx, mz, ln, wd, ang) in enumerate(rects):
+            bm = bmesh.new()
+            bmesh.ops.create_cube(bm, size=1.0)
+            # letter plane: x across, z up, y = out of the face (0 .. depth)
+            bmesh.ops.scale(bm, vec=V((ln, depth, wd)), verts=bm.verts)
+            bmesh.ops.rotate(bm, verts=bm.verts, cent=(0, 0, 0), matrix=Matrix.Rotation(-ang, 3, "Y"))
+            bmesh.ops.translate(bm, vec=V((mx - cx, depth / 2, mz)), verts=bm.verts)
+            prisms.append(G.obj_from_bm(f"{name}_{li}_p{q}", bm, mat, smooth=False))
+        ob = prisms[0]
+        ob.name = f"{name}_{li}"
+        if len(prisms) > 1:
+            G.boolean(ob, prisms[1:], op="UNION")
+        # weld the union, merge coplanar triangles, then lay the letter on the face: origin on the surface at the
+        # letter centre, x along the surface, z up the raked face, y = the surface normal
+        o = V(CAB.front_pt(z_c, cx, 0.0))
+        n = CAB.normal_front(z_c, cx)
+        up = (V(CAB.front_pt(z_c + 0.05, cx, 0.0)) - V(CAB.front_pt(z_c - 0.05, cx, 0.0))).normalized()
+        rt = up.cross(n).normalized()
+        if rt.x < 0:
+            rt = -rt
+        up = n.cross(rt).normalized()
+        if up.z < 0:
+            up = -up
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
+        for _ in range(3):
+            bmesh.ops.dissolve_limit(bm, angle_limit=math.radians(0.5), verts=bm.verts, edges=bm.edges)
+            # vertices left on a straight outline edge (two collinear edges, nothing else)
+            lone = [v for v in bm.verts if len(v.link_edges) == 2 and abs(
+                (v.link_edges[0].other_vert(v).co - v.co).normalized().dot(
+                    (v.link_edges[1].other_vert(v).co - v.co).normalized()) + 1.0) < 1e-6]
+            if not lone:
+                break
+            bmesh.ops.dissolve_verts(bm, verts=lone)
+        # triangles here, not in the exporter: the union leaves vertices on straight outline edges (where a wall of
+        # one stroke ends on the face of another), the n-gon fill made zero-area triangles of them and the FBX
+        # round trip dropped those (check_export: 9 triangles fewer than the manifest)
+        bmesh.ops.triangulate(bm, faces=bm.faces, ngon_method="BEAUTY")
+        bmesh.ops.dissolve_degenerate(bm, dist=2e-5, edges=bm.edges)
+        flat = [f for f in bm.faces if f.calc_area() < 1e-10]
+        if flat:    # collinear leftovers: no area, so no crack opens when they go
+            bmesh.ops.delete(bm, geom=flat, context="FACES")
+        print(f"  {ob.name}: {len(bm.faces)} triangles ({len(flat)} zero-area dropped)")
+        for v in bm.verts:
+            v.co = o + rt * v.co.x + n * (v.co.y + 0.0010) + up * v.co.z
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        bm.to_mesh(ob.data)
+        bm.free()
+        ob.data.shade_flat()
+        if ob.data.validate():      # what the FBX importer would drop (doubled / degenerate faces): drop it here, so
+            ob.data.update()        # the manifest counts the triangles that really reach the game
+            print(f"  {ob.name}: validate() removed invalid faces, {len(ob.data.polygons)} triangles left")
+        out.append(ob)
+    return out
 
 
 def wiper_boss(name, px, z, r=0.022, h0=0.0025, h1=0.029, seg=16):
@@ -855,6 +912,54 @@ def wiper_boss(name, px, z, r=0.022, h0=0.0025, h1=0.029, seg=16):
     return ob
 
 
+def wiper_arm(name, p0, p1, nrm, m, w0=0.030, w1=0.022, w2=0.018, t0=0.010, t1=0.006, head=0.22):
+    """Wiper arm as a flat tapered strap lying parallel to the glass: cast head (w0 -> w1 over `head` of the length),
+    then the spring strap down to w2 at the blade. r8 (ADR 0061): the arm was a 16 mm eight-sided rod. Its up-facing
+    facets mirrored the sky at grazing angles and were 2-3 mm wide: on the dark cowl the arm rendered as a row of
+    light dots (truck-34: 2 px on High, 1.2 px on Low). The strap shows the game cameras one face, 18-30 mm wide,
+    with the normal of the glass."""
+    p0, p1 = V(p0), V(p1)
+    d = (p1 - p0).normalized()
+    wv = d.cross(V(nrm)).normalized()
+    nv = wv.cross(d).normalized()
+    ln = (p1 - p0).length
+    bm = bmesh.new()
+    rings = []
+    for f, w, t in ((0.0, w0, t0), (head, w1, t1), (1.0, w2, t1)):
+        c = p0 + d * (ln * f)
+        rings.append([bm.verts.new(c + wv * (sx * w / 2) + nv * (sy * t / 2))
+                      for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))])
+    for r0, r1 in zip(rings, rings[1:]):
+        for i in range(4):
+            bm.faces.new((r0[i], r0[(i + 1) % 4], r1[(i + 1) % 4], r1[i]))
+    bm.faces.new(list(reversed(rings[0])))
+    bm.faces.new(rings[-1])
+    return G.obj_from_bm(name, bm, m, smooth=False)
+
+
+def wiper_blade(name, base, nrm, m, wdt=0.024, foot=0.004, shoulder=0.011, ridge=0.024):
+    """Flat (aero) wiper blade along `base` (points on the glass, with their surface normals `nrm`): a five-sided
+    section, `wdt` wide across the glass, with the spoiler ridge on the upper side. r8: was an 18 mm round tube."""
+    bm = bmesh.new()
+    rings = []
+    n = len(base)
+    for i, (p, nn) in enumerate(zip(base, nrm)):
+        t = (base[min(i + 1, n - 1)] - base[max(i - 1, 0)]).normalized()
+        g = nn.cross(t).normalized()          # across the blade, in the glass plane
+        if g.z < 0:
+            g = -g                            # +g = up the glass
+        rings.append([bm.verts.new(p + g * a + nn * h) for a, h in
+                      ((-wdt / 2, foot), (wdt / 2, foot), (wdt / 2, shoulder), (wdt * 0.15, ridge),
+                       (-wdt / 2, shoulder))])
+    k = len(rings[0])
+    for r0, r1 in zip(rings, rings[1:]):
+        for i in range(k):
+            bm.faces.new((r0[i], r0[(i + 1) % k], r1[(i + 1) % k], r1[i]))
+    bm.faces.new(list(reversed(rings[0])))
+    bm.faces.new(rings[-1])
+    return G.obj_from_bm(name, bm, m, smooth=False)
+
+
 def wipers():
     # A6.1 (interior critic r2 #7): parked blades lie on the glass just above the 75 mm bottom frit (frit top 2.135 m),
     # rising 16 mm towards the tip, so the driver sees them along the bottom of the screen as in real cabs (they were
@@ -866,19 +971,20 @@ def wipers():
         wiper_boss(f"wiper_pivot{k}", px, WS_Z0 - 0.04)
         zt = zb0 + rise + 0.018
         tip = V((px + length, CAB.front_pt(zt, px + length, 0.03)[1], zt))
-        rod(f"wiper_arm{k}", p0, tip, 0.008, "plastic_satin", seg=8)
-        # blade lying on the glass along the base
-        pts = []
-        for i in range(9):
-            x = px + 0.06 + (length - 0.04) * i / 8
-            pts.append(V(CAB.front_pt(zb0 + rise * (x - px) / length, x, 0.016)))
-        tube(f"wiper_blade{k}", pts, 0.009, "rubber", seg=6)
+        wiper_arm(f"wiper_arm{k}", p0, tip, CAB.normal_front(zt, px + length * 0.5), "wiper_black")
+        # blade lying on the glass along the base (the front is crowned R 10 m: 4 spans keep it within 0.5 mm)
+        pts, nrm = [], []
+        for i in range(5):
+            x = px + 0.06 + (length - 0.04) * i / 4
+            zz = zb0 + rise * (x - px) / length
+            pts.append(V(CAB.front_pt(zz, x, 0.0)))
+            nrm.append(CAB.normal_front(zz, x))
+        wiper_blade(f"wiper_blade{k}", pts, nrm, "rubber")
         # washer nozzle on the cowl next to each pivot
         box((f"washer_nozzle{k}"), (px + 0.12, CAB.front_pt(WS_Z0 - 0.03, px + 0.12, 0)[1] + 0.006, WS_Z0 - 0.027),
             (0.022, 0.012, 0.010), "plastic_satin", bev=0.003)
 
 
-# ---------------------------------------------------------------- headlamps (TRAKT signature)
 def drl_guide(name, s, p0, p1, wdt=0.016, n=12):
     """LED light guide between two front-projection points (x, z) with a dark-chrome carrier behind it."""
     bm = bmesh.new()
@@ -1209,7 +1315,7 @@ def mirrors(kind="classic", front=True):
             c = V((xh, yh, 2.47))
             # r4: slimmer head (0.25 x 0.15 -> HOUSE_W x ~0.115 m deep): seen from the eye point it must not hide
             # more than the two B2 heads did (11.5 deg); measured with pillar_obstruction.py
-            box(f"mirror_main_house_{s}", c, (HOUSE_W, 0.080, 0.76), "plastic_satin", bev=0.038, seg=4, rot=rot)
+            box(f"mirror_main_house_{s}", c, (HOUSE_W, 0.080, 0.76), "mirror_plastic", bev=0.038, seg=4, rot=rot)
             # r6 E7: the back shell is dark grained plastic, not body colour (a white back read as a blank card)
             box(f"mirror_main_cap_{s}", c + rot @ V((0, 0.030, 0)), (HOUSE_W - 0.008, 0.085, 0.745), "plastic",
                 bev=0.040, seg=5, rot=rot)
@@ -1224,8 +1330,8 @@ def mirrors(kind="classic", front=True):
                 hb = ck + rk @ V((0, 0.030, -0.030))
                 out = V((ck.x - foot.x, ck.y - foot.y, 0.0)).normalized()
                 tube("mirror_kerb_arm", [foot - out * 0.01, foot + out * 0.05 + V((0, 0, 0.02)), hb + V((0, 0, -0.03)),
-                                         hb], 0.011, "plastic_satin", seg=8)
-                box("mirror_kerb", ck, (0.20, 0.08, 0.14), "plastic_satin", bev=0.03, seg=3, rot=rk)
+                                         hb], 0.011, "mirror_plastic", seg=8)
+                box("mirror_kerb", ck, (0.20, 0.08, 0.14), "mirror_plastic", bev=0.03, seg=3, rot=rk)
                 box("mirror_kerb_glass", ck + rk @ V((0, -0.041, 0)), (0.18, 0.006, 0.12), "mirror", bev=0.003,
                     rot=rk)
             box(f"mirror_main_glass_{s}", c + rot @ V((0, -0.041, 0.13)), (HOUSE_W - 0.024, 0.006, 0.44), "mirror",
@@ -1236,16 +1342,16 @@ def mirrors(kind="classic", front=True):
                 p0 = V(CAB.side_pt(zb, win_front(zb) + 0.012, s, -0.012))
                 p1 = V((xh - s * 0.08, yh + 0.012, zh))
                 d = p1 - p0
-                box(f"mirror_arm_{nm}_{s}", (p0 + p1) / 2, (d.length, 0.040, 0.070), "plastic_satin", bev=0.018, seg=2,
+                box(f"mirror_arm_{nm}_{s}", (p0 + p1) / 2, (d.length, 0.040, 0.070), "mirror_plastic", bev=0.018, seg=2,
                     rot=d.to_track_quat("X", "Z").to_matrix())
         elif kind == "classic":
             xh = s * 1.50
             yh = base.y - 0.10
             # arm: upper beam + lower strut, satin black
             tube(f"mirror_arm_{s}", [base + V((s * 0.0, 0, 0.03)), V((s * 1.33, yh + 0.02, 2.99)),
-                                     V((xh, yh, 2.94))], 0.015, "plastic_satin", seg=10)
+                                     V((xh, yh, 2.94))], 0.015, "mirror_plastic", seg=10)
             tube(f"mirror_strut_{s}", [V(CAB.side_pt(2.25, win_front(2.25) - 0.02, s, 0.0)),
-                                       V((xh - s * 0.02, yh, 2.08))], 0.014, "plastic_satin", seg=10)
+                                       V((xh - s * 0.02, yh, 2.08))], 0.014, "mirror_plastic", seg=10)
             # class II main + class IV wide-angle heads; body-colour back caps. R2 #7: each glass is aimed so
             # that the eye point sees the field it must show (glass normal = bisector of the direction to the
             # eye and the required view direction), not left facing straight back (edge-on from the seat)
@@ -1254,11 +1360,11 @@ def mirrors(kind="classic", front=True):
                 c = V((xh, yh, zc))
                 rot = mirror_aim(c, view)
                 if rounded():   # aero housing: fully rounded rim (R 42 mm) and a deeper, domed body-colour back
-                    box(f"mirror_{nm}_{s}", c, (0.24, 0.085, hgt), "plastic_satin", bev=0.042, seg=7, rot=rot)
+                    box(f"mirror_{nm}_{s}", c, (0.24, 0.085, hgt), "mirror_plastic", bev=0.042, seg=7, rot=rot)
                     box(f"mirror_{nm}_cap_{s}", c + rot @ V((0, 0.035, 0)), (0.232, 0.10, hgt - 0.012), "paint",
                         bev=0.049, seg=8, rot=rot)
                 else:
-                    box(f"mirror_{nm}_{s}", c, (0.24, 0.085, hgt), "plastic_satin", bev=0.03, seg=4, rot=rot)
+                    box(f"mirror_{nm}_{s}", c, (0.24, 0.085, hgt), "mirror_plastic", bev=0.03, seg=4, rot=rot)
                     box(f"mirror_{nm}_cap_{s}", c + rot @ V((0, 0.02, 0)), (0.235, 0.06, hgt - 0.01), "paint",
                         bev=0.03, seg=4, rot=rot)
                 box(f"mirror_{nm}_glass_{s}", c + rot @ V((0, -0.044, 0)), (0.215, 0.006, hgt - 0.03), "mirror",
@@ -1266,18 +1372,18 @@ def mirrors(kind="classic", front=True):
             if s > 0:  # class V kerb mirror on the passenger side, under the main mirrors, looking down
                 c = V((s * 1.42, yh + 0.04, 1.98))
                 rot = mirror_aim(c, (0.25, -0.35, -1.0))
-                box("mirror_kerb", c, (0.20, 0.08, 0.14), "plastic_satin", bev=0.03, seg=3, rot=rot)
+                box("mirror_kerb", c, (0.20, 0.08, 0.14), "mirror_plastic", bev=0.03, seg=3, rot=rot)
                 box("mirror_kerb_glass", c + rot @ V((0, -0.041, 0)), (0.18, 0.006, 0.12), "mirror", bev=0.003,
                     rot=rot)
         else:
             # camera monitor system: short aero arm with a camera pod (class II/IV)
             yh = base.y - 0.05
             tube(f"cam_arm_{s}", [base + V((0, 0, 0.04)), V((s * 1.36, yh, 2.98)), V((s * 1.44, yh - 0.03, 2.96))],
-                 0.022, "plastic_satin", seg=10)
-            sphere(f"cam_pod_{s}", (s * 1.46, yh - 0.06, 2.95), 0.05, "plastic_satin", scale=(1.1, 2.2, 1.0))
+                 0.022, "mirror_plastic", seg=10)
+            sphere(f"cam_pod_{s}", (s * 1.46, yh - 0.06, 2.95), 0.05, "mirror_plastic", scale=(1.1, 2.2, 1.0))
             cyl(f"cam_lens_{s}", (s * 1.46, yh - 0.165, 2.95), 0.016, 0.008, "glass_tint", axis="Y", seg=16)
             if s > 0:
-                sphere("cam_pod_kerb", (s * 1.36, yh - 0.03, 2.86), 0.035, "plastic_satin", scale=(1, 1.6, 1))
+                sphere("cam_pod_kerb", (s * 1.36, yh - 0.03, 2.86), 0.035, "mirror_plastic", scale=(1, 1.6, 1))
     # class VI front mirror over the passenger-side corner (kept with camera mirrors too)
     if not front:
         return
@@ -1291,13 +1397,13 @@ def mirrors(kind="classic", front=True):
         rot = mirror_aim(c, tgt - c)
         hb = c + rot @ V((0, 0.030, 0.045))
         tube("front_mirror_arm", [p + V((0, -0.05, 0.10)), p + V((0, 0.13, 0.10)), V((p.x, hb.y + 0.01, p.z + 0.02)),
-                                  hb + V((0, 0.01, 0.10)), hb], 0.013, "plastic_satin", seg=10)
-        box("front_mirror", c, (0.26, 0.07, 0.17), "plastic_satin", bev=0.03, seg=3, rot=rot)
+                                  hb + V((0, 0.01, 0.10)), hb], 0.013, "mirror_plastic", seg=10)
+        box("front_mirror", c, (0.26, 0.07, 0.17), "mirror_plastic", bev=0.03, seg=3, rot=rot)
         box("front_mirror_glass", c + rot @ V((0, -0.0355, 0)), (0.24, 0.006, 0.15), "mirror", bev=0.003, rot=rot)
         return
     tube("front_mirror_arm", [p + V((0, -0.05, 0.10)), p + V((0, 0.12, 0.10)), p + V((0, 0.20, 0.0))], 0.014,
-         "plastic_satin", seg=10)
-    box("front_mirror", p + V((0, 0.22, -0.10)), (0.26, 0.07, 0.17), "plastic_satin", bev=0.03, seg=3,
+         "mirror_plastic", seg=10)
+    box("front_mirror", p + V((0, 0.22, -0.10)), (0.26, 0.07, 0.17), "mirror_plastic", bev=0.03, seg=3,
         rot=Matrix.Rotation(math.radians(-35), 3, "X"))
     box("front_mirror_glass", p + V((0, 0.20, -0.135)), (0.24, 0.006, 0.15), "mirror", bev=0.003,
         rot=Matrix.Rotation(math.radians(-35), 3, "X"))
