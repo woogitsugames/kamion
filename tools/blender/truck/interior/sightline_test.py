@@ -86,6 +86,11 @@ def test(eye_offsets, nu=24, nv=10):
             pts = [o + U * (u0 + (u1 - u0) * (i + 0.5) / nu) + Vv * (v0 + (v1 - v0) * (j + 0.5) / nv)
                    for i in range(nu) for j in range(nv)]
             targets[f"cluster:{reg}"] = ("cluster_screen", pts)
+    if "info_screen" in bpy.data.objects:   # 10.1 in navigation canvas (ADR 0020): the whole UV rectangle must show
+        o, U, Vv = screen_frame("info_screen")
+        pts = [o + U * ((i + 0.5) / nu) + Vv * ((j + 0.5) / nv) for i in range(nu) for j in range(nv)]
+        pts += [o + U * a + Vv * b for a in (0.01, 0.99) for b in (0.01, 0.99)]   # the four canvas corners
+        targets["info:whole_screen"] = ("info_screen", pts)
     for ob in bpy.data.objects:  # any physical round gauge still in the model
         if ob.name.startswith("gauge_face_"):
             me = ob.data

@@ -79,7 +79,8 @@ SLOT_OF = {
 SLOT = {m: s for s, ms in SLOT_OF.items() for m in ms}
 DETAIL_SET = {"MI_Cab_Plastic": ("dashgrain", 1024), "MI_Cab_Leather": ("leather", 1024),
               "MI_Cab_Fabric": ("fabric", 512), "MI_Cab_Rubber": ("rubbermat", 1024), "MI_Cab_Metal": ("brushed", 512)}
-WEAR_MUL = {"leather_trim": 1.6, "leather": 2.3, "leather_wheel": 1.6, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3}
+WEAR_MUL = {"leather_trim": 1.6, "leather": 2.3, "leather_wheel": 1.6, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3,
+            "switch": 1.35}
 NO_AO = ("curtain_", "blind_", "hatch_blind",     # thin interpenetrating cloth (critic #15) and the rim, which
          "wheel_rim", "wheel_stitch",           # rotates (a baked occlusion pattern would turn with it): median value
          "ws_frit")                             # A6 r3: frit on the glass (no surface under it to inherit UV1 from)
