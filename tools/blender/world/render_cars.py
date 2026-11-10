@@ -49,8 +49,13 @@ def material(name, spec):
             mul.inputs[1].default_value = float(spec.get("alpha", 1.0))
             nt.links.new(im.outputs["Alpha"], mul.inputs[0])
             nt.links.new(mul.outputs[0], b.inputs["Alpha"])
-        else:
-            nt.links.new(im.outputs["Color"], b.inputs["Base Color"])
+        else:                                   # texture x manifest colour (the engine's _BaseMap x _BaseColor)
+            mx = nt.nodes.new("ShaderNodeMixRGB")
+            mx.blend_type = "MULTIPLY"
+            mx.inputs[0].default_value = 1.0
+            mx.inputs[2].default_value = col
+            nt.links.new(im.outputs["Color"], mx.inputs[1])
+            nt.links.new(mx.outputs[0], b.inputs["Base Color"])
     elif spec.get("shader") == "car_glass":
         # UV0 u codes of WorldCarGlass.shader: >= 6 clear lamp cover (life_cars.LENS_U), >= 2 privacy pane
         uv = nt.nodes.new("ShaderNodeUVMap")

@@ -142,6 +142,9 @@ M = {
     # alloy under brake dust (v4: 0.115 rendered as a black disc on LOD1 at 12-45 m on Low, read as "no rim")
     "rim_dusty": {"color": [0.27, 0.25, 0.22], "rough": 0.58, "metal": 0.45},
     "tyre_dusty": {"color": [0.05, 0.045, 0.038], "rough": 0.95},
+    # r10 (ADR 0078): LOD0 car tyres with the tread / sidewall texture (modulation, mean ~0.78; colour raised to match)
+    "car_tyre": {"color": [0.033, 0.033, 0.033], "rough": 0.85, "texture": "car_tyre"},
+    "car_tyre_dusty": {"color": [0.066, 0.059, 0.050], "rough": 0.95, "texture": "car_tyre"},
     "car_interior": {"color": [0.022, 0.022, 0.024], "rough": 0.9},
     "rim_dark": {"color": [0.05, 0.05, 0.052], "rough": 0.6, "metal": 0.5},
     "rim_steel": {"color": [0.07, 0.07, 0.072], "rough": 0.55, "metal": 0.6},
