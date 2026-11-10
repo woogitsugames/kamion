@@ -104,11 +104,13 @@ namespace Game.Editor.VisualQA
             // -qaGate3 <gate3_cameras.json>: adds the Stage 3 gate cameras (same code as the phone's qacam_set=gate3,
             // re-seated on the road collision) so scripts/gate3-evidence.ps1 can render them in the editor.
             string gate3Json = EditorTools.Arg("-qaGate3", null);
+            // Colliders are saved disabled and cooked by the player at load; do the same so the gate cameras seat and the
+            // contact shadows ray-cast onto the road like on the phone (r5 E-N1: the edit-mode wheel-plane fallback hid the
+            // trailer patch under the asphalt).
+            foreach (var ck in UnityEngine.Object.FindObjectsByType<Game.World.WorldCollisionCooker>(FindObjectsInactive.Include, FindObjectsSortMode.None)) ck.Cook();
+            Physics.SyncTransforms();
             if (!string.IsNullOrEmpty(gate3Json))
             {
-                // Colliders are saved disabled and cooked by the player at load; do the same so the cameras seat like on the phone.
-                foreach (var ck in UnityEngine.Object.FindObjectsByType<Game.World.WorldCollisionCooker>(FindObjectsInactive.Include, FindObjectsSortMode.None)) ck.Cook();
-                Physics.SyncTransforms();
                 Game.Gameplay.Gate3Cameras.CreateAll(UnityEngine.Object.FindAnyObjectByType<Game.World.WorldRegionRoot>(), null, File.ReadAllText(gate3Json));
             }
             var cams = UnityEngine.Object.FindObjectsByType<ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None)
@@ -184,7 +186,7 @@ namespace Game.Editor.VisualQA
                 for (int ci = 0; ci < ContactShadowCaster.Count; ci++)
                 {
                     var csc = ContactShadowCaster.Get(ci);
-                    Debug.Log($"[QA] contact shadow {csc.name}: {csc.LastVertices} vertices, {csc.LastHits} ground hits");
+                    Debug.Log($"[QA] contact shadow {csc.name}: {csc.LastVertices} vertices, {csc.LastHits} ground hits; {csc.LastDiagnostics}");
                 }
                 if (VehicleReflectionCapture.Active != null) VehicleReflectionCapture.Active.RenderAllNow();
                 foreach (var sl in UnityEngine.Object.FindObjectsByType<StreetLamps>(FindObjectsSortMode.None)) sl.RefreshLights(cam);
