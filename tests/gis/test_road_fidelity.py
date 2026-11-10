@@ -20,7 +20,7 @@ from conftest import REGION_DIR, REPO
 QA = REGION_DIR / "generated" / "fidelity_qa.json"
 TARGET = {"axis_p95": 1.0, "edge_p95": 0.75, "lane_mismatch": 0, "islands_absent": 0}
 # measured 2026-11-10 (fidelity-r9); ratchet: never worse than this (+ small tolerance for classifier noise)
-BASELINE = {"axis_p95": None, "edge_p95": None, "lane_mismatch": None, "islands_absent": None, "lane_into_island_bug": None}
+BASELINE = {"axis_p95": 0.032, "edge_p95": 2.04, "lane_mismatch": 0, "islands_absent": 4, "lane_into_island_bug": 3}
 TOL = {"axis_p95": 0.02, "edge_p95": 0.05}
 
 
@@ -64,7 +64,10 @@ def test_ratchet_edges(qa):
 
 
 def test_ratchet_lanes(qa):
-    assert len(_route(qa)["lanes"]["mismatch"]) <= BASELINE["lane_mismatch"]
+    ln = _route(qa)["lanes"]
+    assert len(ln["mismatch"]) <= BASELINE["lane_mismatch"]
+    # 25 of 29 route segments verifiable (OSM lanes tag or marked road on ortho); the 4 unmarked yard roads are not
+    assert ln["verified"] >= 25
 
 
 def test_ratchet_islands(qa):
@@ -73,7 +76,7 @@ def test_ratchet_islands(qa):
 
 
 # which owner targets are already met (hard asserts); the rest xfail until met, then this test fails ("promote")
-MET = {"axis_p95": None, "edge_p95": None, "lane_mismatch": None, "islands_absent": None}
+MET = {"axis_p95": True, "edge_p95": False, "lane_mismatch": True, "islands_absent": False}
 
 
 def _target(name, ok):

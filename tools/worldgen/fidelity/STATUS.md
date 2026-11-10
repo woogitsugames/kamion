@@ -15,3 +15,9 @@ Branch `fidelity-r9` (worktree agent-aee7234325983b8dc). Evidence: `artifacts/fi
   Full run (route + tile) in progress. NEXT:
   `uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c` then fill BASELINE/MET in
   tests/gis/test_road_fidelity.py and `uv run --project tools/worldgen pytest tests/gis/test_road_fidelity.py -q`.
+- 2026-11-10 21:40 — full run (route + 75 tile junction windows, ~4 min). Route: axis p95 0.03 m, edge (road->verge) p95 2.04 m,
+  lanes 25/25 verified, islands absent 4, lane->island bug 3 (owner bug = j:n12620261934 lane 0 through, E -283 N -197).
+  Test tests/gis/test_road_fidelity.py: 8 passed, 2 xfailed. DIFFS.md final top 10. NEXT (mine): read destination:lanes /
+  placement in roadgraph.RAW_TAGS (+ QA entry for dropped turn:lanes) — NOT started. NEXT command:
+  `uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c && uv run --project tools/worldgen pytest tests/gis/test_road_fidelity.py -q`
+- 21:50 determinism: two full runs -> identical fidelity_qa.json sha256 08b902f6...f286.

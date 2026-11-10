@@ -54,3 +54,11 @@ testu, który nie pozwoli się pogorszyć.
 - Klasyfikator ortofoto ma znane słabości (cienie drzew, chodniki w kolorze asfaltu, parkingi przy jezdni, auta na
   krawędzi): wyniki krawędzi to rozkład, nie pomiar geodezyjny; każda nakładka jest oglądana przez człowieka/agenta.
 - Komórki WMS i arkusz są tylko referencją pomiarową (docs/05 §3), nigdy teksturą.
+
+## Wynik pierwszego pomiaru (2026-11-10, trasa startowa, 29 odcinków)
+Oś vs OSM p95 0,03 m (cel spełniony). Krawędź asfalt→zieleń p50 0,74 / p95 2,04 m (cel 0,75 niespełniony). Pasy 25/25
+zweryfikowanych zgodnych (4 drogi placu bez malowania nieweryfikowalne). Wysepki generatora bez pokrycia na ortofoto przy
+trasie: 4; pasy wjeżdżające w wysepkę na prawdziwym asfalcie: 3 (w tym lewy pas „na wprost” Andersa przy sygnalizacji
+s ≈ 1355 — zgłoszenie właściciela). Lista przyczyn: `artifacts/fidelity-r9/DIFFS.md`. Ratchet: `tests/gis/test_road_fidelity.py`
+(8 passed, 2 xfailed = krawędź, wysepki).
+Idempotencja: dwa kolejne pełne runy dają identyczny `fidelity_qa.json` (SHA256 08b902f6…f286).
