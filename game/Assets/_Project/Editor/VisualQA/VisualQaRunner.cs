@@ -85,6 +85,15 @@ namespace Game.Editor.VisualQA
             var profile = QualityProfile.Load();
             QualityProfile.Tier tierSettings = default;
             bool hasTier = profile != null && profile.TryGet(tier, out tierSettings);
+            // Ablation renders in the editor (same keys as the phone launch overrides): -qaRq "rq_hlod=0,rq_trees=0".
+            string rq = EditorTools.Arg("-qaRq", null);
+
+            if (hasTier && !string.IsNullOrEmpty(rq))
+            {
+                var kv = rq.Split(',').Select(s => s.Split('=')).Where(p => p.Length == 2).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
+                Debug.Log("[VISUALQA] overrides: " + RenderOverrides.Parse(k => kv.TryGetValue(k, out var v) ? v : null));
+                tierSettings = RenderOverrides.ApplyTo(tierSettings);
+            }
             // The world volume carries the tonemapper; EnvironmentLighting adds a runtime look-grading volume (D23).
             var volume = UnityEngine.Object.FindObjectsByType<UnityEngine.Rendering.Volume>(FindObjectsSortMode.None)
                 .FirstOrDefault(v => v.sharedProfile != null && v.sharedProfile.Has<UnityEngine.Rendering.Universal.Tonemapping>());
@@ -244,6 +253,26 @@ namespace Game.Editor.VisualQA
                 var world = RenderToPixels(cam, width, height, out _, null, msaa, scale);
                 stats.AppendLine(SceneStats.Estimate(cam, hasTier ? tierSettings.shadowDistance : QualitySettings.shadowDistance,
                     hasTier ? tierSettings.shadowCascades : 1, qa.id));
+                // -qaTimeFrames N: N more renders of this camera at the tier's size / MSAA, wall time with a 1-pixel readback
+                // at the end (GPU-synchronised): an editor-GPU estimate of the frame cost for A/B comparisons (ADR 0023).
+                int timeN = int.Parse(EditorTools.Arg("-qaTimeFrames", "0"));
+                if (timeN > 0)
+                {
+                    int tw = Mathf.RoundToInt(width * scale), th = Mathf.RoundToInt(height * scale);
+                    var trt = new RenderTexture(tw, th, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB) { antiAliasing = msaa };
+                    var one = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+                    cam.targetTexture = trt;
+                    void Sync() { RenderTexture.active = trt; one.ReadPixels(new Rect(0, 0, 1, 1), 0, 0); one.Apply(); RenderTexture.active = null; }
+                    cam.Render(); Sync();
+                    var sw = System.Diagnostics.Stopwatch.StartNew();
+                    for (int k = 0; k < timeN; k++) cam.Render();
+                    Sync();
+                    double ms = sw.Elapsed.TotalMilliseconds / timeN;
+                    cam.targetTexture = null;
+                    trt.Release(); UnityEngine.Object.DestroyImmediate(trt); UnityEngine.Object.DestroyImmediate(one);
+                    stats.AppendLine($"  {qa.id} editor frame time: {ms:F2} ms over {timeN} renders ({tw}x{th}, msaa {msaa}, {SystemInfo.graphicsDeviceName})");
+                    Debug.Log($"VISUALQA_TIMING {qa.id} {ms:F3}");
+                }
                 var wi = Game.World.WorldInstances.Last;
                 if (wi.Draws > 0)
                     stats.AppendLine($"  {qa.id} instanced (props+trees): draws {wi.Draws}, instances {wi.Instances}, triangles {wi.Triangles / 1000}k, cells {wi.VisibleCells}, forest HLOD cells {wi.HlodCells}");
