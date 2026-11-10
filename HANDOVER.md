@@ -2,7 +2,7 @@
 
 ## Najpierw
 - main = ten commit. Start s8: 8 agentów Fable przejmuje/uruchomionych (tabela). GPT/Codex pracuje nad importem Megascans (ADR 0084, `gpt-megascans`, STATUS `artifacts/megascans-r1/STATUS.md`) — nie ruszać, scalić po REPORT.md. Antigravity (Argon 4) — zadanie `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` (tło za krawędzią świata, ADR 0085, gałąź `argon-edge`).
-- Decyzja otwarta: ogranicznik na zjeździe twarde 90 czy ~94 (`overrunBrakeOffsetKmh`, ADR 0082).
+- Decyzja właściciela D46: ogranicznik na zjeździe dopuszcza ~94 km/h (`overrunBrakeOffsetKmh = 4` zostaje, ADR 0082).
 - Decyzja lidera s8 (0076): ratchety fidelity — abreast oceniane na ortofoto; jeśli bliżej rzeczywistości, osobna metryka i nowy baseline z uzasadnieniem w ADR 0076; inaczej abreast ograniczony do osi p95 ≤ 0,13 m.
 
 | zadanie | ADR | worktree (`.claude/worktrees/`) | STATUS | stan |
