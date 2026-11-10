@@ -60,9 +60,10 @@ VAN = dict(L=4.52, W=1.83, H=1.85, wb=2.78, foh=0.88, r=0.325, sill=0.23, belt=1
 # peak): drop / run of the fascia, lamp top / bottom at the inner and outer end, grille half width (in top half
 # widths) and its top, light bar across the tail.
 FACES = {
-    "swept": dict(drop=0.34, run=0.20, lamp=(0.03, 0.26, 0.00, 0.44), gw=0.62, gt=0.24, bar=False),
-    "wide": dict(drop=0.32, run=0.18, lamp=(0.03, 0.24, 0.00, 0.36), gw=0.62, gt=0.14, bar=True),
-    "tall": dict(drop=0.42, run=0.14, lamp=(0.02, 0.20, 0.00, 0.32), gw=0.64, gt=0.10, bar=False),
+    # r8 (REVIEW r7 W-N7 "a line instead of headlamps"): taller housings (was 0.26 / 0.44, 0.24 / 0.36, 0.20 / 0.32)
+    "swept": dict(drop=0.34, run=0.20, lamp=(0.03, 0.36, 0.00, 0.54), gw=0.62, gt=0.30, bar=False),
+    "wide": dict(drop=0.32, run=0.18, lamp=(0.03, 0.34, 0.00, 0.46), gw=0.62, gt=0.20, bar=True),
+    "tall": dict(drop=0.42, run=0.14, lamp=(0.02, 0.28, 0.00, 0.40), gw=0.64, gt=0.14, bar=False),
 }
 
 
@@ -455,13 +456,14 @@ def _vehicle(d, paint, lod):
         # tyre disc per wheel (the round wheels are what still reads at 15-40 px; a black band reads as "legs")
         ya, yb = yra - r, yfa + r
         for sx in (-1, 1):
-            _oq(m, "tyre", [[sx * (hw - 0.01), yra, 0.06], [sx * (hw - 0.01), yfa, 0.06],
-                            [sx * (hw - 0.01), yfa, sill + 0.02], [sx * (hw - 0.01), yra, sill + 0.02]], [sx, 0, 0])
+            # r8 N-13: the dark band is a two-sided keel on the centre line (was one outward quad per side between the
+            # axles: under the body the far wheel discs showed their culled backs, i.e. the paving)
+            _oq(m, "tyre", [[0.0, ya, 0.06], [0.0, yb, 0.06], [0.0, yb, sill + 0.02], [0.0, ya, sill + 0.02]], [sx, 0, 0])
             for yc in (yra, yfa):
                 _disc(m, "tyre", [sx * (hw + 0.006), yc, r], r, 6, sx, math.pi / 6)
+        xc = hw - 0.14           # r8 N-13: inside the body's lower edge (hw - 0.01 stuck out beside the bumpers)
         for yy, s in ((ya, -1), (yb, 1)):
-            _oq(m, "tyre", [[hw - 0.01, yy, 0.0], [-hw + 0.01, yy, 0.0], [-hw + 0.01, yy, sill + 0.02],
-                            [hw - 0.01, yy, sill + 0.02]], [0, s, 0])
+            _oq(m, "tyre", [[xc, yy, 0.08], [-xc, yy, 0.08], [-xc, yy, sill + 0.02], [xc, yy, sill + 0.02]], [0, s, 0])
 
     # ---- lamps, grille, plates
     if lod < 2:
@@ -728,7 +730,14 @@ def _wheel2(m, x_out, yc, r, sx, seg, steel, lod, wst=0, rimm="rim", tyre="tyre"
         rings = [ring(*p) for p in prof]
         for A, B in zip(rings[:-1], rings[1:]):
             band(tyre, A, B)
-        band(tyre, rings[-1], ring(r, w), radial=1.0)
+        inner = ring(r, w)
+        for k in range(seg):                                    # tread: not the top third (inside the arch)
+            k2 = (k + 1) % seg
+            if rings[-1][k][2] + rings[-1][k2][2] < 2 * r + 0.9 * r:
+                want = (rings[-1][k] + rings[-1][k2]) / 2 - cen
+                want[0] = 0
+                _quad(m, tyre, rings[-1][k], rings[-1][k2], inner[k2], inner[k], want)
+        fan(tyre, inner[::2], -X)                               # r8 N-13: inner sidewall (seen under the body)
         lip = ring(rr - 0.014, 0.014)
         rim = "rim_steel" if steel else ("rim" if wst == 3 else rimm)
         band(rim, rings[0], lip, radial=0.0)
@@ -762,7 +771,27 @@ def _wheel2(m, x_out, yc, r, sx, seg, steel, lod, wst=0, rimm="rim", tyre="tyre"
                 want = (B[k] + B[k2]) / 2 - cen
                 want[0] = 0
                 _quad(m, tyre, B[k], B[k2], C2[k2], C2[k], want)
-        fan("rim_steel" if steel else ("rim_dark" if wst == 3 else rimm), A, X)
+        fan(tyre, C2, -X)                                       # r8 N-13: inner sidewall (seen under the body)
+        face = "rim_steel" if steel else ("rim_dark" if wst == 3 else rimm)
+        fan(face, A, X)
+        # r8 N-14 (Low draws LOD1 from 16 m): a plain disc read as "no rim". Dark hub + dark windows between
+        # the spokes of the prototype's alloy style (pressed steel: hub cap ring only)
+        ra_ = (0.62 if steel else 0.70) * r
+        c0 = np.array([x_out + sx * 0.002, yc, r])
+        dark = "rim_dark" if not steel else "tyre"
+        if steel:
+            fan(dark, [c0 + np.array([0, 0.30 * r * math.cos(t), 0.30 * r * math.sin(t)])
+                       for t in np.linspace(0, 2 * math.pi, 7)[:-1]], X)
+        else:
+            ns = (5, 5, 7, 5)[wst]
+            wdark = "rim" if wst == 3 else dark                 # style 3: dark wheel, bright machined windows
+            for s_ in range(ns):
+                t0 = 2 * math.pi * (s_ + 0.24) / ns + 0.3
+                t1 = 2 * math.pi * (s_ + 0.76) / ns + 0.3
+                tm = (t0 + t1) / 2
+                q = [c0 + np.array([0, rad * math.cos(t), rad * math.sin(t)])
+                     for rad, t in ((0.30 * ra_, tm), (0.90 * ra_, t0), (0.90 * ra_, t1))]
+                fan(wdark if wst == 3 else dark, q, X)
 
 
 def _vehicle2(d, paint, lod, steel=False, style=None):
@@ -786,7 +815,9 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     priv = not cargo and bool(style.get("privacy", False))
 
     # ---- top shell: crowned centre + shoulder arcs
-    NT, NS = (3, 3) if lod == 0 else (1, 1)
+    # r8: LOD0 crown 6 -> 4 quads across (pays for the inner skin); LOD1 shoulders 1 -> 2 segments (N-14: with one
+    # chord the wings and roof rails were flat bevels, "soap", on Low at 12-45 m)
+    NT, NS = (2, 3) if lod == 0 else (1, 2)
     gs = ([-2 + k / NS for k in range(NS)] + [-1 + k / NT for k in range(2 * NT + 1)] + [1 + (k + 1) / NS for k in range(NS)])
     for i in range(n - 1):
         mat = matname[sh.emat[i]]
@@ -804,6 +835,24 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
                       (gs[j] * ds + po, vb * ds)], nn)
             else:
                 _quad(m, mm, A[j][0], A[j + 1][0], B[j + 1][0], B[j][0], nn)
+
+    # ---- r8 (REVIEW r7 N-13): inner skin of the greenhouse. The shell is single-sided, so a ray that entered through
+    # one pane left through the BACK of the far pillar / roof rail and showed the paving (car_holes_qa.py). Coarse
+    # (4 quads across, 5 mm inside the shell): roof lining and the inner faces of the pillars; beside the glass
+    # the pillar lining reaches 15 % into the pane so that no ray slips between the shell and its lining.
+    if lod == 0:
+        for i in range(sh.mid["G0"], sh.mid["G4"]):
+            if matname[sh.emat[i]] == gmat:
+                strips = ([-2.0, -1.5, -0.85], [0.85, 1.5, 2.0])
+            else:
+                strips = ([-2.0, -1.0, 0.0, 1.0, 2.0],)
+            for gk in strips:
+                A = [sh.pt(i, g) for g in gk]
+                B = [sh.pt(i + 1, g) for g in gk]
+                for j in range(len(gk) - 1):
+                    q = [A[j], A[j + 1], B[j + 1], B[j]]
+                    _quad(m, "car_interior", *[pp - nn / np.linalg.norm(nn) * 0.005 for pp, nn in q],
+                          -sum(nn / np.linalg.norm(nn) for _, nn in q))
 
     def patch(name, t0, t1, glist, mat, lift=0.006):
         i = sh.seg[name]
@@ -835,7 +884,7 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     yfa = L / 2 - d["foh"]
     yra = yfa - d["wb"]
     ra = r + 0.05
-    aseg = 10 if lod == 0 else 4
+    aseg = 10 if lod == 0 else 6                # r8 N-14: LOD1 arches 4 -> 6 segments (Low draws LOD1 from 16 m)
 
     def arch(yc):
         return [(yc - ra - 0.03, sill)] + [(yc - ra * math.cos(t), r + ra * math.sin(t))
@@ -921,7 +970,11 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
                 q = [np.array([sx * (sh.X(y, z) + lift), y, z]) for y, z in t]
                 _oq(m, mat, q, [sx, 0, 0])
     if lod == 0:
-        side_tris(paint, _tri2d(outer.difference(unary_union(wins))))
+        frame = outer.difference(unary_union(wins))
+        side_tris(paint, _tri2d(frame))
+        for t in _tri2d(frame.simplify(0.01)):      # r8 N-13: inner face of the pillars / window frames
+            for sx in (1, -1):
+                _oq(m, "car_interior", [np.array([sx * (sh.X(y, z) - 0.005), y, z]) for y, z in t], [-sx, 0, 0])
         for wn, rear in zip(wins, wrear):           # dust mask rises from the lower window edge
             po = PRIVACY_U if (priv and rear) else 0.0
             for t in _tri2d(wn):
@@ -938,9 +991,11 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         A = arch(yc)
         xo = sh.X(yc, r) - 0.035
         for sx in (-1, 1):
-            _wheel2(m, sx * xo, yc, r, sx, 16 if lod == 0 else 8, steel, lod, style["wheel"],
+            _wheel2(m, sx * xo, yc, r, sx, 16 if lod == 0 else 10, steel, lod, style["wheel"],
                     "rim_dusty" if dl > 0.45 else "rim", "tyre_dusty" if dl > 0.3 else "tyre")
-            dep = 0.30 if lod == 0 else 0.24
+            dep = 0.28 if lod == 0 else 0.26
+            # r8 N-13: back plate of the wheel housing (the gap above the tyre showed the cabin / the far side)
+            _oq(m, "car_trim", [np.array([sx * (sh.X(ya, za) - dep), ya, za]) for ya, za in A], [sx, 0, 0])
             for (ya, za), (yb, zb_) in zip(A[:-1], A[1:]):
                 mid = np.array([0, yc - (ya + yb) / 2, r - (za + zb_) / 2])
                 xa, xb = sh.X(ya, za), sh.X(yb, zb_)
@@ -953,8 +1008,9 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
                     _quad(m, "car_sill", [sx * (xa + 0.006), ya, za], [sx * (xb + 0.006), yb, zb_],
                           [sx * (sh.X(y2b, z2b) + 0.006), y2b, z2b], [sx * (sh.X(y2a, z2a) + 0.006), y2a, z2a], [sx, 0, 0])
     zfl = sill + 0.06
-    _quad(m, "car_trim", [hw - 0.10, -L / 2 + 0.2, zfl], [-hw + 0.10, -L / 2 + 0.2, zfl], [-hw + 0.10, L / 2 - 0.2, zfl],
-          [hw - 0.10, L / 2 - 0.2, zfl], [0, 0, -1])
+    # under-floor (r8: pulled inside the plan taper, its rear corners stuck out of the rounded tail)
+    _quad(m, "car_trim", [hw - 0.16, -L / 2 + 0.4, zfl], [-hw + 0.16, -L / 2 + 0.4, zfl], [-hw + 0.16, L / 2 - 0.5, zfl],
+          [hw - 0.16, L / 2 - 0.5, zfl], [0, 0, -1])
 
     # ---- lamps, grille, intakes, plates (patches on the shell; lamps taper inward and wrap into the wing)
     f = FACES[d.get("face", "swept")]
@@ -971,9 +1027,29 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     tg = [0.34, 0.8, 1.0, 1.4, 1.8] if lod == 0 else [0.36, 1.0, 1.7]
     for sx in (-1, 1):
         spatch("H1", lamp_cols(sx, 0.0, 1.0), "car_lamp")
+        spatch("H1", lamp_cols(sx, 0.06, 0.24)[:-1], "car_light_head", lift=0.009)       # running-light strip
+        # r8 W-N7 / N-14: two round projector lenses in the dark housing (LOD0 had one flat strip, "soap with a
+        # line"; LOD1 had the dark housing only, "no headlamps"). LOD1: one block where the two lenses sit.
+        i_ = sh.seg["H1"]
+        ln_ = float(np.linalg.norm(sh.P[i_ + 1] - sh.P[i_]))
+        xt_ = sh.pt(i_, 1.0)[0][0]
+
+        def lamp_t(g, a):
+            kk = (g - lg[0]) / (lg[-1] - lg[0])
+            top, bot = li0 + (lo0 - li0) * kk, li1 + (lo1 - li1) * kk
+            return top + (bot - top) * a, (bot - top) * ln_
         if lod == 0:
-            spatch("H1", lamp_cols(sx, 0.07, 0.36)[:-1], "car_light_head", lift=0.009)   # reflector / running-light strip
-            spatch("H1", lamp_cols(sx, 0.50, 0.90)[1:3], "car_light_head", lift=0.009)   # main beam unit
+            for gc in (0.66, 1.02):
+                tc_, hgt = lamp_t(gc, 0.64)
+                rl = 0.30 * hgt
+                hexa = []
+                for a_ in np.linspace(0, 2 * math.pi, 7)[:-1]:
+                    pp, nrm = sh.ptf(i_, tc_ + rl * math.sin(a_) / ln_, sx * (gc + rl * math.cos(a_) / xt_))
+                    hexa.append(pp + nrm * 0.010)
+                _oq(m, "car_light_head", hexa, sh.ptf(i_, tc_, sx * gc)[1])
+        else:
+            spatch("H1", [(sx * g, lamp_t(g, 0.38)[0], lamp_t(g, 0.90)[0]) for g in (0.54, 1.14)], "car_light_head",
+                   lift=0.009)
         if cargo:
             patch("R1", 0.30, 0.97, [sx * g for g in ([1.0, 1.35, 1.7] if lod == 0 else [1.0, 1.6])], "car_light_tail")
         else:
@@ -996,14 +1072,18 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
             t = gt + (0.70 - gt) * k / 3
             patch("H1", t, t + 0.03, [-0.70 * gw, 0.0, 0.70 * gw], "rim_dark", lift=0.009)  # grille slats
         if d.get("face") == "wide":
-            patch("H1", gt - 0.035, gt, [-0.72 * gw, 0.0, 0.72 * gw], "rim", lift=0.009)   # bright strip on the grille
+            patch("H1", gt - 0.035, gt, [-0.72 * gw, 0.0, 0.72 * gw], "rim_dark", lift=0.009)   # satin strip (r8: no chrome)
+        for t in (0.40, 0.66):                                                             # lower intake slats (r8)
+            patch("F1", t, t + 0.05, [-0.56, 0.0, 0.56], "rim_dark", lift=0.009)
         for sx in (-1, 1):                                                                 # corner intakes
             spatch("F1", [(sx * 1.05, 0.12, 0.62), (sx * 1.32, 0.06, 0.72), (sx * 1.62, 0.12, 0.56)], "car_trim")
         patch("R1", 0.0, 0.13, [-0.72, 0.0, 0.72], "car_trim")                             # rear valance insert
         if not cargo:                                                                      # roof aerial fin
             pr = sh.pt(sh.mid["G1"], 0.0)[0]
             _box5(m, "car_trim", [0, pr[1] + 0.16, pr[2] + 0.025], 0.02, 0.075, 0.03, (0, 0, -1))
-    pk = int(style.get("plate", 0)) if lod == 0 else PLATE_FAR       # LOD1: EU band + grey band only
+    # r8 N-14: LOD1 carries the prototype's own plate too (Low draws LOD1 from 16 m, where a 520 mm plate is still
+    # ~60 px wide; the atlas mips blur the characters into the grey band that the far cell used to fake)
+    pk = int(style.get("plate", 0))
     u0, v0, u1, v1 = plate_uv(pk)
     for name, tc in (("H1", 0.80), ("R1", 0.30)):
         i = sh.seg[name]
@@ -1045,13 +1125,11 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     for sx in (-1, 1):
         c = [sx * (sh.X(yM, zM) + 0.085), yM, zM]
         if lod == 0:
-            _box5(m, paint, c, 0.085, 0.035, 0.055, (-sx, 0, 0))
+            _box5(m, paint, c, 0.085, 0.035, 0.055, (0, 0, 0))
             _quad(m, "car_glass", [c[0] - 0.07, yM - 0.037, zM - 0.04], [c[0] + 0.07, yM - 0.037, zM - 0.04],
                   [c[0] + 0.07, yM - 0.037, zM + 0.04], [c[0] - 0.07, yM - 0.037, zM + 0.04], [0, -1, 0])
         else:
-            for s in (-1, 1):
-                _quad(m, paint, [c[0] - 0.085, yM + s * 0.03, zM - 0.055], [c[0] + 0.085, yM + s * 0.03, zM - 0.055],
-                      [c[0] + 0.085, yM + s * 0.03, zM + 0.055], [c[0] - 0.085, yM + s * 0.03, zM + 0.055], [0, s, 0])
+            _box5(m, paint, c, 0.085, 0.03, 0.055, (0, 0, 0))
     if lod == 0:
         def vline(y, za, zb_):
             return [(y, za + (zb_ - za) * k / 4) for k in range(5)]
@@ -1078,7 +1156,7 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
 
         # ---- interior seen through the glass: tub, dashboard, seats with headrests, headliner
         it = "car_interior"
-        yi0, yi1 = ga0 + 0.10, ga1 + 0.05
+        yi0, yi1 = ga0 + 0.02, ga1 + 0.05                  # r8 N-13: the tub reaches the base of the rear glass
         xi = hw - 0.13
         zf0 = sill + 0.12
         _quad(m, it, [-xi, yi0, zf0], [xi, yi0, zf0], [xi, yi1, zf0], [-xi, yi1, zf0], [0, 0, 1])
@@ -1086,12 +1164,31 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
             _quad(m, it, [sx * xi, yi0, zf0], [sx * xi, yi1, zf0], [sx * xi, yi1, sh.zbelt(yi1)],
                   [sx * xi, yi0, sh.zbelt(yi0)], [-sx, 0, 0])
         _quad(m, it, [-xi, yi0, zf0], [xi, yi0, zf0], [xi, yi0, sh.zbelt(yi0)], [-xi, yi0, sh.zbelt(yi0)], [0, 1, 0])
+        # r8 N-13: door tops between the cabin wall and the glass line (looking down through a side window showed
+        # the paving through the 0.12 m door cavity)
+        if not cargo:                                # shelf from the tub's rear wall up to the base of the rear glass
+            ib = sh.mid["G0"]
+            ql = [sh.pt(ib, g)[0] - np.array([0, 0, 0.006]) for g in (-2.0, -1.0, 1.0, 2.0)]
+            zb0 = sh.zbelt(yi0)
+            _oq(m, it, [np.array([-xi, yi0, zb0]), np.array([xi, yi0, zb0]), ql[3], ql[2], ql[1], ql[0]], [0, 0.3, 1])
+        yl = [yi0, min(ga0 + 0.55, (yi0 + yi1) / 2), yi1]
+        for sx in (-1, 1):
+            for ya, yb in zip(yl[:-1], yl[1:]):
+                za, zb_ = sh.zbelt(ya), sh.zbelt(yb)
+                _quad(m, it, [sx * xi, ya, za], [sx * sh.X(ya, za), ya, za], [sx * sh.X(yb, zb_), yb, zb_],
+                      [sx * xi, yb, zb_], [0, 0, 1])
         zd = belt - 0.03
-        _box5(m, it, [0, yi1 - 0.27, (zd + zf0) / 2], xi, 0.27, (zd - zf0) / 2, (0, 0, -1))          # dashboard
-        zh_ = sh.zroof - 0.10
-        g1, g3 = sh.P[sh.mid["G1"]], sh.P[sh.mid["G3"]]
-        xh = hw - d["tumble"] - 0.10
-        _quad(m, it, [-xh, g1[0], zh_], [xh, g1[0], zh_], [xh, g3[0], zh_], [-xh, g3[0], zh_], [0, 0, -1])
+        # dashboard: a slab above the front wheel housings (r8 N-13: down to the floor it stood inside the arches
+        # and showed in the gap over the tyre) + the bulkhead behind it, as wide as the body
+        zd0 = max(zf0, r + ra + 0.02)
+        _box5(m, it, [0, yi1 - 0.27, (zd + zd0) / 2], xi - 0.03, 0.27, (zd - zd0) / 2, (0, 0, 0))
+        xb_, zb_ = sh.X(yi1, belt) - 0.03, sh.zbelt(yi1)
+        _oq(m, it, [np.array(q_) for q_ in ([-xb_, yi1, zd0], [xb_, yi1, zd0], [xb_, yi1, zb_ - 0.02],
+                                             [xb_ - 0.11, yi1, belt - 0.01], [-xb_ + 0.11, yi1, belt - 0.01],
+                                             [-xb_, yi1, zb_ - 0.02])], [0, -1, 0])
+        xw_ = sh.X(yfa, r) - 0.30                              # between the wheel housings: down to the floor
+        _quad(m, it, [-xw_, yi1, zf0], [xw_, yi1, zf0], [xw_, yi1, zd0], [-xw_, yi1, zd0], [0, -1, 0])
+        # (the flat headliner quad of v2-v4 is replaced by the inner skin above)
         ysb = yB + 0.02
         zs0 = zf0 + 0.20
         for sx in (-1, 1):                                                                             # front seats
@@ -1099,11 +1196,14 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
             _box5(m, it, [sx * 0.37, ysb + 0.02, belt + 0.25], 0.12, 0.05, 0.095, (0, 0, -1))
             _box5(m, it, [sx * 0.37, ysb + 0.30, zf0 + 0.27], 0.24, 0.25, 0.07, (0, 0, -1))
         if cargo:
-            _quad(m, it, [-xi, ysb - 0.12, zf0], [xi, ysb - 0.12, zf0], [xi, ysb - 0.12, H - 0.15],
-                  [-xi, ysb - 0.12, H - 0.15], [0, 1, 0])
+            # bulkhead up to the roof lining (r8 N-13: the 0.15 m gap under the roof opened the empty cargo bay)
+            xs_ = xi - 0.14
+            _oq(m, it, [np.array(q_) for q_ in ([-xi, ysb - 0.12, zf0], [xi, ysb - 0.12, zf0],
+                                                 [xi, ysb - 0.12, H - 0.20], [xs_, ysb - 0.12, H - 0.03],
+                                                 [-xs_, ysb - 0.12, H - 0.03], [-xi, ysb - 0.12, H - 0.20])], [0, 1, 0])
         else:
             yrs = max(yra + 0.12, ga0 + 0.55)
-            _box5(m, it, [0, yrs, (zs0 + belt + 0.08) / 2], 0.64, 0.08, (belt + 0.08 - zs0) / 2, (0, 0, -1))
+            _box5(m, it, [0, yrs, (zs0 + belt + 0.08) / 2], 0.56, 0.08, (belt + 0.08 - zs0) / 2, (0, 0, -1))
             for sx in (-1, 1):
                 _box5(m, it, [sx * 0.36, yrs + 0.02, belt + 0.17], 0.11, 0.05, 0.075, (0, 0, -1))
             _quad(m, it, [-xi, yi0, sh.zbelt(yi0) - 0.02], [xi, yi0, sh.zbelt(yi0) - 0.02], [xi, yrs, belt - 0.02],

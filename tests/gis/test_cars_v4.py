@@ -26,7 +26,10 @@ def test_vehicle_policy_mirrors_engine():
     hi = BW.instance_rule("car_hatch_red", 3, BW.LOD_POLICY["High"]["lod_bias"])
     lo = BW.instance_rule("car_hatch_red", 3, BW.LOD_POLICY["Low"]["lod_bias"])
     assert hi[-1][0] == lo[-1][0] == BW.VEHICLE_CULL_M >= 150          # W-N6: LOD2 instead of a cull on Low
-    assert lo[0][0] == 12.5 and hi[0][0] == 37.5
+    # r8 (REVIEW r7 N-14): LOD0 floor on every tier, so the cars 8-12 m beside the route are LOD0 on Low too
+    assert float(re.search(r"VehicleLod0MinM = ([0-9.]+)f", cs).group(1)) == BW.VEHICLE_LOD0_MIN_M >= 15.0
+    assert lo[0][0] == BW.VEHICLE_LOD0_MIN_M and hi[0][0] == 37.5 and lo[1][0] == 45.0
+    assert BW.instance_rule("tractor_white", 2, 0.5)[0][0] == 20.0       # 40 x 0.5 is already above the floor
     assert BW.instance_rule("trailer_box_0", 2, 0.5)[-1][0] == BW.VEHICLE_CULL_M
     assert BW.instance_rule("bin_1100_blue", 2, 0.5)[-1][0] == 60.0      # non-vehicles still scale with lodBias
 
@@ -43,8 +46,8 @@ def test_car_lod2_is_cheap_and_plates_textured():
         k = LC._plate_index(f"{b}_red")
         u0, v0, u1, v1 = LC.plate_uv(k)
         assert p0["UV"][:, 0].min() >= u0 - 1e-6 and p0["UV"][:, 0].max() <= u1 + 1e-6
-        f0, g0, f1, g1 = LC.plate_uv(LC.PLATE_FAR)
-        assert p1["UV"][:, 0].min() >= f0 - 1e-6 and p1["UV"][:, 1].max() <= g1 + 1e-6    # LOD1: far plate only
+        # r8 (REVIEW r7 N-14): LOD1 carries the prototype's own plate too (the atlas mips do the far blur)
+        assert p1["UV"][:, 0].min() >= u0 - 1e-6 and p1["UV"][:, 0].max() <= u1 + 1e-6
     assert M["car_plate"]["texture"] == "car_plates"
     assert 0.5 <= M["car_glass_tint"]["alpha"] <= 0.7                    # W-N8: transmission 0.3-0.5
 
