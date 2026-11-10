@@ -1,6 +1,6 @@
 # ADR 0039: truck wheel LODs reduced by lathe column/ring, not by edge collapse
 
-Status: proposed (exporter change in, re-export pending) · 2026-11-10 · rendering-perf
+Status: accepted (re-exported) · 2026-11-10 · rendering-perf
 
 ## Context
 REVIEW r5 R-W1 (P0): tractor wheels are shredded on A16 Low in 4/4 exterior frames of build `40ae9c5`; S24+ High
@@ -33,12 +33,20 @@ d1357f9/f524390.
   settings and checks each wheel: radius, width, at least 16 segments, at least 96 vertices, unit and outward
   normals, and no degenerate or flipped triangles.
 
-## Status / open
-First run (scratch, fast bake): LOD2 wheels have r 0.5377 m (exact) and rear width 0.655 m (exact). The front
-tyre is 24 segments and 152 tris. The inner rear tyres (seg 24, partly culled) do not get the profile reduction
-yet (1312 tris each), so LOD2 = 20.2 k tris > 15.5 k limit. Fix to do: ring matching by nearest profile point
-instead of a 1 mm key, or a lower DP tolerance budget, then a full re-export (`a6_export.py`, about 45 s plus
-full bake), `check_export`, `TruckAssetBuilder`, and A16 Low g3a/g3b_ext34.
+## Status (2026-11-10, re-export done)
+- The first `reduce_round` dissolved vertices (`bmesh.ops.dissolve_verts`). bmesh merged whole bands into n-gons:
+  the front tyres came out as 134 triangles of garbage and the inner rear tyres were not reduced at all (1087).
+  To still hit 14.5 k, `lights_min` had been lowered to 0.15, which crushed the lower fairing (black triangles from
+  the bumper corner to the arch) and left every other piece at its floor (k = 0).
+- Now the piece is rebuilt on the generator grid: every vertex gets (column, ring) from its angle and from the
+  generator meridian (`chassis.tyre_profile`, `RIM_PROF + RIM_INNER`), kept columns x Douglas-Peucker rings
+  (tyre tolerance 20 mm: tread grooves live in the normal map; rim 4 mm) become new quads on LOD0 vertices with
+  LOD0 loop data. A coarse cell exists when any LOD0 cell under it survived hidden-face removal; blocks with a
+  culled corner keep their LOD0 cells.
+- Budget: `TRI_TARGET[2]` 14 500 -> 15 300 (limit stays 15 500); `MIN_RATIO = {"lower_fairing": 0.3}`.
+  Result: LOD0 101 195, LOD1 43 000, LOD2 15 300 (k 40.9, off the floor). Tyres 288-342 tris at 24 segments,
+  rims 388-480 at 20-24 segments. `check_export` PASS (radius, width, budgets).
+- Open: the rims keep all their rings (candidates for another ~600 tris); trailer exporter (T-2) needs the same rule.
 
 ## Consequences
 - LOD2 wheels cost more than the shredded 170 tris (expected about 600-800 per axle side). They cost less than
