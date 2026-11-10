@@ -232,7 +232,8 @@ Shader "Kamion/Truck Exterior"
                 // same local shadow lift as the interior (Kamion/Cab Interior); zero outside the cab view.
                 half yl = dot(col.rgb, half3(0.2126, 0.7152, 0.0722));
                 half ql = _CabShadowLift.y / (yl + _CabShadowLift.y + 1e-5);
-                col.rgb *= 1.0 + _CabShadowLift.x * ql * ql * ql;
+                half gl = 1.0 + _CabShadowLift.x * ql * ql * ql;
+                col.rgb = lerp(col.rgb * gl, (yl * gl).xxx, _CabShadowLift.z * (1.0 - 1.0 / gl));   // neutral lift (r5 L2)
                 col.rgb = MixFog(col.rgb, i.fogFactor);
                 return half4(col.rgb, 1);
             }
