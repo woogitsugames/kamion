@@ -41,9 +41,9 @@ SETS = {
     "asphalt_sma_fresh": dict(fn=A.sma_fresh, tile_m=[4.0, 4.0], target=0.075, uv="world_xy_planar",
         slots=["road_asphalt (sections resurfaced recently: proposed material road_asphalt_new)"],
         note="SMA 11 wearing course a few months in service: binder film still on the chips, slight sheen."),
-    "asphalt_worn": dict(fn=A.worn, tile_m=[4.0, 4.0], target=0.13, uv="world_xy_planar",
+    "asphalt_worn": dict(fn=A.worn, tile_m=[4.0, 4.0], target=0.08, uv="world_xy_planar",
         slots=["road_asphalt", "yard_asphalt", "path_asphalt"],
-        note="Aged AC 11: exposed light aggregate, ravelling sockets, dust in voids, low-contrast hairline "
+        note="Aged AC 11 (albedo 0.08, was 0.13; paint/asphalt contrast, ADR 0049 addendum r7): exposed light aggregate, ravelling sockets, dust in voids, low-contrast hairline "
              "micro-cracking only. Distinct cracks come from asphalt_cracks_layer (16 m) so this 4 m base has "
              "no recognisable features."),
     "asphalt_patch": dict(fn=A.patch, tile_m=[4.0, 4.0], target=0.062, uv="world_xy_planar",

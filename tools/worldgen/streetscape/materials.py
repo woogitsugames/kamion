@@ -12,9 +12,9 @@ M = {
     "yard_paving": {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones", "texture_set": "paving_20x10_grey"},
     "yard_concrete": {"color": [0.30, 0.297, 0.288], "rough": 0.85, "surface": "concrete", "texture_set": "concrete_cast_5m_joints"},
     "yard_slabs": {"color": [0.27, 0.267, 0.258], "rough": 0.85, "surface": "concrete", "texture_set": "concrete_slab_3x1.5"},
-    "yard_asphalt": {"color": [0.131, 0.13, 0.129], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
+    "yard_asphalt": {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
     "yard_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
-    "path_asphalt": {"color": [0.131, 0.13, 0.129], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
+    "path_asphalt": {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
     "cycle_red": {"color": [0.20, 0.06, 0.05], "rough": 0.88, "surface": "asphalt", "texture_set": "paving_red"},
     # buildings
     "hall_wall_grey": {"color": [0.46, 0.47, 0.46], "rough": 0.5, "metal": 0.2, "texture_set": "sandwich_ribbed"},
@@ -200,7 +200,7 @@ M = {
     # decals on roads (markings layer, depth offset like the markings)
     "decal_oil": {"color": [0.02, 0.02, 0.02], "rough": 0.35, "decal": True, "texture_set": "oil_stain_alpha"},
     "decal_tyre": {"color": [0.018, 0.018, 0.017], "rough": 0.55, "decal": True, "texture_set": "tyre_scrub_alpha"},
-    "marking_yard": {"color": [0.46, 0.46, 0.44], "rough": 0.7, "surface": "paint", "decal": True},   # worn yard paint
+    "marking_yard": {"color": [0.36, 0.36, 0.35], "rough": 0.7, "surface": "paint", "decal": True},   # worn yard paint, no film: B2-class (ADR 0049 r7)
     "drain_grate": {"color": [0.035, 0.033, 0.03], "rough": 0.6, "decal": True, "procedural": "grate"},  # cast iron
     "decal_patch": {"color": [0.062, 0.062, 0.06], "rough": 0.85, "decal": True, "texture_set": "asphalt_patch"},
     # bridges (roads.meshing bridge_style overrides; CC0 photos of the Andersa viaducts, docs/REFERENCES.md)

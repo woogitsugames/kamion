@@ -346,16 +346,16 @@
         4.0,
         4.0
       ],
-      "target": 0.13,
+      "target": 0.08,
       "uv": "world_xy_planar",
       "slots": [
         "road_asphalt",
         "yard_asphalt",
         "path_asphalt"
       ],
-      "note": "Aged AC 11: exposed light aggregate, ravelling sockets, dust in voids, low-contrast hairline micro-cracking only. Distinct cracks come from asphalt_cracks_layer (16 m) so this 4 m base has no recognisable features.",
+      "note": "Aged AC 11 (albedo 0.08, was 0.13; paint/asphalt contrast, ADR 0049 addendum r7): exposed light aggregate, ravelling sockets, dust in voids, low-contrast hairline micro-cracking only. Distinct cracks come from asphalt_cracks_layer (16 m) so this 4 m base has no recognisable features.",
       "kind": "tiling_set",
-      "albedo_target_mean_lum_linear": 0.13,
+      "albedo_target_mean_lum_linear": 0.08,
       "files": {
         "High": {
           "res": [
@@ -364,7 +364,7 @@
           ],
           "texel_mm": 1.95,
           "dir": "asphalt_worn/High",
-          "png_bytes": 31818026,
+          "png_bytes": 31221239,
           "files": [
             "T_asphalt_worn_BaseColor.png",
             "T_asphalt_worn_MaskMap.png",
@@ -387,7 +387,7 @@
           ],
           "texel_mm": 3.91,
           "dir": "asphalt_worn/Medium",
-          "png_bytes": 8807759,
+          "png_bytes": 8648554,
           "files": [
             "T_asphalt_worn_BaseColor.png",
             "T_asphalt_worn_MaskMap.png",
@@ -410,7 +410,7 @@
           ],
           "texel_mm": 7.81,
           "dir": "asphalt_worn/Low",
-          "png_bytes": 2187858,
+          "png_bytes": 2148164,
           "files": [
             "T_asphalt_worn_BaseColor.png",
             "T_asphalt_worn_MaskMap.png",
@@ -432,13 +432,13 @@
         0.00199
       ],
       "albedo": {
-        "mean_lum_linear": 0.13,
-        "p05": 0.0727,
-        "p95": 0.2151,
+        "mean_lum_linear": 0.08,
+        "p05": 0.0447,
+        "p95": 0.1324,
         "mean_rgb_linear": [
-          0.131,
-          0.1299,
-          0.1287
+          0.0803,
+          0.0796,
+          0.0789
         ]
       },
       "hf_ratio_albedo": 0.1386,

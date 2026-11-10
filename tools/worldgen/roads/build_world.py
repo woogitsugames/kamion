@@ -58,7 +58,9 @@ GENERATOR_VERSION = "world-c/1"
 MATERIALS = {
     # Ground materials with a generated PBR set (art-source/world/materials/materials_spec.json, ADR 0022):
     # `color` = the set's calibrated mean linear albedo, so the engine tint is 1; `texture_set` names the set.
-    "road_asphalt": {"color": [0.131, 0.13, 0.129], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
+    # aged AC 0.08 (was 0.13): new AC ~0.05 -> aged/soiled up to ~0.15 (arXiv:2409.12242 p. 7, broadband); 0.08 for the
+    # paint/asphalt contrast >= 1.8 at the paint cap (review r6 W-H6, ADR 0049 addendum r7). WORKING_VALUE.
+    "road_asphalt": {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
     "road_asphalt_new": {"color": [0.075, 0.075, 0.073], "rough": 0.85, "surface": "asphalt",
                          "texture_set": "asphalt_sma_fresh"},
     "road_concrete": {"color": [0.30, 0.297, 0.288], "rough": 0.85, "surface": "concrete",
@@ -82,12 +84,13 @@ MATERIALS = {
     "verge_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
     "shoulder_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     "terrain_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
-    # road paint film, albedo 0.60 (0.55-0.65, r4/r6 W-H6, WORKING_VALUE) over the asphalt_worn set of the road beneath:
+    # road paint film, albedo 0.55 under a traffic film 0.38 -> effective ~0.28-0.41, mean 0.34 (EN 1436 white in service,
+    # luminance factor classes B2 >= 0.30 / B3 >= 0.40; ADR 0049 addendum r7, WORKING_VALUE) over the asphalt_worn set:
     # Kamion/World PBR _DECAL_PAINT wears it through to that asphalt on the aggregate peaks in the wheel paths of
     # transverse marks (TEXCOORD_1, roads.markings._paint_uv1), adds a grey-brown traffic film by age and keeps the
     # distance pre-filter towards the real asphalt albedo (0.12 m line < 1 px). ADR 0049.
-    "marking_white": {"color": [0.60, 0.60, 0.59], "rough": 0.65, "surface": "paint", "texture_set": "asphalt_worn",
-                      "paint": {"wheel_wear": 0.85, "age_wear": 0.25, "dirt": 0.43, "line_w_m": 0.12},
+    "marking_white": {"color": [0.55, 0.55, 0.54], "rough": 0.65, "surface": "paint", "texture_set": "asphalt_worn",
+                      "paint": {"wheel_wear": 0.85, "age_wear": 0.25, "dirt": 0.38, "line_w_m": 0.12},
                       "decal": True, "depth_offset_m": S.MARKING_LIFT},
     "collision_asphalt": {"color": [1, 0, 1], "rough": 1.0, "surface": "asphalt", "collision": True},
     "collision_curb": {"color": [1, 0, 1], "rough": 1.0, "surface": "concrete_kerb", "collision": True},

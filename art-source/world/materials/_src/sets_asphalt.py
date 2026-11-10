@@ -101,7 +101,7 @@ def sma_fresh(n=2048):
 def worn(n=2048):
     c = Ctx(n, n, 4.0, 4.0, seed=102)
     s = asphalt_base(c, cell=0.0080, gap=0.0016, coverage=0.84, chip_h=2.0e-3, mastic_lum=0.075, chip_lum=0.17,
-                     chip_var=0.30, pit_depth=2.5e-3, dust_share=0.45, target=0.13, rough_chip=0.86,
+                     chip_var=0.30, pit_depth=2.5e-3, dust_share=0.45, target=0.08, rough_chip=0.86,
                      rough_mastic=0.92, hairline=0.35)
     s.name = "asphalt_worn"
     return s
