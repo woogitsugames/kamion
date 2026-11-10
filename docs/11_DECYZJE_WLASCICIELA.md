@@ -54,3 +54,7 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 | D33 | Kierownica przy niskim słońcu (do D27) | Próg **względny**: R−B ≤ 6 % i nasycenie ≤ nasycenia białej powierzchni w tym samym świetle (zamiast sat ≤ 15 %); WB 0,5 bez zmian |
 | D34 | Korekta D31 (po naprawie capture odbić, ADR 0056) | Szyba z zewnątrz p50 **23–45 %** (dolna granica wg zdjęcia Volvo FH; 33 % zakładało odbicie samego nieba); σ ≥ 8 zostaje celem |
 | D35 | Korekta D30 — gdzie mierzyć krzywiznę | Refleks ≥ 10 pkt High / ≥ 6 pkt Low mierzony na **deflektorze dachu**; narożnik kabiny tylko przy niskim słońcu / słońcu (pionowa ściana poniżej kamery odbija ziemię) |
+| D36 | S24+ High nie trzyma 60 kl./s (r8: 43–47 kl./s, p95 33,4 ms) | Dolny próg dynamicznej skali renderu na High **0,70** (zamiast 0,80); A/B na S24+ przed zamknięciem (szacunek GPU 12–15 ms UNVERIFIED) |
+| D37 | Jasność farby/zebry (r8: zebra 233 sRGB) | Próg **względny**: farba/asfalt **1,7–2,3** w słońcu; **≤ 235 sRGB** w słońcu, **≤ 217** przy pochmurnym (zastępuje twarde ≤ 217) |
+| D38 | Wyprane kolory przy słońcu (r8: trawa sat 28 vs 33–58 na zdjęciach) | Podnieść nasycenie **albedo trawy do 35–40** (materiał, bez zmian post-procesu) |
+| D39 | Panel deweloperski w APK | **Zostaje widoczny** — na razie grają tylko właściciel i lider |
