@@ -157,6 +157,34 @@ def _road_band(nt, band, z0):
     return tot
 
 
+# r10 (ADR 0083): fleet graphic on the curtain without any name or logo - a broad diagonal band and a pinstripe left in
+# the untinted fabric white (tint mask 0), so every curtain colour of the game gets a two-tone livery from one bake.
+# (u = distance from the front edge minus 0.8 x height above the hem; both sides share the same y, so the band leans
+# back on both.) LIVERY_BAND = False restores the plain r9 curtain. WORKING_VALUE (art direction, owner may veto).
+LIVERY_BAND = True
+LIVERY_BANDS = ((1.00, 2.60), (2.95, 3.22))
+
+
+def _livery_mask(nt):
+    N, mn = M.N, M.math_node
+    geo = N(nt, "ShaderNodeNewGeometry")
+    sep = N(nt, "ShaderNodeSeparateXYZ")
+    M.L(nt, geo.outputs["Position"], sep.inputs[0])
+    u = mn(nt, "SUBTRACT", mn(nt, "SUBTRACT", Y_FRONT, sep.outputs[1]),
+           mn(nt, "MULTIPLY", mn(nt, "SUBTRACT", sep.outputs[2], CURT_Z0), 0.8))
+    w = 0.010
+    tot = None
+    for a, b in LIVERY_BANDS:
+        t = mn(nt, "MULTIPLY", mn(nt, "DIVIDE", mn(nt, "SUBTRACT", u, a), w, clamp=True),
+               mn(nt, "DIVIDE", mn(nt, "SUBTRACT", b, u), w, clamp=True))
+        tot = t if tot is None else mn(nt, "MAXIMUM", tot, t)
+    out = nt.nodes.new("ShaderNodeMath")
+    out.operation = "SUBTRACT"
+    out.label = "tint_mask"
+    out.inputs[0].default_value = 1.0
+    M.L(nt, tot, out.inputs[1])
+
+
 def materials():
     """Trailer authoring library on top of the TRAKT library (rubber, chassis, steel, lenses, plate, ...)."""
     M.build_library("white")
@@ -170,6 +198,8 @@ def materials():
     b.inputs["Sheen Weight"].default_value = 0.15
     _grime(nt, b, (0.80, 0.80, 0.80), 0.55, h0=2.1, amount=0.45, film=1.3, streak=1.15, cav=1.3, spray=1.7,
            dust=(0.17, 0.15, 0.12), band=0.9, band_z0=CURT_Z0)
+    if LIVERY_BAND:
+        _livery_mask(nt)
     m, nt, b = P("roof_tarp", "CURTAIN", (0.80, 0.80, 0.80), 0.62)
     _grime(nt, b, (0.80, 0.80, 0.80), 0.62, h0=5.0, amount=0.25, cav=0.6)
     # webbing straps welded to the curtain: same coated fabric, a shade darker (tinted with the curtain in game)
@@ -490,8 +520,62 @@ def frame():
         box_mm(f"doc_tube_clamp_{yy}", -1.05, -0.91, yy - 0.015, yy + 0.015, 1.02, 1.12, "galv")
 
 
-# ---------------------------------------------------------------- running gear
-def axles_and_suspension():
+# ---------------------------------------------------------------- under-floor equipment (r10, ADR 0083)
+def underfloor_equipment():
+    """Fills the empty bay between the landing gear and the tridem (kerb side): spare wheel in a hanging carrier and
+    a two-door pallet box behind the side guard. Sizes class-typical, WORKING_VALUE (no manufacturer drawing used)."""
+    part("CHASSIS", "frame")
+    # spare wheel 385/65 R22.5 lying flat, disc down, in a galvanised carrier
+    cx, cy, z0 = 0.65, -3.32, 0.372
+    zc = z0 + TYRE_W / 2
+    prof, v, _, _ = tyre_profile()
+    lathe("spare_tyre", prof, V((cx, cy, zc)), "tyre_trailer", seg=40, side=1, axis="Z", uv_v=v, sharp=60)
+    k = 1.30
+    rim = [(0.300, 0.112 * k), (0.302, 0.124 * k), (0.294, 0.128 * k), (0.284, 0.100 * k),
+           (0.262, 0.080 * k), (0.256, 0.050), (0.256, -0.050), (0.262, -0.080 * k), (0.284, -0.100 * k),
+           (0.294, -0.128 * k), (0.302, -0.124 * k), (0.300, -0.112 * k)]
+    lathe("spare_rim", rim, V((cx, cy, zc)), "steel_wheel", seg=32, side=1, axis="Z", sharp=45)
+    et = 0.120
+    dprof = [(0.110, et - 0.008), (0.150, et - 0.008), (0.172, et - 0.020), (0.235, et - 0.030), (0.250, et - 0.040),
+             (0.250, et - 0.052), (0.232, et - 0.042), (0.168, et - 0.032), (0.146, et - 0.020), (0.110, et - 0.020)]
+    lathe("spare_disc", dprof, V((cx, cy, zc)), "steel_wheel", seg=32, side=-1, axis="Z", sharp=40)
+    for j, dy in enumerate((-0.30, 0.30)):
+        box_mm(f"spare_carrier_bar_{j}", cx - 0.56, cx + 0.56, cy + dy - 0.03, cy + dy + 0.03, z0 - 0.03, z0 - 0.004,
+               "galv", bev=0.003)
+        rod(f"spare_hanger_in_{j}", (cx - 0.545, cy + dy, z0 - 0.01), (cx - 0.545, cy + dy, 1.20), 0.011, "galv", seg=8)
+        rod(f"spare_hanger_out_{j}", (cx + 0.545, cy + dy, z0 - 0.01), (cx + 0.545, cy + dy, 1.09), 0.011, "galv", seg=8)
+    box_mm("spare_clamp", cx - 0.13, cx + 0.13, cy - 0.035, cy + 0.035, zc + et - 0.006, zc + et + 0.006, "galv",
+           bev=0.003)
+    rod("spare_rod", (cx, cy, zc + et), (cx, cy, 1.22), 0.012, "galv", seg=8)
+    cyl("spare_nut", (cx, cy, zc + et + 0.02), 0.028, 0.03, "steel", axis="Z", seg=6)
+    # pallet box: black powder-coated steel body, two galvanised drop-down doors with pressed ribs and paddle latches
+    x0, x1, ya, yb, zb, zt = 0.62, 1.165, -3.98, -5.50, 0.50, 1.06
+    box_mm("pallet_box", x0, x1, yb, ya, zb, zt, "trl_chassis", bev=0.008)
+    ym = (ya + yb) / 2
+    for j, (d0, d1) in enumerate(((ya - 0.025, ym + 0.006), (ym - 0.006, yb + 0.025))):
+        box_mm(f"pallet_door_{j}", x1, x1 + 0.006, d1, d0, zb + 0.03, zt - 0.03, "galv", bev=0.002, seg=1)
+        for z in (0.66, 0.90):
+            box_mm(f"pallet_rib_{j}_{z}", x1 + 0.006, x1 + 0.011, d1 + 0.06, d0 - 0.06, z - 0.018, z + 0.018, "galv",
+                   bev=0.004, seg=1)
+        yl = (d0 + d1) / 2
+        box_mm(f"pallet_latch_pan_{j}", x1 + 0.0062, x1 + 0.0072, yl - 0.055, yl + 0.055, zt - 0.14, zt - 0.07, "gap")
+        box_mm(f"pallet_latch_{j}", x1 + 0.007, x1 + 0.013, yl - 0.035, yl + 0.035, zt - 0.125, zt - 0.085, "steel",
+               bev=0.002, seg=1)
+        for yh in (d0 - 0.12, d1 + 0.12):
+            cyl(f"pallet_hinge_{j}_{yh:.2f}", (x1 + 0.008, yh, zb + 0.03), 0.010, 0.09, "galv", axis="Y", seg=8)
+    for j, yy in enumerate((ya - 0.10, yb + 0.10)):   # hanger straps up to the outriggers
+        box_mm(f"pallet_strap_{j}", x0 - 0.004, x1 + 0.002, yy - 0.02, yy + 0.02, zt - 0.004, 1.17, "galv")
+    # two wheel chocks in a holder ahead of the toolbox (driver side)
+    for j, yy in enumerate((-3.52, -3.72)):
+        extrude_poly(f"chock_{j}", [(yy + 0.07, 0.66), (yy - 0.07, 0.66), (yy - 0.07, 0.69), (yy + 0.045, 0.84),
+                                    (yy + 0.07, 0.84)], 0.16, "trl_plastic", plane="YZ", origin=(-1.13, 0, 0),
+                     bev=0.006).data.shade_flat()
+    box_mm("chock_holder", -1.15, -0.95, -3.80, -3.44, 0.635, 0.66, "galv", bev=0.002)
+    for yy in (-3.78, -3.46):
+        box_mm(f"chock_holder_arm_{yy}", -1.05, -1.03, yy - 0.012, yy + 0.012, 0.66, 1.17, "galv")
+
+
+# ---------------------------------------------------------------- running geardef axles_and_suspension():
     part("CHASSIS", "frame")
     for i, ya in enumerate(AXLES):
         cyl(f"axle_beam_{i}", (0, ya, WC), 0.073, 1.72, "trl_chassis", axis="X", seg=16)
@@ -1111,7 +1195,7 @@ def build(hi=True):
     G.STATE["coll"] = bpy.context.scene.collection
     materials()
     before = {o.name for o in bpy.data.objects}
-    steps = [frame, axles_and_suspension, wheels, mudguards, side_guards, landing_gear, front_wall,
+    steps = [frame, axles_and_suspension, wheels, mudguards, side_guards, underfloor_equipment, landing_gear, front_wall,
              top_rails_and_roof, rear_portal_and_doors, rear_lamps_and_rup]
     for fn in steps:
         b0 = {o.name for o in bpy.data.objects}

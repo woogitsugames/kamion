@@ -48,3 +48,5 @@ if ($Step -in 'all', 'test') {
     Write-Host "editmode exit $LASTEXITCODE"
 }
 
+
+git -C $W checkout -- game/Assets/_Project/Rendering/Settings/Lighting/M_Sky.mat game/ProjectSettings/QualitySettings.asset game/ProjectSettings/ProjectSettings.asset 2>$null

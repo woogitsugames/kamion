@@ -75,7 +75,7 @@ LOD1_DROP = ("_nutind", "_nutwasher", "_stud", "hinge_bolt", "lash_", "toolbox_l
              "air_tank_strap", "mudflap_rib", "leg_foot_lug", "leg_foot_pin", "hubcap_plug", "kingpin_grease",
              "door_groove", "sideguard_groove", "top_rail_groove", "rear_led_", "brake_hose", "ebs_hose",
              "crank_grip_rod", "mudguard_stay", "side_marker_brk", "tension_lever", "stalk_base", "lockhandle",
-             "hinge_barrel")
+             "hinge_barrel", "pallet_latch", "pallet_hinge", "spare_nut", "chock_holder_arm")
 LOD2_DROP = LOD1_DROP + ("_nut", "lockcam", "hinge_strap", "buckle_", "strap_", "caliper", "brake_chamber",
                          "damper", "bellow", "hanger", "trailing_arm", "crossmember", "outrigger", "air_tank", "ebs_",
                          "air_line", "doc_tube", "coupling", "palm_", "socket_", "kingpin", "mudguard_lip",
@@ -84,7 +84,9 @@ LOD2_DROP = LOD1_DROP + ("_nut", "lockcam", "hinge_strap", "buckle_", "strap_", 
                          "curtain_front_strip", "stalk_", "side_reflector", "sideguard_post", "lockbar",
                          "door_frame", "beam_flange", "rup_brace", "tri_reflector", "contour_rear", "toolbox",
                          "leg_gearbox", "front_lamp", "rear_marker", "door_centre_seal", "rear_sill_face",
-                         "coupler_plate", "front_cross", "_hubcap", "crank_hub", "crank_grip")
+                         "coupler_plate", "front_cross", "_hubcap", "crank_hub", "crank_grip", "pallet_rib",
+                         "pallet_strap", "spare_hanger", "spare_clamp", "spare_rod", "spare_carrier", "spare_disc",
+                         "chock")
 
 
 def a2u(v):
@@ -323,6 +325,9 @@ def emit_tint_mask(mats):
         for lk in list(em.inputs["Color"].links):
             nt.links.remove(lk)
         em.inputs["Color"].default_value = (1, 1, 1, 1) if m.name in tinted else (0, 0, 0, 1)
+        tm = next((n for n in nt.nodes if n.label == "tint_mask"), None)     # r10: procedural livery mask (curtain band)
+        if tm is not None and m.name in tinted:
+            nt.links.new(tm.outputs[0], em.inputs["Color"])
         em.inputs["Strength"].default_value = 1.0
         nt.links.new(em.outputs[0], out.inputs["Surface"])
 
