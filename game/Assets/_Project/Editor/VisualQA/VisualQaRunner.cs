@@ -249,6 +249,7 @@ namespace Game.Editor.VisualQA
                         foreach (var mir in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None))
                         {
                             var mt = mir.Texture;
+                            if (!mir.main) continue;
                             if (mir.phase == 0) ctx.LeftMirrorTexture = () => mt; else ctx.RightMirrorTexture = () => mt;
                         }
                     }
