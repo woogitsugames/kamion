@@ -67,3 +67,10 @@ Gałąź: worktree-agent-a2afb96d89584cca6 (worktree .claude/worktrees/agent-a2a
 - NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` →
   `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Medium -Lighting overcast -Gate3 artifacts/islands-r10/cameras.json -Cameras au_f_s0580,au_f_s0600,au_f_s0620,au_f_s1040,au_f_s1060,au_f_s1080,au_r_s1140,au_r_s1160,au_r_s1180,top_s610,top_merge,top_ma010,top_putry_n -OutputDir artifacts/islands-r10/renders`
   → obejrzeć → cofnąć M_Sky.mat/QualitySettings/ProjectSettings → po scaleniu 0076: `git merge main`, build_world, pytest gis.
+- 2026-11-11 (przejęcie nr 3) steep_grass na końcach klinów: przyczyna = stacja graniczna pożyczana przez pas RURAL od
+  pasa URBAN (meshing.build_side_strip) niosła h = −0,06 (schowany krawężnik), co side_profile czyta jako „rów domyślny
+  0,6 m" → rów 0,2 m skakał do 0,6 m na jednej stacji. Poprawka: przy `gore_flush` pożyczona stacja bierze wysokość
+  własnego pasa. Pomiar na samym etapie dróg (pipeline.build): strome ściany trawy 16 → 4 (zostaje stara w23982184).
+- NASTĘPNY KROK: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` →
+  `uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art artifacts/islands-r10/fidelity` →
+  `uv run --project tools/worldgen pytest tests/gis -q` → import-region → visual-qa (komendy wyżej).

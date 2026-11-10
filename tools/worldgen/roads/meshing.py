@@ -175,6 +175,13 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
             sl = slice(lo, hi)
             kr = kl[a]
             prm = [(kr, *p[1:]) for p in params[lo:hi]]
+            if r and c.meta.get("gore_flush") and len(prm) > 1:
+                # the station borrowed from the previous run carries the height of ANOTHER profile family. Next to
+                # a paved gore (ADR 0077) that is the dropped kerb (-0.06, which side_profile reads as "default
+                # ditch 0.6 m": a 0.2 m swale jumped to 0.6 m over one station = 0.5-0.7 m steep grass faces at
+                # E 786 N -831, E 321 N -603, E 48 N -460) or a ditch depth used as a kerb height (a concrete fin
+                # where the hidden kerb starts). The borrowed station continues this run's own height instead.
+                prm[0] = (kr, prm[1][1], *prm[0][2:])
             _emit_strip(buf, G[sl], (N * sgn)[sl], zg[sl], prm, kap[sl], hw[sl], side == "R",
                         br[sl] if br is not None else None, coarse, f"{c.id}:{side}:{r}")
         return
