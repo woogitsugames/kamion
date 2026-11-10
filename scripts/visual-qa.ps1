@@ -34,7 +34,9 @@ param(
     # Adds the Stage 3 gate cameras (e.g. Data/Regions/<region>/gate3_cameras.json) to the scene's control cameras.
     [string]$Gate3 = '',
     # Parapet run-off A/B: off renders hall walls without the _RUNOFF streak layer.
-    [ValidateSet('on', 'off')] [string]$Runoff = 'on'
+    [ValidateSet('on', 'off')] [string]$Runoff = 'on',
+    # Measurement mask: '<renderer>[:<slot>][;...]' also writes <id>_mask.png with those slots flat magenta.
+    [string]$Mask = ''
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -56,6 +58,7 @@ if ($Wires -ne 'on') { $qaArgs += @('-qaWires', $Wires) }
 if ($Runoff -ne 'on') { $qaArgs += @('-qaRunoff', $Runoff) }
 if ($Gate3) { $qaArgs += @('-qaGate3', [IO.Path]::GetFullPath($Gate3, (Get-Location).Path)) }
 if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
+if ($Mask) { $qaArgs += @('-qaMask', $Mask) }
 $code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
 
 $result = Select-String -Path $log -Pattern 'VISUALQA_RESULT:.*' | Select-Object -Last 1

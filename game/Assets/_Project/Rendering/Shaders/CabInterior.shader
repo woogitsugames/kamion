@@ -56,7 +56,7 @@ Shader "Kamion/Cab Interior"
             TEXTURE2D(_Normal);
             TEXTURE2D(_AO); SAMPLER(sampler_AO);
             TEXTURE2D(_DecalAtlas); SAMPLER(sampler_DecalAtlas);
-            half4 _CabFill;     // rgb: first-bounce irradiance / pi in exposed units (CabInteriorLighting)
+            half4 _CabFill;     // rgb: first-bounce irradiance / pi in exposed units, w: glass transmittance of the sun (CabInteriorLighting)
             half _CabEnclosure; // share of the open-sky SH the closed cab blocks (roof, walls); 0 = open sky (unset global)
             half _CabGain;      // cab-view tone-mapping gain (1 = off)
             half4 _CabShadowLift; // x: strength k, y: knee k0 (exposed linear); gain = 1 + k (k0 / (Y + k0))^3, cab view only
@@ -108,7 +108,6 @@ Shader "Kamion/Cab Interior"
                 half3 albedo;
                 half rough;
                 half3 nTS = half3(0, 0, 1);
-                half wearGloss = 0.0;
             #if defined(_KAMION_CAB_DECAL)
                 half4 d = SAMPLE_TEXTURE2D(_DecalAtlas, sampler_DecalAtlas, i.uv01.xy);
                 // Legend band of the atlas (icons, v < 0.5; manifest "MI_Cab_Decal" notes). A 10-13 mm legend is ~8-12 px
@@ -127,16 +126,14 @@ Shader "Kamion/Cab Interior"
                 // read (ADR 0044): the wear is shaped (wk), broken up by the detail variation so it is not a vertex
                 // gradient, and mostly a gloss change (hand-polished leather and plastic get shiny before they get pale).
                 half wk = saturate(wear * 2.4 * (0.55 + 0.9 * det.r * mixD + 0.45 * (1.0 - mixD)));
-                albedo = tint * lerp(1.0, (0.7 + 0.6 * det.r) * (0.4 + 0.6 * det.g), mixD) * lerp(1.0, det.a, perf) * (1.0 + 1.5 * wear + 1.3 * wk);
+                half3 base = tint * lerp(1.0, (0.7 + 0.6 * det.r) * (0.4 + 0.6 * det.g), mixD) * lerp(1.0, det.a, perf);
+                half3 worn = base * (1.0 + 1.5 * wear + 1.3 * wk);
+                // Black parts (rim, selector, knobs, stalks: tint < ~0.1) get glossy, not pale: worn black leather and
+                // plastic stay at albedo <= 0.05 linear (review r6 C-N5: the x2.7 wear albedo plus the warm sun made the
+                // rim beige). Their wear reads through the roughness (polish) only.
+                half dark = 1.0 - saturate(dot(tint, half3(0.3333, 0.3333, 0.3333)) * 8.0);
+                albedo = lerp(worn, min(worn, max(base, 0.05)), dark);
                 rough = clamp(i.color.a + (det.b - 0.5) * 0.6 * mixD - 0.25 * wear - 0.3 * wk, 0.08, 1.0);
-                // Touch-point wear on black parts (rim, selector, knobs: tint < ~0.1). In the cab view they sit on the
-                // plateau of the local shadow lift below (Y * gain is almost flat under the knee), so neither the albedo /
-                // roughness wear above nor a x2.2 gain before the lift changed the frame (cab-dash before/after diff
-                // 0-2 / 255, wear pass r4). A phone's local tone mapping lifts regions, not pixels: local contrast
-                // survives it. The polish (a black surface mirroring the glazing: ambient-scaled, additive) is applied
-                // after the lift; a multiplier there did nothing either (the lit value of these parts is ~0).
-                // WORKING_VALUE.
-                wearGloss = wk * (1.0 - saturate(dot(tint, half3(0.3333, 0.3333, 0.3333)) * 8.0));
                 // Panel gaps and creases: the AO atlas is ambient-only in URP, so in direct light a 2 mm gap had the
                 // brightness of its panels. Deep AO also darkens the albedo: gaps read as thin dark lines.
                 albedo *= lerp(0.4, 1.0, smoothstep(0.04, 0.28, ao));
@@ -152,28 +149,29 @@ Shader "Kamion/Cab Interior"
                 input.viewDirectionWS = GetWorldSpaceNormalizeViewDir(i.positionWS);
                 input.shadowCoord = TransformWorldToShadowCoord(i.positionWS);
                 input.fogCoord = i.fogFactor;
-                // AO multiplies the whole indirect term in UniversalFragmentPBR (occlusion), the fill included.
+                // AO multiplies the whole indirect term (GlobalIllumination occlusion), the fill included.
                 input.bakedGI = SampleSH(nWS) * (1.0 - _CabEnclosure) + _CabFill.rgb;
                 input.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(i.positionCS);
                 input.shadowMask = half4(1, 1, 1, 1);
 
-                SurfaceData s = (SurfaceData)0;
-                s.albedo = saturate(albedo);
-                s.metallic = metal;
-                s.smoothness = 1.0 - rough;
-                s.occlusion = ao;
-                s.alpha = 1;
-                s.normalTS = nTS;
-                half4 col = UniversalFragmentPBR(input, s);
-                // Grazing sheen: the windscreen and side glass are a large bright source in front of every cab surface;
-                // the cab has no probe that sees them, so edges of keys, the wheel rim and seat bolsters had no highlight
-                // and leather read like matte plastic. Fresnel-weighted ambient, scaled by smoothness (worn leather and
-                // satin keys catch it, grained dash plastic does not), occluded by the AO atlas. ~8 ALU, no sample.
-                half nv = saturate(dot(nWS, input.viewDirectionWS));
-                half fr = 1.0 - nv; fr *= fr * fr;
-                half sm = s.smoothness;
-                col.rgb += input.bakedGI * (fr * sm * (0.4 + sm) * 3.0 * ao * (1.0 - metal));
-                col.rgb *= _CabGain > 0.0 ? _CabGain : 1.0;   // unset global (0) = no gain
+                // URP PBR split in direct sun and indirect (review r6 C-N5). The cab-view gain is the phone's local tone
+                // mapping of a backlit cab (D23, ADR 0029): it lifts what the shade receives (sky SH through the
+                // enclosure, the first-bounce fill, the probe reflection of the glazing), not the sun patches, which the
+                // scene exposure already meters (ADR 0016) - the gain on everything put the sunlit black rim and hub at
+                // 2-5.6x their exposed value in the sun's colour (beige, sat 34 %). Energy: the indirect specular is
+                // URP's EnvironmentBRDF (Fresnel, roughness) of the reflection probe x AO; the additive grazing sheen
+                // (up to 3.5x the ambient) and the wear polish (4.5x) of ADR 0044 reflected more than they received and
+                // are gone - the polish now reads through the lower roughness of the worn spots.
+                BRDFData brdf;
+                half alpha = 1.0;
+                InitializeBRDFData(saturate(albedo), metal, half3(0, 0, 0), 1.0 - rough, alpha, brdf);
+                Light sun = GetMainLight(input.shadowCoord, input.positionWS, input.shadowMask);
+                // The sun reaches every cab surface through the glazing, which casts no shadow: x transmittance (unset = 1).
+                half3 direct = LightingPhysicallyBased(brdf, sun, nWS, input.viewDirectionWS) * (_CabFill.w > 0.0 ? _CabFill.w : 1.0);
+                const BRDFData noCoat = (BRDFData)0;
+                half3 indirect = GlobalIllumination(brdf, noCoat, 0.0, input.bakedGI, ao, input.positionWS, nWS,
+                    input.viewDirectionWS, input.normalizedScreenSpaceUV);
+                half4 col = half4(direct + indirect * (_CabGain > 0.0 ? _CabGain : 1.0), 1.0);   // unset global (0) = no gain
                 // Local shadow lift (review r4 L1): a phone's local tone mapping lifts deep shade in a backlit cab. Smooth
                 // in luminance (Y * gain stays monotone for k < 16), ~1 above 3 x the knee.
                 half yl = dot(col.rgb, half3(0.2126, 0.7152, 0.0722));
@@ -182,7 +180,6 @@ Shader "Kamion/Cab Interior"
                 // The lifted share is neutral (review r5 L2: black plastics turned brown under the warm low-sun fill); a
                 // phone's local tone mapping lifts luminance, not the chroma of deep shade. z = desaturation of that share.
                 col.rgb = lerp(col.rgb * g, (yl * g).xxx, _CabShadowLift.z * (1.0 - 1.0 / g));
-                col.rgb += input.bakedGI * (ao * wearGloss * 4.5);
                 col.rgb = MixFog(col.rgb, i.fogFactor);
                 return half4(col.rgb, 1);
             }

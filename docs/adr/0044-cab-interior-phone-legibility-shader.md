@@ -46,3 +46,26 @@ edge, door-card kick zone, bolster creases, elbow spot. A-pillar foot / kick pan
 end. Sleeper privacy curtain on a ceiling track and a third-drawn passenger door curtain (never ahead of the driver's
 shoulder line) against the see-through cab from outside.
 Evidence: `docs/reports/visual/interior-wear/`.
+
+## Addendum 2026-11-10 r6 (rendering-perf, review r6 C-N5/C-N6/C-N7) - supersedes decisions 4 and 5; needs visual-critic review
+Root causes (measured, editor, rim = mask of `STEERING_WHEEL_LOD0:MI_Cab_Leather`, `-qaMask`):
+- **Rim AO 0.02 on every tier.** The rim rotates (`NO_AO`) and samples the cloth block of the AO atlas, filled with the
+  *median* of the bake: ~45 % of covered texels are fully occluded faces (p10 = 0), so the median was 0.04 (8-bit 5-6).
+  Ambient, fill and reflections of the rim x 0.02, albedo x 0.4 (deep-AO darkening): black in shade, lit by the warm sun
+  only. This, not the lift plateau, is why the r4 wear polish (`* ao`) did not read.
+- **Cab gain on the direct sun.** `_CabGain` (2^(1 + meter), 5.66 at low sun) multiplied the sun patches too; isolation
+  render with gain/lift off: rim lit R-B 15 -> 7 %, wear off: no change (wear is not the colour source).
+- **Grazing sheen (up to 3.5x bakedGI) and wear polish (4.5x bakedGI)** reflected more than the surface receives.
+Decision: (a) cloth block = *mean* cab ambient (a6_export; `ao_cloth_block.py` re-levels the exported atlases, LOD0
+0.024 -> 0.150, no re-bake); (b) shader: URP PBR split, `col = sun * tau_glass + indirect * _CabGain` (the gain is the
+phone's local tone mapping of the shade; sun patches are metered by the scene exposure), sun x glass transmittance
+(`_CabFill.w`, the glass casts no shadow); indirect specular = URP EnvironmentBRDF x AO; sheen and wear polish removed;
+black parts (tint < ~0.1) keep albedo <= 0.05 when worn (gloss only); (c) fill sky part in `SkyModel.AdaptedWhite`.
+Measured (cab-dash, rim p50 / lit-third sat / R-B / p99:p50; HEAD assets rebuilt -> after):
+Low overcast 9.8 -> 14.1 %, High 11.0 -> 16.1 % (diff 2.0); lowsun Low sat 33.4 -> 18.1 %, R-B 12.2 -> 3.4 %, 3.18 -> 1.93;
+High 30.5 -> 18.9 %, 13.2 -> 4.2 %, 3.67 -> 2.12. Editor GPU Low 1755x810: 1.78-1.86 / 1.90-2.14 ms vs 1.78 / 1.90 (noise).
+A16: UNVERIFIED. Open: lowsun sat 18-19 % > 15 % target - the sunlit share has the sun colour of LP_LowSun (sunlit grey
+hall wall in the same frame 17-22 %), below that needs a WB / sun-colour decision (ADR 0043, D27); Low dusk black < 3 %
+5.8 -> 8.4 % (deep shade lost the non-physical sheen; High 1.8 %); C-N7 white L = exterior `CAB_Body_LOD0:MI_Ext_Lights`
+(headlamp DRL guide, emissive) seen through a gap in the passenger-side lower front of the interior - exterior/interior
+geometry (truck-artist). Evidence: `artifacts/truck-interior/r6-wheel/`.
