@@ -43,6 +43,8 @@ namespace Game.World.Import
             else if (proto == "pylon" || proto == "power_pole") e = new[] { 80f, 1500f };
             else if (proto.StartsWith("plate_") || proto.StartsWith("board_") || proto.StartsWith("sign_") || proto.StartsWith("signal_")) e = new[] { 50f, 250f };
             else if (proto == "bus_shelter" || proto.EndsWith("_gate")) e = new[] { 60f, 300f };
+            // Hero depot hall segments (ADR 0071, art-source/world/landmarks): LOD0 / LOD1 / silhouette, never culled.
+            else if (proto.StartsWith("landmark_depot")) e = new[] { 100f, 400f, 20000f };
             // Landmarks (chimneys): visible across the district, never culled inside the far plane.
             else if (proto.StartsWith("landmark_")) e = new[] { 650f, 20000f };
             // Vehicles (ADR 0041 v4, REVIEW r6 W-N6): LOD switches x lodBias, cull FIXED at VehicleCullM on every tier
@@ -55,7 +57,8 @@ namespace Game.World.Import
             else e = new[] { 30f, 120f };   // bench, bollard, waste bin, street cabinet, pallets, containers
             // Mirror: tools/worldgen/roads/build_world.py instance_ends() (frame estimate) - keep the two in sync.
             if (e.Length > lodCount) e = new[] { e[0] }.Concat(e.Skip(e.Length - lodCount + 1)).ToArray();
-            int shadows = proto.StartsWith("tree_") ? 0b011 : 0b001;
+            // A hall shades the yard in front of it: LOD1 keeps casting (the shadow must not pop off at the LOD switch).
+            int shadows = proto.StartsWith("tree_") || proto.StartsWith("landmark_depot") ? 0b011 : 0b001;
             return (e.Take(lodCount).ToArray(), shadows);
         }
 
@@ -65,6 +68,13 @@ namespace Game.World.Import
             var props = GlbReader.Load(Path.Combine(art, "props", "street_props.glb"));
             var trees = GlbReader.Load(Path.Combine(art, "vegetation", "trees.glb"));
             var impostors = GlbReader.Load(Path.Combine(art, "vegetation", "trees_lod2.glb"));
+            // Authored landmark assets (ADR 0067 / 0071): art-source/world/landmarks/<asset>/<asset>.glb, prototypes
+            // "landmark_<...>" (+ .lod1 / .lod2) in the same frame as street_props.glb.
+            var landmarkLibs = new List<GlbReader>();
+            string lmDir = Path.Combine(art, "landmarks");
+            if (Directory.Exists(lmDir))
+                foreach (var f in Directory.GetFiles(lmDir, "*.glb", SearchOption.AllDirectories).OrderBy(x => x, StringComparer.Ordinal))
+                    landmarkLibs.Add(GlbReader.Load(f));
             var treeMeta = Obj(Obj(Parse(File.ReadAllText(Path.Combine(art, "vegetation", "trees_meta.json")))).Get("trees"));
 
             string path = $"{r.Dir}/Instances.asset";
@@ -88,6 +98,9 @@ namespace Game.World.Import
                 var lodNodes = new List<(GlbReader g, GlbReader.MeshNode n)>();
                 var src = tree ? trees : props;
                 var n0 = src.Find(name);
+                if (n0 == null && !tree)
+                    foreach (var lib in landmarkLibs)
+                        if (lib.Find(name) is GlbReader.MeshNode ln) { src = lib; n0 = ln; break; }
                 if (n0 == null) { Debug.LogWarning($"[IMPORT] prototype '{name}' not in the library - instances skipped"); protoIndex[name] = -1; return -1; }
                 lodNodes.Add((src, n0));
                 var n1 = src.Find(name + ".lod1");

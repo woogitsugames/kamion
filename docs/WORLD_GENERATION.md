@@ -124,6 +124,23 @@ Oświetlenie `--light overcast|lowsun|both`: AgX, bez bloomu, winiety i aberracj
 
 Przykład w repo (baza Kwadrat Park): droga dojazdowa do placu ma w OSM tylko `highway=service`, więc generator dał klasę D (2 × 2,50 m). Ortofoto pokazuje ok. 7 m asfaltu, więc override ustawia 2 × 3,50 m. Na placu nie ma krawężników (`flush`), a łuk wjazdu ma 15 m dla naczepy. Każdy wpis ma `reason`, `confidence` i `verify` (pozycję z listy zdjęć właściciela). Test `test_overrides_applied_and_not_stale` pilnuje, że wpisy działają po regeneracji.
 
+### Hero depot (`kind: hero_depot`, ADR 0071)
+
+Hala bazy gracza (Kwadrat Park, `bdot:9962cca0…`) jest assetem Blendera zamiast hali z reguły. `streetscape/hero_depot.py`
+zapisuje spec `Data/Regions/<id>/generated/landmarks/<asset>.spec.json` (obrys BDOT z odciętymi przybudówkami, wysokość
+LoD1, teren co 4 m wzdłuż fasad, cechy fasad z override'u: rząd doków, pasma okien, żaluzje, drzwi, bramy, rury spustowe,
+dach) i porównuje jego sha256 z `art-source/world/landmarks/<asset>/<asset>_meta.json`. Asset nieaktualny →
+`build_world` sam uruchamia Blendera (`KAMION_BLENDER` albo `blender` w PATH; `KAMION_NO_BLENDER=1` wyłącza); bez
+Blendera hala wraca do geometrii z reguły, a wpis trafia do `overrides_stale` i `streetscape_qa.json → hero_depots.stale`.
+Doki pochodzą ze specu w tym samym formacie co `docks_for()` (place, naczepy, ślady opon bez zmian), pryzmat kolizji
+budynku zostaje, dochodzą bloki kolizji odbojnic. Instancje: `landmark_depot_<asset>_NN` (+ `.lod1`, `.lod2`, `_roof`).
+
+```
+uv run --project tools/worldgen python -m streetscape.hero_depot            # (z tools/worldgen) sam spec, bez budowy świata
+blender -b --factory-startup -P tools/blender/world/landmarks/make_depot.py -- --spec Data/Regions/<id>/generated/landmarks/<asset>.spec.json [--render <katalog>]
+uv run --project tools/worldgen python tools/worldgen/qa/depot_ortho.py XMIN YMIN XMAX YMAX out.jpg [--plain] [--grid 10]   # kadr ortofoto z siatką EPSG:2180
+```
+
 ## Kontrola jakości
 
 - Testy: `tests/gis/test_world_roads.py` (szczelność szwów skrzyżowań: >300 szwów, każdy wspólny wierzchołek po wierzchołku i krawędź po krawędzi; pochylenia ≤ limit; brak szumu NMT w niwelecie; wierzchołki jezdni ≤ 0,2 m od wygenerowanego przekroju; przesunięcie osi przez wygładzanie p95 ≤ 0,5 m; teren ≥ 0,30 m pod drogą; wspólne krawędzie chunków; deterministyczność; struktura GLB; overrides; wymiary z rozporządzeń).

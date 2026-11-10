@@ -768,7 +768,8 @@ def build_roof(lod):
                     (0, 0, 1))
             mb.poly([(*p2, ZTOP + 1.0), (*q2, ZTOP + 1.0), (c[0], c[1], ZTOP + 0.95)], [(0, 0), (1, 0), (0.5, 1)], "roof_vent",
                     (0, 0, -1))
-    build_roof.skylights = cnt
+    if lod == 0:
+        build_roof.skylights = cnt
     return mb
 
 
