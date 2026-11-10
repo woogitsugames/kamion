@@ -264,6 +264,20 @@ def safe_name(s: str) -> str:
 
 # ---------------------------------------------------------------- pipeline
 
+def adopt_or_download(http, cand, dest: Path, log, source, stats=None):
+    """File already on disk but not in the manifest (killed run): hash it instead of downloading again."""
+    if Path(dest).exists() and Path(dest).stat().st_size > 0:
+        data = Path(dest).read_bytes()
+        return hashlib.sha256(data).hexdigest(), len(data)
+    try:
+        return http.download(cand["file_url"], dest)
+    except SourceError as e:
+        if stats is not None:
+            stats["failed"] = stats.get("failed", 0) + 1
+        log(f"[{source}] skip {cand['id']}: {e}")
+        return None, 0
+
+
 def fetch_for_points(source, points, candidates_fn, http, outdir: Path, per_point=3, max_total=150,
                      azimuth_tol=None, now=None, log=print):
     """For each shot: candidates -> licence gate -> nearest/best `per_point` -> download once -> manifest.
@@ -302,14 +316,13 @@ def fetch_for_points(source, points, candidates_fn, http, outdir: Path, per_poin
         if old and dest.exists():
             old["shots"] = sorted(set(old.get("shots", [])) | shots)
             continue
-        try:
-            sha, size = http.download(c["file_url"], dest)
-        except SourceError as e:
-            stats["failed"] = stats.get("failed", 0) + 1
-            log(f"[{source}] skip {cid}: {e}")
+        sha, size = adopt_or_download(http, c, dest, log, source, stats)
+        if sha is None:
             continue
         entries[cid] = make_entry(source, c, key, sha, size, shots, now)
         stats["downloaded"] += 1
+        if stats["downloaded"] % 10 == 0:
+            write_manifest(manifest_path, entries)  # survive a killed run
     write_manifest(manifest_path, entries)
     log(f"[{source}] candidates {stats['candidates']}, licence-rejected {stats['rejected_license']}, "
         f"new downloads {stats['downloaded']}, shots with hits {stats['points_with_hits']}/{len(points)}, "

@@ -282,14 +282,14 @@ def fetch_text_source(source, items, fn, http, outdir, per_item=8, max_total=150
             if c["id"] in entries and dest.exists():
                 entries[c["id"]]["shots"] = sorted(set(entries[c["id"]].get("shots", [])) | {shot["nr"]})
                 continue
-            try:
-                sha, size = http.download(c["file_url"], dest)
-            except rc.SourceError as e:
-                log(f"[{source}] skip {c['id']}: {e}")
+            sha, size = rc.adopt_or_download(http, c, dest, log, source)
+            if sha is None:
                 continue
             entries[c["id"]] = rc.make_entry(source, c, key, sha, size, {shot["nr"]}, now)
             entries[c["id"]]["query"] = label
             n_new += 1
+            if n_new % 10 == 0:
+                rc.write_manifest(Path(outdir) / "manifest.jsonl", entries)
     rc.write_manifest(Path(outdir) / "manifest.jsonl", entries)
     log(f"[{source}] licence-rejected {n_rej}, new downloads {n_new}, requests {http.requests_made}")
     return entries, pseudo
