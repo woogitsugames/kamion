@@ -124,6 +124,10 @@ def test_instances_reference_existing_prototypes():
         for it in data["instances"]:
             if it["p"].startswith("tree_"):
                 assert f"{it['p']}_{it['v']}" in trees
+            elif it["p"].startswith("landmark_") and it["p"] not in props:                      # hero assets (ADR 0067): own GLB + meta
+                lm = {s["name"] for f in (REPO / "art-source/world/landmarks").glob("*/*_meta.json")
+                      for s in json.loads(f.read_text(encoding="utf-8"))["segments"]}
+                assert it["p"] in lm, it["p"]
             else:
                 assert it["p"] in props, it["p"]
             assert b["e_min"] - 0.01 <= it["e"] <= b["e_max"] + 0.01 or b["e_min"] <= -1024 or b["e_max"] >= 1024

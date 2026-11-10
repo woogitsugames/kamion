@@ -184,4 +184,4 @@ def test_biezenstwa_plantings_applied():
     assert not pl["stale"], pl["stale"]
     assert pl["hedges"] >= 4 and pl["hedge_m2"] > 40.0
     fills = {i["fill"] for i in pl["islands"]}
-    assert fills == {"paving", "soil"} and pl["shrubs"] >= 3
+    assert fills == {"paving", "gravel"}                          # ring centre: pale gravel (Mapillary p13/p21, ADR 0067)
