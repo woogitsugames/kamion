@@ -190,3 +190,34 @@ Licencja **Fab Standard License** (Quixel Megascans; karta pozycji: „Licencja 
 | `granite-rock` | Granite Rock (3d) | https://www.fab.com/listings/01d40602-eb64-448b-af63-a7896924280a | Fab Standard | 2026-11-10 | `178df9900e3eccaf3ce21069281cdd3cfa4eead781f3b1828596570986ae5484` |
 | `small-granite-rock` | Small Granite Rock (3d) | https://www.fab.com/listings/d4de5337-7536-41df-9706-2825dc0a9dad | Fab Standard | 2026-11-10 | `3af7d445e783e65254590ecd3abab12a83cc1e88f54aac82ce5c1873f420e11b` |
 | `urban-trash` | Urban Trash (3d, mid) | https://www.fab.com/listings/4eb4b87c-92bf-495a-b68a-5877fc07094f | Fab Standard | 2026-11-10 | `89aab0683b618a66040d49d40241cae63db9a9eeda0d18ce1c4e61f032e96383` |
+
+### Optional world integration (ADR 0084, gpt-megascans)
+
+Local source manifest + `tools/worldgen/fab/review.json` control eligibility.
+The observed local hashes for boxwood, granite-rock and small-granite-rock were
+verified against intact ZIPs and embedded Quixel identities; original acquisition
+pins remain in the manifest because the replacement chronology is UNVERIFIED.
+`tools/worldgen/fab/prepare.py` produces mobile LOD libraries, alpha/albedo,
+normal, roughness, AO and packed metallic/smoothness maps exclusively under
+`art-source/world/megascans/_generated/`; Unity copies into `Assets/_Generated`.
+Both directories are ignored; the git guard checks paths, archive/member hashes
+and derived-output provenance hashes. No Fab assets or textures enter tracked art.
+
+| Source ids | Intended local use / decision |
+|---|---|
+| street-curbs, modular-curb | Clean atlas crops blended into our generated road kerb material; original metric road geometry retained |
+| metal-manhole-cover | Lane-centred cover detail; locations WORKING_VALUE |
+| round-drain-cover, square-rusty-drain | Existing kerb-side gully mesh materials; spacing retained |
+| round-manhole-cover | Rejected: embossed emblem and lettering |
+| trash-bag-pack | Small grounded groups by existing shelter/gate/parking context |
+| trash-can, urban-trash | Rejected: visible emblem / printed packaging and branded bin |
+| grass-clumps, wild-grass | Bounded soft-verge details, LOD0/1/2 |
+| boxwood, elderberry | Landscaping/soft-verge shrubs and explicitly authored island selections |
+| silver-birch-bark, birch-tree-trunk | Bark crops mixed onto our generated birch material |
+| linden-branch | Woody bark crop onto our generated linden; supplied scan contains no leaves |
+| pine-bark | Rejected for trunk use: source is loose bark/mulch atlas; existing pine bark retained |
+| granite-rock, small-granite-rock | Grounded roadside stone props, LOD0/1/2 |
+
+Prepared normal maps remain disabled pending a tangent-capable reviewed mesh
+path. Existing tree leaves remain. Missing licensed files preserve procedural/CC0
+fallback; no licensed download is attempted by the public-clone build.

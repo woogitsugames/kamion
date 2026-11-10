@@ -14,3 +14,6 @@
 
 - Krok 5: baseline build zakończony (64 chunki, 418 MiB High / 91 MiB Low); trwa import baseline z KAMION_DISABLE_FAB=1. Testy Fab 28/28. Niezależny review wykrył brak tangentów w compact mesh: normal mapy wyłączone, AO keyword naprawiony, UV0 Fab jawnie zachowane.
 - NASTĘPNY KROK: `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -OutputDir artifacts/megascans-r1/before/Low-overcast` (po imporcie).
+
+- Krok 6: ADR 0084 a użycia/odrzucenia 19 pozycji zapisane w LICENSES. Budżet Python obejmuje zmierzone LOD Fab; UV0/alpha/AO poprawione. Baseline import regeneruje istniejące PBR (stemple świeżego worktree); nadal trwa.
+- NASTĘPNY KROK: `Get-Content artifacts/megascans-r1/before-import.log -Tail 10`.

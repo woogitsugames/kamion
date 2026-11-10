@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from pathlib import Path
 
 import numpy as np
@@ -31,6 +32,8 @@ def key(asset_id):
 
 def load_ready(path=MANIFEST, root=ROOT):
     """Fail closed on absent, unreviewed or partly deleted local outputs."""
+    if os.environ.get("KAMION_DISABLE_FAB") == "1":
+        return {}
     try:
         data = json.loads(Path(path).read_text(encoding="utf-8"))
         if data.get("schema") != 1:
@@ -77,6 +80,22 @@ def materials(assets=None):
                             "surface": "steel" if is_decal else "detail"}
         if is_decal:
             result[key(aid)].update({"decal": True, "depth_offset_m": LIFT_PATCH})
+    return result
+
+
+def prototype_stats(assets=None):
+    """Measured triangle counts for the first imported variant, not estimates."""
+    assets = load_ready() if assets is None else assets
+    result = {}
+    for aid, item in assets.items():
+        models = item.get("models", [])
+        if not models:
+            continue
+        stats = {f"tris_lod{lod['lod']}": int(lod["triangles"])
+                 for lod in models[0].get("lods", [])
+                 if lod.get("lod") in (0, 1, 2) and isinstance(lod.get("triangles"), (int, float))}
+        if len(stats) == 3:
+            result[key(aid)] = stats
     return result
 
 
@@ -236,6 +255,10 @@ def props(pl, net, assets, roads_poly, bpoly, paved, park_polys, route, report, 
         if np.linalg.norm(vector) > 0:
             p = np.array([q.x, q.y]) + vector / np.linalg.norm(vector) * 1.1
             place("trash-bag-pack", p, 0.45, f"parking:{i}")
+            # Clipped boxwood belongs to managed parking landscaping, not a wild
+            # highway verge. The five-point ground/road checks still apply.
+            outside = np.array([q.x, q.y]) - vector / np.linalg.norm(vector) * 1.5
+            place("boxwood", outside, 0.65, f"parking-landscaping:{i}", natural=True)
     # Authored Fab planting plans only. In particular never put greenery into
     # Bie?e?stwa's gravel island: the reference explicitly shows no shrubs there.
     for plan in islands:
@@ -269,7 +292,7 @@ def props(pl, net, assets, roads_poly, bpoly, paved, park_polys, route, report, 
                 outer = side_extent(kind, h, w, depth, mat)
                 seed = f"verge:{c.id}:{side}:{s:.2f}"
                 u = hf(seed, "family")
-                family = ("grass-clumps", "wild-grass") if u < 0.7 else (("boxwood", "elderberry") if u < 0.86 else ("granite-rock", "small-granite-rock"))
+                family = ("grass-clumps", "wild-grass") if u < 0.7 else (("elderberry",) if u < 0.86 else ("granite-rock", "small-granite-rock"))
                 choices = [a for a in family if a in ready]
                 if not choices:
                     continue

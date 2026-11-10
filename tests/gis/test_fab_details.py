@@ -162,3 +162,16 @@ def test_fab_materials_use_asset_keys_and_decal_metadata():
     assert mats['fab_metal_manhole_cover']['fab_asset'] == 'metal-manhole-cover'
     assert mats['fab_metal_manhole_cover']['decal'] is True
     assert 'decal' not in mats['fab_boxwood']
+
+
+
+def test_prototype_stats_read_actual_first_variant_counts():
+    a = {'boxwood': {'models': [{'lods': [
+        {'lod': 0, 'triangles': 997}, {'lod': 1, 'triangles': 301}, {'lod': 2, 'triangles': 95}]}]}}
+    assert F.prototype_stats(a) == {'fab_boxwood': {'tris_lod0': 997, 'tris_lod1': 301, 'tris_lod2': 95}}
+    assert F.prototype_stats({'unprepared': {}}) == {}
+
+
+def test_disable_switch_avoids_local_assets(monkeypatch, tmp_path):
+    monkeypatch.setenv('KAMION_DISABLE_FAB', '1')
+    assert F.load_ready(tmp_path / 'manifest.json') == {}

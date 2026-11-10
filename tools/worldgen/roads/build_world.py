@@ -748,6 +748,7 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
     """Static triangles/materials per chunk + per-camera frame estimate (120 deg wedge around the view) with a
     breakdown by category (terrain, roads = road + bridge + markings + paved, furniture, buildings, trees per
     LOD, forest HLOD, props)."""
+    props_meta = {**props_meta, **FD.prototype_stats()}
     tp = REPO / "art-source" / "world" / "vegetation" / "trees_meta.json"
     trees = json.loads(tp.read_text(encoding="utf-8"))["trees"] if tp.exists() else {}
 
