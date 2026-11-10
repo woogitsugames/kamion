@@ -1,4 +1,4 @@
-# HANDOVER — kamion, sesja 7 (2026-11-10 ok. 22:50; limit 5 h ok. 84 % — nowych agentów nie startować, przy 95 % WIP+push)
+# HANDOVER — kamion, sesja 7 (2026-11-10 ok. 23:00; limit 5 h 95 % — agenci dostali polecenie: commit WIP + STATUS.md i stop; nowa sesja startuje z docs/owner/START-PROMPT-S8.md)
 
 ## Najpierw
 - **main wypchnięty (ten commit).** Scalone w s7: **0082 ogranicznik/krawędź świata** `65e24d9`, **0080 oświetlenie** `5439ddf` (wariant 3 overcast wybrany przez właściciela: lookToe 0,9/0,4/0,6 + EV −0,2, kompensacja kabiny `rq_cabtoe`), **0071 Kwadrat Park** `c132f56` (szlaban działa i ma kolizję — test WorldCBarrierTests; plac bez osobówek, naczepy przy dokach). Main NIE zregenerowany po scaleniach (czeka na 0076: P0 korytarza s1432–1480 nadal czerwony na main).
