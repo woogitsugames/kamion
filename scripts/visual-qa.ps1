@@ -59,9 +59,27 @@ if ($Runoff -ne 'on') { $qaArgs += @('-qaRunoff', $Runoff) }
 if ($Gate3) { $qaArgs += @('-qaGate3', [IO.Path]::GetFullPath($Gate3, (Get-Location).Path)) }
 if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
 if ($Mask) { $qaArgs += @('-qaMask', $Mask) }
+$runStart = Get-Date
 $code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
 
 $result = Select-String -Path $log -Pattern 'VISUALQA_RESULT:.*' | Select-Object -Last 1
+
+# ADR 0050: Unity 6000.3.28f1 sporadically access-violates (0xC0000005 = -1073741819) AFTER the runner finished, inside
+# EditorApplication.Exit -> DestroyGfxDevice -> ~D3D12PipelineCache -> D3D12PipelineCacheLibrary::SaveCache (engine bug,
+# no managed/our resources on the stack). Accept the run only when ALL of this is proven: exit code is exactly that
+# access violation, the log has VISUALQA_RESULT: OK rendered=N, the crash stack contains the known signature, and N fresh
+# PNGs exist. Anything else (other crash, other stack, fewer frames) stays a failure.
+if ($code -eq -1073741819 -and $result -and $result.Line -match 'VISUALQA_RESULT: OK rendered=(\d+)') {
+    $n = [int]$Matches[1]
+    $sig = Select-String -Path $log -SimpleMatch 'D3D12PipelineCacheLibrary::SaveCache' -Quiet
+    $fresh = @(Get-ChildItem $OutputDir -Filter *.png -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -notlike '*_mask.png' -and $_.LastWriteTime -ge $runStart }).Count
+    if ($sig -and $fresh -ge $n) {
+        Write-Warning "Unity crashed on shutdown (0xC0000005 in D3D12PipelineCacheLibrary::SaveCache, known engine bug, ADR 0050) AFTER writing all $n frames; accepted."
+        $code = 0
+    }
+    else { Write-Host "shutdown crash NOT accepted: signature=$sig freshPng=$fresh expected=$n" -ForegroundColor Red }
+}
 if ($code -ne 0 -or -not $result -or $result.Line -notmatch 'VISUALQA_RESULT: OK') {
     Write-Host "visual-qa FAILED (exit $code), log: $log" -ForegroundColor Red
     Show-UnityLogErrors $log
