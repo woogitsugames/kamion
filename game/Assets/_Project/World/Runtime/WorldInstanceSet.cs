@@ -68,8 +68,84 @@ namespace Game.World
         public Material[] materials = Array.Empty<Material>();
         public Cell[] cells = Array.Empty<Cell>();
         public Run[] runs = Array.Empty<Run>();
+        [Tooltip("Full matrices: only for sets that cannot be packed (shear / mirror) and for assets imported before ADR 0025")]
         public Matrix4x4[] matrices = Array.Empty<Matrix4x4>();
+        [Tooltip("Compact TRS (ADR 0025): position float32x3, region-root space")]
+        public Vector3[] positions = Array.Empty<Vector3>();
+        [Tooltip("Compact TRS: rotation quaternion x, y, z, w as SNorm16 (4 per instance)")]
+        public short[] rotations = Array.Empty<short>();
+        [Tooltip("Compact TRS: scale x, y, z as IEEE half (3 per instance)")]
+        public ushort[] scales = Array.Empty<ushort>();
         public Hlod[] hlods = Array.Empty<Hlod>();
         public HlodGroup[] hlodGroups = Array.Empty<HlodGroup>();
+
+        bool Compact => positions != null && positions.Length > 0;
+
+        /// <summary>Number of instances (compact TRS or full matrices).</summary>
+        public int Count => Compact ? positions.Length : matrices.Length;
+
+        public Vector3 LocalPosition(int i)
+        {
+            if (Compact) return positions[i];
+            var m = matrices[i];
+            return new Vector3(m.m03, m.m13, m.m23);
+        }
+
+        /// <summary>Instance matrix in region-root space.</summary>
+        public Matrix4x4 LocalMatrix(int i)
+        {
+            if (!Compact) return matrices[i];
+            int r = i * 4, s = i * 3;
+            var q = new Quaternion(rotations[r] / 32767f, rotations[r + 1] / 32767f, rotations[r + 2] / 32767f, rotations[r + 3] / 32767f);
+            q.Normalize();
+            var sc = new Vector3(Mathf.HalfToFloat(scales[s]), Mathf.HalfToFloat(scales[s + 1]), Mathf.HalfToFloat(scales[s + 2]));
+            return Matrix4x4.TRS(positions[i], q, sc);
+        }
+
+        /// <summary>
+        /// Packs instance matrices as compact TRS (26 B instead of 64 B per instance; ADR 0025) when every matrix is a
+        /// rotation + positive scale + translation that round-trips within <paramref name="tolerance"/> (metres of
+        /// basis error per unit, i.e. 1e-3 = 1 mm on a 1 m column). Returns false and keeps the full matrices otherwise.
+        /// </summary>
+        public bool Pack(Matrix4x4[] mats, float tolerance = 1e-3f)
+        {
+            var pos = new Vector3[mats.Length];
+            var rot = new short[mats.Length * 4];
+            var scl = new ushort[mats.Length * 3];
+            for (int i = 0; i < mats.Length; i++)
+            {
+                var m = mats[i];
+                Vector3 c0 = m.GetColumn(0), c1 = m.GetColumn(1), c2 = m.GetColumn(2);
+                var sc = new Vector3(c0.magnitude, c1.magnitude, c2.magnitude);
+                if (sc.x < 1e-6f || sc.y < 1e-6f || sc.z < 1e-6f || m.m30 != 0f || m.m31 != 0f || m.m32 != 0f || m.m33 != 1f) { matrices = mats; return false; }
+                var q = Quaternion.LookRotation(c2 / sc.z, c1 / sc.y);
+                if (q.w < 0f) q = new Quaternion(-q.x, -q.y, -q.z, -q.w);
+                pos[i] = new Vector3(m.m03, m.m13, m.m23);
+                rot[i * 4] = Snorm16(q.x); rot[i * 4 + 1] = Snorm16(q.y); rot[i * 4 + 2] = Snorm16(q.z); rot[i * 4 + 3] = Snorm16(q.w);
+                scl[i * 3] = Mathf.FloatToHalf(sc.x); scl[i * 3 + 1] = Mathf.FloatToHalf(sc.y); scl[i * 3 + 2] = Mathf.FloatToHalf(sc.z);
+            }
+            positions = pos; rotations = rot; scales = scl; matrices = Array.Empty<Matrix4x4>();
+            for (int i = 0; i < mats.Length; i++)
+            {
+                var d = LocalMatrix(i);
+                float err = 0f;
+                for (int k = 0; k < 12; k++)
+                {
+                    int row = k % 4, col = k / 4;   // 3x3 basis (relative to its column scale) + translation
+                    if (row == 3) continue;
+                    float scale = Mathf.Max(1f, ((Vector3)mats[i].GetColumn(col)).magnitude);
+                    err = Mathf.Max(err, Mathf.Abs(d[row, col] - mats[i][row, col]) / scale);
+                }
+                err = Mathf.Max(err, (d.GetColumn(3) - mats[i].GetColumn(3)).magnitude);
+                if (err > tolerance)
+                {
+                    positions = Array.Empty<Vector3>(); rotations = Array.Empty<short>(); scales = Array.Empty<ushort>(); matrices = mats;
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        static short Snorm16(float v) => (short)Mathf.Clamp(Mathf.RoundToInt(v * 32767f), -32767, 32767);
     }
 }
