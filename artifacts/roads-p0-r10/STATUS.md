@@ -65,3 +65,10 @@ Galaz: worktree-agent-ad6af5501cb259d76.
   test_terrain_walls (steep_grass 0, skirt:j 0). ADR: docs/adr/0076-route-corridor-kerbs-poles.md.
   Wynik: pytest tests/gis 222 passed, 2 xfailed; route_corridor 4789 stacji, 0 uskokow, 0 przeszkod; consistency 69.
 - NASTEPNY KROK: pwsh scripts/import-region.ps1 -Region bialystok-industrial-c ; pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Medium -Lighting overcast -Gate3 artifacts/roads-p0-r10/p0_cameras.json -Cameras p0_median_slot_eye,p0_n10015785253_top,p0_n4103450295_top,p0_n1882887385_top,p0_lamp_w1101181473_eye,p0_ma001_top,p0_ma012_top,au_f_s0620,au_f_s0640,au_r_s1380,au_r_s1400,p0_kerb_merge_top,p0_fork_putry_eye -OutputDir artifacts/roads-p0-r10/renders ; pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCRouteTests|WorldCBarrierTests"
+- (przejecie #3, 2026-11-11 00:37) Niezacommitowany diff z 00:24 (meshing._corner_gaps zwraca tez roznice wysokosci, pasek
+  flush naroznika pochyla sie na krawedz sasiada, tylko gdy |dz| <= CORNER_FILL_DZ_M 0,15 m; network.side_profile flush:
+  h = wznios zewn. krawedzi) = sensowna kontynuacja, build_world z 00:29 juz go zawieral (generated spojne). Zostaje.
+  Po nim: export-route 2394 m; route_corridor 4789 stacji, 0 uskokow, 0 przeszkod; pytest tests/gis 222 passed, 2 xfailed;
+  terrain_walls 6 -> 5 (yard_concrete 4 -> 3, max 0,345 m); cull: kerb_tris 1262 / side_tris 132 / parts 151.
+  import-region OK (exit 0, Medium 112,0 MB), 13 kamer wyrenderowane do artifacts/roads-p0-r10/renders.
+- NASTEPNY KROK: pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCRouteTests|WorldCBarrierTests" ; pwsh scripts/test.ps1 -Platform EditMode

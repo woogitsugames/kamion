@@ -990,10 +990,13 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
     if mat == MAT_FLUSH_ROAD:
         # flush edge (another carriageway touches / overlaps, a yard): the surface runs on, there is no kerb.
         # A concrete strip at road level used to cross the neighbour's lane edge (ADR 0076).
-        return [(0.0, 0.0, 0.0, h, "road_asphalt"),
-                (0.0, h, tw, h, "road_asphalt"),
-                (tw, h, tw + w, zw, "road_asphalt"),
-                (tw + w, zw, tw + w, zw - depth, "curb_concrete")]
+        # For a flush edge `h` is not a kerb height but the rise of the strip's outer edge (0 on ribbon edges; the
+        # height of the neighbouring carriageway edge at junction corners, meshing._corner_gaps).
+        z1 = h * tw / (tw + w)
+        return [(0.0, 0.0, 0.0, 0.0, "road_asphalt"),
+                (0.0, 0.0, tw, z1, "road_asphalt"),
+                (tw, z1, tw + w, h, "road_asphalt"),
+                (tw + w, h, tw + w, h - depth, "curb_concrete")]
     return [(0.0, 0.0, 0.0, h, "curb_concrete"),
             (0.0, h, tw, h, "curb_concrete"),
             (tw, h, tw + w, zw, m if w > 0.05 else "curb_concrete"),

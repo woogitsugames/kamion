@@ -905,9 +905,10 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
         # another carriageway (not an arm of this junction) right beside the corner: the strip is flush asphalt up
         # to it. The kerb of a median that two carriageways close on used to end 3 m before they met and left a
         # slot down to the terrain (j:n10015785253, 0.5 m deep, terrain_walls QA; ADR 0076)
-        gaps = _corner_gaps(net, j, G, OUT)
-        params = [(URBAN, 0.0, float(g), p[3], MAT_FLUSH_ROAD) if (p[0] == URBAN and np.isfinite(g)) else p
-                  for p, g in zip(params, gaps)]
+        gaps, rise = _corner_gaps(net, j, G, OUT, Z)
+        params = [(URBAN, float(r), float(g), p[3], MAT_FLUSH_ROAD) if (p[0] == URBAN and np.isfinite(g)) else
+                  ((p[0], 0.0, p[2], p[3], p[4]) if (p[0] == URBAN and p[4] == MAT_FLUSH_ROAD) else p)
+                  for p, g, r in zip(params, gaps, rise)]
         fl = [p[0] == URBAN and p[4] == MAT_FLUSH_ROAD for p in params]
         # the corner polyline runs CCW around the patch, outward = right of travel -> mirrored strip
         if len(set(fl)) > 1:
@@ -919,7 +920,9 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
                 if b_ - lo < 2:
                     continue
                 sl = slice(lo, b_)
-                prm = [(q[0], q[1], q[2], q[3], MAT_FLUSH_ROAD if fl[a_] else (0 if q[4] == MAT_FLUSH_ROAD else q[4]))
+                # the shared station of a kerbed run is a flush one: kerb height 0 there (its `h` is a rise)
+                prm = [((q[0], q[1], q[2], q[3], MAT_FLUSH_ROAD) if fl[a_] else
+                        ((q[0], 0.0, 0.0, q[3], 0) if q[4] == MAT_FLUSH_ROAD else q))
                        if q[0] == URBAN else q for q in params[lo:b_]]
                 _emit_strip(buf, G[sl], OUT[sl], Z[sl], prm, kap[sl], hwz[sl], True, None, coarse,
                             j.id + f":corner{i}" + (f":{r}" if r else ""))
@@ -927,9 +930,15 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
             _emit_strip(buf, G, OUT, Z, params, kap, hwz, True, None, coarse, j.id + f":corner{i}")
 
 
-def _corner_gaps(net, j, G, OUT):
-    """Per corner station: clear gap [m] to the carriageway of another ground chain lying outward of the corner and
-    running along it, when that gap is under FLUSH_FILL_MAX_M (0 where it overlaps); nan elsewhere."""
+CORNER_FILL_DZ_M = 0.15      # the neighbour's edge must be this close in height to the corner (WORKING_VALUE)
+
+
+def _corner_gaps(net, j, G, OUT, Z):
+    """Per corner station: (clear gap [m] to the carriageway of another ground chain lying outward of the corner and
+    running along it, height of that carriageway's edge above the corner), when the gap is under FLUSH_FILL_MAX_M
+    (0 where it overlaps) and the height difference under CORNER_FILL_DZ_M - the flush strip then slopes onto that
+    edge. Carriageways further apart in height (ramps beside a through road: 0.4-0.5 m at j:n1883469484) keep
+    their kerb. nan elsewhere."""
     from shapely import STRtree
     from shapely.geometry import LineString, Point
     if getattr(net, "_cw_tree", None) is None:
@@ -938,8 +947,9 @@ def _corner_gaps(net, j, G, OUT):
     tree, ch = net._cw_tree
     own = {a.chain.id for a in j.arms} | {c.id for c in getattr(j, "internal", [])}
     out = np.full(len(G), np.nan)
+    rise = np.zeros(len(G))
     if _patch_on_bridge(j):
-        return out
+        return out, rise
     for m, (p, o) in enumerate(zip(G, OUT)):
         best = None
         for k in tree.query(Point(*p).buffer(FLUSH_FILL_MAX_M + 12.0)):
@@ -954,12 +964,18 @@ def _corner_gaps(net, j, G, OUT):
                 continue
             if float(np.dot(oc.line.point(s_o) - p, o)) <= 0.0:          # the other road is behind the corner
                 continue
-            gap = max(abs(lat_o) - float(oc.hw_at(s_o)), 0.0)
-            if gap < FLUSH_FILL_MAX_M and (best is None or gap < best):
-                best = gap
+            hw_o = float(oc.hw_at(s_o))
+            gap = max(abs(lat_o) - hw_o, 0.0)
+            if gap >= FLUSH_FILL_MAX_M or (best is not None and gap >= best):
+                continue
+            z_o = float(oc.crossfall_z(s_o, float(np.clip(lat_o, -hw_o, hw_o))))     # its edge nearest the corner
+            if abs(z_o - float(Z[m])) > CORNER_FILL_DZ_M:
+                continue
+            best = gap
+            rise[m] = z_o - float(Z[m])
         if best is not None:
             out[m] = best
-    return out
+    return out, rise
 
 
 # ---------------------------------------------------------------------------------------------
