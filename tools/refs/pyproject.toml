@@ -4,10 +4,12 @@ version = "0.1.0"
 description = "TRUCK SIM PL street-level reference fetcher (Mapillary, CC BY-SA 4.0, ADR 0065)"
 requires-python = "==3.12.*"
 dependencies = [
+    "matplotlib>=3.11.2",
     "pillow>=11.0",
     "pyproj>=3.8.0",
     "pyyaml>=6.0.3",
     "requests>=2.34.2",
+    "shapely>=2.2.0",
 ]
 
 [dependency-groups]

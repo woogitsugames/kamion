@@ -43,3 +43,30 @@ LoD2 (`Data/raw/gugik/lod2-2017-2061`) i pełne arkusze ortofotomapy (`gugik-ort
 - `dane.gov.pl` był nieosiągalny z tej sieci (timeout połączenia); Miasto Białystok udostępnia dane przez ArcGIS Online (bez licencji w metadanych).
 - Pokrycie: ujęcia 1-12 (prywatny teren Kwadrat Parku) nie mają pokrycia ulicznego w żadnym z otwartych źródeł; pozostają
   ortofotomapa, Commons i ewentualnie Mapillary (agent równoległy).
+
+## Stan końcowy (2026-11-10, gałąź `worktree-agent-ab1fb0a47d2f0a491`, nie scalona)
+Liczby z `tools/refs/summarize.py` (`artifacts/refs/open_sources_coverage.json`), testy `uv run --project tools/refs pytest tests/refs -q`: 50 zielonych.
+
+| Źródło | Pliki | Licencje | Autorzy | Ujęcia z obrazem (z 55) |
+|---|---|---|---|---|
+| KartaView | 79 | CC BY-SA 79 | 4 | 41 |
+| Panoramax | 23 | CC BY-SA 23 | 1 | 17 |
+| Wikimedia Commons | 134 | CC0 92, CC BY 17, CC BY-SA 25 | 11 | 54 |
+| Openverse | 0 | - | - | 0 |
+| GUGiK ortofotomapa (WMS) | 55 | dane GUGiK | 1 | 55 |
+| Miasto Białystok (ArcGIS) | 11 warstw | brak deklaracji (`LEGAL_REVIEW_REQUIRED`) | 1 | - |
+
+Bez zdjęcia ulicznego ani z Commons zostaje tylko ujęcie nr 2.
+
+Dodane po przyjęciu:
+- `object_refs.py` + `curation/<obiekt>.json`: referencje per obiekt z jawną listą odrzuceń po przeglądzie. Kwadrat Park: 11 zdjęć Commons + 3 kadry ortofoto + plan budynków; straż pożarna (JRG nr 2, OSM way/211035271): 17 zdjęć + 2 ortofoto + plan.
+- `summarize.py`: zbiorcze pokrycie ze wszystkich manifestów.
+- Manifest przyrostowy (zapis co 3 pobrania) i adopcja plików już pobranych: przerwany przebieg wznawia się bez duplikatów.
+- Klient HTTP: błędy sieci (reset, timeout) ponawiane jak 5xx, 2 ponowienia, `Retry-After` ograniczony do 120 s (Commons potrafił zatrzymać przebieg na długo); błędy programu nie są połykane (testy).
+
+Otwarte:
+- Openverse: 0 plików, API zwracało 504 przy każdym podejściu. Ponowić `open_sources.py --source openverse --interval 1.5`.
+- `dusk-sodium` (zmierzch, światła sodowe): 0 obrazów, `INDEX.md` pusty. Barwa i kontrast lamp sodowych pozostają `UNVERIFIED`.
+- Kwadrat Park: brak otwartych zdjęć hal, bramy, ramp i portierni (teren prywatny); detale `UNVERIFIED`.
+- Dane Miasta Białystok: brak licencji w metadanych, tylko kontrola pozycji do przeglądu prawnego.
+- Lider: scalenie, kopia `artifacts/refs` z worktree jest już w głównym `artifacts/refs`; przed usunięciem worktree odpiąć junction `Data/raw`.

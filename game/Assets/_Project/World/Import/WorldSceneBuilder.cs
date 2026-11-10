@@ -77,6 +77,10 @@ namespace Game.World.Import
             if (instances != null) rootGo.AddComponent<WorldInstances>().set = instances;
             else Debug.LogWarning("[IMPORT] Instances.asset missing - no props or trees in " + scenePath);
             colliders += BuildPropColliders(r, rootGo.transform);
+            BuildBarriers(r, rootGo.transform);
+            Physics.SyncTransforms();
+            // Region edge (ADR 0082): boundary data, apron to the horizon, road closures before the edge.
+            WorldEdgeBuilder.Build(r, rootGo.transform, tier);
             Physics.SyncTransforms();
 
             // ---------------- route (heights from the collision) ----------------
@@ -172,6 +176,38 @@ namespace Game.World.Import
             EditorSceneManager.SaveScene(scene, scenePath);
             AssetDatabase.SaveAssets();
             Debug.Log($"[IMPORT] scene {scenePath} (tier {tier}): {r.Chunks.Count} chunks, {colliders} colliders, route {route.Length:F0} m, spawn {spawnPos}");
+        }
+
+        /// <summary>Automatic boom barriers of depot gates (MA-003): one kinematic boom with <see cref="DepotBarrier"/> each.</summary>
+        static void BuildBarriers(RegionImporter.Result r, Transform parent)
+        {
+            if (r.PropColliders == null || r.PropColliders.Barriers.Count == 0) return;
+            var root = new GameObject("Barriers").transform;
+            root.SetParent(parent, false);
+            int i = 0;
+            foreach (var b in r.PropColliders.Barriers)
+            {
+                var go = new GameObject($"DepotBarrier_{i++}");
+                go.layer = 2;   // Ignore Raycast: wheel rays (UnityGroundQuery) never stand on a boom, bodies still collide
+                go.transform.SetParent(root, false);
+                go.transform.localPosition = b.M.GetColumn(3);
+                go.transform.localRotation = b.M.rotation;
+                go.AddComponent<MeshFilter>().sharedMesh = b.Mesh;
+                var mr = go.AddComponent<MeshRenderer>();
+                mr.sharedMaterials = b.Materials;
+                var bc = go.AddComponent<BoxCollider>();
+                bc.center = new Vector3(b.Length * 0.5f, 0f, 0f);
+                bc.size = new Vector3(b.Length, 0.10f, 0.10f);
+                var rb = go.AddComponent<Rigidbody>();
+                rb.isKinematic = true;
+                rb.useGravity = false;
+                rb.mass = 14f;
+                var bar = go.AddComponent<DepotBarrier>();
+                bar.boomLengthM = b.Length;
+                bar.openAngleDeg = b.OpenDeg;
+                bar.travelSign = b.Travel;
+            }
+            Debug.Log($"[IMPORT] barriers: {r.PropColliders.Barriers.Count} automatic booms (DepotBarrier)");
         }
 
         /// <summary>Box colliders of street props (lamps, poles, signal masts, gates...) in the start-route corridor.</summary>

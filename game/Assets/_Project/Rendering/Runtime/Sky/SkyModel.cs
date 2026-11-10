@@ -49,6 +49,13 @@ namespace Game.Rendering
         public readonly Vector3 TrueSunDirection;
         /// <summary>Sky luminance factor relative to the sun at 0.5° (1 above it; ADR 0062 civil twilight).</summary>
         public readonly float TwilightFactor;
+        /// <summary>ADR 0080: overcast dome brightening toward the sun, L x (1 + s cos²γ) for γ &lt; 90°, renormalised to
+        /// the same horizontal illuminance (thinner cloud / forward scattering toward the sun; 0 = CIE standard overcast).</summary>
+        public readonly float OvercastDirectional;
+        /// <summary>ADR 0080: share of the clear-sky direct beam that passes a thin overcast as a directional component
+        /// (soft form shading and faint shadows). Taken out of the overcast diffuse, so the total horizontal illuminance
+        /// (and the exposure) stays at the handbook overcast value.</summary>
+        public readonly float OvercastSunLeak;
 
         // ---------------------------------------------------------------- twilight (ADR 0062)
         public const float MinTwilightElevationDeg = -8f;
@@ -85,8 +92,11 @@ namespace Game.Rendering
         /// <param name="wbAdaptation">0 = fixed daylight white balance (default, all presets). &gt; 0: phone-style partial
         /// white-balance adaptation (Bradford von Kries, degree D) toward the scene illuminant (sun + sky on a horizontal
         /// plane), applied to sun, sky, ambient, fog and reflections alike. Option (c) of ADR 0043: owner A/B only.</param>
-        public SkyModel(float sunElevationDeg, float sunAzimuthDeg, float turbidity, float overcast, float ev100, float wbAdaptation = 0f)
+        public SkyModel(float sunElevationDeg, float sunAzimuthDeg, float turbidity, float overcast, float ev100, float wbAdaptation = 0f,
+            float overcastDirectional = 0f, float overcastSunLeak = 0f)
         {
+            OvercastDirectional = Mathf.Clamp(overcastDirectional, 0f, 2f);
+            OvercastSunLeak = Mathf.Clamp(overcastSunLeak, 0f, 0.3f);
             SunElevationDeg = Mathf.Clamp(sunElevationDeg, 0.5f, 89.5f);
             TrueSunElevationDeg = Mathf.Clamp(sunElevationDeg, MinTwilightElevationDeg, 89.5f);
             TwilightFactor = TwilightFactorAt(TrueSunElevationDeg);
@@ -104,7 +114,12 @@ namespace Game.Rendering
             // Twilight (ADR 0062): the sun is below the horizon - no direct light, the dome dims by TwilightFactor.
             float clearKh = (0.8f + 15.5f * Mathf.Sqrt(sinH)) * 1000f * TwilightFactor;
             float overKh = (0.3f + 21.0f * sinH) * 1000f * TwilightFactor;
-            SunNormalIlluminanceLux = TrueSunElevationDeg < 0f ? 0f : clearDn * (1f - Overcast);
+            // ADR 0080: a thin overcast passes part of the beam; what it passes is not scattered into the dome.
+            float leakDn = TrueSunElevationDeg < 0f ? 0f : clearDn * OvercastSunLeak * Overcast;
+            float leakKh = Mathf.Min(leakDn * sinH, overKh * 0.5f);
+            leakDn = sinH > 1e-4f ? leakKh / sinH : 0f;
+            overKh -= leakKh;
+            SunNormalIlluminanceLux = TrueSunElevationDeg < 0f ? 0f : clearDn * (1f - Overcast) + leakDn;
             SkyHorizontalIlluminanceLux = Mathf.Lerp(clearKh, overKh, Overcast);
 
             // ---- Preetham coefficients ----
@@ -121,8 +136,13 @@ namespace Game.Rendering
             m_ClearScale = 1f;
             float eUnit = IntegrateHorizontal(ClearLuminanceRelative);
             m_ClearScale = eUnit > 0f ? clearKh / eUnit : 0f;
-            // CIE overcast: E_h = 7π/9 · Lz.
+            // CIE overcast: E_h = 7π/9 · Lz; with the directional term the integral is numeric.
             m_OvercastZenith = overKh * 9f / (7f * Mathf.PI);
+            if (OvercastDirectional > 0f)
+            {
+                float e1 = IntegrateHorizontal(OvercastRelative);
+                m_OvercastZenith = e1 > 0f ? overKh / e1 : 0f;
+            }
 
             SunColor = SunColorFromTurbidity(T, m);
             AdaptedWhite = Color.white;
@@ -170,7 +190,7 @@ namespace Game.Rendering
             }
             if (Overcast > 0f)
             {
-                float L = m_OvercastZenith * (1f + 2f * dir.y) / 3f;
+                float L = m_OvercastZenith * OvercastRelative(dir);
                 c += AdaptedWhite * (L * Overcast);
             }
             return c;
@@ -203,7 +223,7 @@ namespace Game.Rendering
             // Zenith chromaticity, clear scale relative to Perez(0, θs) and exposure folded in.
             float fY0 = Perez(m_PY, 0f, m_ThetaS), fx0 = Perez(m_Px, 0f, m_ThetaS), fy0 = Perez(m_Py, 0f, m_ThetaS);
             zenith = new Vector4(m_Zx / fx0, m_Zy / fy0, m_ClearScale * Exposure / fY0, m_OvercastZenith * Exposure);
-            misc = new Vector4(Overcast, SunNormalIlluminanceLux * Exposure / SunSolidAngleSr, 0f, 0f);
+            misc = new Vector4(Overcast, SunNormalIlluminanceLux * Exposure / SunSolidAngleSr, OvercastDirectional, 0f);
         }
 
         // ---------------------------------------------------------------- SH and cubemap
@@ -363,6 +383,13 @@ namespace Game.Rendering
             float ct = Mathf.Max(Mathf.Cos(theta), 0.01f);
             float cg = Mathf.Cos(gamma);
             return (1f + p[0] * Mathf.Exp(p[1] / ct)) * (1f + p[2] * Mathf.Exp(p[3] * gamma) + p[4] * cg * cg);
+        }
+
+        /// <summary>Overcast luminance relative to the zenith constant: CIE (1 + 2 cos θ) / 3 × the directional term.</summary>
+        float OvercastRelative(Vector3 dir)
+        {
+            float cg = Mathf.Max(Vector3.Dot(dir, SunDirection), 0f);
+            return (1f + 2f * Mathf.Max(dir.y, 0f)) / 3f * (1f + OvercastDirectional * cg * cg);
         }
 
         float ClearLuminanceRelative(Vector3 dir)
