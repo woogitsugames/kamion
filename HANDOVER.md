@@ -18,8 +18,8 @@
 | zewnętrze TRAKT + naczepa | 0083 | agent-a4049e15e1ab8c681 | artifacts/truck-ext-r10 | SCALONE `68e5335` (r8, wariant B, dach < 90 % luminancji). Na main wymagane TruckAssetBuilder.BuildBatch + WorldTruckInstaller.InstallBatch. Otwarte → nowe zadanie: lakier kabiny, szyba czołowa, reflektory w dzień (TruckExterior.shader/TruckLights.cs). Worktree do usunięcia |
 | Kwadrat Park r11 (recenzja) | 0071 | kwadrat-r11 | artifacts/kwadrat-r11 | s8: nowy agent Fable |
 | światło r11 (recenzja) | 0080 | light-r11 | artifacts/light-r11 | s8: raport `195eb5a` (niebo 6800 K, korony, mgiełka, szyba); kończy w tle |
-| import Megascans | 0084 | gpt-megascans | artifacts/megascans-r1 | GPT/Codex w toku |
-| tło za krawędzią | 0085 | argon-edge (Argon tworzy) | artifacts/edge-far-r1 | Antigravity — do startu przez właściciela |
+| import Megascans | 0084 | gpt-megascans | artifacts/megascans-r1 | GPT/Codex w toku — runda 3 (r1 sam ocenił FAIL: krawężnik bez brudu, Low +19 draw/+4k tris; poprawia) |
+| tło za krawędzią | 0085 | argon-edge | artifacts/edge-far-r1 | Antigravity w toku — r0-before gotowe, generator far_field.py; zmienia WorldSurface.shader + streetscape/materials.py (konflikt z 0081 `tint_linear` → unia ręcznie) |
 
 ## Następne kroki
 1. Scalanie: 0076 → 0077 → 0070 → 0078 → 0081 → 0083 → Kwadrat r11 → światło r11 → 0084 → 0085; po drogach: build_world → pytest gis → import-region → PlayMode WorldCBarrier|DepotBarrier|WorldCRoute.
