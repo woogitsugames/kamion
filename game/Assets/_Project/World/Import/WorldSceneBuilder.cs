@@ -78,6 +78,9 @@ namespace Game.World.Import
             else Debug.LogWarning("[IMPORT] Instances.asset missing - no props or trees in " + scenePath);
             colliders += BuildPropColliders(r, rootGo.transform);
             Physics.SyncTransforms();
+            // Region edge (ADR 0082): boundary data, apron to the horizon, road closures before the edge.
+            WorldEdgeBuilder.Build(r, rootGo.transform, tier);
+            Physics.SyncTransforms();
 
             // ---------------- route (heights from the collision) ----------------
             var routeGo = new GameObject("Route_start");
