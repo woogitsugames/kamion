@@ -93,6 +93,22 @@ osobnej decyzji lidera (dotyczy też atlasu wiaduktu z ADR 0067, który trzeba o
   `fire-station-route` High 516 tys. trójkątów / 350 drawów, Low 209 tys. / 205; `fire-station-ref7197` High 424 tys. /
   138, Low 364 tys. / 132. Wpływ na FPS na telefonie: `UNVERIFIED` (brak przebiegu na urządzeniu w tej gałęzi).
 
+- **r6** (po recenzji `docs/reports/visual/REVIEW-2026-11-10-0070-0083.md`, P0 nr 1 + P1 nr 2–7; łatka
+  `artifacts/firestation-r9/scripts/r6_patch.py`): albedo tynku 0,47/0,545/0,65 → 0,185/0,26/0,365. Pomiar w kadrze
+  `fire-station-ref7197` High overcast (JPG, prostokąt tynku szczytu): **103/119/135 i 105/121/137 sRGB** przy celu ze
+  zdjęcia 7197 110/126/145 (±10: spełnione; r5: 170/178/188). Szum izotropowy tynku ÷3 (zostają zacieki i strefa
+  rozbryzgu). Dach: B −35 % liniowo, szorstkość 0,48; pomiar 83/102/138 i 94/112/145 (cel 84/112/153). Okna skrzydła:
+  rama PCV 10 cm, szprosy 6 cm, trzy stany szkła (roleta / firana / ciemne wnętrze) z gradientem nieba; szkło szczytu
+  z wypalonym gradientem (ciemniejszy dół). Płot granatowy (albedo 0,022/0,032/0,075). Tuje: trzy pokroje, rozrzut
+  odstępu ±25 %, wysokość 2,2–5,4 m; trzy świerki (dwa przed prawym oknem łukowym, jeden przed skrzydłem; r6b:
+  gładki stożek 12-boczny po tym, jak pierwsza wersja wyszła kanciasta).
+- **LOD po r6**: **9 944 / 2 828 / 164** trójkątów (`logs/build_world_r6b.log`). Koszt kadru bez zmian w granicach
+  szacunku (`unity/r6/*/stats.txt`: route High 516 tys. / Low 209 tys.).
+- **Otwarte po r6**: świerki to gładkie stożki (pokrój tui, nie świerka) i dwa stoją na kostce, nie na trawie
+  (pozycje `WORKING_VALUE` z jednego zdjęcia — przesunąć); albedo koron (`hedge_thuja`, zestaw wspólny) nierozjaśnione;
+  płot z góry nadal zlewa się w pas (teraz ciemny); brak drzew liściastych po lewej; P2 z recenzji (cegła, kratki,
+  flaga, budynek gospodarczy, AO okapu w lowsun) nieruszone; światła nie strojono (czeka scalenie r11).
+
 ### Samokrytyka wg docs/06 (r5, bez visual-critic)
 - Szkło hali nadal ciemniejsze względem ściany niż na zdjęciu; brak firan/odbić (jednolite szare pola).
 - Tynk z bliska lekko „chmurkowy” (detal skanu ok. 1 m); na zdjęciu farba jest równa. Z trasy (≥ 45 m) niewidoczne.
@@ -101,7 +117,7 @@ osobnej decyzji lidera (dotyczy też atlasu wiaduktu z ADR 0067, który trzeba o
 - Elewacje podwórza i budynek gospodarczy pozostają `WORKING_VALUE`.
 
 ## Dowody
-`artifacts/firestation-r9/`: `unity/r4b/view/`, `unity/r5/{High,Low}-{overcast,lowsun}/`, `unity/r5/view/`,
+`artifacts/firestation-r9/`: `unity/r6/` (r6b; `r6a/` = pierwsza wersja świerków), `unity/r6/compare_unity_r6.jpg`, `unity/r4b/view/`, `unity/r5/{High,Low}-{overcast,lowsun}/`, `unity/r5/view/`,
 `unity/r5/compare_unity_r5.jpg` (zdjęcie 7197 / High / Low), `atlas_base_r5.jpg`, logi `logs/*_r5.log`.
 pytest `tests/gis` (r5): 229 passed, 3 failed, 2 xfailed — wszystkie 3 odziedziczone z main (`test_route_corridor` ×2:
 P0 z HANDOVER, wiadukt s≈1432–1480; `test_report_not_stale`: `fidelity_qa.json` w wersji main). EditMode (r5): 188,
