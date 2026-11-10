@@ -14,7 +14,7 @@ Pamięć poprzednich sesji: `C:\Users\matma\.claude\projects\C--Users-matma-Docu
 - **Przed usunięciem worktree skopiuj jego `artifacts/`** do głównego checkoutu (2026-11-10 straciliśmy tak zrzuty S24+ i klipy DK8). W briefach każ zapisywać dowody pod ścieżkę absolutną `C:\Users\matma\Documents\Claude\kamion\artifacts\...`.
 - Po buildach cofaj efekty uboczne: `game/ProjectSettings/ProjectSettings.asset` (preloadedAssets), `QualitySettings.asset`, `M_Sky.mat`, pusty `game/Assets/Resources(.meta)`.
 
-## Gdzie jesteśmy (main = ok. `165dd5b`)
+## Gdzie jesteśmy (main = ok. HEAD z 2026-11-10 ok. 11:30)
 - **Etap 3 (bramka, odcinki G3-A i G3-B: brama Kwadrat Parku → Rondo Putry)** — pomiary zrobione (`docs/reports/GATE-3-draft.md`):
   - A16 Low (sha `c59209e`): G3-A/G3-B p50/p95/p99 33,3/33,5/33,6 ms, PSS ~690 MB, bez grzania — **PASS**.
   - S24+ High (stary build `fefd804`): p95 50/33,5 ms — **FAIL**; poprawka ADR 0046 (adaptacyjna skala 1,00/0,85/0,80 + FSR1/RCAS, zejście do 30 FPS przy thermal ≥ 2, lżejsze cienie) scalona, **niezmierzona na telefonie**.
@@ -33,10 +33,12 @@ Scalone dziś już: TRAKT r3 (słupek A 7,0°), r4 (lamele grilla 20° w dół, 
 | Zadanie | Worktree (`.claude/worktrees/…`) | Uwagi |
 |---|---|---|
 | (scalone `ffbe6cf`) wnętrze: polerowanie wieńca/wybieraka, listwa u stopy słupka A, zasłony koi i drzwi pasażera; **sprawdzić**: przy lowsun zasłona pasażera przyciemnia piastę/konsolę (próg czerni `cab-dash` ≤ 8 %), połysk addytywny w CabInterior.shader do przeglądu rendering-perf; fotel/mata/drzwi poza kadrem — nieocenione | — | gotowe |
-| Opus: latarnie/słupki na terenie (audyt obiekty vs teren → PASS) + ścianki skrzyżowań (obniż ratchet) | `agent-adf7e8fce42acbbeb` | dowody `artifacts/world-fixes/`; jw. generated |
+| (scalone `65f3acd` + regeneracja świata na main) latarnie/słupki: 0 zakopanych słupków, 3 latarnie wiszą 0,301–0,305 m (próg 0,30; podejrzenie: rzadsza kolizja terenu), ratchet ścianek 103 → 14, jedna prawdziwa ścianka `j:n1847044961` przy Rondzie Putry otwarta | — | gotowe |
 | Opus: druty WN min. szerokość w px (P0 z r6) + zacieki pod attyką | `agent-a00eb437b0f666944` (kopia: `origin/wip/wires-streaks`) | **WIP `a1d4e81`, NIE scalać bez weryfikacji**: kod drutów (`_ScaledScreenParams`, rdzeń ≥1,2 px, AA) i zacieków (`parapet_runoff`, UV1, `_RUNOFF`) jest, ale rendery nie potwierdzają efektu; część ścian `hall_wall` bez TEXCOORD_1; addendum ADR 0022 opisuje to jako działające — poprawić. Dowody `artifacts/world-fixes/wires-streaks/` |
 
 Scalone też: auta v3 (`b8c93ca`; felgi LOD1 „rim_dusty” przyciemnione w kodzie, nieprzerenderowane). Konflikty w `Data/Regions/bialystok-industrial-c/generated/*.json`: bierz `--ours` i wygeneruj świat ponownie po scaleniu wszystkich gałęzi świata.
+
+**Czerwony test na main:** `tests/gis/test_world_v31.py::test_frame_budget_with_forest_hlod` (po autach v3, LOD0 aut 3,3–3,6 k tris) — napraw uczciwie (dystanse LOD aut / oszacowanie), bez luzowania limitu.
 
 ## Recenzja r6 (docs/reports/visual/REVIEW-2026-11-10-r6.md) — top poprawek
 1. **P0** build ≥ obecny main na A16 (Low) i nowe 37 kadrów gate3 + `truck-34`/`cab-dash` (stare kadry są sprzed nowego frontu i aut). Akceptacja `cab-dash` < 3 % luma ≤ 8 %.
