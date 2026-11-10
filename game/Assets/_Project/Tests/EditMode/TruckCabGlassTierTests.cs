@@ -92,5 +92,53 @@ namespace Game.Tests
             }
             finally { rig.forceLevel = -1; }
         }
+
+        /// <summary>
+        /// ADR 0046: exactly one glass layer per tier. The glazing group (GLASS_*) is the only glass; no exterior body renderer
+        /// (CAB_Body_LODn ...) keeps a MI_Ext_Glass slot / submesh, so Low's LOD2 body no longer draws a second glass sheet.
+        /// </summary>
+        [Test]
+        public void Prefab_SingleGlassLayer_OnEveryTier()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
+            Assume.That(prefab, Is.Not.Null, "TRAKT prefab not generated (Kamion/Setup/Rebuild TRAKT truck)");
+            m_Go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+            var rig = m_Go.GetComponent<TruckVisualRig>();
+            var gb = rig.glassLods.SelectMany(l => l.renderers).Where(g => g != null).Select(g => { var b = g.bounds; b.Expand(0.04f); return b; }).ToArray();
+            int lensTris = 0;
+            foreach (var rs in rig.slots)
+            {
+                if (rs.renderer == null || rs.renderer.name.StartsWith("GLASS_", StringComparison.Ordinal)) continue;
+                var mf = rs.renderer.GetComponent<MeshFilter>();
+                var mesh = mf.sharedMesh;
+                Assert.That(rs.slots.Length, Is.EqualTo(mesh.subMeshCount), $"{rs.renderer.name}: slots match submeshes");
+                var v = mesh.vertices; var l2w = rs.renderer.transform.localToWorldMatrix;
+                for (int sm = 0; sm < rs.slots.Length; sm++)
+                {
+                    if (rs.slots[sm] != "MI_Ext_Glass") continue;
+                    var t = mesh.GetTriangles(sm);
+                    for (int i = 0; i < t.Length; i += 3)
+                    {
+                        var c = l2w.MultiplyPoint3x4((v[t[i]] + v[t[i + 1]] + v[t[i + 2]]) / 3f);
+                        Assert.That(gb.Any(b => b.Contains(c)), Is.False, $"{rs.renderer.name}: body glass face duplicates the glazing (double glass)");
+                    }
+                    lensTris += t.Length / 3;
+                }
+            }
+            Assert.That(lensTris, Is.GreaterThan(0), "lamp lens faces (MI_Ext_Glass on the body) remain");
+            try
+            {
+                for (int level = 0; level < 4; level++)
+                {
+                    rig.forceLevel = level;
+                    rig.Apply();
+                    string tier = TruckVisualRig.TierNames[level];
+                    // The windscreen is drawn by exactly one glass LOD level at any distance: LOD levels hold disjoint renderers.
+                    var all = rig.glassGroup.GetLODs().SelectMany(l => l.renderers).Where(r => r != null && r.name.StartsWith("GLASS_Windscreen", StringComparison.Ordinal)).ToArray();
+                    Assert.AreEqual(all.Length, all.Distinct().Count(), $"windscreen renderers appear once across glass LOD levels ({tier})");
+                }
+            }
+            finally { rig.forceLevel = -1; }
+        }
     }
 }
