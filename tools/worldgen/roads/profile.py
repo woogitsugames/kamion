@@ -304,7 +304,7 @@ def _surface_offset(e, roof, lat):
     return -S.CROSSFALL * abs(lat) if roof else e * lat
 
 
-def adjacent_targets(c, ground: list, el) -> dict:
+def adjacent_targets(c, ground: list, el, min_dot: float = 0.9) -> dict:
     """Stations of chain c (not elevated) whose edge touches or overlaps a roughly parallel, already solved ground
     road (gap between the edges < ADJ_TOUCH_M): the centreline height that puts this edge on that road's surface.
     Two carriageways side by side (a merge, an on-ramp along a main road) share their edge height; the NMT alone
@@ -330,7 +330,7 @@ def adjacent_targets(c, ground: list, el) -> dict:
             if s_o <= 0.0 or s_o >= g.length:
                 continue
             io = g.idx(s_o)
-            if abs(float(np.dot(g.line.t[io], t))) < 0.9:
+            if abs(float(np.dot(g.line.t[io], t))) < min_dot:
                 continue
             hw_o = float(g.hw_at(s_o))
             if abs(lat_o) - hw_o - float(c.hw[i]) >= S.ADJ_TOUCH_M:
@@ -347,6 +347,7 @@ def adjacent_targets(c, ground: list, el) -> dict:
     return out
 
 
+ABREAST_TIE_DOT = 0.7        # = the parallel test of network._push_abreast (a merge closes at up to ~45 deg)
 SHIFTED_END_MIN_M = 0.3      # chain ends nearer than this to their node keep the node height
 
 
@@ -437,6 +438,14 @@ def build_profiles(net, hf: Heightfield) -> dict:
             zb = float(np.mean(pending[c.node_b]))
         el = el_of[c.id] if (c.id in req or za is not None or zb is not None) else None
         adj_of[c.id] = adjacent_targets(c, ground_chains, el_of[c.id])
+        # an embankment ramp (OSM layer >= 1, no structure) that a ground carriageway merges into / diverges from
+        # (network.abreast_forks: the carriageways overlap before the node) is on that carriageway's level over the
+        # overlap, not on the straight descent to the node: the Putry viaduct ramp was 1.0 m above the on-ramp from
+        # the roundabout 30 m before their node, the 45 m junction patch between them a 0.6 m ridge (MA-012)
+        tied = [g for g in ground_chains if g.meta.get("abreast_of") == c.id]
+        if tied:
+            for i, zt in adjacent_targets(c, tied, c.bridge, min_dot=ABREAST_TIE_DOT).items():
+                adj_of[c.id].setdefault(i, zt)
         c.z, stats[c.id] = chain_profile(c, hf, za, zb, rmin_of[c.id], el, req.get(c.id), adj_of[c.id])
         for node, zz in ((c.node_a, c.z[0]), (c.node_b, c.z[-1])):
             if zn.get(node) is None:

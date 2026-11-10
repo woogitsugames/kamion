@@ -517,6 +517,14 @@ class PatchHeight:
         a, s, P, d, n, hw, g, z0 = self.arms[i]
         v = p - P
         along = float(v @ d)
+        if along < 0.0:
+            # beside the trimmed part of the arm (the gore of a 45 m merge patch): the arm's own surface at its
+            # nearest edge, not the end-section plane carried 15-40 m along a changing grade (0.18 m ridge between
+            # the Putry viaduct ramp and its on-ramp, MA-012)
+            sp_, lat_ = a.chain.line.project(p)
+            if 1e-3 < sp_ < a.chain.length - 1e-3:
+                hw_ = float(a.chain.hw_at(sp_))
+                return float(a.chain.crossfall_z(sp_, float(np.clip(lat_, -hw_, hw_))))
         lat = float(np.clip(v @ n, -hw, hw))
         cf = float(a.chain.crossfall_z(s, lat * a.lat_sign())) - z0
         return z0 + g * along + cf

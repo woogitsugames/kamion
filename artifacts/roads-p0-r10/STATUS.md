@@ -48,3 +48,13 @@ Galaz: worktree-agent-ad6af5501cb259d76.
 - Brak: ADR docs/adr/0076-*.md, ocena visual-critic, kopia dowodow do main artifacts/roads-p0-r10, obejrzenie
   p0_median_slot_eye / p0_n10015785253_top / p0_n4103450295_top / p0_n1882887385_top / p0_lamp_w1101181473_eye.
 - NASTEPNY KROK: uv run --project tools/worldgen pytest tests/gis/test_road_fidelity.py tests/gis/test_terrain_walls.py tests/gis/test_road_consistency.py -q   (po decyzji o ratchetach / naprawie szczeliny j:n10015785253), potem ADR 0076
+- (przejecie #2, decyzja lidera o ratchetach) Ortofoto vs abreast: artifacts/roads-p0-r10/abreast_ortho/*.jpg (8 wezlow,
+  zolty = abreast, cyan = osie OSM) + abreast_vs_ortho.json: abreast = +4006 m2 jezdni w 8 oknach, na zieleni 639 vs 493 m2
+  (Andersa zach.: krawedzie 5-9 m na trawniku/chodniku), na "nie-drodze" 6409 vs 5968 m2 -> odpowiedz NIE.
+  network.ABREAST_PUSH = False (osie zostaja na OSM, abreast_forks tylko wiaze lacznice z sasiadem: meta abreast_of).
+  Bez przesuniecia: korytarz 4 uskoki przy s=618 (trasa zmieniala pas PRZED wezlem przez nos j:n3341716400) ->
+  roads/route.py: zmiana pasa na jezdni z wieksza liczba pasow -> route_corridor 4789 stacji, 0 uskokow, 0 przeszkod.
+  MA-012 (garb w latce 45 m j:n1847044938: nasyp wiaduktu 1,0 m nad lacznica) -> profile.py: nasyp (layer>=1 bez obiektu)
+  bierze wysokosc lacznicy, ktora sie w niego wlacza; overlap_dz.py: 119 komorek > 5 cm (max 0,238) -> 0 (max 0,045).
+  W toku (niezbudowane): network flush-strip wypelnia szczeline (j:n10015785253), meshing.PatchHeight.arm_plane.
+- NASTEPNY KROK: git merge main (generated -> --ours) ; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c ; uv run --project tools/worldgen python scripts/export-route.py --region bialystok-industrial-c ; uv run --project tools/worldgen python tests/gis/route_corridor.py

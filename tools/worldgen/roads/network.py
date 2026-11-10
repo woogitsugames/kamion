@@ -27,6 +27,7 @@ SURFACE_MAT = {"asphalt": "road_asphalt", "asphalt_new": "road_asphalt_new", "pa
 # side profile families
 URBAN, ISLAND, RURAL, MEDIAN_RURAL = 0, 1, 2, 3
 WALK_MATS = ["curb_concrete", "sidewalk_paving", "bridge_concrete", "verge_grass", "road_asphalt"]
+FLUSH_FILL_MAX_M = 1.5  # a flush edge strip is at most this wide (the flush mask is dilated 4 m past gap < NOSE_MIN_GAP_M)
 MAT_FLUSH_ROAD = 4      # side `mat` code: flush edge shared with another carriageway -> asphalt, no kerb (ADR 0076)
 
 
@@ -508,6 +509,14 @@ def align_forks(net: Network, report: list | None = None):
                                        "lanes": [round(x, 2) for x in take]})
 
 
+# Lateral push of merging / diverging carriageways (ADR 0076 r1) is OFF: checked against the GUGiK orthophoto
+# (artifacts/roads-p0-r10/abreast_ortho/*.jpg, abreast_vs_ortho.json) the pushed layout put 4006 m2 more asphalt
+# into the 8 node windows, 147 m2 more of it on vegetation (Andersa west: carriageway edges 5-9 m out on the verge
+# and the footway) and moved the start-route axis up to 6.9 m off OSM (p95 1.745 m, ratchet 0.13 m). The real merge
+# lanes lie where OSM draws them: the carriageways overlap and are one surface. With the push off abreast_forks
+# only records which carriageway each overlapping branch lies on (meta "abreast_of"), so profile.build_profiles
+# (step 1b) puts both on one surface; kerbs inside the overlap are removed by meshing.cull_sides_on_carriageway.
+ABREAST_PUSH = False
 ABREAST_OVERLAP_M = 0.3       # carriageways laid side by side overlap by this much (one surface, no sliver; WORKING_VALUE)
 ABREAST_SMOOTH_M = 5.0        # Gaussian sigma of the lateral push along the chain (WORKING_VALUE)
 ABREAST_RELEASE_M = 15.0      # the push ends once the carriageways have been clear of each other this long
@@ -594,6 +603,13 @@ def _push_abreast(net: Network, ends: dict, c: Chain, e: str, nb: Chain, side: f
     far_node = c.node_b if e == "a" else c.node_a
     if floor <= 0.0 and float((deficit > 0).sum()) * DENSE < min(ABREAST_MIN_RUN_M, 0.9 * c.length):
         return
+    if not ABREAST_PUSH:                                     # axes stay on OSM: one surface, no lateral move
+        c.meta["abreast_of"] = nb.id
+        c.meta["abreast_overlap_m"] = round(float((deficit > 0).sum()) * DENSE, 1)
+        report.append({"node": node, "chain": c.id, "beside": nb.id, "side": "left" if side > 0 else "right",
+                       "overlap_run_m": c.meta["abreast_overlap_m"], "overlap_max_m": round(float(deficit.max()), 2),
+                       "shift_max_m": 0.0})
+        return
     final = smooth_1d(deficit, ABREAST_SMOOTH_M / DENSE) if n > 3 else deficit
     if floor > 0.0:
         final = np.maximum(final, floor * _smoothstep(1.0 - d / ABREAST_NODE_FADE_M))
@@ -642,7 +658,11 @@ def abreast_forks(net: Network, report: list | None = None):
     the branch that continues the single carriageway keeps its edge on the single carriageway's edge, the others
     are pushed outward just enough not to overlap their inner neighbour (_push_abreast), and the single
     carriageway is widened at the node to take them all, tapering back over ABREAST_TAPER_RATIO x the extra width
-    (the merge / diverge lane)."""
+    (the merge / diverge lane).
+
+    r2 (ABREAST_PUSH = False, see there): nothing is moved or widened any more - the orthophoto shows the OSM axes
+    are the truer layout. The overlapping branch is only tied to its inner neighbour (meta "abreast_of") so that
+    both get one height surface (profile step 1b)."""
     report = [] if report is None else report
     ends = {}
     for c in net.chains:
@@ -692,8 +712,8 @@ def abreast_forks(net: Network, report: list | None = None):
                 b = br[i]
                 nb = br[i + 1]["c"] if i < ia else br[i - 1]["c"]
                 _push_abreast(net, ends, b["c"], b["e"], nb, 1.0 if i < ia else -1.0, report, node, visited)
-            if len(report) == n_rep:
-                continue                                 # nothing overlapped: a plain Y junction
+            if len(report) == n_rep or not ABREAST_PUSH:
+                continue                                 # nothing overlapped (a plain Y junction) / nothing moved
             # widen the single carriageway at the node to the laid-out branches, taper back (merge / diverge lane)
             lats = []
             for b in br:
@@ -846,10 +866,13 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
             # a parallel carriageway right next to this edge (on-ramp beside the Andersa ramp at Rondo Bieżeństwa):
             # the verge / ditch / sidewalk would lie on the other road, so the edge is a plain kerb
             if not (c.roundabout and kind[0] == ISLAND):
-                tight, flush = _tight_side(c, sgn, idx, kind, h, w, depth, mat, all_tree, all_chains, trims)
+                tight, flush, gap = _tight_side(c, sgn, idx, kind, h, w, depth, mat, all_tree, all_chains, trims)
                 kind[tight], h[tight], w[tight], mat[tight] = URBAN, S.KERB_HEIGHT, 0.0, 0
                 h[flush] = 0.0                    # the other carriageway touches / overlaps: no kerb ridge in it
                 mat[flush] = MAT_FLUSH_ROAD
+                # ... and the flush asphalt strip reaches the other carriageway: the 0.15 m strips of the two edges
+                # left a 0.3-0.9 m slot down to the terrain where the gap opens (j:n10015785253, terrain_walls QA)
+                w[flush] = np.clip(gap[flush], 0.0, FLUSH_FILL_MAX_M)
                 c.meta.setdefault("tight_m", {})[side] = round(float(tight.sum() * DENSE), 1)
                 c.meta.setdefault("flush_m", {})[side] = round(float(flush.sum() * DENSE), 1)
             c.side[side] = {"kind": kind, "walk": walk_d, "median": med_d, "raw": {"h": h, "w": w, "depth": depth},
@@ -860,11 +883,13 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
 def _tight_side(c, sgn, idx, kind, h, w, depth, mat, tree, chains, trims=False):
     """Stations whose side profile (verge, ditch, sidewalk) would reach onto another, roughly parallel carriageway:
     gap between this edge and the other edge < profile extent + 0.3 m (and gap < NOSE_MIN_GAP_M: touching or
-    overlapping, returned as the second mask -> flush edge). Chains meeting this one at a node are ignored
+    overlapping, returned as the second mask -> flush edge; third = that gap per station, held from the nearest
+    station that has such a carriageway). Chains meeting this one at a node are ignored
     within ADJ_NODE_SKIP_M of it (junction patches join them). Checked every 4 m, dilated by 4 m."""
     n = len(c.line.s)
     hit = np.zeros(len(idx), bool)
     touch = np.zeros(len(idx), bool)
+    gapv = np.zeros(len(idx))
     nodes = {c.node_a: 0.0, c.node_b: c.length}
     # chains sharing a node: skipped where the junction patch joins them. Before the junctions exist that is a
     # guess (ADJ_NODE_SKIP_M); the second assign_sides pass (trims=True) knows the trims, so a verge / kerb of one
@@ -891,6 +916,7 @@ def _tight_side(c, sgn, idx, kind, h, w, depth, mat, tree, chains, trims=False):
             gap = abs(lat_o) - oc.hw_at(s_o)
             if gap < ext + 0.3:
                 hit[j] = True
+                gapv[j] = max(float(gap), 0.0)
                 if gap < S.NOSE_MIN_GAP_M:
                     touch[j] = True
                 break
@@ -898,7 +924,8 @@ def _tight_side(c, sgn, idx, kind, h, w, depth, mat, tree, chains, trims=False):
     hs = np.array([hit[max(0, j - win):j + win + 1].any() for j in range(len(idx))])
     ts = np.array([touch[max(0, j - win):j + win + 1].any() for j in range(len(idx))])
     return (np.interp(np.arange(n), idx, hs.astype(float)) > 0.0,
-            np.interp(np.arange(n), idx, ts.astype(float)) > 0.0)
+            np.interp(np.arange(n), idx, ts.astype(float)) > 0.0,
+            np.interp(np.arange(n), np.asarray(idx)[hit], gapv[hit]) if hit.any() else np.zeros(n))
 
 
 def structure_sides(c: Chain, mask: np.ndarray):

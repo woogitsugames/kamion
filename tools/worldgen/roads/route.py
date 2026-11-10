@@ -10,8 +10,8 @@ built from:
   * lateral position = centre of the rightmost lane in the direction of travel (lane_layout: what the markings
     paint), on one-way carriageways and on two-way roads alike (a truck keeps right; a 1-lane link = its centre),
   * where two consecutive pieces do not meet (lane count changes, a merge lane ends, a diverge) and the heading
-    does not turn, the lateral gap is taken up as a lane change on the wider carriageway, smoothstep over
-    LANE_CHANGE_RATIO x gap (>= LANE_CHANGE_MIN_M),
+    does not turn, the lateral gap is taken up as a lane change on the carriageway with more lanes (the wider one
+    when the lane counts are equal), smoothstep over LANE_CHANGE_RATIO x gap (>= LANE_CHANGE_MIN_M),
   * at real turns (junction, roundabout entry, diverge onto a link) the lane lines of the two pieces cross or
     overshoot each other by up to the lateral lane offset (the route ran 1-2 m forward and back: 10 false "steps"
     in test_route_profile_has_no_steps): both pieces are cut at their crossing (or the overshooting points are
@@ -171,7 +171,11 @@ def lane_route(net, path_edges, node_xy, step=2.0):
         if g < 0.3:
             continue
         L = max(LANE_CHANGE_MIN_M, LANE_CHANGE_RATIO * g)
-        if HW[k - 1] >= HW[k]:                 # the approach is the wider carriageway: change lanes before the joint
+        la, lb = net.sections[E[k - 1]].lanes, net.sections[E[k]].lanes
+        # change lanes on the carriageway with more lanes (a 1-lane merge branch has its gore / the other branch
+        # beside it: the lane change before the joint ran over the nose kerb at j:n3341716400, 4 steps at s = 618 m);
+        # equal lane counts: on the wider one
+        if la > lb or (la == lb and HW[k - 1] >= HW[k]):
             m = (np.arange(len(P)) < k) & (s[k - 1] - s < L)
             shift[m] += gap[None, :] * _smoothstep(1.0 - (s[k - 1] - s[m]) / L)[:, None]
         else:                                  # merge onto the wider carriageway: change lanes after the joint
