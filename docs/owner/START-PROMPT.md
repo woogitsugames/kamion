@@ -1,22 +1,21 @@
-# Prompt startowy dla nowej sesji (wklej jako pierwszą wiadomość)
+Kontynuujesz projekt Kamion (realistyczny mobilny symulator ciężarówki, Unity 6000.3.28f1 URP, Białystok 1:1) w C:\Users\matma\Documents\Claude\kamion. Poprzednia sesja (3) skończyła na limicie użycia; mogli zostać agenci w toku.
 
-```
-Kontynuujesz projekt Kamion (realistyczny mobilny symulator ciężarówki, Unity 6000.3.28f1 URP, Białystok 1:1) na tym samym komputerze, w katalogu C:\Users\matma\Documents\Claude\kamion. Poprzednia sesja działała na innym koncie Claude.
+Najpierw przeczytaj: HANDOVER.md (sekcja „Najpierw (sesja 3 → następna)”) → CLAUDE.md → docs/11_DECYZJE_WLASCICIELA.md (D30–D35) → docs/reports/GATE-3-draft.md → docs/reports/visual/REVIEW-2026-11-10-r7.md (§9–14) → pamięć C:\Users\matma\.claude\projects\C--Users-matma-Documents-Claude-kamion\memory\MEMORY.md z plikami.
 
-Najpierw przeczytaj w tej kolejności: HANDOVER.md → CLAUDE.md → docs/11_DECYZJE_WLASCICIELA.md → docs/reports/GATE-3-draft.md → docs/reports/visual/REVIEW-2026-11-10-r6.md → docs/REFERENCES.md. Przeczytaj też pamięć poprzednich sesji: C:\Users\matma\.claude\projects\C--Users-matma-Documents-Claude-kamion\memory\MEMORY.md i pliki, do których prowadzi (jeśli nie załadowała się sama).
-
-Zasady (obowiązują cały czas):
-- Działaj autonomicznie (bypass), możesz instalować potrzebne narzędzia. Jakość, nie cena: ma być realistycznie na maksa i pięknie.
-- Używaj wielu agentów równolegle (do 10, każdy w swoim worktree). Modele 3D (ciężarówka, naczepa, wnętrze, auta, Blender) — Fable 5.2; grafika/shadery/świat/fizyka — Opus; średnie zadania — Sonnet; proste — Haiku. Zwięzłe raporty, zmniejszaj zrzuty przed oglądaniem.
-- Ty jesteś liderem i jedynym integratorem: scalaj na main (--no-ff), regularnie push na https://github.com/woogitsugames/kamion, sprzątaj worktree i artefakty — ale ZANIM usuniesz worktree, skopiuj jego artifacts/ do głównego checkoutu.
-- Decyzje dla mnie zadawaj w formie klikalnej. Pisz po polsku. Na koniec większego kroku: commit, push, krótki raport.
-- Zakaz Google Street View/Maps/Earth. Referencje: Wikimedia Commons i dane GUGiK/OSM. Moje zdjęcia prasowe tylko jako wzór stylu, bez kopiowania cudzej marki.
-- Telefony: zawsze -Serial, sprawdzaj blokadę ekranu i temperaturę, nigdy nie usypiaj ani nie blokuj telefonu, nigdy nie wpisuj PIN-u. S24+ (RZCX60VE8ZY) to mój telefon roboczy (połączenia i SMS): bateria nigdy poniżej 20 %, pomiary tylko przy ≥ 40 % i tylko za moją zgodą, po pomiarze zamknij grę. A16 (RFGL34SJYDZ) bez ograniczeń.
+Zasady (cały czas):
+- Autonomicznie, wolno instalować narzędzia. Jakość, nie cena: realistycznie na maksa i pięknie.
+- Agenci równolegle (do 10, każdy w swoim worktree). Modele 3D (ciężarówka, naczepa, wnętrze, auta, Blender): Fable 5.2; grafika, shadery, świat, fizyka, feeling sterowania: Opus; średnie: Sonnet; proste: Haiku. Zwięzłe raporty, zrzuty zmniejszaj przed oglądaniem. Każdy agent ma własny podkatalog scratchpadu. Numery nowych ADR przydzielaj z góry (ostatni: 0058).
+- Ty jesteś liderem i jedynym integratorem: merge --no-ff na main, regularnie push na https://github.com/woogitsugames/kamion. Przed usunięciem worktree: skopiuj jego artifacts/ do głównego checkoutu, odepnij junctiony Data/raw (cmd /c rmdir), dopiero potem git worktree remove --force; sprawdź, że Data/raw w main istnieje. Nie scalaj na main, gdy agent buduje APK z main.
+- Przy 85 % limitu nie uruchamiaj nowych agentów; przy ~92–95 % każ agentom zapisywać WIP (commit + STATUS.md) i zaktualizuj HANDOVER.md.
+- Decyzje dla mnie w formie klikalnej, po polsku. Na koniec większego kroku: commit, push, krótki raport.
+- Zakaz Google Street View/Maps/Earth. Referencje: Wikimedia Commons, GUGiK, OSM. Moje zdjęcia prasowe tylko jako wzór stylu.
+- Telefony: zawsze -Serial, tylko $Adb z scripts/env.ps1, jeden agent telefonowy naraz. **Pomiar tylko gdy na PC nie działa żaden Unity.exe** (Unity zabija demona adb → A16 „offline”, trzeba przepiąć kabel — wtedy poproś mnie). `gate3-run -SkipBuild` instaluje najnowszy APK z artifacts/apk — pilnuj. Sprawdzaj blokadę ekranu i temperaturę; nigdy nie usypiaj, nie blokuj telefonu i nie wpisuj PIN-u. S24+ (RZCX60VE8ZY) to mój telefon roboczy: bateria nigdy < 20 %, pomiar tylko przy ≥ 40 % i < 36 °C; zgoda na pomiar High z sesji 3 obowiązuje dla nowego buildu; po pomiarze am force-stop. A16 (RFGL34SJYDZ) bez ograniczeń.
 
 Zadania:
-1. Sprawdź stan repo. Jedyna praca w toku to niezweryfikowany WIP drutów WN i zacieków pod attyką (worktree .claude/worktrees/agent-a00eb437b0f666944, kopia origin/wip/wires-streaks) — zweryfikuj renderami i dokończ albo zrób od nowa. Napraw czerwony test tests/gis/test_world_v31.py::test_frame_budget_with_forest_hlod (bez luzowania limitu).
-2. Testy wszystkich zestawów na main, nowy build Low na A16 z kadrami gate3 (recenzja r6, P0), potem poprawki z listy r6 w HANDOVER.md i recenzja r7.
-3. Przygotuj pomiar S24+ High z nowym buildem (ADR 0046) i zapytaj mnie o zgodę, zanim go uruchomisz.
-4. Dokończ raport bramki 3 i przygotuj APK do mojego testu jazdy (docs/owner/FEEL-TEST.md).
-5. Potem lista otwartych poprawek z HANDOVER.md (punkt 5).
-```
+1. Sprawdź `git worktree list`, `git log --oneline -15`, pliki statusu: artifacts/handover/final-integration-status.md (build-qa: integracja → czysty build Low+High → A16 → S24+) i artifacts/world-fixes/cars-r8/STATUS.md (Fable: dziura w aucie w cab-dash + LOD aut na Low). Jeśli agent nie skończył — przejmij od miejsca w statusie (worktree `.claude/worktrees/agent-aeb4c025dbb5eae0c`, gałąź `worktree-agent-aeb4c025dbb5eae0c`), dokończ, zweryfikuj renderami, scal.
+2. adb devices; jeśli A16 offline — poproś mnie o przepięcie. Po podłączeniu am force-stop com.woogitsugames.kamion na obu telefonach.
+3. Jeśli brak: pełna integracja na main (build_region → build_world → import-region; Truck/Trailer BuildBatch; WorldTruckInstaller.InstallBatch; pytest, EditMode, PlayMode, physics), czysty (nie -dirty) build Low + High. A16 Low gate3 G3-A + G3-B + kamery kabiny (cab-dash ≤ 8 % czerni; logcat `[CAB] view camera … cabView=True`), gate3-evidence; potem S24+ High wg docs/owner/S24-HIGH-RUN.md.
+4. Zainstaluj mi APK na S24+ do testu jazdy (docs/owner/FEEL-TEST.md): sprawdzam hamulec postojowy (nie rusza z P, ostrzeżenie + gong) i nową kierownicę (ADR 0058, parametry w steering_feel.json). Moje logi: `adb logcat -d -s Unity | findstr CONTROLS`.
+5. Recenzja r8 (visual-critic, Opus) z kadrami z telefonu i montażami ze zdjęciami; klikalne decyzje dla mnie.
+6. Poprawki z r7 cz. 2 (top 8): regres stożka/prążków w szybie przy lowsun i szyba drzwi od środka; ciemne akcenty świata p10 ≤ 28; przód TRAKT na Low przy lowsun + aliasing napisu/wycieraczek; berberys kształt; σ szyby ≥ 8, jasny prostokąt w szybie, chrom lusterek; metadane gate3 (gitSha = sha APK, duplikat g3b_eye_s1532).
+7. Raport bramki 3 do końca (docs/reports/GATE-3-draft.md: liczby A16 + S24+, kadry, anty-slop §5, werdykt do mojej decyzji).
