@@ -198,13 +198,21 @@ overrides:
     zones:
       - {center_epsg2180: [777582.0, 596169.0], radius_m: 25.0, style: glazed, band_m: 1.0}
       - {center_epsg2180: [777535.0, 596208.0], radius_m: 45.0, style: glazed, band_m: 1.6}
-    mapillary: ["1911352299378570", "1783751488818497", "1240467703063612"]
+      - {center_epsg2180: [777625.0, 596121.0], radius_m: 75.0, style: glazed, band_m: 1.0}   # MA-008 link
+      - {center_epsg2180: [777445.0, 596353.0], radius_m: 45.0, style: glazed, band_m: 1.0}   # MA-008/021 Tysiaclecia
+      - {center_epsg2180: [777445.0, 596438.0], radius_m: 45.0, style: glazed, band_m: 1.0}
+      - {center_epsg2180: [777445.0, 596523.0], radius_m: 60.0, style: glazed, band_m: 1.0}
+    mapillary: ["1911352299378570", "1783751488818497", "1240467703063612", "1424981177846267", "995780104564541",
+                "312705613662497", "1340597302993462"]
     reason: >-
       The NE barrier of the Andersa link to Rondo Putry (OSM 319142221-319142224 wall=noise_barrier / BDOT10k
       OT_OIKM_L) is glazed from the bus stop to the ring on the 2024 photos (kino, p38: light plinth ~0.6 m, dark band
       to ~1.0 m, clear panels above; p40: dark cassettes to ~1.6 m) and a dark solid wall further SE (czadzik 2018 at
       g3b_eye_s1482). Heights read off the photos against the 0.15 m kerb, WORKING_VALUE. Everything else keeps the
       default dark solid style.
+      Map audit r9 (MA-008 / MA-021): Mapillary 1424981177846267, 995780104564541 (link to Putry) and 312705613662497,
+      1340597302993462 (al. Tysiaclecia) show clear panels on green posts with a low solid plinth along these runs
+      too; zones 3-6 added (band 1.0 m WORKING_VALUE).
     confidence: medium
     verify: style change station and band heights on site
   - id: andersa-p26-tree-groups

@@ -148,7 +148,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     def znat(e, n):                              # natural ground (NMT, decks removed): embankment height
         return PV.bilinear(hf.z, hf, np.asarray(e, float), np.asarray(n, float))
     FU.guardrails(lin, w.net, znat, frep)
-    FU.noise_barriers(lin, src, origin, roads_poly, frep, overrides)
+    FU.noise_barriers(lin, src, origin, roads_poly, frep, overrides, pl=pl)
     FU.power_lines(lin, src, origin, frep, pl=pl, roads_poly=roads_poly)
     GT.build(pl, lin, w.net, graph, overrides, roads_poly, bpoly, origin, frep)
     pl.items.extend(facade_signs)

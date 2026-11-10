@@ -374,14 +374,15 @@ def speed_signs(pl, net, report, codes):
     for c in net.chains:
         if c.meta.get("absorbed") or c.roundabout or c.length < 80:
             continue
-        sec = c.section(c.length / 2, net.sec_list)
-        v = sec.maxspeed
-        if not v or int(v) == 50:
-            continue
         dirs = [1] if (c.dirn > 0).mean() >= 0.5 else [-1] if (c.dirn < 0).mean() >= 0.5 else [1, -1]
         for dn in dirs:
             s = (c.t_a + S.SPEED_SIGN_AFTER_JUNCTION) if dn > 0 else (c.length - c.t_b - S.SPEED_SIGN_AFTER_JUNCTION)
             if not (0 < s < c.length) or c.bridge[c.idx(s)]:
+                continue
+            # the limit of the section the sign stands on (a chain spans several OSM ways: MA-007 showed 90 where
+            # the way under the sign has maxspeed=70)
+            v = c.section(s, net.sec_list).maxspeed
+            if not v or int(v) == 50:
                 continue
             side = "R" if dn > 0 else "L"
             sgn = -1.0 if side == "R" else 1.0
@@ -909,7 +910,7 @@ def noise_wall(lin, P, Z, st, H, key):
     lin.posts(st["post_mat"], P, S.NOISE_BARRIER_POST, 0.16, 0.16, H + 0.1, src=key)
 
 
-def noise_barriers(lin, src, origin, roads_poly, report, overrides=None):
+def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None):
     """BDOT10k OT_OIKM_L + OSM barrier=wall/wall=noise_barrier (parts > NOISE_DEDUP_M from BDOT) + authored lines,
     styled by authored zones (kind: noise_barrier_style, Mapillary image ids as provenance), default `solid`."""
     L = {"bdot": 0.0, "osm": 0.0, "override": 0.0}
@@ -930,8 +931,10 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None):
     for ln, style, H, key in extra:
         feats.append((ln, key, "override", H))
     used_zones = set()
+    walls = []
     for line, key, kind, H in feats:
         for part in cut_by(line, cutter):
+            walls.append(part)
             P = lin.dens(part, 2.0)
             Z = lin.z(P)
             for sl, st in _noise_runs(P, zones, default):
@@ -946,6 +949,48 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None):
     report["noise_barriers"] = {"m_by_source": {k: round(v) for k, v in L.items()},
                                 "m_by_style": {k: round(v) for k, v in by_style.items()},
                                 "zones_stale": sorted({z[3] for z in zones} - used_zones)}
+    if pl is not None:
+        report["noise_barriers"]["signs_moved_off_wall"] = _signs_off_walls(pl, walls, roads_poly)
+
+
+SIGN_WALL_CLEAR_M = 0.9     # sign post in front of a noise barrier, road side (map audit MA-007 / MA-021, WORKING_VALUE)
+
+
+def _signs_off_walls(pl, walls, roads_poly):
+    """Sign assemblies placed by rule before the barriers existed can stand in a barrier (map audit MA-007 / MA-021:
+    the B-33 plate cut by the panels). Moves the whole assembly (same src) to the road side of the wall,
+    SIGN_WALL_CLEAR_M in front of it, never onto the carriageway. Returns the moved assembly sources."""
+    if not walls or roads_poly is None:
+        return []
+    tree = shapely.STRtree(walls)
+    rb = roads_poly.boundary
+    moved = {}
+    for it in pl.items:
+        if not it["p"].startswith("sign_post") or it["src"] in moved:
+            continue
+        q = shapely.Point(it["e"], it["n"])
+        near = tree.query(q, predicate="dwithin", distance=SIGN_WALL_CLEAR_M)
+        if not len(near):
+            continue
+        w = min((walls[i] for i in near), key=q.distance)
+        on_w = np.array(w.interpolate(w.project(q)).coords[0])
+        kerb = np.array(rb.interpolate(rb.project(shapely.Point(*on_w))).coords[0])
+        to_road = kerb - on_w
+        gap = float(np.hypot(*to_road))
+        if gap < 1e-3:
+            continue
+        d = min(SIGN_WALL_CLEAR_M, max(0.0, gap - 0.5))
+        target = on_w + to_road / gap * d
+        moved[it["src"]] = target - np.array([it["e"], it["n"]])
+    for it in pl.items:
+        v = moved.get(it["src"])
+        if v is None:
+            continue
+        e0, n0 = it["e"], it["n"]
+        e1, n1 = e0 + v[0], n0 + v[1]
+        dz = float(pl.zsurf(np.array([e1]), np.array([n1]))[0] - pl.zsurf(np.array([e0]), np.array([n0]))[0])
+        it["e"], it["n"], it["z"] = round(float(e1), 3), round(float(n1), 3), round(it["z"] + dz, 3)
+    return sorted(moved)
 
 
 WIRE_HALF_W = 0.012          # m; conductor ~24 mm incl. sag ripple (WORKING_VALUE, AFL-6 70-120 mm2 class)
