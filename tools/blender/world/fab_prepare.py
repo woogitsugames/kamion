@@ -129,6 +129,8 @@ def main(request):
     lods = []
     objects = []
     for lod, budget in enumerate(request["budgets"]):
+        crossed = bool(billboard and lod)
+        plane_budget = budget // 2 if crossed else budget
         original = billboard if billboard and lod else source
         obj = original.copy()
         obj.data = original.data.copy()
@@ -141,20 +143,48 @@ def main(request):
         # repeat if Blender's estimate overshoots the absolute triangle budget.
         for _ in range(5):
             count = triangles(obj)
-            if count <= budget:
+            if count <= plane_budget:
                 break
             modifier = obj.modifiers.new("mobile_lod", "DECIMATE")
-            modifier.ratio = min(0.99, budget / count * 0.98)
+            modifier.ratio = min(0.99, plane_budget / count * 0.98)
             modifier.use_collapse_triangulate = True
             bpy.ops.object.modifier_apply(modifier=modifier.name)
         count = triangles(obj)
-        if count > budget:
-            thin_cards(obj, budget)
+        if count > plane_budget:
+            thin_cards(obj, plane_budget)
             count = triangles(obj)
         # Some source leaf cards contain duplicate corners. Clean the reduced
         # topology before counting/exporting instead of relying on exporter repair.
         obj.data.validate(verbose=False, clean_customdata=True)
         obj.data.update()
+        if crossed:
+            # Collapse can drift the feet/top a few centimetres. Restore the
+            # source card's metric bounds before crossing, including z=0 ground.
+            target_lo = Vector(tuple(min(v.co[i] for v in original.data.vertices) for i in range(3)))
+            target_hi = Vector(tuple(max(v.co[i] for v in original.data.vertices) for i in range(3)))
+            current_lo = Vector(tuple(min(v.co[i] for v in obj.data.vertices) for i in range(3)))
+            current_hi = Vector(tuple(max(v.co[i] for v in obj.data.vertices) for i in range(3)))
+            for vertex in obj.data.vertices:
+                for axis in range(3):
+                    span = current_hi[axis] - current_lo[axis]
+                    vertex.co[axis] = (target_lo[axis] + (vertex.co[axis] - current_lo[axis]) / span
+                                       * (target_hi[axis] - target_lo[axis]) if span > 1e-8 else target_lo[axis])
+            obj.data.update()
+            # Static point instances have arbitrary yaw. One source billboard
+            # vanishes edge-on; bake a perpendicular copy into the SAME mesh
+            # and material so the fix adds triangles, not a renderer/draw.
+            twin = obj.copy()
+            twin.data = obj.data.copy()
+            bpy.context.collection.objects.link(twin)
+            normals = [v.vector.copy() for v in twin.data.corner_normals]
+            rotation = Matrix.Rotation(math.pi / 2, 4, "Z")
+            twin.data.transform(rotation)
+            twin.data.update()
+            twin.data.normals_split_custom_set([(rotation.to_3x3() @ n).normalized() for n in normals])
+            obj.select_set(True)
+            twin.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+            bpy.ops.object.join()
         count = triangles(obj)
         if count > budget or count == 0:
             raise ValueError(f"LOD {lod} invalid triangle count: {count}/{budget}")
@@ -162,7 +192,8 @@ def main(request):
         bpy.ops.export_scene.gltf(filepath=str(path), export_format="GLB", use_selection=True,
                                   export_yup=True, export_animations=False, export_cameras=False,
                                   export_lights=False, export_materials="EXPORT")
-        lods.append({"lod": lod, "path": str(path), "triangles": count, "budget": budget})
+        lods.append({"lod": lod, "path": str(path), "triangles": count, "budget": budget,
+                     "crossed_billboard": crossed})
         objects.append(obj)
     bpy.ops.object.select_all(action="DESELECT")
     for obj in objects:

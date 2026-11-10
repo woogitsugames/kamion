@@ -47,3 +47,6 @@
 
 - Krok 16: druga runda przygotowana: wspólny atlas również dla kratek na placach, nowe włazy4,5mm nad podłożem. Odtworzono WorldPBR krawężnika z2metrowym kaflem/2spoinami. Testy powierzchni+rozmieszczenia28/28 PASS. Testy indeksowania legacy11/11 PASS w Unity (zero wpływu nowych Fab na dawną kolejność i przerzedzanie lasu). Trwa ponowny build.
 - NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` po round2-build.
+
+- Krok 17: runda2 obejrzana w56kadrach: WorldPBR usuwa rażącą jasność ściany, ale Low nadal do+19draw/+4ktris — kolejna korekta. Diagnostyka46oryginalnych wpustów: szerokość0,500m, długość0,056–1,012m, UV poprawne; materiał obejmuje je teraz bez ruszania geometrii. Wszystkie773 odtworzone zcache:V/T identyczne. Nowe Fab mają własne komórki cullingu (12/12 EditMode); billboardy skrzyżowane i osadzone naY=0 (22/22 procesora). GISr2:270PASS,5odziedziczonychFAIL,2xfail. Trwa runda3.
+- NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` po round3-build.

@@ -103,6 +103,22 @@ def _source_path(root, relative):
     return path
 
 
+def validate_crossed_billboard(positions, indices):
+    """Require depth and two perpendicular face directions, not an edge-on card."""
+    positions = np.asarray(positions, dtype=float)
+    indices = np.asarray(indices, dtype=int).reshape(-1, 3)
+    if np.any(np.ptp(positions, axis=0) < 1e-5):
+        raise ValueError("Far foliage must have nonzero width, height and depth")
+    if abs(float(np.min(positions[:, 1]))) > 1e-4:
+        raise ValueError("Far foliage must remain seated at the metric ground base")
+    faces = positions[indices]
+    normals = np.cross(faces[:, 1] - faces[:, 0], faces[:, 2] - faces[:, 0])
+    lengths = np.linalg.norm(normals, axis=1)
+    normals = normals[lengths > 1e-10] / lengths[lengths > 1e-10, None]
+    if not len(normals) or np.min(np.abs(normals @ normals.T)) > 0.1:
+        raise ValueError("Far foliage requires two perpendicular billboard planes")
+
+
 def sync_glb_textures(path, textures, root, billboard_textures=None):
     """Refresh embedded glTF maps too, retaining geometry and buffer indices."""
     raw = path.read_bytes()
@@ -112,6 +128,19 @@ def sync_glb_textures(path, textures, root, billboard_textures=None):
         raise ValueError(f"Fab GLB node transforms must be baked before export: {path}")
     binary_start = 20 + length + 8
     binary = raw[binary_start:]
+    def accessor(index):
+        a = gltf["accessors"][index]
+        view = gltf["bufferViews"][a["bufferView"]]
+        components = {"SCALAR": 1, "VEC3": 3}[a["type"]]
+        dtype = np.dtype({5126: "<f4", 5125: "<u4", 5123: "<u2", 5121: "u1"}[a["componentType"]])
+        return np.ndarray((a["count"], components), dtype=dtype, buffer=binary,
+                          offset=view.get("byteOffset", 0) + a.get("byteOffset", 0),
+                          strides=(view.get("byteStride", components * dtype.itemsize), dtype.itemsize))
+    for mesh in gltf.get("meshes", []):
+        for primitive in mesh["primitives"]:
+            material = gltf.get("materials", [])[primitive["material"]]
+            if material.get("name", "").endswith("_billboard"):
+                validate_crossed_billboard(accessor(primitive["attributes"]["POSITION"]), accessor(primitive["indices"]))
     replacements = {}
     def image_view(texture):
         image = gltf["images"][gltf["textures"][texture["index"]]["source"]]
@@ -317,7 +346,7 @@ def prepare(root: Path = ROOT, blender: Path | None = None, only: set[str] | Non
                 if "billboard_source" in model:
                     request["billboard_source"] = str(model["billboard_source"])
                     request["billboard_textures"] = {k: str(root / v) for k, v in record["billboard_textures"]["High"].items()}
-                    request["budgets"] = [8000 if aid in {"boxwood", "elderberry"} else 4000, 16, 4]
+                    request["budgets"] = [8000 if aid in {"boxwood", "elderberry"} else 4000, 24, 8]
                 request_path = dest / (model["variant"] + "-request.json")
                 _write_json(request_path, request)
                 subprocess.run([str(blender), "-b", "--factory-startup", "--python-exit-code", "1", "-P",

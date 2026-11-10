@@ -17,21 +17,21 @@ change project settings, packages, shared scenes, phone policy or the licence.
   own decimated LOD0/1/2. Every result, intermediate and provenance file stays in
   ignored `art-source/world/megascans/_generated/`. No downloads or account access.
 - Low/Medium consume 512 px maps; High consumes 1024 px. Per-prototype initial
-  caps are2400/800/200 triangles (props),8000/16/4 (shrubs) and4000/16/4 (grass), WORKING_VALUE. Near plants retain optimized true geometry; far LODs use silhouette billboards with their own source atlas.
+  caps are2400/800/200 triangles (props),8000/24/8 (shrubs) and4000/24/8 (grass), WORKING_VALUE. Near plants retain optimized true geometry; far LODs use silhouette billboards with their own source atlas.
   Actual counts and source dimensions are recorded in the local output manifest.
   Aggressive collapse and leaf removal failed visual review and are not used for active plant variants. Judge silhouettes and coverage in visual QA before accepting them.
 - `fab_tree_surfaces.py` crops clean atlas regions into bark_birch, bark_linden
-  and curb_concrete. It keeps our trees and Polish kerb geometry. Bark UV scale,
+  and curb_concrete. It keeps our trees and Polish kerb geometry. Kerbs keep the existing World PBR shader, macro grime, normals/masks/variation and a two-unit 2 x0.5m UV tile; only the photographic base is overridden. Bark UV scale,
   colour calibration, cropping and source mixing are WORKING_VALUE, not surveyed.
 - `FabMaterials` imports albedo, metallic/smoothness and AO into the ignored
   Unity region output, ASTC with mipmaps and streaming-compatible non-readable
   textures. Normals are prepared but deliberately disabled: compact world meshes
   have no tangent attribute and source normal convention is UNVERIFIED.
-- `streetscape/fab_details.py` replaces existing 35 m gully materials, adds
+- `streetscape/fab_details.py` replaces existing35 m gully and yard-drain materials in one shared padded atlas, adds
   lane-centred 640 mm covers at 90 m spacing, and bounded props by existing
   shelters/gates/parking or on soft verges. These placements/dimensions are
   WORKING_VALUE, not mapped utility positions. No extra road collider obstacles.
-  Props use 12/30/65 m LOD/cull distances and a regional 320-instance cap.
+  Covers are lifted4.5mm above the sampled road to avoid coplanar asphalt patches. Props use12/30/65 m LOD/cull distances and a regional 320-instance cap.
   Authored islands require an explicit `fab_plants` list; existing references
   are not replaced by generic shrubs. Scene budgets include measured Fab LODs.
 - Public clones retain existing geometry/materials and log a warning. Set
@@ -47,6 +47,16 @@ change project settings, packages, shared scenes, phone policy or the licence.
   Quixel identity were checked; observed pins replace the active pins, while
   original acquisition hashes/byte counts remain in the source manifest. Cause
   of the discrepancy remains UNVERIFIED, not an invented acquisition history.
+
+## Import ordering
+
+Fab matrices append after the exact previous legacy matrix storage. Cell runs
+retain independent storage offsets, so adding a scan does not alter the existing
+forest's index-based distance thinning. Fab uses disjoint culling cells (reserved
+key bit with XOR, including negative boundary keys), so their bounds do not enlarge
+legacy forest/HLOD cells. Collider handling and runtime thinning
+algorithms remain unchanged. Reflection-based EditMode regressions cover equal
+sort keys, inserted Fab records and thinning phases.
 
 ## Validation and limits
 

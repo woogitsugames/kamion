@@ -188,8 +188,8 @@ def drainage(buf, net, assets, report):
         counts[aid] = counts.get(aid, 0) + 1
 
     def compact_grate(p):
-        # Only the known compact 500 x 600 mm normalized quads from gullies()
-        # and life.yard_drains(). Never remap a trench or arbitrary repeated UVs.
+        # Only normalized quads from gullies() / life.yard_drains(), never a
+        # trench or arbitrary repeated UVs. Keep existing geometry verbatim.
         if p.V.shape != (4, 3) or p.UV.shape != (4, 2) or p.T.shape != (2, 3):
             return False
         corners = np.array([[0, 0], [1, 0], [1, 1], [0, 1]])
@@ -198,6 +198,17 @@ def drainage(buf, net, assets, report):
         if len(np.unique(p.UV.round(6), axis=0)) != 4:
             return False
         edges = np.linalg.norm(np.diff(p.V[[0, 1, 2, 3, 0], :2], axis=0), axis=1)
+        if p.src.startswith("gully:"):
+            # Measured tile-C snapshot: 46/773 native gullies have warped along
+            # edges (0.056301..1.012007 m) from the offset-curve Jacobian; both
+            # cross edges remain 0.500000 m, all triangles face up. This guard
+            # allows their material replacement without changing road support.
+            # Bounds 0.05..1.02 m are WORKING_VALUE for this measured snapshot;
+            # future outside-range shapes require review rather than a free pass.
+            signed = np.cross(p.V[p.T[:, 1]] - p.V[p.T[:, 0]],
+                              p.V[p.T[:, 2]] - p.V[p.T[:, 0]])[:, 2]
+            return (np.all(signed > 0) and np.allclose(edges[[1, 3]], GULLY_SIZE[0], rtol=0, atol=1e-5)
+                    and np.all(edges[[0, 2]] >= .05) and np.all(edges[[0, 2]] <= 1.02))
         return np.allclose(np.sort(edges), sorted(GULLY_SIZE * 2), rtol=.1, atol=.005)
 
     if drains:

@@ -17,6 +17,30 @@ namespace Game.Tests
             return (int[])method.Invoke(null, new object[] { cells, forests, prototypes, fab });
         }
 
+        [Test]
+        public void FabCellsAreDisjointEvenForActualNegativeBoundaryGridKeys()
+        {
+            var importer = Type.GetType("Game.World.Import.InstanceImporter, Game.World.Import.Editor", true);
+            var method = importer.GetMethod("DetailCellKey", BindingFlags.Public | BindingFlags.Static);
+            Assert.That(method, Is.Not.Null);
+            var legacy = new HashSet<long>();
+            // Current exported region: E cells -1..32, N cells -2..32. Include
+            // negative signed keys: OR-ing a reserved bit would leave those shared.
+            for (long n = -2; n <= 32; n++)
+                for (long e = -1; e <= 32; e++) legacy.Add((n << 20) | e);
+            var details = new HashSet<long>();
+            foreach (long key in legacy)
+            {
+                Assert.That((long)method.Invoke(null, new object[] { key, false }), Is.EqualTo(key));
+                long detail = (long)method.Invoke(null, new object[] { key, true });
+                Assert.That(detail, Is.Not.EqualTo(key));
+                Assert.That((long)method.Invoke(null, new object[] { key, true }), Is.EqualTo(detail));
+                details.Add(detail);
+            }
+            Assert.That(details.Count, Is.EqualTo(legacy.Count), "Two detail cells collided");
+            Assert.That(details.Overlaps(legacy), Is.False, "A detail would expand a legacy cell's bounds");
+        }
+
         [TestCase(0)]
         [TestCase(1)]
         [TestCase(2)]

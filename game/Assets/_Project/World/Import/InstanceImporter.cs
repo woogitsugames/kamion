@@ -25,6 +25,14 @@ namespace Game.World.Import
     {
         public const float CellM = 64f;
 
+        /// <summary>
+        /// Fab details have independent bounds/culling cells, so their new geometry cannot change a legacy
+        /// forest cell's frustum, near/far LOD band or HLOD switch. Bit 50 is outside the region grid domain.
+        /// Toggle rather than OR: negative boundary cells already have that bit set by signed grid encoding.
+        /// Legacy keys, matrix storage and collider placement are unchanged.
+        /// </summary>
+        public static long DetailCellKey(long cellKey, bool fab) => fab ? cellKey ^ (1L << 50) : cellKey;
+
 
         /// <summary>
         /// Keep every pre-Fab matrix at its legacy sorted index. Runtime forest thinning uses the absolute
@@ -336,7 +344,8 @@ namespace Game.World.Import
                         colliders.Barriers.Add(bar);
                         continue;
                     }
-                    items.Add((cellKey, forest, pi, m));
+                    long drawCellKey = DetailCellKey(cellKey, p.StartsWith("fab_", StringComparison.Ordinal));
+                    items.Add((drawCellKey, forest, pi, m));
                     if (contactOf.TryGetValue(pi, out int cpi)) items.Add((cellKey, false, cpi, m));
                     if (colMeshes.TryGetValue(p, out var cb) && cb.HasValue && corridor.Any(c => e >= c.Min.x && e < c.Max.x && n >= c.Min.y && n < c.Max.y))
                         colliders.Items.Add((p, m, cb.Value));

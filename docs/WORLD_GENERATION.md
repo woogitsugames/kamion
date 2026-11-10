@@ -248,7 +248,7 @@ blobs and LFS object ids, including renamed known products. Exact byte hashes do
 not identify every possible new transformation; output confinement remains
 mandatory.
 
-Utilities share one padded atlas and retain geometry-aware gully positions;
+Street and yard utilities share one padded atlas and retain their existing positions;
 new lane covers and all art placements are WORKING_VALUE, not surveyed utility
 locations. Props are bounded, avoid carriageways/buildings and sample their
 support. Plantings on an authored island require `fab_plants` with explicitly

@@ -10,7 +10,7 @@ from zipfile import ZipFile, ZipInfo
 import pytest
 from PIL import Image
 
-from fab.prepare import OUTPUT, _meshes, prepare, safe_members, select_maps, sync_glb_textures
+from fab.prepare import OUTPUT, _meshes, prepare, safe_members, select_maps, sync_glb_textures, validate_crossed_billboard
 
 
 def setup_source(tmp_path, approved=True):
@@ -218,3 +218,22 @@ def test_exported_glb_parent_transform_fails_before_ready(tmp_path):
                     + struct.pack("<I4s", len(payload), b"JSON") + payload)
     with pytest.raises(ValueError, match="transforms must be baked"):
         sync_glb_textures(glb, {}, tmp_path)
+
+
+def test_single_plane_far_foliage_rejected():
+    with pytest.raises(ValueError, match="nonzero"):
+        validate_crossed_billboard([[-1, 0, 0], [1, 0, 0], [1, 2, 0], [-1, 2, 0]],
+                                  [0, 1, 2, 0, 2, 3])
+
+
+def test_crossed_billboard_covers_both_yaw_directions():
+    validate_crossed_billboard([[-1, 0, 0], [1, 0, 0], [1, 2, 0], [-1, 2, 0],
+                               [0, 0, -1], [0, 0, 1], [0, 2, 1], [0, 2, -1]],
+                              [0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7])
+
+
+def test_simplified_billboard_cannot_float_above_ground():
+    with pytest.raises(ValueError, match="ground base"):
+        validate_crossed_billboard([[-1, .02, 0], [1, .02, 0], [1, 2, 0], [-1, 2, 0],
+                                   [0, .02, -1], [0, .02, 1], [0, 2, 1], [0, 2, -1]],
+                                  [0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7])

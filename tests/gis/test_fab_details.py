@@ -313,6 +313,38 @@ def test_grate_replacement_skips_trenches_unknown_sources_and_metric_uv(monkeypa
     assert all(p.mat == 'drain_grate' for p in buf.parts)
 
 
+def test_measured_curved_street_grates_replace_material_without_geometry_change(monkeypatch):
+    buf = MeshBuf()
+    uv, triangles = [[0, 0], [1, 0], [1, 1], [0, 1]], [[0, 1, 2], [0, 2, 3]]
+    # Both transverse edges are 500 mm; curvature warps the opposite along edges.
+    for index, length in enumerate((.08, .95)):
+        v = np.array([[0, 0, 3], [length, 0, 3.005],
+                      [length+.05, np.sqrt(.5**2-.05**2), 3.015], [0, .5, 3.01]])
+        buf.add('markings', 'drain_grate', v, uv, triangles, src=f'gully:curve:R:{index}')
+    before = [(p.V.copy(), p.T.copy()) for p in buf.parts]
+    monkeypatch.setattr(F, '_atlas', lambda assets: {'uv_rects': {'square-rusty-drain': [.1, .2, .4, .8]}})
+    report = {}
+    F.drainage(buf, network(), {'square-rusty-drain': {}}, report)
+    assert report['gully_replacements'] == 2
+    for p, (v, t) in zip(buf.parts, before):
+        assert p.mat == 'fab_drainage'
+        np.testing.assert_array_equal(p.V, v)
+        np.testing.assert_array_equal(p.T, t)
+
+
+def test_street_grate_guard_rejects_five_metre_trench_and_downward_faces():
+    buf = MeshBuf()
+    uv, triangles = [[0, 0], [1, 0], [1, 1], [0, 1]], [[0, 1, 2], [0, 2, 3]]
+    v = np.array([[0, 0, 0], [5, 0, 0], [5, .5, 0], [0, .5, 0]])
+    buf.add('markings', 'drain_grate', v.copy(), uv, triangles, src='gully:trench:R:0')
+    v[:, 0] *= .12
+    buf.add('markings', 'drain_grate', v, uv, np.asarray(triangles)[:, ::-1], src='gully:flipped:R:0')
+    report = {}
+    F.drainage(buf, network(), {'square-rusty-drain': {}}, report)
+    assert report['gully_replacements'] == 0
+    assert all(p.mat == 'drain_grate' for p in buf.parts)
+
+
 def test_apply_reports_overall_placed_source_counts(monkeypatch):
     monkeypatch.setattr(F, 'load_ready', lambda: {'square-rusty-drain': {}})
     monkeypatch.setattr(F, 'drainage', lambda buf, net, assets, rep:
