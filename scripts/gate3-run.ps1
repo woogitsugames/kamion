@@ -14,7 +14,8 @@
   pwsh scripts/gate3-run.ps1 -Serial RFGL34SJYDZ -Tier Low  -Fps 30                    # A16, segment G3-A
   pwsh scripts/gate3-run.ps1 -Serial RZCX60VE8ZY -Tier High -Fps 60 -WorldHigh         # S24+, High world content
   pwsh scripts/gate3-run.ps1 -Serial RFGL34SJYDZ -Tier Low -SkipBuild -SkipCameras     # re-measure with the installed APK
-  pwsh scripts/gate3-run.ps1 -Serial X -Tier Low -DryRun                               # validate plan, no adb/Unity
+  pwsh scripts/gate3-run.ps1 -Serial X -Tier High -SkipBuild -Apk artifacts/apk/kamion-0.1.0-<sha>-high.apk       # exact APK
+  pwsh scripts/gate3-run.ps1 -Serial X -Tier Low -DryRun                              # validate plan, no adb/Unity
 .NOTES
   Exit: 0 all requested steps done and measurement valid; 2 plan/prerequisite error; 3 unsupported segment (game lacks
   launch arg; no longer the case once route_s exists in the game sources, the check greps for it); 4 build/install failed; 5 phone locked/asleep (measurement rejected); 6 metrics missing.
@@ -30,6 +31,9 @@ param(
     [string]$Region = 'bialystok-industrial-c',
     [switch]$WorldHigh,
     [switch]$SkipBuild,
+    # With -SkipBuild: the exact APK to install. Default: newest artifacts/apk/*.apk of the variant that matches the run
+    # (-high when -WorldHigh or -Tier High/Ultra, otherwise the plain one; never -dev unless -Development).
+    [string]$Apk = '',
     [switch]$SkipCameras,
     [switch]$Development,
     [int]$LoadSeconds = 25,
@@ -77,6 +81,10 @@ if ($needRouteS -and -not $hasRouteS) {
 if ($DryRun) {
     Write-Host 'DRY RUN - plan only, nothing executed. Cameras:'
     $cams | ForEach-Object { Write-Host ("   {0,-28} {1,-12} truck_s={2}" -f $_.id, $_.kind, $_.truck_s_m) }
+    $dryHigh = [bool]($WorldHigh -or $Tier -in @('High', 'Ultra'))
+    $dryApk = if ($Apk) { $Apk } else { (& python (Join-Path $PSScriptRoot 'gate3_meta.py') pick --dir (Join-Path $ArtifactsDir 'apk') --high $(if ($dryHigh) { 1 } else { 0 }) --dev $(if ($Development) { 1 } else { 0 }) | Select-Object -First 1) }
+    if ($SkipBuild) { Write-Host "   would INSTALL (-SkipBuild): $(if ($dryApk) { $dryApk } else { '<none found for this tier>' })" } else { Write-Host '   would BUILD, then install the fresh APK' }
+    if ($dryApk -and (Test-Path $dryApk)) { (& python (Join-Path $PSScriptRoot 'gate3_meta.py') apk --apk $dryApk --repo $RepoRoot) | Write-Host }
     exit 0
 }
 
@@ -103,7 +111,7 @@ New-Item -ItemType Directory -Force (Join-Path $outRoot 'cam') | Out-Null
 $result = [ordered]@{
     schema = 'truck-sim-pl/gate3-result/1'; timestamp = $ts; serial = $Serial; segment = $segId
     segmentSpec = [ordered]@{ s_start_m = $segSpec.s_start_m; s_end_m = $segSpec.s_end_m; length_m = $lengthM }
-    tier = $Tier; fps = $Fps; speedKmh = $SpeedKmh; worldHigh = [bool]$WorldHigh; gitSha = (Get-GitShortSha)
+    tier = $Tier; fps = $Fps; speedKmh = $SpeedKmh; worldHigh = [bool]$WorldHigh; gitSha = $null   # set from the installed APK below, never from HEAD
     gameLacks = @(); valid = $false
 }
 if (-not $hasGate3Cams) { $result.gameLacks += "qacam_set (gate3_cameras.json not loaded in the scene -> g3* cameras cannot be framed on the phone)" }
@@ -118,15 +126,43 @@ if (-not $SkipBuild -and $hasGate3Cams) {
 }
 
 # ---------------------------------------------------------------- 1. build + install (build-android.ps1)
+$metaPy = Join-Path $PSScriptRoot 'gate3_meta.py'
+$wantHigh = [bool]($WorldHigh -or $Tier -in @('High', 'Ultra'))
+$apkDir = Join-Path $ArtifactsDir 'apk'
 $baArgs = @('-Install', '-Serial', $Serial)
-if ($SkipBuild) { $baArgs += '-SkipBuild' }
 if ($WorldHigh) { $baArgs += '-WorldHigh' }
 if ($Development) { $baArgs += '-Development' }
+if ($SkipBuild) {
+    # Never "the newest file": Low and -high APKs sit side by side (r7 section 7).
+    $apkPath = $Apk
+    if (-not $apkPath) {
+        $apkPath = (& python $metaPy pick --dir $apkDir --high $(if ($wantHigh) { 1 } else { 0 }) --dev $(if ($Development) { 1 } else { 0 }) | Select-Object -First 1)
+        if (-not $apkPath) { Write-Host "no $(if ($wantHigh) { '-high' } else { 'plain (Low/Medium)' }) APK in $apkDir for -Tier $Tier - pass -Apk <path> or build" -ForegroundColor Red; exit 2 }
+    }
+    if (-not (Test-Path $apkPath)) { Write-Host "-Apk not found: $apkPath" -ForegroundColor Red; exit 2 }
+    $apkPath = (Resolve-Path $apkPath).Path
+    $baArgs += @('-SkipBuild', '-Apk', $apkPath)
+    Write-Host "INSTALLING APK (-SkipBuild, $(if ($Apk) { 'explicit -Apk' } else { 'auto-picked for tier ' + $Tier })): $apkPath"
+}
 & pwsh -NoProfile -File (Join-Path $PSScriptRoot 'build-android.ps1') @baArgs
 if ($LASTEXITCODE -ne 0) { Write-Host "build/install failed (exit $LASTEXITCODE)" -ForegroundColor Red; exit 4 }
-$apk = Get-ChildItem (Join-Path $ArtifactsDir 'apk') -Filter *.apk | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-$result.apk = [ordered]@{ path = $apk.FullName; sizeMB = [Math]::Round($apk.Length / 1MB, 1); sha256 = (Get-FileHash -Algorithm SHA256 $apk.FullName).Hash.ToLower() }
-Write-Host "APK $($apk.Name) $($result.apk.sizeMB) MB sha256 $($result.apk.sha256)"
+if (-not $SkipBuild) {
+    $apkItem = Get-ChildItem $apkDir -Filter *.apk | Where-Object { ($_.Name -match '-high\.apk$|-high-dev\.apk$') -eq [bool]$WorldHigh -and ($_.Name -match '-dev\.apk$') -eq [bool]$Development } | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    $apkPath = $apkItem.FullName
+}
+# Identity of the installed APK comes from the APK (name + hash), not from `git rev-parse HEAD` at measurement time (r7 section 7).
+$meta = (& python $metaPy apk --apk $apkPath --repo $RepoRoot) -join "`n" | ConvertFrom-Json
+$apkFi = Get-Item $apkPath
+$result.apkFile = $meta.apkFile; $result.apkSha256 = $meta.apkSha256
+$result.gitSha = $meta.gitSha; $result.repoHeadAtMeasurement = (Get-GitShortSha)
+$result.apkDirty = $meta.dirty
+$result.apk = [ordered]@{ path = $apkPath; file = $meta.apkFile; sizeMB = [Math]::Round($apkFi.Length / 1MB, 1); sha256 = $meta.apkSha256; builtFromSha = $meta.gitSha; dirty = $meta.dirty }
+$result.warnings = @($meta.warnings)
+if ($wantHigh -and $meta.high -eq $false) { $result.warnings += "tier $Tier / WorldHigh run but the APK is not a -high build" }
+if (-not $wantHigh -and $meta.high -eq $true) { $result.warnings += "tier $Tier run with a -high APK (World content High)" }
+if ($meta.dirty) { $result.valid = $false }
+foreach ($w in $result.warnings) { Write-Host "WARNING: $w" -ForegroundColor Yellow }
+Write-Host "APK $($meta.apkFile) $($result.apk.sizeMB) MB sha256 $($meta.apkSha256) built from $($meta.gitSha)$(if ($meta.dirty) { ' (DIRTY)' }) (repo HEAD now $($result.repoHeadAtMeasurement))"
 
 # ---------------------------------------------------------------- 2. autopilot drive + metrics
 if (-not (Assert-PhoneReady 'before drive')) { exit 5 }
@@ -159,7 +195,8 @@ if ($dmExit -ne 0 -or -not $newDir -or -not (Test-Path (Join-Path $newDir.FullNa
 $m = Get-Content (Join-Path $newDir.FullName 'metrics.json') -Raw | ConvertFrom-Json
 $result.device = $m.device; $result.frameTime = $m.frameTime; $result.gpuMs = $m.gpuMs; $result.cpuMainMs = $m.cpuMainMs
 $result.pssMb = $m.pssMb; $result.batteryTempAfterC = $m.batteryTempC; $result.thermalStatus = $m.thermalStatus
-$result.valid = [bool]($ready -and $m.frameTime -and $m.frameTime.samples -gt 100)
+$result.valid = [bool]($ready -and $m.frameTime -and $m.frameTime.samples -gt 100 -and -not $meta.dirty)
+if ($meta.dirty) { $result.gameLacks += 'APK is -dirty: not valid gate evidence (rebuild from a clean commit)' }
 if (-not $ready) { $result.gameLacks += "no '[LAB] DrivingLab ready ... autopilot=route' in logcat: the autopilot did not start (scene/route missing?)" }
 
 # Budget comparison (docs/PERFORMANCE_BUDGETS.md WORKING_VALUEs).
@@ -176,7 +213,7 @@ if ($m.frameTime) {
 }
 
 # ---------------------------------------------------------------- 3. control cameras (device frames)
-$camResults = @(); $ids = @()
+$camResults = @(); $ids = @(); $seenMd5 = @{}
 if (-not $SkipCameras) {
     $ids = @($cams | ForEach-Object { $_ }) + @($reuse | Where-Object { $_ -match $CameraFilter } | ForEach-Object { [pscustomobject]@{ id = $_; truck_s_m = $null; kind = 'existing' } })
     if ($Segment -eq 'A') {
@@ -195,21 +232,34 @@ if (-not $SkipCameras) {
         }
         if ($c.id -like 'g3*' -and $hasGate3Cams) { $ex += 'qacam_set=gate3' }
         if ($lightTag) { $ex += "lighting=$lightTag" }
-        & $Adb -s $Serial logcat -c
-        $cmArgs = @('-NoProfile', '-File', (Join-Path $PSScriptRoot 'device-metrics.ps1'), '-Serial', $Serial, '-Launch', '-DurationSeconds', "$CameraWaitSeconds",
-            '-Tier', $Tier, '-Fps', "$Fps", '-Scene', 'WorldC', '-QaCamera', $c.id)
-        if ($ex) { $cmArgs += @('-Extra', ($ex -join ',')) }
-        $b4 = @(Get-ChildItem (Join-Path $ArtifactsDir "device/$Serial") -Directory | ForEach-Object Name)
-        & pwsh @cmArgs | Out-Null
-        $lg = (& $Adb -s $Serial logcat -d -v threadtime -s Unity:V) -join "`n"
-        $locked2 = -not (Assert-PhoneReady "after camera $($c.id)")
-        $d = Get-ChildItem (Join-Path $ArtifactsDir "device/$Serial") -Directory | Where-Object { $b4 -notcontains $_.Name } | Sort-Object Name | Select-Object -Last 1
         $png = Join-Path $outRoot "cam/$frameId.png"
-        $active = $lg -match [regex]::Escape("control camera $($c.id) active")
-        if ($d -and (Test-Path (Join-Path $d.FullName 'screen.png'))) { Copy-Item (Join-Path $d.FullName 'screen.png') $png -Force }
-        $status = if ($locked2) { 'REJECTED_LOCKED' } elseif (-not $active) { 'MISSING_IN_SCENE' } elseif (Test-Path $png) { 'CAPTURED' } else { 'NO_SCREENSHOT' }
-        if ($status -eq 'MISSING_IN_SCENE') { Remove-Item $png -ErrorAction SilentlyContinue }   # a frame of the wrong camera is not evidence
-        $camResults += [ordered]@{ id = $frameId; status = $status; png = $(if ($status -eq 'CAPTURED') { $png } else { $null }) }
+        $status = 'NO_SCREENSHOT'; $md5 = $null; $dupOf = $null; $locked2 = $false
+        # A frame byte-identical to an earlier camera's frame is not a frame of THIS camera (r7 section 7: s1532 == s1482): retake once, then flag.
+        foreach ($attempt in 1, 2) {
+            & $Adb -s $Serial logcat -c
+            $cmArgs = @('-NoProfile', '-File', (Join-Path $PSScriptRoot 'device-metrics.ps1'), '-Serial', $Serial, '-Launch', '-DurationSeconds', "$CameraWaitSeconds",
+                '-Tier', $Tier, '-Fps', "$Fps", '-Scene', 'WorldC', '-QaCamera', $c.id)
+            if ($ex) { $cmArgs += @('-Extra', ($ex -join ',')) }
+            $b4 = @(Get-ChildItem (Join-Path $ArtifactsDir "device/$Serial") -Directory | ForEach-Object Name)
+            Remove-Item $png -ErrorAction SilentlyContinue
+            & pwsh @cmArgs | Out-Null
+            $lg = (& $Adb -s $Serial logcat -d -v threadtime -s Unity:V) -join "`n"
+            $locked2 = -not (Assert-PhoneReady "after camera $($c.id)")
+            $d = Get-ChildItem (Join-Path $ArtifactsDir "device/$Serial") -Directory | Where-Object { $b4 -notcontains $_.Name } | Sort-Object Name | Select-Object -Last 1
+            $active = $lg -match [regex]::Escape("control camera $($c.id) active")
+            if ($d -and (Test-Path (Join-Path $d.FullName 'screen.png'))) { Copy-Item (Join-Path $d.FullName 'screen.png') $png -Force }
+            $status = if ($locked2) { 'REJECTED_LOCKED' } elseif (-not $active) { 'MISSING_IN_SCENE' } elseif (Test-Path $png) { 'CAPTURED' } else { 'NO_SCREENSHOT' }
+            if ($status -eq 'MISSING_IN_SCENE') { Remove-Item $png -ErrorAction SilentlyContinue }   # a frame of the wrong camera is not evidence
+            $dupOf = $null
+            if ($status -eq 'CAPTURED') {
+                $md5 = (Get-FileHash -Algorithm MD5 $png).Hash.ToLower()
+                if ($seenMd5.ContainsKey($md5)) { $dupOf = $seenMd5[$md5] } else { $seenMd5[$md5] = $frameId }
+            }
+            if (-not $dupOf -or $locked2) { break }
+            Write-Host "  cam $frameId identical to $dupOf (md5 $md5) - retaking once" -ForegroundColor Yellow
+        }
+        if ($dupOf) { $status = 'DUPLICATE_FRAME'; $result.warnings += "frame $frameId is byte-identical to $dupOf (md5 $md5): not evidence of this camera" }
+        $camResults += [ordered]@{ id = $frameId; status = $status; md5 = $md5; duplicateOf = $dupOf; png = $(if ($status -eq 'CAPTURED') { $png } else { $null }) }
         Write-Host ("  cam {0,-28} {1}" -f $frameId, $status)
         if ($locked2) { $exit = 5; break }
     }
@@ -217,6 +267,9 @@ if (-not $SkipCameras) {
 $result.cameras = $camResults
 $result.camerasCaptured = @($camResults | Where-Object { $_.status -eq 'CAPTURED' }).Count
 $result.camerasPlanned = $ids.Count
+$dupFrames = @($camResults | Where-Object { $_.status -eq 'DUPLICATE_FRAME' })
+$result.duplicateFrames = @($dupFrames | ForEach-Object { "$($_.id) == $($_.duplicateOf)" })
+if ($dupFrames.Count -gt 0) { $result.valid = $false; Write-Host "INVALID: $($dupFrames.Count) duplicate camera frame(s): $($result.duplicateFrames -join '; ')" -ForegroundColor Red }
 $result | ConvertTo-Json -Depth 8 | Set-Content (Join-Path $outRoot 'gate3-result.json') -Encoding utf8
 Write-Host "result $(Join-Path $outRoot 'gate3-result.json'): valid=$($result.valid), cameras $($result.camerasCaptured)/$($result.camerasPlanned)"
 if (-not $result.valid -and $exit -eq 0) { $exit = 6 }
