@@ -43,14 +43,12 @@ namespace Game.World.Import
             {
                 if (item.Get("status") as string != "ready" || !Approved(Str(item.Get("prototype")).Substring(4).Replace('_', '-'), item)) continue;
                 if (!(item.Get("models") is List<object> models)) continue;
-                foreach (var model in models.OfType<Dictionary<string, object>>())
-                {
-                    string path = Resolve(model.Get("path"));
-                    if (path != null) paths.Add(path);
-                    if (model.Get("lods") is List<object> lods)
-                        foreach (var lod in lods.OfType<Dictionary<string, object>>())
-                        { path = Resolve(lod.Get("path")); if (path != null) paths.Add(path); }
-                }
+                // Placement currently selects the first variant. Load one combined
+                // LOD library instead of every individual LOD and unused variant.
+                var model = models.OfType<Dictionary<string, object>>().FirstOrDefault();
+                if (model == null) continue;
+                string path = Resolve(model.Get("path"));
+                if (path != null) paths.Add(path);
             }
             return paths;
         }
@@ -73,7 +71,11 @@ namespace Game.World.Import
         }
         static Dictionary<string, object> Maps(string id)
         {
-            s_Surfaces = s_Surfaces ?? Read("surfaces_manifest.json", "materials");
+            if (s_Surfaces == null)
+            {
+                s_Surfaces = Read("surfaces_manifest.json", "materials");
+                foreach (var kv in Read("drainage_atlas_manifest.json", "materials")) s_Surfaces[kv.Key] = kv.Value;
+            }
             Dictionary<string, object> entry = null;
             if (s_Surfaces.Get(id) is Dictionary<string, object> surface)
             {

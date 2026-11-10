@@ -20,3 +20,6 @@
 
 - Krok 7: 38 testów Fab PASS. Dodano denylistę samych hashy (850 członków ZIP, lokalne pochodne), kontrolę blobów indeksu i LFS oid — działa też w publicznym klonie. Stare zatwierdzenia są unieważniane przy zmianie review/SHA. Wykryto błędną skalę/osiowanie FBX małego kamienia; poprawka oparta o jego metadane 0,26×0,18×0,08 m w toku.
 - NASTĘPNY KROK: `uv run --project tools/worldgen python tools/worldgen/fab/audit_inventory.py` (po korekcie kamienia).
+
+- Krok 8: baseline Unity import OK; 28 kamer Low i 28 High overcast zapisane. Low pamięć świata 112,1 MB (render76,4 + instancje19,0 + kolizja16,7), High248,8 MB (CPU/import estimates, nie telefon). Atlas3utility→1materiał gotowy; kontrola siatek odrzuciła pierwsze boxwood/elderberry zbyt przerzedzone/zepsute UV — poprawiamy przed rundą świata.
+- NASTĘPNY KROK: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` (po atlasie i poprawce roślin).
