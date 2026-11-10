@@ -67,7 +67,7 @@ DEFAULTS = {
     "pipe_d_m": 0.20,            # deck drainage collector under the low cantilever
     "pipe_offset_m": 4.35,
     "segment_target_m": 50.0,
-    "lod_ends_m": [70.0, 260.0, 20000.0],   # at lodBias 1 (InstanceImporter.Policy / build_world.instance_ends)
+    "lod_ends_m": [90.0, 300.0, 20000.0],   # at lodBias 1 (InstanceImporter.Policy / build_world.instance_ends)
 }
 
 

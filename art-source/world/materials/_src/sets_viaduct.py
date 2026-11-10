@@ -134,6 +134,9 @@ def viaduct_concrete(nx=4096):
         detail = np.clip(lum / np.maximum(low, 1e-3), 0.6, 1.5)             # high-pass (< ~0.5 m) of the scan
         chroma = dif.reshape(-1, 3).mean(0)
         chroma = chroma / (chroma @ K.LUM)
+        chroma = 0.25 * chroma + 0.75 * np.array([1.035, 0.995, 0.925], np.float32)   # scan is yellow-olive; the
+        # reference frames show a warm light grey (hue by eye, WORKING_VALUE)
+        chroma = chroma / (chroma @ K.LUM)
         w1 = wmix[..., 0]
         hs = _tile_scan(scan["disp"], c)[..., 0] * (1 - w1) + _tile_scan(scan["disp"], c, True, (0.37, 0.61))[..., 0] * w1
         hs = (hs - K.blur(hs, 0.3 / c.px)) * 6e-3                           # +-~1.5 mm relief, WORKING_VALUE
@@ -221,7 +224,7 @@ def viaduct_concrete(nx=4096):
     joint = np.maximum(joint, pjm)
     h -= 3e-3 * pjm
     plate = np.floor((X - 0.4) / 3.0).astype(np.int64)
-    fade = 0.10 + 0.14 * sstep(0.1, 0.55, cv) + 0.10 * K.hash01(plate, 21) + 0.06 * n_mid      # chalking, sun from above
+    fade = 0.04 + 0.10 * sstep(0.1, 0.55, cv) + 0.08 * K.hash01(plate, 21) + 0.05 * n_mid      # chalking, sun from above
     grime_c = 0.30 * sstep(0.12, 0.0, cv) * (0.5 + 0.5 * n_str) + 0.5 * _streaks(X, Cn["h"] - cv, [(u0 + 1.5, 0.03, 0.45, 0.5) for u0, *_ in cj_plate], n_str)
     chip = sstep(1.9, 2.6, noise(c, 7, 0.01, 0.12, beta=0.6)) * sstep(0.10, 0.0, np.minimum(cv, Cn["h"] - cv)) * in_c
 

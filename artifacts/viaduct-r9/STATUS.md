@@ -56,3 +56,9 @@ pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting overcast -Gate3 Da
 ```
 Uwaga: baseline build_world zmienia bajty `world_manifest.json` i kilku PNG/GLB w `art-source/world` (różnice
 środowiska) — nie commitować tych plików bez potrzeby.
+
+## Dziennik (najnowsze na dole)
+- 20:xx atlas `viaduct_concrete` przebudowany z neutralniejszym odcieniem (beton lin. 0.373/0.359/0.306, średnia atlasu 0.369/0.324/0.276). OK wizualnie (pasy: gzyms czerwony, dźwigar, filar z czerwonym pasem, ściana, próbki).
+- Napisany `tools/blender/world/landmarks/make_viaduct.py` (NIEURUCHOMIONY). Hooki gotowe: `build_world.py` (HB.plan/apply, instance_ends `landmark_viaduct` [90,300,20000], QA `hero_bridges`), `materials.py` (viaduct_concrete, viaduct_steel, island_gravel), `plantings.py` (`fill: gravel`), `overrides.yaml` (`andersa-viaduct-biezenstwa-hero`, ring-centre → gravel).
+- W toku: `KAMION_NO_BLENDER=1 uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` (ma zapisać spec; asset jeszcze nie istnieje → fallback generyczny). Log: `artifacts/viaduct-r9/logs/build_world_spec.log`.
+- Następny krok: `blender -b --factory-startup -P tools/blender/world/landmarks/make_viaduct.py -- --spec Data/Regions/bialystok-industrial-c/generated/landmarks/viaduct_biezenstwa.spec.json --render <abs>/artifacts/viaduct-r9/blender` → obejrzeć PNG → potem bez `--render` (eksport GLB + meta) → ponownie build_world (bez KAMION_NO_BLENDER).
