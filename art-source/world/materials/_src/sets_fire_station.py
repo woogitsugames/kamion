@@ -560,7 +560,7 @@ def alpha_texture(path: Path | None = None):
     rgb[rust] = np.array([0.16, 0.07, 0.03], np.float32)
 
     # lettering: bold sans, dark red (as on the facade), slightly faded; rendered at 4x and box filtered
-    red = np.array([0.33, 0.035, 0.045], np.float32)
+    red = np.array([0.25, 0.030, 0.050], np.float32)     # r4: crimson of photo 7197 (was 0.33: read signal red in Unity)
     for key, text in (("lettering", "PAŃSTWOWA  STRAŻ  POŻARNA"), ("number", "998")):
         r = ALPHA_LAYOUT[key]
         x0, x1 = int(r["u"][0] * W), int(r["u"][1] * W)

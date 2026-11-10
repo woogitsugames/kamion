@@ -890,8 +890,8 @@ def build_hall(mb, lod):
             for (sa, za), (sb, zb) in zip(top[:-1], top[1:]):
                 a, b = P3((u0 + sa, vv), za + 0.03), P3((u0 + sb, vv), zb + 0.03)
                 L = float(np.linalg.norm(b - a))
-                dn = np.array([0, 0, -0.42])
-                mb.face([a + dn, b + dn, b, a], [(run, f["v0"]), (run + L, f["v0"]), (run + L, f["v0"] + f["h"]), (run, f["v0"] + f["h"])],
+                dn = np.array([0, 0, -0.22])      # r4: 0.42 -> 0.22 m, the verge flashing is a thin line on photo 7197 (~0.15 m)
+                mb.face([a + dn, b + dn, b, a], [(run, f["v0"] + 0.09), (run + L, f["v0"] + 0.09), (run + L, f["v0"] + 0.31), (run, f["v0"] + 0.31)],
                         MAT, np.array([0, o, 0.0]))
                 if lod == 0:      # soffit of the verge
                     back = np.array([0, -o * oh, 0.0])
@@ -1016,7 +1016,10 @@ def build_site(mb, lod):
         ua, ub = rect["u"][0], rect["u"][0] + (rect["u"][1] - rect["u"][0]) * f
         za, zb = p[2] + ph + y_off, q[2] + ph + y_off
         mb.face([P3(p[:2], za), P3(q[:2], zb), P3(q[:2], zb + fh), P3(p[:2], za + fh)],
-                [(ua, rect["v"][0]), (ub, rect["v"][0]), (ub, rect["v"][1]), (ua, rect["v"][1])], ALPHA, None, two_sided=True)
+                [(ua, rect["v"][0]), (ub, rect["v"][0]), (ub, rect["v"][1]), (ua, rect["v"][1])], ALPHA, np.append(-n2, 0.0))
+        # r4: ONE face per bay, normal towards the street. The alpha material is double sided in the engine (Cull Off);
+        # the mirrored duplicate (two_sided) rendered the bars pale grey in Unity (r3 / r4 frames: 141,146,161 over a
+        # dark thuja = environment reflection at Fresnel 1, i.e. a degenerate shading normal on the coincident pair).
         if foot:
             for sgn in (-1.0, 1.0):
                 o2 = n2 * 0.10 * sgn
