@@ -4,6 +4,7 @@ using System.Text;
 using Game.Cameras;
 using Game.Controls;
 using Game.Telemetry;
+using Game.UI.Layout;
 using Game.Vehicle.Physics;
 using Game.Vehicle.Runtime;
 using UnityEngine;
@@ -56,17 +57,18 @@ namespace Game.UI.Driving
     }
 
     /// <summary>
-    /// Driving-lab HUD v0 (uGUI built in code, Screen Space - Camera so visual QA can capture it):
-    /// left thumb = steering wheel (or gyro calibrate in gyro mode), right thumb = brake + throttle pedals with the
-    /// gear selector (R N D, manual −/+, parking brake) above them; top centre = truck-style readout (speed, gear,
-    /// rpm, parking brake); top right = camera / steering mode / telemetry / record / reset / menu; top left =
-    /// telemetry panel (per-wheel load and slip, physics step time, frame-time percentiles).
-    /// Laid out inside Screen.safeArea; reference 1920×1080 scaled by height (A16 landscape = 2340×1080).
+    /// Driving HUD (uGUI built in code; Screen Space - Camera for visual-QA captures, Overlay at runtime).
+    /// Adaptive layout (ADR 0079): every group is a zone placed by <see cref="HudLayout"/> from the safe-area size
+    /// in canvas units (<see cref="UiViewport"/>: scale by the shorter side and DPI), solved again whenever the
+    /// screen changes (rotation, folding a foldable) or the HUD state changes - zones never overlap, from 1:1 to 21:9.
+    /// Left thumb = steering wheel (or gyro calibrate), turn signals above it, endurance-brake stalk (0 / engine
+    /// brake / retarder R1–R4) + brake cruise beside it; right thumb = brake + throttle pedals with the gear
+    /// selector (R N D, + − A/M, parking brake) beside them; top centre = one truck-style cluster (speed, gear, rpm,
+    /// parking brake, ABS / STOP / engine brake / retarder lamps, both service-circuit pressures) flanked by the
+    /// mirror insets, with the parking-brake warning and the reversing view below; top right = ONE developer
+    /// button whose panel (camera, steering mode, menu, settings, telemetry, record, reset, lab, coupling, landing
+    /// gear) drops down and collapses again; top left = telemetry panel (developer).
     /// Calm palette (dark translucent panels, off-white text, muted accent) — no neon, no glass effects.
-    /// Stage 2: endurance-brake stalk (0 / engine brake / retarder R1–R4) + brake cruise right of the wheel; warning
-    /// strip under the readout (ABS, low air STOP, engine brake, retarder, both service-circuit pressures);
-    /// coupling / landing-gear / lab-menu buttons (third row top right); reversing-camera view (top centre) while
-    /// reversing; telemetry with articulation, kingpin load and trailer data.
     /// </summary>
     public sealed class DrivingHud : MonoBehaviour
     {
@@ -87,9 +89,14 @@ namespace Game.UI.Driving
         DrivingHudContext m_Ctx;
         Font m_Font;
         RectTransform m_SafeArea;
-        Rect? m_SafeOverride;
-        Rect m_AppliedSafe;
-        Vector2Int m_AppliedScreen;
+        UiViewport m_View;
+        HudLayoutInput m_In;
+        HudLayoutResult m_L;
+        bool m_LayoutValid, m_DevOpen, m_LabOpen;
+        RectTransform m_ClusterRt, m_ParkWarnRt, m_ReverseRt, m_DevToggleRt, m_DevPanelRt, m_LabRt, m_TelemetryRt, m_WheelRt, m_GyroRt,
+            m_TurnRt, m_StalkRt, m_BrakeRt, m_ThrottleRt, m_GearsRt, m_DevTextRt;
+        Text m_DevToggleLabel;
+        Image m_DevToggleImage;
 
         GameObject m_WheelGo, m_GyroGo, m_TelemetryPanel, m_LabPanel, m_ReversePanel;
         Text m_Coupling, m_ReverseLabel, m_LampAbs, m_LampStop, m_LampEb, m_LampRet, m_Air1, m_Air2, m_CruiseLabel, m_AbsFaultLabel;
@@ -159,15 +166,19 @@ namespace Game.UI.Driving
         }
 
         /// <summary>Editor capture only: lay out against a fake safe area (normalized).</summary>
-        public void OverrideSafeAreaNormalized(Rect n) { m_SafeOverride = n; ApplySafeArea(); }
+        public void OverrideSafeAreaNormalized(Rect n) { m_View.OverrideSafeAreaNormalized(n); UpdateLayout(); }
+
+        /// <summary>Tests / captures: lay out for a device screen (pixels, safe area in pixels, DPI; 0 = unknown). The
+        /// canvas camera must render at the same pixel size.</summary>
+        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi); UpdateLayout(); }
 
         public void SetTelemetryVisible(bool on)
         {
             if (m_TelemetryPanel != null) m_TelemetryPanel.SetActive(on);
             // The coupling diagnostics line (kingpin offset, articulation, legs) is telemetry: hidden by default.
             if (m_Coupling != null) m_Coupling.gameObject.SetActive(on && DevDiagnostics);
-            if (m_Status != null) Place((RectTransform)m_Status.transform, new Vector2(0f, 1f), new Vector2(24f, on ? -580f : -24f), new Vector2(900f, 34f));
             RefreshLabels();
+            UpdateLayout();
         }
 
         // ------------------------------------------------------------------ build
@@ -179,11 +190,6 @@ namespace Game.UI.Driving
             canvas.worldCamera = cam;
             canvas.planeDistance = cam != null ? Mathf.Max(cam.nearClipPlane * 2f, 0.12f) : 1f;
             canvas.sortingOrder = 900;
-            var scaler = gameObject.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-            scaler.matchWidthOrHeight = 1f;
             gameObject.AddComponent<GraphicRaycaster>();
             m_Font = UiFonts.Default;
 
@@ -195,81 +201,129 @@ namespace Game.UI.Driving
             lp.onDrag = d => m_Ctx.Rig?.AddLookDelta(d);
             lp.onZoom = z => m_Ctx.Rig?.AddZoom(z);
 
-            m_SafeArea = Rect("SafeArea", transform);
-            Stretch(m_SafeArea);
+            m_View = new UiViewport(canvas);   // scale by the shorter side / DPI + safe area (ADR 0079)
+            m_SafeArea = m_View.SafeArea;
 
-            BuildReadout();
-            BuildTopButtons();
+            BuildCluster();
+            BuildCentreColumn();
             BuildTelemetryPanel();
             BuildWheel();
             BuildGyroPanel();
+            BuildLeftControls();
             BuildPedalsAndGears();
-            BuildStage2();
+            BuildDevPanel();
+            BuildDevText();
             EnsureEventSystem();
-            ApplySafeArea();
             RefreshLabels();
             RefreshNow();
         }
 
-        void BuildReadout()
+        /// <summary>Zone root: a rect the layout solver positions (bottom-left anchored in the safe area).</summary>
+        RectTransform Zone(string name, Vector2 size)
         {
-            var p = Panel("Readout", m_SafeArea, new Vector2(0.5f, 1f), new Vector2(0f, -20f), new Vector2(560f, 150f));
-            m_Speed = Label(p, "Speed", "0", 84, TextAnchor.MiddleRight, new Vector2(20f, 18f), new Vector2(210f, 120f));
-            Label(p, "Unit", "km/h", SmallFont, TextAnchor.LowerLeft, new Vector2(236f, 34f), new Vector2(90f, 40f)).color = k_Muted;
-            m_Gear = Label(p, "Gear", "N", 64, TextAnchor.MiddleCenter, new Vector2(330f, 30f), new Vector2(120f, 100f));
-            m_Park = Label(p, "Park", "(P)", 40, TextAnchor.MiddleCenter, new Vector2(460f, 40f), new Vector2(80f, 80f));
+            var rt = Rect(name, m_SafeArea);
+            Place(rt, Vector2.zero, Vector2.zero, size);
+            return rt;
+        }
+
+        RectTransform ZonePanel(string name, Vector2 size)
+        {
+            var rt = Zone(name, size);
+            var img = rt.gameObject.AddComponent<Image>();
+            img.color = k_Panel;
+            img.raycastTarget = false;
+            return rt;
+        }
+
+        /// <summary>Instrument cluster, one compact panel: speed / gear / parking brake / rpm on top, warning lamps and
+        /// both service-circuit pressures in a strip below (a truck display, not two stacked game panels).</summary>
+        void BuildCluster()
+        {
+            var p = ZonePanel("Readout", HudLayout.ClusterSize);
+            m_ClusterRt = p;
+            m_Speed = Label(p, "Speed", "0", 66, TextAnchor.MiddleRight, new Vector2(8f, 72f), new Vector2(150f, 80f));
+            Label(p, "Unit", "km/h", 20, TextAnchor.LowerLeft, new Vector2(166f, 112f), new Vector2(70f, 28f)).color = k_Muted;
+            m_Rpm = Label(p, "Rpm", "600 obr/min", 18, TextAnchor.LowerLeft, new Vector2(166f, 80f), new Vector2(130f, 26f));
+            m_Rpm.color = k_Muted;
+            m_Gear = Label(p, "Gear", "N", 50, TextAnchor.MiddleCenter, new Vector2(290f, 76f), new Vector2(92f, 72f));
+            m_Park = Label(p, "Park", "(P)", 30, TextAnchor.MiddleCenter, new Vector2(380f, 80f), new Vector2(56f, 64f));
             m_Park.color = k_Red;
             var barBg = Rect("RpmBg", p);
-            Place(barBg, new Vector2(0f, 0f), new Vector2(20f, 10f), new Vector2(520f, 10f));
-            barBg.gameObject.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.12f);
+            Place(barBg, Vector2.zero, new Vector2(12f, 60f), new Vector2(416f, 8f));
+            var bbi = barBg.gameObject.AddComponent<Image>(); bbi.color = new Color(1f, 1f, 1f, 0.12f); bbi.raycastTarget = false;
             var bar = Rect("RpmBar", barBg);
             bar.anchorMin = Vector2.zero; bar.anchorMax = new Vector2(0f, 1f); bar.offsetMin = bar.offsetMax = Vector2.zero;
             m_RpmBar = bar.gameObject.AddComponent<Image>();
-            m_RpmBar.color = k_Muted;
+            m_RpmBar.color = k_Muted; m_RpmBar.raycastTarget = false;
             for (int r = 500; r < 2100; r += 500)
             {
                 var tick = Rect("RpmTick" + r, barBg);
                 float u = r / 2100f;
-                tick.anchorMin = new Vector2(u, -0.6f); tick.anchorMax = new Vector2(u, 1.6f);
+                tick.anchorMin = new Vector2(u, -0.4f); tick.anchorMax = new Vector2(u, 1.4f);
                 tick.offsetMin = new Vector2(-1f, 0f); tick.offsetMax = new Vector2(1f, 0f);
                 var ti = tick.gameObject.AddComponent<Image>(); ti.color = new Color(1f, 1f, 1f, 0.55f); ti.raycastTarget = false;
             }
-            m_Rpm = Label(p, "Rpm", "600 obr/min", 26, TextAnchor.UpperLeft, new Vector2(22f, 108f), new Vector2(300f, 34f));
-            m_Rpm.color = k_Text;
-            m_Status = Label(m_SafeArea, "Status", "", SmallFont, TextAnchor.UpperLeft, Vector2.zero, new Vector2(900f, 34f));
-            Place((RectTransform)m_Status.transform, new Vector2(0f, 1f), new Vector2(24f, -24f), new Vector2(900f, 34f));
-            m_Status.color = k_Amber;
-            m_Status.gameObject.SetActive(m_Ctx.DevDiagnostics);   // developer text, not over the horizon (review r2 #3)
-            DevDiagnostics = m_Ctx.DevDiagnostics;
+            // ---- warning strip (bottom 52 units of the cluster)
+            var sep = Rect("Separator", p);
+            Place(sep, Vector2.zero, new Vector2(12f, 51f), new Vector2(416f, 1f));
+            var si = sep.gameObject.AddComponent<Image>(); si.color = new Color(1f, 1f, 1f, 0.10f); si.raycastTarget = false;
+            m_LampAbs = Lamp(p, "ABS", 8f);
+            m_LampStop = Lamp(p, "STOP", 66f);
+            m_LampEb = Lamp(p, "HS", 124f);
+            m_LampRet = Lamp(p, "RET", 182f);
+            m_Air1 = Label(p, "Air1", "— bar", 18, TextAnchor.MiddleLeft, new Vector2(252f, 16f), new Vector2(86f, 30f));
+            m_Air2 = Label(p, "Air2", "— bar", 18, TextAnchor.MiddleLeft, new Vector2(346f, 16f), new Vector2(86f, 30f));
+            m_Air1Bar = Bar(p, "Air1Bar", new Vector2(252f, 9f));
+            m_Air2Bar = Bar(p, "Air2Bar", new Vector2(346f, 9f));
         }
 
-        void BuildTopButtons()
+        /// <summary>Under the cluster: parking-brake drive-away warning, reversing view; beside it: the mirror insets.</summary>
+        void BuildCentreColumn()
         {
-            const float w = 200f, h = 74f, gap = 10f;
-            Vector2 a = new Vector2(1f, 1f);
-            float x0 = -24f - 3 * w - 2 * gap;
-            m_CamLabel = Button(m_SafeArea, "Camera", a, new Vector2(x0, -24f - h), new Vector2(w, h), () => { m_Ctx.Rig?.NextMode(); RefreshLabels(); }, out _);
-            m_SteerLabel = Button(m_SafeArea, "SteerMode", a, new Vector2(x0 + w + gap, -24f - h), new Vector2(w, h), () => { m_Ctx.ToggleSteeringMode?.Invoke(); RefreshLabels(); }, out _);
-            Button(m_SafeArea, "Menu", a, new Vector2(x0 + 2 * (w + gap), -24f - h), new Vector2(w, h), () => m_Ctx.OpenMenu?.Invoke(), out _).text = "Menu";
-            float y2 = -24f - 2 * h - gap;
-            m_TelLabel = Button(m_SafeArea, "Telemetry", a, new Vector2(x0, y2), new Vector2(w, h), () => SetTelemetryVisible(!TelemetryVisible), out _);
-            m_RecLabel = Button(m_SafeArea, "Record", a, new Vector2(x0 + w + gap, y2), new Vector2(w, h), () => { m_Ctx.Recorder?.Toggle(); RefreshLabels(); }, out m_RecImage);
-            Button(m_SafeArea, "Reset", a, new Vector2(x0 + 2 * (w + gap), y2), new Vector2(w, h), () => m_Ctx.ResetVehicle?.Invoke(), out _).text = "Reset";
+            // P applied, D/R + throttle: red text under the cluster, fades ~1 s after it clears.
+            var pw = ZonePanel("ParkWarn", HudLayout.ParkWarnSize);
+            m_ParkWarnRt = pw;
+            pw.GetComponent<Image>().color = new Color(0.40f, 0.10f, 0.09f, 0.94f);
+            m_ParkWarn = Label(pw, "Text", "Hamulec postojowy!", 26, TextAnchor.MiddleCenter, Vector2.zero, HudLayout.ParkWarnSize);
+            m_ParkWarnGroup = pw.gameObject.AddComponent<CanvasGroup>();
+            m_ParkWarnGroup.alpha = 0f; m_ParkWarnGroup.blocksRaycasts = false; m_ParkWarnGroup.interactable = false;
+
+            m_MirrorL = MirrorInset("MirrorInsetL", out m_MirrorLGo);
+            m_MirrorR = MirrorInset("MirrorInsetR", out m_MirrorRGo);
+
+            var rev = ZonePanel("ReverseView", HudLayout.ReverseSize);
+            m_ReverseRt = rev;
+            var imgRt = Rect("Image", rev);
+            imgRt.anchorMin = Vector2.zero; imgRt.anchorMax = Vector2.one; imgRt.offsetMin = new Vector2(5f, 5f); imgRt.offsetMax = new Vector2(-5f, -5f);
+            m_ReverseImage = imgRt.gameObject.AddComponent<RawImage>();
+            m_ReverseImage.raycastTarget = false;
+            var labelBg = Rect("LabelBg", rev);
+            Place(labelBg, Vector2.zero, new Vector2(5f, HudLayout.ReverseSize.y - 5f - 30f), new Vector2(300f, 30f));
+            var lbi = labelBg.gameObject.AddComponent<Image>();
+            lbi.color = k_Panel; lbi.raycastTarget = false;
+            m_ReverseLabel = Label(rev, "Label", "KAMERA COFANIA", 17, TextAnchor.MiddleLeft, new Vector2(14f, HudLayout.ReverseSize.y - 5f - 30f), new Vector2(290f, 30f));
+            m_ReversePanel = rev.gameObject;
+            m_ReversePanel.SetActive(false);
         }
 
         void BuildTelemetryPanel()
         {
-            var p = Panel("Telemetry", m_SafeArea, new Vector2(0f, 1f), new Vector2(24f, -24f), new Vector2(800f, 500f));
+            var p = ZonePanel("Telemetry", new Vector2(HudLayout.TelemetryMaxWidth, 440f));
+            m_TelemetryRt = p;
             m_TelemetryPanel = p.gameObject;
-            m_Telemetry = Label(p, "Body", "", SmallFont, TextAnchor.UpperLeft, new Vector2(18f, 10f), new Vector2(770f, 484f));
-            m_Telemetry.font = m_Font;
+            m_Telemetry = Label(p, "Body", "", 20, TextAnchor.UpperLeft, Vector2.zero, Vector2.zero);
+            var rt = m_Telemetry.rectTransform;
+            rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = new Vector2(14f, 10f); rt.offsetMax = new Vector2(-14f, -10f);
+            // The panel width follows the free column: long lines wrap, nothing spills over the cluster or the mirrors.
+            m_Telemetry.horizontalOverflow = HorizontalWrapMode.Wrap;
+            m_Telemetry.verticalOverflow = VerticalWrapMode.Truncate;
             m_TelemetryPanel.SetActive(false);
         }
 
         void BuildWheel()
         {
-            var root = Rect("SteeringWheel", m_SafeArea);
-            Place(root, new Vector2(0f, 0f), new Vector2(70f, 50f), new Vector2(440f, 440f));
+            var root = Zone("SteeringWheel", new Vector2(HudLayout.WheelSize, HudLayout.WheelSize));
+            m_WheelRt = root;
             var hit = root.gameObject.AddComponent<Image>();
             hit.color = new Color(0, 0, 0, 0); // touch target = full square
             var rot = Rect("Rotating", root);
@@ -286,141 +340,138 @@ namespace Game.UI.Driving
 
         void BuildGyroPanel()
         {
-            var p = Panel("Gyro", m_SafeArea, new Vector2(0f, 0f), new Vector2(70f, 120f), new Vector2(440f, 260f));
-            m_GyroLabel = Label(p, "Tilt", "Gyro", Font, TextAnchor.UpperCenter, new Vector2(10f, 14f), new Vector2(420f, 100f));
-            Button(p, "Calibrate", new Vector2(0f, 1f), new Vector2(40f, -230f), new Vector2(360f, 96f), () => m_Ctx.Gyro?.Calibrate(), out _).text = "Kalibruj (trzymaj prosto)";
+            var p = ZonePanel("Gyro", HudLayout.GyroSize);
+            m_GyroRt = p;
+            m_GyroLabel = Label(p, "Tilt", "Gyro", Font, TextAnchor.MiddleCenter, new Vector2(10f, 120f), new Vector2(380f, 100f));
+            Button(p, "Calibrate", Vector2.zero, new Vector2(20f, 18f), new Vector2(360f, 88f), 26, () => m_Ctx.Gyro?.Calibrate(), out _).text = "Kalibruj (trzymaj prosto)";
             m_GyroGo = p.gameObject;
             m_GyroGo.SetActive(false);
         }
 
-        void BuildPedalsAndGears()
-        {
-            var br = new Vector2(1f, 0f);
-            var brake = PedalRect("Brake", new Vector2(-470f, 40f), new Vector2(210f, 300f), k_BrakeFill, "HAMULEC", v => { if (m_Ctx.Touch != null) m_Ctx.Touch.BrakeRaw = v; });
-            var thr = PedalRect("Throttle", new Vector2(-230f, 40f), new Vector2(190f, 360f), k_ThrottleFill, "GAZ", v => { if (m_Ctx.Touch != null) m_Ctx.Touch.ThrottleRaw = v; });
-            _ = brake; _ = thr;
-            const float bw = 120f, bh = 92f, g = 12f;
-            float x = -24f - 4 * bw - 3 * g, y1 = 420f, y2 = y1 + bh + g; // throttle pedal top = 400
-            Button(m_SafeArea, "R", br, new Vector2(x, y1), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestSelector(SelectorRequest.Reverse), out m_ReverseBtn).text = "R";
-            Button(m_SafeArea, "N", br, new Vector2(x + (bw + g), y1), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestSelector(SelectorRequest.Neutral), out m_NeutralBtn).text = "N";
-            Button(m_SafeArea, "D", br, new Vector2(x + 2 * (bw + g), y1), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestSelector(SelectorRequest.Drive), out m_DriveBtn).text = "D";
-            Button(m_SafeArea, "Park", br, new Vector2(x + 3 * (bw + g), y1), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestParkingToggle(), out m_ParkBtn).text = "(P)\n<size=17>POSTOJOWY</size>";
-            Button(m_SafeArea, "ShiftDown", br, new Vector2(x, y2), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestShift(-1), out _).text = "−";
-            Button(m_SafeArea, "ShiftUp", br, new Vector2(x + (bw + g), y2), new Vector2(bw, bh), () => m_Ctx.Touch?.RequestShift(+1), out _).text = "+";
-            Button(m_SafeArea, "Manual", br, new Vector2(x + 2 * (bw + g), y2), new Vector2(2 * bw + g, bh), () => m_Ctx.Touch?.RequestManualToggle(), out m_ManualBtn).text = "A/M";
-        }
-
         static readonly string[] k_StalkLabels = { "0", "HS", "R1", "R2", "R3", "R4" };
 
-        void BuildStage2()
+        /// <summary>Turn signals above the wheel (lit with the flasher; self-cancel like a stalk) and the endurance-brake
+        /// stalk + brake cruise beside it.</summary>
+        void BuildLeftControls()
         {
-            // ---- warning strip under the readout ----
-            var strip = Panel("Warnings", m_SafeArea, new Vector2(0.5f, 1f), new Vector2(0f, -178f), new Vector2(560f, 92f));
-            m_LampAbs = Lamp(strip, "ABS", 10f);
-            m_LampStop = Lamp(strip, "STOP", 92f);
-            m_LampEb = Lamp(strip, "HS", 174f);
-            m_LampRet = Lamp(strip, "RET", 256f);
-            m_Air1 = Label(strip, "Air1", "1  — bar", SmallFont - 2, TextAnchor.MiddleLeft, new Vector2(346f, 50f), new Vector2(200f, 34f));
-            m_Air2 = Label(strip, "Air2", "2  — bar", SmallFont - 2, TextAnchor.MiddleLeft, new Vector2(346f, 8f), new Vector2(200f, 34f));
-            m_Air1Bar = Bar(strip, "Air1Bar", new Vector2(346f, 46f));
-            m_Air2Bar = Bar(strip, "Air2Bar", new Vector2(346f, 4f));
+            var turn = Zone("TurnSignals", HudLayout.TurnSignalsSize);
+            m_TurnRt = turn;
+            float th = HudLayout.TurnSignalsSize.y;
+            Button(turn, "TurnLeft", Vector2.zero, new Vector2(0f, 0f), new Vector2(124f, th), 30, () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Left), out m_TurnLeftBtn).text = "←";
+            Button(turn, "Hazard", Vector2.zero, new Vector2(132f, 0f), new Vector2(136f, th), 24, () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Hazard), out m_HazardBtn).text = "AWAR.";
+            Button(turn, "TurnRight", Vector2.zero, new Vector2(276f, 0f), new Vector2(124f, th), 30, () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Right), out m_TurnRightBtn).text = "→";
 
-            // ---- parking-brake drive-away warning (P applied, D/R + throttle): red text under the warning strip, fades ~1 s after it clears ----
-            var pw = Panel("ParkWarn", m_SafeArea, new Vector2(0.5f, 1f), new Vector2(0f, -278f), new Vector2(560f, 50f));
-            pw.GetComponent<Image>().color = new Color(0.40f, 0.10f, 0.09f, 0.94f);
-            m_ParkWarn = Label(pw, "Text", "Hamulec postojowy!", Font - 2, TextAnchor.MiddleCenter, Vector2.zero, new Vector2(560f, 50f));
-            m_ParkWarnGroup = pw.gameObject.AddComponent<CanvasGroup>();
-            m_ParkWarnGroup.alpha = 0f; m_ParkWarnGroup.blocksRaycasts = false; m_ParkWarnGroup.interactable = false;
-
-            // ---- turn signals: left / hazard / right above the steering wheel (lit with the flasher; self-cancel like a stalk) ----
-            const float th = 84f;
-            Button(m_SafeArea, "TurnLeft", Vector2.zero, new Vector2(70f, 506f), new Vector2(140f, th), () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Left), out m_TurnLeftBtn).text = "←";
-            Button(m_SafeArea, "Hazard", Vector2.zero, new Vector2(222f, 506f), new Vector2(156f, th), () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Hazard), out m_HazardBtn).text = "AWAR.";
-            Button(m_SafeArea, "TurnRight", Vector2.zero, new Vector2(390f, 506f), new Vector2(140f, th), () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Right), out m_TurnRightBtn).text = "→";
-
-            // ---- coupling status (under the status line) ----
-            m_Coupling = Label(m_SafeArea, "Coupling", "", SmallFont, TextAnchor.UpperLeft, Vector2.zero, new Vector2(1100f, 34f));
-            Place((RectTransform)m_Coupling.transform, new Vector2(0f, 1f), new Vector2(24f, -620f), new Vector2(1100f, 34f));
-            m_Coupling.color = k_Muted;
-            m_Coupling.gameObject.SetActive(false);   // shown with the telemetry panel, developer mode only
-
-            // ---- endurance-brake stalk + brake cruise, right of the steering wheel ----
-            var stalk = Rect("Stalk", m_SafeArea);
-            Place(stalk, Vector2.zero, new Vector2(530f, 40f), new Vector2(116f, 476f));
-            var titleBg = Rect("TitleBg", stalk);
-            Place(titleBg, Vector2.zero, new Vector2(0f, 382f), new Vector2(116f, 56f));
-            var tbi = titleBg.gameObject.AddComponent<Image>(); tbi.color = k_PedalPanel; tbi.raycastTarget = false;   // legible on any background
-            var title = Label(stalk, "Title", "Hamulce\nzwalniające", 20, TextAnchor.MiddleCenter, new Vector2(0f, 382f), new Vector2(116f, 56f));
-            title.color = k_Text;
-            const float ch = 48f, cg = 5f;
+            var stalk = Zone("Stalk", HudLayout.StalkSize);
+            m_StalkRt = stalk;
+            float sw = HudLayout.StalkSize.x;
+            const float ch = 44f, pitch = 48f;
             for (int i = 0; i < k_StalkLabels.Length; i++)
             {
                 int stage = i;
-                float y = 6 * (ch + cg) - (i + 1) * (ch + cg) + 0f;
-                Button(stalk, "Stalk" + k_StalkLabels[i], Vector2.zero, new Vector2(0f, y), new Vector2(116f, ch),
+                float y = (k_StalkLabels.Length - 1 - i) * pitch;
+                Button(stalk, "Stalk" + k_StalkLabels[i], Vector2.zero, new Vector2(0f, y), new Vector2(sw, ch), 24,
                     () => { if (m_Ctx.Touch != null && m_Ctx.RetarderLever != null) m_Ctx.Touch.RequestRetarderStep(stage - m_Ctx.RetarderLever()); }, out m_StalkCells[i]).text = k_StalkLabels[i];
             }
-            m_CruiseLabel = Button(stalk, "Cruise", Vector2.zero, new Vector2(0f, 6 * (ch + cg) + 4f), new Vector2(116f, 60f),
+            float cy = k_StalkLabels.Length * pitch + 4f;
+            m_CruiseLabel = Button(stalk, "Cruise", Vector2.zero, new Vector2(0f, cy), new Vector2(sw, 52f), 18,
                 () => m_Ctx.Touch?.RequestBrakeCruiseToggle(), out m_CruiseBtn);
-            m_CruiseLabel.fontSize = 20;
+            var titleBg = Rect("TitleBg", stalk);
+            Place(titleBg, Vector2.zero, new Vector2(0f, cy + 56f), new Vector2(sw, 28f));
+            var tbi = titleBg.gameObject.AddComponent<Image>(); tbi.color = k_PedalPanel; tbi.raycastTarget = false;   // legible on any background
+            Label(stalk, "Title", "Zwalniacz", 18, TextAnchor.MiddleCenter, new Vector2(0f, cy + 56f), new Vector2(sw, 28f)).color = k_Text;
+        }
 
-            // ---- third row top right: lab menu, coupling, landing gear ----
-            const float w = 200f, h = 74f, gap = 10f;
-            Vector2 a = new Vector2(1f, 1f);
-            float x0 = -24f - 3 * w - 2 * gap, y3 = -24f - 3 * h - 2 * gap;
-            Button(m_SafeArea, "Lab", a, new Vector2(x0, y3), new Vector2(w, h), () => { m_LabPanel.SetActive(!m_LabPanel.activeSelf); }, out _).text = "Zestaw…";
-            Button(m_SafeArea, "Couple", a, new Vector2(x0 + w + gap, y3), new Vector2(w, h), () => m_Ctx.Touch?.RequestCouplingToggle(), out _).text = "Siodło";
-            Button(m_SafeArea, "Legs", a, new Vector2(x0 + 2 * (w + gap), y3), new Vector2(w, h), () => m_Ctx.Touch?.RequestLandingGearToggle(), out _).text = "Nogi ↑↓";
+        /// <summary>Pedals at the right edge, gear selector beside them (R N D / + − A/M, parking brake below): the whole
+        /// group stays as low as the throttle pedal instead of stacking two button rows over the road.</summary>
+        void BuildPedalsAndGears()
+        {
+            m_BrakeRt = PedalRect("Brake", HudLayout.BrakeSize, k_BrakeFill, "HAMULEC", v => { if (m_Ctx.Touch != null) m_Ctx.Touch.BrakeRaw = v; });
+            m_ThrottleRt = PedalRect("Throttle", HudLayout.ThrottleSize, k_ThrottleFill, "GAZ", v => { if (m_Ctx.Touch != null) m_Ctx.Touch.ThrottleRaw = v; });
+            var g = Zone("Gears", HudLayout.GearsSize);
+            m_GearsRt = g;
+            const float bw = 100f, bh = 76f, pitch = 84f, x2 = 108f;
+            float y0 = HudLayout.GearsSize.y - bh;
+            Button(g, "R", Vector2.zero, new Vector2(0f, y0), new Vector2(bw, bh), 30, () => m_Ctx.Touch?.RequestSelector(SelectorRequest.Reverse), out m_ReverseBtn).text = "R";
+            Button(g, "N", Vector2.zero, new Vector2(0f, y0 - pitch), new Vector2(bw, bh), 30, () => m_Ctx.Touch?.RequestSelector(SelectorRequest.Neutral), out m_NeutralBtn).text = "N";
+            Button(g, "D", Vector2.zero, new Vector2(0f, y0 - 2 * pitch), new Vector2(bw, bh), 30, () => m_Ctx.Touch?.RequestSelector(SelectorRequest.Drive), out m_DriveBtn).text = "D";
+            Button(g, "ShiftUp", Vector2.zero, new Vector2(x2, y0), new Vector2(bw, bh), 30, () => m_Ctx.Touch?.RequestShift(+1), out _).text = "+";
+            Button(g, "ShiftDown", Vector2.zero, new Vector2(x2, y0 - pitch), new Vector2(bw, bh), 30, () => m_Ctx.Touch?.RequestShift(-1), out _).text = "−";
+            Button(g, "Manual", Vector2.zero, new Vector2(x2, y0 - 2 * pitch), new Vector2(bw, bh), 30, () => m_Ctx.Touch?.RequestManualToggle(), out m_ManualBtn).text = "A/M";
+            Button(g, "Park", Vector2.zero, Vector2.zero, new Vector2(HudLayout.GearsSize.x, bh), 26, () => m_Ctx.Touch?.RequestParkingToggle(), out m_ParkBtn).text = "(P)  <size=17>POSTOJOWY</size>";
+        }
 
-            // ---- fourth row: control settings (own screen, ControlSettingsPanel) ----
-            float y4 = y3 - h - gap;
-            Button(m_SafeArea, "Settings", a, new Vector2(x0, y4), new Vector2(w, h), () => m_Ctx.OpenSettings?.Invoke(), out _).text = "Ustawienia";
+        /// <summary>Developer panel (D39: stays in the APK): ONE button top right; the camera / steering / menu / settings /
+        /// telemetry / record / reset / lab / coupling / landing-gear buttons drop down under it and collapse again, so
+        /// they never sit over the mirrors, the cluster or the road while driving. The lab page (spawn presets, ABS fault,
+        /// reversing camera, mirror insets) replaces the grid in the same place.</summary>
+        void BuildDevPanel()
+        {
+            m_DevToggleLabel = Button(m_SafeArea, "DevToggle", Vector2.zero, Vector2.zero, HudLayout.DevToggleSize, 24, () => SetDevPanelOpen(!m_DevOpen), out m_DevToggleImage);
+            m_DevToggleRt = (RectTransform)m_DevToggleImage.transform;
+            m_DevToggleLabel.text = "Panel";
 
-            // ---- lab panel (spawn presets, ABS fault, reversing camera) ----
-            var lab = Panel("LabPanel", m_SafeArea, a, new Vector2(-24f, y4 - gap), new Vector2(3 * w + 2 * gap, 3 * h + 4 * gap + 36f));
+            const float bw = 200f, bh = 66f, pad = 8f, pitchX = 208f, pitchY = 74f;
+            var grid = ZonePanel("DevPanel", HudLayout.DevPanelSize);
+            grid.GetComponent<Image>().raycastTarget = true;   // touches on the panel do not turn the camera
+            m_DevPanelRt = grid;
+            float y0 = HudLayout.DevPanelSize.y - pad - bh;
+            Vector2 P(int col, int row) => new Vector2(pad + col * pitchX, y0 - row * pitchY);
+            var sz = new Vector2(bw, bh);
+            m_CamLabel = Button(grid, "Camera", Vector2.zero, P(0, 0), sz, 24, () => { m_Ctx.Rig?.NextMode(); RefreshLabels(); }, out _);
+            m_SteerLabel = Button(grid, "SteerMode", Vector2.zero, P(1, 0), sz, 24, () => { m_Ctx.ToggleSteeringMode?.Invoke(); RefreshLabels(); }, out _);
+            Button(grid, "Menu", Vector2.zero, P(0, 1), sz, 24, () => m_Ctx.OpenMenu?.Invoke(), out _).text = "Menu";
+            Button(grid, "Settings", Vector2.zero, P(1, 1), sz, 24, () => { SetDevPanelOpen(false); m_Ctx.OpenSettings?.Invoke(); }, out _).text = "Ustawienia";
+            m_TelLabel = Button(grid, "Telemetry", Vector2.zero, P(0, 2), sz, 24, () => SetTelemetryVisible(!TelemetryVisible), out _);
+            m_RecLabel = Button(grid, "Record", Vector2.zero, P(1, 2), sz, 24, () => { m_Ctx.Recorder?.Toggle(); RefreshLabels(); }, out m_RecImage);
+            Button(grid, "Reset", Vector2.zero, P(0, 3), sz, 24, () => m_Ctx.ResetVehicle?.Invoke(), out _).text = "Reset";
+            Button(grid, "Lab", Vector2.zero, P(1, 3), sz, 24, () => SetLabOpen(true), out _).text = "Zestaw…";
+            Button(grid, "Couple", Vector2.zero, P(0, 4), sz, 24, () => m_Ctx.Touch?.RequestCouplingToggle(), out _).text = "Siodło";
+            Button(grid, "Legs", Vector2.zero, P(1, 4), sz, 24, () => m_Ctx.Touch?.RequestLandingGearToggle(), out _).text = "Nogi ↑↓";
+
+            // ---- lab page (spawn presets, ABS fault, reversing camera, mirror insets)
+            var lab = ZonePanel("LabPanel", HudLayout.DevPanelSize);
             lab.GetComponent<Image>().raycastTarget = true;
-            Label(lab, "Title", "Start zestawu (reset pozycji)", SmallFont - 2, TextAnchor.MiddleLeft, new Vector2(12f, 3 * h + 3 * gap), new Vector2(560f, 34f)).color = k_Muted;
+            m_LabRt = lab;
+            float full = HudLayout.DevPanelSize.x - 2 * pad;
+            Label(lab, "Title", "Start zestawu (reset pozycji)", 20, TextAnchor.MiddleLeft, new Vector2(pad + 4f, HudLayout.DevPanelSize.y - pad - 30f), new Vector2(full, 30f)).color = k_Muted;
             string[] names = { "Solo", "Pusta", "24 t", "40 t" };
-            float bw = (3 * w + 2 * gap - 5 * gap) / 4f;
+            float sbw = (full - 3 * pad) / 4f, ly = HudLayout.DevPanelSize.y - pad - 30f - pad - bh;
             for (int i = 0; i < 4; i++)
             {
                 int idx = i;
-                Button(lab, "Spawn" + i, Vector2.zero, new Vector2(gap + i * (bw + gap), 2 * h + 3 * gap), new Vector2(bw, h), () => { m_Ctx.Spawn?.Invoke(idx); m_LabPanel.SetActive(false); }, out m_SpawnBtns[i]).text = names[i];
+                Button(lab, "Spawn" + i, Vector2.zero, new Vector2(pad + i * (sbw + pad), ly), new Vector2(sbw, bh), 24, () => { m_Ctx.Spawn?.Invoke(idx); SetLabOpen(false); }, out m_SpawnBtns[i]).text = names[i];
             }
-            float hw2 = (3 * w + 2 * gap - 3 * gap) / 2f;
-            m_AbsFaultLabel = Button(lab, "AbsFault", Vector2.zero, new Vector2(gap, h + 2 * gap), new Vector2(hw2, h), () => m_Ctx.ToggleAbsFault?.Invoke(), out _);
-            Button(lab, "RevCam", Vector2.zero, new Vector2(2 * gap + hw2, h + 2 * gap), new Vector2(hw2, h), () => m_Ctx.Touch?.RequestReverseCameraToggle(), out _).text = "Kamera cofania";
+            m_AbsFaultLabel = Button(lab, "AbsFault", Vector2.zero, new Vector2(pad, ly - pitchY), sz, 22, () => m_Ctx.ToggleAbsFault?.Invoke(), out _);
+            Button(lab, "RevCam", Vector2.zero, new Vector2(pad + pitchX, ly - pitchY), sz, 22, () => m_Ctx.Touch?.RequestReverseCameraToggle(), out _).text = "Kamera cofania";
+            m_MirrorInsetLabel = Button(lab, "MirrorInsets", Vector2.zero, new Vector2(pad, ly - 2 * pitchY), new Vector2(full, bh), 22, () => m_Ctx.ToggleMirrorInsets?.Invoke(), out _);
+            Button(lab, "LabBack", Vector2.zero, new Vector2(pad, pad), new Vector2(full, bh), 24, () => SetLabOpen(false), out _).text = "Wróć";
             m_LabPanel = lab.gameObject;
+            m_DevPanelRt.gameObject.SetActive(false);
             m_LabPanel.SetActive(false);
-
-            // ---- main-mirror insets (cab view), between the readout and the corner buttons ----
-            m_MirrorL = MirrorInset("MirrorInsetL", -460f, out m_MirrorLGo);
-            m_MirrorR = MirrorInset("MirrorInsetR", 300f, out m_MirrorRGo);
-            m_MirrorInsetLabel = Button(lab, "MirrorInsets", Vector2.zero, new Vector2(gap, gap), new Vector2(3 * w, h), () => m_Ctx.ToggleMirrorInsets?.Invoke(), out _);
-
-            // ---- reversing camera view (top centre) ----
-            var rev = Rect("ReverseView", m_SafeArea);
-            Place(rev, new Vector2(0.5f, 1f), new Vector2(-280f, -362f - 315f), new Vector2(560f, 315f));
-            var frame = rev.gameObject.AddComponent<Image>();
-            frame.color = k_Panel; frame.raycastTarget = false;
-            var imgRt = Rect("Image", rev);
-            imgRt.anchorMin = Vector2.zero; imgRt.anchorMax = Vector2.one; imgRt.offsetMin = new Vector2(6f, 6f); imgRt.offsetMax = new Vector2(-6f, -6f);
-            m_ReverseImage = imgRt.gameObject.AddComponent<RawImage>();
-            m_ReverseImage.raycastTarget = false;
-            var labelBg = Rect("LabelBg", rev);
-            Place(labelBg, Vector2.zero, new Vector2(6f, 273f), new Vector2(330f, 36f));
-            var lbi = labelBg.gameObject.AddComponent<Image>();
-            lbi.color = k_Panel; lbi.raycastTarget = false;
-            m_ReverseLabel = Label(rev, "Label", "KAMERA COFANIA", 18, TextAnchor.MiddleLeft, new Vector2(16f, 273f), new Vector2(320f, 36f));
-            m_ReversePanel = rev.gameObject;
-            m_ReversePanel.SetActive(false);
         }
 
-        /// <summary>Mirror inset 160 × 290 at the top, x relative to the screen centre; image flipped like a mirror.</summary>
-        RawImage MirrorInset(string name, float x, out GameObject go)
+        /// <summary>Developer text (status / autopilot line, coupling line): bottom centre, between the control groups,
+        /// over the dashboard - never over the horizon (review r2 #3).</summary>
+        void BuildDevText()
         {
-            var rt = Rect(name, m_SafeArea);
-            Place(rt, new Vector2(0.5f, 1f), new Vector2(x, -20f - 290f), new Vector2(160f, 290f));
+            m_DevTextRt = Zone("DevText", new Vector2(480f, HudLayout.DevTextHeight));
+            m_Status = Label(m_DevTextRt, "Status", "", 20, TextAnchor.LowerCenter, Vector2.zero, Vector2.zero);
+            HalfOf(m_Status.rectTransform, 0.5f, 1f);
+            m_Status.color = k_Amber;
+            m_Status.horizontalOverflow = HorizontalWrapMode.Wrap;
+            m_Status.gameObject.SetActive(m_Ctx.DevDiagnostics);
+            DevDiagnostics = m_Ctx.DevDiagnostics;
+            m_Coupling = Label(m_DevTextRt, "Coupling", "", 20, TextAnchor.LowerCenter, Vector2.zero, Vector2.zero);
+            HalfOf(m_Coupling.rectTransform, 0f, 0.5f);
+            m_Coupling.color = k_Muted;
+            m_Coupling.horizontalOverflow = HorizontalWrapMode.Wrap;
+            m_Coupling.gameObject.SetActive(false);   // shown with the telemetry panel, developer mode only
+        }
+
+        /// <summary>Mirror inset (main mirror, portrait) beside the cluster; image flipped like a mirror.</summary>
+        RawImage MirrorInset(string name, out GameObject go)
+        {
+            var rt = Zone(name, HudLayout.MirrorSize);
             var frame = rt.gameObject.AddComponent<Image>();
             frame.color = new Color(0.03f, 0.03f, 0.035f, 0.95f); frame.raycastTarget = false;
             var img = Rect("Image", rt);
@@ -433,9 +484,116 @@ namespace Game.UI.Driving
             return ri;
         }
 
+        // ------------------------------------------------------------------ layout
+
+        /// <summary>Developer panel expanded / collapsed (collapsing also leaves the lab page).</summary>
+        public void SetDevPanelOpen(bool open)
+        {
+            m_DevOpen = open;
+            if (!open) m_LabOpen = false;
+            m_LayoutValid = false;
+            UpdateLayout();
+        }
+
+        public bool DevPanelOpen => m_DevOpen;
+
+        void SetLabOpen(bool open)
+        {
+            m_LabOpen = open && m_DevOpen;
+            m_LayoutValid = false;
+            UpdateLayout();
+        }
+
+        /// <summary>The zones as last solved (tests, captures).</summary>
+        public HudLayoutResult Layout => m_L;
+        /// <summary>Safe-area size in canvas units as last applied.</summary>
+        public Vector2 SafeSizeUnits => m_View.SizeUnits;
+        public RectTransform SafeAreaRect => m_SafeArea;
+
+        /// <summary>The rect transform that shows layout zone <paramref name="i"/> (see <see cref="HudLayoutResult.Zone"/>).</summary>
+        public RectTransform ZoneTransform(int i)
+        {
+            switch (i)
+            {
+                case 0: return m_ClusterRt;
+                case 1: return m_ParkWarnRt;
+                case 2: return m_ReverseRt;
+                case 3: return (RectTransform)m_MirrorLGo.transform;
+                case 4: return (RectTransform)m_MirrorRGo.transform;
+                case 5: return m_DevToggleRt;
+                case 6: return m_LabOpen ? m_LabRt : m_DevPanelRt;
+                case 7: return m_TelemetryRt;
+                case 8: return m_In.Gyro ? m_GyroRt : m_WheelRt;
+                case 9: return m_TurnRt;
+                case 10: return m_StalkRt;
+                case 11: return m_BrakeRt;
+                case 12: return m_ThrottleRt;
+                case 13: return m_GearsRt;
+                default: return m_DevTextRt;
+            }
+        }
+
+        /// <summary>Screen rotation, folding / unfolding, split screen: Unity resizes the canvas, the next refresh lays out again.</summary>
+        void OnRectTransformDimensionsChange() { m_View?.Invalidate(); }
+
+        /// <summary>Solves and applies the zones when the screen or the HUD state changed. No allocation.</summary>
+        void UpdateLayout()
+        {
+            bool changed = m_View.Refresh();
+            HudLayoutInput s;
+            s.Width = m_View.SizeUnits.x; s.Height = m_View.SizeUnits.y;
+            s.Gyro = m_Ctx.IsGyroMode != null && m_Ctx.IsGyroMode();
+            s.DevPanelOpen = m_DevOpen;
+            s.Telemetry = TelemetryVisible;
+            s.MirrorLeft = m_Ctx.LeftMirrorTexture != null && m_Ctx.LeftMirrorTexture() != null;
+            s.MirrorRight = m_Ctx.RightMirrorTexture != null && m_Ctx.RightMirrorTexture() != null;
+            s.ReverseView = m_Ctx.ReverseCameraTexture != null && m_Ctx.ReverseCameraTexture() != null;
+            s.DevText = DevDiagnostics;
+            if (!changed && m_LayoutValid && s.SameAs(m_In)) return;
+            m_In = s; m_LayoutValid = true;
+            HudLayout.Solve(s, out m_L);
+
+            SetRect(m_ClusterRt, m_L.Cluster);
+            SetRect(m_ParkWarnRt, m_L.ParkWarn);
+            SetRect(m_ReverseRt, m_L.ReverseView);
+            SetRect((RectTransform)m_MirrorLGo.transform, m_L.MirrorLeft);
+            SetRect((RectTransform)m_MirrorRGo.transform, m_L.MirrorRight);
+            SetRect(m_DevToggleRt, m_L.DevToggle);
+            SetRect(m_DevPanelRt, m_L.DevPanel);
+            SetRect(m_LabRt, m_L.DevPanel);
+            if (s.Telemetry) SetRect(m_TelemetryRt, m_L.Telemetry);
+            SetRect(m_WheelRt, new Rect(m_L.Steering.x, m_L.Steering.y, HudLayout.WheelSize, HudLayout.WheelSize));
+            SetRect(m_GyroRt, new Rect(m_L.Steering.x, m_L.Steering.y, HudLayout.GyroSize.x, HudLayout.GyroSize.y));
+            SetRect(m_TurnRt, m_L.TurnSignals);
+            SetRect(m_StalkRt, m_L.Stalk);
+            SetRect(m_BrakeRt, m_L.Brake);
+            SetRect(m_ThrottleRt, m_L.Throttle);
+            SetRect(m_GearsRt, m_L.Gears);
+            SetRect(m_DevTextRt, m_L.DevText);
+
+            bool grid = m_DevOpen && !m_LabOpen, lab = m_DevOpen && m_LabOpen;
+            if (m_DevPanelRt.gameObject.activeSelf != grid) m_DevPanelRt.gameObject.SetActive(grid);
+            if (m_LabPanel.activeSelf != lab) m_LabPanel.SetActive(lab);
+            m_DevToggleImage.color = m_DevOpen ? k_ButtonOn : k_Button;
+            string tl = m_DevOpen ? "Zamknij" : "Panel";
+            if (!ReferenceEquals(m_DevToggleLabel.text, tl)) m_DevToggleLabel.text = tl;
+        }
+
+        static void HalfOf(RectTransform rt, float y0, float y1)
+        {
+            rt.anchorMin = new Vector2(0f, y0); rt.anchorMax = new Vector2(1f, y1);
+            rt.offsetMin = rt.offsetMax = Vector2.zero;
+        }
+
+        static void SetRect(RectTransform rt, Rect r)
+        {
+            rt.anchoredPosition = r.position;
+            rt.sizeDelta = r.size;
+        }
+
         Text Lamp(RectTransform parent, string text, float x)
         {
-            var t = Label(parent, "Lamp" + text, text, 24, TextAnchor.MiddleCenter, new Vector2(x, 14f), new Vector2(76f, 64f));
+            var t = Label(parent, "Lamp" + text, text, 20, TextAnchor.MiddleCenter, new Vector2(x, 6f), new Vector2(56f, 40f));
             t.color = k_LampOff;
             return t;
         }
@@ -443,8 +601,8 @@ namespace Game.UI.Driving
         Image Bar(RectTransform parent, string name, Vector2 pos)
         {
             var bg = Rect(name + "Bg", parent);
-            Place(bg, Vector2.zero, pos, new Vector2(200f, 6f));
-            bg.gameObject.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.12f);
+            Place(bg, Vector2.zero, pos, new Vector2(84f, 5f));
+            var bgi = bg.gameObject.AddComponent<Image>(); bgi.color = new Color(1f, 1f, 1f, 0.12f); bgi.raycastTarget = false;
             var bar = Rect(name, bg);
             bar.anchorMin = Vector2.zero; bar.anchorMax = new Vector2(0f, 1f); bar.offsetMin = bar.offsetMax = Vector2.zero;
             var img = bar.gameObject.AddComponent<Image>();
@@ -470,10 +628,9 @@ namespace Game.UI.Driving
         static readonly Color k_LampOff = new Color(1f, 1f, 1f, 0.16f);
         static readonly Color k_Green = new Color(0.55f, 0.80f, 0.50f, 1f);
 
-        RectTransform PedalRect(string name, Vector2 pos, Vector2 size, Color fillColor, string label, Action<float> onValue)
+        RectTransform PedalRect(string name, Vector2 size, Color fillColor, string label, Action<float> onValue)
         {
-            var rt = Rect(name, m_SafeArea);
-            Place(rt, new Vector2(1f, 0f), pos - new Vector2(0f, 0f), size);
+            var rt = Zone(name, size);
             rt.gameObject.AddComponent<Image>().color = k_PedalPanel;   // near-opaque: road markings must not show through
             var fill = Rect("Fill", rt);
             fill.anchorMin = Vector2.zero; fill.anchorMax = new Vector2(1f, 0f); fill.offsetMin = fill.offsetMax = Vector2.zero;
@@ -498,13 +655,13 @@ namespace Game.UI.Driving
 
         void Update()
         {
-            ApplySafeArea();
             PollDevGesture();
             RefreshNow();
         }
 
         public void RefreshNow()
         {
+            UpdateLayout();
             var v = m_Ctx.Vehicle;
             bool gyro = m_Ctx.IsGyroMode != null && m_Ctx.IsGyroMode();
             if (m_WheelGo.activeSelf == gyro) m_WheelGo.SetActive(!gyro);
@@ -599,11 +756,11 @@ namespace Game.UI.Driving
                 m_NextCoupling = Time.unscaledTime + 0.1f;
                 m_Coupling.text = m_Ctx.CouplingStatus() ?? "";
             }
-            SetInset(m_MirrorLGo, m_MirrorL, m_Ctx.LeftMirrorTexture);
-            SetInset(m_MirrorRGo, m_MirrorR, m_Ctx.RightMirrorTexture);
+            SetInset(m_MirrorLGo, m_MirrorL, m_Ctx.LeftMirrorTexture, m_L.ShowMirrorLeft);
+            SetInset(m_MirrorRGo, m_MirrorR, m_Ctx.RightMirrorTexture, m_L.ShowMirrorRight);
             if (m_MirrorInsetLabel != null)
             {
-                string ml = m_Ctx.MirrorInsets != null && m_Ctx.MirrorInsets() ? "Lusterka w kabinie: okienka" : "Lusterka w kabinie: tylko rozglądanie";
+                string ml = m_Ctx.MirrorInsets != null && m_Ctx.MirrorInsets() ? "Lusterka w kabinie: okienka" : "Lusterka w kabinie: rozglądanie";
                 if (!ReferenceEquals(m_MirrorInsetLabel.text, ml)) m_MirrorInsetLabel.text = ml;
             }
             var tex = m_Ctx.ReverseCameraTexture != null ? m_Ctx.ReverseCameraTexture() : null;
@@ -618,10 +775,10 @@ namespace Game.UI.Driving
 
         float m_NextCoupling;
 
-        static void SetInset(GameObject go, RawImage img, Func<Texture> src)
+        static void SetInset(GameObject go, RawImage img, Func<Texture> src, bool room)
         {
             var t = src != null ? src() : null;
-            bool on = t != null;
+            bool on = t != null && room;   // room: false while a developer overlay uses the inset's place
             if (go.activeSelf != on) go.SetActive(on);
             if (on && img.texture != t) img.texture = t;
         }
@@ -709,24 +866,6 @@ namespace Game.UI.Driving
             m_RecLabel.text = m_Ctx.Recorder != null && m_Ctx.Recorder.IsRecording ? "Stop REC" : "Nagraj CSV";
         }
 
-        void ApplySafeArea()
-        {
-            Rect n;
-            if (m_SafeOverride.HasValue) n = m_SafeOverride.Value;
-            else
-            {
-                var screen = new Vector2Int(Screen.width, Screen.height);
-                var safe = Screen.safeArea;
-                if (safe == m_AppliedSafe && screen == m_AppliedScreen) return;
-                m_AppliedSafe = safe; m_AppliedScreen = screen;
-                if (screen.x <= 0 || screen.y <= 0) return;
-                n = new Rect(safe.x / screen.x, safe.y / screen.y, safe.width / screen.x, safe.height / screen.y);
-            }
-            m_SafeArea.anchorMin = n.min;
-            m_SafeArea.anchorMax = n.max;
-            m_SafeArea.offsetMin = m_SafeArea.offsetMax = Vector2.zero;
-        }
-
         // ------------------------------------------------------------------ helpers
 
         static string[] BuildNumbers(int n)
@@ -798,7 +937,7 @@ namespace Game.UI.Driving
             return t;
         }
 
-        Text Button(Transform parent, string name, Vector2 anchor, Vector2 bottomLeft, Vector2 size, UnityEngine.Events.UnityAction onClick, out Image image)
+        Text Button(Transform parent, string name, Vector2 anchor, Vector2 bottomLeft, Vector2 size, int fontSize, UnityEngine.Events.UnityAction onClick, out Image image)
         {
             var rt = Rect(name, parent);
             Place(rt, anchor, bottomLeft, size);
@@ -807,7 +946,7 @@ namespace Game.UI.Driving
             var b = rt.gameObject.AddComponent<Button>();
             b.targetGraphic = image;
             b.onClick.AddListener(onClick);
-            var label = Label(rt, "Label", name, size.y > 80f ? Font : SmallFont + 2, TextAnchor.MiddleCenter, Vector2.zero, size);
+            var label = Label(rt, "Label", name, fontSize, TextAnchor.MiddleCenter, Vector2.zero, size);
             return label;
         }
 
