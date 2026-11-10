@@ -62,7 +62,7 @@ LAYOUT = {
     "tile_m": list(TILE),
     # real size of the gable openings (measured on the CC0 photo 7197: 27 px/m on the 12 m gable, WORKING_VALUE
     # +-0.2 m); the atlas rects win_arch / win_round hold them scaled (rect size / real size)
-    "arch": {"w": 4.7, "spring": 3.3, "rise": 1.3, "trim": 0.24, "col": 1.175, "row": 1.5, "bar": 0.07},
+    "arch": {"w": 4.7, "spring": 3.3, "rise": 1.3, "trim": 0.24, "col": 1.5667, "row": 1.5, "bar": 0.07},      # r4: 3 lights (2 mullions) as on photo 7197
     "round": {"d": 3.4, "trim": 0.28, "cross": 0.24},
     "plaster": {"v0": 0.0, "h": 4.0, "base_h": 2.6, "mid": [1.2, 2.6]},     # top zone = [base_h, h]
     "roof": {"v0": 4.05, "h": 3.2, "mid": [0.6, 2.8], "rib_pitch": 0.25},
@@ -83,6 +83,7 @@ LAYOUT = {
     "dark": _r(8.15, 12.60, 0.9, 1.35),
     "glass": _r(9.25, 12.60, 0.9, 1.35),
     "ochre": _r(10.35, 12.60, 1.6, 1.35),
+    "thuja_far": _r(12.15, 12.60, 1.75, 1.35),     # r4: far-LOD thuja body (LOD1/2 have no leaf shell)
     # linear albedo, WORKING_VALUE read by eye off the CC0 photos (overcast frame 7197 + sunny frame 20240626)
     "render_blue_linear": [0.47, 0.545, 0.65],
     "roof_blue_linear": [0.022, 0.085, 0.36],
@@ -205,9 +206,10 @@ def fire_station(nx=2048):
     det, hs, rd, _, ok = _scan_fields("painted_plaster_wall", c, n_mask, 0.45e-3)
     sources.append("polyhaven:painted_plaster_wall (CC0)" if ok else "painted_plaster_wall: procedural fallback")
     base = np.array(L["render_blue_linear"], np.float32)
-    tone = det ** 0.9 * (1 + 0.03 * n_mid + 0.06 * n_big - 0.035 * ss(0.2, 1.4, n_run))
+    # r4: the scan detail is damped (0.9 -> 0.5) and the big tone noise halved: photo 7197 shows an even matt paint
+    tone = det ** 0.5 * (1 + 0.02 * n_mid + 0.03 * n_big - 0.03 * ss(0.2, 1.4, n_run))
     # repainted areas: slightly different batch of paint on a few big soft patches
-    tone *= 1 + 0.035 * ss(0.6, 1.1, n_pat) - 0.03 * ss(0.7, 1.3, -n_pat)
+    tone *= 1 + 0.02 * ss(0.6, 1.1, n_pat) - 0.02 * ss(0.7, 1.3, -n_pat)
     pcol = base[None, None, :] * tone[..., None]
     # splash zone above the plinth: soil splash + algae on the bottom 0.5 m, stronger in patches
     splash = ss(0.75, 0.0, pv) * (0.6 + 0.4 * ss(-0.5, 0.8, n_big)) * (0.75 + 0.25 * n_mid.clip(-1, 1))
@@ -342,7 +344,7 @@ def fire_station(nx=2048):
     pvc = np.array([0.66, 0.66, 0.64], np.float32)
 
     def glazing(mask, gu, gv, wpane, hpane, bar=0.035, frame=0.07, wtot=None, htot=None, shape=None, trim=None,
-                blind_seed=0):
+                blind_seed=0, glass=None):
         """Window in a rect: gu/gv = local metres, panes of wpane x hpane, PVC frame, glass with blinds in some."""
         nonlocal alb, h, rough
         inside = shape if shape is not None else np.ones_like(mask)
@@ -357,7 +359,10 @@ def fire_station(nx=2048):
         hsh = K.hash01(pane, 17)
         blind = (hsh > 0.62)[..., None] * np.array([0.30, 0.30, 0.28], np.float32) * (0.75 + 0.25 * np.cos(2 * np.pi * gv / 0.05))[..., None]
         dark_in = (0.6 + 0.8 * K.hash01(pane, 19))[..., None]
-        gcol = np.where((hsh > 0.62)[..., None], blind * 0.35 + glass_col * 0.65, glass_col * dark_in)
+        if glass is not None:                      # big hall glazing: grey daylight reflection, no blinds (photo 7197)
+            gcol = glass[None, None, :] * (0.85 + 0.3 * K.hash01(pane, 19))[..., None] * (1 + 0.10 * n_big)[..., None]
+        else:
+            gcol = np.where((hsh > 0.62)[..., None], blind * 0.35 + glass_col * 0.65, glass_col * dark_in)
         col = np.where((fr | bars)[..., None], pvc * (1 - 0.15 * ss(0.3, 0.0, gv)[..., None]), gcol)
         ro = np.where(fr | bars, 0.45, 0.07)
         hh = np.where(fr | bars, 0.0, -0.025)
@@ -370,6 +375,9 @@ def fire_station(nx=2048):
         rough = np.where(m, ro, rough)
         h = np.where(m, hh, h)
 
+    # r4: the hall windows read mid grey on the overcast CC0 photo 7197 (sky reflection + light interior), far lighter
+    # than the office glazing. Linear albedo WORKING_VALUE by eye.
+    hall_glass = np.array([0.085, 0.090, 0.095], np.float32)
     # arched window 3.4 x 3.4: segmental arch (rise 1.0 m above the 2.4 m springing), blue trim band 0.16 m
     A = L["win_arch"]
     ga = L["arch"]
@@ -382,7 +390,7 @@ def fire_station(nx=2048):
     in_shape = ((av <= hs_) | (darc <= rad)) & (au >= 0) & (au <= wA) & (av >= 0)
     trim_m = in_shape & (darc > rad - ga["trim"]) & (av > hs_ + rise - rad)
     # background outside the arch inside the rect = render (so the quad can cover the whole rect)
-    glazing(in_a, au, av, ga["col"], ga["row"], bar=ga["bar"], shape=in_shape, trim=(trim_m, tblue * 1.0), blind_seed=3)
+    glazing(in_a, au, av, ga["col"], ga["row"], bar=ga["bar"], shape=in_shape, trim=(trim_m, tblue * 1.0), blind_seed=3, glass=hall_glass)
     sill_a = in_a & in_shape & (av < 0.06)
     alb = np.where(sill_a[..., None], pvc * 0.8, alb)
     out_a = in_a & ~in_shape
@@ -400,8 +408,13 @@ def fire_station(nx=2048):
     rr = np.hypot(ru, rv2)
     in_circ = rr <= R0
     ring = in_circ & (rr > R0 - gr["trim"])
-    cross = in_circ & ((np.abs(ru) < gr["cross"] / 2) | (np.abs(rv2) < gr["cross"] / 2))
-    glazing(in_rw, ru + R0, rv2 + R0, 9.0, 9.0, shape=in_circ, trim=(ring | cross, tblue), blind_seed=5)
+    # r4 (photo 7197): one wide blue vertical post; the horizontal member is a thin white transom
+    cross = in_circ & (np.abs(ru) < gr["cross"] / 2)
+    glazing(in_rw, ru + R0, rv2 + R0, 9.0, 9.0, shape=in_circ, trim=(ring | cross, tblue), blind_seed=5, glass=hall_glass)
+    transom = in_rw & in_circ & ~ring & ~cross & (np.abs(rv2) < 0.035)
+    alb = np.where(transom[..., None], pvc, alb)
+    rough = np.where(transom, 0.45, rough)
+    h = np.where(transom, 0.0, h)
     out_r = in_rw & ~in_circ
     alb = np.where(out_r[..., None], base * (det ** 0.8)[..., None], alb)
     rough = np.where(out_r, 0.9, rough)
@@ -474,6 +487,15 @@ def fire_station(nx=2048):
     rough = np.where(in_oc, 0.9, rough)
     h = np.where(in_oc, hs, h)
 
+    # far-LOD thuja body: leaf green of the shell texture seen from a distance (core albedo x ~2.5, materials.py
+    # hedge_thuja note 'core ~0.4 x leaf'), mottled so the cone is not a flat colour
+    Tf = L["thuja_far"]
+    in_tf = _gut(X, v, Tf)
+    tcol = np.array([0.040, 0.068, 0.030], np.float32) * (1 + 0.30 * n_mid + 0.15 * n_big + 0.25 * n_fine).clip(0.4, 1.8)[..., None]
+    alb = np.where(in_tf[..., None], tcol, alb)
+    rough = np.where(in_tf, 0.9, rough)
+    h = np.where(in_tf, 0.004 * n_mid, h)
+
     alb = np.clip(alb, 0.012, 0.9).astype(np.float32)
     s = K.SurfaceSet("fire_station", c, alb, h.astype(np.float32), np.clip(rough, 0.05, 1).astype(np.float32),
                      eid.astype(np.float32), np.clip(joint, 0, 1).astype(np.float32), metal=metal.astype(np.float32),
@@ -496,7 +518,7 @@ ALPHA_LAYOUT = {
     "gate_bay": {"u": [0.3125, 0.625], "v": [0.5, 1.0], "size_m": [2.5, 1.6]},
     "swatch_blue": {"u": [0.64, 0.70], "v": [0.55, 0.95]},
     "lettering": {"u": [0.0, 1.0], "v": [0.27, 0.48], "size_m": [7.6, 0.80]},
-    "number": {"u": [0.0, 0.30], "v": [0.02, 0.25], "size_m": [2.3, 0.88]},
+    "number": {"u": [0.0, 0.34], "v": [0.02, 0.25], "size_m": [2.4, 0.80]},     # r4: roundel + digits 0.6 m (photo 7197)
 }
 
 
@@ -553,6 +575,20 @@ def alpha_texture(path: Path | None = None):
             f = _font(px)
         bb = dr.textbbox((0, 0), text, font=f)
         dr.text(((w4 - (bb[2] - bb[0])) / 2 - bb[0], (h4 - (bb[3] - bb[1])) / 2 - bb[1]), text, fill=255, font=f)
+        if key == "number":                        # r4: digits right of a generic handset roundel (ring + receiver arc)
+            im = Image.new("L", (w4, h4), 0)
+            dr = ImageDraw.Draw(im)
+            f = _font(int(h4 * 0.98))
+            bb = dr.textbbox((0, 0), text, font=f)
+            sc = min(1.0, (w4 * 0.70) / (bb[2] - bb[0]), (h4 * 0.76) / (bb[3] - bb[1]))
+            f = _font(int(h4 * 0.98 * sc))
+            bb = dr.textbbox((0, 0), text, font=f)
+            dr.text((w4 - (bb[2] - bb[0]) - bb[0] - w4 * 0.01, (h4 - (bb[3] - bb[1])) / 2 - bb[1]), text, fill=255, font=f)
+            rr_ = h4 * 0.30
+            cx_, cy_ = w4 * 0.02 + rr_, h4 / 2
+            lw = max(2, int(h4 * 0.055))
+            dr.ellipse((cx_ - rr_, cy_ - rr_, cx_ + rr_, cy_ + rr_), outline=255, width=lw)
+            dr.arc((cx_ - rr_ * 0.55, cy_ - rr_ * 0.55, cx_ + rr_ * 0.55, cy_ + rr_ * 0.55), 110, 250, fill=255, width=int(lw * 1.6))
         m4 = np.asarray(im, np.float32) / 255
         m1 = m4.reshape(y1 - y0, 4, x1 - x0, 4).mean((1, 3))
         a[y0:y1, x0:x1] = m1

@@ -174,6 +174,10 @@ namespace Game.World.Import
             mat.SetFloat("_MacroSize", 64f);
             mat.SetFloat("_MacroStrength", kind == "modulation_set" ? 0.06f : 0.16f);
             mat.SetFloat("_MacroWear", kind == "modulation_set" ? 0.05f : 0.2f);
+            // Hero fire station (ADR 0070 r4): weathering is authored in the atlas (splash zone, run-off); the world-planar
+            // macro layer at full strength put pale clouds on the vertical render (r3 frames vs the even paint of the CC0
+            // photo 7197). WORKING_VALUE by eye.
+            if (setName == "fire_station") { mat.SetFloat("_MacroStrength", 0.05f); mat.SetFloat("_MacroWear", 0.04f); }
             mat.SetFloat("_ElementJitter", 0f);
             mat.SetFloat("_ReceiveShadows", 1f);
             SetBlend(mat, false);

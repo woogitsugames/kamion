@@ -456,7 +456,7 @@ def deep_window(mb, O, S, nout, hole, kind, u0, depth=0.20, proud=0.03):
         run += L
     mb.face([W(*p) + back for p in Pi[:-1]], [auv(p) for p in Pi[:-1]], MAT, nout)
     bl = ((0.3, f["v0"] + 0.10), (0.3 + 2 * ri, f["v0"] + 0.26))
-    _bar(mb, W, back, nout, (R0 - ri, R0), (R0 + ri, R0), g["cross"] / 2, 0.07, bl)
+    _bar(mb, W, back, nout, (R0 - ri, R0), (R0 + ri, R0), 0.035, 0.05, white)      # r4: thin white transom (photo 7197)
     _bar(mb, W, back, nout, (R0, R0 - ri), (R0, R0 + ri), g["cross"] / 2, 0.07, bl)
 
 
@@ -907,6 +907,14 @@ def build_hall(mb, lod):
                  P3((r["u"][1], v0 - 0.03), r["z"][1]), P3((r["u"][0], v0 - 0.03), r["z"][1])]
             mb.face(q, [(a["u"][0], a["v"][0]), (a["u"][1], a["v"][0]), (a["u"][1], a["v"][1]), (a["u"][0], a["v"][1])],
                     ALPHA, np.array([0, -1.0, 0]))
+    if lod == 0 and "vents" in h:               # r4: ochre vent squares under the verge (photo 7197), 2 cm proud
+        oc, vt = LAY["ochre"], h["vents"]
+        hs_ = vt["size"] / 2
+        for uu in vt["u"]:
+            q = [P3((uu - hs_, v0 - 0.02), vt["z"] - hs_), P3((uu + hs_, v0 - 0.02), vt["z"] - hs_),
+                 P3((uu + hs_, v0 - 0.02), vt["z"] + hs_), P3((uu - hs_, v0 - 0.02), vt["z"] + hs_)]
+            ou, ov = oc["u"][0] + 0.2, oc["v"][0] + 0.9
+            mb.face(q, [(ou, ov), (ou + vt["size"], ov), (ou + vt["size"], ov + vt["size"]), (ou, ov + vt["size"])], MAT, np.array([0, -1.0, 0]))
     downpipe(mb, (u1, v0 + 0.4), (1, 0), PL_H, ze - 0.5, lod)
     downpipe(mb, (u1, v1 - 0.4), (1, 0), PL_H, ze - 0.5, lod)
     downpipe(mb, (u0 + 0.35, v0), (0, -1), PL_H, ze - 0.5, lod)
@@ -1057,7 +1065,15 @@ def build_site(mb, lod):
                     per = 2 * math.pi * r / sides
                     u_a, u_b = (i * per + k * 0.37) / tile, ((i + 1) * per + k * 0.37) / tile
                     v_a, v_b = prof[j][0] * hh / tile, prof[j + 1][0] * hh / tile
-                    mb.face([a0, a1, b1, b0], [(u_a, v_a), (u_b, v_a), (u_b, v_b), (u_a, v_b)], mat,
+                    quv = [(u_a, v_a), (u_b, v_a), (u_b, v_b), (u_a, v_b)]
+                    if lod > 0:                 # r4: no leaf shell on LOD1/2 -> leaf-green atlas swatch instead of the
+                        tf = LAY["thuja_far"]    # near-black core (black cones on the Low tier, r3 frames)
+                        fv = tf["v"][1] - tf["v"][0] - 0.1
+                        ya, yb = min(v_a * 0.25, fv), min(v_b * 0.25, fv)
+                        xa = tf["u"][0] + 0.05 + (i % 2) * 0.8
+                        quv = [(xa, tf["v"][0] + 0.05 + ya), (xa + 0.8, tf["v"][0] + 0.05 + ya),
+                               (xa + 0.8, tf["v"][0] + 0.05 + yb), (xa, tf["v"][0] + 0.05 + yb)]
+                    mb.face([a0, a1, b1, b0], quv, mat if lod == 0 else MAT,
                             np.append((a0 + a1 + b0 + b1)[:2] / 4 - c[:2] - lean * prof[j][0] ** 2, 0.15))
     # flag poles with the national flag
     sg, fl = LAY["steel_galv"], LAY["flag"]
