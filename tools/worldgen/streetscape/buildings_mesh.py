@@ -666,26 +666,30 @@ def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh
             def fq(u0, u1, z0, z1, uv):
                 acc.quad(lay, far, P(a + d_ * u0, z0), P(a + d_ * u1, z0), P(a + d_ * u1, z1), P(a + d_ * u0, z1), uv=uv)
             plain = [[0.2, pv0], [1.2, pv0], [1.2, pv1], [0.2, pv1]]
-            fq(0.0, ua, z, zw1, plain)
-            fq(ub, L, z, zw1, plain)
             kk = sh / FA.FAR_ROW_H
-            for s0, cnt, g, r0, off in FA.far_plan(groups[:ns], fkey):
+            plan = FA.far_plan(groups[:ns], fkey)
+            # the wall above the last storey (attic band) rides on the last chunk when the atlas is plain above its row
+            fold = FA.far_plain_above(plan[-1][2], plan[-1][3] + plan[-1][1] - 1) and zt - zw1 < 0.85 * kk
+            ztop = zt if fold else zw1
+            fq(0.0, ua, z, ztop, plain)
+            fq(ub, L, z, ztop, plain)
+            for s0, cnt, g, r0, off in plan:
                 z0 = z if s0 == 0 else zw0 + s0 * sh
-                z1 = min(zw0 + (s0 + cnt) * sh, zw1)
+                z1 = ztop if s0 + cnt == ns else zw0 + (s0 + cnt) * sh
                 vr = FA.far_row_v(g, r0)
                 v0, v1 = vr + (z0 - zw0 - s0 * sh) / kk, vr + (z1 - zw0 - s0 * sh) / kk
-                for b0 in range(0, n, FA.FAR_BAYS):
-                    b1 = min(n, b0 + FA.FAR_BAYS)
-                    x0, x1 = off * FA.FAR_PITCH, (off + b1 - b0) * FA.FAR_PITCH       # periodic: bay b0 + 8 = bay b0
-                    fq(ua + b0 * FA.FAR_PITCH, ua + b1 * FA.FAR_PITCH, z0, z1, [[x0, v0], [x1, v0], [x1, v1], [x0, v1]])
-            z = zw1
+                # one quad for all bays: the atlas repeats every 8 bays; half-float u only rounds the two ends
+                x0 = off * FA.FAR_PITCH
+                fq(ua, ub, z0, z1, [[x0, v0], [x0 + ub - ua, v0], [x0 + ub - ua, v1], [x0, v1]])
+            z = ztop
     if z < zt:
         band(z, zt, wall)
-    # coping ledge 0.12 m proud over the top 0.25 m: front + top (the wall continues behind it, so no underside)
+    # coping ledge over the top 0.25 m: one face leaning 0.12 m out at its foot (drip edge) and meeting the wall line
+    # 5 cm above the roof, so it closes against the roof polygon without a top face (r10: -2 triangles per edge, pays
+    # for the storey-row quads of ADR 0081)
     o = nout * 0.12
     za, zb_ = zt - 0.25, zt + 0.05
-    acc.quad(lay, "hall_flashing", P(a + o, za), P(c_ + o, za), P(c_ + o, zb_), P(a + o, zb_))
-    acc.quad(lay, "hall_flashing", P(a + o, zb_), P(c_ + o, zb_), P(c_, zb_), P(a, zb_))
+    acc.quad(lay, "hall_flashing", P(a + o, za), P(c_ + o, za), P(c_, zb_), P(a, zb_))
 
 
 def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None):
@@ -740,6 +744,11 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
         storeys, sh, zbase = storey_plan(typ, h, p)
         pitched = typ == "house" and (p.get("roof_type_lod2") in (None, "1030", "1040", "1130", "1050"))
         rect = poly.minimum_rotated_rectangle
+        rc_ = np.asarray(rect.exterior.coords)[:4]
+        re_ = [float(np.linalg.norm(rc_[(i + 1) % 4] - rc_[i])) for i in range(4)]
+        rk_ = 0 if re_[0] >= re_[1] else 1
+        rect_along = (rc_[(rk_ + 1) % 4] - rc_[rk_]) / max(re_[rk_], 1e-6)
+        rect_short = min(re_[0], re_[1])
         if pitched and poly.area / max(rect.area, 1e-6) > 0.82 and poly.area < 400:
             work = shapely.geometry.polygon.orient(rect)
         else:
@@ -785,7 +794,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
         u_acc = 0.0
         dock_edges = {tuple(np.round(dk["edge"][0], 2)): dk for dk in docks}
         nouts = []
-        signed = False
+        signed = laddered = False
         for ei, (a, c_) in enumerate(edges):
             L = float(np.linalg.norm(c_ - a))
             if L < 0.05:
@@ -848,6 +857,17 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                     FK.coping(acc, a, c_, nout, zt)
                     for u in FK.downpipe_positions(L, ops, f"{key}:{ei}", 22.0):
                         FK.downpipe(acc, a, d, nout, u, zbot + 0.4, zt - 0.75, hopper=True)
+                # ADR 0081 hall kit: wall louvres (half of the dockless walls), one caged roof ladder per bigger hall
+                if not dk and L > 14 and zt - zref > 5.0 and FK.hfloat(key, ei, "louvre") < 0.5:
+                    for j in range(1 + int(L > 40)):
+                        u = FK.safe_u(2.6 if j == 0 else L - 2.6, [(o[0] - 0.7, o[1] + 0.7, *o[2:]) for o in ops], L)
+                        if u is not None:
+                            FK.wall_louvre(acc, a, d, nout, u, min(zref + 3.4, zt - 1.6), 1.0, FA.hint(key, ei, "lv"))
+                if not dk and not laddered and ei != main and L > 10 and zt - zref > 6.0 and poly.area > 600:
+                    u = FK.safe_u(L - 1.6, [(o[0] - 0.8, o[1] + 0.8, *o[2:]) for o in ops], L)
+                    if u is not None and u > L / 2:
+                        FK.cage_ladder(acc, a, d, nout, u, zref + 0.25, zt)
+                        laddered = True
                 for o in ops:                                         # canopies over personnel doors
                     if o[5] == "door" and o[6] != "garage_door":
                         FK.canopy(acc, a, d, nout, (o[0] + o[1]) / 2, o[1] - o[0] + 0.8, o[3] + 0.35, 0.9)
@@ -881,7 +901,10 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                         usplits = [FK.safe_u(um - 1.6, ops, L), FK.safe_u(um + 1.6, ops, L)]
                 lod1_ro = ((zt, RUNOFF_PERIOD_M * FK.hfloat(key, "runoff_u"), 0.6 + 0.7 * FK.hfloat(key, "runoff_l"))
                            if str(wall).startswith("hall_wall") else None)
-                gable_accent = insulated and L < 16 and FK.hfloat(key, "gable") < 0.6
+                # accent colour on the gable ends only: an edge across the long axis, about as long as the block is
+                # deep (before r10 every edge < 16 m qualified, so stepped blocks came out accent-coloured all round)
+                gable_accent = (insulated and L < 16 and FK.hfloat(key, "gable") < 0.6 and L > 0.7 * rect_short and
+                                abs(float(d @ rect_along)) < 0.3)
                 band_z = []                                            # (z0, z1) of each band
                 if bands and ei not in bal_edges and not gable_accent and typ in ("block", "office"):
                     kk_ = sh / FA.FAR_ROW_H                               # sill 0.9 k, head 2.35 k / 2.5 k (facade_openings)

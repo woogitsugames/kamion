@@ -117,16 +117,16 @@ def test_lod1_wall_is_not_a_box_face():
     B.lod1_wall(acc, "office", "plaster_grey", np.array([0.0, 0.0]), np.array([30.0, 0.0]), np.array([0.0, -1.0]),
                 30.0, 99.5, 100.0, 112.0, 0.0, 3, 3.5, 0.45, "office", False, fkey="t:0")
     mats = {m for (_, m) in acc.d}
-    assert {"plinth_dark", "plaster_grey__far_office", "plaster_grey", "hall_flashing"} <= mats
+    assert mats == {"plinth_dark", "plaster_grey__far_office", "hall_flashing"}       # the plain wall rides on the far set
     win = acc.d[("buildings_low", "plaster_grey__far_office")]
     uv = np.concatenate([it[2] for it in win])
     assert all(it[3] is None for it in win)                                   # no UV1 grid any more
-    assert uv[:, 0].min() >= 0 and uv[:, 0].max() <= 2 * FA.FAR_M[0]          # half-float friendly u
+    assert uv[:, 0].min() >= 0
     assert uv[:, 1].min() >= FA.FAR_PLAIN_V[0] and uv[:, 1].max() <= FA.FAR_M[1]
     z = np.concatenate([it[0][:, 2] for it in win])
-    assert z.max() == pytest.approx(100.45 + 3 * 3.5)                         # 3 storeys of 3.5 m above the ground floor level
+    assert z.max() == pytest.approx(112.0)                                    # the attic band rides on the last chunk
     tris = sum(len(it[1]) for items in acc.d.values() for it in items)
-    assert tris <= 30
+    assert tris <= 18
 
 
 def test_far_plan_is_shared_by_both_lods():

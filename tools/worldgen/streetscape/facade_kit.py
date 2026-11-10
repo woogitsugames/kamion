@@ -320,6 +320,50 @@ def window_kit(acc, a, d, nout, o, key, p_ac):
         acc.box(L0, "downpipe", c + d3 * sg * 0.3 - [0, 0, 0.32] - n3 * 0.02, d3 * 0.015, n3 * 0.17, [0, 0, 0.015])
 
 
+def wall_louvre(acc, a, d, nout, u, z, size=1.0, variant=0):
+    """Ventilation louvre on a hall wall: `vent` cell of the facade atlas on a 4 cm frame box."""
+    d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
+    _abox(acc, v3(a + d * u + nout * 0.02, z), d3 * size / 2, n3 * 0.02, [0, 0, size / 2],
+          front=FA.uv_rect("vent", variant), sw="galv")
+
+
+def cage_ladder(acc, a, d, nout, u, z0, z1, mat="downpipe"):
+    """Roof access ladder with a safety cage (drabina z koszem ochronnym, PN-EN ISO 14122-4: cage from 2.2-3.0 m above
+    the ground, hoops <= 1.5 m apart, rungs 0.225-0.30 m; here 0.3 / 0.9 m, WORKING_VALUE), 0.25 m off the wall,
+    stiles 1.1 m above the parapet. LOD0 only."""
+    d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
+    c = v3(a + d * u + nout * 0.25, 0.0)
+    top = z1 + 1.1
+    for sg in (-1, 1):                              # stiles
+        acc.box(L0, mat, c + d3 * sg * 0.225 + [0, 0, (z0 + top) / 2], d3 * 0.02, n3 * 0.02, [0, 0, (top - z0) / 2], skip=(0,))
+    z = z0 + 0.3
+    while z < z1 + 0.05:                            # rungs
+        acc.box(L0, mat, c + [0, 0, z], d3 * 0.205, n3 * 0.012, [0, 0, 0.012], skip=(4, 5))
+        z += 0.3
+    for zs in (z0 + 1.5, z1 - 0.6):                 # wall brackets
+        for sg in (-1, 1):
+            acc.box(L0, mat, c + d3 * sg * 0.225 - n3 * 0.125 + [0, 0, zs], d3 * 0.015, n3 * 0.125, [0, 0, 0.015], skip=(2, 3))
+    zc0 = z0 + 2.5
+    if top - zc0 < 1.0:
+        return
+    r = 0.35
+    ang = [math.pi * k / 4 for k in range(5)]       # half hoop on the street side
+    pts = [d3 * (r * math.cos(t)) + n3 * (r * math.sin(t) * 1.0 + 0.0) for t in ang]
+    z = zc0
+    while z < top + 0.01:                           # hoops: flat bar 5 cm, both faces
+        for (p0, p1) in zip(pts, pts[1:]):
+            A_, B_ = c + p0 + [0, 0, z - 0.025], c + p1 + [0, 0, z - 0.025]
+            acc.quad(L0, mat, A_, B_, B_ + [0, 0, 0.05], A_ + [0, 0, 0.05])
+            acc.quad(L0, mat, B_, A_, A_ + [0, 0, 0.05], B_ + [0, 0, 0.05])
+        z += 0.9
+    for k in (1, 2, 3):                             # vertical straps
+        q = c + pts[k]
+        t = np.cross([0, 0, 1.0], pts[k] / r)
+        A_, B_ = q - t * 0.02 + [0, 0, zc0], q + t * 0.02 + [0, 0, zc0]
+        acc.quad(L0, mat, A_, B_, B_ + [0, 0, top - zc0], A_ + [0, 0, top - zc0])
+        acc.quad(L0, mat, B_, A_, A_ + [0, 0, top - zc0], B_ + [0, 0, top - zc0])
+
+
 def chimney(acc, rect_poly, zridge, key):
     c = np.asarray(rect_poly.exterior.coords)[:4]
     e = [np.hypot(*(c[(i + 1) % 4] - c[i])) for i in range(4)]

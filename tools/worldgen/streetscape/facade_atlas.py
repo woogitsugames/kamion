@@ -110,14 +110,18 @@ FAR_ROWS = {
     "balcony": [
         [("bal", 0), ("w2", 4), ("bal", 3), ("w1", 1), ("bal", 6), ("w2", 8), ("bal", 1), ("w2", 0)],
         [("bal", 5), ("w1", 3), ("bal", 2), ("w2", 7), ("bal", 7), ("w2", 3), ("bal", 4), ("w1", 2)],
+        [("bal", 2), ("w2", 9), ("bal", 6), ("w2", 1), ("bal", 0), ("w1", 5), ("bal", 5), ("w2", 6)],
+        [("bal", 7), ("w2", 2), ("bal", 4), ("w1", 0), ("bal", 3), ("w2", 5), ("bal", 1), ("w1", 4)],
     ],
     "office": [
         [("off", 0), ("off", 1), ("off", 2), ("off", 3), ("off", 4), ("off", 1), ("off", 0), ("off", 3)],
         [("off", 2), ("off", 4), ("off", 0), ("off", 1), ("off", 3), ("off", 2), ("off", 4), ("off", 0)],
     ],
-    "ribbon": [[("rib", i) for i in range(8)]],
+    "ribbon": [[("rib", (i * k + j) % 5) for i in range(8)] for j, k in ((0, 1), (2, 3), (4, 2))],
 }
-FAR_ORDER = [(g, i) for g in ("block", "balcony", "office", "ribbon") for i in range(len(FAR_ROWS[g]))]
+# balcony rows first: every other group starts with a blank sill zone, so the row above any group's last row is plain
+# wall for 0.9 m (far_plain_above) and LOD1 can run its last chunk up to the wall top
+FAR_ORDER = [(g, i) for g in ("balcony", "block", "office", "ribbon") for i in range(len(FAR_ROWS[g]))]
 FAR_M = (FAR_BAYS * FAR_PITCH, FAR_V0 + FAR_ROW_H * len(FAR_ORDER))
 # sill height above the floor / window height per row group (m, at FAR_ROW_H storey height)
 FAR_SILL = {"block": 0.9, "balcony": 0.9, "office": 0.9, "ribbon": 0.9}
@@ -169,7 +173,17 @@ def far_plan(groups, key):
     while s < len(groups):
         g = groups[s]
         rows = len(FAR_ROWS[g])
-        r0 = hint(key, g, "r0") % rows if (s == 0 or groups[s - 1] != g) else 0
+        r0 = 0
+        if s == 0 or groups[s - 1] != g:
+            run = 1
+            while s + run < len(groups) and groups[s + run] == g:
+                run += 1
+            if g == "balcony":                    # end on the group's last row: the attic band folds into the chunk
+                r0 = (rows - run % rows) % rows
+            else:                                 # a random first row, unless it would cost one more chunk (quad)
+                r0 = hint(key, g, "r0") % rows
+                if -(-(run + r0) // rows) > -(-run // rows):
+                    r0 = 0
         n = 1
         while s + n < len(groups) and groups[s + n] == g and r0 + n < rows:
             n += 1
@@ -180,6 +194,13 @@ def far_plan(groups, key):
         s += n
         c += 1
     return out
+
+
+def far_plain_above(group, row):
+    """True when the atlas is plain wall for 0.85 m above this row (the next row starts with a blank sill zone, or the
+    atlas wraps into the plain strip): LOD1 then runs the last chunk up to the wall top instead of a separate band."""
+    i = FAR_ORDER.index((group, row)) + 1
+    return i == len(FAR_ORDER) or FAR_ORDER[i][0] != "balcony"
 
 
 def far_storey(plan, s):
