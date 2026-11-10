@@ -31,14 +31,14 @@ Pamięć poprzednich sesji: `C:\Users\matma\.claude\projects\C--Users-matma-Docu
 | Zadanie | Gdzie | Stan / co zrobić |
 |---|---|---|
 | TRAKT: wewnętrzna okładzina lewego słupka A (czarny klin ~12 % kadru z fotela) → ≤ b2+1° | worktree `.claude/worktrees/agent-a7bf651b0c37426a5` (gałąź `worktree-agent-a7bf651b0c37426a5`) | Fable 5.2; sprawdź `git log main..HEAD`, klatki w `artifacts/owner/modern-front/unity3/`; po scaleniu skopiuj gitignorowany `art-source/truck/interior/export/SM_CabInterior_LOD0.fbx` z worktree do main |
-| Shader: przegląd ograniczenia brudu na gładkich częściach + czarne lamele grilla wychodzą szare | worktree `.claude/worktrees/agent-a97376698478165f6` | Opus; kadry w `artifacts/owner/modern-front/shader/` |
+| (scalone 2026-11-10) Shader: brud na gładkich częściach + czarny plastik grilla — ADR 0047 r3 | — | gotowe |
 
 ## Następne kroki (kolejność)
 1. Dokończ/scal dwie prace powyżej; przebuduj prefab (`Game.Editor.Setup.TruckAssetBuilder.BuildBatch`), testy EditMode + PlayMode + `uv run --project tools/worldgen --with pytest --with scipy pytest tests/ -q` + dotnet runner (`%LOCALAPPDATA%\Microsoft\dotnet\dotnet.exe test tools/physics-runner -c Release`).
 2. Recenzja wizualna **r6** (`visual-critic`, Opus) nowego frontu, aut, wnętrza na klatkach URP i A16.
 3. Za zgodą właściciela: S24+ High z nowym buildem (ADR 0046) — G3-A/G3-B, zrzuty kamer, klipy DK8 (jazda, nie statyczna kamera), 30-min test termiczny; sprawdź natywną rozdzielczość buildu (QHD+ vs FHD+).
 4. Raport bramki 3 do końca (sekcje wizualne, werdykt) → APK do testu jazdy właściciela (D25).
-5. Otwarte: auta — mleczne szyby LOD0 na High, brud progów, przody kanciaste; latarnie/słupki vs teren; ścianki terenu na skrzyżowaniach (ratchet 103); linie WN rwą się subpikselowo (min. szerokość w px); zacieki pod attyką hal; lusterko przednie celuje w niebo; przetarcia na kierownicy/fotelu (generator wnętrza); lusterka 3→2/klatkę na High (propozycja w ADR 0046); szyba z zewnątrz wciąż „akwarium”.
+5. Otwarte: auta — mleczne szyby LOD0 na High, brud progów, przody kanciaste; latarnie/słupki vs teren; ścianki terenu na skrzyżowaniach (ratchet 103); linie WN rwą się subpikselowo (min. szerokość w px); zacieki pod attyką hal; lusterko przednie celuje w niebo; przetarcia na kierownicy/fotelu (generator wnętrza); lusterka 3→2/klatkę na High (propozycja w ADR 0046); lamele grilla pochylone czołem w dół (geometria, zamiast obejścia w shaderze — ADR 0047 r3); szyba z zewnątrz wciąż „akwarium”.
 
 ## Narzędzia
 Unity 6000.3.28f1 (`scripts/env.ps1`), Blender 4.2.9 `C:\Users\matma\AppData\Local\Programs\Blender4.2\blender-4.2.9-windows-x64\blender.exe -b` (**nigdy `Mesh.materials.clear()`**), .NET SDK user-local, uv/Python, ImageMagick, scrcpy, adb. Komendy w `CLAUDE.md`.
