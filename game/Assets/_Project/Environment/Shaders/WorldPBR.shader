@@ -20,6 +20,12 @@
 // the wheels wore it through on the aggregate peaks (Var.R); grey-brown traffic film by age; distance pre-filter
 // towards the asphalt by the line's pixel coverage.
 // _GRASS_DETILE (grass sets: macro-masked bare soil, rotated second sample on Medium+; review r5 W-N3, ADR 0042).
+// _CARPAINT (parked-car paint, ADR 0078): two-layer paint. Base coat = the tinted car_grime albedo with _CarPaint.x
+// metal (aluminium flake / mica; 0 = solid colour) at roughness _CarPaint.w; clear coat = F0 0.04 GGX + sharp
+// environment reflection at the set's smoothness (so road film and dust still matt it). Medium+ (_KAMION_WORLD_DETAIL):
+// flake sparkle, a per-cell (object space, _CarFlake.x cells / m) tilt of the base-coat normal by _CarPaint.y, faded
+// out by the pixel footprint (no shimmer at distance). Pearl (_CarPaint.z): base-coat reflection shifts towards
+// _PearlTint at grazing angles. Low: no flake, 0 extra fetches; cost = one more GGX lobe and env sample.
 // Global tier keyword _KAMION_WORLD_DETAIL (Medium and up): element tone jitter, crack layer, second rotated macro
 // octave, close-range photo detail (asphalt) - Low draws base + normal + mask + one macro sample only.
 // Anti-shimmer: mips + per-tier aniso (QualityProfile), Toksvig smoothness from the generator, element jitter and
@@ -67,6 +73,9 @@ Shader "Kamion/World PBR"
         _StripeB ("Stripe colour B (linear)", Color) = (0.7, 0.7, 0.68, 1)
         _PaintColor ("Paint film albedo (linear, _DECAL_PAINT), a = smoothness", Vector) = (0.6, 0.6, 0.57, 0.35)
         _PaintWear ("Paint wear: x wheel-path, y age, z dirt film, w line width m", Vector) = (0.85, 0.25, 0.3, 0.12)
+        _CarPaint ("Car paint (_CARPAINT): x base metal, y flake tilt, z pearl, w base-coat roughness", Vector) = (0, 0, 0, 0.5)
+        _CarFlake ("Car flake: x cells per m, y fade footprint m", Vector) = (900, 0.004, 0, 0)
+        _PearlTint ("Pearl grazing tint (linear)", Color) = (1, 1, 1, 1)
         _OffsetFactor ("Depth offset factor", Float) = 0
         _OffsetUnits ("Depth offset units", Float) = 0
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("Src blend", Float) = 1
@@ -94,6 +103,7 @@ Shader "Kamion/World PBR"
             float4 _PaintColor, _PaintWear;
             float4 _Grime, _SkyOcc;
             float _DripBand;
+            float4 _CarPaint, _CarFlake, _PearlTint;
             float _OffsetFactor, _OffsetUnits, _SrcBlend, _DstBlend, _ZWrite, _Cull, _ReceiveShadows;
         CBUFFER_END
         ENDHLSL
@@ -128,6 +138,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _RUNOFF
             #pragma shader_feature_local _STRIPES
             #pragma shader_feature_local _GRIME
+            #pragma shader_feature_local _CARPAINT
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionWorldGI.hlsl"   // ADR 0064 baked sky visibility + far ground shadows
@@ -541,6 +552,11 @@ Shader "Kamion/World PBR"
                 half perceptualRoughness = 1.0 - smooth;
                 half r = max(perceptualRoughness * perceptualRoughness, 0.002);
                 half r2 = r * r;
+            #if defined(_CARPAINT)
+                // clean = how much clear coat shows through the road film (the set's smoothness, 0.68 on clean paint)
+                half clean = saturate((mask.a - 0.25) / 0.40);
+                metal = _CarPaint.x * clean;
+            #endif
                 half3 specColor = lerp(half3(0.04, 0.04, 0.04), albedo, metal);
                 half3 diffColor = albedo * (1.0 - metal) * (1.0 - 0.04);
 
@@ -557,7 +573,30 @@ Shader "Kamion/World PBR"
                 half LoH = saturate(dot(L.direction, H));
                 float d = NoH * NoH * (r2 - 1.0) + 1.00001;
                 half spec = r2 / ((d * d) * max(0.1, LoH * LoH) * (r * 4.0 + 2.0));
+            #if defined(_CARPAINT)
+                // base coat (flake layer): its own roughness, normal tilted per flake cell on Medium+
+                half3 nb = nw;
+                half rb = max(_CarPaint.w * _CarPaint.w, 0.02);
+              #if defined(_KAMION_WORLD_DETAIL)
+                {
+                    float3 po = TransformWorldToObject(pw) * _CarFlake.x;
+                    float3 cell = floor(po);
+                    float3 hsh = frac(sin(float3(dot(cell, float3(127.1, 311.7, 74.7)), dot(cell, float3(269.5, 183.3, 246.1)),
+                                                 dot(cell, float3(113.5, 271.9, 124.6)))) * 43758.5453);
+                    half ffade = saturate(_CarFlake.y / max(length(fwidth(pw)), 1e-5) - 0.5);
+                    nb = normalize(nw + (half3)(hsh * 2.0 - 1.0) * (_CarPaint.y * ffade * clean));
+                }
+              #endif
+                half NoHb = saturate(dot(nb, H));
+                half rb2 = rb * rb;
+                float db = NoHb * NoHb * (rb2 - 1.0) + 1.00001;
+                half specB = rb2 / ((db * db) * max(0.1, LoH * LoH) * (rb * 4.0 + 2.0));
+                half3 baseSpecCol = lerp(specColor, specColor * _PearlTint.rgb, _CarPaint.z * Pow4(1.0 - NoV));
+                half coatF = 0.04 + 0.96 * Pow4(1.0 - LoH) * (1.0 - LoH);
+                half3 color = (diffColor + baseSpecCol * (specB * metal) + (spec * coatF * clean).xxx) * L.color * (atten * NoL);
+            #else
                 half3 color = (diffColor + specColor * spec) * L.color * (atten * NoL);
+            #endif
 
                 // sky occlusion (ADR 0060) on top of baked sky visibility giK (ADR 0064)
                 half3 ambient = SampleSH(nw) * diffColor * (ao * giK) * (1.0 - _SkyOcc.x * saturate(-nw.y));
@@ -565,6 +604,18 @@ Shader "Kamion/World PBR"
                 half fresnel = Pow4(1.0 - NoV);
                 half grazing = saturate(smooth + max(metal, 0.04));
                 half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, ao * giK) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
+            #if defined(_CARPAINT)
+                {
+                    // clear coat: mirror of the sky / street at the coat's roughness, Schlick F0 0.04; under it the base
+                    // coat reflects a blurred environment in its own (flake) colour
+                    half coat = (0.04 + 0.96 * fresnel * (1.0 - NoV)) * clean;
+                    half3 envCoat = GlossyEnvironmentReflection(R, perceptualRoughness, ao * giK) * coat;
+                    half3 Rb = reflect(-V, nb);
+                    half3 envBase = GlossyEnvironmentReflection(Rb, _CarPaint.w, ao * giK) * baseSpecCol * (metal * (1.0 - coat));
+                    half3 envDull = GlossyEnvironmentReflection(R, perceptualRoughness, ao * giK) * (0.04 * (1.0 - clean)) / (r2 + 1.0);
+                    env = envCoat + envBase + envDull;
+                }
+            #endif
                 env *= 1.0 - _SkyOcc.y * (1.0 - smoothstep(0.05, 0.45, R.y));
                 color += ambient + env;
                 color += diffColor * KamionLampPools(pw, nw);   // dusk street-lamp pools (ADR 0062)

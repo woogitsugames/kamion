@@ -168,6 +168,17 @@ namespace Game.World.Import
             if (id.StartsWith("car_paint_") && def.Get("rough") != null)
                 mat.SetFloat("_SmoothnessScale", Mathf.Clamp((1f - (float)Num(def.Get("rough"))) / 0.68f, 0.5f, 1.4f));
             mat.SetFloat("_MetallicScale", 0f);
+            // Parked-car paint r10 (ADR 0078): clear coat over a base coat. Manifest "paint": [base metal, flake tilt,
+            // pearl, base-coat roughness] (+ optional "pearl_tint"); solid colours have metal 0 and no flake.
+            if (id.StartsWith("car_paint_") && def.Get("paint") is List<object> cp && cp.Count >= 4)
+            {
+                mat.EnableKeyword("_CARPAINT");
+                mat.SetVector("_CarPaint", new Vector4((float)Num(cp[0]), (float)Num(cp[1]), (float)Num(cp[2]), (float)Num(cp[3])));
+                mat.SetVector("_CarFlake", new Vector4(900f, 0.004f, 0f, 0f));
+                var pt = def.Get("pearl_tint") as List<object>;
+                mat.SetColor("_PearlTint", pt != null && pt.Count >= 3
+                    ? new Color((float)Num(pt[0]), (float)Num(pt[1]), (float)Num(pt[2]), 1f) : Color.white);
+            }
             mat.SetFloat("_MacroSize", 64f);
             mat.SetFloat("_MacroStrength", kind == "modulation_set" ? 0.06f : 0.16f);
             mat.SetFloat("_MacroWear", kind == "modulation_set" ? 0.05f : 0.2f);

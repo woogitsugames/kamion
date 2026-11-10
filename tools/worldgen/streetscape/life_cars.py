@@ -917,7 +917,7 @@ def _wheel2(m, x_out, yc, r, sx, seg, steel, lod, wst=0, rimm="rim", tyre="tyre"
                 want = (B[k] + B[k2]) / 2 - cen
                 want[0] = 0
                 _quad(m, tyre, B[k], B[k2], C2[k2], C2[k], want)
-        fan(tyre, C2[::2], -X)                                  # r8 N-13: inner sidewall (seen under the body); r10: 5-gon
+        fan(tyre, C2, -X)                                       # r8 N-13: inner sidewall (seen under the body)
         cover = steel and wst % 2 == 1                          # r10: plastic wheel cover (silver disc)
         face = (rimm if cover else "rim_steel") if steel else ("rim_dark" if wst == 3 else rimm)
         fan(face, A, X)
@@ -1242,7 +1242,7 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
             xp = sh.X(yc, r) - dep
             _quad(m, "car_trim", [sx * xp, yc - ra - 0.03, sill], [sx * xp, yc + ra + 0.03, sill],
                   [sx * xp, yc + ra + 0.03, r + ra], [sx * xp, yc - ra - 0.03, r + ra], [sx, 0, 0])
-            AL = A if lod == 0 else A[::2]            # r10: LOD1 liner on every other arch point (frame budget)
+            AL = A        # (a liner on every other arch point opened a sliver into the housing: hole test)
             for k, ((ya, za), (yb, zb_)) in enumerate(zip(AL[:-1], AL[1:])):
                 mid = np.array([0, yc - (ya + yb) / 2, r - (za + zb_) / 2])
                 xa, xb = sh.X(ya, za) + lipo, sh.X(yb, zb_) + lipo
@@ -1370,9 +1370,9 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
 
     if lod == 0:
         # grille and lower intake: real openings 35-38 mm deep, dark plane behind bars (no badge, no make's shape)
-        recess(iH, grille_cols, 0.038, "car_trim", "car_interior", taper=0.06)
+        recess(iH, grille_cols, 0.038, "car_trim", "car_trim", taper=0.06)
         slats(iH, grille_cols[1:-1], (0.22, 0.50, 0.78), 0.010, 0.016)
-        recess(sh.seg["F1"], intake_cols, 0.035, "car_trim", "car_interior", taper=0.06)
+        recess(sh.seg["F1"], intake_cols, 0.035, "car_trim", "car_trim", taper=0.06)
         slats(sh.seg["F1"], intake_cols[1:-1], (0.5,), 0.010, 0.012)
         for sx in (-1, 1):                                                                 # corner intakes / fog recesses
             spatch("F1", [(sx * 1.05, 0.40, 0.80), (sx * 1.38, 0.34, 0.86), (sx * 1.72, 0.42, 0.74)], "car_trim")

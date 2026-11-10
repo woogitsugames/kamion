@@ -40,7 +40,7 @@ def test_car_lod2_is_cheap_and_plates_textured():
     for b in LC.CARS:
         m0, m1, _, m2 = LC.car(b, "red")
         t2 = sum(len(p["T"]) for p in m2.out())
-        assert t2 <= 60, (b, t2)
+        assert t2 <= 96, (b, t2)                # r10 (ADR 0078): LOD2 = the r9 silhouette at its control stations
         p0 = {p["mat"]: p for p in m0.out()}["car_plate"]
         p1 = {p["mat"]: p for p in m1.out()}["car_plate"]
         k = LC._plate_index(f"{b}_red")

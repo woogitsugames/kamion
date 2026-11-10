@@ -119,20 +119,31 @@ M = {
     "paint_white_reflective": {"color": [0.7, 0.7, 0.7], "rough": 0.4},
     "cabinet_grey": {"color": [0.35, 0.36, 0.35], "rough": 0.6},
     # static life props (streetscape.life_props): vehicles, yard props, gate kit
-    "car_paint_silver": {"color": [0.42, 0.43, 0.44], "rough": 0.28, "metal": 0.6, "texture_set": "car_grime"},
-    "car_paint_grey": {"color": [0.13, 0.135, 0.14], "rough": 0.26, "metal": 0.5, "texture_set": "car_grime"},
-    "car_paint_black": {"color": [0.018, 0.018, 0.02], "rough": 0.2, "metal": 0.3, "texture_set": "car_grime"},
-    "car_paint_white": {"color": [0.68, 0.68, 0.66], "rough": 0.3, "texture_set": "car_grime"},
-    "car_paint_white2": {"color": [0.62, 0.63, 0.62], "rough": 0.36, "texture_set": "car_grime"},
-    "car_paint_blue": {"color": [0.03, 0.05, 0.12], "rough": 0.24, "metal": 0.4, "texture_set": "car_grime"},
-    "car_paint_red": {"color": [0.32, 0.03, 0.025], "rough": 0.28, "metal": 0.2, "texture_set": "car_grime"},
+    # r10 (ADR 0078): "paint" = [base-coat metal, flake tilt, pearl, base-coat roughness] for the _CARPAINT layer of
+    # Kamion/World PBR (clear coat = "rough"). Types, WORKING_VALUE (no Polish register of paint types): silver, grey
+    # and blue metallic (aluminium flake), black pearl (mica, blue-violet at grazing angles), white and red solid
+    # (white is the no-surcharge base colour of most ranges; the vans' whites are solid fleet paint).
+    "car_paint_silver": {"color": [0.42, 0.43, 0.44], "rough": 0.28, "metal": 0.6, "texture_set": "car_grime",
+                         "paint": [0.85, 0.30, 0.0, 0.50]},
+    "car_paint_grey": {"color": [0.13, 0.135, 0.14], "rough": 0.26, "metal": 0.5, "texture_set": "car_grime",
+                       "paint": [0.75, 0.28, 0.0, 0.50]},
+    "car_paint_black": {"color": [0.018, 0.018, 0.02], "rough": 0.2, "metal": 0.3, "texture_set": "car_grime",
+                        "paint": [0.55, 0.22, 0.8, 0.45], "pearl_tint": [1.6, 1.9, 3.2]},
+    "car_paint_white": {"color": [0.68, 0.68, 0.66], "rough": 0.3, "texture_set": "car_grime",
+                        "paint": [0.0, 0.0, 0.0, 0.5]},
+    "car_paint_white2": {"color": [0.62, 0.63, 0.62], "rough": 0.36, "texture_set": "car_grime",
+                         "paint": [0.0, 0.0, 0.0, 0.5]},
+    "car_paint_blue": {"color": [0.03, 0.05, 0.12], "rough": 0.24, "metal": 0.4, "texture_set": "car_grime",
+                       "paint": [0.70, 0.30, 0.0, 0.48]},
+    "car_paint_red": {"color": [0.32, 0.03, 0.025], "rough": 0.28, "metal": 0.2, "texture_set": "car_grime",
+                      "paint": [0.0, 0.0, 0.0, 0.5]},
     "car_paint_green": {"color": [0.035, 0.07, 0.045], "rough": 0.35, "metal": 0.4, "texture_set": "car_grime"},
     "car_paint_beige": {"color": [0.36, 0.32, 0.24], "rough": 0.4, "metal": 0.3, "texture_set": "car_grime"},
     "car_glass": {"color": [0.012, 0.014, 0.016], "rough": 0.65},     # opaque (LOD1 / LOD2): does not mirror the sky
     # LOD0 car glazing: dark tint, alpha blended (importer: "blend"), the dark interior shows through
     # v4 (REVIEW r6 W-N8): transmission 0.35 per face onto the dark interior (both faces drawn), thinner dust film
     "car_glass_tint": {"color": [0.010, 0.016, 0.016], "rough": 0.05, "alpha": 0.65, "blend": True, "shader": "car_glass",
-                       "dust": 0.35, "privacy_alpha": 0.80, "reflect": 1.0},
+                       "dust": 0.35, "privacy_alpha": 0.80, "reflect": 1.0, "lens_alpha": 0.10},
     # road film overlays of car LOD0 / LOD1 (ADR 0041 par. 8): alpha texture x per-level alpha, three dirt levels
     # v4: darker grey-brown, lower alpha (the salt-pale level 3 at alpha 1.0 read as beige paint on red / dark cars)
     "car_dirt_1": {"color": [0.15, 0.13, 0.10], "rough": 1.0, "alpha": 0.45, "blend": True, "texture": "car_dirt"},
