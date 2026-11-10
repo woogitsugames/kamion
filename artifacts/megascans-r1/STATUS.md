@@ -54,3 +54,5 @@
 - Krok 18: runda3 import+56PNG OK. Low szczyt956drawEst/333ktris bez wzrostu; lokalnie do+4draw/+4ktris. EditMode206:194PASS,0FAIL,7skipped,5inconclusive. GISr3:275PASS,5odziedziczonychFAIL,2xfail. Trzy dodatkowe kamery na faktycznej trasie: raycast3/3 PASS, wysokość2,300m. Zapisano1989plików stanu after w prywatnym art-source/world/megascans/_generated/qa-after-r3.zip.
 - TRWA TERAZ: prawdziwy build/import fallback z KAMION_DISABLE_FAB=1 i osobne kadry before. Po nim KONIECZNIE odtworzyć after (Unity musi być zamknięte).
 - NASTĘPNY KROK awaryjny: `uv run --project tools/worldgen python artifacts/megascans-r1/reversible_qa_state.py restore`; następnie wyczyścić KAMION_DISABLE_FAB i sprawdzić manifest/PNG.
+
+- Krok22: odtworzono wygenerowany światafter (archiwum1989plików); KAMION_DISABLE_FAB wyłączone. NASTĘPNY: powtórny raycast i sanityrender after, walidacja SHA192plików.
