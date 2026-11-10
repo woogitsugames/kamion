@@ -38,3 +38,14 @@ Status: Accepted (rendering-perf), 2026-11-09. Review: `docs/reports/visual/REVI
 - All constants are WORKING_VALUE until compared with owner photos.
 - The capture has no shadows and no instanced props/trees; in a forest the reflections show sky where trees would be.
 - The world generator's lamp glass quad faces up; the glass is drawn double-sided until world-builder flips it.
+
+## Amendment 2026-11-10 (r4 E2, glass)
+- `Kamion/Truck Glass` is a thin pane, not one interface: reflectance R2 = 2R/(1+R) from Schlick F0 0.04 (0.08 at normal
+  incidence, ~0.1 at a 3/4 view, ~0.3 at 70 deg) on the capture (High) or sky cubemap (Low/Medium); transmittance
+  (1 − R2) · (1 − _Opacity)^(1/cos θt) (n 1.52), so the interior darkens towards grazing angles. From the cab only the
+  first surface carries the analytic dash reflection (no ghost) and the tint body term is off (no milky veil). Cost
+  ~14 ALU per glass pixel, no texture, all tiers.
+- Measured (editor, truck-34 overcast, windscreen median / sky median, display): High 0.402 → 0.411, Low 0.395 → 0.405,
+  lowsun 0.344 → 0.372. A dielectric pane cannot reach "≥ 60 % of the sky" (r5) at a 3/4 view: that needs R2 ≈ 0.3
+  (≥ 70 deg incidence). What remains is interior radiance seen from outside (cab SH share / fill) and the clipped sky
+  (display 1.0), both outside the glass shader. WORKING_VALUE until compared with owner photos.
