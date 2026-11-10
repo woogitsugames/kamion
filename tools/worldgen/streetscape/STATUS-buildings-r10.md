@@ -59,3 +59,16 @@
 - `test_cc0_scans`: 6 passed.
 - NASTĘPNY KROK: `git merge main` (generated -> --ours) -> `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c`
   -> `uv run --project tools/worldgen pytest tests/gis -q` -> `pwsh artifacts/buildings-r10/run_round.ps1 -Round r2 -Configs High:overcast,Low:overcast`
+
+## krok 5 — merge main, runda r2, testy (2026-11-10)
+- `git merge main` (generated = ours) + build_world (278 s) + import (569 s). pytest gis: 222 passed, 3 failed (road_fidelity stale,
+  route_corridor x2 - te same co na main, zadanie 0076), 2 xfailed. EditMode: 188 total, 176 passed, 0 failed, 7 skipped.
+- Runda r2 (High + Low overcast) obejrzana vs r1 i refs CC0: tynki jasne (szary/kremowy/brzoskwiniowy jak na zdjęciach), cegła w skali,
+  cokół z fakturą, zacieki pod attyką widoczne z bliska; LOD1 na Low zgodny kolorem z LOD0. Rundy poprawek: 1 z 2 wykorzystana.
+- stats.txt Low (estymata edytora, r1 -> r2, r2 zawiera też zmiany z main): block_1 418 -> 460 draws / 322k -> 331k tris, block_2 330 -> 372 / 352k -> 361k,
+  fence_3 257 -> 243 / 352k -> 355k, office_2 149 -> 150 / 189k -> 174k.
+- Otwarte: brak oceny visual-critic (zakaz subagentów w tym zadaniu), brak pomiaru na telefonie, globalna poprawka `_Tint` (ADR 0081, „do decyzji lidera”),
+  kamera r10_hall_3 pod terenem, r10_hall_1 zasłonięta naczepą (po merge main), tynk szary z bliska ma za mocny „pieprz” faktury.
+- NASTĘPNY KROK (lider): `git merge worktree-agent-ac404823e7d8b56e7` (generated -> --ours) ->
+  `uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only facade_atlas,facade_far,fence_concrete` ->
+  `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` -> `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c`
