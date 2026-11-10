@@ -148,7 +148,7 @@ def test_life_prototypes_budget_and_lods():
     # ADR 0041 par. 7 / 9 / r8 (WORKING_VALUE until the phone measurement): cars are seen from 5-12 m, LOD0 is drawn
     # only below 16 m on Low / 37.5 m on High, so LOD0 <= 4000; LOD1 is the Low car from 16 to 45 m (r8, REVIEW r7
     # N-14: rounded shoulders, 10-gon wheels with spoke windows, lamp lenses, housing back plates; the frame limits
-    # of test_frame_budget_with_forest_hlod are unchanged) <= 900 (was 650); LOD2 (45 / 135 - 300 m) <= 60 triangles
+    # of test_frame_budget_with_forest_hlod are unchanged) <= 900 (was 650); LOD2 (42.5 / 127.5 - 300 m) <= 60 triangles
     assert max(t0 for k, (t0, _) in tris.items() if k.startswith(("car_", "van_"))) <= 4000
     assert max(t1 for k, (_, t1) in tris.items() if k.startswith(("car_", "van_"))) <= 900
     assert max(t0 for k, (t0, _) in tris.items() if k.startswith("trailer_")) <= 1200

@@ -996,7 +996,10 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
                     "rim_dusty" if dl > 0.45 else "rim", "tyre_dusty" if dl > 0.3 else "tyre")
             dep = 0.28 if lod == 0 else 0.26
             # r8 N-13: back plate of the wheel housing (the gap above the tyre showed the cabin / the far side)
-            _oq(m, "car_trim", [np.array([sx * (sh.X(ya, za) - dep), ya, za]) for ya, za in A], [sx, 0, 0])
+            # (one quad over the whole housing: only the part inside the arch opening is ever seen)
+            xp = sh.X(yc, r) - dep
+            _quad(m, "car_trim", [sx * xp, yc - ra - 0.03, sill], [sx * xp, yc + ra + 0.03, sill],
+                  [sx * xp, yc + ra + 0.03, r + ra], [sx * xp, yc - ra - 0.03, r + ra], [sx, 0, 0])
             for (ya, za), (yb, zb_) in zip(A[:-1], A[1:]):
                 mid = np.array([0, yc - (ya + yb) / 2, r - (za + zb_) / 2])
                 xa, xb = sh.X(ya, za), sh.X(yb, zb_)

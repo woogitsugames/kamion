@@ -680,7 +680,7 @@ def instance_ends(proto, nlods):
     elif proto.startswith("landmark_"):
         e = [650.0, 20000.0]
     elif proto.startswith(("car_", "van_")):
-        e = [25.0, 90.0, VEHICLE_CULL_M]
+        e = [25.0, 85.0, VEHICLE_CULL_M]
     elif proto.startswith(("tractor_", "trailer_")):
         e = [40.0, VEHICLE_CULL_M]
     else:

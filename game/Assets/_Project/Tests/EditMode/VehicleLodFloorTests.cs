@@ -5,14 +5,14 @@ namespace Game.Tests
 {
     /// <summary>
     /// ADR 0041 r8 (REVIEW r7 N-14): parked vehicles keep LOD0 up to WorldInstances.VehicleLod0MinM on every tier. On Low
-    /// (lodBias 0.5) the car policy 25 / 90 / 300 m switched to LOD1 at 12.5 m, i.e. for the cars right beside the route.
+    /// (lodBias 0.5) the car policy 25 / 85 / 300 m switched to LOD1 at 12.5 m, i.e. for the cars right beside the route.
     /// </summary>
     public class VehicleLodFloorTests
     {
         [Test]
         public void Lod0Floor_HoldsOnLow_LeavesHighAndSingleLodAlone()
         {
-            var car = new[] { 25f, 90f, WorldInstances.VehicleCullM };
+            var car = new[] { 25f, 85f, WorldInstances.VehicleCullM };
             float min = WorldInstances.VehicleLod0MinM;
             Assert.GreaterOrEqual(min, 15f);
             // Low: lodBias 0.5, fixed cull

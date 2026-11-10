@@ -22,13 +22,13 @@ def test_vehicle_policy_mirrors_engine():
     cs = (REPO / "game/Assets/_Project/World/Runtime/WorldInstances.cs").read_text(encoding="utf-8")
     assert float(re.search(r"VehicleCullM = ([\d.]+)f", cs).group(1)) == BW.VEHICLE_CULL_M
     imp = (REPO / "game/Assets/_Project/World/Import/InstanceImporter.cs").read_text(encoding="utf-8")
-    assert "new[] { 25f, 90f, WorldInstances.VehicleCullM }" in imp and "new[] { 40f, WorldInstances.VehicleCullM }" in imp
+    assert "new[] { 25f, 85f, WorldInstances.VehicleCullM }" in imp and "new[] { 40f, WorldInstances.VehicleCullM }" in imp
     hi = BW.instance_rule("car_hatch_red", 3, BW.LOD_POLICY["High"]["lod_bias"])
     lo = BW.instance_rule("car_hatch_red", 3, BW.LOD_POLICY["Low"]["lod_bias"])
     assert hi[-1][0] == lo[-1][0] == BW.VEHICLE_CULL_M >= 150          # W-N6: LOD2 instead of a cull on Low
     # r8 (REVIEW r7 N-14): LOD0 floor on every tier, so the cars 8-12 m beside the route are LOD0 on Low too
     assert float(re.search(r"VehicleLod0MinM = ([0-9.]+)f", cs).group(1)) == BW.VEHICLE_LOD0_MIN_M >= 15.0
-    assert lo[0][0] == BW.VEHICLE_LOD0_MIN_M and hi[0][0] == 37.5 and lo[1][0] == 45.0
+    assert lo[0][0] == BW.VEHICLE_LOD0_MIN_M and hi[0][0] == 37.5 and lo[1][0] == 42.5
     assert BW.instance_rule("tractor_white", 2, 0.5)[0][0] == 20.0       # 40 x 0.5 is already above the floor
     assert BW.instance_rule("trailer_box_0", 2, 0.5)[-1][0] == BW.VEHICLE_CULL_M
     assert BW.instance_rule("bin_1100_blue", 2, 0.5)[-1][0] == 60.0      # non-vehicles still scale with lodBias
