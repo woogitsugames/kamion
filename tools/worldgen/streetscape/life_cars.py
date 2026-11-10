@@ -455,15 +455,16 @@ def _vehicle(d, paint, lod):
         # LOD2 (far rows, 135-300 m High / 45-300 m Low): dark under-body band between the axles + one hexagonal
         # tyre disc per wheel (the round wheels are what still reads at 15-40 px; a black band reads as "legs")
         ya, yb = yra - r, yfa + r
+        # r8 N-13: the dark under-body is a closed skirt (two side bands + two cross quads on one rectangle inside the
+        # body's lower edge). Before: bands between the axles at hw - 0.01 and cross quads as wide, which stuck out
+        # beside the tapered bumpers and left the far wheel discs' culled backs (= the paving) visible under the body.
+        xc, z0, z1 = hw - 0.14, 0.03, sill + 0.02
         for sx in (-1, 1):
-            # r8 N-13: the dark band is a two-sided keel on the centre line (was one outward quad per side between the
-            # axles: under the body the far wheel discs showed their culled backs, i.e. the paving)
-            _oq(m, "tyre", [[0.0, ya, 0.06], [0.0, yb, 0.06], [0.0, yb, sill + 0.02], [0.0, ya, sill + 0.02]], [sx, 0, 0])
+            _oq(m, "tyre", [[sx * xc, ya, z0], [sx * xc, yb, z0], [sx * xc, yb, z1], [sx * xc, ya, z1]], [sx, 0, 0])
             for yc in (yra, yfa):
                 _disc(m, "tyre", [sx * (hw + 0.006), yc, r], r, 6, sx, math.pi / 6)
-        xc = hw - 0.14           # r8 N-13: inside the body's lower edge (hw - 0.01 stuck out beside the bumpers)
         for yy, s in ((ya, -1), (yb, 1)):
-            _oq(m, "tyre", [[xc, yy, 0.08], [-xc, yy, 0.08], [-xc, yy, sill + 0.02], [xc, yy, sill + 0.02]], [0, s, 0])
+            _oq(m, "tyre", [[xc, yy, z0], [-xc, yy, z0], [-xc, yy, z1], [xc, yy, z1]], [0, s, 0])
 
     # ---- lamps, grille, plates
     if lod < 2:
