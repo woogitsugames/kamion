@@ -73,3 +73,24 @@ Wikimedia Commons, 1920 px previews, licence read from the Commons API (`extmeta
 | `cab_2022_DAF_XG_530.jpg` | 2022 DAF XG 530.jpg | MrWalkr | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:2022_DAF_XG_530.jpg | front 3/4: corner deflector wrap bumper-to-roof, roof edge radius, body-colour arch flare |
 | `cab_DAF_XG_530_RED_Edition_IAA_2022_DSC03843_.jpg` | DAF XG+ 530 RED Edition IAA 2022 (DSC03843).jpg | MarcelX42 | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:DAF_XG%2B_530_RED_Edition_IAA_2022_(DSC03843).jpg | gloss paint: unbroken reflections over corner and roof radii |
 | `cab_6-365_Volvo_FH.jpg` | 6-365 Volvo FH.jpg | dickinsonjohn02 | Public domain | https://commons.wikimedia.org/wiki/File:6-365_Volvo_FH.jpg | working tractor (2013 registration, 2012+ cab generation): corner-to-door wrap, rounded mirror housings, bumper ends |
+
+## Otwarte zrodla referencji (D43, ADR 0066)
+
+Bez zdjec wlasnych (D43) referencje trasy C pochodza wylacznie z otwartych zrodel; Google Maps/Street View/Earth/3D Tiles zakazane (takze przez Gemini). Narzedzia: `tools/refs/` (`open_sources.py`, `object_refs.py`, `gugik_ortho.py`, `bialystok_open_data.py`, `summarize.py`). Surowe pliki: `Data/raw/refs/<zrodlo>/` i `Data/raw/refs/objects/<obiekt>/` (poza gitem), kazde zrodlo z `manifest.jsonl` (URL, autor, licencja, SHA256, ujecia). Montaze i `INDEX.md`: `artifacts/refs/`. Uzycie: referencja wizualna; BY-SA nigdy jako tekstura (share-alike); tekstury tylko z CC0/PD/wlasne.
+
+| Zrodlo | Licencja | Dane | Gdzie | Uzycie |
+|---|---|---|---|---|
+| KartaView | CC BY-SA 4.0 | zdjecia uliczne wokol 55 ujec (79 plikow, pokrycie 41/55) | `artifacts/refs/kartaview/` | tylko referencja |
+| Panoramax | per zdjecie (tu CC BY-SA) | 23 zdjecia, 17/55 ujec | `artifacts/refs/panoramax/` | tylko referencja |
+| Wikimedia Commons | CC0 / CC BY / CC BY-SA wg `extmetadata` | geosearch + kategorie + wyszukiwanie tekstowe | `artifacts/refs/commons/`, `artifacts/refs/<obiekt>/` | CC0/BY mozliwa tekstura (wpis w LICENSES), BY-SA tylko referencja |
+| Openverse | CC0/BY/BY-SA (filtr + ponowna kontrola) | zapytania tekstowe; API czesto 504/wolne | `Data/raw/refs/openverse/` | j.w. |
+| GUGiK ortofotomapa (WMS) | GUGiK open data (art. 40a Pgik) | kadry 160 m na 55 ujec + okna obiektow | `artifacts/refs/gugik-ortho/`, `.../<obiekt>/ortho/` | referencja i dopasowanie |
+| GUGiK LoD1/LoD2, BDOT10k | j.w. | wysokosci i obrysy w `buildings.geojson`; plan 2D `plan_budynki.jpg` | `artifacts/refs/<obiekt>/plan_budynki.jpg` | dane |
+| Miasto Bialystok (ArcGIS) | dane otwarte miasta | 11 warstw (m.in. straz_pozarna, parki, monitoring) | `Data/raw/refs/bialystok-open-data/` | kontrola pozycji |
+
+### Referencje per obiekt (`python tools/refs/object_refs.py --object ...`)
+| Obiekt | Folder | Zawartosc / luki |
+|---|---|---|
+| Kwadrat Park | `artifacts/refs/kwadrat-park/INDEX.md` | 11 zdjec Commons (okolica: droga dojazdowa, wiadukt, mokry asfalt, sasiednie obiekty) + 3 ortofoto (400/160/70 m) + plan budynkow. LUKA: zadnych otwartych zdjec hal/bramy/ramp/portierni (teren prywatny; KartaView/Panoramax 0 trafien) - detale UNVERIFIED |
+| Straz pozarna (JRG nr 2, Andersa; OSM way/211035271, 53.157322, 23.156306) | `artifacts/refs/fire-station/INDEX.md` | 17 zdjec (KartaView z Andersa, Commons) + 2 ortofoto + plan; kontrola z danymi miasta (Andersa 46) |
+| Zmierzch / swiatla sodowe | `artifacts/refs/dusk-sodium/INDEX.md` | stan 2026-11-10: 0 obrazow (INDEX pusty; Openverse 504, Commons 429) - OTWARTE, ponowic `object_refs.py --object dusk-sodium`; barwa i kontrast swiatel sodowych: UNVERIFIED |

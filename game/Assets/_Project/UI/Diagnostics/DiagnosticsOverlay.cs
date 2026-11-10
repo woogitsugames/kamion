@@ -4,6 +4,7 @@ using Game.Core;
 using Game.Platform;
 using Game.Rendering;
 using Game.Telemetry;
+using Game.UI.Layout;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
@@ -33,9 +34,7 @@ namespace Game.UI
         Text m_FpsButtonLabel;
         Text m_TierButtonLabel;
         Text m_HideButtonLabel;
-        Rect m_AppliedSafeArea;
-        Vector2Int m_AppliedScreen;
-        Rect? m_SafeAreaOverride;
+        UiViewport m_View;
         float m_NextRefresh;
         string m_Header;
         readonly StringBuilder m_Sb = new StringBuilder(1024);
@@ -54,8 +53,8 @@ namespace Game.UI
         /// <summary>Editor capture only: lay out against a fake safe area (normalized 0..1).</summary>
         public void OverrideSafeAreaNormalized(Rect normalized)
         {
-            m_SafeAreaOverride = normalized;
-            ApplySafeArea();
+            m_View.OverrideSafeAreaNormalized(normalized);
+            m_View.Refresh();
         }
 
         void Build(Camera camera)
@@ -65,19 +64,12 @@ namespace Game.UI
             m_Canvas.worldCamera = camera;
             m_Canvas.planeDistance = camera != null ? Mathf.Max(camera.nearClipPlane * 2f, 0.5f) : 1f;
             m_Canvas.sortingOrder = 1000;
-            var scaler = gameObject.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-            scaler.matchWidthOrHeight = 1f; // landscape: scale by height
             gameObject.AddComponent<GraphicRaycaster>();
 
             var font = UiFonts.Default;
 
-            m_SafeArea = NewRect("SafeArea", transform);
-            m_SafeArea.anchorMin = Vector2.zero;
-            m_SafeArea.anchorMax = Vector2.one;
-            m_SafeArea.offsetMin = m_SafeArea.offsetMax = Vector2.zero;
+            m_View = new UiViewport(m_Canvas);   // scale by the shorter side / DPI + safe area (ADR 0079)
+            m_SafeArea = m_View.SafeArea;
 
             // Text panel, top-left of the safe area.
             var panelRt = NewRect("Panel", m_SafeArea);
@@ -125,7 +117,7 @@ namespace Game.UI
             EnsureEventSystem();
 
             m_Header = BuildHeader();
-            ApplySafeArea();
+            m_View.Refresh();
         }
 
         static RectTransform NewRect(string name, Transform parent)
@@ -187,37 +179,15 @@ namespace Game.UI
 
         void Update()
         {
-            ApplySafeArea();
+            m_View.Refresh();
             if (Time.unscaledTime >= m_NextRefresh) RefreshNow();
-        }
-
-        void ApplySafeArea()
-        {
-            if (m_SafeArea == null) return;
-            Rect n;
-            if (m_SafeAreaOverride.HasValue)
-            {
-                n = m_SafeAreaOverride.Value;
-            }
-            else
-            {
-                var screen = new Vector2Int(Screen.width, Screen.height);
-                var safe = Screen.safeArea;
-                if (safe == m_AppliedSafeArea && screen == m_AppliedScreen) return;
-                m_AppliedSafeArea = safe;
-                m_AppliedScreen = screen;
-                if (screen.x <= 0 || screen.y <= 0) return;
-                n = new Rect(safe.x / screen.x, safe.y / screen.y, safe.width / screen.x, safe.height / screen.y);
-            }
-            m_SafeArea.anchorMin = n.min;
-            m_SafeArea.anchorMax = n.max;
-            m_SafeArea.offsetMin = m_SafeArea.offsetMax = Vector2.zero;
         }
 
         public void RefreshNow()
         {
             m_NextRefresh = Time.unscaledTime + RefreshInterval;
             if (m_Body == null) return;
+            m_View.Refresh();
             var ci = CultureInfo.InvariantCulture;
             int targetFps = Application.targetFrameRate;
             m_FpsButtonLabel.text = targetFps > 0 ? $"Cel: {targetFps} FPS" : "Cel: auto";

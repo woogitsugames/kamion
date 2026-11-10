@@ -1,3 +1,43 @@
+# HANDOVER — kamion, sesja 7 (2026-11-10 ok. 23:xx; start po ubiciu s6 limitem)
+
+## Najpierw
+- **main = `4c27a9b`, wypchnięty.** Żadnych scaleń w s7 jeszcze. Brak wiszących procesów Unity/Blender/build_world po s6.
+- s7: wznowiono 8 agentów s6 w ich istniejących worktree (tabela s6 niżej — te same worktree/gałęzie/STATUS) + 0083 zewnętrze TRAKT wystartowane od nowa (poprzedni worktree agent-a895ad2cc01f155bd nigdy nie powstał) w nowym worktree (ścieżka w raporcie agenta; STATUS `artifacts/truck-ext-r10/STATUS.md`). Wszyscy Fable 5.2. Razem 9 agentów.
+- Puste/osierocone katalogi w `.claude/worktrees/` (nie w `git worktree list`): a0c58…, a12755…, a48798…, a619ef…, a66ef6…, a9eaae…, ab1fb0… — do ręcznego usunięcia (sprawdzić junctiony przed rmdir).
+- Następne kroki bez zmian (s6 §Następne kroki): scalać 0076 → 0077 → 0070/0071 → 0078 → 0081 → 0080 → 0082 → 0083; po każdym regeneracja + pytest gis.
+
+---
+# HANDOVER — kamion, sesja 6 (2026-11-10 ok. 21:45 czasu właściciela; lider zapisuje po każdym scaleniu/starcie/końcu agenta)
+
+## Najpierw
+- **main = `ba74b1e`, wypchnięty.** Scalone w s6: HUD 0079, refs 0066, auta r9 (ADR 0073, generated = ours → wymagana regeneracja), fidelity dróg (ADR 0075). Main NIE zregenerowany po scaleniach; pytest gis na main: 2 czerwone P0 korytarza (agent 0076).
+- Polecenie właściciela s6: **max 10 agentów, wszystkie Fable 5.2**, mocny skok jakości wyglądu. Limit 5 h: reset 01:20 (start s6 0 %).
+- Zgłoszenia właściciela s6: (1) HUD na Fold 8 Ultra (ekran ~1:1) rozjechany, ustawienia ucięte → ADR 0079; (2) film jazdy `Screen_Recording_20261110_210126_Kamion.mp4` (127 s, klatki `artifacts/owner/fold-video-2026-11-10/`): brak ogranicznika (95–105 km/h), koniec świata ~116 s — biała pustka, spadek do 179 km/h, kamera w desce; przejazd po wyspie ronda Bieżeństwa ~30 s → ADR 0082.
+- Przejęcie po ubiciu sesji: worktree w `.claude/worktrees/<id>`, STATUS.md w `<wt>/artifacts/<dir>/` (dir z kolumny dowody); nowy agent Fable z briefem „pracuj WYŁĄCZNIE w <wt>, najpierw docs/owner/AGENT-RULES.md i STATUS.md, dokończ”. Agenci commitują WIP co krok (przypomnienie wysłane 22:xx).
+- Nowe worktree agentów: Data/raw/derived ma być KOPIĄ (robocopy), nie junction — inaczej build_world nadpisuje main.
+- Ostatni przydzielony ADR: **0083**. D45 Fab (Megascans + CC BY, pliki poza gitem) — przyjęta; właściciel pobiera na koncie Epic do 12.11. 0066 scalone; pusty katalog worktree agent-ab1fb0a47d2f0a491 (kopie Data/raw) do ręcznego usunięcia.
+- Dodatkowe zgłoszenia właściciela s6 przekazane: latarnia na lewym pasie estakady (~93–100 s) i krawężnik w poprzek jezdni (~105–112 s) → 0076; szlaban Kwadrat Park nie otwiera się, brak kolizji → 0071.
+
+| zadanie | model | ADR | worktree / gałąź | dowody | stan |
+|---|---|---|---|---|---|
+| P0 korytarz trasy s1432–1480 + MA-001/002/012 | Fable | 0076 | agent-ad6af5501cb259d76 / worktree-agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | w toku |
+| wysepki z OSM (compute_corners), MA-010, krawędzie p95 | Fable | 0077 | agent-a2afb96d89584cca6 / worktree-agent-a2afb96d89584cca6 | artifacts/islands-r10 | w toku |
+| straż JRG2 dokończenie + merge main | Fable | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | w toku |
+| Kwadrat Park dokończenie + brama/naczepy | Fable | 0071 | agent-a1409e374f8c12b4f | artifacts/kwadrat-r9 | w toku |
+| HUD adaptacyjny (Fold, 1:1–21:9) | Fable | 0079 | usunięty | artifacts/hud-r10 | SCALONE (test na telefonie UNVERIFIED; dev pod przyciskiem „Panel”) |
+| auta r10 (lampy, płatek, LOD2) | Fable | 0078 | agent-a2215bcc98d109edc / worktree-agent-a2215bcc98d109edc | artifacts/cars-r10 | w toku |
+| oświetlenie/atmosfera r10 + warianty ekspozycji ov | Fable | 0080 | agent-ac7c9571184d27443 / worktree-agent-ac7c9571184d27443 | artifacts/light-r10 | w toku |
+| zabudowa typologia r10 | Fable | 0081 | agent-ac404823e7d8b56e7 / worktree-agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | w toku |
+| licencja Fab/Patch + refs 0066 | Fable | 0066 | usunięty | docs/reports/FAB-PATCH-LICENSE-2026-11-10.md | SCALONE |
+| zewnętrze TRAKT + naczepa r10 | Fable | 0083 | agent-a895ad2cc01f155bd / worktree-agent-a895ad2cc01f155bd | artifacts/truck-ext-r10 | w toku |
+| ogranicznik 90, koniec świata, kamera, rondo (film Fold) | Fable | 0082 | agent-acc0299ca0b0081b1 / worktree-agent-acc0299ca0b0081b1 | artifacts/drive-fold-r10 | w toku |
+
+## Następne kroki
+1. Scalać po kolei w miarę kończenia: 0076 → 0077 → 0070/0071 → 0078 → 0081 → 0080 → 0079/0082 → 0066. Po każdym: regeneracja świata na main, pytest gis.
+2. Pełna integracja + czyste buildy Low/High/Ultra, telefony (A16 Low gate3, S24+ High A/B) — tylko gdy żaden Unity nie działa.
+3. Decyzje klikalne: Fab/Patch (D40), ekspozycja ov (warianty z 0080), D23 vs dach N-17, wynik audytu mapy. Recenzja r9/r10, raport bramki 3.
+
+---
 # HANDOVER — kamion, sesja 5 (aktualizacja 2026-11-10 ok. 22:10; lider zapisuje ten plik po każdym scaleniu/starcie agenta)
 
 ## Najpierw (sesja 5 → następna)
