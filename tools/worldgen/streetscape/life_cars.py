@@ -1,23 +1,17 @@
-"""Parked-vehicle prototypes (ADR 0041 par. 6): generic passenger cars and a light van, built from a side
-profile (the way a car body is drawn) instead of a box loft. Frame as streetscape.props: x = right, y = nose,
-z = up, origin = centre of the footprint on the ground.
+"""Parked-vehicle prototypes (ADR 0041 par. 6, ADR 0073): generic passenger cars and a mid-size panel van, built
+from a side profile (the way a car body is drawn). Frame as streetscape.props: x = right, y = nose, z = up,
+origin = centre of the footprint on the ground.
 
 No make or model is reproduced: each body is a class average (lengths, wheelbases and heights below are typical
-values of the European B/C/D segments, B/C-SUV and car-derived light vans, all WORKING_VALUE) with no grille
-shape, lamp signature or badge of any real vehicle. Registration plates: fictional strings in the Polish format
-(plate_atlas, REVIEW r6 W-N9), generated from a seed, not taken from any register; LOD1 shows only the EU band
-and a grey character band.
+values of the European C/D segments, C-SUV and mid-size panel vans, all WORKING_VALUE; proportions checked against
+street photos of the route, used as a pattern only) with no grille shape, lamp signature or badge of any real
+vehicle. Registration plates: fictional strings in the Polish format (plate_atlas, REVIEW r6 W-N9), generated from
+a seed, not taken from any register.
 
-A body is a closed side profile of named points (rear bumper -> tail -> rear glass -> roof -> windscreen -> hood
--> nose -> front bumper), each with its own half width (plan taper at the nose and tail, tumblehome of the
-greenhouse). The top strip is the profile swept across x; the sides are the profile polygon itself.
-  LOD0  rounded shoulders (a chamfer station across x, so A/C pillars and roof rails come out body-coloured
-        for free), wheel-arch cut-outs with dark liners, recessed wheels (tyre tube, sidewall, rim), framed side
-        windows split at the B pillar, door shut lines and handles, lamps, grille, plates, mirrors, dark lower
-        valances and sills, roof rails (estate / SUV), arch cladding (SUV)
-  LOD1  same profile without the chamfer; round tyre + rim discs on the body side, framed side windows, lamps,
-        plates, mirrors, sills: at 12-45 m it still has a hood, a raked windscreen, pillars and four round wheels
-  LOD2  the LOD1 body with a glazed greenhouse and one dark under-body block (far parking rows)
+  LOD0 / LOD1  r9 shell (_Shell, _vehicle2): profile swept across x with a crowned top, shoulder arcs and side
+               columns whose rows lie on the body's feature lines; lamp units, seams, wheels, glazing over a dark
+               interior (LOD0), road film overlays
+  LOD2         first-pass body (_vehicle): the profile without shoulders, glazed greenhouse, under-body skirt
 """
 
 from __future__ import annotations
@@ -41,13 +35,13 @@ VAN_COLOURS = ["white", "silver", "white2"]
 CARS = {
     # r9 (ADR 0073): class-typical proportions re-read off street photos of the route (Mapillary, proportions only):
     # longer bonnets (cowl 0.2 m behind the front axle), 29-32 deg windscreens, near-vertical fascias, bumper ledges.
-    "hatch": dict(L=4.26, W=1.79, H=1.46, wb=2.62, foh=0.88, r=0.316, sill=0.19, belt=1.03, nose=0.83, hood=1.06,
+    "hatch": dict(L=4.26, W=1.79, H=1.46, wb=2.62, foh=0.88, r=0.316, sill=0.19, belt=1.05, nose=0.86, hood=1.00,
                   ws=0.76, tail=(0.11, 1.04), deck=0.0, rg=(0.44, 0.055), tumble=0.17, bp=1.30, qp=None, cp=0.34,
                   ap=0.10, face="swept", plan=(0.78, 0.23, 0.55, 0.13), flare=0.020),
-    "sedan": dict(L=4.64, W=1.80, H=1.44, wb=2.70, foh=0.90, r=0.320, sill=0.19, belt=1.02, nose=0.81, hood=1.12,
+    "sedan": dict(L=4.64, W=1.80, H=1.44, wb=2.70, foh=0.90, r=0.320, sill=0.19, belt=1.03, nose=0.83, hood=1.12,
                   ws=0.80, tail=(0.06, 1.06), deck=0.44, rg=(1.10, 0.05), tumble=0.18, bp=1.30, qp=None, cp=0.24,
                   ap=0.10, face="wide", plan=(0.82, 0.24, 0.60, 0.14), flare=0.018),
-    "estate": dict(L=4.66, W=1.80, H=1.48, wb=2.70, foh=0.90, r=0.320, sill=0.19, belt=1.02, nose=0.81, hood=1.12,
+    "estate": dict(L=4.66, W=1.80, H=1.48, wb=2.70, foh=0.90, r=0.320, sill=0.19, belt=1.03, nose=0.83, hood=1.12,
                    ws=0.80, tail=(0.10, 1.05), deck=0.0, rg=(0.40, 0.05), tumble=0.17, bp=1.30, qp=1.00, cp=0.13,
                    ap=0.10, rails=True, face="swept", plan=(0.82, 0.24, 0.55, 0.12), flare=0.018),
     "suv": dict(L=4.42, W=1.84, H=1.65, wb=2.66, foh=0.90, r=0.350, sill=0.25, belt=1.20, nose=1.03, hood=1.04,
