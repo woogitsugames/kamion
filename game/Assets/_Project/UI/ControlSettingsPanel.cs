@@ -109,6 +109,7 @@ namespace Game.UI
             Stepper(panel, left, ref y, "Czułość", () => Pct(Settings.wheelSensitivity), d => Settings.wheelSensitivity = Step(Settings.wheelSensitivity, d, 0.1f, ControlSettings.GainMin, ControlSettings.GainMax));
             Stepper(panel, left, ref y, "Samocentrowanie", () => Settings.centreStrength <= 0.001f ? "wyłączone" : Pct(Settings.centreStrength), d => Settings.centreStrength = Step(Settings.centreStrength, d, 0.1f, ControlSettings.CentreMin, ControlSettings.CentreMax));
             Stepper(panel, left, ref y, "Martwa strefa", () => Pct(Settings.wheelDeadZone), d => Settings.wheelDeadZone = Step(Settings.wheelDeadZone, d, 0.01f, ControlSettings.DeadMin, ControlSettings.DeadMax));
+            Segment(panel, left, ref y, "Przełożenie", "stałe", "od prędkości", () => Settings.speedSensitiveSteering, v => Settings.speedSensitiveSteering = v);
             y -= 18f;
             Header(panel, "PEDAŁY", left, ref y);
             Segment(panel, left, ref y, "Krzywa gazu", "liniowa", "progresywna", () => Settings.throttleProgressive, v => Settings.throttleProgressive = v);

@@ -3,13 +3,15 @@ using UnityEngine;
 namespace Game.Controls
 {
     /// <summary>
-    /// On-screen steering wheel v0 (logic; the uGUI widget forwards pointer events here).
+    /// On-screen steering wheel (logic; the uGUI widget forwards pointer events here). ADR 0058.
     /// - Rotation: the finger's angle around the wheel centre is tracked incrementally (clockwise = right), so the
-    ///   wheel can be turned hand-over-hand through several turns up to ±<see cref="HalfRangeDeg"/>.
-    /// - Output: wheel angle / half range → dead zone → light smoothing (τ = <see cref="SmoothingTau"/>, 20 ms default).
-    /// - Self-centre when released: angular speed toward 0 from vehicle speed and the model's aligning torque
-    ///   (<see cref="SelfCentreRate"/>); no centring at standstill (as on a real truck with power steering at rest).
-    ///   This is a documented approximation, not a force-feedback model: the finger cannot be pushed.
+    ///   on-screen wheel follows the finger 1:1 and can be turned hand-over-hand up to ±<see cref="HalfRangeDeg"/>.
+    /// - Output: the TARGET of the cab wheel, normalised to its lock: on-screen angle / half range → dead zone →
+    ///   sensitivity → speed-sensitive gain (<see cref="SteeringFeel.WheelGain"/>: the comfort range reaches full lock
+    ///   when manoeuvring, but at speed one on-screen degree is one cab-wheel degree). The cab wheel itself
+    ///   (<see cref="SteeringColumn"/>) follows with the hand-speed limit and inertia, and self-centres when released.
+    /// - Released: the on-screen wheel shows the cab wheel (<see cref="FollowColumn"/>), so it returns with it and can
+    ///   be grabbed again without a jump.
     /// </summary>
     public sealed class TouchSteeringWheel : IDriverInput
     {
@@ -19,23 +21,20 @@ namespace Game.Controls
         /// <summary>Half lock-to-lock range of the on-screen wheel [deg]; 270 = comfort, 900 = sim (docs/04 §3).</summary>
         public float HalfRangeDeg = 270f;
         public float DeadZone = 0.01f;
-        /// <summary>Output gain (settings menu); 1 = full lock at the full wheel range.</summary>
+        /// <summary>Output gain (settings menu); 1 = full lock at the full wheel range (at manoeuvring speed).</summary>
         public float Sensitivity = 1f;
-        /// <summary>Multiplier of the self-centring speed (settings menu); 0 = the wheel stays where it was left.</summary>
-        public float CentreStrength = 1f;
-        public float SmoothingTau = 0.02f;
-        /// <summary>Centring speed limit [deg/s of the on-screen wheel].</summary>
-        public float CentreRateMaxDegS = 540f;
-        /// <summary>Speed at which the speed term saturates [m/s].</summary>
-        public float CentreSpeedRef = 8f;
-        /// <summary>Aligning torque at which the torque term saturates [N m].</summary>
-        public float AligningTorqueRef = 800f;
+        /// <summary>Settings menu: speed-sensitive mapping on (default) / off (fixed comfort gear-up at every speed).</summary>
+        public bool SpeedSensitive = true;
         /// <summary>Finger closer than this to the centre [px] is ignored (angle is ill-defined).</summary>
         public float MinRadiusPx = 24f;
+        public SteeringFeel Feel = SteeringFeel.Defaults();
 
         public float WheelDeg { get; private set; }
         public bool Held { get; private set; }
+        /// <summary>Last target (normalised cab-wheel angle) written to the intent.</summary>
         public float Output { get; private set; }
+        /// <summary>Gain applied in the last sample (speed-sensitive mapping).</summary>
+        public float LastGain { get; private set; } = 1f;
 
         float m_LastFingerDeg;
         bool m_HasFinger;
@@ -63,25 +62,34 @@ namespace Game.Controls
         /// <summary>Sets the wheel angle directly (tests, reset).</summary>
         public void SetWheelDeg(float deg) => WheelDeg = Mathf.Clamp(deg, -HalfRangeDeg, HalfRangeDeg);
 
-        /// <summary>Centring speed [deg/s] for a released wheel.</summary>
-        public static float SelfCentreRate(float forwardSpeed, float aligningTorque, float maxRate, float speedRef, float torqueRef)
+        /// <summary>Target (normalised to the cab-wheel lock) for an on-screen angle at a gain.</summary>
+        public float Target(float wheelDeg, float gain)
+            => Mathf.Clamp(SteeringMath.DeadZone(wheelDeg / Mathf.Max(1f, HalfRangeDeg), DeadZone) * Sensitivity * gain, -1f, 1f);
+
+        /// <summary>
+        /// While released, puts the on-screen wheel where the cab wheel is (inverse of <see cref="Target"/> at the last
+        /// gain), so it self-centres with it; it only ever moves toward centre.
+        /// </summary>
+        public void FollowColumn(float columnNormalized)
         {
-            float k = 0.6f * Mathf.Clamp01(Mathf.Abs(forwardSpeed) / Mathf.Max(speedRef, 0.1f))
-                    + 0.4f * Mathf.Clamp01(Mathf.Abs(aligningTorque) / Mathf.Max(torqueRef, 1f));
-            return maxRate * Mathf.Clamp01(k);
+            if (Held) return;
+            float u = columnNormalized / Mathf.Max(1e-3f, Sensitivity * LastGain);
+            float au = Mathf.Abs(u);
+            float x = au < 1e-6f ? 0f : Mathf.Sign(u) * (DeadZone + au * (1f - DeadZone));
+            x = Mathf.Clamp(x * HalfRangeDeg, -HalfRangeDeg, HalfRangeDeg);
+            // The cab wheel may still lag behind where the finger let go: the on-screen wheel never moves outward to
+            // meet it (no jump away from centre), it waits and returns with it.
+            WheelDeg = WheelDeg * x <= 0f ? 0f : Mathf.Sign(x) * Mathf.Min(Mathf.Abs(WheelDeg), Mathf.Abs(x));
         }
 
         public void Sample(float dt, in VehicleFeedback fb, ref DriverIntent intent)
         {
-            if (!Held)
-            {
-                float rate = SelfCentreRate(fb.ForwardSpeed, fb.AligningTorque, CentreRateMaxDegS, CentreSpeedRef, AligningTorqueRef);
-                WheelDeg = Mathf.MoveTowards(WheelDeg, 0f, rate * Mathf.Max(0f, CentreStrength) * dt);
-            }
-            float target = Mathf.Clamp(SteeringMath.DeadZone(WheelDeg / Mathf.Max(1f, HalfRangeDeg), DeadZone) * Sensitivity, -1f, 1f);
-            Output = Mathf.Lerp(Output, target, SteeringMath.SmoothingAlpha(dt, SmoothingTau));
+            float lockDeg = fb.HandwheelLockDeg > 0f ? fb.HandwheelLockDeg : Feel.fallbackLockDeg;
+            LastGain = SpeedSensitive ? Feel.WheelGain(fb.ForwardSpeed * 3.6f, HalfRangeDeg, lockDeg) : 1f;
+            Output = Target(WheelDeg, LastGain);
             intent.Steer = Output;
             intent.SteerActive = true;
+            intent.HandsOn = Held;
         }
     }
 }

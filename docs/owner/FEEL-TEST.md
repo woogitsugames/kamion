@@ -9,7 +9,7 @@ Cel: ocenić, jak ciężarówka **czuje się w dłoniach** i czy odcinek wygląd
    - **Pora dnia** (tylko trasy): Pochmurno / Niskie słońce / Zmierzch.
    - **Jakość grafiki**: Low / Medium / High / Ultra. Zalecenie: słabszy telefon Low lub Medium, flagowiec High.
    - **Limit klatek**: 30 lub 60 FPS (zalecenie: 30 na słabszym, 60 na flagowcu).
-4. **Ustawienia sterowania** (też z jazdy, przycisk „Ustawienia”): zakres kierownicy, czułość, samocentrowanie, krzywe pedałów, gyro (włącz/wyłącz, czułość, kalibracja), kamera (czułość rozglądania, pole widzenia, ruch głowy). Zacznij od ustawień domyślnych; jeśli coś Ci nie pasuje, zmień **jedną rzecz naraz** i zapamiętaj co.
+4. **Ustawienia sterowania** (też z jazdy, przycisk „Ustawienia”): zakres kierownicy, czułość, samocentrowanie, przełożenie (stałe / od prędkości — domyślnie od prędkości: przy manewrach mały obrót palcem daje pełny skręt, przy prędkości 1° palcem = 1° kierownicy w kabinie), krzywe pedałów, gyro (włącz/wyłącz, czułość, kalibracja), kamera (czułość rozglądania, pole widzenia, ruch głowy). Zacznij od ustawień domyślnych; jeśli coś Ci nie pasuje, zmień **jedną rzecz naraz** i zapamiętaj co.
 
 ## Co przejechać
 Każdy odcinek zrób **ręcznie** (bez autopilota), minimum 2 razy: raz w trybie kierownicy dotykowej, raz w gyro. Zmieniaj pory dnia między podejściami.
@@ -25,6 +25,7 @@ Do menu wracasz przyciskiem **Menu** (górny rząd) lub klawiszem „wstecz” t
 ## Co oceniasz (tak / nie / uwaga)
 Sterowanie (najważniejsze):
 - [ ] Skręt idzie **w dobrą stronę** w obu trybach (kierownica, gyro)? Kierownica wraca do środka z odpowiednią siłą?
+- [ ] Kierownica w kabinie obraca się **płynnie i spokojnie** jak w prawdziwej ciężarówce (ADR 0058)? Przy 60–90 km/h szybki ruch palcem nie szarpie autem? Przy manewrach da się szybko dokręcić do oporu?
 - [ ] Brak wyczuwalnego opóźnienia między palcem a kołami? Pedały: da się delikatnie dozować gaz i hamulec?
 - [ ] Ciężarówka zachowuje się jak 40 t: bezwładność, pochylanie się przy hamowaniu, zakręt z naczepą?
 - [ ] Kamera z kabiny: wysokość oczu, pole widzenia, ruch głowy (bez mdłości?), rozglądanie gestem.

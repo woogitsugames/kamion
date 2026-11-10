@@ -42,6 +42,7 @@ namespace Game.Controls
                 {
                     result.Steer = it.Steer;
                     result.SteerActive = true;
+                    result.HandsOn = it.HandsOn;
                     steered = true;
                     SteeringSource = s.Name;
                 }

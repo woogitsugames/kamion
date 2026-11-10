@@ -124,7 +124,7 @@ namespace Game.Tests
         {
             // A save written by a Stage 3 build (schema 1, no camera fields).
             var v1 = ControlSettings.FromJson("{\"schema\":1,\"wheelRangeDeg\":540,\"gyroEnabled\":true,\"throttleProgressive\":false}");
-            Assert.AreEqual(2, v1.schema);
+            Assert.AreEqual(ControlSettings.CurrentSchema, v1.schema);
             Assert.AreEqual(540f, v1.wheelRangeDeg); Assert.IsTrue(v1.gyroEnabled); Assert.IsFalse(v1.throttleProgressive);
             Assert.AreEqual(1f, v1.lookSensitivity); Assert.AreEqual(55f, v1.cabFov); Assert.IsTrue(v1.headMotion);
         }
@@ -142,19 +142,20 @@ namespace Game.Tests
         public void LogLine_ContainsAllChoices()
         {
             string l = Custom().LogLine("saved");
-            StringAssert.StartsWith("[CONTROLS] saved v2", l);
-            foreach (string part in new[] { "steer=gyro", "wheelRange=540", "wheelSens=1.40", "centre=0.60", "deadZone=0.040", "gyroInvert=on", "gyroSens=1.50", "throttle=linear", "brake=progressive", "lookSens=1.00", "cabFov=55", "headMotion=on" })
+            StringAssert.StartsWith("[CONTROLS] saved v3", l);
+            foreach (string part in new[] { "steer=gyro", "wheelRange=540", "wheelSens=1.40", "centre=0.60", "deadZone=0.040", "gyroInvert=on", "gyroSens=1.50", "throttle=linear", "brake=progressive", "lookSens=1.00", "cabFov=55", "headMotion=on", "speedSteer=on" })
                 StringAssert.Contains(part, l);
         }
 
         [Test]
         public void ApplyTo_PushesValuesIntoInputSources()
         {
-            var wheel = new TouchSteeringWheel(); var gyro = new GyroSteering(); var touch = new TouchControls();
+            var wheel = new TouchSteeringWheel(); var gyro = new GyroSteering(); var touch = new TouchControls(); var column = new SteeringColumn();
             wheel.SetWheelDeg(200f);
-            var s = Custom(); s.wheelRangeDeg = 180f; s.ApplyTo(wheel, gyro, touch);
+            var s = Custom(); s.wheelRangeDeg = 180f; s.speedSensitiveSteering = false; s.ApplyTo(wheel, gyro, touch, column);
             Assert.AreEqual(180f, wheel.HalfRangeDeg); Assert.AreEqual(180f, wheel.WheelDeg, 1e-4f, "re-clamped to the shorter range");
-            Assert.AreEqual(1.4f, wheel.Sensitivity, 1e-5f); Assert.AreEqual(0.6f, wheel.CentreStrength, 1e-5f); Assert.AreEqual(0.04f, wheel.DeadZone, 1e-5f);
+            Assert.AreEqual(1.4f, wheel.Sensitivity, 1e-5f); Assert.AreEqual(0.6f, column.CentreStrength, 1e-5f);
+            Assert.IsFalse(wheel.SpeedSensitive); Assert.IsFalse(gyro.SpeedSensitive); Assert.AreEqual(0.04f, wheel.DeadZone, 1e-5f);
             Assert.IsFalse(wheel.Enabled); Assert.IsTrue(gyro.Enabled); Assert.IsTrue(gyro.Invert);
             Assert.AreEqual(35f / 1.5f, gyro.MaxTiltDeg, 1e-4f);
             Assert.AreEqual(1f, touch.ThrottleExponent); Assert.AreEqual(1.4f, touch.BrakeExponent, 1e-6f);
@@ -206,11 +207,11 @@ namespace Game.Tests
         {
             float Deg(float centre)
             {
-                var w = new TouchSteeringWheel { CentreStrength = centre };
-                w.SetWheelDeg(200f);
-                var it = new DriverIntent();
-                for (int i = 0; i < 10; i++) w.Sample(0.02f, new VehicleFeedback { ForwardSpeed = 10f, AligningTorque = 400f }, ref it);
-                return w.WheelDeg;
+                var col = new SteeringColumn();
+                new ControlSettings { centreStrength = centre }.ApplyTo(null, null, null, col);
+                col.SnapTo(200f);
+                for (int i = 0; i < 20; i++) col.Step(0.01f, 0f, false, 36f, 400f);
+                return col.AngleDeg;
             }
             Assert.AreEqual(200f, Deg(0f), 1e-3f);
             Assert.Less(Deg(2f), Deg(1f));

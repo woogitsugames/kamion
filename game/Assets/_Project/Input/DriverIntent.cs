@@ -14,6 +14,11 @@ namespace Game.Controls
         public float Steer;
         /// <summary>True when this source currently has steering authority (finger on wheel, key held, gyro on...).</summary>
         public bool SteerActive;
+        /// <summary>
+        /// The driver's hands hold the wheel at <see cref="Steer"/> (finger on the touch wheel, gyro, key). False = the
+        /// wheel is released and self-centres (ADR 0058, <see cref="SteeringColumn"/>).
+        /// </summary>
+        public bool HandsOn;
         /// <summary>Accelerator 0..1.</summary>
         public float Throttle;
         /// <summary>Service brake 0..1.</summary>
@@ -63,6 +68,8 @@ namespace Game.Controls
         public float AligningTorque;
         /// <summary>Current road-wheel angle / maximum, -1..1.</summary>
         public float RoadWheelAngleNormalized;
+        /// <summary>Half lock-to-lock of the cab steering wheel [deg] (road-wheel lock x overall ratio); 0 = unknown.</summary>
+        public float HandwheelLockDeg;
         public Vector3 Position;
         public Vector3 Forward;
     }

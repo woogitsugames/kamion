@@ -13,7 +13,7 @@ namespace Game.Controls
     /// menu return, on pause / focus loss / destroy, and via <see cref="TryFlush"/> (idle moment, at most every
     /// <see cref="FlushIntervalS"/>, or when the ring is three quarters full).
     /// Axes are recorded on change (at most every <see cref="MinIntervalS"/>, plus once when all return to rest);
-    /// one-shot commands the frame they happen. Format: <c>[CONTROLS] in t=12.35 steer=+0.31 thr=0.80 brk=0.00 v=45.2</c>,
+    /// one-shot commands the frame they happen. Format: <c>[CONTROLS] in t=12.35 steer=+0.31 thr=0.80 brk=0.00 v=45.2 hw=+120</c> (steer = target, hw = cab wheel [deg]),
     /// <c>[CONTROLS] cmd t=13.10 selector=Reverse shift=+1 ...</c>, <c>[CONTROLS] event t=.. text</c>.
     /// </summary>
     public sealed class ControlInputLogger
@@ -26,7 +26,7 @@ namespace Game.Controls
         struct Entry
         {
             public Kind kind;
-            public float t, steer, thr, brk, speed;
+            public float t, steer, thr, brk, speed, hw;
             public byte selector; public sbyte shift, retarder;
             public ushort toggles;
             public string text;   // reference to a caller-owned (cached) string, never built here
@@ -47,9 +47,16 @@ namespace Game.Controls
         /// <summary>Entries recorded and not yet written.</summary>
         public int Pending => m_Count;
 
-        public ControlInputLogger(Action<string> sink = null) { m_Sink = sink ?? (s => Debug.Log(s)); }
+        public ControlInputLogger(Action<string> sink = null) { m_Sink = sink ?? WriteNoStack; }
 
-        public void Observe(float time, in DriverIntent intent, float speedKmh)
+        /// <summary>
+        /// Debug.Log without the managed stack trace: the Player's "Log" stack-trace type is ScriptOnly, which made every
+        /// [CONTROLS] line in the owner's logcat (S24+, 2026-11-10) carry a second DebugLogHandler line.
+        /// </summary>
+        public static void WriteNoStack(string line) => Debug.LogFormat(LogType.Log, LogOption.NoStacktrace, null, "{0}", line);
+
+        /// <param name="handwheelDeg">Simulated cab steering-wheel angle [deg] (ADR 0058), NaN = not logged.</param>
+        public void Observe(float time, in DriverIntent intent, float speedKmh, float handwheelDeg = float.NaN)
         {
             if (float.IsNaN(m_T0)) m_T0 = time;
             float steer = intent.SteerActive ? intent.Steer : 0f;
@@ -59,7 +66,7 @@ namespace Game.Controls
             if (time - m_LastAxisT >= MinIntervalS && ((!rest && changed) || (rest && !m_AtRest)))
             {
                 ref Entry e = ref Next();
-                e.kind = Kind.Axes; e.t = time - m_T0; e.steer = steer; e.thr = intent.Throttle; e.brk = intent.Brake; e.speed = speedKmh;
+                e.kind = Kind.Axes; e.t = time - m_T0; e.steer = steer; e.thr = intent.Throttle; e.brk = intent.Brake; e.speed = speedKmh; e.hw = handwheelDeg;
                 m_Steer = steer; m_Throttle = intent.Throttle; m_Brake = intent.Brake;
                 m_AtRest = rest; m_LastAxisT = time;
             }
@@ -130,6 +137,7 @@ namespace Game.Controls
                             .Append(" thr=").Append(e.thr.ToString("F2", ci))
                             .Append(" brk=").Append(e.brk.ToString("F2", ci))
                             .Append(" v=").Append(e.speed.ToString("F1", ci));
+                        if (!float.IsNaN(e.hw)) m_Sb.Append(" hw=").Append(e.hw.ToString("+0;-0;+0", ci));
                         break;
                     case Kind.Command:
                         if (e.selector != 0) m_Sb.Append(" selector=").Append(((SelectorRequest)e.selector).ToString());
