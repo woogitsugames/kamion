@@ -53,7 +53,7 @@ def test_berberis_texture_has_lighter_tips():
 def test_sky_occlusion_material_data():
     """sky_occ on structures and glazing, never on cars, ground, decals or vegetation (ADR 0060)."""
     from streetscape.materials import M
-    assert M["glass"]["sky_occ"] == [0.0, 0.6]
+    assert M["glass"]["sky_occ"] == [0.0, 0.9]
     assert M["canopy_steel"]["sky_occ"][0] > 0.3
     assert M["plaster_light__far_office"]["sky_occ"][1] > 0.3
     for k, v in M.items():

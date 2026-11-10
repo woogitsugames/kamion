@@ -281,7 +281,7 @@ for _k, _ws in _FAR_WALLS.items():
 # y scales near-horizontal reflections (R.y < 0.45) by up to 1 - y. WORKING_VALUE, judged against the CC0 Bieżeństwa
 # photo (soffit / fascia ~20 % luma at overcast vs ~30 % before). Not on cars, ground, vegetation, decals or
 # collision (cars belong to the vehicle look work; ground faces up).
-SKY_OCC_GLASS = [0.0, 0.6]
+SKY_OCC_GLASS = [0.0, 0.9]   # r8 after4: 0.6 left glazing at ~40 % luma (target 0.03-0.06 lin.)
 SKY_OCC_STRUCT = [0.5, 0.0]
 _NO_SKY_OCC = ("car_", "collision_", "decal_", "marking", "hedge_", "lamp_glass", "signal_", "tyre", "rim",
                "trailer_", "tractor_", "vehicle_", "wire", "bed_soil", "noise_glass")

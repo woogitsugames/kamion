@@ -37,7 +37,7 @@ Shader "Kamion/Vegetation"
         _Transmission ("Back-lit transmission", Range(0, 1)) = 0.25
         [NoScaleOffset] _NormalOcc ("Normal XY (RG), sky visibility (B) - impostor / HLOD edge", 2D) = "bump" {}
         _Impostor ("Impostor: x views, y visibility strength (ambient), z visibility strength (sun)", Vector) = (6, 0.6, 0.35, 0)
-        _CrownShade ("Leaf cards: sky occlusion of the lower crown (ambient; ADR 0060)", Range(0, 1)) = 0.5
+        _CrownShade ("Leaf cards: sky occlusion of the lower crown (ambient; ADR 0060)", Range(0, 1)) = 0.7
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 0
         [Toggle] _AlphaToMask ("Alpha to coverage", Float) = 0
     }
