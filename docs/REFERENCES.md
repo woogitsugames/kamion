@@ -30,6 +30,8 @@ Real photographs; licences checked via the Commons API. **CC0 / public domain** 
 | File | Licence | Author | Use |
 |---|---|---|---|
 | `20201102_152339_Rondo_Pamięci_Bieżeństwa_1915_roku_Białystok.jpg` | CC0 | Rakoon | **Ground truth for tile C**: Rondo Bieżeństwa under the Andersa viaduct — red-painted deck edge, cylindrical concrete piers, steel railing, roundabout planting (red shrubs), zebra P-10, D-6 sign, lamp types, overcast November light |
+| `20210904_101250_September_2021_in_Białystok.jpg` | CC0 | Rakoon | **Ground truth for the Kwadrat Park hall (ADR 0071)**: south corner seen from the access road — light grey horizontally profiled sheet, dark coping, vermilion-framed strip windows (SE) and louvre panel (SW), tall vermilion portal, roof fans; trade units with an asphalt forecourt. Reference only (crops in `artifacts/kwadrat-r9/refs/`) |
+| `20241222_122132_December_2024_in_Białystok.jpg` | CC0 | Rakoon | Kwadrat Park hall, SW facade from the waste ground to the south-west (long light facade, window band); the yellow office tower next to the gate. Reference only |
 | `7204_May_2021_in_Białystok.jpg` | CC0 | Rakoon | **Ground truth for tile C** (viaduct near DK8/DK19): green deck, yellow-painted round piers, transparent noise screens on the viaduct, sign gantry (E67 Warszawa / 65 Ełk / 8 Augustów / 19 Kuźnica), wet asphalt, arrows P-8 |
 | `Worn_cracked_asphalt_pavement.jpg` | Public domain | John Harvey | asphalt cracks/wear (may be a texture source) |
 | `Асфальт.jpg` | CC BY-SA 4.0 | Eugenix18 | asphalt look reference only |
@@ -94,3 +96,8 @@ Bez zdjec wlasnych (D43) referencje trasy C pochodza wylacznie z otwartych zrode
 | Kwadrat Park | `artifacts/refs/kwadrat-park/INDEX.md` | 11 zdjec Commons (okolica: droga dojazdowa, wiadukt, mokry asfalt, sasiednie obiekty) + 3 ortofoto (400/160/70 m) + plan budynkow. LUKA: zadnych otwartych zdjec hal/bramy/ramp/portierni (teren prywatny; KartaView/Panoramax 0 trafien) - detale UNVERIFIED |
 | Straz pozarna (JRG nr 2, Andersa; OSM way/211035271, 53.157322, 23.156306) | `artifacts/refs/fire-station/INDEX.md` | 17 zdjec (KartaView z Andersa, Commons) + 2 ortofoto + plan; kontrola z danymi miasta (Andersa 46) |
 | Zmierzch / swiatla sodowe | `artifacts/refs/dusk-sodium/INDEX.md` | stan 2026-11-10: 0 obrazow (INDEX pusty; Openverse 504, Commons 429) - OTWARTE, ponowic `object_refs.py --object dusk-sodium`; barwa i kontrast swiatel sodowych: UNVERIFIED |
+
+## Zdjęcia właściciela — centrum Białegostoku (dodane 2026-11-10, s7) — `Data/photos/owner-2026-11-10-centrum/` (poza gitem)
+10 zdjęć własnych właściciela (prawa: właściciel). Rynek Kościuszki, Lipowa, katedra; 8 × Galaxy S24+ 2025-08-04 ok. 13:33–13:41 (dzień, chmury cumulus), 2 × Xiaomi 2022-04-14 ok. 20:02 (niebieska godzina, latarnie).
+Położenie EPSG:2180 ok. x 778 134–778 315, y 593 302–593 328 — **poza regionem `bialystok-industrial-c`** (ok. 1,9 km na południe od ymin). Zastosowanie: przyszły region „centrum”, oraz od razu materiały i detale: kostka granitowa w łuki, płyty granitowe, pasy z ciemnej kostki, studzienki/kratki, kamienna ławka, fontanna, kamienice z mansardami, latarnie, barwa nieba overcast/cumulus, oświetlenie o zmierzchu (luka `dusk-sodium`).
+Zasady: na zdjęciach są osoby (także dzieci) — tylko jako referencja, nigdy w repo, w teksturach ani w raportach publicznych; marki widoczne w kadrze (banery klubu, parasole browarów) — nie odtwarzać.

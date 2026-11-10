@@ -271,6 +271,40 @@ namespace Game.Tests
             Assert.Less(maxArt, 3.0, "straight-line stop, no trailer swing");
         }
 
+        /// <summary>
+        /// ADR 0082 (owner recording 2026-11-10, 108-114 s: 90 -> 94 km/h at full throttle while changing lanes): the
+        /// speed limiter holds the set speed in the two-body Unity adapter too, straight and through lane changes, on
+        /// asphalt and with the wheels on grass (wheel spin must not carry the vehicle past the limiter).
+        /// </summary>
+        [TestCase(SurfaceKind.DryAsphalt, CargoPreset.Empty, TestName = "SpeedLimiter_FullThrottle_LaneChanges_Asphalt_Empty")]
+        [TestCase(SurfaceKind.DryAsphalt, CargoPreset.Gross40t, TestName = "SpeedLimiter_FullThrottle_LaneChanges_Asphalt_40t")]
+        [TestCase(SurfaceKind.Grass, CargoPreset.Empty, TestName = "SpeedLimiter_FullThrottle_LaneChanges_Grass_Empty")]
+        public void SpeedLimiter_FullThrottle_LaneChanges(SurfaceKind surface, CargoPreset cargo)
+        {
+            Flat(surface, 2600f);
+            SpawnCoupled(new Vector3(0, 0, -1200f), Quaternion.identity, cargo, false);
+            m_Body.SetMoving(88f / 3.6f, 11);
+            Physics.SyncTransforms();
+            double maxStraight = 0, maxSwerve = 0, maxGround = 0, endKmh = 0;
+            for (int i = 0; i < 3600; i++)
+            {
+                float t = i * Dt;
+                // 0-14 s straight, then 4 s-period lane changes (about 2.5 m/s2 lateral at 90 km/h).
+                float steer = t < 14f ? 0f : 0.02f * Mathf.Sin(2f * Mathf.PI * (t - 14f) / 4f);
+                SetInput(1, 0, steer, GearSelector.Drive);
+                Step(1);
+                double v = ForwardKmh;
+                if (t < 14f) maxStraight = Math.Max(maxStraight, v); else maxSwerve = Math.Max(maxSwerve, v);
+                maxGround = Math.Max(maxGround, m_Body.Body.linearVelocity.magnitude * 3.6);
+                endKmh = v;
+            }
+            double lim = m_Body.Model.Def.driveline.speedLimiterKmh;
+            Debug.Log($"[TEST] limiter {surface} {cargo}: max straight {maxStraight:F2}, max in lane changes {maxSwerve:F2}, max ground speed {maxGround:F2}, end {endKmh:F2} km/h (set {lim:F0})");
+            Assert.LessOrEqual(maxStraight, lim + 0.5, "limiter, straight");
+            Assert.LessOrEqual(maxSwerve, lim + 0.5, "limiter, lane changes");
+            Assert.LessOrEqual(maxGround, lim + 1.0, "ground speed of the tractor body");
+        }
+
         /// <summary>Runner jackknife_wet_curve_noabs@empty: R120 at 60 km/h on wet asphalt, EBS fault (no ABS, no load
         /// sensing), half pedal at 6 s with the steering held: the light drive axle locks and the combination folds.</summary>
         [Test]

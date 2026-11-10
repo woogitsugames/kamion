@@ -61,7 +61,7 @@ Shader "Kamion/Cab Display"
                 half NoV = saturate(dot(n, Vd));
                 half fresnel = 0.04 + 0.96 * Pow4(1.0 - NoV) * (1.0 - NoV);
                 half3 env = GlossyEnvironmentReflection(reflect(-Vd, n), 0.05, 1.0) * fresnel * _Reflection;
-                return half4(KamionToeParity(screen * gain + env), 1.0);   // D23 toe without the LUT (cab view, ADR 0044 r7)
+                return half4(KamionCabToeInverse(KamionToeParity(screen * gain + env), _KamionCabToeInvDisplay), 1.0);   // D23 toe without the LUT (cab view, ADR 0044 r7)
             }
             ENDHLSL
         }

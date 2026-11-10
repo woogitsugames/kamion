@@ -528,7 +528,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         ci_, cj_ = chunk_of(np.array([it["e"]]), np.array([it["n"]]), half)
         inst_by_chunk.setdefault((int(ci_[0]), int(cj_[0])), []).append(it)
     props_meta = PR.export(st["codes"], st["boards"], out_root.parent / "props" if out_root != DEFAULT_OUT(region_id) else None)
-    props_meta = {**props_meta, **hero_tris}      # hero viaduct segments (art-source/world/landmarks), frame estimate
+    props_meta = {**props_meta, **hero_tris, **st.get("hero_tris", {})}      # hero viaduct + hero depot segments (art-source/world/landmarks), frame estimate
     chunks_meta = []
     for key in sorted(terrain):
         ci, cj = key
@@ -696,6 +696,8 @@ def instance_ends(proto, nlods):
         e = [50.0, 250.0]
     elif proto == "bus_shelter" or proto.endswith("_gate"):
         e = [60.0, 300.0]
+    elif proto.startswith("landmark_depot"):       # hero depot hall segments (ADR 0071): LOD0 / LOD1 / silhouette
+        e = [100.0, 400.0, 20000.0]
     elif proto.startswith("landmark_viaduct"):      # hero viaduct segments (ADR 0067): LOD0 / LOD1 / silhouette
         e = [90.0, 300.0, 20000.0]
     elif proto.startswith("landmark_"):

@@ -18,4 +18,21 @@ half3 KamionToeParity(half3 c)
     return (half3)(x * (1.0 + p.x * p.y / (x + p.y)) + p.z * p.w / (x + p.w));
 }
 
+// ADR 0080 addendum (owner variant 3): the world contrast toe c' = g c (c + (1 - s) p) / (c + p) (LUT on the post tiers,
+// KamionTone on Low) pulled the cab interior close to black (toe gain -> g (1 - s) = 0.16 near 0). In the cab view the
+// interior keeps its ADR 0044 display (a phone lifts a backlit interior locally): the cab surfaces write the toe's
+// pre-image, blended by w. Closed form of the inverse (quadratic in c). Zero vector = identity (outside the cab view,
+// presets without a toe).
+float4 _KamionCabToeInv;          // s, p, g, strength - Kamion/Cab Interior (every tier: LUT or KamionTone follows)
+float4 _KamionCabToeInvDisplay;   // same for Kamion/Cab Display (post tiers only: no KamionTone in that shader)
+
+half3 KamionCabToeInverse(half3 c, float4 t)
+{
+    if (t.x <= 0.0 || t.w <= 0.0) return c;
+    float3 y = max((float3)c, 0.0);
+    float3 b = y - t.z * (1.0 - t.x) * t.y;
+    float3 inv = (b + sqrt(b * b + 4.0 * t.z * t.y * y)) / (2.0 * t.z);
+    return (half3)lerp(y, inv, t.w);
+}
+
 #endif

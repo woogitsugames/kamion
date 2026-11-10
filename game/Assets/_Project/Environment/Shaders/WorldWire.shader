@@ -42,6 +42,7 @@ Shader "Kamion/World Wire"
             #pragma multi_compile_fog
             #pragma multi_compile_instancing
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseColor;
@@ -96,7 +97,7 @@ Shader "Kamion/World Wire"
                 Light L = GetMainLight();
                 half3 amb = SampleSH(half3(0, 1, 0)) * 0.8 + SampleSH(half3(0, -1, 0)) * 0.2;
                 o.light = _BaseColor.rgb * (amb + L.color * 0.5 * saturate(L.direction.y + 0.2));
-                o.fogFactor = ComputeFogFactor(o.positionCS.z);
+                o.fogFactor = KamionFogTau(pw, o.positionCS.w);
                 return o;
             }
 
@@ -106,7 +107,7 @@ Shader "Kamion/World Wire"
                 float d = abs(i.wline.x);
                 float c = i.wline.y;
                 half cov = saturate(min(d + 0.5, c) - max(d - 0.5, -c));
-                half3 col = MixFog(i.light, i.fogFactor);
+                half3 col = KamionMixFog(i.light, i.fogFactor);
                 return half4(col, i.alpha * cov);
             }
             ENDHLSL

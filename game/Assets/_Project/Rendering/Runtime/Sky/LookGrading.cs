@@ -63,6 +63,76 @@ namespace Game.Rendering
             return keys;
         }
 
+        // ---------------------------------------------------------------- contrast toe (ADR 0080)
+        /// <summary>Gain that keeps <paramref name="pivot"/> fixed under the toe.</summary>
+        public static float ToeGain(float s, float p, float pivot) => s <= 0f ? 1f : (pivot + p) / (pivot + (1f - s) * p);
+
+        /// <summary>
+        /// Contrast toe c' = g c (c + (1 - s) p) / (c + p): shadows scaled toward (1 - s) g, values far above p by g, the
+        /// pivot unchanged. Monotone for s &lt; 1. The same function runs in KamionAtmosphere.hlsl on the tiers without
+        /// post-processing; the post tiers compose it into the master curve (<see cref="MasterCurveKeys(float,float,float,float,float)"/>).
+        /// </summary>
+        public static float Toe(float c, float s, float p, float pivot)
+        {
+            c = Mathf.Max(c, 0f);
+            return s <= 0f ? c : c * ToeGain(s, p, pivot) * (c + (1f - s) * p) / (c + p);
+        }
+
+        /// <summary>Scene value whose toe output is <paramref name="y"/> (bisection).</summary>
+        public static float InverseToe(float y, float s, float p, float pivot)
+        {
+            if (s <= 0f) return y;
+            float lo = 0f, hi = Mathf.Max(y, 1e-4f) * 2f + p;
+            for (int i = 0; i < 48; i++)
+            {
+                float mid = 0.5f * (lo + hi);
+                if (Toe(mid, s, p, pivot) < y) lo = mid; else hi = mid;
+            }
+            return 0.5f * (lo + hi);
+        }
+
+        static readonly float[] k_ToeX = { 0f, 0.0025f, 0.005f, 0.01f, 0.02f, 0.03f, 0.045f, 0.065f, 0.09f, 0.12f, 0.15f, 0.18f, 0.22f, 0.27f, 0.33f, 0.4f, 0.5f };
+
+        /// <summary>The D23 master curve of the scene value after the contrast toe: display = D23(Toe(x)). s = 0 returns
+        /// the plain D23 keys.</summary>
+        public static Keyframe[] MasterCurveKeys(float blackSrgb, float whiteClip, float toe, float toeP, float pivot)
+        {
+            if (toe <= 0f) return MasterCurveKeys(blackSrgb, whiteClip);
+            var d23 = new AnimationCurve(MasterCurveKeys(blackSrgb, whiteClip));
+            float clip = Mathf.Max(whiteClip, k_X[k_X.Length - 1] + 0.05f);
+            float xClip = InverseToe(clip, toe, toeP, pivot);
+            var us = new System.Collections.Generic.List<float>();
+            var vs = new System.Collections.Generic.List<float>();
+            foreach (float x in k_ToeX)
+            {
+                if (x >= xClip * 0.97f) break;
+                us.Add(U(x));
+                vs.Add(d23.Evaluate(U(Toe(x, toe, toeP, pivot))));
+            }
+            us.Add(U(xClip)); vs.Add(V(1f));
+            us.Add(1f); vs.Add(V(1f));
+            return Monotone(us.ToArray(), vs.ToArray());
+        }
+
+        static Keyframe[] Monotone(float[] u, float[] v)
+        {
+            int n = u.Length;
+            var d = new float[n - 1];
+            for (int i = 0; i < n - 1; i++) d[i] = (v[i + 1] - v[i]) / (u[i + 1] - u[i]);
+            var m = new float[n];
+            m[0] = d[0]; m[n - 1] = 0f;
+            for (int i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0f ? 0f : (d[i - 1] + d[i]) * 0.5f;
+            for (int i = 0; i < n - 1; i++)
+            {
+                if (d[i] == 0f) { m[i] = m[i + 1] = 0f; continue; }
+                float a = m[i] / d[i], b = m[i + 1] / d[i], h = a * a + b * b;
+                if (h > 9f) { float t = 3f / Mathf.Sqrt(h); m[i] = t * a * d[i]; m[i + 1] = t * b * d[i]; }
+            }
+            var keys = new Keyframe[n];
+            for (int i = 0; i < n; i++) keys[i] = new Keyframe(u[i], v[i], m[i], m[i]);
+            return keys;
+        }
+
         /// <summary>Display sRGB of an exposed scene value through the master curve (grey; what the LUT does).</summary>
         public static float Display(AnimationCurve master, float x)
         {

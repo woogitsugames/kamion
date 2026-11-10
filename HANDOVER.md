@@ -1,3 +1,59 @@
+# HANDOVER — kamion, sesja 8 (2026-11-10 ok. 22:00 UTC start; limit 5 h reset 2026-11-11 03:00 UTC)
+
+## Najpierw
+- main = ten commit. Start s8: 8 agentów Fable przejmuje/uruchomionych (tabela). GPT/Codex pracuje nad importem Megascans (ADR 0084, `gpt-megascans`, STATUS `artifacts/megascans-r1/STATUS.md`) — nie ruszać, scalić po REPORT.md. Antigravity (Argon 4) — zadanie `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` (tło za krawędzią świata, ADR 0085, gałąź `argon-edge`).
+- Decyzja właściciela D46: ogranicznik na zjeździe dopuszcza ~94 km/h (`overrunBrakeOffsetKmh = 4` zostaje, ADR 0082).
+- Decyzja lidera s8 (0076): ratchety fidelity — abreast oceniane na ortofoto; jeśli bliżej rzeczywistości, osobna metryka i nowy baseline z uzasadnieniem w ADR 0076; inaczej abreast ograniczony do osi p95 ≤ 0,13 m.
+
+| zadanie | ADR | worktree (`.claude/worktrees/`) | STATUS | stan |
+|---|---|---|---|---|
+| P0 korytarz + ratchety | 0076 | agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | s8: agent Fable w toku |
+| wysepki z OSM | 0077 | agent-a2afb96d89584cca6 | tools/worldgen/fidelity/STATUS_islands_r10.md | s8: agent Fable w toku (merge main po 0076) |
+| straż JRG2 | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | s8: agent Fable w toku |
+| osobówki r10 | 0078 | agent-a2215bcc98d109edc | artifacts/cars-r10 | s8: agent Fable w toku |
+| zabudowa r10 | 0081 | agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | s8: agent Fable w toku |
+| zewnętrze TRAKT + naczepa | 0083 | agent-a4049e15e1ab8c681 | artifacts/truck-ext-r10 | s8: agent Fable w toku |
+| Kwadrat Park r11 (recenzja) | 0071 | kwadrat-r11 | artifacts/kwadrat-r11 | s8: nowy agent Fable |
+| światło r11 (recenzja) | 0080 | light-r11 | artifacts/light-r11 | s8: nowy agent Fable |
+| import Megascans | 0084 | gpt-megascans | artifacts/megascans-r1 | GPT/Codex w toku |
+| tło za krawędzią | 0085 | argon-edge (Argon tworzy) | artifacts/edge-far-r1 | Antigravity — do startu przez właściciela |
+
+## Następne kroki
+1. Scalanie: 0076 → 0077 → 0070 → 0078 → 0081 → 0083 → Kwadrat r11 → światło r11 → 0084 → 0085; po drogach: build_world → pytest gis → import-region → PlayMode WorldCBarrier|DepotBarrier|WorldCRoute.
+2. Sprzątanie ZROBIONE: worktree 0071/0080/0082 usunięte (artifacts skopiowane), 7 osieroconych katalogów usuniętych (junctiony odpięte, artifacts → artifacts/orphans/), nagranie → artifacts/owner/.
+3. Integracja, czyste buildy Low/High/Ultra, telefony, raport bramki 3.
+4. Ostatni przydzielony ADR: **0085**.
+
+---
+# HANDOVER — kamion, sesja 7 (2026-11-10 ok. 23:00; LIMIT WYCZERPANY ok. 23:10; wszyscy agenci (0070, 0076, 0077, 0078, 0081, 0082, 0083) zapisali WIP i są zatrzymani; agenci dostali polecenie: commit WIP + STATUS.md i stop; nowa sesja startuje z docs/owner/START-PROMPT-S8.md)
+
+## Najpierw
+- **main wypchnięty (ten commit).** Scalone w s7: **0082 ogranicznik/krawędź świata** `65e24d9`, **0080 oświetlenie** `5439ddf` (wariant 3 overcast wybrany przez właściciela: lookToe 0,9/0,4/0,6 + EV −0,2, kompensacja kabiny `rq_cabtoe`), **0071 Kwadrat Park** `c132f56` (szlaban działa i ma kolizję — test WorldCBarrierTests; plac bez osobówek, naczepy przy dokach). Main NIE zregenerowany po scaleniach (czeka na 0076: P0 korytarza s1432–1480 nadal czerwony na main).
+- **Fab Megascans (D45): 19/19 pobrane** (EULA zaakceptowana na koncie Epic właściciela za jego zgodą) → `Data/raw/fab/<id>/*.zip` (poza gitem, ok. 1,7 GB), manifest SHA256 `Data/SourceManifests/fab-megascans-2026-11-10.json`, tabela w `docs/LICENSES.md`, test `tests/gis/test_fab_not_tracked.py`. Jakość: 3D/rośliny `_high` FBX, dekale/kora `4k`, Urban Trash `mid`. **Jeszcze nieużyte** — następny agent: import do generatorów (krawężniki, studzienki, kosze, trawa, krzewy, kora, kamienie), wyniki w `_Generated`, nic do gita.
+- **Zdjęcia właściciela:** 10 własnych z centrum → `Data/photos/owner-2026-11-10-centrum/` (poza gitem; osoby/dzieci w kadrze — tylko referencja), wpis w `docs/REFERENCES.md`. ~25 zdjęć z internetu wklejonych w czacie — tylko opis `docs/refs/owner-aerials-2026-11-10.md` (Putry: latarnie na krawędziach/pasie dzielącym; P-21 przed nosem wyspy; S8/DK8).
+- **Recenzja visual-critic** (`docs/reports/visual/REVIEW-2026-11-10-0071-0080.md`): 0071 **FAIL jakości** (bez regresji blokującej) — P0: kostka placu ~0,4–0,5 m zamiast ~0,2 m (sprawdzić, czy to 0071 czy materiał globalny; inna skala w renderach 0080), plac bez zużycia/łat/śladów, elewacja hali bez zacieków/AO; P1: naczepy-pudełka, brak cieni kontaktowych, szlaban bez wyspy/krawężnika, paleta zbyt jednolita. 0080 **PASS warunkowy** — P1: asfalt overcast o 25–50 poziomów za ciemny vs zdjęcia, ciemne auta i korony drzew w czerni (brak odbić nieba, mgiełka 100–500 m), niebo neutralne zamiast chłodnego, smuga/prążki na szybie kabiny w clear. Wymagane: render stanu połączonego z main (hala pod wariantem 3) i zrzuty z telefonu. → przydzielić w s8 (agent Kwadrat r11 + agent światło r11).
+
+| zadanie | ADR | worktree (`.claude/worktrees/`), gałąź `worktree-<id>` | STATUS | stan |
+|---|---|---|---|---|
+| P0 korytarz trasy + MA-001/002/012 + latarnia/krawężnik z filmu | 0076 | agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | STOP na 95 %, `fcd74f9`, NIEscalone: korytarz 4790 stacji 0 uskoków/0 przeszkód, krawężniki w poprzek 29→0, latarnie na jezdni 2→0 (Putry OK), spójność 103→69. pytest gis 203/5 czerwone: ratchety fidelity (oś p95 1,745 m vs baseline 0,032 — skutek łącznic „abreast”; krawędzie 2,57; wysepki 7>4) = DECYZJA lidera/właściciela, `test_terrain_walls` szczelina przy j:n10015785253 (E −239 N −236) do naprawy. Brak ADR 0076. |
+| wysepki z OSM, MA-010, krawędzie | 0077 | agent-a2afb96d89584cca6 | artifacts/islands-r10 | STOP, `5cba6a3`, NIEscalone: `roads/gores.py` + 8 override paved_gore (P-21), MA-010 = przesunięta oś OSM (center_offset +2,9 m), 7 odcinków center_offset; fidelity: krawędź p50 0,76→0,46, p95 2,52 (cel 0,75 ✗), wysepki bez pokrycia 4→3. Brak: regeneracja, pytest, import Unity, ADR 0077 wynik. BASELINE w test_road_fidelity.py nieaktualny (sprzed 0074). Komendy: `tools/worldgen/fidelity/STATUS_islands_r10.md`. Konflikty z 0076: network.py/pipeline.py/overrides.yaml (różne funkcje), generated → regen. |
+| straż JRG2 r4 | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | STOP, `31976e3`, NIEscalone (merge main OK). LOD 8864/2720/164. Runda r4b zakończona (ROUND_DONE), efekty uboczne Unity cofnięte; obejrzeć r4b (kolor prętów płotu), uzupełnić ADR 0070. Następny krok w STATUS.md. |
+| osobówki r10 | 0078 | agent-a2215bcc98d109edc | artifacts/cars-r10 | STOP, `f1c73fc`, NIEscalone: film drogowy, lampy/szwy na poszyciu, drzwi vs nadkole, poprawka mory płatka (NIEobejrzana). LOD0 3936–4158 (limit testu podniesiony do 4200 — do akceptacji), 0/81 dziur. W tle mógł zostać Unity High (`unity_after2.log`) — potem `git checkout -- M_Sky.mat QualitySettings.asset`. WorldPBR.shader: bloki `_CARPAINT` rozdzielne od 0080. |
+| zabudowa r10 | 0081 | agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | STOP, `c953bc7`, NIEscalone (runda r1 zakończona, rendery w worktree `artifacts/buildings-r10/r1/*/960/`): facade_atlas LOD0/LOD1 spójne, typologia biur/bloków, balkony/klimatyzatory, płot betonowy (558 m). Low tris maks. +0,07 %, nowy koszt tekstur facade_atlas 39,8/7,8/1,4 MB (High/Med/Low). Rendery r1 NIEobejrzane. Czerwony przez niego: test_cc0_scans (przebudować `build_all.py --only fence_concrete`). ~60 niezacommitowanych plików regeneracji = szum. Komendy: `tools/worldgen/streetscape/STATUS-buildings-r10.md`. |
+| ogranicznik 90, koniec świata, kamera, rondo | 0082 | agent-acc0299ca0b0081b1 | artifacts/drive-fold-r10 | SCALONE 65e24d9 — po scaleniu na main wymagany import-region (zapory przy imporcie) + `test.ps1 -Platform PlayMode -Filter WorldEdgeRecoveryTests`; asfalt 89,4 km/h, zjazd 5 % 40 t ustala się na 94 (retarder od 94, `overrunBrakeOffsetKmh=4` WORKING_VALUE — decyzja właściciela); +4 km/h z filmu UNVERIFIED (potrzebna telemetria „Nagraj”); teren za krawędzią pusty (las/zabudowa do zrobienia) |
+| zewnętrze TRAKT + naczepa r10 (start s7) | 0083 | agent-a4049e15e1ab8c681 | artifacts/truck-ext-r10 | STOP na 95 %, `672893a`, NIEscalone: osłony boczne, owiewki, lampy tylne, wyposażenie pod naczepą, pas na firance (LOD0 104,5k/89k, w budżecie). Otwarte: r4 nieobejrzane (dach naczepy albedo 0,36), Low lowsun exit 1, EditMode nieuruchomione, ADR 0083 szkic; decyzja właściciela: pas na firance + osłony boczne. Następny krok w STATUS.md. |
+| oświetlenie r10 | 0080 | agent-ac7c9571184d27443 | STATUS.md | SCALONE (worktree do usunięcia) |
+| Kwadrat Park r10 | 0071 | agent-a1409e374f8c12b4f | artifacts/kwadrat-r9 | SCALONE (worktree do usunięcia) |
+
+Prompt startowy następnej sesji: `docs/owner/START-PROMPT-S8.md`. Przejęcie po ubiciu: jak w s6 — nowy agent Fable z briefem „pracuj WYŁĄCZNIE w <wt>, najpierw docs/owner/AGENT-RULES.md i STATUS.md, dokończ”.
+
+## Następne kroki
+1. Scalać w miarę kończenia: 0076 → 0077 → 0070 → 0078 → 0081 → 0082 → 0083. Po 0076: na main build_world → pytest gis → import-region → `pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCBarrierTests|DepotBarrierTests"`.
+2. Telefon: A/B oświetlenia na Samsungu A (`-e rq_clouds -1 -e rq_haze 0 -e rq_look 0 -e rq_cabtoe 0`), tylko gdy żaden Unity nie działa.
+3. Agent importu Megascans (po resecie limitu). Usunąć worktree 0080/0071 (kopia artifacts, junctiony).
+4. Ostatni przydzielony ADR: **0084** (0084 = import Megascans, zlecony agentowi GPT/Codex: `docs/owner/GPT-TASK-01-MEGASCANS.md`, gałąź `gpt-megascans`, worktree `.claude/worktrees/gpt-megascans`, STATUS `artifacts/megascans-r1/STATUS.md`).
+
+---
 # HANDOVER — kamion, sesja 6 (2026-11-10 ok. 21:45 czasu właściciela; lider zapisuje po każdym scaleniu/starcie/końcu agenta)
 
 ## Najpierw

@@ -127,6 +127,35 @@ def lamp_old(h, kind):
     return m, l1, col
 
 
+def lamp_arc(h=9.0, reach=2.2, double=False):
+    """Arched single / double arm column ("pastoral"): tapered galvanised steel column, arm rising in one continuous
+    arc to `reach`, elongated sodium "cobra" luminaire. The lamp family of the Kwadrat Park access road and yard
+    (CC0 photo 20210904_101250, Rakoon, Commons: tall arched columns along the lane; reference only, proportions
+    by eye: column ~9 m, arm ~2 m; WORKING_VALUE). Arm along +y."""
+    m, l1, col = Mesh(), Mesh(), Mesh()
+    for mm, seg in ((m, 10), (l1, 5)):
+        mm.box("concrete_base", [0, 0, 0.04], 0.28, 0.28, 0.08)
+        mm.tube("steel_galv", [0, 0, 0.08], [0, 0, 1.1], 0.095, 0.085, seg)             # base section with the hatch
+        mm.tube("steel_galv", [0, 0, 1.1], [0, 0, h - 1.6], 0.075, 0.045, seg)
+        if seg > 5:
+            mm.box("steel_galv", [0, -0.092, 0.62], 0.045, 0.006, 0.16)                 # service hatch
+            mm.tube("steel_galv", [0, 0, 1.08], [0, 0, 1.13], 0.10, 0.08, seg)          # collar
+        for sgn in ((1, -1) if double else (1,)):
+            pts = [np.array([0.0, 0.0, h - 1.6])]
+            n = 8 if seg > 5 else 4
+            for k in range(1, n + 1):                                                    # quarter ellipse up and out
+                a = k / n * math.pi / 2
+                pts.append(np.array([0.0, sgn * reach * (1 - math.cos(a)), h - 1.6 + 1.6 * math.sin(a)]))
+            for a_, b_ in zip(pts[:-1], pts[1:]):
+                mm.tube("steel_galv", a_, b_, 0.04, 0.035, max(4, seg // 2), cap=False)
+            e = pts[-1]
+            mm.box("luminaire_old", e + [0, sgn * 0.34, -0.02], 0.13, 0.38, 0.07)
+            mm.quad("lamp_glass_sodium", e + [-0.10, sgn * 0.05, -0.092], e + [0.10, sgn * 0.05, -0.092],
+                    e + [0.10, sgn * 0.66, -0.092], e + [-0.10, sgn * 0.66, -0.092])
+    col.tube("collision_steel", [0, 0, 0], [0, 0, h], 0.13, 0.13, 6)
+    return m, l1, col
+
+
 def sign_post():
     m, l1, col = Mesh(), Mesh(), Mesh()
     # embed 0.1 of the unit post: the instance scales z by its height (sz up to ~5), a -0.3 embed became 1.1-1.5 m
@@ -362,6 +391,8 @@ def build_all(sign_codes, boards):
         P[f"lamp_{int(d['h'])}m"] = lamp(d["h"], d["bracket"])
     for kind, hh in LAMP_OLD:
         P[f"lamp_old_{kind}_{hh}m"] = lamp_old(float(hh), kind)
+    P["lamp_arc_9m"] = lamp_arc(9.0)
+    P["lamp_arc_9m_double"] = lamp_arc(9.0, double=True)
     P["sign_post"] = sign_post()
     for c in sorted(sign_codes):
         P[f"plate_{c}"] = plate(c)

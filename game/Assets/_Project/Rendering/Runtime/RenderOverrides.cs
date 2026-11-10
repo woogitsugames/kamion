@@ -51,6 +51,11 @@ namespace Game.Rendering
         public static float? EnvCaptureLod;
         public static int? ShadowCascades;
         public static int? ShadowResolution;
+        public static int? Clouds;       // ADR 0080: rq_clouds -1 flat dome, 0..2 quality
+        public static bool? GroundHaze;  // rq_haze
+        public static bool? Ssao;        // rq_ssao
+        public static bool Look;         // any of rq_look / rq_ev / rq_wet / rq_grassvar given
+        public static float? CabToe;     // ADR 0080: rq_cabtoe 0..1 cab-view compensation of the world contrast toe (A/B)
         public static string Ab;
         public static float? AbPeriod;
 
@@ -61,7 +66,8 @@ namespace Game.Rendering
                                   FsrSharpness.HasValue || Pacing.HasValue || LampPools.HasValue || EnvCaptureInterval.HasValue ||
                                   EnvCaptureLod.HasValue || ShadowCascades.HasValue || ShadowResolution.HasValue || Ab != null ||
                                   Game.Core.MirrorOverrides.Any ||
-                                  WorldGi.HasValue || WorldSun.HasValue;
+                                  WorldGi.HasValue || WorldSun.HasValue ||
+                                  Clouds.HasValue || GroundHaze.HasValue || Ssao.HasValue || Look || CabToe.HasValue;
 
         /// <summary>Reads the overrides through a launch-argument getter (platform services). Returns a log line.</summary>
         public static string Parse(Func<string, string> arg)
@@ -75,6 +81,16 @@ namespace Game.Rendering
             ScaleMin = F(arg("rq_scalemin")); FsrSharpness = F(arg("rq_fsrsharp")); Pacing = B(arg("rq_pacing")); LampPools = I(arg("rq_lamppools"));
             EnvCaptureInterval = I(arg("rq_envcap_iv")); EnvCaptureLod = F(arg("rq_envcap_lod"));
             ShadowCascades = I(arg("rq_shadowcasc")); ShadowResolution = I(arg("rq_shadowres"));
+            // ADR 0080: sky / atmosphere switches and the owner A/B look overrides (rq_look 0|1|2 contrast variant A|B|C,
+            // rq_ev exposure bias in stops, rq_wet wetness 0..1, rq_grassvar lawn variation 0..1).
+            Clouds = I(arg("rq_clouds")); GroundHaze = B(arg("rq_haze")); Ssao = B(arg("rq_ssao"));
+            int? look = I(arg("rq_look")); float? ev = F(arg("rq_ev")); float? wet = F(arg("rq_wet")); float? gvar = F(arg("rq_grassvar"));
+            Look = look.HasValue || ev.HasValue || wet.HasValue || gvar.HasValue;
+            WorldAtmosphere.LookVariant = look ?? -1;
+            CabToe = F(arg("rq_cabtoe"));
+            LightingPreset.ExposureBiasOverride = ev ?? 0f;
+            WorldAtmosphere.WetOverride = wet;
+            WorldAtmosphere.GrassOverride = gvar;
             string ab = arg("rq_ab");
             Ab = string.IsNullOrEmpty(ab) ? null : ab.ToLowerInvariant();
             AbPeriod = F(arg("rq_ab_period"));
@@ -93,7 +109,8 @@ namespace Game.Rendering
                          $"envcap_iv={EnvCaptureInterval} envcap_lod={EnvCaptureLod} shadowcasc={ShadowCascades} shadowres={ShadowResolution} ab={Ab} ab_period={AbPeriod} " +
                          $"mirror_cap={Game.Core.MirrorOverrides.Cap} mirror_lod={Game.Core.MirrorOverrides.LodScale} mirror_far={Game.Core.MirrorOverrides.FarClip} " +
                          $"mirror_res={Game.Core.MirrorOverrides.Resolution} mirror_rate={Game.Core.MirrorOverrides.DueSchedule} mirror_legacy={Game.Core.MirrorOverrides.Legacy} " +
-                         $"mirror_off={Game.Core.MirrorOverrides.Suspended} worldgi={WorldGi} worldsun={WorldSun}" : null;
+                         $"mirror_off={Game.Core.MirrorOverrides.Suspended} worldgi={WorldGi} worldsun={WorldSun} " +
+                         $"clouds={Clouds} haze={GroundHaze} ssao={Ssao} look={WorldAtmosphere.LookVariant} ev={LightingPreset.ExposureBiasOverride} wet={WorldAtmosphere.WetOverride}" : null;
         }
 
         /// <summary>The tier with the overrides applied (vegetation + camera fields; URP asset fields by the applier).</summary>
@@ -133,6 +150,9 @@ namespace Game.Rendering
             }
             if (WorldGi.HasValue) t.worldSkyVisOff = !WorldGi.Value;
             if (WorldSun.HasValue) t.worldBakedSunOff = !WorldSun.Value;
+            if (Clouds.HasValue) { t.cloudsOff = Clouds.Value < 0; t.cloudQuality = Math.Max(0, Math.Min(2, Clouds.Value)); }
+            if (GroundHaze.HasValue) t.groundHazeOff = !GroundHaze.Value;
+            if (Ssao.HasValue) t.ssao = Ssao.Value;
             return t;
         }
 
