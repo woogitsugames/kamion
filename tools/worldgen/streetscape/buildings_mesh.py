@@ -437,7 +437,7 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
                 continue
             um = um0 + i * pitch
             ops.append((um - 0.45, um + 0.45, zref + 0.25, zref + 0.70, 0.10, "window", cells("base", hv("b", i))))
-    groups = FA.far_groups(typ, storeys, variant.get("balcony"), variant.get("ribbon"))
+    groups = FA.far_groups(typ, storeys, variant.get("balcony"), variant.get("ribbon"), key.rsplit(":", 1)[0])
     ns = FA.far_storeys(groups, sh, ztop - 0.3 - zref - zbase)
     plan = FA.far_plan(groups[:ns], key)
     for s in range(ns):
@@ -653,7 +653,7 @@ def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh
         # strip of the same material (same tone as the zone)
         n = int((L - 1.0) // FA.FAR_PITCH)
         zw0 = zref + zbase
-        groups = FA.far_groups(typ, storeys, balcony, kind == "ribbon")
+        groups = FA.far_groups(typ, storeys, balcony, kind == "ribbon", fkey.rsplit(":", 1)[0])
         ns = FA.far_storeys(groups, sh, zt - 0.3 - zw0)
         if n >= 1 and ns >= 1:
             far = f"{zone_wall or wall}__far_{kind}"
@@ -908,7 +908,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                 band_z = []                                            # (z0, z1) of each band
                 if bands and ei not in bal_edges and not gable_accent and typ in ("block", "office"):
                     kk_ = sh / FA.FAR_ROW_H                               # sill 0.9 k, head 2.35 k / 2.5 k (facade_openings)
-                    ns_ = FA.far_storeys(FA.far_groups(typ, storeys, False, variant["ribbon"]), sh, zt - 0.3 - zref - zbase)
+                    ns_ = FA.far_storeys(FA.far_groups(typ, storeys, False, variant["ribbon"], key), sh, zt - 0.3 - zref - zbase)
                     for st_ in range(ns_):
                         z0_ = zref + zbase + st_ * sh
                         if typ == "block" and st_ >= 1:

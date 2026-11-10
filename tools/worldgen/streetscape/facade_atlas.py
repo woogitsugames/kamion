@@ -106,6 +106,7 @@ FAR_ROWS = {
         [("w2", 0), ("w1", 0), ("w2", 3), ("w2", 5), ("w1", 2), ("w2", 1), ("w2", 7), ("w1", 4)],
         [("w2", 2), ("w2", 8), ("w1", 1), ("w2", 4), ("w2", 9), ("w1", 3), ("w2", 6), ("w1", 5)],
         [("w2", 9), ("w1", 5), ("w2", 1), ("w3", 0), ("w1", 0), ("w2", 6), ("w2", 2), ("w3", 2)],
+        [("w1", 3), ("w2", 5), ("w2", 0), ("w1", 1), ("w2", 8), ("w3", 1), ("w1", 4), ("w2", 3)],
     ],
     "balcony": [
         [("bal", 0), ("w2", 4), ("bal", 3), ("w1", 1), ("bal", 6), ("w2", 8), ("bal", 1), ("w2", 0)],
@@ -113,18 +114,24 @@ FAR_ROWS = {
         [("bal", 2), ("w2", 9), ("bal", 6), ("w2", 1), ("bal", 0), ("w1", 5), ("bal", 5), ("w2", 6)],
         [("bal", 7), ("w2", 2), ("bal", 4), ("w1", 0), ("bal", 3), ("w2", 5), ("bal", 1), ("w1", 4)],
     ],
+    # offices: one window family per building (white PVC / anthracite aluminium) - what differs from window to
+    # window is the blind and the light, never the joinery (`off` variants 0, 2, 4 white, 1, 3 anthracite)
     "office": [
-        [("off", 0), ("off", 1), ("off", 2), ("off", 3), ("off", 4), ("off", 1), ("off", 0), ("off", 3)],
-        [("off", 2), ("off", 4), ("off", 0), ("off", 1), ("off", 3), ("off", 2), ("off", 4), ("off", 0)],
+        [("off", 0), ("off", 2), ("off", 4), ("off", 2), ("off", 0), ("off", 4), ("off", 2), ("off", 0)],
+        [("off", 4), ("off", 0), ("off", 2), ("off", 0), ("off", 4), ("off", 2), ("off", 4), ("off", 2)],
     ],
-    "ribbon": [[("rib", (i * k + j) % 5) for i in range(8)] for j, k in ((0, 1), (2, 3), (4, 2))],
+    "office_d": [
+        [("off", 1), ("off", 3), ("off", 3), ("off", 1), ("off", 3), ("off", 1), ("off", 3), ("off", 3)],
+        [("off", 3), ("off", 1), ("off", 3), ("off", 3), ("off", 1), ("off", 3), ("off", 1), ("off", 3)],
+    ],
+    "ribbon": [[("rib", 1 if (i * 3 + j) % 4 == 0 else 3) for i in range(8)] for j in range(2)],
 }
 # balcony rows first: every other group starts with a blank sill zone, so the row above any group's last row is plain
 # wall for 0.9 m (far_plain_above) and LOD1 can run its last chunk up to the wall top
-FAR_ORDER = [(g, i) for g in ("balcony", "block", "office", "ribbon") for i in range(len(FAR_ROWS[g]))]
+FAR_ORDER = [(g, i) for g in ("balcony", "block", "office", "office_d", "ribbon") for i in range(len(FAR_ROWS[g]))]
 FAR_M = (FAR_BAYS * FAR_PITCH, FAR_V0 + FAR_ROW_H * len(FAR_ORDER))
 # sill height above the floor / window height per row group (m, at FAR_ROW_H storey height)
-FAR_SILL = {"block": 0.9, "balcony": 0.9, "office": 0.9, "ribbon": 0.9}
+FAR_SILL = {"block": 0.9, "balcony": 0.9, "office": 0.9, "office_d": 0.9, "ribbon": 0.9}
 
 
 def far_row(group, key):
@@ -141,16 +148,19 @@ def far_entry(group, row, off, bay):
     return FAR_ROWS[group][row][(bay + off) % FAR_BAYS]
 
 
-FAR_TOP = {"block": 2.35, "balcony": 2.35, "office": 2.5, "ribbon": 2.5}      # window head above the floor (m at FAR_ROW_H)
+FAR_TOP = {"block": 2.35, "balcony": 2.35, "office": 2.5, "office_d": 2.5, "ribbon": 2.5}      # window head above the floor (m at FAR_ROW_H)
 FAR_PLAIN_V = (0.65, 0.95)      # v range of the plain wall strip below the rows (above the _SPLASH zone)
 
 
-def far_groups(typ, storeys, balcony=False, ribbon=False):
-    """Row group of every storey of one wall: blocks get balcony rows from the 1st floor on their balcony side,
-    ribbon offices get ribbon rows from the 1st floor."""
+def far_groups(typ, storeys, balcony=False, ribbon=False, bkey=""):
+    """Row group of every storey of one wall: blocks get balcony rows on their balcony side,
+    ribbon offices get ribbon rows from the 1st floor (anthracite ground floor); other offices are white-framed or
+    anthracite-framed as a whole building (bkey = building id)."""
     if typ == "block":
-        return ["block"] + ["balcony" if balcony else "block"] * (storeys - 1)
-    return ["office"] + ["ribbon" if ribbon else "office"] * (storeys - 1)
+        return ["balcony" if balcony else "block"] * storeys     # raised ground floor: balconies from the parter up
+    if ribbon:
+        return ["office_d"] + ["ribbon"] * (storeys - 1)
+    return ["office_d" if hint(bkey, "joinery") % 5 < 2 else "office"] * storeys
 
 
 def far_storeys(groups, sh, zbase_top):

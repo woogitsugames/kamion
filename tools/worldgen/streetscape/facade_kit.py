@@ -403,4 +403,4 @@ def machine_rooms(acc, poly, z, layer):
         p = ctr + along * t
         if inner.contains(shapely.Point(*p)):
             acc.box(layer, "balcony_slab", v3(p, z + 1.1), np.append(along * 1.4, 0), np.append(across * 1.6, 0),
-                    [0, 0, 1.1])
+                    [0, 0, 1.1], skip=(0,))            # the face on the roof is never seen
