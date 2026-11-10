@@ -16,7 +16,7 @@ namespace Game.Controls
         public const string PrefKey = "controls.settings";
         /// <summary>Pre-settings-menu key: 0 = wheel 270, 1 = wheel 900, 2 = gyro (Stage 1/2 builds).</summary>
         public const string LegacySteerModeKey = "controls.steerMode";
-        public const int CurrentSchema = 2;
+        public const int CurrentSchema = 3;
 
         public const float RangeMin = 180f, RangeMax = 900f;
         public const float GainMin = 0.5f, GainMax = 2f;
@@ -32,7 +32,7 @@ namespace Game.Controls
         public float wheelRangeDeg = 270f;
         /// <summary>Output gain of the wheel (1 = full lock at the full range).</summary>
         public float wheelSensitivity = 1f;
-        /// <summary>Multiplier of the self-centring speed when the wheel is released (0 = stays where left).</summary>
+        /// <summary>Multiplier of the self-centring speed of the cab wheel when released (0 = stays where left; ADR 0058).</summary>
         public float centreStrength = 1f;
         /// <summary>Steering dead zone, fraction of full lock.</summary>
         public float wheelDeadZone = 0.01f;
@@ -51,6 +51,11 @@ namespace Game.Controls
         public float cabFov = 55f;
         /// <summary>Schema 2: head sway from accelerations (limited, see CameraRig); off for motion-sickness-prone players.</summary>
         public bool headMotion = true;
+        /// <summary>
+        /// Schema 3 (ADR 0058): speed-sensitive steering. On = the comfort range reaches full lock when manoeuvring but at
+        /// speed one on-screen degree is one cab-wheel degree (gyro: less lock at full tilt); off = the old fixed mapping.
+        /// </summary>
+        public bool speedSensitiveSteering = true;
 
         public const float ProgressiveThrottleExponent = 1.6f, ProgressiveBrakeExponent = 1.4f;
         public const float BaseGyroMaxTiltDeg = 35f;
@@ -70,6 +75,7 @@ namespace Game.Controls
             wheelDeadZone = d.wheelDeadZone; gyroEnabled = d.gyroEnabled; gyroInvert = d.gyroInvert;
             gyroSensitivity = d.gyroSensitivity; throttleProgressive = d.throttleProgressive; brakeProgressive = d.brakeProgressive;
             lookSensitivity = d.lookSensitivity; cabFov = d.cabFov; headMotion = d.headMotion;
+            speedSensitiveSteering = d.speedSensitiveSteering;
             schema = CurrentSchema;
         }
 
@@ -105,13 +111,16 @@ namespace Game.Controls
         }
 
         /// <summary>
-        /// Schema migrations. v0 (no "schema" field) and v1 (no camera fields) need no conversion: JsonUtility leaves the
-        /// missing fields at their defaults, so only the version is raised; the owner's other choices are kept.
+        /// Schema migrations. v0 (no "schema" field), v1 (no camera fields) and v2 (no speed-sensitive steering) need no
+        /// value conversion: JsonUtility leaves the missing fields at their defaults, so only the version is raised and
+        /// the owner's other choices are kept. v2 to v3 explicitly switches speed-sensitive steering on: the v2 mapping
+        /// was the cause of the "wheel turns far too fast" feel report (ADR 0058), so an old save gets the new feel.
         /// </summary>
         static void Migrate(ControlSettings s)
         {
             if (s.schema < 1) s.schema = 1;
             if (s.schema < 2) s.schema = 2;   // v2: lookSensitivity, cabFov, headMotion
+            if (s.schema < 3) { s.speedSensitiveSteering = true; s.schema = 3; }   // v3: ADR 0058 steering column
             if (s.schema > CurrentSchema) s.schema = CurrentSchema;   // saved by a newer build: keep known fields
         }
 
@@ -142,13 +151,14 @@ namespace Game.Controls
         // ------------------------------------------------------------------ apply
 
         /// <summary>Copies the settings into the input sources (the sources hold no other tuning state).</summary>
-        public void ApplyTo(TouchSteeringWheel wheel, GyroSteering gyro, TouchControls touch)
+        public void ApplyTo(TouchSteeringWheel wheel, GyroSteering gyro, TouchControls touch, SteeringColumn column = null)
         {
+            if (column != null) column.CentreStrength = centreStrength;
             if (wheel != null)
             {
                 wheel.HalfRangeDeg = wheelRangeDeg;
                 wheel.Sensitivity = wheelSensitivity;
-                wheel.CentreStrength = centreStrength;
+                wheel.SpeedSensitive = speedSensitiveSteering;
                 wheel.DeadZone = wheelDeadZone;
                 wheel.Enabled = !gyroEnabled;
                 wheel.SetWheelDeg(wheel.WheelDeg);   // re-clamp to a shorter range
@@ -157,6 +167,7 @@ namespace Game.Controls
             {
                 gyro.Enabled = gyroEnabled;
                 gyro.Invert = gyroInvert;
+                gyro.SpeedSensitive = speedSensitiveSteering;
                 gyro.MaxTiltDeg = GyroMaxTiltDeg;
             }
             if (touch != null)
@@ -183,9 +194,11 @@ namespace Game.Controls
                 + " brake=" + (brakeProgressive ? "progressive" : "linear")
                 + " lookSens=" + lookSensitivity.ToString("F2", ci)
                 + " cabFov=" + cabFov.ToString("F0", ci)
-                + " headMotion=" + (headMotion ? "on" : "off");
+                + " headMotion=" + (headMotion ? "on" : "off")
+                + " speedSteer=" + (speedSensitiveSteering ? "on" : "off");
         }
 
-        public void Log(string reason) => Debug.Log(LogLine(reason));
+        /// <summary>Writes <see cref="LogLine"/> without a stack trace (one logcat line per entry).</summary>
+        public void Log(string reason) => ControlInputLogger.WriteNoStack(LogLine(reason));
     }
 }

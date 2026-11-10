@@ -61,12 +61,18 @@ namespace Game.Tests
             for (int i = 1; i <= 24; i++) { float a = i * 30f * Mathf.Deg2Rad; w.PointerDrag(new Vector2(Mathf.Sin(a), Mathf.Cos(a)) * 100f); }
             Assert.AreEqual(720f, w.WheelDeg, 0.5f);
             w.PointerUp();
+            // ADR 0058: the cab wheel (column) self-centres; the released on-screen wheel follows it.
+            var col = new SteeringColumn(null, 900f);
             var it = new DriverIntent();
-            w.Sample(0.1f, new VehicleFeedback { ForwardSpeed = 0f }, ref it);
-            Assert.AreEqual(720f, w.WheelDeg, 0.01f, "no self-centre at standstill");
-            for (int i = 0; i < 100; i++) w.Sample(0.05f, new VehicleFeedback { ForwardSpeed = 10f, AligningTorque = 500f }, ref it);
+            w.Sample(0.01f, new VehicleFeedback { HandwheelLockDeg = 900f }, ref it);
+            col.SnapTo(it.Steer * col.LockDeg);
+            Assert.IsFalse(it.HandsOn);
+            for (int i = 0; i < 100; i++) { col.Step(0.01f, 0f, false, 0f, 0f); w.FollowColumn(col.Normalized); }
+            Assert.AreEqual(720f, w.WheelDeg, 0.5f, "no self-centre at standstill");
+            for (int i = 0; i < 1000; i++) { col.Step(0.01f, 0f, false, 36f, 500f); w.FollowColumn(col.Normalized); }
             Assert.AreEqual(0f, w.WheelDeg, 0.01f, "returns to centre when moving");
-            Assert.Greater(TouchSteeringWheel.SelfCentreRate(10f, 800f, 540f, 8f, 800f), TouchSteeringWheel.SelfCentreRate(3f, 100f, 540f, 8f, 800f));
+            var feel = SteeringFeel.Defaults();
+            Assert.Greater(feel.CentreRate(36f, 800f), feel.CentreRate(10f, 100f));
         }
 
         [Test]

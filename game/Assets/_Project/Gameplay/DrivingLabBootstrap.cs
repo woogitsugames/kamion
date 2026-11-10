@@ -43,6 +43,10 @@ namespace Game.Gameplay
         public readonly KeyboardDriverInput Keyboard = new KeyboardDriverInput();
         public readonly TouchSteeringWheel Wheel = new TouchSteeringWheel();
         public readonly GyroSteering Gyro = new GyroSteering();
+        /// <summary>The simulated cab steering wheel (ADR 0058): driver target → hand-rate-limited wheel → Steering command, in the fixed step.</summary>
+        public readonly SteeringColumn Column = new SteeringColumn();   // tuning loaded in Awake (Resources)
+        float m_SteerTarget;
+        bool m_SteerHandsOn, m_SteerBypass, m_SteerHasTarget;
         public readonly TouchControls Touch = new TouchControls();
         /// <summary>Turn-signal stalk + flasher (self-cancelling, 1.5 Hz); drives the lamps, the cluster arrows and the relay click.</summary>
         public readonly TurnSignal Signals = new TurnSignal();
@@ -111,6 +115,10 @@ namespace Game.Gameplay
             m_Mixer.Add(Wheel);
             m_Mixer.Add(Gyro);
             m_Mixer.Add(Touch);
+            Column.Feel = SteeringFeel.LoadDefault();
+            Wheel.Feel = Column.Feel;
+            Gyro.Feel = Column.Feel;
+            Column.LockDeg = HandwheelLockDeg();
             GyroSteering.EnableSensors();
             Controls = ControlSettings.Load();
             ApplyControls();
@@ -260,7 +268,7 @@ namespace Game.Gameplay
         public void ApplyControls()
         {
             bool wasGyro = Gyro.Enabled;
-            Controls.ApplyTo(Wheel, Gyro, Touch);
+            Controls.ApplyTo(Wheel, Gyro, Touch, Column);
             m_SteerMode = Controls.gyroEnabled ? SteerMode.Gyro : (Controls.wheelRangeDeg >= 600f ? SteerMode.Wheel900 : SteerMode.Wheel270);
             if (Gyro.Enabled && !wasGyro) Gyro.Calibrate();
             if (!Controls.gyroEnabled) Gyro.Suspend();
@@ -419,6 +427,8 @@ namespace Game.Gameplay
             m_Selector = GearSelector.Drive;
             m_Manual = false;
             Wheel.SetWheelDeg(0f);
+            Column.SnapTo(0f);
+            m_SteerTarget = 0f;
             SetAbsFault(m_AbsFault, silent: true);
             m_Rig.SetCombination(coupled);
             if (m_Audio != null) m_Audio.ResetEvents();
@@ -446,6 +456,31 @@ namespace Game.Gameplay
 
         bool m_AutoRecord;
 
+        /// <summary>Half lock-to-lock of the cab wheel [deg] = road-wheel lock x overall ratio (vehicle data).</summary>
+        float HandwheelLockDeg()
+        {
+            var st = vehicle.Model.Steering;
+            return (float)(st.MaxAngle * MathUtil.Rad2Deg * st.Def.steeringRatio);
+        }
+
+        /// <summary>
+        /// Fixed step, before <see cref="VehicleBody"/> (execution order -200): steps the cab wheel toward the driver's
+        /// target and writes its angle / lock as the steering command. Autopilots bypass the hand model (their own
+        /// controllers are tuned on the raw command) and the column is kept at their angle for a seamless hand-over.
+        /// </summary>
+        void FixedUpdate()
+        {
+            if (!vehicle.Initialized || UnityEngine.Physics.simulationMode != SimulationMode.FixedUpdate) return;   // scripted stepping (tests) drives Input itself
+            var m = vehicle.Model;
+            Column.LockDeg = HandwheelLockDeg();
+            if (m_SteerBypass) { if (m_SteerHasTarget) Column.SnapTo(m_SteerTarget * Column.LockDeg); }
+            else Column.Step(Time.fixedDeltaTime, m_SteerTarget * Column.LockDeg, m_SteerHandsOn, (float)m.SpeedForward * 3.6f, (float)m.AligningTorqueTotal);
+            var input = vehicle.Input;
+            input.Steer = Column.Normalized;
+            vehicle.Input = input;
+            Wheel.FollowColumn(Column.Normalized);
+        }
+
         void Update()
         {
             if (!vehicle.Initialized) return;
@@ -461,11 +496,16 @@ namespace Game.Gameplay
                 ForwardSpeed = (float)m.SpeedForward,
                 AligningTorque = (float)m.AligningTorqueTotal,
                 RoadWheelAngleNormalized = (float)(m.Steering.Angle / m.Steering.MaxAngle),
+                HandwheelLockDeg = Column.LockDeg,
                 Position = vehicle.transform.position,
                 Forward = vehicle.transform.forward,
             };
             var intent = m_Mixer.Sample(Time.deltaTime, fb);
-            if (!Autopilot.Enabled && !RouteDriver.Enabled) m_InputLog.Observe(Time.unscaledTime, intent, vehicle.SpeedKmh);
+            m_SteerBypass = Autopilot.Enabled || RouteDriver.Enabled;
+            m_SteerHasTarget = intent.SteerActive;
+            m_SteerTarget = intent.SteerActive ? Mathf.Clamp(intent.Steer, -1f, 1f) : 0f;
+            m_SteerHandsOn = intent.SteerActive && intent.HandsOn;
+            if (!m_SteerBypass) m_InputLog.Observe(Time.unscaledTime, intent, vehicle.SpeedKmh, Column.AngleDeg);
             if (m_Rig.mode != m_LoggedCamMode) { m_LoggedCamMode = m_Rig.mode; m_InputLog.Event(Time.unscaledTime, k_CamModeEvents[(int)m_LoggedCamMode]); }
             m_InputLog.TryFlush(Time.unscaledTime, intent.Throttle < 0.01f && intent.Brake < 0.01f && !intent.SteerActive);   // batched; allocates only on that frame
             var kb = UnityEngine.InputSystem.Keyboard.current;   // Android back key arrives as Escape
@@ -479,7 +519,7 @@ namespace Game.Gameplay
             var input = vehicle.Input;
             input.Throttle = intent.Throttle;
             input.Brake = intent.Brake;
-            if (intent.SteerActive) input.Steer = Mathf.Clamp(intent.Steer, -1f, 1f);
+            // input.Steer is written by the steering column in FixedUpdate (ADR 0058).
             input.Selector = m_Selector;
             input.ParkingBrake = m_Parking;
             input.ManualMode = m_Manual;

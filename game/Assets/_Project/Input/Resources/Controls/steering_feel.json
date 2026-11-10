@@ -1,0 +1,17 @@
+{
+  "_comment": "ADR 0058 steering feel (driver hands on a heavy-truck wheel). All WORKING_VALUE until the owner's feel test. Same values as the C# defaults in Game.Controls.SteeringFeel.",
+  "handRateSpeedsKmh": [0, 10, 30, 50, 80, 100],
+  "handRateDegS": [540, 480, 300, 200, 130, 110],
+  "rateRiseTimeS": 0.1,
+  "trackingTauS": 0.05,
+  "centreRateMaxDegS": 300,
+  "centreSpeedRefKmh": 30,
+  "centreTorqueRefNm": 800,
+  "centreMinSpeedKmh": 2,
+  "centreTauS": 0.3,
+  "speedGainStartKmh": 20,
+  "speedGainEndKmh": 60,
+  "highSpeedScreenToHandwheel": 1.0,
+  "gyroHighSpeedGain": 0.3,
+  "fallbackLockDeg": 800
+}

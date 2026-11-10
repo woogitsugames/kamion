@@ -45,6 +45,8 @@ namespace Game.Controls
     /// <summary>
     /// Gyro (tilt) steering v0: tilt the phone like a wheel. Gravity sensor (fallback: accelerometer) →
     /// tilt angle about the screen normal → minus calibrated neutral → 1€ filter → dead zone → ±<see cref="MaxTiltDeg"/>.
+    /// The output is the TARGET of the cab wheel (normalised to its lock), scaled at speed by
+    /// <see cref="SteeringFeel.GyroGain"/>; the cab wheel (<see cref="SteeringColumn"/>) follows it rate-limited (ADR 0058).
     /// Disabled while the app is paused; recalibrates (and outputs 0 briefly) on screen-orientation change.
     /// On-device sign/axis behaviour is UNVERIFIED until tested on the Galaxy A16 (see docs/reports/GATE-1-draft.md).
     /// </summary>
@@ -57,6 +59,9 @@ namespace Game.Controls
         public float DeadZoneDeg = 1.0f;
         /// <summary>Flips the steering direction (settings menu), for a sensor whose sign is opposite on the device.</summary>
         public bool Invert;
+        /// <summary>Settings menu: speed-sensitive gain on (default) / off.</summary>
+        public bool SpeedSensitive = true;
+        public SteeringFeel Feel = SteeringFeel.Defaults();
         public readonly OneEuroFilter Filter = new OneEuroFilter(minCutoff: 1.0f, beta: 0.02f, derivativeCutoff: 1.0f);
 
         float m_Neutral;
@@ -107,9 +112,10 @@ namespace Game.Controls
             if (!m_Calibrated) return;
             RelativeTiltDeg = Filter.Filter(GyroMath.Relative(raw, m_Neutral), dt);
             if (m_HoldTimer > 0f) { m_HoldTimer -= dt; Output = 0f; }
-            else Output = GyroMath.SteerFromTilt(RelativeTiltDeg, MaxTiltDeg, DeadZoneDeg, Invert);
+            else Output = GyroMath.SteerFromTilt(RelativeTiltDeg, MaxTiltDeg, DeadZoneDeg, Invert) * (SpeedSensitive ? Feel.GyroGain(fb.ForwardSpeed * 3.6f) : 1f);
             intent.Steer = Output;
             intent.SteerActive = true;
+            intent.HandsOn = true;   // tilt = hands on the wheel; level phone = straight ahead
         }
     }
 }

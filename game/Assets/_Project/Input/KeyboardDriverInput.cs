@@ -41,6 +41,7 @@ namespace Game.Controls
 
             intent.Steer = m_Steer;
             intent.SteerActive = dir != 0 || Mathf.Abs(m_Steer) > 1e-3f;
+            intent.HandsOn = intent.SteerActive;   // the key ramp has its own return to centre
             intent.Throttle = m_Throttle;
             intent.Brake = m_Brake;
             if (kb.digit1Key.wasPressedThisFrame) intent.Selector = SelectorRequest.Drive;
