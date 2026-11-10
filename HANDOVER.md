@@ -14,7 +14,7 @@ Pamięć poprzednich sesji: `C:\Users\matma\.claude\projects\C--Users-matma-Docu
 - **Przed usunięciem worktree skopiuj jego `artifacts/`** do głównego checkoutu (2026-11-10 straciliśmy tak zrzuty S24+ i klipy DK8). W briefach każ zapisywać dowody pod ścieżkę absolutną `C:\Users\matma\Documents\Claude\kamion\artifacts\...`.
 - Po buildach cofaj efekty uboczne: `game/ProjectSettings/ProjectSettings.asset` (preloadedAssets), `QualitySettings.asset`, `M_Sky.mat`, pusty `game/Assets/Resources(.meta)`.
 
-## Gdzie jesteśmy (main = ok. `ae97eff`)
+## Gdzie jesteśmy (main = ok. `165dd5b`)
 - **Etap 3 (bramka, odcinki G3-A i G3-B: brama Kwadrat Parku → Rondo Putry)** — pomiary zrobione (`docs/reports/GATE-3-draft.md`):
   - A16 Low (sha `c59209e`): G3-A/G3-B p50/p95/p99 33,3/33,5/33,6 ms, PSS ~690 MB, bez grzania — **PASS**.
   - S24+ High (stary build `fefd804`): p95 50/33,5 ms — **FAIL**; poprawka ADR 0046 (adaptacyjna skala 1,00/0,85/0,80 + FSR1/RCAS, zejście do 30 FPS przy thermal ≥ 2, lżejsze cienie) scalona, **niezmierzona na telefonie**.
@@ -27,11 +27,21 @@ Pamięć poprzednich sesji: `C:\Users\matma\.claude\projects\C--Users-matma-Docu
 - **Wygląd:** D23 „jak zdjęcie z telefonu”; balans bieli 0,5 przy niskim słońcu (D27, ADR 0043); cab lift ADR 0029.
 - **Menu testu jazdy właściciela** + `docs/owner/FEEL-TEST.md`, log `[CONTROLS]` bez alokacji. Test jazdy (D25) **po raporcie bramki 3**.
 
-## Prace w toku w chwili przekazania (sprawdź, scal albo dokończ)
-| Zadanie | Gdzie | Stan / co zrobić |
+## Prace w toku w chwili przekazania (sprawdź `git -C <worktree> log main..HEAD`, skopiuj `artifacts/` do main, scal albo dokończ)
+Scalone dziś już: TRAKT r3 (słupek A 7,0°), r4 (lamele grilla 20° w dół, lusterko kl. VI na ziemię, węższe lusterko 11,25°), shader czarnego plastiku (ADR 0047 r3), strażnik jednej warstwy szkła (ADR 0048; „podwójna szyba na Low” niepotwierdzona — sprawdzić dwa poziomy GLASS_* naraz albo szybę z CabInterior). Diagnoza „akwarium”: wnętrze ma fizycznie poprawną jasność, kabina jest przezroczysta na wylot (dowody `artifacts/owner/aquarium/`).
+
+| Zadanie | Worktree (`.claude/worktrees/…`) | Uwagi |
 |---|---|---|
-| TRAKT: wewnętrzna okładzina lewego słupka A (czarny klin ~12 % kadru z fotela) → ≤ b2+1° | worktree `.claude/worktrees/agent-a7bf651b0c37426a5` (gałąź `worktree-agent-a7bf651b0c37426a5`) | Fable 5.2; sprawdź `git log main..HEAD`, klatki w `artifacts/owner/modern-front/unity3/`; po scaleniu skopiuj gitignorowany `art-source/truck/interior/export/SM_CabInterior_LOD0.fbx` z worktree do main |
-| (scalone 2026-11-10) Shader: brud na gładkich częściach + czarny plastik grilla — ADR 0047 r3 | — | gotowe |
+| Fable 5.2: przetarcia wnętrza w generatorze + jasny klin u podstawy słupka A + koja/zasłonka/zagłówek pasażera (przeciw „akwarium”) | `agent-ab5e8add34b25c723` | dowody `artifacts/owner/interior-wear/`; po scaleniu skopiuj gitignorowany `art-source/truck/interior/export/SM_CabInterior_LOD0.fbx` |
+| Fable 5.2: auta v3 (ciemne szyby LOD0, brud, nowoczesne przody) | `agent-ae432b34eda9359b4` | dowody `artifacts/visual-qa/life-cars-v3/`; nie commituje `Data/Regions/*/generated` — po scaleniu wygeneruj świat na main (`build_world.py`) i zacommituj |
+| Opus: latarnie/słupki na terenie (audyt obiekty vs teren → PASS) + ścianki skrzyżowań (obniż ratchet) | `agent-adf7e8fce42acbbeb` | dowody `artifacts/world-fixes/`; jw. generated |
+| Opus: druty WN min. szerokość w px (P0 z r6) + zacieki pod attyką | `agent-a00eb437b0f666944` | dowody `artifacts/world-fixes/wires-streaks/`; jw. generated |
+
+Konflikty w `Data/Regions/bialystok-industrial-c/generated/*.json`: bierz `--ours` i wygeneruj świat ponownie po scaleniu wszystkich gałęzi świata.
+
+## Recenzja r6 (docs/reports/visual/REVIEW-2026-11-10-r6.md) — top poprawek
+1. **P0** build ≥ obecny main na A16 (Low) i nowe 37 kadrów gate3 + `truck-34`/`cab-dash` (stare kadry są sprzed nowego frontu i aut). Akceptacja `cab-dash` < 3 % luma ≤ 8 %.
+2. **P0** druty WN (w toku). 3. **P1** kierownica beżowa przy niskim słońcu / czarna dziura na Low (CabInterior lighting). 4. **P1** naczepa: ciemna plama na firance, jasna łata pod naczepą. 5. **P1** szyba z zewnątrz, odbicie ziemi w lakierze drzwi, narożniki maski jak dziury; lakier matowy/kredowy. 6. **P1** auta: rozrzut brył/kolorów/kątów, wolne miejsca, ta sama liczba na Low i High. 7. **P1** farba linii na A16 ≤ 217 sRGB (teraz 246–249), kamera `g3a_eye_s0012` w geometrii, automatyczna kontrola 37 kadrów. 8. **P2** napis TRAKT na Low, gradient nieba High (pochmurne = biel 254), żywopłoty Bieżeństwa, ślady w dokach, kadry lusterek nowej kabiny.
 
 ## Następne kroki (kolejność)
 1. Dokończ/scal dwie prace powyżej; przebuduj prefab (`Game.Editor.Setup.TruckAssetBuilder.BuildBatch`), testy EditMode + PlayMode + `uv run --project tools/worldgen --with pytest --with scipy pytest tests/ -q` + dotnet runner (`%LOCALAPPDATA%\Microsoft\dotnet\dotnet.exe test tools/physics-runner -c Release`).
