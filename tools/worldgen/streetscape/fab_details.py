@@ -13,7 +13,7 @@ from pathlib import Path
 
 import numpy as np
 import shapely
-from shapely.geometry import Point
+from shapely.geometry import Point, LineString
 
 from roads.decals import _surf, hf, LIFT_PATCH
 from roads.markings import lane_layout
@@ -241,6 +241,11 @@ def props(pl, net, assets, roads_poly, bpoly, paved, park_polys, route, report, 
     No uniform region-wide scatter: litter needs an existing bus-stop/gate/bin or
     a mapped car park; grass/shrubs/rocks follow roadside soft ground only.
     """
+    # build_world.route_polyline returns a numpy Nx2/Nx3 array, while small
+    # unit/synthetic callers may already pass a Shapely line.
+    if route is not None and not hasattr(route, "buffer"):
+        points = np.asarray(route, float)
+        route = LineString(points[:, :2]) if points.ndim == 2 and len(points) >= 2 else None
     ready = {a for a, item in assets.items() if item.get("models")}
     if not ready:
         report["props"] = {}

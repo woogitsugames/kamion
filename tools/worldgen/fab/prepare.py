@@ -32,8 +32,9 @@ CHANNELS = {"basecolor": ("basecolor", "diffuse"), "normal": ("normal",),
 # Per prototype, not a scene/frame allowance. WORKING_VALUE pending phone profiling.
 BUDGETS = {"plant": [1800, 700, 180], "3d": [2400, 800, 200]}
 SOURCE_TRANSFORMS = {
-    "small-granite-rock": {"scale": 0.01, "rotate_x_degrees": 90,
-        "evidence": "wgyxecr.json meta length=0.26m,width=0.18m,height=0.08m; FBX imported 25.579x8.094x17.955m"},
+    "small-granite-rock": {"bake_parent_transform": True, "expected_parent_scale": 0.01,
+        "expected_parent_rotate_x_degrees": 90,
+        "evidence": "wgyxecr.json meta length=0.26m,width=0.18m,height=0.08m; FBX world_root parent supplies 0.01 scale and X90 rotation"},
 }
 LOG = logging.getLogger("fab")
 
@@ -107,6 +108,8 @@ def sync_glb_textures(path, textures, root, billboard_textures=None):
     raw = path.read_bytes()
     length = struct.unpack_from("<I", raw, 12)[0]
     gltf = json.loads(raw[20:20 + length])
+    if any(set(node) & {"translation", "rotation", "scale", "matrix"} for node in gltf.get("nodes", [])):
+        raise ValueError(f"Fab GLB node transforms must be baked before export: {path}")
     binary_start = 20 + length + 8
     binary = raw[binary_start:]
     replacements = {}

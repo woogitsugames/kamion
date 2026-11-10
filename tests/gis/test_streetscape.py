@@ -118,6 +118,15 @@ def test_instances_reference_existing_prototypes():
     trees = json.loads((REPO / "art-source/world/vegetation/trees_meta.json").read_text(encoding="utf-8"))["trees"]
     # authored landmark assets (ADR 0067 / 0071): prototypes listed in art-source/world/landmarks/<asset>/<asset>_meta.json
     props = dict(props)
+    # ADR 0084: optional Fab prototypes come from the current approved, pinned
+    # local library. Never accept an instance solely because its name starts fab_.
+    from streetscape import fab_details as FD
+    fab = FD.prototype_stats()
+    for name, stats in fab.items():
+        assert set(stats) == {"tris_lod0", "tris_lod1", "tris_lod2"}, name
+        assert all(isinstance(v, int) and v > 0 for v in stats.values()), name
+        assert stats["tris_lod2"] <= stats["tris_lod1"] <= stats["tris_lod0"], name
+    props.update(fab)
     for mf in (REPO / "art-source/world/landmarks").glob("*/*_meta.json"):
         for seg in json.loads(mf.read_text(encoding="utf-8")).get("segments", []):
             props[seg["name"]] = {"tris_lod0": seg["tris"][0]}

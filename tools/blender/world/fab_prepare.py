@@ -93,6 +93,12 @@ def main(request):
         if len(meshes) > 1:
             bpy.ops.object.join()
         source = bpy.context.object
+        # A selected mesh may inherit centimetres/Y-up from an unselected FBX
+        # world_root. Bake its world matrix too; otherwise exporter emits node
+        # transforms and the project's GLB reader correctly rejects the mesh.
+        world = source.matrix_world.copy()
+        source.parent = None
+        source.matrix_world = world
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
         old_normals = [v.vector.copy() for v in source.data.corner_normals]
         transform = Matrix.Rotation(math.radians(correction.get("rotate_x_degrees", 0)), 4, "X") @ Matrix.Scale(correction.get("scale", 1), 4)

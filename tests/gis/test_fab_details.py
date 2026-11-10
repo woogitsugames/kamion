@@ -268,3 +268,17 @@ def test_drainage_atlas_remaps_existing_gully_uv_without_geometry_changes(monkey
     for p in b.parts[len(geometry):]:
         assert np.allclose(p.UV.min(0), [.55, .55])
         assert np.allclose(p.UV.max(0), [.95, .95])
+
+
+
+def test_props_accepts_exact_stage_numpy_route_and_clears_corridor():
+    flat = lambda e, n: np.zeros_like(e, dtype=float)
+    net = network(500)
+    assets = {a: {'models': [{'lods': []}]} for a in F.GROUND_IDS}
+    road = box(-10, -3, 510, 3)
+    route = np.column_stack([np.arange(0, 501, 10), np.full(51, 7.), np.zeros(51)])
+    pl, report = Placer(flat, flat), {}
+    F.props(pl, net, assets, road, Polygon(), [], [], route, report)
+    assert pl.items
+    corridor = __import__('shapely').geometry.LineString(route[:, :2]).buffer(2.5)
+    assert all(not corridor.contains(__import__('shapely').geometry.Point(it['e'], it['n'])) for it in pl.items)

@@ -3,13 +3,14 @@ import hashlib
 import json
 import os
 import subprocess
+import struct
 from pathlib import Path
 from zipfile import ZipFile, ZipInfo
 
 import pytest
 from PIL import Image
 
-from fab.prepare import OUTPUT, _meshes, prepare, safe_members, select_maps
+from fab.prepare import OUTPUT, _meshes, prepare, safe_members, select_maps, sync_glb_textures
 
 
 def setup_source(tmp_path, approved=True):
@@ -206,3 +207,14 @@ def test_plant_source_lods_keep_true_geometry_and_billboard_separate(tmp_path):
     assert models[0]["variant"] == "VarA"
     assert models[0]["source"].read_text() == "VarA sourceLOD2"
     assert models[0]["billboard_source"].read_text() == "VarA sourceLOD3"
+
+
+def test_exported_glb_parent_transform_fails_before_ready(tmp_path):
+    document = {"nodes": [{"mesh": 0, "scale": [0.01, 0.01, 0.01]}]}
+    payload = json.dumps(document).encode()
+    payload += b" " * (-len(payload) % 4)
+    glb = tmp_path / "parent-transform.glb"
+    glb.write_bytes(struct.pack("<4sII", b"glTF", 2, 20 + len(payload))
+                    + struct.pack("<I4s", len(payload), b"JSON") + payload)
+    with pytest.raises(ValueError, match="transforms must be baked"):
+        sync_glb_textures(glb, {}, tmp_path)
