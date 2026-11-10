@@ -28,7 +28,12 @@ namespace Game.Rendering
         public static QualityProfile.Tier Current { get; private set; }
         public static bool HasCurrent { get; private set; }
 
-        void OnEnable() => ApplyNow();
+        void OnEnable()
+        {
+            // ADR 0046: adaptive render scale + thermal fallback (only tiers that enable them; play mode / player only).
+            if (Application.isPlaying && GetComponent<AdaptiveFrameDriver>() == null) gameObject.AddComponent<AdaptiveFrameDriver>();
+            ApplyNow();
+        }
 
         void LateUpdate()
         {

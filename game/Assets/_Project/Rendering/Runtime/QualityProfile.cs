@@ -43,6 +43,8 @@ namespace Game.Rendering
             [Tooltip("Mip bias on world surface textures (negative = sharper; aliasing risk)")] public float worldMipBias;
             public float lodBias;
             public float cameraFarClip;
+            [Tooltip("Adaptive render scale floor (ADR 0046; GPU p90 driven, 0 = fixed renderScale)")] public float adaptiveScaleMin;
+            [Tooltip("Frame cap after thermal status >= 2 for 30 s (ADR 0046; 0 = off)")] public int thermalFallbackFps;
             [Tooltip("Enable the world surface detail layer (second albedo scale + macro variation)")] public bool worldDetail;
             public int additionalLightsPerObject;
             [Header("Vegetation (WorldInstances; device-measured, DK8 forest)")]
@@ -155,6 +157,8 @@ namespace Game.Rendering
         /// foliage; with URP Lit 61.6 vs 50.4). Cause UNVERIFIED (no GPU counters yet): likely 4× HDR samples exceeding the G57 tile buffer (ADR 0013).
         /// High is MSAA 2× too: S24+ DK8 forest, cool phone, 38.7 ms at 4× vs 21.6 ms at 2× (Lit), no visible edge difference
         /// on native crops (ADR 0013 addendum r4, review r3 §7; accepted on condition of a 10 s motion recording).
+        /// High gate 3 (ADR 0046): adaptive render scale 0.80-1.00 (GPU p90, 2 s windows) and a thermal 30 FPS fallback -
+        /// S24+ GPU p50 14.8 ms at the 60 FPS cap left no vsync margin.
         /// </summary>
         public static Tier[] Defaults() => new[]
         {
@@ -191,11 +195,11 @@ namespace Game.Rendering
                 name = "High", renderScale = 1.0f, msaa = 2, postAntialiasing = AntialiasingMode.None, hdr = true,
                 postProcessing = true, tonemapping = TonemappingMode.Neutral,
                 shadowDistance = 100f, shadowResolution = 2048, shadowCascades = 3, cascade2Split = 0.25f,
-                cascade4Split = new Vector3(0.08f, 0.25f, 0.55f), softShadows = true, softShadowQuality = SoftShadowQuality.Medium,
+                cascade4Split = new Vector3(0.08f, 0.25f, 0.55f), softShadows = true, softShadowQuality = SoftShadowQuality.Low,
                 shadowDepthBias = 0.8f, shadowNormalBias = 0.8f,
-                anisotropic = 1, worldTextureAniso = 8, worldMipBias = 0f, lodBias = 1.5f, cameraFarClip = 2500f,
+                anisotropic = 1, worldTextureAniso = 8, worldMipBias = 0f, lodBias = 1.5f, cameraFarClip = 2500f, adaptiveScaleMin = 0.80f, thermalFallbackFps = 30,
                 worldDetail = true, additionalLightsPerObject = 4,
-                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, leafAlphaToCoverage = true, simpleFoliage = true,
+                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 120f, forestHlodCullM = 0f,
                 clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 128, envCaptureInterval = 2, envCaptureFarClip = 200f, contactShadows = true, cabShadowLift = 8f, streetLights = 4,
                 budgetDrawCalls = 800, budgetTrianglesK = 1500, budgetTextureMB = 256, budgetShadowMs = 2.0f, budgetStatus = "UNMEASURED (no flagship attached)",

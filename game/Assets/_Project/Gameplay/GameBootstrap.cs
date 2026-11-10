@@ -72,6 +72,7 @@ namespace Game.Gameplay
             else if (QualityTiers.SavedFrameRate > 0)
                 fps = QualityTiers.SavedFrameRate;
             QualityTiers.SetTargetFrameRate(fps);
+            AdaptiveFrameDriver.ThermalStatusProvider = Platform.GetThermalStatus;   // ADR 0046 thermal fallback
 
             var build = BuildInfo.Current;
             Debug.Log($"[BOOT] Kamion {build.ShortLabel} unity={build.unityVersion} platform={Platform.Name} " +
