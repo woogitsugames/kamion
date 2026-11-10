@@ -53,11 +53,15 @@ namespace Game.World
         public float AngleDeg { get; private set; }
         /// <summary>True while a body occupies the presence loop (last sensor pass).</summary>
         public bool Occupied { get; private set; }
+        /// <summary>Colliders returned by the last loop query (static world included); must stay below the buffer size.</summary>
+        public int LoopColliders { get; private set; }
+        public const int LoopBufferSize = 128;
 
         const float LoopHalfHeight = 2.5f;
         const float LoopSideMargin = 0.4f;
 
-        readonly Collider[] m_Hits = new Collider[32];
+        // The loop box also returns the static world under it (road, kerbs, yard, props); WorldCBarrierTests reports the count.
+        readonly Collider[] m_Hits = new Collider[LoopBufferSize];
         Rigidbody m_Body;
         Collider m_BoomCollider;
         Quaternion m_BaseRotation;
@@ -78,10 +82,17 @@ namespace Game.World
 
         void FixedUpdate()
         {
+            // Script mode (tests stepping Physics.Simulate themselves): the owner calls Tick before every step, as for VehicleBody.
+            if (Physics.simulationMode != SimulationMode.FixedUpdate) return;
+            Tick(Time.fixedDeltaTime);
+        }
+
+        /// <summary>One drive + sensor step. Called from FixedUpdate; by the owner of the loop when Physics.simulationMode is Script.</summary>
+        public void Tick(float dt)
+        {
             if (State == BarrierState.Broken) return;
-            Sense();
+            Sense(dt);
             if (State == BarrierState.Broken) return;
-            float dt = Time.fixedDeltaTime;
             if (automatic)
             {
                 if (Occupied)
@@ -119,15 +130,15 @@ namespace Game.World
             else if (!open && State != BarrierState.Closed) State = BarrierState.Closing;
         }
 
-        void Sense()
+        void Sense(float dt)
         {
             // loop box in the frame of the closed boom
             float zc = travelSign * (exitM - approachM) * 0.5f;
             var half = new Vector3(boomLengthM * 0.5f + LoopSideMargin, LoopHalfHeight, (approachM + exitM) * 0.5f);
             Vector3 centre = m_HingePosition + m_BaseRotation * new Vector3(boomLengthM * 0.5f, LoopHalfHeight - 0.9f, zc);
             int n = Physics.OverlapBoxNonAlloc(centre, half, m_Hits, m_BaseRotation, ~0, QueryTriggerInteraction.Ignore);
+            LoopColliders = n;
             bool any = false;
-            float dt = Time.fixedDeltaTime;
             Vector3 mid = m_Body.worldCenterOfMass;
             for (int i = 0; i < n; i++)
             {

@@ -235,7 +235,8 @@ def test_life_props_and_gate_kit_placed(qa):
     assert life["pallets"] >= 50 and life["bins"] >= 10
     gates = qa["furniture"]["gates"]
     assert gates["stale"] == [] and [g["id"] for g in gates["applied"]] == ["kwadrat-park-gate-kit"]
-    assert gates["applied"][0]["gatehouse"] is not None and gates["applied"][0]["fence_m"] > 10
+    assert gates["applied"][0]["gatehouse"] is not None
+    assert gates["applied"][0]["fence_m"] == 0.0     # ADR 0071 r10: open access road (override fence: false)
 
 
 def test_truck_yards_are_behaton(qa):

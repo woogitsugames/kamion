@@ -116,6 +116,29 @@
    "tris_lod0": 129,
    "tris_lod1": 75
   },
+  "barrier_base": {
+   "materials": [
+    "barrier_housing",
+    "cabinet_grey",
+    "concrete_base",
+    "lamp_glass_sodium",
+    "reflector_red",
+    "steel_galv",
+    "steel_painted"
+   ],
+   "tris_lod0": 336,
+   "tris_lod1": 87
+  },
+  "barrier_boom": {
+   "materials": [
+    "gate_boom",
+    "reflector_red",
+    "rubber_black",
+    "steel_painted"
+   ],
+   "tris_lod0": 84,
+   "tris_lod1": 15
+  },
   "bench": {
    "materials": [
     "bench_wood",
@@ -1156,6 +1179,26 @@
    ],
    "tris_lod0": 80,
    "tris_lod1": 53
+  },
+  "lamp_arc_9m": {
+   "materials": [
+    "concrete_base",
+    "lamp_glass_sodium",
+    "luminaire_old",
+    "steel_galv"
+   ],
+   "tris_lod0": 208,
+   "tris_lod1": 88
+  },
+  "lamp_arc_9m_double": {
+   "materials": [
+    "concrete_base",
+    "lamp_glass_sodium",
+    "luminaire_old",
+    "steel_galv"
+   ],
+   "tris_lod0": 302,
+   "tris_lod1": 134
   },
   "lamp_old_concrete_9m": {
    "materials": [

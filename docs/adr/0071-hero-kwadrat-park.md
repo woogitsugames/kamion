@@ -89,3 +89,29 @@ orthophoto neither confirms nor refutes it.
 - An own texture atlas for the hall (as the viaduct): the hall is 600 m of facade; tiling world sets in metres give
   the texel density of the rest of the world and inherit the CC0 scans of ADR 0063.
 - Canopy over the dock row (old hero flag): not visible under the strip windows in the CC0 photo.
+
+## r10 (2026-11-10): yard life, gate, automatic barrier
+1. **Trailers at the hero docks.** They never stood there: `life.START_CLEAR_*` (r5 interim rule: no parked truck
+   prototype within 120 m of the route start / 45 m of its first 250 m) covers the whole yard. The hero dock row is
+   exempt (`dock_trailers`: `sp.free` instead of `sp.vehicle_free`); yard rows and rigs keep the rule.
+2. **Cars in the truck yard.** BDOT10k `OT_KUKO_A rodzaj=parking` (8 328 m2) spans the whole manoeuvring yard, so the
+   parking rule laid two rows of cars across it. New override `kind: depot_yard` (`streetscape/depot_yard.py`, entry
+   `kwadrat-park-yard`): `no_parking_epsg2180` (cut out of the parking regions), `clear_lamps_epsg2180` + `lamps`
+   (columns at the pole feet read off the orthophoto shadows, west edge of the lane; prototype `lamp_arc_9m`, the
+   arched single-arm column of the CC0 photo), `props` (two dark 40 ft containers of the orthophoto).
+3. **Gate.** The CC0 photo 20210904_101250 looks along the access road into the depot: no gate leaf and no fence
+   across the forecourt; the orthophoto agrees. `depot_gate` got the additive flags `sliding_gate` / `fence`
+   (default true); the Kwadrat kit sets both false. Gatehouse and booms stay (WORKING_VALUE, start anchor).
+4. **Automatic boom (map audit MA-003, owner report: the boom did not open and had no collision).** The kit places
+   `barrier_base` (housing, rest post) and `barrier_boom` (hinge frame, instance key `barrier: {L, open_deg, lane,
+   travel}`). The importer turns every such boom into a GameObject with `Game.World.DepotBarrier`
+   (`InstanceImporter.Barrier`, `WorldSceneBuilder.BuildBarriers`; layer Ignore Raycast so wheel rays never stand on
+   it): presence loop 25 m before / 6 m behind the boom (any non-kinematic rigidbody, so the trailer keeps it open),
+   opening 3.5 s / closing 4.0 s after 1.5 s free (WORKING_VALUE; drives of 6 m booms: 3-6 s), kinematic boom =
+   solid when closed or moving, break-away above 1.5 m/s closing speed: the boom is released as a 14 kg dynamic body
+   one step before the contact, so the engine solves a truck-vs-light-boom impact instead of an immovable wall.
+   No allocation after Awake (`OverlapBoxNonAlloc`, fixed buffer). PlayMode `DepotBarrierTests` (3): approach ->
+   open (3.46 s) -> combination passes -> closed; closed boom stops 1.5 t at 1 m/s; 7.5 t at 6 m/s breaks the boom
+   and keeps 5.99 m/s.
+   Open: the released boom is a free body (no bent hinge / shear-pin joint); a straight loop box can see a vehicle
+   on the neighbouring lane behind the island nose; the OSM `lift_gate` props elsewhere are still static.

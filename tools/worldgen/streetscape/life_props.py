@@ -535,6 +535,15 @@ def gatehouse():
 BOOM_OPEN_DEG = 85.0       # raised boom (WORKING_VALUE; drives stop at 85-90 deg)
 
 
+def _boom_tube(mm, p0, p1, r0, r1, seg):
+    """Boom profile with UV u = metres along the boom (Mesh.tube maps the length to v and the circumference to u,
+    which painted the `boom_red_white` bands lengthwise: one side of the boom red, the other white - seen in the
+    r10a WorldC renders)."""
+    mm.tube("gate_boom", p0, p1, r0, r1, seg, cap=False)
+    uv = mm.prims["gate_boom"][2][-1]
+    mm.prims["gate_boom"][2][-1] = uv[:, ::-1].copy()
+
+
 def barrier_arm(L=6.0, raised=False):
     """Boom barrier: drive housing (0.4 x 0.35 x 1.05 m) at the origin, boom along +x at 0.95 m, rest post
     with a fork at the far end. The boom has UV u = metres (0.5 m red/white bands in the material).
@@ -551,7 +560,7 @@ def barrier_arm(L=6.0, raised=False):
             p1 = p0 + (L - 0.15) * np.array([math.cos(a), 0.0, math.sin(a)])
         else:
             p1 = np.array([L, 0.0, 0.95])
-        mm.tube("gate_boom", p0, p1, 0.05, 0.04, seg)
+        _boom_tube(mm, p0, p1, 0.05, 0.04, seg)
         mm.tube("steel_painted", [L - 0.1, 0.0, 0.0], [L - 0.1, 0.0, 0.88], 0.04, None, max(4, seg // 2))
         mm.box("steel_painted", [L - 0.1, 0.0, 0.9], 0.08, 0.02, 0.04)
         if seg > 5:
@@ -610,7 +619,7 @@ def barrier_boom(L=BOOM_L):
     m, l1 = Mesh(), Mesh()
     y = 0.0                       # the instance is placed BOOM_SIDE to the side of the housing (gate.py)
     for mm, seg in ((m, 10), (l1, 5)):
-        mm.tube("gate_boom", [-0.25, y, 0.0], [L, y, 0.0], 0.05, 0.045, seg)
+        _boom_tube(mm, [-0.25, y, 0.0], [L, y, 0.0], 0.05, 0.045, seg)
         if seg > 5:
             mm.box("rubber_black", [L / 2 + 0.2, y, -0.06], L / 2 - 0.5, 0.012, 0.012)   # rubber edge
             mm.tube("reflector_red", [L, y, 0.0], [L + 0.03, y, 0.0], 0.05, None, seg)    # end cap

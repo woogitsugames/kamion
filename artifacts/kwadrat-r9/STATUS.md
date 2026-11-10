@@ -83,3 +83,21 @@ Worktree `.claude/worktrees/agent-a1409e374f8c12b4f`, gałąź `worktree-agent-a
 - 22:50 PlayMode `DepotBarrierTests` 3/3 zielone (`logs/playmode_barrier1.xml`): otwarcie 3,46 s, zestaw przejeżdża, zamknięcie; zamknięta belka blokuje 1,5 t @ 1 m/s; przejazd na siłę 6 m/s → belka uwolniona, ciężarówka 5,99 m/s.
 - Dodane: `streetscape/depot_yard.py` + override `kwadrat-park-yard` (no_parking, lampy łukowe `lamp_arc_9m` wg cieni z ortofoto, 2 kontenery), gate kit `sliding_gate: false`, `fence: false` (zdjęcie CC0 2021 + ortofoto: otwarty wjazd).
 - NASTĘPNY KROK: build_world w toku (`logs/build_world_r10a.log`); potem `uv run --project tools/worldgen pytest tests/gis -q`; `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c`; `pwsh artifacts/kwadrat-r9/qa_runs.ps1 -Phase r10a`.
+
+## Stan 2026-11-10 ~22:25 (r10b, przejęcie po ubitym agencie)
+- Cykl r10a był w rzeczywistości ukończony (build_world done, import OK, rendery High-overcast/High-lowsun/Low-overcast; brak Low-lowsun).
+- pytest gis po r10a: 215 zielone, 4 czerwone (`logs/pytest_r10a.log`): `test_region_yard` (lamp_8m w wielokącie clear_lamps — override
+  poprawiony po starcie buildu, wymaga rebuild), `test_report_not_stale` (fidelity: `tools/worldgen/fidelity/run.py`), 2x korytarz trasy
+  s≈1432–1480 = znany P0 z main (HANDOVER, agent 0076), nie z tej gałęzi.
+- Szlaban na scenie WorldC: nowy `WorldCBarrierTests` (PlayMode, prawdziwa scena + zestaw 40 t po trasie): 1. przebieg CZERWONY — w trybie
+  `SimulationMode.Script` FixedUpdate szlabanu nie chodził w kroku symulacji (belka zamknięta, |dv| 6,06 m/s). Naprawa: `DepotBarrier.Tick(dt)`
+  (FixedUpdate tylko w trybie FixedUpdate, jak VehicleBody), testy Script krokują szlabany (`WorldCRouteTests` też), bufor pętli 32 → 128.
+  2. przebieg: 4/4 zielone (`logs/playmode_worldc_barrier2.log`, `artifacts/tests/worldc-barrier.txt`): 2 belki z kolizją (ray wzdłuż pasa
+  trafia collider), otwarcie od s=216,5 m (belka s=247,4 m), pełne otwarcie 3,49 s, 85° gdy ciągnik 8 m przed belką przy 20 km/h, 0 kontaktów,
+  zamknięcie przy s=308,4 m, druga belka nieruszona, max |dv| 0,050 m/s, pętla widzi max 11 colliderów.
+- Render r10a: belka bliższa cała czerwona, dalsza cała biała — pasy `boom_red_white` szły po obwodzie (Mesh.tube: u = kąt). Naprawa
+  `life_props._boom_tube` (u = metry wzdłuż belki) + test `test_boom_bands_run_along_the_boom`.
+- NASTĘPNY KROK:
+    $env:KAMION_BLENDER='C:\Users\matma\AppData\Local\Programs\Blender4.2\blender-4.2.9-windows-x64\blender.exe'; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> artifacts/kwadrat-r9/logs/build_world_r10b.log
+    uv run --project tools/worldgen python tools/worldgen/fidelity/run.py --region bialystok-industrial-c ; uv run --project tools/worldgen pytest tests/gis -q
+    pwsh scripts/import-region.ps1 -Region bialystok-industrial-c ; pwsh artifacts/kwadrat-r9/qa_runs.ps1 -Phase r10b
