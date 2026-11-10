@@ -328,7 +328,7 @@ def write_layout():
 
 
 VIADUCT_SETS = {
-    "viaduct_concrete": dict(fn=viaduct_concrete, tile_m=list(TILE), target=CONCRETE atlas=True,
+    "viaduct_concrete": dict(fn=viaduct_concrete, tile_m=list(TILE), target=CONCRETE, atlas=True,
         uv="mesh_uv0_metres (u along the bridge, v = band position; layout in art-source/world/landmarks/"
            "viaduct_biezenstwa/atlas_layout.json)",
         slots=["viaduct_concrete (hero viaduct asset, ADR 0067)"],
