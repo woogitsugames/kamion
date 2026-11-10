@@ -35,6 +35,28 @@ namespace Game.Rendering
                  "the blue dome; only the sun is warm. WORKING_VALUE.")]
         [Range(0f, 1f)] public float lowSunAmbientCool = 0.8f;
 
+        [Header("Overcast structure and atmosphere (ADR 0080)")]
+        [Tooltip("Overcast dome brightening toward the sun azimuth (SkyModel.OvercastDirectional; 0 = CIE standard overcast)")]
+        [Range(0f, 2f)] public float overcastDirectional;
+        [Tooltip("Share of the direct beam passing a thin overcast (soft directional light and faint shadows; taken out of the diffuse)")]
+        [Range(0f, 0.3f)] public float overcastSunLeak;
+        [Tooltip("Cloud deck contrast of the overcast dome (0 = flat dome): thick parts darker, thin parts lighter, mean 1")]
+        [Range(0f, 0.6f)] public float cloudContrast;
+        [Tooltip("Cloud texture tiles per unit of the cloud plane (plane at height 1; smaller = larger cloud masses)")]
+        public float cloudScale = 0.16f;
+        [Tooltip("Cloud drift (plane units per second; ~0.004 = 20 km/h at 1500 m)")]
+        public Vector2 cloudWind = new Vector2(0.0035f, 0.0015f);
+        [Tooltip("Ground haze layer: extra extinction at the layer base as a multiple of the visibility extinction (0 = uniform fog)")]
+        [Range(0f, 4f)] public float hazeGroundFactor;
+        [Tooltip("Scale height of the ground haze layer (m)")]
+        public float hazeScaleHeightM = 60f;
+        [Tooltip("Wet surfaces 0 dry .. 1 soaked (albedo, smoothness; a parameter, not weather simulation)")]
+        [Range(0f, 1f)] public float wetness;
+        [Tooltip("Share of the low spots holding standing water at wetness 1")]
+        [Range(0f, 0.6f)] public float puddles = 0.3f;
+        [Tooltip("Lawn variation strength (clumps, scorched patches, flowers, micro shading) of the grass sets")]
+        [Range(0f, 1f)] public float grassVariation = 1f;
+
         [Header("Exposure (ADR 0016)")]
         [Tooltip("On: camera EV100 from the sun-elevation table (ExposureTable), like a phone's scene metering. " +
                  "Off: the fixed ev100 below.")]
@@ -57,17 +79,26 @@ namespace Game.Rendering
         [Tooltip("Highlight desaturation towards white near the clip (0 = none, 1 = grey at the clip): a clipped sky goes " +
                  "white, not yellow (review r3 G5).")]
         [Range(0f, 1f)] public float lookHighlightDesaturation = 0.4f;
+        [Tooltip("ADR 0080 contrast variant: toe strength s of LookGrading.Toe (0 = the D23 curve unchanged)")]
+        [Range(0f, 0.9f)] public float lookToe;
+        [Tooltip("Toe half-point p (scene linear)")]
+        [Range(0.02f, 0.4f)] public float lookToeP = 0.12f;
+        [Tooltip("Scene value kept fixed by the toe gain (0.18 = mid-grey held; higher = mid-tones slightly darker)")]
+        [Range(0.1f, 0.6f)] public float lookTonePivot = 0.3f;
 
         /// <summary>Camera EV100 of this preset (table from sun elevation and cloud, minus the bias). No per-frame pass.</summary>
         public float ResolveEv100(SkyModel probe) =>
-            (autoExposure ? ExposureTable.Ev100(probe.TrueSunElevationDeg, probe.Overcast) : ev100) - exposureCompensation;
+            (autoExposure ? ExposureTable.Ev100(probe.TrueSunElevationDeg, probe.Overcast) : ev100) - exposureCompensation - ExposureBiasOverride;
+
+        /// <summary>ADR 0080 owner A/B renders only (rq_ev): extra exposure bias in stops, 0 = none. Not a default.</summary>
+        public static float ExposureBiasOverride;
 
         /// <summary>Builds the sky model with the resolved exposure (two passes: illuminance does not depend on exposure).</summary>
         public SkyModel CreateModel(float wbOverride = -1f)
         {
             var probe = new SkyModel(sunElevationDeg, sunAzimuthDeg, turbidity, overcast, 0f);
             return new SkyModel(sunElevationDeg, sunAzimuthDeg, turbidity, overcast, ResolveEv100(probe),
-                wbOverride >= 0f ? wbOverride : whiteBalanceAdaptation);
+                wbOverride >= 0f ? wbOverride : whiteBalanceAdaptation, overcastDirectional, overcastSunLeak);
         }
 
         public static LightingPreset CreateClear()
@@ -82,7 +113,14 @@ namespace Game.Rendering
         {
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_Overcast";
-            p.sunElevationDeg = 30f; p.sunAzimuthDeg = 200f; p.turbidity = 4f; p.overcast = 1f; p.visibilityKm = 8f;
+            // ADR 0080: sun at 41 deg / 200 deg (within 3 deg of the baked LP_Clear sun, so the ADR 0064 far ground shadows
+            // carry the faint leaked-beam shadows beyond the realtime distance), a thin stratocumulus deck.
+            p.sunElevationDeg = 41f; p.sunAzimuthDeg = 200f; p.turbidity = 4f; p.overcast = 1f; p.visibilityKm = 8f;
+            p.overcastDirectional = 0.6f; p.overcastSunLeak = 0.05f;
+            p.cloudContrast = 0.21f;
+            p.hazeGroundFactor = 1.6f; p.hazeScaleHeightM = 60f;
+            // Owner decision 2026-11-10 (ADR 0080): contrast variant 3 "deep" - broad toe about the sky value and -0.2 EV.
+            p.lookToe = 0.9f; p.lookToeP = 0.4f; p.lookTonePivot = 0.6f; p.exposureCompensation = -0.2f;
             return p;
         }
 

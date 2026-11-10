@@ -110,6 +110,7 @@ Shader "Kamion/Truck Exterior"
             #define _NORMALMAP 1
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
             #include "KamionVehicleEnv.hlsl"
             #include "KamionToeParity.hlsl"
 
@@ -253,7 +254,7 @@ Shader "Kamion/Truck Exterior"
                 o.tangentWS = half4(n.tangentWS, v.tangentOS.w * GetOddNegativeScale());
                 o.uv01 = float4(v.uv0, v.uv1);
                 o.uv2 = v.uv2;
-                o.fogFactor = ComputeFogFactor(pcs.z);
+                o.fogFactor = KamionFogTau(pw, pcs.w);
                 return o;
             }
 
@@ -433,7 +434,7 @@ Shader "Kamion/Truck Exterior"
                 half gl = 1.0 + _CabShadowLift.x * ql * ql * ql;
                 col.rgb = lerp(col.rgb * gl, (yl * gl).xxx, _CabShadowLift.z * (1.0 - 1.0 / gl));   // neutral lift (r5 L2)
                 col.rgb = KamionToeParity(col.rgb);   // cab view on the tiers without the D23 LUT (identity elsewhere)
-                col.rgb = MixFog(col.rgb, i.fogFactor);
+                col.rgb = KamionMixFog(col.rgb, i.fogFactor);
                 return half4(col.rgb, 1);
             }
             ENDHLSL
