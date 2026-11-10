@@ -119,7 +119,8 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 | Up-shift rpm (light → full throttle) | 1250 → 1750 | rpm | WORKING_VALUE | Triggered on the rpm predicted at the end of the torque ramp (rpm rate × 0.27 s) |
 | Down-shift rpm (light → full) | 850 → 1100 (+200 on climbs > 2.5 % at > 50 % pedal) | rpm | WORKING_VALUE | Grade bonus keeps the engine in the torque plateau |
 | Min rpm after up-shift (light → full) | max(950 → 1250, down-shift line + 100) | rpm | WORKING_VALUE | Includes the speed lost during the interruption ((resistance / mass) × 0.545 s); prevents hunting |
-| Up-shift acceptance (≥ 30 % pedal) | acceleration in the new gear ≥ 0.10 × pedal | m/s² | WORKING_VALUE | Mass/grade/aero-aware (tractive force vs resistance) |
+| Up-shift acceptance (≥ 30 % pedal) | acceleration in the new gear ≥ 0.10 × pedal | m/s² | WORKING_VALUE | Mass/grade/aero-aware (tractive force vs resistance). At the governor (over-rev guard) the next gear needs ≥ 0, otherwise the engine stays on the governor (ADR 0024) |
+| Down-shift hold (≥ 30 % pedal, not engine-brake mode) | acceleration in the current gear ≥ 0.10 × pedal (same force balance as the up-shift acceptance) | m/s² | WORKING_VALUE | Mirror of the up-shift acceptance, no new parameter; lugging guard (line − 150 rpm) judged on rpm + max(0, rpm rate) × 0.545 s still forces the down-shift (ADR 0024) |
 | Max skip / up→down hold-off / same-direction hold-off | 2 gears / 1.0 s / 0.3 s | – | WORKING_VALUE | Over-rev guard (> governor − 50 rpm) bypasses both |
 | Launch rpm (light → full) + load bonus / max launch gear | 800 → 1100 + 250 × required-force fraction / 4 | rpm, – | WORKING_VALUE | The launch gear is chosen from mass and grade with a 2.5× force margin |
 | Creep (pedal < 0.15) | 500 | N m | WORKING_VALUE | Clutch torque at idle for manoeuvring / coupling |
