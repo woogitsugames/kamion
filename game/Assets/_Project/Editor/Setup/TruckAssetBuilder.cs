@@ -232,6 +232,9 @@ namespace Game.Editor.Setup
                     m.SetFloat("_IsPaint", slot == "Paint" ? 1f : 0f);
                     m.SetFloat("_Dirt", 0.5f);
                     m.SetColor("_DirtColor", new Color(0.15f, 0.135f, 0.11f, 1f));
+                    // ADR 0038: coated base lobe, orange peel, procedural road grime (vehicle frame from ContactShadowCaster). WORKING_VALUE.
+                    m.SetFloat("_CoatedBaseRoughness", 0.6f); m.SetFloat("_OrangePeel", 0.012f);
+                    m.SetFloat("_GrimeHeight", 0.8f); m.SetFloat("_GrimeChassis", 1.3f);
                     if (slot == "Paint")
                     {
                         // Livery "white" (biel flotowa), manifest liveries.white; colours are linear.
