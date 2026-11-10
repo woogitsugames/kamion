@@ -129,7 +129,9 @@ namespace Game.Rendering
                 float rho = Mathf.Clamp(meanAlbedo, 0.01f, 0.9f);
                 float bounce = glassTransmittance * rho / (interiorArea * (1f - rho)) * m.Exposure / Mathf.PI * fillScale;
                 // Sun part in the sun's colour, sky part neutral (overcast-grey daylight through the glass; review r3 C2).
-                Color c = (m.SunColor * fluxSun + Color.white * fluxSky) * bounceTint * bounce;
+                // Neutral = the adapted white of the preset: with the phone-style WB of LP_LowSun (ADR 0043) the sun and
+                // the sky are adapted, plain white daylight was not (review r6 C-N5).
+                Color c = (m.SunColor * fluxSun + m.AdaptedWhite * fluxSky) * bounceTint * bounce;
                 fill = new Vector3(c.r, c.g, c.b);
             }
             float gain = 1f, lift = 0f, enc = exteriorEnclosure;
@@ -144,7 +146,9 @@ namespace Game.Rendering
             LastMeterEv = Mathf.Log(gain, 2f) - (gain > 1f ? cabViewEv : 0f);
             LastFill = fill;
             LastGain = gain;
-            Shader.SetGlobalVector(k_Fill, new Vector4(fill.x, fill.y, fill.z, 0f));
+            // w: glass transmittance of the direct sun on the interior (every sunlit cab surface is lit through the glazing;
+            // the glass casts no shadow, so the shader applies it; review r6 C-N5).
+            Shader.SetGlobalVector(k_Fill, new Vector4(fill.x, fill.y, fill.z, Mathf.Clamp01(glassTransmittance)));
             Shader.SetGlobalFloat(k_Gain, gain);
             Shader.SetGlobalVector(k_Lift, new Vector4(lift, Mathf.Max(1e-4f, shadowLiftKnee), Mathf.Clamp01(shadowLiftNeutral), 0f));
             Shader.SetGlobalFloat(k_Enclosure, Mathf.Clamp01(enc));

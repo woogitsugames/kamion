@@ -851,7 +851,9 @@ def bake_ao(receivers, hide, res, samples, distance, out_png):
         filled = filled | grow
     ao[~filled] = 1.0
     blk = max(4, res // 128)
-    cloth = float(np.median(ao[cov > 0])) if (cov > 0).any() else 0.4
+    # Mean, not median (review r6 C-N5/C-N6): ~45 % of the covered texels are fully occluded faces (p10 = 0), so the
+    # median was 0.04 and the rim (NO_AO) was black on every tier. ao_cloth_block.py applies this to exported atlases.
+    cloth = float(np.mean(ao[cov > 0])) if (cov > 0).any() else 0.4
     ao[-blk:, -blk:] = 1.0                 # neutral block: glass, decals, displays, mirrors
     ao[-3 * blk:-2 * blk, -blk:] = cloth   # cloth block: curtains / blinds get the median cab ambient
     bpy.data.images.remove(img)
