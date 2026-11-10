@@ -35,7 +35,11 @@ UNCOMPRESSED_BPP, UNCOMPRESSED_MIN_DIM = 24, 256   # a >= 24 bpp texture larger 
 ELEVATED_BY_DESIGN = re.compile(
     r"^(signal_head|board_|facade_sign|plate_|sign_face|banner|wire|cable|lamp_head|luminaire|mirror_|gantry_|bracket|camera_|clock|flag)", re.I)
 # Documented exemptions (each is listed in the report, never silent):
-ALBEDO_EXEMPT = re.compile(r"^M_(sign|plate)_", re.I)          # traffic-sign faces: retroreflective white and black print by design
+ALBEDO_EXEMPT = re.compile(r"^M_(sign|plate)_|^M_car_plate$|^M_contact_|^M_(booth_|car_|door_|noise_)?glass(_tint)?$", re.I)
+# sign/plate faces: retroreflective white and black print by design (M_car_plate added r7);
+# M_contact_*: multiplicative contact-shadow patches (ADR 0050), _BaseColor is not albedo;
+# glass (M_glass, M_booth_glass, M_car_glass, M_door_glass, M_noise_glass, M_car_glass_tint): transmissive / reflective,
+# the opaque-albedo range does not apply (review r7, 6 glass materials). Dark solid materials stay audited.
 # Shader-procedural albedo: _BaseColor is white (drain_grate, gate_boom), the real albedo is in the shader / importer.
 # Constants (linear) from WorldPBR.shader (_DECAL_GRATE iron) and WorldPbrMaterials.Stripes (boom_red_white).
 PROCEDURAL_LINEAR = {
@@ -43,7 +47,7 @@ PROCEDURAL_LINEAR = {
     "M_gate_boom": [(0.45, 0.025, 0.02), (0.68, 0.68, 0.66)],                              # red / white bands, 0.5 m each
 }
 LINEAR_BASECOLOR_SHADERS = ("Kamion/World Wire",)   # importer writes the linear value with SetVector, the shader reads it as linear
-TEXEL_EXEMPT = re.compile(r"^M_impostor_", re.I)               # distance billboards of whole trees, low density by design
+TEXEL_EXEMPT = re.compile(r"^M_impostor_|^M_marking_white$", re.I)  # impostors: low density by design; road paint: dense tiling, over the upper bound harms nothing (review r7)
 VEGETATION = re.compile(r"^(tree|shrub|bush|hedge)_", re.I)   # planted: trunk base may sit below the terrain
 VEGETATION_SUNK_OK_M = 1.0
 # Frame exposure (r6 W-N10 / section 8 #1): a frame inside geometry or with a black hole is not evidence.
