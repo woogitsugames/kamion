@@ -1,6 +1,7 @@
 # HANDOVER — kamion, sesja 8 (2026-11-10 ok. 22:00 UTC start; limit 5 h reset 2026-11-11 03:00 UTC)
 
 ## Najpierw
+- **Polecenie właściciela (s8, ~00:10): następna sesja DOKŁADA PRACĘ GPT i Argonowi** — dopisując kolejne zadania na końcu ich plików w sekcji „KOLEJKA” (`docs/owner/GPT-TASK-01-MEGASCANS.md`, `docs/owner/ARGON-TASK-01-WORLD-EDGE.md`), z numerem ADR z góry, gałęzią, worktree i STATUS. Zawsze trzymaj w kolejce każdego co najmniej 1–2 niezrobione zadania. Obecnie: GPT Q1 = ADR 0086 (`_Tint` gamma globalnie), Q2 = ADR 0088 (Megascans r2 drzewa); Argon Q1 = ADR 0087 (lakier/szyba/reflektory ciągnika). Scalaj ich gałęzie po REPORT.md jak każdego agenta.
 - **Polecenie właściciela (s8, ~23:55 UTC): lider s8 NIE wznawia agentów po ich zakończeniu — pracę przejmuje sesja 9 wg `docs/owner/START-PROMPT-S9.md`: max 3 agentów naraz + zewnętrzny trigger co godzinę wybudzający sesję.** Agenci, którzy skończyli, zostają z raportem w STATUS.md swojego worktree.
 - **Limit 5 h na 83 % o ~23:50 UTC** (reset 03:00 UTC) — od teraz bez nowych agentów, dopóki działa ≥ 2.
 - main = ten commit. Start s8: 8 agentów Fable przejmuje/uruchomionych (tabela). GPT/Codex pracuje nad importem Megascans (ADR 0084, `gpt-megascans`, STATUS `artifacts/megascans-r1/STATUS.md`) — nie ruszać, scalić po REPORT.md. Antigravity (Argon 4) — zadanie `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` (tło za krawędzią świata, ADR 0085, gałąź `argon-edge`).
@@ -25,7 +26,7 @@
 1. Scalanie: 0076 → 0077 → 0070 → 0078 → 0081 → 0083 → Kwadrat r11 → światło r11 → 0084 → 0085; po drogach: build_world → pytest gis → import-region → PlayMode WorldCBarrier|DepotBarrier|WorldCRoute.
 2. Sprzątanie ZROBIONE: worktree 0071/0080/0082 usunięte (artifacts skopiowane), 7 osieroconych katalogów usuniętych (junctiony odpięte, artifacts → artifacts/orphans/), nagranie → artifacts/owner/.
 3. Integracja, czyste buildy Low/High/Ultra, telefony, raport bramki 3.
-4. Ostatni przydzielony ADR: **0086** (0086 = globalna poprawka `_Tint` gamma w World PBR, do zlecenia po scaleniach).
+4. Ostatni przydzielony ADR: **0088** (0086 = `_Tint` gamma → GPT Q1; 0087 = lakier/szyba/reflektory TRAKT → Argon Q1; 0088 = Megascans r2 drzewa → GPT Q2).
 
 ---
 # HANDOVER — kamion, sesja 7 (2026-11-10 ok. 23:00; LIMIT WYCZERPANY ok. 23:10; wszyscy agenci (0070, 0076, 0077, 0078, 0081, 0082, 0083) zapisali WIP i są zatrzymani; agenci dostali polecenie: commit WIP + STATUS.md i stop; nowa sesja startuje z docs/owner/START-PROMPT-S8.md)

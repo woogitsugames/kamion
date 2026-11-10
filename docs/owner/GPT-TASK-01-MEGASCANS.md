@@ -33,3 +33,13 @@ Po każdej rundzie: `uv run --project tools/worldgen tools/worldgen/roads/build_
 
 ## Definition of Done
 pytest tests/gis zielone (poza znanym P0 korytarza s1432–1480, jeśli main go jeszcze ma), EditMode `pwsh scripts/test.ps1 -Platform EditMode` bez nowych porażek, budżet Low nie gorszy (stats z visual-qa), ADR `docs/adr/0084-megascans-import.md`, wpisy w docs/LICENSES.md (co i gdzie użyte), raport końcowy w `artifacts/megascans-r1/REPORT.md` (gałąź, sha, co zrobione, liczby, ścieżki PNG przed/po, otwarte, przewidywane konflikty: materials.py, plantings.py, life_props.py, build_world.py). Lider Claude scali gałąź `gpt-megascans`.
+
+---
+## KOLEJKA — kolejne zadania (dopisuje lider; po skończeniu zadania przeczytaj ten plik ponownie i bierz następne niezrobione)
+Zasady jak wyżej (własny worktree z main, kopia Data/raw/derived, STATUS po każdym kroku, nie scalasz, REPORT.md na koniec). Przed startem: `git log main --oneline -20` — zacznij od aktualnego main.
+
+### Q1 (ADR 0086) — globalna poprawka `_Tint` (gamma) w World PBR
+Agent 0081 wykazał: `_Tint` w `Kamion/World PBR` jest właściwością `Color`, więc Unity linearyzuje go drugi raz (kolor^2,2), np. `plaster_grey` 0,36 → 0,095 na ekranie. Dla budynków dodano flagę `tint_linear` (`tools/worldgen/streetscape/materials.py` + `WorldPbrMaterials.cs`, gałąź 0081 — jeśli nie ma jej jeszcze na main, poczekaj na scalenie albo pracuj na `worktree-agent-ac404823e7d8b56e7`). Zadanie: włączyć poprawną konwersję dla WSZYSTKICH zestawów (ekrany akustyczne, ogrodzenia, wiadukt, rekwizyty, nawierzchnie), każdy zestaw przekalibrować do zmierzonego albedo/zdjęć (one były strojone pod błąd), kamery kontrolne przed/po Low/High × clear/overcast, histogramy vs zdjęcia (docs/REFERENCES.md, Data/photos/owner-2026-11-10-centrum — tylko referencja). Gałąź `gpt-tint-gamma`, worktree `.claude/worktrees/gpt-tint-gamma`, STATUS `artifacts/tint-gamma-r1/STATUS.md`, ADR `docs/adr/0086-world-pbr-tint-gamma.md`.
+
+### Q2 (ADR 0088) — Megascans r2: drzewa i liście
+Jeśli w R1 kora/liście (silver-birch-bark, birch-tree-trunk, linden-branch) zostały na fallbacku — wpiąć je w NASZE generowane drzewa (brzoza, sosna, lipa) z LOD i budżetem Low; korony nie mogą być „w czerni” (por. światło r11 w ADR 0080). Gałąź `gpt-megascans-r2`, STATUS `artifacts/megascans-r2/STATUS.md`.

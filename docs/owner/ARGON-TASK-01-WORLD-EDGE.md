@@ -32,3 +32,10 @@ Kamery kontrolne patrzące za krawędź (z kabiny na al. Tysiąclecia N 900–10
 
 ## Definition of Done
 `uv run --project tools/worldgen pytest tests/gis -q` bez nowych porażek (+ nowy test generatora far-field), EditMode `pwsh scripts/test.ps1 -Platform EditMode` bez nowych porażek, PlayMode `-Filter WorldEdgeRecoveryTests` zielone, budżet Low w normie, ADR `docs/adr/0085-far-field-backdrop.md`, wpisy w docs/LICENSES.md, raport `artifacts/edge-far-r1/REPORT.md` (gałąź, sha, liczby, PNG przed/po, otwarte, przewidywane konflikty — prawdopodobnie `WorldEdgeBuilder.cs`, `build_world.py`, `import-region.ps1`). Lider Claude scali gałąź `argon-edge`.
+
+---
+## KOLEJKA — kolejne zadania (dopisuje lider; po skończeniu zadania przeczytaj ten plik ponownie i bierz następne niezrobione)
+Zasady jak wyżej (własny worktree z AKTUALNEGO main, kopia Data/raw/derived, STATUS po każdym kroku, nie scalasz, REPORT.md na koniec).
+
+### Q1 (ADR 0087) — ciągnik TRAKT: lakier kabiny, szyba czołowa, reflektory w dzień
+Z recenzji `docs/reports/visual/REVIEW-2026-11-10-0070-0083.md` (sekcja 0083, P1 5–7, scalone w main `68e5335`): lakier kabiny kredowy bez odbić (realny lakier użytkowy: połysk, odbicie nieba, fresnel), szyba czołowa mleczna, reflektory świecą pełną bielą w dzień. Pliki: `TruckExterior.shader`, shader szkła kabiny, `TruckLights.cs` (przeczytaj ADR 0083, 0059 i D31/D34/D44 w docs/11 — wymagania odbicia szyby). Po zmianach: `Game.Editor.Setup.TruckAssetBuilder.BuildBatch`, `Game.World.Import.WorldTruckInstaller.InstallBatch`, kamery `chase,truck-side,truck-rear34` + kabina, Low/High × clear/overcast/lowsun, EditMode zielone, budżet bez zmian. P2 jeśli czas: płaskie klosze lamp, plamy na szybie bocznej. Gałąź `argon-truck-paint`, STATUS `artifacts/truck-paint-r1/STATUS.md`, ADR `docs/adr/0087-truck-cab-paint-glass-lights.md`.
