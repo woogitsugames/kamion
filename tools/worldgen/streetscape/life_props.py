@@ -741,3 +741,70 @@ def build_registered():
     for name, (H, d0, d1) in sorted(LANDMARKS.items()):
         P[name] = chimney(H, d0, d1)
     return P
+
+
+# ------------------------------------------------------------------------------------------- contact shadow (ADR 0050)
+# Parameters of Kamion/World Vehicle Contact per vehicle prototype, in the Unity object frame of the instance
+# (x right, z forward = generator +y; all slabs are centred on x = 0). Every value is a WORKING_VALUE read off the
+# prototype geometry above: slab = the underside seen from the ground (half sizes grown by ~0.3 x height where sills,
+# wheels, tanks or steps close the sides of the gap), tyre = tight contact core at the tread, sun box = the lower body
+# that blocks the sun from the ground under / beside it when the instance casts no shadow (LOD1+, Low LOD0 > 12 m).
+CONTACT_FADE = 0.30          # m, patch edge fade (the patch outline is never visible)
+NO_AXLE = 1.0e4
+
+
+def _cs(slab0, slab1, strength, tyre, axles, sun_box, sun_z, margin):
+    ax = list(axles) + [NO_AXLE] * (4 - len(axles))
+    rects = [(slab0[0], slab0[2]), (slab1[0], slab1[2]), (sun_box[0], sun_box[2])] + [(a, tyre[2]) for a in axles]
+    hx = max(slab0[1], slab1[1], sun_box[1], tyre[0] + tyre[1]) + margin
+    z0 = min(c - h for c, h in rects) - margin
+    z1 = max(c + h for c, h in rects) + margin
+
+    def r(v):
+        return [round(float(x), 4) for x in v]
+    return {"slab0": r(slab0), "slab1": r(slab1), "strength": r(list(strength) + [0.0]), "tyre": r(tyre),
+            "axles": r(ax), "sun_box": r(sun_box), "sun_z": r(sun_z),
+            "patch": r([(z0 + z1) / 2, hx, (z1 - z0) / 2, CONTACT_FADE])}
+
+
+def contact_spec(name):
+    """Contact-shadow parameters (dict of 4-vectors) for a vehicle prototype name, None for anything else."""
+    if name.startswith(("car_", "van_")):
+        d = CARS[name.split("_")[1]] if name.startswith("car_") else VAN
+        hw, L, sill, r = d["W"] / 2, d["L"], d["sill"], d["r"]
+        h = sill + 0.04                                   # floor pan between the sills (sill = lowest body edge)
+        yfa = L / 2 - d["foh"]
+        return _cs([0.0, hw - 0.05 + 0.1 * h, L / 2 - 0.30, h],            # cabin floor between the sills
+                   [0.0, hw - 0.25, L / 2 - 0.02, sill + 0.17],            # overhangs: bumper lower edges (taper)
+                   (1.0, 0.75, 0.85),
+                   [hw - 0.15, 0.10, 0.30 * r, 0.04],                     # tyre tread contact
+                   (yfa, yfa - d["wb"]),
+                   [0.0, hw - 0.04, L / 2 - 0.06, 1.0], [sill, d["belt"] - 0.05, 0.06, 0.06], 0.70)
+    if name.startswith("tractor_"):
+        t = TRACTOR
+        hw = t["W"] / 2
+        y_ra = -t["fw_ahead"]
+        y_fa, y_rear = y_ra + t["wb"], y_ra - t["rear_oh"]
+        y_front = y_fa + t["fh"]
+        y_tank = y_front - t["cab_l"] - 1.75                # rear end of the tanks / battery box
+        return _cs([(y_tank + y_front) / 2, hw + 0.10, (y_front - y_tank) / 2, 0.55],   # cab, steps, tanks, bumper
+                   [(y_rear + y_tank) / 2, hw - 0.25, (y_tank - y_rear) / 2, 0.80],    # rails + fifth wheel, duals
+                   (0.90, 0.65, 0.90),
+                   [hw - 0.26, 0.22, 0.15, 0.05], (y_fa, y_ra),
+                   [(y_rear + y_front) / 2, hw - 0.05, (y_front - y_rear) / 2, 0.80], [0.50, 1.20, 0.05, 0.05], 1.20)
+    if name.startswith("trailer_"):
+        L, hw, zf = TRAILER_L, TRAILER_W / 2, TRAILER_FLOOR
+        a0, a1 = TRAILER_AXLES[0] - 0.75, TRAILER_AXLES[-1] + 0.75
+        return _cs([L / 2, hw + 0.25, L / 2, zf - 0.20],                    # floor + main beams
+                   [(a0 + a1) / 2, hw, (a1 - a0) / 2, 0.55],               # axle group: tyres close the sides
+                   (0.90, 0.80, 0.90),
+                   [hw - 0.27, 0.19, 0.16, 0.05], TRAILER_AXLES,
+                   [L / 2, hw, L / 2, 0.95], [zf - 0.30, zf + 0.10, 0.05, 0.05], 1.60)
+    return None
+
+
+def contact_quad(m, spec):
+    """Flat patch (material vehicle_contact) 1 cm over the ground plane covering spec['patch'] (generator frame)."""
+    cz, hx, hz, _ = spec["patch"]
+    z = 0.01
+    m.quad("vehicle_contact", [-hx, cz - hz, z], [hx, cz - hz, z], [hx, cz + hz, z], [-hx, cz + hz, z])

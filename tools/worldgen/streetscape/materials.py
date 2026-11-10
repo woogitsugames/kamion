@@ -90,6 +90,9 @@ M = {
     "barrier_post": {"color": [0.40, 0.41, 0.41], "rough": 0.55, "metal": 0.9},
     "noise_panel": {"color": [0.30, 0.33, 0.31], "rough": 0.6, "metal": 0.1, "texture_set": "noise_cassette"},
     "car_sill": {"color": [0.035, 0.033, 0.03], "rough": 0.8},
+    # contact shadow / AO patch under parked vehicles (ADR 0050): Kamion/World Vehicle Contact, parameters per
+    # prototype from the LOD0 node extras ("contact", life_props.contact_spec)
+    "vehicle_contact": {"color": [1.0, 1.0, 1.0], "rough": 1.0, "shader": "vehicle_contact"},
     "wire": {"color": [0.11, 0.11, 0.105], "rough": 0.5, "shader": "wire"},   # weathered aluminium conductor, ribbon
     "concrete_pole": {"color": [0.33, 0.33, 0.31], "rough": 0.9},
     "insulator": {"color": [0.5, 0.5, 0.5], "rough": 0.3},

@@ -405,8 +405,10 @@ namespace Game.World
         /// Only the LOD switches scale with lodBias. WORKING_VALUE; mirrored in build_world.py VEHICLE_CULL_M.</summary>
         public const float VehicleCullM = 300f;
 
+        /// <summary>Vehicle prototypes and their contact-shadow patch prototypes ("contact_&lt;spec hash&gt;", ADR 0050): fixed cull.</summary>
         public static bool IsVehicle(string proto) =>
-            proto.StartsWith("car_") || proto.StartsWith("van_") || proto.StartsWith("tractor_") || proto.StartsWith("trailer_");
+            proto.StartsWith("car_") || proto.StartsWith("van_") || proto.StartsWith("tractor_") || proto.StartsWith("trailer_") ||
+            proto.StartsWith("contact_");
         [Tooltip("Cull distance of trees and shrubs (m at lodBias 1), caps the baked impostor distance")]
         public float treeCullM = 600f;
 
