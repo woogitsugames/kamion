@@ -76,10 +76,11 @@ MATERIALS = {
     "apron_sett": {"color": [0.27, 0.24, 0.21], "rough": 0.9, "surface": "sett"},
     # viaducts: precast-concrete modulation map projected in world metres (the deck / pier meshes have no metric UV);
     # albedo from the CC0 Bieżeństwa photo (piers mid grey, soffit in its own shadow, REVIEW r3 W4). WORKING_VALUE
+    # sky_occ (ADR 0060): the soffit and the deck underside face a road the deck itself shades
     "bridge_concrete": {"color": [0.42, 0.42, 0.40], "rough": 0.85, "surface": "concrete",
-                        "texture_set": "concrete_precast", "uv": "planar"},
+                        "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.5, 0.0]},
     "bridge_soffit": {"color": [0.15, 0.15, 0.145], "rough": 0.9, "surface": "concrete",
-                      "texture_set": "concrete_precast", "uv": "planar"},
+                      "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.6, 0.0]},
     "barrier_steel": {"color": [0.55, 0.56, 0.57], "rough": 0.45, "metal": 0.9, "surface": "steel"},
     "verge_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
     "shoulder_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},

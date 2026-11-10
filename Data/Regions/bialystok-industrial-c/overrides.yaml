@@ -133,7 +133,7 @@ overrides:
     reason: >-
       OSM has no barrier=hedge / flowerbed around Rondo Pamięci Bieżeństwa 1915 r. The CC0 photo 20201102_152339
       (Rakoon, docs/REFERENCES.md) shows clipped dark-red berberis hedges on the lawns beside the footpaths and a
-      bare soil / mulch bed with red shrubs in the roundabout centre; the GUGiK 2024-05-27 orthophoto (0.25 m) shows
+      bare soil / mulch bed in the roundabout centre (2020-08 Mapillary: loose stones, see islands); the GUGiK 2024-05-27 orthophoto (0.25 m) shows
       the same dark shrub masses (traced below, EPSG:2180, +-0.5 m; OSM centrelines overlay the orthophoto within
       1-2 m), the light-brown soil centre island under the viaduct and a paved splitter island between the two zebras
       of the northern arm. Hedge height 0.6-0.8 m, species and the shrub layout in the centre are WORKING_VALUE.
@@ -146,4 +146,6 @@ overrides:
       - {name: C, plant: berberis_red, rim_m: 0.4, ring: [[778556.0, 595567.5], [778560.0, 595568.6], [778567.0, 595568.8], [778573.0, 595568.2], [778574.2, 595566.5], [778572.0, 595563.8], [778565.0, 595563.2], [778559.0, 595563.6], [778556.5, 595565.0]]}
     islands:
       - {name: north-splitter, at: [778566.8, 595538.0], fill: paving}
-      - {name: ring-centre, at: [778549.7, 595506.5], fill: soil, shrubs: berberis_red, shrub_spacing_m: 2.2, shrub_share: 0.7}
+      # ADR 0060 (D42 Mapillary 2020-08-15, CC BY-SA, reference only): the ring centre under the viaduct is loose grey
+      # river stones / gravel on a slope, no red shrubs (was soil + berberis clumps from the r6 reading of the orthophoto)
+      - {name: ring-centre, at: [778549.7, 595506.5], fill: stones}

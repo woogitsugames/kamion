@@ -183,6 +183,18 @@ namespace Game.World.Import
                 mat.EnableKeyword("_ROADWEAR");
                 mat.SetFloat("_WheelPolish", id == "road_asphalt" ? 0.6f : 0.25f);
                 mat.SetFloat("_GutterDirt", id == "road_asphalt" ? 0.55f : 0.3f);
+                // ADR 0060: oil / soot band between the wheel paths of aged roads (resurfaced SMA: barely)
+                mat.SetFloat("_DripBand", id == "road_asphalt" ? 0.22f : 0.06f);
+            }
+            // ADR 0060 (review r7 N-2): dirty joints and damp / oily hollows on yards and footways (not on carriageways:
+            // their wear comes from _ROADWEAR). WORKING_VALUE, judged against the CC0 Bieżeństwa / Andersa photos.
+            if (setName == "behaton_i_grey" || setName == "paving_20x10_grey" || setName == "concrete_cast_5m_joints"
+                || setName == "concrete_slab_3x1.5" || (setName == "asphalt_worn" && id != "road_asphalt"))
+            {
+                bool blocks = setName == "behaton_i_grey" || setName == "paving_20x10_grey";
+                mat.EnableKeyword("_GRIME");
+                // x damp darkening, y macro-pool threshold (~0.62 = 16 % of the area), z joint dirt, w damp gloss
+                mat.SetVector("_Grime", new Vector4(blocks ? 0.42f : 0.38f, 0.62f, blocks ? 0.45f : 0.3f, 0.5f));
             }
             if (setName == "asphalt_worn")
             {
@@ -212,7 +224,8 @@ namespace Game.World.Import
                 // Review r5 W-N3: macro-masked bare soil + rotated second sample (ADR 0042). Refill = linear mean of
                 // the grass_verge texels without bare soil (Var.B < 0.1), measured from the Medium BaseColor.
                 mat.EnableKeyword("_GRASS_DETILE");
-                mat.SetVector("_GrassFill", new Vector4(0.079f, 0.109f, 0.037f, 1f));   // linear, no sRGB conversion
+                // D38 (ADR 0060): grass chroma x1.45 in the set -> refill re-measured (Medium, Var.B < 0.1)
+                mat.SetVector("_GrassFill", new Vector4(0.072f, 0.114f, 0.011f, 1f));   // linear, no sRGB conversion
             }
             if (id.StartsWith("hall_wall") || id.StartsWith("plaster_") || id == "panel_concrete" || id == "brick_red" || id == "hall_plinth")
             {

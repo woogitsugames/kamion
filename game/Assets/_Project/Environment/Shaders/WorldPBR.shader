@@ -52,6 +52,9 @@ Shader "Kamion/World PBR"
         _DetailFade ("Photo detail fade distance (m)", Float) = 25
         _WheelPolish ("Wheel-path polish (_ROADWEAR)", Range(0, 1)) = 0.5
         _GutterDirt ("Gutter grime (_ROADWEAR)", Range(0, 1)) = 0.5
+        _DripBand ("Lane-centre oil / soot drip band between the wheel paths (_ROADWEAR)", Range(0, 1)) = 0
+        _Grime ("Ground grime (_GRIME): x damp darkening, y damp threshold (macro pool), z joint dirt, w damp gloss", Vector) = (0.45, 0.62, 0.3, 0.5)
+        _SkyOcc ("Sky occlusion: x down-facing ambient, y horizon reflection (0 = off; ADR 0060)", Vector) = (0, 0, 0, 0)
         _AgeTint ("Patch age target / base albedo ratio", Float) = 2.0
         _DecalAlpha ("Decal opacity", Range(0, 1)) = 1
         _SplashHeight ("Splash zone height (m)", Float) = 0.6
@@ -89,6 +92,8 @@ Shader "Kamion/World PBR"
             float4 _Stripe, _StripeA, _StripeB;
             float4 _GrassFill;
             float4 _PaintColor, _PaintWear;
+            float4 _Grime, _SkyOcc;
+            float _DripBand;
             float _OffsetFactor, _OffsetUnits, _SrcBlend, _DstBlend, _ZWrite, _Cull, _ReceiveShadows;
         CBUFFER_END
         ENDHLSL
@@ -122,6 +127,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _SPLASH
             #pragma shader_feature_local _RUNOFF
             #pragma shader_feature_local _STRIPES
+            #pragma shader_feature_local _GRIME
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionWorldGI.hlsl"   // ADR 0064 baked sky visibility + far ground shadows
@@ -342,7 +348,32 @@ Shader "Kamion/World PBR"
                         half g = (1.0 - smoothstep(0.05, 0.65, w.y)) * _GutterDirt;
                         albedo = lerp(albedo, albedo * half3(1.12, 1.06, 0.92) + half3(0.012, 0.010, 0.006), g);
                         smooth *= 1.0 - 0.4 * g;
+                        // ADR 0060 (review r7 N-2): the gutter's lowest ~0.25 m stays damp (water runs along the kerb to the
+                        // gullies), broken where the macro mottling says the grit is dry
+                        half damp = (1.0 - smoothstep(0.08, 0.3, w.y)) * saturate(0.35 + (macro.a - 0.5) * 2.0 + (macro.b - 0.5)) * _GutterDirt;
+                        albedo *= 1.0 - 0.5 * damp;
+                        smooth = lerp(smooth, 0.55, damp);
+                        // oil / soot drip band between the wheel paths (lane centre 0.5 +- ~0.12), mottled, strongest where
+                        // traffic queues; WORKING_VALUE darkening, the band is ~0.8 m of a 3.5 m lane
+                        half drip = saturate(1.0 - abs(lc - 0.5) / 0.13) * saturate(0.45 + (macro.a - 0.5) * 2.2 + (macro.g - 0.5) * 0.8);
+                        albedo *= 1.0 - _DripBand * drip;
                     }
+                }
+            #endif
+
+                // ---- ground grime (ADR 0060, review r7 N-2): dirty joints on every tier (Var.B, the Medium+ element jitter
+                // only adds tone) and damp / oily hollows: water and fines stay in the low points (Var.R height) of the
+                // 1.5-24 m wear patches (macro B) broken by the 0.5-4 m mottling (macro A). Paving, yard concrete, yard and
+                // path asphalt. Low: +1 fetch (Var, bilinear).
+            #if defined(_GRIME)
+                {
+                    half4 gv = SAMPLE_TEXTURE2D(_VarMap, sampler_BaseMap, uvb);
+                    half jfade = saturate(0.012 / max(footprint, 1e-4));             // joints resolved: full dirt
+                    albedo *= 1.0 - _Grime.z * gv.b * lerp(0.5, 1.0, jfade);
+                    half pool = macro.b * 0.65 + macro.a * 0.35 - (gv.r - 0.7) * 0.06;
+                    half wet = smoothstep(_Grime.y, _Grime.y + 0.025, pool);
+                    albedo *= 1.0 - _Grime.x * wet;
+                    smooth = lerp(smooth, max(smooth, 0.62), wet * _Grime.w);
                 }
             #endif
 
@@ -528,11 +559,13 @@ Shader "Kamion/World PBR"
                 half spec = r2 / ((d * d) * max(0.1, LoH * LoH) * (r * 4.0 + 2.0));
                 half3 color = (diffColor + specColor * spec) * L.color * (atten * NoL);
 
-                half3 ambient = SampleSH(nw) * diffColor * (ao * giK);
+                // sky occlusion (ADR 0060) on top of baked sky visibility giK (ADR 0064)
+                half3 ambient = SampleSH(nw) * diffColor * (ao * giK) * (1.0 - _SkyOcc.x * saturate(-nw.y));
                 half3 R = reflect(-V, nw);
                 half fresnel = Pow4(1.0 - NoV);
                 half grazing = saturate(smooth + max(metal, 0.04));
                 half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, ao * giK) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
+                env *= 1.0 - _SkyOcc.y * (1.0 - smoothstep(0.05, 0.45, R.y));
                 color += ambient + env;
                 color += diffColor * KamionLampPools(pw, nw);   // dusk street-lamp pools (ADR 0062)
 

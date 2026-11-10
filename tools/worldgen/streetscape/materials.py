@@ -88,7 +88,10 @@ M = {
     "concrete_fence_post": {"color": [0.28, 0.28, 0.26], "rough": 0.9},
     "concrete_wall": {"color": [0.30, 0.30, 0.28], "rough": 0.9},
     "barrier_post": {"color": [0.40, 0.41, 0.41], "rough": 0.55, "metal": 0.9},
-    "noise_panel": {"color": [0.30, 0.33, 0.31], "rough": 0.6, "metal": 0.1, "texture_set": "noise_cassette"},
+    # ADR 0060 (r7 N-2, D42 Mapillary 2018-07 / 2024-07 at g3b_eye_s1482 / s1632, reference only): the absorbing
+    # cassettes along Andersa / Putry are dark powder-coated (anthracite / moss-green class), read near-black under the
+    # glass panes; 0.30 read as a light grey wall. WORKING_VALUE (no RAL plate seen).
+    "noise_panel": {"color": [0.05, 0.06, 0.055], "rough": 0.6, "metal": 0.1, "texture_set": "noise_cassette"},
     "car_sill": {"color": [0.035, 0.033, 0.03], "rough": 0.8},
     # contact shadow / AO patch under parked vehicles (ADR 0050): Kamion/World Vehicle Contact, parameters per
     # prototype from the LOD0 node extras ("contact", life_props.contact_spec)
@@ -227,6 +230,10 @@ M = {
                               "texture": f"hedge_{kind}_{sp}", "alpha_cutoff": 0.5}
        for kind in ("shell", "sprig") for sp in ("berberis", "privet", "hornbeam", "thuja")},
     "bed_soil": {"color": [0.17, 0.13, 0.095], "rough": 0.9, "surface": "grass", "texture_set": "soil_bed"},
+    # roundabout centre under the viaduct: loose grey-beige river stones / coarse gravel on a slope (Mapillary CC BY-SA
+    # 201270605169291 / 2818555625124739, 2020-08, D42, reference only; ADR 0060). Set gravel_compacted (no pebble set
+    # yet), lighter than a road shoulder. WORKING_VALUE.
+    "bed_stones": {"color": [0.22, 0.21, 0.195], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     # sign gantry (streetscape.life_props.sign_gantry)
     "gantry_steel": {"color": [0.42, 0.43, 0.43], "rough": 0.55, "metal": 0.9},
     # landmarks
@@ -265,3 +272,33 @@ for _k, _ws in _FAR_WALLS.items():
             M[f"{_w}__far_{_k}"] = {"color": M[_w]["color"], "rough": M[_w]["rough"], "base": _w,
                                     "window_grid": dict(FAR_GRID[_k], uv="TEXCOORD_1"),
                                     "glass_color": [0.03, 0.035, 0.04]}
+
+# Sky occlusion (ADR 0060, review r7 N-2 "no dark accents"): the engine lights the world with the sky SH and a sky
+# reflection probe and has no screen-space AO, so (a) faces looking down (deck soffits, eaves, canopy and balcony
+# undersides, the head of window reveals) were lit by a ground that is in fact shaded by the same structure, and
+# (b) glazing mirrored the bright horizon where a real window sees the street, trees and the buildings opposite.
+# [x, y] = Kamion/World Surface / PBR _SkyOcc: x scales the ambient of down-facing faces by 1 - x * max(-n.y, 0),
+# y scales near-horizontal reflections (R.y < 0.45) by up to 1 - y. WORKING_VALUE, judged against the CC0 Bieżeństwa
+# photo (soffit / fascia ~20 % luma at overcast vs ~30 % before). Not on cars, ground, vegetation, decals or
+# collision (cars belong to the vehicle look work; ground faces up).
+SKY_OCC_GLASS = [0.0, 0.9]   # r8 after4: 0.6 left glazing at ~40 % luma (target 0.03-0.06 lin.)
+SKY_OCC_STRUCT = [0.5, 0.0]
+_NO_SKY_OCC = ("car_", "collision_", "decal_", "marking", "hedge_", "lamp_glass", "signal_", "tyre", "rim",
+               "trailer_", "tractor_", "vehicle_", "wire", "bed_soil", "noise_glass")
+_GLASSY = ("glass", "door_glass", "booth_glass", "shelter_glass", "canopy_glass", "skylight")
+
+
+def _sky_occ(k, v):
+    if k.startswith(_NO_SKY_OCC) or v.get("collision") or v.get("decal") or "surface" in v and v["surface"] in (
+            "grass", "asphalt", "paving_stones", "gravel", "sett"):
+        return None
+    if k in _GLASSY or "window_grid" in v:
+        return SKY_OCC_GLASS if k in _GLASSY else [SKY_OCC_STRUCT[0], SKY_OCC_GLASS[1]]
+    return SKY_OCC_STRUCT
+
+
+for _k, _v in M.items():
+    _so = _sky_occ(_k, _v)
+    if _so is not None:
+        _v.setdefault("sky_occ", _so)
+

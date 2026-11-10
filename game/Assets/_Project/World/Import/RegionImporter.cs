@@ -236,6 +236,18 @@ namespace Game.World.Import
         // ------------------------------------------------------------------------------------------------- materials
         static Material CreateMaterial(Result r, string id, Dictionary<string, object> m, Dictionary<string, object> roadAsphalt)
         {
+            var mat = CreateMaterialCore(r, id, m, roadAsphalt);
+            // ADR 0060: manifest "sky_occ": [down-facing ambient, horizon reflection] (structures, glazing; 0 = off)
+            if (mat != null && m.Get("sky_occ") is List<object> so && so.Count >= 2 && mat.HasProperty("_SkyOcc"))
+            {
+                mat.SetVector("_SkyOcc", new Vector4((float)Num(so[0]), (float)Num(so[1]), 0f, 0f));
+                EditorUtility.SetDirty(mat);
+            }
+            return mat;
+        }
+
+        static Material CreateMaterialCore(Result r, string id, Dictionary<string, object> m, Dictionary<string, object> roadAsphalt)
+        {
             var c = Arr(m.Get("color"));
             var albedo = new Color((float)Num(c[0]), (float)Num(c[1]), (float)Num(c[2]));
             float rough = m.Get("rough") != null ? (float)Num(m.Get("rough")) : 0.9f;
