@@ -58,3 +58,15 @@ European premium tractor were shown as a reference for proportion, roundness and
 - r2 exports: exterior LOD0 102 062 / LOD1 42 999 / LOD2 15 300, interior LOD0 93 345 / LOD1 42 175 / LOD2 21 906
   (`rear_lid_` dropped at LOD2); both check_export PASS, sightline PASS, check_fit PASS (12 vertices = 0.051 % outside,
   0 in the glass zone). Unity frames: `docs/reports/visual/truck-A6-exterior/modern-front/unity2/`.
+
+## Revision r3 shader (2026-11-10, rendering review of r2)
+- r2 gloss-film shed (x 0.25 below baked roughness ~0.3) now applies only above the spray band (0.5-1.1 x _GrimeHeight):
+  polished tanks, chrome steps and lenses at bumper/arch height keep the full wet road spray; the mask keeps the shed.
+- Black louvres read mid-grey (overcast sRGB ~50-110) although albedo (linear 0.01), roughness (0.09) and baked dirt (0)
+  are correct: it is the 4 % mirror of open sky. Low's analytic cube and the High capture (no instanced trees/props) give
+  open sky where near-horizon reflections of a parked truck see buildings, trees and ground. Gloss dielectric trim
+  (non-paint, non-metal, roughness < 0.22-0.32) gets its own env term: Schlick F, AO, horizon occlusion and a
+  near-horizon obstruction lerp(0.3, 1, smoothstep(-0.05, 0.42, R.y)) (WORKING_VALUE); URP keeps the direct light.
+  truck-34 grille mean sRGB: Low overcast 51 -> 44, High overcast 60 -> 51, lowsun 25-29 -> 19-24; paint, glass, lamps
+  unchanged. Cost: one extra env sample on gloss-trim pixels only (~1-2 % of the truck-34 frame); not measured on a phone.
+  Evidence: artifacts/owner/modern-front/shader/. Geometry follow-up (truck-artist): louvre faces tilted face-down.
