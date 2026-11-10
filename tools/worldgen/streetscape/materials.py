@@ -109,7 +109,7 @@ M = {
     # LOD0 car glazing: dark tint, alpha blended (importer: "blend"), the dark interior shows through
     # v4 (REVIEW r6 W-N8): transmission 0.35 per face onto the dark interior (both faces drawn), thinner dust film
     "car_glass_tint": {"color": [0.010, 0.016, 0.016], "rough": 0.05, "alpha": 0.65, "blend": True, "shader": "car_glass",
-                       "dust": 0.35, "privacy_alpha": 0.80, "reflect": 1.3},
+                       "dust": 0.35, "privacy_alpha": 0.80, "reflect": 1.0},
     # road film overlays of car LOD0 / LOD1 (ADR 0041 par. 8): alpha texture x per-level alpha, three dirt levels
     # v4: darker grey-brown, lower alpha (the salt-pale level 3 at alpha 1.0 read as beige paint on red / dark cars)
     "car_dirt_1": {"color": [0.15, 0.13, 0.10], "rough": 1.0, "alpha": 0.45, "blend": True, "texture": "car_dirt"},

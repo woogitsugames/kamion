@@ -69,3 +69,19 @@ hall wall in the same frame 17-22 %), below that needs a WB / sun-colour decisio
 5.8 -> 8.4 % (deep shade lost the non-physical sheen; High 1.8 %); C-N7 white L = exterior `CAB_Body_LOD0:MI_Ext_Lights`
 (headlamp DRL guide, emissive) seen through a gap in the passenger-side lower front of the interior - exterior/interior
 geometry (truck-artist). Evidence: `artifacts/truck-interior/r6-wheel/`.
+
+## Addendum r7 (2026-11-10, rendering-perf): cab-view display parity on Low
+Measured (cab-dash, editor, share of pixels < 3 % luma / p50): Low dusk 8.7 % / 13.9 vs High 2.1 % / 15.5. High with
+post-processing off (`-qaRq rq_post=0`): 9.5 % / 13.6, with the vehicle capture off: unchanged 2.1 %. So the gap is the
+display transfer, not the light: High maps the scene through the D23 master curve (black floor 1.5 %, 0.0025 -> 3.8 %,
+0.01 -> 11.5 %, 0.18 -> 48.4 %), Low has no LUT and writes plain sRGB (0 %, 3.2 %, 10.0 %, 46.1 %).
+Decision: in the cab view on tiers without post-processing, the cab shaders (CabInterior, TruckExterior cab-view parts,
+CabDisplay) write the linear value whose plain sRGB equals the D23 display: c' = c (1 + a k / (c + k)) + f k2 / (c + k2)
+per channel (`KamionToeParity.hlsl`, `LookGrading.NoPostToeParity` = 0.21129, 0.206849, 0.001319, 0.000598, least-squares
+fit to the master curve, <= 0.45 display points for c <= 0.2; EditMode `CabToeParityTests`). Set by CabInteriorLighting
+only when the camera is in the cab and the tier has no post (`toeParity`, default on); identity everywhere else. No light
+is added: it is the same tone curve the phone-look tiers already apply. The non-physical sheen stays removed (r6).
+Result Low (before -> after; High): dusk 8.7 -> 4.8 % / 13.9 -> 15.0 (2.1 % / 15.5), overcast 5.0 -> 2.4 % / 20.0 -> 21.6
+(1.8 % / 22.1), lowsun 2.0 % / 16.9 (1.8 % / 17.5), clear 3.9 -> 1.8 %. Cost: ~12 ALU per cab pixel; editor Low 1755x810
+cab-dash 5.21 -> 4.94 ms (noise). A16 not measured. The world outside the cab on Low keeps plain sRGB (10-25 % darker
+in linear than High in the toe and mids): a global Low LUT would cost a full-screen pass, not done.

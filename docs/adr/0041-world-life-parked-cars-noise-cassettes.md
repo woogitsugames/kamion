@@ -144,9 +144,34 @@
    - Paint roughness spread 0.30-0.50 per colour (it was 0.35 for all but white2); road film darker grey-brown,
      alpha 0.45 / 0.62 / 0.78 (level 3 at 1.0 read as beige two-tone paint), film line and spray fans lower;
      `rim_dusty` 0.115 -> 0.17 (black disc on LOD1).
+10. Glass v5 (2026-11-10, rendering-perf, W-N8 follow-up; evidence `artifacts/world-fixes/glass-plastic/`):
+   - **Cause of the bright textured pattern** (par. 9, tune5): the sun glint `pow(n.h, 900) x 12` in half precision.
+     Normalised half vectors carry ~1e-3 error, so n.h jittered around the lobe and the whole pane turned into a stipple
+     of sun-bright pixels whenever the sun stood roughly behind the camera (debug renders: glass opaque black = pattern
+     gone, glint x 0 = pattern gone). In float the same lobe is a ~2 deg halo and a GGX lobe (alpha 0.01) keeps a
+     5-10 deg tail; now the glint is the mirror image of the sun disk only (half vector within 0.23 deg, x 600), float.
+   - Term budget at < 45 deg (decomposition renders, front faces, High clear): reflection 0.017-0.064 linear, dust film
+     0.005-0.017, transmission 0.19-0.29 of what is behind. Side panes lean ~24 deg (tumblehome; face normal z p50 0.66
+     over all panes), so the reflected ray of a pane seen from 1.7 m rises 30-75 deg into the sky (median r.y 0.96 in
+     glass_side_25): the panes mirror the sky around the sun at 0.6-0.8 exposed, F (1 + T^2) ~ 0.045 -> ~0.03 linear
+     = ~20 % luma from the sky alone. That is physical, not a blend or interior error.
+   - Reflection: sky above ~15 deg (smoothstep 0..0.26 of r.y), below it the street clutter at the diffuse ground
+     radiance `_KamionGroundEnv` (cars, halls, trees, paving; WORKING_VALUE) instead of the cube's horizon haze;
+     `_Reflect` 1.3 -> 1.0 with the sheet's two faces R = F (1 + T^2) (clear x 1.12, privacy x 1.04).
+   - Result p50 luma < 45 / >= 70 deg (criterion <= 20 / >= 40), same 7 cameras: High clear 24.3 / 33.0 (v4 25.4 /
+     33.6), Low clear 22.6 / 31.0 (23.5 / 31.5), High overcast 30.5 / 44.4 (32.5 / 46.9), Low overcast 28.2 / 42.3
+     (30.2 / 44.8). glass_side_00 < 45 deg 41.7 -> 24.8 (the stipple). **Still NOT MET** for < 45 deg (all) and >= 70 deg
+     in clear light: with this sky radiance a leaning pane cannot read <= 20 % without darkening the sky reflection
+     below physics. Options for the reviewer / owner: accept ~23-30 % (photo check of parked cars in Bialystok light),
+     or revisit the sky model's absolute radiance (ADR 0010; would change the truck paint and glass too).
+   - Frame floor (darkest 1 % = 13-16 % luma clear, 17-20 % overcast) is not the grading: the D23 toe maps 0.0025 to
+     3.8 % (plain sRGB 3.2 %) and Low (no LUT) has the same floor. The darkest pixels are under the parked cars, lit
+     by the full sky SH (no ambient occlusion on world props / paving): open, world-builder (contact AO under cars).
+   - Cost: glass pixels only, one cube sample less branching, float glint; editor Low stretch-01 5.33 -> 5.19 ms
+     (noise). A16 not measured.
 
 ## Not done / open
-- r6 W-N8 glass criterion not met (numbers in par. 9); the bright textured pane content is unexplained.
+- r6 W-N8 glass criterion not met (par. 10: physics budget of a leaning pane mirroring the sky).
 - Fixed vehicle cull and the Low LOD2 at 45-300 m are not measured on the A16.
 - Road film and glass dust are per prototype, not per instance; the paint `car_grime` set is unchanged.
 - r6 W-N6 parity was checked on the editor frames only (fixed vehicle cull); on Low the panel fence is opaque, so

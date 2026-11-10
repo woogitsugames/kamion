@@ -141,3 +141,17 @@ Frames: `artifacts/owner/modern-front/r6-geo/` (`before` = main with the r4 expo
   (`docs/reports/visual/truck-A6-exterior/lod1_34przod.jpg`, already in the r4 export; not the sill cladding);
   (2) Low corner p50 (above); (3) Low lowsun corner p50 / p99 1.6 / 19.9 %; (4) no phone frame: UNVERIFIED on device;
   (5) not reviewed by `visual-critic` yet.
+
+## Addendum r7 (2026-11-10, rendering-perf): E-N2 on Low is a hole, not the env term
+Evidence `artifacts/world-fixes/glass-plastic/` (`tmask/`, `bar_rays_LOD0.txt`, `bar_rays_LOD2.txt`, `sheets/`).
+- Debug renders of `Kamion/Truck Exterior` (glossTrim / roughness / normal written as colour) left the Low bar black:
+  those pixels are not drawn by the exterior at all. `-qaMask CAB_Interior` turns the whole Low bar and the High corners
+  magenta: the camera sees the **cab interior LOD0 through the exterior**.
+- Ray map from the truck-34 camera (Blender, `bar_rays.py`: exterior LODn + interior LOD0, glass transparent, A2 grid
+  x -1.30..1.22 m, z 1.67..2.45 m on the cab front): LOD2 (the only exterior on Low) - interior first across the whole
+  band z 1.67-1.85 m, i.e. the `grille_bar_mask` face is gone after the collapse decimation; LOD0 - interior first at
+  x -1.10..-0.86 and +0.78..+1.02 m, z 1.67-1.93 m: the wrapped corners leave a gap to the corner panel. Measured
+  corner p50 / p99 (truck-34 overcast): Low 5.5 / 34.1, High 8.2 / 36.4; bar face beside the letters Low 4.3, High 17.3.
+- No shader change can fix this. Geometry (truck-artist): close the corner gap (bar end cap / chamfer meets the corner
+  panel) and keep the bar in LOD2 (`a6_export.NO_DECIMATE += "grille_bar_mask"`, ~2 k tris on LOD2, or its own column
+  reduction like `reduce_round`). Then re-measure E-N2 (Low = High within 3 pts, lowsun Low corner now 1.6 / 19.9).
