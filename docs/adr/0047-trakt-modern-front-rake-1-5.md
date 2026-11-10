@@ -1,4 +1,4 @@
-# ADR 0046 — TRAKT modern front (`modern` cab variant), 1.5° front rake, honest front overhang
+# ADR 0047 — TRAKT modern front (`modern` cab variant), 1.5° front rake, honest front overhang
 
 Status: accepted (2026-11-10, owner decisions D28 / D29)
 

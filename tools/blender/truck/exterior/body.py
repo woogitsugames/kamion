@@ -182,7 +182,7 @@ def set_rake(deg):
 
 import copy as _copy  # noqa: E402
 _CFG0, _ROUND0 = _copy.deepcopy(CFG), _copy.deepcopy(ROUND)
-DEFAULT_SHAPE = "modern"            # owner decisions D28 / D29 (2026-11-10, ADR 0046): modern front, 1.5 deg rake
+DEFAULT_SHAPE = "modern"            # owner decisions D28 / D29 (2026-11-10, ADR 0047): modern front, 1.5 deg rake
 SHAPE_RAKE = {"b2": 7.0, "round": 7.0, "modern": 1.5}
 # modern: the front plane sits 0.08 m further back, so the upright face (visor nose = front-most body point,
 # 1.444 m ahead of the axle) stays inside dims.json front_overhang_m 1.45 m -> combination 16.47 m (b2 measured 1.56 m)
