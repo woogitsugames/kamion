@@ -52,7 +52,7 @@ widoczne na elewacji (krój DejaVu Sans Bold); **bez logo PSP, herbu, znaku słu
    więc brud siedzi tam, gdzie siedzi w rzeczywistości, a środek nie kafelkuje widocznie. Drugi materiał
    `fire_station_alpha` (alpha test): przęsła płotu, brama, napisy. Tuje: istniejące `hedge_thuja` + `hedge_shell_thuja`.
 4. **LOD i budżet**: `landmark_fire_station*` → końce LOD [150, 450, 20000] m × lodBias (InstanceImporter.Policy i
-   `build_world.instance_ends`, trzymane w parze). LOD0 8 246 trójkątów (budżet zadania ≤ 15 000), LOD1 2 956
+   `build_world.instance_ends`, trzymane w parze). LOD0 8 240 trójkątów (budżet zadania ≤ 15 000), LOD1 2 950
    (bez ościeży, rur, słupków, powłoki tuj), LOD2 164 (bryły + dachy + okna szczytu). Cztery materiały.
 5. **Unity**: `InstanceImporter` czyta biblioteki `art-source/world/landmarks/*/*.glb` (ten sam mechanizm co ADR 0067;
    hunk identyczny, żeby scalenie z gałęzią wiaduktu było trywialne).
@@ -70,3 +70,16 @@ ogrodzenia (±3 m) i położenie bramy, liczba tuj; przesunięcie układu wysoko
 - Atlas jest generowany (poza gitem jak inne zestawy PBR); skany CC0 leżą w `Data/raw/cc0/polyhaven/` z kontrolą md5,
   bez sieci zestaw buduje się z szumu (komunikat w logu).
 - Testy: `tests/gis/test_hero_building.py`.
+
+## Dodatek: `_Tile` w Kamion/World PBR
+`WorldPbrMaterials.Create` wyliczał `tile` z `tile_m` zestawu, ale nigdy nie zapisywał go do materiału: wszystkie zestawy
+są próbkowane z domyślnym kaflem shadera 4 m (np. `plaster` 2 m, `brick` 1,04 m, beton 10 m). Dla atlasu to błąd
+krytyczny (pierwszy render: atlas powielony co 4 m), więc zestaw z `"atlas": true` w `materials_spec.json` dostaje
+`_Tile` = `tile_m`. Pozostałych zestawów ta zmiana nie dotyka: naprawa ogólna zmienia wygląd całego świata i wymaga
+osobnej decyzji lidera (dotyczy też atlasu wiaduktu z ADR 0067, który trzeba oznaczyć `atlas`).
+
+## Dowody
+`artifacts/firestation-r9/`: `blender/it{1,2,3}/` (3 iteracje, `compare_it3.jpg` obok referencji),
+`unity/r2/{High,Low}-{overcast,lowsun}/` (`compare_unity_r2.jpg`), `plan_overlay.jpg` (rzut na ortofoto), logi `logs/`.
+pytest `tests/gis`: 173 passed; EditMode: 164 passed, 0 failed (5 inconclusive: brak prefabrykatu TRAKT w worktree).
+Przegląd `visual-critic`: do zrobienia przez lidera (subagent nie tworzy subagentów).
