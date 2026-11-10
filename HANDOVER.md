@@ -1,3 +1,22 @@
+# HANDOVER — kamion, sesja 5 (start 2026-11-10 ok. 21:10)
+
+## Najpierw (sesja 5 → następna)
+- main = `947749e` + ten commit. Przód 0061 scalony, worktree usunięty. Zasady dla agentów: `artifacts/handover/AGENT-RULES-S5.md`.
+- Agenci sesji 5 (STATUS.md w `<wt>/artifacts/<dir>/`; stare worktree = ta sama ścieżka co w sesji 4, nowe = `.claude/worktrees/agent-<id>` utworzone przez narzędzie):
+| zadanie | model | ADR | worktree | dowody |
+|---|---|---|---|---|
+| świat r8 (akcenty, berberys, trawa) | Opus | 0060 | agent-a9eaaeb7a945e26bb | world-r8 |
+| skany CC0 | Opus | 0063 | agent-a173ed44d3c378718 | cc0-r8 |
+| wyposażenie drogi | Opus | 0069 | agent-a6651051778fa221f | street-r9 |
+| wiadukt hero | Fable | 0067 | agent-a1ec6028c4e13f527 | viaduct-r9 |
+| otwarte źródła (+ Kwadrat Park, straż) | Sonnet | 0066 | agent-ab1fb0a47d2f0a491 | refs-opensources, refs/ |
+| straż pożarna hero | Fable | 0070 | nowy | firestation-r9 |
+| Kwadrat Park hero | Fable | 0071 | nowy | kwadrat-r9 |
+| grill Low lowsun + szyba/dach/chrom | Opus | 0072 | nowy | truckshade-r9 |
+| auta r9 sylwetki | Fable | 0073 | nowy | cars-r9 |
+- Ostatni przydzielony ADR: **0073**. Kolejność scalania: 0060 → 0063 → 0069 → 0067 → 0072 → 0073 → 0070/0071 → 0066; potem pełna integracja, telefony, r9, bramka 3.
+
+---
 # HANDOVER — kamion (TRUCK SIM PL), stan 2026-11-10 ok. 20:00 (sesja 4, limit 86 %)
 
 ## Najpierw (sesja 4 → następna)
