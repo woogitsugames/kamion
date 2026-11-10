@@ -455,7 +455,7 @@ def main(argv=None):
         pp = c.line.point(ss)
         off = c.meta.get("center_offset")
         if off is not None:        # authored carriageway placement is not an axis error (metrics.axis_metrics)
-            pp = pp - np.array([c.line.frame(x)[2] for x in ss]) * np.interp(ss, c.line.s, off)[:, None]
+            pp = pp - c.line.frame(ss)[1] * np.interp(ss, c.line.s, off)[:, None]
         pooled += [ol.distance(Point(p)) for p in pp]
     route_ax = Mx.stats(pooled)
     rs = edge_summary(route_edge_all)
