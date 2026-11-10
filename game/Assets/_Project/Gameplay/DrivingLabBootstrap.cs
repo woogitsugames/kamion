@@ -44,6 +44,9 @@ namespace Game.Gameplay
         public readonly TouchSteeringWheel Wheel = new TouchSteeringWheel();
         public readonly GyroSteering Gyro = new GyroSteering();
         public readonly TouchControls Touch = new TouchControls();
+        /// <summary>Turn-signal stalk + flasher (self-cancelling, 1.5 Hz); drives the lamps, the cluster arrows and the relay click.</summary>
+        public readonly TurnSignal Signals = new TurnSignal();
+        TruckLights m_Lights;
         public readonly PathFollowerDriverInput RouteDriver = new PathFollowerDriverInput();
 
         CameraRig m_Rig;
@@ -156,6 +159,8 @@ namespace Game.Gameplay
                 RetarderLeverMax = m_LeverMax,
                 BrakeCruiseKmh = () => m_CruiseKmh,
                 CouplingStatus = CouplingStatus,
+                TurnSignalLever = () => Signals.Lever,
+                TurnSignalLit = () => Signals.Lit,
                 ReverseCameraTexture = () => m_ActiveRevCam != null ? m_ActiveRevCam.Texture : null,
                 ReverseCameraLabel = () => m_ActiveRevCam == m_TrailerCam ? "KAMERA COFANIA (naczepa)" : "KAMERA SIODŁA (za kabiną)",
                 // Mirror strategy (visual review #14): in the cab view the main mirrors are shown as insets by default
@@ -408,6 +413,7 @@ namespace Game.Gameplay
             Physics.SyncTransforms();
             m_CouplingEvents = 0;
             m_Lever = 0; m_CruiseKmh = 0f;
+            Signals.Cancel();
             m_Parking = !Autopilot.Enabled && !RouteDriver.Enabled;
             m_Selector = GearSelector.Drive;
             m_Manual = false;
@@ -467,6 +473,7 @@ namespace Game.Gameplay
                 if (m_SettingsPanel != null) m_SettingsPanel.Close(); else ReturnToMenu();
             }
             ApplyCommands(intent);
+            UpdateTurnSignals(intent, fb.RoadWheelAngleNormalized);
 
             var input = vehicle.Input;
             input.Throttle = intent.Throttle;
@@ -500,6 +507,19 @@ namespace Game.Gameplay
                 m_ActiveRevCam = want;
                 if (want != null) want.Active = true;
             }
+        }
+
+        void UpdateTurnSignals(in DriverIntent intent, float roadWheelNorm)
+        {
+            if (intent.TurnSignal != TurnSignalRequest.None)
+            {
+                Signals.Request(intent.TurnSignal);
+                Flash(Signals.Lever == 0 ? "Kierunkowskaz: wył." : Signals.Lever == 2 ? "Światła awaryjne" : Signals.Lever < 0 ? "Kierunkowskaz: lewy" : "Kierunkowskaz: prawy");
+            }
+            int edge = Signals.Step(Time.deltaTime, roadWheelNorm);
+            if (m_Audio != null) m_Audio.OnFlasherEdge(edge);
+            if (m_Lights == null) m_Lights = vehicle.GetComponent<TruckLights>();
+            if (m_Lights != null) { m_Lights.indicatorLever = Signals.Lever; m_Lights.flasherLit = Signals.Lit; }
         }
 
         void ApplyCommands(in DriverIntent intent)
