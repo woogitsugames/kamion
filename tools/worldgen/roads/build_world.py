@@ -651,6 +651,10 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
     walls = CF.terrain_walls(w.buf.parts, zc, w.hf, mask=mask)
     log("terrain walls > %.2f m:" % walls["thresh_m"], walls["count"], "max", walls["max_m"])
     write_json(gen / "terrain_walls_qa.json", walls)
+    from roads import consistency as CQ
+    cq = CQ.check(w, st["instances"], region_id, pipeline)
+    log("road consistency:", cq["count"], cq["by_kind"], "on route", cq["on_route"])
+    write_json(gen / "road_consistency_qa.json", cq)
     if os.environ.get("WORLDGEN_DUMP_WALLS"):     # debug: ground parts + conformed terrain for offline wall analysis
         import pickle
         keep = [(p.layer, p.mat, p.src, p.V, p.T) for p in w.buf.parts if p.layer in ("road", "paved")]
@@ -868,6 +872,7 @@ def qa_report(w, mk_report, mask):
             "junctions_earclip": pstats.get("earclip_ids", []),
             "roundabout_junctions": sum(1 for j in w.junctions if j.roundabout),
             "signalised_junctions": sum(1 for j in w.junctions if j.signalized),
+            "emergency_signal_junctions": sorted(j.id for j in w.junctions if getattr(j, "emergency_signals", False)),
             "grade_over_limit": [c["id"] for c in over],
             "axis_smoothing_deviation_m": {"p50": r(np.percentile(dev_all, 50), 3),
                                            "p95": r(np.percentile(dev_all, 95), 3),
@@ -884,6 +889,7 @@ def qa_report(w, mk_report, mask):
             "walled_ramps": w.profiles.get("walled_ramps", []),
             "clearance_by_class_m": S.CLEARANCE_BY_CLASS,
             "fork_tapers": w.stats.get("fork_tapers", []),
+            "fork_shifts": w.stats.get("fork_shifts", []),
             "overrides_applied": net.overrides_applied, "overrides_stale": net.overrides_stale,
             "low_confidence": [
                 "bridge deck heights interpolated between abutments (NMT = ground under deck); piers by rule",

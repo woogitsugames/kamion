@@ -367,7 +367,7 @@ def build_all(sign_codes, boards):
         P[f"plate_{c}"] = plate(c)
     for c, (w, h) in sorted(boards.items()):
         P[f"board_{c}"] = board(c, w, h)
-    for lit in ("red", "green"):
+    for lit in ("red", "green", "off"):          # off: emergency signals at rest (ADR 0074)
         P[f"signal_head_{lit}"] = signal_head(lit)
     P["signal_pole"] = signal_pole()
     P["signal_mast"] = signal_pole(S.SIGNAL_MAST_H, 6.0)
