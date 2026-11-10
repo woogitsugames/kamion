@@ -368,7 +368,9 @@ namespace Game.Editor.VisualQA
         {
             if (a == null) return;
             a.renderers += count == 0 ? 0 : 1; a.instances += count;
-            if (a.hasBaseMap && !st.uv0 && a.shader != "Kamion/World Surface") st.texturedNoUv = true;   // World Surface projects planar in world space, UV0 not needed
+            // World Surface always, and World PBR unless _UV_MESH0/_UV_MESH1 is on, project planar in world space (no UV0 read)
+            bool worldPlanar = a.shader == "Kamion/World Surface" || (a.shader == "Kamion/World PBR" && !a.mat.IsKeywordEnabled("_UV_MESH0") && !a.mat.IsKeywordEnabled("_UV_MESH1"));
+            if (a.hasBaseMap && !st.uv0 && !worldPlanar) st.texturedNoUv = true;
             if (!a.hasBaseMap || st.worldArea == null || si >= st.worldArea.Length) return;
             float wa = st.worldArea[si] * linScale * linScale, ua = st.uvArea[si] * Mathf.Abs(a.tiling.x * a.tiling.y);
             if (wa < 1e-4f || ua < 1e-9f) return;

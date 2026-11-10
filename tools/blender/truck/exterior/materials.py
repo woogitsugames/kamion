@@ -677,7 +677,27 @@ def build_library(livery="white", clay=False):
     principled("lens_amber", "LIGHTS", (0.95, 0.42, 0.04), 0.05, transm=0.85, ior=1.49)
     principled("lens_red", "LIGHTS", (0.55, 0.02, 0.015), 0.05, transm=0.85, ior=1.49)
     # r4: smoked projector lens, opaque in the bake (transmission baked the env as a blue cast in the game atlas)
-    principled("projector", "LIGHTS", (0.045, 0.045, 0.048), 0.04, spec=0.7)
+    m, nt, b = principled("projector", "LIGHTS", (0.045, 0.045, 0.048), 0.03, spec=0.7)
+    # B2.2 refraction fake (the game bakes the lens opaque into the Lights atlas): a real LED projector lens shows
+    # the inverted image of its chrome reflector - bright lower half, the sharp shield cut-off line just under the
+    # middle, a dark upper half with a faint blue cast of the coated optics. Gradient over the lens' own height
+    # (Generated z per lens object), baked into the albedo; low roughness keeps the crown highlight on top.
+    if not clay:
+        tc = N(nt, "ShaderNodeTexCoord")
+        sp = N(nt, "ShaderNodeSeparateXYZ")
+        cr = N(nt, "ShaderNodeValToRGB")
+        L(nt, tc.outputs["Generated"], sp.inputs[0])
+        L(nt, sp.outputs["Z"], cr.inputs["Fac"])
+        el = cr.color_ramp.elements
+        stops = [(0.00, (0.20, 0.205, 0.215)), (0.14, (0.46, 0.47, 0.49)), (0.40, (0.36, 0.37, 0.39)),
+                 (0.47, (0.70, 0.71, 0.73)), (0.50, (0.025, 0.025, 0.030)), (0.85, (0.035, 0.040, 0.055)),
+                 (1.00, (0.018, 0.018, 0.022))]
+        el[0].position, el[0].color = stops[0][0], (*stops[0][1], 1)
+        el[1].position, el[1].color = stops[-1][0], (*stops[-1][1], 1)
+        for p, c in stops[1:-1]:
+            e = el.new(p)
+            e.color = (*c, 1)
+        L(nt, cr.outputs["Color"], b.inputs["Base Color"])
     if clay:
         for k in ("lens_amber", "lens_red", "projector"):
             b = STATE["mats"][k].node_tree.nodes["Principled BSDF"]

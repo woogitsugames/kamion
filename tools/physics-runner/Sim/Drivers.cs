@@ -256,4 +256,65 @@ namespace PhysicsRunner.Sim
             return new DriverInput { Throttle = th, Brake = br, Steer = steer, Selector = GearSelector.Drive };
         }
     }
+
+    /// <summary>
+    /// Closed-loop path follower for swept-path checks (tests/physics/swept_path_gate3.py): Stanley steering on the
+    /// steer-axle centre (heading error + atan(k e / v)), so the cab stays on the given line the way a driver keeps
+    /// the cab in the lane and the trailer off-tracks freely; PI speed hold on a per-point speed profile with a
+    /// short preview. path = [x, z, vKmh] in the sim frame (x = E, z = N). Brakes to a stop at the path end.
+    /// </summary>
+    public sealed class PathDriver : IDriver
+    {
+        readonly double[][] _p;
+        readonly SpeedController _sc;
+        readonly double _wheelbase, _k;
+        int _i;
+
+        public PathDriver(DriverSpec d, double wheelbase)
+        {
+            if (d.path == null || d.path.Length < 3) throw new ArgumentException("path driver needs >= 3 points");
+            _p = d.path;
+            _wheelbase = wheelbase;
+            _k = d.stanleyGain;
+            _sc = new SpeedController(_p[0][2] / 3.6);
+        }
+
+        public DriverInput Update(double t, double dt, SimContext s)
+        {
+            Vec3 pf = s.Body.State.LocalToWorld(new Vec3(0, 0, _wheelbase));
+            Vec3 fwd = s.Body.Rotation * Vec3.Forward;
+            double psi = Math.Atan2(fwd.x, fwd.z);
+            // nearest segment, searched forward from the last one (monotone progress)
+            int n = _p.Length, best = _i;
+            double bestD = double.MaxValue, bestU = 0;
+            for (int j = Math.Max(0, _i - 2); j < Math.Min(n - 1, _i + 40); j++)
+            {
+                double ax = _p[j][0], az = _p[j][1], bx = _p[j + 1][0], bz = _p[j + 1][1];
+                double dx = bx - ax, dz = bz - az, l2 = dx * dx + dz * dz;
+                double u = l2 > 1e-12 ? MathUtil.Clamp(((pf.x - ax) * dx + (pf.z - az) * dz) / l2, 0, 1) : 0;
+                double ex = ax + u * dx - pf.x, ez = az + u * dz - pf.z, d2 = ex * ex + ez * ez;
+                if (d2 < bestD) { bestD = d2; best = j; bestU = u; }
+            }
+            _i = best;
+            double sx = _p[best + 1][0] - _p[best][0], sz = _p[best + 1][1] - _p[best][1];
+            double psiP = Math.Atan2(sx, sz);
+            double cx = _p[best][0] + bestU * sx - pf.x, cz = _p[best][1] + bestU * sz - pf.z;
+            // + = path lies to the right of the steer axle (right = (cos psi, -sin psi) in x/z)
+            double eRight = cx * Math.Cos(psi) - cz * Math.Sin(psi);
+            double headErr = psiP - psi;
+            while (headErr > Math.PI) headErr -= 2 * Math.PI;
+            while (headErr < -Math.PI) headErr += 2 * Math.PI;
+            double v = Math.Abs(s.Tractor.SpeedForward);
+            double delta = headErr + Math.Atan2(_k * eRight, v + 1.0);
+            double steer = MathUtil.Clamp(delta / s.Tractor.Steering.MaxAngle, -1, 1);
+
+            bool atEnd = best >= n - 2 && bestU > 0.95;
+            double vt = _p[best][2];
+            for (int j = best; j < Math.Min(n, best + 4); j++) vt = Math.Min(vt, _p[j][2]);
+            _sc.TargetMs = atEnd ? 0 : vt / 3.6;
+            _sc.Update(v, dt, out double th, out double br);
+            if (atEnd) { th = 0; br = 0.5; }
+            return new DriverInput { Throttle = th, Brake = br, Steer = steer, Selector = GearSelector.Drive };
+        }
+    }
 }
