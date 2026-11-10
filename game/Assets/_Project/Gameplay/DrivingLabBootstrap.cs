@@ -237,7 +237,8 @@ namespace Game.Gameplay
                 if (applier != null) { applier.targetCamera = cam; applier.ApplyNow(); }
                 if (mainCamera != null) mainCamera.enabled = false;
                 if (m_Hud != null) m_Hud.gameObject.SetActive(false);
-                Debug.Log($"[LAB] control camera {id} active ({cam.pixelWidth}x{cam.pixelHeight})");
+                var qp = qa.transform.position;
+                Debug.Log($"[LAB] control camera {id} active ({cam.pixelWidth}x{cam.pixelHeight}) pos=({qp.x:F1},{qp.y:F1},{qp.z:F1}) fwd=({qa.transform.forward.x:F2},{qa.transform.forward.y:F2},{qa.transform.forward.z:F2})");
                 return;
             }
             Debug.LogWarning($"[LAB] qacam={id}: no such ControlCamera in the scene");
