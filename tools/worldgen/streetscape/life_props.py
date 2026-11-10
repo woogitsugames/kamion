@@ -133,7 +133,10 @@ def trailer(kind, colour):
             bx(m, "trailer_alu", -hw - 0.02, hw + 0.02, 0.0, L, H - 0.12, H)               # roof + top rail
             bx(m, "trailer_chassis", -hw + 0.02, hw - 0.02, 0.0, L, zf - 0.14, zf)          # floor
             bx(m, "trailer_alu", -hw - 0.02, hw + 0.02, 0.0, L, zf, zb + 0.10)              # bottom rail (0.15 m)
-            bx(m, "trailer_front", -hw + 0.01, hw - 0.01, L - 0.06, L, zb + 0.10, H - 0.12)   # front bulkhead
+            # front bulkhead: painted steel in the fleet's dark tone on the grey / blue / green trailers, bare light
+            # panel on the others (r11, review A7: every front was the same light grey plate)
+            bx(m, "trailer_front_dark" if colour in ("grey", "blue", "green") else "trailer_front",
+               -hw + 0.01, hw - 0.01, L - 0.06, L, zb + 0.10, H - 0.12)
             if lod == 0:                         # curtain straps (buckles) every 0.62 m: flat strips on the curtain
                 for y in np.arange(0.6, L - 0.3, 0.62):
                     for sx in (-1, 1):
@@ -630,7 +633,7 @@ def barrier_base(L=BOOM_L):
     entrances, no product copied; sizes WORKING_VALUE."""
     m, l1, col = Mesh(), Mesh(), Mesh()
     for mm, lod in ((m, 0), (l1, 1)):
-        mm.box("concrete_base", [0, 0, -0.06], 0.38, 0.33, 0.12)
+        mm.box("concrete_base", [0, 0, -0.06], 0.30, 0.27, 0.12)      # footing inside the island kerb (gate._island)
         mm.box("barrier_housing", [0, 0, 0.555], 0.20, 0.175, 0.495)
         mm.box("barrier_housing", [0, 0, 1.065], 0.225, 0.20, 0.015)                  # cap overhang
         if lod == 0:

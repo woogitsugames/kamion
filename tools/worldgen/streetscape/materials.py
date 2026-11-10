@@ -177,6 +177,7 @@ M = {
     "coupling_red": {"color": [0.35, 0.03, 0.02], "rough": 0.5},
     "coupling_yellow": {"color": [0.55, 0.40, 0.02], "rough": 0.5},
     "trailer_front": {"color": [0.40, 0.41, 0.41], "rough": 0.5, "metal": 0.3},
+    "trailer_front_dark": {"color": [0.075, 0.08, 0.085], "rough": 0.5, "metal": 0.3},
     "trailer_alu": {"color": [0.45, 0.46, 0.46], "rough": 0.4, "metal": 0.9},
     "trailer_doors": {"color": [0.50, 0.51, 0.50], "rough": 0.45, "metal": 0.3},
     "trailer_chassis": {"color": [0.03, 0.03, 0.032], "rough": 0.6, "metal": 0.5},

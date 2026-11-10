@@ -11,3 +11,11 @@
 - Tekstury PBR zbudowane ze skanów (446 s, `logs/build_all_base.log`), spec bez zmian.
 - W toku: baseline (kod main: stash zmian Pythona + C# z ad9760d) build_world -> import -> rendery "before".
 - NASTĘPNY KROK: po baseline `git stash pop; git checkout 61ad878 -- game/Assets/_Project/World/Import`
+
+## 23:40 — baseline gotowy, after1 w toku
+- Baseline (kod main, tekstury ze skanów): `before/{Medium-overcast,Medium-clear,Low-overcast}` (8 kamer, PNG + JPG 960), `logs/build_world_base.log`,
+  pytest gis baseline: 223 zielone / 7 czerwonych (`logs/pytest_gis_base.log`; 2 moje nowe testy czerwone na starym świecie, reszta = znane z main + 2 do sprawdzenia:
+  `test_life_prototypes_budget_and_lods`, `test_every_vehicle_has_a_spec_and_others_none` — skutki moich zmian prototypów, do poprawy).
+- Kod r11: yard_wear.py (ślady, łaty, olej, brud krawędzi), authored dock_trailers, detal naczep, wyspa szlabanu + pętle + słupki, UV1 zacieków hali, płyta `yard_concrete_worn`.
+- UWAGA: pytest gis zapisuje `generated/streetscape_qa.json` / `world_manifest.json` i przebudowuje GLB hali — po testach zawsze pełny build_world.
+- NASTĘPNY KROK: `pwsh artifacts/kwadrat-r11/cycle.ps1 -Phase after1 -Combos Medium-overcast` (w toku) -> obejrzeć -> iteracja.

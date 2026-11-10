@@ -245,7 +245,8 @@ def apply(buf, overrides, origin, docks, paved, roads_poly, zsurf, report):
 
         # ---- soil washed against the edges of the yard (kerbs, edgings, wall feet)
         if wr.get("grime_edges"):
-            lim = zone.buffer(3.0) if zone is not None else yard
+            # the zone (no-parking ring) stops short of the dock wall: the wall foot and the apron belong to the yard
+            lim = shapely.union_all([zone, LineString([p, q])]).convex_hull.buffer(3.0) if zone is not None else yard
             flush = roads_poly.buffer(0.8)
             for gi, g in enumerate(getattr(yard, "geoms", [yard])):
                 for ri, rg in enumerate([g.exterior] + list(g.interiors)):

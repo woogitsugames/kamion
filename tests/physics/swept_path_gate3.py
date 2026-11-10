@@ -64,7 +64,7 @@ BODY = {    # name: (frame, z, |x|)  corners
 }
 
 CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_gravel", "yard_asphalt",
-               "yard_behaton", "yard_concrete", "yard_gravel", "yard_paving", "yard_slabs"}
+               "yard_behaton", "yard_concrete", "yard_concrete_worn", "yard_gravel", "yard_paving", "yard_slabs"}
 CAT = {"off": 0, "carriageway": 1, "apron": 2, "kerb": 3, "side": 4}
 
 # --- speed profile (WORKING_VALUEs, driver model): lateral 1.2 m/s^2 (laden artic, comfortable), decel 0.8,
