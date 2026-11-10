@@ -273,7 +273,10 @@ namespace Game.Editor.Setup
                 // Interior: tier = LOD (High LOD0, Medium LOD1, Low LOD2); AO atlas of that LOD at the tier size.
                 int il = TruckVisualRig.InteriorLodFor(tier);
                 string it = $"{SrcInt}/Textures/{tier}";
-                var ao = Tex<Texture2D>($"{it}/T_Cab_AO_LOD{il}.png");
+                // AO atlas no smaller than Medium (1024): the LOD0 atlas is packed for 4096, and at the Low 512 the thin
+                // islands (A-pillar trim, steering-wheel rim) fall into the black gutter - review r4 L1, Low cab-dash
+                // overcast < 3 %: 12.1 % of the frame (512) vs 2.1 % (1024). Cost on Low: +0.26 MB (ASTC 8x8 with mips).
+                var ao = Tex<Texture2D>($"{SrcInt}/Textures/{(tier == "Low" ? "Medium" : tier)}/T_Cab_AO_LOD{il}.png");
                 foreach (var slot in new[] { "Plastic", "Leather", "Fabric", "Rubber", "Metal" })
                 {
                     var m = Mat(dir, "MI_Cab_" + slot, cab);

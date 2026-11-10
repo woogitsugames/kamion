@@ -29,6 +29,10 @@ namespace Game.Rendering
                  "from walls, trees and the truck itself, which grey real shadows; 0.55 removes the cyan shadows of the " +
                  "first renders (visual review r2 #3, docs/06 §2). WORKING_VALUE.")]
         [Range(0f, 1f)] public float ambientSkySaturation = 0.55f;
+        [Tooltip("Low-sun ambient (review r4 L2): share of the sky probe samples that take the zenith chroma instead of the " +
+                 "warm aureole/horizon chroma below 15 deg sun (SkyModel.AmbientProbe lowSunCool). Shade at low sun is lit by " +
+                 "the blue dome; only the sun is warm. WORKING_VALUE.")]
+        [Range(0f, 1f)] public float lowSunAmbientCool = 0.8f;
 
         [Header("Exposure (ADR 0016)")]
         [Tooltip("On: camera EV100 from the sun-elevation table (ExposureTable), like a phone's scene metering. " +
