@@ -107,19 +107,19 @@ Shader "Kamion/Sky"
                 float2 u = p * _KamionCloud.z + _KamionCloudWind.xy;
                 half4 a = SAMPLE_TEXTURE2D(_KamionCloudTex, sampler_KamionCloudTex, u);
                 half4 b = SAMPLE_TEXTURE2D(_KamionCloudTex, sampler_KamionCloudTex, u * 2.9 + _KamionCloudWind.zw);
-                half n = a.a * 0.42 + a.r * 0.36 + b.g * 0.22;
+                half n = a.a * 0.50 + a.r * 0.36 + b.g * 0.14;
                 if (_KamionCloud.y > 0.5)
-                    n += (SAMPLE_TEXTURE2D(_KamionCloudTex, sampler_KamionCloudTex, u * 7.7 + 0.31).b - 0.5) * 0.14;
+                    n += (SAMPLE_TEXTURE2D(_KamionCloudTex, sampler_KamionCloudTex, u * 7.7 + 0.31).b - 0.5) * 0.07;
                 half relief = 0.0;
                 if (_KamionCloud.y > 1.5)
                 {
                     float2 us = u + _KamionCloudSun.xy * _KamionCloudSun.w;
-                    half n2 = SAMPLE_TEXTURE2D(_KamionCloudTex, sampler_KamionCloudTex, us).a * 0.42
+                    half n2 = SAMPLE_TEXTURE2D(_KamionCloudTex, sampler_KamionCloudTex, us).a * 0.50
                             + SAMPLE_TEXTURE2D(_KamionCloudTex, sampler_KamionCloudTex, us).r * 0.36
-                            + SAMPLE_TEXTURE2D(_KamionCloudTex, sampler_KamionCloudTex, us * 2.9 + _KamionCloudWind.zw).g * 0.22;
+                            + SAMPLE_TEXTURE2D(_KamionCloudTex, sampler_KamionCloudTex, us * 2.9 + _KamionCloudWind.zw).g * 0.14;
                     relief = (n - n2) * _KamionCloudSun.z;         // thinner toward the sun = lit edge
                 }
-                half s = smoothstep(0.30, 0.70, n);                // billow edges; symmetric, mean stays 0.5
+                half s = smoothstep(0.26, 0.74, n);                // billow edges; symmetric, mean stays 0.5
                 half fade = 1.0 - exp(-max(d.y, 0.0) * _KamionCloud.w);
                 return 1.0 + (half)_KamionCloud.x * fade * ((0.5 - s) * 2.0 + relief);
             }

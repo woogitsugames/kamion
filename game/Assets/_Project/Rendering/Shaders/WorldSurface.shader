@@ -216,7 +216,7 @@ Shader "Kamion/World Surface"
 
                 {
                     half3 tnWet = half3(0, 0, 1);
-                    KamionWetSurface(n, macro, _GroundMasks > 0.5 ? 0.0 : step(0.95, n.y), albedo, smooth, tnWet);   // ADR 0080
+                    KamionWetSurface(n, macro, _GroundMasks > 0.5 ? 0.0 : step(0.95, n.y), _GroundMasks > 0.5 ? 0.15 : 1.0, albedo, smooth, tnWet);   // ADR 0080
                 }
                 float3 V = GetWorldSpaceNormalizeViewDir(i.positionWS);
                 half NoV = saturate(dot(n, V));

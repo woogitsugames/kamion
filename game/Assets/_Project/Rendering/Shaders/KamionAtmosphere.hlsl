@@ -47,14 +47,14 @@ half3 KamionMixFog(half3 c, half tau)
 // paving: albedo x 0.55-0.75, Lekner and Dorf 1988 give ~0.5-0.7 for wet soil / asphalt, WORKING_VALUE), a water film
 // raises the smoothness of up-facing faces, and standing water fills the low spots (pool: 0..1 from the macro map).
 // Walls take a third of the effect (driven rain). No effect when _KamionWet.x = 0 (one uniform branch).
-void KamionWetSurface(half3 n, half pool, half puddles, inout half3 albedo, inout half smooth, inout half3 tn)
+void KamionWetSurface(half3 n, half pool, half puddles, half film, inout half3 albedo, inout half smooth, inout half3 tn)
 {
     if (_KamionWet.x <= 0.001) return;
     half up = saturate(n.y * 2.5h - 1.25h);
     half w = (half)_KamionWet.x * lerp(0.33h, 1.0h, up);
     half porous = saturate(1.0h - smooth * 1.6h);
-    albedo *= lerp(1.0h, lerp(0.82h, 0.58h, porous), w);
-    smooth = lerp(smooth, max(smooth, 0.70h), w * up);
+    albedo *= lerp(1.0h, lerp(0.82h, 0.58h, porous), w * lerp(0.4h, 1.0h, film));
+    smooth = lerp(smooth, max(smooth, 0.70h), w * up * film);   // film: 1 paved, ~0.15 grass / soil (no water sheet)
     half t = 1.0h - (half)_KamionWet.y * (half)_KamionWet.x;
     half pud = smoothstep(t, t + 0.05h, pool) * up * puddles;
     smooth = lerp(smooth, 0.96h, pud);

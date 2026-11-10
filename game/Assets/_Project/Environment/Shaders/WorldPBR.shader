@@ -293,9 +293,9 @@ Shader "Kamion/World PBR"
                         half lumG = dot(albedo, half3(0.2126, 0.7152, 0.0722));
                         half clump = smoothstep(0.42, 0.68, macro.a * 0.7 + macro.g * 0.3);
                         albedo *= lerp(half3(1, 1, 1), half3(0.74, 0.86, 0.70), clump * gv);
-                        half burn = smoothstep(0.56, 0.66, macro.r * 0.55 + macro.b * 0.45 - (macro.a - 0.5) * 0.35);
+                        half burn = smoothstep(0.58, 0.68, macro.r * 0.55 + macro.b * 0.45 - (macro.a - 0.5) * 0.35);
                         half3 straw = half3(1.55, 1.30, 0.72) * lumG * 1.15;
-                        albedo = lerp(albedo, straw, burn * 0.75 * gv);
+                        albedo = lerp(albedo, straw, burn * 0.5 * gv);
                         half micro = saturate(lumG / max(glum, 1e-3) - 0.5);          // 0 gaps .. 1 tips
                         albedo *= lerp(1.0, lerp(0.72, 1.16, micro), gv * saturate(0.06 / footprint));
                     #if defined(_KAMION_WORLD_DETAIL)
@@ -569,9 +569,9 @@ Shader "Kamion/World PBR"
                 // ---- ADR 0080: wet surface parameter (global _KamionWet; no effect at 0). Standing water in the macro
                 // low spots of paved / asphalt sets only (grass, decals with their own film: no puddles).
             #if defined(_GRASS_DETILE) || defined(_DECAL_ALPHA) || defined(_DECAL_TYRE) || defined(_GROUNDMASKS)
-                KamionWetSurface(n, 0.0, 0.0, albedo, smooth, tn);
+                KamionWetSurface(n, 0.0, 0.0, 0.15, albedo, smooth, tn);
             #else
-                KamionWetSurface(n, macro.b * 0.6 + macro.a * 0.4, step(0.95, n.y), albedo, smooth, tn);
+                KamionWetSurface(n, macro.b * 0.6 + macro.a * 0.4, step(0.95, n.y), 1.0, albedo, smooth, tn);
             #endif
                 albedo = saturate(albedo);
                 smooth = saturate(smooth);
