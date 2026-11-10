@@ -699,6 +699,39 @@ def sign_gantry(span, H):
     return m, l1, None
 
 
+CANTILEVERS = set()     # (column side L/R, reach_m, height_dm) registered by streetscape.landmarks (form: cantilever)
+
+
+def sign_cantilever(reach, H, mirror=False):
+    """Single-column lattice sign cantilever (ADR 0069, Mapillary p37 2020: one 0.6 x 0.6 m lattice column in the
+    gore / at the shoulder, a 0.8 m deep lattice arm over the lanes). Column at the origin, arm along local +x (-x when
+    `mirror`, column left of travel) to `reach`, top of the arm at H; +y = front (boards hang there). Member sizes
+    WORKING_VALUE (read off the photo against the 3.5 m lanes). LOD0: 4 chords + zig-zag lacing; LOD1: two boxes."""
+    m, l1 = Mesh(), Mesh()
+    d = -1.0 if mirror else 1.0
+    zb0, zb1 = H - 0.8, H
+    for cx in (-0.3, 0.3):
+        for cy in (-0.3, 0.3):
+            m.tube("gantry_steel", [cx, cy, 0.25], [cx, cy, H + 0.3], 0.05, None, 6, cap=False)
+    for z in np.arange(0.6, H - 0.3, 1.2):
+        for (a, b) in (((-0.3, -0.3), (0.3, -0.3)), ((0.3, -0.3), (0.3, 0.3)), ((0.3, 0.3), (-0.3, 0.3)),
+                       ((-0.3, 0.3), (-0.3, -0.3))):
+            m.tube("gantry_steel", [a[0], a[1], z], [b[0], b[1], z + 0.6], 0.025, None, 4, cap=False)
+    bx(l1, "gantry_steel", -0.3, 0.3, -0.3, 0.3, 0.25, H + 0.3)
+    x0 = 0.3
+    for cy in (-0.35, 0.35):
+        for z in (zb0, zb1):
+            m.tube("gantry_steel", [d * x0, cy, z], [d * reach, cy, z], 0.055, None, 6, cap=True)
+        xs = np.arange(x0, reach - 0.4, 0.9)
+        for i, x in enumerate(xs):
+            za, zb = (zb0, zb1) if i % 2 == 0 else (zb1, zb0)
+            m.tube("gantry_steel", [d * x, cy, za], [d * min(x + 0.9, reach), cy, zb], 0.022, None, 4, cap=False)
+    for x in np.arange(x0, reach, 1.8):                       # cross ties between the two arm planes
+        m.tube("gantry_steel", [d * x, -0.35, zb1], [d * x, 0.35, zb1], 0.02, None, 4, cap=False)
+    bx(l1, "gantry_steel", d * x0, d * reach, -0.35, 0.35, zb0, zb1)
+    return m, l1, None
+
+
 def gantry_footing():
     """Concrete footing of one gantry column (1.2 x 1.2 m, -0.3..0.25 m) with the column's collider (0.7 x 0.7 m up
     to 4 m)."""
@@ -736,7 +769,9 @@ def build_registered():
     P = {}
     for span, hdm in sorted(GANTRIES):
         P[f"sign_gantry_{span}_{hdm}"] = sign_gantry(float(span), hdm / 10.0)
-    if GANTRIES:
+    for side, reach, hdm in sorted(CANTILEVERS):
+        P[f"sign_cantilever_{side}{reach}_{hdm}"] = sign_cantilever(float(reach), hdm / 10.0, mirror=side == "L")
+    if GANTRIES or CANTILEVERS:
         P["gantry_footing"] = gantry_footing()
     for name, (H, d0, d1) in sorted(LANDMARKS.items()):
         P[name] = chimney(H, d0, d1)

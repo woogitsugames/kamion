@@ -13,6 +13,7 @@ keyed by the extract sha256, so re-runs are fast and deterministic.
 
 from __future__ import annotations
 
+import hashlib
 import pickle
 from pathlib import Path
 
@@ -31,7 +32,7 @@ ROAD_TAGS = (
     "highway", "name", "ref", "lanes", "lanes:forward", "lanes:backward", "maxspeed",
     "turn:lanes", "turn:lanes:forward", "turn:lanes:backward", "oneway", "junction",
     "surface", "bridge", "tunnel", "layer", "maxweight", "maxheight", "hgv", "access",
-    "width", "sidewalk", "lit", "destination", "int_ref", "service",
+    "width", "sidewalk", "lit", "destination", "destination:ref", "int_ref", "service",
 )
 AREA_KEYS_LANDUSE = {"industrial", "railway", "commercial", "retail", "farmyard", "construction"}
 POINT_KEYS = {
@@ -119,7 +120,9 @@ def load_layers() -> dict[str, gpd.GeoDataFrame]:
     pbf = download()
     sha = load_manifest()["sha256"]
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    cache = CACHE_DIR / f"bialystok_layers_{sha[:16]}.pkl"
+    # the kept tag list is part of the key (ADR 0069 added destination:ref; a stale pickle silently dropped it)
+    tags_key = hashlib.sha1(repr(ROAD_TAGS).encode()).hexdigest()[:8]
+    cache = CACHE_DIR / f"bialystok_layers_{sha[:16]}_{tags_key}.pkl"
     if cache.exists():
         raw = pickle.loads(cache.read_bytes())
     else:
