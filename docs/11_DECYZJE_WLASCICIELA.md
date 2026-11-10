@@ -58,3 +58,5 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 | D37 | Jasność farby/zebry (r8: zebra 233 sRGB) | Próg **względny**: farba/asfalt **1,7–2,3** w słońcu; **≤ 235 sRGB** w słońcu, **≤ 217** przy pochmurnym (zastępuje twarde ≤ 217) |
 | D38 | Wyprane kolory przy słońcu (r8: trawa sat 28 vs 33–58 na zdjęciach) | Podnieść nasycenie **albedo trawy do 35–40** (materiał, bez zmian post-procesu) |
 | D39 | Panel deweloperski w APK | **Zostaje widoczny** — na razie grają tylko właściciel i lider |
+| D40 | Skany CC0 (zmiana ADR 0010) | **Zgoda**: skany CC0 z Poly Haven i ambientCG jako baza materiałów świata (licencja każdego zasobu sprawdzana i wpisana do `docs/LICENSES.md`); generatory dalej robią rozkład, zużycie i warianty |
+| D41 | Zdjęcia trasy startowej | Właściciel **zrobi własne zdjęcia** trasy (Kwadrat Park → Andersa → Rondo Putry → DK8) wg listy ujęć od lidera — do tekstur fasad i dopasowania kadrów |
