@@ -55,7 +55,7 @@ namespace Game.World.Import
         /// <summary>True when the manifest material has a generated set whose files exist for the tier.</summary>
         public static bool Has(Dictionary<string, object> def, string id)
         {
-            if (id == "decal_tyre" || Band(def)) return true;   // procedural strip profile, no set
+            if (id == "decal_tyre") return true;   // procedural strip profile, no set
             if (def.Get("procedural") as string == "grate") return true;   // gully grates (drain_grate)
             if (Stripes(def) != null) return true;                         // painted bands (boom, hazard)
             var s = Set(def.Get("texture_set") as string);
@@ -73,20 +73,12 @@ namespace Game.World.Import
             if ((kind == "modulation_set" || uv.StartsWith("mesh_uv0")) && def.Get("uv") as string != "planar") uv0 = true;
             if (def.Get("uv1") as string == "along_m") uv1 = true;
             if (id == "road_asphalt" || id == "road_asphalt_new") uv1 = true;           // _ROADWEAR
-            if ((id.StartsWith("hall_wall") || Runoff(def)) && Set("parapet_runoff") != null) uv1 = true;   // _RUNOFF (wall-top space)
-            if (id == "decal_patch" || id == "decal_oil" || id == "decal_tyre" || Band(def)) { uv0 = true; uv1 = true; }
+            if (id.StartsWith("hall_wall") && Set("parapet_runoff") != null) uv1 = true;   // _RUNOFF (wall-top space)
+            if (id == "decal_patch" || id == "decal_oil" || id == "decal_tyre") { uv0 = true; uv1 = true; }
             if (def.Get("paint") is Dictionary<string, object>) uv1 = true;              // _DECAL_PAINT wear data (ADR 0049)
             if (def.Get("procedural") as string == "grate" || Stripes(def) != null) uv0 = true;
             if (id == "terrain_grass") colors = true;
         }
-
-        /// <summary>ADR 0071 r11: soft noise-broken band decals (yard tyre tracks, grime along kerbs and wall feet):
-        /// manifest "band": true, drawn like decal_tyre with the material's own colour and "alpha".</summary>
-        static bool Band(Dictionary<string, object> def) => def.Get("band") is bool b && b;
-
-        /// <summary>ADR 0071 r11: manifest "weather": true = wall material of an authored asset that carries the splash
-        /// zone (UV0.y = metres above ground) and run-off space (TEXCOORD_1) of the generated hall walls.</summary>
-        static bool Runoff(Dictionary<string, object> def) => def.Get("weather") is bool b && b;
 
         /// <summary>Procedural stripe sets: (direction in UV metres, period m, colour A, colour B), linear colours.</summary>
         static (Vector2 dir, float period, Color a, Color b)? Stripes(Dictionary<string, object> def)
@@ -152,12 +144,7 @@ namespace Game.World.Import
             // ADR 0067: `tile` was never written to the material (every set is sampled at the shader default 4 x 4 m,
             // whatever tile_m says). Strip atlases (non-square, UV0 in atlas metres) need the real size; the other sets
             // keep the 4 m look they were reviewed with until the lead decides (see ADR 0067, "znane").
-            // ADR 0071 r11 (review 2026-11-10, P0 "kostka 0,4-0,5 m"): sets segmented into physical elements (CC0 scans of
-            // behaton / 20x10 paving / 35 cm slabs, `source.elements_per_tile`) are 1.9-3.1 m of real surface; sampled at
-            // the 4 m default every block came out 1.3-2.1x too large (behaton 0.42 m instead of 0.20 m). Their element
-            // size is a scale cue, so they always get their real tile.
-            bool elementScan = set != null && set.Get("source") is Dictionary<string, object> esrc && esrc.Get("elements_per_tile") != null;
-            if ((def.Get("set_tile") is bool stl && stl) || elementScan) mat.SetVector("_Tile", tile);
+            if (def.Get("set_tile") is bool stl && stl) mat.SetVector("_Tile", tile);
 
             float scale = 1f;
             Vector3 tint = Vector3.one;
@@ -225,8 +212,7 @@ namespace Game.World.Import
                 // x damp darkening, y macro-pool threshold (~0.62 = 16 % of the area), z joint dirt, w damp gloss
                 mat.SetVector("_Grime", new Vector4(blocks ? 0.42f : 0.38f, 0.62f, blocks ? 0.45f : 0.3f, 0.5f));
             }
-            // ADR 0071 r11: manifest "cracks": strength = the 16 m crack layer on a non-asphalt set (worn dock apron)
-            if (setName == "asphalt_worn" || def.Get("cracks") != null)
+            if (setName == "asphalt_worn")
             {
                 var cm = Layer(r, "asphalt_cracks_layer", "T_asphalt_cracks_layer_Mask.png", false, false);
                 var cn = Layer(r, "asphalt_cracks_layer", "T_asphalt_cracks_layer_Normal.png", false, true);
@@ -234,7 +220,7 @@ namespace Game.World.Import
                 {
                     mat.SetTexture("_CrackMap", cm); mat.SetTexture("_CrackNormal", cn);
                     mat.EnableKeyword("_CRACKS");
-                    mat.SetFloat("_CrackStrength", def.Get("cracks") != null ? (float)Num(def.Get("cracks")) : id == "yard_asphalt" ? 0.9f : 0.75f);
+                    mat.SetFloat("_CrackStrength", id == "yard_asphalt" ? 0.9f : 0.75f);
                 }
             }
             if (asphalt)
@@ -257,13 +243,12 @@ namespace Game.World.Import
                 // D38 (ADR 0060): grass chroma x1.45 in the set -> refill re-measured (Medium, Var.B < 0.1)
                 mat.SetVector("_GrassFill", new Vector4(0.072f, 0.114f, 0.011f, 1f));   // linear, no sRGB conversion
             }
-            if (id.StartsWith("hall_wall") || id.StartsWith("plaster_") || id == "panel_concrete" || id == "brick_red" || id == "hall_plinth" || Runoff(def))
+            if (id.StartsWith("hall_wall") || id.StartsWith("plaster_") || id == "panel_concrete" || id == "brick_red" || id == "hall_plinth")
             {
                 mat.EnableKeyword("_SPLASH");
                 mat.SetFloat("_SplashHeight", id == "hall_plinth" ? 0.35f : 0.6f);
             }
-            if (Runoff(def)) mat.SetFloat("_MacroStrength", 0.12f);   // panel-to-panel tone drift of a 600 m facade
-            if (id.StartsWith("hall_wall") || Runoff(def))
+            if (id.StartsWith("hall_wall"))
             {
                 // parapet run-off streaks (zacieki pod attyką): TEXCOORD_1 = (u m, 1 + metres below the fascia / length
                 // scale) from buildings_mesh.py hall walls; one RGB sample on all tiers
@@ -332,11 +317,11 @@ namespace Game.World.Import
                     float P(string k, float d) => pd.Get(k) != null ? (float)Num(pd.Get(k)) : d;
                     mat.SetVector("_PaintWear", new Vector4(P("wheel_wear", 0.85f), P("age_wear", 0.25f), P("dirt", 0.3f), P("line_w_m", 0.12f)));
                 }
-                else if (id == "decal_tyre" || Band(def))
+                else if (id == "decal_tyre")
                 {
                     mat.EnableKeyword("_DECAL_TYRE");
                     mat.SetVector("_Tint", new Vector4(col.x, col.y, col.z, 1f));
-                    mat.SetFloat("_DecalAlpha", def.Get("alpha") != null ? (float)Num(def.Get("alpha")) : 0.45f);
+                    mat.SetFloat("_DecalAlpha", 0.45f);
                     SetBlend(mat, true);
                     mat.renderQueue = (int)RenderQueue.Geometry + 20;
                 }

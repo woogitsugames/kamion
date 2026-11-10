@@ -126,21 +126,14 @@ namespace Game.World.Import
                 foreach (var (g, n) in lodNodes)
                 {
                     starts.Add(materials.Count);
-                    bool uv = false, uv1 = false;
+                    bool uv = false;
                     foreach (var prim in n.Primitives)
                     {
                         var mat = ProtoMaterial(r, g, prim.Material, out bool textured);
                         materials.Add(mat);
                         uv |= textured;
-                        // ADR 0071 r11: wall-top / sill run-off space of the hero hall (TEXCOORD_1, only where the
-                        // material reads it and the primitive carries it)
-                        if (prim.Uv1 != null && prim.Material != null && r.MaterialDefs.TryGetValue(prim.Material, out var pd))
-                        {
-                            WorldPbrMaterials.Channels(pd, prim.Material, out _, out bool pu1, out _);
-                            uv1 |= pu1;
-                        }
                     }
-                    var mesh = WorldMeshBake.Compact(n.Name, n.Primitives, new WorldMeshBake.Options { Uv0 = uv, Uv1 = uv1 });
+                    var mesh = WorldMeshBake.Compact(n.Name, n.Primitives, new WorldMeshBake.Options { Uv0 = uv });
                     AssetDatabase.AddObjectToAsset(mesh, set);
                     bytes += WorldMeshBake.GpuBytes(mesh);
                     lods.Add(mesh);
