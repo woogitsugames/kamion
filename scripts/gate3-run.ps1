@@ -41,8 +41,10 @@ param(
     [string]$CameraFilter = '',
     # Truck-mounted control cameras (TruckAssetBuilder: truck-34, cab-dash) framed on the phone under each lighting preset (r6 section 8 #1).
     # Taken only for segment A (they do not depend on the segment); pass -TruckCameras @() to skip.
-    [string[]]$TruckCameras = @('truck-34', 'cab-dash'),
+    [string[]]$TruckCameras = @('truck-34', 'cab-dash', 'cab-left', 'cab-driver', 'cab-mirror-front'),
     [string[]]$TruckLightings = @('overcast', 'lowsun', 'dusk'),
+    # Gate/control (world) cameras are framed a second time under these presets (r8: world overcast frames missing); @() = clear only.
+    [string[]]$WorldLightings = @('overcast'),
     [switch]$DryRun
 )
 $ErrorActionPreference = 'Stop'
@@ -221,6 +223,8 @@ if (-not $SkipCameras) {
             if ($CameraFilter -and ($tc -notmatch $CameraFilter)) { continue }
             $ids += [pscustomobject]@{ id = $tc; truck_s_m = $null; kind = 'truck'; lighting = $lg } } }
     }
+    foreach ($lg in $WorldLightings) { foreach ($wc in @($ids | Where-Object { $_.kind -ne 'truck' })) {
+        $ids += [pscustomobject]@{ id = $wc.id; truck_s_m = $wc.truck_s_m; kind = $wc.kind; lighting = $lg } } }
     foreach ($c in $ids) {
         $lightTag = if ($c.PSObject.Properties['lighting']) { $c.lighting } else { '' }
         $frameId = if ($lightTag) { "$($c.id)_$lightTag" } else { $c.id }
@@ -260,6 +264,8 @@ if (-not $SkipCameras) {
         }
         if ($dupOf) { $status = 'DUPLICATE_FRAME'; $result.warnings += "frame $frameId is byte-identical to $dupOf (md5 $md5): not evidence of this camera" }
         $camResults += [ordered]@{ id = $frameId; status = $status; md5 = $md5; duplicateOf = $dupOf; png = $(if ($status -eq 'CAPTURED') { $png } else { $null }) }
+        $cabLine = if ($c.id -like 'cab-*') { ([regex]::Match($lg, '\[CAB\] view camera[^\r\n]*')).Value } else { '' }
+        if ($cabLine) { $camResults[-1].cabViewLine = $cabLine; $camResults[-1].cabView = ($cabLine -match 'cabView=True') }
         Write-Host ("  cam {0,-28} {1}" -f $frameId, $status)
         if ($locked2) { $exit = 5; break }
     }
