@@ -65,3 +65,5 @@
 - Krok20: import fallback Low+High OK. NASTĘPNY: pwsh artifacts/megascans-r1/run-camera-proof.ps1 -Stage before; potem identyczne kadry before i odtworzenieafter.
 
 - Krok22: odtworzono wygenerowany światafter (archiwum1989plików); KAMION_DISABLE_FAB wyłączone. NASTĘPNY: powtórny raycast i sanityrender after, walidacja SHA192plików.
+
+- Krok24: pełny build rundy4 zakończony (64chunki); prawdziwy fallback build ma exit0 (fallback-build-exit.json), import i6PNG before poprawne. Fallback EditMode:200PASS/0FAIL/7skipped/5inconclusive; wrapper1/nativeUnity2, identyczny mechanizm jak baseline. Próba BlendProbes nie poprawiła ciemnej roślinności i została cofnięta; kalibracja sRGB→linear zachowuje dokładny kanałalpha, źródłowy odcień i detale. NASTĘPNY: pwsh artifacts/megascans-r1/run-final-proof.ps1 po gotowej powierzchni trawy.

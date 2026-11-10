@@ -211,7 +211,7 @@ and derived-output provenance hashes. No Fab assets or textures enter tracked ar
 | round-manhole-cover | Rejected: embossed emblem and lettering |
 | trash-bag-pack | Small grounded groups by existing shelter/gate/parking context |
 | trash-can, urban-trash | Rejected: visible emblem / printed packaging and branded bin |
-| grass-clumps, wild-grass | Bounded soft-verge details, LOD0/1/2 |
+| grass-clumps, wild-grass | Bounded soft-verge details, LOD0/1/2; grass-clumps also supplies the private periodic grass base-map bake |
 | boxwood, elderberry | Landscaping/soft-verge shrubs and explicitly authored island selections |
 | silver-birch-bark, birch-tree-trunk | Bark crops mixed onto our generated birch material |
 | linden-branch | Woody bark crop onto our generated linden; supplied scan contains no leaves |

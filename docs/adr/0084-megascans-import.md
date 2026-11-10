@@ -27,6 +27,16 @@ change project settings, packages, shared scenes, phone policy or the licence.
   Unity region output, ASTC with mipmaps and streaming-compatible non-readable
   textures. Normals are prepared but deliberately disabled: compact world meshes
   have no tangent attribute and source normal convention is UNVERIFIED.
+- Plant albedo is calibrated in linear light to opaque-pixel mean luminance
+  0.08 (green species) and 0.18 (dry wild grass), WORKING_VALUE. Source sRGB,
+  hue/detail and alpha remain intact; measured gains and clipping are recorded
+  locally. The unadjusted elderberry rendered almost black in both tiers.
+- `fab/grass_surface.py` bakes an emissive top-down periodic 4 m tile from
+  reviewed grass-clump geometry. It replaces only the existing grass base map,
+  retaining WorldPBR ground masks, normals, macro variation and vertex channels.
+  Mean linear RGB [0.08, 0.105, 0.038] preserves the previous palette; the tile
+  size, planting density and calibration are WORKING_VALUE. No runtime geometry
+  or shader pass is added by this surface.
 - `streetscape/fab_details.py` replaces existing35 m gully and yard-drain materials in one shared padded atlas, adds
   lane-centred 640 mm covers at 90 m spacing, and bounded props by existing
   shelters/gates/parking or on soft verges. These placements/dimensions are
