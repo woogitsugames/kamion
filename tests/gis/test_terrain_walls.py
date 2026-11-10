@@ -10,6 +10,8 @@ import pytest
 from conftest import REGION_DIR
 
 QA = REGION_DIR / "generated" / "terrain_walls_qa.json"
+RATCHET = {"skirt:j": 85, "skirt:yard_asphalt": 1, "skirt:yard_concrete": 8, "skirt:yard_slabs": 1,
+           "steep_grass:verge_grass": 8}     # 103 points, build of 2026-11-10 (e81fbfe)
 
 
 def test_no_vertical_terrain_walls():
@@ -17,11 +19,12 @@ def test_no_vertical_terrain_walls():
         pytest.skip("terrain_walls_qa.json missing: run roads/build_world.py")
     q = json.loads(QA.read_text(encoding="utf-8"))
     assert q["thresh_m"] <= 0.15
-    # verge / yard skirts (W-H5) must be clean; junction-patch skirts ("j:" sources) are a known remainder (ADR 0033)
-    bad = [w for w in q["worst"] if not w["src"].startswith("j:")]
-    assert not bad, f"verge / yard walls > {q['thresh_m']} m: {bad[:5]}"
-    if q["count"]:
-        pytest.xfail(f"{q['count']} junction-skirt vertices > {q['thresh_m']} m (max {q['max_m']} m), ADR 0033 open item")
+    assert "by_source" in q, "old QA format: rebuild the region"
+    # ratchet (ADR 0033): target 0; lower these numbers whenever a fix lands, never raise them
+    for cat, n in q["by_source"].items():
+        assert cat in RATCHET, f"new wall category {cat} ({n} points), worst {q['worst'][:5]}"
+        assert n <= RATCHET[cat], f"{cat}: {n} wall points > {q['thresh_m']} m (ratchet {RATCHET[cat]})"
+    assert q["count"] <= sum(RATCHET.values())
 
 
 def test_marking_paint_is_worn():

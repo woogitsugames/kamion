@@ -107,7 +107,10 @@ CFG = {
     "bar": [(-0.80, 1.585), (0.80, 1.585), (0.80, 1.852), (-0.80, 1.852)],    # upper field + black wordmark band
     "bumper_road": [(-0.80, 0.885), (0.80, 0.885), (0.80, 1.21), (-0.80, 1.21)],   # lower intake (honeycomb)
     "emblem_z": None, "emblem_w": 0.15,          # B2 v2: no grille badge, the wordmark carries the brand
-    "wordmark_z": 1.799, "wordmark_h": 0.080,
+    # B2.2: the grille frame covered the band's top 22 mm, so the old 80 mm letters at 1.799 lost their top 9 mm (T
+    # bars, R/A shoulders). The frame's top lip is now 8 mm (sides/bottom stay 22 mm) and the band nose radius 4 mm:
+    # flat visible face 1.749-1.844 m = 95 mm, letters 91 mm centred in it (2 mm clear top and bottom)
+    "wordmark_z": 1.7965, "wordmark_h": 0.091,
     # (z_centre, height, depth, material): flush black band carrying the silver TRAKT letters (owner sheets: light
     # lettering on a dark strip, the band runs up to the cowl so screen-band-grille read as one dark mass) + 6 louvres
     "grille_bars": [(1.7985, 0.107, 0.040, "plastic_satin"),
@@ -278,19 +281,26 @@ def front_face(feathers, strokes):
         return st[1][0] + (st[2][0] - st[1][0]) * t
     for k, (zc, hgt, depth, m_) in enumerate(CFG["grille_bars"]):
         grille_bar(f"grille_bar{k}", zc, hgt, depth, gx(zc) - 0.004, m_, round_front=(k == 0 or m_ == "paint"),
-                   nose=0.0 if k == 0 else -0.003)
+                   nose=0.0 if k == 0 else -0.003,
+                   nose_r=0.004 if k == 0 else 0.015)   # B2.2: 99 mm flat face for the 91 mm letters
     # frame: raised graphite band along the T outline (outer edge flush with the pocket edge)
     st, br = CFG["stem"], CFG["bar"]
     xs = gx(br[0][1] - 1e-6)
     outline = [st[0], st[1], (xs, br[0][1]), br[1], br[2], br[3], br[0], (-xs, br[0][1])]
     outline = [p for i, p in enumerate(outline)          # B2 v2: rectangular grille -> drop repeated corners
                if math.hypot(p[0] - outline[i - 1][0], p[1] - outline[i - 1][1]) > 1e-4]
-    ribbon("grille_frame", outline, 0.022, "trim_graphite", off=-0.004, thick=0.010)
+    top = br[2][1]                                        # B2.2: 8 mm top lip over the wordmark band, 22 mm elsewhere
+    fw = [0.008 if abs(p[1] - top) < 1e-6 and abs(outline[(i + 1) % len(outline)][1] - top) < 1e-6 else 0.022
+          for i, p in enumerate(outline)]
+    ribbon("grille_frame", outline, fw, "trim_graphite", off=-0.004, thick=0.010)
     if CFG["emblem_z"] is not None:
         emblem(feathers)
     # B2 v2: real satin-silver letters (3 mm) on the black band - kept as game geometry ('badge_'), not the
     # paint-slot decal (a decal can only tint the Paint slot, it cannot draw light letters on dark trim)
-    wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=14.0, mat="satin_alu", name="badge_trakt")
+    # B2.2: letters lie in the raked band, 1.6x stroke (12 mm at 80 mm cap height), 4 mm deep, 1.2 mm chamfer,
+    # brushed aluminium (bright, anisotropic) so the A crossbar and the R leg survive a 3/4 view on a phone
+    wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=16.0, mat="alu_brushed",
+             name="badge_trakt", weight=1.6, depth=0.004, on_face=True, bev=0.0012)
     # flush cowl (wiper panel) in the same plane, between the service flap and the glass edge
     CAB.patch("cowl", "plastic", "front", WS_Z0 - 0.082, WS_Z0 - 0.012, -1.12, 1.12, off=0.002, nz=3, npar=40)
     # B2 v2: no slot row - in the game atlas it baked into a black/grey comb; the plain black cowl now merges with
@@ -318,8 +328,9 @@ def emblem(subpaths):
 
 def ribbon(name, poly, width, m, off=-0.004, thick=0.01, kind="front", loft=None):
     """Frame band of `width` running inside a closed CCW polygon [(x, z)] on the cab surface (one strip per
-    edge, mitred corners), raised `thick` from `off`."""
+    edge, mitred corners), raised `thick` from `off`. `width` may be a list with one width per edge i -> i+1."""
     n = len(poly)
+    wd = list(width) if isinstance(width, (list, tuple)) else [width] * n
 
     def inward(i):
         (x0, z0), (x1, z1) = poly[i], poly[(i + 1) % n]
@@ -328,8 +339,13 @@ def ribbon(name, poly, width, m, off=-0.004, thick=0.01, kind="front", loft=None
     inner = []
     for i in range(n):
         na, nb = inward(i - 1), inward(i)
-        k = width / max(1.0 + na[0] * nb[0] + na[1] * nb[1], 0.2)   # mitre: distance `width` to both edges
-        inner.append((poly[i][0] + (na[0] + nb[0]) * k, poly[i][1] + (na[1] + nb[1]) * k))
+        wa, wb = wd[i - 1], wd[i]
+        det = na[0] * nb[1] - na[1] * nb[0]
+        if abs(wa - wb) < 1e-9 or abs(det) < 0.05:
+            k = wb / max(1.0 + na[0] * nb[0] + na[1] * nb[1], 0.2)   # mitre: distance `width` to both edges
+            inner.append((poly[i][0] + (na[0] + nb[0]) * k, poly[i][1] + (na[1] + nb[1]) * k))
+        else:                                                # unequal widths: q with q.na = wa, q.nb = wb
+            inner.append((poly[i][0] + (wa * nb[1] - wb * na[1]) / det, poly[i][1] + (wb * na[0] - wa * nb[0]) / det))
     for i in range(n):
         j = (i + 1) % n
         (xa, za), (xb, zb) = poly[i], poly[j]
@@ -338,13 +354,13 @@ def ribbon(name, poly, width, m, off=-0.004, thick=0.01, kind="front", loft=None
                        thick=thick)
 
 
-def grille_bar(name, zc, hgt, depth, hw, m, round_front=True, n=2, nose=-0.003):   # flat front: n=2 is exact
+def grille_bar(name, zc, hgt, depth, hw, m, round_front=True, n=2, nose=-0.003, nose_r=0.015):   # flat front: n=2 is exact
     """Horizontal grille bar following the cab front: body-colour bars get a rounded nose, graphite bars a
     louvre face tilted up (different depth and section, so the field never reads as identical slats).
     nose = offset of the bar face from the cab surface (0 = flush, carries the wordmark decal)."""
     h = hgt / 2
     if round_front:
-        r = min(0.015, h * 0.6)
+        r = min(nose_r, h * 0.6)
         prof = [(-h, -depth), (-h, nose - r), (-h + r * 0.3, nose - r * 0.3), (-h + r, nose), (h - r, nose),
                 (h - r * 0.3, nose - r * 0.3), (h, nose - r), (h, -depth)]
     else:
@@ -363,8 +379,13 @@ def grille_bar(name, zc, hgt, depth, hw, m, round_front=True, n=2, nose=-0.003):
     return G.obj_from_bm(name, bm, m, sharp=55)
 
 
-def wordmark(strokes, z_c=1.918, height=0.052, spacing=30.0, mat="wordmark", name="wordmark", origin=None):
-    """TRAKT letters from the SVG polylines (own geometric monoline), letter-spaced, extruded 3 mm."""
+def wordmark(strokes, z_c=1.918, height=0.052, spacing=30.0, mat="wordmark", name="wordmark", origin=None,
+             weight=1.0, depth=0.003, on_face=False, bev=0.0):
+    """TRAKT letters from the SVG polylines (own geometric monoline), letter-spaced, extruded `depth`.
+    weight scales the SVG stroke width; on_face=True lays every stroke in the raked front plane (each stroke
+    centred on the face at its own height and tilted by RAKE) instead of an upright box at the plane's z_c point."""
+    if on_face:
+        return _wordmark_on_face(strokes, z_c, height, spacing, mat, name, weight, depth, bev)
     ys = [p[1] for pl, w in strokes for p in pl]
     y0, y1 = min(ys), max(ys)
     sc = height / (y1 - y0 + strokes[0][1])
@@ -393,6 +414,75 @@ def wordmark(strokes, z_c=1.918, height=0.052, spacing=30.0, mat="wordmark", nam
             hw = w * sc / 2
             box(f"{name}_{k}_{j}", ((ax + bx) / 2, yfr + 0.0015, (az + bz) / 2), (ln + 2 * hw, 0.003, 2 * hw), mat,
                 rot=Matrix.Rotation(-ang, 3, "Y"))
+
+
+def _wordmark_on_face(strokes, z_c, height, spacing, mat, name, weight, depth, bev):
+    """B2.2 badge letters (REVIEW: 'TPAKT' at 3/4 on a 1080p frame - the A lost its crossbar, the R its leg).
+    Cause: the upright 3 mm letter boxes sat on the 7 deg raked band at the z_c point only, so the lower ~40 % of
+    every letter was buried in the band and the top stood 8 mm proud; the 7.7 mm strokes were < 1 px at game
+    distance. Now each stroke lies in the face plane (centred at its own height, tilted by RAKE), strokes are
+    `weight` x the SVG width and chamfered, so the edges catch a highlight line on the dark band."""
+    ys = [p[1] for pl, w in strokes for p in pl]
+    y0, y1 = min(ys), max(ys)
+    wmax = max(w for _, w in strokes) * weight
+    sc = height / (y1 - y0 + wmax)
+    bounds = [192, 239, 293, 347, 401, 460]  # letter x-ranges in trakt.svg: T R A K T
+
+    def idx(x):
+        for i, b in enumerate(bounds[1:]):
+            if x < b:
+                return i
+        return len(bounds) - 2
+    allx = [x + idx(min(p[0] for p in pl)) * spacing for pl, w in strokes for x, _ in pl]
+    xc = (min(allx) + max(allx)) / 2
+    tilt = Matrix.Rotation(math.radians(RAKE), 3, "X")     # +z -> (0, -sin, cos): leans back with the face
+    def turn(p0, p1, p2):   # turn angle at p1 between segments p0-p1 and p1-p2 (0 = straight on)
+        u = V((p1[0] - p0[0], 0, p1[1] - p0[1])).normalized()
+        v = V((p2[0] - p1[0], 0, p2[1] - p1[1])).normalized()
+        return math.acos(max(-1.0, min(1.0, u.dot(v))))
+    def butts(p, k, j):     # does point p (SVG units) lie on a segment other than its own (k, j)?
+        for k2, (pl2, _) in enumerate(strokes):
+            for j2, (q0, q1) in enumerate(zip(pl2, pl2[1:])):
+                if (k2, j2) == (k, j):
+                    continue
+                ex, ey = q1[0] - q0[0], q1[1] - q0[1]
+                t = max(0.0, min(1.0, ((p[0] - q0[0]) * ex + (p[1] - q0[1]) * ey) / (ex * ex + ey * ey)))
+                if math.hypot(p[0] - q0[0] - t * ex, p[1] - q0[1] - t * ey) < 0.5:
+                    return True
+        return False
+    seen, local = {}, []          # index of each polyline within its letter
+    for pl, _ in strokes:
+        li = idx(min(p[0] for p in pl))
+        local.append(seen.get(li, 0))
+        seen[li] = local[-1] + 1
+    for k, (pl, w) in enumerate(strokes):
+        off = idx(min(p[0] for p in pl)) * spacing
+        for j, (a, b) in enumerate(zip(pl, pl[1:])):
+            ax, az = -(a[0] + off - xc) * sc, z_c - (a[1] - (y0 + y1) / 2) * sc   # viewer's left = +X
+            bx, bz = -(b[0] + off - xc) * sc, z_c - (b[1] - (y0 + y1) / 2) * sc
+            d = V((bx - ax, 0, bz - az))
+            ln = d.length
+            if ln < 1e-6:
+                continue
+            ang = math.atan2(d.z, d.x)
+            hw = w * weight * sc / 2
+            # B2.2: square cap (hw) only at the free ends; at an inner joint extend by the mitre length
+            # hw * tan(turn / 2) - a full square cap on a 45 deg shoulder poked out as a notch (A, R bowl)
+            # (capped at hw: an acute apex would otherwise grow a spike). An end that butts into another stroke
+            # (R leg, K arms, A crossbar, T stem) gets no cap: its square corner stuck out of the stroke it meets
+            e0 = (0.0 if butts(a, k, j) else hw) if j == 0 else hw * min(1.0, math.tan(turn(pl[j - 1], a, b) / 2))
+            e1 = ((0.0 if butts(b, k, j) else hw) if j == len(pl) - 2
+                  else hw * min(1.0, math.tan(turn(a, b, pl[j + 2]) / 2)))
+            dn = d / ln
+            ax, az = ax - dn.x * e0, az - dn.z * e0
+            bx, bz = bx + dn.x * e1, bz + dn.z * e1
+            ln = ln + e0 + e1
+            mx, mz = (ax + bx) / 2, (az + bz) / 2
+            # strokes overlap at the joints: stagger depth 0.15 mm per stroke so coplanar faces never z-fight
+            # later polylines of a letter (crossbar, R leg, T stem) sit 0.2 mm lower so their caps hide inside
+            c = V(CAB.front_pt(mz, mx, depth / 2 + 0.0010 - 0.0002 * min(local[k], 3) + 0.00005 * (j % 2)))
+            box(f"{name}_{k}_{j}", c, (ln, depth, 2 * hw), mat, bev=bev, seg=1,
+                rot=tilt @ Matrix.Rotation(-ang, 3, "Y"))
 
 
 def wipers():
@@ -443,7 +533,7 @@ def drl_guide(name, s, p0, p1, wdt=0.016, n=12):
         bm.faces.new((a[j], b[j], d[j], c[j]))
     G.obj_from_bm(name, bm, "led_drl", sharp=40)
     k = 2.2
-    CAB.quad_patch(name + "_carrier", "dark_chrome", "front",
+    CAB.quad_patch(name + "_carrier", "lamp_housing", "front",
                    [(s * (x0 - k * nx), z0 - k * nz), (s * (x1 - k * nx), z1 - k * nz),
                     (s * (x1 + k * nx), z1 + k * nz), (s * (x0 + k * nx), z0 + k * nz)], off=-0.045, nu=n, nv=1)
 
@@ -497,20 +587,43 @@ def lens_dome(name, poly, m, crown=0.008, thick=0.005, rim_off=-0.001, sub=8):
     return G.obj_from_bm(name, bm, m, sharp=55)
 
 
+def reflector_funnel(name, s, cx, zc, rings, m="reflector"):
+    """Faceted chrome funnel through rounded-rectangle rings [(w, h, r, off)] (front projection, centre (cx, zc),
+    side s): flat-shaded facets between rings, normals facing out of the lamp (+y)."""
+    bm = bmesh.new()
+    vs = []
+    for w, h, r, off in rings:
+        pts = [(cx + px, zc + pz) for px, pz in rrect(w, h, r, 3)]
+        vs.append([bm.verts.new(CAB.front_pt(z, s * x, off)) for x, z in pts])
+    n = len(vs[0])
+    for ra, rb in zip(vs, vs[1:]):
+        for i in range(n):
+            j = (i + 1) % n
+            bm.faces.new((ra[i], ra[j], rb[j], rb[i]))
+    bm.normal_update()
+    if sum(f.normal.y * f.calc_area() for f in bm.faces) < 0:
+        bmesh.ops.reverse_faces(bm, faces=bm.faces)
+    return G.obj_from_bm(name, bm, m, sharp=20)
+
+
 def lamp_cell(tag, s, x0, x1, z0, z1, beam):
     """One LED reflector module (rectangular, not a round 'eyeball'): dark-chrome frame with depth, faceted
     reflector floor, and either a slim projector lens (low beam) or an LED bar (high beam)."""
     rect = [(x0, z0), (x1, z0), (x1, z1), (x0, z1)]
     poly = rect if s > 0 else mirror_poly(rect)
     sx = lambda x: s * x  # noqa: E731
-    # reflector floor: two facets meeting in a shallow ridge (reads as a stamped reflector, not a flat plate)
     zm = (z0 + z1) / 2
-    CAB.quad_patch(f"proj_bowl_{tag}_a", "lamp_inner", "front", [(sx(x0), z0), (sx(x1), z0), (sx(x1), zm),
-                                                               (sx(x0), zm)], off=-0.044, nu=4, nv=1)
-    CAB.quad_patch(f"proj_bowl_{tag}_b", "lamp_inner", "front", [(sx(x0), zm), (sx(x1), zm), (sx(x1), z1),
-                                                               (sx(x0), z1)], off=-0.040, nu=4, nv=1)
-    ribbon(f"proj_shroud_{tag}", poly, 0.007, "dark_chrome", off=-0.044, thick=0.026)
+    # black module floor behind everything (the gap between reflector and lens holder reads as depth)
+    CAB.quad_patch(f"proj_bowl_{tag}", "lamp_inner", "front", [(sx(x0), z0), (sx(x1), z0), (sx(x1), z1),
+                                                             (sx(x0), z1)], off=-0.050, nu=4, nv=1)
+    ribbon(f"proj_shroud_{tag}", poly, 0.007, "lamp_housing", off=-0.044, thick=0.026)
     cx, w, h = (x0 + x1) / 2, (x1 - x0), (z1 - z0)
+    # B2.2 (lead: 'headlamp lenses read flat grey'): vacuum-metallised free-form reflector - a faceted chrome funnel
+    # from the shroud's inner edge (-22 mm) down to the lens holder (-46 mm) in three rings with different
+    # slopes, so each facet mirrors a different part of the sky/ground (the sparkle of a real LED lamp)
+    reflector_funnel(f"proj_refl_{tag}" if beam == "low" else f"hb_refl_{tag}", s, cx, zm,
+                     [(w - 0.015, h - 0.015, 0.003, -0.022), (w - 0.019, h - 0.021, 0.006, -0.031),
+                      (w - 0.024, h - 0.024, 0.010, -0.039), (w - 0.022, h - 0.022, 0.012, -0.046)])
     # B2.1 (owner sheets: rectangular LED modules): every module carries a rectangular projector lens - a crowned
     # rounded-rectangle block of smoked polycarbonate (real thickness, two surfaces + wall, so it catches a
     # highlight on its crown and a lit edge at an angle) in a thin dark-chrome bezel. Low beam = the two inner
@@ -522,8 +635,8 @@ def lamp_cell(tag, s, x0, x1, z0, z1, beam):
     # back face no deeper than the lamp back (-52 mm): check_fit found the interior dash behind a deeper block
     # strongly crowned (14 mm over a 44 mm block): the sky reflects only on the upper half, the lower half mirrors
     # the black lamp floor - reads as a lens with depth, not a flat grey pane under overcast light
-    lens_dome(f"{nm}_{tag}", rr, "projector", crown=0.014, thick=0.012, rim_off=-0.040, sub=2)
-    ribbon(f"proj_bezel_{tag}", rr, 0.0035, "dark_chrome", off=-0.041, thick=0.004)
+    lens_dome(f"{nm}_{tag}", rr, "projector", crown=0.009, thick=0.012, rim_off=-0.040, sub=2)
+    ribbon(f"proj_bezel_{tag}", rr, 0.0035, "reflector", off=-0.041, thick=0.005)   # B2.2: bright lens holder ring
     # LED emitter strip at the top edge of the high-beam module (reads as a different module, not a third copy)
     if beam != "low":
         CAB.quad_patch(f"hb_led_{tag}", "led_off", "front", [(sx(x0 + 0.012), z1 - 0.0085), (sx(x1 - 0.012), z1 - 0.0085),
@@ -548,7 +661,7 @@ def headlamps():
         for k, (x0, x1, beam) in enumerate(((0.905, 1.000, "low"), (1.015, 1.110, "low"), (1.125, 1.225, "high"))):
             lamp_cell(f"{s}_{k}", s, x0, x1, 1.642, 1.712, beam)
         # outboard corner: dark-chrome fin with a vertical light-guide end of the DRL (lamp reads round the corner)
-        CAB.quad_patch(f"lamp_fin_{s}", "dark_chrome", "front",
+        CAB.quad_patch(f"lamp_fin_{s}", "lamp_housing", "front",
                        [(s * 1.245, 1.632), (s * 1.262, 1.632), (s * 1.275, 1.725), (s * 1.258, 1.725)]
                        if s > 0 else [(s * 1.262, 1.632), (s * 1.245, 1.632), (s * 1.258, 1.725),
                                       (s * 1.275, 1.725)], off=-0.040, nu=2, nv=2, thick=0.020)
@@ -557,7 +670,7 @@ def headlamps():
         CAB.quad_patch(f"indicator_{s}", "led_amber", "front",
                        [(s * 0.860, 1.607), (s * 1.285, 1.607), (s * 1.285, 1.625), (s * 0.860, 1.625)],
                        off=-0.030, nu=20, nv=1, thick=0.004)   # >= cage (0.02) behind the lens: bakes clean
-        CAB.quad_patch(f"ind_carrier_{s}", "dark_chrome", "front",
+        CAB.quad_patch(f"ind_carrier_{s}", "lamp_housing", "front",
                        [(s * 0.855, 1.602), (s * 1.290, 1.602), (s * 1.290, 1.630), (s * 0.855, 1.630)],
                        off=-0.040, nu=20, nv=1)
         # crowned clear outer lens (two Fresnel surfaces + rim) + black gasket round it

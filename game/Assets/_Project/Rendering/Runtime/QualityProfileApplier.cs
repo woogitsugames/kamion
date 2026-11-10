@@ -15,6 +15,7 @@ namespace Game.Rendering
     {
         public const string WorldDetailKeyword = "_KAMION_WORLD_DETAIL";
         static readonly int k_ClearCoatOff = Shader.PropertyToID("_KamionClearCoatOff");
+        static readonly int k_GrimeDetailOff = Shader.PropertyToID("_KamionGrimeDetailOff");
 
         public Camera targetCamera;
         public Volume volume;
@@ -92,6 +93,7 @@ namespace Game.Rendering
             if (t.worldDetail) Shader.EnableKeyword(WorldDetailKeyword); else Shader.DisableKeyword(WorldDetailKeyword);
             // A8: truck paint clear coat switch (Kamion/Truck Exterior reads 0 = on, so an unset global keeps it on).
             Shader.SetGlobalFloat(k_ClearCoatOff, t.clearCoat ? 0f : 1f);
+            Shader.SetGlobalFloat(k_GrimeDetailOff, t.vehicleGrimeDetail ? 0f : 1f);   // ADR 0038
             if (worldTextures != null)
                 foreach (var tex in worldTextures)
                 {

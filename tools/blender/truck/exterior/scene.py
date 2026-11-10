@@ -486,6 +486,11 @@ CAMS = {
     "przod": dict(loc=(-0.0, 30, 2.0), rot=(math.radians(90), 0, math.radians(180)), ortho=7.4, fig=(-2.6, 2.4)),
     "34tyl": dict(loc=(9.2, -14.6, 2.5), target=(-0.3, -1.7, 1.55), lens=42, fig=(-2.6, -6.2)),
     "zbl_reflektor": dict(loc=(-2.75, 4.4, 1.80), target=(-1.06, 1.43, 1.60), lens=75, fig=None),   # B2 v2 lamp height
+    # B2.2: 3/4 close-up of the grille band (TRAKT badge letters) and the inner low-beam module
+    "zbl_znak": dict(loc=(-1.55, 3.55, 1.95), target=(-0.05, 1.41, 1.78), lens=70, fig=None),
+    # B2.2: letter joints at ~1 px = 0.35 mm, and the three lamp modules (housing colour, inner lens reflection)
+    "zbl_litery": dict(loc=(-0.35, 2.75, 1.86), target=(0.0, 1.42, 1.797), lens=85, fig=None),
+    "zbl_soczewka": dict(loc=(-1.75, 2.85, 1.74), target=(-1.06, 1.42, 1.668), lens=85, fig=None),
     "zbl_stopnie": dict(loc=(-4.4, 1.6, 1.15), target=(-1.2, -0.30, 0.78), lens=45, fig=None),
     "zbl_tyl": dict(loc=(-3.4, -7.6, 3.4), target=(0.0, -2.5, 1.25), lens=38, fig=None),
     "zbl_kolo": dict(loc=(4.2, -2.6, 0.95), target=(1.2, -3.7, 0.55), lens=50, fig=None),

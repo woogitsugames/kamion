@@ -36,6 +36,9 @@ namespace Game.Editor.VisualQA
                 string outDir = EditorTools.Arg("-qaOutput", Path.Combine(EditorTools.RepoRoot, "artifacts", "visual-qa", scene));
                 string lighting = EditorTools.Arg("-qaLighting", null);
                 string only = EditorTools.Arg("-qaCameras", null);
+                // ADR 0043 option (c) A/B: phone-style white-balance adaptation strength (not a default).
+                string wb = EditorTools.Arg("-qaWbAdapt", null);
+                if (!string.IsNullOrEmpty(wb)) EnvironmentLighting.WhiteBalanceOverride = float.Parse(wb, System.Globalization.CultureInfo.InvariantCulture);
                 int count = Render(scene, w, h, tier, outDir, lighting, only);
                 exit = count > 0 ? 0 : 1;
                 Debug.Log($"VISUALQA_RESULT: {(exit == 0 ? "OK" : "NO_CAMERAS")} rendered={count} dir={outDir}");
@@ -101,8 +104,20 @@ namespace Game.Editor.VisualQA
             var worldTextures = applier != null ? applier.worldTextures : null;
             string[] filter = string.IsNullOrEmpty(onlyCameras) ? null : onlyCameras.Split(',');
 
+            // -qaGate3 <gate3_cameras.json>: adds the Stage 3 gate cameras (same code as the phone's qacam_set=gate3,
+            // re-seated on the road collision) so scripts/gate3-evidence.ps1 can render them in the editor.
+            string gate3Json = EditorTools.Arg("-qaGate3", null);
+            // Colliders are saved disabled and cooked by the player at load; do the same so the gate cameras seat and the
+            // contact shadows ray-cast onto the road like on the phone (r5 E-N1: the edit-mode wheel-plane fallback hid the
+            // trailer patch under the asphalt).
+            foreach (var ck in UnityEngine.Object.FindObjectsByType<Game.World.WorldCollisionCooker>(FindObjectsInactive.Include, FindObjectsSortMode.None)) ck.Cook();
+            Physics.SyncTransforms();
+            if (!string.IsNullOrEmpty(gate3Json))
+            {
+                Game.Gameplay.Gate3Cameras.CreateAll(UnityEngine.Object.FindAnyObjectByType<Game.World.WorldRegionRoot>(), null, File.ReadAllText(gate3Json));
+            }
             var cams = UnityEngine.Object.FindObjectsByType<ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None)
-                .Where(c => filter == null || filter.Contains(c.id))
+                .Where(c => filter == null || filter.Any(f => Game.Gameplay.Gate3Cameras.Norm(f) == Game.Gameplay.Gate3Cameras.Norm(c.id)))
                 .OrderBy(c => c.id, StringComparer.Ordinal).ToArray();
             int msaa = 1; float scale = 1f;
             if (hasTier)
@@ -174,7 +189,7 @@ namespace Game.Editor.VisualQA
                 for (int ci = 0; ci < ContactShadowCaster.Count; ci++)
                 {
                     var csc = ContactShadowCaster.Get(ci);
-                    Debug.Log($"[QA] contact shadow {csc.name}: {csc.LastVertices} vertices, {csc.LastHits} ground hits");
+                    Debug.Log($"[QA] contact shadow {csc.name}: {csc.LastVertices} vertices, {csc.LastHits} ground hits; {csc.LastDiagnostics}");
                 }
                 if (VehicleReflectionCapture.Active != null) VehicleReflectionCapture.Active.RenderAllNow();
                 foreach (var sl in UnityEngine.Object.FindObjectsByType<StreetLamps>(FindObjectsSortMode.None)) sl.RefreshLights(cam);
@@ -186,6 +201,23 @@ namespace Game.Editor.VisualQA
                     Shader.SetGlobalFloat("_CabGain", 1f);
                 }
                 else foreach (var cl in UnityEngine.Object.FindObjectsByType<CabInteriorLighting>(FindObjectsSortMode.None)) cl.Refresh(cam);
+                // ADR 0043 diagnostic: -qaNoGlass leaves only the grey Fresnel loss of the glazing (no body absorption,
+                // grime, film or interior reflection), so sky-through-glass can be compared with the real glass in one frame.
+                if (EditorTools.Arg("-qaNoGlass", null) == "1")
+                    foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                    {
+                        var mats = r.sharedMaterials;
+                        bool any = false;
+                        for (int mi = 0; mi < mats.Length; mi++)
+                        {
+                            if (mats[mi] == null || mats[mi].shader == null || mats[mi].shader.name != "Kamion/Truck Glass") continue;
+                            var g = new Material(mats[mi]) { hideFlags = HideFlags.DontSave };
+                            g.SetFloat("_Opacity", 0f); g.SetFloat("_Grime", 0f); g.SetFloat("_Wiper", 0f);
+                            g.SetVector("_InteriorAlbedo", Vector4.zero);
+                            mats[mi] = g; any = true;
+                        }
+                        if (any) { r.sharedMaterials = mats; Debug.Log($"[QA] no-glass: {r.name} enabled={r.enabled} visible={r.isVisible} layer={r.gameObject.layer}"); }
+                    }
 
                 // UI is rendered in its own pass (UI layer only, transparent clear) and composited over the world
                 // image (premultiplied "over"), exactly like the runtime Screen Space - Overlay canvas: world geometry
@@ -239,6 +271,7 @@ namespace Game.Editor.VisualQA
                         foreach (var mir in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None))
                         {
                             var mt = mir.Texture;
+                            if (!mir.main) continue;
                             if (mir.phase == 0) ctx.LeftMirrorTexture = () => mt; else ctx.RightMirrorTexture = () => mt;
                         }
                     }

@@ -15,6 +15,7 @@
 // oil atlas 2x2 picked by TEXCOORD_1.y, tyre scrub profile across TEXCOORD_0.y), _GROUNDMASKS (terrain COLOR_0:
 // R road distance / 20 m, G forest floor, B unmown, A bare soil), _SPLASH (walls: splash / dirt zone above the ground
 // from TEXCOORD_0.y = metres above ground).
+// _GRASS_DETILE (grass sets: macro-masked bare soil, rotated second sample on Medium+; review r5 W-N3, ADR 0042).
 // Global tier keyword _KAMION_WORLD_DETAIL (Medium and up): element tone jitter, crack layer, second rotated macro
 // octave, close-range photo detail (asphalt) - Low draws base + normal + mask + one macro sample only.
 // Anti-shimmer: mips + per-tier aniso (QualityProfile), Toksvig smoothness from the generator, element jitter and
@@ -51,6 +52,7 @@ Shader "Kamion/World PBR"
         _DecalAlpha ("Decal opacity", Range(0, 1)) = 1
         _SplashHeight ("Splash zone height (m)", Float) = 0.6
         _GroundTint ("Terrain grass ground-mask strength", Range(0, 1)) = 1
+        _GrassFill ("Grass refill albedo (_GRASS_DETILE, linear; Vector: no sRGB conversion)", Vector) = (0.079, 0.109, 0.037, 1)
         _Stripe ("Stripes (_STRIPES): xy direction in UV0 metres, z period m", Vector) = (1, 0, 1, 0)
         _StripeA ("Stripe colour A (linear)", Color) = (0.55, 0.03, 0.02, 1)
         _StripeB ("Stripe colour B (linear)", Color) = (0.7, 0.7, 0.68, 1)
@@ -76,6 +78,7 @@ Shader "Kamion/World PBR"
             float _ElementJitter, _ElementSize, _MacroSize, _MacroStrength, _MacroWear, _CrackStrength, _DetailFade;
             float _WheelPolish, _GutterDirt, _AgeTint, _DecalAlpha, _SplashHeight, _GroundTint;
             float4 _Stripe, _StripeA, _StripeB;
+            float4 _GrassFill;
             float _OffsetFactor, _OffsetUnits, _SrcBlend, _DstBlend, _ZWrite, _Cull, _ReceiveShadows;
         CBUFFER_END
         ENDHLSL
@@ -105,6 +108,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _PHOTO_DETAIL
             #pragma shader_feature_local _ _DECAL_PATCH _DECAL_ALPHA _DECAL_TYRE _DECAL_GRATE
             #pragma shader_feature_local _GROUNDMASKS
+            #pragma shader_feature_local _GRASS_DETILE
             #pragma shader_feature_local _SPLASH
             #pragma shader_feature_local _STRIPES
 
@@ -225,6 +229,37 @@ Shader "Kamion/World PBR"
                 half4 macro2 = SAMPLE_TEXTURE2D(_MacroMap, sampler_MacroMap, mul(rot, pw.xz) / (_MacroSize * 4.13) + 0.37);
                 macro.rg = macro.rg * 0.6 + macro2.gr * 0.4;
                 macro.b = macro.b * 0.7 + macro2.b * 0.3;
+            #endif
+
+                // ---- grass de-tiling (review r5 W-N3 "odra"): the 3 m grass tile repeats its bare-soil spots (Var.B) at one
+                // scale and contrast. Medium+: a second sample rotated 30 deg and scaled 1.37x, blended by the 2-16 m and
+                // 0.5-4 m macro channels, so the 3 m period never shows. All tiers: bare soil survives only inside a
+                // world-space macro mask (8-64 m damp / worn hollows + 0.5-4 m mottling, ~35 % of the area) and along the
+                // carriageway edge (terrain COLOR_0.r); elsewhere the soil texels are refilled with the calibrated grass
+                // albedo at their own luminance. Low: +1 fetch (Var), Medium+: +3 fetches. ADR 0042.
+            #if defined(_GRASS_DETILE)
+                {
+                    half soil = SAMPLE_TEXTURE2D(_VarMap, sampler_BaseMap, uvb).b;
+                #if defined(_KAMION_WORLD_DETAIL)
+                    const float2x2 rg = float2x2(0.8660, -0.5, 0.5, 0.8660);
+                    float2 uv2 = mul(rg, um) / (_Tile.xy * 1.37) + float2(0.41, 0.73);
+                    half3 b2 = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv2).rgb * _Tint.rgb * _AlbedoScale;
+                    half s2 = SAMPLE_TEXTURE2D(_VarMap, sampler_BaseMap, uv2).b;
+                    half3 tn2 = UnpackNormalScale(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, uv2), _NormalStrength);
+                    half wmix = smoothstep(0.35, 0.65, macro.g * 0.7 + macro.a * 0.3);
+                    albedo = lerp(albedo, b2, wmix);
+                    soil = lerp(soil, s2, wmix);
+                    tn = normalize(lerp(tn, tn2, wmix));
+                #endif
+                    half keep = smoothstep(0.45, 0.65, macro.b * 0.6 + macro.r * 0.4 + (macro.a - 0.5) * 0.5);
+                #if defined(_GROUNDMASKS)
+                    keep = max(keep, (1.0 - smoothstep(0.02, 0.12, i.masks.r)) * 0.8);   // trampled edge, ~0.4-2.4 m
+                #endif
+                    half glum = dot(_GrassFill.rgb, half3(0.2126, 0.7152, 0.0722));
+                    half lumA = dot(albedo, half3(0.2126, 0.7152, 0.0722));
+                    half3 refill = _GrassFill.rgb * clamp(lumA / max(glum, 1e-3), 0.6, 1.4);
+                    albedo = lerp(albedo, refill, saturate(soil * 1.6) * (1.0 - keep));
+                }
             #endif
                 half tone = (macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 0.6 + (macro.a - 0.5) * 0.4;
                 albedo *= 1.0 + _MacroStrength * tone;

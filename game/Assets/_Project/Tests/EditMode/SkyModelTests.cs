@@ -83,6 +83,40 @@ namespace Game.Tests
         }
 
         [Test]
+        public void LowSun_AntiSunHorizon_IsNotOlive_AndHillaireMakesItLessWarm()
+        {
+            // ADR 0043 (b): sun < 10 deg, sky 1-10 deg above the horizon opposite the sun: "peach/white, no olive" in the
+            // analytic sky itself (the render adds glass and grading). Logged per azimuth for the record.
+            var p = LightingPreset.CreateLowSun();
+            var m = p.CreateModel();
+            foreach (float dAz in new[] { 90f, 135f, 180f })
+            foreach (float elDeg in new[] { 2f, 5f, 10f })
+            {
+                float az = (p.sunAzimuthDeg + dAz) * Mathf.Deg2Rad, el = elDeg * Mathf.Deg2Rad;
+                var c = m.Radiance(new Vector3(Mathf.Cos(el) * Mathf.Sin(az), Mathf.Sin(el), Mathf.Cos(el) * Mathf.Cos(az)));
+                c /= c.maxColorComponent;
+                Debug.Log($"[TEST] ADR0043 anti-sun dAz {dAz} el {elDeg}: rgb/max {c.r:F3} {c.g:F3} {c.b:F3} R-B {c.r - c.b:F3}");
+                Assert.Less(c.r - c.b, 0.35f, $"anti-sun horizon too warm at dAz {dAz} el {elDeg}");
+                // Olive = warm (R > B) and yellow-green (G >= R). A blue sky with G > R (cyan side) is not olive.
+                if (c.r - c.b > 0.1f) Assert.GreaterOrEqual(c.r - c.g, 0f, $"anti-sun horizon olive at dAz {dAz} el {elDeg}");
+            }
+        }
+
+        [Test]
+        public void WhiteBalanceAdaptation_IsOffByDefault_AndNeutralisesTheIlluminant()
+        {
+            var a = new SkyModel(9f, 60f, 3f, 0f, 12f);
+            var b = new SkyModel(9f, 60f, 3f, 0f, 12f, 0f);
+            Assert.AreEqual(Color.white, a.AdaptedWhite, "default = fixed daylight WB");
+            Assert.AreEqual(a.SunColor, b.SunColor);
+            var c = new SkyModel(9f, 60f, 3f, 0f, 12f, 0.5f);
+            Assert.Less(c.SunColor.r / c.SunColor.b, a.SunColor.r / a.SunColor.b, "adaptation cools the low sun");
+            Assert.Greater(c.AdaptedWhite.b, c.AdaptedWhite.r, "a neutral surface turns slightly blue under adaptation");
+            foreach (var p in new[] { LightingPreset.CreateClear(), LightingPreset.CreateOvercast(), LightingPreset.CreateLowSun(), LightingPreset.CreateDusk() })
+                Assert.AreEqual(0f, p.whiteBalanceAdaptation, p.name + ": WB adaptation is an owner decision (ADR 0043), off");
+        }
+
+        [Test]
         public void SunColour_IsWarmDaylight()
         {
             var m = new SkyModel(42f, 200f, 2.5f, 0f, 14.5f);

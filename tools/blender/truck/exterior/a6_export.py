@@ -66,12 +66,14 @@ MAT_SLOT = {
     "alu_brushed": "Metal", "alu_wheel": "Metal", "chrome": "Metal", "satin_alu": "Metal", "steel": "Metal",
     "checker": "Metal", "perforated": "Metal", "wordmark": "Metal",
     "glass": "Glass", "glass_tint": "Glass",
-    "lamp_inner": "Lights", "reflector": "Lights", "dark_chrome": "Lights", "led_drl": "Lights", "led_off": "Lights",
+    "lamp_inner": "Lights", "reflector": "Lights", "dark_chrome": "Lights", "lamp_housing": "Lights", "led_drl": "Lights", "led_off": "Lights",
     "led_amber": "Lights",
     "lens_amber": "Lights", "lens_red": "Lights", "projector": "Lights",
     "mirror": "MirrorRT",
 }   # everything else (plastics, rubber, tyres, chassis, graphite, honeycomb, frit, plate, grease, ...) -> Trim
 
+# B2.2: a lit LED module's chrome reflector carries scattered light round the lens: same group, 30 % emission mask
+REFL_GLOW = 0.30
 LIGHT_GROUPS = ["NONE", "DRL", "LOW_BEAM", "HIGH_BEAM", "IND_L", "IND_R", "TAIL_BRAKE", "REVERSE", "MARKER_FRONT",
                 "MARKER_SIDE", "MARKER_REAR", "FOG", "WORK"]
 LIGHT_COLOUR = {"DRL": (1.0, 0.97, 0.92), "LOW_BEAM": (1.0, 0.96, 0.90), "HIGH_BEAM": (1.0, 0.97, 0.94),
@@ -99,7 +101,7 @@ LOD2_DROP = LOD1_DROP + ("coil", "damper_", "brake_chamber", "caliper_", "tie_ro
                          "propshaft", "anti_roll", "leaf_", "handle_bar", "handle_back", "door_handle", "mirror_strut",
                          "horn", "flap_arm", "catwalk", "gooseneck", "step_nose", "eats_band", "fuel_cap", "oil_pan",
                          "gearbox", "engine", "radiator", "cab_pivot", "frame_horn", "frame_front_cross",
-                         "frame_cross", "axle_arm", "trailing_arm", "guard_arm", "hb_mask", "proj_bowl", "socket",
+                         "frame_cross", "axle_arm", "trailing_arm", "guard_arm", "hb_mask", "proj_bowl", "proj_refl", "hb_refl", "socket",
                          "brake_disc", "_dish", "belt_seal", "wiper_pivot", "arch_brush", "bstep_tread", "fog_back",
                          "fog_bowl", "battery_lid", "adblue_cap", "diff", "front_axle", "axle_rear", "bellow_",
                          "front_mudflap_clamp", "lamp_gasket", "rear_joint", "air_tank",
@@ -442,9 +444,9 @@ def mirror_quads(coll):
 def light_group(pname, mname, x):
     if mname == "led_drl":
         return "DRL"
-    if pname.startswith("proj_lens"):
+    if pname.startswith(("proj_lens", "proj_refl")):
         return "LOW_BEAM"
-    if pname.startswith(("hb_led", "hb_lens")):
+    if pname.startswith(("hb_led", "hb_lens", "hb_refl")):
         return "HIGH_BEAM"
     if pname.startswith("pos_led"):
         return "MARKER_FRONT"
@@ -519,6 +521,7 @@ def to_game_piece(o, gm):
         face_slot.append(sl)
         grp = light_group(o.name, mn, p.center.x) if sl == "Lights" else "NONE"
         gi = LIGHT_GROUPS.index(grp)
+        pname_refl = o.name.startswith(("proj_refl", "hb_refl"))
         pr = PRIORITY.get(mn, 1.0)
         if o.get("group") == "frame" and p.normal.z < -0.6:
             pr *= 0.6
@@ -527,7 +530,7 @@ def to_game_piece(o, gm):
         prio.data[p.index].value = pr
         tint = tint_of.get(mn, (1, 1, 1))
         for li in p.loop_indices:
-            dl[li].uv = (gi, 1.0 if gi else 0.0)
+            dl[li].uv = (gi, (REFL_GLOW if pname_refl else 1.0) if gi else 0.0)
             cd[li].color = (*[c ** (1 / 2.2) for c in tint], ior_of.get(mn, 2.0) - 1.0)
             if is_decal and rect:
                 co = me.vertices[me.loops[li].vertex_index].co

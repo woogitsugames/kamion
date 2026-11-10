@@ -5,12 +5,16 @@
 //   ambientShare = E_sky / (E_sky + E_sun · NdotL · shadow) at this pixel (main-light shadow map sampled here), so in
 //                 direct sun only the sky part is occluded and the real cast shadow does the rest.
 // Fog fades the effect with distance like the ground it darkens. No depth write, Cull Off, one draw per vehicle.
+// Queue Geometry+499 (last in the opaque pass, after alpha-tested foliage): the renderer has transparent receive shadows
+// off, and URP then disables the main-light shadow keywords for the transparent pass, so in Transparent-50 the shadow map
+// was never sampled (shadow = 1 everywhere) and under the truck the sun counted as unshadowed: share << 1, AO too weak in
+// sun (r5 E-N1; High lowsun A/B: ground under bumper 60 % -> 32 % of asphalt, frame 49 % -> 21 %).
 Shader "Kamion/Contact Shadow"
 {
     Properties { }
     SubShader
     {
-        Tags { "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "Queue" = "Transparent-50" "IgnoreProjector" = "True" }
+        Tags { "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "Queue" = "Geometry+499" "IgnoreProjector" = "True" }
         Pass
         {
             Name "ContactShadow"
@@ -41,7 +45,13 @@ Shader "Kamion/Contact Shadow"
             {
                 V o;
                 VertexPositionInputs p = GetVertexPositionInputs(v.positionOS.xyz);
-                o.positionCS = p.positionCS;
+                // Depth bias towards the camera (8 cm along the view ray, same pixel): the patch sits on the ray-cast ground
+                // (or, without colliders, on the wheel-contact plane), which can be a few cm under the rendered road mesh
+                // (terrain LOD, camber, tyre sink); a fixed polygon offset alone let whole patches vanish under the road.
+                // Truck surfaces within 8 cm of the ground (tyre bottoms) get the contact darkening too, as they would.
+                float3 toCam = _WorldSpaceCameraPos - p.positionWS;
+                float3 biased = p.positionWS + toCam * min(0.08 * rsqrt(max(dot(toCam, toCam), 1e-4)), 0.5);
+                o.positionCS = TransformWorldToHClip(biased);
                 o.positionWS = p.positionWS;
                 o.slab = v.uv0;
                 o.hs = v.uv1;

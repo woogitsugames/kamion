@@ -33,7 +33,7 @@ Physics fixed step, vehicle, world streaming, rendering CPU, GPU — not budgete
 | Same core, .NET runner (Release, no Unity) | p50 6.4–6.7 µs | `docs/PHYSICS_VALIDATION.md` §4 | desktop |
 | Ground raycasts per step, combination | 152 (10 wheel ends × 15 + 2 landing-gear legs) → 15 200/s | by construction | measure on A16; `RaycastCommand` batching is the fallback |
 | GC allocations per combination step | 0 | PlayMode, 2000 steps | ✅ |
-| Extra cameras in the cab view | 2 mirror cameras alternating (≈ 1 extra scene render/frame on Low/Medium), render textures 224/288/384/512 px high (Low/Medium/High/Ultra), far clip 150/250/400 m, no shadows/post/MSAA | `VehicleCameraBudget` | WORKING_VALUE — measure GPU/CPU on A16 |
+| Extra cameras in the cab view | 6 mirrors (R46 II x2, IV x2, V, VI) with render textures sharing a hard cap of 1/2/3/6 mirror renders per frame (Low/Medium/High/Ultra), weighted round-robin (main 1, convex 0.5), only glass on screen; main RT 224/288/384/512 px high, convex 0.43-0.6 of that; far clip 150/250/400 m (convex half); no shadows/post/MSAA (ADR 0042) | `VehicleCameraBudget`, `RenderTextureMirror` | WORKING_VALUE - measure GPU/CPU ms on A16 Low and S24+ High in the cab view |
 | Reversing camera | only in R (or forced), 320×180 … 640×360, every 2nd frame on Low/Medium | `VehicleCameraBudget` | WORKING_VALUE |
 | Vehicle audio memory | ADPCM Compressed In Memory, build report "Sounds" 13.1 MB | `artifacts/logs/build-*.log` | matches AUDIO_DESIGN §6 estimate (≈ 13 MB) |
 | Galaxy A16, DrivingLab, 40 t combination on autopilot | — | `pwsh scripts/device-metrics.ps1 -Launch -DurationSeconds 90 -Scene DrivingLab -Autopilot circle50 -Speed 40 -Trailer 40` | **not measured — phone locked** |

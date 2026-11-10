@@ -31,6 +31,13 @@ namespace Game.Rendering
         [Tooltip("Share of the open-sky ambient (SH) blocked by the cab roof and walls (A8, review r4 E2: from outside the " +
                  "interior was lit like an open terrace, so the windscreen read as clear glass). Glazing ~4.3 m^2 of ~26 m^2. WORKING_VALUE")]
         public float enclosure = 0.6f;
+        [Tooltip("Enclosure for every view from outside the cab (review r5 E2 'aquarium windscreen': from outside the interior " +
+                 "was ~3x too bright against the sky). Physical share of the open-sky ambient the cab blocks: glazing ~4.3 m^2 " +
+                 "of ~26 m^2 interior, transmittance 0.75, so the interior sees ~10-15 % of the open sky; the first bounce comes " +
+                 "from _CabFill. The lower in-cab value above is part of the cab-view local tone mapping (ADR 0029). WORKING_VALUE")]
+        [Range(0f, 1f)] public float exteriorEnclosure = 0.88f;
+        [Tooltip("Desaturation of the lifted share of deep shade in the cab view (review r5 L2: black plastics went brown)")]
+        [Range(0f, 1f)] public float shadowLiftNeutral = 0.8f;
         [Tooltip("Extra fill scale (1 = physical estimate)")] public float fillScale = 1f;
         [Tooltip("Colour of the bounce (dash, koniak, floor mat). Mild: review r3 C2 - a strongly warm tint on top of the sun " +
                  "colour turned the black plastics beige at low sun")] public Color bounceTint = new Color(1f, 0.97f, 0.93f);
@@ -125,10 +132,11 @@ namespace Game.Rendering
                 Color c = (m.SunColor * fluxSun + Color.white * fluxSky) * bounceTint * bounce;
                 fill = new Vector3(c.r, c.g, c.b);
             }
-            float gain = 1f, lift = 0f;
+            float gain = 1f, lift = 0f, enc = exteriorEnclosure;
             if (cam != null && interiorBounds.Contains(t.InverseTransformPoint(cam.transform.position)))
             {
                 gain = Mathf.Pow(2f, cabViewEv + CabMeterEv(m, fill));
+                enc = enclosure;
                 // Phone-like local tone mapping of the cab view (review r4 L1): only the interior surfaces, only in the
                 // cab view, strongest in the deepest shade - the sky through the glass and the lit dash are untouched.
                 lift = shadowLift >= 0f ? shadowLift : QualityProfileApplier.HasCurrent ? QualityProfileApplier.Current.cabShadowLift : 8f;
@@ -138,8 +146,8 @@ namespace Game.Rendering
             LastGain = gain;
             Shader.SetGlobalVector(k_Fill, new Vector4(fill.x, fill.y, fill.z, 0f));
             Shader.SetGlobalFloat(k_Gain, gain);
-            Shader.SetGlobalVector(k_Lift, new Vector4(lift, Mathf.Max(1e-4f, shadowLiftKnee), 0f, 0f));
-            Shader.SetGlobalFloat(k_Enclosure, Mathf.Clamp01(enclosure));
+            Shader.SetGlobalVector(k_Lift, new Vector4(lift, Mathf.Max(1e-4f, shadowLiftKnee), Mathf.Clamp01(shadowLiftNeutral), 0f));
+            Shader.SetGlobalFloat(k_Enclosure, Mathf.Clamp01(enc));
         }
     }
 }
