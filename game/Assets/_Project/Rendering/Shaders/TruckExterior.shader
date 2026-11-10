@@ -16,6 +16,17 @@
 //   probe / environment, AO as specular occlusion) + coat sun highlight. Mask = paint mask * (1 - dust): dust sits on top
 //   of the lacquer. Global _KamionClearCoatOff (QualityProfile.clearCoat false -> 1) is the tier switch. Optional metallic
 //   flake (_Flake, off for the fleet white): mip-faded sparkle in the base specular, for dark metallic liveries.
+// - Coated paint (ADR 0038, review r4 E1): under the coat the pigmented base is a rough scatterer, not a second glossy
+//   plastic: its own specular lobe is widened to _CoatedBaseRoughness (the 0.36 base lobe was the "grey plastic" sheen).
+//   The coat normal carries an orange-peel ripple (vehicle-frame position, ~6 mm wavelength, slope _OrangePeel) that fades
+//   into the coat roughness once a ripple is below a pixel; the coat reflection gets a horizon occlusion (no sky through
+//   the body). Solid fleet white -> no flake (manifest liveries.white).
+// - Road grime (ADR 0038, review r4 E4): coverage = _Dirt x (baked M.g + procedural). Procedural part in the vehicle
+//   frame published by ContactShadowCaster (globals _KamionGrime*, slot = renderer user value 1..4): height above the
+//   wheel-contact plane (wavy top edge at _GrimeHeight), wheel-arch spray rings around each axle (biased rearwards),
+//   vertical streak noise, x cavity (1 - AO). Heavier on non-paint slots (chassis, tanks) and on the wheels (radial
+//   sidewall dust). Without a frame (slot 0) only the baked mask is used. Tier switch _KamionGrimeDetailOff (1 = height
+//   gradient only, no arch loop / streak noise).
 Shader "Kamion/Truck Exterior"
 {
     Properties
@@ -38,6 +49,10 @@ Shader "Kamion/Truck Exterior"
         _DecalRoughness ("Decal roughness", Range(0, 1)) = 0.3
         _DirtColor ("Dirt colour (linear)", Color) = (0.15, 0.135, 0.11, 1)
         _Dirt ("Dirt amount (0 washed, 0.5 fleet, 1 very dirty)", Range(0, 1)) = 0.5
+        _CoatedBaseRoughness ("Base roughness under a full clear coat", Range(0, 1)) = 0.6
+        _OrangePeel ("Orange peel slope (coat normal)", Range(0, 0.05)) = 0.012
+        _GrimeHeight ("Road grime height above the wheel contact (m)", Range(0, 2)) = 0.8
+        _GrimeChassis ("Grime multiplier on non-paint slots", Range(0, 3)) = 1.3
         [Toggle(_KAMION_TRUCK_LAMPS)] _Lamps ("Lamp emission from uv2 (Lights slot)", Float) = 0
     }
     SubShader
@@ -51,6 +66,7 @@ Shader "Kamion/Truck Exterior"
             float4 _PaintColor, _DecalColor, _DirtColor;
             float _NormalStrength, _IsPaint, _PaintRoughness, _PaintMetallic, _DecalMetallic, _DecalRoughness, _Dirt, _Lamps;
             float _ClearCoat, _ClearCoatRoughness, _Flake, _FlakeScale;
+            float _CoatedBaseRoughness, _OrangePeel, _GrimeHeight, _GrimeChassis;
         CBUFFER_END
         float _KamionTyreFlatRadius;          // global (TruckVisualRig: tractor physics rolling radius 0.51 m), 0 = off
         float _KamionTrailerTyreFlatRadius;   // global (TrailerVisualRig: trailer physics rolling radius 0.515 m), 0 = off
@@ -96,7 +112,53 @@ Shader "Kamion/Truck Exterior"
             TEXTURE2D(_TruckLightState); SAMPLER(sampler_point_clamp);
             float _KamionExposure;
             float _KamionClearCoatOff;
-            half4 _CabShadowLift;   // cab-view local shadow lift (CabInteriorLighting; 0 outside the cab view)   // tier switch (QualityProfileApplier): 0 = on (unset global), 1 = off
+            half4 _CabShadowLift;   // cab-view local shadow lift (CabInteriorLighting; 0 outside the cab view)
+            // Grime vehicle frames (ContactShadowCaster): per slot right / up / forward with w = -dot(axis, origin); origin on
+            // the wheel-contact plane. Axles: x = forward offset, y = wheel-centre height, z = radius, w = 1 valid.
+            float4 _KamionGrimeRight[4], _KamionGrimeUp[4], _KamionGrimeFwd[4];
+            float4 _KamionGrimeAxle[16];
+            float _KamionGrimeDetailOff;   // tier switch (QualityProfileApplier): 0 = full (unset global), 1 = height only
+
+            float KHash(float2 p) { return frac(sin(dot(p, float2(127.1, 311.7))) * 43758.5453); }
+            float KNoise(float2 p)
+            {
+                float2 i = floor(p), f = frac(p);
+                f = f * f * (3.0 - 2.0 * f);
+                return lerp(lerp(KHash(i), KHash(i + float2(1, 0)), f.x), lerp(KHash(i + float2(0, 1)), KHash(i + float2(1, 1)), f.x), f.y);
+            }
+
+            // Procedural road grime 0..~1 in the vehicle frame lp (x right, y height above contact, z forward).
+            half KamionGrime(float3 lp, uint slot, half detail)
+            {
+                float h = lp.y;
+                // Wavy top edge: 1D noise along the body (~0.6 m features), +-25 %.
+                float edge = _GrimeHeight * (0.75 + 0.5 * KNoise(float2(lp.z * 1.7 + lp.x * 0.9, 3.1)));
+                edge = max(edge, 0.05);
+                // Solid band up to ~40 % of the edge, fading to the edge, then a light dust film up to twice the edge.
+                half g = 1.0 - smoothstep(0.4 * edge, edge, h);
+                g += 0.18 * (1.0 - smoothstep(edge, 2.0 * edge, h));
+                if (detail > 0.5)
+                {
+                    half arch = 0;
+                    [unroll] for (uint k = 0u; k < 4u; k++)
+                    {
+                        float4 A = _KamionGrimeAxle[(slot - 1u) * 4u + k];
+                        float dz = lp.z - A.x, dy = h - A.y;
+                        float d = sqrt(dz * dz + dy * dy);
+                        // Ring just outside the tyre (inner arch, mudguard, step), wider and stronger behind the wheel.
+                        half behind = saturate(0.5 - dz / max(A.z, 0.1));
+                        half ring = saturate(1.0 - abs(d - A.z - 0.1) / (0.25 + 0.3 * behind)) * (0.55 + 0.45 * behind);
+                        arch = max(arch, ring * A.w);
+                    }
+                    g = max(g, arch);
+                    // Vertical streaks / splatter (8 cm across, 0.7 m tall), faded to its mean below a pixel.
+                    float2 q = float2((lp.z + lp.x) * 12.0, h * 1.4);
+                    half fw = saturate(1.5 - 24.0 * max(fwidth(lp.z), fwidth(lp.x)));
+                    half n = 0.65 * KNoise(q) + 0.35 * KNoise(q * 2.7 + 5.3);
+                    g *= lerp(1.0, 0.55 + 0.9 * n, fw);
+                }
+                return g;
+            }
 
             // GGX specular of one smooth dielectric layer for the main light (D * Vis * F * NdotL), Unity light units.
             half3 CoatDirect(Light L, half3 n, half3 v, half rough, half F0)
@@ -154,6 +216,17 @@ Shader "Kamion/Truck Exterior"
                 half4 m = SAMPLE_TEXTURE2D(_MMap, sampler_CMap, uv);
                 half3 nTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_NMap, sampler_CMap, uv), _NormalStrength);
 
+                half isTyre = (GetMeshRenderingLayer() & ((1u << 8) | (1u << 9))) != 0u ? 1.0 : 0.0;
+                uint slot = unity_RendererUserValue;
+                bool hasFrame = slot >= 1u && slot <= 4u;
+                float3 lp = i.positionWS;
+                if (hasFrame)
+                {
+                    float3 pw = i.positionWS;
+                    lp = float3(dot(pw, _KamionGrimeRight[slot - 1u].xyz) + _KamionGrimeRight[slot - 1u].w,
+                                dot(pw, _KamionGrimeUp[slot - 1u].xyz) + _KamionGrimeUp[slot - 1u].w,
+                                dot(pw, _KamionGrimeFwd[slot - 1u].xyz) + _KamionGrimeFwd[slot - 1u].w);
+                }
                 half3 albedo = c.rgb;
                 half rough = c.a;
                 half metal = m.b;
@@ -164,16 +237,34 @@ Shader "Kamion/Truck Exterior"
                     coat = paint * _ClearCoat * (1.0 - _KamionClearCoatOff);
                     albedo = lerp(albedo, albedo * _PaintColor.rgb, paint);
                     rough = lerp(rough, _PaintRoughness, paint);
+                    // Pigmented base under the lacquer: a wide lobe, the gloss belongs to the coat.
+                    rough = lerp(rough, max(rough, _CoatedBaseRoughness), coat);
                     metal = _PaintMetallic * paint;
                     half4 d = SAMPLE_TEXTURE2D(_DecalMap, sampler_DecalMap, i.uv01.zw);
                     albedo = lerp(albedo, _DecalColor.rgb, d.a);
                     metal = lerp(metal, _DecalMetallic, d.a);
                     rough = lerp(rough, _DecalRoughness, d.a);
                 }
-                half dirt = saturate(m.g * _Dirt);
+                half grime = m.g;
+                if (hasFrame)
+                {
+                    half proc;
+                    if (isTyre > 0.5)
+                    {
+                        // Sidewall dust: radial (rotation invariant), heaviest at the tread shoulder; rim gets brake dust.
+                        float rr = length(i.positionWS - float3(UNITY_MATRIX_M._m03, UNITY_MATRIX_M._m13, UNITY_MATRIX_M._m23));
+                        proc = 0.55 + 0.45 * smoothstep(0.25, 0.5, rr);
+                    }
+                    else
+                        proc = KamionGrime(lp, slot, 1.0 - _KamionGrimeDetailOff) * (_IsPaint > 0.5 ? 1.0 : _GrimeChassis);
+                    // Cavities hold more: x 1.4 in full occlusion, x 0.85 on open panels.
+                    proc *= lerp(1.4, 0.85, m.r);
+                    grime = max(grime * 0.8, proc);
+                }
+                half dirt = saturate(grime * _Dirt * 1.8);
                 coat *= 1.0 - saturate(dirt * 1.5);
                 albedo = lerp(albedo, _DirtColor.rgb, dirt);
-                rough = saturate(rough + 0.35 * m.g * _Dirt);
+                rough = lerp(rough, max(rough, 0.88), dirt);
                 metal *= 1.0 - dirt;
 
                 half sgn = i.tangentWS.w;
@@ -219,13 +310,21 @@ Shader "Kamion/Truck Exterior"
                 if (coat > 0.001)
                 {
                     half3 v = input.viewDirectionWS;
-                    // Coat sits on the geometric + macro normal (orange peel is far below the atlas resolution).
-                    half NoV = saturate(dot(nWS, v));
+                    // Orange peel: three crossed ripples (~6 mm) in the vehicle frame; below a pixel they become coat roughness.
+                    float3 op = lp * 1050.0;
+                    float3 ph = float3(dot(op, float3(0.83, 0.31, 0.46)), dot(op, float3(-0.27, 0.77, 0.58)), dot(op, float3(0.44, -0.52, 0.73)));
+                    half fade = saturate(1.2 - max(max(fwidth(ph.x), fwidth(ph.y)), fwidth(ph.z)) * 0.35);
+                    half3 tilt = cos(ph.x) * half3(0.83, 0.31, 0.46) + cos(ph.y) * half3(-0.27, 0.77, 0.58) + cos(ph.z) * half3(0.44, -0.52, 0.73);
+                    half3 nCoat = normalize(nWS + (tilt - dot(tilt, nWS) * nWS) * (_OrangePeel * fade));
+                    half coatRough = sqrt(_ClearCoatRoughness * _ClearCoatRoughness + (1.0 - fade) * 4.0 * _OrangePeel);
+                    half NoV = saturate(dot(nCoat, v));
                     half Fc = (0.04 + 0.96 * Pow4(1.0 - NoV) * (1.0 - NoV)) * coat;
-                    half3 R = reflect(-v, nWS);
-                    half3 env = GlossyEnvironmentReflection(R, i.positionWS, _ClearCoatRoughness, m.r);
+                    half3 R = reflect(-v, nCoat);
+                    // Horizon occlusion: reflection directions under the geometric surface see the body, not the sky.
+                    half hor = saturate(1.0 + 1.2 * dot(R, i.normalWS));
+                    half3 env = GlossyEnvironmentReflection(R, i.positionWS, coatRough, m.r) * (hor * hor);
                     Light L = GetMainLight(input.shadowCoord, i.positionWS, input.shadowMask);
-                    half3 direct = CoatDirect(L, nWS, v, _ClearCoatRoughness, 0.04) * coat;
+                    half3 direct = CoatDirect(L, nCoat, v, coatRough, 0.04) * coat;
                     col.rgb = col.rgb * (1.0 - Fc) + env * Fc + direct;
                 }
                 // Cab view (review r4 L1): the A-pillars, door frames and mirror housings seen from the driver's seat get the
