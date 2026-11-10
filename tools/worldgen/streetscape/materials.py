@@ -233,7 +233,7 @@ M = {
     # roundabout centre under the viaduct: loose grey-beige river stones / coarse gravel on a slope (Mapillary CC BY-SA
     # 201270605169291 / 2818555625124739, 2020-08, D42, reference only; ADR 0060). Set gravel_compacted (no pebble set
     # yet), lighter than a road shoulder. WORKING_VALUE.
-    "bed_stones": {"color": [0.27, 0.255, 0.23], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
+    "bed_stones": {"color": [0.22, 0.21, 0.195], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     # sign gantry (streetscape.life_props.sign_gantry)
     "gantry_steel": {"color": [0.42, 0.43, 0.43], "rough": 0.55, "metal": 0.9},
     # landmarks

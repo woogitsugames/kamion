@@ -28,7 +28,7 @@ def test_berberis_band_is_narrow_and_low():
     bed = Polygon([(0, 0), (20, 0), (21, 3), (19, 6.5), (1, 6.8), (-1, 3)])
     band = PT.band_of(bed, 1.25)
     w = 2 * band.area / band.length
-    assert 1.05 < w < 1.45 and band.length > 2 * 14.0          # long, narrow
+    assert 1.0 < w < 1.45 and band.length > 2 * 17.0          # long (full bed length), narrow
     assert bed.buffer(1e-6).contains(band)
     narrow = Polygon([(0, 0), (10, 0), (10, 1.0), (0, 1.0)])
     assert PT.band_of(narrow, 1.25).equals(narrow)              # already narrower: kept

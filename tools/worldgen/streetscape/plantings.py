@@ -79,7 +79,7 @@ SPECIES = {
     # ADR 0060 (review r7 N-4, "red sofa"): the r7 cushion (barrel sides, 0.4 m shoulder, 0.08 m lump per plant) read
     # as a couch of sausages. The photo shows a low band clipped to a straight, slightly battered side and a flat top
     # with a small rounded arris; shoots grow out lighter (copper) above the cut. Lumps 0.015 m, dome 0.05.
-    "berberis_red": dict(tex="berberis", h=HEDGE_H, plant=(0.55, 0.85), bulge=0.015, dome=0.05, gap_p=0.03, sigma=0.5,
+    "berberis_red": dict(tex="berberis", h=HEDGE_H, plant=(0.55, 0.85), bulge=0.025, dome=0.05, gap_p=0.03, sigma=0.5,
                          sprig=0.13, sprig_wh=((0.16, 0.28), (0.10, 0.20)), prof="clipped", band=BAND_M),
     "privet": dict(tex="privet", h=(1.2, 1.7), plant=(0.45, 0.65), bulge=0.04, dome=0.04, gap_p=0.04, sigma=0.36,
                    sprig=0.30, sprig_wh=((0.14, 0.24), (0.10, 0.18))),
@@ -94,8 +94,8 @@ PROFILES = {
     "cushion": [(-0.03, -0.03, 0.2), (-0.04, 0.32, 0.8), (0.0, 0.62, 1.0), (0.09, 0.84, 0.9), (0.22, 0.95, 0.6),
                 (0.40, 1.0, 0.3)],
     # clipped low band (ADR 0060): straight side with ~6 deg batter, 0.08-0.12 m rounded arris, flat top
-    "clipped": [(-0.02, -0.03, 0.3), (0.0, 0.30, 0.6), (0.025, 0.72, 0.8), (0.045, 0.88, 0.7), (0.09, 0.97, 0.5),
-                (0.16, 1.0, 0.3)],
+    "clipped": [(-0.02, -0.03, 0.3), (0.0, 0.30, 0.6), (0.03, 0.62, 0.8), (0.07, 0.82, 0.8), (0.14, 0.94, 0.6),
+                (0.24, 1.0, 0.4)],
 }
 SHELL_D = 0.05              # m, alpha leaf shell outside the opaque core
 SHELL_FOOT = 0.14           # share of h below which the shell is open: dark stems / core at the base
@@ -339,32 +339,41 @@ def _hedge_species(t):
     return "thuja" if t.get("leaf_type") == "needleleaved" else "privet"
 
 
-def band_of(poly, width, key=None):
-    """Clipped hedge band ~`width` m wide along an elongated bed (ADR 0060, review r7 N-4): the bed polygon is inset
-    until its mean width (2 A / P, exact for a long strip) matches; ends follow the bed taper, corners softened.
-    Beds already narrower than the band are returned as they are."""
-    def wmean(g):
-        return 2.0 * g.area / max(g.length, 1e-6) if not g.is_empty else 0.0
-    if wmean(poly) <= width * 1.05:
+def band_of(poly, width, key=None, step=0.8, end_trim=0.3):
+    """Clipped hedge band ~`width` m wide along an elongated bed (ADR 0060, review r7 N-4 / r8 N-22): the bed's centre
+    line (mid-points of cross-sections perpendicular to its long axis, smoothed) buffered by width / 2 with rounded
+    ends, kept inside the bed; the band runs the full length of the bed like the photo's strips (an inset of the bed
+    shortened them into lens shapes). Beds already narrower than the band are returned as they are."""
+    from shapely.geometry import LineString
+    if 2.0 * poly.area / max(poly.length, 1e-6) <= width * 1.05:
         return poly
-    lo, hi = 0.0, 0.5 * wmean(poly) * 2.0
-    best = poly
-    for _ in range(24):
-        d = 0.5 * (lo + hi)
-        g = poly.buffer(-d, join_style="mitre")
-        if g.is_empty or g.area < 0.5:
-            hi = d
+    rect = np.asarray(poly.minimum_rotated_rectangle.exterior.coords)[:4]
+    e = [rect[1] - rect[0], rect[2] - rect[1]]
+    ax = e[0] if np.linalg.norm(e[0]) >= np.linalg.norm(e[1]) else e[1]
+    L = float(np.linalg.norm(ax))
+    ax = ax / L
+    nrm = np.array([-ax[1], ax[0]])
+    c = np.asarray(poly.centroid.coords[0])
+    pts = []
+    for t in np.arange(-L / 2, L / 2 + 1e-6, step):
+        q = c + ax * t
+        cut = LineString([q - nrm * 50.0, q + nrm * 50.0]).intersection(poly)
+        if cut.is_empty:
             continue
-        g = max(getattr(g, "geoms", [g]), key=lambda q: q.area)
-        best = g
-        if wmean(g) > width:
-            lo = d
-        else:
-            hi = d
-    best = best.buffer(-0.15).buffer(0.15, quad_segs=3)
-    if best.is_empty:
+        seg = max(getattr(cut, "geoms", [cut]), key=lambda g: g.length)
+        if seg.length < 0.3:
+            continue
+        pts.append(np.asarray(seg.centroid.coords[0]))
+    if len(pts) < 3:
         return poly
-    return max(getattr(best, "geoms", [best]), key=lambda q: q.area)
+    P = np.array(pts)
+    if len(P) >= 5:                                   # 3-point smoothing, ends kept
+        P[1:-1] = (P[:-2] + 2 * P[1:-1] + P[2:]) / 4.0
+    band = LineString(P).buffer(width / 2.0, quad_segs=4).intersection(poly.buffer(-end_trim))
+    band = band.buffer(-0.1).buffer(0.1, quad_segs=3)
+    if band.is_empty:
+        return poly
+    return max(getattr(band, "geoms", [band]), key=lambda q: q.area)
 
 
 def _island_holes(roads_poly):
