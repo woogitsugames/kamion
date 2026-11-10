@@ -143,18 +143,68 @@ ROUND = {
 }
 
 
+# ---------------------------------------------------------------- modern front (owner 2026-11-10, STAGE 1 proposal)
+# 'nowy front, nowoczesny, od zera': 2020+ generation long-haul face in TRAKT's own language, built on the rounded
+# loft (crown R 10 m in plan, side view still one 7 deg plane). TRAKT graphic = the brand's road-T as ONE gloss-black
+# mask: the T bar is a full-width band under the windscreen (wraps the corners with the glass, carries the wordmark),
+# the T stem runs down through the bumper to the number plate; a dashed 'lane line' of brushed-aluminium dashes runs
+# down the stem's centre. Slim wrap-round LED lamps sit low in the corner panels beside the stem. No maker's
+# signature is used (no lamp brows, no stepped bar signature, no roof-lamp pods). All values WORKING_VALUE.
+MODERN = {
+    "round": {"roof_h": 0.30, "roof_rr": (0.34, 0.26, 0.08), "marker_dz": 0.40,
+              "rf": [(CAB_Z0, 0.38), (WS_Z0 - 0.10, 0.38), (WS_Z0 - 0.015, 0.36), (WS_Z1 + 0.02, 0.34), (ROOF_Z, 0.36)],
+              "low_rf": [(0.38, 0.40), (FAIR_TOP, 0.38)]},
+    "cfg": {
+        # tumblehome above the belt line (22 mm at the window top, 60 mm at the roof): reflections flow
+        "w": [(CAB_Z0, CAB_HALF_W), (BELT_Z, CAB_HALF_W), (WIN_TOP, CAB_HALF_W - 0.022),
+              (3.45, CAB_HALF_W - 0.05), (ROOF_Z, CAB_HALF_W - 0.06)],
+        "stem": [(-0.795, 1.221), (0.795, 1.221), (0.85, 1.640), (-0.85, 1.640)],     # T stem (cab part), tapered
+        "bar": [(-1.12, 1.618), (1.12, 1.618), (1.12, 1.866), (-1.12, 1.866)],       # T bar under the windscreen
+        "bumper_road": [(-0.72, 0.70), (0.72, 0.70), (0.793, 1.216), (-0.793, 1.216)],  # T stem (bumper part)
+        # slim wrap-round lamp low in the corner panel beside the stem (taller towards the corner)
+        "lamp": [(0.880, 1.336), (1.345, 1.300), (1.365, 1.478), (0.880, 1.458)],
+        "louvres": (1.272, 0.075, 5, 0.050),   # first centre z, pitch, count, height (cab); the bumper continues it
+        "wordmark_z": 1.748, "wordmark_h": 0.100,
+        "bumper_split": 0.45,
+    },
+}
+
+
 def set_shape(name):
     global SHAPE
-    assert name in ("b2", "round"), name
+    assert name in ("b2", "round", "modern"), name
     SHAPE = name
-    if name == "round":
+    if name == "modern":
+        ROUND.update(MODERN["round"])
+        CFG.update(MODERN["cfg"])
+    if name in ("round", "modern"):
         for k in ("rf", "ws_bottom_x", "ws_top_x"):
             CFG[k] = ROUND[k]
         CFG["roof_r"] = ROUND["roof_h"]
 
 
 def rounded():
-    return SHAPE == "round"
+    return SHAPE in ("round", "modern")
+
+
+def modern():
+    return SHAPE == "modern"
+
+
+class ShiftLoft(Loft):
+    """View of a loft whose front parametrisation is shifted (lamp unit placed elsewhere on the same surface)."""
+
+    def __init__(self, base, dx, dz):
+        self.__dict__.update(base.__dict__)
+        self._b, self._dx, self._dz = base, dx, dz
+
+    def front_pt(self, z, x, off):
+        return self._b.front_pt(z + self._dz, x + (self._dx if x >= 0 else -self._dx), off)
+
+
+def lamp_loft():
+    dx, dz = CFG.get("lamp_shift", (0.0, 0.0))
+    return ShiftLoft(CAB, dx, dz) if (dx or dz) else CAB
 LOW = None    # Loft of the lower fairing
 
 
@@ -218,11 +268,14 @@ def cab_shell():
                                    (win_front(WIN_TOP), WIN_TOP), (WIN_REAR, WIN_TOP)],
                                   off=-0.10, thick=0.25, side=s, nu=28, nv=6))
         lamp = CFG["lamp"] if s > 0 else mirror_poly(CFG["lamp"])
-        cut.append(CAB.poly_patch(f"cut_lamp_{s}", "lamp_inner", "front", lamp, off=-0.07, thick=0.20, sub=6))
+        cut.append(lamp_loft().poly_patch(f"cut_lamp_{s}", "lamp_inner", "front", lamp, off=-0.07, thick=0.20, sub=6))
         cut.append(CAB.patch(f"cut_handle_{s}", "plastic", "side", 1.38, 2.32, HANDLE_Y[0], HANDLE_Y[1], off=-0.06,
                              thick=0.15, side=s, nz=2, npar=2))
     for k in ("stem", "bar"):
-        cut.append(CAB.poly_patch("cut_" + k, "grille_mesh", "front", CFG[k], off=-0.07, thick=0.20, sub=5))
+        if modern():   # the T bar wraps the corners: dense quad cutter
+            cut.append(CAB.quad_patch("cut_" + k, "plastic", "front", CFG[k], off=-0.07, thick=0.20, nu=48, nv=3))
+        else:
+            cut.append(CAB.poly_patch("cut_" + k, "grille_mesh", "front", CFG[k], off=-0.07, thick=0.20, sub=5))
     boolean(sh, cut)
     sh.data.shade_smooth()
     if hasattr(sh.data, "set_sharp_from_angle"):
@@ -277,6 +330,10 @@ def doors_and_gaps():
         # B2.1 (owner sheets): no door skirt - the door's lower edge is the cab edge (1.225 m) and the step well
         # behind the wheel stays open below it; a dark seal lip marks the door bottom over the steps
         CAB.gap_h(f"door_gap_b_{s}", s, CAB_Z0 + 0.006, DOOR_REAR - 0.006, DOOR_FRONT_LOW + 0.006, w=0.008, off=0.004)
+        if modern():   # dark sill cladding with a soft kick-up towards the rear, running into the lamp's lower edge
+            CAB.quad_patch(f"sill_clad_{s}", "plastic", "side", [(CAB_BACK_Y + 0.10, CAB_Z0 + 0.004), (1.19, CAB_Z0 + 0.004),
+                                                                   (1.19, 1.300), (CAB_BACK_Y + 0.10, 1.430)],
+                           off=0.003, side=s, nu=36, nv=2, thick=0.006)
         # rear side panel / roof split and the side extender line (stamping joints)
         CAB.gap_h(f"roofjoint_{s}", s, 3.30, CAB_BACK_Y + 0.12, win_front(3.30) + 0.08, w=0.005)
         # flush door handle with recess and key cylinder (near the rear edge, reachable from the steps)
@@ -295,6 +352,8 @@ def doors_and_gaps():
         # cab tilt line (cab lower edge over the frame-mounted fairing)
     CAB.patch("tilt_gap_front", "gap", "front", CAB_Z0 - 0.006, CAB_Z0 + 0.004, -1.6, 1.6, off=0.001, nz=1, npar=60)
     # service hatch (tilting front flap) outline
+    if modern():      # the mask itself is the service flap, its pocket edge is the joint
+        return
     hx, ht = 0.815, WS_Z0 - 0.085     # B2 v2: the grille is the tilting flap; top under the cowl
     CAB.patch("hatch_gap_top", "gap", "front", ht - 0.0035, ht + 0.0035, -hx, hx, off=0.0012, nz=1, npar=30)
     for s in (-1, 1):
@@ -305,8 +364,36 @@ def doors_and_gaps():
 
 
 # ---------------------------------------------------------------- front face: grille, brand, cowl, wipers
+def lane_dash(name, loft, zc, hgt, off):
+    """TRAKT motif: one dash of the road centre line (brushed aluminium) on the mask's centreline."""
+    box(name, V(loft.front_pt(zc, 0.0, off)), (0.024, 0.005, hgt), "alu_brushed", bev=0.0015, seg=1,
+        rot=Matrix.Rotation(math.radians(RAKE), 3, "X"))
+
+
+def front_face_modern(strokes):
+    """Gloss-black road-T mask (see MODERN): T bar panel + louvred stem with the lane-line dashes."""
+    st, br = CFG["stem"], CFG["bar"]
+    CAB.quad_patch("grille_back_stem", "grille_honey", "front", st, off=-0.066, nu=24, nv=4)
+    CAB.quad_patch("grille_back_bar", "plastic", "front", br, off=-0.066, nu=48, nv=2)
+    zb0, zb1 = br[0][1] + 0.004, br[2][1] - 0.004
+    grille_bar("mask_bar", (zb0 + zb1) / 2, zb1 - zb0, 0.060, br[1][0] - 0.004, "mask_gloss", nose=-0.002,
+               nose_r=0.016, n=56)
+    z0, pitch, cnt, hgt = CFG["louvres"]
+    for k in range(cnt):
+        zc = z0 + pitch * k
+        hw = st[1][0] + (st[2][0] - st[1][0]) * (zc - st[1][1]) / (st[2][1] - st[1][1]) - 0.006
+        grille_bar(f"mask_louvre{k}", zc, hgt, 0.052, hw, "mask_gloss", nose=-0.004, nose_r=0.020)
+        lane_dash(f"lane_dash{k}", CAB, zc, hgt - 0.014, -0.002)
+    wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=16.0, mat="alu_brushed",
+             name="badge_trakt", weight=1.6, depth=0.004, on_face=True, bev=0.0012)
+    CAB.patch("cowl", "plastic_satin", "front", WS_Z0 - 0.082, WS_Z0 - 0.012, -1.12, 1.12, off=0.002, nz=3, npar=48)
+    wipers()
+
+
 def front_face(feathers, strokes):
     set_group("cab")
+    if modern():
+        return front_face_modern(strokes)
     # one T-shaped grille field: honeycomb insert deep in the pocket, bars of three weights in front of it,
     # a graphite frame round the whole T (the brand idea lives in the frame and the DRL, not in slat fields)
     for k in ("stem", "bar"):
@@ -393,7 +480,7 @@ def ribbon(name, poly, width, m, off=-0.004, thick=0.01, kind="front", loft=None
                        thick=thick)
 
 
-def grille_bar(name, zc, hgt, depth, hw, m, round_front=True, n=2, nose=-0.003, nose_r=0.015):   # flat front: n=2 is exact
+def grille_bar(name, zc, hgt, depth, hw, m, round_front=True, n=2, nose=-0.003, nose_r=0.015, loft=None):   # flat front: n=2 is exact
     """Horizontal grille bar following the cab front: body-colour bars get a rounded nose, graphite bars a
     louvre face tilted up (different depth and section, so the field never reads as identical slats).
     nose = offset of the bar face from the cab surface (0 = flush, carries the wordmark decal)."""
@@ -409,7 +496,7 @@ def grille_bar(name, zc, hgt, depth, hw, m, round_front=True, n=2, nose=-0.003, 
     if rounded():
         n = max(n, 16)            # crowned face: the bar follows the plan curve
     for dz, o in prof:
-        rows.append([bm.verts.new(CAB.front_pt(zc + dz, -hw + 2 * hw * j / n, o)) for j in range(n + 1)])
+        rows.append([bm.verts.new((loft or CAB).front_pt(zc + dz, -hw + 2 * hw * j / n, o)) for j in range(n + 1)])
     k = len(rows)
     for a in range(k):
         r0, r1 = rows[a], rows[(a + 1) % k]
@@ -692,6 +779,30 @@ def headlamps():
     'eyeballs'), a thin amber LED indicator line along the bottom. The DRL light guides (T-bar along the top
     + road edge down the inner side, split at the corner and set back behind the lens) are half of the
     TRAKT mark per lamp: both lamps and the T-shaped grille frame read as the brand's road-T."""
+    global CAB
+    real = CAB
+    CAB = lamp_loft()
+    try:
+        _headlamps_modern() if modern() else _headlamps()
+    finally:
+        CAB = real
+
+
+def _headlamps_modern():
+    """Slim full-LED unit: three reflector modules in a row under one light-guide line (DRL / position / switchback
+    indicator) that runs the whole width and round the corner; crowned clear lens in a black gasket."""
+    set_group("cab")
+    for s in (-1, 1):
+        poly = CFG["lamp"] if s > 0 else mirror_poly(CFG["lamp"])
+        CAB.poly_patch(f"lamp_back_{s}", "lamp_inner", "front", poly, off=-0.052, sub=6)
+        drl_guide(f"drl_{s}_0", s, (0.900, 1.444), (1.340, 1.461), wdt=0.014, n=24)
+        for k, (x0, x1, beam) in enumerate(((0.902, 1.020, "low"), (1.032, 1.150, "low"), (1.162, 1.280, "high"))):
+            lamp_cell(f"{s}_{k}", s, x0, x1, 1.350, 1.428, beam)
+        lens_dome(f"lamp_lens_{s}", poly, "lens_clear", crown=0.011, thick=0.006, sub=12)
+        ribbon(f"lamp_gasket_{s}", poly, 0.007, "plastic_satin", off=-0.004, thick=0.006)
+
+
+def _headlamps():
     set_group("cab")
     for s in (-1, 1):
         poly = CFG["lamp"] if s > 0 else mirror_poly(CFG["lamp"])
@@ -741,6 +852,10 @@ def sun_visor():
     # section (z, offset from the shell): root on the header, blade sloping down to a 6 mm rounded nose
     prof = [(z_root + 0.030, -0.004), (z_root + 0.026, 0.040), (z_root + 0.010, 0.086), (z_root + 0.002, 0.090),
             (z_root - 0.006, 0.084), (z_root - 0.012, 0.040), (z_root - 0.018, -0.004)]
+    if modern():   # soft bulged visor: deeper rounded section, wraps the R 0.34 corners with the glass
+        hw, n = 1.20, 48
+        prof = [(z_root + 0.075, -0.004), (z_root + 0.070, 0.035), (z_root + 0.052, 0.085), (z_root + 0.028, 0.118),
+                (z_root + 0.006, 0.128), (z_root - 0.010, 0.120), (z_root - 0.020, 0.060), (z_root - 0.026, -0.004)]
     bm = bmesh.new()
     rows = [[bm.verts.new(CAB.front_pt(z, -hw + 2 * hw * j / n, o)) for j in range(n + 1)] for z, o in prof]
     for a in range(len(rows)):
@@ -759,7 +874,7 @@ def corners_roof_rear():
     # B2.1: each lamp = moulded black base on the header (rubber gasket line), a recessed LED bar and a crowned
     # clear lens with real thickness standing 22 mm proud; tilted with the 7 deg front plane
     rot = Matrix.Rotation(math.radians(RAKE), 3, "X")
-    for i, xm in enumerate((-0.80, -0.40, 0.0, 0.40, 0.80)):
+    for i, xm in enumerate((-0.84, 0.84) if modern() else (-0.80, -0.40, 0.0, 0.40, 0.80)):
         p = V(CAB.front_pt(ROOF_Z - (ROUND["marker_dz"] if rounded() else 0.16), xm, 0.0))
         box(f"marker_front_base_{i}", p + rot @ V((0, 0.004, 0)), (0.124, 0.012, 0.050), "plastic_satin", bev=0.005,
             seg=3, rot=rot)
@@ -781,6 +896,12 @@ def corners_roof_rear():
         extrude_poly(f"extender_flap_{s}", rub, 0.008, "rubber", plane="YZ", origin=(xo - s * 0.012, 0, 0))
         for z in (1.9, 2.6, 3.25):
             box(f"extender_hinge_{s}_{z}", (xo - s * 0.03, CAB_BACK_Y - 0.02, z), (0.03, 0.06, 0.05), "plastic_satin")
+    if modern():   # rear roof spoiler (body colour): bridges the 3.75 m roof towards the 4.00 m trailer, top 3.90 m
+        y0, y1, hw = -0.58, CAB_BACK_Y - 0.07, 1.10
+        top = [(y0 + (y1 - y0) * t, ROOF_Z - 0.012 + 0.122 * math.sin(math.pi / 2 * min(1.0, t * 1.2)))
+               for t in (0, 0.1, 0.2, 0.32, 0.45, 0.6, 0.8, 1)]
+        prof = top + [(y1 + 0.045, ROOF_Z - 0.10), (y0, ROOF_Z - 0.10)]
+        extrude_poly("roof_spoiler", prof, 2 * hw, "paint", plane="YZ", origin=(-hw, 0, 0), bev=0.018, bseg=3)
     # roof: rear spoiler lip, roof hatch, antenna base
     box_mm("roof_lip", -1.10, 1.10, CAB_BACK_Y - 0.06, CAB_BACK_Y + 0.08, ROOF_Z - 0.035, ROOF_Z - 0.005,
            "plastic", bev=0.01)
@@ -822,7 +943,25 @@ def mirrors(kind="classic", front=True):
     set_group("mirrors" if kind == "classic" else "mirrors_cam")
     for s in (-1, 1):
         base = V(CAB.side_pt(2.90, win_front(2.90) + 0.02, s, 0.0))
-        if kind == "classic":
+        if kind == "classic" and modern():
+            # one tall aero housing (class II + IV glasses) on two short faired blades; body-colour back
+            xh, yh = s * 1.50, base.y - 0.10
+            rot = mirror_aim(V((xh, yh, 2.60)), (s * 0.06, -1.0, -0.02))
+            c = V((xh, yh, 2.47))
+            box(f"mirror_house_{s}", c, (0.25, 0.10, 0.76), "plastic_satin", bev=0.048, seg=7, rot=rot)
+            box(f"mirror_house_cap_{s}", c + rot @ V((0, 0.04, 0)), (0.242, 0.11, 0.745), "paint", bev=0.052, seg=8,
+                rot=rot)
+            box(f"mirror_main_glass_{s}", c + rot @ V((0, -0.051, 0.13)), (0.215, 0.006, 0.44), "mirror", bev=0.004,
+                rot=rot)
+            box(f"mirror_wide_glass_{s}", c + rot @ V((0, -0.051, -0.24)), (0.215, 0.006, 0.20), "mirror", bev=0.004,
+                rot=rot)
+            for nm, zb, zh in (("top", 2.84, 2.74), ("bot", 2.26, 2.20)):
+                p0 = V(CAB.side_pt(zb, win_front(zb) + 0.012, s, -0.012))
+                p1 = V((xh - s * 0.09, yh + 0.012, zh))
+                d = p1 - p0
+                box(f"mirror_arm_{nm}_{s}", (p0 + p1) / 2, (d.length, 0.045, 0.085), "plastic_satin", bev=0.02, seg=4,
+                    rot=d.to_track_quat("X", "Z").to_matrix())
+        elif kind == "classic":
             xh = s * 1.50
             yh = base.y - 0.10
             # arm: upper beam + lower strut, satin black
@@ -882,7 +1021,12 @@ def lower_fairing():
     set_group("lower")
     sp = CFG["bumper_split"]
     # B2/owner: the bumper face continues the cab's front plane (one line in side view), tucking under at the lip
-    LOW = Loft(front=[(0.38, 1.530), (0.55, face_y(0.55)), (FAIR_TOP, face_y(FAIR_TOP) + 0.002)], back=FAIR_BACK,
+    fr = [(0.38, 1.530), (0.55, face_y(0.55)), (FAIR_TOP, face_y(FAIR_TOP) + 0.002)]
+    if modern():   # one rounded volume: the chin rolls under in an R ~0.15 m curve instead of a straight chamfer
+        fr = [(0.38, face_y(0.55) - 0.085), (0.41, face_y(0.55) - 0.048), (0.45, face_y(0.55) - 0.022),
+              (0.50, face_y(0.50) - 0.007), (0.56, face_y(0.56)), (FAIR_TOP, face_y(FAIR_TOP) + 0.002)]
+    ihw, iz0, iz1 = (0.66, 0.48, 0.61) if modern() else (0.80, 0.45, 0.62)     # lower intake
+    LOW = Loft(front=fr, back=FAIR_BACK,
                w=[(0.38, CAB_HALF_W - 0.02), (0.55, CAB_HALF_W), (sp, CAB_HALF_W), (FAIR_TOP, CAB_HALF_W)],
                rf=ROUND["low_rf"] if rounded() else [(0.38, 0.22), (FAIR_TOP, 0.17)], rb=0.05, z0=0.38,
                ztop=FAIR_TOP, roof_r=0.015, arc_n=24 if rounded() else 14, step=0.04, flat_n=8, roof_n=3,
@@ -902,11 +1046,17 @@ def lower_fairing():
                                z + (0.30 if k == 2 else 0.24), "plastic", bev=0.07 if rounded() else 0.045,
                                seg=5 if rounded() else 3))
     # bumper pockets: lower intake, the T 'road' continued in the bumper, fog lamps, two cleaning steps
-    cuts.append(LOW.patch("cut_intake", "grille_honey_coarse", "front", 0.45, 0.62, -0.80, 0.80, off=-0.06,
+    cuts.append(LOW.patch("cut_intake", "grille_honey_coarse", "front", iz0, iz1, -ihw, ihw, off=-0.06,
                           thick=0.15, nz=2, npar=24))
     cuts.append(LOW.quad_patch("cut_road", "trim_graphite", "front", CFG["bumper_road"], off=-0.034, thick=0.15,
                                nu=16, nv=3))
     for s in (-1, 1):
+        if modern():   # slim fog / cornering LED slot in line with the lower intake, wrapping the bumper corner
+            cuts.append(LOW.patch(f"cut_bstep_{s}", "plastic", "front", 1.055, 1.115, s * 0.875, s * 1.30, off=-0.10,
+                                  thick=0.2, nz=1, npar=16))      # integrated cleaning step under the lamp
+            cuts.append(LOW.patch(f"cut_fog_{s}", "lamp_inner", "front", iz0 + 0.02, iz1 - 0.02, s * 0.80, s * 1.22,
+                                  off=-0.05, thick=0.12, nz=2, npar=16))
+            continue
         # B2.1 (owner sheets): compact LED fog / cornering module in each bumper corner (was a 0.40 m slot)
         cuts.append(LOW.patch(f"cut_fog_{s}", "lamp_inner", "front", 0.695, 0.785, s * 0.96, s * 1.17, off=-0.05,
                               thick=0.12, nz=2, npar=8))
@@ -968,6 +1118,17 @@ def lower_fairing():
         box(f"side_repeater_base_{s}", p - V((s * 0.003, 0, 0)), (0.006, 0.070, 0.026), "plastic_satin", bev=0.002,
             rot=rot)
         box(f"side_repeater_{s}", p + V((s * 0.002, 0, 0)), (0.006, 0.062, 0.020), "lens_amber", bev=0.003, rot=rot)
+        if modern():
+            LOW.patch(f"bstep_tread_{s}", "plastic_satin", "front", 1.057, 1.066, s * 0.88, s * 1.295, off=-0.095, thick=0.09,
+                      nz=1, npar=16)
+            a0, a1, e = s * 0.805, s * 1.215, s * 0.012
+            LOW.patch(f"fog_lens_{s}", "lens_clear", "front", iz0 + 0.024, iz1 - 0.024, a0, a1, off=0.0, nz=2, npar=16)
+            LOW.patch(f"fog_back_{s}", "lamp_inner", "front", iz0 + 0.02, iz1 - 0.02, a0, a1, off=-0.045, nz=1, npar=16)
+            LOW.patch(f"fog_bowl_{s}", "dark_chrome", "front", iz0 + 0.03, iz1 - 0.03, a0 + e, a1 - e, off=-0.038,
+                      nz=1, npar=16, thick=0.006)
+            LOW.patch(f"fog_led_{s}_0", "led_off", "front", iz0 + 0.046, iz1 - 0.046, a0 + 2 * e, a1 - 2 * e, off=-0.031,
+                      nz=1, npar=16, thick=0.006)
+            continue
         # fog / cornering module: clear lens over two square LED cells in a dark-chrome carrier
         LOW.patch(f"fog_lens_{s}", "lens_clear", "front", 0.700, 0.780, s * 0.965, s * 1.165, off=0.0, nz=2, npar=8)
         LOW.patch(f"fog_back_{s}", "lamp_inner", "front", 0.695, 0.785, s * 0.96, s * 1.17, off=-0.045, nz=1, npar=8)
@@ -983,16 +1144,28 @@ def lower_fairing():
     # number plate (PL/EU 520 x 114 mm) on a dark holder
     LOW.patch("plate_holder", "plastic", "front", 0.765, 0.905, -0.275, 0.275, off=0.001, thick=0.008, nz=2, npar=8)
     G.plate_uv(LOW.patch("plate", "plate", "front", 0.778, 0.892, -0.26, 0.26, off=0.0105, nz=1, npar=4), 1)
-    LOW.patch("tow_cover", "gap", "front", 1.02, 1.025, -0.12, 0.12, off=0.001, nz=1, npar=2)
-    LOW.patch("tow_cover_b", "gap", "front", 0.93, 0.935, -0.12, 0.12, off=0.001, nz=1, npar=2)
-    for s in (-1, 1):
-        LOW.patch(f"tow_cover_s{s}", "gap", "front", 0.93, 1.025, s * 0.12 - 0.0025, s * 0.12 + 0.0025, off=0.001,
-                  nz=1, npar=1)
+    if not modern():
+        LOW.patch("tow_cover", "gap", "front", 1.02, 1.025, -0.12, 0.12, off=0.001, nz=1, npar=2)
+        LOW.patch("tow_cover_b", "gap", "front", 0.93, 0.935, -0.12, 0.12, off=0.001, nz=1, npar=2)
+        for s in (-1, 1):
+            LOW.patch(f"tow_cover_s{s}", "gap", "front", 0.93, 1.025, s * 0.12 - 0.0025, s * 0.12 + 0.0025, off=0.001,
+                      nz=1, npar=1)
     # bumper 'road' (the grille's T stem continued): coarse honeycomb in a graphite frame, no slats
     LOW.quad_patch("road_back", "grille_honey_coarse", "front", CFG["bumper_road"], off=-0.029, nu=16, nv=3)
-    ribbon("road_frame", CFG["bumper_road"], 0.022, "trim_graphite", off=-0.004, thick=0.008, loft=LOW)
+    if modern():   # the mask's stem continues in the bumper: same louvre rhythm, then one gloss panel for the plate
+        rd = CFG["bumper_road"]
+        hwz = lambda z: rd[1][0] + (rd[2][0] - rd[1][0]) * (z - rd[1][1]) / (rd[2][1] - rd[1][1]) - 0.006  # noqa: E731
+        _, pitch, _, hgt = CFG["louvres"]
+        for k in range(3):
+            zc = 1.152 - pitch * k
+            grille_bar(f"bumper_louvre{k}", zc, hgt, 0.026, hwz(zc), "mask_gloss", nose=-0.004, nose_r=0.020, loft=LOW)
+            lane_dash(f"lane_dash_b{k}", LOW, zc, hgt - 0.014, -0.002)
+        grille_bar("bumper_plate_panel", 0.835, 0.235, 0.026, hwz(0.835), "mask_gloss", nose=-0.004, nose_r=0.020,
+                   loft=LOW)
+    else:
+        ribbon("road_frame", CFG["bumper_road"], 0.022, "trim_graphite", off=-0.004, thick=0.008, loft=LOW)
     # lower intake: coarse honeycomb (different texture and scale from the grille), horns visible behind it
-    LOW.patch("intake_mesh", "grille_honey_coarse", "front", 0.45, 0.62, -0.80, 0.80, off=-0.052, nz=1, npar=16)
+    LOW.patch("intake_mesh", "grille_honey_coarse", "front", iz0, iz1, -ihw, ihw, off=-0.052, nz=1, npar=16)
     for s in (-1, 1):
         cyl(f"horn_{s}", (s * 0.45, 1.44, 0.53), 0.055, 0.04, "plastic_satin", axis="Y", seg=24)
     # lower spoiler lip

@@ -51,7 +51,7 @@ def parse():
     p.add_argument("--tag", default="")
     p.add_argument("--no-analysis", action="store_true")
     p.add_argument("--beam", default="", choices=["", "low"], help="a4: QA render with the dipped beam lit")
-    p.add_argument("--shape", default="b2", choices=["b2", "round"],
+    p.add_argument("--shape", default="b2", choices=["b2", "round", "modern"],
                    help="cab surfacing: b2 = exported cab, round = rounding-pass proposal (owner approval pending)")
     p.add_argument("--vis", action="store_true", help="a4: eye-point views + visibility map (widocznosc_*)")
     return p.parse_args(argv)
@@ -63,6 +63,7 @@ def build(a):
     S.setup_render(a.res, a.samples)
     clay = a.mode == "a3"
     M.build_library(a.liveries.split(",")[0], clay=clay)
+    M.principled("mask_gloss", "TRIM", (0.010, 0.010, 0.011), 0.09, coat=0.5)   # --shape modern: gloss-black mask
     if clay:
         for k in ("tyre_steer", "tyre_drive"):
             M.principled(k, "TYRE", (0.03, 0.03, 0.03), 0.85)
@@ -151,7 +152,7 @@ def render_view(a, v, light, livery, fig, suffix=""):
             ob.hide_render = not (a.mode == "a3" and w == "wall_" + v)
     lv = M.LIVERIES["clay" if a.mode == "a3" else livery][3]
     mode = "A3 blockout w skali (clay)" if a.mode == "a3" else (
-        "A4 zewnętrze" + (" | PROPOZYCJA: zaokrąglenia" if a.shape == "round" else ""))
+        "A4 zewnętrze" + ({"round": " | PROPOZYCJA: zaokrąglenia", "modern": " | PROPOZYCJA: nowy front"}.get(a.shape, "")))
     S.stamp(f"TRAKT (koncepcja B) | {LABEL.get(v, v)} | {lv} | {LIGHT_LABEL[light]} | {mode}"
             + (" | figura 1,80 m" if f else ""))
     name = f"{v}_{livery}_{light}{suffix}.jpg" if a.mode == "a4" else f"{v}{suffix}.jpg"
@@ -183,7 +184,7 @@ def main():
     if a.shape == "b2":   # the interior reads this contract; the 'round' proposal must not move it before approval
         B.door_interface(os.path.join(G.REPO, "art-source", "truck", "exterior", "door_interface.json"))
     else:
-        B.door_interface(os.path.join(a.out, "door_interface_round.json"))
+        B.door_interface(os.path.join(a.out, f"door_interface_{a.shape}.json"))
     if a.mode == "a4":
         lods = S.lod_estimate()
         S.tri_stats(os.path.join(a.out, "stats.json"), extra={"lod_plan_measured": lods})
