@@ -457,6 +457,8 @@ namespace Game.World.Import
             ti.filterMode = FilterMode.Trilinear;
             ti.anisoLevel = text ? 4 : 2;
             ti.maxTextureSize = 2048;
+            // explicit: NPOT impostor atlases (1536 x 384) with npotScale None are stored uncompressed (3 MB each; ADR 0025)
+            ti.npotScale = TextureImporterNPOTScale.ToNearest;
             ti.textureCompression = TextureImporterCompression.Compressed;
             ti.SetPlatformTextureSettings(new TextureImporterPlatformSettings
             {
