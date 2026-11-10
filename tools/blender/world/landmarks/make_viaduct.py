@@ -397,7 +397,7 @@ def build_camera(mb, deck):
     st = min(sts, key=lambda s_: abs(s_.s - (0.5 * (so[0] + so[1]) + 7.0)))
     sd = LAY["swatch_dark"]
     c = st.at(0.6, -PRM["girder_depth_m"])
-    mb.box(c[:2], st.t[:2], st.n[:2], 0.02, 0.02, c[2] - 0.28, c[2], STEEL, STEEL_UV, top=False)
+    mb.box(c[:2], st.t[:2], st.n[:2], 0.02, 0.02, c[2] - 0.28, c[2], STEEL, (STEEL_UV[0], STEEL_UV[2]), top=False)
     mb.box(c[:2], st.t[:2], st.n[:2], 0.16, 0.09, c[2] - 0.42, c[2] - 0.28, CONC, ((sd["u"][0], sd["v"][0]), (sd["u"][1], sd["v"][1])), top=True, bottom=True)
     return st.s
 
