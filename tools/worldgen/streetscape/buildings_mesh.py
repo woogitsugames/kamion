@@ -122,15 +122,17 @@ class Acc:
             uv = [[0, 0], [L, 0], [L, H], [0, H]]
         self.add(layer, mat, V, [[0, 1, 2], [0, 2, 3]], uv, uv1)
 
-    def box(self, layer, mat, c, ax, ay, az):
-        """Box centred at c with half-axis vectors ax, ay, az (all 6 faces, outward)."""
+    def box(self, layer, mat, c, ax, ay, az, skip=()):
+        """Box centred at c with half-axis vectors ax, ay, az (all 6 faces, outward). skip: face indices left out
+        (0 -az, 1 +az, 2 -ay, 3 +ay, 4 -ax, 5 +ax), for the cheap LOD1 silhouette pieces whose hidden faces never show."""
         c, ax, ay, az = (np.asarray(x, float) for x in (c, ax, ay, az))
         P = [c + sx * ax + sy * ay + sz * az for sz in (-1, 1) for sy in (-1, 1) for sx in (-1, 1)]
         faces = [(0, 2, 3, 1), (4, 5, 7, 6), (0, 1, 5, 4), (2, 6, 7, 3), (0, 4, 6, 2), (1, 3, 7, 5)]
         if np.dot(np.cross(ax, ay), az) < 0:
             faces = [f[::-1] for f in faces]
-        for f in faces:
-            self.quad(layer, mat, *[P[i] for i in f])
+        for k, f in enumerate(faces):
+            if k not in skip:
+                self.quad(layer, mat, *[P[i] for i in f])
 
     # parapet run-off coverage (REVIEW G3 wires-streaks-v2): hall_wall_* triangles with / without wall-top TEXCOORD_1
     runoff_tris = {"with_uv1": 0, "without_uv1": 0}
@@ -168,7 +170,7 @@ def runoff_uv1(runoff, ua, ub, za, zb):
     return [[a, ka], [b, ka], [b, kb], [a, kb]]
 
 
-def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0, vref=0.0, runoff=None):
+def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0, vref=0.0, runoff=None, reveal=None):
     """Wall rectangle [0, L] x [zb, zt] in the vertical plane through p0 along d, minus rectangular
     openings [(ua, ub, va, vb, depth, kind, mat_in)]. Adds reveals and the recessed infill.
     runoff = (z_top, u_offset, length_scale): the wall face gets TEXCOORD_1 = (u_offset + u, 1 + (z_top - z) /
@@ -202,7 +204,7 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
     for (ua, ub, va, vb, depth, kind, mat_in) in ops:
         back = -n3 * depth
         A, B, C, D = (np.array(P(ua, va)), np.array(P(ub, va)), np.array(P(ub, vb)), np.array(P(ua, vb)))
-        rv = "reveal_" + ("hall" if mat.startswith("hall") else "plaster")
+        rv = reveal or "reveal_" + ("hall" if mat.startswith("hall") else "plaster")
         # reveals (facing into the opening)
         acc.quad(layer, rv, A, B, B + back, A + back)          # sill (faces up)
         acc.quad(layer, rv, D + back, C + back, C, D)          # head (faces down)
@@ -512,6 +514,40 @@ def build_dock(acc, layer, p, d, nout, u, zy, num):
              P(-1.04, zl - 0.115, 0.63))
 
 
+def build_dock_lod1(acc, p, d, nout, u, zy, num, layer="buildings_low"):
+    """LOD1 counterpart of build_dock (Low / Medium away from the route, High beyond the LOD switch): the same
+    silhouette - black shelter frame (two curtains + header) with the yellow guide stripes, leveller block,
+    wheel guides on the apron - as boxes without their wall-side / bottom faces, in materials LOD1 draws anyway
+    (FK.L1_MAT: one draw per material per chunk). Hazard stripes, number plate, bumpers, signal light and floodlight
+    are LOD0 detail. review r6 / HANDOVER pkt 7 (Low and High show the same docks)."""
+    zf = zy + S.DOCK_FLOOR_H
+    c = p + d * u
+    W = S.DOCK_DOOR_W
+
+    def P(off_u, z, out=0.0):
+        q = c + d * off_u + nout * out
+        return np.array([q[0], q[1], z])
+    sw, sh, sd = S.DOCK_SHELTER_W, S.DOCK_SHELTER_H, S.DOCK_SHELTER_D
+    side = (sw - W) / 2 + 0.05
+    shelter = FK.L1_MAT["dock_shelter"]
+    for sgn in (-1, 1):
+        cc = P(sgn * (W / 2 + side / 2), zf + sh / 2 - 0.1, sd / 2)
+        acc.box(layer, shelter, cc, np.append(d * side / 2, 0), np.append(nout * sd / 2, 0),
+                [0, 0, sh / 2 - 0.1], skip=(0, 2))
+        x = sgn * (W / 2 + side / 2)
+        acc.quad(layer, "paint_yellow", P(x - 0.05, zf + 0.1, sd + 0.005), P(x + 0.05, zf + 0.1, sd + 0.005),
+                 P(x + 0.05, zf + sh - 0.5, sd + 0.005), P(x - 0.05, zf + sh - 0.5, sd + 0.005))
+    acc.box(layer, shelter, P(0, zf + sh - 0.35, sd / 2), np.append(d * (sw / 2 + 0.05), 0),
+            np.append(nout * sd / 2, 0), [0, 0, 0.35], skip=(2,))
+    # leveller block (lip + front in one box: top, front, ends)
+    steel = FK.L1_MAT["steel_checker"]
+    acc.box(layer, steel, P(0, zf - 0.17, 0.2), np.append(d * 1.0, 0), np.append(nout * 0.2, 0),
+            [0, 0, 0.17], skip=(0, 2))
+    for sgn in (-1, 1):            # wheel guides on the apron: top, both sides, the far end
+        acc.box(layer, "paint_yellow", P(sgn * 1.35, zy + 0.12, 2.6), np.append(d * 0.06, 0), np.append(nout * 2.2, 0),
+                [0, 0, 0.12], skip=(0, 2))
+
+
 # ------------------------------------------------------------------------------------------- main
 def load(fc, origin, overrides):
     ox, oy = origin
@@ -535,10 +571,12 @@ def load(fc, origin, overrides):
 
 
 def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase, kind, pitched, zone_wall=None,
-              runoff=None):
+              runoff=None, pieces=None):
     """LOD1 wall edge: cheap (8-14 triangles) but not a box face - plinth, window zone (office / block: far facade
     material, UV1 = (bay, storey) grid), wall above, projecting coping at the attic. runoff: as wall_with_openings
-    (hall_wall_* bands get the same wall-top TEXCOORD_1 as LOD0, so the streaks do not pop at the LOD switch)."""
+    (hall_wall_* bands get the same wall-top TEXCOORD_1 as LOD0, so the streaks do not pop at the LOD switch).
+    pieces(layer): draws the wall zbot..zt itself (halls: the LOD0 plinth / colour bands / dock openings, see build());
+    lod1_wall then only adds the coping ledge."""
     lay = "buildings_low"
 
     def P(q, z):
@@ -555,8 +593,12 @@ def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh
         band(zbot, zt, wall)
         return
     zpl = zref + (0.6 if typ == "hall" else zbase - 0.1)
-    band(zbot, zpl, "hall_plinth" if typ == "hall" else "plinth_dark")
-    z = zpl
+    if pieces is not None:
+        pieces(lay)
+        z = zt
+    else:
+        band(zbot, zpl, "hall_plinth" if typ == "hall" else "plinth_dark")
+        z = zpl
     if typ in ("office", "block") and L > 2.5:
         g = FAR_GRID[kind]
         n = int((L - 1.0) // g["pitch_m"])
@@ -569,7 +611,8 @@ def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh
             v0, v1 = (z - zw0) / sh, (zw1 - zw0) / sh          # v0 < 0: the strip below the ground floor
             band(z, zw1, f"{zone_wall or wall}__far_{kind}", uv1=[[u0, v0], [u1, v0], [u1, v1], [u0, v1]])
             z = zw1
-    band(z, zt, wall)
+    if z < zt:
+        band(z, zt, wall)
     # coping ledge 0.12 m proud over the top 0.25 m: front + top (the wall continues behind it, so no underside)
     o = nout * 0.12
     za, zb_ = zt - 0.25, zt + 0.05
@@ -684,6 +727,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
             nout = np.array([d[1], -d[0]])
             nouts.append(nout)
             lod1_main, lod1_zone = wall, None        # LOD1 colours follow what dominates the LOD0 wall (W-H4)
+            lod1_pieces = None
             dk = dock_edges.get(tuple(np.round(a, 2)))
             zt = zeave
             is_main = ei == main or (typ == "hall" and L > 30)
@@ -716,6 +760,15 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                 lod1_ro = (zt - 0.25, ro[1], ro[2])                  # LOD1: coping ledge over the top 0.25 m
                 FK.wall_pieces(wall_with_openings, acc, a, d, nout, L, zbot, zt - 0.4, ops, u_acc, zref,
                                [zpl, zlow, ztopb], [], hall_mat, runoff=ro)
+
+                # LOD1 hall wall (HANDOVER pkt 7): the same plinth height, colour bands and dock doors as LOD0
+                # (dock doors as recessed openings, ~10 triangles each; windows / personnel doors stay LOD0
+                # detail), so Low and High show the same hall. Before: one ivory band, the red top band of this
+                # hall and every dock existed on High only.
+                def lod1_pieces(lay, a=a, d=d, nout=nout, L=L, zt=zt, hall_mat=hall_mat, zs=[zpl, zlow, ztopb],
+                                dock_ops=[o for o in ops if o[5] == "dock"], ro=lod1_ro):
+                    FK.wall_pieces(wall_with_openings, acc, a, d, nout, L, zbot, zt, dock_ops, u_acc, zref, zs, [],
+                                   hall_mat, layer=lay, runoff=ro, reveal=FK.L1_MAT["reveal_hall"])
                 P3 = lambda q, z: [q[0], q[1], z]
                 acc.quad("buildings", "hall_flashing", P3(a + nout * 0.03, zt - 0.4), P3(c_ + nout * 0.03, zt - 0.4),
                          P3(c_ + nout * 0.03, zt), P3(a + nout * 0.03, zt))
@@ -733,13 +786,15 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
                 if dk:
                     for dock in dk["docks"]:
                         build_dock(acc, "buildings", a, d, nout, dock["u"], dk["yard_z"], dock["num"])
+                        build_dock_lod1(acc, a, d, nout, dock["u"], dk["yard_z"], dock["num"])
                     # canopy over the dock row (steel, typical) only for hero buildings
                     if hero:
                         u0d, u1d = dk["docks"][0]["u"] - 2.2, dk["docks"][-1]["u"] + 2.2
                         cz = zf + S.DOCK_SHELTER_H + 0.9
                         cm = a + d * (0.5 * (u0d + u1d)) + nout * 1.0
-                        acc.box("buildings", "steel_painted", [cm[0], cm[1], cz], np.append(d * (u1d - u0d) / 2, 0),
-                                np.append(nout * 1.0, 0), [0, 0, 0.08])
+                        for lay_, sk_ in (("buildings", ()), ("buildings_low", (2,))):
+                            acc.box(lay_, "steel_painted", [cm[0], cm[1], cz], np.append(d * (u1d - u0d) / 2, 0),
+                                    np.append(nout * 1.0, 0), [0, 0, 0.08], skip=sk_)
                         signs.append(FK.sign_instance("dostawy", a, d, nout, u0d - 3.0 if u0d > 6 else u1d + 3.0,
                                                       cz + 1.2, f"{key}:{ei}"))
                 if is_main and not signed and L > 25 and (hero or FK.hfloat(key, "sign") < 0.6):
@@ -823,7 +878,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None)
             # LOD1 (v3.1): plinth band, window zone with the far facade material (window grid in UV1), wall above,
             # projecting coping at the attic; pitched houses keep the plain wall
             lod1_wall(acc, typ, lod1_main, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase,
-                      "ribbon" if variant["ribbon"] else typ, pitched, zone_wall=lod1_zone, runoff=lod1_ro)
+                      "ribbon" if variant["ribbon"] else typ, pitched, zone_wall=lod1_zone, runoff=lod1_ro,
+                      pieces=lod1_pieces)
             u_acc += L
         if typ == "hall" and len(edges) >= 3:                       # corner flashings
             for i, (a, c_) in enumerate(edges):

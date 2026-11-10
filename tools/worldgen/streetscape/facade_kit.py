@@ -11,8 +11,12 @@ block   wielka płyta: raw large panels with joints (30 %) or ETICS insulation w
         away from the entrances; entrance canopies; ventilation stacks and lift machine rooms on the roof.
 house   gutters on both eaves with corner downpipes, chimney; 12 % of small single-storey houses are wooden
         (horizontal boarding, natural or green-painted: the Podlasie wooden house).
-Everything is deterministic (hash of the building id). Only the LOD0 layer ('buildings') gets the kit; LOD1
-keeps the plain prism so the Low/Medium variant stays within its size budget. Dimensions WORKING_VALUE.
+Everything is deterministic (hash of the building id). The LOD0 layer ('buildings') gets the full kit. LOD1
+('buildings_low': the Low/Medium tiers away from the route and High beyond the LOD switch) gets a cheap copy of the
+silhouette pieces - gutters, downpipes, door canopies, chimneys - as single boxes without the faces that touch the
+wall or never face the street (4-10 triangles each instead of 12-36), so a tier changes the detail density, never
+the building (review r6 / HANDOVER pkt 7, ADR 0012 addendum r7). Balconies stay LOD0-only (open issue: one block
+facade would cost ~2-3 k triangles). Dimensions WORKING_VALUE.
 """
 
 from __future__ import annotations
@@ -26,6 +30,12 @@ import shapely
 ACCENT_HALL = ["hall_wall_accent_blue", "hall_wall_accent_red", "hall_wall_accent_green", "hall_wall_graphite"]
 ACCENT_PLASTER = ["plaster_accent_terracotta", "plaster_accent_green", "plaster_accent_ochre", "plaster_accent_grey"]
 L0 = "buildings"
+L1 = "buildings_low"
+# LOD1 material merge: every material is one submesh = one draw per chunk, so the LOD1 silhouette pieces reuse a
+# material of the same tone that LOD1 already draws: gutter, canopy and leveller steel share the downpipe grey
+# (lin. 0.20-0.30), the black dock shelter (0.025) and the dock door reveals take the graphite coping (0.045)
+L1_MAT = {"gutter": "downpipe", "canopy_steel": "downpipe", "steel_checker": "downpipe",
+          "roof_metal_graphite": "hall_flashing", "dock_shelter": "hall_flashing", "reveal_hall": "hall_flashing"}
 
 
 def hfloat(*key):
@@ -121,6 +131,10 @@ def downpipe(acc, a, d, nout, u, z0, z1, hopper=True, mat="downpipe"):
     acc.box(L0, mat, v3(p + nout * 0.08, z0 + 0.18), np.append(d * 0.05, 0), np.append(nout * 0.12, 0), [0, 0, 0.12])
     if hopper:
         acc.box(L0, mat, v3(p + nout * 0.03, z1 + 0.15), np.append(d * 0.16, 0), np.append(nout * 0.10, 0), [0, 0, 0.17])
+    # LOD1: one pipe from the ground to the hopper top, front + two sides only (6 triangles)
+    zt1 = z1 + (0.32 if hopper else 0.0)
+    acc.box(L1, L1_MAT.get(mat, mat), v3(p, (z0 + zt1) / 2), np.append(d * 0.05, 0), np.append(nout * 0.05, 0), [0, 0, (zt1 - z0) / 2],
+            skip=(0, 1, 2))
 
 
 def gutter(acc, a, c, nout, z, mat="gutter", proud=0.12):
@@ -129,11 +143,15 @@ def gutter(acc, a, c, nout, z, mat="gutter", proud=0.12):
     d = d / L
     ctr = (a + c) / 2 + nout * (proud + 0.06)
     acc.box(L0, mat, v3(ctr, z - 0.06), np.append(d * (L / 2 + 0.05), 0), np.append(nout * 0.07, 0), [0, 0, 0.06])
+    # LOD1: same box without the wall-side face and the two end caps (6 triangles)
+    acc.box(L1, L1_MAT.get(mat, mat), v3(ctr, z - 0.06), np.append(d * (L / 2 + 0.05), 0), np.append(nout * 0.07, 0), [0, 0, 0.06],
+            skip=(2, 4, 5))
 
 
 def canopy(acc, a, d, nout, u, w, z, depth, mat="canopy_steel", posts=False, zg=None):
     p = a + d * u + nout * (depth / 2)
     acc.box(L0, mat, v3(p, z), np.append(d * w / 2, 0), np.append(nout * depth / 2, 0), [0, 0, 0.06])
+    acc.box(L1, L1_MAT.get(mat, mat), v3(p, z), np.append(d * w / 2, 0), np.append(nout * depth / 2, 0), [0, 0, 0.06], skip=(2,))
     if posts and zg is not None:
         for sg in (-1, 1):
             q = a + d * (u + sg * (w / 2 - 0.12)) + nout * (depth - 0.12)
@@ -222,8 +240,9 @@ def chimney(acc, rect_poly, zridge, key):
     ctr = np.asarray(rect_poly.centroid.coords[0])
     t = (hfloat(key, "chim") - 0.5) * max(e) * 0.5
     p = ctr + along * t
-    acc.box(L0, "chimney_brick", v3(p, zridge - 0.2), np.append(along * 0.3, 0),
-            np.append(np.array([-along[1], along[0]]) * 0.25, 0), [0, 0, 1.0])
+    for layer in (L0, L1):
+        acc.box(layer, "chimney_brick", v3(p, zridge - 0.2), np.append(along * 0.3, 0),
+                np.append(np.array([-along[1], along[0]]) * 0.25, 0), [0, 0, 1.0], skip=(0,))
 
 
 def sign_instance(code, a, d, nout, u, z, src):

@@ -47,3 +47,45 @@ def test_facade_colour_is_kept_across_tiers(rows):
     assert not out, f"{len(out)} buildings change colour between tiers: {out[:8]}"
     ch = [colour_delta(r["rgb0"], r["rgb1"])[1] for r in rows]
     assert np.percentile(ch, 95) < 0.05
+
+
+# Silhouette parity (HANDOVER pkt 7, review r6): docks, shelters, gutters, downpipes exist on LOD1 wherever LOD0 has
+# them, so Low (LOD1 away from the route) and High show the same buildings; only the detail density may differ.
+# LOD0 material -> the LOD1 material that carries the same piece (FK.L1_MAT merges tones to save draws)
+SILHOUETTE = {"dock_shelter": "hall_flashing", "dock_door": "dock_door", "downpipe": "downpipe", "gutter": "downpipe",
+              "chimney_brick": "chimney_brick"}
+
+
+def test_lod1_keeps_the_silhouette_pieces():
+    from route_corridor import node_triangles, read_glb
+    files = sorted(f for f in WORLD.glob("chunk_*.glb") if not f.name.endswith(".low.glb"))
+    if not files:
+        pytest.skip("world GLBs not built (Data/raw is not versioned)")
+    missing, n0, n1 = [], {}, {}
+    for f in files:
+        doc, data, off = read_glb(f)
+        t0 = node_triangles(doc, data, off, "buildings")
+        t1 = node_triangles(doc, data, off, "buildings_lod1")
+        for m0, m1 in SILHOUETTE.items():
+            k0, k1 = len(t0.get(m0, ())), len(t1.get(m1, ()))
+            n0[m0] = n0.get(m0, 0) + k0
+            n1[m1] = n1.get(m1, 0) + k1
+            if k0 and not k1:
+                missing.append((f.name, m0, k0))
+    assert not missing, f"LOD0-only silhouette pieces: {missing[:8]}"
+    assert n1["dock_door"] > 0 and n1["downpipe"] > 0
+    # LOD1 stays cheaper than LOD0 (the density may differ, the presence may not)
+    assert n1["dock_door"] <= n0["dock_door"] and n1["downpipe"] < n0["downpipe"] + n0["gutter"], (n0, n1)
+
+
+def test_low_variant_carries_the_lod1_silhouette():
+    """chunk_*.low.glb (WorldC, the default APK) has the same LOD1 node as the High chunk."""
+    from route_corridor import node_triangles, read_glb
+    files = sorted(WORLD.glob("chunk_*.low.glb"))
+    if not files:
+        pytest.skip("world GLBs not built")
+    shelters = 0
+    for f in files:
+        doc, data, off = read_glb(f)
+        shelters += len(node_triangles(doc, data, off, "buildings_lod1").get("dock_door", ()))
+    assert shelters > 0
