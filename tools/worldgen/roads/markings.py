@@ -421,12 +421,21 @@ def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of):
         return False
     used = n * S.P10_STRIPE + (n - 1) * S.P10_GAP
     ss = np.linspace(s_c - half, s_c + half, int(round(S.P10_WIDTH / P10_DRAPE_STEP_M)) + 1)
+    # stripes parallel to the arm at the crossing (tangent at s_c), not fanned along the chain's bend into the node
+    o = np.asarray(c.line.offset_point(np.array([s_c]), np.array([0.0])), float).reshape(-1)[:2]
+    a_ = np.asarray(c.line.offset_point(np.array([s_c - half]), np.array([0.0])), float).reshape(-1)[:2]
+    b_ = np.asarray(c.line.offset_point(np.array([s_c + half]), np.array([0.0])), float).reshape(-1)[:2]
+    t = (b_ - a_) / max(float(np.hypot(*(b_ - a_))), 1e-9)
+    nrm = np.array([-t[1], t[0]])
+    l_probe = np.asarray(c.line.offset_point(np.array([s_c]), np.array([1.0])), float).reshape(-1)[:2] - o
+    if float(np.dot(l_probe, nrm)) < 0:                 # keep the chain's lateral sign convention
+        nrm = -nrm
     meshes = []
     for k_ in range(n):
         lat = -used / 2 + k_ * (S.P10_STRIPE + S.P10_GAP) + S.P10_STRIPE / 2
         sides = []
         for l_ in (lat - S.P10_STRIPE / 2, lat + S.P10_STRIPE / 2):
-            p = c.line.offset_point(ss, np.full(len(ss), l_))
+            p = o + np.outer(ss - s_c, t) + nrm * l_       # rigid rectangle: the chain bends into the node
             z = np.array([top_of(float(e), float(nn)) for e, nn in p])
             if not np.all(np.isfinite(z)) or np.max(np.abs(np.diff(z))) > P10_DRAPE_MAX_STEP_M:
                 return False        # off the road meshes, or onto a kerb / island top

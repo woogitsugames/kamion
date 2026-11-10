@@ -257,7 +257,8 @@ def test_photo_matched_overrides_applied(qa):
     """Bridge styles, the Putry gantry and the EC chimneys (CC0 photos / OSM ground truth) are all applied."""
     lm = qa["furniture"]["landmarks"]
     assert lm["stale"] == []
-    assert [g["id"] for g in lm["gantries"]] == ["andersa-putry-approach-gantry"]
+    assert {g["id"] for g in lm["gantries"]} == {"andersa-putry-approach-gantry",            # + ADR 0069 (Mapillary)
+                                                 "andersa-putry-cantilever-p37", "andersa-putry-portal-p40"}
     assert len(lm["landmarks"]) == 2
     man = json.loads((REGION_DIR / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
     ids = {o["id"] for o in man["overrides_applied"]}

@@ -210,6 +210,7 @@ overrides:
   - id: andersa-p26-tree-groups
     kind: tree_groups
     lines:
+      - {line_epsg2180: [[778309.7, 595611.3], [778224.1, 595663.3]]}
       - {line_epsg2180: [[778328.2, 595585.5], [778223.2, 595644.4]]}
     group_size: [3, 5]
     gap_m: [20.0, 45.0]
@@ -218,7 +219,7 @@ overrides:
     reason: >-
       Mapillary 1666299510882315 (kino, 2024-07-26) and 2684818718445505 (richlv, 2020-08-15) at p26 show clumps of
       large broadleaf trees on the verge beyond the westbound carriageway of Andersa with open grass between them;
-      BDOT10k / OSM have no trees there. Line on the grass (BDOT OT_PTTR_A) beyond the cycle path (OT_SKRP_L), ~22-28 m off the westbound centreline, 40-160 m ahead (r9c: first line lay on the carriageway; read off the photo,
+      BDOT10k / OSM have no trees there. Line 1 on the verge strip between the westbound kerb and the cycle path (OT_SKRP_L), line 2 on the grass (OT_PTTR_A) beyond it, 40-160 m ahead (r9c: first line lay on the carriageway; read off the photo,
       WORKING_VALUE); species from the crown shape (linden / maple); only positions are authored.
     confidence: low
     verify: tree positions on site / orthophoto
