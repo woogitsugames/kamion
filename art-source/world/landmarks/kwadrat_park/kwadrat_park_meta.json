@@ -1,0 +1,355 @@
+{
+ "asset": "kwadrat_park",
+ "axes": "glTF (x, y, z) = (-dE, dU, dN) relative to the segment anchor (local E, N, U)",
+ "blender": "4.2.9 LTS",
+ "glb_sha256": "a26c77c1fd321d850cfe9966612476f6402e6abec727cc39b7bd06b4fec93966",
+ "materials": [
+  "canopy_steel",
+  "concrete_base",
+  "dock_digits",
+  "dock_door",
+  "dock_light",
+  "dock_shelter",
+  "door_glass",
+  "door_steel",
+  "downpipe",
+  "glass",
+  "gutter",
+  "hall_flashing",
+  "hall_plinth",
+  "hazard_stripes",
+  "kp_accent",
+  "kp_glass_block",
+  "kp_roof_white",
+  "kp_wall",
+  "lamp_glass",
+  "luminaire_housing",
+  "paint_yellow",
+  "plate_white",
+  "roof_membrane",
+  "roof_vent",
+  "rubber_black",
+  "skylight",
+  "steel_checker",
+  "steel_galv",
+  "steel_painted_grey",
+  "window_frame"
+ ],
+ "schema": "truck-sim-pl/hero-depot-asset/1",
+ "segments": [
+  {
+   "anchor": [
+    480.724,
+    -448.323,
+    141.63
+   ],
+   "facade": "SW",
+   "name": "landmark_depot_kwadrat_park_00",
+   "tris": [
+    1354,
+    300,
+    20
+   ],
+   "u": [
+    0.0,
+    42.899
+   ]
+  },
+  {
+   "anchor": [
+    518.491,
+    -468.667,
+    141.63
+   ],
+   "facade": "SW",
+   "name": "landmark_depot_kwadrat_park_01",
+   "tris": [
+    622,
+    116,
+    32
+   ],
+   "u": [
+    42.899,
+    85.797
+   ]
+  },
+  {
+   "anchor": [
+    556.258,
+    -489.012,
+    141.63
+   ],
+   "facade": "SW",
+   "name": "landmark_depot_kwadrat_park_02",
+   "tris": [
+    344,
+    44,
+    16
+   ],
+   "u": [
+    85.797,
+    128.696
+   ]
+  },
+  {
+   "anchor": [
+    594.026,
+    -509.357,
+    141.63
+   ],
+   "facade": "SW",
+   "name": "landmark_depot_kwadrat_park_03",
+   "tris": [
+    382,
+    60,
+    32
+   ],
+   "u": [
+    128.696,
+    171.595
+   ]
+  },
+  {
+   "anchor": [
+    624.844,
+    -497.377,
+    141.63
+   ],
+   "facade": "SE-yard",
+   "name": "landmark_depot_kwadrat_park_04",
+   "tris": [
+    2912,
+    634,
+    246
+   ],
+   "u": [
+    0.0,
+    50.326
+   ]
+  },
+  {
+   "anchor": [
+    646.756,
+    -456.703,
+    141.63
+   ],
+   "facade": "SE-yard",
+   "name": "landmark_depot_kwadrat_park_05",
+   "tris": [
+    748,
+    140,
+    68
+   ],
+   "u": [
+    50.326,
+    92.402
+   ]
+  },
+  {
+   "anchor": [
+    665.822,
+    -421.311,
+    141.63
+   ],
+   "facade": "SE-yard",
+   "name": "landmark_depot_kwadrat_park_06",
+   "tris": [
+    1042,
+    122,
+    68
+   ],
+   "u": [
+    92.402,
+    130.728
+   ]
+  },
+  {
+   "anchor": [
+    675.955,
+    -405.275,
+    141.63
+   ],
+   "facade": "e2",
+   "name": "landmark_depot_kwadrat_park_07",
+   "tris": [
+    14,
+    12,
+    8
+   ],
+   "u": [
+    0.0,
+    2.675
+   ]
+  },
+  {
+   "anchor": [
+    677.755,
+    -404.675,
+    141.63
+   ],
+   "facade": "e3",
+   "name": "landmark_depot_kwadrat_park_08",
+   "tris": [
+    14,
+    12,
+    8
+   ],
+   "u": [
+    0.0,
+    3.243
+   ]
+  },
+  {
+   "anchor": [
+    659.323,
+    -392.895,
+    141.63
+   ],
+   "facade": "NE",
+   "name": "landmark_depot_kwadrat_park_09",
+   "tris": [
+    14,
+    12,
+    8
+   ],
+   "u": [
+    0.0,
+    43.597
+   ]
+  },
+  {
+   "anchor": [
+    620.947,
+    -372.205,
+    141.63
+   ],
+   "facade": "NE",
+   "name": "landmark_depot_kwadrat_park_10",
+   "tris": [
+    14,
+    12,
+    8
+   ],
+   "u": [
+    43.597,
+    87.195
+   ]
+  },
+  {
+   "anchor": [
+    582.572,
+    -351.515,
+    141.63
+   ],
+   "facade": "NE",
+   "name": "landmark_depot_kwadrat_park_11",
+   "tris": [
+    14,
+    12,
+    8
+   ],
+   "u": [
+    87.195,
+    130.792
+   ]
+  },
+  {
+   "anchor": [
+    544.197,
+    -330.825,
+    141.63
+   ],
+   "facade": "NE",
+   "name": "landmark_depot_kwadrat_park_12",
+   "tris": [
+    14,
+    12,
+    8
+   ],
+   "u": [
+    130.792,
+    174.389
+   ]
+  },
+  {
+   "anchor": [
+    514.423,
+    -340.202,
+    141.63
+   ],
+   "facade": "NW",
+   "name": "landmark_depot_kwadrat_park_13",
+   "tris": [
+    424,
+    68,
+    34
+   ],
+   "u": [
+    0.0,
+    44.768
+   ]
+  },
+  {
+   "anchor": [
+    493.366,
+    -379.425,
+    141.63
+   ],
+   "facade": "NW",
+   "name": "landmark_depot_kwadrat_park_14",
+   "tris": [
+    310,
+    36,
+    16
+   ],
+   "u": [
+    44.768,
+    89.036
+   ]
+  },
+  {
+   "anchor": [
+    472.368,
+    -418.538,
+    141.63
+   ],
+   "facade": "NW",
+   "name": "landmark_depot_kwadrat_park_15",
+   "tris": [
+    422,
+    68,
+    34
+   ],
+   "u": [
+    89.036,
+    133.554
+   ]
+  },
+  {
+   "anchor": [
+    518.237,
+    -423.64,
+    141.63
+   ],
+   "facade": "roof",
+   "name": "landmark_depot_kwadrat_park_roof",
+   "tris": [
+    5004,
+    374,
+    38
+   ],
+   "u": [
+    0,
+    0
+   ]
+  }
+ ],
+ "skylights": 463,
+ "spec": "Data/Regions/bialystok-industrial-c/generated/landmarks/kwadrat_park.spec.json",
+ "spec_sha256": "6c72d683134ae2190c417561c77635ddaa2dd529f1524fd54dfe1b8c7cde6fde",
+ "tris_total": [
+  13648,
+  2034,
+  652
+ ]
+}

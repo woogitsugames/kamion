@@ -30,6 +30,8 @@ Real photographs; licences checked via the Commons API. **CC0 / public domain** 
 | File | Licence | Author | Use |
 |---|---|---|---|
 | `20201102_152339_Rondo_Pamięci_Bieżeństwa_1915_roku_Białystok.jpg` | CC0 | Rakoon | **Ground truth for tile C**: Rondo Bieżeństwa under the Andersa viaduct — red-painted deck edge, cylindrical concrete piers, steel railing, roundabout planting (red shrubs), zebra P-10, D-6 sign, lamp types, overcast November light |
+| `20210904_101250_September_2021_in_Białystok.jpg` | CC0 | Rakoon | **Ground truth for the Kwadrat Park hall (ADR 0071)**: south corner seen from the access road — light grey horizontally profiled sheet, dark coping, vermilion-framed strip windows (SE) and louvre panel (SW), tall vermilion portal, roof fans; trade units with an asphalt forecourt. Reference only (crops in `artifacts/kwadrat-r9/refs/`) |
+| `20241222_122132_December_2024_in_Białystok.jpg` | CC0 | Rakoon | Kwadrat Park hall, SW facade from the waste ground to the south-west (long light facade, window band); the yellow office tower next to the gate. Reference only |
 | `7204_May_2021_in_Białystok.jpg` | CC0 | Rakoon | **Ground truth for tile C** (viaduct near DK8/DK19): green deck, yellow-painted round piers, transparent noise screens on the viaduct, sign gantry (E67 Warszawa / 65 Ełk / 8 Augustów / 19 Kuźnica), wet asphalt, arrows P-8 |
 | `Worn_cracked_asphalt_pavement.jpg` | Public domain | John Harvey | asphalt cracks/wear (may be a texture source) |
 | `Асфальт.jpg` | CC BY-SA 4.0 | Eugenix18 | asphalt look reference only |
