@@ -21,6 +21,7 @@ import pbrkit as K  # noqa: E402
 import sets_asphalt as A  # noqa: E402
 import sets_other as O  # noqa: E402
 import sets_facade as F  # noqa: E402
+import sets_fire_station as FS  # noqa: E402
 
 OUT = HERE.parent
 REPO = OUT.parents[2]
@@ -87,6 +88,8 @@ SETS = {
              "smear (elongated, for yards), 2 old faded ring, 3 drip cluster. Cell = floor(seed*4) from "
              "TEXCOORD_1.y; BaseColor.a = opacity; cell borders fade to 0 so mips do not bleed."),
 }
+
+SETS.update(FS.FIRE_STATION_SETS)      # hero fire station atlas (ADR 0070)
 
 LAYERS = {
     "asphalt_cracks_layer": dict(tile_m=[16.0, 16.0], uv="world_xy_planar",
@@ -255,6 +258,10 @@ def main():
         entry["kind"] = "decal_atlas" if s.alpha is not None else "tiling_set"
         entry["albedo_target_mean_lum_linear"] = meta["target"]
         entry.update(info)
+        if name in FS.FIRE_STATION_SETS:    # atlas on external CC0 scans (sets_fire_station)
+            entry["source"] = s.source
+            entry["render_mean_rgb_linear"] = s.concrete_mean
+            FS.write_layout()
         sets[name] = entry
     for name, meta in F.FACADE_SETS.items():
         if only and name not in only:
