@@ -1,0 +1,108 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-industrial-c",
+ "cameras": [
+  {
+   "id": "edge_tys_n0850",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -857,
+    850,
+    200.0
+   ],
+   "look_at": [
+    -857,
+    890,
+    199.5
+   ],
+   "fov_deg": 60,
+   "note": "al. Tysiaclecia PP northbound, 174 m before the north edge (recording 110 s)"
+  },
+  {
+   "id": "edge_tys_n0930",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -857,
+    930,
+    200.0
+   ],
+   "look_at": [
+    -857,
+    970,
+    199.5
+   ],
+   "fov_deg": 60,
+   "note": "34 m before the closure"
+  },
+  {
+   "id": "edge_tys_n1000",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -857,
+    1000,
+    200.0
+   ],
+   "look_at": [
+    -857,
+    1040,
+    199.5
+   ],
+   "fov_deg": 60,
+   "note": "past the closure, 24 m before the edge: the white void of the recording (116 s)"
+  },
+  {
+   "id": "edge_tys_n1022_back",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -857,
+    1060,
+    200.0
+   ],
+   "look_at": [
+    -857,
+    1020,
+    199.5
+   ],
+   "fov_deg": 60,
+   "note": "from outside the region looking back south"
+  },
+  {
+   "id": "edge_tys_above",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -857,
+    880,
+    200.0
+   ],
+   "look_at": [
+    -857,
+    1010,
+    155.0
+   ],
+   "fov_deg": 60,
+   "note": "45 m above the road looking at the closure and the apron"
+  },
+  {
+   "id": "edge_ne_corner_above",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    900,
+    900,
+    200.0
+   ],
+   "look_at": [
+    1100,
+    1100,
+    140.0
+   ],
+   "fov_deg": 60,
+   "note": "north-east corner from above: apron to the horizon"
+  }
+ ]
+}
