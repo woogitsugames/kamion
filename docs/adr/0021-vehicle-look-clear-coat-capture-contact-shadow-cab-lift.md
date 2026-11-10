@@ -49,3 +49,20 @@ Status: Accepted (rendering-perf), 2026-11-09. Review: `docs/reports/visual/REVI
   lowsun 0.344 → 0.372. A dielectric pane cannot reach "≥ 60 % of the sky" (r5) at a 3/4 view: that needs R2 ≈ 0.3
   (≥ 70 deg incidence). What remains is interior radiance seen from outside (cab SH share / fill) and the clipped sky
   (display 1.0), both outside the glass shader. WORKING_VALUE until compared with owner photos.
+
+## Amendment 2026-11-10 (review r5 E-N1: contact shadow too weak on phones)
+- **Bug:** `Kamion/Contact Shadow` ran in `Transparent-50`; `Mobile_Renderer` has transparent receive shadows off, so URP
+  turned the main-light shadow keywords off for that pass, the shadow map was never sampled and the sun under the truck
+  counted as unshadowed (ambient share << 1). Fix: queue `Geometry+499` (end of the opaque pass, same single draw).
+  Editor High lowsun A/B, ground / adjacent asphalt (sRGB display): under bumper 60 → 32 %, under frame 49 → 21 %.
+- **Edit-mode QA ground:** the wheel-plane fallback sat up to ~10 cm off the rendered road (trailer patch hidden under the
+  asphalt). `VisualQaRunner` now cooks the world colliders like the player (`WorldCollisionCooker.Cook`), so the QA frames
+  ray-cast like the phone; the fallback plane uses the lowest tyre renderer points. The vertex shader adds an 8 cm
+  view-ray depth bias (the patch can still sit a few cm under the road mesh).
+- **Enclosure:** occluder grows by `sideClosure` × h on each side (1.0, WORKING_VALUE: wheels, tanks, steps and bumper close
+  the sides of the gap); wheel blob `wheelContactHeight` 0.05 m (was 0.18) and half contact length 0.3 × radius (was 0.45),
+  i.e. a tight dark core at the tyre patch. Renamed fields, so the old serialized values in the prefab are ignored.
+- Editor `truck-34` overcast after the fix (ground / adjacent asphalt, display): Low 34 / 27 / 25 % (bumper / frame / front
+  tyre), Medium 35 / 29 / 28 %, High 35 / 29 / 28 %; under the trailer front 51–57 %. Phone numbers: pending (no device run).
+- Cost: same draw count; +1 hard shadow-map tap (Low: no soft shadows) per patch pixel and a slightly larger patch
+  (margin + h). Phone GPU delta not measured yet (UNVERIFIED, expected well under 0.1 ms on A16 Low).
