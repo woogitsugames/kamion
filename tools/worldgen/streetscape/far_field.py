@@ -321,7 +321,7 @@ def _extract_lod1_heights(zip_path: Path, audit: dict | None = None) -> dict[str
                             bid = (child.text or "").strip()
                         elif tag == "stringAttribute" and child.get("name") == "buildingId":
                             bid = next(((v.text or "").strip() for v in child if local(v.tag) == "value"), "")
-                        elif tag == "measuredHeight" and child.get("uom", "m") in ("m", "#m"):
+                        elif tag == "measuredHeight" and child.get("uom", "m") in ("m", "#m", "meter", "metre"):
                             try:
                                 height = float(child.text or "")
                             except ValueError:

@@ -22,7 +22,7 @@ def city(body):
 
 
 def building(bid, height):
-    return ('<b:Building><b:measuredHeight uom="m">' + height + '</b:measuredHeight>'
+    return ('<b:Building><b:measuredHeight uom="meter">' + height + '</b:measuredHeight>'
             '<g:stringAttribute name="buildingId"><g:value>' + bid +
             '</g:value></g:stringAttribute></b:Building>')
 
@@ -66,5 +66,11 @@ def test_conflicting_duplicate_ids_are_excluded_independently_of_member_order(tm
 
 def test_missing_archive_and_unsupported_height_units(tmp_path):
     assert _extract_lod1_heights(tmp_path / "missing.zip") == {}
-    body = building("feet", "40").replace('uom="m"', 'uom="ft"')
+    body = building("feet", "40").replace('uom="meter"', 'uom="ft"')
     assert _extract_lod1_heights(archive(tmp_path, {"tile.gml": city(body)})) == {}
+
+
+@pytest.mark.parametrize("unit", ["m", "#m", "meter", "metre"])
+def test_supported_meter_units(tmp_path, unit):
+    body = building("valid", "12.5").replace('uom="meter"', f'uom="{unit}"')
+    assert _extract_lod1_heights(archive(tmp_path, {"tile.gml": city(body)})) == {"valid": 12.5}

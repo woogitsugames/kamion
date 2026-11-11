@@ -18,3 +18,6 @@ Przygotowano audyt różnic wysokości, tożsamości obrysów oraz lasów, komin
 Następny krok po build_world: pwsh artifacts/edge-r2/heavy.ps1 -Task AuditHeights, potem pojedynczy test_far_field.py.
 Krok 6: zapisano decyzję r2 w ADR 0121 i kopię obu źródłowych GLB przed regeneracją do odtworzenia bazy. Obejrzano także parę B 381800493259507: zdjęcie pod słońce, więc bez oceny fotometrycznej; to nie dowód zgodności całego horyzontu.
 Następny krok: poczekać na zakończenie bieżącego build_world, bez uruchamiania równoległej generacji lub pełnego GIS.
+Krok 7: kontrola pierwszych 64 KiB rzeczywistego GML ujawniła uom="meter". Początkowa lista jednostek m/#m byłaby zbyt wąska; poprawiono ją o równoważne meter/metre, a fixture odtwarza teraz rzeczywisty zapis. Dodano cztery przypadki jednostek. Wynik 11/11 dotyczył poprzedniego stanu.
+Bieżący build_world już działa pod heavy. Jeśli załadował moduł przed poprawką, po jego zakończeniu wymuszona zostanie ponowna ekstrakcja i FarField, przed jakimkolwiek renderem po zmianie.
+Następny krok: sprawdzić lod1_height_audit.usable_ids, potem ponowić test_lod1 i audyt wysokości pod heavy.
