@@ -134,9 +134,32 @@
       "absolute_u_m": 147.2755,
       "eye_height_m": 1.7,
       "pose_confidence": "C",
-      "pose_reason": "J3: horizon requires vanishing-line calibration",
+      "pose_reason": "J3: horizon now derived from two road edges; fresh render review pending",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "vanishing_lines": [
+        [
+          [
+            0.25,
+            0.7291666666666666
+          ],
+          [
+            0.4078125,
+            0.5444444444444444
+          ]
+        ],
+        [
+          [
+            0.99609375,
+            0.7263888888888889
+          ],
+          [
+            0.4640625,
+            0.5388888888888889
+          ]
+        ]
+      ],
+      "horizon_method": "Two manually marked road edges on rectified 1280x720 photo; road slope and roll remain WORKING_VALUE"
     },
     "sbs-g3-a-1398898753813071": {
       "horizon_y_fraction": 0.7,

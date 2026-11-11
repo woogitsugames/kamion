@@ -58,7 +58,7 @@ def test_committed_set_has_unique_licensed_photos_and_file_seated_poses():
 def test_compose_rejects_missing_and_wrong_aspect(tmp_path,monkeypatch):
     region=tmp_path/'region'; region.mkdir(); renders=tmp_path/'renders'; renders.mkdir()
     Image.new('RGB',(40,30),'gray').save(tmp_path/'photo.png')
-    ref={'camera':'sbs-test','photo':'photo.png','horizon_y_fraction':0.5,'pose_status':'WORKING_VALUE',
+    ref={'pose_confidence':'B','camera':'sbs-test','photo':'photo.png','horizon_y_fraction':0.5,'pose_status':'WORKING_VALUE',
          'width':40,'height':30,'author':'Example','license':'CC BY-SA 4.0','captured_at':'2020','page_url':'https://www.mapillary.com/'}
     sbs.write(region/'sbs_references.json',{'references':[ref]})
     monkeypatch.setattr(sbs,'ROOT',tmp_path);monkeypatch.setattr(sbs,'REGION',region)
@@ -120,3 +120,28 @@ def test_rectification_does_not_fill_missing_pixels(tmp_path):
     assert sbs.rectified_horizon(0.5,80,60,meta,focal)==0.5
     meta['exif_orientation']=6
     with pytest.raises(ValueError,match='unsupported'):sbs.rectify(source,meta,tmp_path/'invalid.png')
+
+
+def test_vanishing_horizon_from_road_edges_and_degenerate_rejection():
+    assert sbs.vanishing_horizon([[[0,1],[0.4,0.6]],[[1,1],[0.6,0.6]]]) == pytest.approx([0.5,0.5])
+    with pytest.raises(ValueError,match='parallel'):
+        sbs.vanishing_horizon([[[0,0],[1,0]],[[0,1],[1,1]]])
+
+
+def test_compose_quarantines_rejected_and_unreviewed_poses(tmp_path,monkeypatch):
+    monkeypatch.setattr(sbs,'REGION',tmp_path)
+    sbs.write(tmp_path/'sbs_references.json',{'references':[
+        {'camera':'bad','pose_confidence':'C','pose_reason':'screen intersection'},
+        {'camera':'unreviewed'}]})
+    sbs.compose(tmp_path/'renders',tmp_path/'out')
+    report=sbs.read(tmp_path/'out/metrics.json')
+    assert not report['pairs'] and not report['missing_renders']
+    assert {r['camera'] for r in report['rejected_poses']}=={'bad','unreviewed'}
+
+
+def test_all_committed_poses_have_explicit_confidence_and_j1_is_quarantined():
+    refs=sbs.read(sbs.REGION/'sbs_references.json')['references']
+    bad={'810896133189484','339463879238809','962702164479831','182011943700132','326454015490067','1406533339711789'}
+    for ref in refs:
+        assert ref['pose_confidence'] in ('A','B','C')
+        if ref['source_id'] in bad: assert ref['pose_confidence']=='C'

@@ -156,6 +156,27 @@ def rectified_horizon(original_fraction,width,height,metadata,target_focal):
     return 0.5+signed*target_focal*max(width,height)/height
 
 
+def vanishing_horizon(lines):
+    """Intersect two authored road-edge lines in normalized rectified photo coordinates.
+
+    This measures a road vanishing point, not a surveyed level horizon on a slope.
+    """
+    if len(lines) != 2:
+        raise ValueError('two vanishing lines required')
+    rays=[]
+    for line in lines:
+        if len(line)!=2 or any(len(p)!=2 or not all(0<=v<=1 for v in p) for p in line):
+            raise ValueError('vanishing lines need two normalized points each')
+        rays.append(np.cross([*line[0],1], [*line[1],1]))
+    point=np.cross(*rays)
+    if abs(point[2]) < 1e-9:
+        raise ValueError('parallel vanishing lines')
+    point=point[:2]/point[2]
+    if not all(0<v<1 for v in point):
+        raise ValueError('vanishing point outside photo')
+    return [round(float(v),7) for v in point]
+
+
 def prepare(count=20, radius=40):
     manifest = ROOT / 'Data/raw/mapillary/bialystok-industrial-c/manifest.jsonl'
     records = [json.loads(line) for line in manifest.read_text(encoding='utf-8').splitlines() if line.strip()]
@@ -222,7 +243,7 @@ def prepare(count=20, radius=40):
                 focal,_,_=rectify(photo,lens,comparison)
             ov = overrides.get(camera_id, {})
             allowed = {'east_delta_m','north_delta_m','eye_height_m','absolute_u_m','heading_delta_deg',
-                       'horizontal_fov_deg','horizon_y_fraction','rectified_horizon_y_fraction','heading_source','pose_status','note','masks','pose_confidence','pose_reason','photometric_use','photometric_reason'}
+                       'horizontal_fov_deg','horizon_y_fraction','rectified_horizon_y_fraction','heading_source','pose_status','note','masks','pose_confidence','pose_reason','photometric_use','photometric_reason','vanishing_lines','horizon_method'}
             if set(ov)-allowed:
                 raise ValueError(f"unknown authored corrections for {camera_id}: {sorted(set(ov)-allowed)}")
             confidence = ov.get('pose_confidence', 'C')
@@ -243,6 +264,8 @@ def prepare(count=20, radius=40):
             horizon = ov.get('horizon_y_fraction', 0.5)
             if lens: horizon=rectified_horizon(horizon,width,height,lens,focal)
             horizon=ov.get('rectified_horizon_y_fraction',horizon)
+            if 'vanishing_lines' in ov:
+                horizon=vanishing_horizon(ov['vanishing_lines'])[1]
             if not (0 < horizon < 1 and eye > 0):
                 raise ValueError(f'invalid authored horizon/eye: {camera_id}')
             pitch = math.degrees(math.atan((2*horizon-1)*math.tan(math.radians(fov)/2)))
