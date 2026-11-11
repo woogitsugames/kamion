@@ -30,12 +30,24 @@ for state in ('Low-overcast','Low-clear','High-overcast','High-clear'):
         p=render_dir/(camera+'.png');assert sha(p)==digest
         with Image.open(p) as im:im.verify()
     metrics=read(sheet_dir/'metrics.json')
+    assert metrics['render_captures']==captures
+    assert metrics['cameras_sha256']==source_hashes['cameras_sha256']
+    for pair in metrics['pairs']:
+        ref=next(r for r in refs if r['camera']==pair['camera'])
+        assert pair['render_sha256']==captured[pair['camera']] and pair['comparison_sha256']==ref['comparison_sha256']
+        assert pair['tier']+'-'+pair['lighting']==state
     assert metrics['provenance_status']=='RECORDED' and not metrics['missing_renders']
     assert {m['camera'] for m in metrics['pairs']}==eligible
     assert {p.stem for p in sheet_dir.glob('*.png')}==eligible
     assert len(metrics['rejected_poses'])==17
     diagnostics=read(EVIDENCE/'diagnostics'/state/'metrics.json')
     assert {m['camera'] for m in diagnostics['pairs']}==ids
+    diagnostic_dir=EVIDENCE/'diagnostics'/state
+    assert {p.stem for p in diagnostic_dir.glob('*.png')}==ids
+    for image_path in diagnostic_dir.glob('*.png'):
+        with Image.open(image_path) as im:
+            assert im.width==960
+            im.verify()
     assert diagnostics['render_captures']==metrics['render_captures']
     assert diagnostics['photometry_sha256']==metrics['photometry_sha256']
     assert all(m['pose_confidence']==next(r['pose_confidence'] for r in refs if r['camera']==m['camera']) for m in diagnostics['pairs'])

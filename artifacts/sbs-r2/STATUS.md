@@ -58,3 +58,6 @@ Przygotowano proces oczekujący na zakończenie własnego procesu World (PID 684
 
 ## Audyt końcowy R2 — przygotowanie
 Przygotowano osobny audyt r2, bez nadpisywania wejść zapisanych przez serię. Sprawdzi wszystkie 168 surowych renderów, 100 A/B, pełną diagnostykę, migawkę ZIP, SHA adnotacji i 64 GLB. Eksportuje 168 liczników z oddzielnymi draws geometrii i instancji oraz porównaniem do r1. Ocenę D51 r1 odróżnia od nieocenionych nowych klatek. Kontrola składni przechodzi; właściwy audyt dopiero po renderach, przez heavy.
+
+## Kontrola powiązania metryk z renderem
+Audyt r2 dodatkowo wymaga dokładnej zgodności capture w metrykach i katalogu raw, identycznego SHA zdjęcia i renderu dla każdej pary oraz poprawnego tieru/światła. Kontroluje także obecność i poprawność wszystkich 168 diagnostycznych PNG. Te warunki zapobiegają uznaniu starej kompozycji przy nowym renderze.
