@@ -81,8 +81,8 @@ Rozpoznanie na stanie main (`artifacts/buildings-r11/base/`):
   (+5,2 %), `r10_fence_1` 306 → 317 (+3,6 %), `putry-above` 291 → 301 (+3,4 %), `r10_block_3` 375 → 387 (+3,2 %);
   pozostałe ≤ +3,0 %. Kamery celu: `r10_block_2` 372 → 383 draws / 361 → 365 tys., `r10_block_5` 375 → 386 / 391 → 394,
   `r10_house_1` 141 → 144 / 170 → 171, `r10_house_2` 142 → 144 / 178 → 179.
-- Testy: `pytest tests/gis` 252 passed, 3 failed, 2 xfailed (stan po r1; po r3 uruchomiony tylko `test_world_v31.py`,
-  20 passed) — te same 3 co na main wg `HANDOVER.md` (`test_road_fidelity::test_report_not_stale`,
+- Testy: `pytest tests/gis` 252 passed, 3 failed, 2 xfailed (stan po r3)
+  — te same 3 co na main wg `HANDOVER.md` (`test_road_fidelity::test_report_not_stale`,
   `test_route_corridor` × 2 przy s ≈ 1432–1480). EditMode: 191, 188 passed, 3 failed —
   `TruckDoorGlassTests` × 3 tiery („MI_Ext_DoorGlassL … null”), materiał ciężarówki; nie uruchamiałem EditMode na
   main, więc „odziedziczone” jest UNVERIFIED.
