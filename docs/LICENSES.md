@@ -232,6 +232,4 @@ path. Existing tree leaves remain. Missing licensed files preserve procedural/CC
 fallback; no licensed download is attempted by the public-clone build.
 
 ## ADR 0103 — fotografie w arkuszach side-by-side G3
-Każde z 40 zdjęć Mapillary (CC BY-SA 4.0, tylko referencje, bez pikseli w grze) ma osobny wpis z autorem, datą, URL i SHA256 w [rejestrze SBS](refs/sbs-gate3-attribution.md). Dane maszynowe: `Data/Regions/bialystok-industrial-c/sbs_references.json`. Modyfikacje panelu zdjęcia: zmniejszenie, siatka i linia horyzontu; panel fotograficzny na CC BY-SA 4.0. Panel renderu zachowuje warunki projektu. Obrazy poza gitem i buildem.
-
-SBS 0103: po uzupełnieniu metadanych obiektywów panele fotograficzne są także prostowane i kadrowane do wspólnej projekcji perspektywicznej; pochodne w artifacts/sbs-gate3/rectified pozostają referencjami CC BY-SA 4.0 poza gitem/buildem.
+Każde z 40 zdjęć Mapillary (CC BY-SA 4.0, tylko referencje, bez pikseli w grze) ma osobny wpis z autorem, datą, URL i SHA256 w [rejestrze SBS](refs/sbs-gate3-attribution.md). Dane maszynowe: `Data/Regions/bialystok-industrial-c/sbs_references.json`, publiczne parametry obiektywów: `sbs_intrinsics.json`. Modyfikacje panelu zdjęcia: prostowanie radialne według modelu obiektywu, kadrowanie, zmniejszenie, siatka i linia horyzontu. Panel fotograficzny i jego modyfikacje na CC BY-SA 4.0; panel renderu zachowuje warunki projektu. Oryginały i pochodne (`artifacts/sbs-gate3/rectified`) poza gitem i buildem.

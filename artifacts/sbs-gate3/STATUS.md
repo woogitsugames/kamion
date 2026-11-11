@@ -37,3 +37,6 @@ NEXT: pwsh artifacts/sbs-gate3/rerender-r2.ps1
 
 Step 13: R2 complete, all 160 PNGs loaded/hashed and metrics consistent; stats Low regular drawsEst 188–486 / trisK 155–556 (CPU estimates, no world changes). Full contact review found 3 more sunset deck photos with NMT-level cameras, plus one wrong SfM heading; R3 authoring raises them to existing deck + eye and selects original compass for 1406533339711789. Exact pose diff limited to these 3; default metrics now include separate sky/asphalt area AND brightness ratios. PNG/JSON writes atomic to avoid reading partial outputs. Focused tests 10/10.
 NEXT: pwsh artifacts/sbs-gate3/rerender-r3.ps1
+
+Step 14: final R3 complete, all 160 frames/sheets decode and source/comparison/render/camera hashes match; 40 distinct original hashes. Final authored coverage and complete per-state stats in SUMMARY.json; 27 poses changed from r0. Updated ADR/licenses/references and honest self-review (gate NOT accepted). Full GIS final sweep running; no Unity remains for this worktree, settings restored.
+NEXT: Get-Content artifacts/sbs-gate3/pytest-final.log -Tail 10
