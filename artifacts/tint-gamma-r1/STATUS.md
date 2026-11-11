@@ -18,3 +18,7 @@
 - Krok8: GIS358pass/2xfail, canonical truck od?wie?ony po dopasowanej macierzy, EditMode226/226pass. Reviewroot wykry? plandeki dok3 rozja?nione53/55/54?110/112/109. Kalibracja wszystkich6PVC+box_white do poprzedniej efektywnej warto?ci GPU, explicit WORKING_VALUE wgADR0092/s9; roughness bez zmian. NAST?PNY KROK: build_world ? import ? after-final236PNG; rozdzieli? statystyki kanonicznego pojazdu od zmian ?wiata.
 
 - Krok9: nowy world306.7s, importSHA0; pami??111.4MBLow/239.8MBHigh bez zmiany. Trwa after-final59?4 po canonicalfixture; wcze?niejsza dopasowana macierz kosztu nadal osobna. NAST?PNY KROK: odczytROI curtain_dock3, finalne strony960 i rootreview; finalGIS w toku.
+
+- Krok10: after-final236PNG +compare-final40stron gotowe; root powiadomiony. Dok3 wraca do53/55/54Highov i87/90/87Highclear (dok?adnie baseline), Low44/46/45 i80/82/79. Audyt wycinka hali wykry? dach naczepy w dawnymROI; ko?cowy g?rna elewacja210,83?240,94, tabela wszystkichrund przeliczona. Statystyki finalLow identyczne; High tylko pojazdowe r??nice?1..+7ktris, draws bez zmian; dow?d izolowany pozostaje wcze?niejszy. NAST?PNY KROK: finalGIS+EditMode po finalnymimporcie, rootreview, REPORT/cleanup/commit/kopiaartefakt?w.
+
+- Krok11: finalGIS359pass/2xfail553s, EditMode226/226pass po finalnymimporcie. Odwr?cono tylko w?asne uboczne ustawieniaUnity. Raport16wierszy, ADR i pe?na tabela ko?cowa gotowe. NAST?PNY KROK: gitdiffaudit/commit, robocopyartifacts /E /XJ do main, rootniezale?nyreview ko?cowy i reportSHA.

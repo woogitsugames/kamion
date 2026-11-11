@@ -1,0 +1,172 @@
+[
+  {
+    "condition": "Low-overcast",
+    "rows_before": 119,
+    "rows_after": 119,
+    "stats_byte_identical": true,
+    "changed_rows": [],
+    "fixture_note": "after-final canonical Truck/Trailer refreshed; this diagnostic is not isolated material-cost evidence. Matched before/after-calibrated cost proof remains final-budget-proof.json."
+  },
+  {
+    "condition": "Low-clear",
+    "rows_before": 119,
+    "rows_after": 119,
+    "stats_byte_identical": true,
+    "changed_rows": [],
+    "fixture_note": "after-final canonical Truck/Trailer refreshed; this diagnostic is not isolated material-cost evidence. Matched before/after-calibrated cost proof remains final-budget-proof.json."
+  },
+  {
+    "condition": "High-overcast",
+    "rows_before": 119,
+    "rows_after": 119,
+    "stats_byte_identical": false,
+    "changed_rows": [
+      {
+        "before": "cab-dash: objects=117 drawsEst=781 shadowDrawsEst=480 trisK=1326 (estimate, before SRP batching)",
+        "after": "cab-dash: objects=117 drawsEst=781 shadowDrawsEst=480 trisK=1333 (estimate, before SRP batching)"
+      },
+      {
+        "before": "cab-driver: objects=113 drawsEst=742 shadowDrawsEst=480 trisK=1315 (estimate, before SRP batching)",
+        "after": "cab-driver: objects=113 drawsEst=742 shadowDrawsEst=480 trisK=1316 (estimate, before SRP batching)"
+      },
+      {
+        "before": "cab-gate: objects=108 drawsEst=700 shadowDrawsEst=480 trisK=1304 (estimate, before SRP batching)",
+        "after": "cab-gate: objects=108 drawsEst=700 shadowDrawsEst=480 trisK=1305 (estimate, before SRP batching)"
+      },
+      {
+        "before": "cab-left: objects=49 drawsEst=286 shadowDrawsEst=480 trisK=739 (estimate, before SRP batching)",
+        "after": "cab-left: objects=49 drawsEst=286 shadowDrawsEst=480 trisK=740 (estimate, before SRP batching)"
+      },
+      {
+        "before": "cab-mirror-front: objects=128 drawsEst=974 shadowDrawsEst=480 trisK=2422 (estimate, before SRP batching)",
+        "after": "cab-mirror-front: objects=128 drawsEst=974 shadowDrawsEst=480 trisK=2424 (estimate, before SRP batching)"
+      },
+      {
+        "before": "cab-mirrors-left: objects=39 drawsEst=237 shadowDrawsEst=480 trisK=739 (estimate, before SRP batching)",
+        "after": "cab-mirrors-left: objects=39 drawsEst=237 shadowDrawsEst=480 trisK=740 (estimate, before SRP batching)"
+      },
+      {
+        "before": "cab-mirrors-right: objects=125 drawsEst=850 shadowDrawsEst=480 trisK=2280 (estimate, before SRP batching)",
+        "after": "cab-mirrors-right: objects=125 drawsEst=850 shadowDrawsEst=480 trisK=2281 (estimate, before SRP batching)"
+      },
+      {
+        "before": "cab-right: objects=150 drawsEst=1047 shadowDrawsEst=480 trisK=1696 (estimate, before SRP batching)",
+        "after": "cab-right: objects=150 drawsEst=1047 shadowDrawsEst=480 trisK=1698 (estimate, before SRP batching)"
+      },
+      {
+        "before": "chase: objects=137 drawsEst=701 shadowDrawsEst=474 trisK=1362 (estimate, before SRP batching)",
+        "after": "chase: objects=137 drawsEst=701 shadowDrawsEst=474 trisK=1361 (estimate, before SRP batching)"
+      },
+      {
+        "before": "trailer-34: objects=176 drawsEst=1007 shadowDrawsEst=480 trisK=2117 (estimate, before SRP batching)",
+        "after": "trailer-34: objects=176 drawsEst=1007 shadowDrawsEst=480 trisK=2118 (estimate, before SRP batching)"
+      },
+      {
+        "before": "trailer-side: objects=131 drawsEst=732 shadowDrawsEst=480 trisK=1402 (estimate, before SRP batching)",
+        "after": "trailer-side: objects=131 drawsEst=732 shadowDrawsEst=480 trisK=1404 (estimate, before SRP batching)"
+      },
+      {
+        "before": "truck-34: objects=107 drawsEst=331 shadowDrawsEst=480 trisK=1164 (estimate, before SRP batching)",
+        "after": "truck-34: objects=107 drawsEst=331 shadowDrawsEst=480 trisK=1165 (estimate, before SRP batching)"
+      },
+      {
+        "before": "truck-34r: objects=66 drawsEst=159 shadowDrawsEst=480 trisK=510 (estimate, before SRP batching)",
+        "after": "truck-34r: objects=66 drawsEst=159 shadowDrawsEst=480 trisK=511 (estimate, before SRP batching)"
+      },
+      {
+        "before": "truck-at-gate: objects=69 drawsEst=162 shadowDrawsEst=480 trisK=577 (estimate, before SRP batching)",
+        "after": "truck-at-gate: objects=69 drawsEst=162 shadowDrawsEst=480 trisK=578 (estimate, before SRP batching)"
+      },
+      {
+        "before": "truck-front: objects=70 drawsEst=199 shadowDrawsEst=480 trisK=599 (estimate, before SRP batching)",
+        "after": "truck-front: objects=70 drawsEst=199 shadowDrawsEst=480 trisK=601 (estimate, before SRP batching)"
+      },
+      {
+        "before": "truck-rear34: objects=165 drawsEst=1011 shadowDrawsEst=480 trisK=1994 (estimate, before SRP batching)",
+        "after": "truck-rear34: objects=165 drawsEst=1011 shadowDrawsEst=480 trisK=1998 (estimate, before SRP batching)"
+      },
+      {
+        "before": "truck-side: objects=149 drawsEst=770 shadowDrawsEst=480 trisK=1764 (estimate, before SRP batching)",
+        "after": "truck-side: objects=149 drawsEst=770 shadowDrawsEst=480 trisK=1768 (estimate, before SRP batching)"
+      }
+    ],
+    "fixture_note": "after-final canonical Truck/Trailer refreshed; this diagnostic is not isolated material-cost evidence. Matched before/after-calibrated cost proof remains final-budget-proof.json."
+  },
+  {
+    "condition": "High-clear",
+    "rows_before": 119,
+    "rows_after": 119,
+    "stats_byte_identical": false,
+    "changed_rows": [
+      {
+        "before": "cab-dash: objects=117 drawsEst=781 shadowDrawsEst=480 trisK=1326 (estimate, before SRP batching)",
+        "after": "cab-dash: objects=117 drawsEst=781 shadowDrawsEst=480 trisK=1333 (estimate, before SRP batching)"
+      },
+      {
+        "before": "cab-driver: objects=113 drawsEst=742 shadowDrawsEst=480 trisK=1315 (estimate, before SRP batching)",
+        "after": "cab-driver: objects=113 drawsEst=742 shadowDrawsEst=480 trisK=1316 (estimate, before SRP batching)"
+      },
+      {
+        "before": "cab-gate: objects=108 drawsEst=700 shadowDrawsEst=480 trisK=1304 (estimate, before SRP batching)",
+        "after": "cab-gate: objects=108 drawsEst=700 shadowDrawsEst=480 trisK=1305 (estimate, before SRP batching)"
+      },
+      {
+        "before": "cab-left: objects=49 drawsEst=286 shadowDrawsEst=480 trisK=739 (estimate, before SRP batching)",
+        "after": "cab-left: objects=49 drawsEst=286 shadowDrawsEst=480 trisK=740 (estimate, before SRP batching)"
+      },
+      {
+        "before": "cab-mirror-front: objects=128 drawsEst=974 shadowDrawsEst=480 trisK=2422 (estimate, before SRP batching)",
+        "after": "cab-mirror-front: objects=128 drawsEst=974 shadowDrawsEst=480 trisK=2424 (estimate, before SRP batching)"
+      },
+      {
+        "before": "cab-mirrors-left: objects=39 drawsEst=237 shadowDrawsEst=480 trisK=739 (estimate, before SRP batching)",
+        "after": "cab-mirrors-left: objects=39 drawsEst=237 shadowDrawsEst=480 trisK=740 (estimate, before SRP batching)"
+      },
+      {
+        "before": "cab-mirrors-right: objects=125 drawsEst=850 shadowDrawsEst=480 trisK=2280 (estimate, before SRP batching)",
+        "after": "cab-mirrors-right: objects=125 drawsEst=850 shadowDrawsEst=480 trisK=2281 (estimate, before SRP batching)"
+      },
+      {
+        "before": "cab-right: objects=150 drawsEst=1047 shadowDrawsEst=480 trisK=1696 (estimate, before SRP batching)",
+        "after": "cab-right: objects=150 drawsEst=1047 shadowDrawsEst=480 trisK=1698 (estimate, before SRP batching)"
+      },
+      {
+        "before": "chase: objects=137 drawsEst=701 shadowDrawsEst=474 trisK=1362 (estimate, before SRP batching)",
+        "after": "chase: objects=137 drawsEst=701 shadowDrawsEst=474 trisK=1361 (estimate, before SRP batching)"
+      },
+      {
+        "before": "trailer-34: objects=176 drawsEst=1007 shadowDrawsEst=480 trisK=2117 (estimate, before SRP batching)",
+        "after": "trailer-34: objects=176 drawsEst=1007 shadowDrawsEst=480 trisK=2118 (estimate, before SRP batching)"
+      },
+      {
+        "before": "trailer-side: objects=131 drawsEst=732 shadowDrawsEst=480 trisK=1402 (estimate, before SRP batching)",
+        "after": "trailer-side: objects=131 drawsEst=732 shadowDrawsEst=480 trisK=1404 (estimate, before SRP batching)"
+      },
+      {
+        "before": "truck-34: objects=107 drawsEst=331 shadowDrawsEst=480 trisK=1164 (estimate, before SRP batching)",
+        "after": "truck-34: objects=107 drawsEst=331 shadowDrawsEst=480 trisK=1165 (estimate, before SRP batching)"
+      },
+      {
+        "before": "truck-34r: objects=66 drawsEst=159 shadowDrawsEst=480 trisK=510 (estimate, before SRP batching)",
+        "after": "truck-34r: objects=66 drawsEst=159 shadowDrawsEst=480 trisK=511 (estimate, before SRP batching)"
+      },
+      {
+        "before": "truck-at-gate: objects=69 drawsEst=162 shadowDrawsEst=480 trisK=577 (estimate, before SRP batching)",
+        "after": "truck-at-gate: objects=69 drawsEst=162 shadowDrawsEst=480 trisK=578 (estimate, before SRP batching)"
+      },
+      {
+        "before": "truck-front: objects=70 drawsEst=199 shadowDrawsEst=480 trisK=599 (estimate, before SRP batching)",
+        "after": "truck-front: objects=70 drawsEst=199 shadowDrawsEst=480 trisK=601 (estimate, before SRP batching)"
+      },
+      {
+        "before": "truck-rear34: objects=165 drawsEst=1011 shadowDrawsEst=480 trisK=1994 (estimate, before SRP batching)",
+        "after": "truck-rear34: objects=165 drawsEst=1011 shadowDrawsEst=480 trisK=1998 (estimate, before SRP batching)"
+      },
+      {
+        "before": "truck-side: objects=149 drawsEst=770 shadowDrawsEst=480 trisK=1764 (estimate, before SRP batching)",
+        "after": "truck-side: objects=149 drawsEst=770 shadowDrawsEst=480 trisK=1768 (estimate, before SRP batching)"
+      }
+    ],
+    "fixture_note": "after-final canonical Truck/Trailer refreshed; this diagnostic is not isolated material-cost evidence. Matched before/after-calibrated cost proof remains final-budget-proof.json."
+  }
+]

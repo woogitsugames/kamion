@@ -11,7 +11,7 @@ ROIS=[
  ('pavers','kwadrat-park-gate',(760,350,850,405)),
  ('fire_plaster','fire-station-ref7197',(445,201,478,228)),
  ('curtain_dock3','stretch-05-docks',(280,185,305,215)),
- ('hall_panel','stretch-05-docks',(220,153,245,165)),
+ ('hall_panel','stretch-05-docks',(210,83,240,94)),
  ('screen_cassette','route-putry-entry-signs',(830,165,915,205)),
  ('bridge_soffit','photo-biezenstwa-ground',(440,225,520,235)),
  ('sky_control','driver-andersa-to-putry',(560,25,720,90)),
