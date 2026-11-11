@@ -2,6 +2,7 @@
 
 ## Najpierw (dla następnej sesji)
 - **Tempo (właściciel, s10):** dalej max 3 agentów naraz. Limit tygodniowy Fable zresetował się (0 % o 10:05, reset 15.11); 5 h reset 15:00 lokalnie.
+- **A16 gate3 Low (11:25, APK 43bc53a769-dirty → valid=False tylko z powodu „dirty”; liczby orientacyjne):** G3-A 29,7 fps p95 33,5 / p99 50,0 ms (budżet p99 40 — OVER), GPU p50/p95 30,7/32,9 ms, CPU 22,5/29,0 ms, PSS 826 MB; G3-B 29,8 fps p95 33,5 / p99 49,9, GPU 30,0/34,5, CPU 21,6/28,7, PSS 829 MB; termika 0; kamery 57/57 + 46/46 (`artifacts/gate3/20261111-104851`, `…-112456`). GPU bez zapasu → potrzebna runda wydajności Low przed bramką; ważny pomiar = czysty APK po scaleniach. Naprawiono `build-android.ps1 -Apk` (901c427f).
 - Trigger 11:21: limit 5 h 20 %, tydzień 4 %. Claude: 0097/0100/0101 w toku (WIP). GPT: C 0098 REPORT „zakończone” (czeka na B wg kolejności), B 0088 REPORT bez EditMode (czeka na zwolnienie PHONE_RUN), nowe sesje S10-B (edge-r2, furniture-r1, sbs-gate3, cab-r1, viaduct-r1) wystartowały. A16 gate3 G3-A Low: 29,7 fps, p95 33,5 / p99 50 ms (OVER), GPU p50 30,7 ms, CPU 22,5 ms, PSS 826 MB — budżet GPU na granicy; G3-B w toku.
 - Trigger 10:21: limit 5 h 8 %, tydzień 2 %; 3 agentów w toku, GPT B/C bez REPORT; regeneracja 0086 ZIELONA (gis 370/0), zacommitowana.
 - Trigger godzinny w sesji (CronCreate, :17) — ginie z sesją.
