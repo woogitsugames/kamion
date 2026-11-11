@@ -1,0 +1,460 @@
+{
+  "scope": "High14 paired source PNGs +ten native1:1 crop boards; projected ROI identity checked visually, not GPU object ID",
+  "frames": 14,
+  "rows": [
+    {
+      "condition": "High-clear",
+      "camera": "r10_front_04",
+      "before_sha256": "3e3f236b48ecaee38755ebb45f8ac6480d5b94aebd92635c91a1c2eb9fcd21c8",
+      "after_sha256": "ec3e7bae379310ba5a2f0178a3190ba31540d9546855dd29f7bf86e0c57f435c",
+      "before_root": "C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-focus-r1/High-clear",
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "nonplate_mae": 0.4205840566222428
+    },
+    {
+      "condition": "High-clear",
+      "camera": "r10_rear_04",
+      "before_sha256": "bba5c84cb6d2fe079cd062d5bac079a5d97dbf90ce7c528110b578273500105a",
+      "after_sha256": "0d92300d48e94f45fef63080d7b51725fc8cb11fd0ac2d90aee67e1b2378b1c7",
+      "before_root": "C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-focus-r1/High-clear",
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "nonplate_mae": 0.4567091055483462
+    },
+    {
+      "condition": "High-clear",
+      "camera": "g_dirt_level_0",
+      "before_sha256": "a18168b6f80296e57686bd7805e8d8ec4d32dd1d062386c477661c031dd9a9eb",
+      "after_sha256": "df12ac2523ff69a4f196268bea1978e65e20a34f476b7a124275b7f40b6d7ff3",
+      "before_root": "C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-focus-r1/High-clear",
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "nonplate_mae": 0.4526819821253186
+    },
+    {
+      "condition": "High-clear",
+      "camera": "g_dirt_level_1",
+      "before_sha256": "48fb56b6a3650db04650d44b60c9cc399015207686466f785016624f9235fdc0",
+      "after_sha256": "b987513b5b3e796cafa1fd15e85ad230ffa99b517211c561201856c5272e7268",
+      "before_root": "C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-focus-r1/High-clear",
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "nonplate_mae": 0.4344955263047734
+    },
+    {
+      "condition": "High-clear",
+      "camera": "g_dirt_level_2",
+      "before_sha256": "ce94b6d191d58f7ec2e703925d895f36b3c9aba0b1de95c313d643572233fbef",
+      "after_sha256": "c74a8cde4dcdbb6a47383276233780ee5382611d88b37dbdf8348f6a6fd4d7b2",
+      "before_root": "C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-focus-r1/High-clear",
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "nonplate_mae": 0.450109444945111
+    },
+    {
+      "condition": "High-clear",
+      "camera": "g_dirt_level_3",
+      "before_sha256": "5707918ce4f1665997d24f16619ed6fc1dbc97edfc6f7220fe019974137120b9",
+      "after_sha256": "9102ae6c21ca548298b75b45aecfdfb073c3c97804dff7e372cead3af88f0cc0",
+      "before_root": "C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-focus-r1/High-clear",
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "nonplate_mae": 0.4429721958425662
+    },
+    {
+      "condition": "High-clear",
+      "camera": "r4_rear_target_3",
+      "before_sha256": "62b91d386846dbf98f821e6601c0fdbd30c88e8c3631c3ba885845d44e8d8e8c",
+      "after_sha256": "25647245d1a6d96cea621ff7558c1cde2e640517ad3d3d3f93243e536dacf592",
+      "before_root": "C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-rear-controls-v2/High-clear/level3",
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "nonplate_mae": 0.4533591145842641
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "r10_front_04",
+      "before_sha256": "4f8b38dd00f6d3c3b7b3cfda74aeefd6e85d501fedb4eab6158134b5cebebeb8",
+      "after_sha256": "465f6df219fbcc1771307f37a9a3232b1cebdc7cf8b3bbda8e70c7b1ae40549d",
+      "before_root": "C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-focus-r1/High-overcast",
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "nonplate_mae": 0.4122027534915363
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "r10_rear_04",
+      "before_sha256": "34491fed5fde7dd59929040034258a76ae7d093a2a6148f2f8cc242d3a3ca589",
+      "after_sha256": "e0fc3d80a4c11e8939d2600e185233a950ee10cb1bc1bb1347228ed182427fd1",
+      "before_root": "C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-focus-r1/High-overcast",
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "nonplate_mae": 0.45651527612883325
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "g_dirt_level_0",
+      "before_sha256": "1d98d66c754750c67f1fa0d5337b246dfb6521c826a5407d2b43c9384fbe5f28",
+      "after_sha256": "fdc098e17d02694b609cb17d3150e30b38b9214c9e01d3fa0ee81c37c9a60b8a",
+      "before_root": "C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-focus-r1/High-overcast",
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "nonplate_mae": 0.4515154930769553
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "g_dirt_level_1",
+      "before_sha256": "3ceb03d4994fa2b09636c4fb3b4ff49a0e440cc02b744f7680fdf555e3a62639",
+      "after_sha256": "cd84fe9de38b09d310420384b77aba88eee9dd196ee9e40ec10bcc6ae8ecabe0",
+      "before_root": "C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-focus-r1/High-overcast",
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "nonplate_mae": 0.42598424592731743
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "g_dirt_level_2",
+      "before_sha256": "58d744514a519b25bd592e17c4360b31588fb232cbe72b12a374af73ca41783b",
+      "after_sha256": "fd4410cd00feca3acfbce414a986eb68429ef3ed71fb7e0b3885092af15ea912",
+      "before_root": "C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-focus-r1/High-overcast",
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "nonplate_mae": 0.4361952012090725
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "g_dirt_level_3",
+      "before_sha256": "38b9cb5a9a32c80e1d294fa6042c5b4c08dc530d9a6d3fba93856d5d035ddb61",
+      "after_sha256": "52d92e7a54f00e88707828f88ed81a41e5939810219e4090e6f530daf7e07603",
+      "before_root": "C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-focus-r1/High-overcast",
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "nonplate_mae": 0.4957212197952939
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "r4_rear_target_3",
+      "before_sha256": "ce7d44c9f50fe67a4725134e455a26836a25f097e25720a3ed47e3a9b61eb781",
+      "after_sha256": "1240024ff55c1f1656ba710b9862287edab9b67e86571cc3746369021ee8f205",
+      "before_root": "C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-rear-controls-v2/High-overcast/level3",
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "nonplate_mae": 0.44600174178321905
+    }
+  ],
+  "source_validation_sha256": "703fbf6d58e630f0c07e82421bdd6d6f5e0601cf0c052dacc5d387fcc8e9dd6b",
+  "known_pass_state": "captured motionVectors true; not final shipping proof; ROOT/G separate replay pending",
+  "viewed_preview_sha256": {
+    "High-clear-g_dirt_level_0-native.png": "8025dca62edce2c8f2991cab0296ebf30e266ec11be465c1d5dd6b1a7293e425",
+    "High-clear-g_dirt_level_1-native.png": "7bb8e9d1620adf0fe06be4391f36e7b84fc27bbeca681155a6f67658edda123a",
+    "High-clear-g_dirt_level_2-native.png": "f48626335df3a9aefaa6951013ff91884226ad41610313bfa9b1023724318319",
+    "High-clear-pairs01.jpg": "06eb0296fefeae9335fcb0708672610bbeb72ca0d3dd885fbf28e55dc651b21c",
+    "High-clear-pairs02.jpg": "edfdad4bc56ac037de9169699a5eaa740894021b24d09479cb539c2923f23500",
+    "High-clear-pairs03.jpg": "47546d435f5488bc54a10c75dd3b8d81264df210f8fc05f4aed941b5c975dabd",
+    "High-clear-r10_rear_04-native.png": "8221781d33783a899887fdf6c63b2e502ae2c37682b68c57e752754b19e09f27",
+    "High-clear-r4_rear_target_3-native.png": "0a5a48708eeee7a95cc3f0d507fb68064d1cf66072c470e068440f1bd4d1bab4",
+    "High-overcast-g_dirt_level_0-native.png": "aa572eef157ee4387ce40ce44f967a31c06f5a87efb7f6b9617408fec43a318a",
+    "High-overcast-g_dirt_level_1-native.png": "3a5d437edaa49d6efc0385e38fbac38027ec3115b3584f9b89e913d609ddbf11",
+    "High-overcast-g_dirt_level_2-native.png": "5d922c3c55fecad93fdbc2022165efc9c48b8e7fb8fabbe41ecc7b732b57c6a6",
+    "High-overcast-pairs01.jpg": "57ab0b261a82eea416b7d83091b6b7e4072176d5b103570232defb35e5e6abdb",
+    "High-overcast-pairs02.jpg": "2db45ac24ed58fe452367cccfbf23543d01802964aef0feb90f3769e7b14cf32",
+    "High-overcast-pairs03.jpg": "9e05e214185d07fa3c5392ef3a6857f377c1eae4f7e7121619c4eef3e2816ffe",
+    "High-overcast-r10_rear_04-native.png": "3a2408d2cda8874ad7b4a89bf92037524add2a6df3e179c0df09b3a29a90c92f",
+    "High-overcast-r4_rear_target_3-native.png": "1eff5208eda81fccea1c6a7516fed510bf45fc21525c51bd81fcba1514fbaa00"
+  }
+}

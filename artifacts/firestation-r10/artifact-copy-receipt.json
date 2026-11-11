@@ -3,7 +3,7 @@
   "mode": "robocopy /E /XJ /R:1 /W:1; no MIR",
   "selected_sha256": {
     "REPORT.md": "3712e1997179a96c82d6e49bdf03cff67ef8a864d6170ccdb05a2e477adc3f07",
-    "STATUS.md": "511a55e63cb41876024e602fa26210e12e3e0a825eb46f403f909b8d9d984b00",
+    "STATUS.md": "8aea25a87897cca801bbc70519f6cd860de5459a35efd86f6d666241886d88b8",
     "REVIEW.md": "0da78a8c72f09bd33e5dd132d4f67df7e3ccc0a156d9239b96adfe8f945d1cc2",
     "SELF-REVIEW.md": "70ec35b251f58e32fcb7fc8fb57aa3e3a342fbbc7e2132474cb155bd9018fbd1",
     "editmode-final.xml": "d616a08cb84e178ba26ce93921d1310c1ebf93305f0e8ab4f1a393195b12a6c0",
@@ -39,7 +39,9 @@
     "G-PLATE-DRAFT-REVIEW.md": "ff4b95fc7bc97a57c78b2f78cbf3e0cacb1631da4f71d9ca7747d564fdeac388",
     "G-PLATE-DRAFT-REVIEW-pins.json": "ea36bf728805eef208077e241b78c26ba8acaf9f205156b4d3118e00ec49d750",
     "G-PLATE-GPU-AUDIT.md": "b637d9c52c4ea867365e0294e0ba887bc61c8245ed21c2fd35749a329f59a9dd",
-    "G-PLATE-GPU-AUDIT-pins.json": "5fa1a0894ce6398ace44e4d7a69c0789c46ec51038412ad174e7175465b4c5bd"
+    "G-PLATE-GPU-AUDIT-pins.json": "5fa1a0894ce6398ace44e4d7a69c0789c46ec51038412ad174e7175465b4c5bd",
+    "G-PLATE-HIGH-REVIEW.md": "993378a4084bd1e17792a6429765220866729b6b3468c856ad0601798ea5a16f",
+    "G-plate-high-independent/inputs-and-bindings.json": "954a4173afdab8bb9ce5b9bbcfe118c07aa00f2df68033390d3c9ed55f9a49a7"
   },
   "png_inventory": {
     "before": 160,
@@ -56,5 +58,5 @@
       "not_overwritten": true
     }
   },
-  "doc_extension": "Step66: plate vertex GPU harness/proof independent audit; source/native afterhash independently read; no Unity."
+  "doc_extension": "Step67: High14 P2 visual review;16 paired/native previews; captured MotionVectors true is explicitly not shipping-pass proof."
 }
