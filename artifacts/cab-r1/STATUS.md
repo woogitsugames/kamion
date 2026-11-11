@@ -17,3 +17,4 @@ Dodano test geometrii: koniec mocowania przesuwa się zgodnie z danymi, punkt pr
 Przygotowano odtwarzalną macierz capture-0112.ps1: Low/High × clear/overcast, każdy proces z osobnym acquire/release; kolejne oczekiwania sprawdzają slot co 5 s. Następny krok: pwsh artifacts/cab-r1/capture-0112.ps1 -Stage baseline.
 Pierwszy wrapper audytu po uzyskaniu slotu nie uruchomił Unity: polityka powłoki blokowała dot-source env.ps1. Slot zwolniono w finally. Poprawiona komenda: pwsh -NoProfile -ExecutionPolicy Bypass -File artifacts/cab-r1/capture-0112.ps1 -Stage baseline (polityka tylko procesu, bez zmiany konfiguracji maszyny).
 Próg identyfikatora wnętrza uwzględnia tłumienie przez szybę: wykrywa przewagę kanałów R/B nad G, a nie wyłącznie pełną jasność magenta. Następny krok: obejrzeć zapisane maski i odnieść liczby do zwykłego RT.
+Zapisano baseline Low clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
