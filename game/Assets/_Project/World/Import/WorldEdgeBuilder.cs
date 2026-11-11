@@ -191,6 +191,10 @@ namespace Game.World.Import
 
             int totalTris = 0;
             long totalBytes = 0;
+            // Stable hierarchy contract used by recovery/integration checks (ADR 0085).
+            // Identity parent: no renderer, collider, material or world-space geometry change.
+            var farRoot = new GameObject("WorldFarField").transform;
+            farRoot.SetParent(edge, false);
             foreach (var secName in k_FarSectors)
             {
                 var nd = g.Find(secName);
@@ -208,7 +212,7 @@ namespace Game.World.Import
                 totalBytes += WorldMeshBake.GpuBytes(sm);
 
                 var sgo = new GameObject($"FarField_{secName}");
-                sgo.transform.SetParent(edge, false);
+                sgo.transform.SetParent(farRoot, false);
                 sgo.AddComponent<MeshFilter>().sharedMesh = sm;
                 var smr = sgo.AddComponent<MeshRenderer>();
                 smr.sharedMaterials = secMats;

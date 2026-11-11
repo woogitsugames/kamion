@@ -1,4 +1,4 @@
-param([switch]$SkipGis)
+param([switch]$SkipGis, [switch]$ResumeAfter)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 Set-Location $root
@@ -37,14 +37,16 @@ while ((Test-Path "$out/materials-prepare.log") -and
     }
     Start-Sleep -Seconds 10
 }
-& uv run --project tools/worldgen python "$out/generate_evidence.py" before > "$out/generate-before.log"
-if ($LASTEXITCODE -ne 0) { throw 'Before generation failed' }
-Wait-Phone
-try {
-    & pwsh -NoProfile -File scripts/import-region.ps1 -Region bialystok-industrial-c
-    if ($LASTEXITCODE -ne 0) { throw 'Import failed' }
-} finally { Restore-UnityEffects }
-Render-Matrix before
+if (!$ResumeAfter) {
+    & uv run --project tools/worldgen python "$out/generate_evidence.py" before > "$out/generate-before.log"
+    if ($LASTEXITCODE -ne 0) { throw 'Before generation failed' }
+    Wait-Phone
+    try {
+        & pwsh -NoProfile -File scripts/import-region.ps1 -Region bialystok-industrial-c
+        if ($LASTEXITCODE -ne 0) { throw 'Import failed' }
+    } finally { Restore-UnityEffects }
+    Render-Matrix before
+}
 & uv run --project tools/worldgen python "$out/generate_evidence.py" after > "$out/generate-after.log"
 if ($LASTEXITCODE -ne 0) { throw 'After generation failed' }
 if (!$SkipGis) {

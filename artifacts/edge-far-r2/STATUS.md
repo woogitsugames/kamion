@@ -45,3 +45,6 @@
 - PHONE_RUN cleared; guarded import succeeded: 64 chunks, Low+High; before matrix captured. First Low-clear edge-south pair inspected: false long red-fascia hall removed and regional cream office revealed; false yellow hall on left also removed.
 - Self-critique: source-verified NE helper at road eye/18.2m is occluded by nearby crowns, so it does not prove the far skyline. Added separate 40m diagnostic camera (explicitly not driver eye), to run as second evidence round after primary matrix/tests finish. Original 7 views preserved.
 - NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20; after EVIDENCE_COMPLETE run pwsh artifacts/edge-far-r2/run-skyline.ps1
+- Primary 28 before/after pairs rendered and inspected (all 4 sheets). Editor estimates: Low static+instanced draws delta 0 for every camera; rounded trisK delta 0 or -1; shadows unchanged. compare_evidence.py passes.
+- EditMode 226/226 passed. PlayMode 2/3 passed: scene test expects WorldEdge/WorldFarField, but inherited builder parents sectors directly under WorldEdge. Added identity WorldFarField container (no geometry/material/collider changes), preserving existing integration assertion.
+- NEXT: pwsh artifacts/edge-far-r2/run-evidence.ps1 -SkipGis -ResumeAfter (rebuild, re-render final after, rerun both Unity suites). Then run-skyline.ps1.
