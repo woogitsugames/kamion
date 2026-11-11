@@ -1015,3 +1015,11 @@ owned shaderID Unknown -> enabled pass. Approved remove only copiedCustomEditor
 association, persistedload+1Low/1High replay; no CPUexport required for GUI-only
 change. Full368 still waits High14 and corrected pass proof. See Low review.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
+
+Step 94: Read E High14 review d9551ee9: all14 full pairs,12 projected boards
+and10 independently prepared native1:1 crops viewed. Scoped visualP2PASS;
+four black-hatch numbers match Low, white hatch front/rear BI19136 coherent.
+No new mirror/collapse/bleed or body change observed. No far/uniqueness/device
+claim. Known old MotionVectors=true focus metadata remains a separate gate;
+new persisted-load+Low/High replay is running. Dust realism stays PARTIAL.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-plate-pass-replay.log -Tail 8
