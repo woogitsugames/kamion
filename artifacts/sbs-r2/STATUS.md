@@ -19,3 +19,6 @@ Recenzent wskazał trzy blokery: ukrycie D51 przez brak pliku, awans starej diag
 
 ## Próbki i widok diagnostyczny
 Obejrzano trzy pary Low-clear (281855, 397016, 149248). Zapisano małe maski czystego nieba i asfaltu, związane z SHA zdjęcia oraz renderu r1. Uwaga w danych wyraźnie ogranicza interpretację przez różny kierunek słońca i przybliżoną pozę. Nie kwalifikowano innych tierów ani nowych renderów. Skrypt SBS może teraz dodatkowo komponować C do osobnego katalogu diagnostycznego, nigdy do domyślnej kohorty A/B. Obie kompozycje są wykonywane sekwencyjnie w jednym slocie heavy.
+
+## Kontrola przeglądarkowa podglądu
+Wygenerowano lekki raport z istniejących metryk r1 (bez obliczeń obrazów i bez nowego renderu). Obejrzano zrzuty 1280×960 oraz 390×844 w izolowanej przeglądarce. Działa wybór stanu i przełącznik diagnostyki C, wynik D51 i zakres starej recenzji są widoczne; brak nowych metryk v2 jest jawny. Jedyny wpis konsoli: brak favicon, bez błędu skryptu. Przeglądarkę zamknięto. Podgląd nie jest finalnym raportem r2 ani nowym dowodem świata.
