@@ -55,7 +55,10 @@ foreach ($tier in @('Low','High')) {
         With-UnitySlot {
             $captureInputs = @('Data/Regions/bialystok-industrial-c/sbs_references.json',
                 'Data/Regions/bialystok-industrial-c/generated/world_manifest.json',
-                'art-source/world/materials/materials_spec.json')
+                'art-source/world/materials/materials_spec.json',
+                "game/Assets/_Generated/World/bialystok-industrial-c/$scene.unity",
+                'game/Assets/_Generated/World/bialystok-industrial-c/Meshes/world_edge.asset',
+                "game/Assets/_Generated/World/bialystok-industrial-c/Meshes/$tier/world_edge_far.asset")
             $hashes = @{}
             foreach ($inputFile in $captureInputs) { $hashes[$inputFile] = (Get-FileHash -LiteralPath $inputFile -Algorithm SHA256).Hash }
             $hashes['proof-cameras.json'] = (Get-FileHash -LiteralPath "$out/proof-cameras.json" -Algorithm SHA256).Hash

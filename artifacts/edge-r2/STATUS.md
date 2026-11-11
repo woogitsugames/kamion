@@ -21,3 +21,5 @@ Następny krok: poczekać na zakończenie bieżącego build_world, bez uruchamia
 Krok 7: kontrola pierwszych 64 KiB rzeczywistego GML ujawniła uom="meter". Początkowa lista jednostek m/#m byłaby zbyt wąska; poprawiono ją o równoważne meter/metre, a fixture odtwarza teraz rzeczywisty zapis. Dodano cztery przypadki jednostek. Wynik 11/11 dotyczył poprzedniego stanu.
 Bieżący build_world już działa pod heavy. Jeśli załadował moduł przed poprawką, po jego zakończeniu wymuszona zostanie ponowna ekstrakcja i FarField, przed jakimkolwiek renderem po zmianie.
 Następny krok: sprawdzić lod1_height_audit.usable_ids, potem ponowić test_lod1 i audyt wysokości pod heavy.
+Krok 8: przed przebudową zapisano SHA aktualnych scen i siatek edge z Unity (snapshot po bazowych renderach, bez udawania pomiaru w trakcie ich wykonywania). Kolejne zrzuty sprawdzą również SHA sceny, apron i siatki far-field przed/po każdym renderze.
+Następny krok nadal zależy od końca build_world; testów Python z tym samym właścicielem slotu nie uruchamiamy równolegle.
