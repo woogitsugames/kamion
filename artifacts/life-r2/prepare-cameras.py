@@ -5,7 +5,7 @@ out=Path(__file__).parent
 packet=json.loads((root/'artifacts/life-r1/cameras.json').read_text(encoding='utf-8-sig'))
 instances=[]
 for p in sorted((root/'Data/raw/derived/bialystok-industrial-c/world').glob('instances_*.json')):
-    instances.extend(json.loads(p.read_text())['instances'])
+    instances.extend(i for i in json.loads(p.read_text())['instances'] if i['p'].startswith(('trailer_','tractor_')))
 selected=[]
 for prefix in ('trailer_curtain_0','trailer_curtain_3','trailer_reefer_0','tractor_white','tractor_blue'):
     group=[i for i in instances if i['p']==prefix]
