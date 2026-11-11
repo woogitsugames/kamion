@@ -33,3 +33,5 @@ Następny krok po teście: AuditHeights → ScopeGenerated → test_far_field.py
 Krok 12: test parsera po poprawce rzeczywistej jednostki meter: 15/15 w 0,60 s, heavy zwolniony. Następna komenda: pwsh artifacts/edge-r2/heavy.ps1 -Task AuditHeights.
 Krok 13: zapisano własny QA i manifest źródeł nowej siatki; uboczne metadane pozostałych dziedzin pozostają niezatwierdzone do odtworzenia przez ScopeGenerated. Audyt wysokości oczekuje na heavy, nie równoleglimy go z innym Pythonem.
 Następny krok: po potwierdzeniu kodu 0 audytu wykonać ScopeGenerated i sprawdzić diff world_manifest.
+Krok 14: po około 14 minutach kolejki zatrzymano wyłącznie własny proces oczekujący na AuditHeights (PID 58904; własny slot nie istniał), bez zatrzymywania obliczeń. Log kolejki zachowano. Kolejne heavy sprawdzają dostępność co 2 s zamiast 7 s; MaxSlots nadal 3, StaleHours zapobiega usuwaniu cudzych slotów.
+Następny krok: ponowny AuditHeights tą samą pulą; bez omijania blokady zasobów.

@@ -21,7 +21,7 @@ if ($Task -in @('GisFile','PhysicsFile','Gate3File')) {
 # Use the current central protocol, even before the next round merges updated main.
 $slot = 'C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
 $started = Get-Date -Format o
-& pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 7 -StaleHours 100000
+& pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 2 -StaleHours 100000
 if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
 $acquired = Get-Date -Format o
 $code = 1
@@ -47,3 +47,4 @@ try {
         Set-Content (Join-Path $receiptDir ("{0}-{1}.json" -f (Get-Date -Format 'yyyyMMdd-HHmmss-fff'),$Task))
 }
 exit $code
+
