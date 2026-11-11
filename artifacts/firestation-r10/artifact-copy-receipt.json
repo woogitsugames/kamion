@@ -3,7 +3,7 @@
   "mode": "robocopy /E /XJ /R:1 /W:1; no MIR",
   "selected_sha256": {
     "REPORT.md": "3712e1997179a96c82d6e49bdf03cff67ef8a864d6170ccdb05a2e477adc3f07",
-    "STATUS.md": "4d67938def22ec5720fa797a129bb953e24cdf8d9cebffcdac12cd691293a4ed",
+    "STATUS.md": "689ea4483395ff3288cb56aeb84c37ba88f63e6adb6b25636ce4505fb86a0446",
     "REVIEW.md": "0da78a8c72f09bd33e5dd132d4f67df7e3ccc0a156d9239b96adfe8f945d1cc2",
     "SELF-REVIEW.md": "70ec35b251f58e32fcb7fc8fb57aa3e3a342fbbc7e2132474cb155bd9018fbd1",
     "editmode-final.xml": "d616a08cb84e178ba26ce93921d1310c1ebf93305f0e8ab4f1a393195b12a6c0",
@@ -23,7 +23,10 @@
     "D-BROAD-HIGH-REVIEW.md": "8cd8e4db4a6e96ed84730f0de979479aca91935cf8533213cca414b794614077",
     "D-broad-high-pairs-960/view-inputs.json": "599f0e0263dc00b3483ed4ceaf0b2d6cc20a47c799bf767e7316e83376792551",
     "D-LOW-WEAR-PACKING-PREFLIGHT.md": "543a3df72f20fd795b1366b178f8b66190544229ab9f161bfe5c3954752aaada",
-    "D-low-wear-map-inventory.json": "8cb95475708c1a18b37a1a3f65df54ca1568e182ea776629480191573db5a9ca"
+    "D-low-wear-map-inventory.json": "8cb95475708c1a18b37a1a3f65df54ca1568e182ea776629480191573db5a9ca",
+    "D-PACKED-HIGH-REVIEW.md": "378a37cc3b74f4b162bcd9630d5d346d7f607b88de77f02345435cc8baa4fd02",
+    "D-packed-high-pairs-960/view-inputs.json": "183c9e3b45972c5387a62609c26fe68ce85441dd5cff0e8268e43b6fea1466a5",
+    "D-packed-high-pairs-960/native-hotspot-metrics.json": "75214db8695e7119c36a444d0baf57f790f35caef0a7b9b6d22455d8e3aa144f"
   },
   "png_inventory": {
     "before": 160,
@@ -31,7 +34,7 @@
   },
   "cc0_source_packaged": true,
   "main_sources_modified": false,
-  "documentation_extension": "Read-only preflights/reviews and one D Low packing source plan; no production changes",
+  "documentation_extension": "Read-only preflights and independent D reviews including packed High8; no production changes",
   "post_handoff_main_line_endings": {
     "restore_cc0_inputs.py": {
       "original_sha256": "a268c5fe4386c2a33d74ea88f482d8e672f309a6817038e846f50c0b650c2b1f",

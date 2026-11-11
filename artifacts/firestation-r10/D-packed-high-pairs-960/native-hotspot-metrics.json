@@ -1,0 +1,121 @@
+{
+  "note": "Independent native display-Y differences; no tone adjustment. 8-connected threshold groups are pixel groups, not physical defects or GPU timing.",
+  "rows": [
+    {
+      "condition": "High-clear",
+      "camera": "d_wear_lane_old",
+      "roi960": [
+        470,
+        280,
+        610,
+        400
+      ],
+      "max_abs_Y": 8.213799999999999,
+      "signed_delta_at_max": -8.213799999999999,
+      "max_native_xy": [
+        1218,
+        881
+      ],
+      "crop_native_xyxy": [
+        1018,
+        751,
+        1418,
+        1011
+      ],
+      "abs_over3_fraction": 0.0012210623242220732,
+      "connectivity": 8,
+      "largest_abs_over3_component_pixels": 3,
+      "largest_component_bbox_native_pixels": [
+        3,
+        2
+      ]
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_wear_missing_uv_2",
+      "roi960": [
+        300,
+        300,
+        850,
+        415
+      ],
+      "max_abs_Y": 7.0733999999999995,
+      "signed_delta_at_max": 7.0733999999999995,
+      "max_native_xy": [
+        1489,
+        934
+      ],
+      "crop_native_xyxy": [
+        1289,
+        804,
+        1689,
+        1064
+      ],
+      "abs_over3_fraction": 0.0004770788912579957,
+      "connectivity": 8,
+      "largest_abs_over3_component_pixels": 3,
+      "largest_component_bbox_native_pixels": [
+        2,
+        3
+      ]
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_wear_lane_old",
+      "roi960": [
+        470,
+        280,
+        610,
+        400
+      ],
+      "max_abs_Y": 11.0722,
+      "signed_delta_at_max": 11.0722,
+      "max_native_xy": [
+        1314,
+        706
+      ],
+      "crop_native_xyxy": [
+        1114,
+        576,
+        1514,
+        836
+      ],
+      "abs_over3_fraction": 0.006435598971104861,
+      "connectivity": 8,
+      "largest_abs_over3_component_pixels": 8,
+      "largest_component_bbox_native_pixels": [
+        6,
+        3
+      ]
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_wear_missing_uv_2",
+      "roi960": [
+        300,
+        300,
+        850,
+        415
+      ],
+      "max_abs_Y": 9.855599999999999,
+      "signed_delta_at_max": 9.855599999999999,
+      "max_native_xy": [
+        1826,
+        813
+      ],
+      "crop_native_xyxy": [
+        1626,
+        683,
+        2026,
+        943
+      ],
+      "abs_over3_fraction": 0.0026039445628997866,
+      "connectivity": 8,
+      "largest_abs_over3_component_pixels": 15,
+      "largest_component_bbox_native_pixels": [
+        7,
+        4
+      ]
+    }
+  ]
+}
