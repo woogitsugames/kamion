@@ -4,7 +4,7 @@ $repo = (Resolve-Path "$PSScriptRoot/../..").Path
 Set-Location $repo
 $env:KAMION_ARTIFACTS_DIR = Join-Path $repo 'artifacts'
 function Invoke-Slotted([scriptblock]$Action) {
-    & pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-asphalt
+    & pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-asphalt -PollSeconds 5
     if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
     try {
         & $Action
