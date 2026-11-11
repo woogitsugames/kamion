@@ -147,3 +147,17 @@ Root viewed genuine P8HighOV baseline and actualwearOFF: fullarm/head reconnects
 with samegeometry. Runtime mask caused severedarrow, notgeometry. Do not call
 this baseline qualityPASS. One diagnostic wheelstrength.85->.425 approved on
 P8/P10 with sameage/dirt and exactfinallyrestore; no globaladoption before review.
+
+CPU source review of gate_wear/bus_stop_wear: existing-asphalt-only support, exact
+projected polygon coverage (including holes), height ambiguity rejection, paint/
+kerb clearance, pair-atomic rejection and existing chunk-materialgroup required.
+TyreUVxmetres/UV1length matches production shader; .9strength is separate from
+existing2.5curbscuff. Gate64tris/72verts from4strips, dimensions WORKING. Full
+world build/ordered proof reports only6_6delta vsbus,190raw unchanged, preserved
+bus4_5 and allinstances; cached2441Generated stillbus-only, so pending BEFORE
+captures remain from explicitlypinned cache even though source/raw advanced.
+D private-scene audit: all40native serializedcamera worldmatrices/FOV/clip and
+truck/trailer root transforms match baseline in bothscenes. Two prefabbytes differ,
+but553truck/253trailer serialized records match after fileID identity normalization,
+161/73localtransforms exact. This does not recover historic actualruntimeposes;
+recorder prepared for nextplannedrender, no372pixelstable claim.

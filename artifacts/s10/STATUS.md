@@ -608,3 +608,16 @@ D resumes only pending busHighOV2, then narrow8/gatepairBEFORE8 on pinnedcached
 bus scenes. CPUgateworld complete, fullGIS running; source/raw ahead deliberately.
 NEXT COMMAND: E copy finalrootreview/artifacts and cleanhandoff; D diagnostics/
 gateAFTER/sourcechoice, fullroute/EditMode/report. C13 waits Dclosure.
+
+Step50: E closed20bd2bff, technicalPASS with appearance and vehicle-pose limits;
+1080artifact files copied/verified, no code/main merge. PHONE returned16:20:19
+perf-low-r2diag1; release16:18 invalidated, owned diag9 installed16:22. Whole
+wrapper has5AB+traceB+traceA/spikeA batches; wait diag1.done, not a transient gap.
+D busHighOV completed8/8; first narrow attempt0PNGs due cameraJSON path, exact
+material restore, fixedconfig but retry correctly blocked. CPUgatebuild240.7s
+completed:6_6only adds72verts/64tris, bus4_5/instances/cached2441Generated exact.
+D fullGIS running; next Unity remains narrow8/gatepairBEFORE, then gateimport.
+C13 read-only preflight updatedad03 for0106/possible QA double scaling (source
+inference, not measurement); source0108 still waitsDclosure.
+NEXT COMMAND: monitor entire perf-low-r2diag1.done+PHONEabsence, then freshrelease;
+review D source masks/strictproofs and fullGIS whileheld.
