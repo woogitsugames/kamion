@@ -1,3 +1,5 @@
+> **ZASTĄPIONE przez `docs/owner/GPT-TASK-05-24H.md` (10 długich sesji na 24 h).**
+
 # Zadanie dla GPT 6.1 Sol — pakiet S10-C (wieczór 11.11): kolejne rundy po recenzjach
 
 Repo `C:\Users\matma\Documents\Claude\kamion`. Zasady, przygotowanie worktree i Definition of Done jak w `docs/owner/GPT-TASK-02-S10.md` i `GPT-TASK-03-S10.md` (obowiązują w całości). **Każdy worktree z AKTUALNEGO main** (od rana weszło: 0086, 0088, 0098, 0097, 0100, 0101, 0102, 0103, 0104, 0105, 0085 r2, 0106, 0107, 0110, 0113, 0087, 0090 — stare gałęzie są nieaktualne). Szczegóły uwag do każdego strumienia: `docs/owner/GPT-FEEDBACK-S10.md` + wskazana recenzja w `docs/reports/visual/`. Scala lider Claude po `REPORT.md` (pisz REPORT normalnym polskim tekstem ze spacjami — część poprzednich była nieczytelna).
