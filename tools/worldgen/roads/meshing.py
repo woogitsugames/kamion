@@ -193,6 +193,12 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
                 br, coarse, c.id + ":" + side)
 
 
+# ADR 0100 (REVIEW s10-0095 P1-8): a concrete strip wider than a kerb top (walk material code 0 = curb_concrete, e.g.
+# the 2 m strip north of DK8 at E -830...-770) got the kerb-top UV (u along, v across, 1 m joints) and read as streaks
+# across the strip; rows wider than this are mapped in plan metres like every other horizontal surface.
+KERB_TOP_UV_MAX_W = 0.4
+
+
 def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
     """G: gutter points (n,2), OUT: unit outward vectors (n,2) (may be miter-scaled), zg gutter z,
     params: per-point side params, kap_toward: curvature toward this side (>0 = side is inside)."""
@@ -242,19 +248,26 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
         V = np.array(rows).reshape(-1, 3)
         # UV: u = along (cumulative), v = across profile
         along = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(G, axis=0).T))])
-        if abs(profs[0][k][2] - profs[0][k][0]) < 1e-6:     # vertical segment
+        rw = max(abs(pr[k][2] - pr[k][0]) for pr in profs)   # row width over ALL stations (ADR 0100)
+        if rw < 1e-6:     # vertical segment (a walk row 0 m wide at the first station only is NOT one: strip N 82)
             UV = np.column_stack([np.repeat(along, 2), np.tile([0.0, 1.0], n) * abs(profs[0][k][3] - profs[0][k][1])])
             if mat in ("sidewalk_paving", "apron_sett", "verge_grass", "shoulder_gravel"):
                 mat = "curb_concrete" if mat != "verge_grass" else "verge_grass"
-        elif mat == "curb_concrete":                           # kerb top: u along (1 m segment joints)
+        elif mat == "curb_concrete" and rw <= KERB_TOP_UV_MAX_W:
+            # kerb top: u along (1 m segment joints)
             UV = np.column_stack([np.repeat(along, 2), np.tile([0.0, 1.0], n) * abs(profs[0][k][2] - profs[0][k][0])])
         else:
             UV = V[:, :2].copy()
+            if mat == "curb_concrete":
+                # a walk strip wider than a kerb top coded as concrete (walk mat 0): the kerb texture set has 1 m
+                # joints and striations along u - mapped in plan metres it still reads as streaks across the strip
+                # (render b6, N 82). Paving, as the strip was before ADR 0095 and as the orthophoto shows it.
+                mat = "sidewalk_paving"
         # UV1 = (metres along the edge, metres from the gutter) -> joints, dirt bands, weeds at the kerb line
         UV1 = np.column_stack([np.repeat(along, 2),
                                np.array([[profs[i][k][0] * scale[i], profs[i][k][2] * scale[i]] for i in range(n)]).ravel()])
         T = grid_tris(n, 2, flip=flip)
-        vertical = abs(profs[0][k][2] - profs[0][k][0]) < 1e-6
+        vertical = rw < 1e-6
         is_flange = vertical and k == nseg - 1 and not coarse
         cmat = ("collision_" + ("curb" if mat == "curb_concrete" else "asphalt" if mat.startswith("road_") else
                                 "paving" if mat in ("sidewalk_paving", "apron_sett", "bridge_concrete") else
@@ -829,7 +842,10 @@ def _repair_fill(poly, zb, ph, spacing):
 
 
 def _patch_mat(net, j):
-    mats = [a.chain.section(a.s(1.0), net.sec_list).surface_mat for a in j.arms]
+    # ADR 0100 (REVIEW s10-0095 P1-6): the majority of the arms' ENGINE materials (incl. the resurfaced share,
+    # standards.surface_material). Taking the raw section material made every plate between two resurfaced arms a
+    # lighter worn rectangle across the carriageway (n10015785253, the bay at s 1060, the fork at s 1440).
+    mats = [S.surface_material(a.chain, a.chain.section(a.s(1.0), net.sec_list)) for a in j.arms]
     return max(sorted(set(mats)), key=mats.count)
 
 

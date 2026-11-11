@@ -1000,6 +1000,9 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
             other = rural_d[os_] & ~path_d[os_]          # median rule unchanged: other side free of paths
             fast_med = fast and (sec_mid.maxspeed or 50) >= 90
             kind[med_d] = np.where(other[med_d] | fast_med, MEDIAN_RURAL, URBAN)
+            # ADR 0100 (REVIEW s10-0095 P1-7): a rural station turned into a kerbed URBAN median kept the DITCH depth
+            # as its kerb height (h = 0.60): 0.6 m concrete "walls" along the DK8 median E -888...-768 and others
+            h[(kind == URBAN) & rural_here] = S.KERB_HEIGHT
             if c.roundabout and side == ("L" if (c.dirn > 0).mean() >= 0.5 else "R"):
                 kind[:] = ISLAND
                 w[:] = S.ROUNDABOUT_APRON_W
