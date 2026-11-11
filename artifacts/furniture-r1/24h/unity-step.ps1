@@ -5,7 +5,7 @@ param(
     [ValidateSet('clear','overcast','dusk')] [string]$Lighting='overcast'
 )
 $ErrorActionPreference='Stop'
-$root=(Resolve-Path "$PSScriptRoot/../../../..").Path
+$root=(Resolve-Path "$PSScriptRoot/../../..").Path
 Set-Location $root
 $ev='artifacts/furniture-r1/24h'
 # Never clean another owner's slot, including an old slot. The protocol owns release.
