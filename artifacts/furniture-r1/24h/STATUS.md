@@ -37,3 +37,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T21:58:10.5042450+01:00: odbudowa cache PBR zakończona kodem 0, log pbr-before.log. NASTĘPNY KROK: sprawdzić brak brakujących plików przed importem baseline.
 
 2026-11-11T22:00:47.0873077+01:00: promień próbkowania podparcia starej betonowej lampy dopasowano do nowej podstawy 0,15 m. Import baseline czeka na slot (4/4); nie uruchomiono Unity poza protokołem. NASTĘPNY KROK: zakończyć import baseline i render czterech wariantów.
+
+2026-11-11T22:02:01.6553961+01:00: zapisano prototype-cost.json z licznikami geometrii i slotów przed/po względem 5f2aa277, oraz atlas cokołu do oględzin. To liczby generatora, nie GPU. NASTĘPNY KROK: import po przydzieleniu slotu i pełna walidacja kadrów.
