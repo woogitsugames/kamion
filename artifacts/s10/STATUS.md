@@ -631,3 +631,20 @@ NewPHONEperfdiag2 returned16:42:56 before gateimport; owneddiag10 installed,
 release16:36 invalidated. No own Unity active/queued. NEXT COMMAND: wait entire
 run-diag2 diag2.done+PHONEabsence, freshrelease, then gateimport/actual.425uniform/
 AFTER, isolatedbroadprobe, finalselection/fullroute/EditMode/report.
+
+Step 52: Whole perf diag2 ended 16:50:33; release 16:51 enabled gate import,
+installer and actual paint uniform proof [.425,.25,.38,.12]. Eight gate AFTER
+frames have matching camera/actor poses and rounded counters, but tracks were
+visually weak (High OV per-strip darkening .657-1.361 LSB). Retained honest FAIL.
+New signed-length gate mode e312147e uses .65/.90 m end fades only on new gate
+vertices; positive/zero legacy expression unchanged. Strict proof 4fa07391:
+only 72 UV1.x sign flips per tier, geometry/UV0/strength/190 raw and2441 cached
+products exact. Full GIS rerunning; broad56 remains inactive pending gate choice.
+Whole perf final.done confirmed, release 17:15:13 issued; NOT consumed by D.
+Leader Gate3 run5 PHONE returned 17:15:54, invalidating that release. Owned diag12
+hold now installed; D has no Unity process/queue. Wait actual run5 END + absence.
+Latest feedback adds F r2 ADR0115 and E r8 ADR0116; readonly preflights delegated.
+Queue remains D closure -> C13/0108 -> B3/0109, then F2/E8 feedback corrections.
+NEXT COMMAND: monitor artifacts/integration-s10/run5.log for actual END, then
+remove ONLY owned diag12 and issue fresh explicit release; D r2 import/install/
+16 gate+legacy-negative controls, broad56, final validation/report still required.
