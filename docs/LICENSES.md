@@ -264,3 +264,13 @@ Zdjęcia nie wchodzą do builda ani tekstur. Rejestr: [`docs/refs/posesje-bialys
 - Wikimedia Commons, 7 zdjęć: C01 Rakoon (CC0 1.0), C02-C05 i C07 Krzysztof Popławski (CC BY 4.0), C06 Jacek Fink-Finowicki (CC BY-SA 4.0). Licencje z extmetadata Commons w dniu pobrania; strony plików w rejestrze.
 - Odrzucone: `Wysoki stoczek 58 Bialystok.jpg` (wygląd jak zrzut z panoramy Google; usunięty z dysku i manifestu).
 - Google Maps/Street View/Earth/3D Tiles: nie użyte.
+
+## ADR 0120 — pochodne tekstury mebli ulicznych (2026-11-11)
+
+`furniture_concrete`, `furniture_footing` i `furniture_plinth` korzystają z istniejącego
+skanu `brushed_concrete`, Poly Haven, CC0 1.0 (Dario Barresi / Dimitrios Savva;
+źródło i hash w tabeli ADR 0063 oraz `cc0_manifest.json`). Generator pozostaje
+w `streetscape/furniture_textures.py`. `plate_back` to własna tekstura proceduralna.
+Nie dodano nowego źródła ani pikseli Fab. Fotografie użyte w porównaniach tej rundy
+służą wyłącznie jako referencje; atrybucje z istniejących rejestrów zapisano też
+w `artifacts/furniture-r1/24h/reference-selection.json`. Nie trafiają do tekstur gry.
