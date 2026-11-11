@@ -17,11 +17,15 @@ The real baseline was rebuilt and canonically imported before changes, including
 
 No road source file, override, road geometry, building set, truck source, global exposure or project setting is changed by these decisions. Reference photographs are never runtime textures.
 
-## Paint readability experiment still pending
+## Retained bounded paint calibration; broader probe still pending
 
-The existing `.85` paint wheel-wear term severs an actual P8 turning arrow. A material-only wearOFF control reconnects its arm/head, excluding a geometry gap. One `.425` diagnostic improves it but leaves a dark head band and cleans the P10 control noticeably; it has not been adopted. ROOT authorized the next isolated test: hold `.425` and narrow only the paint wheel denominator`.13 -> .085`, preserving centres`.26/.74`, age and dirt. The nominal full width becomes.595m at a3.5m lane instead of.91m. This is a WORKING_VALUE contact-band adjustment, with no P8-only encoding, new sample or batch. The diagnostic shader is an ignored editor asset assigned only to transient clones with finally restoration and original-material SHA verification.
+The existing `.85` paint wheel-wear term severs an actual P8 turning arrow. A material-only wearOFF control reconnects its arm/head, excluding a geometry gap. One `.425` diagnostic improves it but leaves a dark head band and cleans the P10 control noticeably. The next isolated width test held `.425` and changed only paint denominator`.13 -> .085`, preserving centres`.26/.74`, age and dirt. ROOT reviewed P8 in all four conditions and the P10 control and retained this bounded candidate: the arrow remains recognisable with local wear. P10 is cleaner; this is an explicit calibration change, not full task quality acceptance or unchanged transverse wear.
 
-The separate three-block polish/gutter/longitudinal-wear patch also remains inactive. Neither it nor three small scalar changes alone constitutes completion of the broader wear task.
+Production source now applies a WORKING_VALUE0.5 contact-response calibration to FRESH nominal `wheel_wear` metadata on every material build. Nominal.85 is declared in the forbidden road generator and is not edited. The actual expected imported uniform is.425, with age.25/dirt.38 unchanged. Reading existing material values would compound the scale and is forbidden. Confirm .425 after the planned gate import and again after the later planned final import. The production shader narrows only paint width to.085: nominal full width.595m at lane3.5m instead of.91m. Asphalt ROADWEAR width, centres and albedo stay unchanged. No P8-only encoding, new sample or batch is added.
+
+Transient diagnostic clones assert original texture/uniform bindings, log actual post-render overrides and restore renderer assignments in finally; original material SHA remains exact. The first narrow attempt had a missing camera JSON and produced0PNGs; its invalid log is retained and excluded from metrics. The corrected diagnostic rendered8 valid frames. No further paint variants are planned.
+
+The separate polish/gutter/longitudinal-wear r2 patch remains inactive and preserves this already-calibrated transverse response. Three small scalar changes alone do not constitute completion of the broader wear task.
 
 ## Evidence and limits
 
