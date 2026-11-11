@@ -1,15 +1,16 @@
-# JRG2 r7 — technical validation and appearance
-- Branch gpt-firestation-r7; matched baseline901c427f,160before/160after,40cameras×LowWorldC/HighWorldC_High×clear/overcast; all20finalsheets inspected.
-- Connected short-needle conifer cards/core, foreground+4m, three irregular thuja forms; CC0fir source pinned/restore package self-contained; not verified Picea.
-- Hero LOD0/LOD1/Far9344/2828/164tri (was9944/2828/164),3/2/1slots; activeLow canselectLOD0; global hedge palette and D48paint preserved.
-- Exact hero runtime High-only leaf lighting; LowURPLit includingLOD0,HighVegetationcopy .25transmission/0shade, no sharedasset mutation; factoryreimport byte-idempotent.
-- Brown clinker and sparse physical runoff; existing splash/vents/flag retained. Cleanpaint/roof/trim/office/flag pixels and9auxmaps exactbaseline.
-- Glass meanY: OVLow63.42–66.81/High70.12–73.24 PASS60–75; clearLow81.83–89.92/High88.97–96.76 (round~98) FAIL.
-- Thuja15paired medianHigh/Low: OV1.0889,clear.9945; coherenthue, not exact all-crown luminance equality.
-- Fullmatched80Low: maxdelta0drawEst/0ktri,peaks968/487k;80High:maxdelta0/0,peaks1778/2476k. HighextraDepthGPU/timingUNVERIFIED.
-- Latest-product fullGIS375passed/1xfail517.58s;784products incl192raw+canonicalvehicle unchanged; targetedNUnit1/1PASS(twofactoryimports/Low→High→Low).
-- FullEditMode PENDING renewed explicitROOTrelease afterPHONE hold; no Unity queued. TechnicalDoD not complete yet.
-- Visual residuals: conifers still narrow/column-like vs7197, clearglass outside target, subtle runoff, coarsealpha-mip differences/device temporal unverified; no collectivequalityPASS.
-- Proof: round2/160PNGs,round2-sheets/,round2-roi/,round2-paint/,round2-thuja*/,actual-alpha-mips/,factory-reimport-durability.json; SELF-REVIEW.md.
-- ROOT final80Low/80High independent review in progress. No merge/push; source-cache+restore_cc0_inputs.py must accompany artifact copy to main.
-- Capture limitation: vehicle-relative frames have independently observed background/framing shifts; canonicalassetSHA equality does not prove scene-pose parity. Fixedhero cameras remain relevant; see VEHICLE-CAMERA-AUDIT.md. No whole160causal-isolation claim.
+# JRG2 r7 — technical validation
+- Branch `gpt-firestation-r7`; baseline `901c427f`; 160 before + 160 final frames (40 cameras × Low/High × clear/overcast), all 20 final contact sheets inspected.
+- Asset LOD0/LOD1/Far: 9344/2828/164 triangles, 3/2/1 slots; near Low can select LOD0. Rooted CC0 fir cards, +4m foreground placement, three irregular thuja forms.
+- High-quality-only hero leaf runtime copy; Low remains URP Lit even at LOD0. Factory reimport byte-idempotent, source asset unchanged; global hedge palettes preserved.
+- Brown clinker, sparse flashing runoff; existing splash/vents/flag retained. D48 plaster, roof/trim/office pixels and all nine auxiliary PBR maps preserved.
+- 80 Low and 80 High matched stats: maximum per-view delta 0 drawEst / 0 ktri. Peaks unchanged: Low 968 / 487k, High 1778 / 2476k. Extra High depth-pass GPU/timing cost UNVERIFIED.
+- Latest-product GIS: 375 passed, 1 xfail (517.58s); all 784 pins unchanged, including 192 raw files and canonical vehicle. Target NUnit: 1/1 PASS (two factory imports, Low→High→Low).
+- Full EditMode PENDING renewed explicit ROOT release after PHONE hold; no Unity queued. Technical DoD remains incomplete.
+
+# Appearance goals and limits
+- Glass overcast mean Y: Low 63.42–66.81 / High 70.12–73.24, PASS 60–75. Clear: 81.83–96.76 (round pane ~98), FAIL; no collective appearance PASS.
+- Thuja 15 paired interior ROIs: median High/Low ratio 1.0889 overcast / .9945 clear; coherent hue, no exact all-crown equality claim.
+- Conifers remain narrow/column-like versus photo7197; runoff subtle. Coarse alpha-mip differences disclosed; device/temporal shimmer unverified.
+- Vehicle-relative frames show background/framing shifts. Canonical asset SHA equality does not prove scene-pose parity; fixed hero views remain relevant. See `VEHICLE-CAMERA-AUDIT.md`.
+- Proof: `round2/`, `round2-sheets/`, ROI/paint/thuja metrics, `actual-alpha-mips/`, `SELF-REVIEW.md`, independent High review; ROOT final Low review pending.
+- CC0 Fir inputs are SHA-pinned and packaged in ignored `source-cache/`; run `restore_cc0_inputs.py` after artifact copy. No merge or push.

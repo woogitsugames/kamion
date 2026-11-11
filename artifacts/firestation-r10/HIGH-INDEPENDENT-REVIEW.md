@@ -1,5 +1,5 @@
 # E: independent final round 2 review - High
-Scope: viewed all 10 full High-clear/High-overcast contact01-05 sheets (80 images), eight fire-station before/after pairs, additional vehicle pairs, semantic glass/plaster/crown ROIs, and real CC0 photo7197. Sheets <=960px, no exposure normalization. Comparisons use ONLY E before/round2 from base901c427f, never G or currentmain. ROOT reviews Low80; this review uses Low only through existing dumps/numbers.
+Scope: viewed all 10 full High-clear/High-overcast contact01-05 sheets (80 images), eight fire-station before/after pairs, additional vehicle pairs, semantic glass/plaster/crown ROIs, and reference photo7197. Sheets <=960px, no exposure normalization. Comparisons use ONLY E before/round2 from base901c427f, never G or currentmain. ROOT reviews Low80; this review uses Low only through existing dumps/numbers.
 Verdict: visible improvement of the local fire-station target; no demonstrated new E regression in the inspected fixed High route views. This is NOT a complete PASS of every objective: clear glass remains outside60-75, some crowns remain narrow, runoff is subtle; vehicle-frame comparison has a material causal-validation gap and final EditMode/GPU gates remain open at review time.
 
 ## Fire station and photographic reference
