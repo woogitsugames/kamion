@@ -1,4 +1,4 @@
-# Stan sesji landmarks, runda 1
+﻿# Stan sesji landmarks, runda 1
 
 Przeczytano zadanie 05, HANDOVER s10, zasady, budżety, decyzje D48–D50 i recenzje remizy oraz wiaduktu. Worktree gpt-landmarks, gałąź gpt-landmarks-r1 utworzone z main 5f2aa277.
 Zakres: wyłącznie remiza, podpomostowa część wiaduktu i kominy. Bez push, scalania do main i telefonów. Unity wyłącznie przez slot Owner gpt-landmarks, zwalniany po każdym uruchomieniu.
@@ -89,5 +89,10 @@ Krok 28: końcowa korekta szkła wzmacnia dolne wnętrze tafli i pozostawia gór
 NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/final-glass.ps1
 
 Zapis pośredni: STATUS, fokusowe porównania i pomiary wariantu 2 skopiowano robocopy do głównego artifacts/landmarks-r1. REPORT jeszcze nie jest gotowy; trwa oczekiwanie na heavy dla końcowego materiału szkła. Wrapper Unity korzysta z własnej nazwy katalogu rundy i obsługuje osobny zestaw kamer, aby kolejne rundy nie nadpisywały tych dowodów.
-`nKrok 29: końcowy materiał szkła wygenerowany w High/Medium/Low pod heavy i ograniczony do własnego wpisu spec. Następnie pojedynczy test remizy.
-`nKrok 30: pojedynczy test remizy po końcowej korekcie zakończony exit 0 pod heavy. Import i szybkie cztery rendery łuków przed walidacją całej trasy.
+
+Krok 29: końcowy materiał szkła wygenerowany w High/Medium/Low pod heavy i ograniczony do własnego wpisu spec. Następnie pojedynczy test remizy.
+
+Krok 30: pojedynczy test remizy po końcowej korekcie zakończony exit 0 pod heavy. Import i szybkie cztery rendery łuków przed walidacją całej trasy.
+
+
+Krok 31: cztery końcowe rendery szkła zakończone poprawnie. Low overcast: lewa góra/dół Y 59,93/48,86, prawa 62,65/48,86; High overcast 66,65/54,86 i 68,72/54,86. Gradient jest poprawny, High pozostaje nieco jaśniejszy od celu fotografii. Korony nadal proceduralne i wymagają następnej rundy po backlogu. Rozpoczynam pełne 192 kadry oraz końcowy GIS pod osobnymi pulami.
