@@ -36,3 +36,12 @@
 - Szybka ścieżka v2 (a1232fc3): Fresnel/absorpcja/faza/SH/fog per wierzchołek, wycieraczki w half; domyślnie Low (QualityProfile.glassFast, rev 106),
   `rq_glassfast 0` = stara ścieżka. Pomiar diag5 w toku.
 - NASTĘPNY KROK: wyniki diag5 → kamery kontrolne `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -Rq rq_glassfast=0 -OutputDir artifacts/perf-low-r1/r1/before-overcast` (+ after bez -Rq).
+
+## 14:40 — KONIEC r1 (wynik PARTIAL) — liczby i decyzje: docs/adr/0106-perf-low-a16-r1.md („Wynik”, „Otwarte”)
+- Finalny APK `kamion-0.1.0-fd126bf3a9.apk` (SHA256 89673f0b…f3e2), gate3 valid=True: Low G3-A 29,78 FPS p99 50,0 (27 kl. >40), GPU p50/p95 29,5/31,1;
+  Low G3-B 29,85 FPS **p99 33,7** (21 kl. >40), GPU 29,1/33,7; ten sam APK z rq_glassfast 0 (G3-B): p99 50,0, GPU 30,4/34,8.
+  Medium A/B ~21,7 FPS, GPU p50 ~45 ms. PSS 811–879 MB, termika 0. `final/summary.txt`.
+- Przyjęte: szybka ścieżka szyby (Low+Medium) −0,9 ms GPU Low / −1,5 Medium, obraz bez zmian (PSNR 62–82 dB, `r1/960/`).
+- Testy: EditMode 229/229, PlayMode 110/0/7, pytest gis 310/1 (test_export_is_deterministic — osobno PASS; poza zakresem gałęzi).
+- REPORT.md nie został zapisany (reguła środowiska subagenta) — treść raportu w odpowiedzi do lidera i w ADR 0106.
+- NASTĘPNY KROK (lider): `git merge perf-low-r1` → EditMode/PlayMode na main → `pwsh scripts/gate3-run.ps1 -Serial RFGL34SJYDZ -Segment A -Tier Low -Fps 30` (+ B).

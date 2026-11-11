@@ -61,7 +61,27 @@ mediana z 12+12 okien; `artifacts/perf-low-r1/diag0..6/summary.txt`). Δ = o ile
    (skala: miększe napisy bramownicy, `r1/960/low-overcast-*-scale075-vs-070-crop.jpg`) → decyzja lidera/właściciela.
 
 ## Wynik (A16, czysty APK `fd126bf3a9`, limit 30 FPS)
-WYNIK_TABELA
+Gate3 (`gate3-run.ps1 -SkipBuild -Apk … -SkipCameras`, valid=True, APK sha256 89673f0b…f3e2, 186,9 MB) i ten sam APK
+z `rq_glassfast 0` („przed” na tym samym buildzie, G3-B). Termika 0, bateria 27,9–28,4 °C we wszystkich przejazdach.
+Klatki po 25 s rozgrzewki; „>40” = liczba klatek > 40 ms. `artifacts/perf-low-r1/final/summary.txt`.
+
+| przejazd | FPS | p50 / p95 / p99 (ms) | >40 | GPU p50 / p95 | CPU main p50 / p95 | PSS MB |
+|---|---|---|---|---|---|---|
+| Low G3-A baza 11:25 (43bc53a769-dirty, przed 0097) | 29,69 | 33,3 / 33,5 / **50,0** | 39 | 30,7 / 32,9 | 22,5 / 29,0 | 826 |
+| **Low G3-A po** | 29,78 | 33,3 / 33,5 / **50,0** | 27 | **29,5 / 31,1** | 22,5 / 28,3 | 811 |
+| Low G3-B baza 11:25 | 29,77 | 33,3 / 33,5 / **49,9** | 32 | 30,0 / 34,5 | 21,6 / 28,7 | 829 |
+| Low G3-B przed (ten APK, `rq_glassfast 0`) | 29,78 | 33,3 / 33,5 / **50,0** | 33 | 30,4 / 34,8 | 19,7 / 27,4 | 831 |
+| **Low G3-B po** | 29,85 | 33,3 / 33,5 / **33,7** | 21 | **29,1 / 33,7** | 20,9 / 28,1 | 839 |
+| Medium G3-B przed (ten APK, `rq_glassfast 0`) | 20,84 | 50,0 / 66,7 / 83,3 | 1155 | 46,6 / 61,0 | 25,5 / 38,4 | 878 |
+| Medium G3-A po | 21,74 | 50,0 / 66,7 / 83,3 | 904 | 44,6 / 51,9 | 32,8 / 45,3 | 871 |
+| Medium G3-B po | 21,77 | 50,0 / 66,7 / 66,9 | 1121 | 45,1 / 57,9 | 24,7 / 34,8 | 879 |
+
+Ocena wobec celu: **p99 ≤ 40 ms osiągnięte na G3-B (33,7), nie na G3-A (50,0)**; GPU p95 ≤ 26 ms **nie osiągnięte**
+(31,1 / 33,7). Piki G3-A po zmianie: 14 z 27 w pierwszych 5 s okna (t 25–30 s; GPU 29–31 ms, CPU main 20–26 ms —
+spóźnione oddanie klatki przy GPU tuż pod 33,3 ms, nie przekroczenie GPU) i pakiet 6 klatek CPU main 39–50 ms przy
+t≈55,5 s (powtarzalny, wcześniej t≈51 s; nie GPU — do zbadania osobno). **Medium na A16 nie trzyma 30 FPS** (~21,7 FPS,
+GPU p50 ~45 ms, +16 ms względem Low: HDR + post + skala 0,85 + world detail + 2 kaskady) — bramka „Samsung A
+w Medium” wymaga osobnej rundy albo decyzji, że A16 = Low (reguła urządzenia już wybiera Low dla Mali-G57).
 
 ## Otwarte (kolejne rundy, kolejność wg zysku/jakości)
 1. Ściany HLOD lasu 1,8 ms: jeden przebieg z ZWrite + clip zamiast prepass + A2C dla ścian za 70 m (mało nakładek),
@@ -72,7 +92,12 @@ WYNIK_TABELA
    pod spodem albo połączenie z wnętrzem; wymaga recenzji wizualnej (docs/06).
 4. Piki p99 z widoków z dużą głębią (Andersa s 1232–1300): adaptacyjna skala Low tylko w ciężkich oknach (podłoga 0,70)
    — wymaga zgody (jakość) i odporności na DVFS przy limicie 30 FPS.
-5. CPU main p95 ~29 ms przy 30 FPS (renderowanie kamery głównej ~10 ms main thread) — osobna runda.
+5. CPU main p95 ~29 ms przy 30 FPS (renderowanie kamery głównej ~10 ms main thread) — osobna runda; pakiet CPU
+   39–50 ms w G3-A (t≈51–56 s, okolice bramy/węzła) — profil Unity (development build) na telefonie.
+6. Piki w pierwszych 5 s okna pomiaru G3-A/B (klatki 50 ms przy GPU 29–31 ms): sprawdzić tworzenie PSO Vulkan
+   (GraphicsStateCollection / prewarm) i rozbieg DVFS; jeśli to PSO — prewarm przy ładowaniu.
+7. **Medium na A16: ~21,7 FPS, GPU p50 ~45 ms** — osobna runda (HDR/post/skala/world detail/kaskady) albo decyzja
+   właściciela, że bramka „Samsung A” = Low.
 
 ## Konflikty przewidywane
 - `QualityProfile.cs` / `QualityProfile.asset` / `ProjectSetup.cs` (GPT ADR 0098 światło): nowe pole `glassFast`,
