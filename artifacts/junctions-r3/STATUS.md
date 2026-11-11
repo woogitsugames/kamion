@@ -20,3 +20,10 @@ scripts = narzędzia r2 + zones_plan.py; logs). „Przed” = main b12 z ADR 009
   linii, P-1 N 59,85, P-2b, jodełka do nosa E −805,6, wyspa, bariera, P-21 boczne, P-1e), bariera na wyspie E −782, n100 SE (4 ×
   paint_clear strzałek na wprost, 2 strzałki naprowadzające). Build b1 padł na aprons (np.cross 2D) — naprawione.
   NASTĘPNY KROK: `bash artifacts/junctions-r3/scripts/loop.sh b2`
+- krok 3 (sha f3b4ece6 … cbaf26c3): krawężnik mediany — stacje wiejskie przerobione na miejską medianę brały głębokość rowu
+  0,60 m jako wysokość krawężnika (DK8 E −888…−768, prawa strona w1101181473): teraz 0,13 m. `kerb_rise.py` (b2): wzniesienia
+  krawężnika nad jezdnią ≥ 0,25 m: 1 (j:n1847317049:corner0, 0,6 m — otwarte); wszystkie pionowe ściany 0,25–0,40 m: 52 → 0,
+  0,40–0,70 m: 79 630 → 79 009 (reszta = kołnierze pod terenem). b2 fast: plany `plan_b2/` obejrzane (Putry N linie + plac,
+  rozdział wsch. jodełka/wyspa/linie, n100 SE strzałki), poprawki: zatoka (współrzędne z planu 8,75 px/m), ukośna linia, ostrze pola.
+  W toku: `loop.sh b3` (pełny: pytest gis + swept), potem import Unity + rendery.
+  NASTĘPNY KROK: `cat artifacts/junctions-r3/logs/b3_loop.out`; `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c`
