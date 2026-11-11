@@ -1,0 +1,1367 @@
+{
+  "method": "CPU ray/native-LOD0 triangle intersection from actual BEFORE projection/mount/region matrices and canonical instance placement; no building/tree occlusion test",
+  "probes": {
+    "r10_wheel_02": [
+      {
+        "pixel": [
+          1080,
+          300
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.6034594200832448,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.15786808824831905,
+            0.6941207897346164
+          ],
+          "height_m": 0.6940459305154143,
+          "height_above_sill_m": 0.5040459305154144,
+          "native_payload": [
+            0.503869398045161,
+            0.583180816252306
+          ],
+          "cpu_expected_opacity": 0.03644443058297351,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 253.992088,
+            "r4-focus-r1": 254.13359999999997
+          },
+          "Low-overcast": {
+            "r4-before": 202.60512799999998,
+            "r4-focus-r1": 203.98927999999995
+          },
+          "High-clear": {
+            "r4-before": 249.414304,
+            "r4-focus-r1": 249.43163199999998
+          },
+          "High-overcast": {
+            "r4-before": 234.47660799999997,
+            "r4-focus-r1": 236.58888000000002
+          }
+        }
+      },
+      {
+        "pixel": [
+          1080,
+          400
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.5837879287875685,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.15858012269538263,
+            0.6003181237669859
+          ],
+          "height_m": 0.6002007434163289,
+          "height_above_sill_m": 0.4102007434163289,
+          "native_payload": [
+            0.410201826157226,
+            0.5834527133064682
+          ],
+          "cpu_expected_opacity": 0.055787527842430296,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 253.905448,
+            "r4-focus-r1": 253.84479999999996
+          },
+          "Low-overcast": {
+            "r4-before": 199.28119999999996,
+            "r4-focus-r1": 198.651696
+          },
+          "High-clear": {
+            "r4-before": 249.213664,
+            "r4-focus-r1": 248.681392
+          },
+          "High-overcast": {
+            "r4-before": 229.70138399999996,
+            "r4-focus-r1": 228.649096
+          }
+        }
+      },
+      {
+        "pixel": [
+          1080,
+          500
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.571260453323235,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.15805976965149365,
+            0.5077707036655406
+          ],
+          "height_m": 0.5076615857557436,
+          "height_above_sill_m": 0.3176615857557436,
+          "native_payload": [
+            0.3177776511482568,
+            0.5832540115999127
+          ],
+          "cpu_expected_opacity": 0.08491580222774281,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 250.99585599999997,
+            "r4-focus-r1": 249.66968799999998
+          },
+          "Low-overcast": {
+            "r4-before": 193.129312,
+            "r4-focus-r1": 192.472008
+          },
+          "High-clear": {
+            "r4-before": 247.412656,
+            "r4-focus-r1": 247.02179199999998
+          },
+          "High-overcast": {
+            "r4-before": 218.95832,
+            "r4-focus-r1": 217.325904
+          }
+        }
+      },
+      {
+        "pixel": [
+          1080,
+          600
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.5753078315127813,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.14914456451012653,
+            0.4167097747940678
+          ],
+          "height_m": 0.41669440044780326,
+          "height_above_sill_m": 0.22669440044780326,
+          "native_payload": [
+            0.22670449136424586,
+            0.5798496566207604
+          ],
+          "cpu_expected_opacity": 0.12846148090565812,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 209.44007199999996,
+            "r4-focus-r1": 240.89272799999998
+          },
+          "Low-overcast": {
+            "r4-before": 149.25545599999998,
+            "r4-focus-r1": 182.16092799999996
+          },
+          "High-clear": {
+            "r4-before": 220.85843999999997,
+            "r4-focus-r1": 243.83847999999998
+          },
+          "High-overcast": {
+            "r4-before": 153.80224,
+            "r4-focus-r1": 199.905128
+          }
+        }
+      },
+      {
+        "pixel": [
+          1080,
+          700
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.5847232394893374,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.14018971739419156,
+            0.3254224664541744
+          ],
+          "height_m": 0.3253227242964824,
+          "height_above_sill_m": 0.1353227242964824,
+          "native_payload": [
+            0.13536026567357312,
+            0.5764301639805711
+          ],
+          "cpu_expected_opacity": 0.19457741686279356,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 208.74192799999997,
+            "r4-focus-r1": 229.4826
+          },
+          "Low-overcast": {
+            "r4-before": 148.23142400000003,
+            "r4-focus-r1": 169.60660799999997
+          },
+          "High-clear": {
+            "r4-before": 220.39745599999998,
+            "r4-focus-r1": 237.596112
+          },
+          "High-overcast": {
+            "r4-before": 152.097984,
+            "r4-focus-r1": 173.919624
+          }
+        }
+      },
+      {
+        "pixel": [
+          1080,
+          780
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.6124435193910311,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.12068093111410055,
+            0.25129497806253953
+          ],
+          "height_m": 0.2512151380616643,
+          "height_above_sill_m": 0.06121513806166429,
+          "native_payload": [
+            0.06129738722296758,
+            0.5689805503534343
+          ],
+          "cpu_expected_opacity": 0.2724566590156745,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 185.27143999999996,
+            "r4-focus-r1": 196.03488
+          },
+          "Low-overcast": {
+            "r4-before": 129.542552,
+            "r4-focus-r1": 141.199544
+          },
+          "High-clear": {
+            "r4-before": 207.44232,
+            "r4-focus-r1": 218.74585599999995
+          },
+          "High-overcast": {
+            "r4-before": 141.304528,
+            "r4-focus-r1": 153.93530400000003
+          }
+        }
+      },
+      {
+        "pixel": [
+          1080,
+          810
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.6140695723809888,
+          "material": "M_car_sill",
+          "native_uv0": [
+            0.12092539254199118,
+            0.22353583010388228
+          ],
+          "height_m": 0.2235616477556543,
+          "height_above_sill_m": 0.03356164775565429,
+          "native_payload": [
+            0.0,
+            0.0
+          ],
+          "cpu_expected_opacity": null,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 63.0642,
+            "r4-focus-r1": 63.0642
+          },
+          "Low-overcast": {
+            "r4-before": 24.0682,
+            "r4-focus-r1": 24.0682
+          },
+          "High-clear": {
+            "r4-before": 69.929232,
+            "r4-focus-r1": 69.94062399999999
+          },
+          "High-overcast": {
+            "r4-before": 28.110976,
+            "r4-focus-r1": 28.099584
+          }
+        }
+      },
+      {
+        "pixel": [
+          1180,
+          300
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.5034424474146555,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.29035723536206065,
+            0.6712979516377935
+          ],
+          "height_m": 0.6712997761014666,
+          "height_above_sill_m": 0.4812997761014666,
+          "native_payload": [
+            0.4811618248251352,
+            0.6337753472677744
+          ],
+          "cpu_expected_opacity": 0.04286378836900324,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 220.49663199999998,
+            "r4-focus-r1": 253.98919999999998
+          },
+          "Low-overcast": {
+            "r4-before": 163.392128,
+            "r4-focus-r1": 202.07510399999995
+          },
+          "High-clear": {
+            "r4-before": 230.578272,
+            "r4-focus-r1": 249.36852799999997
+          },
+          "High-overcast": {
+            "r4-before": 168.15621599999997,
+            "r4-focus-r1": 233.683128
+          }
+        }
+      },
+      {
+        "pixel": [
+          1180,
+          400
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.4855147347088178,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.2902835847410635,
+            0.5833253131540688
+          ],
+          "height_m": 0.5832874201511032,
+          "height_above_sill_m": 0.39328742015110324,
+          "native_payload": [
+            0.39331488003249476,
+            0.6337471556425124
+          ],
+          "cpu_expected_opacity": 0.06389842716986677,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 222.82697599999995,
+            "r4-focus-r1": 253.81014399999995
+          },
+          "Low-overcast": {
+            "r4-before": 164.613976,
+            "r4-focus-r1": 198.00324
+          },
+          "High-clear": {
+            "r4-before": 231.99888,
+            "r4-focus-r1": 248.62128799999994
+          },
+          "High-overcast": {
+            "r4-before": 169.324792,
+            "r4-focus-r1": 227.86028
+          }
+        }
+      },
+      {
+        "pixel": [
+          1180,
+          500
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.475714462130669,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.2881073149265724,
+            0.4966720959741889
+          ],
+          "height_m": 0.4966063619267099,
+          "height_above_sill_m": 0.3066063619267099,
+          "native_payload": [
+            0.30671674279602434,
+            0.6329141337039511
+          ],
+          "cpu_expected_opacity": 0.09461644833960876,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 231.69796799999997,
+            "r4-focus-r1": 247.781024
+          },
+          "Low-overcast": {
+            "r4-before": 172.94812000000002,
+            "r4-focus-r1": 189.7032
+          },
+          "High-clear": {
+            "r4-before": 238.39421600000003,
+            "r4-focus-r1": 245.99884800000004
+          },
+          "High-overcast": {
+            "r4-before": 181.18183199999996,
+            "r4-focus-r1": 213.391304
+          }
+        }
+      },
+      {
+        "pixel": [
+          1180,
+          600
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.4793216739654753,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.2799954290956447,
+            0.4111893290798766
+          ],
+          "height_m": 0.4110440798604894,
+          "height_above_sill_m": 0.2210440798604894,
+          "native_payload": [
+            0.22118067796918023,
+            0.6298162906257518
+          ],
+          "cpu_expected_opacity": 0.13901235458568678,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 207.73215999999996,
+            "r4-focus-r1": 238.76170400000004
+          },
+          "Low-overcast": {
+            "r4-before": 147.521088,
+            "r4-focus-r1": 179.74019999999996
+          },
+          "High-clear": {
+            "r4-before": 219.07591999999997,
+            "r4-focus-r1": 242.43235200000004
+          },
+          "High-overcast": {
+            "r4-before": 151.555632,
+            "r4-focus-r1": 194.67018399999998
+          }
+        }
+      },
+      {
+        "pixel": [
+          1180,
+          700
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.4879808947800581,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.27184955342303563,
+            0.32534894079214827
+          ],
+          "height_m": 0.325124096992019,
+          "height_above_sill_m": 0.135124096992019,
+          "native_payload": [
+            0.1352867686235734,
+            0.6267057113439665
+          ],
+          "cpu_expected_opacity": 0.20456533292356974,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 207.284328,
+            "r4-focus-r1": 229.60496
+          },
+          "Low-overcast": {
+            "r4-before": 146.46770399999997,
+            "r4-focus-r1": 169.45243200000002
+          },
+          "High-clear": {
+            "r4-before": 218.859264,
+            "r4-focus-r1": 237.298944
+          },
+          "High-overcast": {
+            "r4-before": 150.34107999999998,
+            "r4-focus-r1": 173.91756800000002
+          }
+        }
+      },
+      {
+        "pixel": [
+          1180,
+          780
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.5129856160983808,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.2549779114355918,
+            0.2555831696631393
+          ],
+          "height_m": 0.25549365426429854,
+          "height_above_sill_m": 0.06549365426429854,
+          "native_payload": [
+            0.06558165190818227,
+            0.620263116081641
+          ],
+          "cpu_expected_opacity": 0.2784332563408628,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 209.03574400000002,
+            "r4-focus-r1": 218.628448
+          },
+          "Low-overcast": {
+            "r4-before": 148.23312799999997,
+            "r4-focus-r1": 158.63184800000002
+          },
+          "High-clear": {
+            "r4-before": 220.51893599999997,
+            "r4-focus-r1": 229.112752
+          },
+          "High-overcast": {
+            "r4-before": 152.01864,
+            "r4-focus-r1": 163.16071999999997
+          }
+        }
+      },
+      {
+        "pixel": [
+          1180,
+          810
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.513216374271155,
+          "material": "M_car_sill",
+          "native_uv0": [
+            0.25599795132255054,
+            0.2295714040797164
+          ],
+          "height_m": 0.2295913336062321,
+          "height_above_sill_m": 0.0395913336062321,
+          "native_payload": [
+            0.0,
+            0.0
+          ],
+          "cpu_expected_opacity": null,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 63.018424,
+            "r4-focus-r1": 63.018424
+          },
+          "Low-overcast": {
+            "r4-before": 23.859632,
+            "r4-focus-r1": 23.859632
+          },
+          "High-clear": {
+            "r4-before": 69.041416,
+            "r4-focus-r1": 69.00992
+          },
+          "High-overcast": {
+            "r4-before": 27.544928,
+            "r4-focus-r1": 27.544928
+          }
+        }
+      },
+      {
+        "pixel": [
+          1280,
+          300
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.4196838904294407,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.407857814092386,
+            0.6513370321989433
+          ],
+          "height_m": 0.6511746909231088,
+          "height_above_sill_m": 0.46117469092310875,
+          "native_payload": [
+            0.4612264986046616,
+            0.6782984987643276
+          ],
+          "cpu_expected_opacity": 0.04966498778675744,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 220.58572,
+            "r4-focus-r1": 254.22890399999997
+          },
+          "Low-overcast": {
+            "r4-before": 164.46966400000002,
+            "r4-focus-r1": 206.06943999999996
+          },
+          "High-clear": {
+            "r4-before": 230.55650400000002,
+            "r4-focus-r1": 249.47495199999997
+          },
+          "High-overcast": {
+            "r4-before": 169.09948799999998,
+            "r4-focus-r1": 238.71372
+          }
+        }
+      },
+      {
+        "pixel": [
+          1280,
+          400
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.4032442643158356,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.40717005441037396,
+            0.5683888375020989
+          ],
+          "height_m": 0.5683127463055093,
+          "height_above_sill_m": 0.3783127463055093,
+          "native_payload": [
+            0.3783969469837613,
+            0.6780357831093975
+          ],
+          "cpu_expected_opacity": 0.07234693503126248,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 236.789992,
+            "r4-focus-r1": 253.905448
+          },
+          "Low-overcast": {
+            "r4-before": 180.185224,
+            "r4-focus-r1": 200.214472
+          },
+          "High-clear": {
+            "r4-before": 241.248832,
+            "r4-focus-r1": 249.31943199999998
+          },
+          "High-overcast": {
+            "r4-before": 194.998,
+            "r4-focus-r1": 230.818128
+          }
+        }
+      },
+      {
+        "pixel": [
+          1280,
+          500
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.395140755112426,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.404160108246005,
+            0.4868102784714485
+          ],
+          "height_m": 0.4867337052462155,
+          "height_above_sill_m": 0.2967337052462155,
+          "native_payload": [
+            0.29684002402593956,
+            0.6768860210652442
+          ],
+          "cpu_expected_opacity": 0.10466475593310053,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 239.13919199999998,
+            "r4-focus-r1": 249.6952
+          },
+          "Low-overcast": {
+            "r4-before": 181.82324799999998,
+            "r4-focus-r1": 192.7032
+          },
+          "High-clear": {
+            "r4-before": 242.598448,
+            "r4-focus-r1": 246.873184
+          },
+          "High-overcast": {
+            "r4-before": 198.529712,
+            "r4-focus-r1": 217.62597599999998
+          }
+        }
+      },
+      {
+        "pixel": [
+          1280,
+          600
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.398622837396734,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.39658487178957347,
+            0.40617202962757776
+          ],
+          "height_m": 0.40601377899782376,
+          "height_above_sill_m": 0.21601377899782376,
+          "native_payload": [
+            0.21615541311156072,
+            0.6739923748412036
+          ],
+          "cpu_expected_opacity": 0.15049321909698898,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 214.21645599999997,
+            "r4-focus-r1": 242.686696
+          },
+          "Low-overcast": {
+            "r4-before": 154.78035200000002,
+            "r4-focus-r1": 184.55751199999997
+          },
+          "High-clear": {
+            "r4-before": 225.15308800000003,
+            "r4-focus-r1": 244.092104
+          },
+          "High-overcast": {
+            "r4-before": 159.51582399999998,
+            "r4-focus-r1": 203.86850399999994
+          }
+        }
+      },
+      {
+        "pixel": [
+          1280,
+          700
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.4068626969358133,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.38897716099385055,
+            0.32518809205598653
+          ],
+          "height_m": 0.32494781387821914,
+          "height_above_sill_m": 0.13494781387821914,
+          "native_payload": [
+            0.13512491471954538,
+            0.6710863238229614
+          ],
+          "cpu_expected_opacity": 0.21672242567007985,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 211.091568,
+            "r4-focus-r1": 231.98128
+          },
+          "Low-overcast": {
+            "r4-before": 150.824064,
+            "r4-focus-r1": 172.554944
+          },
+          "High-clear": {
+            "r4-before": 222.00517599999995,
+            "r4-focus-r1": 238.977336
+          },
+          "High-overcast": {
+            "r4-before": 155.090528,
+            "r4-focus-r1": 180.622848
+          }
+        }
+      },
+      {
+        "pixel": [
+          1280,
+          780
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.4296312566871523,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            0.37418644224466413,
+            0.25938252416204655
+          ],
+          "height_m": 0.2592844363228362,
+          "height_above_sill_m": 0.06928443632283621,
+          "native_payload": [
+            0.06937752714472784,
+            0.665543875510632
+          ],
+          "cpu_expected_opacity": 0.290187258382802,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 211.67844000000005,
+            "r4-focus-r1": 221.12527999999998
+          },
+          "Low-overcast": {
+            "r4-before": 151.20451999999997,
+            "r4-focus-r1": 160.96039999999996
+          },
+          "High-clear": {
+            "r4-before": 222.754456,
+            "r4-focus-r1": 231.22516000000005
+          },
+          "High-overcast": {
+            "r4-before": 154.77812799999998,
+            "r4-focus-r1": 165.57044000000002
+          }
+        }
+      },
+      {
+        "pixel": [
+          1280,
+          810
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 1.4246865662736239,
+          "material": "M_car_sill",
+          "native_uv0": [
+            0.3782058757537662,
+            0.23515776954736733
+          ],
+          "height_m": 0.23517224918299728,
+          "height_above_sill_m": 0.04517224918299728,
+          "native_payload": [
+            0.0,
+            0.0
+          ],
+          "cpu_expected_opacity": null,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 63.372375999999996,
+            "r4-focus-r1": 63.372375999999996
+          },
+          "Low-overcast": {
+            "r4-before": 23.325672000000004,
+            "r4-focus-r1": 23.325672000000004
+          },
+          "High-clear": {
+            "r4-before": 69.67227199999998,
+            "r4-focus-r1": 69.62938399999999
+          },
+          "High-overcast": {
+            "r4-before": 27.358888,
+            "r4-focus-r1": 27.278888000000002
+          }
+        }
+      }
+    ],
+    "r10_rear_04": [
+      {
+        "pixel": [
+          700,
+          500
+        ],
+        "hit": {
+          "prototype": "car_suv_black",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 856,
+          "level": 3,
+          "phase": 0.251953125,
+          "distance": 1.5637088857452093,
+          "material": "M_car_paint_black",
+          "native_uv0": [
+            -2.101394436754228,
+            1.1951247908005256
+          ],
+          "height_m": 1.1958095203503247,
+          "height_above_sill_m": 0.9458095203503247,
+          "native_payload": [
+            0.9456113581607344,
+            -0.2821697548222735
+          ],
+          "cpu_expected_opacity": 0.006144242732845748,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 61.73947999999999,
+            "r4-focus-r1": 61.762584
+          },
+          "Low-overcast": {
+            "r4-before": 60.175119999999986,
+            "r4-focus-r1": 60.689023999999996
+          },
+          "High-clear": {
+            "r4-before": 67.725056,
+            "r4-focus-r1": 68.261792
+          },
+          "High-overcast": {
+            "r4-before": 66.009456,
+            "r4-focus-r1": 66.346256
+          }
+        }
+      },
+      {
+        "pixel": [
+          700,
+          650
+        ],
+        "hit": {
+          "prototype": "car_suv_black",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 856,
+          "level": 3,
+          "phase": 0.251953125,
+          "distance": 1.548851979972154,
+          "material": "M_car_paint_black",
+          "native_uv0": [
+            -2.129021941213676,
+            1.0491585758825557
+          ],
+          "height_m": 1.049306017958786,
+          "height_above_sill_m": 0.7993060179587861,
+          "native_payload": [
+            0.7987950512877827,
+            -0.2925737766572087
+          ],
+          "cpu_expected_opacity": 0.01228419942482416,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 48.578799999999994,
+            "r4-focus-r1": 49.3662
+          },
+          "Low-overcast": {
+            "r4-before": 33.716559999999994,
+            "r4-focus-r1": 33.931799999999996
+          },
+          "High-clear": {
+            "r4-before": 53.69194400000001,
+            "r4-focus-r1": 54.257335999999995
+          },
+          "High-overcast": {
+            "r4-before": 37.78292,
+            "r4-focus-r1": 38.300144
+          }
+        }
+      },
+      {
+        "pixel": [
+          700,
+          800
+        ],
+        "hit": {
+          "prototype": "car_suv_black",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 856,
+          "level": 3,
+          "phase": 0.251953125,
+          "distance": 1.5510130573141019,
+          "material": "M_car_trim",
+          "native_uv0": [
+            -2.154035059819739,
+            0.9056274539236367
+          ],
+          "height_m": 0.905476201273262,
+          "height_above_sill_m": 0.655476201273262,
+          "native_payload": [
+            0.0,
+            0.0
+          ],
+          "cpu_expected_opacity": null,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 31.86224,
+            "r4-focus-r1": 31.86224
+          },
+          "Low-overcast": {
+            "r4-before": 19.829919999999994,
+            "r4-focus-r1": 19.829919999999994
+          },
+          "High-clear": {
+            "r4-before": 37.253136,
+            "r4-focus-r1": 37.258912
+          },
+          "High-overcast": {
+            "r4-before": 23.824879999999997,
+            "r4-focus-r1": 23.818896
+          }
+        }
+      },
+      {
+        "pixel": [
+          700,
+          950
+        ],
+        "hit": {
+          "prototype": "car_suv_black",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 856,
+          "level": 3,
+          "phase": 0.251953125,
+          "distance": 1.5613878928921527,
+          "material": "M_car_plate",
+          "native_uv0": [
+            0.1021359926194966,
+            0.262007079210087
+          ],
+          "height_m": 0.7663165005648338,
+          "height_above_sill_m": 0.5163165005648338,
+          "native_payload": [
+            0.0,
+            0.0
+          ],
+          "cpu_expected_opacity": null,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 69.971696,
+            "r4-focus-r1": 69.971696
+          },
+          "Low-overcast": {
+            "r4-before": 98.963848,
+            "r4-focus-r1": 98.963848
+          },
+          "High-clear": {
+            "r4-before": 72.899992,
+            "r4-focus-r1": 72.977264
+          },
+          "High-overcast": {
+            "r4-before": 73.401472,
+            "r4-focus-r1": 73.475856
+          }
+        }
+      },
+      {
+        "pixel": [
+          700,
+          1050
+        ],
+        "hit": {
+          "prototype": "car_suv_black",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 856,
+          "level": 3,
+          "phase": 0.251953125,
+          "distance": 1.5962874010049715,
+          "material": "M_car_paint_black",
+          "native_uv0": [
+            -2.1851058723803187,
+            0.6666531718816633
+          ],
+          "height_m": 0.6668728229259796,
+          "height_above_sill_m": 0.4168728229259796,
+          "native_payload": [
+            0.41682328615360875,
+            -0.31375882072605316
+          ],
+          "cpu_expected_opacity": 0.05477650816947088,
+          "keep_upper": 0.25262838740293797
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 108.066904,
+            "r4-focus-r1": 105.17390399999998
+          },
+          "Low-overcast": {
+            "r4-before": 85.60304800000002,
+            "r4-focus-r1": 85.77588000000002
+          },
+          "High-clear": {
+            "r4-before": 59.517112000000004,
+            "r4-focus-r1": 58.712295999999995
+          },
+          "High-overcast": {
+            "r4-before": 84.871216,
+            "r4-focus-r1": 85.84366399999999
+          }
+        }
+      },
+      {
+        "pixel": [
+          1750,
+          650
+        ],
+        "hit": {
+          "prototype": "car_hatch_white",
+          "source": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0",
+          "instance": 850,
+          "level": 3,
+          "phase": 0.28515625,
+          "distance": 3.655103667119139,
+          "material": "M_car_paint_white",
+          "native_uv0": [
+            -2.0703216685865926,
+            0.6658418558854216
+          ],
+          "height_m": 0.6660568490540503,
+          "height_above_sill_m": 0.47605684905405027,
+          "native_payload": [
+            0.4757283677355607,
+            -0.26746499059016615
+          ],
+          "cpu_expected_opacity": 0.05011060998200554,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 113.10473600000002,
+            "r4-focus-r1": 126.133872
+          },
+          "Low-overcast": {
+            "r4-before": 135.98907999999997,
+            "r4-focus-r1": 159.07604
+          },
+          "High-clear": {
+            "r4-before": 118.38720799999999,
+            "r4-focus-r1": 130.999992
+          },
+          "High-overcast": {
+            "r4-before": 138.383416,
+            "r4-focus-r1": 163.20034399999997
+          }
+        }
+      },
+      {
+        "pixel": [
+          1750,
+          850
+        ],
+        "hit": null,
+        "luma": {
+          "Low-clear": {
+            "r4-before": 154.485008,
+            "r4-focus-r1": 154.485008
+          },
+          "Low-overcast": {
+            "r4-before": 114.22800000000001,
+            "r4-focus-r1": 114.22800000000001
+          },
+          "High-clear": {
+            "r4-before": 159.122072,
+            "r4-focus-r1": 159.130576
+          },
+          "High-overcast": {
+            "r4-before": 114.3806,
+            "r4-focus-r1": 114.48616
+          }
+        }
+      },
+      {
+        "pixel": [
+          1750,
+          1000
+        ],
+        "hit": null,
+        "luma": {
+          "Low-clear": {
+            "r4-before": 161.754432,
+            "r4-focus-r1": 161.754432
+          },
+          "Low-overcast": {
+            "r4-before": 128.947904,
+            "r4-focus-r1": 128.947904
+          },
+          "High-clear": {
+            "r4-before": 164.86731199999997,
+            "r4-focus-r1": 164.904584
+          },
+          "High-overcast": {
+            "r4-before": 124.72802399999999,
+            "r4-focus-r1": 124.73075200000001
+          }
+        }
+      }
+    ],
+    "r4_dirt_candidate_3": [
+      {
+        "pixel": [
+          1150,
+          650
+        ],
+        "hit": {
+          "prototype": "car_hatch_black",
+          "source": "life:parking:kwadrat-park-units-forecourt#0",
+          "instance": 895,
+          "level": 3,
+          "phase": 0.646484375,
+          "distance": 4.253500261637219,
+          "material": "M_car_paint_black",
+          "native_uv0": [
+            -0.06374222540862994,
+            0.49598321170690074
+          ],
+          "height_m": 0.4957315146907504,
+          "height_above_sill_m": 0.3057315146907504,
+          "native_payload": [
+            0.305897255461822,
+            0.4985568325338701
+          ],
+          "cpu_expected_opacity": 0.08962748279543023,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 99.9198,
+            "r4-focus-r1": 82.8516
+          },
+          "Low-overcast": {
+            "r4-before": 47.996,
+            "r4-focus-r1": 36.683952000000005
+          },
+          "High-clear": {
+            "r4-before": 106.39577600000001,
+            "r4-focus-r1": 88.87747999999999
+          },
+          "High-overcast": {
+            "r4-before": 53.70496,
+            "r4-focus-r1": 41.872496
+          }
+        }
+      },
+      {
+        "pixel": [
+          1300,
+          700
+        ],
+        "hit": {
+          "prototype": "car_hatch_black",
+          "source": "life:parking:kwadrat-park-units-forecourt#0",
+          "instance": 895,
+          "level": 3,
+          "phase": 0.646484375,
+          "distance": 4.336149864471777,
+          "material": "M_car_paint_black",
+          "native_uv0": [
+            0.42889108440591495,
+            0.32261881072915943
+          ],
+          "height_m": 0.3224210974075543,
+          "height_above_sill_m": 0.1324210974075543,
+          "native_payload": [
+            0.132555865508763,
+            0.6863329467412346
+          ],
+          "cpu_expected_opacity": 0.2234412396908091,
+          "keep_upper": 0.0
+        },
+        "luma": {
+          "Low-clear": {
+            "r4-before": 89.44743199999999,
+            "r4-focus-r1": 91.09990400000001
+          },
+          "Low-overcast": {
+            "r4-before": 40.577223999999994,
+            "r4-focus-r1": 42.49084
+          },
+          "High-clear": {
+            "r4-before": 96.020592,
+            "r4-focus-r1": 97.96475999999998
+          },
+          "High-overcast": {
+            "r4-before": 45.845768,
+            "r4-focus-r1": 47.900808
+          }
+        }
+      }
+    ]
+  },
+  "note": "Identity and metric-height evidence at selected car pixels; not a GPU ID buffer. Nonpaint hits are excluded from body profiles."
+}

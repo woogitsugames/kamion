@@ -22,7 +22,8 @@ namespace Game.Editor.VisualQA
         sealed class Input { public string prototype;public Matrix4x4 matrix;public WorldInstanceSet.Prototype mesh;public Vector3 regionPosition;public int index; }
         [Serializable] public class Example { public string prototype;public int level,index;public float e,n,z;public Vector3 worldOrigin; }
         [Serializable] public class Case { public string label;public Vector3 shift;public int[] expected,actual;public float[] phase;public bool pass; }
-        [Serializable] public class Evidence { public string unity,graphics,shaderSha256,instancesSha256,method,note;public int instanceCount;public int[] cpuCounts,gpuCounts;public float maximumLevelError;public Case[] cases;public Example[] examples; }
+        [Serializable] public class InputSample { public string prototype;public int nativeIndex,cpuLevel,gpuLevel;public float e,n,z; }
+        [Serializable] public class Evidence { public string unity,graphics,shaderSha256,instancesSha256,method,note;public int instanceCount;public int[] cpuCounts,gpuCounts;public float maximumLevelError;public Case[] cases;public Example[] examples;public InputSample[] perInstance; }
 
         static string Hash(string path)
         {
@@ -139,7 +140,7 @@ namespace Game.Editor.VisualQA
             camera.backgroundColor=Color.magenta;camera.allowHDR=true;camera.allowMSAA=false;camera.cullingMask=~0;
             var extra=camera.GetUniversalAdditionalCameraData();extra.renderPostProcessing=false;extra.antialiasing=AntialiasingMode.None;extra.volumeLayerMask=0;
             var rt=new RenderTexture(64,16,24,RenderTextureFormat.ARGBFloat,RenderTextureReadWrite.Linear){filterMode=FilterMode.Point};rt.Create();camera.targetTexture=rt;
-            var pixels=new Texture2D(64,16,TextureFormat.RGBAFloat,false,true);var batch=new Matrix4x4[4];var cases=new List<Case>();
+            var pixels=new Texture2D(64,16,TextureFormat.RGBAFloat,false,true);var batch=new Matrix4x4[4];var cases=new List<Case>();var samples=new List<InputSample>();
             try
             {
                 for(int start=0;start<inputs.Count;start+=4)
@@ -152,6 +153,7 @@ namespace Game.Editor.VisualQA
                         var expected=Expected(batch[j],rect);int cpu=Mathf.RoundToInt(expected[0]*3),gpu=Mathf.RoundToInt(colors[j].r*3);
                         if(cpu!=gpu||Mathf.Abs(colors[j].g-expected[1])>.001f||colors[j].b>.001f)throw new InvalidOperationException("Actual instancing mismatch at input "+(start+j));
                         evidence.cpuCounts[cpu]++;evidence.gpuCounts[gpu]++;
+                        samples.Add(new InputSample{prototype=inputs[start+j].prototype,nativeIndex=inputs[start+j].index,cpuLevel=cpu,gpuLevel=gpu,e=inputs[start+j].regionPosition.x,n=inputs[start+j].regionPosition.z,z=inputs[start+j].regionPosition.y});
                         evidence.maximumLevelError=Mathf.Max(evidence.maximumLevelError,Mathf.Abs(colors[j].r-expected[0]));
                     }
                 }
@@ -169,7 +171,7 @@ namespace Game.Editor.VisualQA
                     }
                     cases.Add(record);if(!record.pass)throw new InvalidOperationException("Actual LOD/rebase instancing mismatch: "+record.label+" shift="+shift);
                 }
-                evidence.cases=cases.ToArray();
+                evidence.cases=cases.ToArray();evidence.perInstance=samples.ToArray();
                 File.WriteAllText(Path.Combine(folder,"instanced-film-gpu-proof.json"),JsonUtility.ToJson(evidence,true));
                 Debug.Log("G_FILM_GPU_RESULT: OK actualInstances="+inputs.Count+" cases="+cases.Count);
             }

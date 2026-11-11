@@ -18,6 +18,12 @@ proto=re.search(r'^  prototypes:\n(.*?)(?=^  \w)',main,re.M|re.S).group(1)
 materials=re.search(r'^  materials:\n(.*?)(?=^  \w|\Z)',main,re.M|re.S).group(1)
 guids=re.findall(r'guid: ([a-f0-9]+)',materials)
 bound={}
+all_materials={}
+for p in (WORLD/'Materials').rglob('*.mat'):
+    meta=Path(str(p)+'.meta')
+    if meta.exists():
+        match=re.search(r'^guid: ([a-f0-9]+)',meta.read_text(),re.M)
+        if match:all_materials[match.group(1)]=p.stem
 for p in (WORLD/'Materials').rglob('M_car_paint_*.mat'):
     meta=Path(str(p)+'.meta').read_text()
     guid=re.search(r'^guid: ([a-f0-9]+)',meta,re.M).group(1)
@@ -26,6 +32,7 @@ for p in (WORLD/'Materials').rglob('M_car_paint_*.mat'):
     if t:bound[guid]=(p.stem,[float(v) for v in t.groups()])
 rows=[]
 native_samples=[]
+native_geometry={}
 for block in re.split(r'^  - name: ',proto,flags=re.M)[1:]:
     name=block.splitlines()[0]
     if not name.startswith(('car_','van_')):continue
@@ -42,6 +49,8 @@ for block in re.split(r'^  - name: ',proto,flags=re.M)[1:]:
         channel=[int(v) for v in channels[4]]
         assert channel[0]==0 and channel[2:]==[1,2],channel
         uv=np.ndarray((n,2),dtype='<f2',buffer=raw,offset=channel[1],strides=(stride,2)).astype(np.float32)
+        c1=[int(v) for v in channels[5]]
+        uv1=np.ndarray((n,2),dtype='<f2',buffer=raw,offset=c1[1],strides=(stride,2)).astype(np.float32) if c1[3]==2 else None
         position=np.ndarray((n,3),dtype='<f4',buffer=raw,offset=0,strides=(stride,4))
         normal_offset=int(channels[1][1])
         normal=np.ndarray((n,3),dtype='i1',buffer=raw,offset=normal_offset,strides=(stride,1)).astype(np.float32)/127
@@ -49,7 +58,12 @@ for block in re.split(r'^  - name: ',proto,flags=re.M)[1:]:
         submeshes=re.findall(r'firstByte: (\d+)\s+indexCount: (\d+).*?baseVertex: (\d+)',subblock,re.S)
         rawindex=bytes.fromhex(re.search(r'm_IndexBuffer: ([a-f0-9]+)',mesh).group(1))
         indexbytes=2 if re.search(r'm_IndexFormat: (\d+)',mesh).group(1)=='0' else 4
+        geometry=[]
         for sub,(offset,count,base) in enumerate(submeshes):
+            allidx=np.frombuffer(rawindex,dtype='<u2' if indexbytes==2 else '<u4',offset=int(offset),count=int(count))+int(base)
+            geometry.append(dict(material=all_materials.get(guids[int(starts[lod])+sub],'unknown'),
+                                 position=position[allidx.reshape(-1,3)],normal=normal[allidx.reshape(-1,3)],uv=uv[allidx.reshape(-1,3)],
+                                 payload=None if uv1 is None else uv1[allidx.reshape(-1,3)]))
             binding=bound.get(guids[int(starts[lod])+sub])
             if binding is None:continue
             material,tile=binding
@@ -71,6 +85,7 @@ for block in re.split(r'^  - name: ',proto,flags=re.M)[1:]:
                 source_map_v_min_m=float(source_v.min()),source_map_v_max_m=float(source_v.max()),
                 samples_legacy_gutter=bool(np.any(source_v<.05)),vertex_buffer_sha256=hashlib.sha256(raw).hexdigest(),
                 geometry_normal_uv0_index_sha256=geometry_hash))
+        native_geometry[(name,lod)]=geometry
 assert len(rows)==81,len(rows)
 assert not any(r['samples_legacy_gutter'] for r in rows)
 out=dict(method='Actual serialized native Instances.asset Float16 TexCoord0, index-selected paint submeshes and material GUID-bound Tile',
