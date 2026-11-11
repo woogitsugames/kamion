@@ -24,3 +24,6 @@
 
 - Step10 candidate1: confirmed finite-range fix uses1000nits/unit in same16x1RGBAHalf and float decode*exposure, with6meaningful day/night/on-off/actualGPU tests. Local WORKING experiments: OrangePeel.012->.004 (F0/coatenergy unchanged), physical capture bypasses Low scene toe and restores globals in finally, windscreenT1.0 with doorT.42/farclutter.35 retained, mildcapturefootprint filter and premultfog. Baselineall102 immutable; prior0059 aquarium rejection is explicit visual gate for this experiment.
 - NEXT COMMAND: canonicalTruckAssetBuilder+TrailerAssetBuilder+WorldTruckInstaller, run candidate1 sixconditions, lampGPU readback, matchedD30/D34/D44 and nativeheadlamp/glass checks. Reject or refine based on actual images.
+
+- Step11 PHONE_RUN: leader phone lock observed before any candidate Unity launch; all F Unity held. Added GPU exposed-lamp readback at controlled exposure0.0001 (dayDRL/high/nightlow/nightDRL/off), restoring previous globals in finally. Candidate rebuild wrapper checks/waits PHONE_RUN before each of4Unity steps and capture. Six regression tests added; baseline cache untouched.
+- NEXT COMMAND: pwsh -NoProfile -ExecutionPolicy Bypass -File artifacts/truck-paint-r1/rebuild-candidate.ps1 -Round candidate1 (waits for lock release before launching Unity); then measure/inspect candidate102.

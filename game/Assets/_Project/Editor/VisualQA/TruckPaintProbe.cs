@@ -32,6 +32,8 @@ namespace Game.Editor.VisualQA
             public string originalShaderSha256;
             public Sample[] samples;
             public string lampTextureFormat, drlTextureR, highTextureR, drlGpuR, highGpuR, nightDrlGpuR, nightLowGpuR, highOffGpuR;
+            public float nitsPerEncodedUnit, emissionProbeExposure;
+            public string exposedDayDrl, exposedHigh, exposedNightLow, exposedNightDrl, exposedHighOff;
             public bool drlFinite, highFinite, daytimeLowBeamOff, automaticNightLowBeamOn;
         }
 
@@ -129,6 +131,8 @@ namespace Game.Editor.VisualQA
             var evidence = new Evidence { unityVersion = Application.unityVersion, colorSpace = QualitySettings.activeColorSpace.ToString(), graphicsDevice = SystemInfo.graphicsDeviceType.ToString(),
                 originalPaintPropertyType = original.GetPropertyType(original.FindPropertyIndex("_PaintColor")).ToString(), originalShaderSha256 = sha, samples = samples.ToArray() };
             var previousSun=RenderSettings.sun;
+            var previousState=Shader.GetGlobalTexture("_TruckLightState");
+            float previousScale=Shader.GetGlobalFloat("_TruckLightNitsScale"), previousExposure=Shader.GetGlobalFloat("_KamionExposure");
             var sunGo=new GameObject("Truck lamp numeric probe sun");
             var lampGo=new GameObject("Truck lamp numeric probe state");
             try
@@ -152,11 +156,23 @@ namespace Game.Editor.VisualQA
                 evidence.nightDrlGpuR=Read(lampShader,1f,true,true,out _).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
                 evidence.nightLowGpuR=Read(lampShader,2f,true,true,out _).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
                 evidence.highOffGpuR=Read(lampShader,3f,true,true,out _).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
+                evidence.nitsPerEncodedUnit=TruckLights.NitsPerEncodedUnit;
+                evidence.emissionProbeExposure=0.0001f; Shader.SetGlobalFloat("_KamionExposure",evidence.emissionProbeExposure);
+                var decodeShader=BuildProbeShader("TruckLampRadiance(SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2((_PaintColor.r + 0.5)/16.0,0.5),0).rgb)");
+                sun.transform.rotation=Quaternion.Euler(40f,0f,0f); lights.highBeam=true; lights.Refresh();
+                evidence.exposedDayDrl=Read(decodeShader,1f,true,true,out _).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
+                evidence.exposedHigh=Read(decodeShader,3f,true,true,out _).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
+                sun.transform.rotation=Quaternion.Euler(-5f,0f,0f); lights.highBeam=false; lights.Refresh();
+                evidence.exposedNightLow=Read(decodeShader,2f,true,true,out _).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
+                evidence.exposedNightDrl=Read(decodeShader,1f,true,true,out _).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
+                evidence.exposedHighOff=Read(decodeShader,3f,true,true,out _).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
             }
             finally
             {
                 RenderSettings.sun=previousSun;
                 UnityEngine.Object.DestroyImmediate(lampGo); UnityEngine.Object.DestroyImmediate(sunGo);
+                Shader.SetGlobalTexture("_TruckLightState",previousState); Shader.SetGlobalFloat("_TruckLightNitsScale",previousScale);
+                Shader.SetGlobalFloat("_KamionExposure",previousExposure);
             }
             string output = EditorTools.Arg("-tintProbeOutput", Path.Combine(EditorTools.RepoRoot, "artifacts/truck-paint-r1/paint-color-probe.json"));
             Directory.CreateDirectory(Path.GetDirectoryName(output));
