@@ -11,7 +11,7 @@ namespace Game.Tests
 {
     public class RoadWearUvContractTests
     {
-        static Mesh Build(bool sentinel)
+        static Mesh Build(bool sentinel,string missingMaterial="road_asphalt")
         {
             var bake=Type.GetType("Game.World.Import.WorldMeshBake, Game.World.Import.Editor",true);
             var optionsType=bake.GetNestedType("Options");
@@ -23,7 +23,7 @@ namespace Game.Tests
                 primitiveType.GetField("Positions").SetValue(primitive,new[]{new Vector3(j*2,0,0),new Vector3(j*2+1,0,0),new Vector3(j*2,0,1)});
                 primitiveType.GetField("Normals").SetValue(primitive,new[]{Vector3.up,Vector3.up,Vector3.up});
                 primitiveType.GetField("Indices").SetValue(primitive,new[]{0,1,2});
-                primitiveType.GetField("Material").SetValue(primitive,"road_asphalt");
+                primitiveType.GetField("Material").SetValue(primitive,j==1?missingMaterial:"road_asphalt");
                 if(j==0)primitiveType.GetField("Uv1").SetValue(primitive,new[]{Vector2.zero,new Vector2(.5f,.25f),new Vector2(-1,5)});
                 list.Add(primitive);
             }
@@ -62,6 +62,13 @@ namespace Game.Tests
         public void OtherLayersKeepTheirLegacyZeroFallback()
         {
             var mesh=Build(false);
+            try{var bytes=Bytes(mesh);for(int i=3;i<6;i++)Assert.That(Uv(mesh,bytes,i),Is.EqualTo(Vector2.zero));}
+            finally{UnityEngine.Object.DestroyImmediate(mesh);}
+        }
+        [Test]
+        public void MixedRoadLayerKeepsMissingSidewalkUvAtLegacyZero()
+        {
+            var mesh=Build(true,"sidewalk_paving");
             try{var bytes=Bytes(mesh);for(int i=3;i<6;i++)Assert.That(Uv(mesh,bytes,i),Is.EqualTo(Vector2.zero));}
             finally{UnityEngine.Object.DestroyImmediate(mesh);}
         }

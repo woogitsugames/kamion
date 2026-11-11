@@ -68,7 +68,7 @@ namespace Game.World.Import
                 if (uv1 != null)
                 {
                     if (p.Uv1 != null) Array.Copy(p.Uv1, 0, uv1, b, p.Uv1.Length);
-                    else if (o.RoadWearSentinel)
+                    else if (o.RoadWearSentinel && (p.Material == "road_asphalt" || p.Material == "road_asphalt_new"))
                         for (int i = 0; i < p.Positions.Length; i++) uv1[b + i] = new Vector2(-1f, 5f);
                 }
                 if (col != null)
