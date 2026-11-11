@@ -6,3 +6,4 @@ Library copied for independent import. NEXT: wait for PHONE_RUN removal, then pw
 Cab export round-trip baseline recorded in export-baseline.log. PHONE_RUN still respected; baseline renders pending. NEXT: pwsh artifacts/cab-r1/render-matrix.ps1 -Stage before
 Initial Blender check found ignored LOD0 FBX missing; copied local truck source directories from main and repeated check (see export-baseline.log). NEXT: finish Library copy, then wait PHONE_RUN and render baseline.
 Added editor-only native mirror RT/configuration audit; no runtime settings changed. NEXT: after baseline matrix run CabMirrorAudit.Run with -cabTier Low/High -cabLighting overcast/clear.
+Instrument/head-box source sightlines PASS. Interior-only 315-ray grid: four mirror glasses 100% clear, WideR 314/315 clear; front and kerb 315/315. Exterior housings/glass adjustment excluded, so full visibility UNVERIFIED until renders. NEXT: wait PHONE_RUN, render baseline, inspect native mirror images.
