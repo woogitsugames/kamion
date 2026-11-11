@@ -1,10 +1,10 @@
-# Stan rundy sbs r1
+﻿# Stan rundy sbs r1
 Przeczytano zlecenie i zasady. Gałąź gpt-sbs-r1, baza main 4c9905b1.
 Trwa przygotowanie lokalnych danych worktree; nie uruchomiono Unity.
 Następny krok: uv run --project tools/refs python tools/refs/sbs_gate3.py --help
 
-Dane worktree skopiowane; junctiony referencji tylko do odczytu. Dodano klasy A/B/C; J1, J2 i J3 wy??czone z domy?lnego zestawu dowodowego do kalibracji. Fotometria domy?lnie wy??czona do sprawdzenia masek. Skrypt SBS pobiera i zwalnia slot przed ka?dym startem Unity.
-Nast?pny krok: uv run --project tools/refs python tools/refs/sbs_gate3.py prepare
+Dane worktree skopiowane; junctiony referencji tylko do odczytu. Klasy A/B/C oraz wykluczenia J1/J2/J3 zapisano jawnie. Fotometria domyślnie wyłączona do sprawdzenia masek. Każdy start Unity wymaga slotu.
+Następny krok: uv run --project tools/refs python tools/refs/sbs_gate3.py prepare
 ## Kalibracja i przygotowanie renderu
 Ukończono kopiowanie danych i cache Library bez Bee/BuildPlayerData/PackageCache. Przygotowano 40 referencji z jawną klasyfikacją pozy. Dla 2948 wskazano dwie krawędzie jezdni na wyprostowanym zdjęciu; ich przecięcie wyznacza horyzont roboczy, z zastrzeżeniem spadku drogi.
 Następny krok: pwsh scripts/sbs-gate3.ps1 -EditMode
@@ -56,4 +56,8 @@ PBR Medium jest kompletny i aktualny: missing=0, stale=0, więc import nie powin
 Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/import-and-baseline.ps1
 ## Dokumentacja i limit czasu
 Uaktualniono ADR 0111 o 42 źródła, rzeczywiste wyniki walidacji, limity heavy/Unity i cel pracy do około 12.11, 21:31 czasu polskiego. Parser PowerShell potwierdził poprawność czterech wrapperów bez uruchamiania Unity ani Pythona obliczeniowego.
+Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20
+
+## Import Unity rozpoczęty
+Uzyskano slot gpt-sbs; import wystartował około 22:25. Kontrola CC0: 13 zasobów, 65 plików, 0 problemów. Zaktualizowano ADR i poprawiono kodowanie polskich znaków w dokumentacji. Nie uruchomiono dodatkowych ciężkich procesów Pythona.
 Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20
