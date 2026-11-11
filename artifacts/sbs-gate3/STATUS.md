@@ -16,3 +16,6 @@ NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10
 
 Step 6: full GIS baseline complete: 370 passed, 1 xfailed, 643.04 s. Report saved, honest PARTIAL pending 40 photo/render pairs, EditMode and pose review. No runtime/world code changed. Artifacts will be copied to main for leader visibility.
 NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10
+
+Step 7: existing refs tool tests also pass after declaring NumPy directly (see pytest-refs.log). Unity remains queued under the owner-confirmed PHONE_RUN lock.
+NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10
