@@ -124,3 +124,36 @@ P0 z HANDOVER, wiadukt s≈1432–1480; `test_report_not_stale`: `fidelity_qa.js
 176 passed, 0 failed, 7 skipped, 5 inconclusive (brak prefabrykatu TRAKT w worktree).
 Wcześniejsze: `blender/it{1..6}/`, `unity/r2..r4/`, `plan_overlay.jpg`.
 Przegląd `visual-critic`: do zrobienia przez lidera (subagent nie tworzy subagentów).
+
+## r7 — S10 E (2026-11-11, w toku — bramki końcowe PENDING)
+
+- Zamrożona baza `901c427f2bc5cebf9571adc14df3253bbd3bd772`, świeży własny PBR/hero/świat i kanoniczny pojazd przed
+  160 prawdziwymi PNG: 40 kamer × Low `WorldC` / High `WorldC_High` × clear / overcast. Baseline192rawSHA i pojazd
+  zapisane w `artifacts/firestation-r10/`; bez porównywania starego cache z nową produkcją.
+- Dwa świerki przed szczytem przesunięte +4m w osi u, trzeci przed skrzydłem zachowuje środek. Korony: połączony,
+  nieregularny rdzeń .55R, niskie gałęzie i wycięte karty z dwoma sprayami ±26° o wspólnej nasadzie. Źródło:
+  Poly Haven `fir_tree_01`, CC0, Rob Tuytel / Rico Cilliers, przypięte dwa SHA256 w `conifer_source.json`.
+  To krótkoigłowy fir/conifer, **nie zweryfikowany skan Picea ani geometria rzeczywistego świerka JRG2**.
+  Źródła repo-relative i pakiet odtworzenia `source-cache/` + `restore_cc0_inputs.py`, bez zależności od strumienia B.
+- Trzy nieregularne pokroje tui i zasiane odchylenie odstępów maks.19.50% (limit±25%). Wspólna paleta własnego atlasu
+  i lokalnego aliasu `fire_station_thuja_shell`; dotychczasowe globalne kolory/tekstury żywopłotów zachowane.
+- LOD **9344 / 2828 / 164**, wcześniej9944 /2828 /164. High3materiały, Low2bez nowego batcha. Karty wykorzystują
+  istniejący `fire_station_alpha`, ustawienia importu i zachowania pokrycia alfa bez zmian. Android-target Editor
+  importuje rzeczywiste ASTC6×6,1024×512,11mipów: stare litery/płot/brama/998 mają alfa dokładnie zgodną do mip3,
+  dalsze poziomy mają jawne różnice progu (letters1pixelmip4/8mip5,fence3/gate1mip5,9983mip6). Native i max1024
+  to **ta sama importowana rozdzielczość**, nie niezależne testy. Oglądane kadry ref/route bez oczywistej regresji
+  napisu/płotu/flagi/okrągłego obramienia; telefon i migotanie pozostają UNVERIFIED.
+- Po dwóch odrzuconych próbach (rzadka korona, potem sam połączony rdzeń) ROOT przyjął bundle2 jako ograniczoną
+  poprawę tej iteracji. Korony nadal węższe/kolumnowe względem7197; **nie deklarujemy mocnego dopasowania do zdjęcia**.
+  Rzeczywisty kolorystyczny proxy odsłonięcia prawej głowy łuku rośnie Low62.87→99.11%,High54.25→97.81%; całego
+  otworu51.45→88.70%,45.16→85.42%. Proxy klasyfikuje zieleń/ciemne piksele w ustalonej masce, ma fałszywe wskazania
+  na obramieniu/AA i **nie jest pomiarem widoczności z bufora głębi ani100% szkła**. Dolne tuje nadal przesłaniają otwory.
+- D48/A: zachowana baza tynku x1.15 `[.21275,.299,.41975]`. Semantyczny baseline czystego tynku szczytu Low105/123/141,
+  High112/131/150; skrzydło/tower nie wymagają rozjaśnienia względem szczytu. To stan zastany zachowany, nie nowa poprawka.
+- Oddzielny kandydat fasady: szkło hali/okrągłe `[.102,.108,.117]` z łagodnym gradientem nieba .90+.06, brązowy klinkier
+  `[.27,.135,.06]`, miejscowe zacieki pod obróbką .35–1m, gęsty rdzeń7–16cm z miękkim ramieniem. Strefa rozbryzgu przy
+  gruncie, kratki i flaga zachowane. Target szkła60–75 sRGB wymaga świeżego renderu — **PENDING**. Wszystkie9map
+  Normal/Mask/Var i czyste piksele tynku/dachu/opasek/flagi/okien biura dokładnie zgodne z bazą; aktualizowany manifest
+  średniej atlasu utrzymuje mnożnik blisko1 (istniejące zaokrąglenie3cyfry daje1.000743 liniowo).
+- Lokalne2widoki: Lowdraws/tris bez zmian, High−1instancedcall/widok i−1ktri z trasy. Pełna końcowa macierz, globalny
+  budżet, pełny GIS, EditMode, ocena końcowa i REPORT wciąż **PENDING**. Praca nie jest zakończona.
