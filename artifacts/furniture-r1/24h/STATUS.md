@@ -137,3 +137,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:21:12.0433527+01:00: heavy world after3; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
 
 2026-11-12T00:22:23.1205420+01:00: after3 zakończony sukcesem: 64 chunki GLB, High 479 MiB i Low 150 MiB (rozmiary eksportu, nie PSS). Brak fallback=True w logu. Zachowano manifest i streetscape_qa iteracji3; geometry czeka na heavy. NASTĘPNY KROK: sprawdzić hashe chronionych obiektów, import i wizualny efekt rozstawu słupków.
+
+2026-11-12T00:23:23.3267923+01:00: potwierdzono dostępność wszystkich czterech zdjęć wybranych do porównań. Końcowy skrypt porównań odtworzy także arkusz referencji z poprawnym polskim fontem i opisami; stare dowody pozostają zachowane. Kontrola geometrii nadal czeka na heavy w aktywnej sekwencji. NASTĘPNY KROK: odczytać wyniki kontroli i obejrzeć nowe PNG.

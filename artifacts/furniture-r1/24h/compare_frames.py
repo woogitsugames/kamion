@@ -3,6 +3,7 @@ import csv
 import json
 import re
 import sys
+import textwrap
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -99,3 +100,16 @@ if '--metrics-only' not in sys.argv:
             thumb = raw.convert('RGB'); thumb.thumbnail((480,380))
             sheet.paste(thumb,(col*480,52))
     sheet.save(ROOT/'reference-sign-after.jpg',quality=92)
+    references = json.loads((ROOT/'reference-selection.json').read_text(encoding='utf-8-sig'))
+    sheet = Image.new('RGB',(960,700),'#202020')
+    draw = ImageDraw.Draw(sheet)
+    for index, reference in enumerate(references):
+        x, y = (index%2)*480, (index//2)*350
+        caption = f"{reference['author']} | {reference['license']} | {reference['detail']}"
+        for line, label in enumerate(textwrap.wrap(caption,width=68)):
+            draw.text((x+5,y+3+line*16),label,font=font,fill='white')
+        source = ROOT.parents[2]/reference['file'].replace('\\','/')
+        with Image.open(source) as raw:
+            thumb = raw.convert('RGB'); thumb.thumbnail((475,270))
+            sheet.paste(thumb,(x,y+75))
+    sheet.save(ROOT/'daylight-reference-sheet-final.jpg',quality=92)
