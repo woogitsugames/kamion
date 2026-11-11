@@ -12,7 +12,7 @@ from PIL import Image
 
 ROOT=Path(__file__).resolve().parent
 # Initial semantic locations from the unchanged r10 camera. Recheck before first measurement.
-ROIS={'r10b_black_05':{'door':(980,590,1100,660),'hood':(1400,470,1520,525),
+ROIS={'r10b_black_05':{'door':(980,590,1100,660),'hood_legacy_mixed':(1400,470,1520,525),'hood':(1450,560,1580,630),
                      'road':(1700,940,1850,1020),'sky':(1700,20,1800,90)}}
 
 def measure(path):

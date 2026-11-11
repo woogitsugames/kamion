@@ -1,0 +1,37 @@
+{
+  "schema": "truck-sim-pl/gate3-cameras/1",
+  "region": "bialystok-industrial-c",
+  "cameras": [
+    {
+      "id": "g_current_black_wheel_02",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 50,
+      "pos": [
+        716.2093329482129,
+        -449.9653540213917,
+        142.24800000000002
+      ],
+      "look_at": [
+        717.1035026497697,
+        -448.1763709178332,
+        142.098
+      ],
+      "note": "WORKING_VALUE QA camera2m outside actual generated front wheel; no world placement changes; source life:parking:kwadrat-park-units-forecourt#0"
+    }
+  ],
+  "source_instance": {
+    "e": 716.39,
+    "n": -446.808,
+    "p": "car_hatch_black",
+    "src": "life:parking:kwadrat-park-units-forecourt#0",
+    "yaw": -2.0343,
+    "z": 141.782
+  },
+  "construction": {
+    "side": 1,
+    "front_axle_y": 1.25,
+    "radius_m": 0.316,
+    "distance_horizontal_m": 2.0
+  }
+}

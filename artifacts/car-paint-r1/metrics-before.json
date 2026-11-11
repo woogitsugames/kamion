@@ -1,0 +1,2523 @@
+{
+  "note": "PNG native display RGB/luma; fixed ROI comparison, not linear photometry. Stats CPU estimates with rounded thousands of triangles; no GPU/device proof.",
+  "rounds": {
+    "before": {
+      "Low-clear": {
+        "roi": {
+          "r10b_black_05": {
+            "door": {
+              "box": [
+                980,
+                590,
+                1100,
+                660
+              ],
+              "rgb_mean": [
+                73.66845238095237,
+                73.39583333333333,
+                71.97214285714286
+              ],
+              "rgb_median": [
+                73.0,
+                73.0,
+                72.0
+              ],
+              "display_luma_mean": 73.3510016904762,
+              "display_luma_p05": 70.06819999999999,
+              "display_luma_p95": 77.7152,
+              "fraction_any250": 0.0
+            },
+            "hood_legacy_mixed": {
+              "box": [
+                1400,
+                470,
+                1520,
+                525
+              ],
+              "rgb_mean": [
+                64.48409090909091,
+                71.08060606060606,
+                83.13196969696969
+              ],
+              "rgb_median": [
+                68.0,
+                73.0,
+                86.0
+              ],
+              "display_luma_mean": 70.5482953939394,
+              "display_luma_p05": 45.7192,
+              "display_luma_p95": 86.53059999999999,
+              "fraction_any250": 0.0
+            },
+            "hood": {
+              "box": [
+                1450,
+                560,
+                1580,
+                630
+              ],
+              "rgb_mean": [
+                65.94758241758242,
+                70.77076923076923,
+                83.28373626373626
+              ],
+              "rgb_median": [
+                66.0,
+                71.0,
+                83.0
+              ],
+              "display_luma_mean": 70.64879593406594,
+              "display_luma_p05": 66.9438,
+              "display_luma_p95": 74.8074,
+              "fraction_any250": 0.0
+            },
+            "road": {
+              "box": [
+                1700,
+                940,
+                1850,
+                1020
+              ],
+              "rgb_mean": [
+                93.82583333333334,
+                91.99016666666667,
+                87.6055
+              ],
+              "rgb_median": [
+                93.0,
+                91.0,
+                87.0
+              ],
+              "display_luma_mean": 92.06385646666668,
+              "display_luma_p05": 85.1364,
+              "display_luma_p95": 100.06419999999999,
+              "fraction_any250": 0.0
+            },
+            "sky": {
+              "box": [
+                1700,
+                20,
+                1800,
+                90
+              ],
+              "rgb_mean": [
+                125.674,
+                142.24642857142857,
+                152.85357142857143
+              ],
+              "rgb_median": [
+                126.0,
+                143.0,
+                153.0
+              ],
+              "display_luma_mean": 139.48896597142857,
+              "display_luma_p05": 138.3966,
+              "display_luma_p95": 141.3886,
+              "fraction_any250": 0.0
+            }
+          }
+        },
+        "stats": {
+          "biezenstwa-above": {
+            "draws": 430,
+            "instances": 458,
+            "triangles_k_rounded": 41,
+            "cells": 130,
+            "forest_hlod_cells": 64
+          },
+          "cab-dash": {
+            "draws": 433,
+            "instances": 325,
+            "triangles_k_rounded": 30,
+            "cells": 209,
+            "forest_hlod_cells": 13
+          },
+          "cab-driver": {
+            "draws": 449,
+            "instances": 397,
+            "triangles_k_rounded": 33,
+            "cells": 204,
+            "forest_hlod_cells": 14
+          },
+          "cab-gate": {
+            "draws": 437,
+            "instances": 387,
+            "triangles_k_rounded": 31,
+            "cells": 185,
+            "forest_hlod_cells": 9
+          },
+          "cab-left": {
+            "draws": 362,
+            "instances": 277,
+            "triangles_k_rounded": 23,
+            "cells": 86,
+            "forest_hlod_cells": 17
+          },
+          "cab-mirror-front": {
+            "draws": 325,
+            "instances": 119,
+            "triangles_k_rounded": 17,
+            "cells": 154,
+            "forest_hlod_cells": 14
+          },
+          "cab-mirrors-left": {
+            "draws": 266,
+            "instances": 199,
+            "triangles_k_rounded": 16,
+            "cells": 60,
+            "forest_hlod_cells": 13
+          },
+          "cab-mirrors-right": {
+            "draws": 283,
+            "instances": 114,
+            "triangles_k_rounded": 17,
+            "cells": 151,
+            "forest_hlod_cells": 16
+          },
+          "cab-right": {
+            "draws": 473,
+            "instances": 314,
+            "triangles_k_rounded": 34,
+            "cells": 251,
+            "forest_hlod_cells": 23
+          },
+          "car_lod_08": {
+            "draws": 234,
+            "instances": 156,
+            "triangles_k_rounded": 37,
+            "cells": 164,
+            "forest_hlod_cells": 106
+          },
+          "car_lod_12": {
+            "draws": 239,
+            "instances": 153,
+            "triangles_k_rounded": 38,
+            "cells": 161,
+            "forest_hlod_cells": 102
+          },
+          "car_lod_15": {
+            "draws": 226,
+            "instances": 151,
+            "triangles_k_rounded": 35,
+            "cells": 162,
+            "forest_hlod_cells": 102
+          },
+          "car_lod_25": {
+            "draws": 264,
+            "instances": 144,
+            "triangles_k_rounded": 33,
+            "cells": 166,
+            "forest_hlod_cells": 102
+          },
+          "chase": {
+            "draws": 394,
+            "instances": 251,
+            "triangles_k_rounded": 22,
+            "cells": 180,
+            "forest_hlod_cells": 9
+          },
+          "dk8-dk19-exit": {
+            "draws": 76,
+            "instances": 935,
+            "triangles_k_rounded": 63,
+            "cells": 74,
+            "forest_hlod_cells": 48
+          },
+          "driver-andersa-to-putry": {
+            "draws": 203,
+            "instances": 172,
+            "triangles_k_rounded": 40,
+            "cells": 200,
+            "forest_hlod_cells": 104
+          },
+          "fire-station-abeam": {
+            "draws": 253,
+            "instances": 275,
+            "triangles_k_rounded": 47,
+            "cells": 224,
+            "forest_hlod_cells": 104
+          },
+          "fire-station-above": {
+            "draws": 220,
+            "instances": 329,
+            "triangles_k_rounded": 33,
+            "cells": 219,
+            "forest_hlod_cells": 54
+          },
+          "fire-station-ref7197": {
+            "draws": 171,
+            "instances": 118,
+            "triangles_k_rounded": 30,
+            "cells": 126,
+            "forest_hlod_cells": 89
+          },
+          "fire-station-route": {
+            "draws": 215,
+            "instances": 142,
+            "triangles_k_rounded": 48,
+            "cells": 229,
+            "forest_hlod_cells": 162
+          },
+          "g3a-eye-s0262": {
+            "draws": 403,
+            "instances": 222,
+            "triangles_k_rounded": 30,
+            "cells": 128,
+            "forest_hlod_cells": 3
+          },
+          "g3a-rondo-bie-approach": {
+            "draws": 144,
+            "instances": 146,
+            "triangles_k_rounded": 13,
+            "cells": 106,
+            "forest_hlod_cells": 0
+          },
+          "g3b-eye-s1482": {
+            "draws": 169,
+            "instances": 252,
+            "triangles_k_rounded": 39,
+            "cells": 180,
+            "forest_hlod_cells": 108
+          },
+          "g3b-rondo-putry-approach": {
+            "draws": 129,
+            "instances": 110,
+            "triangles_k_rounded": 24,
+            "cells": 161,
+            "forest_hlod_cells": 101
+          },
+          "glass_front": {
+            "draws": 328,
+            "instances": 181,
+            "triangles_k_rounded": 31,
+            "cells": 213,
+            "forest_hlod_cells": 54
+          },
+          "kwadrat-park-gate": {
+            "draws": 512,
+            "instances": 236,
+            "triangles_k_rounded": 45,
+            "cells": 138,
+            "forest_hlod_cells": 88
+          },
+          "photo-biezenstwa-ground": {
+            "draws": 144,
+            "instances": 145,
+            "triangles_k_rounded": 12,
+            "cells": 104,
+            "forest_hlod_cells": 0
+          },
+          "putry-above": {
+            "draws": 171,
+            "instances": 146,
+            "triangles_k_rounded": 12,
+            "cells": 152,
+            "forest_hlod_cells": 23
+          },
+          "r10_block_1": {
+            "draws": 240,
+            "instances": 208,
+            "triangles_k_rounded": 17,
+            "cells": 222,
+            "forest_hlod_cells": 14
+          },
+          "r10_block_2": {
+            "draws": 319,
+            "instances": 327,
+            "triangles_k_rounded": 21,
+            "cells": 186,
+            "forest_hlod_cells": 7
+          },
+          "r10_block_3": {
+            "draws": 310,
+            "instances": 337,
+            "triangles_k_rounded": 19,
+            "cells": 180,
+            "forest_hlod_cells": 5
+          },
+          "r10_block_4": {
+            "draws": 298,
+            "instances": 261,
+            "triangles_k_rounded": 16,
+            "cells": 186,
+            "forest_hlod_cells": 9
+          },
+          "r10_block_5": {
+            "draws": 320,
+            "instances": 391,
+            "triangles_k_rounded": 20,
+            "cells": 196,
+            "forest_hlod_cells": 9
+          },
+          "r10_fence_1": {
+            "draws": 280,
+            "instances": 231,
+            "triangles_k_rounded": 23,
+            "cells": 160,
+            "forest_hlod_cells": 20
+          },
+          "r10_fence_2": {
+            "draws": 226,
+            "instances": 168,
+            "triangles_k_rounded": 25,
+            "cells": 241,
+            "forest_hlod_cells": 67
+          },
+          "r10_fence_3": {
+            "draws": 238,
+            "instances": 178,
+            "triangles_k_rounded": 29,
+            "cells": 242,
+            "forest_hlod_cells": 73
+          },
+          "r10_front_04": {
+            "draws": 233,
+            "instances": 159,
+            "triangles_k_rounded": 37,
+            "cells": 166,
+            "forest_hlod_cells": 108
+          },
+          "r10_hall_1": {
+            "draws": 434,
+            "instances": 226,
+            "triangles_k_rounded": 30,
+            "cells": 61,
+            "forest_hlod_cells": 24
+          },
+          "r10_hall_2": {
+            "draws": 420,
+            "instances": 344,
+            "triangles_k_rounded": 35,
+            "cells": 68,
+            "forest_hlod_cells": 29
+          },
+          "r10_hall_3": {
+            "draws": 398,
+            "instances": 260,
+            "triangles_k_rounded": 29,
+            "cells": 250,
+            "forest_hlod_cells": 37
+          },
+          "r10_hall_4": {
+            "draws": 407,
+            "instances": 188,
+            "triangles_k_rounded": 50,
+            "cells": 198,
+            "forest_hlod_cells": 102
+          },
+          "r10_house_1": {
+            "draws": 148,
+            "instances": 78,
+            "triangles_k_rounded": 37,
+            "cells": 213,
+            "forest_hlod_cells": 155
+          },
+          "r10_house_2": {
+            "draws": 106,
+            "instances": 57,
+            "triangles_k_rounded": 34,
+            "cells": 210,
+            "forest_hlod_cells": 155
+          },
+          "r10_office_1": {
+            "draws": 184,
+            "instances": 146,
+            "triangles_k_rounded": 15,
+            "cells": 43,
+            "forest_hlod_cells": 31
+          },
+          "r10_office_2": {
+            "draws": 610,
+            "instances": 367,
+            "triangles_k_rounded": 63,
+            "cells": 68,
+            "forest_hlod_cells": 30
+          },
+          "r10_rear_04": {
+            "draws": 364,
+            "instances": 271,
+            "triangles_k_rounded": 25,
+            "cells": 98,
+            "forest_hlod_cells": 14
+          },
+          "r10_shed_1": {
+            "draws": 190,
+            "instances": 175,
+            "triangles_k_rounded": 15,
+            "cells": 41,
+            "forest_hlod_cells": 29
+          },
+          "r10_shed_2": {
+            "draws": 176,
+            "instances": 114,
+            "triangles_k_rounded": 14,
+            "cells": 261,
+            "forest_hlod_cells": 45
+          },
+          "r10_shed_3": {
+            "draws": 430,
+            "instances": 938,
+            "triangles_k_rounded": 50,
+            "cells": 200,
+            "forest_hlod_cells": 26
+          },
+          "r10_wheel_02": {
+            "draws": 232,
+            "instances": 160,
+            "triangles_k_rounded": 39,
+            "cells": 156,
+            "forest_hlod_cells": 103
+          },
+          "r10b_black_05": {
+            "draws": 380,
+            "instances": 167,
+            "triangles_k_rounded": 48,
+            "cells": 171,
+            "forest_hlod_cells": 89
+          },
+          "r10b_black_20": {
+            "draws": 368,
+            "instances": 159,
+            "triangles_k_rounded": 42,
+            "cells": 169,
+            "forest_hlod_cells": 84
+          },
+          "r10b_black_45": {
+            "draws": 343,
+            "instances": 142,
+            "triangles_k_rounded": 36,
+            "cells": 169,
+            "forest_hlod_cells": 83
+          },
+          "r10b_blue_05": {
+            "draws": 443,
+            "instances": 155,
+            "triangles_k_rounded": 66,
+            "cells": 168,
+            "forest_hlod_cells": 84
+          },
+          "r10b_grey_05": {
+            "draws": 440,
+            "instances": 160,
+            "triangles_k_rounded": 57,
+            "cells": 168,
+            "forest_hlod_cells": 81
+          },
+          "r10b_silver_05": {
+            "draws": 228,
+            "instances": 159,
+            "triangles_k_rounded": 36,
+            "cells": 171,
+            "forest_hlod_cells": 108
+          },
+          "route-onramp-andersa": {
+            "draws": 371,
+            "instances": 986,
+            "triangles_k_rounded": 59,
+            "cells": 269,
+            "forest_hlod_cells": 39
+          },
+          "route-onramp-andersa-above": {
+            "draws": 390,
+            "instances": 1171,
+            "triangles_k_rounded": 77,
+            "cells": 239,
+            "forest_hlod_cells": 49
+          },
+          "route-putry-approach": {
+            "draws": 176,
+            "instances": 115,
+            "triangles_k_rounded": 28,
+            "cells": 171,
+            "forest_hlod_cells": 107
+          },
+          "route-putry-entry-signs": {
+            "draws": 157,
+            "instances": 168,
+            "triangles_k_rounded": 22,
+            "cells": 145,
+            "forest_hlod_cells": 94
+          },
+          "stretch-01": {
+            "draws": 459,
+            "instances": 423,
+            "triangles_k_rounded": 32,
+            "cells": 192,
+            "forest_hlod_cells": 10
+          },
+          "stretch-02": {
+            "draws": 563,
+            "instances": 414,
+            "triangles_k_rounded": 55,
+            "cells": 158,
+            "forest_hlod_cells": 6
+          },
+          "stretch-03": {
+            "draws": 403,
+            "instances": 227,
+            "triangles_k_rounded": 29,
+            "cells": 133,
+            "forest_hlod_cells": 3
+          },
+          "stretch-04": {
+            "draws": 379,
+            "instances": 363,
+            "triangles_k_rounded": 26,
+            "cells": 251,
+            "forest_hlod_cells": 14
+          },
+          "stretch-05-docks": {
+            "draws": 718,
+            "instances": 449,
+            "triangles_k_rounded": 78,
+            "cells": 218,
+            "forest_hlod_cells": 84
+          },
+          "trailer-34": {
+            "draws": 415,
+            "instances": 256,
+            "triangles_k_rounded": 30,
+            "cells": 201,
+            "forest_hlod_cells": 13
+          },
+          "trailer-side": {
+            "draws": 319,
+            "instances": 166,
+            "triangles_k_rounded": 25,
+            "cells": 229,
+            "forest_hlod_cells": 59
+          },
+          "truck-34": {
+            "draws": 260,
+            "instances": 146,
+            "triangles_k_rounded": 34,
+            "cells": 164,
+            "forest_hlod_cells": 108
+          },
+          "truck-34r": {
+            "draws": 131,
+            "instances": 153,
+            "triangles_k_rounded": 14,
+            "cells": 44,
+            "forest_hlod_cells": 36
+          },
+          "truck-at-gate": {
+            "draws": 133,
+            "instances": 102,
+            "triangles_k_rounded": 16,
+            "cells": 66,
+            "forest_hlod_cells": 59
+          },
+          "truck-front": {
+            "draws": 124,
+            "instances": 105,
+            "triangles_k_rounded": 15,
+            "cells": 64,
+            "forest_hlod_cells": 57
+          },
+          "truck-rear34": {
+            "draws": 409,
+            "instances": 244,
+            "triangles_k_rounded": 25,
+            "cells": 200,
+            "forest_hlod_cells": 13
+          },
+          "truck-side": {
+            "draws": 304,
+            "instances": 149,
+            "triangles_k_rounded": 23,
+            "cells": 189,
+            "forest_hlod_cells": 42
+          }
+        }
+      },
+      "Low-overcast": {
+        "roi": {
+          "r10b_black_05": {
+            "door": {
+              "box": [
+                980,
+                590,
+                1100,
+                660
+              ],
+              "rgb_mean": [
+                33.80904761904762,
+                34.16392857142857,
+                34.93488095238095
+              ],
+              "rgb_median": [
+                33.0,
+                34.0,
+                34.0
+              ],
+              "display_luma_mean": 34.144143642857145,
+              "display_luma_p05": 30.787399999999998,
+              "display_luma_p95": 39.1444,
+              "fraction_any250": 0.0
+            },
+            "hood_legacy_mixed": {
+              "box": [
+                1400,
+                470,
+                1520,
+                525
+              ],
+              "rgb_mean": [
+                73.24909090909091,
+                75.43151515151516,
+                84.39909090909092
+              ],
+              "rgb_median": [
+                77.0,
+                80.0,
+                92.0
+              ],
+              "display_luma_mean": 75.61499072727271,
+              "display_luma_p05": 29.8596,
+              "display_luma_p95": 95.58959999999999,
+              "fraction_any250": 0.0
+            },
+            "hood": {
+              "box": [
+                1450,
+                560,
+                1580,
+                630
+              ],
+              "rgb_mean": [
+                71.47824175824177,
+                73.84087912087912,
+                86.0610989010989
+              ],
+              "rgb_median": [
+                72.0,
+                74.0,
+                86.0
+              ],
+              "display_luma_mean": 74.22088228571428,
+              "display_luma_p05": 68.36899999999999,
+              "display_luma_p95": 81.37299999999999,
+              "fraction_any250": 0.0
+            },
+            "road": {
+              "box": [
+                1700,
+                940,
+                1850,
+                1020
+              ],
+              "rgb_mean": [
+                55.68366666666667,
+                54.73491666666666,
+                53.55283333333333
+              ],
+              "rgb_median": [
+                55.0,
+                54.0,
+                53.0
+              ],
+              "display_luma_mean": 54.8512745,
+              "display_luma_p05": 48.855599999999995,
+              "display_luma_p95": 62.0682,
+              "fraction_any250": 0.0
+            },
+            "sky": {
+              "box": [
+                1700,
+                20,
+                1800,
+                90
+              ],
+              "rgb_mean": [
+                161.95185714285714,
+                164.66042857142858,
+                168.90857142857143
+              ],
+              "rgb_median": [
+                162.0,
+                164.0,
+                169.0
+              ],
+              "display_luma_mean": 164.3913022,
+              "display_luma_p05": 162.65099999999998,
+              "display_luma_p95": 170.65099999999998,
+              "fraction_any250": 0.0
+            }
+          }
+        },
+        "stats": {
+          "biezenstwa-above": {
+            "draws": 430,
+            "instances": 458,
+            "triangles_k_rounded": 41,
+            "cells": 130,
+            "forest_hlod_cells": 64
+          },
+          "cab-dash": {
+            "draws": 433,
+            "instances": 325,
+            "triangles_k_rounded": 30,
+            "cells": 209,
+            "forest_hlod_cells": 13
+          },
+          "cab-driver": {
+            "draws": 449,
+            "instances": 397,
+            "triangles_k_rounded": 33,
+            "cells": 204,
+            "forest_hlod_cells": 14
+          },
+          "cab-gate": {
+            "draws": 437,
+            "instances": 387,
+            "triangles_k_rounded": 31,
+            "cells": 185,
+            "forest_hlod_cells": 9
+          },
+          "cab-left": {
+            "draws": 362,
+            "instances": 277,
+            "triangles_k_rounded": 23,
+            "cells": 86,
+            "forest_hlod_cells": 17
+          },
+          "cab-mirror-front": {
+            "draws": 325,
+            "instances": 119,
+            "triangles_k_rounded": 17,
+            "cells": 154,
+            "forest_hlod_cells": 14
+          },
+          "cab-mirrors-left": {
+            "draws": 266,
+            "instances": 199,
+            "triangles_k_rounded": 16,
+            "cells": 60,
+            "forest_hlod_cells": 13
+          },
+          "cab-mirrors-right": {
+            "draws": 283,
+            "instances": 114,
+            "triangles_k_rounded": 17,
+            "cells": 151,
+            "forest_hlod_cells": 16
+          },
+          "cab-right": {
+            "draws": 473,
+            "instances": 314,
+            "triangles_k_rounded": 34,
+            "cells": 251,
+            "forest_hlod_cells": 23
+          },
+          "car_lod_08": {
+            "draws": 234,
+            "instances": 156,
+            "triangles_k_rounded": 37,
+            "cells": 164,
+            "forest_hlod_cells": 106
+          },
+          "car_lod_12": {
+            "draws": 239,
+            "instances": 153,
+            "triangles_k_rounded": 38,
+            "cells": 161,
+            "forest_hlod_cells": 102
+          },
+          "car_lod_15": {
+            "draws": 226,
+            "instances": 151,
+            "triangles_k_rounded": 35,
+            "cells": 162,
+            "forest_hlod_cells": 102
+          },
+          "car_lod_25": {
+            "draws": 264,
+            "instances": 144,
+            "triangles_k_rounded": 33,
+            "cells": 166,
+            "forest_hlod_cells": 102
+          },
+          "chase": {
+            "draws": 394,
+            "instances": 251,
+            "triangles_k_rounded": 22,
+            "cells": 180,
+            "forest_hlod_cells": 9
+          },
+          "dk8-dk19-exit": {
+            "draws": 76,
+            "instances": 935,
+            "triangles_k_rounded": 63,
+            "cells": 74,
+            "forest_hlod_cells": 48
+          },
+          "driver-andersa-to-putry": {
+            "draws": 203,
+            "instances": 172,
+            "triangles_k_rounded": 40,
+            "cells": 200,
+            "forest_hlod_cells": 104
+          },
+          "fire-station-abeam": {
+            "draws": 253,
+            "instances": 275,
+            "triangles_k_rounded": 47,
+            "cells": 224,
+            "forest_hlod_cells": 104
+          },
+          "fire-station-above": {
+            "draws": 220,
+            "instances": 329,
+            "triangles_k_rounded": 33,
+            "cells": 219,
+            "forest_hlod_cells": 54
+          },
+          "fire-station-ref7197": {
+            "draws": 171,
+            "instances": 118,
+            "triangles_k_rounded": 30,
+            "cells": 126,
+            "forest_hlod_cells": 89
+          },
+          "fire-station-route": {
+            "draws": 215,
+            "instances": 142,
+            "triangles_k_rounded": 48,
+            "cells": 229,
+            "forest_hlod_cells": 162
+          },
+          "g3a-eye-s0262": {
+            "draws": 403,
+            "instances": 222,
+            "triangles_k_rounded": 30,
+            "cells": 128,
+            "forest_hlod_cells": 3
+          },
+          "g3a-rondo-bie-approach": {
+            "draws": 144,
+            "instances": 146,
+            "triangles_k_rounded": 13,
+            "cells": 106,
+            "forest_hlod_cells": 0
+          },
+          "g3b-eye-s1482": {
+            "draws": 169,
+            "instances": 252,
+            "triangles_k_rounded": 39,
+            "cells": 180,
+            "forest_hlod_cells": 108
+          },
+          "g3b-rondo-putry-approach": {
+            "draws": 129,
+            "instances": 110,
+            "triangles_k_rounded": 24,
+            "cells": 161,
+            "forest_hlod_cells": 101
+          },
+          "glass_front": {
+            "draws": 328,
+            "instances": 181,
+            "triangles_k_rounded": 31,
+            "cells": 213,
+            "forest_hlod_cells": 54
+          },
+          "kwadrat-park-gate": {
+            "draws": 512,
+            "instances": 236,
+            "triangles_k_rounded": 45,
+            "cells": 138,
+            "forest_hlod_cells": 88
+          },
+          "photo-biezenstwa-ground": {
+            "draws": 144,
+            "instances": 145,
+            "triangles_k_rounded": 12,
+            "cells": 104,
+            "forest_hlod_cells": 0
+          },
+          "putry-above": {
+            "draws": 171,
+            "instances": 146,
+            "triangles_k_rounded": 12,
+            "cells": 152,
+            "forest_hlod_cells": 23
+          },
+          "r10_block_1": {
+            "draws": 240,
+            "instances": 208,
+            "triangles_k_rounded": 17,
+            "cells": 222,
+            "forest_hlod_cells": 14
+          },
+          "r10_block_2": {
+            "draws": 319,
+            "instances": 327,
+            "triangles_k_rounded": 21,
+            "cells": 186,
+            "forest_hlod_cells": 7
+          },
+          "r10_block_3": {
+            "draws": 310,
+            "instances": 337,
+            "triangles_k_rounded": 19,
+            "cells": 180,
+            "forest_hlod_cells": 5
+          },
+          "r10_block_4": {
+            "draws": 298,
+            "instances": 261,
+            "triangles_k_rounded": 16,
+            "cells": 186,
+            "forest_hlod_cells": 9
+          },
+          "r10_block_5": {
+            "draws": 320,
+            "instances": 391,
+            "triangles_k_rounded": 20,
+            "cells": 196,
+            "forest_hlod_cells": 9
+          },
+          "r10_fence_1": {
+            "draws": 280,
+            "instances": 231,
+            "triangles_k_rounded": 23,
+            "cells": 160,
+            "forest_hlod_cells": 20
+          },
+          "r10_fence_2": {
+            "draws": 226,
+            "instances": 168,
+            "triangles_k_rounded": 25,
+            "cells": 241,
+            "forest_hlod_cells": 67
+          },
+          "r10_fence_3": {
+            "draws": 238,
+            "instances": 178,
+            "triangles_k_rounded": 29,
+            "cells": 242,
+            "forest_hlod_cells": 73
+          },
+          "r10_front_04": {
+            "draws": 233,
+            "instances": 159,
+            "triangles_k_rounded": 37,
+            "cells": 166,
+            "forest_hlod_cells": 108
+          },
+          "r10_hall_1": {
+            "draws": 434,
+            "instances": 226,
+            "triangles_k_rounded": 30,
+            "cells": 61,
+            "forest_hlod_cells": 24
+          },
+          "r10_hall_2": {
+            "draws": 420,
+            "instances": 344,
+            "triangles_k_rounded": 35,
+            "cells": 68,
+            "forest_hlod_cells": 29
+          },
+          "r10_hall_3": {
+            "draws": 398,
+            "instances": 260,
+            "triangles_k_rounded": 29,
+            "cells": 250,
+            "forest_hlod_cells": 37
+          },
+          "r10_hall_4": {
+            "draws": 407,
+            "instances": 188,
+            "triangles_k_rounded": 50,
+            "cells": 198,
+            "forest_hlod_cells": 102
+          },
+          "r10_house_1": {
+            "draws": 148,
+            "instances": 78,
+            "triangles_k_rounded": 37,
+            "cells": 213,
+            "forest_hlod_cells": 155
+          },
+          "r10_house_2": {
+            "draws": 106,
+            "instances": 57,
+            "triangles_k_rounded": 34,
+            "cells": 210,
+            "forest_hlod_cells": 155
+          },
+          "r10_office_1": {
+            "draws": 184,
+            "instances": 146,
+            "triangles_k_rounded": 15,
+            "cells": 43,
+            "forest_hlod_cells": 31
+          },
+          "r10_office_2": {
+            "draws": 610,
+            "instances": 367,
+            "triangles_k_rounded": 63,
+            "cells": 68,
+            "forest_hlod_cells": 30
+          },
+          "r10_rear_04": {
+            "draws": 364,
+            "instances": 271,
+            "triangles_k_rounded": 25,
+            "cells": 98,
+            "forest_hlod_cells": 14
+          },
+          "r10_shed_1": {
+            "draws": 190,
+            "instances": 175,
+            "triangles_k_rounded": 15,
+            "cells": 41,
+            "forest_hlod_cells": 29
+          },
+          "r10_shed_2": {
+            "draws": 176,
+            "instances": 114,
+            "triangles_k_rounded": 14,
+            "cells": 261,
+            "forest_hlod_cells": 45
+          },
+          "r10_shed_3": {
+            "draws": 430,
+            "instances": 938,
+            "triangles_k_rounded": 50,
+            "cells": 200,
+            "forest_hlod_cells": 26
+          },
+          "r10_wheel_02": {
+            "draws": 232,
+            "instances": 160,
+            "triangles_k_rounded": 39,
+            "cells": 156,
+            "forest_hlod_cells": 103
+          },
+          "r10b_black_05": {
+            "draws": 380,
+            "instances": 167,
+            "triangles_k_rounded": 48,
+            "cells": 171,
+            "forest_hlod_cells": 89
+          },
+          "r10b_black_20": {
+            "draws": 368,
+            "instances": 159,
+            "triangles_k_rounded": 42,
+            "cells": 169,
+            "forest_hlod_cells": 84
+          },
+          "r10b_black_45": {
+            "draws": 343,
+            "instances": 142,
+            "triangles_k_rounded": 36,
+            "cells": 169,
+            "forest_hlod_cells": 83
+          },
+          "r10b_blue_05": {
+            "draws": 443,
+            "instances": 155,
+            "triangles_k_rounded": 66,
+            "cells": 168,
+            "forest_hlod_cells": 84
+          },
+          "r10b_grey_05": {
+            "draws": 440,
+            "instances": 160,
+            "triangles_k_rounded": 57,
+            "cells": 168,
+            "forest_hlod_cells": 81
+          },
+          "r10b_silver_05": {
+            "draws": 228,
+            "instances": 159,
+            "triangles_k_rounded": 36,
+            "cells": 171,
+            "forest_hlod_cells": 108
+          },
+          "route-onramp-andersa": {
+            "draws": 371,
+            "instances": 986,
+            "triangles_k_rounded": 59,
+            "cells": 269,
+            "forest_hlod_cells": 39
+          },
+          "route-onramp-andersa-above": {
+            "draws": 390,
+            "instances": 1171,
+            "triangles_k_rounded": 77,
+            "cells": 239,
+            "forest_hlod_cells": 49
+          },
+          "route-putry-approach": {
+            "draws": 176,
+            "instances": 115,
+            "triangles_k_rounded": 28,
+            "cells": 171,
+            "forest_hlod_cells": 107
+          },
+          "route-putry-entry-signs": {
+            "draws": 157,
+            "instances": 168,
+            "triangles_k_rounded": 22,
+            "cells": 145,
+            "forest_hlod_cells": 94
+          },
+          "stretch-01": {
+            "draws": 459,
+            "instances": 423,
+            "triangles_k_rounded": 32,
+            "cells": 192,
+            "forest_hlod_cells": 10
+          },
+          "stretch-02": {
+            "draws": 563,
+            "instances": 414,
+            "triangles_k_rounded": 55,
+            "cells": 158,
+            "forest_hlod_cells": 6
+          },
+          "stretch-03": {
+            "draws": 403,
+            "instances": 227,
+            "triangles_k_rounded": 29,
+            "cells": 133,
+            "forest_hlod_cells": 3
+          },
+          "stretch-04": {
+            "draws": 379,
+            "instances": 363,
+            "triangles_k_rounded": 26,
+            "cells": 251,
+            "forest_hlod_cells": 14
+          },
+          "stretch-05-docks": {
+            "draws": 718,
+            "instances": 449,
+            "triangles_k_rounded": 78,
+            "cells": 218,
+            "forest_hlod_cells": 84
+          },
+          "trailer-34": {
+            "draws": 415,
+            "instances": 256,
+            "triangles_k_rounded": 30,
+            "cells": 201,
+            "forest_hlod_cells": 13
+          },
+          "trailer-side": {
+            "draws": 319,
+            "instances": 166,
+            "triangles_k_rounded": 25,
+            "cells": 229,
+            "forest_hlod_cells": 59
+          },
+          "truck-34": {
+            "draws": 260,
+            "instances": 146,
+            "triangles_k_rounded": 34,
+            "cells": 164,
+            "forest_hlod_cells": 108
+          },
+          "truck-34r": {
+            "draws": 131,
+            "instances": 153,
+            "triangles_k_rounded": 14,
+            "cells": 44,
+            "forest_hlod_cells": 36
+          },
+          "truck-at-gate": {
+            "draws": 133,
+            "instances": 102,
+            "triangles_k_rounded": 16,
+            "cells": 66,
+            "forest_hlod_cells": 59
+          },
+          "truck-front": {
+            "draws": 124,
+            "instances": 105,
+            "triangles_k_rounded": 15,
+            "cells": 64,
+            "forest_hlod_cells": 57
+          },
+          "truck-rear34": {
+            "draws": 409,
+            "instances": 244,
+            "triangles_k_rounded": 25,
+            "cells": 200,
+            "forest_hlod_cells": 13
+          },
+          "truck-side": {
+            "draws": 304,
+            "instances": 149,
+            "triangles_k_rounded": 23,
+            "cells": 189,
+            "forest_hlod_cells": 42
+          }
+        }
+      },
+      "High-clear": {
+        "roi": {
+          "r10b_black_05": {
+            "door": {
+              "box": [
+                980,
+                590,
+                1100,
+                660
+              ],
+              "rgb_mean": [
+                79.3852380952381,
+                79.12190476190476,
+                77.71119047619048
+              ],
+              "rgb_median": [
+                79.0,
+                79.0,
+                77.0
+              ],
+              "display_luma_mean": 79.07603585714286,
+              "display_luma_p05": 75.8556,
+              "display_luma_p95": 83.36180999999996,
+              "fraction_any250": 0.0
+            },
+            "hood_legacy_mixed": {
+              "box": [
+                1400,
+                470,
+                1520,
+                525
+              ],
+              "rgb_mean": [
+                70.60757575757576,
+                77.38045454545454,
+                89.42242424242424
+              ],
+              "rgb_median": [
+                73.0,
+                79.0,
+                92.0
+              ],
+              "display_luma_mean": 76.80997072727273,
+              "display_luma_p05": 50.715199999999996,
+              "display_luma_p95": 94.3902,
+              "fraction_any250": 0.0
+            },
+            "hood": {
+              "box": [
+                1450,
+                560,
+                1580,
+                630
+              ],
+              "rgb_mean": [
+                71.86175824175824,
+                76.87274725274725,
+                89.61615384615385
+              ],
+              "rgb_median": [
+                71.0,
+                77.0,
+                89.0
+              ],
+              "display_luma_mean": 76.72748494505494,
+              "display_luma_p05": 72.87159999999999,
+              "display_luma_p95": 81.3822,
+              "fraction_any250": 0.0
+            },
+            "road": {
+              "box": [
+                1700,
+                940,
+                1850,
+                1020
+              ],
+              "rgb_mean": [
+                98.743,
+                96.92333333333333,
+                92.53375
+              ],
+              "rgb_median": [
+                98.0,
+                97.0,
+                91.0
+              ],
+              "display_luma_mean": 96.99326655,
+              "display_luma_p05": 81.6428,
+              "display_luma_p95": 114.9198,
+              "fraction_any250": 0.0
+            },
+            "sky": {
+              "box": [
+                1700,
+                20,
+                1800,
+                90
+              ],
+              "rgb_mean": [
+                131.417,
+                146.41528571428572,
+                155.26314285714287
+              ],
+              "rgb_median": [
+                132.0,
+                148.0,
+                156.0
+              ],
+              "display_luma_mean": 143.86546545714285,
+              "display_luma_p05": 141.8178,
+              "display_luma_p95": 146.6104,
+              "fraction_any250": 0.0
+            }
+          }
+        },
+        "stats": {
+          "biezenstwa-above": {
+            "draws": 560,
+            "instances": 679,
+            "triangles_k_rounded": 66,
+            "cells": 180,
+            "forest_hlod_cells": 114
+          },
+          "cab-dash": {
+            "draws": 687,
+            "instances": 673,
+            "triangles_k_rounded": 74,
+            "cells": 331,
+            "forest_hlod_cells": 20
+          },
+          "cab-driver": {
+            "draws": 690,
+            "instances": 810,
+            "triangles_k_rounded": 76,
+            "cells": 290,
+            "forest_hlod_cells": 16
+          },
+          "cab-gate": {
+            "draws": 674,
+            "instances": 770,
+            "triangles_k_rounded": 72,
+            "cells": 254,
+            "forest_hlod_cells": 9
+          },
+          "cab-left": {
+            "draws": 529,
+            "instances": 819,
+            "triangles_k_rounded": 51,
+            "cells": 86,
+            "forest_hlod_cells": 15
+          },
+          "cab-mirror-front": {
+            "draws": 493,
+            "instances": 346,
+            "triangles_k_rounded": 53,
+            "cells": 356,
+            "forest_hlod_cells": 39
+          },
+          "cab-mirrors-left": {
+            "draws": 344,
+            "instances": 522,
+            "triangles_k_rounded": 31,
+            "cells": 60,
+            "forest_hlod_cells": 12
+          },
+          "cab-mirrors-right": {
+            "draws": 374,
+            "instances": 362,
+            "triangles_k_rounded": 55,
+            "cells": 364,
+            "forest_hlod_cells": 84
+          },
+          "cab-right": {
+            "draws": 727,
+            "instances": 710,
+            "triangles_k_rounded": 94,
+            "cells": 524,
+            "forest_hlod_cells": 116
+          },
+          "car_lod_08": {
+            "draws": 327,
+            "instances": 639,
+            "triangles_k_rounded": 85,
+            "cells": 343,
+            "forest_hlod_cells": 283
+          },
+          "car_lod_12": {
+            "draws": 329,
+            "instances": 627,
+            "triangles_k_rounded": 88,
+            "cells": 343,
+            "forest_hlod_cells": 282
+          },
+          "car_lod_15": {
+            "draws": 313,
+            "instances": 619,
+            "triangles_k_rounded": 91,
+            "cells": 344,
+            "forest_hlod_cells": 282
+          },
+          "car_lod_25": {
+            "draws": 347,
+            "instances": 589,
+            "triangles_k_rounded": 89,
+            "cells": 346,
+            "forest_hlod_cells": 280
+          },
+          "chase": {
+            "draws": 607,
+            "instances": 665,
+            "triangles_k_rounded": 58,
+            "cells": 243,
+            "forest_hlod_cells": 8
+          },
+          "dk8-dk19-exit": {
+            "draws": 88,
+            "instances": 2216,
+            "triangles_k_rounded": 69,
+            "cells": 74,
+            "forest_hlod_cells": 46
+          },
+          "driver-andersa-to-putry": {
+            "draws": 277,
+            "instances": 904,
+            "triangles_k_rounded": 80,
+            "cells": 307,
+            "forest_hlod_cells": 186
+          },
+          "fire-station-abeam": {
+            "draws": 330,
+            "instances": 895,
+            "triangles_k_rounded": 84,
+            "cells": 450,
+            "forest_hlod_cells": 308
+          },
+          "fire-station-above": {
+            "draws": 339,
+            "instances": 1066,
+            "triangles_k_rounded": 82,
+            "cells": 455,
+            "forest_hlod_cells": 224
+          },
+          "fire-station-ref7197": {
+            "draws": 228,
+            "instances": 512,
+            "triangles_k_rounded": 63,
+            "cells": 246,
+            "forest_hlod_cells": 208
+          },
+          "fire-station-route": {
+            "draws": 292,
+            "instances": 787,
+            "triangles_k_rounded": 87,
+            "cells": 443,
+            "forest_hlod_cells": 350
+          },
+          "g3a-eye-s0262": {
+            "draws": 578,
+            "instances": 448,
+            "triangles_k_rounded": 99,
+            "cells": 171,
+            "forest_hlod_cells": 3
+          },
+          "g3a-rondo-bie-approach": {
+            "draws": 214,
+            "instances": 320,
+            "triangles_k_rounded": 29,
+            "cells": 132,
+            "forest_hlod_cells": 0
+          },
+          "g3b-eye-s1482": {
+            "draws": 282,
+            "instances": 932,
+            "triangles_k_rounded": 52,
+            "cells": 236,
+            "forest_hlod_cells": 149
+          },
+          "g3b-rondo-putry-approach": {
+            "draws": 162,
+            "instances": 726,
+            "triangles_k_rounded": 34,
+            "cells": 196,
+            "forest_hlod_cells": 122
+          },
+          "glass_front": {
+            "draws": 446,
+            "instances": 644,
+            "triangles_k_rounded": 84,
+            "cells": 497,
+            "forest_hlod_cells": 209
+          },
+          "kwadrat-park-gate": {
+            "draws": 816,
+            "instances": 450,
+            "triangles_k_rounded": 146,
+            "cells": 240,
+            "forest_hlod_cells": 190
+          },
+          "photo-biezenstwa-ground": {
+            "draws": 209,
+            "instances": 306,
+            "triangles_k_rounded": 27,
+            "cells": 136,
+            "forest_hlod_cells": 0
+          },
+          "putry-above": {
+            "draws": 239,
+            "instances": 542,
+            "triangles_k_rounded": 25,
+            "cells": 198,
+            "forest_hlod_cells": 23
+          },
+          "r10_block_1": {
+            "draws": 359,
+            "instances": 628,
+            "triangles_k_rounded": 37,
+            "cells": 227,
+            "forest_hlod_cells": 14
+          },
+          "r10_block_2": {
+            "draws": 440,
+            "instances": 636,
+            "triangles_k_rounded": 43,
+            "cells": 186,
+            "forest_hlod_cells": 7
+          },
+          "r10_block_3": {
+            "draws": 458,
+            "instances": 664,
+            "triangles_k_rounded": 48,
+            "cells": 180,
+            "forest_hlod_cells": 5
+          },
+          "r10_block_4": {
+            "draws": 396,
+            "instances": 601,
+            "triangles_k_rounded": 35,
+            "cells": 186,
+            "forest_hlod_cells": 9
+          },
+          "r10_block_5": {
+            "draws": 364,
+            "instances": 873,
+            "triangles_k_rounded": 38,
+            "cells": 197,
+            "forest_hlod_cells": 9
+          },
+          "r10_fence_1": {
+            "draws": 420,
+            "instances": 892,
+            "triangles_k_rounded": 50,
+            "cells": 162,
+            "forest_hlod_cells": 18
+          },
+          "r10_fence_2": {
+            "draws": 500,
+            "instances": 718,
+            "triangles_k_rounded": 80,
+            "cells": 516,
+            "forest_hlod_cells": 171
+          },
+          "r10_fence_3": {
+            "draws": 415,
+            "instances": 840,
+            "triangles_k_rounded": 89,
+            "cells": 508,
+            "forest_hlod_cells": 271
+          },
+          "r10_front_04": {
+            "draws": 327,
+            "instances": 650,
+            "triangles_k_rounded": 85,
+            "cells": 343,
+            "forest_hlod_cells": 283
+          },
+          "r10_hall_1": {
+            "draws": 601,
+            "instances": 445,
+            "triangles_k_rounded": 86,
+            "cells": 61,
+            "forest_hlod_cells": 23
+          },
+          "r10_hall_2": {
+            "draws": 718,
+            "instances": 468,
+            "triangles_k_rounded": 89,
+            "cells": 68,
+            "forest_hlod_cells": 29
+          },
+          "r10_hall_3": {
+            "draws": 552,
+            "instances": 734,
+            "triangles_k_rounded": 75,
+            "cells": 544,
+            "forest_hlod_cells": 150
+          },
+          "r10_hall_4": {
+            "draws": 598,
+            "instances": 493,
+            "triangles_k_rounded": 127,
+            "cells": 412,
+            "forest_hlod_cells": 305
+          },
+          "r10_house_1": {
+            "draws": 270,
+            "instances": 587,
+            "triangles_k_rounded": 67,
+            "cells": 423,
+            "forest_hlod_cells": 308
+          },
+          "r10_house_2": {
+            "draws": 248,
+            "instances": 727,
+            "triangles_k_rounded": 65,
+            "cells": 423,
+            "forest_hlod_cells": 305
+          },
+          "r10_office_1": {
+            "draws": 220,
+            "instances": 687,
+            "triangles_k_rounded": 39,
+            "cells": 43,
+            "forest_hlod_cells": 27
+          },
+          "r10_office_2": {
+            "draws": 924,
+            "instances": 486,
+            "triangles_k_rounded": 179,
+            "cells": 68,
+            "forest_hlod_cells": 30
+          },
+          "r10_rear_04": {
+            "draws": 534,
+            "instances": 822,
+            "triangles_k_rounded": 53,
+            "cells": 98,
+            "forest_hlod_cells": 12
+          },
+          "r10_shed_1": {
+            "draws": 215,
+            "instances": 897,
+            "triangles_k_rounded": 36,
+            "cells": 41,
+            "forest_hlod_cells": 25
+          },
+          "r10_shed_2": {
+            "draws": 363,
+            "instances": 933,
+            "triangles_k_rounded": 49,
+            "cells": 525,
+            "forest_hlod_cells": 79
+          },
+          "r10_shed_3": {
+            "draws": 672,
+            "instances": 1476,
+            "triangles_k_rounded": 86,
+            "cells": 216,
+            "forest_hlod_cells": 27
+          },
+          "r10_wheel_02": {
+            "draws": 327,
+            "instances": 648,
+            "triangles_k_rounded": 85,
+            "cells": 322,
+            "forest_hlod_cells": 267
+          },
+          "r10b_black_05": {
+            "draws": 555,
+            "instances": 447,
+            "triangles_k_rounded": 122,
+            "cells": 358,
+            "forest_hlod_cells": 276
+          },
+          "r10b_black_20": {
+            "draws": 541,
+            "instances": 442,
+            "triangles_k_rounded": 125,
+            "cells": 361,
+            "forest_hlod_cells": 276
+          },
+          "r10b_black_45": {
+            "draws": 512,
+            "instances": 421,
+            "triangles_k_rounded": 106,
+            "cells": 360,
+            "forest_hlod_cells": 273
+          },
+          "r10b_blue_05": {
+            "draws": 559,
+            "instances": 447,
+            "triangles_k_rounded": 130,
+            "cells": 352,
+            "forest_hlod_cells": 267
+          },
+          "r10b_grey_05": {
+            "draws": 561,
+            "instances": 451,
+            "triangles_k_rounded": 135,
+            "cells": 361,
+            "forest_hlod_cells": 274
+          },
+          "r10b_silver_05": {
+            "draws": 327,
+            "instances": 666,
+            "triangles_k_rounded": 85,
+            "cells": 351,
+            "forest_hlod_cells": 286
+          },
+          "route-onramp-andersa": {
+            "draws": 720,
+            "instances": 1441,
+            "triangles_k_rounded": 138,
+            "cells": 517,
+            "forest_hlod_cells": 148
+          },
+          "route-onramp-andersa-above": {
+            "draws": 692,
+            "instances": 1520,
+            "triangles_k_rounded": 146,
+            "cells": 490,
+            "forest_hlod_cells": 223
+          },
+          "route-putry-approach": {
+            "draws": 248,
+            "instances": 682,
+            "triangles_k_rounded": 44,
+            "cells": 213,
+            "forest_hlod_cells": 135
+          },
+          "route-putry-entry-signs": {
+            "draws": 190,
+            "instances": 638,
+            "triangles_k_rounded": 26,
+            "cells": 167,
+            "forest_hlod_cells": 104
+          },
+          "stretch-01": {
+            "draws": 733,
+            "instances": 835,
+            "triangles_k_rounded": 87,
+            "cells": 263,
+            "forest_hlod_cells": 10
+          },
+          "stretch-02": {
+            "draws": 1016,
+            "instances": 757,
+            "triangles_k_rounded": 148,
+            "cells": 212,
+            "forest_hlod_cells": 6
+          },
+          "stretch-03": {
+            "draws": 570,
+            "instances": 459,
+            "triangles_k_rounded": 98,
+            "cells": 179,
+            "forest_hlod_cells": 3
+          },
+          "stretch-04": {
+            "draws": 535,
+            "instances": 693,
+            "triangles_k_rounded": 73,
+            "cells": 548,
+            "forest_hlod_cells": 131
+          },
+          "stretch-05-docks": {
+            "draws": 1167,
+            "instances": 792,
+            "triangles_k_rounded": 235,
+            "cells": 465,
+            "forest_hlod_cells": 293
+          },
+          "trailer-34": {
+            "draws": 644,
+            "instances": 560,
+            "triangles_k_rounded": 61,
+            "cells": 352,
+            "forest_hlod_cells": 26
+          },
+          "trailer-side": {
+            "draws": 435,
+            "instances": 642,
+            "triangles_k_rounded": 86,
+            "cells": 530,
+            "forest_hlod_cells": 225
+          },
+          "truck-34": {
+            "draws": 348,
+            "instances": 576,
+            "triangles_k_rounded": 93,
+            "cells": 335,
+            "forest_hlod_cells": 277
+          },
+          "truck-34r": {
+            "draws": 145,
+            "instances": 895,
+            "triangles_k_rounded": 30,
+            "cells": 44,
+            "forest_hlod_cells": 31
+          },
+          "truck-at-gate": {
+            "draws": 157,
+            "instances": 666,
+            "triangles_k_rounded": 36,
+            "cells": 83,
+            "forest_hlod_cells": 72
+          },
+          "truck-front": {
+            "draws": 147,
+            "instances": 509,
+            "triangles_k_rounded": 38,
+            "cells": 86,
+            "forest_hlod_cells": 76
+          },
+          "truck-rear34": {
+            "draws": 657,
+            "instances": 535,
+            "triangles_k_rounded": 64,
+            "cells": 394,
+            "forest_hlod_cells": 35
+          },
+          "truck-side": {
+            "draws": 412,
+            "instances": 485,
+            "triangles_k_rounded": 86,
+            "cells": 441,
+            "forest_hlod_cells": 185
+          }
+        }
+      },
+      "High-overcast": {
+        "roi": {
+          "r10b_black_05": {
+            "door": {
+              "box": [
+                980,
+                590,
+                1100,
+                660
+              ],
+              "rgb_mean": [
+                38.317142857142855,
+                38.69261904761905,
+                39.516666666666666
+              ],
+              "rgb_median": [
+                38.0,
+                38.0,
+                39.0
+              ],
+              "display_luma_mean": 38.672289047619046,
+              "display_luma_p05": 34.7874,
+              "display_luma_p95": 44.1444,
+              "fraction_any250": 0.0
+            },
+            "hood_legacy_mixed": {
+              "box": [
+                1400,
+                470,
+                1520,
+                525
+              ],
+              "rgb_mean": [
+                79.58712121212122,
+                81.88333333333334,
+                91.17560606060606
+              ],
+              "rgb_median": [
+                84.0,
+                87.0,
+                100.0
+              ],
+              "display_luma_mean": 82.06606072727271,
+              "display_luma_p05": 30.0,
+              "display_luma_p95": 104.72999999999999,
+              "fraction_any250": 0.0
+            },
+            "hood": {
+              "box": [
+                1450,
+                560,
+                1580,
+                630
+              ],
+              "rgb_mean": [
+                77.8756043956044,
+                80.68065934065935,
+                93.59736263736264
+              ],
+              "rgb_median": [
+                78.0,
+                81.0,
+                94.0
+              ],
+              "display_luma_mean": 81.01689063736264,
+              "display_luma_p05": 74.4412,
+              "display_luma_p95": 88.87039999999999,
+              "fraction_any250": 0.0
+            },
+            "road": {
+              "box": [
+                1700,
+                940,
+                1850,
+                1020
+              ],
+              "rgb_mean": [
+                60.495416666666664,
+                59.55833333333333,
+                58.36625
+              ],
+              "rgb_median": [
+                59.0,
+                58.0,
+                57.0
+              ],
+              "display_luma_mean": 59.67148883333333,
+              "display_luma_p05": 47.9278,
+              "display_luma_p95": 74.64640999999995,
+              "fraction_any250": 0.0
+            },
+            "sky": {
+              "box": [
+                1700,
+                20,
+                1800,
+                90
+              ],
+              "rgb_mean": [
+                168.92914285714286,
+                170.90485714285714,
+                175.67614285714285
+              ],
+              "rgb_median": [
+                169.0,
+                171.0,
+                175.0
+              ],
+              "display_luma_mean": 170.8293071142857,
+              "display_luma_p05": 167.5054,
+              "display_luma_p95": 179.43839999999997,
+              "fraction_any250": 0.0
+            }
+          }
+        },
+        "stats": {
+          "biezenstwa-above": {
+            "draws": 560,
+            "instances": 679,
+            "triangles_k_rounded": 66,
+            "cells": 180,
+            "forest_hlod_cells": 114
+          },
+          "cab-dash": {
+            "draws": 687,
+            "instances": 673,
+            "triangles_k_rounded": 74,
+            "cells": 331,
+            "forest_hlod_cells": 20
+          },
+          "cab-driver": {
+            "draws": 690,
+            "instances": 810,
+            "triangles_k_rounded": 76,
+            "cells": 290,
+            "forest_hlod_cells": 16
+          },
+          "cab-gate": {
+            "draws": 674,
+            "instances": 770,
+            "triangles_k_rounded": 72,
+            "cells": 254,
+            "forest_hlod_cells": 9
+          },
+          "cab-left": {
+            "draws": 529,
+            "instances": 819,
+            "triangles_k_rounded": 51,
+            "cells": 86,
+            "forest_hlod_cells": 15
+          },
+          "cab-mirror-front": {
+            "draws": 493,
+            "instances": 346,
+            "triangles_k_rounded": 53,
+            "cells": 356,
+            "forest_hlod_cells": 39
+          },
+          "cab-mirrors-left": {
+            "draws": 344,
+            "instances": 522,
+            "triangles_k_rounded": 31,
+            "cells": 60,
+            "forest_hlod_cells": 12
+          },
+          "cab-mirrors-right": {
+            "draws": 374,
+            "instances": 362,
+            "triangles_k_rounded": 55,
+            "cells": 364,
+            "forest_hlod_cells": 84
+          },
+          "cab-right": {
+            "draws": 727,
+            "instances": 710,
+            "triangles_k_rounded": 94,
+            "cells": 524,
+            "forest_hlod_cells": 116
+          },
+          "car_lod_08": {
+            "draws": 327,
+            "instances": 639,
+            "triangles_k_rounded": 85,
+            "cells": 343,
+            "forest_hlod_cells": 283
+          },
+          "car_lod_12": {
+            "draws": 329,
+            "instances": 627,
+            "triangles_k_rounded": 88,
+            "cells": 343,
+            "forest_hlod_cells": 282
+          },
+          "car_lod_15": {
+            "draws": 313,
+            "instances": 619,
+            "triangles_k_rounded": 91,
+            "cells": 344,
+            "forest_hlod_cells": 282
+          },
+          "car_lod_25": {
+            "draws": 347,
+            "instances": 589,
+            "triangles_k_rounded": 89,
+            "cells": 346,
+            "forest_hlod_cells": 280
+          },
+          "chase": {
+            "draws": 607,
+            "instances": 665,
+            "triangles_k_rounded": 58,
+            "cells": 243,
+            "forest_hlod_cells": 8
+          },
+          "dk8-dk19-exit": {
+            "draws": 88,
+            "instances": 2216,
+            "triangles_k_rounded": 69,
+            "cells": 74,
+            "forest_hlod_cells": 46
+          },
+          "driver-andersa-to-putry": {
+            "draws": 277,
+            "instances": 904,
+            "triangles_k_rounded": 80,
+            "cells": 307,
+            "forest_hlod_cells": 186
+          },
+          "fire-station-abeam": {
+            "draws": 330,
+            "instances": 895,
+            "triangles_k_rounded": 84,
+            "cells": 450,
+            "forest_hlod_cells": 308
+          },
+          "fire-station-above": {
+            "draws": 339,
+            "instances": 1066,
+            "triangles_k_rounded": 82,
+            "cells": 455,
+            "forest_hlod_cells": 224
+          },
+          "fire-station-ref7197": {
+            "draws": 228,
+            "instances": 512,
+            "triangles_k_rounded": 63,
+            "cells": 246,
+            "forest_hlod_cells": 208
+          },
+          "fire-station-route": {
+            "draws": 292,
+            "instances": 787,
+            "triangles_k_rounded": 87,
+            "cells": 443,
+            "forest_hlod_cells": 350
+          },
+          "g3a-eye-s0262": {
+            "draws": 578,
+            "instances": 448,
+            "triangles_k_rounded": 99,
+            "cells": 171,
+            "forest_hlod_cells": 3
+          },
+          "g3a-rondo-bie-approach": {
+            "draws": 214,
+            "instances": 320,
+            "triangles_k_rounded": 29,
+            "cells": 132,
+            "forest_hlod_cells": 0
+          },
+          "g3b-eye-s1482": {
+            "draws": 282,
+            "instances": 932,
+            "triangles_k_rounded": 52,
+            "cells": 236,
+            "forest_hlod_cells": 149
+          },
+          "g3b-rondo-putry-approach": {
+            "draws": 162,
+            "instances": 726,
+            "triangles_k_rounded": 34,
+            "cells": 196,
+            "forest_hlod_cells": 122
+          },
+          "glass_front": {
+            "draws": 446,
+            "instances": 644,
+            "triangles_k_rounded": 84,
+            "cells": 497,
+            "forest_hlod_cells": 209
+          },
+          "kwadrat-park-gate": {
+            "draws": 816,
+            "instances": 450,
+            "triangles_k_rounded": 146,
+            "cells": 240,
+            "forest_hlod_cells": 190
+          },
+          "photo-biezenstwa-ground": {
+            "draws": 209,
+            "instances": 306,
+            "triangles_k_rounded": 27,
+            "cells": 136,
+            "forest_hlod_cells": 0
+          },
+          "putry-above": {
+            "draws": 239,
+            "instances": 542,
+            "triangles_k_rounded": 25,
+            "cells": 198,
+            "forest_hlod_cells": 23
+          },
+          "r10_block_1": {
+            "draws": 359,
+            "instances": 628,
+            "triangles_k_rounded": 37,
+            "cells": 227,
+            "forest_hlod_cells": 14
+          },
+          "r10_block_2": {
+            "draws": 440,
+            "instances": 636,
+            "triangles_k_rounded": 43,
+            "cells": 186,
+            "forest_hlod_cells": 7
+          },
+          "r10_block_3": {
+            "draws": 458,
+            "instances": 664,
+            "triangles_k_rounded": 48,
+            "cells": 180,
+            "forest_hlod_cells": 5
+          },
+          "r10_block_4": {
+            "draws": 396,
+            "instances": 601,
+            "triangles_k_rounded": 35,
+            "cells": 186,
+            "forest_hlod_cells": 9
+          },
+          "r10_block_5": {
+            "draws": 364,
+            "instances": 873,
+            "triangles_k_rounded": 38,
+            "cells": 197,
+            "forest_hlod_cells": 9
+          },
+          "r10_fence_1": {
+            "draws": 420,
+            "instances": 892,
+            "triangles_k_rounded": 50,
+            "cells": 162,
+            "forest_hlod_cells": 18
+          },
+          "r10_fence_2": {
+            "draws": 500,
+            "instances": 718,
+            "triangles_k_rounded": 80,
+            "cells": 516,
+            "forest_hlod_cells": 171
+          },
+          "r10_fence_3": {
+            "draws": 415,
+            "instances": 840,
+            "triangles_k_rounded": 89,
+            "cells": 508,
+            "forest_hlod_cells": 271
+          },
+          "r10_front_04": {
+            "draws": 327,
+            "instances": 650,
+            "triangles_k_rounded": 85,
+            "cells": 343,
+            "forest_hlod_cells": 283
+          },
+          "r10_hall_1": {
+            "draws": 601,
+            "instances": 445,
+            "triangles_k_rounded": 86,
+            "cells": 61,
+            "forest_hlod_cells": 23
+          },
+          "r10_hall_2": {
+            "draws": 718,
+            "instances": 468,
+            "triangles_k_rounded": 89,
+            "cells": 68,
+            "forest_hlod_cells": 29
+          },
+          "r10_hall_3": {
+            "draws": 552,
+            "instances": 734,
+            "triangles_k_rounded": 75,
+            "cells": 544,
+            "forest_hlod_cells": 150
+          },
+          "r10_hall_4": {
+            "draws": 598,
+            "instances": 493,
+            "triangles_k_rounded": 127,
+            "cells": 412,
+            "forest_hlod_cells": 305
+          },
+          "r10_house_1": {
+            "draws": 270,
+            "instances": 587,
+            "triangles_k_rounded": 67,
+            "cells": 423,
+            "forest_hlod_cells": 308
+          },
+          "r10_house_2": {
+            "draws": 248,
+            "instances": 727,
+            "triangles_k_rounded": 65,
+            "cells": 423,
+            "forest_hlod_cells": 305
+          },
+          "r10_office_1": {
+            "draws": 220,
+            "instances": 687,
+            "triangles_k_rounded": 39,
+            "cells": 43,
+            "forest_hlod_cells": 27
+          },
+          "r10_office_2": {
+            "draws": 924,
+            "instances": 486,
+            "triangles_k_rounded": 179,
+            "cells": 68,
+            "forest_hlod_cells": 30
+          },
+          "r10_rear_04": {
+            "draws": 534,
+            "instances": 822,
+            "triangles_k_rounded": 53,
+            "cells": 98,
+            "forest_hlod_cells": 12
+          },
+          "r10_shed_1": {
+            "draws": 215,
+            "instances": 897,
+            "triangles_k_rounded": 36,
+            "cells": 41,
+            "forest_hlod_cells": 25
+          },
+          "r10_shed_2": {
+            "draws": 363,
+            "instances": 933,
+            "triangles_k_rounded": 49,
+            "cells": 525,
+            "forest_hlod_cells": 79
+          },
+          "r10_shed_3": {
+            "draws": 672,
+            "instances": 1476,
+            "triangles_k_rounded": 86,
+            "cells": 216,
+            "forest_hlod_cells": 27
+          },
+          "r10_wheel_02": {
+            "draws": 327,
+            "instances": 648,
+            "triangles_k_rounded": 85,
+            "cells": 322,
+            "forest_hlod_cells": 267
+          },
+          "r10b_black_05": {
+            "draws": 555,
+            "instances": 447,
+            "triangles_k_rounded": 122,
+            "cells": 358,
+            "forest_hlod_cells": 276
+          },
+          "r10b_black_20": {
+            "draws": 541,
+            "instances": 442,
+            "triangles_k_rounded": 125,
+            "cells": 361,
+            "forest_hlod_cells": 276
+          },
+          "r10b_black_45": {
+            "draws": 512,
+            "instances": 421,
+            "triangles_k_rounded": 106,
+            "cells": 360,
+            "forest_hlod_cells": 273
+          },
+          "r10b_blue_05": {
+            "draws": 559,
+            "instances": 447,
+            "triangles_k_rounded": 130,
+            "cells": 352,
+            "forest_hlod_cells": 267
+          },
+          "r10b_grey_05": {
+            "draws": 561,
+            "instances": 451,
+            "triangles_k_rounded": 135,
+            "cells": 361,
+            "forest_hlod_cells": 274
+          },
+          "r10b_silver_05": {
+            "draws": 327,
+            "instances": 666,
+            "triangles_k_rounded": 85,
+            "cells": 351,
+            "forest_hlod_cells": 286
+          },
+          "route-onramp-andersa": {
+            "draws": 720,
+            "instances": 1441,
+            "triangles_k_rounded": 138,
+            "cells": 517,
+            "forest_hlod_cells": 148
+          },
+          "route-onramp-andersa-above": {
+            "draws": 692,
+            "instances": 1520,
+            "triangles_k_rounded": 146,
+            "cells": 490,
+            "forest_hlod_cells": 223
+          },
+          "route-putry-approach": {
+            "draws": 248,
+            "instances": 682,
+            "triangles_k_rounded": 44,
+            "cells": 213,
+            "forest_hlod_cells": 135
+          },
+          "route-putry-entry-signs": {
+            "draws": 190,
+            "instances": 638,
+            "triangles_k_rounded": 26,
+            "cells": 167,
+            "forest_hlod_cells": 104
+          },
+          "stretch-01": {
+            "draws": 733,
+            "instances": 835,
+            "triangles_k_rounded": 87,
+            "cells": 263,
+            "forest_hlod_cells": 10
+          },
+          "stretch-02": {
+            "draws": 1016,
+            "instances": 757,
+            "triangles_k_rounded": 148,
+            "cells": 212,
+            "forest_hlod_cells": 6
+          },
+          "stretch-03": {
+            "draws": 570,
+            "instances": 459,
+            "triangles_k_rounded": 98,
+            "cells": 179,
+            "forest_hlod_cells": 3
+          },
+          "stretch-04": {
+            "draws": 535,
+            "instances": 693,
+            "triangles_k_rounded": 73,
+            "cells": 548,
+            "forest_hlod_cells": 131
+          },
+          "stretch-05-docks": {
+            "draws": 1167,
+            "instances": 792,
+            "triangles_k_rounded": 235,
+            "cells": 465,
+            "forest_hlod_cells": 293
+          },
+          "trailer-34": {
+            "draws": 644,
+            "instances": 560,
+            "triangles_k_rounded": 61,
+            "cells": 352,
+            "forest_hlod_cells": 26
+          },
+          "trailer-side": {
+            "draws": 435,
+            "instances": 642,
+            "triangles_k_rounded": 86,
+            "cells": 530,
+            "forest_hlod_cells": 225
+          },
+          "truck-34": {
+            "draws": 348,
+            "instances": 576,
+            "triangles_k_rounded": 93,
+            "cells": 335,
+            "forest_hlod_cells": 277
+          },
+          "truck-34r": {
+            "draws": 145,
+            "instances": 895,
+            "triangles_k_rounded": 30,
+            "cells": 44,
+            "forest_hlod_cells": 31
+          },
+          "truck-at-gate": {
+            "draws": 157,
+            "instances": 666,
+            "triangles_k_rounded": 36,
+            "cells": 83,
+            "forest_hlod_cells": 72
+          },
+          "truck-front": {
+            "draws": 147,
+            "instances": 509,
+            "triangles_k_rounded": 38,
+            "cells": 86,
+            "forest_hlod_cells": 76
+          },
+          "truck-rear34": {
+            "draws": 657,
+            "instances": 535,
+            "triangles_k_rounded": 64,
+            "cells": 394,
+            "forest_hlod_cells": 35
+          },
+          "truck-side": {
+            "draws": 412,
+            "instances": 485,
+            "triangles_k_rounded": 86,
+            "cells": 441,
+            "forest_hlod_cells": 185
+          }
+        }
+      }
+    }
+  }
+}

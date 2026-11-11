@@ -32,3 +32,6 @@
 
 - Step11: graphics-enabled actual WorldPBR Pearl Color-property probe completed successfully (24 samples), preserving source properties/CBUFFER and changing only diagnostic fragment return. Raw HDR SetColor encoding behavior now measured; numeric evidence in pearl-probe.json, no production correction yet. No source/settings drift.
 - NEXT COMMAND: pwsh -ExecutionPolicy Bypass -File artifacts/car-paint-r1/baseline.ps1 -Phase Capture; view fixed car+route PNGs and verify native ROIs before any paint decision.
+
+- Step12: all292 fresh baseline frames complete73cameras x4conditions, native door ROI valid: Highov38.672/Lowov34.144 already target. No reflection floor or pigment lift. Visually identified old hood ROI includes wiper/trim, preserved as hood_legacy_mixed82.066High; new clean bonnet-only ROI Highov81.017. Existing silver view now black; historical wheel02 occluded/cutoff. Added source-derived current black front-wheel2m camera BEFORE production edits, no placement changes; all metadata/proof retained. Pearl correction will be isolated before wheel/dirt combination.
+- NEXT COMMAND: wheel-baseline.ps1 (both guards each launch), then Pearl-only material contract fix/import/capture and quantify delta with film state unchanged.
