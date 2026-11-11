@@ -71,3 +71,6 @@ NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/round2-world.log -Tail 10
 
 Krok 22: źródło plamy rozpoznane jednoznacznie. Promień CPU z ciemnego ROI ku słońcu LP_Overcast trafia po 6,76 m w flagę; promienie z jasnych miejsc nad i obok nie mają przeszkody. W połączeniu z ablacją Unity potwierdza to cień flagi, nie wadę atlasu. Nie zmieniano z tego powodu światła ani albedo. World wariantu 2 przebudowuje teraz hero pod aktualne dane korony.
 NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/round2-build-wrapper.log -Tail 10
+
+Krok 23: World wariantu 2 ukończony w 479,0 s, hero applied, bez fallback=True. Model: 9584/2860/164 tris; Low zachował budżet poprzedniego wariantu. Pojedynczy zestaw testów zatrzymał pipeline przed importem: 6 PASS, 1 FAIL. Nowa kontrola maski wykryła przyciemnienie białego poprzecznika i parapetu rysowanych po funkcji glazing; pozostałe kontrole geometrii i materiałów przeszły. Poprawka będzie ograniczona do AO tych białych detali. Pełnego GIS nie uruchamiano.
+NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/round2-resume.ps1
