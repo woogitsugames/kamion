@@ -958,8 +958,7 @@ def panel_fence(lin, line, col, key, flexible=False):
     def subdivide(a, b, depth=0):
         q = np.array([a, (a + b) / 2, b])
         z = lin.z(q)
-        if depth < 10 and (np.linalg.norm(b-a) > S.FENCE_PANEL_W + 1e-6
-                           or (np.ptp(z) > 0.25 and np.linalg.norm(b-a) > 0.35)):
+        if depth < 10 and (np.linalg.norm(b-a) > S.FENCE_PANEL_W + 1e-6 or np.ptp(z) > 0.25):
             mid = (a + b) / 2
             subdivide(a, mid, depth+1)
             subdivide(mid, b, depth+1)

@@ -217,6 +217,7 @@ def plate(code):
     if area2 > 0:
         pts2, uvs = pts2[::-1], uvs[::-1]
     k_ = len(pts2)
+    hh = size * (math.sqrt(3) / 2 if shape == "triangle" else 1.0)
     for mm, full in ((m, True), (l1, False)):
         V = [[0, y, 0]] + [[x, y, z] for x, z in pts2]
         # u runs against local +x: seen from the front (+y) in Unity, local +x is on the viewer's left (the C-12 arrows
@@ -227,7 +228,9 @@ def plate(code):
         mm.add(f"sign_{code}", V, T, UV)
         yb = y - rim if full else y - 0.004
         Vb = [[0, yb, 0]] + [[x, yb, z] for x, z in pts2]
-        UVb = [(0.5, 0.5)] + [(0.5 - x / size, 0.5 + z / size) for x, z in pts2]
+        # ADR0120: one 1 m atlas width, with the same normalised clamp heights for every shape.
+        # The 0.6 vertical inset keeps the A-7 centroid-based triangle inside the texture.
+        UVb = [(0.5, 0.5)] + [(0.5 - x, 0.5 + 0.6 * z / hh) for x, z in pts2]
         mm.add("plate_back", Vb, [(0, 1 + (k + 1) % k_, 1 + k) for k in range(k_)], UVb)
         if full:                                    # folded rim (outward normals)
             Vr, Tr, UVr = [], [], []
@@ -235,11 +238,9 @@ def plate(code):
                 (x0, z0), (x1, z1) = pts2[k], pts2[(k + 1) % k_]
                 o = len(Vr)
                 Vr += [[x0, y, z0], [x1, y, z1], [x1, yb, z1], [x0, yb, z0]]
-                L = math.hypot(x1 - x0, z1 - z0)
-                UVr += [(0, 0), (L, 0), (L, rim), (0, rim)]
+                UVr += [(0.05, 0.05), (0.20, 0.05), (0.20, 0.20), (0.05, 0.20)]
                 Tr += [(o, o + 2, o + 1), (o, o + 3, o + 2), (o, o + 1, o + 2), (o, o + 2, o + 3)]   # both sides
             mm.add("plate_back", Vr, Tr, UVr)
-    hh = size * (math.sqrt(3) / 2 if shape == "triangle" else 1.0)
     for zc in (-hh * 0.28, hh * 0.22):              # clamps around the post, behind the plate
         m.box("steel_galv", [0, 0.0, zc], S.SIGN_POST_D / 2 + 0.008, S.SIGN_POST_D / 2 + 0.008, 0.022)
         m.box("steel_galv", [0, (S.SIGN_POST_D / 2 + y - rim) / 2 + 0.004, zc], 0.06, (y - rim - S.SIGN_POST_D / 2) / 2, 0.018)
@@ -253,7 +254,8 @@ def board(code, w, h):
     m.quad(f"sign_{code}", [-w / 2, y, -h / 2], [-w / 2, y, h / 2], [w / 2, y, h / 2], [w / 2, y, -h / 2],
            uv=((1, 0), (1, 1), (0, 1), (0, 0)))   # u mirrored as on the plates
     m.quad("plate_back", [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
-           [-w / 2, y - 0.01, -h / 2], uv=((0, 0), (0, h), (w, h), (w, 0)))
+           [-w / 2, y - 0.01, -h / 2],
+           uv=((0.05, 0.05), (0.05, 0.20), (0.20, 0.20), (0.20, 0.05)))
     for sx in (-1, 1):
         m.box("steel_galv", [sx * w / 2 * 0.7, 0.02, 0], 0.03, 0.03, h / 2)   # rails (Z-profile)
     return m, m, None

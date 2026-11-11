@@ -1,6 +1,7 @@
 """Regression cases from the HIL review: metre-high plinth and steel-like concrete pole."""
 import numpy as np
 from shapely.geometry import LineString
+import pytest
 
 from streetscape import furniture as F, props as P
 
@@ -35,3 +36,18 @@ def test_old_concrete_column_keeps_its_taper_on_both_render_lods():
         assert 0.145 <= foot_r <= 0.155
         assert 0.065 <= top_r <= 0.075
         assert foot_r / top_r > 2
+
+
+def test_short_steep_fence_edge_still_steps_instead_of_forming_a_tall_plinth():
+    buf = Buffer()
+    lin = F.Lin(buf, lambda e, n: e)
+    F.panel_fence(lin, LineString([(0, 0), (0.30, 0)]), 'fence_green', 'short-bank')
+    boards = [v for layer, mat, v, t in buf.parts if mat == 'concrete_plinth']
+    assert max(np.max(v[:, 2]-v[:, 0]) for v in boards) <= 0.46
+
+
+@pytest.mark.parametrize('code', ['A-7', 'C-12', 'B-20', 'D-1', 'D-6'])
+def test_sign_back_and_folded_rim_never_wrap_the_wear_atlas(code):
+    for mesh in P.plate(code)[:2]:
+        uv = next(p['UV'] for p in mesh.out() if p['mat'] == 'plate_back')
+        assert np.all(uv >= 0) and np.all(uv <= 1)

@@ -247,12 +247,12 @@ def plate_back(shape=None):
     img[100:104, 156:194] = (150, 150, 150)
     img[110:113, 156:186] = (165, 165, 165)
     # ADR0120: aluminium oxidises; brown runoff comes only from steel fasteners.
-    # Clamp heights match props.plate; marks stay local instead of rusting the whole disc.
+    # props.plate insets the vertical UV by 0.6 and uses a 1 m physical width on every shape.
     xx = np.linspace(0, 1, n)[None, :]
     runoff = np.zeros((n, n))
-    for mount in (0.28, 0.78):
+    for mount in (0.368, 0.668):
         below = yy - mount
-        for bolt in (0.40, 0.60):
+        for bolt in (0.46, 0.54):
             width = 0.009 + 0.014 * np.clip(below / 0.2, 0, 1)
             mark = np.exp(-((xx-bolt) / width) ** 2)
             mark *= np.clip(below / 0.012, 0, 1) * np.clip(1-below / 0.22, 0, 1)
