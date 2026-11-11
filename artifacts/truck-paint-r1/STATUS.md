@@ -30,3 +30,6 @@
 
 - Step12 PHONE WINDOW: observed transient leader lock gap: candidateTruck launched only after PHONE_RUN absent, then lock recreated. Initial licencewarnings recovered; actual TRUCK_RESULT OK, no compile/shader errors. No F Unity remains. Stopped only own waiting PowerShellPID73772 before Trailer. ROOT explicitly holds Unity until release; added shared GPT_UNITY_HOLD alongside PHONE_RUN in every F launch wrapper. No further launch until explicit root message. Baseline remains immutable.
 - NEXT COMMAND AFTER ROOT RELEASE ONLY: pwsh -NoProfile -ExecutionPolicy Bypass -File artifacts/truck-paint-r1/rebuild-candidate.ps1 -Round candidate1; until then CPU metrics/ADR preparation.
+
+- Step13 CPU-only during explicithold: ADR0087 WIP records measured Infinity, diagnostic validity, exact baseline and separate A/C integration caveat; no visual or performance PASS asserted. measure_contract.py reproduces owner legacy1024 metrics plus native rawROI counterpart and placement proof.
+- NEXT COMMAND: wait explicit ROOTrelease (bothlocks absent); resume rebuild-candidate.ps1, then candidate102 inspection and quantified acceptance/refinement.
