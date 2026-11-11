@@ -780,9 +780,11 @@ namespace Game.Editor.Setup
                     // Convex mirror of radius R: the surface normal at the glass edge (half size s) turns by s / R, so the
                     // reflected ray turns by 2 s / R on top of the flat-mirror angle atan(s / d) (MirrorOptics.Build).
                     var cam = camT.gameObject.AddComponent<Camera>();
-                    RenderTextureMirror.ConfigureCheapCamera(cam, 2f * view.HalfVDeg, Mathf.Max(0.1f, dist * 0.98f), 250f);
+                    int mirrorClass = main ? 2 : role == "MIRROR_Kerb" ? 5 : role == "MIRROR_Front" ? 6 : 4;
+                    RenderTextureMirror.ConfigureCheapCamera(cam, 2f * view.HalfVDeg, MirrorOptics.NearClipFor(mirrorClass, dist), 250f);
                     Debug.Log($"[TRUCK] {role}: axis {view.forward:F3}, field {2f * view.HalfHDeg:F1} x {2f * view.HalfVDeg:F1} deg");
                     var mir = camT.gameObject.AddComponent<RenderTextureMirror>();
+                    mir.r46Class = mirrorClass;
                     mir.glass = r;
                     mir.flipHorizontally = false; // reflected-eye camera + exported UV basis already produce a mirror image
                     mir.aspect = gw / gh;

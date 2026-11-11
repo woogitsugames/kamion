@@ -131,8 +131,8 @@ namespace Game.Vehicle.Runtime
         /// <summary>Frame count of the last scheduled render (diagnostics; -1 = never).</summary>
         public int LastRenderFrame { get; private set; } = -1;
 
-        // ADR 0068: own-cab interior renderers, not drawn while a class II / IV mirror renders (81 k triangles in every
-        // mirror view, seen only at a grazing angle through the side glass). null = not looked up yet.
+        // ADR 0068 / 0112: own-cab interior renderers are omitted in every mirror. Downward views retain the exterior
+        // roof through the close near plane instead of showing the seats through a clipped roof. null = not looked up yet.
         Renderer[] m_HideInMirror;
         bool[] m_PreviousHidden;
         static RenderTextureMirror s_Hiding;
@@ -173,11 +173,8 @@ namespace Game.Vehicle.Runtime
         {
             if (s_Hiding != null) s_Hiding.SetHidden(false);
             if (!cam.TryGetComponent(out RenderTextureMirror m) || MirrorOverrides.Legacy) return;
-            // Classes II and IV look back along the cab side (interior only at a grazing angle through the side glass).
-            // Class VI looks down through the windscreen and V near the door glass: they keep the interior
-            // (editor frame cab-mirror-front: the class VI image showed the empty cab without it).
-            int c = m.Class;   // r46Class is cached in OnEnable (play mode); edit-mode QA reads the name
-            if (c == 2 || c == 4) m.SetHidden(true);
+            // The old V/VI exception exposed the dashboard and seats (review K1). The exterior shell remains visible.
+            m.SetHidden(true);
         }
 
         static void OnEndCamera(UnityEngine.Rendering.ScriptableRenderContext ctx, Camera cam)
@@ -238,6 +235,11 @@ namespace Game.Vehicle.Runtime
         {
             int h = Mathf.Max(16, Mathf.RoundToInt(VehicleCameraBudget.MirrorHeight * resolutionScale));
             var cam = Cam;
+            // Also applies to existing generated prefabs, before their next TruckAssetBuilder rebuild.
+            int cls = Class;
+            if ((cls == 5 || cls == 6) && glass != null)
+                cam.nearClipPlane = MirrorOptics.NearClipFor(cls,
+                    Vector3.Distance(cam.transform.position, glass.bounds.center), MirrorOverrides.Legacy);
             // Far clip every time (cheap): the A/B toggler (rq_ab mirrorcfg) switches configurations at run time.
             cam.farClipPlane = VehicleCameraBudget.MirrorFarClip * (main ? 1f : VehicleCameraBudget.ConvexFarClipScale);
             if (m_Rt != null && m_Height == h) return;

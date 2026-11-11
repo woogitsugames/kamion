@@ -16,7 +16,7 @@ namespace Game.Tests.EditMode
     /// </summary>
     public class MirrorCostTests
     {
-        [TestCase(2), TestCase(4)]
+        [TestCase(2), TestCase(4), TestCase(5), TestCase(6)]
         public void InteriorCulling_RestoresPreviouslyHiddenRenderer(int mirrorClass)
         {
             var root = new GameObject("mirror-culling-state-test");
@@ -52,6 +52,37 @@ namespace Game.Tests.EditMode
         }
 
         static readonly int[] k_Class = { 2, 2, 4, 4, 5, 6 };
+
+        [TestCase(2, false, 1.862f), TestCase(4, false, 1.862f)]
+        [TestCase(5, false, .1f), TestCase(6, false, .1f)]
+        [TestCase(5, true, 1.862f), TestCase(6, true, 1.862f)]
+        public void NearClip_DownwardRoofRetained_OtherClassesAndLegacyUnchanged(int mirrorClass, bool legacy, float expected) =>
+            Assert.AreEqual(expected, MirrorOptics.NearClipFor(mirrorClass, 1.9f, legacy), 1e-5f);
+
+        [TestCase(5), TestCase(6)]
+        public void DownwardMirror_RenderNowUpdatesOldPrefabNearClip(int mirrorClass)
+        {
+            var root = new GameObject("downward-near-test");
+            try
+            {
+                var glass = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                glass.transform.SetParent(root.transform, false);
+                var view = new GameObject("old-generated-camera");
+                view.transform.SetParent(root.transform, false);
+                var camera = view.AddComponent<Camera>();
+                camera.transform.SetPositionAndRotation(new Vector3(0, 4, 0), Quaternion.Euler(45, 24, 0));
+                RenderTextureMirror.ConfigureCheapCamera(camera, 44f, 1.9f, 100f);
+                var mirror = view.AddComponent<RenderTextureMirror>();
+                mirror.main = false; mirror.r46Class = mirrorClass; mirror.glass = glass.GetComponent<Renderer>();
+                Vector3 position = camera.transform.position, forward = camera.transform.forward;
+                mirror.RenderNow();
+                Assert.AreEqual(.1f, camera.nearClipPlane, 1e-5f);
+                Assert.AreEqual(44f, camera.fieldOfView, 1e-5f);
+                Assert.AreEqual(position, camera.transform.position);
+                Assert.AreEqual(forward, camera.transform.forward);
+            }
+            finally { Object.DestroyImmediate(root); }
+        }
 
         static MirrorRefreshSchedule.Entry[] Six(bool standing, params bool[] visible)
         {
