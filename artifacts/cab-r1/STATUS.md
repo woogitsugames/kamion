@@ -59,3 +59,4 @@ Zapisano result-0112-p2 Low clear, siedem kamer i sześć natywnych RT z identyf
 Zapisano result-0112-p2 Low overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano result-0112-p2 High clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano result-0112-p2 High overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
+Dodano tymczasowe kamery inspekcyjne obejmujące całą obudowę z oka kierowcy. A/B używa istniejących siatek sprzed MirrorBezel w pamięci sceny; nie zapisuje scen/prefabu ani nowych kamer gry. Następny krok: inspect-bezel-0112 High clear, obejrzeć całe obrzeże, potem route P2 i testy Mirror.
