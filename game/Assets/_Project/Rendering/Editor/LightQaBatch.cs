@@ -109,8 +109,10 @@ namespace Game.Rendering.Editor
                         throw new InvalidOperationException("Requested lighting preset was not applied: " + job.lighting);
                     if (!QualityProfileApplier.HasCurrent || QualityProfileApplier.Current.name != job.tier)
                         throw new InvalidOperationException("Requested lighting QA tier was not applied: " + job.tier);
+                    if (job.overrideWhiteClip && Mathf.Abs(environment.Active.lookWhiteClip - job.whiteClip) > 0.0001f)
+                        throw new InvalidOperationException($"Requested white clip was not retained: requested={job.whiteClip}, actual={environment.Active.lookWhiteClip}");
                     total += count;
-                    Debug.Log($"LIGHT_QA_JOB: OK rendered={count} tier={job.tier} lighting={job.lighting} rq={job.rq} whiteClipOverride={job.overrideWhiteClip}/{job.whiteClip} shadowFilter={job.shadowFilter} output={job.output}");
+                    Debug.Log($"LIGHT_QA_JOB: OK rendered={count} tier={job.tier} lighting={job.lighting} rq={job.rq} whiteClipOverride={job.overrideWhiteClip}/{job.whiteClip} actualWhiteClip={environment.Active.lookWhiteClip} shadowFilter={job.shadowFilter} output={job.output}");
                 }
                 Debug.Log($"LIGHT_QA_RESULT: OK jobs={jobs.jobs.Length} rendered={total}");
                 exit = 0;
