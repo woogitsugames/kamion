@@ -499,7 +499,8 @@ Shader "Kamion/World PBR"
                     half age = (half)frac(ex);
                     half known = step(-0.5, i.uv.z);                     // (-1, 5) = no wear data
                     float lc = frac(i.uv.z);
-                    half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.13) * known;
+                    // ADR0099 WORKING_VALUE: ~0.60m contact band at lane3.5m; asphalt polish stays wider.
+                    half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.085) * known;
                     half peaks = SAMPLE_TEXTURE2D(_VarMap, sampler_BaseMap, uvb).r;     // aggregate tops wear first
                     half mott = (macro.a - 0.5) * 2.0;
                     half worn = _PaintWear.x * wp * transverse * (0.55 + 0.9 * age)     // tyres scrub the crossed marks
