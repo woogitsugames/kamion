@@ -122,3 +122,5 @@ Krok 36f: natywne wycinki kominów ujawniły trzy wyloty na głowicy lewego i je
 Krok 36g: watchdog wznowił własny generator o 00:20:32 i 00:20:33 (dwa uruchomione nadzory). CPU procesu ponownie rośnie. Zapisano ograniczenie identyfikacji zdjęć kominów: referencja pierwotnych override wspomina szachownicę, nieobecną na analizowanym 073128; przed zmianą trzeba potwierdzić przypisanie do OSM. NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/budget-fix-world.log -Tail 8
 
 Krok 36h: odnaleziono pierwotną referencję EC_Białystok (Hiuppo, CC BY-SA 2.5). EXIF DateTime wskazuje 2007-03-06; ma szachownicę i pasy tylko u góry, a referencja CC0 z 2020 pokazuje inny stan malowania. Dane i podglądy zapisane z atrybucją. To istotna różnica epok referencji przed r3; nie przenoszę starego malowania do modelu na ślepo. Generator zakończył pierwszy etap dróg po wznowieniu.
+
+Krok 37: regeneracja modelu i świata po naprawie budżetu: trójkąty 9584/2818/164, brak fallback=True. Następnie pojedyncze testy remizy i hero building.
