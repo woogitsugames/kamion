@@ -1,21 +1,17 @@
 # S10 — raport koordynatora (WIP)
 
-Stan 2026-11-11 14:48 CET. Pakiet nadal w toku. Nie scalano ani nie pushowano main z tej sesji; scalenia A/B/C i0101 wykonał lider Claude. Maksymalnie trzech wykonawców, każdy we własnym worktree. Każdy strumień ma osobny STATUS i raport z dowodami.
+Stan 2026-11-11 15:23:22 +01:00. Praca trwa. Maksymalnie trzech wykonawców, osobne worktree. Ta sesja nie scalała ani nie pushowała main; A/B/C integrował lider Claude.
 
-| Strumień | Zweryfikowany stan | Testy i ograniczenia |
+| Strumień | Stan i dowody | Otwarte |
 |---|---|---|
-| A /0086, gpt-tint-gamma | Kontrakt koloru1317afba; błędną kalibrację hali/ekranów naprawił lider w0101, scalonym4c63f4c4 | A: GIS359/2xfail, EditMode226/226. Krytyk0101 zamknął P0 pigmentów; brak żeberek hali jest poza tintem. Trzy braki wygenerowanych materiałów w zewnętrznym teście0101 wymagają kanonicznego retry lidera. |
-| B /0088, gpt-vegetation-r2 | Scalone przez lidera; dokumentacja63fa644f uwzględnia jakość FAIL | GIS364/2xfail, EditMode218/218. Korony DK8 i obwódka poprawione, ale żywopłoty, pokrój/impostory sosny, zdrowe korony i trawa wymagają0109. |
-| C /0098, gpt-light-r12 | Scalone przez lidera; dokumentacja77b718c4 wycofuje akceptację miękkości High | GIS355/2xfail, EditMode221/221. Niebo/biel poprawione, P0 RCAS0 rozmywa asfalt; pozostały ściany/cienie i brak nowych zmian mgły/AO. Kontynuacja0108. |
-| F /0087, gpt-truck-paint | Zakończone wdrożenie2086e780, jakość właścicielska CZĘŚCIOWA/FAIL | GIS370/1xfail, EditMode238/238, końcowe102 kadry, budżet bez wzrostu. Naprawione przepełnienie lamp; fizyczne próbkowanie odbić i ograniczona krzywizna normalnych3,6mm. Drzwi overcast3,32Low/2,77High nadal poniżej4; inne niespełnione wiersze jawnie w REPORT. |
-| G /0089, gpt-car-paint | SCOPED PASS; wdrożenie aa1af012, późniejsze2f7e64f1/7ababc29 tylko przeglądy D/C13 | GIS375/1xfail, EditMode231/231. GPU1007 instancji i18 przypadkówLOD/origin PASS.324 kadry obejrzane przez autora i root. Drzwi HighOV39,840; maska nie rozjaśniona.236 porównań trasy bez wzrostu. |
-| E /remiza r7, gpt-firestation-r7 | W toku: rośliny i pozycje poprawione z ujawnioną wąskością koron; trwa druga kalibracja szkła | Docelowy tynk już spełniony i zachowany. Cztery kadry pierwszej elewacji zbyt jasne High79–85 zamiast60–75. ASTC1024×512 zmierzone: stare detale zgodne mip0–3, dalsze mipy mają pojedyncze różnice. Pełne testy/budżety po finalnych produktach. |
-| D /0099, gpt-surface-wear | Przejęte przez F; przygotowana niezmieniona baza i patche nieaktywne92bc26af/58b6e8b9 | Import i kanoniczne pojazdy gotowe,372 kadry BEFORE=93?4; root sprawdzi? wszystkie hashe i cztery plansze cel?w. Brak UV dla części dróg i stałe UV oznakowania to osobne ograniczenia; małe patche nie zamykają całego zużycia nawierzchni. |
+| A /0086 | Kontrakt koloru1317afba; GIS359/2xfail, EditMode226/226. Lider naprawił kalibrację hali/ekranów w0101; późniejszy main XML14:31:39 przeszedł245/245. | Proceduralny wygląd hali poza zakresem tintu. |
+| B /0088 | Wdrożenie zakończone; dokumentacja63fa644f wycofuje pełny PASS jakości. GIS364/2xfail, EditMode218/218. | Pokrój sosen, żywopłoty, jasne korony i trawa: kolejka0109. |
+| C /0098 | Wdrożenie zakończone; dokumentacja77b718c4 wycofuje akceptację rozmycia High. GIS355/2xfail, EditMode221/221. | P0 RCAS oraz ściany/cienie/mgła/AO: kolejka0108. |
+| F /0087 | Zakończone2086e780; GIS370/1xfail, EditMode238/238,102 pary kadrów i niezmienione liczniki. Skończone przepełnienie lamp i ograniczone poprawki lakieru/odbicia. | Jakość częściowa: drzwi OV3,32Low/2,77High poniżej4, część szkła i dach clear nadal poza celem. |
+| G /0089 | SCOPED PASS wdrożeniaaa1af012; późniejsze commity tylko przeglądy. GIS375/1xfail, EditMode231/231;324 kadry, GPU1007 instancji/18 przypadków. | Telefon i wspólna integracja niezweryfikowane; ograniczenia starych kamer jawne. |
+| E /remiza r7 | Runtime63c7a76f i test1/1;16 nowych kadrów potwierdza Low Lit/High leaf-copy, bez wzrostu liczników Low. Szkło OV63–75, tuje zbliżone między tierami. | Trwa drugi import i pełne160/testy. Clear szkło82–98, wąskie korony i subtelne zacieki pozostają ograniczeniami; dodatkowy High pass bez pomiaru GPU. |
+| D /0099 | Bazowe372 kadry zweryfikowane hashami. Import zachowuje154 siatki;150 hashy UV1.y zgodnych. Transfer11 fragmentów/58,319m2, odrzuca507;14 testów ukierunkowanych PASS. | Trwają dodatkowe kontrole znaków i przystanku464 przed zmianą świata. Zużycie nawierzchni, pełne testy/budżety i REPORT jeszcze niezamknięte. |
 
-Po zakończeniu F/G/E/D:0108 światło r13, następnie0109 roślinność r3 według docs/owner/GPT-FEEDBACK-S10.md. Preflight0108 jest gotowy, kod nie został zmieniony.
-
-Budżety dotyczą estymat edytora i zaokrąglonych tysięcy trójkątów. Nie są pomiarem czasu GPU telefonu. Nie używano telefonu ani ADB; testy telefonu prowadzi zewnętrzny agent wydajności. Nasze kolejne uruchomienia Unity zatrzymują obie blokady, a po rzeczywistym końcu przebiegu wymagają jawnego wznowienia. PHONE-RACE.md opisuje wcześniejszą lukę blokady i wdrożone zatrzymanie.
-
-Po scaleniu B odtworzono wyłącznie dwa brakujące, ignorowane wejścia CC0 z przypiętego pakietu, bez nadpisania plików lub kodu main. Manifest/hashes sprawdzone, wynikowy PNG sosny po regeneracji lidera identyczny bajtowo z zaakceptowanym B. Regeneracja lidera14790c48:389passed/1xfail. E ma własny pakiet CC0 fir_tree_01 i instrukcję odtworzenia; taksonomia Picea nie jest potwierdzona.
-
-Każda para przed/po zachowuje własną bazę. Nowe kamery diagnostyczne G są AFTER-only, a historyczne nieprawidłowe/zasłonięte widoki nie są dowodem LOD. Wspólna integracja wszystkich gałęzi pozostaje pracą lidera. Nie nadano zbiorczego PASS jakości na podstawie samych testów.
+Po zamknięciu E/D: najpierw C r13/0108, następnie B r3/0109 według GPT-FEEDBACK-S10.md. Preflight gotowy; kod tych rund jeszcze niepowstał.
+Budżety to estymaty edytora, nie pomiar GPU telefonu. Nie używano telefonu/ADB; blokady PHONE_RUN i GPT_UNITY_HOLD są sprawdzane przed kolejnymi uruchomieniami. PHONE-RACE.md opisuje wcześniejszą lukę i zabezpieczenie.
+Każdy strumień zachowuje własną bazę i jawne odrzucenia. Raporty oraz dowody są kopiowane do głównego artifacts; wspólne scalenie pozostaje zadaniem lidera. Nie nadano zbiorczego PASS na podstawie samych testów.

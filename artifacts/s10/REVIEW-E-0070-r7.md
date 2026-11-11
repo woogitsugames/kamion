@@ -77,3 +77,10 @@ again would fail OV. Root authorizes full160 after correctedOVbindings confirm;
 keep clear residual explicit, no aggregate owner-qualityPASS/newLowmaterialslot
 or unlit fake to force numeric target. Dedicated architecturalglass model/global
 C13 exposure need separate causal evidence; current atlas has lit diffuse response.
+
+Root independently viewed all4 true-runtimeR1 contact sheets (16actualviews) and
+read both binding dumps: Low originalURPLit includingnearLOD0; Highruntimeleaf
+copy with gamma/texture/coverage/.25/0 preserved. SourceJSON exact recorded.
+R1summary Low8views maxdraw/triKdelta0 peak501->501; Highmaxdraw-1/triK<=0.
+These are pre-SRP estimates, not physical shaderpass/GPUtime. Full160 allowed,
+no more tuning; keep clearglass/canopy/runoff/cost limitations explicit.

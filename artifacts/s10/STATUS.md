@@ -568,3 +568,12 @@ glass82-98 FAIL vs60-75, OV passes; clear thuja pairratio .9917. No static re-da
 that would break OV. Full160 authorized after OV runtime binding check, residual
 quality failure explicit. NEXT COMMAND: E finish R1?160/tests; D new matched
 glyph/unknown/bus BEFORE, then bounded wear/build and final validation.
+
+Step46: Reviewed all 16 true runtime E R1 views and both material-binding dumps;
+Low keeps original Lit even near LOD0, High uses the approved copy. Full160 may
+proceed after second import; known appearance and High GPU limitations remain.
+Reviewed D bus/paint BEFORE16: visible stop context, hatch controls are not P8.
+G performs only read-only gate-coordinate support. REPORT rewritten to current
+state, preserving pending0108/0109 and all partial failures.
+NEXT COMMAND: E full160/GIS/EditMode; D actual arrow BEFORE, bounded bus/world
+change and wear candidate, then route validation. Check both guards each launch.

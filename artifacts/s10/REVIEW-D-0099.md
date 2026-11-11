@@ -125,3 +125,10 @@ sentinel+6marking buffers in3chunks,0newchannels. Final blocked logged counts11a
 Coverage correction: root initially read lane-field-import-proof.json (prior16),
 not lane-final-import-proof.json. Current final proof independently parsed11/507/
 356/58.319 per tier. Native154geometry/150yhash verification remains unchanged.
+
+Root viewed4 final-field-before sheets/16views: stop464 actualroad/curb/shelter
+context visible before newstain; supported/unknown paint are hatch/lines, not
+provenP8arrow. Additional actualcompactglyph closeup pending before worldbuild.
+G readonly gate-source coordinate preflight assigned, no D source/cache/Unity
+overlap. Newstop metadata selector may add20stopnodes andbus=yes to20existing
+platformnodes; unchanged geometry/otherobjects must be measured separately.
