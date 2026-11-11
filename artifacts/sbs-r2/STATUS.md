@@ -70,3 +70,7 @@ IMPORT_RESULT: OK, 64 chunki, oba tiery Low+High. Preflight PBR: 0 brakujących,
 
 ## EditMode i rozdzielenie pul
 EditMode: 261/261, 0 porażek i pominięć; świeży XML zachowany, slot Unity zwolniony. Dodano RenderOnly, rozłączne z ComposeOnly. Pozwala wykonać same capture Unity, gdy sekwencja testów i fidelity używa lub oczekuje na heavy. Nie uruchamia kompozycji ani publikacji migawki; te nastąpią osobnym ComposeOnly po zakończeniu wszystkich ciężkich zadań gałęzi. Cała seria raw wymaga niezmiennego HEAD, kamer, świata i materiałów. Parser PowerShell przechodzi. Następny krok: zamrożony pełny render 42 kamer × 4 stany.
+
+## Pełne capture R2 zakończone
+Seria RenderOnly zakończona kodem 0. Wszystkie 168 renderów ma capture OK, wspólny HEAD b9b5574e2dd093af3b36b82ff2a84f55643141e3, 42 kamery w każdym stanie. Z metadanych capture: identyczne SHA PNG względem r1: 31 Low-overcast, 38 Low-clear, 36 High-overcast, 38 High-clear, łącznie 143/168. To nie jest dowód poprawy pozostałych 25 klatek. Pełny audyt ponownie sprawdzi rzeczywiste bajty.
+Wyeksportowano lekkim parserem tekstu wszystkie 168 liczników (bez obliczeń obrazów). W obu stanach Low delta draws geometrii = 0, instancji = 0, estymacji tris = 0. Nie jest to pomiar GPU ani telefonu. Kompozycje A/B, diagnostyka, raport i pełny GIS pozostają przed nami; test raportu nadal czeka na heavy.
