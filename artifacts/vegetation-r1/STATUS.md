@@ -64,3 +64,4 @@ ADR 0109 uzupełniono o faktyczny zakres zmian, granice pomiarów, 322 obrazy be
 Import-after: IMPORT_RESULT OK, 64 chunki, Low+High, bez błędów shaderów w logu importu. Zakończono kontrolę hashy kolizji (collision-comparison.json). Następny krok: after-matrix.log oraz pierwsze obrazy after.
 Zapisano after WorldC Low overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Zapisano after WorldC Low clear. Następny krok: obejrzenie arkuszy i porównanie statystyk.
+Zapisano after WorldC_High High overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
