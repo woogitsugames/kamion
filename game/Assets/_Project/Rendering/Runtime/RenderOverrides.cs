@@ -114,7 +114,7 @@ namespace Game.Rendering
             Game.Core.MirrorOverrides.Suspended = B(arg("rq_mirror_off")) == true;
             string up = arg("rq_upscale");
             Upscale = string.IsNullOrEmpty(up) ? null : up.ToLowerInvariant();
-            return Any ? $"msaa={Msaa} scale={RenderScale} shadow={ShadowDistance} post={Post} hdr={Hdr} a2c={LeafA2C} trees={Trees} " +
+            return Any ? $"msaa={Msaa} scale={RenderScale} shadow={ShadowDistance} post={Post} dither={Dither} skydither={SkyDither} hdr={Hdr} a2c={LeafA2C} trees={Trees} " +
                          $"treeshadow={TreeShadowMask} card={TreeCardScale} cull={TreeCull} thin={TreeThin} vegshader={SimpleFoliage} hlod={ForestHlod} a8={VehicleLook} envcap={EnvCapture} " +
                          $"scalemin={ScaleMin} upscale={Upscale} fsrsharp={FsrSharpness} pacing={Pacing} lamppools={LampPools} " +
                          $"envcap_iv={EnvCaptureInterval} envcap_lod={EnvCaptureLod} shadowcasc={ShadowCascades} shadowres={ShadowResolution} ab={Ab} ab_period={AbPeriod} " +

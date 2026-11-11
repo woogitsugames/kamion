@@ -23,3 +23,6 @@
 
 - Step7: untouched full baseline236PNGs(59x4), plus22selectedlowsun; all20standard sheets viewed. Route19 overcast gap Low116/High119 already matches photo116-121; keep exposure/toe. Clear High gable254.7/243.8/212.3 confirms clip. Added diagnostic-only rq_dither/rq_skydither; default oldpolicy preserved. QA explicit pipeline override hook centralized/static and logs actual URP fields. Root review requested before ablations.
 - NEXT COMMAND: pwsh scripts/visual-qa.ps1 -Scene WorldC_High -Tier High -Lighting clear -Cameras r10_block_3,r10_block_4,r10_house_2 -Gate3 Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json -OutputDir artifacts/light-r12/harness-parity/High-clear
+
+- Step8: diagnostic emptyRq parity meanabs0.34LSB/max2 (only stochastic dither); root reviewed hook/noop. Six controlled noise variants: sky hf3px1.831 -> skyOff0.518 -> skyOff+sharp0withcameraDither0.482. Both-dithers-off0.222 visibly bands; rejected. Installed URP1767 skips RCAS keyword at exact0, actual0/overrideTrue logged. Keep final dither; measure edge/cab legibility before policy decision. All standard236 and selected22beforeframes viewed via22sheets. FullGIS running.
+- NEXT COMMAND: inspect noise/legibility-zero road/window/cab edge crops; then implement clear-only shoulder and bounded shadow ablations.
