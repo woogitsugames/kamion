@@ -37,7 +37,7 @@ def test_mapped_forest_and_exposed_soil_survive_ground_variation():
 
 
 @pytest.mark.parametrize("plant", ["berberis_red", "privet", "hornbeam", "thuja"])
-def test_hedge_core_stays_below_the_actual_triangulated_leaf_top(plant):
+def test_hedge_core_stays_below_the_actual_triangulated_leaf_shell(plant):
     class Capture:
         def __init__(self):
             self.parts = []
@@ -51,8 +51,10 @@ def test_hedge_core_stays_below_the_actual_triangulated_leaf_top(plant):
     core_m, shell_m, sprig_m = hedge_mats(plant)
     assert {p[0] for p in buf.parts} <= {core_m, shell_m, sprig_m}
     core = [p for p in buf.parts if p[0] == core_m][-1][1]
-    _, shell, indices = [p for p in buf.parts if p[0] == shell_m][-1]
-    triangles = shell[indices]
+    # The rounded shoulder also covers corner vertices outside the flat top's
+    # footprint. Test the actual complete leaf shell, not only its top cap.
+    triangles = np.concatenate([vertices[indices] for material, vertices, indices in buf.parts
+                                if material == shell_m])
     a, b, c = (triangles[:, i, :2] for i in range(3))
     ab, ac = b-a, c-a
     ap = core[:, None, :2]-a[None, :, :]
@@ -65,5 +67,5 @@ def test_hedge_core_stays_below_the_actual_triangulated_leaf_top(plant):
     inside = valid & (w0 >= -1e-7) & (w1 >= -1e-7) & (w2 >= -1e-7)
     heights = w0*triangles[:, 0, 2]+w1*triangles[:, 1, 2]+w2*triangles[:, 2, 2]
     surface = np.where(inside, heights, -np.inf).max(axis=1)
-    assert np.isfinite(surface).all(), "core top must lie inside the leaf top footprint"
+    assert np.isfinite(surface).all(), "core top must lie inside the leaf shell footprint"
     assert np.max(core[:, 2]-surface) <= .005, "opaque core pokes through the leaf top"
