@@ -270,18 +270,19 @@ namespace Game.World.Import
             return best.point;
         }
 
+        // plot_ground (ADR 0114): lawn / driveway of house plots, LOD0 / LOD1 only, no shadows.
         // Layers per LOD (ADR 0012). Distances: manifest switch distances (camera to near chunk edge) + 0.7 chunk.
         static readonly string[][] k_LowLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires" },
-            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground" },
+            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground" },
             new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires" },
             new[] { "terrain_lod3", "bridge", "buildings_lod1" },
         };
         static readonly string[][] k_HighLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires" },
-            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground" },
+            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground" },
             new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires" },
             new[] { "terrain_lod3", "bridge", "buildings_lod1" },
         };

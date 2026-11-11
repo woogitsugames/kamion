@@ -252,7 +252,7 @@ def build_meshes(buf, paved, zgrid, hf, walls=None, roads_poly=None):
         dedge = shapely.distance(pts, poly.exterior)
         dwall = shapely.distance(pts, walls) if walls is not None and not walls.is_empty else np.full(len(P), 50.0)
         UV1 = np.column_stack([np.minimum(dedge, 50.0), np.minimum(dwall, 50.0)])
-        buf.add("paved", mat, V, UV, T, footprint=True, src=item["id"], UV1=UV1)
+        buf.add(item.get("layer", "paved"), mat, V, UV, T, footprint=True, src=item["id"], UV1=UV1)      # layer: ADR 0114
         buf.add("collision", "collision_" + S.SURFACE_OF.get(mat, "asphalt"), V, UV, T, src=item["id"])
         _edges(buf, item, zgrid, hf, roads_poly)
 
@@ -312,4 +312,4 @@ def _edges(buf, item, zgrid, hf, roads_poly=None):
                 T.append((a0 + k, b0 + k + 1, a0 + k + 1))      # faces to the right of travel (outward)
                 T.append((a0 + k, b0 + k, b0 + k + 1))
         if T:
-            buf.add("paved", "curb_concrete" if edged else mat, V, UV, np.asarray(T), src=item["id"] + ":edge")
+            buf.add(item.get("layer", "paved"), "curb_concrete" if edged else mat, V, UV, np.asarray(T), src=item["id"] + ":edge")

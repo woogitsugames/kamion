@@ -70,6 +70,9 @@ DRIVE_W_M = 3.0
 # One driveway material for every plot (budget, ADR 0114): gravel driveways (ref P20) and the concrete edging strip
 # each added a submesh to the chunk's paved mesh (+5 / +3 chunks); block paving is the common case.
 DRIVE_MAT = "yard_paving"
+# Chunk layer of the plot ground (lawn, driveway, path): like `paved`, but shown only with the chunk's LOD0 / LOD1 (as
+# `furniture` is) - in r1 the lawns sat in `paved` (drawn to LOD2, ~700 m) and cost draws in every distant view.
+GROUND_LAYER = "plot_ground"
 PATH_W_M = 1.1
 DROP_H_M = 0.03               # lowered kerb at a driveway, m above the gutter (WORKING_VALUE: 2-4 cm in practice)
 DROP_RAMP_M = 1.0             # kerb ramps down over this length on either side of the driveway
@@ -616,12 +619,12 @@ def paved_items(rp, roads_poly, bpoly, paved):
         hard_u = plot["hard"]
         for k, q in enumerate(_polys(hard_u.difference(taken), 1.0)):
             out.append({"id": f"plot:{plot['id']}:drive{k}", "poly": q, "mat": DRIVE_MAT, "source": "plot", "parking": False,
-                        "edging": False})
+                        "edging": False, "layer": GROUND_LAYER})
         lawn = plot["poly"].difference(taken).difference(hard_u.buffer(0.02))
         lawns = _polys(lawn, 6.0)
         plot["lawn"] = shapely.unary_union(lawns) if lawns else None
         for k, q in enumerate(lawns):
-            out.append({"id": f"plot:{plot['id']}:lawn{k}", "poly": q, "mat": "plot_lawn", "source": "plot", "parking": False})
+            out.append({"id": f"plot:{plot['id']}:lawn{k}", "poly": q, "mat": "plot_lawn", "source": "plot", "parking": False, "layer": GROUND_LAYER})
     return out
 
 
@@ -1113,7 +1116,7 @@ def _verge_overlay(buf, plot, surf_top, src_id):
     T = np.asarray(T)
     nrm = np.cross(V[T[:, 1]] - V[T[:, 0]], V[T[:, 2]] - V[T[:, 0]])
     T[nrm[:, 2] < 0] = T[nrm[:, 2] < 0][:, [0, 2, 1]]
-    buf.add("paved", DRIVE_MAT, V, np.asarray(UV), T, src=src_id + ":verge",
+    buf.add(GROUND_LAYER, DRIVE_MAT, V, np.asarray(UV), T, src=src_id + ":verge",
             UV1=np.tile([25.0, 25.0], (len(V), 1)))
     return 1
 
@@ -1131,6 +1134,8 @@ def lawn_mask(col, lawns, hf, rasterize):
     near_hard = ndimage.binary_dilation(hard, iterations=2)
     fix = ring & ~near_hard
     col[..., 0] = np.where(fix, np.maximum(col[..., 0], 0.3), col[..., 0])
+    # beyond the chunk's LOD1 the lawn surface is not drawn: the terrain under it must read as grass, not as grit
+    col[..., 0] = np.where(ndimage.binary_erosion(inside, iterations=1), np.maximum(col[..., 0], 0.3), col[..., 0])
     m = ndimage.gaussian_filter((inside | ring).astype(np.float32), 1.0)
     col[..., 2] = col[..., 2] * (1.0 - m) + np.minimum(col[..., 2], 0.12) * m
     return col

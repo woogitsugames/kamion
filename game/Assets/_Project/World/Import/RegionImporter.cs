@@ -534,8 +534,8 @@ namespace Game.World.Import
         }
 
         // ------------------------------------------------------------------------------------------------- meshes
-        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires" };
-        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "buildings", "buildings_lod1", "furniture", "wires" };
+        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings_lod1", "furniture", "wires" };   // plot_ground: ADR 0114
+        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_lod1", "furniture", "wires" };
 
         static void BakeVisual(Result r, Chunk ch, GlbReader g, string tier, GlbReader.MeshNode extraBuildingsLod0 = null)
         {

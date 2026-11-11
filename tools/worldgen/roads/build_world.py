@@ -39,8 +39,10 @@ from terrain_mesh import conform as CF    # noqa: E402
 from terrain_mesh.gltf import GLB, GLTF_AXES, smooth_normals  # noqa: E402
 from streetscape import export as PR      # noqa: E402
 
-LAYERS = ("road", "bridge", "markings", "paved", "buildings", "buildings_low", "furniture", "wires", "collision")
-NODES = (("road", "road"), ("bridge", "bridge"), ("markings", "markings"), ("paved", "paved"),
+# plot_ground (ADR 0114): lawn / driveway of the house plots - ground like `paved`, but shown with the chunk's LOD0 / LOD1
+# only (like `furniture`) and never a shadow caster
+LAYERS = ("road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_low", "furniture", "wires", "collision")
+NODES = (("road", "road"), ("bridge", "bridge"), ("markings", "markings"), ("paved", "paved"), ("plot_ground", "plot_ground"),
          ("buildings", "buildings"), ("buildings_low", "buildings_lod1"), ("furniture", "furniture"),
          ("wires", "wires"), ("collision", "road_collision"))
 
@@ -833,7 +835,7 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
     per_chunk = []
     for ch in chunks_meta:
         t = ch["triangles"]
-        stat = sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved", "furniture", "wires"))
+        stat = sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved", "plot_ground", "furniture", "wires"))
         ci, cj = (int(x) for x in ch["id"].split("_"))
         inst = inst_by_chunk.get((ci, cj), [])
         per_chunk.append({"chunk": ch["id"], "materials": len(ch["materials"]),
