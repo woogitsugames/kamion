@@ -139,6 +139,11 @@ namespace Game.Rendering
             "treecard" => "tree card LOD distances x0.5",
             "glassdbg" => "Kamion/Truck Glass constant colour (rq_glassdbg 1: raster + blend floor of the pane)",
             "glassfast" => "Kamion/Truck Glass fast path toggled (_KAMION_GLASS_FAST)",
+            "forestfast" => "forest fast path toggled (all parts, ADR 0113)",
+            "vegfast" => "Kamion/Vegetation _KAMION_VEG_FAST toggled (wall L2 SH per vertex, shadow fetch past the fade)",
+            "hlod1pass" => "forest HLOD edge walls one-pass toggled (no depth pre-pass, ZWrite colour pass)",
+            "canopyfast" => "forest HLOD canopy Kamion/Forest Canopy vs URP Lit toggled",
+            "veganiso" => "vegetation textures aniso 1 (import: 2)",
             _ => "unknown key (no change)",
         };
 
@@ -379,6 +384,11 @@ namespace Game.Rendering
                     if (m_GlassShip < 0) m_GlassShip = Shader.IsKeywordEnabled("_KAMION_GLASS_FAST") ? 1 : 0;
                     if ((m_GlassShip == 1) ^ b) Shader.EnableKeyword("_KAMION_GLASS_FAST"); else Shader.DisableKeyword("_KAMION_GLASS_FAST");
                     break;
+                case "forestfast": ForestFastPath.FlipKeyword = ForestFastPath.FlipEdgeOnePass = ForestFastPath.FlipCanopy = b; ForestFastPath.Refresh(); break;
+                case "vegfast": ForestFastPath.FlipKeyword = b; ForestFastPath.Refresh(); break;
+                case "hlod1pass": ForestFastPath.FlipEdgeOnePass = b; ForestFastPath.Refresh(); break;
+                case "canopyfast": ForestFastPath.FlipCanopy = b; break;
+                case "veganiso": ForestFastPath.FlipAniso = b; ForestFastPath.Refresh(); break;
                 case "shadowcasc":
                     if (urp == null) break;
                     if (b) { m_SavedCascades = urp.shadowCascadeCount; urp.shadowCascadeCount = Mathf.Max(1, m_SavedCascades - 1); }

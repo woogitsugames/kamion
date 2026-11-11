@@ -41,6 +41,10 @@ Shader "Kamion/Vegetation"
         _CrownShade ("Leaf cards: sky occlusion of the lower crown (ambient; ADR 0088)", Range(0, 1)) = 0.5
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 0
         [Toggle] _AlphaToMask ("Alpha to coverage", Float) = 0
+        // ADR 0113: colour-pass depth state. Defaults = two-pass path (depth pass + ZWrite Off / pulled-in colour pass);
+        // ForestFastPath sets 1 / 0 with the depth pass disabled for the single-pass HLOD edge walls.
+        [HideInInspector] _VegZWrite ("Colour pass ZWrite", Float) = 0
+        [HideInInspector] _VegOffset ("Colour pass depth offset", Float) = -1
     }
     SubShader
     {
@@ -184,13 +188,17 @@ Shader "Kamion/Vegetation"
             // LEqual + a small pull towards the camera instead of ZTest Equal: the two passes are separate shader programs
             // and the compiler does not guarantee bit-identical depth (Vulkan without Invariant: every leaf failed Equal on
             // the Mali-G57). ZWrite Off keeps the early depth test valid despite the clip / coverage below.
-            ZWrite Off ZTest LEqual Offset -1, -1 Cull [_Cull]
+            // ADR 0113: [_VegZWrite] / [_VegOffset] = Off / -1 except the single-pass HLOD edge walls (On / 0, depth pass off).
+            ZWrite [_VegZWrite] ZTest LEqual Offset [_VegOffset], [_VegOffset] Cull [_Cull]
             AlphaToMask [_AlphaToMask]
             HLSLPROGRAM
             #pragma target 3.0
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            // ADR 0113 (QualityProfile.forestFast): HLOD edge walls take the L2 SH band per vertex (L0 + L1 stay per pixel,
+            // URP's "mixed" SH mode), and no vegetation pixel beyond the shadow fade samples the shadow map.
+            #pragma multi_compile _ _KAMION_VEG_FAST
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile_fog
             #pragma multi_compile_instancing
@@ -211,6 +219,30 @@ Shader "Kamion/Vegetation"
                 half3 l2 = SHEvalLinearL2(n, unity_SHBr, unity_SHBg, unity_SHBb, unity_SHC);
                 return max((l0 + l2) * (1.0h + t) + l1 * (1.0h - t), half3(0.0h, 0.0h, 0.0h));
             }
+            // ADR 0113: LeafAmbient with the L2 band given (per vertex); L0 + L1 (linear in n) per pixel.
+            half3 LeafAmbientL2(half3 n, half3 l2)
+            {
+                half t = _AmbientTransmission * _KamionLeafAmbient.x * step(_Cull, 0.5h);
+                half3 l0 = half3(unity_SHAr.w, unity_SHAg.w, unity_SHAb.w);
+                half3 l1 = half3(dot(unity_SHAr.xyz, n), dot(unity_SHAg.xyz, n), dot(unity_SHAb.xyz, n));
+                return max((l0 + l2) * (1.0h + t) + l1 * (1.0h - t), half3(0.0h, 0.0h, 0.0h));
+            }
+            // Main-light shadow. Fast path (ADR 0113): URP's distance fade (as URP Lit; the two-pass path had none) and no
+            // shadow-map fetch beyond it - HLOD walls (> 70 m) and most impostors lie past the Low / Medium shadow distance.
+            half VegShadow(float3 positionWS)
+            {
+            #if defined(MAIN_LIGHT_CALCULATE_SHADOWS)
+            #if defined(_KAMION_VEG_FAST)
+                half fade = GetMainLightShadowFade(positionWS);
+                UNITY_BRANCH if (fade > 0.999h) return 1.0h;
+                return lerp(MainLightRealtimeShadow(TransformWorldToShadowCoord(positionWS)), 1.0h, fade);
+            #else
+                return MainLightRealtimeShadow(TransformWorldToShadowCoord(positionWS));
+            #endif
+            #else
+                return 1.0h;
+            #endif
+            }
             struct A { float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct V
             {
@@ -225,6 +257,8 @@ Shader "Kamion/Vegetation"
                 half3 upWS : TEXCOORD6;
                 half4 ambUpT : TEXCOORD7;        // xyz SH towards up, w view blend weight
                 half3 ambDown : TEXCOORD8;
+            #elif defined(_HLOD_EDGE) && defined(_KAMION_VEG_FAST)
+                half3 ambL2 : TEXCOORD5;         // L2 SH band of the wall normal (even in n: valid for both faces)
             #endif
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -252,6 +286,9 @@ Shader "Kamion/Vegetation"
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
                 // Ambient per vertex: crown normals are smooth (generator), so per-pixel SH adds nothing visible.
                 o.ambient = LeafAmbient(o.normalWS);
+            #if defined(_HLOD_EDGE) && defined(_KAMION_VEG_FAST)
+                o.ambL2 = SHEvalLinearL2(o.normalWS, unity_SHBr, unity_SHBg, unity_SHBb, unity_SHC);
+            #endif
             #endif
                 o.positionWS = TransformObjectToWorld(pOS);
                 o.positionCS = TransformWorldToHClip(o.positionWS);
@@ -317,12 +354,17 @@ Shader "Kamion/Vegetation"
                     float3 B = dp2perp * duv1.y + dp1perp * duv2.y;
                     float inv = rsqrt(max(max(dot(T, T), dot(B, B)), 1e-12));
                     n = normalize(T * inv * nxy.x + B * inv * nxy.y + n * nz);
+                #if defined(_KAMION_VEG_FAST)
+                    ambient = LeafAmbientL2(n, i.ambL2);
+                #else
                     ambient = LeafAmbient(n);
+                #endif
                     occA = lerp(1.0, nm.b, _Impostor.y);
                     occS = lerp(1.0, nm.b, _Impostor.z);
                 }
             #endif
-                Light L = GetMainLight(TransformWorldToShadowCoord(i.positionWS));
+                Light L = GetMainLight();
+                L.shadowAttenuation = VegShadow(i.positionWS);
                 half NoL = dot(n, L.direction);
                 half sun = saturate(NoL) + _Transmission * saturate(-NoL);
                 // r11 sheen: the waxy leaf / needle surface mirrors a few percent of the sky whatever its pigment (the

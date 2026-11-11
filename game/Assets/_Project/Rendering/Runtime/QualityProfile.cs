@@ -90,6 +90,11 @@ namespace Game.Rendering
             [Tooltip("Kamion/Truck Glass fast path (_KAMION_GLASS_FAST): Fresnel, body absorption, film phase, ambient and fog per vertex, " +
                      "wiper sweeps in half precision. A16 Low: the windscreen covers ~80 % of the cab view and cost 3.6-4.3 ms GPU")]
             public bool glassFast;
+            [Header("Forest fast path (ADR 0113)")]
+            [Tooltip("Forest HLOD and impostors on the cheap path: HLOD canopy on Kamion/Forest Canopy instead of URP Lit, HLOD edge " +
+                     "walls in one pass (ZWrite + alpha-to-coverage, no depth pre-pass), L2 SH per vertex on the walls and no shadow-map " +
+                     "fetch past the shadow fade on every vegetation pixel (_KAMION_VEG_FAST). A16 Low: forest HLOD + impostors 4.3 ms")]
+            public bool forestFast;
             [Header("Budget assumptions (UNMEASURED until the phone is measured)")]
             public int budgetDrawCalls;
             public int budgetTrianglesK;
@@ -102,7 +107,7 @@ namespace Game.Rendering
         [Tooltip("Migration revision (ProjectSetup.LoadTiers applies the changes of later revisions to an existing asset)")]
         public int revision;
         /// <summary>ADR 0062: High floor 0.70, FSR upscaling, pacing fallback, lamp pools.</summary>
-        public const int CurrentRevision = 106;   // ADR 0080: cloudQuality, ssao; ADR0098: shadow receiver stability and post noise; ADR 0106: glassFast
+        public const int CurrentRevision = 113;   // ADR 0080: cloudQuality, ssao; ADR0098: shadow receiver stability and post noise; ADR 0106: glassFast; ADR 0113: forestFast
 
         /// <summary>
         /// First-launch tier by device (no launch argument, nothing saved by the player). Rules are checked in order; a rule
@@ -125,6 +130,9 @@ namespace Game.Rendering
                  "asset, not just the shader: without an instanced material in the build Unity strips the INSTANCING_ON variants " +
                  "and Graphics.RenderMeshInstanced draws nothing (A16, 2026-11-09)")]
         public Material foliageMaterial;
+        [Tooltip("ADR 0113: template of the forest HLOD canopy on tiers with forestFast (Kamion/Forest Canopy, M_ForestCanopy); " +
+                 "keeps the shader in the build")]
+        public Material canopyMaterial;
         [Tooltip("Tier when no device rule matches")] public string fallbackTier = "Medium";
 
         public static DeviceRule[] DefaultDeviceRules() => new[]
@@ -203,7 +211,7 @@ namespace Game.Rendering
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 70f, forestHlodCullM = 1000f,
                 clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 64, envCaptureInterval = 10, envCaptureFarClip = 150f, envCaptureMinMove = 2f, envCaptureMaxAge = 20f, contactShadows = true, cabShadowLift = 8f, streetLights = 0, lampPools = 4,
-                glassFast = true,
+                glassFast = true, forestFast = true,
                 budgetDrawCalls = 250, budgetTrianglesK = 350, budgetTextureMB = 64, budgetShadowMs = 1.0f, budgetStatus = "UNMEASURED",
             },
             new Tier
