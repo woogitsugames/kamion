@@ -19,7 +19,7 @@ The initial gate strips reused the legacy2.5m/4m end fades. On a4.2m strip these
 
 No road source file, override, road geometry, building set, truck source, global exposure or project setting is changed by these decisions. Reference photographs are never runtime textures.
 
-## Retained bounded paint calibration; broader probe still pending
+## Retained paint calibration and rejected broader-wear probe
 
 The existing `.85` paint wheel-wear term severs an actual P8 turning arrow. A material-only wearOFF control reconnects its arm/head, excluding a geometry gap. One `.425` diagnostic improves it but leaves a dark head band and cleans the P10 control noticeably. The next isolated width test held `.425` and changed only paint denominator`.13 -> .085`, preserving centres`.26/.74`, age and dirt. ROOT reviewed P8 in all four conditions and the P10 control and retained this bounded candidate: the arrow remains recognisable with local wear. P10 is cleaner; this is an explicit calibration change, not full task quality acceptance or unchanged transverse wear.
 
@@ -27,14 +27,18 @@ Production source now applies a WORKING_VALUE0.5 contact-response calibration to
 
 Transient diagnostic clones assert original texture/uniform bindings, log actual post-render overrides and restore renderer assignments in finally; original material SHA remains exact. The first narrow attempt had a missing camera JSON and produced0PNGs; its invalid log is retained and excluded from metrics. The corrected diagnostic rendered8 valid frames. No further paint variants are planned.
 
-The separate polish/gutter/longitudinal-wear r2 patch remains inactive and preserves this already-calibrated transverse response. Three small scalar changes alone do not constitute completion of the broader wear task.
+The separate polish/gutter/longitudinal-wear probe was tested with 56 fresh BEFORE and 56 AFTER images, exact camera/vehicle runtime poses and matching rounded counters. Its actual source-field masks were active, yet measured wheel-mask luma changes were only 0.047-0.278 display levels on old road and 0.100-0.333 on fresh road. ROOT and independent High review rejected the experiment because it did not demonstrate a convincing quality improvement. Only those three blocks were reverted; the selected shader again has SHA256 1dc7db4ea4ec839f4dc8fbd301ba5aedd38a12c3fff892e66818841d125edce4. Paint, UV corrections, bus oil and gate version 2 remain selected. The rejected shader and all paired evidence are archived.
+
+The fresh probe also exposed Unity serialization of two signal materials: only the _EMISSION keyword was removed. Original bytes matched the private snapshot. START AFTER was restored to START BEFORE; END AFTER matches the independently pinned END BEFORE for all 2441 cached files and 192 raw files. This is an explicit startup/end exception, not a claim that all cached files stayed unchanged throughout. The signal-oil closeup contains no visible lamp head, and a MeshRenderer-only recorder cannot establish instanced signal state. No fictitious lamp ROI or historical runtime measurement is claimed.
+
+Overall asphalt sterility remains open. LOW-WEAR-SOURCE-PLAN.md attributes missing Low crack/photo detail to the existing tier gate and inventories genuinely usable channels. Its Low-only packed-mask proposal is read-only, with unresolved compression, UV-scale, material-isolation and memory questions under independent review. No larger atlas, added fetch, amplitude sweep or final quality acceptance follows from that plan. Final route and editor tests wait for the selected source.
 
 ## Evidence and limits
 
 - `lane-final-native-proof.json`:154 native road/marking meshes preserve positions/normals/indices/UV0;150 actual UV1.y hashes match original semantic data through Unity Half conversion, four channels absent. Paint age stays exact.
 - `bus-world-proof.json`:190/192 raw files byte-identical; only4_5 High/Low add10vertices/9triangles, with all old ordered primitives/material definitions/node transforms intact. Actual nested Fab status is15 ready assets and320 props, without fallback.
 - `gate-world-proof.json`: relative to bus-only, only6_6 High/Low change; old tyre data matches after removing the72-vertex/64-triangle insertion and rebasing indices. Bus4_5 and all64 instance files remain byte-identical. All2441 cached bus-only Unity files remain unchanged during CPU generation.
-- Focused editor tests14/14 pass. Bus/gate source tests16/16 pass. The final signed-mode full GIS suite passes 388 tests with one expected failure. XML reports zero failures/errors; strict raw delta and all 2441 cached hashes are verified again afterward. Final EditMode, complete matched AFTER matrices and independent visual acceptance are still required.
+- Focused editor tests14/14 pass. Bus/gate source tests 18/18 pass. The final signed-mode full GIS suite passes 388 tests with one expected failure. XML reports zero failures/errors; strict raw delta and all 2441 cached hashes are verified again afterward. Final EditMode, complete matched AFTER matrices and independent visual acceptance are still required.
 - Existing patches/cracks are inventoried and photographed in actual controls; their presence alone is not a visual quality claim. Low keeps its existing detail gate and adds no texture fetch.
 - Source material-group deltas are0. Added source triangles are exactly9bus+64gate per tier. Captured counter values are pre-SRP estimates with rounded triangle counts, not measured phone GPU cost. Runtime cost remains UNVERIFIED until appropriate evidence exists.
 - Preserved scenes match current serialized actor roots and all40 native camera matrices/FOVs. Prefabs match all553truck/253trailer semantic records after local-fileID normalization. A scoped runtime recorder captured the two bus High-overcast camera/actor poses successfully; this does not retroactively prove372 pixel-identical frames.
