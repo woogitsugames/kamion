@@ -37,3 +37,6 @@ Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/import-and-baseline.ps1
 18 testów zaliczonych: wcześniej niespójne far field, kotwice wiaduktu, prototypy instancji i cały aktualny zestaw SBS. Pierwszy GLB ma SHA zgodne z aktualnym manifestem i zapisaną migawką. Odtworzono brakującą warstwę asfaltu z istniejącego w main publicznego zdjęcia (build_all --only asphalt_detail_photo, kod 0). Import nadal czeka na slot; Unity jeszcze nie wystartowało.
 Metadane renderu rozróżniają bazę main faktycznie zawartą w gałęzi i obserwowany bieżący tip main; zapisują też SHA manifestu świata i specyfikacji materiałów.
 Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20
+## Odtwarzalne próby pozy
+Rozszerzono sondy J2 do siatki XY −5,5/0/+5,5 m (72 warianty), ponieważ przesunięcie względem jezdni nie musi być prostopadłe do osi zdjęcia. Skrypty generatora, renderu ze slotami i galerii 960 px zapisano w artifacts/sbs-r1. Sondy nie zmieniają pozy przyjętych do bramki.
+Następny krok po baseline: pwsh -NoProfile -File artifacts/sbs-r1/render-pose-probes.ps1
