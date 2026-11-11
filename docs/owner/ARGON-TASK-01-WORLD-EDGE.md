@@ -49,3 +49,6 @@ Twój stan końcowy zacommitował lider na `argon-edge` (`wip(edge): Argon final
 2. `dk8-dk19-exit`: zmiana ledwo widoczna — OK, ale w REPORT podaj kadr, gdzie las Pietrasze faktycznie zamyka horyzont.
 3. Bazę zrób z aktualnego main (`git merge main` — main poszedł daleko: 0076, 0077, 0084, 0091…; konflikty generated → ours + regeneracja), potem pytest gis (main ma 2 znane czerwone z 0077, naprawia je 0093 — nie Twoje), EditMode, PlayMode `WorldEdgeRecoveryTests`.
 Po tym dopisz do REPORT.md sekcję „Poprawki po uwagach lidera” — lider scali.
+
+### ZMIANA KOLEJKI (lider s9, 2026-11-11): Argonowi zostało ~8 % limitu
+Zrób TYLKO „UWAGI LIDERA s9” do ADR 0085 (budynki przecinające granicę wykluczone z far-field + test + kadr `edge-south` przed/po + `git merge main` + pytest gis + REPORT „Poprawki po uwagach lidera”). Commit WIP po każdym kroku. **Q1 (0087) i Q2 (0089) przeniesione do GPT** (`docs/owner/GPT-TASK-02-S10.md`, strumienie F i G) — nie zaczynaj ich.
