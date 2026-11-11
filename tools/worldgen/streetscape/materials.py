@@ -176,12 +176,15 @@ M = {
     "reflector_red": {"color": [0.4, 0.02, 0.02], "rough": 0.2},
     "tyre": {"color": [0.025, 0.025, 0.025], "rough": 0.85},
     "rim": {"color": [0.50, 0.51, 0.52], "rough": 0.36, "metal": 0.7},
-    "trailer_curtain_grey": {"color": [0.20, 0.21, 0.21], "rough": 0.7, "texture_set": "curtain_folds"},
-    "trailer_curtain_blue": {"color": [0.03, 0.06, 0.14], "rough": 0.7, "texture_set": "curtain_folds"},
-    "trailer_curtain_white": {"color": [0.55, 0.56, 0.55], "rough": 0.7, "texture_set": "curtain_folds"},
-    "trailer_curtain_red": {"color": [0.18, 0.045, 0.035], "rough": 0.7, "texture_set": "curtain_folds"},
-    "trailer_curtain_green": {"color": [0.045, 0.08, 0.06], "rough": 0.7, "texture_set": "curtain_folds"},
-    "trailer_curtain_silver": {"color": [0.36, 0.37, 0.37], "rough": 0.6, "texture_set": "curtain_folds"},
+    # r12 (ADR 0092): "rough" of a curtain is now applied by the importer (mean roughness of the set scaled to it; before
+    # the set's 0.64 was used whatever stood here). Matt PVC-coated fabric 0.82, the silver (aluminised) tarp 0.72;
+    # metallic 0 (WORKING_VALUE, judged on the dock renders: no horizon line on a tarp in the shade of the hall).
+    "trailer_curtain_grey": {"color": [0.20, 0.21, 0.21], "rough": 0.82, "texture_set": "curtain_folds"},
+    "trailer_curtain_blue": {"color": [0.03, 0.06, 0.14], "rough": 0.82, "texture_set": "curtain_folds"},
+    "trailer_curtain_white": {"color": [0.55, 0.56, 0.55], "rough": 0.82, "texture_set": "curtain_folds"},
+    "trailer_curtain_red": {"color": [0.18, 0.045, 0.035], "rough": 0.82, "texture_set": "curtain_folds"},
+    "trailer_curtain_green": {"color": [0.045, 0.08, 0.06], "rough": 0.82, "texture_set": "curtain_folds"},
+    "trailer_curtain_silver": {"color": [0.36, 0.37, 0.37], "rough": 0.72, "texture_set": "curtain_folds"},
     "trailer_box_white": {"color": [0.60, 0.61, 0.60], "rough": 0.45, "texture_set": "box_panel"},
     "tractor_paint_white": {"color": [0.66, 0.66, 0.64], "rough": 0.3},
     "tractor_paint_silver": {"color": [0.40, 0.41, 0.42], "rough": 0.3, "metal": 0.6},
@@ -206,7 +209,7 @@ M = {
     "trailer_chassis": {"color": [0.03, 0.03, 0.032], "rough": 0.6, "metal": 0.5},
     "trailer_strap": {"color": [0.10, 0.10, 0.10], "rough": 0.6, "metal": 0.4},
     "reefer_unit": {"color": [0.48, 0.49, 0.48], "rough": 0.5},
-    "reefer_grille": {"color": [0.03, 0.03, 0.03], "rough": 0.6},
+    "reefer_grille": {"color": [0.03, 0.03, 0.03], "rough": 0.6, "texture_set": "louvre_slats"},   # r12: slats (importer stripes)
     "pallet_wood": {"color": [0.36, 0.28, 0.18], "rough": 0.9, "texture_set": "euro_pallet_side"},
     "pallet_foil": {"color": [0.45, 0.45, 0.43], "rough": 0.3},
     "cardboard": {"color": [0.35, 0.25, 0.14], "rough": 0.9},
@@ -269,7 +272,10 @@ M = {
     # ground) + run-off streaks under the coping and the strip-window sills (TEXCOORD_1 of make_depot.py), like the
     # generated hall walls. 0.62 -> 0.56: the wall, the sky and the apron were one light grey (WORKING_VALUE; the CC0
     # photo 20210904_101250 shows the sheet clearly darker than the overcast sky).
-    "kp_wall": {"color": [0.56, 0.57, 0.57], "rough": 0.5, "metal": 0.1, "texture_set": "sandwich_ribbed", "weather": True},
+    # r12 (ADR 0092): `panel_m` = cladding module of the set [panel length, course height] m: the macro tone drift is
+    # quantised to it (one tone per panel + a butt joint line) instead of a smooth noise
+    "kp_wall": {"color": [0.56, 0.57, 0.57], "rough": 0.5, "metal": 0.1, "texture_set": "sandwich_ribbed", "weather": True,
+                "panel_m": [6.0, 1.0]},
     "kp_accent": {"color": [0.50, 0.075, 0.035], "rough": 0.55, "metal": 0.2},
     "kp_glass_block": {"color": [0.27, 0.29, 0.30], "rough": 0.3},
     "kp_roof_white": {"color": [0.52, 0.52, 0.50], "rough": 0.8},

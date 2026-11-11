@@ -39,6 +39,12 @@ LIFT_PATCH = 0.002
 LIFT_GRIME = 0.003
 LIFT_TYRE = 0.008
 TRACK_GAUGE = 2.04          # m between the wheel-path centres of a truck / semitrailer (WORKING_VALUE)
+# r12 (review 2026-11-11 s9: "ślady opon jak plamy cienia"): a wheel path is the print of a twin tyre - two treads of
+# TWIN_TREAD_M with TWIN_GAP_M between them (315/80 R22.5 twins: 0.60 m over both; WORKING_VALUE), drawn as two narrow
+# bands with a hard edge (band v inside 0.22..0.78: the material's soft profile starts at 0.44 of its ramp).
+TWIN_TREAD_M = 0.26
+TWIN_GAP_M = 0.08
+TWIN_V = (0.22, 0.78)
 # Soil bands use the tyre-scrub band material (dark grey film, same shader path): one draw less per chunk than a
 # material of their own, and at the opacities used here (0.3-0.6) a soil film and a rubber film read the same.
 GRIME_MAT = "decal_tyre"
@@ -67,9 +73,10 @@ def _resample(P, step):
     return np.array([ln.interpolate(ln.length * k / (n - 1)).coords[0] for k in range(n)])
 
 
-def band(buf, mat, C, w, zsurf, lift, strength, src):
+def band(buf, mat, C, w, zsurf, lift, strength, src, v=(0.0, 1.0)):
     """Soft band decal along the polyline C (n, 2) of width w (scalar or per point): UV0 = (metres along, 0..1 across),
-    UV1 = (length, strength), faces up. Returns the number of triangles."""
+    UV1 = (length, strength), faces up. v = range of the across coordinate on the two edges: (0, 1) = soft edges,
+    a narrower range cuts the soft ramp of the material (hard edge). Returns the number of triangles."""
     C = np.asarray(C, float)
     if len(C) < 2:
         return 0
@@ -84,7 +91,7 @@ def band(buf, mat, C, w, zsurf, lift, strength, src):
     ss = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(C, axis=0).T))])
     # A = right edge, B = left edge of the travel direction: (A_i, A_i+1, B_i+1) is CCW seen from above
     T = np.array([(i, i + 1, m + i + 1) for i in range(m - 1)] + [(i, m + i + 1, m + i) for i in range(m - 1)])
-    uv = np.column_stack([np.tile(ss, 2), np.repeat([0.0, 1.0], m)])
+    uv = np.column_stack([np.tile(ss, 2), np.repeat([float(v[0]), float(v[1])], m)])
     uv1 = np.column_stack([np.full(2 * m, ss[-1]), np.full(2 * m, strength)])
     buf.add("markings", mat, np.column_stack([V2, Z]), uv, T, src=src, UV1=uv1)
     return len(T)
@@ -185,13 +192,15 @@ def apply(buf, overrides, origin, docks, paved, roads_poly, zsurf, report):
                 # 0.35-0.85 of the dock scrub opacity: a driving line is a faint darkening, not a skid mark
                 strength = float(tr.get("strength", 1.0)) * (0.35 + 0.5 * hf(*key, "s"))
                 for wx in (-1.0, 1.0):
-                    C = C0 + nn * (wx * TRACK_GAUGE / 2 + drift)[:, None]
-                    ok = shapely.contains_xy(drivable, C[:, 0], C[:, 1])
-                    for ri, run in enumerate(_runs(C, ok)):
-                        w = 0.36 + 0.16 * hf(*key, wx, "w")
-                        cnt["tris"] += band(buf, "decal_tyre", run, w, zsurf, LIFT_TYRE, min(strength, 1.5),
-                                            f"wear:{oid}:track{ti}:{k}:{int(wx)}:{ri}")
-                        cnt["track_bands"] += 1
+                    for tw in (-1.0, 1.0):                           # the two treads of the twin tyre
+                        C = C0 + nn * (wx * TRACK_GAUGE / 2 + tw * (TWIN_TREAD_M + TWIN_GAP_M) / 2 + drift)[:, None]
+                        ok = shapely.contains_xy(drivable, C[:, 0], C[:, 1])
+                        for ri, run in enumerate(_runs(C, ok)):
+                            # the hard edge shows 1 / 0.56 of the band's peak: keep the peak opacity of r11
+                            cnt["tris"] += band(buf, "decal_tyre", run, TWIN_TREAD_M, zsurf, LIFT_TYRE,
+                                                min(strength * (0.9 + 0.2 * hf(*key, wx, tw, "t")), 1.5),
+                                                f"wear:{oid}:track{ti}:{k}:{int(wx)}:{int(tw)}:{ri}", v=TWIN_V)
+                            cnt["track_bands"] += 1
 
         # ---- dark soil / damp lines read off the orthophoto
         for gi, gl in enumerate(wr.get("grime_lines_uo", [])):

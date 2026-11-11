@@ -135,3 +135,38 @@ def test_boom_bands_run_along_the_boom():
         # u is constant around each ring (no band change around the profile)
         for x in np.unique(np.round(V[:, 0], 6)):
             assert np.ptp(UV[np.abs(V[:, 0] - x) < 1e-6, 0]) < 1e-9
+
+
+def test_region_gate_cannot_be_driven_round():
+    """ADR 0092 (review 2026-11-11 s9): each boom's rest post stands on a raised kerbed strip on the outer side of its
+    lane, and a closure line (posts / panel fence) runs from that strip to the edge of the paved yard; no rule car is
+    parked across a closure line."""
+    qa = json.loads((REGION_DIR / "generated" / "streetscape_qa.json").read_text(encoding="utf-8"))
+    g = qa["furniture"]["gates"]
+    assert not [s for s in g["stale"] if "strip" in s or "closure" in s], g["stale"]
+    ap = g["applied"][0]
+    assert set(ap["side_strips"]) == {"entry", "exit"}
+    for name, st in ap["side_strips"].items():
+        assert st["rest_on_strip"], name
+        assert st["m2"] >= 8.0, (name, st)
+    assert set(ap["closure"]) == {"entry", "exit"}
+    for name, c in ap["closure"].items():
+        assert c["ends"] in ("yard_edge", "cut"), (name, c)       # not cut short by max_m: it reaches a boundary
+        assert c["m"] >= 5.0, (name, c)
+    assert len(g["closure_lines"]) == 2
+    from shapely.geometry import LineString
+    lines = [LineString(c) for c in g["closure_lines"]]
+    cars = [i for i in _instances() if i["p"].startswith(("car_", "van_", "tractor_", "trailer_"))]
+    near = [(i["p"], i["src"]) for i in cars if min(ln.distance(Point(i["e"], i["n"])) for ln in lines) < 1.2]
+    assert not near, near
+    assert g.get("scuff_tris", 0) > 0
+
+
+def test_reefer_unit_has_a_grille_on_both_lods():
+    """ADR 0092: the refrigeration unit is not a plain white box - the slatted grille is on LOD0 and LOD1, UV v in
+    metres (the importer's `louvre_slats` stripes run on it), and the trailer stays inside the LOD budgets."""
+    P = LP.build_all()
+    m, l1 = P["trailer_reefer_0"][0], P["trailer_reefer_0"][1]
+    for mesh in (m, l1):
+        uv = np.concatenate(mesh.prims["reefer_grille"][2])
+        assert uv[:, 1].max() - uv[:, 1].min() == pytest.approx(0.78, abs=0.01)

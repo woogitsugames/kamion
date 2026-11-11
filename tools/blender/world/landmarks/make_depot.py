@@ -49,6 +49,7 @@ ZPAR = ZTOP + PRM["parapet_h_m"]                 # top of the attic wall (coping
 
 WALL, ACCENT, GLASSB, PLINTH, FLASH = "kp_wall", "kp_accent", "kp_glass_block", "hall_plinth", "hall_flashing"
 RUNOFF_PERIOD_M = 24.0       # u period of the parapet_runoff layer (streetscape.buildings_mesh.RUNOFF_PERIOD_M)
+SILL_FLAG = 64.0             # added to TEXCOORD_1.v of faces under a window sill (WorldPBR.shader _RUNOFF: v >= 48)
 
 _spec = importlib.util.spec_from_file_location("wm", REPO / "tools" / "worldgen" / "streetscape" / "materials.py")
 _wm = importlib.util.module_from_spec(_spec)
@@ -180,9 +181,11 @@ class Fr:
         q = self.a + self.d * u + self.n * o
         return np.array([q[0], q[1], z])
 
-    def front(self, mb, u0, u1, z0, z1, mat, o=0.0, uv=None, run_top=None):
+    def front(self, mb, u0, u1, z0, z1, mat, o=0.0, uv=None, run_top=None, sill=False):
         """run_top: z of the edge the rain runs off above this face (coping or a window sill): the face gets
-        TEXCOORD_1 = (u in the 24 m run-off period, 1 + metres below that edge), like buildings_mesh.runoff_uv1."""
+        TEXCOORD_1 = (u in the 24 m run-off period, 1 + metres below that edge), like buildings_mesh.runoff_uv1.
+        sill (r12): the edge is the sheet-metal sill of an opening - v carries SILL_FLAG on top (Kamion/World PBR
+        _RUNOFF: dust washed off the sill, a dirt line under it and denser, stronger streaks)."""
         if u1 - u0 < 1e-4 or z1 - z0 < 1e-4:
             return
         uv1 = None
@@ -191,6 +194,8 @@ class Fr:
             sh = RUNOFF_PERIOD_M * math.floor(a / RUNOFF_PERIOD_M)       # half-float TEXCOORD_1: keep |u| small
             a, b = a - sh, self.u_off + u1 - sh
             ka, kb = 1.0 + (run_top - z0), 1.0 + (run_top - z1)
+            if sill:
+                ka, kb = ka + SILL_FLAG, kb + SILL_FLAG
             uv1 = [(a, ka), (b, ka), (b, kb), (a, kb)]
         if uv is None:
             uv = [(self.u_off + u0, z0 - ZREF), (self.u_off + u1, z0 - ZREF), (self.u_off + u1, z1 - ZREF),
@@ -311,20 +316,20 @@ def build_wall(mb, e, fr, ua, ub, ops, lod):
         spans = []
         for o in col:
             if o[2] > z:
-                spans.append((z, o[2]))
+                spans.append((z, o[2], o[4] in ("strip", "louvre", "window", "band")))
             z = max(z, o[3])
         if z < ZPAR:
-            spans.append((z, ZPAR))
-        for z0, z1 in spans:
+            spans.append((z, ZPAR, False))
+        for z0, z1, sill in spans:
             # r11 weathering: every cladding face knows the edge above it that sheds water down the sheet (the coping,
             # or the sill of the opening above: strip windows, louvres), so soot streaks start there, not at the ground
             if z0 < zp < z1:
                 fr.front(mb, u0, u1, z0, zp, PLINTH)
-                fr.front(mb, u0, u1, zp, z1, WALL, run_top=z1)
+                fr.front(mb, u0, u1, zp, z1, WALL, run_top=z1, sill=sill)
             elif z1 <= zp:
                 fr.front(mb, u0, u1, z0, z1, PLINTH)
             else:
-                fr.front(mb, u0, u1, z0, z1, WALL, run_top=z1)
+                fr.front(mb, u0, u1, z0, z1, WALL, run_top=z1, sill=sill)
 
 
 def build_dock(mb, fr, o, lod):

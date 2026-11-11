@@ -76,7 +76,6 @@ Shader "Kamion/World PBR"
         _CarPaint ("Car paint (_CARPAINT): x base metal, y flake tilt, z pearl, w base-coat roughness", Vector) = (0, 0, 0, 0.5)
         _CarFlake ("Car flake: x cells per m, y fade scale (1 = gone when a pixel covers a cell)", Vector) = (400, 1, 0, 0)
         _PearlTint ("Pearl grazing tint (linear)", Color) = (1, 1, 1, 1)
-        _PanelTone ("Panel tone (_PANELTONE): xy cladding module in UV0 m (length, course), z per-panel hash share, w butt-joint line", Vector) = (6, 1, 0.35, 0.3)
         _OffsetFactor ("Depth offset factor", Float) = 0
         _OffsetUnits ("Depth offset units", Float) = 0
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("Src blend", Float) = 1
@@ -99,7 +98,6 @@ Shader "Kamion/World PBR"
             float _AlbedoScale, _NormalStrength, _SmoothnessScale, _MetallicScale;
             float _ElementJitter, _ElementSize, _MacroSize, _MacroStrength, _MacroWear, _CrackStrength, _DetailFade;
             float _WheelPolish, _GutterDirt, _AgeTint, _DecalAlpha, _SplashHeight, _GroundTint, _RunoffStrength;
-            float4 _PanelTone;
             float4 _Stripe, _StripeA, _StripeB;
             float4 _GrassFill;
             float4 _PaintColor, _PaintWear;
@@ -141,7 +139,6 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _STRIPES
             #pragma shader_feature_local _GRIME
             #pragma shader_feature_local _CARPAINT
-            #pragma shader_feature_local _PANELTONE
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
@@ -330,28 +327,6 @@ Shader "Kamion/World PBR"
                 }
             #endif
                 half tone = (macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 0.6 + (macro.a - 0.5) * 0.4;
-            #if defined(_PANELTONE)
-                {
-                    // ADR 0092 (review 2026-11-11 s9 par. 4): a coated sandwich-panel wall does not drift in tone like a
-                    // cloud - every panel is one sheet from one coil, so the tone steps at the panel joints. The macro
-                    // drift is sampled once per panel (at its centre, in the wall's own UV0 metres: u along, v up) and
-                    // mixed with a per-panel hash (lot-to-lot difference of neighbouring panels). One point sample.
-                    float2 cellf = um / _PanelTone.xy;
-                    float2 cell = floor(cellf);
-                    float2 pc = (cell + 0.5) * _PanelTone.xy;
-                    half4 mp = SAMPLE_TEXTURE2D_LOD(_MacroMap, sampler_MacroMap, pc / _MacroSize + 0.19, 0);
-                    float3 p3 = frac(float3(cell.xyx) * float3(0.1031, 0.1030, 0.0973));
-                    p3 += dot(p3, p3.yzx + 33.33);
-                    half hsh = frac((p3.x + p3.y) * p3.z);
-                    half drift = (mp.r - 0.5) * 1.4 + (mp.g - 0.5) * 0.6 + (mp.a - 0.5) * 0.4;
-                    tone = drift * (1.0 - _PanelTone.z) + (hsh - 0.5) * 2.0 * _PanelTone.z;
-                    // butt joint between two panels of a course (the set draws only the horizontal shadow gaps)
-                    float du = abs(frac(cellf.x) - 0.5) * _PanelTone.x;                  // 0 at mid-panel
-                    float fwu = max(fwidth(um.x), 1e-4);
-                    half jl = 1.0 - saturate((0.5 * _PanelTone.x - du - 0.006) / fwu);
-                    albedo *= 1.0 - _PanelTone.w * jl * saturate(0.012 / fwu);
-                }
-            #endif
                 albedo *= 1.0 + _MacroStrength * tone;
                 half wear = saturate((macro.b - 0.5) * 2.0);          // > 0: worn / soiled patches
                 albedo *= 1.0 + _MacroWear * (macro.b - 0.5) * 0.8;

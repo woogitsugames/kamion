@@ -154,10 +154,18 @@ def trailer(kind, colour):
                     for sx in (-1, 1):
                         bx(m, "trailer_alu", sx * hw - 0.012, sx * hw + 0.012, y - 0.03, y + 0.03, zf, H - 0.02)
             if kind == "reefer":
+                # Transport refrigeration unit on the front bulkhead (r12, review s9: "agregat chłodni biały sześcian"):
+                # white housing, condenser grille with horizontal slats over the upper two thirds (material stripes
+                # `louvre_slats`, UV v = metres up), dark service band with the control box underneath. Generic shape,
+                # no product copied; sizes WORKING_VALUE. The grille is on both LODs (a plain white box at 25 m).
+                yq = L + 0.425
                 bx(m, "reefer_unit", -0.95, 0.95, L, L + 0.42, 2.45, 3.85)
+                m.quad("reefer_grille", [-0.84, yq, 2.98], [0.84, yq, 2.98], [0.84, yq, 3.76], [-0.84, yq, 3.76],
+                       uv=((0.0, 0.0), (1.68, 0.0), (1.68, 0.78), (0.0, 0.78)))
                 if lod == 0:
-                    m.quad("reefer_grille", [-0.85, L + 0.425, 2.6], [0.85, L + 0.425, 2.6], [0.85, L + 0.425, 3.7],
-                           [-0.85, L + 0.425, 3.7])
+                    m.quad("trailer_chassis", [-0.84, yq, 2.52], [0.84, yq, 2.52], [0.84, yq, 2.90], [-0.84, yq, 2.90])
+                    m.quad("reefer_unit", [0.38, yq + 0.004, 2.57], [0.78, yq + 0.004, 2.57], [0.78, yq + 0.004, 2.85],
+                           [0.38, yq + 0.004, 2.85])                                           # control box door
         if lod == 0:                             # front: corner posts, two uprights, coupling heads, marker lights
             yf = L + (0.42 if kind == "reefer" else 0.0)
             for x in (-hw + 0.04, hw - 0.04, -0.45, 0.45):
