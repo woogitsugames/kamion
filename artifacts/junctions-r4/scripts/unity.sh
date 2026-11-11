@@ -16,5 +16,5 @@ if [ "${2:-}" = "low" ]; then
 waitlock
 pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting clear -Gate3 $CAMS -OutputDir artifacts/junctions-r4/renders_${TAG}_low > $L/${TAG}_qa_low.log 2>&1; echo "qa low rc $?"
 fi
-git checkout -- game/Assets/_Project/Rendering/Settings/Lighting/M_Sky.mat game/ProjectSettings/QualitySettings.asset game/ProjectSettings/ProjectSettings.asset 2>/dev/null
+git checkout -- game/Assets/_Project/Rendering/Settings/Lighting/M_Sky.mat game/ProjectSettings/QualitySettings.asset game/ProjectSettings/ProjectSettings.asset game/Assets/_Project/Rendering/Settings/Lighting/LP_Dusk.asset game/Assets/_Project/Rendering/Settings/Lighting/LP_LowSun.asset 2>/dev/null
 echo "done $(date +%H:%M)"
