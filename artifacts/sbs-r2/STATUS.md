@@ -43,3 +43,6 @@ Migawka powstaje teraz w nowym katalogu tymczasowym. Weryfikowane są skopiowane
 
 ## Próba migawki bez obciążenia generatorów
 Lekka kontrola PowerShell na małych sztucznych plikach przechodzi: pierwszy zapis, usunięcie opcjonalnej adnotacji bez pozostawienia starej kopii, zgodny skład ZIP, odrzucenie zmienionej adnotacji i zmienionej kamery oraz zachowanie poprzedniej poprawnej migawki po błędzie. Nie uruchamiano Unity ani testów GIS poza slotem. Właściwy generator wciąż czeka na heavy.
+
+## Dalsza kalibracja — odrzucona słaba przesłanka
+Ponownie obejrzano kadr 182011943700132. Zdjęcie nie potwierdza jazdy na pomoście, dlatego różnica około 5 m względem pobliskiej kamery mostowej nie uzasadnia korekty wysokości. Zachowano C i zapisano potrzebę rozdzielenia XY, kursu i epoki danych. Nie wykonano automatycznej korekty na podstawie samej liczby.
