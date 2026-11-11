@@ -72,7 +72,7 @@ def build_network(region_id: str, graph: dict | None = None):
     return net, graph, overrides, stats
 
 
-def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None) -> World:
+def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None, side_edit=None) -> World:
     region = load_region(region_id)
     origin = (region["origin"]["x"], region["origin"]["y"])
     rdir = REGIONS / region_id
@@ -128,6 +128,8 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
 
     buf = M.MeshBuf()
     stats = {"patch": {}}
+    if side_edit is not None:            # ADR 0114: dropped kerbs at house driveways (streetscape.plots.apply_drops)
+        stats["side_edit"] = side_edit(net)
     for c in net.chains:
         M.build_ribbon(buf, net, c)
         M.build_ribbon(buf, net, c, coarse=True)

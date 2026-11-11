@@ -499,8 +499,15 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
     clean, bad = CF.clean_under_bridges(w0.hf.z, deck, deck_mask, thick)
     log(f"pass 1: deck nodes {int(deck_mask.sum())}, NMT nodes replaced under decks {int(bad.sum())}")
     hf = pipeline.P.Heightfield(clean, w0.hf.bbox, (w0.hf.ox, w0.hf.oy))
+    # house plots (ADR 0114): planned once on the pass-1 geometry, so pass 2 can lower the kerbs at their driveways
+    from streetscape import stage as SS0
+    from streetscape import plots as PLT
+    plot_plan = SS0.plan_plots(w0, region_id)
+    log(f"plots planned: {len(plot_plan['plots'])}, kerb drops {len(plot_plan['drops'])}")
     # pass 2: final geometry on the cleaned ground model
-    w = pipeline.build(region_id, hf=hf)
+    w = pipeline.build(region_id, hf=hf, side_edit=lambda net: PLT.apply_drops(net, plot_plan["drops"]))
+    w.plot_plan = plot_plan
+    log(f"kerb drops applied: {w.stats.get('side_edit')}")
     w.stats["nmt_replaced_under_decks"] = int(bad.sum())
     log(f"network: {len(w.net.chains)} chains, {len(w.junctions)} junctions")
     mk_report = {}

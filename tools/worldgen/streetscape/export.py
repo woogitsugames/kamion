@@ -22,6 +22,7 @@ from . import life_cars as LC
 from . import signs as SG
 from . import hedge_textures as HT
 from . import furniture_textures as FT
+from . import plot_kit as PKT
 from .materials import M
 
 REPO = Path(__file__).resolve().parents[3]
@@ -139,7 +140,9 @@ def textures():
             "viaduct_steel": (ART / "textures" / "viaduct_steel.png").read_bytes(),
             # hero fire station (ADR 0070): fence / gate / lettering, art-source/world/materials/_src/sets_fire_station.py --alpha
             "fire_station_alpha": (ART / "textures" / "fire_station_alpha.png").read_bytes(),
-            **{k: SG.png_bytes(im) for k, im in HT.textures().items()}}
+            **{k: SG.png_bytes(im) for k, im in HT.textures().items()},
+            # house plot kit (ADR 0114): one alpha atlas for fences / gates / garden plants (streetscape.plot_kit)
+            **{k: SG.png_bytes(im) for k, im in PKT.textures().items()}}
 
 
 def glb_materials():

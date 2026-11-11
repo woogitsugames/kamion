@@ -1,0 +1,277 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-industrial-c",
+ "frame": "local E,N,U (E,N = EPSG:2180 minus region origin; U = EVRF2007)",
+ "cameras": [
+  {
+   "id": "r13_house2_az20",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -495.45,
+    143.86,
+    144.94
+   ],
+   "look_at": [
+    -512.03,
+    132.68,
+    139.94
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0097 review camera, bdot:2BE4B431-C793-1BF0-E053-CC2BA8C0D140, 20.0 m at az 20 deg, 9.0 m up"
+  },
+  {
+   "id": "r13_house2_az110",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -493.23,
+    125.83,
+    144.94
+   ],
+   "look_at": [
+    -512.03,
+    132.68,
+    139.94
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0097 review camera, bdot:2BE4B431-C793-1BF0-E053-CC2BA8C0D140, 20.0 m at az 110 deg, 9.0 m up"
+  },
+  {
+   "id": "r13_house2_az200",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -518.87,
+    113.88,
+    144.94
+   ],
+   "look_at": [
+    -512.03,
+    132.68,
+    139.94
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0097 review camera, bdot:2BE4B431-C793-1BF0-E053-CC2BA8C0D140, 20.0 m at az 200 deg, 9.0 m up"
+  },
+  {
+   "id": "r13_house2_az290",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -526.42,
+    146.57,
+    144.94
+   ],
+   "look_at": [
+    -512.03,
+    132.68,
+    139.94
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0097 review camera, bdot:2BE4B431-C793-1BF0-E053-CC2BA8C0D140, 20.0 m at az 290 deg, 9.0 m up"
+  },
+  {
+   "id": "r13_house1_az200",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -523.81,
+    85.72,
+    144.63
+   ],
+   "look_at": [
+    -516.97,
+    104.51,
+    139.63
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0097 review camera, bdot:2BE4B431-C792-1BF0-E053-CC2BA8C0D140, 20.0 m at az 200 deg, 9.0 m up"
+  },
+  {
+   "id": "r14_plot2_eye_az70",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -497.02,
+    124.69,
+    137.99
+   ],
+   "look_at": [
+    -512.03,
+    132.68,
+    137.79
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0097 review camera, bdot:2BE4B431-C793-1BF0-E053-CC2BA8C0D140, 17.0 m at az 70 deg, 1.7 m up"
+  },
+  {
+   "id": "r14_plot2_eye_az160",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -506.21,
+    116.7,
+    137.99
+   ],
+   "look_at": [
+    -512.03,
+    132.68,
+    137.79
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0097 review camera, bdot:2BE4B431-C793-1BF0-E053-CC2BA8C0D140, 17.0 m at az 160 deg, 1.7 m up"
+  },
+  {
+   "id": "r14_plot2_eye_az250",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -528.0,
+    126.86,
+    137.99
+   ],
+   "look_at": [
+    -512.03,
+    132.68,
+    137.79
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0097 review camera, bdot:2BE4B431-C793-1BF0-E053-CC2BA8C0D140, 17.0 m at az 250 deg, 1.7 m up"
+  },
+  {
+   "id": "r14_plot2_eye_az340",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -517.84,
+    148.65,
+    139.01
+   ],
+   "look_at": [
+    -512.03,
+    132.68,
+    138.81
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0097 review camera, bdot:2BE4B431-C793-1BF0-E053-CC2BA8C0D140, 17.0 m at az 340 deg, 1.7 m up"
+  },
+  {
+   "id": "r14_plot1_eye_az250",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -532.94,
+    98.7,
+    137.59
+   ],
+   "look_at": [
+    -516.97,
+    104.51,
+    137.39
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0097 review camera, bdot:2BE4B431-C792-1BF0-E053-CC2BA8C0D140, 17.0 m at az 250 deg, 1.7 m up"
+  },
+  {
+   "id": "r14_plots_aerial_low",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -533.82,
+    101.55,
+    151.94
+   ],
+   "look_at": [
+    -512.03,
+    132.68,
+    136.94
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0097 review camera, bdot:2BE4B431-C793-1BF0-E053-CC2BA8C0D140, 38.0 m at az 215 deg, 16.0 m up"
+  },
+  {
+   "id": "r13_houses_aerial",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -568.41,
+    112.15,
+    170.94
+   ],
+   "look_at": [
+    -512.03,
+    132.68,
+    137.94
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0097 review camera, bdot:2BE4B431-C793-1BF0-E053-CC2BA8C0D140, 60.0 m at az 250 deg, 35.0 m up"
+  },
+  {
+   "id": "r13_block3_close",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -285.21,
+    -374.97,
+    133.92
+   ],
+   "look_at": [
+    -288.49,
+    -388.58,
+    136.22
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0097: 14 m in front of the r10_block_3 look-at point, eye level"
+  },
+  {
+   "id": "r13_block1_az0",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -277.68,
+    -227.09,
+    131.9
+   ],
+   "look_at": [
+    -277.68,
+    -272.09,
+    136.2
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0097 review camera, bdot:d0f4dd2c-c040-439e-aece-8fe13f9d3046, 45.0 m at az 0 deg, 1.7 m up"
+  },
+  {
+   "id": "r13_block1_az180",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -277.68,
+    -317.09,
+    132.57
+   ],
+   "look_at": [
+    -277.68,
+    -272.09,
+    136.87
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0097 review camera, bdot:d0f4dd2c-c040-439e-aece-8fe13f9d3046, 45.0 m at az 180 deg, 1.7 m up"
+  }
+ ]
+}
