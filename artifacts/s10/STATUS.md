@@ -412,3 +412,18 @@ REVIEW/ADR/status, copiedartifacts; runtime/testevidenceunchanged. No mainmerge.
 Acalib0101 externallymerged4c63f4c4 andcriticclosesP0hall/screens; hallmaterial
 ribbing outsideTintstillFAIL, canonicalfixture3testretry requiredatleaderintegration.
 NEXT COMMAND: reviewG28finalcontacts/fixture+budget andEfasadeproof; monitor perf-low-r1/diag5.log actualEND, promptnewrelease GfullEditMode/GPU, Dpristinebaseline, Eactualfasadeprobe. Onlyafterallcurrent finishqueue0108then0109.
+## Step30 - final G scopedPASS; reneweddiag6hold; D/E pending
+Rootviewedall28GfinalR3contacts324frames+nativewheels/4level sheets, parsed231/231
+XML0fail/skip, finalGPU1007+18cases0error/shaderSHA b0e4510b...; no newscoped
+regression. REVIEW-G finalscopedPASS with device/integration/stylization/invalid
+legacyQA/pairing limits; copiedtoGownREVIEW for workerfinalcommit/copy. G0be2d1db
+cleanbeforeindependentreview, sourceunchanged afterR3. No furtherenginework.
+PHONEperfdiag6created13:59:59; Dfirstimport/Efasadefuturelaunch stoppedbeforeUnity,
+no active/queuedworkers. RootownedHOLDdiag6created; old13:58releaseinvalid.
+F2086e780 boundedpartial closure; now ownsD92bc26af pristine593/192privatebackup,
+patchesinactive, actualbeforematrixpending. Efacadesource66b72b9f: intendedglass/
+clinker/toprunoff only; cleanplaster/roof/trim/normal/mask/var exact, meanrefresh
+ensures nearunitTint1.000743 (notbitexact1), actual4probe pendingworld/phone.
+Feedbackqueue0108then0109 remains AFTER current F/G/E/D. B/C qualityFAIL notclosed
+byoldtestpasses; A0101externalcalibfix independentlycriticvalidatedP0closed.
+NEXT COMMAND: monitor perf-low-r1/diag6.log actualEND; promptfreshrelease Dpristineimport/fixtures/before236 andEactualfasade4, Gfinalreviewcommit/copy CPUonly. Then completeD/E before0108/0109.
