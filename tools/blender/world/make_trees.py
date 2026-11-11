@@ -1,4 +1,4 @@
-"""Procedural tree library for Podlasie roadsides (our geometry/leaves, CC0 pine bark).
+"""Procedural tree library for Podlasie roadsides (our geometry/broadleaf, CC0 pine bark/needles).
 
     blender -b --factory-startup -P tools/blender/world/make_trees.py
 

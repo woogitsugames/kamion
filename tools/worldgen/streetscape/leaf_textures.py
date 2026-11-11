@@ -1,10 +1,11 @@
-"""Procedural foliage-card and ground-detail textures (our own; no photos, no generators).
+"""Our foliage/ground cards, with optional hash-pinned CC0 pine bark and needles.
 
     uv run --project tools/worldgen tools/worldgen/streetscape/leaf_textures.py
 
 Writes art-source/world/vegetation/{leaves_<species>.png, grass_tuft.png, bark_<species>.png} (RGBA, sRGB).
-Each foliage card is a cluster of leaves / needle tufts drawn from primitives with per-leaf colour jitter
-(sun-side lighter, inner darker) so the crown has depth when cards overlap. Deterministic seeds.
+Broadleaf cards are clusters drawn from primitives with per-leaf colour jitter
+(sun-side lighter, inner darker). Pine uses a clean CC0 twig crop when available,
+with a deterministic procedural fallback. Source hashes / crop: pine_needles_manifest.json.
 """
 
 from __future__ import annotations
