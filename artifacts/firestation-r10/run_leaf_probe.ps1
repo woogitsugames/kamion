@@ -5,7 +5,7 @@ function Assert-LeafGate {
  if(-not(Test-Path "$taskRoot/ROOT_UNITY_RELEASE.txt")){throw 'Fresh explicitROOTrelease missing'}
  foreach($guard in @('PHONE_RUN','GPT_UNITY_HOLD')){if(Test-Path "C:/Users/matma/Documents/Claude/kamion/artifacts/locks/$guard"){throw "Unity blocked by $guard"}}
  if(Test-UnityProjectLocked){throw 'Own Unity already active'}
- if(-not(Test-Path "$taskRoot/GLASS2_ROOT_ACCEPTED.txt")){throw 'Glass2actual4ROOTgate must finish BEFORE shader experiment'}
+ if(-not(Test-Path "$taskRoot/GLASS2_TARGET_MEASURED.txt")){throw 'Glass2actual4measured target must finish BEFORE shader experiment'}
 }
 Assert-LeafGate
 $generatedRoot=[IO.Path]::GetFullPath((Join-Path $workRoot 'game/Assets/_Generated'))

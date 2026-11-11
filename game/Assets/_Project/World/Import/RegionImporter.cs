@@ -335,7 +335,8 @@ namespace Game.World.Import
                     // Exposed units (ADR 0010): emissive in the manifest is relative radiance; ×0.25 keeps a lit signal
                     // lamp clearly brighter than daylit surfaces without clipping to white on LDR tiers.
                     emission = new Color((float)Num(e[0]), (float)Num(e[1]), (float)Num(e[2])) * 0.25f;
-                return LitMaterial(path, albedo, rough, metal, t, clip, clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, clip, emission);
+                return HeroLeafLighting(id, LitMaterial(path, albedo, rough, metal, t, clip,
+                    clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, clip, emission));
             }
             bool decal = m.Get("decal") is bool dc && dc;
             Color? bg = null;
@@ -441,6 +442,32 @@ namespace Game.World.Import
             mat.SetColor("_DustColor", new Color(0.36f, 0.34f, 0.30f, 1f));
             mat.SetOverrideTag("RenderType", "Transparent");
             mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
+        // ADR0070 r7: only the High hero thuja shell uses thin-leaf lighting. Low has no such material slot.
+        // Leave all route hedges, the shared hero text/fence alpha atlas and the opaque hero core untouched.
+        static Material HeroLeafLighting(string id, Material mat)
+        {
+            if (id != "fire_station_thuja_shell" || mat == null) return mat;
+            var shader = Shader.Find("Kamion/Vegetation");
+            if (shader == null || !shader.isSupported) return mat;
+            // LitMaterial already encoded the authored linear multiplier for a ShaderLab Color property.
+            // Preserve that stored value exactly: another .gamma here would apply the tint conversion twice.
+            var tint = mat.GetColor("_BaseColor");
+            var texture = mat.GetTexture("_BaseMap");
+            var scale = mat.GetTextureScale("_BaseMap"); var offset = mat.GetTextureOffset("_BaseMap");
+            float cutoff = mat.GetFloat("_Cutoff"), cull = mat.GetFloat("_Cull"), coverage = mat.GetFloat("_AlphaToMask");
+            int queue = mat.renderQueue;
+            mat.shader = shader;
+            mat.shaderKeywords = new string[0]; mat.EnableKeyword("_ALPHATEST_ON");
+            mat.SetTexture("_BaseMap", texture); mat.SetTextureScale("_BaseMap", scale); mat.SetTextureOffset("_BaseMap", offset);
+            mat.SetColor("_BaseColor", tint);
+            mat.SetFloat("_Cutoff", cutoff); mat.SetFloat("_Cull", cull); mat.SetFloat("_AlphaToMask", coverage);
+            mat.SetFloat("_Transmission", 0.25f); mat.SetFloat("_CrownShade", 0f);
+            // This shader has no wind displacement. Its additional depth pass has a High-only cost.
+            mat.renderQueue = queue; mat.enableInstancing = true;
             EditorUtility.SetDirty(mat);
             return mat;
         }
