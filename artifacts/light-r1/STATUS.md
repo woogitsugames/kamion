@@ -70,3 +70,4 @@ Krok 21: RCAS zakończony, 40/40 PNG. Porównanie samych tekstowych metadanych (
 
 
 Krok 22 (22:34): import uzyskał heavy i Unity, trwa niejawna przebudowa PBR (set asphalt_* w logu). Slot heavy pozostaje zajęty przez ten import. Następny krok: śledzić validation-followup-heavy.log; po zakończeniu importu istniejący kontroler sam uruchomi smoke i EditMode. Nie startować kolejnej kopii.
+Import świeżego świata zakończony. Następny krok: cloud-smoke.json w LightQaBatch i testy EditMode.
