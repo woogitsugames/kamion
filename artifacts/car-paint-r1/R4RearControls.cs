@@ -90,7 +90,7 @@ namespace Game.Editor.VisualQA
                 {
                     float level=mode=="off"?-1:float.Parse(mode.Substring(5));
                     Shader.SetGlobalFloat("_R4ForceLevel",level);Shader.SetGlobalFloat("_R4OpacityOff",mode=="off"?1:0);
-                    string output=Path.Combine(folder,"r4-rear-controls",tier+"-"+light,mode);
+                    string output=Path.Combine(folder,EditorTools.Arg("-r4ControlTag","r4-rear-controls"),tier+"-"+light,mode);
                     if(Directory.Exists(output))throw new InvalidOperationException("Refuse overwrite "+output);
                     Environment.SetEnvironmentVariable("KAMION_G_POSE_OUTPUT",Path.Combine(output,"poses"));
                     RenderPipelineManager.beginCameraRendering+=Install;
