@@ -24,12 +24,46 @@ def zg_of(cid):
 
 
 cams = []
+# ADR 0107 (review 0097 P2-m): r13_house2_az20 sat in a tree crown and r13_block1_az180 under the terrain (the height
+# came from another camera's ground). Ground = NMT under the camera; azimuth swept off trees (instances_*.json).
+_t = json.loads((rdir / "terrain.json").read_text(encoding="utf-8"))
+_hm = np.fromfile(REPO / _t["encoding"]["file"], dtype="<u2").reshape(_t["samples"][1], _t["samples"][0])
+_ox, _oy = reg["origin"]["x"], reg["origin"]["y"]
+
+
+def ground(p):
+    i = int(round(p[0] + _ox - _t["bbox"][0]))
+    j = int(round(_t["bbox"][3] - (p[1] + _oy)))
+    i, j = min(max(i, 0), _hm.shape[1] - 1), min(max(j, 0), _hm.shape[0] - 1)
+    return _t["encoding"]["offset_m"] + float(_hm[j, i]) * _t["encoding"]["scale_m_per_unit"]
+
+
+_trees = []
+for f in sorted((REPO / "Data" / "raw" / "derived" / "bialystok-industrial-c" / "world").glob("instances_*.json")):
+    d = json.loads(f.read_text(encoding="utf-8"))
+    _trees += [(it["e"], it["n"]) for it in d["instances"]
+               if isinstance(it, dict) and str(it.get("p", "")).startswith("tree_") and not str(it["p"]).startswith("tree_shrub")]
+_trees = np.asarray(_trees, float).reshape(-1, 2)
+
+
+def clear_of_trees(p, c):
+    if not len(_trees):
+        return True
+    if np.min(np.hypot(*(_trees - p).T)) < 8.0:
+        return False
+    ab = c - p
+    t = np.clip(((_trees - p) @ ab) / float(ab @ ab), 0.0, 1.0)
+    return float(np.min(np.hypot(*(_trees - (p + t[:, None] * ab)).T))) > 3.5
 
 
 def cam(cid, bid, zg, dist, az_deg, up, look_up, fov=55.0):
     c = np.asarray(blds[bid]["poly"].centroid.coords[0])
-    a = math.radians(az_deg)
-    p = c + dist * np.array([math.sin(a), math.cos(a)])
+    for off in (0, 12, -12, 24, -24, 36, -36, 48, -48):
+        a = math.radians(az_deg + off)
+        p = c + dist * np.array([math.sin(a), math.cos(a)])
+        if clear_of_trees(p, c):
+            break
+    zg = max(zg, ground(p) - up + 1.7)          # never lower than eye level above the ground under the camera
     cams.append({"id": cid, "type": "persp", "kind": "photo_match", "seat": "file",
                  "pos": [round(float(p[0]), 2), round(float(p[1]), 2), round(zg + up, 2)],
                  "look_at": [round(float(c[0]), 2), round(float(c[1]), 2), round(zg + look_up, 2)],

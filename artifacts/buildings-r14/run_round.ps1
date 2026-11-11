@@ -24,8 +24,8 @@ foreach ($cfg in $Configs.Split(',')) {
     if ($Cameras) { $args2 += @('-Cameras', $Cameras) }
     pwsh scripts/visual-qa.ps1 @args2 *> "$out/qa-$tier-$light.log"
     "qa $cfg exit $LASTEXITCODE, $([int]((Get-Date) - $t).TotalSeconds) s" | Tee-Object -Append "$out/round.log"
-    New-Item -ItemType Directory -Force "$dir/1280" | Out-Null
-    Get-ChildItem "$dir/*.png" | ForEach-Object { magick $_.FullName -resize 1280x "$dir/1280/$($_.BaseName).jpg" }
+    New-Item -ItemType Directory -Force "$dir/960" | Out-Null
+    Get-ChildItem "$dir/*.png" | ForEach-Object { magick $_.FullName -resize 960x "$dir/960/$($_.BaseName).jpg" }
 }
 # Unity side effects (AGENT-RULES 2)
 git checkout -- game/Assets/_Project/Rendering/Settings/Lighting/M_Sky.mat game/ProjectSettings/QualitySettings.asset game/ProjectSettings/ProjectSettings.asset 2>$null
