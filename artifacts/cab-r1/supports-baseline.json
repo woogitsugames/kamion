@@ -1,0 +1,32 @@
+{
+  "MIRROR_MainL": {
+    "samples": 2400,
+    "blocked": 0,
+    "fraction": 0.0,
+    "by_object": {}
+  },
+  "MIRROR_MainR": {
+    "samples": 2400,
+    "blocked": 20,
+    "fraction": 0.008333333333333333,
+    "by_object": {
+      "mirror_arm_top_1": 20
+    }
+  },
+  "MIRROR_WideL": {
+    "samples": 2400,
+    "blocked": 73,
+    "fraction": 0.030416666666666668,
+    "by_object": {
+      "mirror_arm_bot_-1": 73
+    }
+  },
+  "MIRROR_WideR": {
+    "samples": 2400,
+    "blocked": 131,
+    "fraction": 0.05458333333333333,
+    "by_object": {
+      "mirror_arm_bot_1": 131
+    }
+  }
+}

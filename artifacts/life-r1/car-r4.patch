@@ -1,0 +1,1778 @@
+diff --git a/art-source/world/materials/_src/sets_facade.py b/art-source/world/materials/_src/sets_facade.py
+index dce10b3d..ac95acb3 100644
+--- a/art-source/world/materials/_src/sets_facade.py
++++ b/art-source/world/materials/_src/sets_facade.py
+@@ -329,7 +329,7 @@ def noise_cassette(n=1024):
+     return st
+ 
+ 
+-def car_grime(n=1024):
++def car_grime(n=1024, lower_film=True):
+     """Parked-car paint film: road spray on the sills and bumpers (v < 0.55 m, warm grey-brown, strongest at the
+     bottom edge), dust film and pollen on horizontal-ish upper surfaces, rain runs below the belt line and the roof
+     edge, faint orange peel. u = metres along the body, v = metres above the ground (life_props car/van UV).
+@@ -355,7 +355,28 @@ def car_grime(n=1024):
+         kd = np.clip(dust, 0, 1)[..., None] * 0.5
+         a = a * (1 - k) + a * np.array([1.0, 0.92, 0.78], np.float32) * k
+         return a * (1 - kd) + a * np.array([1.0, 0.97, 0.90], np.float32) * kd
+-    return _finish("car_grime", c, lum, h, rough, np.zeros_like(X), np.zeros_like(X), extra=tint, ao_k=0.2)
++    result = _finish("car_grime", c, lum, h, rough, np.zeros_like(X), np.zeros_like(X), extra=tint, ao_k=0.2)
++    if not lower_film:
++        # Preserve the LEGACY calibration gain. Recalibrating the clean map would
++        # alter upper dust/peel pixels unrelated to the removed lower film.
++        legacy_raw = tint(lum[..., None] * np.ones(3, np.float32)).astype(np.float32)
++        gain = MOD_MEAN / float((legacy_raw @ LUM).mean())
++        clean_lum = (1 + 0.01 * peel) * (1 - 0.07 * runs * belt) * (1 + 0.05 * dust)
++        clean_raw = clean_lum[..., None] * np.ones(3, np.float32)
++        kd = dust[..., None] * 0.5
++        clean_raw = clean_raw * (1 - kd) + clean_raw * np.array([1.0, 0.97, 0.90], np.float32) * kd
++        # Keep the legacy repeat-boundary padding: the writer's periodic Gaussian
++        # otherwise carries the changed bottom film into the unchanged top rows.
++        # Native paint UV/Tile ranges are audited separately; mip filtering is not
++        # claimed identical merely because point coordinates miss this gutter.
++        clean_region = v >= 0.05
++        result.albedo = np.where(((film > 0) & clean_region)[..., None],
++                                 np.clip(clean_raw.astype(np.float32) * gain, 0, 1), result.albedo)
++        result.rough = np.where(clean_region, np.clip(0.32 + 0.15 * dust, 0.05, 1).astype(np.float32), result.rough)
++        # Clean-only Mask.R payload: exactly the film removed here. Seven car
++        # paint materials have MetallicScale0 and a separate CarPaint metal model.
++        result.metal = np.where(clean_region, film, 0).astype(np.float32)
++    return result
+ 
+ 
+ def parapet_runoff(nx=1024, ny=160, seed=521):
+@@ -548,6 +569,9 @@ FACADE_SETS = {
+         note="Clipped red berberis hedge face: leaf clusters, dark voids, thin holes (u along, v over the section)."),
+     "soil_bed": dict(fn=soil_bed, tile_m=[2.0, 2.0], slots=["bed_soil"],
+         note="Island planting bed: loam with bark mulch chips, a few stones, leaf litter (u, v plan metres)."),
++    "car_grime_clean": dict(fn=lambda: car_grime(lower_film=False), tile_m=[5.0, 2.5],
++        slots=["car_paint_silver", "car_paint_grey", "car_paint_black", "car_paint_white", "car_paint_white2", "car_paint_blue", "car_paint_red"],
++        note="R4 clean lower shell; original upper dust/runs/peel and calibration retained. Road deposition is instance-driven."),
+     "car_grime": dict(fn=car_grime, tile_m=[5.0, 2.5], slots=["car_paint_*"],
+         note="Parked-car paint film: road spray on sills, dust on top, rain runs (u along body, v = height)."),
+     "box_panel": dict(fn=box_panel, tile_m=[4.8, 2.7], slots=["trailer_box_white"],
+diff --git a/docs/adr/0089-car-paint-vertical-reflections.md b/docs/adr/0089-car-paint-vertical-reflections.md
+new file mode 100644
+index 00000000..13e1204a
+--- /dev/null
++++ b/docs/adr/0089-car-paint-vertical-reflections.md
+@@ -0,0 +1,19 @@
++# ADR 0089: parked-car paint, wheels, deposition and plate variation
++
++Status: bounded R4 repair selected after independent ROOT/E visual review; dust realism PARTIAL. Historical R3 visual acceptance is withdrawn, not a calibration reference.
++
++Keep the earlier causal Pearl Color-property upload correction, neutral tyres/rims and 22-segment existing LOD0 wheels. No pigment/exposure lift, fourth runtime LOD or unrelated quality reduction.
++
++Export affine signed height above the actual class sill and longitudinal axle coordinate in UV1 after normal splitting. All 81 car LOD meshes keep positions/normals/indices/UV0/groups; native stride 20 to 24 adds an estimated 584576 payload bytes, not total allocation, including nonpaint vertices sharing each stream.
++
++Use bounded broad wheel/rear weights and exponential height decay in CARPAINT. Minimal dust at level 0; deterministic GI-relative float32 origin hash selects 10/35/35/20 levels. No detached height envelope, inverse legacy-film division, new geometry or texture sample. Deposition colour, falloff and opacity are WORKING_VALUE rather than measured albedo.
++
++Only seven active paint materials use car_grime_clean. Preserve legacy calibration and wrap gutter; Mask.R carries removed legacy-film coverage for forward upper-role restoration, with smoothness subtraction. Green/beige stay legacy; actual metallic override remains separate. Initial un-restored bonnet +14.543% was rejected before import.
++
++Reuse the existing plate atlas with 27 eligible cells. Add exact local plate UV1 corners to 54 LOD0/1 primitives inside the already-present stream, with unchanged UV0 fallback. One shared URP Lit forward vertex wrapper retains original fragment and auxiliary passes; no new texture, material instance or draw split. LOD2 has no plate.
++
++Enable the local vertex keyword only after fresh-library and actual native indexed-corner validation. Reject old/mixed payloads and unsupported pipeline eligibility; shader lightmap or invalid-GI paths keep UV0. GI validity uses texel size, independently of visibility strength. No whole-fleet uniqueness claim.
++
++Preserve LightMode-tag pass state around exact car_plate factory switches. The inherited Lit CustomEditor rewrote unknown-shader MotionVectors on load; remove that generated-only inspector association. Persisted replay proves disabled motion, Opaque queue 2000 and existing texture/ST/roughness.
++
++Final 368 CPU records are unchanged; source adds ALU and data, not a measured GPU-time saving. Scene dependency texture union is 7 versus counterfactual R3 4: +170368 ASTC mip payload bytes; desktop Profiler delta +1813016 includes overhead. A16 residency/timing remain UNVERIFIED. Evidence and limitations: artifacts/car-paint-r1/REPORT.md, SELF-CRITICISM.md, r4-final-validation.json, r4-plate-native-parity.json and GPU proofs. Preserve canonical fixtures/pose packets; shared shader/material/importer integration requires a bounded union and canonical regeneration.
+diff --git a/game/Assets/_Project/Environment/Shaders/WorldCarPlate.shader b/game/Assets/_Project/Environment/Shaders/WorldCarPlate.shader
+new file mode 100644
+index 00000000..9c555202
+--- /dev/null
++++ b/game/Assets/_Project/Environment/Shaders/WorldCarPlate.shader
+@@ -0,0 +1,575 @@
++// ADR0089: URP Lit 17.3.0 wrapper. Copyright (c) 2020 Unity Technologies ApS.
++// Unity Companion License for Unity-dependent projects:
++// https://unity.com/legal/licenses/unity-companion-license
++// Provided AS IS without warranties; see the installed URP package LICENSE.md.
++// Only the forward vertex UV is adapted; copied Lit properties/passes preserve the original binding.
++Shader "Kamion/World Car Plate"
++{
++    Properties
++    {
++        [HideInInspector] _PlatePayloadVersion("Validated local plate corners", Float) = 0
++        // Specular vs Metallic workflow
++        _WorkflowMode("WorkflowMode", Float) = 1.0
++
++        [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
++        [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
++
++        _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
++
++        _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
++        _SmoothnessTextureChannel("Smoothness texture channel", Float) = 0
++
++        _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
++        _MetallicGlossMap("Metallic", 2D) = "white" {}
++
++        _SpecColor("Specular", Color) = (0.2, 0.2, 0.2)
++        _SpecGlossMap("Specular", 2D) = "white" {}
++
++        [ToggleOff] _SpecularHighlights("Specular Highlights", Float) = 1.0
++        [ToggleOff] _EnvironmentReflections("Environment Reflections", Float) = 1.0
++
++        _BumpScale("Scale", Float) = 1.0
++        _BumpMap("Normal Map", 2D) = "bump" {}
++
++        _Parallax("Scale", Range(0.005, 0.08)) = 0.005
++        _ParallaxMap("Height Map", 2D) = "black" {}
++
++        _OcclusionStrength("Strength", Range(0.0, 1.0)) = 1.0
++        _OcclusionMap("Occlusion", 2D) = "white" {}
++
++        [HDR] _EmissionColor("Color", Color) = (0,0,0)
++        _EmissionMap("Emission", 2D) = "white" {}
++
++        _DetailMask("Detail Mask", 2D) = "white" {}
++        _DetailAlbedoMapScale("Scale", Range(0.0, 2.0)) = 1.0
++        _DetailAlbedoMap("Detail Albedo x2", 2D) = "linearGrey" {}
++        _DetailNormalMapScale("Scale", Range(0.0, 2.0)) = 1.0
++        [Normal] _DetailNormalMap("Normal Map", 2D) = "bump" {}
++
++        // SRP batching compatibility for Clear Coat (Not used in Lit)
++        [HideInInspector] _ClearCoatMask("_ClearCoatMask", Float) = 0.0
++        [HideInInspector] _ClearCoatSmoothness("_ClearCoatSmoothness", Float) = 0.0
++
++        // Blending state
++        _Surface("__surface", Float) = 0.0
++        _Blend("__blend", Float) = 0.0
++        _Cull("__cull", Float) = 2.0
++        [ToggleUI] _AlphaClip("__clip", Float) = 0.0
++        [HideInInspector] _SrcBlend("__src", Float) = 1.0
++        [HideInInspector] _DstBlend("__dst", Float) = 0.0
++        [HideInInspector] _SrcBlendAlpha("__srcA", Float) = 1.0
++        [HideInInspector] _DstBlendAlpha("__dstA", Float) = 0.0
++        [HideInInspector] _ZWrite("__zw", Float) = 1.0
++        [HideInInspector] _BlendModePreserveSpecular("_BlendModePreserveSpecular", Float) = 1.0
++        [HideInInspector] _AlphaToMask("__alphaToMask", Float) = 0.0
++        [HideInInspector] _AddPrecomputedVelocity("_AddPrecomputedVelocity", Float) = 0.0
++        [HideInInspector] _XRMotionVectorsPass("_XRMotionVectorsPass", Float) = 1.0
++
++        [ToggleUI] _ReceiveShadows("Receive Shadows", Float) = 1.0
++        // Editmode props
++        _QueueOffset("Queue offset", Float) = 0.0
++
++        // ObsoleteProperties
++        [HideInInspector] _MainTex("BaseMap", 2D) = "white" {}
++        [HideInInspector] _Color("Base Color", Color) = (1, 1, 1, 1)
++        [HideInInspector] _GlossMapScale("Smoothness", Float) = 0.0
++        [HideInInspector] _Glossiness("Smoothness", Float) = 0.0
++        [HideInInspector] _GlossyReflections("EnvironmentReflections", Float) = 0.0
++
++        [HideInInspector][NoScaleOffset]unity_Lightmaps("unity_Lightmaps", 2DArray) = "" {}
++        [HideInInspector][NoScaleOffset]unity_LightmapsInd("unity_LightmapsInd", 2DArray) = "" {}
++        [HideInInspector][NoScaleOffset]unity_ShadowMasks("unity_ShadowMasks", 2DArray) = "" {}
++    }
++
++    SubShader
++    {
++        // Universal Pipeline tag is required. If Universal render pipeline is not set in the graphics settings
++        // this Subshader will fail. One can add a subshader below or fallback to Standard built-in to make this
++        // material work with both Universal Render Pipeline and Builtin Unity Pipeline
++        Tags
++        {
++            "RenderType" = "Opaque"
++            "RenderPipeline" = "UniversalPipeline"
++            "UniversalMaterialType" = "Lit"
++            "IgnoreProjector" = "True"
++        }
++        LOD 300
++
++        // ------------------------------------------------------------------
++        //  Forward pass. Shades all light in a single pass. GI + emission + Fog
++        Pass
++        {
++            // Lightmode matches the ShaderPassName set in UniversalRenderPipeline.cs. SRPDefaultUnlit and passes with
++            // no LightMode tag are also rendered by Universal Render Pipeline
++            Name "ForwardLit"
++            Tags
++            {
++                "LightMode" = "UniversalForward"
++            }
++
++            // -------------------------------------
++            // Render State Commands
++            Blend[_SrcBlend][_DstBlend], [_SrcBlendAlpha][_DstBlendAlpha]
++            ZWrite[_ZWrite]
++            Cull[_Cull]
++            AlphaToMask[_AlphaToMask]
++
++            HLSLPROGRAM
++            #pragma target 3.5
++
++            // -------------------------------------
++            // Shader Stages
++            #pragma vertex PlatePassVertex
++            #pragma shader_feature_local_vertex _PLATE_LOCAL_CORNERS
++            #pragma fragment LitPassFragment
++
++            // -------------------------------------
++            // Material Keywords
++            #pragma shader_feature_local _NORMALMAP
++            #pragma shader_feature_local _PARALLAXMAP
++            #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
++            #pragma shader_feature_local _ _DETAIL_MULX2 _DETAIL_SCALED
++            #pragma shader_feature_local_fragment _SURFACE_TYPE_TRANSPARENT
++            #pragma shader_feature_local_fragment _ALPHATEST_ON
++            #pragma shader_feature_local_fragment _ _ALPHAPREMULTIPLY_ON _ALPHAMODULATE_ON
++            #pragma shader_feature_local_fragment _EMISSION
++            #pragma shader_feature_local_fragment _METALLICSPECGLOSSMAP
++            #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
++            #pragma shader_feature_local_fragment _OCCLUSIONMAP
++            #pragma shader_feature_local_fragment _SPECULARHIGHLIGHTS_OFF
++            #pragma shader_feature_local_fragment _ENVIRONMENTREFLECTIONS_OFF
++            #pragma shader_feature_local_fragment _SPECULAR_SETUP
++
++            // -------------------------------------
++            // Universal Pipeline keywords
++            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
++            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
++            #pragma multi_compile _ EVALUATE_SH_MIXED EVALUATE_SH_VERTEX
++            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
++            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
++            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
++            #pragma multi_compile_fragment _ _REFLECTION_PROBE_ATLAS
++            #pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
++            #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
++            #pragma multi_compile_fragment _ _SCREEN_SPACE_IRRADIANCE
++            #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
++            #pragma multi_compile_fragment _ _LIGHT_COOKIES
++            #pragma multi_compile _ _LIGHT_LAYERS
++            #pragma multi_compile _ _CLUSTER_LIGHT_LOOP
++            #include_with_pragmas "Packages/com.unity.render-pipelines.core/ShaderLibrary/FoveatedRenderingKeywords.hlsl"
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
++
++
++            // -------------------------------------
++            // Unity defined keywords
++            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
++            #pragma multi_compile _ SHADOWS_SHADOWMASK
++            #pragma multi_compile _ DIRLIGHTMAP_COMBINED
++            #pragma multi_compile _ LIGHTMAP_ON
++            #pragma multi_compile_fragment _ LIGHTMAP_BICUBIC_SAMPLING
++            #pragma multi_compile_fragment _ REFLECTION_PROBE_ROTATION
++            #pragma multi_compile _ DYNAMICLIGHTMAP_ON
++            #pragma multi_compile _ USE_LEGACY_LIGHTMAPS
++            #pragma multi_compile _ LOD_FADE_CROSSFADE
++            #pragma multi_compile_fragment _ DEBUG_DISPLAY
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Fog.hlsl"
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ProbeVolumeVariants.hlsl"
++
++            //--------------------------------------
++            // GPU Instancing
++            #pragma multi_compile_instancing
++            #pragma instancing_options renderinglayer
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
++
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
++            // Keep URP Lit fragment/light/shadow/fog and every auxiliary pass unchanged.
++            #define LitPassVertex OriginalLitPassVertex
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitForwardPass.hlsl"
++            #undef LitPassVertex
++            float4 _KamionGIRect;
++            float4 _KamionGIHeight;
++
++            float2 PlateInstanceUV(float2 localCorner, float2 originXZ)
++            {
++                uint2 cell = (uint2)(int2)floor((originXZ - _KamionGIRect.xy) * 4.0 + 0.37);
++                uint h = cell.x * 1664525u + cell.y * 1013904223u;
++                h ^= h >> 16; h *= 2246822519u; h ^= h >> 13;
++                uint plate = h % 27u;
++                float2 lo = float2((plate % 4u) * .25 + 4.0/1024.0,
++                                      (7u - plate / 4u) * .125 + 5.0/512.0);
++                return lo + localCorner * float2(248.0/1024.0, 54.0/512.0);
++            }
++
++            Varyings PlatePassVertex(Attributes input)
++            {
++                UNITY_SETUP_INSTANCE_ID(input);
++                // Payload is enabled only after full-library import validation. Old/mixed
++                // payload, missing GI, lightmaps and deferred auxiliary passes retain UV0.
++                #if defined(_PLATE_LOCAL_CORNERS) && !defined(LIGHTMAP_ON) && !defined(DYNAMICLIGHTMAP_ON)
++                float2 originXZ = GetObjectToWorldMatrix()._m03_m23;
++                float2 regionUV = (originXZ - _KamionGIRect.xy) * _KamionGIRect.zw;
++                if (_KamionGIHeight.z > 0.0 &&
++                    all(_KamionGIRect.zw > 0.0) && all(regionUV >= 0.0) && all(regionUV <= 1.0))
++                    input.texcoord = PlateInstanceUV(input.staticLightmapUV, originXZ);
++                #endif
++                return OriginalLitPassVertex(input);
++            }
++            ENDHLSL
++        }
++
++        Pass
++        {
++            Name "ShadowCaster"
++            Tags
++            {
++                "LightMode" = "ShadowCaster"
++            }
++
++            // -------------------------------------
++            // Render State Commands
++            ZWrite On
++            ZTest LEqual
++            ColorMask 0
++            Cull[_Cull]
++
++            HLSLPROGRAM
++            #pragma target 2.0
++
++            // -------------------------------------
++            // Shader Stages
++            #pragma vertex ShadowPassVertex
++            #pragma fragment ShadowPassFragment
++
++            // -------------------------------------
++            // Material Keywords
++            #pragma shader_feature_local _ALPHATEST_ON
++            #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
++
++            //--------------------------------------
++            // GPU Instancing
++            #pragma multi_compile_instancing
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
++
++            // -------------------------------------
++            // Universal Pipeline keywords
++
++            // -------------------------------------
++            // Unity defined keywords
++            #pragma multi_compile _ LOD_FADE_CROSSFADE
++
++            // This is used during shadow map generation to differentiate between directional and punctual light shadows, as they use different formulas to apply Normal Bias
++            #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
++
++            // -------------------------------------
++            // Includes
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
++            ENDHLSL
++        }
++
++        Pass
++        {
++            // Lightmode matches the ShaderPassName set in UniversalRenderPipeline.cs. SRPDefaultUnlit and passes with
++            // no LightMode tag are also rendered by Universal Render Pipeline
++            Name "GBuffer"
++            Tags
++            {
++                "LightMode" = "UniversalGBuffer"
++            }
++
++            // -------------------------------------
++            // Render State Commands
++            ZWrite[_ZWrite]
++            ZTest LEqual
++            Cull[_Cull]
++
++            HLSLPROGRAM
++            #pragma target 4.5
++
++            // Deferred Rendering Path does not support the OpenGL-based graphics API:
++            // Desktop OpenGL, OpenGL ES 3.0, WebGL 2.0.
++            #pragma exclude_renderers gles3 glcore
++
++            // -------------------------------------
++            // Shader Stages
++            #pragma vertex LitGBufferPassVertex
++            #pragma fragment LitGBufferPassFragment
++
++            // -------------------------------------
++            // Material Keywords
++            #pragma shader_feature_local _NORMALMAP
++            #pragma shader_feature_local_fragment _ALPHATEST_ON
++            //#pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
++            #pragma shader_feature_local_fragment _EMISSION
++            #pragma shader_feature_local_fragment _METALLICSPECGLOSSMAP
++            #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
++            #pragma shader_feature_local_fragment _OCCLUSIONMAP
++            #pragma shader_feature_local _PARALLAXMAP
++            #pragma shader_feature_local _ _DETAIL_MULX2 _DETAIL_SCALED
++
++            #pragma shader_feature_local_fragment _SPECULARHIGHLIGHTS_OFF
++            #pragma shader_feature_local_fragment _ENVIRONMENTREFLECTIONS_OFF
++            #pragma shader_feature_local_fragment _SPECULAR_SETUP
++            #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
++
++            // -------------------------------------
++            // Universal Pipeline keywords
++            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
++            //#pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
++            //#pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
++            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
++            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
++            #pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
++            #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
++            #pragma multi_compile_fragment _ _RENDER_PASS_ENABLED
++            #pragma multi_compile _ _CLUSTER_LIGHT_LOOP
++            #pragma multi_compile _ EVALUATE_SH_MIXED EVALUATE_SH_VERTEX
++            #include_with_pragmas "Packages/com.unity.render-pipelines.core/ShaderLibrary/FoveatedRenderingKeywords.hlsl"
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
++
++            // -------------------------------------
++            // Unity defined keywords
++            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
++            #pragma multi_compile _ SHADOWS_SHADOWMASK
++            #pragma multi_compile _ DIRLIGHTMAP_COMBINED
++            #pragma multi_compile _ LIGHTMAP_ON
++            #pragma multi_compile_fragment _ LIGHTMAP_BICUBIC_SAMPLING
++            #pragma multi_compile_fragment _ REFLECTION_PROBE_ROTATION
++            #pragma multi_compile _ DYNAMICLIGHTMAP_ON
++            #pragma multi_compile _ USE_LEGACY_LIGHTMAPS
++            #pragma multi_compile _ LOD_FADE_CROSSFADE
++            #pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT
++            #pragma multi_compile_fragment _ _SCREEN_SPACE_IRRADIANCE
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ProbeVolumeVariants.hlsl"
++
++            //--------------------------------------
++            // GPU Instancing
++            #pragma multi_compile_instancing
++            #pragma instancing_options renderinglayer
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
++
++            // -------------------------------------
++            // Includes
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitGBufferPass.hlsl"
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/GBufferOutputFormat.hlsl"
++            ENDHLSL
++        }
++
++        Pass
++        {
++            Name "DepthOnly"
++            Tags
++            {
++                "LightMode" = "DepthOnly"
++            }
++
++            // -------------------------------------
++            // Render State Commands
++            ZWrite On
++            ColorMask R
++            Cull[_Cull]
++
++            HLSLPROGRAM
++            #pragma target 2.0
++
++            // -------------------------------------
++            // Shader Stages
++            #pragma vertex DepthOnlyVertex
++            #pragma fragment DepthOnlyFragment
++
++            // -------------------------------------
++            // Material Keywords
++            #pragma shader_feature_local _ALPHATEST_ON
++            #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
++
++            // -------------------------------------
++            // Unity defined keywords
++            #pragma multi_compile _ LOD_FADE_CROSSFADE
++
++            //--------------------------------------
++            // GPU Instancing
++            #pragma multi_compile_instancing
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
++
++            // -------------------------------------
++            // Includes
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
++            ENDHLSL
++        }
++
++        // This pass is used when drawing to a _CameraNormalsTexture texture
++        Pass
++        {
++            Name "DepthNormals"
++            Tags
++            {
++                "LightMode" = "DepthNormals"
++            }
++
++            // -------------------------------------
++            // Render State Commands
++            ZWrite On
++            Cull[_Cull]
++
++            HLSLPROGRAM
++            #pragma target 2.0
++
++            // -------------------------------------
++            // Shader Stages
++            #pragma vertex DepthNormalsVertex
++            #pragma fragment DepthNormalsFragment
++
++            // -------------------------------------
++            // Material Keywords
++            #pragma shader_feature_local _NORMALMAP
++            #pragma shader_feature_local _PARALLAXMAP
++            #pragma shader_feature_local _ _DETAIL_MULX2 _DETAIL_SCALED
++            #pragma shader_feature_local _ALPHATEST_ON
++            #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
++
++            // -------------------------------------
++            // Unity defined keywords
++            #pragma multi_compile _ LOD_FADE_CROSSFADE
++
++            // -------------------------------------
++            // Universal Pipeline keywords
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
++
++            //--------------------------------------
++            // GPU Instancing
++            #pragma multi_compile_instancing
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
++
++            // -------------------------------------
++            // Includes
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitDepthNormalsPass.hlsl"
++            ENDHLSL
++        }
++
++        // This pass it not used during regular rendering, only for lightmap baking.
++        Pass
++        {
++            Name "Meta"
++            Tags
++            {
++                "LightMode" = "Meta"
++            }
++
++            // -------------------------------------
++            // Render State Commands
++            Cull Off
++
++            HLSLPROGRAM
++            #pragma target 2.0
++
++            // -------------------------------------
++            // Shader Stages
++            #pragma vertex UniversalVertexMeta
++            #pragma fragment UniversalFragmentMetaLit
++
++            // -------------------------------------
++            // Material Keywords
++            #pragma shader_feature_local_fragment _SPECULAR_SETUP
++            #pragma shader_feature_local_fragment _EMISSION
++            #pragma shader_feature_local_fragment _METALLICSPECGLOSSMAP
++            #pragma shader_feature_local_fragment _ALPHATEST_ON
++            #pragma shader_feature_local_fragment _ _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
++            #pragma shader_feature_local _ _DETAIL_MULX2 _DETAIL_SCALED
++            #pragma shader_feature_local_fragment _SPECGLOSSMAP
++            #pragma shader_feature EDITOR_VISUALIZATION
++
++            // -------------------------------------
++            // Includes
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitMetaPass.hlsl"
++
++            ENDHLSL
++        }
++
++        Pass
++        {
++            Name "Universal2D"
++            Tags
++            {
++                "LightMode" = "Universal2D"
++            }
++
++            // -------------------------------------
++            // Render State Commands
++            Blend[_SrcBlend][_DstBlend]
++            ZWrite[_ZWrite]
++            Cull[_Cull]
++
++            HLSLPROGRAM
++            #pragma target 2.0
++
++            // -------------------------------------
++            // Shader Stages
++            #pragma vertex vert
++            #pragma fragment frag
++
++            // -------------------------------------
++            // Material Keywords
++            #pragma shader_feature_local_fragment _ALPHATEST_ON
++            #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
++
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
++
++            // -------------------------------------
++            // Includes
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/Utils/Universal2D.hlsl"
++            ENDHLSL
++        }
++
++        Pass
++        {
++            Name "MotionVectors"
++            Tags { "LightMode" = "MotionVectors" }
++            ColorMask RG
++
++            HLSLPROGRAM
++            #pragma shader_feature_local _ALPHATEST_ON
++            #pragma multi_compile _ LOD_FADE_CROSSFADE
++            #pragma shader_feature_local_vertex _ADD_PRECOMPUTED_VELOCITY
++
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ObjectMotionVectors.hlsl"
++            ENDHLSL
++        }
++
++        Pass
++        {
++            Name "XRMotionVectors"
++            Tags { "LightMode" = "XRMotionVectors" }
++            ColorMask RGBA
++
++            // Stencil write for obj motion pixels
++            Stencil
++            {
++                WriteMask 1
++                Ref 1
++                Comp Always
++                Pass Replace
++            }
++
++            HLSLPROGRAM
++            #pragma shader_feature_local _ALPHATEST_ON
++            #pragma multi_compile _ LOD_FADE_CROSSFADE
++            #pragma shader_feature_local_vertex _ADD_PRECOMPUTED_VELOCITY
++            #define APPLICATION_SPACE_WARP_MOTION 1
++
++            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
++            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ObjectMotionVectors.hlsl"
++            ENDHLSL
++        }
++    }
++
++    FallBack "Hidden/Universal Render Pipeline/FallbackError"
++    // Generated-only material: the exact-id factory owns validation. URP's Lit
++    // inspector identifies this shader name as Unknown and incorrectly enables
++    // MotionVectors during load. Default ShaderGUI preserves the copied Lit state.
++}
+diff --git a/game/Assets/_Project/Environment/Shaders/WorldCarPlate.shader.meta b/game/Assets/_Project/Environment/Shaders/WorldCarPlate.shader.meta
+new file mode 100644
+index 00000000..3638c1e4
+--- /dev/null
++++ b/game/Assets/_Project/Environment/Shaders/WorldCarPlate.shader.meta
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: 0f86bc55323c4d948d8a02196332d622
+diff --git a/game/Assets/_Project/Environment/Shaders/WorldPBR.shader b/game/Assets/_Project/Environment/Shaders/WorldPBR.shader
+index dfc95bf5..1251f277 100644
+--- a/game/Assets/_Project/Environment/Shaders/WorldPBR.shader
++++ b/game/Assets/_Project/Environment/Shaders/WorldPBR.shader
+@@ -159,6 +159,20 @@ Shader "Kamion/World PBR"
+             TEXTURE2D(_DetailNormal);
+             TEXTURE2D(_RunoffMap);
+ 
++            #if defined(_CARPAINT)
++            // ADR0089: four painted-shell film levels, including clean. Region-relative origin remains stable
++            // when WorldInstances and the existing GI rectangle move together during a floating-origin shift.
++            // Computed per vertex and carried flat: no per-fragment hash or additional texture sample.
++            float2 CarInstanceFilm(float2 originXZ)
++            {
++                uint2 cell = (uint2)(int2)floor((originXZ - _KamionGIRect.xy) * 4.0 + 0.37);
++                uint h = cell.x * 1664525u + cell.y * 1013904223u;
++                h ^= h >> 16; h *= 2246822519u; h ^= h >> 13;
++                uint level = h < 429496730u ? 0u : (h < 1932735283u ? 1u : (h < 3435973837u ? 2u : 3u));
++                return float2(level * (1.0 / 3.0), (h & 1023u) * (1.0 / 1024.0));
++            }
++            #endif
++
+             struct Attributes
+             {
+                 float4 positionOS : POSITION;
+@@ -176,6 +190,9 @@ Shader "Kamion/World PBR"
+                 half fogFactor : TEXCOORD2;
+                 half4 masks : TEXCOORD3;
+                 float4 uv : TEXCOORD4;      // xy TEXCOORD_0, zw TEXCOORD_1
++                #if defined(_CARPAINT)
++                nointerpolation float2 carFilm : TEXCOORD5;
++                #endif
+                 UNITY_VERTEX_INPUT_INSTANCE_ID
+                 UNITY_VERTEX_OUTPUT_STEREO
+             };
+@@ -193,6 +210,9 @@ Shader "Kamion/World PBR"
+                 o.fogFactor = KamionFogTau(p.positionWS, p.positionCS.w);
+                 o.masks = v.color;
+                 o.uv = float4(v.uv0, v.uv1);
++                #if defined(_CARPAINT)
++                o.carFilm = CarInstanceFilm(float2(GetObjectToWorldMatrix()._m03, GetObjectToWorldMatrix()._m23));
++                #endif
+                 return o;
+             }
+ 
+@@ -248,10 +268,42 @@ Shader "Kamion/World PBR"
+             #endif
+                 float footprint = max(length(fwidth(um)), 1e-5);      // metres per pixel
+ 
++                #if defined(_CARPAINT)
++                if (_CarFlake.w > 0.5) uvb.x += i.carFilm.y;
++                #endif
++
+                 half4 base = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uvb);
+                 half4 mask = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, uvb);
+                 half3 tn = UnpackNormalScale(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, uvb), _NormalStrength);
++                #if defined(_CARPAINT)
++                half carFilmOpacity = 0.0h;
++                if (_CarFlake.w > 0.5)
++                {
++                    // WORKING_VALUE: source UV1 is height above the actual class sill
++                    // and an affine rear=0/front=1 axle coordinate. No film inversion.
++                    half amount = 0.08h + 0.92h * i.carFilm.x;
++                    half falloff = 0.16h + 0.06h * i.carFilm.x;
++                    half vertical = exp2(-max(i.uv.z, 0.0) / falloff * 1.442695h);
++                    half keepUpper = smoothstep(0.45h, 0.85h, abs(n.y)) * smoothstep(0.6, 0.8, um.y);
++                    // Clean-map Mask.R carries removed legacy film, not metal.
++                    // Preserve the existing bonnet/roof response by forward application;
++                    // the monotone sill layer below remains independent of that coverage.
++                    half upperFilm = saturate(mask.r);
++                    half3 legacyMultiplier = (1.0h - 0.30h * upperFilm) * half3(1.0h, 1.0h - 0.08h * upperFilm, 1.0h - 0.22h * upperFilm);
++                    base.rgb *= lerp(half3(1, 1, 1), legacyMultiplier, keepUpper);
++                    mask.a = saturate(mask.a - 0.35h * upperFilm * keepUpper);
++                    half frontTrail = saturate(1.0h - abs(i.uv.w - 0.87h) / 0.28h);
++                    half rearTrail = saturate(1.0h - abs(i.uv.w + 0.13h) / 0.28h);
++                    half rearFace = saturate((-i.uv.w - 0.20h) * 8.0h);
++                    half deposition = max(max(frontTrail, rearTrail), rearFace);
++                    carFilmOpacity = 0.5h * amount * vertical * (0.72h + 0.28h * deposition) * (1.0h - keepUpper);
++                    mask.a = lerp(mask.a, 0.25h, carFilmOpacity);
++                }
++                #endif
+                 half3 albedo = base.rgb * _Tint.rgb * _AlbedoScale;
++                #if defined(_CARPAINT)
++                albedo = lerp(albedo, half3(0.240h, 0.230h, 0.205h), carFilmOpacity);
++                #endif
+                 half smooth = mask.a * _SmoothnessScale;
+                 half ao = mask.g;
+                 half metal = mask.r * _MetallicScale;
+diff --git a/game/Assets/_Project/Tests/EditMode/CarPaintMaterialTests.cs b/game/Assets/_Project/Tests/EditMode/CarPaintMaterialTests.cs
+new file mode 100644
+index 00000000..d7252936
+--- /dev/null
++++ b/game/Assets/_Project/Tests/EditMode/CarPaintMaterialTests.cs
+@@ -0,0 +1,52 @@
++using System;
++using System.Reflection;
++using NUnit.Framework;
++using UnityEngine;
++using UnityEngine.Rendering;
++
++namespace Game.Tests
++{
++    public class CarPaintMaterialTests
++    {
++        static void ApplyPearl(Material material, Vector3 linear)
++        {
++            var type = Type.GetType("Game.World.Import.WorldPbrMaterials, Game.World.Import.Editor", true);
++            var method = type.GetMethod("SetLinearPearlTint", BindingFlags.Static | BindingFlags.Public);
++            Assert.NotNull(method);
++            method.Invoke(null, new object[] { material, linear });
++        }
++
++        [TestCase(1f)] [TestCase(1.6f)] [TestCase(1.9f)] [TestCase(3.2f)]
++        public void PearlRatio_ColorStoragePreservesLinearHdr(float value)
++        {
++            var shader = Shader.Find("Kamion/World PBR");
++            Assert.NotNull(shader);
++            Assert.That(shader.GetPropertyType(shader.FindPropertyIndex("_PearlTint")), Is.EqualTo(ShaderPropertyType.Color));
++            var material = new Material(shader);
++            try
++            {
++                ApplyPearl(material, Vector3.one * value);
++                var decoded = material.GetColor("_PearlTint").linear;
++                Assert.That(decoded.r, Is.EqualTo(value).Within(1e-5));
++                Assert.That(decoded.g, Is.EqualTo(value).Within(1e-5));
++                Assert.That(decoded.b, Is.EqualTo(value).Within(1e-5));
++                Assert.That(material.GetColor("_PearlTint").a, Is.EqualTo(1f));
++            }
++            finally { UnityEngine.Object.DestroyImmediate(material); }
++        }
++
++        [Test]
++        public void BlackPearl_ChannelRatiosSurviveEncoding()
++        {
++            var material = new Material(Shader.Find("Kamion/World PBR"));
++            try
++            {
++                ApplyPearl(material, new Vector3(1.6f, 1.9f, 3.2f));
++                var decoded = material.GetColor("_PearlTint").linear;
++                Assert.That(decoded.g / decoded.r, Is.EqualTo(1.9f / 1.6f).Within(1e-5));
++                Assert.That(decoded.b / decoded.r, Is.EqualTo(2f).Within(1e-5));
++            }
++            finally { UnityEngine.Object.DestroyImmediate(material); }
++        }
++    }
++}
+diff --git a/game/Assets/_Project/Tests/EditMode/CarPaintMaterialTests.cs.meta b/game/Assets/_Project/Tests/EditMode/CarPaintMaterialTests.cs.meta
+new file mode 100644
+index 00000000..186649a0
+--- /dev/null
++++ b/game/Assets/_Project/Tests/EditMode/CarPaintMaterialTests.cs.meta
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: 4f3c5c6abadf4bf6b0002aac882a3f70
+diff --git a/game/Assets/_Project/Tests/EditMode/CarPlatePayloadTests.cs b/game/Assets/_Project/Tests/EditMode/CarPlatePayloadTests.cs
+new file mode 100644
+index 00000000..822dc08d
+--- /dev/null
++++ b/game/Assets/_Project/Tests/EditMode/CarPlatePayloadTests.cs
+@@ -0,0 +1,147 @@
++using System;
++using System.Linq;
++using UnityEditor;
++using NUnit.Framework;
++using UnityEngine;
++using UnityEngine.Rendering;
++
++namespace Game.Tests
++{
++    public class CarPlatePayloadTests
++    {
++        static bool Invoke(string name, params object[] args) => (bool)Type.GetType(
++            "Game.World.Import.WorldCarPlateMaterials, Game.World.Import.Editor", true).GetMethod(name).Invoke(null, args);
++
++        static Vector2[] Corners() => new[] { Vector2.zero, Vector2.right, Vector2.one, Vector2.up,
++            Vector2.zero, Vector2.right, Vector2.one, Vector2.up };
++
++        [Test]
++        public void CompletePlateCornersPreserveAtlasEndpointOrientation()
++        {
++            var local = Corners();
++            var atlas = Array.ConvertAll(local, p => new Vector2(.5039f + .2422f * p.x, .7598f + .1054f * p.y));
++            Assert.True(Invoke("ValidCorners", atlas, local));
++            local[0] = Vector2.one; // A mixed/zero-filled payload must never be enabled globally.
++            Assert.False(Invoke("ValidCorners", atlas, local));
++            Assert.False(Invoke("ValidCorners", atlas, new Vector2[8]));
++            Assert.False(Invoke("ValidCorners", atlas, null));
++        }
++
++        [TestCase("car_plate", true)]
++        [TestCase("car_paint_black", false)]
++        [TestCase("truck_plate", false)]
++        public void MaterialEligibilityIsExactIdAndRejectsUnsupportedBindings(string id, bool expected)
++        {
++            var material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
++            try
++            {
++                material.SetTexture("_BaseMap", Texture2D.whiteTexture);
++                Assert.That(Invoke("EligibleMaterial", id, material), Is.EqualTo(expected));
++                material.SetTextureScale("_BaseMap", Vector2.one * 2);
++                Assert.False(Invoke("EligibleMaterial", id, material));
++                material.SetTextureScale("_BaseMap", Vector2.one);
++                material.EnableKeyword("LIGHTMAP_ON");
++                Assert.False(Invoke("EligibleMaterial", id, material));
++            }
++            finally { UnityEngine.Object.DestroyImmediate(material); }
++        }
++
++        [Test]
++        public void NativeValidationRejectsZeroFilledPayloadDespiteIdenticalDescriptor()
++        {
++            Mesh Build(bool valid)
++            {
++                var mesh = new Mesh();
++                mesh.SetVertexBufferParams(8, new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 3),
++                    new VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.SNorm8, 4),
++                    new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float16, 2),
++                    new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float16, 2));
++                var bytes = new byte[8 * 24];
++                var local = Corners();
++                void Half(int offset, float value) => Array.Copy(BitConverter.GetBytes(Mathf.FloatToHalf(value)), 0, bytes, offset, 2);
++                for (int i = 0; i < 8; i++)
++                {
++                    Half(i * 24 + 16, .25f + local[i].x * .2421875f);
++                    Half(i * 24 + 18, .5f + local[i].y * .10546875f);
++                    Half(i * 24 + 20, valid ? local[i].x : 0);
++                    Half(i * 24 + 22, valid ? local[i].y : 0);
++                }
++                mesh.SetVertexBufferData(bytes, 0, 0, bytes.Length);
++                mesh.SetIndices(new[] { 0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7 }, MeshTopology.Triangles, 0);
++                mesh.UploadMeshData(true);
++                return mesh;
++            }
++            var good = Build(true);
++            var stale = Build(false);
++            try
++            {
++                Assert.False(good.isReadable);
++                Assert.That(good.GetVertexBufferStride(0), Is.EqualTo(stale.GetVertexBufferStride(0)));
++                Assert.True(Invoke("ValidNativePlate", good, 0));
++                Assert.False(Invoke("ValidNativePlate", stale, 0));
++            }
++            finally { UnityEngine.Object.DestroyImmediate(good); UnityEngine.Object.DestroyImmediate(stale); }
++        }
++
++        [Test]
++        public void RepeatedShaderSwitchPreservesDisabledMotionAndEnabledDepthPasses()
++        {
++            var lit = Shader.Find("Universal Render Pipeline/Lit");
++            var material = new Material(lit);
++            var type = Type.GetType("Game.World.Import.WorldCarPlateMaterials, Game.World.Import.Editor", true);
++            try
++            {
++                material.SetShaderPassEnabled("MotionVectors", false);
++                material.SetShaderPassEnabled("DepthOnly", true);
++                foreach (var shader in new[] { Shader.Find("Kamion/World Car Plate"), lit, Shader.Find("Kamion/World Car Plate") })
++                {
++                    type.GetMethod("ChangeShaderPreservingPasses").Invoke(null, new object[] { material, shader });
++                    Assert.False(material.GetShaderPassEnabled("MotionVectors"));
++                    Assert.True(material.GetShaderPassEnabled("DepthOnly"));
++                }
++            }
++            finally { UnityEngine.Object.DestroyImmediate(material); }
++        }
++
++        [Test]
++        public void OwnedMaterialReimportPreservesMotionStateAndLocalKeyword()
++        {
++            const string path = "Assets/_Generated/R4PlatePersistTest.mat";
++            var material = new Material(Shader.Find("Kamion/World Car Plate"));
++            material.SetShaderPassEnabled("MotionVectors", false);
++            material.SetFloat("_PlatePayloadVersion", 1);
++            material.EnableKeyword("_PLATE_LOCAL_CORNERS");
++            try
++            {
++                AssetDatabase.CreateAsset(material, path);
++                AssetDatabase.SaveAssets();
++                AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
++                var loaded = AssetDatabase.LoadAssetAtPath<Material>(path);
++                Assert.False(loaded.GetShaderPassEnabled("MotionVectors"));
++                Assert.True(loaded.IsKeywordEnabled("_PLATE_LOCAL_CORNERS"));
++                Assert.That(loaded.GetFloat("_PlatePayloadVersion"), Is.EqualTo(1));
++            }
++            finally { AssetDatabase.DeleteAsset(path); }
++        }
++
++        [Test]
++        public void OwnedPlateShaderDefaultsToLegacyUv0AndPreservesOpaquePasses()
++        {
++            var shader = Shader.Find("Kamion/World Car Plate");
++            Assert.NotNull(shader);
++            var material = new Material(shader);
++            try
++            {
++                Assert.That(material.GetFloat("_PlatePayloadVersion"), Is.Zero);
++                Assert.False(material.IsKeywordEnabled("_PLATE_LOCAL_CORNERS"));
++                // EditMode does not activate a URP renderer. Inspect imported subshader
++                // metadata rather than Material.FindPass's currently active pipeline.
++                var subshader = ShaderUtil.GetShaderData(shader).GetSubshader(0);
++                var names = Enumerable.Range(0, subshader.PassCount).Select(i => subshader.GetPass(i).Name.ToUpperInvariant()).ToArray();
++                foreach (string pass in new[] { "ForwardLit", "ShadowCaster", "DepthOnly", "DepthNormals", "GBuffer" })
++                    Assert.Contains(pass.ToUpperInvariant(), names);
++            }
++            finally { UnityEngine.Object.DestroyImmediate(material); }
++        }
++    }
++}
+diff --git a/game/Assets/_Project/Tests/EditMode/CarPlatePayloadTests.cs.meta b/game/Assets/_Project/Tests/EditMode/CarPlatePayloadTests.cs.meta
+new file mode 100644
+index 00000000..cc80e9bb
+--- /dev/null
++++ b/game/Assets/_Project/Tests/EditMode/CarPlatePayloadTests.cs.meta
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: 6b72c9f081e6450bb4af247f950da034
+diff --git a/game/Assets/_Project/World/Import/InstanceImporter.cs b/game/Assets/_Project/World/Import/InstanceImporter.cs
+index 8f28d2b3..21479170 100644
+--- a/game/Assets/_Project/World/Import/InstanceImporter.cs
++++ b/game/Assets/_Project/World/Import/InstanceImporter.cs
+@@ -173,6 +173,7 @@ namespace Game.World.Import
+                         var mat = ProtoMaterial(r, g, prim.Material, out bool textured);
+                         materials.Add(mat);
+                         uv |= textured;
++                        if (prim.Material == "car_plate" && prim.Uv1 != null) uv1 = true;
+                         // ADR 0071 r11: wall-top / sill run-off space of the hero hall (TEXCOORD_1, only where the
+                         // material reads it and the primitive carries it)
+                         if (prim.Uv1 != null && prim.Material != null && r.MaterialDefs.TryGetValue(prim.Material, out var pd))
+diff --git a/game/Assets/_Project/World/Import/RegionImporter.cs b/game/Assets/_Project/World/Import/RegionImporter.cs
+index 2ad8f520..2f3f7da5 100644
+--- a/game/Assets/_Project/World/Import/RegionImporter.cs
++++ b/game/Assets/_Project/World/Import/RegionImporter.cs
+@@ -216,6 +216,7 @@ namespace Game.World.Import
+             // ---- point instances (props, trees) ----
+             var instFiles = chunkDefs.Select(co => Path.Combine(srcDir, Path.GetFileName(Str(Obj(Obj(co).Get("instances")).Get("file"))))).ToList();
+             r.Instances = InstanceImporter.Build(r, instFiles, out r.PropColliders);
++            WorldCarPlateMaterials.Configure(r);
+ 
+             AssetDatabase.SaveAssets();
+             Debug.Log($"[IMPORT] {region}: sha256 mismatches vs manifest: {r.ShaMismatches}");
+@@ -386,6 +387,9 @@ namespace Game.World.Import
+                     // Exposed units (ADR 0010): emissive in the manifest is relative radiance; ×0.25 keeps a lit signal
+                     // lamp clearly brighter than daylit surfaces without clipping to white on LDR tiers.
+                     emission = new Color((float)Num(e[0]), (float)Num(e[1]), (float)Num(e[2])) * 0.25f;
++                if (id == "car_plate")
++                    return WorldCarPlateMaterials.PreserveLitPasses(path,
++                        () => LitMaterial(path, albedo, rough, metal, t, clip, clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, clip, emission));
+                 return LitMaterial(path, albedo, rough, metal, t, clip, clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, clip, emission);
+             }
+             bool decal = m.Get("decal") is bool dc && dc;
+diff --git a/game/Assets/_Project/World/Import/WorldCarPlateMaterials.cs b/game/Assets/_Project/World/Import/WorldCarPlateMaterials.cs
+new file mode 100644
+index 00000000..fe58fd57
+--- /dev/null
++++ b/game/Assets/_Project/World/Import/WorldCarPlateMaterials.cs
+@@ -0,0 +1,180 @@
++using System;
++using System.Collections.Generic;
++using System.IO;
++using System.Linq;
++using System.Text.RegularExpressions;
++using Game.Editor.Build;
++using UnityEditor;
++using UnityEngine;
++using UnityEngine.Rendering;
++using UnityEngine.Rendering.Universal;
++
++namespace Game.World.Import
++{
++    /// <summary>ADR0089: opt in one existing Lit material only after the complete local-corner migration.</summary>
++    public static class WorldCarPlateMaterials
++    {
++        public const string ShaderName = "Kamion/World Car Plate";
++        public const string Keyword = "_PLATE_LOCAL_CORNERS";
++        // Material API keys are LightMode tags, not ShaderLab pass names.
++        static readonly string[] Passes = { "UniversalForward", "ShadowCaster", "UniversalGBuffer", "DepthOnly", "DepthNormals", "Meta", "Universal2D", "MotionVectors", "XRMotionVectors" };
++        static readonly Regex Vehicle = new Regex(@"^(car_(hatch|sedan|estate|suv)_(silver|grey|black|white|blue|red)|van_(white|silver|white2))(\.lod[12])?$", RegexOptions.CultureInvariant);
++
++        public static bool ValidCorners(Vector2[] uv0, Vector2[] local)
++        {
++            if (uv0 == null || local == null || uv0.Length != 8 || local.Length != 8) return false;
++            Vector2 lo = uv0.Aggregate(Vector2.Min), hi = uv0.Aggregate(Vector2.Max);
++            if (hi.x - lo.x < .2f || hi.y - lo.y < .1f) return false;
++            var counts = new int[4];
++            for (int i = 0; i < local.Length; i++)
++            {
++                var p = local[i];
++                if ((p.x != 0f && p.x != 1f) || (p.y != 0f && p.y != 1f)) return false;
++                var expected = new Vector2(Mathf.Lerp(lo.x, hi.x, p.x), Mathf.Lerp(lo.y, hi.y, p.y));
++                if ((uv0[i] - expected).sqrMagnitude > 1e-8f) return false;
++                counts[(int)p.x + 2 * (int)p.y]++;
++            }
++            return counts.All(n => n == 2);
++        }
++
++        public static bool ValidLibrary(GlbReader library)
++        {
++            var nodes = library.Nodes.Where(n => Vehicle.IsMatch(n.Name)).ToArray();
++            if (nodes.Length != 81 || nodes.Select(n => n.Name).Distinct().Count() != 81) return false;
++            int plateCount = 0;
++            foreach (var node in nodes)
++            {
++                var plates = node.Primitives.Where(p => p.Material == "car_plate").ToArray();
++                if (node.Name.EndsWith(".lod2", StringComparison.Ordinal))
++                {
++                    if (plates.Length != 0) return false;
++                    continue;
++                }
++                if (plates.Length != 1 || plates[0].Indices?.Length != 12 || !ValidCorners(plates[0].Uv0, plates[0].Uv1)) return false;
++                plateCount++;
++            }
++            return plateCount == 54;
++        }
++
++        public static bool ForwardOnly(RenderPipelineAsset asset)
++        {
++            if (!(asset is UniversalRenderPipelineAsset urp) || urp.rendererDataList.Length == 0) return false;
++            foreach (var renderer in urp.rendererDataList)
++                if (!(renderer is UniversalRendererData data) || data.renderingMode != RenderingMode.Forward) return false;
++            return true;
++        }
++
++        public static bool ValidNativePlate(Mesh mesh, int submesh)
++        {
++            if (mesh == null || !mesh.HasVertexAttribute(VertexAttribute.TexCoord0) ||
++                !mesh.HasVertexAttribute(VertexAttribute.TexCoord1)) return false;
++            foreach (var channel in new[] { VertexAttribute.TexCoord0, VertexAttribute.TexCoord1 })
++                if (mesh.GetVertexAttributeStream(channel) != 0 || mesh.GetVertexAttributeDimension(channel) != 2 ||
++                    mesh.GetVertexAttributeFormat(channel) != VertexAttributeFormat.Float16) return false;
++            var sub = mesh.GetSubMesh(submesh);
++            if (sub.indexCount != 12) return false;
++            // Editor API intentionally supports UploadMeshData(true): validate the ACTUAL
++            // native buffers, not merely the fresh GLB or a matching vertex descriptor.
++            using (var snapshot = MeshUtility.AcquireReadOnlyMeshData(mesh))
++            {
++                var data = snapshot[0];
++                var selected = new SortedSet<int>();
++                if (mesh.indexFormat == IndexFormat.UInt16)
++                {
++                    var indices = data.GetIndexData<ushort>();
++                    for (int i = 0; i < sub.indexCount; i++) selected.Add(indices[sub.indexStart + i] + sub.baseVertex);
++                }
++                else
++                {
++                    var indices = data.GetIndexData<int>();
++                    for (int i = 0; i < sub.indexCount; i++) selected.Add(indices[sub.indexStart + i] + sub.baseVertex);
++                }
++                if (selected.Count != 8) return false;
++                byte[] bytes = data.GetVertexData<byte>(0).ToArray();
++                int stride = mesh.GetVertexBufferStride(0), offset0 = mesh.GetVertexAttributeOffset(VertexAttribute.TexCoord0),
++                    offset1 = mesh.GetVertexAttributeOffset(VertexAttribute.TexCoord1);
++                Vector2 Read(int i, int offset) => new Vector2(Mathf.HalfToFloat(BitConverter.ToUInt16(bytes, i * stride + offset)),
++                    Mathf.HalfToFloat(BitConverter.ToUInt16(bytes, i * stride + offset + 2)));
++                return ValidCorners(selected.Select(i => Read(i, offset0)).ToArray(), selected.Select(i => Read(i, offset1)).ToArray());
++            }
++        }
++
++        public static bool ValidNativeLibrary(WorldInstanceSet set, Material plate)
++        {
++            var native = set.prototypes.Where(p => Vehicle.IsMatch(p.name)).ToArray();
++            if (native.Length != 27) return false;
++            int count = 0;
++            foreach (var prototype in native)
++            {
++                if (prototype.lods.Length != 3) return false;
++                for (int lod = 0; lod < prototype.lods.Length; lod++)
++                {
++                    var mesh = prototype.lods[lod];
++                    int seen = 0;
++                    for (int sub = 0; sub < mesh.subMeshCount; sub++)
++                        if (set.materials[prototype.materialStart[lod] + sub] == plate)
++                        {
++                            if (!ValidNativePlate(mesh, sub)) return false;
++                            seen++; count++;
++                        }
++                    if (seen != (lod == 2 ? 0 : 1)) return false;
++                }
++            }
++            return count == 54;
++        }
++
++        public static bool EligibleMaterial(string id, Material material)
++        {
++            return id == "car_plate" && material != null && material.HasProperty("_BaseMap") &&
++                material.GetTexture("_BaseMap") != null && material.GetTextureScale("_BaseMap") == Vector2.one &&
++                material.GetTextureOffset("_BaseMap") == Vector2.zero && !material.IsKeywordEnabled("LIGHTMAP_ON") &&
++                !material.IsKeywordEnabled("DYNAMICLIGHTMAP_ON");
++        }
++
++        public static Material PreserveLitPasses(string path, Func<Material> factory)
++        {
++            var existing = AssetDatabase.LoadAssetAtPath<Material>(path);
++            var states = existing == null ? null : Passes.Select(existing.GetShaderPassEnabled).ToArray();
++            var material = factory();
++            if (states != null) for (int i = 0; i < Passes.Length; i++) material.SetShaderPassEnabled(Passes[i], states[i]);
++            return material;
++        }
++
++        public static void ChangeShaderPreservingPasses(Material material, Shader shader)
++        {
++            var states = Passes.Select(material.GetShaderPassEnabled).ToArray();
++            material.shader = shader;
++            for (int i = 0; i < Passes.Length; i++) material.SetShaderPassEnabled(Passes[i], states[i]);
++        }
++
++        public static void Configure(RegionImporter.Result region)
++        {
++            if (!region.Materials.TryGetValue("car_plate", out var plate)) return;
++            // A repeat import starts from ordinary Lit; rejection must never preserve a stale enabled flag.
++            var original = Shader.Find("Universal Render Pipeline/Lit");
++            if (original == null) return;
++            plate.DisableKeyword(Keyword);
++            if (plate.HasProperty("_PlatePayloadVersion")) plate.SetFloat("_PlatePayloadVersion", 0f);
++            ChangeShaderPreservingPasses(plate, original);
++            bool eligible = EligibleMaterial("car_plate", plate) && ForwardOnly(GraphicsSettings.defaultRenderPipeline);
++            for (int i = 0; eligible && i < QualitySettings.names.Length; i++)
++            {
++                var pipeline = QualitySettings.GetRenderPipelineAssetAt(i);
++                if (pipeline != null) eligible &= ForwardOnly(pipeline);
++            }
++            var shader = Shader.Find(ShaderName);
++            eligible &= shader != null;
++            if (eligible)
++                eligible = ValidLibrary(GlbReader.Load(Path.Combine(EditorTools.RepoRoot, "art-source", "world", "props", "street_props.glb")));
++            if (eligible) eligible = ValidNativeLibrary(region.Instances, plate);
++            if (eligible)
++            {
++                ChangeShaderPreservingPasses(plate, shader);
++                plate.SetFloat("_PlatePayloadVersion", 1f);
++                plate.EnableKeyword(Keyword);
++            }
++            EditorUtility.SetDirty(plate);
++            Debug.Log($"[IMPORT] car_plate local-corner remap: {(eligible ? "enabled (54 plates, Forward only)" : "UV0 fallback (eligibility failed)")}");
++        }
++    }
++}
+diff --git a/game/Assets/_Project/World/Import/WorldCarPlateMaterials.cs.meta b/game/Assets/_Project/World/Import/WorldCarPlateMaterials.cs.meta
+new file mode 100644
+index 00000000..e17147fd
+--- /dev/null
++++ b/game/Assets/_Project/World/Import/WorldCarPlateMaterials.cs.meta
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: fcd28febec1644378ec706906af0ca6d
+diff --git a/game/Assets/_Project/World/Import/WorldPbrMaterials.cs b/game/Assets/_Project/World/Import/WorldPbrMaterials.cs
+index 56e2681d..db736cbf 100644
+--- a/game/Assets/_Project/World/Import/WorldPbrMaterials.cs
++++ b/game/Assets/_Project/World/Import/WorldPbrMaterials.cs
+@@ -48,6 +48,13 @@ namespace Game.World.Import
+             material.SetColor("_Tint", new Color(linear.x, linear.y, linear.z, 1f).gamma);
+         }
+ 
++        /// <summary>ADR0089: pearl ratios are linear HDR multipliers. The Color property has the same
++        /// upload decode as Tint; actual GPU readback showed raw 3.2 becoming 12.922 instead of 3.2.</summary>
++        public static void SetLinearPearlTint(Material material, Vector3 linear)
++        {
++            material.SetColor("_PearlTint", new Color(linear.x, linear.y, linear.z, 1f).gamma);
++        }
++
+         static Dictionary<string, object> Spec()
+         {
+             if (s_Spec == null)
+@@ -81,6 +88,7 @@ namespace Game.World.Import
+             string uv = s != null ? Str(s.Get("uv")) ?? "" : "";
+             if ((kind == "modulation_set" || uv.StartsWith("mesh_uv0")) && def.Get("uv") as string != "planar") uv0 = true;
+             if (def.Get("uv1") as string == "along_m") uv1 = true;
++            if (id.StartsWith("car_paint_") && def.Get("paint") is List<object>) uv1 = true; // R4 source deposition payload
+             if (id == "road_asphalt" || id == "road_asphalt_new") uv1 = true;           // _ROADWEAR
+             if ((id.StartsWith("hall_wall") || Runoff(def) || (def.Get("runoff") is bool ro && ro)) && Set("parapet_runoff") != null) uv1 = true;   // _RUNOFF (wall-top space): 0071 `weather` + 0081 `runoff`
+             if (id == "decal_patch" || id == "decal_oil" || id == "decal_tyre") { uv0 = true; uv1 = true; }
+@@ -210,10 +218,10 @@ namespace Game.World.Import
+             {
+                 mat.EnableKeyword("_CARPAINT");
+                 mat.SetVector("_CarPaint", new Vector4((float)Num(cp[0]), (float)Num(cp[1]), (float)Num(cp[2]), (float)Num(cp[3])));
+-                mat.SetVector("_CarFlake", new Vector4(400f, 1f, 0.08f, 0f));   // 2.5 mm cells, gone when a pixel covers a cell; z = flake reflectance above the pigment (WORKING_VALUE)
++                mat.SetVector("_CarFlake", new Vector4(400f, 1f, 0.08f, 1f));   // x:2.5mm flake cells,z:reflectance above pigment; w:ADR0089 per-instance road film (WORKING_VALUE)
+                 var pt = def.Get("pearl_tint") as List<object>;
+-                mat.SetColor("_PearlTint", pt != null && pt.Count >= 3
+-                    ? new Color((float)Num(pt[0]), (float)Num(pt[1]), (float)Num(pt[2]), 1f) : Color.white);
++                SetLinearPearlTint(mat, pt != null && pt.Count >= 3
++                    ? new Vector3((float)Num(pt[0]), (float)Num(pt[1]), (float)Num(pt[2])) : Vector3.one);
+             }
+             mat.SetFloat("_MacroSize", 64f);
+             mat.SetFloat("_MacroStrength", kind == "modulation_set" ? 0.06f : 0.16f);
+diff --git a/tests/gis/test_car_deposition.py b/tests/gis/test_car_deposition.py
+new file mode 100644
+index 00000000..96003a4b
+--- /dev/null
++++ b/tests/gis/test_car_deposition.py
+@@ -0,0 +1,61 @@
++"""Car deposition coordinates are a data addition, never a geometry rebuild."""
++import numpy as np
++import pytest
++
++from streetscape import life_cars as cars
++from streetscape.export import crease_normals
++from streetscape.materials import M
++
++
++@pytest.mark.parametrize('body', [*cars.CARS, 'van'])
++@pytest.mark.parametrize('lod', [0, 1, 2])
++def test_deposition_coordinates_preserve_shape_and_interpolate_affinely(body, lod):
++    meshes = cars.van('white') if body == 'van' else cars.car(body, 'black')
++    original = crease_normals(meshes[(0, 1, 3)[lod]].out())
++    name = 'van_white' if body == 'van' else f'car_{body}_black'
++    result = cars.paint_deposition(original, name)
++    d = cars.VAN if body == 'van' else cars.CARS[body]
++    rear = d['L'] / 2 - d['foh'] - d['wb']
++    assert len(result) == len(original)
++    paint = 0
++    for before, after in zip(original, result):
++        assert after['mat'] == before['mat']
++        for key in ('V', 'N', 'T', 'UV'):
++            assert np.array_equal(before[key], after[key]), key
++        if before['mat'] == 'car_plate':
++            assert np.array_equal(after['UV1'], np.rint(after['UV1']))
++            assert np.all((after['UV1'] >= 0) & (after['UV1'] <= 1))
++            continue
++        if not before['mat'].startswith('car_paint_'):
++            assert 'UV1' not in after
++            continue
++        paint += 1
++        uv = after['UV1']
++        v = after['V']
++        assert np.allclose(uv[:, 0], v[:, 2] - d['sill'])
++        assert np.allclose(uv[:, 1], (v[:, 1] - rear) / d['wb'])
++        # Include front/rear faces and large far-LOD triangles, not just side vertices.
++        bary = np.array([.2, .3, .5])
++        point = np.einsum('tvk,v->tk', v[after['T']], bary)
++        interpolated = np.einsum('tvk,v->tk', uv[after['T']], bary)
++        assert np.allclose(interpolated[:, 0], point[:, 2] - d['sill'])
++        assert np.allclose(interpolated[:, 1], (point[:, 1] - rear) / d['wb'])
++        half = np.einsum('tvk,v->tk', uv.astype(np.float16).astype(np.float32)[after['T']], bary)
++        assert np.max(np.abs(half - interpolated)) < .001
++    assert paint
++
++
++def test_clean_set_only_routes_materials_with_instance_deposition():
++    active = {name for name, definition in M.items() if name.startswith('car_paint_') and 'paint' in definition}
++    assert len(active) == 7
++    for name in active:
++        assert M[name]['texture_set'] == 'car_grime_clean'
++    for name in ('car_paint_green', 'car_paint_beige'):
++        assert 'paint' not in M[name]
++        assert M[name]['texture_set'] == 'car_grime'
++
++
++def test_nonvehicle_export_adapter_leaves_primitives_unmodified():
++    primitive = {'V': np.zeros((3, 3)), 'T': np.array([[0, 1, 2]]), 'UV': np.zeros((3, 2)), 'mat': 'steel'}
++    original = [primitive]
++    assert cars.paint_deposition(original, 'bench') is original
+diff --git a/tests/gis/test_car_map_fields.py b/tests/gis/test_car_map_fields.py
+new file mode 100644
+index 00000000..aca831e9
+--- /dev/null
++++ b/tests/gis/test_car_map_fields.py
+@@ -0,0 +1,50 @@
++"""Keep unrelated paint fields and repeat padding while replacing lower film."""
++from pathlib import Path
++import importlib
++import sys
++import numpy as np
++from PIL import Image
++
++ROOT=Path(__file__).resolve().parents[2]
++
++
++def test_clean_car_map_preserves_upper_pixels_and_legacy_wrap_padding(tmp_path, monkeypatch):
++    monkeypatch.syspath_prepend(str(ROOT/'art-source/world/materials/_src'))
++    facade=importlib.import_module('sets_facade')
++    kit=importlib.import_module('pbrkit')
++    legacy=facade.car_grime(n=1024)
++    clean=facade.car_grime(n=1024,lower_film=False)
++    _,y=legacy.c.xy()
++    v=2.5-y
++    for field in ('height','elem_id','joint'):
++        assert np.array_equal(getattr(legacy,field),getattr(clean,field)),field
++    for mask in (v<.05,v>1.1):
++        assert np.array_equal(legacy.albedo[mask],clean.albedo[mask])
++        assert np.array_equal(legacy.rough[mask],clean.rough[mask])
++    assert np.any(clean.albedo!=legacy.albedo)
++    assert legacy.metal is None
++    assert clean.metal is not None
++    assert np.all((clean.metal>=0)&(clean.metal<=1))
++    assert np.all(clean.metal[v<.05]==0)
++    assert np.all(clean.metal[v>1.1]==0)
++    # Coverage must describe exactly the removed film, never arbitrary noise or metal.
++    assert np.allclose(legacy.rough-clean.rough,.35*clean.metal,atol=2e-7)
++    coverage=clean.metal
++    forward=(1-.30*coverage)[...,None]*np.stack([np.ones_like(coverage),1-.08*coverage,1-.22*coverage],axis=-1)
++    assert np.allclose(clean.albedo*forward,legacy.albedo,atol=3e-7)
++    legacy.name='legacy'
++    clean.name='clean'
++    kit.write_set(legacy,tmp_path)
++    kit.write_set(clean,tmp_path)
++    checked=[]
++    for tier in ('High','Medium','Low'):
++        for suffix in ('BaseColor','Normal','MaskMap','Var'):
++            before=np.asarray(Image.open(tmp_path/'legacy'/tier/f'T_legacy_{suffix}.png'))
++            after=np.asarray(Image.open(tmp_path/'clean'/tier/f'T_clean_{suffix}.png'))
++            assert before.shape==after.shape
++            height=2.5*(1-(np.arange(before.shape[0])+.5)/before.shape[0])
++            assert np.array_equal(before[height>1.1],after[height>1.1]),(tier,suffix)
++            if suffix in ('Normal','Var'):
++                assert np.array_equal(before,after),(tier,suffix)
++            checked.append((tier,suffix))
++    assert len(checked)==12
+diff --git a/tests/gis/test_car_plate_payload.py b/tests/gis/test_car_plate_payload.py
+new file mode 100644
+index 00000000..74a08e7b
+--- /dev/null
++++ b/tests/gis/test_car_plate_payload.py
+@@ -0,0 +1,41 @@
++"""Plate migration preserves legacy geometry/UV0 and needs no additional channel."""
++import numpy as np
++import pytest
++from streetscape import life_cars as cars
++from streetscape.export import crease_normals
++
++FLEET = [(body, color) for body in cars.CARS for color in cars.CAR_COLOURS]
++FLEET += [('van', color) for color in cars.VAN_COLOURS]
++
++
++@pytest.mark.parametrize('body,color', FLEET)
++def test_all_27_fleet_prototypes_preserve_legacy_binding_and_add_four_corners(body, color):
++    meshes = cars.van(color) if body == 'van' else cars.car(body, color)
++    name = f'van_{color}' if body == 'van' else f'car_{body}_{color}'
++    seen = 0
++    for lod, mesh in enumerate((meshes[0], meshes[1], meshes[3])):
++        before = crease_normals(mesh.out())
++        after = cars.paint_deposition(before, name)
++        # Existing paint payload already requires Half2 on every car LOD; no new channel.
++        assert any(p['mat'].startswith('car_paint_') and 'UV1' in p for p in after)
++        plates = [p for p in after if p['mat'] == 'car_plate']
++        assert len(plates) == (0 if lod == 2 else 1)
++        for a, b in zip(before, after):
++            assert a['mat'] == b['mat']
++            for key in ('V', 'N', 'T', 'UV'):
++                assert np.array_equal(a[key], b[key]), (name, lod, key)
++        for plate in plates:
++            assert len(plate['V']) == 8 and plate['T'].size == 12
++            corners, count = np.unique(plate['UV1'], axis=0, return_counts=True)
++            assert np.array_equal(corners, [[0, 0], [0, 1], [1, 0], [1, 1]])
++            assert np.array_equal(count, [2, 2, 2, 2])
++            uv = plate['UV']
++            restored = uv.min(axis=0) + plate['UV1'] * np.ptp(uv, axis=0)
++            assert np.allclose(uv, restored, atol=1e-8)
++            # Generator->glTF->Unity double V conversion retains these exact integer corners.
++            exported = plate['UV1'].copy()
++            exported[:, 1] = 1 - exported[:, 1]
++            exported[:, 1] = 1 - exported[:, 1]
++            assert np.array_equal(exported.astype(np.float16), plate['UV1'])
++            seen += 1
++    assert seen == 2
+diff --git a/tests/gis/test_cars_r10.py b/tests/gis/test_cars_r10.py
+index 666043fa..69ffd646 100644
+--- a/tests/gis/test_cars_r10.py
++++ b/tests/gis/test_cars_r10.py
+@@ -95,11 +95,13 @@ def test_door_seams_start_behind_the_front_arch():
+         assert len(ahead) == 0, (name, ahead[:3])
+ 
+ 
+-def test_tail_film_follows_the_shell_columns():
+-    """The road film on the tail is cut on the shell's own columns (a quad from g = 0.7 to 2.0 was a chord through the
+-    shoulder arc: hard-edged rectangles on the bumper)."""
++def test_tail_film_uses_shell_uv_without_a_floating_skin():
++    """ADR0089 film follows the actual curved painted shell, so its former off-surface alpha chords cannot recur."""
+     for name, d, P in _protos():
+-        dirt = [p for k, p in _by(P[0]).items() if k.startswith("car_dirt_")]
+-        v = np.concatenate([p["V"] for p in dirt])
++        assert not any(k.startswith("car_dirt_") for k in _by(P[0]))
++        paint = [p for k, p in _by(P[0]).items() if k.startswith("car_paint_")]
++        for primitive in paint:
++            assert np.allclose(primitive["UV"], primitive["V"][:, [1, 2]])
++        v = np.concatenate([p["V"] for p in paint])
+         tail = v[v[:, 1] < -d["L"] / 2 + 0.25]
+         assert len(np.unique(np.round(np.abs(tail[:, 0]), 3))) >= 6, name
+diff --git a/tests/gis/test_cars_r11.py b/tests/gis/test_cars_r11.py
+new file mode 100644
+index 00000000..62e78c5a
+--- /dev/null
++++ b/tests/gis/test_cars_r11.py
+@@ -0,0 +1,33 @@
++"""ADR0089 close wheel silhouette, grounding and neutral material constraints."""
++import math
++import numpy as np
++import pytest
++
++@pytest.mark.parametrize("body", ["hatch", "sedan", "estate", "suv"])
++def test_close_wheel_outline_error_below_four_mm_and_grounded(body):
++    from streetscape import life_cars as LC
++    d = LC.CARS[body]
++    shell = LC._Shell(d, 0)
++    parts = LC.car(body, "black")
++    for lod, limit in ((0, .004), (1, .020)):
++        tyre = [p["V"] for p in parts[lod].out() if p["mat"] in ("car_tyre", "car_tyre_dusty", "tyre", "tyre_dusty")]
++        v = np.concatenate(tyre)
++        front = v[np.abs(v[:, 1] - shell.yfa) <= d["r"] + .001]
++        rad = np.hypot(front[:, 1] - shell.yfa, front[:, 2] - d["r"])
++        outer = front[np.abs(rad - d["r"]) < 1e-6]
++        angles = np.unique(np.round(np.arctan2(outer[:, 2] - d["r"], outer[:, 1] - shell.yfa), 6))
++        gaps = np.diff(np.r_[angles, angles[0] + 2 * math.pi])
++        error = d["r"] * (1 - math.cos(gaps.max() / 2))
++        assert error <= limit, (body, lod, error)
++        if lod == 0:
++            assert abs(v[:, 2].min()) < 1e-6, (body, "tyre floats above prototype ground")
++        else:
++            assert len(angles) == 10, (body, "existing LOD1 outline changed")
++
++def test_rubber_and_dusty_rim_are_neutral_with_a_dark_dish():
++    from streetscape.materials import M
++    for name in ("car_tyre", "car_tyre_dusty", "tyre_dusty", "rim_dusty"):
++        rgb = np.array(M[name]["color"])
++        assert np.ptp(rgb) < .002, (name, rgb)
++    assert M["car_tyre_dusty"]["rough"] >= .9
++    assert np.mean(M["rim_dark"]["color"]) < np.mean(M["rim_dusty"]["color"]) * .3
+diff --git a/tests/gis/test_streetscape.py b/tests/gis/test_streetscape.py
+index aed4eec2..188de59f 100644
+--- a/tests/gis/test_streetscape.py
++++ b/tests/gis/test_streetscape.py
+@@ -177,26 +177,27 @@ def test_life_prototypes_budget_and_lods():
+ 
+ 
+ def test_parked_cars_road_film_glass_mask_and_wheels():
+-    """ADR 0041 par. 8: every car / van carries one road-film level on LOD0 and LOD1 (all three levels occur in the
+-    fleet), LOD0 glazing uses the car-glass shader with a dust mask in UV0, wheels vary, materials exist."""
++    """ADR0089: painted-shell metre UVs carry per-instance film without an alpha skin. Glass masks,
++    varied wheels and legacy decal texture contracts remain valid."""
+     import numpy as np
+     from streetscape import export as E
+     from streetscape import life_cars as LC
+     from streetscape import life_props as LP
+     from streetscape.materials import M
+-    levels, wheels = set(), set()
++    wheels = set()
+     for k, v in LP.build_all().items():
+         if not k.startswith(("car_", "van_")):
+             continue
+         m0 = {p["mat"]: p for p in v[0].out()}
+         m1 = {p["mat"]: p for p in v[1].out()}
+         assert set(m0) | set(m1) <= set(M), k
+-        film = [x for x in m0 if x.startswith("car_dirt_")]
+-        assert len(film) == 1 and film[0] in m1, k
+-        levels.add(film[0])
+-        f = m0[film[0]]
+-        assert f["UV"][:, 1].min() >= 0.0 and f["UV"][:, 1].max() <= 1.0 + 1e-9
+-        assert f["V"][:, 2].min() > 0.15 and f["V"][:, 2].max() < 1.25, k        # sills .. below the belt line
++        assert not any(x.startswith("car_dirt_") for x in set(m0) | set(m1)), k
++        for mm in (m0, m1):
++            paint = [(n, p) for n, p in mm.items() if n.startswith("car_paint_")]
++            assert paint, k
++            for name, primitive in paint:
++                assert M[name]["texture_set"] == "car_grime_clean" and len(M[name]["paint"]) == 4
++                assert np.allclose(primitive["UV"], primitive["V"][:, [1, 2]]), (k, name)
+         g = np.array(m0["car_glass_tint"]["UV"], float)
+         pv = np.abs(g[:, 0]) > 2.0                                                # privacy panes: u offset (par. 9)
+         ln = np.abs(g[:, 0]) > 6.0                                                # clear lamp covers (r10, LENS_U)
+@@ -209,7 +210,7 @@ def test_parked_cars_road_film_glass_mask_and_wheels():
+         assert pv.any() == (LC._style(k[4:])["privacy"] and not k.startswith("van_")), k
+         assert "car_glass_tint" not in m1 and "car_lamp" in m0
+         wheels.add(LC._style(k[4:])["wheel"])
+-    assert levels == {"car_dirt_1", "car_dirt_2", "car_dirt_3"} and len(wheels) >= 3
++    assert len(wheels) >= 3
+     assert M["car_glass_tint"]["shader"] == "car_glass" and M["car_glass_tint"]["rough"] <= 0.1
+     assert M["car_dirt_1"]["alpha"] < M["car_dirt_2"]["alpha"] < M["car_dirt_3"]["alpha"]
+     a = np.asarray(E.car_dirt_png())[:, :, 3] / 255.0
+diff --git a/tools/worldgen/streetscape/export.py b/tools/worldgen/streetscape/export.py
+index 07121212..a5500175 100644
+--- a/tools/worldgen/streetscape/export.py
++++ b/tools/worldgen/streetscape/export.py
+@@ -200,17 +200,17 @@ def export(codes, boards, out_dir=None):
+             cm = PP.Mesh()
+             LP.contact_quad(cm, cspec)
+             glb.add_mesh(name + ".contact", cm.out(), {"contact": cspec})
+-        prims = crease_normals(lod0.out())
++        prims = LC.paint_deposition(crease_normals(lod0.out()), name)
+         glb.add_mesh(name, prims, {"lod": 0})
+         t0 = sum(len(p["T"]) for p in prims)
+-        p1 = crease_normals(lod1.out())
++        p1 = LC.paint_deposition(crease_normals(lod1.out()), name)
+         glb.add_mesh(name + ".lod1", p1, {"lod": 1})
+         t1 = sum(len(p["T"]) for p in p1)
+         if col is not None:
+             glb.add_mesh(name + ".col", col.out(), {"collision": True})
+         meta[name] = {"tris_lod0": int(t0), "tris_lod1": int(t1), "materials": sorted({p["mat"] for p in prims})}
+         if more and more[0] is not None:          # optional third LOD (cars, vans: far parking rows)
+-            p2 = crease_normals(more[0].out())
++            p2 = LC.paint_deposition(crease_normals(more[0].out()), name)
+             glb.add_mesh(name + ".lod2", p2, {"lod": 2})
+             meta[name]["tris_lod2"] = int(sum(len(p["T"]) for p in p2))
+         del glb_tris
+diff --git a/tools/worldgen/streetscape/life_cars.py b/tools/worldgen/streetscape/life_cars.py
+index f4aa613c..6ea56962 100644
+--- a/tools/worldgen/streetscape/life_cars.py
++++ b/tools/worldgen/streetscape/life_cars.py
+@@ -10,7 +10,7 @@ a seed, not taken from any register.
+ 
+   LOD0 / LOD1  r9 shell (_Shell, _vehicle2): profile swept across x with a crowned top, shoulder arcs and side
+                columns whose rows lie on the body's feature lines; lamp units, seams, wheels, glazing over a dark
+-               interior (LOD0), road film overlays
++               interior (LOD0), per-instance painted-shell film (ADR0089)
+   LOD2         first-pass body (_vehicle): the profile without shoulders, glazed greenhouse, under-body skirt
+ """
+ 
+@@ -306,6 +306,52 @@ def _box5(m, mat, c, hx, hy, hz, skip):
+             _oq(m, mat, q, nrm)
+ 
+ 
++def payload(vertices, dimensions):
++    """Signed height above sill and affine axle coordinate, no geometry change.
++
++    The second coordinate is deliberately broad. Vertex interpolation cannot resolve
++    detailed spray silhouettes on the existing sparse topology.
++    """
++    v = np.asarray(vertices)
++    y = v[:, 1]
++    front = dimensions['L'] / 2 - dimensions['foh']
++    rear = front - dimensions['wb']
++    return np.column_stack([v[:, 2] - dimensions['sill'], (y-rear)/dimensions['wb']])
++
++
++def longitudinal_weight(axle_coordinate):
++    u = np.asarray(axle_coordinate)
++    front = np.clip(1-np.abs(u-.87)/.28,0,1)
++    rear = np.clip(1-np.abs(u+.13)/.28,0,1)
++    rear_face = np.clip((-u-.20)*8,0,1)
++    return np.maximum(np.maximum(front,rear),rear_face)
++
++
++def paint_deposition(primitives, prototype):
++    """R4 data-only adapter after normal splitting; leave every existing array intact."""
++    name = prototype.removeprefix('car_')
++    body = name.split('_')[0]
++    dimensions = VAN if body == 'van' else CARS.get(body)
++    if dimensions is None:
++        return primitives
++    result = []
++    for primitive in primitives:
++        if primitive['mat'].startswith('car_paint_'):
++            primitive = dict(primitive, UV1=payload(primitive['V'], dimensions))
++        elif primitive['mat'] == 'car_plate':
++            # Both faces already use the same atlas cell. Keep UV0 as the legacy
++            # fallback and add exact local corners to the existing Half2 channel.
++            uv = np.asarray(primitive['UV'])
++            span = np.ptp(uv, axis=0)
++            if np.any(span <= 0):
++                raise ValueError(f'{prototype}: degenerate plate UV rectangle')
++            local = (uv - uv.min(axis=0)) / span
++            if not np.allclose(local, np.rint(local), atol=1e-6):
++                raise ValueError(f'{prototype}: plate payload requires rectangle corners')
++            primitive = dict(primitive, UV1=np.rint(local))
++        result.append(primitive)
++    return result
++
+ def _paint_uv(m):
+     """UV of every car_paint_* primitive = (y, z) in metres (side projection), so the car_grime set puts road
+     film on the sills and bumpers and dust on the roof whatever helper built the part."""
+@@ -817,7 +863,7 @@ def _wheel2(m, x_out, yc, r, sx, seg, steel, lod, wst=0, rimm="rim", tyre="tyre"
+ 
+     def ring(rad, o, n=seg):
+         return [np.array([x_out - sx * o, yc + rad * math.cos(t), r + rad * math.sin(t)])
+-                for t in np.linspace(0, 2 * math.pi, n + 1)[:-1]]
++                for t in np.linspace(0, 2 * math.pi, n + 1)[:-1] + (-math.pi / 2 if lod == 0 else 0)]
+ 
+     def band(mat, A, B, radial=0.3, inward=False):
+         n = len(A)
+@@ -954,8 +1000,6 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
+     matname = {"paint": paint, "glass": gmat, "trim": "car_trim", "bump": bmat}
+     style = style or dict(dirt=0.5, wheel=0, uoff=0.0)
+     dl = float(style["dirt"])                       # 0 fresh from the car wash .. 1 a month of winter streets
+-    dmat = f"car_dirt_{1 + min(2, int(dl * 3))}"
+-    uo = float(style["uoff"])
+     ds = 0.70 + 0.30 * dl                           # glass dust reach (UV0 of car_glass_tint, see materials.py)
+     # factory privacy glass behind the B pillar (v4, WORKING_VALUE fleet look: SUVs / estates, half the hatches):
+     # UV0 u of those panes is offset by PRIVACY_U, WorldCarGlass.shader decodes it (no extra material / draw)
+@@ -1246,38 +1290,7 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
+                 side_tris("car_sill", [[(y_a, za), (y_b, zb_), (y_b, max(zt_, zb_))],
+                                        [(y_a, za), (y_b, max(zt_, zb_)), (y_a, max(zt_, za))]], lift=0.004)
+ 
+-    # ---- road film (alpha overlay): sills, lower doors, spray fans behind the wheels, arch lips
+-    ya_, yb_ = sh.y0 + 0.40, sh.y1 - 0.55                       # the straight part of the plan
+-    arch_top = r + ra
+-
+-    def ztop(y):
+-        z = sill + 0.12 + 0.14 * dl
+-        for yc in (yra, yfa):
+-            z += (0.12 + 0.18 * dl) * math.exp(-((y - (yc - ra - 0.24)) / 0.28) ** 2)
+-        return z
+-    kd = 8 if lod == 0 else 3
+-    if lod == 0:
+-        # r9: the film uses the body's own columns (with the arch flares a coarser overlay cut through the skin
+-        # and showed as hard-edged polygons of clean paint)
+-        runs = [sorted({round(float(y), 4) for y in ys if ya_ < y < yb_} | {round(ya_, 4), round(yb_, 4)})]
+-    else:                                    # LOD1: three plain runs between / beside the arches, no arch lips
+-        e = ra + 0.03
+-        runs = [[ya_, yra - e], [yra + e, yra + e + 0.45, (yra + yfa) / 2, yfa - e], [yfa + e, yb_]]
+-    rows = 2 if lod == 0 else 1
+-
+-    def dcol(y):
+-        zb = float(np.interp(y, By, Bz))
+-        zt = min(max(ztop(y), zb + 0.11), arch_top + 0.16)
+-        return [(np.array([sh.X(y, zb + (zt - zb) * k / rows) + 0.018, y, zb + (zt - zb) * k / rows]), (y / 1.7 + uo, k / rows))
+-                for k in range(rows + 1)]
+-    for dys in runs:
+-        dc = [dcol(y) for y in dys]
+-        for ca, cb in zip(dc[:-1], dc[1:]):
+-            for k in range(rows):
+-                for sx in (1, -1):
+-                    fx = np.array([sx, 1, 1])
+-                    _puv(m, dmat, [ca[k][0] * fx, cb[k][0] * fx, cb[k + 1][0] * fx, ca[k + 1][0] * fx],
+-                         [ca[k][1], cb[k][1], cb[k + 1][1], ca[k + 1][1]], [sx, 0, 0])
++    # ADR0089: road film is sampled on the painted shell per instance; no floating alpha skin.
+ 
+     # ---- greenhouse side: frame with window openings (LOD0: see-through glass in the openings)
+     ig0, ig4 = sh.mid["G0"], sh.mid["G4"]
+@@ -1334,7 +1347,7 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
+         A = arch(yc)
+         xo = sh.X(yc, r) - 0.030
+         for sx in (-1, 1):
+-            _wheel2(m, sx * xo, yc, r, sx, 14 if lod == 0 else 10, steel, lod, style["wheel"],
++            _wheel2(m, sx * xo, yc, r, sx, 22 if lod == 0 else 10, steel, lod, style["wheel"],
+                     "rim_dusty" if dl > 0.45 else "rim",
+                     ("car_" if lod == 0 else "") + ("tyre_dusty" if dl > 0.3 else "tyre"))
+             dep = 0.28 if lod == 0 else 0.26
+@@ -1348,14 +1361,6 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
+                 xa, xb = sh.X(ya, za) + lipo, sh.X(yb, zb_) + lipo
+                 _quad(m, "car_trim", [sx * xa, ya, za], [sx * xb, yb, zb_], [sx * (xb - dep), yb, zb_],
+                       [sx * (xa - dep), ya, za], mid)
+-                if lod == 0 and dl > 0.33 and 0 < k < len(A) - 2 and (ya + yb) / 2 < yc + 0.05:
+-                    # r10: spray settles on the lip behind the wheel (v = 0 dense film at the arch edge)
+-                    kk = (ra + (0.085 if clad else 0.06)) / ra
+-                    y2a, z2a = yc + (ya - yc) * kk, max(sill, r + (za - r) * kk)
+-                    y2b, z2b = yc + (yb - yc) * kk, max(sill, r + (zb_ - r) * kk)
+-                    _puv(m, dmat, [[sx * (xa + 0.007), ya, za], [sx * (xb + 0.007), yb, zb_],
+-                                   [sx * (sh.X(y2b, z2b) + 0.011), y2b, z2b], [sx * (sh.X(y2a, z2a) + 0.011), y2a, z2a]],
+-                         [(ya / 1.7 + uo, 0.25), (yb / 1.7 + uo, 0.25), (yb / 1.7 + uo, 0.95), (ya / 1.7 + uo, 0.95)], [sx, 0, 0])
+                 if lod == 0 and 0 < k < len(A) - 2:
+                     # lip ring: 10 mm proud at the arch edge, flush 45 mm (cladding: 70 mm) outside it
+                     kk = (ra + (0.07 if clad else 0.045)) / ra
+@@ -1568,16 +1573,6 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
+         front = name == "F1"                 # front plate seen from +y: its left (EU band) is +x; rear: -x
+         uv = [((u0 if (pp[0] > 0) == front else u1), (v0 if pp[2] < (zlo + zhi) / 2 else v1)) for pp in q]
+         _puv(m, "car_plate", q, uv, nn)
+-    # road film on the tail (dirtiest face of a car) and the lower front bumper
+-    # r10: the film follows the shell's own columns (a quad from g = 0.7 to 2.0 was a chord through the shoulder arc:
+-    # half of it sank into the body and the rest stood off the corner as a hard-edged rectangle)
+-    dg = list(gs)
+-    spatch("R1", [(g, 0.0, 1.0) for g in dg], dmat, lift=0.016, uv=(uo, 0.45), v0=0.0)
+-    spatch("R2", [(g, 0.0, 0.25 + 0.45 * dl) for g in dg], dmat, lift=0.016, uv=(uo + 0.21, 0.45), v0=0.35)
+-    if lod == 0:
+-        for half in ([g for g in dg if g <= -0.5 + 1e-9], [g for g in dg if g >= 0.5 - 1e-9]):   # not over the plate
+-            spatch("F1", [(g, 1.0, 0.0) for g in half], dmat, lift=0.016, uv=(uo + 0.37, 0.45), v0=0.62 - 0.30 * dl)   # thin: splatter
+-
+     # ---- sills, seams, handles, mirrors, rails, wipers
+     def strip(mat, pts, wy, lift=0.004):            # seam along (y, z) points, 2 * wy wide
+         for (ya, za), (yb, zb_) in zip(pts[:-1], pts[1:]):
+@@ -1836,7 +1831,7 @@ def _plate_index(name):
+ 
+ 
+ def _style(name):
+-    """Per-prototype look (deterministic): dirt level, alloy style, film pattern offset, plate."""
++    """Per-prototype wheel/glass ageing, alloy style and plate. Painted-shell road film is per instance (ADR0089)."""
+     h = zlib.crc32(name.encode())
+     body = name.split("_")[0]
+     privacy = body in ("suv", "estate") or (body == "hatch" and (h >> 24) & 1 == 1)
+diff --git a/tools/worldgen/streetscape/materials.py b/tools/worldgen/streetscape/materials.py
+index 2f9c6bfd..69ccc3a2 100644
+--- a/tools/worldgen/streetscape/materials.py
++++ b/tools/worldgen/streetscape/materials.py
+@@ -167,19 +167,19 @@ M = {
+     # r10b: dark paints lifted (black 0.018 -> 0.035, blue 0.03 / 0.05 / 0.12 -> 0.045 / 0.085 / 0.21, grey 0.13 -> 0.16):
+     # under the ADR 0080 overcast the old values rendered as black silhouettes (review 0080 P1 #2); the Mapillary
+     # crops in artifacts/cars-r9/refs show black / dark grey bodies clearly above the tyres. WORKING_VALUE.
+-    "car_paint_silver": {"color": [0.42, 0.43, 0.44], "rough": 0.28, "metal": 0.6, "texture_set": "car_grime",
++    "car_paint_silver": {"color": [0.42, 0.43, 0.44], "rough": 0.28, "metal": 0.6, "texture_set": "car_grime_clean",
+                          "paint": [0.85, 0.30, 0.0, 0.50]},
+-    "car_paint_grey": {"color": [0.16, 0.165, 0.17], "rough": 0.26, "metal": 0.5, "texture_set": "car_grime",
++    "car_paint_grey": {"color": [0.16, 0.165, 0.17], "rough": 0.26, "metal": 0.5, "texture_set": "car_grime_clean",
+                        "paint": [0.75, 0.28, 0.0, 0.50]},
+-    "car_paint_black": {"color": [0.035, 0.035, 0.038], "rough": 0.2, "metal": 0.3, "texture_set": "car_grime",
++    "car_paint_black": {"color": [0.035, 0.035, 0.038], "rough": 0.2, "metal": 0.3, "texture_set": "car_grime_clean",
+                         "paint": [0.55, 0.22, 0.8, 0.45], "pearl_tint": [1.6, 1.9, 3.2]},
+-    "car_paint_white": {"color": [0.68, 0.68, 0.66], "rough": 0.3, "texture_set": "car_grime",
++    "car_paint_white": {"color": [0.68, 0.68, 0.66], "rough": 0.3, "texture_set": "car_grime_clean",
+                         "paint": [0.0, 0.0, 0.0, 0.5]},
+-    "car_paint_white2": {"color": [0.62, 0.63, 0.62], "rough": 0.36, "texture_set": "car_grime",
++    "car_paint_white2": {"color": [0.62, 0.63, 0.62], "rough": 0.36, "texture_set": "car_grime_clean",
+                          "paint": [0.0, 0.0, 0.0, 0.5]},
+-    "car_paint_blue": {"color": [0.045, 0.085, 0.21], "rough": 0.24, "metal": 0.4, "texture_set": "car_grime",
++    "car_paint_blue": {"color": [0.045, 0.085, 0.21], "rough": 0.24, "metal": 0.4, "texture_set": "car_grime_clean",
+                        "paint": [0.70, 0.30, 0.0, 0.48]},
+-    "car_paint_red": {"color": [0.32, 0.03, 0.025], "rough": 0.28, "metal": 0.2, "texture_set": "car_grime",
++    "car_paint_red": {"color": [0.32, 0.03, 0.025], "rough": 0.28, "metal": 0.2, "texture_set": "car_grime_clean",
+                       "paint": [0.0, 0.0, 0.0, 0.5]},
+     "car_paint_green": {"color": [0.035, 0.07, 0.045], "rough": 0.35, "metal": 0.4, "texture_set": "car_grime"},
+     "car_paint_beige": {"color": [0.36, 0.32, 0.24], "rough": 0.4, "metal": 0.3, "texture_set": "car_grime"},
+@@ -195,11 +195,12 @@ M = {
+     "car_dirt_3": {"color": [0.18, 0.165, 0.135], "rough": 1.0, "alpha": 0.78, "blend": True, "texture": "car_dirt"},
+     "car_lamp": {"color": [0.045, 0.047, 0.05], "rough": 0.12, "metal": 0.5},     # smoked lamp housing behind the lens
+     # alloy under brake dust (v4: 0.115 rendered as a black disc on LOD1 at 12-45 m on Low, read as "no rim")
+-    "rim_dusty": {"color": [0.27, 0.25, 0.22], "rough": 0.58, "metal": 0.45},
+-    "tyre_dusty": {"color": [0.05, 0.045, 0.038], "rough": 0.95},
++    # ADR0089 WORKING_VALUE: neutral brake dust/rubber, old luminance retained; dark dish stays rim_dark/car_trim.
++    "rim_dusty": {"color": [0.25, 0.25, 0.25], "rough": 0.58, "metal": 0.45},
++    "tyre_dusty": {"color": [0.046, 0.046, 0.046], "rough": 0.95},
+     # r10 (ADR 0078): LOD0 car tyres with the tread / sidewall texture (modulation, mean ~0.78; colour raised to match)
+     "car_tyre": {"color": [0.033, 0.033, 0.033], "rough": 0.85, "texture": "car_tyre"},
+-    "car_tyre_dusty": {"color": [0.066, 0.059, 0.050], "rough": 0.95, "texture": "car_tyre"},
++    "car_tyre_dusty": {"color": [0.060, 0.060, 0.060], "rough": 0.95, "texture": "car_tyre"},
+     "car_interior": {"color": [0.022, 0.022, 0.024], "rough": 0.9},
+     "rim_dark": {"color": [0.05, 0.05, 0.052], "rough": 0.6, "metal": 0.5},
+     "rim_steel": {"color": [0.07, 0.07, 0.072], "rough": 0.55, "metal": 0.6},

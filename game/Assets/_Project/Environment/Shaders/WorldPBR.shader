@@ -165,6 +165,20 @@ Shader "Kamion/World PBR"
             TEXTURE2D(_DetailNormal);
             TEXTURE2D(_RunoffMap);
 
+            #if defined(_CARPAINT)
+            // ADR0089: four painted-shell film levels, including clean. Region-relative origin remains stable
+            // when WorldInstances and the existing GI rectangle move together during a floating-origin shift.
+            // Computed per vertex and carried flat: no per-fragment hash or additional texture sample.
+            float2 CarInstanceFilm(float2 originXZ)
+            {
+                uint2 cell = (uint2)(int2)floor((originXZ - _KamionGIRect.xy) * 4.0 + 0.37);
+                uint h = cell.x * 1664525u + cell.y * 1013904223u;
+                h ^= h >> 16; h *= 2246822519u; h ^= h >> 13;
+                uint level = h < 429496730u ? 0u : (h < 1932735283u ? 1u : (h < 3435973837u ? 2u : 3u));
+                return float2(level * (1.0 / 3.0), (h & 1023u) * (1.0 / 1024.0));
+            }
+            #endif
+
             struct Attributes
             {
                 float4 positionOS : POSITION;
@@ -182,6 +196,9 @@ Shader "Kamion/World PBR"
                 half fogFactor : TEXCOORD2;
                 half4 masks : TEXCOORD3;
                 float4 uv : TEXCOORD4;      // xy TEXCOORD_0, zw TEXCOORD_1
+                #if defined(_CARPAINT)
+                nointerpolation float2 carFilm : TEXCOORD5;
+                #endif
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -199,6 +216,9 @@ Shader "Kamion/World PBR"
                 o.fogFactor = KamionFogTau(p.positionWS, p.positionCS.w);
                 o.masks = v.color;
                 o.uv = float4(v.uv0, v.uv1);
+                #if defined(_CARPAINT)
+                o.carFilm = CarInstanceFilm(float2(GetObjectToWorldMatrix()._m03, GetObjectToWorldMatrix()._m23));
+                #endif
                 return o;
             }
 
@@ -260,10 +280,42 @@ Shader "Kamion/World PBR"
             #endif
                 float footprint = max(length(fwidth(um)), 1e-5);      // metres per pixel
 
+                #if defined(_CARPAINT)
+                if (_CarFlake.w > 0.5) uvb.x += i.carFilm.y;
+                #endif
+
                 half4 base = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uvb);
                 half4 mask = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, uvb);
                 half3 tn = UnpackNormalScale(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, uvb), _NormalStrength);
+                #if defined(_CARPAINT)
+                half carFilmOpacity = 0.0h;
+                if (_CarFlake.w > 0.5)
+                {
+                    // WORKING_VALUE: source UV1 is height above the actual class sill
+                    // and an affine rear=0/front=1 axle coordinate. No film inversion.
+                    half amount = 0.08h + 0.92h * i.carFilm.x;
+                    half falloff = 0.16h + 0.06h * i.carFilm.x;
+                    half vertical = exp2(-max(i.uv.z, 0.0) / falloff * 1.442695h);
+                    half keepUpper = smoothstep(0.45h, 0.85h, abs(n.y)) * smoothstep(0.6, 0.8, um.y);
+                    // Clean-map Mask.R carries removed legacy film, not metal.
+                    // Preserve the existing bonnet/roof response by forward application;
+                    // the monotone sill layer below remains independent of that coverage.
+                    half upperFilm = saturate(mask.r);
+                    half3 legacyMultiplier = (1.0h - 0.30h * upperFilm) * half3(1.0h, 1.0h - 0.08h * upperFilm, 1.0h - 0.22h * upperFilm);
+                    base.rgb *= lerp(half3(1, 1, 1), legacyMultiplier, keepUpper);
+                    mask.a = saturate(mask.a - 0.35h * upperFilm * keepUpper);
+                    half frontTrail = saturate(1.0h - abs(i.uv.w - 0.87h) / 0.28h);
+                    half rearTrail = saturate(1.0h - abs(i.uv.w + 0.13h) / 0.28h);
+                    half rearFace = saturate((-i.uv.w - 0.20h) * 8.0h);
+                    half deposition = max(max(frontTrail, rearTrail), rearFace);
+                    carFilmOpacity = 0.5h * amount * vertical * (0.72h + 0.28h * deposition) * (1.0h - keepUpper);
+                    mask.a = lerp(mask.a, 0.25h, carFilmOpacity);
+                }
+                #endif
                 half3 albedo = base.rgb * _Tint.rgb * _AlbedoScale;
+                #if defined(_CARPAINT)
+                albedo = lerp(albedo, half3(0.240h, 0.230h, 0.205h), carFilmOpacity);
+                #endif
                 half smooth = mask.a * _SmoothnessScale;
                 half ao = mask.g;
                 half metal = mask.r * _MetallicScale;
@@ -623,6 +675,8 @@ Shader "Kamion/World PBR"
                     half lum = dot(base.rgb, half3(0.2126, 0.7152, 0.0722));
                     half detl = saturate(lum / 0.095);
                     albedo = lerp(albedo, albedo * half3(1.22, 1.10, 0.92), k.b * 0.8 * _GroundTint);
+                    // ADR0109: additive ground-only dry matter, behind the existing data keyword.
+                    albedo = KamionGrassDryMatter(albedo, k, _GroundTint);
                     // Pine-forest floor (bór sosnowy): needle litter in patches with feather moss and bilberry, not a
                     // uniform beige (review r3 W2 / r4 W-H8). Linear albedo: litter 0.045/0.035/0.021, moss + bilberry
                     // 0.034/0.049/0.019 (WORKING_VALUE, judged against the CC0 Tysiąclecia photos); patches from the

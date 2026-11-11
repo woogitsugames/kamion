@@ -11,6 +11,10 @@ namespace Game.Vehicle.Runtime
     /// </summary>
     public static class MirrorOptics
     {
+        /// <summary>ADR 0112: downward cameras must retain the cab roof between the virtual eye and the glass.</summary>
+        public static float NearClipFor(int mirrorClass, float eyeToGlassDistance, bool legacy = false) =>
+            !legacy && (mirrorClass == 5 || mirrorClass == 6) ? 0.1f : Mathf.Max(0.1f, eyeToGlassDistance * 0.98f);
+
         public struct View
         {
             public Vector3 position, forward, up, right;

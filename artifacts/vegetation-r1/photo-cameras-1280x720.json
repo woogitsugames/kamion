@@ -1,0 +1,44 @@
+{
+  "schema": "kamion/sbs-cameras/1",
+  "frame": "E,N,absolute U",
+  "cameras": [
+    {
+      "id": "sbs-g3-a-2948595898752384",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        537.0445,
+        -701.8343,
+        147.2755
+      ],
+      "look_at": [
+        502.1718,
+        -682.546,
+        150.7185
+      ],
+      "fov_deg": 38.52954,
+      "segment": "G3-A",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-150280503737744",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -275.2184,
+        -214.0732,
+        132.4223
+      ],
+      "look_at": [
+        -245.9429,
+        -241.107,
+        135.903
+      ],
+      "fov_deg": 39.99889,
+      "segment": "G3-B",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    }
+  ]
+}

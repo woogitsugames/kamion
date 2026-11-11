@@ -1145,6 +1145,112 @@
       "hf_ratio_albedo": 0.0069,
       "ao_mean": 1.0
     },
+    "car_grime_clean": {
+      "tile_m": [
+        5.0,
+        2.5
+      ],
+      "slots": [
+        "car_paint_silver",
+        "car_paint_grey",
+        "car_paint_black",
+        "car_paint_white",
+        "car_paint_white2",
+        "car_paint_blue",
+        "car_paint_red"
+      ],
+      "note": "R4 clean lower shell; original upper dust/runs/peel and calibration retained. Road deposition is instance-driven.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            512
+          ],
+          "texel_mm": 4.88,
+          "dir": "car_grime_clean/High",
+          "png_bytes": 2017205,
+          "files": [
+            "T_car_grime_clean_BaseColor.png",
+            "T_car_grime_clean_MaskMap.png",
+            "T_car_grime_clean_Normal.png",
+            "T_car_grime_clean_Var.png"
+          ],
+          "smoothness_mean": 0.621,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1244310
+        },
+        "Medium": {
+          "res": [
+            512,
+            256
+          ],
+          "texel_mm": 9.77,
+          "dir": "car_grime_clean/Medium",
+          "png_bytes": 467164,
+          "files": [
+            "T_car_grime_clean_BaseColor.png",
+            "T_car_grime_clean_MaskMap.png",
+            "T_car_grime_clean_Normal.png",
+            "T_car_grime_clean_Var.png"
+          ],
+          "smoothness_mean": 0.621,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 242920
+        },
+        "Low": {
+          "res": [
+            256,
+            128
+          ],
+          "texel_mm": 19.53,
+          "dir": "car_grime_clean/Low",
+          "png_bytes": 103603,
+          "files": [
+            "T_car_grime_clean_BaseColor.png",
+            "T_car_grime_clean_MaskMap.png",
+            "T_car_grime_clean_Normal.png",
+            "T_car_grime_clean_Var.png"
+          ],
+          "smoothness_mean": 0.621,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 43690
+        }
+      },
+      "height_range_m": [
+        -6e-05,
+        7e-05
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5184,
+        "p05": 0.5069,
+        "p95": 0.5342,
+        "mean_rgb_linear": [
+          0.5217,
+          0.5183,
+          0.511
+        ]
+      },
+      "hf_ratio_albedo": 0.0255,
+      "ao_mean": 1.0
+    },
     "concrete_cast_5m_joints": {
       "tile_m": [
         10.0,

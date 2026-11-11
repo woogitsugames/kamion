@@ -177,26 +177,27 @@ def test_life_prototypes_budget_and_lods():
 
 
 def test_parked_cars_road_film_glass_mask_and_wheels():
-    """ADR 0041 par. 8: every car / van carries one road-film level on LOD0 and LOD1 (all three levels occur in the
-    fleet), LOD0 glazing uses the car-glass shader with a dust mask in UV0, wheels vary, materials exist."""
+    """ADR0089: painted-shell metre UVs carry per-instance film without an alpha skin. Glass masks,
+    varied wheels and legacy decal texture contracts remain valid."""
     import numpy as np
     from streetscape import export as E
     from streetscape import life_cars as LC
     from streetscape import life_props as LP
     from streetscape.materials import M
-    levels, wheels = set(), set()
+    wheels = set()
     for k, v in LP.build_all().items():
         if not k.startswith(("car_", "van_")):
             continue
         m0 = {p["mat"]: p for p in v[0].out()}
         m1 = {p["mat"]: p for p in v[1].out()}
         assert set(m0) | set(m1) <= set(M), k
-        film = [x for x in m0 if x.startswith("car_dirt_")]
-        assert len(film) == 1 and film[0] in m1, k
-        levels.add(film[0])
-        f = m0[film[0]]
-        assert f["UV"][:, 1].min() >= 0.0 and f["UV"][:, 1].max() <= 1.0 + 1e-9
-        assert f["V"][:, 2].min() > 0.15 and f["V"][:, 2].max() < 1.25, k        # sills .. below the belt line
+        assert not any(x.startswith("car_dirt_") for x in set(m0) | set(m1)), k
+        for mm in (m0, m1):
+            paint = [(n, p) for n, p in mm.items() if n.startswith("car_paint_")]
+            assert paint, k
+            for name, primitive in paint:
+                assert M[name]["texture_set"] == "car_grime_clean" and len(M[name]["paint"]) == 4
+                assert np.allclose(primitive["UV"], primitive["V"][:, [1, 2]]), (k, name)
         g = np.array(m0["car_glass_tint"]["UV"], float)
         pv = np.abs(g[:, 0]) > 2.0                                                # privacy panes: u offset (par. 9)
         ln = np.abs(g[:, 0]) > 6.0                                                # clear lamp covers (r10, LENS_U)
@@ -209,7 +210,7 @@ def test_parked_cars_road_film_glass_mask_and_wheels():
         assert pv.any() == (LC._style(k[4:])["privacy"] and not k.startswith("van_")), k
         assert "car_glass_tint" not in m1 and "car_lamp" in m0
         wheels.add(LC._style(k[4:])["wheel"])
-    assert levels == {"car_dirt_1", "car_dirt_2", "car_dirt_3"} and len(wheels) >= 3
+    assert len(wheels) >= 3
     assert M["car_glass_tint"]["shader"] == "car_glass" and M["car_glass_tint"]["rough"] <= 0.1
     assert M["car_dirt_1"]["alpha"] < M["car_dirt_2"]["alpha"] < M["car_dirt_3"]["alpha"]
     a = np.asarray(E.car_dirt_png())[:, :, 3] / 255.0

@@ -1,0 +1,65 @@
+﻿{
+    "scope":  "Read-only exported LOD0 FBX; central dash ROI, not exact part selection. Excludes UV density \u003c=1; no statement about AO or edge regions.",
+    "bounds":  {
+                   "y":  [
+                             1.08,
+                             1.34
+                         ],
+                   "z":  [
+                             2.04,
+                             2.14
+                         ],
+                   "x":  [
+                             0.1,
+                             1
+                         ]
+               },
+    "triangles":  707,
+    "maximumAnisotropy":  1.4530902253514597,
+    "worst":  [
+                  {
+                      "object":  "CAB_Interior_LOD0",
+                      "centre":  [
+                                     0.8692966103553772,
+                                     1.0837036768595378,
+                                     2.128725051879883
+                                 ],
+                      "anisotropy":  1.4530902253514595,
+                      "uv_per_m_min":  8.659065203569613,
+                      "uv_per_m_max":  12.58240300798795
+                  },
+                  {
+                      "object":  "CAB_Interior_LOD0",
+                      "centre":  [
+                                     0.4715813398361206,
+                                     1.2427141666412354,
+                                     2.130086978276571
+                                 ],
+                      "anisotropy":  1.4494920747268372,
+                      "uv_per_m_min":  8.680831759121592,
+                      "uv_per_m_max":  12.582796836883775
+                  },
+                  {
+                      "object":  "CAB_Interior_LOD0",
+                      "centre":  [
+                                     0.8684451381365458,
+                                     1.2427475055058796,
+                                     2.1301124890645347
+                                 ],
+                      "anisotropy":  1.448794089447471,
+                      "uv_per_m_min":  8.68489316277901,
+                      "uv_per_m_max":  12.582621881716982
+                  },
+                  {
+                      "object":  "CAB_Interior_LOD0",
+                      "centre":  [
+                                     0.9771375060081482,
+                                     1.1153791348139446,
+                                     2.119047244389852
+                                 ],
+                      "anisotropy":  1.4479521714897194,
+                      "uv_per_m_min":  11.586631273491118,
+                      "uv_per_m_max":  16.776887912702158
+                  }
+              ]
+}
