@@ -65,3 +65,7 @@ Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20
 Import zakończony poprawnie: 64 chunki, Low+High; EditMode wystartował po oddzielnym Acquire. Dla J1 zapisano rozbieżności oryginalnego kompasu i SfM (około 50 stopni w dwóch kadrach), alternatywne pozycje GPS oraz roboczy horyzont 326454 równy około 0,891. Nie zmieniono przyjętych kamer.
 Odtwarzalne sondy obejmują teraz J2, sześć J1 i dwa kadry Commons, po maksymalnie dziewięć wariantów na zdjęcie. Generowanie samych danych prób to lekkie przeliczenie JSON, bez regeneracji świata ani testów GIS.
 Następny krok po baseline: pwsh -NoProfile -File artifacts/sbs-r1/render-pose-probes.ps1
+## Świeży baseline i EditMode
+EditMode: 261/261 zaliczone, 0 błędów. Baseline Low overcast: 42 rendery, 25 par dowodowych B i 17 odrzuconych C. Oddzielny zestaw diagnostyczny zawiera wszystkie 42 pary i nie stanowi dowodu zaliczenia bramki. Wszystkie mają zarejestrowane SHA źródeł i renderów.
+Kolejne składanie dużych partii SBS także obejmuje pula heavy; slot Unity jest wcześniej zwalniany, więc nie rezerwujemy obu pul jednocześnie. Parser wrapperów zaliczony.
+Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/render-pose-probes.ps1

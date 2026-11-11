@@ -87,8 +87,13 @@ try {
                     } finally { Restore-UnitySideEffects; & pwsh -NoProfile -File $slotScript -Release -Owner $SlotOwner }
                 }
             }
-            & uv run --project tools/refs python tools/refs/sbs_gate3.py compose --renders $renderDir --output (Join-Path $output "sheets/$tier-$light")
-            if ($LASTEXITCODE -ne 0) { throw "Incomplete evidence: $tier $light" }
+            $heavyOwner = (& git branch --show-current).Trim()
+            & pwsh -NoProfile -File $slotScript -Acquire -Pool heavy -Owner $heavyOwner -PollSeconds 7 -StaleHours 87600
+            if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
+            try {
+                & uv run --project tools/refs python tools/refs/sbs_gate3.py compose --renders $renderDir --output (Join-Path $output "sheets/$tier-$light")
+                if ($LASTEXITCODE -ne 0) { throw "Incomplete evidence: $tier $light" }
+            } finally { & pwsh -NoProfile -File $slotScript -Release -Pool heavy -Owner $heavyOwner }
         }
     }
 } finally { Pop-Location }

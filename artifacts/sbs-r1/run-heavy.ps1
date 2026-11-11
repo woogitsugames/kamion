@@ -1,7 +1,10 @@
 param(
-    [Parameter(Mandatory)][ValidateSet('World','Materials','Fidelity','TestFile','FinalGis','PrepareSbs')][string]$Task,
+    [Parameter(Mandatory)][ValidateSet('World','Materials','Fidelity','TestFile','FinalGis','PrepareSbs','ComposeSbs')][string]$Task,
     [string]$TestFile,
     [string]$Only,
+    [string]$RenderDir,
+    [string]$OutputDir,
+    [switch]$IncludeRejected,
     [switch]$EndOfRound
 )
 $ErrorActionPreference='Stop'
@@ -25,6 +28,11 @@ try {
             Fidelity {uv run --project tools/worldgen python tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art artifacts/sbs-r1/fidelity}
             TestFile {uv run --project tools/worldgen python -m pytest $TestFile -q}
             FinalGis {uv run --project tools/worldgen python -m pytest tests/gis -q}
+            ComposeSbs {
+                if(!$RenderDir -or !$OutputDir){throw 'RenderDir and OutputDir required'}
+                if($IncludeRejected){uv run --project tools/refs python tools/refs/sbs_gate3.py compose --renders $RenderDir --output $OutputDir --include-rejected}
+                else {uv run --project tools/refs python tools/refs/sbs_gate3.py compose --renders $RenderDir --output $OutputDir}
+            }
             PrepareSbs {uv run --project tools/refs python tools/refs/sbs_gate3.py prepare}
         }
         $taskExit=$LASTEXITCODE
