@@ -303,7 +303,12 @@ def main(argv=None):
             oc = Mx.ortho_lane_count(ctx, c, max(sp[0], c.t_a), min(sp[1], c.length - c.t_b), edge_rows.get(eid, []))
         lanes_osm = lc["osm"].get("lanes")
         truth, tsrc = None, None
-        if lanes_osm and lanes_osm.isdigit():
+        sec_ = ctx.net.sections.get(eid)
+        if sec_ is not None and getattr(sec_, "lane_edges", None):
+            # ADR 0095: lanes measured on the 0.08 m orthophoto (authored lane_edges with evidence) outrank the OSM
+            # lanes tag where the two differ (a turn lane that ends, a ramp counted as a third lane)
+            truth, tsrc = int(sec_.lanes), f"orthophoto:{sec_.provenance.get('authored_override')}"
+        elif lanes_osm and lanes_osm.isdigit():
             truth, tsrc = int(lanes_osm), "osm"
         elif oc and oc["agree"] >= 0.6 and (oc["lanes"] >= 2 or lc["gen"]["oneway"]):
             # an unmarked two-way road shows no separator line: paint cannot tell 1 from 2 lanes there

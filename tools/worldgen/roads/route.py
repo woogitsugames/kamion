@@ -41,6 +41,10 @@ JOINT_MILD_TURN_DEG = 60.0
 # ran 2.9 m (Rondo Biezenstwa, E 559 N -689) / 1.0 m (Rondo Putry, E -535 N 52) off the carriageway in
 # tests/physics/test_swept_path_gate3 (was 1.1 m / clear on the OSM axes). A truck straddles the ring lanes anyway.
 RING_BLEND_M = 30.0          # WORKING_VALUE
+RING_HOLD_M = 12.0           # WORKING_VALUE: axis held this far from the ring before the blend (the trailer is still
+                             # off-tracking through the exit corner)
+RING_JOINT_ROUND_M = 2.0     # corner rounding at ring joints: the ring / arm axes meet at the node, a longer Bezier
+                             # only cuts the inner corner
 
 
 def _seg_x(p, q, a, b):
@@ -181,8 +185,8 @@ def lane_route(net, path_edges, node_xy, step=2.0):
         if sec.roundabout:
             lat[:] = 0.0
         elif sec.oneway:
-            lat *= _smoothstep((ring_before[i_e] + np.abs(ss - s0)) / RING_BLEND_M) * \
-                _smoothstep((ring_after[i_e] + np.abs(s1 - ss)) / RING_BLEND_M)
+            lat *= _smoothstep((ring_before[i_e] + np.abs(ss - s0) - RING_HOLD_M) / RING_BLEND_M) * \
+                _smoothstep((ring_after[i_e] + np.abs(s1 - ss) - RING_HOLD_M) / RING_BLEND_M)
         P = c.line.offset_point(ss, lat)
         hw = np.asarray(c.hw_at(ss), float)
         if pieces:
@@ -213,7 +217,9 @@ def lane_route(net, path_edges, node_xy, step=2.0):
         gap = b - a
         g = float(np.hypot(*gap))
         if turn > LANE_CHANGE_MAX_TURN_DEG:
-            corners.append((k, JOINT_ROUND_MILD_M if turn <= JOINT_MILD_TURN_DEG else JOINT_ROUND_M))
+            ring = net.sections[E[k - 1]].roundabout or net.sections[E[k]].roundabout
+            corners.append((k, RING_JOINT_ROUND_M if ring else
+                            JOINT_ROUND_MILD_M if turn <= JOINT_MILD_TURN_DEG else JOINT_ROUND_M))
             continue
         if g < 0.3:
             continue
