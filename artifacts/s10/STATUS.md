@@ -823,3 +823,10 @@ exception allowed solely with allbaselinePNG/otherfunction+source hashes exact,
 missing/fallback failclosed and versioned readyrecord. No generic stale bypass.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
 Review D actualASTC/16QA and G smallP0focus; final acceptance still pending.
+Step 73: ROOT independently read actual private packedPNG/source1024 arrays:
+16GBA tiles exact, R nearest4x exact, SHA604496bf...40e070 matches, inputSHA
+verified. Proof saved without committing PNG; actualASTC/images stillpending.
+G WIP23acda0d now records active7files/17newtests/76PASS, CPUworld396.4s and
+upperPNGedge failed3132components. Approvedgutter testedagainstactualTile/UVwrap
+before candidateimport; no false upper/allmip parity claim. NEXT COMMAND:
+Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
