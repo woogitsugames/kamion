@@ -199,18 +199,6 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
 KERB_TOP_UV_MAX_W = 0.4
 
 
-def _grass_uv(P, key):
-    """ADR 0100 (REVIEW s10-0095 P1-11): plan-metre UV of a grass strip rotated and offset by a hash of the strip id.
-    With the plain world UV every median showed the same 3 m tile repeating along it in the same direction (a "W"
-    zigzag readable from above and from a high cab); rotation / offset per strip breaks the alignment. Metres kept."""
-    import hashlib
-    h = hashlib.sha1(f"{key}:grass_uv".encode()).digest()
-    a = (h[0] / 255.0) * math.pi
-    ox, oy = h[1] / 255.0 * 3.0, h[2] / 255.0 * 3.0
-    ca, sa = math.cos(a), math.sin(a)
-    return np.column_stack([ca * P[:, 0] - sa * P[:, 1] + ox, sa * P[:, 0] + ca * P[:, 1] + oy])
-
-
 def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
     """G: gutter points (n,2), OUT: unit outward vectors (n,2) (may be miter-scaled), zg gutter z,
     params: per-point side params, kap_toward: curvature toward this side (>0 = side is inside)."""
@@ -267,8 +255,6 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
         elif mat == "curb_concrete" and abs(profs[0][k][2] - profs[0][k][0]) <= KERB_TOP_UV_MAX_W:
             # kerb top: u along (1 m segment joints)
             UV = np.column_stack([np.repeat(along, 2), np.tile([0.0, 1.0], n) * abs(profs[0][k][2] - profs[0][k][0])])
-        elif mat == "verge_grass":
-            UV = _grass_uv(V[:, :2], src)
         else:
             UV = V[:, :2].copy()
             if mat == "curb_concrete":
