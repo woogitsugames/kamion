@@ -10,3 +10,6 @@ NEXT: pwsh scripts/sbs-gate3.ps1 -EditMode
 
 Step 4: ADR 0103 documents commands, coordinate/FOV contract, calibration, licence and coverage limits. Composer now draws histograms, checks photo hashes and supports authored sky/asphalt polygons. 6 focused tests pass. Main Library copied (robocopy exit 1 = success). Guarded render/EditMode runner started and is waiting for PHONE_RUN; no Unity launched.
 NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10
+
+Step 5: PowerShell syntax and Python compilation pass; 7 focused tests (including mask overlap/area) pass. NumPy declared directly in refs dependencies. Coverage measured: G3-A stations 340.426–436.716 m (20 photos, max offset 28.235 m), G3-B 0–485.862 m (20 photos, max offset 33.732 m). Owner confirms phone test still active; continue waiting without touching lock.
+NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10

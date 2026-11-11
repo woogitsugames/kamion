@@ -76,3 +76,14 @@ def test_luma_histogram_counts_all_pixels_and_empty_asphalt_is_null():
     m=sbs.measurements(Image.new('RGB',(30,20),'white'),0.5)
     assert sum(m['histogram_32'])==600
     assert m['sky_asphalt_ratio_estimate'] is None
+
+
+def test_authored_area_masks_and_overlap_rejection():
+    top=[[0,0],[1,0],[1,0.4],[0,0.4]]
+    bottom=[[0,0.6],[1,0.6],[1,1],[0,1]]
+    im=Image.new('RGB',(100,100),'gray')
+    m=sbs.measurements(im,0.5,{'sky':[top],'asphalt':[bottom]})
+    assert m['sky_asphalt_ratio_estimate']==pytest.approx(1,abs=0.05)
+    assert m['mask_method'].startswith('authored')
+    with pytest.raises(ValueError,match='overlap'):
+        sbs.measurements(im,0.5,{'sky':[top],'asphalt':[top]})

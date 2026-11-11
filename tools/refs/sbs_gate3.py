@@ -124,6 +124,10 @@ def prepare(count=20, radius=40):
             with Image.open(photo) as im:
                 width, height = im.size
             ov = overrides.get(camera_id, {})
+            allowed = {'east_delta_m','north_delta_m','eye_height_m','absolute_u_m','heading_delta_deg',
+                       'horizontal_fov_deg','horizon_y_fraction','pose_status','note','masks'}
+            if set(ov)-allowed:
+                raise ValueError(f"unknown authored corrections for {camera_id}: {sorted(set(ov)-allowed)}")
             e = x-origin['x'] + ov.get('east_delta_m', 0)
             n = y-origin['y'] + ov.get('north_delta_m', 0)
             eye = ov.get('eye_height_m', 2.2)
@@ -148,7 +152,9 @@ def prepare(count=20, radius=40):
                          'assumptions': 'NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.',
                          'authored_overrides': ov})
     write(REGION / 'sbs_cameras.json', {'schema': 'kamion/sbs-cameras/1', 'frame': 'E,N,absolute U', 'cameras': cameras})
-    write(REGION / 'sbs_references.json', {'schema': 'kamion/sbs-references/1',
+    input_hashes={name:hashlib.sha256((REGION/name).read_bytes()).hexdigest()
+                  for name in ('region.yaml','terrain.json','gate3_segment.json')}
+    write(REGION / 'sbs_references.json', {'schema': 'kamion/sbs-references/1', 'input_sha256':input_hashes,
           'source_manifest_sha256': hashlib.sha256(manifest.read_bytes()).hexdigest(), 'references': refs})
     write(config_path, config)
     lines = ['# ADR 0103 — per-photo attribution (reference sheets only)', '',
@@ -160,6 +166,17 @@ def prepare(count=20, radius=40):
         lines.append(f"| {r['camera']} | {r['author']} | {r['captured_at']} | [Mapillary {r['source_id']}]({r['page_url']}) | `{r['sha256']}` |")
     (ROOT/'docs/refs/sbs-gate3-attribution.md').write_text('\n'.join(lines)+'\n', encoding='utf-8')
     OUTPUT.mkdir(parents=True, exist_ok=True)
+    coverage=[]
+    for segment in read(REGION/'gate3_segment.json')['segments']:
+        selected=[r for r in refs if r['segment']==segment['id']]
+        coverage.append({'segment':segment['id'],'photos':len(selected),
+                         'station_min_m':min(r['segment_station_m'] for r in selected),
+                         'station_max_m':max(r['segment_station_m'] for r in selected),
+                         'segment_length_m':round(LineString(segment['points_en']).length,3),
+                         'max_distance_to_route_m':max(r['route_distance_m'] for r in selected),
+                         'authors':sorted({r['author'] for r in selected}),
+                         'verified_poses':sum(r['pose_status']=='VERIFIED' for r in selected)})
+    write(OUTPUT/'coverage.json',{'segments':coverage,'note':'Station range is not continuous photo coverage.'})
     contact(refs)
     print(f'Prepared {len(cameras)} distinct photo cameras; pose calibration still required.')
 
@@ -254,7 +271,9 @@ def compose(render_dir, outdir, strict=True):
             d.line(points,fill=color,width=2)
         d.text((24,height+99),'sRGB luma histogram: blue PHOTO / orange RENDER (32 bins, normalized)',fill='white')
         sheet.save(outdir/(r['camera']+'.png'))
-    write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'gate_status':'UNVERIFIED'})
+    write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'gate_status':'UNVERIFIED',
+          'cameras_sha256':hashlib.sha256((REGION/'sbs_cameras.json').read_bytes()).hexdigest()
+              if (REGION/'sbs_cameras.json').exists() else None})
     print(f'Composed {len(metrics)} pairs; missing {len(missing)} renders.')
     if strict and missing:
         raise SystemExit(2)
