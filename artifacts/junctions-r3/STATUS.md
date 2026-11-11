@@ -41,3 +41,6 @@ scripts = narzędzia r2 + zones_plan.py; logs). „Przed” = main b12 z ADR 009
   (znana 0082). Kerb rise ≥ 0,25 m: 1 (j:n1847317049:corner0 E −983 N 66,5 — poza trasą). Override'y 94 zastosowane / 0 nieaktualnych;
   farba autorska 20/20. Czekam na zdjęcie PHONE_RUN (od 10:48).
   NASTĘPNY KROK: jak wyżej (import-region → visual-qa).
+- b5 (sha 704c50d6): deduplikacja barier < 1 m (furniture `_dedup_guardrail`; pominięte 24 m, autorskie 36 m). Testy b5: kluczowe 51/51,
+  `test_streetscape.py` + `test_world_roads.py` 74/74. ADR 0100 uzupełniony (liczby bez Unity). PHONE_RUN nadal aktywny.
+  NASTĘPNY KROK: (bez PHONE_RUN) `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` → visual-qa jak wyżej (renders_b5).
