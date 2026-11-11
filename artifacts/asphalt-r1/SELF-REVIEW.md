@@ -1,6 +1,6 @@
 # Samokontrola obrazu, r1b / candidate2
 
-Obejrzano 6 arkuszy zdjęcie | render w `review-candidate2-960`: po 3 referencje dla Low i High, overcast. Obejrzano też pełne podglądy Low starej drogi, nowej drogi, świeżej i starej łaty oraz SBS 150280503737744. Dokończono oględziny wszystkich 8 arkuszy przed | po w tym katalogu. Pełne contact sheets pozostałych kamer wymagają jeszcze kontroli po analizie liczników.
+Obejrzano 6 arkuszy zdjęcie | render w `review-candidate2-960`: po 3 referencje dla Low i High, overcast. Obejrzano też pełne podglądy Low starej drogi, nowej drogi, świeżej i starej łaty oraz SBS 150280503737744. Dokończono oględziny wszystkich 8 arkuszy przed | po w tym katalogu. Pełne contact sheets wszystkich kamer obejrzano po analizie liczników; szczegóły poniżej.
 
 Stara jezdnia ma wyraźniejsze ciemne ślady kół. W SBS 150280503737744 ślady są teraz widoczne z kamery trasy, lecz na zdjęciu kontrast i lokalne ciemne plamy nadal są mocniejsze. Tonu nie można porównywać jako fizycznego albedo: zdjęcie ma inne światło, ekspozycję, datę i pozę. Referencje 303305168125936 i 454716650857984 pokazują bardziej równy, ciemny asfalt wiaduktu; render ma mocniejsze powtarzalne pasma. Ujęcia mają różne horyzonty, więc nie są dowodem dokładnego dopasowania do zdjęcia.
 
@@ -14,3 +14,4 @@ Wynik: poprawa czytelności części materiałów, ale jeszcze nie pełny wizual
 
 
 Obejrzano wszystkie 28 contact sheets comparison-candidate2-960: po 7 stron dla Low/High i overcast/clear. Obejmują 312 par obrazów ze wszystkich 78 kamer. Na małych miniaturach nie widać przesunięcia geometrii, zmian kadru ani rozległych usterek poza opisanymi materiałami. W clear różnica asfaltu jest mniej kontrastowa niż w overcast; w ujęciach pod wiaduktem ślady są mocno podłużne. W kamerach kabiny i pojazdów nawierzchnia zajmuje niewielką część obrazu, więc ten przegląd wykrywa tylko duże regresje; nie potwierdza jakości drobnej faktury. Drobny wzór przy krawężniku oceniono osobno w natywnych wycinkach. Wszystkie liczniki candidate2 mają delta 0, ale budżet GPU nadal UNVERIFIED.
+

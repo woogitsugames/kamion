@@ -8,4 +8,5 @@ Stara droga ma wyraźniejsze miękkie ślady kół. Referencja 150280503737744 u
 
 Drobny falisty wzór przy krawężniku jest widoczny w kontroli natywnej. Wyłączenia poszczególnych warstw go nie usunęły, przyczyny nie ustalono. Krytyk nie potwierdził jednoznacznego moiré na arkuszach 960 px; taki rozmiar nie rozstrzyga stabilności w ruchu. Low i High mają podobne ograniczenia.
 
-EditMode 275/275 passed. Pełne końcowe testy i pomiary liczbowe pozostają w toku; ich wynik będzie w REPORT.md. A16 UNVERIFIED, telefonu nie używano. Wartości wizualne WORKING_VALUE. Ta recenzja nie daje zgody na bezwarunkową integrację.
+EditMode 275/275 passed. Autor obejrzał ponadto wszystkie 28 contact sheets dla 312 par z 78 kamer w czterech warunkach. Liczniki candidate2: wszystkie mesh/instance delta 0. Pomiar kontrastu ślad/środek w Low overcast zmienił się z 1,045/1,033 na 0,970/0,972, wobec około 0,67 na jednej fotografii; poprawa nie dowodzi osiągnięcia docelowego kontrastu. Pełne końcowe testy pozostają w toku, ich wynik będzie w REPORT.md. A16 UNVERIFIED, telefonu nie używano. Wartości wizualne WORKING_VALUE. Ta recenzja nie daje zgody na bezwarunkową integrację.
+
