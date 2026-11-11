@@ -1,6 +1,9 @@
 ﻿param([string]$Stage='before')
 $ErrorActionPreference='Stop'
 Set-Location 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation'
+if ($Stage -eq 'before' -and (Test-Path artifacts/vegetation-r1/REIMPORT-REQUIRED.txt)) {
+ throw 'Baseline reimport required: restore the missing photographic asphalt dependency before comparison.'
+}
 . artifacts/vegetation-r1/checkpoint.ps1
 foreach($tier in @('Low','High')) { foreach($lighting in @('overcast','clear')) {
   $scene=if($tier -eq 'High') {'WorldC_High'} else {'WorldC'}
