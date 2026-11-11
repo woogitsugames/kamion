@@ -306,6 +306,41 @@ def _box5(m, mat, c, hx, hy, hz, skip):
             _oq(m, mat, q, nrm)
 
 
+def payload(vertices, dimensions):
+    """Signed height above sill and affine axle coordinate, no geometry change.
+
+    The second coordinate is deliberately broad. Vertex interpolation cannot resolve
+    detailed spray silhouettes on the existing sparse topology.
+    """
+    v = np.asarray(vertices)
+    y = v[:, 1]
+    front = dimensions['L'] / 2 - dimensions['foh']
+    rear = front - dimensions['wb']
+    return np.column_stack([v[:, 2] - dimensions['sill'], (y-rear)/dimensions['wb']])
+
+
+def longitudinal_weight(axle_coordinate):
+    u = np.asarray(axle_coordinate)
+    front = np.clip(1-np.abs(u-.87)/.28,0,1)
+    rear = np.clip(1-np.abs(u+.13)/.28,0,1)
+    rear_face = np.clip((-u-.20)*8,0,1)
+    return np.maximum(np.maximum(front,rear),rear_face)
+
+
+def paint_deposition(primitives, prototype):
+    """R4 data-only adapter after normal splitting; leave every existing array intact."""
+    name = prototype.removeprefix('car_')
+    body = name.split('_')[0]
+    dimensions = VAN if body == 'van' else CARS.get(body)
+    if dimensions is None:
+        return primitives
+    result = []
+    for primitive in primitives:
+        if primitive['mat'].startswith('car_paint_'):
+            primitive = dict(primitive, UV1=payload(primitive['V'], dimensions))
+        result.append(primitive)
+    return result
+
 def _paint_uv(m):
     """UV of every car_paint_* primitive = (y, z) in metres (side projection), so the car_grime set puts road
     film on the sills and bumpers and dust on the roof whatever helper built the part."""

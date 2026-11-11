@@ -168,7 +168,8 @@ Shader "Kamion/World PBR"
                 uint2 cell = (uint2)(int2)floor((originXZ - _KamionGIRect.xy) * 4.0 + 0.37);
                 uint h = cell.x * 1664525u + cell.y * 1013904223u;
                 h ^= h >> 16; h *= 2246822519u; h ^= h >> 13;
-                return float2((h >> 30) * (1.0 / 3.0), (h & 1023u) * (1.0 / 1024.0));
+                uint level = h < 429496730u ? 0u : (h < 1932735283u ? 1u : (h < 3435973837u ? 2u : 3u));
+                return float2(level * (1.0 / 3.0), (h & 1023u) * (1.0 / 1024.0));
             }
             #endif
 
@@ -278,27 +279,23 @@ Shader "Kamion/World PBR"
                 half carFilmOpacity = 0.0h;
                 if (_CarFlake.w > 0.5)
                 {
-                    // Recover the old car_grime lower-body multiplier before applying instance film. Removing
-                    // only the alpha overlay left its second brown band behind, even on a "clean" instance.
-                    half legacyFilm = saturate((0.68h - mask.a) / 0.35h) * (1.0h - smoothstep(1.3, 1.5, um.y));
+                    // WORKING_VALUE: source UV1 is height above the actual class sill
+                    // and an affine rear=0/front=1 axle coordinate. No film inversion.
+                    half amount = 0.08h + 0.92h * i.carFilm.x;
+                    half falloff = 0.16h + 0.06h * i.carFilm.x;
+                    half vertical = exp2(-max(i.uv.z, 0.0) / falloff * 1.442695h);
                     half keepUpper = smoothstep(0.45h, 0.85h, abs(n.y)) * smoothstep(0.6, 0.8, um.y);
-                    half removedFilm = legacyFilm * (1.0h - keepUpper);
-                    base.rgb /= max((1.0h - 0.30h * removedFilm) * half3(1.0h, 1.0h - 0.08h * removedFilm, 1.0h - 0.22h * removedFilm), 0.2h);
-                    mask.a = saturate(mask.a + 0.35h * removedFilm);
-                    // WORKING_VALUE road-grit deposition: bounded sill height/opacity, existing modulation
-                    // pattern with a per-instance phase. Bonnet/roof detail remains independent of road spray.
-                    // Divide out the height envelope to retain the existing fan/drop variation as spray patches,
-                    // rather than restoring the old uniform sill stripe. No additional texture sample/noise layer.
-                    half expectedFilm = max(1.0h - smoothstep(0.15h, 0.95h, um.y), 0.08h);
-                    half sprayPatch = smoothstep(0.25h, 1.50h, legacyFilm / expectedFilm);
-                    half top = lerp(0.35h, 0.70h, i.carFilm.x);
-                    carFilmOpacity = sprayPatch * i.carFilm.x * (1.0h - smoothstep(top - 0.14h, top + 0.12h, um.y)) * 0.75h * (1.0h - keepUpper);
+                    half frontTrail = saturate(1.0h - abs(i.uv.w - 0.87h) / 0.28h);
+                    half rearTrail = saturate(1.0h - abs(i.uv.w + 0.13h) / 0.28h);
+                    half rearFace = saturate((-i.uv.w - 0.20h) * 8.0h);
+                    half deposition = max(max(frontTrail, rearTrail), rearFace);
+                    carFilmOpacity = 0.5h * amount * vertical * (0.72h + 0.28h * deposition) * (1.0h - keepUpper);
                     mask.a = lerp(mask.a, 0.25h, carFilmOpacity);
                 }
                 #endif
                 half3 albedo = base.rgb * _Tint.rgb * _AlbedoScale;
                 #if defined(_CARPAINT)
-                albedo = lerp(albedo, half3(0.140h, 0.136h, 0.128h), carFilmOpacity);
+                albedo = lerp(albedo, half3(0.240h, 0.230h, 0.205h), carFilmOpacity);
                 #endif
                 half smooth = mask.a * _SmoothnessScale;
                 half ao = mask.g;

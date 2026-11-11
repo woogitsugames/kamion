@@ -196,7 +196,7 @@ def test_parked_cars_road_film_glass_mask_and_wheels():
             paint = [(n, p) for n, p in mm.items() if n.startswith("car_paint_")]
             assert paint, k
             for name, primitive in paint:
-                assert M[name]["texture_set"] == "car_grime" and len(M[name]["paint"]) == 4
+                assert M[name]["texture_set"] == "car_grime_clean" and len(M[name]["paint"]) == 4
                 assert np.allclose(primitive["UV"], primitive["V"][:, [1, 2]]), (k, name)
         g = np.array(m0["car_glass_tint"]["UV"], float)
         pv = np.abs(g[:, 0]) > 2.0                                                # privacy panes: u offset (par. 9)

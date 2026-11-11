@@ -88,6 +88,7 @@ namespace Game.World.Import
             string uv = s != null ? Str(s.Get("uv")) ?? "" : "";
             if ((kind == "modulation_set" || uv.StartsWith("mesh_uv0")) && def.Get("uv") as string != "planar") uv0 = true;
             if (def.Get("uv1") as string == "along_m") uv1 = true;
+            if (id.StartsWith("car_paint_") && def.Get("paint") is List<object>) uv1 = true; // R4 source deposition payload
             if (id == "road_asphalt" || id == "road_asphalt_new") uv1 = true;           // _ROADWEAR
             if ((id.StartsWith("hall_wall") || Runoff(def) || (def.Get("runoff") is bool ro && ro)) && Set("parapet_runoff") != null) uv1 = true;   // _RUNOFF (wall-top space): 0071 `weather` + 0081 `runoff`
             if (id == "decal_patch" || id == "decal_oil" || id == "decal_tyre") { uv0 = true; uv1 = true; }
