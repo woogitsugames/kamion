@@ -62,3 +62,5 @@ Zadanie heavy TestFile zakończone kodem 0. Log: C:\Users\matma\Documents\Claude
 
 
 Krok 19: dodano preflight ustawień przed nowymi uruchomieniami Unity; przy wcześniejszych niezacommitowanych zmianach start zostaje odrzucony bez ich cofania. Pełny restore po Unity pozostaje zgodny z jawnym protokołem użytkownika. Następny krok: zakończyć istniejącą kolejkę i zweryfikować smoke.
+
+Krok 20: niezależny przegląd harnessu wykrył niejednoznaczne wielkości liter tieru i akceptowanie niepełnej sceny. Poprawiono kanonizację nazwy tieru, odrzucanie nieznanych profili, wymaganą liczbę kamer i sprawdzenie EnvironmentLighting/presetu/aktywnego tieru przed OK. Dotychczasowe 35 PNG RCAS wykonał stary renderer, nie ten batch; poprawki dotyczą nadchodzących porównań. Następny krok: smoke potwierdzający zastosowane stany po imporcie.

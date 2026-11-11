@@ -64,6 +64,10 @@ namespace Game.Rendering.Editor
                 {
                     if (job.width <= 0 || job.height <= 0 || string.IsNullOrEmpty(job.output))
                         throw new ArgumentException("Each job needs positive dimensions and an output directory");
+                    int tierIndex = Array.FindIndex(originalTiers,
+                        t => string.Equals(t.name, job.tier, StringComparison.OrdinalIgnoreCase));
+                    if (tierIndex < 0) throw new ArgumentException("Unknown lighting QA tier: " + job.tier);
+                    job.tier = originalTiers[tierIndex].name;
                     foreach (var item in pipelineSnapshots) EditorJsonUtility.FromJsonOverwrite(item.Value, item.Key);
                     foreach (var item in presetSnapshots) EditorJsonUtility.FromJsonOverwrite(item.Value, item.Key);
                     if (job.overrideWhiteClip)
@@ -76,8 +80,7 @@ namespace Game.Rendering.Editor
                     var overrides = (job.rq ?? "").Split(',').Where(s => !string.IsNullOrWhiteSpace(s))
                         .Select(s => s.Split('=')).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
                     RenderOverrides.Parse(k => overrides.TryGetValue(k, out var v) ? v : null);
-                    for (int i = 0; i < profile.tiers.Length; i++)
-                        if (profile.tiers[i].name == job.tier) profile.tiers[i] = RenderOverrides.ApplyTo(profile.tiers[i]);
+                    profile.tiers[tierIndex] = RenderOverrides.ApplyTo(profile.tiers[tierIndex]);
                     Directory.CreateDirectory(job.output);
                     if (job.shadowFilter < 0 || job.shadowFilter > 3) throw new ArgumentException("shadowFilter must be 0..3");
                     Action<QualityProfile.Tier> filter = _ => {
@@ -95,6 +98,17 @@ namespace Game.Rendering.Editor
                     }
                     finally { QualityProfileApplier.Applied -= filter; }
                     if (count <= 0) throw new InvalidOperationException("Job rendered no cameras: " + job.output);
+                    int expected = string.IsNullOrEmpty(job.cameras) ? count : job.cameras.Split(',')
+                        .Select(id => id.Trim()).Where(id => id.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).Count();
+                    if (count != expected) throw new InvalidOperationException($"Incomplete lighting QA: expected={expected}, rendered={count}");
+                    var environment = UnityEngine.Object.FindAnyObjectByType<EnvironmentLighting>();
+                    if (environment == null || environment.Active == null || environment.Model == null)
+                        throw new InvalidOperationException("Lighting QA requires a configured EnvironmentLighting");
+                    if (!string.Equals(environment.Active.name, job.lighting, StringComparison.OrdinalIgnoreCase) &&
+                        !string.Equals(environment.Active.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase))
+                        throw new InvalidOperationException("Requested lighting preset was not applied: " + job.lighting);
+                    if (!QualityProfileApplier.HasCurrent || QualityProfileApplier.Current.name != job.tier)
+                        throw new InvalidOperationException("Requested lighting QA tier was not applied: " + job.tier);
                     total += count;
                     Debug.Log($"LIGHT_QA_JOB: OK rendered={count} tier={job.tier} lighting={job.lighting} rq={job.rq} whiteClipOverride={job.overrideWhiteClip}/{job.whiteClip} shadowFilter={job.shadowFilter} output={job.output}");
                 }
