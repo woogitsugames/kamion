@@ -138,7 +138,7 @@ def _island(lin, P_e, P_x, z_lane, src):
 
 
 CLOSURE_POST_M = 1.5       # m between the steel posts of a closure line (a car is 1.7-1.9 m wide; WORKING_VALUE)
-SCUFF_M = 1.3              # m of kerb round each nose of an island that carries tyre rub (WORKING_VALUE)
+SCUFF_M = 2.2              # m of kerb round each nose of an island that carries tyre rub (WORKING_VALUE)
 
 
 def _side_strip(lin, c, s_k, g, lat_sign, cfg, roads_poly, keep_pt, src):
@@ -178,7 +178,7 @@ def _side_strip(lin, c, s_k, g, lat_sign, cfg, roads_poly, keep_pt, src):
 def _scuffs(buf, poly, zlane, t_axis, key, src):
     """Tyre rub on the kerb at both noses of a raised island (review s9: "wyspa czysta"): a dark band on the kerb top
     edge and on its face over SCUFF_M round the vertices that are extreme along t_axis. `decal_tyre` bands (UV0 =
-    metres along, v inside 0.2..0.8 = hard edge; UV1 = length, strength). Returns the triangle count."""
+    metres along, v inside 0.36..0.64 = full opacity, hard edge; UV1 = length, strength). Returns the triangle count."""
     R = np.asarray(shapely.geometry.polygon.orient(poly, 1.0).exterior.coords)[:-1]
     n = len(R)
     zt = np.asarray(zlane(R), float) + ISLAND_H
@@ -205,17 +205,17 @@ def _scuffs(buf, poly, zlane, t_axis, key, src):
         tt /= np.maximum(np.linalg.norm(tt, axis=1, keepdims=True), 1e-9)
         nout = np.column_stack([tt[:, 1], -tt[:, 0]])               # outward of a CCW ring
         ssl = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
-        strength = 1.1 + 0.4 * DC.hf(*key, e)
-        uv1 = np.column_stack([np.full(2 * m, ssl[-1] + 6.5), np.full(2 * m, strength)])   # +6.5: no end fade on 1.3 m
+        strength = 2.5              # >= 2.5: solid band, no macro break-up (WorldPBR.shader _DECAL_TYRE)
+        uv1 = np.column_stack([np.full(2 * m, ssl[-1] + 6.5), np.full(2 * m, strength)])   # +6.5: no end fade on a short band
         uvu = np.tile(ssl + 2.5, 2)
         T = np.array([(i, i + 1, m + i + 1) for i in range(m - 1)] + [(i, m + i + 1, m + i) for i in range(m - 1)])
         # face: from 15 mm under the top edge down to 0.11 m, 4 mm proud
         Vf = np.vstack([np.column_stack([P + nout * 0.004, Z - 0.11]), np.column_stack([P + nout * 0.004, Z - 0.015])])
-        buf.add("markings", "decal_tyre", Vf, np.column_stack([uvu, np.repeat([0.2, 0.8], m)]), T, src=f"{src}:face{e}",
+        buf.add("markings", "decal_tyre", Vf, np.column_stack([uvu, np.repeat([0.36, 0.64], m)]), T, src=f"{src}:face{e}",
                 UV1=uv1)
         # top edge: 0.10 m of the kerb top
         Vt = np.vstack([np.column_stack([P - nout * 0.002, Z + 0.004]), np.column_stack([P - nout * 0.10, Z + 0.004])])
-        buf.add("markings", "decal_tyre", Vt, np.column_stack([uvu, np.repeat([0.25, 0.75], m)]), T, src=f"{src}:top{e}",
+        buf.add("markings", "decal_tyre", Vt, np.column_stack([uvu, np.repeat([0.3, 0.7], m)]), T, src=f"{src}:top{e}",
                 UV1=uv1)
         tris += 2 * len(T)
     return tris

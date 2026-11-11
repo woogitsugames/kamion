@@ -479,6 +479,9 @@ Shader "Kamion/World PBR"
                     half prof = smoothstep(0.0, 0.55, across);
                     half ends = saturate(i.uv.x / 2.5) * saturate((i.uv.z - i.uv.x) / 4.0);
                     half brk = saturate(0.55 + (macro.a - 0.5) * 2.5 + (macro.g - 0.5));
+                    // ADR 0092: strength >= 2.5 = a solid band (tyre rub on a kerb nose must not vanish where the macro
+                    // mottling happens to be low); driving lines and soil bands (<= 1.5) keep the break-up
+                    brk = max(brk, saturate(i.uv.w - 1.5));
                     albedo = _Tint.rgb;
                     smooth = 0.42 * _SmoothnessScale;
                     ao = 1.0;
@@ -644,7 +647,14 @@ Shader "Kamion/World PBR"
                 specColor = lerp(half3(0.04, 0.04, 0.04), albedo + _CarFlake.z, metal);
             #endif
 
+            #if defined(_PANELTONE)
+                // ADR 0092: the clear preset's sun runs almost along the 180 m dock wall; the receiver then self-shadows
+                // in sawtooth patches (Medium) / soft clouds (High). Normal-offset receiver bias on this wall only, up
+                // to 0.25 m when the sun grazes it (shadows cast on the wall move by less than that).
+                float4 shadowCoord = TransformWorldToShadowCoord(pw + n * (0.03 + 0.22 * saturate(1.0 - abs(dot(n, _MainLightPosition.xyz)) * 3.0)));
+            #else
                 float4 shadowCoord = TransformWorldToShadowCoord(pw);
+            #endif
                 Light L = GetMainLight(shadowCoord, pw, half4(1, 1, 1, 1));
                 half giK, giSun;
                 KamionWorldGI(pw, n, giK, giSun);
