@@ -1,5 +1,5 @@
 param(
-    [Parameter(Mandatory)][ValidateSet('World','Materials','FocusedTests','Fidelity','PhysicsGate3','Compare','Inventory')][string]$Stage,
+    [Parameter(Mandatory)][ValidateSet('World','Materials','FocusedTests','Fidelity','PhysicsGate3','Compare','Inventory','WheelMetrics')][string]$Stage,
     [string]$Label = 'candidate', [string[]]$Tests = @(), [string]$Only = '', [switch]$EndOfRound
 )
 $ErrorActionPreference = 'Stop'
@@ -31,6 +31,7 @@ try {
         'Fidelity' { & uv run --project tools/worldgen python tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art "artifacts/asphalt-r1/$Label-fidelity" *> $log }
         'PhysicsGate3' { & uv run --project tools/worldgen python -m pytest tests/physics tests/gate3 -q *> $log }
         'Compare' { & uv run --project tools/worldgen python artifacts/asphalt-r1/compare.py --after $Label *> $log }
+        'WheelMetrics' { & uv run --project tools/worldgen python artifacts/asphalt-r1/wheel_contrast.py --after $Label *> $log }
         'Inventory' { & uv run --project tools/worldgen python artifacts/asphalt-r1/patch_inventory.py *> $log }
     }
     $code = $LASTEXITCODE
@@ -41,3 +42,4 @@ Add-Content artifacts/asphalt-r1/STATUS.md "$(Get-Date -Format o): heavy $Stage 
 git add -f artifacts/asphalt-r1/STATUS.md
 git commit -m "wip(asphalt): checkpoint heavy $Stage $Label"
 exit $code
+
