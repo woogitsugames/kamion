@@ -39,8 +39,8 @@ from roads.network import MEDIAN_RURAL, RURAL, URBAN, side_params, side_extent
 
 from . import facade_atlas as FA
 
-# Ground-standing poles are seated on the lowest surface under their footing (gate 3 audit: lamps / masts up to
-# 0.44 m in the air, sign posts buried > 0.6 m); the part on the high side goes into the ground like a real foundation.
+# ADR 0102: visible foundations follow the render surface at the pole axis. The coarser collision surface is
+# deliberately NOT a height reference for art: it can lie a metre below a kerb/embankment edge.
 SEATED_POLES = ("lamp_", "signal_mast", "signal_pole", "sign_post", "power_pole")
 SEAT_R = 0.35                 # m, footing radius probed (WORKING_VALUE)
 SEAT_MAX_BURY = 0.40          # m, deepest the pole axis is set below the surface at its centre (WORKING_VALUE)
@@ -133,9 +133,12 @@ class Placer:
         self.pts = {}
 
     def seat(self, proto, p):
-        """Base height of a ground-standing pole: the actual surface under its footing (mesh top: island / kerb /
-        footway / verge / yard, else the conformed terrain), lowest of the centre + 4 footing points so no part of
-        the base hangs in the air; the high side goes into the ground like a foundation. Returns (z, step)."""
+        """Visible axis contact and surrounding terrain relief (not a corrected/zeroed QA metric).
+
+        Foundations extend below their axis contact in the prototypes. Sampling the minimum lowered the entire
+        lamp into the high bank; sampling the maximum raised it above the ground at its axis. A concrete footing
+        may be partly exposed on the downhill face, as in a real installation. Dimensions are WORKING_VALUE.
+        """
         r = next((v for k, v in FOOT_R.items() if proto.startswith(k)), SEAT_R)
         e = np.array([p[0], p[0] + r, p[0] - r, p[0], p[0]])
         n = np.array([p[1], p[1], p[1], p[1] + r, p[1] - r])
@@ -143,17 +146,8 @@ class Placer:
         z = []
         for k in range(5):
             m = self.surf.top(float(e[k]), float(n[k])) if self.surf is not None else float("nan")
-            if self.col is not None:     # never above the collision the pole is audited / driven against
-                c = self.col.top(float(e[k]), float(n[k]), below=(m + 0.05) if math.isfinite(m) else None)
-                if math.isfinite(c) and (not math.isfinite(m) or c < m):
-                    m = c
-                elif not math.isfinite(c) and math.isfinite(m):   # no collision here (verge ribbon): terrain collider
-                    m = min(m, float(zt[k]))
             z.append(m if math.isfinite(m) else float(zt[k]))
-        # on a ditch / embankment slope the footing reaches down to the low side, but the axis never goes more than
-        # SEAT_MAX_BURY into the ground at its centre (a 12 m lamp 1.6 m shorter reads wrong; audit sunk tolerance 0.6)
-        zs = max(min(z), z[0] - SEAT_MAX_BURY)
-        return float(zs), float(max(z) - min(z))
+        return float(z[0]), float(max(z) - min(z))
 
     def near(self, group, p, r):
         for q in self.pts.get(group, []):

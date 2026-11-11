@@ -78,8 +78,9 @@ LAMP_OLD = (("concrete", 9), ("steel", 8))     # (kind, height m) of the older s
 def lamp(h, bracket, double=False):
     m, l1, col = Mesh(), Mesh(), Mesh()
     for mm, seg in ((m, 12), (l1, 6)):
-        mm.box("concrete_base", [0, 0, 0.1], 0.25, 0.25, 0.2)
-        mm.tube("steel_galv", [0, 0, 0.2], [0, 0, h - 0.3], 0.085, 0.040, seg)
+        # ADR 0102: buried footing, 8 cm cap above the local surface. Same primitive/material budget.
+        mm.box("concrete_base", [0, 0, -0.585], 0.25, 0.25, 0.665)
+        mm.tube("steel_galv", [0, 0, 0.06], [0, 0, h - 0.3], 0.085, 0.040, seg)
         for sgn in ((1, -1) if double else (1,)):
             top = np.array([0, 0, h - 0.4])
             end = np.array([0, sgn * bracket, h])
@@ -100,23 +101,28 @@ def lamp_old(h, kind):
     m, l1, col = Mesh(), Mesh(), Mesh()
     for mm, seg in ((m, 10), (l1, 5)):
         if kind == "concrete":
-            mm.tube("concrete_pole", [0, 0, -0.3], [0, 0, h], 0.12, 0.07, seg)
+            mm.tube("concrete_pole", [0, 0, -1.25], [0, 0, 0], 0.12, 0.12, seg, cap=False)
+            mm.tube("concrete_pole", [0, 0, 0], [0, 0, h], 0.12, 0.07, seg)
             pts = [np.array([0.0, 0.05, h - 1.4])]
-            for k in range(1, 7):                       # arc: up then out (quarter ellipse 1.2 m out, 1.0 m up)
-                a = k / 6 * math.pi / 2
+            bends = 6 if seg > 5 else 3
+            for k in range(1, bends + 1):              # same silhouette, fewer sections on Low
+                a = k / bends * math.pi / 2
                 pts.append(np.array([0.0, 0.05 + 1.2 * math.sin(a), h - 1.4 + 1.0 * (1 - math.cos(a)) + 0.35 * math.sin(a)]))
             pts.append(pts[-1] + [0, 0.5, 0.06])
             for a_, b_ in zip(pts[:-1], pts[1:]):
                 mm.tube("steel_painted_grey", a_, b_, 0.03, 0.03, max(4, seg // 2), cap=False)
             for zb in (h - 1.4, h - 0.7):               # clamp bands
-                mm.tube("steel_painted_grey", [0, 0, zb], [0, 0, zb + 0.08], 0.105, 0.105, seg, cap=False)
+                rr = 0.12 - 0.05 * zb / h + 0.004
+                mm.tube("steel_painted_grey", [0, 0, zb], [0, 0, zb + 0.08], rr, rr, seg, cap=False)
             e = pts[-1]
             mm.box("luminaire_old", e + [0, 0.35, 0.02], 0.15, 0.40, 0.08)
             mm.quad("lamp_glass_sodium", e + [-0.12, 0.02, -0.065], e + [0.12, 0.02, -0.065],
                     e + [0.12, 0.66, -0.065], e + [-0.12, 0.66, -0.065])
         else:
-            mm.box("concrete_base", [0, 0, 0.1], 0.2, 0.2, 0.2)
-            mm.tube("steel_painted_grey", [0, 0, 0.2], [0, 0, h - 0.2], 0.075, 0.05, seg)
+            mm.box("concrete_base", [0, 0, -0.585], 0.2, 0.2, 0.665)
+            mm.tube("steel_painted_grey", [0, 0, 0.06], [0, 0, h - 0.2], 0.075, 0.05, seg)
+            if seg > 5:
+                mm.box("steel_painted_grey", [0, -0.073, 0.55], 0.033, 0.005, 0.13)  # flush service hatch
             top = np.array([0, 0, h - 0.35])
             end = top + np.array([0, 1.4 * math.cos(math.radians(15)), 1.4 * math.sin(math.radians(15))])
             mm.tube("steel_painted_grey", top, end, 0.03, 0.03, max(4, seg // 2))
@@ -134,7 +140,7 @@ def lamp_arc(h=9.0, reach=2.2, double=False):
     by eye: column ~9 m, arm ~2 m; WORKING_VALUE). Arm along +y."""
     m, l1, col = Mesh(), Mesh(), Mesh()
     for mm, seg in ((m, 10), (l1, 5)):
-        mm.box("concrete_base", [0, 0, 0.04], 0.28, 0.28, 0.08)
+        mm.box("concrete_base", [0, 0, -0.585], 0.28, 0.28, 0.665)
         mm.tube("steel_galv", [0, 0, 0.08], [0, 0, 1.1], 0.095, 0.085, seg)             # base section with the hatch
         mm.tube("steel_galv", [0, 0, 1.1], [0, 0, h - 1.6], 0.075, 0.045, seg)
         if seg > 5:
@@ -160,8 +166,8 @@ def sign_post():
     m, l1, col = Mesh(), Mesh(), Mesh()
     # embed 0.1 of the unit post: the instance scales z by its height (sz up to ~5), a -0.3 embed became 1.1-1.5 m
     # below the base and the gate 3 audit read the posts as buried 0.85 m (Rondo Bieżeństwa / Putry approaches)
-    m.tube("steel_galv", [0, 0, -0.1], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 10)
-    l1.tube("steel_galv", [0, 0, -0.1], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 4)
+    m.tube("steel_galv", [0, 0, -0.4], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 10)
+    l1.tube("steel_galv", [0, 0, -0.4], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 4)
     col.tube("collision_steel", [0, 0, 0], [0, 0, 1.0], 0.05, None, 4)
     return m, l1, col
 
@@ -269,9 +275,9 @@ def signal_pole(h=S.SIGNAL_POLE_H, arm=0.0):
     za = h - 0.4                                        # arm axis height
     for mm, seg, nb in ((m, 10, 6), (l1, 5, 2)):
         if not arm:
-            mm.tube("steel_galv", [0, 0, -0.2], [0, 0, h], 0.07, 0.06, seg)
+            mm.tube("steel_galv", [0, 0, -1.25], [0, 0, h], 0.07, 0.06, seg)
             continue
-        mm.tube("steel_galv", [0, 0, -0.2], [0, 0, za - R], 0.13, 0.11, seg, cap=False)
+        mm.tube("steel_galv", [0, 0, -1.25], [0, 0, za - R], 0.13, 0.11, seg, cap=False)
         prev, r_prev = np.array([0.0, 0.0, za - R]), 0.11
         for k in range(1, nb + 1):                      # quarter bend: centre (0, R, za - R)
             a = 0.5 * math.pi * k / nb
@@ -326,7 +332,7 @@ def sliding_gate(w=8.0):
 
 def bollard():
     m, col = Mesh(), Mesh()
-    m.tube("steel_painted", [0, 0, 0], [0, 0, 0.9], 0.06, None, 10)
+    m.tube("steel_painted", [0, 0, -0.3], [0, 0, 0.9], 0.06, None, 10)
     m.tube("paint_white_reflective", [0, 0, 0.75], [0, 0, 0.82], 0.062, None, 10, cap=False)
     col.tube("collision_steel", [0, 0, 0], [0, 0, 0.9], 0.07, None, 6)
     return m, m, col
