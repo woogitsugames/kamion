@@ -79,3 +79,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T22:57:22.9178234+01:00: dodano detal desek przez istniejący COLOR_0 (UNorm8), bez nowej tożsamości materiału ani zmiany słupków/barier. Współdzielone WorldSurface/WorldPbrMaterials rozszerzono wyłącznie za flagą furniture_plinth_detail i lokalnym keywordem; Has/_Tile/_Tint pozostają bez zmian. Nowe testy GPU porównują keyword off/on na nieoznaczonym betonie oraz sprawdzają kolor liniowy, pas brudu i usunięcie flagi. NASTĘPNY KROK: pwsh artifacts/furniture-r1/24h/unity-step.ps1 -Step plinth-probe.
 
 2026-11-11T22:57:49.6994556+01:00: Unity plinth-probe before Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-11T22:59:24.5431526+01:00: plinth-probe GPU/fabryka 7/7 passed, 0 skipped (XML zapisany). Wariant nieoznaczony ma identyczne próbki GPU z keywordem off/on; oznaczony skan działa liniowo i brud zanika ku górze. Dodano test UNorm8 markera/metrycznej wysokości oraz braku danych detalu na pozostałej geometrii. NASTĘPNY KROK: focused plik 0120 przez heavy, następnie build-after przez heavy.

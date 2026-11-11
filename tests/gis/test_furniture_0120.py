@@ -11,9 +11,11 @@ from roads import standards as S
 class Buffer:
     def __init__(self):
         self.parts = []
+        self.colors = []
 
     def add(self, layer, mat, V, UV, T, **kwargs):
         self.parts.append((layer, mat, np.asarray(V), np.asarray(T)))
+        self.colors.append(kwargs.get('COL'))
 
 
 def test_steep_plot_fence_does_not_turn_into_a_metre_high_retaining_wall():
@@ -46,6 +48,24 @@ def test_short_steep_fence_edge_still_steps_instead_of_forming_a_tall_plinth():
     F.panel_fence(lin, LineString([(0, 0), (0.30, 0)]), 'fence_green', 'short-bank')
     boards = [v for layer, mat, v, t in buf.parts if mat == 'concrete_plinth']
     assert max(np.max(v[:, 2]-v[:, 0]) for v in boards) <= 0.46
+
+
+def test_only_our_boards_receive_byte_stable_detail_markers_and_ground_height():
+    buf = Buffer()
+    lin = F.Lin(buf, lambda e, n: .4*e)
+    lin.posts('barrier_post', np.array([[0., 3.], [2., 3.]]), None, .06, .04, 1)
+    protected = buf.parts[0][2].copy()
+    F.panel_fence(lin, LineString([(0,0), (2,0)]), 'fence_green', 'marked-board')
+    assert np.array_equal(buf.parts[0][2], protected) and buf.colors[0] is None
+    for (layer, mat, v, t), colors in zip(buf.parts, buf.colors):
+        if mat != 'concrete_plinth':
+            assert colors is None
+            continue
+        packed = np.round(colors*255).astype(np.uint8)
+        assert np.all(packed[:,2] == 64) and np.all(packed[:,3] == 128)
+        decoded = packed[:,1]/255-.25
+        expected = v[:,2]-.4*v[:,0]
+        assert np.max(np.abs(decoded-expected)) <= 1/255
 
 
 @pytest.mark.parametrize('code', ['A-7', 'C-12', 'B-20', 'D-1', 'D-6'])
