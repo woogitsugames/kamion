@@ -107,3 +107,6 @@
 
 - Step36 docs correction: full F busstop-raw-proof.json independentlyparsed20bboxstop_position nodes/1872regional, not10from earliertruncatedstdout. Corrected ownbusdoc addendum/count and recorded bbox; historicalStep35note superseded by this correction. Dataset/scope/placement unchanged; no Dsource/Unity or Gimplementation/report change.
 - NEXT COMMAND: docsWIPcommit/copy/sendROOT, standby0108afterD/Eclose+explicitdispatch.
+
+- Step37 niezale?ny READONLY reviewE: wszystkie10Highcontact?w80obraz?w,8hero przed/po+7197, dodatkoweparypojazdu/ROI/dumpy przejrzane. W?asneRGB80High i564fixturehash0mismatch potwierdzaj? osobno luk?pozykadr?w (trailer/truckrear), nieautomatyczn?regresj?E. Szk?oOVtargetPASS/clearFAIL, korony/HighdepthGPUlimity jawne; finalEditModeEpendingPHONE. E-FINAL-INDEPENDENT-REVIEW.md+HighdiffJSON wOWNartifacts, bezEsource/cache/Unity lubGimplementation/report changes.
+- NEXT COMMAND: docsWIPcommit/copy/sendROOT/E/F, standby0108dopieroD/Eclosure+explicitdispatch.
