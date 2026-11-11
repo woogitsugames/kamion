@@ -99,3 +99,12 @@ nieoznaczonym betonie, mnożenie detalu w przestrzeni liniowej, zanik brudu,
 zachowanie kanałów i czyszczenie keywordu/samplera po usunięciu flagi danych.
 Koszt GPU i ocena materiału pozostają do kontroli w renderach i późniejszym
 pomiarze lidera na urządzeniu. Same identyczne próbki nie dowodzą zerowego kosztu.
+
+### r1, korekta po niezależnym przeglądzie iteracji 1
+
+Krótkie stopnie desek na skarpie nie wyznaczają już słupków. Podpory zachowują
+moduł do 2,5 m i narożniki linii, a siatka podąża za spadkiem między nimi.
+Podział betonu pozostaje niezależny; deski mają zamknięte końce i małe szczeliny.
+Poprzedni wymóg poziomego wierzchu siatki zastąpiono kontrolą wysokości nad
+pochyłym gruntem. To usuwa przyczynę błędnego rytmu gęstych pionowych podpór.
+Ocena wizualna tej korekty i końcowy budżet nadal oczekują na przebudowę/render.
