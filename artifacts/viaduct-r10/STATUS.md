@@ -31,3 +31,5 @@
 - Regeneracja r3 PASS (305.1 s), maks. Low +0.6276% tris, grupy GLB Low delta 0, QA drogi 65 jak baza. Lokalne testy 6/6 PASS, w tym równe risery i podparcie końca biegu.
 - Obejrzano geometry-preview/compare-r3.jpg (lewo before / prawo after, 3 kadry). Schody mają rzeczywisty bieg do gruntu; głowice/łożyska rozdzielone. Płaskie materiały oraz gruby teren podglądu nie rozstrzygają finalnego kontaktu/AO — ocena Unity pozostaje otwarta.
 - NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/final-gis-r3.log -Tail 6; Get-Content artifacts/viaduct-r10/unity-queue.log -Tail 1
+- Pełny GIS r3: 376 PASS / 1 XFAIL, 531.61 s (final-gis-r3.log); deterministyczny eksport zielony. Kod/geometria ustabilizowane.
+- Stan: GIS_DONE / UNITY_WAIT. PHONE_RUN nadal obecny; czekamy zgodnie z odpowiedzią właściciela. NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/render-before.log -Tail 10; Get-Content artifacts/viaduct-r10/validate-after.log -Tail 10

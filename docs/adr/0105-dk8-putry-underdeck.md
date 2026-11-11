@@ -59,7 +59,8 @@ głowice, łożyska, rury, skrzydła, schody, zacieki i położenie plam farby s
   Obejrzany podgląd geometrii Blendera (porównanie trzech kamer): głowice i łożyska
   są rozdzielone, bieg schodów dochodzi do gruntu. Płaskie materiały podglądu i
   gruby LOD terenu nie pozwalają ocenić końcowego materiału ani kontaktu w Unity.
-  Pełny GIS na ustabilizowanej generacji r3 w toku.
+  Pełny GIS na ustabilizowanej generacji r3: **376 PASS / 1 XFAIL**, 531,61 s,
+  w tym deterministyczny eksport; `artifacts/viaduct-r10/final-gis-r3.log`.
 - Unity czeka na blokadę `artifacts/locks/PHONE_RUN` w main. Właściciel potwierdził,
   że pomiar telefonu nadal trwa. Nie uruchamiamy Unity ani adb podczas blokady.
 
