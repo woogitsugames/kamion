@@ -10,3 +10,6 @@ NASTĘPNY KROK: uv run --project tools/worldgen python tools/worldgen/roads/buil
 
 GIS bazowe: 370 passed, 1 xfailed / 635.18 s. Regresje ADR0102: 6 passed. Korekta po audycie kodu: fundament -0.45/+0.08 m, lokalne przesunięcie lampy do 1.05 m przy ostrym uskoku zamiast głębokiego zakopania. Jawne wysokości na wiaduktach zachowane. Low starej betonowej lampy 105→91 tris, pozostałe porównane Low bez wzrostu slotów.
 NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1
+
+Regenerated baseline from 9e6e9fde; furniture source restored to branch HEAD.
+NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
