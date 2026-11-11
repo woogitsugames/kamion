@@ -66,6 +66,7 @@ MonoBehaviour:
     cloudsOff: 0
     groundHazeOff: 0
     ssao: 0
+    glassFast: 1
     budgetDrawCalls: 250
     budgetTrianglesK: 350
     budgetTextureMB: 64
@@ -124,6 +125,7 @@ MonoBehaviour:
     cloudsOff: 0
     groundHazeOff: 0
     ssao: 0
+    glassFast: 1
     budgetDrawCalls: 350
     budgetTrianglesK: 550
     budgetTextureMB: 96
@@ -182,6 +184,7 @@ MonoBehaviour:
     cloudsOff: 0
     groundHazeOff: 0
     ssao: 0
+    glassFast: 0
     budgetDrawCalls: 800
     budgetTrianglesK: 1500
     budgetTextureMB: 256
@@ -240,12 +243,13 @@ MonoBehaviour:
     cloudsOff: 0
     groundHazeOff: 0
     ssao: 1
+    glassFast: 0
     budgetDrawCalls: 1000
     budgetTrianglesK: 2000
     budgetTextureMB: 384
     budgetShadowMs: 3
     budgetStatus: UNMEASURED (no flagship attached)
-  revision: 98
+  revision: 106
   deviceRules:
   - gpuContains: Mali-G57
     modelContains: 

@@ -287,6 +287,9 @@ namespace Game.World
         {
             m_Camera = cam;
             SyncOrigin();
+            // ADR 0106 GPU breakdown (rq_props, rq_ab trees|props): diagnostics only, shipping state = both on.
+            bool trees = m_Trees && !RenderOverrides.AbTreesOff;
+            bool props = RenderOverrides.Props != false && !RenderOverrides.AbPropsOff;
             GeometryUtility.CalculateFrustumPlanes(cam, m_Planes);
             Vector3 cp = cam.transform.position;
             // ADR 0068: extra views (mirrors) use their own LOD scale on the tier bias (Game.Core.ExtraViewLod), whatever
@@ -316,7 +319,7 @@ namespace Game.World
             {
                 var mesh = groups[g].mesh;
                 bool gFar = false;
-                if (mesh != null && m_Trees && m_HlodSwitch > 0f)
+                if (mesh != null && trees && m_HlodSwitch > 0f)
                 {
                     var gb = mesh.bounds; gb.center += o;
                     float d = Mathf.Sqrt(gb.SqrDistance(cp));
@@ -338,7 +341,7 @@ namespace Game.World
                 Last.VisibleCells++;
                 // Forest HLOD (ADR 0015): beyond the tier's switch distance the cell mesh replaces its forest trees.
                 bool hlod = false;
-                if (cell.hlod > 0 && m_Trees && m_HlodSwitch > 0f && set.hlods != null && cell.hlod <= set.hlods.Length)
+                if (cell.hlod > 0 && trees && m_HlodSwitch > 0f && set.hlods != null && cell.hlod <= set.hlods.Length)
                 {
                     var h = set.hlods[cell.hlod - 1];
                     bool groupDrawn = h.group >= 0 && h.group < ng && m_GroupFar[h.group];
@@ -352,8 +355,9 @@ namespace Game.World
                     if (hlod && run.forest) continue;
                     var p = protos[run.prototype];
                     var ends = m_Ends[run.prototype];
-                    if (!m_Trees && m_Thin[run.prototype]) continue;
-                    float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, m_TreeCard) : scale;
+                    if (!trees && m_Thin[run.prototype]) continue;
+                    if (!props && !m_Thin[run.prototype]) continue;
+                    float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, m_TreeCard) * RenderOverrides.AbTreeCardScale : scale;
                     float cs = m_FixedCull[run.prototype] ? distanceScale : scale;   // vehicles: same cull on every tier
                     float l0 = m_Lod0Min[run.prototype] * distanceScale;   // vehicles: LOD0 floor on every tier
                     int ln = LodAt(ends, dNear, ls, cs, l0), lf = LodAt(ends, dFar, ls, cs, l0);
@@ -393,7 +397,7 @@ namespace Game.World
 
         int ThinStride(float d, float scale)
         {
-            float s = m_ThinStart * scale;
+            float s = m_ThinStart * scale * RenderOverrides.AbTreeThinScale;
             // v3.4 kept the strides: a later start (1.5x, +25 % instances in the DK8 view) did not fit the A16 Low budget
             // with certainty (editor timing noise > the gain; ADR 0023). The forest edge reads dense through the HLOD.
             return d < s ? 1 : d < 2.5f * s ? 2 : 4;
@@ -462,13 +466,15 @@ namespace Game.World
         /// <summary>A forest HLOD mesh (cell or chunk merge), region-root space, no shadows (beyond every tier's shadow distance).</summary>
         void DrawMesh(Mesh mesh, int materialStart, Bounds b)
         {
-            if (mesh == null) return;
+            if (mesh == null || RenderOverrides.AbHlodOff) return;   // ADR 0106 A/B (diagnostics)
             var mats = m_Mats ?? set.materials;
             var trs = Matrix4x4.Translate(m_Origin);
             for (int s = 0; s < mesh.subMeshCount; s++)
             {
                 var mat = mats[materialStart + s];
                 if (mat == null) continue;
+                // ADR 0106 A/B (diagnostics): 1 = no canopy (opaque) submeshes, 2 = no edge-wall (Kamion/Vegetation) submeshes.
+                if (RenderOverrides.AbHlodPart != 0 && (RenderOverrides.AbHlodPart == 2) == (mat.shader == m_FoliageShader)) continue;
 
                 var rp = new RenderParams(mat)
                 {
@@ -488,6 +494,7 @@ namespace Game.World
 
         void Append(int proto, int lod, Matrix4x4[] src, int start, int count, Bounds cellBounds)
         {
+            if (RenderOverrides.AbImpostorOff && m_Thin[proto] && lod > 0 && lod == set.prototypes[proto].lods.Length - 1) return;   // ADR 0106 A/B
             int slot = m_BatchOffset[proto] + lod;
             while (count > 0)
             {
@@ -511,7 +518,7 @@ namespace Game.World
             var b = m_BatchBounds[slot];
             // Tree casters per tier (QualityProfile.treeShadowLodMask): LOD1 tree cards in the shadow pass doubled the
             // forest cost on the A16 (Low/Medium cast from LOD0 only).
-            int mask = m_Thin[proto] ? p.shadowLodMask & m_TreeShadowMask : p.shadowLodMask;
+            int mask = m_Thin[proto] ? (RenderOverrides.AbTreeShadowOff ? 0 : p.shadowLodMask & m_TreeShadowMask) : p.shadowLodMask;
             var shadows = (mask & (1 << lod)) != 0 ? ShadowCastingMode.On : ShadowCastingMode.Off;
             int m0 = p.materialStart[lod];
             for (int s = 0; s < mesh.subMeshCount; s++)

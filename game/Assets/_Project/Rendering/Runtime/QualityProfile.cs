@@ -86,6 +86,10 @@ namespace Game.Rendering
             [Tooltip("Off = uniform fog only, no ground haze layer (the per-vertex optical depth costs the same either way)")] public bool groundHazeOff;
             [Tooltip("Screen-space ambient occlusion after opaques (URP SSAO, depth source; needs the renderer feature - Ultra's renderer only)")]
             public bool ssao;
+            [Header("Vehicle glass (ADR 0106)")]
+            [Tooltip("Kamion/Truck Glass fast path (_KAMION_GLASS_FAST): Fresnel, body absorption, film phase, ambient and fog per vertex, " +
+                     "wiper sweeps in half precision. A16 Low: the windscreen covers ~80 % of the cab view and cost 3.6-4.3 ms GPU")]
+            public bool glassFast;
             [Header("Budget assumptions (UNMEASURED until the phone is measured)")]
             public int budgetDrawCalls;
             public int budgetTrianglesK;
@@ -98,7 +102,7 @@ namespace Game.Rendering
         [Tooltip("Migration revision (ProjectSetup.LoadTiers applies the changes of later revisions to an existing asset)")]
         public int revision;
         /// <summary>ADR 0062: High floor 0.70, FSR upscaling, pacing fallback, lamp pools.</summary>
-        public const int CurrentRevision = 98;   // ADR0098: shadow receiver stability and post noise.
+        public const int CurrentRevision = 106;   // ADR 0080: cloudQuality, ssao; ADR0098: shadow receiver stability and post noise; ADR 0106: glassFast
 
         /// <summary>
         /// First-launch tier by device (no launch argument, nothing saved by the player). Rules are checked in order; a rule
@@ -199,6 +203,7 @@ namespace Game.Rendering
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 70f, forestHlodCullM = 1000f,
                 clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 64, envCaptureInterval = 10, envCaptureFarClip = 150f, envCaptureMinMove = 2f, envCaptureMaxAge = 20f, contactShadows = true, cabShadowLift = 8f, streetLights = 0, lampPools = 4,
+                glassFast = true,
                 budgetDrawCalls = 250, budgetTrianglesK = 350, budgetTextureMB = 64, budgetShadowMs = 1.0f, budgetStatus = "UNMEASURED",
             },
             new Tier
@@ -213,7 +218,7 @@ namespace Game.Rendering
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 70f, forestHlodCullM = 1000f,
                 clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 64, envCaptureInterval = 6, envCaptureFarClip = 150f, envCaptureMinMove = 2f, envCaptureMaxAge = 20f, contactShadows = true, cabShadowLift = 8f, streetLights = 0, lampPools = 6,
-                cloudQuality = 1,
+                cloudQuality = 1, glassFast = true,
                 budgetDrawCalls = 350, budgetTrianglesK = 550, budgetTextureMB = 96, budgetShadowMs = 1.5f, budgetStatus = "UNMEASURED",
             },
             new Tier

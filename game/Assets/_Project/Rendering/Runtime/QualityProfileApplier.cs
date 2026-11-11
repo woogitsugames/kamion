@@ -21,6 +21,7 @@ namespace Game.Rendering
             float policy = t.name == "Medium" || t.name == "High" ? MaxArchitecturalGlassReceiverBias : 0f;
             return Mathf.Clamp(requested ?? policy, 0f, MaxArchitecturalGlassReceiverBias);
         }
+        public const string GlassFastKeyword = "_KAMION_GLASS_FAST";   // ADR 0106
         static readonly int k_ClearCoatOff = Shader.PropertyToID("_KamionClearCoatOff");
         static readonly int k_GrimeDetailOff = Shader.PropertyToID("_KamionGrimeDetailOff");
         static readonly int k_SkyDitherOff = Shader.PropertyToID("_KamionSkyDitherOff");
@@ -60,7 +61,9 @@ namespace Game.Rendering
             {
                 t = RenderOverrides.ApplyTo(t);
             }
-            Apply(t, targetCamera != null ? targetCamera : ViewCameraResolver.Resolve(null), volume, worldTextures, ref m_Tonemapping);
+            var cam = targetCamera != null ? targetCamera : ViewCameraResolver.Resolve(null);
+            Apply(t, cam, volume, worldTextures, ref m_Tonemapping);
+            if (cam != null && RenderOverrides.CullMask.HasValue && Application.isPlaying) cam.cullingMask &= RenderOverrides.CullMask.Value;   // ADR 0106
         }
 
         /// <summary>
@@ -86,6 +89,7 @@ namespace Game.Rendering
             if (RenderOverrides.Hdr.HasValue) urp.supportsHDR = t.hdr;
             if (RenderOverrides.Upscale != null) urp.upscalingFilter = t.upscalingFilter;   // ADR 0062 A/B
             if (RenderOverrides.FsrSharpness.HasValue) { urp.fsrOverrideSharpness = true; urp.fsrSharpness = t.fsrSharpness; }
+            if (RenderOverrides.LodBias.HasValue && Application.isPlaying) QualitySettings.lodBias = t.lodBias;   // ADR 0106
         }
 
         /// <summary>Raised after a tier was applied (vegetation reads <see cref="Current"/>).</summary>
@@ -135,6 +139,7 @@ namespace Game.Rendering
                 foreach (var m in Resources.FindObjectsOfTypeAll<Material>())
                     if (m.name == "M_kp_glass_block") Debug.Log($"[RQ_GLASS] name={m.name} shader={m.shader.name} flag={m.GetFloat("_ArchitecturalGlass")} receive={m.GetFloat("_ReceiveShadows")}");
 #endif
+            if (t.glassFast) Shader.EnableKeyword(GlassFastKeyword); else Shader.DisableKeyword(GlassFastKeyword);
             // A8: truck paint clear coat switch (Kamion/Truck Exterior reads 0 = on, so an unset global keeps it on).
             Shader.SetGlobalFloat(k_ClearCoatOff, t.clearCoat ? 0f : 1f);
             Shader.SetGlobalFloat(k_GrimeDetailOff, t.vehicleGrimeDetail ? 0f : 1f);   // ADR 0038

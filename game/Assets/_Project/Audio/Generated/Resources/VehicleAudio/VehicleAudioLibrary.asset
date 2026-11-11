@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a99caf092d7598646a564bc44e0c2f38, type: 3}
+  m_Name: VehicleAudioLibrary
+  m_EditorClassIdentifier: Game.Audio::TruckSim.Audio.VehicleAudioLibrary
+  exteriorEngine: {fileID: 11400000, guid: b2b6fa948c038ae47ab9cec67fe78d83, type: 2}
+  cabEngine: {fileID: 11400000, guid: 21e85e6e59aaae5478a52dd46df5d893, type: 2}
+  exteriorEngineBrake: {fileID: 11400000, guid: 87efda6845238304a812079d6c067a00, type: 2}
+  cabEngineBrake: {fileID: 11400000, guid: 52136de6676220a41ae1243b67e9b40b, type: 2}
+  turboWhistleLoop: {fileID: 8300000, guid: 5c21148f64af24140bd9ebd6764baa12, type: 3}
+  turboLiftoff: {fileID: 8300000, guid: 459ad8206510e0a4c855a9f4632e6b4a, type: 3}
+  airBrakeRelease: {fileID: 8300000, guid: 8d10c6d99c4a2744695dc7c6b50f40d2, type: 3}
+  parkingBrakeSet: {fileID: 8300000, guid: 302a6e01bd993e343b45e67cb37f99b7, type: 3}
+  airDryerPurge: {fileID: 8300000, guid: 171a9a38b4035304897c67df2eaac3c3, type: 3}
+  gearshiftAir: {fileID: 8300000, guid: de2cb36ab14227248a2681446795dcba, type: 3}
+  roadRollLoop: {fileID: 8300000, guid: e194ed18368ffe045b2c0c7907496f8d, type: 3}
+  windLoop: {fileID: 8300000, guid: 70d6e2d61956b8d43af19218fa5b746d, type: 3}
+  gearWhineLoop: {fileID: 8300000, guid: 3351945025ce9984ca878b3ab9fe00ca, type: 3}
+  airBrakeReleaseCab: {fileID: 8300000, guid: d810a67a8700a1f4aa39dc3e562e8bda, type: 3}
+  parkingBrakeSetCab: {fileID: 8300000, guid: a9f272e3099943a48aa557de9dfc1c6d, type: 3}
+  airDryerPurgeCab: {fileID: 8300000, guid: ce468b87c1bb2c24ab81421cfa2e42aa, type: 3}
+  gearshiftAirCab: {fileID: 8300000, guid: a7529a07b7f320249b2a82e7eb73667c, type: 3}
+  roadRollLoopCab: {fileID: 8300000, guid: 7fa15f042d539e44f8fd5387c8734233, type: 3}
+  windLoopCab: {fileID: 8300000, guid: 04ff700f784a0ec48a82c374046989c5, type: 3}
+  parkingBrakeRelease: {fileID: 8300000, guid: e946d7125dbb09b4f9c6ac198e2e70cf, type: 3}
+  parkingBrakeReleaseCab: {fileID: 8300000, guid: 541216de30b84d743a2be72b1e6de0d5, type: 3}
+  airDryerPurgeB: {fileID: 8300000, guid: 5808a0f455d2966418cc497f940a4be8, type: 3}
+  airDryerPurgeBCab: {fileID: 8300000, guid: 7843b140a13df8d469a168476227201a, type: 3}
+  tyreSurface:
+  - ext: {fileID: 8300000, guid: e194ed18368ffe045b2c0c7907496f8d, type: 3}
+    cab: {fileID: 8300000, guid: 7fa15f042d539e44f8fd5387c8734233, type: 3}
+  - ext: {fileID: 8300000, guid: dbece10cb913dcc44bccba0c2f13ac6e, type: 3}
+    cab: {fileID: 8300000, guid: 484f5d165dea71147ba109982c9a4e42, type: 3}
+  - ext: {fileID: 8300000, guid: 36929b20e11972441828714754184328, type: 3}
+    cab: {fileID: 8300000, guid: 8993b99575359ba418f0c3adaefb5ac6, type: 3}
+  - ext: {fileID: 8300000, guid: edd5484c70fddc3418043f2dbd74e878, type: 3}
+    cab: {fileID: 8300000, guid: 85ec9936f3b0f734b8ae9fa766fe36e0, type: 3}
+  - ext: {fileID: 8300000, guid: b10103baa1a921545a1a35829c432a62, type: 3}
+    cab: {fileID: 8300000, guid: 0d1fa9362d5d73c45a5636d7b8324379, type: 3}
+  - ext: {fileID: 8300000, guid: e443105c9f7851c4398c157a6815f16c, type: 3}
+    cab: {fileID: 8300000, guid: bb29045d0928f7143a9a34d85fbcfe68, type: 3}
+  tyreSqueal:
+    ext: {fileID: 8300000, guid: b04ee053ad5c30643880a7e36cabdc7b, type: 3}
+    cab: {fileID: 8300000, guid: c04c1cbc46bf09840bc4c3a96cefdaf3, type: 3}
+  retarder:
+    ext: {fileID: 8300000, guid: e95d0e3506c007c4591615b225cd0e7f, type: 3}
+    cab: {fileID: 8300000, guid: 99cb52d26ca068740abab4b6b1b2c2f1, type: 3}
+  compressor:
+    ext: {fileID: 8300000, guid: 74cd440dc5071ad4d87adab412d687d2, type: 3}
+    cab: {fileID: 8300000, guid: 4cc1354fd7acc2040a209edf51364be7, type: 3}
+  ambientBed:
+    ext: {fileID: 8300000, guid: 3c6f64946d997274187d88280a3f9531, type: 3}
+    cab: {fileID: 8300000, guid: 70b94f12e4c230a4db6b66a0a74df303, type: 3}
+  forklift:
+    ext: {fileID: 8300000, guid: 0b17a49cfdabde74dab117c3040cb74f, type: 3}
+    cab: {fileID: 8300000, guid: 00e492a20bcc6d14fabca2d11742ef67, type: 3}
+  crowCaw:
+    ext: {fileID: 8300000, guid: c79afaf2be0452849895b65a0722d027, type: 3}
+    cab: {fileID: 8300000, guid: 462b8776e72841042a7d2e3d0d48f28d, type: 3}
+  indicatorTick:
+    ext: {fileID: 8300000, guid: 36978f58759288a418cfbc26fa696921, type: 3}
+    cab: {fileID: 8300000, guid: ee53a87ed680f444fb934985aad9cf98, type: 3}
+  indicatorTock:
+    ext: {fileID: 8300000, guid: 4deb2b643fe62904295782882dd43af1, type: 3}
+    cab: {fileID: 8300000, guid: 6530a8dedebe0dd40949f03563d2efaf, type: 3}
+  birdSparrow: {fileID: 8300000, guid: 533c8327a01ea9b479150c4583e11920, type: 3}
+  birdTit: {fileID: 8300000, guid: c0bd8caf01432ad4499810eac0b988b9, type: 3}
+  sourceInfo: 122 engine loops + 47 sfx, tools/audio/render_all.py (procedural synthesis,
+    no recordings)

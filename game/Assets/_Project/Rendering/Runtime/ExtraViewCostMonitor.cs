@@ -53,6 +53,10 @@ namespace Game.Rendering
         bool m_AbB;
         float m_SavedShadowDistance = -1f;
         int m_SavedCascades = -1;
+        float m_SavedLod = -1f, m_SavedScale = -1f, m_SavedFar = -1f;   // ADR 0106 A/B keys
+        int m_SavedMask;
+        Camera m_AbCam;
+        Canvas[] m_Canvases;
         readonly float[] m_Gpu = new float[2048], m_Cpu = new float[2048], m_Dt = new float[2048];
         int m_N;
         readonly float[][] m_WinGpu = { new float[64], new float[64] }, m_WinCpu = { new float[64], new float[64] };
@@ -111,6 +115,30 @@ namespace Game.Rendering
             "envcap" => "no reflection-capture faces",
             "shadows" => "shadow distance 0",
             "shadowcasc" => "one shadow cascade fewer",
+            // ADR 0106 (A16 Low GPU breakdown)
+            "lod" => "LOD bias x0.6",
+            "scale" => "render scale -0.1",
+            "far" => "main camera far clip x0.5",
+            "props" => "no instanced props / parked vehicles",
+            "trees" => "no instanced trees / forest HLOD",
+            "truck" => "main camera without the Vehicle layer (own truck, cab)",
+            "hud" => "no screen-space canvases",
+            "glass" => "no Kamion/Truck Glass renderers",
+            "cabint" => "no Kamion/Cab Interior renderers",
+            "truckext" => "no Kamion/Truck Exterior renderers",
+            "cabdisp" => "no Kamion/Cab Display renderers",
+            "mirrorlow" => "mirror LOD scale 0.5 (convex 0.3) as on High",
+            "far80" => "main camera far clip x0.8",
+            "scale5" => "render scale -0.05",
+            "hlodcanopy" => "no forest HLOD canopy (URP Lit) submeshes",
+            "hlodedge" => "no forest HLOD edge-wall submeshes",
+            "hlod" => "no forest HLOD meshes",
+            "impostor" => "no tree impostor LOD",
+            "treeshadow" => "instanced trees cast no shadows",
+            "treethin" => "tree thinning starts at half the distance",
+            "treecard" => "tree card LOD distances x0.5",
+            "glassdbg" => "Kamion/Truck Glass constant colour (rq_glassdbg 1: raster + blend floor of the pane)",
+            "glassfast" => "Kamion/Truck Glass fast path toggled (_KAMION_GLASS_FAST)",
             _ => "unknown key (no change)",
         };
 
@@ -160,6 +188,7 @@ namespace Game.Rendering
             float now = Time.realtimeSinceStartup;
             if (m_AbKey != null) AbUpdate(now);
             if (now - m_WindowStart < WindowS) return;
+            if (RenderOverrides.Hud == false) SetHud(false);   // ADR 0106: rq_hud 0 (canvases created later are caught here)
             int frames = Mathf.Max(1, Time.frameCount - m_WindowStartFrame);
             double msPerTick = 1000.0 / Stopwatch.Frequency;
             ExtraViewStats.MirrorRendersPerFrame = m_MirrorRenders / (float)frames;
@@ -223,6 +252,59 @@ namespace Game.Rendering
             m_N = 0;
         }
 
+        /// <summary>ADR 0106: shows / hides every screen-space overlay canvas (HUD, menus) for the GPU A/B.</summary>
+        void SetHud(bool visible)
+        {
+            if (!visible || m_Canvases == null) m_Canvases = FindObjectsByType<Canvas>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            foreach (var c in m_Canvases)
+                if (c != null && c.isRootCanvas && c.renderMode == RenderMode.ScreenSpaceOverlay) c.enabled = visible;
+        }
+
+        /// <summary>ADR 0106: disables (B) / re-enables (A) the enabled renderers whose first material uses the shader (GPU A/B
+        /// per vehicle shader). Renderer.enabled, not forceRenderingOff: the mirrors toggle the latter on the cab interior.</summary>
+        readonly System.Collections.Generic.List<Renderer> m_AbOff = new System.Collections.Generic.List<Renderer>();
+        bool m_AbLogged;
+        int m_GlassShip = -1;
+
+        /// <summary>ADR 0106: which renderers of the A/B shader the main camera drew last frame, and their screen share.</summary>
+        static void LogRenderer(Renderer r)
+        {
+            var cam = ViewCameraResolver.Resolve(null);
+            float share = 0f;
+            if (cam != null && r.isVisible)
+            {
+                var b = r.bounds;
+                Vector2 mn = new Vector2(1e9f, 1e9f), mx = new Vector2(-1e9f, -1e9f);
+                bool behind = false;
+                for (int k = 0; k < 8; k++)
+                {
+                    var c = b.center + Vector3.Scale(b.extents, new Vector3((k & 1) == 0 ? -1 : 1, (k & 2) == 0 ? -1 : 1, (k & 4) == 0 ? -1 : 1));
+                    var v = cam.WorldToViewportPoint(c);
+                    if (v.z <= 0f) behind = true;
+                    mn = Vector2.Min(mn, v); mx = Vector2.Max(mx, v);
+                }
+                mn = Vector2.Max(mn, Vector2.zero); mx = Vector2.Min(mx, Vector2.one);
+                share = behind ? -1f : Mathf.Max(0f, mx.x - mn.x) * Mathf.Max(0f, mx.y - mn.y);
+            }
+            var lg = r.GetComponentInParent<LODGroup>();
+            Debug.Log($"[PASSAB] renderer '{r.name}' visible={r.isVisible} bboxShare={share:F2} layer={r.gameObject.layer} lodGroup={(lg != null ? lg.name : "-")} mats={r.sharedMaterials.Length}");
+        }
+
+        void SetShaderRenderers(string shader, bool off)
+        {
+            if (!off) { foreach (var r in m_AbOff) if (r != null) r.enabled = true; m_AbOff.Clear(); return; }
+            foreach (var r in FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                var m = r.sharedMaterial;
+                if (r.enabled && m != null && m.shader != null && m.shader.name == shader)
+                {
+                    if (!m_AbLogged) LogRenderer(r);
+                    r.enabled = false; m_AbOff.Add(r);
+                }
+            }
+            m_AbLogged = true;
+        }
+
         static readonly float[] s_Tmp = new float[2048];
 
         static float P(float[] a, int n, float q)
@@ -250,6 +332,52 @@ namespace Game.Rendering
                     if (urp == null) break;
                     if (b) { m_SavedShadowDistance = urp.shadowDistance; urp.shadowDistance = 0f; }
                     else if (m_SavedShadowDistance >= 0f) { urp.shadowDistance = m_SavedShadowDistance; m_SavedShadowDistance = -1f; }
+                    break;
+                case "lod":
+                    if (b) { m_SavedLod = QualitySettings.lodBias; QualitySettings.lodBias = m_SavedLod * 0.6f; }
+                    else if (m_SavedLod > 0f) { QualitySettings.lodBias = m_SavedLod; m_SavedLod = -1f; }
+                    break;
+                case "scale":
+                    if (urp == null) break;
+                    if (b) { m_SavedScale = urp.renderScale; urp.renderScale = Mathf.Max(0.3f, m_SavedScale - 0.1f); }
+                    else if (m_SavedScale > 0f) { urp.renderScale = m_SavedScale; m_SavedScale = -1f; }
+                    break;
+                case "far":
+                    if (b) { m_AbCam = ViewCameraResolver.Resolve(null); if (m_AbCam != null) { m_SavedFar = m_AbCam.farClipPlane; m_AbCam.farClipPlane = m_SavedFar * 0.5f; } }
+                    else if (m_AbCam != null && m_SavedFar > 0f) { m_AbCam.farClipPlane = m_SavedFar; m_SavedFar = -1f; }
+                    break;
+                case "truck":
+                    if (b) { m_AbCam = ViewCameraResolver.Resolve(null); if (m_AbCam != null) { m_SavedMask = m_AbCam.cullingMask; m_AbCam.cullingMask &= ~(1 << LayerMask.NameToLayer("Vehicle")); } }
+                    else if (m_AbCam != null && m_SavedMask != 0) { m_AbCam.cullingMask = m_SavedMask; m_SavedMask = 0; }
+                    break;
+                case "props": RenderOverrides.AbPropsOff = b; break;
+                case "trees": RenderOverrides.AbTreesOff = b; break;
+                case "hud": SetHud(!b); break;
+                case "glass": SetShaderRenderers("Kamion/Truck Glass", b); break;
+                case "cabint": SetShaderRenderers("Kamion/Cab Interior", b); break;
+                case "truckext": SetShaderRenderers("Kamion/Truck Exterior", b); break;
+                case "cabdisp": SetShaderRenderers("Kamion/Cab Display", b); break;
+                case "mirrorlow": MirrorOverrides.LodScale = b ? 0.5f : (float?)null; break;
+                case "far80":
+                    if (b) { m_AbCam = ViewCameraResolver.Resolve(null); if (m_AbCam != null) { m_SavedFar = m_AbCam.farClipPlane; m_AbCam.farClipPlane = m_SavedFar * 0.8f; } }
+                    else if (m_AbCam != null && m_SavedFar > 0f) { m_AbCam.farClipPlane = m_SavedFar; m_SavedFar = -1f; }
+                    break;
+                case "scale5":
+                    if (urp == null) break;
+                    if (b) { m_SavedScale = urp.renderScale; urp.renderScale = Mathf.Max(0.3f, m_SavedScale - 0.05f); }
+                    else if (m_SavedScale > 0f) { urp.renderScale = m_SavedScale; m_SavedScale = -1f; }
+                    break;
+                case "hlodcanopy": RenderOverrides.AbHlodPart = b ? 1 : 0; break;
+                case "hlodedge": RenderOverrides.AbHlodPart = b ? 2 : 0; break;
+                case "hlod": RenderOverrides.AbHlodOff = b; break;
+                case "impostor": RenderOverrides.AbImpostorOff = b; break;
+                case "treeshadow": RenderOverrides.AbTreeShadowOff = b; break;
+                case "treethin": RenderOverrides.AbTreeThinScale = b ? 0.5f : 1f; break;
+                case "treecard": RenderOverrides.AbTreeCardScale = b ? 0.5f : 1f; break;
+                case "glassdbg": Shader.SetGlobalFloat("_KamionGlassDebug", b ? (RenderOverrides.GlassDebug ?? 1) : 0f); break;
+                case "glassfast":
+                    if (m_GlassShip < 0) m_GlassShip = Shader.IsKeywordEnabled("_KAMION_GLASS_FAST") ? 1 : 0;
+                    if ((m_GlassShip == 1) ^ b) Shader.EnableKeyword("_KAMION_GLASS_FAST"); else Shader.DisableKeyword("_KAMION_GLASS_FAST");
                     break;
                 case "shadowcasc":
                     if (urp == null) break;
