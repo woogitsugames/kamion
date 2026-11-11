@@ -39,3 +39,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T22:00:47.0873077+01:00: promień próbkowania podparcia starej betonowej lampy dopasowano do nowej podstawy 0,15 m. Import baseline czeka na slot (4/4); nie uruchomiono Unity poza protokołem. NASTĘPNY KROK: zakończyć import baseline i render czterech wariantów.
 
 2026-11-11T22:02:01.6553961+01:00: zapisano prototype-cost.json z licznikami geometrii i slotów przed/po względem 5f2aa277, oraz atlas cokołu do oględzin. To liczby generatora, nie GPU. NASTĘPNY KROK: import po przydzieleniu slotu i pełna walidacja kadrów.
+
+2026-11-11T22:03:47.8638782+01:00: przygotowano compare_frames.py: wszystkie kamery, osobne draws siatek i instancji, konserwatywna granica kwantyzacji trisK, arkusze ≤960 px. NASTĘPNY KROK: uruchomić po kompletnych renderach before/after; obejrzeć każdy arkusz.
