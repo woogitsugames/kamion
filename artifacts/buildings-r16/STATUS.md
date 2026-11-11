@@ -39,3 +39,11 @@
 - W toku: `full_round.ps1 -Round r1` (High overcast, extra High, extra Low).
 - NASTĘPNY KROK: `python artifacts/buildings-r16/budget2.py artifacts/buildings-r16/base/High-overcast artifacts/buildings-r16/r1/High-overcast`
   → obejrzeć `artifacts/buildings-r16/r1/extra/960/r16_*.jpg` → ADR 0124.
+
+## krok 4 — High zmierzony
+- High overcast, 67 kamer, r1 vs baza (`budget_high_r1.txt`): MeshRenderer −49, instancje −7, razem **−56**, najgorsza **+3**
+  (`trailer-34`; `cab-mirrors-right` +2, `g3b-eye-s1482` +2 — węzeł `wires`), cienie MR **−123**, trójkąty siatek **−46 k**.
+  `cab-mirror-front` 954 → 954 draws, 1264 → 1265 k tris; `cab-mirrors-right` 827 → 829, 1138 → 1139 k. UWAGA: te dwie kamery
+  to widok GŁÓWNY z kabiny (stats.txt liczy kamerę główną), nie kamery RT lusterek — koszt RT lusterek nadal niezmierzony
+  (MirrorCostProfiler z `PlotViewCull.Enabled` on/off — do zrobienia).
+- NASTĘPNY KROK: po `extra done` w `r1/round.log` obejrzeć `r1/extra/960/r16_*.jpg`.
