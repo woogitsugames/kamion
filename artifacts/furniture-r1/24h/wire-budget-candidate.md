@@ -17,3 +17,17 @@ Kandydat wymaga kontroli na nierównym NMT: dolna krawędź musi schodzić pod
 wszystkie deski i teren, a UV musi zachować poziom drutów. Sprawdzić również
 kolizję, AABB i cienie. Nie zastosowano go do źródeł ani do eksportu iteracji 3;
 wyniki tej iteracji pozostają powiązane z zapisanymi hashami źródeł.
+
+## Niezależny przegląd kandydata
+
+Kandydat jest sensowny dla siatki renderowanej, ale minimum musi obejmować
+również boczne wygięcie oraz wszystkie dotychczasowe próbki desek. Trzeba
+uwzględnić różnicę pomiędzy NMT a uproszczonym terenem Low. Kolizja powinna
+zachować dotychczasowe stacje i geometrię niezależnie od optymalizacji obrazu.
+
+Uproszczenie sinusoidy do końców i środka zmienia jej sylwetkę oraz normalne;
+kontrola obrazów pozostaje potrzebna mimo małego odchylenia 12–25 mm.
+Sprawdzić AABB i cienie: głębszy panel lub odstająca próbka mogą zwiększyć
+koszt cullingu/ukrytych fragmentów. Porównać granice siatki z istniejącymi
+deskami i słupkami, zamiast zakładać brak zmiany granic całej grupy.
+Mniej trójkątów nie jest samodzielnym dowodem mniejszego kosztu GPU.
