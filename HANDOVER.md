@@ -3,6 +3,7 @@
 ## Najpierw (dla następnej sesji)
 - **Tempo (właściciel, s10):** dalej max 3 agentów naraz. Limit tygodniowy Fable zresetował się (0 % o 10:05, reset 15.11); 5 h reset 15:00 lokalnie.
 - GPT J 0103 i K 0104 SCALONE (`8b176456`, `1c894f25`); `.venv` odśledzony. Regeneracja HIL zielona (494/1 znane). Integracja s10b na main w toku: `artifacts/integration-s10/run2.log` (czeka na PHONE_RUN agenta 0106; import, truck, EditMode, PlayMode, gis, commit reserializacji, czysty APK Low). Priorytety bramki 3 z side-by-side (top 5): niebo/ekspozycja, trawa/pobocza, asfalt bez zużycia, bariery na pomostach/łącznicach, pod wiaduktem → GPT 0108/0109/0099 i Claude 0110.
+- **17:00:** regeneracja 0107 zielona (gis 471/0). **GPT 0090 remiza r7 SCALONE `b0685f51`** (WorldInstances.cs: unia VegetationCanopyPolicy + heroLeaf; hero leaf też na Ultra), **GPT 0087 TRAKT SCALONE `1d695be1`** (wygląd FAIL wg krytyka). Regeneracja `artifacts/logs/s10-regen-EF.log` w toku. Feedback F r2 (0115), E r8 (0116) w `docs/owner/GPT-FEEDBACK-S10.md`. Po regeneracji: integracja Unity (import + Truck BuildBatch/Install — 0087 zmienia ciężarówkę) + EditMode/PlayMode + APK + zrzuty A16.
 - Trigger 16:21: 5 h 29 %, tydzień 22 %, Fable 25 %. Claude: 0110 (Fable) i 0113 w toku (0113 trzyma PHONE_RUN). Regeneracja 0107 w toku. GPT gotowe: 0087 truck-paint (PARTIAL, sami przyznają FAIL wyglądu), 0090 remiza r7 → krytyk w toku. GPT w toku: 0089 car-paint, 0099 surface-wear.
 - **15:45 PIERWSZY WAŻNY gate3 A16 Low (APK `kamion-0.1.0-21a55c3fe4.apk`, main po 0106, valid=True):** G3-A 29,72 fps, p95 33,5 / **p99 50,0** (OVER), GPU p50/p95 29,9/31,8, PSS 835; G3-B 29,88 fps, p95 33,5 / p99 33,7 (OK), GPU 29,5/33,3, PSS 826; termika 0. EditMode 248/248, PlayMode 110/0/7. (`artifacts/gate3/20261111-154331`, …)
 - 0107 recenzja: scalenie PASS warunkowy (działki +152 draws Low, najgorsza kamera +45 — ADR do poprawy; pomiar A16 na r10_house_2/r10_shed_2), jakość FAIL (siatka świeci, podjazd schodkuje, ogród = łąka, popping 60 m, zacieki P1-f cofnięte). **SCALONE `615d7e6e`** (materials.py — unia z 0102), worktree usunięty, regeneracja `artifacts/logs/s10-regen-0107.log`. G3-B kamery 46/46 valid (`artifacts/gate3/20261111-154538`). **Brak zdjęć polskich posesji w repo — poprosić właściciela o zdjęcia płotów/bram/podjazdów domów jednorodzinnych.**
@@ -47,7 +48,7 @@
 4. Węzły r3 wg recenzji 0095; Kwadrat r13 po zdjęciach właściciela; raport bramki 3.
 5. **GPT pakiet S10-B** `docs/owner/GPT-TASK-03-S10.md` (5 nowych sesji właściciela, po 1 strumieniu): H 0085 r2 tło (gpt-edge-r2 z argon-edge), I 0102 meble uliczne (gpt-furniture-r1), J 0103 side-by-side bramki 3 (gpt-sbs-gate3), K 0104 kabina/lusterka (gpt-cab-r1), L 0105 wiadukt pod pomostem (gpt-viaduct-r1). Scalać po REPORT.md.
 6. Następni w kolejce Claude: zabudowa r6 (0107, na Fable — lista r6 z REVIEW s10-0097 + działki domów P1-h), Kwadrat r13.
-7. Ostatni przydzielony ADR: **0113** (wydajność r2) (0107 zabudowa r6, 0108/0109/0111/0112 GPT feedback `docs/owner/GPT-FEEDBACK-S10.md`, 0110 węzły r4).
+7. Ostatni przydzielony ADR: **0116** (0113 wydajność r2, 0114 zabudowa r7, 0115/0116 GPT) (0107 zabudowa r6, 0108/0109/0111/0112 GPT feedback `docs/owner/GPT-FEEDBACK-S10.md`, 0110 węzły r4).
 
 ---
 # HANDOVER — kamion, sesja 9 (2026-11-11 00:30 → ~10:30 lokalnie; zamknięta na polecenie właściciela przy końcu limitu 5 h)

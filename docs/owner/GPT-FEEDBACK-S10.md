@@ -28,3 +28,8 @@ Kolejność: po bieżących (0087, 0089, 0090, 0099) — najpierw C r13 (P0), po
 4. Bariery na pomoście / przy łącznicach (14) → Claude (węzły r4).
 5. Pod wiaduktem: kruszywo zamiast trawy, spód, słupy (13) → sprawdzić po ponownym renderze z 0105.
 Ostatni przydzielony ADR: **0112**.
+
+## Po recenzji 0087/0090 (`docs/reports/visual/REVIEW-2026-11-11-s10-gpt-0087-0090.md`) — scalone na main (`b0685f51`, `1d695be1`)
+- **F r2 — ADR 0115 TRAKT r2** (gałąź `gpt-truck-paint-r2`): wygląd praktycznie bez zmian (RMSE kadru 0,04–0,5 %): lakier kredowy, dach biały w High-clear, szyba mleczna bez gradientu nieba. DRL na High przycięty do 255 (1129 px) — zejdź z luminancją. **Poprawki szyby muszą trafić też do szybkiej ścieżki `FragFast` (ADR 0106, Low/Medium)** — inaczej na A16 nic nie widać. REPORT/ADR pisz normalnym tekstem ze spacjami (obecny jest nieczytelny dla właściciela).
+- **E r8 — ADR 0116 remiza r8** (gałąź `gpt-firestation-r8`): świerki — blade półprzezroczyste karty → ciemne, szerokie, gęste jak na 7197; szkło łuków: gradient odwrócony (render góra 72 / dół 79–83, zdjęcie góra 62–67 / dół 46–53), clear 94–104 za jasne; zacieki niewidoczne, ciemna plama przy maszcie bez źródła; tuje na Low fasetowane, rytm prawie równy. (Lider poprawił: hero leaf także na Ultra.)
+Ostatni przydzielony ADR: **0116**.
