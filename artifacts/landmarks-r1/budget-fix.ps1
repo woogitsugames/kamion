@@ -1,5 +1,9 @@
 $ErrorActionPreference='Stop'
 Set-Location (Split-Path (Split-Path $PSScriptRoot))
+# The already queued focused run owns the same heavy identity. Do not acquire
+# another job under that identity until its Python has ended and released it.
+while (-not ((Get-Content "$PSScriptRoot/budget-fix-focusedgis-wrapper.log" -Raw).Contains('released gpt-landmarks-r1'))) { Start-Sleep -Seconds 2 }
+if (-not ((Get-Content "$PSScriptRoot/budget-fix-focusedgis.log" -Raw).Contains('7 passed'))) { throw 'Initial focused budget test failed' }
 & pwsh artifacts/landmarks-r1/heavy-step.ps1 -Step World -Log artifacts/landmarks-r1/budget-fix-world.log
 if ($LASTEXITCODE -ne 0) { throw 'Budget-fix world generation failed' }
 $meta=Get-Content art-source/world/landmarks/fire_station_jrg2/fire_station_jrg2_meta.json -Raw | ConvertFrom-Json
