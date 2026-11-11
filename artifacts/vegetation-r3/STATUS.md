@@ -14,3 +14,4 @@ Baseline kontrolny odzyskano z r1 B (268 obrazów), bez ponownego renderowania: 
 Zapisano pary foto before Low-clear-photo-1280x720. Następny krok: porównać z photo-references.json.
 Zapisano pary foto before Low-clear-photo-2048x1152. Następny krok: porównać z photo-references.json.
 Zapisano pary foto before Low-clear-photo-2048x1536. Następny krok: porównać z photo-references.json.
+Zapisano pary foto before Low-overcast-photo-1280x720. Następny krok: porównać z photo-references.json.
