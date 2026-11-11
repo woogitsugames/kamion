@@ -13,3 +13,5 @@ Krok 4: Library skopiowano bez błędów (53144 pliki). Baseline czeka na slot 4
 Krok 5: zapisano SHA-256 shaderów, TruckLights i wszystkich źródłowych FBX zewnętrza/naczepy przed zmianami. Baseline nadal w kolejce Unity, bez uruchomienia poza blokadą. Następny krok: po zapisaniu baseline zmierzyć ROI i poprawić zgodność FragFast.
 
 Krok 6: przed pierwszym startem Unity poprawiono wybór sceny: High używa WorldC_High, Low WorldC. Zatrzymano wyłącznie własny proces czekający na slot i wznowiono kolejkę. Następny krok: pwsh artifacts/truck-r1/baseline.ps1.
+
+Krok 7: przygotowano adapter diagnostyczny w art-source/truck/exterior/qa. Generuje tylko ignorowany kod edytora, zachowuje przywracanie materiałów i dodaje tymczasowy ciemny pigment oraz osobny katalog wyników. Jeszcze go nie aktywowano. Następny krok: po baseline uruchomić prepare_round_0115.py i cztery kontrole pigment/refleks.
