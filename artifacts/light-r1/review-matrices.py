@@ -1,7 +1,11 @@
 """Review sheets for actual shadow/shoulder ablations; original PNG measurements."""
 import json
+import os
 import runpy
 from pathlib import Path
+
+for variable in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+    os.environ[variable] = "1"
 
 from PIL import Image, ImageDraw
 from measure import measure
