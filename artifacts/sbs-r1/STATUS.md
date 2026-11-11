@@ -69,3 +69,6 @@ Następny krok po baseline: pwsh -NoProfile -File artifacts/sbs-r1/render-pose-p
 EditMode: 261/261 zaliczone, 0 błędów. Baseline Low overcast: 42 rendery, 25 par dowodowych B i 17 odrzuconych C. Oddzielny zestaw diagnostyczny zawiera wszystkie 42 pary i nie stanowi dowodu zaliczenia bramki. Wszystkie mają zarejestrowane SHA źródeł i renderów.
 Kolejne składanie dużych partii SBS także obejmuje pula heavy; slot Unity jest wcześniej zwalniany, więc nie rezerwujemy obu pul jednocześnie. Parser wrapperów zaliczony.
 Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/render-pose-probes.ps1
+## Materiały gotowe do recenzji
+Zapisano migawkę baseline-current/inputs i potwierdzono jej SHA względem zapisów renderowania. Pose QA obejmuje 144 rendery i 16 galerii. Klasy C nie zostały awansowane na podstawie samych metadanych; oryginalny kompas nie rozwiązał wszystkich błędów. Przygotowano REVIEW-MANIFEST.md do niezależnej oceny narzędzia i kandydatów.
+Następny krok: niezależna recenzja, następnie końcowe testy rundy przez pulę heavy.
