@@ -70,3 +70,6 @@
 
 - Step29 initial laneimport COMPLETE exit0; actual logs saved. Raw topologyproof3350indexed vs3343exactposition+sameage components (7metadataunions): added conservative metadata-only grouping and splitvertexclosure regression; no actual vertex/index/normal weld. RawPBFscope correction:20regionstop_positions, NOT10 (initial truncatedstdout miscount); bbox[776971,595199,779019,597247], regional1872, samequery/SHA unchanged.
 - NEXT COMMAND: lane-tests.ps1 (11tests), correctedmetadata-group canonicalimport then actual acceptedcoverage/nativeage+geometry proof and positiveglyph/unknownnegative render.
+
+- Step30 actual correctedgrouping tests11/11PASS,0skip. Native rawmetadata3350->3343groups proof and splitvertexreject test preserve no-weld contract. Existing daylightphoto1170695487387705 (7m from rawstop2367445386/ref464) viewed960: rightsidebusbay+repairboundary/shelter visible; photo supports bayzone investigation, not measured engine/absolutealbedo. Candidatecoords/compass stored, all20stoppositions scope fixed.
+- NEXT COMMAND: correctedgrouping lane-import.ps1, native-audit -Stage lane-field then exactgeometry/UV0/age-only comparison; positive+unknownpaintcontrol selection and busbayfullpolygon sourceverification.

@@ -1,62 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<test-run id="2" testcasecount="10" result="Passed" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0,0480956">
-  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="236" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.048096" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+<test-run id="2" testcasecount="11" result="Passed" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0,0524124">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="237" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.052412" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
     <properties>
       <property name="platform" value="EditMode" />
     </properties>
-    <test-suite type="Assembly" id="1288" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="236" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.043327" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <test-suite type="Assembly" id="1289" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="237" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.047049" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
       <properties>
-        <property name="_PID" value="102024" />
+        <property name="_PID" value="94588" />
         <property name="_APPDOMAIN" value="Unity Child Domain" />
         <property name="platform" value="EditMode" />
         <property name="EditorOnly" value="True" />
       </properties>
-      <test-suite type="TestSuite" id="1289" name="Game" fullname="Game" runstate="Runnable" testcasecount="236" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.042310" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <test-suite type="TestSuite" id="1290" name="Game" fullname="Game" runstate="Runnable" testcasecount="237" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.045991" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
         <properties />
-        <test-suite type="TestSuite" id="1290" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="236" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.041450" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <test-suite type="TestSuite" id="1291" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="237" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.045059" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
           <properties />
-          <test-suite type="TestFixture" id="1102" name="RoadPaintLaneFieldTests" fullname="Game.Tests.RoadPaintLaneFieldTests" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.023231" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <test-suite type="TestFixture" id="1102" name="RoadPaintLaneFieldTests" fullname="Game.Tests.RoadPaintLaneFieldTests" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.026641" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
             <properties />
-            <test-case id="1106" name="AmbiguousOverlappingRoadFieldsAreRejected" fullname="Game.Tests.RoadPaintLaneFieldTests.AmbiguousOverlappingRoadFieldsAreRejected" methodname="AmbiguousOverlappingRoadFieldsAreRejected" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" seed="970558882" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.012518" asserts="0">
+            <test-case id="1107" name="AmbiguousOverlappingRoadFieldsAreRejected" fullname="Game.Tests.RoadPaintLaneFieldTests.AmbiguousOverlappingRoadFieldsAreRejected" methodname="AmbiguousOverlappingRoadFieldsAreRejected" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" seed="249601805" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.015167" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1104" name="ExistingVaryingPaintFieldIsNeverReplaced" fullname="Game.Tests.RoadPaintLaneFieldTests.ExistingVaryingPaintFieldIsNeverReplaced" methodname="ExistingVaryingPaintFieldIsNeverReplaced" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" seed="1726294396" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.000184" asserts="0">
+            <test-case id="1104" name="ExistingVaryingPaintFieldIsNeverReplaced" fullname="Game.Tests.RoadPaintLaneFieldTests.ExistingVaryingPaintFieldIsNeverReplaced" methodname="ExistingVaryingPaintFieldIsNeverReplaced" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" seed="598061533" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.000181" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1108" name="LaneWrapDiscontinuityRejectsComponentInsteadOfInterpolatingAcrossReset" fullname="Game.Tests.RoadPaintLaneFieldTests.LaneWrapDiscontinuityRejectsComponentInsteadOfInterpolatingAcrossReset" methodname="LaneWrapDiscontinuityRejectsComponentInsteadOfInterpolatingAcrossReset" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" seed="69841055" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.001139" asserts="0">
+            <test-case id="1109" name="LaneWrapDiscontinuityRejectsComponentInsteadOfInterpolatingAcrossReset" fullname="Game.Tests.RoadPaintLaneFieldTests.LaneWrapDiscontinuityRejectsComponentInsteadOfInterpolatingAcrossReset" methodname="LaneWrapDiscontinuityRejectsComponentInsteadOfInterpolatingAcrossReset" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" seed="113528610" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.000608" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1107" name="OtherRoadHeightCannotSupplyPaintLane" fullname="Game.Tests.RoadPaintLaneFieldTests.OtherRoadHeightCannotSupplyPaintLane" methodname="OtherRoadHeightCannotSupplyPaintLane" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" seed="932354930" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.000131" asserts="0">
+            <test-case id="1108" name="OtherRoadHeightCannotSupplyPaintLane" fullname="Game.Tests.RoadPaintLaneFieldTests.OtherRoadHeightCannotSupplyPaintLane" methodname="OtherRoadHeightCannotSupplyPaintLane" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" seed="1954266125" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.000133" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1103" name="SupportedWholeGlyphReusesLaneButPreservesExactAgeAndGeometry" fullname="Game.Tests.RoadPaintLaneFieldTests.SupportedWholeGlyphReusesLaneButPreservesExactAgeAndGeometry" methodname="SupportedWholeGlyphReusesLaneButPreservesExactAgeAndGeometry" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" seed="1372232397" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.000939" asserts="0">
+            <test-case id="1106" name="SplitVerticesAtSamePositionAndAgeStillRejectWholeGlyph" fullname="Game.Tests.RoadPaintLaneFieldTests.SplitVerticesAtSamePositionAndAgeStillRejectWholeGlyph" methodname="SplitVerticesAtSamePositionAndAgeStillRejectWholeGlyph" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" seed="1286973654" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.000857" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1105" name="UnknownPartRejectsEntireConnectedGlyphIncludingSupportedTriangle" fullname="Game.Tests.RoadPaintLaneFieldTests.UnknownPartRejectsEntireConnectedGlyphIncludingSupportedTriangle" methodname="UnknownPartRejectsEntireConnectedGlyphIncludingSupportedTriangle" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" seed="1110701785" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.000129" asserts="0">
+            <test-case id="1103" name="SupportedWholeGlyphReusesLaneButPreservesExactAgeAndGeometry" fullname="Game.Tests.RoadPaintLaneFieldTests.SupportedWholeGlyphReusesLaneButPreservesExactAgeAndGeometry" methodname="SupportedWholeGlyphReusesLaneButPreservesExactAgeAndGeometry" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" seed="1091957602" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.001140" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1105" name="UnknownPartRejectsEntireConnectedGlyphIncludingSupportedTriangle" fullname="Game.Tests.RoadPaintLaneFieldTests.UnknownPartRejectsEntireConnectedGlyphIncludingSupportedTriangle" methodname="UnknownPartRejectsEntireConnectedGlyphIncludingSupportedTriangle" classname="Game.Tests.RoadPaintLaneFieldTests" runstate="Runnable" seed="673823925" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.000317" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
           </test-suite>
-          <test-suite type="TestFixture" id="1109" name="RoadWearUvContractTests" fullname="Game.Tests.RoadWearUvContractTests" classname="Game.Tests.RoadWearUvContractTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.013512" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <test-suite type="TestFixture" id="1110" name="RoadWearUvContractTests" fullname="Game.Tests.RoadWearUvContractTests" classname="Game.Tests.RoadWearUvContractTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.013628" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
             <properties />
-            <test-case id="1110" name="MissingRoadUvUsesSentinelButValidZeroAndExistingDataSurvive" fullname="Game.Tests.RoadWearUvContractTests.MissingRoadUvUsesSentinelButValidZeroAndExistingDataSurvive" methodname="MissingRoadUvUsesSentinelButValidZeroAndExistingDataSurvive" classname="Game.Tests.RoadWearUvContractTests" runstate="Runnable" seed="93339426" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.009244" asserts="0">
+            <test-case id="1111" name="MissingRoadUvUsesSentinelButValidZeroAndExistingDataSurvive" fullname="Game.Tests.RoadWearUvContractTests.MissingRoadUvUsesSentinelButValidZeroAndExistingDataSurvive" methodname="MissingRoadUvUsesSentinelButValidZeroAndExistingDataSurvive" classname="Game.Tests.RoadWearUvContractTests" runstate="Runnable" seed="1411454194" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.009137" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
@@ -64,19 +70,19 @@
               <output><![CDATA[[BAKE] normal vertex format: SNorm8x4
 ]]></output>
             </test-case>
-            <test-case id="1112" name="MixedRoadLayerKeepsMissingSidewalkUvAtLegacyZero" fullname="Game.Tests.RoadWearUvContractTests.MixedRoadLayerKeepsMissingSidewalkUvAtLegacyZero" methodname="MixedRoadLayerKeepsMissingSidewalkUvAtLegacyZero" classname="Game.Tests.RoadWearUvContractTests" runstate="Runnable" seed="1163394139" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.000369" asserts="0">
+            <test-case id="1113" name="MixedRoadLayerKeepsMissingSidewalkUvAtLegacyZero" fullname="Game.Tests.RoadWearUvContractTests.MixedRoadLayerKeepsMissingSidewalkUvAtLegacyZero" methodname="MixedRoadLayerKeepsMissingSidewalkUvAtLegacyZero" classname="Game.Tests.RoadWearUvContractTests" runstate="Runnable" seed="2079698137" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.000380" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1111" name="OtherLayersKeepTheirLegacyZeroFallback" fullname="Game.Tests.RoadWearUvContractTests.OtherLayersKeepTheirLegacyZeroFallback" methodname="OtherLayersKeepTheirLegacyZeroFallback" classname="Game.Tests.RoadWearUvContractTests" runstate="Runnable" seed="1789443081" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.000316" asserts="0">
+            <test-case id="1112" name="OtherLayersKeepTheirLegacyZeroFallback" fullname="Game.Tests.RoadWearUvContractTests.OtherLayersKeepTheirLegacyZeroFallback" methodname="OtherLayersKeepTheirLegacyZeroFallback" classname="Game.Tests.RoadWearUvContractTests" runstate="Runnable" seed="2125801604" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.000337" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1113" name="PolicyChangesOnlyMissingUvBytesNotGeometryOrSubmeshes" fullname="Game.Tests.RoadWearUvContractTests.PolicyChangesOnlyMissingUvBytesNotGeometryOrSubmeshes" methodname="PolicyChangesOnlyMissingUvBytesNotGeometryOrSubmeshes" classname="Game.Tests.RoadWearUvContractTests" runstate="Runnable" seed="1637820057" result="Passed" start-time="2026-11-11 14:02:58Z" end-time="2026-11-11 14:02:58Z" duration="0.001916" asserts="0">
+            <test-case id="1114" name="PolicyChangesOnlyMissingUvBytesNotGeometryOrSubmeshes" fullname="Game.Tests.RoadWearUvContractTests.PolicyChangesOnlyMissingUvBytesNotGeometryOrSubmeshes" methodname="PolicyChangesOnlyMissingUvBytesNotGeometryOrSubmeshes" classname="Game.Tests.RoadWearUvContractTests" runstate="Runnable" seed="1290363540" result="Passed" start-time="2026-11-11 14:06:03Z" end-time="2026-11-11 14:06:03Z" duration="0.001940" asserts="0">
               <properties>
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
