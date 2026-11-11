@@ -36,7 +36,10 @@ before=nodes(out/'baseline-street_props.glb')
 after=nodes(root/'art-source/world/props/street_props.glb')
 changed=[n for n in sorted(before.keys()|after.keys()) if before.get(n)!=after.get(n)]
 protected=[n for n in changed if not n.startswith(('trailer_','tractor_'))]
-report=dict(before_nodes=len(before),after_nodes=len(after),changed=changed,changed_outside_static_vehicles=protected)
+old=json.loads((root/'artifacts/life-r1/prepared-import-20261111-225727-source-proof.json').read_text())
+raw_changed=[p['file'] for p in old['products'] if hashlib.sha256((root/p['file']).read_bytes()).hexdigest()!=p['actual']]
+report=dict(before_nodes=len(before),after_nodes=len(after),changed=changed,changed_outside_static_vehicles=protected,raw_products_checked=len(old['products']),raw_products_changed=raw_changed)
 (out/'nonlife-glb-audit.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
-print(json.dumps(dict(nodes=len(after),changed=len(changed),protected_changed=len(protected))))
+print(json.dumps(dict(nodes=len(after),changed=len(changed),protected_changed=len(protected),raw_changed=len(raw_changed))))
 assert not protected,protected
+assert not raw_changed,raw_changed
