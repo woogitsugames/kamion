@@ -26,3 +26,4 @@ Krok 7: dodano clearCloudCover w LightingPreset (clear 0,42 WORKING_VALUE; inne 
 Krok 8: dokončene clear RCAS: 0,75 daje asfalt HF 5,6999 i niebo HF 0,6418 (r=1,5 px). Wybrano 0,75 jako kandydat odzyskujący detal, próg nieba ≤0,6 pozostaje niespełniony o 0,0418, bez deklaracji PASS. Applier rozwiązuje historyczne High/FSR/zero do 0,75, zachowuje jawne Rq i pozostałe profile. Dodano test granic Low/High/Linear/jawne zero. Bez nowego pola QualityProfile ani migracji. Następny krok: dokończyć overcast ablacjas i zweryfikować kandydata w pełnym renderze.
 
 Krok 9: skybox zachowuje kontrakt cap-off przy przechwytywaniu odbić: chmury używają radiancji modelu zamiast limitu wyświetlania. Następny krok: import i oględziny nieba oraz odbić po zakończeniu bieżącej serii.
+Render ablacji zakończony: artifacts/light-r1/rcas/High-overcast-0. PNG wymagają obejrzenia i pomiarów. Następny krok: kolejny wariant w artifacts/light-r1/rcas-ablation.ps1, potem analiza.
