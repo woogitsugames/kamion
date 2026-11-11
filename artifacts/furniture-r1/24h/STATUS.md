@@ -7,3 +7,5 @@ Cel: podmurówka i deformacje siatki, rozpoznawalny słup betonowy, korozja uchw
 NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c
 
 21:33: generator baseline przerwany przed startem: stara .venv bez interpretera. Zachowano jako .venv.pre24h-invalid; uv odtwarza środowisko. NASTĘPNY KROK: powtórzyć build_world.
+
+21:37: przygotowano ADR 0120 i runner Unity z acquire/release także przy błędzie. Przejrzano arkusz Commons: ogrodzenia przemysłowe i wyposażenie, bez dowodu dokładnego typu bocznych lamp. NASTĘPNY KROK: po build-before uruchomić pwsh artifacts/furniture-r1/24h/unity-step.ps1 -Step import -Phase before.
