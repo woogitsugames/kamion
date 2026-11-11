@@ -26,7 +26,7 @@ namespace Game.Vehicle.Runtime
         const int DRL = 1, LOW = 2, HIGH = 3, IND_L = 4, IND_R = 5, TAIL_BRAKE = 6, REVERSE = 7, MARKER_F = 8, MARKER_S = 9, MARKER_R = 10, FOG = 11, WORK = 12, PLATE = 13;
         // cd/m^2 (WORKING_VALUE): ADR 0115 starts a bounded DRL display calibration against the clipped High-overcast strip.
         // Day/night ratio remains 1 / 0.35. Other lamp levels retain the preceding provisional calibration.
-        const float DrlNits = 4e3f, LowNits = 5e4f, HighNits = 8e4f, TailNits = 1.3e3f, BrakeNits = 2.0e4f, ReverseNits = 3e4f, MarkerNits = 2e3f, IndicatorNits = 2.5e4f;
+        const float DrlNits = 3e3f, LowNits = 5e4f, HighNits = 8e4f, TailNits = 1.3e3f, BrakeNits = 2.0e4f, ReverseNits = 3e4f, MarkerNits = 2e3f, IndicatorNits = 2.5e4f;
         static readonly Color White = new Color(1f, 0.97f, 0.92f), Red = new Color(1f, 0.03f, 0.01f), Amber = new Color(1f, 0.42f, 0.02f);
 
         // Encode luminance before RGBAHalf storage: high80000 exceeds65504; retain headroom for authored lamp levels.
