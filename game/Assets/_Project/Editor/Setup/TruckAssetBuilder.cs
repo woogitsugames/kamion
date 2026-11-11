@@ -1042,6 +1042,16 @@ namespace Game.Editor.Setup
             Q("cab-dash", eye, Quaternion.Euler(24f, 12f, 0f), 62f, "A7: cluster, steering wheel, centre stack, lower dash (low-sun black-cab check: lower dash > 8 %).");
             Q("cab-left", eye, Quaternion.Euler(4f, -68f, 0f), 62f, "A7: driver door card, door glass and the main/wide mirrors on the left.");
             Q("cab-right", eye, Quaternion.Euler(8f, 58f, 0f), 62f, "A7: passenger seat, passenger door card, right mirrors through the glass.");
+            // ADR 0104: the driving views cannot expose the driver's bolster or resolve moulded grain.
+            // Separate detail views are evidence only; they never replace the driver's-eye acceptance frames.
+            var hPoint = FindDeep(truck, "DriverHPoint");
+            Vector3 hip = hPoint != null ? truck.InverseTransformPoint(hPoint.position) : eye - Vector3.up * 0.635f;
+            Vector3 seatView = eye + new Vector3(0.92f, -0.10f, 0.12f);
+            Q("cab-seat", seatView, Quaternion.LookRotation(hip + new Vector3(-0.08f, 0.15f, -0.18f) - seatView, Vector3.up),
+                52f, "0104: driver seat cloth, door-side leather bolster and seams; detail view, not ocular point.");
+            Vector3 materialView = eye + new Vector3(0.35f, -0.12f, 0.16f);
+            Q("cab-materials", materialView, Quaternion.LookRotation(eye + new Vector3(0.48f, -0.50f, 0.85f) - materialView, Vector3.up),
+                45f, "0104: dash moulded plastic grain, panel join and seam; detail view, not ocular point.");
             // Mirror checks (review r6 C-N8, ADR 0042 addendum): from the eye, narrow field onto the glass of each side and the
             // front mirror, so the image in every class II / IV / V / VI glass is readable in the control frame.
             void QMirrors(string id, string note, params string[] glass)
