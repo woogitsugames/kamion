@@ -62,3 +62,4 @@ Obejrzano wszystkie 24 arkusze kontrolne baseline (268 kadrów Low/High, clear/o
 Import kandydata zakończony kodem 0. Następny krok: sprawdzić import-after.log, render-matrix -Stage after.
 ADR 0109 uzupełniono o faktyczny zakres zmian, granice pomiarów, 322 obrazy before i pilną pulę heavy. Baseline własnych pomiarów opisuje corrected ROI, bez twierdzenia o gotowej jakości. Następny krok: zakończenie import-after i macierz after.
 Import-after: IMPORT_RESULT OK, 64 chunki, Low+High, bez błędów shaderów w logu importu. Zakończono kontrolę hashy kolizji (collision-comparison.json). Następny krok: after-matrix.log oraz pierwsze obrazy after.
+Zapisano after WorldC Low overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
