@@ -4,3 +4,5 @@
 - NEXT: git lfs checkout; copy required local data and create read-only-use raw junctions; inspect far_field.py.
 - Required copies/junctions and LFS checkout complete; local material/Library cache prepared. Baseline GIS and merged-world regeneration running.
 - NEXT: uv run --project tools/worldgen python -m streetscape.far_field --region bialystok-industrial-c (after boundary regression tests).
+- Boundary regression: 10 synthetic tests passed (four sides, touching, MultiPolygon and concave source; Low/High emit guard). Before generator source saved.
+- NEXT: finish merged build baseline, regenerate far field, pytest GIS, wait for PHONE_RUN before Unity.

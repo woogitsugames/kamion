@@ -53,6 +53,7 @@ FORESHORTEN_SPAN_M = 520.0
 FORESHORTEN_TAU_M = 950.0
 
 SECTORS = ("far_north", "far_east", "far_south", "far_west")
+GIS_CACHE_SCHEMA = "far-field-gis-cache/8"
 
 # Linear RGB albedos calibrated to docs/06 §3 and streetscape/materials.py
 PALETTE_BLOCK = [
@@ -316,6 +317,15 @@ def _road_exit_corridors(half: float = 1024.0) -> shapely.Geometry:
     return shapely.union_all(stubs)
 
 
+def building_outside_region(footprint, half: float) -> bool:
+    """Region buildings own the whole boundary-crossing footprint, including contact.
+
+    Check the source geometry before discarding MultiPolygon parts, then the rounded
+    LoD rectangle as well: either approximation can otherwise cover a region building.
+    """
+    return not footprint.is_empty and not footprint.intersects(box(-half, -half, half, half))
+
+
 def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0) -> dict:
     """Extract and cache real ring features from BDOT10k (gpkg), GUGiK LoD1 2024, and OSM PBF."""
     import pyogrio
@@ -343,7 +353,11 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
     if cache_path.exists():
         try:
             cached = json.loads(cache_path.read_text(encoding="utf-8"))
-            if cached.get("sources_sha256") == sources_sha and cached.get("schema") == "far-field-gis-cache/7":
+            if (cached.get("sources_sha256") == sources_sha
+                    and cached.get("schema") == GIS_CACHE_SCHEMA
+                    and cached.get("origin_epsg2180") == [ox, oy]
+                    and cached.get("half_m") == half
+                    and cached.get("ring_max_m") == RING_MAX_M):
                 return cached
         except Exception:
             pass
@@ -361,6 +375,8 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
 
     forests = []
     buildings = []
+    boundary_exclusions = {"bdot_source": 0, "bdot_rectangle": 0,
+                           "osm_source": 0, "osm_rectangle": 0}
     chimneys = []
     pylons = []
     power_lines = []
@@ -387,6 +403,9 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
         df = pyogrio.read_dataframe(bdot_files["OT_BUBD_A"], bbox=bbox_2180)
         for _, row in df.iterrows():
             geom = shapely.affinity.translate(row.geometry, xoff=-ox, yoff=-oy)
+            if not building_outside_region(geom, half):
+                boundary_exclusions["bdot_source"] += 1
+                continue
             if geom.geom_type == "MultiPolygon":
                 geom = max(geom.geoms, key=lambda g: g.area)
             if geom.geom_type != "Polygon" or geom.area < 45.0:
@@ -444,6 +463,9 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
             if rect.geom_type != "Polygon" or rect.area < 30.0:
                 continue
             rc = np.round(np.asarray(rect.exterior.coords)[:4], 1).tolist()
+            if not building_outside_region(Polygon(rc), half):
+                boundary_exclusions["bdot_rectangle"] += 1
+                continue
             buildings.append({
                 "id": bid or f"bdot_{len(buildings)}",
                 "typ": typ,
@@ -607,6 +629,9 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                         if dmin < 10.0:
                             return
                     poly = shapely.make_valid(Polygon(pts))
+                    if not building_outside_region(poly, half):
+                        boundary_exclusions["osm_source"] += 1
+                        return
                     if poly.geom_type == "MultiPolygon":
                         poly = max(poly.geoms, key=lambda g: g.area)
                     if poly.geom_type != "Polygon" or poly.area < 55.0:
@@ -651,6 +676,9 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                     if rect.geom_type != "Polygon" or rect.area < 35.0:
                         return
                     rc = np.round(np.asarray(rect.exterior.coords)[:4], 1).tolist()
+                    if not building_outside_region(Polygon(rc), half):
+                        boundary_exclusions["osm_rectangle"] += 1
+                        return
                     buildings.append({
                         "id": f"osm_a{a.id}",
                         "typ": typ,
@@ -665,7 +693,7 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
         RingHandler().apply_file(str(osm_pbf), locations=True)
 
     data = {
-        "schema": "far-field-gis-cache/7",
+        "schema": GIS_CACHE_SCHEMA,
         "region": region_id,
         "origin_epsg2180": [ox, oy],
         "half_m": half,
@@ -674,6 +702,7 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
         "extracted_in_s": round(time.time() - t0, 2),
         "forests": forests,
         "buildings": buildings,
+        "boundary_exclusions": boundary_exclusions,
         "chimneys": chimneys,
         "pylons": pylons,
         "power_lines": power_lines,
@@ -1019,7 +1048,7 @@ def _wall_visible_from_tile(a: np.ndarray, c: np.ndarray, half: float = 1024.0) 
 
 def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevation, half: float, tier: str):
     rc = np.asarray(b["rect"], dtype=np.float64)
-    if len(rc) < 4:
+    if len(rc) < 4 or not building_outside_region(Polygon(rc), half):
         return
     if not Polygon(rc).exterior.is_ccw:
         rc = rc[::-1]
@@ -1048,6 +1077,8 @@ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevat
     ce, cn, _, _ = foreshorten_point(cx_raw, cy_raw, half)
     s_xy, s_h = foreshorten_scales(d_raw)
     pts = np.array([[ce + (p[0] - cx_raw) * s_xy, cn + (p[1] - cy_raw) * s_xy] for p in rc[:4]], dtype=np.float64)
+    if not building_outside_region(Polygon(pts), half):
+        return
     sec = sectors[sector_of(ce, cn, half)]
 
     z_ref = elev.z_at_eff(ce, cn)
@@ -1492,6 +1523,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
         "schema": "truck-sim-pl/far-field-qa/1",
         "region": region_id,
         "feature_counts": src_manifest["feature_counts"],
+        "boundary_exclusions": gis["boundary_exclusions"],
         "tiers": qa_tiers,
     }
     gen_dir = pipeline.REGIONS / region_id / "generated"
