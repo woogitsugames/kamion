@@ -10,7 +10,8 @@
 |---|---|---|---|---|
 | recenzja 0095 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0095.md | ZROBIONA `503c89ae`: scalenie PASS warunkowy, bramka wizualna węzłów FAIL (połamana P-21, Putry N/MA-010 gołe) |
 | węzły r3 | 0100 | .claude/worktrees/junctions-r3 (gałąź junctions-r3) | artifacts/junctions-r3/STATUS.md | w toku (world-builder) wg recenzji s10-0095 |
-| recenzja 0086 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0086.md | w toku |
+| recenzja 0086 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0086.md | ZROBIONA: kontrakt OK, kalibracja FAIL (hala kp_wall przepalona, ekrany za ciemne); D48: tynk remizy 110/126/145 zostaje |
+| kalibracja r2 | 0101 | .claude/worktrees/tint-r2 (gałąź tint-r2) | artifacts/tint-r2/STATUS.md | w toku (rendering-perf) wg recenzji s10-0086 |
 | zabudowa r5 | 0097 | .claude/worktrees/buildings-r5 (gałąź buildings-r5) | artifacts/buildings-r13/STATUS.md | w toku (world-builder) |
 | GPT B roślinność r2 | 0088 | gpt-vegetation-r2 | — | GPT w toku, brak REPORT |
 | GPT C światło r12 | 0098 | gpt-light-r12 | — | GPT w toku, brak REPORT |
@@ -22,7 +23,7 @@
 2. Integracja na main z Megascans + 0086 (import-region, Truck BuildBatch/InstallBatch, EditMode/PlayMode, APK Low) → telefon A16 Low gate3.
 3. Scalanie GPT B 0088 → C 0098 po REPORT.md; 0097 po REPORT.md.
 4. Węzły r3 wg recenzji 0095; Kwadrat r13 po zdjęciach właściciela; raport bramki 3.
-5. Ostatni przydzielony ADR: **0100** (węzły r3).
+5. Ostatni przydzielony ADR: **0101** (kalibracja r2).
 
 ---
 # HANDOVER — kamion, sesja 9 (2026-11-11 00:30 → ~10:30 lokalnie; zamknięta na polecenie właściciela przy końcu limitu 5 h)
