@@ -15,10 +15,14 @@
 
 - Krok7: eksperyment przebudowany33s(fire_station)+317s(world); import po walidacji cache zakończonyOK/SHA0. Chronione piksele dachu/trimu/szkła identyczne wHigh/Medium/Low (plaster-atlas-diff.json); 3testyGISkontraktuPASS. PierwszeEditMode223/226: wszystkie14TintGPU/CPUgreen,3starefixtureTruckDoorGlass brakMI_Ext_DoorGlassL; po finalnejparzeodświeżę canonicaltruck i powtórzętesty. NASTĘPNY KROK: `pwsh -ExecutionPolicy Bypass -File artifacts/tint-gamma-r1/run-round.ps1 -Round after-calibrated`; tabelaROI i niezależnyreviewroot.
 
-- Krok8: GIS358pass/2xfail, canonical truck od?wie?ony po dopasowanej macierzy, EditMode226/226pass. Reviewroot wykry? plandeki dok3 rozja?nione53/55/54?110/112/109. Kalibracja wszystkich6PVC+box_white do poprzedniej efektywnej warto?ci GPU, explicit WORKING_VALUE wgADR0092/s9; roughness bez zmian. NAST?PNY KROK: build_world ? import ? after-final236PNG; rozdzieli? statystyki kanonicznego pojazdu od zmian ?wiata.
+- Step8: independent review found dock3 curtain brightness regression; seven explicit working pigments preserve accepted s9 GPU appearance; roughness unchanged. NEXT: rebuild/import/final236.
 
-- Krok9: nowy world306.7s, importSHA0; pami??111.4MBLow/239.8MBHigh bez zmiany. Trwa after-final59?4 po canonicalfixture; wcze?niejsza dopasowana macierz kosztu nadal osobna. NAST?PNY KROK: odczytROI curtain_dock3, finalne strony960 i rootreview; finalGIS w toku.
+- Step9: world306.7s, importSHA0, memory111.4MBLow/239.8MBHigh. NEXT: final236/ROIs/root review.
 
-- Krok10: after-final236PNG +compare-final40stron gotowe; root powiadomiony. Dok3 wraca do53/55/54Highov i87/90/87Highclear (dok?adnie baseline), Low44/46/45 i80/82/79. Audyt wycinka hali wykry? dach naczepy w dawnymROI; ko?cowy g?rna elewacja210,83?240,94, tabela wszystkichrund przeliczona. Statystyki finalLow identyczne; High tylko pojazdowe r??nice?1..+7ktris, draws bez zmian; dow?d izolowany pozostaje wcze?niejszy. NAST?PNY KROK: finalGIS+EditMode po finalnymimporcie, rootreview, REPORT/cleanup/commit/kopiaartefakt?w.
+- Step10: final236 and40paired sheets ready; dock3 matches baseline in4conditions. Corrected hall ROI to upper facade210,83-240,94 and remeasured every round. Separate canonical fixture diagnostic. NEXT: finalGIS/EditMode.
 
-- Krok11: finalGIS359pass/2xfail553s, EditMode226/226pass po finalnymimporcie. Odwr?cono tylko w?asne uboczne ustawieniaUnity. Raport16wierszy, ADR i pe?na tabela ko?cowa gotowe. NAST?PNY KROK: gitdiffaudit/commit, robocopyartifacts /E /XJ do main, rootniezale?nyreview ko?cowy i reportSHA.
+- Step11: finalGIS359pass/2xfail553s; finalEditMode226/226pass0skip. Reverted own Unity settings side effects. Artifacts copied to main /E /XJ. NEXT: independent root review.
+
+- Step12: independent root review PASS for ADR0086 scope; fixed literal-question-mark encoding damage in REPORT/ADR/status additions. LASTSHA implementation ab738b01. NEXT: record root review path, docs-only commit and artifact recopy.
+
+- Step13: root REVIEW.md received, scopedPASS confirmed and report linked; report16cleanASCIIlines, ADR UTF8 checked. NEXT: docs-only commit, recopy artifacts /E /XJ and deliver final SHA for F handoff.

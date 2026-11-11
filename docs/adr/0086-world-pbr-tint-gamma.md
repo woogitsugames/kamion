@@ -1,52 +1,44 @@
-﻿# ADR 0086 — jeden liniowy kontrakt `_Tint` materiałów świata
+# ADR 0086: one linear WorldPBR tint contract and measured local recalibration
 
-Status: Proposed, S10 A (`gpt-tint-gamma`), 2026-11-11. Baza źródeł: main `4f7da66c`; integracja przez lidera, bez scalania tej gałęzi do main.
+Status: implemented on gpt-tint-gamma, 2026-11-11; independent root review PASS for this scope.
 
-## Problem i pomiar
+## Evidence and decision
 
-`WorldPBR.shader` deklaruje `_Tint` jako ShaderLab `Color`. Unity 6000.3.28f1 w Linear/D3D12 dekoduje tę wartość z sRGB podczas wysyłania do GPU również po `Material.SetVector`. Manifesty przechowują wartości liniowe. ADR0081 kompensował dekodowanie tylko dla materiałów budynków z `tint_linear`; pozostałe zestawy modulacyjne, niejednostkowe współczynniki zestawów kalibrowanych i pasy opon nadal otrzymywały zły mnożnik.
+`Kamion/World PBR` declares `_Tint` as Color. An actual GPU readback probe clones the current shader, preserving its properties/CBUFFER and changing only the fragment return to `_Tint`. With Unity6000.3.28f1, Linear color space, D3D12 and ARGBFloat linear readback, raw0.08 becomes0.007194 and raw0.5 becomes0.214041. Uploading gamma(linear) returns exactly0.08/0.5; HDR1.5 and2.5 also round-trip. Both SetColor and SetVector follow the same conversion. See tint-probe.json and WorldPbrTintProbe.cs; this is measured shader behavior rather than an API assumption.
 
-Dowód to **odczyt GPU rzeczywistego shadera**, nie sam odczyt `Material.GetColor`: `WorldPbrTintProbe` kopiuje bieżący WorldPBR do ignorowanego `_Generated`, zmienia tylko zwracany fragment na `_Tint`, zachowuje jego właściwości/CBUFFER i renderuje do liniowego ARGBFloat bez światła, tekstur i ekspozycji. Zapisano hash źródła, wersję Unity, API i 56 odczytów w `artifacts/tint-gamma-r1/tint-probe.json`.
+All four importer writes use SetLinearTint: modulation, calibrated luminance ratios, oil/paint reset and tyre decal. The API accepts a linear multiplier and stores its gamma encoding. Legacy tint_linear metadata remains accepted but no longer selects the conversion. Existing ADR0081 modulation and identity1 are no-ops. No production shader change, extra texture or runtime pass was added.
 
-| Liniowe wejście | GPU po surowym SetVector/SetColor | GPU po zapisie wejście.gamma |
-|---:|---:|---:|
-| 0,04 | 0,003096 | 0,040000 |
-| 0,08 | 0,007194 | 0,080000 |
-| 0,18 | 0,027212 | 0,180000 |
-| 0,50 | 0,214041 | 0,500000 |
-| 1,00 | 1,000000 | 1,000000 |
-| 1,50 | 2,440062 | 1,500000 |
-| 2,50 | 7,507028 | 2,500000 |
+The119-definition contract audit records56 previously corrected modulation definitions,33 remaining modulation definitions,29 calibrated ratios and1tyre decal. material-contract-audit.json preserves the baseline; material-final-audit.json records the final disposition per definition. This audit does not claim119 independent physical-albedo measurements. Preserve tile(set_tile||elementScan||atlas), weather/runoff, macro, panel_m, splash_h, normal/mask scales and all texture metric sizes. Preserve asphalt linear0.08 (ADR0080/0049). Adjacent StripeA/StripeB/PearlTint Color risks remain outside this change; PearlTint is coordinated with streamG.
 
-## Decyzja
+## Local working calibration
 
-1. Wszystkie cztery zapisy `_Tint` w `WorldPbrMaterials.Create` przechodzą przez `SetLinearTint`. API przyjmuje **liniowy mnożnik**, zapisuje jego `.gamma`, a GPU otrzymuje pierwotną wartość liniową. Obejmuje modulację, skalarny stosunek luminancji zestawu kalibrowanego, reset tintu oleju/farby oraz proceduralny decal opony. Współczynniki HDR zachowują zakres powyżej 1.
-2. `tint_linear` pozostaje zgodnym metadanym starszych manifestów, ale nie steruje już konwersją. Materiały, które były poprawne po ADR0081, zachowują wartości GPU; tint równy 1 jest działaniem neutralnym. Audyt obejmuje 119 definicji PBR: 56 wcześniej poprawnych modulacyjnych, 33 pozostałe modulacyjne, 29 kalibrowanych i pas opon. Tabela wszystkich definicji przed zmian?: `material-contract-audit.json`; decyzja ko?cowa per definicja: `material-final-audit.json`. Audyt kontraktu wszystkich119 nie oznacza119niezale?nych pomiar?w fizycznego albedo; lokalna kalibracja jest jawnie ograniczona do udokumentowanych przypadk?w.
-3. Nie zmieniono shadera ani jego wariantów. Zachowano `_Tile = set_tile || elementScan || atlas`, wspólne `weather`/`runoff`, `macro`, `panel_m`, `splash_h`, skale normalnych/masek i fizyczne rozmiary tekstur. Asfalt zachowuje decyzję 0,08 liniowego albedo z ADR0080/0049.
-4. Kalibracja po pierwszej pełnej rundzie z samą poprawką: ciemna kaseta ekranu urosła z 28/29/28 do 57/59/56 w High overcast wobec referencyjnych 36–40. `noise_panel_dark` zmieniono z 0,068/0,072/0,070 na **0,022/0,024/0,023 liniowo (WORKING_VALUE)**. Nie jest to pomiar fizycznego albedo farby.
-5. Tynk remizy już miał neutralny tint; sama poprawka nie zmieniła jego koloru, lecz Low pozostawał o 13–15 poziomów poniżej celu. Zastosowano **jeden wspólny mnożnik 1,15 liniowo tylko do pigmentu tynku** w `sets_fire_station.py`: 0,185/0,260/0,365 → 0,21275/0,299/0,41975, WORKING_VALUE. Obejmuje pas tynku oraz tynk otaczający łuki/okrągłe okno. Piksele dachu, obróbek, szyb i szprosów są identyczne we wszystkich trzech tierach; wysokość/roughness również pozostają niezmienione. To mały konflikt liczbowy z późniejszym strumieniem E, nie zmiana bryły ani szkła.
+1. Screen cassette: pure contract made High-overcast28/29/28 become57/59/56, against photographed36-40. noise_panel_dark changes0.068/0.072/0.070 to0.022/0.024/0.023 linear, WORKING_VALUE.
+2. Fire station: neutral tint means the contract alone cannot change it. Low remained outside the requested110/126/145 +/-10 target. Apply one common linear gain1.15 only to plaster pigment:0.185/0.260/0.365 to0.21275/0.299/0.41975. This also affects plaster around arch/round windows. Roof, trim, glazing and bars remain pixel-identical in all3tiers; height/roughness unchanged (plaster-atlas-diff.json and pure generator regression). This is a narrow numeric conflict with later streamE, not a building geometry/glass change.
+3. Independent review caught the omitted trailer calibration: dock3 ROI960(280,185,305,215) High-overcast53/55/54 became110/112/109. ADR0092 and s9-0092-0093 had accepted matte cloth (overcast48/49/50, clear upper77/80/79). All6trailer_curtain pigments plus trailer_box_white explicitly use the previous GPU-effective linear pigment, srgb_to_linear(oldColor), under the correct global upload. curtain-calibration.json records every value. These are review-supported WORKING_VALUE pigments, not a rollback or special-case conversion in the importer. Preserve roughness0.82/0.72/0.45.
 
-## Dowód obrazu i kalibracji
+## Matched camera and photo evidence
 
-Każda runda: **59 kamer × Low/High × overcast/clear = 236 PNG**, identyczne rozdzielczości 2340×1080 i kamery, ten sam plik Gate3 budynków. Low renderuje `WorldC`, High `WorldC_High`; obie sceny mają wspólny import MaterialTier Medium (rozdzielczości per spec, Fab mobile 512). `before` zbudowano i zaimportowano od zera na źródłach bazowych; 192/192 plików GLB/instances zgodnych z manifestem, Fab dostępny, bez fallback. `after-contract` pokazuje sam kontrakt; `after-calibrated` zawiera dwie powyższe kalibracje. Oryginalne pary zachowano przed odświeżeniem nieaktualnych fixture pojazdu.
+Each round has59registered cameras xLow/High xovercast/clear =236PNG,2340x1080. Low uses WorldC and High uses WorldC_High, the same Gate3 building camera JSON, and both import MaterialTierMedium (per-spec sizes, Fab mobile512). Baseline is freshly built/imported from captured source4f7da66c, with192raw hashes checked and Fab present without fallback. before, after-contract and after-calibrated share the same copied vehicle fixture; after-final includes canonical vehicle refresh described below. compare-final contains40paged paired sheets plus pivotal960pairs.
 
-Stałe ROI czytają pełne PNG; współrzędne i surowe liczby są w `measure_rois.py` i `*-roi.json`. Zdjęcia to porównanie **wyglądu ekranowego** zależnego od ekspozycji, pory i balansu bieli; nie wyprowadzamy z nich absolutnego albedo. Fotografia remizy 7197: zmierzony czysty fragment tynku 110,7/126,4/146,6 (nominalny cel 110/126/145 ±10). Fotografie hali: CC0 Rakoon `cm157094809` (pochmurno) i `cm109685822` (słońce); źródła/licencje w `docs/REFERENCES.md` i `artifacts/kwadrat-r9/refs`. Ekran: Mapillary p38/p40, opis pomiaru i lokalizacja w ADR0069/recenzjach s9. Różnice pogody/kąta nie są ukrywane jako pomiar materiału.
+ROIs read raw PNG pixels, not JPEG previews. Their coordinates and exact values are reproducible in measure_rois.py and the four *-roi.json files. Fire photo7197 plaster ROI is110.7/126.4/146.6, nominal target110/126/145 +/-10. Hall photos are CC0 Rakoon cm157094809 (overcast, ROI131/146/160) and cm109685822 (sunny,200/209/217, different orientation). Sources/licences are in docs/REFERENCES.md and prior local reference artifacts. Screen references are Mapillaryp38/p40, documented by ADR0069/s9. These comparisons concern screen appearance under different weather/exposure/white balance, not absolute photo-derived physical albedo.
 
-| Warunek | Asfalt RGB przed?po | Kostka RGB przed?po | Tynk remizy RGB przed?po | Hala RGB przed?po | Kaseta ekranu RGB przed?po | Plandeka dok3 RGB przed?po |
+The old hall ROI220,153-245,165 overlapped a trailer roof. Self-audit corrected it to210,83-240,94, entirely on the upper metal facade; hall-roi-grid.jpg proves placement. All four rounds were remeasured. The table below uses the corrected ROI and final images.
+
+| Condition | Asphalt RGB before -> final | Pavers | Fire plaster | Hall metal | Screen cassette | Dock3 curtain |
 |---|---|---|---|---|---|---|
-| Low overcast | 70/69/68?70/69/68 | 119/119/116?120/120/117 | 97/112/130?103/120/139 | 80/83/83?122/125/125 | 24/25/25?32/34/32 | 44/46/45?44/46/45 |
-| High overcast | 74/73/72?74/73/71 | 126/125/122?127/126/123 | 105/121/137?111/129/147 | 86/89/89?127/130/130 | 28/29/28?36/38/37 | 53/55/54?53/55/54 |
-| Low clear | 99/97/93?99/97/93 | 145/143/136?146/144/137 | 142/161/176?150/171/187 | 91/95/94?125/128/126 | 49/51/49?66/69/65 | 80/82/79?80/82/79 |
-| High clear | 103/102/98?103/102/98 | 151/149/142?152/150/143 | 154/172/191?165/186/207 | 98/101/100?130/133/131 | 53/56/54?72/74/71 | 88/90/87?88/90/87 |
+| Low-overcast | 70/69/68 -> 70/69/68 | 119/119/116 -> 120/120/117 | 97/112/130 -> 103/120/139 | 80/83/83 -> 122/125/125 | 24/25/25 -> 32/34/32 | 44/46/45 -> 44/46/45 |
+| High-overcast | 74/73/72 -> 74/73/71 | 126/125/122 -> 127/126/123 | 105/121/137 -> 111/129/147 | 86/89/89 -> 127/130/130 | 28/29/28 -> 36/38/37 | 53/55/54 -> 53/55/54 |
+| Low-clear | 99/97/93 -> 99/97/93 | 145/143/136 -> 146/144/137 | 142/161/176 -> 150/171/187 | 91/95/94 -> 125/128/126 | 49/51/49 -> 66/69/65 | 80/82/79 -> 80/82/79 |
+| High-clear | 103/102/98 -> 103/102/98 | 151/149/142 -> 152/150/143 | 154/172/191 -> 165/186/207 | 98/101/100 -> 130/133/131 | 53/56/54 -> 72/74/71 | 88/90/87 -> 88/90/87 |
 
-Cel tynku dotyczy dopasowanej pochmurnej fotografii, nie wymuszania tego samego RGB w słońcu. Oba profile overcast mieszczą się w ±10. ROI hali zosta? skorygowany po audycie: dawny prostok?t220,153?245,165 zawiera? dach naczepy. Ko?cowy210,83?240,94 le?y wy??cznie na g?rnej elewacji metalowej (`hall-roi-grid.jpg`); wszystkie rundy przeliczono. Hala odzyskuje jasny profilowany metal (w pochmurnej fotografii 131/146/160, chłodniejszy WB; w słonecznej 200/209/217 przy innym oświetleniu). Nie przyciemniono jej ponownie dla zachowania wyglądu błędu. Niebo kontrolne jest niezmienione, asfalt przesuwa się o <0,2 poziomu, kostka o <1.
+Both overcast fire-station profiles meet +/-10; clear is not forced to match an overcast photograph. High-overcast screen reaches36/38/37; Low32/34/32 remains approximately4levels below the photo reference, disclosed rather than hidden by global exposure. Sky-control and bridge-soffit ROIs are unchanged. Asphalt changes less than0.2levels, pavers less than1. Hall changes are justified by the lighter metal reference; the colder photographed white balance is not copied as an absolute albedo measurement.
 
-## Walidacja i granice
+## Validation and limitations
 
-Wa?ne rozr??nienie fixture: `before`, `after-contract`, `after-calibrated` maj? ten sam skopiowany Generated pojazd. Po zamkni?ciu tych rund canonical TruckAssetBuilder/WorldTruckInstaller naprawi? brak MI_Ext_DoorGlassL, a pe?ny EditMode przeszed?226/226 (bez pomini??). `after-final` ma ju? kanoniczny pojazd; jego pe?nokadrowych r??nic/stats nie przypisujemy wy??cznie materia?om ?wiata. Osobna diagnostyka wykaza?a Low identyczny; High zmienia jedynie tr?jk?ty w kadrach pojazdowych (?1?+7k, cab-dash maksymalnie+7k), draws/obiekty/cienie oraz wszystkie wiersze ?wiatowe/instancjonowane bez zmian (`canonical-fixture-budget-diagnostic.json`). Dow?d zerowego kosztu wszystkich59 kamer dotyczy dopasowanej pary before/after-calibrated; ostatnia korekta7pigment?w nie dodaje geometrii, tekstur ani shader?w.
+Final GIS:359passed,2expected xfails,553s. Final EditMode after the final world import:226/226passed,0skips, including14actual GPU/CPU tint tests. Import reports0SHA mismatches; world memory111.4MBLow/239.8MBHigh.
 
-- `stats.txt` z wszystkich 59 kamer są **bajtowo identyczne** przed/po we wszystkich czterech warunkach: bez nowych draws/tris/instancji i bez nowych tekstur; brak twierdzenia o pomiarze GPU na telefonie.
-- Testy regresji obejmują zapis/odczyt GPU siedmiu wartości 0,04…2,5, zachowanie kontraktów metrycznych/pogodowych i ochronę nietynkowych regionów atlasu.
-- Dalsze wyniki pełnego GIS/EditMode i niezależny review: końcowy `artifacts/tint-gamma-r1/REPORT.md`. Pierwszy EditMode potwierdził wszystkie 14 nowych testów; trzy błędy dotyczyły nieaktualnej skopiowanej fixture TruckMaterials bez MI_Ext_DoorGlassL. Canonical TruckAssetBuilder/WorldTruckInstaller uruchamiane są dopiero po zamknięciu dopasowanych par.
-- Samokrytyka: Low nadal u?ywa g?adkiego LOD1 naczep (otwarte s9 P2), nie odtworzono fa?d geometrii przez pigment. Identyczne ciemne sylwetki drzew, stożkowe tuje, sterylne strefy zużycia, szum High i ekspozycja białych ścian w clear nadal wymagają swoich strumieni. Nie korygowano ich przez globalną ekspozycję ani ponowne zaciemnianie wszystkich materiałów.
-- `_StripeA`, `_StripeB`, `_PearlTint` są sąsiednimi właściwościami Color z osobnym ryzykiem konwersji; pozostały poza tym zakresem zgodnie z koordynacją (PearlTint do późniejszej kalibracji lakieru G).
+Matched before/after-calibrated stats are byte-identical for all59cameras in all4conditions, including instancing (final-budget-proof.json). This is the isolated world-material cost proof, not a phone GPU measurement. After the matched rounds, canonical TruckAssetBuilder/WorldTruckInstaller repaired the copied fixture missing MI_Ext_DoorGlassL. Initial223/226 passed becomes226/226 after fixture repair. No vehicle source code changed; only the missing ignored interior FBX was copied, with its SHA recorded in the artifact log.
+
+Final images use this refreshed canonical fixture. Separate canonical-fixture-budget-diagnostic.json reports Low stats unchanged and High vehicle-camera triangles changing -1k to+7k (cab-dash maximum), with draws/objects/shadow-draws unchanged. Every world-only and instanced row is unchanged. Mixed-fixture full-frame image differences are not attributed solely to tint.
+
+Independent root review PASS is scoped to this contract and material calibration. Remaining inherited issues belong to their owning streams: dark tree silhouettes, conical hero shrubs, sterile wear, High noise, clear white clipping and hall glass artifacts. Low dock trailers still use smooth LOD1 geometry (open s9P2); pigment cannot restore missing folds. No global visual or phone-performance PASS is claimed. Production shader/settings/scenes/packages/asmdefs and geometry code remain unchanged. Independent review: `artifacts/tint-gamma-r1/REVIEW.md` (canonical coordination copy `artifacts/s10/REVIEW-A-0086.md`).
