@@ -578,9 +578,13 @@ def main():
     p=sub.add_parser('prepare'); p.add_argument('--count-per-segment',type=int,default=20)
     sub.add_parser('fetch-intrinsics')
     p=sub.add_parser('compose'); p.add_argument('--renders',type=Path,required=True); p.add_argument('--output',type=Path,required=True); p.add_argument('--include-rejected',action='store_true'); p.add_argument('--historical',action='store_true'); p.add_argument('--inputs',type=Path); p.add_argument('--landmarks',type=Path); p.add_argument('--photometry',type=Path)
+    p=sub.add_parser('report'); p.add_argument('--runs',type=Path,nargs='+',required=True); p.add_argument('--output',type=Path,required=True); p.add_argument('--recognition',type=Path)
     args=ap.parse_args()
     if args.command=='prepare': prepare(args.count_per_segment)
     elif args.command=='fetch-intrinsics': fetch_intrinsics()
+    elif args.command=='report':
+        from sbs_report import build_report
+        build_report(args.runs,args.output,args.recognition)
     else: compose(args.renders,args.output,include_rejected=args.include_rejected,historical=args.historical,inputs=args.inputs,landmarks_file=args.landmarks,photometry_file=args.photometry)
 
 

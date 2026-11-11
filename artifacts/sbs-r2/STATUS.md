@@ -7,3 +7,6 @@ Następny krok: przegląd metrics/report API i implementacja raportu z jednoznac
 ## Metryki obrazu v2
 Wydzielono moduł sbs_photometry: kontrast RMS, zakres percentyli, gradient przy wspólnej rozdzielczości, maski nieba/asfaltu i wyłączenia maski samochodu. Ręcznie zweryfikowane próbki wiążą się z SHA obu obrazów, zgodnym światłem i przybliżoną lub lepszą pozą. Nie stanowią oceny D51 ani awansu klasy. Nowa definicja metryk jest jawna, żeby nie porównywać niezgodnych algorytmów.
 Pierwszy test zgodności wykrył niemodyfikowalną tablicę maski PIL; poprawiono operację bez zmiany danych źródłowych. Następny krok: pojedynczo test_sbs_gate3.py i test_sbs_photometry.py przez heavy, potem raport HTML.
+
+## Raport i wynik testów
+Zgodność dotychczasowej kompozycji: 40/40, testy fotometrii: 13/13. Dodano raport HTML działający lokalnie oraz bazę 25 ocen D51, związaną z SHA renderów r1. Wynik świata pozostaje FAIL; nowe obrazy nie dziedziczą automatycznie dawnych ocen. Trend odrzuca zmianę pozy, źródła, masek, definicji metryk, tieru lub światła oraz próbki bez ręcznej kwalifikacji. Następny krok: testy raportu i odtworzenie świata przed nowym importem.
