@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Game.Editor.Build;
+using Game.Vehicle.Runtime;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -30,9 +31,11 @@ namespace Game.Editor.VisualQA
             public string originalTintPropertyType;
             public string originalShaderSha256;
             public Sample[] samples;
+            public string lampTextureFormat, drlTextureR, highTextureR, drlGpuR, highGpuR, nightDrlGpuR, nightLowGpuR, highOffGpuR;
+            public bool drlFinite, highFinite, daytimeLowBeamOff, automaticNightLowBeamOn;
         }
 
-        public static Shader BuildProbeShader()
+        public static Shader BuildProbeShader(string expression = "_PaintColor.rgb")
         {
             string original = Path.Combine(Application.dataPath, "_Project/Rendering/Shaders/TruckExterior.shader");
             string text = File.ReadAllText(original).Replace("Cull Back", "Cull Off");
@@ -49,7 +52,7 @@ namespace Game.Editor.VisualQA
                 else if (text[end] == '}') depth--;
             }
             if (depth != 0) throw new InvalidOperationException("Truck Exterior fragment braces not balanced");
-            text = text.Substring(0, body) + "{ return half4(_PaintColor.rgb, 1); }" + text.Substring(end);
+            text = text.Substring(0, body) + "{ return half4(" + expression + ", 1); }" + text.Substring(end);
             string full = Path.Combine(EditorTools.ProjectRoot, ProbeShader);
             Directory.CreateDirectory(Path.GetDirectoryName(full));
             File.WriteAllText(full, text);
@@ -112,6 +115,36 @@ namespace Game.Editor.VisualQA
             using (var hash = System.Security.Cryptography.SHA256.Create()) sha = BitConverter.ToString(hash.ComputeHash(File.ReadAllBytes(source))).Replace("-", "").ToLowerInvariant();
             var evidence = new Evidence { unityVersion = Application.unityVersion, colorSpace = QualitySettings.activeColorSpace.ToString(), graphicsDevice = SystemInfo.graphicsDeviceType.ToString(),
                 originalTintPropertyType = original.GetPropertyType(original.FindPropertyIndex("_PaintColor")).ToString(), originalShaderSha256 = sha, samples = samples.ToArray() };
+            var previousSun=RenderSettings.sun;
+            var sunGo=new GameObject("Truck lamp numeric probe sun");
+            var lampGo=new GameObject("Truck lamp numeric probe state");
+            try
+            {
+                var sun=sunGo.AddComponent<Light>(); sun.type=LightType.Directional;
+                sun.transform.rotation=Quaternion.Euler(50f,0f,0f); RenderSettings.sun=sun;
+                var lights=lampGo.AddComponent<TruckLights>(); lights.highBeam=true; lights.Refresh();
+                float drl=lights.StateTexture.GetPixel(1,0).r, high=lights.StateTexture.GetPixel(3,0).r;
+                evidence.lampTextureFormat=lights.StateTexture.format.ToString();
+                evidence.drlTextureR=drl.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+                evidence.highTextureR=high.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+                evidence.drlFinite=!float.IsNaN(drl)&&!float.IsInfinity(drl);
+                evidence.highFinite=!float.IsNaN(high)&&!float.IsInfinity(high);
+                evidence.daytimeLowBeamOff=lights.StateTexture.GetPixel(2,0).r==0f;
+                var lampShader=BuildProbeShader("SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2((_PaintColor.r + 0.5)/16.0,0.5),0).rgb");
+                float drlGpu=Read(lampShader,1f,true,true,out _), highGpu=Read(lampShader,3f,true,true,out _);
+                evidence.drlGpuR=drlGpu.ToString("R",System.Globalization.CultureInfo.InvariantCulture);
+                evidence.highGpuR=highGpu.ToString("R",System.Globalization.CultureInfo.InvariantCulture);
+                sun.transform.rotation=Quaternion.Euler(-5f,0f,0f); lights.highBeam=false; lights.Refresh();
+                evidence.automaticNightLowBeamOn=lights.LowBeamOn;
+                evidence.nightDrlGpuR=Read(lampShader,1f,true,true,out _).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
+                evidence.nightLowGpuR=Read(lampShader,2f,true,true,out _).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
+                evidence.highOffGpuR=Read(lampShader,3f,true,true,out _).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
+            }
+            finally
+            {
+                RenderSettings.sun=previousSun;
+                UnityEngine.Object.DestroyImmediate(lampGo); UnityEngine.Object.DestroyImmediate(sunGo);
+            }
             string output = EditorTools.Arg("-tintProbeOutput", Path.Combine(EditorTools.RepoRoot, "artifacts/truck-paint-r1/paint-color-probe.json"));
             Directory.CreateDirectory(Path.GetDirectoryName(output));
             File.WriteAllText(output, JsonUtility.ToJson(evidence, true));

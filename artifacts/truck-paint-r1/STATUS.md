@@ -10,3 +10,6 @@
 
 - Step4: root authorized merge latest main into F before any baseline captures. Stopped only verified own build_all PythonPID42312 while no Unity was active; no vehicle production edits/no baseline images. Fresh321.6s old-base world metadata persisted as WIP only.
 - NEXT COMMAND: git merge main --no-edit (into F only); regenerate world and all PBR from merged sources, then canonical builders/install, raw192SHA/Fab15+320 proof and snapshot before baseline.
+
+- Step5: merged main db1432c5 into F atf52fabf6 before captures; fresh fullPBR+world regeneration running from A-correct sources. Source diagnosis being tested: DRL160000/high80000 encoded directly in RGBAHalf(max65504) may overflow. Probe now records actual GPU texture sampling day/night/on/off alongside Color upload, before production edits.
+- NEXT COMMAND: wait fresh PBR/world completion; prepare-baseline.ps1; snapshot_fixture.py; baseline102PNG plus no-pane/no-coat diagnostics.
