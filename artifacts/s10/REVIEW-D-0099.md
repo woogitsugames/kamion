@@ -62,3 +62,9 @@ policy. Assertion rejected the expected4row claim; no false proof accepted. Agen
 narrows policy to asphalt/_new only and reruns import/native audit. Actual extra
 UVchannels0bytes, superseding36124byte forecast. Initial12causal images retain
 firstcandidate provenance; final narrower candidate must be measured independently.
+
+Final narrowed native audit independently checked:154meshes identical positions,
+normals,indices,UV0,vertex/submesh counts; EXACT4UV1rows (2_3/5_4 eachtier).
+All channel-presence flags unchanged, actual extra UV allocation0bytes.96sidewalk
+vertices no longer affected. Sourcefield closeups/UVtransfer feasibility remain;
+this correctness fix alone is not broadwear quality acceptance.
