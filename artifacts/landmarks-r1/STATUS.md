@@ -34,3 +34,6 @@ NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-capture-wrapper.l
 
 Krok 11: artifact-only kandydat wygładzenia tui przeszedł porównanie 26 rzeczywistych krzewów. Geometria, UV i materiały identyczne; High 4576 tris/0 nowych normalnych, Low 552 tris/1104 zgodne normalne narożników. Współdzielone pozycje mają identyczne normalne. Nie wdrożono do produkcji; brak renderu oznacza brak visual PASS. Import nadal w kolejce.
 NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-import-wrapper.log -Tail 10
+
+Krok 12: slot gpt-landmarks przyznany, import Unity rozpoczęty 22:15:29. CC0 fetch: 13 zasobów, 65 plików, 0 problemów. Artifact-only próba gradientu hali: 15664 zmienione piksele atlasu 512, wszystkie piksele poza prostokątami okien hali identyczne. Obejrzano arkusz CPU; nie jest to dowód wyglądu Unity. Produkcja nadal bez zmian, baseline w toku.
+NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-capture-wrapper.log -Tail 10
