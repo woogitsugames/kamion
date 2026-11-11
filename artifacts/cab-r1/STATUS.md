@@ -32,3 +32,4 @@ Inspected all36 baseline frames + native High mirrors. Found TRAKT double horizo
 Rendered after Low overcast plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/after
 Candidate rebuild succeeded: LOD0 backing moved107 vertices; vertex28500/index110904 counts unchanged. Updated audit comment for authored UV contract; budget TSV comparison ignores explanatory comment lines only. NEXT COMMAND: Get-Content artifacts/cab-r1/after-WorldTruckInstaller.log -Tail 8
 Rendered after Low clear plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/after
+Rendered after High overcast plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/after
