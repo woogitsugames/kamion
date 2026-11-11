@@ -96,3 +96,4 @@ Zapisano final-candidate Low overcast, kod wejściowy zgodny z fingerprintem. Na
 Zapisano final-candidate Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano final-candidate High overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano final-candidate High clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Krok 33: końcowy kandydat po kanonicznym builderze ma komplet 28 kadrów, 7 kamer × Low/High × overcast/clear. Przygotowano sekwencję końcowej kontroli Medium, zmierzchu, kadru bez szyby, wszystkich kamer i pełnego EditMode. Każde Unity ma własny acquire/finally release; końcowy GIS pozostaje oddzielnym ostatnim krokiem rundy.
