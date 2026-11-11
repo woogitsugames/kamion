@@ -9,3 +9,6 @@ Następny krok: uv run --project tools/worldgen python -m pytest tests/gis/test_
 
 Krok 3: przygotowano kontrakt 92 kamer z poprzedniego R4 i skrypt czterech warunków. Baseline korzysta z kopii scen main i shadera main; po pomiarze shader wraca do commita kandydata. Każde osobne uruchomienie Unity pobiera i zwalnia slot gpt-life. Nie przypisujemy starych pomiarów do nowej gałęzi.
 Następny krok: pwsh artifacts/life-r1/capture.ps1 -Stage before
+
+Krok 4: testy ukierunkowane zakończone: 50 passed w 38,28 s. Baseline Unity uruchomiony ze slotem gpt-life; pozostałe zmiany świata nie są jeszcze importowane.
+Następny krok: uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py, a następnie generator build_world i weryfikacja braku fallback=True.
