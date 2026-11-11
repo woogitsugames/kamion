@@ -20,7 +20,9 @@ def main():
             else:assert part['minimumTyreLength']>=0
     assert len(changed)==len(signed)==2
     assert set(changed)=={(r['scene'],r['path'])for r in signed}
-    report=dict(native_meshes=len(new),changed_UV1_buffers=changed,signed=signed,
+    tyre=next(m for m in after['materials']if m['path'].endswith('/M_decal_tyre.mat'))
+    assert '_DECAL_TYRE' in tyre['keywords'].split(',') and '_UV_MESH1' not in tyre['keywords'].split(',')
+    report=dict(native_meshes=len(new),changed_UV1_buffers=changed,signed=signed,actual_tyre_keywords=tyre['keywords'],
                 note='Actual uploaded mesh readback after canonical import. Geometry/UV0/age exact; only two gate marking UV1 buffers change. Shader GPU branch visibility remains a separate image test.')
     (OUT/'gate-r2-native-proof.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
 if __name__=='__main__':main()
