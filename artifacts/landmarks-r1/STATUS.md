@@ -19,3 +19,6 @@ NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-materials-medium.
 
 Krok 6: świat zakończył wszystkie etapy po 1082,1 s, 64 pary GLB; remiza applied, bez stale, tris 9344/2828/164. Brak fallback=True w logu. Powłoka zwróciła 1 po potraktowaniu komunikatów instalacji uv na stderr jako błędu; sam log generatora kończy się done, bez traceback, eksport obecny. Materiały Medium zakończone exit 0, 694 s. Rozpoczynam import przez slot.
 NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/unity-step.ps1 -Step Capture -Phase before -Cameras ''
+
+Krok 7: import oczekuje na cztery zajęte sloty, bez startu Unity. W tym czasie odczytano rzeczywisty street_props.glb: osie obu kominów EC i ich LOD1 mają poziomy dryf 0 m, znaleziono dwie instancje. To dowód CPU, nie runtime Unity; pozorne pochylenie wymaga sprawdzenia kadru, nie zgadywania rotacji. Dopisano jawne -Cameras all do wrappera pełnego baseline.
+NASTĘPNA KOMENDA: po imporcie pwsh artifacts/landmarks-r1/unity-step.ps1 -Step Capture -Phase before -Cameras all

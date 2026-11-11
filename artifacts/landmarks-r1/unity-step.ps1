@@ -25,7 +25,7 @@ switch ($Step) {
             foreach ($light in @('overcast','clear')) {
                 $scene = if ($tier -eq 'High') { 'WorldC_High' } else { 'WorldC' }
                 $params = @{Scene=$scene; Tier=$tier; Lighting=$light; OutputDir="artifacts/landmarks-r1/$Phase/$tier-$light"}
-                if ($Cameras) { $params.Cameras = $Cameras }
+                if ($Cameras -and $Cameras -ne 'all') { $params.Cameras = $Cameras }
                 Run-Guarded 'scripts/visual-qa.ps1' $params
             }
         }
