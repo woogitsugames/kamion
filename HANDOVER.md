@@ -1,6 +1,7 @@
 # HANDOVER — kamion, sesja 9 (start 2026-11-11 00:30 lokalnie / 23:30 UTC; limit 5 h reset 04:30 UTC)
 
 ## Najpierw
+- Trigger 02:20: limit 82 %; 0092 i 0093 w toku; Argon 0085 — uwagi przed scaleniem.
 - **Limit 74 % o ~02:05 lokalnie** (reset 04:30 UTC): nowe agenty wstrzymane, dopóki działają 0092 i 0093; 0094 czeka.
 - 0084 po regeneracji: pytest gis 323 ✓ / 0 ✗.
 - Trigger 01:23 (limit 42 %): 0077 w toku (końcowy pytest), 0091 r1 import, 0092 runda; 0084 GPT scalone.
@@ -17,7 +18,7 @@
 | geometria i oznakowanie węzłów + 2 czerwone testy main | 0093 | junctions-r1 (z 8cc25713) | artifacts/junctions-r1 | s9: agent Fable start ~02:30 |
 | Kwadrat Park r12 (firanka matowa, szlaban domknięty, dryf do paneli) | 0092 | kwadrat-r12 (z d8e929ca) | artifacts/kwadrat-r12 | s9: agent Fable start ~01:35 |
 | import Megascans R1 | 0084 | gpt-megascans (NIE usuwać — Codex wciąż aktywny) | artifacts/megascans-r1/REPORT.md | SCALONE `98e54e47` (REPORT: lokalnie PASS, skok sceny FAIL, Low lokalnie +4 draw/+4k tris; normal mapy Fab wyłączone; High 1024 i telefon UNVERIFIED); konflikt stage.py = unia (yard wear 0071 + FD.apply); regeneracja main w tle `artifacts/logs/s9-main-regen-0084.log`; GPT następnie Q1 0086 / Q2 0088 |
-| tło za krawędzią | 0085 | argon-edge | artifacts/edge-far-r1 | Argon w toku |
+| tło za krawędzią | 0085 | argon-edge | artifacts/edge-far-r1/REPORT.md | REPORT 01:38; stan zacommitowany przez lidera (Argon bezczynny od 01:46). NIEscalone: `edge-south` — budynek regionu zastąpiony/zdublowany halą far-field (podejrzenie: budynki przecinające granicę w far-field) → uwagi w `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` „UWAGI LIDERA s9” |
 
 ## Następne kroki
 1. Scal 0076 → 0077 (gdy skończą); na main: build_all → build_world → pytest gis → import-region → Truck/Trailer BuildBatch + InstallBatch → EditMode/PlayMode (`WorldCBarrierTests|DepotBarrierTests|WorldCRouteTests|WorldEdgeRecoveryTests`).
