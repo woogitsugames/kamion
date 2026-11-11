@@ -10,7 +10,7 @@ function Wait-Phone {
 function Restore-Unity {
  git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
 }
-$cameras = 'dk8-under-span,dk8-bearing,route-putry-entry-signs,g3b-rondo-putry-approach'
+$cameras = 'dk8-under-span,dk8-bearing,dk8-abutment,route-putry-entry-signs,g3b-rondo-putry-approach'
 foreach ($tier in @('Low','High')) {
  foreach ($light in @('overcast','clear')) {
   Wait-Phone
@@ -21,3 +21,4 @@ foreach ($tier in @('Low','High')) {
  }
 }
 'baseline renders finished' | Add-Content artifacts/viaduct-r10/unity-queue.log
+

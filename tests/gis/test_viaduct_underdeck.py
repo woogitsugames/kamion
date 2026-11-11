@@ -95,3 +95,24 @@ def test_vegetation_uses_only_an_existing_megascans_prototype():
     H._apply_underdeck(w, hero, instances)
     assert len(instances) == 2
     assert instances[1]["p"] == "fab_grass_clumps" and instances[1]["z"] == 3.
+
+
+def test_generated_specs_have_grounded_stair_flights_and_unchanged_decks():
+    gen = ROOT / 'Data/Regions/bialystok-industrial-c/generated'
+    specs = json.loads((gen / 'landmarks/viaduct_putry_underdeck.spec.json').read_text(encoding='utf-8'))
+    qa = json.loads((gen / 'streetscape_qa.json').read_text(encoding='utf-8'))
+    assert len(specs) == 2
+    flights = 0
+    for spec in specs:
+        for steps in spec['stairs']:
+            if not steps:  # a blocked landing must not create an unsupported flight
+                continue
+            flights += 1
+            assert all(len(step) == 4 and step[3] > step[2] for step in steps)
+            assert .079 <= steps[-1][3] - steps[-1][2] <= .301
+            for a, b in zip(steps[:-1], steps[1:]):
+                assert abs(a[3] - b[3] - spec['params']['stairs_rise_m']) < .002
+    assert flights > 0
+    for report in qa['hero_bridges']['underdeck']:
+        assert report['deck_before_sha256'] == report['deck_after_sha256']
+        assert report['new_materials'] == []

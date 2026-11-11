@@ -26,3 +26,5 @@
 - Podgląd geometrii Blendera obejrzany (geometry-preview/compare.jpg; to NIE Unity). Ujawniono płaskie stopnie: zastąpiono je pełnym biegiem o riser 0.18 m, podpartym do próbkowanego gruntu; lot bez dolnego podparcia jest pomijany.
 - Zacieki i wysokość plam farby zróżnicowane deterministycznie pomiędzy podporami. Testy lokalne nadal 5/5 PASS.
 - Przerwany własny pełny GIS jako nieaktualny po korekcie geometrii; inne sesje nietknięte. NASTĘPNY KROK: uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+- Dodana kamera przyczółka i przygotowana kolejka validate-after.ps1: po baseline oraz zielonym GIS import, 20 renderów after, EditMode; przed każdym startem kontrola PHONE_RUN, potem cofnięcie efektów ubocznych Unity.
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/build-r3.log -Tail 10; Get-Content artifacts/viaduct-r10/unity-queue.log -Tail 1
