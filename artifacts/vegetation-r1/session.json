@@ -6,7 +6,7 @@
   "deadline_at": "2026-11-12T21:30:50+01:00",
   "base_sha": "4c9905b1",
   "owner": "gpt-vegetation",
-  "phase": "candidate_b_full_matrix_running",
+  "phase": "round_closed_handoff",
   "branch_collision": "gpt-vegetation-r2 belongs to the previous vegetation worktree; preserve it; choose next unused round branch when needed",
   "restrictions": [
     "no_push",
@@ -23,5 +23,14 @@
   "slot_script": "C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1",
   "candidate": "B",
   "probe_b_grass_std": 5.17,
-  "next_step": "complete full matrix B then photo renders, final tests and independent critic"
+  "next_step": "copy artifacts to main, create next unused branch and merge main, continue open crown priority",
+  "final_gis": {
+    "passed": 495,
+    "xfailed": 1,
+    "failed": 1,
+    "failure": "stale pre-existing road fidelity report"
+  },
+  "editmode": "261/261",
+  "critic": "limited editor correction PASS, overall vegetation realism FAIL",
+  "next_branch": "gpt-vegetation-r3"
 }
