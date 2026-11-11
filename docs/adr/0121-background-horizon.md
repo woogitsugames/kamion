@@ -31,3 +31,11 @@ Pełny GIS przy zamknięciu rundy, pod pulą heavy: 492 passed, 1 failed, 1 xfai
 ### Kolejna runda
 
 Audyt przypiętego archiwum LoD1 potwierdził 31 plików GML, które dotychczasowy parser pomija (czyta wyłącznie XML i oczekuje innego zapisu buildingId). Produkcyjny parser zwraca 0 wysokości. Prototyp do odczytu odzyskał 36971 wysokości, z czego 5390 pasuje bezpośrednio do identyfikatorów pierścienia. Naprawa produkcyjnego odczytu i pochodzenie wysokości należą do rundy r2; r1 nie zmienia far_field.py.
+
+## Runda r2 — odczyt wysokości LoD1
+
+Archiwum GUGiK 2061 zawiera kafle GML. Odczyt pojedynczego XML przez wyrażenie regularne nie obsługiwał użytego zapisu identyfikatora w gen:stringAttribute. Parser strumieniowy przechodzi przez wszystkie GML/XML i wiąże buildingId oraz measuredHeight wyłącznie w obrębie jednego Building, niezależnie od prefiksu i kolejności pól. Zachowuje obsługę starszego elementu buildingId. Wartości niefinitywne, niepozytywne, brakujące oraz jednostki inne niż metry są odrzucane. Sprzeczne powtórzenia tego samego ID są wykluczane, zamiast uzależniać wynik od kolejności plików.
+
+Cache ma wersję /11. Każdy budynek zapisuje height_source: pomiar GUGiK, szacunek WORKING_VALUE z kondygnacji/typologii albo niezweryfikowany tag OSM. Manifest i QA zapisują liczniki tych źródeł oraz audyt odczytu archiwum. Jest to pochodzenie wysokości źródłowej; dotychczasowa kompresja odległości i wysokości dalekiego planu pozostaje aktywna. Nie oznacza to modelu tła o pełnej skali pionowej.
+
+Baza r2 obejmuje 364 PNG (91 kamer w czterech konfiguracjach), aktualne klasy pozy i SHA wejść. Porównania fotograficzne dopuszczają A/B, odrzucają C; fotometria i pozy B pozostają niezweryfikowane. Testy parsera: 11/11. Walidacja regeneracji, sylwetki, wszystkich kamer Low i końcowy GIS pozostają w toku.

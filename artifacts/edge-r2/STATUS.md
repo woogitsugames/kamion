@@ -16,3 +16,5 @@ Krok 4: baza ukończona: po 91 kamer w Low/High × clear/overcast, łącznie 364
 Krok 5: obejrzano bazowe edge-east i edge-south w 960 px: rzadka sylwetka miasta nadal widoczna, bez przypisywania winy materiałom. Generator czeka na wolny heavy; cudzych procesów ani slotów nie ruszano.
 Przygotowano audyt różnic wysokości, tożsamości obrysów oraz lasów, kominów i masztów. Test QA sprawdzi zgodność pochodzenia wysokości w cache/QA/manifeście.
 Następny krok po build_world: pwsh artifacts/edge-r2/heavy.ps1 -Task AuditHeights, potem pojedynczy test_far_field.py.
+Krok 6: zapisano decyzję r2 w ADR 0121 i kopię obu źródłowych GLB przed regeneracją do odtworzenia bazy. Obejrzano także parę B 381800493259507: zdjęcie pod słońce, więc bez oceny fotometrycznej; to nie dowód zgodności całego horyzontu.
+Następny krok: poczekać na zakończenie bieżącego build_world, bez uruchamiania równoległej generacji lub pełnego GIS.
