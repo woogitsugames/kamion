@@ -34,3 +34,5 @@ Krok 11: dodano rq_clearcover do izolowania pokrycia chmur bez edycji assetów i
 
 Krok 12: build_world baseline zakończony (log: [world 1089.0s] done); uruchomiono wymagane python -m pytest tests/gis -q. Przygotowano cloud-smoke.json (5 zadań / 15 PNG) i run-light-batch.ps1 z Acquire/Release i przywracaniem efektów ubocznych. Następny krok: po zakończeniu rcas-ablation.ps1 uruchomić pwsh artifacts/light-r1/run-light-batch.ps1 -Jobs artifacts/light-r1/cloud-smoke.json; po GIS wykonać import aktualnych wygenerowanych danych.
 Render ablacji zakończony: artifacts/light-r1/rcas/High-overcast-0.25. PNG wymagają obejrzenia i pomiarów. Następny krok: kolejny wariant w artifacts/light-r1/rcas-ablation.ps1, potem analiza.
+
+Krok 13: przygotowano validation-followup.ps1. Czeka na potwierdzony własny proces RCAS 93600, sprawdza komplet 40 PNG, potem kolejno import, 15 PNG smoke i pełne EditMode. Każde nowe Unity ma osobne Acquire/Release gpt-light. GIS w toku, na 58% wystąpiła jedna porażka — przyczyna do odczytu po końcu testów, bez zgadywania.
