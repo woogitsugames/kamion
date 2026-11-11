@@ -7,7 +7,8 @@ from PIL import Image, ImageDraw
 from measure import measure
 
 ROOT = Path(__file__).resolve().parent
-SOURCE = "cloud-photo-v2" if (ROOT / "cloud-photo-v2/Low-clear-clouds/r10_house_2.png").exists() else "cloud-photo"
+SOURCE = next(folder for folder in ("cloud-photo-v3", "cloud-photo-v2", "cloud-photo")
+              if (ROOT / folder / "Low-clear-clouds/r10_house_2.png").exists())
 VARIANTS = ["High-clear-flat", "High-clear-clouds", "High-clear-with-dither", "Low-clear-flat", "Low-clear-clouds"]
 CAMERAS = ["driver-andersa-to-putry", "r10_block_3", "r10_house_2"]
 result = {}

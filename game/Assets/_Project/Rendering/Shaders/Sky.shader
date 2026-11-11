@@ -114,7 +114,11 @@ Shader "Kamion/Sky"
                 {
                     float3 ray = normalize(mul((float3x3)_KamionClearCloudRotation, d));
                     float2 uv = float2(frac(atan2(ray.x, ray.z) / (2.0 * PI) + 0.5), asin(clamp(ray.y, -1.0, 1.0)) / PI + 0.5);
-                    half2 source = SAMPLE_TEXTURE2D(_KamionClearCloudTex, sampler_KamionClearCloudTex, uv).rg;
+                    // A longitude wrap is not a one-texture-wide pixel footprint. Correct the implicit U
+                    // derivative across that boundary, or mip selection draws a vertical dashed seam.
+                    float2 dx = ddx(uv), dy = ddy(uv);
+                    dx.x -= round(dx.x); dy.x -= round(dy.x);
+                    half2 source = SAMPLE_TEXTURE2D_GRAD(_KamionClearCloudTex, sampler_KamionClearCloudTex, uv, dx, dy).rg;
                     clearCloud = half2(source.r * (half)_KamionClearCloudCover * smoothstep(0.0, 0.06, d.y), source.g);
                     if (_KamionCloud.x <= 0.0) return 1.0; // Clear: one photographic fetch, no noise deck.
                 }
