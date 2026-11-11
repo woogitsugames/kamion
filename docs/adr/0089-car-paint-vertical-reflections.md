@@ -17,3 +17,10 @@ Enable the local vertex keyword only after fresh-library and actual native index
 Preserve LightMode-tag pass state around exact car_plate factory switches. The inherited Lit CustomEditor rewrote unknown-shader MotionVectors on load; remove that generated-only inspector association. Persisted replay proves disabled motion, Opaque queue 2000 and existing texture/ST/roughness.
 
 Final 368 CPU records are unchanged; source adds ALU and data, not a measured GPU-time saving. Scene dependency texture union is 7 versus counterfactual R3 4: +170368 ASTC mip payload bytes; desktop Profiler delta +1813016 includes overhead. A16 residency/timing remain UNVERIFIED. Evidence and limitations: artifacts/car-paint-r1/REPORT.md, SELF-CRITICISM.md, r4-final-validation.json, r4-plate-native-parity.json and GPU proofs. Preserve canonical fixtures/pose packets; shared shader/material/importer integration requires a bounded union and canonical regeneration.
+## Sesja life, r1 — 24 godziny od 11 listopada 2026
+
+Gałąź gpt-life-r1 powstała z main 5f2aa277 w osobnym worktree gpt-life. Z gpt-car-paint przeniesiono selektywnie wyłącznie naprawy osobówek R4 i ich niezbędne zależności: kanał UV1 eksportera/importera, lokalny shader tablic, opt-in materiałów i wariant car_grime_clean. Bieżące zmiany dróg, budynków, mebli i generatów z main zachowano. Nie scala się całej starszej gałęzi z dokumentami innych strumieni.
+
+Nowe dowody powstają w artifacts/life-r1; historyczne 368 par i testy R4 nie są nowymi wynikami tej gałęzi. Przed importem kandydata wykonywany jest baseline 92 kamer w czterech warunkach, ze scenami skopiowanymi z main i shaderem main. Wszystkie wywołania Unity są chronione slotem gpt-life. Testy ukierunkowane nowej gałęzi: 50 passed. Pełna walidacja r1 i ocena realizmu pozostają w toku.
+
+Ograniczenia przejęte z recenzji: subtelny i gładki kurz nie jest jeszcze pełnym odwzorowaniem zdjęcia; czerń w clear i płaskie felgi pozostają do oceny. Nie deklaruje się unikalności tablic całej floty ani pomiaru kosztu GPU na A16. Nie zmienia się ekspozycji, profili jakości ani skali renderowania.

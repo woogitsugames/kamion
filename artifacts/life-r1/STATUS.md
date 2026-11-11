@@ -30,3 +30,6 @@ Następny krok: sprawdzić log materiałów pod kątem SKIP/fallback i diff spec
 
 Krok 10: baseline Low/overcast ukończony, również 92 PNG. Obejrzano r10b_black_05: czerń jest czytelna w pochmurnym świetle, brud to nadal jednolity stary pas. Nagłówek stats potwierdza Low renderScale=0.75 i msaa=2; wartości draws/instancji są szacunkami CPU, nie pomiarem GPU telefonu. High/clear w toku.
 Następny krok: zakończyć dwa zestawy High, dopiero potem przywrócić shader kandydata i zaimportować zregenerowany świat.
+
+Krok 11: ADR 0089 uzupełniono po polsku o r1 sesji life, selektywne przeniesienie R4 i jawne ograniczenia. Historyczne wyniki nie są przypisywane do obecnej gałęzi; raport końcowy powstanie po nowych testach i obejrzeniu porównań.
+Następny krok: monitorować baseline i generatory, bez kolejnego uruchamiania tych samych zadań.
