@@ -33,3 +33,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T21:55:25.7113057+01:00: baseline build exit=0, brak fallback=True. Pierwszy snapshot zatrzymał się na jawnym stride glTF; poprawiono czytanie accessorów, bez modyfikacji produktów. Zapisano hashe i zastosowano zmiany w czterech plikach mebli. Testy mebli exit=0. NASTĘPNY KROK: import i render baseline przed generatorem po zmianach.
 
 2026-11-11T21:57:32.3902640+01:00: przegląd kodu wykazał wspólną teksturę betonu słupa i cokołu. Oddzielono atlas cokołu od brudnej dolnej strefy słupa, aby nie pogłębiać I3. Addytywny alias furniture_footing w materials.py, bez nowych slotów. Testy mebli exit=0. NASTĘPNY KROK: sprawdzić render cokołu oraz koszt dodatkowej tekstury po imporcie.
+
+2026-11-11T21:58:10.5042450+01:00: odbudowa cache PBR zakończona kodem 0, log pbr-before.log. NASTĘPNY KROK: sprawdzić brak brakujących plików przed importem baseline.
