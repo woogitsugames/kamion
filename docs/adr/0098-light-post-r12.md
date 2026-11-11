@@ -15,3 +15,15 @@ Low: identyczne statystyki CPU obu warunków i niezmieniona polityka; wynik nie 
 Weryfikacja: świeży build/import, 192 SHA, 236 PNG przed i po + wybrane lowsun/Medium; GIS 355 PASS/2 xfail, EditMode 221/221.
 Dowody: `artifacts/light-r12/{REPORT,REVIEW,SELF-CRITICISM}.md`, `final-metrics.json`, `floor/edge-metrics.json`, `shadow/glass-acceptance-metrics.json`.
 Ograniczenia: GPU/termika i rzeczywisty device EASU UNVERIFIED; kalibracja KP/noise-wall należy do ADR0101, materiały/roślinność do innych strumieni.
+
+## Uzupełnienie po niezależnej recenzji s10 (2026-11-11)
+Scalenie ocenione warunkowo PASS, jakość całego celu0098 — FAIL.
+Recenzja: docs/reports/visual/REVIEW-2026-11-11-s10-0088-0098.md na main.
+P0: RCAS=0 rozmywa asfalt przed kabiną; wcześniejsza akceptacja tego kompromisu
+jest wycofana. Zysk nieba pochodzi głównie z wyłączenia ditheru przed LUT.
+Pozostały pieprz ścian, falisty brzeg cienia przy lowsun; mgiełka i AO były
+udokumentowanym stanem istniejącym, nie nową realizacją tych celów.
+Testy355 passed/2xfailed i EditMode221/221 oraz identyczne stats pozostają
+potwierdzeniem poprzedniego kodu, nie akceptacją jakości ani wydajności GPU.
+Lider przydzielił0108 / gpt-light-r13 w GPT-FEEDBACK-S10.md: po bieżących
+F/G/E/D, przed roślinnością0109. Ten zapis nie zmienia kodu i nie scala main.
