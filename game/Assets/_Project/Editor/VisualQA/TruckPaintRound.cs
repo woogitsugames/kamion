@@ -79,10 +79,11 @@ namespace Game.Editor.VisualQA
             string source=File.ReadAllText(Path.Combine(Application.dataPath,"_Project/Rendering/Shaders/TruckGlass.shader"));
             source=source.Replace("Shader \"Kamion/Truck Glass\"","Shader \"Hidden/Kamion/TruckGlassDiagnostic_"+mode+"\"")
                 .Replace("\"KamionVehicleEnv.hlsl\"","\"Assets/_Project/Rendering/Shaders/KamionVehicleEnv.hlsl\"");
-            string fields=mode=="mask"?"float3(i.inside,glazing,hasFrame?1:0)":mode=="height"?"float3(saturate(h/5.0),NoV,F)":throw new InvalidOperationException("Unknown glass probe");
+            bool nearOnly=mode=="near-transmission"||mode=="near-radiance-off";
+            string fields=mode=="mask"?"float3(i.inside,glazing,hasFrame?1:0)":mode=="height"?"float3(saturate(h/5.0),NoV,F)":mode=="near-transmission"?"float3(trans,F,film)":mode=="near-radiance-off"?"float3(0,0,0)":throw new InvalidOperationException("Unknown glass probe");
             const string output="return half4(col, alpha);";
             if(!source.Contains(output))throw new InvalidOperationException("Glass output changed");
-            source=source.Replace(output,"return half4("+fields+",1);");
+            source=source.Replace(output,"return half4("+fields+","+(mode=="near-radiance-off"?"alpha":"1")+");");
             string path="Assets/_Generated/TruckPaintProbe/GlassDiagnostic_"+mode+".shader";
             File.WriteAllText(Path.Combine(EditorTools.ProjectRoot,path),source);
             AssetDatabase.ImportAsset(path,ImportAssetOptions.ForceSynchronousImport|ImportAssetOptions.ForceUpdate);
@@ -91,10 +92,11 @@ namespace Game.Editor.VisualQA
             foreach(var guid in AssetDatabase.FindAssets("t:Material",new[]{"Assets/_Generated/Truck"}))
             {
                 var material=AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guid));
-                if(material==null||material.shader==null||material.shader.name!="Kamion/Truck Glass")continue;
+                if(material==null||material.shader==null||material.shader.name!="Kamion/Truck Glass"||(nearOnly&&material.name!="MI_Ext_Glass"))continue;
                 paints.Add((material,EditorJsonUtility.ToJson(material))); material.shader=shader;
             }
-            if(paints.Count!=12)throw new InvalidOperationException("Expected12cab/lens glass materials, got "+paints.Count);
+            int expected=nearOnly?3:12;
+            if(paints.Count!=expected)throw new InvalidOperationException("Expected"+expected+"cab/lens glass materials, got "+paints.Count);
             return shader;
         }
 
