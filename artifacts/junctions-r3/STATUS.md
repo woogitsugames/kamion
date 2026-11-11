@@ -11,3 +11,12 @@ scripts = narzędzia r2 + zones_plan.py; logs). „Przed” = main b12 z ADR 009
   Override'y: DK8 front (jodełka do E −806, wierzchołek do nosa, 35°), s1440 nos (wielokąt przerysowany, oś przez środek), s1440 pasmo
   (równoległe −29° od osi, obramowanie tylko NE), n100 (gęste 0,25/0,25). Test `tests/gis/test_p21_hatch.py` (15).
   NASTĘPNY KROK: `bash artifacts/junctions-r3/scripts/loop.sh b1`
+- krok 2 (sha 784b7fc5, 7468bf9c): `roads/aprons.py` (`kind: paved_apron` — analityczne przycięcie trójkątów jezdni do wielokąta,
+  z, UV, UV1, COL barycentrycznie; test `tests/gis/test_aprons.py`), `kind: guardrail` (streetscape/furniture.py, bariera autorska),
+  zebry / strzałki drapowane komórkami z podniesieniem (`p21_hatch.drape_lift`), UV w metrach dla pasa betonu szerszego niż 0,4 m
+  (meshing.KERB_TOP_UV_MAX_W — smugi E −830…−770 N 82), materiał łaty = większość materiałów silnikowych ramion (szwy).
+  Override'y: Putry N (2 × P-1 + P-7a × 2 + P-7b przez łatę przejazdu, plac `paved_apron` paving), MA-010 (P-1 pierścienia +
+  wlot ramienia płd.), zatoka s 1060 (2 × `paved_apron` sett na „uszach”), rozdział jezdni wsch. E −831…−788 (paint_clear ukośnej
+  linii, P-1 N 59,85, P-2b, jodełka do nosa E −805,6, wyspa, bariera, P-21 boczne, P-1e), bariera na wyspie E −782, n100 SE (4 ×
+  paint_clear strzałek na wprost, 2 strzałki naprowadzające). Build b1 padł na aprons (np.cross 2D) — naprawione.
+  NASTĘPNY KROK: `bash artifacts/junctions-r3/scripts/loop.sh b2`
