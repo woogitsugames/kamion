@@ -12,3 +12,6 @@ NASTĘPNA KOMENDA: `pwsh artifacts/firestation-r10/bootstrap.ps1` — prywatne k
 
 Krok2: prywatne kopie raw/cache/Fab/Generated gotowe, Library ze stabilnego C; junctiony tylko do odczytu. Kopiowano wyłącznie PNG materiałów, bez source/spec. Referencja7197 i ignorowany interiorLOD0 skopiowane. Brak dryfu śledzonych plików. NASTĘPNA KOMENDA: `uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py`; CPU prep dozwolone, Unity czeka na explicit ROOT release i obie blokady.
 
+
+Krok3a: plny PBR wygenerowany475s. Uzupełniono jedyne brakujące istniejące wejście pipeline: public-domain Worn_cracked_asphalt_pavement.jpg (John Harvey, LICENSES), odtworzono tylko asphalt_detail_photo. To wejście istniejącej tekstury świata, nie fizyczna referencja remizy; dla JRG2 pozostaje wyłącznie rzeczywiste7197. NASTĘPNA KOMENDA: `Get-Content artifacts/firestation-r10/baseline-world.log -Tail 8`; nadal bez Unity przed ROOT release.
+
