@@ -39,3 +39,5 @@ Uzupełnienie kroku 14: zatrzymanie wrappera pozostawiło jego własny proces Ac
 Następny krok: ponowne uruchomienie AuditHeights, kod wyniku odczytać z nowego kwitu zadania.
 Krok 15: podczas kolejki przygotowano 10 bazowych par G3-B z atrybucją i klasą B w baseline-photo-review; obejrzano arkusze 1–3 (9 par), do 960 px. Ujęcia pod słońce nie nadają się do werdyktu fotometrycznego. W dziennym 150280503737744 kominy i miejska sylwetka wymagają szczególnej oceny po regeneracji; samo poprawienie źródła wysokości nie zamyka jakości zdjęcie–render.
 Następny krok: wynik audytu, ograniczenie metadanych i nowe rendery; dotychczasowe pary są wyłącznie bazą, nie dowodem poprawy r2.
+Krok 16: audyt zakończony kodem 0: 5384 zmienione wysokości (2253 bloki, 1564 biurowe, 1065 hale, 502 domy); wszystkie 8447 obrysów oraz lasy, kominy, maszty i linie bez zmian. ScopeGenerated zweryfikował oba SHA GLB i odtworzył metadane innych dziedzin; world_manifest zachowuje wyłącznie aktualizację far-field.
+Następny krok w tym samym heavy: pojedynczy tests/gis/test_far_field.py, potem pula zwolniona i Unity After.
