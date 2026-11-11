@@ -209,8 +209,9 @@ def _scuffs(buf, poly, zlane, t_axis, key, src):
         uv1 = np.column_stack([np.full(2 * m, ssl[-1] + 6.5), np.full(2 * m, strength)])   # +6.5: no end fade on a short band
         uvu = np.tile(ssl + 2.5, 2)
         T = np.array([(i, i + 1, m + i + 1) for i in range(m - 1)] + [(i, m + i + 1, m + i) for i in range(m - 1)])
-        # face: from 15 mm under the top edge down to 0.11 m, 4 mm proud
-        Vf = np.vstack([np.column_stack([P + nout * 0.004, Z - 0.11]), np.column_stack([P + nout * 0.004, Z - 0.015])])
+        # face: from 15 mm under the top edge down to 0.11 m, 4 mm proud at the top and 16 mm at the bottom (the batter
+        # of a kerb face; it also keeps the decal's normal pointing up-and-out: test_decals_face_up)
+        Vf = np.vstack([np.column_stack([P + nout * 0.016, Z - 0.11]), np.column_stack([P + nout * 0.004, Z - 0.015])])
         buf.add("markings", "decal_tyre", Vf, np.column_stack([uvu, np.repeat([0.36, 0.64], m)]), T, src=f"{src}:face{e}",
                 UV1=uv1)
         # top edge: 0.10 m of the kerb top

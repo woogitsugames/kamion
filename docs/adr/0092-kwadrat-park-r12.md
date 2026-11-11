@@ -9,26 +9,34 @@ stron, brak tablicy; (P1) ściana hali w słońcu — „miękkie obłoki” dry
 jak plamy cienia, wyspa czysta z jednym słupkiem, agregat chłodni jako biały sześcian.
 
 ## Diagnoza (zmierzone / przeczytane z kodu, nie zgadywane)
-1. **Firanka.** Zestaw `curtain_folds` niesie w MaskMap gładkość średnio 0,364 (`materials_spec.json`,
-   `smoothness_mean`), metaliczność 0. Manifestowe `rough` (0,7) nie było nigdzie czytane. W cieniu hali rozproszenie
-   ciemnego PVC (albedo 0,20) jest słabe, a człon środowiskowy przy kącie ślizgowym w `WorldPBR.shader`
-   (`grazing = smooth + F0`, sonda przy chropowatości 0,64) rysuje na plandece czytelną linię horyzontu. To nie metal —
-   to za gładka i za mało rozmyta odbitka nieba.
+1. **Firanka.** Pierwsza hipoteza (gładkość) była błędna i została sprawdzona renderem: zestaw `curtain_folds` ma
+   gładkość średnio 0,364 i metaliczność 0, a po zejściu do 0,18 (runda r2) kadr się nie zmienił. Prawdziwa przyczyna:
+   **film brudu drogowego z r11** — nakładka `car_dirt_2` (1,37 m wysokości, gęsta na dolnych 0,85–1,25 m, kolor
+   0,16/0,14/0,11, alfa 0,62) rysowana materiałem URP Lit (ambient z SH bez wypalonej widoczności nieba, której używa
+   `Kamion/World PBR`). W cieniu hali nakładka wychodzi jaśniejsza i cieplejsza niż ciemna plandeka pod nią, z ciemną
+   postrzępioną górną krawędzią — czyta się jak odbicie słonecznego placu i linii horyzontu w polerowanej blasze.
+   Manifestowe `rough` plandeki (0,7) nie było przy tym nigdzie czytane.
 2. **Brama.** W wygenerowanym świecie oba pasy leżą w płaskiej kostce `yard_behaton` od granicy do granicy
    (`artifacts/kwadrat-r12/topdown_gate_before60.png`): 37 m na zachód, ok. 18 m na wschód. Podpory ramion stały na
    tej kostce. Ortofoto GUGiK 2024-05-27 (0,25 m; `ortho_gate.jpg`, `ortho_gate_zoom.jpg`): po wschodniej stronie pasa
    wjazdowego wąski jasny pas z krawężnikiem (ok. 1,5 × 18 m) z dwoma słupami — cienka linia ramienia kończy się na jego
    północnym końcu; po zachodniej stronie pasa wyjazdowego trawnik z krawężnikiem i drzewem. Linii ogrodzenia ani
    tablicy nie widać; zdjęcie CC0 `20210904_101250` (Rakoon) nie obejmuje szlabanu.
-3. **Ściana.** Dryf tonu to próbka mapy makro w `pw.xz / 64 m` — gładki szum bez związku z podziałem okładziny.
-   Zaciek pod parapetem pasa okien istniał od r11 (TEXCOORD_1 liczony od parapetu), ale był tą samą warstwą co pod
-   attyką, w jej słabym początku: z 20 m nieczytelny.
+3. **Ściana.** Dwa nałożone zjawiska. (a) Dryf tonu to próbka mapy makro w `pw.xz / 64 m` — gładki szum bez związku
+   z podziałem okładziny. (b) W presecie `clear` słońce biegnie prawie wzdłuż 180 m ściany doków i odbiornik cienia
+   sam się zacienia: piła na Medium, miękkie obłoki na High (`before/wall_clear.jpg`, `before/wall_clear_high.jpg`);
+   w `overcast` zjawiska nie ma. To (b) dominuje w kadrze „ściana w słońcu”. Zaciek pod parapetem pasa okien istniał
+   od r11 (TEXCOORD_1 liczony od parapetu), ale był tą samą warstwą co pod attyką, w jej słabym początku.
 4. **Słupki wyspy.** Były dwa (r11), drugi zasłonięty szafami szlabanu w kadrze bramy.
+5. **Agregat.** Kratka agregatu istniała od r10, ale jej quad był nawinięty do wnętrza obudowy i odcinany (cull
+   back) — stąd „biały sześcian”.
 
 ## Decyzja
-1. **Plandeka PVC (P1).** `WorldPbrMaterials`: dla `trailer_curtain_*` `_SmoothnessScale` = (1 − `rough` z manifestu) /
-   `smoothness_mean` zestawu. Manifest: `rough` 0,82 (PVC matowe), 0,72 (plandeka srebrna); metaliczność 0
-   (`_MetallicScale` 0 jak dotąd). WORKING_VALUE, oceniane na renderach doków.
+1. **Plandeka PVC (P1).** (a) Nakładka filmu brudu zdjęta z naczep firankowych (zestaw `curtain_folds` ma własny brud
+   na dolnej trzeciej; −1 submesh na prototyp LOD0); naczepy skrzyniowe zachowują niższy film (0,85 m). (b)
+   `WorldPbrMaterials`: dla `trailer_curtain_*` `_SmoothnessScale` = (1 − `rough` z manifestu) / `smoothness_mean`
+   zestawu; manifest: `rough` 0,82 (PVC matowe), 0,72 (plandeka srebrna); metaliczność 0 (`_MetallicScale` 0 jak dotąd).
+   WORKING_VALUE.
 2. **Zamknięcie bramy (P1)** — w `authored_overrides` (`kwadrat-park-gate-kit`), przeżywa regenerację:
    - `side_strips`: podniesiony pas z krawężnikiem po ZEWNĘTRZNEJ stronie każdego pasa na linii szlabanu; podpora
      ramienia stoi na nim (wjazd: kostka, 1,5 m; wyjazd: trawnik, 2,2 m). WIDZIANE na ortofoto (kształt); położenie
@@ -43,7 +51,9 @@ jak plamy cienia, wyspa czysta z jednym słupkiem, agregat chłodni jako biały 
    płyty, w metrach UV0 ściany) + udział skrótu na płytę 0,35 + cienka linia styku czołowego co długość płyty,
    wygaszana gdy piksel jest szerszy niż 12 mm. Manifest `kp_wall.panel_m: [6.0, 1.0]`; wysokość pasa skalowana
    stosunkiem zastosowanego kafla do kafla zestawu (zestaw `sandwich_ribbed` 6 m jest nadal próbkowany co 4 m → pas
-   0,667 m, zgodny z rysowanymi fugami). Siła 0,12 bez zmian.
+   0,667 m, zgodny z rysowanymi fugami). Siła 0,12 bez zmian. W tym samym wariancie: przesunięcie punktu próbkowania
+   cienia wzdłuż normalnej ściany (0,03–0,25 m, rośnie gdy słońce ślizga się po ścianie) — tylko dla `kp_wall`;
+   pozostałe hale mają to samo zjawisko (otwarte, zakres 0091 / światło).
    Zaciek pod parapetem: ściany pod parapetem pasa okien / żaluzji niosą w TEXCOORD_1.v znacznik +64; shader rysuje
    pod parapetem linię brudu 0,2 m i zacieki 1,7× gęstsze, 1,8× mocniejsze, na 2,5 m zamiast 4 m.
 4. **P2.** Ślady: każdy tor koła to odcisk bliźniaka — dwa bieżniki 0,26 m z przerwą 0,08 m (0,60 m razem), twarda

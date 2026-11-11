@@ -76,7 +76,8 @@ def test_yard_wear_synthetic():
     YW.apply(buf, [_wear()], (0.0, 0.0), docks, paved, Polygon(), zsurf, rep)
     r = rep["yard_wear"]
     c = r["applied"][0]
-    assert c["track_bands"] == 4 and c["patches"] == 1 and c["trenches"] == 1
+    # 2 passes x 2 wheel paths x 2 treads of the twin tyre (ADR 0092)
+    assert c["track_bands"] == 8 and c["patches"] == 1 and c["trenches"] == 1
     assert 22 <= c["oil"] <= 55 and c["grime_bands"] >= 8
     assert r["stale"] == ["y:wear:patch1:off_the_block_paving"]
     mats = {p.mat for p in buf.parts}
@@ -139,8 +140,10 @@ def test_trailer_detail_and_budget():
     """Review A4: landing gear, mudguards, side markers, pallet box, spare wheel, road film - within the LOD budget."""
     for kind in ("curtain", "box", "reefer"):
         l0, l1, col = LP.trailer(kind, "grey")
-        # the detail costs one extra submesh (draw) on LOD0 - the road film - and none on LOD1
-        assert any(k.startswith("car_dirt_") for k in l0.prims) and not any(k.startswith("car_dirt_") for k in l1.prims)
+        # the detail costs one extra submesh (draw) on LOD0 of box bodies - the road film - and none on LOD1; a curtain
+        # carries no film overlay (ADR 0092: the blended sheet read as a mirror on the dark tarpaulin)
+        assert any(k.startswith("car_dirt_") for k in l0.prims) == (kind != "curtain")
+        assert not any(k.startswith("car_dirt_") for k in l1.prims)
         known = {"trailer_alu", "trailer_chassis", "trailer_doors", "trailer_strap", "trailer_front", "trailer_front_dark",
                  "trailer_box_white", "trailer_curtain_grey", "coupling_red", "coupling_yellow", "car_trim", "car_light_head",
                  "car_light_tail", "reflector_red", "plate_pl", "tyre", "rim", "reefer_unit", "reefer_grille"}
