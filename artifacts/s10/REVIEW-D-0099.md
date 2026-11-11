@@ -193,3 +193,10 @@ Actual shader visibility, legacy kerb controls and GPU cost remain pending.
 The GIS386/1xfail result above belongs to r1; changed Python requires a new suite,
 now running. Do not reuse the original 372 frames as the fresh broad-wear BEFORE:
 paint calibration and gate state have changed. Broad56 remains inactive.
+Actual R2 native audit now independently parsed by ROOT:154 mesh records have
+identical positions/normals/indices/UV0/UV1.y/counts/submeshes/channel presence
+versus first gate import. Only two6_6marking UV1 hashes change; exactly72 negative
+length vertices each, Half value -4.19921875. Second planned import paint uniform
+remains [.425,.25,.38,.12], confirming no cumulative scaling. Input hashes and
+ROOT proof saved in D-gate-r2-native-independent-check.json. Actual appearance
+and shader/GPU cost remain separate;16frame capture in progress.

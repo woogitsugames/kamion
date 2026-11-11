@@ -746,3 +746,9 @@ idempotence and16 gate/legacy-kerb controls. G not released yet. New PHONE
 invalidates release, both guards checked before every launch. NEXT COMMAND:
 Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
 Review16frames before broad56 activation; then release G baseline separately.
+
+Step 66: D import8ae7f6be and native f6cc56ca complete. ROOT independently
+parsed native154 records and repeated paint uniform; all invariants pass, only
+two expected signed UV1 buffers.16frame capture running; no PHONE return.
+NEXT COMMAND: Get-ChildItem C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/gate-r2-after -Recurse -Filter *.png
+Review actual16 and contrast/pose/kerb controls before broad; G separate release.
