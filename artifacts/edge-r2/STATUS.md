@@ -51,3 +51,5 @@ Krok 17: pojedynczy test_far_field.py zaliczony; wynik w test-far-field.log. Nas
 Krok 18: ukończono macierz After 364 PNG. Obejrzano preview-east i preview-south (High clear, przed/po, 960 px): południowa sylwetka zmieniła proporcje hali zgodnie z wysokością LoD1; na wschodzie efekt subtelny. Cały cel jakości tła pozostaje częściowy, szczególnie wobec przybliżonych pozy B.
 EditMode zakończyło się kodem 0; kopię XML zapisano w tests. Compare oczekuje na heavy; liczbowego werdyktu budżetu jeszcze nie przypisano.
 Następny krok: sprawdzić budget-summary.json, obejrzeć ostateczne pary zdjęcie/render, potem pełny GIS przy końcu rundy.
+Krok 19: ADR uzupełniono o zmierzone wyniki ekstrakcji, niezmienione obrysy, liczniki siatek i testy 15/15, 5/5 oraz EditMode 267/267. Budżet wszystkich kamer oraz końcowy GIS nadal otwarte, bez przedwczesnego PASS.
+Następny krok: wynik Compare oczekującego w heavy; później pełny GIS na zamknięcie rundy.

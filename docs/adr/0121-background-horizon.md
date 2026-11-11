@@ -39,3 +39,11 @@ Archiwum GUGiK 2061 zawiera kafle GML. Odczyt pojedynczego XML przez wyrażenie 
 Cache ma wersję /11. Każdy budynek zapisuje height_source: pomiar GUGiK, szacunek WORKING_VALUE z kondygnacji/typologii albo niezweryfikowany tag OSM. Manifest i QA zapisują liczniki tych źródeł oraz audyt odczytu archiwum. Jest to pochodzenie wysokości źródłowej; dotychczasowa kompresja odległości i wysokości dalekiego planu pozostaje aktywna. Nie oznacza to modelu tła o pełnej skali pionowej.
 
 Baza r2 obejmuje 364 PNG (91 kamer w czterech konfiguracjach), aktualne klasy pozy i SHA wejść. Porównania fotograficzne dopuszczają A/B, odrzucają C; fotometria i pozy B pozostają niezweryfikowane. Testy parsera: 11/11. Walidacja regeneracji, sylwetki, wszystkich kamer Low i końcowy GIS pozostają w toku.
+
+### Wyniki regeneracji i zakres r2
+
+Produkcja odczytała 36971 wysokości z 31 GML, bez duplikatów i konfliktów. W pierścieniu 5390 z 8447 budynków ma measuredHeight; 97 zachowuje szacunek BDOT, 2921 szacunek OSM, 39 tag height OSM pozostaje UNVERIFIED. Różnicę wysokości względem bazy ma 5384 obiektów: 2253 bloki, 1564 biurowe, 1065 hal i 502 domy. Wszystkie obrysy oraz lasy, kominy, maszty i linie zachowały dane z bazy. Audyt dotyczy danych źródłowych przed kompresją perspektywy.
+
+Pełny build_world zakończył się po 459,9 s, bez fallback=True. Far-field Low: 24508 → 24500 trójkątów; High: 118524 → 118524. Import edge potwierdził te liczby i nie zmienił 35 kontynuacji ani 36 zamknięć dróg. Uboczne metadane dróg, props, wiaduktu i streetscape odtworzono; w world_manifest zachowano wyłącznie aktualizację własnego far-field. Test parsera po sprawdzeniu rzeczywistej jednostki meter: 15/15; pojedynczy far-field: 5/5; EditMode: 267/267, bez pominięć.
+
+Macierz po zmianie obejmuje kolejne 364 PNG. W obejrzanym edge-south High clear zmieniła się wysokość hali w panoramie; na wschodzie efekt jest subtelny. Nie ogłaszamy zamknięcia jakości fotograficznej miasta. Weryfikacja wszystkich kamer Low i końcowy GIS pozostają do dopisania po zakończeniu ich zadań.
