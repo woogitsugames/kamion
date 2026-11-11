@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[3]
 
 
 def pole_texture(kind):
-    concrete = kind == "concrete"
+    concrete = kind in ("concrete", "footing")
     aid = "brushed_concrete" if concrete else "corrugated_iron_03"
     raw = ROOT / "art-source/world/cc0/_raw" / aid / f"{aid}_diff_2k.jpg"
     w, h = 256, 512
@@ -31,7 +31,7 @@ def pole_texture(kind):
         warnings.warn(f"ADR0102 scan missing: {aid}; flat furniture texture fallback", stacklevel=2)
         ratio = np.ones((h, w))
     # ADR0120: retain concrete scan relief instead of compressing it to nearly white.
-    level, grain = (228, 1.05) if concrete else (245, 0.3)
+    level, grain = (228, 1.05) if kind == "concrete" else ((245, 1.05) if kind == "footing" else (245, 0.3))
     rgb = np.repeat((level * (1 + grain * (ratio - 1)))[..., None], 3, axis=2)
     z = (1 - (np.arange(h) + 0.5) / h)[:, None]
     u = (np.arange(w) + 0.5)[None, :] / w
@@ -45,12 +45,15 @@ def pole_texture(kind):
         dirt = np.array([162, 157, 140])
     islands = np.clip((ratio - 0.94) * 8, 0, 1) if not concrete else np.ones((h, w))
     mask = foot * (0.35 + 0.65 * islands)
+    if kind == "footing":
+        # A shallow concrete cap is not the salt-soaked bottom of a nine-metre pole (review I3).
+        mask *= 0.12
     rgb = rgb * (1 - mask[..., None]) + dirt * mask[..., None]
     if kind in ("grey", "bollard"):
         # One torn, unbranded paper remnant on the rear sector, with no text or invented logo.
         paper = (u > 0.63) & (u < 0.78) & (z * height > 0.63) & (z * height < 0.76)
         rgb[paper] = (211, 207, 184)
-    if concrete:
+    if kind == "concrete":
         # Dirt runs below the two steel arm collars; no uniform all-over noise.
         metres = z * height
         runoff = np.zeros((h, w))
@@ -64,4 +67,4 @@ def pole_texture(kind):
 
 
 def textures():
-    return {f"furniture_{k}": pole_texture(k) for k in ("galv", "grey", "concrete", "bollard")}
+    return {f"furniture_{k}": pole_texture(k) for k in ("galv", "grey", "concrete", "bollard", "footing")}

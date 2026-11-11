@@ -513,3 +513,8 @@ for _k in ("roof_tiles_red", "roof_tiles_brown"):
 #   unmown verge next to it).
 M["plot_kit"] = {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "plot_kit", "alpha_cutoff": 0.5}
 M["plot_lawn"] = {"color": [0.150, 0.200, 0.060], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"}
+
+# ADR 0120, furniture-only alias: the shallow lamp footing keeps the concrete-base pigment,
+# but no longer samples the dirty ground line of the entire concrete pole atlas (review I3).
+# Existing material identity/slot count, linear tint and tiling rules stay unchanged.
+M["furniture_footing"] = {**M["furniture_footing"], "texture": "furniture_footing"}
