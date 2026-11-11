@@ -1,0 +1,1921 @@
+{
+  "camera": {
+    "fov_deg": 24.5,
+    "id": "fire_station_ref7197",
+    "look_at": [
+      -231.271,
+      -167.131,
+      137.756
+    ],
+    "note": "frame of the CC0 photo 'File:7197 May 2021 in Bialystok.jpg' (Rakoon): the arched gable from across Andersa",
+    "pos": [
+      -271.13,
+      -239.961,
+      132.856
+    ],
+    "type": "persp"
+  },
+  "fov_convention": "Unity vertical; native2340x1080",
+  "definitions": {
+    "P1_gable_paint": {
+      "type": "plaster",
+      "points": [
+        [
+          37.0,
+          -0.03,
+          6.15
+        ],
+        [
+          38.15,
+          -0.03,
+          6.15
+        ],
+        [
+          38.15,
+          -0.03,
+          7.75
+        ],
+        [
+          37.0,
+          -0.03,
+          7.75
+        ]
+      ]
+    },
+    "P2_wing_paint": {
+      "type": "plaster",
+      "points": [
+        [
+          19.4,
+          0.17,
+          6.05
+        ],
+        [
+          21.0,
+          0.17,
+          6.05
+        ],
+        [
+          21.0,
+          0.17,
+          6.4
+        ],
+        [
+          19.4,
+          0.17,
+          6.4
+        ]
+      ]
+    },
+    "P3_tower_paint": {
+      "type": "plaster",
+      "points": [
+        [
+          22.05,
+          5.97,
+          8.7
+        ],
+        [
+          22.65,
+          5.97,
+          8.7
+        ],
+        [
+          22.65,
+          5.97,
+          9.4
+        ],
+        [
+          22.05,
+          5.97,
+          9.4
+        ]
+      ]
+    },
+    "P4_wing_lower_paint": {
+      "type": "plaster_check_tree_occlusion",
+      "points": [
+        [
+          27.0,
+          0.17,
+          3.0
+        ],
+        [
+          27.4,
+          0.17,
+          3.0
+        ],
+        [
+          27.4,
+          0.17,
+          3.8
+        ],
+        [
+          27.0,
+          0.17,
+          3.8
+        ]
+      ]
+    },
+    "P5_gable_lower_paint": {
+      "type": "plaster_check_tree_occlusion",
+      "points": [
+        [
+          42.15,
+          -0.03,
+          4.2
+        ],
+        [
+          42.65,
+          -0.03,
+          4.2
+        ],
+        [
+          42.65,
+          -0.03,
+          4.8
+        ],
+        [
+          42.15,
+          -0.03,
+          4.8
+        ]
+      ]
+    },
+    "R1_round_glass": {
+      "type": "round_glass",
+      "points": [
+        [
+          41.35,
+          -0.08,
+          7.6
+        ],
+        [
+          41.85,
+          -0.08,
+          7.6
+        ],
+        [
+          41.85,
+          -0.08,
+          8.05
+        ],
+        [
+          41.35,
+          -0.08,
+          8.05
+        ]
+      ]
+    },
+    "G1_left_glass_upper": {
+      "type": "glass",
+      "points": [
+        [
+          39.05,
+          -0.08,
+          4.45
+        ],
+        [
+          39.85,
+          -0.08,
+          4.45
+        ],
+        [
+          39.85,
+          -0.08,
+          4.85
+        ],
+        [
+          39.05,
+          -0.08,
+          4.85
+        ]
+      ]
+    },
+    "G2_left_glass_mid": {
+      "type": "glass",
+      "points": [
+        [
+          39.05,
+          -0.08,
+          2.75
+        ],
+        [
+          39.85,
+          -0.08,
+          2.75
+        ],
+        [
+          39.85,
+          -0.08,
+          3.25
+        ],
+        [
+          39.05,
+          -0.08,
+          3.25
+        ]
+      ]
+    },
+    "G3_right_glass_upper": {
+      "type": "glass_may_be_occluded_before",
+      "points": [
+        [
+          44.95,
+          -0.08,
+          4.45
+        ],
+        [
+          45.75,
+          -0.08,
+          4.45
+        ],
+        [
+          45.75,
+          -0.08,
+          4.85
+        ],
+        [
+          44.95,
+          -0.08,
+          4.85
+        ]
+      ]
+    },
+    "G4_right_glass_mid": {
+      "type": "glass_may_be_occluded_before",
+      "points": [
+        [
+          44.95,
+          -0.08,
+          2.75
+        ],
+        [
+          45.75,
+          -0.08,
+          2.75
+        ],
+        [
+          45.75,
+          -0.08,
+          3.25
+        ],
+        [
+          44.95,
+          -0.08,
+          3.25
+        ]
+      ]
+    }
+  },
+  "results": {
+    "Low-clear": {
+      "P1_gable_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 169.23745484830457,
+        "type": "plaster",
+        "native_polygon": [
+          [
+            1081.6988237129804,
+            551.167784611891
+          ],
+          [
+            1115.3769271419476,
+            550.8755156447246
+          ],
+          [
+            1115.4385922465178,
+            503.29017093185433
+          ],
+          [
+            1081.7982945914064,
+            503.68432531144776
+          ]
+        ],
+        "pixels": 1681,
+        "median_rgb_srgb": [
+          152.0,
+          173.0,
+          189.0
+        ],
+        "mean_rgb_srgb": [
+          151.39143367043425,
+          172.5960737656157,
+          188.51695419393218
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          167.6906,
+          169.478,
+          170.6906
+        ],
+        "mean_linear_luminance": 0.40004873439174254,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P2_wing_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 173.27261104294476,
+        "type": "plaster",
+        "native_polygon": [
+          [
+            585.969265272814,
+            558.658479851223
+          ],
+          [
+            629.8291694573346,
+            558.2870924740477
+          ],
+          [
+            629.9582400157918,
+            548.2135483550569
+          ],
+          [
+            586.1084126579303,
+            548.6139548340061
+          ]
+        ],
+        "pixels": 489,
+        "median_rgb_srgb": [
+          156.0,
+          178.0,
+          195.0
+        ],
+        "mean_rgb_srgb": [
+          154.7280163599182,
+          176.70552147239263,
+          193.87321063394683
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          168.50504,
+          174.47799999999998,
+          177.00948
+        ],
+        "mean_linear_luminance": 0.42199859463343087,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P3_tower_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 176.15554121212122,
+        "type": "plaster",
+        "native_polygon": [
+          [
+            715.9530626174816,
+            494.49244690655416
+          ],
+          [
+            731.5279007570789,
+            494.2962055977437
+          ],
+          [
+            731.724592791237,
+            475.41319047646203
+          ],
+          [
+            716.1565337362861,
+            475.6285862417838
+          ]
+        ],
+        "pixels": 330,
+        "median_rgb_srgb": [
+          157.0,
+          180.0,
+          196.0
+        ],
+        "mean_rgb_srgb": [
+          157.23939393939395,
+          179.76666666666668,
+          196.0848484848485
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          174.5502,
+          176.33759999999998,
+          177.2654
+        ],
+        "mean_linear_luminance": 0.4373188286359248,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P4_wing_lower_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 177.9770453333333,
+        "type": "plaster_check_tree_occlusion",
+        "native_polygon": [
+          [
+            795.8053109573882,
+            645.8289500486213
+          ],
+          [
+            807.0764996010441,
+            645.7988591659896
+          ],
+          [
+            807.2773983599365,
+            622.4132354176041
+          ],
+          [
+            796.0122969722368,
+            622.460468773388
+          ]
+        ],
+        "pixels": 300,
+        "median_rgb_srgb": [
+          160.0,
+          182.0,
+          198.0
+        ],
+        "mean_rgb_srgb": [
+          159.28,
+          181.48666666666668,
+          198.26666666666668
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          176.98059999999998,
+          178.1591,
+          178.55019999999996
+        ],
+        "mean_linear_luminance": 0.4473635811350645,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P5_gable_lower_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 171.26985526315792,
+        "type": "plaster_check_tree_occlusion",
+        "native_polygon": [
+          [
+            1233.7456968468516,
+            608.4276024990039
+          ],
+          [
+            1248.6773019656443,
+            608.3534536803111
+          ],
+          [
+            1248.6436407025374,
+            590.294913832716
+          ],
+          [
+            1233.7184496875923,
+            590.3860958814956
+          ]
+        ],
+        "pixels": 304,
+        "median_rgb_srgb": [
+          153.0,
+          175.0,
+          190.0
+        ],
+        "mean_rgb_srgb": [
+          152.86184210526315,
+          174.81578947368422,
+          190.34868421052633
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          170.47799999999998,
+          171.4058,
+          171.55020000000002
+        ],
+        "mean_linear_luminance": 0.41080594916822194,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "R1_round_glass": {
+        "green_or_dark_fraction": 0.23555555555555555,
+        "mean_luminance_srgb": 89.86511111111112,
+        "type": "round_glass",
+        "native_polygon": [
+          [
+            1209.6063395691783,
+            506.5606576137664
+          ],
+          [
+            1224.4654341053943,
+            506.39068263358246
+          ],
+          [
+            1224.4480135960866,
+            492.92305272764133
+          ],
+          [
+            1209.5936836027138,
+            493.1056590188375
+          ]
+        ],
+        "pixels": 225,
+        "median_rgb_srgb": [
+          89.0,
+          90.0,
+          88.0
+        ],
+        "mean_rgb_srgb": [
+          89.12444444444445,
+          90.24888888888889,
+          88.24444444444444
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          88.643,
+          89.643,
+          90.64299999999999
+        ],
+        "mean_linear_luminance": 0.1019435858819393,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G1_left_glass_upper": {
+        "green_or_dark_fraction": 0.10461538461538461,
+        "mean_luminance_srgb": 85.88932738461538,
+        "type": "glass",
+        "native_polygon": [
+          [
+            1141.5502257299622,
+            601.35813417126
+          ],
+          [
+            1165.1858501948082,
+            601.2294207813677
+          ],
+          [
+            1165.1872168450268,
+            589.249163366938
+          ],
+          [
+            1141.5582899604253,
+            589.3958585329959
+          ]
+        ],
+        "pixels": 325,
+        "median_rgb_srgb": [
+          85.0,
+          86.0,
+          84.0
+        ],
+        "mean_rgb_srgb": [
+          85.26153846153846,
+          86.27692307692308,
+          83.89846153846153
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          84.64299999999999,
+          85.643,
+          87.61411999999999
+        ],
+        "mean_linear_luminance": 0.09284333375176058,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G2_left_glass_mid": {
+        "green_or_dark_fraction": 0.1125,
+        "mean_luminance_srgb": 81.826408,
+        "type": "glass",
+        "native_polygon": [
+          [
+            1141.5159016715345,
+            652.273574871317
+          ],
+          [
+            1165.1800332619382,
+            652.2215123974253
+          ],
+          [
+            1165.1817455832525,
+            637.2110511657731
+          ],
+          [
+            1141.5260055772803,
+            637.2856964732118
+          ]
+        ],
+        "pixels": 400,
+        "median_rgb_srgb": [
+          81.0,
+          82.0,
+          80.0
+        ],
+        "mean_rgb_srgb": [
+          81.205,
+          82.195,
+          80.005
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          80.5708,
+          81.64299999999999,
+          83.5708
+        ],
+        "mean_linear_luminance": 0.084036709569772,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G3_right_glass_upper": {
+        "green_or_dark_fraction": 0.018461538461538463,
+        "mean_luminance_srgb": 89.92183015384614,
+        "type": "glass_may_be_occluded_before",
+        "native_polygon": [
+          [
+            1317.5534928772427,
+            600.3996667027852
+          ],
+          [
+            1341.7228656112095,
+            600.268046660303
+          ],
+          [
+            1341.6735689692657,
+            588.1534853931448
+          ],
+          [
+            1317.5111989808006,
+            588.3034923272355
+          ]
+        ],
+        "pixels": 325,
+        "median_rgb_srgb": [
+          90.0,
+          91.0,
+          88.0
+        ],
+        "mean_rgb_srgb": [
+          89.36923076923077,
+          90.30153846153846,
+          87.78769230769231
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          88.59967999999999,
+          90.4986,
+          90.64299999999999
+        ],
+        "mean_linear_luminance": 0.1020810665290625,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G4_right_glass_mid": {
+        "green_or_dark_fraction": 0.1375,
+        "mean_luminance_srgb": 85.4769165,
+        "type": "glass_may_be_occluded_before",
+        "native_polygon": [
+          [
+            1317.7335128365976,
+            651.8858858177176
+          ],
+          [
+            1341.9326925743783,
+            651.8326462066004
+          ],
+          [
+            1341.8709255518577,
+            636.6535112977954
+          ],
+          [
+            1317.6805202081437,
+            636.7298437331152
+          ]
+        ],
+        "pixels": 400,
+        "median_rgb_srgb": [
+          85.0,
+          86.0,
+          84.0
+        ],
+        "mean_rgb_srgb": [
+          84.825,
+          85.8675,
+          83.5275
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          84.57079999999999,
+          85.57079999999999,
+          86.5708
+        ],
+        "mean_linear_luminance": 0.09191371617689681,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      }
+    },
+    "Low-overcast": {
+      "P1_gable_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 119.343297917906,
+        "type": "plaster",
+        "native_polygon": [
+          [
+            1081.6988237129804,
+            551.167784611891
+          ],
+          [
+            1115.3769271419476,
+            550.8755156447246
+          ],
+          [
+            1115.4385922465178,
+            503.29017093185433
+          ],
+          [
+            1081.7982945914064,
+            503.68432531144776
+          ]
+        ],
+        "pixels": 1681,
+        "median_rgb_srgb": [
+          104.0,
+          122.0,
+          140.0
+        ],
+        "mean_rgb_srgb": [
+          103.99464604402142,
+          121.80190362879239,
+          140.18441403926235
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          118.47279999999999,
+          119.47279999999999,
+          120.4728
+        ],
+        "mean_linear_luminance": 0.18713549543721805,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P2_wing_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 123.18361595092024,
+        "type": "plaster",
+        "native_polygon": [
+          [
+            585.969265272814,
+            558.658479851223
+          ],
+          [
+            629.8291694573346,
+            558.2870924740477
+          ],
+          [
+            629.9582400157918,
+            548.2135483550569
+          ],
+          [
+            586.1084126579303,
+            548.6139548340061
+          ]
+        ],
+        "pixels": 489,
+        "median_rgb_srgb": [
+          108.0,
+          127.0,
+          146.0
+        ],
+        "mean_rgb_srgb": [
+          107.34560327198363,
+          125.63803680981596,
+          145.50715746421267
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          119.32976,
+          124.3324,
+          126.192
+        ],
+        "mean_linear_luminance": 0.20055262923658623,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P3_tower_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 125.55060424242424,
+        "type": "plaster",
+        "native_polygon": [
+          [
+            715.9530626174816,
+            494.49244690655416
+          ],
+          [
+            731.5279007570789,
+            494.2962055977437
+          ],
+          [
+            731.724592791237,
+            475.41319047646203
+          ],
+          [
+            716.1565337362861,
+            475.6285862417838
+          ]
+        ],
+        "pixels": 330,
+        "median_rgb_srgb": [
+          110.0,
+          128.0,
+          148.0
+        ],
+        "mean_rgb_srgb": [
+          109.44242424242424,
+          128.11515151515152,
+          147.5787878787879
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          124.6172,
+          125.61719999999998,
+          126.40459999999999
+        ],
+        "mean_linear_luminance": 0.2087362488856441,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P4_wing_lower_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 126.65923266666667,
+        "type": "plaster_check_tree_occlusion",
+        "native_polygon": [
+          [
+            795.8053109573882,
+            645.8289500486213
+          ],
+          [
+            807.0764996010441,
+            645.7988591659896
+          ],
+          [
+            807.2773983599365,
+            622.4132354176041
+          ],
+          [
+            796.0122969722368,
+            622.460468773388
+          ]
+        ],
+        "pixels": 300,
+        "median_rgb_srgb": [
+          111.0,
+          129.0,
+          149.0
+        ],
+        "mean_rgb_srgb": [
+          110.42333333333333,
+          129.21,
+          149.2
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          125.61719999999998,
+          126.6172,
+          127.4046
+        ],
+        "mean_linear_luminance": 0.21275339701629573,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P5_gable_lower_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 121.0924480263158,
+        "type": "plaster_check_tree_occlusion",
+        "native_polygon": [
+          [
+            1233.7456968468516,
+            608.4276024990039
+          ],
+          [
+            1248.6773019656443,
+            608.3534536803111
+          ],
+          [
+            1248.6436407025374,
+            590.294913832716
+          ],
+          [
+            1233.7184496875923,
+            590.3860958814956
+          ]
+        ],
+        "pixels": 304,
+        "median_rgb_srgb": [
+          105.0,
+          124.0,
+          142.0
+        ],
+        "mean_rgb_srgb": [
+          105.29276315789474,
+          123.66447368421052,
+          142.13815789473685
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          120.4728,
+          121.2602,
+          121.6172
+        ],
+        "mean_linear_luminance": 0.193102223104662,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "R1_round_glass": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 66.84543377777777,
+        "type": "round_glass",
+        "native_polygon": [
+          [
+            1209.6063395691783,
+            506.5606576137664
+          ],
+          [
+            1224.4654341053943,
+            506.39068263358246
+          ],
+          [
+            1224.4480135960866,
+            492.92305272764133
+          ],
+          [
+            1209.5936836027138,
+            493.1056590188375
+          ]
+        ],
+        "pixels": 225,
+        "median_rgb_srgb": [
+          66.0,
+          67.0,
+          69.0
+        ],
+        "mean_rgb_srgb": [
+          65.59555555555555,
+          67.00888888888889,
+          68.90666666666667
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          66.647,
+          66.9318,
+          66.9318
+        ],
+        "mean_linear_luminance": 0.05588525017161713,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G1_left_glass_upper": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 65.08949907692308,
+        "type": "glass",
+        "native_polygon": [
+          [
+            1141.5502257299622,
+            601.35813417126
+          ],
+          [
+            1165.1858501948082,
+            601.2294207813677
+          ],
+          [
+            1165.1872168450268,
+            589.249163366938
+          ],
+          [
+            1141.5582899604253,
+            589.3958585329959
+          ]
+        ],
+        "pixels": 325,
+        "median_rgb_srgb": [
+          64.0,
+          65.0,
+          67.0
+        ],
+        "mean_rgb_srgb": [
+          63.60923076923077,
+          65.3323076923077,
+          67.04307692307692
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          64.7192,
+          64.9318,
+          65.64699999999999
+        ],
+        "mean_linear_luminance": 0.053021911115868646,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G2_left_glass_mid": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 63.42437700000001,
+        "type": "glass",
+        "native_polygon": [
+          [
+            1141.5159016715345,
+            652.273574871317
+          ],
+          [
+            1165.1800332619382,
+            652.2215123974253
+          ],
+          [
+            1165.1817455832525,
+            637.2110511657731
+          ],
+          [
+            1141.5260055772803,
+            637.2856964732118
+          ]
+        ],
+        "pixels": 400,
+        "median_rgb_srgb": [
+          62.0,
+          64.0,
+          65.0
+        ],
+        "mean_rgb_srgb": [
+          62.0675,
+          63.625,
+          65.4325
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          62.719199999999994,
+          63.647,
+          63.931799999999996
+        ],
+        "mean_linear_luminance": 0.050382273361472905,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G3_right_glass_upper": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 66.80707323076923,
+        "type": "glass_may_be_occluded_before",
+        "native_polygon": [
+          [
+            1317.5534928772427,
+            600.3996667027852
+          ],
+          [
+            1341.7228656112095,
+            600.268046660303
+          ],
+          [
+            1341.6735689692657,
+            588.1534853931448
+          ],
+          [
+            1317.5111989808006,
+            588.3034923272355
+          ]
+        ],
+        "pixels": 325,
+        "median_rgb_srgb": [
+          65.0,
+          67.0,
+          69.0
+        ],
+        "mean_rgb_srgb": [
+          65.44307692307693,
+          67.01538461538462,
+          68.76
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          66.647,
+          66.7192,
+          66.9318
+        ],
+        "mean_linear_luminance": 0.055821038422728904,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G4_right_glass_mid": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 64.8957115,
+        "type": "glass_may_be_occluded_before",
+        "native_polygon": [
+          [
+            1317.7335128365976,
+            651.8858858177176
+          ],
+          [
+            1341.9326925743783,
+            651.8326462066004
+          ],
+          [
+            1341.8709255518577,
+            636.6535112977954
+          ],
+          [
+            1317.6805202081437,
+            636.7298437331152
+          ]
+        ],
+        "pixels": 400,
+        "median_rgb_srgb": [
+          63.5,
+          65.0,
+          67.0
+        ],
+        "mean_rgb_srgb": [
+          63.49,
+          65.1125,
+          66.8875
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          64.64699999999999,
+          64.8255,
+          65.64699999999999
+        ],
+        "mean_linear_luminance": 0.052707811150673155,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      }
+    },
+    "High-clear": {
+      "P1_gable_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 185.13534086853065,
+        "type": "plaster",
+        "native_polygon": [
+          [
+            1081.6988237129804,
+            551.167784611891
+          ],
+          [
+            1115.3769271419476,
+            550.8755156447246
+          ],
+          [
+            1115.4385922465178,
+            503.29017093185433
+          ],
+          [
+            1081.7982945914064,
+            503.68432531144776
+          ]
+        ],
+        "pixels": 1681,
+        "median_rgb_srgb": [
+          167.0,
+          188.0,
+          210.0
+        ],
+        "mean_rgb_srgb": [
+          167.23140987507435,
+          187.95419393218322,
+          209.93218322427126
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          182.4808,
+          185.1238,
+          187.9112
+        ],
+        "mean_linear_luminance": 0.48847644845822735,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P2_wing_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 177.70195173824132,
+        "type": "plaster",
+        "native_polygon": [
+          [
+            585.969265272814,
+            558.658479851223
+          ],
+          [
+            629.8291694573346,
+            558.2870924740477
+          ],
+          [
+            629.9582400157918,
+            548.2135483550569
+          ],
+          [
+            586.1084126579303,
+            548.6139548340061
+          ]
+        ],
+        "pixels": 489,
+        "median_rgb_srgb": [
+          165.0,
+          186.0,
+          208.0
+        ],
+        "mean_rgb_srgb": [
+          160.74846625766872,
+          180.38854805725973,
+          201.01022494887525
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          161.61456,
+          182.91119999999998,
+          188.3364
+        ],
+        "mean_linear_luminance": 0.4497757074252259,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P3_tower_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 183.93482727272726,
+        "type": "plaster",
+        "native_polygon": [
+          [
+            715.9530626174816,
+            494.49244690655416
+          ],
+          [
+            731.5279007570789,
+            494.2962055977437
+          ],
+          [
+            731.724592791237,
+            475.41319047646203
+          ],
+          [
+            716.1565337362861,
+            475.6285862417838
+          ]
+        ],
+        "pixels": 330,
+        "median_rgb_srgb": [
+          167.0,
+          188.0,
+          210.0
+        ],
+        "mean_rgb_srgb": [
+          166.20606060606062,
+          186.70909090909092,
+          208.65757575757576
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          179.03755999999998,
+          185.1238,
+          187.9112
+        ],
+        "mean_linear_luminance": 0.4817460697305759,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P4_wing_lower_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 196.36017933333332,
+        "type": "plaster_check_tree_occlusion",
+        "native_polygon": [
+          [
+            795.8053109573882,
+            645.8289500486213
+          ],
+          [
+            807.0764996010441,
+            645.7988591659896
+          ],
+          [
+            807.2773983599365,
+            622.4132354176041
+          ],
+          [
+            796.0122969722368,
+            622.460468773388
+          ]
+        ],
+        "pixels": 300,
+        "median_rgb_srgb": [
+          179.0,
+          199.0,
+          221.0
+        ],
+        "mean_rgb_srgb": [
+          178.58666666666667,
+          199.25,
+          220.07
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          192.3364,
+          196.12439999999998,
+          200.192
+        ],
+        "mean_linear_luminance": 0.5568994408090078,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P5_gable_lower_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 184.44464013157895,
+        "type": "plaster_check_tree_occlusion",
+        "native_polygon": [
+          [
+            1233.7456968468516,
+            608.4276024990039
+          ],
+          [
+            1248.6773019656443,
+            608.3534536803111
+          ],
+          [
+            1248.6436407025374,
+            590.294913832716
+          ],
+          [
+            1233.7184496875923,
+            590.3860958814956
+          ]
+        ],
+        "pixels": 304,
+        "median_rgb_srgb": [
+          167.0,
+          188.0,
+          210.0
+        ],
+        "mean_rgb_srgb": [
+          166.48026315789474,
+          187.2796052631579,
+          209.25986842105263
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          182.26819999999998,
+          184.696,
+          186.24374
+        ],
+        "mean_linear_luminance": 0.4844156903875707,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "R1_round_glass": {
+        "green_or_dark_fraction": 0.4311111111111111,
+        "mean_luminance_srgb": 97.86876888888888,
+        "type": "round_glass",
+        "native_polygon": [
+          [
+            1209.6063395691783,
+            506.5606576137664
+          ],
+          [
+            1224.4654341053943,
+            506.39068263358246
+          ],
+          [
+            1224.4480135960866,
+            492.92305272764133
+          ],
+          [
+            1209.5936836027138,
+            493.1056590188375
+          ]
+        ],
+        "pixels": 225,
+        "median_rgb_srgb": [
+          97.0,
+          99.0,
+          96.0
+        ],
+        "mean_rgb_srgb": [
+          96.98666666666666,
+          98.31111111111112,
+          96.08444444444444
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          96.14168,
+          98.2178,
+          99.3582
+        ],
+        "mean_linear_luminance": 0.12184132691497715,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G1_left_glass_upper": {
+        "green_or_dark_fraction": 0.31076923076923074,
+        "mean_luminance_srgb": 93.48741476923077,
+        "type": "glass",
+        "native_polygon": [
+          [
+            1141.5502257299622,
+            601.35813417126
+          ],
+          [
+            1165.1858501948082,
+            601.2294207813677
+          ],
+          [
+            1165.1872168450268,
+            589.249163366938
+          ],
+          [
+            1141.5582899604253,
+            589.3958585329959
+          ]
+        ],
+        "pixels": 325,
+        "median_rgb_srgb": [
+          92.0,
+          93.0,
+          91.0
+        ],
+        "mean_rgb_srgb": [
+          92.64307692307692,
+          93.96,
+          91.29230769230769
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          91.643,
+          92.92779999999999,
+          95.78859999999999
+        ],
+        "mean_linear_luminance": 0.11071941274733986,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G2_left_glass_mid": {
+        "green_or_dark_fraction": 0.1775,
+        "mean_luminance_srgb": 88.96925749999998,
+        "type": "glass",
+        "native_polygon": [
+          [
+            1141.5159016715345,
+            652.273574871317
+          ],
+          [
+            1165.1800332619382,
+            652.2215123974253
+          ],
+          [
+            1165.1817455832525,
+            637.2110511657731
+          ],
+          [
+            1141.5260055772803,
+            637.2856964732118
+          ]
+        ],
+        "pixels": 400,
+        "median_rgb_srgb": [
+          88.0,
+          89.0,
+          87.0
+        ],
+        "mean_rgb_srgb": [
+          88.2925,
+          89.345,
+          87.24
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          87.64299999999999,
+          88.8556,
+          90.57079999999999
+        ],
+        "mean_linear_luminance": 0.09985515813135834,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G3_right_glass_upper": {
+        "green_or_dark_fraction": 0.24307692307692308,
+        "mean_luminance_srgb": 96.75649169230769,
+        "type": "glass_may_be_occluded_before",
+        "native_polygon": [
+          [
+            1317.5534928772427,
+            600.3996667027852
+          ],
+          [
+            1341.7228656112095,
+            600.268046660303
+          ],
+          [
+            1341.6735689692657,
+            588.1534853931448
+          ],
+          [
+            1317.5111989808006,
+            588.3034923272355
+          ]
+        ],
+        "pixels": 325,
+        "median_rgb_srgb": [
+          97.0,
+          97.0,
+          95.0
+        ],
+        "mean_rgb_srgb": [
+          96.07692307692308,
+          97.1876923076923,
+          94.48615384615384
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          94.99759999999998,
+          96.7152,
+          98.54192
+        ],
+        "mean_linear_luminance": 0.11895552341253642,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G4_right_glass_mid": {
+        "green_or_dark_fraction": 0.2175,
+        "mean_luminance_srgb": 91.45398749999998,
+        "type": "glass_may_be_occluded_before",
+        "native_polygon": [
+          [
+            1317.7335128365976,
+            651.8858858177176
+          ],
+          [
+            1341.9326925743783,
+            651.8326462066004
+          ],
+          [
+            1341.8709255518577,
+            636.6535112977954
+          ],
+          [
+            1317.6805202081437,
+            636.7298437331152
+          ]
+        ],
+        "pixels": 400,
+        "median_rgb_srgb": [
+          91.0,
+          92.0,
+          89.0
+        ],
+        "mean_rgb_srgb": [
+          90.3425,
+          92.0725,
+          88.6
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          89.7152,
+          91.4986,
+          92.643
+        ],
+        "mean_linear_luminance": 0.10587165108752945,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      }
+    },
+    "High-overcast": {
+      "P1_gable_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 127.9663734681737,
+        "type": "plaster",
+        "native_polygon": [
+          [
+            1081.6988237129804,
+            551.167784611891
+          ],
+          [
+            1115.3769271419476,
+            550.8755156447246
+          ],
+          [
+            1115.4385922465178,
+            503.29017093185433
+          ],
+          [
+            1081.7982945914064,
+            503.68432531144776
+          ]
+        ],
+        "pixels": 1681,
+        "median_rgb_srgb": [
+          111.0,
+          130.0,
+          150.0
+        ],
+        "mean_rgb_srgb": [
+          111.50565139797739,
+          130.6656751933373,
+          149.6977989292088
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          126.11579999999998,
+          127.6172,
+          130.11979999999997
+        ],
+        "mean_linear_luminance": 0.21753110021115626,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P2_wing_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 126.32113169734151,
+        "type": "plaster",
+        "native_polygon": [
+          [
+            585.969265272814,
+            558.658479851223
+          ],
+          [
+            629.8291694573346,
+            558.2870924740477
+          ],
+          [
+            629.9582400157918,
+            548.2135483550569
+          ],
+          [
+            586.1084126579303,
+            548.6139548340061
+          ]
+        ],
+        "pixels": 489,
+        "median_rgb_srgb": [
+          112.0,
+          130.0,
+          150.0
+        ],
+        "mean_rgb_srgb": [
+          110.69325153374233,
+          128.88139059304703,
+          146.97750511247443
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          121.67016,
+          127.6172,
+          130.33344
+        ],
+        "mean_linear_luminance": 0.21187900848463337,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P3_tower_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 128.72211393939392,
+        "type": "plaster",
+        "native_polygon": [
+          [
+            715.9530626174816,
+            494.49244690655416
+          ],
+          [
+            731.5279007570789,
+            494.2962055977437
+          ],
+          [
+            731.724592791237,
+            475.41319047646203
+          ],
+          [
+            716.1565337362861,
+            475.6285862417838
+          ]
+        ],
+        "pixels": 330,
+        "median_rgb_srgb": [
+          113.0,
+          132.0,
+          151.0
+        ],
+        "mean_rgb_srgb": [
+          112.26363636363637,
+          131.44848484848484,
+          150.1787878787879
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          126.09334,
+          129.2602,
+          130.7628
+        ],
+        "mean_linear_luminance": 0.2202957773355956,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P4_wing_lower_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 132.83385066666668,
+        "type": "plaster_check_tree_occlusion",
+        "native_polygon": [
+          [
+            795.8053109573882,
+            645.8289500486213
+          ],
+          [
+            807.0764996010441,
+            645.7988591659896
+          ],
+          [
+            807.2773983599365,
+            622.4132354176041
+          ],
+          [
+            796.0122969722368,
+            622.460468773388
+          ]
+        ],
+        "pixels": 300,
+        "median_rgb_srgb": [
+          116.0,
+          136.0,
+          157.0
+        ],
+        "mean_rgb_srgb": [
+          115.96333333333334,
+          135.39,
+          157.19
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          131.18518,
+          132.97879999999998,
+          134.4046
+        ],
+        "mean_linear_luminance": 0.2359245104411958,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "P5_gable_lower_paint": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 127.54159802631578,
+        "type": "plaster_check_tree_occlusion",
+        "native_polygon": [
+          [
+            1233.7456968468516,
+            608.4276024990039
+          ],
+          [
+            1248.6773019656443,
+            608.3534536803111
+          ],
+          [
+            1248.6436407025374,
+            590.294913832716
+          ],
+          [
+            1233.7184496875923,
+            590.3860958814956
+          ]
+        ],
+        "pixels": 304,
+        "median_rgb_srgb": [
+          111.0,
+          130.0,
+          150.0
+        ],
+        "mean_rgb_srgb": [
+          111.29605263157895,
+          130.1809210526316,
+          149.23355263157896
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          126.0649,
+          127.4006,
+          129.83499999999998
+        ],
+        "mean_linear_luminance": 0.21594300360762664,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "R1_round_glass": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 73.72289066666664,
+        "type": "round_glass",
+        "native_polygon": [
+          [
+            1209.6063395691783,
+            506.5606576137664
+          ],
+          [
+            1224.4654341053943,
+            506.39068263358246
+          ],
+          [
+            1224.4480135960866,
+            492.92305272764133
+          ],
+          [
+            1209.5936836027138,
+            493.1056590188375
+          ]
+        ],
+        "pixels": 225,
+        "median_rgb_srgb": [
+          73.0,
+          74.0,
+          76.0
+        ],
+        "mean_rgb_srgb": [
+          72.54222222222222,
+          73.89333333333333,
+          75.5111111111111
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          72.78899999999999,
+          73.9318,
+          74.64699999999999
+        ],
+        "mean_linear_luminance": 0.06798178484643982,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G1_left_glass_upper": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 72.22281661538462,
+        "type": "glass",
+        "native_polygon": [
+          [
+            1141.5502257299622,
+            601.35813417126
+          ],
+          [
+            1165.1858501948082,
+            601.2294207813677
+          ],
+          [
+            1165.1872168450268,
+            589.249163366938
+          ],
+          [
+            1141.5582899604253,
+            589.3958585329959
+          ]
+        ],
+        "pixels": 325,
+        "median_rgb_srgb": [
+          71.0,
+          73.0,
+          74.0
+        ],
+        "mean_rgb_srgb": [
+          70.73538461538462,
+          72.48307692307692,
+          74.02461538461539
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          71.2166,
+          72.294,
+          73.04491999999999
+        ],
+        "mean_linear_luminance": 0.0652292631579321,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G2_left_glass_mid": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 70.12496449999999,
+        "type": "glass",
+        "native_polygon": [
+          [
+            1141.5159016715345,
+            652.273574871317
+          ],
+          [
+            1165.1800332619382,
+            652.2215123974253
+          ],
+          [
+            1165.1817455832525,
+            637.2110511657731
+          ],
+          [
+            1141.5260055772803,
+            637.2856964732118
+          ]
+        ],
+        "pixels": 400,
+        "median_rgb_srgb": [
+          68.0,
+          71.0,
+          72.0
+        ],
+        "mean_rgb_srgb": [
+          68.26,
+          70.4575,
+          72.3225
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          68.85278,
+          70.4344,
+          71.1496
+        ],
+        "mean_linear_luminance": 0.0614986590897829,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G3_right_glass_upper": {
+        "green_or_dark_fraction": 0.0,
+        "mean_luminance_srgb": 73.24351815384615,
+        "type": "glass_may_be_occluded_before",
+        "native_polygon": [
+          [
+            1317.5534928772427,
+            600.3996667027852
+          ],
+          [
+            1341.7228656112095,
+            600.268046660303
+          ],
+          [
+            1341.6735689692657,
+            588.1534853931448
+          ],
+          [
+            1317.5111989808006,
+            588.3034923272355
+          ]
+        ],
+        "pixels": 325,
+        "median_rgb_srgb": [
+          72.0,
+          74.0,
+          75.0
+        ],
+        "mean_rgb_srgb": [
+          71.92307692307692,
+          73.46461538461539,
+          74.94153846153846
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          72.2166,
+          73.5066,
+          73.9318
+        ],
+        "mean_linear_luminance": 0.06709417346091469,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      },
+      "G4_right_glass_mid": {
+        "green_or_dark_fraction": 0.05,
+        "mean_luminance_srgb": 71.19163699999999,
+        "type": "glass_may_be_occluded_before",
+        "native_polygon": [
+          [
+            1317.7335128365976,
+            651.8858858177176
+          ],
+          [
+            1341.9326925743783,
+            651.8326462066004
+          ],
+          [
+            1341.8709255518577,
+            636.6535112977954
+          ],
+          [
+            1317.6805202081437,
+            636.7298437331152
+          ]
+        ],
+        "pixels": 400,
+        "median_rgb_srgb": [
+          69.0,
+          72.0,
+          73.0
+        ],
+        "mean_rgb_srgb": [
+          68.99,
+          71.7125,
+          72.515
+        ],
+        "p10_p50_p90_luminance_srgb": [
+          69.9318,
+          71.1496,
+          72.22858
+        ],
+        "mean_linear_luminance": 0.06343603015398068,
+        "validity": "PROPOSED mask; verify annotated overlay before using as semantic evidence"
+      }
+    }
+  }
+}
