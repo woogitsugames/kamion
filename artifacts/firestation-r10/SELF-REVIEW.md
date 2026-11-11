@@ -1,6 +1,6 @@
 # E r7 self-review — final160, EditMode pending
 
-Inspected all20 contact sheets covering160 final full frames, the16 true-runtime gate frames, actual2340×1080 native details, semantic ROI overlays and physical photo7197. The baseline has identical cameras, canonical vehicle and locked901c source; final geometry uses current own products. No exposure matching. ROOT independently reviewed each bounded candidate and true-runtime gate; final80Low/80High independent review is in progress.
+Inspected all20 contact sheets covering160 final full frames, the16 true-runtime gate frames, actual2340×1080 native details, semantic ROI overlays and physical photo7197. The baseline has the same40cameraIDs, canonical vehicle assets and locked901c source; scene-pose parity is limited for17vehicle views; final geometry uses current own products. No exposure matching. ROOT independently reviewed each bounded candidate and true-runtime gate; final80Low/80High independent review is in progress.
 
 | Priority / location | Verdict and evidence | Remaining action |
 |---|---|---|
@@ -18,3 +18,5 @@ Arch whole-opening and head metrics are distinct color classifiers, not depth vi
 Latest-product GIS375passed/1xfail;784product pins unchanged including192raw+canonicalvehicle. Actual targeted NUnit1/1 passes two factory imports and Low→High→Low. FullEditMode remains PENDING explicit release after PHONE hold. Technical validation is incomplete until it finishes; overall appearance goals are NOT all PASS because clear glass and canopy photo-match remain open. Main C13/other-stream integrations were not silently absorbed into matched901c proof.
 
 Final capture limitation: ROOT/G independent review found vehicle-relative camera framing shifts in trailer-34/truck-rear34/truck-side, including static background. Canonical asset pins match but baseline scene poses were not saved. Baseline import preceded canonical installer rebuild; installer preserved old scene root poses, whereas later imports instantiate canonical prefabs directly. Plausible confound, exactcause unproven. Full160 is not a wholly isolated vehicle visual comparison; fixed world-space hero cameras/ROIs remain relevant. See VEHICLE-CAMERA-AUDIT.md. Measured draw estimates are reported as observations, not causal GPU proof.
+
+Protected pixel equality means source atlas texels and specified PBR maps, not all rendered scene pixels. Camera IDs are matched; the17vehicle-relative views do not have demonstrated before/after world-pose parity.

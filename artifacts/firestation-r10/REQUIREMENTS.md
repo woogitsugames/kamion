@@ -12,3 +12,5 @@
 - Evidence: true before160 + final160,40cameras×4conditions,20finalsheets inspected. FinalGIS375passed/1xfail,784pins/192raw/vehicle unchanged. TargetNUnit1/1 PASS, fullEditModePENDINGPHONErelease. ROOTfinalreviewinprogress. No overall visualqualityPASS.
 
 Final capture caveat: vehicle-relative trailer-34/truck-rear34/truck-side show background framing shifts. AssetSHA parity is proven, scene-pose parity is not. Baseline import preceded canonical installer rebuild, which preserves old scene roots; later imports place canonical assets directly. Fixed world-space hero views remain relevant. Full160inventory/budgetobservations are not a globally isolated vehicle appearance experiment. See VEHICLE-CAMERA-AUDIT.md.
+
+Precision: protected pixels are source-atlas texels, not rendered scene pixels. Same40cameraIDs are used; causal parity is limited for17vehicle-relative views, with visible shifts in several.
