@@ -1,0 +1,8 @@
+# Editor mirror audit; cadence is configured, not measured phone Hz. Native RT pixels are unflipped; surface mapping follows the prefab UV/flip contract.
+mirror	class	width	height	fovV	aspect	near	far	lodScale	cap	intervalDrivingFrames	intervalStandingFrames
+MIRROR_MainL_Camera	2	100	224	50.391	0.42333	1.067	150.0	1.00	1	4	4
+MIRROR_MainR_Camera	2	100	224	39.595	0.43088	2.061	150.0	1.00	1	4	4
+MIRROR_WideL_Camera	4	133	134	74.017	0.98636	1.115	75.0	1.00	1	8	16
+MIRROR_WideR_Camera	4	133	134	69.440	0.98685	2.087	75.0	1.00	1	8	16
+MIRROR_Kerb_Camera	5	143	94	47.609	1.65398	1.973	75.0	1.00	1	8	32
+MIRROR_Front_Camera	6	192	119	60.124	1.95907	1.881	75.0	1.00	1	8	32
