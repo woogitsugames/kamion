@@ -2,7 +2,7 @@ param([ValidateSet('before','after')] [string]$Stage='before')
 $ErrorActionPreference='Stop'
 $repo=(Resolve-Path "$PSScriptRoot/../..").Path
 Set-Location $repo
-. scripts/env.ps1
+. "$repo/scripts/env.ps1"
 $phoneLock='C:\Users\matma\Documents\Claude\kamion\artifacts\locks\PHONE_RUN'
 $coordinatorHold=Join-Path (Split-Path $phoneLock) 'GPT_UNITY_HOLD'
 function Wait-UnityAllowed {
@@ -35,3 +35,4 @@ foreach($tier in @('Low','High')) {
     git commit -m "wip(cab): render $Stage $tier $light"
   }
 }
+
