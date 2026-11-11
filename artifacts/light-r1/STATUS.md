@@ -13,3 +13,4 @@ Krok 4: zapisano ADR 0108 z kryteriami r1, granicami własności i oknem pracy d
 Render ablacji zakończony: artifacts/light-r1/rcas/High-clear-0. PNG wymagają obejrzenia i pomiarów. Następny krok: kolejny wariant w artifacts/light-r1/rcas-ablation.ps1, potem analiza.
 
 Krok 5: przygotowano compare_rcas.py, który liczy RMS z oryginalnych PNG i zapisuje arkusze ≤960 px. Następny krok: uv run --project tools/worldgen python artifacts/light-r1/compare_rcas.py po zakończeniu ablacji.
+Render ablacji zakończony: artifacts/light-r1/rcas/High-clear-0.25. PNG wymagają obejrzenia i pomiarów. Następny krok: kolejny wariant w artifacts/light-r1/rcas-ablation.ps1, potem analiza.
