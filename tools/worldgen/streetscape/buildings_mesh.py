@@ -1082,7 +1082,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                         okey = f"{key}:{ei}:{o[0]:.1f}:{o[2]:.1f}"
                         if o[5] == "bdoor":
                             bal_count += 1
-                            FK.balcony(acc, a, d, nout, o[0] + 1.05, 2.4, o[2] - 0.03, variant=o[7], key=okey)
+                            FK.balcony(acc, a, d, nout, o[0] + 1.05, 2.4, o[2] - 0.03, variant=o[7], key=okey,
+                                       inner=o[2] - zref < 4.5)
                         elif o[5] == "window" and o[1] - o[0] > 1.0 and o[2] > zref + zbase:
                             FK.window_kit(acc, a, d, nout, o, okey, 0.05)
                         elif o[5] == "door":
@@ -1140,12 +1141,13 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 uh += L
         if pitched:
             rmat = hpick(key, ROOFS_PITCHED, "roof")
-            # ADR 0094 (review s9 P1-4): the soffit is light boarding (white PVC / painted boards), not the graphite
-            # flashing - under an overcast sky it read 24-52 sRGB next to a wall of 186. `reveal_plaster` is drawn by
-            # every plastered building already (no new material = no new draw call)
+            # ADR 0094 (review s9 P1-4): the soffit is boxed in and rendered / painted in the wall colour (the wall
+            # material itself: no new material = no new draw call), not the graphite flashing - under an overcast sky
+            # it read 24-52 sRGB next to a wall of 186. r1 of this ADR tried the white `reveal_plaster`: lighter than
+            # the wall above it (225 vs 204), the corner of the overhang read as a white wedge on the gable.
             # fascia / verge board: white boards with a tile roof, sheet flashing in the roof tone with a metal roof
             # (review s9 P2-3 "thick black verge board")
-            eaves = RF.build(acc, roof, poly, rmat, soffit_mat="reveal_plaster",
+            eaves = RF.build(acc, roof, poly, rmat, soffit_mat=wall,
                              fascia_mat="hall_flashing" if rmat.startswith("roof_metal") else "reveal_plaster")
             eaves.sort(key=lambda e_: -float(np.hypot(*(e_[1] - e_[0]))))
             for k_, (ea, eb, ze) in enumerate(eaves):             # eaves gutters; downpipes on the two longest
@@ -1163,7 +1165,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 nch = 0
             for cp in RF.chimney_spots(roof, poly, lambda salt: FK.hfloat(key, salt), nch):
                 FK.chimney(acc, cp, roof.eu, float(roof.z(cp)) - 0.25, max(roof.zridge + 0.45, float(roof.z(cp)) + 0.9),
-                           apron=(float(roof.z(cp)) + RF.T_TOP, roof.s * 0.3))
+                           apron=lambda q_: float(roof.z(q_)) + RF.T_TOP)
         else:
             roof_flat(acc, "buildings", poly, zeave, attic=0.3 if typ in ("hall", "office", "block") else 0.15,
                       skylights=typ == "hall", key=key)

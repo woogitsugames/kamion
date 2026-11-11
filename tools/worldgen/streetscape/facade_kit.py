@@ -256,12 +256,14 @@ BAL_GAP = 0.10                  # clear gap between the slab and the balustrade 
 BAL_V = (0.08, 1.02)            # rows of the `balf` cell the infill shows (bottom rail ... top rail), m
 
 
-def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key=""):
+def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key="", inner=True):
     """Balcony at floor level zf (ADR 0094, review s9 P1-5: was a closed dark box).
     Slab 0.16 m, 4 cm proud of the balustrade on its three free sides. Balustrade = a `balf` cell of the facade atlas
     (sheet, bars, boards, glass, cloth - the variant the LOD1 row shows) on the front AND on both sides, both faces,
     carried 10 cm clear of the slab on corner posts (the gap shows the sky / the wall behind: the balustrade reads as
     a screen in front of the slab, not as the side of a box); 5 x 4 cm handrail on the three sides.
+    inner: also the faces of the balustrade that look into the balcony (only the two lowest storeys - from the
+    street nobody sees into a balcony above the eye; 6-10 triangles per balcony, the Low tier budget).
     ADR 0081: 14 % glazed in above the balustrade, 18 % with a satellite dish, 30 % with a laundry line (WORKING_VALUE)."""
     d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
     hw = w / 2 + 0.1
@@ -275,8 +277,9 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key=""):
     f = v3(a + d * u + nout * dep, zf)
     A_, B_ = f - d3 * hw, f + d3 * hw
     _aq(acc, A_ + z0, B_ + z0, B_ + up, A_ + up, [[cu, va], [cu + cw, va], [cu + cw, vb], [cu, vb]])
-    _aq(acc, B_ - n3 * 0.04 + z0, A_ - n3 * 0.04 + z0, A_ - n3 * 0.04 + up, B_ - n3 * 0.04 + up,
-        [[cu + cw, va], [cu, va], [cu, vb], [cu + cw, vb]])
+    if inner:
+        _aq(acc, B_ - n3 * 0.04 + z0, A_ - n3 * 0.04 + z0, A_ - n3 * 0.04 + up, B_ - n3 * 0.04 + up,
+            [[cu + cw, va], [cu, va], [cu, vb], [cu + cw, vb]])
     w0 = v3(a + d * u, zf)
     for sg in (-1, 1):
         # side screens: the first `dep` metres of the same cell, its end post at the free corner
@@ -285,16 +288,17 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key=""):
         q = [(sw_, uw), (so_, uo)] if sg < 0 else [(so_, uo), (sw_, uw)]      # CCW seen from outside
         (P0, u0_), (P1, u1_) = q
         _aq(acc, P0 + z0, P1 + z0, P1 + up, P0 + up, [[u0_, va], [u1_, va], [u1_, vb], [u0_, vb]])
-        _aq(acc, P1 + z0, P0 + z0, P0 + up, P1 + up, [[u1_, va], [u0_, va], [u0_, vb], [u1_, vb]])
-        # corner post under the screen (front + outer face)
+        if inner:
+            _aq(acc, P1 + z0, P0 + z0, P0 + up, P1 + up, [[u1_, va], [u0_, va], [u0_, vb], [u1_, vb]])
+        # corner post under the screen (front face; the outer side face only on the two lowest storeys)
         acc.box(L0, "downpipe", so_ - d3 * sg * 0.02 - n3 * 0.02 + [0, 0, BAL_GAP / 2], d3 * 0.02, n3 * 0.02,
-                [0, 0, BAL_GAP / 2], skip=(0, 1, 2, 4 if sg > 0 else 5))
+                [0, 0, BAL_GAP / 2], skip=(0, 1, 2, 4 if sg > 0 else 5) + (() if inner else (5 if sg > 0 else 4,)))
     # handrail: 5 x 4 cm on the three open sides, 3 cm proud of the infill (top and outer faces only)
     rail = up + [0, 0, 0.01]
     acc.box(L0, "downpipe", f + n3 * 0.01 + rail, d3 * (hw + 0.03), n3 * 0.025, [0, 0, 0.02], skip=(0, 2, 4, 5))
     for sg in (-1, 1):
         acc.box(L0, "downpipe", w0 + d3 * sg * hw + n3 * dep / 2 + rail, d3 * 0.025, n3 * dep / 2,
-                [0, 0, 0.02], skip=(0, 2, 3, 4 if sg > 0 else 5))
+                [0, 0, 0.02], skip=(0, 2, 3, 4 if sg > 0 else 5) + (() if inner else (1,)))
     up = np.array([0, 0, 1.05])
     if hfloat(key, "glz") < 0.14:               # zabudowa balkonu: glazing above the balustrade, front + sides
         gv = int(hfloat(key, "glzv") * 97)
@@ -408,9 +412,8 @@ def cage_ladder(acc, a, d, nout, u, z0, z1, mat="downpipe"):
 def chimney(acc, p, along, z0, z1, apron=None):
     """Brick chimney stack 0.56 x 0.44 m from z0 (inside the roof) to z1 with a sheet-metal cap (ADR 0091: the
     stack stands on the roof slope next to the ridge and ends 0.45 m above it).
-    apron = (roof surface z at the stack centre, rise of the roof over the stack's half size): sheet flashing round
-    the foot of the stack (obróbka komina, ADR 0094), 0.15 m up the brick above the highest point of the roof at the
-    stack, 3 cm proud; LOD0, side faces only."""
+    apron(xy) -> roof surface z: sheet flashing round the foot of the stack (obróbka komina, ADR 0094), 3 cm proud
+    of the brick, from the roof surface 0.15 m up the stack, following the slope; LOD0, four faces."""
     along = np.asarray(along, float)
     across = np.array([-along[1], along[0]])
     c = v3(p, (z0 + z1) / 2)
@@ -419,10 +422,11 @@ def chimney(acc, p, along, z0, z1, apron=None):
                 skip=(0,))
     acc.box(L0, "hall_flashing", v3(p, z1 + 0.04), np.append(along * 0.33, 0), np.append(across * 0.27, 0), [0, 0, 0.04])
     if apron is not None:
-        zs, rise = apron
-        za, zb = zs - rise - 0.05, zs + rise + 0.15
-        acc.box(L0, "hall_flashing", v3(p, (za + zb) / 2), np.append(along * 0.31, 0), np.append(across * 0.25, 0),
-                [0, 0, (zb - za) / 2], skip=(0, 1))
+        cs = [np.asarray(p, float) + along * (sx * 0.31) + across * (sy * 0.25) for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+        zs = [float(apron(q)) for q in cs]
+        for i in range(4):
+            q0, q1, za, zb = cs[i], cs[(i + 1) % 4], zs[i], zs[(i + 1) % 4]
+            acc.quad(L0, "hall_flashing", v3(q0, za - 0.04), v3(q1, zb - 0.04), v3(q1, zb + 0.15), v3(q0, za + 0.15))
 
 
 def sign_instance(code, a, d, nout, u, z, src):

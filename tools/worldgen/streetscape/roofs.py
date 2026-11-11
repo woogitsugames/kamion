@@ -238,8 +238,10 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
                 S = _tris(sg)
                 if len(S):
                     sxy = S[:, [0, 2, 1]].reshape(-1, 2)
+                    # UV0.v >= 3 m: wall materials read v as metres above the ground (splash zone)
+                    suv = np.column_stack([sxy[:, 0], sxy[:, 1] - np.floor(sxy[:, 1].min()) + 3.0])
                     acc.add("buildings", soffit_mat, np.column_stack([sxy, roof.z(sxy) - T_SOFFIT]),
-                            np.arange(len(sxy)).reshape(-1, 3), sxy)
+                            np.arange(len(sxy)).reshape(-1, 3), suv)
     # ridge and hip caps (gąsiory, ADR 0094 - review s9 P2-3 "knife-edge ridge"): a three-facet cap 0.22 m wide and
     # 5 cm proud along every ridge / hip line of the height field, where the covering exists. LOD0, the roof's own
     # material; UV0 turned by 90 deg, so the course lines of the set become the joints between the cap tiles.

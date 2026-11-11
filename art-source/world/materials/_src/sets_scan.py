@@ -490,10 +490,11 @@ SCAN_SETS = {
     "plaster": (["painted_plaster_wall"], lambda: tiling_from_scan(
         "plaster", "painted_plaster_wall", target=0.5, hue=NEUTRAL, out_L=2.0, out_n=1024, seed=6318,
         # ADR 0094 (review s9 P1-2): the scan is a weathered, repainted wall - its cream / white paint patches of
-        # 0.1-0.5 m read on a light facade as paint dabbed on with a sponge. Tone variation coarser than ~0.12 m is
-        # flattened by 92 % (was: coarser than 0.5 m by 85 %) and the local hue shifts by 85 %; a rendered facade is
+        # 0.1-0.5 m read on a light facade as paint dabbed on with a sponge. Tone variation coarser than ~0.04 m is
+        # flattened by 95 % (was: coarser than 0.5 m by 85 %; r1 of this ADR 0.12 m / 92 % still showed 7-10 cm dabs of
+        # +-4 % linear) and the local hue shifts are removed; a rendered facade is
         # one tone, its variation comes from the splash zone and the run-off streaks (shader), not from the tile
-        flat_m=0.12, flat_k=0.92, hue_keep=0.15, modulation=True, hf_keep=0.22, hf_sigma_m=0.03, nrm_gain=0.3, ao_gamma=0.15)),   # ADR 0091
+        flat_m=0.04, flat_k=0.95, hue_keep=0.0, modulation=True, hf_keep=0.22, hf_sigma_m=0.03, nrm_gain=0.3, ao_gamma=0.15)),   # ADR 0091
     "brick": (["red_brick"], lambda: tiling_from_scan(
         "brick", "red_brick", target=0.5, hue=NEUTRAL, out_L=1.4, out_n=1024, seed=6319,
         flat_m=0.4, flat_k=0.8, hue_keep=1.0, modulation=True, joint_dark=0.35,   # ADR 0091 darker joints
