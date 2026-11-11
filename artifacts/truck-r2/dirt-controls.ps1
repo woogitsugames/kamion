@@ -26,7 +26,7 @@ foreach ($case in $Cases) {
     try {
         $runStart = Get-Date
         $log = "artifacts/truck-r2/$round-$(Get-Timestamp).log"
-        $code = Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.Editor.VisualQA.TruckRound0115.RunBatch','-truckRound',$round,'-truckOutputRoot','artifacts/truck-r2','-truckCameras','truck-34,truck-side,truck-rear34,truck-front','-truckTiers','Low,High','-truckLights','overcast,clear','-truckDirt',$amounts[$case])
+        $code = Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.Editor.VisualQA.TruckRound0115.RunBatch','-truckRound',$round,'-truckOutputRoot','artifacts/truck-r2','-truckCameras','truck-34r,truck-side,truck-rear34,truck-front','-truckTiers','Low,High','-truckLights','overcast,clear','-truckDirt',$amounts[$case])
         $result = Select-String -LiteralPath $log -Pattern ("^TRUCK_ROUND_RESULT: OK " + [regex]::Escape($round) + " count=16$") | Select-Object -Last 1
         $fresh = @(Get-ChildItem "artifacts/truck-r2/$round" -Recurse -Filter '*.png' -ErrorAction SilentlyContinue | Where-Object LastWriteTime -ge $runStart).Count
         $productionSha = (Get-FileHash game/Assets/_Project/Rendering/Shaders/TruckExterior.shader -Algorithm SHA256).Hash.ToLowerInvariant()
