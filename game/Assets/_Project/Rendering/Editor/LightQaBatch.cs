@@ -24,6 +24,7 @@ namespace Game.Rendering.Editor
             public bool overrideWhiteClip;
             public float whiteClip;
             public int shadowFilter; // 0 keeps the light's state; 1/2/3 = URP Low/Medium/High.
+            public bool shadowWallProbe; // hall3: establish a physical 10 m span for the PNG edge measurement.
         }
 
         static string Arg(string key)
@@ -115,6 +116,7 @@ namespace Game.Rendering.Editor
                     var actualFilter = environment.sun.GetUniversalAdditionalLightData().softShadowQuality;
                     if (job.shadowFilter > 0 && (int)actualFilter != job.shadowFilter)
                         throw new InvalidOperationException("Requested shadow filter was not retained: " + actualFilter);
+                    if (job.shadowWallProbe) WriteShadowWallProbe(job);
                     total += count;
                     Debug.Log($"LIGHT_QA_JOB: OK rendered={count} tier={job.tier} lighting={job.lighting} rq={job.rq} whiteClipOverride={job.overrideWhiteClip}/{job.whiteClip} actualWhiteClip={environment.Active.lookWhiteClip} shadowFilter={job.shadowFilter} actualShadowFilter={actualFilter} output={job.output}");
                 }
@@ -134,6 +136,54 @@ namespace Game.Rendering.Editor
                 RenderOverrides.Parse(_ => null);
             }
             if (Application.isBatchMode) EditorApplication.Exit(exit);
+        }
+
+        [Serializable] sealed class ShadowWallProbe
+        {
+            public string camera, collider, scope;
+            public int width, height;
+            public Vector3 worldCenter, normal, worldStart, worldEnd, pixelStart, pixelEnd;
+            public float spanMetres;
+        }
+
+        static void WriteShadowWallProbe(Job job)
+        {
+            var qa = UnityEngine.Object.FindObjectsByType<ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                .Single(c => c.id == "r10_hall_3");
+            var cam = qa.GetComponent<Camera>();
+            float aspect = cam.aspect;
+            cam.aspect = (float)job.width/job.height;
+            try
+            {
+                // Native 2340x1080 hall3 ROI, reviewed visually: a long vertical warehouse wall.
+                var ray = cam.ViewportPointToRay(new Vector3(1420f/2340f, 1f-560f/1080f, 0f));
+                if (!Physics.Raycast(ray, out var hit, cam.farClipPlane, ~0, QueryTriggerInteraction.Ignore) ||
+                    Mathf.Abs(hit.normal.y) > 0.03f)
+                    throw new InvalidOperationException("Shadow wall probe did not hit a vertical collider");
+                Vector3 tangent = Vector3.Cross(Vector3.up, hit.normal).normalized;
+                var proof = new ShadowWallProbe {
+                    camera = qa.id, collider = hit.collider.name,
+                    scope = "10 m horizontal segment on raycast vertical wall; pixel coordinates origin top-left; edge measured separately",
+                    width = job.width, height = job.height, worldCenter = hit.point, normal = hit.normal,
+                    worldStart = hit.point-5f*tangent, worldEnd = hit.point+5f*tangent, spanMetres = 10f
+                };
+                foreach (var p in new[] { proof.worldStart, proof.worldEnd })
+                {
+                    var check = cam.WorldToViewportPoint(p);
+                    if (check.z <= 0f || check.x <= 0f || check.x >= 1f || check.y <= 0f || check.y >= 1f ||
+                        !Physics.Raycast(cam.ViewportPointToRay(check), out var endHit, cam.farClipPlane, ~0, QueryTriggerInteraction.Ignore) ||
+                        Vector3.Distance(endHit.point, p) > 0.2f || Vector3.Dot(endHit.normal, hit.normal) < 0.99f)
+                        throw new InvalidOperationException("10 m shadow-wall span is not visible/on one plane");
+                }
+                Vector3 Pixel(Vector3 p) {
+                    var v = cam.WorldToViewportPoint(p);
+                    return new Vector3(v.x*job.width, (1f-v.y)*job.height, v.z);
+                }
+                proof.pixelStart = Pixel(proof.worldStart); proof.pixelEnd = Pixel(proof.worldEnd);
+                File.WriteAllText(Path.Combine(job.output, "shadow-wall-10m.json"), JsonUtility.ToJson(proof, true));
+                Debug.Log("LIGHT_QA_SHADOW_WALL: " + JsonUtility.ToJson(proof));
+            }
+            finally { cam.aspect = aspect; }
         }
     }
 }
