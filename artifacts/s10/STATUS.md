@@ -448,3 +448,25 @@ Gtechnicalclosureaa1af012; docs-onlyDscope/C13preflight2f7e64f1/7ababc29 doNOT
 changeGimplementation/validation. OwnREADONLYpreflightC13saved; no0108source/
 branch/Unity untilD/Eclosed. C13firstthen0109 perleaderfeedback.
 NEXT COMMAND: Get-Content ../perf-low-r1/artifacts/perf-low-r1/final.log -Tail 8; afteractualfinalEND+PHONEabsence removeONLYownedholdprefixdiag7 andexplicitrelease D CAPTURE(no repeatimport/fixtures), Eglass2Import+4. Monitoractualcounts/ROIbeforeanymaskpatch orfullmatrix.
+## Step32 - actual Eglass2gatePASS; Dbeforeprimary andlegacycontrols
+PerfFINAL actualoldMediumBdone14:30:48+lockreleased14:30:49; rootexplicitrelease
+14:31:06 removedonlyownedmarkerIDdiag7 andwrotefreshErelease. DstraighttoCapture,
+Eglass2Import/4actual. No phone/ADB action. Guardsremainbeforeeverylaunch.
+Dprimaryactual57x4=228fresh beforePNGs complete: requested58 includedortho_putry,
+notcreatedbyWorldSceneBuilder type!=persp; removedonlyunavailableID/documented.
+Actualscope23nativeworldroutes+26Gate3+8wear. Additional36legacynegativecontrols
+(17vehicle+19architecture)x4 capturingbeforeactivation tocovercanonical59,
+matchedAFTERsameIDs. Patchesstillinactive, current2440canonicalfiles1.103GB
+privatepins beforecapture. Actualtarget/camera validity/rootreviewrequired.
+Eglass2 actual4 bothUnityexit0/784pins192raw+vehicle stable. RootviewedHigh/Low
+nativeglass/clinker/gable-wingrunoff boards vs SAMEgeometrybundle baseline.
+PrimarymeanY63.42..66.81Low/70.13..73.70High; additionalSAFEpanegrid63.20..67.94/
+69.39..74.78, target60-75PASS. Originaloutergridhitbluearchtrim42percent ->invalid;
+twopanesplantoccluded excluded, notglassproof. Rootacceptedgatefilewritten.
+Clinkerbrownbetter, dripsremainmodest/notsterilityPASS; D48gable105/123/141Low,
+112/131/150High remains. NextONEHighonlyleaflightingQA authorizedwithsamecolor/
+Lowunchanged/exactJSON+YAMLrestore, no auto-promote orfree-depthpassclaim.
+Gaa1technicalclosure/7abdocs preflight, no source/Unity0108untilD/Eclosed.
+NEXT COMMAND: reviewD93uniquecontrolset(beforetargetcontacts)+completebeforepins,
+thenboundedmaskactivation; inspect EHigh-onlyleafA/B/actualpasslimits thenchoose
+fixedcandidate forfull160/GIS/EditMode/report. RecheckPHONE/ownedholdbeforelaunch.
