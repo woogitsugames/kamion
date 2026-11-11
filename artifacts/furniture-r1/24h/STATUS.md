@@ -23,3 +23,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T21:42:55.8726766+01:00: odróżniono raporty ADR 0102 od nowej rundy. Raport nadrzędny oznaczony W TOKU, stary zachowany w legacy-0102. NASTĘPNY KROK: import baseline po zakończeniu generatora.
 
 2026-11-11T21:45:03.7710219+01:00: dodano dwa przypadki regresji HIL. Na niezmienionym baseline oba zawodzą zgodnie z odtworzonymi problemami (pytest-review-red.log). NASTĘPNY KROK: po baseline zastosować zmianę i potwierdzić zielony wynik.
+
+2026-11-11T21:45:38.4852512+01:00: przygotowano snapshot_geometry.py do porównania payloadów siatek poza meblami i kolizją własnych płotów. Pliki licencjonowane nie są kopiowane do gita; dowód zawiera tylko hashe. NASTĘPNY KROK: uv run --project tools/worldgen python artifacts/furniture-r1/24h/snapshot_geometry.py before po zakończeniu build-before.
