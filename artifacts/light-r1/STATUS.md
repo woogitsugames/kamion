@@ -43,3 +43,5 @@ Krok 15: przygotowano pełne porównanie SBS przed/po na 40 pozach × Low/High �
 
 Krok 16: GIS pierwszy przebieg: 492 PASS / 1 FAIL / 1 XFAIL, powodem FAIL jest stary fidelity_qa.json. Odświeżanie przez fidelity/run.py i ponowny pełny GIS uruchomione, bez zmian kodu dróg i ratchetów. Sprawdzenie logu build_world: fallback=True = False. Następny krok: odczytać wynik odświeżonego GIS i kontynuować kolejkę Unity.
 Render ablacji zakończony: artifacts/light-r1/rcas/High-overcast-0.5. PNG wymagają obejrzenia i pomiarów. Następny krok: kolejny wariant w artifacts/light-r1/rcas-ablation.ps1, potem analiza.
+
+Krok 17: niezależny visual-critic obejrzał 20 PNG clear i 10 zestawów natywnych wycinków; recenzja review-rcas/REVIEW.md. Najlepszy kandydat 0,75, lecz żaden wariant nie spełnia obu progów; podkreśla też ziarno tynku i kontury. Autor dodatkowo obejrzał wszystkie 5 kontaktówek i główne wycinki. Runda pozostaje bez werdyktu PASS. Następny krok: smoke z ditheringiem on/off i nowym niebem; nie zwiększać globalnej ostrości ponad 0,75.
