@@ -9,7 +9,7 @@ if ($Phase -eq 'PreparedImport') {
  & uv run --project tools/worldgen python artifacts/life-r1/source-proof.py "prepared-import-$stamp"
  if ($LASTEXITCODE -ne 0) { throw 'Prepared input verification failed' }
 }
-& pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-life
+& pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-life -StaleHours 1000000
 if($LASTEXITCODE -ne 0){throw 'Brak slotu Unity'}
 try {
  if($Phase -eq 'PreparedImport') {
