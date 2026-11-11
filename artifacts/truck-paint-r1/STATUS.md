@@ -51,3 +51,7 @@
 
 - Step19 actual candidate proof: canonicalTruck/Trailer/Install allOK after explicitrelease. GPUactualRGBAHalf nowDRL160/high80/night56/50/off0 finite; productionshaderdecode at controlledExposure0.0001 yields16/8/5.6/5/0. Allstateflagsday/night correct.102candidate frames in progress (Low51done), no visualPASS claim.
 - NEXT COMMAND: preview.py candidate1; measure_contract.py candidate1; compare_fixture.py candidate1; render fresh candidate1-near-pane-off, inspect full102 and rootreview before finaltests.
+
+- Step20 candidate1 actual102 inspected pivotal pairs; formalmetrics stillFAIL: OVdoor1.57Low/2.01High; roof14.17/15.72PASS, glassOVp5018.77/22.61, sd5.92/5.32. Budgetall102rows identical and0mesh/FBX/pose changes. Suspected NEW groundchecker rejected: two nativeHighclearROI byteidentical100percent vsbaseline. No candidatePASS.
+- Step21 actual mesh probes (generatedshader/postoff): coat~1, AO1, dirtmedian.002, Fc~.051, NoV~.59, rough.0976; R.y .006..-.053. DoorenvYHigh.354->.143, Low.210->.131 explains weakreflection. Masks notdisabled. Probing dominant-horizontal nontie cuberays (initial diagonal ties could selectYface), then separate High256 capture control; no largerdefault or arbitraryF0 gain.
+- NEXT COMMAND: run-env-controls.ps1, quantify actualcube/rasterization/door terms; refine physicalcause, then matchedcandidate rerender and finaltests.

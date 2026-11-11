@@ -104,7 +104,7 @@ namespace Game.Editor.VisualQA
         public static void WriteEnvironmentDirections(string output)
         {
             var rows=new List<DirectionSample>();
-            foreach(string ray in new[]{"0,1,0","0,-1,0","1,1,0","1,-1,0","0,1,1","0,-1,1"})
+            foreach(string ray in new[]{"0,1,0","0,-1,0","1,1,0","1,-1,0","0,1,1","0,-1,1","1,0.75,0","1,-0.75,0","-1,0.75,0","-1,-0.75,0","0,0.75,1","0,-0.75,1","0,0.75,-1","0,-0.75,-1"})
             {
                 var shader=BuildProbeShader("SAMPLE_TEXTURECUBE_LOD(_KamionVehicleEnvCube, sampler_KamionVehicleEnvCube, normalize(float3("+ray+")),0).rgb");
                 rows.Add(new DirectionSample{ray=ray,gpuRed=Read(shader,1f,false,true,out _)});
