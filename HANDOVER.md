@@ -1,6 +1,7 @@
 # HANDOVER — kamion, sesja 9 (start 2026-11-11 00:30 lokalnie / 23:30 UTC; limit 5 h reset 04:30 UTC)
 
 ## Najpierw
+- **Limit 74 % o ~02:05 lokalnie** (reset 04:30 UTC): nowe agenty wstrzymane, dopóki działają 0092 i 0093; 0094 czeka.
 - 0084 po regeneracji: pytest gis 323 ✓ / 0 ✗.
 - Trigger 01:23 (limit 42 %): 0077 w toku (końcowy pytest), 0091 r1 import, 0092 runda; 0084 GPT scalone.
 - Zasady s9: `docs/owner/START-PROMPT-S9.md` — max 3 agentów naraz, trigger co godzinę (CronCreate w sesji s9, :17, wygasa po 7 dniach / z zamknięciem sesji).
@@ -12,7 +13,7 @@
 |---|---|---|---|---|
 | P0 korytarz + ratchety | 0076 | usunięty | artifacts/roads-p0-r10 | SCALONE `da5dd11` (main po s9-scaleniach: pytest gis 246/3 znane przed 0076); main po 0076 zregenerowany: pytest gis 249 ✓ / 0 ✗ (log `artifacts/logs/s9-main-regen-0076.log`); recenzja `docs/reports/visual/REVIEW-2026-11-11-s9-0076.md`: PASS warunkowy scalenia, węzły vs ortofoto FAIL (łaty bez linii P-1, nosy klinów, P-21, latarnia na igłowej wysepce E −774,5 N 77,5) → ADR 0093 |
 | wysepki z OSM | 0077 | usunięty | artifacts/islands-r10 | SCALONE `0f6a5cee` (konflikty kodu z 0076: pipeline.py — stats 0076 + GO.build przed cull_sides; meshing.py — flaga flush 0076 + stacja 0077; BASELINE fidelity z 0077); po regeneracji main `8cc25713`: pytest gis 328 ✓ / **2 ✗** (kerb_on_carriageway 28 > 0 = zatopione krawężniki pod klinami; skirt:yard_concrete 4 > 3) → krok 0 zadania 0093 |
-| zabudowa r3 (domy dwuspadowe, balkony, tynk, cegła) | 0091 | buildings-r11 (z d205d4a) | artifacts/buildings-r11 | PARTIAL `88a4c79f`: dachy z LoD2 (200 dwusp./30 czterosp./36 jednosp.), balkony + ościeża, szary tynk +35, cegła R/B 2,07→1,66; NIE: pieprz tynku −5 %, draws Low > +3 % na 4 kamerach (dk8 +5,2 %); EditMode TruckDoorGlassTests ×3 (sprawdzić na main); recenzja visual-critic w toku; po scaleniu `build_all.py --only roof_tiles,plaster,brick` |
+| zabudowa r3 | 0091 | usunięty | artifacts/buildings-r11 | SCALONE `9f9a34c5` (recenzja `REVIEW-2026-11-11-s9-0091.md`: PASS warunkowy; draws Low +3–5 % na 4 kamerach → rozstrzyga A16, ew. cofnąć `plinth_grey`); regeneracja main w tle `artifacts/logs/s9-main-regen-0091.log` |
 | geometria i oznakowanie węzłów + 2 czerwone testy main | 0093 | junctions-r1 (z 8cc25713) | artifacts/junctions-r1 | s9: agent Fable start ~02:30 |
 | Kwadrat Park r12 (firanka matowa, szlaban domknięty, dryf do paneli) | 0092 | kwadrat-r12 (z d8e929ca) | artifacts/kwadrat-r12 | s9: agent Fable start ~01:35 |
 | import Megascans R1 | 0084 | gpt-megascans (NIE usuwać — Codex wciąż aktywny) | artifacts/megascans-r1/REPORT.md | SCALONE `98e54e47` (REPORT: lokalnie PASS, skok sceny FAIL, Low lokalnie +4 draw/+4k tris; normal mapy Fab wyłączone; High 1024 i telefon UNVERIFIED); konflikt stage.py = unia (yard wear 0071 + FD.apply); regeneracja main w tle `artifacts/logs/s9-main-regen-0084.log`; GPT następnie Q1 0086 / Q2 0088 |
@@ -22,8 +23,9 @@
 1. Scal 0076 → 0077 (gdy skończą); na main: build_all → build_world → pytest gis → import-region → Truck/Trailer BuildBatch + InstallBatch → EditMode/PlayMode (`WorldCBarrierTests|DepotBarrierTests|WorldCRouteTests|WorldEdgeRecoveryTests`).
 2. Render stanu połączonego (wymóg recenzji): High+Low overcast `fire-station-ref7197`, `stretch-05-docks`, `kwadrat-park-gate`, `truck-at-gate`, `r10_block_2`, `r10b_black_05` + zrzuty z telefonu → ponowny pomiar tynku remizy.
 3. Nowe zadania z recenzji s9 (agenci po zwolnieniu miejsc): **0090** remiza r7 (świerki piętrowe, tuje 3 kształty + Low, szkło 60–75, zacieki). **0089** czarny lakier aut → Argon Q2 (dopisane).
+3a. **0094** zabudowa r4 (z recenzji 0091: P1-1 daszek przebija połać, P1-2 łaty jasnego tynku — osłabić warstwę niskoczęst., P1-3 balkony na obu długich stronach, P1-4 czarna podbitka nad skrzydłem L ≥ 90, P1-5 balkony z płytą 0,15–0,2 m i jaśniejszą balustradą; P2 kolory dachów/tynków, gąsior, pieprz High w shaderze). **0090** remiza r7.
 4. Integracja, czyste buildy Low/High, telefony (A16 Low gate3, S24+ High), raport bramki 3.
-5. Ostatni przydzielony ADR: **0093**.
+5. Ostatni przydzielony ADR: **0094**.
 
 ---
 # HANDOVER — kamion, sesja 8 (2026-11-10 ok. 22:00 UTC start; limit 5 h reset 2026-11-11 03:00 UTC)
