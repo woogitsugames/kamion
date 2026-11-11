@@ -105,3 +105,12 @@ and curb/shelterzone. A bounded stain may use verifiedactualstopzone as explicit
 WORKING_VALUE trafficwear, not claim photographed/measured engineoil coordinates.
 Fullpolygon must fit generateddriveablebay/height/chunk with matchedcost; no
 shelter projection/all20 placement or invented roadgeometry.
+
+Unknownoverlap source fixb5cd75b3 reviewed: matchingheightnull/sentinel road
+triangles retained as blockers, otherheight unknown roads do not veto. Actual
+latest targetedXML14/14/0skip independently parsed PASS; older copied artifact
+XMLstill11, so rootusedactualtests/editmode-20261111-151057.xml. Final blocker
+import/currentcoveragepending; prior16component result remains provisional. Age
+comparison firstrejected PythonrawUV orientation, then NumPyvsUnity halfrounding;
+verifyuploaded age against originalGlbReader plus UnityFloatToHalf before PASS.
+Generator flips both UVsets onexport and GlbReader unflips; no newUVconvention.

@@ -546,3 +546,9 @@ verifiedbayzone allowsboundedWORKINGstainifactualdriveablefootprintsupports.
 Eruntimepolicy17lines+1NUnit(tworeimports/tierroundtrip) sourcescopeapproved;
 actualtest/importpending, askedconcretecheckpoint. NEXT COMMAND: Dnativeageproof/
 unknownblocker+glyphcontrols; Eactualtest/runtimeR1?160; guardsbeforeeachlaunch.
+
+Step43: independentEactualXML1/1/0skipPASS63c7runtimepolicy; latestDXML14/14/0skip
+PASSb5cdunknownblockerfix (oldcopiedartifact11superseded). ProofSHA/casecounts
+saved. EcorrectedR1importactive; Dfinalblockerimportactive, actualcoverage/age
+pending. NEXT COMMAND: Dnativeage originalGlbReader/Unityhalf+glyphcontrols; E
+Lowabeam/Highbinding16R1/fourconditionmetrics thenfullvalidation. Bothguards.

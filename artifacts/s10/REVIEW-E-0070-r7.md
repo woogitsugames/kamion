@@ -66,3 +66,6 @@ Root source-reviewed17line runtimepolicy/cache diff and oneNUnitcase with two
 actualLitfactory reimports/LowHighLow. Exactheroalias only, source gamma/texture
 UV/Cutoff/A2C preserved, .25/0High, unrelatedmaterials and sourceJSON unchanged
 in test. Actual execution/Lowabeam+Highbindings pending; importerhook removed.
+
+Actual correctedruntime targettest XML independently parsed1/1/0skip PASS;
+source63c7a76f. Fullsuite/actualLowHighbinding renders pending.
