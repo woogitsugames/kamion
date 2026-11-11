@@ -1,4 +1,4 @@
-param([ValidateSet('baseline','result-0112')][string]$Stage='baseline')
+param([ValidatePattern('^(baseline|result-0112(?:-[A-Za-z0-9-]+)?)$')][string]$Stage='baseline')
 $ErrorActionPreference='Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
 if ((git branch --show-current) -ne 'gpt-cab-r1') { throw 'Tylko runda cab r1.' }

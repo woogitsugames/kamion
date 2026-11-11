@@ -1,7 +1,9 @@
 """Compare ADR 0112 cab evidence; estimates are not device GPU counters."""
-import json,re
+import argparse,json,re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent
+parser=argparse.ArgumentParser();parser.add_argument('--after',default='result-0112');parser.add_argument('--output',default='comparison-0112.json');options=parser.parse_args()
+AFTER=ROOT/options.after
 failures=[]
 
 def read_stats(path):
@@ -18,10 +20,10 @@ def tsv(path):
  lines=[x for x in path.read_text(encoding='utf-8-sig').splitlines() if x and not x.startswith('#')]
  columns=lines[0].split('\t');return {r[0]:dict(zip(columns,r)) for r in (x.split('\t') for x in lines[1:])}
 
-result={'scope':'Editor CPU visibility estimates, regular and instanced draws separately; rounded regular triangles. Device times UNVERIFIED.','states':{}}
+result={'scope':'Editor CPU visibility estimates, regular and instanced draws separately; rounded regular triangles. Device times UNVERIFIED.','stage_after':options.after,'states':{}}
 for tier in ('Low','High'):
  for light in ('clear','overcast'):
-  key=f'{tier}-{light}';a=ROOT/'baseline'/key;b=ROOT/'result-0112'/key
+  key=f'{tier}-{light}';a=ROOT/'baseline'/key;b=AFTER/key
   try:
    before=read_stats(a/'stats.txt');after=read_stats(b/'stats.txt')
    if set(before)!=set(after):failures.append(key+': camera list differs')
@@ -57,7 +59,7 @@ for tier in ('Low','High'):
   except (FileNotFoundError,KeyError,ValueError) as e:
    failures.append(key+': incomplete evidence: '+str(e))
 try:
- before=read_stats(ROOT/'baseline/Low-route-all/stats.txt');after=read_stats(ROOT/'result-0112/Low-route-all/stats.txt')
+ before=read_stats(ROOT/'baseline/Low-route-all/stats.txt');after=read_stats(AFTER/'Low-route-all/stats.txt')
  if set(before)!=set(after):failures.append('route: camera list differs')
  delta={n:{f:after[n][f]-v for f,v in row.items()} for n,row in before.items()}
  for n,d in delta.items():
@@ -68,5 +70,5 @@ try:
 except (FileNotFoundError,KeyError,ValueError) as e:
  failures.append('route: incomplete evidence: '+str(e))
 result['failures']=failures;result['result']='FAIL' if failures else 'PASS'
-(ROOT/'comparison-0112.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
+(ROOT/options.output).write_text(json.dumps(result,indent=2),encoding='utf-8')
 print(result['result']);print('\n'.join(failures));raise SystemExit(bool(failures))
