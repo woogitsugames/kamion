@@ -19,10 +19,13 @@ namespace Game.Tests
             {
                 var color = new Color(.3f, .5f, .2f, .8f);
                 material.SetColor("_BaseColor", color);
+                // Unity Color storage may round-trip by an ulp; compare against the stored
+                // pre-policy value so this checks whether the policy changes the palette.
+                var storedColor = material.GetColor("_BaseColor");
                 VegetationCanopyPolicy.Apply(material);
                 Assert.That(material.GetFloat("_AmbientTransmission"), Is.EqualTo(transmission).Within(1e-6));
                 Assert.That(material.GetFloat("_CrownShade"), Is.EqualTo(shade).Within(1e-6));
-                Assert.That(material.GetColor("_BaseColor"), Is.EqualTo(color));
+                Assert.That(material.GetColor("_BaseColor"), Is.EqualTo(storedColor));
                 Assert.That(material.IsKeywordEnabled("_EMISSION"), Is.False);
             }
             finally { Object.DestroyImmediate(material); }

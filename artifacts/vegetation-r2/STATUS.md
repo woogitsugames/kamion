@@ -107,3 +107,7 @@ EditMode PENDING za głównym PHONE_RUN. Canonical fixture jest już przywrócon
 
 NASTĘPNA KOMENDA (ROOT): `Get-Content artifacts/vegetation-r2/editmode-complete.log -Tail 20`; po zakończeniu `uv run --project tools/worldgen python artifacts/vegetation-r2/snapshot_canonical.py --check`.
 
+
+- Krok19 (koordynator): przejeto finalna walidacje po9070b252; autor pracuje juz tylko nad E. Poprzedni wrapper zakonczyl sie faktycznie o10:44:47: EditMode218/212,6nowych testow nie przeszlo przez dokladne porownanie wejsciowego Color z Unity SetColor/GetColor (zaokraglenie). Polityka nie zapisuje koloru; test poprawiono na dokladne porownanie odczytu przed/po Apply, zachowujac sens ochrony palety. Produkcja/PNGs/GIS bez zmian.
+- MAIN PHONE_RUN usuwa sie chwilowo miedzy powtorkami telefonu: B start10:43:49 i F start~10:48 weszly w te okna. Dodano koordynacyjny GPT_UNITY_HOLD, wszyscy agenci wstrzymuja Unity do jawnego zwolnienia. B nie ma juz aktywnego wrappera/Unity; nie startujemy ponownie w przejsciowym oknie.
+- NASTEPNY KROK: po stabilnym zakonczeniu telefonu `pwsh scripts/test.ps1 -Platform EditMode`; potem XML+192SHA, poprawienie REVIEW/REPORT i kopiowanie artifacts do main.
