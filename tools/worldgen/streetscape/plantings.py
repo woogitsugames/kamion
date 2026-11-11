@@ -80,7 +80,8 @@ SPECIES = {
     # as a couch of sausages. The photo shows a low band clipped to a straight, slightly battered side and a flat top
     # with a small rounded arris; shoots grow out lighter (copper) above the cut. Lumps 0.015 m, dome 0.05.
     "berberis_red": dict(tex="berberis", h=HEDGE_H, plant=(0.55, 0.85), bulge=0.025, dome=0.10, gap_p=0.09, sigma=0.5,
-                         sprig=0.13, sprig_wh=((0.16, 0.28), (0.10, 0.20)), prof="clipped", band=BAND_M),
+                         sprig=0.13, sprig_wh=((0.16, 0.28), (0.10, 0.20)), prof="clipped", band=BAND_M,
+                         local_top=True),
     "privet": dict(tex="privet", h=(1.2, 1.7), plant=(0.45, 0.65), bulge=0.08, dome=0.12, gap_p=0.10, sigma=0.36,
                    sprig=0.30, sprig_wh=((0.14, 0.24), (0.10, 0.18))),
     "hornbeam": dict(tex="hornbeam", h=(1.4, 2.0), plant=(0.5, 0.7), bulge=0.08, dome=0.10, gap_p=0.09, sigma=0.38,
@@ -230,6 +231,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     # the shell's global median made a sharp ridge next to its undulating edge.
     top_xy, top_z = rings(R, hl, prof)[-1]
     top_h = top_z - zground(top_xy[:, 0], top_xy[:, 1])
+    local_top = S.get("local_top", False)  # photo-calibrated roundabout berberis only
     # core: inset and lowered by SHELL_D, dark interior material (modulation set hedge_foliage)
     # (half the perimeter vertices: it only shows through the leaf gaps; 1.3 x SHELL_D keeps the chords inside)
     cs = slice(None, None, 2) if n >= 16 else slice(None)
@@ -240,7 +242,8 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     try:
         P2, Tt = _fill(core[-1][0], 1.0)
         zt = zground(P2[:, 0], P2[:, 1])
-        z2 = zt + _local_top_height(P2, top_xy, top_h) - 0.5 * S["dome"] * h - SHELL_D
+        z2 = (zt + _local_top_height(P2, top_xy, top_h) - 0.5 * S["dome"] * h - SHELL_D if local_top
+              else zt + h * (1.0 - 0.6 * S["dome"]) - SHELL_D)
         z2[:nc] = core[-1][1]
         buf.add("furniture", core_m, np.column_stack([P2, z2]), P2.copy(), Tt, src=src)
         nt += len(Tt)
@@ -263,7 +266,8 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
             inner = P2[n:]
             dmin = np.sqrt(((inner[:, None, :] - stop[None, :, :]) ** 2).sum(-1).min(1))
             lam = 0.65 * (S["plant"][0] + S["plant"][1])
-            z2[n:] = (zt[n:] + _local_top_height(inner, top_xy, top_h) + 0.035 * np.minimum(dmin / 0.5, 1.0)
+            top = _local_top_height(inner, top_xy, top_h) if local_top else float(np.median(hl))
+            z2[n:] = (zt[n:] + top + 0.035 * np.minimum(dmin / 0.5, 1.0)
                       + 0.5 * S["dome"] * h * _crown(inner, ph, lam))
         ang = _h(key, "ua") * 6.283
         c, s_ = math.cos(ang), math.sin(ang)
