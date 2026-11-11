@@ -386,7 +386,10 @@ namespace Game.World.Import
                     float rough = def.Get("rough") != null ? (float)Num(def.Get("rough")) : 0.65f;
                     mat.SetVector("_PaintColor", new Vector4(col.x, col.y, col.z, Mathf.Clamp01(1f - rough)));
                     float P(string k, float d) => pd.Get(k) != null ? (float)Num(pd.Get(k)) : d;
-                    mat.SetVector("_PaintWear", new Vector4(P("wheel_wear", 0.85f), P("age_wear", 0.25f), P("dirt", 0.3f), P("line_w_m", 0.12f)));
+                    // ADR0099 WORKING_VALUE: narrower contact wear remains legible on P8/P10.
+                    // Always calibrate fresh metadata, never the existing material (reimports must be idempotent).
+                    float wheelWear = P("wheel_wear", 0.85f) * 0.5f;
+                    mat.SetVector("_PaintWear", new Vector4(wheelWear, P("age_wear", 0.25f), P("dirt", 0.3f), P("line_w_m", 0.12f)));
                 }
                 else if (id == "decal_tyre")
                 {

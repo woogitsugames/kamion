@@ -1,0 +1,137 @@
+[
+  {
+    "camera": "d_field_patch_putry",
+    "footprint": {
+      "chunk": "2_4",
+      "material": "decal_patch",
+      "center_enu": [
+        -412.74007929799916,
+        -124.58782864985353,
+        131.27673785429974
+      ],
+      "bounds_enu": [
+        [
+          -415.28900146484375,
+          -127.16100311279297,
+          131.24899291992188
+        ],
+        [
+          -410.20599365234375,
+          -122.02899932861328,
+          131.31500244140625
+        ]
+      ],
+      "area_m2": 12.618512560749831,
+      "triangles": 8,
+      "source": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.glb",
+      "source_sha256": "b9c9c3ba3f218e17cb97d00546e657f70a0f10212c5dab1bd7e185677444d1c7"
+    },
+    "note": "Actual12.62m2 patch footprint near Putry; visibility/control only, not photo-identical roadworks claim."
+  },
+  {
+    "camera": "d_field_patch_large",
+    "footprint": {
+      "chunk": "5_6",
+      "material": "decal_patch",
+      "center_enu": [
+        323.7628254857104,
+        -572.2743708164388,
+        141.14820141048915
+      ],
+      "bounds_enu": [
+        [
+          320.0559997558594,
+          -575.72900390625,
+          141.04400634765625
+        ],
+        [
+          327.48199462890625,
+          -568.8200073242188,
+          141.25100708007812
+        ]
+      ],
+      "area_m2": 27.378308514166044,
+      "triangles": 18,
+      "source": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.glb",
+      "source_sha256": "682da6823e64767f2cd69f64616738e8320b74eb3007d958e733a6f174ddcb2f"
+    },
+    "note": "Actual largest27.38m2 existing patch; retain footprint/geometry, assess edge/tone/age."
+  },
+  {
+    "camera": "d_field_tyre_near_gate",
+    "footprint": {
+      "chunk": "6_6",
+      "material": "decal_tyre",
+      "center_enu": [
+        664.4807953950838,
+        -601.3072134040854,
+        141.75469951039895
+      ],
+      "bounds_enu": [
+        [
+          656.8480224609375,
+          -608.8410034179688,
+          141.5760040283203
+        ],
+        [
+          672.114013671875,
+          -593.7739868164062,
+          141.92999267578125
+        ]
+      ],
+      "area_m2": 7.4818554143462865,
+      "triangles": 28,
+      "source": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.glb",
+      "source_sha256": "d27e03668cae415545a2fc1518fa80ee9f690b4b4c977490c82b2b64ab8edd79"
+    },
+    "note": "Nearest actual tyre footprint to source gatehouse; distance36.8m, sourceIDnotexported, cannot yet attribute to gate."
+  },
+  {
+    "camera": "d_field_signal_oil",
+    "footprint": {
+      "chunk": "2_4",
+      "material": "decal_oil",
+      "center_enu": [
+        -282.7723907138094,
+        -172.02022896342635,
+        130.0934263435326
+      ],
+      "bounds_enu": [
+        [
+          -283.0589904785156,
+          -172.44500732421875,
+          130.08700561523438
+        ],
+        [
+          -282.4320068359375,
+          -171.6490020751953,
+          130.0989990234375
+        ]
+      ],
+      "area_m2": 0.3053955654009122,
+      "triangles": 9,
+      "source": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.glb",
+      "source_sha256": "b9c9c3ba3f218e17cb97d00546e657f70a0f10212c5dab1bd7e185677444d1c7"
+    },
+    "note": "Actual oil footprint nearest source traffic_signal 1847044938; oil-source attribution not exported. Verify roadlane/context before queue claim.",
+    "signal_source": {
+      "geometry": {
+        "coordinates": [
+          777646.38,
+          596062.58
+        ],
+        "type": "Point"
+      },
+      "osm_node": 1847044938,
+      "tags": {
+        "highway": "traffic_signals",
+        "traffic_signals": "emergency"
+      }
+    },
+    "signal_local_en": [
+      -348.61999999999534,
+      -160.4200000000419
+    ],
+    "distance_to_signal_m": 66.86159555910362
+  }
+]
