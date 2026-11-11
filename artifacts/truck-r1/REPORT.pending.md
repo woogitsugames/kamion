@@ -1,0 +1,17 @@
+Raport roboczy: oczekuje na końcowy GIS, nie jest zgłoszeniem do integracji.
+
+Gałąź gpt-truck-r1, baza main 5f2aa277. Ostatni commit kodu produkcyjnego i testów: 45e8352c1f7d08753f5657e194ff4c2779f6a74c; późniejsze WIP zapisują dowody i dokumentację. ADR 0115. Zakres: wyłącznie zewnętrze ciągnika i naczepy.
+
+Poprawiono atmosferyczny in-scatter szkła premultiplied w FragFast. DRL otrzymał lokalny luminancyjny shoulder 0,8, obliczany w float przed half i maską emitera, tylko dla grupy 1. Surowe ustawienia sterownika pozostają 160000/56000; parametr jest WORKING_VALUE kalibracji obrazu, nie pomiarem fotometrii. Warianty stałej redukcji do 2000/3000/4000 odrzucono po porównaniu obu pogodowych warunków.
+
+Natywne ROI lewej lampy High-overcast: 1214 → 0 pikseli z każdym kanałem ≥254; w pozostałych trzech warunkach Low/High × clear/overcast 0 → 0. Recenzent rozpoznaje światło w obu pogodach i nie widzi nowej regresji reflektorów, kierunkowskazu ani widoku kierowcy. Gradient światłowodu pozostaje subtelny. Porównania przed/po: final-candidate/*/review-lamp-left.jpg i review-cab-driver.jpg, każdy arkusz ma 960 px szerokości.
+
+Lakier, dach i mleczność szyby nadal nie spełniają celu. Rozrzut profilu drzwi nie zmienił się: overcast Low 3,362 / High 2,437; clear Low 5,261 / High 3,661 punktu przy celu 4–10. Końcowy D44 wynosi 0,490 Low i 0,526 High przy celu ≥0,7. Kontrole potwierdziły obecność wkładu powłoki, lecz nie poprawę białego lakieru. Nie zmieniano F0, wypukłości drzwi, globalnego światła ani postprocessingu. Wyniki i ograniczenia: final-summary.json, controls-summary.json, FINAL-REVIEW.md.
+
+Zapisano 28 kadrów kandydata, po 6 Medium, zmierzchu i kontrolnych bez szyby oraz 96 końcowych kadrów wszystkich kamer. Medium obejmuje szybką ścieżkę w obu pogodach. Zmierzch nie ma bazy porównawczej; płaskie jasne moduły reflektorów pozostają otwarte. Fotograficzne arkusze 960 px: [pojazd roboczy | render](photo-render-working-tractor-High-overcast.jpg), [odbicia lakieru | render](photo-render-paint-reflection-High-clear.jpg). To różne pojazdy, lakiery, pozy i światło; źródła/licencje w references/CREDITS.md. Zdjęcia srebrnego i czerwonego ciągnika nie są kalibracją jasności białego lakieru.
+
+Kanoniczny builder ciągnika, naczepy i instalacja przeszły. Porównano 566 wygenerowanych plików i dwa prefaby: bez zmian mesh/FBX oraz semantycznych pozycji i rendererów. Wszystkie 96 wierszy kamer ma identyczne estymaty rendererów i cieni, osobne liczniki instancji oraz raportowane tysiące trójkątów. Dowód: all-cameras-counters.csv. Nie dodano próbek, przebiegów, wariantów shaderowych ani geometrii. Koszt dodatkowej arytmetyki na A16 jest UNVERIFIED; telefonów nie używano.
+
+Pełny EditMode: 266/266 passed, 0 failed, 0 skipped, exit 0; XML i JSON w pakiecie. Końcowy GIS: OCZEKUJE. Bazowy GIS sprzed pilnej aktualizacji limitów: 488 passed, 5 failed, 1 xfailed. Końcowy test korzysta z heavy, z jednym wątkiem bibliotek numerycznych. Efekty uboczne testów w cudzych generated wymagają zachowania dowodu i cofnięcia przed przekazaniem.
+
+Do integracji służy kod własnych shaderów, komentarze TruckLights, testy i ADR; ignorowane materiały/prefaby należy regenerować przez WorldTruckInstaller.InstallBatch. Żadnych zmian źródeł innych dziedzin, merge do main ani push. Artefakty zostaną skopiowane robocopy po końcowym GIS. Następna runda: gpt-truck-r2, zabrudzenia progów, błotników i plandeki po scaleniu aktualnego main do własnej gałęzi.
