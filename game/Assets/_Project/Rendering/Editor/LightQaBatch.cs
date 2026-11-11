@@ -26,6 +26,7 @@ namespace Game.Rendering.Editor
             public int shadowFilter; // 0 keeps the light's state; 1/2/3 = URP Low/Medium/High.
             public bool shadowWallProbe; // hall3: establish a physical 10 m span for the PNG edge measurement.
             public float clearSkySaturation; // 0 leaves preset unchanged; diagnostic display-only chroma.
+            public bool lampProbe;
         }
 
         static string Arg(string key)
@@ -93,11 +94,13 @@ namespace Game.Rendering.Editor
                     profile.tiers[tierIndex] = RenderOverrides.ApplyTo(profile.tiers[tierIndex]);
                     Directory.CreateDirectory(job.output);
                     if (job.shadowFilter < 0 || job.shadowFilter > 3) throw new ArgumentException("shadowFilter must be 0..3");
-                    Action<ScriptableRenderContext, Camera> filter = (_, __) => {
-                        if (job.shadowFilter == 0) return;
-                        foreach (var light in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
-                            if (light.type == LightType.Directional)
-                                light.GetUniversalAdditionalLightData().softShadowQuality = (SoftShadowQuality)job.shadowFilter;
+                    var lampProbe = job.lampProbe ? new LightQaLampProbe() : null;
+                    Action<ScriptableRenderContext, Camera> filter = (_, camera) => {
+                        if (job.shadowFilter > 0)
+                            foreach (var light in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
+                                if (light.type == LightType.Directional)
+                                    light.GetUniversalAdditionalLightData().softShadowQuality = (SoftShadowQuality)job.shadowFilter;
+                        lampProbe?.Capture(camera);
                     };
                     int count;
                     RenderPipelineManager.beginCameraRendering += filter;
@@ -111,6 +114,7 @@ namespace Game.Rendering.Editor
                     int expected = string.IsNullOrEmpty(job.cameras) ? count : job.cameras.Split(',')
                         .Select(id => id.Trim()).Where(id => id.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).Count();
                     if (count != expected) throw new InvalidOperationException($"Incomplete lighting QA: expected={expected}, rendered={count}");
+                    lampProbe?.Write(job.output, expected);
                     var environment = UnityEngine.Object.FindAnyObjectByType<EnvironmentLighting>();
                     if (environment == null || environment.Active == null || environment.Model == null)
                         throw new InvalidOperationException("Lighting QA requires a configured EnvironmentLighting");
