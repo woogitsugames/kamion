@@ -6,7 +6,7 @@ w chimney-preflight.json: oba kominy i oba LOD mają dryf osi 0 m, yaw instancji
 To nie zastępuje odczytu macierzy Unity. Nie pochylać ani nie prostować modelu na oko.
 
 Fotografia CC0 20200711_073128 Elektociepłownia Białystok pokazuje szerokie pasy
-na dużej części obu trzonów. Obecny builder daje siedem pasów dopiero od 0,66H
+na dużej części WIDOCZNYCH trzonów; dół jest zasłonięty. Obecny builder daje siedem pasów dopiero od 0,66H
 (dla 120 m około 5,83 m na pas). To konkretna różnica do pomiaru i poprawy.
 Nie zmieniać wysokości 120 m, średnic ani pozycji bez osobnego źródła.
 Kominy różnią się detalami zwieńczenia i stanem malowania; zdjęcie nie uzasadnia
@@ -16,6 +16,11 @@ Natywne wycinki 073128 są w chimney-photo-details (172x528 i 204x808,
 SHA źródła w source.json). Lewy komin ma trzy osobne wyloty na głowicy;
 prawy jeden duży wylot i inny układ galerii/zużycia. Obecny wspólny builder
 tego nie odwzorowuje. Nie oceniać detalu z samej miniatury 960x540.
+Najpierw jednak potwierdzić tożsamość: overrides podają w628899553 i w628899554
+(120 m, średnice przy podstawie z OSM), a ich notatka wspomina inne zdjęcie
+CC BY-SA EC_Białystok z szachownicą na jednym zwieńczeniu. Na 073128 szachownicy
+nie widać. Mogą to być inne widoczne kominy zakładu albo inny stan malowania;
+nie wolno automatycznie przenieść głowic i procentu malowania z nieprzypisanego kadru.
 
 Własność: `landmarks.py` rejestruje nazwy i wymiary w LP.LANDMARKS. Sam builder
 `chimney()` znajduje się w cudzym life_props.py; jego pliku nie edytować.

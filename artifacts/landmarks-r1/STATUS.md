@@ -118,3 +118,5 @@ Krok 36d: ustalono przyczynę braku postępu generatora: liderowy ops-watchdog z
 Krok 36e: przygotowano NEXT-R3.md z konkretną różnicą schematu pasów kominów oraz ograniczeniami własności pliku life_props.py. Nadal brak zmian źródłowych poza remizą. Generator pozostaje zawieszony przez watchdog; nie duplikuję go i nie zwalniam slotu, dopóki proces istnieje.
 
 Krok 36f: natywne wycinki kominów ujawniły trzy wyloty na głowicy lewego i jeden na prawym. Zidentyfikowano istniejący przepływ własnych GLB przez hero_building/InstanceImporter, pozwalający przyszłą rundę wykonać bez edycji plików life i roads. Zapisane w NEXT-R3.md; implementacji r3 jeszcze nie rozpoczęto.
+
+Krok 36g: watchdog wznowił własny generator o 00:20:32 i 00:20:33 (dwa uruchomione nadzory). CPU procesu ponownie rośnie. Zapisano ograniczenie identyfikacji zdjęć kominów: referencja pierwotnych override wspomina szachownicę, nieobecną na analizowanym 073128; przed zmianą trzeba potwierdzić przypisanie do OSM. NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/budget-fix-world.log -Tail 8
