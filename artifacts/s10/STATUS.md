@@ -21,8 +21,8 @@ and this coordination worktree start at 4f7da66c.
 
 A owns importer tint/calibration; B vegetation geometry, leaf ambient and grass;
 C lighting/post/atmosphere/shadow policy. Shared shader edits must be additive
-and explicitly reconciled in reports. No nested agents. D/E first per direct
-user sequence; if D remains gated, E can run while waiting.
+and explicitly reconciled in reports. No nested agents. Latest direct user
+steering: when workers finish, dispatch F, then G, then E, then D.
 
 Main had an existing modified generated/world_manifest.json; do not touch it.
 No active argon-car-paint branch exists; C leaves 0089 to stream G.
@@ -40,3 +40,15 @@ sorted file/hash signatures are identical (7579ea53d9ce10288f7ffb42ab9581b49db92
 Proof: baseline-world-proof.json, produced by read-only compare-baselines.py.
 Workers are importing fresh material caches before matched baseline captures.
 NEXT COMMAND: review A/B/C baseline frames and measured material/crown/post metrics; `git -C C:/Users/matma/Documents/Claude/kamion log main --oneline --grep="merge.*0095" -5`.
+
+## Step 4 — owner queue correction and QA harness audit
+Re-read the complete task after the user's explicit update. Queue is now
+F → G → E → D; D still requires the actual 0095 merge. Main now d1895536
+(regenerated 0096 world, 355 passed / 2 xfailed per leader; A/B/C remain isolated
+on their already verified identical source-world baselines).
+All baseline/after conditions use full scene control cameras plus s9 Gate3
+building cameras. Low loads WorldC, High loads WorldC_High explicitly; the QA
+runner does not auto-select the High scene from -Tier. C will repair ablation
+pipeline overrides only for explicit override fields, preserving empty-Rq
+baseline behavior. No ProjectSettings or main source changes are authorized.
+NEXT COMMAND: review full 4-condition baselines, then worker implementation and experiment evidence; dispatch F from current main at the first free worker slot.
