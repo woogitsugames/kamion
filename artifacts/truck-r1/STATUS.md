@@ -91,3 +91,4 @@ Krok 31: przygotowano arkusze zdjęcie | render o szerokości 960 px, jawnie ozn
 Krok 32: przygotowano końcowe zestawienie dopasowanych metryk przed/po, w tym D44 względem kontrolnego kadru bez szyby. Skupione testy GPU obejmują stan dzień/noc, kodowanie half, dodatnią i zerową ekspozycję oraz wyłączenie shoulder. Wszystkie 11 przypadków passed. Oczekiwanie na heavy trwa; brak dodatkowych ciężkich zadań.
 Kanoniczny truck zakończony poprawnie. Następny krok: dokończyć instalację i porównać migawkę wygenerowanych zasobów.
 Kanoniczny trailer zakończony poprawnie. Następny krok: dokończyć instalację i porównać migawkę wygenerowanych zasobów.
+Kanoniczny install zakończony poprawnie. Następny krok: dokończyć instalację i porównać migawkę wygenerowanych zasobów.
