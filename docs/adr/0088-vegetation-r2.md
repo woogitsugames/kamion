@@ -33,3 +33,15 @@ DK8 overcast p10/p50 Low18,644/31,147→33,140/42,495,High21,504/34,786→35,849
 Istniejące skanyR1 boxwood/elderberry są zachowane, nie stanowią nowej geometrii B. Aktywne VarA:boxwood7062/18/6tri i6instancji; elderberry7139/22/6tri i37instancji. Wszystkie6GLB mają SHA identyczne z oryginalnym cache, źródła pozostają zatwierdzone. Dowód i neutralna galeria z runtime teksturami: shrubs-preservation-proof.json / shrubs-LOD-preserved.jpg.
 
 PełneGIS364passed,2xfailed,676,87s;192raw i canonicalJSON bez zmian po testach. Final full EditMode218/218 PASS,0failed/0skipped, after test-only stored-color assertion correction f37499de. Production and matched images unchanged; verified head1dc20dd2 and192raw/canonicalJSON unchanged. Earlier218/212 run is retained for audit, not final acceptance. Wizualny PASS jest ograniczony: karty i lipa pozostają stylizowane (P2), bliskie żywopłoty uproszczone, temporalne LOD/shimmer i GPU A16 UNVERIFIED. Nie deklarujemy fotorealizmu.
+
+## Uzupełnienie po niezależnej recenzji s10 (2026-11-11)
+Scalenie zostało ocenione PASS, ale jakość względem całego celu 0088 — FAIL.
+Recenzja: docs/reports/visual/REVIEW-2026-11-11-s10-0088-0098.md na main.
+Pozostały P1: żywopłoty jako jednolite wałki, pokrój i obłe impostory sosny,
+szew kory oraz zbyt jasne zdrowe korony Putry. Wariacja trawy w skali metrów
+jest za słaba; usunięcie jednolitej obwódki nie zamyka tego celu.
+Wcześniejsza ocena gotowości nie oznacza pełnego zaliczenia jakości. Testy
+364 passed / 2 xfailed i EditMode218/218 oraz budżet pozostają dowodami
+poprzedniej implementacji, a nie nowej poprawki tych wad.
+Lider przydzielił kontynuację 0109 / gpt-vegetation-r3 w GPT-FEEDBACK-S10.md,
+po bieżących F/G/E/D i korekcie światła0108. Ten zapis nie zmienia kodu.
