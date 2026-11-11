@@ -36,3 +36,6 @@
 - NEXT: Get-Content artifacts/edge-far-r2/materials-prepare.log -Tail 10; Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20
 - Committing regenerated world/fidelity/source manifests after the passing full GIS run; before-render phase will temporarily regenerate only the far-field baseline, then restore final r2 via the generator.
 - NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20
+- Offline PBR preparation complete (466s). Missing asphalt source photo found in main, copied locally, and asphalt_detail_photo regenerated in 1s; materials_spec.json remains byte-equivalent under git (no material source/spec changes).
+- New guarded render sequence running: session uses baseline generator then waits for PHONE_RUN before import. No Unity launched yet; user confirmed phone measurement still active.
+- NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20
