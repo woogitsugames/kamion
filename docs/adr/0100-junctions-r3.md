@@ -73,6 +73,7 @@ plan_*/ = ortofoto | generator, renders_*/ = kamery kontrolne Unity).
 | swept path G3-A wide / lane, G3-B (min. prześwit opon) | −0,10 / −1,12, −0,14 m | −0,10 / −1,12, −0,14 m (b3, bez zmian); RING-B +1,61 m |
 | `pytest tests/physics tests/gate3` | 47 passed, 1 failed (0082) | 47 passed, 1 failed (ta sama znana `test_generator_reproduces_committed_scenarios`) |
 | import-region (pamięć świata) | Low 110,0 / High 237,9 MB (r2) | Low 111,5 / High 240,0 MB (b10; markings 2,8 MB, paved 3,2 MB) |
+| EditMode | 209/212 (r2; 3 × `TruckDoorGlassTests`) | 223/226 (b10; te same 3 × `TruckDoorGlassTests` — brak materiałów ciężarówki w `_Generated/Truck` worktree) |
 | PlayMode `WorldCRouteTests|WorldCBarrierTests` | 3/3: 40 t max \|dv\|/krok 0,121 m/s (s 361), solo 0,080 | 3/3 (b8): 0,121 m/s (s 361), solo 0,080 m/s — bez zmian |
 
 Kontrola wizualna: rendery 44 kamer `artifacts/junctions-r3/renders_b6_high/`, `renders_b8_high/` (High overcast),
