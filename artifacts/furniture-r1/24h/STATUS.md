@@ -145,3 +145,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:26:01.2477491+01:00: porównano metadane trójkątów warstwy furniture: baseline 259970, iteracja1 292938, iteracja2 272986, iteracja3 296198 (wszystkie chunki High, bez instancji; nie budżet kamery). Zapisano kandydat optymalizacji ukrytej części siatki, bez zmiany obecnych źródeł/eksportu. NASTĘPNY KROK: finalne rendery rozstrzygną potrzebę kolejnej iteracji.
 
 2026-11-12T00:26:48.3801817+01:00: Unity import after Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T00:27:14.6345387+01:00: Unity render after Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
