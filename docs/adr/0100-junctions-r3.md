@@ -54,7 +54,39 @@ plan_*/ = ortofoto | generator, renders_*/ = kamery kontrolne Unity).
    n10015785253 SE (4 × `paint_clear` strzałek na wprost, 2 strzałki naprowadzające). Kamery: `r3_*` (6).
 
 ## Wynik
-LICZBY_PLACEHOLDER
+### Liczby (build b5, 2026-11-11, `bialystok-industrial-c`; „przed” = main 503c89ae / r2 b12)
+| miara | przed | po |
+|---|---|---|
+| P-21: farba pod asfaltem między narożnikami (powierzchnia nad płaszczyzną farby) | do 2,6 cm na polach (b0, komórki 0,5 m bez podniesienia; 11,7 cm na uskoku s1440 ramp), trójkąty CDT 1,5 m — więcej | 0 w próbkach (podniesienie ≤ 3,0 cm, komórki nad uskokiem > 3 cm odrzucone) |
+| P-21: pola / pasy (czworokąty) | 12 pól, pasy jako wycinki wielokąta | 14 pól, 301 pasów, każdy czworokąt wypukły, równoległy (test 17/17) |
+| farba autorska `painted_line` / `painted_arrow` / `painted_crossing` zbudowana | 8 | 20 / 20 |
+| override'y zastosowane / nieaktualne | 69 / 0 | 94 / 0 |
+| wzniesienie krawężnika nad jezdnią ≥ 0,25 m (`kerb_rise.py`) | 0,60 m na pasie dzielącym DK8 E −888…−768 i in. (wszystkie pionowe ściany krawężnika 0,25–0,40 m: 52) | 1 (j:n1847317049:corner0, E −983 N 66,5, poza trasą); ściany 0,25–0,40 m: 0 |
+| ścianki terenu > 0,15 m (`terrain_walls_qa`) | 3 | 3 (max 0,345 m) |
+| fidelity trasy: krawędź jezdni vs ortofoto p50 / p95 | 0,36 / 2,30 m | 0,36 / 2,304 m (bez zmian — geometria jezdni nietknięta) |
+| bariery: punkty runów pominięte jako duplikat < 1 m | — | 24 m (bariery autorskie 36 m) |
+| `pytest tests/gis` | 356 passed, 1 xfailed (r2) | b3: 387 passed / 1 failed (szwy, naprawione); b4: `test_world_roads` 15/15, testy kluczowe 51/51 |
+| swept path G3-A wide / lane, G3-B (min. prześwit opon) | −0,10 / −1,12, −0,14 m | −0,10 / −1,12, −0,14 m (b3, bez zmian); RING-B +1,61 m |
+| `pytest tests/physics tests/gate3` | 47 passed, 1 failed (0082) | 47 passed, 1 failed (ta sama znana `test_generator_reproduces_committed_scenarios`) |
+UNITY_PLACEHOLDER
+
 
 ## Otwarte
-OTWARTE_PLACEHOLDER
+1. **Geometria nie przebudowana tam, gdzie OSM jest daleko od ortofoto**: rozdział jezdni wsch. (jezdnia 2 m za szeroka od
+   południa, N 48,8 zamiast 51,6; wyspa tylko do E −788, dalej generator ma pas łącznicy tam, gdzie na ortofoto jest
+   wyspa — przedłużenie wpakowałoby wyspę w pas), MA-010 (łata dolnego pierścienia szersza niż pierścień, 1,5–2,5 m
+   od ortofoto), n10015785253 jezdnia płd. (kończący się 4. pas i załom krawężnika E −247 N −253 — zrobione tylko
+   strzałki), pole `s1440-diverge-p21` (178 komórek poza jezdnią generatora).
+2. **P1-7 częściowo**: wysokość krawężnika naprawiona; tekstura „marmurkowa”, moduł 1 m ze spoiną i teren do korony
+   (kołnierz 0,5 m widoczny tam, gdzie teren mediany leży niżej) — nie ruszone. Samotny murek przed łącznicą s 1440 —
+   nie sprawdzony po zmianie.
+3. **P1-9** separator łącznica/dojazd wiaduktu (trawa → kostka z barierą) — nie zrobione (wyspa autorska leży na jezdni,
+   tu jest trawa poza jezdnią). **P1-11** zygzak trawy median — maska tekstury w shaderze (`WorldSurface.shader`, plik
+   wspólny), nie ruszone. **P1-10** — tylko deduplikacja < 1 m (24 m); „słupek-skrzynka” nie zidentyfikowany.
+4. **P2**: P2-1 (skok linii) nie ruszone; P2-2 (podwójne linie na wiadukcie) — `mk_near.py` na b4 pokazuje jedną P-7b
+   na krawędź; drugi pas na planie to kapa / krawężnik w kolorze planview — do potwierdzenia na renderze; P2-3 (czerwone
+   przejazdy, sygnalizator), P2-4 (filary) — nie ruszone; P2-5 — dodane kamery `r3_*`.
+5. Kąty i rozstawy P-21 (35° jodełki, 29° pasma s 1440, 19–20° s 610, pasy 0,25–0,30 m co 0,5–0,85 m) to odczyt z
+   ortofoto 0,08 m — WORKING_VALUE; zgodność z rozporządzeniem (Dz.U. 2019 poz. 2311, zał. 2) UNVERIFIED.
+6. Ocena `visual-critic` i zrzut z telefonu — dla lidera (agent nie tworzy subagentów i nie używa telefonów).
+
