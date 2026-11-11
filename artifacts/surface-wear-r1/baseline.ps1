@@ -1,4 +1,4 @@
-param([ValidateSet('Import','Fixtures','Capture')][string]$Phase)
+param([ValidateSet('Import','Fixtures','Capture')][string]$Phase,[ValidateSet('All','Low','High')][string]$Tier='All',[ValidateSet('All','clear','overcast')][string]$Light='All')
 $ErrorActionPreference='Stop'
 Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
 . scripts/env.ps1
@@ -24,11 +24,11 @@ if($Phase-eq'Fixtures') {
  }
 }
 if($Phase-eq'Capture') {
- foreach($tier in @('Low','High')){foreach($light in @('clear','overcast')){
+ foreach($captureTier in @('Low','High')|Where-Object{$Tier-eq'All'-or$_-eq$Tier}){foreach($captureLight in @('clear','overcast')|Where-Object{$Light-eq'All'-or$_-eq$Light}){
   Guard
-  $scene=if($tier-eq'High'){'WorldC_High'}else{'WorldC'}
-  pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/visual-qa.ps1 -Scene $scene -Tier $tier -Lighting $light -Gate3 artifacts/surface-wear-r1/qa-cameras.json -OutputDir "artifacts/surface-wear-r1/before/$tier-$light"
-  if($LASTEXITCODE-ne0){throw "Pristinecapturefailed$tier$light"}
+  $scene=if($captureTier-eq'High'){'WorldC_High'}else{'WorldC'}
+  pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/visual-qa.ps1 -Scene $scene -Tier $captureTier -Lighting $captureLight -Cameras ((Get-Content artifacts/surface-wear-r1/capture-camera-ids.txt -Raw).Trim()) -Gate3 artifacts/surface-wear-r1/qa-cameras.json -OutputDir "artifacts/surface-wear-r1/before/$captureTier-$captureLight"
+  if($LASTEXITCODE-ne0){throw "Pristinecapturefailed$captureTier$captureLight"}
   RestoreOwned
  }}
 }
