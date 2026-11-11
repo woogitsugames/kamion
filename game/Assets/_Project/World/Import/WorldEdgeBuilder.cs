@@ -514,6 +514,7 @@ namespace Game.World.Import
                     float apronY = Mathf.Max(ApronSurfaceAt(c - side * hw, profileY),
                                              ApronSurfaceAt(c + side * hw, profileY));
                     float crownY = Mathf.Lerp(start.y + 0.03f, apronY + 0.14f, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(d / 120f)));
+                    crownY = Mathf.Max(crownY, apronY + 0.04f);
                     float toeY = apronY - 0.35f;
                     // cross-section: toe left, edge left, edge right, toe right
                     float[] off = { -hw - 4.5f, -hw, hw, hw + 4.5f };
@@ -526,6 +527,24 @@ namespace Game.World.Import
                         uv.Add(new Vector2(off[q], d));
                         col.Add(ApronMask(p, d, shoulder: q == 1 || q == 2));
                     }
+                }
+                // A coarse asphalt segment can cross a break in the apron slope between its stations.
+                // Lift its two station edges just enough to clear that break, retaining the same topology.
+                for (int s = 0; s < seg; s++)
+                {
+                    int a = v0 + s * 4, b = a + 4;
+                    float lift = 0f;
+                    for (int step = 0; step <= 8; step++)
+                        for (int lane = 0; lane <= 2; lane++)
+                        {
+                            float t = step / 8f, across = lane / 2f;
+                            Vector3 p = Vector3.Lerp(Vector3.Lerp(pos[a + 1], pos[a + 2], across),
+                                                     Vector3.Lerp(pos[b + 1], pos[b + 2], across), t);
+                            lift = Mathf.Max(lift, ApronSurfaceAt(new Vector2(p.x, p.z), p.y - 0.04f) + 0.04f - p.y);
+                        }
+                    if (lift > 0f)
+                        foreach (int index in new[] { a + 1, a + 2, b + 1, b + 2 })
+                            pos[index] += Vector3.up * lift;
                 }
                 for (int s = 0; s < seg; s++)
                 {
