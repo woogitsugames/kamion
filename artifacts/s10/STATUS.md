@@ -329,3 +329,20 @@ rebuilt, only measuredpostregen equality. Missingrawprerequisite alreadyrestored
 PHONEdiag1 active (sevenruns), F/E noUnity, G parked75082bd1, sameworkerDartifact
 prep. No newqualityPASS for F/E/G/D, A calibrationstill leader0101pending.
 NEXT COMMAND: Get-Content ../perf-low-r1/artifacts/perf-low-r1/diag1.log -Tail 5; require final ab_scale+lockreleased andstableabsence before freshrelease, then immediate Gimport/captures and F/E next actualrounds.
+## Step25 - explicit release aborted by diag2; bounded next candidates
+Finalrelease guard failed becausePHONE returned13:05:23 for perfdiag2. No owned
+hold removed, no Erelease markerwritten, no actual explicitrelease. Allworkers
+confirm noUnity/queuedlaunch; Gready75082bd1 for immediateimport. Dartifact-only
+checkpointdba4855d clean,593pristineGenerated pins; tinyUVsentinelpatch is NOT
+broadwearcompletion. Exactactivationsequence retains realDbeforematrix.
+F source211doorloops/side and4096Nmap prove lowerpanel has no macrocrown. Accepted
+next boundedexperiment<=1degree/3.6mm WORKING_VALUE shadingnormal only, explicit
+semanticDOORbit10 onall3LOD, defaultlightbit0preserved, objectlocal/hingestable,
+coherentdiffuse+coat, no pigment/F0/geometry/mat/variant gain. ActualGPU/visual/
+budgetprobes pending; externalphone profiles baselinevehiclecost, not ourdelta.
+E CPU .55R connectedcore chosen for nextactualprobe (notPASS); .70swallowsneedle
+outline/returnsopaquecone. SameLow2828tris/2slots, archheads/palette preserved.
+Root removes extra120s wait policy after verifiedactualphonebatchEND: not required
+byproject; it letnextdiagnostic take ourwholewindow. ActualEND+guardabsence+
+perlaunchguard remain mandatory; transientgapauto-resume forbidden.
+NEXT COMMAND: monitor perf-low-r1/diag2.log finalfourrunEND+lockreleased; promptlycheckPHONEabsence and removeonlyownedhold for explicitrelease, immediateGimport first then F/E actual next candidates.

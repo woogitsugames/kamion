@@ -1,6 +1,6 @@
 # S10 — raport koordynatora (WIP)
 
-Stan: 2026-11-11, 12:28 CET. Pakiet nie jest jeszcze zamknięty.
+Stan: 2026-11-11, 13:07 CET. Pakiet nie jest jeszcze zamknięty.
 Repozytorium: `C:/Users/matma/Documents/Claude/kamion`.
 Koordynacja: `.claude/worktrees/gpt-s10-coordination`, `codex/s10-coordination`.
 Nie scalano ani nie pushowano main z tej sesji. Integrację prowadzi lider Claude.
@@ -33,3 +33,5 @@ PHONE-RACE.md dokumentuje krótkie nakładanie uruchomień w przerwach zmiennej 
 Dokończyć i niezależnie obejrzeć F/G/E, uruchomić D po zwolnieniu miejsca, zebrać pełne testy i budżety oraz zastąpić ten raport końcowym zestawieniem rzeczywistych wyników i otwartych ograniczeń. Zachować zakaz scalania do main.
 
 Aktualizacja: lider zewnętrzny scalił B (6b8f9123) i C (bfdde95f); trwa jego regeneracja. Ponowne okno telefonu perf-low-r1 od 12:27:10 wstrzymuje nasze Unity. Pełne GIS F i G działają podczas tej blokady.
+
+Stan uzupełniający: G 375 passed / 1 xfailed, zapisany czysty 75082bd1; D nieaktywny patch dba4855d, bez zmiany bazy. Lider zregenerował B+C na main14790c48: 389 passed / 1 xfailed. E pierwszy wariant koron odrzucony jako zbyt rzadki, następny .55R w przygotowaniu. F następna próba obejmuje uzasadnioną źródłowo krzywiznę normalnych drzwi; nadal brak akceptacji. Nowe okno telefonu diag2 blokuje Unity; próba wznowienia została poprawnie zatrzymana przez powrót PHONE_RUN.
