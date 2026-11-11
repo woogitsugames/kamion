@@ -34,3 +34,5 @@ NASTĘPNY KROK: Get-Content artifacts/furniture-r1/pytest-after.log -Tail 10; po
 
 Dodano do zaplanowanej walidacji istniejący Gate3Audit przed/po (Low, korytarz trasy 40 m): kontrola finalnych instancji po wszystkich filtrach usuwania/przesuwania, UV i materiałów. Nie opieramy werdyktu o kontakcie z ziemią wyłącznie na logu wstępnego osadzania.
 NASTĘPNY KROK: po zakończeniu aktywnego GIS wznowić run-validation.ps1
+
+GIS po zmianach: 377 passed, 1 xfailed / 538.42 s. Brak nowych porażek względem 370/1 bazowo. NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (import/audyt/rendery przed-po + EditMode; każdy start Unity za PHONE_RUN).
