@@ -28,6 +28,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--report", required=True)
     parser.add_argument("--include-exterior", action="store_true", help="include opaque exterior FBX geometry")
+    parser.add_argument("--exterior-lod", type=int, choices=(0, 1, 2), default=0, help="Low uses exterior LOD2 but keeps interior and mirror glass LOD0")
     parser.add_argument("--open-housing-ablation", action="store_true", help="diagnostic only: omit flat forward housing caps")
     parser.add_argument("--housing-recess-mm", type=float, default=0, help="diagnostic only: recess backing behind adjustable glass")
     parser.add_argument("--preview-dir", default="", help="clay/magenta source visibility renders, NOT game-material evidence")
@@ -63,11 +64,15 @@ def main():
     omitted = 0
     moved = 0
     if args.include_exterior:
-        bpy.ops.import_scene.fbx(filepath=os.path.join(BI.REPO, manifest["lods"]["LOD0"]["file"]))
+        outer = manifest["lods"]["LOD" + str(args.exterior_lod)]
+        bpy.ops.import_scene.fbx(filepath=os.path.join(BI.REPO, outer["file"]))
         for obj in bpy.context.selected_objects:
-            info = lod["objects"].get(obj.name)
+            info = outer["objects"].get(obj.name)
             if obj.type == "MESH" and info and not info["role"].startswith(("GLASS_", "MIRROR_")):
                 objects.append(obj)
+        if args.preview_dir and args.exterior_lod != 0:
+            # Runtime keeps the LOD0 glass quads on Low. Opaque LOD0 parts stay hidden in the preview.
+            bpy.ops.import_scene.fbx(filepath=os.path.join(BI.REPO, lod["file"]))
         bpy.context.view_layer.update()
         dg = bpy.context.evaluated_depsgraph_get()
     for obj in objects:
@@ -75,7 +80,7 @@ def main():
         mesh = evaluated.to_mesh()
         base = len(vertices)
         world_points = [obj.matrix_world @ v.co for v in mesh.vertices]
-        if obj.name == "CAB_Body_LOD0" and args.housing_recess_mm:
+        if obj.name == "CAB_Body_LOD" + str(args.exterior_lod) and args.housing_recess_mm:
             depth = args.housing_recess_mm / 1000
             for i, point in enumerate(world_points):
                 for c, r, u, n, w, lo, hi in caps:
@@ -86,7 +91,7 @@ def main():
                         moved += 1
                         break
         vertices.extend(world_points)
-        if args.preview_dir and obj.name == "CAB_Body_LOD0" and args.housing_recess_mm:
+        if args.preview_dir and obj.name == "CAB_Body_LOD" + str(args.exterior_lod) and args.housing_recess_mm:
             inverse = obj.matrix_world.inverted()
             if len(mesh.vertices) != len(obj.data.vertices):
                 raise ValueError("Imported CAB_Body has unexpected modifiers; cannot preview by vertex index")
@@ -96,7 +101,7 @@ def main():
         for face in mesh.polygons:
             points = [world_points[i] for i in face.vertices]
             face_normal = (points[1] - points[0]).cross(points[2] - points[0]).normalized()
-            if args.open_housing_ablation and obj.name == "CAB_Body_LOD0" and any(
+            if args.open_housing_ablation and obj.name == "CAB_Body_LOD" + str(args.exterior_lod) and any(
                 face_normal.dot(n) > .995 and all(abs((p - c).dot(r)) <= w and lo <= (p - c).dot(u) <= hi
                                                   and -.012 <= (p - c).dot(n) <= .002 for p in points)
                 for c, r, u, n, w, lo, hi in caps
@@ -155,7 +160,7 @@ def main():
                                                           for name, gaps in blocker_gaps.items()})
     scope = "Interior and opaque exterior" if args.include_exterior else "Interior only; exterior obstruction excluded"
     output = dict(scope=scope + "; glass adjustment from TruckAssetBuilder; no transparency attenuation or reflected-field compliance verdict",
-                  housing_cap_faces_omitted=omitted, housing_vertices_recessed=moved, results=results)
+                  exterior_lod=args.exterior_lod, housing_cap_faces_omitted=omitted, housing_vertices_recessed=moved, results=results)
     os.makedirs(os.path.dirname(os.path.abspath(args.report)), exist_ok=True)
     with open(args.report, "w") as report:
         json.dump(output, report, indent=2)
@@ -172,7 +177,7 @@ def preview(directory, opaque, roles, axis, offset):
     glass = bpy.data.materials.new("Audit_Glass_Magenta")
     glass.diffuse_color = (1, 0, 1, 1)
     for obj in bpy.data.objects:
-        is_mirror = obj.name.startswith("MIRROR_")
+        is_mirror = obj.name.startswith("MIRROR_") and obj.name.endswith("_LOD0")
         if obj.type != "MESH":
             continue
         obj.hide_render = obj.name not in allowed and not is_mirror
