@@ -8,3 +8,6 @@
 
 - Krok3: odtworzono baseline świata z HEAD, nie użyto starej sceny main; build bez fallback=True, zapisano SHA surowych produktów. NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` i4zestawy kontrolne.
 
+
+- Krok4: przygotowano spójne okna koron, stabilny podzbiór kart LOD1 z LOD0, fotograficzną korę sosny CC0 oraz paletę liści WORKING_VALUE. Wyjścia tylko w artifacts/vegetation-r2/tree-products, scena baseline nietknięta; zachowano3pasmaLOD0/1+impostorLOD2. NASTĘPNY KROK: `blender -b --factory-startup -P tools/blender/world/make_trees.py -- --out artifacts/vegetation-r2/tree-products`.
+

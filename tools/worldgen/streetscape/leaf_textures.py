@@ -9,6 +9,10 @@ Each foliage card is a cluster of leaves / needle tufts drawn from primitives wi
 
 from __future__ import annotations
 
+import argparse
+import hashlib
+import json
+import logging
 import math
 import sys
 from pathlib import Path
@@ -20,8 +24,11 @@ REPO = Path(__file__).resolve().parents[3]
 OUT = REPO / "art-source" / "world" / "vegetation"
 
 # base leaf colours (sRGB), summer, muted (docs/06: przygaszone zielenie)
-COL = {"birch": (100, 116, 50), "alder": (52, 68, 34), "maple": (70, 92, 40), "linden": (74, 94, 42),
-       "pine": (44, 62, 38), "shrub": (66, 84, 40)}
+# ADR0088: the old pine covered-texel median linear luminance was .0353.
+# Muted needle / leaf reflectance starting values, WORKING_VALUE; final acceptance
+# uses lit crown p10/p50 against the same photographic metric, not these swatches.
+COL = {"birch": (100, 116, 50), "alder": (65, 83, 46), "maple": (78, 100, 52), "linden": (84, 104, 56),
+       "pine": (66, 85, 52), "shrub": (74, 94, 51)}
 
 
 def jitter(c, rng, k=0.18):
@@ -124,6 +131,30 @@ def bark(species, seed, n=256):
     return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)).convert("RGBA")
 
 
+def pine_scan(lower=False, n=512, root=REPO):
+    """Hash-pinned Poly Haven CC0 pine bark; never the rejected Fab mulch atlas."""
+    manifest = root / "art-source/world/cc0/cc0_manifest.json"
+    try:
+        asset = next(a for a in json.loads(manifest.read_text(encoding="utf-8"))["assets"] if a["id"] == "pine_bark")
+        source = next(f for f in asset["files"] if f["map"] == "Diffuse")
+        path = root / "art-source/world/cc0/_raw/pine_bark" / source["url"].rsplit("/", 1)[1]
+        if hashlib.sha256(path.read_bytes()).hexdigest() != source["sha256"]:
+            raise ValueError("CC0 pine bark SHA mismatch")
+        with Image.open(path) as image:
+            a = np.asarray(image.convert("RGB").resize((n, n), Image.Resampling.LANCZOS), dtype=np.float32) / 255
+        linear = np.where(a <= .04045, a / 12.92, ((a + .055) / 1.055) ** 2.4)
+        # Same muted bark palette as the public generator, with warmer upper bole.
+        rgb = np.array((94, 84, 72) if lower else (124, 94, 69), np.float32) / 255
+        target = np.where(rgb <= .04045, rgb / 12.92, ((rgb + .055) / 1.055) ** 2.4)
+        linear *= target / np.maximum(linear.mean((0, 1)), .001)
+        linear = np.clip(linear, 0, 1)
+        out = np.where(linear <= .0031308, linear * 12.92, 1.055 * linear ** (1 / 2.4) - .055)
+        return Image.fromarray(np.round(out * 255).astype(np.uint8)).convert("RGBA")
+    except (OSError, KeyError, StopIteration, ValueError) as error:
+        logging.warning("CC0 pine bark unavailable (%s); procedural bark retained", error)
+        return bark("pine" if not lower else "alder", 200, n)
+
+
 def grass_tuft(seed=3, n=256):
     """Card of grass blades + a few dry stems and a weed (kerb-line / verge detail)."""
     rng = np.random.default_rng(seed)
@@ -141,13 +172,18 @@ def grass_tuft(seed=3, n=256):
 
 
 def main():
-    OUT.mkdir(parents=True, exist_ok=True)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out", type=Path, default=OUT)
+    args = parser.parse_args()
+    out = args.out
+    out.mkdir(parents=True, exist_ok=True)
     for k, sp in enumerate(["pine", "birch", "alder", "maple", "linden", "shrub"]):
-        foliage(sp, 100 + k).save(OUT / f"leaves_{sp}.png", optimize=True)
-        bark(sp, 200 + k).save(OUT / f"bark_{sp}.png", optimize=True)
-    bark("twig", 210).save(OUT / "bark_twig.png", optimize=True)
-    grass_tuft().save(OUT / "grass_tuft.png", optimize=True)
-    print("written", sorted(p.name for p in OUT.glob("*.png")))
+        foliage(sp, 100 + k).save(out / f"leaves_{sp}.png", optimize=True)
+        (pine_scan() if sp == "pine" else bark(sp, 200 + k)).save(out / f"bark_{sp}.png", optimize=True)
+    pine_scan(lower=True).save(out / "bark_pine_lower.png", optimize=True)
+    bark("twig", 210).save(out / "bark_twig.png", optimize=True)
+    grass_tuft().save(out / "grass_tuft.png", optimize=True)
+    print("written", sorted(p.name for p in out.glob("*.png")))
 
 
 if __name__ == "__main__":

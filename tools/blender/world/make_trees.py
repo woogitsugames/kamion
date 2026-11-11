@@ -27,7 +27,13 @@ import numpy as np
 from mathutils import Matrix, Vector
 
 REPO = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(REPO / "tools/worldgen"))
+from streetscape.foliage_policy import crown_opening, leaf_lod_indices
 VEG = REPO / "art-source" / "world" / "vegetation"
+ARGV = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+if "--out" in ARGV:
+    VEG = Path(ARGV[ARGV.index("--out") + 1]).resolve()
+VEG.mkdir(parents=True, exist_ok=True)
 HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.5, "shrub": 2.8}
 BARK = {"pine": ["bark_pine_lower", "bark_pine"], "birch": ["bark_birch"], "alder": ["bark_alder"],
         "maple": ["bark_maple"], "linden": ["bark_linden"], "shrub": ["bark_shrub"]}
@@ -36,6 +42,8 @@ BARK = {"pine": ["bark_pine_lower", "bark_pine"], "birch": ["bark_birch"], "alde
 class Geo:
     def __init__(self):
         self.parts = {}     # mat -> (verts, faces, uvs, normals or None)
+        self.crown_height = 0
+        self.crown_phase = 0
 
     def _p(self, mat):
         return self.parts.setdefault(mat, ([], [], [], []))
@@ -65,6 +73,8 @@ class Geo:
                 F.append((a, a + 1, a + n + 1, a + n))
 
     def card(self, mat, c, normal, up, size, crown_c):
+        if self.crown_height and crown_opening(c, crown_c, self.crown_height, self.crown_phase):
+            return
         V, F, UV, N = self._p(mat)
         nrm = normal.normalized()
         r = up.cross(nrm)
@@ -99,6 +109,8 @@ def grow(species, variant, lod):
     rng = random.Random(hash((species, variant)) & 0xFFFF if False else (sum(map(ord, species)) * 31 + variant))
     H = HREF[species] * rng.uniform(0.92, 1.08)
     g = Geo()
+    g.crown_height = H
+    g.crown_phase = variant * 1.73 + sum(map(ord, species)) * .013
     leaf = f"leaves_{species}"
     cards_keep = 1.0 if lod == 0 else (0.6 if species == "birch" else 0.33)
     csize_k = 1.0 if lod == 0 else (1.5 if species == "birch" else 1.6)
@@ -235,6 +247,24 @@ def grow(species, variant, lod):
     return g, H
 
 
+def reuse_leaf_lod(g0, g1, seed):
+    """Keep LOD1 leaf centres on the LOD0 branch groups, without new submeshes."""
+    for name, (vertices, faces, uv, normals) in g0.parts.items():
+        if not name.startswith("leaves_"):
+            continue
+        out_v, out_f, out_uv, out_n = [], [], [], []
+        for index in leaf_lod_indices(len(faces), seed):
+            face = faces[index]
+            centre = sum((vertices[i] for i in face), Vector()) / len(face)
+            base = len(out_v)
+            out_v += [centre + (vertices[i] - centre) * 1.40 for i in face]
+            out_uv += [uv[i] for i in face]
+            out_n += [normals[i] for i in face]
+            out_f.append(tuple(range(base, base + len(face))))
+        g1.parts[name] = (out_v, out_f, out_uv, out_n)
+    return g1
+
+
 def to_object(name, g):
     me = bpy.data.meshes.new(name)
     verts, faces, uvs, nrms, mats = [], [], [], [], []
@@ -276,7 +306,9 @@ def material(name):
     nt = m.node_tree
     bsdf = nt.nodes["Principled BSDF"]
     tex = nt.nodes.new("ShaderNodeTexImage")
-    file = name.replace("bark_pine_lower", "bark_alder")
+    file = name
+    if name == "bark_pine_lower" and not (VEG / f"{file}.png").exists():
+        file = "bark_alder"  # public fallback for old caches
     tex.image = bpy.data.images.load(str(VEG / f"{file}.png"))
     nt.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
     bsdf.inputs["Roughness"].default_value = 0.9
@@ -309,7 +341,7 @@ def material(name):
 # specks from the silhouette and packs <name>.png (RGB albedo + A coverage) and <name>_n.png (RG normal, B occlusion).
 IMP_NF = 6                       # impostor views around the tree (60 degrees apart), blended in the shader
 IMP_RES = (256, 384)             # one view
-RAW = REPO / "artifacts" / "vegetation_bake"     # raw passes (not versioned)
+RAW = REPO / "artifacts" / "vegetation-r2" / "raw-bakes"  # raw passes, never tracked
 _passmats = {}
 
 
@@ -778,6 +810,7 @@ def main():
             g0, H = grow(sp, v, 0)
             o0 = to_object(name, g0)
             g1, _ = grow(sp, v, 1)
+            g1 = reuse_leaf_lod(g0, g1, sum(map(ord, sp)) * 31 + v)
             o1 = to_object(name + ".lod1", g1)
             o1.hide_render = True
             S = bake_impostor(o0, name, H)
@@ -790,7 +823,7 @@ def main():
             meta[name] = {"species": sp, "variant": v, "href_m": round(H, 2), "impostor_frame_m": round(S, 2),
                           "impostor_views": IMP_NF, "impostor_aspect": round(IMP_RES[0] / IMP_RES[1], 4),
                           "tris_lod0": sum(len(p.vertices) - 2 for p in o0.data.polygons),
-                          "tris_lod1": sum(len(p.vertices) - 2 for p in o1.data.polygons), "tris_lod2": 4}
+                          "tris_lod1": sum(len(p.vertices) - 2 for p in o1.data.polygons), "tris_lod2": 2}
     if quick:
         return
     href = {k: v["href_m"] for k, v in meta.items()}
@@ -807,4 +840,5 @@ def main():
     print("[trees] wrote", VEG / "trees.glb")
 
 
-main()
+if __name__ == "__main__":
+    main()
