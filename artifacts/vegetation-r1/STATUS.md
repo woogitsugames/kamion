@@ -59,3 +59,4 @@ Doprecyzowano liniowy kontrakt: nowa sucha warstwa otrzymuje _Tint razy _AlbedoS
 Generator after zakończony kodem 0. Następny krok: sprawdzić after-world.log i Megascans, przygotować PBR w heavy, następnie import-safe.
 Odświeżenie jedynego starego zestawu PBR asphalt_detail_photo w heavy zakończone kodem 0. Następny krok: kontrola nowego QA i import-safe, bez ukrytego build_all.
 Obejrzano wszystkie 24 arkusze kontrolne baseline (268 kadrów Low/High, clear/overcast). PBR photo-layer odświeżony pod heavy, ponownie potwierdzono zgodność map z main. Zapisano hashe bazowych meshów kolizji przed reimportem do kontroli przypadkowych zmian. Następny krok: pwsh artifacts/vegetation-r1/import-safe.ps1, następnie after.
+Import kandydata zakończony kodem 0. Następny krok: sprawdzić import-after.log, render-matrix -Stage after.
