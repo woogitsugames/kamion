@@ -26,3 +26,5 @@
 - Step12: independent root review PASS for ADR0086 scope; fixed literal-question-mark encoding damage in REPORT/ADR/status additions. LASTSHA implementation ab738b01. NEXT: record root review path, docs-only commit and artifact recopy.
 
 - Step13: root REVIEW.md received, scopedPASS confirmed and report linked; report16cleanASCIIlines, ADR UTF8 checked. NEXT: docs-only commit, recopy artifacts /E /XJ and deliver final SHA for F handoff.
+
+- Step14 coordinator correction: externalcritic d80a85a4 invalidates calibrationPASS. IlluminatedKPgate252/62percentclip and screen/plinth .28/.30vs .34-.38 were missed by shadedROI/absolutephotoRGB method. REVIEW/REPORT corrected, GPUcontractstillPASS. Main99a4f3f8 leaderalreadyowns tint-r2/ADR0101; no duplicate implementation. D48 plastertarget retained. NEXT: leader tint-r2 multiROI calibration and integration; no main merge byGPT.

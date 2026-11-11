@@ -1,6 +1,6 @@
 # Independent review — S10 A / ADR0086
 
-Verdict: **PASS for the scoped tint upload contract and reviewed material calibration.**
+Verdict updated 2026-11-11: **PASS for tint upload contract; calibration FAIL pending leader ADR0101.**
 Reviewer: coordinator, separate from implementation author. Reviewed implementation
 ab738b01, actual GPU numeric probe, full 59-camera Low/High overcast pairs,
 full 59-camera Low/High clear final pairs, and 960px firestation/screen/hall/DK8
@@ -29,3 +29,19 @@ CPU/GPU cases. Same-fixture world matrix has byte-identical stats. The subsequen
 canonical truck refresh adds up to7k triangles in High vehicle views only; it has
 no draw delta and Low stats remain identical, reported separately from material cost.
 No phone/GPU-performance claim, merge or push is authorized by this review.
+
+
+## Independent critic follow-up ? supersedes calibration approval
+The external visual-critic review at docs/reports/visual/REVIEW-2026-11-11-s10-0086.md
+(main d80a85a4) identifies missed directional-illumination failures: KP gate
+High-clear wall252sRGB/62percent clip, overcast187, versus the shaded-only hall
+ROI used above. Screen cassette/plinth ratios .28Low/.30High overcast also miss
+the reference .34-.38. The earlier no-new-blocking-defect statement was too broad
+and is withdrawn. Contract/GPU proof, stable asphalt/pavers and restored curtains
+remain valid. Local appearance cannot be cleared using a single shaded ROI or
+absolute photo sRGB across different illumination. Require lit+shaded wall ROIs,
+clip fractions and same-frame neutral ratios for calibration closure.
+Leader owns active tint-r2/ADR0101 from main99a4f3f8, so no duplicate correction
+is made here. D48 retains owner plaster target110/126/145; streamE must preserve it.
+Mixed truck-fixture camera pairs are excluded from tint-only proof as already
+noted; B/C/F final matched matrices use explicit fixture snapshots.
