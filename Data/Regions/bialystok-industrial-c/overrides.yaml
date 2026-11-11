@@ -561,7 +561,9 @@ overrides:
     set: {width: 9.0}
   - id: s610-north-arm-p21-median
     kind: painted_zone
-    stripe_az_deg: -15
+    stripe_az_deg: 20     # ADR 0100: was -15 (stripes ran the wrong way), trace/s610_ns.jpg left
+    stripe_w_m: 0.28      # ADR 0100: dense hatching on the 0.08 m orthophoto (trace/s610_centre.jpg, s610_ns.jpg), pitch ~0.56 m
+    stripe_gap_m: 0.28
     polygon_en: [[362.8, -529.0], [363.4, -529.5], [358.8, -539.4], [354.4, -549.0], [352.5, -553.1],
                  [351.6, -548.2], [356.2, -539.4], [360.8, -531.4]]
     reason: s 610 north arm, painted median between the two directions (crop artifacts/junctions-r1/trace/z_s610_n_o.jpg).
@@ -569,7 +571,9 @@ overrides:
     verify: owner drive
   - id: s610-p21-centre
     kind: painted_zone
-    stripe_az_deg: 30
+    stripe_az_deg: 19     # ADR 0100: measured 19 deg on trace/s610_centre.jpg (stripe (330,480) -> (760,330), 55.6 px/m)
+    stripe_w_m: 0.28      # ADR 0100: dense hatching on the 0.08 m orthophoto (trace/s610_centre.jpg, s610_ns.jpg), pitch ~0.56 m
+    stripe_gap_m: 0.28
     polygon_en: [[347.0, -555.9], [350.0, -559.6], [347.0, -567.5], [346.2, -572.4], [345.1, -575.0],
                  [341.1, -574.0], [342.0, -570.6], [343.2, -568.4], [342.6, -567.7], [341.3, -568.0],
                  [340.2, -570.6], [338.7, -572.4], [335.6, -570.8]]
@@ -582,6 +586,8 @@ overrides:
   - id: s610-p21-west
     kind: painted_zone
     stripe_az_deg: 15
+    stripe_w_m: 0.28      # ADR 0100: dense hatching on the 0.08 m orthophoto (trace/s610_centre.jpg, s610_ns.jpg), pitch ~0.56 m
+    stripe_gap_m: 0.28
     polygon_en: [[321.3, -575.7], [332.5, -573.7], [335.6, -575.7], [329.7, -578.5], [328.6, -579.0]]
     reason: s 610, P-21 between the west zebra and the Andersa ramp (crop artifacts/junctions-r1/trace/z_s610_s_o.jpg).
     confidence: high
@@ -589,6 +595,8 @@ overrides:
   - id: s610-p21-south
     kind: painted_zone
     stripe_az_deg: 20
+    stripe_w_m: 0.28      # ADR 0100: dense hatching on the 0.08 m orthophoto (trace/s610_centre.jpg, s610_ns.jpg), pitch ~0.56 m
+    stripe_gap_m: 0.28
     polygon_en: [[340.7, -579.0], [344.8, -579.6], [347.0, -584.7], [349.9, -589.7], [342.1, -584.6], [340.7, -582.0]]
     reason: s 610, P-21 south of the east zebra down to the tip E 349.9 N -589.7 (crop z_s610_s_o.jpg).
     confidence: high
