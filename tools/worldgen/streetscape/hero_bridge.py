@@ -417,7 +417,9 @@ def _pipe(buf, a, b, radius, src):
     ring = [radius * (x * math.cos(k * math.pi / 2) + y * math.sin(k * math.pi / 2)) for k in range(4)]
     for i in range(4):
         j = (i + 1) % 4
-        _quad(buf, [a + ring[i], a + ring[j], b + ring[j], b + ring[i]], "bridge_concrete", src, ring[i] + ring[j])
+        # The underside material also keeps the surface-index QA from treating
+        # the collector (<0.8 m below the deck) as a pavement/bridge kerb.
+        _quad(buf, [a + ring[i], a + ring[j], b + ring[j], b + ring[i]], "bridge_soffit", src, ring[i] + ring[j])
 
 
 def _apply_underdeck(w, hero):

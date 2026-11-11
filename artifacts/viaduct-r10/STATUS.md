@@ -13,3 +13,6 @@
 - Szacunek generatora Low: maks. +0.650% tris (route_putry_entry_signs 444835 -> 447727), materials_low delta 0 w każdej kamerze. To NIE są liczniki GPU/draws z Unity.
 - Korekta kamer z faktycznego specu: oko 137 m przy terenie ~135 m. Kolejka renderów before czeka na PHONE_RUN (render-before.ps1).
 - NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/unity-queue.log -Tail 3; Get-Content artifacts/viaduct-r10/baseline-gis.log -Tail 5
+- Bazowy GIS: 369 PASS / 1 XFAIL / 1 FAIL (test_export_is_deterministic). Test porównał manifest sprzed zmian z generacją nowej konstrukcji — konieczny ponowny pełny przebieg na ustabilizowanym stanie.
+- QA r1 ujawniło 3 nowe klasyfikacje bridge_kerb: kolektor był traktowany jak nawierzchnia w oknie wysokości ±0.8 m. Rury przypisane do istniejącego bridge_soffit (konstrukcja poniżej jezdni), bez zmiany indeksu QA i bez nowych materiałów.
+- NASTĘPNY KROK: uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c
