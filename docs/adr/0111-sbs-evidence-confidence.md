@@ -19,3 +19,9 @@ Każde uruchomienie Unity w skrypcie SBS ma osobne Acquire/Release slotu `gpt-sb
 
 ## Otwarte
 Pierwsze 300 m G3-A bez lokalnych zdjęć; dodatkowe pobranie Mapillary zablokowane błędem DNS. Klasy C i fotometria wymagają dalszej kontroli. Nie wykonujemy testów telefonów; dowody edytora nie zastępują pomiaru A16.
+
+## Limity zasob?w po pilnym poleceniu w?a?ciciela
+Ci??kie generacje, fidelity i pojedyncze pliki pytest korzystaj? z puli `heavy` (max 3), z w?a?cicielem r?wnym bie??cej ga??zi i Release w finally. Pe?ny GIS tylko na ko?cu rundy, z jawnym `-EndOfRound`. Unity ma oddzieln? pul? max 4 i w?a?ciciela `gpt-sbs`. Wywo?ania u?ywaj? aktualnego skryptu z main; nie kopiujemy ani nie zmieniamy wsp??dzielonej implementacji. Nie usuwamy cudzych slot?w: du?y pr?g stale w naszych wywo?aniach wy??cza automatyczne sprz?tanie cudzych rekord?w. Sprawdzanie kolejki co 7 s nie zmienia limitu.
+
+## Dalsza praca sesji
+Cel czasowy: praca do oko?o 2026-11-12 21:31 Europe/Warsaw (24 h od rozpocz?cia). Runda r1 nie jest zamkni?ta bez raportu i ogl?dzin ?wie?ych render?w. Nast?pne rundy pozostaj? w tym samym worktree, z now? ga??zi? i merge main, bez scalenia do main ani pushowania.

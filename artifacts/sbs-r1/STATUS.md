@@ -54,3 +54,6 @@ Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20
 ## Bezpieczne oczekiwanie na zasoby
 PBR Medium jest kompletny i aktualny: missing=0, stale=0, więc import nie powinien uruchomić ukrytego build_all. Testy SBS: 16/16. Oczekiwanie slotów sprawdzamy co 7 s; limity pozostają 4 Unity i 3 heavy. Długi próg stale w naszych wywołaniach zapobiega automatycznemu usuwaniu cudzych slotów przez współdzielony skrypt. Przed ponownym ustawieniem kolejki potwierdzono brak Unity z tego worktree i zwolniono wyłącznie własny slot.
 Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/import-and-baseline.ps1
+## Dokumentacja i limit czasu
+Uaktualniono ADR 0111 o 42 źródła, rzeczywiste wyniki walidacji, limity heavy/Unity i cel pracy do około 12.11, 21:31 czasu polskiego. Parser PowerShell potwierdził poprawność czterech wrapperów bez uruchamiania Unity ani Pythona obliczeniowego.
+Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20
