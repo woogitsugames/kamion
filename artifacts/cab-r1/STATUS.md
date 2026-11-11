@@ -27,3 +27,4 @@ Added budget comparison: nine camera estimates/configuration, Low increases fail
 Rendered before Low overcast plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/before
 Rendered before Low clear plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/before
 Rendered before High overcast plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/before
+Rendered before High clear plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/before
