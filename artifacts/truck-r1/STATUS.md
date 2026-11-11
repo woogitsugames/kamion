@@ -95,3 +95,4 @@ Kanoniczny install zakończony poprawnie. Następny krok: dokończyć instalacj�
 Zapisano final-candidate Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano final-candidate Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano final-candidate High overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Zapisano final-candidate High clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
