@@ -1,6 +1,7 @@
 # HANDOVER — kamion, sesja 9 (start 2026-11-11 00:30 lokalnie / 23:30 UTC; limit 5 h reset 04:30 UTC)
 
 ## Najpierw
+- **03:22 lokalnie: limit 96 %** — stop nowych agentów do resetu 04:30 UTC (05:30 lokalnie). main `631e0837` + niezacommitowana regeneracja po 0093 (pytest w toku, log `artifacts/logs/s9-main-regen-0093.log`; jeśli sesja padnie: sprawdź log, przy `PYTEST EXIT 0` → `git add Data/Regions && git commit`, inaczej powtórz `uv run --project tools/worldgen python -m pytest tests/gis -q`). Uruchamiacz `uv run pytest` bywa zepsuty („trampoline failed”) — używaj `python -m pytest`.
 - ~03:05: 0093 scalony; żaden agent Claude nie działa. Po resecie (04:30 UTC = 05:30 lokalnie): krytyk 0092 + 0093, potem 0094 / 0090, integracja Unity (import-region, BuildBatch, testy), APK, telefon.
 - 02:45: limit 88 % — 0092 scalony bez krytyka (po resecie); działa tylko 0093.
 - Trigger 02:20: limit 82 %; 0092 i 0093 w toku; Argon 0085 — uwagi przed scaleniem.
