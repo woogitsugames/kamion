@@ -117,6 +117,24 @@ Low 64 px / 1 face per 10 frames / far 150 m, Medium 64 / 6, High 128 / 3, Ultra
 <= +0.2 ms GPU average while driving (budget 0.3), 0 parked; peak frame ~1-2 ms GPU + CPU. **UNVERIFIED, measure with
 and without `rq_envcap=0`** (A16 Low, S24+ High 60 FPS).
 
+## Measured: A16 Low GPU frame breakdown, gate 3 G3-B, 2026-11-11 (ADR 0106)
+Galaxy A16, Low, cab view, 40 t, 30 km/h, uncapped (GPU-bound, governor at max), same APK per row, `rq_ab` interleaved
+4 s A/B windows (median of 12+12). Base GPU p50 27.9 ms (30.0 ms at the 30 FPS cap). Sources:
+`artifacts/perf-low-r1/diag0..6/summary.txt`. Δ = GPU p50 saved without the element.
+
+| Element | Δ GPU p50 (ms) |
+|---|---|
+| Own truck in the main camera | 4.7-5.4 (cab glass 3.6-4.3, of which raster+blend ~1.2; exterior 0.65; interior -1.2) |
+| Instanced trees + forest HLOD | 2.4-3.0 (HLOD edge walls 1.8, HLOD canopy 0.9, impostors 1.6; tree shadows 0, thinning x0.5 0.3) |
+| Render scale 0.75 -> 0.70 / 0.65 / 0.60 | 2.0 / 3.3 / 4.8 (~13 ms pixel-proportional at 0.75) |
+| Far clip 900 -> 720 / 450 m; LOD bias x0.6 | 0.7 / 1.4; 1.4 |
+| Mirrors (1 render/frame); mirror LOD 0.5 | 0.75-1.25; 0.1 |
+| Shadows off; props + parked cars; HUD | 0.9; 0.3; 0.3 |
+| MSAA 2x -> 1x; sky clouds/haze; A8 vehicle look | 0; 0; 0 |
+
+ADR 0106 ships the Truck Glass fast path on Low/Medium: -0.9 ms GPU p50, image unchanged (PSNR 62-82 dB). Gate runs
+with the clean APK: see ADR 0106 "Wynik".
+
 ## World content v2 (ADR 0012) — build and memory, 2026-11-09
 Sources: `artifacts/world/bialystok-industrial-c-import.json` (bake), `BUILD_CONTENT` lines of the build logs (Unity build
 report, sizes before LZ4HC), APK file sizes. Tile C = 4 km², 64 chunks, ≈ 110 800 instances (2 300 props + 108 500 trees).

@@ -23,7 +23,8 @@ Zbiory pobrane 2026-11-09 przez `tools/worldgen/ingest.py --region bialystok-ind
 | `gugik-orto-2024-rgb-0p25-bialystok-industrial-c` | Ortofotomapa RGB 0,25 m, 2024-05-27 | `https://opendata.geoportal.gov.pl/ortofotomapa/81427/…` | 4 GeoTIFF, 179 MB | j.w., `LEGAL_REVIEW_REQUIRED` | j.w. | nie | **tylko referencja i QA** (nie tekstura); wycinki w `docs/reports/map/bialystok-industrial-c_ortho_alignment.png` |
 | `gugik-bdot10k-2061` | BDOT10k powiat 2061, GPKG, wersja 2024-09 | `https://opendata.geoportal.gov.pl/bdot10k/schemat2021/GPKG/20/2061_GPKG.zip` | 15,6 MB | j.w., `LEGAL_REVIEW_REQUIRED` | j.w. | nie | obrysy budynków, szerokość i nawierzchnia jezdni (fallback w grafie) |
 | `gugik-lod2-2017-2061` | Modele 3D budynków LoD2 (stan 2017), CityGML 2.0 | `https://opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD2/2061_gml.zip` | 23,5 MB | **CC BY 4.0** (panel pobierania GUGiK) | „Źródło danych: GUGiK (geoportal.gov.pl), CC BY 4.0” | nie | wysokość kalenicy i okapu, typ dachu |
-| `gugik-lod1-2024-2061` | Modele 3D budynków LoD1 2024, CityGML | `https://opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD1/2024/20/2061.zip` | 12,8 MB | **CC BY 4.0** | j.w. | nie | wysokość budynków (`measuredHeight`) |
+| `gugik-lod1-2024-2061` | Modele 3D budynków LoD1 2024, CityGML | `https://opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD1/2024/20/2061.zip` | 12,8 MB | **CC BY 4.0** | j.w. | nie | wysokość budynków (`measuredHeight`), tło horyzontu poza kaflem (`far_field`, ADR 0085) |
+| `bialystok-industrial-c-far-field` | Pierścień tła horyzontu (poza bbox 2048 × 2048 m, do ±4200 m od kotwicy regionu): BDOT10k powiat 2061 (`OT_PTLZ_A`, `OT_BUBD_A`, `OT_BUWT_P`, `OT_SULN_L`) + LoD1 2024 (`2061_lod1_2024.zip`) + OSM (`podlaskie-261108.osm.pbf`, w tym powiat 2002 na N) | manifest zbiorczy: `Data/SourceManifests/bialystok-industrial-c-far-field.manifest.json` | 6 plików źródłowych (SHA256 w manifeście) | dane GUGiK (PGiK art. 40a ust. 2 pkt 1) + CC BY 4.0 (LoD1) + ODbL 1.0 (OSM), `LEGAL_REVIEW_REQUIRED` | „Źródło danych: GUGiK (geoportal.gov.pl), CC BY 4.0; © OpenStreetMap contributors (ODbL)” | manifest tak; GLB pochodne (`far_field.glb`, `far_field.low.glb`) poza gitem | 4-sektorowe tło dalekiego planu (`tools/worldgen/streetscape/far_field.py` → `WorldEdgeBuilder`, ADR 0085): lasy, osiedla bloków, hale, kominy EC i słupy WN za zamknięciami dróg |
 
 Sprawdzone, ale **niepobrane** (opcje `ingest.py --with nmpt|trees|lidar`): NMPT 0,5 m 2025, modele 3D drzew LoD1 2023 (CC BY 4.0, 1,07 GB), LiDAR LAZ 2025 (12 pkt/m², ~4,8 GB).
 
@@ -158,6 +159,7 @@ Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z c
 | `gugik-ortho-hr-cells` | GUGiK WMS `ORTO/WMS/HighResolution` (EPSG:2180, komórki 128 m, 0,08 m/px) → `Data/raw/refs/gugik-ortho-hr/<region>/c_XX_YY.jpg` + `manifest.jsonl` (URL, czas, SHA256, bbox) | dane GUGiK, art. 40a ust. 2 pkt 1 Pgik; WMS bez ograniczeń dostępu; „Źródło danych: Główny Urząd Geodezji i Kartografii” | nie (poza gitem) | tylko referencja i pomiar zgodności (ADR 0075), nigdy tekstura w grze; data nalotu mozaiki WMS `UNVERIFIED` |
 | `world-hero-fire-station` | `tools/blender/world/landmarks/make_fire_station.py` + `tools/worldgen/streetscape/hero_building.py` + `art-source/world/landmarks/fire_station_jrg2/{dims.json,atlas_layout.json}` → `fire_station_jrg2.glb`, `_meta.json`; `art-source/world/textures/fire_station_alpha.png` (`sets_fire_station.py --alpha`) | własna (projekt); wymiary z BDOT10k i GUGiK LoD2 2017 (CC BY 4.0, `lod2_roofs.json`), elewacje odwzorowane „na oko” ze zdjęć CC0 (Commons, Rakoon) i klatek CC BY-SA 4.0 użytych wyłącznie jako wzór | tak | remiza JRG nr 2 PSP, Andersa 46 (ADR 0070): budynek, ogrodzenie, tuje, maszty. Napis „PAŃSTWOWA STRAŻ POŻARNA” i „998” = nazwa służby i numer alarmowy (font DejaVu Sans Bold); bez logo, herbu i znaków graficznych PSP |
 | `world-hero-fire-station-atlas` | `art-source/world/materials/_src/sets_fire_station.py` → `art-source/world/materials/fire_station/{High,Medium,Low}/*.png`; bazy: skany **Poly Haven** „Painted Plaster Wall” (Amal Kumar; https://polyhaven.com/a/painted_plaster_wall), „Brick Wall 006” (Jan Burghardt; https://polyhaven.com/a/brick_wall_006), „Concrete Wall 008” (Charlotte Baglioni, Dario Barresi; https://polyhaven.com/a/concrete_wall_008), mapy diff/disp/rough 2k JPG, md5 w `sets_fire_station.py`, pobierane do `Data/raw/cc0/polyhaven/` | **CC0 1.0** (skany) + własna obróbka (górnoprzepust luminancji, relief, szorstkość; kolory, zacieki, okna, bramy, blacha generowane) | nie (generowane; skany poza repo) | atlas 14 × 14 m obiektu hero (ADR 0070). Pierwsze użycie skanów CC0 w świecie gry |
+| `world-hero-fire-station-conifer-r7` | [Poly Haven Fir Tree 01](https://polyhaven.com/a/fir_tree_01), Rob Tuytel (photography), Rico Cilliers (model); only1k twig_diff +twig_alpha PNG, SHA256/MD5/crop in `art-source/world/landmarks/fire_station_jrg2/conifer_source.json`; paired-alpha component filter, palette calibration, stem-centred short-needle spray into own fire_station_alpha cell | **CC0 1.0**, [official licence](https://polyhaven.com/license), verified2026-11-11; own generated geometry/processing | raw ignored; derivative in existing alpha atlas | JRG2 r7 conifer boughs, not a verified Picea scan. Trunk/UV strips excluded. No7197 photo pixels enter textures; route/global hedge palettes unchanged. Offline restore package under ignored `artifacts/firestation-r10/source-cache/` |
 | `world-streetscape-data` | `Data/Regions/bialystok-industrial-c/generated/streetscape_sources.json` (OSM + BDOT10k) | ODbL 1.0 (© OpenStreetMap contributors) + dane GUGiK (BDOT10k, art. 40a ust. 2 pkt 1 Pgik) | tak | place, ogrodzenia, drzewa, ekrany, słupy. Ta sama uwaga `LEGAL_REVIEW_REQUIRED` co dla grafu dróg |
 
 ## Referencje z otwartych zrodel (D43, ADR 0066)
@@ -230,3 +232,27 @@ and derived-output provenance hashes. No Fab assets or textures enter tracked ar
 Prepared normal maps remain disabled pending a tangent-capable reviewed mesh
 path. Existing tree leaves remain. Missing licensed files preserve procedural/CC0
 fallback; no licensed download is attempted by the public-clone build.
+
+ADR0088 roślinność r2: bark_pine.png i bark_pine_lower.png oraz sosnowe partie naszych publicznych GLB/impostorów/HLOD korzystają ze skanu Pine Bark (Dimitrios Savva, Poly Haven, CC0; https://polyhaven.com/a/pine_bark). Wejście diffuse2k i SHA256: art-source/world/cc0/cc0_manifest.json, generator weryfikuje hash. Liście i geometria pozostają nasze proceduralne. Fab brzoza/lipa jest wyłącznie zatwierdzonym near override importera, nie wejściem do publicznego bake; linden-branch jest drewnem, nie liśćmi. Mapillary w artifacts/vegetation-r2 służy wyłącznie QA referencyjnemu, nie teksturowaniu ani buildowi.
+
+ADR0088 igły sosny: pine_tree_01 (Rico Cilliers — model, Rob Tuytel — fotografia), https://polyhaven.com/a/pine_tree_01, CC0 według https://polyhaven.com/license (sprawdzone2026-11-11). Wykorzystano wyłącznie czystą gałązkę z twig_diff+twig_alpha1kPNG, crop [5,26,220,450], bez szyszek i paddingu atlasu. Jawne URL/MD5API/SHA256 i przetwarzanie: art-source/world/cc0/pine_needles_manifest.json, tools/worldgen/streetscape/pine_needles.py; raw ignorowane, legalne pochodne CC0 mogą wejść do publicznych kart/bake. Nie użyto modelu3D PolyHaven.
+# ADR 0102 — dodatkowe użycie istniejących skanów CC0 (2026-11-11)
+
+`streetscape/furniture_textures.py` wykorzystuje mikrostrukturę istniejących, lokalnych map Diffuse
+`brushed_concrete` (Dario Barresi / Dimitrios Savva) i `corrugated_iron_03` (Charlotte Baglioni),
+Poly Haven, CC0 1.0, opisanych wraz z hashami w tabeli ADR 0063 oraz `cc0_manifest.json`.
+Wynik: tekstury `furniture_{galv,grey,concrete,bollard}` — filtr usuwa szerokie oświetlenie/przetłoczenia,
+warstwy zużycia są własne. Mapillary p12/p15/p20/p26/p30 tylko jako referencja proporcji i rodzin;
+żaden piksel Mapillary nie trafia do atlasów ani do builda.
+
+### ADR 0105 — DK8 Putry underdeck (2026-11-11)
+
+Reuses the existing CC0 `concrete_precast` material. Existing Fab Standard
+`grass-clumps` vegetation is retained; additional abutment clumps are disabled
+after the Low draw budget check. No new
+source imagery, third-party texture pixels or Fab derivatives are versioned.
+Rakoon's CC0 `7204_May_2021_in_Białystok.jpg` and Mapillary p42/p45/p47
+(reference-only, as registered above) inform the structure; paint blobs are
+authored WORKING_VALUE shapes without text or brands. See ADR 0105.
+## ADR 0103 — fotografie w arkuszach side-by-side G3
+Każde z 40 zdjęć Mapillary (CC BY-SA 4.0, tylko referencje, bez pikseli w grze) ma osobny wpis z autorem, datą, URL i SHA256 w [rejestrze SBS](refs/sbs-gate3-attribution.md). Dane maszynowe: `Data/Regions/bialystok-industrial-c/sbs_references.json`, publiczne parametry obiektywów: `sbs_intrinsics.json`. Modyfikacje panelu zdjęcia: prostowanie radialne według modelu obiektywu, kadrowanie, zmniejszenie, siatka i linia horyzontu. Panel fotograficzny i jego modyfikacje na CC BY-SA 4.0; panel renderu zachowuje warunki projektu. Oryginały i pochodne (`artifacts/sbs-gate3/rectified`) poza gitem i buildem.

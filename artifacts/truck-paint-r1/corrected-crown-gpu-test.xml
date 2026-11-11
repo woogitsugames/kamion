@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Passed" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-11 12:25:35Z" end-time="2026-11-11 12:25:42Z" duration="6,7529785">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="238" result="Passed" start-time="2026-11-11 12:25:35Z" end-time="2026-11-11 12:25:42Z" duration="6.752979" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1293" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-truck-paint/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="238" result="Passed" start-time="2026-11-11 12:25:35Z" end-time="2026-11-11 12:25:42Z" duration="6.747835" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="95120" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1294" name="Game" fullname="Game" runstate="Runnable" testcasecount="238" result="Passed" start-time="2026-11-11 12:25:35Z" end-time="2026-11-11 12:25:42Z" duration="6.747181" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1295" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="238" result="Passed" start-time="2026-11-11 12:25:35Z" end-time="2026-11-11 12:25:42Z" duration="6.746695" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1296" name="EditMode" fullname="Game.Tests.EditMode" runstate="Runnable" testcasecount="56" result="Passed" start-time="2026-11-11 12:25:35Z" end-time="2026-11-11 12:25:42Z" duration="6.745102" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1272" name="TruckDoorCrownTests" fullname="Game.Tests.EditMode.TruckDoorCrownTests" classname="Game.Tests.EditMode.TruckDoorCrownTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-11 12:25:35Z" end-time="2026-11-11 12:25:42Z" duration="6.744274" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="ParameterizedMethod" id="1279" name="ActualCanonicalMeshesAndRendererLayerDataReachGpuWithLightLayersDefinitionOffAndOn" fullname="Game.Tests.EditMode.TruckDoorCrownTests.ActualCanonicalMeshesAndRendererLayerDataReachGpuWithLightLayersDefinitionOffAndOn" classname="Game.Tests.EditMode.TruckDoorCrownTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-11 12:25:35Z" end-time="2026-11-11 12:25:37Z" duration="1.948423" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1277" name="ActualCanonicalMeshesAndRendererLayerDataReachGpuWithLightLayersDefinitionOffAndOn(False)" fullname="Game.Tests.EditMode.TruckDoorCrownTests.ActualCanonicalMeshesAndRendererLayerDataReachGpuWithLightLayersDefinitionOffAndOn(False)" methodname="ActualCanonicalMeshesAndRendererLayerDataReachGpuWithLightLayersDefinitionOffAndOn" classname="Game.Tests.EditMode.TruckDoorCrownTests" runstate="Runnable" seed="1119755468" result="Passed" start-time="2026-11-11 12:25:35Z" end-time="2026-11-11 12:25:36Z" duration="1.134865" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1278" name="ActualCanonicalMeshesAndRendererLayerDataReachGpuWithLightLayersDefinitionOffAndOn(True)" fullname="Game.Tests.EditMode.TruckDoorCrownTests.ActualCanonicalMeshesAndRendererLayerDataReachGpuWithLightLayersDefinitionOffAndOn(True)" methodname="ActualCanonicalMeshesAndRendererLayerDataReachGpuWithLightLayersDefinitionOffAndOn" classname="Game.Tests.EditMode.TruckDoorCrownTests" runstate="Runnable" seed="1061081581" result="Passed" start-time="2026-11-11 12:25:36Z" end-time="2026-11-11 12:25:37Z" duration="0.809274" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[There are inconsistent line endings in the 'Assets/_Generated/TruckPaintProbe/TruckPaintReadback.shader' script. Some are Mac OS X (UNIX) and some are Windows.
+This might lead to incorrect line numbers in stacktraces and compiler errors. Many text editors can fix this using Convert Line Endings menu commands.
+There are inconsistent line endings in the 'Assets/_Generated/TruckPaintProbe/TruckPaintReadback.shader' script. Some are Mac OS X (UNIX) and some are Windows.
+This might lead to incorrect line numbers in stacktraces and compiler errors. Many text editors can fix this using Convert Line Endings menu commands.
+There are inconsistent line endings in the 'Assets/_Generated/TruckPaintProbe/TruckPaintReadback.shader' script. Some are Mac OS X (UNIX) and some are Windows.
+This might lead to incorrect line numbers in stacktraces and compiler errors. Many text editors can fix this using Convert Line Endings menu commands.
+There are inconsistent line endings in the 'Assets/_Generated/TruckPaintProbe/TruckPaintReadback.shader' script. Some are Mac OS X (UNIX) and some are Windows.
+This might lead to incorrect line numbers in stacktraces and compiler errors. Many text editors can fix this using Convert Line Endings menu commands.
+There are inconsistent line endings in the 'Assets/_Generated/TruckPaintProbe/TruckPaintReadback.shader' script. Some are Mac OS X (UNIX) and some are Windows.
+This might lead to incorrect line numbers in stacktraces and compiler errors. Many text editors can fix this using Convert Line Endings menu commands.
+There are inconsistent line endings in the 'Assets/_Generated/TruckPaintProbe/TruckPaintReadback.shader' script. Some are Mac OS X (UNIX) and some are Windows.
+This might lead to incorrect line numbers in stacktraces and compiler errors. Many text editors can fix this using Convert Line Endings menu commands.
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-case id="1273" name="ActualHelperIsBoundedAndHasZeroHeightBoundaryGradient" fullname="Game.Tests.EditMode.TruckDoorCrownTests.ActualHelperIsBoundedAndHasZeroHeightBoundaryGradient" methodname="ActualHelperIsBoundedAndHasZeroHeightBoundaryGradient" classname="Game.Tests.EditMode.TruckDoorCrownTests" runstate="Runnable" seed="261184664" result="Passed" start-time="2026-11-11 12:25:37Z" end-time="2026-11-11 12:25:39Z" duration="1.527951" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1275" name="ActualHelperPreservesBothDoorSidesAndObjectLocalCoordinatesThroughHingeSuspensionRebase" fullname="Game.Tests.EditMode.TruckDoorCrownTests.ActualHelperPreservesBothDoorSidesAndObjectLocalCoordinatesThroughHingeSuspensionRebase" methodname="ActualHelperPreservesBothDoorSidesAndObjectLocalCoordinatesThroughHingeSuspensionRebase" classname="Game.Tests.EditMode.TruckDoorCrownTests" runstate="Runnable" seed="562369112" result="Passed" start-time="2026-11-11 12:25:39Z" end-time="2026-11-11 12:25:40Z" duration="1.446211" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1274" name="ActualHelperRejectsBodyTrimGlassInnerSkinAndOutsideDoorPatch" fullname="Game.Tests.EditMode.TruckDoorCrownTests.ActualHelperRejectsBodyTrimGlassInnerSkinAndOutsideDoorPatch" methodname="ActualHelperRejectsBodyTrimGlassInnerSkinAndOutsideDoorPatch" classname="Game.Tests.EditMode.TruckDoorCrownTests" runstate="Runnable" seed="628265115" result="Passed" start-time="2026-11-11 12:25:40Z" end-time="2026-11-11 12:25:42Z" duration="1.815822" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1276" name="CanonicalPrefabTagsExactlyBothDoorsAllThreeLods" fullname="Game.Tests.EditMode.TruckDoorCrownTests.CanonicalPrefabTagsExactlyBothDoorsAllThreeLods" methodname="CanonicalPrefabTagsExactlyBothDoorsAllThreeLods" classname="Game.Tests.EditMode.TruckDoorCrownTests" runstate="Runnable" seed="218781703" result="Passed" start-time="2026-11-11 12:25:42Z" end-time="2026-11-11 12:25:42Z" duration="0.000639" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

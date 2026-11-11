@@ -69,24 +69,31 @@ def _densify(P, smooth=True):
 
 
 def _drape_polygon(buf, top, pg, src, uv1y=0.35):
+    """ADR 0100: a 4-corner shape (zebra bar, P-11 square) is draped as a strip of cells <= 0.35 m, anything else is
+    triangulated at 0.5 m; both lifted so the paint plane never dips under the surface (p21_hatch.drape_lift). The
+    ADR 0095 version draped 1 m Delaunay triangles at their corners only: dark specks of asphalt through the bars."""
     from .gores import _triangulate
+    from . import p21_hatch as H
     n, lost = 0, 0
     for part in getattr(pg, "geoms", [pg]):
         if part.is_empty or part.geom_type != "Polygon" or part.area < 0.01:
             continue
-        V, T = _triangulate(part, 1.0)
-        if V is None:
-            continue
-        z = top.z(V)
-        keep = np.isfinite(z)[T].all(1)
-        lost += int((~keep).sum())
-        if not keep.any():
+        ring = np.asarray(part.exterior.coords)[:-1]
+        if len(ring) == 4 and not part.interiors:
+            V, T = H.drape_quad(ring)
+        else:
+            V, T = _triangulate(part, 0.5)
+            if V is None:
+                continue
+        z, T, nl, _ = H.drape_lift(top, V, T)
+        lost += nl
+        if not len(T):
             continue
         age = (zlib.crc32(src.encode()) % 1000) / 1000.0 * 0.98
         uv1 = np.column_stack([np.full(len(V), 0.5), np.full(len(V), uv1y + age)])
         buf.add("markings", "marking_white", np.column_stack([V, np.nan_to_num(z) + S.MARKING_LIFT]), V.copy(),
-                T[keep], src=src, UV1=uv1)
-        n += int(keep.sum())
+                T, src=src, UV1=uv1)
+        n += int(len(T))
     return n, lost
 
 

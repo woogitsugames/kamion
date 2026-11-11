@@ -60,10 +60,13 @@ MonoBehaviour:
     cabShadowLift: 8
     streetLights: 0
     lampPools: 4
+    worldSkyVisOff: 0
+    worldBakedSunOff: 0
     cloudQuality: 0
     cloudsOff: 0
     groundHazeOff: 0
     ssao: 0
+    glassFast: 1
     budgetDrawCalls: 250
     budgetTrianglesK: 350
     budgetTextureMB: 64
@@ -83,8 +86,8 @@ MonoBehaviour:
     cascade4Split: {x: 0.067, y: 0.2, z: 0.467}
     softShadows: 0
     softShadowQuality: 1
-    shadowDepthBias: 1
-    shadowNormalBias: 1
+    shadowDepthBias: 0.4
+    shadowNormalBias: 0.3
     anisotropic: 1
     worldTextureAniso: 4
     worldMipBias: 0
@@ -116,10 +119,13 @@ MonoBehaviour:
     cabShadowLift: 8
     streetLights: 0
     lampPools: 6
+    worldSkyVisOff: 0
+    worldBakedSunOff: 0
     cloudQuality: 1
     cloudsOff: 0
     groundHazeOff: 0
     ssao: 0
+    glassFast: 1
     budgetDrawCalls: 350
     budgetTrianglesK: 550
     budgetTextureMB: 96
@@ -136,11 +142,11 @@ MonoBehaviour:
     shadowResolution: 2048
     shadowCascades: 3
     cascade2Split: 0.25
-    cascade4Split: {x: 0.08, y: 0.25, z: 0.55}
+    cascade4Split: {x: 0.2, y: 0.55, z: 0.8}
     softShadows: 1
     softShadowQuality: 1
-    shadowDepthBias: 0.8
-    shadowNormalBias: 0.8
+    shadowDepthBias: 0.4
+    shadowNormalBias: 0.3
     anisotropic: 1
     worldTextureAniso: 8
     worldMipBias: 0
@@ -150,7 +156,7 @@ MonoBehaviour:
     thermalFallbackFps: 30
     pacingFallbackFps: 30
     upscalingFilter: 3
-    fsrSharpness: 0.75
+    fsrSharpness: 0
     worldDetail: 1
     additionalLightsPerObject: 4
     treeCardLodScale: 0.5
@@ -172,10 +178,13 @@ MonoBehaviour:
     cabShadowLift: 8
     streetLights: 4
     lampPools: 8
+    worldSkyVisOff: 0
+    worldBakedSunOff: 0
     cloudQuality: 1
     cloudsOff: 0
     groundHazeOff: 0
     ssao: 0
+    glassFast: 0
     budgetDrawCalls: 800
     budgetTrianglesK: 1500
     budgetTextureMB: 256
@@ -228,16 +237,19 @@ MonoBehaviour:
     cabShadowLift: 8
     streetLights: 6
     lampPools: 8
+    worldSkyVisOff: 0
+    worldBakedSunOff: 0
     cloudQuality: 2
     cloudsOff: 0
     groundHazeOff: 0
     ssao: 1
+    glassFast: 0
     budgetDrawCalls: 1000
     budgetTrianglesK: 2000
     budgetTextureMB: 384
     budgetShadowMs: 3
     budgetStatus: UNMEASURED (no flagship attached)
-  revision: 80
+  revision: 106
   deviceRules:
   - gpuContains: Mali-G57
     modelContains: 

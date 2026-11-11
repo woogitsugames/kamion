@@ -1,0 +1,54 @@
+# Strumień L — ADR 0105
+- 2026-11-11: przeczytano kontrakt S10-B, zasady, recenzje s9/s10 i historię viaduct-r9. Worktree z main 9e6e9fde, gałąź gpt-viaduct-r1.
+- Kopie derived/cc0/Megascans/_Generated gotowe; junctiony gugik/osm/refs/mapillary/fab tylko do odczytu; git lfs checkout zakończony.
+- PHONE_RUN obecny: bez Unity/adb. Zakres: tylko konstrukcja poniżej pomostu; bez _Tint bridge_concrete i bez dróg/barier.
+- NASTĘPNY KROK: uv run --project tools/worldgen python -m pytest tests/gis -q
+- Implementacja r1: osobny viaduct_underdeck.json (bez edycji overrides.yaml), konstrukcja w hero_bridge.py, stare materiały i chunk batching; pomost/ekrany/barierki pozostają nietknięte.
+- Podpory, głowice, łożyska, dźwigar/kroplowniki, rury, ściany skrzydłowe i schody wymagają testów i przeglądu; wymiary WORKING_VALUE.
+- NASTĘPNY KROK: uv run --project tools/worldgen python tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+- Testy jednostkowe r1: 4/4 PASS (niezmienność siatek pomostu, normalne, prześwit, osadzenie). Obejrzano ref7204.jpg oraz refp45.jpg; żółte podpory potwierdzone, wymiary nadal WORKING_VALUE.
+- Uściślenie: wcześniejszy asset r9 = Bieżeństwa; 0105 = DK8/Putry. Osobny zakres OSM z istniejącego bridge_style Putry.
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/build-r1.log -Tail 20; Get-Content artifacts/viaduct-r10/baseline-gis.log -Tail 10
+- build_world r1: PASS (325.4 s), dwa łańcuchy Putry, 7+5 linii podpór. SHA pomostu przed/po identyczne dla obu; brak nowych materiałów. Sufit zastąpiony, pomost i bariery bez przebudowy.
+- Szacunek generatora Low: maks. +0.650% tris (route_putry_entry_signs 444835 -> 447727), materials_low delta 0 w każdej kamerze. To NIE są liczniki GPU/draws z Unity.
+- Korekta kamer z faktycznego specu: oko 137 m przy terenie ~135 m. Kolejka renderów before czeka na PHONE_RUN (render-before.ps1).
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/unity-queue.log -Tail 3; Get-Content artifacts/viaduct-r10/baseline-gis.log -Tail 5
+- Bazowy GIS: 369 PASS / 1 XFAIL / 1 FAIL (test_export_is_deterministic). Test porównał manifest sprzed zmian z generacją nowej konstrukcji — konieczny ponowny pełny przebieg na ustabilizowanym stanie.
+- QA r1 ujawniło 3 nowe klasyfikacje bridge_kerb: kolektor był traktowany jak nawierzchnia w oknie wysokości ±0.8 m. Rury przypisane do istniejącego bridge_soffit (konstrukcja poniżej jezdni), bez zmiany indeksu QA i bez nowych materiałów.
+- NASTĘPNY KROK: uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+- Dodano samosiejną trawę wyłącznie przez istniejący prototyp Fab grass-clumps, bez zmiany 0088; testy lokalne 5/5 PASS. Pozycje próbkowane z terenu i sprawdzane względem maski dróg.
+- Audyt referencji: obejrzano ortofoto/plan Putry; 33 pliki GML LoD2 nie zawierają namespace Bridge, więc nie są źródłem geometrii spodu (lod2-audit.json).
+- Właściciel potwierdził: pomiar telefonu nadal trwa, czekamy. ADR 0105 i dopisek licencyjny przygotowane; brak startu Unity.
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/build-r2.log -Tail 10
+- Regeneracja r2 PASS (299.6 s). QA drogowe wróciło dokładnie do bazowych 65 przypadków (bez nowych regresji). 8 kęp istniejącego Fab grass-clumps przy przyczółkach.
+- Niezależny audyt GLB Low: 64/64 chunków bazowych zweryfikowane po SHA; suma grup siatka/materiał delta 0. Nie zastępuje to liczników draws z renderu Unity.
+- NASTĘPNY KROK: uv run --project tools/worldgen python -m pytest tests/gis -q
+- Podgląd geometrii Blendera obejrzany (geometry-preview/compare.jpg; to NIE Unity). Ujawniono płaskie stopnie: zastąpiono je pełnym biegiem o riser 0.18 m, podpartym do próbkowanego gruntu; lot bez dolnego podparcia jest pomijany.
+- Zacieki i wysokość plam farby zróżnicowane deterministycznie pomiędzy podporami. Testy lokalne nadal 5/5 PASS.
+- Przerwany własny pełny GIS jako nieaktualny po korekcie geometrii; inne sesje nietknięte. NASTĘPNY KROK: uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+- Dodana kamera przyczółka i przygotowana kolejka validate-after.ps1: po baseline oraz zielonym GIS import, 20 renderów after, EditMode; przed każdym startem kontrola PHONE_RUN, potem cofnięcie efektów ubocznych Unity.
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/build-r3.log -Tail 10; Get-Content artifacts/viaduct-r10/unity-queue.log -Tail 1
+- Regeneracja r3 PASS (305.1 s), maks. Low +0.6276% tris, grupy GLB Low delta 0, QA drogi 65 jak baza. Lokalne testy 6/6 PASS, w tym równe risery i podparcie końca biegu.
+- Obejrzano geometry-preview/compare-r3.jpg (lewo before / prawo after, 3 kadry). Schody mają rzeczywisty bieg do gruntu; głowice/łożyska rozdzielone. Płaskie materiały oraz gruby teren podglądu nie rozstrzygają finalnego kontaktu/AO — ocena Unity pozostaje otwarta.
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/final-gis-r3.log -Tail 6; Get-Content artifacts/viaduct-r10/unity-queue.log -Tail 1
+- Pełny GIS r3: 376 PASS / 1 XFAIL, 531.61 s (final-gis-r3.log); deterministyczny eksport zielony. Kod/geometria ustabilizowane.
+- Stan: GIS_DONE / UNITY_WAIT. PHONE_RUN nadal obecny; czekamy zgodnie z odpowiedzią właściciela. NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/render-before.log -Tail 10; Get-Content artifacts/viaduct-r10/validate-after.log -Tail 10
+- PHONE_RUN zwolniony ~11:54; baseline Unity zakończony: 20 PNG (5 kamer × Low/High × clear/overcast). Obejrzano before-low-sheet.jpg: ujęcia pod konstrukcją czytelne, oryginalny kadr przyczółka zasłania ekran akustyczny.
+- Import r3 do Unity w toku; po EditMode kolejka scout-detail.ps1 dobierze dodatkowy kadr przyczółka bez zmiany par before/after.
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/validate-after.log -Tail 10; Get-Content artifacts/viaduct-r10/import.log -Tail 10
+- Unity import PASS i 20 PNG after gotowe (r3 z 8 dodatkowymi kępami). SceneStats wykrył Low +1 draw w dk8-abutment i g3b-rondo-putry-approach; konstrukcja ma nadal 0 nowych grup GLB. Dodatkowe kępy Fab wyłączone (add_grass=false), istniejąca roślinność pozostaje.
+- Korekta zmienia tylko instancje, nie GLB konstrukcji. Pełny GIS uruchomiony ponownie; jego fixture regeneruje świat i sprawdza deterministyczny eksport. Wymagany ponowny import i after po tym przebiegu.
+- NASTĘPNY KROK: uv run --project tools/worldgen python -m pytest tests/gis -q
+- Diagnoza draws potwierdzona: Low g3b statyczne 295 -> 295, instancje 129 -> 130; dk8-abutment statyczne 278 -> 278, instancje 222 -> 223. Wzrost pochodzi wyłącznie z kęp, a nie konstrukcji.
+- EditMode r3 226/226 PASS (EditMode-r3.xml). Obejrzane pary Low-clear i High-overcast oraz 6 prób kamer detali. Finalne dodatkowe kadry: dk8-east-north i dk8-west-interior (schody/skrzydła bez zasłonięcia).
+- Finalna kolejka validate-after.ps1 czeka na zielony GIS r4, potem import, 28 after PNG (20 sparowanych + 8 dodatkowych detali) oraz EditMode.
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/final-gis-r4.log -Tail 8; Get-Content artifacts/viaduct-r10/validate-after-r4.log -Tail 8
+- Końcowy GIS r4: 377 PASS / 1 XFAIL, 663.87 s. Raport QA potwierdza vegetation_added [0,0]; GLB konstrukcji bez zmian. Końcowy import rozpoczęty po sprawdzeniu braku PHONE_RUN.
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/validate-after-r4.log -Tail 10; uv run --project tools/worldgen python artifacts/viaduct-r10/compare_stats.py
+- Wykryto różnicę fixture/import: test_world_roads buduje raw do temp (po sukcesie czyszczony), aktualizuje jednak generated/world_manifest.json. Lokalny raw nadal miał 8 odrzuconych kęp.
+- reconcile_instances.py odtworzył wyłącznie usunięcie tych 8 instancji; PRZED zapisem sprawdził wszystkie 64 wynikowe SHA instancji i 128 GLB względem manifestu z zielonego testu. Wszystkie 192 pliki zgodne byte-for-byte z testowanym wyjściem, bez nowej geometrii. Następne importy automatycznie sprawdzają ten warunek.
+- NASTĘPNY KROK: pwsh artifacts/viaduct-r10/validate-after.ps1 -GisLog artifacts/viaduct-r10/final-gis-r4.log
+- FINAL: import Low+High PASS, EditMode 226/226 PASS (EditMode-final.xml), 20 before + 28 świeżych after PNG. Obejrzano wszystkie cztery arkusze par, detale i zestawienie z CC0 (inna poza; nie gate3 matched SBS).
+- Końcowy SceneStats: 20/20 par delta drawsEst 0; maks. Low tris +1.408% <3%. Efekty uboczne Unity cofnięte, worktree czysty przed zapisem dokumentacji.
+- SELF_REVIEW.md opisuje ciemny spód, niezweryfikowane wymiary i ograniczenia kamery. Gotowe do niezależnej recenzji lidera; bez merge/push i bez telefonu.
+- NASTĘPNY KROK (lider): git merge gpt-viaduct-r1; uv run --project tools/worldgen python tools/worldgen/roads/build_world.py --region bialystok-industrial-c; pwsh scripts/import-region.ps1 -Region bialystok-industrial-c

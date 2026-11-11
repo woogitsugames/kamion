@@ -1,0 +1,140 @@
+{
+  "summary": {
+    "phase": "facade-probe",
+    "inventory": {
+      "Low-overcast": {
+        "PNGs": 2,
+        "camera_ids": [
+          "fire-station-ref7197",
+          "fire-station-route"
+        ]
+      },
+      "High-overcast": {
+        "PNGs": 2,
+        "camera_ids": [
+          "fire-station-ref7197",
+          "fire-station-route"
+        ]
+      }
+    },
+    "matched_views": 4,
+    "notes": [
+      "Estimates before SRP batching; actual shader pass/GPU cost may differ.",
+      "No device/temporal inference from staticEditor frames."
+    ],
+    "Low": {
+      "views": 2,
+      "max_local_draw_delta": 0,
+      "max_local_trisK_delta": 0,
+      "peak_before_draws": 420,
+      "peak_after_draws": 420
+    },
+    "High": {
+      "views": 2,
+      "max_local_draw_delta": -1,
+      "max_local_trisK_delta": 0
+    }
+  },
+  "views": [
+    {
+      "condition": "Low-overcast",
+      "camera": "fire-station-ref7197",
+      "static_draws_before": 126,
+      "static_draws_after": 126,
+      "static_draws_delta": 0,
+      "shadow_draws_before": 99,
+      "shadow_draws_after": 99,
+      "shadow_draws_delta": 0,
+      "static_trisK_before": 326,
+      "static_trisK_after": 326,
+      "static_trisK_delta": 0,
+      "instance_draws_before": 171,
+      "instance_draws_after": 171,
+      "instance_draws_delta": 0,
+      "instance_trisK_before": 30,
+      "instance_trisK_after": 30,
+      "instance_trisK_delta": 0,
+      "total_drawsEst_before": 297,
+      "total_drawsEst_after": 297,
+      "total_drawsEst_delta": 0,
+      "total_trisK_before": 356,
+      "total_trisK_after": 356,
+      "total_trisK_delta": 0
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "fire-station-route",
+      "static_draws_before": 205,
+      "static_draws_after": 205,
+      "static_draws_delta": 0,
+      "shadow_draws_before": 74,
+      "shadow_draws_after": 74,
+      "shadow_draws_delta": 0,
+      "static_trisK_before": 210,
+      "static_trisK_after": 210,
+      "static_trisK_delta": 0,
+      "instance_draws_before": 215,
+      "instance_draws_after": 215,
+      "instance_draws_delta": 0,
+      "instance_trisK_before": 48,
+      "instance_trisK_after": 48,
+      "instance_trisK_delta": 0,
+      "total_drawsEst_before": 420,
+      "total_drawsEst_after": 420,
+      "total_drawsEst_delta": 0,
+      "total_trisK_before": 258,
+      "total_trisK_after": 258,
+      "total_trisK_delta": 0
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "fire-station-ref7197",
+      "static_draws_before": 147,
+      "static_draws_after": 147,
+      "static_draws_delta": 0,
+      "shadow_draws_before": 339,
+      "shadow_draws_after": 339,
+      "shadow_draws_delta": 0,
+      "static_trisK_before": 907,
+      "static_trisK_after": 907,
+      "static_trisK_delta": 0,
+      "instance_draws_before": 228,
+      "instance_draws_after": 227,
+      "instance_draws_delta": -1,
+      "instance_trisK_before": 63,
+      "instance_trisK_after": 63,
+      "instance_trisK_delta": 0,
+      "total_drawsEst_before": 375,
+      "total_drawsEst_after": 374,
+      "total_drawsEst_delta": -1,
+      "total_trisK_before": 970,
+      "total_trisK_after": 970,
+      "total_trisK_delta": 0
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "fire-station-route",
+      "static_draws_before": 357,
+      "static_draws_after": 357,
+      "static_draws_delta": 0,
+      "shadow_draws_before": 339,
+      "shadow_draws_after": 339,
+      "shadow_draws_delta": 0,
+      "static_trisK_before": 889,
+      "static_trisK_after": 889,
+      "static_trisK_delta": 0,
+      "instance_draws_before": 292,
+      "instance_draws_after": 291,
+      "instance_draws_delta": -1,
+      "instance_trisK_before": 87,
+      "instance_trisK_after": 86,
+      "instance_trisK_delta": -1,
+      "total_drawsEst_before": 649,
+      "total_drawsEst_after": 648,
+      "total_drawsEst_delta": -1,
+      "total_trisK_before": 976,
+      "total_trisK_after": 975,
+      "total_trisK_delta": -1
+    }
+  ]
+}

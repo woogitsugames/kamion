@@ -223,6 +223,51 @@ namespace Game.World.Import
             return r;
         }
 
+        /// <summary>Loads manifest metadata, chunk bounds, and materials for rebuilding WorldEdge in place without re-baking all 16 chunks.</summary>
+        public static Result LoadForEdge(string region)
+        {
+            string repo = EditorTools.RepoRoot;
+            string regionDir = Path.Combine(repo, "Data", "Regions", region);
+            var manifest = Obj(Parse(File.ReadAllText(Path.Combine(regionDir, "generated", "world_manifest.json"))));
+            var regionYaml = File.ReadAllLines(Path.Combine(regionDir, "region.yaml"));
+            var r = new Result { Region = region, Dir = $"{GeneratedRoot}/{region}", ChunkSize = (float)Num(manifest.Get("chunk_size_m")) };
+            ReadAnchor(regionYaml, out r.AnchorX, out r.AnchorY, out r.AnchorZ);
+            foreach (var d in new[] { r.Dir, r.Dir + "/Materials", r.Dir + "/Meshes/Low", r.Dir + "/Meshes/High" })
+                Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, d));
+            LookDevAssets.EnsureAll();
+            var roadAsphalt = Obj(manifest.Get("materials")).Get("road_asphalt") as Dictionary<string, object>;
+            foreach (var kv in Obj(manifest.Get("materials")))
+            {
+                var m = Obj(kv.Value);
+                r.MaterialDefs[kv.Key] = m;
+                r.MaterialSurface[kv.Key] = Str(m.Get("surface"));
+            }
+            foreach (var kv in r.MaterialDefs.ToList())
+            {
+                var m = kv.Value;
+                if (m.Get("collision") is bool col && col) continue;
+                string matPath = $"{r.Dir}/Materials/M_{kv.Key}.mat";
+                var existing = AssetDatabase.LoadAssetAtPath<Material>(matPath);
+                if (existing != null && kv.Key != "far_field_buildings")
+                    r.Materials[kv.Key] = existing;
+                else
+                    r.Materials[kv.Key] = CreateMaterial(r, kv.Key, m, roadAsphalt);
+            }
+            foreach (var co in Arr(manifest.Get("chunks")))
+            {
+                var c = Obj(co);
+                var b = Obj(c.Get("bounds_local_m"));
+                r.Chunks.Add(new Chunk
+                {
+                    Id = Str(c.Get("id")),
+                    Min = new Vector2((float)Num(b.Get("e_min")), (float)Num(b.Get("n_min"))),
+                    Max = new Vector2((float)Num(b.Get("e_max")), (float)Num(b.Get("n_max"))),
+                });
+            }
+            AssetDatabase.SaveAssets();
+            return r;
+        }
+
         static void CheckSha(Result r, string file, string expected, string region)
         {
             if (!File.Exists(file))
@@ -238,6 +283,12 @@ namespace Game.World.Import
         static Material CreateMaterial(Result r, string id, Dictionary<string, object> m, Dictionary<string, object> roadAsphalt)
         {
             var mat = CreateMaterialCore(r, id, m, roadAsphalt);
+            // ADR0098: explicit hero glazing semantic for receiver-depth bias; other materials stay off.
+            if (mat != null && mat.HasProperty("_ArchitecturalGlass"))
+            {
+                mat.SetFloat("_ArchitecturalGlass", id == "kp_glass_block" ? 1f : 0f);
+                EditorUtility.SetDirty(mat);
+            }
             // ADR 0060: manifest "sky_occ": [down-facing ambient, horizon reflection] (structures, glazing; 0 = off)
             if (mat != null && m.Get("sky_occ") is List<object> so && so.Count >= 2 && mat.HasProperty("_SkyOcc"))
             {
@@ -534,6 +585,7 @@ namespace Game.World.Import
                     {
                         if (def.Get("texture") != null) uv = true;
                         if (def.Get("window_grid") != null && nd.Primitives[i].Uv1 != null) uv1 = true;   // far facades (ADR 0015)
+                        if (def.Get("vertex_color") is bool vc && vc && nd.Primitives[i].Colors != null) colors = true;
                         // PBR sets (ADR 0022): mesh UV in metres, road wear / decal data in TEXCOORD_1
                         WorldPbrMaterials.Channels(def, id, out bool p0, out bool p1, out bool pc);
                         uv |= p0 && nd.Primitives[i].Uv0 != null;

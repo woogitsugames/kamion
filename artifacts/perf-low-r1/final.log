@@ -1,0 +1,51 @@
+14:13:39 waiting: lock=False unity=5
+14:14:39 waiting: lock=False unity=4
+14:15:39 waiting: lock=False unity=2
+14:16:39 waiting: lock=False unity=2
+14:17:40 waiting: lock=False unity=1
+14:18:40 lock taken
+14:18:45 gate3 Low A battery=28 C
+14:18:46   == gate3: segment G3-A s=12..450 (436.716 m), tier Low, 30 fps, 30 km/h, run 96s (25 s load + 71 s drive)
+14:18:46      cameras: 14 from gate3_cameras.json + 7 existing control cameras; game reads route_s: True, qacam_set: True
+14:19:06   WARNING: APK built from fd126bf3a9 but repo HEAD is 95b9565cb4: the measurement is NOT of HEAD
+14:20:48     frames 2003 over 67,2s: mean 29,79 fps, p50 33,33 / p95 33,49 / p99 49,96 / max 83,29 ms
+14:20:48     GPU p50 29,50 / p95 31,11 ms (1814 samples)
+14:20:48     CPU main p50 22,49 / p95 28,30 ms
+14:20:48   FPS: p50 33,3 / p95 33,5 / p99 50,0 ms, PSS 810,9 MB, thermal 0 -> p95 ok, p99 OVER, PSS ok
+14:20:48   result C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r1\artifacts\gate3\20261111-141845\RFGL34SJYDZ\gate3-result.json: valid=True, cameras 0/0
+14:20:48   exit 0
+14:20:48 gate3 Low B battery=28.1 C
+14:20:49   == gate3: segment G3-B s=1232..1718 (485.862 m), tier Low, 30 fps, 30 km/h, run 104s (25 s load + 79 s drive)
+14:20:49      cameras: 16 from gate3_cameras.json + 7 existing control cameras; game reads route_s: True, qacam_set: True
+14:21:06   WARNING: APK built from fd126bf3a9 but repo HEAD is ba793dfdb0: the measurement is NOT of HEAD
+14:22:55     frames 2230 over 74,7s: mean 29,87 fps, p50 33,33 / p95 33,47 / p99 33,68 / max 66,77 ms
+14:22:55     GPU p50 29,12 / p95 33,70 ms (2105 samples)
+14:22:55     CPU main p50 20,86 / p95 28,14 ms
+14:22:55   FPS: p50 33,3 / p95 33,5 / p99 33,7 ms, PSS 838,7 MB, thermal 0 -> p95 ok, p99 ok, PSS ok
+14:22:55   result C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r1\artifacts\gate3\20261111-142049\RFGL34SJYDZ\gate3-result.json: valid=True, cameras 0/0
+14:22:55   exit 0
+14:22:56 gate3 Medium A battery=28 C
+14:22:56   == gate3: segment G3-A s=12..450 (436.716 m), tier Medium, 30 fps, 30 km/h, run 96s (25 s load + 71 s drive)
+14:22:56      cameras: 14 from gate3_cameras.json + 7 existing control cameras; game reads route_s: True, qacam_set: True
+14:23:12   WARNING: APK built from fd126bf3a9 but repo HEAD is ba793dfdb0: the measurement is NOT of HEAD
+14:24:55     frames 1502 over 69s: mean 21,76 fps, p50 49,97 / p95 66,70 / p99 83,34 / max 116,78 ms
+14:24:55     GPU p50 44,58 / p95 51,87 ms (1495 samples)
+14:24:55     CPU main p50 32,75 / p95 45,28 ms
+14:24:56   FPS: p50 50,0 / p95 66,7 / p99 83,3 ms, PSS 871 MB, thermal 0 -> p95 OVER, p99 OVER, PSS ok
+14:24:56   result C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r1\artifacts\gate3\20261111-142256\RFGL34SJYDZ\gate3-result.json: valid=True, cameras 0/0
+14:24:56   exit 0
+14:24:56 gate3 Medium B battery=28.2 C
+14:24:57   == gate3: segment G3-B s=1232..1718 (485.862 m), tier Medium, 30 fps, 30 km/h, run 104s (25 s load + 79 s drive)
+14:24:57      cameras: 16 from gate3_cameras.json + 7 existing control cameras; game reads route_s: True, qacam_set: True
+14:25:13   WARNING: APK built from fd126bf3a9 but repo HEAD is ba793dfdb0: the measurement is NOT of HEAD
+14:27:09     frames 1761 over 80,8s: mean 21,79 fps, p50 49,98 / p95 66,68 / p99 66,86 / max 83,50 ms
+14:27:09     GPU p50 45,06 / p95 57,93 ms (1717 samples)
+14:27:09     CPU main p50 24,70 / p95 34,78 ms
+14:27:10   FPS: p50 50,0 / p95 66,7 / p99 66,9 ms, PSS 879 MB, thermal 0 -> p95 OVER, p99 OVER, PSS ok
+14:27:10   result C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r1\artifacts\gate3\20261111-142457\RFGL34SJYDZ\gate3-result.json: valid=True, cameras 0/0
+14:27:10   exit 0
+14:27:10 before Low B rq_glassfast=0
+14:28:59   done -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r1\artifacts\perf-low-r1\final\before-Low-B
+14:28:59 before Medium B rq_glassfast=0
+14:30:48   done -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r1\artifacts\perf-low-r1\final\before-Medium-B
+14:30:49 lock released

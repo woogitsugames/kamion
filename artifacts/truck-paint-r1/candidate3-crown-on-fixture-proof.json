@@ -1,0 +1,51 @@
+{
+  "stage": "candidate3-crown-on",
+  "baseline_files": 564,
+  "changed_files": [
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_Glass.mat",
+      "before_sha256": "9c979f2d616a02d7c3bd246a8548f0cf1b1e635c6dbe287859a2f5565b7e67f4",
+      "candidate_sha256": "2907213fbd7a79a2520e9c4b11ff756d9f248df0d9bdddc4c9d653f923688997"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_Paint.mat",
+      "before_sha256": "51661ef7fb22a6dcf6bc9931c32b5555ca3b32537b998a1e0b0bb344bc41841e",
+      "candidate_sha256": "41ff046bf564d6268bc9576a05352f70f88d2fc0377347dfdb9bef9fa64431fb"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_Glass.mat",
+      "before_sha256": "9c979f2d616a02d7c3bd246a8548f0cf1b1e635c6dbe287859a2f5565b7e67f4",
+      "candidate_sha256": "2907213fbd7a79a2520e9c4b11ff756d9f248df0d9bdddc4c9d653f923688997"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_Paint.mat",
+      "before_sha256": "7c7771c21a8500dc03ba8578d40a31e9da077e536bc23c23465645aa917ca206",
+      "candidate_sha256": "2fbfde2694fca989897e0d5f83650d26b5022705d2df5320753244f4a609963f"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_Glass.mat",
+      "before_sha256": "9c979f2d616a02d7c3bd246a8548f0cf1b1e635c6dbe287859a2f5565b7e67f4",
+      "candidate_sha256": "2907213fbd7a79a2520e9c4b11ff756d9f248df0d9bdddc4c9d653f923688997"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_Paint.mat",
+      "before_sha256": "ba775c9302c2b8fda0806de166cd932d4ea3c49f87e2bd4fcc31b3cd9d3c59e1",
+      "candidate_sha256": "8163a950a5e81e80fb2d4f733a2e266e2022c52687d922c18d43b5b3cde62d30"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Tractor4x2_TRAKT.prefab",
+      "before_sha256": "8c11e10c22839531e0677b64158b111a2ac2ba8531b97018c958472855c1ebe9",
+      "candidate_sha256": "794888aab5c99b5281f7828a200973c116bbf31b3a01e729fec815940b1b9288"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Trailer_Curtainsider_Art.prefab",
+      "before_sha256": "ad2740725275c171cd260c4da6f275fd5e878cc9331b3f890c9b287a86e8bccf",
+      "candidate_sha256": "f7c9721223a88803710ff76c12d62a9b5a5e26c6a7247294eee49bac113b0506"
+    }
+  ],
+  "mesh_or_fbx_changes": [],
+  "truck_transform_nodes_before": 161,
+  "truck_transform_nodes_after": 161,
+  "truck_pose_or_hierarchy_changes": [],
+  "note": "Ignores nondeterministic prefab fileIDs; compares hierarchy paths/local transforms. Binary source meshes separately hashed. Not a rendered budget/GPU claim."
+}

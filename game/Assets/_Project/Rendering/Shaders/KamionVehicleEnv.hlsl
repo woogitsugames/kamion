@@ -4,8 +4,9 @@
 // With the vehicle capture (VehicleReflectionCapture active, _KamionVehicleCapture = 1; ADR 0056: every tier with
 // envCaptureSize > 0, i.e. Low 64 px .. Ultra 256 px): the capture cube _KamionVehicleEnvCube holds the real ground,
 // kerbs, halls and the sky as seen from the truck, and is sampled directly (bound as a global texture, not through a
-// reflection probe: the probe route never reached the truck, ADR 0056). Box-filtered mips; the lobe is picked with URP's
-// perceptual-roughness -> mip mapping (6 steps).
+// reflection probe: the probe route never reached the truck, ADR 0056). These are box-filtered mips, not
+// GGX-prefiltered probe mips. ADR0087 candidate: approximate the GGX angular width alpha=pr^2 against
+// the face-centre angular texel width 2/faceSize. This is a box-footprint approximation, not a GGX convolution.
 //
 // Without it (envCaptureSize 0, or rq_envcap=0): unity_SpecCube0 is the analytic SkyModel cube (EnvironmentLighting).
 // That cube is direction-only and fades from the horizon colour to the ground over ~15 deg below the horizon, so a door or
@@ -19,7 +20,7 @@
 float4 _KamionGroundEnv;      // rgb: diffuse ground radiance (exposed linear, EnvironmentLighting), a: fog extinction (1/m)
 float4 _KamionHorizonEnv;     // rgb: horizon / fog colour (exposed linear), a = 1 when set
 float _KamionVehicleCapture;  // 1 = _KamionVehicleEnvCube is valid (VehicleReflectionCapture)
-float4 _KamionVehicleEnvParams; // x: mip at perceptual roughness 1
+float4 _KamionVehicleEnvParams; // x: maximum sampled mip, y: actual capture face size
 TEXTURECUBE(_KamionVehicleEnvCube); SAMPLER(sampler_KamionVehicleEnvCube);
 
 // R: reflected direction (normalised). h: height of the shaded point above the road (m). Returns the specular environment
@@ -28,7 +29,9 @@ half3 KamionVehicleEnv(half3 R, float3 positionWS, half perceptualRoughness, hal
 {
     if (_KamionVehicleCapture > 0.5)
     {
-        half mip = perceptualRoughness * (1.7 - 0.7 * perceptualRoughness) * _KamionVehicleEnvParams.x;
+        float alpha = (float)perceptualRoughness * perceptualRoughness;
+        float footprint = alpha * max(_KamionVehicleEnvParams.y, 1.0) * 0.5;
+        half mip = clamp(log2(max(footprint, 1.0)), 0.0, _KamionVehicleEnvParams.x);
         return SAMPLE_TEXTURECUBE_LOD(_KamionVehicleEnvCube, sampler_KamionVehicleEnvCube, R, mip).rgb * occlusion;
     }
     half3 env = GlossyEnvironmentReflection(R, positionWS, perceptualRoughness, occlusion);

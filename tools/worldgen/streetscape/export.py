@@ -21,6 +21,7 @@ from . import props as PP
 from . import life_cars as LC
 from . import signs as SG
 from . import hedge_textures as HT
+from . import furniture_textures as FT
 from .materials import M
 
 REPO = Path(__file__).resolve().parents[3]
@@ -129,7 +130,8 @@ def car_dirt_png(w=512, h=128, seed=41):
 
 
 def textures():
-    return {"fence_mesh": SG.png_bytes(fence_mesh_png()), "dock_digits": SG.png_bytes(SG.digits_atlas()),
+    return {**{k: SG.png_bytes(im) for k, im in FT.textures().items()},
+            "fence_mesh": SG.png_bytes(fence_mesh_png()), "dock_digits": SG.png_bytes(SG.digits_atlas()),
             "plate_back": SG.png_bytes(SG.plate_back()), "car_dirt": SG.png_bytes(car_dirt_png()),
             "car_plates": SG.png_bytes(LC.plate_atlas()),
             "car_tyre": SG.png_bytes(LC.tyre_texture()),

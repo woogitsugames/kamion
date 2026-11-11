@@ -138,7 +138,7 @@ def test_far_plan_is_shared_by_both_lods():
     plan = FA.far_plan(groups, "b:3")
     assert sum(n for _, n, *_ in plan) == 11 and [p[0] for p in plan] == sorted(p[0] for p in plan)
     for s0, n, g, r0, off in plan:
-        assert r0 + n <= len(FA.FAR_ROWS[g]) and (g != "balcony" or off % 2 == 0)
+        assert r0 + n <= len(FA.FAR_ROWS[g]) and (not FA.is_bal(g) or off % 2 == 0)
     ops = B.facade_openings("block", 40.0, 100.0, 100.0 + 1.0 + 5 * 2.8 + 0.6, 5, "b:3", False, False,
                             {"balcony": True, "basement": True}, sh=2.8, zbase=1.0)
     plan = FA.far_plan(FA.far_groups("block", 5, balcony=True), "b:3")
@@ -339,7 +339,7 @@ def test_r3_materials():
     tint_linear stays scoped to the building envelope (ADR 0086 is a separate task)."""
     from streetscape.materials import M
     for k in ("plinth_dark", "plinth_grey"):
-        assert M[k]["splash_h"] == 0.5 and M[k]["tint_linear"] and "runoff" not in M[k]
+        assert M[k]["splash_h"] == (0.8 if k == "plinth_dark" else 0.5) and M[k]["tint_linear"] and "runoff" not in M[k]   # ADR 0097: 0.8 m
     for k in ("roof_tiles_red", "roof_tiles_brown", "roof_metal_graphite"):
         assert M[k]["texture_set"] == "roof_tiles" and M[k]["set_tile"]
     assert M["brick_red"]["macro"][1] > 0.06

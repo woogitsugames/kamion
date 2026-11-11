@@ -108,11 +108,20 @@ FAR_ROWS = {
         [("w2", 9), ("w1", 5), ("w2", 1), ("w3", 0), ("w1", 0), ("w2", 6), ("w2", 2), ("w3", 2)],
         [("w1", 3), ("w2", 5), ("w2", 0), ("w1", 1), ("w2", 8), ("w3", 1), ("w1", 4), ("w2", 3)],
     ],
-    "balcony": [
-        [("bal", 0), ("w2", 4), ("bal", 3), ("w1", 1), ("bal", 6), ("w2", 8), ("bal", 1), ("w2", 0)],
-        [("bal", 5), ("w1", 3), ("bal", 2), ("w2", 7), ("bal", 7), ("w2", 3), ("bal", 4), ("w1", 2)],
-        [("bal", 2), ("w2", 9), ("bal", 6), ("w2", 1), ("bal", 0), ("w1", 5), ("bal", 5), ("w2", 6)],
-        [("bal", 7), ("w2", 2), ("bal", 4), ("w1", 0), ("bal", 3), ("w2", 5), ("bal", 1), ("w1", 4)],
+    # ADR 0097 (review s9 0094 P1-b "konfetti"): one balustrade type per building. The balcony rows come in one group
+    # per type (BAL_TYPES: `balf` variant of the whole building); the "bal" entries carry only the door / window
+    # variant. Two rows per group (was four mixed rows) keep the row atlas at 16 rows instead of 22.
+    "balcony_1": [
+        [("bal", 0), ("w2", 4), ("bal", 3), ("w1", 1), ("bal", 2), ("w2", 8), ("bal", 1), ("w2", 0)],
+        [("bal", 4), ("w1", 3), ("bal", 2), ("w2", 7), ("bal", 0), ("w2", 3), ("bal", 3), ("w1", 2)],
+    ],
+    "balcony_6": [
+        [("bal", 0), ("w2", 4), ("bal", 3), ("w1", 1), ("bal", 2), ("w2", 8), ("bal", 1), ("w2", 0)],
+        [("bal", 4), ("w1", 3), ("bal", 2), ("w2", 7), ("bal", 0), ("w2", 3), ("bal", 3), ("w1", 2)],
+    ],
+    "balcony_3": [
+        [("bal", 0), ("w2", 4), ("bal", 3), ("w1", 1), ("bal", 2), ("w2", 8), ("bal", 1), ("w2", 0)],
+        [("bal", 4), ("w1", 3), ("bal", 2), ("w2", 7), ("bal", 0), ("w2", 3), ("bal", 3), ("w1", 2)],
     ],
     # offices: one window family per building (white PVC / anthracite aluminium) - what differs from window to
     # window is the blind and the light, never the joinery (`off` variants 0, 2, 4 white, 1, 3 anthracite)
@@ -128,10 +137,21 @@ FAR_ROWS = {
 }
 # balcony rows first: every other group starts with a blank sill zone, so the row above any group's last row is plain
 # wall for 0.9 m (far_plain_above) and LOD1 can run its last chunk up to the wall top
-FAR_ORDER = [(g, i) for g in ("balcony", "block", "office", "office_d", "ribbon") for i in range(len(FAR_ROWS[g]))]
+BAL_TYPES = (1, 6, 3)           # balf variants a building can carry: white trapezoid sheet, fibre-cement panels, frosted glass
+BAL_GROUPS = tuple(f"balcony_{t}" for t in BAL_TYPES)
+FAR_ORDER = [(g, i) for g in BAL_GROUPS + ("block", "office", "office_d", "ribbon") for i in range(len(FAR_ROWS[g]))]
 FAR_M = (FAR_BAYS * FAR_PITCH, FAR_V0 + FAR_ROW_H * len(FAR_ORDER))
 # sill height above the floor / window height per row group (m, at FAR_ROW_H storey height)
-FAR_SILL = {"block": 0.9, "balcony": 0.9, "office": 0.9, "office_d": 0.9, "ribbon": 0.9}
+FAR_SILL = {"block": 0.9, "office": 0.9, "office_d": 0.9, "ribbon": 0.9, **{g: 0.9 for g in BAL_GROUPS}}
+
+
+def is_bal(group):
+    return group.startswith("balcony")
+
+
+def bal_type(group):
+    """balf variant of a balcony row group."""
+    return int(group.rsplit("_", 1)[1])
 
 
 def far_row(group, key):
@@ -148,7 +168,7 @@ def far_entry(group, row, off, bay):
     return FAR_ROWS[group][row][(bay + off) % FAR_BAYS]
 
 
-FAR_TOP = {"block": 2.35, "balcony": 2.35, "office": 2.5, "office_d": 2.5, "ribbon": 2.5}      # window head above the floor (m at FAR_ROW_H)
+FAR_TOP = {"block": 2.35, "office": 2.5, "office_d": 2.5, "ribbon": 2.5, **{g: 2.35 for g in BAL_GROUPS}}      # window head above the floor (m at FAR_ROW_H)
 FAR_PLAIN_V = (0.65, 0.95)      # v range of the plain wall strip below the rows (above the _SPLASH zone)
 
 
@@ -156,8 +176,10 @@ def far_groups(typ, storeys, balcony=False, ribbon=False, bkey=""):
     """Row group of every storey of one wall: blocks get balcony rows on their balcony side,
     ribbon offices get ribbon rows from the 1st floor (anthracite ground floor); other offices are white-framed or
     anthracite-framed as a whole building (bkey = building id)."""
-    if typ == "block":
-        return ["balcony" if balcony else "block"] * storeys     # raised ground floor: balconies from the parter up
+    if typ == "block":           # raised ground floor: balconies from the parter up
+        if balcony and not isinstance(balcony, str):              # True: a type from the building id (tests, callers
+            balcony = BAL_GROUPS[hint(bkey, "balt") % len(BAL_GROUPS)]   # without an estate); a str: that group
+        return [balcony if balcony else "block"] * storeys
     if ribbon:
         return ["office_d"] + ["ribbon"] * (storeys - 1)
     return ["office_d" if hint(bkey, "joinery") % 5 < 2 else "office"] * storeys
@@ -188,7 +210,7 @@ def far_plan(groups, key):
             run = 1
             while s + run < len(groups) and groups[s + run] == g:
                 run += 1
-            if g == "balcony":                    # end on the group's last row: the attic band folds into the chunk
+            if is_bal(g):                         # end on the group's last row: the attic band folds into the chunk
                 r0 = (rows - run % rows) % rows
             else:                                 # a random first row, unless it would cost one more chunk (quad)
                 r0 = hint(key, g, "r0") % rows
@@ -198,7 +220,7 @@ def far_plan(groups, key):
         while s + n < len(groups) and groups[s + n] == g and r0 + n < rows:
             n += 1
         off = hint(key, g, c) % FAR_BAYS
-        if g == "balcony":
+        if is_bal(g):
             off -= off % 2                      # balconies stay on the even bays of the wall, storey above storey
         out.append((s, n, g, r0, off))
         s += n
@@ -210,7 +232,7 @@ def far_plain_above(group, row):
     """True when the atlas is plain wall for 0.85 m above this row (the next row starts with a blank sill zone, or the
     atlas wraps into the plain strip): LOD1 then runs the last chunk up to the wall top instead of a separate band."""
     i = FAR_ORDER.index((group, row)) + 1
-    return i == len(FAR_ORDER) or FAR_ORDER[i][0] != "balcony"
+    return i == len(FAR_ORDER) or not is_bal(FAR_ORDER[i][0])
 
 
 def far_storey(plan, s):

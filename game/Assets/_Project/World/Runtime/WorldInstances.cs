@@ -127,7 +127,10 @@ namespace Game.World
             Shader.SetGlobalFloat(k_ImpostorBlend, TierLodBias >= 0.75f ? 1f : 0f);
             bool a2c = !ok || t.leafAlphaToCoverage;
             bool simple = ok && t.simpleFoliage;
-            if (m_Mats == null || simple != m_SimpleFoliage) BuildMaterials(simple);
+            // Hero LOD0 can also be selected close to the site on Low. Gate thin-leaf lighting by the actual
+            // active quality profile, never by LOD distance (including temporary mirror/extra-view bias).
+            bool heroLeafHigh = QualityProfileApplier.HasCurrent && (t.name == "High" || t.name == "Ultra");   // review s10-0087-0090: Ultra too
+            if (m_Mats == null || simple != m_SimpleFoliage || heroLeafHigh != m_HeroLeafHigh) BuildMaterials(simple);
             if (a2c != m_LeafA2C || !Mathf.Approximately(cull, m_TreeCull))
             {
                 m_LeafA2C = a2c;
@@ -151,6 +154,7 @@ namespace Game.World
         // tiers with simpleFoliage). The generated asset is never modified.
         Material[] m_Mats;
         bool m_SimpleFoliage;
+        bool m_HeroLeafHigh;
         Shader m_FoliageShader;
 
         /// <summary>A leaf card or impostor material: alpha-clipped and double sided (InstanceImporter.ProtoMaterial).</summary>
@@ -162,6 +166,7 @@ namespace Game.World
         {
             ReleaseMaterials();
             m_SimpleFoliage = simple;
+            m_HeroLeafHigh = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.name == "High";
             var src = set != null ? set.materials : null;
             if (src == null) { m_Mats = Array.Empty<Material>(); return; }
             m_Mats = (Material[])src.Clone();
@@ -187,7 +192,10 @@ namespace Game.World
             for (int i = 0; i < m_Mats.Length; i++)
             {
                 var m = m_Mats[i];
-                if (!IsFoliage(m) && !(m != null && m.shader == m_FoliageShader)) continue;
+                // ADR0070 r7: a runtime copy for this one hero shell only. Source assets remain URP Lit so Low
+                // keeps its original shader/cost even when a near camera selects the shared LOD0 mesh.
+                bool heroLeaf = m_HeroLeafHigh && m != null && m.name == "M_fire_station_thuja_shell";
+                if (!IsFoliage(m) && !(m != null && m.shader == m_FoliageShader) && !heroLeaf) continue;
                 if (!copies.TryGetValue(m, out var c) && m.shader == m_FoliageShader)
                 {
                     // Generated on Kamion/Vegetation already (impostors, HLOD edge walls; ADR 0023): copy as is.
@@ -206,6 +214,12 @@ namespace Game.World
                     c.SetFloat("_Cull", 0f);
                     c.SetFloat("_AlphaToMask", m_LeafA2C ? 1f : 0f);
                     copies[m] = c;
+                }
+                VegetationCanopyPolicy.Apply(c);
+                if (heroLeaf)
+                {
+                    c.SetFloat("_Transmission", 0.25f);
+                    c.SetFloat("_CrownShade", 0f);
                 }
                 m_Mats[i] = c;
             }
@@ -286,6 +300,9 @@ namespace Game.World
         {
             m_Camera = cam;
             SyncOrigin();
+            // ADR 0106 GPU breakdown (rq_props, rq_ab trees|props): diagnostics only, shipping state = both on.
+            bool trees = m_Trees && !RenderOverrides.AbTreesOff;
+            bool props = RenderOverrides.Props != false && !RenderOverrides.AbPropsOff;
             GeometryUtility.CalculateFrustumPlanes(cam, m_Planes);
             Vector3 cp = cam.transform.position;
             // ADR 0068: extra views (mirrors) use their own LOD scale on the tier bias (Game.Core.ExtraViewLod), whatever
@@ -315,7 +332,7 @@ namespace Game.World
             {
                 var mesh = groups[g].mesh;
                 bool gFar = false;
-                if (mesh != null && m_Trees && m_HlodSwitch > 0f)
+                if (mesh != null && trees && m_HlodSwitch > 0f)
                 {
                     var gb = mesh.bounds; gb.center += o;
                     float d = Mathf.Sqrt(gb.SqrDistance(cp));
@@ -337,7 +354,7 @@ namespace Game.World
                 Last.VisibleCells++;
                 // Forest HLOD (ADR 0015): beyond the tier's switch distance the cell mesh replaces its forest trees.
                 bool hlod = false;
-                if (cell.hlod > 0 && m_Trees && m_HlodSwitch > 0f && set.hlods != null && cell.hlod <= set.hlods.Length)
+                if (cell.hlod > 0 && trees && m_HlodSwitch > 0f && set.hlods != null && cell.hlod <= set.hlods.Length)
                 {
                     var h = set.hlods[cell.hlod - 1];
                     bool groupDrawn = h.group >= 0 && h.group < ng && m_GroupFar[h.group];
@@ -351,8 +368,9 @@ namespace Game.World
                     if (hlod && run.forest) continue;
                     var p = protos[run.prototype];
                     var ends = m_Ends[run.prototype];
-                    if (!m_Trees && m_Thin[run.prototype]) continue;
-                    float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, m_TreeCard) : scale;
+                    if (!trees && m_Thin[run.prototype]) continue;
+                    if (!props && !m_Thin[run.prototype]) continue;
+                    float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, m_TreeCard) * RenderOverrides.AbTreeCardScale : scale;
                     float cs = m_FixedCull[run.prototype] ? distanceScale : scale;   // vehicles: same cull on every tier
                     float l0 = m_Lod0Min[run.prototype] * distanceScale;   // vehicles: LOD0 floor on every tier
                     int ln = LodAt(ends, dNear, ls, cs, l0), lf = LodAt(ends, dFar, ls, cs, l0);
@@ -392,7 +410,7 @@ namespace Game.World
 
         int ThinStride(float d, float scale)
         {
-            float s = m_ThinStart * scale;
+            float s = m_ThinStart * scale * RenderOverrides.AbTreeThinScale;
             // v3.4 kept the strides: a later start (1.5x, +25 % instances in the DK8 view) did not fit the A16 Low budget
             // with certainty (editor timing noise > the gain; ADR 0023). The forest edge reads dense through the HLOD.
             return d < s ? 1 : d < 2.5f * s ? 2 : 4;
@@ -461,13 +479,15 @@ namespace Game.World
         /// <summary>A forest HLOD mesh (cell or chunk merge), region-root space, no shadows (beyond every tier's shadow distance).</summary>
         void DrawMesh(Mesh mesh, int materialStart, Bounds b)
         {
-            if (mesh == null) return;
+            if (mesh == null || RenderOverrides.AbHlodOff) return;   // ADR 0106 A/B (diagnostics)
             var mats = m_Mats ?? set.materials;
             var trs = Matrix4x4.Translate(m_Origin);
             for (int s = 0; s < mesh.subMeshCount; s++)
             {
                 var mat = mats[materialStart + s];
                 if (mat == null) continue;
+                // ADR 0106 A/B (diagnostics): 1 = no canopy (opaque) submeshes, 2 = no edge-wall (Kamion/Vegetation) submeshes.
+                if (RenderOverrides.AbHlodPart != 0 && (RenderOverrides.AbHlodPart == 2) == (mat.shader == m_FoliageShader)) continue;
 
                 var rp = new RenderParams(mat)
                 {
@@ -487,6 +507,7 @@ namespace Game.World
 
         void Append(int proto, int lod, Matrix4x4[] src, int start, int count, Bounds cellBounds)
         {
+            if (RenderOverrides.AbImpostorOff && m_Thin[proto] && lod > 0 && lod == set.prototypes[proto].lods.Length - 1) return;   // ADR 0106 A/B
             int slot = m_BatchOffset[proto] + lod;
             while (count > 0)
             {
@@ -510,7 +531,7 @@ namespace Game.World
             var b = m_BatchBounds[slot];
             // Tree casters per tier (QualityProfile.treeShadowLodMask): LOD1 tree cards in the shadow pass doubled the
             // forest cost on the A16 (Low/Medium cast from LOD0 only).
-            int mask = m_Thin[proto] ? p.shadowLodMask & m_TreeShadowMask : p.shadowLodMask;
+            int mask = m_Thin[proto] ? (RenderOverrides.AbTreeShadowOff ? 0 : p.shadowLodMask & m_TreeShadowMask) : p.shadowLodMask;
             var shadows = (mask & (1 << lod)) != 0 ? ShadowCastingMode.On : ShadowCastingMode.Off;
             int m0 = p.materialStart[lod];
             for (int s = 0; s < mesh.subMeshCount; s++)

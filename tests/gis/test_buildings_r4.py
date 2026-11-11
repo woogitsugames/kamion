@@ -45,7 +45,7 @@ def test_balcony_is_a_slab_with_a_screen_clear_of_it():
     full = sum(len(it[1]) for v in acc.d.values() for it in v)
     far = _balcony(key, False)
     lean = sum(len(it[1]) for v in far.d.values() for it in v)
-    assert full == 42 and lean == 20
+    assert full == 42 and lean == 16                                    # ADR 0097: no side rails above the 2nd storey (was 20)
 
 
 def test_dishes_look_at_the_satellite():
@@ -62,13 +62,14 @@ def test_dishes_look_at_the_satellite():
     assert _tris(north, "downpipe") == 20                              # no dish on a balcony that faces north
 
 
-def test_roof_covering_is_short_where_a_wall_faces_up_the_roof():
+def test_roof_covering_is_short_where_a_wall_faces_up_the_roof(monkeypatch):
     """P1-4: full overhang at eaves and verges (also the verge next to a re-entrant corner), OVERHANG_NOTCH along a
     wall the roof rises away from (the wing wall that faces the ridge); the soffit takes the material the caller
     names (light boarding, exempt from the sky occlusion of down-facing faces), not the graphite flashing."""
     from streetscape import buildings_mesh as B
     from streetscape import roofs as RF
     from streetscape.materials import M
+    monkeypatch.setattr(RF, "MULTI", False)        # the single-field roof (ADR 0097 builds L plans as a MultiRoof)
     kf = lambda s: 0.3
     props = {"roof_type_lod2": "1030", "height_lod2_2017_m": 8.0, "lod2_eave_rel_m": 3.0}
     rect = box(0, 0, 12, 8)
@@ -109,7 +110,7 @@ def test_r4_palettes_add_no_material():
     """One plinth tone, the four house tones of r3 reweighted, plaster walls with a 1.2 m splash zone."""
     from streetscape import buildings_mesh as B
     from streetscape.materials import M
-    assert B.PLINTHS == ["plinth_dark"] and M["plinth_dark"]["color"][0] == pytest.approx(0.20)
+    assert B.PLINTHS == ["plinth_dark"] and M["plinth_dark"]["color"][0] == pytest.approx(0.24)   # ADR 0097: 0.20 -> 0.24
     assert set(B.HOUSE_WALLS) == {"plaster_light", "plaster_beige", "plaster_cream", "plaster_grey"}
     assert sum(w in ("plaster_light", "plaster_grey") for w in B.HOUSE_WALLS) * 3 <= len(B.HOUSE_WALLS)
     assert sum(r.startswith("roof_metal") for r in B.ROOFS_PITCHED) * 3 <= len(B.ROOFS_PITCHED)

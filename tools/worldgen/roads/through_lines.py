@@ -313,78 +313,48 @@ def zone_polygon(o):
     return pg, ""
 
 
-def _stripes(pg, az_deg, origin):
-    """Parallel stripes of P21_STRIPE_W_M every W + GAP, running along azimuth az_deg (0 = east, CCW), clipped."""
-    from shapely import affinity
-    minx, miny, maxx, maxy = pg.bounds
-    R = float(np.hypot(maxx - minx, maxy - miny)) / 2 + 2.0
-    cx, cy = origin
-    boxes = []
-    y = -R - ((-R) % (P21_STRIPE_W_M + P21_STRIPE_GAP_M))
-    while y < R:
-        boxes.append(shapely.box(cx - R, cy + y, cx + R, cy + y + P21_STRIPE_W_M))
-        y += P21_STRIPE_W_M + P21_STRIPE_GAP_M
-    return affinity.rotate(shapely.union_all(boxes), az_deg, origin=(cx, cy)).intersection(pg)
-
-
-def _tri(pg, step=1.5):
-    from .gores import _triangulate
-    return _triangulate(pg, step)
-
-
 def paint_zones(buf, overrides, report, applied, stale):
+    """P-21 zones as analytic quads (roads/p21_hatch.py, ADR 0100): border ring + stripes, each quad draped in
+    cells <= 0.5 m; cells with a corner off the generated carriageway are dropped (counted)."""
+    from . import p21_hatch as H
     top = None
     rep = []
     for o in overrides:
         if o.get("kind") != "painted_zone":
             continue
-        pg, why = zone_polygon(o)
-        if pg is None:
+        try:
+            g = H.hatch(o)
+        except ValueError as e:
             stale.append(o["id"])
-            rep.append({"id": o["id"], "built": False, "note": why})
+            rep.append({"id": o["id"], "built": False, "note": str(e)})
             continue
         if top is None:
             top = _Top(buf.parts)
-        inner = pg.buffer(-P21_BORDER_W_M)
-        paint = pg.difference(inner) if o.get("border", True) else Polygon()
+        pg = g["polygon"]
         cen = np.asarray(pg.centroid.coords[0])
-        if not inner.is_empty:
-            if o.get("chevron_axis"):
-                # chevrons: stripes mirrored about the axis, pointing against the traffic that meets the zone
-                p0, p1 = (np.asarray(v, float) for v in o["chevron_axis"])
-                ax = _unit(p1 - p0)
-                az = math.degrees(math.atan2(ax[1], ax[0]))
-                ang = float(o.get("chevron_deg", 45.0))
-                big = 500.0
-                left = Polygon([p0 - ax * big, p1 + ax * big, p1 + ax * big + _left(ax) * big, p0 - ax * big + _left(ax) * big])
-                right = Polygon([p0 - ax * big, p1 + ax * big, p1 + ax * big - _left(ax) * big, p0 - ax * big - _left(ax) * big])
-                paint = shapely.union_all([paint, _stripes(inner.intersection(left), az + ang, p0),
-                                           _stripes(inner.intersection(right), az - ang, p0)])
-            else:
-                paint = shapely.union_all([paint, _stripes(inner, float(o.get("stripe_az_deg", 45.0)), cen)])
-        ntri, lost = 0, 0
-        for part in getattr(paint, "geoms", [paint]):
-            if part.is_empty or part.geom_type != "Polygon" or part.area < 0.02:
+        Vs, Ts, nv = [], [], 0
+        lost, sink = 0, 0.0
+        for q in g["border"] + g["stripes"]:
+            V, T = H.drape_quad(q)
+            zl, T, nl, lf = H.drape_lift(top, V, T)
+            lost += nl
+            if not len(T):
                 continue
-            V, T = _tri(part)
-            if V is None:
-                continue
-            z = top.z(V)
-            ok = np.isfinite(z)
-            keep = ok[T].all(1)
-            lost += int((~keep).sum())
-            if not keep.any():
-                continue
-            uv1 = np.column_stack([np.full(len(V), 0.5), np.full(len(V), 0.35)])
-            buf.add("markings", "marking_white", np.column_stack([V, np.nan_to_num(z) + S.MARKING_LIFT]), V.copy(),
-                    T[keep], src=f"P-21@zone:{o['id']}", UV1=uv1)
-            ntri += int(keep.sum())
+            sink = max(sink, lf)
+            Vs.append(np.column_stack([V, np.nan_to_num(zl) + S.MARKING_LIFT]))
+            Ts.append(T + nv)
+            nv += len(V)
+        ntri = int(sum(len(t) for t in Ts))
         if ntri:
+            V3 = np.vstack(Vs)
+            uv1 = np.column_stack([np.full(len(V3), 0.5), np.full(len(V3), 0.35)])
+            buf.add("markings", "marking_white", V3, V3[:, :2].copy(), np.vstack(Ts), src=f"P-21@zone:{o['id']}", UV1=uv1)
             applied.append({"id": o["id"], "targets": [f"zone@{cen[0]:.0f},{cen[1]:.0f}"]})
         else:
             stale.append(o["id"])
         rep.append({"id": o["id"], "built": bool(ntri), "area_m2": round(float(pg.area), 1), "tris": ntri,
-                    "tris_off_carriageway": lost, "xy": [round(float(v), 1) for v in cen]})
+                    "tris_off_carriageway": lost, "xy": [round(float(v), 1) for v in cen], "mode": g["mode"],
+                    "stripes": len(g["stripes"]), "fields_deg": g["fields"], "max_lift_m": round(sink, 4)})
     report["painted_zones"] = rep
     # other paint inside a painted zone or on an authored island is erased (a lane line of the generated ribbon
     # under the hatching of a painted lane drop; lines of the patch under an island)

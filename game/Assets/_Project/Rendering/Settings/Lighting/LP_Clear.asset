@@ -20,11 +20,25 @@ MonoBehaviour:
   groundAlbedo: {r: 0.15, g: 0.155, b: 0.135, a: 1}
   ambientSkySaturation: 0.55
   lowSunAmbientCool: 0.8
+  overcastDirectional: 0
+  overcastSunLeak: 0
+  overcastCctK: 0
+  cloudContrast: 0
+  cloudScale: 0.16
+  cloudWind: {x: 0.0035, y: 0.0015}
+  hazeGroundFactor: 0
+  hazeScaleHeightM: 60
+  wetness: 0
+  puddles: 0.3
+  grassVariation: 1
   autoExposure: 1
   ev100: 15
   exposureCompensation: 0
   lookSaturation: 0
   whiteBalanceAdaptation: 0
   lookBlackLevel: 0.015
-  lookWhiteClip: 0.7
+  lookWhiteClip: 1.2
   lookHighlightDesaturation: 0.4
+  lookToe: 0
+  lookToeP: 0.12
+  lookTonePivot: 0.3

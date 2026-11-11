@@ -1,0 +1,91 @@
+{
+  "method": "Actual VisualQaRunner estimate rows and instanced submission counters for18matched frames. These are before-SRP draw/tris estimates, NOT GPU drawcalls/timing.",
+  "runtimeShaderMathCost": "UNVERIFIED",
+  "newGeometryOrPassOrMaterial": "none",
+  "rows": [
+    {
+      "condition": "High-clear",
+      "selectedStatsRows": 6,
+      "baselineToOnIdentical": true,
+      "offToOnIdentical": true,
+      "stats": [
+        "truck-34: objects=107 drawsEst=331 shadowDrawsEst=480 trisK=1165 (estimate, before SRP batching)",
+        "  truck-34 instanced (props+trees): draws 348, instances 576, triangles 93k, cells 335, forest HLOD cells 277",
+        "truck-at-gate: objects=69 drawsEst=162 shadowDrawsEst=480 trisK=578 (estimate, before SRP batching)",
+        "  truck-at-gate instanced (props+trees): draws 157, instances 666, triangles 36k, cells 83, forest HLOD cells 72",
+        "truck-side: objects=149 drawsEst=774 shadowDrawsEst=480 trisK=1767 (estimate, before SRP batching)",
+        "  truck-side instanced (props+trees): draws 412, instances 485, triangles 86k, cells 441, forest HLOD cells 185"
+      ]
+    },
+    {
+      "condition": "High-lowsun",
+      "selectedStatsRows": 6,
+      "baselineToOnIdentical": true,
+      "offToOnIdentical": true,
+      "stats": [
+        "truck-34: objects=107 drawsEst=331 shadowDrawsEst=480 trisK=1165 (estimate, before SRP batching)",
+        "  truck-34 instanced (props+trees): draws 348, instances 576, triangles 93k, cells 335, forest HLOD cells 277",
+        "truck-at-gate: objects=69 drawsEst=162 shadowDrawsEst=480 trisK=578 (estimate, before SRP batching)",
+        "  truck-at-gate instanced (props+trees): draws 157, instances 666, triangles 36k, cells 83, forest HLOD cells 72",
+        "truck-side: objects=149 drawsEst=774 shadowDrawsEst=480 trisK=1767 (estimate, before SRP batching)",
+        "  truck-side instanced (props+trees): draws 412, instances 485, triangles 86k, cells 441, forest HLOD cells 185"
+      ]
+    },
+    {
+      "condition": "High-overcast",
+      "selectedStatsRows": 6,
+      "baselineToOnIdentical": true,
+      "offToOnIdentical": true,
+      "stats": [
+        "truck-34: objects=107 drawsEst=331 shadowDrawsEst=480 trisK=1165 (estimate, before SRP batching)",
+        "  truck-34 instanced (props+trees): draws 348, instances 576, triangles 93k, cells 335, forest HLOD cells 277",
+        "truck-at-gate: objects=69 drawsEst=162 shadowDrawsEst=480 trisK=578 (estimate, before SRP batching)",
+        "  truck-at-gate instanced (props+trees): draws 157, instances 666, triangles 36k, cells 83, forest HLOD cells 72",
+        "truck-side: objects=149 drawsEst=774 shadowDrawsEst=480 trisK=1767 (estimate, before SRP batching)",
+        "  truck-side instanced (props+trees): draws 412, instances 485, triangles 86k, cells 441, forest HLOD cells 185"
+      ]
+    },
+    {
+      "condition": "Low-clear",
+      "selectedStatsRows": 6,
+      "baselineToOnIdentical": true,
+      "offToOnIdentical": true,
+      "stats": [
+        "truck-34: objects=85 drawsEst=227 shadowDrawsEst=130 trisK=289 (estimate, before SRP batching)",
+        "  truck-34 instanced (props+trees): draws 260, instances 146, triangles 34k, cells 164, forest HLOD cells 108",
+        "truck-at-gate: objects=66 drawsEst=148 shadowDrawsEst=100 trisK=207 (estimate, before SRP batching)",
+        "  truck-at-gate instanced (props+trees): draws 133, instances 102, triangles 16k, cells 66, forest HLOD cells 59",
+        "truck-side: objects=86 drawsEst=319 shadowDrawsEst=108 trisK=352 (estimate, before SRP batching)",
+        "  truck-side instanced (props+trees): draws 304, instances 149, triangles 23k, cells 189, forest HLOD cells 42"
+      ]
+    },
+    {
+      "condition": "Low-lowsun",
+      "selectedStatsRows": 6,
+      "baselineToOnIdentical": true,
+      "offToOnIdentical": true,
+      "stats": [
+        "truck-34: objects=85 drawsEst=227 shadowDrawsEst=130 trisK=289 (estimate, before SRP batching)",
+        "  truck-34 instanced (props+trees): draws 260, instances 146, triangles 34k, cells 164, forest HLOD cells 108",
+        "truck-at-gate: objects=66 drawsEst=148 shadowDrawsEst=100 trisK=207 (estimate, before SRP batching)",
+        "  truck-at-gate instanced (props+trees): draws 133, instances 102, triangles 16k, cells 66, forest HLOD cells 59",
+        "truck-side: objects=86 drawsEst=319 shadowDrawsEst=108 trisK=352 (estimate, before SRP batching)",
+        "  truck-side instanced (props+trees): draws 304, instances 149, triangles 23k, cells 189, forest HLOD cells 42"
+      ]
+    },
+    {
+      "condition": "Low-overcast",
+      "selectedStatsRows": 6,
+      "baselineToOnIdentical": true,
+      "offToOnIdentical": true,
+      "stats": [
+        "truck-34: objects=85 drawsEst=227 shadowDrawsEst=130 trisK=289 (estimate, before SRP batching)",
+        "  truck-34 instanced (props+trees): draws 260, instances 146, triangles 34k, cells 164, forest HLOD cells 108",
+        "truck-at-gate: objects=66 drawsEst=148 shadowDrawsEst=100 trisK=207 (estimate, before SRP batching)",
+        "  truck-at-gate instanced (props+trees): draws 133, instances 102, triangles 16k, cells 66, forest HLOD cells 59",
+        "truck-side: objects=86 drawsEst=319 shadowDrawsEst=108 trisK=352 (estimate, before SRP batching)",
+        "  truck-side instanced (props+trees): draws 304, instances 149, triangles 23k, cells 189, forest HLOD cells 42"
+      ]
+    }
+  ]
+}

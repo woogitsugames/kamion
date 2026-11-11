@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Game.Editor.Build;
 using Game.Vehicle.Runtime;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static Game.World.Import.MiniJson;
@@ -11,26 +13,66 @@ using static Game.World.Import.MiniJson;
 namespace Game.World.Import
 {
     /// <summary>
-    /// Edge of the imported region (ADR 0082). The generated data stop at the region bbox; before this builder the
-    /// roads ran into a white void there and the vehicle fell out of the world (owner recording 2026-11-10, 116 s).
+    /// Edge of the imported region (ADR 0082, ADR 0085). The generated data stop at the region bbox; before this builder
+    /// the roads ran into a white void there and the vehicle fell out of the world (owner recording 2026-11-10, 116 s).
     /// Built at import, in region-root space:
     /// - <see cref="WorldBoundary"/> on the region root (drivable rectangle + closures) for the runtime safety net,
     /// - an apron: the terrain border extruded outwards to beyond the far clip plane (no collision; the safety net
-    ///   recovers a vehicle that gets there), so the horizon is ground, not void,
-    /// - a straight road stub on a low embankment behind every road that leaves the region,
+    ///   recovers a vehicle that gets there), with ground-mask vertex colours (forest floor, unmown meadow, soil),
+    /// - a straight road stub graded onto the apron behind every main road that leaves the region,
     /// - a road closure <see cref="ClosureSetbackM"/> inside the edge on each of those roads: a row of concrete
-    ///   barriers with a red/white U-20 board on posts, and a box collider (the physical end of the road).
-    /// Dimensions of the barrier and board are WORKING_VALUE (typical concrete safety barrier ~0.8 m high;
-    /// U-20 "zapora drogowa" board 0.25 m high with alternating red/white fields - not measured from the regulation).
+    ///   barriers with a red/white U-20 board on posts, and a box collider (the physical end of the road),
+    /// - a 4-sector far-field backdrop (<c>FarField_far_north</c>, <c>FarField_far_east</c>, <c>FarField_far_south</c>,
+    ///   <c>FarField_far_west</c>) built from real GUGiK BDOT10k + LoD1 + OSM ring data (ADR 0085), shadow-free and
+    ///   collider-free.
     /// </summary>
     public static class WorldEdgeBuilder
     {
         /// <summary>Closures stand this far inside the region edge, measured along the road [m].</summary>
         public const float ClosureSetbackM = 60f;
         public const float ApronReachM = 2600f;
+        public const float ApronEaseM = 600f;
         public const float StubLengthM = 420f;
         const float SampleStepM = 16f;
-        static readonly float[] k_RingDist = { -1f, 0f, 60f, 300f, ApronReachM };
+        static readonly float[] k_RingDist = { -1f, 0f, 30f, 80f, 160f, 280f, 440f, 600f, ApronReachM };
+        static readonly string[] k_FarSectors = { "far_north", "far_east", "far_south", "far_west" };
+
+        /// <summary>Batch entry point to rebuild WorldEdge (apron + closures + far-field) in WorldC and WorldC_High in place.</summary>
+        public static void RebuildEdgeBatch()
+        {
+            int exit = 1;
+            try
+            {
+                string region = EditorTools.Arg("-region", "bialystok-industrial-c");
+                var r = RegionImporter.LoadForEdge(region);
+                foreach (var tier in RegionImporter.Tiers)
+                {
+                    string scenePath = r.ScenePath(tier);
+                    if (!File.Exists(Path.Combine(EditorTools.ProjectRoot, scenePath))) continue;
+                    var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+                    var rootGo = GameObject.Find("Region_" + region);
+                    if (rootGo == null) throw new InvalidOperationException($"Region_{region} not found in {scenePath}");
+                    foreach (var wb in rootGo.GetComponents<WorldBoundary>()) UnityEngine.Object.DestroyImmediate(wb);
+                    var oldEdge = rootGo.transform.Find("WorldEdge");
+                    if (oldEdge != null) UnityEngine.Object.DestroyImmediate(oldEdge.gameObject);
+                    var mcs = rootGo.GetComponentsInChildren<MeshCollider>(true);
+                    foreach (var mc in mcs) mc.enabled = true;
+                    Physics.SyncTransforms();
+                    Build(r, rootGo.transform, tier);
+                    foreach (var mc in mcs) mc.enabled = false;
+                    EditorSceneManager.SaveScene(scene);
+                }
+                AssetDatabase.SaveAssets();
+                exit = 0;
+                Debug.Log($"REBUILD_EDGE_RESULT: OK region={region}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                Debug.Log("REBUILD_EDGE_RESULT: FAILED");
+            }
+            if (Application.isBatchMode) EditorApplication.Exit(exit);
+        }
 
         public static void Build(RegionImporter.Result r, Transform root, string tier)
         {
@@ -52,11 +94,21 @@ namespace Game.World.Import
                 closures.Add(new WorldBoundary.Closure
                 {
                     localPos = new Vector3(ex.closureEN.x, cy, ex.closureEN.y),
-                    headingDeg = Mathf.Atan2(ex.closureDir.x, ex.closureDir.y) * Mathf.Rad2Deg,
+                    headingDeg = Mathf.Atan2(ex.closureEN == ex.edgeEN ? ex.edgeDir.x : ex.closureDir.x,
+                                             ex.closureEN == ex.edgeEN ? ex.edgeDir.y : ex.closureDir.y) * Mathf.Rad2Deg,
                     widthM = ex.width, road = ex.road,
                 });
                 Vector2 inside = ex.edgeEN - ex.edgeDir * 1.5f;
-                if (RoadY(root, inside, out float ey)) stubs.Add((new Vector3(ex.edgeEN.x, ey, ex.edgeEN.y), ex.edgeDir, ex.width));
+                if (RoadY(root, inside, out float ey))
+                {
+                    var cand = new Vector3(ex.edgeEN.x, ey, ex.edgeEN.y);
+                    int nearIdx = stubs.FindIndex(s => Vector2.Distance(new Vector2(s.start.x, s.start.z), ex.edgeEN) < 30f);
+                    if (nearIdx >= 0)
+                    {
+                        if (ex.width > stubs[nearIdx].width) stubs[nearIdx] = (cand, ex.edgeDir, ex.width);
+                    }
+                    else stubs.Add((cand, ex.edgeDir, ex.width));
+                }
             }
             boundary.closures = closures.ToArray();
 
@@ -75,6 +127,9 @@ namespace Game.World.Import
             amr.shadowCastingMode = ShadowCastingMode.Off;
             amr.lightProbeUsage = LightProbeUsage.Off;
             amr.reflectionProbeUsage = ReflectionProbeUsage.Off;
+
+            // ---- far-field backdrop sectors (ADR 0085) ----
+            int farTris = BuildFarField(r, edge, tier);
 
             // ---- closures ----
             string closurePath = $"{r.Dir}/Meshes/world_edge_closures.asset";
@@ -116,7 +171,59 @@ namespace Game.World.Import
             }
             EditorUtility.SetDirty(host);
             Debug.Log($"[IMPORT] world edge (tier {tier}): bounds E {min.x:F0}..{max.x:F0} N {min.y:F0}..{max.y:F0}, {exits.Count} roads leave the region, " +
-                      $"{closures.Count} closures {ClosureSetbackM:F0} m inside, {stubs.Count} road stubs, apron {mesh.vertexCount} verts to {ApronReachM:F0} m");
+                      $"{closures.Count} closures {ClosureSetbackM:F0} m inside, {stubs.Count} road stubs, apron {mesh.vertexCount} verts to {ApronReachM:F0} m, far-field {farTris} tris");
+        }
+
+        static int BuildFarField(RegionImporter.Result r, Transform edge, string tier)
+        {
+            string glbName = tier == "High" ? "far_field.glb" : "far_field.low.glb";
+            string glbPath = Path.Combine(EditorTools.RepoRoot, "Data", "raw", "derived", r.Region, "world", glbName);
+            if (!File.Exists(glbPath))
+            {
+                Debug.LogWarning($"[IMPORT] world edge: {glbPath} missing - skipping far-field backdrop");
+                return 0;
+            }
+            var g = GlbReader.Load(glbPath);
+            string assetPath = $"{r.Dir}/Meshes/{tier}/world_edge_far.asset";
+            AssetDatabase.DeleteAsset(assetPath);
+            var farHost = new Mesh { name = $"world_edge_far_{tier}" };
+            AssetDatabase.CreateAsset(farHost, assetPath);
+
+            int totalTris = 0;
+            long totalBytes = 0;
+            // Stable hierarchy contract used by recovery/integration checks (ADR 0085).
+            // Identity parent: no renderer, collider, material or world-space geometry change.
+            var farRoot = new GameObject("WorldFarField").transform;
+            farRoot.SetParent(edge, false);
+            foreach (var secName in k_FarSectors)
+            {
+                var nd = g.Find(secName);
+                if (nd == null || nd.Primitives.Count == 0) continue;
+                var secMats = new Material[nd.Primitives.Count];
+                for (int i = 0; i < secMats.Length; i++)
+                {
+                    string mid = nd.Primitives[i].Material;
+                    secMats[i] = Mat(r, mid, "far_field_buildings", "plaster_light");
+                }
+                var sm = WorldMeshBake.Compact($"{secName}_{tier}", nd.Primitives,
+                    new WorldMeshBake.Options { Uv0 = true, Uv1 = true, Colors = true });
+                AssetDatabase.AddObjectToAsset(sm, farHost);
+                totalTris += (int)(sm.GetIndexCount(0) / 3) + (sm.subMeshCount > 1 ? (int)(sm.GetIndexCount(1) / 3) : 0);
+                totalBytes += WorldMeshBake.GpuBytes(sm);
+
+                var sgo = new GameObject($"FarField_{secName}");
+                sgo.transform.SetParent(farRoot, false);
+                sgo.AddComponent<MeshFilter>().sharedMesh = sm;
+                var smr = sgo.AddComponent<MeshRenderer>();
+                smr.sharedMaterials = secMats;
+                smr.shadowCastingMode = ShadowCastingMode.Off;
+                smr.receiveShadows = false;
+                smr.lightProbeUsage = LightProbeUsage.Off;
+                smr.reflectionProbeUsage = ReflectionProbeUsage.Off;
+            }
+            r.MemoryBytes[$"{tier}/far_field"] = totalBytes;
+            EditorUtility.SetDirty(farHost);
+            return totalTris;
         }
 
         static float ClosureSpan(float roadWidth) => roadWidth + 5f;   // carriageway + shoulders / kerbs on both sides
@@ -267,6 +374,28 @@ namespace Game.World.Import
         }
 
         // ------------------------------------------------------------------------------------------------ apron
+        static Color32 ApronMask(Vector2 p, float d, bool shoulder = false)
+        {
+            byte r = shoulder ? (byte)12 : (byte)255;
+            float n1 = 0.5f + 0.5f * Mathf.Sin(p.x * 0.013f + p.y * 0.009f) * Mathf.Cos(p.y * 0.017f - p.x * 0.011f);
+            float n2 = 0.5f + 0.5f * Mathf.Sin(p.x * 0.031f - p.y * 0.023f);
+            // Forest floor needle/leaf litter in the northern/north-western forest belts (Las Pietrasze, Las Bacieczki)
+            float forestZone = Mathf.Clamp01((p.y - 320f) / 450f);
+            if (p.x < -550f && p.y > -100f) forestZone = Mathf.Max(forestZone, 0.65f * Mathf.Clamp01((p.y + 100f) / 350f));
+            float gF = forestZone * Mathf.Lerp(0.45f, 0.88f, n1) * Mathf.Clamp01((d + 15f) / 90f);
+            // Unmown dry meadow grass across open verges and outer fields
+            float bF = Mathf.Lerp(0.35f, 0.82f, n2) * (1f - 0.45f * gF);
+            // Bare soil / urban earth patches in southern & eastern built-up/industrial corridors
+            float urbanZone = Mathf.Clamp01((-p.y - 250f) / 500f);
+            if (p.x > 550f && p.y < 300f) urbanZone = Mathf.Max(urbanZone, 0.75f);
+            float aF = urbanZone * Mathf.Lerp(0.15f, 0.48f, n1 * n2) * Mathf.Clamp01(d / 60f);
+            return new Color32(
+                r,
+                (byte)Mathf.Clamp(Mathf.RoundToInt(gF * 255f), 0, 255),
+                (byte)Mathf.Clamp(Mathf.RoundToInt(bF * 255f), 0, 255),
+                (byte)Mathf.Clamp(Mathf.RoundToInt(aF * 255f), 0, 255));
+        }
+
         static void BuildApron(Mesh mesh, Transform root, Vector2 min, Vector2 max, List<(Vector3 start, Vector2 dir, float width)> stubs)
         {
             // Perimeter samples, counter-clockwise seen from above: south side (west to east), SE corner fan, east side, ...
@@ -294,18 +423,41 @@ namespace Game.World.Import
                 mean += height[i];
             }
             mean /= np;
+            var smoothHeight = new float[np];
+            const int win = 6;
+            for (int i = 0; i < np; i++)
+            {
+                float s = 0f;
+                for (int dj = -win; dj <= win; dj++) s += height[(i + dj + np) % np];
+                smoothHeight[i] = s / (2 * win + 1);
+            }
+            float ApronHeightAt(float z0, float zSm, float d)
+            {
+                float s1 = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(d / 220f));
+                float s2 = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((d - 220f) / 1400f));
+                float zNear = Mathf.Lerp(z0, zSm - 0.15f, s1);
+                float zFar = zSm - 0.25f + 0.08f * (mean - zSm);
+                return Mathf.Lerp(zNear, zFar, s2);
+            }
 
             var pos = new List<Vector3>(); var nrm = new List<Vector3>(); var uv = new List<Vector2>(); var col = new List<Color32>();
             var grass = new List<int>(); var asphalt = new List<int>();
-            var white = new Color32(255, 0, 0, 0);   // same default as the terrain grid (WorldMeshBake.TerrainBandData)
             for (int i = 0; i < np; i++)
                 for (int k = 0; k < nr; k++)
                 {
                     float d = k_RingDist[k];
                     Vector2 p = basePt[i] + normal[i] * d;
-                    // Inner ring tucked under the terrain border; far ring eased to the mean height (calm horizon).
-                    float y = k == 0 ? height[i] - 0.6f : k == 1 ? height[i] - 0.04f : Mathf.Lerp(height[i], mean, Mathf.SmoothStep(0f, 1f, d / ApronReachM));
-                    pos.Add(new Vector3(p.x, y, p.y)); nrm.Add(Vector3.up); uv.Add(p); col.Add(white);
+                    // Inner ring tucked under the terrain border; far rings ease locally without pulling valleys uphill,
+                    // matching BorderElevation.z_at_eff in tools/worldgen/streetscape/far_field.py.
+                    float y = k == 0
+                        ? height[i] - 0.6f
+                        : k == 1
+                            ? height[i] - 0.04f
+                            : ApronHeightAt(height[i], smoothHeight[i], d);
+                    pos.Add(new Vector3(p.x, y, p.y));
+                    nrm.Add(Vector3.up);
+                    uv.Add(p);
+                    col.Add(ApronMask(p, Mathf.Max(0f, d)));
                 }
             for (int i = 0; i < np; i++)
             {
@@ -318,25 +470,38 @@ namespace Game.World.Import
                 }
             }
 
-            // Road stubs: asphalt strip on a low embankment, straight on from the edge.
+            // Road stubs: asphalt strip on a low embankment graded smoothly onto the local apron surface.
             foreach (var (start, dir, width) in stubs)
             {
                 Vector2 side = new Vector2(dir.y, -dir.x);   // right of the travel direction
-                const int seg = 6;
+                const int seg = 12;
                 float hw = width * 0.5f + 0.75f;             // carriageway + hard strip
+                int bestIdx = 0;
+                float bestDist = float.MaxValue;
+                for (int i = 0; i < np; i++)
+                {
+                    float dd = Vector2.Distance(basePt[i], new Vector2(start.x, start.z));
+                    if (dd < bestDist) { bestDist = dd; bestIdx = i; }
+                }
+                float stubZSm = smoothHeight[bestIdx];
                 int v0 = pos.Count;
                 for (int s = 0; s <= seg; s++)
                 {
                     float d = StubLengthM * s / seg;
                     Vector2 c = new Vector2(start.x, start.z) + dir * d;
-                    float y = start.y + 0.02f;
+                    float apronY = ApronHeightAt(start.y, stubZSm, d);
+                    float crownY = Mathf.Lerp(start.y + 0.03f, apronY + 0.14f, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(d / 120f)));
+                    float toeY = apronY - 0.35f;
                     // cross-section: toe left, edge left, edge right, toe right
-                    float[] off = { -hw - 7f, -hw, hw, hw + 7f };
-                    float[] dy = { -4.5f, 0f, 0f, -4.5f };
+                    float[] off = { -hw - 4.5f, -hw, hw, hw + 4.5f };
+                    float[] ys = { toeY, crownY, crownY, toeY };
                     for (int q = 0; q < 4; q++)
                     {
                         Vector2 p = c + side * off[q];
-                        pos.Add(new Vector3(p.x, y + dy[q], p.y)); nrm.Add(Vector3.up); uv.Add(new Vector2(off[q], d)); col.Add(white);
+                        pos.Add(new Vector3(p.x, ys[q], p.y));
+                        nrm.Add(Vector3.up);
+                        uv.Add(new Vector2(off[q], d));
+                        col.Add(ApronMask(p, d, shoulder: q == 1 || q == 2));
                     }
                 }
                 for (int s = 0; s < seg; s++)

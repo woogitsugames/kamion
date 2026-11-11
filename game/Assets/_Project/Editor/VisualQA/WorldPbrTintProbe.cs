@@ -37,7 +37,8 @@ namespace Game.Editor.VisualQA
             string original = Path.Combine(Application.dataPath, "_Project/Environment/Shaders/WorldPBR.shader");
             string text = File.ReadAllText(original);
             text = text.Replace("Shader \"Kamion/World PBR\"", "Shader \"Hidden/Kamion/WorldPbrTintReadback\"")
-                .Replace("../../Rendering/Shaders/KamionLampPools.hlsl", "Assets/_Project/Rendering/Shaders/KamionLampPools.hlsl");
+                // every include relative to Environment/Shaders (KamionLampPools, VegetationGround, ...) must resolve from the probe's folder
+                .Replace("\"../../Rendering/Shaders/", "\"Assets/_Project/Rendering/Shaders/");
             int declaration = text.IndexOf("half4 frag(", StringComparison.Ordinal);
             if (declaration < 0) throw new InvalidOperationException("World PBR fragment declaration changed");
             int body = text.IndexOf('{', declaration);

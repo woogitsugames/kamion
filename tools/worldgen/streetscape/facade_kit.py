@@ -118,6 +118,108 @@ def coping(acc, a, c, nout, zt, mat="hall_flashing"):
     acc.box(L0, mat, v3(ctr, zt + 0.03), np.append(d * (L / 2 + 0.06), 0), np.append(nout * 0.11, 0), [0, 0, 0.05])
 
 
+PLINTH_JOINT_M = 2.4            # ADR 0107: spacing of the vertical joints of a tall plinth (cast / precast basement wall), m
+PLINTH_TALL_M = 0.9             # plinth standing higher than this above the ground gets joints
+PLINTH_BAND_M = 0.5             # the plinth band proper under the drip profile; the basement wall is below it
+
+
+def plinth_joints(acc, a, d, nout, L, zpl, zbot, ops, ground, phase, mat="hall_flashing"):
+    """ADR 0107 (review 0097 P2-k "cokół 2 m jedną płytą"): where the plinth stands more than PLINTH_TALL_M out of a
+    slope it is a basement wall under a plinth band - a horizontal joint PLINTH_BAND_M under the plinth top and
+    vertical joints every PLINTH_JOINT_M below it (owner photo `ściana budynku.png`: cast wall with thin joints every
+    2-3 m). Joints = 1.5 cm dark strips 4 mm proud of the plinth face, in the drip profile's material (no new draw),
+    never across an opening. ground(u) = terrain height at u along the wall; phase in [0, 1) shifts the joints per
+    wall. LOD0, 2 triangles per joint. Returns the triangle count."""
+    d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
+    w, zj = 0.0075, zpl - PLINTH_BAND_M
+    us = [min(max(PLINTH_JOINT_M * (phase * 0.8 + 0.1) + k * PLINTH_JOINT_M, 0.0), L)
+          for k in range(int(L / PLINTH_JOINT_M) + 1)]
+    us = sorted({round(u, 3) for u in [0.0, L] + us})
+    tall = [zpl - ground(u) > PLINTH_TALL_M for u in us]
+
+    def clear(u0, u1, z0, z1):
+        return not any(o[0] < u1 and o[1] > u0 and o[2] < z1 and o[3] > z0 for o in ops)
+    n = 0
+    p0 = v3(a + nout * 0.004, 0.0)
+    for (u0, t0), (u1, t1) in zip(zip(us, tall), zip(us[1:], tall[1:])):
+        if t0 and t1 and u1 - u0 > 0.3 and clear(u0, u1, zj - w, zj + w):
+            acc.quad(L0, mat, p0 + d3 * u0 + [0, 0, zj - w], p0 + d3 * u1 + [0, 0, zj - w],
+                     p0 + d3 * u1 + [0, 0, zj + w], p0 + d3 * u0 + [0, 0, zj + w])
+            n += 2
+    for u, t in zip(us[1:-1], tall[1:-1]):
+        z0 = max(ground(u) - 0.05, zbot)
+        if t and zj - z0 > 0.3 and clear(u - w, u + w, z0, zj):
+            acc.quad(L0, mat, p0 + d3 * (u - w) + [0, 0, z0], p0 + d3 * (u + w) + [0, 0, z0],
+                     p0 + d3 * (u + w) + [0, 0, zj], p0 + d3 * (u - w) + [0, 0, zj])
+            n += 2
+    return n
+
+
+def plinth_drip(acc, a, d, nout, L, z, ops, mat="hall_flashing"):
+    """ADR 0097 (review 0094 P1-a "linia cokół-ściana"): starter / drip profile of the insulation over the plinth -
+    3.5 cm proud, 3 cm tall, front + underside in the dark flashing (r1 had a light top face: from 10-30 m it read as a
+    dashed white line, not as the 2-3 cm shadow line between the insulated wall and the recessed plinth). Split round
+    the openings that cross z (entrance doors). LOD0, 4 triangles per run."""
+    d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
+    cuts = sorted((o[0] - 0.02, o[1] + 0.02) for o in ops if o[2] < z + 0.03 and o[3] > z - 0.01)
+    u, runs = -0.035, []
+    for c0, c1 in cuts:
+        if c0 > u + 0.1:
+            runs.append((u, c0))
+        u = max(u, c1)
+    if L + 0.035 > u + 0.1:
+        runs.append((u, L + 0.035))
+    for u0, u1 in runs:
+        c = v3(a + d * ((u0 + u1) / 2) + nout * 0.0175, z + 0.005)
+        acc.box(L0, mat, c, d3 * ((u1 - u0) / 2), n3 * 0.0175, [0, 0, 0.015], skip=(1, 2, 4, 5))
+
+
+def door_steps(acc, a, d, nout, u, zd, zg, mat="plinth_dark", w=1.4):
+    """ADR 0097 (review 0094 P2-b "drzwi bez stopnia i progu"): landing 1.0 m deep at the door sill (2 cm below it),
+    steps of <= 0.18 m rise / 0.30 m going down to the ground in front (WT par. 69: rise <= 0.175 m outdoors is the
+    usual target; WORKING_VALUE), a 3 cm sheet threshold in the door line. zg = terrain at the door. LOD0 only (LOD1
+    house walls carry no plinth material: one more draw per chunk)."""
+    d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
+    top = zd - 0.02
+    rise = top - zg
+    if rise < 0.05:
+        return
+    nst = max(0, int(math.ceil(rise / 0.18)) - 1)
+    zb = zg - 0.15
+    c = a + d * u + nout * 0.5
+    acc.box(L0, mat, v3(c, (top + zb) / 2), d3 * (w / 2), n3 * 0.5, [0, 0, (top - zb) / 2], skip=(0, 2))
+    for k in range(nst):
+        zt_ = top - (k + 1) * rise / (nst + 1)
+        c = a + d * u + nout * (1.0 + 0.15 + 0.3 * k)
+        acc.box(L0, mat, v3(c, (zt_ + zb) / 2), d3 * (w / 2 - 0.05 * (k + 1)), n3 * 0.15, [0, 0, (zt_ - zb) / 2],
+                skip=(0, 2))
+    # ADR 0107 (review 0097 P2-j "biała strefa drzwi przebija cokół"): the threshold is grey sheet (the gutter /
+    # downpipe material every house already draws), not the white of the window sills
+    acc.box(L0, "downpipe", v3(a + d * u + nout * 0.03, zd - 0.005), d3 * 0.52, n3 * 0.09, [0, 0, 0.018],
+            skip=(0, 2, 4, 5))
+
+
+def wall_apron(acc, poly, hf, width=0.5, mat="sidewalk_paving", lift=0.04, step=2.0):
+    """ADR 0097 (review 0094 P2-g "opaska z kostki/żwiru"): concrete-paver apron round a block, `width` m wide, draped
+    on the terrain (vertices every `step` m along the walls, `lift` above the ground). The plinth then stands in a
+    paved strip instead of meeting the grass on a hard line. LOD0; sidewalk_paving is already drawn in 12 of the 14
+    chunks with blocks (r1 chunk_mats)."""
+    import shapely as _sh
+    ring = poly.buffer(width, join_style="mitre", mitre_limit=2.0).difference(poly)
+    if ring.is_empty:
+        return
+    ring = _sh.segmentize(ring, step)
+    tri = _sh.constrained_delaunay_triangles(ring)
+    T = np.array([np.asarray(t.exterior.coords)[:3] for t in tri.geoms if t.area > 1e-4])
+    if not len(T):
+        return
+    cr = (T[:, 1, 0] - T[:, 0, 0]) * (T[:, 2, 1] - T[:, 0, 1]) - (T[:, 1, 1] - T[:, 0, 1]) * (T[:, 2, 0] - T[:, 0, 0])
+    T[cr < 0] = T[cr < 0][:, [0, 2, 1]]
+    xy = T.reshape(-1, 2)
+    z = hf.sample(xy[:, 0], xy[:, 1]) + lift
+    acc.add(L0, mat, np.column_stack([xy, z]), np.arange(len(xy)).reshape(-1, 3), xy)
+
+
 def corner_trim(acc, p, n_a, n_b, z0, z1, mat="hall_flashing"):
     """L-shaped corner flashing as one box at the outer corner (bisector of the two outward normals)."""
     bis = n_a + n_b
@@ -300,9 +402,9 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key="", inner=True
     rail = up + [0, 0, 0.04]                         # handrail top 1.10 m above the floor (WT par. 298: >= 1.1 m)
     acc.box(L0, "downpipe", f + n3 * 0.01 + rail, d3 * (hw + 0.03), n3 * 0.025, [0, 0, 0.02],
             skip=(0, 2, 4, 5) if inner else (0, 1, 2, 4, 5))
-    for sg in (-1, 1):
-        acc.box(L0, "downpipe", w0 + d3 * sg * hw + n3 * dep / 2 + rail, d3 * 0.025, n3 * dep / 2,
-                [0, 0, 0.02], skip=(0, 2, 3, 4 if sg > 0 else 5) + (() if inner else (1,)))
+    for sg in (-1, 1) if inner else ():      # ADR 0097: no side rails above the 2nd storey (-4 triangles: balconies
+        acc.box(L0, "downpipe", w0 + d3 * sg * hw + n3 * dep / 2 + rail, d3 * 0.025, n3 * dep / 2,   # on both long sides)
+                [0, 0, 0.02], skip=(0, 2, 3, 4 if sg > 0 else 5))
     up = np.array([0, 0, 1.05])
     if hfloat(key, "glz") < 0.14:               # zabudowa balkonu: glazing above the balustrade, front + sides
         gv = int(hfloat(key, "glzv") * 97)
@@ -317,19 +419,28 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key="", inner=True
                 s0, s1, ua_, ub_ = s1, s0, ub_, ua_
             _aq(acc, s0, s1, s1 + gup, s0 + gup, [[ua_, gv_], [ub_, gv_], [ub_, gv_ + gh], [ua_, gv_ + gh]])
     else:
-        if hfloat(key, "line") < 0.30:          # laundry: cloths hanging from a line under the slab above
-            x = -hw + 0.3
+        if hfloat(key, "line") < 0.12:          # laundry: cloths hanging from a line under the slab above
+            # ADR 0097 (review 0094 P2-d "pranie jak flaga"): 12 % of the balconies (was 30 %), on a rack 0.5 m behind
+            # the balustrade, line 1.55-1.75 m, small pieces (0.25-0.55 m) of muted colours with gaps, hanging at
+            # different depths and a few degrees off the line - only the tops show over the 1.1 m handrail
+            x = -hw + 0.35 + 0.3 * hfloat(key, "lx")
+            # ADR 0107 (review 0097 P2-h "trzy płaskie kwadraty nad balustradą"): the rack is a standing dryer, its
+            # line 0.95-1.05 m - below the 1.1 m handrail, so the washing shows only through bars / glass and from
+            # above; no saturated red (cloth_red S 0.74)
+            zl = 0.95 + 0.1 * hfloat(key, "lz")
             k = 0
-            while x < hw - 0.5:
-                cw = 0.35 + 0.45 * hfloat(key, "cw", k)
-                ch = 0.5 + 0.5 * hfloat(key, "ch", k)
-                col = hpick(["cloth_white", "cloth_red", "cloth_blue", "cloth_dark", "cloth_yellow", "cloth_green",
-                             "cloth_white"], key, "cc", k)
-                c0 = w0 + d3 * x + n3 * (depth - 0.35) + [0, 0, 1.95]
+            while x < hw - 0.45 and k < 5:
+                cw = 0.22 + 0.33 * hfloat(key, "cw", k)
+                ch = 0.25 + 0.30 * hfloat(key, "ch", k)
+                col = hpick(["cloth_white", "cloth_dark", "cloth_white", "cloth_blue", "cloth_dark", "cloth_white",
+                             "cloth_green"], key, "cc", k)
+                tilt = (hfloat(key, "ct", k) - 0.5) * 0.12
+                c0 = w0 + d3 * x + n3 * (depth - 0.55 - 0.1 * hfloat(key, "cd", k)) + [0, 0, zl]
                 uvc = FA.swatch_uv(col)
-                _aq(acc, c0 - [0, 0, ch], c0 + d3 * cw - [0, 0, ch], c0 + d3 * cw, c0, uvc)
-                _aq(acc, c0 + d3 * cw - [0, 0, ch], c0 - [0, 0, ch], c0, c0 + d3 * cw, uvc)
-                x += cw + 0.08 + 0.3 * hfloat(key, "cg", k)
+                lo = c0 - [0, 0, ch] + n3 * tilt
+                _aq(acc, lo, lo + d3 * cw, c0 + d3 * cw, c0, uvc)
+                _aq(acc, lo + d3 * cw, lo, c0, c0 + d3 * cw, uvc)
+                x += cw + 0.12 + 0.35 * hfloat(key, "cg", k)
                 k += 1
         if hfloat(key, "dish") < 0.18 and float(n3 @ DISH_AZ) > -0.2:
             # satellite dish on an arm off the balustrade rail (review s9 P1-5: the dishes were white ovals hanging in

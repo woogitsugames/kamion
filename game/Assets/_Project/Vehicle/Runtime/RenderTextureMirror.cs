@@ -80,7 +80,7 @@ namespace Game.Vehicle.Runtime
 
     /// <summary>
     /// Rear-view / convex mirror: a camera at the mirror image of the design eye point looking along the reflected line
-    /// of sight, rendering a low-resolution render texture shown (horizontally flipped) on the glass quad. Convex
+    /// of sight, rendering a low-resolution texture mapped by the authored glass UVs (legacy flip is configurable). Convex
     /// mirrors (UN R46 classes IV-VI) get the wider field of view of their radius of curvature (computed by the
     /// builder). Static geometry, not a per-frame reflection of the head position. All mirrors share one per-frame
     /// render budget (VehicleCameraBudget.MirrorsPerFrame; ADR 0042 weighted round-robin, ADR 0068 due-based on High).
@@ -106,6 +106,8 @@ namespace Game.Vehicle.Runtime
         public int phase;
         /// <summary>Main mirror (class II): HUD inset, full far clip. Convex mirrors (classes IV-VI): false.</summary>
         public bool main = true;
+        /// <summary>Legacy graybox UVs need a flip. TRAKT quads already map the reflected-eye camera correctly (ADR 0104).</summary>
+        public bool flipHorizontally = true;
         /// <summary>Share of the shared round-robin budget (main 1, convex 0.5).</summary>
         public float weight = 1f;
         /// <summary>Camera aspect (tan of the horizontal / vertical half field) for convex mirrors; 0 = render-texture aspect.</summary>
@@ -243,8 +245,8 @@ namespace Game.Vehicle.Runtime
                     glass.sharedMaterial = m_Mat;
                 }
                 m_Mat.SetTexture("_BaseMap", m_Rt);
-                m_Mat.SetTextureScale("_BaseMap", new Vector2(-1f, 1f));   // mirror image
-                m_Mat.SetTextureOffset("_BaseMap", new Vector2(1f, 0f));
+                m_Mat.SetTextureScale("_BaseMap", new Vector2(flipHorizontally ? -1f : 1f, 1f));
+                m_Mat.SetTextureOffset("_BaseMap", new Vector2(flipHorizontally ? 1f : 0f, 0f));
                 m_Mat.SetColor("_BaseColor", new Color(0.92f, 0.93f, 0.95f, 1f)); // glass loses a little light
             }
         }

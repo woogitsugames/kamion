@@ -91,6 +91,33 @@ namespace Game.Editor.Setup
                         qp.tiers[i].cloudQuality = d.cloudQuality;
                         qp.tiers[i].ssao = d.ssao;
                     }
+                qp.revision = 80;
+                dirty = true;
+            }
+            if (qp.revision < 98)
+            {
+                // ADR0098: retain Low and all map/count budgets; only reviewed Medium/High policies migrate.
+                for (int i = 0; i < qp.tiers.Length; i++)
+                    foreach (var d in defs)
+                    {
+                        if (d.name != qp.tiers[i].name || (d.name != "Medium" && d.name != "High")) continue;
+                        qp.tiers[i].shadowDepthBias = d.shadowDepthBias;
+                        qp.tiers[i].shadowNormalBias = d.shadowNormalBias;
+                        if (d.name == "High")
+                        {
+                            qp.tiers[i].cascade4Split = d.cascade4Split;
+                            qp.tiers[i].fsrSharpness = d.fsrSharpness;
+                        }
+                    }
+                qp.revision = 98;
+                dirty = true;
+            }
+            if (qp.revision < 106)
+            {
+                // ADR 0106: Truck Glass fast path per tier (Low on).
+                for (int i = 0; i < qp.tiers.Length; i++)
+                    foreach (var d in defs)
+                        if (string.Equals(d.name, qp.tiers[i].name, StringComparison.OrdinalIgnoreCase)) qp.tiers[i].glassFast = d.glassFast;
                 qp.revision = QualityProfile.CurrentRevision;
                 dirty = true;
             }
@@ -224,8 +251,10 @@ namespace Game.Editor.Setup
                 Set(so, "m_RenderScale", t.renderScale);
                 // ADR 0062: upscaler used whenever the (adaptive) render scale is below 1.
                 Set(so, "m_UpscalingFilter", (int)t.upscalingFilter);
-                Set(so, "m_FsrOverrideSharpness", t.fsrSharpness > 0f);
-                if (t.fsrSharpness > 0f) Set(so, "m_FsrSharpness", t.fsrSharpness);
+                bool explicitFsr = t.upscalingFilter == UpscalingFilterSelection.FSR;
+                // Exact zero disables the installed URP RCAS keyword; do not fall back to the default sharpness.
+                Set(so, "m_FsrOverrideSharpness", explicitFsr || t.fsrSharpness > 0f);
+                if (explicitFsr || t.fsrSharpness > 0f) Set(so, "m_FsrSharpness", t.fsrSharpness);
                 Set(so, "m_MSAA", t.msaa);
                 Set(so, "m_SupportsHDR", t.hdr);
                 Set(so, "m_HDRColorBufferPrecision", 0);            // R11G11B10: same 32 bpp as RGBA8 on the tile

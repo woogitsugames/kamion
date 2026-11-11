@@ -10112,9 +10112,9 @@
    {
     "built": true,
     "id": "dk8-ramp-split-line-solid",
-    "len_m": 47.2,
+    "len_m": 41.6,
     "line": "P-2b",
-    "tris": 94
+    "tris": 86
    },
    {
     "built": true,
@@ -10134,14 +10134,98 @@
     "built": true,
     "id": "n10015785253-crossing-west",
     "kind": "painted_crossing",
-    "tris": 50,
+    "tris": 120,
     "tris_off_carriageway": 0
    },
    {
     "built": true,
     "id": "n10015785253-crossing-east",
     "kind": "painted_crossing",
-    "tris": 50,
+    "tris": 120,
+    "tris_off_carriageway": 0
+   },
+   {
+    "built": true,
+    "id": "putry-n-sb-lane-1",
+    "len_m": 21.1,
+    "line": "P-1",
+    "tris": 30
+   },
+   {
+    "built": true,
+    "id": "putry-n-sb-lane-2",
+    "len_m": 21.3,
+    "line": "P-1",
+    "tris": 30
+   },
+   {
+    "built": true,
+    "id": "putry-n-sb-edge-crossover",
+    "len_m": 20.2,
+    "line": "P-7a",
+    "tris": 40
+   },
+   {
+    "built": true,
+    "id": "putry-n-nb-edge-crossover",
+    "len_m": 11.9,
+    "line": "P-7a",
+    "tris": 24
+   },
+   {
+    "built": true,
+    "id": "putry-n-sb-edge-west",
+    "len_m": 19.6,
+    "line": "P-7b",
+    "tris": 44
+   },
+   {
+    "built": true,
+    "id": "ma010-ring-lane-s",
+    "len_m": 13.2,
+    "line": "P-1",
+    "tris": 16
+   },
+   {
+    "built": true,
+    "id": "ma010-south-arm-lane",
+    "len_m": 5.1,
+    "line": "P-1",
+    "tris": 8
+   },
+   {
+    "built": true,
+    "id": "dk8-e-split-main-lane",
+    "len_m": 74.0,
+    "line": "P-1",
+    "tris": 96
+   },
+   {
+    "built": true,
+    "id": "dk8-e-split-line-solid",
+    "len_m": 29.0,
+    "line": "P-2b",
+    "tris": 60
+   },
+   {
+    "built": true,
+    "id": "dk8-e-split-ramp-line",
+    "len_m": 11.0,
+    "line": "P-1e",
+    "tris": 24
+   },
+   {
+    "built": true,
+    "id": "n100-se-guidance-arrow-1",
+    "kind": "painted_arrow",
+    "tris": 23,
+    "tris_off_carriageway": 0
+   },
+   {
+    "built": true,
+    "id": "n100-se-guidance-arrow-2",
+    "kind": "painted_arrow",
+    "tris": 23,
     "tris_off_carriageway": 0
    }
   ],
@@ -10157,34 +10241,6 @@
     "note": "deck height interpolated between abutments; piers placed by rule (no data)",
     "piers": 0,
     "span_m": 17.0
-   },
-   {
-    "chain": "c:w1101181473:10076968415-1847263305",
-    "confidence": "low",
-    "note": "deck height interpolated between abutments; piers placed by rule (no data)",
-    "piers": 0,
-    "span_m": 11.5
-   },
-   {
-    "chain": "c:w1101181473:10076968415-1847263305",
-    "confidence": "low",
-    "note": "deck height interpolated between abutments; piers placed by rule (no data)",
-    "piers": 7,
-    "span_m": 219.4
-   },
-   {
-    "chain": "c:w173956078:1847263293-5749429982",
-    "confidence": "low",
-    "note": "deck height interpolated between abutments; piers placed by rule (no data)",
-    "piers": 0,
-    "span_m": 11.5
-   },
-   {
-    "chain": "c:w173956078:1847263293-5749429982",
-    "confidence": "low",
-    "note": "deck height interpolated between abutments; piers placed by rule (no data)",
-    "piers": 5,
-    "span_m": 212.9
    },
    {
     "chain": "c:w173956079:1832975577-2256069814",
@@ -10287,7 +10343,7 @@
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 504563,
+  "footprint_nodes": 505974,
   "fork_abreast": [
    {
     "beside": "c:w173956078:1847263293-5749429982",
@@ -11484,6 +11540,13 @@
      "id": "n10015785253-island",
      "note": "z 130.35",
      "surface": "sidewalk_paving"
+    },
+    {
+     "area_m2": 33.8,
+     "built": true,
+     "id": "dk8-e-split-island",
+     "note": "z 140.03",
+     "surface": "sidewalk_paving"
     }
    ],
    "kerb_dropped_m": 646.0,
@@ -11979,9 +12042,63 @@
     ]
    },
    {
+    "id": "dk8-e-split-island",
+    "targets": [
+     "island"
+    ]
+   },
+   {
+    "id": "putry-n-plaza-apron",
+    "targets": [
+     "apron@-575,129"
+    ]
+   },
+   {
+    "id": "andersa-bay-apron-west",
+    "targets": [
+     "apron@-105,-319"
+    ]
+   },
+   {
+    "id": "andersa-bay-apron-east",
+    "targets": [
+     "apron@-55,-359"
+    ]
+   },
+   {
     "id": "n10015785253-edge-line-clear",
     "targets": [
      "clear@-224,-237"
+    ]
+   },
+   {
+    "id": "dk8-e-split-clear-diagonal",
+    "targets": [
+     "clear@-822,58"
+    ]
+   },
+   {
+    "id": "n100-se-arrows-clear",
+    "targets": [
+     "clear@-233,-246"
+    ]
+   },
+   {
+    "id": "n100-se-arrows-clear-2",
+    "targets": [
+     "clear@-246,-237"
+    ]
+   },
+   {
+    "id": "n100-se-arrows-clear-3",
+    "targets": [
+     "clear@-236,-249"
+    ]
+   },
+   {
+    "id": "n100-se-arrows-clear-4",
+    "targets": [
+     "clear@-248,-240"
     ]
    },
    {
@@ -11993,7 +12110,7 @@
    {
     "id": "s1440-diverge-p21",
     "targets": [
-     "zone@-339,-144"
+     "zone@-341,-141"
     ]
    },
    {
@@ -12023,7 +12140,7 @@
    {
     "id": "dk8-ramp-split-p21-front",
     "targets": [
-     "zone@-788,77"
+     "zone@-791,77"
     ]
    },
    {
@@ -12053,7 +12170,19 @@
    {
     "id": "s1440-diverge-p21-band",
     "targets": [
-     "zone@-363,-119"
+     "zone@-363,-120"
+    ]
+   },
+   {
+    "id": "dk8-e-split-p21-front",
+    "targets": [
+     "zone@-816,56"
+    ]
+   },
+   {
+    "id": "dk8-e-split-p21-side",
+    "targets": [
+     "zone@-799,54"
     ]
    },
    {
@@ -12105,6 +12234,90 @@
     ]
    },
    {
+    "id": "putry-n-sb-lane-1",
+    "targets": [
+     "line@-562,139"
+    ]
+   },
+   {
+    "id": "putry-n-sb-lane-2",
+    "targets": [
+     "line@-559,138"
+    ]
+   },
+   {
+    "id": "putry-n-sb-edge-crossover",
+    "targets": [
+     "line@-556,138"
+    ]
+   },
+   {
+    "id": "putry-n-nb-edge-crossover",
+    "targets": [
+     "line@-550,129"
+    ]
+   },
+   {
+    "id": "putry-n-sb-edge-west",
+    "targets": [
+     "line@-566,139"
+    ]
+   },
+   {
+    "id": "ma010-ring-lane-s",
+    "targets": [
+     "line@-552,-9"
+    ]
+   },
+   {
+    "id": "ma010-south-arm-lane",
+    "targets": [
+     "line@-573,-6"
+    ]
+   },
+   {
+    "id": "dk8-e-split-main-lane",
+    "targets": [
+     "line@-860,60"
+    ]
+   },
+   {
+    "id": "dk8-e-split-line-solid",
+    "targets": [
+     "line@-860,56"
+    ]
+   },
+   {
+    "id": "dk8-e-split-ramp-line",
+    "targets": [
+     "line@-799,53"
+    ]
+   },
+   {
+    "id": "n100-se-guidance-arrow-1",
+    "targets": [
+     "painted_arrow"
+    ]
+   },
+   {
+    "id": "n100-se-guidance-arrow-2",
+    "targets": [
+     "painted_arrow"
+    ]
+   },
+   {
+    "id": "dk8-e-split-barrier",
+    "targets": [
+     "guardrail@-797,55"
+    ]
+   },
+   {
+    "id": "dk8-ramp-split-barrier",
+    "targets": [
+     "guardrail@-780,76"
+    ]
+   },
+   {
     "id": "kwadrat-park-hero",
     "targets": [
      "bdot:9962cca0-95de-4200-a0c4-3922b8e40d9c"
@@ -12120,37 +12333,73 @@
   ],
   "overrides_stale": [],
   "paint_clear_tris": {
+   "dk8-e-split-clear-diagonal": 330,
+   "n100-se-arrows-clear": 5,
+   "n100-se-arrows-clear-2": 5,
+   "n100-se-arrows-clear-3": 5,
+   "n100-se-arrows-clear-4": 5,
    "n10015785253-edge-line-clear": 63
   },
-  "paint_erased_in_zones_tris": 104,
+  "paint_erased_in_zones_tris": 93,
   "painted_zones": [
    {
     "area_m2": 159.3,
     "built": true,
+    "fields_deg": [
+     [
+      -65.55,
+      56
+     ]
+    ],
     "id": "s1440-merge-p21-ramp",
-    "tris": 305,
-    "tris_off_carriageway": 101,
+    "max_lift_m": 0.0267,
+    "mode": "axis",
+    "stripes": 56,
+    "tris": 1729,
+    "tris_off_carriageway": 479,
     "xy": [
      -380.8,
      -145.4
     ]
    },
    {
-    "area_m2": 43.8,
+    "area_m2": 36.2,
     "built": true,
+    "fields_deg": [
+     [
+      172.7,
+      10
+     ],
+     [
+      102.7,
+      15
+     ]
+    ],
     "id": "s1440-diverge-p21",
-    "tris": 98,
-    "tris_off_carriageway": 10,
+    "max_lift_m": 0.0261,
+    "mode": "chevron",
+    "stripes": 25,
+    "tris": 350,
+    "tris_off_carriageway": 178,
     "xy": [
-     -339.1,
-     -143.9
+     -341.1,
+     -141.3
     ]
    },
    {
     "area_m2": 53.3,
     "built": true,
+    "fields_deg": [
+     [
+      20.0,
+      30
+     ]
+    ],
     "id": "s610-north-arm-p21-median",
-    "tris": 167,
+    "max_lift_m": 0.0021,
+    "mode": "absolute",
+    "stripes": 30,
+    "tris": 768,
     "tris_off_carriageway": 0,
     "xy": [
      356.7,
@@ -12160,9 +12409,18 @@
    {
     "area_m2": 116.2,
     "built": true,
+    "fields_deg": [
+     [
+      19.0,
+      34
+     ]
+    ],
     "id": "s610-p21-centre",
-    "tris": 250,
-    "tris_off_carriageway": 0,
+    "max_lift_m": 0.0294,
+    "mode": "absolute",
+    "stripes": 34,
+    "tris": 1449,
+    "tris_off_carriageway": 9,
     "xy": [
      343.9,
      -566.1
@@ -12171,8 +12429,17 @@
    {
     "area_m2": 38.0,
     "built": true,
+    "fields_deg": [
+     [
+      15.0,
+      7
+     ]
+    ],
     "id": "s610-p21-west",
-    "tris": 84,
+    "max_lift_m": 0.0135,
+    "mode": "absolute",
+    "stripes": 7,
+    "tris": 512,
     "tris_off_carriageway": 0,
     "xy": [
      329.0,
@@ -12182,8 +12449,17 @@
    {
     "area_m2": 37.7,
     "built": true,
+    "fields_deg": [
+     [
+      20.0,
+      20
+     ]
+    ],
     "id": "s610-p21-south",
-    "tris": 96,
+    "max_lift_m": 0.0116,
+    "mode": "absolute",
+    "stripes": 20,
+    "tris": 526,
     "tris_off_carriageway": 0,
     "xy": [
      344.4,
@@ -12191,22 +12467,44 @@
     ]
    },
    {
-    "area_m2": 31.1,
+    "area_m2": 44.5,
     "built": true,
+    "fields_deg": [
+     [
+      -35.95,
+      21
+     ],
+     [
+      34.05,
+      21
+     ]
+    ],
     "id": "dk8-ramp-split-p21-front",
-    "tris": 104,
+    "max_lift_m": 0.0296,
+    "mode": "chevron",
+    "stripes": 42,
+    "tris": 654,
     "tris_off_carriageway": 0,
     "xy": [
-     -788.2,
+     -791.2,
      76.8
     ]
    },
    {
     "area_m2": 58.3,
     "built": true,
+    "fields_deg": [
+     [
+      35.0,
+      11
+     ]
+    ],
     "id": "dk8-ramp-split-p21-side",
-    "tris": 117,
-    "tris_off_carriageway": 49,
+    "max_lift_m": 0.0003,
+    "mode": "absolute",
+    "stripes": 11,
+    "tris": 389,
+    "tris_off_carriageway": 147,
     "xy": [
      -766.0,
      78.3
@@ -12215,8 +12513,17 @@
    {
     "area_m2": 7.0,
     "built": true,
+    "fields_deg": [
+     [
+      11.0,
+      2
+     ]
+    ],
     "id": "n10015785253-p21-west",
-    "tris": 32,
+    "max_lift_m": 0.0079,
+    "mode": "absolute",
+    "stripes": 2,
+    "tris": 118,
     "tris_off_carriageway": 0,
     "xy": [
      -223.5,
@@ -12226,9 +12533,18 @@
    {
     "area_m2": 10.6,
     "built": true,
+    "fields_deg": [
+     [
+      5.0,
+      9
+     ]
+    ],
     "id": "n10015785253-p21-east",
-    "tris": 41,
-    "tris_off_carriageway": 0,
+    "max_lift_m": 0.0187,
+    "mode": "absolute",
+    "stripes": 9,
+    "tris": 176,
+    "tris_off_carriageway": 2,
     "xy": [
      -217.8,
      -235.2
@@ -12237,8 +12553,17 @@
    {
     "area_m2": 3.2,
     "built": true,
+    "fields_deg": [
+     [
+      42.0,
+      1
+     ]
+    ],
     "id": "n10015785253-p21-north",
-    "tris": 14,
+    "max_lift_m": 0.0018,
+    "mode": "absolute",
+    "stripes": 1,
+    "tris": 84,
     "tris_off_carriageway": 0,
     "xy": [
      -214.6,
@@ -12246,22 +12571,75 @@
     ]
    },
    {
-    "area_m2": 172.6,
+    "area_m2": 120.2,
     "built": true,
+    "fields_deg": [
+     [
+      -71.36,
+      47
+     ]
+    ],
     "id": "s1440-diverge-p21-band",
-    "tris": 200,
-    "tris_off_carriageway": 162,
+    "max_lift_m": 0.0007,
+    "mode": "axis",
+    "stripes": 47,
+    "tris": 950,
+    "tris_off_carriageway": 438,
     "xy": [
      -363.3,
-     -119.0
+     -119.7
+    ]
+   },
+   {
+    "area_m2": 33.3,
+    "built": true,
+    "fields_deg": [
+     [
+      34.17,
+      14
+     ],
+     [
+      -35.83,
+      14
+     ]
+    ],
+    "id": "dk8-e-split-p21-front",
+    "max_lift_m": 0.0021,
+    "mode": "chevron",
+    "stripes": 28,
+    "tris": 486,
+    "tris_off_carriageway": 0,
+    "xy": [
+     -816.0,
+     55.9
+    ]
+   },
+   {
+    "area_m2": 9.2,
+    "built": true,
+    "fields_deg": [
+     [
+      -35.0,
+      5
+     ]
+    ],
+    "id": "dk8-e-split-p21-side",
+    "max_lift_m": 0.0019,
+    "mode": "absolute",
+    "stripes": 5,
+    "tris": 182,
+    "tris_off_carriageway": 0,
+    "xy": [
+     -799.1,
+     54.1
     ]
    }
   ],
   "roundabout_junctions": 12,
   "sides_on_carriageway_culled": {
-   "kerb_tris": 4727,
-   "parts": 458,
-   "side_tris": 108
+   "kerb_tris": 4614,
+   "parts": 456,
+   "side_tris": 224
   },
   "signalised_junctions": 11,
   "through_lines": {

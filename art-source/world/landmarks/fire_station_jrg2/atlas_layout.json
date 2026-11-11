@@ -1,5 +1,29 @@
 {
  "alpha": {
+  "conifer_bough": {
+   "composition": "two root-connected sprays, rotations -26/+26 degrees, authored CC0 derivative",
+   "content_alpha32_bbox_px": [
+    20,
+    50,
+    243,
+    204
+   ],
+   "gutter_px": 16,
+   "inner_uv": [
+    0.30810546875,
+    0.0400390625,
+    0.421875,
+    0.1923828125
+   ],
+   "u": [
+    0.3,
+    0.43
+   ],
+   "v": [
+    0.025,
+    0.24
+   ]
+  },
   "fence_bay": {
    "size_m": [
     2.5,
@@ -92,9 +116,9 @@
    ]
   },
   "clinker_linear": [
-   0.47,
-   0.29,
-   0.115
+   0.27,
+   0.135,
+   0.06
   ],
   "dark": {
    "u": [
@@ -140,6 +164,11 @@
     10.85
    ]
   },
+  "foliage_linear": [
+   0.04,
+   0.068,
+   0.03
+  ],
   "glass": {
    "u": [
     9.25,
@@ -237,6 +266,11 @@
     13.95
    ]
   },
+  "thuja_shell_tint_linear": [
+   1.7655748795135453,
+   1.5545408983901856,
+   2.45558899801143
+  ],
   "tile_m": [
    14.0,
    14.0

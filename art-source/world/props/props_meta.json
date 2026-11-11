@@ -392,11 +392,18 @@
   },
   "bollard": {
    "materials": [
-    "paint_white_reflective",
-    "steel_painted"
+    "furniture_bollard",
+    "paint_white_reflective"
    ],
    "tris_lod0": 50,
    "tris_lod1": 50
+  },
+  "bollard_hoop": {
+   "materials": [
+    "furniture_bollard"
+   ],
+   "tris_lod0": 128,
+   "tris_lod1": 40
   },
   "bus_shelter": {
    "materials": [
@@ -1116,82 +1123,82 @@
   },
   "lamp_10m": {
    "materials": [
-    "concrete_base",
+    "furniture_footing",
+    "furniture_galv",
     "lamp_glass",
-    "luminaire_housing",
-    "steel_galv"
+    "luminaire_housing"
    ],
    "tris_lod0": 80,
    "tris_lod1": 53
   },
   "lamp_12m": {
    "materials": [
-    "concrete_base",
+    "furniture_footing",
+    "furniture_galv",
     "lamp_glass",
-    "luminaire_housing",
-    "steel_galv"
+    "luminaire_housing"
    ],
    "tris_lod0": 80,
    "tris_lod1": 53
   },
   "lamp_8m": {
    "materials": [
-    "concrete_base",
+    "furniture_footing",
+    "furniture_galv",
     "lamp_glass",
-    "luminaire_housing",
-    "steel_galv"
+    "luminaire_housing"
    ],
    "tris_lod0": 80,
    "tris_lod1": 53
   },
   "lamp_9m": {
    "materials": [
-    "concrete_base",
+    "furniture_footing",
+    "furniture_galv",
     "lamp_glass",
-    "luminaire_housing",
-    "steel_galv"
+    "luminaire_housing"
    ],
    "tris_lod0": 80,
    "tris_lod1": 53
   },
   "lamp_arc_9m": {
    "materials": [
-    "concrete_base",
+    "furniture_footing",
+    "furniture_galv",
     "lamp_glass_sodium",
-    "luminaire_old",
-    "steel_galv"
+    "luminaire_old"
    ],
    "tris_lod0": 208,
    "tris_lod1": 88
   },
   "lamp_arc_9m_double": {
    "materials": [
-    "concrete_base",
+    "furniture_footing",
+    "furniture_galv",
     "lamp_glass_sodium",
-    "luminaire_old",
-    "steel_galv"
+    "luminaire_old"
    ],
    "tris_lod0": 302,
    "tris_lod1": 134
   },
   "lamp_old_concrete_9m": {
    "materials": [
-    "concrete_pole",
+    "furniture_concrete",
+    "furniture_grey",
     "lamp_glass_sodium",
-    "luminaire_old",
-    "steel_painted_grey"
+    "luminaire_old"
    ],
-   "tris_lod0": 154,
-   "tris_lod1": 105
+   "tris_lod0": 174,
+   "tris_lod1": 91
   },
   "lamp_old_steel_8m": {
    "materials": [
-    "concrete_base",
+    "furniture_footing",
+    "furniture_grey",
     "lamp_glass_sodium",
-    "luminaire_old",
-    "steel_painted_grey"
+    "luminaire_old"
    ],
-   "tris_lod0": 71,
+   "tris_lod0": 83,
    "tris_lod1": 53
   },
   "landmark_chimney_120_75": {
@@ -1349,6 +1356,142 @@
    ],
    "tris_lod0": 72,
    "tris_lod1": 8
+  },
+  "plot_drive_gravel": {
+   "materials": [
+    "yard_gravel"
+   ],
+   "tris_lod0": 10,
+   "tris_lod1": 2
+  },
+  "plot_drive_paving": {
+   "materials": [
+    "yard_paving"
+   ],
+   "tris_lod0": 10,
+   "tris_lod1": 2
+  },
+  "plot_fence_concrete_a": {
+   "materials": [
+    "concrete_fence"
+   ],
+   "tris_lod0": 26,
+   "tris_lod1": 4
+  },
+  "plot_fence_concrete_b": {
+   "materials": [
+    "concrete_fence"
+   ],
+   "tris_lod0": 26,
+   "tris_lod1": 4
+  },
+  "plot_fence_concrete_h": {
+   "materials": [
+    "concrete_fence"
+   ],
+   "tris_lod0": 26,
+   "tris_lod1": 4
+  },
+  "plot_fence_mesh_galv": {
+   "materials": [
+    "fence_galv_mesh"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 4
+  },
+  "plot_fence_mesh_green": {
+   "materials": [
+    "fence_green_mesh"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 4
+  },
+  "plot_fence_panel_anthracite": {
+   "materials": [
+    "concrete_plinth",
+    "fence_anthracite_mesh"
+   ],
+   "tris_lod0": 40,
+   "tris_lod1": 16
+  },
+  "plot_fence_panel_green": {
+   "materials": [
+    "concrete_plinth",
+    "fence_green_mesh"
+   ],
+   "tris_lod0": 40,
+   "tris_lod1": 16
+  },
+  "plot_fence_picket": {
+   "materials": [
+    "wood_planks"
+   ],
+   "tris_lod0": 112,
+   "tris_lod1": 64
+  },
+  "plot_gate_anthracite": {
+   "materials": [
+    "fence_anthracite_mesh"
+   ],
+   "tris_lod0": 128,
+   "tris_lod1": 32
+  },
+  "plot_gate_galv": {
+   "materials": [
+    "fence_galv_mesh"
+   ],
+   "tris_lod0": 128,
+   "tris_lod1": 32
+  },
+  "plot_gate_green": {
+   "materials": [
+    "fence_green_mesh"
+   ],
+   "tris_lod0": 128,
+   "tris_lod1": 32
+  },
+  "plot_gate_wood": {
+   "materials": [
+    "wood_planks"
+   ],
+   "tris_lod0": 208,
+   "tris_lod1": 112
+  },
+  "plot_thuja": {
+   "materials": [
+    "hedge_shell_thuja",
+    "hedge_thuja"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 50
+  },
+  "plot_wicket_anthracite": {
+   "materials": [
+    "fence_anthracite_mesh"
+   ],
+   "tris_lod0": 76,
+   "tris_lod1": 28
+  },
+  "plot_wicket_galv": {
+   "materials": [
+    "fence_galv_mesh"
+   ],
+   "tris_lod0": 76,
+   "tris_lod1": 28
+  },
+  "plot_wicket_green": {
+   "materials": [
+    "fence_green_mesh"
+   ],
+   "tris_lod0": 76,
+   "tris_lod1": 28
+  },
+  "plot_wicket_wood": {
+   "materials": [
+    "wood_planks"
+   ],
+   "tris_lod0": 96,
+   "tris_lod1": 48
   },
   "power_pole": {
    "materials": [

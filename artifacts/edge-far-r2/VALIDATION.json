@@ -1,0 +1,53 @@
+{
+  "tested_source_reference": "c05e8f06",
+  "source_files": [
+    "tools/worldgen/streetscape/far_field.py",
+    "game/Assets/_Project/World/Import/WorldEdgeBuilder.cs",
+    "tests/gis/test_far_field_boundary.py"
+  ],
+  "meshes_match_tested_commit": {
+    "Low": "69549b754e8e29ac6c10d09544a4304c1857e59b2d4c3ecded80d244dc1ed11e",
+    "High": "1e800b583ca312440ced83828c538996960c800c1377214e92041c2a5ca33dc0"
+  },
+  "unity_tests": {
+    "editmode-20261111-120601.xml": {
+      "id": "2",
+      "testcasecount": "226",
+      "result": "Passed",
+      "total": "226",
+      "passed": "226",
+      "failed": "0",
+      "inconclusive": "0",
+      "skipped": "0",
+      "asserts": "0",
+      "engine-version": "3.5.0.0",
+      "clr-version": "4.0.30319.42000",
+      "start-time": "2026-11-11 11:06:18Z",
+      "end-time": "2026-11-11 11:06:24Z",
+      "duration": "6,0280814"
+    },
+    "playmode-20261111-120628.xml": {
+      "id": "2",
+      "testcasecount": "3",
+      "result": "Passed",
+      "total": "3",
+      "passed": "3",
+      "failed": "0",
+      "inconclusive": "0",
+      "skipped": "0",
+      "asserts": "0",
+      "engine-version": "3.5.0.0",
+      "clr-version": "4.0.30319.42000",
+      "start-time": "2026-11-11 11:06:49Z",
+      "end-time": "2026-11-11 11:07:04Z",
+      "duration": "15,1026333"
+    }
+  },
+  "verified_pngs": 64,
+  "paired_estimates": 32,
+  "low_max_delta_draws": 0,
+  "low_max_delta_tris_k": 0,
+  "gis": "388 passed, 1 expected xfailed; gis-after.log",
+  "independent_review": "pending leader",
+  "phone_validation": "leader-owned; not performed here"
+}

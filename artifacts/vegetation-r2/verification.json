@@ -1,0 +1,51 @@
+{
+  "validated_head": "1dc20dd29920742a00050878c7e5a46e6c1fb870",
+  "production_texture_policy": "1d822d56",
+  "canonical_world": "698fc0c3",
+  "GIS": {
+    "passed": 364,
+    "xfailed": 2,
+    "exit": 0,
+    "seconds": 676.87,
+    "log": "pytest-complete.log"
+  },
+  "EditMode": {
+    "result": "Passed",
+    "total": "218",
+    "passed": "218",
+    "failed": "0",
+    "skipped": "0"
+  },
+  "new_policy_cases": [
+    {
+      "name": "OnlyPineOrPineStandGetsAdditionalScattering(\"M_leaves_pine\",0.4f,0.25f)",
+      "result": "Passed"
+    },
+    {
+      "name": "OnlyPineOrPineStandGetsAdditionalScattering(\"M_impostor_tree_pine_0\",0.4f,0.25f)",
+      "result": "Passed"
+    },
+    {
+      "name": "OnlyPineOrPineStandGetsAdditionalScattering(\"M_forest_edge_conifer\",0.4f,0.5f)",
+      "result": "Passed"
+    },
+    {
+      "name": "OnlyPineOrPineStandGetsAdditionalScattering(\"M_forest_edge_mixed\",0.32f,0.5f)",
+      "result": "Passed"
+    },
+    {
+      "name": "OnlyPineOrPineStandGetsAdditionalScattering(\"M_leaves_linden\",0.25f,0.5f)",
+      "result": "Passed"
+    },
+    {
+      "name": "OnlyPineOrPineStandGetsAdditionalScattering(\"M_fab_elderberry\",0.25f,0.5f)",
+      "result": "Passed"
+    }
+  ],
+  "canonical": {
+    "raw_files": 192,
+    "raw_changed": [],
+    "canonical_json_changed": []
+  },
+  "scope": "Matched visuals predate canonical vehicle fixture restore; test-only Color assertion correction does not change runtime or pixels"
+}

@@ -1,0 +1,12 @@
+{
+  "rows": 15,
+  "nonDedicatedGlassRows": 6,
+  "nonDedicatedGlazingBandTriangles": 0,
+  "nonDedicatedPaneAabbCandidateTriangles": 0,
+  "dedicatedSameWindingCoincident": 0,
+  "dedicatedMixedInsideTriangles": 0,
+  "dedicatedReverseWindingPairs": 2073,
+  "actualMaskNear": "outside/glazing/frame=(0,1,1)",
+  "actualMaskFarWithNearRemoved": "inside/glazing/frame=(1,1,1)",
+  "note": "LOD levels audited individually, never summed as simultaneous runtime layers. AABB overlap was broadphase and returned0; all non-dedicated body/chassis glass triangles also lie outside actual shader glazing height band. No additional cab glazing overlay evidenced."
+}

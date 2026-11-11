@@ -1738,7 +1738,7 @@
           ],
           "texel_mm": 3.91,
           "dir": "facade_atlas/High",
-          "png_bytes": 4411458,
+          "png_bytes": 4400133,
           "files": [
             "T_facade_atlas_BaseColor.png",
             "T_facade_atlas_MaskMap.png",
@@ -1765,7 +1765,7 @@
           ],
           "texel_mm": 7.81,
           "dir": "facade_atlas/Medium",
-          "png_bytes": 1725594,
+          "png_bytes": 1720369,
           "files": [
             "T_facade_atlas_BaseColor.png",
             "T_facade_atlas_MaskMap.png",
@@ -1792,7 +1792,7 @@
           ],
           "texel_mm": 15.62,
           "dir": "facade_atlas/Low",
-          "png_bytes": 656956,
+          "png_bytes": 655652,
           "files": [
             "T_facade_atlas_BaseColor.png",
             "T_facade_atlas_MaskMap.png",
@@ -1818,13 +1818,13 @@
         0.03
       ],
       "albedo": {
-        "mean_lum_linear": 0.2505,
+        "mean_lum_linear": 0.2504,
         "p05": 0.0241,
         "p95": 0.6556,
         "mean_rgb_linear": [
-          0.2431,
-          0.2371,
-          0.2288
+          0.2432,
+          0.237,
+          0.2286
         ]
       },
       "hf_ratio_albedo": 0.0028,
@@ -1833,7 +1833,7 @@
     "facade_far": {
       "tile_m": [
         24.0,
-        40.199999999999996
+        45.8
       ],
       "target": 0.5,
       "kind": "modulation_set",
@@ -1847,21 +1847,21 @@
         "High": {
           "res": [
             2048,
-            3428
+            3908
           ],
           "texel_mm": 11.72,
           "dir": "facade_far/High",
-          "png_bytes": 1431165,
+          "png_bytes": 1532540,
           "files": [
             "T_facade_far_BaseColor.png",
             "T_facade_far_MaskMap.png",
             "T_facade_far_Normal.png",
             "T_facade_far_Var.png"
           ],
-          "smoothness_mean": 0.322,
+          "smoothness_mean": 0.324,
           "aux_res": [
             512,
-            857
+            977
           ],
           "astc": {
             "BaseColor": "6x6",
@@ -1869,26 +1869,26 @@
             "MaskMap": "6x6",
             "Var": "8x8"
           },
-          "gpu_bytes_astc_mips": 4946558
+          "gpu_bytes_astc_mips": 5639191
         },
         "Medium": {
           "res": [
             1024,
-            1714
+            1954
           ],
           "texel_mm": 23.44,
           "dir": "facade_far/Medium",
-          "png_bytes": 558786,
+          "png_bytes": 606539,
           "files": [
             "T_facade_far_BaseColor.png",
             "T_facade_far_MaskMap.png",
             "T_facade_far_Normal.png",
             "T_facade_far_Var.png"
           ],
-          "smoothness_mean": 0.322,
+          "smoothness_mean": 0.324,
           "aux_res": [
             512,
-            857
+            977
           ],
           "astc": {
             "BaseColor": "6x6",
@@ -1896,30 +1896,30 @@
             "MaskMap": "8x8",
             "Var": "8x8"
           },
-          "gpu_bytes_astc_mips": 1594248
+          "gpu_bytes_astc_mips": 1817480
         },
         "Low": {
           "res": [
             512,
-            857
+            977
           ],
           "texel_mm": 46.88,
           "dir": "facade_far/Low",
-          "png_bytes": 226049,
+          "png_bytes": 249305,
           "files": [
             "T_facade_far_BaseColor.png",
             "T_facade_far_MaskMap.png",
             "T_facade_far_Normal.png",
             "T_facade_far_Var.png"
           ],
-          "smoothness_mean": 0.322,
+          "smoothness_mean": 0.324,
           "astc": {
             "BaseColor": "8x8",
             "Normal": "8x8",
             "MaskMap": "8x8",
             "Var": "8x8"
           },
-          "gpu_bytes_astc_mips": 585045
+          "gpu_bytes_astc_mips": 666965
         }
       },
       "height_range_m": [
@@ -1927,16 +1927,16 @@
         0.0
       ],
       "albedo": {
-        "mean_lum_linear": 0.4077,
-        "p05": 0.0264,
-        "p95": 0.5304,
+        "mean_lum_linear": 0.4206,
+        "p05": 0.0269,
+        "p95": 0.626,
         "mean_rgb_linear": [
-          0.4084,
-          0.4087,
-          0.402
+          0.4213,
+          0.4217,
+          0.4151
         ]
       },
-      "hf_ratio_albedo": 0.0038,
+      "hf_ratio_albedo": 0.0043,
       "ao_mean": 1.0
     },
     "fence_concrete": {
@@ -2077,7 +2077,7 @@
           ],
           "texel_mm": 6.84,
           "dir": "fire_station/High",
-          "png_bytes": 10024912,
+          "png_bytes": 9995923,
           "files": [
             "T_fire_station_BaseColor.png",
             "T_fire_station_MaskMap.png",
@@ -2100,7 +2100,7 @@
           ],
           "texel_mm": 13.67,
           "dir": "fire_station/Medium",
-          "png_bytes": 2716186,
+          "png_bytes": 2706366,
           "files": [
             "T_fire_station_BaseColor.png",
             "T_fire_station_MaskMap.png",
@@ -2123,7 +2123,7 @@
           ],
           "texel_mm": 27.34,
           "dir": "fire_station/Low",
-          "png_bytes": 671490,
+          "png_bytes": 669053,
           "files": [
             "T_fire_station_BaseColor.png",
             "T_fire_station_MaskMap.png",
@@ -2145,16 +2145,16 @@
         0.03727
       ],
       "albedo": {
-        "mean_lum_linear": 0.2278,
-        "p05": 0.0636,
+        "mean_lum_linear": 0.219,
+        "p05": 0.0572,
         "p95": 0.6162,
         "mean_rgb_linear": [
-          0.192,
-          0.2304,
-          0.2966
+          0.1833,
+          0.2228,
+          0.29
         ]
       },
-      "hf_ratio_albedo": 0.0033,
+      "hf_ratio_albedo": 0.0029,
       "ao_mean": 0.961,
       "source": "polyhaven:painted_plaster_wall (CC0); polyhaven:concrete_wall_008 (CC0); polyhaven:brick_wall_006 (CC0)",
       "render_mean_rgb_linear": [

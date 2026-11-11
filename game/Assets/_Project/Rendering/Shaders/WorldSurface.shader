@@ -45,6 +45,7 @@ Shader "Kamion/World Surface"
         _WindowGrid ("Far facade pane rect in a bay (u0, u1, v0, v1)", Vector) = (0.25, 0.75, 0.3, 0.8)
         _GlassColor ("Far facade glass albedo (linear)", Color) = (0.03, 0.035, 0.04, 1)
         _SkyOcc ("Sky occlusion: x down-facing ambient, y horizon reflection (0 = off; ADR 0060)", Vector) = (0, 0, 0, 0)
+        _ArchitecturalGlass ("Architectural glass shadow receiver (ADR0098)", Float) = 0
         _Emission ("Emission luminance (cd/m2, linear; street lamp glass)", Color) = (0, 0, 0, 0)
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull (lamp glass: Off - the generator's glass quad faces up)", Float) = 2
         [Toggle] _GroundMasks ("Terrain ground masks from COLOR_0 (R road distance/20 m, G forest floor, B unmown, A bare soil)", Float) = 0
@@ -69,9 +70,12 @@ Shader "Kamion/World Surface"
             float4 _GlassColor;
             float4 _Emission;
             float4 _SkyOcc;
+            float _ArchitecturalGlass;
         CBUFFER_END
         float _KamionStreetLamps, _KamionLampLights, _KamionExposure;
+        float _KamionGlassShadowBias;
         #include "KamionLampPools.hlsl"
+        #include "VegetationGround.hlsl"
         ENDHLSL
 
         Pass
@@ -178,7 +182,7 @@ Shader "Kamion/World Surface"
                     albedo = lerp(albedo, albedo * _DryTint.rgb, k.b * 0.8);
                     albedo = lerp(albedo, half3(0.085, 0.072, 0.045) * detail, k.g);
                     albedo = lerp(albedo, half3(0.13, 0.11, 0.085) * detail, k.a);
-                    half grit = (1.0 - smoothstep(0.03, 0.07, k.r)) * 0.7;
+                    half grit = KamionGrassGrit(k, macro);
                     albedo = lerp(albedo, half3(0.19, 0.17, 0.14) * detail, grit);
                 }
                 albedo = saturate(albedo);
@@ -193,15 +197,18 @@ Shader "Kamion/World Surface"
                 half smooth = saturate(_Smoothness + _SmoothnessVar * (det - 0.5));
             #if defined(_FAR_FACADE)
                 {
+                    albedo *= i.masks.rgb;
                     float2 g = i.uv1;
                     float2 bay = floor(g);
                     float2 f = g - bay;
                     float2 fw = max(fwidth(g), 1e-4);
+                    half isRibbon = step(0.6, i.masks.a) * step(i.masks.a, 0.88);
+                    float4 wg = lerp(_WindowGrid, float4(0.08, 0.92, 0.32, 0.76), isRibbon);
                     // Box-filtered pane rectangle (signed distance to the nearest edge in pixels, clamped).
-                    half mx = saturate(min(f.x - _WindowGrid.x, _WindowGrid.y - f.x) / fw.x + 0.5);
-                    half my = saturate(min(f.y - _WindowGrid.z, _WindowGrid.w - f.y) / fw.y + 0.5);
-                    half row = step(0.0, bay.y);
-                    half mean = (_WindowGrid.y - _WindowGrid.x) * (_WindowGrid.w - _WindowGrid.z);
+                    half mx = saturate(min(f.x - wg.x, wg.y - f.x) / fw.x + 0.5);
+                    half my = saturate(min(f.y - wg.z, wg.w - f.y) / fw.y + 0.5);
+                    half row = step(0.0, bay.y) * step(0.5, i.masks.a);
+                    half mean = (wg.y - wg.x) * (wg.w - wg.z);
                     half sub = saturate(max(fw.x, fw.y) * 1.5 - 0.5);   // bay < ~1.5 px: use the mean coverage
                     half pane = lerp(mx * my, mean, sub) * row;
                     float h = frac(sin(dot(bay, float2(12.9898, 78.233))) * 43758.5453);
@@ -226,7 +233,12 @@ Shader "Kamion/World Surface"
                 const half3 specColor = half3(0.04, 0.04, 0.04);
 
                 // Sun
-                float4 shadowCoord = TransformWorldToShadowCoord(i.positionWS);
+                float3 shadowReceiver = i.positionWS;
+                // ADR0098: explicit imported glazing semantic, not a roughness heuristic.
+                // Bounded receiver-normal offset retains cast/frame shadows and does not move geometry.
+                if (_KamionGlassShadowBias > 0.0 && _ArchitecturalGlass > 0.5)
+                    shadowReceiver += n * _KamionGlassShadowBias;
+                float4 shadowCoord = TransformWorldToShadowCoord(shadowReceiver);
                 Light L = GetMainLight(shadowCoord, i.positionWS, half4(1, 1, 1, 1));
                 half giK, giSun;
                 KamionWorldGI(i.positionWS, n, giK, giSun);

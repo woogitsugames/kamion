@@ -1,0 +1,245 @@
+{
+  "method": "EXACT locked baseline material/UV clean-paint masks reused. Report z5-8 band to avoid lower changedplants; overlays require validation. No RGB threshold filters hide dark paint.",
+  "results": {
+    "Low-overcast": {
+      "gable": {
+        "all_clean_above2m": {
+          "pixels": 40340,
+          "median_rgb_srgb": [
+            105.0,
+            123.0,
+            141.0
+          ],
+          "mean_rgb_srgb": [
+            105.17461576598909,
+            123.19890927119485,
+            141.9186663361428
+          ],
+          "median_luma_srgb": 120.545
+        },
+        "matched_z2to5": {
+          "pixels": 6854,
+          "median_rgb_srgb": [
+            105.0,
+            123.0,
+            141.0
+          ],
+          "mean_rgb_srgb": [
+            104.74365334111468,
+            122.49460169244237,
+            140.72133060986286
+          ],
+          "median_luma_srgb": 120.4728
+        },
+        "matched_z5to8": {
+          "pixels": 18932,
+          "median_rgb_srgb": [
+            105.0,
+            123.0,
+            141.0
+          ],
+          "mean_rgb_srgb": [
+            105.10939150644411,
+            123.11451510669765,
+            141.87312486794843
+          ],
+          "median_luma_srgb": 120.4728
+        }
+      },
+      "wing": {
+        "all_clean_above2m": {
+          "pixels": 33110,
+          "median_rgb_srgb": [
+            109.0,
+            127.0,
+            146.0
+          ],
+          "mean_rgb_srgb": [
+            106.59583207490184,
+            124.24874660223497,
+            141.09821806100877
+          ],
+          "median_luma_srgb": 124.545
+        },
+        "matched_z2to5": {
+          "pixels": 30920,
+          "median_rgb_srgb": [
+            108.0,
+            127.0,
+            146.0
+          ],
+          "mean_rgb_srgb": [
+            106.22668175937905,
+            123.85523932729625,
+            140.5648447606727
+          ],
+          "median_luma_srgb": 124.4046
+        },
+        "matched_z5to8": {
+          "pixels": 2190,
+          "median_rgb_srgb": [
+            110.0,
+            129.0,
+            148.0
+          ],
+          "mean_rgb_srgb": [
+            111.80776255707762,
+            129.80456621004566,
+            148.62876712328767
+          ],
+          "median_luma_srgb": 126.11979999999998
+        }
+      },
+      "tower": {
+        "all_clean_above2m": {
+          "pixels": 5349,
+          "median_rgb_srgb": [
+            109.0,
+            128.0,
+            147.0
+          ],
+          "mean_rgb_srgb": [
+            110.15554309216677,
+            128.04299869134417,
+            147.1065619742008
+          ],
+          "median_luma_srgb": 125.33239999999999
+        },
+        "matched_z5to8": {
+          "pixels": 1364,
+          "median_rgb_srgb": [
+            109.0,
+            128.0,
+            147.0
+          ],
+          "mean_rgb_srgb": [
+            109.81451612903226,
+            127.75586510263929,
+            147.86730205278593
+          ],
+          "median_luma_srgb": 125.33239999999999
+        }
+      }
+    },
+    "High-overcast": {
+      "gable": {
+        "all_clean_above2m": {
+          "pixels": 43083,
+          "median_rgb_srgb": [
+            112.0,
+            131.0,
+            150.0
+          ],
+          "mean_rgb_srgb": [
+            111.66081749181812,
+            130.7465357565629,
+            149.57537775920898
+          ],
+          "median_luma_srgb": 128.2602
+        },
+        "matched_z2to5": {
+          "pixels": 7115,
+          "median_rgb_srgb": [
+            111.0,
+            130.0,
+            150.0
+          ],
+          "mean_rgb_srgb": [
+            111.01349262122277,
+            129.76753338018273,
+            148.03865073787773
+          ],
+          "median_luma_srgb": 127.4768
+        },
+        "matched_z5to8": {
+          "pixels": 21600,
+          "median_rgb_srgb": [
+            112.0,
+            131.0,
+            150.0
+          ],
+          "mean_rgb_srgb": [
+            111.78671296296297,
+            130.83430555555555,
+            149.66712962962964
+          ],
+          "median_luma_srgb": 128.192
+        }
+      },
+      "wing": {
+        "all_clean_above2m": {
+          "pixels": 29244,
+          "median_rgb_srgb": [
+            113.0,
+            133.0,
+            153.0
+          ],
+          "mean_rgb_srgb": [
+            108.59571194091096,
+            127.61410887703461,
+            145.0088223225277
+          ],
+          "median_luma_srgb": 130.68939999999998
+        },
+        "matched_z2to5": {
+          "pixels": 27147,
+          "median_rgb_srgb": [
+            113.0,
+            133.0,
+            153.0
+          ],
+          "mean_rgb_srgb": [
+            108.19306000663056,
+            127.15375547942682,
+            144.3153939661841
+          ],
+          "median_luma_srgb": 130.54899999999998
+        },
+        "matched_z5to8": {
+          "pixels": 2097,
+          "median_rgb_srgb": [
+            114.0,
+            134.0,
+            155.0
+          ],
+          "mean_rgb_srgb": [
+            113.80829756795423,
+            133.57367668097282,
+            153.9856938483548
+          ],
+          "median_luma_srgb": 131.1238
+        }
+      },
+      "tower": {
+        "all_clean_above2m": {
+          "pixels": 5349,
+          "median_rgb_srgb": [
+            114.0,
+            134.0,
+            153.0
+          ],
+          "mean_rgb_srgb": [
+            113.88166012338755,
+            133.21854552252756,
+            152.97569639184894
+          ],
+          "median_luma_srgb": 130.9072
+        },
+        "matched_z5to8": {
+          "pixels": 1364,
+          "median_rgb_srgb": [
+            114.0,
+            134.0,
+            152.0
+          ],
+          "mean_rgb_srgb": [
+            114.51026392961877,
+            133.66715542521993,
+            152.81891495601172
+          ],
+          "median_luma_srgb": 130.8338
+        }
+      }
+    }
+  }
+}

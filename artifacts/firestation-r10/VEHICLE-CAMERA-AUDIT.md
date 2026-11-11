@@ -1,0 +1,9 @@
+# Final vehicle-camera causality audit (CPU, no Unity)
+
+ROOT/G found static-background framing shifts in trailer-34/truck-rear34/truck-side before→round2, not explainable as hero material changes. LowOV trailer-34 MAE3.179/626425changedpixels; HighOV MAE4.253/25.9%pixels (independent reviewers). Do not call this an E geometry regression or a fully matched vehicle appearance proof.
+
+Verified sequence: fresh baseline region import completed12:00:12, canonical WorldTruckInstaller completed12:01:40, then before160. Installer calls TruckAssetBuilder.Build()/TrailerAssetBuilder.Build() before replacing scene instances. It preserves the old scene vehicle and trailer root position/rotation (WorldTruckInstaller.cs73,85) generated before the canonical rebuild. Later region imports instantiate canonical prefabs and derive trailer placement directly from their VehicleData. This is a plausible pose/placement confound, not proven exact cause.
+
+Canonical Truck/Trailer asset bytes were pinned after installer and match all later stages/final784 verification. That proves fixture assets, NOT scene-root/camera transform equality. Before scene YAML/world camera poses were not separately archived; no exact retroactive pose proof exists. Baseline installer logs only rounded tractor position(729.58,10.36,-395.77),heading209.4. Final scene spawn is(729.57574,10.364564,-395.76938),rotation(0,.96733606,0,-.2534974); local QA definitions remain source-identical. Final scene pose records in final-scene-camera-pose-audit.json.
+
+Fixed world-space fire_station_* cameras and semantic facade ROIs remain direct relevant hero evidence. Full160 is an actual inventory and measured stats comparison, with vehicle-frame causality limited; no global pixel-identity or whole-world visual-isolation claim. No source/camera changes or new capture while PHONE held. Canonical asset bytes alone must not be advertised as complete pose parity.

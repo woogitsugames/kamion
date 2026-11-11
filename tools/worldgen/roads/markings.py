@@ -192,6 +192,9 @@ def edge_lines(sec, hw, dirn):
 
 
 def build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
+    # ADR 0100: authored paved aprons re-surface the generated carriageway before any paint is draped on it
+    from . import aprons as APR
+    APR.apply(buf, getattr(net, "authored", None) or [], report, net.overrides_applied, net.overrides_stale)
     first = len(buf.parts)
     _build_markings(buf, net, juncs, ctx_points, report)
     report["overlap_removed_tris"] = drop_overlapping(buf, net, first)

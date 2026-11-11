@@ -1,0 +1,39 @@
+Applications Graphics Acceleration Info:
+Uptime: 483722535 Realtime: 909464872
+
+** Graphics info for pid 12336 [com.woogitsugames.kamion] **
+GraphicBufferAllocator buffers:
+            Handle |         Size |     W (Stride) x H | Layers |   Format |      Usage | Requestor
+0xb4000075c0443dc0 |  9945.00 KiB | 1080 (1088) x 2340 |      1 |        1 | 0x     b00 | a72bd9e SurfaceView[com.woogitsugames.kamion/com.unity3d.player.UnityPlayerGameActivity]@0#1(BLAST Consumer)1
+0xb4000075c0443f00 |  9945.00 KiB | 1080 (1088) x 2340 |      1 |        1 | 0x     b00 | a72bd9e SurfaceView[com.woogitsugames.kamion/com.unity3d.player.UnityPlayerGameActivity]@0#1(BLAST Consumer)1
+0xb4000076495ff680 |  9922.50 KiB | 2340 (2352) x 1080 |      1 |        1 | 0x     933 | VRI[UnityPlayerGameActivity]@fe6755b#0(BLAST Consumer)0
+0xb40000768ad32040 |  9945.00 KiB | 1080 (1088) x 2340 |      1 |        1 | 0x     b00 | a72bd9e SurfaceView[com.woogitsugames.kamion/com.unity3d.player.UnityPlayerGameActivity]@0#1(BLAST Consumer)1
+0xb40000768ad32180 |  9922.50 KiB | 2340 (2352) x 1080 |      1 |        1 | 0x     933 | VRI[UnityPlayerGameActivity]@fe6755b#0(BLAST Consumer)0
+0xb40000768ad32400 |  9922.50 KiB | 2340 (2352) x 1080 |      1 |        1 | 0x     933 | VRI[UnityPlayerGameActivity]@fe6755b#0(BLAST Consumer)0
+0xb40000768ad35b00 |  9945.00 KiB | 1080 (1088) x 2340 |      1 |        1 | 0x     b00 | a72bd9e SurfaceView[com.woogitsugames.kamion/com.unity3d.player.UnityPlayerGameActivity]@0#1(BLAST Consumer)1
+Total allocated by GraphicBufferAllocator (estimate): 69547.50 KB
+Imported gralloc buffers:
++ name:a72bd9e SurfaceView[com.woogitsugames.kamion/com.unity3d.player.UnityPlayerGameActivity]@0#1(BLAST Consumer)1, id:6481105702946, size:10153.00KiB, w/h:1080x2340, usage: 0xb00, req fmt:1, fourcc/mod:875708993/576460752303423602, dataspace: 0x8810000, compressed: true
++ name:a72bd9e SurfaceView[com.woogitsugames.kamion/com.unity3d.player.UnityPlayerGameActivity]@0#1(BLAST Consumer)1, id:6481105702945, size:10153.00KiB, w/h:1080x2340, usage: 0xb00, req fmt:1, fourcc/mod:875708993/576460752303423602, dataspace: 0x8810000, compressed: true
++ name:a72bd9e SurfaceView[com.woogitsugames.kamion/com.unity3d.player.UnityPlayerGameActivity]@0#1(BLAST Consumer)1, id:6481105702944, size:10153.00KiB, w/h:1080x2340, usage: 0xb00, req fmt:1, fourcc/mod:875708993/576460752303423602, dataspace: 0x8810000, compressed: true
++ name:VRI[UnityPlayerGameActivity]@fe6755b#0(BLAST Consumer)0, id:6481105702923, size:9922.50KiB, w/h:2340x1080, usage: 0x933, req fmt:1, fourcc/mod:875708993/0, dataspace: 0x0, compressed: false
++ name:VRI[UnityPlayerGameActivity]@fe6755b#0(BLAST Consumer)0, id:6481105702925, size:9922.50KiB, w/h:2340x1080, usage: 0x933, req fmt:1, fourcc/mod:875708993/0, dataspace: 0x0, compressed: false
++ name:a72bd9e SurfaceView[com.woogitsugames.kamion/com.unity3d.player.UnityPlayerGameActivity]@0#1(BLAST Consumer)1, id:6481105702947, size:10153.00KiB, w/h:1080x2340, usage: 0xb00, req fmt:1, fourcc/mod:875708993/576460752303423602, dataspace: 0x8810000, compressed: true
++ name:VRI[UnityPlayerGameActivity]@fe6755b#0(BLAST Consumer)0, id:6481105702924, size:9922.50KiB, w/h:2340x1080, usage: 0x933, req fmt:1, fourcc/mod:875708993/0, dataspace: 0x0, compressed: false
+Total imported by gralloc: 70379.50KiB
+
+Profile data in ms:
+
+	com.woogitsugames.kamion/com.unity3d.player.UnityPlayerGameActivity/android.view.ViewRootImpl@24ccdfc (visibility=0)
+View hierarchy:
+
+  com.woogitsugames.kamion/com.unity3d.player.UnityPlayerGameActivity/android.view.ViewRootImpl@24ccdfc
+  9 views, 11,32 kB of render nodes
+
+
+Total ViewRootImpl   : 1
+Total attached Views : 9
+Total RenderNode     : 11,32 kB (used) / 11,32 kB (capacity)
+
+  ProcessConfig={1.0 ?mcc0mnc [pl_PL] ldltr sw384dp w832dp h384dp 450dpi nrml long compactNeeded land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 2340, 1080) mAppBounds=Rect(0, 0 - 2340, 1080) mMaxBounds=Rect(0, 0 - 2340, 1080) mDisplayRotation=ROTATION_90 mWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90 mStageConfig=undefined mPopOver=off mOverlappingWithCutout=false} s.10081 fontWeightAdjustment=0 ff=0 bf=-1 bts=0 cst=1.0 nightDim=0 themeSeq=0}
+  Application ResourcesConfig={1.0 ?mcc0mnc [pl_PL] ldltr sw384dp w832dp h384dp 450dpi nrml long compactNeeded land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 2340, 1080) mAppBounds=Rect(0, 0 - 2340, 1080) mMaxBounds=Rect(0, 0 - 2340, 1080) mDisplayRotation=ROTATION_90 mWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90 mStageConfig=undefined mPopOver=off mOverlappingWithCutout=false} s.10081 fontWeightAdjustment=0 ff=0 bf=-1 bts=0 cst=1.0 nightDim=0 themeSeq=0}

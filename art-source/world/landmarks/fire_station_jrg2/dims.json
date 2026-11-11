@@ -1,11 +1,11 @@
 {
  "schema": "truck-sim-pl/hero-building-dims/1",
  "asset": "fire_station_jrg2",
- "object": "Jednostka Ratowniczo-Gaśnicza nr 2 PSP, ul. Gen. Andersa 46, Białystok (OSM way 211035271)",
+ "object": "Jednostka Ratowniczo-Ga\u015bnicza nr 2 PSP, ul. Gen. Andersa 46, Bia\u0142ystok (OSM way 211035271)",
  "sources": {
   "plan": "BDOT10k footprints bdot:2BE4B431-C784-1BF0-E053-CC2BA8C0D140 (1317.7 m2) and bdot:2BE4B431-C7B4-1BF0-E053-CC2BA8C0D140 (245.2 m2); GUGiK orthophoto 0.25 m (2024)",
   "heights": "GUGiK LoD2 2017 roof planes (lod2_roofs.json, CC BY 4.0), relative to the lowest LoD2 vertex of each building",
-  "facades": "by eye from CC0 photos (Wikimedia Commons, Rakoon: '7197 May 2021 in Białystok', '20240626 103137 June 2024 in Białystok') and CC BY-SA 4.0 street-level frames used as pattern only (Mapillary 767523907280643, 171742518208129 richlv; 471355742447021 strudel; 2934972690092373 grobin; KartaView kv993066550): WORKING_VALUE unless a LoD2 / BDOT source is named",
+  "facades": "by eye from CC0 photos (Wikimedia Commons, Rakoon: '7197 May 2021 in Bia\u0142ystok', '20240626 103137 June 2024 in Bia\u0142ystok') and CC BY-SA 4.0 street-level frames used as pattern only (Mapillary 767523907280643, 171742518208129 richlv; 471355742447021 strudel; 2934972690092373 grobin; KartaView kv993066550): WORKING_VALUE unless a LoD2 / BDOT source is named",
   "unverified": "NE and NW facades, garage rear doors, hall SE wall, outbuilding facades, gate position, thuja count: not visible in any open photo - WORKING_VALUE"
  },
  "axis": {
@@ -245,8 +245,8 @@
    ]
   ],
   "count": 26,
-  "jitter": 0.5,
-  "note": "r6: wider size / spacing spread (review P1 #6); WORKING_VALUE"
+  "jitter": 0.25,
+  "note": "r7: three habits; planner jitter .25 limits consecutive spacing to ?25% nominal (actual seeded range?19.50%). WORKING_VALUE, original count/row endpoints unchanged."
  },
  "flagpoles": {
   "uv": [
@@ -264,13 +264,13 @@
  "spruce": {
   "items": [
    [
-    47.6,
+    51.6,
     -21.0,
     7.6,
     1.5
    ],
    [
-    50.4,
+    54.4,
     -19.5,
     6.2,
     1.25
@@ -282,6 +282,9 @@
     1.5
    ]
   ],
-  "note": "u, v, height, radius. r6: CC0 photo 7197 shows two spruces in front of the right arched window, taller than the window heads, and a broad dark conifer in front of the wing. Positions and sizes read off that one photo: WORKING_VALUE +-3 m"
+  "note": "r7: first two foreground conifers shifted+4u m screen-right in ref7197; wing conifer unchanged. Tiered root-connected boughs, CC0 short-needle fir/conifer proxy (not verified Picea). Placement WORKING_VALUE?3m from one photo; ground re-sampled by planner.",
+  "inner_core_fill_r_WORKING_VALUE": 0.55,
+  "inner_core_note": "r7r2: continuous irregular inner canopy, broader lower third; .55R chosen after actual4-frame sparse-crown rejection. Outer CC0 boughs/cards/positions unchanged; density is authored WORKING_VALUE, not scan geometry.",
+  "bough_uv_revision": "r7-bundle2-root-content-16px"
  }
 }

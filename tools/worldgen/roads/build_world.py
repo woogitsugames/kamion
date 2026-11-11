@@ -77,7 +77,10 @@ MATERIALS = {
     # viaducts: precast-concrete modulation map projected in world metres (the deck / pier meshes have no metric UV);
     # albedo from the CC0 Bieżeństwa photo (piers mid grey, soffit in its own shadow, REVIEW r3 W4). WORKING_VALUE
     # sky_occ (ADR 0060): the soffit and the deck underside face a road the deck itself shades
-    "bridge_concrete": {"color": [0.42, 0.42, 0.40], "rough": 0.85, "surface": "concrete",
+    # ADR0101 (r2): 0.42 was tuned under the old gamma upload (GPU ~0.15); under the linear _Tint (0086) the girder
+    # faces read 1.10-1.38 x the asphalt of the same frame, the Bieżeństwa photo has lit pier / road 0.95-1.02, and
+    # from above the cornices read near-white. 0.26/0.26/0.25 (WORKING_VALUE) targets that ratio (tint_ratio.py).
+    "bridge_concrete": {"color": [0.26, 0.26, 0.25], "rough": 0.85, "surface": "concrete",
                         "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.5, 0.0]},
     "bridge_soffit": {"color": [0.15, 0.15, 0.145], "rough": 0.9, "surface": "concrete",
                       "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.6, 0.0]},
@@ -712,6 +715,11 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         with open(os.environ["WORLDGEN_DUMP_WALLS"], "wb") as fh:
             pickle.dump({"parts": keep, "zc": zc, "mask": mask, "x0": w.hf.x0, "y1": w.hf.y1}, fh)
     np.save(out_root / "terrain_conformed.npy", zc.astype(np.float32))
+    from streetscape import far_field as FF
+    ff_qa = FF.build_far_field(region_id, out_root=out_root)
+    manifest["far_field"] = ff_qa["tiers"]
+    write_json(gen / "world_manifest.json", manifest)
+    log("far_field:", {k: v["total_triangles"] for k, v in ff_qa["tiers"].items()})
     log("done")
     return w, manifest, qa
 

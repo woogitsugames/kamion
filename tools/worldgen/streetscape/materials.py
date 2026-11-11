@@ -19,6 +19,17 @@ def _set_mean(name, default):
         return default
 
 
+def _hero_thuja_shell_tint():
+    """ADR0070 r7: hero-only alias; all global route hedge colours stay unchanged."""
+    import json
+    from pathlib import Path
+    p = Path(__file__).resolve().parents[3] / "art-source/world/landmarks/fire_station_jrg2/atlas_layout.json"
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))["atlas"]["thuja_shell_tint_linear"]
+    except (OSError, KeyError, ValueError):
+        return [1.76558, 1.55454, 2.45559]  # default shared leaf palette / procedural covered-shell mean
+
+
 M = {
     # paved areas
     "yard_paving": {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones", "texture_set": "paving_20x10_grey"},
@@ -134,7 +145,10 @@ M = {
     # rose from 28/29/28 to 57/59/56 in High overcast (route-putry-entry-signs).
     # Candidate linear albedo below targets the photo's 36–40 display levels;
     # screen appearance calibration only, not a physical measurement of the paint.
-    "noise_panel_dark": {"color": [0.022, 0.024, 0.023], "rough": 0.7, "metal": 0.05, "texture_set": "noise_cassette"},
+    # ADR0101 (r2): that compared absolute levels with a brighter summer photo; the measured quantity is the
+    # cassette/plinth ratio on one face (p40: 0.34-0.38). Back to the measured 0.04 (hue of the old .068/.072/.070),
+    # checked as a ratio to the plinth on 2 cameras (tools/worldgen/qa/tint_ratio.py).
+    "noise_panel_dark": {"color": [0.039, 0.041, 0.040], "rough": 0.7, "metal": 0.05, "texture_set": "noise_cassette"},
     "noise_post": {"color": [0.17, 0.21, 0.18], "rough": 0.55, "metal": 0.3},
     "car_sill": {"color": [0.035, 0.033, 0.03], "rough": 0.8},
     # contact shadow / AO patch under parked vehicles (ADR 0050): Kamion/World Vehicle Contact, parameters per
@@ -302,7 +316,10 @@ M = {
     # photo 20210904_101250 shows the sheet clearly darker than the overcast sky).
     # r12 (ADR 0092): `panel_m` = cladding module of the set [panel length, course height] m: the macro tone drift is
     # quantised to it (one tone per panel + a butt joint line) instead of a smooth noise
-    "kp_wall": {"color": [0.56, 0.57, 0.57], "rough": 0.5, "metal": 0.1, "texture_set": "sandwich_ribbed", "weather": True,
+    # ADR0101 (r2): under the linear _Tint contract (0086) 0.56 doubled the GPU albedo and the sunlit gate facade
+    # clipped (252 sRGB, ribs lost). 0.37/0.38/0.38 (WORKING_VALUE) is checked as hall/sky ratio on a lit and a
+    # shaded camera (overcast 0.6-0.88 like the CC0 photos, clear without clip; tools/worldgen/qa/tint_ratio.py).
+    "kp_wall": {"color": [0.37, 0.38, 0.38], "rough": 0.5, "metal": 0.1, "texture_set": "sandwich_ribbed", "weather": True,
                 "panel_m": [6.0, 1.0]},
     "kp_accent": {"color": [0.50, 0.075, 0.035], "rough": 0.55, "metal": 0.2},
     "kp_glass_block": {"color": [0.27, 0.29, 0.30], "rough": 0.3},
@@ -347,6 +364,8 @@ M = {
                      "surface": "concrete", "texture_set": "fire_station"},
     "fire_station_alpha": {"color": [1.0, 1.0, 1.0], "rough": 0.6, "texture": "fire_station_alpha",
                            "alpha_cutoff": 0.5},
+    "fire_station_thuja_shell": {"color": _hero_thuja_shell_tint(), "rough": 0.97,
+                                 "texture": "hedge_shell_thuja", "alpha_cutoff": 0.5},
     # landmarks
     "chimney_concrete": {"color": [0.40, 0.40, 0.38], "rough": 0.9},
     "chimney_red": {"color": [0.35, 0.05, 0.04], "rough": 0.85},
@@ -364,6 +383,13 @@ M = {
     "plaster_band_grey": {"color": [0.26, 0.27, 0.27], "rough": 0.9, "texture_set": "plaster"},
     # retaining walls of the raised ramps (roads.profile.mark_walled_ramps): block-faced concrete
     "ramp_wall_blocks": {"color": [0.34, 0.33, 0.31], "rough": 0.9, "texture_set": "concrete_blocks_split"},
+    # far-field backdrop beyond the 2x2 km region border (ADR 0085, streetscape.far_field): one merged submesh per
+    # cardinal sector with linear albedo in COLOR_0.rgb, window-mode flag in COLOR_0.a (1 = block/office grid,
+    # 0.75 = ribbon windows, 0 = windowless wall/roof/plinth/chimney/pylon), and bay x storey coordinates in TEXCOORD_1.
+    "far_field_buildings": {"color": [1.0, 1.0, 1.0], "rough": 0.88, "base": "plaster_white", "vertex_color": True,
+                            "window_grid": {"pitch_m": 3.0, "win_w": 0.48, "sill": 0.30, "head": 0.82,
+                                            "uv": "TEXCOORD_1"},
+                            "glass_color": [0.032, 0.038, 0.046]},
 }
 
 # ADR 0081 (r10 r2): Kamion/World PBR declares _Tint as a Color property, so Unity converts the value written by the
@@ -444,3 +470,36 @@ for _k, _v in M.items():
     if _so is not None:
         _v.setdefault("sky_occ", _so)
 
+
+# ADR 0097 (zabudowa r5; additive block - the table above is shared with ADR 0086 / 0098, so the building changes of
+# this round are applied here, in place, after it):
+# - review 0094 P2-e "szczyt 251/241/210 (R przy klipie)" in High clear: plaster_cream albedo -8 % (the review's own
+#   alternative to an exposure change, which belongs to the lighting work, ADR 0098). In place: the LOD1 far
+#   materials share the colour list.
+# - review 0094 P1-a / P2-g "rozbryzgu nie widać": the plinth 0.20 -> 0.24 (dark mineral plaster; the shader's splash
+#   multiplier is fixed, so a lighter base is what makes 8-10 sRGB levels of splash) and its splash zone 0.5 -> 0.8 m.
+#   WORKING_VALUE both.
+M["plaster_cream"]["color"][:] = [round(c * 0.92, 4) for c in M["plaster_cream"]["color"]]
+M["plinth_dark"]["color"][:] = [0.24, 0.24, 0.235]
+M["plinth_dark"]["splash_h"] = 0.8
+# ADR 0102: additive, furniture-only atlas bindings; existing shared pigments and the linear tint contract stay intact.
+for _kind, _base in (("galv", "steel_galv"), ("grey", "steel_painted_grey"),
+                     ("concrete", "concrete_pole"), ("bollard", "steel_painted")):
+    M[f"furniture_{_kind}"] = {**M[_base], "texture": f"furniture_{_kind}"}
+M["furniture_footing"] = {**M["concrete_base"], "texture": "furniture_concrete"}
+
+
+
+# ADR 0107 (zabudowa r6; additive block, same rule as the ADR 0097 block above):
+# - review 0097 P1-e "spody i boki płyt balkonowych 38-40 sRGB przy ścianie 100-150": the slab was raw concrete 0.30
+#   with the ambient of its underside halved (SKY_OCC_STRUCT). Balcony slabs of the insulated blocks are rendered and
+#   painted with the facade (light grey / off-white underside on the CC0 Putry photos, refs/cm121537425): albedo 0.52,
+#   and no halving of the down-facing ambient (like soffit_boards, ADR 0094) - the ground SH term is already the dark
+#   side of the ambient. WORKING_VALUE, target: underside >= 55-60 % of the wall luminance at overcast.
+M["balcony_slab"]["color"][:] = [0.52, 0.515, 0.50]
+M["balcony_slab"]["sky_occ"] = [0.0, 0.0]
+# - review 0097 P2-n "dachówka: regularne pasy, jednolity ton": the 1.4 m roof_tiles set repeats its 7 x 4 tiles; a
+#   macro tone drift of 7 m / 0.16 (importer `macro` = [size m, strength], as on brick_red: lots, weathering, moss on
+#   the north slope) breaks the repeat over a slope. Tile roofs only - a pressed metal sheet is one tone. WORKING_VALUE.
+for _k in ("roof_tiles_red", "roof_tiles_brown"):
+    M[_k]["macro"] = [7.0, 0.16]

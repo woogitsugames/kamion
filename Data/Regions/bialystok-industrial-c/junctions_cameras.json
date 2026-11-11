@@ -671,6 +671,111 @@
     74.5,
     141.8
    ]
+  },
+  {
+   "id": "r3_e_split_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "ADR 0100: eastbound DK8 ramp lane before the separator nose E -805.6 N 55.75 (P1-2), chevrons on the left",
+   "pos": [
+    -845.0,
+    54.0,
+    141.0
+   ],
+   "look_at": [
+    -800.0,
+    55.5,
+    140.1
+   ]
+  },
+  {
+   "id": "r3_e_split_top",
+   "type": "persp",
+   "kind": "rondo_above",
+   "seat": "file",
+   "fov_deg": 65.0,
+   "note": "ADR 0100: top-down, eastbound split",
+   "pos": [
+    -812.0,
+    57.0,
+    180.0
+   ],
+   "look_at": [
+    -812.0,
+    57.5,
+    140.0
+   ]
+  },
+  {
+   "id": "r3_n100_se_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "ADR 0100: SE-bound Andersa before n10015785253, ending right lane with guidance arrows (P1-4)",
+   "pos": [
+    -280.0,
+    -223.5,
+    132.5
+   ],
+   "look_at": [
+    -240.0,
+    -250.0,
+    130.5
+   ]
+  },
+  {
+   "id": "r3_ma010_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "ADR 0100: Rondo Putry ring S under the viaduct heading SE (P0-2 MA-010)",
+   "pos": [
+    -578.0,
+    6.5,
+    137.0
+   ],
+   "look_at": [
+    -545.0,
+    -14.0,
+    134.0
+   ]
+  },
+  {
+   "id": "r3_putry_n_top",
+   "type": "persp",
+   "kind": "rondo_above",
+   "seat": "file",
+   "fov_deg": 65.0,
+   "note": "ADR 0100: top-down Putry N crossover and plaza",
+   "pos": [
+    -560.0,
+    127.0,
+    175.0
+   ],
+   "look_at": [
+    -560.0,
+    127.5,
+    135.0
+   ]
+  },
+  {
+   "id": "r3_bay_w_top",
+   "type": "persp",
+   "kind": "rondo_above",
+   "seat": "file",
+   "fov_deg": 65.0,
+   "note": "ADR 0100: top-down west end of the sett bay (apron)",
+   "pos": [
+    -108.0,
+    -322.0,
+    170.0
+   ],
+   "look_at": [
+    -108.0,
+    -321.5,
+    137.0
+   ]
   }
  ]
 }

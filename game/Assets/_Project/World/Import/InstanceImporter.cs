@@ -571,7 +571,7 @@ namespace Game.World.Import
         /// WORKING_VALUE, measured in artifacts/vqa (ADR 0023 table).
         /// </summary>
         public static readonly Vector2 ImpostorVisibility = new Vector2(0.45f, 0.25f);
-        /// <summary>HLOD edge walls: the stand interior is dark only through the visibility map, so it applies fully.</summary>
+        /// <summary>ADR0088: direct-only bake omits transmitted / multiply scattered leaf light. WORKING_VALUE.</summary>
         public static readonly Vector2 EdgeVisibility = new Vector2(1.0f, 0.6f);
 
         /// <summary>Kamion/Vegetation material asset (impostor / HLOD edge variant), alpha-to-coverage, double sided, instanced.</summary>
@@ -589,6 +589,7 @@ namespace Game.World.Import
             mat.SetTexture("_NormalOcc", normalOcc);
             mat.SetColor("_BaseColor", Color.white);
             mat.SetVector("_Impostor", impostor);
+            VegetationCanopyPolicy.Apply(mat);
             mat.SetFloat("_Cutoff", cutoff);
             mat.SetFloat("_Cull", 0f);
             mat.SetFloat("_AlphaToMask", 1f);

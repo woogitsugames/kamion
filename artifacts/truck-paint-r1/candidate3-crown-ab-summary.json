@@ -1,0 +1,51 @@
+{
+  "amplitudeFixed_mm": 3.6,
+  "normalCap_deg": 1,
+  "rows": [
+    {
+      "condition": "High-clear",
+      "CrownOFF_doorRange": 6.205151702786367,
+      "CrownON_doorRange": 6.688429308565524,
+      "delta": 0.4832776057791577,
+      "ownerGatePass": true
+    },
+    {
+      "condition": "High-lowsun",
+      "CrownOFF_doorRange": 5.007706914344709,
+      "CrownON_doorRange": 6.036660474716214,
+      "delta": 1.0289535603715052,
+      "ownerGatePass": true
+    },
+    {
+      "condition": "High-overcast",
+      "CrownOFF_doorRange": 2.3711413828689345,
+      "CrownON_doorRange": 2.733044375645008,
+      "delta": 0.3619029927760735,
+      "ownerGatePass": false
+    },
+    {
+      "condition": "Low-clear",
+      "CrownOFF_doorRange": 3.323983488132072,
+      "CrownON_doorRange": 5.212177502579976,
+      "delta": 1.8881940144479046,
+      "ownerGatePass": true
+    },
+    {
+      "condition": "Low-lowsun",
+      "CrownOFF_doorRange": 2.6657791537667634,
+      "CrownON_doorRange": 3.2346460268317827,
+      "delta": 0.5688668730650193,
+      "ownerGatePass": false
+    },
+    {
+      "condition": "Low-overcast",
+      "CrownOFF_doorRange": 2.3451104231166156,
+      "CrownON_doorRange": 3.319628482972135,
+      "delta": 0.9745180598555194,
+      "ownerGatePass": false
+    }
+  ],
+  "ownerStatus": "FAIL: overcastLow/High andLow-lowsun stillbelow4. Noamplitude sweep.",
+  "interpretation": "CoherentnormalchangesdiffuseANDcoat; deltaisNOTpureclearcoat contribution.",
+  "images": "candidate3-off-on-960"
+}

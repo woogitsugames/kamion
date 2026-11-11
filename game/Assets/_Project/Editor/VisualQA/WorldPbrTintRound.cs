@@ -16,11 +16,13 @@ namespace Game.Editor.VisualQA
             // Default is ALL registered cameras: a global material fix needs a
             // full-world regression matrix, even when the ROI table uses a subset.
             string cameras = EditorTools.Arg("-tintCameras", null);
+            // ADR0101: optional output root so later calibration rounds do not overwrite the 0086 evidence.
+            string outRoot = EditorTools.Arg("-tintOutDir", Path.Combine(EditorTools.RepoRoot, "artifacts/tint-gamma-r1"));
             int rendered = 0;
             foreach (string tier in new[] { "Low", "High" })
                 foreach (string lighting in new[] { "overcast", "clear" })
                 {
-                    string output = Path.Combine(EditorTools.RepoRoot, "artifacts/tint-gamma-r1", round, tier + "-" + lighting);
+                    string output = Path.Combine(outRoot, round, tier + "-" + lighting);
                     string scene = tier == "High" ? "WorldC_High" : "WorldC";
                     int count = VisualQaRunner.Render(scene, 2340, 1080, tier, output, lighting, cameras);
                     if (count <= 0 || (cameras != null && count != cameras.Split(',').Length))

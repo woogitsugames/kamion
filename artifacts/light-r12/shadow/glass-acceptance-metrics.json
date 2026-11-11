@@ -1,0 +1,62 @@
+{
+  "condition": "Medium clear; same default curve/pipeline; only explicit kp receiver bias differs",
+  "working_value_m": 0.08,
+  "rois": {
+    "frame_received_shadow": {
+      "rect_original_px": [
+        55,
+        231,
+        63,
+        240
+      ],
+      "control_luma": 96.05098611111111,
+      "candidate_luma": 100.43663611111111,
+      "realtime_off_luma": 107.02961111111111,
+      "candidate_received_shadow_depth_vs_realtime_off": 6.592974999999999,
+      "candidate_vs_control_absmean_rgb": 4.277777777777778,
+      "candidate_vs_control_absmax_rgb": 12.0
+    },
+    "pane_interior": {
+      "rect_original_px": [
+        70,
+        231,
+        90,
+        240
+      ],
+      "control_luma": 103.70565111111111,
+      "candidate_luma": 107.51376666666664,
+      "realtime_off_luma": 107.51376666666664,
+      "candidate_received_shadow_depth_vs_realtime_off": 0.0,
+      "candidate_vs_control_absmean_rgb": 3.65,
+      "candidate_vs_control_absmax_rgb": 17.0
+    },
+    "broad_triangle": {
+      "rect_original_px": [
+        105,
+        225,
+        140,
+        240
+      ],
+      "control_luma": 93.75348647619047,
+      "candidate_luma": 106.37020380952379,
+      "realtime_off_luma": 107.37341599999999,
+      "candidate_received_shadow_depth_vs_realtime_off": 1.0032121904761906,
+      "candidate_vs_control_absmean_rgb": 12.27047619047619,
+      "candidate_vs_control_absmax_rgb": 22.0
+    },
+    "trailer_contact": {
+      "rect_original_px": [
+        50,
+        650,
+        1000,
+        950
+      ],
+      "control_luma": 103.78750302947368,
+      "candidate_luma": 103.78750302947368,
+      "realtime_off_luma": 112.62201895649122,
+      "candidate_received_shadow_depth_vs_realtime_off": 8.834515927017545,
+      "candidate_vs_control_absmean_rgb": 0.0,
+      "candidate_vs_control_absmax_rgb": 0.0
+    }
+  }
+}

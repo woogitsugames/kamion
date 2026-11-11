@@ -327,6 +327,56 @@ def plan(w, region_id, overrides, zground, blocked, log=lambda *a: None) -> list
             continue
         ways = set(spec["osm_ways"])
         out.append({"override": o, "spec": spec, "meta": meta, "sha": sha, "chains": _chains(w.net, ways)})
+    # ADR 0105: independently authored underdeck dressing. Keep road overrides,
+    # the deck ribbons, screens and barriers owned by ADR 0100 untouched.
+    config = REPO / "Data" / "Regions" / region_id / "viaduct_underdeck.json"
+    if config.exists():
+        from types import SimpleNamespace
+        cfg = json.loads(config.read_text(encoding="utf-8"))
+        for c in _chains(w.net, {str(x) for x in cfg["target"]["osm_way"]}):
+            if any(c.id in {ch.id for ch in h["chains"]} for h in out):
+                continue
+            local = SimpleNamespace(net=SimpleNamespace(chains=[c]), region=w.region)
+            spec = build_spec(local, cfg, zground, blocked)
+            if spec is not None:
+                # Ground samples are authored into the spec, so stairs cannot float
+                # above an imagined planar embankment. Never write to raw junctions.
+                spec["stairs"] = []
+                spec["self_seeded_grass"] = []
+                dk = spec["decks"][0]
+                for k, end in enumerate(dk["s_open"]):
+                    st = min(dk["stations"], key=lambda st: abs(st["s"] - end))
+                    t = np.array(st["t"])
+                    n = np.array(st["l"][:2]) - np.array(st["r"][:2])
+                    hw = np.linalg.norm(n) / 2
+                    n /= 2 * hw
+                    mid = (np.array(st["l"]) + np.array(st["r"])) / 2
+                    back = t * (-1 if k == 0 else 1)
+                    steps = []
+                    stair_top = mid[2] - spec["params"]["girder_depth_m"] - .10
+                    for j in range(40):
+                        xy = mid[:2] + n * (hw + .65) + back * ((j + .5) * spec["params"]["stairs_tread_m"])
+                        if blocked(xy):
+                            break
+                        z = zground(*xy)
+                        tread = stair_top - j * spec["params"]["stairs_rise_m"]
+                        if tread < z + .08:
+                            break
+                        steps.append([_r(xy[0]), _r(xy[1]), _r(z), _r(tread)])
+                    # Do not leave a truncated flight ending in mid-air when a
+                    # live road blocks its lower landing.
+                    if steps and steps[-1][3] - steps[-1][2] > .30:
+                        steps = []
+                    spec["stairs"].append(steps)
+                    for side, distance in ((-1, .8), (1, 1.7), (-1, 2.6)):
+                        xy = mid[:2] + n * side * (hw + 1.2) + back * distance
+                        if not blocked(xy):
+                            spec["self_seeded_grass"].append([_r(xy[0]), _r(xy[1]), _r(zground(*xy))])
+                out.append({"underdeck": True, "spec": spec, "chains": [c], "override": cfg})
+        sp = spec_path(region_id, cfg["asset"])
+        sp.parent.mkdir(parents=True, exist_ok=True)
+        sp.write_text(json.dumps([h["spec"] for h in out if h.get("underdeck")],
+                                 sort_keys=True, indent=1) + "\n", encoding="utf-8", newline="\n")
     return out
 
 
@@ -334,11 +384,217 @@ def chain_ids(heroes) -> set:
     return {c.id for h in heroes for c in h["chains"]}
 
 
+def _quad(buf, points, mat, src, outward):
+    """Metric planar UVs; outward winding (including the underside)."""
+    v = np.asarray(points, float)
+    t = np.array([[0, 1, 2], [0, 2, 3]])
+    if np.dot(np.cross(v[1] - v[0], v[2] - v[0]), outward) < 0:
+        t = t[:, [0, 2, 1]]
+    buf.add("bridge", mat, v, np.column_stack([v[:, 0] + v[:, 2], v[:, 1] + v[:, 2]]), t, src=src)
+
+
+def _prism(buf, centre, t, hl, hw, bevel, z0, z1, mat, src, collision=False):
+    """Eight-sided concrete column/head; bevel is geometry, never a round normal."""
+    t = np.asarray(t, float)
+    n = np.array([-t[1], t[0]])
+    ring = [(hl, -hw + bevel), (hl, hw - bevel), (hl - bevel, hw), (-hl + bevel, hw),
+            (-hl, hw - bevel), (-hl, -hw + bevel), (-hl + bevel, -hw), (hl - bevel, -hw)]
+    xy = np.asarray(centre) + np.array([t * a + n * b for a, b in ring])
+    v = np.concatenate([np.column_stack([xy, np.full(8, z0)]), np.column_stack([xy, np.full(8, z1)])])
+    faces = []
+    for i in range(8):
+        j = (i + 1) % 8
+        faces += [(i, j, j + 8), (i, j + 8, i + 8)]
+    faces += [(8, 8 + i, 9 + i) for i in range(1, 7)]
+    uv = np.column_stack([v[:, 0] + v[:, 2], v[:, 1] + v[:, 2]])
+    buf.add("bridge", mat, v, uv, faces, src=src)
+    if collision:
+        buf.add("collision", "collision_building", v, uv, faces, src=src)
+
+
+def _pipe(buf, a, b, radius, src):
+    """Four-sided PVC pipe in the already batched concrete material; no new renderer."""
+    a, b = np.asarray(a, float), np.asarray(b, float)
+    d = b - a
+    if np.linalg.norm(d) < 1e-5:
+        return
+    d /= np.linalg.norm(d)
+    x = np.cross(d, [0, 0, 1])
+    if np.linalg.norm(x) < 1e-5:
+        x = np.array([1., 0., 0.])
+    x /= np.linalg.norm(x)
+    y = np.cross(d, x)
+    ring = [radius * (x * math.cos(k * math.pi / 2) + y * math.sin(k * math.pi / 2)) for k in range(4)]
+    for i in range(4):
+        j = (i + 1) % 4
+        # The underside material also keeps the surface-index QA from treating
+        # the collector (<0.8 m below the deck) as a pavement/bridge kerb.
+        _quad(buf, [a + ring[i], a + ring[j], b + ring[j], b + ring[i]], "bridge_soffit", src, ring[i] + ring[j])
+
+
+def _apply_underdeck(w, hero, instances=None):
+    """DK8 Putry: chunk-batched structure only. No instance/material/draw group is added.
+
+    Girder bottom stays at the old 1.20 m deck envelope. Reuse the two original
+    concrete materials and yellow pier paint documented by the CC0 photograph.
+    All structural details without drawings are WORKING_VALUE (ADR 0105).
+    """
+    spec, c = hero["spec"], hero["chains"][0]
+    prm, buf = spec["params"], w.buf
+    src = c.id + ":underdeck0105"
+    def deck_hash():
+        digest = hashlib.sha256()
+        for p in buf.parts:
+            if (p.src == c.id or p.src.startswith(c.id + ":")) and p.src != c.id + ":soffit" and not p.src.startswith(src):
+                digest.update((p.src + p.layer + p.mat).encode())
+                for arr in (p.V, p.UV, p.T):
+                    digest.update(np.ascontiguousarray(arr).tobytes())
+        return digest.hexdigest()
+    original_deck = deck_hash()
+    before = sum(len(p.T) for p in buf.parts if p.layer == "bridge")
+    removed = sum(len(p.T) for p in buf.parts if p.src == c.id + ":soffit")
+    buf.parts = [p for p in buf.parts if p.src != c.id + ":soffit"]
+    dk = spec["decks"][0]
+    sts = dk["stations"]
+
+    def frame(st):
+        t = np.array(st["t"])
+        n = np.array(st["l"][:2]) - np.array(st["r"][:2])
+        n /= np.linalg.norm(n)
+        mid = (np.array(st["l"]) + np.array(st["r"])) / 2
+        return t, n, mid
+
+    def at(st, x, drop):
+        _, n, mid = frame(st)
+        width = np.linalg.norm(np.array(st["l"][:2]) - np.array(st["r"][:2]))
+        slope = (st["l"][2] - st["r"][2]) / width
+        return mid + np.append(n * x, slope * x - drop)
+
+    # Closed box/cantilever section, sampled on the generated alignment. Ends
+    # remain inside the old deck envelope: no lower beam across a live road.
+    for a, b in zip(sts[:-1], sts[1:]):
+        if not (a["open"] and b["open"]):
+            continue
+        ha = np.linalg.norm(np.array(a["l"][:2]) - np.array(a["r"][:2])) / 2
+        hb = np.linalg.norm(np.array(b["l"][:2]) - np.array(b["r"][:2])) / 2
+        for sgn in (-1, 1):
+            # outer slab, inclined web, bottom flange. The original cap remains.
+            xa = [sgn * ha, sgn * (ha - .12), sgn * 2.9, sgn * 2.1, 0.]
+            xb = [sgn * hb, sgn * (hb - .12), sgn * 2.9, sgn * 2.1, 0.]
+            drops = [1.2, prm["slab_depth_m"], .82, prm["girder_depth_m"], prm["girder_depth_m"]]
+            for i in range(4):
+                p, q = at(a, xa[i], drops[i]), at(a, xa[i + 1], drops[i + 1])
+                r, s = at(b, xb[i], drops[i]), at(b, xb[i + 1], drops[i + 1])
+                _quad(buf, [p, r, s, q], "bridge_soffit", src + ":girder", [0, 0, -1])
+            # Raised drip nose under outer slab, kept above the old soffit.
+            x0, x1 = sgn * (ha - .28), sgn * (ha - .32)
+            y0, y1 = sgn * (hb - .28), sgn * (hb - .32)
+            d = prm["slab_depth_m"] + prm["drip_depth_m"]
+            _quad(buf, [at(a, x0, d), at(b, y0, d), at(b, y1, d), at(a, x1, d)],
+                  "bridge_soffit", src + ":drip", [0, 0, -1])
+        # Collector, downhill side from the actual crossfall.
+        sgn = -1 if a["l"][2] > a["r"][2] else 1
+        _pipe(buf, at(a, sgn * (ha - .7), .90), at(b, sgn * (hb - .7), .90), .09, src + ":collector")
+
+    for pi, pr in enumerate(dk["piers"]):
+        st = min(sts, key=lambda st: abs(st["s"] - pr["s"]))
+        t, n, mid = frame(st)
+        cap_top = pr["top"] - prm["bearing_gap_m"]
+        cap_bottom = cap_top - prm["cap_h_m"]
+        # The support footprint was checked against the ground-road exclusion mask.
+        for qi, q in enumerate(pr["cols"]):
+            _prism(buf, q[:2], t, .5, .6, .25, q[2] - .5, cap_bottom,
+                   "pier_yellow", src + ":column", collision=True)
+            _prism(buf, q[:2], t, .66, .75, .13, cap_bottom, cap_top,
+                   "bridge_concrete", src + ":head", collision=True)
+            M.box(buf, "bridge", "bridge_soffit", q[:2], t, .30, .36,
+                  cap_top, pr["top"], src + ":bearing")
+            # Uneven gravity-driven runoff under the bearing, never tiled at every station.
+            for side in (-1, 1):
+                for j, length in enumerate((.50, .83, .36)):
+                    if (pi * 3 + qi + j) % 4 == 0:
+                        continue
+                    length *= .72 + .11 * ((pi * 7 + qi * 3 + j) % 5)
+                    centre = np.array(q[:2]) + n * ((j - 1) * .13 + .025 * ((pi + qi) % 3)) + t * side * .501
+                    a = np.append(centre - n * .035, cap_bottom - .01)
+                    b = np.append(centre + n * .035, cap_bottom - .01)
+                    end = min(length, max(.05, cap_bottom - q[2] - .1))
+                    _quad(buf, [a, b, b - [0, 0, end], a - [0, 0, end * .72]],
+                          "bridge_soffit", src + ":runoff", np.append(t * side, 0))
+            if prm.get("paint_blobs") and (pi + qi) % 3 == 0:
+                # Abstract paint patch only: no glyphs, logos, lettering or copied pixels.
+                base = np.array(q[:2]) + t * .502
+                z = min(q[2] + .85 + .12 * ((pi + qi) % 4), cap_bottom - .35)
+                _quad(buf, [(* (base - n * .22), z), (*(base + n * .17), z + .06),
+                            (*(base + n * .24), z + .28), (*(base - n * .13), z + .22)],
+                      "bridge_soffit", src + ":paint_WORKING_VALUE", np.append(t, 0))
+        hw = np.linalg.norm(np.array(st["l"][:2]) - np.array(st["r"][:2])) / 2
+        sgn = -1 if st["l"][2] > st["r"][2] else 1
+        q = max(pr["cols"], key=lambda q: sgn * float(np.dot(np.array(q[:2]) - mid[:2], n)))
+        a = at(st, sgn * (hw - .7), .90)
+        xy = np.array(q[:2]) - t * .67
+        b = np.append(xy, a[2] - .1)
+        _pipe(buf, a, b, .075, src + ":outlet")
+        _pipe(buf, b, [*xy, q[2] + .15], .075, src + ":downpipe")
+
+    # Abutments, wing walls and an explicit stair flight down the embankment.
+    so = dk["s_open"]
+    if so:
+        for k, end in enumerate(so):
+            st = min(sts, key=lambda st: abs(st["s"] - end))
+            t, n, mid = frame(st)
+            back = t * (-1 if k == 0 else 1)
+            hw = np.linalg.norm(np.array(st["l"][:2]) - np.array(st["r"][:2])) / 2
+            ground = min(st["zc"], st["zl"], st["zr"])
+            top = mid[2] - prm["girder_depth_m"]
+            ctr = mid[:2] + back * .5
+            for layer, mat in (("bridge", "bridge_concrete"), ("collision", "collision_building")):
+                M.box(buf, layer, mat, ctr, t, .5, hw, ground - .5, top, src + ":abutment")
+            for side in (-1, 1):
+                a = mid[:2] + n * side * hw
+                b = a + back * prm["wing_len_m"] + n * side * .7
+                # Sloping wall falls towards embankment toe; duplicated back winding for solidity.
+                for normal in (np.append(n * side, 0), -np.append(n * side, 0)):
+                    _quad(buf, [(*a, ground - .3), (*b, ground - .3), (*b, ground + .25), (*a, top)],
+                          "bridge_concrete", src + ":wing", normal)
+            for j, length in enumerate((.6, 1.0, .45, .8)):
+                xy = mid[:2] + n * ((j - 1.5) * 1.1) - back * .002
+                z = top - .02
+                low = max(ground, z - length)
+                _quad(buf, [(*(xy - n * .07), z), (*(xy + n * .07), z),
+                            (*(xy + n * .025), low), (*(xy - n * .025), low + .08)],
+                      "bridge_soffit", src + ":joint_runoff", np.append(-back, 0))
+            # Solid stair flight descending away from the abutment; every riser
+            # is supported down to sampled ground, not a floating stack of slabs.
+            for x, y, z, tread in spec.get("stairs", [[], []])[k]:
+                M.box(buf, "bridge", "bridge_concrete", [x, y], t, prm["stairs_tread_m"] / 2,
+                      prm["stairs_width_m"] / 2, z - .25, tread, src + ":stairs")
+    after = sum(len(p.T) for p in buf.parts if p.layer == "bridge")
+    vegetation = 0
+    # Reuse a Fab prototype already present in this region, never generate a
+    # procedural shrub or introduce a new mesh/material family for this task.
+    if hero["override"].get("add_grass", False) and instances is not None and any(it["p"] == "fab_grass_clumps" for it in instances):
+        for j, (e, n, z) in enumerate(spec.get("self_seeded_grass", [])):
+            instances.append({"p": "fab_grass_clumps", "e": e, "n": n, "z": z,
+                              "yaw": _r((j * 2.399963 + .73) % (2 * math.pi), 4),
+                              "src": src + ":Megascans:WORKING_VALUE"})
+            vegetation += 1
+    w.stats["hero_bridges"].setdefault("underdeck", []).append({
+        "id": hero["override"]["id"], "chain": c.id, "spec_sha256": _sha(spec),
+        "removed_soffit_tris": removed, "added_net_tris": after - before,
+        "pier_lines": len(dk["piers"]), "structure": "WORKING_VALUE",
+        "deck_before_sha256": original_deck, "deck_after_sha256": deck_hash(),
+        "deck_barriers_unchanged": original_deck == deck_hash(), "new_materials": [], "vegetation_added": vegetation})
+
+
 def apply(w, heroes, instances: list, log=lambda *a: None) -> dict:
     """Swap the generic bridge dressing for the asset. Returns {prototype: {tris_lod0, tris_lod1, tris_lod2}}."""
     rep = w.stats.setdefault("hero_bridges", {"applied": [], "stale": []})
     tris = {}
     for h in heroes:
+        if h.get("underdeck"):
+            _apply_underdeck(w, h, instances)
+            continue
         o, spec, meta = h["override"], h["spec"], h["meta"]
         prm = spec["params"]
         removed = {"soffit": 0, "fascia": 0, "parapet": 0}

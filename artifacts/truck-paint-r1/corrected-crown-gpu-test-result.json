@@ -1,0 +1,18 @@
+{
+  "result": "PASS",
+  "passed": 6,
+  "failed": 0,
+  "skipped": 0,
+  "sourceHead": "05d5f878",
+  "sourceWorkingDiff": "none at run start",
+  "actualRenderingPath": "Isolated real URP Camera.Render for actual canonical mesh+layer data; CommandBuffer only for pureactualHLSL function/matrixprobes",
+  "coverage": [
+    "bounds/zero patch boundaries",
+    "rejectedbody/trim/glass/inner-skin/outside masks",
+    "bothsides",
+    "hinge+suspension+rebase pointandgradientdirection covariance",
+    "exact6canonical door renderer tags all3LOD preservinglightbit0",
+    "actualcanonical mesh/layerGPU read defineLIGHT_LAYERSoff/on"
+  ],
+  "priorFailure": "First CommandBuffer layerprobe4pass2fail retained/classifiedinvalidlayermetadata path, productionURPmaskindependentlyPASS"
+}

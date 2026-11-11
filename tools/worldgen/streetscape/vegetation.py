@@ -30,6 +30,7 @@ from scipy import ndimage
 from shapely.geometry import Polygon
 
 from . import paved as PV
+from .foliage_policy import metric_patch_field, osm_tree_species
 
 SPECIES = ["pine", "birch", "alder", "maple", "linden", "shrub"]
 MIX = {"iglasty": [0.82, 0.12, 0.02, 0.02, 0.02, 0.0], "mieszany": [0.45, 0.25, 0.10, 0.10, 0.10, 0.0],
@@ -208,7 +209,7 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
         if nd["tags"].get("natural") == "tree":
             q = np.asarray(nd["geometry"]["coordinates"], float)[None] - origin
             rng = np.random.default_rng(nd["osm_node"])
-            emit(q, ["linden"], rng, f"osm:node/{nd['osm_node']}")
+            emit(q, [osm_tree_species(nd["tags"])], rng, f"osm:node/{nd['osm_node']}")
     # self-seeded vegetation on unmown land
     for layer in ("OT_PTNZ_A", "OT_PTTR_A"):
         for f in src["bdot10k"][layer]:
@@ -245,11 +246,18 @@ def ground_masks(src, origin, hf, dist_road, forests):
     lawns = [PV._poly_local(a["geometry"]["coordinates"], origin) for a in src["osm"]["areas"]
              if a["tags"].get("landuse") == "grass" or a["tags"].get("leisure") in ("park", "playground", "pitch")]
     mown = PV.rasterize_polys(lawns, hf) | (dist_road < 4.0)
-    B = (~mown).astype(float)
+    east = hf.x0 + np.arange(W)
+    north = hf.y1 - np.arange(H)
+    dry = metric_patch_field(east, north, 6.0, 881)
+    # Existing BDOT / OSM classes constrain the variation: managed turf has only
+    # small dry patches, while unmanaged grass has larger straw / tuft regions.
+    # WORKING_VALUE moisture / mowing appearance, not surveyed bare-foot paths.
+    B = np.where(mown, dry * .18, .55 + dry * .45)
     bare_polys = [PV._poly_local(f["geometry"]["coordinates"], origin) for f in src["bdot10k"]["OT_PTNZ_A"]]
     bare_polys += [PV._poly_local(a["geometry"]["coordinates"], origin) for a in src["osm"]["areas"]
                    if a["tags"].get("landuse") in ("construction", "brownfield")]
     A = PV.rasterize_polys(bare_polys, hf).astype(float)
+    A *= .40 + .60 * metric_patch_field(east, north, 3.5, 882)
     C = np.stack([R, G, B, A], axis=-1)
     C = ndimage.gaussian_filter(C, sigma=(1.5, 1.5, 0))
     C[..., 0] = np.where(dist_road <= 0.0, 0.0, C[..., 0])      # exactly 0 under roads / yards (no grass there)

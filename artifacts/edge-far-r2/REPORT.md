@@ -1,0 +1,18 @@
+# H / ADR 0085 r2 — ready for leader review
+- Branch `gpt-edge-r2`; tested implementation/source/data checkpoint c05e8f06; later commits add evidence/docs. Final equivalence checked in VALIDATION.json.
+- Base: argon-edge 293c5f69 + main 9e6e9fde; only stream H; no main merge/push.
+- Fix: reject full source footprints, rounded and compressed rectangles overlapping tile + complete regional outlines; cache /10 pins regional dependency.
+- Buildings 8470 -> 8447 (23 excluded, 0 added); full-region raw overlaps 19 -> 0, compressed overlaps 22 -> 0; regional office restored in edge-south.
+- Mesh Low 24826 -> 24508 tris (-1.28%); High 118902 -> 118524 (-0.32%); no new materials/textures/colliders/shadow casters.
+- Low across 16 matched views: static+instanced draws delta 0; max rounded trisK delta 0 (some -1k); meets +0 draws / <=+2% tris relative to Argon + same main.
+- Tests: GIS 388 passed / 1 expected xfailed; EditMode 226/226; WorldEdgeRecoveryTests 3/3, no skips. Final XML: tests/*120601.xml and *120628.xml.
+- Unity fix: identity WorldEdge/WorldFarField parent for four sectors, required by existing PlayMode assertion (test unchanged).
+- Evidence: 64 final PNGs, 32 pairs Low/High x clear/overcast; before/, after/, skyline/; compare-*.jpg and compare-skyline.jpg inspected.
+- Las Pietrasze verified in pinned OSM; forest_identity.py + pietrasze-source-summary.json. 40m skyline diagnostic at DK8/DK19 exit explicitly is not driver-eye evidence.
+- Atmosphere stays on shared WorldSurface/Vegetation globals (0098 contract); exterior terrain remains NMT-border apron approximation, full-ring NMT relief UNVERIFIED.
+- Open: leader independent visual review/device gate; elevated views expose inherited layered forest cards. SELF-REVIEW.md states limits; no full gate-3 claim.
+- Cleanup: both original Argon export/export paths absent; 204580041 bytes in quarantine/; recursive deletion blocked by automatic policy, so no disk-space reclamation.
+- Known editor shutdown issue after final skyline High-overcast frame accepted by existing wrapper (ADR 0083); frame integrity verified; full logs retained.
+- Conflicts: generated JSON -> regenerate; inherited additive WorldSurface.shader/materials.py/RegionImporter/build_world/WorldEdgeBuilder changes; preserve 0086 linear tint, _Tile rules, weather/runoff and 0098 common fog.
+- Leader: merge gpt-edge-r2, regenerate build_world.py + fidelity report on integrated main, import-region.ps1, rerun Unity checks/independent review; no commands executed on main here.
+- Delivery: artifacts/edge-far-r2 copied to main artifacts/edge-far-r2; logs/, tests/, VALIDATION.json retain proofs.

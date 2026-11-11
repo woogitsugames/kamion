@@ -3,8 +3,8 @@
 // - _CMap: RGB albedo (sRGB), A roughness. _NMap: tangent normal (OpenGL +Y). _MMap: R AO, G dirt mask, B metallic
 //   (Paint: B = paint mask). Paint: albedo = C.rgb * _PaintColor where the paint mask is set; TRAKT wordmark from the
 //   decal atlas on uv1. Dirt: lerp to _DirtColor by M.g * _Dirt; dust is dielectric and rougher.
-// - Lights slot (_KAMION_TRUCK_LAMPS): emission = _TruckLightState[uv2.x] (RGB luminance in cd/m^2, written by
-//   TruckLights) * uv2.y * _KamionExposure (display value per cd/m^2, EnvironmentLighting). Lamps are therefore in the same
+// - Lights slot (_KAMION_TRUCK_LAMPS): emission = _TruckLightState[uv2.x] (RGB luminance / _TruckLightNitsScale, written by
+//   TruckLights) * _TruckLightNitsScale * uv2.y * _KamionExposure, decoded in float (EnvironmentLighting). Lamps are therefore in the same
 //   exposed units as the sun and sky: a DRL is bright, a tail lamp is a dim red by day, both read correctly at dusk.
 // - Lighting: URP UniversalFragmentPBR (main light + cascaded shadows, SH ambient x AO, reflection probe / custom
 //   environment). Tyre deflection: renderers with rendering layer bit 8 (TruckVisualRig.TyreRenderingLayer, the wheel
@@ -77,6 +77,25 @@ Shader "Kamion/Truck Exterior"
         float _KamionTyreFlatRadius;          // global (TruckVisualRig: tractor physics rolling radius 0.51 m), 0 = off
         float _KamionTrailerTyreFlatRadius;   // global (TrailerVisualRig: trailer physics rolling radius 0.515 m), 0 = off
 
+        // ADR0087 candidate: bit10 is an explicit DOOR_L/R renderer semantic (all3LODs), bit0 stays set.
+        // A shallow stamped-panel crown missing from the exactly planar source FBX/normal atlas.
+        // 3.6mm/.65m and <1degree slope are qualitative WORKING_VALUE, not measured photo depth.
+        // Door-object coordinates follow its hinge, cab suspension and world rebase; no world-position mask.
+        float _KamionDoorCrownOff; // diagnostic ablation only; default0, no material/keyword variant
+        float3 KamionDoorCrownGradient(float3 pOS, float3 normalOS, float paintMask, uint renderingLayer)
+        {
+            if (_KamionDoorCrownOff > 0.5 || (renderingLayer & (1u << 10)) == 0u || paintMask < 0.001)
+                return float3(0,0,0);
+            // Hinges from the source manifest: height1.6m, forward4.8902m; flat exterior skin at localx0.
+            float2 uv = (pOS.zy - float2(-1.7402, -0.315)) / float2(1.3, 0.65);
+            if (any(uv <= 0.0) || any(uv >= 1.0)) return float3(0,0,0);
+            float skin = (1.0 - smoothstep(0.002, 0.008, abs(pOS.x))) * smoothstep(0.90, 0.98, abs(normalOS.x));
+            float2 sn = sin(PI * uv), cs = cos(PI * uv);
+            // h=A*sin(pi*u)^2*sin(pi*v)^2: both height and derivative are zero at every patch boundary.
+            float2 derivative = 0.0036 * (2.0 * PI) * sn * cs * sn.yx * sn.yx / float2(1.3, 0.65);
+            return float3(0, derivative.y, derivative.x) * (skin * saturate(paintMask));
+        }
+
         // Loaded-tyre contact patch: clamp the part of the tyre below the contact plane onto it.
         // Rendering layer bit 8 = tractor wheels, bit 9 = trailer wheels (different tyre size, different rolling radius).
         float3 KamionTyreFlatten(float3 positionWS)
@@ -120,6 +139,12 @@ Shader "Kamion/Truck Exterior"
             TEXTURE2D(_DecalMap); SAMPLER(sampler_DecalMap);
             TEXTURE2D(_TruckLightState); SAMPLER(sampler_point_clamp);
             float _KamionExposure;
+            float _TruckLightNitsScale; // TruckLights: nits per RGBAHalf encoded unit
+            float3 TruckLampRadiance(float3 encoded)
+            {
+                // Keep both operations in float; expanding to nits in half would overflow before exposure.
+                return encoded * (_TruckLightNitsScale * _KamionExposure);
+            }
             float _KamionClearCoatOff;
             half4 _CabShadowLift;   // cab-view local shadow lift (CabInteriorLighting; 0 outside the cab view)
             // Grime vehicle frames (ContactShadowCaster): per slot right / up / forward with w = -dot(axis, origin); origin on
@@ -265,7 +290,8 @@ Shader "Kamion/Truck Exterior"
                 half4 m = SAMPLE_TEXTURE2D(_MMap, sampler_CMap, uv);
                 half3 nTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_NMap, sampler_CMap, uv), _NormalStrength);
 
-                half isTyre = (GetMeshRenderingLayer() & ((1u << 8) | (1u << 9))) != 0u ? 1.0 : 0.0;
+                uint renderingLayer = GetMeshRenderingLayer();
+                half isTyre = (renderingLayer & ((1u << 8) | (1u << 9))) != 0u ? 1.0 : 0.0;
                 uint slot = unity_RendererUserValue;
                 bool hasFrame = slot >= 1u && slot <= 4u;
                 float3 lp = i.positionWS;
@@ -340,6 +366,15 @@ Shader "Kamion/Truck Exterior"
                 half sgn = i.tangentWS.w;
                 half3 bit = sgn * cross(i.normalWS, i.tangentWS.xyz);
                 half3 nWS = NormalizeNormalPerPixel(TransformTangentToWorld(nTS, half3x3(i.tangentWS.xyz, bit, i.normalWS)));
+                if ((renderingLayer & (1u << 10)) != 0u && _IsPaint > 0.5)
+                {
+                    float3 pOS = TransformWorldToObject(i.positionWS);
+                    float3 geometricNormalOS = TransformWorldToObjectDir(i.normalWS);
+                    float3 gradientOS = KamionDoorCrownGradient(pOS, geometricNormalOS, m.b, renderingLayer);
+                    // The same mapped macro normal drives the pigment BRDF and clearcoat, not a reflection-only gain.
+                    nWS = normalize(nWS - TransformObjectToWorldDir(gradientOS, false));
+                }
+
 
                 InputData input = (InputData)0;
                 input.positionWS = i.positionWS;
@@ -361,8 +396,8 @@ Shader "Kamion/Truck Exterior"
             #if defined(_KAMION_TRUCK_LAMPS)
                 // 16 x 1 state texture: texel x = light group id (0 = none).
                 float u = (i.uv2.x + 0.5) / 16.0;
-                half3 lum = SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2(u, 0.5), 0).rgb;
-                s.emission = lum * saturate(i.uv2.y) * _KamionExposure;
+                float3 encoded = SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2(u, 0.5), 0).rgb;
+                s.emission = (half3)(TruckLampRadiance(encoded) * saturate(i.uv2.y));
             #endif
                 // Metallic flake: per-cell random normal tilt in the base specular only, faded out where a cell is
                 // smaller than a pixel (no sparkle aliasing at distance).

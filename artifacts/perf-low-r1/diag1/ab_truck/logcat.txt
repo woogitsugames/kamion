@@ -1,0 +1,90 @@
+--------- beginning of main
+11-11 12:54:16.035 15849 15849 V Unity   : Context Type: GameActivity
+11-11 12:54:16.040 15849 15863 I Unity   : UnityApplication::CreateInstance
+11-11 12:54:16.040 15849 15863 I Unity   : GameActivity Package Version '4.4.0'
+11-11 12:54:16.041 15849 15863 I Unity   : Starting Game Loop
+11-11 12:54:16.043 15849 15863 I Unity   : Handle cmd APP_CMD_START(11)
+11-11 12:54:16.049 15849 15863 I Unity   : Handle cmd APP_CMD_RESUME(12)
+11-11 12:54:16.069 15849 15863 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+11-11 12:54:16.081 15849 15863 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+11-11 12:54:16.081 15849 15863 I Unity   : Handle cmd APP_CMD_CONTENT_RECT_CHANGED(5)
+11-11 12:54:16.085 15849 15863 I Unity   : Handle cmd APP_CMD_INIT_WINDOW(1)
+11-11 12:54:16.095 15849 15863 I Unity   : MemoryManager: Using 'Dynamic Heap' Allocator.
+11-11 12:54:16.111 15849 15863 I Unity   : SystemInfo CPU = ARM64 FP ASIMD AES, Cores = 8, Memory = 3653mb
+11-11 12:54:16.111 15849 15863 I Unity   : SystemInfo ARM big.LITTLE configuration: 2 big (mask: 0xc0), 6 little (mask: 0x3f)
+11-11 12:54:16.111 15849 15863 I Unity   : ApplicationInfo 'com.woogitsugames.kamion', Version '0.1.0', Min API Level '29', Target API Level '36'
+11-11 12:54:16.111 15849 15863 I Unity   : Built from '6000.3/respin/6000.3.28f1-21f78c3e21d1' branch, Version '6000.3.28f1 (8f082d2fe476)', Build type 'Release', Scripting Backend 'il2cpp', CPU 'arm64-v8a', Stripping 'Enabled'
+11-11 12:54:16.111 15849 15863 I Unity   : Device Model 'samsung SM-A165F', OS 'Android OS 16 (API 36)'
+11-11 12:54:16.236 15849 15863 I Unity   : Company Name: woogitsugames
+11-11 12:54:16.236 15849 15863 I Unity   : Product Name: Kamion
+11-11 12:54:16.632 15849 15863 I Unity   :     HasWindow = 1, HasFocus = 0
+11-11 12:54:16.632 15849 15863 I Unity   : Handle cmd APP_CMD_WINDOW_RESIZED(3)
+11-11 12:54:16.632 15849 15863 I Unity   : Handle cmd APP_CMD_WINDOW_REDRAW_NEEDED(4)
+11-11 12:54:16.632 15849 15863 I Unity   : Handle cmd APP_CMD_GAINED_FOCUS(7)
+11-11 12:54:16.632 15849 15863 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+11-11 12:54:18.862 15849 15863 I Unity   : [BOOT] render overrides (profiling): msaa= scale= shadow= post= hdr= a2c= trees= treeshadow= card= cull= thin= vegshader= hlod= a8= envcap= scalemin= upscale= fsrsharp= pacing= lamppools= envcap_iv= envcap_lod= shadowcasc= shadowres= ab=truck ab_period= mirror_cap= mirror_lod= mirror_far= mirror_res= mirror_rate= mirror_legacy=False mirror_off=False worldgi= worldsun= clouds= haze= ssao= look=-1 ev=0 wet= lod= far= mask= props= hud=
+11-11 12:54:18.864 15849 15863 I Unity   : [BOOT] Kamion 0.1.0 (747d8f5b0c-dirty) unity=6000.3.28f1 platform=android-36 device='samsung SM-A165F' gpu='Mali-G57 MC2' api='Vulkan 1.1.0 [54.1.0 (0x0d801000)]' ram=3653MB screen=2340x1080 tier=Low targetFps=240
+11-11 12:54:18.868 15849 15863 I Unity   : [BOOT] diagnostics output: /storage/emulated/0/Android/data/com.woogitsugames.kamion/files/diag
+11-11 12:54:18.928 15849 15863 I Unity   : [CONTROLS] boot v3 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on
+11-11 12:54:18.938 15849 15863 I Unity   : [CONTROLS] menu shown light=overcast tier=Low fps=240
+11-11 12:54:18.954 15849 15863 I Unity   : [BOOT] launch argument scene=WorldC
+11-11 12:54:20.508 15849 15863 I Unity   : [WORLD] collision cooked at load: 274 meshes, bake 254 ms (parallel), enable 2 ms, total 256 ms
+11-11 12:54:20.509 15849 15863 I Unity   : [PASSAB] start key=truck period=4,0s (A = shipping, B = main camera without the Vehicle layer (own truck, cab)); WARNING: pass rq_scale <s> rq_pacing 0 or the adaptive scale reacts to the toggle
+11-11 12:54:20.526 15849 15863 I Unity   : [CONTROLS] loaded v3 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on
+11-11 12:54:20.661 15849 15863 I Unity   : [LAB] DrivingLab ready: vehicle=Tractor4x2_TRAKT trailer=Trailer_Curtainsider_Art spawn=Gross40t steer=Wheel270 autopilot=route fixedDt=0,009999993
+11-11 12:54:21.640 15849 15863 I Unity   : [AUDIO] vehicle audio ready (122 engine loops + 47 sfx, tools/audio/render_all.py (procedural synthesis, no recordings))
+11-11 12:54:21.919 15849 15863 I Unity   : [TELEMETRY] recording → /storage/emulated/0/Android/data/com.woogitsugames.kamion/files/telemetry/drive-20261111-125421.csv
+11-11 12:54:21.920 15849 15863 I Unity   : [CAB] view camera Main Camera cabView=False gain 1,00 meter 0,00 EV
+11-11 12:54:23.550 15849 15863 I Unity   : [DIAG] t=3s tier=Low target=240 fps=0.3 p50=3300.00 p95=3300.00 p99=3300.00 max=3300.00ms temp=28.7C thermal=0 headroom=0.64 pss=893MB scale=0.75 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00 ab=truck:A
+11-11 12:54:23.553 15849 15863 I Unity   : [CAB] view camera Main Camera cabView=True gain 4,94 meter 1,30 EV
+11-11 12:54:24.518 15849 15863 I Unity   : [PASSAB] key=truck state=A n=25 gpu_p50=28.97 gpu_p90=45.43 cpu_p50=20.37 cpu_p90=43.23 dt_p50=33.33 mir=1.00/1311.10ms cap=6.00/798.49ms
+11-11 12:54:28.535 15849 15863 I Unity   : [DIAG] t=8s tier=Low target=240 fps=21.3 p50=33.29 p95=33.45 p99=216.67 max=3300.00ms temp=28.7C thermal=0 headroom=0.65 pss=892MB scale=0.75 fallback=none mir=1.00/f cpu=2.83 gpu=- cap=0.08/f cpu=0.11 gpu=- shd_gpu=- main_cpu=5.80 ab=truck:B
+11-11 12:54:28.536 15849 15863 I Unity   : [PASSAB] key=truck state=B n=129 gpu_p50=23.68 gpu_p90=26.28 cpu_p50=15.04 cpu_p90=17.95 dt_p50=33.22 mir=1.00/2.83ms cap=0.08/0.11ms
+11-11 12:54:32.538 15849 15863 I Unity   : [PASSAB] key=truck state=A n=104 gpu_p50=28.22 gpu_p90=32.44 cpu_p50=18.46 cpu_p90=23.42 dt_p50=33.31 mir=1.00/3.78ms cap=0.09/0.14ms
+11-11 12:54:33.536 15849 15863 I Unity   : [DIAG] t=13s tier=Low target=240 fps=26.1 p50=33.30 p95=33.56 p99=83.50 max=3300.00ms temp=28.7C thermal=0 headroom=0.65 pss=898MB scale=0.75 fallback=none mir=1.00/f cpu=3.78 gpu=- cap=0.09/f cpu=0.14 gpu=- shd_gpu=- main_cpu=7.12 ab=truck:B
+11-11 12:54:36.562 15849 15863 I Unity   : [PASSAB] key=truck state=B n=120 gpu_p50=24.82 gpu_p90=33.02 cpu_p50=16.81 cpu_p90=22.68 dt_p50=33.28 mir=1.00/3.91ms cap=0.09/0.16ms
+11-11 12:54:38.537 15849 15863 I Unity   : [DIAG] t=18s tier=Low target=240 fps=28.4 p50=33.31 p95=49.76 p99=50.46 max=3300.00ms temp=28.7C thermal=0 headroom=0.66 pss=932MB scale=0.75 fallback=none mir=1.00/f cpu=3.84 gpu=- cap=0.11/f cpu=0.15 gpu=- shd_gpu=- main_cpu=6.66 ab=truck:A
+11-11 12:54:40.588 15849 15863 I Unity   : [PASSAB] key=truck state=A n=91 gpu_p50=34.41 gpu_p90=40.97 cpu_p50=20.02 cpu_p90=26.25 dt_p50=33.34 mir=1.00/4.07ms cap=0.11/0.18ms
+11-11 12:54:43.571 15849 15863 I Unity   : [DIAG] t=23s tier=Low target=240 fps=33.3 p50=33.31 p95=49.98 p99=50.12 max=116.49ms temp=28.7C thermal=0 headroom=0.66 pss=874MB scale=0.75 fallback=none mir=1.00/f cpu=4.35 gpu=- cap=0.09/f cpu=0.16 gpu=- shd_gpu=- main_cpu=6.74 ab=truck:B
+11-11 12:54:44.605 15849 15863 I Unity   : [PASSAB] key=truck state=B n=100 gpu_p50=32.43 gpu_p90=33.84 cpu_p50=18.34 cpu_p90=21.60 dt_p50=33.32 mir=1.00/3.85ms cap=0.10/0.17ms
+11-11 12:54:44.606 15849 15863 I Unity   : [PASSAB] summary key=truck windows A=3 B=3 gpu_p50 A=28.97 B=24.82 (A-B +4.15) cpu_p50 A=20.02 B=16.81 (A-B +3.20)
+11-11 12:54:48.586 15849 15863 I Unity   : [DIAG] t=28s tier=Low target=240 fps=31.1 p50=33.32 p95=50.01 p99=50.13 max=116.49ms temp=28.7C thermal=0 headroom=0.66 pss=922MB scale=0.75 fallback=none mir=1.00/f cpu=4.50 gpu=- cap=0.11/f cpu=0.18 gpu=- shd_gpu=- main_cpu=6.95 ab=truck:A
+11-11 12:54:48.620 15849 15863 I Unity   : [PASSAB] key=truck state=A n=95 gpu_p50=34.17 gpu_p90=36.71 cpu_p50=19.55 cpu_p90=24.19 dt_p50=33.33 mir=1.00/4.50ms cap=0.11/0.18ms
+11-11 12:54:52.655 15849 15863 I Unity   : [PASSAB] key=truck state=B n=111 gpu_p50=29.37 gpu_p90=31.91 cpu_p50=18.23 cpu_p90=20.77 dt_p50=33.32 mir=1.00/4.28ms cap=0.09/0.15ms
+11-11 12:54:53.590 15849 15863 I Unity   : [DIAG] t=33s tier=Low target=240 fps=31.1 p50=33.32 p95=50.01 p99=50.13 max=66.64ms temp=28.7C thermal=0 headroom=0.66 pss=873MB scale=0.75 fallback=none mir=1.00/f cpu=4.28 gpu=- cap=0.09/f cpu=0.15 gpu=- shd_gpu=- main_cpu=6.72 ab=truck:A
+11-11 12:54:56.656 15849 15863 I Unity   : [PASSAB] key=truck state=A n=105 gpu_p50=30.51 gpu_p90=33.24 cpu_p50=18.77 cpu_p90=21.44 dt_p50=33.33 mir=1.00/4.29ms cap=0.09/0.19ms
+11-11 12:54:58.610 15849 15863 I Unity   : [DIAG] t=38s tier=Low target=240 fps=31.4 p50=33.32 p95=49.98 p99=50.13 max=66.64ms temp=28.7C thermal=0 headroom=0.66 pss=863MB scale=0.75 fallback=none mir=1.00/f cpu=4.09 gpu=- cap=0.09/f cpu=0.17 gpu=- shd_gpu=- main_cpu=6.13 ab=truck:B
+11-11 12:55:00.671 15849 15863 I Unity   : [PASSAB] key=truck state=B n=131 gpu_p50=22.86 gpu_p90=24.73 cpu_p50=16.18 cpu_p90=18.74 dt_p50=16.72 mir=1.00/4.16ms cap=0.10/0.18ms
+11-11 12:55:03.620 15849 15863 I Unity   : [DIAG] t=43s tier=Low target=240 fps=34.2 p50=33.31 p95=33.52 p99=50.07 max=50.20ms temp=28.7C thermal=0 headroom=0.65 pss=863MB scale=0.75 fallback=none mir=1.00/f cpu=3.96 gpu=- cap=0.09/f cpu=0.17 gpu=- shd_gpu=- main_cpu=5.56 ab=truck:A
+11-11 12:55:04.704 15849 15863 I Unity   : [PASSAB] key=truck state=A n=116 gpu_p50=27.62 gpu_p90=30.78 cpu_p50=16.24 cpu_p90=19.36 dt_p50=33.31 mir=1.00/3.78ms cap=0.10/0.18ms
+11-11 12:55:08.649 15849 15863 I Unity   : [DIAG] t=48s tier=Low target=240 fps=37.2 p50=33.29 p95=33.44 p99=50.00 max=50.20ms temp=28.7C thermal=0 headroom=0.65 pss=909MB scale=0.75 fallback=none mir=1.00/f cpu=3.61 gpu=- cap=0.09/f cpu=0.17 gpu=- shd_gpu=- main_cpu=5.52 ab=truck:B
+11-11 12:55:08.739 15849 15863 I Unity   : [PASSAB] key=truck state=B n=140 gpu_p50=21.47 gpu_p90=23.61 cpu_p50=14.55 cpu_p90=17.87 dt_p50=16.68 mir=1.00/3.61ms cap=0.09/0.17ms
+11-11 12:55:08.739 15849 15863 I Unity   : [PASSAB] summary key=truck windows A=6 B=6 gpu_p50 A=28.97 B=23.68 (A-B +5.29) cpu_p50 A=18.77 B=16.18 (A-B +2.59)
+11-11 12:55:12.772 15849 15863 I Unity   : [PASSAB] key=truck state=A n=116 gpu_p50=27.31 gpu_p90=30.83 cpu_p50=16.35 cpu_p90=19.04 dt_p50=33.30 mir=1.00/3.70ms cap=0.10/0.18ms
+11-11 12:55:13.654 15849 15863 I Unity   : [DIAG] t=53s tier=Low target=240 fps=38.1 p50=33.28 p95=33.42 p99=49.96 max=50.07ms temp=28.7C thermal=0 headroom=0.66 pss=849MB scale=0.75 fallback=none mir=1.00/f cpu=3.70 gpu=- cap=0.10/f cpu=0.18 gpu=- shd_gpu=- main_cpu=5.43 ab=truck:B
+11-11 12:55:16.776 15849 15863 I Unity   : [PASSAB] key=truck state=B n=133 gpu_p50=21.98 gpu_p90=24.50 cpu_p50=14.97 cpu_p90=17.90 dt_p50=16.68 mir=1.00/3.40ms cap=0.09/0.16ms
+11-11 12:55:18.656 15849 15863 I Unity   : [DIAG] t=58s tier=Low target=240 fps=38.6 p50=33.27 p95=33.41 p99=33.55 max=50.07ms temp=28.7C thermal=0 headroom=0.66 pss=883MB scale=0.75 fallback=none mir=1.00/f cpu=3.61 gpu=- cap=0.09/f cpu=0.13 gpu=- shd_gpu=- main_cpu=5.92 ab=truck:A
+11-11 12:55:20.808 15849 15863 I Unity   : [PASSAB] key=truck state=A n=123 gpu_p50=26.08 gpu_p90=29.47 cpu_p50=16.23 cpu_p90=18.82 dt_p50=33.32 mir=1.00/3.66ms cap=0.09/0.14ms
+11-11 12:55:23.657 15849 15863 I Unity   : [DIAG] t=63s tier=Low target=240 fps=39.1 p50=33.27 p95=33.40 p99=33.49 max=50.00ms temp=28.7C thermal=0 headroom=0.66 pss=883MB scale=0.75 fallback=none mir=1.00/f cpu=3.57 gpu=- cap=0.10/f cpu=0.15 gpu=- shd_gpu=- main_cpu=5.94 ab=truck:B
+11-11 12:55:24.840 15849 15863 I Unity   : [PASSAB] key=truck state=B n=144 gpu_p50=20.50 gpu_p90=23.03 cpu_p50=14.07 cpu_p90=17.67 dt_p50=16.67 mir=1.00/3.23ms cap=0.08/0.12ms
+11-11 12:55:28.690 15849 15863 I Unity   : [DIAG] t=68s tier=Low target=240 fps=39.5 p50=33.23 p95=33.40 p99=33.55 max=50.01ms temp=28.7C thermal=0 headroom=0.66 pss=880MB scale=0.75 fallback=none mir=1.00/f cpu=3.29 gpu=- cap=0.08/f cpu=0.13 gpu=- shd_gpu=- main_cpu=5.58 ab=truck:A
+11-11 12:55:28.854 15849 15863 I Unity   : [PASSAB] key=truck state=A n=118 gpu_p50=26.86 gpu_p90=30.82 cpu_p50=16.05 cpu_p90=19.48 dt_p50=33.30 mir=1.00/3.29ms cap=0.08/0.13ms
+11-11 12:55:32.859 15849 15863 I Unity   : [PASSAB] key=truck state=B n=133 gpu_p50=22.51 gpu_p90=25.32 cpu_p50=14.35 cpu_p90=18.28 dt_p50=16.69 mir=1.00/3.19ms cap=0.06/0.11ms
+11-11 12:55:32.859 15849 15863 I Unity   : [PASSAB] summary key=truck windows A=9 B=9 gpu_p50 A=28.22 B=22.86 (A-B +5.36) cpu_p50 A=18.46 B=15.04 (A-B +3.42)
+11-11 12:55:33.723 15849 15863 I Unity   : [DIAG] t=73s tier=Low target=240 fps=39.7 p50=33.17 p95=33.40 p99=33.55 max=50.01ms temp=28.7C thermal=0 headroom=0.66 pss=834MB scale=0.75 fallback=none mir=1.00/f cpu=3.19 gpu=- cap=0.06/f cpu=0.11 gpu=- shd_gpu=- main_cpu=5.49 ab=truck:A
+11-11 12:55:34.222 15849 15863 I Unity   : [GATE3] segment done t=70.5 s s=1714.0
+11-11 12:55:36.872 15849 15863 I Unity   : [PASSAB] key=truck state=A n=115 gpu_p50=27.97 gpu_p90=30.50 cpu_p50=16.08 cpu_p90=19.76 dt_p50=33.32 mir=1.00/3.37ms cap=0.00/0.00ms
+11-11 12:55:38.738 15849 15863 I Unity   : [DIAG] t=78s tier=Low target=240 fps=38.4 p50=33.27 p95=33.41 p99=33.55 max=50.01ms temp=28.7C thermal=0 headroom=0.66 pss=836MB scale=0.75 fallback=none mir=1.00/f cpu=3.08 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.63 ab=truck:B
+11-11 12:55:40.908 15849 15863 I Unity   : [PASSAB] key=truck state=B n=131 gpu_p50=24.22 gpu_p90=25.43 cpu_p50=14.38 cpu_p90=17.09 dt_p50=33.24 mir=1.00/3.10ms cap=0.00/0.00ms
+11-11 12:55:43.739 15849 15863 I Unity   : [DIAG] t=83s tier=Low target=240 fps=37.9 p50=33.28 p95=33.41 p99=33.51 max=50.00ms temp=28.7C thermal=0 headroom=0.67 pss=866MB scale=0.75 fallback=none mir=1.00/f cpu=3.23 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.41 ab=truck:A
+11-11 12:55:44.940 15849 15863 I Unity   : [PASSAB] key=truck state=A n=117 gpu_p50=27.95 gpu_p90=30.21 cpu_p50=16.10 cpu_p90=18.86 dt_p50=33.31 mir=1.00/3.44ms cap=0.00/0.00ms
+11-11 12:55:48.739 15849 15863 I Unity   : [DIAG] t=88s tier=Low target=240 fps=37.6 p50=33.29 p95=33.42 p99=33.47 max=49.99ms temp=28.7C thermal=0 headroom=0.66 pss=836MB scale=0.75 fallback=none mir=1.00/f cpu=3.12 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.33 ab=truck:B
+11-11 12:55:48.974 15849 15863 I Unity   : [PASSAB] key=truck state=B n=131 gpu_p50=23.35 gpu_p90=25.40 cpu_p50=14.17 cpu_p90=17.20 dt_p50=33.20 mir=1.00/3.12ms cap=0.00/0.00ms
+11-11 12:55:52.992 15849 15863 I Unity   : [PASSAB] key=truck state=A n=116 gpu_p50=27.99 gpu_p90=29.94 cpu_p50=16.06 cpu_p90=18.62 dt_p50=33.31 mir=1.00/3.40ms cap=0.00/0.00ms
+11-11 12:55:53.740 15849 15863 I Unity   : [DIAG] t=93s tier=Low target=240 fps=37.6 p50=33.29 p95=33.42 p99=33.48 max=50.02ms temp=28.7C thermal=0 headroom=0.66 pss=878MB scale=0.75 fallback=none mir=1.00/f cpu=3.40 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.72 ab=truck:B
+11-11 12:55:56.993 15849 15863 I Unity   : [PASSAB] key=truck state=B n=128 gpu_p50=23.29 gpu_p90=25.40 cpu_p50=14.50 cpu_p90=18.48 dt_p50=33.22 mir=1.00/3.47ms cap=0.03/0.04ms
+11-11 12:55:56.993 15849 15863 I Unity   : [PASSAB] summary key=truck windows A=12 B=12 gpu_p50 A=27.97 B=23.29 (A-B +4.69) cpu_p50 A=16.24 B=14.55 (A-B +1.69)
+11-11 12:55:58.759 15849 15863 I Unity   : [DIAG] t=98s tier=Low target=240 fps=37.5 p50=33.29 p95=33.42 p99=33.48 max=50.02ms temp=28.7C thermal=0 headroom=0.66 pss=878MB scale=0.75 fallback=none mir=1.00/f cpu=3.29 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.47 ab=truck:A
+11-11 12:56:01.011 15849 15863 I Unity   : [PASSAB] key=truck state=A n=116 gpu_p50=27.89 gpu_p90=29.60 cpu_p50=15.90 cpu_p90=19.03 dt_p50=33.31 mir=1.00/3.30ms cap=0.00/0.00ms
+11-11 12:56:03.761 15849 15863 I Unity   : [DIAG] t=103s tier=Low target=240 fps=37.6 p50=33.28 p95=33.42 p99=33.48 max=50.02ms temp=28.7C thermal=0 headroom=0.67 pss=836MB scale=0.75 fallback=none mir=1.00/f cpu=3.21 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.59 ab=truck:B
+11-11 12:56:05.015 15849 15863 I Unity   : [PASSAB] key=truck state=B n=127 gpu_p50=23.86 gpu_p90=25.22 cpu_p50=14.50 cpu_p90=18.57 dt_p50=33.25 mir=1.00/3.47ms cap=0.00/0.00ms

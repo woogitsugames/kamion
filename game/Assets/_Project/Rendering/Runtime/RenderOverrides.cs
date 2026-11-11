@@ -22,6 +22,9 @@ namespace Game.Rendering
     /// mirror renders), rq_envcap_iv (capture: one face every N frames), rq_envcap_lod (capture LOD scale), rq_shadowcasc
     /// (cascade count), rq_shadowres (main-light shadow map px), rq_ab (interleaved A/B of one pass: mirrors, mirrorcfg,
     /// mirrorlod, envcap, shadows, shadowcasc; ExtraViewCostMonitor) with rq_ab_period (s).
+    /// ADR 0106 (A16 Low GPU breakdown): rq_lod (QualitySettings.lodBias), rq_far (main camera far clip m), rq_mask (main
+    /// camera culling mask AND), rq_props (0 = no instanced props/vehicles, trees kept), rq_hud (0 = no screen-space
+    /// canvases); rq_ab keys lod, scale, far, props, trees, truck, hud (ExtraViewCostMonitor.Describe).
     /// </summary>
     public static class RenderOverrides
     {
@@ -29,6 +32,9 @@ namespace Game.Rendering
         public static float? RenderScale;
         public static float? ShadowDistance;
         public static bool? Post;
+        public static bool? Dither;       // ADR0098: isolate output noise from material microstructure.
+        public static bool? SkyDither;
+        public static float? GlassShadowBias; // metres, architectural glazing only (ADR0098 diagnosis).
         public static bool? Hdr;
         public static bool? LeafA2C;
         public static bool? Trees;
@@ -51,6 +57,7 @@ namespace Game.Rendering
         public static float? EnvCaptureLod;
         public static int? ShadowCascades;
         public static int? ShadowResolution;
+        public static float? ShadowDepthBias, ShadowNormalBias, ShadowSplit1, ShadowSplit2;
         public static int? Clouds;       // ADR 0080: rq_clouds -1 flat dome, 0..2 quality
         public static bool? GroundHaze;  // rq_haze
         public static bool? Ssao;        // rq_ssao
@@ -58,22 +65,37 @@ namespace Game.Rendering
         public static float? CabToe;     // ADR 0080: rq_cabtoe 0..1 cab-view compensation of the world contrast toe (A/B)
         public static string Ab;
         public static float? AbPeriod;
+        // ADR 0106
+        public static float? LodBias;    // rq_lod
+        public static float? FarClip;    // rq_far
+        public static int? CullMask;     // rq_mask
+        public static bool? Props;       // rq_props
+        public static bool? Hud;         // rq_hud
+        public static bool? GlassFast;   // rq_glassfast (tier override, ADR 0106)
+        public static int? GlassDebug;   // rq_glassdbg (with rq_ab glassdbg: the B level of _KamionGlassDebug)
+        /// <summary>ADR 0106 A/B state (ExtraViewCostMonitor): instanced trees / props suspended in the B windows.</summary>
+        public static bool AbTreesOff, AbPropsOff, AbTreeShadowOff, AbHlodOff, AbImpostorOff;
+        public static float AbTreeThinScale = 1f, AbTreeCardScale = 1f;
+        public static int AbHlodPart;   // 1 canopy off, 2 edge walls off
 
-        public static bool Any => Msaa.HasValue || RenderScale.HasValue || ShadowDistance.HasValue || Post.HasValue || Hdr.HasValue ||
+        public static bool Any => Msaa.HasValue || RenderScale.HasValue || ShadowDistance.HasValue || Post.HasValue || Dither.HasValue || SkyDither.HasValue || GlassShadowBias.HasValue || Hdr.HasValue ||
                                   LeafA2C.HasValue || Trees.HasValue || TreeShadowMask.HasValue || TreeCardScale.HasValue ||
                                   TreeCull.HasValue || TreeThin.HasValue || SimpleFoliage.HasValue || ForestHlod.HasValue ||
                                   VehicleLook.HasValue || EnvCapture.HasValue || ScaleMin.HasValue || Upscale != null ||
                                   FsrSharpness.HasValue || Pacing.HasValue || LampPools.HasValue || EnvCaptureInterval.HasValue ||
-                                  EnvCaptureLod.HasValue || ShadowCascades.HasValue || ShadowResolution.HasValue || Ab != null ||
+                                  EnvCaptureLod.HasValue || ShadowCascades.HasValue || ShadowResolution.HasValue || ShadowDepthBias.HasValue || ShadowNormalBias.HasValue || ShadowSplit1.HasValue || ShadowSplit2.HasValue || Ab != null ||
                                   Game.Core.MirrorOverrides.Any ||
                                   WorldGi.HasValue || WorldSun.HasValue ||
-                                  Clouds.HasValue || GroundHaze.HasValue || Ssao.HasValue || Look || CabToe.HasValue;
+                                  Clouds.HasValue || GroundHaze.HasValue || Ssao.HasValue || Look || CabToe.HasValue ||
+                                  LodBias.HasValue || FarClip.HasValue || CullMask.HasValue || Props.HasValue || Hud.HasValue || GlassFast.HasValue;
 
         /// <summary>Reads the overrides through a launch-argument getter (platform services). Returns a log line.</summary>
         public static string Parse(Func<string, string> arg)
         {
             Msaa = I(arg("rq_msaa")); RenderScale = F(arg("rq_scale")); ShadowDistance = F(arg("rq_shadow"));
             Post = B(arg("rq_post")); Hdr = B(arg("rq_hdr")); LeafA2C = B(arg("rq_a2c")); Trees = B(arg("rq_trees"));
+            Dither = B(arg("rq_dither")); SkyDither = B(arg("rq_skydither"));
+            GlassShadowBias = F(arg("rq_glassshadow"));
             TreeShadowMask = I(arg("rq_treeshadow")); TreeCardScale = F(arg("rq_card")); TreeCull = F(arg("rq_cull"));
             TreeThin = F(arg("rq_thin")); SimpleFoliage = B(arg("rq_vegshader")); ForestHlod = F(arg("rq_hlod"));
             VehicleLook = B(arg("rq_a8")); EnvCapture = I(arg("rq_envcap"));
@@ -81,6 +103,8 @@ namespace Game.Rendering
             ScaleMin = F(arg("rq_scalemin")); FsrSharpness = F(arg("rq_fsrsharp")); Pacing = B(arg("rq_pacing")); LampPools = I(arg("rq_lamppools"));
             EnvCaptureInterval = I(arg("rq_envcap_iv")); EnvCaptureLod = F(arg("rq_envcap_lod"));
             ShadowCascades = I(arg("rq_shadowcasc")); ShadowResolution = I(arg("rq_shadowres"));
+            ShadowDepthBias = F(arg("rq_shadowbias")); ShadowNormalBias = F(arg("rq_shadownormal"));
+            ShadowSplit1 = F(arg("rq_shadowsplit")); ShadowSplit2 = F(arg("rq_shadowsplit2"));
             // ADR 0080: sky / atmosphere switches and the owner A/B look overrides (rq_look 0|1|2 contrast variant A|B|C,
             // rq_ev exposure bias in stops, rq_wet wetness 0..1, rq_grassvar lawn variation 0..1).
             Clouds = I(arg("rq_clouds")); GroundHaze = B(arg("rq_haze")); Ssao = B(arg("rq_ssao"));
@@ -99,6 +123,7 @@ namespace Game.Rendering
             LightingPreset.ExposureBiasOverride = ev ?? 0f;
             WorldAtmosphere.WetOverride = wet;
             WorldAtmosphere.GrassOverride = gvar;
+            LodBias = F(arg("rq_lod")); FarClip = F(arg("rq_far")); CullMask = I(arg("rq_mask")); Props = B(arg("rq_props")); Hud = B(arg("rq_hud")); GlassDebug = I(arg("rq_glassdbg")); GlassFast = B(arg("rq_glassfast"));   // ADR 0106
             string ab = arg("rq_ab");
             Ab = string.IsNullOrEmpty(ab) ? null : ab.ToLowerInvariant();
             AbPeriod = F(arg("rq_ab_period"));
@@ -111,14 +136,15 @@ namespace Game.Rendering
             Game.Core.MirrorOverrides.Suspended = B(arg("rq_mirror_off")) == true;
             string up = arg("rq_upscale");
             Upscale = string.IsNullOrEmpty(up) ? null : up.ToLowerInvariant();
-            return Any ? $"msaa={Msaa} scale={RenderScale} shadow={ShadowDistance} post={Post} hdr={Hdr} a2c={LeafA2C} trees={Trees} " +
+            return Any ? $"msaa={Msaa} scale={RenderScale} shadow={ShadowDistance} post={Post} dither={Dither} skydither={SkyDither} hdr={Hdr} a2c={LeafA2C} trees={Trees} " +
                          $"treeshadow={TreeShadowMask} card={TreeCardScale} cull={TreeCull} thin={TreeThin} vegshader={SimpleFoliage} hlod={ForestHlod} a8={VehicleLook} envcap={EnvCapture} " +
                          $"scalemin={ScaleMin} upscale={Upscale} fsrsharp={FsrSharpness} pacing={Pacing} lamppools={LampPools} " +
                          $"envcap_iv={EnvCaptureInterval} envcap_lod={EnvCaptureLod} shadowcasc={ShadowCascades} shadowres={ShadowResolution} ab={Ab} ab_period={AbPeriod} " +
                          $"mirror_cap={Game.Core.MirrorOverrides.Cap} mirror_lod={Game.Core.MirrorOverrides.LodScale} mirror_far={Game.Core.MirrorOverrides.FarClip} " +
                          $"mirror_res={Game.Core.MirrorOverrides.Resolution} mirror_rate={Game.Core.MirrorOverrides.DueSchedule} mirror_legacy={Game.Core.MirrorOverrides.Legacy} " +
                          $"mirror_off={Game.Core.MirrorOverrides.Suspended} worldgi={WorldGi} worldsun={WorldSun} " +
-                         $"clouds={Clouds} haze={GroundHaze} ssao={Ssao} look={WorldAtmosphere.LookVariant} ev={LightingPreset.ExposureBiasOverride} wet={WorldAtmosphere.WetOverride}" : null;
+                         $"clouds={Clouds} haze={GroundHaze} ssao={Ssao} look={WorldAtmosphere.LookVariant} ev={LightingPreset.ExposureBiasOverride} wet={WorldAtmosphere.WetOverride} " +
+                         $"lod={LodBias} far={FarClip} mask={CullMask} props={Props} hud={Hud} glassfast={GlassFast}" : null;
         }
 
         /// <summary>The tier with the overrides applied (vegetation + camera fields; URP asset fields by the applier).</summary>
@@ -145,6 +171,10 @@ namespace Game.Rendering
             if (EnvCaptureInterval.HasValue) t.envCaptureInterval = Math.Max(1, EnvCaptureInterval.Value);
             if (ShadowCascades.HasValue) t.shadowCascades = Math.Max(1, Math.Min(4, ShadowCascades.Value));
             if (ShadowResolution.HasValue) t.shadowResolution = ShadowResolution.Value;
+            if (ShadowDepthBias.HasValue) t.shadowDepthBias = ShadowDepthBias.Value;
+            if (ShadowNormalBias.HasValue) t.shadowNormalBias = ShadowNormalBias.Value;
+            if (ShadowSplit1.HasValue) { t.cascade2Split = ShadowSplit1.Value; t.cascade4Split.x = ShadowSplit1.Value; }
+            if (ShadowSplit2.HasValue) t.cascade4Split.y = ShadowSplit2.Value;
             if (Upscale != null)
             {
                 switch (Upscale)
@@ -161,6 +191,9 @@ namespace Game.Rendering
             if (Clouds.HasValue) { t.cloudsOff = Clouds.Value < 0; t.cloudQuality = Math.Max(0, Math.Min(2, Clouds.Value)); }
             if (GroundHaze.HasValue) t.groundHazeOff = !GroundHaze.Value;
             if (Ssao.HasValue) t.ssao = Ssao.Value;
+            if (LodBias.HasValue) t.lodBias = LodBias.Value;
+            if (FarClip.HasValue) t.cameraFarClip = FarClip.Value;
+            if (GlassFast.HasValue) t.glassFast = GlassFast.Value;
             return t;
         }
 

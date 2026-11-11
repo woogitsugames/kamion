@@ -1,0 +1,98 @@
+{
+  "status": "BOUNDED_CPU_PLAN_NOT_PRODUCTION_NOT_RENDERED",
+  "sourceDefect": "Confirmed source limitation: actual exported lower DoorL/R painted panel is exactly planar and baked normal constant. Whether that is the remaining visual defect is a hypothesis, not proved from photos. Front R10m crown affects front only.",
+  "sourceRegionBlender": {
+    "height_m": [
+      1.35,
+      1.85
+    ],
+    "foreaft_m": [
+      -0.35,
+      0.65
+    ]
+  },
+  "workingCandidate": {
+    "heightSagitta_m": 0.0036,
+    "heightSpan_m": 0.65,
+    "widthSpan_m": 1.3,
+    "maximumNormalTilt_deg": 0.9968224904571644,
+    "hardTiltLimit_deg": 1.0,
+    "sourceHeightRegion_m": [
+      1.285,
+      1.935
+    ],
+    "sourceForeAftRegion_m": [
+      -0.55,
+      0.75
+    ],
+    "UnityVehicleHeightRegion_m": [
+      1.285,
+      1.935
+    ],
+    "UnityVehicleForwardRegion_m": [
+      3.15,
+      4.45
+    ],
+    "heightFunction": "h=A*sin(pi*u)^2*sin(pi*v)^2; u/vclamped0..1. Analyticgradient applied as shading normal in vehicle frame onpainted sidefaces only, notvertex displacement.",
+    "mask": "paint mask, nearvertical side normal, doorpatch, belowwindow. Zeroheight andzero derivative at allpatch boundaries.",
+    "unchanged": [
+      "actual geometry/silhouette",
+      "pigment effectivelegacyColor",
+      "F0=.04",
+      "coat amount",
+      "roughness",
+      "capture resolution/rate",
+      "fallback environment",
+      "globalpost"
+    ],
+    "notDerivedFromPhoto": [
+      "3.6mm amplitude",
+      "1deg cap"
+    ],
+    "rationale": "Generic shallow stamped-panel crown, not maker-specific crease or invented specular gain. Single fixedboundedtest; no amplitude sweep tohitROI.",
+    "rejectionCriteria": [
+      "manufactured visible wavy/oilcan look",
+      "new band or seam near patch boundaries",
+      "gate improvement only from local hot spot rather than natural broadreflection",
+      "cab/clear/lowsun regression",
+      "source/mask leaks to glass/trim/trailer"
+    ],
+    "evidenceLimits": "Photos show crease/pressed-panel transitions and slight bent reflections but also broad nearly planar areas. They do not prove a uniform sinusoidal crown, its amplitude, or that this alone should meet the owner gate. Test only once, retain if natural and robust; otherwise no evidence-backed further normal tuning."
+  },
+  "references": [
+    {
+      "file": "Data/photos/nowe/cab_2022_DAF_XG_530.jpg",
+      "sha256": "d3397ed1965c0c69356470da55215cd8de199775a11505cc98520fb57203f4c7",
+      "crop": [
+        950,
+        600,
+        1240,
+        920
+      ],
+      "basis": "Existing docs/REFERENCES.md Commons provenance. Qualitative pressed-panel/reflection-shape evidence only; no measured depth/BRDF/albedo."
+    },
+    {
+      "file": "Data/photos/nowe/cab_DAF_XG_530_RED_Edition_IAA_2022_DSC03843_.jpg",
+      "sha256": "7cfab56b59cdd3df3ce2d76d2b8090d243167a7241df47a41372a4e181a7cf7a",
+      "crop": [
+        780,
+        465,
+        1040,
+        720
+      ],
+      "basis": "Existing docs/REFERENCES.md Commons provenance. Qualitative pressed-panel/reflection-shape evidence only; no measured depth/BRDF/albedo."
+    },
+    {
+      "file": "Data/photos/nowe/cab_6-365_Volvo_FH.jpg",
+      "sha256": "1a5394ffde4dca23998dd2f5252ed5b1664d8a2ff998daa76914b83984444069",
+      "crop": [
+        745,
+        780,
+        945,
+        1010
+      ],
+      "basis": "Existing docs/REFERENCES.md Commons provenance. Qualitative pressed-panel/reflection-shape evidence only; no measured depth/BRDF/albedo."
+    }
+  ],
+  "next": "After explicitUnityrelease, first pendingglasscausalterms. One optional matched macro-normal candidate onlyifsource-basedplan accepted; keepdefaultC2failedrows. If no robust improvement, reportremaining gate failure ratherthan unbounded tuning."
+}

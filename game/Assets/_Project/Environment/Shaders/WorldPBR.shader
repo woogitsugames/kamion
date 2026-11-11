@@ -92,6 +92,7 @@ Shader "Kamion/World PBR"
         HLSLINCLUDE
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         #include "../../Rendering/Shaders/KamionLampPools.hlsl"
+        #include "../../Rendering/Shaders/VegetationGround.hlsl"
         CBUFFER_START(UnityPerMaterial)
             float4 _BaseMap_ST;
             float4 _Tint;
@@ -335,7 +336,7 @@ Shader "Kamion/World PBR"
                 #endif
                     half keep = smoothstep(0.45, 0.65, macro.b * 0.6 + macro.r * 0.4 + (macro.a - 0.5) * 0.5);
                 #if defined(_GROUNDMASKS)
-                    keep = max(keep, (1.0 - smoothstep(0.02, 0.12, i.masks.r)) * 0.8);   // trampled edge, ~0.4-2.4 m
+                    keep = max(keep, KamionGrassGrit(i.masks, macro.a));
                 #endif
                     half glum = dot(_GrassFill.rgb, half3(0.2126, 0.7152, 0.0722));
                     half lumA = dot(albedo, half3(0.2126, 0.7152, 0.0722));
@@ -620,7 +621,7 @@ Shader "Kamion/World PBR"
                     half3 floorAlb = lerp(half3(0.045, 0.035, 0.021), half3(0.034, 0.049, 0.019), mossy);
                     albedo = lerp(albedo, floorAlb * (0.6 + 0.8 * detl), k.g * _GroundTint);
                     albedo = lerp(albedo, half3(0.13, 0.11, 0.085) * (0.6 + 0.8 * detl), k.a * _GroundTint);
-                    half grit = (1.0 - smoothstep(0.03, 0.07, k.r)) * 0.6 * _GroundTint;
+                    half grit = KamionGrassGrit(k, macro.a) * _GroundTint;
                     albedo = lerp(albedo, half3(0.19, 0.17, 0.14) * (0.7 + 0.6 * detl), grit);
                 }
             #endif
@@ -650,8 +651,30 @@ Shader "Kamion/World PBR"
                     half sill = step(48.0, i.uv.w);
                     float depth = i.uv.w - 1.0 - 64.0 * sill;
                     float2 ur = float2(i.uv.z * lerp(1.0, 1.7, sill) / 24.0 + 0.31 * sill, 1.0 - clamp(depth * lerp(0.25, 0.4, sill), 0.0, 0.985));
+                    // ADR 0107 (review 0097 P1-f "jedna centralna kropla"): v >= 112 = sill-local data. A sill sheds its
+                    // water at its two ENDS (the flashing has end caps: two whiskers) and wets the wall right under its
+                    // drip edge over its whole length (a weak wide band). TEXCOORD_1.u = signed metres from the nearer
+                    // sill end (left half < 0, right half > 0), v = 128 + 8 * rnd + 1 + depth below the sill / length
+                    // scale (rnd 0-7 per window, 1 + depth < 8). The whisker length differs per end (rnd); the band
+                    // takes its fine vertical structure from the run-off map. Additive: the older modes are untouched.
+                    half sill2 = step(112.0, i.uv.w);
+                    float srnd = floor((i.uv.w - 128.0) * 0.125) * sill2;
+                    depth -= (64.0 + 8.0 * srnd) * sill2;
+                    half sside = step(0.0, i.uv.z);
+                    ur = lerp(ur, float2(i.uv.z * 1.7 / 24.0 + srnd * 0.137 + sside * 0.37, 1.0 - clamp(depth * 0.4, 0.0, 0.985)), sill2);
                     half3 ro = SAMPLE_TEXTURE2D(_RunoffMap, sampler_MacroMap, ur).rgb;
                     ro.r = saturate(ro.r * (1.0 + 0.8 * sill) + sill * 0.3 * (1.0 - smoothstep(0.0, 0.2, depth)) * (0.5 + macro.a));
+                    if (sill2 > 0.5)
+                    {
+                        half slen = 0.45 + 0.55 * frac(srnd * lerp(0.37, 0.61, sside) + lerp(0.1, 0.5, sside));
+                        float sde = abs(i.uv.z);                               // metres from the nearer sill end
+                        // r1 (1.5-5 cm core, up to 1.6 scale lengths) read as 1 px hairlines 2 m long from 15 m: wider, shorter
+                        // r1b: soft-edged (no hard bar), strongest right under the sill end, broken by the map's streak structure
+                        half whisk = (1.0 - smoothstep(0.0, 0.07 + 0.05 * depth, sde)) * (1.0 - smoothstep(0.1 * slen, 1.1 * slen, depth)) * (0.65 + 0.35 * ro.r);
+                        half band = (0.35 + 0.65 * ro.r) * (1.0 - smoothstep(0.0, 0.5, depth));
+                        ro.r = saturate(max(whisk, band * 0.8));
+                        ro.g *= whisk * 0.5;
+                    }
                     half k = _RunoffStrength * saturate(0.8 + (macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 1.0);
                     albedo = lerp(albedo, albedo * half3(0.22, 0.21, 0.2), ro.r * k);
                     albedo = lerp(albedo, half3(0.075, 0.042, 0.022), ro.g * k * 0.8);
