@@ -15,6 +15,17 @@ namespace Game.Rendering
     {
         public const string WorldDetailKeyword = "_KAMION_WORLD_DETAIL";
         public const float MaxArchitecturalGlassReceiverBias = 0.08f; // ADR0098 WORKING_VALUE, smallest tested acceptable.
+        public const float HighRcasSharpness = 0.75f; // ADR 0108 r1: measured ablation 0 / .25 / .5 / .75.
+
+        /// <summary>Restore the High FSR detail lost by ADR0098 without changing other tiers or explicit A/B values.
+        /// This resolves the legacy serialized zero at the camera boundary; no new QualityProfile field/migration.</summary>
+        public static QualityProfile.Tier ApplyLightPolicy(QualityProfile.Tier t)
+        {
+            if (t.name == "High" && t.upscalingFilter == UpscalingFilterSelection.FSR &&
+                t.fsrSharpness <= 0f && !RenderOverrides.FsrSharpness.HasValue)
+                t.fsrSharpness = HighRcasSharpness;
+            return t;
+        }
 
         public static float ArchitecturalGlassBias(QualityProfile.Tier t, float? requested = null)
         {
@@ -88,7 +99,8 @@ namespace Game.Rendering
             }
             if (RenderOverrides.Hdr.HasValue) urp.supportsHDR = t.hdr;
             if (RenderOverrides.Upscale != null) urp.upscalingFilter = t.upscalingFilter;   // ADR 0062 A/B
-            if (RenderOverrides.FsrSharpness.HasValue) { urp.fsrOverrideSharpness = true; urp.fsrSharpness = t.fsrSharpness; }
+            if (RenderOverrides.FsrSharpness.HasValue || (t.name == "High" && t.upscalingFilter == UpscalingFilterSelection.FSR))
+            { urp.fsrOverrideSharpness = true; urp.fsrSharpness = t.fsrSharpness; }
             if (RenderOverrides.LodBias.HasValue && Application.isPlaying) QualitySettings.lodBias = t.lodBias;   // ADR 0106
         }
 
@@ -98,9 +110,10 @@ namespace Game.Rendering
         /// <summary>Static entry for editor tools (visual QA) that render without entering play mode.</summary>
         public static void Apply(QualityProfile.Tier t, Camera cam, Volume volume, Texture[] worldTextures, ref Tonemapping tonemapping)
         {
-            // Editor QA uses this entry directly. Only explicit overrides write pipeline properties;
-            // an empty rq set remains a no-op, keeping before/after baseline harnesses identical.
-            if (RenderOverrides.Any) ApplyPipelineOverrides(t);
+            // Both the player and editor QA resolve the legacy High zero here. Other tiers retain baked policy.
+            t = ApplyLightPolicy(t);
+            if (RenderOverrides.Any || (t.name == "High" && t.upscalingFilter == UpscalingFilterSelection.FSR))
+                ApplyPipelineOverrides(t);
 #if UNITY_EDITOR
             if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset pipeline)
                 Debug.Log($"[RQ_PIPELINE] scale={pipeline.renderScale} fsrSharpness={pipeline.fsrSharpness} fsrOverride={pipeline.fsrOverrideSharpness} cascades={pipeline.shadowCascadeCount} shadowResolution={pipeline.mainLightShadowmapResolution} shadowDistance={pipeline.shadowDistance} bias={pipeline.shadowDepthBias}/{pipeline.shadowNormalBias} splits={pipeline.cascade3Split}");

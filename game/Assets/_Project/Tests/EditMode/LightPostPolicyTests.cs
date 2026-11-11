@@ -10,6 +10,35 @@ namespace Game.Tests
     public class LightPostPolicyTests
     {
         [Test]
+        public void HighRcasRestoresLegacyZeroButHonoursExplicitZeroAndOtherTiers()
+        {
+            var saved = RenderOverrides.FsrSharpness;
+            try
+            {
+                RenderOverrides.FsrSharpness = null;
+                foreach (var tier in QualityProfile.Defaults())
+                {
+                    var resolved = QualityProfileApplier.ApplyLightPolicy(tier);
+                    Assert.AreEqual(tier.name == "High" ? 0.75f : tier.fsrSharpness, resolved.fsrSharpness, tier.name);
+                    Assert.AreEqual(tier.renderScale, resolved.renderScale);
+                    Assert.AreEqual(tier.postProcessing, resolved.postProcessing);
+                }
+                var high = QualityProfile.Defaults().Single(t => t.name == "High");
+                foreach (float sharpness in new[] { 0f, 0.25f, 0.5f, 0.75f })
+                {
+                    RenderOverrides.FsrSharpness = sharpness;
+                    Assert.AreEqual(sharpness,
+                        QualityProfileApplier.ApplyLightPolicy(RenderOverrides.ApplyTo(high)).fsrSharpness,
+                        "diagnostic zero must still disable RCAS");
+                }
+                RenderOverrides.FsrSharpness = null;
+                high.upscalingFilter = UpscalingFilterSelection.Linear;
+                Assert.AreEqual(0f, QualityProfileApplier.ApplyLightPolicy(high).fsrSharpness);
+            }
+            finally { RenderOverrides.FsrSharpness = saved; }
+        }
+
+        [Test]
         public void ClearShoulderPreservesAsphaltAndMidGreyAnchors()
         {
             var preset = LightingPreset.CreateClear();
