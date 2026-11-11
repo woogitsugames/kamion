@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pl"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kabina r1 — dowody i ograniczenia</title>
+<style>body{max-width:960px;margin:32px auto;padding:0 16px;font:17px/1.55 system-ui;background:#f5f3ed;color:#202327}h1{font-size:28px}h2{font-size:22px;margin-top:36px}img{max-width:100%;height:auto;background:#ddd}figure{margin:24px 0}figcaption{font-size:15px;color:#444}a{color:#165ba3}code{font-size:14px}table{border-collapse:collapse;width:100%}td,th{text-align:left;padding:8px;border-bottom:1px solid #ccc}.pending{padding:16px;background:#fff0ca}</style>
+<h1>Kabina r1: lusterka i diagnostyka wnętrza</h1>
+<p>Gałąź <code>gpt-cab-r1</code>. K1/K2 sprawdzone w <code>1284e35e</code>; K3 z testami i budżetami w <code>d1c3d863</code>. <a href="REPORT.md">Raport po polsku</a> · <a href="STATUS.md">Bieżący stan</a>.</p>
+<p class="pending">Runda jeszcze trwa. Materiał deski i czytelność zużycia przechodzą do rundy CC0. GIS końcowy oczekuje na pulę heavy. Nie ma pomiaru GPU telefonu ani niezależnej akceptacji wizualnej.</p>
+<table><tr><th>Sprawdzenie</th><th>Wynik</th></tr>
+<tr><td>Pełne EditMode</td><td>276/276</td></tr>
+<tr><td>Lusterka — testy celowane</td><td>36/36</td></tr>
+<tr><td>Low/Gate3, 78 kamer</td><td>Draws +0, instancje +0, największa delta sumy tris ok. +0,50%</td></tr>
+<tr><td>Piksele wnętrza w RT po poprawce</td><td>0 w sześciu lustrach, Low/High × clear/overcast</td></tr></table>
+<p><a href="comparison-0112-p2.json">Pełne liczby K1–K3</a>. Liczby drawów są estymatami widoczności CPU; zwykłe tris zaokrąglono w źródłowych statystykach. Draws instancji i ich geometria mają osobne pola.</p>
+<h2>Odbicia i mocowanie</h2>
+<figure><img src="native-K1-before-after-960.jpg" alt="Natywne odbicia przed poprawką i po niej"><figcaption>K1: odbicie wnętrza znika po zmianie near V/VI i cullingu. To render gry, nie fotografia.</figcaption></figure>
+<figure><img src="left-K2-before-after-960.jpg" alt="Lewe lusterka przed cofnięciem ramienia i po nim"><figcaption>K2: dolne ramię cofnięte za szkło; mocowanie przy kabinie pozostaje na miejscu.</figcaption></figure>
+<figure><img src="bezel-inspection-left-960.jpg" alt="Pełna lewa obudowa bez ramki i z ramką"><figcaption>K3: ta sama kamera z oka kierowcy, zmiana wyłącznie siatki obrzeża w pamięci sceny.</figcaption></figure>
+<figure><img src="bezel-inspection-right-960.jpg" alt="Pełna prawa obudowa bez ramki i z ramką"><figcaption>Ostre rogi szkła osłonięte obrzeżem. Koszt +480 tris/LOD, bez nowego submeshu ani przebiegu.</figcaption></figure>
+<h2>Powierzchnia deski — diagnoza, bez zmiany materiału</h2>
+<figure><img src="surface-audit-High-clear-contact.jpg" alt="Sześć kontrolowanych wariantów kanałów materiału deski"><figcaption>Każdy wariant startuje z tej samej sceny. Detail off wyłącza normal mapę i wszystkie modulacje detalu, więc nie jest izolowanym testem samych normalnych. AO flat korzysta z białego bloku atlasu. Wszystkie 12 PNG zapisano przed awarią D3D12 przy zamykaniu Unity; proces miał exit 1.</figcaption></figure>
+<p><a href="export-uv-central-roi.json">UV rzeczywistego FBX w centralnym obszarze</a>: 707 trójkątów, maksymalna anizotropia 1,4531. Wybór przestrzenny i próg gęstości nie zastępują dokładnego wyboru części. <a href="dash-uv-audit.json">Audyt źródłowej deski</a> obejmuje inne ograniczenia.</p>
+<figure><img src="seat-entry-High-clear-960.jpg" alt="Widok przy wejściu na fotel kierowcy"><figcaption>K5: audyt źródłowy nie znalazł przecięć powierzchni fotela z kołem i podłokietnikami. Nie badał zawierania brył i nie jest audytem FBX; geometria pozostaje bez arbitralnego przesunięcia.</figcaption></figure>
+<h2>Rzeczywiste referencje</h2>
+<p><a href="REFERENCES-0112.md">Autorzy, licencje i zakres użycia</a>. Inne pojazdy i pozy, bez dopasowania pomiarowego do renderów.</p>
+<figure><img src="reference-real-cab-mirrors-960.jpg" alt="Fotografia zestawu lusterek na prawdziwej ciężarówce"><figcaption>dickinsonjohn02, Wikimedia Commons, oznaczenie Public Domain Mark. Referencja mocowania i obudowy, nie zawartości odbicia z oka kierowcy.</figcaption></figure>
+<figure><img src="reference-real-dash-960.jpg" alt="Fotografia deski rozdzielczej prawdziwej kabiny"><figcaption>Herranderssvensson, Scania S730 dash, Wikimedia Commons, CC BY-SA 3.0. Kopia pomniejszona do 960 px, wyłącznie referencja układu.</figcaption></figure>
+<figure><img src="cc0-prep-preview-960.jpg" alt="Dwa rzeczywiste materiały skóry przygotowane do następnej rundy"><figcaption>Rob Tuytel / Poly Haven, CC0. Pobrane i zweryfikowane, jeszcze niezintegrowane. Skan skóry nie jest skanem tworzywa deski.</figcaption></figure>
+</html>
