@@ -53,7 +53,9 @@ def emit(buf,cases,half_m,forbidden,report):
                 if np.cross(tri[1]-tri[0],tri[2]-tri[0])[2]<0:triangles=triangles[:,[0,2,1]]
                 ss=np.linspace(0,LENGTH_M,n)
                 uv=np.column_stack([np.tile(ss,2),np.repeat([0.,1.],n)])
-                uv1=np.column_stack([np.full(len(points),LENGTH_M),np.full(len(points),STRENGTH)])
+                # ADR0099: negative physical length selects ONLY the new short approach fade.
+                # All existing tyre lengths are nonnegative and retain the legacy shader path.
+                uv1=np.column_stack([np.full(len(points),-LENGTH_M),np.full(len(points),STRENGTH)])
                 pending.append((vertices,uv,triangles,uv1,side))
         if reason is not None:
             rep["rejected"].append({"source":case["src"],"lane":case["name"],"reason":reason})
@@ -64,6 +66,7 @@ def emit(buf,cases,half_m,forbidden,report):
         rep["applied"].append({"source":case["src"],"lane":case["name"],"working_value":True,
                                "chunk":list(anchor),"spacing_m":SPACING_M,"width_m":WIDTH_M,"length_m":LENGTH_M,
                                "strength":STRENGTH,"lift_m":LIFT_M,"clearance_m":CLEARANCE_M,
+                               "signed_length_short_approach":True,"fade_start_m":.65,"fade_end_m":.90,
                                "triangles":32,"vertices":36,"new_source_material_groups":0,
                                "center_en":center.tolist(),"travel_en":np.asarray(case["travel"]).tolist()})
     return rep

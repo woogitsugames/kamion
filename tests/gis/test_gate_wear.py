@@ -31,6 +31,7 @@ def test_supported_pair_is_deterministic_and_draped_without_road_changes():
  for p in a.parts[2:]:
   assert p.mat=='decal_tyre' and np.allclose(p.V[:,2],p.V[:,0]*.01+.005)
   assert np.isfinite(p.UV).all() and np.all(p.UV1[:,1]==.9)
+  assert np.all(p.UV1[:,0]==-G.LENGTH_M)
   assert np.all(np.cross(p.V[p.T[:,1]]-p.V[p.T[:,0]],p.V[p.T[:,2]]-p.V[p.T[:,0]])[:,2]>0)
  assert x['applied'][0]['new_source_material_groups']==0
 
@@ -61,3 +62,29 @@ def test_chunk_crossing_pair_is_rejected_atomically():
  b=Buffer();b.parts[0].V[:,1]=np.where(b.parts[0].V[:,1]==0,20,-20)
  x=G.emit(b,cases(n=-.05),1024,[],{})
  assert not x['applied'] and x['rejected'][0]['reason']=='cross_chunk_pair' and len(b.parts)==2
+
+
+def _shader_ends(u,length):
+ """Evaluate the actual shader expressions, checking both signed branches."""
+ import re
+ source=(ROOT/'game/Assets/_Project/Environment/Shaders/WorldPBR.shader').read_text()
+ match=re.search(r'if \(i\.uv\.z < 0\.0\)\s*ends = (.*?);\s*else\s*ends = (.*?);',source)
+ assert match,'Signed tyre contract is missing'
+ expression=match.group(1 if length<0 else 2)
+ expression=expression.replace('i.uv.x','u').replace('i.uv.z','length')
+ return eval(expression,{'__builtins__':{}},{'u':u,'length':length,'abs':abs,'saturate':lambda x:np.clip(x,0,1)})
+
+
+def test_signed_approach_fade_is_bounded_and_zero_at_both_physical_ends():
+ u=np.array([-.1,0,.325,.65,2.1,3.3,3.75,4.2,4.3])
+ actual=_shader_ends(u,-4.2)
+ np.testing.assert_allclose(actual,[0,0,.5,1,1,1,.5,0,0],atol=1e-12)
+ assert np.all((actual>=0)&(actual<=1))
+
+
+def test_nonnegative_lengths_keep_literal_legacy_fade_including_zero():
+ source=(ROOT/'game/Assets/_Project/Environment/Shaders/WorldPBR.shader').read_text()
+ assert 'else\n                        ends = saturate(i.uv.x / 2.5) * saturate((i.uv.z - i.uv.x) / 4.0);' in source
+ u=np.linspace(-1,30,1001)
+ for length in [0.,.2,4.2,12.,25.]:
+  np.testing.assert_array_equal(_shader_ends(u,length),np.clip(u/2.5,0,1)*np.clip((length-u)/4.,0,1))

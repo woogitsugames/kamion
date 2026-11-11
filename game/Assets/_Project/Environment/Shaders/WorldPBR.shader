@@ -477,7 +477,13 @@ Shader "Kamion/World PBR"
                     // (TEXCOORD_0.x metres, TEXCOORD_1.x length), broken up by the macro mottling
                     half across = 1.0 - abs(i.uv.y * 2.0 - 1.0);
                     half prof = smoothstep(0.0, 0.55, across);
-                    half ends = saturate(i.uv.x / 2.5) * saturate((i.uv.z - i.uv.x) / 4.0);
+                    // ADR0099: negative physical length reserves a short gate approach;
+                    // WORKING_VALUE .65/.90m fades. Nonnegative legacy data stays exact.
+                    half ends;
+                    if (i.uv.z < 0.0)
+                        ends = saturate(i.uv.x / 0.65) * saturate((abs(i.uv.z) - i.uv.x) / 0.90);
+                    else
+                        ends = saturate(i.uv.x / 2.5) * saturate((i.uv.z - i.uv.x) / 4.0);
                     half brk = saturate(0.55 + (macro.a - 0.5) * 2.5 + (macro.g - 0.5));
                     // ADR 0092: strength >= 2.5 = a solid band (tyre rub on a kerb nose must not vanish where the macro
                     // mottling happens to be low); driving lines and soil bands (<= 1.5) keep the break-up
