@@ -12,3 +12,6 @@ Następny krok: pwsh artifacts/life-r1/capture.ps1 -Stage before
 
 Krok 4: testy ukierunkowane zakończone: 50 passed w 38,28 s. Baseline Unity uruchomiony ze slotem gpt-life; pozostałe zmiany świata nie są jeszcze importowane.
 Następny krok: uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py, a następnie generator build_world i weryfikacja braku fallback=True.
+
+Krok 5: obejrzano lokalny arkusz zdjęć Mapillary; nie jest kalibrowaną referencją albedo. Przygotowano skrypt porównujący wszystkie kamery, osobno draws świata i instancji, oraz pary przed/po do 960 px. Pierwszy import Unity trwa, nie wykonano jeszcze oceny nowych PNG.
+Następny krok po renderze AFTER: uv run --project tools/worldgen python artifacts/life-r1/compare.py
