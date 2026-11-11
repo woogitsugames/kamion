@@ -36,3 +36,6 @@ Dodano do zaplanowanej walidacji istniejący Gate3Audit przed/po (Low, korytarz 
 NASTĘPNY KROK: po zakończeniu aktywnego GIS wznowić run-validation.ps1
 
 GIS po zmianach: 377 passed, 1 xfailed / 538.42 s. Brak nowych porażek względem 370/1 bazowo. NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (import/audyt/rendery przed-po + EditMode; każdy start Unity za PHONE_RUN).
+
+Blokada telefonu zwolniona; import bazowy w toku (przebudowa lokalnych PBR). Obejrzano blender-prototypes.png: odrębne sylwetki 12 m / betonowa 9 m / stalowa 8 m, stopy na płaszczyźnie, prawidłowy U-słupek. Blender ma jawnie przywrócone tinty z manifestu (GLB z teksturą zapisuje factor=1); to diagnostyka modeli, nie dowód Unity. Bounds zapisane w blender-prototype-bounds.json.
+NASTĘPNY KROK: obserwować validation.log/import-before.log; obejrzeć before/ po pojawieniu PNG.
