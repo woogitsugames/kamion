@@ -257,3 +257,14 @@ cannot restart our chains. Old release invalid; E suspends own marker. CPU/sourc
 work continues, D remains frozen. Need actual perf-run completion, not a lock gap,
 then stableabsence and fresh explicit release. No phone/ADB actions byGPT.
 NEXT COMMAND: inspect artifacts/perf-low-r1/STATUS.md and actual phone-run log for END; keep own hold until completion, continue independent CPU review meanwhile.
+## Step19 - independent F layer diagnosis and G source review
+Root independently viewed fiveway valid pane-removal board: hard house/upper
+silhouette persists without dedicated glass, so not near-cube raster proof. High256
+negligible effect; no resolution default increase. F remainsFAILon door/glassmetrics.
+REVIEW-F records actual candidate102, valid/rejected diagnoses and remaining gates.
+REVIEW-G records freshbaseline target alreadymet, isolatedPearl delta and source
+review2b5e88dd. No source-level blocker, actual instanced/rebase/GPU/budget pending.
+Phone diag0 nineablations active; allF/G/E noUnity/queuedlaunch confirmed. G first
+finishesCPU/GIS/probe prep; optional D artifactpatch only ifGparked, nofourthworker
+or Dbaseline mutation. Shared ownhold remains until realphonebatchEND+release.
+NEXT COMMAND: monitor perf-low-r1/diag0.log for final batch completion; review actual CPU/GIS checkpoints and then explicitly release guarded F/G/E captures.
