@@ -83,3 +83,6 @@
 
 - Krok15: końcowy worldbuild i canonicalimport po wybranej poprawce pine-only. Sprawdzono192rawSHA względemr2; finalny snapshotJSON/GLB zapisany. NASTĘPNY KROK: finalna236macierz59kamer na oryginalnym fixture oraz końcoweGIS/EditMode.
 
+
+- After59 WorldC Low-overcast: rzeczywista scena profilu,59 identycznych kamer. NASTĘPNY KROK: porównanie stats i ROI, następnie pozostałe warunki / końcowy GIS+EditMode.
+
