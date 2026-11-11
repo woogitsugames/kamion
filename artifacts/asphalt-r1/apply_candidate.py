@@ -9,15 +9,17 @@ def change(path, old, new):
 
 shader = 'game/Assets/_Project/Environment/Shaders/WorldPBR.shader'
 change(shader, '        _WheelPolish (',
-       '        _AsphaltWear ("Asphalt: tone, wheel darkening, Low cracks, Low photo detail (ADR0118)", Vector) = (1, 0, 0, 0)\n        _WheelPolish (')
+       '        _AsphaltWear ("Asphalt: tone, wheel darkening, Low cracks, reserved (ADR0118)", Vector) = (1, 0, 0, 0)\n        _WheelPolish (')
 change(shader, '            float4 _PaintColor, _PaintWear;',
        '            float4 _PaintColor, _PaintWear;\n            float4 _AsphaltWear;')
 change(shader, '            #if defined(_CRACKS) && defined(_KAMION_WORLD_DETAIL)\n                {',
        '            #if defined(_CRACKS)\n            #if !defined(_KAMION_WORLD_DETAIL)\n                if (_AsphaltWear.z > 0.5) // opt-in: existing mask, one fetch, no crack normal on Low\n            #endif\n                {')
 change(shader, '                    half3 cn = UnpackNormalScale(SAMPLE_TEXTURE2D(_CrackNormal, sampler_CrackMap, uc), amount);\n                    tn = normalize(half3(tn.xy + cn.xy, tn.z * cn.z));',
        '                #if defined(_KAMION_WORLD_DETAIL)\n                    half3 cn = UnpackNormalScale(SAMPLE_TEXTURE2D(_CrackNormal, sampler_CrackMap, uc), amount);\n                    tn = normalize(half3(tn.xy + cn.xy, tn.z * cn.z));\n                #endif')
+change(shader, '                    float2 w = i.uv.zw;\n                    if (w.x > -0.5)',
+       '                    float2 w = i.uv.zw;\n                    albedo *= _AsphaltWear.x; // tone also applies to old-road patches without lane data\n                    if (w.x > -0.5)')
 change(shader, '                        albedo *= 1.0 - 0.10 * wp * _WheelPolish;',
-       '                        // ADR0118: traffic polish darkens binder; existing macro breaks continuous bands.\n                        half traffic = _AsphaltWear.y * (0.65 + 0.35 * macro.a);\n                        albedo *= _AsphaltWear.x * (1.0 - wp * (0.10 * _WheelPolish + traffic));')
+       '                        // ADR0118: traffic polish darkens binder; existing macro breaks continuous bands.\n                        half traffic = _AsphaltWear.y * (0.65 + 0.35 * macro.a);\n                        albedo *= 1.0 - wp * (0.10 * _WheelPolish + traffic);')
 
 imp = 'game/Assets/_Project/World/Import/WorldPbrMaterials.cs'
 change(imp, '            bool asphalt = setName == "asphalt_worn"',
