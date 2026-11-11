@@ -37,7 +37,7 @@ namespace Game.Editor.VisualQA
             public bool drlFinite, highFinite, daytimeLowBeamOff, automaticNightLowBeamOn;
         }
 
-        public static Shader BuildProbeShader(string expression = "_PaintColor.rgb")
+        public static Shader BuildProbeShader(string expression = "_PaintColor.rgb", string vertexOverride = null, bool lightLayers = false)
         {
             string original = Path.Combine(Application.dataPath, "_Project/Rendering/Shaders/TruckExterior.shader");
             string text = File.ReadAllText(original).Replace("Cull Back", "Cull Off");
@@ -55,6 +55,9 @@ namespace Game.Editor.VisualQA
             }
             if (depth != 0) throw new InvalidOperationException("Truck Exterior fragment braces not balanced");
             text = text.Substring(0, body) + "{ return half4(" + expression + ", 1); }" + text.Substring(end);
+            if(vertexOverride!=null) text=text.Replace("o.positionCS = pcs;","o.positionCS = "+vertexOverride+";");
+            // Production has no LIGHT_LAYERS variant. This QA-only define verifies its unconditional per-draw accessor.
+            if(lightLayers) text=text.Replace("#include \"Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl\"","#define _LIGHT_LAYERS 1\n#include \"Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl\"");
             string full = Path.Combine(EditorTools.ProjectRoot, ProbeShader);
             Directory.CreateDirectory(Path.GetDirectoryName(full));
             File.WriteAllText(full, text);

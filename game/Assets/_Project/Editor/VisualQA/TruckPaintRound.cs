@@ -56,7 +56,7 @@ namespace Game.Editor.VisualQA
                     float debugY=dot(env,float3(0.2126,0.7152,0.0722));
                     debugEnv=float3(debugY/(1.0+debugY),0.5+0.5*R.y,0.5+0.5*nWS.y);
                     "+result);
-                string fields=mode=="mask"?"float3(coat,dirt,m.r)":mode=="fresnel"?"debugFc":mode=="env"?"debugEnv":throw new InvalidOperationException("Unknown paint diagnostic mode");
+                string fields=mode=="mask"?"float3(coat,dirt,m.r)":mode=="fresnel"?"debugFc":mode=="env"?"debugEnv":mode=="crown"?"float3((renderingLayer & (1u << 10)) != 0u ? 1:0,saturate(length(KamionDoorCrownGradient(TransformWorldToObject(i.positionWS),TransformWorldToObjectDir(i.normalWS),m.b,renderingLayer))/0.017455),saturate(_IsPaint*m.b))":throw new InvalidOperationException("Unknown paint diagnostic mode");
                 source=source.Replace("return half4(col.rgb, 1);","return half4("+fields+",1);");
             }
             string target="Assets/_Generated/TruckPaintProbe/PaintDiagnostic_"+mode+".shader";
@@ -113,6 +113,8 @@ namespace Game.Editor.VisualQA
             string production=Path.Combine(Application.dataPath,"_Project/Rendering/Shaders/TruckExterior.shader");
             string originalHash=Hash(production);
             float originalCoatOff=Shader.GetGlobalFloat("_KamionClearCoatOff");
+            float originalCrownOff=Shader.GetGlobalFloat("_KamionDoorCrownOff");
+            Shader.SetGlobalFloat("_KamionDoorCrownOff",EditorTools.Arg("-truckCrownOff","0")=="1"?1:0);
             panes.Clear(); paints.Clear(); int total=0;
             try
             {
@@ -155,6 +157,7 @@ namespace Game.Editor.VisualQA
                     if(EditorJsonUtility.ToJson(paint.material)!=paint.json) throw new InvalidOperationException("Transient paint material restoration failed");
                 }
                 Shader.SetGlobalFloat("_KamionClearCoatOff",originalCoatOff);
+                Shader.SetGlobalFloat("_KamionDoorCrownOff",originalCrownOff);
                 if(Hash(production)!=originalHash) throw new InvalidOperationException("Production shader changed during diagnostic");
                 Debug.Log("TRUCK_ABLATION_CLEANUP: productionSHA="+originalHash+" restoredPaints="+paints.Count);
             }

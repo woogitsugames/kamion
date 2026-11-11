@@ -563,6 +563,9 @@ namespace Game.Editor.Setup
                             r.receiveShadows = !glassish;
                             // Wheels (origin = wheel centre): tyre contact-patch flattening in Kamion/Truck Exterior.
                             if (role.StartsWith("WHEEL_", StringComparison.Ordinal)) r.renderingLayerMask |= TruckVisualRig.TyreRenderingLayer;
+                            // ADR0087 reserved bit10: actual painted door object, allLODs; keep default light-layer bit0.
+                            // Crown uses object-local coordinates, so it stays attached through hinge/cab transforms.
+                            if (role == "DOOR_L" || role == "DOOR_R") r.renderingLayerMask |= 1u << 10;
                             (transparent ? glassLods : exteriorLods)[lod].Add(r);
                         }
                     }
