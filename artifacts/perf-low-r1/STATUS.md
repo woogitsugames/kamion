@@ -28,3 +28,11 @@
 - Szybka ścieżka szyby (SH per wierzchołek, wielomianowy atan2) tylko −0,4 ms → koszt nie w tych miejscach; bisekcja `_KamionGlassDebug` 1..5
   i A/B drzew (treeshadow/treethin/treecard) w toku: diag4 (APK 5117650d90).
 - NASTĘPNY KROK: wyniki `artifacts/perf-low-r1/diag4/*/logcat.txt` ([PASSAB] summary) → wybór poprawek.
+
+## 13:55 — krok 2: poprawka szyby + bisekcja (diag4, APK 5117650d90) — `diag4/summary.txt`
+- `_KamionGlassDebug`: stała barwa −3,1 ms (raster+blend ~1,2 ms zostaje), bez filmu wycieraczek −0,85, bez fog/tone −0,2, bez env −0,15,
+  bez GGX −0,06 → koszt rozłożony po całym modelu szyby (Fresnel, absorpcja, faza, SH, film).
+- Drzewa: cienie drzew 0, przerzedzanie ×0,5 −0,3, karty ×0,5 0 → 3 ms drzew to HLOD/impostory (A/B hlod/impostor w diag5).
+- Szybka ścieżka v2 (a1232fc3): Fresnel/absorpcja/faza/SH/fog per wierzchołek, wycieraczki w half; domyślnie Low (QualityProfile.glassFast, rev 106),
+  `rq_glassfast 0` = stara ścieżka. Pomiar diag5 w toku.
+- NASTĘPNY KROK: wyniki diag5 → kamery kontrolne `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -Rq rq_glassfast=0 -OutputDir artifacts/perf-low-r1/r1/before-overcast` (+ after bez -Rq).
