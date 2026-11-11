@@ -87,6 +87,7 @@ KERB_HEIGHT_APRON = 0.04            # WORKING_VALUE: roundabout truck apron kerb
 SIDEWALK_W = 2.00
 SIDEWALK_CROSSFALL = 0.02
 VERGE_W = 1.00                      # WORKING_VALUE: grass strip behind the kerb when no sidewalk
+VERGE_SKIRT_SLOPE = 2.0              # WORKING_VALUE (ADR 0110): run per unit fall of the grass skirt of a verge strip
 MEDIAN_VERGE_MAX = 3.00             # WORKING_VALUE (ADR 0110): grass strip behind a median kerb (two meet in the middle)
 FLANGE_DEPTH = 0.50                 # vertical skirt under the outer edge (hides terrain/road seams)
 TERRAIN_UNDER_ROAD = 0.35           # terrain pushed this far below the road surface inside footprint

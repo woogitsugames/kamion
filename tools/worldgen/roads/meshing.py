@@ -211,7 +211,7 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
 def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
     """ADR 0110: grass strip behind a kerb without a sidewalk, from the back of the kerb top at the kerb crown
     (rising SIDEWALK_CROSSFALL outward), VW m wide per station, ending in a battered grass skirt
-    (1 : EMBANKMENT_SLOPE, FLANGE_DEPTH deep) instead of the kerb's vertical concrete flange. Visual only (the
+    (1 : VERGE_SKIRT_SLOPE, FLANGE_DEPTH deep) instead of the kerb's vertical concrete flange. Visual only (the
     collision ground behind a kerb stays the terrain). Exported inside the terrain primitives of its chunk
     (build_world.merge_verge_into_terrain): same grass, no extra draw call."""
     n = len(G)
@@ -232,12 +232,12 @@ def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
     if inside.any():
         R = 1.0 / np.maximum(kap_toward[inside], 1e-6)
         allow = np.maximum(0.3, 0.9 * R - (hw[inside] if np.ndim(hw) else hw))
-        scale[inside] = np.minimum(1.0, allow / np.maximum(tw + VW[inside] + S.FLANGE_DEPTH * S.EMBANKMENT_SLOPE, 1e-6))
+        scale[inside] = np.minimum(1.0, allow / np.maximum(tw + VW[inside] + S.FLANGE_DEPTH * S.VERGE_SKIRT_SLOPE, 1e-6))
     on = VW > 0.0
     u0 = tw * scale
     u1 = (tw + VW) * scale
-    depth = np.where(on, depth, 0.0) * scale          # squeezed on the inside of a curve: shallower, same 1:1.5 slope
-    u2 = u1 + depth * S.EMBANKMENT_SLOPE
+    depth = np.where(on, depth, 0.0) * scale          # squeezed on the inside of a curve: shallower, same 1:2 slope
+    u2 = u1 + depth * S.VERGE_SKIRT_SLOPE
     z0 = zg + H
     z1 = z0 + S.SIDEWALK_CROSSFALL * VW
     z2 = z1 - depth

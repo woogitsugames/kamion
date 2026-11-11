@@ -205,7 +205,19 @@ def terrain_walls(parts, zc, hf, thresh=WALL_MAX, mask=None):
         i0, j0 = np.floor(fi).astype(int), np.floor(fj).astype(int)
         return mask[j0, i0] & mask[j0, i0 + 1] & mask[j0 + 1, i0] & mask[j0 + 1, i0 + 1]
 
+    vg = {"steep_grass": 0, "skirt": 0, "max_m": 0.0, "worst": []}
+
     def note(p, P, h, kind):
+        if p.src.endswith(":vg"):
+            # ADR 0110: grass strips behind kerbs (roads.meshing._emit_verge) are exported inside the terrain mesh;
+            # they are counted on their own ("verge_strips"; ratchet in tests/gis/test_junctions_r4.py), not as walls
+            # of the road profile
+            vg[kind] += len(h)
+            if len(h) and float(np.max(h)) > vg["max_m"]:
+                k_ = int(np.argmax(h))
+                vg["max_m"] = float(np.max(h))
+                vg["worst"] = [kind, p.src, round(float(P[k_][0]), 1), round(float(P[k_][1]), 1)]
+            return
         hs.append(h)
         key = f"{kind}:j:{p.mat}" if p.src.startswith('j:') else f"{kind}:{p.mat}"
         by[key] = by.get(key, 0) + len(h)
@@ -242,7 +254,7 @@ def terrain_walls(parts, zc, hf, thresh=WALL_MAX, mask=None):
                 fa = 0.5 * ln[steep] * np.minimum(1.0, hv.mean(1) / dz)
                 run = np.hypot(*(A3[:, :, :2].max(1) - A3[:, :, :2].min(1)).T)
                 flag = (hv > thresh).any(1)
-                if flag.any():
+                if flag.any() and not p.src.endswith(":vg"):
                     key = p.src.split(":corner")[0]
                     r = area.setdefault(key, {"src": key, "mat": p.mat, "points": 0, "exposed_m2": 0.0, "run_m": 0.0,
                                               "max_h": 0.0, "e": float(P[k][0, 0]), "n": float(P[k][0, 1])})
@@ -258,9 +270,10 @@ def terrain_walls(parts, zc, hf, thresh=WALL_MAX, mask=None):
                 k = ext > thresh
                 if k.any():
                     note(p, V[T[g][k]].mean(1), ext[k], "steep_grass")
+    vg["max_m"] = round(vg["max_m"], 3)
     if not hs:
         return {"thresh_m": thresh, "count": 0, "max_m": 0.0, "p99_m": 0.0, "by_source": {}, "worst": [],
-                "skirt_area": [], "thin_steep_faces_skipped": slivers[0]}
+                "skirt_area": [], "thin_steep_faces_skipped": slivers[0], "verge_strips": vg}
     h = np.concatenate(hs)
     where.sort(key=lambda t: -t[5])
     rows = sorted(area.values(), key=lambda r: -r["exposed_m2"])
@@ -269,6 +282,6 @@ def terrain_walls(parts, zc, hf, thresh=WALL_MAX, mask=None):
                  visible=r["exposed_m2"] >= SLIVER_M2)
     return {"thresh_m": thresh, "count": int(len(h)), "max_m": round(float(h.max()), 3),
             "p99_m": round(float(np.percentile(h, 99)), 3), "by_source": by,
-            "sliver_m2": SLIVER_M2, "skirt_area": rows, "thin_steep_faces_skipped": slivers[0],
+            "sliver_m2": SLIVER_M2, "skirt_area": rows, "thin_steep_faces_skipped": slivers[0], "verge_strips": vg,
             "worst": [{"kind": kd, "src": s, "mat": m, "e": round(e, 1), "n": round(n, 1), "h": round(v, 3)}
                       for kd, s, m, e, n, v in where[:30]]}

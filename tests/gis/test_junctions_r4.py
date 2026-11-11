@@ -58,7 +58,7 @@ def _top_skirt(buf):
     return top, [p for p in buf.parts if not any(p is q for q in top)]
 
 
-def test_verge_strip_sits_at_the_kerb_crown_and_ends_in_a_1_to_1p5_skirt():
+def test_verge_strip_sits_at_the_kerb_crown_and_ends_in_a_1_to_2_skirt():
     buf = _verge(np.full(60, 1.0))
     top, skirt = _top_skirt(buf)
     assert len(top) == 1 and len(skirt) == 1 and top[0].mat == "verge_grass"
@@ -68,8 +68,8 @@ def test_verge_strip_sits_at_the_kerb_crown_and_ends_in_a_1_to_1p5_skirt():
     inner = V[np.isclose(V[:, 1], S.KERB_TOP_W)]
     assert np.allclose(inner[:, 2], 100.0 + 0.01 * inner[:, 0] + S.KERB_HEIGHT)          # kerb crown
     assert np.isclose(V[:, 1].max(), S.KERB_TOP_W + 1.0)
-    assert _slopes(skirt[0]).min() > 0.80                                                 # 1 : 1.5 = 0.83 (QA wall < 0.80)
-    assert np.isclose(skirt[0].V[:, 2].min() - skirt[0].V[:, 2].max() + S.FLANGE_DEPTH, -0.01 * 59 + 0.0, atol=0.62)
+    assert _slopes(skirt[0]).min() > 0.88                                                 # 1 : 2 = 0.894 (QA wall < 0.80)
+    assert np.isclose(skirt[0].V[:, 1].max(), S.KERB_TOP_W + 1.0 + S.FLANGE_DEPTH * S.VERGE_SKIRT_SLOPE)
 
 
 def test_verge_strip_runs_out_over_two_metres_without_steep_faces():
@@ -158,9 +158,14 @@ def test_built_region_has_bridge_structure_and_hero_barriers():
 
 def test_built_region_verge_strips_do_not_make_walls():
     w = _qa("terrain_walls_qa.json")
-    by = w["by_source"]
-    if not any(k.endswith("verge_grass") for k in by):
+    if "verge_strips" not in w:
         pytest.skip("terrain_walls_qa.json from before ADR 0110 (rebuild the region)")
-    # exposed near-vertical verge faces: a handful of slivers at junction corners (b3: 27), never a wall
-    assert by.get("skirt:verge_grass", 0) + by.get("skirt:j:verge_grass", 0) <= 40
-    assert w["max_m"] <= 0.65
+    v = w["verge_strips"]
+    # ratchet (never raise): grass faces of the strips steeper than ~1 : 1.33 and taller than 0.15 m / near-vertical
+    # strip faces standing > 0.15 m over the terrain. Build b8 of ADR 0110.
+    assert v["steep_grass"] <= RATCHET_VERGE["steep_grass"], v
+    assert v["skirt"] <= RATCHET_VERGE["skirt"], v
+    assert v["max_m"] <= 0.65, v
+
+
+RATCHET_VERGE = {"steep_grass": 300, "skirt": 40}
