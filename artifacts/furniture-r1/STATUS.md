@@ -78,3 +78,6 @@ NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using com
 
 Render after Low overcast complete: artifacts/furniture-r1/after/Low-overcast
 NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
+
+Render after Low clear complete: artifacts/furniture-r1/after/Low-clear
+NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
