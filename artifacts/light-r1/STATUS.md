@@ -1,7 +1,7 @@
 ﻿## Stan bieżący po zmianie limitów — 11 listopada, około 22:28
 Gałąź gpt-light-r1; własny worktree gpt-light. Okno pracy do 12 listopada 21:30, Europe/Warsaw.
 Ciężki Python wyłącznie przez run-heavy.ps1 i aktualny helper slotów z main: pula heavy, właściciel gpt-light-r1, max 3. Pełny GIS tylko na końcu rundy (-Task GisFinal -RoundEnd).
-35/40 PNG ablacji RCAS gotowych; ostatni wariant High-overcast-0.75 czeka w istniejącym procesie 93600. Poprawiony kontroler importu czeka na jego koniec, potem bierze heavy również dla niejawnego build_all/build_world.
+40/40 PNG ablacji RCAS gotowych. Poprawiony kontroler PID 60592 rozpoczął import w slotach heavy (gpt-light-r1) i Unity (gpt-light); przebudowa PBR build_all jest objęta heavy. Nie uruchamiać równolegle drugiego własnego heavy z tym samym właścicielem.
 GIS pierwszy pełny: 492 PASS / 1 FAIL (stary fidelity) / 1 XFAIL. Po odświeżeniu pełny przebieg zatrzymano na pilne polecenie limitu; nie jest zaliczony. Pojedynczy test_road_fidelity.py po odświeżeniu: 9 PASS / 1 XFAIL w puli heavy, slot zwolniony.
 RCAS .75 jest kandydatem, nie zamknięciem P0: asfalt HF 5,6999, niebo HF 0,6418 > 0,6. Niezależna recenzja w review-rcas/REVIEW.md. Nowe chmury i próby bieli/cieni wymagają renderów i oględzin.
 Następny krok: Get-Content artifacts/light-r1/rcas-ablation.log -Tail 6; Get-Content artifacts/light-r1/validation-followup-heavy.log -Tail 6. Nie uruchamiać drugiej kopii tych procesów. Po smoke obejrzeć PNG, potem próby cieni/bieli i pełne SBS; EditMode w kolejce, pełny GIS na końcu.
@@ -67,3 +67,6 @@ Krok 20: niezależny przegląd harnessu wykrył niejednoznaczne wielkości liter
 Render ablacji zakończony: artifacts/light-r1/rcas/High-overcast-0.75. PNG wymagają obejrzenia i pomiarów. Następny krok: kolejny wariant w artifacts/light-r1/rcas-ablation.ps1, potem analiza.
 
 Krok 21: RCAS zakończony, 40/40 PNG. Porównanie samych tekstowych metadanych (lekki skrypt, bez dużego przetwarzania obrazów) obejmuje wszystkie 5 kamer w clear i overcast: draws, osobne draws instancji i trójkąty bez zmian między RCAS 0 i 0,75. Poprawiony kontroler czeka obecnie na heavy; NIE uruchamiać drugiej własnej operacji heavy z tym samym właścicielem, bo helper traktuje ponowne Acquire jako odświeżenie. Następny krok: import → cloud-smoke → EditMode z istniejącego kontrolera.
+
+
+Krok 22 (22:34): import uzyskał heavy i Unity, trwa niejawna przebudowa PBR (set asphalt_* w logu). Slot heavy pozostaje zajęty przez ten import. Następny krok: śledzić validation-followup-heavy.log; po zakończeniu importu istniejący kontroler sam uruchomi smoke i EditMode. Nie startować kolejnej kopii.
