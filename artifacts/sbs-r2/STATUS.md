@@ -90,3 +90,6 @@ Manifest review-pair-manifest.json obejmuje wszystkie 25 B w Low-overcast. Dokł
 
 ## Własny przegląd sześciu nowych obrazów
 Obejrzano sześć natywnych renderów Low-overcast R2 obok fotografii w arkuszach r1. Zapisano VISUAL-REVIEW-CHANGED.md. Nadal widoczne główne braki: U-3, bliska kratownicowa bramownica, pierzeja handlowa i proporcje/przezroczystość ekranu. W dwóch rozpoznawalnych kadrach zachowany główny układ drogi. Nie zmieniono formalnego rejestru ocen, klas pozy ani nie podano nowego automatycznego wyniku 12/11/2. Następne wymagane materiały: końcowe kompozycje, przegląd niezależny, pełny GIS.
+
+## Niezależny przegląd nowych kadrów
+Krytyk obejrzał sześć zmienionych par Low-overcast, pozostałe 19 przyjął jako te same piksele według manifestu. Nie znalazł podstaw do podważenia ogólnego D51 FAIL. Ważne doprecyzowanie: w 180137 są częściowo przezroczyste zielonkawe panele, więc aktualnego problemu nie należy opisywać jako całkowitego braku ekranu. Pozostają różnice wysokości, ciągłości, osadzenia i otoczenia. W 150280 obecne są hale i blok, ale brak charakterystycznej pierzei. Zapisano REVIEW-INDEPENDENT-CHANGED.md bez nadpisywania historycznej recenzji r1 i bez zmiany klas.
