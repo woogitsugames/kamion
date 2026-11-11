@@ -167,10 +167,10 @@
       "r3AndroidProjection": 178560,
       "currentProfilerRuntimeBytes": 3766304,
       "r3CounterfactualProfilerRuntimeBytes": 1953288,
-      "additionalBoundObjects": 3,
       "additionalReportedFormatMipPayloadBytes": 170368,
       "additionalDesktopProfilerRuntimeBytes": 1813016,
-      "additionalAndroidAstcProjectionBytes": 170368
+      "additionalAndroidAstcProjectionBytes": 170368,
+      "additionalDependencyTextureObjects": 3
     },
     {
       "scene": "WorldC_High",
@@ -197,13 +197,14 @@
       "r3AndroidProjection": 178560,
       "currentProfilerRuntimeBytes": 3766304,
       "r3CounterfactualProfilerRuntimeBytes": 1953288,
-      "additionalBoundObjects": 3,
       "additionalReportedFormatMipPayloadBytes": 170368,
       "additionalDesktopProfilerRuntimeBytes": 1813016,
-      "additionalAndroidAstcProjectionBytes": 170368
+      "additionalAndroidAstcProjectionBytes": 170368,
+      "additionalDependencyTextureObjects": 3
     }
   ],
   "generatedLegacyObjects": 4,
   "generatedCleanObjects": 4,
-  "interpretation": "Eight generated cached TextureObjects (4 legacy+4 clean); each shipped scene dependency union7 versus4 under pinned R3 binding substitution. Clean normal/Var pixel data reuse does not deduplicate GUID objects. Reported ASTC mip payload is NOT actual D3D12 VRAM: desktop may decompress ASTC; Profiler total includes engine/CPU/native overhead. Android projection is not measured A16 residency."
+  "interpretation": "Eight generated cached TextureObjects (4 legacy+4 clean); each shipped scene dependency union7 versus4 under pinned R3 binding substitution. Clean normal/Var pixel data reuse does not deduplicate GUID objects. Reported ASTC mip payload is NOT actual D3D12 VRAM: desktop may decompress ASTC; Profiler total includes engine/CPU/native overhead. Android projection is not measured A16 residency.",
+  "definition": "Dependency objects are the AssetDatabase.GetDependencies scene union, not proven bound textures or GPU residency. R3 is a pinned-binding substitution counterfactual, not historical runtime readback."
 }
