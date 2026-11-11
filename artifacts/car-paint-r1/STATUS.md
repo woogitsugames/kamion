@@ -17,3 +17,6 @@
 
 - Step6: expanded source provenance with actual prop GLB/meta, regenerated car_grime maps, tracked truck FBX/JSON and canonical builder/importer sources. CPU float32 dirt-seed proposal covers all4 levels across1007 actual placements (253/273/226/255); zero cell changes under five tested origin shifts including +/-4096m. GPU proof remains required. Viewed existing real Mapillary references <=960px and recorded hashes; historical car image used only to locate ROIs, never as fresh baseline. Both Unity locks remain active.
 - NEXT COMMAND: wait explicit ROOT release; then guarded baseline.ps1 -Phase Import (fresh source/PBR ready).
+
+- Step7: unchanged baseline car geometry tests11/11 PASS (16.2 s). Prepared native2340x1080 fixed-ROI/CPU-counter comparison script; ROIs remain provisional until fresh PNG visual verification. Current raw confirms historical black/grey/blue cameras target correct colours within4/3/2.7cm; historical silver now targets a blackSUV within18cm, retained as unchanged regression view but never silver-colour evidence. Unity still held; zero fresh Unity captures, zero production changes.
+- NEXT COMMAND: after explicit ROOT release and both locks absent, baseline.ps1 -Phase Import, then Fixtures and Capture; inspect fresh ROI semantics before measurements.
