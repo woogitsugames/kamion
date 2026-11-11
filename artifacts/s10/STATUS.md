@@ -522,3 +522,11 @@ UV1rows/0newchannels confirmed (proof saved). Sidewalkscope corrected. First12
 provisionalframes reviewed; actualsourcefieldcloseupsnext/broadinactive.
 NEXT COMMAND: Dfieldcontrols+importmaskfeasibility; Eround1fourcondition16/root
 reviewthenfull160/GIS/EditMode. MonitorPHONE/ownedholdbeforelaunch.
+
+Step40: EsharedInstances exposesLowabeamLOD0 so importerhooknotHighonly. Root
+requiresbaseURPLit+exacthero runtimeHighcopy/qualitychangerebuild+LowHighLowtest;
+no all-tiercostacceptance. Full160pauseduntilcorrectedR1. Dactualfield16viewed;
+patch/oilvisible, gateattributionnotproven; boundedwholecomponentUVtransferplan
+authorizedwithrejectgates. GbusREADONLY1ed61e9c received, noDsourcewrites.
+NEXT COMMAND: Ecorrectedruntimepolicy/R1bindings+metrics, Dcomponenthelper/tests
+andmatchedglyphcontrols; broadseparate/fullvalidationthen0108.

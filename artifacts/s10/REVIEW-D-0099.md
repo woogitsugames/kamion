@@ -68,3 +68,17 @@ normals,indices,UV0,vertex/submesh counts; EXACT4UV1rows (2_3/5_4 eachtier).
 All channel-presence flags unchanged, actual extra UV allocation0bytes.96sidewalk
 vertices no longer affected. Sourcefield closeups/UVtransfer feasibility remain;
 this correctness fix alone is not broadwear quality acceptance.
+
+Root viewed4field-foundation sheets/16actualframes: real rectangular repair
+patches at two targetposes and small signalnear oil visible. Gate-near tyre
+frame shows irregular dark yard patches/bands, not readable pairedgateentry
+tracks; no gatePASS. Paint remains full/clean versus references. Allowed
+wholecomponent field transfer planned using actual containingroadUV/height,
+vertex+edge-mid+centroid agreement, preservepaintUV1.yage and allgeometry/UV0.
+Unknownjunction/height/overlap/lane-wrapreject;131.832m2 preliminary accepted
+area is an upperbound before componentclosure, not final coverage.
+Greadonlybusstoppreflight1ed61e9c confirms all extracted20OSMstopnodesplatform,
+no direction/stop_position; not proofrawPBF lacks them (selector omission).
+Existing allowedfurniture/life flow/decal material permits future VERIFIEDsmall
+footprint, not projectedallshelters.0newdraw conditional onchunk/culling, actual
+matchedbudgetneeded. Source+photo/ortho verification or precisehandoff required.

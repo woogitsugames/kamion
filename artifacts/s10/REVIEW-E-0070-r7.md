@@ -49,3 +49,15 @@ Low unchanged. Extra High vegetation depth pass/cost is real policy difference;
 pre-SRPdraw estimates unchanged is NOT GPU-pass/timing proof. Finalclear/OVmatrix,
 GIS/EditMode, budget and sourcefixture proofs still required. Morphology retains
 narrow/column limitation; no further tuning or claim of exact photograph species.
+
+## LOD versus active quality scope correction
+R1 exposed shared Instances.asset: Low abeam camera49.15m is withinLOD0 end
+150m*Lowbias.5=75m. Importer exactid changes LOD0 at EVERYquality, not Highonly.
+Earlier Low-unchanged assumption was incomplete (ref/route97.65/96.49m useLOD1).
+Root rejects promoting all-tier LOD0 shader based on draw estimates; requires
+base asset remain URPLit and runtime-copy exactheroalias only at activeHigh.
+WorldInstances.ReadTier material cache must rebuild on this policy change even
+when simpleFoliage stays equal; Low->High->Low meaningfultest and realLowabeam/
+Highbindingproof. Preserve approved gammaColor/texture/Cutoff/A2C/.25/0 onHigh;
+no asset mutation/globalfoliage/materialslot changes. Importerhook superseded by
+this narrow runtime policy; full160 waits corrected4conditionR1 review.
