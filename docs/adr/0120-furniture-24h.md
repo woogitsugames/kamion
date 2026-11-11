@@ -108,3 +108,26 @@ Podział betonu pozostaje niezależny; deski mają zamknięte końce i małe szc
 Poprzedni wymóg poziomego wierzchu siatki zastąpiono kontrolą wysokości nad
 pochyłym gruntem. To usuwa przyczynę błędnego rytmu gęstych pionowych podpór.
 Ocena wizualna tej korekty i końcowy budżet nadal oczekują na przebudowę/render.
+
+### r1, iteracja 3 i przygotowana iteracja 4
+
+Rendery iteracji 3 potwierdziły naprawę gęstych słupków. Chronione payloady
+geometrii: 6833 przed i po, bez różnic. Import zapisał Low 120,0 MB i High
+262,1 MB danych mesh/instancji/kolizji; nie jest to pomiar PSS urządzenia.
+W 220 kombinacjach kamer delta draws mesh i instancji wynosi zero.
+Konserwatywna granica tris nadal nie potwierdza limitu +2% w kilku kadrach
+trasy. Pełne dane i ograniczenia są w artifacts/furniture-r1/24h/iteration3/.
+
+Niezależny przegląd zbliżeń wykazał włóknisty odczyt betonowego trzonu.
+Przygotowana iteracja 4 zachowuje źródło CC0 brushed_concrete, ale pobiera
+je w skali metrycznej zamiast rozciągać kwadratowy skan przez całe 9 m.
+Kafel źródłowy ma 2,5 m; obwód atlasu odpowiada średniemu obwodowi obecnego
+modelu roboczego. Mniejszy kontrast ziarna i półprzezroczysty pas brudu są
+WORKING_VALUE do oceny obrazów, nie pomiarem konkretnej latarni.
+
+Druga zmiana przygotowana do iteracji 4 ogranicza podziały siatki renderowanej
+za krótkimi stopniami desek. Kolizja zachowuje poprzednie stacje. Minimum
+terenu sprawdzane jest także wzdłuż uproszczonego wygięcia co najwyżej 0,25 m;
+na nietypowym spadku poprzecznym pozostaje poprzednia geometria. Nowa dolna
+krawędź nie schodzi poniżej istniejących desek. Ostateczne granice rendererów,
+cienie, wygląd i budżet wymagają ponownej kontroli po eksporcie.
