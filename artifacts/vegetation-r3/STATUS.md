@@ -19,3 +19,4 @@ Zapisano pary foto before Low-overcast-photo-2048x1152. Następny krok: porówna
 Propozycja obejmuje cztery korony z ortofoto, z niepewnością pozycji około 3 m. Wysokość 12,5–15 m i lipa jako zastępnik liściastego są WORKING_VALUE, nie inwentaryzacją. Dodano testy obecności, blokowanej nawierzchni, deduplikacji z OSM i obcego kafla, przed implementacją. Następny krok: test red w heavy i zakończenie baseline Unity.
 Zapisano pary foto before Low-overcast-photo-2048x1536. Następny krok: porównać z photo-references.json.
 Zapisano pary foto before High-clear-photo-1280x720. Następny krok: porównać z photo-references.json.
+Zapisano pary foto before High-clear-photo-2048x1152. Następny krok: porównać z photo-references.json.
