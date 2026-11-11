@@ -1131,7 +1131,7 @@ def build_conifer(mb, c, height, radius, key, lod):
     # and asymmetric radii carry the envelope; clipped outer sprays keep branch gaps.
     fill = D["spruce"].get("inner_core_fill_r_WORKING_VALUE", .55)
     profile = D["spruce"].get("core_profile_WORKING_VALUE", ((.055,.42),(.27,1.0),(.60,.58),(.975,.03)))
-    sides = 8 if lod == 0 else 6
+    sides = 8 if lod == 0 else int(D["spruce"].get("low_core_sides", 6))
     rings, normals = [], []
     for j,(f,shape) in enumerate(profile):
         ring, nr = [], []

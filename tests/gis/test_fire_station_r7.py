@@ -118,6 +118,8 @@ def geometry_namespace(monkeypatch):
 
 def test_new_geometry_keeps_two_low_slots_and_original_plant_budget(geometry_namespace):
     namespace = geometry_namespace
+    whole = namespace["build"](1)
+    assert sum(len(face)-2 for face in whole.F) <= 2828, "whole Low hero retains its original geometry budget"
     mb = namespace["MB"]()
     for e,n,z,height,radius,key in namespace["SPEC"]["ground"]["thuja"]:
         namespace["build_thuja"](mb,namespace["en_to_uvz"]([e,n,z]),height,radius,key,1)

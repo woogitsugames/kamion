@@ -288,6 +288,8 @@
   "inner_core_fill_r_WORKING_VALUE": 0.95,
   "core_profile_WORKING_VALUE": [[0.045, 0.64], [0.13, 1.0], [0.27, 0.68], [0.33, 0.85], [0.48, 0.48], [0.54, 0.65], [0.74, 0.28], [0.975, 0.025]],
   "low_bough_counts": [2, 1, 1, 2, 1, 1, 2, 1, 1],
+  "low_core_sides": 5,
+  "low_core_budget_note": "ADR 0116 r1: five smooth-normal sides retain all twelve Low bough cards and all eight crown tiers; 42 triangles saved across three trees pay for the 32-triangle curved gable runoff strip. Whole Low hero remains below the original 2828 triangles. Authored WORKING_VALUE.",
   "core_shape_note": "ADR 0116 r1 variant 2: tiered crown from photograph 7197. On Low, 24 fewer bough quads pay for four extra six-sided core segments, keeping plant triangles unchanged. Authored WORKING_VALUE, not scanned geometry.",
   "inner_core_note": "ADR 0116 r1: dense opaque inner canopy remains readable when sparse needle cards disappear in Low mips. First two crown radii broadened to a height-to-width envelope near 2:1. Tiered core and fewer Low cards preserve the original Low plant triangle budget and material counts; authored WORKING_VALUE, not scanned tree geometry.",
   "bough_uv_revision": "r7-bundle2-root-content-16px"
