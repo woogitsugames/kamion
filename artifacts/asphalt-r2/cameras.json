@@ -620,6 +620,48 @@
                                     ],
                         "fov_deg":  50,
                         "note":  "WORKING_VALUE footway detail outside Kwadrat, derived from existing road view; inspect coverage. Not a photo pose."
+                    },
+                    {
+                        "id":  "sbs-g3-a-3970163613102941",
+                        "kind":  "photo_match",
+                        "seat":  "file",
+                        "type":  "persp",
+                        "pos":  [
+                                    563.0025,
+                                    -698.2133,
+                                    141.4383
+                                ],
+                        "look_at":  [
+                                        527.8658,
+                                        -711.9114,
+                                        154.7716
+                                    ],
+                        "fov_deg":  73.7398,
+                        "segment":  "G3-A",
+                        "pose_confidence":  "B",
+                        "pose_reason":  "Approximate pose; prior visual review did not reject it; fresh review required",
+                        "note":  "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+                    },
+                    {
+                        "id":  "sbs-g3-a-177786140912399",
+                        "kind":  "photo_match",
+                        "seat":  "file",
+                        "type":  "persp",
+                        "pos":  [
+                                    575.6741,
+                                    -714.9251,
+                                    141.5805
+                                ],
+                        "look_at":  [
+                                        548.3884,
+                                        -689.2242,
+                                        155.5432
+                                    ],
+                        "fov_deg":  73.7398,
+                        "segment":  "G3-A",
+                        "pose_confidence":  "B",
+                        "pose_reason":  "Approximate pose; prior visual review did not reject it; fresh review required",
+                        "note":  "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
                     }
                 ]
 }
