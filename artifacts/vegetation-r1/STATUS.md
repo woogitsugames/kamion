@@ -47,3 +47,4 @@ Zapisano pary foto before Low-clear-photo-2048x1536. Następny krok: porównać 
 Zapisano pary foto before High-clear-photo-1280x720. Następny krok: porównać z photo-references.json.
 Zapisano pary foto before High-clear-photo-2048x1152. Następny krok: porównać z photo-references.json.
 Zapisano pary foto before High-clear-photo-2048x1536. Następny krok: porównać z photo-references.json.
+W plantings.py zastąpiono globalną medianę wysokości pokrywy ciągłym polem lokalnych wysokości roślin. Rdzeń i liściasta powłoka korzystają z tego samego pola; rdzeń obniżony o zapas pod reliefem. Nie dodano wierzchołków, trójkątów ani materiałów. To hipoteza naprawy szwu widocznego w before, nie zatwierdzony wygląd. Dane _Generated pozostają bazowe do końca zdjęć before. Następny krok: pojedyncze testy w heavy i regeneracja po before-photos.

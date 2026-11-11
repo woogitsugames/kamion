@@ -171,6 +171,18 @@ def _crown(P, ph, lam):
     return r / 3.0
 
 
+def _local_top_height(points, boundary, heights):
+    """Continuous clipped-plant height, shared by the core and the leaf shell.
+
+    Inverse-distance weights retain local dips and approach the authored edge
+    heights without the medial-axis jumps of a nearest-edge lookup. No geometry
+    is added; this only replaces the old global median on existing top vertices.
+    """
+    d2 = ((points[:, None, :] - boundary[None, :, :]) ** 2).sum(-1)
+    weights = 1.0 / np.maximum(d2, .01 ** 2)
+    return (weights @ heights) / weights.sum(1)
+
+
 def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", stats=None):
     """Clipped hedge over plan polygon `poly` (local metres) standing on zground (review r6 W-N12, ADR 0049 addendum):
     an opaque dark core (interior shade, stems visible at the foot), an alpha leaf shell SHELL_D outside it (silhouette
@@ -213,6 +225,11 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
         buf.add("furniture", mat, V, UV, np.array(T), src=src)
         return len(T)
 
+    # ADR0109: both tops follow the same full-resolution edge field. A flat
+    # interior core could previously protrude through a missing-plant dip, and
+    # the shell's global median made a sharp ridge next to its undulating edge.
+    top_xy, top_z = rings(R, hl, prof)[-1]
+    top_h = top_z - zground(top_xy[:, 0], top_xy[:, 1])
     # core: inset and lowered by SHELL_D, dark interior material (modulation set hedge_foliage)
     # (half the perimeter vertices: it only shows through the leaf gaps; 1.3 x SHELL_D keeps the chords inside)
     cs = slice(None, None, 2) if n >= 16 else slice(None)
@@ -223,7 +240,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     try:
         P2, Tt = _fill(core[-1][0], 1.0)
         zt = zground(P2[:, 0], P2[:, 1])
-        z2 = zt + h * (1.0 - 0.6 * S["dome"]) - SHELL_D           # below the lowest crown: never pokes through
+        z2 = zt + _local_top_height(P2, top_xy, top_h) - 0.5 * S["dome"] * h - SHELL_D
         z2[:nc] = core[-1][1]
         buf.add("furniture", core_m, np.column_stack([P2, z2]), P2.copy(), Tt, src=src)
         nt += len(Tt)
@@ -246,7 +263,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
             inner = P2[n:]
             dmin = np.sqrt(((inner[:, None, :] - stop[None, :, :]) ** 2).sum(-1).min(1))
             lam = 0.65 * (S["plant"][0] + S["plant"][1])
-            z2[n:] = (zt[n:] + float(np.median(hl)) + 0.035 * np.minimum(dmin / 0.5, 1.0)
+            z2[n:] = (zt[n:] + _local_top_height(inner, top_xy, top_h) + 0.035 * np.minimum(dmin / 0.5, 1.0)
                       + 0.5 * S["dome"] * h * _crown(inner, ph, lam))
         ang = _h(key, "ua") * 6.283
         c, s_ = math.cos(ang), math.sin(ang)
