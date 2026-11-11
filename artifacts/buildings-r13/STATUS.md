@@ -32,3 +32,13 @@ Gałąź `buildings-r5`, worktree `.claude/worktrees/buildings-r5`, z main `0e73
 - NASTĘPNY KROK: po zdjęciu PHONE_RUN dokończy się `r1` High clear; potem
   `pwsh artifacts/buildings-r13/chain.ps1 -Round r2` i kamery `cams_r13.json`:
   `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting overcast -Gate3 artifacts/buildings-r13/cams_r13.json -Cameras <ids> -OutputDir artifacts/buildings-r13/r2/extra`
+
+## krok 4 — r2 dane zbudowane, czeka na PHONE_RUN (+ GPT_UNITY_HOLD) z importem/renderami
+- r2 region: High 4038 submeshy (+13: opaska `buildings|sidewalk_paving` jako osobna siatka w 13 chunkach, nowy
+  materiał tylko w 2), 14,03 mln tris; Low 3006 / 4,489 mln (bez zmian).
+- pytest tests/gis (r2): 380 passed, 1 xfailed (`r2/pytest_gis.log`).
+- r1 High clear: szczyt `r10_house_2` średnio 232/221/193 → 220/211/189, p99 R 255 → 253 (krem −8 %; reszta = ekspozycja).
+- Rozbryzg cokołu `r10_block_3` (góra − dół pasa, luma): 8,4 → 11,7 poziomu (`plinth_profile.py`).
+- ADR 0097 szkic: `docs/adr/0097-buildings-r5.md`.
+- NASTĘPNY KROK: działa `run_round.ps1 -Round r2` + kamery `cams_r13.json` (po zdjęciu blokady), potem budżet
+  `uv run --project tools/worldgen python artifacts/buildings-r13/budget.py artifacts/buildings-r13/base/Low-overcast artifacts/buildings-r13/r2/Low-overcast`
