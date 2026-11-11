@@ -1055,7 +1055,11 @@ def panel_fence(lin, line, col, key, flexible=False):
         probe_s = np.linspace(0,1,max(2,int(math.ceil(length/.25))+1))
         probe_q = np.column_stack([np.interp(probe_s,stations[indices],Q[indices,axis]) for axis in (0,1)])
         render_floor = float(min(np.min(ground),np.min(lin.z(probe_q))))-.1
-        if len(Q) > len(indices) and render_floor >= lowest_concrete:
+        upper_error = np.max(np.abs(np.interp(stations,stations[indices],upper[indices])-upper))
+        # Preserve a raised upper boundary over local terrain humps. Only the flexible mesh's
+        # shallow sine-to-chord difference is allowed (under 1 cm, WORKING_VALUE pending renders).
+        upper_tolerance = .01 if flexible else 1e-6
+        if len(Q) > len(indices) and render_floor >= lowest_concrete and upper_error <= upper_tolerance:
             reduced_q, reduced_top = Q[indices], upper[indices]
             count = len(reduced_q)
             V = np.concatenate([np.column_stack([reduced_q,np.full(count,render_floor)]),
