@@ -1,6 +1,6 @@
 # Independent review - S10 C / ADR0098
 
-Verdict: visual/source review PASS within C scope; final EditMode completion pending.
+Verdict: PASS within C scope; final EditMode221/221 verified in XML,0failed/0skipped.
 Reviewed source9e7e0b45, all20 after contact sheets covering236frames, prior causal
 shadow/glass comparisons, native and70percent floor edge/cab crops, final JSON.
 
@@ -28,3 +28,5 @@ KP pigment calibration, remiza geometry, truck glass or parked-carblackpaint.
 No phone/ADB tests or measured GPUmilliseconds. Source changes additive and
 common-file conflicts RegionImporter/WorldSurface must be unioned with B/D.
 Finalcanonical truckfixture rebuild is after matchedmatrix and onlyfor tests.
+
+Final EditMode XML independently read: artifacts/tests/editmode-20261111-102347.xml,221passed including all9LightPostPolicy cases. GIS355passed/2xfail (sourcePython unchanged).

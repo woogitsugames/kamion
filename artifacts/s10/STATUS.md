@@ -11,12 +11,12 @@ and this coordination worktree start at 4f7da66c.
 
 | Stream | Agent | Branch / worktree | Status | State |
 |---|---|---|---|---|
-| A 0086 tint gamma | fab_processor | gpt-tint-gamma | artifacts/tint-gamma-r1/STATUS.md | COMPLETE 38149050, scoped independent PASS |
+| A 0086 tint gamma | fab_processor | gpt-tint-gamma | artifacts/tint-gamma-r1/STATUS.md | contract PASS; calibration FAIL, leader ADR0101; docs1317afba |
 | B 0088 vegetation | tree_surfaces | gpt-vegetation-r2 | artifacts/vegetation-r2/STATUS.md | running: real CC0 pine-needle quality pass |
-| C 0098 light/post | world_integration | gpt-light-r12 | artifacts/light-r12/STATUS.md | running: final shoulder/glass policy validation |
+| C 0098 light/post | world_integration | gpt-light-r12 | artifacts/light-r12/STATUS.md | visual PASS, EditMode221/221; ADR/report finishing |
 | D 0099 surface wear | pending | gpt-surface-wear | artifacts/surface-wear-r1/STATUS.md | dependency satisfied by 471438fb; after G/E |
 | E 0090 fire station r7 | pending | gpt-firestation-r7 | artifacts/firestation-r10/STATUS.md | queued after G |
-| F 0087 truck paint | fab_processor | gpt-truck-paint | artifacts/truck-paint-r1/STATUS.md | running from 232fbada: canonical baseline |
+| F 0087 truck paint | fab_processor | gpt-truck-paint | artifacts/truck-paint-r1/STATUS.md | running merged db1432c5: locked102frames, GPUlight Infinityproof |
 | G 0089 car paint | pending | gpt-car-paint | artifacts/car-paint-r1/STATUS.md | NEXT free worker |
 
 A owns importer tint/calibration; B vegetation geometry, leaf ambient and grass;
@@ -26,7 +26,7 @@ steering: when workers finish, dispatch F, then G, then E, then D.
 
 Main had an existing modified generated/world_manifest.json; do not touch it.
 No active argon-car-paint branch exists; C leaves 0089 to stream G.
-0095 log hits are only assignment/review docs, not a merge: D is not cleared.
+Initial gate check was pending; current main471438fb actually merges0095, so D is cleared after G/E.
 
 NEXT COMMAND: `git -C C:/Users/matma/Documents/Claude/kamion log main --oneline --grep="merge.*0095" -5`; monitor A/B/C status and review concrete evidence.
 
