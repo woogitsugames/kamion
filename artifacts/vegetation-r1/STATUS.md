@@ -27,3 +27,4 @@ Weryfikacja zależności asfaltu: spec_entry_retained=true, wszystkie 4 mapy Hig
 Kompilacja pierwszego uruchomienia przeszła dalej: Bee zapisał stan 22:15, Unity ładuje tryb projektu. Cache nie był kasowany; brak podstaw do traktowania procesu jako zawieszonego. Następny krok: końcowy wynik importu i before.
 Sprawdzono składnię narzędzi Python (compileall). Import bazowy wczytuje tekstury impostorów. Następny krok: macierz before, następnie pary foto before i implementacja materiału.
 Zaimportowano bazę z własnej regeneracji. Następny krok: pwsh artifacts/vegetation-r1/render-matrix.ps1 -Stage before
+Zapisano before WorldC Low overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
