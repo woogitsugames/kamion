@@ -732,10 +732,13 @@ overrides:
       8.7 m at station 55 (xsec/fork4.png): the exit lane widens from 3.4 to 4.6 m and the gore starts on this edge. width and
       center_offset = [[t, m], ...] along the edge (11.1 -> 13.4 m; the median kerb stays straight). A first
       correction to 11.0 m after fidelity/edge_sides (it took the P-21 for the pavement edge) is withdrawn.
+      turn_lanes empty: OSM has through|through|slight_right, but no arrows are visible on stations 18-60 of this
+      edge (xsec/and5.png, xsec/fork4.png), only the solid line and the chevrons.
     confidence: high
     verify: owner drive
     set:
       lane_edges: [0.6, 4.1, 7.7, 12.0]
+      turn_lanes: ""
       width: [[0.0, 11.1], [0.5, 12.3], [0.92, 13.3], [1.0, 13.4]]
       center_offset: [[0.0, -0.7], [0.5, -1.45], [0.92, -2.05], [1.0, -2.1]]
   - id: andersa-se-xsec-w560802655
