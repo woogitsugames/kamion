@@ -11,3 +11,4 @@ Krok 2: skrypty r2 mają własny STATUS, centralne pule, limitów nie podnoszą 
 2026-11-11T23:51:49.8820657+01:00 Zapisano rendery before/Low-overcast wszystkich kamer; ocena PNG i budżetu nadal w toku.
 2026-11-11T23:52:30.1063581+01:00 Zapisano rendery before/High-clear wszystkich kamer; ocena PNG i budżetu nadal w toku.
 2026-11-11T23:53:08.6229993+01:00 Zapisano rendery before/High-overcast wszystkich kamer; ocena PNG i budżetu nadal w toku.
+Krok 3: parser LoD1 odczytuje strumieniowo wszystkie GML/XML, identyfikator i wysokość tylko w granicach jednego budynku; konfliktujące duplikaty odrzuca. Cache /11 wymusi odświeżenie. Cache, QA i manifest zapisują pochodzenie wysokości i audyt parsera; szacunki mają WORKING_VALUE, tagi OSM pozostają UNVERIFIED. Dodano testy regresji rzeczywistego układu archiwum, brakujących wartości, duplikatów i wysokości niepoprawnych. Zmiana kodu jeszcze bez regeneracji.
