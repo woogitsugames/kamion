@@ -48,5 +48,6 @@ replace_once('foreach(var paint in paints) if(paint.material!=null)', '''foreach
 
 target = ROOT / 'game/Assets/_Generated/TruckQa0115/Editor/TruckRound0115.cs'
 target.parent.mkdir(parents=True, exist_ok=True)
-target.write_text(text, encoding='utf-8')
+if not target.exists() or target.read_text(encoding='utf-8') != text:
+    target.write_text(text, encoding='utf-8')
 print(f'Prepared {target.relative_to(ROOT)}; upstream SHA256={hashlib.sha256(source.read_bytes()).hexdigest()}')
