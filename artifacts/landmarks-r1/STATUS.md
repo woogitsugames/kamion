@@ -84,3 +84,6 @@ Krok 26: pojedynczy plik testów remizy po poprawce zakończony exit 0 pod heavy
 
 Krok 27: wariant 2 obejrzany we wszystkich 16 parach. Profil iglaków jest piętrowy, lecz nadal stylizowany względem zdjęcia; zostaje do dalszej rundy jakości po backlogu. Low w podzbiorze czterech kamer mieści budżet. Szkło High-overcast ma teraz góra/dół 64,93/59,00 (lewy łuk); dół pozostaje za jasny względem fotografii, więc ostatnia korekta tej rundy dotyczy tylko maski wnętrza tafli. Wspólny materials_spec przywrócono do pierwotnej kolejności kluczy: końcowy diff względem bazy to wyłącznie 13 zmienionych wierszy w fire_station, bez przestawiania innych zestawów.
 NASTĘPNA KOMENDA: końcowa generacja materiału, pojedynczy test i szybki render samych łuków, następnie pełny komplet kamer i testy końca rundy.
+
+Krok 28: końcowa korekta szkła wzmacnia dolne wnętrze tafli i pozostawia górne odbicie nieba. Maska ma własny przedział wysokości 0,25–0,70; ramy nadal chronione testem. To wyłącznie materiał, bez kolejnej zmiany geometrii. Doprecyzowano opis fallbacku igliwia, aby nie przypisywać skanowi niezweryfikowanych map.
+NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/final-glass.ps1

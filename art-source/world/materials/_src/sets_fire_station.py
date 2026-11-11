@@ -98,7 +98,8 @@ LAYOUT = {
     # Retains the previous far-LOD starting palette; lit Low/High calibration remains WORKING_VALUE.
     "foliage_linear": [0.040, 0.068, 0.030],
     "conifer_linear": [0.030, 0.051, 0.0225],  # darker evergreen needles/core; WORKING_VALUE from 7197
-    "hall_room_visibility_WORKING_VALUE": [0.65, 1.0],  # opaque glazing proxy: dark room below / sky above
+    "hall_room_visibility_WORKING_VALUE": [0.35, 1.0],  # opaque glazing proxy: dark room below / sky above
+    "hall_room_height_range_WORKING_VALUE": [0.25, 0.70],
 }
 
 
@@ -394,7 +395,8 @@ def fire_station(nx=2048):
             # Store the lower room's ambient visibility in the existing AO channel,
             # excluding frames, so reducing albedo does not hit a bright specular floor.
             low, high = L["hall_room_visibility_WORKING_VALUE"]
-            visibility = low+(high-low)*np.clip(gv/max(gmax,1e-3),0,1)**1.3
+            room_low,room_high = L["hall_room_height_range_WORKING_VALUE"]
+            visibility = low+(high-low)*ss(room_low,room_high,np.clip(gv/max(gmax,1e-3),0,1))
             cavity_mask = mask & inside & ~(fr | bars)
             if trim is not None:
                 cavity_mask &= ~trim[0]
@@ -557,7 +559,10 @@ def fire_station(nx=2048):
     alb[iy,ix] = ccol*(1+.12*n_mid[iy,ix])[:,None]
     rough[iy,ix] = .97-.06*covered
     h[iy,ix] = .002*(.6*covered+.4*n_mid[iy,ix])
-    sources.append("polyhaven:fir_tree_01 needle RGB (CC0; authored opaque canopy derivative)")
+    conifer_meta = LANDMARK/"conifer_foliage_meta.json"
+    conifer_applied = conifer_meta.exists() and json.loads(conifer_meta.read_text()).get("applied",False)
+    sources.append("polyhaven:fir_tree_01 needle RGB (CC0; authored opaque canopy derivative)" if conifer_applied
+                   else "fir_tree_01: authored fallback, source maps not verified")
 
     alb = np.clip(alb, 0.012, 0.9).astype(np.float32)
     s = K.SurfaceSet("fire_station", c, alb, h.astype(np.float32), np.clip(rough, 0.05, 1).astype(np.float32),

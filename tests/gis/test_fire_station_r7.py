@@ -93,7 +93,7 @@ def test_glazing_room_visibility_preserves_pvc_and_painted_trim(atlas, monkeypat
         r=atlas.LAYOUT[key]
         allowed |= ((x>=r["u"][0]-.1)&(x<=r["u"][1]+.1)&(v>=r["v"][0]-.1)&(v<=r["v"][1]+.1))
     assert np.all(surface.ao_extra[~allowed]==1)
-    assert .64 <= surface.ao_extra.min() < .8
+    assert .2 <= surface.ao_extra.min() < .8
     blue=allowed&(surface.albedo[...,2]>3*surface.albedo[...,0])
     white=allowed&(surface.albedo.min(axis=2)>.3)
     assert blue.any() and white.any()
