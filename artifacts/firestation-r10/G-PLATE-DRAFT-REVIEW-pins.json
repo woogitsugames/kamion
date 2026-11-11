@@ -1,0 +1,41 @@
+{
+  "status": "UNCOMMITTED DRAFT reviewed against HEAD b0e63fd5f95ef6afe8f76566947916522c97da36; not compiled/imported by reviewer",
+  "files_sha256": {
+    "game/Assets/_Project/World/Import/WorldCarPlateMaterials.cs": "3d00471465da5bf068284b6543c5004dd441b7601ce3dce7596036e44b668730",
+    "game/Assets/_Project/Environment/Shaders/WorldCarPlate.shader": "3d517ceb43fb9afc1e07258c782b9e16bdb15ba3f38e711731fd5b906c1126b6",
+    "game/Assets/_Project/World/Import/RegionImporter.cs": "650364cf7186655a1bd1e84a31cef665bc361170d0034cb9d972521db2bc0937",
+    "game/Assets/_Project/World/Import/InstanceImporter.cs": "44f32043444b6287b213c28675e5a290cfadbbf7b9e1be574cccca5abc60bf91",
+    "tools/worldgen/streetscape/life_cars.py": "50e38b0f77c6b113a00f76d271ed5554a1a92c7c1a9011fb4c2e941b21dc73ed",
+    "game/Assets/_Project/Tests/EditMode/CarPlatePayloadTests.cs": "6879dd26289d85a4195c7e0986c44e7a9da351662948306c683ee32ec833d5f2"
+  },
+  "initial_shader_sha256": "ccf81b55417f4b05b3a191dd399663dee051962dc963a588fed2d95c06beb647",
+  "note": "Shader attribution header changed during reading; final pinned shader05f948... has the same functional diff. Helper pinned204aa5da was unchanged during review.",
+  "followup_checkpoint": "ced3d5a1e17557b22d0da1ba5fe69e1bc2604c95",
+  "followup_files": {
+    "game/Assets/_Project/World/Import/WorldCarPlateMaterials.cs": {
+      "git_blob_sha256": "3d00471465da5bf068284b6543c5004dd441b7601ce3dce7596036e44b668730",
+      "working_bytes_sha256_at_recheck": "3d00471465da5bf068284b6543c5004dd441b7601ce3dce7596036e44b668730"
+    },
+    "game/Assets/_Project/Environment/Shaders/WorldCarPlate.shader": {
+      "git_blob_sha256": "87ad370309c9037eb9131d2afa5cc907365d247c8ad566c7ca4573eb0980a419",
+      "working_bytes_sha256_at_recheck": "3d517ceb43fb9afc1e07258c782b9e16bdb15ba3f38e711731fd5b906c1126b6"
+    },
+    "game/Assets/_Project/Tests/EditMode/CarPlatePayloadTests.cs": {
+      "git_blob_sha256": "96903a8ae30d9f9e9558f3020de8035377f5496517e0828e3e6a68806749e72d",
+      "working_bytes_sha256_at_recheck": "96903a8ae30d9f9e9558f3020de8035377f5496517e0828e3e6a68806749e72d"
+    },
+    "game/Assets/_Project/World/Import/RegionImporter.cs": {
+      "git_blob_sha256": "650364cf7186655a1bd1e84a31cef665bc361170d0034cb9d972521db2bc0937",
+      "working_bytes_sha256_at_recheck": "650364cf7186655a1bd1e84a31cef665bc361170d0034cb9d972521db2bc0937"
+    },
+    "game/Assets/_Project/World/Import/InstanceImporter.cs": {
+      "git_blob_sha256": "44f32043444b6287b213c28675e5a290cfadbbf7b9e1be574cccca5abc60bf91",
+      "working_bytes_sha256_at_recheck": "44f32043444b6287b213c28675e5a290cfadbbf7b9e1be574cccca5abc60bf91"
+    },
+    "tools/worldgen/streetscape/life_cars.py": {
+      "git_blob_sha256": "9f4af79d1099ca4d9b2842faeed1af75b93727b5b9958d0d75e67bada76894dd",
+      "working_bytes_sha256_at_recheck": "50e38b0f77c6b113a00f76d271ed5554a1a92c7c1a9011fb4c2e941b21dc73ed"
+    }
+  },
+  "followup_status": "Read fixed committed objects, not future working-tree changes; source-only findings closure, compile/runtime pending"
+}

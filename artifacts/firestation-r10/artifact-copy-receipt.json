@@ -3,7 +3,7 @@
   "mode": "robocopy /E /XJ /R:1 /W:1; no MIR",
   "selected_sha256": {
     "REPORT.md": "3712e1997179a96c82d6e49bdf03cff67ef8a864d6170ccdb05a2e477adc3f07",
-    "STATUS.md": "4e70723ad5221aee4679c2fb42029b1069784c4e303af3841149e57341cf9612",
+    "STATUS.md": "cd0884f10ef4fd9b430b7fdc8a8df9486f24fc2080e26a9818a13107a81eff28",
     "REVIEW.md": "0da78a8c72f09bd33e5dd132d4f67df7e3ccc0a156d9239b96adfe8f945d1cc2",
     "SELF-REVIEW.md": "70ec35b251f58e32fcb7fc8fb57aa3e3a342fbbc7e2132474cb155bd9018fbd1",
     "editmode-final.xml": "d616a08cb84e178ba26ce93921d1310c1ebf93305f0e8ab4f1a393195b12a6c0",
@@ -35,7 +35,9 @@
     "G-PLATE-R4-PREFLIGHT.md": "b6558299e49f41c7f1aaa9902831202bff60ed2cb253cbd8363273c274cc7253",
     "G-plate-native-uv-proof.json": "f20d3064fab45e226f45528e554140f58256acf19b809c157cac3fdb0876b8f8",
     "G-REAR-V2-REVIEW.md": "fcd4afca112c05321765c4257e041df218c1ee8dfdc3d493bdafcf5417fb9ef5",
-    "G-rear-v2-independent/independent-check.json": "0d5f4409e705336ed973c11a87657aca50d257263d5d3788d190778da350cb83"
+    "G-rear-v2-independent/independent-check.json": "0d5f4409e705336ed973c11a87657aca50d257263d5d3788d190778da350cb83",
+    "G-PLATE-DRAFT-REVIEW.md": "ff4b95fc7bc97a57c78b2f78cbf3e0cacb1631da4f71d9ca7747d564fdeac388",
+    "G-PLATE-DRAFT-REVIEW-pins.json": "ea36bf728805eef208077e241b78c26ba8acaf9f205156b4d3118e00ec49d750"
   },
   "png_inventory": {
     "before": 160,
@@ -52,5 +54,5 @@
       "not_overwritten": true
     }
   },
-  "doc_extension": "Step64: valid rear-v2 independent controller-state/pose/PNG response review; no new GPU state capture."
+  "doc_extension": "Step65: G P2 draft + fixed immutable ced3d5a1 source review; no Unity/tests; earlier findings closed source-only."
 }
