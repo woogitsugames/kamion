@@ -47,3 +47,8 @@ Gałąź `junctions-r6` (z main 3540bbdf). Dowody: `artifacts/junctions-r6/` (re
   `bash artifacts/junctions-r6/scripts/build.sh b3 && bash artifacts/junctions-r6/scripts/imp.sh b3 && bash artifacts/junctions-r6/scripts/post.sh b3 full`
   → `python artifacts/junctions-r6/scripts/stats_cmp.py artifacts/junctions-r6/renders_m0_low_clear/stats.txt artifacts/junctions-r6/renders_b3_low_clear/stats.txt`
   → `bash artifacts/junctions-r6/scripts/lum_set.sh b3` → obejrzeć `r4_deck_bz_eye2` (szachownica), `p0_kerb_merge_eye`, `r4_putry_nose_eye`.
+- krok 3 (22:39, w toku): wartości z iteracji wpisane do `build_world.py` (`barrier_steel` 0,50 / `set_metal` 0,9 / `sky_occ` [0, 0,25];
+  `vertex_grime` 0,165; t1 kapa / asfalt 1,35 Low clear, 1,46–1,50 High overcast; krawężnik 1,53–1,63 → stąd `bridge_kerb` 0,19),
+  ADR 0123 szkic (`docs/adr/0123-junctions-r6-barriers.md`), build b3 + import + 4 zestawy renderów uruchomione jednym poleceniem
+  (`logs/b3_all.out`). Polecenie właściciela: po tej operacji STOP.
+  NASTĘPNY KROK (gdyby przerwało w trakcie): `bash artifacts/junctions-r6/scripts/build.sh b3 && bash artifacts/junctions-r6/scripts/imp.sh b3`
