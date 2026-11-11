@@ -508,3 +508,11 @@ layer15028includesdecalsnotpaintcoverage; independentproofupdatedpermaterial.
 23bussheltersnearestoil7.04-92.11m proximitynotattribution. Actualfootprint
 closeupsnext. NEXT COMMAND: Dnativeafter/hashdiff+UVcausal, Eround1hero16/root
 reviewthen160/GIS/EditMode; freshguardsbeforeeachlaunch.
+
+Step38 14:57: Dfirstnativeafter preserved154geometry hashesbut8UVrows incl96
+sidewalkverts ->reject scope/assertion, narrowtoasphaltonly+reaudit. Actualextra
+UVbuffers0bytes notoldprediction. E41c8e90c hero-onlyfactorysource committed,
+round1importactive. GboundedREADONLYbusstopallowedflow/robustcoords/costpreflight
+inownGdocs(noDwrites/Unity) assigned, stillmax3workers.
+NEXT COMMAND: Dnarrowactualaudit/12causal review, E16hero4conditions/rootreview;
+thenfullmatrices/tests. C13remainsafterD/Eclosure.

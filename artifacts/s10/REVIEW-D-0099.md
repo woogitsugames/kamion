@@ -55,3 +55,10 @@ Source connected-footprint inventory312patch/871oil/799tyre is neither generator
 source attribution nor rendered-visible count.23bus shelters nearest oil7.04-92.11m
 proves proximity only; no dedicated stop-zone attribution. Need target-specific
 source/actual images before adding/moving existing wear under allowed scope.
+
+First sentinel actual audit preserved all154positions/normals/index/UV0 hashes,
+but8UVrow changes exposed96missing sidewalk vertices affected by layer-wide
+policy. Assertion rejected the expected4row claim; no false proof accepted. Agent
+narrows policy to asphalt/_new only and reruns import/native audit. Actual extra
+UVchannels0bytes, superseding36124byte forecast. Initial12causal images retain
+firstcandidate provenance; final narrower candidate must be measured independently.
