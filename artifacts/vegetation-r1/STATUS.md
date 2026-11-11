@@ -66,3 +66,4 @@ Zapisano after WorldC Low overcast. Następny krok: obejrzenie arkuszy i porówn
 Zapisano after WorldC Low clear. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Zapisano after WorldC_High High overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Zapisano after WorldC_High High clear. Następny krok: obejrzenie arkuszy i porównanie statystyk.
+Macierz after zakończona kodem 0. Następny krok: review_images.py, metryki koron i statystyki; potem zdjęcia after.
