@@ -17,10 +17,14 @@ CONFIG = ROOT / 'art-source/truck/interior/cab_material_scans.json'
 
 
 def config_args(output, alpha, config=CONFIG, fetch=False):
-    entry = json.loads(Path(config).read_text(encoding='utf-8-sig'))['leather']
+    document = json.loads(Path(config).read_text(encoding='utf-8-sig'))
+    if document['schema'] != 1:
+        raise ValueError('Unsupported cab scan schema')
+    entry = document['leather']
     raw = ROOT / 'art-source/truck/interior/cc0/_raw' / entry['asset']
     args = argparse.Namespace(output=Path(output), preserve_alpha=Path(alpha),
-                              source_metres=entry['source_metres'], tile_metres=entry['tile_metres'])
+                              source_metres=entry['source_metres'], tile_metres=entry['tile_metres'],
+                              rim_uv_scale=entry['wheel_authored_tile_metres'] / entry['tile_metres'])
     for role, item in entry['maps'].items():
         path = raw / item['file']
         if not path.exists() and fetch:
@@ -118,8 +122,10 @@ def prepare(args):
         'actual_crop_metres': pixels / shape[0] * args.source_metres,
         'crop_pixels': pixels, 'source_pixels': shape, 'crop_box': box,
         'edge_crossfade_fraction': .06, 'scan_roughness_median': rough_median,
-        'mapping_limits': 'Keeps existing UV contracts: 12 cm on upholstery, 5 cm on wheel. On wheel this candidate grain is 5/12 of physical crop scale until its mapping is corrected. No claim of a scanned dashboard plastic.',
+        'mapping_limits': '12 cm upholstery crop. Authored wheel UV uses 5 cm; requires the flagged Unity rim UV correction, verified separately in builder logs. Source-only previews retain the authored wheel scale. No claim of a scanned dashboard plastic.',
+        'required_unity_rim_uv_scale': args.rim_uv_scale,
         'perforation_alpha_source': str(args.preserve_alpha),
+        'perforation_alpha_source_sha256': hashlib.sha256(args.preserve_alpha.read_bytes()).hexdigest(),
         'sources': {role: {'file': str(path), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()} for role, path in files.items()},
         'outputs': outputs,
     }
