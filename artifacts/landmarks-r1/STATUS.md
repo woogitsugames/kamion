@@ -81,3 +81,6 @@ NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/round2-resume.ps1
 Krok 25: materiał z poprawką białych detali wygenerowany we wszystkich trzech rozdzielczościach pod heavy. Wspólny spec zachowuje wszystkie pozostałe wpisy z HEAD. Następnie pojedynczy test remizy; bez pełnego GIS.
 
 Krok 26: pojedynczy plik testów remizy po poprawce zakończony exit 0 pod heavy. Pipeline przechodzi do importu i 16 renderów fokusowych wariantu 2 przez oddzielne sloty Unity. NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/round2-resume-wrapper.log -Tail 10
+
+Krok 27: wariant 2 obejrzany we wszystkich 16 parach. Profil iglaków jest piętrowy, lecz nadal stylizowany względem zdjęcia; zostaje do dalszej rundy jakości po backlogu. Low w podzbiorze czterech kamer mieści budżet. Szkło High-overcast ma teraz góra/dół 64,93/59,00 (lewy łuk); dół pozostaje za jasny względem fotografii, więc ostatnia korekta tej rundy dotyczy tylko maski wnętrza tafli. Wspólny materials_spec przywrócono do pierwotnej kolejności kluczy: końcowy diff względem bazy to wyłącznie 13 zmienionych wierszy w fire_station, bez przestawiania innych zestawów.
+NASTĘPNA KOMENDA: końcowa generacja materiału, pojedynczy test i szybki render samych łuków, następnie pełny komplet kamer i testy końca rundy.
