@@ -2,7 +2,7 @@
 
 ## Runda 1 — lakier, szkło i światła dzienne
 
-Status: praca w toku. Start 11 listopada 2026, 21:31 CET. Gałąź `gpt-truck-r1`.
+Status: runda zakończona z ograniczonymi poprawkami technicznymi; cel wyglądu lakieru i szyby pozostaje otwarty. Start 11 listopada 2026, 21:31 CET. Gałąź `gpt-truck-r1`.
 
 Punktem wyjścia jest main `5f2aa277` oraz recenzja `REVIEW-2026-11-11-s10-gpt-0087-0090.md`. Dawne pomiary 0087 nie stanowią pomiaru tej rundy. Obowiązują D30, D34, D35 i D44, a także budżet Low bez dodatkowych przebiegów i wzrostu liczby wywołań rysowania. Czas GPU na telefonie pozostanie UNVERIFIED, ponieważ telefony należą do zakresu lidera.
 
@@ -12,7 +12,7 @@ Pierwsza uzasadniona poprawka techniczna dotyczy mgły w `FragFast`: szkło uży
 
 DRL zachowuje kodowanie 1000 nitów na jednostkę RGBAHalf. Luminancja jest WORKING_VALUE i wymaga porównania przed i po. Nie zmieniamy ekspozycji całej sceny ani presetów oświetlenia należących do innej sesji. Lakier wymaga aktualnego dowodu rozdzielającego refleks od jasności białego pigmentu; nie przyjmujemy z góry, że capture nie zawiera podłoża.
 
-Wyniki, porównania, ograniczenia i konflikty zostaną wpisane po walidacji. Na tym etapie nie ogłaszamy PASS wyglądu.
+Nie ogłaszamy PASS wyglądu. Wyniki i ograniczenia zapisano poniżej oraz w raporcie rundy.
 
 ### Decyzje i dotychczasowe dowody r1
 
@@ -26,11 +26,11 @@ Nie zmieniamy F0, amplitudy wypukłości drzwi, geometrii, pozostałych grup lam
 
 W stałym natywnym ROI lewej lampy liczba pikseli z każdym kanałem RGB ≥254 wynosi 1214 → 0 na High-overcast; w pozostałych trzech warunkach kandydat również ma 0. ROI zawiera obudowę i otoczenie lampy. Recenzent rozpoznaje włączone DRL w obu pogodach, nie widzi regresji reflektorów i kierunkowskazu; zaznacza, że gradient pozostaje subtelny. To akceptacja kandydata do walidacji, nie PASS całego truck.
 
-Testy rzeczywistego dekodowania/stanu oraz nowego ograniczenia HDR i bypassu przeszły 11/11, bez pominięć. Nowe próby GPU obejmują zerową i dużą ekspozycję. Pełny EditMode i końcowy GIS są jeszcze wymagane.
+Testy rzeczywistego dekodowania/stanu oraz nowego ograniczenia HDR i bypassu przeszły 11/11, bez pominięć. Nowe próby GPU obejmują zerową i dużą ekspozycję. Wyniki pełnego EditMode i końcowego GIS są poniżej.
 
 Kontrole lakieru zachowały szorstkość i tłumienie podłoża przy wyłączaniu samego wkładu powłoki. High-overcast: wkład powłoki w średnią jasność próbki drzwi wynosi 1,62 punktu na bieli i 4,66 na ciemnym pigmencie. To wyniki po przetwarzaniu obrazu, nie surowe HDR. Potwierdzają obecność odbicia, lecz nie zamykają celu połysku białej kabiny. W tej rundzie nie wzmacniamy sztucznie F0.
 
-Pozostają otwarte: kredowy lakier i dach w słońcu, mleczność szyby oraz D44. Stara baza ma stosunek odchyleń szyby do widoku bez przedniej tafli 0,475 Low i 0,526 High, przy celu 0,7. Końcowa próba bez tafli zostanie wykonana na identycznej wersji kandydata. Brak pomiarów telefonów zgodnie z zakresem właściciela.
+Pozostają otwarte: kredowy lakier i dach w słońcu, mleczność szyby oraz D44. Stara baza ma stosunek odchyleń szyby do widoku bez przedniej tafli 0,475 Low i 0,526 High, przy celu 0,7. Końcową próbę bez tafli wykonano na identycznej wersji kandydata. Brak pomiarów telefonów zgodnie z zakresem właściciela.
 
 Po pilnej aktualizacji właściciela wszystkie ciężkie zadania Pythona korzystają z puli `heavy` (max 3), a pełny GIS jest uruchamiany wyłącznie na końcu rundy. Wcześniejszy bazowy GIS, wykonany przed tą aktualizacją i przed zmianami produkcyjnymi, dał 488 passed, 5 failed, 1 xfailed. Pięć błędów dotyczy far-field, wiaduktu, przeterminowanego fidelity, brakującego prototypu i deterministyczności świata; pliki tych dziedzin nie są poprawiane w sesji truck.
 
@@ -43,3 +43,7 @@ Końcowy D44 według tej samej próbki i skalowania do 1024 px: 0,490 Low i 0,52
 Decyzja o podłodze szorstkości capture w `FragFast`: nie dodajemy nominalnej wartości 0,09 z pełnej ścieżki. Obecne Low i Medium mają capture 64 px; wzór `mip = clamp(log2(max(pr² × size / 2, 1)), ...)` daje mip 0 zarówno przed, jak i po takim ograniczeniu dla pr < 0,09 (największy footprint 0,2592). Dla większego pr ograniczenie nic nie zmienia. Ta równoważność dotyczy aktualnych profili, a nie dowolnej przyszłej rozdzielczości. Medium-overcast i Medium-clear zostały wyrenderowane po zmianie mgły.
 
 Niezależna kontrola po rebuildzie nie wykazała nowej regresji sylwetki, ustawienia pojazdu ani widoku kierowcy w ośmiu arkuszach. Lakier, dach i szyba nadal nie spełniają celu materiałowego. Zmierzch jest kontrolą jakościową bez bazy: Low i High pokazują płaskie jasne moduły reflektorów; nie przypisujemy ich tej rundzie. Pełna ocena jest w `artifacts/truck-r1/FINAL-REVIEW.md`.
+
+Końcowy GIS pod slotem heavy: 488 passed, 5 failed, 1 xfailed w 688,34 s, dokładnie te same pięć testów co w bazie. Porównanie nazw i wyników jest w `gis-comparison.json`. Sześć zmienionych przez test plików generated zachowano w patchu i przywrócono do wersji gałęzi. Nie poprawiano błędów innych dziedzin.
+
+Kompilacja Android z zawartością Low i High zakończyła się powodzeniem: 0 błędów, 12 ostrzeżeń, 289 s. APK ma 375305009 bajtów; log, SHA i metadane w `artifacts/truck-r1/build/`. Wśród ostrzeżeń są potencjalnie niezainicjalizowane wartości w niezmienionym `KamionVehicleEnv.hlsl`; brak błędów shaderów. Nie instalowano ani nie uruchamiano aplikacji na telefonie. Wygenerowane ustawienia przywrócono; tymczasowe Resources usunął sam pipeline Unity. Kod źródłowy builda jest wskazany przez SHA w nazwie APK, późniejsze commity zapisywały jedynie dowody i dokumentację.

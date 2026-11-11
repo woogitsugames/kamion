@@ -19,7 +19,9 @@ try {
     New-Item -ItemType Directory -Force artifacts/truck-r1/build | Out-Null
     Copy-Item -LiteralPath $apk.FullName,($apk.FullName + '.sha256') -Destination artifacts/truck-r1/build
     Copy-Item -LiteralPath $log.FullName -Destination artifacts/truck-r1/build/unity.log
-    [ordered]@{ result='Succeeded'; apk=$apk.Name; bytes=$apk.Length; sha256=(Get-FileHash -LiteralPath $apk.FullName -Algorithm SHA256).Hash; install=$false; run=$false; world_high=$true; source_commit=(git rev-parse HEAD) } | ConvertTo-Json | Set-Content -Encoding utf8 artifacts/truck-r1/build/result.json
+    $buildSha = [regex]::Match($apk.Name, '-(?<sha>[0-9a-f]{10})(?:-dirty)?-high\.apk$').Groups['sha'].Value
+    if (!$buildSha) { throw 'Nie odczytano SHA wejściowego z nazwy APK.' }
+    [ordered]@{ result='Succeeded'; apk=$apk.Name; bytes=$apk.Length; sha256=(Get-FileHash -LiteralPath $apk.FullName -Algorithm SHA256).Hash; install=$false; run=$false; world_high=$true; source_commit=(git rev-parse $buildSha); evidence_commit_at_finish=(git rev-parse HEAD) } | ConvertTo-Json | Set-Content -Encoding utf8 artifacts/truck-r1/build/result.json
 }
 finally {
     pwsh $slotScript -Release -Owner gpt-truck
