@@ -1,12 +1,23 @@
-# G / ADR0089 - final R3 visual self-review (verified)
+# G R4 self-criticism
 
-Viewed all292fresh before frames,4additional wheel baselines,20Pearl-only frames,324R1,24R2focused,24R3focused and324R3 through labelled <=960px sheets and native crops. Compared actual Mapillary references (refs/provenance.json), not cross-weather albedo truth.
-Fresh A-correct blackdoor already satisfied requested30-40; no invented old21-24 reproduction or pigment/reflection-floor boost. Pearl-only is separately causal; controlfilm0.796078prototype -> instance2/3 explicitly changes for combined views.
-R3 Highov door39.840/bonnet78.697, Lowov35.226/71.638. Purebonnet remainsR1, only+.178High/+.163Low versusPearl-only. Door has partialfilm overlap, not fully excluded; target is measured, not predicted from height policy.
-R1 numeric seed proof did not imply dirty-level legibility: originalR1 failed. Actual-scene diagnostic rejected the UV/missing-mask hypothesis. R2 gray camo/block edges and door46.618Highov/41.695Lowov were rejected, retained for review.
-R3 clean0 retained;1subtle/2moderate/3heavier continuous lower spray visible in clear, subtler/coherent overcast. Existing mask and neutral grit are WORKING_VALUE art parameters, not measured dirt reflectance. White/light cars make grime more contrasty; whitevan preexisting clear clipping remains outside black-paint fix.
-Native wheels rounder22vs14; chords remain visible at2m. Neutral rubber/gray spokes/dark dish retained. ExistingLOD0 range25m/37.5mHigh also receives cost; LOD1 stays10, no fourth runtime band/material/draw split.
-All236common route camera-condition CPU counters nonincrease; fleet allLOD0 -30000triangles is separate. FragmentALU changes are not measured device cost; phone/GPU timing UNVERIFIED. No unrelated quality reduction/road geometry change.
-Actual RenderMeshInstanced1007inputs and18LOD/rebase cases passed, counts253/273/226/255. This proves stable seed and origin policy, not final visual appearance or timing. Finalsource-hash rerun passes1007instances/18cases with exactcurrentR3SHA.
-Limitations: historicalsilver nowblackSUV; wheel02 cutoff/occluded, threeoldLOD/glass views see trailer. New20/45m only visible rear/body ROI, no whole-car guarantee;8new diagnostic cameras AFTER-only, original73pairs plus4wheelbaselines strict.
-Final192SHA/0mismatch/Fab15fallbackFalse;90vehiclefixture hashes equal freshcanonical before. GIS375pass/1knownxfail and17targetedpass; finalEditMode231/231PASS incl5carcases; independentROOT reviewed all324final frames plusnativewheel/levels withoutnewscopedregression.
+I viewed all 32 final contact pages (368 frames) at 960x720, fresh native R3/R4 lower-body, bonnet and wheel pairs, and the pinned Mapillary reference contact sheet. ROOT independently reviewed Low 184, E High 184; all pose packets and CPU counters are checked separately from appearance. Reference photographs support neutral wheels and lower-edge deposits, not a calibrated dirt albedo or close photographic reconstruction.
+
+The prior R3 acceptance was wrong: detached dark mid-door blobs and a lighter strip below them were visible. Its record is retained under R3-*-WITHDRAWN.md. R4 removes those blobs rather than merely warming the same pattern. The affine height/axle payload avoids the rejected precomputed-weight interpolation gradient of 11.904/m on sparse sedan triangles.
+
+Dust realism remains PARTIAL. The new lower deposit is continuous but too smooth and subtle in full scenes to claim rich photographed roadspray. No plastic bumpers, tyre rubber or entire rear are dirtied by this paint-only layer. The supplemental rear has visible paint starting at 0.315 m; it does not prove deposition at the physical sill or a universally dirtiest whole rear. No further amplitude/plastic expansion was made after the bounded ROOT choice.
+
+The independent OFF/0/1/2/3 rear PNG series is strictly monotonic in all four conditions on the supplied 68 ray-selected lower-paint samples. This supports function, not photographic quality. CPU body-ray identity is not a GPU ID/occlusion buffer. The pictured white wheel/side car is a HATCH, not the historical estate label.
+
+Upper preservation needed a real correction. PNG top-row parity alone missed actual Tile 4x4 sampling of legacy lower film on horizontal bonnets. The +14.543% base/+0.11283 smoothness attempt was rejected before import. Forward restoration from clean Mask.R preserves upper role without height-envelope division. Final bonnet ROI changes at most 0.02935 display luma; do not call every upper texel/mip/ASTC pixel mathematically identical.
+
+Final High-overcast door 40.9841 exceeds the historical 30-40 interval slightly, versus its fresh R3 value 39.8909. This +1.0932 change is disclosed; no global paint lift or reflection floor was added. Current source, lighting and ROI identity supersede old pre-Tint numbers. The bonnet remains guarded separately.
+
+Plate variation is readable and coherent in the selected close views, including repeated black hatch instances. It uses only 27 existing cells, so collisions across the fleet are expected. LOD2 has no plate; mips beyond the small existing gutters and phone ASTC readability are unverified. The vertex readback tests cell centers; independent native-corner audit and native crops establish orientation, not the center probe alone.
+
+The first plate import lost disabled MotionVectors; a later Lit-inspector load rewrote it again because the owned shader name is Unknown to URP. Both failures are retained. Corrected exact-id pass preservation and removal of inherited Lit CustomEditor were verified by independent Low/High reload/replay and a persisted-material regression. Earlier 28 focus frames remain valid visual comparisons, not final pass-state proof.
+
+All 368 CPU records and four complete stats.txt files are identical to baseline. This is not a phone/GPU timing result: CARPAINT/plate add ALU, native paint UV1 adds 584576 bytes, and scene texture dependencies add three objects under a pinned R3 binding counterfactual. ASTC payload projection +170368 bytes is not actual A16 residency; desktop Profiler +1813016 includes CPU/native/decompression overhead.
+
+Pearl upload and 22-segment LOD0 wheel changes belong to earlier G rounds and are preserved here, not claimed as new R3-to-R4 geometry improvements. Chords remain visible close up. Historical car_lod/glass cameras face the truck, black45 is wall-occluded, and some wheel/body targets are partial. They are retained and labelled, not counted as whole-car/far-plate proof.
+
+No geometry, roads, global atmosphere, adaptive-resolution policy, scenes, PackageCache, phone or main source was changed in this R4 proof. Source/current-main drift is explicit; integration must union the owned shader/material/importer blocks and regenerate products before its own proof.

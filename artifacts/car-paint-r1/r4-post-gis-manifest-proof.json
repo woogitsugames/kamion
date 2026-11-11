@@ -1,0 +1,11 @@
+{
+  "pytest_exit": 0,
+  "passed": 526,
+  "xfailed": 1,
+  "elapsed_s": 638.73,
+  "canonical_manifest_before_posttest_sha256": "ab2ab0c347b8d63969cdbe289576e5dbe9450bbc08dd9648d441942b587a5683",
+  "protected_canonical_sha256": "ab2ab0c347b8d63969cdbe289576e5dbe9450bbc08dd9648d441942b587a5683",
+  "restored_only_canonical_manifest": false,
+  "canonical_raw192_valid": true,
+  "note": "Only restore this exact pre-test canonical snapshot if tests changed it; never git restore an old HEAD manifest or manually edit hashes."
+}

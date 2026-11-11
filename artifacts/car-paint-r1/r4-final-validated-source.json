@@ -1,0 +1,109 @@
+{
+  "branch": "gpt-car-paint",
+  "validated_source_commit": "bf83923a70017d3a7bb926cd4830095dfcdcf4b1",
+  "production_and_test_files": [
+    {
+      "file": "art-source/world/materials/_src/sets_facade.py",
+      "sha256": "21d7f7ec5e4bc9b339d012d80b5e27f8e9ba1d549d84b7dd079928be47b276ff"
+    },
+    {
+      "file": "art-source/world/materials/materials_spec.json",
+      "sha256": "4c8161052bde8143a7509bb22d998c9c5104b9a29bad6d0fb2590e6f1c5781d4"
+    },
+    {
+      "file": "art-source/world/props/street_props.glb",
+      "sha256": "ea70d2348f57b0f1e9de165b103d32e9cb2e44395da12b655dd1df30fd6836d8"
+    },
+    {
+      "file": "game/Assets/_Project/Environment/Shaders/WorldCarPlate.shader",
+      "sha256": "808cddaffd314650e4a711804a457d8db1be9c3b7e8b3eabfdb8f1484b4a748b"
+    },
+    {
+      "file": "game/Assets/_Project/Environment/Shaders/WorldCarPlate.shader.meta",
+      "sha256": "6b4b72331e5e1f3ecbbab04f10af11bbc422a4b7ee51c7a6d3b7b3bf19e26d9c"
+    },
+    {
+      "file": "game/Assets/_Project/Environment/Shaders/WorldPBR.shader",
+      "sha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a"
+    },
+    {
+      "file": "game/Assets/_Project/Tests/EditMode/CarPlatePayloadTests.cs",
+      "sha256": "141134ceb38660c0b2ae15e9fd8b137455d40a4aa7cf86a8cbb5902da3a49c6d"
+    },
+    {
+      "file": "game/Assets/_Project/Tests/EditMode/CarPlatePayloadTests.cs.meta",
+      "sha256": "dda9c45caab433d1c6f2e93c85e236556f5a32c304e4e85600fdea63835f5376"
+    },
+    {
+      "file": "game/Assets/_Project/World/Import/InstanceImporter.cs",
+      "sha256": "44f32043444b6287b213c28675e5a290cfadbbf7b9e1be574cccca5abc60bf91"
+    },
+    {
+      "file": "game/Assets/_Project/World/Import/RegionImporter.cs",
+      "sha256": "c3563e30cdd6c4cbb6e3f1fe2291580faff24aa43e071c21fe6a9cca16ac84c8"
+    },
+    {
+      "file": "game/Assets/_Project/World/Import/WorldCarPlateMaterials.cs",
+      "sha256": "e1c5f6b3c6da123a369d2e2245b6f8b6fec86795c095a69cb8c52c843f72366c"
+    },
+    {
+      "file": "game/Assets/_Project/World/Import/WorldCarPlateMaterials.cs.meta",
+      "sha256": "9d53c0858d1043c2c7b2ca1538cbb8b870e295f2992973f94d763f2edefc4514"
+    },
+    {
+      "file": "game/Assets/_Project/World/Import/WorldPbrMaterials.cs",
+      "sha256": "101348478291d2b8e69dc1b919572ca848e6923caebc13bae8128a9135f6a68a"
+    },
+    {
+      "file": "tests/gis/test_car_deposition.py",
+      "sha256": "2f63f6aa61f7b545914a7ef9e1ce22f76e946df9b9a8e767c02174251d32a18f"
+    },
+    {
+      "file": "tests/gis/test_car_map_fields.py",
+      "sha256": "f4c63a972a9ba1c29342516c7390b4f949513d5c7358d96460966acdb761d18e"
+    },
+    {
+      "file": "tests/gis/test_car_plate_payload.py",
+      "sha256": "3c4290b9a633dde98eafbabb6181b2e355f1d9fdb719788c21352213822b1d5b"
+    },
+    {
+      "file": "tests/gis/test_streetscape.py",
+      "sha256": "42da4b032f97ddccbc0f124e0a15068818c719f36bb1fb54f27491b1b655edec"
+    },
+    {
+      "file": "tools/worldgen/streetscape/export.py",
+      "sha256": "7f98225b8b89a25faf4008de3a1a9c748d537df97b4c073c0f974dd9d35e5fd4"
+    },
+    {
+      "file": "tools/worldgen/streetscape/life_cars.py",
+      "sha256": "50e38b0f77c6b113a00f76d271ed5554a1a92c7c1a9011fb4c2e941b21dc73ed"
+    },
+    {
+      "file": "tools/worldgen/streetscape/materials.py",
+      "sha256": "4b89c4f43ffc02d6537589a892eff406b6c1faf98ab17e36de9d0efb7a541459"
+    }
+  ],
+  "native_assets": [
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Instances.asset",
+      "sha256": "8b1e11855330096af1d4f8a45d192f6dcc1a39582c3cd637ccd6c9415b87d02b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/WorldC.unity",
+      "sha256": "9edeac236401e055ebf3659b01c89058af688a4512eee95345c3b5b847774d92"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/WorldC_High.unity",
+      "sha256": "d5279e0eb78b8e789314ab4af352f29ef4d5a9dfd97cdb4d73f23731ee17c5d9"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+      "sha256": "bb3c5f5c20719e5bf210c3227ab2341cedb3a030e3df02fa64cdab040929574c"
+    }
+  ],
+  "raw192_exact": true,
+  "canonical_fixtures90_equal_before": true,
+  "fab_ready": 15,
+  "fab_fallback": false,
+  "note": "Source code at this commit; later report-only commits do not change validated production content. Native actor/camera parity separately proven by736 actual packets."
+}

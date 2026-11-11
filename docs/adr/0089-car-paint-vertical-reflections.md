@@ -1,15 +1,19 @@
-# ADR 0089: osobowki - lakier, kola i brud per instancja
-Status: przyjety zakresowo po niezaleznej recenzji ROOT; R3, EditMode231/231 i final-source GPU PASS.
-Baza: main43bc53a7, swiezy world/PBR/import oraz kanoniczne Truck/Trailer przed porownaniem;192SHA/Fab15bez fallback.
-Aktualna baza po korekcie TintA ma High-overcast drzwi38.672 i czysta maske81.017 sRGB, wiec nie dodajemy podbicia pigmentu ani dolnej granicy odbicia.
-Pomiar GPU Color-property wykryl ponowne dekodowanie HDRPearl1.6/1.9/3.2 do2.812/4.104/12.922; SetLinearPearlTint koduje gamma przed SetColor, zachowujac liniowe proporcje i helperTint.
-Oddzielna korektaPearl: Highov drzwi38.356/maska78.519; bez zmiany brudu, geometrii i pigmentu. Historyczne74 nie jest aktualnym celem maski.
-LOD0 kola14->22segmenty z wierzcholkiem styku; LOD1pozostaje10, bez nowego pasma runtime/materialu/draw. Zmiana obejmuje istniejace25m (37.5mHigh), nie tylko<8m.
-Guma i zakurzona felga neutralne szare przy zblizonej luminancji, ciemne dno zachowane; naturalne swiatlo nadal zmienia kanalowe RGB.
-Osobne przezroczyste skory brudu usuniete; CARPAINT odwraca dotychczasowy dolny mnoznik car_grime i naklada film/roughness na malowana powloke, clean0 usuwa oba dawne pasy.
-Cztery poziomy i faza z hasha poczatku instancji wzgledem _KamionGIRect, raz per vertex; bez nowych runtime pol/tekstur/draw. GPU RenderMeshInstanced1007instancji i18LOD/przesuniec potwierdza stabilnosc.
-R1 film za slabo czytelny; diagnostyka prawdziwej sceny potwierdzila aktywne UV/maski/poziomy, hipoteza braku pasma UV odrzucona.
-R2 odrzucony: bloki/camo oraz drzwi46.618Highov/41.695Lowov. R3: szerszy prog istniejacej maski.25..1.5, grit.14linear, cap.75/top.70m; WORKING_VALUE, bez nowych tekstur/draw.
-R3 drzwi39.840Highov/35.226Lowov, maska78.697/71.638 bez zmiany wzgledemR1; czesciowy wplyw brudu naROI jawny. Budzet oryginalnych59kamer: Lowdraw-23..0, High-42..0 i brak wzrostu zaokraglonych trianglesK; estymacje edytora, koszt GPU/telefonu UNVERIFIED.
-375GISpass/1knownxfail,17celowanychPASS; EditMode231/231PASS (5carcases), final-source GPU1007/18PASS, ROOT obejrzal324R3+24focused bez nowej regresji.292before +4wheelbaseline;8nowychkamer R1 to AFTER-only, bez wymyslonych par.
-Dowody: artifacts/car-paint-r1/STATUS.md, R1-SELF-CRITICISM.md, pearl-probe.json, pearl-only-delta.json, instanced-film-gpu-proof.json i metrics-before-vs-r1.json.
+# ADR 0089: parked-car paint, wheels, deposition and plate variation
+
+Status: bounded R4 repair selected after independent ROOT/E visual review; dust realism PARTIAL. Historical R3 visual acceptance is withdrawn, not a calibration reference.
+
+Keep the earlier causal Pearl Color-property upload correction, neutral tyres/rims and 22-segment existing LOD0 wheels. No pigment/exposure lift, fourth runtime LOD or unrelated quality reduction.
+
+Export affine signed height above the actual class sill and longitudinal axle coordinate in UV1 after normal splitting. All 81 car LOD meshes keep positions/normals/indices/UV0/groups; native stride 20 to 24 adds an estimated 584576 payload bytes, not total allocation, including nonpaint vertices sharing each stream.
+
+Use bounded broad wheel/rear weights and exponential height decay in CARPAINT. Minimal dust at level 0; deterministic GI-relative float32 origin hash selects 10/35/35/20 levels. No detached height envelope, inverse legacy-film division, new geometry or texture sample. Deposition colour, falloff and opacity are WORKING_VALUE rather than measured albedo.
+
+Only seven active paint materials use car_grime_clean. Preserve legacy calibration and wrap gutter; Mask.R carries removed legacy-film coverage for forward upper-role restoration, with smoothness subtraction. Green/beige stay legacy; actual metallic override remains separate. Initial un-restored bonnet +14.543% was rejected before import.
+
+Reuse the existing plate atlas with 27 eligible cells. Add exact local plate UV1 corners to 54 LOD0/1 primitives inside the already-present stream, with unchanged UV0 fallback. One shared URP Lit forward vertex wrapper retains original fragment and auxiliary passes; no new texture, material instance or draw split. LOD2 has no plate.
+
+Enable the local vertex keyword only after fresh-library and actual native indexed-corner validation. Reject old/mixed payloads and unsupported pipeline eligibility; shader lightmap or invalid-GI paths keep UV0. GI validity uses texel size, independently of visibility strength. No whole-fleet uniqueness claim.
+
+Preserve LightMode-tag pass state around exact car_plate factory switches. The inherited Lit CustomEditor rewrote unknown-shader MotionVectors on load; remove that generated-only inspector association. Persisted replay proves disabled motion, Opaque queue 2000 and existing texture/ST/roughness.
+
+Final 368 CPU records are unchanged; source adds ALU and data, not a measured GPU-time saving. Scene dependency texture union is 7 versus counterfactual R3 4: +170368 ASTC mip payload bytes; desktop Profiler delta +1813016 includes overhead. A16 residency/timing remain UNVERIFIED. Evidence and limitations: artifacts/car-paint-r1/REPORT.md, SELF-CRITICISM.md, r4-final-validation.json, r4-plate-native-parity.json and GPU proofs. Preserve canonical fixtures/pose packets; shared shader/material/importer integration requires a bounded union and canonical regeneration.
