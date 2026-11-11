@@ -2,6 +2,8 @@ import json, re
 from pathlib import Path
 from PIL import Image, ImageOps, ImageDraw
 ROOT = Path(__file__).resolve().parent
+route_path=ROOT/'route-camera-ids.json'
+route_ids=set(json.loads(route_path.read_text(encoding='utf-8-sig'))['ids']) if route_path.exists() else set()
 
 def read_stats(path):
     data = {}
@@ -26,7 +28,8 @@ for condition in ('Low-clear','Low-overcast','High-clear','High-overcast'):
         delta={k:a[k]-b[k] for k in b}
         total_b=b['tris_k']+b.get('instance_tris_k',0)
         total_a=a['tris_k']+a.get('instance_tris_k',0)
-        rows.append(dict(camera=camera,before=b,after=a,delta=delta,total_tris_percent=100*(total_a-total_b)/max(total_b,1)))
+        total_draw_delta=delta['draws']+delta.get('instance_draws',0)
+        rows.append(dict(camera=camera,is_route=camera in route_ids,before=b,after=a,delta=delta,total_draw_delta=total_draw_delta,total_tris_percent=100*(total_a-total_b)/max(total_b,1)))
     results[condition]=rows
     out=ROOT/'review'/condition
     out.mkdir(parents=True,exist_ok=True)
@@ -44,5 +47,19 @@ for condition in ('Low-clear','Low-overcast','High-clear','High-overcast'):
                 canvas.paste(thumb,(x,25))
             draw.text((x+5,5),f'{stage} | {camera} | {condition}',fill='white')
         canvas.save(out/f'{camera}.jpg',quality=90)
+    # Review pages retain 960 px width and stay below 960 px on both axes.
+    pairs=sorted(out.glob('*.jpg'))
+    for start in range(0,len(pairs),3):
+        page=Image.new('RGB',(960,780),'#252525')
+        ImageDraw.Draw(page).text((5,5),f'{condition} | Main 5f2aa277 before / R4 after',fill='white')
+        for index,pair in enumerate(pairs[start:start+3]):
+            with Image.open(pair) as frame:page.paste(frame,(0,30+index*250))
+        page.save(out/f'page-{start//3:02d}.png')
 (ROOT/'all-camera-budget.json').write_text(json.dumps(results,indent=2),encoding='utf-8')
-print(json.dumps({k:dict(cameras=len(v),max_total_tris_percent=max(x['total_tris_percent'] for x in v),max_draw_delta=max(x['delta']['draws'] for x in v),max_instance_draw_delta=max(x['delta'].get('instance_draws',0) for x in v)) for k,v in results.items()},indent=2))
+summary={}
+for condition,rows in results.items():
+    present={r['camera'] for r in rows}
+    route=[r for r in rows if r['is_route']]
+    summary[condition]=dict(cameras=len(rows),route_cameras=len(route),missing_route=sorted(route_ids-present),max_total_tris_percent=max(r['total_tris_percent'] for r in rows),max_draw_delta=max(r['delta']['draws'] for r in rows),max_instance_draw_delta=max(r['delta'].get('instance_draws',0) for r in rows),max_total_draw_delta=max(r['total_draw_delta'] for r in rows),route_over_budget=[r['camera'] for r in route if r['total_draw_delta']>0 or r['total_tris_percent']>2])
+(ROOT/'budget-summary.json').write_text(json.dumps(summary,indent=2),encoding='utf-8')
+print(json.dumps(summary,indent=2))
