@@ -1,6 +1,7 @@
 # HANDOVER — kamion, sesja 9 (start 2026-11-11 00:30 lokalnie / 23:30 UTC; limit 5 h reset 04:30 UTC)
 
 ## Najpierw
+- 04:22: limit 97 %, nic w toku (Argon/GPT bez zmian); jednorazowa pobudka 05:35 lokalnie na start pracy po resecie.
 - **03:22 lokalnie: limit 96 %** — stop nowych agentów do resetu 04:30 UTC (05:30 lokalnie). main ZIELONY po 0093: pytest gis 345 ✓ / 0 ✗ (regeneracja zacommitowana). Uruchamiacz `uv run pytest` bywa zepsuty („trampoline failed”) — używaj `python -m pytest`.
 - ~03:05: 0093 scalony; żaden agent Claude nie działa. Po resecie (04:30 UTC = 05:30 lokalnie): krytyk 0092 + 0093, potem 0094 / 0090, integracja Unity (import-region, BuildBatch, testy), APK, telefon.
 - 02:45: limit 88 % — 0092 scalony bez krytyka (po resecie); działa tylko 0093.
