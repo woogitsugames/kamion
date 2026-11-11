@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import json
 import math
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -21,6 +22,8 @@ from shapely.geometry import LineString, Point
 ROOT = Path(__file__).resolve().parents[2]
 REGION = ROOT / 'Data/Regions/bialystok-industrial-c'
 OUTPUT = ROOT / 'artifacts/sbs-gate3'
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+from sbs_photometry import DEFINITION, image_measurements, paired_photometry, camera_signature
 
 
 def read(path):
@@ -405,39 +408,8 @@ def contact(refs):
         sheet.save(OUTPUT/f'contact-{seg}.jpg')
 
 
-def measurements(im, horizon, authored_masks=None):
-    a = np.asarray(im.convert('RGB'),dtype=float)
-    luma = a @ np.array([0.2126,0.7152,0.0722])
-    yy,xx=np.indices(luma.shape)
-    # Deliberately labelled estimates: no semantic segmenter or ground-truth masks.
-    sky=(yy<luma.shape[0]*horizon)&(luma>115)&(a[:,:,2]>=a[:,:,0]*0.95)
-    asphalt=(yy>luma.shape[0]*max(horizon,0.55))&(xx>luma.shape[1]*0.2)&(xx<luma.shape[1]*0.8)&(np.ptp(a,axis=2)<35)&(luma>25)&(luma<180)
-    method='WORKING_VALUE RGB/position heuristic, not semantic ground truth'
-    if authored_masks is not None:
-        masks=[]
-        for label in ('sky','asphalt'):
-            mask=Image.new('1',im.size)
-            draw=ImageDraw.Draw(mask)
-            for polygon in authored_masks.get(label,[]):
-                if len(polygon)<3 or any(not (0<=x<=1 and 0<=y<=1) for x,y in polygon):
-                    raise ValueError('mask polygons require >=3 normalized points')
-                draw.polygon([(x*(im.width-1),y*(im.height-1)) for x,y in polygon],fill=1)
-            masks.append(np.asarray(mask,dtype=bool))
-        sky,asphalt=masks
-        if np.any(sky & asphalt): raise ValueError('sky/asphalt masks overlap')
-        method='authored normalized polygons; see sbs_authored_overrides.json'
-    hist=np.histogram(luma,bins=32,range=(0,256))[0]
-    sky_luma=float(luma[sky].mean()) if sky.any() else None
-    asphalt_luma=float(luma[asphalt].mean()) if asphalt.any() else None
-    return {'luma_mean_srgb': round(float(luma.mean()),3), 'histogram_32':hist.tolist(),
-            'sky_fraction_estimate':round(float(sky.mean()),5),
-            'asphalt_fraction_estimate':round(float(asphalt.mean()),5),
-            'sky_asphalt_ratio_estimate':round(float(sky.sum()/asphalt.sum()),5) if asphalt.any() else None,
-            'sky_asphalt_area_ratio_estimate':round(float(sky.sum()/asphalt.sum()),5) if asphalt.any() else None,
-            'sky_luma_mean_srgb_estimate':round(sky_luma,3) if sky_luma is not None else None,
-            'asphalt_luma_mean_srgb_estimate':round(asphalt_luma,3) if asphalt_luma is not None else None,
-            'sky_asphalt_luma_ratio_estimate':round(sky_luma/asphalt_luma,5) if sky_luma is not None and asphalt_luma else None,
-            'mask_method':method}
+def measurements(im,horizon,authored_masks=None):
+    return image_measurements(im,horizon,authored_masks)
 
 
 def landmark_report(annotations, ref, render_digest, render_size):
@@ -470,10 +442,14 @@ def landmark_report(annotations, ref, render_digest, render_size):
             'method':'WORKING_VALUE manually marked correspondences; geometric identity and point placement require review'}
 
 
-def compose(render_dir, outdir, strict=True, include_rejected=False, historical=False, inputs=None, landmarks_file=None):
+def compose(render_dir, outdir, strict=True, include_rejected=False, historical=False, inputs=None, landmarks_file=None, photometry_file=None):
     if inputs is not None and not historical: raise ValueError("custom input snapshots require --historical")
     input_dir=Path(inputs) if inputs is not None else REGION
     refs=read(input_dir/'sbs_references.json')['references']
+    cameras_by_id={c['id']:c for c in read(input_dir/'sbs_cameras.json').get('cameras',[])} if (input_dir/'sbs_cameras.json').exists() else {}
+    photometry_path=Path(photometry_file) if photometry_file is not None else input_dir/'sbs_photometry.json'
+    photometry_annotations=read(photometry_path).get('annotations',[]) if photometry_path.exists() else []
+    photometry_hash=hashlib.sha256(photometry_path.read_bytes()).hexdigest() if photometry_path.exists() else None
     landmark_path=Path(landmarks_file) if landmarks_file is not None else input_dir/'sbs_landmarks.json'
     annotations=read(landmark_path).get('annotations',[]) if landmark_path.exists() else []
     landmark_hash=hashlib.sha256(landmark_path.read_bytes()).hexdigest() if landmark_path.exists() else None
@@ -535,12 +511,21 @@ def compose(render_dir, outdir, strict=True, include_rejected=False, historical=
             if src.width*dst.height != dst.width*src.height:
                 raise ValueError(f"aspect mismatch: {r['camera']}; render at photo aspect ratio")
             left,right=src.convert('RGB'),dst.convert('RGB')
-        masks=r.get('authored_overrides',{}).get('masks',{})
+        render_digest=hashlib.sha256(render.read_bytes()).hexdigest()
+        observed_photo_sha=hashlib.sha256((ROOT/r.get('comparison_photo',r['photo'])).read_bytes()).hexdigest()
+        lighting=matching[0].get('lighting') if captures else None
+        tier=matching[0].get('tier') if captures else None
+        photo_samples=paired_photometry(photometry_annotations,{**r,'comparison_sha256':observed_photo_sha},render_digest,lighting)
+        masks=photo_samples['masks'] or r.get('authored_overrides',{}).get('masks',{})
         m={'camera':r['camera'],'pose_status':r['pose_status'],
-           'pose_confidence':r.get('pose_confidence','C'), 'photometric_use':r.get('photometric_use',False), 'photo_sha256':r.get('sha256'),
+           'pose_confidence':r.get('pose_confidence','C'), 'photometric_use':photo_samples['use'],
+           'photometry':{k:v for k,v in photo_samples.items() if k!='masks'},'mask_signature':photo_samples['mask_signature'],
+           'pose_signature':camera_signature(cameras_by_id.get(r['camera'])),'tier':tier,'lighting':lighting,'metric_definition':DEFINITION,'photo_sha256':r.get('sha256'),
            'render_sha256':hashlib.sha256(render.read_bytes()).hexdigest(), 'comparison_sha256':r.get('comparison_sha256'),
            'photo':measurements(left,r['horizon_y_fraction'],masks.get('photo')),
            'render':measurements(right,r['horizon_y_fraction'],masks.get('render'))}
+        if m['photometric_use'] and any(m[panel][region+'_samples']['pixels']<32 for panel in ('photo','render') for region in ('sky','asphalt')):
+            m['photometric_use']=False;m['photometry']['status']='INSUFFICIENT_SAMPLE_PIXELS'
         ph=np.array(m['photo']['histogram_32'],dtype=float); ph/=ph.sum()
         rh=np.array(m['render']['histogram_32'],dtype=float); rh/=rh.sum()
         m['landmarks']=landmark_report(annotations,{**r,'comparison_sha256':hashlib.sha256((ROOT/r.get('comparison_photo',r['photo'])).read_bytes()).hexdigest()},m['render_sha256'],right.size)
@@ -572,7 +557,7 @@ def compose(render_dir, outdir, strict=True, include_rejected=False, historical=
         for j,text in enumerate([f"Photo: {r['author']} | {r['license']} | {r['captured_at']}",r['page_url'],
                                   'Grid: 25%; red: authored horizon. Photo rectified/cropped if intrinsics cached.',
                                   'Histogram and sky/asphalt estimates: metrics.json; no gate PASS inferred.',
-                                  f"Photometric use: {r.get('photometric_use',False)} | {r.get('photo_vs_data_age','Data epoch UNVERIFIED')}"]):
+                                  f"Photometric use: {m['photometric_use']} ({photo_samples['status']}) | {r.get('photo_vs_data_age','Data epoch UNVERIFIED')}"]):
             d.text((6,height+29+j*17),text,fill='white')
         peak=max(float(ph.max()),float(rh.max()),1e-9)
         for hist,color in [(ph,'#55bbff'),(rh,'#ffaa44')]:
@@ -580,7 +565,7 @@ def compose(render_dir, outdir, strict=True, include_rejected=False, historical=
             d.line(points,fill=color,width=2)
         d.text((24,height+119),'sRGB luma histogram: blue PHOTO / orange RENDER (32 bins, normalized)',fill='white')
         save_png(sheet,outdir/(r['camera']+'.png'))
-    write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'rejected_poses':rejected,'render_captures':captures,'provenance_status':provenance,'provenance_warnings':warnings,'landmarks_sha256':landmark_hash,'gate_status':'UNVERIFIED',
+    write(outdir/'metrics.json',{'schema':'kamion/sbs-metrics/2','metric_definition':DEFINITION,'photometry_sha256':photometry_hash,'pairs':metrics,'missing_renders':missing,'rejected_poses':rejected,'render_captures':captures,'provenance_status':provenance,'provenance_warnings':warnings,'landmarks_sha256':landmark_hash,'gate_status':'UNVERIFIED',
           'cameras_sha256':camera_hash})
     print(f'Composed {len(metrics)} pairs; missing {len(missing)} renders.')
     if strict and missing:
@@ -592,11 +577,11 @@ def main():
     sub=ap.add_subparsers(dest='command',required=True)
     p=sub.add_parser('prepare'); p.add_argument('--count-per-segment',type=int,default=20)
     sub.add_parser('fetch-intrinsics')
-    p=sub.add_parser('compose'); p.add_argument('--renders',type=Path,required=True); p.add_argument('--output',type=Path,required=True); p.add_argument('--include-rejected',action='store_true'); p.add_argument('--historical',action='store_true'); p.add_argument('--inputs',type=Path); p.add_argument('--landmarks',type=Path)
+    p=sub.add_parser('compose'); p.add_argument('--renders',type=Path,required=True); p.add_argument('--output',type=Path,required=True); p.add_argument('--include-rejected',action='store_true'); p.add_argument('--historical',action='store_true'); p.add_argument('--inputs',type=Path); p.add_argument('--landmarks',type=Path); p.add_argument('--photometry',type=Path)
     args=ap.parse_args()
     if args.command=='prepare': prepare(args.count_per_segment)
     elif args.command=='fetch-intrinsics': fetch_intrinsics()
-    else: compose(args.renders,args.output,include_rejected=args.include_rejected,historical=args.historical,inputs=args.inputs,landmarks_file=args.landmarks)
+    else: compose(args.renders,args.output,include_rejected=args.include_rejected,historical=args.historical,inputs=args.inputs,landmarks_file=args.landmarks,photometry_file=args.photometry)
 
 
 if __name__=='__main__':

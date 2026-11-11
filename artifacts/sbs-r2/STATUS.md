@@ -4,3 +4,6 @@ Przeczytano nową D51 oraz recenzję REVIEW-2026-11-11-s11-sbs-r1-D51.md. Bramka
 R2 obejmuje metryki obrazu i kontrastu, zgodność kohort/warunków przy trendzie, raport HTML latest oraz ślad D51. Punkty i maski mają wiązać się z konkretnymi obrazami; nie wolno zaliczać świata na podstawie histogramu. Priorytety geometryczne w r3 oprzemy na D51.
 Ciężkie zadania wyłącznie przez run-heavy.ps1, właściciel gpt-sbs-r2, max 3. Unity przez osobne sloty gpt-sbs, max 4. Pełny GIS dopiero na końcu rundy. Nie używamy telefonów, nie scalany do main, nie pushujemy.
 Następny krok: przegląd metrics/report API i implementacja raportu z jednoznacznym stanem D51 oraz trendami dla zgodnych źródeł.
+## Metryki obrazu v2
+Wydzielono moduł sbs_photometry: kontrast RMS, zakres percentyli, gradient przy wspólnej rozdzielczości, maski nieba/asfaltu i wyłączenia maski samochodu. Ręcznie zweryfikowane próbki wiążą się z SHA obu obrazów, zgodnym światłem i przybliżoną lub lepszą pozą. Nie stanowią oceny D51 ani awansu klasy. Nowa definicja metryk jest jawna, żeby nie porównywać niezgodnych algorytmów.
+Pierwszy test zgodności wykrył niemodyfikowalną tablicę maski PIL; poprawiono operację bez zmiany danych źródłowych. Następny krok: pojedynczo test_sbs_gate3.py i test_sbs_photometry.py przez heavy, potem raport HTML.
