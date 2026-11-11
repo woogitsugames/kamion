@@ -606,10 +606,11 @@ namespace Game.Editor.Setup
                 }
 
                 // ADR 0104: only the detailed housing embeds the adjusted glass; Low/Medium body meshes stay unchanged.
-                RecessMirrorBacking(root.transform, exteriorLods[0].FirstOrDefault(r => r.name.StartsWith("CAB_Body", StringComparison.Ordinal)), mirrorInfo);
                 // ADR 0112: support-only deformation on every body LOD; no exterior export or material changes.
+                // Identify source islands before the older recess modifier can move vertices at the lower arm tip.
                 foreach (var bodyLod in exteriorLods)
                     ClearMirrorSupports(root.transform, bodyLod.FirstOrDefault(r => r.name.StartsWith("CAB_Body", StringComparison.Ordinal)));
+                RecessMirrorBacking(root.transform, exteriorLods[0].FirstOrDefault(r => r.name.StartsWith("CAB_Body", StringComparison.Ordinal)), mirrorInfo);
 
                 // ---- cab glazing seen from the eye (ADR 0045): the exterior FBX glass is a single outward-facing sheet, so with
                 // Kamion/Truck Glass (Cull Back) the driver looked through no glass at all on every tier (no tint, no dash
