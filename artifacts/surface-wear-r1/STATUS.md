@@ -2,3 +2,6 @@
 
 - Step1: created gpt-surface-wear from current main901c427f; verified0095 merge471438fb is an ancestor, git-lfs checkout complete. Read S10D/task01 prerequisites and root UV preflight. G remains parked at e6d4b436; queue F-G-E-D preserved. No D production edits, no Unity launch/automatic queue, both shared guards plus explicit ROOT release required. Own D preparation only; roads/overrides/geometry/buildings/far-field/settings/packages/scenes/asmdef remain outside scope.
 - NEXT COMMAND: pwsh -ExecutionPolicy Bypass -File artifacts/surface-wear-r1/bootstrap.ps1 (copies private products and stable C cache; then fresh Python PBR/world).
+
+- Step2: private data/Fab/CC0/photos copied; _Generated/Library are stableC5db77e9d CACHE ONLY, no tracked C policy copied. Five raw source junctions are read-only by task policy. Copied only ignored materialPNG products, no material generators/spec drift. Bootstrap verification192/192 current copied raw hashes and Fab15/fallbackFalse; fresh own Python products next. Root preflight acknowledges tiny171-vertex zero-UV default issue, no production fix authorized.
+- NEXT COMMAND: uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c and uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py (independent Python generation only; no Unity).
