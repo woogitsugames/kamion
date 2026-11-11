@@ -648,3 +648,6 @@ Queue remains D closure -> C13/0108 -> B3/0109, then F2/E8 feedback corrections.
 NEXT COMMAND: monitor artifacts/integration-s10/run5.log for actual END, then
 remove ONLY owned diag12 and issue fresh explicit release; D r2 import/install/
 16 gate+legacy-negative controls, broad56, final validation/report still required.
+Step 53: Refreshed REPORT with actual D gate/paint proof, pending r2 GIS/16frames,
+and new0115/0116 feedback. No aggregate quality PASS. NEXT COMMAND: monitor
+run5 END/PHONE and issue new guarded release before D Unity; no main merge.
