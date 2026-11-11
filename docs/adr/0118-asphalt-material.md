@@ -1,8 +1,8 @@
-# ADR 0118 — Materiał nawierzchni
+﻿# ADR 0118 — Materiał nawierzchni
 
 ## r1 — Low, ślady kół i widoczność istniejących napraw
 
-Stan: WIP, wygląd i koszt GPU niezweryfikowane.
+Stan r1: zakończona, ocena wizualna warunkowa, bez pełnego PASS; koszt GPU A16 UNVERIFIED.
 
 Bazą jest gpt-surface-wear scalone do aktualnego main w worktree gpt-asphalt. Recenzja 0099 wykazała brak zmiany asfaltu w kamerach trasy, pomijanie spękań przez Low i ukryty mnożnik przetarcia farby w importerze.
 
@@ -21,6 +21,7 @@ Wariant r1a: Low na starym asfalcie próbkuje istniejącą maskę spękań oraz 
 Kontrola r1a wykazała za mocne przetarcie na nowej nawierzchni. Materiał jezdni jest odczytywany przed chunkowaniem z jej trójkątów na zgodnym poziomie wysokości; próbki w wierzchołkach, środkach krawędzi i trójkątów muszą być jednoznacznie podparte nowym asfaltem. UV1.y farby dostaje +4: [4,5) podłużna, [6,7) poprzeczna; część ułamkowa wieku i UV1.x pola pasa pozostają bez zmian. Wartownik (-1,5) nie jest klasą nowej nawierzchni. Świeża nawierzchnia ma jawne mnożniki zużycia 0/0 w danych, a stara zachowuje 0,85 wheel_wear. Pod farbą odtwarzane są ślady kół starego asfaltu, aby odsłonięte miejsca miały kolor faktycznego podłoża. Olej źródeł oil:j... ma skalę 1,15 w dotychczas nieużywanym UV1.x; plamy placów, bram i przystanku zachowują stare dane. Próba przesunięcia foto-detalu o jeden mip nie zmieniła drobnego wzoru przy krawężniku i została cofnięta. Wyłączenia foto-detalu, spękań, normalnej oraz brudu rynsztoka również nie usunęły wzoru. Przyczyna pozostaje nieustalona; nie raportujemy jej jako naprawionej. Modulacja śladu używa metrowej skali macro.g zamiast drobnej macro.a; zachowuje średnią amplitudę 0,825. Bez nowych kanałów wierzchołków, geometrii, materiałów, tekstur ani przebiegów; wszystkie wartości wyglądu pozostają WORKING_VALUE do sprawdzenia w renderach.
 
 
-### Dowody candidate2 przed testami końcowymi
-Kod produktu: 53e403c964cbb62e028c27eabd6d78ec1c27e3f5. Porównano 312 par z 78 kamer w Low/High clear/overcast, osobno mesh i instancje: wszystkie liczniki delta 0. Obejrzano 28 contact sheets i 14 większych arkuszy. Importer: geometria bez wzrostu bajtów, tekstury ASTC 40 667 737 bajtów bez wzrostu. Są to estymacje widoczności i alokacji, nie czas GPU. Low overcast ślad/środek: baseline 1,045/1,033, candidate2 0,970/0,972. Referencja jednego zdjęcia około 0,67, więc docelowego kontrastu nie potwierdzono. Niezależny krytyk: warunkowe, bez pełnego wizualnego PASS; stara łata zbyt regularna i płaska, część nowej farby nadal zużyta. EditMode 275/275 passed, końcowe testy GIS/physics/gate3 jeszcze w toku. A16 UNVERIFIED.
+### Wynik końcowy r1 / candidate2
+Kod produktu: 53e403c964cbb62e028c27eabd6d78ec1c27e3f5. Porównano 312 par z 78 kamer w Low/High clear/overcast, osobno mesh i instancje: wszystkie liczniki delta 0. Obejrzano 28 contact sheets i 14 większych arkuszy. Importer: geometria bez wzrostu bajtów, tekstury ASTC 40 667 737 bajtów bez wzrostu. Są to estymacje widoczności i alokacji, nie czas GPU. Low overcast ślad/środek: baseline 1,045/1,033, candidate2 0,970/0,972. Referencja jednego zdjęcia około 0,67, więc docelowego kontrastu nie potwierdzono. Niezależny krytyk: warunkowe, bez pełnego wizualnego PASS; stara łata zbyt regularna i płaska, część nowej farby nadal zużyta. EditMode 275/275 passed. Końcowy GIS 521 passed, 1 xfailed; odtworzono metadane producenta, audyt 196 plik/SHA bez rozbieżności. Fidelity exit 0. Physics/gate3 47 passed, 1 znana porażka odtwarzalności top_speed_flat_comb.json; źródeł fizyki nie zmieniano. A16 UNVERIFIED.
+
 

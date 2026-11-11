@@ -1,6 +1,6 @@
-# Runda 1 — asfalt jako materiał
+﻿# Runda 1 — asfalt jako materiał
 
-Gałąź: `gpt-asphalt-r1`. Stan: raport roboczy, trwa końcowa walidacja. Wariant obrazu: `candidate2`. SHA końcowe oraz wyniki GIS, physics/gate3 i pomiary wszystkich kamer zostaną dopisane po zakończeniu procesów. Nie scalono do main, niczego nie pushowano i nie używano telefonu.
+Gałąź: gpt-asphalt-r1. Stan: runda zakończona, ocena wizualna warunkowa, bez pełnego PASS. Wybrany wariant: candidate2. SHA kodu produktu: 53e403c964cbb62e028c27eabd6d78ec1c27e3f5. Punkt drzewa przed końcowym raportem: ccfb4ab6c366650181c7a91ff5290f92ea1e2b2e. Data raportu: 2026-11-12T00:43:35.1640595+01:00. Nie scalono do main, niczego nie pushowano i nie używano telefonu.
 
 Przygotowano wymagany worktree i zasoby, włączono gałąź `gpt-surface-wear`, a następnie wykonano baseline i dwa warianty. Każda pełna seria ma 78 kamer w Low i High, clear i overcast, czyli 312 obrazów. Własne kamery bliskich łat służą kontroli materiału, nie są pozami odtworzonymi ze zdjęcia. Audyt runtime-state-audit.json potwierdza 78 stanów dla każdego warunku, bez brakujących kamer. Low: global detail false, cel renderowania 1755 × 810 i PNG po przeskalowaniu do 2340 × 1080; High: global detail true, 2340 × 1080. To dotychczasowe profile, takie same w baseline i candidate2. Wszystkie odczytane maski były ASTC 8×8. Macierze i stany z momentu renderowania zachowano w candidate2/*/runtime-cameras.
 
@@ -16,7 +16,7 @@ Pomiar jednego zdjęcia Mapillary 150280503737744 dał medianę luminancji obraz
 
 Wariant r1a miał identyczne liczniki we wszystkich 312 porównaniach kamer: zmiana obiektów, estymowanych draws, shadow draws, trisK, draws instancji, liczby instancji i instance trisK wynosiła zero. Końcowe porównanie candidate2 również obejmuje 312 wierszy, 78 kamer i cztery warunki: wszystkie wymienione liczniki mają delta 0. Dane są w counters-candidate2.csv i comparison-candidate2.json. Obejrzano wszystkie 28 contact sheets tego porównania; szczegółowa ocena małych faktur pochodzi z większych wybranych par i wycinków natywnych. Raporty importera baseline i candidate2 mają identyczne bajty geometrii we wszystkich 22 kategoriach, tekstury ASTC 40 667 737 bajtów, 126 992 instancje i 2674 kolidery propsów. Szczegóły są w import-budget-comparison.json. To dowód rozmiaru alokacji, nie identyczności danych wierzchołków ani czasów GPU. Liczniki CPU oraz zaokrąglone tysiące trójkątów nie dowodzą kosztu GPU. Low dostaje dodatkowe próbki istniejących tekstur, więc A16 pozostaje UNVERIFIED mimo braku nowego przebiegu. Telefon jest poza zakresem sesji.
 
-Testy kierunkowe: 4 testy UV napraw, 8 testów yard_wear i 6 testów klasyfikacji farby/oleju przeszły pod heavy. EditMode: 275 total, 275 passed, 0 failed, 0 skipped. Audyt po drugim producencie sprawdził 196 odwołań plik/SHA, bez rozbieżności. Pełny GIS przed wprowadzeniem nowej zasady heavy dał 506 passed, 5 failed, 1 xfailed, ale był uruchomiony współbieżnie z producentem i nie stanowi końcowego wyniku. Końcowy GIS jest uruchomiony osobno pod heavy, z odtworzeniem metadanych producenta po skutkach fixture. Fidelity zakończyło się kodem 0; jego odświeżony raport jest zapisany w generated/fidelity_qa.json i candidate2-fidelity/fidelity_summary.json. Physics/gate3: 47 passed, 1 failed w 305,45 s. Jedyna porażka to wskazany w instrukcji test_generator_reproduces_committed_scenarios: generator kończy się 0, ale top_speed_flat_comb.json różni się od zapisanego scenariusza. Drzewo tests/physics, tests/gate3 i game/Assets/_Project/Vehicle/Physics jest identyczne jak w bazie 4e019d64; dowód w physics-gate3-source-proof.json. Nie naprawiano cudzej dziedziny ani nie osłabiano progów.
+Testy końcowe: pełny GIS pod heavy — 521 passed, 1 xfailed w 623,55 s, exit 0. Po zakończeniu przywrócono metadane producenta; audyt 196 odwołań plik/SHA ma 0 rozbieżności. Wyniki: candidate2-final-gis.log, candidate2-final-gis.xml, candidate2-final-post-gis-manifest-audit.log i end-round-checks.json. Testy kierunkowe: 4 testy UV napraw, 8 testów yard_wear i 6 testów klasyfikacji farby/oleju przeszły pod heavy. EditMode: 275 total, 275 passed, 0 failed, 0 skipped. Fidelity zakończyło się kodem 0; odświeżony raport jest w generated/fidelity_qa.json i candidate2-fidelity/fidelity_summary.json. Physics/gate3: 47 passed, 1 failed w 305,45 s. Jedyna porażka to wskazany w instrukcji test_generator_reproduces_committed_scenarios: generator kończy się 0, ale top_speed_flat_comb.json różni się od zapisanego scenariusza. Drzewo tests/physics, tests/gate3 i game/Assets/_Project/Vehicle/Physics jest identyczne jak w bazie 4e019d64; dowód w physics-gate3-source-proof.json. Nie naprawiano cudzej dziedziny ani nie osłabiano progów.
 
 Obejrzane pary zdjęcie | render, szerokość do 960 px: `review-candidate2-960/{Low,High}-ref-150280503737744.jpg`, `-ref-303305168125936.jpg`, `-ref-454716650857984.jpg`. Pary baseline | candidate2 dla starej drogi, nowej drogi i dwóch łat są w tym samym katalogu. Pełne uwagi: `SELF-REVIEW.md` i `VISUAL-CRITIC.md`.
 
@@ -24,10 +24,7 @@ Niezależny krytyk obejrzał 14 arkuszy. Ocena jest warunkowa, bez pełnego PASS
 
 Zmiany wspólne są sterowane dodatkowymi danymi `_AsphaltWear`, `_PatchSeam`, `_PaintFreshWear`, flagą podłoża farby i dodatnim UV1.x oleju. Zachowano kontrakt `_Tile`, liniowy `_Tint`, weather/runoff. Możliwe konflikty przy integracji: `WorldPBR.shader`, `WorldPbrMaterials.cs`, końcowe wpisy `materials.py`, `yard_wear.py` i wygenerowane metadane. Geometria dróg, oznakowania, krawężników, budynki i pliki Claude nie były edytowane. Editor-only `AsphaltQaStateProbe` zapisuje stan materiału i macierze kamer wyłącznie po jawnym ustawieniu zmiennej środowiska; w playerze go nie ma.
 
-Na tym etapie nie zgłaszamy gotowości do bezwarunkowej integracji. Po końcowych wynikach raport i artefakty zostaną skopiowane robocopy do main, po czym sesja przejdzie bez oczekiwania do r2: materiał krawężników i kostki.
-
-
-
+Runda 1 kończy się oceną warunkową. Nie zgłaszamy gotowości do bezwarunkowej integracji. Przekazanie artefaktów robocopy do main potwierdza DELIVERED.json, publikowane razem z tym raportem po weryfikacji kopii. Następna runda bez oczekiwania na lidera: gpt-asphalt-r2, materiał krawężników i kostki.
 
 ![Zdjęcie Mapillary i render Low, stary asfalt](review-candidate2-960/Low-ref-150280503737744.jpg)
 
@@ -35,11 +32,8 @@ Na tym etapie nie zgłaszamy gotowości do bezwarunkowej integracji. Po końcowy
 
 ![Zdjęcie Mapillary i render Low, druga poza wiaduktu](review-candidate2-960/Low-ref-454716650857984.jpg)
 
-
-
 Próba diagnostyczna podczas oczekiwania na heavy: w jednym kadrze Low overcast zwiększono siłę śladów z 0,45 do 0,80 wyłącznie w wygenerowanym materiale, a po renderze przywrócono go bajt w bajt. Stan w czasie renderowania potwierdził 0,80. Ślady są mocniejsze, ale bardziej regularne, a falisty wzór przy krawężniku wyraźniejszy. Próba nie została wybrana; candidate2 i źródła pozostają przy 0,45. Sama globalna siła nie wystarcza do zgodności z referencją. Artefakt: probe-strength-comparison-960.jpg. Unity zapisało poprawny 1/1 PNG, po czym wystąpił znany błąd wyjścia mono cleanup -1073741819 zaakceptowany przez istniejący skrypt według ADR 0083; nie przedstawiamy go jako czystego wyjścia natywnego.
 
-
-
 Dodatkowa diagnostyka wzoru przy krawężniku: przy tej samej próbnej sile 0,80 pozostawiono 44 MeshRenderery zawierające asfalt, a 608 pozostałych przełączono na ShadowsOnly. Instancje pośrednie pozostały bez zmian; całe renderery z wieloma podmateriałami jezdni również zostały. Wzór nadal jest widoczny. Próba nie potwierdza prostej hipotezy nakładania oddzielnego renderera terenu, lecz nie wyklucza nakładania w zachowanej grupie ani problemu shadera. Nie ustalono przyczyny. Tymczasowy kod w _Generated został usunięty w finally, materiał przywrócony do 0,45; wybrany candidate2 i źródła produktu są bez zmian. Dowód: isolation-comparison-960.jpg oraz runtime-cameras w isolate-y080.
+
 
