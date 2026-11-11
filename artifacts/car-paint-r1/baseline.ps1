@@ -6,7 +6,7 @@ function Assert-PhoneSlot {
  if((Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/PHONE_RUN') -or (Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/GPT_UNITY_HOLD')){throw 'Main PHONE_RUN/GPT_UNITY_HOLD active; no Unity launch'}
 }
 function Restore-OwnedSideEffects {
- git restore -- game/ProjectSettings game/Assets/_Project/Rendering/Settings/Lighting/M_Sky.mat
+ git restore -- game/ProjectSettings game/Assets/_Project/Rendering/Settings/Lighting
 }
 if($Phase-eq'Import') {
  Assert-PhoneSlot

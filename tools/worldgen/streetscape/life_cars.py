@@ -10,7 +10,7 @@ a seed, not taken from any register.
 
   LOD0 / LOD1  r9 shell (_Shell, _vehicle2): profile swept across x with a crowned top, shoulder arcs and side
                columns whose rows lie on the body's feature lines; lamp units, seams, wheels, glazing over a dark
-               interior (LOD0), road film overlays
+               interior (LOD0), per-instance painted-shell film (ADR0089)
   LOD2         first-pass body (_vehicle): the profile without shoulders, glazed greenhouse, under-body skirt
 """
 
@@ -817,7 +817,7 @@ def _wheel2(m, x_out, yc, r, sx, seg, steel, lod, wst=0, rimm="rim", tyre="tyre"
 
     def ring(rad, o, n=seg):
         return [np.array([x_out - sx * o, yc + rad * math.cos(t), r + rad * math.sin(t)])
-                for t in np.linspace(0, 2 * math.pi, n + 1)[:-1]]
+                for t in np.linspace(0, 2 * math.pi, n + 1)[:-1] + (-math.pi / 2 if lod == 0 else 0)]
 
     def band(mat, A, B, radial=0.3, inward=False):
         n = len(A)
@@ -954,8 +954,6 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     matname = {"paint": paint, "glass": gmat, "trim": "car_trim", "bump": bmat}
     style = style or dict(dirt=0.5, wheel=0, uoff=0.0)
     dl = float(style["dirt"])                       # 0 fresh from the car wash .. 1 a month of winter streets
-    dmat = f"car_dirt_{1 + min(2, int(dl * 3))}"
-    uo = float(style["uoff"])
     ds = 0.70 + 0.30 * dl                           # glass dust reach (UV0 of car_glass_tint, see materials.py)
     # factory privacy glass behind the B pillar (v4, WORKING_VALUE fleet look: SUVs / estates, half the hatches):
     # UV0 u of those panes is offset by PRIVACY_U, WorldCarGlass.shader decodes it (no extra material / draw)
@@ -1246,38 +1244,7 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
                 side_tris("car_sill", [[(y_a, za), (y_b, zb_), (y_b, max(zt_, zb_))],
                                        [(y_a, za), (y_b, max(zt_, zb_)), (y_a, max(zt_, za))]], lift=0.004)
 
-    # ---- road film (alpha overlay): sills, lower doors, spray fans behind the wheels, arch lips
-    ya_, yb_ = sh.y0 + 0.40, sh.y1 - 0.55                       # the straight part of the plan
-    arch_top = r + ra
-
-    def ztop(y):
-        z = sill + 0.12 + 0.14 * dl
-        for yc in (yra, yfa):
-            z += (0.12 + 0.18 * dl) * math.exp(-((y - (yc - ra - 0.24)) / 0.28) ** 2)
-        return z
-    kd = 8 if lod == 0 else 3
-    if lod == 0:
-        # r9: the film uses the body's own columns (with the arch flares a coarser overlay cut through the skin
-        # and showed as hard-edged polygons of clean paint)
-        runs = [sorted({round(float(y), 4) for y in ys if ya_ < y < yb_} | {round(ya_, 4), round(yb_, 4)})]
-    else:                                    # LOD1: three plain runs between / beside the arches, no arch lips
-        e = ra + 0.03
-        runs = [[ya_, yra - e], [yra + e, yra + e + 0.45, (yra + yfa) / 2, yfa - e], [yfa + e, yb_]]
-    rows = 2 if lod == 0 else 1
-
-    def dcol(y):
-        zb = float(np.interp(y, By, Bz))
-        zt = min(max(ztop(y), zb + 0.11), arch_top + 0.16)
-        return [(np.array([sh.X(y, zb + (zt - zb) * k / rows) + 0.018, y, zb + (zt - zb) * k / rows]), (y / 1.7 + uo, k / rows))
-                for k in range(rows + 1)]
-    for dys in runs:
-        dc = [dcol(y) for y in dys]
-        for ca, cb in zip(dc[:-1], dc[1:]):
-            for k in range(rows):
-                for sx in (1, -1):
-                    fx = np.array([sx, 1, 1])
-                    _puv(m, dmat, [ca[k][0] * fx, cb[k][0] * fx, cb[k + 1][0] * fx, ca[k + 1][0] * fx],
-                         [ca[k][1], cb[k][1], cb[k + 1][1], ca[k + 1][1]], [sx, 0, 0])
+    # ADR0089: road film is sampled on the painted shell per instance; no floating alpha skin.
 
     # ---- greenhouse side: frame with window openings (LOD0: see-through glass in the openings)
     ig0, ig4 = sh.mid["G0"], sh.mid["G4"]
@@ -1334,7 +1301,7 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         A = arch(yc)
         xo = sh.X(yc, r) - 0.030
         for sx in (-1, 1):
-            _wheel2(m, sx * xo, yc, r, sx, 14 if lod == 0 else 10, steel, lod, style["wheel"],
+            _wheel2(m, sx * xo, yc, r, sx, 22 if lod == 0 else 10, steel, lod, style["wheel"],
                     "rim_dusty" if dl > 0.45 else "rim",
                     ("car_" if lod == 0 else "") + ("tyre_dusty" if dl > 0.3 else "tyre"))
             dep = 0.28 if lod == 0 else 0.26
@@ -1348,14 +1315,6 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
                 xa, xb = sh.X(ya, za) + lipo, sh.X(yb, zb_) + lipo
                 _quad(m, "car_trim", [sx * xa, ya, za], [sx * xb, yb, zb_], [sx * (xb - dep), yb, zb_],
                       [sx * (xa - dep), ya, za], mid)
-                if lod == 0 and dl > 0.33 and 0 < k < len(A) - 2 and (ya + yb) / 2 < yc + 0.05:
-                    # r10: spray settles on the lip behind the wheel (v = 0 dense film at the arch edge)
-                    kk = (ra + (0.085 if clad else 0.06)) / ra
-                    y2a, z2a = yc + (ya - yc) * kk, max(sill, r + (za - r) * kk)
-                    y2b, z2b = yc + (yb - yc) * kk, max(sill, r + (zb_ - r) * kk)
-                    _puv(m, dmat, [[sx * (xa + 0.007), ya, za], [sx * (xb + 0.007), yb, zb_],
-                                   [sx * (sh.X(y2b, z2b) + 0.011), y2b, z2b], [sx * (sh.X(y2a, z2a) + 0.011), y2a, z2a]],
-                         [(ya / 1.7 + uo, 0.25), (yb / 1.7 + uo, 0.25), (yb / 1.7 + uo, 0.95), (ya / 1.7 + uo, 0.95)], [sx, 0, 0])
                 if lod == 0 and 0 < k < len(A) - 2:
                     # lip ring: 10 mm proud at the arch edge, flush 45 mm (cladding: 70 mm) outside it
                     kk = (ra + (0.07 if clad else 0.045)) / ra
@@ -1568,16 +1527,6 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
         front = name == "F1"                 # front plate seen from +y: its left (EU band) is +x; rear: -x
         uv = [((u0 if (pp[0] > 0) == front else u1), (v0 if pp[2] < (zlo + zhi) / 2 else v1)) for pp in q]
         _puv(m, "car_plate", q, uv, nn)
-    # road film on the tail (dirtiest face of a car) and the lower front bumper
-    # r10: the film follows the shell's own columns (a quad from g = 0.7 to 2.0 was a chord through the shoulder arc:
-    # half of it sank into the body and the rest stood off the corner as a hard-edged rectangle)
-    dg = list(gs)
-    spatch("R1", [(g, 0.0, 1.0) for g in dg], dmat, lift=0.016, uv=(uo, 0.45), v0=0.0)
-    spatch("R2", [(g, 0.0, 0.25 + 0.45 * dl) for g in dg], dmat, lift=0.016, uv=(uo + 0.21, 0.45), v0=0.35)
-    if lod == 0:
-        for half in ([g for g in dg if g <= -0.5 + 1e-9], [g for g in dg if g >= 0.5 - 1e-9]):   # not over the plate
-            spatch("F1", [(g, 1.0, 0.0) for g in half], dmat, lift=0.016, uv=(uo + 0.37, 0.45), v0=0.62 - 0.30 * dl)   # thin: splatter
-
     # ---- sills, seams, handles, mirrors, rails, wipers
     def strip(mat, pts, wy, lift=0.004):            # seam along (y, z) points, 2 * wy wide
         for (ya, za), (yb, zb_) in zip(pts[:-1], pts[1:]):
@@ -1836,7 +1785,7 @@ def _plate_index(name):
 
 
 def _style(name):
-    """Per-prototype look (deterministic): dirt level, alloy style, film pattern offset, plate."""
+    """Per-prototype wheel/glass ageing, alloy style and plate. Painted-shell road film is per instance (ADR0089)."""
     h = zlib.crc32(name.encode())
     body = name.split("_")[0]
     privacy = body in ("suv", "estate") or (body == "hatch" and (h >> 24) & 1 == 1)
