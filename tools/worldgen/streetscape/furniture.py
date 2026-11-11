@@ -827,7 +827,7 @@ class Lin:
             self.ribbon(collision, P, zb, zt, 0.0, src, both=False, collision=None)
             self.buf.parts[-1].layer = "collision"
 
-    def posts(self, mat, P, spacing, w, d, h, zb=None, src=""):
+    def posts(self, mat, P, spacing, w, d, h, zb=None, src="", ground_feet=False):
         line = LineString(P)
         L = line.length
         ss = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))]) if spacing is None else np.arange(0, L + 1e-6, spacing)
@@ -838,7 +838,7 @@ class Lin:
         dd = np.gradient(Q, axis=0) if len(Q) > 1 else np.array([[1.0, 0.0]])
         dd /= np.maximum(np.hypot(dd[:, 0], dd[:, 1]), 1e-9)[:, None]
         Vs, Ts = [], []
-        for q, z, ground, t in zip(Q, Z, self.z(Q), dd):
+        for q, z, ground, t in zip(Q, Z, self.z(Q) if ground_feet else Z, dd):
             nn = np.array([-t[1], t[0]])
             c = [q[0], q[1], (ground - 0.3 + z + h) / 2]
             hx, hy, hz = t * w / 2, nn * d / 2, (z + h - ground + 0.3) / 2
@@ -956,7 +956,7 @@ def panel_fence(lin, line, col, key, flexible=False):
         else:
             bottom, upper = top, np.full(2, base + S.FENCE_H)
         lin.ribbon(f"{col}_mesh", Q, bottom, upper, 0, key, both=True, collision="collision_fence")
-    lin.posts(col, P, None, 0.06, 0.04, S.FENCE_H + 0.05, zb=post_base, src=key)
+    lin.posts(col, P, None, 0.06, 0.04, S.FENCE_H + 0.05, zb=post_base, src=key, ground_feet=True)
 
 
 def fences(lin, src, origin, roads_poly, report):

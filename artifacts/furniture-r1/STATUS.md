@@ -19,3 +19,6 @@ NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1
 
 Dopracowano mapowanie atlasu: metry fizyczne (9 m atlas dla lamp, 0.9 m dla słupków) zamiast rozciągania strefy brudu z wysokością lampy. Istniejąca stopa otrzymała ten sam skan betonu przez addytywny materiał furniture_footing, bez dodatkowego slotu. Testy regresji: 6 passed.
 NASTĘPNY KROK: czekać na PHONE_RUN; pipeline walidacji działa.
+
+Przegląd współdzielonych helperów: terenowe stopy słupków ograniczone opcją ground_feet=True wyłącznie do nowego panel_fence. Bariery/ekrany korzystające z jawnego zb zachowują poprzednią geometrię; dedykowana regresja mostu 8 m przechodzi. Łącznie 7 nowych testów zielonych.
+NASTĘPNY KROK: pipeline czeka na PHONE_RUN przed importem bazowym.

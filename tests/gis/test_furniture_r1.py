@@ -78,3 +78,12 @@ def test_panel_fence_has_level_bays_corner_posts_and_buried_feet():
         assert v[:, 2].min() == pytest.approx(0.4 * e - 0.3)
     assert any(np.allclose(v[:, :2].mean(axis=0), [4, 0]) for v in posts.reshape(-1, 8, 3))
 
+
+def test_shared_posts_keep_explicit_bridge_height_without_sampling_terrain():
+    buf = Buffer()
+    lin = F.Lin(buf, lambda e, n: np.zeros_like(e))
+    lin.posts('barrier_post', np.array([[0., 0.], [4., 0.]]), 2., .06, .04, 1., zb=np.array([8., 8.]))
+    v = buf.parts[0][2]
+    assert v[:, 2].min() == pytest.approx(7.7)
+    assert v[:, 2].max() == pytest.approx(9.)
+
