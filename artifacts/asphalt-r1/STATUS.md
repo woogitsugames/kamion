@@ -39,3 +39,4 @@ Przygotowano porównanie wszystkich kamer: mesh draws, shadow draws oraz draws/t
 2026-11-11T22:51:48.6159375+01:00: Import kandydata zakończony. Następny krok: cztery serie Capture candidate.
 2026-11-11T22:52:17.8336566+01:00: zapisano artifacts/asphalt-r1/candidate/Low-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-11T22:52:46.5455607+01:00: zapisano artifacts/asphalt-r1/candidate/Low-clear. Następny krok: pozostałe serie lub porównanie wariantu.
+2026-11-11T22:53:29.2765278+01:00: zapisano artifacts/asphalt-r1/candidate/High-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
