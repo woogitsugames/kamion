@@ -61,3 +61,4 @@ Diagnostyka r3: 5676 punktów, różnica Python−Unity −0,3726…+1,4267 m, p
 Następny krok: wynik GIS, REPORT i kopia artifacts do main, następnie r3.
 Krok 24: przygotowano dowód aktualności raportu fidelity względem źródeł: obecny raport jest nieaktualny dla siedmiu plików roads/overrides, które wraz z samym fidelity_qa pozostają bez zmian od bazy 54bb70ca. Nie uruchamiano regeneracji fidelity ani nie zmieniano dziedziny Claude. Pełny GIS nadal trwa; ten audyt nie zastępuje końcowego wyniku testów.
 Następny krok: końcowy wynik gis-final.log, potem REPORT i robocopy.
+Krok 22: pełny GIS na końcu rundy zakończył się kodem 1; szczegóły w gis-final.log. Następny krok: odczytać wyniki, uzupełnić ADR i REPORT oraz skopiować artifacts.
