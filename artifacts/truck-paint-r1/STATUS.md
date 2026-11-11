@@ -48,3 +48,6 @@
 
 - Step18 resume: explicit ROOTrelease11:56:56 after stable phone-window end. Bothguards independently absent, branchba61eec7 clean. Candidate wrapper now stops rather than auto-resumes if either guard returns.
 - NEXT COMMAND: pwsh -NoProfile -ExecutionPolicy Bypass -File artifacts/truck-paint-r1/rebuild-candidate.ps1 -Round candidate1; then actual102PNG/metrics/GPU evidence and refinement.
+
+- Step19 actual candidate proof: canonicalTruck/Trailer/Install allOK after explicitrelease. GPUactualRGBAHalf nowDRL160/high80/night56/50/off0 finite; productionshaderdecode at controlledExposure0.0001 yields16/8/5.6/5/0. Allstateflagsday/night correct.102candidate frames in progress (Low51done), no visualPASS claim.
+- NEXT COMMAND: preview.py candidate1; measure_contract.py candidate1; compare_fixture.py candidate1; render fresh candidate1-near-pane-off, inspect full102 and rootreview before finaltests.

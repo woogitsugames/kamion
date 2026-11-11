@@ -21,7 +21,7 @@ for stage in sys.argv[1:] or ["before"]:
   if not cond.is_dir() or not(cond/"truck-34.png").exists():continue
   im=get(stage,cond.name);legacy=stats(im);native=stats(im,True)
   row={"legacy1024":legacy,"native":native,"regions1024":BOX,"method":"r7 measure.py copied method, native no-resize counterpart; no physical albedo claim"}
-  for reference in ["before-near-pane-off","before-no-pane-fixed"]:
+  for reference in list(dict.fromkeys([stage+"-near-pane-off","before-near-pane-off","before-no-pane-fixed"])):
    ref=root/reference/cond.name/"truck-34.png"
    if ref.exists():
     d=stats(Image.open(ref).convert("RGB"))["glass"]["sd"]
