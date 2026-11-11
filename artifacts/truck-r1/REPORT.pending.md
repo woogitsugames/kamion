@@ -1,4 +1,4 @@
-Raport roboczy: oczekuje na końcowy GIS, nie jest zgłoszeniem do integracji.
+Raport roboczy: oczekuje na kompilację Android, nie jest zgłoszeniem do integracji.
 
 Gałąź gpt-truck-r1, baza main 5f2aa277. Ostatni commit kodu produkcyjnego i testów: 45e8352c1f7d08753f5657e194ff4c2779f6a74c; późniejsze WIP zapisują dowody i dokumentację. ADR 0115. Zakres: wyłącznie zewnętrze ciągnika i naczepy.
 
@@ -12,6 +12,6 @@ Zapisano 28 kadrów kandydata, po 6 Medium, zmierzchu i kontrolnych bez szyby or
 
 Kanoniczny builder ciągnika, naczepy i instalacja przeszły. Porównano 566 wygenerowanych plików i dwa prefaby: bez zmian mesh/FBX oraz semantycznych pozycji i rendererów. Wszystkie 96 wierszy kamer ma identyczne estymaty rendererów i cieni, osobne liczniki instancji oraz raportowane tysiące trójkątów. Dowód: all-cameras-counters.csv. Nie dodano próbek, przebiegów, wariantów shaderowych ani geometrii. Koszt dodatkowej arytmetyki na A16 jest UNVERIFIED; telefonów nie używano.
 
-Pełny EditMode: 266/266 passed, 0 failed, 0 skipped, exit 0; XML i JSON w pakiecie. Końcowy GIS: OCZEKUJE. Bazowy GIS sprzed pilnej aktualizacji limitów: 488 passed, 5 failed, 1 xfailed. Końcowy test korzysta z heavy, z jednym wątkiem bibliotek numerycznych. Efekty uboczne testów w cudzych generated wymagają zachowania dowodu i cofnięcia przed przekazaniem.
+Pełny EditMode: 266/266 passed, 0 failed, 0 skipped, exit 0; XML i JSON w pakiecie. Końcowy GIS: 488 passed, 5 failed, 1 xfailed w 688,34 s; dokładnie te same pięć niepowodzeń co w bazie (far-field, wiadukt, stary fidelity, brakujący prototyp, deterministyczność świata). Dowód: gis-comparison.json. Test działał pod heavy, z jednym wątkiem bibliotek numerycznych; zachowano patch i cofnięto sześć efektów ubocznych generated. Android: OCZEKUJE, build bez instalacji i uruchamiania telefonu.
 
-Do integracji służy kod własnych shaderów, komentarze TruckLights, testy i ADR; ignorowane materiały/prefaby należy regenerować przez WorldTruckInstaller.InstallBatch. Żadnych zmian źródeł innych dziedzin, merge do main ani push. Artefakty zostaną skopiowane robocopy po końcowym GIS. Następna runda: gpt-truck-r2, zabrudzenia progów, błotników i plandeki po scaleniu aktualnego main do własnej gałęzi.
+Do integracji służy kod własnych shaderów, komentarze TruckLights, testy i ADR; ignorowane materiały/prefaby należy regenerować przez WorldTruckInstaller.InstallBatch. Żadnych zmian źródeł innych dziedzin, merge do main ani push. Artefakty zostaną skopiowane robocopy po zamknięciu walidacji. Następna runda: gpt-truck-r2, zabrudzenia progów, błotników i plandeki po scaleniu aktualnego main do własnej gałęzi.
