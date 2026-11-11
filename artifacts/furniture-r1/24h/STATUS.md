@@ -35,3 +35,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T21:57:32.3902640+01:00: przegląd kodu wykazał wspólną teksturę betonu słupa i cokołu. Oddzielono atlas cokołu od brudnej dolnej strefy słupa, aby nie pogłębiać I3. Addytywny alias furniture_footing w materials.py, bez nowych slotów. Testy mebli exit=0. NASTĘPNY KROK: sprawdzić render cokołu oraz koszt dodatkowej tekstury po imporcie.
 
 2026-11-11T21:58:10.5042450+01:00: odbudowa cache PBR zakończona kodem 0, log pbr-before.log. NASTĘPNY KROK: sprawdzić brak brakujących plików przed importem baseline.
+
+2026-11-11T22:00:47.0873077+01:00: promień próbkowania podparcia starej betonowej lampy dopasowano do nowej podstawy 0,15 m. Import baseline czeka na slot (4/4); nie uruchomiono Unity poza protokołem. NASTĘPNY KROK: zakończyć import baseline i render czterech wariantów.

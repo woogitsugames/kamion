@@ -119,7 +119,7 @@ class SurfaceTop:
 
 
 # footing radius per pole family (m): the part of the footprint that must stand on the surface
-FOOT_R = {"lamp_arc_": 0.28, "lamp_old_concrete_": 0.12, "lamp_old_steel_": 0.20, "lamp_": 0.25,
+FOOT_R = {"lamp_arc_": 0.28, "lamp_old_concrete_": 0.15, "lamp_old_steel_": 0.20, "lamp_": 0.25,
           "signal_mast": 0.30, "signal_pole": 0.10, "sign_post": 0.04, "power_pole": 0.15, "bollard": 0.06}
 
 
