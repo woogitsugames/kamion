@@ -92,7 +92,32 @@ jak jechać”. Dowody: `artifacts/junctions-r2/`.
 Tabela liczb: sekcja „Liczby” niżej (uzupełniana z `roads_qa.json`, `fidelity_qa.json`, `road_consistency_qa.json`,
 `terrain_walls_qa.json`, `swept_*/summary.json`; logi `artifacts/junctions-r2/logs/`).
 
-LICZBY_PLACEHOLDER
+### Liczby (build b10, 2026-11-11, `bialystok-industrial-c`; „przed” = main 88c6c6e9)
+| miara | przed | po (b10) |
+|---|---|---|
+| fidelity trasy: krawędź jezdni vs ortofoto p50 / p95 (n) | 0,46 / 2,52 m (616) | **0,36 / 2,30 m** (595) |
+| fidelity trasy: wyspy generatora bez pokrycia na ortofoto | 1 | **0** (cel właściciela `islands_absent` spełniony, `MET` = True) |
+| fidelity trasy: pas w wyspę / błąd generatora | 0 / 0 | 0 / 0 |
+| mediana krawędzi wg `edge_sides` (lewa / prawa), w1093579590 | — / +1,92 m | −0,21 / +0,12 m |
+| to samo, w249640399:131612943-1852176912 (zatoka) | −1,06 m / — | +0,38 m / — |
+| spójność dróg, suma (na trasie) | 65 (1) | 66 (2 w b10: + `arrow_no_exit` przed rozwidleniem; poprawka w b11) |
+| `obstacle_in_lane` (kafel) | 1 | 2 (nowy przypadek poza trasą — nie zbadany) |
+| ścianki terenu > 0,15 m | 4 | 3 |
+| override'y: zastosowane / nieaktualne | — | 69 / 0 |
+| farba autorska (`painted_line` / `painted_crossing`) zbudowana | — | 8 / 8; pola P-21 12 / 12 |
+| korytarz trasy (`test_route_corridor`) | 0 uskoków / 0 przeszkód | 0 / 0 (b10) |
+| `pytest tests/gis` | 345 passed, 2 xfailed | 355 passed, 1 failed, 1 xfailed (b10; porażka = `arrow_no_exit`, patrz b11 w STATUS) |
+| swept path G3-A (Bieżeństwa) wide / lane, min. prześwit opon | −1,92 / −2,94 m (integracja s9) | **−0,10 / −1,12 m** (jak baza 10.11: −0,10 / −1,10) |
+| swept path G3-B (Putry) wide / lane | −0,63 / −0,98 m | −0,45…−0,63 / −0,81…−0,98 m w b10 (obejście ronda: skręt w węźle; reguła `JOINT_PULL` dodana po b10 — wynik w STATUS / raporcie) |
+| PlayMode `WorldCRouteTests|WorldCBarrierTests` | 3/3 (0093) | 3/3: 40 t max \|dv\|/krok 0,135 m/s (s = 361 m), solo 0,080 m/s, max odchyłka 0,88 m |
+| EditMode | 209/212 (0093) | 209/212 (3 × `TruckDoorGlassTests`: brak materiałów ciężarówki w `_Generated/Truck` worktree) |
+| import-region | Low 110,0 / High 237,9 MB (integracja) | Low 110,0 / High 237,9 MB |
+
+Kontrola wizualna: `artifacts/junctions-r2/plan_after/*.jpg` (ortofoto | generator + trasa, 13 miejsc), rendery 39 kamer
+`renders_b10/` (Medium overcast) i `renders_b10_low/`. Obejrzane obok ortofoto: zatoka (`top_merge`, `r2_bay_eye`),
+n10015785253 (`p0_n10015785253_top`, `r2_n100_eye`), rozdział łącznicy (`p0_kerb_merge_top`, `p0_kerb_merge_eye`,
+`r2_kerb_merge_main_eye`), wiadukt (`p0_lamp_w1101181473_eye`, `p0_lamp_putry_eye`), rozwidlenie (`top_s1440`,
+plan_after) — stan b9; rendery b10 (po ostatniej zmianie łącznicy) nie były już oglądane jeden po drugim.
 
 ## Otwarte
 Z listy recenzji 0093 zrobiony jest punkt 1 (trzy P0-L) i część punktów 4 i 8; reszta nie została ruszona w tej rundzie.

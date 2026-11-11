@@ -44,7 +44,8 @@ RING_BLEND_M = 30.0          # WORKING_VALUE
 RING_HOLD_M = 12.0           # WORKING_VALUE: axis held this far from the ring before the blend (the trailer is still
                              # off-tracking through the exit corner)
 CURVE_R0_M, CURVE_R1_M = 60.0, 30.0   # WORKING_VALUE: bends tighter than R0 pull the route to the axis, fully at R1
-CURVE_LEAD_M = 12.0          # WORKING_VALUE: lead in / out of that pull
+JOINT_PULL_MIN_DEG, JOINT_PULL_HOLD_M, JOINT_PULL_M = 25.0, 6.0, 20.0   # WORKING_VALUE (right turn at a node)
+CURVE_LEAD_M = 12.0         # WORKING_VALUE: lead in / out of that pull
 RING_JOINT_ROUND_M = 2.0    # corner rounding at ring joints: the ring / arm axes meet at the node, a longer Bezier
                              # only cuts the inner corner
 
@@ -200,6 +201,16 @@ def lane_route(net, path_edges, node_xy, step=2.0):
             ker = np.hanning(2 * k_ + 1)
             wc = np.convolve(np.pad(wc, k_, mode="edge"), ker / ker.sum(), mode="valid")
             lat = lat * (1.0 - wc)
+        if sec.oneway and sec.lanes >= 2 and not sec.roundabout:
+            # the same at a right turn between two multi-lane one-way carriageways that meet at an angle in a node
+            # (link -> bypass of Rondo Putry, E -535 N 52): axis within JOINT_PULL_M of the joint
+            for j_e, d_j in ((i_e - 1, np.abs(ss - s0)), (i_e + 1, np.abs(s1 - ss))):
+                if 0 <= j_e < len(path_edges):
+                    so = net.sections[path_edges[j_e][0]]
+                    a_, b_ = (spans[j_e][1], spans[i_e][0]) if j_e < i_e else (spans[i_e][1], spans[j_e][0])
+                    turn = math.degrees(math.atan2(a_[0] * b_[1] - a_[1] * b_[0], float(np.dot(a_, b_))))
+                    if so.oneway and so.lanes >= 2 and not so.roundabout and -110.0 < turn < -JOINT_PULL_MIN_DEG:
+                        lat = lat * _smoothstep((d_j - JOINT_PULL_HOLD_M) / JOINT_PULL_M)
         P = c.line.offset_point(ss, lat)
         hw = np.asarray(c.hw_at(ss), float)
         if pieces:
