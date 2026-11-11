@@ -117,3 +117,6 @@ NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using com
 
 Render after High clear complete: artifacts/furniture-r1/after/High-clear
 NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
+
+GIS after passed (see pytest-after.log).
+NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
