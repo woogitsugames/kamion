@@ -14,3 +14,6 @@
 
 - Step5: widened standard comparisons to ALL registered scene cameras plus19 building cameras per root; targeted/lowsun isolation remains selectable. Added <=960px contact-sheet generator. FilmGrain volume intensity confirmed0; pepper diagnosis remains dither/RCAS until actual A/B evidence.
 - NEXT COMMAND: powershell -File artifacts/light-r12/capture.ps1 -Phase before; then measure.py on each output condition.
+
+- Step6: baseline import OK64chunks Low+High; fresh sky visibility bake1m2048, vis_road0.926, solid_inst82. Material cache rebuilt495s from unchanged4f7 source. Reverted Unity-only settings/sky side effects; no visual policy edit yet.
+- NEXT COMMAND: powershell -File artifacts/light-r12/capture.ps1 -Phase before (full registry4conditions).
