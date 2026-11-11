@@ -1,0 +1,33 @@
+{
+  "schema": "truck-sim-pl/gate3-cameras/1",
+  "region": "bialystok-industrial-c",
+  "cameras": [
+    {
+      "id": "r4_rear_target_3",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 45,
+      "pos": [
+        668.1408923014147,
+        -523.6160483782422,
+        143.05700000000002
+      ],
+      "look_at": [
+        672.9096552307318,
+        -522.8841222120702,
+        142.30700000000002
+      ],
+      "note": "WORKING_VALUE QA-only supplemental rear3/4 on actual level3 target. CPU vehicle/building footprint rays clear; fresh image verification required. No placement or old-camera edit."
+    }
+  ],
+  "target": {
+    "e": 674.796,
+    "n": -523.807,
+    "p": "car_hatch_black",
+    "src": "life:parking:kwadrat-park-units-forecourt#0",
+    "yaw": -2.0258,
+    "z": 141.757
+  },
+  "expected_natural_level": 3,
+  "control_note": "Same-frame R4 controls, not historical R3 BEFORE"
+}
