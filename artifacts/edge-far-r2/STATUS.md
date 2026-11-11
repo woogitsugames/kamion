@@ -31,3 +31,6 @@
 - Full GIS at 74%, no failures so far; slow final fixture rebuilds world and validates deterministic export. Exact before/after ID sets: removed 23, added 0.
 - Preparing existing PBR sets offline to avoid long pre-Unity material generation; render driver waits for material completion as well as GIS success and PHONE_RUN clearance. No material-generator source changes.
 - NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30; Get-Content artifacts/edge-far-r2/materials-prepare.log -Tail 10
+- FULL GIS PASS: 388 passed, 1 xfailed in 536.80s; no skipped tests. Baseline 4 stale generated failures resolved. Log gis-after.log.
+- Rendering continuation has passed the GIS gate and waits for local material preparation completion, then PHONE_RUN; owner confirmation remains respected.
+- NEXT: Get-Content artifacts/edge-far-r2/materials-prepare.log -Tail 10; Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20

@@ -25,6 +25,10 @@ if phase == "before":
     spec.loader.exec_module(module)
 else:
     from streetscape import far_field as module
+    cached = OUT / "after/generated/far_field_gis_cache.json"
+    if cached.exists():
+        # extract_ring_gis validates schema, every input hash, origin and extent.
+        shutil.copy2(cached, WORLD / "far_field_gis_cache.json")
 qa = module.build_far_field("bialystok-industrial-c")
 dest = OUT / phase / "generated"
 dest.mkdir(parents=True, exist_ok=True)
