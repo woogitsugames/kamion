@@ -69,3 +69,4 @@ Przygotowano porównanie wszystkich kamer: mesh draws, shadow draws oraz draws/t
 2026-11-11T23:53:45.1082588+01:00: Przygotowano REPORT.md jako roboczy, z rozróżnieniem źródłowych liczników, widoczności i kosztu GPU. Bez końcowego PASS; oczekiwanie na heavy do pomiarów i końcowych testów.
 2026-11-11T23:53:57.5348979+01:00: Pomiar kontrastu Low overcast exit=0, slot heavy zwolniony. Wymagana kontrola projekcji masek.
 2026-11-11T23:55:20.2661512+01:00: Pierwsza maska ma poprawną projekcję na czystą jezdnię, ale wąski ROI pomija lewy ślad. Poszerzono ROI poziomo do 380..630 px przy szerokości 960; maski pozostają kontrolowane polem UV, bez krawężnika/farby.
+2026-11-11T23:57:04.9750308+01:00: Przygotowano sekwencyjną końcową kolejkę Fidelity → physics/gate3 → pełny GIS. Zabezpieczenie wymaga zakończonego porównania i braku własnego aktywnego slotu heavy; każdy etap Acquire/Release osobno. Kolejka jeszcze nie uruchomiona.
