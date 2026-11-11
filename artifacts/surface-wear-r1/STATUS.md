@@ -104,3 +104,6 @@
 
 - Step43 bus-onlycanonicalimport+WorldTruckInstaller COMPLETE exit0. Busaftercaptures6/8 COMPLETE Lowclear/LowOV/Highclear. WrappercorrectlystoppedBEFOREHighOV whenPHONEreturned15:43:31; ownUnityNONE/queuedNONE, oldreleaseinvalid. Available6stats compareidentical roundedobjects/drawsEst/shadowDrawsEst/trisK (preSRPestimates NOTactualGPU), exactsource+9tris separate.
 - NEXT COMMAND ONLY AFTER NEW EXPLICIT ROOT UNITY RELEASE: powershell -NoProfile -ExecutionPolicy Bypass -File artifacts/surface-wear-r1/bus-capture.ps1 -OnlyTier High -OnlyLight overcast. DO NOTrepeatimport/install/6frames. CPUinactivegate/narrowpaintdiagnostic preparation whileheld; NOUnity/autoresume.
+
+- Step44 heldCPU preparation: ROOTauthorized nextpaint widthdiagnostic ONLY (.425held; DECAL_PAINT.13->.085, centresunchanged). PreparedQAshadercopy/artifactC#assigner/wrapper, NOTinstalled/rendered/productionadopted. Same20SAMPLEtokens, no newproductionmaterial/draw. ViewedactualLowOVbusafterclose: smalllocalizedoilpatch visible, no globaldirtchange. HighOVstillpendingphonehold.
+- NEXT COMMAND AFTER NEW EXPLICIT ROOT RELEASE: bus-capture.ps1 -OnlyTier High -OnlyLight overcast. TheninstallignoredQAartifactswhileUnityoff, paint-narrow.ps1(8views); inactivegatepairsourceplan meanwhile. OwnUnityNONE/noqueuedlaunch.
