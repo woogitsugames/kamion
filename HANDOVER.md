@@ -1,6 +1,7 @@
 # HANDOVER — kamion, sesja 9 (start 2026-11-11 00:30 lokalnie / 23:30 UTC; limit 5 h reset 04:30 UTC)
 
 ## Najpierw
+- Trigger 01:23 (limit 42 %): 0077 w toku (końcowy pytest), 0091 r1 import, 0092 runda; 0084 GPT scalone.
 - Zasady s9: `docs/owner/START-PROMPT-S9.md` — max 3 agentów naraz, trigger co godzinę (CronCreate w sesji s9, :17, wygasa po 7 dniach / z zamknięciem sesji).
 - **main = `2ab23b2` (+ ten commit), wypchnięty.** Scalone w s9 (po recenzji `docs/reports/visual/REVIEW-2026-11-11-s9.md`, wszystkie PASS/PASS warunkowy): 0080 światło r11 `ddda766` → 0071 Kwadrat r11 `a00a5a2` → 0081 zabudowa r2 `24964e9` → 0070 remiza r6 `95eb72f` → 0078 auta r10b `2ab23b2`. Konflikty: `WorldPbrMaterials.cs` unia (zacieki `weather`‖`runoff`; `_Tile` = `set_tile || elementScan || atlas`), `build_all.py` unia importów, `materials_spec.json` unia JSON, `street_props.glb` + generated = ours (regen). Worktree tych 5 + 0083 usunięte (artifacts w main, gałęzie skasowane).
 - Agenci 0076/0077 s8 ubici limitem → s9 przejęła je nowymi agentami Fable (world-builder) w tych samych worktree (00:40).
@@ -12,7 +13,7 @@
 | wysepki z OSM | 0077 | agent-a2afb96d89584cca6 | tools/worldgen/fidelity/STATUS_islands_r10.md | s9: agent przejmujący w toku (steep_grass, import, kamery) |
 | zabudowa r3 (domy dwuspadowe, balkony, tynk, cegła) | 0091 | buildings-r11 (z d205d4a) | artifacts/buildings-r11 | s9: agent Fable start 01:05 |
 | Kwadrat Park r12 (firanka matowa, szlaban domknięty, dryf do paneli) | 0092 | kwadrat-r12 (z d8e929ca) | artifacts/kwadrat-r12 | s9: agent Fable start ~01:35 |
-| import Megascans | 0084 | gpt-megascans | artifacts/megascans-r1 | GPT w toku |
+| import Megascans R1 | 0084 | gpt-megascans (NIE usuwać — Codex wciąż aktywny) | artifacts/megascans-r1/REPORT.md | SCALONE `98e54e47` (REPORT: lokalnie PASS, skok sceny FAIL, Low lokalnie +4 draw/+4k tris; normal mapy Fab wyłączone; High 1024 i telefon UNVERIFIED); konflikt stage.py = unia (yard wear 0071 + FD.apply); regeneracja main w tle `artifacts/logs/s9-main-regen-0084.log`; GPT następnie Q1 0086 / Q2 0088 |
 | tło za krawędzią | 0085 | argon-edge | artifacts/edge-far-r1 | Argon w toku |
 
 ## Następne kroki
