@@ -90,3 +90,4 @@ NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/final-glass.ps1
 
 Zapis pośredni: STATUS, fokusowe porównania i pomiary wariantu 2 skopiowano robocopy do głównego artifacts/landmarks-r1. REPORT jeszcze nie jest gotowy; trwa oczekiwanie na heavy dla końcowego materiału szkła. Wrapper Unity korzysta z własnej nazwy katalogu rundy i obsługuje osobny zestaw kamer, aby kolejne rundy nie nadpisywały tych dowodów.
 `nKrok 29: końcowy materiał szkła wygenerowany w High/Medium/Low pod heavy i ograniczony do własnego wpisu spec. Następnie pojedynczy test remizy.
+`nKrok 30: pojedynczy test remizy po końcowej korekcie zakończony exit 0 pod heavy. Import i szybkie cztery rendery łuków przed walidacją całej trasy.
