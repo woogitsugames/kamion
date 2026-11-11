@@ -1,6 +1,6 @@
 # ADR 0102 — Meble uliczne r1, wynik rundy 2
 
-Status: przygotowane do recenzji lidera; EditMode w toku/oczekuje blokady telefonu. Data: 2026-11-11.
+Status: gotowe do recenzji i integracji przez lidera. Data: 2026-11-11.
 Gałąź `gpt-furniture-r1`, baza `9e6e9fde`. Zakres: strumień I pakietu S10-B.
 
 ## Problem i źródła
@@ -35,7 +35,7 @@ WORKING_VALUE; nie wykonano inwentaryzacji każdej latarni ani pomiaru katalogow
 
 ## Zmierzone wyniki
 
-- GIS R2: 379 passed, 1 xfailed / 649,86 s; 9 nowych regresji. EditMode: wynik w REPORT.md.
+- GIS R2: 379 passed, 1 xfailed / 649,86 s; 9 nowych regresji. EditMode: 226/226, 0 failed, 0 skipped.
 - QA reliefu: 147 → 107, maksimum 1,087 → 0,411 m; 20 lokalnych korekt lamp.
 - Gate3Audit, korytarz 40 m: 223 podpory, floating 4 → 0, sunk 0 → 0. Sygnalizator przy
   E −597,535 / N 20,717 zachowuje poziom: 141,384 → 141,386 m, nie spada do dolnej jezdni.
