@@ -46,3 +46,6 @@ Lekka kontrola PowerShell na małych sztucznych plikach przechodzi: pierwszy zap
 
 ## Dalsza kalibracja — odrzucona słaba przesłanka
 Ponownie obejrzano kadr 182011943700132. Zdjęcie nie potwierdza jazdy na pomoście, dlatego różnica około 5 m względem pobliskiej kamery mostowej nie uzasadnia korekty wysokości. Zachowano C i zapisano potrzebę rozdzielenia XY, kursu i epoki danych. Nie wykonano automatycznej korekty na podstawie samej liczby.
+
+## Przygotowanie zgodnego punktu odniesienia trendu
+Przygotowano recompose-history.ps1 do ponownego obliczenia metryk v2 dla renderów r1. Pobiera oryginalne bajty wejść z inputs.zip i używa jawnego trybu historical, nie modyfikując r1. Kompozycje A/B i C będą sekwencyjne w jednym slocie heavy, zapis do history/sbs-r1. Przygotowanie skryptu nie jest potwierdzeniem wykonania; uruchomienie dopiero po zakończeniu generatora naszej gałęzi.
