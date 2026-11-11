@@ -3,6 +3,7 @@
 ## Najpierw (dla następnej sesji)
 - **Tempo (właściciel, s10):** dalej max 3 agentów naraz. Limit tygodniowy Fable zresetował się (0 % o 10:05, reset 15.11); 5 h reset 15:00 lokalnie.
 - GPT J 0103 i K 0104 SCALONE (`8b176456`, `1c894f25`); `.venv` odśledzony. Regeneracja HIL zielona (494/1 znane). Integracja s10b na main w toku: `artifacts/integration-s10/run2.log` (czeka na PHONE_RUN agenta 0106; import, truck, EditMode, PlayMode, gis, commit reserializacji, czysty APK Low). Priorytety bramki 3 z side-by-side (top 5): niebo/ekspozycja, trawa/pobocza, asfalt bez zużycia, bariery na pomostach/łącznicach, pod wiaduktem → GPT 0108/0109/0099 i Claude 0110.
+- **22:40:** **0114 SCALONE `3540bbdf`** (recenzja s10-0114: PASS, jakość warunkowa; r8: zjazdy/kostka na jezdni, szwy, schody przed płotem, tuje/jabłonie/kute pręty, ulica bez przewodów, zacieki, koszt działek w lusterkach High). Regeneracja 0117+0114 `artifacts/logs/s10-regen-0117-0114.log`. Start (Fable): **0123 węzły r6** (`junctions-r6`) i **0124 zabudowa r8** (`buildings-r8`) — oba używają `unity-slot.ps1`.
 - **22:10:** **0117 SCALONE `6be0d8f6`** (recenzja s10-0117: PASS warunkowy, bariery pkt 4 bramki NIE zamknięte — r6: szachownica cienia poręczy na kapie Low clear, taśma W za ciemna w słońcu (albedo 0,13 metal 0 → cynk), kapa najjaśniejsza w kadrze, bariera przy filarze wg pomiaru, murek r2_fork_link (3. runda!), samotny słupek p0_kerb_merge, RING-B prześwit 1,31 m — 2 nowe propy na fartuchu wyspy E571 N−716 / E558 N−733). **0114 GOTOWE `2622bda0`** (działki bez instancji, Low najgorsza +11, High +29 / suma +359, cienie +189) → krytyk w toku; po nim scalenie i JEDNA regeneracja dla 0117+0114 (+ fidelity/run.py). Potem węzły r6 (0123, Fable) i A16 na r10_house_1/2, r10_shed_2. GPT 24 h — 10 sesji czeka na start przez właściciela (`docs/owner/GPT-PROMPTS-24H.md`).
 - **21:00:** recenzja GPT 0099 (`REVIEW-2026-11-11-s10-gpt-0099.md`): scalenie PASS warunkowy, cel asfaltu FAIL (kadry trasy bez zmian) — NIE scalone; przejmuje sesja GPT „asphalt” (r1 z tej gałęzi po merge main).
 - **20:31 po resecie:** 5 h 2 %, tydzień 34 %, Fable 46 %. Wznowione 0114 i 0117 (przerwane limitem ~19:30). GPT 0099 zużycie nawierzchni gotowe (PARTIAL APPEARANCE) → krytyk w toku. GPT 0089 R4 w toku.
@@ -41,7 +42,9 @@
 | GPT H 0085r2 / I 0102 / L 0105 | — | gpt-edge-r2, gpt-furniture-r1, gpt-viaduct-r1 | REVIEW-2026-11-11-s10-gpt-HIL.md (scalenie PASS, jakość FAIL) | SCALONE `4a2eea8c`, `85e19ebf`, `68ca9fd8` (LICENSES/materials.py — unia); regeneracja `artifacts/logs/s10-regen-HIL.log`; po niej sprawdzić roads_qa (4 wpisy mostów) i 806 chronionych elementów (I) |
 | węzły r4 + bariery | 0110 | usunięty | artifacts/junctions-r4/REPORT.md | SCALONE `60705006` |
 | węzły r5 bariery | 0117 | usunięty | artifacts/junctions-r5/STATUS.md | SCALONE `6be0d8f6` |
-| zabudowa r7 | 0114 | .claude/worktrees/buildings-r7 | artifacts/buildings-r15/STATUS.md | w toku (Fable) |
+| zabudowa r7 | 0114 | usunięty | artifacts/buildings-r15/STATUS.md | SCALONE `3540bbdf` |
+| węzły r6 | 0123 | .claude/worktrees/junctions-r6 | artifacts/junctions-r6/STATUS.md | w toku (Fable) |
+| zabudowa r8 | 0124 | .claude/worktrees/buildings-r8 | artifacts/buildings-r16/STATUS.md | w toku (Fable) |
 | zabudowa r6 + działki | 0107 | usunięty | artifacts/buildings-r14/REPORT.md | SCALONE `615d7e6e`; r7 (ADR 0114) po zdjęciach posesji: siatka, zjazd/podjazd, ogród, LOD działek, zacieki, koszt draws |
 | recenzja 0086 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0086.md | ZROBIONA: kontrakt OK, kalibracja FAIL (hala kp_wall przepalona, ekrany za ciemne); D48: tynk remizy 110/126/145 zostaje |
 | kalibracja r2 | 0101 | .claude/worktrees/tint-r2 (gałąź tint-r2) | artifacts/tint-r2/STATUS.md | w toku (rendering-perf) wg recenzji s10-0086 |
@@ -60,7 +63,7 @@
 5. **GPT pakiet S10-B** `docs/owner/GPT-TASK-03-S10.md` (5 nowych sesji właściciela, po 1 strumieniu): H 0085 r2 tło (gpt-edge-r2 z argon-edge), I 0102 meble uliczne (gpt-furniture-r1), J 0103 side-by-side bramki 3 (gpt-sbs-gate3), K 0104 kabina/lusterka (gpt-cab-r1), L 0105 wiadukt pod pomostem (gpt-viaduct-r1). Scalać po REPORT.md.
 6. Następni w kolejce Claude: zabudowa r6 (0107, na Fable — lista r6 z REVIEW s10-0097 + działki domów P1-h), Kwadrat r13.
 7. **GPT: 10 długich sesji na 24 h `docs/owner/GPT-TASK-05-24H.md`** (zastępuje 04; dziedziny: light 0108, vegetation 0109, asphalt 0118, sbs 0111, cab 0112, truck 0115, landmarks 0116/0119, furniture 0120, edge 0121, life 0089/0122; gałęzie `gpt-<dziedzina>-rN`, REPORT po każdej rundzie → lider scala co godzinę). **Limit Unity na maszynie: `scripts/unity-slot.ps1` (max 4 naraz, respektuje PHONE_RUN) — agenci Claude też go używają.** (stary opis: pakiet S10-C `docs/owner/GPT-TASK-04-S10.md` (10 strumieni wg priorytetu bramki 3; 0108, 0109, 0118, 0111, 0112, 0119, 0115, 0116, 0120, 0121).
-8. Ostatni przydzielony ADR: **0122** (0113 wydajność r2, 0114 zabudowa r7, 0115/0116 GPT) (0107 zabudowa r6, 0108/0109/0111/0112 GPT feedback `docs/owner/GPT-FEEDBACK-S10.md`, 0110 węzły r4).
+8. Ostatni przydzielony ADR: **0124** (0113 wydajność r2, 0114 zabudowa r7, 0115/0116 GPT) (0107 zabudowa r6, 0108/0109/0111/0112 GPT feedback `docs/owner/GPT-FEEDBACK-S10.md`, 0110 węzły r4).
 
 ---
 # HANDOVER — kamion, sesja 9 (2026-11-11 00:30 → ~10:30 lokalnie; zamknięta na polecenie właściciela przy końcu limitu 5 h)
