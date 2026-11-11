@@ -22,6 +22,8 @@ namespace Game.World.Import
             public bool Uv0;
             /// <summary>TEXCOORD_1 float16×2: LOD1 far-facade window grid (ADR 0015). Zero where a primitive has none.</summary>
             public bool Uv1;
+            /// <summary>Road-only missing data: preserve the shader no-lane sentinel; other layers keep zero defaults.</summary>
+            public bool RoadWearSentinel;
             public bool Colors;
         }
 
@@ -63,7 +65,12 @@ namespace Game.World.Import
                 if (p.Normals != null) Array.Copy(p.Normals, 0, nrm, b, p.Normals.Length);
                 else for (int i = 0; i < p.Positions.Length; i++) nrm[b + i] = Vector3.up;
                 if (uv != null && p.Uv0 != null) Array.Copy(p.Uv0, 0, uv, b, p.Uv0.Length);
-                if (uv1 != null && p.Uv1 != null) Array.Copy(p.Uv1, 0, uv1, b, p.Uv1.Length);
+                if (uv1 != null)
+                {
+                    if (p.Uv1 != null) Array.Copy(p.Uv1, 0, uv1, b, p.Uv1.Length);
+                    else if (o.RoadWearSentinel)
+                        for (int i = 0; i < p.Positions.Length; i++) uv1[b + i] = new Vector2(-1f, 5f);
+                }
                 if (col != null)
                 {
                     if (p.Colors != null) Array.Copy(p.Colors, 0, col, b, p.Colors.Length);
