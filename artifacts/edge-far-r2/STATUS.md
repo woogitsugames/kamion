@@ -13,3 +13,7 @@
 - Merged-world build complete: 64 chunks, High 405 MiB / Low 92 MiB; no fallback=True in build log. Patched far-field build yielded Low 24584 vs 24826 tris, High 118612 vs 118902; final metadata will be regenerated after baseline captures.
 - ADR r2 records ownership boundary guards, atmosphere contract with 0098, NMT apron approximation and honest inherited +2..4 draw cost relative to no-backdrop main.
 - NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20 (PHONE_RUN still active).
+- Owner confirmed PHONE_RUN is still active: continue waiting; no Unity started and lock untouched.
+- Fresh offline GIS extraction: 8453 buildings; zero raw-rectangle and compressed-rectangle intersections. Exclusion counters include wholly inside buildings, so 589 BDOT source rejections must NOT be called 589 removed duplicates; actual delta is 17 (2 blocks, 13 halls, 2 offices).
+- Baseline GIS: 4 failures, 370 passed, 1 skipped, 1 xfailed; stale generated r4/depot/fidelity/determinism inputs. Regenerated world, refresh fidelity, then fresh full GIS sequentially (no writer race).
+- NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30

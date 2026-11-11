@@ -1,3 +1,4 @@
+param([switch]$SkipGis)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 Set-Location $root
@@ -24,8 +25,10 @@ function Render-Matrix([string]$phase) {
         }
     }
 }
-# A previous shell may still be regenerating the merged world. Do not race it.
-while (Get-Process -Id 64672 -ErrorAction SilentlyContinue) { Start-Sleep -Seconds 10 }
+# The world baseline must be generated before this render-only orchestration starts.
+if (!(Select-String "$out/build-before.log" -Pattern '\[world.*\] done' -Quiet)) {
+    throw 'Run the merged world generation first; build-before.log has no completion marker'
+}
 & uv run --project tools/worldgen python "$out/generate_evidence.py" before > "$out/generate-before.log"
 if ($LASTEXITCODE -ne 0) { throw 'Before generation failed' }
 Wait-Phone
@@ -36,8 +39,10 @@ try {
 Render-Matrix before
 & uv run --project tools/worldgen python "$out/generate_evidence.py" after > "$out/generate-after.log"
 if ($LASTEXITCODE -ne 0) { throw 'After generation failed' }
-& uv run --project tools/worldgen python -m pytest tests/gis -q > "$out/gis-after.log" 2>&1
-if ($LASTEXITCODE -ne 0) { throw 'GIS validation failed' }
+if (!$SkipGis) {
+    & uv run --project tools/worldgen python -m pytest tests/gis -q > "$out/gis-after.log" 2>&1
+    if ($LASTEXITCODE -ne 0) { throw 'GIS validation failed' }
+}
 Wait-Phone
 . scripts/env.ps1
 try {
