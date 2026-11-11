@@ -1,6 +1,7 @@
 ﻿param([string]$Stage='before')
 $ErrorActionPreference='Stop'
 Set-Location 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation'
+. artifacts/vegetation-r1/checkpoint.ps1
 foreach($tier in @('Low','High')) {
  $scene=if($tier -eq 'High') {'WorldC_High'} else {'WorldC'}
  foreach($group in Get-ChildItem artifacts/vegetation-r1 -Filter 'photo-cameras-*.json') {
@@ -18,8 +19,8 @@ foreach($tier in @('Low','High')) {
    git restore --worktree -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
   }
   Add-Content artifacts/vegetation-r1/STATUS.md "Zapisano pary foto $Stage $folder. Następny krok: porównać z photo-references.json."
-  git add -f artifacts/vegetation-r1/STATUS.md
-  git commit -m "wip(vegetation): fotografie $Stage $folder"
+  Save-VegetationCheckpoint -Message "wip(vegetation): fotografie $Stage $folder"
  }
 }
 "Pary foto $Stage zakończone" | Set-Content "artifacts/vegetation-r1/$Stage-photos-done.txt"
+
