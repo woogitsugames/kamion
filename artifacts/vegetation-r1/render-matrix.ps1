@@ -7,7 +7,7 @@ if ($Stage -eq 'before' -and (Test-Path artifacts/vegetation-r1/REIMPORT-REQUIRE
 . artifacts/vegetation-r1/checkpoint.ps1
 foreach($tier in @('Low','High')) { foreach($lighting in @('overcast','clear')) {
   $scene=if($tier -eq 'High') {'WorldC_High'} else {'WorldC'}
-  pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-vegetation -StaleHours 1000000
+  pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-vegetation -StaleHours 1000000 -PollSeconds 10
   if($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
   try {
     pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $tier -Lighting $lighting -Gate3 Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json -OutputDir "artifacts/vegetation-r1/$Stage/$tier-$lighting" *> "artifacts/vegetation-r1/$Stage-$tier-$lighting.log"
@@ -20,5 +20,6 @@ foreach($tier in @('Low','High')) { foreach($lighting in @('overcast','clear')) 
   Save-VegetationCheckpoint -Message "wip(vegetation): render $Stage $tier $lighting"
 } }
 "Macierz $Stage zakończona" | Set-Content "artifacts/vegetation-r1/$Stage-done.txt"
+
 
 

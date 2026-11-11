@@ -1,4 +1,4 @@
-param([string]$Log = 'artifacts/vegetation-r1/import-after.log')
+﻿param([string]$Log = 'artifacts/vegetation-r1/import-after.log')
 $ErrorActionPreference = 'Stop'
 Set-Location 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation'
 # Fail before Unity acquisition if import-region would silently launch a heavy
@@ -24,7 +24,7 @@ foreach ($set in $spec.sets.PSObject.Properties) {
 }
 if ($need.Count -gt 0) { throw "PBR preflight: run Materials in pool heavy first. Missing/stale sets: $($need -join ', ')" }
 $slotScript = 'C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
-pwsh $slotScript -Acquire -Owner gpt-vegetation -StaleHours 1000000
+pwsh $slotScript -Acquire -Owner gpt-vegetation -StaleHours 1000000 -PollSeconds 10
 if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
 $importExit = 1
 try {
@@ -35,3 +35,4 @@ try {
     git restore --worktree -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
 }
 exit $importExit
+
