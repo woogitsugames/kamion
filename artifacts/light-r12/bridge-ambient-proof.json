@@ -1,0 +1,47 @@
+{
+  "source": "fresh canonical WorldSkyBake output; no new AO algorithm claimed",
+  "texel_m": 1,
+  "points": [
+    {
+      "offset_m": -30,
+      "local_EN": [
+        537.835,
+        -749.764
+      ],
+      "sky_visibility": 1.0,
+      "ambient_factor_at_ground_model": 1.0
+    },
+    {
+      "offset_m": 0,
+      "local_EN": [
+        552.085,
+        -723.364
+      ],
+      "sky_visibility": 0.043137254901960784,
+      "ambient_factor_at_ground_model": 0.33019607843137255
+    },
+    {
+      "offset_m": 10,
+      "local_EN": [
+        556.835,
+        -714.564
+      ],
+      "sky_visibility": 0.043137254901960784,
+      "ambient_factor_at_ground_model": 0.33019607843137255
+    },
+    {
+      "offset_m": 30,
+      "local_EN": [
+        566.335,
+        -696.964
+      ],
+      "sky_visibility": 1.0,
+      "ambient_factor_at_ground_model": 1.0
+    }
+  ],
+  "confidence": {
+    "axis_and_levels": "generated road (OSM axis, NMT, PTB2022 clearance): medium",
+    "structure": "WORKING_VALUE (Mapillary reference frames, by eye): low"
+  },
+  "ambient_model": "WorldGI bounce0.3, ground/up-facing receiver; runtime screenshots separately reviewed"
+}

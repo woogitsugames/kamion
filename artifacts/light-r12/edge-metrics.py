@@ -1,5 +1,6 @@
 """Fixed original-pixel edges and cab numeral; report measured tradeoffs, no no-loss claim."""
 import json
+import sys
 from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw
@@ -7,6 +8,10 @@ from PIL import Image, ImageDraw
 ROOT = Path(__file__).parent
 BASE = ROOT / 'before/High-clear'
 TEST = ROOT / 'noise/legibility-zero'
+prefix = 'noise/edge'
+if len(sys.argv) > 2:
+    BASE, TEST = Path(sys.argv[1]), Path(sys.argv[2])
+    prefix = sys.argv[3]
 ROIS = {
     'road_paint': ('driver-andersa-to-putry', (1330, 760, 1540, 900)),
     'window_edge': ('r10_block_3', (1480, 375, 1550, 405)),
@@ -48,6 +53,6 @@ for y,(label,(camera,rect)) in enumerate(ROIS.items()):
         crop=crop.resize((min(460,crop.width*3),min(220,crop.height*3)),Image.Resampling.NEAREST)
         sheet.paste(crop,(x*480,y*260+25))
         draw.text((x*480+4,y*260+4),label+' / '+name,fill='white')
-(ROOT/'noise/edge-metrics.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
-sheet.save(ROOT/'noise/edge-crops.jpg',quality=96)
+(ROOT/(prefix+'-metrics.json')).write_text(json.dumps(result,indent=2),encoding='utf-8')
+sheet.save(ROOT/(prefix+'-crops.jpg'),quality=96)
 print(json.dumps(result,indent=2))

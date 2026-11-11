@@ -44,3 +44,9 @@
 
 - Step14: canonical world import reproduced explicitkpflag fromresetignoredmaterial; emptyRq Highactualpipeline logged FSR0overrideTrue/2048px/3cascades/.4/.3/.20,.55, finalditherTrue/skyDitherOff1/glass8cm. Clear1.1gable242.3/231.7/201.2 unclipped; tunedfinalshoulder1.2 for <=~240R, fixed asphaltanchors. SourcebakedLP1.2, Lowpolicy unchanged. Beginfullmatchedafter beforevehiclefixture refresh.
 - NEXT COMMAND: pwsh -File artifacts/light-r12/capture.ps1 -Phase after; then selectedlowsun +Mediumglassdefault, measure/viewall and refreshvehiclefixture for fullEditMode.
+
+- Step15: finalmatched236before+236after and22lowsun each,6Mediumdefault; all44standard/lowsun sheets plus2Medium viewed, references andselfcriticism complete. Independentroot scopedPASS inREVIEW.md; all4CPUstatsfiles byteidentical (236 cameras), GPUUNVERIFIED. Floor.70 proxy boundedtradeoff accepted: paintedge+0.333px/cabcontrast128->126. GIS355/2xfail; fixturecache missingFBXfixed AFTERmatrix, Truck/Trailer/Install+EditMode221/221 PASS (9newCtests). Final192SHA/Fab15 nofallback proof; no engine edits after9e7e0b45.
+- NEXT COMMAND: robocopy artifacts/light-r12 C:/Users/matma/Documents/Claude/kamion/artifacts/light-r12 /E /XJ /R:1 /W:1 (then finalproof commit; leader owns integration).
+
+- Step16: ADR0098(17lines), REPORT(20lines), SELF-CRITICISM, independentREVIEW PASS, canonicalproof192/0 andNUnitXML complete. Evidence copiedtomain /E /XJ noMIR (robocopyexit1 accepted). No ownUnity active; no ProjectSettings/Packages/scenes/asmdef source changes. Canonicalgenerated world_manifest SHA refresh intentionallykeptlocal/uncommitted, matchingrawproof; snapshots copied. No merge/push.
+- NEXT COMMAND (leader): git log --oneline gpt-light-r12; integrate scopedC withA/B/F/materialcalibration and runjointvisual/deviceproof. Cworktree retained.
