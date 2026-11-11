@@ -18,7 +18,7 @@
   650,
   805
  ],
- "processing": "paired alpha R, threshold32 largestconnectedcomponent+dilate1, RGB calibrated to hero-local intended linear foliage palette; stem-centred; atlas16px gutter. Never use trunk/UV strips.",
+ "processing": "paired alpha R, threshold32 largestconnectedcomponent+dilate1, RGB calibrated to hero-local intended linear foliage palette; stem-centred; atlas16px gutter. Never use trunk/UV strips. Two sprays composited about their shared stem; covered palette mean retained after packing.",
  "files": [
   {
    "map": "diff",
@@ -36,5 +36,14 @@
    "bytes": 371026,
    "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/fir_tree_01/fir_tree_01_twig_alpha_1k.png"
   }
- ]
+ ],
+ "composition": {
+  "sprays": 2,
+  "rotation_deg": [
+   -26,
+   26
+  ],
+  "attachment": "shared root; content-centred UV; 16px outer gutter",
+  "status": "authored derivative, not measured spruce geometry"
+ }
 }

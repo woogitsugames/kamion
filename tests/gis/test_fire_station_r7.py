@@ -48,6 +48,26 @@ def test_clean_clone_fallback_is_explicit_and_deterministic(atlas, monkeypatch, 
     assert status["applied"] is False and "NOT verified Picea" in status["species_status"]
 
 
+def test_bundle_uv_covers_packed_sprays_and_keeps_root_and_outer_gutter(atlas, monkeypatch):
+    # Asymmetric fixture catches full-thumbnail UV padding and a root shifted away from the card attachment.
+    from PIL import ImageDraw
+    twig = Image.new("RGBA", (180, 240)); draw = ImageDraw.Draw(twig)
+    draw.line((90, 239, 90, 10), fill=(60, 85, 40, 255), width=6)
+    draw.line((90, 180, 20, 90), fill=(60, 85, 40, 255), width=16)
+    draw.line((90, 150, 150, 60), fill=(60, 85, 40, 255), width=12)
+    monkeypatch.setattr(atlas, "_conifer_sprite", lambda: twig.copy())
+    patch = atlas._conifer_patch(); r = atlas.ALPHA_LAYOUT["conifer_bough"]
+    w, h = atlas.ALPHA_LAYOUT["size_px"]; x0 = int(r["u"][0]*w); y0 = h-int(r["v"][1]*h)
+    u0,v0,u1,v1 = r["inner_uv"]
+    left,right = round(u0*w)-x0,round(u1*w)-x0
+    top,bottom = round((1-v1)*h)-y0,round((1-v0)*h)-y0
+    yy,xx = np.where(patch[...,3] >= 32)
+    assert left <= xx.min() and xx.max() < right and top <= yy.min() and yy.max() < bottom
+    assert left >= 16 and patch.shape[1]-right >= 16 and top >= 16 and patch.shape[0]-bottom >= 16
+    stem = np.median(np.where(patch[yy.max()-2:yy.max()+1,:,3] >= 32)[1])+.5
+    assert abs((left+right)/2-stem) <= .5
+
+
 def test_hero_palette_alias_leaves_all_route_hedges_unchanged():
     from streetscape import materials as m
     from streetscape.hedge_textures import shell

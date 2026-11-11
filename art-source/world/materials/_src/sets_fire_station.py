@@ -604,6 +604,61 @@ def _conifer_sprite(log=print):
     return centred
 
 
+def _conifer_patch():
+    """Two sprays share one stem root, one atlas cell and the existing runtime alpha material.
+
+    This is an authored CC0 derivative, not scanned spruce geometry. Content UV removes empty
+    thumbnail margins; the 16-pixel outer gutter and bottom-centred branch attachment stay intact.
+    """
+    r = ALPHA_LAYOUT["conifer_bough"]; W, H = ALPHA_LAYOUT["size_px"]
+    x0, x1 = int(r["u"][0] * W), int(r["u"][1] * W)
+    y0, y1 = H - int(r["v"][1] * H), H - int(r["v"][0] * H)
+    width, height, gap = x1-x0, y1-y0, r["gutter_px"]
+    sprite = _conifer_sprite()
+    # Retain the current packed single-spray covered mean, so composition is not a palette change.
+    reference = sprite.copy(); reference.thumbnail((width-2*gap, height-2*gap), Image.Resampling.LANCZOS)
+    ref = np.array(reference); ref_keep = ref[..., 3] >= 128
+    target = (_lin(ref[..., :3].astype(np.float64)/255)[ref_keep].mean(0)
+              if ref_keep.any() else np.array(LAYOUT["foliage_linear"]))
+    canvas = Image.new("RGBA", (1200, 900)); layer = Image.new("RGBA", canvas.size)
+    root = (600, 840)
+    layer.alpha_composite(sprite, (round(root[0]-sprite.width/2), root[1]-sprite.height))
+    for angle in (-26, 26):
+        canvas.alpha_composite(layer.rotate(angle, Image.Resampling.BICUBIC, center=root))
+    a = np.array(canvas); yy, xx = np.where(a[..., 3] > 32)
+    if not len(xx):
+        r["inner_uv"] = [(x0+gap)/W, (H-y1+gap)/H, (x1-gap)/W, (H-y0-gap)/H]
+        return np.zeros((height, width, 4), np.uint8)
+    assert not ((a[0, :, 3] > 32).any() or (a[-1, :, 3] > 32).any()
+                or (a[:, 0, 3] > 32).any() or (a[:, -1, 3] > 32).any()), "Clipped root bundle"
+    twig = canvas.crop((int(xx.min()), int(yy.min()), int(xx.max())+1, int(yy.max())+1))
+    a = np.array(twig); stem = float(np.median(np.where(a[-3:, :, 3] > 32)[1]))
+    half = int(np.ceil(max(stem, twig.width-stem)))
+    centred = Image.new("RGBA", (half*2, twig.height)); centred.alpha_composite(twig, (round(half-stem), 0))
+    # Extra 4 px allow root-centred UV filter padding while retaining the full outer gutter.
+    centred.thumbnail((width-2*(gap+4), height-2*gap), Image.Resampling.LANCZOS)
+    patch = Image.new("RGBA", (width, height))
+    patch.alpha_composite(centred, ((width-centred.width)//2, height-gap-centred.height))
+    pa = np.array(patch); covered = pa[..., 3] >= 128
+    linear = _lin(pa[..., :3].astype(np.float64)/255)
+    if covered.any():
+        linear *= target / np.maximum(linear[covered].mean(0), 1e-6)
+    pa[..., :3] = np.clip(np.rint(K.srgb_encode(np.clip(linear, 0, 1))*255), 0, 255).astype(np.uint8)
+    yy, xx = np.where(pa[..., 3] >= 32); bottom = int(yy.max())
+    stem = float(np.median(np.where(pa[bottom-2:bottom+1, :, 3] >= 32)[1]))+.5
+    half = int(np.ceil(max(stem-xx.min(), xx.max()+1-stem)+2))
+    left, right = int(np.floor(stem-half)), int(np.ceil(stem+half))
+    top = max(gap, int(yy.min())-2)
+    assert left >= gap and right <= width-gap, "Root-centred UV must preserve outer gutter"
+    r["inner_uv"] = [(x0+left)/W, (H-y1+gap)/H, (x0+right)/W, (H-y0-top)/H]
+    r["composition"] = "two root-connected sprays, rotations -26/+26 degrees, authored CC0 derivative"
+    r["content_alpha32_bbox_px"] = [int(xx.min()), int(yy.min()), int(xx.max())+1, bottom+1]
+    empty = pa[..., 3] == 0
+    nearest = ndimage.distance_transform_edt(empty, return_distances=False, return_indices=True)
+    pa[..., :3][empty] = pa[nearest[0][empty], nearest[1][empty], :3]
+    return pa
+
+
 def alpha_texture(path: Path | None = None):
     """fire_station_alpha.png 2048 x 1024 RGBA (see ALPHA_LAYOUT). Painted blue steel fence: posts are geometry;
     the bay holds top / bottom rails and vertical bars every 0.125 m; the gate bay adds a diagonal brace."""
@@ -676,13 +731,7 @@ def alpha_texture(path: Path | None = None):
     x0, x1 = int(r["u"][0] * W), int(r["u"][1] * W)
     y0, y1 = H - int(r["v"][1] * H), H - int(r["v"][0] * H)
     gap = r["gutter_px"]
-    sprite = _conifer_sprite()
-    sprite.thumbnail((x1 - x0 - gap * 2, y1 - y0 - gap * 2), Image.Resampling.LANCZOS)
-    patch = Image.new("RGBA", (x1 - x0, y1 - y0))
-    patch.alpha_composite(sprite, ((patch.width - sprite.width) // 2, patch.height - gap - sprite.height))
-    pa = np.array(patch); empty = pa[..., 3] == 0
-    nearest = ndimage.distance_transform_edt(empty, return_distances=False, return_indices=True)
-    pa[..., :3][empty] = pa[nearest[0][empty], nearest[1][empty], :3]
+    pa = _conifer_patch()
     rgb[y0:y1, x0:x1] = _lin(pa[..., :3].astype(np.float32) / 255)
     a[y0:y1, x0:x1] = pa[..., 3].astype(np.float32) / 255
     img = np.dstack([K.srgb_encode(np.clip(rgb, 0, 1)), a])
@@ -694,6 +743,8 @@ def alpha_texture(path: Path | None = None):
 def write_layout():
     LANDMARK.mkdir(parents=True, exist_ok=True)
     p = LANDMARK / "atlas_layout.json"
+    # Recompute from the same pixels as alpha_texture: no stale full-cell UV after a standalone layout build.
+    _conifer_patch()
     # Hero-only shell alias: keep the route's procedural texture/palette untouched.
     # The alias receives an A-correct linear multiplier, retaining the same .97 roughness and alpha settings.
     worldgen = str(REPO / "tools" / "worldgen")

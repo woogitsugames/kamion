@@ -1,0 +1,30 @@
+{
+  "status": "ARTIFACT_ONLY_NO_RUNTIME_ACCEPTANCE",
+  "source_sha256": "d17168b6e861d61dda924152abdc46ecf5e80d533a23404ac18e4f16d6fe4a3f",
+  "parameters": {
+    "hall_glass_linear": [
+      0.068,
+      0.072,
+      0.078
+    ],
+    "hall_only_gradient": [
+      0.75,
+      0.5,
+      1.3
+    ],
+    "clinker_linear": [
+      0.27,
+      0.135,
+      0.06
+    ]
+  },
+  "preserved": {
+    "height": "ALL_FIELDS_EXACT",
+    "rough": "ALL_FIELDS_EXACT",
+    "metal": "ALL_FIELDS_EXACT",
+    "joint": "ALL_FIELDS_EXACT",
+    "elem_id": "ALL_FIELDS_EXACT",
+    "albedo": "EXACT_OUTSIDE_BRICK_ARCH_ROUND_INCLUDING_ALL_CLEAN_PAINT_ROOF_TRIM_FLAG_AND_OFFICE_GLASS"
+  },
+  "changed_pixels": 85136
+}
