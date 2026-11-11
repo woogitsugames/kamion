@@ -28,7 +28,9 @@ for name,meshes in LP.build_all().items():
                 if merged and lo<=merged[-1][1]+1e-6: merged[-1][1]=max(merged[-1][1],hi)
                 else: merged.append([lo,hi])
             sides[str(sign)]=merged
-        lods.append(dict(triangles=sum(len(p['T']) for p in prims),materials=[p['mat'] for p in prims],tyre_ground=float(V[:,2].min()),axle_intervals=sides))
+        curtain=next((p for p in prims if p['mat'].startswith('trailer_curtain_')),None)
+        uv_bounds=None if curtain is None else dict(min=curtain['UV'].min(axis=0).tolist(),max=curtain['UV'].max(axis=0).tolist())
+        lods.append(dict(triangles=sum(len(p['T']) for p in prims),materials=[p['mat'] for p in prims],tyre_ground=float(V[:,2].min()),axle_intervals=sides,curtain_uv_bounds=uv_bounds))
     result[name]=lods
 out=Path(__file__).with_name(f'prototype-{stage}.json')
 out.write_text(json.dumps(result,indent=2),encoding='utf-8')
@@ -40,4 +42,9 @@ if stage!='baseline':
             assert a['materials']==b['materials'],(name,lod,'material groups changed')
         if name.startswith('trailer_'):
             assert all(len(v)==3 for v in lods[1]['axle_intervals'].values()),name
-            assert abs(lods[1]['tyre_ground']-lods[0]['tyre_ground'])<0.01,name
+            # Ten-sided LOD0 has up to 2.7 cm faceting clearance. LOD1 must
+            # touch nominal ground, with no return of the former 12 cm gap.
+            assert -1e-6 <= lods[1]['tyre_ground'] < 0.01,name
+            assert abs(lods[1]['tyre_ground']-lods[0]['tyre_ground'])<0.03,name
+        if name.startswith('trailer_curtain_'):
+            assert all(0 <= a['curtain_uv_bounds']['min'][1] < a['curtain_uv_bounds']['max'][1] < 2.7 for a in lods),name
