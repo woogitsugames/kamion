@@ -42,3 +42,4 @@ Rozpoczynam przebudowę prefabów przez build-0112.ps1: osobny slot i przywróce
 BuildBatch zatrzymał się poprawnie na brakującym dopasowaniu dolnego ramienia LOD0: stary MirrorHousingRecess przesuwał część jego końca przed identyfikacją wysp. Zmieniono kolejność: podpory na źródłowej siatce wszystkich LOD, potem recess tylko LOD0; cofnięty koniec ramienia jest już poza zakresem recess. Nie instalowano niedokończonego prefabu. Następny krok: ponowić build-0112.ps1.
 Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
+Zapisano result-0112 Low clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
