@@ -33,3 +33,13 @@ Kontrole lakieru zachowały szorstkość i tłumienie podłoża przy wyłączani
 Pozostają otwarte: kredowy lakier i dach w słońcu, mleczność szyby oraz D44. Stara baza ma stosunek odchyleń szyby do widoku bez przedniej tafli 0,475 Low i 0,526 High, przy celu 0,7. Końcowa próba bez tafli zostanie wykonana na identycznej wersji kandydata. Brak pomiarów telefonów zgodnie z zakresem właściciela.
 
 Po pilnej aktualizacji właściciela wszystkie ciężkie zadania Pythona korzystają z puli `heavy` (max 3), a pełny GIS jest uruchamiany wyłącznie na końcu rundy. Wcześniejszy bazowy GIS, wykonany przed tą aktualizacją i przed zmianami produkcyjnymi, dał 488 passed, 5 failed, 1 xfailed. Pięć błędów dotyczy far-field, wiaduktu, przeterminowanego fidelity, brakującego prototypu i deterministyczności świata; pliki tych dziedzin nie są poprawiane w sesji truck.
+
+### Końcowa kontrola renderowania i EditMode
+
+Po kanonicznym zbudowaniu obu pojazdów i instalacji w scenach zapisano 28 kadrów końcowych, dodatkowo 6 Medium, 6 o zmierzchu i 6 kontrolnych bez przedniej szyby. Pełny EditMode zakończył się kodem 0: 266 passed, zero failed i skipped. Wszystkie 96 wierszy kamer (48 × Low/High, overcast) ma identyczne liczniki rendererów, cieni i instancji oraz raportowane tysiące trójkątów. Dowód: `artifacts/truck-r1/all-cameras-counters.csv`. Trójkąty są zaokrąglone, wywołania rendererów są estymatami przed SRP, a nie pomiarem GPU telefonu.
+
+Końcowy D44 według tej samej próbki i skalowania do 1024 px: 0,490 Low i 0,526 High, nadal poniżej 0,7. Rozrzut profilu drzwi pozostaje identyczny: overcast 3,362 Low i 2,437 High; clear 5,261 Low i 3,661 High. Przy celu 4–10 większość warunków nadal nie przechodzi. Końcowe ROI lewej lampy potwierdza 1214 → 0 przyciętych pikseli High-overcast i 0 → 0 w pozostałych trzech warunkach.
+
+Decyzja o podłodze szorstkości capture w `FragFast`: nie dodajemy nominalnej wartości 0,09 z pełnej ścieżki. Obecne Low i Medium mają capture 64 px; wzór `mip = clamp(log2(max(pr² × size / 2, 1)), ...)` daje mip 0 zarówno przed, jak i po takim ograniczeniu dla pr < 0,09 (największy footprint 0,2592). Dla większego pr ograniczenie nic nie zmienia. Ta równoważność dotyczy aktualnych profili, a nie dowolnej przyszłej rozdzielczości. Medium-overcast i Medium-clear zostały wyrenderowane po zmianie mgły.
+
+Niezależna kontrola po rebuildzie nie wykazała nowej regresji sylwetki, ustawienia pojazdu ani widoku kierowcy w ośmiu arkuszach. Lakier, dach i szyba nadal nie spełniają celu materiałowego. Zmierzch jest kontrolą jakościową bez bazy: Low i High pokazują płaskie jasne moduły reflektorów; nie przypisujemy ich tej rundzie. Pełna ocena jest w `artifacts/truck-r1/FINAL-REVIEW.md`.
