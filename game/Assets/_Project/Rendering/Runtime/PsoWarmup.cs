@@ -59,8 +59,8 @@ namespace Game.Rendering
                 if (traceS > 0f)
                 {
                     m_Trace = new GraphicsStateCollection();
-                    m_Trace.BeginTrace();
-                    Debug.Log($"[PSO] trace start ({traceS:F0} s) api={SystemInfo.graphicsDeviceType} quality={q} tag={traceTag}");
+                    bool ok = m_Trace.BeginTrace();
+                    Debug.Log($"[PSO] trace start ok={ok} dev={Debug.isDebugBuild} ({traceS:F0} s) api={SystemInfo.graphicsDeviceType} quality={q} tag={traceTag}");
                 }
                 if (warm)
                 {

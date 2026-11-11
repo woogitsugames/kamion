@@ -332,12 +332,31 @@ namespace Game.World
                 m_GroupFar[g] = gFar;
             }
 
-            for (int ci = 0; ci < cells.Length; ci++)
+            // ADR 0113 (forestFast): visible cells near to far, so the instances of every batch reach the GPU roughly front to
+            // back and the early depth test rejects hidden leaf-card / impostor layers (A16: alpha-tested overdraw).
+            int nVis = cells.Length;
+            bool sorted = Game.Rendering.ForestFastPath.SortCells;
+            if (sorted)
             {
+                if (m_VisIdx == null || m_VisIdx.Length != cells.Length) { m_VisIdx = new int[cells.Length]; m_VisD = new float[cells.Length]; }
+                nVis = 0;
+                for (int ci = 0; ci < cells.Length; ci++)
+                {
+                    var bb = m_CellBounds[ci];
+                    if (!GeometryUtility.TestPlanesAABB(m_Planes, bb)) continue;
+                    float dn = Mathf.Sqrt(bb.SqrDistance(cp));
+                    if (dn > far) continue;
+                    m_VisIdx[nVis] = ci; m_VisD[nVis] = dn; nVis++;
+                }
+                Array.Sort<float, int>(m_VisD, m_VisIdx, 0, nVis);
+            }
+            for (int k = 0; k < nVis; k++)
+            {
+                int ci = sorted ? m_VisIdx[k] : k;
                 var cell = cells[ci];
                 var b = m_CellBounds[ci];
-                if (!GeometryUtility.TestPlanesAABB(m_Planes, b)) continue;
-                float dNear = Mathf.Sqrt(b.SqrDistance(cp));
+                if (!sorted && !GeometryUtility.TestPlanesAABB(m_Planes, b)) continue;
+                float dNear = sorted ? m_VisD[k] : Mathf.Sqrt(b.SqrDistance(cp));
                 if (dNear > far) continue;
                 float dFar = FarDistance(b, cp);
                 Last.VisibleCells++;
@@ -463,6 +482,8 @@ namespace Game.World
         public float forestHlodCullM = 0f;
 
         bool[] m_GroupFar;
+        int[] m_VisIdx;      // ADR 0113: visible cells sorted near to far
+        float[] m_VisD;
 
 
         /// <summary>A forest HLOD mesh (cell or chunk merge), region-root space, no shadows (beyond every tier's shadow distance).</summary>

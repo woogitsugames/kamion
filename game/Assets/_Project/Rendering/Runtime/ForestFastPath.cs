@@ -30,11 +30,13 @@ namespace Game.Rendering
         /// <summary>Tier state (QualityProfileApplier).</summary>
         public static bool Shipping { get; private set; }
         /// <summary>A/B flips (true = the part is the opposite of <see cref="Shipping"/>).</summary>
-        public static bool FlipKeyword, FlipEdgeOnePass, FlipCanopy, FlipAniso;
+        public static bool FlipKeyword, FlipEdgeOnePass, FlipCanopy, FlipAniso, FlipSort;
 
         public static bool KeywordOn => Shipping ^ FlipKeyword;
         public static bool EdgeOnePass => Shipping ^ FlipEdgeOnePass;
         public static bool CanopyOn => Shipping ^ FlipCanopy;
+        /// <summary>WorldInstances submits the visible cells near to far (front-to-back instances inside each batch).</summary>
+        public static bool SortCells => Shipping ^ FlipSort;
 
         static readonly List<Material> s_Edges = new List<Material>();
         static readonly List<Material> s_Foliage = new List<Material>();

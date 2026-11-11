@@ -1,0 +1,59 @@
+Applications Memory Usage (in Kilobytes):
+Uptime: 497821590 Realtime: 923563927
+
+** MEMINFO in pid 16098 [com.woogitsugames.kamion] **
+                   Pss  Private  Private  SwapPss      Rss     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty    Total     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------   ------
+  Native Heap    40992    40924       28       75    41776    48268    44731     3536
+  Dalvik Heap     1346     1276       12      149     1996     8713     2569     6144
+ Dalvik Other      914      884        4       16     1196                           
+        Stack     1596     1596        0        0     1600                           
+       Ashmem       83        0        0        0      604                           
+    Other dev       43       20       12        0      468                           
+     .so mmap   202548   139452    59520       50   225448                           
+    .jar mmap     5809        0     1568        0    26832                           
+    .apk mmap     4659        0     4412        0     5328                           
+    .ttf mmap      248        0      232        0      264                           
+    .dex mmap      199        0      120        0      848                           
+    .oat mmap     1001        0      232        0    11072                           
+    .art mmap     1902      940      144      305    11980                           
+   Other mmap     6061        4     5980        0     6912                           
+   EGL mtrack    28427    28427        0        0    28427                           
+    GL mtrack   377592   377592        0        0   377592                           
+      Unknown   197110   196876      212       13   197600                           
+        TOTAL   871138   787991    72476      608   939943    56981    47300     9680
+ 
+ App Summary
+                       Pss(KB)                        Rss(KB)
+                        ------                         ------
+           Java Heap:     2360                          13976
+         Native Heap:    40924                          41776
+                Code:   205536                         269824
+               Stack:     1596                           1600
+            Graphics:   406019                         406019
+       Private Other:   204032
+              System:    10671
+             Unknown:                                  206748
+ 
+           TOTAL PSS:   871138            TOTAL RSS:   939943       TOTAL SWAP PSS:      608
+ 
+ Objects
+               Views:        9         ViewRootImpl:        1
+         AppContexts:        5           Activities:        1
+              Assets:       36        AssetManagers:        0
+       Local Binders:       23        Proxy Binders:       83
+       Parcel memory:       12         Parcel count:       41
+    Death Recipients:        0             WebViews:        0
+ 
+ Native Allocations
+                         Count                       Total(kB)
+                        ------                         ------
+    Other (malloced):      344                             31
+ Other (nonmalloced):      109                             78
+ 
+ SQL
+         MEMORY_USED:        0
+  PAGECACHE_OVERFLOW:        0          MALLOC_SIZE:        0
+ 
+ 
