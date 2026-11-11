@@ -1,11 +1,11 @@
-﻿# Strumień J / ADR 0103 — REPORT
-Wynik: zestaw gotowy, końcowy GIS w toku; bramka 3 NIEZALICZONA (to narzędzie i materiał do recenzji).
+# Strumień J / ADR 0103 — REPORT
+Wynik: DONE — narzędzie i 160 arkuszy gotowe do recenzji lidera; bramka 3 NIEZALICZONA.
 Gałąź gpt-sbs-gate3; kod/kamery 9bfdf2b4; baza main 9e6e9fde; bieżący sha: git rev-parse HEAD.
 Dostarczono 40 unikalnych zdjęć (20/G3), 40 kamer sbs-*, 160 renderów i 160 arkuszy Low/High × clear/overcast.
 Kod tools/refs/sbs_gate3.py; wrapper scripts/sbs-gate3.ps1; nowe Data/Regions/bialystok-industrial-c/sbs_*.json; inne kamery/świat bez zmian.
 27 fisheye + 13 perspective wyprostowane z publicznych intrinsics; GPS -> EPSG:2180, zbieżność południków, zgodny FOV, jawne authored_overrides.
 Po przeglądzie skorygowano 27 pozycji/poz od r0, w tym 8 wysokości pomostów, 1 odsunięcie od bariery i 1 błędny kurs SfM; niepewność pozostaje WORKING_VALUE.
-GIS baseline 370 passed/1 xfailed; końcowy pełny GIS: patrz pytest-final.log (w toku); SBS 10/10, refs 51/51, EditMode 226/226.
+Końcowy pełny GIS 380 passed/1 znany xfailed (601.07 s, pytest-final.log; w tym SBS 10/10); refs 51/51, EditMode 226/226 (tests/*.xml).
 Metryki: histogram 32-bin, jasność, osobne stosunki powierzchni i jasności niebo/asfalt, jawne maski lub opisane heurystyki, hashe źródeł/renderów.
 Dowody finalne: sheets/{Low,High}-{clear,overcast}/*.png + metrics.json; renders/*/stats-*.txt; SUMMARY.json; audit-final.log.
 Obejrzano kontakty wszystkich 160 par i wybrane pełne PNG w 4 stanach; VISUAL-REVIEW.md = samokrytyka, nie niezależna recenzja.

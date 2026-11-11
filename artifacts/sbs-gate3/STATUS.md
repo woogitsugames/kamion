@@ -40,3 +40,6 @@ NEXT: pwsh artifacts/sbs-gate3/rerender-r3.ps1
 
 Step 14: final R3 complete, all 160 frames/sheets decode and source/comparison/render/camera hashes match; 40 distinct original hashes. Final authored coverage and complete per-state stats in SUMMARY.json; 27 poses changed from r0. Updated ADR/licenses/references and honest self-review (gate NOT accepted). Full GIS final sweep running; no Unity remains for this worktree, settings restored.
 NEXT: Get-Content artifacts/sbs-gate3/pytest-final.log -Tail 10
+
+Step 15 COMPLETE: final full GIS 380 passed, 1 existing xfailed (601.07 s); refs 51/51 and EditMode 226/226. Final audit validates 40 distinct real photos, 40 rectified sources, 160 renders/sheets with matching hashes and all 160 stats entries; all 4-state overviews and key full before/after PNGs viewed. Final camera inputs + Unity logs + EditMode XML included in artifact bundle. No runtime/world changes, no merge/push/adb. Independent leader review and owner gate acceptance remain explicitly open.
+NEXT (leader, after review): git merge gpt-sbs-gate3
