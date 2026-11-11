@@ -101,3 +101,4 @@ Zapisano final-medium Medium overcast, kod wejściowy zgodny z fingerprintem. Na
 Zapisano final-medium Medium clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano final-dusk Low dusk, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano final-dusk High dusk, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Zapisano kontrolę pigmentu no-pane. Następny krok: porównać amplitudę odbicia ON/OFF i wybrać poprawkę lakieru na podstawie wyniku.
