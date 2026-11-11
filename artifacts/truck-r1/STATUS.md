@@ -63,3 +63,5 @@ Zapisano drl-power-2000 Low overcast, kod wejściowy zgodny z fingerprintem. Nas
 Zapisano drl-power-2000 High overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 
 Krok 24: DRL 2000 dał 1214→0 przyciętych pikseli High-overcast i 0→0 Low, lecz niezależna ocena wskazała zbyt słaby sygnał światła dziennego oraz miejscami wygląd jasnego plastiku. Nie uznano go za wariant docelowy. Kolejny ograniczony wariant roboczy: 4000 dzień / 1400 noc, bez dodawania profilu lub efektu shaderowego. Następny krok: drl-power-4000 Low/High overcast i clear; potem ocena całego frontu oraz paska.
+
+Krok 25: procedura renderowania normalizuje listy profili i świateł przekazywane przez natywne pwsh -File oraz sprawdza komplet wskazanych kamer przy wznawianiu. Pierwsze wywołanie overcast,clear zostało zatrzymane przez walidację argumentów przed zajęciem slotu i startem Unity. Następny krok: ponowić drl-power-4000 w obu pogodach.

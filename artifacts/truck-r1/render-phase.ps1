@@ -1,10 +1,14 @@
 param(
     [ValidatePattern('^[a-z0-9-]+$')] [string]$Stage = 'fog-only',
-    [ValidateSet('Low','Medium','High')] [string[]]$Tiers = @('Low','High'),
-    [ValidateSet('overcast','clear','lowsun','dusk')] [string[]]$Lighting = @('overcast'),
+    [string[]]$Tiers = @('Low','High'),
+    [string[]]$Lighting = @('overcast'),
     [string]$Cameras = 'truck-34,truck-34r,truck-front,truck-side,truck-rear34,cab-driver,chase'
 )
 $ErrorActionPreference = 'Stop'
+$Tiers = @($Tiers | ForEach-Object { $_.Split(',') } | ForEach-Object { $_.Trim() })
+$Lighting = @($Lighting | ForEach-Object { $_.Split(',') } | ForEach-Object { $_.Trim() })
+if (!$Tiers.Count -or @($Tiers | Where-Object { $_ -notin @('Low','Medium','High') }).Count) { throw 'Nieprawidłowy profil.' }
+if (!$Lighting.Count -or @($Lighting | Where-Object { $_ -notin @('overcast','clear','lowsun','dusk') }).Count) { throw 'Nieprawidłowe światło.' }
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
 $slotScript = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $sources = @('game/Assets/_Project/Rendering/Shaders/TruckExterior.shader','game/Assets/_Project/Rendering/Shaders/TruckGlass.shader','game/Assets/_Project/Vehicle/Runtime/TruckLights.cs')
@@ -14,6 +18,9 @@ foreach ($tier in $Tiers) {
         $fingerprint = ((Get-FileHash -LiteralPath $sources -Algorithm SHA256).Hash -join "`n")
         if (Test-Path "$output/complete.ok") {
             if ((Get-Content "$output/complete.ok" -Raw).Trim() -ne $fingerprint.Trim()) { throw 'Kod zmieniony: wybierz nową nazwę Stage.' }
+            foreach ($camera in $Cameras.Split(',')) {
+                if (!(Test-Path "$output/$camera.png")) { throw 'Brakuje kamery w istniejącym etapie; wybierz nową nazwę Stage.' }
+            }
             continue
         }
         pwsh $slotScript -Acquire -Owner gpt-truck -StaleHours 100000 -PollSeconds 5
