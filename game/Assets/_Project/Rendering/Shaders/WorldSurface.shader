@@ -181,7 +181,7 @@ Shader "Kamion/World Surface"
                     half3 detail = (2.0 * det) * (1.0 + _MacroStrength * m);
                     albedo = lerp(albedo, albedo * _DryTint.rgb, k.b * 0.8);
                     // Same ground-mask response as World PBR; no extra samples or passes.
-                    albedo = KamionGrassDryMatter(albedo, k, detail.r, 1.0h);
+                    albedo = KamionGrassDryMatter(albedo, k, detail.r, 1.0h, half3(1.0h, 1.0h, 1.0h));
                     albedo = lerp(albedo, half3(0.085, 0.072, 0.045) * detail, k.g);
                     albedo = lerp(albedo, half3(0.13, 0.11, 0.085) * detail, k.a);
                     half grit = KamionGrassGrit(k, macro);

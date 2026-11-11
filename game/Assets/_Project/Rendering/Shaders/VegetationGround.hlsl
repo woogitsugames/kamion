@@ -2,13 +2,13 @@
 // R = road/yard distance /20m; G forest; B mowing/dryness; A mapped exposed ground.
 #ifndef KAMION_VEGETATION_GROUND_INCLUDED
 #define KAMION_VEGETATION_GROUND_INCLUDED
-half3 KamionGrassDryMatter(half3 green, half4 ground, half detail, half strength)
+half3 KamionGrassDryMatter(half3 green, half4 ground, half detail, half strength, half3 linearTint)
 {
     // ADR0109: metre-scale B controls a blend of living blades and straw,
     // rather than only a small hue multiplier. Linear albedo WORKING_VALUE;
     // detail comes from the caller's existing sample (no added texture fetch).
     half dry = smoothstep(0.18h, 0.92h, ground.b);
-    half3 straw = half3(0.145h, 0.125h, 0.055h) * detail;
+    half3 straw = half3(0.145h, 0.125h, 0.055h) * detail * linearTint;
     return lerp(green, straw, dry * 0.65h * saturate(strength));
 }
 half KamionGrassExposure(half4 ground)
