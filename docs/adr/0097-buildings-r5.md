@@ -27,7 +27,9 @@ Rozpoznanie (baza = main `0e73211a` z ADR 0086, `artifacts/buildings-r13/base/`)
    Filary między oknami bez zmian (zacieki spod attyki jak dotąd). `facade_kit.plinth_drip`: profil startowy
    ocieplenia nad cokołem, 3,5 cm przed licem, front + spód w ciemnej obróbce (spód patrzy w dół → linia cienia),
    przerwany na drzwiach. Cokół 0,20 → 0,24, strefa rozbryzgu 0,5 → 0,8 m (stały mnożnik shadera: jaśniejsza baza
-   daje więcej poziomów rozbryzgu). `facade_kit.wall_apron`: opaska z kostki 0,5 m wokół bloków, położona na terenie.
+   daje więcej poziomów rozbryzgu). `facade_kit.wall_apron` (opaska z kostki 0,5 m wokół bloków) jest napisana, ale
+   **wyłączona** (`BLOCK_APRON = False`): położona na polu wysokości zapadała się pod siatkę terenu i wychodziła jasnymi
+   łatami na skarpie (r2 `r10_block_5`).
 2. **Jeden typ balustrady na budynek (P1-b)** — `facade_atlas`: grupy wierszy `balcony_1/6/3` (blacha trapezowa
    biała, płyty włóknocementowe, szkło mrożone), po 2 wiersze (row atlas 14 → 16 wierszy); wpis „bal” niesie tylko
    wariant drzwi/okna. Typ budynku: para typów na osiedle (komórka 250 m), budynek bierze pierwszy w 70 %
@@ -36,7 +38,8 @@ Rozpoznanie (baza = main `0e73211a` z ADR 0086, `artifacts/buildings-r13/base/`)
 3. **Dach wielopołaciowy (P1-c, P2-c)** — `roofs.MultiRoof`: rzut prawie prostokątny (krawędzie ±11°) rozkładany na
    prostokąty (siatka ze skupionych współrzędnych ścian, zachłannie największe pole, ≤ 4 części, części węższe niż
    1 m pomijane); każda część to dach dwuspadowy nad swoim prostokątem, skrzydło przy dłuższej ścianie głównej bryły
-   ma kalenicę prostopadle i sięga do kalenicy głównej, kalenica skrzydła ≤ kalenica główna − 0,3 m. Dach = **górna
+   ma kalenicę prostopadle i sięga do kalenicy głównej, kalenica skrzydła ≤ kalenica główna − 0,3 m; pole części
+   sięga 1,2 m poza jej prostokąt (ściany rzutu odchodzą od siatki). Dach = **górna
    obwiednia** części: max dwóch połaci zagina się w górę, więc kosz powstaje sam, a kalenica skrzydła ginie w połaci
    głównej. Kosze dostają pas obróbki 2 × 0,18 m. Gdy obwiednia nie pokrywa całego okapu (ściany za daleko od siatki)
    — dawny pojedynczy dach. Deska czołowa przy dachówce = materiał podbitki (`soffit_boards`): jeden kolor desek
@@ -56,3 +59,54 @@ Rozpoznanie (baza = main `0e73211a` z ADR 0086, `artifacts/buildings-r13/base/`)
 
 WORKING_VALUE: skala zacieków parapetowych, wymiary kapinosu i opaski, 12 % wyjątków, komórka osiedla 250 m,
 70/30, wagi palety domów, zasięg części dachu 1,2 m, min. część 1 m, kalenica skrzydła −0,3 m, wymiary podestu.
+
+## Liczby (edytor; nic z telefonu)
+Rundy: base (main) → r1 → r2 → r3 (= stan końcowy: r2 bez opaski). Dowody `artifacts/buildings-r13/<runda>/`.
+
+| miara | base | r1 | r2 | r3 |
+|---|---|---|---|---|
+| balkony w regionie | 2369 | 3413 | 3413 | R3_BAL |
+| domy: MultiRoof / dwuspad. / czterosp. / jednosp. / płaskie | 0 / 200 / 30 / 36 / 4 | 98 / 102 / 30 / 36 / 4 | = | = |
+| region High: submeshe / mln tris | (r12 r3b: 4025 / 13,96) | 4025 / 14,04 | 4038 / 14,03 | R3_HIGH |
+| region Low: submeshe / mln tris | (r12 r3b: 3004 / 4,490) | 3006 / 4,489 | 3006 / 4,489 | R3_LOW |
+| budżet Low, 57 kamer: draws | 16688 | 16683 (−0,0 %) | 16697 (+0,1 %) | R3_DRAWS |
+| budżet Low: tris (maks. kamera) | 15117 k | +0,6 % (r10_block_2 +3,0 %) | +0,6 % (r10_block_3 +2,8 %) | R3_TRIS |
+| cokół `r10_block_3` High overcast (sRGB) | 63,9 | 69,4 | — | R3_PLINTH |
+| rozbryzg cokołu, góra − dół pasa (luma) | 8,4 | 11,7 | 11,0 | R3_SPLASH |
+| szczyt `r10_house_2` High clear, średnio / p99 R | 232/221/193, 255 | 220/211/189, 253 | — | — |
+
+- Paleta domów (270, `palette_stats.py`): ciepłe (krem + beż) 63 % → 48 %; najbliższy sąsiad z tą samą ścianą
+  24 % → 0 %, z tym samym dachem 39 % → 1 %.
+- Row atlas `facade_far`: 40,2 → 45,8 m wysokości, GPU (ASTC + mipy) High 4,95 → 5,64 MB, Medium 1,59 → 1,82 MB,
+  Low 0,59 → 0,67 MB (+14 %).
+- Tynk, cegła, niebo bez zmian (`measure.py`: szary tynk 128,0 / 131,9, cegła R/B 1,66).
+- Testy: `pytest tests/gis` (r2) 380 passed, 1 xfailed; `test_buildings_r5.py` 10 testów. EditMode: R3_EDIT.
+
+## Samokrytyka (docs/06)
+- **Bez `visual-critic` i bez telefonu** (zakaz subagentów; A16 robi lider). Oceny wyłącznie moje.
+- **Zacieki pod parapetami są subtelne** (siła z shadera × 0,6 dla tynków — nie zmieniałem shadera ani importera);
+  z 10–30 m czytelne pod oknami bloków, przy pełnym słońcu słabsze. Narożników nie dotknąłem.
+- **P2-g tylko częściowo**: kapinos i rozbryzg tak; cokół 2 m na skarpie to dalej jedna płaszczyzna, opaska wyłączona.
+- **MultiRoof** obejmuje 98 domów; rzuty bez prostokątnej siatki (± 11°) albo z dziurą w pokryciu zostają przy
+  jednym polu (dawne zachowanie). Kosze oglądane tylko z kamer `r13_house2_*` i z wykresu `roof_plot.png`;
+  część rzutów rozkłada się na 3–4 części z małymi daszkami nad uskokami ≥ 1 m — mogą wyglądać „rozdrobnione”.
+- **Wyjątki balustrad 12 %** to reguła, nie dane; typy na osiedle z siatki 250 m, nie z granic osiedli.
+- **P2-e**: krem −8 % zbił średnią szczytu o 12 poziomów R, ale p99 dalej 253 — reszta to ekspozycja clear (0098).
+- **P2-f** zdiagnozowane jako aliasing mapy cieni od obróbki attyki, nie maska — nienaprawione (rendering).
+- Opaska kosztowała +13 submeshy High (osobna siatka `buildings|sidewalk_paving`) i nie działała wizualnie — wyłączona.
+
+## Otwarte / do decyzji lidera
+- visual-critic + zrzut z A16 (pkt 8).
+- Rendering (ADR 0098): ekspozycja clear, pieprz High, piła cienia pod obróbką attyki (P2-f, `base/crop_fence2_lc.png`).
+- Opaska wokół bloków: wymaga wysokości siatki terenu (albo wycięcia terenu) — `BLOCK_APRON`.
+- Cokół na skarpie: pas cokołu + ściana piwnicy (P2-g) — niezrobione.
+- Po scaleniu: `build_all.py --only facade_atlas,facade_far` → `build_world` → `import-region`.
+
+## Przewidywane konflikty
+- `tools/worldgen/streetscape/materials.py`: tylko blok dopisany na końcu (krem, `plinth_dark` kolor i `splash_h`);
+  konflikt tylko, gdy 0086/0098 też dopisują na końcu pliku albo zmienią `plinth_dark` / `plaster_cream` (moje
+  przypisania w miejscu nadpiszą ich wartości — do uzgodnienia przy scaleniu).
+- `tests/gis/test_world_v31.py` (`test_r3_materials` — `splash_h` cokołu 0,8; `test_far_plan…` — `is_bal`),
+  `tests/gis/test_buildings_r4.py` (MULTI wyłączone w teście okapu, cokół 0,24, balkon 16 tris).
+- `art-source/world/materials/materials_spec.json` (rozmiary facade_atlas / facade_far) — regenerowany plik.
+- `WorldPbrMaterials.cs`, `WorldPBR.shader`, `WorldSurface.shader` — bez zmian.
