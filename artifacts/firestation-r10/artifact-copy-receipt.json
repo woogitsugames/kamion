@@ -3,7 +3,7 @@
   "mode": "robocopy /E /XJ /R:1 /W:1; no MIR",
   "selected_sha256": {
     "REPORT.md": "3712e1997179a96c82d6e49bdf03cff67ef8a864d6170ccdb05a2e477adc3f07",
-    "STATUS.md": "503d0b2e42b2489a9eb1e673f7f2cce7daa650807c09a5efc67cad3b5d5b0ed3",
+    "STATUS.md": "761362df5ce9b499eba76f6e52dd79c9a3f34a922bd6400b90755acfdf899809",
     "REVIEW.md": "0da78a8c72f09bd33e5dd132d4f67df7e3ccc0a156d9239b96adfe8f945d1cc2",
     "SELF-REVIEW.md": "70ec35b251f58e32fcb7fc8fb57aa3e3a342fbbc7e2132474cb155bd9018fbd1",
     "editmode-final.xml": "d616a08cb84e178ba26ce93921d1310c1ebf93305f0e8ab4f1a393195b12a6c0",
@@ -31,7 +31,9 @@
     "G-r4-high-pairs-960/independent-input-pose-check.json": "530b6f1757d31b865909c75b44e9b334e73cfc686fde76f05a4679a0616ffc18",
     "G-r4-high-pairs-960/view-inputs.json": "51af7c7500ee11eebba1c7b5be64d8aa6245805e21c9ac150a1b9c30bfb92e2f",
     "D-FINAL-HIGH-REVIEW.md": "73673e68de23f8e3abc6ba8699428c69ab02b976ff308f6ffd97f009e459c3ea",
-    "D-final-high-inputs.json": "4d288cd1772113e8bff455e8f5c49ca9a10b9ae9a88fce1593d526f9a9428225"
+    "D-final-high-inputs.json": "4d288cd1772113e8bff455e8f5c49ca9a10b9ae9a88fce1593d526f9a9428225",
+    "G-PLATE-R4-PREFLIGHT.md": "b6558299e49f41c7f1aaa9902831202bff60ed2cb253cbd8363273c274cc7253",
+    "G-plate-native-uv-proof.json": "f20d3064fab45e226f45528e554140f58256acf19b809c157cac3fdb0876b8f8"
   },
   "png_inventory": {
     "before": 160,
@@ -48,5 +50,5 @@
       "not_overwritten": true
     }
   },
-  "doc_extension": "Step62: D final High186 independent review. 16 original size-only sheets and10 full-pair previews copied; no source or Unity changes."
+  "doc_extension": "Step63: G R4 P2 plate binding/native UV preflight; explicit UV1 plan only, no source activation."
 }
