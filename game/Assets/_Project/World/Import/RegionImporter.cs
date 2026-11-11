@@ -295,12 +295,13 @@ namespace Game.World.Import
                 mat.SetVector("_SkyOcc", new Vector4((float)Num(so[0]), (float)Num(so[1]), 0f, 0f));
                 EditorUtility.SetDirty(mat);
             }
-            // ADR 0123: manifest "cast_shadows": false = the material is left out of the shadow pass (alpha-tested railing
-            // bars of the hero viaduct drew a checkerboard on the cap at the Low shadow resolution, REVIEW s10-0117 P1-1).
-            // Always written, so a reimport at the same asset path restores the pass when the key is gone.
-            if (mat != null)
+            // ADR 0123: manifest "cast_shadows": false is honoured per submesh by the instance set
+            // (InstanceImporter -> WorldInstanceSet.noShadowMaterials): URP's material validation re-enables the
+            // ShadowCaster pass of an opaque Lit material, so it cannot be stored on the material asset.
+            // ADR 0123: manifest "shadow_low": false = no shadow casting on the Low tier (Kamion/World PBR _LowNoShadow)
+            if (mat != null && mat.HasProperty("_LowNoShadow"))
             {
-                mat.SetShaderPassEnabled("ShadowCaster", !(m.Get("cast_shadows") is bool cs && !cs));
+                mat.SetFloat("_LowNoShadow", m.Get("shadow_low") is bool sl && !sl ? 1f : 0f);
                 EditorUtility.SetDirty(mat);
             }
             // ADR 0123: manifest "vertex_grime": [r, g, b, roughness gain] = road film where the mesh carries COLOR_0.r

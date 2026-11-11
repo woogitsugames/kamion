@@ -1424,14 +1424,16 @@ overrides:
     verify: owner drive
   - id: dk8-ramp-split-barrier-n
     kind: guardrail
-    polyline_en: [[-750.0, 77.4], [-755.0, 77.1], [-765.0, 76.85], [-775.0, 76.7], [-778.5, 76.7]]
+    polyline_en: [[-756.0, 77.05], [-765.0, 76.85], [-775.0, 76.7], [-778.5, 76.7]]
     reason: >-
       ADR 0123 (REVIEW s10-0117 P1-4, p0_kerb_merge_eye): second rail of the separator dk8-ramp-split-island, on its
       ramp side. The 0.08 m orthophoto (artifacts/junctions-r6/ortho/kerb_merge.jpg, kerb_merge_e.jpg) has two rails
       from the nose at E -779.5 N 76.4: the north one at N 76.6-76.9 running into the barrier of the ramp deck
       (expansion joint at E -752), the south one at N 75.0-74.5 into the barrier of the DK8 deck (that is
-      dk8-ramp-split-barrier). Drawn east to west (ramp carriageway on the right); starts where the generated barrier
-      of the ramp deck begins (E -750.0 N 77.45, c:w240542867 R) and meets the south rail before the nose.
+      dk8-ramp-split-barrier). Drawn east to west (ramp carriageway on the right); starts at the east end of the
+      generated island (E -756): the generated ground between the island and the ramp deck (E -755...-750) lies
+      lower than both, a rail carried across it dived and twisted (build b2) - 6 m of the real rail are missing there.
+      Meets the south rail before the nose.
     confidence: medium
     verify: owner drive
   - id: dk8-e-split-p21-side

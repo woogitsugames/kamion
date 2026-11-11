@@ -75,6 +75,11 @@ MATERIALS = {
                       "texture_set": "kerb_concrete_1m"},
     "sidewalk_paving": {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones",
                         "texture_set": "paving_20x10_grey"},
+    # ADR 0123: kerb of a bridge deck (curb_concrete triangles of the bridge layer, renamed in assemble()). Mapillary
+    # 454716650857984: kerb / asphalt sRGB luminance 1.40 (overcast); 2948595898752384 (sun): 1.35. The plain kerb
+    # (0.28) read 1.6. WORKING_VALUE, matched in the frames r4_deck_bz_eye / _eye2.
+    "bridge_kerb": {"color": [0.19, 0.186, 0.176], "rough": 0.9, "surface": "concrete_kerb",
+                    "texture_set": "kerb_concrete_1m"},
     "apron_sett": {"color": [0.27, 0.24, 0.21], "rough": 0.9, "surface": "sett"},
     # viaducts: precast-concrete modulation map projected in world metres (the deck / pier meshes have no metric UV);
     # albedo from the CC0 Bieżeństwa photo (piers mid grey, soffit in its own shadow, REVIEW r3 W4). WORKING_VALUE
@@ -103,7 +108,7 @@ MATERIALS = {
     # overcast photo (454716650857984: beam / asphalt 1.4-1.5) and sunny ones (2948595898752384: sunlit beam 1.5 x
     # asphalt, shaded 0.6 x; 500263111404933 from below: beam / grass 3-4).
     "barrier_steel": {"color": [0.50, 0.505, 0.51], "rough": 0.56, "metal": 1.0, "surface": "steel",
-                      "texture_set": "barrier_galv", "set_tile": True, "set_metal": 0.9},
+                      "texture_set": "barrier_galv", "set_tile": True, "set_metal": 0.9, "shadow_low": False},
     "verge_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
     "shoulder_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     "terrain_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
@@ -175,7 +180,11 @@ def assemble(parts, layers, half):
         ci, cj = chunk_of(cen[:, 0], cen[:, 1], half)
         for key in sorted(set(zip(ci.tolist(), cj.tolist()))):
             sel = (ci == key[0]) & (cj == key[1])
-            g = groups.setdefault((key, p.layer, p.mat), [])
+            # ADR 0123: kerbs on a deck are exported as `bridge_kerb` (same kerb set, darker: road film, REVIEW
+            # s10-0117 P1-3) - a rename at export only, so every QA / fidelity rule keyed on curb_concrete still
+            # sees them; the bridge mesh had a curb_concrete primitive for exactly these triangles (no extra draw)
+            mat_out = "bridge_kerb" if (p.layer == "bridge" and p.mat == "curb_concrete") else p.mat
+            g = groups.setdefault((key, p.layer, mat_out), [])
             g.append((pi, p.V, N, p.UV, p.T[sel], p.UV1, p.COL))
     out = {}
     for (key, layer, mat), items in sorted(groups.items()):

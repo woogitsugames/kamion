@@ -61,6 +61,7 @@ Shader "Kamion/World PBR"
         _DripBand ("Lane-centre oil / soot drip band between the wheel paths (_ROADWEAR)", Range(0, 1)) = 0
         _Grime ("Ground grime (_GRIME): x damp darkening, y damp threshold (macro pool), z joint dirt, w damp gloss", Vector) = (0.45, 0.62, 0.3, 0.5)
         _SkyOcc ("Sky occlusion: x down-facing ambient, y horizon reflection (0 = off; ADR 0060)", Vector) = (0, 0, 0, 0)
+        _LowNoShadow ("No shadow casting below the world-detail tier (Low; ADR 0123)", Float) = 0
         _VertexGrime ("Vertex grime (_VERTEX_GRIME, COLOR_0.r): rgb grime albedo (linear), w roughness gain (ADR 0123)", Vector) = (0.1, 0.1, 0.09, 0.3)
         _AgeTint ("Patch age target / base albedo ratio", Float) = 2.0
         _DecalAlpha ("Decal opacity", Range(0, 1)) = 1
@@ -107,6 +108,7 @@ Shader "Kamion/World PBR"
             float4 _PaintColor, _PaintWear;
             float4 _Grime, _SkyOcc;
             float4 _VertexGrime;
+            float _LowNoShadow;
             float _DripBand;
             float4 _CarPaint, _CarFlake, _PearlTint;
             float _OffsetFactor, _OffsetUnits, _SrcBlend, _DstBlend, _ZWrite, _Cull, _ReceiveShadows;
@@ -783,6 +785,7 @@ Shader "Kamion/World PBR"
             #pragma fragment ShadowFrag
             #pragma multi_compile_instancing
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
+            #pragma multi_compile_vertex _ _KAMION_WORLD_DETAIL
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
 
             float3 _LightDirection;
@@ -807,6 +810,12 @@ Shader "Kamion/World PBR"
                 cs.z = min(cs.z, UNITY_NEAR_CLIP_VALUE);
             #else
                 cs.z = max(cs.z, UNITY_NEAR_CLIP_VALUE);
+            #endif
+            #if !defined(_KAMION_WORLD_DETAIL)
+                // ADR 0123 (REVIEW s10-0117 P1-1): on the Low tier the shadow map cannot resolve the two beams of a
+                // deck barrier 0.2 m apart - their shadow fell on the cap as a checkerboard (r4_deck_bz_eye2). Materials
+                // flagged _LowNoShadow (manifest "shadow_low": false) cast nothing there: all vertices collapse.
+                if (_LowNoShadow > 0.5) cs = float4(-2.0, -2.0, -2.0, 1.0);
             #endif
                 o.positionCS = cs;
                 return o;

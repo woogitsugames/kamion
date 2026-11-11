@@ -1,0 +1,202 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-industrial-c",
+ "frame": "local E,N,U (EPSG:2180 minus region origin; U absolute EVRF2007 NMT + height, re-seated by raycast unless seat=file)",
+ "note": "ADR 0093 junction cameras: every junction from above + driver's eye; owner-video spots p0_lamp_putry_eye/top (lamp on the viaduct E -589 N 19.5) and p0_kerb_merge_eye/top (kerb E -782 N 77.5). Same cameras before / after.",
+ "cameras": [
+  {
+   "id": "p0_lamp_putry_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "seat": "file",
+   "fov_deg": 55.0,
+   "note": "owner video ~93-100 s: lamp in the left lane on the viaduct, was at E -588.9 N 19.5. ADR 0095: the deck is now the measured 2 lanes (was 11.5 m: the old camera spot is on the barrier line); camera in the left lane",
+   "pos": [
+    -543.2,
+    11.0,
+    143.05
+   ],
+   "look_at": [
+    -575.8,
+    34.1,
+    141.9
+   ]
+  },
+  {
+   "id": "p0_kerb_merge_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "owner video ~105-112 s: kerb across the carriageway, was at E -781.7 N 77.5. ADR 0095: camera on the ramp lane from Rondo Putry (measured placement), separator nose on its left",
+   "pos": [
+    -745.0,
+    80.6,
+    143.5
+   ],
+   "look_at": [
+    -790.0,
+    78.5,
+    141.6
+   ]
+  },
+  {
+   "id": "eye_putry_n",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "ADR 0093: Putry N arm, driver's eye heading south to the ring. ADR 0095: moved from the median (E -552) to the southbound carriageway",
+   "pos": [
+    -561.5,
+    138.0,
+    139.5
+   ],
+   "look_at": [
+    -565.5,
+    108.0,
+    138.0
+   ]
+  },
+  {
+   "id": "r2_fork_link_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "ADR 0095: link to Rondo Putry after the fork, P-21 band and separator on the left (route s ~1440)",
+   "pos": [
+    -343.1,
+    -132.9,
+    134.3
+   ],
+   "look_at": [
+    -375.2,
+    -109.1,
+    133.4
+   ]
+  },
+  {
+   "id": "r2_kerb_merge_main_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "ADR 0095: main carriageway west of the separator nose, ramp lane joining on the right behind the solid line",
+   "pos": [
+    -760.0,
+    72.0,
+    143.0
+   ],
+   "look_at": [
+    -810.0,
+    74.5,
+    141.8
+   ]
+  },
+  {
+   "id": "r4_pier_bz",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "fov_deg": 73.7398,
+   "pos": [
+    575.67,
+    -714.93,
+    141.58
+   ],
+   "look_at": [
+    548.39,
+    -689.22,
+    155.54
+   ],
+   "note": "ADR 0110: pose of gate-3 side-by-side frame 177786140912399 (ADR 0103 camera), barriers (priority 4)"
+  },
+  {
+   "id": "r4_deck_bz_eye2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "fov_deg": 38.52954,
+   "pos": [
+    537.04,
+    -701.83,
+    147.28
+   ],
+   "look_at": [
+    502.17,
+    -682.55,
+    150.72
+   ],
+   "note": "ADR 0110: pose of gate-3 side-by-side frame 2948595898752384 (ADR 0103 camera), barriers (priority 4)"
+  },
+  {
+   "id": "r4_deck_bz_eye",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "fov_deg": 52.43723,
+   "pos": [
+    503.5,
+    -680.91,
+    146.61
+   ],
+   "look_at": [
+    467.56,
+    -664.09,
+    151.69
+   ],
+   "note": "ADR 0110: pose of gate-3 side-by-side frame 454716650857984 (ADR 0103 camera), barriers (priority 4)"
+  },
+  {
+   "id": "r4_link_bz_a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "fov_deg": 73.7398,
+   "pos": [
+    521.93,
+    -679.07,
+    141.37
+   ],
+   "look_at": [
+    488.62,
+    -696.74,
+    154.7
+   ],
+   "note": "ADR 0110: pose of gate-3 side-by-side frame 500263111404933 (ADR 0103 camera), barriers (priority 4)"
+  },
+  {
+   "id": "r4_link_bz_b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "fov_deg": 73.7398,
+   "pos": [
+    490.08,
+    -662.12,
+    141.55
+   ],
+   "look_at": [
+    458.98,
+    -683.46,
+    154.88
+   ],
+   "note": "ADR 0110: pose of gate-3 side-by-side frame 1259231227807789 (ADR 0103 camera), barriers (priority 4)"
+  },
+  {
+   "id": "r4_putry_nose_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "seat": "file",
+   "fov_deg": 55.0,
+   "pos": [
+    -558.5,
+    146.0,
+    138.6
+   ],
+   "look_at": [
+    -554.0,
+    128.0,
+    136.6
+   ],
+   "note": "ADR 0110: Putry N southbound, left lane, towards the end of the north median at the crossover (P1-1a)"
+  }
+ ]
+}

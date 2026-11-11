@@ -136,6 +136,7 @@ namespace Game.World.Import
             var protoIndex = new Dictionary<string, int>();
             var protos = new List<WorldInstanceSet.Prototype>();
             var materials = new List<Material>();
+            var noShadow = new List<int>();
             var colMeshes = new Dictionary<string, Bounds?>();
             var contactOf = new Dictionary<int, int>();   // vehicle prototype -> its contact patch prototype (ADR 0050)
             long bytes = 0;
@@ -171,6 +172,11 @@ namespace Game.World.Import
                     foreach (var prim in n.Primitives)
                     {
                         var mat = ProtoMaterial(r, g, prim.Material, out bool textured);
+                        // ADR 0123: manifest "cast_shadows": false (alpha-tested railing bars of the hero viaduct). The
+                        // URP material validation turns the ShadowCaster pass of an opaque Lit material back on, so
+                        // the flag lives with the instance set and WorldInstances draws the submesh without shadows.
+                        if (prim.Material != null && r.MaterialDefs.TryGetValue(prim.Material, out var mdef) && mdef.Get("cast_shadows") is bool castSh && !castSh)
+                            noShadow.Add(materials.Count);
                         materials.Add(mat);
                         uv |= textured;
                         // ADR 0071 r11: wall-top / sill run-off space of the hero hall (TEXCOORD_1, only where the
@@ -415,6 +421,7 @@ namespace Game.World.Import
                 if (!hlodUsed[hi]) cells.Add(new WorldInstanceSet.Cell { bounds = hlods[hi].mesh.bounds, runStart = runs.Count, runCount = 0, hlod = hi + 1 });
             set.prototypes = protos.ToArray();
             set.materials = materials.ToArray();
+            set.noShadowMaterials = noShadow.ToArray();
             set.cells = cells.ToArray();
             set.runs = runs.ToArray();
             // compact TRS in the asset (26 B instead of 64 B per instance, ADR 0025); full matrices only when a matrix does not round-trip
