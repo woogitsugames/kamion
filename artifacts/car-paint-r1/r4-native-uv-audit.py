@@ -3,10 +3,12 @@ from pathlib import Path
 import hashlib
 import json
 import re
+import sys
 import numpy as np
 
 ROOT=Path(__file__).resolve().parents[2]
-WORLD=ROOT/'game/Assets/_Generated/World/bialystok-industrial-c'
+tag=sys.argv[1] if len(sys.argv)>1 else 'current'
+WORLD=(ROOT/'artifacts/car-paint-r1/r4-native-before-snapshot') if tag=='before' else ROOT/'game/Assets/_Generated/World/bialystok-industrial-c'
 path=WORLD/'Instances.asset'
 text=path.read_text()
 documents=re.findall(r'^--- !u!(\d+) &(-?\d+)\n(.*?)(?=^---|\Z)',text,re.M|re.S)
@@ -62,11 +64,13 @@ for block in re.split(r'^  - name: ',proto,flags=re.M)[1:]:
             assert v.min()>=0 and v.max()<1,'Unexpected texture-V wrap crossing'
             fraction=v-np.floor(v)
             source_v=fraction*2.5
+            geometry_hash=hashlib.sha256(position.astype('<f4').tobytes()+normal.astype('<f4').tobytes()+uv.astype('<f4').tobytes()+rawindex).hexdigest()
             rows.append(dict(prototype=name,lod=lod,material=material,tile=tile,stride=stride,
                 uv0_min=sampled.min(0).tolist(),uv0_max=sampled.max(0).tolist(),
                 repeated_v_min=float(fraction.min()),repeated_v_max=float(fraction.max()),
                 source_map_v_min_m=float(source_v.min()),source_map_v_max_m=float(source_v.max()),
-                samples_legacy_gutter=bool(np.any(source_v<.05)),vertex_buffer_sha256=hashlib.sha256(raw).hexdigest()))
+                samples_legacy_gutter=bool(np.any(source_v<.05)),vertex_buffer_sha256=hashlib.sha256(raw).hexdigest(),
+                geometry_normal_uv0_index_sha256=geometry_hash))
 assert len(rows)==81,len(rows)
 assert not any(r['samples_legacy_gutter'] for r in rows)
 out=dict(method='Actual serialized native Instances.asset Float16 TexCoord0, index-selected paint submeshes and material GUID-bound Tile',
@@ -75,5 +79,5 @@ out=dict(method='Actual serialized native Instances.asset Float16 TexCoord0, ind
     native_tile_values=sorted({tuple(r['tile'][:2]) for r in rows}),
     all_vertex_and_affine_triangle_ranges_outside_gutter=True,
     note='Level0 coordinate range proof. Does not establish mip-identical filtering or fragment GPU binding; derivative/mip footprints can extend beyond a point sample.',rows=rows)
-(ROOT/'artifacts/car-paint-r1/r4-native-uv0-tile-proof.json').write_text(json.dumps(out,indent=2)+'\n')
+(ROOT/f'artifacts/car-paint-r1/r4-native-uv0-tile-proof-{tag}.json').write_text(json.dumps(out,indent=2)+'\n')
 print(json.dumps({k:v for k,v in out.items() if k!='rows'}))

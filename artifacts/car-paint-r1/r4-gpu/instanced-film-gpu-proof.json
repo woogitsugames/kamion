@@ -1,0 +1,564 @@
+{
+    "unity": "6000.3.28f1",
+    "graphics": "Direct3D12",
+    "shaderSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+    "instancesSha256": "ffc09c7d60313cbfd06b6ac630889fc65eb094e02464c4da09b39ae95297c916",
+    "method": "Graphics.RenderMeshInstanced, same RenderParams/instance matrix path as WorldInstances.Flush; actual imported matrices, actual source vertex film function",
+    "note": "Numeric diagnostic viewport/fragment adapter only, linear float RT without lighting/post. Full actual vehicle input coverage plus same-prototype LOD0/1/2 meshes and rebased inputs. Not performance or device proof.",
+    "instanceCount": 1009,
+    "cpuCounts": [
+        100,
+        369,
+        329,
+        211
+    ],
+    "gpuCounts": [
+        100,
+        369,
+        329,
+        211
+    ],
+    "maximumLevelError": 0.0,
+    "cases": [
+        {
+            "label": "actual-car_hatch_black-LOD0",
+            "shift": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD1",
+            "shift": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD2",
+            "shift": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD0",
+            "shift": {
+                "x": 1024.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD1",
+            "shift": {
+                "x": 1024.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD2",
+            "shift": {
+                "x": 1024.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD0",
+            "shift": {
+                "x": -1024.0,
+                "y": 0.0,
+                "z": 1024.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD1",
+            "shift": {
+                "x": -1024.0,
+                "y": 0.0,
+                "z": 1024.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD2",
+            "shift": {
+                "x": -1024.0,
+                "y": 0.0,
+                "z": 1024.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD0",
+            "shift": {
+                "x": 4096.0,
+                "y": 0.0,
+                "z": -4096.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD1",
+            "shift": {
+                "x": 4096.0,
+                "y": 0.0,
+                "z": -4096.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD2",
+            "shift": {
+                "x": 4096.0,
+                "y": 0.0,
+                "z": -4096.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD0",
+            "shift": {
+                "x": -4096.0,
+                "y": 0.0,
+                "z": 4096.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD1",
+            "shift": {
+                "x": -4096.0,
+                "y": 0.0,
+                "z": 4096.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD2",
+            "shift": {
+                "x": -4096.0,
+                "y": 0.0,
+                "z": 4096.0
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD0",
+            "shift": {
+                "x": 512.25,
+                "y": 0.0,
+                "z": -2048.75
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD1",
+            "shift": {
+                "x": 512.25,
+                "y": 0.0,
+                "z": -2048.75
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        },
+        {
+            "label": "actual-car_hatch_black-LOD2",
+            "shift": {
+                "x": 512.25,
+                "y": 0.0,
+                "z": -2048.75
+            },
+            "expected": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "actual": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "phase": [
+                0.9853515625,
+                0.1181640625,
+                0.7314453125,
+                0.646484375
+            ],
+            "pass": true
+        }
+    ],
+    "examples": [
+        {
+            "prototype": "car_hatch_black",
+            "level": 0,
+            "index": 731,
+            "e": 174.75399780273438,
+            "n": -1000.7760009765625,
+            "z": 134.98199462890626,
+            "worldOrigin": {
+                "x": 174.75399780273438,
+                "y": 3.8419952392578127,
+                "z": -1000.7760009765625
+            }
+        },
+        {
+            "prototype": "car_hatch_black",
+            "level": 1,
+            "index": 1868,
+            "e": 84.90299987792969,
+            "n": -937.8189697265625,
+            "z": 132.9199981689453,
+            "worldOrigin": {
+                "x": 84.90299987792969,
+                "y": 1.779998779296875,
+                "z": -937.8189697265625
+            }
+        },
+        {
+            "prototype": "car_hatch_black",
+            "level": 2,
+            "index": 572,
+            "e": -472.3940124511719,
+            "n": -1020.1740112304688,
+            "z": 127.36299896240235,
+            "worldOrigin": {
+                "x": -472.3940124511719,
+                "y": -3.7770004272460939,
+                "z": -1020.1740112304688
+            }
+        },
+        {
+            "prototype": "car_hatch_black",
+            "level": 3,
+            "index": 8908,
+            "e": 674.7960205078125,
+            "n": -523.8070068359375,
+            "z": 141.7570037841797,
+            "worldOrigin": {
+                "x": 674.7960205078125,
+                "y": 10.61700439453125,
+                "z": -523.8070068359375
+            }
+        }
+    ]
+}

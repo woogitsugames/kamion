@@ -1,0 +1,738 @@
+{
+    "method": "RenderMeshInstanced actual native paint meshes, four actual instance matrices, actual fragment opacity/UV1/keepUpper into linear float RT; CPU physical-coordinate and opacity comparison",
+    "shaderSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+    "graphics": "Direct3D12",
+    "instances": 1009,
+    "cases": [
+        {
+            "prototype": "car_hatch_silver",
+            "lod": 0,
+            "pixels": 53164,
+            "maxHeightError": 0.0006852149963378906,
+            "maxAxleError": 0.0005992650985717773,
+            "maxOpacityError": 0.000029027462005615234,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_silver",
+            "lod": 1,
+            "pixels": 63180,
+            "maxHeightError": 0.0008630752563476563,
+            "maxAxleError": 0.0006470680236816406,
+            "maxOpacityError": 0.000032007694244384766,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_silver",
+            "lod": 2,
+            "pixels": 55012,
+            "maxHeightError": 0.00032827258110046387,
+            "maxAxleError": 0.0003262758255004883,
+            "maxOpacityError": 0.0000298917293548584,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_white",
+            "lod": 0,
+            "pixels": 51888,
+            "maxHeightError": 0.0008387565612792969,
+            "maxAxleError": 0.0004957914352416992,
+            "maxOpacityError": 0.00003185868263244629,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_white",
+            "lod": 1,
+            "pixels": 60636,
+            "maxHeightError": 0.0007746219635009766,
+            "maxAxleError": 0.0005743503570556641,
+            "maxOpacityError": 0.000026106834411621094,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_white",
+            "lod": 2,
+            "pixels": 56328,
+            "maxHeightError": 0.00016224384307861328,
+            "maxAxleError": 0.00044596195220947266,
+            "maxOpacityError": 0.00003102421760559082,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_silver",
+            "lod": 0,
+            "pixels": 52388,
+            "maxHeightError": 0.0008482933044433594,
+            "maxAxleError": 0.000517725944519043,
+            "maxOpacityError": 0.00003212690353393555,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_silver",
+            "lod": 1,
+            "pixels": 62944,
+            "maxHeightError": 0.0006232261657714844,
+            "maxAxleError": 0.0004923343658447266,
+            "maxOpacityError": 0.00003170967102050781,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_silver",
+            "lod": 2,
+            "pixels": 54708,
+            "maxHeightError": 0.0005801916122436523,
+            "maxAxleError": 0.00029540061950683594,
+            "maxOpacityError": 0.00002765655517578125,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_silver",
+            "lod": 0,
+            "pixels": 52356,
+            "maxHeightError": 0.0008007287979125977,
+            "maxAxleError": 0.0006372928619384766,
+            "maxOpacityError": 0.00003218650817871094,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_silver",
+            "lod": 1,
+            "pixels": 63596,
+            "maxHeightError": 0.0007674694061279297,
+            "maxAxleError": 0.0005425214767456055,
+            "maxOpacityError": 0.000029325485229492188,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_silver",
+            "lod": 2,
+            "pixels": 53460,
+            "maxHeightError": 0.00036391615867614746,
+            "maxAxleError": 0.00043714046478271484,
+            "maxOpacityError": 0.000030338764190673828,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_white",
+            "lod": 0,
+            "pixels": 52356,
+            "maxHeightError": 0.0008007287979125977,
+            "maxAxleError": 0.0006372928619384766,
+            "maxOpacityError": 0.00003218650817871094,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_white",
+            "lod": 1,
+            "pixels": 63596,
+            "maxHeightError": 0.0007674694061279297,
+            "maxAxleError": 0.0005425214767456055,
+            "maxOpacityError": 0.000029325485229492188,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_white",
+            "lod": 2,
+            "pixels": 53460,
+            "maxHeightError": 0.00036391615867614746,
+            "maxAxleError": 0.00043714046478271484,
+            "maxOpacityError": 0.000030338764190673828,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_blue",
+            "lod": 0,
+            "pixels": 53164,
+            "maxHeightError": 0.0006852149963378906,
+            "maxAxleError": 0.0005992650985717773,
+            "maxOpacityError": 0.000029027462005615234,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_blue",
+            "lod": 1,
+            "pixels": 63180,
+            "maxHeightError": 0.0008630752563476563,
+            "maxAxleError": 0.0006470680236816406,
+            "maxOpacityError": 0.000032007694244384766,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_blue",
+            "lod": 2,
+            "pixels": 55012,
+            "maxHeightError": 0.00032827258110046387,
+            "maxAxleError": 0.0003262758255004883,
+            "maxOpacityError": 0.0000298917293548584,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_white",
+            "lod": 0,
+            "pixels": 53164,
+            "maxHeightError": 0.0006852149963378906,
+            "maxAxleError": 0.0005992650985717773,
+            "maxOpacityError": 0.000029027462005615234,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_white",
+            "lod": 1,
+            "pixels": 63180,
+            "maxHeightError": 0.0008630752563476563,
+            "maxAxleError": 0.0006470680236816406,
+            "maxOpacityError": 0.000032007694244384766,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_white",
+            "lod": 2,
+            "pixels": 55012,
+            "maxHeightError": 0.00032827258110046387,
+            "maxAxleError": 0.0003262758255004883,
+            "maxOpacityError": 0.0000298917293548584,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_silver",
+            "lod": 0,
+            "pixels": 51888,
+            "maxHeightError": 0.0008387565612792969,
+            "maxAxleError": 0.0004957914352416992,
+            "maxOpacityError": 0.00003185868263244629,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_silver",
+            "lod": 1,
+            "pixels": 60636,
+            "maxHeightError": 0.0007746219635009766,
+            "maxAxleError": 0.0005743503570556641,
+            "maxOpacityError": 0.000026106834411621094,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_silver",
+            "lod": 2,
+            "pixels": 56328,
+            "maxHeightError": 0.00016224384307861328,
+            "maxAxleError": 0.00044596195220947266,
+            "maxOpacityError": 0.00003102421760559082,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_black",
+            "lod": 0,
+            "pixels": 52388,
+            "maxHeightError": 0.0008482933044433594,
+            "maxAxleError": 0.000517725944519043,
+            "maxOpacityError": 0.00003212690353393555,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_black",
+            "lod": 1,
+            "pixels": 62944,
+            "maxHeightError": 0.0006232261657714844,
+            "maxAxleError": 0.0004923343658447266,
+            "maxOpacityError": 0.00003170967102050781,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_black",
+            "lod": 2,
+            "pixels": 54708,
+            "maxHeightError": 0.0005801916122436523,
+            "maxAxleError": 0.00029540061950683594,
+            "maxOpacityError": 0.00002765655517578125,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "van_white2",
+            "lod": 0,
+            "pixels": 64780,
+            "maxHeightError": 0.00091552734375,
+            "maxAxleError": 0.0005173683166503906,
+            "maxOpacityError": 0.000029802322387695313,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "van_white2",
+            "lod": 1,
+            "pixels": 70448,
+            "maxHeightError": 0.0008308887481689453,
+            "maxAxleError": 0.0004520416259765625,
+            "maxOpacityError": 0.00003123283386230469,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "van_white2",
+            "lod": 2,
+            "pixels": 76176,
+            "maxHeightError": 0.00037682056427001953,
+            "maxAxleError": 0.00037384033203125,
+            "maxOpacityError": 0.000030100345611572266,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_grey",
+            "lod": 0,
+            "pixels": 52356,
+            "maxHeightError": 0.0008007287979125977,
+            "maxAxleError": 0.0006372928619384766,
+            "maxOpacityError": 0.00003218650817871094,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_grey",
+            "lod": 1,
+            "pixels": 63596,
+            "maxHeightError": 0.0007674694061279297,
+            "maxAxleError": 0.0005425214767456055,
+            "maxOpacityError": 0.000029325485229492188,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_grey",
+            "lod": 2,
+            "pixels": 53460,
+            "maxHeightError": 0.00036391615867614746,
+            "maxAxleError": 0.00043714046478271484,
+            "maxOpacityError": 0.000030338764190673828,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_black",
+            "lod": 0,
+            "pixels": 53164,
+            "maxHeightError": 0.0006852149963378906,
+            "maxAxleError": 0.0005992650985717773,
+            "maxOpacityError": 0.000029027462005615234,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_black",
+            "lod": 1,
+            "pixels": 63180,
+            "maxHeightError": 0.0008630752563476563,
+            "maxAxleError": 0.0006470680236816406,
+            "maxOpacityError": 0.000032007694244384766,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_black",
+            "lod": 2,
+            "pixels": 55012,
+            "maxHeightError": 0.00032827258110046387,
+            "maxAxleError": 0.0003262758255004883,
+            "maxOpacityError": 0.0000298917293548584,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_grey",
+            "lod": 0,
+            "pixels": 53164,
+            "maxHeightError": 0.0006852149963378906,
+            "maxAxleError": 0.0005992650985717773,
+            "maxOpacityError": 0.000029027462005615234,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_grey",
+            "lod": 1,
+            "pixels": 63180,
+            "maxHeightError": 0.0008630752563476563,
+            "maxAxleError": 0.0006470680236816406,
+            "maxOpacityError": 0.000032007694244384766,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_grey",
+            "lod": 2,
+            "pixels": 55012,
+            "maxHeightError": 0.00032827258110046387,
+            "maxAxleError": 0.0003262758255004883,
+            "maxOpacityError": 0.0000298917293548584,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_red",
+            "lod": 0,
+            "pixels": 53164,
+            "maxHeightError": 0.0006852149963378906,
+            "maxAxleError": 0.0005992650985717773,
+            "maxOpacityError": 0.000029027462005615234,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_red",
+            "lod": 1,
+            "pixels": 63180,
+            "maxHeightError": 0.0008630752563476563,
+            "maxAxleError": 0.0006470680236816406,
+            "maxOpacityError": 0.000032007694244384766,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_hatch_red",
+            "lod": 2,
+            "pixels": 55012,
+            "maxHeightError": 0.00032827258110046387,
+            "maxAxleError": 0.0003262758255004883,
+            "maxOpacityError": 0.0000298917293548584,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_grey",
+            "lod": 0,
+            "pixels": 51888,
+            "maxHeightError": 0.0008387565612792969,
+            "maxAxleError": 0.0004957914352416992,
+            "maxOpacityError": 0.00003185868263244629,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_grey",
+            "lod": 1,
+            "pixels": 60636,
+            "maxHeightError": 0.0007746219635009766,
+            "maxAxleError": 0.0005743503570556641,
+            "maxOpacityError": 0.000026106834411621094,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_grey",
+            "lod": 2,
+            "pixels": 56328,
+            "maxHeightError": 0.00016224384307861328,
+            "maxAxleError": 0.00044596195220947266,
+            "maxOpacityError": 0.00003102421760559082,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_grey",
+            "lod": 0,
+            "pixels": 52388,
+            "maxHeightError": 0.0008482933044433594,
+            "maxAxleError": 0.000517725944519043,
+            "maxOpacityError": 0.00003212690353393555,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_grey",
+            "lod": 1,
+            "pixels": 62944,
+            "maxHeightError": 0.0006232261657714844,
+            "maxAxleError": 0.0004923343658447266,
+            "maxOpacityError": 0.00003170967102050781,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_grey",
+            "lod": 2,
+            "pixels": 54708,
+            "maxHeightError": 0.0005801916122436523,
+            "maxAxleError": 0.00029540061950683594,
+            "maxOpacityError": 0.00002765655517578125,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "van_white",
+            "lod": 0,
+            "pixels": 64780,
+            "maxHeightError": 0.00091552734375,
+            "maxAxleError": 0.0005173683166503906,
+            "maxOpacityError": 0.000029802322387695313,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "van_white",
+            "lod": 1,
+            "pixels": 70448,
+            "maxHeightError": 0.0008308887481689453,
+            "maxAxleError": 0.0004520416259765625,
+            "maxOpacityError": 0.00003123283386230469,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "van_white",
+            "lod": 2,
+            "pixels": 76176,
+            "maxHeightError": 0.00037682056427001953,
+            "maxAxleError": 0.00037384033203125,
+            "maxOpacityError": 0.000030100345611572266,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_black",
+            "lod": 0,
+            "pixels": 52356,
+            "maxHeightError": 0.0008007287979125977,
+            "maxAxleError": 0.0006372928619384766,
+            "maxOpacityError": 0.00003218650817871094,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_black",
+            "lod": 1,
+            "pixels": 63596,
+            "maxHeightError": 0.0007674694061279297,
+            "maxAxleError": 0.0005425214767456055,
+            "maxOpacityError": 0.000029325485229492188,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_black",
+            "lod": 2,
+            "pixels": 53460,
+            "maxHeightError": 0.00036391615867614746,
+            "maxAxleError": 0.00043714046478271484,
+            "maxOpacityError": 0.000030338764190673828,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_blue",
+            "lod": 0,
+            "pixels": 52356,
+            "maxHeightError": 0.0008007287979125977,
+            "maxAxleError": 0.0006372928619384766,
+            "maxOpacityError": 0.00003218650817871094,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_blue",
+            "lod": 1,
+            "pixels": 63596,
+            "maxHeightError": 0.0007674694061279297,
+            "maxAxleError": 0.0005425214767456055,
+            "maxOpacityError": 0.000029325485229492188,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_blue",
+            "lod": 2,
+            "pixels": 53460,
+            "maxHeightError": 0.00036391615867614746,
+            "maxAxleError": 0.00043714046478271484,
+            "maxOpacityError": 0.000030338764190673828,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_red",
+            "lod": 0,
+            "pixels": 52356,
+            "maxHeightError": 0.0008007287979125977,
+            "maxAxleError": 0.0006372928619384766,
+            "maxOpacityError": 0.00003218650817871094,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_red",
+            "lod": 1,
+            "pixels": 63596,
+            "maxHeightError": 0.0007674694061279297,
+            "maxAxleError": 0.0005425214767456055,
+            "maxOpacityError": 0.000029325485229492188,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_estate_red",
+            "lod": 2,
+            "pixels": 53460,
+            "maxHeightError": 0.00036391615867614746,
+            "maxAxleError": 0.00043714046478271484,
+            "maxOpacityError": 0.000030338764190673828,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_blue",
+            "lod": 0,
+            "pixels": 51888,
+            "maxHeightError": 0.0008387565612792969,
+            "maxAxleError": 0.0004957914352416992,
+            "maxOpacityError": 0.00003185868263244629,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_blue",
+            "lod": 1,
+            "pixels": 60636,
+            "maxHeightError": 0.0007746219635009766,
+            "maxAxleError": 0.0005743503570556641,
+            "maxOpacityError": 0.000026106834411621094,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_blue",
+            "lod": 2,
+            "pixels": 56328,
+            "maxHeightError": 0.00016224384307861328,
+            "maxAxleError": 0.00044596195220947266,
+            "maxOpacityError": 0.00003102421760559082,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_blue",
+            "lod": 0,
+            "pixels": 52388,
+            "maxHeightError": 0.0008482933044433594,
+            "maxAxleError": 0.000517725944519043,
+            "maxOpacityError": 0.00003212690353393555,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_blue",
+            "lod": 1,
+            "pixels": 62944,
+            "maxHeightError": 0.0006232261657714844,
+            "maxAxleError": 0.0004923343658447266,
+            "maxOpacityError": 0.00003170967102050781,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_blue",
+            "lod": 2,
+            "pixels": 54708,
+            "maxHeightError": 0.0005801916122436523,
+            "maxAxleError": 0.00029540061950683594,
+            "maxOpacityError": 0.00002765655517578125,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_red",
+            "lod": 0,
+            "pixels": 52388,
+            "maxHeightError": 0.0008482933044433594,
+            "maxAxleError": 0.000517725944519043,
+            "maxOpacityError": 0.00003212690353393555,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_red",
+            "lod": 1,
+            "pixels": 62944,
+            "maxHeightError": 0.0006232261657714844,
+            "maxAxleError": 0.0004923343658447266,
+            "maxOpacityError": 0.00003170967102050781,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_red",
+            "lod": 2,
+            "pixels": 54708,
+            "maxHeightError": 0.0005801916122436523,
+            "maxAxleError": 0.00029540061950683594,
+            "maxOpacityError": 0.00002765655517578125,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_white",
+            "lod": 0,
+            "pixels": 52388,
+            "maxHeightError": 0.0008482933044433594,
+            "maxAxleError": 0.000517725944519043,
+            "maxOpacityError": 0.00003212690353393555,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_white",
+            "lod": 1,
+            "pixels": 62944,
+            "maxHeightError": 0.0006232261657714844,
+            "maxAxleError": 0.0004923343658447266,
+            "maxOpacityError": 0.00003170967102050781,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_suv_white",
+            "lod": 2,
+            "pixels": 54708,
+            "maxHeightError": 0.0005801916122436523,
+            "maxAxleError": 0.00029540061950683594,
+            "maxOpacityError": 0.00002765655517578125,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "van_silver",
+            "lod": 0,
+            "pixels": 64780,
+            "maxHeightError": 0.00091552734375,
+            "maxAxleError": 0.0005173683166503906,
+            "maxOpacityError": 0.000029802322387695313,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "van_silver",
+            "lod": 1,
+            "pixels": 70448,
+            "maxHeightError": 0.0008308887481689453,
+            "maxAxleError": 0.0004520416259765625,
+            "maxOpacityError": 0.00003123283386230469,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "van_silver",
+            "lod": 2,
+            "pixels": 76176,
+            "maxHeightError": 0.00037682056427001953,
+            "maxAxleError": 0.00037384033203125,
+            "maxOpacityError": 0.000030100345611572266,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_black",
+            "lod": 0,
+            "pixels": 51888,
+            "maxHeightError": 0.0008387565612792969,
+            "maxAxleError": 0.0004957914352416992,
+            "maxOpacityError": 0.00003185868263244629,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_black",
+            "lod": 1,
+            "pixels": 60636,
+            "maxHeightError": 0.0007746219635009766,
+            "maxAxleError": 0.0005743503570556641,
+            "maxOpacityError": 0.000026106834411621094,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_black",
+            "lod": 2,
+            "pixels": 56328,
+            "maxHeightError": 0.00016224384307861328,
+            "maxAxleError": 0.00044596195220947266,
+            "maxOpacityError": 0.00003102421760559082,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_red",
+            "lod": 0,
+            "pixels": 51888,
+            "maxHeightError": 0.0008387565612792969,
+            "maxAxleError": 0.0004957914352416992,
+            "maxOpacityError": 0.00003185868263244629,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_red",
+            "lod": 1,
+            "pixels": 60636,
+            "maxHeightError": 0.0007746219635009766,
+            "maxAxleError": 0.0005743503570556641,
+            "maxOpacityError": 0.000026106834411621094,
+            "yOrientation": "RTreadbackY inverted"
+        },
+        {
+            "prototype": "car_sedan_red",
+            "lod": 2,
+            "pixels": 56328,
+            "maxHeightError": 0.00016224384307861328,
+            "maxAxleError": 0.00044596195220947266,
+            "maxOpacityError": 0.00003102421760559082,
+            "yOrientation": "RTreadbackY inverted"
+        }
+    ],
+    "note": "Numeric diagnostic viewport and fragment-return adapter; actual meshes/material bindings and source fragment calculations. Not lighting, performance, full-image or device proof."
+}
