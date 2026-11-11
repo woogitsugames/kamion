@@ -29,3 +29,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T21:46:30.5137718+01:00: izolowany kandydat przeszedł 11 testów mebli (pytest-candidate.log), w tym oba czerwone przypadki HIL. Snapshot obejmuje także materiały barier i ekranów w węźle furniture. NASTĘPNY KROK: import baseline i zastosowanie kandydata produkcyjnie po zakończeniu generatora.
 
 2026-11-11T21:51:05.1405616+01:00: sprawdzono katalog roboczy runnera i poprawiono liczbę poziomów ścieżki przed pierwszym Unity. Baseline przeszedł geometrię dróg, budynki i nawierzchnie; obecnie generuje wyposażenie. NASTĘPNY KROK: zakończyć baseline i cache PBR, następnie acquire/import.
+
+2026-11-11T21:55:25.7113057+01:00: baseline build exit=0, brak fallback=True. Pierwszy snapshot zatrzymał się na jawnym stride glTF; poprawiono czytanie accessorów, bez modyfikacji produktów. Zapisano hashe i zastosowano zmiany w czterech plikach mebli. Testy mebli exit=0. NASTĘPNY KROK: import i render baseline przed generatorem po zmianach.

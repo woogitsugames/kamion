@@ -30,12 +30,14 @@ def pole_texture(kind):
     else:
         warnings.warn(f"ADR0102 scan missing: {aid}; flat furniture texture fallback", stacklevel=2)
         ratio = np.ones((h, w))
-    rgb = np.repeat((245 * (1 + 0.3 * (ratio - 1)))[..., None], 3, axis=2)
+    # ADR0120: retain concrete scan relief instead of compressing it to nearly white.
+    level, grain = (228, 1.05) if concrete else (245, 0.3)
+    rgb = np.repeat((level * (1 + grain * (ratio - 1)))[..., None], 3, axis=2)
     z = (1 - (np.arange(h) + 0.5) / h)[:, None]
     u = (np.arange(w) + 0.5)[None, :] / w
     height = 0.9 if kind == "bollard" else 9.0
     # Salt / road splash at the foot; asymmetric dirt, no all-over random noise.
-    foot = np.clip(1 - z * height / (0.22 if concrete else 0.30), 0, 1)
+    foot = np.clip(1 - z * height / (0.65 if concrete else 0.30), 0, 1)
     foot = foot * (0.65 + 0.35 * np.sin(u * 2 * np.pi + 0.7) ** 2)
     dirt = np.array([133, 126, 109]) if concrete else np.array([157, 112, 77])
     # Galvanised poles get road film, painted steel gets small rust islands at the ground line.
@@ -48,6 +50,16 @@ def pole_texture(kind):
         # One torn, unbranded paper remnant on the rear sector, with no text or invented logo.
         paper = (u > 0.63) & (u < 0.78) & (z * height > 0.63) & (z * height < 0.76)
         rgb[paper] = (211, 207, 184)
+    if concrete:
+        # Dirt runs below the two steel arm collars; no uniform all-over noise.
+        metres = z * height
+        runoff = np.zeros((h, w))
+        for collar, sector in ((7.6, 0.22), (8.3, 0.73)):
+            below = collar - metres
+            streak = np.exp(-((u-sector) / 0.055) ** 2)
+            streak = streak * np.clip(below / 0.12, 0, 1) * np.clip(1-below / 2.6, 0, 1)
+            runoff = np.maximum(runoff, streak * 0.28)
+        rgb = rgb * (1-runoff[..., None]) + np.array([125, 117, 99]) * runoff[..., None]
     return Image.fromarray(np.clip(rgb, 0, 255).astype(np.uint8), "RGB")
 
 

@@ -105,15 +105,15 @@ def lamp(h, bracket, double=False):
 def lamp_old(h, kind):
     """Second lamp family for side streets (critic R2 #10): older installations still common on Polish residential
     and industrial access roads (shapes typical, no product copied; dimensions WORKING_VALUE).
-      kind "concrete": spun-concrete pole (żerdź wirowana, 0.24 -> 0.14 m) with a steel arm rising in an arc and an
+      kind "concrete": spun-concrete pole (żerdź wirowana, 0.30 -> 0.14 m) with a steel arm rising in an arc and an
         elongated "cobra" sodium luminaire (orange-tinted bowl);
       kind "steel":    thin grey-painted steel pole with a straight arm tilted up 15 deg and a box luminaire."""
     m, l1, col = Mesh(), Mesh(), Mesh()
     m.pole_height = l1.pole_height = h
     for mm, seg in ((m, 10), (l1, 5)):
         if kind == "concrete":
-            mm.tube("concrete_pole", [0, 0, -0.3], [0, 0, 0], 0.12, 0.12, seg, cap=False)
-            mm.tube("concrete_pole", [0, 0, 0], [0, 0, h], 0.12, 0.07, seg)
+            mm.tube("concrete_pole", [0, 0, -0.3], [0, 0, 0], 0.15, 0.15, seg, cap=False)
+            mm.tube("concrete_pole", [0, 0, 0], [0, 0, h], 0.15, 0.07, seg)
             pts = [np.array([0.0, 0.05, h - 1.4])]
             bends = 6 if seg > 5 else 3
             for k in range(1, bends + 1):              # same silhouette, fewer sections on Low
@@ -123,7 +123,7 @@ def lamp_old(h, kind):
             for a_, b_ in zip(pts[:-1], pts[1:]):
                 mm.tube("steel_painted_grey", a_, b_, 0.03, 0.03, max(4, seg // 2), cap=False)
             for zb in (h - 1.4, h - 0.7):               # clamp bands
-                rr = 0.12 - 0.05 * zb / h + 0.004
+                rr = 0.15 - 0.08 * zb / h + 0.004
                 mm.tube("steel_painted_grey", [0, 0, zb], [0, 0, zb + 0.08], rr, rr, seg, cap=False)
             e = pts[-1]
             mm.box("luminaire_old", e + [0, 0.35, 0.02], 0.15, 0.40, 0.08)
@@ -140,7 +140,8 @@ def lamp_old(h, kind):
             mm.box("luminaire_old", end + [0, 0.28, 0.0], 0.14, 0.3, 0.07)
             mm.quad("lamp_glass_sodium", end + [-0.11, 0.04, -0.072], end + [0.11, 0.04, -0.072],
                     end + [0.11, 0.52, -0.072], end + [-0.11, 0.52, -0.072])
-    col.tube("collision_steel", [0, 0, 0], [0, 0, h], 0.13, 0.13, 6)
+    col.tube("collision_steel", [0, 0, 0], [0, 0, h],
+             0.16 if kind == "concrete" else 0.13, 0.08 if kind == "concrete" else 0.13, 6)
     return m, l1, col
 
 

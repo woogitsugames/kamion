@@ -16,10 +16,12 @@ for path in sorted(Path('Data/raw/derived/bialystok-industrial-c/world').glob('c
     def accessor(index):
         a = doc['accessors'][index]
         view = doc['bufferViews'][a['bufferView']]
-        # Writer stores one tightly packed accessor per view. Assert rather than silently hash the wrong span.
-        assert not view.get('byteStride') and not a.get('byteOffset')
-        start = view.get('byteOffset', 0)
-        return binary[start:start+view['byteLength']]
+        components = {'SCALAR': 1, 'VEC2': 2, 'VEC3': 3, 'VEC4': 4, 'MAT4': 16}[a['type']]
+        width = components * {5120: 1, 5121: 1, 5122: 2, 5123: 2, 5125: 4, 5126: 4}[a['componentType']]
+        stride = view.get('byteStride', width)
+        start = view.get('byteOffset', 0) + a.get('byteOffset', 0)
+        assert stride >= width and not a.get('sparse')
+        return b''.join(binary[start+i*stride:start+i*stride+width] for i in range(a['count']))
 
     for node in doc.get('nodes', []):
         if 'mesh' not in node:

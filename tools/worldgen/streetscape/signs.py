@@ -246,6 +246,18 @@ def plate_back(shape=None):
     img[96:128, 150:200] = (225, 226, 222)                     # label
     img[100:104, 156:194] = (150, 150, 150)
     img[110:113, 156:186] = (165, 165, 165)
+    # ADR0120: aluminium oxidises; brown runoff comes only from steel fasteners.
+    # Clamp heights match props.plate; marks stay local instead of rusting the whole disc.
+    xx = np.linspace(0, 1, n)[None, :]
+    runoff = np.zeros((n, n))
+    for mount in (0.28, 0.78):
+        below = yy - mount
+        for bolt in (0.40, 0.60):
+            width = 0.009 + 0.014 * np.clip(below / 0.2, 0, 1)
+            mark = np.exp(-((xx-bolt) / width) ** 2)
+            mark *= np.clip(below / 0.012, 0, 1) * np.clip(1-below / 0.22, 0, 1)
+            runoff = np.maximum(runoff, mark * 0.68)
+    img = img * (1-runoff[..., None]) + np.array([116, 78, 47]) * runoff[..., None]
     a = np.full((n, n, 1), 255.0)
     return Image.fromarray(np.clip(np.concatenate([img, a], -1), 0, 255).astype(np.uint8), "RGBA")
 
