@@ -1201,18 +1201,18 @@ overrides:
   - id: andersa-bay-apron-west
     kind: paved_apron
     surface: sett
-    polygon_en: [[-117.0, -314.45], [-106.0, -321.75], [-103.0, -321.0], [-103.0, -312.0], [-117.0, -309.5]]
+    polygon_en: [[-114.0, -317.5], [-100.0, -326.82], [-98.0, -326.0], [-98.0, -316.0], [-114.0, -313.0]]
     reason: >-
       Sett bay on Andersa s 1040-1080, west end: on the orthophoto the sett runs on unbroken from E -122 N -310
-      (artifacts/junctions-r3/plan1/merge1060.jpg, left); the generator ends it at E -103 with an asphalt "ear" of the
+      (artifacts/junctions-r3/plan1/merge1060.jpg, left); the generator ends it at E -100 with an asphalt "ear" of the
       junction patch. The polygon lies north of the P-7a edge line of the carriageway (0.15 m clear of it).
     confidence: medium
     verify: owner drive
   - id: andersa-bay-apron-east
     kind: paved_apron
     surface: sett
-    polygon_en: [[-66.0, -344.15], [-50.0, -354.65], [-48.0, -354.0], [-48.0, -343.0], [-66.0, -335.0]]
-    reason: Same bay, east end (asphalt ear E -64...-50 north of the edge line; sett on the orthophoto to E -50).
+    polygon_en: [[-66.0, -356.9], [-48.0, -368.95], [-46.0, -368.0], [-46.0, -358.0], [-66.0, -350.0]]
+    reason: Same bay, east end (asphalt ear E -63...-56 north of the edge line; sett on the orthophoto to E -50).
     confidence: medium
     verify: owner drive
   # ---------------------------------------------------------------- ADR 0100 (REVIEW s10-0095 P1-2/P1-3): eastbound split E -830...-790
@@ -1226,7 +1226,7 @@ overrides:
   # carriageway is 2 m too wide on the south side (N 48.8 vs 51.6): geometry not rebuilt (ADR 0100 open).
   - id: dk8-e-split-clear-diagonal
     kind: paint_clear
-    polygon_en: [[-861.0, 62.4], [-779.0, 54.6], [-779.0, 53.2], [-861.0, 60.8]]
+    polygon_en: [[-861.0, 63.0], [-779.0, 56.0], [-779.0, 53.2], [-861.0, 59.0]]
     reason: The through line drawn diagonally across the plate (TL-P-7b@j:n1832975577, E -859.6 N 61.6 -> E -780.4 N 53.9) is not on the orthophoto.
     confidence: high
     verify: owner drive
@@ -1283,7 +1283,7 @@ overrides:
     stripe_az_deg: -35
     stripe_w_m: 0.3
     stripe_gap_m: 0.55
-    polygon_en: [[-806.3, 54.75], [-795.5, 54.7], [-795.5, 53.0], [-806.3, 54.55]]
+    polygon_en: [[-806.3, 54.65], [-795.5, 54.7], [-795.5, 53.0]]
     reason: P-21 oblique band on the ramp side of the separator (east_split.jpg x 450-770 y 600-655).
     confidence: medium
     verify: owner drive
