@@ -35,16 +35,17 @@ def intersections(a,b):
 
 seats={prefix:[o for o in objects if o.name.startswith(prefix+'_') and not any(token in o.name for token in ('armrest','arm_pivot','rail','base','gaiter','bellows','damper'))] for prefix in ('drv','pas')}
 wheel=[o for o in objects if o.name.startswith(('wheel_rim','spoke_','wheel_hub','hub_gap'))]
-report={'scope':'Source surfaces after fit_to_exterior. Exact edge/triangle intersections; no solid containment test, no claim about game FBX. Rear hinge contact may be intentional.','states':{}}
+report={'scope':'Source surfaces after fit_to_exterior. Exact edge/triangle intersections; no solid containment test, no claim about game FBX. 0.025 variant moves door armrests outward only. Rear hinge contact may be intentional.','states':{},'selectors':{'seats':{p:[o.name for o in ss] for p,ss in seats.items()},'wheel':[o.name for o in wheel],'arms':[o.name for o in objects if 'armrest' in o.name]}}
 for shift in (0,.025):
  if shift:
   for prefix,side in (('drv',1),('pas',-1)):
    for obj in objects:
-    if obj.name.startswith((prefix+'_armrest',prefix+'_arm_pivot')):obj.location.x+=side*shift
+    if obj.name.startswith('door_armrest_'+str(-side)):obj.location.x-=side*shift
   bpy.context.view_layer.update();cache.clear()
  rows=[]
  for prefix in ('drv','pas'):
-  arms=[o for o in objects if o.name.startswith(prefix+'_armrest')]
+  side=-1 if prefix=='drv' else 1
+  arms=[o for o in objects if o.name.startswith((prefix+'_armrest','door_armrest_'+str(side)))]
   for arm in arms:
    for seat in seats[prefix]:
     hit=intersections(arm,seat)
