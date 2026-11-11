@@ -29,3 +29,17 @@ Low: brak nowego przebiegu, zmiany skali, geometrii i liczby instancji. Koszt GP
 Komin na photo-biezenstwa-ground: uwaga przekazana w tym ADR i przyszłym REPORT właścicielowi landmarków. Nie zmieniam rotacji instancji. Pieprz ścian jest przypisany w recenzji do shadera ścian; nie maskuję go globalnym rozmyciem.
 
 Przewidywane styki integracji: addytywna polityka High w QualityProfileApplier, presety LightingPreset i Sky.shader. ProjectSettings, Packages, sceny i pliki pozostałych dziedzin pozostają poza zmianą.
+
+## Runda r2 — zmierzch, noc i lampy, w toku
+
+Gałąź gpt-light-r2 utworzona od końca r1; aktualny main scalony jako ba0520cf. Zmiany main dotyczyły narzędzia/pozycji SBS i dokumentacji, bez zmiany źródeł świata lub renderingu. D51 oznacza, że dopracowanie światła nie blokuje oceny rozpoznawalności trasy; nie zmieniamy geometrii ani ocen pozy należących do innych sesji.
+
+Baseline Dusk: 24 PNG, sześć kamer × Low/High × pule off/on. Edytorowa sonda zapisuje faktyczne głowice i wagi przed rysowaniem każdej kamery. Zarejestrowano 702 głowice; wszystkie wybrane wagi są dodatnie. Low ma 4 pule i 0 świateł punktowych, High 8 pul i 4 punktowe. Suma wag zależnie od kamery: Low 2,72–4,00, High 5,78–7,60. Model tła daje 7,784 lx przy ekspozycji 0,0707297; są to wartości modelu, nie pomiar fizyczny.
+
+Analiza oryginalnych PNG off/on, stałe ROI gruntu, wygładzenie 20 pikseli: przy kierowcy p95/maksimum stosunku jasności Low 1,519/1,568, High 1,472/1,517; przy bloku Low 1,720/1,822, High 1,699/1,747; przy dokach tylko Low 1,092/1,133, High 1,084/1,122. Pozostałe kamery i metoda są w artifacts/light-r2/dusk-baseline-metrics.json. Obejrzano wszystkie 24 obrazy i mapy różnicy ×6. Lampy działają; sam dodatni stan przełącznika nie byłby takim dowodem.
+
+Osobny LP_Night zachowuje dotychczasowy Dusk bez zmian. Wykorzystuje dolną granicę istniejącego modelu zmierzchu (−8°) i roboczą korektę ekspozycji −4 EV; to przybliżenie wyglądu nocy, nie nowy astronomiczny model nieba. Wybór ekspozycji nastąpi po ablacji −2/−3/−4/−5 EV, na Low i High. Rejestracja presetu jest w LookDevAssets; istniejący importer pobierze piąty preset bez zmian w kodzie innych dziedzin. Bake widoczności słońca wybiera dwa dotychczasowe presety po nazwie, więc Night nie rozszerza map GI.
+
+Referencje nocne: trzy lokalne zdjęcia śródmieścia Białegostoku autorstwa Rakoon, grudzień 2020, CC0 według zapisanego manifestu Wikimedia; hashe oryginałów sprawdzono. Są zimowe, z dekoracjami, inną nawierzchnią i nieznaną ekspozycją/WB. Służą jako odniesienie wyglądu nocy, nie jako dopasowanie geometrii, kolorów konkretnej oprawy czy kalibracja kandeli. Pochodzenie: artifacts/light-r1/night-reference-preflight.json.
+
+Ukierunkowane DuskStreetLampTests: 4/4, XML editmode-20261112-004024.xml. Generator → fidelity → import oczekują po analizie baseline w jednym szeregowym pipeline heavy; sam Unity dodatkowo bierze własny slot. Po imporcie 60 PNG Dusk/Night i kontrola rzeczywistej selekcji lamp. Nowy preset nie dodaje przebiegów, punktowych świateł Low, pól QualityProfile ani obniżenia skali.
