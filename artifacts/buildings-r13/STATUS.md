@@ -42,3 +42,14 @@ Gałąź `buildings-r5`, worktree `.claude/worktrees/buildings-r5`, z main `0e73
 - ADR 0097 szkic: `docs/adr/0097-buildings-r5.md`.
 - NASTĘPNY KROK: działa `run_round.ps1 -Round r2` + kamery `cams_r13.json` (po zdjęciu blokady), potem budżet
   `uv run --project tools/worldgen python artifacts/buildings-r13/budget.py artifacts/buildings-r13/base/Low-overcast artifacts/buildings-r13/r2/Low-overcast`
+
+## krok 5 — r2 zrenderowany + kamery dodatkowe; opaska wyłączona → r3
+- Budżet Low base → r2 (57 kamer): draws 16688 → 16697 (+0,1 %, maks. fire-station-ref7197 +0,8 %), tris +0,6 %
+  (maks. r10_block_3 +2,8 %); kamer > 400 draws 10 → 10.
+- Region r2: High 4038 submeshy (opaska), Low 3006. Rozbryzg cokołu `r10_block_3` 8,4 → 11,0 poziomu.
+- Paleta domów (`palette_stats.py`): ciepłe 63 → 48 %, najbliższy sąsiad z tą samą ścianą 24 → 0 %, z tym samym
+  dachem 39 → 1 %.
+- Oglądane: zacieki pod parapetami czytelne (r13_block3_close, r10_block_5), kapinos = ciemna linia, konfetti znikło
+  (r10_block_2/4), domy z podestem, kosze/skrzydła na kamerach r13_house2_*. Opaska zapadała się pod siatkę terenu
+  (r10_block_5: jasne łaty) → `BLOCK_APRON = False` (otwarte).
+- NASTĘPNY KROK: `pwsh artifacts/buildings-r13/chain.ps1 -Round r3`, potem `pwsh scripts/test.ps1 -Platform EditMode`

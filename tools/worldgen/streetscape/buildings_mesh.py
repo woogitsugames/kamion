@@ -80,6 +80,10 @@ BAL_EXCEPT_PCT = 12            # ADR 0097: share of balconies with another balus
 BAL_EXCEPT = (4, 5, 0)         # balf variants of the exceptions: bars + flowers, reed mat, perforated (r1 also brown /
                                # green plastic: the brown read orange on r10_block_3)
 ESTATE_M = 250.0               # ADR 0097: estate cell for the balustrade types (<= 2 types per cell), m (WORKING_VALUE)
+# ADR 0097 r2: the paved apron round blocks is OFF - draped on the height field it sank under the terrain mesh along
+# most of the wall and showed as loose light patches where the slope dips (r2 r10_block_5); needs the terrain mesh's
+# own heights (or a terrain cut) first. Open.
+BLOCK_APRON = False
 SILL_RUNOFF = True             # ADR 0097: streaks under window sills (TEXCOORD_1.v + 64, shader ADR 0092)      # ADR 0094: one tone (r3 had two; every material is a draw per chunk on both LODs)
 
 
@@ -1224,7 +1228,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                       pieces=lod1_pieces, fkey=f"{key}:{ei}", balcony=bal_group if ei in bal_edges else False, plinth=plinth,
                       ground=lod1_gfn)
             u_acc += L
-        if typ == "block":                                         # ADR 0097 (P2-g): paved apron
+        if typ == "block" and BLOCK_APRON:                         # ADR 0097 (P2-g): paved apron
             FK.wall_apron(acc, poly, hf)
         if typ == "hall" and len(edges) >= 3:                       # corner flashings
             for i, (a, c_) in enumerate(edges):
