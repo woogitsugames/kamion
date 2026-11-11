@@ -12164,7 +12164,7 @@
    {
     "id": "n10015785253-p21-north",
     "targets": [
-     "zone@-215,-226"
+     "zone@-214,-226"
     ]
    },
    {
@@ -12354,7 +12354,9 @@
     "id": "s1440-merge-p21-ramp",
     "max_lift_m": 0.0267,
     "mode": "axis",
+    "stripe_cover": 0.455,
     "stripes": 56,
+    "stripes_built": 51,
     "tris": 1729,
     "tris_off_carriageway": 479,
     "xy": [
@@ -12378,7 +12380,9 @@
     "id": "s1440-diverge-p21",
     "max_lift_m": 0.0261,
     "mode": "chevron",
+    "stripe_cover": 0.35,
     "stripes": 25,
+    "stripes_built": 18,
     "tris": 350,
     "tris_off_carriageway": 178,
     "xy": [
@@ -12398,7 +12402,9 @@
     "id": "s610-north-arm-p21-median",
     "max_lift_m": 0.0021,
     "mode": "absolute",
+    "stripe_cover": 0.377,
     "stripes": 30,
+    "stripes_built": 30,
     "tris": 768,
     "tris_off_carriageway": 0,
     "xy": [
@@ -12418,7 +12424,9 @@
     "id": "s610-p21-centre",
     "max_lift_m": 0.0294,
     "mode": "absolute",
+    "stripe_cover": 0.437,
     "stripes": 34,
+    "stripes_built": 34,
     "tris": 1449,
     "tris_off_carriageway": 9,
     "xy": [
@@ -12438,7 +12446,9 @@
     "id": "s610-p21-west",
     "max_lift_m": 0.0135,
     "mode": "absolute",
+    "stripe_cover": 0.399,
     "stripes": 7,
+    "stripes_built": 7,
     "tris": 512,
     "tris_off_carriageway": 0,
     "xy": [
@@ -12458,7 +12468,9 @@
     "id": "s610-p21-south",
     "max_lift_m": 0.0116,
     "mode": "absolute",
+    "stripe_cover": 0.41,
     "stripes": 20,
+    "stripes_built": 20,
     "tris": 526,
     "tris_off_carriageway": 0,
     "xy": [
@@ -12482,7 +12494,9 @@
     "id": "dk8-ramp-split-p21-front",
     "max_lift_m": 0.0296,
     "mode": "chevron",
+    "stripe_cover": 0.346,
     "stripes": 42,
+    "stripes_built": 42,
     "tris": 654,
     "tris_off_carriageway": 0,
     "xy": [
@@ -12502,7 +12516,9 @@
     "id": "dk8-ramp-split-p21-side",
     "max_lift_m": 0.0003,
     "mode": "absolute",
+    "stripe_cover": 0.252,
     "stripes": 11,
+    "stripes_built": 10,
     "tris": 389,
     "tris_off_carriageway": 147,
     "xy": [
@@ -12522,7 +12538,9 @@
     "id": "n10015785253-p21-west",
     "max_lift_m": 0.0079,
     "mode": "absolute",
+    "stripe_cover": 0.197,
     "stripes": 2,
+    "stripes_built": 2,
     "tris": 118,
     "tris_off_carriageway": 0,
     "xy": [
@@ -12542,7 +12560,9 @@
     "id": "n10015785253-p21-east",
     "max_lift_m": 0.0187,
     "mode": "absolute",
+    "stripe_cover": 0.32,
     "stripes": 9,
+    "stripes_built": 9,
     "tris": 176,
     "tris_off_carriageway": 2,
     "xy": [
@@ -12551,23 +12571,25 @@
     ]
    },
    {
-    "area_m2": 3.2,
+    "area_m2": 4.0,
     "built": true,
     "fields_deg": [
      [
-      42.0,
-      1
+      8.0,
+      6
      ]
     ],
     "id": "n10015785253-p21-north",
-    "max_lift_m": 0.0018,
+    "max_lift_m": 0.0017,
     "mode": "absolute",
-    "stripes": 1,
-    "tris": 84,
+    "stripe_cover": 0.315,
+    "stripes": 6,
+    "stripes_built": 6,
+    "tris": 112,
     "tris_off_carriageway": 0,
     "xy": [
-     -214.6,
-     -225.8
+     -214.3,
+     -225.9
     ]
    },
    {
@@ -12582,7 +12604,9 @@
     "id": "s1440-diverge-p21-band",
     "max_lift_m": 0.0007,
     "mode": "axis",
+    "stripe_cover": 0.434,
     "stripes": 47,
+    "stripes_built": 41,
     "tris": 950,
     "tris_off_carriageway": 438,
     "xy": [
@@ -12606,7 +12630,9 @@
     "id": "dk8-e-split-p21-front",
     "max_lift_m": 0.0021,
     "mode": "chevron",
+    "stripe_cover": 0.23,
     "stripes": 28,
+    "stripes_built": 28,
     "tris": 486,
     "tris_off_carriageway": 0,
     "xy": [
@@ -12626,7 +12652,9 @@
     "id": "dk8-e-split-p21-side",
     "max_lift_m": 0.0019,
     "mode": "absolute",
+    "stripe_cover": 0.21,
     "stripes": 5,
+    "stripes_built": 5,
     "tris": 182,
     "tris_off_carriageway": 0,
     "xy": [

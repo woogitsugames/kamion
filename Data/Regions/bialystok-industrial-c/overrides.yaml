@@ -1026,11 +1026,16 @@ overrides:
     verify: owner drive
   - id: n10015785253-p21-north
     kind: painted_zone
-    stripe_az_deg: 42
-    stripe_w_m: 0.25      # ADR 0100: dense hatching on the 0.08 m orthophoto (zones0/n10015785253-p21-*.jpg), pitch ~0.5 m
-    stripe_gap_m: 0.25
-    polygon_en: [[-216.25, -226.6], [-212.5, -223.6], [-215.0, -227.3]]
-    reason: P-21 north of the island tip, between the two slip lanes.
+    stripe_az_deg: 8      # ADR 0110: re-read on the 0.08 m orthophoto at 120 px/m (artifacts/junctions-r4/trace/n100n.jpg)
+    stripe_w_m: 0.20      # 6-7 stripes about 0.2 m wide at 0.42 m pitch (WORKING_VALUE, orthophoto read)
+    stripe_gap_m: 0.22
+    border_w_m: 0.15
+    stripe_min_m: 0.2
+    polygon_en: [[-216.13, -226.57], [-212.21, -223.63], [-214.71, -227.54]]
+    reason: >-
+      P-21 north of the island tip, between the two slip lanes. ADR 0110 (REVIEW s10-0100 P0-1): the r3 polygon was
+      about 0.5-1 m too narrow on its east side and its 0.25/0.25 m stripes at 42 deg were all rejected as fragments
+      (empty frame); re-traced with stripes nearly east-west as on the orthophoto.
     confidence: high
     verify: owner drive
   - id: n10015785253-edge-line-clear
