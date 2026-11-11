@@ -5,7 +5,8 @@ foreach ($tier in @('Low', 'High')) {
         pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-truck -StaleHours 100000
         if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu Unity.' }
         try {
-            pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier $tier -Lighting $lighting -Cameras 'truck-34,truck-34r,truck-front,truck-side,truck-rear34,cab-driver,chase' -EnvDump -OutputDir "artifacts/truck-r1/before/$tier-$lighting"
+            $scene = if ($tier -eq 'High') { 'WorldC_High' } else { 'WorldC' }
+            pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $tier -Lighting $lighting -Cameras 'truck-34,truck-34r,truck-front,truck-side,truck-rear34,cab-driver,chase' -EnvDump -OutputDir "artifacts/truck-r1/before/$tier-$lighting"
             if ($LASTEXITCODE -ne 0) { throw "Baseline nieudany: $tier $lighting" }
         }
         finally {
