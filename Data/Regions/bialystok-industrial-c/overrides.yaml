@@ -249,10 +249,14 @@ overrides:
   - id: andersa-viaduct-biezenstwa-style
     kind: bridge_style
     target: {osm_way: [175157461, 177895177]}
-    set: {fascia: red, pier_mat: bridge_concrete, noise_screen: null}
+    set: {fascia: red, pier_mat: bridge_concrete, noise_screen: null, cap_w: 1.0}
     reason: >-
       Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r.: red-painted deck edge, plain grey cylindrical
       concrete piers, steel railing, no noise screen (CC0 photo 20201102_152339, Rakoon, docs/REFERENCES.md).
+      cap_w (ADR 0117): cap behind the kerb 1.0 m instead of the generic 1.5 m - orthophoto: kerb + cap with the
+      barrier ~1.3 m; Mapillary 454716650857984: edge line -> barrier face ~1.25 m (was ~1.8 m, the cap read as a
+      sidewalk). WORKING_VALUE (+-0.2 m). The deck gets 0.5 m narrower on each outer side; the carriageway, the
+      box girder and the piers stay.
       Pier diameter and spacing are not measured (WORKING_VALUE 1.2 m, rule spacing).
     confidence: medium
     verify: pier count / spacing and fascia height from a site photo
@@ -260,6 +264,7 @@ overrides:
     kind: hero_bridge
     target: {osm_way: [175157461, 177895177]}
     asset: viaduct_biezenstwa
+    set: {rail_h_m: 1.10, rail_inset_m: 0.08}   # ADR 0117: deck-edge railing with horizontal bars in the asset
     reason: >-
       Landmark object of route G3-A (ADR 0067): the Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r. gets an
       authored Blender asset (art-source/world/landmarks/viaduct_biezenstwa, tools/blender/world/landmarks/
@@ -1142,9 +1147,12 @@ overrides:
   # plan cache) along the topology of the 0.08 m orthophoto (artifacts/junctions-r3/plan1/putry_n.jpg, trace/putry_n.jpg).
   - id: putry-n-median-nose
     kind: traffic_island
-    surface: apron_sett
-    polygon_en: [[-555.55, 130.3], [-555.5, 129.4], [-555.0, 128.75], [-554.2, 128.35], [-553.0, 128.2], [-551.8, 128.35],
-                 [-551.0, 128.75], [-550.55, 129.4], [-550.5, 130.3]]
+    surface: sidewalk_paving
+    # ADR 0117 (REVIEW s10-0110 P1-9, "placek-cokol"): smooth half ellipse (12 segments, was a half octagon), grey
+    # setts as on the orthophoto (was beige apron_sett), tip N 128.8 (was 128.2)
+    polygon_en: [[-555.6, 130.7], [-555.56, 130.21], [-555.3, 129.75], [-554.89, 129.36], [-554.35, 129.05],
+                 [-553.72, 128.86], [-553.05, 128.8], [-552.38, 128.86], [-551.75, 129.05], [-551.21, 129.36],
+                 [-550.8, 129.75], [-550.54, 130.21], [-550.5, 130.7]]
     reason: >-
       ADR 0110 (REVIEW s10-0100 P1-1a): the north median of the Putry N arm ended square at the crossover plate (open
       kerb end and a blunt face at N 129.6-130, the first thing the driver sees in eye_putry_n). The 0.08 m orthophoto

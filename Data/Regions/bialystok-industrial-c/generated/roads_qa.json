@@ -2335,8 +2335,8 @@
    "length_m": 569.9,
    "max_grade": 0.0567,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.927,
-   "sidewalk_frac": 1.0,
+   "profile_rms_vs_nmt_m": 0.926,
+   "sidewalk_frac": 0.0,
    "width_m": [
     8.0
    ],
@@ -10354,7 +10354,7 @@
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 505750,
+  "footprint_nodes": 505757,
   "fork_abreast": [
    {
     "alongside_run_m": 125.0,
@@ -11552,11 +11552,11 @@
      "surface": "sidewalk_paving"
     },
     {
-     "area_m2": 8.9,
+     "area_m2": 7.7,
      "built": true,
      "id": "putry-n-median-nose",
-     "note": "z 136.05",
-     "surface": "apron_sett"
+     "note": "z 136.06",
+     "surface": "sidewalk_paving"
     },
     {
      "area_m2": 35.0,
@@ -11775,7 +11775,7 @@
    "P-8 skipped (off carriageway)": 66
   },
   "markings_overlap_removed_tris": 104,
-  "nmt_nodes_replaced_under_decks": 2185,
+  "nmt_nodes_replaced_under_decks": 2171,
   "overrides_applied": [
    {
     "id": "kwadrat-park-yard-access-width",
@@ -12774,8 +12774,8 @@
    {
     "chain": "c:w175157461:1883101816-1883469484",
     "confidence": "medium",
-    "max_wall_h_m": 3.96,
-    "nmt_fill_max_m": 0.86,
+    "max_wall_h_m": 3.98,
+    "nmt_fill_max_m": 0.85,
     "walled_m": 110.5
    },
    {

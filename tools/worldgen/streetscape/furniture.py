@@ -37,6 +37,7 @@ from shapely.geometry import LineString, Point
 from roads import standards as S
 from roads.network import MEDIAN_RURAL, RURAL, URBAN, side_params, side_extent
 from roads.geom import dp_keep
+from roads.meshing import bridge_cap_w
 
 from . import facade_atlas as FA
 
@@ -287,7 +288,10 @@ def clear_under_decks(pl, parts, report):
     on the same base (ADR 0076, owner 2026-11-10: "a lamp stands in the middle of the lane" on the Andersa
     viaduct - a 12 m lamp of the road below came up through the deck). Lamps along a road that passes under a
     viaduct are placed by the same rule as anywhere else; under the deck there is no room for the column."""
-    deck = SurfaceTop(parts, layers=("bridge",))
+    # ADR 0117 (REVIEW s10-0110 P1-4): the deck barriers live in the `bridge` layer since ADR 0110 - their rails
+    # 0.7-1.1 m above the cap read as "a deck above the pole" and every lamp on the caps of the DK8 Putry decks was
+    # removed (p0_lamp_putry_eye). Only the structure counts, not the steel on it.
+    deck = SurfaceTop([p for p in parts if p.mat != "barrier_steel"], layers=("bridge",))
     groups = {}
     for it in pl.items:
         groups.setdefault((round(it["e"], 2), round(it["n"], 2)), []).append(it)
@@ -464,7 +468,10 @@ def lamps(pl, net, osm_nodes, origin, report):
                 z = None
                 if c.bridge[c.idx(s)]:
                     z = float(c.crossfall_z(s, sgn * hw)) + S.BRIDGE_KERB_H
-                    p = c.line.offset_point(s, sgn * (hw + S.KERB_TOP_W + 0.6))
+                    # ADR 0117: on a narrow cap (bridge_style cap_w < 1.3 m) the barrier stands 0.7 m behind the kerb
+                    # face - the pole goes behind it, at the cap edge (0.6 m would put it in the barrier line)
+                    cw = bridge_cap_w(c)
+                    p = c.line.offset_point(s, sgn * (hw + S.KERB_TOP_W + (0.6 if cw >= 1.3 else cw - 0.12)))
                 pl.add(proto if z is None else f"lamp_{int(spec['h'])}m", p, yaw_of(face), z=z, src=f"rule:{c.id}",
                        group="lamp")
                 n += 1
@@ -1018,13 +1025,120 @@ def retaining(lin, P, key):
         lin.slab("steel_galv", rail, top + zr - 0.03, top + zr + 0.03, 0.05, key + ":railing")
 
 
-def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
-    """Steel W-beam on posts (top GUARDRAIL_H), Z = ground/surface height along P (points ~1 m apart).
+# ADR 0117 (REVIEW s10-0110 P1-1): the W-beam as the folded sheet it is - 310 mm high, 83 mm deep, two flat crests and
+# a valley (the "A" guide rail of the SP-05 family; depth/height from the review table, fold positions WORKING_VALUE).
+# (offset towards the road from the back plane of the beam, height below its top edge). Every facet has its own
+# vertices: the exporter smooths normals inside a part, so shared rows shaded the beam as one tube.
+W_PROFILE = ((0.020, 0.0), (0.083, -0.040), (0.083, -0.105), (0.0, -0.155), (0.083, -0.205), (0.083, -0.270),
+             (0.020, -0.310))
+W_BACK = 0.05               # m: back plane (valley) of the beam in front of the post line P -> crest face at 0.133
+#                             (0.13 before: the collision face and the swept-path clearance stay where they were)
+POST_FRONT = -0.05          # m: road-side flange of the post behind P; the spacer fills POST_FRONT .. W_BACK (0.10 m)
+POST_C = (0.10, 0.055)      # ground post: C / sigma 100 x 55 (web across the road, flanges along it), WORKING_VALUE
+POST_C_DECK = (0.12, 0.064)  # deck post (heavier section on a foot plate, Mapillary 454716650857984), WORKING_VALUE
+# UV0 of the `barrier_galv` set (4.0 x 0.5 m tile, u along the beam, v = unrolled metres across the profile from the
+# bottom edge): posts / spacers / plates sample the plain sheet between the splices
+POST_U0 = 1.3
+RAIL_DP_M = 0.02            # Douglas-Peucker tolerance of the beams (ADR 0110: 0.01; 0117: 6 facets instead of 4 strips)
 
-    ADR 0110: `tall` (bool per point) = bridge barrier-railing ("barieroporecz"): posts to BRIDGE_BARRIER_H with a
-    flat mid rail and a handrail above the beam, as on the decks of the Andersa viaducts (Mapillary 454716650857984,
-    2948595898752384, 500263111404933: horizontal rails, no pickets). `term` = (start, end): the beam is turned down
-    to the ground over GUARDRAIL_TERMINAL_M at that end (a free end on the ground; REVIEW s10-0100 P2-7)."""
+
+def _w_unrolled():
+    v = [0.0]
+    pr = W_PROFILE[::-1]
+    for (o0, z0), (o1, z1) in zip(pr[:-1], pr[1:]):
+        v.append(v[-1] + math.hypot(o1 - o0, z1 - z0))
+    return v[::-1]            # per W_PROFILE point, top edge first
+
+
+def _quads(lin, layer, mat, quads, src, both=True):
+    """Flat-shaded quad soup: quads = [(4 points CCW seen from the front, 4 uv)]."""
+    V, UV, T = [], [], []
+    for pts, uv in quads:
+        b = len(V)
+        V += [np.asarray(q, float) for q in pts]
+        UV += list(uv)
+        T += [(b, b + 1, b + 2), (b, b + 2, b + 3)]
+        if both:
+            b = len(V)
+            V += [np.asarray(q, float) for q in pts]
+            UV += list(uv)
+            T += [(b, b + 2, b + 1), (b, b + 3, b + 2)]
+    if V:
+        lin.buf.add(layer, mat, np.array(V), np.array(UV, float), np.array(T), src=src)
+
+
+def _rail_posts(lin, Q, Zq, Tq, top, deck, key):
+    """C posts at Q (n, 2) with the open side downstream, a spacer block between post and beam, and on a deck a foot
+    plate. `top` = top of the W-beam above Zq per post; deck posts carry on to BRIDGE_BARRIER_H (upper beam)."""
+    quads, flanges = [], []
+    dep, fl = POST_C_DECK if deck else POST_C
+    f, bk = POST_FRONT, POST_FRONT - dep
+
+    def uv(u0, u1, h):
+        h = min(h, 0.44)
+        return ((POST_U0 + u0, 0.02), (POST_U0 + u1, 0.02), (POST_U0 + u1, 0.02 + h), (POST_U0 + u0, 0.02 + h))
+
+    def frame(q, t):
+        nn = np.array([-t[1], t[0]])                  # towards the road (beam side)
+        return lambda o, a, zz: np.append(q + nn * o + t * a, zz)
+
+    for q, z, t, tp in zip(Q, Zq, Tq, top):
+        P3 = frame(q, t)
+        z0 = z if deck else z - 0.3                    # ground posts are driven in
+        z1 = z + (S.BRIDGE_BARRIER_H if deck else tp - 0.03)
+        h = z1 - z0
+        # road-side flange, web, back flange (thin sheet, drawn from both sides)
+        # web from both sides; the flanges only from outside (ADR 0117 budget: 8 triangles per post)
+        quads.append(([P3(f, -fl / 2, z0), P3(bk, -fl / 2, z0), P3(bk, -fl / 2, z1), P3(f, -fl / 2, z1)],
+                      uv(0.1, 0.1 + dep, h)))
+        flanges.append(([P3(f, fl / 2, z0), P3(f, -fl / 2, z0), P3(f, -fl / 2, z1), P3(f, fl / 2, z1)], uv(0.0, fl, h)))
+        flanges.append(([P3(bk, -fl / 2, z0), P3(bk, fl / 2, z0), P3(bk, fl / 2, z1), P3(bk, -fl / 2, z1)],
+                        uv(0.3, 0.3 + fl, h)))
+    _quads(lin, "furniture", POST_MAT, quads, key, both=True)
+    solid = flanges
+    u = POST_U0 + 0.5
+    for q, z, t, tp in zip(Q, Zq, Tq, top):
+        P3 = frame(q, t)
+        # spacer ("przekladka"): block between the post flange and the valley of the beam; top + the two sides
+        a_, zs0, zs1 = 0.045, z + tp - 0.235, z + tp - 0.075
+        for sg in (1.0, -1.0):
+            pts = [P3(POST_FRONT, sg * a_, zs0), P3(W_BACK, sg * a_, zs0), P3(W_BACK, sg * a_, zs1),
+                   P3(POST_FRONT, sg * a_, zs1)]
+            solid.append((pts if sg > 0 else pts[::-1], ((u, 0.20), (u + 0.1, 0.20), (u + 0.1, 0.36), (u, 0.36))))
+        if deck:
+            # foot plate bolted to the cap: top and the road-side edge
+            f0, f1, a_, th = POST_FRONT + 0.05, POST_FRONT - dep - 0.05, 0.11, 0.02
+            solid.append(([P3(f1, a_, z + th), P3(f0, a_, z + th), P3(f0, -a_, z + th), P3(f1, -a_, z + th)],
+                          ((u + 0.2, 0.05), (u + 0.42, 0.05), (u + 0.42, 0.27), (u + 0.2, 0.27))))
+    _quads(lin, "furniture", POST_MAT, solid, key, both=False)
+
+
+def _stations(P, Z, top, spacing, lo, hi):
+    """Post stations every ~`spacing` along P[lo:hi + 1] (both ends included): points, foot z, tangents, beam top."""
+    Pp = P[lo:hi + 1]
+    s = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(Pp, axis=0).T))])
+    L = float(s[-1])
+    n = max(1, int(round(L / spacing)))
+    u = np.linspace(0.0, L, n + 1)
+    Q = np.column_stack([np.interp(u, s, Pp[:, 0]), np.interp(u, s, Pp[:, 1])])
+    d = np.gradient(Pp, axis=0)
+    d /= np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)[:, None]
+    Tq = np.column_stack([np.interp(u, s, d[:, 0]), np.interp(u, s, d[:, 1])])
+    Tq /= np.maximum(np.hypot(Tq[:, 0], Tq[:, 1]), 1e-9)[:, None]
+    return Q, np.interp(u, s, Z[lo:hi + 1]), Tq, np.interp(u, s, top[lo:hi + 1])
+
+
+def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
+    """Steel W-beam on posts (top GUARDRAIL_H), Z = ground/surface height along P (points ~1 m apart). P is the post
+    line; the road is on its LEFT normal side (beam face W_BACK + 0.083 in front of it).
+
+    ADR 0110: `tall` (bool per point) = deck barrier of the Andersa viaducts. `term` = (start, end): the beam is
+    turned down to the ground over GUARDRAIL_TERMINAL_M at that end (a free end on the ground).
+    ADR 0117: folded W profile with hard arrises (W_PROFILE), C posts with a spacer behind the beam (the beam hangs on
+    the face of the post, not on its top), ground posts every GUARDRAIL_POST_SPACING_GROUND; deck runs: heavier posts
+    on foot plates every GUARDRAIL_POST_SPACING with a box beam above the W-beam (Mapillary 454716650857984: low
+    W-beam + upper beam on short posts; the handrail with horizontal bars at the deck edge is a separate railing -
+    hero asset / roads.meshing.build_bridge_extras)."""
     n = len(P)
     tall = np.zeros(n, bool) if tall is None else np.asarray(tall, bool)
     first = len(lin.buf.parts)
@@ -1038,6 +1152,10 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
         if term[1] and not tall[-tl - 1:].any():
             top[-tl - 1:] = np.linspace(S.GUARDRAIL_H, 0.33, tl + 1)
             hi = n - tl
+    d = np.gradient(P, axis=0)
+    d /= np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)[:, None]
+    nrm = np.column_stack([-d[:, 1], d[:, 0]])
+    s_all = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
     # posts: one family per run of low / tall points (shared boundary point belongs to the tall run)
     k = lo
     while k < hi:
@@ -1045,41 +1163,61 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
         while kk + 1 < hi and tall[kk + 1] == tall[k]:
             kk += 1
         if kk > k:
-            if tall[k]:
-                lin.posts(POST_MAT, P[k:kk + 1], S.GUARDRAIL_POST_SPACING, 0.1, 0.06, S.BRIDGE_BARRIER_H,
-                          zb=Z[k:kk + 1], src=key)
-                kp = dp_keep(np.column_stack([P[k:kk + 1], Z[k:kk + 1]]), 0.01)
-                Pt, zt = P[k:kk + 1][kp], Z[k:kk + 1][kp]
-                lin.ribbon("barrier_steel", Pt, zt + S.BRIDGE_BARRIER_MID - 0.03, zt + S.BRIDGE_BARRIER_MID + 0.03,
-                           0.03, key)
-                lin.slab("barrier_steel", Pt, zt + S.BRIDGE_BARRIER_H - 0.06, zt + S.BRIDGE_BARRIER_H, 0.06, key)
-            else:
-                lin.posts(POST_MAT, P[k:kk + 1], S.GUARDRAIL_POST_SPACING, 0.1, 0.05, S.GUARDRAIL_H - 0.05,
-                          zb=Z[k:kk + 1], src=key)
+            deck = bool(tall[k])
+            Q, Zq, Tq, tq = _stations(P, Z, top, S.GUARDRAIL_POST_SPACING if deck else S.GUARDRAIL_POST_SPACING_GROUND,
+                                      k, kk)
+            if not deck and k > lo and tall[k - 1]:
+                Q, Zq, Tq, tq = Q[1:], Zq[1:], Tq[1:], tq[1:]          # the boundary post is the deck post
+            if len(Q):
+                _rail_posts(lin, Q, Zq, Tq, tq, deck, key)
+            if deck:
+                # upper box beam (100 x 80) on the road face of the posts; at an end where the W-beam carries on
+                # along the ground it slopes down behind the W-beam over 2 m instead of stopping in the air
+                zt = np.full(kk - k + 1, S.BRIDGE_BARRIER_H)
+                if kk - k >= 6:                       # every end (also a run end: no beam stopping in the air)
+                    zt[:3] = np.linspace(S.GUARDRAIL_H - 0.02, S.BRIDGE_BARRIER_H, 3)
+                    zt[-3:] = np.linspace(S.BRIDGE_BARRIER_H, S.GUARDRAIL_H - 0.02, 3)
+                kp = dp_keep(np.column_stack([P[k:kk + 1], Z[k:kk + 1] + zt]), RAIL_DP_M)
+                Pt, zz, nt, st = P[k:kk + 1][kp], (Z[k:kk + 1] + zt)[kp], nrm[k:kk + 1][kp], s_all[k:kk + 1][kp]
+                box = ((POST_FRONT, 0.0), (POST_FRONT + 0.08, 0.0), (POST_FRONT + 0.08, -0.10), (POST_FRONT, -0.10))
+                uvv = (0.40, 0.46, 0.34, 0.42)
+                for (o0, z0), (o1, z1), v0 in list(zip(box, box[1:] + box[:1], uvv))[:2] + [(box[3], box[0], uvv[3])]:
+                    A = np.column_stack([Pt + nt * o0, zz + z0])
+                    B = np.column_stack([Pt + nt * o1, zz + z1])
+                    m_ = len(Pt)
+                    V = np.concatenate([A, B])
+                    UV = np.column_stack([np.tile(st, 2), np.repeat([v0, v0 + 0.06], m_)])
+                    T = [(i, i + 1, m_ + i + 1) for i in range(m_ - 1)] + [(i, m_ + i + 1, m_ + i) for i in range(m_ - 1)]
+                    lin.buf.add("furniture", "barrier_steel", V, UV, np.array(T), src=key)
         k = kk + 1
-    d = np.gradient(P, axis=0)
-    d /= np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)[:, None]
-    nrm = np.column_stack([-d[:, 1], d[:, 0]])
     # ADR 0110: the beam keeps only the points a 1 cm Douglas-Peucker needs (it was meshed every metre: 16 triangles
     # per metre also on straights; the posts above keep their spacing)
-    kp = dp_keep(np.column_stack([P, Z + top]), 0.01)
-    P, Z, top, nrm = P[kp], Z[kp], top[kp], nrm[kp]
+    kp = dp_keep(np.column_stack([P, Z + top]), RAIL_DP_M)
+    P, Z, top, nrm, s = P[kp], Z[kp], top[kp], nrm[kp], s_all[kp]
     n = len(P)
-    # W profile (two bulges toward the road side, +nrm): 5 points of the 0.31 m high beam
-    prof = [(0.0, -0.31), (0.05, -0.24), (0.0, -0.155), (0.05, -0.07), (0.0, 0.0)]
-    rows = []
-    for o, dz in prof:
-        rows.append(np.column_stack([P + nrm * (0.08 + o), Z + top + dz]))
+    vv = _w_unrolled()
+    rows, uvr = [], []
+    for (o0, z0), (o1, z1), v0, v1 in zip(W_PROFILE[:-1], W_PROFILE[1:], vv[:-1], vv[1:]):
+        rows.append(np.column_stack([P + nrm * (W_BACK + o0), Z + top + z0]))
+        rows.append(np.column_stack([P + nrm * (W_BACK + o1), Z + top + z1]))
+        uvr += [v0, v1]
     V = np.concatenate(rows)
-    s = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
-    UV = np.column_stack([np.tile(s, len(rows)), np.repeat(np.arange(len(rows)) * 0.08, n)])
+    UV = np.column_stack([np.tile(s, len(rows)), np.repeat(uvr, n)])
     T = []
-    for r in range(len(rows) - 1):
+    for r in range(0, len(rows), 2):
         a, b = r * n, (r + 1) * n
         T += [(a + k, a + k + 1, b + k + 1) for k in range(n - 1)] + [(a + k, b + k + 1, b + k) for k in range(n - 1)]
     T = np.array(T)
     lin.buf.add("furniture", "barrier_steel", V, UV, T, src=key)
-    lin.buf.add("furniture", "barrier_steel", V, UV, T[:, [0, 2, 1]], src=key)
+    # back of the sheet: two facets (top edge - valley - bottom edge); the folds are a road-side thing (budget)
+    bi = [0, 5, 6, 11]
+    Vb = np.concatenate([rows[i] for i in bi])
+    UVb = np.column_stack([np.tile(s, 4), np.repeat([uvr[i] for i in bi], n)])
+    Tb = []
+    for r in (0, 2):
+        a, b = r * n, (r + 1) * n
+        Tb += [(a + k, b + k + 1, a + k + 1) for k in range(n - 1)] + [(a + k, b + k, b + k + 1) for k in range(n - 1)]
+    lin.buf.add("furniture", "barrier_steel", Vb, UVb, np.array(Tb), src=key)
     if tall.any() or key.endswith(":structure"):
         # ADR 0110: a run on a deck, and a run beside a viaduct, belong to the bridge mesh of their chunk (drawn with
         # the deck; one barrier_steel primitive for both), not to the furniture mesh (fences, hedges: its bounds grew
@@ -1087,7 +1225,15 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
         for prt in lin.buf.parts[first:]:
             if prt.layer == "furniture":
                 prt.layer = "bridge"
-    lin.buf.add("collision", "collision_steel", V, UV, np.concatenate([T, T[:, [0, 2, 1]]]), src=key)
+    # collision: the road face of the beam only (top edge - crests - bottom edge), where it was before ADR 0117
+    cr = [0, 1, 3, 7, 9, 11]
+    Vc = np.concatenate([rows[i] for i in cr])
+    Tc = []
+    for r in range(len(cr) - 1):
+        a, b = r * n, (r + 1) * n
+        Tc += [(a + k, a + k + 1, b + k + 1) for k in range(n - 1)] + [(a + k, b + k + 1, b + k) for k in range(n - 1)]
+    Tc = np.array(Tc)
+    lin.buf.add("collision", "collision_steel", Vc, Vc[:, :2], np.concatenate([Tc, Tc[:, [0, 2, 1]]]), src=key)
 
 
 # ADR 0110: posts share the material of the beam (galvanised steel both): one draw call per furniture chunk instead of two
@@ -1099,18 +1245,54 @@ GUARDRAIL_DEDUP_GROUND_M = 2.5   # ADR 0110 (REVIEW s10-0100 P1-6): ground runs 
 GUARDRAIL_MIN_RUN = 8       # points (1 m apart) of a run left after the dedup; shorter leftovers are dropped
 
 
+GUARDRAIL_JOIN_M = 4.0      # ADR 0117: a run cut by the dedup is led onto the rail that cut it when that is this close
+GUARDRAIL_JOIN_BLEND = 8    # points (1 m) over which the cut end swings onto the other rail
+
+
 def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True)):
     """Build the parts of run P that are not within the dedup distance of a rail built before (two chains / a chain
-    and an authored rail on the same separator crossed and overlapped at E -782 and on the viaduct approaches)."""
+    and an authored rail on the same separator crossed and overlapped at E -782 and on the viaduct approaches).
+
+    ADR 0117 (REVIEW s10-0110 P1-6, p0_kerb_merge_eye): a cut end used to stop in the air beside the other rail,
+    which itself dived into the ground 2 m further (two runs at two angles, two posts side by side). Now the cut
+    end swings onto the nearest point of the rail that cut it (GUARDRAIL_JOIN_M) and, when runs are queued
+    (`lin.rail_queue`, guardrails()), the end of that rail it lands on loses its turned-down terminal: one rail."""
     from shapely.geometry import LineString, Point
+    from shapely.ops import nearest_points
+    P = np.array(P, float)
     keep = np.ones(len(P), bool)
     tall = np.zeros(len(P), bool) if tall is None else np.asarray(tall, bool)
+    allb = None
     if built:
         near = shapely.union_all([b.buffer(GUARDRAIL_DEDUP_M) for b in built])
         far = shapely.union_all([b.buffer(GUARDRAIL_DEDUP_GROUND_M) for b in built])
+        allb = shapely.union_all(built)
         shapely.prepare(near)
         shapely.prepare(far)
         keep = ~np.where(tall, shapely.contains_xy(near, P[:, 0], P[:, 1]), shapely.contains_xy(far, P[:, 0], P[:, 1]))
+    queue = getattr(lin, "rail_queue", None)
+
+    def join(Ps, end):
+        """Swing end `end` (0 / -1) of segment Ps onto the rail that cut it; True when joined."""
+        q = nearest_points(allb, Point(Ps[end]))[0]
+        q = np.array([q.x, q.y])
+        dv = q - Ps[end]
+        if float(np.hypot(*dv)) > GUARDRAIL_JOIN_M or len(Ps) < GUARDRAIL_JOIN_BLEND + 2:
+            return False
+        u = np.linspace(1.0, 0.0, GUARDRAIL_JOIN_BLEND + 1)[:-1]
+        w = u * u * (3 - 2 * u)
+        idx = np.arange(GUARDRAIL_JOIN_BLEND) if end == 0 else len(Ps) - 1 - np.arange(GUARDRAIL_JOIN_BLEND)
+        Ps[idx] += dv[None, :] * w[:, None]
+        m["joined_ends"] = m.get("joined_ends", 0) + 1
+        if queue:
+            for it in queue:                       # the rail it lands on: no turned-down terminal at that end
+                for e_ in (0, -1):
+                    if float(np.hypot(*(it["P"][e_] - q))) < 6.0:
+                        t_ = list(it["term"])
+                        t_[e_] = False
+                        it["term"] = tuple(t_)
+        return True
+
     k = 0
     while k < len(P):
         if not keep[k]:
@@ -1120,14 +1302,75 @@ def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True)):
         while kk + 1 < len(P) and keep[kk + 1]:
             kk += 1
         if kk - k + 1 >= GUARDRAIL_MIN_RUN:
+            Ps = P[k:kk + 1].copy()
             # a cut made by the dedup is not a free end (the other rail carries on there)
-            guardrail(lin, P[k:kk + 1], Z[k:kk + 1], key, tall[k:kk + 1],
-                      (term[0] and k == 0, term[1] and kk == len(P) - 1))
-            built.append(LineString(P[k:kk + 1]))
+            t0, t1 = term[0] and k == 0, term[1] and kk == len(P) - 1
+            if allb is not None:
+                if k > 0:
+                    join(Ps, 0)
+                if kk < len(P) - 1:
+                    join(Ps, -1)
+            it = {"P": Ps, "Z": Z[k:kk + 1], "key": key, "tall": tall[k:kk + 1], "term": (t0, t1)}
+            if queue is not None:
+                queue.append(it)
+            else:
+                guardrail(lin, it["P"], it["Z"], key, it["tall"], it["term"])
+            built.append(LineString(Ps))
         else:
             m["dedup_dropped_pts"] = m.get("dedup_dropped_pts", 0) + (kk - k + 1)
         k = kk + 1
     m["dedup_skipped_pts"] = m.get("dedup_skipped_pts", 0) + int((~keep).sum())
+
+
+def _join_free_ends(queue, m):
+    """ADR 0117 (p0_kerb_merge_eye): an end of a run that stops within GUARDRAIL_JOIN_M of ANOTHER rail (a deck
+    barrier starting 2 m beside the separator rail of the gore, two rails of one nose) swings onto it: the rails meet
+    in a V / Y as on the orthophoto (E -781 N 76.5) instead of ending side by side. The end loses its terminal."""
+    from shapely.geometry import LineString, Point
+    from shapely.ops import nearest_points
+    lines = [LineString(it["P"]) for it in queue]
+    for i, it in enumerate(queue):
+        Ps = it["P"]
+        if len(Ps) < GUARDRAIL_JOIN_BLEND + 4:
+            continue
+        for end in (0, -1):
+            pe = Point(Ps[end])
+            # rails at the same level only (a deck rail passes over a ground rail without meeting it)
+            others = []
+            for j, l in enumerate(lines):
+                if j == i or l.distance(pe) > GUARDRAIL_JOIN_M:
+                    continue
+                Pj = queue[j]["P"]
+                kj = int(np.argmin(np.hypot(Pj[:, 0] - Ps[end][0], Pj[:, 1] - Ps[end][1])))
+                if abs(float(queue[j]["Z"][kj]) - float(it["Z"][end])) < 1.0:
+                    others.append(l)
+            if not others:
+                continue
+            allb = shapely.union_all(others)
+            d = allb.distance(pe)
+            if not (0.3 < d <= GUARDRAIL_JOIN_M):
+                continue
+            q = nearest_points(allb, pe)[0]
+            dv = np.array([q.x, q.y]) - Ps[end]
+            u = np.linspace(1.0, 0.0, GUARDRAIL_JOIN_BLEND + 1)[:-1]
+            w = u * u * (3 - 2 * u)
+            idx = np.arange(GUARDRAIL_JOIN_BLEND) if end == 0 else len(Ps) - 1 - np.arange(GUARDRAIL_JOIN_BLEND)
+            Ps[idx] += dv[None, :] * w[:, None]
+            t_ = list(it["term"])
+            t_[end] = False
+            it["term"] = tuple(t_)
+            m["joined_free_ends"] = m.get("joined_free_ends", 0) + 1
+        lines[i] = LineString(Ps)
+
+
+def _flush_rails(lin, m=None):
+    queue = getattr(lin, "rail_queue", None) or []
+    if queue and m is not None:
+        _join_free_ends(queue, m)
+    for it in queue:
+        guardrail(lin, it["P"], it["Z"], it["key"], it["tall"], it["term"])
+    lin.rail_queue = None
+    return [bool(np.all(it["tall"])) for it in queue]
 
 
 STRUCT_GUARD_GAP_M = 8.0     # WORKING_VALUE (ADR 0110): a ground carriageway edge this close to a viaduct / walled ramp
@@ -1153,7 +1396,7 @@ def _structures(net):
             if len(run) < 3:
                 continue
             pts = c.line.p[run]
-            half = float(np.max(c.hw[run])) + S.KERB_TOP_W + S.BRIDGE_CAP_W
+            half = float(np.max(c.hw[run])) + S.KERB_TOP_W + bridge_cap_w(c)
             out.append((c.id, LineString(pts).buffer(half, cap_style="flat"), cKDTree(pts),
                         np.asarray(c.crossfall_z(c.line.s[run], 0.0), float)))
     return out
@@ -1189,6 +1432,29 @@ def guardrails(lin, net, zground, report):
     built = []
     drops, runs = [], []
     structs = _structures(net)
+    # ADR 0117: authored rails are built FIRST (they are traced; the rule runs give way and join them); runs are
+    # queued so that a later join can still cancel the turned-down terminal of the rail it lands on
+    lin.rail_queue = []
+    # ADR 0100: authored guardrails on kerbed separators traced on the orthophoto (`kind: guardrail`, polyline_en in
+    # region-local E/N, drawn with the road on the RIGHT of the drawing direction = the face of the W-beam)
+    m["authored"] = 0.0
+    for o in getattr(net, "authored", None) or []:
+        if o.get("kind") != "guardrail":
+            continue
+        Q = np.asarray(o.get("polyline_en") or [], float)
+        if Q.ndim != 2 or len(Q) < 2:
+            net.overrides_stale.append(o["id"])
+            continue
+        sq = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(Q, axis=0).T))])
+        u = np.linspace(0.0, sq[-1], max(2, int(np.ceil(sq[-1])) + 1))
+        P = np.column_stack([np.interp(u, sq, Q[:, 0]), np.interp(u, sq, Q[:, 1])])
+        Z = lin.z(P)
+        if not np.isfinite(Z).all():
+            net.overrides_stale.append(o["id"])
+            continue
+        _dedup_guardrail(lin, P, Z, f"authored:{o['id']}", built, m)
+        net.overrides_applied.append({"id": o["id"], "targets": [f"guardrail@{P[0][0]:.0f},{P[0][1]:.0f}"]})
+        m["authored"] += float(sq[-1])
     for c in net.chains:
         if c.meta.get("absorbed"):
             continue
@@ -1212,7 +1478,13 @@ def guardrails(lin, net, zground, report):
             # bridges: barrier-railing on the cap, BRIDGE_BARRIER_EDGE_M in from its outer edge (ADR 0110: the
             # orthophoto of the Biezenstwa decks has it 0.2-0.4 m from the deck edge, 0.8-1.0 m behind the kerb)
             want[br] = 1
-            off[br] = hw[br] + S.KERB_TOP_W + S.BRIDGE_CAP_W - S.BRIDGE_BARRIER_EDGE_M
+            # ADR 0117: the post line keeps BRIDGE_BARRIER_EDGE_M to the cap edge on a 1.5 m cap; on a narrower cap
+            # (bridge_style cap_w, Biezenstwa 1.0 m) the beam face stands BRIDGE_BARRIER_FACE_M behind the kerb face
+            # (Mapillary 454716650857984: edge line -> face ~1.25 m, kerb -> face ~0.7 m) but never closer than
+            # BRIDGE_BARRIER_EDGE_MIN_M to the cap edge
+            edge = np.clip(kw[br] + S.KERB_TOP_W - (S.BRIDGE_BARRIER_FACE_M + W_BACK + 0.083),
+                           S.BRIDGE_BARRIER_EDGE_MIN_M, S.BRIDGE_BARRIER_EDGE_M)
+            off[br] = hw[br] + S.KERB_TOP_W + kw[br] - edge
             zb[br] = zg[br] + S.BRIDGE_KERB_H
             med = (kinds == MEDIAN_RURAL) & ~br
             want[med] = 2
@@ -1277,32 +1549,104 @@ def guardrails(lin, net, zground, report):
                     for q in (1, 2, 3, 4):
                         m[names[q]] += float((want[sl] == q).sum())
                 k = kk + 1
-    # ADR 0100: authored guardrails on kerbed separators traced on the orthophoto (`kind: guardrail`, polyline_en in
-    # region-local E/N, drawn with the road on the RIGHT of the drawing direction = the face of the W-beam)
-    m["authored"] = 0.0
-    for o in getattr(net, "authored", None) or []:
-        if o.get("kind") != "guardrail":
-            continue
-        Q = np.asarray(o.get("polyline_en") or [], float)
-        if Q.ndim != 2 or len(Q) < 2:
-            net.overrides_stale.append(o["id"])
-            continue
-        sq = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(Q, axis=0).T))])
-        u = np.linspace(0.0, sq[-1], max(2, int(np.ceil(sq[-1])) + 1))
-        P = np.column_stack([np.interp(u, sq, Q[:, 0]), np.interp(u, sq, Q[:, 1])])
-        Z = lin.z(P)
-        if not np.isfinite(Z).all():
-            net.overrides_stale.append(o["id"])
-            continue
-        _dedup_guardrail(lin, P, Z, f"authored:{o['id']}", built, m)
-        net.overrides_applied.append({"id": o["id"], "targets": [f"guardrail@{P[0][0]:.0f},{P[0][1]:.0f}"]})
-        m["authored"] += float(sq[-1])
+    deck_flags = _flush_rails(lin, m)
     report["guardrails_m"] = {k: round(v) for k, v in m.items()}
+    # pier_guardrails (after the bridge supports exist) dedups against the GROUND rails (deck rails pass overhead)
+    net.guardrail_built = [b for b, dk in zip(built, deck_flags) if not dk] if len(deck_flags) == len(built) else built
     d = np.array(drops) if drops else np.zeros(1)
     report["embankment_check"] = {"rural_sides": len(drops), "max_drop_m": round(float(d.max()), 2),
                                   "p95_drop_m": round(float(np.percentile(d, 95)), 2),
                                   "threshold_m": S.GUARDRAIL_EMBANKMENT_H, "runs": runs,
                                   "ground": "NMT (decks removed) at the profile end + 5 / 7 / 9 m"}
+
+
+PIER_GUARD_GAP_M = 4.5       # WORKING_VALUE (ADR 0117, REVIEW s10-0110 P1-7): pier axis this close to a carriageway edge
+PIER_GUARD_REACH_M = 8.0     # ... gets a W-beam reaching this far past it both ways (+ the turned-down terminals)
+PIER_R_M = 0.5               # half size of a pier across (hero column 0.8 x 1.0 m, generic cylinder r 0.6 m)
+
+
+def pier_guardrails(lin, net, piers, parts, report):
+    """ADR 0117: W-beam between a ground carriageway and a viaduct pier standing closer than PIER_GUARD_GAP_M to its
+    edge (Mapillary 177786140912399: W-beam in front of a pier of the Biezenstwa viaduct at the roundabout kerb).
+    `piers` = (n, 2) pier axes: hero spec columns + the generic cylinders (roads.meshing.build_bridge_supports), so
+    it runs after them, not in guardrails(). The edge is the outline of the ground asphalt (chains, junction plates and
+    roundabout rings alike), the post line GUARDRAIL_OFFSET behind the kerb (closer when the pier leaves no room);
+    runs are deduplicated against the rails built before. WORKING rule."""
+    from scipy.spatial import cKDTree
+    from shapely.geometry import LineString, Point, Polygon
+    from shapely.ops import substring, unary_union
+    piers = np.asarray(piers, float).reshape(-1, 2)
+    m = {}
+    total, hits = 0.0, []
+    built = getattr(net, "guardrail_built", None)
+    if built is None:
+        built = net.guardrail_built = []
+    reach = PIER_GUARD_REACH_M + S.GUARDRAIL_TERMINAL_M
+    tri, kerb = [], []
+    for p in parts:
+        if p.layer != "road" or not len(p.T):
+            continue
+        if p.mat.startswith("road_asphalt") and not p.src.endswith(":vg"):
+            tri.append(p.V[p.T])
+        elif p.mat == "curb_concrete":
+            kerb.append(p.V[:, :2])
+    if len(piers) and tri:
+        A = np.concatenate(tri)
+        cen = A[:, :, :2].mean(1)
+        ktree = cKDTree(np.concatenate(kerb)) if kerb else None
+        for i, q in enumerate(piers):
+            sel = np.hypot(cen[:, 0] - q[0], cen[:, 1] - q[1]) < PIER_GUARD_GAP_M + reach + 6.0
+            if not sel.any():
+                continue
+            loc = A[sel]
+            U = unary_union([Polygon(t[:, :2]).buffer(0.03) for t in loc]).buffer(-0.03)
+            pq = Point(q)
+            dq = float(U.distance(pq))
+            if dq <= 0.0 or dq > PIER_GUARD_GAP_M:
+                continue
+            rings = []
+            for g in getattr(U, "geoms", [U]):
+                rings += [g.exterior] + list(g.interiors)
+            ring = min(rings, key=lambda r: r.distance(pq))
+            off = min(S.KERB_TOP_W + S.GUARDRAIL_OFFSET, dq - PIER_R_M - 0.35)
+            if off < 0.3 or ring.length < 2 * reach + 2:
+                continue
+            # start the ring opposite the pier so the stretch beside it does not cross the seam
+            C = np.asarray(ring.coords)[:-1]
+            k0 = int(np.argmax(np.hypot(C[:, 0] - q[0], C[:, 1] - q[1])))
+            line = LineString(np.vstack([C[k0:], C[:k0 + 1]]))
+            s0 = line.project(pq)
+            seg = substring(line, max(s0 - reach, 0.0), min(s0 + reach, line.length)).simplify(0.05)
+            n = max(2, int(round(seg.length)) + 1)
+            P = np.array([seg.interpolate(t).coords[0] for t in np.linspace(0.0, seg.length, n)])
+            if len(P) < 2 * S.GUARDRAIL_TERMINAL_M + 6:
+                continue
+            d = np.gradient(P, axis=0)
+            d /= np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)[:, None]
+            nrm = np.column_stack([-d[:, 1], d[:, 0]])
+            j = int(np.argmin(np.hypot(P[:, 0] - q[0], P[:, 1] - q[1])))
+            sg = 1.0 if float((q - P[j]) @ nrm[j]) > 0 else -1.0
+            E = P + nrm * sg * off
+            # foot height: nearest asphalt vertex + kerb (when a kerb runs along this edge)
+            V3 = loc.reshape(-1, 3)
+            _, kk = cKDTree(V3[:, :2]).query(P)
+            z = V3[kk, 2]
+            if ktree is not None:
+                dk, _ = ktree.query(P)
+                z = z + np.where(dk < 0.6, S.KERB_HEIGHT, -0.02)
+            z = np.convolve(np.pad(z, 2, mode="edge"), np.ones(5) / 5, mode="valid")
+            if sg > 0:                       # guardrail(): the road is on the LEFT of the post line
+                E, z = E[::-1], z[::-1]
+            n0 = len(built)
+            _dedup_guardrail(lin, E, z, f"pier{i}:structure", built, m)
+            got = sum(b_.length for b_ in built[n0:])
+            total += got
+            if got > 0:
+                hits.append({"pier": [round(float(q[0]), 1), round(float(q[1]), 1)], "edge_m": round(dq, 2),
+                             "offset_m": round(off, 2), "built_m": round(got, 1)})
+    report.setdefault("guardrails_m", {})["pier"] = round(total)
+    report["guardrails_pier"] = {"piers": int(len(piers)), "gap_m": PIER_GUARD_GAP_M, "built_m": round(total, 1),
+                                 "runs": hits, **{k: int(v) for k, v in m.items()}}
 
 
 def is_noise_wall(tags):

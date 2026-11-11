@@ -61,8 +61,12 @@ DEFAULTS = {
     "col_chamfer_m": 0.12,
     "bearing_gap_m": 0.22,       # plinth + elastomeric bearing between column head and girder
     "abutment_t_m": 1.00,
-    # ADR 0110: 0 = no picket railing in the asset. The decks carry the generated steel barrier-railing
-    # (streetscape.furniture.guardrails, horizontal rails as on Mapillary 454716650857984 / 500263111404933).
+    # ADR 0110: 0 = no picket railing in the asset. ADR 0117: the railing at the deck edge is back, with horizontal
+    # bars (viaduct_steel.png; Mapillary 500263111404933 from below, 454716650857984 from the deck: a separate
+    # handrail with horizontal bars behind the road barrier). The road barrier (W-beam + upper beam) is generated
+    # (streetscape.furniture.guardrails) and stands in front of it.
+    # Set per asset in the override (`set: {rail_h_m: 1.10, rail_inset_m: 0.08}` for viaduct_biezenstwa); the default
+    # stays 0 so that the specs of other heroes (0105 DK8 underdeck) do not change.
     "rail_h_m": 0.0,
     "rail_inset_m": 0.15,
     "rail_post_m": 2.0,
@@ -380,6 +384,20 @@ def plan(w, region_id, overrides, zground, blocked, log=lambda *a: None) -> list
         sp.write_text(json.dumps([h["spec"] for h in out if h.get("underdeck")],
                                  sort_keys=True, indent=1) + "\n", encoding="utf-8", newline="\n")
     return out
+
+
+def pier_points(heroes, parts):
+    """(n, 2) axes of all viaduct piers: hero spec columns + the generic pier cylinders left in the buffer
+    (src "<chain>:pier"); for streetscape.furniture.pier_guardrails (ADR 0117)."""
+    pts = []
+    for h in heroes:
+        for dk in (h.get("spec") or {}).get("decks", []):
+            for pr in dk.get("piers", []):
+                pts += [q[:2] for q in pr["cols"]]
+    for p in parts:
+        if p.layer == "bridge" and p.src.endswith(":pier") and len(p.V):
+            pts.append(((p.V[:, :2].min(0) + p.V[:, :2].max(0)) / 2).tolist())
+    return np.asarray(pts, float).reshape(-1, 2)
 
 
 def chain_ids(heroes) -> set:

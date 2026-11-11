@@ -1127,12 +1127,14 @@ def structure_sides(c: Chain, mask: np.ndarray):
     walled ramps after assign_sides, so they kept the rural shoulder + ditch at deck height (a 2.65 m strip
     instead of the 1.5 m cap, overhanging the on-ramp beside Andersa at Rondo Bieżeństwa)."""
     sig = 2.0 / DENSE
+    from . import meshing as _M              # bridge_style overrides (ADR 0117: per-bridge cap width `cap_w`)
+    cap_w = _M.bridge_cap_w(c)
     for side in ("L", "R"):
         d = c.side[side]
         raw = d["raw"]
         d["kind"][mask] = URBAN
         raw["h"][mask] = S.BRIDGE_KERB_H
-        raw["w"][mask] = S.BRIDGE_CAP_W
+        raw["w"][mask] = cap_w
         d["mat"][mask] = 2
         raw["depth"][mask] = S.BRIDGE_DECK_THICKNESS + S.BRIDGE_KERB_H
         d["h"], d["w"], d["depth"] = smooth_1d(raw["h"], sig), smooth_1d(raw["w"], sig), smooth_1d(raw["depth"], sig)
