@@ -37,3 +37,5 @@ Krok 14: po około 14 minutach kolejki zatrzymano wyłącznie własny proces ocz
 Następny krok: ponowny AuditHeights tą samą pulą; bez omijania blokady zasobów.
 Uzupełnienie kroku 14: zatrzymanie wrappera pozostawiło jego własny proces Acquire (PID 71344, rodzic 58904), który trzymał log. Sprawdzono tożsamość i zatrzymano także ten proces oczekujący; nie działał żaden Python audytu i nie było własnego slotu. Pierwsze wznowienie nie wystartowało przez otwarty log. Log przeniesiono dopiero po zamknięciu obu procesów.
 Następny krok: ponowne uruchomienie AuditHeights, kod wyniku odczytać z nowego kwitu zadania.
+Krok 15: podczas kolejki przygotowano 10 bazowych par G3-B z atrybucją i klasą B w baseline-photo-review; obejrzano arkusze 1–3 (9 par), do 960 px. Ujęcia pod słońce nie nadają się do werdyktu fotometrycznego. W dziennym 150280503737744 kominy i miejska sylwetka wymagają szczególnej oceny po regeneracji; samo poprawienie źródła wysokości nie zamyka jakości zdjęcie–render.
+Następny krok: wynik audytu, ograniczenie metadanych i nowe rendery; dotychczasowe pary są wyłącznie bazą, nie dowodem poprawy r2.
