@@ -156,7 +156,7 @@ namespace Game.Rendering.Editor
             try
             {
                 // Native 2340x1080 hall3 ROI, reviewed visually: a long vertical warehouse wall.
-                var ray = cam.ViewportPointToRay(new Vector3(1420f/2340f, 1f-560f/1080f, 0f));
+                var ray = cam.ViewportPointToRay(new Vector3(1300f/2340f, 1f-560f/1080f, 0f));
                 if (!Physics.Raycast(ray, out var hit, cam.farClipPlane, ~0, QueryTriggerInteraction.Ignore) ||
                     Mathf.Abs(hit.normal.y) > 0.03f)
                     throw new InvalidOperationException("Shadow wall probe did not hit a vertical collider");
