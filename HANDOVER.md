@@ -20,7 +20,7 @@
 | Argon 0085 | 0085 | argon-edge | artifacts/edge-far-r1 | czeka na poprawkę |
 
 ## Następne kroki
-1. Regeneracja 0086 + recenzja ZROBIONE. Integracja na main w toku (lider, tło): `artifacts/integration-s10/run.ps1` → `run.log` (import-region, Truck/Trailer BuildBatch, InstallBatch, EditMode, PlayMode, APK Low).
+1. Integracja na main ZROBIONA (10:30–10:39, main 584f2cd4 + _Generated): import OK (Fab bez fallbacku), Truck/Trailer BuildBatch + InstallBatch OK, EditMode 226/226, PlayMode 110/0/7 skip, APK Low `artifacts/apk/kamion-0.1.0-43bc53a769-dirty.apk` 186,9 MB SHA256 a15d182d8fc3ab038bdf0b69f63dd1b279d3f8b92a05d35514fe5b6e790ee41d („dirty” = reserializacja LP_*.asset przez Unity, cofnięta). Log `artifacts/integration-s10/run.log`. Telefon A16 Low: `artifacts/integration-s10/phone.ps1` → `phone.log` (lock `artifacts/locks/PHONE_RUN`; jeśli sesja padła — usuń lock).
 2. Integracja na main z Megascans + 0086 (import-region, Truck BuildBatch/InstallBatch, EditMode/PlayMode, APK Low) → telefon A16 Low gate3.
 3. Scalanie GPT B 0088 → C 0098 po REPORT.md; 0097 po REPORT.md.
 4. Węzły r3 wg recenzji 0095; Kwadrat r13 po zdjęciach właściciela; raport bramki 3.
