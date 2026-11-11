@@ -1,3 +1,36 @@
+# HANDOVER — kamion, ZAMKNIĘCIE sesji 10 (2026-11-11 ~22:50; właściciel zmienia konto → limity od zera)
+
+## Prawda o stanie (czytaj to, niżej jest dziennik s10)
+- **main = ten commit, wypchnięty.** Start s11: `docs/owner/START-PROMPT-S11.md`.
+- **Bramka 3 — kryterium D51 (właściciel):** rozpoznawalność trasy (układ jezdni, pasy, skrzyżowania, ronda, wiadukty, znaki/bramownice, budynki i obiekty charakterystyczne — „z grubsza podobne” do zdjęć). Niebo/ekspozycja, odcień trawy, tekstury, dziury NIE blokują bramki (dopracujemy później).
+- **Scalone w s10 (wszystko po visual-critic, recenzje `docs/reports/visual/REVIEW-2026-11-11-s10-*.md`):** 0086+0101 `_Tint`/kalibracja · 0088 roślinność · 0098 światło · 0097/0107/0114 zabudowa r5–r7 + działki · 0100/0110/0117 węzły r3–r5 + bariery · 0102 meble · 0103 side-by-side (40 par Mapillary) · 0104 kabina/lusterka · 0105 wiadukt pod pomostem · 0085 r2 tło · 0087 TRAKT · 0090 remiza r7 · 0106/0113 wydajność A16 Low · `.venv` odśledzony · fix `build-android.ps1 -Apk` · fix `device-metrics.ps1` (CSV przed screencap) · fix sondy Tint.
+- **NIE scalone:** GPT 0089 osobówki (brud progów FAIL → R4 w toku w sesji GPT „life”), GPT 0099 asfalt (cel FAIL → przejęte przez sesję GPT „asphalt”).
+- **Telefon A16 Low (ostatni ważny, APK `kamion-0.1.0-21a55c3fe4.apk`, po 0106):** G3-A 29,7 fps p95 33,5 / p99 50 (część to artefakt starego device-metrics — naprawiony później), GPU p95 31,8; G3-B 29,9 fps p99 33,7, GPU p95 33,3; PSS ~830 MB; termika 0. Po 0113 (prewarm, las) agent zmierzył G3-A p99 33,6 bez końcówki. **Ważny pomiar po wszystkich scaleniach jeszcze nie zrobiony.**
+- **Decyzje właściciela s10:** D48 tynk remizy 110/126/145 zostaje · D49 A16 = Low dla bramki 3 · D50 bez obniżania skali renderu · D51 bramka 3 = rozpoznawalność.
+
+## Agenci na zamknięciu s10
+| zadanie | ADR | worktree / gałąź | STATUS | stan |
+|---|---|---|---|---|
+| węzły r6 bariery (Fable) | 0123 | `.claude/worktrees/junctions-r6` / `junctions-r6` | `artifacts/junctions-r6/STATUS.md` | KOŃCZY (patrz niżej, aktualizacja przy zamknięciu) |
+| zabudowa r8 działki (Fable) | 0124 | `.claude/worktrees/buildings-r8` / `buildings-r8` | `artifacts/buildings-r16/STATUS.md` | KOŃCZY |
+| **10 sesji GPT 24 h** (od ~21:25, właściciel) | 0108, 0109, 0118, 0111, 0112, 0115, 0116/0119, 0120, 0121, 0089/0122 | `.claude/worktrees/gpt-<dziedzina>` / `gpt-<dziedzina>-rN` | `artifacts/<dziedzina>-rN/REPORT.md` | pracują; `docs/owner/GPT-TASK-05-24H.md`, uwagi `docs/owner/GPT-FEEDBACK-S10.md` |
+Stare worktree GPT z dnia (`gpt-cab-r1`, `gpt-edge-r2`, `gpt-firestation-r7`, `gpt-furniture-r1`, `gpt-light-r12`, `gpt-megascans`, `gpt-sbs-gate3`, `gpt-surface-wear`, `gpt-tint-gamma`, `gpt-truck-paint`, `gpt-vegetation-r2`, `gpt-viaduct-r1`, `gpt-car-paint`) — scalone/zastąpione; usuwać tylko za zgodą właściciela (GPT może z nich korzystać). `argon-edge` zastąpiony przez 0085 r2.
+
+## Ochrona maszyny (WAŻNE — 64 GB RAM, 24 wątki, RTX 5070, ~13 sesji)
+- 22:13 kilkanaście równoległych pytest/build_world zawiesiło PC. Od tego czasu:
+  - `scripts/unity-slot.ps1 -Acquire|-Release -Owner <x> [-Pool unity|heavy]` — Unity max 4, ciężki Python max 3; respektuje `artifacts/locks/PHONE_RUN`.
+  - **`scripts/ops-watchdog.ps1`** — wymusza limit bez współpracy sesji (BelowNormal, 4 rdzenie dla Windows, max 3 ciężkie zadania Pythona: nadmiarowe WSTRZYMUJE i wznawia; < 8 GB RAM → wstrzymuje). Log `artifacts/logs/ops-watchdog.log`. **Ginie z sesją lidera — s11 musi go uruchomić od razu:** `pwsh -NoProfile -File scripts/ops-watchdog.ps1` (w tle). Sesje GPT nie znają `-Pool heavy` (wystartowały wcześniej; właściciel nie może do nich pisać) — watchdog to za nie pilnuje.
+  - Właściciel dodał wykluczenie Defendera dla folderu repo.
+
+## Następne kroki (s11)
+1. Uruchom `ops-watchdog.ps1` w tle. Ustaw godzinny trigger (CronCreate, minuta nie :00/:30).
+2. 0123 i 0124: visual-critic (kryterium D51) → scalenie → JEDNA regeneracja (build_all, build_world, export-route, fidelity/run.py, pytest gis+physics+gate3 z `-Pool heavy`).
+3. Co godzinę: rundy GPT (`gpt-<dziedzina>-rN` z REPORT.md) → visual-critic (można łączyć) → scalenie (generated → ours) → regeneracja → uwagi do `GPT-FEEDBACK-S10.md`.
+4. **Ścieżka do bramki 3 (D51):** świeży zestaw sbs na aktualnym main (sesja GPT „sbs” r2) → visual-critic z pytaniem „czy kierowca rozpozna to miejsce?” → lista blokerów rozpoznawalności → poprawki (Claude: geometria/obiekty) → integracja Unity (import, Truck/Trailer BuildBatch, InstallBatch, EditMode/PlayMode, czysty APK Low) → gate3 A16 Low A+B z kamerami → pakiet porównań dla właściciela do akceptacji kierunku.
+5. Otwarte: wideo migotania lasu (`artifacts/perf-low-r2/shimmer.ps1`), ponowne nagranie PSO po scaleniach, Kwadrat r13 (po zdjęciach bramy), S24+ High (bateria ≥ 40 %).
+6. **Ostatni przydzielony ADR: 0124.**
+
+---
 # HANDOVER — kamion, sesja 10 (2026-11-11 od ~10:05 lokalnie)
 
 ## Najpierw (dla następnej sesji)
