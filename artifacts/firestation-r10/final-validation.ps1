@@ -7,6 +7,8 @@ Set-Location $workRoot
 if($Stage -eq 'GIS') {
     uv run --project tools/worldgen python tools/worldgen/fidelity/run.py --region bialystok-industrial-c --no-tile *> "$taskRoot/final-fidelity.log"
     if($LASTEXITCODE -ne 0){throw 'Fidelity generation failed'}
+    uv run --project tools/worldgen python artifacts/firestation-r10/pin_products.py final
+    if($LASTEXITCODE -ne 0){throw 'Final product pinning failed'}
     uv run --project tools/worldgen python -m pytest tests/gis -q *> "$taskRoot/pytest-complete.log"
     if($LASTEXITCODE -ne 0){throw 'Full GIS failed; inspect actual failures without weakening tests'}
 } elseif($Stage -eq 'EditMode') {
