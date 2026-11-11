@@ -21,3 +21,4 @@ Krok 8: zapisano procedurę czterech kontroli lakieru: biały/ciemny × odbicie 
 Krok 9: testy GIS bazowego worktree wykazały już niepowodzenia przed jakąkolwiek zmianą produkcyjnego kodu truck. Czekamy na pełne tracebacki, aby oddzielić stan wejściowy od regresji. Baseline graficzny nadal oczekuje na slot Unity. Następny krok: odczytać artifacts/truck-r1/gis.log po zakończeniu testów.
 
 Krok 10: dodano atrybucję i licencje obu pomniejszonych zdjęć Commons. Jawnie opisano, że są odniesieniem do materiałów, nie tym samym pojazdem i kadrem. Pierwszy render nadal odtwarza cache/kompiluje skrypty. Następny krok: obejrzeć wynik Low-overcast.
+Baseline Low overcast zapisany. Następny krok: obejrzeć PNG i zmierzyć lakier, szybę oraz DRL.
