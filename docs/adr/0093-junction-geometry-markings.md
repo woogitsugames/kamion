@@ -101,3 +101,22 @@ Liczby „po” z `roads_qa.json`, `road_consistency_qa.json`, `terrain_walls_qa
    ortofoto (po sprawdzeniu — `painted_zone`).
 7. WORKING_VALUE: `MATCH_MAX_M` 1,9 m, `THROUGH_DEG` 35°, `RING_DEG` 80°, pasy P-21 0,5 / 1,0 m, `NARROW_ISLAND_R`
    1,0 m, `SPIKE_OPEN_M` 0,5 m, `FRAGMENT_MIN_M` 2,0 m, szerokość ramienia płn. s 610 9,0 m. UNVERIFIED: wymiary P-11.
+
+## Testy i kontrola wizualna (2026-11-11)
+- `pytest tests/gis`: **337 passed, 2 xfailed** (main: 328 passed, 2 failed; +9 testów: `test_junction_paint.py` 7,
+  `test_no_kerb_under_a_fill`, `test_no_paint_from_the_gore_rule` zamiast testu `hatch`). Ratchet
+  `skirt:yard_concrete` 3 → 2. `route_corridor`: 2394,5 m, 4790 stacji, **0 uskoków, 0 przeszkód**, 0 bez nawierzchni.
+- Unity 6000.3.28f1: `import-region` OK (Low 109,7 MB, High 235,6 MB). PlayMode `WorldCRouteTests|WorldCBarrierTests`
+  i EditMode: wynik w `artifacts/junctions-r1/STATUS.md` (logi `logs/playmode.log`, `logs/editmode.log`).
+- Kamery (34, WorldC, Medium overcast `renders_after/`, Low overcast `renders_after_low/`); pary przed / po z tej samej
+  kamery w `artifacts/junctions-r1/pairs/`. „Przed”: dla 13 kamer ADR 0077 — rendery końcowe 0077
+  (`artifacts/islands-r10/renders/`); dla pozostałych — `renders_before/`, czyli `_Generated` skopiowany z main na
+  starcie zadania, który okazał się importem STARSZYM niż 0077 (pierścień MA-010 jeszcze bez przesunięcia), więc te pary
+  nie są dokładnym stanem 8cc25713.
+- Obejrzane obok ortofoto (widoki z góry `plan_after/*.jpg` = ortofoto | generator, wycinki `trace/*.jpg`):
+  `top_s610`, `au_f_s0600`, `au_f_s0620` (bez szarych pasów krawężnika, jedna linia ciągła, azyl i pola P-21 jak na
+  zdjęciu, trawnik między ulicą a parkingiem), `top_s1440`, `au_r_s1380` (pas z kostki do nosa E −362 N −156, P-21 na
+  lewym pasie łącznicy, linie przez łatę zamiast 45 m gołego asfaltu), `top_ma010` (linie pierścienia przez łaty,
+  P-11 przy zebrze), `top_putry_n`, `p0_kerb_merge_eye`, `p0_lamp_putry_eye` (brak krawężnika / latarni na pasie —
+  bez zmian względem 0076), widoki z góry n10015785253 i s 1060 (linie ciągną się przez łatę; mediana i zatoka — otwarte).
+- Nie zrobione: ocena `visual-critic` (agent bez prawa tworzenia subagentów) i zrzut z telefonu — dla lidera.
