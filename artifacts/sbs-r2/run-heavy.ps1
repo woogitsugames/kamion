@@ -1,5 +1,5 @@
 param(
-    [Parameter(Mandatory)][ValidateSet('World','Materials','Fidelity','TestFile','FinalGis','PrepareSbs','ComposeSbs')][string]$Task,
+    [Parameter(Mandatory)][ValidateSet('World','Materials','Fidelity','TestFile','FinalGis','PrepareSbs','ComposeSbs','Audit')][string]$Task,
     [string]$TestFile,
     [string]$Only,
     [string]$RenderDir,
@@ -24,6 +24,7 @@ try {
     try {
         $env:PYTHONUNBUFFERED='1'
         switch($Task) {
+            Audit {uv run --project tools/refs python artifacts/sbs-r2/audit_final.py}
             World {uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c}
             Materials {
                 if($Only){uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only $Only}

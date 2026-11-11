@@ -55,3 +55,6 @@ Około północy po oczekiwaniu uzyskano heavy gpt-sbs-r2 (3/3). Log potwierdza 
 
 ## Sekwencja po generatorze
 Przygotowano proces oczekujący na zakończenie własnego procesu World (PID 68496). Przypina uchwyt, sprawdza jego końcowy kod, a dopiero po sukcesie uruchomi kolejno trzy pojedyncze pliki testowe, fidelity i ponowne metryki historyczne. Każda ciężka faza ma osobne Acquire/Release i nie nakłada się z generatorem. Nie uruchamia Unity ani pełnego GIS; te kroki wymagają dalszej kontroli.
+
+## Audyt końcowy R2 — przygotowanie
+Przygotowano osobny audyt r2, bez nadpisywania wejść zapisanych przez serię. Sprawdzi wszystkie 168 surowych renderów, 100 A/B, pełną diagnostykę, migawkę ZIP, SHA adnotacji i 64 GLB. Eksportuje 168 liczników z oddzielnymi draws geometrii i instancji oraz porównaniem do r1. Ocenę D51 r1 odróżnia od nieocenionych nowych klatek. Kontrola składni przechodzi; właściwy audyt dopiero po renderach, przez heavy.
