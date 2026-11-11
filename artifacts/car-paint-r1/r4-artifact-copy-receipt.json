@@ -1,0 +1,2992 @@
+{
+  "robocopy_exit": 1,
+  "robocopy_exit_meaning": "Files copied successfully; no failure code",
+  "mode": "incremental /E /XJ, no MIR",
+  "qa_counts": {
+    "r4-before": {
+      "Low-clear": 92,
+      "Low-overcast": 92,
+      "High-clear": 92,
+      "High-overcast": 92
+    },
+    "r4-final": {
+      "Low-clear": 92,
+      "Low-overcast": 92,
+      "High-clear": 92,
+      "High-overcast": 92
+    }
+  },
+  "verified_qa_png_sha_pairs": 736,
+  "verified_key_metadata_files": 12,
+  "excluded_private_directories": [
+    "r4-native-before-snapshot",
+    "r4-preplate-native",
+    "r4-baseline-inputs",
+    "__pycache__"
+  ],
+  "excluded_extensions": [
+    ".glb",
+    ".asset",
+    ".mat",
+    ".fbx",
+    ".bin",
+    ".npy",
+    ".npz"
+  ],
+  "private_directory_present_at_destination": {
+    "r4-native-before-snapshot": false,
+    "r4-preplate-native": false,
+    "r4-baseline-inputs": true,
+    "__pycache__": true
+  },
+  "note": "Artifact/review/log/helper/QA-only copy. No main production files, private native/source/raw snapshots, Fab derivatives or readback buffers copied.",
+  "qa_pngs": [
+    {
+      "file": "r4-before/Low-clear/biezenstwa-above.png",
+      "sha256": "2b7f30c82a7f00611e84a6ae15954184a1fb657c3a4ea681caf740cf68da91b4"
+    },
+    {
+      "file": "r4-before/Low-clear/cab-dash.png",
+      "sha256": "aab3559e6b6276404c84479c467d34dde4b7220c2e6af466a21116ea657625e8"
+    },
+    {
+      "file": "r4-before/Low-clear/cab-driver.png",
+      "sha256": "09f573940786adc4fd63ee61118b675650c9b64b9b01596a11dec7a2c4217163"
+    },
+    {
+      "file": "r4-before/Low-clear/cab-gate.png",
+      "sha256": "93a1371074c0a8bc3077aaa30af5154fff03dd5b381a59c4fc624ab1ddaf5c98"
+    },
+    {
+      "file": "r4-before/Low-clear/cab-grain.png",
+      "sha256": "8212fe00a833cf80117eb7ca60cee124027b1f18c50c59e8090bb32dd144984d"
+    },
+    {
+      "file": "r4-before/Low-clear/cab-left.png",
+      "sha256": "896752c2be7fb0665ddede852d73bce5140c3f85adc76276380be560a528a839"
+    },
+    {
+      "file": "r4-before/Low-clear/cab-materials.png",
+      "sha256": "608ab9f7f0a8859ba5aa2ccd19195e4ea16a26bc971d01793920c39fe5781bf3"
+    },
+    {
+      "file": "r4-before/Low-clear/cab-mirror-front.png",
+      "sha256": "5443476b10d04f7aaa8d918c69d4291d639ea93296df4b9da06fa2855d7a541e"
+    },
+    {
+      "file": "r4-before/Low-clear/cab-mirrors-left.png",
+      "sha256": "a3e2e232e615a29d433dce65bd8849d33b7c47753b9230d6de955a825e14f54b"
+    },
+    {
+      "file": "r4-before/Low-clear/cab-mirrors-right.png",
+      "sha256": "2a47cc1806fcf79e188712c9b6793ad87ff7af572356ca857edfdfda54e0b692"
+    },
+    {
+      "file": "r4-before/Low-clear/cab-right.png",
+      "sha256": "f3ad6a92d8ea4888ff1612af490d17612f348b98d14e7c645e7b2f5c7cf91671"
+    },
+    {
+      "file": "r4-before/Low-clear/cab-seat-entry.png",
+      "sha256": "0f9a73572295d1b8bd01924d3e299762042d5a512cb17cceb8b78a2efe5c094f"
+    },
+    {
+      "file": "r4-before/Low-clear/cab-seat.png",
+      "sha256": "25216cd27529e636b5465baf19a57be1f88b0293c86dc2e8d70ad843e3775f89"
+    },
+    {
+      "file": "r4-before/Low-clear/car_lod_08.png",
+      "sha256": "2e546bde566da43ed011bd9306ee2dba53528fe79714003400d1c1c7209b6f2b"
+    },
+    {
+      "file": "r4-before/Low-clear/car_lod_12.png",
+      "sha256": "3ee9232cea28e89014df1af5a7c7259159121fbfc8ef2f08df886f72785d2828"
+    },
+    {
+      "file": "r4-before/Low-clear/car_lod_15.png",
+      "sha256": "ee1bfa2733ae4b7101db187d6569cf8af7b8b92391c38d588236e1d8e2ce6094"
+    },
+    {
+      "file": "r4-before/Low-clear/car_lod_25.png",
+      "sha256": "a82eca5bf0c250d5b777f442412f21b0556dc8c94aeda39b0846bed71a4b1ce6"
+    },
+    {
+      "file": "r4-before/Low-clear/chase.png",
+      "sha256": "a03a35a5ef29cd55d96009a26533e4e2ddb0c62732dbefa979f67caa53a79c84"
+    },
+    {
+      "file": "r4-before/Low-clear/dk8-dk19-exit.png",
+      "sha256": "02a7b4a4e913d3c26700a25e3ca62192191950a347ee5a1d29e63749373b47be"
+    },
+    {
+      "file": "r4-before/Low-clear/driver-andersa-to-putry.png",
+      "sha256": "b145ab540f2797c23880dcfdb3a304570756a2c3b760b53de1f35c2d5af5e102"
+    },
+    {
+      "file": "r4-before/Low-clear/edge-east.png",
+      "sha256": "237476adb51512853d2da56259be4a32e9710ace88c1c7c26433e0ac84ac039e"
+    },
+    {
+      "file": "r4-before/Low-clear/edge-north.png",
+      "sha256": "4d28d511e4818f4fcfdb4756cd53174a5acfc8ade1396ea31f0e6404fb74148e"
+    },
+    {
+      "file": "r4-before/Low-clear/edge-south.png",
+      "sha256": "eed4563e66b5aa89d22e2659ad487ea505f287d2c84d8727dcf709b981b5869d"
+    },
+    {
+      "file": "r4-before/Low-clear/edge-west.png",
+      "sha256": "40d64576744d23d6ffa7630b4a70511744e4e7175d2e89d3ca5833c6eb8b45ef"
+    },
+    {
+      "file": "r4-before/Low-clear/fire-station-abeam.png",
+      "sha256": "21fe2df744855e5759cd38f23ed2d9bd6ffcb18f3872e14b83530901c933d8d5"
+    },
+    {
+      "file": "r4-before/Low-clear/fire-station-above.png",
+      "sha256": "8fd35e6970683b2be620207207312d75da4d382f635e84d3cdb2b703aa6634ad"
+    },
+    {
+      "file": "r4-before/Low-clear/fire-station-ref7197.png",
+      "sha256": "92f598cd092312bd9c3b5929d36891965e07ab5c735eae55a1262af6e8e2484a"
+    },
+    {
+      "file": "r4-before/Low-clear/fire-station-route.png",
+      "sha256": "ec17f8b50f6e60d24352f81048fc38f32ddc40472289a5a3371a5297a95eecf5"
+    },
+    {
+      "file": "r4-before/Low-clear/g3a-eye-s0262.png",
+      "sha256": "604d8c4b22feb986da0f70aac051814d87882df335ef3cae2ebd193f31b25916"
+    },
+    {
+      "file": "r4-before/Low-clear/g3a-rondo-bie-approach.png",
+      "sha256": "4945594a0a44f11cf3533de98f606714ace1d957dfcb4709e8a21fc0708b95a2"
+    },
+    {
+      "file": "r4-before/Low-clear/g3b-eye-s1482.png",
+      "sha256": "bdd9bc151ed0f77a9c7864576d7127487e60cc5a6bd6c21c8e00e9e98e956fa7"
+    },
+    {
+      "file": "r4-before/Low-clear/g3b-rondo-putry-approach.png",
+      "sha256": "a08b60c380f472f724a07e046acf0ed12e1a588c7d5deb79c2891504f2c97b5e"
+    },
+    {
+      "file": "r4-before/Low-clear/g_current_black_lod_05.png",
+      "sha256": "e69be609c6a7418db3672adb7e99907ae8262014c646f127e9c15a5ed586ef4c"
+    },
+    {
+      "file": "r4-before/Low-clear/g_current_black_lod_20.png",
+      "sha256": "9b06781fc372b900371a7da67dc5944f4f8203f39e019d5bec1c9c54d165b4a2"
+    },
+    {
+      "file": "r4-before/Low-clear/g_current_black_lod_45.png",
+      "sha256": "5a8372d242568d0daf433ee1a23c8e5b3957892b6ee6a5905a1c4a0a04280947"
+    },
+    {
+      "file": "r4-before/Low-clear/g_current_black_wheel_02.png",
+      "sha256": "137a44544465104f1cf02ac04f55af2af83019e215de1142e6f26f8cb3835eb7"
+    },
+    {
+      "file": "r4-before/Low-clear/g_dirt_level_0.png",
+      "sha256": "25de3e01ffb542b298911003c2f512e4d779219ce19f82a09790b10f94c722e2"
+    },
+    {
+      "file": "r4-before/Low-clear/g_dirt_level_1.png",
+      "sha256": "07918491f3d1fcb622c58832144a13e31d3df6376c2b1a0f2cdac3b122847291"
+    },
+    {
+      "file": "r4-before/Low-clear/g_dirt_level_2.png",
+      "sha256": "34a7f712a98b5cce8f97acc9173c298acad6be706ff8c67c6d4276ecd3401861"
+    },
+    {
+      "file": "r4-before/Low-clear/g_dirt_level_3.png",
+      "sha256": "9ee3fe26e624f4761f3602032dc5d9c22e2034196d11b28df58e4f3dcdedbebd"
+    },
+    {
+      "file": "r4-before/Low-clear/glass_front.png",
+      "sha256": "bc86d6e8086f5a8305c03a00bf7831bb19e5bebfc7d705919b741dac0ce74fe2"
+    },
+    {
+      "file": "r4-before/Low-clear/kwadrat-park-gate.png",
+      "sha256": "a9d2608197ffe4b334873921ae924b123d4a41e1d41dfcbde68b0dd827732f6f"
+    },
+    {
+      "file": "r4-before/Low-clear/photo-biezenstwa-ground.png",
+      "sha256": "f9ed8c3cc09f6707375dad969ba0635c1c2df56261d7a1fccc073fe69293e750"
+    },
+    {
+      "file": "r4-before/Low-clear/putry-above.png",
+      "sha256": "cc36244dba486dfb7c233c0a8963c6fb353ea77716d85a2dacbda997aac5c2b0"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_block_1.png",
+      "sha256": "0d975c95f563dafa62de057dd0df65bb8441e259536895038cf017211759f4b8"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_block_2.png",
+      "sha256": "44b10be37e9b9762b442148276efd23d82c535f6d0d33600fbaf7ed0b279fce0"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_block_3.png",
+      "sha256": "0cd1cb3668b2d05808ee8e266130abeff5ad878bc29977ce755d60054cb31ac6"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_block_4.png",
+      "sha256": "7b72201463df7fc4ae8f4e885fa5dc7982c585cff54fa8a2e40df90ac1b3ad04"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_block_5.png",
+      "sha256": "1ba6447acfa18ea36fb8443efc0884ba44b68f66e692350ca3703e08ff2c3f45"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_fence_1.png",
+      "sha256": "c0dfdbab0357279a689006fc5503f46a94c2494414e5279f4ba192cbd23a0740"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_fence_2.png",
+      "sha256": "b1adc4529c557a1d08fb0a7e46086c07b5c9ae7ab7d9bbed006878ac91ce6013"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_fence_3.png",
+      "sha256": "24042567b38878fc163478e36600ab9c02601bc62d96e7f135858085045ccc46"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_front_04.png",
+      "sha256": "8516cf07e4752eb1516b44793e4e4e6552d75070bc6f036569d2883b18a8cebd"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_hall_1.png",
+      "sha256": "a5d69ec68bdec5a5bcde684f42001c220080ec204eb58e02f010330462644e42"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_hall_2.png",
+      "sha256": "b97c3d89c2e860b73102de05c75d17dc010cc4072c423b44efc24ec2b0950b71"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_hall_3.png",
+      "sha256": "f5182374fd9e4bef1c24a9ee1bc55ac08b635b86f58905dbf28e83772e3d5b5d"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_hall_4.png",
+      "sha256": "946b38c629f868c60d348c094a0928e00cd8079c336374276f01526b494e06ef"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_house_1.png",
+      "sha256": "2937dafbee88a16ed205ccea52798282e5c54ac49956cb9ad3675822e893a43d"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_house_2.png",
+      "sha256": "636cc6fdd9026d3511d240c1b6fa5562d959ed469f994828293cadac9b1c7e46"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_office_1.png",
+      "sha256": "04439d7dab58d265a78b9aa0195c23495ad669bf122ac226d428de69d2b535c5"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_office_2.png",
+      "sha256": "f71223afb99b4f3c32635d3dfebce68151ffaa85d94b989be48f12fa05e6bf55"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_rear_04.png",
+      "sha256": "1ed6fef56790d6e1ea461350aaf143c907005e4543b799ded767b17204833f8d"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_shed_1.png",
+      "sha256": "d1a35f8edc75eb6b862753f817cf3bad0f8525772f1d641b4b72e0105087825e"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_shed_2.png",
+      "sha256": "b289c9a9107fc7780ffb1d62ce63be6d712e28b2fafa633cef4e99de52c61f1d"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_shed_3.png",
+      "sha256": "3005fe616992999cbdfc74d22253a3fd0f87378aad5bfe65ccacd8ded09c6397"
+    },
+    {
+      "file": "r4-before/Low-clear/r10_wheel_02.png",
+      "sha256": "86f61c6f2c4d1722b2408c3ab653bc29cf6684a406e35aae4c1d4a59b60783cf"
+    },
+    {
+      "file": "r4-before/Low-clear/r10b_black_05.png",
+      "sha256": "97a6b83f8fe6371cc438feec85816b6a51975eeecc04c279fcf975431c6d504a"
+    },
+    {
+      "file": "r4-before/Low-clear/r10b_black_20.png",
+      "sha256": "11e16c7d90217531a3bd0d0fe02a09640527d76c4baf53d5fa581a791917b082"
+    },
+    {
+      "file": "r4-before/Low-clear/r10b_black_45.png",
+      "sha256": "d7706709dd9a38083944adaa0f3c1f157b41d157b7bc316479cb8115c8f3b386"
+    },
+    {
+      "file": "r4-before/Low-clear/r10b_blue_05.png",
+      "sha256": "01f7badaa05fbd352cca535793100024e3580323728c54f52377373525daba5d"
+    },
+    {
+      "file": "r4-before/Low-clear/r10b_blue_20.png",
+      "sha256": "1d80f2441ed9d057b9b6216d8320a027e2760cd9fd4d7023007b1fd6dfdc0cd9"
+    },
+    {
+      "file": "r4-before/Low-clear/r10b_grey_05.png",
+      "sha256": "d086312132fec55ab85f47fd747b20a50a520a78f886691616d3c1c0690a5a00"
+    },
+    {
+      "file": "r4-before/Low-clear/r10b_grey_20.png",
+      "sha256": "57a9ad9f2c7bbfee90f608e9e33bc8984e295ff47809c514f6d72dcdbef040f1"
+    },
+    {
+      "file": "r4-before/Low-clear/r10b_silver_05.png",
+      "sha256": "92af566d81dbfff80ac3e2871ee4ebf59d198ff191b6e2caeb2cb072fe5d58ed"
+    },
+    {
+      "file": "r4-before/Low-clear/r4_dirt_candidate_3.png",
+      "sha256": "5b7d927bc25289c4556ee5e93eb1ccb11b60294c01a83fb0f11c2ce98ea0f864"
+    },
+    {
+      "file": "r4-before/Low-clear/route-onramp-andersa-above.png",
+      "sha256": "2f5ec493c666e34b183c48b68f37c346c9743d1e676bedc50264298302a77c47"
+    },
+    {
+      "file": "r4-before/Low-clear/route-onramp-andersa.png",
+      "sha256": "efdf79041adf5eab0d6f7c2af25a0f74a0f1a6f9da77f7864e3f0c765a87994a"
+    },
+    {
+      "file": "r4-before/Low-clear/route-putry-approach.png",
+      "sha256": "621bb8c3a319892efc93b06bb59916444923f86bcb18a9374d990801502f91ca"
+    },
+    {
+      "file": "r4-before/Low-clear/route-putry-entry-signs.png",
+      "sha256": "a506fda1c93107c05d0ca446cfd4a587899636ab68b49f6eaeb19c40448a6c62"
+    },
+    {
+      "file": "r4-before/Low-clear/stretch-01.png",
+      "sha256": "f21668ce921241d05343ef7299c63541403765aa299ec25a6d01c2f5d8a428d7"
+    },
+    {
+      "file": "r4-before/Low-clear/stretch-02.png",
+      "sha256": "c7df0893d56811cbfb24715a41652c204119b56bffc6f6044ff3181a5b2fa285"
+    },
+    {
+      "file": "r4-before/Low-clear/stretch-03.png",
+      "sha256": "4f1dcdb1c16b81afbde57827c963cb3791c787d5307fba790b99aa904d185db1"
+    },
+    {
+      "file": "r4-before/Low-clear/stretch-04.png",
+      "sha256": "16fedd9bc1314fb55ca424ba0f479e708a5b5e21eae399da15b4e57be52b53a0"
+    },
+    {
+      "file": "r4-before/Low-clear/stretch-05-docks.png",
+      "sha256": "f2dddab4161b8fae07172f520035561a0e4787d809c57b1939b85c60ed9e20ac"
+    },
+    {
+      "file": "r4-before/Low-clear/trailer-34.png",
+      "sha256": "354ad163810a69f89630b66b378ebe3e03d37dac54f86f1c361097075b5f745f"
+    },
+    {
+      "file": "r4-before/Low-clear/trailer-side.png",
+      "sha256": "21c70f490a9efff4261962807ee0ac76a56dc6e5333521997d952edbb81e22d7"
+    },
+    {
+      "file": "r4-before/Low-clear/truck-34.png",
+      "sha256": "0ec93cf733ab015d57ae004eb2f0adbdea59b61f24ae73fec542f4da02b38bf4"
+    },
+    {
+      "file": "r4-before/Low-clear/truck-34r.png",
+      "sha256": "d87656b44884afc10cd04d8ec1855cb284a43b7e8c9821cf7558d0a87b285af9"
+    },
+    {
+      "file": "r4-before/Low-clear/truck-at-gate.png",
+      "sha256": "e8795cfb0ea73c70fdf52a48c75c2fd118edb8ac7c2bc2e37a736c541593756c"
+    },
+    {
+      "file": "r4-before/Low-clear/truck-front.png",
+      "sha256": "aa70ea85bec3ec31cdf7e9abe4987d7087f948baeede0f176b716743cffa2761"
+    },
+    {
+      "file": "r4-before/Low-clear/truck-rear34.png",
+      "sha256": "c10829ae57a7a64b2a76a3ec3de3c754fb51be5cf609f51494899ab1935c4af9"
+    },
+    {
+      "file": "r4-before/Low-clear/truck-side.png",
+      "sha256": "17f33197726ff64b9d9bfd7ad568d5a6c6dd65c245db7c55a7de4fa5c6d4d45b"
+    },
+    {
+      "file": "r4-before/Low-overcast/biezenstwa-above.png",
+      "sha256": "d7c566b7b2e91854c8e350003d13630659fe3d923cd14c01dbd433dc407f703b"
+    },
+    {
+      "file": "r4-before/Low-overcast/cab-dash.png",
+      "sha256": "0ff11b1223a224d9a56de81cfc80b574200d1238b49446a9a395540205066250"
+    },
+    {
+      "file": "r4-before/Low-overcast/cab-driver.png",
+      "sha256": "5b3d545ef74f7ae05021cccc5ca798c095b97008e9c1b839a781d5c2f8597849"
+    },
+    {
+      "file": "r4-before/Low-overcast/cab-gate.png",
+      "sha256": "f7b7d9a7413e540319f24ea6441eeddbefb9793e1ae35cf30a82070b0551f40f"
+    },
+    {
+      "file": "r4-before/Low-overcast/cab-grain.png",
+      "sha256": "22f4a9e13a92e0c9bb4cb4d069ced7fd9ca84543e01e7bf75e5c228a310e956c"
+    },
+    {
+      "file": "r4-before/Low-overcast/cab-left.png",
+      "sha256": "c602b51af2615aa29c934c2752592dcbd47b104e266df0797c757a29cd5ff47a"
+    },
+    {
+      "file": "r4-before/Low-overcast/cab-materials.png",
+      "sha256": "e7d88734e05d3c2e425b006111fdf17c98ea8109c0dca8c7e3bea02961121e9f"
+    },
+    {
+      "file": "r4-before/Low-overcast/cab-mirror-front.png",
+      "sha256": "8034ba154820f2d9244d033a6b49a87c16be172e9d4ab9c4903c6f029c99de5e"
+    },
+    {
+      "file": "r4-before/Low-overcast/cab-mirrors-left.png",
+      "sha256": "2189233fc07fbc90c281cec06be2715800fc67d991bb883cb583e2aaecdd7719"
+    },
+    {
+      "file": "r4-before/Low-overcast/cab-mirrors-right.png",
+      "sha256": "0ec00bfeba3b038646a65e0092ab20745b9a7ba77dd8ca8341da5b735a2a39fb"
+    },
+    {
+      "file": "r4-before/Low-overcast/cab-right.png",
+      "sha256": "74a6fea9441344d2423914a64fc466a49c52f8785c6cfc104a4c4bfc474352aa"
+    },
+    {
+      "file": "r4-before/Low-overcast/cab-seat-entry.png",
+      "sha256": "7eb7852c7b19f1584b56661ba417edca280f01d46e2f300f83e76be89b17b711"
+    },
+    {
+      "file": "r4-before/Low-overcast/cab-seat.png",
+      "sha256": "e803d05acd817e85f23cec2ff35a009ce81b514004298c3eba2e564437adfb3b"
+    },
+    {
+      "file": "r4-before/Low-overcast/car_lod_08.png",
+      "sha256": "e3e7177bc956b96c4b776a56eec829444b865aa41f74ab3bfddc12959035b339"
+    },
+    {
+      "file": "r4-before/Low-overcast/car_lod_12.png",
+      "sha256": "90c458f4da52488c69451a488a32a271c060e08d4351b3ec46a1b769c26930a6"
+    },
+    {
+      "file": "r4-before/Low-overcast/car_lod_15.png",
+      "sha256": "3d5f583aedf3737893b362991c617e9dbacc61d86951069736175f1e0517167e"
+    },
+    {
+      "file": "r4-before/Low-overcast/car_lod_25.png",
+      "sha256": "63b5c71a95a33cda3d2a658a47fe977ae20d967c518cd632d97654fd577086db"
+    },
+    {
+      "file": "r4-before/Low-overcast/chase.png",
+      "sha256": "a5d39973de083a0b05ebafdf8636388ecb54c9bf15f89e59ad6736b7b3cb25b9"
+    },
+    {
+      "file": "r4-before/Low-overcast/dk8-dk19-exit.png",
+      "sha256": "173a2d71fdce2349b7eea51dea2d48978fc263cdfdca0934c39f9f685497a07b"
+    },
+    {
+      "file": "r4-before/Low-overcast/driver-andersa-to-putry.png",
+      "sha256": "8f4e4524468cad29c2f7c2888c55a8b50e4f87b1bdd13473258eaa69c569fe2d"
+    },
+    {
+      "file": "r4-before/Low-overcast/edge-east.png",
+      "sha256": "8d7c9bb36f8fa257a2204189420108ada6c162d1523e8f3abdafe8f04b4baa02"
+    },
+    {
+      "file": "r4-before/Low-overcast/edge-north.png",
+      "sha256": "3e2027287c575ab76f94a8b3644e4c581988e2a18a8d9fa46e526f69eac1675f"
+    },
+    {
+      "file": "r4-before/Low-overcast/edge-south.png",
+      "sha256": "7ccdfe782438f5b10834714a64e3680f281cfa49819e16450dc598874733a65f"
+    },
+    {
+      "file": "r4-before/Low-overcast/edge-west.png",
+      "sha256": "9f31c328fb286b4f8ca7db27d34d561760b47d9674452b196409e633db06a79c"
+    },
+    {
+      "file": "r4-before/Low-overcast/fire-station-abeam.png",
+      "sha256": "6127af69470aeddeda4d7e1443dc5c14eb71386cada4229e039546ea92fe9418"
+    },
+    {
+      "file": "r4-before/Low-overcast/fire-station-above.png",
+      "sha256": "3047f0908823029f357809df832b06f5b8a272553dd1b4393b5f6de5fa3acc6e"
+    },
+    {
+      "file": "r4-before/Low-overcast/fire-station-ref7197.png",
+      "sha256": "0b03b75fc158d448a8c8ac5a1ff4332a599b8a5d8a3509e4bbf71c7253d7b85d"
+    },
+    {
+      "file": "r4-before/Low-overcast/fire-station-route.png",
+      "sha256": "3db856773915c5b3d91952c26590cbaa97451f4ab562cba2305a8b32a22ba9fc"
+    },
+    {
+      "file": "r4-before/Low-overcast/g3a-eye-s0262.png",
+      "sha256": "ca1e808bf4f8bcb5236eb2f2bcd28f937cc2f7b0bc006c6d2bc3aa6fd502d22a"
+    },
+    {
+      "file": "r4-before/Low-overcast/g3a-rondo-bie-approach.png",
+      "sha256": "bf0637661dfd25975ff5cc08366a2ca61ddcb1391e625f77a4d8701740044612"
+    },
+    {
+      "file": "r4-before/Low-overcast/g3b-eye-s1482.png",
+      "sha256": "64d378f92947fc4203c2244aad7b6deb8f947635194f9958400b5ccc4bd40a58"
+    },
+    {
+      "file": "r4-before/Low-overcast/g3b-rondo-putry-approach.png",
+      "sha256": "d91df7dca703a983965d64cc87796bf5cc258ef196ce0abe8ae507b1126e9bfd"
+    },
+    {
+      "file": "r4-before/Low-overcast/g_current_black_lod_05.png",
+      "sha256": "f7bbb53552f4850a53930126895696ad0f92d759ae63ae7c5ceb9400a5660358"
+    },
+    {
+      "file": "r4-before/Low-overcast/g_current_black_lod_20.png",
+      "sha256": "e10605d60dfadffc85d8c337ab0fb9d214da88dcbbb0d38bd1abd73ca82030e0"
+    },
+    {
+      "file": "r4-before/Low-overcast/g_current_black_lod_45.png",
+      "sha256": "122cafcc8652a7da04ab63551d34f3828c41fe473ac04f0a8c567116f1697729"
+    },
+    {
+      "file": "r4-before/Low-overcast/g_current_black_wheel_02.png",
+      "sha256": "70c38059153cca094d060897b23676eb17033512fdad6a20cef76c37d27c5984"
+    },
+    {
+      "file": "r4-before/Low-overcast/g_dirt_level_0.png",
+      "sha256": "e9ee20f0cace74ba810590077cde6c2f03d150b7c0c2bed98afb213f1560850a"
+    },
+    {
+      "file": "r4-before/Low-overcast/g_dirt_level_1.png",
+      "sha256": "33887a7e8ecdc6cb48d0bf83325bf304a144e11e5ea27b3dae0b4fa453268fa4"
+    },
+    {
+      "file": "r4-before/Low-overcast/g_dirt_level_2.png",
+      "sha256": "2fd71c6e0ff5535d02b64c184c142247f542593091a9d7bd7fc230d701fe0a0f"
+    },
+    {
+      "file": "r4-before/Low-overcast/g_dirt_level_3.png",
+      "sha256": "bd2f71578c4548c38555e6d1e18b0688b9fb145e690c2d502c18f2d22028ab16"
+    },
+    {
+      "file": "r4-before/Low-overcast/glass_front.png",
+      "sha256": "c62cb3defe40333f8ceeaf9e64a585f7e0ec72620da9543e3c05663bc1629b77"
+    },
+    {
+      "file": "r4-before/Low-overcast/kwadrat-park-gate.png",
+      "sha256": "8a2085b00d8e6be90859bfb0221babb0af9f9ce733c7e4298a8891107f68e8f7"
+    },
+    {
+      "file": "r4-before/Low-overcast/photo-biezenstwa-ground.png",
+      "sha256": "b43e2731671bd85db4b4916307ecfd15013519d446ffaa81cffb67fbbac048cf"
+    },
+    {
+      "file": "r4-before/Low-overcast/putry-above.png",
+      "sha256": "dec0335285c8159cb2ac83419c73ddbf7a4445d1ea961085b5353f91d009a27f"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_block_1.png",
+      "sha256": "a9d98871490040d0b1d14f016d74d5dad54777e4201f4bff021870b707c2b945"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_block_2.png",
+      "sha256": "ef4732dfe16c2e9758e141b98a5fefed2e59fecf3a7a595000d647032ff57c75"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_block_3.png",
+      "sha256": "298c72e8104facdc6fc7c7fd8b8cb7a1501f27110c74ddc5cd54b45d2b406002"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_block_4.png",
+      "sha256": "9821c28a8f9b76d9d3db762777e2dca3696556c7a75cb028840bef3eb46fec6d"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_block_5.png",
+      "sha256": "63adeb91d8b936033e7a71bd26b4b2a240da19384dda489b9d3caf42314db7f5"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_fence_1.png",
+      "sha256": "ba939f2afbc12d44bc8d4c7bbd21ad7ccfc91b2bd139725c1ac9b89fe9438e04"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_fence_2.png",
+      "sha256": "a291b41fcea15b721ad7ab144c7cfecedbc4f84455dcd39d6526d53aa53ba3fb"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_fence_3.png",
+      "sha256": "badd0c16e741a93aff2eac4ae547a29e0b5c9a4069b3b0b425fbce5a093f7fe7"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_front_04.png",
+      "sha256": "a558dd1ac32183236b4ca7e9179b508d4d8bfb1b0dc81f9331d14841751ec7b3"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_hall_1.png",
+      "sha256": "b94a55af6e2a781fea2ba5c8328e29039aa99c25f93731863219bd92a2d21366"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_hall_2.png",
+      "sha256": "f4358442e4776377df4f3b4663fbdbdc5d1eb5f780e240ce38878cbeb00e4410"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_hall_3.png",
+      "sha256": "9eef7eae56ba7ef1a40fde2992906d61d41a9ef8f2751b184b7c98fd843c29bd"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_hall_4.png",
+      "sha256": "16b1836a57819158a606fe65eafc92d2b32b238eb9f6884b33e4e032f258d501"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_house_1.png",
+      "sha256": "ec54a761b75ab16b43dfc572a71736fa3f8c5dd7aea056df8595c39df165f7c9"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_house_2.png",
+      "sha256": "d687323ad9304f6e51bfc0191a96e277044d8ecb46625b230cc1bfcfaaf18a5c"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_office_1.png",
+      "sha256": "e55d59fee2c971c03139553b6f219bb7719df82e6c10e0c15824fd176e41dc29"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_office_2.png",
+      "sha256": "d5fa6b76ebfef976886d35cb6481696a9aafe6480d9b9979faf6f786118e390e"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_rear_04.png",
+      "sha256": "7654004714d35e27840447a14dd3fd239de88c7ea4c7f50330876d6e6ce4cf02"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_shed_1.png",
+      "sha256": "035eb23fbb7b5fab2b748fde0ee5db12598e84605b72c9904196346ececdc984"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_shed_2.png",
+      "sha256": "112ed26a46a682d6db4a7f2392a995ca7643e20605f1fa3b0cf05974889b93cb"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_shed_3.png",
+      "sha256": "3e0d14ce80682fc76fbfcd55a17c9f7bb0e974cb2eb3435dac724ad80b387e53"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10_wheel_02.png",
+      "sha256": "876a2792a56dd34b298cfe65b406df0bf1e1660b209890b73ca035470692df5a"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10b_black_05.png",
+      "sha256": "263fbc5f358255557babe7ced1be170770d96ed2b557b2b010112ba9ca83b85e"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10b_black_20.png",
+      "sha256": "b6917df6a1f4d030a05252a013447af199c0b1f1418e8f19b2b3cba34e3b92fe"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10b_black_45.png",
+      "sha256": "406cf6e8bf5bbb1aac1ba96cb2315abd502dbe2f91f37b67ff1e02e0b226ae6e"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10b_blue_05.png",
+      "sha256": "0ceb0b00a924d4026ba15b4ceaa7ce47d094d7b54e3473e6cad6d66309d3e48e"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10b_blue_20.png",
+      "sha256": "623ae34169ea02d5d13234ff486f39af5e3f51c247274f68f8fe7947cc3de4b3"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10b_grey_05.png",
+      "sha256": "dddbea9798f1657b808962f2b05f1fb9d4cce1b09d78c69c2ee95f1b76717fc0"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10b_grey_20.png",
+      "sha256": "4ab8fb752b76e0afda655f674a5269c211ef5db5fe5a52c97f9e7a674090fe0c"
+    },
+    {
+      "file": "r4-before/Low-overcast/r10b_silver_05.png",
+      "sha256": "8d6fbded15adf176ffce2d814ef189629079eb46a0eb6a71ed9b779a3301bfbd"
+    },
+    {
+      "file": "r4-before/Low-overcast/r4_dirt_candidate_3.png",
+      "sha256": "d6d32b20fd4c9eac73d91644820e3dfeb0a70aa3159d90ec91b37eb85e304e0c"
+    },
+    {
+      "file": "r4-before/Low-overcast/route-onramp-andersa-above.png",
+      "sha256": "8406662d755276b637dd9958b6a386de7e1bb75318268fefd0ee98f3df338981"
+    },
+    {
+      "file": "r4-before/Low-overcast/route-onramp-andersa.png",
+      "sha256": "6b3dd7aa5acde4dcc6ad8a49ad79b59575837ed4778c411084073a714c9df263"
+    },
+    {
+      "file": "r4-before/Low-overcast/route-putry-approach.png",
+      "sha256": "9735ed34ae08692385f4b95f979eef64204a34a063ef8856428f9edfc6ef2690"
+    },
+    {
+      "file": "r4-before/Low-overcast/route-putry-entry-signs.png",
+      "sha256": "c5335068bb24c19ec761b31a03037165526a772462349eda2c8f9bd878c804ee"
+    },
+    {
+      "file": "r4-before/Low-overcast/stretch-01.png",
+      "sha256": "b2eee7186817989223765ac15257b0b9d2d777da5cce3622514504736b83bec1"
+    },
+    {
+      "file": "r4-before/Low-overcast/stretch-02.png",
+      "sha256": "c3eadd640553c3031496b70cfef2274980724871db5f0a8815a4d525daed4e59"
+    },
+    {
+      "file": "r4-before/Low-overcast/stretch-03.png",
+      "sha256": "6da6c889d746a9ced249a9f27dbb0a4f10d45cc2355e260dd189b7e284a5948b"
+    },
+    {
+      "file": "r4-before/Low-overcast/stretch-04.png",
+      "sha256": "2aad9cb48677c249c60b7b14f401c43ba8f1a99d6801ed9614abf1c2a8fbc82d"
+    },
+    {
+      "file": "r4-before/Low-overcast/stretch-05-docks.png",
+      "sha256": "a07c2369aa2e2f2d2cdebe0fe510ca2dc34ce55f5602e563adf84e2b54720b0d"
+    },
+    {
+      "file": "r4-before/Low-overcast/trailer-34.png",
+      "sha256": "8e6235d5978362a7045082460714af5ba59787e6ef854817d1006d49a2e5a506"
+    },
+    {
+      "file": "r4-before/Low-overcast/trailer-side.png",
+      "sha256": "2a68444adea1ca53f6009fe866102c2a101dd880f081a3c3ec41a434167f01c7"
+    },
+    {
+      "file": "r4-before/Low-overcast/truck-34.png",
+      "sha256": "8abffaa494515ff679a3c1c192510b7ffef6eb99f6dd81f5ef6942d9d96fc4e4"
+    },
+    {
+      "file": "r4-before/Low-overcast/truck-34r.png",
+      "sha256": "117ebfcacac408db3ff03a8e577ef5b4b41fa5b1648e244b1f83c290d5df7c52"
+    },
+    {
+      "file": "r4-before/Low-overcast/truck-at-gate.png",
+      "sha256": "aa12334a6339c93d47c3373524768dd7a584e3deb4f2d4842dbcf9f860eeeca8"
+    },
+    {
+      "file": "r4-before/Low-overcast/truck-front.png",
+      "sha256": "26a2d3c280f4ccfd4d3655df234f9a71d2b7bda57663af6f28ddff18217d7770"
+    },
+    {
+      "file": "r4-before/Low-overcast/truck-rear34.png",
+      "sha256": "8d6fd1ed9c43d62aa92aca598dfa1538da1d6907b7b5fab3a20433694c12f05c"
+    },
+    {
+      "file": "r4-before/Low-overcast/truck-side.png",
+      "sha256": "cb05d2c9686239f795fe1b24f287850e3454882575257b54a961d5295b5bd43b"
+    },
+    {
+      "file": "r4-before/High-clear/biezenstwa-above.png",
+      "sha256": "317b64af39cbcde7be10f9ad46420430ada2b7fec9cd6b96c053eb719397e729"
+    },
+    {
+      "file": "r4-before/High-clear/cab-dash.png",
+      "sha256": "f7d1a89d4d28206fbba79c7ea3928d14942c8e0fa3f67569599c39cc14c795f0"
+    },
+    {
+      "file": "r4-before/High-clear/cab-driver.png",
+      "sha256": "c66ce86a67b3b9daa3370326b841d2fdb5ede18e8a51a08221e50694e13fcf07"
+    },
+    {
+      "file": "r4-before/High-clear/cab-gate.png",
+      "sha256": "ea132931c1fdc3c2eeff7cc4fb2edb957c92af726c4979304067192e123009f3"
+    },
+    {
+      "file": "r4-before/High-clear/cab-grain.png",
+      "sha256": "f582c342d4974bff4171bab312ee13890d0aa6c48c5c88283a9bb40746e946b6"
+    },
+    {
+      "file": "r4-before/High-clear/cab-left.png",
+      "sha256": "91d9fe3db639dd1fd8dc261a5705e83f05566b9171c7deed8a924aa5ccc54a01"
+    },
+    {
+      "file": "r4-before/High-clear/cab-materials.png",
+      "sha256": "3c6e090f8d882e04bbfddd463b46e6bd4876156fb6aaaee02919d7b93007ab48"
+    },
+    {
+      "file": "r4-before/High-clear/cab-mirror-front.png",
+      "sha256": "e8875140bc9fffc156ff4dd448645b1d4e2c1521cd8f039fc71102dccfac2d68"
+    },
+    {
+      "file": "r4-before/High-clear/cab-mirrors-left.png",
+      "sha256": "a2df94188f6a259a5955b82001d3d6c2b0739b82fa4a02bb7fa643eaf7811e12"
+    },
+    {
+      "file": "r4-before/High-clear/cab-mirrors-right.png",
+      "sha256": "6f89de299e0afd3118dfeba3b9d32bc90d9bf6ab9fa40fa695908f5239c36b6c"
+    },
+    {
+      "file": "r4-before/High-clear/cab-right.png",
+      "sha256": "0ebdec8d90dac39ae50ed3a19237ae2b5385a38cb81211347119146802e7e4da"
+    },
+    {
+      "file": "r4-before/High-clear/cab-seat-entry.png",
+      "sha256": "375e9b1e3f1d590888f1634bfb494ca0fd88ccb9bbacbe608a7395c4f2ca2970"
+    },
+    {
+      "file": "r4-before/High-clear/cab-seat.png",
+      "sha256": "ba2ea34cc25b8c50e32a880ca42e386ad8c18b058db2a0392a52f6cbd0077ea3"
+    },
+    {
+      "file": "r4-before/High-clear/car_lod_08.png",
+      "sha256": "84940db16320a3d40e6f60fa4c67744671a578bd81833499cae40c9acf24e187"
+    },
+    {
+      "file": "r4-before/High-clear/car_lod_12.png",
+      "sha256": "f0ed3a511b9ac98a815773bb49c5979ac69565a295915661cd1401f31d1c9abf"
+    },
+    {
+      "file": "r4-before/High-clear/car_lod_15.png",
+      "sha256": "5d73ceda47ae8a94c0f96abb0c6a25ef638d100f14207bc07b69414e01562f82"
+    },
+    {
+      "file": "r4-before/High-clear/car_lod_25.png",
+      "sha256": "0886589a37ab2c0e7b1cc248026c9c037333b0e88ca7efbb37d31b10bbf4c435"
+    },
+    {
+      "file": "r4-before/High-clear/chase.png",
+      "sha256": "86f442b69c9adb4fd6ba9656d445097dc9cca276bcf4cb40c829fb7003da2223"
+    },
+    {
+      "file": "r4-before/High-clear/dk8-dk19-exit.png",
+      "sha256": "7078374e97614ee252d773ecc11f0e4f3e6a4a141dd20400f37713227e649bb1"
+    },
+    {
+      "file": "r4-before/High-clear/driver-andersa-to-putry.png",
+      "sha256": "0f8e16833928465a6dadb582b91ed837288adbab91473b0babbe82b9537bec21"
+    },
+    {
+      "file": "r4-before/High-clear/edge-east.png",
+      "sha256": "0f184da2b37a4da560e5b4ae25f23ff6a458441659e0f39bec1178609f614bf9"
+    },
+    {
+      "file": "r4-before/High-clear/edge-north.png",
+      "sha256": "ba74708bed9cda5caa2f1db5d4e7502ade37d6396adb5f9bd2f507a6fdac222c"
+    },
+    {
+      "file": "r4-before/High-clear/edge-south.png",
+      "sha256": "75a3eda41aaabeda5cabcaf01f725294c134c903090dd90faedf02d14d918b5f"
+    },
+    {
+      "file": "r4-before/High-clear/edge-west.png",
+      "sha256": "57ebe2fad33ca107367c71338c4a0b3a223c9d507ceb7d438d4eeddb7047026a"
+    },
+    {
+      "file": "r4-before/High-clear/fire-station-abeam.png",
+      "sha256": "97023eaf9158408f44ded9db58d908be1753cb749618939257e89aac1b57aec5"
+    },
+    {
+      "file": "r4-before/High-clear/fire-station-above.png",
+      "sha256": "fe926822ca7885ea19e3919fb14bd2e6ff210cd316dd41bc60310548836f9023"
+    },
+    {
+      "file": "r4-before/High-clear/fire-station-ref7197.png",
+      "sha256": "13eb598c16f7d69272400320e2f3cf91b6374ea4fe8c9856ddd636cbd87d5cb0"
+    },
+    {
+      "file": "r4-before/High-clear/fire-station-route.png",
+      "sha256": "0fa77a9c76a140a8124d99847a93fd24516b83c106d49b9fe8b31ea29614ebcd"
+    },
+    {
+      "file": "r4-before/High-clear/g3a-eye-s0262.png",
+      "sha256": "37839129ec09328e0c5130ea99fa690ca348c2620a587bc4c4de8494bc4c1caa"
+    },
+    {
+      "file": "r4-before/High-clear/g3a-rondo-bie-approach.png",
+      "sha256": "5f3b381313a39510e7ad24f0e4e129d048ecda9fc4b3bf70e0a932596d30f6dc"
+    },
+    {
+      "file": "r4-before/High-clear/g3b-eye-s1482.png",
+      "sha256": "993237f039329d461ab45dc869fa7d3e5dba3a35d1dfa5bf128ffb6d0d866c43"
+    },
+    {
+      "file": "r4-before/High-clear/g3b-rondo-putry-approach.png",
+      "sha256": "8651cd70d65d687e5ff74077b614b3c2be4a5a4118e4f350d600021fa5e3011a"
+    },
+    {
+      "file": "r4-before/High-clear/g_current_black_lod_05.png",
+      "sha256": "5c5f168b046c8a89b6b3c0ead1d8e7c032f03b940820dd1e1560869cc6e5759c"
+    },
+    {
+      "file": "r4-before/High-clear/g_current_black_lod_20.png",
+      "sha256": "7e43c5d9a334844c8ca141eb8da2fe15bc5e8b8174844b0e570ab6f087fd986e"
+    },
+    {
+      "file": "r4-before/High-clear/g_current_black_lod_45.png",
+      "sha256": "a3633effdb21e90bd0171ead8109f29d6c1b9d5e3546baccd520211a87efe5e1"
+    },
+    {
+      "file": "r4-before/High-clear/g_current_black_wheel_02.png",
+      "sha256": "9b09970ded73e0dceff4948212bc634f0cc45abf49d5fb6c7c650657346cb254"
+    },
+    {
+      "file": "r4-before/High-clear/g_dirt_level_0.png",
+      "sha256": "3328b126bf9f6338989ef11e65d53167649091a8b58a65e5420d8398c31e25e0"
+    },
+    {
+      "file": "r4-before/High-clear/g_dirt_level_1.png",
+      "sha256": "abf3741fcbf58be3f36008016f612bc40d51a77c71c0330a8a9f59eedfc316e9"
+    },
+    {
+      "file": "r4-before/High-clear/g_dirt_level_2.png",
+      "sha256": "906178a0113e519427e9e9cdc0111e7093aeb90b9850ea98564b9450b3dadf79"
+    },
+    {
+      "file": "r4-before/High-clear/g_dirt_level_3.png",
+      "sha256": "076ca6676284a9c62dfb68d5d48183af142c27f46aa421d013dff256ba9d6902"
+    },
+    {
+      "file": "r4-before/High-clear/glass_front.png",
+      "sha256": "b1bfa6412c73c56ac5dab9979c54511f57ff22a8f4a2abb513a3682093d39a36"
+    },
+    {
+      "file": "r4-before/High-clear/kwadrat-park-gate.png",
+      "sha256": "4b7525e7c6272c2df037917ecd63d281804317d860faac9f8e26cdd69989240c"
+    },
+    {
+      "file": "r4-before/High-clear/photo-biezenstwa-ground.png",
+      "sha256": "743e4756fd1a5587e25b065b27b2ac618662aa5ea01cf9f2f1f6401a13eb87c4"
+    },
+    {
+      "file": "r4-before/High-clear/putry-above.png",
+      "sha256": "cc8ab5221671eb12e2841f9f0691700d88dd5ba0ef34022062f13d67344c91ec"
+    },
+    {
+      "file": "r4-before/High-clear/r10_block_1.png",
+      "sha256": "793f3c9d2d1573d4109c321de421927935df970e2bece302911abc1ff6f2c2a3"
+    },
+    {
+      "file": "r4-before/High-clear/r10_block_2.png",
+      "sha256": "d830ff12cd6d319264ee4212aa7c9b2ee0cb18d6633b724918fe45a320dd041e"
+    },
+    {
+      "file": "r4-before/High-clear/r10_block_3.png",
+      "sha256": "68aa87e24875f2afbc931fef8f4729b1dd5a2e5527204c47e36954d53a3e05ed"
+    },
+    {
+      "file": "r4-before/High-clear/r10_block_4.png",
+      "sha256": "980d50e3c3374748e6380fe2cc1730d77dbb1c0260da2dbde0db04a07f6395de"
+    },
+    {
+      "file": "r4-before/High-clear/r10_block_5.png",
+      "sha256": "06dc6aad730a8504d5577dd5b488fc2e411e94b693ccfe232f9d0c3355042321"
+    },
+    {
+      "file": "r4-before/High-clear/r10_fence_1.png",
+      "sha256": "1fd8f211d2bbbca2502a9d80c39daa0f14464f8e246cdbe731bde4a18b804dc2"
+    },
+    {
+      "file": "r4-before/High-clear/r10_fence_2.png",
+      "sha256": "a5daed806a6c015f9e395cacf2d06d3edd895b8dcfdaa5506f941873fc6dd201"
+    },
+    {
+      "file": "r4-before/High-clear/r10_fence_3.png",
+      "sha256": "35efe493a825049651ace3a60495a2417802960e152071f9c706ec43f61e337e"
+    },
+    {
+      "file": "r4-before/High-clear/r10_front_04.png",
+      "sha256": "0bab7442bc08948fec7d8a19b5bb8d75ee33aec218cdda6d7d542f100bc7dbc6"
+    },
+    {
+      "file": "r4-before/High-clear/r10_hall_1.png",
+      "sha256": "5547d755e6cade68fe081a152cfdaeb780468665189a134f49621695f8397c77"
+    },
+    {
+      "file": "r4-before/High-clear/r10_hall_2.png",
+      "sha256": "8be8f3222314e85314df52c8f6cc760b1b6705f156d9bbd097ec82f7bbe6e17a"
+    },
+    {
+      "file": "r4-before/High-clear/r10_hall_3.png",
+      "sha256": "01ee9ee902ab92d524f2b816b5a5aaf1f2f1fc4286e6cbee48da0d82930840e4"
+    },
+    {
+      "file": "r4-before/High-clear/r10_hall_4.png",
+      "sha256": "6b9d8b94332ce7114355fa3eee16bd9bdd63a1abbfbf4a2545917090214dbdba"
+    },
+    {
+      "file": "r4-before/High-clear/r10_house_1.png",
+      "sha256": "f61796b040a3c05bb857b33faf2e30f2969fa59c668aca112bc1c3aeb4538aad"
+    },
+    {
+      "file": "r4-before/High-clear/r10_house_2.png",
+      "sha256": "3a2d5f775cbf85c5a0c49e0553c7674d57da8b94609e22a3c619accd8857e4d4"
+    },
+    {
+      "file": "r4-before/High-clear/r10_office_1.png",
+      "sha256": "1b587add8752f9a975d512d2e18a5be081e47c50ec4e5086d04e150fe6a179fe"
+    },
+    {
+      "file": "r4-before/High-clear/r10_office_2.png",
+      "sha256": "913914a4bf44ca8b09d78981521c84a58673dcb4dcebf1c07fc3c67eba018646"
+    },
+    {
+      "file": "r4-before/High-clear/r10_rear_04.png",
+      "sha256": "d027fb026752b9fa75daac0f54622399a05e267c7f7476acc9dfc14ef28ab21d"
+    },
+    {
+      "file": "r4-before/High-clear/r10_shed_1.png",
+      "sha256": "119e2f53d6248ddb6198d98cda0d4576e1bb951ebcbc8d867ca3a0606514be24"
+    },
+    {
+      "file": "r4-before/High-clear/r10_shed_2.png",
+      "sha256": "c60f2e40618ad7f90e8e608b2fe44d1f78afdfe960f20bebb3cc00e531cc13d1"
+    },
+    {
+      "file": "r4-before/High-clear/r10_shed_3.png",
+      "sha256": "93af61efc648000334a7fedb3ca30de9d3d166ea413c6f9cb86e760aa3754edb"
+    },
+    {
+      "file": "r4-before/High-clear/r10_wheel_02.png",
+      "sha256": "fdffa7790fa9909586c920bec38916084a002ef05ad10fe0ae78a83da4d86d12"
+    },
+    {
+      "file": "r4-before/High-clear/r10b_black_05.png",
+      "sha256": "352ef0f5874d1710bf5c0e8837e25269d5dcfe6bcd06f99a87fcdcacc2ab04bb"
+    },
+    {
+      "file": "r4-before/High-clear/r10b_black_20.png",
+      "sha256": "000da40c9ffc5e5de7f4f333d6d6d3c8aa15e910b9a14ba54377bdc9ed622957"
+    },
+    {
+      "file": "r4-before/High-clear/r10b_black_45.png",
+      "sha256": "943031c310ba1d5deb888e643e5993af4abaa4d61b60e09ab47364e07bceb409"
+    },
+    {
+      "file": "r4-before/High-clear/r10b_blue_05.png",
+      "sha256": "b395412577fea8f83b83eef9fada8b3d9fbca1fa1b892a8e15d94eb9ba91f0f5"
+    },
+    {
+      "file": "r4-before/High-clear/r10b_blue_20.png",
+      "sha256": "afcad9cb0230538e8c63100561448e0bc3aaead8086c06c11dd935bca95dee37"
+    },
+    {
+      "file": "r4-before/High-clear/r10b_grey_05.png",
+      "sha256": "a84d1b5329747c539481168ac69e47aac9dc50f351c235a23b47ed43eb3ce88d"
+    },
+    {
+      "file": "r4-before/High-clear/r10b_grey_20.png",
+      "sha256": "c4688c22575c668fdd98f8312ff74adc35a16da042836009d2bf47f09dcd35ac"
+    },
+    {
+      "file": "r4-before/High-clear/r10b_silver_05.png",
+      "sha256": "956fb438c6c962b63302388c41d78ad50068ef96fd2524f99d32c8d4b76735df"
+    },
+    {
+      "file": "r4-before/High-clear/r4_dirt_candidate_3.png",
+      "sha256": "3ac4e6653de5ad32e93e03f5bd13eaa62dbe28ab04200e63c13a2d04ebcb1c6e"
+    },
+    {
+      "file": "r4-before/High-clear/route-onramp-andersa-above.png",
+      "sha256": "fa21909cd86d78c9d561637fda82b0462fff6eca46e43552b639678550b2c5c1"
+    },
+    {
+      "file": "r4-before/High-clear/route-onramp-andersa.png",
+      "sha256": "f93ff37897fb0fbcd0b57193297b035ffdf786dfa6067eaf8a638c858d2f2d3d"
+    },
+    {
+      "file": "r4-before/High-clear/route-putry-approach.png",
+      "sha256": "e2f29981850132022323e56e7b1716e602529e6d37d1093cc9375a0ff30bd90d"
+    },
+    {
+      "file": "r4-before/High-clear/route-putry-entry-signs.png",
+      "sha256": "567f93882e7758c9d6b0555b410d6b783988f27776c824edca9a2b803cbe306b"
+    },
+    {
+      "file": "r4-before/High-clear/stretch-01.png",
+      "sha256": "2309a54490f77d45fea062d1b8eb6637bb7e880f7e3cc4118fb232b889a8774d"
+    },
+    {
+      "file": "r4-before/High-clear/stretch-02.png",
+      "sha256": "40b290a04903e2c230792e29f4f3495ed1b15d0ee0ba4b74176267b1777741d8"
+    },
+    {
+      "file": "r4-before/High-clear/stretch-03.png",
+      "sha256": "a8b1a715d0a71cb410f5eba00c4088e864a1665d7ecc8befde0e80120165aa88"
+    },
+    {
+      "file": "r4-before/High-clear/stretch-04.png",
+      "sha256": "2e9e599747396e4a70ceb4a4ed10d571889048da9f9a97701b5bd78897f80bf4"
+    },
+    {
+      "file": "r4-before/High-clear/stretch-05-docks.png",
+      "sha256": "5adb1c4b0ed017a1bd949347ec14aac3b3ea274bff3816b9440bfe9d53063d05"
+    },
+    {
+      "file": "r4-before/High-clear/trailer-34.png",
+      "sha256": "f0d19a683a0e7ba34d3ba0f43bbb7b85ce314c22d773db40f9dc11b86849313e"
+    },
+    {
+      "file": "r4-before/High-clear/trailer-side.png",
+      "sha256": "9697d90381971a6afe248564a1177369f74629618ec39b195a461f07e3d06d5e"
+    },
+    {
+      "file": "r4-before/High-clear/truck-34.png",
+      "sha256": "83b10041ac04506a66b9263fe6c5bd234a187b810e8099ac6a759d8c7e9b2891"
+    },
+    {
+      "file": "r4-before/High-clear/truck-34r.png",
+      "sha256": "1b9798c3e53d1a99ed97b2eeb50ba5d17e83abce48583ecb9df88c32fb354422"
+    },
+    {
+      "file": "r4-before/High-clear/truck-at-gate.png",
+      "sha256": "cb8e7cf56f8e133343c631182b52a4976e7b86332d7e877697513ff33063d094"
+    },
+    {
+      "file": "r4-before/High-clear/truck-front.png",
+      "sha256": "b9cf3da7c6319e287fedcdde4bc690f0a6a0cc77863e69b4070ffc483df0f3de"
+    },
+    {
+      "file": "r4-before/High-clear/truck-rear34.png",
+      "sha256": "3b72619ecbf244233979e10b20523b02a6dcb19225a47ab4af982a58c98a08f4"
+    },
+    {
+      "file": "r4-before/High-clear/truck-side.png",
+      "sha256": "584fa819dbd595727f0fd26d7389696cf62389c362e8dcf1bc0ebbd74617c4f5"
+    },
+    {
+      "file": "r4-before/High-overcast/biezenstwa-above.png",
+      "sha256": "f4a427dedb7de137fc7128a8785062c4f9220f2814113748b54f67d4f916e676"
+    },
+    {
+      "file": "r4-before/High-overcast/cab-dash.png",
+      "sha256": "5996416ff7631e556486d92282578906de16eed6f02bc1408b84363b4d5f73ac"
+    },
+    {
+      "file": "r4-before/High-overcast/cab-driver.png",
+      "sha256": "4298617a628447e503d019e74517d6656bbcf6a562cf81957e03eea0d4c17b55"
+    },
+    {
+      "file": "r4-before/High-overcast/cab-gate.png",
+      "sha256": "8a84c8565f2d653d0df32fd66f67c45f2ae645d3c4cbc267b0826d6cf840593e"
+    },
+    {
+      "file": "r4-before/High-overcast/cab-grain.png",
+      "sha256": "46b6e2d3e688f521d5ed326b1cb2f0c2569481a6cf27f426ed25674fe094e81e"
+    },
+    {
+      "file": "r4-before/High-overcast/cab-left.png",
+      "sha256": "08604ff0f738cace8a15db19de68d14b03f97a5695fd3edb517567dac08a6ec2"
+    },
+    {
+      "file": "r4-before/High-overcast/cab-materials.png",
+      "sha256": "5c0705a67fe26d5607e555789b7b7915deb3dacefb82fd02ce6ca90c6da04e59"
+    },
+    {
+      "file": "r4-before/High-overcast/cab-mirror-front.png",
+      "sha256": "90ed31500f13a9ab493e0c1bfe165041af33242b1deb329f9bf9806d2aef0221"
+    },
+    {
+      "file": "r4-before/High-overcast/cab-mirrors-left.png",
+      "sha256": "d4e64b1bfbbf1574aac987afc8b957710fddca8b6fa861682586a128449025a7"
+    },
+    {
+      "file": "r4-before/High-overcast/cab-mirrors-right.png",
+      "sha256": "22ebeca32d223d2ea67c5f2709a4e97ad31662ef66b6fc2c7925989e98501493"
+    },
+    {
+      "file": "r4-before/High-overcast/cab-right.png",
+      "sha256": "5a5356d7e738625e2d1a3b512cda23dc6bea740338b3c9b22fba109b817e7249"
+    },
+    {
+      "file": "r4-before/High-overcast/cab-seat-entry.png",
+      "sha256": "02cdb4e4419fac604d924f0a00857a04da3292653898fe8e6438cf1ba7e7bcd7"
+    },
+    {
+      "file": "r4-before/High-overcast/cab-seat.png",
+      "sha256": "33b52e577c4643f1c5bccc958fa19230c32e5b88c7624ec0d9cc149e1724c5c0"
+    },
+    {
+      "file": "r4-before/High-overcast/car_lod_08.png",
+      "sha256": "216061150ee5f6ddac2e2ea5773710e82fa0e9baacb9b23041e8f28a0929c215"
+    },
+    {
+      "file": "r4-before/High-overcast/car_lod_12.png",
+      "sha256": "4d210191c81443f4fdec3ff223de12a001b6ef4c9277925d6f4ca49e91d640f1"
+    },
+    {
+      "file": "r4-before/High-overcast/car_lod_15.png",
+      "sha256": "7221c167e565e391ab5dcf1eccbdea53b7c74bedd3c9d3b3ae42b62829c6cacb"
+    },
+    {
+      "file": "r4-before/High-overcast/car_lod_25.png",
+      "sha256": "384b3878f54643c223e924bf937c557b8b3e268c7d94d4bd86da5ed7ac527559"
+    },
+    {
+      "file": "r4-before/High-overcast/chase.png",
+      "sha256": "542b2d87ba203a362be0428a3b69bd9d82eb7f5356e2f6ae425963494f3ca52c"
+    },
+    {
+      "file": "r4-before/High-overcast/dk8-dk19-exit.png",
+      "sha256": "7dfd7b4457ec46e018746aabe9e40d2609841df6d77bd594dd09cb358911fd16"
+    },
+    {
+      "file": "r4-before/High-overcast/driver-andersa-to-putry.png",
+      "sha256": "70bc7e2a48303a4d952b68f14a86015b34f7f4e5f25e690b34a9bdb9e717379b"
+    },
+    {
+      "file": "r4-before/High-overcast/edge-east.png",
+      "sha256": "1cf121dff43594aca8c026052260059c582276a6f2ed792cd5f4ffeb36e97e7a"
+    },
+    {
+      "file": "r4-before/High-overcast/edge-north.png",
+      "sha256": "e6bd0563f7a5de8eae365129080a76229063c8e33dfc75caf505dce50ef0df2f"
+    },
+    {
+      "file": "r4-before/High-overcast/edge-south.png",
+      "sha256": "ff4ca5be831265cc156efa81c53e6ae2a201fa2ce4cbfc2dfa76d5ff765a7b0f"
+    },
+    {
+      "file": "r4-before/High-overcast/edge-west.png",
+      "sha256": "a1f3bec54236b8de72f50f14f80f295950849ad3ccd86b8b36d3081d6aecb84d"
+    },
+    {
+      "file": "r4-before/High-overcast/fire-station-abeam.png",
+      "sha256": "e71307cbdcb565cf5465b40069a8f162407b9aab35954f1d93ad0cb49b92b4c1"
+    },
+    {
+      "file": "r4-before/High-overcast/fire-station-above.png",
+      "sha256": "b39064849ae0d674d0c1252c05a7bc49dd5e5920875c2c9fba6affb5ef9a147e"
+    },
+    {
+      "file": "r4-before/High-overcast/fire-station-ref7197.png",
+      "sha256": "cb97b9accea25ac812c815eedb10f2075ae2c8160b193c4abc82900cee86dc62"
+    },
+    {
+      "file": "r4-before/High-overcast/fire-station-route.png",
+      "sha256": "81ad4b96db6bc239f0db6f3f45b6de7531d56a6b85df25dbfe0ee905e3251597"
+    },
+    {
+      "file": "r4-before/High-overcast/g3a-eye-s0262.png",
+      "sha256": "0f73fdc768e8a9ac4b6ba7b4eaf474397e7e6be817fd7be84a97319af27edec3"
+    },
+    {
+      "file": "r4-before/High-overcast/g3a-rondo-bie-approach.png",
+      "sha256": "7ca348c6ac5e100ad267396876db2e4241f84dbd5c07dd3b3bac3d8d25224b9b"
+    },
+    {
+      "file": "r4-before/High-overcast/g3b-eye-s1482.png",
+      "sha256": "357a5e30bea3d58b99ed25facae9a47c9c5163595e148dc80da5feafb82ed200"
+    },
+    {
+      "file": "r4-before/High-overcast/g3b-rondo-putry-approach.png",
+      "sha256": "94d322b2a3d3f5da2cf7addba055c21c55a3ef1fdee5acf71827c5f794d4bf9e"
+    },
+    {
+      "file": "r4-before/High-overcast/g_current_black_lod_05.png",
+      "sha256": "9a42f246b63ca9757daf663f93281aa3db1e0b58479406583e585f2abb7def1d"
+    },
+    {
+      "file": "r4-before/High-overcast/g_current_black_lod_20.png",
+      "sha256": "779793b30bc4a49a8fe99754ae0d8a2bfa43137ce0ca839acf0e292a99017c66"
+    },
+    {
+      "file": "r4-before/High-overcast/g_current_black_lod_45.png",
+      "sha256": "5c1472fe02df321b4204e0f7cb6a4ffbcce3a20750b6153928d7ed1ed3ccc1f4"
+    },
+    {
+      "file": "r4-before/High-overcast/g_current_black_wheel_02.png",
+      "sha256": "1b16d4d7551b3640ff9b0825d47e05011011a5b11d0e58f0b10a79f9b123f42e"
+    },
+    {
+      "file": "r4-before/High-overcast/g_dirt_level_0.png",
+      "sha256": "2487f6bc97124d0eeda0a42354d6251cf7a518ff2b6677732843644ae15bbf1e"
+    },
+    {
+      "file": "r4-before/High-overcast/g_dirt_level_1.png",
+      "sha256": "7c98b8c83315990a5c6bd59c0daca9e753f40f217e971407f335cc3f1799c393"
+    },
+    {
+      "file": "r4-before/High-overcast/g_dirt_level_2.png",
+      "sha256": "d5a2fe2e6578dd4bee5e9939064ed5f7e6b09ee44ef0b5426c59d88e80fe8516"
+    },
+    {
+      "file": "r4-before/High-overcast/g_dirt_level_3.png",
+      "sha256": "02eb9b83dfcd57f3b1b53c25441053e046207b3e40f4b28670efbb27a5ade640"
+    },
+    {
+      "file": "r4-before/High-overcast/glass_front.png",
+      "sha256": "b3d0ce4e76130ef8229e2ec2f27408802e234df9daabf8dac497325d039cebbd"
+    },
+    {
+      "file": "r4-before/High-overcast/kwadrat-park-gate.png",
+      "sha256": "baadd8138afb6e268405d2b03a32129a5583d946c172248c3e6b78ff1ef341f4"
+    },
+    {
+      "file": "r4-before/High-overcast/photo-biezenstwa-ground.png",
+      "sha256": "5a74c46bedeb7f3ed7323cdffe180ca7648c0b9aca5065e8820517b2dc06d892"
+    },
+    {
+      "file": "r4-before/High-overcast/putry-above.png",
+      "sha256": "104e61eeba20c977d6ce2c222f4be3c9917cd44e91d7040a41cff53d9237d96c"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_block_1.png",
+      "sha256": "5c2f8159d5453290c685afa9288e7670be4bb42b47a84d428a510299065962de"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_block_2.png",
+      "sha256": "2425bc0044bb31ac6a2fba6faba6a1d3fcf554c9f6d2cbd226b74294eb425b60"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_block_3.png",
+      "sha256": "fb0104c56a001f7ea5a41f0f8b18c32b8ef256c229109d7f8f7f837bcead5ad6"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_block_4.png",
+      "sha256": "26b77e5e67ce1924750306efc3b7b67b32b2bb83edc96f1ff3bb94790808452e"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_block_5.png",
+      "sha256": "23b0eb0e53d7213a3b337ca8b234a133a03b4d7568b35851c7b1c17d758aa4d9"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_fence_1.png",
+      "sha256": "ff35a82ff50ed129251a35fd0fbf6c61845245de9e12559eb7206d0dbae8d937"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_fence_2.png",
+      "sha256": "f7949129d1de2d1b7ffc9a43b2d48f50facb1c96688a4cafc71a25b432dd5595"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_fence_3.png",
+      "sha256": "09203adacc48b5738d856f29367c7a12941829fea75621c28476c629b5a107e1"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_front_04.png",
+      "sha256": "1190554667ce76e9e411ec0f8a61e8d3591f7f758eff13fcc1d7f91e0f9b12ae"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_hall_1.png",
+      "sha256": "9eae6cdaa0ec97bc5a74aa88596db65be53544405ffec2f696e998928d121912"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_hall_2.png",
+      "sha256": "33d126eb2df54bc5fa14183556190a9e671fee66994d87a248d92cf86650ec22"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_hall_3.png",
+      "sha256": "b2f3e407875a55d4e244d9adcf0f0c8a929883453f5e725328f3eee8d5ed6c62"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_hall_4.png",
+      "sha256": "52f06fc0cc71be51c4b302005ca8b71993163ef08508a88164cc99a1aa5c9f09"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_house_1.png",
+      "sha256": "45eb42f1f9401bb07d8b0158694aac5fe074015bbc042a8b56c982c6fb702455"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_house_2.png",
+      "sha256": "8f23107381f8a9a005443e1f1b94718c7b9ae7a7d9b96ffe4ec2e1d37c63ecd3"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_office_1.png",
+      "sha256": "3cc229a10cd2a101748fb5a918e6a74d8c68fd8079d2b988ab9bcd9c59b88bfb"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_office_2.png",
+      "sha256": "bc4de471fa22095f61646cce976799103f824dcf31a4662c22e25bd8a9367027"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_rear_04.png",
+      "sha256": "cf980ac6042925353881dcf2eccbb632023c4f6484e8a42d47454a3492d78493"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_shed_1.png",
+      "sha256": "82a6cdb3db800c199ff0c446efd58af3a3d5121dcc79d347955fc7399044b713"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_shed_2.png",
+      "sha256": "a181926cb4767b967e8a3fab545c85249a0fb41eb33435eb5ffe1724d69030ce"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_shed_3.png",
+      "sha256": "23b3d7d728c03ae19e85d5f8ef96ca945e5f93c59b46be0514ad5c6aec5cb251"
+    },
+    {
+      "file": "r4-before/High-overcast/r10_wheel_02.png",
+      "sha256": "e268a1985a1fcf823bacfd60cabf3881c5897d5a92d18db7063c60db1e010fdd"
+    },
+    {
+      "file": "r4-before/High-overcast/r10b_black_05.png",
+      "sha256": "71a34cf27ef8a2a86fd8c3e48867bc21045e802f6d98869b8075c86672853e19"
+    },
+    {
+      "file": "r4-before/High-overcast/r10b_black_20.png",
+      "sha256": "697c39ab745df2263241a98b16174291e25ef29a8822edc63831dc5963534932"
+    },
+    {
+      "file": "r4-before/High-overcast/r10b_black_45.png",
+      "sha256": "009dc92ee0ff56d3d3db309d2415dff038a8fcdf61ea07f5ff323e10d4931eff"
+    },
+    {
+      "file": "r4-before/High-overcast/r10b_blue_05.png",
+      "sha256": "9f0369392188293ced14b89a2af016a38330a4fdee5a9b6932cd6d1eccb84e0c"
+    },
+    {
+      "file": "r4-before/High-overcast/r10b_blue_20.png",
+      "sha256": "806d9fcce172063a2cf245881579f7de14dfbcab9de0af751e039235604a8c39"
+    },
+    {
+      "file": "r4-before/High-overcast/r10b_grey_05.png",
+      "sha256": "6a1c36d8a341524a67b7acc1be824ed8e7f362677d9c88de929db20fce583169"
+    },
+    {
+      "file": "r4-before/High-overcast/r10b_grey_20.png",
+      "sha256": "0e2b6338ad13376e6201a58bd07242215a4f63e27b4bfe6c471495307fb1cc49"
+    },
+    {
+      "file": "r4-before/High-overcast/r10b_silver_05.png",
+      "sha256": "3802b9e0558fd189069927ce35920786910e9cb6ffc4348f82f4f9dff8a63b27"
+    },
+    {
+      "file": "r4-before/High-overcast/r4_dirt_candidate_3.png",
+      "sha256": "6c16c1562578448d2e77abc97bcc6b70990b065e19aaa8cccdecaad4e0a35e89"
+    },
+    {
+      "file": "r4-before/High-overcast/route-onramp-andersa-above.png",
+      "sha256": "76c026208fb4d18258e033f14c9a26064dc6c43439711b5b218e01b8f49dc510"
+    },
+    {
+      "file": "r4-before/High-overcast/route-onramp-andersa.png",
+      "sha256": "5aefc0977b6d8c2f833f8126520e9cbea88804762a24fd54239a730b0dfa263d"
+    },
+    {
+      "file": "r4-before/High-overcast/route-putry-approach.png",
+      "sha256": "85f0ca6795b7806e9b19ef556a311f6a249ad3e149264d698568f6fb07417704"
+    },
+    {
+      "file": "r4-before/High-overcast/route-putry-entry-signs.png",
+      "sha256": "0de26e343a1d521e148f893d7922b48337d0ea7bec210019a0901aac70cf8e4b"
+    },
+    {
+      "file": "r4-before/High-overcast/stretch-01.png",
+      "sha256": "d4a2a3978c550b37dd0a72e5c517ed53bfd1144e1799e0e1c6b557dedb1bf130"
+    },
+    {
+      "file": "r4-before/High-overcast/stretch-02.png",
+      "sha256": "94e35dbb490423e0627a7cd941339468eda11d8fbbe1dc06f32662e13c1793f8"
+    },
+    {
+      "file": "r4-before/High-overcast/stretch-03.png",
+      "sha256": "7c734a7cb46d31b49e367ae6eb94368cc2080a57c0c9a4f7ab7a8c1e6402ad92"
+    },
+    {
+      "file": "r4-before/High-overcast/stretch-04.png",
+      "sha256": "ad98a4c98c9f502ee14675e0953bf28c026168867ac2b1b3db8b74efd1f06e32"
+    },
+    {
+      "file": "r4-before/High-overcast/stretch-05-docks.png",
+      "sha256": "8ae3df86c62b2dbe4657b0733e7bb5f33037e53fba4b1672bcbc1784971bb470"
+    },
+    {
+      "file": "r4-before/High-overcast/trailer-34.png",
+      "sha256": "044fd1b4d2845d7337b19ad59b725cb6459760c438e5707c5716cf4c41553cbc"
+    },
+    {
+      "file": "r4-before/High-overcast/trailer-side.png",
+      "sha256": "b3508dae9027422de2b25720223ada28771642b5438d14fcbe96af23c80327f1"
+    },
+    {
+      "file": "r4-before/High-overcast/truck-34.png",
+      "sha256": "c8e1e3579dc8b40303e3009d951399c45aec61f9e5966abab22d3c9403981cd6"
+    },
+    {
+      "file": "r4-before/High-overcast/truck-34r.png",
+      "sha256": "ca1ee9828d7c11f6ae820d5ec2c770fb397012bea210b4169f4b919a5c6f9921"
+    },
+    {
+      "file": "r4-before/High-overcast/truck-at-gate.png",
+      "sha256": "c68652cf1334ee775ca0651ad6719aa14c85eec1859e8b5f575a6b77c6ab014a"
+    },
+    {
+      "file": "r4-before/High-overcast/truck-front.png",
+      "sha256": "8aedc7b447dc4e446d5a76d26bbe0d0638bb3932198bb554e46b3eda002b5dd2"
+    },
+    {
+      "file": "r4-before/High-overcast/truck-rear34.png",
+      "sha256": "65c1e438ab2aef48c98e5e42e246e12be5af263cbeab4e4a411e5b1e057b4995"
+    },
+    {
+      "file": "r4-before/High-overcast/truck-side.png",
+      "sha256": "86548157233af0506d23f127a07fbc033dd50c7b57f1324f84b4073875e473ba"
+    },
+    {
+      "file": "r4-final/Low-clear/biezenstwa-above.png",
+      "sha256": "1b43ad47bede46d1eac973533d918076e216358aa8186c6aadf0ba82bd8040bf"
+    },
+    {
+      "file": "r4-final/Low-clear/cab-dash.png",
+      "sha256": "fa98c9cf4ed9815617a48f2ad0e6010aea8b0196b760564cfa36695c985acb9d"
+    },
+    {
+      "file": "r4-final/Low-clear/cab-driver.png",
+      "sha256": "c28ffe7754806bfd76fa7eb0445793511343829e0d2c037415ba517a03d2e9db"
+    },
+    {
+      "file": "r4-final/Low-clear/cab-gate.png",
+      "sha256": "70cad80710d4523752f3acad610f13c3dd46eac8fd1e0afc669511ed4c9fa018"
+    },
+    {
+      "file": "r4-final/Low-clear/cab-grain.png",
+      "sha256": "8f309d205f564612e6fa265e6cf57e3b4baf45088f7b25a1885fa9a503bd1942"
+    },
+    {
+      "file": "r4-final/Low-clear/cab-left.png",
+      "sha256": "edd60747bef9a6d2ca978c2d8b62caa500cf4efd6f2798e9f3cbfa00175615f2"
+    },
+    {
+      "file": "r4-final/Low-clear/cab-materials.png",
+      "sha256": "608ab9f7f0a8859ba5aa2ccd19195e4ea16a26bc971d01793920c39fe5781bf3"
+    },
+    {
+      "file": "r4-final/Low-clear/cab-mirror-front.png",
+      "sha256": "986a2c72fc37339563f916bc29e0e341652b5ebbf17c7780ec135478086ba256"
+    },
+    {
+      "file": "r4-final/Low-clear/cab-mirrors-left.png",
+      "sha256": "0b9bd91e237ae3cedc6b2824e6ff88771157dde9c3c9febb0b7a5fc04588757a"
+    },
+    {
+      "file": "r4-final/Low-clear/cab-mirrors-right.png",
+      "sha256": "75f2e3ca6c93f84ab854b32ec946971bab32cbb424323575703160fff6a3cbfd"
+    },
+    {
+      "file": "r4-final/Low-clear/cab-right.png",
+      "sha256": "d0cd574e8f3ba1c4dd69beb11d47dd18b0122e2336127e71e7d802b2b78d364d"
+    },
+    {
+      "file": "r4-final/Low-clear/cab-seat-entry.png",
+      "sha256": "0f9a73572295d1b8bd01924d3e299762042d5a512cb17cceb8b78a2efe5c094f"
+    },
+    {
+      "file": "r4-final/Low-clear/cab-seat.png",
+      "sha256": "8c93d8c54f9b492aaf859ec0e6f4370cfa56f04a3bcf5786fe51159a104e0559"
+    },
+    {
+      "file": "r4-final/Low-clear/car_lod_08.png",
+      "sha256": "2e546bde566da43ed011bd9306ee2dba53528fe79714003400d1c1c7209b6f2b"
+    },
+    {
+      "file": "r4-final/Low-clear/car_lod_12.png",
+      "sha256": "3ee9232cea28e89014df1af5a7c7259159121fbfc8ef2f08df886f72785d2828"
+    },
+    {
+      "file": "r4-final/Low-clear/car_lod_15.png",
+      "sha256": "ee1bfa2733ae4b7101db187d6569cf8af7b8b92391c38d588236e1d8e2ce6094"
+    },
+    {
+      "file": "r4-final/Low-clear/car_lod_25.png",
+      "sha256": "c839b9e7f51fadb9d52cf6991d0571f5c744baf8594788db056f77daa7c7863b"
+    },
+    {
+      "file": "r4-final/Low-clear/chase.png",
+      "sha256": "12b89c8cd9291c3ab3e143341f93e267d6aed8d9fd4abcb0f1706d04487fe6a8"
+    },
+    {
+      "file": "r4-final/Low-clear/dk8-dk19-exit.png",
+      "sha256": "02a7b4a4e913d3c26700a25e3ca62192191950a347ee5a1d29e63749373b47be"
+    },
+    {
+      "file": "r4-final/Low-clear/driver-andersa-to-putry.png",
+      "sha256": "36404d04ec570a1d1efd6705c3cce75a60792e13e5e253b97768802e8edbba5b"
+    },
+    {
+      "file": "r4-final/Low-clear/edge-east.png",
+      "sha256": "237476adb51512853d2da56259be4a32e9710ace88c1c7c26433e0ac84ac039e"
+    },
+    {
+      "file": "r4-final/Low-clear/edge-north.png",
+      "sha256": "4d28d511e4818f4fcfdb4756cd53174a5acfc8ade1396ea31f0e6404fb74148e"
+    },
+    {
+      "file": "r4-final/Low-clear/edge-south.png",
+      "sha256": "ece896fb398e64796c0027fbaff160601ebece6b455691b2f9b6e7aef12f1f07"
+    },
+    {
+      "file": "r4-final/Low-clear/edge-west.png",
+      "sha256": "40d64576744d23d6ffa7630b4a70511744e4e7175d2e89d3ca5833c6eb8b45ef"
+    },
+    {
+      "file": "r4-final/Low-clear/fire-station-abeam.png",
+      "sha256": "cd6e721bb97c5e103cd73aff02b0a6093085f159f8c7bcfae72f9fe0639b7012"
+    },
+    {
+      "file": "r4-final/Low-clear/fire-station-above.png",
+      "sha256": "6ad4268fba6f531f627989a3d2493cc97c7fcdfdc189a6054ff78b82a8509917"
+    },
+    {
+      "file": "r4-final/Low-clear/fire-station-ref7197.png",
+      "sha256": "0ea3b854afbaffd330555b1a7ff3effa7061c70c17c2235ae00a1bb746e6c98d"
+    },
+    {
+      "file": "r4-final/Low-clear/fire-station-route.png",
+      "sha256": "834eee4407379d9910ee83d93b4692658617cd9ea9c531bd9aafa9278ba22da6"
+    },
+    {
+      "file": "r4-final/Low-clear/g3a-eye-s0262.png",
+      "sha256": "8fa44746d5159f18218c1c093f26c772dabc1b05a3cae1b15355f2156941f79b"
+    },
+    {
+      "file": "r4-final/Low-clear/g3a-rondo-bie-approach.png",
+      "sha256": "9f2d638726dd734816edae94e15d99a95baddb7fdf3ad43c012d2cc757d7b43a"
+    },
+    {
+      "file": "r4-final/Low-clear/g3b-eye-s1482.png",
+      "sha256": "4b912073b8c1c3a13fe6eac3fed2a1a3285c3e6a6cda1f8b0c81b0cd485ee45e"
+    },
+    {
+      "file": "r4-final/Low-clear/g3b-rondo-putry-approach.png",
+      "sha256": "7056e9740a5c862584168bea07c78802da14a2c003cec319155bf0439c83befb"
+    },
+    {
+      "file": "r4-final/Low-clear/g_current_black_lod_05.png",
+      "sha256": "dc837727ede4e172d8737f72755fdc96970bb9b1e8aec3c2b89fa6e99ae54340"
+    },
+    {
+      "file": "r4-final/Low-clear/g_current_black_lod_20.png",
+      "sha256": "034ad3ae7fca16f66b065e0eec2dfc9b952a3257cdde628c78740c78115e74e1"
+    },
+    {
+      "file": "r4-final/Low-clear/g_current_black_lod_45.png",
+      "sha256": "08d8c2a1d19147f5d9cd18263e92f38b200dc20f5559f2818b9278e89f245ff6"
+    },
+    {
+      "file": "r4-final/Low-clear/g_current_black_wheel_02.png",
+      "sha256": "b3d8db52459b370d8b22bc4a59b552908bf21b8dfb9e8c27753d81c2d55a7245"
+    },
+    {
+      "file": "r4-final/Low-clear/g_dirt_level_0.png",
+      "sha256": "d1b032de537d883e0c3779d96cf9e87d55674f8d56fc74944fcfc6ec7ed1ea83"
+    },
+    {
+      "file": "r4-final/Low-clear/g_dirt_level_1.png",
+      "sha256": "33ee63cc4be8b0dbe6e3eb0dcb7d98aa75fb72c2eb023a7b97052f05f6df9d66"
+    },
+    {
+      "file": "r4-final/Low-clear/g_dirt_level_2.png",
+      "sha256": "963d232debf1ebbd68a4a26d4eb3dbd789c3e104b92630c527f63e9173658d8f"
+    },
+    {
+      "file": "r4-final/Low-clear/g_dirt_level_3.png",
+      "sha256": "c3bcf03d270e73ce9baaba957a6640c76e048563ad1066b21003090c0ca70e93"
+    },
+    {
+      "file": "r4-final/Low-clear/glass_front.png",
+      "sha256": "bc86d6e8086f5a8305c03a00bf7831bb19e5bebfc7d705919b741dac0ce74fe2"
+    },
+    {
+      "file": "r4-final/Low-clear/kwadrat-park-gate.png",
+      "sha256": "f0c59b2a3fd16fc7f90f2864d28cdbfbf56e28ad8c260b3d1e410504d79eee49"
+    },
+    {
+      "file": "r4-final/Low-clear/photo-biezenstwa-ground.png",
+      "sha256": "f8e84ca558686edd37d32e93544cae088c5f6f7e85902c3b9b5667c8bbfef091"
+    },
+    {
+      "file": "r4-final/Low-clear/putry-above.png",
+      "sha256": "8d8c661968e35dfb3b9830be32ca1aea14cc315290a701f8cce8c178b47ebb71"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_block_1.png",
+      "sha256": "03df81f295d641e7db76e2e6773271c85f0f94ada7969b5d290b66d0f2ac5825"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_block_2.png",
+      "sha256": "44b10be37e9b9762b442148276efd23d82c535f6d0d33600fbaf7ed0b279fce0"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_block_3.png",
+      "sha256": "0ed86eaec77a682457b1df2918c99969c6611dcbe068a5c85ed7f9262fd12439"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_block_4.png",
+      "sha256": "7b72201463df7fc4ae8f4e885fa5dc7982c585cff54fa8a2e40df90ac1b3ad04"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_block_5.png",
+      "sha256": "1ba6447acfa18ea36fb8443efc0884ba44b68f66e692350ca3703e08ff2c3f45"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_fence_1.png",
+      "sha256": "b69822194e2b4faae70af32f92a55d0583dc68ca16effd9b4a28569d2ba8ec30"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_fence_2.png",
+      "sha256": "1cbbbe50888227f8d46a23f3dbc2d4ad9251ef25831f120ebf83da45f0f925f6"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_fence_3.png",
+      "sha256": "40c83e00f65dc933e732468875162a5a85c0b6bf7258cda6f04b89668fc2db68"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_front_04.png",
+      "sha256": "8fdf27bc49657c1978c0dbdcd839d6b4c1a5fd5a737a29814d71bab64f7a9d41"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_hall_1.png",
+      "sha256": "9fde53e28638703457de32cb3edd5eb0790618705bc68cb4fed48d73aac8c6cb"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_hall_2.png",
+      "sha256": "b97c3d89c2e860b73102de05c75d17dc010cc4072c423b44efc24ec2b0950b71"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_hall_3.png",
+      "sha256": "f5182374fd9e4bef1c24a9ee1bc55ac08b635b86f58905dbf28e83772e3d5b5d"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_hall_4.png",
+      "sha256": "c8caff8c5fb4c792ffe53bc5b9423a77057250eb9a2de417ec4566a96dba8da8"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_house_1.png",
+      "sha256": "7b0062cf6f6e2f78f22f8219e032efb34a251dbd59121cac9ef4b9de658cd194"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_house_2.png",
+      "sha256": "636cc6fdd9026d3511d240c1b6fa5562d959ed469f994828293cadac9b1c7e46"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_office_1.png",
+      "sha256": "fc67d99a927704d4d6b5e712fade67808aeab87c87935cddf60d88c57eb3c08f"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_office_2.png",
+      "sha256": "606f21f32e28f848b86dc802ba3fb5703c4e4e643f6768605bcf1006c8e03a2e"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_rear_04.png",
+      "sha256": "eba4ba5a805d57ca5ce1c1b9e32f3c3fd4b8da190877ded5f6fd57c6db845755"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_shed_1.png",
+      "sha256": "d1a35f8edc75eb6b862753f817cf3bad0f8525772f1d641b4b72e0105087825e"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_shed_2.png",
+      "sha256": "b289c9a9107fc7780ffb1d62ce63be6d712e28b2fafa633cef4e99de52c61f1d"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_shed_3.png",
+      "sha256": "bea6abf63793c61664bcb2454b0db5c8ca2db96bd046323092cfbb74059e1c55"
+    },
+    {
+      "file": "r4-final/Low-clear/r10_wheel_02.png",
+      "sha256": "02d1b325008d401eda2510451dd0035813f2b8a85be38d99409b8da84fdd3ca7"
+    },
+    {
+      "file": "r4-final/Low-clear/r10b_black_05.png",
+      "sha256": "b35af5096a4424f06188d35b5215e8847ce9078e8cd1438d58d90d989f3ecfb7"
+    },
+    {
+      "file": "r4-final/Low-clear/r10b_black_20.png",
+      "sha256": "dc968fd4859cdabf76fa1bfb41c929e1abe01db8f7a060f6bc0330a1f72da6d2"
+    },
+    {
+      "file": "r4-final/Low-clear/r10b_black_45.png",
+      "sha256": "d7706709dd9a38083944adaa0f3c1f157b41d157b7bc316479cb8115c8f3b386"
+    },
+    {
+      "file": "r4-final/Low-clear/r10b_blue_05.png",
+      "sha256": "0b75cea8cb23a812da914cde3f71f797e5cb2f514e8e46124f5bd000bd20e93d"
+    },
+    {
+      "file": "r4-final/Low-clear/r10b_blue_20.png",
+      "sha256": "3050d5cd479776ddddd1ba780bf3dc53e6e1dd97dade73c1cf2acf20dbff861f"
+    },
+    {
+      "file": "r4-final/Low-clear/r10b_grey_05.png",
+      "sha256": "2f71164db0347d90813c0445c30b57bcdb39a59eaadbc31f9644e89673f2bcce"
+    },
+    {
+      "file": "r4-final/Low-clear/r10b_grey_20.png",
+      "sha256": "8d75d8d5ec18046d2cd6bff0d315a15497ace414c61f313030537fa5dc4ca754"
+    },
+    {
+      "file": "r4-final/Low-clear/r10b_silver_05.png",
+      "sha256": "5222e086f07f595a7b4e1a5a400d1b2978d5cdf6cd815a7344ab4cebd4f0e3e4"
+    },
+    {
+      "file": "r4-final/Low-clear/r4_dirt_candidate_3.png",
+      "sha256": "e95769856deb991b641c1bf52c3af8b1aa49a336a997424230a45c8aa7c26210"
+    },
+    {
+      "file": "r4-final/Low-clear/route-onramp-andersa-above.png",
+      "sha256": "f18de0bd425d189328089332b56805a4c8f4274f869880e766502f45897de70d"
+    },
+    {
+      "file": "r4-final/Low-clear/route-onramp-andersa.png",
+      "sha256": "3038907ad727511e767b0236b233e9c6a52dfca6316f30cf0298516e5a5e5d6f"
+    },
+    {
+      "file": "r4-final/Low-clear/route-putry-approach.png",
+      "sha256": "269366919757481cc3618d0a4b66159dfd570a53f22c77e6fbd70407fbe2dc78"
+    },
+    {
+      "file": "r4-final/Low-clear/route-putry-entry-signs.png",
+      "sha256": "4b3896261f6c4d26f833d04779bf2c7a34e3bef9994413e59068ba65ef802e68"
+    },
+    {
+      "file": "r4-final/Low-clear/stretch-01.png",
+      "sha256": "583c2853b0f45db077869e8ab68614ed1f2c0634821ce2ce3223a425e5ef497b"
+    },
+    {
+      "file": "r4-final/Low-clear/stretch-02.png",
+      "sha256": "78734e136b847c031e5c4c527391445332c59948143d1b428f98b37fa30ece50"
+    },
+    {
+      "file": "r4-final/Low-clear/stretch-03.png",
+      "sha256": "adc7f687fcf313bfaba01d0a8cdabbba6807d4702869296403a2a3aebc14a9fb"
+    },
+    {
+      "file": "r4-final/Low-clear/stretch-04.png",
+      "sha256": "dc7468d54bab04d32ad86cd58a2faeb07e227f298f3069ecd182d4a991a7ddec"
+    },
+    {
+      "file": "r4-final/Low-clear/stretch-05-docks.png",
+      "sha256": "6198e40be2adc421bd1c8f11a20195853e6f1c54f69c263a380c6d69ebce1136"
+    },
+    {
+      "file": "r4-final/Low-clear/trailer-34.png",
+      "sha256": "b613a6c00be8c7cc0faa0319ad18fb4113b851c730c5b29bb20fe18e288818ff"
+    },
+    {
+      "file": "r4-final/Low-clear/trailer-side.png",
+      "sha256": "ad211e74f04010e1ac22ff0760639d7f7aa856e1c5f88e9954c7fc1977b30714"
+    },
+    {
+      "file": "r4-final/Low-clear/truck-34.png",
+      "sha256": "5bf1db3f1c0ff354557202f005ce35f3a5ca4be9e61f489454c803e4945b1a0a"
+    },
+    {
+      "file": "r4-final/Low-clear/truck-34r.png",
+      "sha256": "33f79b7b1e0ff6b1570de8eeef7bcf622fd1138fc778d899612aa76aef52b8bd"
+    },
+    {
+      "file": "r4-final/Low-clear/truck-at-gate.png",
+      "sha256": "a6516aac91c5840cd662fcadab714d449bcfff574d5cc5a19b8fe64d801cd6af"
+    },
+    {
+      "file": "r4-final/Low-clear/truck-front.png",
+      "sha256": "ea25b85e7cd29d33753f28e66f88fdb112691403016312900efd6526d960c3d1"
+    },
+    {
+      "file": "r4-final/Low-clear/truck-rear34.png",
+      "sha256": "434efa27ad6cd0acffc504bb4f42331ca831d7c9ef9fdf17bbf81710d6af612e"
+    },
+    {
+      "file": "r4-final/Low-clear/truck-side.png",
+      "sha256": "97e90f126940e085eb0df1638364505f7c6ea325e8d9f87d50dd435ee3691d64"
+    },
+    {
+      "file": "r4-final/Low-overcast/biezenstwa-above.png",
+      "sha256": "bf570ac11a6f691cd4b0eae97b3686f4db577f550fed43d0e07b164d5c1370b6"
+    },
+    {
+      "file": "r4-final/Low-overcast/cab-dash.png",
+      "sha256": "2d26047080b04d2849df8619b224d217977baf969377b595c42a6c77aaac5bea"
+    },
+    {
+      "file": "r4-final/Low-overcast/cab-driver.png",
+      "sha256": "7df2975f5a3bd106defca0bcde231c88ac67b5eeb74a44c44d2459f8d64806e3"
+    },
+    {
+      "file": "r4-final/Low-overcast/cab-gate.png",
+      "sha256": "202631ca41e0e314ea98b22122a75142325857e4be90092fa3c1243c657b38b7"
+    },
+    {
+      "file": "r4-final/Low-overcast/cab-grain.png",
+      "sha256": "3547245940010704cf488d017d636ee9867ef569b34c063a7cd9b25ef4a7aa4c"
+    },
+    {
+      "file": "r4-final/Low-overcast/cab-left.png",
+      "sha256": "8fdc172a0ed4ab940faa0d4fb15799d3ed85e941a5c83eb554977b94db78e727"
+    },
+    {
+      "file": "r4-final/Low-overcast/cab-materials.png",
+      "sha256": "e7d88734e05d3c2e425b006111fdf17c98ea8109c0dca8c7e3bea02961121e9f"
+    },
+    {
+      "file": "r4-final/Low-overcast/cab-mirror-front.png",
+      "sha256": "dd52cfadc42aa9d731351dab95e719172a1673d6a6315263e2b2e8c4eb682f4c"
+    },
+    {
+      "file": "r4-final/Low-overcast/cab-mirrors-left.png",
+      "sha256": "f9b175074699048aaadc1efc5224ff5a06a95cae6418fbea81db04c8a5a4c7a9"
+    },
+    {
+      "file": "r4-final/Low-overcast/cab-mirrors-right.png",
+      "sha256": "653b52cb23e719c00d12c27f885903da08608efc318afb3920643300ff03d2b7"
+    },
+    {
+      "file": "r4-final/Low-overcast/cab-right.png",
+      "sha256": "b4e715e90e5a34b64bb878c701ec108b0f9bd09a0b848d56bac58a83a6a6053a"
+    },
+    {
+      "file": "r4-final/Low-overcast/cab-seat-entry.png",
+      "sha256": "7eb7852c7b19f1584b56661ba417edca280f01d46e2f300f83e76be89b17b711"
+    },
+    {
+      "file": "r4-final/Low-overcast/cab-seat.png",
+      "sha256": "1eb7f1fd3ba20763722f4b688b65e67fa8b35b87f3c726dd081364b1025c100b"
+    },
+    {
+      "file": "r4-final/Low-overcast/car_lod_08.png",
+      "sha256": "e3e7177bc956b96c4b776a56eec829444b865aa41f74ab3bfddc12959035b339"
+    },
+    {
+      "file": "r4-final/Low-overcast/car_lod_12.png",
+      "sha256": "90c458f4da52488c69451a488a32a271c060e08d4351b3ec46a1b769c26930a6"
+    },
+    {
+      "file": "r4-final/Low-overcast/car_lod_15.png",
+      "sha256": "3d5f583aedf3737893b362991c617e9dbacc61d86951069736175f1e0517167e"
+    },
+    {
+      "file": "r4-final/Low-overcast/car_lod_25.png",
+      "sha256": "fb5b5be8372fd1689bad09c67aa9944845c53735c912b276212ea4e524cfd161"
+    },
+    {
+      "file": "r4-final/Low-overcast/chase.png",
+      "sha256": "22da481ba34b3ff37d1ecd928fc04347c99fed24e37df6a1ebdb1bedc5db0564"
+    },
+    {
+      "file": "r4-final/Low-overcast/dk8-dk19-exit.png",
+      "sha256": "a3b98a9f56032d5338ba14a20de362bdbdccc6c791b0f50aa27f40b8a549cb09"
+    },
+    {
+      "file": "r4-final/Low-overcast/driver-andersa-to-putry.png",
+      "sha256": "e02e22ae8949d694e9550af8f1d69e6b602d609425cc4486027e77bab6661644"
+    },
+    {
+      "file": "r4-final/Low-overcast/edge-east.png",
+      "sha256": "8d7c9bb36f8fa257a2204189420108ada6c162d1523e8f3abdafe8f04b4baa02"
+    },
+    {
+      "file": "r4-final/Low-overcast/edge-north.png",
+      "sha256": "3e2027287c575ab76f94a8b3644e4c581988e2a18a8d9fa46e526f69eac1675f"
+    },
+    {
+      "file": "r4-final/Low-overcast/edge-south.png",
+      "sha256": "8cf0efce072db8f84eafcf67e3a5c928b032dc430b782a166cdf5657ab3eca96"
+    },
+    {
+      "file": "r4-final/Low-overcast/edge-west.png",
+      "sha256": "9f31c328fb286b4f8ca7db27d34d561760b47d9674452b196409e633db06a79c"
+    },
+    {
+      "file": "r4-final/Low-overcast/fire-station-abeam.png",
+      "sha256": "3ae666a3283d5bfe2532077991b672569af984f344c6ea822a1b3817c9a31869"
+    },
+    {
+      "file": "r4-final/Low-overcast/fire-station-above.png",
+      "sha256": "f1fd1d7a26215eb018eabc48f3439c67f46a810ad781e1d1649d9b02a98538ff"
+    },
+    {
+      "file": "r4-final/Low-overcast/fire-station-ref7197.png",
+      "sha256": "e57f9244e272968b7dffbd8451bc67d4e1de27f3d1856376a90f685717ddc532"
+    },
+    {
+      "file": "r4-final/Low-overcast/fire-station-route.png",
+      "sha256": "3db856773915c5b3d91952c26590cbaa97451f4ab562cba2305a8b32a22ba9fc"
+    },
+    {
+      "file": "r4-final/Low-overcast/g3a-eye-s0262.png",
+      "sha256": "d03073664d227bec403d05688b14ef67b689ae237dd5c6d3800409b03a38b82a"
+    },
+    {
+      "file": "r4-final/Low-overcast/g3a-rondo-bie-approach.png",
+      "sha256": "9002cf6a6b8c59e2a61b7d9d5abf88e5604da04d0068a5371d19d1f9c65e3e60"
+    },
+    {
+      "file": "r4-final/Low-overcast/g3b-eye-s1482.png",
+      "sha256": "458f3b250709a1055295e5865258d10fad15185f418c9d46b3b6d34e1d57e34f"
+    },
+    {
+      "file": "r4-final/Low-overcast/g3b-rondo-putry-approach.png",
+      "sha256": "b137c89b49c8900eb094fbf0003009577cd6519d36bfc2677ff2b4fc30e5268c"
+    },
+    {
+      "file": "r4-final/Low-overcast/g_current_black_lod_05.png",
+      "sha256": "0106412d21c12f2c9446e66456382c61ce29fc9194a09aba520f41df859068e7"
+    },
+    {
+      "file": "r4-final/Low-overcast/g_current_black_lod_20.png",
+      "sha256": "d958683f34e7f5ce88433cf72b76e28085fabb77b748a9eb0d6eb2a31d18bd47"
+    },
+    {
+      "file": "r4-final/Low-overcast/g_current_black_lod_45.png",
+      "sha256": "2ef653f501a307f1655713aae9bef8cc402dd1652296ec6777f31606d1dc1c7d"
+    },
+    {
+      "file": "r4-final/Low-overcast/g_current_black_wheel_02.png",
+      "sha256": "060b43b60d47d9d03087e0d80aa78ea404650f522f4f497fb29e4500ebcc9622"
+    },
+    {
+      "file": "r4-final/Low-overcast/g_dirt_level_0.png",
+      "sha256": "98608b5cd7dd690159648ce440850d7e1fc3ef3637e92445d98789379e9c0a5c"
+    },
+    {
+      "file": "r4-final/Low-overcast/g_dirt_level_1.png",
+      "sha256": "2161cb57fe9dedb81feee33d36fa5706fc951e6bf78404ae837a8530c85a5749"
+    },
+    {
+      "file": "r4-final/Low-overcast/g_dirt_level_2.png",
+      "sha256": "04f5a31749762bd46c34be135b30f779782095584d06e9878b937daeba95f6ca"
+    },
+    {
+      "file": "r4-final/Low-overcast/g_dirt_level_3.png",
+      "sha256": "b7bb4f1b7bb6ca512314b2ddc77376f1d910e8de1716824017cb3e94aa0c806b"
+    },
+    {
+      "file": "r4-final/Low-overcast/glass_front.png",
+      "sha256": "c62cb3defe40333f8ceeaf9e64a585f7e0ec72620da9543e3c05663bc1629b77"
+    },
+    {
+      "file": "r4-final/Low-overcast/kwadrat-park-gate.png",
+      "sha256": "8e00d7eccc4e0fc96c38a4ae3b3a240cfcca8857bb1231efaf7974e69d40795d"
+    },
+    {
+      "file": "r4-final/Low-overcast/photo-biezenstwa-ground.png",
+      "sha256": "32e24af3df12ce0d5d9f94e04707c5ffc1dd03c7f553af0cb1d6ebc7877ad7f2"
+    },
+    {
+      "file": "r4-final/Low-overcast/putry-above.png",
+      "sha256": "7a2c4e2f85e8e643f8e9ef32f851ab69334a61a07e0bf2876c31e06a7919c57e"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_block_1.png",
+      "sha256": "6bea0281b604cc62c79d373a6a6156776a5fbbd0bf3e48dbacbaf7f71d5a3157"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_block_2.png",
+      "sha256": "ef4732dfe16c2e9758e141b98a5fefed2e59fecf3a7a595000d647032ff57c75"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_block_3.png",
+      "sha256": "c22425d6c925e1d6ac8f9df8dd06247b8dd5cda10b05b095c339634ff13ac156"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_block_4.png",
+      "sha256": "9821c28a8f9b76d9d3db762777e2dca3696556c7a75cb028840bef3eb46fec6d"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_block_5.png",
+      "sha256": "63adeb91d8b936033e7a71bd26b4b2a240da19384dda489b9d3caf42314db7f5"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_fence_1.png",
+      "sha256": "da017e805e1bfd9d6097bc92c6766619da5846d17c23e9e34a5e18bddd074df2"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_fence_2.png",
+      "sha256": "4aabfeae748a223abfee2be68c3c84322578ee1c1812aaf6b3ea18837e38a20f"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_fence_3.png",
+      "sha256": "27ab8484981dad9ed4dfabe33465c727d692433bb848b342b6717cff724ccf1b"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_front_04.png",
+      "sha256": "f59d8bbb0e8630d83fa523ed3914a62396a31d8a77d045a1a85473bdca379218"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_hall_1.png",
+      "sha256": "4cb03edb310ceb321d5496be176eeacff62f9ec2fbc25b3a97caf1ce7e4bbb87"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_hall_2.png",
+      "sha256": "f4358442e4776377df4f3b4663fbdbdc5d1eb5f780e240ce38878cbeb00e4410"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_hall_3.png",
+      "sha256": "9eef7eae56ba7ef1a40fde2992906d61d41a9ef8f2751b184b7c98fd843c29bd"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_hall_4.png",
+      "sha256": "3ce1cac2713598b39829e934504e61f6ea370658597f4fd65a5cfc375cc56c26"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_house_1.png",
+      "sha256": "fd5de4763febd5178f35483f606aa247f1649677762a78ac9ca4af424b448cb4"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_house_2.png",
+      "sha256": "5b7aad96c261c7c883611a8f3a8047ebe27731a531b529668b8c337a6049a6e9"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_office_1.png",
+      "sha256": "a5603e8f339525d8bda7b630952480a0ffb9d0aa78be1af60a175ba45b8e561e"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_office_2.png",
+      "sha256": "8fc149acf265199f1d4e91032ac6e650544f273bef5cf8766a2de6d609696084"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_rear_04.png",
+      "sha256": "c3ad2a7291894e909634c267407d92235454bc9bb810cc11ec5338b1c54b1167"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_shed_1.png",
+      "sha256": "035eb23fbb7b5fab2b748fde0ee5db12598e84605b72c9904196346ececdc984"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_shed_2.png",
+      "sha256": "112ed26a46a682d6db4a7f2392a995ca7643e20605f1fa3b0cf05974889b93cb"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_shed_3.png",
+      "sha256": "1e844eb3106d4cc21aae36c740011ac70bedd4fa714ac6bf13dd2ab9cad85fb5"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10_wheel_02.png",
+      "sha256": "8b90395329d6aa3b71b0d678cdcded49e3d6b17b4f6132e8474c919866f41348"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10b_black_05.png",
+      "sha256": "a18a7da2abaed5d1ea5d56d3bd4f6b28f7f64499d7fe5fbae8ce207efced103c"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10b_black_20.png",
+      "sha256": "4d190bbb1e53d1aaf3aaea56ca1349bffb0fe85de276c66c6e89c105134e0a06"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10b_black_45.png",
+      "sha256": "406cf6e8bf5bbb1aac1ba96cb2315abd502dbe2f91f37b67ff1e02e0b226ae6e"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10b_blue_05.png",
+      "sha256": "76edc88adf1f048caee369e4749267f9ca94cc2b5ca7e90de7bd26fae12263c1"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10b_blue_20.png",
+      "sha256": "482cec9fd1e74be98d794ceb3ed957eba4246755ea46e5483b47a84f78192595"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10b_grey_05.png",
+      "sha256": "af0173359daeaa69962d5292988598c5fa67f1fcd7b40fefbdfef48183bd6267"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10b_grey_20.png",
+      "sha256": "5e69ada6a9e7ebe5e3e637edc739c1711f63cbb3f297dd125f1d23aebf158aae"
+    },
+    {
+      "file": "r4-final/Low-overcast/r10b_silver_05.png",
+      "sha256": "3d256a6b0c45442d860a874ac4bad702390c4a71aba9349cf4ed5b399254f3a0"
+    },
+    {
+      "file": "r4-final/Low-overcast/r4_dirt_candidate_3.png",
+      "sha256": "85ddd1f644af7b75cbe0efe4f296070ad178afe359649e1c8680139a20088b21"
+    },
+    {
+      "file": "r4-final/Low-overcast/route-onramp-andersa-above.png",
+      "sha256": "e0b326ac027acb1d6868e36babea97be818af03f69258399c3df67abd8c077ae"
+    },
+    {
+      "file": "r4-final/Low-overcast/route-onramp-andersa.png",
+      "sha256": "64dd31d00fed5cefe82714262fce5048abdfd3b87aabcf1fd3862cd48e2d1585"
+    },
+    {
+      "file": "r4-final/Low-overcast/route-putry-approach.png",
+      "sha256": "aca58cbb5e4ec4dc7dbce0daebe272f98432fdd7047107699f65f9b7b4de9f22"
+    },
+    {
+      "file": "r4-final/Low-overcast/route-putry-entry-signs.png",
+      "sha256": "16759ebce309860eda8ae008a857377ab2523b40c2efd9fa60faf768974641d4"
+    },
+    {
+      "file": "r4-final/Low-overcast/stretch-01.png",
+      "sha256": "eda394c9f0f98b2f1c1995af6764c4d9cc08cd36f1718d344f846b673839b379"
+    },
+    {
+      "file": "r4-final/Low-overcast/stretch-02.png",
+      "sha256": "7a55ae93c6a9ab283218299ba7e99bc3ecbe81e8db589064930bb1635fc2087f"
+    },
+    {
+      "file": "r4-final/Low-overcast/stretch-03.png",
+      "sha256": "43bca6cbeda106c643dac7fc727b23e832597aa43d4ed16b1b4014f1ff492a52"
+    },
+    {
+      "file": "r4-final/Low-overcast/stretch-04.png",
+      "sha256": "4c11fcfe1360387da3f6d4c6150cdf84df6f0912f8c497ef2cd1b15e687c35c6"
+    },
+    {
+      "file": "r4-final/Low-overcast/stretch-05-docks.png",
+      "sha256": "390394fc3ef9cdbb5f85f3d2441b58ec75a0db819e8aa84cf6a95a8a67da5baa"
+    },
+    {
+      "file": "r4-final/Low-overcast/trailer-34.png",
+      "sha256": "a59721f1e4f72b77af94e0ea8e6c62efc4e51f8a73fd192f1a4e9cfa89f6c605"
+    },
+    {
+      "file": "r4-final/Low-overcast/trailer-side.png",
+      "sha256": "4ef14e81a15819fc1901cf46cac026cd7321257e22b8129dbe14f993c4ee8909"
+    },
+    {
+      "file": "r4-final/Low-overcast/truck-34.png",
+      "sha256": "d86701c94a0ca1ae9a93cfd0ca154ddae3d2c95eb75a0f522e990b75072b0e00"
+    },
+    {
+      "file": "r4-final/Low-overcast/truck-34r.png",
+      "sha256": "e2995c0dabdf826f3c4e964e459d148c2c049fc04cb6d4e5ae095952a0926707"
+    },
+    {
+      "file": "r4-final/Low-overcast/truck-at-gate.png",
+      "sha256": "b66d38d8bb6cff857fb7101edca8025b4e78adb9305c4c01b1df4fd6d3f43ff0"
+    },
+    {
+      "file": "r4-final/Low-overcast/truck-front.png",
+      "sha256": "dc8692c7445f749fc35aa27c76ca9c01860557e4ffb5441d29a0aad24cbef4d2"
+    },
+    {
+      "file": "r4-final/Low-overcast/truck-rear34.png",
+      "sha256": "43eb453b9dcbddcc9117d11c94a9bf6eaaad74675a5cff93d618283b5ad91604"
+    },
+    {
+      "file": "r4-final/Low-overcast/truck-side.png",
+      "sha256": "ae3d6a29b1b4e2751d68b5657b880aeda2cb0b415df47e78f645815c22ae752f"
+    },
+    {
+      "file": "r4-final/High-clear/biezenstwa-above.png",
+      "sha256": "c1592e335870e38c04459864abe84c71f3d73d98d1bd844aff5f10af5abb5e1a"
+    },
+    {
+      "file": "r4-final/High-clear/cab-dash.png",
+      "sha256": "60cdd9467b7d1241fef068b7529238cbccfabe43dbd53099f345a4554be199cb"
+    },
+    {
+      "file": "r4-final/High-clear/cab-driver.png",
+      "sha256": "a6de52a5a60c32c331aa4cb964b2d465af876a8e541fe8d89547a10d9c58de87"
+    },
+    {
+      "file": "r4-final/High-clear/cab-gate.png",
+      "sha256": "4197bb64c519fa87b3fd857b6e5f46ef5fe52bd4d79adb328cd5341b870753dc"
+    },
+    {
+      "file": "r4-final/High-clear/cab-grain.png",
+      "sha256": "39d9167a2112445edc16a9f867a5b41a7a45449b6284f4e563418f99b8345e31"
+    },
+    {
+      "file": "r4-final/High-clear/cab-left.png",
+      "sha256": "6400eff4bd38ec2bd3d550b504abb24983a97584e73e0adeedd514251a240a8f"
+    },
+    {
+      "file": "r4-final/High-clear/cab-materials.png",
+      "sha256": "ab14a56b8bed8d3b41381cd858a89f37a23173cfcfa78033ca67217b98c05956"
+    },
+    {
+      "file": "r4-final/High-clear/cab-mirror-front.png",
+      "sha256": "636697ae3b57770c6aea423700cb44cbcd74094493129162f1e45a493db0cad2"
+    },
+    {
+      "file": "r4-final/High-clear/cab-mirrors-left.png",
+      "sha256": "18889eb552545b038d8ae8ec164b685c6c852b92639ce23d1afa3d3174bf8ee9"
+    },
+    {
+      "file": "r4-final/High-clear/cab-mirrors-right.png",
+      "sha256": "7fecba1e3341df6cd059a5c7f41098e17054072917342209f6d0e3f60bb2e995"
+    },
+    {
+      "file": "r4-final/High-clear/cab-right.png",
+      "sha256": "376a6f9f5211b88ae1f4b99f782682321e1faffda2ac8419d2899ff98d788e7b"
+    },
+    {
+      "file": "r4-final/High-clear/cab-seat-entry.png",
+      "sha256": "89d6dfe101ccf02e1204848692176c8e4e562af090cbdd9a5743553699f5657f"
+    },
+    {
+      "file": "r4-final/High-clear/cab-seat.png",
+      "sha256": "6fb892da62e53f292e4a92a7edf3461f02d38a3ea62d6dc5408cfbbb5dee8e4e"
+    },
+    {
+      "file": "r4-final/High-clear/car_lod_08.png",
+      "sha256": "84940db16320a3d40e6f60fa4c67744671a578bd81833499cae40c9acf24e187"
+    },
+    {
+      "file": "r4-final/High-clear/car_lod_12.png",
+      "sha256": "f0ed3a511b9ac98a815773bb49c5979ac69565a295915661cd1401f31d1c9abf"
+    },
+    {
+      "file": "r4-final/High-clear/car_lod_15.png",
+      "sha256": "5d73ceda47ae8a94c0f96abb0c6a25ef638d100f14207bc07b69414e01562f82"
+    },
+    {
+      "file": "r4-final/High-clear/car_lod_25.png",
+      "sha256": "7338d8e6facbd9fe61422d59c646378382e7171c44fc75307f73939f5504a33f"
+    },
+    {
+      "file": "r4-final/High-clear/chase.png",
+      "sha256": "a33b71e064dcc3c2928c959c72f2d27e7fee40c987e6c89bf66f1fda2597bdc1"
+    },
+    {
+      "file": "r4-final/High-clear/dk8-dk19-exit.png",
+      "sha256": "3fd7a803dbb2f4df829162538ba513114e8b70d809b2b75f66827870f1eb0253"
+    },
+    {
+      "file": "r4-final/High-clear/driver-andersa-to-putry.png",
+      "sha256": "9d22c166e1c86903d278446ccae35b46c9b7b2566369da21906150d13cc8b992"
+    },
+    {
+      "file": "r4-final/High-clear/edge-east.png",
+      "sha256": "8757a955a86761ddeba8c5ad3d58c7e7524968332d4175614b2b0d1dbde8621e"
+    },
+    {
+      "file": "r4-final/High-clear/edge-north.png",
+      "sha256": "ba74708bed9cda5caa2f1db5d4e7502ade37d6396adb5f9bd2f507a6fdac222c"
+    },
+    {
+      "file": "r4-final/High-clear/edge-south.png",
+      "sha256": "5d1a5c45ebc10c71530495e5fb5c8728142aaf2efba84d94f1f6e8db8aeb90b6"
+    },
+    {
+      "file": "r4-final/High-clear/edge-west.png",
+      "sha256": "57ebe2fad33ca107367c71338c4a0b3a223c9d507ceb7d438d4eeddb7047026a"
+    },
+    {
+      "file": "r4-final/High-clear/fire-station-abeam.png",
+      "sha256": "dbb79c6a8f6943ca7cd3604af2f0037e5aeaff3465c2bcd9648462ef95e730eb"
+    },
+    {
+      "file": "r4-final/High-clear/fire-station-above.png",
+      "sha256": "bcc21dcbde5564fb8cf1f91c5d735cc9f0801996c1c7fabec5351c5c0cd001d7"
+    },
+    {
+      "file": "r4-final/High-clear/fire-station-ref7197.png",
+      "sha256": "23aef158c589317f613a9ed3d5f2f0eeaab1a099f03476f91a41127e6f5e21ac"
+    },
+    {
+      "file": "r4-final/High-clear/fire-station-route.png",
+      "sha256": "5c11d5f98d03548c7f803243eebb27c47789504606bdf37cb080cc69a56908b2"
+    },
+    {
+      "file": "r4-final/High-clear/g3a-eye-s0262.png",
+      "sha256": "df402e98bae87b6ff9b060fff3cc8a0fce7a270d41923ed8a7e6aa93f038a55e"
+    },
+    {
+      "file": "r4-final/High-clear/g3a-rondo-bie-approach.png",
+      "sha256": "5f3b381313a39510e7ad24f0e4e129d048ecda9fc4b3bf70e0a932596d30f6dc"
+    },
+    {
+      "file": "r4-final/High-clear/g3b-eye-s1482.png",
+      "sha256": "873717b66b00b1fa77897cf5c23c67b701689532090afc819588a2297dcfda99"
+    },
+    {
+      "file": "r4-final/High-clear/g3b-rondo-putry-approach.png",
+      "sha256": "44a306668bdad05c56bbe4d2c17f3b4d89a61f4a8903ae263c06a9c69cea3052"
+    },
+    {
+      "file": "r4-final/High-clear/g_current_black_lod_05.png",
+      "sha256": "cdb3c98673dece5286ca59b75cfeb8731895195cf60311e4f88cb43e455a8c64"
+    },
+    {
+      "file": "r4-final/High-clear/g_current_black_lod_20.png",
+      "sha256": "7e79ecd3f81f8cb6215e509e26ca67ce3b8472ae07acf7094a9ba9f78dd2386b"
+    },
+    {
+      "file": "r4-final/High-clear/g_current_black_lod_45.png",
+      "sha256": "5e9000adbc103228238215f136752ff4ac77d9263667aa36c2611eb2c5fe1aa3"
+    },
+    {
+      "file": "r4-final/High-clear/g_current_black_wheel_02.png",
+      "sha256": "b5e1f8d258a0f2facdc2e837328b36ab0e5240c36c1f75cc1848f2b6fecd2428"
+    },
+    {
+      "file": "r4-final/High-clear/g_dirt_level_0.png",
+      "sha256": "c476ce93b2f165989003956bfeca517e32ecc70a8be23fd55305434e865a990b"
+    },
+    {
+      "file": "r4-final/High-clear/g_dirt_level_1.png",
+      "sha256": "630580e9e83f82cd6f017ffa3facf6cdf75ef5a27708a26b260121eb7b8e8f1e"
+    },
+    {
+      "file": "r4-final/High-clear/g_dirt_level_2.png",
+      "sha256": "266067365a4663d901b911fd8dc1153d49bbb09bce635e29d162e4a7a8e914cd"
+    },
+    {
+      "file": "r4-final/High-clear/g_dirt_level_3.png",
+      "sha256": "4a8c699090a5652b95b7caa050980bcd273057f7b52d7eb789ef8958b5d14c15"
+    },
+    {
+      "file": "r4-final/High-clear/glass_front.png",
+      "sha256": "b1bfa6412c73c56ac5dab9979c54511f57ff22a8f4a2abb513a3682093d39a36"
+    },
+    {
+      "file": "r4-final/High-clear/kwadrat-park-gate.png",
+      "sha256": "78dd2a8d3acd526976940c1c6fde13afa63b25e1ba168fdb95ac8057a9594eb9"
+    },
+    {
+      "file": "r4-final/High-clear/photo-biezenstwa-ground.png",
+      "sha256": "9c331ff2147f87e92c9604c66fe49808080df414d98820bcd027f321bfb6f85a"
+    },
+    {
+      "file": "r4-final/High-clear/putry-above.png",
+      "sha256": "bd997f20decf7bd740d9afa97145d869e889ea4c6affb0fdadcb87487cb64ce9"
+    },
+    {
+      "file": "r4-final/High-clear/r10_block_1.png",
+      "sha256": "3c8a8a3d09e0f62d478e6c8071926b9d7fea9e8352a24cb6af255d1ae1813260"
+    },
+    {
+      "file": "r4-final/High-clear/r10_block_2.png",
+      "sha256": "d830ff12cd6d319264ee4212aa7c9b2ee0cb18d6633b724918fe45a320dd041e"
+    },
+    {
+      "file": "r4-final/High-clear/r10_block_3.png",
+      "sha256": "9c9a5db213ed468ba698fbda781f0406ecbc3dba55bdecbecf4997fe09311b6b"
+    },
+    {
+      "file": "r4-final/High-clear/r10_block_4.png",
+      "sha256": "980d50e3c3374748e6380fe2cc1730d77dbb1c0260da2dbde0db04a07f6395de"
+    },
+    {
+      "file": "r4-final/High-clear/r10_block_5.png",
+      "sha256": "06dc6aad730a8504d5577dd5b488fc2e411e94b693ccfe232f9d0c3355042321"
+    },
+    {
+      "file": "r4-final/High-clear/r10_fence_1.png",
+      "sha256": "4298cc73e9e93c6277a2bc23961a116073dc2409ec4766cd9ee6925248c62712"
+    },
+    {
+      "file": "r4-final/High-clear/r10_fence_2.png",
+      "sha256": "e15d015aeb5259d97a7ec74deaf38de33e4bc0eb7af90587e105c7b1d6168972"
+    },
+    {
+      "file": "r4-final/High-clear/r10_fence_3.png",
+      "sha256": "7434e6f178e5ee82580333cace813eb0bfe681faf99fc03432531c6c02e07998"
+    },
+    {
+      "file": "r4-final/High-clear/r10_front_04.png",
+      "sha256": "d50d8e29ddc2f1fc5bc27e2e7c910444350008d2f80d4c6a375e144fe9b8a90e"
+    },
+    {
+      "file": "r4-final/High-clear/r10_hall_1.png",
+      "sha256": "a2213c2407087429c444964f760d85da3e95bd0ddccf8fa73cc255784fe4f981"
+    },
+    {
+      "file": "r4-final/High-clear/r10_hall_2.png",
+      "sha256": "8be8f3222314e85314df52c8f6cc760b1b6705f156d9bbd097ec82f7bbe6e17a"
+    },
+    {
+      "file": "r4-final/High-clear/r10_hall_3.png",
+      "sha256": "01ee9ee902ab92d524f2b816b5a5aaf1f2f1fc4286e6cbee48da0d82930840e4"
+    },
+    {
+      "file": "r4-final/High-clear/r10_hall_4.png",
+      "sha256": "981ddd37f9a70d6108bd6d09893c88299bd6627fc50b05a6ae5f0e495a74d2d5"
+    },
+    {
+      "file": "r4-final/High-clear/r10_house_1.png",
+      "sha256": "c0df537d1e4875d65c20432ddd9a9b07272d7b43487ef0af65c12f864178cd31"
+    },
+    {
+      "file": "r4-final/High-clear/r10_house_2.png",
+      "sha256": "0ebba4d96e86df7115b993d8ea7708c10355a132e6e719944663301ba0f60bf0"
+    },
+    {
+      "file": "r4-final/High-clear/r10_office_1.png",
+      "sha256": "dc40be9fe4398e5190ef42f8328fb7a1da280e91f27447734985bc8c256ace08"
+    },
+    {
+      "file": "r4-final/High-clear/r10_office_2.png",
+      "sha256": "5ff9c39b5d02d23f56fdd607ad2c7a238fb329d3f9414a157c2564a588b54899"
+    },
+    {
+      "file": "r4-final/High-clear/r10_rear_04.png",
+      "sha256": "aeb150144d90fc43083f1e219d405f696cfe3f138fd8f5bccba57ad25e7dbc28"
+    },
+    {
+      "file": "r4-final/High-clear/r10_shed_1.png",
+      "sha256": "119e2f53d6248ddb6198d98cda0d4576e1bb951ebcbc8d867ca3a0606514be24"
+    },
+    {
+      "file": "r4-final/High-clear/r10_shed_2.png",
+      "sha256": "bbbf4e0adb5d43ffa858e2ac329d54bf17ca4506ba2a2f85e7695cd6f92df79e"
+    },
+    {
+      "file": "r4-final/High-clear/r10_shed_3.png",
+      "sha256": "6d998ae4fead99500a1e86c906258d506a6c341a0f3c4980d5dd689936bbffda"
+    },
+    {
+      "file": "r4-final/High-clear/r10_wheel_02.png",
+      "sha256": "6294fe005fefbebee7cfeef7d4a6198235c76a91e12ea85f88c23cca01da3f32"
+    },
+    {
+      "file": "r4-final/High-clear/r10b_black_05.png",
+      "sha256": "3cbdf61e0a7bef65ee8a1bce5865c8eef705b31d7a1b2b72e3257dfd51cd4549"
+    },
+    {
+      "file": "r4-final/High-clear/r10b_black_20.png",
+      "sha256": "a50e16cccab4e38cb013225e8854f9fbbe24c428d353bcb3b14162fe656009d4"
+    },
+    {
+      "file": "r4-final/High-clear/r10b_black_45.png",
+      "sha256": "943031c310ba1d5deb888e643e5993af4abaa4d61b60e09ab47364e07bceb409"
+    },
+    {
+      "file": "r4-final/High-clear/r10b_blue_05.png",
+      "sha256": "3c4a492db4eaf195365480a142ffcce64e425b3645ed7b206f512b04cadf7d00"
+    },
+    {
+      "file": "r4-final/High-clear/r10b_blue_20.png",
+      "sha256": "7d708b3b754c4757d310ed19ec911d130659891c44a23d0dd2d5811d11642af2"
+    },
+    {
+      "file": "r4-final/High-clear/r10b_grey_05.png",
+      "sha256": "5df06ad36f840a8676d09b83f59c8bfd173e999f79d6aaa8deb48136c71cfaab"
+    },
+    {
+      "file": "r4-final/High-clear/r10b_grey_20.png",
+      "sha256": "bab2e3cd3f43d6ad88352145dae0776dc9d6e37b6bf9fd6cb6c2571d6c36e00d"
+    },
+    {
+      "file": "r4-final/High-clear/r10b_silver_05.png",
+      "sha256": "b035f346d5a8d5973cc2e5670e6865c6ea9a834654d9b3a770b00f6b4d358aa2"
+    },
+    {
+      "file": "r4-final/High-clear/r4_dirt_candidate_3.png",
+      "sha256": "8c7441eaa2cd0c4ece88e21df9156f1190185fcd083746f135e4727b8c53b946"
+    },
+    {
+      "file": "r4-final/High-clear/route-onramp-andersa-above.png",
+      "sha256": "e65e5a9555fa6a37a957df5218c1a2944b6eafe251ed49751a4758651e1c1d6c"
+    },
+    {
+      "file": "r4-final/High-clear/route-onramp-andersa.png",
+      "sha256": "2ae6fc2633a4ebef7a08330964b82ed60ce92bcfe7926869c1e92d0d08d6d765"
+    },
+    {
+      "file": "r4-final/High-clear/route-putry-approach.png",
+      "sha256": "474b71510ea04a5baf988916f176af8715d069280d8ad0eb68635db0673d6b53"
+    },
+    {
+      "file": "r4-final/High-clear/route-putry-entry-signs.png",
+      "sha256": "aa952b9907461020cdfe5d5f08eb58cd398aefbb451e40d46ab72032dcf0a390"
+    },
+    {
+      "file": "r4-final/High-clear/stretch-01.png",
+      "sha256": "4edd3ab09c50d3c85afd36f451ebdcdd429394fd8b3a98829eea2f291a871ea9"
+    },
+    {
+      "file": "r4-final/High-clear/stretch-02.png",
+      "sha256": "9fbc444f8b5e92a8f4dd554f5132991012a010ff85bc19064abcb51a1b23d2de"
+    },
+    {
+      "file": "r4-final/High-clear/stretch-03.png",
+      "sha256": "7aa04335d331d4c50ef780af21f8cc4a67cbc1eb7a93cbce600a99996c9b898d"
+    },
+    {
+      "file": "r4-final/High-clear/stretch-04.png",
+      "sha256": "2dbaca11e32ac7316a152c0b7649a4951de3ac229302e49b1cb4404a901aa8f9"
+    },
+    {
+      "file": "r4-final/High-clear/stretch-05-docks.png",
+      "sha256": "dd1debd70f099d2950adf857e3f42fed9b80de314baf6208098c901f21a96310"
+    },
+    {
+      "file": "r4-final/High-clear/trailer-34.png",
+      "sha256": "6dcdc73061bfa766f2608548ee654044d124dda81f75e39e2d141f7150d3e114"
+    },
+    {
+      "file": "r4-final/High-clear/trailer-side.png",
+      "sha256": "645b683a6199c382e7a616dbe1de7400b767b8bc337c73f68c908faff2fc99c2"
+    },
+    {
+      "file": "r4-final/High-clear/truck-34.png",
+      "sha256": "90f2073dbfde707e563d917ea29c744c680ff4212192fd01def1eafb33f52a3a"
+    },
+    {
+      "file": "r4-final/High-clear/truck-34r.png",
+      "sha256": "d6ec7bd311d7725a72229adf9fcf0a0a979a487ec8e1d54145cab3034666895a"
+    },
+    {
+      "file": "r4-final/High-clear/truck-at-gate.png",
+      "sha256": "2a4c0db15ada0d040fa31ef80774ba5456cc514f40ffe7e1ee42c3c0526d9a50"
+    },
+    {
+      "file": "r4-final/High-clear/truck-front.png",
+      "sha256": "cc82d68af29b3a04cf3fdaab3218103f18fc3dc06dad1b3f44716b2c706aba60"
+    },
+    {
+      "file": "r4-final/High-clear/truck-rear34.png",
+      "sha256": "1a45905aee697c9ffd92526baa7a3fa12ed3e8fa43bbcd38b63bfd5736b4601d"
+    },
+    {
+      "file": "r4-final/High-clear/truck-side.png",
+      "sha256": "24dc2594ad93a1c371f21e63b1441996b5c24ccfd5ab63132cd9b5884f9c21b7"
+    },
+    {
+      "file": "r4-final/High-overcast/biezenstwa-above.png",
+      "sha256": "021fede4f42b82bfa4dee40fe884a984940b40b94200644107c7c791214b111f"
+    },
+    {
+      "file": "r4-final/High-overcast/cab-dash.png",
+      "sha256": "ddafba1a9ab0036c42c521f21c7ce0c472f4f0c1cb8946297c84deea500997b4"
+    },
+    {
+      "file": "r4-final/High-overcast/cab-driver.png",
+      "sha256": "7d273ed5fb974230568a1c0cb0a5ac94b995e8d37807931490c9c93008c78e21"
+    },
+    {
+      "file": "r4-final/High-overcast/cab-gate.png",
+      "sha256": "d729b0c4a0ccc8d8aa36f7fc02245f5aa716252695a5e23e7854ca7d5c4ba0ca"
+    },
+    {
+      "file": "r4-final/High-overcast/cab-grain.png",
+      "sha256": "33927495b122e30010e5927d78666c710b664bfaab77e8466e703bc69c43a762"
+    },
+    {
+      "file": "r4-final/High-overcast/cab-left.png",
+      "sha256": "d221b03132ecbb530c48b659453ce41b0f35f201ff6309f80a35fcc976b7a413"
+    },
+    {
+      "file": "r4-final/High-overcast/cab-materials.png",
+      "sha256": "dd022f9f1d481c91e06aba0235e32a813337e7713d24891e3cd2754e1d7719f2"
+    },
+    {
+      "file": "r4-final/High-overcast/cab-mirror-front.png",
+      "sha256": "d576eb1b2817ff3c34b291840a6854310afdab13f7f1099915d04c65412858f1"
+    },
+    {
+      "file": "r4-final/High-overcast/cab-mirrors-left.png",
+      "sha256": "5b79c05e3e19cea67ebea5665611c55a432f8420c4058462a5299bf9b29150a1"
+    },
+    {
+      "file": "r4-final/High-overcast/cab-mirrors-right.png",
+      "sha256": "40e6c17ddf6ee84093736b84a41718cdad527f9e606319400f6eb1473c79f0e0"
+    },
+    {
+      "file": "r4-final/High-overcast/cab-right.png",
+      "sha256": "ca3bf06dd2221078854efb10c5d00b6da1cc319880ba003eabbce271e06e3aa7"
+    },
+    {
+      "file": "r4-final/High-overcast/cab-seat-entry.png",
+      "sha256": "10dfd3e48e459e158aa82273c4b6e983e0a0738208b5d43e1ab2d934eeddd7c1"
+    },
+    {
+      "file": "r4-final/High-overcast/cab-seat.png",
+      "sha256": "705edcad454b61c1dde92d381f951957074412a13352561e96db5bdb94eb47fa"
+    },
+    {
+      "file": "r4-final/High-overcast/car_lod_08.png",
+      "sha256": "216061150ee5f6ddac2e2ea5773710e82fa0e9baacb9b23041e8f28a0929c215"
+    },
+    {
+      "file": "r4-final/High-overcast/car_lod_12.png",
+      "sha256": "4d210191c81443f4fdec3ff223de12a001b6ef4c9277925d6f4ca49e91d640f1"
+    },
+    {
+      "file": "r4-final/High-overcast/car_lod_15.png",
+      "sha256": "7221c167e565e391ab5dcf1eccbdea53b7c74bedd3c9d3b3ae42b62829c6cacb"
+    },
+    {
+      "file": "r4-final/High-overcast/car_lod_25.png",
+      "sha256": "932a170b66a6ac5912ef596c00f25c4025832b2d294db48d8ea8359c827dea34"
+    },
+    {
+      "file": "r4-final/High-overcast/chase.png",
+      "sha256": "48b9df4829d51178e4f00edcd5e171df9ae8a5ef225c06fb244447a08344df06"
+    },
+    {
+      "file": "r4-final/High-overcast/dk8-dk19-exit.png",
+      "sha256": "72391823ec3f0be556f10fc2e7e1ce7cb3e2cb76502b87ecc3f2b90ca4003577"
+    },
+    {
+      "file": "r4-final/High-overcast/driver-andersa-to-putry.png",
+      "sha256": "615752883cf9fcaeedf56d26885904a2ea4b922f028e571102cf9d75b60a8e54"
+    },
+    {
+      "file": "r4-final/High-overcast/edge-east.png",
+      "sha256": "3432e92365b4dc26044582915bb2b99a92de5a0c798a6f0d1fe6aa3b3f7afc6c"
+    },
+    {
+      "file": "r4-final/High-overcast/edge-north.png",
+      "sha256": "e6bd0563f7a5de8eae365129080a76229063c8e33dfc75caf505dce50ef0df2f"
+    },
+    {
+      "file": "r4-final/High-overcast/edge-south.png",
+      "sha256": "e5023b28727c11fa754e08ac06c9479db2bf7e27ed8aebf7dca202c6e61f7b88"
+    },
+    {
+      "file": "r4-final/High-overcast/edge-west.png",
+      "sha256": "a1f3bec54236b8de72f50f14f80f295950849ad3ccd86b8b36d3081d6aecb84d"
+    },
+    {
+      "file": "r4-final/High-overcast/fire-station-abeam.png",
+      "sha256": "5c1deae929af08fe11c33b5fbf4bfd6dfeed7b714c0c45d2e26d1f8538b1ed92"
+    },
+    {
+      "file": "r4-final/High-overcast/fire-station-above.png",
+      "sha256": "3e40410d29543bd517d18c471e3e6948205d5ccc674c926992ac07436136b7bc"
+    },
+    {
+      "file": "r4-final/High-overcast/fire-station-ref7197.png",
+      "sha256": "cb97b9accea25ac812c815eedb10f2075ae2c8160b193c4abc82900cee86dc62"
+    },
+    {
+      "file": "r4-final/High-overcast/fire-station-route.png",
+      "sha256": "66fba0605df89b465f2e108177a52ee2df4afef9217275b288f1ce6061a8b25b"
+    },
+    {
+      "file": "r4-final/High-overcast/g3a-eye-s0262.png",
+      "sha256": "1994ca5537632d785b8d3afd665aae86c070f5685089c34bb3cfc6993427bf1e"
+    },
+    {
+      "file": "r4-final/High-overcast/g3a-rondo-bie-approach.png",
+      "sha256": "19b71ece4c5586b4774cdbddd3572c7d40b957c6500e830b9730d855c67f3162"
+    },
+    {
+      "file": "r4-final/High-overcast/g3b-eye-s1482.png",
+      "sha256": "bc8b2bdd93149bae80445d481e036c3ff57f04ed20aefd327b8e13d87528b29f"
+    },
+    {
+      "file": "r4-final/High-overcast/g3b-rondo-putry-approach.png",
+      "sha256": "40ca6055ef9b4b164d457ab8abd1c3e2166767a18c10dcb0973d79b73f5241cd"
+    },
+    {
+      "file": "r4-final/High-overcast/g_current_black_lod_05.png",
+      "sha256": "a771d0a04d4bae5fab0294ba877f07410aded03235f22b2b6bb452a73e8a5360"
+    },
+    {
+      "file": "r4-final/High-overcast/g_current_black_lod_20.png",
+      "sha256": "47caa831b3fe2505e2dcbb85ee4d099e9e520cb236b65ef73fbf3fba136d4554"
+    },
+    {
+      "file": "r4-final/High-overcast/g_current_black_lod_45.png",
+      "sha256": "c063706232a56fea9d5241c84062abf851a75e80de72921bb7aea78633e26fbd"
+    },
+    {
+      "file": "r4-final/High-overcast/g_current_black_wheel_02.png",
+      "sha256": "153a9b2fbb09577a98b6fcd1affb50803631eef5ed97302ddb73752cdbaf9218"
+    },
+    {
+      "file": "r4-final/High-overcast/g_dirt_level_0.png",
+      "sha256": "41fca8908a191d105378ea565d1050b89456e0c35e3fb4be018e6fbce83eec33"
+    },
+    {
+      "file": "r4-final/High-overcast/g_dirt_level_1.png",
+      "sha256": "2096a9ddfe796dc9eb6deb9ebfae4646c78718841666f3f009c5e081efd05224"
+    },
+    {
+      "file": "r4-final/High-overcast/g_dirt_level_2.png",
+      "sha256": "e7e759e6d82cd2d6a237a161c2cc0847baf07544d6b061882b44d7239272328b"
+    },
+    {
+      "file": "r4-final/High-overcast/g_dirt_level_3.png",
+      "sha256": "10783f5b7428ae2a380567d88dc67176f22ae8004c4567b29aa8981c2d114bd1"
+    },
+    {
+      "file": "r4-final/High-overcast/glass_front.png",
+      "sha256": "b3d0ce4e76130ef8229e2ec2f27408802e234df9daabf8dac497325d039cebbd"
+    },
+    {
+      "file": "r4-final/High-overcast/kwadrat-park-gate.png",
+      "sha256": "d119ae52d65d089c502b8e9e111d6a6eace709c5305b654efee6fdd893b710cb"
+    },
+    {
+      "file": "r4-final/High-overcast/photo-biezenstwa-ground.png",
+      "sha256": "bcd9b428f59f1ca755696ea6b8a2687784d0f199405038e77df26e1ba36520f5"
+    },
+    {
+      "file": "r4-final/High-overcast/putry-above.png",
+      "sha256": "5586c364e78b021719cdb7f405f10ef510e73c488ab8292fd040f1ba8f53a8e5"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_block_1.png",
+      "sha256": "e36452e9b4327b0547014bf47316ace8d9f869d164d0196bc947ffdcdb502309"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_block_2.png",
+      "sha256": "2425bc0044bb31ac6a2fba6faba6a1d3fcf554c9f6d2cbd226b74294eb425b60"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_block_3.png",
+      "sha256": "a8fc7c54453524c3c54f36345c09072ffeb7dc2494a6a654328423c4e11385df"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_block_4.png",
+      "sha256": "26b77e5e67ce1924750306efc3b7b67b32b2bb83edc96f1ff3bb94790808452e"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_block_5.png",
+      "sha256": "23b0eb0e53d7213a3b337ca8b234a133a03b4d7568b35851c7b1c17d758aa4d9"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_fence_1.png",
+      "sha256": "7a2cdc133394a3192f9f9e373531beb489140a50f65c47b3838752a2ed47776e"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_fence_2.png",
+      "sha256": "90c3b2900fe0d7cbb9eddca320e9f24d241cf984ccd3a95bbb14ae01a3713929"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_fence_3.png",
+      "sha256": "09203adacc48b5738d856f29367c7a12941829fea75621c28476c629b5a107e1"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_front_04.png",
+      "sha256": "2e581a2fce90f98a0a19f91cf9aa58d1cedd1d787af3b886e1b613ec80022486"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_hall_1.png",
+      "sha256": "267b7f05889afbcc58ea12cb1673baff471f15cf095fe6ebc49404d205a6074d"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_hall_2.png",
+      "sha256": "33d126eb2df54bc5fa14183556190a9e671fee66994d87a248d92cf86650ec22"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_hall_3.png",
+      "sha256": "b2f3e407875a55d4e244d9adcf0f0c8a929883453f5e725328f3eee8d5ed6c62"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_hall_4.png",
+      "sha256": "cac64ab35d364fdc116d9dc42bd8c8227afa4ebda72dcd7afba495f89d039098"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_house_1.png",
+      "sha256": "b51e8775c0617efa92e4c9e9e620324ab14400c116a840bea2f4f4be319c6999"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_house_2.png",
+      "sha256": "cb651fd6c07cb3060eeb922aac0e197b9b935bb4123b32b95959b828505893c5"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_office_1.png",
+      "sha256": "db0041893f4a4896355924882003827cb55a6e9fe12fcc39075d0312f4351b7b"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_office_2.png",
+      "sha256": "052999f46fc92c90c6fda59175788e00f0dfe8066d7069f3c23c380e3d1ba9b0"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_rear_04.png",
+      "sha256": "f06e77a8be5ed8f341e8daf1c205ce4c809e9ca9c9ca3a80f1e9290026be8e92"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_shed_1.png",
+      "sha256": "4b969ba5962168818324311b3a18cd765367066f01d017bb4c41aff3a647065f"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_shed_2.png",
+      "sha256": "3120cc8d9fe36a3ac8ebc9a77db28773231f1ccf1a4e3e3f115020f5875fc2d0"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_shed_3.png",
+      "sha256": "c2a9c949cc818384e854ee456a03b0a52d7b847b6e549e95a1aa8bb0f0beada9"
+    },
+    {
+      "file": "r4-final/High-overcast/r10_wheel_02.png",
+      "sha256": "3c3616f1fae66648f6735a5b3cc7015dd2a80af8f06eb88e05c44bb1b80dfd5f"
+    },
+    {
+      "file": "r4-final/High-overcast/r10b_black_05.png",
+      "sha256": "7a7910123512567a23b751e0065fee3720aca98e5700d31fd516e0b20222a384"
+    },
+    {
+      "file": "r4-final/High-overcast/r10b_black_20.png",
+      "sha256": "3515223a2ce6c55ef50216047ace5c47806f48e5e60a97e1521679bdb6102457"
+    },
+    {
+      "file": "r4-final/High-overcast/r10b_black_45.png",
+      "sha256": "009dc92ee0ff56d3d3db309d2415dff038a8fcdf61ea07f5ff323e10d4931eff"
+    },
+    {
+      "file": "r4-final/High-overcast/r10b_blue_05.png",
+      "sha256": "6a463ad64636f55d1d44c2592d42bd8f412d61c77f47d4ee7d373b2bedc4aef6"
+    },
+    {
+      "file": "r4-final/High-overcast/r10b_blue_20.png",
+      "sha256": "7a625eb3bdd14a73be8b2139fcdaef86cd03471d312ba46824ac6662b3eedf45"
+    },
+    {
+      "file": "r4-final/High-overcast/r10b_grey_05.png",
+      "sha256": "20e87d5f342e2893c52811ae31cdb38863458331926aa3c4ef0bb72d6247b0ef"
+    },
+    {
+      "file": "r4-final/High-overcast/r10b_grey_20.png",
+      "sha256": "524b95a970ba3ff15b7c877b81f7de1c829646440b676d85127905ecc19d6c91"
+    },
+    {
+      "file": "r4-final/High-overcast/r10b_silver_05.png",
+      "sha256": "aaf63610223094db1835d3d5a84f47f5efde4f8e2d1d69d79252b30e58b40fb0"
+    },
+    {
+      "file": "r4-final/High-overcast/r4_dirt_candidate_3.png",
+      "sha256": "58d62abaafdfd3d320897574cdc520855d177bdea908fddee7191367c9d8fa40"
+    },
+    {
+      "file": "r4-final/High-overcast/route-onramp-andersa-above.png",
+      "sha256": "265700c45c9d3c239c02e3238607e87e45149009bd6aab2bccd98860eb0f044a"
+    },
+    {
+      "file": "r4-final/High-overcast/route-onramp-andersa.png",
+      "sha256": "0f8e0c706c5abdfb4343166603f50ae3ed45e3e1805c049fff10f28a41939404"
+    },
+    {
+      "file": "r4-final/High-overcast/route-putry-approach.png",
+      "sha256": "5f6e4f8a4bf49d1c2a38160f67e2d0cb296b8735bc48353b3ac4ee8ece0033f7"
+    },
+    {
+      "file": "r4-final/High-overcast/route-putry-entry-signs.png",
+      "sha256": "26a1e25752c0e65a17a68ed8d94ac05046fb0b4110097aba26c12da596358a6c"
+    },
+    {
+      "file": "r4-final/High-overcast/stretch-01.png",
+      "sha256": "aaf1aeca2593fb720305d7503800ffa4eea1db68b3460951e102e11aa2421edf"
+    },
+    {
+      "file": "r4-final/High-overcast/stretch-02.png",
+      "sha256": "06173130a7224391bddd2ea77b2629d4ac75fc75a7b5af81c9ceda0ce4e5ab56"
+    },
+    {
+      "file": "r4-final/High-overcast/stretch-03.png",
+      "sha256": "649cdef2f14a4e1f3650b7105532a13a095dcd842b2fd4bd3b32d907711b5d56"
+    },
+    {
+      "file": "r4-final/High-overcast/stretch-04.png",
+      "sha256": "2f854f3512a3f474d3c753335b039e2aff0d5829fb1f2fcf6e8231e46a38f242"
+    },
+    {
+      "file": "r4-final/High-overcast/stretch-05-docks.png",
+      "sha256": "1ffdb987dcdb2a491e3f1bece845c20d3bd05d5a4f7aab8e0acdb31641544363"
+    },
+    {
+      "file": "r4-final/High-overcast/trailer-34.png",
+      "sha256": "89cabbb716414387654b65ed6b63da1226a39fdda09a7ef9593e2b7744ef55c4"
+    },
+    {
+      "file": "r4-final/High-overcast/trailer-side.png",
+      "sha256": "e3719410cb89360137074f22dc26568dfbdfa30210a0495294747deb8a6362d4"
+    },
+    {
+      "file": "r4-final/High-overcast/truck-34.png",
+      "sha256": "61344b68fb74d0689654ee7656e8dd1874a98f9351620df482e7e7f9ca8b15fe"
+    },
+    {
+      "file": "r4-final/High-overcast/truck-34r.png",
+      "sha256": "a2ecb9caa0272de51ebc5343b7470cecc61ae8265ac12732a324024f55441c83"
+    },
+    {
+      "file": "r4-final/High-overcast/truck-at-gate.png",
+      "sha256": "b6d867df0b500496ffb42325134cfa014f6c8d10243ed4162cdc849aa318e7cf"
+    },
+    {
+      "file": "r4-final/High-overcast/truck-front.png",
+      "sha256": "76d67d933711915cf0a14e8adfbd4d9b092aa4844eb1db0cbb7affed3bb965b1"
+    },
+    {
+      "file": "r4-final/High-overcast/truck-rear34.png",
+      "sha256": "5f974d2cf0f537761860e92dd85f87488497bfda645ec2bc217717d41a20a1ef"
+    },
+    {
+      "file": "r4-final/High-overcast/truck-side.png",
+      "sha256": "2f737ade89e5dfeed24374d0de681e0ad7191d3637c160a1976e24d5213dada7"
+    }
+  ],
+  "root_review_source_sha256": "809ac052a75e319bc8a72052b18ca1839e81d1d92f8731b1748bf716d0db434f",
+  "root_review_source_file": "artifacts/s10/REVIEW-G-FINAL.md",
+  "preexisting_excluded_destination_note": "Main r4-baseline-inputs creation17:52 predates this final copy; excluded directories were not deleted. Existing __pycache__ is root-owned. No claim that all excluded directories are absent."
+}
