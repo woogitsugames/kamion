@@ -107,7 +107,10 @@ Liczby „po” z `roads_qa.json`, `road_consistency_qa.json`, `terrain_walls_qa
   `test_no_kerb_under_a_fill`, `test_no_paint_from_the_gore_rule` zamiast testu `hatch`). Ratchet
   `skirt:yard_concrete` 3 → 2. `route_corridor`: 2394,5 m, 4790 stacji, **0 uskoków, 0 przeszkód**, 0 bez nawierzchni.
 - Unity 6000.3.28f1: `import-region` OK (Low 109,7 MB, High 235,6 MB). PlayMode `WorldCRouteTests|WorldCBarrierTests`
-  i EditMode: wynik w `artifacts/junctions-r1/STATUS.md` (logi `logs/playmode.log`, `logs/editmode.log`).
+  **3/3**: zestaw 40 t max |dv|/krok 0,192 m/s (s = 359 m), solo 0,080 m/s (s = 2376 m), bez kontaktu nadwozia, max
+  odchyłka poprzeczna 0,74 m. EditMode 212: 209 passed, **3 failed** — `TruckDoorGlassTests` ×3 (`MI_Ext_DoorGlassL`
+  = null: brak wygenerowanych materiałów ciężarówki w `_Generated/Truck`, także w katalogu main; poza zakresem tego ADR,
+  nie sprawdzone uruchomieniem na main).
 - Kamery (34, WorldC, Medium overcast `renders_after/`, Low overcast `renders_after_low/`); pary przed / po z tej samej
   kamery w `artifacts/junctions-r1/pairs/`. „Przed”: dla 13 kamer ADR 0077 — rendery końcowe 0077
   (`artifacts/islands-r10/renders/`); dla pozostałych — `renders_before/`, czyli `_Generated` skopiowany z main na
