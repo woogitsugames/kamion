@@ -1,4 +1,17 @@
-﻿# Stan rundy sbs r2
+﻿# Aktualny stan R2 — 12.11.2026, 00:44 Europe/Warsaw
+
+Gałąź gpt-sbs-r2, wyłącznie domena SBS. Runda jeszcze niezakończona.
+
+Gotowe: świat kod 0 (457 s, bez fallback=True), 64 GLB o SHA identycznych z r1; import Low+High; EditMode 261/261; 168 nowych renderów z jednego HEAD b9b5574e; 168 wierszy liczników, wszystkie delty Low geometrii/instancji/tris = 0. SHA 143/168 PNG identyczne z r1. Test raportu po rzeczywistej poprawce HTML: 25/25; test zgodności SBS: 40/40. Własny i niezależny przegląd sześciu zmienionych B zapisany. Formalna recenzja D51 pozostaje r1 FAIL 12/11/2, klasy 25 B / 17 C / brak A bez zmian.
+
+W toku: żywy post-world (sesja 79348, PID 84752) oczekuje na heavy dla pojedynczego test_sbs_photometry.py. Potem ma wykonać fidelity i historyczne metryki r1. Żywa sesja 44605 czeka na sukces PID 84752, następnie wykona ComposeOnly r2, audyt przez heavy i raport artifacts/sbs-gate3/latest. Nie uruchamiać drugiego ciężkiego zadania z tym samym właścicielem. Obserwację wznawiać przez te uchwyty, nie restartować generatora ani renderów.
+
+Do zakończenia: fotometria, fidelity, historyczne i aktualne kompozycje, audyt oraz przegląd 28 stron A/B i raportu HTML; niezależny przegląd narzędzia/pakietu; pełny GIS dopiero na końcu; finalny ADR/REPORT; robocopy r2 i latest do main bez commitowania na main; zaraz potem nowa gałąź rundy i merge main. Produkty generatorów spoza SBS nie będą commitowane i zostaną przywrócone po zachowaniu dowodów. Nowe pełne capture wykonano około 00:20; następny odczyt aktualnego main najpóźniej około 06:20.
+
+Cały cel trwa do około 12.11.2026, 21:31 Europe/Warsaw. Nie pushować, nie scalać do main, nie używać telefonów. Unity: owner gpt-sbs. Heavy: owner bieżącej gałęzi. Cudzych slotów i PHONE_RUN nie zmieniać.
+
+## Dziennik wykonanych kroków
+# Stan rundy sbs r2
 Gałąź gpt-sbs-r2, ten sam worktree. R1 zakończona na 814d3408, artefakty skopiowane i zweryfikowane na main. Wykonano merge main ce3f1a77 (merge bec082b1), bez konfliktów. Zmiany main od bazy r1 dotyczą dokumentacji i ochrony zasobów, bez zmian generatora świata, materiałów i runtime.
 Przeczytano nową D51 oraz recenzję REVIEW-2026-11-11-s11-sbs-r1-D51.md. Bramka świata: FAIL według rozpoznawalności, 12 rozpoznawalnych / 11 częściowych / 2 nie. G3-B pozostaje głównym problemem. Fotometria nie jest blokerem bramki. Cztery dodatkowe zastrzeżenia pozy dotyczą 328135, 177786, 494288 i stacji 275528; nie ukrywamy ich przez usuwanie negatywnych ocen świata.
 R2 obejmuje metryki obrazu i kontrastu, zgodność kohort/warunków przy trendzie, raport HTML latest oraz ślad D51. Punkty i maski mają wiązać się z konkretnymi obrazami; nie wolno zaliczać świata na podstawie histogramu. Priorytety geometryczne w r3 oprzemy na D51.
@@ -96,3 +109,4 @@ Krytyk obejrzał sześć zmienionych par Low-overcast, pozostałe 19 przyjął j
 
 ## Potwierdzenie rzeczywistej kolejki heavy
 O 00:42–00:43 sprawdzono procesy systemowe bez ujawniania pełnych command line. Trzy sloty odpowiadały trzem aktywnym zadaniom: dwa build_world oraz jeden pytest, rozpoczęte 00:36–00:41. Nie stwierdzono podstaw do traktowania slotów jako porzuconych. Nie zmieniano cudzych blokad ani PHONE_RUN. Własny post-world pozostaje potwierdzonym żywym procesem oczekującym na test fotometrii; dalsza sekwencja czeka na jego kod zakończenia.
+
