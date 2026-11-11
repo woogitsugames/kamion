@@ -12,7 +12,7 @@ Obecny LOD1 naczepy zastępuje trzy koła jednym długim graniastosłupem na str
 
 Kryterium wyboru: poprawa sylwetki i powierzchni na renderze Low/High, clear/overcast względem baseline i zdjęć; bez nowych grup materiałowych/draws na Low, trójkąty na kamerach trasy najwyżej +2%. Zmiany nie mogą przesuwać obrysu kolizji, osi ani punktu podparcia kół. Koszt geometrii prototypu oraz pełny budżet kamer będą raportowane osobno. Limity szacunkowe pojedynczego prototypu nie zastępują pomiaru trasy.
 
-Stan dowodów: skrypt wyboru rzeczywistych instancji i dopisania kamer jest uruchomiony pod kolejką heavy. Baseline renderów r2 oraz pomiary kandydata pozostają do wykonania. Materiały i geometria produkcyjna r2 jeszcze bez zmian. Pełny GIS dopiero na końcu rundy; podczas poprawek pojedyncze pliki testów. Wszystkie zadania ciężkie mają slot heavy gpt-life-r2, każde Unity slot gpt-life.
+Stan dowodów: finalny baseline ma 456 PNG, po 114 kamer Low/High × clear/overcast, z High na WorldC_High. Pierwsze zasłonięte kadry zachowano w before-rejected-v1; komplet v2 w before-v2. Finalne kamery obejmują 20 widoków pięciu rzeczywistych pojazdów i dwa dodatkowe czytelne widoki ciągników z 22 m. Obejrzano wszystkie 20 kadrów placu Low/clear i oba dodatkowe; dwa stare dalekie widoki ciągników nie stanowią dowodu ich LOD. Audyt baseline importuje zamrożone baseline-life_props.py. Regresje test_yard_vehicle_lod.py: 5 passed. Regeneracja kandydata jest w toku; import, AFTER i pełny budżet kamer pozostają do wykonania. Pełny GIS dopiero na końcu rundy; podczas poprawek pojedyncze pliki testów. Wszystkie zadania ciężkie mają slot heavy gpt-life-r2, każde Unity slot gpt-life.
 
 ## Wynik audytu kandydata r2
 
