@@ -25,5 +25,53 @@
     "draws_static_est": 0,
     "draws_instanced_est": 0,
     "tris_total_k": 0
+  },
+  "counter_delta_values": {
+    "Low": {
+      "draws_static_est": [
+        0
+      ],
+      "draws_instanced_est": [
+        0
+      ],
+      "tris_total_k": [
+        0
+      ],
+      "shadow_draws_static_est": [
+        0
+      ]
+    },
+    "High": {
+      "draws_static_est": [
+        0
+      ],
+      "draws_instanced_est": [
+        0
+      ],
+      "tris_total_k": [
+        0
+      ],
+      "shadow_draws_static_est": [
+        0
+      ]
+    }
+  },
+  "maximum_counter_rows": {
+    "Low": {
+      "camera": "sbs-g3-a-454716650857984",
+      "state": "Low-clear",
+      "draws_total_est": 812,
+      "draws_static_est": 445,
+      "draws_instanced_est": 367,
+      "tris_total_k": 373
+    },
+    "High": {
+      "camera": "sbs-g3-a-320215796381417",
+      "state": "High-clear",
+      "draws_total_est": 1376,
+      "draws_static_est": 945,
+      "draws_instanced_est": 431,
+      "tris_total_k": 1151
+    }
   }
 }

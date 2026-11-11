@@ -118,3 +118,6 @@ Przygotowano i obejrzano mały wykres pose-topology/putry-camera-topology.png or
 
 ## Fidelity zakończone
 Fidelity: kod 0, własny slot heavy zwolniony. Pomiar osi względem OSM: p95 0,04 m; krawędzi względem orto: p95 2,304 m, dane z fidelity_summary.json. To wyniki narzędzia geometrycznego, nie zaliczenie D51 ani pomiar poprawności pozy kamer. Nadal 4 odcinki pasów mają stan unverified, a rozpoznawalność obiektów pozostaje odrębnym problemem. Historyczna kompozycja r1 jest teraz oczekującą fazą aktywnego post-world.
+
+## Pełna kontrola delt liczników
+Sprawdzono zbiory wszystkich wartości, nie tylko maksimum: dla 84 Low i 84 High delty static draws, instanced draws, tris i shadow draws wynoszą wyłącznie 0. Low max 812 = 445 + 367 w A454716650857984; High max 1376 = 945 + 431 w A320215796381417. Dopisano pełne zbiory delt i rekordy maksimów do capture-summary.json. To estymacje CPU przed batchingiem, nie rzeczywiste GPU ani pomiar A16.
