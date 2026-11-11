@@ -93,3 +93,6 @@ Obejrzano sześć natywnych renderów Low-overcast R2 obok fotografii w arkuszac
 
 ## Niezależny przegląd nowych kadrów
 Krytyk obejrzał sześć zmienionych par Low-overcast, pozostałe 19 przyjął jako te same piksele według manifestu. Nie znalazł podstaw do podważenia ogólnego D51 FAIL. Ważne doprecyzowanie: w 180137 są częściowo przezroczyste zielonkawe panele, więc aktualnego problemu nie należy opisywać jako całkowitego braku ekranu. Pozostają różnice wysokości, ciągłości, osadzenia i otoczenia. W 150280 obecne są hale i blok, ale brak charakterystycznej pierzei. Zapisano REVIEW-INDEPENDENT-CHANGED.md bez nadpisywania historycznej recenzji r1 i bez zmiany klas.
+
+## Potwierdzenie rzeczywistej kolejki heavy
+O 00:42–00:43 sprawdzono procesy systemowe bez ujawniania pełnych command line. Trzy sloty odpowiadały trzem aktywnym zadaniom: dwa build_world oraz jeden pytest, rozpoczęte 00:36–00:41. Nie stwierdzono podstaw do traktowania slotów jako porzuconych. Nie zmieniano cudzych blokad ani PHONE_RUN. Własny post-world pozostaje potwierdzonym żywym procesem oczekującym na test fotometrii; dalsza sekwencja czeka na jego kod zakończenia.
