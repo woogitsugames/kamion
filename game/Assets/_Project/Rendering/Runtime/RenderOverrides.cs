@@ -67,8 +67,10 @@ namespace Game.Rendering
         public static int? CullMask;     // rq_mask
         public static bool? Props;       // rq_props
         public static bool? Hud;         // rq_hud
+        public static int? GlassDebug;   // rq_glassdbg (with rq_ab glassdbg: the B level of _KamionGlassDebug)
         /// <summary>ADR 0106 A/B state (ExtraViewCostMonitor): instanced trees / props suspended in the B windows.</summary>
-        public static bool AbTreesOff, AbPropsOff;
+        public static bool AbTreesOff, AbPropsOff, AbTreeShadowOff;
+        public static float AbTreeThinScale = 1f, AbTreeCardScale = 1f;
 
         public static bool Any => Msaa.HasValue || RenderScale.HasValue || ShadowDistance.HasValue || Post.HasValue || Hdr.HasValue ||
                                   LeafA2C.HasValue || Trees.HasValue || TreeShadowMask.HasValue || TreeCardScale.HasValue ||
@@ -111,7 +113,7 @@ namespace Game.Rendering
             LightingPreset.ExposureBiasOverride = ev ?? 0f;
             WorldAtmosphere.WetOverride = wet;
             WorldAtmosphere.GrassOverride = gvar;
-            LodBias = F(arg("rq_lod")); FarClip = F(arg("rq_far")); CullMask = I(arg("rq_mask")); Props = B(arg("rq_props")); Hud = B(arg("rq_hud"));   // ADR 0106
+            LodBias = F(arg("rq_lod")); FarClip = F(arg("rq_far")); CullMask = I(arg("rq_mask")); Props = B(arg("rq_props")); Hud = B(arg("rq_hud")); GlassDebug = I(arg("rq_glassdbg"));   // ADR 0106
             string ab = arg("rq_ab");
             Ab = string.IsNullOrEmpty(ab) ? null : ab.ToLowerInvariant();
             AbPeriod = F(arg("rq_ab_period"));

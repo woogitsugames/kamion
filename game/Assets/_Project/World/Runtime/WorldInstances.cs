@@ -356,7 +356,7 @@ namespace Game.World
                     var ends = m_Ends[run.prototype];
                     if (!trees && m_Thin[run.prototype]) continue;
                     if (!props && !m_Thin[run.prototype]) continue;
-                    float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, m_TreeCard) : scale;
+                    float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, m_TreeCard) * RenderOverrides.AbTreeCardScale : scale;
                     float cs = m_FixedCull[run.prototype] ? distanceScale : scale;   // vehicles: same cull on every tier
                     float l0 = m_Lod0Min[run.prototype] * distanceScale;   // vehicles: LOD0 floor on every tier
                     int ln = LodAt(ends, dNear, ls, cs, l0), lf = LodAt(ends, dFar, ls, cs, l0);
@@ -396,7 +396,7 @@ namespace Game.World
 
         int ThinStride(float d, float scale)
         {
-            float s = m_ThinStart * scale;
+            float s = m_ThinStart * scale * RenderOverrides.AbTreeThinScale;
             // v3.4 kept the strides: a later start (1.5x, +25 % instances in the DK8 view) did not fit the A16 Low budget
             // with certainty (editor timing noise > the gain; ADR 0023). The forest edge reads dense through the HLOD.
             return d < s ? 1 : d < 2.5f * s ? 2 : 4;
@@ -514,7 +514,7 @@ namespace Game.World
             var b = m_BatchBounds[slot];
             // Tree casters per tier (QualityProfile.treeShadowLodMask): LOD1 tree cards in the shadow pass doubled the
             // forest cost on the A16 (Low/Medium cast from LOD0 only).
-            int mask = m_Thin[proto] ? p.shadowLodMask & m_TreeShadowMask : p.shadowLodMask;
+            int mask = m_Thin[proto] ? (RenderOverrides.AbTreeShadowOff ? 0 : p.shadowLodMask & m_TreeShadowMask) : p.shadowLodMask;
             var shadows = (mask & (1 << lod)) != 0 ? ShadowCastingMode.On : ShadowCastingMode.Off;
             int m0 = p.materialStart[lod];
             for (int s = 0; s < mesh.subMeshCount; s++)

@@ -127,6 +127,10 @@ namespace Game.Rendering
             "cabint" => "no Kamion/Cab Interior renderers",
             "truckext" => "no Kamion/Truck Exterior renderers",
             "cabdisp" => "no Kamion/Cab Display renderers",
+            "treeshadow" => "instanced trees cast no shadows",
+            "treethin" => "tree thinning starts at half the distance",
+            "treecard" => "tree card LOD distances x0.5",
+            "glassdbg" => "Kamion/Truck Glass debug level rq_glassdbg (1 constant, 2 no film/env/spec, 3 no film, 4 no spec, 5 no fog)",
             "glassfast" => "Kamion/Truck Glass fast path toggled (_KAMION_GLASS_FAST)",
             _ => "unknown key (no change)",
         };
@@ -346,6 +350,10 @@ namespace Game.Rendering
                 case "cabint": SetShaderRenderers("Kamion/Cab Interior", b); break;
                 case "truckext": SetShaderRenderers("Kamion/Truck Exterior", b); break;
                 case "cabdisp": SetShaderRenderers("Kamion/Cab Display", b); break;
+                case "treeshadow": RenderOverrides.AbTreeShadowOff = b; break;
+                case "treethin": RenderOverrides.AbTreeThinScale = b ? 0.5f : 1f; break;
+                case "treecard": RenderOverrides.AbTreeCardScale = b ? 0.5f : 1f; break;
+                case "glassdbg": Shader.SetGlobalFloat("_KamionGlassDebug", b ? (RenderOverrides.GlassDebug ?? 1) : 0f); break;
                 case "glassfast":
                     if (m_GlassShip < 0) m_GlassShip = Shader.IsKeywordEnabled("_KAMION_GLASS_FAST") ? 1 : 0;
                     if ((m_GlassShip == 1) ^ b) Shader.EnableKeyword("_KAMION_GLASS_FAST"); else Shader.DisableKeyword("_KAMION_GLASS_FAST");
