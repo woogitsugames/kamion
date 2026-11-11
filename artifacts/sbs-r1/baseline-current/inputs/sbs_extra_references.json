@@ -1,0 +1,23 @@
+{
+  "schema": "kamion/sbs-extra-references/1",
+  "references": [
+    {
+      "camera": "sbs-g3-a-cm109685822",
+      "source_id": "cm109685822",
+      "segment": "G3-A",
+      "metadata_manifest": "Data/raw/refs/objects/kwadrat-park/commons-geo/manifest.jsonl",
+      "heading_true_deg": 40,
+      "horizontal_fov_deg": 70,
+      "horizon_y_fraction": 0.55
+    },
+    {
+      "camera": "sbs-g3-a-cm92458760",
+      "source_id": "cm92458760",
+      "segment": "G3-A",
+      "metadata_manifest": "Data/raw/refs/objects/kwadrat-park/commons-geo/manifest.jsonl",
+      "heading_true_deg": 112,
+      "horizontal_fov_deg": 70,
+      "horizon_y_fraction": 0.54
+    }
+  ]
+}
