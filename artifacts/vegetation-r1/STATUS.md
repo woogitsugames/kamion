@@ -70,3 +70,4 @@ Macierz after zakończona kodem 0. Następny krok: review_images.py, metryki kor
 Zapisano pary foto after Low-clear-photo-1280x720. Następny krok: porównać z photo-references.json.
 Zapisano pary foto after Low-clear-photo-2048x1152. Następny krok: porównać z photo-references.json.
 Zapisano pary foto after Low-clear-photo-2048x1536. Następny krok: porównać z photo-references.json.
+Zapisano pary foto after High-clear-photo-1280x720. Następny krok: porównać z photo-references.json.
