@@ -133,3 +133,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:08:46.7346367+01:00: narzędzie porównań przygotuje również końcowy arkusz pięciu detali i parę referencja/render znaku do960px, z polskimi opisami, atrybucją i jawną niepewnością pozy. Poprawiono uszkodzone znaki w opisach referencji. NASTĘPNY KROK: odczytać wyniki działającej sekwencji; obrazy powstaną dopiero po renderach, wewnątrz heavy.
 
 2026-11-12T00:12:54.8705431+01:00: generator after3 uzyskał heavy i działa (Python PID 67868, uv 108248); zapisano hash źródeł oraz HEAD w build-after3-context.json. Walidacja czeka na zakończenie tego samego procesu. NASTĘPNY KROK: sprawdzić brak fallback, porównanie chronionej geometrii i końcowe rendery.
+
+2026-11-12T00:21:12.0433527+01:00: heavy world after3; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
