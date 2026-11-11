@@ -11,6 +11,9 @@ ROIS = {
     "route-onramp-andersa-above": (.82, .62, .97, .80),
     "r10_fence_2": (.10, .72, .85, .93),
 }
+FOCUS = ("dk8-dk19-exit", "driver-andersa-to-putry", "route-putry-approach",
+         "g3a-rondo-bie-approach", "photo-biezenstwa-ground", "route-onramp-andersa-above",
+         "r10_fence_2", "fire-station-ref7197")
 
 
 def stats(path):
@@ -75,6 +78,49 @@ def main():
                     delta_draws=after[camera]["total_draws"]-before[camera]["total_draws"],
                     delta_triangles_percent=100*(after[camera]["total_triangles_k"]/
                                                 max(before[camera]["total_triangles_k"], 1)-1)) for camera in before}
+                for camera in FOCUS:
+                    paths = [ROOT/stage/folder.name/(camera+".png") for stage in ("before", "after")]
+                    if not all(p.exists() for p in paths):
+                        continue
+                    frames = [Image.open(p).convert("RGB") for p in paths]
+                    for frame in frames:
+                        frame.thumbnail((960, 960))
+                    sheet = Image.new("RGB", (960, sum(f.height+24 for f in frames)), "#222222")
+                    draw = ImageDraw.Draw(sheet)
+                    y = 0
+                    for label, frame in zip(("PRZED", "PO"), frames):
+                        draw.text((6, y+5), label+" "+folder.name+" "+camera, fill="white")
+                        sheet.paste(frame, (0, y+24))
+                        y += frame.height+24
+                    sheet.save(output/("focus-"+folder.name+"-"+camera+".jpg"), quality=92)
+    ref_file = ROOT/"photo-references.json"
+    if ref_file.exists():
+        repo = ROOT.parents[1]
+        pairs = ROOT/"photo-pairs"
+        pairs.mkdir(exist_ok=True)
+        for ref in json.loads(ref_file.read_text(encoding="utf-8-sig"))["references"]:
+            for folder in sorted((ROOT/"after").glob("*-photo-*")):
+                before, after = ROOT/"before"/folder.name/(ref["camera"]+".png"), folder/(ref["camera"]+".png")
+                if not before.exists() or not after.exists():
+                    continue
+                photo = Image.open(repo/ref["local_photo"]).convert("RGB")
+                old, new = Image.open(before).convert("RGB"), Image.open(after).convert("RGB")
+                if photo.width*new.height != new.width*photo.height:
+                    raise ValueError("Photo/render aspect mismatch: "+ref["camera"])
+                height = round(470*photo.height/photo.width)
+                sheet = Image.new("RGB", (960, 2*(height+25)+90), "#222222")
+                draw = ImageDraw.Draw(sheet)
+                for row, render in enumerate((old, new)):
+                    y = row*(height+25)
+                    draw.text((4, y+4), "ZDJECIE", fill="white")
+                    draw.text((494, y+4), ("PRZED" if row == 0 else "PO")+" "+folder.name, fill="white")
+                    sheet.paste(photo.resize((470, height)), (0, y+23))
+                    sheet.paste(render.resize((470, height)), (490, y+23))
+                y = 2*(height+25)+4
+                for i, line in enumerate((ref["camera"], f'{ref["author"]} | {ref["license"]} | {ref["captured_at"]}',
+                                          ref["page_url"], "Poza UNVERIFIED; roznice oswietlenia i sezonu nie sa wynikiem zmiany.")):
+                    draw.text((5, y+18*i), line, fill="white")
+                sheet.save(pairs/(folder.name+"-"+ref["camera"]+".jpg"), quality=92)
     (ROOT/"measurements.json").write_text(json.dumps(measurements, indent=2)+"\n", encoding="utf-8")
     (ROOT/"stats-comparison.json").write_text(json.dumps(comparisons, indent=2)+"\n", encoding="utf-8")
     print("Contact sheets:", len(list(output.glob("*.jpg"))))
