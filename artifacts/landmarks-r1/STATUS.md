@@ -65,3 +65,6 @@ NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/round1-build.ps1 -Phase round2
 
 Krok 20: wariant 2 w źródłach. Profil ośmiu poziomów korony zastępuje gładki stożek. Low zamienia 24 karty na cztery dodatkowe segmenty rdzenia na drzewo, zachowując pierwotny budżet trójkątów; High zachowuje karty. Rdzeń otrzymuje detal RGB rzeczywistych igieł CC0 zamiast samego szumu. Dolne tafle otrzymują maskę widoczności wnętrza w istniejącym kanale AO, bez zmian PVC, niebieskiej ramy i shaderów. Dodano test ochrony ram. Syntax OK; wyniki obrazu i budżetu wariantu 2 UNVERIFIED.
 NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/round1-build.ps1 -Phase round2
+
+Krok 21: materiały wariantu 2 ukończone pod heavy, exit 0, 31 s. Slot zwolniony; World osobno zajął heavy i działa. Przygotowano końcowe zachowanie wszystkich wpisów wspólnego materials_spec poza fire_station; przed końcowym commitem remiza będzie wygenerowana we wszystkich trzech rozdzielczościach, aby nie usuwać cudzych opisów High/Low. Pełny GIS nadal nie był uruchamiany w trakcie strojenia.
+NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/round2-world.log -Tail 10

@@ -2,6 +2,7 @@ param(
     [Parameter(Mandatory)]
     [ValidateSet('World','Materials','FinalGIS','FocusedGIS','Fidelity')][string]$Step,
     [string]$Only = 'fire_station',
+    [string]$Tiers = 'Medium',
     [string]$TestFile = 'tests/gis/test_fire_station_r7.py',
     [string]$Log = 'artifacts/landmarks-r1/heavy-step.log'
 )
@@ -28,7 +29,7 @@ try {
                 & uv run --project tools/worldgen python art-source/world/materials/_src/sets_fire_station.py --alpha --layout *> "$Log.alpha"
                 if ($LASTEXITCODE -ne 0) { throw "Hero atlas preparation failed, log: $Log.alpha" }
             }
-            & uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only $Only --tier Medium *> $Log
+            & uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only $Only --tier $Tiers *> $Log
         }
         'FinalGIS' { & uv run --project tools/worldgen python -m pytest tests/gis -q *> $Log }
         'FocusedGIS' {
