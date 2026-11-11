@@ -221,6 +221,7 @@ namespace Game.World
                     c.SetFloat("_Transmission", 0.25f);
                     c.SetFloat("_CrownShade", 0f);
                 }
+                Game.Rendering.ForestFastPath.Register(c);   // ADR 0113: HLOD edge one-pass state, A/B
                 m_Mats[i] = c;
             }
         }
@@ -232,6 +233,7 @@ namespace Game.World
                 if (m != null && Array.IndexOf(set.materials, m) < 0)
                 {
                     StreetLamps.UnregisterGlass(m);
+                    Game.Rendering.ForestFastPath.Unregister(m);
                     if (Application.isPlaying) Destroy(m); else DestroyImmediate(m);
                 }
             m_Mats = null;
@@ -484,7 +486,7 @@ namespace Game.World
             var trs = Matrix4x4.Translate(m_Origin);
             for (int s = 0; s < mesh.subMeshCount; s++)
             {
-                var mat = mats[materialStart + s];
+                var mat = Game.Rendering.ForestFastPath.Canopy(mats[materialStart + s]);   // ADR 0113: Kamion/Forest Canopy on forestFast tiers
                 if (mat == null) continue;
                 // ADR 0106 A/B (diagnostics): 1 = no canopy (opaque) submeshes, 2 = no edge-wall (Kamion/Vegetation) submeshes.
                 if (RenderOverrides.AbHlodPart != 0 && (RenderOverrides.AbHlodPart == 2) == (mat.shader == m_FoliageShader)) continue;

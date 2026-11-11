@@ -1,0 +1,85 @@
+{
+  "schema": "truck-sim-pl/gate3-result/1",
+  "timestamp": "20261111-165713",
+  "serial": "RFGL34SJYDZ",
+  "segment": "G3-A",
+  "segmentSpec": {
+    "s_start_m": 12.0,
+    "s_end_m": 450.0,
+    "length_m": 436.716
+  },
+  "tier": "Low",
+  "fps": 30,
+  "speedKmh": 30,
+  "worldHigh": false,
+  "gitSha": "6b6c1d8003",
+  "gameLacks": [],
+  "valid": true,
+  "apkFile": "kamion-0.1.0-6b6c1d8003.apk",
+  "apkSha256": "02ce1654a3d14c23073b259863f0c8b6bb95258bed933affcb6ce0d368b12fc3",
+  "repoHeadAtMeasurement": "6b6c1d8003",
+  "apkDirty": false,
+  "apk": {
+    "path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\perf-low-r2\\artifacts\\apk\\kamion-0.1.0-6b6c1d8003.apk",
+    "file": "kamion-0.1.0-6b6c1d8003.apk",
+    "sizeMB": 191.4,
+    "sha256": "02ce1654a3d14c23073b259863f0c8b6bb95258bed933affcb6ce0d368b12fc3",
+    "builtFromSha": "6b6c1d8003",
+    "dirty": false
+  },
+  "warnings": [],
+  "batteryTempBeforeC": 28.2,
+  "driveLog": {
+    "autopilotStartedLine": true,
+    "suspiciousLines": 0,
+    "logcat": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\perf-low-r2\\artifacts\\gate3\\20261111-165713\\RFGL34SJYDZ\\logcat-run.txt"
+  },
+  "device": {
+    "ro.product.model": "SM-A165F",
+    "ro.product.manufacturer": "samsung",
+    "ro.soc.model": "MT6789",
+    "ro.build.version.release": "16",
+    "ro.build.version.sdk": "36",
+    "ro.hardware.egl": "meow"
+  },
+  "frameTime": {
+    "samples": 1925,
+    "warmupSeconds": 25,
+    "spanSeconds": 64.5,
+    "meanFps": 29.83,
+    "p50Ms": 33.333,
+    "p95Ms": 33.463,
+    "p99Ms": 49.944,
+    "maxMs": 50.142,
+    "over33ms": 234,
+    "over50ms": 9
+  },
+  "gpuMs": {
+    "samples": 1751,
+    "p50": 29.959,
+    "p95": 31.699,
+    "p99": 32.648
+  },
+  "cpuMainMs": {
+    "samples": 1925,
+    "p50": 22.419,
+    "p95": 29.453,
+    "p99": 45.877
+  },
+  "pssMb": 868.9,
+  "batteryTempAfterC": 28.2,
+  "thermalStatus": 0,
+  "budget": {
+    "p95Ms": 34.0,
+    "p99Ms": 40.0,
+    "pssMb": 1000,
+    "source": "docs/PERFORMANCE_BUDGETS.md (WORKING_VALUE)",
+    "p95Ok": true,
+    "p99Ok": false,
+    "pssOk": true
+  },
+  "cameras": [],
+  "camerasCaptured": 0,
+  "camerasPlanned": 0,
+  "duplicateFrames": []
+}

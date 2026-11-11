@@ -140,6 +140,7 @@ namespace Game.Rendering
                     if (m.name == "M_kp_glass_block") Debug.Log($"[RQ_GLASS] name={m.name} shader={m.shader.name} flag={m.GetFloat("_ArchitecturalGlass")} receive={m.GetFloat("_ReceiveShadows")}");
 #endif
             if (t.glassFast) Shader.EnableKeyword(GlassFastKeyword); else Shader.DisableKeyword(GlassFastKeyword);
+            ForestFastPath.Apply(t.forestFast);   // ADR 0113
             // A8: truck paint clear coat switch (Kamion/Truck Exterior reads 0 = on, so an unset global keeps it on).
             Shader.SetGlobalFloat(k_ClearCoatOff, t.clearCoat ? 0f : 1f);
             Shader.SetGlobalFloat(k_GrimeDetailOff, t.vehicleGrimeDetail ? 0f : 1f);   // ADR 0038

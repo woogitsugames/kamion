@@ -118,8 +118,22 @@ namespace Game.Editor.Setup
                 for (int i = 0; i < qp.tiers.Length; i++)
                     foreach (var d in defs)
                         if (string.Equals(d.name, qp.tiers[i].name, StringComparison.OrdinalIgnoreCase)) qp.tiers[i].glassFast = d.glassFast;
+                qp.revision = 106;
+                dirty = true;
+            }
+            if (qp.revision < 113)
+            {
+                // ADR 0113: forest fast path per tier (Low on).
+                for (int i = 0; i < qp.tiers.Length; i++)
+                    foreach (var d in defs)
+                        if (string.Equals(d.name, qp.tiers[i].name, StringComparison.OrdinalIgnoreCase)) qp.tiers[i].forestFast = d.forestFast;
                 qp.revision = QualityProfile.CurrentRevision;
                 dirty = true;
+            }
+            if (qp.canopyMaterial == null)
+            {
+                qp.canopyMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/_Project/Rendering/Settings/M_ForestCanopy.mat");
+                dirty |= qp.canopyMaterial != null;
             }
             if (qp.deviceRules == null || qp.deviceRules.Length == 0) { qp.deviceRules = QualityProfile.DefaultDeviceRules(); dirty = true; }
             // Always re-serialize: new non-array fields (device rules) exist only as code initialisers until written once.

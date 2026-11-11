@@ -1,0 +1,33 @@
+16:56:07 waiting: lock=False unity=1
+16:57:07 lock taken
+16:57:13 gate3 Low A battery=28.2 C
+16:57:13   == gate3: segment G3-A s=12..450 (436.716 m), tier Low, 30 fps, 30 km/h, run 96s (25 s load + 71 s drive)
+16:57:13      cameras: 14 from gate3_cameras.json + 7 existing control cameras; game reads route_s: True, qacam_set: True
+16:59:12     frames 1925 over 64,5s: mean 29,83 fps, p50 33,33 / p95 33,46 / p99 49,94 / max 50,14 ms
+16:59:12     GPU p50 29,96 / p95 31,70 ms (1751 samples)
+16:59:12     CPU main p50 22,42 / p95 29,45 ms
+16:59:13   FPS: p50 33,3 / p95 33,5 / p99 49,9 ms, PSS 868,9 MB, thermal 0 -> p95 ok, p99 OVER, PSS ok
+16:59:13   result C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\gate3\20261111-165713\RFGL34SJYDZ\gate3-result.json: valid=True, cameras 0/0
+16:59:13   exit 0
+16:59:13 gate3 Low B battery=28.2 C
+16:59:13   == gate3: segment G3-B s=1232..1718 (485.862 m), tier Low, 30 fps, 30 km/h, run 104s (25 s load + 79 s drive)
+16:59:13      cameras: 16 from gate3_cameras.json + 7 existing control cameras; game reads route_s: True, qacam_set: True
+17:01:25     frames 2292 over 76,5s: mean 29,98 fps, p50 33,33 / p95 33,45 / p99 33,57 / max 50,05 ms
+17:01:25     GPU p50 29,01 / p95 32,22 ms (2158 samples)
+17:01:25     CPU main p50 21,80 / p95 28,26 ms
+17:01:26   FPS: p50 33,3 / p95 33,5 / p99 33,6 ms, PSS 838,9 MB, thermal 0 -> p95 ok, p99 ok, PSS ok
+17:01:26   result C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\gate3\20261111-165913\RFGL34SJYDZ\gate3-result.json: valid=True, cameras 0/0
+17:01:26   exit 0
+17:01:26 before Low A telemetry=1,route_end=450,rq_forestfast=0,pso_warm=0
+17:03:07   done -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\perf-low-r2\final\before-Low-A
+17:03:07 before Low B telemetry=1,route_end=1718,route_s=1232,rq_forestfast=0,pso_warm=0
+17:04:56   done -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\perf-low-r2\final\before-Low-B
+17:04:56 lock released
+17:04:56 lock taken
+17:04:56 run nopso-Low-A (96 s): telemetry=1,route_end=450,pso_warm=0 battery=28.4 C
+17:06:37 done nopso-Low-A -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\perf-low-r2\final\nopso-Low-A
+17:06:37 lock released
+17:06:37 lock taken
+17:06:37 run nopso-Low-B (104 s): telemetry=1,route_end=1718,route_s=1232,pso_warm=0 battery=28.3 C
+17:08:26 done nopso-Low-B -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\perf-low-r2\final\nopso-Low-B
+17:08:26 lock released
