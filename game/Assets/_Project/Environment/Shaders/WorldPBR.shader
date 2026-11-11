@@ -626,16 +626,34 @@ Shader "Kamion/World PBR"
                         // 0.55-1.0 scale lengths; the wet band under the drip edge lives inside the sill only and is gone
                         // 0.25 scale lengths down. Strength floor 0.5: the plaster factor of the parapet layer (x 0.6)
                         // left a sill mark at ~3 levels. WORKING_VALUE, measured from 5 m and 20 m (ADR 0114 table).
+                        // ADR 0124 (review 0114 P1-r8-g: "dwie identyczne nóżki o twardej górnej krawędzi, symetryczne";
+                        // weakest 10 % of the marks ~5 sRGB levels from 20 m). Per END of the sill (hash of rnd and side):
+                        // 28 % of the ends shed nothing, the rest get their own length (0.35-1.0 scale lengths) and
+                        // strength (0.6-1.0). Shape of run-off water: a stain 15 cm wide right under the end cap that
+                        // narrows to 3.6 cm at its tip, flanks feathered over 5-9 cm and broken by the run-off map,
+                        // fading in over the first 3 cm (no hard top line) and wandering sideways on its way down.
+                        // One sill in five also drips somewhere along its length (a short streak inside the sill).
+                        // Strength floor 0.62. WORKING_VALUE; measured from 5 m and 20 m (ADR 0124 table).
                         float au = abs(i.uv.z);
                         half outside = step(1.5, au);
                         float sde = au - 2.0 * outside;                       // metres from the sill end
-                        half slen = 0.55 + 0.45 * frac(srnd * lerp(0.37, 0.61, sside) + lerp(0.1, 0.5, sside));
-                        float hw = lerp(0.045, 0.02, saturate(depth / slen));
-                        half whisk = (1.0 - smoothstep(hw, hw + 0.03, sde)) * (1.0 - smoothstep(0.3 * slen, slen, depth)) * (0.8 + 0.2 * ro.r);
+                        half h1 = frac(srnd * 0.618 + sside * 0.37 + 0.13);
+                        half h2 = frac(srnd * 0.377 + sside * 0.71 + 0.29);
+                        half present = step(0.28, h1);
+                        half slen = 0.35 + 0.65 * h2;
+                        half sstr = 0.6 + 0.4 * frac(h1 * 7.3);
+                        float sdw = sde + (macro.a - 0.5) * 0.07 * saturate(depth * 1.5) * (1.0 - 2.0 * outside);
+                        float hw = lerp(0.075, 0.018, saturate(depth / slen));
+                        half fadeIn = smoothstep(-0.01, 0.03 + 0.05 * h2, depth);
+                        half whisk = present * sstr * (1.0 - smoothstep(hw, hw + 0.05 + 0.04 * ro.r, abs(sdw)))
+                                   * (1.0 - smoothstep(0.2 * slen, slen, depth)) * fadeIn * (0.72 + 0.28 * ro.r);
                         half band = (1.0 - outside) * (0.3 + 0.5 * ro.r) * (1.0 - smoothstep(0.03, 0.25, depth)) * 0.5;
-                        ro.r = saturate(max(whisk, band));
+                        half dripAt = 0.22 + 0.25 * frac(srnd * 0.291 + 0.05);
+                        half drip = step(0.8, frac(srnd * 0.459 + 0.21)) * (1.0 - outside) * (1.0 - sside)
+                                  * (1.0 - smoothstep(0.012, 0.045, abs(au - dripAt))) * (1.0 - smoothstep(0.12, 0.55, depth)) * 0.7;
+                        ro.r = saturate(max(max(whisk, band), drip));
                         ro.g *= whisk * 0.5;
-                        k = max(k, 0.5);
+                        k = max(k, 0.62);
                     }
                     albedo = lerp(albedo, albedo * half3(0.22, 0.21, 0.2), ro.r * k);
                     albedo = lerp(albedo, half3(0.075, 0.042, 0.022), ro.g * k * 0.8);

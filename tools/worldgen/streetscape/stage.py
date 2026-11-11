@@ -229,7 +229,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     # house plots (ADR 0107 / 0114): fences, gates and garden as chunk geometry in one material (`plot_kit`)
     def zplot(q):
         return float(np.asarray(zsurf(np.array([q[0]]), np.array([q[1]]))).ravel()[0])
-    plots = PLT.build(w.buf, plot_plan, zplot, FU.SurfaceTop([p_ for p_ in w.buf.parts if p_.layer == "road"]), rep)
+    plots = PLT.build(w.buf, plot_plan, zplot, FU.SurfaceTop([p_ for p_ in w.buf.parts if p_.layer == "road"]), rep,
+                      items=pl.items)       # ADR 0124: the lamp poles of the house streets carry the overhead line
     log("plots", {k: v for k, v in rep["plots"].items() if k != "list"})
 
     # vegetation
