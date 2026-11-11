@@ -45,3 +45,19 @@ Leader owns active tint-r2/ADR0101 from main99a4f3f8, so no duplicate correction
 is made here. D48 retains owner plaster target110/126/145; streamE must preserve it.
 Mixed truck-fixture camera pairs are excluded from tint-only proof as already
 noted; B/C/F final matched matrices use explicit fixture snapshots.
+
+## External ADR0101 r2 follow-up (13:25, not merged here)
+Leader's tint-r2 final measurements report scoped calibration checks pass: gate
+Highclear250->217, clip82percent->.1percent, hall/skyOV.72High/.78Low;
+screens/plinth .32-.37 onthree lit views; bridge girder/asphalt.95-1.02. Fourstats
+files reportedidentical. Root independently viewed gateHighclear and bridgeabove
+HighOV before/r2 pairs: material texture restored in bright hall, bridge exposure
+reduced coherently; no whole-frame illumination change claimed. This is an
+available external correction, not proof that original A calibration was correct.
+
+Read actual external XML editmode-20261111-131503.xml:223/226, three failures are
+TruckDoorGlassTests Low/Medium/High, each missing MI_Ext_DoorGlassL in generated
+TruckMaterialSet. This identifies fixture cause. It does NOT independently prove
+those failures pre-existed that baseline; canonical Truck build/install plus retry
+required at leader integration. Original A canonical226/226 remains its own proof.
+No external worktree edits, mainmerge or blanket integration approval byroot.

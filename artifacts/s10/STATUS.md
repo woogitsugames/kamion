@@ -374,3 +374,18 @@ readback ready05d5f878;6tests then18OFF/18ON/6mask pendingrelease. Glassactual
 nearT~.745/F.082/film0; removingnearRadiance atrealalpha raisesOVsd10.43Low/7.83High
 versus5.92/5.33. Additiveveil confirmed; no arbitraryT/clutterboost.
 NEXT COMMAND: monitor perf-low-r1/diag3.log actualEND; CPUreview Gmaskedfilmdomain/EUVcoverage, then promptnewrelease for repairedFtests/crownAB and G/E boundednextcandidate. Dinactiveartifactdba4855d waitsGclosure.
+## Step28 - retain bounded F with owner failures explicit; reneweddiag4hold
+Phoneperfdiag4returned13:28:29; GfocusedR2/Ffinalcanonical/EactualMipQA allstopped
+BEFORE nextlaunch, noUnityactive/queued. OwnHOLDdiag4created, old13:25invalid.
+Rootreviewedall18C3OFFONviews across6conditions: retain3.6mm plausiblecandidate,
+noinflatedwave/seam; ownerOV/Lowlowsun FAIL stays. Actual6GPUtestsPASS repaired
+URPpath; finalcanonical102/fullEditMode pendingrelease. REVIEW-F updated.
+G actualfilmGPUdiagnostic provesmask+seedactive; CPUUVdomainhypothesis retracted.
+R2oneboundedneutralgrit.16/cap.85/sourcefan variation prepared4a3031d8, focused24
+beforefullmatrix. Eactualpackedalpha measuredU69-70percent/V98-100percent,
+so earlierpossibletop/radialpadding hypothesisNOTsupported; sidepadding and
+rooted2/3spraybundleartifact evaluatedbeforetuning, nopalette/raw/globalB changes.
+Rootviewedexternal0101r2hall/bridgepairs; actualXML223/226 fails missingDoorGlassL
+fixture onalltiers, not provenpreexisting. REVIEW-A recordsscopedavailablecalibfix
+andmandatorycanonicalretry/integration, notoriginalAcalibapproval.
+NEXT COMMAND: monitor perf-low-r1/diag4.log finalbatchEND; promptnewrelease for Ffinalcanonical102/EditMode, GfocusedR2, EmeaningfulMip/nextfoliageprobe. Dawaitsfirstworkerclosure, pristineinactivepatch preserved.

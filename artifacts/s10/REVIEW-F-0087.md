@@ -29,3 +29,18 @@ unchanged analytic fallback, guarded actual renders after phone release, final G
 EditMode and geometry/budget verification, at least two reviewed candidate rounds,
 ADR/REPORT with remaining limitations. Existing failed rows must remain visible.
 No phone/GPU timing or final visual acceptance is claimed.
+## Bounded C3 source/visual review (13:33)
+Root independently viewed HighOVside and Lowclear34 native960 pairs plus all four
+remaining condition sheets (LowOV, Highclear, Low/Highlowsun): all18 OFF/ON camera
+views covered. Fixed3.6mm shading crown is subtle/plausible, without an obvious
+inflated wave or boundary seam; RETAIN this bounded candidate. It is qualitative
+WORKING_VALUE, not measured reference depth. No amplitude increase justified.
+Actual6HLSL/canonicaldoor/transform GPU tests pass after replacing invalid legacy
+CommandBuffer metadata readback with realURP Camera.Render. Actual pipeline mask
+provesonlyDOORbit10, body/fender/trim unaffected. Keep failed firstXML as invalid
+probe-path history, not a production defect or a passing test.
+Owner appearance remains PARTIAL/FAIL: OV door3.32Low/2.73High stillbelow4;
+Lowlowsun3.23 below4. Clear5.21Low/6.69High andHighlowsun6.04 pass. Glass unchanged.
+Normal delta affects diffuse+coat together, not pure specular. Full final102,
+canonical lamp probe, two focused coat-radianceOFF and fullEditMode still required.
+Do not call final owner-qualityPASS merely because runtime tests/budgets pass.
