@@ -19,11 +19,13 @@ foreach($method in @('Game.Editor.Setup.TruckAssetBuilder.BuildBatch','Game.Worl
   if($code -ne 0 -or !(Select-String -Path $log -SimpleMatch 'TRUCK_RESULT: OK' -Quiet)) { throw "Failed $method ($code): $log" }
 }
 foreach($tier in @('Low','High')) {
+  $scene=if($tier -eq 'High') {'WorldC_High'} else {'WorldC'}
   foreach($light in @('overcast','clear')) {
     Wait-UnityAllowed
-    & pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene WorldC -Tier $tier -Lighting $light -Cameras 'cab-driver,cab-dash,cab-left,cab-right,cab-mirrors-left,cab-mirrors-right,cab-mirror-front,cab-seat,cab-materials' -OutputDir "artifacts/cab-r1/$Stage/$tier-$light"
+    & pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene $scene -Tier $tier -Lighting $light -Cameras 'cab-driver,cab-dash,cab-left,cab-right,cab-mirrors-left,cab-mirrors-right,cab-mirror-front,cab-seat,cab-materials' -OutputDir "artifacts/cab-r1/$Stage/$tier-$light"
+    $renderExit=$LASTEXITCODE
     Restore-UnityEffects
-    if($LASTEXITCODE -ne 0) { throw "Render failed: $Stage $tier $light" }
+    if($renderExit -ne 0) { throw "Render failed: $Stage $tier $light" }
     Wait-UnityAllowed
     $log=Join-Path $repo "artifacts/cab-r1/$Stage-mirrors-$tier-$light.log"
     $output=Join-Path $repo "artifacts/cab-r1/$Stage/$tier-$light/native-mirrors"
