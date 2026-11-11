@@ -53,3 +53,4 @@ Zapisano kontrolę pigmentu dark-off. Następny krok: porównać amplitudę odbi
 Zapisano kontrolę pigmentu no-pane. Następny krok: porównać amplitudę odbicia ON/OFF i wybrać poprawkę lakieru na podstawie wyniku.
 
 Krok 21: pierwsza zmiana produkcyjna — FragFast waży kolor mgły alfą tafli, tak jak pełna ścieżka. Bez zmiany wykładnika transmitancji, próbek, przebiegów i geometrii. Białe/ciemne kontrole oraz brak przedniej tafli zakończone, źródła wejściowe zachowane w markerach. High jest niezmienioną kontrolą wariantu pełnego. Następny krok: pwsh -ExecutionPolicy Bypass -File artifacts/truck-r1/render-phase.ps1 -Stage fog-only.
+Zapisano fog-only Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
