@@ -11,3 +11,5 @@ Fizyczny crop ma około 12 cm i zachowuje dotychczasowe rozdzielczości High 102
 Obręcz kierownicy ma w źródłowym FBX kafel 5 cm. Pod flagą CC0 builder mnoży jej UV przez 5/12, pozostawiając piastę, pozostałe materiały i atlas AO bez zmian. Granice promienia 0,19–0,27 m są WORKING_VALUE i wymagają weryfikacji na wszystkich LOD; niejednoznaczny wybór kończy się błędem. Blenderowy podgląd samego źródłowego FBX nie uwzględnia tej korekty Unity.
 
 Skan skóry nie jest skanem tworzywa deski. Akceptacja materiału wymaga obejrzenia świeżych kadrów Low/High oraz sprawdzenia budżetu, niezależnie od zgodności hashów.
+
+Profil `plastic` to opcjonalna rekonstrukcja tłoczenia na podstawie tego samego skanu. Pole źródłowe 20 cm mapuje na kafel 10 cm; normal, wariacja albedo, roughness i mikro-AO są osłabione według danych. Skala i amplitudy to WORKING_VALUE. Nie jest to pomiar ani skan tworzywa konkretnej deski. Przełącznik `plastic.enabled` jest niezależny od skóry. Kandydat: wrapper z `-MaterialProfile plastic`, zawsze pod heavy. Zachowuje dotychczasowy kontrakt i rozdzielczości dwóch map Plastic, bez nowego materiału lub przebiegu.

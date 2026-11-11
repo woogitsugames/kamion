@@ -87,7 +87,7 @@ def image8(array):
 
 def prepare(args):
     if not 0 < args.source_crop_metres <= args.source_metres or not args.tile_metres > 0:
-        raise ValueError('Tile must fit the physical source field')
+        raise ValueError('Source crop must fit the physical field and game tile must be positive')
     files = {role: getattr(args, role) for role in ('diffuse', 'normal', 'roughness', 'ao')}
     images = {role: Image.open(path).convert('RGB' if role in ('diffuse', 'normal') else 'L') for role, path in files.items()}
     shape = images['diffuse'].size
@@ -111,7 +111,9 @@ def prepare(args):
     micro_ao = 1 + (crops['ao'] - 1) * args.ao_gain
     detail = periodic_edges(np.stack((variation, micro_ao, roughness), -1))
     normal = unit_normals(periodic_edges(crops['normal']), args.normal_strength)
+    alpha_source_sha = hashlib.sha256(args.preserve_alpha.read_bytes()).hexdigest()
     old_alpha = Image.open(args.preserve_alpha).convert('RGBA').getchannel('A')
+    alpha_pixels_sha = hashlib.sha256(old_alpha.tobytes()).hexdigest()
     args.output.mkdir(parents=True, exist_ok=True)
     outputs = []
     for tier, size in (('High', 1024), ('Medium', 512), ('Low', 256)):
@@ -137,7 +139,8 @@ def prepare(args):
         'required_unity_rim_uv_scale': args.rim_uv_scale,
         'working_values': {key: getattr(args, key) for key in ('variation_gain', 'roughness_gain', 'ao_gain', 'normal_strength')},
         'perforation_alpha_source': str(args.preserve_alpha),
-        'perforation_alpha_source_sha256': hashlib.sha256(args.preserve_alpha.read_bytes()).hexdigest(),
+        'perforation_alpha_source_sha256': alpha_source_sha,
+        'perforation_alpha_pixels_sha256': alpha_pixels_sha,
         'sources': {role: {'file': str(path), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()} for role, path in files.items()},
         'outputs': outputs,
     }
