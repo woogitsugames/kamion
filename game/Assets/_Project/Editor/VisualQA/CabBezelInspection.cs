@@ -45,6 +45,7 @@ namespace Game.Editor.VisualQA
                             Bounds bounds = mirrors[item.Item2].glass.bounds;
                             bounds.Encapsulate(mirrors[item.Item3].glass.bounds); bounds.Expand(.08f);
                             var go = new GameObject("cab-bezel-inspection-" + item.Item1);
+                            go.transform.SetParent(rig.transform, false);
                             var camera = go.AddComponent<Camera>();
                             camera.transform.SetPositionAndRotation(eye.position, Quaternion.LookRotation(bounds.center - eye.position, rig.transform.up));
                             camera.fieldOfView = 2f * Mathf.Atan(bounds.size.y / (1.7f * Vector3.Distance(bounds.center, eye.position))) * Mathf.Rad2Deg;
@@ -55,9 +56,10 @@ namespace Game.Editor.VisualQA
                     EditorSceneManager.sceneOpened += Prepare;
                     try
                     {
-                        VisualQaRunner.Render(tier == "High" ? "WorldC_High" : "WorldC", 1920, 1080, tier,
+                        int rendered = VisualQaRunner.Render(tier == "High" ? "WorldC_High" : "WorldC", 1920, 1080, tier,
                             Path.Combine(output, before ? "before" : "after"), light,
                             "cab-bezel-inspection-left,cab-bezel-inspection-right");
+                        if (rendered != 2) throw new InvalidOperationException("Expected both complete mirror housings, rendered " + rendered);
                     }
                     finally { EditorSceneManager.sceneOpened -= Prepare; }
                 }
