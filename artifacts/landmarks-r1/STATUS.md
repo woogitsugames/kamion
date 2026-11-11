@@ -114,3 +114,5 @@ Krok 36b: test remizy z kontrolą całego LOD1 przeszedł: 7/7 w 4,88 s pod heav
 Krok 36c: zapisano NEXT-R2.md z analizą ścieżki PBR i kontraktów UV oraz planem wyłączenia niepotwierdzonych schodów. Źródła wiaduktu nadal nietknięte. NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/budget-fix-world.log -Tail 8
 
 Krok 36d: ustalono przyczynę braku postępu generatora: liderowy ops-watchdog zapisał SUSPEND własnego launchera Python PID 107876 o 00:07:38; jego rzeczywisty proces 111836 ma wszystkie wątki Suspended. Pula heavy jest poprawnie zajęta. Nie wznawiam procesu poza nadzorem i nie uruchamiam duplikatu. Pipeline pozostaje aktywny i po automatycznym RESUME będzie kontynuował. NASTĘPNY KROK: analiza referencji bez ciężkiego Pythona; monitor budget-fix-world.log.
+
+Krok 36e: przygotowano NEXT-R3.md z konkretną różnicą schematu pasów kominów oraz ograniczeniami własności pliku life_props.py. Nadal brak zmian źródłowych poza remizą. Generator pozostaje zawieszony przez watchdog; nie duplikuję go i nie zwalniam slotu, dopóki proces istnieje.
