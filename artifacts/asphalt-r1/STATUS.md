@@ -61,3 +61,4 @@ Przygotowano porównanie wszystkich kamer: mesh draws, shadow draws oraz draws/t
 2026-11-11T23:47:34.6964558+01:00: Przygotowano pomiar kontrastu na faktycznych macierzach kamery i interpolowanym UV1 Half. Wyniki wymagają oględzin kolorowych masek. ADR poprawiony: próby filtracji nie usunęły drobnego wzoru przy krawężniku, nie deklarujemy naprawy.
 2026-11-11T23:47:55.2626807+01:00: zapisano artifacts/asphalt-r1/candidate2/Low-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-11T23:48:28.2526237+01:00: zapisano artifacts/asphalt-r1/candidate2/Low-clear. Następny krok: pozostałe serie lub porównanie wariantu.
+2026-11-11T23:49:14.8987958+01:00: zapisano artifacts/asphalt-r1/candidate2/High-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
