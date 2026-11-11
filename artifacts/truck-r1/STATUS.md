@@ -92,3 +92,4 @@ Krok 32: przygotowano końcowe zestawienie dopasowanych metryk przed/po, w tym D
 Kanoniczny truck zakończony poprawnie. Następny krok: dokończyć instalację i porównać migawkę wygenerowanych zasobów.
 Kanoniczny trailer zakończony poprawnie. Następny krok: dokończyć instalację i porównać migawkę wygenerowanych zasobów.
 Kanoniczny install zakończony poprawnie. Następny krok: dokończyć instalację i porównać migawkę wygenerowanych zasobów.
+Zapisano final-candidate Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
