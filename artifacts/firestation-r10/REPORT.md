@@ -12,3 +12,4 @@
 - Visual residuals: conifers still narrow/column-like vs7197, clearglass outside target, subtle runoff, coarsealpha-mip differences/device temporal unverified; no collectivequalityPASS.
 - Proof: round2/160PNGs,round2-sheets/,round2-roi/,round2-paint/,round2-thuja*/,actual-alpha-mips/,factory-reimport-durability.json; SELF-REVIEW.md.
 - ROOT final80Low/80High independent review in progress. No merge/push; source-cache+restore_cc0_inputs.py must accompany artifact copy to main.
+- Capture limitation: vehicle-relative frames have independently observed background/framing shifts; canonicalassetSHA equality does not prove scene-pose parity. Fixedhero cameras remain relevant; see VEHICLE-CAMERA-AUDIT.md. No whole160causal-isolation claim.
