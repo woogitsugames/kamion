@@ -11,7 +11,7 @@ namespace Game.World.Import
         const float Cell = 8f;
         // WORKING tolerances: paint is lifted6mm. Reject other road levels and discontinuous lane fields.
         const float HeightTolerance = .035f, OverlapTolerance = .02f, LinearTolerance = .025f;
-        struct Triangle { public Vector3 A,B,C; public Vector3 Lane; }
+        struct Triangle { public Vector3 A,B,C; public Vector3 Lane; public bool Known; }
         readonly List<Triangle> triangles = new List<Triangle>();
         readonly Dictionary<Vector2Int,List<int>> cells = new Dictionary<Vector2Int,List<int>>();
         public sealed class Stats { public int AcceptedComponents, RejectedComponents, ChangedVertices; public double AcceptedArea; }
@@ -21,12 +21,12 @@ namespace Game.World.Import
             if(road==null)return;
             foreach(var p in road.Primitives)
             {
-                if((p.Material!="road_asphalt"&&p.Material!="road_asphalt_new")||p.Uv1==null)continue;
+                if(p.Material!="road_asphalt"&&p.Material!="road_asphalt_new")continue;
                 for(int i=0;i<p.Indices.Length;i+=3)
                 {
                     int a=p.Indices[i],b=p.Indices[i+1],c=p.Indices[i+2];
-                    if(p.Uv1[a].x<-.5f||p.Uv1[b].x<-.5f||p.Uv1[c].x<-.5f)continue;
-                    var t=new Triangle{A=p.Positions[a],B=p.Positions[b],C=p.Positions[c],Lane=new Vector3(p.Uv1[a].x,p.Uv1[b].x,p.Uv1[c].x)};
+                    bool known=p.Uv1!=null&&p.Uv1[a].x>=-.5f&&p.Uv1[b].x>=-.5f&&p.Uv1[c].x>=-.5f;
+                    var t=new Triangle{A=p.Positions[a],B=p.Positions[b],C=p.Positions[c],Known=known,Lane=known?new Vector3(p.Uv1[a].x,p.Uv1[b].x,p.Uv1[c].x):Vector3.zero};
                     int index=triangles.Count;triangles.Add(t);
                     Vector3 min=Vector3.Min(t.A,Vector3.Min(t.B,t.C)),max=Vector3.Max(t.A,Vector3.Max(t.B,t.C));
                     for(int x=Mathf.FloorToInt(min.x/Cell);x<=Mathf.FloorToInt(max.x/Cell);x++)
@@ -47,6 +47,8 @@ namespace Game.World.Import
                 double det=(double)ab.x*ac.z-(double)ab.z*ac.x;if(Math.Abs(det)<1e-8)continue;
                 float b=(float)(((double)ap.x*ac.z-(double)ap.z*ac.x)/det),c=(float)(((double)ab.x*ap.z-(double)ab.z*ap.x)/det),a=1-b-c;
                 if(Mathf.Min(a,Mathf.Min(b,c))<-.0001f||Mathf.Abs(a*t.A.y+b*t.B.y+c*t.C.y-p.y)>HeightTolerance)continue;
+                // A coplanar no-data junction patch is an ambiguity blocker, never an invisible hole in the field.
+                if(!t.Known){lane=0;return false;}
                 float value=a*t.Lane.x+b*t.Lane.y+c*t.Lane.z;
                 lo=Mathf.Min(lo,value);hi=Mathf.Max(hi,value);lane+=value;count++;
             }

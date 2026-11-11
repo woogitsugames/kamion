@@ -41,6 +41,21 @@ namespace Game.Tests
         }
         [Test] public void AmbiguousOverlappingRoadFieldsAreRejected()
         {var p=Paint();Assert.That(Transfer(MakeNode(Road(),Road(.2f)),p,out var stats),Is.SameAs(p));Assert.That(Changed(stats),Is.Zero);}
+        [Test] public void CoplanarUnknownUvRoadBlocksKnownRibbon()
+        {
+            var unknown=Road();Primitive.GetField("Uv1").SetValue(unknown,null);var p=Paint();
+            Assert.That(Transfer(MakeNode(Road(),unknown),p,out var stats),Is.SameAs(p));Assert.That(Changed(stats),Is.Zero);
+        }
+        [Test] public void CoplanarSentinelRoadBlocksKnownRibbon()
+        {
+            var unknown=Road();Primitive.GetField("Uv1").SetValue(unknown,new[]{new Vector2(-1,5),new Vector2(-1,5),new Vector2(-1,5),new Vector2(-1,5)});var p=Paint();
+            Assert.That(Transfer(MakeNode(Road(),unknown),p,out var stats),Is.SameAs(p));Assert.That(Changed(stats),Is.Zero);
+        }
+        [Test] public void UnknownRoadOnOtherLevelDoesNotVetoSupportedGlyph()
+        {
+            var unknown=Road(height:2);Primitive.GetField("Uv1").SetValue(unknown,null);
+            Transfer(MakeNode(Road(),unknown),Paint(),out var stats);Assert.That(Changed(stats),Is.EqualTo(4));
+        }
         [Test] public void OtherRoadHeightCannotSupplyPaintLane()
         {var p=Paint();Assert.That(Transfer(MakeNode(Road(height:.2f)),p,out var stats),Is.SameAs(p));Assert.That(Changed(stats),Is.Zero);}
         [Test] public void LaneWrapDiscontinuityRejectsComponentInsteadOfInterpolatingAcrossReset()
