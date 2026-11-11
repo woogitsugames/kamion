@@ -2,6 +2,7 @@ $ErrorActionPreference='Stop'
 . "$PSScriptRoot/../../scripts/env.ps1"
 $material=Join-Path $RepoRoot 'game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_marking_white.mat'
 $before=(Get-FileHash -LiteralPath $material -Algorithm SHA256).Hash
+if(-not(Test-Path (Join-Path $RepoRoot 'artifacts/surface-wear-r1/qa-paint-narrow-cameras.json'))){throw 'Missing prepared narrow camera config; do not launch Unity'}
 foreach($tier in @('Low','High')) {foreach($light in @('clear','overcast')) {
  if((Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/PHONE_RUN') -or (Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/GPT_UNITY_HOLD')){throw 'Unity hold returned; explicitROOTrelease required'}
  $scene=if($tier-eq'High'){'WorldC_High'}else{'WorldC'}

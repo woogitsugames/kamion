@@ -1,0 +1,11 @@
+{
+  "result": "386 passed,1 xfailed",
+  "tests": 387,
+  "failures": 0,
+  "errors": 0,
+  "expected_failure_count": 1,
+  "duration_seconds": 511.28,
+  "final_raw192_and_cached2441_unchanged": true,
+  "source_commit": "52bb274c",
+  "command": "uv run --project tools/worldgen python -m pytest tests/gis -q --junitxml=artifacts/surface-wear-r1/gis-final.xml"
+}

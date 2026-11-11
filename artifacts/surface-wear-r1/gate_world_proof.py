@@ -54,6 +54,6 @@ def main():
     packet=dict(raw_count=192,unchanged_from_bus_only=190,changed=proof,bus_4_5_exact=True,all64instances_exact=True,
                 cached_bus_only_Generated_files_unchanged=len(cached['files']),cached_Generated_mismatches=mismatches,
                 gate=tracks,fab_ready=15,fab_props=320,fab_fallback=False,files=files,
-                note='Canonical CPU build only. Cached Unity scenes still bus-only for pending HighOV/narrow/gate BEFORE. New gate64tris per tier source groups0; no actual PNG/GPU PASS yet.')
+                note='Canonical CPU build only. Cached Unity scenes still bus-only for remaining narrow/gate BEFORE; all8bus AFTER complete. New gate64tris per tier source groups0; no actual PNG/GPU PASS yet.')
     (OUT/'gate-world-proof.json').write_text(json.dumps(packet,indent=2)+'\n');print(json.dumps({k:v for k,v in packet.items()if k not in('files','gate')}))
 if __name__=='__main__':main()
