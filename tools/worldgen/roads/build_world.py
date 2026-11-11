@@ -951,6 +951,8 @@ def qa_report(w, mk_report, mask):
             "crossings_p11": mk_report.get("crossings_p11", 0),
             "through_lines": mk_report.get("through_lines", {}),
             "painted_zones": mk_report.get("painted_zones", []),
+            "authored_paint": mk_report.get("authored_paint", []),          # ADR 0095
+            "paint_clear_tris": mk_report.get("paint_clear_tris", {}),
             "paint_erased_in_zones_tris": mk_report.get("paint_erased_in_zones_tris", 0),
             "crossings_skipped": mk_report.get("crossings_skipped", []),
             "crossings_in_junction": mk_report.get("crossings_in_junction", []),
