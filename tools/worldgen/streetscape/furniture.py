@@ -1333,12 +1333,20 @@ def _join_free_ends(queue, m):
         Ps = it["P"]
         if len(Ps) < GUARDRAIL_JOIN_BLEND + 4:
             continue
-        others = [l for j, l in enumerate(lines) if j != i]
-        if not others:
-            continue
-        allb = shapely.union_all(others)
         for end in (0, -1):
             pe = Point(Ps[end])
+            # rails at the same level only (a deck rail passes over a ground rail without meeting it)
+            others = []
+            for j, l in enumerate(lines):
+                if j == i or l.distance(pe) > GUARDRAIL_JOIN_M:
+                    continue
+                Pj = queue[j]["P"]
+                kj = int(np.argmin(np.hypot(Pj[:, 0] - Ps[end][0], Pj[:, 1] - Ps[end][1])))
+                if abs(float(queue[j]["Z"][kj]) - float(it["Z"][end])) < 1.0:
+                    others.append(l)
+            if not others:
+                continue
+            allb = shapely.union_all(others)
             d = allb.distance(pe)
             if not (0.3 < d <= GUARDRAIL_JOIN_M):
                 continue
