@@ -14,55 +14,76 @@
     74.779,
     141.187
    ],
-   "note": "ADR0102 authored close-up from baseline instance; fixed for before/after."
+   "note": "ADR0102 authored close-up from baseline instance; fixed for before/after.",
+   "seat": "file"
   },
   {
    "id": "furniture-old-steel",
    "type": "persp",
    "fov_deg": 50,
    "pos": [
-    28.408,
-    -472.929,
-    141.132
+    33.408,
+    -479.929,
+    143.93200000000002
    ],
    "look_at": [
     24.408,
     -467.929,
-    141.032
+    143.93200000000002
    ],
-   "note": "ADR0102 authored close-up from baseline instance; fixed for before/after."
+   "note": "ADR0102 authored close-up from baseline instance; fixed for before/after.",
+   "seat": "file"
   },
   {
    "id": "furniture-old-concrete",
    "type": "persp",
    "fov_deg": 50,
    "pos": [
-    360.883,
-    -557.258,
-    142.773
+    365.883,
+    -564.258,
+    145.573
    ],
    "look_at": [
     356.883,
     -552.258,
-    142.673
+    145.573
    ],
-   "note": "ADR0102 authored close-up from baseline instance; fixed for before/after."
+   "note": "ADR0102 authored close-up from baseline instance; fixed for before/after.",
+   "seat": "file"
   },
   {
    "id": "furniture-sign-back",
    "type": "persp",
    "fov_deg": 50,
    "pos": [
-    -268.472,
-    -238.02,
-    132.391
+    -269.2014396789257,
+    -235.32291884056175,
+    132.191
    ],
    "look_at": [
     -272.472,
     -233.02,
-    132.291
+    132.191
    ],
-   "note": "ADR0102 authored close-up from baseline instance; fixed for before/after."
+   "note": "ADR0102 authored close-up from baseline instance; fixed for before/after.",
+   "seat": "file"
+  },
+  {
+   "id": "furniture-fence",
+   "kind": "photo_match",
+   "seat": "file",
+   "fov_deg": 55,
+   "pos": [
+    24.614279025619833,
+    -575.0933116232131,
+    141.74030670634014
+   ],
+   "look_at": [
+    23.239999999990687,
+    -580.7600000000093,
+    140.88006408789198
+   ],
+   "note": "ADR0102 authored OSM fence 590134608; fixed A/B pose, NMT height WORKING_VALUE."
   }
  ]
 }

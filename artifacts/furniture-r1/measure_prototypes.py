@@ -27,6 +27,8 @@ for name,e,n,proto in [('footing-slope',-727.2,75.6,'lamp_'),('old-steel',24.4,-
     it=min(candidates,key=lambda x:(x['e']-e)**2+(x['n']-n)**2)
     e,n,z=it['e'],it['n'],it['z']
     high=3 if proto=='sign_post' else 1.6
-    cams.append(dict(id='furniture-'+name,type='persp',fov_deg=50,pos=[e+4,n-5,z+high],look_at=[e,n,z+high-0.1],note='ADR0102 authored close-up from baseline instance; fixed for before/after.'))
-Path('Data/Regions/bialystok-industrial-c/furniture_cameras.json').write_text(json.dumps({'cameras':cams},indent=1)+'\n')
+    cams.append(dict(id='furniture-'+name,type='persp',seat='file',fov_deg=50,pos=[e+4,n-5,z+high],look_at=[e,n,z+high-0.1],note='ADR0102 authored close-up from baseline instance; fixed for before/after.'))
+camera_file = Path('Data/Regions/bialystok-industrial-c/furniture_cameras.json')
+if not camera_file.exists():
+    camera_file.write_text(json.dumps({'cameras':cams},indent=1)+'\n')
 print(json.dumps(result,indent=1))

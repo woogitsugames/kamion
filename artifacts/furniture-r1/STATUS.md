@@ -13,3 +13,6 @@ NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1
 
 Regenerated baseline from 9e6e9fde; furniture source restored to branch HEAD.
 NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
+
+Regeneracja bazowego kodu zakończona 297.2 s; QA odtwarza 147 / 1.087 m. W logu brak fallback=True. Dodano stałą kamerę zwykłego ogrodzenia OSM 590134608; kamery mają seat=file, tył znaku wyznaczony z yaw. Import Unity czeka na PHONE_RUN.
+NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1
