@@ -29,3 +29,4 @@ Rendered before Low clear plus native mirror evidence. NEXT: continue matrix / i
 Rendered before High overcast plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/before
 Rendered before High clear plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/before
 Inspected all36 baseline frames + native High mirrors. Found TRAKT double horizontal flip: own vehicle at outer edges. Enabled art-only flip fix (graybox default retained), LOD0 backing recess, and separate entry/grain inspection cameras. NEXT COMMAND: pwsh -NoProfile -File artifacts/cab-r1/render-matrix.ps1 -Stage after
+Rendered after Low overcast plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/after
