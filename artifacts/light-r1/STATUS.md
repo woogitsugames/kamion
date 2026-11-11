@@ -101,3 +101,4 @@ Batch światła zakończony: artifacts/light-r1/cloud-photo-v2.json; log C:\User
 
 Krok 32: przygotowano odtworzony stan przed na tym samym świeżym świecie: clearcover=0, High RCAS=0 i dawny dither=1, whiteclip=1,2, filtr cienia Low. To kontrolowane A/B parametrów, nie historyczny render starej geometrii. 12 zadań / 160 PNG; źródłowych póz SBS nie zmieniono. Analiza zdjęć użyje poprawionego cloud-photo-v2. Następny krok: wykonać sbs-before.json i ukierunkowany EditMode LightPostPolicyTests.
 Batch światła zakończony: artifacts/light-r1/sbs-before.json; log C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-light\artifacts\light-r1\sbs-before.20261111-231641.log. Następny krok: obejrzeć PNG i policzyć metryki, nie deklarować PASS z samego kodu wyjścia.
+Ukierunkowane EditMode LightPostPolicyTests zakończone kodem 0. Następny krok: odczytać light-policy-test.log i ocenić obrazy.
