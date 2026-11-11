@@ -49,3 +49,22 @@ fresh editor baseline/candidate comparisons and cannot close the clean-build or 
 Fresh editor baseline, bounded fixes based on it, rebuilt candidate, inspected before/after PNGs, EditMode without
 new failures, Low stats and mirror configuration comparison, independent visual review and leader phone validation.
 No visual PASS or device-performance claim is made while those items remain open.
+
+## Prepared candidate (not yet enabled; await baseline Unity frames)
+
+The opaque housing is only 2.7–32.6 mm in front of blocked wide-glass samples. Removing just its flat cap in an
+ablation improves but does not solve the obstruction; rounded cap faces also intersect the adjusted glass.
+`MirrorHousingRecess` instead moves the existing inner-backing vertices to a plane 30 mm behind the nominal glass,
+with 6 mm clearance and a 1 µm rebuild tolerance. Outer bezel and rear cap stay. Recalculate only affected normals
+and orthogonalize their existing tangents. Topology, slots, UVs, colours and bounds stay unchanged. Depth/clearance
+are WORKING_VALUEs, not measured production-truck dimensions.
+
+Blender source study (opaque geometry + adjusted glass; 315 samples): High WideL 84.1→97.5%, WideR 74.9→88.3%,
+MainR 99.0→99.7%; MainL, Kerb, Front stay 100%. The remaining right obstruction includes the actual door/window
+channel. Clay/magenta before/after PNGs were inspected; they are visibility diagnostics, not game-material proof.
+
+Runtime ownership matters: `TruckVisualRig.InteriorLodFor` always selects LOD0; Low uses exterior LOD2 and LOD0
+mirror quads. With that actual geometry chain, WideL is already 97.5%, WideR 89.5%. Therefore the proposed fix is
+**exterior CAB_Body LOD0 only**, retaining Low/Medium geometry rather than changing a model that lacks the High defect.
+The candidate helper is currently unused. Its tests guard topology, UV/colour data, transformed mesh coordinates,
+immutable source, idempotence, outer bezel/back-cap and unrelated body positions. Unity execution remains pending.
