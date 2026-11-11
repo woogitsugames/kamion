@@ -19,7 +19,7 @@ function Run-Guarded([string]$Script, [hashtable]$Params) {
     }
 }
 switch ($Step) {
-    'Import' { Run-Guarded 'scripts/import-region.ps1' @{Region='bialystok-industrial-c'} }
+    'Import' { Run-Guarded 'artifacts/landmarks-r1/import-prepared.ps1' @{} }
     'EditMode' { Run-Guarded 'scripts/test.ps1' @{Platform='EditMode'} }
     'Capture' {
         foreach ($tier in @('Low','High')) {

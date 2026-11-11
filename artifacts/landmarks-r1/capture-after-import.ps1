@@ -1,11 +1,14 @@
 param([Parameter(Mandatory)][int]$ImportProcess)
 $ErrorActionPreference = 'Stop'
 Set-Location (Split-Path (Split-Path $PSScriptRoot))
-while ($p = Get-CimInstance Win32_Process -Filter "ProcessId=$ImportProcess") {
-    if ($p.CommandLine -notmatch 'artifacts[/\\]landmarks-r1[/\\]unity-step\.ps1\s+-Step\s+Import') {
-        throw 'Import process identity changed; no capture started'
-    }
-    Start-Sleep -Seconds 5
+$p = Get-Process -Id $ImportProcess -ErrorAction SilentlyContinue
+if ($p) {
+    if ($p.ProcessName -ne 'pwsh') { throw 'Unexpected import process type' }
+    # The PID is verified by the caller. Pin its handle instead of repeatedly
+    # querying WMI, which can cancel requests under concurrent Unity imports.
+    $null = $p.Handle
+    while (-not $p.HasExited) { Start-Sleep -Seconds 5 }
+    $p.Dispose()
 }
 $log = Get-Content "$PSScriptRoot/baseline-import-wrapper.log" -Raw
 if (-not $log.Contains('IMPORT_RESULT: OK') -or -not $log.Contains('released gpt-landmarks')) {

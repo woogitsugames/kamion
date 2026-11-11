@@ -37,3 +37,7 @@ NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-import-wrapper.lo
 
 Krok 12: slot gpt-landmarks przyznany, import Unity rozpoczęty 22:15:29. CC0 fetch: 13 zasobów, 65 plików, 0 problemów. Artifact-only próba gradientu hali: 15664 zmienione piksele atlasu 512, wszystkie piksele poza prostokątami okien hali identyczne. Obejrzano arkusz CPU; nie jest to dowód wyglądu Unity. Produkcja nadal bez zmian, baseline w toku.
 NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-capture-wrapper.log -Tail 10
+
+Krok 13: zastosowano pilną zmianę protokołu: każde ciężkie zadanie Python przez pulę heavy, maksymalnie 3, Owner równy bieżącej gałęzi. Pełny GIS wyłącznie na końcu rundy; w trakcie pojedyncze pliki. Nie działa żaden ciężki Python tej sesji. Dodano heavy-step.ps1 z Release w finally i limitem wątków bibliotek numerycznych. Nowe importy używają import-prepared.ps1, bez ukrytego automatycznego build_all poza pulą heavy. Skryptów współdzielonych nie zmieniano; heavy korzysta z aktualnej infrastruktury main przez ścieżkę bezwzględną.
+Import baseline OK: 64 kafle, Low 117,0 MB, High 259,1 MB łącznie z instancjami i kolizją. Slot zwolniony; pełny capture czeka na slot. Naprawiono warunkową kontynuację: uchwyt procesu zamiast powtarzanego WMI, które raz anulowało zapytanie. Syntax check trzech helperów OK.
+NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-capture-wrapper.log -Tail 12
