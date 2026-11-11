@@ -33,7 +33,7 @@ sheet = Image.new("RGB", (960, 520), "#202020")
 draw = ImageDraw.Draw(sheet)
 for i, variant in enumerate(VARIANTS[:3]):
     with Image.open(ROOT / SOURCE / variant / "r10_block_3.png") as im:
-        crop = im.convert("RGB").crop((1097, 73, 1389, 183))
+        crop = im.convert("RGB").crop((350, 40, 530, 130))  # reviewed cloud-free blue, not the bright solar aureole
     a = np.asarray(crop, dtype=float)
     stretched = np.uint8(np.clip((a-a.mean((0, 1)))*16+128, 0, 255))
     sheet.paste(crop, (i*320, 30))
@@ -44,6 +44,6 @@ sheet.save(ROOT / "photo-native-sky-banding.jpg", quality=97)
 (ROOT / "photo-metrics.json").write_text(json.dumps({"source_directory": SOURCE, "measurements": result}, indent=2), encoding="utf-8")
 for variant, cameras in result.items():
     for camera, rois in cameras.items():
-        for label in ("sky", "asphalt_near"):
+        for label in ("sky", "sky_clean_blue", "asphalt_near"):
             if label in rois:
                 print(variant, camera, label, "HF1.5", rois[label]["hf_rms_srgb_levels"]["1.5"])

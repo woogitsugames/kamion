@@ -10,7 +10,7 @@ from PIL import Image, ImageFilter
 
 ROIS = {
     'driver-andersa-to-putry': {'asphalt_near': (680, 500, 720, 550)},
-    'r10_block_3': {'sky': (600, 40, 760, 100), 'grey_gable': (1085, 150, 1180, 300),
+    'r10_block_3': {'sky': (600, 40, 760, 100), 'sky_clean_blue': (191, 22, 290, 71), 'grey_gable': (1085, 150, 1180, 300),
                     'grey_front': (480, 108, 570, 140), 'plinth': (1110, 328, 1220, 355)},
     'r10_block_4': {'sky': (700, 60, 800, 160), 'brick': (250, 80, 450, 280),
                     'peach': (1120, 110, 1180, 200)},
