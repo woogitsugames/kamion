@@ -113,3 +113,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T23:41:20.1803496+01:00: heavy focused after; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
 
 2026-11-11T23:49:57.9911695+01:00: heavy world after2; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-11T23:55:49.7584139+01:00: niezależny review wskazał regresję gęstych słupków. Oddzielono moduł nośny siatki (do2,5m, narożniki zachowane) od krótkich stopni desek. Siatka podąża za spadkiem między słupkami, dolna krawędź chowa się za deskami; druty UV zachowują poziom. Dodano zamknięte końce desek i test rozstawu na skarpie. Poprzedni test poziomego wierzchu z ADR0102 zmieniono na kontrolę wysokości nad gruntem, bo stary warunek wymuszał błędną proporcję. NASTĘPNY KROK: pojedyncze testy i build-after3 w heavy.

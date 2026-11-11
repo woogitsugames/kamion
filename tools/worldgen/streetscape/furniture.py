@@ -968,60 +968,85 @@ class PanelPlinthDetail:
 
 
 def panel_fence(lin, line, col, key, flexible=False):
-    """ADR0120: short stepped bays on grades, joints and a slight lateral mesh bow.
+    """ADR0120: standard support spacing, low stepped boards and grade-following mesh.
 
-    Maximum endpoint rise 0.25 m, maximum bay 2.5 m, lateral bow 12–25 mm
-    and board end clearance 8 mm are WORKING_VALUE, not surveyed dimensions.
-    Road barriers and shared Lin helpers keep their existing behaviour.
+    Splitting a board on a bank must not create another steel post. The continuous mesh is supported
+    at the original <=2.5 m stations; its lower edge sits behind the stepped concrete. Dimensions,
+    the occasional 12–25 mm bow and the 8 mm board joints are WORKING_VALUE.
     """
     P = [np.asarray(line.coords[0], float)]
-
-    def subdivide(a, b, depth=0):
-        q = np.array([a, (a + b) / 2, b])
-        z = lin.z(q)
-        if depth < 10 and (np.linalg.norm(b-a) > S.FENCE_PANEL_W + 1e-6 or np.ptp(z) > 0.25):
-            mid = (a + b) / 2
-            subdivide(a, mid, depth+1)
-            subdivide(mid, b, depth+1)
-        else:
-            P.append(b)
-
     for a, b in zip(np.asarray(line.coords)[:-1], np.asarray(line.coords)[1:]):
         count = max(1, int(math.ceil(np.linalg.norm(b-a) / S.FENCE_PANEL_W)))
-        for j in range(count):
-            subdivide(a + (b-a)*j/count, a + (b-a)*(j+1)/count)
+        P.extend(a + (b-a)*j/count for j in range(1, count+1))
     P = np.asarray(P)
     Z = lin.z(P)
-    bases = np.maximum(Z[:-1], Z[1:])
-    post_base = np.maximum(np.r_[bases[0], bases], np.r_[bases, bases[-1]])
-    for i, base in enumerate(bases):
-        ends = P[i:i + 2]
-        direction = ends[1] - ends[0]
+    for i, ends in enumerate(zip(P[:-1], P[1:])):
+        a, b = ends
+        direction = b-a
         length = np.linalg.norm(direction)
         if length < 1e-6:
             continue
         direction /= length
-        inset = min(0.008, length * 0.1)
-        board = ends + np.array([direction * inset, -direction * inset])
-        low = lin.z(board) - 0.2
-        top = np.full(2, base + S.FENCE_PLINTH_H)
-        phase = (_h(f"{key}:concrete:{i}") % 256) / 255
-        Lin(PanelPlinthDetail(lin, phase), lin.zsurf).slab("concrete_plinth", board, low, top, 0.05, key)
         lateral = np.array([-direction[1], direction[0]])
+        boards = [a]
+
+        def split(p, q, depth=0):
+            sample = np.array([p, (p+q)/2, q])
+            if depth < 10 and np.ptp(lin.z(sample)) > 0.25:
+                mid = (p+q)/2
+                split(p, mid, depth+1); split(mid, q, depth+1)
+            else:
+                boards.append(q)
+
+        split(a, b)
+        boards = np.asarray(boards)
+        ground = lin.z(boards)
+        levels = np.maximum(ground[:-1], ground[1:]) + S.FENCE_PLINTH_H
+        for j, level in enumerate(levels):
+            segment = boards[j:j+2]
+            inset = min(0.008, np.linalg.norm(segment[1]-segment[0])*.1)
+            board = segment + np.array([direction*inset, -direction*inset])
+            low = lin.z(board)-.2
+            top = np.full(2, level)
+            detail = PanelPlinthDetail(lin, (_h(f"{key}:concrete:{i}:{j}") % 256)/255)
+            Lin(detail, lin.zsurf).slab("concrete_plinth", board, low, top, .05, key)
+            # Closed prefab ends make the small joints readable without a new material.
+            for end in (0,1):
+                q = board[end]
+                v = np.array([[*(q-lateral*.025),low[end]], [*(q+lateral*.025),low[end]],
+                              [*(q+lateral*.025),level], [*(q-lateral*.025),level]])
+                triangles = [(0,1,2),(0,2,3)] if end else [(0,2,1),(0,3,2)]
+                detail.add("furniture", "concrete_plinth", v,
+                           np.array([[0,0],[.05,0],[.05,level-low[end]],[0,level-low[end]]]), triangles, src=key)
+
+        stations = np.linalg.norm(boards-a, axis=1)/length
+        bottom = np.r_[levels[0], np.minimum(levels[:-1], levels[1:]), levels[-1]]
         seed = _h(f"{key}:bay:{i}")
         bow = (0.012 + (seed % 14) * 0.001) * (1 if seed & 16 else -1)
-        # Flexible wire always sags; rigid panels mix intact bays and occasional local bows.
-        # A 1-in-4 distribution is WORKING_VALUE, not an inventory of every real panel.
-        deformed = flexible or seed % 4 == 0
-        if deformed:
-            Q = np.array([ends[0], ends.mean(axis=0) + lateral * bow, ends[1]])
-            bottom = np.full(3, base + S.FENCE_PLINTH_H)
-            sag = 0.045 if flexible else 0.0
-            upper = base + S.FENCE_H - np.array([0, sag, 0])
+        if flexible or seed % 4 == 0:
+            expanded = np.unique(np.r_[stations, .5])
+            bottom = np.interp(expanded, stations, bottom)
+            stations = expanded
+            offset = np.sin(stations*np.pi)*bow
         else:
-            Q, bottom, upper = ends, top, np.full(2, base + S.FENCE_H)
-        lin.ribbon(f"{col}_mesh", Q, bottom, upper, 0, key, both=True, collision="collision_fence")
-    lin.posts(col, P, None, 0.06, 0.04, S.FENCE_H + 0.05, zb=post_base, src=key, ground_feet=True)
+            offset = np.zeros(len(stations))
+        Q = a + (b-a)*stations[:,None] + lateral*offset[:,None]
+        upper = np.interp(stations, [0,1], Z[i:i+2]+S.FENCE_H)
+        if flexible:
+            upper -= np.sin(stations*np.pi)*.045
+        upper = np.maximum(upper, bottom+.4)
+        n = len(Q)
+        V = np.concatenate([np.column_stack([Q,bottom]), np.column_stack([Q,upper])])
+        s = np.r_[0,np.cumsum(np.linalg.norm(np.diff(Q,axis=0),axis=1))]
+        # Horizontal wires retain their physical height; the ground does not shear the texture grid.
+        UV = np.column_stack([np.tile(s,2),V[:,2]-math.floor(Z[i])])
+        T = np.array([(k,k+1,n+k+1) for k in range(n-1)]+[(k,n+k+1,n+k) for k in range(n-1)])
+        lin.buf.add("furniture",f"{col}_mesh",V,UV,T,src=key)
+        lin.buf.add("furniture",f"{col}_mesh",V,UV,T[:,[0,2,1]],src=key)
+        collision = V.copy()
+        collision[:n,2] = lin.z(Q)-.1
+        lin.buf.add("collision","collision_fence",collision,UV,np.concatenate([T,T[:,[0,2,1]]]),src=key)
+    lin.posts(col,P,None,.06,.04,S.FENCE_H+.05,zb=Z,src=key,ground_feet=True)
 
 
 def fences(lin, src, origin, roads_poly, report):

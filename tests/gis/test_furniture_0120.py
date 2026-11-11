@@ -77,6 +77,14 @@ def test_rigid_fence_has_a_mix_of_intact_and_bowed_bays():
     assert any(.01 <= w <= .03 for w in widths)
 
 
+def test_short_board_steps_do_not_multiply_the_structural_posts():
+    buf = Buffer()
+    F.panel_fence(F.Lin(buf,lambda e,n:.4*e),LineString([(0,0),(10,0)]),'fence_green','regular-posts')
+    posts = next(v for layer,mat,v,t in buf.parts if mat=='fence_green').reshape(-1,8,3)
+    assert len(posts) == 5
+    assert np.allclose(np.diff(posts[:,:,:2].mean(axis=1)[:,0]),2.5)
+
+
 @pytest.mark.parametrize('code', ['A-7', 'C-12', 'B-20', 'D-1', 'D-6'])
 def test_sign_back_and_folded_rim_never_wrap_the_wear_atlas(code):
     for mesh in P.plate(code)[:2]:
