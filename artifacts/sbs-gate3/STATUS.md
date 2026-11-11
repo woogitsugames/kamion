@@ -25,3 +25,6 @@ NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10
 
 Step 9: exposed rectified_horizon_y_fraction for direct calibration on rectified sheets, avoiding double application of the lens transform. Original horizon field remains reproducible. Focused tests 9/9 still pass; worktree otherwise clean, Unity still waits for PHONE_RUN.
 NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10
+
+Step 10: PHONE_RUN removed; guarded runner started EditMode at 11:55 local (log artifacts/logs/test-editmode-20261111-115503.log), then queued the 4-state camera matrix. No second Unity process for this project.
+NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 15
