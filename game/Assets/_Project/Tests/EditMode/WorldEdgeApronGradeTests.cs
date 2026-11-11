@@ -76,6 +76,12 @@ namespace Game.Tests.EditMode
                 Assert.AreEqual(2, apron.subMeshCount, "grass and asphalt; no new draw slot");
                 Assert.AreEqual(24, apron.GetTriangles(1).Length / 3,
                     "one continuation retains 12 asphalt quads");
+                var roadData = new List<Vector2>();
+                apron.GetUVs(1, roadData);
+                Assert.AreEqual(apron.vertexCount, roadData.Count, "explicit no-lane-data channel");
+                foreach (int index in apron.GetTriangles(1))
+                    Assert.AreEqual(new Vector2(-1f, 5f), roadData[index],
+                        "the full continuation must not receive the gutter-only wear layer");
 
                 // Raycast only the grass/shoulder submesh, not the asphalt being tested.
                 groundOnly.vertices = apron.vertices;

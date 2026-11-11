@@ -564,6 +564,9 @@ namespace Game.World.Import
             mesh.Clear();
             mesh.indexFormat = pos.Count > 65000 ? IndexFormat.UInt32 : IndexFormat.UInt16;
             mesh.SetVertices(pos); mesh.SetNormals(nrm); mesh.SetUVs(0, uv); mesh.SetColors(col);
+            // WorldPBR _ROADWEAR contract: (-1, 5) means no measured lane-wear data.
+            // Missing UV1 becomes (0, 0), incorrectly treating the entire continuation as a dirty gutter.
+            mesh.SetUVs(1, Enumerable.Repeat(new Vector2(-1f, 5f), pos.Count).ToList());
             mesh.subMeshCount = 2;
             mesh.SetTriangles(grass, 0); mesh.SetTriangles(asphalt, 1);
             mesh.RecalculateNormals();
