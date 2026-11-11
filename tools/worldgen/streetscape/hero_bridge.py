@@ -573,7 +573,7 @@ def _apply_underdeck(w, hero, instances=None):
     vegetation = 0
     # Reuse a Fab prototype already present in this region, never generate a
     # procedural shrub or introduce a new mesh/material family for this task.
-    if instances is not None and any(it["p"] == "fab_grass_clumps" for it in instances):
+    if hero["override"].get("add_grass", False) and instances is not None and any(it["p"] == "fab_grass_clumps" for it in instances):
         for j, (e, n, z) in enumerate(spec.get("self_seeded_grass", [])):
             instances.append({"p": "fab_grass_clumps", "e": e, "n": n, "z": z,
                               "yaw": _r((j * 2.399963 + .73) % (2 * math.pi), 4),

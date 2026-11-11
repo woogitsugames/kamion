@@ -36,3 +36,6 @@
 - PHONE_RUN zwolniony ~11:54; baseline Unity zakończony: 20 PNG (5 kamer × Low/High × clear/overcast). Obejrzano before-low-sheet.jpg: ujęcia pod konstrukcją czytelne, oryginalny kadr przyczółka zasłania ekran akustyczny.
 - Import r3 do Unity w toku; po EditMode kolejka scout-detail.ps1 dobierze dodatkowy kadr przyczółka bez zmiany par before/after.
 - NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/validate-after.log -Tail 10; Get-Content artifacts/viaduct-r10/import.log -Tail 10
+- Unity import PASS i 20 PNG after gotowe (r3 z 8 dodatkowymi kępami). SceneStats wykrył Low +1 draw w dk8-abutment i g3b-rondo-putry-approach; konstrukcja ma nadal 0 nowych grup GLB. Dodatkowe kępy Fab wyłączone (add_grass=false), istniejąca roślinność pozostaje.
+- Korekta zmienia tylko instancje, nie GLB konstrukcji. Pełny GIS uruchomiony ponownie; jego fixture regeneruje świat i sprawdza deterministyczny eksport. Wymagany ponowny import i after po tym przebiegu.
+- NASTĘPNY KROK: uv run --project tools/worldgen python -m pytest tests/gis -q

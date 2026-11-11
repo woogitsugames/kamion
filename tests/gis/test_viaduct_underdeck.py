@@ -85,16 +85,27 @@ def test_chamfered_column_faces_point_outwards():
 
 def test_vegetation_uses_only_an_existing_megascans_prototype():
     w, hero = fixture()
+    hero["override"]["add_grass"] = True
     hero["spec"]["self_seeded_grass"] = [[0., 7., 3.]]
     instances = []
     H._apply_underdeck(w, hero, instances)
     assert instances == [], "no procedural substitute when the Fab prototype is unavailable"
     w, hero = fixture()
+    hero["override"]["add_grass"] = True
     hero["spec"]["self_seeded_grass"] = [[0., 7., 3.]]
     instances = [dict(p="fab_grass_clumps")]
     H._apply_underdeck(w, hero, instances)
     assert len(instances) == 2
     assert instances[1]["p"] == "fab_grass_clumps" and instances[1]["z"] == 3.
+
+
+def test_low_draw_budget_disables_additional_grass():
+    w, hero = fixture()
+    assert hero['override']['add_grass'] is False
+    hero['spec']['self_seeded_grass'] = [[0., 7., 3.]]
+    instances = [dict(p='fab_grass_clumps')]
+    H._apply_underdeck(w, hero, instances)
+    assert len(instances) == 1
 
 
 def test_generated_specs_have_grounded_stair_flights_and_unchanged_decks():
