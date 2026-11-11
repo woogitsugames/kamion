@@ -1021,10 +1021,8 @@ def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str,
                     ht = _crown_height_wave(P[:, 0] + ri * 17.3, P[:, 1] - ri * 11.7, h_base * 1.08, half) * end_taper
                     sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0)
 
-    # 3. Dark interior canopy fill tucked 10 m inside, split into <= 320 m cells so
-    #    triangle fans never bridge concave bays or road corridors. Keep its rim near
-    #    the cap, not at ground level: ground-to-apex fans read as repeated pyramids
-    #    from elevated views. Crown curtains still own the external silhouette.
+    # 3. Sloping dark conifer/mixed under-canopy mound tucked 10 m inside, split into <= 320 m convex-ish cells so
+    #    triangle fans never bridge concave bays or road corridors
     inset = poly_eff.buffer(-10.0)
     if inset.is_empty:
         return
@@ -1058,11 +1056,9 @@ def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str,
             b = ring[(i + 1) % m]
             za = elev.z_at_eff(a[0], a[1])
             zb = elev.z_at_eff(b[0], b[1])
-            # WORKING_VALUE: shallow fill 20% below the internal apex, hidden behind
-            # the substantially taller tree crowns; same vertices/triangles/material.
-            pa_cap = [a[0], a[1], za + h_cap * 0.8]
-            pb_cap = [b[0], b[1], zb + h_cap * 0.8]
-            sec.add_tri0(pa_cap, pb_cap, p_apex, col_top, normal=[0.0, 0.0, 1.0])
+            pa_bot = [a[0], a[1], za - 0.4]
+            pb_bot = [b[0], b[1], zb - 0.4]
+            sec.add_tri0(pa_bot, pb_bot, p_apex, col_top, normal=[0.0, 0.0, 1.0])
 
 
 def _wall_visible_from_tile(a: np.ndarray, c: np.ndarray, half: float = 1024.0) -> bool:

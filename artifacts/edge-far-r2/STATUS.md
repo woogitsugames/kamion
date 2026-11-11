@@ -54,3 +54,6 @@
 - Second-round 40m skyline shows inherited ground-to-apex triangle fans as repeated dark pyramids. Testing a shallow internal canopy fill with rim at 0.8*h_cap (WORKING_VALUE), same triangle/vertex/material count; external crown curtains unchanged.
 - Prototype first shell did not rebuild due Windows PowerShell execution policy; that capture is invalid for the experiment. Re-running under project-supported pwsh with terminating errors and explicit successful rebuild before render (test-cap.ps1).
 - NEXT: Get-Content artifacts/edge-far-r2/test-cap.log -Tail 20; inspect cap-prototype/Low-clear/edge-pietrasze-skyline.png before accepting/rejecting variant.
+- Shallow-canopy experiment REJECTED after inspecting cap-prototype-pair.jpg: introduced broad flat green surfaces without resolving the visible layered cards. Restored exact previously validated far_field.py from c05e8f06; no candidate canopy change retained.
+- Skyline diagnostic demonstrates horizon closure but exposes inherited aerial/card limitations. It is not a driver-eye quality claim; core corrected road views and budgets remain validated.
+- NEXT: pwsh artifacts/edge-far-r2/run-skyline.ps1 -ResumeAfter to regenerate/rebuild restored final geometry and complete four skyline after views.
