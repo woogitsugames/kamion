@@ -68,8 +68,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 2.1968,
         "north_delta_m": -7.9288,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-3970163613102941",
@@ -132,8 +140,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 3.2243,
         "north_delta_m": -8.3676,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-149248627179406",
@@ -196,8 +212,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 1.3733,
         "north_delta_m": -7.3135,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-1406533339711789",
@@ -262,8 +286,16 @@
         "north_delta_m": 0.774,
         "absolute_u_m": 147.5188,
         "eye_height_m": 1.7,
-        "heading_source": "original"
-      }
+        "heading_source": "original",
+        "pose_confidence": "C",
+        "pose_reason": "J1: heading mismatch and sunset",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J1: heading mismatch and sunset",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure"
     },
     {
       "camera": "sbs-g3-a-177786140912399",
@@ -326,8 +358,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 0.3569,
         "north_delta_m": -4.8093,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-178689077481862",
@@ -390,8 +430,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 0.2,
         "north_delta_m": -3.8026,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-223210302566110",
@@ -455,8 +503,16 @@
         "east_delta_m": 1.0208,
         "north_delta_m": -1.668,
         "absolute_u_m": 147.5288,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure"
     },
     {
       "camera": "sbs-g3-a-309664504075286",
@@ -520,8 +576,16 @@
         "east_delta_m": -0.1508,
         "north_delta_m": -1.3252,
         "absolute_u_m": 147.5342,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure"
     },
     {
       "camera": "sbs-g3-a-504348097385466",
@@ -584,8 +648,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 0.7796,
         "north_delta_m": -6.5794,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-201270605169291",
@@ -648,8 +720,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 4.3238,
         "north_delta_m": -8.1843,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-2948595898752384",
@@ -713,8 +793,16 @@
         "east_delta_m": -16.4111,
         "north_delta_m": 5.7643,
         "absolute_u_m": 147.2755,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J3: horizon requires vanishing-line calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J3: horizon requires vanishing-line calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-1398898753813071",
@@ -777,8 +865,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 5.6334,
         "north_delta_m": -7.6717,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-320326319617139",
@@ -841,8 +937,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 9.559,
         "north_delta_m": -5.7517,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-482392746429891",
@@ -905,8 +1009,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 13.6031,
         "north_delta_m": -5.4959,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-454716650857984",
@@ -970,8 +1082,16 @@
         "east_delta_m": -3.3013,
         "north_delta_m": -3.0228,
         "absolute_u_m": 146.6139,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-500263111404933",
@@ -1034,8 +1154,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 14.7423,
         "north_delta_m": -4.9266,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-1259231227807789",
@@ -1098,8 +1226,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": -1.741,
         "north_delta_m": -1.0108,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-751431972202262",
@@ -1162,8 +1298,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": -24.6678,
         "north_delta_m": 7.1709,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-303305168125936",
@@ -1227,8 +1371,16 @@
         "east_delta_m": 2.0585,
         "north_delta_m": -14.6877,
         "absolute_u_m": 144.2164,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-a-320215796381417",
@@ -1292,8 +1444,16 @@
         "east_delta_m": 3.8099,
         "north_delta_m": -20.3367,
         "absolute_u_m": 145.4629,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-381800493259507",
@@ -1353,8 +1513,16 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.65,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
-      }
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure"
     },
     {
       "camera": "sbs-g3-b-2279538078845158",
@@ -1414,8 +1582,16 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.57,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
-      }
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure"
     },
     {
       "camera": "sbs-g3-b-837235577143499",
@@ -1475,8 +1651,16 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.57,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
-      }
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure"
     },
     {
       "camera": "sbs-g3-b-3281350541967811",
@@ -1536,8 +1720,16 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.68,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
-      }
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-275528677534382",
@@ -1597,8 +1789,16 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.58,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
-      }
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure"
     },
     {
       "camera": "sbs-g3-b-150280503737744",
@@ -1658,8 +1858,16 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.62,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
-      }
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-297817221966185",
@@ -1719,8 +1927,16 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.68,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
-      }
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-3678296072299092",
@@ -1780,8 +1996,16 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.58,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
-      }
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure"
     },
     {
       "camera": "sbs-g3-b-962702164479831",
@@ -1844,8 +2068,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 0.2086,
         "north_delta_m": 0.0954,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J1: heading mismatch 35-40 degrees",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J1: heading mismatch 35-40 degrees",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-1528935774382039",
@@ -1905,8 +2137,16 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.66,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
-      }
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-810896133189484",
@@ -1969,8 +2209,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 0.2351,
         "north_delta_m": 0.4265,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J1: camera intersects acoustic screen",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J1: camera intersects acoustic screen",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-810525063224609",
@@ -2033,8 +2281,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": -9.5335,
         "north_delta_m": 1.3964,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-326454015490067",
@@ -2094,8 +2350,16 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.65,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
-      }
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "C",
+        "pose_reason": "J1: horizon/pitch mismatch",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J1: horizon/pitch mismatch",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-209622370971977",
@@ -2158,8 +2422,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": -4.7521,
         "north_delta_m": 4.6617,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-339463879238809",
@@ -2219,8 +2491,16 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.63,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
-      }
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "C",
+        "pose_reason": "J1: lateral offset from photographed lane",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J1: lateral offset from photographed lane",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-468026894483428",
@@ -2283,8 +2563,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": -1.5773,
         "north_delta_m": -5.5378,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-4312632558767412",
@@ -2347,8 +2635,16 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": -0.7042,
         "north_delta_m": -8.5967,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-494288258686575",
@@ -2410,8 +2706,16 @@
         "pose_status": "WORKING_VALUE",
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R2: photo visibly on Putry deck. Existing generated bridge road asphalt vertical ray at stored EN hits absolute U 140.188m (artifacts/sbs-gate3/deck-ray-heights.json), add nominal eye 1.7m; keep computed GPS because original GPS is outside deck asphalt. Camera only; WORKING_VALUE eye, no world modification.",
         "absolute_u_m": 141.888,
-        "eye_height_m": 1.7
-      }
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-182011943700132",
@@ -2471,8 +2775,16 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.62,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
-      }
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "C",
+        "pose_reason": "J1: heading mismatch 30-40 degrees",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "C",
+      "pose_reason": "J1: heading mismatch 30-40 degrees",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     },
     {
       "camera": "sbs-g3-b-1801374876712141",
@@ -2532,8 +2844,16 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.62,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
-      }
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      },
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
     }
   ]
 }

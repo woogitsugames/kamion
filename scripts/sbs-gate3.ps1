@@ -3,6 +3,7 @@ param(
     [string[]]$Tiers = @('Low', 'High'),
     [string[]]$Lighting = @('overcast', 'clear'),
     [switch]$EditMode,
+    [string]$SlotOwner = 'gpt-sbs',
     [switch]$ComposeOnly
 )
 $ErrorActionPreference = 'Stop'
@@ -25,11 +26,12 @@ function Restore-UnitySideEffects {
 Push-Location $taskRoot
 try {
     if ($EditMode -and !$ComposeOnly) {
-        Wait-Phone
+        & pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Owner $SlotOwner
+        if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
         try {
             & pwsh -NoProfile -File scripts/test.ps1 -Platform EditMode
             if ($LASTEXITCODE -ne 0) { throw 'EditMode failed; inspect artifacts/tests and artifacts/logs.' }
-        } finally { Restore-UnitySideEffects }
+        } finally { Restore-UnitySideEffects; & pwsh -NoProfile -File scripts/unity-slot.ps1 -Release -Owner $SlotOwner }
     }
     foreach ($tier in $Tiers) {
         if ($tier -notin @('Low','Medium','High','Ultra')) { throw "Invalid tier: $tier" }
@@ -43,13 +45,14 @@ try {
                     $width = 1280
                     $height = [int]($width * $first.height / $first.width)
                     $ids = ($group.Group.camera -join ',')
-                    Wait-Phone
+                    & pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Owner $SlotOwner
+                    if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
                     try {
                         & pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene WorldC -Tier $tier -Lighting $light -Width $width -Height $height -Gate3 $cameraFile -Cameras $ids -OutputDir $renderDir
                         if ($LASTEXITCODE -ne 0) { throw "Render failed: $tier $light $($group.Name)" }
                         # visual-qa stats.txt is overwritten per invocation; preserve every aspect group.
                         Copy-Item -LiteralPath (Join-Path $renderDir 'stats.txt') -Destination (Join-Path $renderDir "stats-$($group.Name).txt")
-                    } finally { Restore-UnitySideEffects }
+                    } finally { Restore-UnitySideEffects; & pwsh -NoProfile -File scripts/unity-slot.ps1 -Release -Owner $SlotOwner }
                 }
             }
             & uv run --project tools/refs python tools/refs/sbs_gate3.py compose --renders $renderDir --output (Join-Path $output "sheets/$tier-$light")

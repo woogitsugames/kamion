@@ -222,9 +222,12 @@ def prepare(count=20, radius=40):
                 focal,_,_=rectify(photo,lens,comparison)
             ov = overrides.get(camera_id, {})
             allowed = {'east_delta_m','north_delta_m','eye_height_m','absolute_u_m','heading_delta_deg',
-                       'horizontal_fov_deg','horizon_y_fraction','rectified_horizon_y_fraction','heading_source','pose_status','note','masks'}
+                       'horizontal_fov_deg','horizon_y_fraction','rectified_horizon_y_fraction','heading_source','pose_status','note','masks','pose_confidence','pose_reason','photometric_use','photometric_reason'}
             if set(ov)-allowed:
                 raise ValueError(f"unknown authored corrections for {camera_id}: {sorted(set(ov)-allowed)}")
+            confidence = ov.get('pose_confidence', 'C')
+            if confidence not in ('A','B','C'):
+                raise ValueError(f'invalid pose_confidence: {camera_id}')
             e = x-origin['x'] + ov.get('east_delta_m', 0)
             n = y-origin['y'] + ov.get('north_delta_m', 0)
             eye = ov.get('eye_height_m', 2.2)
@@ -246,6 +249,7 @@ def prepare(count=20, radius=40):
             cameras.append({'id': camera_id, 'kind': 'photo_match', 'seat': 'file', 'type': 'persp',
                             'pos': [round(e,4),round(n,4),round(u,4)], 'look_at': pose(e,n,u,heading,pitch),
                             'fov_deg': round(fov,5), 'segment': segment['id'],
+                            'pose_confidence': confidence, 'pose_reason': ov.get('pose_reason','Unreviewed pose'),
                             'note': 'ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json'})
             refs.append({'camera': camera_id, 'segment': segment['id'], 'photo': photo.relative_to(ROOT).as_posix(),
                          'source_id': r['id'], 'page_url': r['page_url'], 'author': r['author'],
@@ -258,6 +262,10 @@ def prepare(count=20, radius=40):
                          'heading_original_deg':r['compass_angle'],
                          'segment_station_m': round(station,3), 'horizon_y_fraction': horizon,
                          'pose_status': ov.get('pose_status','WORKING_VALUE'),
+                         'pose_confidence': confidence, 'pose_reason': ov.get('pose_reason','Unreviewed pose'),
+                         'photometric_use': ov.get('photometric_use', False),
+                         'photometric_reason': ov.get('photometric_reason','Photometry not reviewed'),
+                         'photo_vs_data_age': 'pre-2020: historical reference; data epoch UNVERIFIED' if int(str(r['captured_at'])[:4]) < 2020 else 'data epoch UNVERIFIED',
                          'assumptions': ('NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.' if lens else 'NMT bare earth; eye/FOV/pitch WORKING_VALUE. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.'),
                          'authored_overrides': ov})
     write(REGION / 'sbs_cameras.json', {'schema': 'kamion/sbs-cameras/1', 'frame': 'E,N,absolute U', 'cameras': cameras})
@@ -340,12 +348,16 @@ def measurements(im, horizon, authored_masks=None):
             'mask_method':method}
 
 
-def compose(render_dir, outdir, strict=True):
+def compose(render_dir, outdir, strict=True, include_rejected=False):
     refs=read(REGION/'sbs_references.json')['references']
     outdir.mkdir(parents=True,exist_ok=True)
     metrics=[]
     missing=[]
+    rejected=[]
     for r in refs:
+        if r.get('pose_confidence','C') == 'C' and not include_rejected:
+            rejected.append({'camera':r['camera'], 'reason':r.get('pose_reason','Unreviewed pose')})
+            continue
         render=render_dir/(r['camera']+'.png')
         if not render.exists():
             missing.append(r['camera']); continue
@@ -358,7 +370,8 @@ def compose(render_dir, outdir, strict=True):
                 raise ValueError(f"aspect mismatch: {r['camera']}; render at photo aspect ratio")
             left,right=src.convert('RGB'),dst.convert('RGB')
         masks=r.get('authored_overrides',{}).get('masks',{})
-        m={'camera':r['camera'],'pose_status':r['pose_status'], 'photo_sha256':r.get('sha256'),
+        m={'camera':r['camera'],'pose_status':r['pose_status'],
+           'pose_confidence':r.get('pose_confidence','C'), 'photometric_use':r.get('photometric_use',False), 'photo_sha256':r.get('sha256'),
            'render_sha256':hashlib.sha256(render.read_bytes()).hexdigest(), 'comparison_sha256':r.get('comparison_sha256'),
            'photo':measurements(left,r['horizon_y_fraction'],masks.get('photo')),
            'render':measurements(right,r['horizon_y_fraction'],masks.get('render'))}
@@ -369,7 +382,7 @@ def compose(render_dir, outdir, strict=True):
         height=round(470*r['height']/r['width'])
         sheet=Image.new('RGB',(960,height+190),'#202020')
         d=ImageDraw.Draw(sheet)
-        d.text((8,4),r['camera']+' | '+r['pose_status'],fill='white')
+        d.text((8,4),r['camera']+' | '+r.get('pose_confidence','C')+' | '+r['pose_status'],fill='white')
         for x,im,label in [(0,left,'PHOTO'),(490,right,'RENDER')]:
             sheet.paste(im.resize((470,height)),(x,24))
             for fraction in (0.25,0.5,0.75):
@@ -388,7 +401,7 @@ def compose(render_dir, outdir, strict=True):
             d.line(points,fill=color,width=2)
         d.text((24,height+99),'sRGB luma histogram: blue PHOTO / orange RENDER (32 bins, normalized)',fill='white')
         save_png(sheet,outdir/(r['camera']+'.png'))
-    write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'gate_status':'UNVERIFIED',
+    write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'rejected_poses':rejected,'gate_status':'UNVERIFIED',
           'cameras_sha256':hashlib.sha256((REGION/'sbs_cameras.json').read_bytes()).hexdigest()
               if (REGION/'sbs_cameras.json').exists() else None})
     print(f'Composed {len(metrics)} pairs; missing {len(missing)} renders.')
@@ -401,11 +414,11 @@ def main():
     sub=ap.add_subparsers(dest='command',required=True)
     p=sub.add_parser('prepare'); p.add_argument('--count-per-segment',type=int,default=20)
     sub.add_parser('fetch-intrinsics')
-    p=sub.add_parser('compose'); p.add_argument('--renders',type=Path,required=True); p.add_argument('--output',type=Path,required=True)
+    p=sub.add_parser('compose'); p.add_argument('--renders',type=Path,required=True); p.add_argument('--output',type=Path,required=True); p.add_argument('--include-rejected',action='store_true')
     args=ap.parse_args()
     if args.command=='prepare': prepare(args.count_per_segment)
     elif args.command=='fetch-intrinsics': fetch_intrinsics()
-    else: compose(args.renders,args.output)
+    else: compose(args.renders,args.output,include_rejected=args.include_rejected)
 
 
 if __name__=='__main__':
