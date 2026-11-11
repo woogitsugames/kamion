@@ -47,3 +47,9 @@ Produkcja odczytała 36971 wysokości z 31 GML, bez duplikatów i konfliktów. W
 Pełny build_world zakończył się po 459,9 s, bez fallback=True. Far-field Low: 24508 → 24500 trójkątów; High: 118524 → 118524. Import edge potwierdził te liczby i nie zmienił 35 kontynuacji ani 36 zamknięć dróg. Uboczne metadane dróg, props, wiaduktu i streetscape odtworzono; w world_manifest zachowano wyłącznie aktualizację własnego far-field. Test parsera po sprawdzeniu rzeczywistej jednostki meter: 15/15; pojedynczy far-field: 5/5; EditMode: 267/267, bez pominięć.
 
 Macierz po zmianie obejmuje kolejne 364 PNG. W obejrzanym edge-south High clear zmieniła się wysokość hali w panoramie; na wschodzie efekt jest subtelny. Nie ogłaszamy zamknięcia jakości fotograficznej miasta. Weryfikacja wszystkich kamer Low i końcowy GIS pozostają do dopisania po zakończeniu ich zadań.
+
+### Budżet i dalsza diagnostyka r2
+
+Compare zakończyło 364 porównania kamer. Wszystkie 182 Low mają deltę sumy drawsEst statycznych i instancji równą 0; delta zaokrąglonej sumy trójkątów wynosi od −1k do 0k. To estymaty edytora, bez pomiaru GPU telefonu. Zapisano 100 par zdjęcie–render dla 25 pozy B; 17 C wykluczono z oceny fotograficznej. W obejrzanej dziennej parze 150280503737744 kominy i tło nadal nie uzasadniają ogólnego PASS jakości. Pozy B pozostają przybliżone, fotometria UNVERIFIED.
+
+Kontrola SHA obu siatek apron i zamknięć potwierdza zgodność bajt w bajt z bazą r2. Diagnostyka na potrzeby r3 porównała 5676 punktów modelu Python z trójkątami Unity. Python minus Unity: od −0,3726 do +1,4267 m, p95 wartości bezwzględnej 0,1717 m; 40 punktów przekracza +0,8 m. Największe różnice są przy północno-zachodnim narożniku. To pomiar rozbieżności modeli, nie dowód widocznego szwu ani liczba wiszących budynków. R2 nie zmienia podłoża ani ustawień mgły; r3 sprawdzi źródło różnicy i obraz.

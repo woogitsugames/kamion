@@ -56,3 +56,6 @@ Następny krok: wynik Compare oczekującego w heavy; później pełny GIS na zam
 Krok 20: przygotowano niewykonywany jeszcze audyt przejścia podłoża dla następnej rundy: porówna model wysokości Python z rzeczywistymi trójkątami zapisanej siatki apron, z wyłączeniem poboczy. Nie zmienia kodu produkcyjnego ani mgły i nie zakłada z góry widocznego szwu. Uruchomienie dopiero pod heavy, sekwencyjnie po Compare.
 Następny krok bieżącej rundy: Compare, a przy końcu rundy audyt diagnostyczny i pełny GIS w slocie heavy.
 Krok 21: Compare zakończone: 364 pary kamer, 182 Low bez naruszeń budżetu; 100 par fotograficznych B, 17 referencji C wykluczonych. Diagnostyka podłoża zakończyła się kodem 0 (audit-ground.log); nie zmienia geometrii. Następna komenda w tym samym heavy: uv run --project tools/worldgen python -m pytest tests/gis -q, na koniec rundy.
+Krok 23: wszystkie 182 Low mają dokładnie deltę draws 0 oraz zaokrąglonych tris od −1k do 0k. SHA apron i zamknięć identyczne z bazą. Obejrzano finalną parę B 150280503737744 i las Low-overcast; zgodność całej panoramy nadal częściowa. ADR zawiera te ograniczenia.
+Diagnostyka r3: 5676 punktów, różnica Python−Unity −0,3726…+1,4267 m, p95 abs 0,1717 m; 40 punktów >0,8 m, skupienie przy narożniku NW. Pełny GIS trwa (80%); nie zmieniamy produkcji r2.
+Następny krok: wynik GIS, REPORT i kopia artifacts do main, następnie r3.
