@@ -81,3 +81,4 @@ Zapisano osiem próbnych kamer wariantu B Low overcast. Następny krok: obejrze�
 Próba B obejrzana: zachowany detal, łaty żółtozielone. Grass-only Low overcast std bloków 3,614 -> 5,170 (18 bloków), bez uznawania samej liczby za realizm. Rondo: poprawiony berberys bez widocznego płaskiego rdzenia. Następny krok: pełna macierz B i porównania ze zdjęciami.
 Zapisano after WorldC Low overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Zapisano after WorldC Low clear. Następny krok: obejrzenie arkuszy i porównanie statystyk.
+Zapisano after WorldC_High High overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
