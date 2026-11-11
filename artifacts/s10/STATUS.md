@@ -12,10 +12,10 @@ and this coordination worktree start at 4f7da66c.
 | Stream | Agent | Branch / worktree | Status | State |
 |---|---|---|---|---|
 | A 0086 tint gamma | fab_processor | gpt-tint-gamma | artifacts/tint-gamma-r1/STATUS.md | contract PASS; calibration FAIL, leader ADR0101; docs1317afba |
-| B 0088 vegetation | tree_surfaces | gpt-vegetation-r2 | artifacts/vegetation-r2/STATUS.md | visual bounded PASS; final GIS/EditMode running |
+| B 0088 vegetation | tree_surfaces | gpt-vegetation-r2 | artifacts/vegetation-r2/STATUS.md | GIS364/2xfail; root owns EditMode retry after test assertion fix |
 | C 0098 light/post | world_integration | gpt-light-r12 | artifacts/light-r12/STATUS.md | COMPLETE clean5db77e9d; visual PASS; EditMode221/221 |
 | D 0099 surface wear | pending | gpt-surface-wear | artifacts/surface-wear-r1/STATUS.md | dependency satisfied by 471438fb; after G/E |
-| E 0090 fire station r7 | pending | gpt-firestation-r7 | artifacts/firestation-r10/STATUS.md | queued after G |
+| E 0090 fire station r7 | tree_surfaces | gpt-firestation-r7 | artifacts/firestation-r10/STATUS.md | CPU preparation from main901c427f; Unity held |
 | F 0087 truck paint | fab_processor | gpt-truck-paint | artifacts/truck-paint-r1/STATUS.md | running merged db1432c5: locked102frames, GPUlight Infinityproof |
 | G 0089 car paint | world_integration | gpt-car-paint | artifacts/car-paint-r1/STATUS.md | starting fresh main after C |
 
@@ -155,3 +155,19 @@ All6boxwood/elderberry activeLOD GLBs match originalsourcecache;6/37world
 instances present. Shape/sourcepreservation verified, no newmesh/driverlightclaim.
 RootconditionalREVIEW.md copiedtoB; finalGIS~78percent, EditModequeued.
 NEXT COMMAND: read B finalGIS completion and canonicalfixture EditModeXML, finalizeREVIEW thenEdispatch.
+
+## Step12 - B validation handoff, E started, phone-rerun race held
+B source frozen at9070b252, sourceauthor reused for E on main901c427f. Root
+owns residual B validation. GIS364passed/2xfail676.87s and192raw/JSON unchanged.
+The old queued B wrapper actually completed10:44:47 with218tests/212passed/6
+failed exactColor assertions in newpolicycases. Root fixed test atf37499de to
+compare Unity-stored pre-policy Color to post-policy readback exactly; production
+unchanged. Retrypending, not DoD complete.
+PHONE_RUN toggled between leader phone reruns. B Unity start10:43:49 and F
+start~10:48 entered temporaryabsent windows; phone lock recreatedduringrun.
+F TruckBuild completedOK; B testsfailed onlyasabove. Both exited, noactiveown
+Unity. Rootcreated artifacts/locks/GPT_UNITY_HOLD; all F/G/E launchers nowcheck
+bothguards and await explicitrelease, CPU workcontinues. B oldrunner finished,
+no hidden automaticlaunch remains. Phone measurements overlapping those windows
+need leader review/repetition; root didnotuseADB or touchthephone.
+NEXT COMMAND: `Test-Path C:/Users/matma/Documents/Claude/kamion/artifacts/locks/PHONE_RUN`; read leader phone completion evidence before releasing; rerun B EditMode once, then finalize report/copy.
