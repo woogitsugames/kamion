@@ -1,0 +1,47 @@
+{
+  "method": "Only env*Fc+direct removed from actualshader; pigmentroughness/coatattenuation/newmappednormal unchanged. Difference is display-output effect ofcoat, not physicalBRDFmeasurement. Coherentcrown OFF/ON changesdiffuse+coat andisNOTthisisolatedeffect.",
+  "rows": [
+    {
+      "condition": "Low-overcast",
+      "door": {
+        "on_p50": 55.46290196078431,
+        "off_p50": 54.23137254901961,
+        "meanDisplayDelta_points": 1.2830316275116858,
+        "onProfileRange": 3.319628482972135,
+        "offProfileRange": 2.2111950464396273,
+        "onP99P50": 1.5686274509803937,
+        "offP99P50": 0.755999999999986
+      },
+      "roof": {
+        "on_p50": 78.20486274509804,
+        "off_p50": 74.28329411764705,
+        "meanDisplayDelta_points": 3.4634039915966377,
+        "onProfileRange": 20.692652941176476,
+        "offProfileRange": 17.3936931372549,
+        "onP99P50": 14.168894901960769,
+        "offP99P50": 13.361647058823522
+      }
+    },
+    {
+      "condition": "High-overcast",
+      "door": {
+        "on_p50": 54.70690196078431,
+        "off_p50": 52.97152941176469,
+        "meanDisplayDelta_points": 1.6635254052085235,
+        "onProfileRange": 2.7740268317853563,
+        "offProfileRange": 1.5241775025799953,
+        "onP99P50": 1.3169411764705927,
+        "offP99P50": 0.6892509803921669
+      },
+      "roof": {
+        "on_p50": 81.34211764705881,
+        "off_p50": 76.1638431372549,
+        "meanDisplayDelta_points": 4.216395658263305,
+        "onProfileRange": 27.91173725490198,
+        "offProfileRange": 25.600414705882343,
+        "onP99P50": 15.63408313725489,
+        "offP99P50": 19.268705882352933
+      }
+    }
+  ]
+}

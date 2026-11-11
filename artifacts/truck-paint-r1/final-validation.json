@@ -1,0 +1,927 @@
+{
+  "sourceValidatedSha": "9a29204d8ac3e55358c63b5d1f0fd0e8cd2ad828",
+  "branch": "gpt-truck-paint",
+  "lockedInput": "db1432c5",
+  "finalCanonicalTruckTrailerInstall": "PASS",
+  "finalLampGpu": "finiteactualdecode16/8/5.6/5/0 atExposure.0001",
+  "GIS": {
+    "passed": 370,
+    "xfailed": 1,
+    "repeatNotNeeded": "No Python generator/product changes after successful fullGIS; onlyshader/C#Editor tagging changes. Coordinator explicitlyapproved no repeat unless newPython/failure."
+  },
+  "EditMode": {
+    "total": 238,
+    "passed": 238,
+    "failed": 0,
+    "skipped": 0,
+    "lampActualGpuStateTests": 6,
+    "doorActualGpuFixtureTransformTests": 6
+  },
+  "finalImages": 102,
+  "focusedCoatRadianceOffImages": 2,
+  "rawWorld192SHA": "PASS",
+  "sourceAssets217Unchanged": true,
+  "productionSHA256": {
+    "game/Assets/_Project/Rendering/Shaders/TruckExterior.shader": "fa3658e89829d54fdec903b5b374d4ade6287af22566ae9c1fe0d3051af60822",
+    "game/Assets/_Project/Rendering/Shaders/TruckGlass.shader": "dcb541d29a7301dea3b2a22095e37f16cf1a740e6f1c6bc876dbd625e6244055",
+    "game/Assets/_Project/Rendering/Shaders/KamionVehicleEnv.hlsl": "3e577eb75434db2e6407c1c1fb7e5eb708e28e05a6b6cb4837fd09006398cf3c",
+    "game/Assets/_Project/Vehicle/Runtime/TruckLights.cs": "6a8b88fa5cec16b7eb2512bb16fbf8e260693f69b551bc1d6282bfbce5a2e39d",
+    "game/Assets/_Project/Editor/Setup/TruckAssetBuilder.cs": "cb7536b664e6933580c75d636ade56accb70c933b48aeb00fc7372e96c3b9ee6",
+    "game/Assets/_Project/Editor/Setup/TrailerAssetBuilder.cs": "2b97620399464141838604abf5d83fee677ad3525b80c7a81591c02e25b9e960",
+    "game/Assets/_Project/Rendering/Runtime/Truck/VehicleReflectionCapture.cs": "6bd1556429881f52d6901851737da767aa5a3af759134e0245b895bfa1317926"
+  },
+  "visualStatus": "PARTIAL OWNER QUALITY / FAIL thresholds retained, no new scoped regression perindependentroot review",
+  "drawTriangleClaims": "All102VisualQaRunner before-SRPestimates/instancedcounterrows identical; NOT actualGPUtiming/calls",
+  "actualGpuMathCost": "UNVERIFIED",
+  "AndroidTiming": "UNVERIFIED",
+  "newGeometryMaterialTextureKeywordVarying": "none",
+  "runtimeReservedRenderingLayerBit": "10/0x400, actualdoorsall3LODs, defaultlightbit0 kept",
+  "sourceAssetRows": [
+    {
+      "file": "art-source/truck/exterior/export/fit_check.json",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/SM_TruckExterior_LOD0.fbx",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/SM_TruckExterior_LOD1.fbx",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/SM_TruckExterior_LOD2.fbx",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Decal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Lights_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Lights_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Lights_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Lights_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Lights_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Metal_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Metal_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Metal_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Metal_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Metal_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Paint_BaseMap_dark.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Paint_BaseMap_white.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Paint_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Paint_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Paint_MaskMap_dark.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Paint_MaskMap_white.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Paint_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Trim_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Trim_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Trim_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Trim_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/High/T_Ext_Trim_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Decal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Lights_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Lights_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Lights_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Lights_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Lights_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Metal_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Metal_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Metal_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Metal_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Metal_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Paint_BaseMap_dark.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Paint_BaseMap_white.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Paint_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Paint_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Paint_MaskMap_dark.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Paint_MaskMap_white.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Paint_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Trim_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Trim_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Trim_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Trim_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Low/T_Ext_Trim_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Decal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Lights_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Lights_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Lights_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Lights_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Lights_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Metal_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Metal_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Metal_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Metal_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Metal_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Paint_BaseMap_dark.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Paint_BaseMap_white.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Paint_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Paint_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Paint_MaskMap_dark.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Paint_MaskMap_white.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Paint_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Trim_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Trim_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Trim_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Trim_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/textures/Medium/T_Ext_Trim_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/exterior/export/truck_exterior_manifest.json",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/cab_interior_manifest.json",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/SM_CabInterior_LOD0.fbx",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/SM_CabInterior_LOD1.fbx",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/SM_CabInterior_LOD2.fbx",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Displays/T_Display_cluster.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Displays/T_Display_din.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Displays/T_Display_infotainment.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_AO_LOD0.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_AO_LOD1.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_AO_LOD2.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_Decal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_Fabric_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_Fabric_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_GlassGrime.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_Leather_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_Leather_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_Metal_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_Metal_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_Plastic_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_Plastic_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_Rubber_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/High/T_Cab_Rubber_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_AO_LOD0.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_AO_LOD1.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_AO_LOD2.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_Decal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_Fabric_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_Fabric_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_GlassGrime.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_Leather_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_Leather_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_Metal_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_Metal_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_Plastic_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_Plastic_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_Rubber_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Low/T_Cab_Rubber_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_AO_LOD0.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_AO_LOD1.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_AO_LOD2.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_Decal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_Fabric_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_Fabric_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_GlassGrime.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_Leather_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_Leather_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_Metal_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_Metal_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_Plastic_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_Plastic_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_Rubber_Detail.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/interior/export/textures/Medium/T_Cab_Rubber_Normal.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/SM_Trailer_LOD0.fbx",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/SM_Trailer_LOD1.fbx",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/SM_Trailer_LOD2.fbx",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Curtain_BaseMap_granat.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Curtain_BaseMap_szary.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Curtain_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Curtain_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Curtain_MaskMap_granat.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Curtain_MaskMap_szary.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Curtain_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Lights_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Lights_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Lights_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Lights_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Lights_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Metal_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Metal_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Metal_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Metal_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Metal_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Paint_BaseMap_granat.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Paint_BaseMap_szary.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Paint_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Paint_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Paint_MaskMap_granat.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Paint_MaskMap_szary.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Paint_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Trim_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Trim_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Trim_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Trim_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/High/T_Trl_Trim_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Curtain_BaseMap_granat.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Curtain_BaseMap_szary.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Curtain_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Curtain_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Curtain_MaskMap_granat.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Curtain_MaskMap_szary.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Curtain_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Lights_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Lights_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Lights_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Lights_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Lights_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Metal_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Metal_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Metal_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Metal_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Metal_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Paint_BaseMap_granat.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Paint_BaseMap_szary.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Paint_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Paint_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Paint_MaskMap_granat.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Paint_MaskMap_szary.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Paint_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Trim_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Trim_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Trim_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Trim_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Low/T_Trl_Trim_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Curtain_BaseMap_granat.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Curtain_BaseMap_szary.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Curtain_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Curtain_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Curtain_MaskMap_granat.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Curtain_MaskMap_szary.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Curtain_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Lights_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Lights_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Lights_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Lights_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Lights_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Metal_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Metal_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Metal_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Metal_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Metal_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Paint_BaseMap_granat.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Paint_BaseMap_szary.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Paint_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Paint_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Paint_MaskMap_granat.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Paint_MaskMap_szary.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Paint_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Trim_BaseMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Trim_C.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Trim_M.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Trim_MaskMap.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/textures/Medium/T_Trl_Trim_N.png",
+      "unchanged": true
+    },
+    {
+      "file": "art-source/truck/trailer/export/trailer_manifest.json",
+      "unchanged": true
+    }
+  ],
+  "canonicalProductionShaderBindingsRestored": {
+    "game/Assets/_Generated/Truck/Materials/High/MI_Ext_Paint.mat": true,
+    "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_Paint.mat": true,
+    "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_Paint.mat": true,
+    "game/Assets/_Generated/Truck/Materials/High/MI_Ext_Glass.mat": true,
+    "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_Glass.mat": true,
+    "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_Glass.mat": true,
+    "game/Assets/_Generated/Truck/Materials/High/MI_Ext_DoorGlassL.mat": true,
+    "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_DoorGlassL.mat": true,
+    "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_DoorGlassL.mat": true,
+    "game/Assets/_Generated/Truck/Materials/High/MI_Ext_DoorGlassR.mat": true,
+    "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_DoorGlassR.mat": true,
+    "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_DoorGlassR.mat": true,
+    "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Glass.mat": true,
+    "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Glass.mat": true,
+    "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Glass.mat": true
+  },
+  "productionShaderMatchesFinalGpuReadback": true
+}

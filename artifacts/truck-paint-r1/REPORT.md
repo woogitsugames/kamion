@@ -1,17 +1,19 @@
-PARTIAL OWNER QUALITY: physical fixes/improvements; owner thresholds still FAIL. Final validation pending PHONE_RUN.
-Branch: gpt-truck-paint; source checkpoint370b58cb; locked world/material inputdb1432c5, no newer C/A0101 mix.
-ADR0087: finite16x1RGBAHalf lamp encoding1000nits/unit, float scale*exposure decode; authored nits remain WORKING_VALUE.
-Actual GPU: DRL160/high80/night56/50/off0 encoded, exposed decode16/8/5.6/5/0 finite; no new texture/pass.
-Capture: real scene/physical radiance with actual-global finally restore; box angular mip approximation, GGX fallback/F0 unchanged.
-Paint: legacy stored.78/.785/.78 ->GPU.57048/.57871/.57048 times_CMap; preserved, not measured physical albedo.
-Fixed generic3.6mm crown (<1deg) onlyactualdoor/all3LOD; coherentdiffuse+coat, geometry/pigment/F0/roughness unchanged.
-Door ON: overcastLow3.32/High2.73 FAIL; clear5.21/6.69 PASS; lowsun3.23 FAIL/6.04 PASS (required4-10points).
-Glass owner median/sigma remainFAIL in several conditions; real nearT~.745/F~.082, correctnear/far flags, no extra overlay.
-Near-radianceOFF OVsd10.43/7.83 vsreal5.92/5.33: additivebody/reflection cutsdisplaycontrast; no arbitraryT/clutter boost.
-High-clear roof range2.63 FAIL on lockedC0; C shoulder integration separate. No blanket appearance PASS.
-Tests: GIS370passed/1xfail,4234inputsunchanged; realURPcrownGPU6/6. Final fullEditMode/lamp6/full102 pending.
-Proof:0mesh/FBX/161pose deltas; selecteddraw/trisestimate rows unchanged. ActualGPUmathcost/Android timing UNVERIFIED.
-PNG: candidate3-off-on-960 all6conditions; crown-pipeline-mask-preview.png; native-registration-gate.jpg.
-References: provenanced Commons DAF/Volvo via docs/REFERENCES.md; qualitative shape only, no measured BRDF/depth.
-Conflicts: reservedrenderingbit10/0x400 DOORsemantic keepslightbit0; TruckExterior/Glass, builder, capture, lights. No main merge/push/phone.
-Open: final canonicalTruck/Trailer/Install+102+2OVcoat-radianceOFF+fullEditMode; independent finalrootreview; C/A0101 integrationfollowup.
+PARTIAL OWNER QUALITY: bounded physical fixes/improvements; owner appearance thresholds still FAIL.
+Branch gpt-truck-paint; validated source9a29204d (later commits docs/artifacts only); locked inputdb1432c5, C/A0101 separate.
+Finite16x1RGBAHalf lamps:1000nits/unit, float scale*exposure decode; authored nits WORKING_VALUE, no new texture/pass.
+ActualGPU encoded160/80/56/50/0 ->exposed16/8/5.6/5/0 finite; day/night/on-off behaviour confirmed.
+Capture: real scene/radiance look-off contract+finallyrestore; angular boxmip approximation, existingGGX fallback/F0 retained.
+Paint legacy stored.78/.785/.78 ->GPU.57048/.57871/.57048 times_CMap preserved; not measured physical albedo.
+Coat orangePeel.012->.004 WORKING; nominalroughness.08/F0.04/basepigment unchanged. No arbitraryreflectance gain.
+Fixed3.6mm/<1deg genericcrown onlyactualdoor/all3LOD; coherentdiffuse+coat; geometry/base roughness/pigment unchanged.
+Finaldoor: OVLow3.32/High2.77 FAIL; clear5.21/6.67 PASS; lowsun3.23 FAIL/6.11 PASS (required4-10points).
+Glassmedian/sigma stillFAIL severalconditions; actualnearT~.745/F~.082 andcorrectnear/far flags, no extraoverlay.
+Near-radianceOFF OVsd10.43/7.83 vsreal5.92/5.33: additivebody/reflection cutsdisplaycontrast; noT/clutterboost.
+High-clearroof2.59 FAIL onlockedC0; separate Cshoulder integration. IsolatedcoatOVdoor mean+1.28/+1.66displaypoints.
+Validation: canonicalTruck/Trailer/Install+102matchedframes+2coatOFF; EditMode238/238/0skip incl6lamp+6crownGPU; GIS370/1xfail.
+Proof:192rawSHA valid,217sourceassets unchanged,0mesh/FBX/161pose deltas; all102estimate/counterrows unchanged.
+Budget: rows are before-SRPestimates, notGPUcalls; actualnewshaderGPUmathcost/Androidtiming UNVERIFIED.
+PNG candidate3-final-960/all6conditions; truecrownOFFON candidate3-off-on-960; independentREVIEW.md retainsqualityFAIL.
+References: provenancedCommonsDAF/Volvo via docs/REFERENCES.md, qualitativeonly; originalbaselinefixture immutable.
+Conflicts: reservedrenderingbit10/0x400DOORsemantic keepslightbit0; TruckExterior/Glass,builder,capture,lights. No mainmerge/push/phone.
+Open: unmetownerthresholds andjointC/A0101 integrationreview; no evidence-backedfurtheramplitude/T/clutter tuning.
