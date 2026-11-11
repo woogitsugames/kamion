@@ -38,3 +38,4 @@ Obejrzano i zatwierdzono stały wielokąt grass-only [(0.835,0.71),(0.98,0.83),(
 Następne żądania slotów sprawdzają dostępność co 10 s (limity globalne i brak kasowania cudzych slotów bez zmian), aby nie przeoczać krótkich przerw między renderami. Aktualne stare oczekiwanie trwa dalej; nie przerwano go ani nie zmieniono cudzych procesów. Następny krok: pozostałe before.
 Zapisano before WorldC Low clear. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Kolejka naturalnie uzyskała slot dla następnego wariantu before; nie zatrzymano żadnego procesu ani nie usunięto slotu. Dodano tryb render-matrix.ps1 -Resume: pomija wyłącznie warianty z VISUALQA_RESULT OK oraz zgodną liczbą PNG i obecnym stats.txt. Następny krok: koniec pozostałych wariantów before, potem render-photos before.
+Zapisano before WorldC_High High overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
