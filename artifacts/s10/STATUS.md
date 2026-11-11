@@ -732,3 +732,9 @@ cars-r10/m3/High-overcast/sheet_far.jpg: a four-view contact sheet, not a camera
 G tasked to recover its actual source views instead of treating it as missingID.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/artifacts/integration-s10/run5.log -Tail 10
 D first release after whole segmentB/END and PHONEabsence; G remains held too.
+Step 64: REPORT refreshed with D final388GIS and G inactive81LOD CPU proof.
+Corrected cumulative raw denominator: bus+gate change4/192 from pristine (188
+unchanged);190unchanged belongs EACH isolated two-file step, not cumulative.
+Sheet_far recovered at G7f09c3f2: black20/grey20/blue20/black45; last occluded.
+Run5 G3A completed57/57 EXIT0; full G3B/END still pending.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/artifacts/integration-s10/run5.log -Tail 10
