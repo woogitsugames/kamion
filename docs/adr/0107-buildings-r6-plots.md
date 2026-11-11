@@ -42,7 +42,7 @@ Rozpoznanie:
    - plan: domy bliżej niż 2,5 m = jedna działka (dom + garaż, bliźniak, szeregowiec); prostokąt w układzie domu,
      front = kierunek z najbliższą drogą, linia ogrodzenia 1 m od śladu drogi (2–9 m przed domem), boki 3–6 m,
      tył 7–15 m; kurczony co 1 m, aż ominie drogi, duże budynki, place, wcześniejsze działki i **istniejące ogrodzenia
-     OSM/BDOT** (te stają się granicą; przęsło równoległe do istniejącego płotu w odległości < 1,6 m nie powstaje);
+     OSM/BDOT** (te stają się granicą; przęsło równoległe do istniejącego płotu w odległości < 2,5 m (±25°) nie powstaje);
    - typologia (WORKING_VALUE, do sprawdzenia ze zdjęciami właściciela): front — panel na podmurówce (antracyt /
      zielony), sztachety drewniane, siatka (zielona / ocynk), płyty betonowe; boki i tył — głównie siatka; jeden typ
      frontu i jeden boków na działkę;
@@ -80,7 +80,7 @@ OTWARTE_TBD
   `furniture.py`. Możliwe konflikty tekstowe: `streetscape/stage.py` (moje wstawki: import `plots`, blok „house plots”
   przed „# vegetation”, `lawn_mask` po `ground_masks`) i `streetscape/props.py` (`build_all`: 2 linie na końcu).
   Konflikt merytoryczny: jeśli GPT zbuduje ogrodzenia uliczne wzdłuż posesji, `plots.build` powinien dostać ich linie
-  jako `barriers` (dziś czyta tylko OSM/BDOT) — wtedy przęsła równoległe znikną same (reguła 1,6 m).
+  jako `barriers` (dziś czyta tylko OSM/BDOT) — wtedy przęsła równoległe znikną same (reguła 2,5 m).
 - `tools/worldgen/streetscape/materials.py`: blok na końcu pliku (po bloku 0097) — konflikt, gdy inna gałąź też dopisze
   na końcu albo zmieni `balcony_slab` / `roof_tiles_*`.
 - `WorldPBR.shader`: wstawka między `float2 ur = …` a `half k = _RunoffStrength…` w bloku `_RUNOFF`.

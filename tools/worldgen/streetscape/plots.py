@@ -45,7 +45,8 @@ ROAD_SEARCH_M = 45.0
 ROAD_CLEAR_M = 1.0            # fence line off the road footprint (carriageway + pavement + verge), m
 MIN_MARGIN_M = 1.5            # a side is never pulled closer to the house than this
 MIN_AREA_RATIO = 1.8          # plot area / footprint area below which no plot is built
-PARALLEL_SKIP_M = 1.6         # a bay this close to (and parallel with) an existing fence is not built
+PARALLEL_SKIP_M = 2.5         # a bay this close to (and within ~25 deg of) an existing fence is not built (r1: 1.6 m /
+                              # 20 deg left V-shaped double fences between neighbours whose houses are turned 10-25 deg)
 BIG_BUILDING_M2 = 80.0        # non-house buildings above this are obstacles; smaller ones are outbuildings of the plot
 FENCE_H = {"mesh": 1.5, "panel": 1.5, "picket": 1.2, "concrete": 1.5}       # m (house fences; 2.03 m is industrial)
 BAY_M = {"mesh": 2.5, "panel": 2.5, "picket": 2.5, "concrete": 2.0}
@@ -140,7 +141,7 @@ class _Near:
         L2 = np.maximum((ab * ab).sum(1), 1e-9)
         k = np.clip(((m - self.A) * ab).sum(1) / L2, 0.0, 1.0)
         d = np.hypot(*(self.A + ab * k[:, None] - m).T)
-        par = np.abs(ab @ t) / np.sqrt(L2) > 0.94
+        par = np.abs(ab @ t) / np.sqrt(L2) > 0.90
         return bool(np.any((d < r) & par))
 
 
