@@ -34,7 +34,6 @@ function Restore-UnitySideEffects {
     & git -C $taskRoot restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
 }
 function Save-EvidenceInputs {
-    # A single byte-exact input epoch is required for every requested state.
     $sourceMap=[ordered]@{
         'sbs_cameras.json'=$cameraFile
         'sbs_references.json'=(Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_references.json')
@@ -42,35 +41,51 @@ function Save-EvidenceInputs {
         'materials_spec.json'=(Join-Path $taskRoot 'art-source/world/materials/materials_spec.json')
     }
     $expected=@{'sbs_cameras.json'='cameras_sha256';'sbs_references.json'='references_sha256';'world_manifest.json'='world_manifest_sha256';'materials_spec.json'='materials_spec_sha256'}
-    $captureRows=@()
+    $captureRows=@();$metricRows=@()
     foreach($tier in $Tiers){foreach($light in $Lighting){
         $files=@(Get-ChildItem -LiteralPath (Join-Path $output "renders/$tier-$light") -Filter 'capture-*.json')
         if(!$files.Count){throw 'Cannot snapshot evidence without render captures'}
         foreach($file in $files){$captureRows+=Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json}
+        $metricRows+=Get-Content -LiteralPath (Join-Path $output "sheets/$tier-$light/metrics.json") -Raw | ConvertFrom-Json
+        if($IncludeDiagnostics){$metricRows+=Get-Content -LiteralPath (Join-Path $output "diagnostics/$tier-$light/metrics.json") -Raw | ConvertFrom-Json}
     }}
-    foreach($key in $sourceMap.Keys){
-        $actual=(Get-FileHash -LiteralPath $sourceMap[$key] -Algorithm SHA256).Hash.ToLowerInvariant()
-        foreach($capture in $captureRows){
-            if($capture.status -ne 'OK' -or $capture.($expected[$key]) -ne $actual){throw "Cannot snapshot mixed or stale evidence: $key"}
-        }
-    }
     if(@($captureRows.git_sha | Select-Object -Unique).Count -ne 1){throw 'Cannot snapshot mixed code epochs'}
     foreach($name in @('sbs_authored_overrides.json','sbs_extra_references.json','sbs_intrinsics.json','sbs_landmarks.json','sbs_photometry.json','sbs_recognition.json')){
         $source=Join-Path $taskRoot ('Data/Regions/bialystok-industrial-c/'+$name)
         if(Test-Path -LiteralPath $source){$sourceMap[$name]=$source}
     }
     if($Photometry){$sourceMap['sbs_photometry.json']=[IO.Path]::GetFullPath($Photometry,$taskRoot)}
-    $snapshot=Join-Path $output 'inputs'
-    New-Item -ItemType Directory -Force $snapshot | Out-Null
-    foreach($existing in Get-ChildItem -LiteralPath $snapshot -Force){
-        if($existing.PSIsContainer -or $existing.Name -notin $sourceMap.Keys){throw 'Snapshot contains obsolete inputs; use a fresh OutputRoot'}
-    }
-    foreach($key in $sourceMap.Keys){Copy-Item -LiteralPath $sourceMap[$key] -Destination (Join-Path $snapshot $key)}
+    $nonce=[Guid]::NewGuid().ToString('N')
+    $staging=Join-Path $output ('.inputs-'+$nonce)
+    New-Item -ItemType Directory -Force $staging | Out-Null
+    foreach($key in $sourceMap.Keys){Copy-Item -LiteralPath $sourceMap[$key] -Destination (Join-Path $staging $key)}
+    # Validate copied bytes, never a source reread before Copy-Item.
     foreach($key in $expected.Keys){
-        $copied=(Get-FileHash -LiteralPath (Join-Path $snapshot $key) -Algorithm SHA256).Hash.ToLowerInvariant()
-        foreach($capture in $captureRows){if($capture.($expected[$key]) -ne $copied){throw "Snapshot changed while copying: $key"}}
+        $copied=(Get-FileHash -LiteralPath (Join-Path $staging $key) -Algorithm SHA256).Hash.ToLowerInvariant()
+        foreach($capture in $captureRows){
+            if($capture.status -ne 'OK' -or $capture.($expected[$key]) -ne $copied){throw "Snapshot differs from captures: $key"}
+        }
     }
-    Compress-Archive -LiteralPath @($sourceMap.Keys | ForEach-Object {Join-Path $snapshot $_}) -DestinationPath (Join-Path $output 'inputs.zip') -Force
+    foreach($binding in @(@('sbs_photometry.json','photometry_sha256'),@('sbs_landmarks.json','landmarks_sha256'))){
+        $file=Join-Path $staging $binding[0]
+        $copied=if(Test-Path -LiteralPath $file){(Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()}else{$null}
+        foreach($metric in $metricRows){if($metric.($binding[1]) -ne $copied){throw "Snapshot annotations differ from composed metrics: $($binding[0])"}}
+    }
+    $stagingZip=Join-Path $output ('.inputs-'+$nonce+'.zip')
+    Compress-Archive -LiteralPath @($sourceMap.Keys | ForEach-Object {Join-Path $staging $_}) -DestinationPath $stagingZip
+    $snapshot=Join-Path $output 'inputs'
+    # All directory moves stay inside the explicitly owned OutputRoot; preserve prior inputs.
+    $archive=Join-Path $output ('inputs-history/'+$nonce)
+    $outputPrefix=[IO.Path]::GetFullPath($output).TrimEnd([IO.Path]::DirectorySeparatorChar)+[IO.Path]::DirectorySeparatorChar
+    foreach($path in @($staging,$snapshot,$archive)){
+        if(![IO.Path]::GetFullPath($path).StartsWith($outputPrefix,[StringComparison]::OrdinalIgnoreCase)){throw 'Snapshot move outside OutputRoot'}
+    }
+    if(Test-Path -LiteralPath $snapshot){
+        New-Item -ItemType Directory -Force (Split-Path $archive -Parent) | Out-Null
+        Move-Item -LiteralPath $snapshot -Destination $archive
+    }
+    Move-Item -LiteralPath $staging -Destination $snapshot
+    Move-Item -LiteralPath $stagingZip -Destination (Join-Path $output 'inputs.zip') -Force
 }
 Push-Location $taskRoot
 try {

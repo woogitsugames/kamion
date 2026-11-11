@@ -37,3 +37,6 @@ Skrypt SBS po ukończeniu żądanych stanów sprawdza wspólny commit i zgodnoś
 
 ## Integralność migawki
 Parser PowerShell potwierdził składnię wrappera. Dodano ponowne sprawdzanie SHA skopiowanych bajtów oraz odrzucanie nieoczekiwanych starych plików w inputs. Zapis do ponownie użytego katalogu nie może po cichu zostawić usuniętej adnotacji z poprzedniego przebiegu. Próba całościowa pozostaje przed nami.
+
+## Powiązanie adnotacji z kompozycją
+Migawka powstaje teraz w nowym katalogu tymczasowym. Weryfikowane są skopiowane bajty oraz SHA fotometrii i punktów względem metryk wszystkich żądanych stanów, również diagnostycznych. Dopiero po tych kontrolach powstaje ZIP i publikowane są inputs. Poprzedni katalog jest zachowywany w inputs-history, a każda ścieżka przeniesienia jest sprawdzana jako leżąca wewnątrz własnego OutputRoot. Parser PowerShell przechodzi.
