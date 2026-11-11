@@ -53,3 +53,6 @@
 
 - Krok9: świat po zbudowany i obie sceny zaimportowane; bez fallback=True. NASTĘPNY KROK: visual-qa WorldC/WorldC_High overcast z identycznymi kamerami DK8/Andersa/Putry i fence.
 
+
+- Krok10: obejrzano5Lowovercast i3LODgalerię. DK8Low p10/p50 18,64/31,15→32,72/43,36; <16 5,43%→0. Andersa p50 67,50→69,29,Putry63,99→72,20. Wszystkie5Low+5High draws bez zmiany; DK8tris169k→161k/443k→435k. Beżowa obwódka fence1/2 usunięta, trawa nadal wymaga porównania pełnej macierzy. NASTĘPNY KROK: `pwsh artifacts/vegetation-r2/after59.ps1` i końcowa236PNG+pełneGIS+EditMode.
+
