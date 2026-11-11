@@ -854,3 +854,16 @@ missingUV-.035/-.033LSB); fresh/P8exactLow. All16runtime/counters and protected
 to verify actualbranch/positiveR before finalreject/costdecision, no newvariant.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
 Then select1dc shipping source/final93x4+EditMode if probevalid andstillweak.
+
+Step 76: D final372/240EditMode complete. ROOTLow186 (16pages+4fullpairs) and
+EHigh1865e81e1b6 (16pages+10fullpairs) reviewed. Combined scopednonregression
+PASS/appearancePARTIAL. Root372SHA/stats independentlychecked:356trisKdelta0,
+16delta+1, othercounters0; EditMode240xmlsha f2d9e789...33ac2e23. CurrentGIS
+gis-gate-r2.xml388/1xfail, old386summary explicitlyhistorical. AuthorfinalREPORT
+andclean/copy pending. GHigh20af3d266a confirmsblobfixPASS/dustPARTIAL; all40
+BEFOREvsFOCUS actualpose/projection/controlfields independentlyexact. Initial
+framingconcern withdrawn after nativebackgroundminimumshift0. Gauthorprofiles
+show closewhite target actuallyHATCHlevel3; rearframe lacksbottom. Approvedone
+newrear3camera +20R4same-frameOFF/levels0-3controlframes, no productiontuning.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/REPORT.md
+Close D handoff afterauthorcopy; G P0supplemental next before368final/plates.
