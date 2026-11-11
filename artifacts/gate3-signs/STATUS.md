@@ -15,3 +15,9 @@ NASTĘPNY KROK: `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner claude-
 Build 2 OK (510 s): portal w (-260.8,-208.3) (cel -261,-208), 2 znaki A-30 przed portalem, 2 tabliczki nazwy ronda postawione. Stale (raportowane, nie gubione): U-4a, D-3, D-6 - punkt na jezdni generowanej > 4 m od krawędzi; tabliczki nazw stanęły na pomoście (z=139.9) -> poprawka kodu (grunt pod wiaduktem), wymaga builda 3.
 Import Unity builda 2 w toku (log artifacts/gate3-signs/import-1.log).
 NASTĘPNY KROK: `pwsh artifacts/gate3-signs/run-sbs.ps1 -Name after1` potem `bash artifacts/gate3-signs/make-pairs.sh after1`
+
+## 4. Build 3 + after1
+after1 (build 2) obejrzane: portal w 275528/837235/2279/381800 na miejscu, wiadukt Putry bez ekranu po lewej (494288). Draws Low-overcast G3-B (stats-diff.py after1): delta -10..+16, mediana 0 (baseline = import main, nie w pełni izolowany).
+Build 3 OK (522 s): U-4a postawione po przyciągnięciu 5.4 m na nos wyspy; D-3/D-6 przy rondzie Bieżeństwa nadal stale (jezdnia generowana > 8 m) - OTWARTE, udokumentowane w teście i ADR.
+W toku: import-2 + render `after` (Low overcast+clear) oraz pełne `pytest tests/gis` (heavy).
+NASTĘPNY KROK: `bash artifacts/gate3-signs/make-pairs.sh after; python artifacts/gate3-signs/stats-diff.py after`

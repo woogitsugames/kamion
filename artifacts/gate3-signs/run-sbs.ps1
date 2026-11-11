@@ -1,6 +1,7 @@
 # Renders the SBS photo-pose cameras (Low overcast by default) under a Unity slot and moves the result to artifacts/gate3-signs/<Name>.
 param([string]$Name = 'baseline', [string[]]$Tiers = @('Low'), [string[]]$Lighting = @('overcast'))
 $ErrorActionPreference = 'Stop'
+$Tiers = @($Tiers | ForEach-Object { $_ -split ',' }); $Lighting = @($Lighting | ForEach-Object { $_ -split ',' })   # pwsh -File passes 'a,b' as one string
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
 $slot = 'C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
 & pwsh -NoProfile -File $slot -Acquire -Owner claude-gate3-signs

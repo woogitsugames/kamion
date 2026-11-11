@@ -227,6 +227,7 @@
      "snapped_m": 0.0,
      "top_m": 3.33,
      "travel_bearing_deg": 309.1,
+     "under_deck": false,
      "z": 129.83
     },
     {
@@ -247,7 +248,28 @@
      "snapped_m": 0.0,
      "top_m": 3.33,
      "travel_bearing_deg": 309.1,
+     "under_deck": false,
      "z": 130.19
+    },
+    {
+     "at": [
+      -212.0,
+      -239.1
+     ],
+     "faces": [
+      "U-4a"
+     ],
+     "id": "andersa-elewatorska-island-u4a",
+     "mapillary": [
+      "381800493259507",
+      "837235577143499"
+     ],
+     "proto": "sign_g3_G3518e7fb6",
+     "snapped_m": 5.41,
+     "top_m": 2.3,
+     "travel_bearing_deg": 312.0,
+     "under_deck": false,
+     "z": 130.46
     },
     {
      "at": [
@@ -265,6 +287,7 @@
      "snapped_m": 0.0,
      "top_m": 2.9,
      "travel_bearing_deg": 288.0,
+     "under_deck": false,
      "z": 139.94
     },
     {
@@ -285,11 +308,11 @@
      "snapped_m": 0.0,
      "top_m": 2.9,
      "travel_bearing_deg": 262.0,
+     "under_deck": false,
      "z": 139.76
     }
    ],
    "stale": [
-    "andersa-elewatorska-island-u4a: on a carriageway at [-217.3, -240.3]",
     "biezenstwa-n-slip-d6: on a carriageway at [540.0, -690.6]",
     "biezenstwa-n-slip-d3: on a carriageway at [543.6, -691.8]"
    ]
@@ -1921,7 +1944,7 @@
      "buildings": 108676,
      "forest_hlod": 29492,
      "furniture": 126877,
-     "props": 64194,
+     "props": 64222,
      "roads": 280613,
      "terrain": 675518,
      "trees_lod0": 5404,
@@ -1932,7 +1955,7 @@
      "buildings": 17218,
      "forest_hlod": 17572,
      "furniture": 32227,
-     "props": 28540,
+     "props": 28568,
      "roads": 280613,
      "terrain": 173586,
      "trees_lod1": 2040,
@@ -1941,8 +1964,8 @@
     "camera": "driver_andersa_to_putry",
     "materials_high": 116,
     "materials_low": 116,
-    "tris_high": 1305092,
-    "tris_low": 553148
+    "tris_high": 1305120,
+    "tris_low": 553176
    },
    {
     "by_category_high": {
@@ -2269,7 +2292,7 @@
      "buildings": 36636,
      "forest_hlod": 59847,
      "furniture": 75320,
-     "props": 42142,
+     "props": 42170,
      "roads": 220645,
      "terrain": 748581,
      "trees_lod0": 6220,
@@ -2280,7 +2303,7 @@
      "buildings": 7177,
      "forest_hlod": 29879,
      "furniture": 38229,
-     "props": 26225,
+     "props": 26253,
      "roads": 220645,
      "terrain": 194322,
      "trees_lod1": 1650,
@@ -2289,15 +2312,15 @@
     "camera": "fire_station_route",
     "materials_high": 112,
     "materials_low": 112,
-    "tris_high": 1207017,
-    "tris_low": 519533
+    "tris_high": 1207045,
+    "tris_low": 519561
    },
    {
     "by_category_high": {
      "buildings": 71550,
      "forest_hlod": 49310,
      "furniture": 73201,
-     "props": 38309,
+     "props": 38325,
      "roads": 235926,
      "terrain": 653468,
      "trees_lod1": 59628,
@@ -2307,7 +2330,7 @@
      "buildings": 19773,
      "forest_hlod": 20188,
      "furniture": 25431,
-     "props": 29977,
+     "props": 29993,
      "roads": 235926,
      "terrain": 170469,
      "trees_lod2": 1986
@@ -2315,15 +2338,15 @@
     "camera": "fire_station_abeam",
     "materials_high": 111,
     "materials_low": 111,
-    "tris_high": 1186354,
-    "tris_low": 503750
+    "tris_high": 1186370,
+    "tris_low": 503766
    },
    {
     "by_category_high": {
      "buildings": 171991,
      "forest_hlod": 63792,
      "furniture": 67589,
-     "props": 47116,
+     "props": 47144,
      "roads": 205660,
      "terrain": 782827,
      "trees_lod0": 3810,
@@ -2334,7 +2357,7 @@
      "buildings": 16777,
      "forest_hlod": 29335,
      "furniture": 37254,
-     "props": 24904,
+     "props": 24920,
      "roads": 205660,
      "terrain": 205057,
      "trees_lod1": 1080,
@@ -2343,15 +2366,15 @@
     "camera": "fire_station_ref7197",
     "materials_high": 115,
     "materials_low": 115,
-    "tris_high": 1364661,
-    "tris_low": 521559
+    "tris_high": 1364689,
+    "tris_low": 521575
    },
    {
     "by_category_high": {
      "buildings": 69291,
      "forest_hlod": 45399,
      "furniture": 104586,
-     "props": 53311,
+     "props": 53327,
      "roads": 388400,
      "terrain": 815817,
      "trees_lod0": 64658,
@@ -2371,7 +2394,7 @@
     "camera": "fire_station_above",
     "materials_high": 116,
     "materials_low": 116,
-    "tris_high": 1792670,
+    "tris_high": 1792686,
     "tris_low": 729868
    },
    {
@@ -2857,7 +2880,7 @@
    },
    {
     "chunk": "3_4",
-    "instances": 658,
+    "instances": 659,
     "materials": 42,
     "trees": 574,
     "tris_forest_hlod": 212,

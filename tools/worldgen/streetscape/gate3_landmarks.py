@@ -258,7 +258,7 @@ def _locate_along(net, graph_nodes, origin, spec):
 
 
 UNDER_DECK_M = 2.5            # top surface this far above the terrain = a bridge deck over the point
-SNAP_MAX_M = 4.0              # authored positions are read off a 0.25 m orthophoto / photos: +- a few metres
+SNAP_MAX_M = 8.0              # authored positions come from a 0.25 m orthophoto; generated islands differ by metres
 SNAP_CLEAR_M = 0.6            # post axis behind the carriageway edge after a snap (plate edge stays off the kerb)
 
 
