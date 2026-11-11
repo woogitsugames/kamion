@@ -33,3 +33,6 @@ Krok7: artifact-only alpha experiment z nowym CC0 fir_tree_01 (fir/conifer, niez
 
 Krok8: source-only fir proxy pełniejszy:36nieregularnych root-attached boughcards naświerk +overlapcore/trunk. Wydano72z84Lowheadroom; plants876≤888, pełnyhero2816≤2828. Actualexportslotcount4/2/1 i boundsidentical. Newcell CPUmipcoverage~10.47%base,~10%mip4,6.35%mip5,0mip6; oldplainfilter alpha paritydo5, LANCZOS1sample6/5sample7. Importer/alpha globalsettings BEZ ZMIAN; rzeczywisteUnitymips/ASTC/shimmer/stats PENDING. Szczegóły FIR-CANDIDATE.md. NASTĘPNA KOMENDA: dopiero po explicitROOTrelease i braku obu blokad: pwsh artifacts/firestation-r10/unity-baseline.ps1 -Stage Import.
 
+
+Krok9: ROOT obejrzał pełniejszy876tri CPUfirproxy: użyteczny do próby w Unity po niezmienionym baseline; koniec dalszego strojenia naślepo. Macierz akceptacji: 4herokamery (near/ref7197,route,abeam,above),LowWorldC/HighWorldC_High,clear/overcast; R1hero +R2pełna trasa. Porównać też stare napisy/płot/flagę/okrągłe okno, actualmips i znikanie nowejkomórki. Wrapper Capture rozdziela before/round1/round2 i chroni gotowe stats przed nadpisaniem. NASTĘPNA KOMENDA: po explicitROOTrelease i obu guards absent: pwsh artifacts/firestation-r10/unity-baseline.ps1 -Stage Import; potem Vehicle iCapture -Phase before. Żadnej produkcji/Unitydotąd.
+

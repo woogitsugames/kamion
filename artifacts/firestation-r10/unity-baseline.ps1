@@ -1,4 +1,8 @@
-param([ValidateSet('Import','Vehicle','Capture')][string]$Stage)
+param(
+    [ValidateSet('Import','Vehicle','Capture')][string]$Stage,
+    [ValidateSet('before','round1','round2')][string]$Phase='before',
+    [switch]$OnlyHero
+)
 $ErrorActionPreference='Stop'
 $taskRoot=$PSScriptRoot
 $workRoot=[IO.Path]::GetFullPath((Join-Path $taskRoot '../..'))
@@ -46,8 +50,12 @@ elseif($Stage -eq 'Capture') {
         $scene=if($tier -eq 'High') {'WorldC_High'} else {'WorldC'}
         foreach($light in @('clear','overcast')) {
             Assert-EUnityRelease
+            $captureArgs=@()
+            if($OnlyHero) {$captureArgs=@('-Cameras','fire_station_route,fire_station_abeam,fire_station_ref7197,fire_station_above')}
+            $output="$taskRoot/$Phase/$tier-$light"
+            if(Test-Path "$output/stats.txt") {throw "Completed evidence already exists: $output; preserve it"}
             # Standard route cameras include all four fire_station_* hero cameras.
-            & pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene $scene -Tier $tier -Lighting $light -Width 2340 -Height 1080 -OutputDir "$taskRoot/before/$tier-$light"
+            & pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene $scene -Tier $tier -Lighting $light -Width 2340 -Height 1080 -OutputDir $output @captureArgs
             if($LASTEXITCODE -ne 0) {throw "Baseline capture failed: $tier/$light"}
         }
     }
