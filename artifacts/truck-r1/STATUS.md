@@ -67,3 +67,4 @@ Krok 24: DRL 2000 dał 1214→0 przyciętych pikseli High-overcast i 0→0 Low, 
 Krok 25: procedura renderowania normalizuje listy profili i świateł przekazywane przez natywne pwsh -File oraz sprawdza komplet wskazanych kamer przy wznawianiu. Pierwsze wywołanie overcast,clear zostało zatrzymane przez walidację argumentów przed zajęciem slotu i startem Unity. Następny krok: ponowić drl-power-4000 w obu pogodach.
 Zapisano drl-power-4000 Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano drl-power-4000 Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Zapisano drl-power-4000 High overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
