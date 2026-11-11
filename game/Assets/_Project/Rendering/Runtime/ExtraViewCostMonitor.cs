@@ -144,7 +144,6 @@ namespace Game.Rendering
             "hlod1pass" => "forest HLOD edge walls one-pass toggled (no depth pre-pass, ZWrite colour pass)",
             "canopyfast" => "forest HLOD canopy Kamion/Forest Canopy vs URP Lit toggled",
             "veganiso" => "vegetation textures aniso 1 (import: 2)",
-            "cellsort" => "instance cells submitted near to far toggled (WorldInstances)",
             _ => "unknown key (no change)",
         };
 
@@ -390,7 +389,6 @@ namespace Game.Rendering
                 case "hlod1pass": ForestFastPath.FlipEdgeOnePass = b; ForestFastPath.Refresh(); break;
                 case "canopyfast": ForestFastPath.FlipCanopy = b; break;
                 case "veganiso": ForestFastPath.FlipAniso = b; ForestFastPath.Refresh(); break;
-                case "cellsort": ForestFastPath.FlipSort = b; break;
                 case "shadowcasc":
                     if (urp == null) break;
                     if (b) { m_SavedCascades = urp.shadowCascadeCount; urp.shadowCascadeCount = Mathf.Max(1, m_SavedCascades - 1); }

@@ -1,0 +1,356 @@
+--------- beginning of main
+11-11 16:48:44.665 20044 20044 I Unity   : applyWindowUIChanges fullScreen = true, renderOutsideSafeArea = true
+11-11 16:48:44.698 20044 20044 V Unity   : Context Type: GameActivity
+11-11 16:48:44.698 20044 20044 D Unity   : CommandLine:  
+11-11 16:48:44.728 20044 20061 I Unity   : UnityApplication::CreateInstance
+11-11 16:48:44.728 20044 20061 I Unity   : GameActivity Package Version '4.4.0'
+11-11 16:48:44.731 20044 20061 I Unity   : Starting Game Loop
+11-11 16:48:44.755 20044 20061 I Unity   : Handle cmd APP_CMD_START(11)
+11-11 16:48:44.757 20044 20044 I Unity   : onResume
+11-11 16:48:44.794 20044 20061 I Unity   : Handle cmd APP_CMD_RESUME(12)
+11-11 16:48:44.869 20044 20061 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+11-11 16:48:44.889 20044 20061 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+11-11 16:48:44.892 20044 20061 I Unity   : Handle cmd APP_CMD_CONTENT_RECT_CHANGED(5)
+11-11 16:48:44.900 20044 20061 I Unity   : Handle cmd APP_CMD_INIT_WINDOW(1)
+11-11 16:48:44.932 20044 20061 I Unity   : MemoryManager: Using 'Dynamic Heap' Allocator.
+11-11 16:48:44.932 20044 20061 D Unity   : [UnityMemory] Configuration Parameters - Can be set up in boot.config
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-allocator-temp-initial-block-size-main=262144"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-allocator-temp-initial-block-size-worker=262144"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-temp-allocator-size-background-worker=32768"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-temp-allocator-size-job-worker=262144"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-temp-allocator-size-preload-manager=262144"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-remapper-allocator-initial-capacity=32768"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-temp-allocator-size-audio-worker=65536"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-temp-allocator-size-cloud-worker=32768"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-bucket-allocator-granularity=16"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-bucket-allocator-bucket-count=8"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-bucket-allocator-block-size=4194304"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-bucket-allocator-block-count=1"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-main-allocator-block-size=16777216"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-thread-allocator-block-size=16777216"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-gfx-main-allocator-block-size=16777216"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-gfx-thread-allocator-block-size=16777216"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-cache-allocator-block-size=4194304"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-typetree-allocator-block-size=2097152"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-profiler-bucket-allocator-granularity=16"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-profiler-bucket-allocator-bucket-count=8"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-profiler-bucket-allocator-block-size=4194304"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-profiler-bucket-allocator-block-count=1"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-profiler-allocator-block-size=16777216"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-profiler-editor-allocator-block-size=1048576"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-temp-allocator-size-main=4194304"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-job-temp-allocator-block-size=2097152"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-job-temp-allocator-block-size-background=1048576"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+11-11 16:48:44.932 20044 20061 D Unity   :     "memorysetup-temp-allocator-size-gfx=262144"
+11-11 16:48:44.964 20044 20061 D Unity   : Enabling Unity systrace
+11-11 16:48:44.964 20044 20061 D Unity   : Starting Unity systrace
+11-11 16:48:44.973 20044 20044 I Unity   : windowFocusChanged: true
+11-11 16:48:44.973 20044 20044 I Unity   : applyWindowUIChanges fullScreen = true, renderOutsideSafeArea = true
+11-11 16:48:44.973 20044 20044 I Unity   : resumeUnity
+11-11 16:48:44.985 20044 20061 I Unity   : SetGameState: isLoading: true, mode: UNKNOWN, label: -2, quality: -1
+11-11 16:48:44.996 20044 20061 D Unity   : [VFS] Mount /data/app/~~sbw5G1vrvYpEWkF1AzccKg==/com.woogitsugames.kamion-hoiPmzCzNkZ6GLTCasFPbA==/base.apk
+11-11 16:48:45.111 20044 20061 I Unity   : SystemInfo CPU = ARM64 FP ASIMD AES, Cores = 8, Memory = 3653mb
+11-11 16:48:45.111 20044 20061 I Unity   : SystemInfo ARM big.LITTLE configuration: 2 big (mask: 0xc0), 6 little (mask: 0x3f)
+11-11 16:48:45.111 20044 20061 I Unity   : ApplicationInfo 'com.woogitsugames.kamion', Version '0.1.0', Min API Level '29', Target API Level '36'
+11-11 16:48:45.111 20044 20061 I Unity   : Built from '6000.3/respin/6000.3.28f1-21f78c3e21d1' branch, Version '6000.3.28f1 (8f082d2fe476)', Build type 'Development', Scripting Backend 'il2cpp', CPU 'arm64-v8a', Stripping 'Enabled'
+11-11 16:48:45.111 20044 20061 I Unity   : Device Model 'samsung SM-A165F', OS 'Android OS 16 (API 36)'
+11-11 16:48:45.113 20044 20061 D Unity   : Determine if il2cpp resources need to extracted:
+11-11 16:48:45.118 20044 20044 I Unity   : applyWindowUIChanges fullScreen = true, renderOutsideSafeArea = true
+11-11 16:48:45.120 20044 20061 D Unity   :     il2cpp resources are up to date, not extracting
+11-11 16:48:45.236 20044 20061 D Unity   : [EGL] Attaching window :0xb40000764c328e10
+11-11 16:48:45.236 20044 20061 D Unity   : InitializeScriptEngine OK (0x77248d4fc0)
+11-11 16:48:45.237 20044 20061 D Unity   : Found 1 interfaces on host :
+11-11 16:48:45.237 20044 20061 D Unity   :  0) 192.168.0.100
+11-11 16:48:45.237 20044 20061 D Unity   : 
+11-11 16:48:45.238 20044 20061 D Unity   : Player connection [508980793664]  Target information:
+11-11 16:48:45.238 20044 20061 D Unity   : 
+11-11 16:48:45.238 20044 20061 D Unity   : Player connection [508980793664]  * "[IP] 192.168.0.100 [Port] 55000 [Flags] 2 [Guid] 73253075 [EditorId] 3879186272 [Version] 1048832 [Id] AndroidPlayer(11,samsung_SM-A165F@192.168.0.100) [Debug] 0 [PackageName] AndroidPlayer [ProjectName] Kamion" 
+11-11 16:48:45.238 20044 20061 D Unity   : 
+11-11 16:48:45.238 20044 20061 D Unity   : Player connection [508980793664] Started UDP target info broadcast (1) on [225.0.0.222:54997].
+11-11 16:48:45.238 20044 20061 D Unity   : 
+11-11 16:48:45.249 20044 20061 D Unity   : Input System module state changed to: Initialized.
+11-11 16:48:45.253 20044 20061 D Unity   : [Physics::Module] Initialized fallback backend.
+11-11 16:48:45.253 20044 20061 D Unity   : [Physics::Module] Id: 0xdecafbad
+11-11 16:48:45.258 20044 20061 D Unity   : PlayerInitEngineNoGraphics OK
+11-11 16:48:45.258 20044 20061 I Unity   : Company Name: woogitsugames
+11-11 16:48:45.258 20044 20061 I Unity   : Product Name: Kamion
+11-11 16:48:45.258 20044 20061 D Unity   : AndroidGraphics::Startup window =  0xb40000764c328e10
+11-11 16:48:45.258 20044 20061 D Unity   : [EGL] Attaching window :0xb40000764c328e10
+11-11 16:48:45.264 20044 20061 D Unity   : [Subsystems] Discovering subsystems at path /data/app/~~sbw5G1vrvYpEWkF1AzccKg==/com.woogitsugames.kamion-hoiPmzCzNkZ6GLTCasFPbA==/base.apk/assets/bin/Data/UnitySubsystems
+11-11 16:48:45.269 20044 20044 I Unity   : applyWindowUIChanges fullScreen = true, renderOutsideSafeArea = true
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: count=14
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_debug_report [enabled=0, external=0]
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_debug_utils [enabled=1, external=0]
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_surface_maintenance1 [enabled=0, external=0]
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_swapchain_colorspace [enabled=1, external=0]
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_GOOGLE_surfaceless_query [enabled=0, external=0]
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_android_surface [enabled=1, external=0]
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_device_group_creation [enabled=0, external=0]
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_external_fence_capabilities [enabled=1, external=0]
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_external_memory_capabilities [enabled=1, external=0]
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_external_semaphore_capabilities [enabled=1, external=0]
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_get_physical_device_properties2 [enabled=1, external=0]
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_get_surface_capabilities2 [enabled=0, external=0]
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_surface [enabled=1, external=0]
+11-11 16:48:45.271 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_surface_protected_capabilities [enabled=0, external=0]
+11-11 16:48:45.277 20044 20061 D Unity   : [Vulkan init] SelectPhysicalDevice requestedDeviceIndex=-1 xrDevice=0x0
+11-11 16:48:45.277 20044 20061 D Unity   : [Vulkan init] Physical Device 0xb40000764947d800 [0]: "Mali-G57 MC2" deviceType=1 vendorID=13b5 deviceID=90930010
+11-11 16:48:45.277 20044 20061 D Unity   : [VULKAN] Android Device Info:
+11-11 16:48:45.277 20044 20061 D Unity   : {"Vendor": "ARM","Device Name": "Mali-G57 MC2","Brand": "samsung","Product Name": "a16nseea","Android OS Version": "16","Vulkan API Version": "Variant: 0 major.minor.patch:1.3.303","Driver Version": "226496512"}
+11-11 16:48:45.277 20044 20061 D Unity   : Vulkan detection: 2
+11-11 16:48:45.277 20044 20061 D Unity   : GfxDevice: creating device client; kGfxThreadingModeThreaded
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: count=14
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_debug_report [enabled=0, external=0]
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_debug_utils [enabled=1, external=0]
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_surface_maintenance1 [enabled=0, external=0]
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_swapchain_colorspace [enabled=1, external=0]
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_GOOGLE_surfaceless_query [enabled=0, external=0]
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_android_surface [enabled=1, external=0]
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_device_group_creation [enabled=0, external=0]
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_external_fence_capabilities [enabled=1, external=0]
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_external_memory_capabilities [enabled=1, external=0]
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_external_semaphore_capabilities [enabled=1, external=0]
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_get_physical_device_properties2 [enabled=1, external=0]
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_get_surface_capabilities2 [enabled=0, external=0]
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_surface [enabled=1, external=0]
+11-11 16:48:45.278 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_surface_protected_capabilities [enabled=0, external=0]
+11-11 16:48:45.280 20044 20061 D Unity   : [Vulkan init] SelectPhysicalDevice requestedDeviceIndex=-1 xrDevice=0x0
+11-11 16:48:45.280 20044 20061 D Unity   : [Vulkan init] Physical Device 0xb40000764947d800 [0]: "Mali-G57 MC2" deviceType=1 vendorID=13b5 deviceID=90930010
+11-11 16:48:45.280 20044 20061 D Unity   : [Vulkan init] Selected physical device 0xb40000764947d800
+11-11 16:48:45.280 20044 20061 D Unity   : [Vulkan init] Graphics queue count=1
+11-11 16:48:45.328 20044 20061 D Unity   : SwappyWrapper: InitSwappyWrapper() succeeded.
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: count=148
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_ANDROID_external_format_resolve [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_ANDROID_external_memory_android_hardware_buffer [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_ARM_rasterization_order_attachment_access [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_ARM_shader_core_builtins [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_ARM_shader_core_properties [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_4444_formats [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_astc_decode_mode [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_border_color_swizzle [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_calibrated_timestamps [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_custom_border_color [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_debug_marker [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_depth_clamp_zero_one [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_depth_clip_enable [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_descriptor_indexing [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_device_address_binding_report [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_device_fault [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_device_memory_report [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_dynamic_rendering_unused_attachments [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_extended_dynamic_state [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_extended_dynamic_state2 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_extended_dynamic_state3 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_external_memory_acquire_unmodified [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_external_memory_dma_buf [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_external_memory_host [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_fragment_density_map [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_fragment_density_map2 [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_frame_boundary [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_global_priority [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_global_priority_query [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_graphics_pipeline_library [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_host_image_copy [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_host_query_reset [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_image_2d_view_of_3d [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_image_compression_control [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_image_compression_control_swapchain [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_image_drm_format_modifier [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_image_robustness [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_image_sliced_view_of_3d [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_index_type_uint8 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_inline_uniform_block [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_legacy_dithering [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_line_rasterization [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_load_store_op_none [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_multisampled_render_to_single_sampled [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_mutable_descriptor_type [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_non_seamless_cube_map [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_pipeline_creation_cache_control [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_pipeline_creation_feedback [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_pipeline_protected_access [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_pipeline_robustness [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_primitive_topology_list_restart [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_primitives_generated_query [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_private_data [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_provoking_vertex [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_queue_family_foreign [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_rasterization_order_attachment_access [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_rgba10x6_formats [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_robustness2 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_scalar_block_layout [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_separate_stencil_usage [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_shader_demote_to_helper_invocation [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_shader_image_atomic_int64 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_shader_subgroup_ballot [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_shader_subgroup_vote [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_shader_tile_image [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_subgroup_size_control [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_subpass_merge_feedback [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_swapchain_maintenance1 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_texel_buffer_alignment [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_texture_compression_astc_hdr [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_tooling_info [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_transform_feedback [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_EXT_vertex_input_dynamic_state [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_GOOGLE_decorate_string [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_GOOGLE_display_timing [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_GOOGLE_user_type [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_16bit_storage [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_8bit_storage [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_bind_memory2 [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_buffer_device_address [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_calibrated_timestamps [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_copy_commands2 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_create_renderpass2 [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_dedicated_allocation [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_depth_stencil_resolve [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_descriptor_update_template [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_device_group [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_driver_properties [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_dynamic_rendering [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_dynamic_rendering_local_read [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_external_fence [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_external_fence_fd [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_external_memory [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_external_memory_fd [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_external_semaphore [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_external_semaphore_fd [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_format_feature_flags2 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_get_memory_requirements2 [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_global_priority [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_image_format_list [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_imageless_framebuffer [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_incremental_present [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_index_type_uint8 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_line_rasterization [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_load_store_op_none [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_maintenance1 [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_maintenance2 [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_maintenance3 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_maintenance4 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_maintenance5 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_maintenance6 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_maintenance7 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_map_memory2 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_multiview [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_pipeline_binary [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_pipeline_executable_properties [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_pipeline_library [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_push_descriptor [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_relaxed_block_layout [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_sampler_mirror_clamp_to_edge [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_sampler_ycbcr_conversion [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_separate_depth_stencil_layouts [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shader_atomic_int64 [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shader_draw_parameters [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shader_expect_assume [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shader_float16_int8 [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shader_float_controls [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shader_float_controls2 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shader_integer_dot_product [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shader_maximal_reconvergence [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shader_non_semantic_info [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shader_quad_control [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shader_subgroup_extended_types [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shader_subgroup_rotate [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shader_subgroup_uniform_control_flow [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shader_terminate_invocation [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_shared_presentable_image [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_spirv_1_4 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_storage_buffer_storage_class [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_swapchain [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_swapchain_mutable_format [enabled=1, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_synchronization2 [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_timeline_semaphore [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_uniform_buffer_standard_layout [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_variable_pointers [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_vertex_attribute_divisor [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_vulkan_memory_model [enabled=0, external=0]
+11-11 16:48:45.329 20044 20061 D Unity   : [Vulkan init] extensions: name=VK_KHR_zero_initialize_workgroup_memory [enabled=0, external=0]
+11-11 16:48:45.335 20044 20061 D Unity   : Vulkan API version 1.1.0 (1.3.303 supported by driver, 1.1.0 requested)
+11-11 16:48:45.335 20044 20061 D Unity   : Vulkan vendor=[ARM] id=[13b5]
+11-11 16:48:45.335 20044 20061 D Unity   : Vulkan renderer=[Mali-G57 MC2] id=[90930010]
+11-11 16:48:45.335 20044 20061 D Unity   : Vulkan device type 1
+11-11 16:48:45.335 20044 20061 D Unity   : Vulkan driverversion=[54.1.0 (0x0d801000)] uint=[226496512]
+11-11 16:48:45.335 20044 20061 D Unity   : Vulkan driverLibraryString=[Mali-G57 MC2 (9), v1.r54p1-12eac0.31596c752a7e2ed34e05ad43c82dd58d]
+11-11 16:48:45.335 20044 20061 D Unity   : VK use pretransform: 1
+11-11 16:48:45.345 20044 20061 D Unity   : Vulkan PSO: Cache data successfully loaded [size=928357,path=/storage/emulated/0/Android/data/com.woogitsugames.kamion/cache/vulkan_pso_cache.bin]
+11-11 16:48:45.347 20044 20061 D Unity   : [EGL] Attaching window :0x0
+11-11 16:48:45.347 20044 20061 D Unity   : AndroidDisplayManagerVulkan::AttachWindow(0xb40000764c328e10, 0)
+11-11 16:48:45.347 20044 20061 D Unity   : InitializeOrResetSwapChain 2340x1080 hdr=0 samples=2
+11-11 16:48:45.394 20044 20061 D Unity   : Backbuffer MSAA samples (2) count is unsupported. Switched to use (1) samples.
+11-11 16:48:45.432 20044 20061 D Unity   : AndroidDisplayManagerVulkan::AttachWindow(0xb40000764c328e10, 0)
+11-11 16:48:45.432 20044 20061 D Unity   : Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+11-11 16:48:45.622 20044 20061 D Unity   : [Physics::Module] Selected backend.
+11-11 16:48:45.622 20044 20061 D Unity   : [Physics::Module] Name: PhysX
+11-11 16:48:45.622 20044 20061 D Unity   : [Physics::Module] Id: 0xf2b8ea05
+11-11 16:48:45.622 20044 20061 D Unity   : [Physics::Module] SDK Version: 4.1.2
+11-11 16:48:45.622 20044 20061 D Unity   : [Physics::Module] Integration Version: 1.0.0
+11-11 16:48:45.622 20044 20061 D Unity   : [Physics::Module] Threading Mode: Multi-Threaded
+11-11 16:48:45.817 20044 20061 D Unity   : PlayerInitEngineGraphics OK
+11-11 16:48:45.839 20044 20061 I Unity   : SetGameState: isLoading: false, mode: UNKNOWN, label: -1, quality: 0
+11-11 16:48:45.840 20044 20061 I Unity   :     HasWindow = 1, HasFocus = 0
+11-11 16:48:45.840 20044 20061 I Unity   : Handle cmd APP_CMD_WINDOW_RESIZED(3)
+11-11 16:48:45.840 20044 20061 D Unity   : NativeWindow resized 2340x1080
+11-11 16:48:45.840 20044 20061 I Unity   : Handle cmd APP_CMD_WINDOW_REDRAW_NEEDED(4)
+11-11 16:48:45.840 20044 20061 I Unity   : Handle cmd APP_CMD_GAINED_FOCUS(7)
+11-11 16:48:45.840 20044 20061 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+11-11 16:48:45.841 20044 20061 D Unity   : InitializeOrResetSwapChain 2340x1080 hdr=0 samples=2
+11-11 16:48:45.879 20044 20061 D Unity   : Backbuffer MSAA samples (2) count is unsupported. Switched to use (1) samples.
+11-11 16:48:45.926 20044 20061 I Unity   : SetGameState: isLoading: true, mode: UNKNOWN, label: 0, quality: 0
+11-11 16:48:47.976 20044 20061 D Unity   : UnloadTime: 3.960077 ms
+11-11 16:48:48.091 20044 20061 I Unity   : [BOOT] Kamion 0.1.0 (cd51dd173a-dirty) unity=6000.3.28f1 platform=android-36 device='samsung SM-A165F' gpu='Mali-G57 MC2' api='Vulkan 1.1.0 [54.1.0 (0x0d801000)]' ram=3653MB screen=2340x1080 tier=Low targetFps=30
+11-11 16:48:48.096 20044 20061 I Unity   : [BOOT] diagnostics output: /storage/emulated/0/Android/data/com.woogitsugames.kamion/files/diag
+11-11 16:48:48.157 20044 20061 I Unity   : [CONTROLS] boot v3 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on
+11-11 16:48:48.168 20044 20061 I Unity   : [CONTROLS] menu shown light=overcast tier=Low fps=30
+11-11 16:48:48.169 20044 20061 I Unity   : SetGameState: isLoading: false, mode: UNKNOWN, label: 0, quality: 0
+11-11 16:48:48.176 20044 20061 D Unity   : Using NDK Choreographer.
+11-11 16:48:48.206 20044 20061 D Unity   : Stopping Unity systrace
+11-11 16:48:48.209 20044 20061 I Unity   : [BOOT] launch argument scene=WorldC
+11-11 16:48:48.209 20044 20061 I Unity   : SetGameState: isLoading: true, mode: UNKNOWN, label: 2, quality: 0
+11-11 16:48:48.211 20044 20061 I Unity   : [PSO] trace start ok=True dev=True (95 s) api=Vulkan quality=Low tag=g3b
+11-11 16:48:48.211 20044 20061 I Unity   : [PSO] warm-up off (pso_warm 0 or tracing)
+11-11 16:48:50.490 20044 20133 D Unity   : Unloading 153 Unused Serialized files (Serialized files now loaded: 0)
+11-11 16:48:50.719 20044 20044 I Unity   : applyWindowUIChanges fullScreen = true, renderOutsideSafeArea = true
+11-11 16:48:50.730 20044 20061 D Unity   : InitializeOrResetSwapChain 2340x1080 hdr=0 samples=1
+11-11 16:48:50.816 20044 20061 D Unity   : UnloadTime: 6.728077 ms
+11-11 16:48:50.850 20044 20061 D Unity   : Failed to load native plugin: Unable to lookup library path for '_burst_0_0'.
+11-11 16:48:51.108 20044 20061 I Unity   : [WORLD] collision cooked at load: 274 meshes, bake 270 ms (parallel), enable 2 ms, total 271 ms
+11-11 16:48:51.135 20044 20061 I Unity   : [CONTROLS] loaded v3 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on
+11-11 16:48:51.273 20044 20061 I Unity   : [LAB] DrivingLab ready: vehicle=Tractor4x2_TRAKT trailer=Trailer_Curtainsider_Art spawn=Gross40t steer=Wheel270 autopilot=route fixedDt=0,009999993
+11-11 16:48:52.360 20044 20061 I Unity   : SetGameState: isLoading: false, mode: UNKNOWN, label: 2, quality: 0
+11-11 16:48:52.379 20044 20061 D Unity   : Unloading 105 unused Assets / (37.4 KB). Loaded Objects now: 16962.
+11-11 16:48:52.379 20044 20061 D Unity   : Memory consumption went from 169.0 MB to 169.0 MB.
+11-11 16:48:52.379 20044 20061 D Unity   : Total: 13.128000 ms (FindLiveObjects: 2.055923 ms CreateObjectMapping: 0.933846 ms MarkObjects: 9.747000 ms  DeleteObjects: 0.389846 ms)
+11-11 16:48:52.379 20044 20061 D Unity   : 
+11-11 16:48:52.449 20044 20061 I Unity   : [AUDIO] vehicle audio ready (122 engine loops + 47 sfx, tools/audio/render_all.py (procedural synthesis, no recordings))
+11-11 16:48:52.748 20044 20061 I Unity   : [TELEMETRY] recording → /storage/emulated/0/Android/data/com.woogitsugames.kamion/files/telemetry/drive-20261111-164852.csv
+11-11 16:48:52.750 20044 20061 I Unity   : [CAB] view camera Main Camera cabView=False gain 1,00 meter 0,00 EV
+11-11 16:48:54.353 20044 20061 I Unity   : [DIAG] t=3s tier=Low target=30 fps=0.3 p50=3466.79 p95=3466.79 p99=3466.79 max=3466.79ms temp=27.5C thermal=0 headroom=0.68 pss=1141MB scale=0.75 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+11-11 16:48:54.360 20044 20061 I Unity   : [CAB] view camera Main Camera cabView=True gain 4,94 meter 1,30 EV
+11-11 16:48:59.319 20044 20061 I Unity   : [DIAG] t=8s tier=Low target=30 fps=15.2 p50=33.34 p95=50.14 p99=333.33 max=3466.79ms temp=27.5C thermal=0 headroom=0.66 pss=1172MB scale=0.75 fallback=none mir=1.00/f cpu=3.85 gpu=32.82 cap=0.07/f cpu=0.15 gpu=2.34 shd_gpu=1.36 main_cpu=7.39
+11-11 16:49:04.367 20044 20061 I Unity   : [DIAG] t=13s tier=Low target=30 fps=20.1 p50=33.34 p95=50.04 p99=116.65 max=3466.79ms temp=27.5C thermal=0 headroom=0.67 pss=1128MB scale=0.75 fallback=none mir=1.00/f cpu=4.35 gpu=33.80 cap=0.09/f cpu=0.19 gpu=3.23 shd_gpu=1.61 main_cpu=8.44
+11-11 16:49:09.356 20044 20061 I Unity   : [DIAG] t=18s tier=Low target=30 fps=21.9 p50=33.34 p95=50.07 p99=83.43 max=3466.79ms temp=27.5C thermal=0 headroom=0.68 pss=1179MB scale=0.75 fallback=none mir=1.00/f cpu=4.47 gpu=36.28 cap=0.09/f cpu=0.18 gpu=4.32 shd_gpu=1.82 main_cpu=8.45
+11-11 16:49:11.493 20044 20120 E Unity   : Vulkan ProfilingMarkerStack: overflow, inconsistent profiler markers
+11-11 16:49:14.365 20044 20061 I Unity   : [DIAG] t=23s tier=Low target=30 fps=21.7 p50=33.34 p95=50.09 p99=83.42 max=3466.79ms temp=27.5C thermal=0 headroom=0.68 pss=1132MB scale=0.75 fallback=none mir=1.00/f cpu=4.49 gpu=39.74 cap=0.10/f cpu=0.19 gpu=2.87 shd_gpu=1.87 main_cpu=33.39
+11-11 16:49:19.396 20044 20061 I Unity   : [DIAG] t=28s tier=Low target=30 fps=25.4 p50=33.34 p95=50.09 p99=66.74 max=782.86ms temp=27.5C thermal=0 headroom=0.68 pss=1177MB scale=0.75 fallback=none mir=1.00/f cpu=4.43 gpu=40.48 cap=0.08/f cpu=0.17 gpu=4.32 shd_gpu=1.71 main_cpu=8.70
+11-11 16:49:24.420 20044 20061 I Unity   : [DIAG] t=33s tier=Low target=30 fps=24.6 p50=33.34 p95=50.11 p99=66.74 max=782.86ms temp=27.5C thermal=0 headroom=0.68 pss=1165MB scale=0.75 fallback=none mir=1.00/f cpu=5.24 gpu=39.85 cap=0.08/f cpu=0.19 gpu=4.25 shd_gpu=1.74 main_cpu=8.96
+11-11 16:49:29.439 20044 20061 I Unity   : [DIAG] t=38s tier=Low target=30 fps=24.6 p50=33.34 p95=50.12 p99=66.70 max=782.86ms temp=27.5C thermal=0 headroom=0.69 pss=1154MB scale=0.75 fallback=none mir=1.00/f cpu=5.07 gpu=35.06 cap=0.09/f cpu=0.20 gpu=2.69 shd_gpu=2.15 main_cpu=8.83
+11-11 16:49:34.447 20044 20061 I Unity   : [DIAG] t=43s tier=Low target=30 fps=24.9 p50=33.34 p95=50.09 p99=66.70 max=782.86ms temp=27.5C thermal=0 headroom=0.69 pss=1154MB scale=0.75 fallback=none mir=1.00/f cpu=5.14 gpu=33.63 cap=0.10/f cpu=0.27 gpu=3.74 shd_gpu=2.30 main_cpu=7.92
+11-11 16:49:39.464 20044 20061 I Unity   : [DIAG] t=48s tier=Low target=30 fps=27.1 p50=33.34 p95=50.03 p99=66.68 max=66.83ms temp=27.5C thermal=0 headroom=0.68 pss=1133MB scale=0.75 fallback=none mir=1.00/f cpu=5.27 gpu=32.56 cap=0.10/f cpu=0.27 gpu=3.53 shd_gpu=2.49 main_cpu=7.67
+11-11 16:49:44.494 20044 20061 I Unity   : [DIAG] t=53s tier=Low target=30 fps=28.3 p50=33.34 p95=50.02 p99=50.09 max=66.83ms temp=27.5C thermal=0 headroom=0.68 pss=1154MB scale=0.75 fallback=none mir=1.00/f cpu=5.16 gpu=33.15 cap=0.10/f cpu=0.22 gpu=3.58 shd_gpu=2.28 main_cpu=7.20
+11-11 16:49:49.506 20044 20061 I Unity   : [DIAG] t=58s tier=Low target=30 fps=28.9 p50=33.34 p95=49.98 p99=50.04 max=66.70ms temp=27.5C thermal=0 headroom=0.68 pss=1120MB scale=0.75 fallback=none mir=1.00/f cpu=5.43 gpu=33.41 cap=0.10/f cpu=0.24 gpu=3.67 shd_gpu=2.44 main_cpu=7.34
+11-11 16:49:54.531 20044 20061 I Unity   : [DIAG] t=63s tier=Low target=30 fps=29.1 p50=33.34 p95=49.92 p99=50.04 max=66.70ms temp=27.5C thermal=0 headroom=0.68 pss=1154MB scale=0.75 fallback=none mir=1.00/f cpu=5.31 gpu=31.61 cap=0.10/f cpu=0.29 gpu=2.87 shd_gpu=2.39 main_cpu=8.19
+11-11 16:49:59.552 20044 20061 I Unity   : [DIAG] t=68s tier=Low target=30 fps=29.2 p50=33.34 p95=33.66 p99=50.07 max=66.70ms temp=27.5C thermal=0 headroom=0.68 pss=1119MB scale=0.75 fallback=none mir=1.00/f cpu=4.79 gpu=32.54 cap=0.10/f cpu=0.21 gpu=3.51 shd_gpu=1.97 main_cpu=7.32
+11-11 16:50:04.556 20044 20061 I Unity   : [DIAG] t=73s tier=Low target=30 fps=29.3 p50=33.33 p95=33.60 p99=50.07 max=66.69ms temp=27.5C thermal=0 headroom=0.68 pss=1151MB scale=0.75 fallback=none mir=1.00/f cpu=4.14 gpu=32.74 cap=0.08/f cpu=0.17 gpu=2.97 shd_gpu=1.79 main_cpu=7.63
+11-11 16:50:05.809 20044 20061 I Unity   : [GATE3] segment done t=70.5 s s=1714.0
+11-11 16:50:09.574 20044 20061 I Unity   : [DIAG] t=78s tier=Low target=30 fps=29.4 p50=33.33 p95=33.58 p99=50.10 max=66.69ms temp=27.5C thermal=0 headroom=0.68 pss=1133MB scale=0.75 fallback=none mir=1.00/f cpu=4.09 gpu=33.80 cap=0.00/f cpu=0.00 gpu=0.00 shd_gpu=1.81 main_cpu=7.71
+11-11 16:50:14.591 20044 20061 I Unity   : [DIAG] t=83s tier=Low target=30 fps=29.3 p50=33.33 p95=33.59 p99=50.12 max=66.69ms temp=27.5C thermal=0 headroom=0.68 pss=1136MB scale=0.75 fallback=none mir=1.00/f cpu=3.90 gpu=33.53 cap=0.00/f cpu=0.00 gpu=0.00 shd_gpu=1.84 main_cpu=7.49
+11-11 16:50:19.593 20044 20061 I Unity   : [DIAG] t=88s tier=Low target=30 fps=29.2 p50=33.33 p95=49.82 p99=50.11 max=50.25ms temp=27.5C thermal=0 headroom=0.68 pss=1122MB scale=0.75 fallback=none mir=1.00/f cpu=4.16 gpu=33.40 cap=0.00/f cpu=0.00 gpu=0.00 shd_gpu=1.84 main_cpu=7.60
+11-11 16:50:20.949 20044 20061 I Unity   : Successfully saved GraphicsStateCollection to /storage/emulated/0/Android/data/com.woogitsugames.kamion/files/pso_Vulkan_Low_g3b.graphicsstate
+11-11 16:50:20.950 20044 20061 I Unity   : [PSO] trace saved=True /storage/emulated/0/Android/data/com.woogitsugames.kamion/files/pso_Vulkan_Low_g3b.graphicsstate variants=67 states=134 t=95,0
+11-11 16:50:24.611 20044 20061 I Unity   : [DIAG] t=93s tier=Low target=30 fps=29.2 p50=33.33 p95=49.92 p99=50.06 max=50.25ms temp=27.5C thermal=0 headroom=0.68 pss=1128MB scale=0.75 fallback=none mir=1.00/f cpu=3.92 gpu=33.50 cap=0.00/f cpu=0.00 gpu=0.00 shd_gpu=1.75 main_cpu=7.00
+11-11 16:50:29.626 20044 20061 I Unity   : [DIAG] t=98s tier=Low target=30 fps=29.1 p50=33.33 p95=49.89 p99=50.07 max=50.22ms temp=27.5C thermal=0 headroom=0.68 pss=1102MB scale=0.75 fallback=none mir=1.00/f cpu=4.04 gpu=32.94 cap=0.07/f cpu=0.13 gpu=2.47 shd_gpu=1.78 main_cpu=6.91

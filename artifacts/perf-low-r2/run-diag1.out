@@ -2,3 +2,23 @@
 16:20:19 lock taken
 16:20:24 install C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\apk\kamion-0.1.0-c0a20185ec.apk
 16:20:41 run ab_forest (104 s): telemetry=1,route_end=1718,route_s=1232,rq_ab=forestfast battery=27.7 C
+16:22:31 done ab_forest -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\perf-low-r2\diag1\ab_forest
+16:22:31 run ab_veg (104 s): telemetry=1,route_end=1718,route_s=1232,rq_ab=vegfast battery=27.7 C
+16:24:20 done ab_veg -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\perf-low-r2\diag1\ab_veg
+16:24:21 run ab_1pass (104 s): telemetry=1,route_end=1718,route_s=1232,rq_ab=hlod1pass battery=27.7 C
+16:26:09 done ab_1pass -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\perf-low-r2\diag1\ab_1pass
+16:26:09 run ab_canopy (104 s): telemetry=1,route_end=1718,route_s=1232,rq_ab=canopyfast battery=27.8 C
+16:28:03 done ab_canopy -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\perf-low-r2\diag1\ab_canopy
+16:28:03 run ab_aniso (104 s): telemetry=1,route_end=1718,route_s=1232,rq_ab=veganiso battery=27.9 C
+16:29:52 done ab_aniso -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\perf-low-r2\diag1\ab_aniso
+16:29:52 lock released
+16:29:52 lock taken
+16:29:53 run traceB (104 s): telemetry=1,route_end=1718,route_s=1232,pso_trace=95,pso_tag=g3b battery=28.1 C
+16:31:41 done traceB -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\perf-low-r2\diag1\traceB
+16:31:41 lock released
+16:31:42 lock taken
+16:31:42 run traceA (96 s): telemetry=1,route_end=450,pso_trace=90,pso_tag=g3a battery=28.2 C
+16:33:22 done traceA -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\perf-low-r2\diag1\traceA
+16:33:22 run spikeA (96 s): telemetry=1,route_end=450,spike_probe=1 battery=28.3 C
+16:35:03 done spikeA -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\perf-low-r2\diag1\spikeA
+16:35:03 lock released
