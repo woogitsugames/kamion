@@ -29,3 +29,6 @@
 
 - Step10: canonical TruckAssetBuilder, TrailerAssetBuilder and WorldTruckInstaller completed with explicitRESULT OK under per-launch guards. Raw192SHA/Fab15/no fallback still verified;90 generated vehicle material/prefab/FBX fixture hashes recorded BEFORE all matched baseline images. No production edits, owned settings side effects restored.
 - NEXT COMMAND: pwsh -ExecutionPolicy Bypass -File artifacts/car-paint-r1/pearl-probe.ps1; then baseline.ps1 -Phase Capture and inspect actual black-door/hood ROIs.
+
+- Step11: graphics-enabled actual WorldPBR Pearl Color-property probe completed successfully (24 samples), preserving source properties/CBUFFER and changing only diagnostic fragment return. Raw HDR SetColor encoding behavior now measured; numeric evidence in pearl-probe.json, no production correction yet. No source/settings drift.
+- NEXT COMMAND: pwsh -ExecutionPolicy Bypass -File artifacts/car-paint-r1/baseline.ps1 -Phase Capture; view fixed car+route PNGs and verify native ROIs before any paint decision.
