@@ -38,6 +38,7 @@ namespace Game.Editor.VisualQA
                 foreach (var fill in UnityEngine.Object.FindObjectsByType<CabInteriorLighting>(FindObjectsSortMode.None)) fill.Refresh(eye);
                 var report = new StringBuilder();
                 var interiorReport = new StringBuilder("mirror\tinteriorPixels\ttotalPixels\n");
+                var budgetReport = new StringBuilder("# Editor visibility estimates, not GPU timings. Regular and instanced submissions reported separately.\n");
                 report.AppendLine("# Editor mirror audit; cadence is configured, not measured phone Hz. Native RT pixels are unflipped; surface mapping follows the prefab UV/flip contract.");
                 report.AppendLine("mirror\tclass\twidth\theight\tfovV\taspect\tnear\tfar\tlodScale\tcap\tintervalDrivingFrames\tintervalStandingFrames");
                 var previous = RenderTexture.active;
@@ -48,6 +49,27 @@ namespace Game.Editor.VisualQA
                     foreach (var mirror in mirrors)
                     {
                         mirror.RenderNow(); mirror.RenderNow();
+                        // Capture regular estimates while the actual mirror culling and LOD bias are in force.
+                        // SceneStats does not inspect forceRenderingOff, so mask those renderers for the estimate only.
+                        string estimate = "UNVERIFIED";
+                        void CaptureBudget(UnityEngine.Rendering.ScriptableRenderContext context, Camera camera)
+                        {
+                            if (camera != mirror.GetComponent<Camera>()) return;
+                            var hidden = UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None)
+                                .Where(r => r.forceRenderingOff && r.enabled).ToArray();
+                            try
+                            {
+                                foreach (var renderer in hidden) renderer.enabled = false;
+                                estimate = SceneStats.Estimate(camera, 0f, 1, mirror.name);
+                            }
+                            finally { foreach (var renderer in hidden) renderer.enabled = true; }
+                        }
+                        UnityEngine.Rendering.RenderPipelineManager.beginCameraRendering += CaptureBudget;
+                        try { mirror.RenderNow(); }
+                        finally { UnityEngine.Rendering.RenderPipelineManager.beginCameraRendering -= CaptureBudget; }
+                        var instanceStats = Game.World.WorldInstances.Last;
+                        budgetReport.AppendLine(estimate);
+                        budgetReport.AppendLine($"  {mirror.name} instanced: draws {instanceStats.Draws}, triangles {instanceStats.Triangles}");
                         var rt = mirror.Texture;
                         if (rt == null || !rt.IsCreated()) throw new InvalidOperationException("Missing mirror texture: " + mirror.name);
                         var cam = mirror.GetComponent<Camera>();
@@ -96,6 +118,7 @@ namespace Game.Editor.VisualQA
                 finally { RenderTexture.active = previous; }
                 File.WriteAllText(Path.Combine(output, "configuration.tsv"), report.ToString());
                 File.WriteAllText(Path.Combine(output, "interior-pixels.tsv"), interiorReport.ToString());
+                File.WriteAllText(Path.Combine(output, "budgets.txt"), budgetReport.ToString());
                 exit = 0;
             }
             catch (Exception e) { Debug.LogException(e); }
