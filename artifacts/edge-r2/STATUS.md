@@ -66,3 +66,5 @@ Krok 25: pełny GIS: 536 passed, 2 failed, 1 xfailed w 749,35 s. Porażki: istni
 Zweryfikowano wszystkie 64 fizyczne GLB z niezależnej budowy CLI i pytest: bajtowo identyczne, 64/64 zgodne też ze świeżym manifestem; bazowe metadane są inne w 54/64 chunkach. Dowód chunk-manifest-drift.json, pełny świeży manifest zachowano w artefaktach. Nie zmieniano źródeł cudzych generatorów ani chunków w końcowym manifeście.
 Po GIS sprawdzono niezmienność własnego QA/manifesta i obu SHA far GLB; odtworzono uboczne metadane innych dziedzin, zachowując bazę sceny + edge. Zachowano after-source i after-gis-cache przed przyszłymi rundami.
 Następny krok: uzupełnić ADR i REPORT ze wszystkimi porażkami, skopiować artifacts, od razu r3.
+Krok 26: REPORT (normalny polski tekst, 17 linii) i VALIDATION opisują wyniki oraz obie porażki pełnego GIS bez oznaczania zestawu PASS. ADR uzupełniono o dowód deterministyczności 64 fizycznych chunków i problem bazowych metadanych. Stan produkcji i własne artefakty są zapisane.
+Następny krok: robocopy artifacts/edge-r2 do main, zweryfikować liczby plików, bajty i SHA REPORT, zapisać kwit i rozpocząć gpt-edge-r3.
