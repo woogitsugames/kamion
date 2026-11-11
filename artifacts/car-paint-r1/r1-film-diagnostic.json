@@ -1,0 +1,14 @@
+{
+  "note": "Actual original-scene fragment-return diagnostic only, labelled R=carFilmOpacity/G=flatinstancelevel/B=saturate(physicalheight). Normal QA post still active, RGB is not linear numeric readback. Source restored byte-for-byte in finally before any R2 edit.",
+  "source_before_diagnostic_sha256": "1de2b34b19a040945593a004b796240834440f88711212a4ff15694ffa6f739a",
+  "cameras": [
+    "g_dirt_level_0",
+    "g_dirt_level_1",
+    "g_dirt_level_2",
+    "g_dirt_level_3",
+    "r10b_black_05"
+  ],
+  "tier": "High",
+  "lighting": "overcast",
+  "result": "All4 realcar seed levels and lowerdoor opacity visible. MissingUV/mask hypothesis rejected. Final grime visual legibility remains FAIL on originalR1."
+}

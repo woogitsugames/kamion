@@ -68,3 +68,6 @@
 
 - Step23 CPU-only: provisional ADR0089 records causal HDR Color fix, fresh A-correct blackdoor decision, bounded wheel range and current evidence/limitations; explicitly WIP pending R2/EditMode/root acceptance. No new code, shader change remains single R2 candidate. Source/cache unchanged under hold.
 - NEXT COMMAND: NEW explicit ROOT release + both guards absent -> capture-focused.ps1. Do not run Unity automatically or activate D while held.
+
+- Step24 CPU-only: compact original236route-condition budget summary and labelled actual-scene fragment-diagnostic provenance saved. All CPU/GPU claims separated; diagnostic post RGB is not treated as linear readback. Rechecked actual Mapillary crops: clean dark cars retain readable body/specular and neutral wheels; these references do not calibrate dirty-film albedo across lighting. No Unity active/queued while diag4HOLD continues.
+- NEXT COMMAND: on NEW explicitROOT release + both guards absent run capture-focused.ps1, inspect24actualR2frames before fullmatrix.

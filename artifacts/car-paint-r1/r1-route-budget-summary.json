@@ -1,0 +1,109 @@
+{
+  "note": "236 matched original-route camera conditions; CPU visible draw estimates and rounded thousands of triangles, NOT GPU/device timing. No unrelated quality reduction, world128BIN and64instanceJSON byte-identical to originalbaseline.",
+  "conditions": {
+    "Low-clear": {
+      "original_route_camera_count": 59,
+      "minimum": {
+        "total_draws_est": -23,
+        "total_triangles_k_rounded": -2
+      },
+      "maximum": {
+        "total_draws_est": 0,
+        "total_triangles_k_rounded": 0
+      },
+      "matched_original_cameras": 73,
+      "after_only_diagnostics": [
+        "g_current_black_lod_05",
+        "g_current_black_lod_20",
+        "g_current_black_lod_45",
+        "g_current_black_wheel_02",
+        "g_dirt_level_0",
+        "g_dirt_level_1",
+        "g_dirt_level_2",
+        "g_dirt_level_3"
+      ],
+      "stats_sha256": {
+        "before": "e2a96d436394e7a03b1d70e96e1c010af5fe99c1bd2fd974eb8eb9310102383f",
+        "r1": "facd0b267d1bab9a343045cc53f6262a973f2b1210fbb404a0fbc8838688870c"
+      }
+    },
+    "Low-overcast": {
+      "original_route_camera_count": 59,
+      "minimum": {
+        "total_draws_est": -23,
+        "total_triangles_k_rounded": -2
+      },
+      "maximum": {
+        "total_draws_est": 0,
+        "total_triangles_k_rounded": 0
+      },
+      "matched_original_cameras": 73,
+      "after_only_diagnostics": [
+        "g_current_black_lod_05",
+        "g_current_black_lod_20",
+        "g_current_black_lod_45",
+        "g_current_black_wheel_02",
+        "g_dirt_level_0",
+        "g_dirt_level_1",
+        "g_dirt_level_2",
+        "g_dirt_level_3"
+      ],
+      "stats_sha256": {
+        "before": "d761ba90f0093e972f5008a8fe4185ffb7db69a657c302e37b37632b183fc3d8",
+        "r1": "021a08da460ea971488afc4938b4f40900aa211d481407a85524fc43beccc948"
+      }
+    },
+    "High-clear": {
+      "original_route_camera_count": 59,
+      "minimum": {
+        "total_draws_est": -42,
+        "total_triangles_k_rounded": -3
+      },
+      "maximum": {
+        "total_draws_est": 0,
+        "total_triangles_k_rounded": 0
+      },
+      "matched_original_cameras": 73,
+      "after_only_diagnostics": [
+        "g_current_black_lod_05",
+        "g_current_black_lod_20",
+        "g_current_black_lod_45",
+        "g_current_black_wheel_02",
+        "g_dirt_level_0",
+        "g_dirt_level_1",
+        "g_dirt_level_2",
+        "g_dirt_level_3"
+      ],
+      "stats_sha256": {
+        "before": "8d69bb9c5ef99bd3b19f5c6911f2a3ab3c392d166d97e42f7010970b972995c4",
+        "r1": "72586d73f26684ba96575a085c36295597073c6d26c85e5d12fc5a28a2d18a4f"
+      }
+    },
+    "High-overcast": {
+      "original_route_camera_count": 59,
+      "minimum": {
+        "total_draws_est": -42,
+        "total_triangles_k_rounded": -3
+      },
+      "maximum": {
+        "total_draws_est": 0,
+        "total_triangles_k_rounded": 0
+      },
+      "matched_original_cameras": 73,
+      "after_only_diagnostics": [
+        "g_current_black_lod_05",
+        "g_current_black_lod_20",
+        "g_current_black_lod_45",
+        "g_current_black_wheel_02",
+        "g_dirt_level_0",
+        "g_dirt_level_1",
+        "g_dirt_level_2",
+        "g_dirt_level_3"
+      ],
+      "stats_sha256": {
+        "before": "9d47385533d6de480bfa9fd92b084c83245e1481487884883c754c388a7983fe",
+        "r1": "4867eeec8b47134655173ec3209b9956b16d76b52bdc3c980b098e5fb977ec8f"
+      }
+    }
+  }
+}
