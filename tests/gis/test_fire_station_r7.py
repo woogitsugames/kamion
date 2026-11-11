@@ -96,11 +96,20 @@ def test_new_geometry_keeps_two_low_slots_and_original_plant_budget(monkeypatch)
     mb = namespace["MB"]()
     for e,n,z,height,radius,key in namespace["SPEC"]["ground"]["thuja"]:
         namespace["build_thuja"](mb,namespace["en_to_uvz"]([e,n,z]),height,radius,key,1)
+    thuja_normal_corners = len(mb.core_normals)
+    assert thuja_normal_corners == len(mb.V), "Low shrubs need explicit smooth normals at every split corner"
+    shared = {}
+    for index, normal in mb.core_normals.items():
+        assert np.isfinite(normal).all() and np.linalg.norm(normal) > 0
+        position = tuple(mb.V[index])
+        if position in shared:
+            np.testing.assert_array_equal(shared[position], normal)
+        shared[position] = normal
     for e,n,z,height,radius,key in namespace["SPEC"]["ground"]["spruce"]:
         namespace["build_conifer"](mb,namespace["en_to_uvz"]([e,n,z]),height,radius,key,1)
     assert set(mb.M) == {"fire_station", "fire_station_alpha"}
     assert sum(len(face)-2 for face in mb.F) <= 888
-    assert len(mb.core_normals) == 216, "radial normals belong only to3 connected low canopy cores"
+    assert len(mb.core_normals) - thuja_normal_corners == 216, "three conifer cores retain their radial normals"
     r = namespace["ALAY"]["conifer_bough"]; u0,v0,u1,v1 = r["inner_uv"]
     for material, uv in zip(mb.M, mb.UV):
         if material == "fire_station_alpha":

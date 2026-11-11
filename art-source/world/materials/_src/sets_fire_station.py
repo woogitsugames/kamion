@@ -381,9 +381,9 @@ def fire_station(nx=2048):
         gmax = float(gv[mask & inside].max()) if (mask & inside).any() else 1.0
         sky = (0.55 + 0.9 * np.clip(gv / max(gmax, 1e-3), 0, 1) ** 1.3)[..., None]
         if glass is not None:                      # big hall glazing: grey daylight reflection, no blinds (photo 7197)
-            # r7: the old strong gradient made upper glass ~100-113 sRGB while mid panes were83-94.
-            # Hall-local soft gradient; a second .60 scalar after the measured83-86 High overshoot targets60-75.
-            sky = (0.90 + 0.06 * np.clip(gv / max(gmax, 1e-3), 0, 1) ** 1.3)[..., None]
+            # ADR 0116 r1: hall-only sky at the head and dark interior below,
+            # as in CC0 7197. WORKING_VALUE until the paired Unity capture.
+            sky = (0.43 + 0.57 * np.clip(gv / max(gmax, 1e-3), 0, 1) ** 1.3)[..., None]
             gcol = glass[None, None, :] * sky * (0.85 + 0.3 * K.hash01(pane, 19))[..., None] * (1 + 0.10 * n_big)[..., None]
         else:                                      # three states: blind / net curtain / dark interior
             curtain = np.array([0.36, 0.36, 0.34], np.float32) * (0.85 + 0.15 * np.cos(2 * np.pi * gu / 0.11))[..., None]
@@ -405,7 +405,7 @@ def fire_station(nx=2048):
     # than the office glazing. Linear albedo WORKING_VALUE by eye.
     # r5: measured on the Unity r4b render (High overcast) the glass was 0.27-0.34 x the wall (linearised sRGB), on the
     # photo 0.45-1.0 x (mean ~0.7): doubled. Still a WORKING_VALUE (one overcast photo).
-    hall_glass = np.array([0.0612, 0.0648, 0.0702], np.float32)  # r7 measured second WORKING_VALUE; office panes unchanged
+    hall_glass = np.array([0.0459, 0.0486, 0.05265], np.float32)  # ADR 0116 r1 WORKING_VALUE; office panes unchanged
     # arched window 3.4 x 3.4: segmental arch (rise 1.0 m above the 2.4 m springing), blue trim band 0.16 m
     A = L["win_arch"]
     ga = L["arch"]
