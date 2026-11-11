@@ -1,0 +1,619 @@
+{
+  "note": "PNG native display RGB/luma; fixed ROI comparison, not linear photometry. Stats CPU estimates with rounded thousands of triangles; no GPU/device proof.",
+  "rounds": {
+    "pearl-only": {
+      "Low-clear": {
+        "roi": {
+          "r10b_black_05": {
+            "door": {
+              "box": [
+                980,
+                590,
+                1100,
+                660
+              ],
+              "rgb_mean": [
+                73.51714285714286,
+                73.10857142857142,
+                70.78880952380952
+              ],
+              "rgb_median": [
+                73.0,
+                73.0,
+                70.0
+              ],
+              "display_luma_mean": 73.02794690476192,
+              "display_luma_p05": 69.996,
+              "display_luma_p95": 76.9278,
+              "fraction_any250": 0.0
+            },
+            "hood_legacy_mixed": {
+              "box": [
+                1400,
+                470,
+                1520,
+                525
+              ],
+              "rgb_mean": [
+                64.07166666666667,
+                70.19954545454546,
+                78.72015151515151
+              ],
+              "rgb_median": [
+                67.0,
+                73.0,
+                81.0
+              ],
+              "display_luma_mean": 69.51194618181817,
+              "display_luma_p05": 45.7192,
+              "display_luma_p95": 84.2378,
+              "fraction_any250": 0.0
+            },
+            "hood": {
+              "box": [
+                1450,
+                560,
+                1580,
+                630
+              ],
+              "rgb_mean": [
+                65.45043956043956,
+                69.67373626373626,
+                77.53648351648351
+              ],
+              "rgb_median": [
+                65.0,
+                69.0,
+                77.0
+              ],
+              "display_luma_mean": 69.34355373626373,
+              "display_luma_p05": 65.8676,
+              "display_luma_p95": 73.37419999999999,
+              "fraction_any250": 0.0
+            },
+            "road": {
+              "box": [
+                1700,
+                940,
+                1850,
+                1020
+              ],
+              "rgb_mean": [
+                93.82583333333334,
+                91.99016666666667,
+                87.6055
+              ],
+              "rgb_median": [
+                93.0,
+                91.0,
+                87.0
+              ],
+              "display_luma_mean": 92.06385646666668,
+              "display_luma_p05": 85.1364,
+              "display_luma_p95": 100.06419999999999,
+              "fraction_any250": 0.0
+            },
+            "sky": {
+              "box": [
+                1700,
+                20,
+                1800,
+                90
+              ],
+              "rgb_mean": [
+                125.674,
+                142.24642857142857,
+                152.85357142857143
+              ],
+              "rgb_median": [
+                126.0,
+                143.0,
+                153.0
+              ],
+              "display_luma_mean": 139.48896597142857,
+              "display_luma_p05": 138.3966,
+              "display_luma_p95": 141.3886,
+              "fraction_any250": 0.0
+            }
+          }
+        },
+        "stats": {
+          "g_current_black_lod_05": {
+            "draws": 265,
+            "instances": 124,
+            "triangles_k_rounded": 41,
+            "cells": 105,
+            "forest_hlod_cells": 91
+          },
+          "g_current_black_lod_20": {
+            "draws": 369,
+            "instances": 145,
+            "triangles_k_rounded": 48,
+            "cells": 106,
+            "forest_hlod_cells": 90
+          },
+          "g_current_black_lod_45": {
+            "draws": 404,
+            "instances": 195,
+            "triangles_k_rounded": 53,
+            "cells": 113,
+            "forest_hlod_cells": 94
+          },
+          "g_current_black_wheel_02": {
+            "draws": 295,
+            "instances": 142,
+            "triangles_k_rounded": 42,
+            "cells": 116,
+            "forest_hlod_cells": 100
+          },
+          "r10b_black_05": {
+            "draws": 380,
+            "instances": 167,
+            "triangles_k_rounded": 48,
+            "cells": 171,
+            "forest_hlod_cells": 89
+          }
+        }
+      },
+      "Low-overcast": {
+        "roi": {
+          "r10b_black_05": {
+            "door": {
+              "box": [
+                980,
+                590,
+                1100,
+                660
+              ],
+              "rgb_mean": [
+                33.68678571428571,
+                33.90547619047619,
+                33.840714285714284
+              ],
+              "rgb_median": [
+                33.0,
+                33.0,
+                33.0
+              ],
+              "display_luma_mean": 33.85430678571428,
+              "display_luma_p05": 30.0,
+              "display_luma_p95": 39.072199999999995,
+              "fraction_any250": 0.0
+            },
+            "hood_legacy_mixed": {
+              "box": [
+                1400,
+                470,
+                1520,
+                525
+              ],
+              "rgb_mean": [
+                72.33257575757575,
+                73.74090909090908,
+                76.86469696969696
+              ],
+              "rgb_median": [
+                76.0,
+                77.0,
+                81.0
+              ],
+              "display_luma_mean": 73.6670349090909,
+              "display_luma_p05": 29.8596,
+              "display_luma_p95": 91.9358,
+              "fraction_any250": 0.0
+            },
+            "hood": {
+              "box": [
+                1450,
+                560,
+                1580,
+                630
+              ],
+              "rgb_mean": [
+                70.15989010989011,
+                71.46384615384615,
+                75.45703296703297
+              ],
+              "rgb_median": [
+                70.0,
+                72.0,
+                76.0
+              ],
+              "display_luma_mean": 71.47493318681319,
+              "display_luma_p05": 66.004,
+              "display_luma_p95": 78.1484,
+              "fraction_any250": 0.0
+            },
+            "road": {
+              "box": [
+                1700,
+                940,
+                1850,
+                1020
+              ],
+              "rgb_mean": [
+                55.68366666666667,
+                54.73491666666666,
+                53.55283333333333
+              ],
+              "rgb_median": [
+                55.0,
+                54.0,
+                53.0
+              ],
+              "display_luma_mean": 54.8512745,
+              "display_luma_p05": 48.855599999999995,
+              "display_luma_p95": 62.0682,
+              "fraction_any250": 0.0
+            },
+            "sky": {
+              "box": [
+                1700,
+                20,
+                1800,
+                90
+              ],
+              "rgb_mean": [
+                161.95185714285714,
+                164.66042857142858,
+                168.90857142857143
+              ],
+              "rgb_median": [
+                162.0,
+                164.0,
+                169.0
+              ],
+              "display_luma_mean": 164.3913022,
+              "display_luma_p05": 162.65099999999998,
+              "display_luma_p95": 170.65099999999998,
+              "fraction_any250": 0.0
+            }
+          }
+        },
+        "stats": {
+          "g_current_black_lod_05": {
+            "draws": 265,
+            "instances": 124,
+            "triangles_k_rounded": 41,
+            "cells": 105,
+            "forest_hlod_cells": 91
+          },
+          "g_current_black_lod_20": {
+            "draws": 369,
+            "instances": 145,
+            "triangles_k_rounded": 48,
+            "cells": 106,
+            "forest_hlod_cells": 90
+          },
+          "g_current_black_lod_45": {
+            "draws": 404,
+            "instances": 195,
+            "triangles_k_rounded": 53,
+            "cells": 113,
+            "forest_hlod_cells": 94
+          },
+          "g_current_black_wheel_02": {
+            "draws": 295,
+            "instances": 142,
+            "triangles_k_rounded": 42,
+            "cells": 116,
+            "forest_hlod_cells": 100
+          },
+          "r10b_black_05": {
+            "draws": 380,
+            "instances": 167,
+            "triangles_k_rounded": 48,
+            "cells": 171,
+            "forest_hlod_cells": 89
+          }
+        }
+      },
+      "High-clear": {
+        "roi": {
+          "r10b_black_05": {
+            "door": {
+              "box": [
+                980,
+                590,
+                1100,
+                660
+              ],
+              "rgb_mean": [
+                79.24928571428572,
+                78.8275,
+                76.54535714285714
+              ],
+              "rgb_median": [
+                79.0,
+                78.0,
+                76.0
+              ],
+              "display_luma_mean": 78.75240092857142,
+              "display_luma_p05": 75.06819999999999,
+              "display_luma_p95": 82.92779999999999,
+              "fraction_any250": 0.0
+            },
+            "hood_legacy_mixed": {
+              "box": [
+                1400,
+                470,
+                1520,
+                525
+              ],
+              "rgb_mean": [
+                70.12636363636364,
+                76.32060606060607,
+                84.89545454545454
+              ],
+              "rgb_median": [
+                73.0,
+                78.0,
+                86.0
+              ],
+              "display_luma_mean": 75.62281418181819,
+              "display_luma_p05": 50.64699999999999,
+              "display_luma_p95": 91.31,
+              "fraction_any250": 0.0
+            },
+            "hood": {
+              "box": [
+                1450,
+                560,
+                1580,
+                630
+              ],
+              "rgb_mean": [
+                71.34384615384616,
+                75.7365934065934,
+                83.74054945054945
+              ],
+              "rgb_median": [
+                71.0,
+                75.0,
+                84.0
+              ],
+              "display_luma_mean": 75.38058096703296,
+              "display_luma_p05": 71.8676,
+              "display_luma_p95": 79.4464,
+              "fraction_any250": 0.0
+            },
+            "road": {
+              "box": [
+                1700,
+                940,
+                1850,
+                1020
+              ],
+              "rgb_mean": [
+                98.74708333333334,
+                96.92966666666666,
+                92.53575
+              ],
+              "rgb_median": [
+                98.0,
+                97.0,
+                91.0
+              ],
+              "display_luma_mean": 96.99880866666666,
+              "display_luma_p05": 81.71114,
+              "display_luma_p95": 114.9238,
+              "fraction_any250": 0.0
+            },
+            "sky": {
+              "box": [
+                1700,
+                20,
+                1800,
+                90
+              ],
+              "rgb_mean": [
+                131.41528571428572,
+                146.41514285714285,
+                155.265
+              ],
+              "rgb_median": [
+                132.0,
+                148.0,
+                156.0
+              ],
+              "display_luma_mean": 143.8651329142857,
+              "display_luma_p05": 141.8178,
+              "display_luma_p95": 146.6104,
+              "fraction_any250": 0.0
+            }
+          }
+        },
+        "stats": {
+          "g_current_black_lod_05": {
+            "draws": 332,
+            "instances": 471,
+            "triangles_k_rounded": 74,
+            "cells": 183,
+            "forest_hlod_cells": 167
+          },
+          "g_current_black_lod_20": {
+            "draws": 441,
+            "instances": 474,
+            "triangles_k_rounded": 94,
+            "cells": 192,
+            "forest_hlod_cells": 174
+          },
+          "g_current_black_lod_45": {
+            "draws": 480,
+            "instances": 503,
+            "triangles_k_rounded": 105,
+            "cells": 199,
+            "forest_hlod_cells": 179
+          },
+          "g_current_black_wheel_02": {
+            "draws": 358,
+            "instances": 513,
+            "triangles_k_rounded": 78,
+            "cells": 205,
+            "forest_hlod_cells": 187
+          },
+          "r10b_black_05": {
+            "draws": 555,
+            "instances": 447,
+            "triangles_k_rounded": 122,
+            "cells": 358,
+            "forest_hlod_cells": 276
+          }
+        }
+      },
+      "High-overcast": {
+        "roi": {
+          "r10b_black_05": {
+            "door": {
+              "box": [
+                980,
+                590,
+                1100,
+                660
+              ],
+              "rgb_mean": [
+                38.17952380952381,
+                38.41059523809524,
+                38.329880952380954
+              ],
+              "rgb_median": [
+                38.0,
+                38.0,
+                38.0
+              ],
+              "display_luma_mean": 38.355641880952376,
+              "display_luma_p05": 34.0,
+              "display_luma_p95": 44.0722,
+              "fraction_any250": 0.0
+            },
+            "hood_legacy_mixed": {
+              "box": [
+                1400,
+                470,
+                1520,
+                525
+              ],
+              "rgb_mean": [
+                78.82969696969697,
+                80.40015151515152,
+                83.76484848484849
+              ],
+              "rgb_median": [
+                84.0,
+                85.0,
+                89.0
+              ],
+              "display_luma_mean": 80.30920400000001,
+              "display_luma_p05": 30.0,
+              "display_luma_p95": 100.5776,
+              "fraction_any250": 0.0
+            },
+            "hood": {
+              "box": [
+                1450,
+                560,
+                1580,
+                630
+              ],
+              "rgb_mean": [
+                77.00538461538461,
+                78.52494505494505,
+                82.91571428571429
+              ],
+              "rgb_median": [
+                76.0,
+                78.0,
+                84.0
+              ],
+              "display_luma_mean": 78.51890004395605,
+              "display_luma_p05": 73.00399999999999,
+              "display_luma_p95": 86.1484,
+              "fraction_any250": 0.0
+            },
+            "road": {
+              "box": [
+                1700,
+                940,
+                1850,
+                1020
+              ],
+              "rgb_mean": [
+                60.49925,
+                59.55383333333333,
+                58.36516666666667
+              ],
+              "rgb_median": [
+                59.0,
+                58.0,
+                57.0
+              ],
+              "display_luma_mean": 59.669007183333335,
+              "display_luma_p05": 47.9278,
+              "display_luma_p95": 74.5668,
+              "fraction_any250": 0.0
+            },
+            "sky": {
+              "box": [
+                1700,
+                20,
+                1800,
+                90
+              ],
+              "rgb_mean": [
+                168.936,
+                170.89857142857142,
+                175.6742857142857
+              ],
+              "rgb_median": [
+                169.0,
+                171.0,
+                175.0
+              ],
+              "display_luma_mean": 170.8261353142857,
+              "display_luma_p05": 167.5054,
+              "display_luma_p95": 179.43839999999997,
+              "fraction_any250": 0.0
+            }
+          }
+        },
+        "stats": {
+          "g_current_black_lod_05": {
+            "draws": 332,
+            "instances": 471,
+            "triangles_k_rounded": 74,
+            "cells": 183,
+            "forest_hlod_cells": 167
+          },
+          "g_current_black_lod_20": {
+            "draws": 441,
+            "instances": 474,
+            "triangles_k_rounded": 94,
+            "cells": 192,
+            "forest_hlod_cells": 174
+          },
+          "g_current_black_lod_45": {
+            "draws": 480,
+            "instances": 503,
+            "triangles_k_rounded": 105,
+            "cells": 199,
+            "forest_hlod_cells": 179
+          },
+          "g_current_black_wheel_02": {
+            "draws": 358,
+            "instances": 513,
+            "triangles_k_rounded": 78,
+            "cells": 205,
+            "forest_hlod_cells": 187
+          },
+          "r10b_black_05": {
+            "draws": 555,
+            "instances": 447,
+            "triangles_k_rounded": 122,
+            "cells": 358,
+            "forest_hlod_cells": 276
+          }
+        }
+      }
+    }
+  }
+}
