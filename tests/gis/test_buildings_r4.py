@@ -45,7 +45,7 @@ def test_balcony_is_a_slab_with_a_screen_clear_of_it():
     full = sum(len(it[1]) for v in acc.d.values() for it in v)
     far = _balcony(key, False)
     lean = sum(len(it[1]) for v in far.d.values() for it in v)
-    assert full == 42 and lean == 20
+    assert full == 42 and lean == 16                                    # ADR 0097: no side rails above the 2nd storey (was 20)
 
 
 def test_dishes_look_at_the_satellite():

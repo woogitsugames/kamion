@@ -101,7 +101,7 @@ def test_plinth_drip_skips_the_door():
     acc = B.Acc()
     FK.plinth_drip(acc, np.array([0.0, 0.0]), np.array([1.0, 0.0]), np.array([0.0, -1.0]), 10.0, 100.9,
                    [(4.0, 5.6, 100.15, 102.4, 0.15, "door", "x")])
-    assert _tris(acc, "window_sill") == 12                # two runs x (top, front, underside)
+    assert _tris(acc, "hall_flashing") == 8               # two runs x (front, underside)
 
 
 def test_house_palette_differs_from_neighbours():
@@ -125,3 +125,19 @@ def test_door_landing_and_steps():
     # landing (4 faces) + 3 steps for 0.58 m of rise
     assert _tris(acc, "plinth_dark") == 8 + 3 * 8 and _tris(acc, "window_sill") == 4
     assert _tris(acc, "plinth_dark", "buildings_low") == 0
+
+
+def test_wall_apron_drapes_on_the_terrain():
+    from streetscape import buildings_mesh as B
+    from streetscape import facade_kit as FK
+
+    class HF:
+        def sample(self, e, n):
+            return 100.0 + 0.1 * np.asarray(e)
+    acc = B.Acc()
+    FK.wall_apron(acc, box(0, 0, 20, 10), HF())
+    V = np.concatenate([it[0] for it in acc.d[("buildings", "sidewalk_paving")]])
+    assert np.allclose(V[:, 2], 100.0 + 0.1 * V[:, 0] + 0.04)
+    area = sum(0.5 * abs(np.cross(t[1] - t[0], t[2] - t[0])[2]) for it in acc.d[("buildings", "sidewalk_paving")]
+               for t in it[0].reshape(-1, 3, 3) * np.array([1, 1, 0]))
+    assert area == pytest.approx(box(0, 0, 20, 10).buffer(0.5, join_style="mitre").area - 200.0, rel=1e-3)

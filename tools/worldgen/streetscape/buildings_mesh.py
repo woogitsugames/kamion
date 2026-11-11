@@ -77,7 +77,8 @@ BALCONY_SUN = np.array([-0.5, -0.866])       # towards SSW (E, N)
 PLINTH_H = {"block": None, "office": 0.6, "house": 0.45, "shed": 0.3}
 PLINTHS = ["plinth_dark"]
 BAL_EXCEPT_PCT = 12            # ADR 0097: share of balconies with another balustrade than the building's (WORKING_VALUE)
-BAL_EXCEPT = (4, 5, 0, 2, 7)   # balf variants of the exceptions: bars + flowers, reed mat, perforated, brown, green
+BAL_EXCEPT = (4, 5, 0)         # balf variants of the exceptions: bars + flowers, reed mat, perforated (r1 also brown /
+                               # green plastic: the brown read orange on r10_block_3)
 ESTATE_M = 250.0               # ADR 0097: estate cell for the balustrade types (<= 2 types per cell), m (WORKING_VALUE)
 SILL_RUNOFF = True             # ADR 0097: streaks under window sills (TEXCOORD_1.v + 64, shader ADR 0092)      # ADR 0094: one tone (r3 had two; every material is a draw per chunk on both LODs)
 
@@ -1223,6 +1224,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                       pieces=lod1_pieces, fkey=f"{key}:{ei}", balcony=bal_group if ei in bal_edges else False, plinth=plinth,
                       ground=lod1_gfn)
             u_acc += L
+        if typ == "block":                                         # ADR 0097 (P2-g): paved apron
+            FK.wall_apron(acc, poly, hf)
         if typ == "hall" and len(edges) >= 3:                       # corner flashings
             for i, (a, c_) in enumerate(edges):
                 FK.corner_trim(acc, a, nouts[i - 1], nouts[i], zref + 0.6, zeave - 0.4)

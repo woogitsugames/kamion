@@ -118,11 +118,11 @@ def coping(acc, a, c, nout, zt, mat="hall_flashing"):
     acc.box(L0, mat, v3(ctr, zt + 0.03), np.append(d * (L / 2 + 0.06), 0), np.append(nout * 0.11, 0), [0, 0, 0.05])
 
 
-def plinth_drip(acc, a, d, nout, L, z, ops, mat="window_sill"):
+def plinth_drip(acc, a, d, nout, L, z, ops, mat="hall_flashing"):
     """ADR 0097 (review 0094 P1-a "linia cokół-ściana"): starter / drip profile of the insulation over the plinth -
-    3.5 cm proud, 3 cm tall, top + front + underside (the underside is a face looking down: the engine halves its
-    ambient, so it reads as the 2-3 cm shadow line between the insulated wall and the recessed plinth). Split round the
-    openings that cross z (entrance doors). LOD0, 6 triangles per run."""
+    3.5 cm proud, 3 cm tall, front + underside in the dark flashing (r1 had a light top face: from 10-30 m it read as a
+    dashed white line, not as the 2-3 cm shadow line between the insulated wall and the recessed plinth). Split round
+    the openings that cross z (entrance doors). LOD0, 4 triangles per run."""
     d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
     cuts = sorted((o[0] - 0.02, o[1] + 0.02) for o in ops if o[2] < z + 0.03 and o[3] > z - 0.01)
     u, runs = -0.035, []
@@ -134,7 +134,7 @@ def plinth_drip(acc, a, d, nout, L, z, ops, mat="window_sill"):
         runs.append((u, L + 0.035))
     for u0, u1 in runs:
         c = v3(a + d * ((u0 + u1) / 2) + nout * 0.0175, z + 0.005)
-        acc.box(L0, mat, c, d3 * ((u1 - u0) / 2), n3 * 0.0175, [0, 0, 0.015], skip=(2, 4, 5))
+        acc.box(L0, mat, c, d3 * ((u1 - u0) / 2), n3 * 0.0175, [0, 0, 0.015], skip=(1, 2, 4, 5))
 
 
 def door_steps(acc, a, d, nout, u, zd, zg, mat="plinth_dark", w=1.4):
@@ -158,6 +158,27 @@ def door_steps(acc, a, d, nout, u, zd, zg, mat="plinth_dark", w=1.4):
                 skip=(0, 2))
     acc.box(L0, "window_sill", v3(a + d * u + nout * 0.03, zd - 0.005), d3 * 0.52, n3 * 0.09, [0, 0, 0.018],
             skip=(0, 2, 4, 5))
+
+
+def wall_apron(acc, poly, hf, width=0.5, mat="sidewalk_paving", lift=0.04, step=2.0):
+    """ADR 0097 (review 0094 P2-g "opaska z kostki/żwiru"): concrete-paver apron round a block, `width` m wide, draped
+    on the terrain (vertices every `step` m along the walls, `lift` above the ground). The plinth then stands in a
+    paved strip instead of meeting the grass on a hard line. LOD0; sidewalk_paving is already drawn in 12 of the 14
+    chunks with blocks (r1 chunk_mats)."""
+    import shapely as _sh
+    ring = poly.buffer(width, join_style="mitre", mitre_limit=2.0).difference(poly)
+    if ring.is_empty:
+        return
+    ring = _sh.segmentize(ring, step)
+    tri = _sh.constrained_delaunay_triangles(ring)
+    T = np.array([np.asarray(t.exterior.coords)[:3] for t in tri.geoms if t.area > 1e-4])
+    if not len(T):
+        return
+    cr = (T[:, 1, 0] - T[:, 0, 0]) * (T[:, 2, 1] - T[:, 0, 1]) - (T[:, 1, 1] - T[:, 0, 1]) * (T[:, 2, 0] - T[:, 0, 0])
+    T[cr < 0] = T[cr < 0][:, [0, 2, 1]]
+    xy = T.reshape(-1, 2)
+    z = hf.sample(xy[:, 0], xy[:, 1]) + lift
+    acc.add(L0, mat, np.column_stack([xy, z]), np.arange(len(xy)).reshape(-1, 3), xy)
 
 
 def corner_trim(acc, p, n_a, n_b, z0, z1, mat="hall_flashing"):
@@ -342,9 +363,9 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key="", inner=True
     rail = up + [0, 0, 0.04]                         # handrail top 1.10 m above the floor (WT par. 298: >= 1.1 m)
     acc.box(L0, "downpipe", f + n3 * 0.01 + rail, d3 * (hw + 0.03), n3 * 0.025, [0, 0, 0.02],
             skip=(0, 2, 4, 5) if inner else (0, 1, 2, 4, 5))
-    for sg in (-1, 1):
-        acc.box(L0, "downpipe", w0 + d3 * sg * hw + n3 * dep / 2 + rail, d3 * 0.025, n3 * dep / 2,
-                [0, 0, 0.02], skip=(0, 2, 3, 4 if sg > 0 else 5) + (() if inner else (1,)))
+    for sg in (-1, 1) if inner else ():      # ADR 0097: no side rails above the 2nd storey (-4 triangles: balconies
+        acc.box(L0, "downpipe", w0 + d3 * sg * hw + n3 * dep / 2 + rail, d3 * 0.025, n3 * dep / 2,   # on both long sides)
+                [0, 0, 0.02], skip=(0, 2, 3, 4 if sg > 0 else 5))
     up = np.array([0, 0, 1.05])
     if hfloat(key, "glz") < 0.14:               # zabudowa balkonu: glazing above the balustrade, front + sides
         gv = int(hfloat(key, "glzv") * 97)
