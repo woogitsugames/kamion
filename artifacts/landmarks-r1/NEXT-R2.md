@@ -16,6 +16,20 @@ Porównać do 7204 (CC0) i p45 (Mapillary, tylko referencja), zmierzyć ROI od n
 Stare pomiary HIL: render 107/99/58 i 80/75/47 sRGB, sd 9–13;
 fotografia 79/67/37 i 81/69/42, sd 19–24. To różne warunki i orientacje, nie albedo.
 
+Ważne nowe źródło: wcześniejszy reference7204.jpg ma tylko 960x640. Pobrano
+oryginał reference7204-original.jpg 5520x3680 (10468810 B), SHA-1 zgodne z Commons
+61364bef59ec622ecf0a89e5a4c6e9cf6678504a; source JSON z licencją CC0 i autorem.
+Natywne wycinki underdeck-photo-details pokazują szerokie pionowe szare pasy na
+ścięciach naroży filarów, obok ochrowych płaszczyzn, oraz słabsze zacieki od głowicy.
+Znaczna część rozrzutu w ROI może wynikać z geometrii, różnych powierzchni i światła,
+a nie z plam w samej farbie. Nie próbować osiągnąć sd 19–24 samym losowym szumem.
+Sprawdzić po świeżym baseline przypisanie istniejących ośmiu ścian _prism:
+odcinki 1/3/5/7 obwodu to bevel. Kandydat za flagą danych: odsłonięty beton na
+potwierdzonych ścięciach, przy zachowaniu ochrowych głównych ścian. Reużycie
+bridge_concrete powinno trafić do już istniejącej grupy oczepów w tym samym chunku;
+potwierdzić draws +0 na wszystkich kamerach. Bez nowych trójkątów. Kolizja musi
+pozostać jedną, niezmienioną pełną bryłą; nie zmieniać cudzych pierwotnych podpór.
+
 Kandydat bez nowego shadera: `pier_yellow` z istniejącym skanem CC0 `plaster`
 (modulation_set; painted_plaster_wall), flagą danych `weather`, `splash_h: 0.8`
 i UV1 pod oczepem. W WorldPbrMaterials istnieją już _SPLASH oraz _RUNOFF na wszystkich

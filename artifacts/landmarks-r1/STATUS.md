@@ -126,3 +126,5 @@ Krok 36h: odnaleziono pierwotną referencję EC_Białystok (Hiuppo, CC BY-SA 2.5
 Krok 37: regeneracja modelu i świata po naprawie budżetu: trójkąty 9584/2818/164, brak fallback=True. Następnie pojedyncze testy remizy i hero building.
 
 Krok 37a: model po regeneracji ma potwierdzone 9584/2818/164 trójkąty. Generator zakończony w 1260,6 s czasu ściennego, w tym 775 s udokumentowanego zawieszenia przez watchdog (zdarzenia tylko własnego PID zachowane). Nie jest to pomiar CPU ani regresji wydajności. Oba pliki testów czekają w pipeline na pulę heavy; następnie import i nowe rendery.
+
+Krok 37b: pobrano zweryfikowany SHA-1 oryginał CC0 zdjęcia wiaduktu 7204 (5520x3680, 10468810 B) do własnych artifacts, bez zapisu w junctionie refs. Wcześniejsza kopia miała 960x640. Natywne detale ujawniają pionowe szare ścięcia naroży przy ochrowych ścianach — ważniejsza wskazówka dla r2 niż zwiększanie szumu materiału. NEXT-R2.md uzupełniono; źródła wiaduktu nietknięte.
