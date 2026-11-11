@@ -57,9 +57,9 @@ try {
         $dm = @('-NoProfile', '-File', (Join-Path $wt 'scripts/device-metrics.ps1'), '-Serial', $Serial, '-Launch', '-DurationSeconds', "$dur",
             '-WarmupSeconds', '25', '-Tier', $Tier, '-Scene', 'WorldC', '-Autopilot', 'route', '-Speed', '30', '-Trailer', '40', '-Extra', ($extra -join ','))
         if ($Uncapped) { $dm += '-Uncapped' } else { $dm += @('-Fps', "$Fps") }
-        $before = @(Get-ChildItem (Join-Path $main "artifacts/device/$Serial") -Directory -ErrorAction SilentlyContinue | ForEach-Object Name)
+        $before = @(Get-ChildItem (Join-Path $wt "artifacts/device/$Serial") -Directory -ErrorAction SilentlyContinue | ForEach-Object Name)
         & pwsh @dm | Out-Null
-        $new = Get-ChildItem (Join-Path $main "artifacts/device/$Serial") -Directory | Where-Object { $before -notcontains $_.Name } | Sort-Object Name | Select-Object -Last 1
+        $new = Get-ChildItem (Join-Path $wt "artifacts/device/$Serial") -Directory | Where-Object { $before -notcontains $_.Name } | Sort-Object Name | Select-Object -Last 1
         $dst = Join-Path $PSScriptRoot "$OutTag/$name"
         New-Item -ItemType Directory -Force $dst | Out-Null
         if ($new) { Copy-Item "$($new.FullName)\*" $dst -Recurse -Force -Exclude 'screen.png'; if (Test-Path "$($new.FullName)\screen.png") { Copy-Item "$($new.FullName)\screen.png" "$dst\screen.png" } }

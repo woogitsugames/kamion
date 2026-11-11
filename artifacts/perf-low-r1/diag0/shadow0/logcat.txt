@@ -1,0 +1,58 @@
+--------- beginning of main
+11-11 12:31:11.457 12605 12605 V Unity   : Context Type: GameActivity
+11-11 12:31:11.461 12605 12619 I Unity   : UnityApplication::CreateInstance
+11-11 12:31:11.461 12605 12619 I Unity   : GameActivity Package Version '4.4.0'
+11-11 12:31:11.462 12605 12619 I Unity   : Starting Game Loop
+11-11 12:31:11.464 12605 12619 I Unity   : Handle cmd APP_CMD_START(11)
+11-11 12:31:11.471 12605 12619 I Unity   : Handle cmd APP_CMD_RESUME(12)
+11-11 12:31:11.491 12605 12619 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+11-11 12:31:11.500 12605 12619 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+11-11 12:31:11.501 12605 12619 I Unity   : Handle cmd APP_CMD_CONTENT_RECT_CHANGED(5)
+11-11 12:31:11.506 12605 12619 I Unity   : Handle cmd APP_CMD_INIT_WINDOW(1)
+11-11 12:31:11.521 12605 12619 I Unity   : MemoryManager: Using 'Dynamic Heap' Allocator.
+11-11 12:31:11.545 12605 12619 I Unity   : SystemInfo CPU = ARM64 FP ASIMD AES, Cores = 8, Memory = 3653mb
+11-11 12:31:11.545 12605 12619 I Unity   : SystemInfo ARM big.LITTLE configuration: 2 big (mask: 0xc0), 6 little (mask: 0x3f)
+11-11 12:31:11.546 12605 12619 I Unity   : ApplicationInfo 'com.woogitsugames.kamion', Version '0.1.0', Min API Level '29', Target API Level '36'
+11-11 12:31:11.546 12605 12619 I Unity   : Built from '6000.3/respin/6000.3.28f1-21f78c3e21d1' branch, Version '6000.3.28f1 (8f082d2fe476)', Build type 'Release', Scripting Backend 'il2cpp', CPU 'arm64-v8a', Stripping 'Enabled'
+11-11 12:31:11.546 12605 12619 I Unity   : Device Model 'samsung SM-A165F', OS 'Android OS 16 (API 36)'
+11-11 12:31:11.664 12605 12619 I Unity   : Company Name: woogitsugames
+11-11 12:31:11.664 12605 12619 I Unity   : Product Name: Kamion
+11-11 12:31:12.046 12605 12619 I Unity   :     HasWindow = 1, HasFocus = 0
+11-11 12:31:12.046 12605 12619 I Unity   : Handle cmd APP_CMD_WINDOW_RESIZED(3)
+11-11 12:31:12.046 12605 12619 I Unity   : Handle cmd APP_CMD_WINDOW_REDRAW_NEEDED(4)
+11-11 12:31:12.046 12605 12619 I Unity   : Handle cmd APP_CMD_GAINED_FOCUS(7)
+11-11 12:31:12.046 12605 12619 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+11-11 12:31:14.268 12605 12619 I Unity   : [BOOT] render overrides (profiling): msaa= scale= shadow=0 post= hdr= a2c= trees= treeshadow= card= cull= thin= vegshader= hlod= a8= envcap= scalemin= upscale= fsrsharp= pacing= lamppools= envcap_iv= envcap_lod= shadowcasc= shadowres= ab= ab_period= mirror_cap= mirror_lod= mirror_far= mirror_res= mirror_rate= mirror_legacy=False mirror_off=False worldgi= worldsun= clouds= haze= ssao= look=-1 ev=0 wet=
+11-11 12:31:14.270 12605 12619 I Unity   : [BOOT] Kamion 0.1.0 (43bc53a769-dirty) unity=6000.3.28f1 platform=android-36 device='samsung SM-A165F' gpu='Mali-G57 MC2' api='Vulkan 1.1.0 [54.1.0 (0x0d801000)]' ram=3653MB screen=2340x1080 tier=Low targetFps=240
+11-11 12:31:14.275 12605 12619 I Unity   : [BOOT] diagnostics output: /storage/emulated/0/Android/data/com.woogitsugames.kamion/files/diag
+11-11 12:31:14.334 12605 12619 I Unity   : [CONTROLS] boot v3 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on
+11-11 12:31:14.344 12605 12619 I Unity   : [CONTROLS] menu shown light=overcast tier=Low fps=240
+11-11 12:31:14.367 12605 12619 I Unity   : [BOOT] launch argument scene=WorldC
+11-11 12:31:15.943 12605 12619 I Unity   : [WORLD] collision cooked at load: 274 meshes, bake 253 ms (parallel), enable 2 ms, total 255 ms
+11-11 12:31:15.960 12605 12619 I Unity   : [CONTROLS] loaded v3 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on
+11-11 12:31:16.096 12605 12619 I Unity   : [LAB] DrivingLab ready: vehicle=Tractor4x2_TRAKT trailer=Trailer_Curtainsider_Art spawn=Gross40t steer=Wheel270 autopilot=route fixedDt=0,009999993
+11-11 12:31:17.071 12605 12619 I Unity   : [AUDIO] vehicle audio ready (122 engine loops + 47 sfx, tools/audio/render_all.py (procedural synthesis, no recordings))
+11-11 12:31:17.350 12605 12619 I Unity   : [TELEMETRY] recording → /storage/emulated/0/Android/data/com.woogitsugames.kamion/files/telemetry/drive-20261111-123117.csv
+11-11 12:31:17.351 12605 12619 I Unity   : [CAB] view camera Main Camera cabView=False gain 1,00 meter 0,00 EV
+11-11 12:31:18.850 12605 12619 I Unity   : [DIAG] t=3s tier=Low target=240 fps=0.3 p50=3167.00 p95=3167.00 p99=3167.00 max=3167.00ms temp=27.5C thermal=0 headroom=0.60 pss=880MB scale=0.75 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+11-11 12:31:18.853 12605 12619 I Unity   : [CAB] view camera Main Camera cabView=True gain 4,94 meter 1,30 EV
+11-11 12:31:23.832 12605 12619 I Unity   : [DIAG] t=8s tier=Low target=240 fps=19.4 p50=33.31 p95=49.94 p99=250.00 max=3167.00ms temp=27.5C thermal=0 headroom=0.59 pss=890MB scale=0.75 fallback=none mir=1.00/f cpu=3.15 gpu=- cap=0.09/f cpu=0.15 gpu=- shd_gpu=- main_cpu=5.92
+11-11 12:31:28.846 12605 12619 I Unity   : [DIAG] t=13s tier=Low target=240 fps=24.2 p50=33.31 p95=50.03 p99=99.99 max=3167.00ms temp=27.5C thermal=0 headroom=0.60 pss=917MB scale=0.75 fallback=none mir=1.00/f cpu=3.83 gpu=- cap=0.10/f cpu=0.16 gpu=- shd_gpu=- main_cpu=6.34
+11-11 12:31:33.864 12605 12619 I Unity   : [DIAG] t=18s tier=Low target=240 fps=26.2 p50=33.32 p95=50.00 p99=66.71 max=3167.00ms temp=27.5C thermal=0 headroom=0.60 pss=940MB scale=0.75 fallback=none mir=1.00/f cpu=3.67 gpu=- cap=0.11/f cpu=0.19 gpu=- shd_gpu=- main_cpu=6.74
+11-11 12:31:38.880 12605 12619 I Unity   : [DIAG] t=23s tier=Low target=240 fps=31.1 p50=33.33 p95=50.01 p99=50.16 max=116.61ms temp=27.5C thermal=0 headroom=0.60 pss=940MB scale=0.75 fallback=none mir=1.00/f cpu=4.25 gpu=- cap=0.09/f cpu=0.16 gpu=- shd_gpu=- main_cpu=6.82
+11-11 12:31:43.901 12605 12619 I Unity   : [DIAG] t=28s tier=Low target=240 fps=29.7 p50=33.33 p95=50.03 p99=50.16 max=116.61ms temp=27.5C thermal=0 headroom=0.61 pss=892MB scale=0.75 fallback=none mir=1.00/f cpu=4.45 gpu=- cap=0.10/f cpu=0.20 gpu=- shd_gpu=- main_cpu=7.07
+11-11 12:31:48.933 12605 12619 I Unity   : [DIAG] t=33s tier=Low target=240 fps=29.2 p50=33.33 p95=50.03 p99=50.14 max=66.71ms temp=27.5C thermal=0 headroom=0.61 pss=952MB scale=0.75 fallback=none mir=1.00/f cpu=4.77 gpu=- cap=0.10/f cpu=0.19 gpu=- shd_gpu=- main_cpu=6.37
+11-11 12:31:53.951 12605 12619 I Unity   : [DIAG] t=38s tier=Low target=240 fps=29.8 p50=33.33 p95=50.02 p99=50.13 max=66.65ms temp=27.5C thermal=0 headroom=0.61 pss=905MB scale=0.75 fallback=none mir=1.00/f cpu=4.10 gpu=- cap=0.11/f cpu=0.21 gpu=- shd_gpu=- main_cpu=6.12
+11-11 12:31:58.952 12605 12619 I Unity   : [DIAG] t=43s tier=Low target=240 fps=32.5 p50=33.32 p95=49.96 p99=50.09 max=66.64ms temp=27.5C thermal=0 headroom=0.61 pss=917MB scale=0.75 fallback=none mir=1.00/f cpu=3.90 gpu=- cap=0.10/f cpu=0.18 gpu=- shd_gpu=- main_cpu=5.39
+11-11 12:32:03.963 12605 12619 I Unity   : [DIAG] t=48s tier=Low target=240 fps=35.4 p50=33.30 p95=33.44 p99=49.98 max=50.10ms temp=27.5C thermal=0 headroom=0.61 pss=893MB scale=0.75 fallback=none mir=1.00/f cpu=3.67 gpu=- cap=0.11/f cpu=0.18 gpu=- shd_gpu=- main_cpu=4.96
+11-11 12:32:08.970 12605 12619 I Unity   : [DIAG] t=53s tier=Low target=240 fps=36.8 p50=33.29 p95=33.42 p99=33.50 max=50.10ms temp=27.5C thermal=0 headroom=0.62 pss=941MB scale=0.75 fallback=none mir=1.00/f cpu=3.44 gpu=- cap=0.11/f cpu=0.19 gpu=- shd_gpu=- main_cpu=5.17
+11-11 12:32:13.983 12605 12619 I Unity   : [DIAG] t=58s tier=Low target=240 fps=37.2 p50=33.29 p95=33.42 p99=33.50 max=50.02ms temp=27.5C thermal=0 headroom=0.62 pss=874MB scale=0.75 fallback=none mir=1.00/f cpu=3.43 gpu=- cap=0.09/f cpu=0.16 gpu=- shd_gpu=- main_cpu=5.55
+11-11 12:32:18.987 12605 12619 I Unity   : [DIAG] t=63s tier=Low target=240 fps=38.0 p50=33.28 p95=33.42 p99=33.49 max=50.02ms temp=27.5C thermal=0 headroom=0.62 pss=884MB scale=0.75 fallback=none mir=1.00/f cpu=3.59 gpu=- cap=0.09/f cpu=0.14 gpu=- shd_gpu=- main_cpu=5.49
+11-11 12:32:24.017 12605 12619 I Unity   : [DIAG] t=68s tier=Low target=240 fps=38.1 p50=33.28 p95=33.42 p99=33.49 max=50.02ms temp=27.5C thermal=0 headroom=0.62 pss=874MB scale=0.75 fallback=none mir=1.00/f cpu=3.31 gpu=- cap=0.08/f cpu=0.13 gpu=- shd_gpu=- main_cpu=5.33
+11-11 12:32:29.019 12605 12619 I Unity   : [DIAG] t=73s tier=Low target=240 fps=37.9 p50=33.28 p95=33.43 p99=33.49 max=49.92ms temp=27.5C thermal=0 headroom=0.62 pss=861MB scale=0.75 fallback=none mir=1.00/f cpu=3.31 gpu=- cap=0.07/f cpu=0.11 gpu=- shd_gpu=- main_cpu=5.24
+11-11 12:32:29.590 12605 12619 I Unity   : [GATE3] segment done t=70.5 s s=1714.0
+11-11 12:32:34.056 12605 12619 I Unity   : [DIAG] t=78s tier=Low target=240 fps=37.0 p50=33.29 p95=33.43 p99=33.50 max=49.92ms temp=27.5C thermal=0 headroom=0.62 pss=891MB scale=0.75 fallback=none mir=1.00/f cpu=3.26 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.50
+11-11 12:32:39.070 12605 12619 I Unity   : [DIAG] t=83s tier=Low target=240 fps=36.1 p50=33.30 p95=33.43 p99=33.51 max=49.96ms temp=27.5C thermal=0 headroom=0.62 pss=859MB scale=0.75 fallback=none mir=1.00/f cpu=3.14 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.47
+11-11 12:32:44.090 12605 12619 I Unity   : [DIAG] t=88s tier=Low target=240 fps=36.0 p50=33.30 p95=33.44 p99=33.53 max=49.98ms temp=27.5C thermal=0 headroom=0.62 pss=852MB scale=0.75 fallback=none mir=1.00/f cpu=3.29 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.26
+11-11 12:32:49.121 12605 12619 I Unity   : [DIAG] t=93s tier=Low target=240 fps=36.1 p50=33.30 p95=33.43 p99=33.52 max=49.98ms temp=27.5C thermal=0 headroom=0.63 pss=862MB scale=0.75 fallback=none mir=1.00/f cpu=3.35 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.43
+11-11 12:32:54.144 12605 12619 I Unity   : [DIAG] t=98s tier=Low target=240 fps=36.0 p50=33.30 p95=33.44 p99=33.52 max=50.05ms temp=27.5C thermal=0 headroom=0.62 pss=866MB scale=0.75 fallback=none mir=1.00/f cpu=3.31 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.36
