@@ -55,3 +55,6 @@ NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/round1-world.log -Tail 10
 
 Krok 17: World ukończony w 480,5 s w heavy; remiza przebudowana Blenderem, brak fallback=True, hero applied. Zapisano własny GLB, meta i spec oraz pomiar liczby trójkątów/prymitywów przed i po. Produkty pozostałych dziedzin są wyłącznie wynikami wymaganego generatora i nie zostały wystawione jako zmiany ich źródeł.
 NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/round1-build-wrapper.log -Tail 10
+
+Krok 18: pojedynczy test remizy w heavy zakończony 6/6 w 3,74 s; slot zwolniony. GLB 9344→9392 / 2828→2860 / 164→164 tris, prymitywy 3/2/1 bez zmiany. Import nowego wariantu w toku. Diagnostyki baseline zakończone i zwolniły slot; własny znacznik ich trwania usunięty. Plama: High Y114,83, bez cieni 131,12 przy sąsiednim tynku131,19; GI-off i SSAO-off pozostawiają114,83. To cień, prawdopodobnie flagi, a nie powód do dodawania kompensacji do albedo. CPU ray/UV probe potwierdził te same UV i kolor atlasu dla LOD0/1 w badanym miejscu.
+NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/round1-build-wrapper.log -Tail 10

@@ -7,6 +7,9 @@ $ErrorActionPreference = 'Stop'
 $wt = Split-Path (Split-Path $PSScriptRoot)
 Set-Location $wt
 function Run-Guarded([string]$Script, [hashtable]$Params) {
+    # This session's baseline diagnostics use the same project. Finish those
+    # before the build pipeline imports or captures the changed hero.
+    while (Test-Path "$PSScriptRoot/DIAGNOSTICS_RUNNING") { Start-Sleep -Seconds 5 }
     # Never let this session's acquisition clean up somebody else's aged slot.
     & pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-landmarks -PollSeconds 10 -StaleHours 876000
     if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
