@@ -42,10 +42,17 @@ def main():
     mode_path=Path(__file__).with_name('SOURCE-MODE.json')
     mode=json.loads(mode_path.read_text(encoding='utf-8-sig')) if mode_path.exists() else None
     result=dict(manifest_sha=sha(manifest),products=products,raw_count=len(products),mismatches=sum(not p['valid'] for p in products),fab_ready=len(ready),fixtures=fixtures,prepared_medium_textures=texture_sha,source_sha=sources,source_mode=mode)
+    base_path=Path(__file__).with_name('canonical-main-manifest.json')
+    if base_path.exists():
+        base=json.loads(base_path.read_text(encoding='utf-8-sig'))
+        expected={item['file']:item['sha256'] for c in base['chunks'] for item in (c,c['low'],c['instances'])}
+        actual={p['file']:p['actual'] for p in products}
+        changed=[name for name in sorted(expected.keys()|actual.keys()) if expected.get(name)!=actual.get(name)]
+        result['raw_vs_committed_base']=dict(base='5f2aa277',changed=len(changed),files=changed)
     assert len(products)==192 and result['mismatches']==0
     assert len(ready)==15,'Fab/Megascans ready library missing entries'
     tag=sys.argv[1] if len(sys.argv)>1 else 'candidate'
     out=Path(__file__).with_name(f'{tag}-source-proof.json')
     out.write_text(json.dumps(result,indent=2),encoding='utf-8')
-    print(json.dumps({k:result[k] for k in ('raw_count','mismatches','fab_ready')}|{'prepared_maps':len(texture_sha)}))
+    print(json.dumps({k:result[k] for k in ('raw_count','mismatches','fab_ready')}|{'prepared_maps':len(texture_sha),'raw_changed_vs_base':result.get('raw_vs_committed_base',{}).get('changed')}))
 if __name__=='__main__':main()
