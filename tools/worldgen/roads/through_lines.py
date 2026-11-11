@@ -51,6 +51,7 @@ def _left(v):
 
 
 def chain_lines_at(c, s, secs, s0, s1, marked_hw, lane_layout):
+    from . import markings as MKf
     """[(lat, kind)] of the lines markings._build_markings paints on chain c at station s; kind `edge` = the bare
     carriageway edge (inside the edge strip) of a road without edge lines."""
     i = int(c.idx(s))
@@ -69,18 +70,23 @@ def chain_lines_at(c, s, secs, s0, s1, marked_hw, lane_layout):
     dirn = int(c.dirn[a_]) or 1
     lat_c, bounds, _ = lane_layout(sec, hw_mid, dirn)
     out = []
-    real_edges = False
+    painted = []
     if sec.highway in marked_hw or sec.roundabout:
         for lat in bounds:
-            out.append((hw + (float(lat) - hw_mid) if sec.oneway else float(lat), "lane"))
+            out.append((float(MKf.follow_edge(sec, float(lat), hw_mid, hw, dirn)) if sec.oneway else float(lat), "lane"))
         if lat_c is not None and sec.width >= S.SEGREGATION_MIN_CARRIAGEWAY:
             out.append((float(lat_c), "P-4" if sec.lanes >= 4 else "centre"))
-        if sec.cls in ("A", "S", "GP") and sec.edge_strip > 0 and not sec.roundabout:
-            real_edges = True
-            for sg in (-1, 1):
-                out.append((sg * (hw - sec.edge_strip + S.LINE_W_WIDE / 2), "P-7b"))
-    if not real_edges:
-        for sg in (-1, 1):
+        painted = [(float(lat), kind) for lat, kind in MKf.edge_lines(sec, hw, dirn)]
+        out += painted
+    # the bare carriageway edge (inside the edge strip) on every side without a painted edge line
+    le = getattr(sec, "lane_edges", None)
+    for sg in (-1, 1):
+        if any(lat * sg > 0 and abs(lat) > hw - 1.5 for lat, _ in painted):
+            continue
+        if le and sec.oneway:
+            d = int(dirn) or 1
+            out.append((d * (hw - le[0]) if sg * d > 0 else d * (hw - le[-1]), "edge"))
+        else:
             out.append((sg * (hw - max(float(sec.edge_strip), 0.0)), "edge"))
     return out, sec
 

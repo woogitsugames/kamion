@@ -118,7 +118,9 @@ def build_ribbon(buf: MeshBuf, net, c, coarse=False):
             UV1 = np.column_stack([np.repeat(st, len(q)), (latv + hwv - sec_mid.edge_strip) / lw * 5.0])
         else:
             # UV1 = (lane coordinate, distance to the nearer carriageway edge) for wheel-path / gutter weathering
-            if sec_mid.oneway or sec_mid.roundabout:
+            if getattr(sec_mid, "lane_edges", None):
+                lanec = sec_mid.lane_coord(latv, hwv, int(c.dirn[c.idx(0.5 * (s0 + s1))]) or 1)
+            elif sec_mid.oneway or sec_mid.roundabout:
                 lanec = (latv + hwv - sec_mid.edge_strip) / lw
             else:
                 lanec = np.abs(latv) / lw

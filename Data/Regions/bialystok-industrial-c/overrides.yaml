@@ -501,17 +501,6 @@ overrides:
     reason: Same junction, 14 m2 corner leftover on asphalt (orthophoto road fraction 1.0).
     confidence: medium
     verify: Mapillary / owner drive
-  - id: gore-andersa-merge-s1060-plain
-    kind: paved_gore
-    at_en: [-83.7, -342.7]
-    radius_m: 45.0
-    reason: >-
-      Ramp / Andersa merge at s 1060: the generic merge-gore rule painted a 127 m2 P-21 ladder between the main
-      carriageway and the added lane. The 0.08 m orthophoto shows one continuous surface with a single solid line
-      there (artifacts/islands-r10/after5/merge_ortho.jpg vs render artifacts/islands-r10/renders/top_merge.png of
-      2026-11-11), so the gap is plain asphalt without hatching.
-    confidence: high
-    verify: Mapillary / owner drive
   # ---------------------------------------------------------------- ADR 0093: junction geometry / paint from the orthophoto
   # painted_zone = P-21 exclusion zone, paint only. polygon_en = region-local E/N traced on the GUGiK 0.08 m
   # orthophoto with artifacts/junctions-r1/scripts/planview.py (5 m grid crops in artifacts/junctions-r1/trace/).
@@ -541,16 +530,15 @@ overrides:
     verify: owner drive
   - id: s1440-diverge-p21
     kind: painted_zone
-    stripe_az_deg: 70
-    polygon_en: [[-352.5, -127.5], [-338.0, -144.3], [-335.5, -147.5], [-343.4, -140.5], [-349.3, -135.7],
-                 [-354.2, -130.8]]
+    chevron_axis: [[-329.5, -151.5], [-344.7, -138.0]]
+    polygon_en: [[-329.5, -151.5], [-336.2, -145.0], [-340.2, -141.0], [-343.6, -138.0], [-345.9, -138.0],
+                 [-345.0, -140.6], [-340.4, -144.8], [-334.8, -149.0]]
     reason: >-
-      Diverge Andersa / ramp to Rondo Putry (s 1432-1480): SE end of the P-21 zone in front of the separator nose
-      (nose E -349.3 N -135.7, tip E -335.5 N -147.5). On the orthophoto the zone continues NW to E -386.6 N -98.1 as a
-      3.6 m band on the ramp carriageway beside a paved strip with a barrier (full outline: [-386.6,-98.1],
-      [-370.4,-109.2], [-358.5,-120.0], [-349.3,-130.8], ..., [-363.9,-120.0], [-376.3,-109.2]); the generated ramp
-      is narrower there and the main carriageway is higher (ramp wall), so that part is NOT built - open in ADR 0093.
-      Crop artifacts/junctions-r1/trace/z_s1440_o.jpg.
+      Diverge Andersa / link to Rondo Putry (s 1432-1480): P-21 chevrons in front of the separator nose. ADR 0095:
+      re-traced on the clean crop trace/fork_zoom_o.jpg (0.08 m, 1 m = 50 px): nose E -345.9 N -138.0, borders through
+      E -340.2 N -141.0 / E -340.4 N -144.8, tip about E -329.5 N -151.5 (ADR 0093 had the nose at E -349.3 N -135.7
+      and the tip at E -335.5 N -147.5), chevrons instead of parallel stripes (REVIEW 0093 P1). The band NW of the
+      nose is s1440-diverge-p21-band.
     confidence: high
     verify: owner drive
   - id: s610-north-arm-width
@@ -664,18 +652,6 @@ overrides:
     confidence: medium
     verify: orthophoto overlay 06_s1060_merge.jpg
     set: {center_offset: -0.95}
-  - id: andersa-placement-s1100-1270
-    target: {edge: "w249640399:1881569071-131612943"}
-    reason: "edge_sides (edge reversed): left +0.46 m (n 67, verge 20: +0.70), right -1.16 m (n 67, verge 63)."
-    confidence: medium
-    verify: orthophoto overlay 07_s1270.jpg
-    set: {center_offset: -0.8}
-  - id: andersa-placement-s1300-1355
-    target: {edge: "w266084693:10015785253-12620261934"}
-    reason: "edge_sides: left -0.90 m (n 25, verge 21), right +0.68 m (n 28, verge 6: +1.24)."
-    confidence: medium
-    verify: orthophoto overlay 08_signals.jpg
-    set: {center_offset: -0.8}
   - id: dk8-placement-a
     target: {edge: "w882366266:2256069816-8205694666"}
     reason: "edge_sides (edge reversed): left +0.70 m (n 93), right -0.36 m (n 93, verge 36: -0.28)."
@@ -688,3 +664,429 @@ overrides:
     confidence: low
     verify: orthophoto overlay 11_dk8.jpg
     set: {center_offset: -0.55}
+  # ---------------------------------------------------------------- ADR 0095: lanes and widths measured on the orthophoto
+  # lane_edges = distances (m) from the LEFT carriageway edge in the direction of travel to [start of lane 1,
+  # lane line 1|2, ..., end of the last lane]; the first value is the left gutter / edge strip, the last one the
+  # carriageway width. Read off straightened strips of the GUGiK 0.08 m orthophoto (WMS HighResolution) drawn along
+  # the OSM way with a 1 m lateral scale (artifacts/junctions-r2/scripts/xbatch.py; strips in
+  # artifacts/junctions-r2/xsec/, reading accuracy about +-0.15 m). center_offset as above (left of the OSM way).
+  # edge_lines = painted edge lines actually on the photo (default with lane_edges: none - kerbed edges on Andersa).
+  # Replaces the generic "lanes x 3.50 m + 2 x 0.50 m" (11.5 m) the generator fell back to because BDOT10k says 8.0 m.
+  - id: andersa-nw-xsec-s1100-1270
+    target: {edge: "w249640399:1881569071-131612943"}
+    reason: >-
+      Andersa NW-bound carriageway before the bay (strips xsec/and1.png, stations 20-44 and 100-124 of the chain):
+      median gutter 0.6 m, lane lines 3.9 / 7.45 m from the median kerb, right asphalt edge 10.8 m; carriageway centre
+      0.2 m right of the previous placement (-0.8, edge_sides ADR 0077) -> -1.0.
+    confidence: high
+    verify: owner drive
+    set: {center_offset: -1.0, lane_edges: [0.6, 3.95, 7.45, 10.8]}
+  - id: andersa-nw-xsec-bay-s1040-1080
+    target: {edge: "w249640399:131612943-1852176912"}
+    reason: >-
+      Andersa NW-bound beside the paved bay (REVIEW 0093 P0-L, route s 1040-1080; strips xsec/s1060_full.png,
+      xsec/and1.png): median kerb 4.3 m left of the OSM way, lane lines 0.4 m left / 3.0 m right of it, solid edge line
+      6.6 m right -> three lanes 3.35 / 3.4 / 3.5 m, 10.9 m kerb to edge line, centre 1.15 m right of the OSM way.
+      The generator had 11.5 m centred on the way plus the bay as a 4 m asphalt lane: 15 m of asphalt with 5 rows.
+    confidence: high
+    verify: owner drive
+    set: {center_offset: -1.15, lane_edges: [0.65, 4.0, 7.4, 10.9]}
+  - id: andersa-nw-xsec-s1080-1210
+    target: {edge: "w1093579590:1852176912-2359253621"}
+    reason: >-
+      Andersa NW-bound after the bay (strips xsec/n100_w1093590.png, xsec/and2.png stations 10-34 and 95-119): median
+      kerb 4.3 m left of the OSM way, lane lines 0.1 m left / 3.4 m right, right kerb 6.75 m right -> lanes
+      3.5 / 3.5 / 3.35 m, 11.05 m, centre 1.2 m right of the way. The right lane is the right-turn lane into the
+      side street at n10015785253 (wide broken line from station 60, solid from 108, arrows; it ends at the island),
+      OSM has no turn:lanes here -> turn_lanes.
+    confidence: high
+    verify: owner drive
+    set: {center_offset: -1.2, lane_edges: [0.7, 4.2, 7.7, 11.05], turn_lanes: "through|through|right"}
+  - id: andersa-nw-xsec-n10015785253
+    target: {edge: "w1093579589:2359253621-10015785253"}
+    reason: >-
+      Andersa NW-bound at the side-street island (strip xsec/and5.png station 0-20, crop trace/n100_o.jpg): median
+      kerb 4.4 m, lane line 0.2 m, solid edge line 3.25 m on the other side of the OSM way: TWO through lanes. The
+      third lane of the neighbouring edges ends here as the right-turn lane and starts again as the merge lane; between
+      them lie 1.9 m of asphalt, the P-21 fields and the kerbed island (carriageway to 11.0 m from the median kerb).
+      REVIEW 0093 P0-L: the generated median ran to zero here because both carriageways were 11.5 m centred on ways
+      drawn 1.1-1.3 m towards the median.
+    confidence: high
+    verify: owner drive
+    set: {center_offset: -1.1, lane_edges: [0.5, 4.2, 7.65], width: 11.0, edge_lines: right}
+  - id: andersa-nw-xsec-s1300-1355
+    target: {edge: "w266084693:10015785253-12620261934"}
+    reason: >-
+      Andersa NW-bound after the side street (strips xsec/n100_w266.png, xsec/and2.png station 30-54, xsec/and5.png
+      station 2-26): median kerb 5.4-5.9 m left of the line placed at -0.8 (ADR 0077), lane lines 1.25-1.6 m left /
+      1.95-2.2 m right, right kerb 5.4-5.6 m right -> 11.1 m, centre 0.1 m left of the previous placement -> -0.7.
+      turn_lanes empty: OSM way 266084693 has through|through|slight_right, no arrows are visible on these strips
+      (the exit lane is marked by the solid line and the chevrons on the next edge).
+    confidence: high
+    verify: owner drive
+    set: {center_offset: -0.7, lane_edges: [0.7, 4.2, 7.7, 11.1], turn_lanes: ""}
+  - id: andersa-nw-xsec-s1355-1410
+    target: {edge: "w266084693:12620261934-2840742308"}
+    reason: >-
+      Andersa NW-bound before the fork to Rondo Putry (strips xsec/and5.png station 18-42, xsec/fork3.png station
+      36-60): median barrier kerb 4.85 -> 4.6 m left of the OSM way, lane lines 0.6 m left / 3.0 m right (solid; from
+      station 46 it opens into the P-21 chevrons), right kerb 6.25 m right at the start, 7.6 m at station 30,
+      8.7 m at station 55 (xsec/fork4.png): the exit lane widens from 3.4 to 4.6 m and the gore starts on this edge. width and
+      center_offset = [[t, m], ...] along the edge (11.1 -> 13.4 m; the median kerb stays straight). A first
+      correction to 11.0 m after fidelity/edge_sides (it took the P-21 for the pavement edge) is withdrawn.
+      turn_lanes empty: OSM has through|through|slight_right, but no arrows are visible on stations 18-60 of this
+      edge (xsec/and5.png, xsec/fork4.png), only the solid line and the chevrons.
+    confidence: high
+    verify: owner drive
+    set:
+      lane_edges: [0.6, 4.1, 7.7, 12.0]
+      turn_lanes: ""
+      width: [[0.0, 11.1], [0.5, 12.3], [0.92, 13.3], [1.0, 13.4]]
+      center_offset: [[0.0, -0.7], [0.5, -1.45], [0.92, -2.05], [1.0, -2.1]]
+  - id: andersa-se-xsec-w560802655
+    target: {edge: "w560802655:12620261936-1946476472"}
+    reason: >-
+      Andersa SE-bound carriageway (strip xsec/and3.png station 30-54): median kerb 4.3 m left of the OSM way, lane
+      lines 0.2 m left / 3.3 m right, right kerb 6.9 m right -> 11.2 m, centre 1.3 m right of the way.
+    confidence: high
+    verify: owner drive
+    set: {center_offset: -1.3, lane_edges: [0.7, 4.1, 7.6, 11.2]}
+  - id: andersa-se-xsec-w266084684
+    target: {edge: "w266084684:1946476472-4103450292"}
+    reason: >-
+      Andersa SE-bound with the bus lane (strips xsec/and3.png stations 120-144 and 200-224): median kerb 4.3 m left
+      of the OSM way, lane line 0.2 m left, solid bus-lane line 3.25 m right, right kerb 6.8 m right -> 11.1 m,
+      centre 1.25 m right of the way.
+    confidence: high
+    verify: owner drive
+    set: {center_offset: -1.25, lane_edges: [0.7, 4.1, 7.55, 11.1]}
+  - id: andersa-se-xsec-w560802656
+    target: {edge: "w560802656:4103450292-277320063"}
+    reason: >-
+      Andersa SE-bound past the bay (strip xsec/and4.png stations 20-44 and 85-109, chain reversed): median gutter
+      edge 4.1 m on the median side of the OSM way, lane lines at the way and 3.45 m on the other side, right kerb
+      7.0 m -> 11.1 m, centre 1.45 m right of the way (direction of travel).
+    confidence: high
+    verify: owner drive
+    set: {center_offset: -1.45, lane_edges: [0.5, 4.05, 7.55, 11.1]}
+  # --- the bay at route s 1040-1080 (REVIEW 0093 P0-L / 0077 #6)
+  - id: andersa-bay-s1060-service-lane
+    target: {edge: "w174545870:131612943-1852176912"}
+    reason: >-
+      OSM service way (access=no) = the sett-paved bay beside Andersa. On the 0.08 m orthophoto (xsec/s1060_full.png)
+      the bay behind the kerbed strip is 4.9 m wide (8.35-13.25 m right of the Andersa OSM way), granite setts; the
+      OSM line runs 0.6 m left of its centre. Was: 4 m of asphalt.
+    confidence: high
+    verify: owner drive
+    set: {width: 4.9, center_offset: -0.6, surface: sett}
+  - id: gore-andersa-bay-s1060-sett
+    kind: paved_gore
+    at_en: [-82.6, -342.8]
+    radius_m: 45.0
+    surface: sett
+    reason: >-
+      Between the Andersa edge line and the bay the surface is continuous (setts) at both ends of the bay; the kerbed
+      strip in between is the traffic_island below. Replaces gore-andersa-merge-s1060-plain (asphalt, ADR 0077).
+    confidence: high
+    verify: owner drive
+  - id: andersa-bay-s1060-kerb-strip
+    kind: traffic_island
+    surface: sidewalk_paving
+    polygon_en: [[-100.3, -328.2], [-100.6, -328.1], [-100.9, -328.2], [-101.2, -328.4], [-101.3, -328.7], [-101.3, -329.0],
+                 [-101.1, -329.3], [-63.7, -358.1], [-63.4, -358.2], [-63.1, -358.2], [-62.8, -358.0], [-62.7, -357.7],
+                 [-62.7, -357.3], [-62.9, -357.0]]
+    reason: >-
+      Raised kerbed strip 1.35 m wide, 48.5 m long, rounded ends, between the Andersa edge line and the bay
+      (xsec/s1060_full.png: stations 10-58.5, 7.0-8.35 m right of the OSM way; trace/bay_nw_o.jpg, bay_se_o.jpg).
+    confidence: high
+    verify: owner drive
+  - id: andersa-bay-s1060-edge-solid
+    kind: painted_line
+    line: P-7b
+    polyline_en: [[-64.05, -358.7], [-101.65, -329.7]]
+    reason: Solid edge line along the kerbed strip of the bay (xsec/s1060_full.png, stations 10.5-58).
+    confidence: high
+    verify: owner drive
+  - id: andersa-bay-s1060-edge-dashed-nw
+    kind: painted_line
+    line: P-7a
+    polyline_en: [[-102.3, -328.9], [-111.7, -321.5], [-128.9, -307.6]]
+    smooth: false
+    reason: Broken edge line across the NW opening of the bay (xsec/s1060_full.png 59-71, xsec/and2.png 10-22).
+    confidence: high
+    verify: owner drive
+  - id: andersa-bay-s1060-edge-dashed-se
+    kind: painted_line
+    line: P-7a
+    polyline_en: [[-19.4, -390.9], [-56.0, -365.1], [-63.1, -359.2]]
+    smooth: false
+    reason: >-
+      Broken edge line across the SE opening / entry taper of the bay (xsec/s1060_full.png 0-9.5, xsec/and1.png
+      stations 0-45 of w249640399:1881569071-131612943).
+    confidence: high
+    verify: owner drive
+  # --- viaduct over Rondo Putry, westbound carriageway + the ramp split at E -782 N 77 (owner video; REVIEW 0093 P0-L)
+  # OSM tags lanes=3 on w490398852 / w490398851 / w173985169 / w23844386. Both the 0.08 m WMS mosaic (cell c_01_08
+  # fetched for this ADR, artifacts/junctions-r2/ortho_hr) and the dated 0.25 m sheet of 2024-05-27 (xsec/km_sheet.png)
+  # show TWO lanes on the main carriageway from the viaduct to the end of the ramp's lane; the third lane of OSM is the
+  # ramp from Rondo Putry running beside it (its own way w240542867, laid abreast by the generator). With 3 x 3.5 + 1 m
+  # centred on the OSM way the generated deck was 3.3 m wider than the real one on the median side - the lamp
+  # "in the left lane" of the owner's video (E -589 N 19.5) stood on the real barrier line.
+  - id: dk8-viaduct-w-xsec-w490398852
+    target: {edge: "w490398852:4825844768-1832991672"}
+    reason: >-
+      Strips xsec/km_trunk0.png (stations 0-70) and xsec/km_trunk.png (60-150): median kerb 3.6 m on the median side
+      of the OSM way, lane line 0.1-0.3 m on the same side, line to the ramp lane 3.3-3.65 m on the other side:
+      two lanes of 3.4-3.6 m; the ramp lane (3.7 m, kerb at 7.0-7.25 m) is w240542867.
+    confidence: high
+    verify: owner drive
+    set: {center_offset: 0.0, lane_edges: [0.2, 3.5, 7.1]}
+  - id: dk8-viaduct-w-ramp-lane
+    target: {edge: "w240542867:1847044963-1832991672"}
+    reason: >-
+      Ramp from Rondo Putry beside the main carriageway (strip xsec/km_ramp_raw.png along the raw OSM way; also
+      xsec/km_trunk0.png, xsec/km_trunk.png). OSM draws the last 40 m of the ramp into the axis of the main
+      carriageway; the real lane stays beside it. Read at 0 / 20 / 40 / 60 / 80 / 95 / 110 / 125 m before the merge
+      node: centre 5.0 / 3.05 / 0.65 / 0.25 / 0 m right, then 0.1 / 0.85 / 0.8 m left of the way (direction of
+      travel; beside the separator the carriageway includes the P-21 band); width kerb to line / separator
+      3.9 / 3.9 / 4.6 / 4.4 / 4.2 / 4.2 / 5.1 / 5.75 m (was 5.5 m everywhere). center_offset and width =
+      [[t, m], ...] along the edge, t = 0 at its start on the viaduct side.
+    confidence: medium
+    verify: owner drive
+    set:
+      width: [[0.0, 5.75], [0.10, 5.75], [0.21, 5.1], [0.32, 4.2], [0.426, 4.2], [0.569, 4.4], [0.713, 4.6], [0.856, 3.9], [1.0, 3.9]]
+      center_offset: [[0.0, 0.8], [0.10, 0.8], [0.21, 0.85], [0.32, 0.1], [0.426, 0.0], [0.569, -0.25], [0.713, -0.65], [0.856, -3.05], [1.0, -5.0]]
+  - id: gore-dk8-ramp-split
+    kind: paved_gore
+    at_en: [-797.0, 76.8]
+    radius_m: 20.0
+    reason: >-
+      Wedge between the ramp lane and the main carriageway in front of the separator nose (E -815...-782): one
+      asphalt surface carrying the P-21 chevrons (xsec/km_trunk.png stations 76-106). The generic merge rule skips
+      it because the two carriageways run closer than 4 m for more than 90 m.
+    confidence: high
+    verify: owner drive
+  - id: dk8-viaduct-w-xsec-w490398851
+    target: {edge: "w490398851:4825844766-4825844768"}
+    reason: "Viaduct, strip xsec/km_t130.png: barrier kerbs 3.6 m (median side) / 4.6 m, edge lines 3.1 / 3.75 m, lane line 0.1 m."
+    confidence: high
+    verify: owner drive
+    set: {center_offset: -0.5, lane_edges: [0.5, 3.7, 7.35, 8.2], edge_lines: both}
+  - id: dk8-viaduct-w-xsec-w173985169
+    target: {edge: "w173985169:1847263320-4825844766"}
+    reason: "Viaduct, strip xsec/km_t130.png (stations 150-246): same section as w490398851."
+    confidence: high
+    verify: owner drive
+    set: {center_offset: -0.5, lane_edges: [0.5, 3.7, 7.35, 8.2], edge_lines: both}
+  - id: dk8-viaduct-w-xsec-w23844386
+    target: {edge: "w23844386:1166108055-1847263320"}
+    reason: >-
+      Viaduct, strips xsec/km_t250.png and xsec/km2.png (station 300-324): the two lanes drift from 0.8 m (station
+      250) to 1.65 m (station 365) off the OSM way, away from the median; at station 310 barrier 2.4 m (median side) /
+      5.6 m, edge lines 2.25 / 4.9 m, lane line 1.4 m. Edge direction is against the chain: start = station 358.
+    confidence: high
+    verify: owner drive
+    set: {center_offset: [-1.6, -0.8], lane_edges: [0.15, 3.8, 7.3, 8.0], edge_lines: both}
+  - id: dk8-viaduct-w-xsec-w173985172
+    target: {edge: "w173985172:1847263305-1166108055"}
+    reason: >-
+      Viaduct, strip xsec/km2.png (station 390-414): edge lines 2.25 m (median side) / 5.0 m, lane line 1.4 m; back to
+      0.6 m off the way at station 465 (next edge).
+    confidence: high
+    verify: owner drive
+    set: {center_offset: [-0.8, -1.6], lane_edges: [0.25, 3.9, 7.5, 8.1], edge_lines: both}
+  - id: dk8-viaduct-w-xsec-w1101181473
+    target: {edge: "w1101181473:10076968415-1847263305"}
+    reason: >-
+      East approach of the viaduct, strip xsec/km2.png (station 500-524): kerb 3.6 m (median side), edge line 3.1 m,
+      lane line 0.3 m on the other side, kerb 4.6 m there (no edge line on that side).
+    confidence: high
+    verify: owner drive
+    set: {center_offset: -0.5, lane_edges: [0.5, 3.9, 7.4, 8.2], edge_lines: left}
+  - id: dk8-ramp-split-island
+    kind: traffic_island
+    surface: sidewalk_paving
+    polygon_en: [[-781.9, 76.5], [-781.2, 77.1], [-768.1, 77.3], [-753.0, 76.9], [-753.3, 73.5], [-781.3, 75.6]]
+    reason: >-
+      Kerbed concrete separator with barriers between the main carriageway and the ramp from Rondo Putry, rounded nose
+      at E -781.9 N 76.5 (the kerb of the owner's video), running east onto the viaduct (xsec/km_trunk.png stations
+      106-135).
+    confidence: high
+    verify: owner drive
+  - id: dk8-ramp-split-p21-front
+    kind: painted_zone
+    chevron_axis: [[-800.4, 76.4], [-781.9, 76.5]]
+    polygon_en: [[-800.4, 76.4], [-793.3, 77.5], [-781.6, 78.4], [-781.2, 77.2], [-781.9, 76.5], [-781.3, 75.6], [-782.3, 75.5]]
+    reason: P-21 chevrons in front of the separator nose, tip at station 88 (xsec/km_trunk.png).
+    confidence: high
+    verify: owner drive
+  - id: dk8-ramp-split-p21-side
+    kind: painted_zone
+    stripe_az_deg: 35
+    polygon_en: [[-781.6, 78.4], [-778.1, 78.7], [-765.9, 79.8], [-760.8, 79.7], [-753.1, 79.0], [-753.3, 76.9], [-768.1, 77.4], [-781.2, 77.2]]
+    reason: >-
+      P-21 on the ramp side of the separator (REVIEW 0093: "P-21 w lacznicy E -757...-782"), oblique stripes
+      (xsec/km_trunk.png stations 106-135).
+    confidence: high
+    verify: owner drive
+  - id: dk8-ramp-split-line-solid
+    kind: painted_line
+    line: P-2b
+    polyline_en: [[-847.6, 75.6], [-828.5, 76.6], [-800.4, 76.4]]
+    reason: Solid line between the ramp lane and the main carriageway, stations 41-88 (xsec/km_trunk0.png, km_trunk.png).
+    confidence: high
+    verify: owner drive
+  - id: dk8-ramp-split-line-dashed
+    kind: painted_line
+    line: P-1e
+    polyline_en: [[-888.6, 72.4], [-850.6, 75.5]]
+    reason: Broken line between the ramp lane and the main carriageway, stations 0-38 (xsec/km_trunk0.png).
+    confidence: high
+    verify: owner drive
+  - id: dk8-w-of-ramp-merge-xsec-w262140922
+    target: {edge: "w262140922:1832991672-1847317049"}
+    reason: >-
+      Three-lane carriageway west of the ramp merge (strip xsec/km4.png, stations 6-30 and 50-74): median barrier kerb
+      3.75 m left of the OSM way, lane lines 0.4 m left / 3.25 m right, right kerb 6.75 m right -> 10.5 m, centre
+      1.5 m right of the way. With the carriageway centred on the way the fork alignment pushed the two-lane main
+      carriageway 1.65 m into the median for 40 m east of the merge node.
+    confidence: high
+    verify: owner drive
+    set: {center_offset: -1.5, lane_edges: [0.0, 3.35, 7.0, 10.5]}
+  # --- side street at n10015785253 (REVIEW 0093 P0-L / 0076 #1): crop artifacts/junctions-r2/trace/n100_o.jpg (2 m grid)
+  - id: n10015785253-side-street-throat
+    target: {edge: "w227212660:5202512922-10015785256"}
+    reason: >-
+      Side street at its junction with Andersa (strip xsec/n100_side.png): 7.3 m kerb to kerb (4.0 m / 3.3 m either
+      side of the OSM way; OSM lanes=2 gave 5.0 m), flaring to about 16 m at the crossings where the two slip lanes
+      (OSM w1093579592 / w1093579593, absorbed into the junction plate by the generator) pass either side of the
+      island. width = [[t, m], ...] along the edge, t = 1 at the junction.
+    confidence: medium
+    verify: owner drive
+    set:
+      center_offset: -0.35
+      width: [[0.0, 7.3], [0.6, 7.3], [0.8, 9.5], [1.0, 16.0]]
+  - id: n10015785253-island
+    kind: traffic_island
+    surface: sidewalk_paving
+    polygon_en: [[-223.1, -232.3], [-222.25, -231.3], [-221.25, -230.6], [-218.6, -228.7], [-216.25, -226.8],
+                 [-215.45, -227.0], [-215.25, -227.65], [-216.75, -229.7], [-218.25, -231.7], [-219.2, -234.2],
+                 [-219.6, -235.3], [-221.25, -234.2], [-222.95, -233.0]]
+    reason: >-
+      Kerbed paved island between the two slip lanes of the side street (refuge of both crossings), traced on the
+      0.08 m orthophoto.
+    confidence: high
+    verify: owner drive
+  - id: n10015785253-p21-west
+    kind: painted_zone
+    stripe_az_deg: 11
+    polygon_en: [[-226.75, -230.45], [-221.5, -229.5], [-221.1, -230.3], [-222.3, -231.1], [-223.2, -232.1]]
+    reason: P-21 west of the island (between the merging slip lane and the Andersa edge line).
+    confidence: high
+    verify: owner drive
+  - id: n10015785253-p21-east
+    kind: painted_zone
+    stripe_az_deg: 5
+    polygon_en: [[-219.1, -234.3], [-218.1, -231.9], [-217.25, -232.95], [-216.75, -234.95], [-216.3, -238.7], [-219.5, -235.5]]
+    reason: P-21 south-east of the island (between the Andersa edge line and the slip lane that leaves it).
+    confidence: high
+    verify: owner drive
+  - id: n10015785253-p21-north
+    kind: painted_zone
+    stripe_az_deg: 42
+    polygon_en: [[-216.25, -226.6], [-212.5, -223.6], [-215.0, -227.3]]
+    reason: P-21 north of the island tip, between the two slip lanes.
+    confidence: high
+    verify: owner drive
+  - id: n10015785253-edge-line-clear
+    kind: paint_clear
+    polygon_en: [[-197.9, -256.3], [-215.0, -242.7], [-231.5, -230.1], [-248.7, -216.3], [-249.5, -217.3],
+                 [-232.3, -231.1], [-215.8, -243.7], [-198.7, -257.3]]
+    reason: >-
+      The generated broken lane line 2|3 on the approach and across this junction plate; on the orthophoto it is one
+      solid line from station 108 of w1093579590 to station 22 of w266084693 (next override).
+    confidence: high
+    verify: owner drive
+  - id: n10015785253-edge-line
+    kind: painted_line
+    line: P-2b
+    smooth: false
+    polyline_en: [[-198.3, -256.8], [-215.4, -243.2], [-231.9, -230.6], [-249.1, -216.8]]
+    reason: >-
+      Solid 0.24 m line on the right edge of the two through lanes of Andersa before, across and after the side-street
+      junction (strips xsec/and2.png stations 108-119, xsec/and5.png, xsec/n100_w266.png stations 0-22): 3.4 / 3.25 /
+      2.9 m right of the three OSM ways = the lane boundary 2|3 of the measured cross-sections. (A first trace on the
+      crop trace/n100_o.jpg put its SE end 3 m off, on the kerb line: superseded by the strip measurements.)
+    confidence: high
+    verify: owner drive
+  - id: n10015785253-crossing-west
+    kind: painted_crossing
+    crossing: P-10
+    line_en: [[-222.7, -224.45], [-218.5, -227.6]]
+    reason: >-
+      Zebra across the slip lane from the side street onto Andersa (OSM node 10015785254; the slip way is absorbed
+      into the junction plate, so the generator had no chain to put it on). Red cycle crossing beside it: not built.
+    confidence: medium
+    verify: owner drive
+  - id: n10015785253-crossing-east
+    kind: painted_crossing
+    crossing: P-10
+    line_en: [[-216.0, -230.2], [-211.75, -233.45]]
+    reason: Zebra across the slip lane from Andersa into the side street (OSM node 3867825902). Red cycle crossing not built.
+    confidence: medium
+    verify: owner drive
+  # --- fork Andersa / link to Rondo Putry (route s 1410-1480; REVIEW 0093 "s 1440 strefa rozjazdu", ADR 0093 open #1)
+  - id: putry-link-fork-placement
+    target: {edge: "w606396463:2840742308-2840742310"}
+    reason: >-
+      Link to Rondo Putry after the fork (strips xsec/fork_link_raw.png along the raw OSM way, xsec/fork_link.png).
+      OSM starts the link on the axis of Andersa and kinks 10 m later; the real lane starts as the right lane of
+      Andersa (4.65 m right of the OSM line of the 3-lane edge, see andersa-nw-xsec-s1355-1410) and from station 177 of
+      the chain runs with its kerb 2.25 m and the P-21 band 1.1-3.1 m either side of the way: carriageway 5.35 m,
+      centre 0.45 m left of the way. The fork alignment held its 4.65 m shift for 40 m and faded it over 93 m, which
+      put the link 4-4.8 m beyond the real kerb, on the verge and the barrier (edge_sides: left -2.8, right +5.3 m).
+      First 20 m: asphalt lane between the P-21 border and the lighter paved strip, 4.2 m wide, read on the clean
+      crop trace/fork_zoom_o.jpg (0.08 m, 1 m = 50 px) at N -144 / -141 / -138 / -135: centre E -335.1 / -338.1 /
+      -340.9 / -343.2; at N -132 with the 2 m P-21 band E -346.0, 6.0 m. The first 0.3 of the profile is fitted to
+      these points (artifacts/junctions-r2/scripts/fit_offset.py, residual <= 0.15 m). Earlier readings (overview
+      plan views; then the lane taken to reach the grass, 6.5 m, which left a hole between the 13.4 m stem and the
+      link start under the route) are superseded.
+    confidence: medium
+    verify: owner drive
+    set:
+      center_offset: [[0.0, -8.4], [0.05, -6.97], [0.1, -2.45], [0.15, -0.07], [0.222, -1.2], [0.3, -0.58], [0.366, -0.2], [0.5, 0.35], [0.75, 0.45], [1.0, 0.2]]
+      width: [[0.0, 4.2], [0.25, 4.2], [0.3, 6.0], [0.366, 5.35], [0.75, 5.35], [1.0, 6.5]]
+  - id: s1440-diverge-p21-band
+    kind: painted_zone
+    stripe_az_deg: 4
+    polygon_en: [[-386.6, -98.1], [-370.4, -109.2], [-358.5, -120.0], [-352.5, -127.5], [-344.6, -136.4],
+                 [-346.6, -137.9], [-354.2, -130.8], [-363.9, -120.0], [-376.3, -109.2]]
+    reason: >-
+      P-21 band on the left side of the link beside the paved separator with the barrier, from the tip E -386.6
+      N -98.1 to the nose zone s1440-diverge-p21 (outline traced for ADR 0093, crop artifacts/junctions-r1/trace/
+      z_s1440_o.jpg; not built then because the generated link was narrower and displaced). Stripes about 49 deg to
+      the direction of travel (xsec/fork_link_raw.png).
+    confidence: high
+    verify: owner drive
+  - id: putry-link-fork-nose
+    target: {node: n2840742308}
+    reason: >-
+      Fork Andersa / link to Rondo Putry: the kerbed separator between the link and the viaduct approach starts 14 m
+      after the fork node (nose at station 173 of the link chain, xsec/fork2.png) and is 3.5 m wide. The first metres
+      of the OSM link leave the axis at more than 25 deg, so the generic rule built a 2.5 m fillet where the gap first
+      reaches 5 m, 50 m on: a junction plate stretched between the link and the rising viaduct approach (1.3 m of
+      height difference inside the route corridor at s 1454).
+    confidence: high
+    verify: owner drive
+    set: {nose_max_angle: 75}
+  - id: andersa-se-placement-w560802655-merge
+    target: {edge: "w560802655:1847044938-12620261936"}
+    reason: >-
+      SE-bound Andersa between the merge of the Rondo Putry ramp and the median crossover: placement only, running
+      from the OSM way at the merge node to the measured placement of the next edge (andersa-se-xsec-w560802655, 1.3 m
+      right) so the kerbs do not jog at the crossover (a 0.27 m verge step in terrain_walls after ADR 0095). The
+      section itself has FOUR lanes on the orthophoto (strip xsec/and4.png station 18-42: kerbs 7.25 m / 6.8 m either
+      side of the way) - not rebuilt here, open in ADR 0095. WORKING_VALUE.
+    confidence: low
+    verify: owner drive
+    set: {center_offset: [0.0, -1.3]}

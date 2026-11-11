@@ -349,6 +349,7 @@ def adjacent_targets(c, ground: list, el, min_dot: float = 0.9) -> dict:
 
 ABREAST_TIE_DOT = 0.7        # = the parallel test of network._push_abreast (a merge closes at up to ~45 deg)
 SHIFTED_END_MIN_M = 0.3      # chain ends nearer than this to their node keep the node height
+SHIFTED_STEM_MAX_M = 2.0     # an authored placement moves a stem end at most this far off its node (ADR 0095)
 
 
 def shifted_end_heights(net, ground: dict) -> dict:
@@ -366,6 +367,17 @@ def shifted_end_heights(net, ground: dict) -> dict:
     for node in sorted(ends):
         stems = [(c, e) for c, e, d in ends[node] if d < SHIFTED_END_MIN_M]
         moved = [(c, e) for c, e, d in ends[node] if d >= SHIFTED_END_MIN_M]
+        if not stems and len(moved) >= 2:
+            # ADR 0095: every end is off the node because the carriageways have authored placements (measured centre
+            # 0.5-1.6 m off the OSM way). The widest end is the stem; the others are "moved" when they do not start on
+            # its end point (the link to Rondo Putry starts 4.9 m right of the 3-lane Andersa: it took the node
+            # height, 0.10 m above the stem's surface there -> two 5 cm steps in the route profile at s 1411-1413)
+            st0 = max(moved, key=lambda x: (float(x[0].hw[x[1]]), x[0].id))
+            d0 = float(np.hypot(*(st0[0].line.p[st0[1]] - net.nodes[node]["xy"])))
+            if d0 <= SHIFTED_STEM_MAX_M:
+                stems = [st0]
+                moved = [(c, e) for c, e in moved if c is not st0[0] and
+                         float(np.hypot(*(c.line.p[e] - st0[0].line.p[st0[1]]))) >= SHIFTED_END_MIN_M]
         if not stems or not moved:
             continue
         st, se = max(stems, key=lambda x: (float(x[0].hw[x[1]]), x[0].id))

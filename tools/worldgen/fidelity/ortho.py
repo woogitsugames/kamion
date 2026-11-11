@@ -12,6 +12,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -61,10 +62,10 @@ def _load_manifest(d: Path):
     return {e["file"]: e for e in (json.loads(x) for x in f.read_text(encoding="utf-8").splitlines() if x.strip())}
 
 
-def fetch_cells(region, cells, log=print, interval=1.0):
+def fetch_cells(region, cells, log=print, interval=1.0, out_dir=None):
     import requests
     from PIL import Image
-    d = cell_dir(region["id"])
+    d = Path(out_dir) if out_dir else cell_dir(region["id"])
     d.mkdir(parents=True, exist_ok=True)
     man = _load_manifest(d)
     px = int(round(CELL_M / RES_HR))
@@ -125,6 +126,15 @@ class Ortho:
         self.region = region
         self.d = cell_dir(region["id"])
         self.man = _load_manifest(self.d)
+        # extra cell directories (same cell grid + manifest.jsonl), e.g. cells fetched in an agent worktree where
+        # Data/raw/refs is a read-only junction: ORTHO_HR_EXTRA=<dir>[;<dir>...] (ADR 0095)
+        self.extra = [Path(x) for x in os.environ.get("ORTHO_HR_EXTRA", "").split(";") if x.strip()]
+        self._where = {}
+        for x in self.extra:
+            for k in _load_manifest(x):
+                if k not in self.man and (x / k).exists():
+                    self.man[k] = {"file": k}
+                    self._where[k] = x
         self._cache = {}
         o = json.loads((REPO / "Data/Regions" / region["id"] / "ortho.json").read_text(encoding="utf-8"))
         self.sheet = REPO / o["file"]
@@ -133,7 +143,8 @@ class Ortho:
         k = (ix, iy)
         if k not in self._cache:
             from PIL import Image
-            f = self.d / f"c_{ix:02d}_{iy:02d}.jpg"
+            name = f"c_{ix:02d}_{iy:02d}.jpg"
+            f = self._where.get(name, self.d) / name
             self._cache[k] = np.asarray(Image.open(f).convert("RGB")) if f.exists() else None
             if len(self._cache) > 80:
                 self._cache.pop(next(iter(self._cache)))

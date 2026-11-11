@@ -65,4 +65,6 @@ def test_andersa_fork_lanes_aligned():
     rq = json.loads((REGION_DIR / "generated" / "roads_qa.json").read_text(encoding="utf-8"))
     shifts = rq["summary"].get("fork_shifts", [])
     # Andersa 3 lanes -> viaduct (2) + link (1): the viaduct is moved left under the two left lanes
-    assert any(s["node"] == "n2840742308" and s["shift_m"] > 1.0 for s in shifts), shifts
+    # ADR 0095: the 3-lane edge now has its measured placement (centre 0.8 m right of the OSM way), so the part of the
+    # shift that only compensated the mis-centred carriageway is gone; the viaduct still moves left under its lanes
+    assert any(s["node"] == "n2840742308" and s["shift_m"] > 0.3 for s in shifts), shifts

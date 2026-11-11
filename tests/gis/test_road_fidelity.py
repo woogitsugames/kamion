@@ -26,7 +26,7 @@ TARGET = {"axis_p95": 1.0, "edge_p95": 0.75, "lane_mismatch": 0, "islands_absent
 # the OSM way, max 3.25 m), edge p95 2.483, islands 4, lane bug 0 (2 of the 3 were roundabout entries = tool error).
 # Now: axis 0.13 (unchanged; authored center_offset placement is excluded from the pooled axis by design), edge p95
 # 2.52 (p50 0.76 -> 0.46; the tail is local widenings / bays the generator does not build), islands 1, lane bug 0.
-BASELINE = {"axis_p95": 0.13, "edge_p95": 2.52, "lane_mismatch": 0, "islands_absent": 1, "lane_into_island_bug": 0}
+BASELINE = {"axis_p95": 0.13, "edge_p95": 2.31, "lane_mismatch": 0, "islands_absent": 0, "lane_into_island_bug": 0}   # ADR 0095: edge 2.52 -> 2.30, islands 1 -> 0
 TOL = {"axis_p95": 0.02, "edge_p95": 0.05}
 
 
@@ -82,7 +82,7 @@ def test_ratchet_islands(qa):
 
 
 # which owner targets are already met (hard asserts); the rest xfail until met, then this test fails ("promote")
-MET = {"axis_p95": True, "edge_p95": False, "lane_mismatch": True, "islands_absent": False}
+MET = {"axis_p95": True, "edge_p95": False, "lane_mismatch": True, "islands_absent": True}
 
 
 def _target(name, ok):

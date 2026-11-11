@@ -56,6 +56,7 @@ GORE_OVERRIDE_CLOSE_M = 3.5    # authored paved_gore: default closing radius (ga
 GORE_KERB_DROP_M = 0.06        # kerb top this far below the surface along a paved gore (hidden under the fill)
 GORE_OVERLAP_M = 0.06          # fill reaches this far under the neighbouring carriageways (no cracks)
 GORE_VISUAL_DZ = -0.004        # fill this much below the carriageway where they overlap (no z-fighting)
+GORE_SURFACES = {"sett": "road_sett", "paving": "road_paving", "concrete": "road_concrete"}   # paved_gore `surface:`
 CARRIAGEWAY_MATS = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
 
 
@@ -281,7 +282,7 @@ def plan(net, juncs, overrides, origin) -> GorePlan:
             for g in hit:
                 for pg in _parts(g.intersection(pt.buffer(rad))):
                     if pg.area >= GORE_SLIVER_MIN_M2:
-                        cand.append(Gore(pg, "override:" + o["id"]))
+                        cand.append(Gore(pg, "override:" + o["id"], mat=GORE_SURFACES.get(o.get("surface"), "road_asphalt")))
             gp.overrides_applied.append({"id": o["id"], "targets": [f"gap@{o['at_en'][0]:.0f},{o['at_en'][1]:.0f}"]})
     # one polygon per place (an override gap swallows the slivers inside it)
     # authored overrides first, in file order (a small hatched zone listed before the larger plain gap keeps its
@@ -308,7 +309,7 @@ def plan(net, juncs, overrides, origin) -> GorePlan:
                                     "area_m2": round(part.area, 1), "reason": "carriageways at different heights",
                                     "step_m": round(_worst_step(V, Z, T), 2)})
                 continue
-            gp.gores.append(Gore(part, g.why, area=float(part.area), hatch=g.hatch))
+            gp.gores.append(Gore(part, g.why, mat=g.mat, area=float(part.area), hatch=g.hatch))
             taken = part if taken is None else taken.union(part)
     for o in overrides:
         if o.get("kind") != "traffic_island":
