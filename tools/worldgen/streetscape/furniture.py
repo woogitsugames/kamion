@@ -1045,7 +1045,7 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
             kk += 1
         if kk > k:
             if tall[k]:
-                lin.posts("barrier_post", P[k:kk + 1], S.GUARDRAIL_POST_SPACING, 0.1, 0.06, S.BRIDGE_BARRIER_H,
+                lin.posts(POST_MAT, P[k:kk + 1], S.GUARDRAIL_POST_SPACING, 0.1, 0.06, S.BRIDGE_BARRIER_H,
                           zb=Z[k:kk + 1], src=key)
                 kp = dp_keep(np.column_stack([P[k:kk + 1], Z[k:kk + 1]]), 0.01)
                 Pt, zt = P[k:kk + 1][kp], Z[k:kk + 1][kp]
@@ -1053,7 +1053,7 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
                            0.03, key)
                 lin.slab("barrier_steel", Pt, zt + S.BRIDGE_BARRIER_H - 0.06, zt + S.BRIDGE_BARRIER_H, 0.06, key)
             else:
-                lin.posts("barrier_post", P[k:kk + 1], S.GUARDRAIL_POST_SPACING, 0.1, 0.05, S.GUARDRAIL_H - 0.05,
+                lin.posts(POST_MAT, P[k:kk + 1], S.GUARDRAIL_POST_SPACING, 0.1, 0.05, S.GUARDRAIL_H - 0.05,
                           zb=Z[k:kk + 1], src=key)
         k = kk + 1
     d = np.gradient(P, axis=0)
@@ -1082,6 +1082,9 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
     lin.buf.add("collision", "collision_steel", V, UV, np.concatenate([T, T[:, [0, 2, 1]]]), src=key)
 
 
+# ADR 0110: posts share the material of the beam (galvanised steel both): one draw call per furniture chunk instead of two
+# (the decks of the hero viaduct got barriers in three chunks that had none; draw budget of the A16)
+POST_MAT = "barrier_steel"
 GUARDRAIL_DEDUP_M = 1.0     # ADR 0100 (REVIEW s10-0095 P1-10): a run within this of an already built rail is not built twice
 GUARDRAIL_DEDUP_GROUND_M = 2.5   # ADR 0110 (REVIEW s10-0100 P1-6): ground runs - one rail per separator also when the
 #                                  two edges that want it are 1-2.5 m apart (decks keep 1 m: two decks, two rails)

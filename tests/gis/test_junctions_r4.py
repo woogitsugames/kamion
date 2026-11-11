@@ -107,16 +107,25 @@ def _rail(n=80, tall=None, term=(True, True)):
     return lin.buf.parts
 
 
+def _is_posts(p):
+    """Lin.posts: 8 vertices and 10 triangles (5 faces) per post, same material as the beam (one draw call)."""
+    return p.layer == "furniture" and len(p.V) % 8 == 0 and len(p.T) == len(p.V) // 8 * 10
+
+
+def _posts(parts):
+    return [p for p in parts if _is_posts(p)]
+
+
 def test_guardrail_free_ends_are_turned_down_and_the_beam_is_decimated():
     parts = _rail()
-    beam = [p for p in parts if p.layer == "furniture" and p.mat == "barrier_steel"][0]
+    beam = [p for p in parts if p.layer == "furniture" and p.mat == "barrier_steel" and not _is_posts(p)][0]
     z = beam.V[:, 2] - 10.0
     assert np.isclose(z.max(), S.GUARDRAIL_H)
     ends = beam.V[(beam.V[:, 0] < 0.5) | (beam.V[:, 0] > 78.5)]
     assert np.isclose((ends[:, 2] - 10.0).max(), 0.33)                 # top of the beam at the free end
     # 79 m straight: terminals + one straight piece, not 79 cells (5 rows x 4 kept stations at most 6)
     assert len(beam.V) <= 5 * 6
-    posts = [p for p in parts if p.mat == "barrier_post"][0]
+    posts = _posts(parts)[0]
     assert posts.V[:, 0].min() >= S.GUARDRAIL_TERMINAL_M - 0.2        # no post standing above the turned-down end
 
 
@@ -124,10 +133,10 @@ def test_bridge_barrier_railing_has_posts_to_the_handrail_and_two_rails_above_th
     tall = np.zeros(80, bool)
     tall[20:60] = True
     parts = _rail(tall=tall, term=(False, False))
-    posts = [p for p in parts if p.mat == "barrier_post"]
+    posts = _posts(parts)
     tops = sorted({round(float(p.V[:, 2].max() - 10.0), 2) for p in posts})
     assert tops == [round(S.GUARDRAIL_H - 0.05, 2), S.BRIDGE_BARRIER_H]
-    steel = [p for p in parts if p.layer == "furniture" and p.mat == "barrier_steel"]
+    steel = [p for p in parts if p.layer == "furniture" and p.mat == "barrier_steel" and not _is_posts(p)]
     zmax = max(float(p.V[:, 2].max()) for p in steel) - 10.0
     assert np.isclose(zmax, S.BRIDGE_BARRIER_H)
     mid = [p for p in steel if np.isclose(p.V[:, 2].max() - 10.0, S.BRIDGE_BARRIER_MID + 0.03)]

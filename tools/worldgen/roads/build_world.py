@@ -193,13 +193,16 @@ def assemble(parts, layers, half):
     return out
 
 
+VERGE_TERRAIN_MAX_LOD = 1     # strips ride on terrain LOD0 / LOD1 (to 300 m); beyond that a kerb back is under a pixel
+
+
 def _is_verge(p):
     return p.layer == "road" and p.src.endswith(":vg")
 
 
 def merge_verge_into_terrain(terrain, parts, half, col, e0, n0):
     """ADR 0110: the grass strips behind kerbs (roads.meshing._emit_verge, src "...:vg") become part of the terrain
-    primitives of their chunk (every LOD; LOD0: the 128 m sub-grid they lie in) instead of a `verge_grass` primitive
+    primitives of their chunk (LOD0: the 128 m sub-grid they lie in, and LOD1) instead of a `verge_grass` primitive
     of the road mesh: same grass as the ground around (terrain shader, ground masks sampled at the nearest node) and
     no extra draw call (23 road chunks had no verge_grass material before). Returns counts."""
     tris = 0
@@ -231,6 +234,8 @@ def merge_verge_into_terrain(terrain, parts, half, col, e0, n0):
             j = np.clip(np.round(n0 - V[:, 1]).astype(int), 0, col.shape[0] - 1)
             C = col[j, i]
         for li, prims in terrain[(ci, cj)].items():
+            if li > VERGE_TERRAIN_MAX_LOD:
+                continue
             pr = prims[sub] if len(prims) == nsub else prims[0]
             base = len(pr["V"])
             pr["V"] = np.vstack([pr["V"], V])
