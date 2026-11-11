@@ -67,3 +67,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T22:36:20.8888700+01:00: Unity sbs-sign before High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-11T22:41:13.6655077+01:00: 4×55 baseline + 1 SBS zakończone. Dwie nowe kamery diagnostyczne wyznaczono błędnie ze starej wysokości: bieżąca instancja ma U141,573 zamiast założonego U143,973. Poprawiono wyłącznie te dwie pozy względem instancji i zachowano stare PNG/JSON w rejected-diagnostic-poses. Runner częściowy zachowuje statystyki pozostałych 53 kamer. NASTĘPNY KROK: ponowić tylko oba zbliżenia w czterech wariantach.
+
+2026-11-11T22:41:41.2239928+01:00: Unity render before Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
