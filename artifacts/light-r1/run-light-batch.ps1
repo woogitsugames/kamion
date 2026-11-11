@@ -15,11 +15,11 @@ if ($Gate3) { $unityArguments += @('-qaGate3', [IO.Path]::GetFullPath($Gate3, $r
 if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu Unity' }
 try {
     $code = Invoke-UnityBatch -LogFile $log -Arguments $unityArguments
-    if ($code -ne 0 -or -not (Select-String $log -Pattern 'LIGHT_QA_RESULT: OK' -Quiet)) {
+    if ($code -ne 0 -or -not (Select-String -Path $log -Pattern 'LIGHT_QA_RESULT: OK' -Quiet)) {
         Show-UnityLogErrors $log
         throw "Batch światła nieudany: exit=$code, log=$log"
     }
-    Select-String $log -Pattern 'LIGHT_QA_JOB:|LIGHT_QA_RESULT:' | ForEach-Object { $_.Line }
+    Select-String -Path $log -Pattern 'LIGHT_QA_JOB:|LIGHT_QA_RESULT:' | ForEach-Object { $_.Line }
 }
 finally {
     git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
