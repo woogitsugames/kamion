@@ -3,7 +3,7 @@
   "mode": "robocopy /E /XJ /R:1 /W:1; no MIR",
   "selected_sha256": {
     "REPORT.md": "3712e1997179a96c82d6e49bdf03cff67ef8a864d6170ccdb05a2e477adc3f07",
-    "STATUS.md": "16d3b466ff46cf4002076f45af24b3ebd9fe4ceeded413a4f0a1aa8f70f7b1e2",
+    "STATUS.md": "16c042fe77c6e2b69820ca0c1b7460b1c7e1d38e1fb6230bc430244c42658cd0",
     "REVIEW.md": "0da78a8c72f09bd33e5dd132d4f67df7e3ccc0a156d9239b96adfe8f945d1cc2",
     "SELF-REVIEW.md": "70ec35b251f58e32fcb7fc8fb57aa3e3a342fbbc7e2132474cb155bd9018fbd1",
     "editmode-final.xml": "d616a08cb84e178ba26ce93921d1310c1ebf93305f0e8ab4f1a393195b12a6c0",
@@ -15,7 +15,8 @@
     "source-cache/fir_tree_01/twig_alpha.png": "3f399629337e7ac3af27a01b08ffb9c0d60224a9dd374a1427761a5c2eea9d6e",
     "restore_cc0_inputs.py": "211c3e4499f578d851ff6b1767a9a8c075f739b0dc0c15d9668b2b82fd407ea3",
     "E-R8-PREFLIGHT.md": "59cc8b042ffc969f050d9f914ab3f6f0fd8e408da191d4bfce71caea4c5f5bf0",
-    "E-R8-ULTRA-INTEGRATION.patch": "d700d5b3107c74692ebf4d3c2c2a048abaacc7a4d423431000e69b3357805e74"
+    "E-R8-ULTRA-INTEGRATION.patch": "d700d5b3107c74692ebf4d3c2c2a048abaacc7a4d423431000e69b3357805e74",
+    "B3-PREFLIGHT.md": "6a54fa63da509720fed18b453a2bf91f1259164b35d16b3c389aa87164dd6539"
   },
   "png_inventory": {
     "before": 160,
@@ -23,7 +24,7 @@
   },
   "cc0_source_packaged": true,
   "main_sources_modified": false,
-  "documentation_extension": "E r8 read-only preflight; source/runtime unchanged; Ultra patch NOT applied",
+  "documentation_extension": "Read-only E r8 and B3 preflights; no source/runtime changes; Ultra patch NOT applied",
   "post_handoff_main_line_endings": {
     "restore_cc0_inputs.py": {
       "original_sha256": "a268c5fe4386c2a33d74ea88f482d8e672f309a6817038e846f50c0b650c2b1f",
