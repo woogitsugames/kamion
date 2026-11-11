@@ -6,3 +6,6 @@ Sesja rozpoczęta 11.11.2026; planowany czas pracy 24 godziny. Bez scalania do m
 
 Krok 2: skopiowano wymagane zasoby i utworzono junctiony; git lfs checkout zakończony bez błędu. Selektywnie zastosowano patch R4 dotyczący aut, bez starych generatów i zmian budynków/dróg. Zależności eksportera/importera i generatora car_grime są wyłącznie opt-in dla aut/tablic; pliki wspólne scalane trójstronnie.
 Następny krok: uv run --project tools/worldgen python -m pytest tests/gis/test_car_deposition.py tests/gis/test_car_map_fields.py tests/gis/test_car_plate_payload.py tests/gis/test_cars_r11.py -q
+
+Krok 3: przygotowano kontrakt 92 kamer z poprzedniego R4 i skrypt czterech warunków. Baseline korzysta z kopii scen main i shadera main; po pomiarze shader wraca do commita kandydata. Każde osobne uruchomienie Unity pobiera i zwalnia slot gpt-life. Nie przypisujemy starych pomiarów do nowej gałęzi.
+Następny krok: pwsh artifacts/life-r1/capture.ps1 -Stage before
