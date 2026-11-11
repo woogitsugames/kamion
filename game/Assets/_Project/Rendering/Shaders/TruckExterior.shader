@@ -4,7 +4,7 @@
 //   (Paint: B = paint mask). Paint: albedo = C.rgb * _PaintColor where the paint mask is set; TRAKT wordmark from the
 //   decal atlas on uv1. Dirt: lerp to _DirtColor by M.g * _Dirt; dust is dielectric and rougher.
 // - Lights slot (_KAMION_TRUCK_LAMPS): emission = _TruckLightState[uv2.x] (RGB luminance / _TruckLightNitsScale, written by
-//   TruckLights) * uv2.y * _KamionExposure (display value per cd/m^2, EnvironmentLighting). Lamps are therefore in the same
+//   TruckLights) * _TruckLightNitsScale * uv2.y * _KamionExposure, decoded in float (EnvironmentLighting). Lamps are therefore in the same
 //   exposed units as the sun and sky: a DRL is bright, a tail lamp is a dim red by day, both read correctly at dusk.
 // - Lighting: URP UniversalFragmentPBR (main light + cascaded shadows, SH ambient x AO, reflection probe / custom
 //   environment). Tyre deflection: renderers with rendering layer bit 8 (TruckVisualRig.TyreRenderingLayer, the wheel

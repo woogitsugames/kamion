@@ -42,7 +42,7 @@ namespace Game.Editor.Setup
         const string MatDir = Root + "/Materials";
         const string ResDir = Root + "/Resources/TRAKT";
         static readonly string[] Tiers = { "High", "Medium", "Low" };
-        /// <summary>Near-pane exterior transmission of the cab glazing (ADR 0048 r6 0.42; ADR 0059 experiment via -extTrans).</summary>
+        /// <summary>ADR0087 windscreen transmission experiment; side doors retain ADR0059 value0.42; -extTrans overrides the windscreen.</summary>
         static float ExtTransmission => float.TryParse(EditorTools.Arg("-extTrans", "1.0"), System.Globalization.NumberStyles.Float,
             System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : 1f;
         const string ExtManifest = "art-source/truck/exterior/export/truck_exterior_manifest.json";
@@ -292,7 +292,7 @@ namespace Game.Editor.Setup
                     // ADR 0038: coated base lobe, orange peel, procedural road grime (vehicle frame from ContactShadowCaster). WORKING_VALUE.
                     m.SetFloat("_CoatedBaseRoughness", 0.6f);
                     // ADR0087 WORKING_VALUE: narrower unresolved ripple lobe, retain dielectricF0/coat energy.
-                    m.SetFloat("_OrangePeel", 0.004f);
+                    m.SetFloat("_OrangePeel", slot == "Paint" ? 0.004f : 0.012f);
                     m.SetFloat("_GrimeHeight", 0.8f); m.SetFloat("_GrimeChassis", 1.3f);
                     if (slot == "Paint")
                     {

@@ -36,3 +36,6 @@
 
 - Step14 CPU source-review followup: explicitly documented legacy serialized Paint/Decal/Dirt Color encoding without changing any values. White stored.78/.785/.78 ->actualGPU multiplier.5704816/.5787147/.5704816, then_CMap; not physical linear albedo. Dirt stored.15 ->GPU.01960665. Builder comments and ADR corrected; no broad gamma conversion. Shared Unity hold remains active, no launch.
 - NEXT COMMAND: wait explicit ROOTrelease; resume guarded candidate rebuild/render.
+
+- Step15 CPU binary proof: candidateTruck first build changes0mesh/FBX files and0semantic hierarchy/local-pose values (161nodes before/after); prefab byte churn is fileID reallocation.16current changedfiles are material values+prefab only. Narrowed OrangePeel experiment toPaint slot so nonpaint unused fields stay legacy. Corrected encoded-unit comments. No Unity launched; repeat this proof after full final canonical rebuild.
+- NEXT COMMAND: after explicit ROOTrelease and bothlocks absent, resume rebuild-candidate.ps1 candidate1; then compare_fixture.py candidate1 and measure_contract.py candidate1.

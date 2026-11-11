@@ -6,7 +6,7 @@ namespace Game.Vehicle.Runtime
     /// <summary>
     /// Lamp state of the art truck (track A7): writes the 16 x 1 light-state texture read by the Lights slot of
     /// Kamion/Truck Exterior (texel = light group id from the manifest light_groups; RGB = lamp luminance / NitsPerEncodedUnit, the
-    /// shader multiplies by the scene exposure). State from the solver input: DRL on, low beam + tail lamps with the
+    /// shader decodes the nits scale before applying scene exposure). State from the solver input: DRL on, low beam + tail lamps with the
     /// automatic light sensor (sun below <see cref="autoLowBeamSunDeg"/>), brake lamps from the service brake pedal, reverse
     /// lamps with the selector in R. Luminances are WORKING_VALUE (LED signal lamps: ECE R7/R87 intensity over the lens
     /// area), to be replaced by measured values. One global 16 x 1 texture, updated only when the state changes, no lights: Low safe. One player truck per scene
