@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('import','render','editmode')] [string]$Step,
+    [ValidateSet('import','render','sbs-sign','editmode')] [string]$Step,
     [string]$Phase='before',
     [ValidateSet('Low','High')] [string]$Tier='Low',
     [ValidateSet('clear','overcast','dusk')] [string]$Lighting='overcast'
@@ -23,6 +23,13 @@ try {
         }
         'editmode' {
             & pwsh scripts/test.ps1 -Platform EditMode *> "$ev/editmode.log"
+        }
+        'sbs-sign' {
+            $scene=if ($Tier -eq 'High') { 'WorldC_High' } else { 'WorldC' }
+            $reference=(Get-Content Data/Regions/bialystok-industrial-c/sbs_references.json -Raw | ConvertFrom-Json).references |
+                Where-Object camera -eq 'sbs-g3-b-297817221966185'
+            $height=[int](1280 * $reference.height / $reference.width)
+            & pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $Tier -Lighting $Lighting -Width 1280 -Height $height -Gate3 Data/Regions/bialystok-industrial-c/sbs_cameras.json -Cameras $reference.camera -OutputDir "$ev/$Phase-sbs/$Tier-$Lighting" *> "$ev/sbs-sign-$Phase-$Tier-$Lighting.log"
         }
     }
     if ($LASTEXITCODE -ne 0) { throw "Unity $Step failed: $LASTEXITCODE" }
