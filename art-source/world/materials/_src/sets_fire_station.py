@@ -98,6 +98,7 @@ LAYOUT = {
     # Retains the previous far-LOD starting palette; lit Low/High calibration remains WORKING_VALUE.
     "foliage_linear": [0.040, 0.068, 0.030],
     "conifer_linear": [0.030, 0.051, 0.0225],  # darker evergreen needles/core; WORKING_VALUE from 7197
+    "hall_room_visibility_WORKING_VALUE": [0.65, 1.0],  # opaque glazing proxy: dark room below / sky above
 }
 
 
@@ -196,6 +197,7 @@ def fire_station(nx=2048):
     joint = np.zeros((c.ny, c.nx), np.float32)
     eid = np.zeros((c.ny, c.nx), np.float32)
     sources = []
+    room_visibility = np.ones((c.ny, c.nx), np.float32)
 
     def put(mask, col, r_=None, m_=None):
         nonlocal alb, rough, metal
@@ -367,7 +369,7 @@ def fire_station(nx=2048):
     def glazing(mask, gu, gv, wpane, hpane, bar=0.06, frame=0.10, wtot=None, htot=None, shape=None, trim=None,
                 blind_seed=0, glass=None):
         """Window in a rect: gu/gv = local metres, panes of wpane x hpane, PVC frame, glass with blinds in some."""
-        nonlocal alb, h, rough
+        nonlocal alb, h, rough, room_visibility
         inside = shape if shape is not None else np.ones_like(mask)
         fr = np.zeros_like(mask)
         if shape is None:
@@ -388,6 +390,15 @@ def fire_station(nx=2048):
             # as in CC0 7197. WORKING_VALUE until the paired Unity capture.
             sky = (0.43 + 0.57 * np.clip(gv / max(gmax, 1e-3), 0, 1) ** 1.3)[..., None]
             gcol = glass[None, None, :] * sky * (0.85 + 0.3 * K.hash01(pane, 19))[..., None] * (1 + 0.10 * n_big)[..., None]
+            # This opaque proxy combines a reflected sky and a recessed room.
+            # Store the lower room's ambient visibility in the existing AO channel,
+            # excluding frames, so reducing albedo does not hit a bright specular floor.
+            low, high = L["hall_room_visibility_WORKING_VALUE"]
+            visibility = low+(high-low)*np.clip(gv/max(gmax,1e-3),0,1)**1.3
+            cavity_mask = mask & inside & ~(fr | bars)
+            if trim is not None:
+                cavity_mask &= ~trim[0]
+            room_visibility = np.where(cavity_mask,visibility,room_visibility)
         else:                                      # three states: blind / net curtain / dark interior
             curtain = np.array([0.36, 0.36, 0.34], np.float32) * (0.85 + 0.15 * np.cos(2 * np.pi * gu / 0.11))[..., None]
             gcol = np.where((hsh > 0.66)[..., None], blind * 0.75 + glass_col * 0.25,
@@ -530,16 +541,28 @@ def fire_station(nx=2048):
     # ADR 0116: evergreen inner mass is darker than the thuja shell. Reuse an
     # unused opaque-atlas cell; the hero keeps its existing material slots.
     in_cf = _gut(X, v, L["conifer_core"])
-    ccol = np.array(L["conifer_linear"], np.float32) * (1 + 0.22 * n_mid + 0.12 * n_fine).clip(0.5, 1.5)[..., None]
-    alb = np.where(in_cf[..., None], ccol, alb)
-    rough = np.where(in_cf, 0.97, rough)
-    h = np.where(in_cf, 0.002 * n_mid, h)
+    # Real CC0 needle RGB supplies the clumps; the opaque inter-needle shadow
+    # fills the gaps that disappear from alpha cards at road-view mip levels.
+    needle = np.array(_conifer_sprite())
+    iy, ix = np.nonzero(in_cf)
+    rect = L["conifer_core"]
+    nx = np.floor((X[iy,ix]-rect["u"][0])/(rect["u"][1]-rect["u"][0])*needle.shape[1]*3).astype(int)%needle.shape[1]
+    ny = np.floor((rect["v"][1]-v[iy,ix])/(rect["v"][1]-rect["v"][0])*needle.shape[0]).astype(int)%needle.shape[0]
+    covered = needle[ny,nx,3].astype(np.float32)/255
+    target = np.array(L["conifer_linear"],np.float32)
+    ccol = _lin(needle[ny,nx,:3].astype(np.float32)/255)*covered[:,None]+target*.55*(1-covered[:,None])
+    ccol *= target/np.maximum(ccol.mean(0,dtype=np.float64),1e-6)
+    alb[iy,ix] = ccol*(1+.12*n_mid[iy,ix])[:,None]
+    rough[iy,ix] = .97-.06*covered
+    h[iy,ix] = .002*(.6*covered+.4*n_mid[iy,ix])
+    sources.append("polyhaven:fir_tree_01 needle RGB (CC0; authored opaque canopy derivative)")
 
     alb = np.clip(alb, 0.012, 0.9).astype(np.float32)
     s = K.SurfaceSet("fire_station", c, alb, h.astype(np.float32), np.clip(rough, 0.05, 1).astype(np.float32),
                      eid.astype(np.float32), np.clip(joint, 0, 1).astype(np.float32), metal=metal.astype(np.float32),
                      ao_scales=(0.01, 0.03, 0.08), ao_k=0.5)
     s.source = "; ".join(sources)
+    s.ao_extra = room_visibility
     s.concrete_mean = [round(float(x), 4) for x in alb[render_mask].mean(0)]      # clean render mean (name kept for build_all)
     return s
 

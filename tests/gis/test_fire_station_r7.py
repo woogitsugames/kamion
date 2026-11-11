@@ -81,6 +81,25 @@ def test_hero_palette_alias_leaves_all_route_hedges_unchanged():
     np.testing.assert_allclose(linear[pixels[..., 3] >= 128].mean(0) * hero["color"], target, rtol=2e-5)
 
 
+def test_glazing_room_visibility_preserves_pvc_and_painted_trim(atlas, monkeypatch):
+    def scan_stub(asset, context, mask, *args, **kwargs):
+        return np.ones_like(mask),np.zeros_like(mask),np.zeros_like(mask),np.zeros_like(mask),False
+    monkeypatch.setattr(atlas,"_scan_fields",scan_stub)
+    monkeypatch.setattr(atlas,"_conifer_sprite",lambda: Image.new("RGBA",(32,32),(45,65,30,255)))
+    surface=atlas.fire_station(128)
+    x,y=surface.c.xy(); v=atlas.TILE[1]-y
+    allowed=np.zeros(x.shape,bool)
+    for key in ("win_arch","win_round"):
+        r=atlas.LAYOUT[key]
+        allowed |= ((x>=r["u"][0]-.1)&(x<=r["u"][1]+.1)&(v>=r["v"][0]-.1)&(v<=r["v"][1]+.1))
+    assert np.all(surface.ao_extra[~allowed]==1)
+    assert .64 <= surface.ao_extra.min() < .8
+    blue=allowed&(surface.albedo[...,2]>3*surface.albedo[...,0])
+    white=allowed&(surface.albedo.min(axis=2)>.3)
+    assert blue.any() and white.any()
+    assert np.all(surface.ao_extra[blue | white]==1), "painted trim and PVC must not inherit the dark room"
+
+
 @pytest.fixture
 def geometry_namespace(monkeypatch):
     # Definition-only load: no bpy import, writer main(), Blender or output mutation.
@@ -115,7 +134,13 @@ def test_new_geometry_keeps_two_low_slots_and_original_plant_budget(geometry_nam
         namespace["build_conifer"](mb,namespace["en_to_uvz"]([e,n,z]),height,radius,key,1)
     assert set(mb.M) == {"fire_station", "fire_station_alpha"}
     assert sum(len(face)-2 for face in mb.F) <= 888
-    assert len(mb.core_normals) - thuja_normal_corners == 216, "three conifer cores retain their radial normals"
+    assert len(mb.core_normals) - thuja_normal_corners >= 216, "three conifer cores retain their radial normals"
+    core = namespace["LAY"]["conifer_core"]
+    for face,uv,material in zip(mb.F,mb.UV,mb.M):
+        a = np.array(uv)
+        if (material == "fire_station" and (a[:,0]>=core["u"][0]).all() and (a[:,0]<=core["u"][1]).all()
+                and (a[:,1]>=core["v"][0]).all() and (a[:,1]<=core["v"][1]).all()):
+            assert all(index in mb.core_normals for index in face), "every opaque needle-core corner needs a smooth normal"
     r = namespace["ALAY"]["conifer_bough"]; u0,v0,u1,v1 = r["inner_uv"]
     for material, uv in zip(mb.M, mb.UV):
         if material == "fire_station_alpha":

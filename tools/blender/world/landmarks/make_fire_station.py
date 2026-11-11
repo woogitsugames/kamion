@@ -1107,14 +1107,16 @@ def build_thuja(mb, c, height, radius, key, lod):
 
 
 def build_conifer(mb, c, height, radius, key, lod):
-    """Root-attached short-needle boughs; Low36cards fits the original whole-plant budget.
+    """Root-attached short-needle boughs and a tiered opaque inner crown.
+
+    Low trades sparse cards for the core silhouette within the original plant budget.
 
     The scan is fir/conifer, NOT a verified Picea. Existing fire_station_alpha is already
     CullOff: one quad per bough, no mirrored duplicate and no extra Low material/batch.
     """
     u0,v0,u1,v1 = ALAY["conifer_bough"]["inner_uv"]
     for j,base_f in enumerate((.08,.17,.27,.36,.45,.55,.65,.76,.87)):
-        count = 6 if lod == 0 else 4
+        count = 6 if lod == 0 else D["spruce"].get("low_bough_counts", [4]*9)[j]
         for i in range(count):
             angle = key*.63+j*1.69+i*2*math.pi/count+.35*(h01(key,j,i,"azimuth")-.5)
             f = base_f+.04*(h01(key,j,i,"level")-.5)
@@ -1128,7 +1130,7 @@ def build_conifer(mb, c, height, radius, key, lod):
     # Continuous inner mass instead of four isolated diamonds. The broader lower third
     # and asymmetric radii carry the envelope; clipped outer sprays keep branch gaps.
     fill = D["spruce"].get("inner_core_fill_r_WORKING_VALUE", .55)
-    profile = ((.055,.42),(.27,1.0),(.60,.58),(.975,.03))
+    profile = D["spruce"].get("core_profile_WORKING_VALUE", ((.055,.42),(.27,1.0),(.60,.58),(.975,.03)))
     sides = 8 if lod == 0 else 6
     rings, normals = [], []
     for j,(f,shape) in enumerate(profile):
