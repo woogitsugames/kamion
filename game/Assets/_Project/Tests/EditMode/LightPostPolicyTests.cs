@@ -10,6 +10,23 @@ namespace Game.Tests
     public class LightPostPolicyTests
     {
         [Test]
+        public void LowSunFilterOptInIsRestrictedToHighAndResetsForOtherPresets()
+        {
+            var lowSun = LightingPreset.CreateLowSun();
+            var clear = LightingPreset.CreateClear();
+            try
+            {
+                Assert.AreEqual(SoftShadowQuality.High, EnvironmentLighting.SunShadowFilter(lowSun, "High"));
+                foreach (string tier in new[] { "Low", "Medium", "Ultra", null })
+                    Assert.AreEqual(SoftShadowQuality.UsePipelineSettings, EnvironmentLighting.SunShadowFilter(lowSun, tier));
+                Assert.AreEqual(SoftShadowQuality.UsePipelineSettings, EnvironmentLighting.SunShadowFilter(clear, "High"));
+                lowSun.highSunShadowFilter = 0;
+                Assert.AreEqual(SoftShadowQuality.UsePipelineSettings, EnvironmentLighting.SunShadowFilter(lowSun, "High"));
+            }
+            finally { Object.DestroyImmediate(lowSun); Object.DestroyImmediate(clear); }
+        }
+
+        [Test]
         public void PhotographicSkyAlignsSunWithoutAzimuthInducedHorizonRoll()
         {
             var preset = LightingPreset.CreateClear();

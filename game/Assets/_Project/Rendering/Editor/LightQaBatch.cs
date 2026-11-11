@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 namespace Game.Rendering.Editor
@@ -83,20 +84,20 @@ namespace Game.Rendering.Editor
                     profile.tiers[tierIndex] = RenderOverrides.ApplyTo(profile.tiers[tierIndex]);
                     Directory.CreateDirectory(job.output);
                     if (job.shadowFilter < 0 || job.shadowFilter > 3) throw new ArgumentException("shadowFilter must be 0..3");
-                    Action<QualityProfile.Tier> filter = _ => {
+                    Action<ScriptableRenderContext, Camera> filter = (_, __) => {
                         if (job.shadowFilter == 0) return;
                         foreach (var light in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
                             if (light.type == LightType.Directional)
                                 light.GetUniversalAdditionalLightData().softShadowQuality = (SoftShadowQuality)job.shadowFilter;
                     };
                     int count;
-                    QualityProfileApplier.Applied += filter;
+                    RenderPipelineManager.beginCameraRendering += filter;
                     try
                     {
                         count = (int)renderer.Invoke(null, new object[] {
                             job.scene, job.width, job.height, job.tier, job.output, job.lighting, job.cameras });
                     }
-                    finally { QualityProfileApplier.Applied -= filter; }
+                    finally { RenderPipelineManager.beginCameraRendering -= filter; }
                     if (count <= 0) throw new InvalidOperationException("Job rendered no cameras: " + job.output);
                     int expected = string.IsNullOrEmpty(job.cameras) ? count : job.cameras.Split(',')
                         .Select(id => id.Trim()).Where(id => id.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).Count();
@@ -111,8 +112,11 @@ namespace Game.Rendering.Editor
                         throw new InvalidOperationException("Requested lighting QA tier was not applied: " + job.tier);
                     if (job.overrideWhiteClip && Mathf.Abs(environment.Active.lookWhiteClip - job.whiteClip) > 0.0001f)
                         throw new InvalidOperationException($"Requested white clip was not retained: requested={job.whiteClip}, actual={environment.Active.lookWhiteClip}");
+                    var actualFilter = environment.sun.GetUniversalAdditionalLightData().softShadowQuality;
+                    if (job.shadowFilter > 0 && (int)actualFilter != job.shadowFilter)
+                        throw new InvalidOperationException("Requested shadow filter was not retained: " + actualFilter);
                     total += count;
-                    Debug.Log($"LIGHT_QA_JOB: OK rendered={count} tier={job.tier} lighting={job.lighting} rq={job.rq} whiteClipOverride={job.overrideWhiteClip}/{job.whiteClip} actualWhiteClip={environment.Active.lookWhiteClip} shadowFilter={job.shadowFilter} output={job.output}");
+                    Debug.Log($"LIGHT_QA_JOB: OK rendered={count} tier={job.tier} lighting={job.lighting} rq={job.rq} whiteClipOverride={job.overrideWhiteClip}/{job.whiteClip} actualWhiteClip={environment.Active.lookWhiteClip} shadowFilter={job.shadowFilter} actualShadowFilter={actualFilter} output={job.output}");
                 }
                 Debug.Log($"LIGHT_QA_RESULT: OK jobs={jobs.jobs.Length} rendered={total}");
                 exit = 0;

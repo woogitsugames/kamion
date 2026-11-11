@@ -46,6 +46,8 @@ namespace Game.Rendering
         [Range(0f, 0.6f)] public float cloudContrast;
         [Tooltip("ADR 0108: opacity of the photographic clear-cloud mask (0 = analytic blue sky). Sun/ambient metering stay unchanged.")]
         [Range(0f, 1f)] public float clearCloudCover;
+        [Tooltip("ADR 0108: opt-in smoother sun-shadow filter on High only; 0 inherits the tier. Low unchanged.")]
+        [Range(0, 3)] public int highSunShadowFilter;
         [Tooltip("Cloud texture tiles per unit of the cloud plane (plane at height 1; smaller = larger cloud masses)")]
         public float cloudScale = 0.16f;
         [Tooltip("Cloud drift (plane units per second; ~0.004 = 20 km/h at 1500 m)")]
@@ -152,6 +154,7 @@ namespace Game.Rendering
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_LowSun";
             p.sunElevationDeg = 9f; p.sunAzimuthDeg = 60f; p.turbidity = 3f; p.overcast = 0f; p.visibilityKm = 15f;
+            p.highSunShadowFilter = 3;
             p.lookSaturation = -3f;
             p.whiteBalanceAdaptation = 0.5f; // owner decision D27 (2026-11-10): phone-style WB at low sun, ADR 0043
             return p;
