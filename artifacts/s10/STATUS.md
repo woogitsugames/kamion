@@ -52,3 +52,22 @@ runner does not auto-select the High scene from -Tier. C will repair ablation
 pipeline overrides only for explicit override fields, preserving empty-Rq
 baseline behavior. No ProjectSettings or main source changes are authorized.
 NEXT COMMAND: review full 4-condition baselines, then worker implementation and experiment evidence; dispatch F from current main at the first free worker slot.
+
+## Step 5 — baseline visual review and first experiment decisions
+Reviewed all 59 Low-overcast baseline frames via A's eight sheets; also full-size
+960 previews of High-clear house and High-overcast DK8, plus real CC0 firestation
+and road references. Visible baseline issues: black dense pine tops, repeated
+grass edge strips, regular crowns; clear house highlights clip. All three fresh
+materials_spec hashes match (46b9e45a41c1ffadbba6bb3a1ce774b82ea446de01e994875c74876b1cfc05b1).
+A's pure gamma fix preserved asphalt (~74) but raised hall (~96→138) and screen
+(~28→57). Screen photo range 36–40 justifies recalibration. Remiza Low is below
+the ±10 band while High already passes; A is testing a common plaster-only
+1.15 linear gain, leaving glass/roof alone, with E conflict explicitly flagged.
+B's first shape gallery rejected as too subtle/clustered; continuous branch
+attachments and stronger silhouettes are being rebuilt at lower triangle cost.
+DK8 crown-only baseline Low p10/p50 18.64/31.15, lt16 5.43%; healthy Andersa/Putry
+ROIs prohibit a global leaf brightening. B will use species/material policy.
+C proved empty-override harness parity (max 2 LSB noise). Both dithers off gave
+banding and was rejected. Pre-LUT sky dither off plus final dither retained and
+RCAS off is under edge/sharpness validation; original route exposure is healthy.
+NEXT COMMAND: review A calibrated frames, B revised silhouettes/scene metrics and C edge/highlight diagnostics; keep the F→G→E→D queue and 0095 gate.
