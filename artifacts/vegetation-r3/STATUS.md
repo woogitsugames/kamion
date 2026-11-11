@@ -13,3 +13,4 @@ Obejrzano ortofoto 2024 z manifestu ortho.json i nakładkę istniejących centr�
 Baseline kontrolny odzyskano z r1 B (268 obrazów), bez ponownego renderowania: siedem hashy źródeł/kamer zgodnych, zero zmian generatora/assetów przy merge i 130 hashy GLB zgodnych. Przywrócono migawkę własnych prawidłowych metadanych B. Nie deklarujemy tych kontrolnych jako świeżych renderów. Wybrano 25 póz B i przygotowano świeży baseline zdjęciowy Low/High clear/overcast. Następny krok: render przed zmianą punktów drzew.
 Zapisano pary foto before Low-clear-photo-1280x720. Następny krok: porównać z photo-references.json.
 Zapisano pary foto before Low-clear-photo-2048x1152. Następny krok: porównać z photo-references.json.
+Zapisano pary foto before Low-clear-photo-2048x1536. Następny krok: porównać z photo-references.json.
