@@ -13,6 +13,6 @@
 - Zdjęcia/ROI/SHA: `photo-crown-*`, `CROWN-METRICS.md`; ekspozycja/sezon różne, druga maska5,3% nie jest ścisłą kalibracją.
 - Obejrzane kontakty `contacts/{before,after}/`, detale przed/po, `alpha-native-compare-*`, `shrubs-LOD-preserved.jpg`; recenzja `REVIEW.md`.
 - PełneGIS:364passed,2xfailed,676,87s (`pytest-complete.log`), exit0;192raw +canonicalJSON bez dryfu.
-- `final-tests.ps1` czeka na PHONE_RUN, następnie EditMode z przywróconym canonical fixture; ROOT sprawdza XML/hash192 i kończy raport/kopię.
+- EditMode retry PENDING: first run218/212 had6 exact Color round-trip assertion failures; test-only fixf37499de compares stored pre/post-policy color. Canonical vehicle fixture restored; ROOT waits for phone gate before retry.
 - P2: powtarzalne karty/lipa, uproszczone bliskie żywopłoty; temporalne shimmer/LOD iGPU A16 UNVERIFIED, brak deklaracji fotorealizmu.
 - Integracja: zachować VegetationGround/include i CanopyPolicy; po A/C/ADR0101 osobno przegląd Tint/światła, regenerować wspólne JSON.

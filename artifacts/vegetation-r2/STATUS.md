@@ -113,3 +113,5 @@ NASTĘPNA KOMENDA (ROOT): `Get-Content artifacts/vegetation-r2/editmode-complete
 - NASTEPNY KROK: po stabilnym zakonczeniu telefonu `pwsh scripts/test.ps1 -Platform EditMode`; potem XML+192SHA, poprawienie REVIEW/REPORT i kopiowanie artifacts do main.
 
 - Krok20 (koordynator): REPORT/ADR skorygowane do rzeczywistego wyniku pierwszego EditMode218/212, test-only fixf37499de czeka na ponowny pelny przebieg. Stary wrapper zakonczony; zadnych automatycznych startow B. Trwa glowny telefon gate3 A/B; nie usuwamy jego locka. NASTEPNY KROK: po zakonczeniu telefonu `pwsh scripts/test.ps1 -Platform EditMode`, potem `uv run --project tools/worldgen python artifacts/vegetation-r2/snapshot_canonical.py --check`.
+
+- Step21 coordinator: verified REPORT/ADR now explicitly record first EditMode218/212 and test-only fixf37499de; previous literal replacement did not match Unicode text. NEXT COMMAND: after phone workflow ends, pwsh scripts/test.ps1 -Platform EditMode.
