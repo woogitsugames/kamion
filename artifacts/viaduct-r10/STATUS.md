@@ -9,3 +9,7 @@
 - Testy jednostkowe r1: 4/4 PASS (niezmienność siatek pomostu, normalne, prześwit, osadzenie). Obejrzano ref7204.jpg oraz refp45.jpg; żółte podpory potwierdzone, wymiary nadal WORKING_VALUE.
 - Uściślenie: wcześniejszy asset r9 = Bieżeństwa; 0105 = DK8/Putry. Osobny zakres OSM z istniejącego bridge_style Putry.
 - NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/build-r1.log -Tail 20; Get-Content artifacts/viaduct-r10/baseline-gis.log -Tail 10
+- build_world r1: PASS (325.4 s), dwa łańcuchy Putry, 7+5 linii podpór. SHA pomostu przed/po identyczne dla obu; brak nowych materiałów. Sufit zastąpiony, pomost i bariery bez przebudowy.
+- Szacunek generatora Low: maks. +0.650% tris (route_putry_entry_signs 444835 -> 447727), materials_low delta 0 w każdej kamerze. To NIE są liczniki GPU/draws z Unity.
+- Korekta kamer z faktycznego specu: oko 137 m przy terenie ~135 m. Kolejka renderów before czeka na PHONE_RUN (render-before.ps1).
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/unity-queue.log -Tail 3; Get-Content artifacts/viaduct-r10/baseline-gis.log -Tail 5
