@@ -1,3 +1,5 @@
 # life r2 — stan pracy
 
 Krok 1: właściciel potwierdził kontynuację wyłącznie life; lider Claude S11 jest jedynym integratorem main. Utworzono gpt-life-r2 od r1 i scalono main 765145c5 bez konfliktów (merge 27aaabc0). Runda r1 przekazana z REPORT i zweryfikowaną kopią. Produkcja r2 jeszcze bez zmian. Przygotowano osobne helpery z katalogiem life-r2; Unity owner gpt-life, heavy owner gpt-life-r2. Następny krok: dobór rzeczywistych instancji naczep/ciągników, kamery i baseline Low/High × clear/overcast; potem poprawka geometrii LOD1 i ocena różnorodności/brudu.
+
+Krok 2: obejrzano ponownie oba zdjęcia referencyjne naczep i zapisano ADR 0122 z zakresem, ograniczeniami licencji oraz kryterium oceny. Przejrzano obecne materiały i LOD: kolory/typy już są zróżnicowane, natomiast LOD1 opon naczepy scala trzy osie, a ciągnik pomija czoła kół. Skrypt kamer przygotowany i oczekuje w istniejącej sesji 2732 na heavy (3/3 zajęte), bez duplikowania. Następny krok: po zakończeniu 2732 sprawdzić yard-targets/cameras, commit zamrożonych kamer i capture.ps1 -Stage before przed jakąkolwiek zmianą geometrii.
