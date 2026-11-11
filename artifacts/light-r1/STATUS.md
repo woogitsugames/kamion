@@ -73,3 +73,5 @@ Krok 22 (22:34): import uzyskał heavy i Unity, trwa niejawna przebudowa PBR (se
 Import świeżego świata zakończony. Następny krok: cloud-smoke.json w LightQaBatch i testy EditMode.
 Batch światła zakończony: artifacts/light-r1/cloud-smoke.json; log C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-light\artifacts\light-r1\cloud-smoke.20261111-224335.log. Następny krok: obejrzeć PNG i policzyć metryki, nie deklarować PASS z samego kodu wyjścia.
 EditMode zakończony bez błędów. Następny krok: obejrzeć wszystkie PNG smoke, porównać niebo ze zdjęciami i wybrać dalszą poprawkę.
+
+Krok 23: import zakończony, smoke 5 zadań / 15 PNG wykonany, EditMode 262/262. Uzupełniono brakującą lokalną kopię Data/photos/nowe/Worn_cracked_asphalt_pavement.jpg; importer wcześniej zachował istniejącą specyfikację oraz wszystkie cztery PNG detalu asfaltu (potwierdzono pliki). Nie zmieniano generatora ani materiału asfaltu. Dodano analizę obrazów do run-heavy.ps1, aby także większe analizy PNG respektowały limit. Następny krok: smoke-review.py i oględziny trzech kontaktówek.

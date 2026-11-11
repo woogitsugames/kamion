@@ -1,6 +1,8 @@
 param(
-    [Parameter(Mandatory)][ValidateSet('BuildWorld','BuildAll','Fidelity','TestFile','GisFinal')][string]$Task,
+    [Parameter(Mandatory)][ValidateSet('BuildWorld','BuildAll','Fidelity','TestFile','GisFinal','Analyze')][string]$Task,
     [string]$TestFile,
+    [string]$Script,
+    [string[]]$ScriptArguments = @(),
     [switch]$RoundEnd
 )
 $ErrorActionPreference = 'Stop'
@@ -13,6 +15,13 @@ if ($Task -eq 'GisFinal' -and -not $RoundEnd) { throw 'Pełny GIS wolno uruchomi
 if ($Task -eq 'TestFile' -and ($TestFile -notmatch '^tests[/\\](gis|physics|gate3)[/\\][^/\\]+\.py$' -or -not (Test-Path -LiteralPath $TestFile -PathType Leaf))) {
     throw 'Podaj jeden istniejący plik testów przez -TestFile; pełne katalogi są zabronione w trakcie rundy'
 }
+if ($Task -eq 'Analyze') {
+    $Script = [IO.Path]::GetFullPath($Script, $repo)
+    if (-not $Script.StartsWith($PSScriptRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
+        [IO.Path]::GetExtension($Script) -ne '.py' -or -not (Test-Path -LiteralPath $Script -PathType Leaf)) {
+        throw 'Analiza musi wskazywać istniejący skrypt Python w katalogu tej rundy'
+    }
+}
 $uvArguments = @('run','--project','tools/worldgen')
 switch ($Task) {
     'BuildWorld' { $uvArguments += @('tools/worldgen/roads/build_world.py','--region','bialystok-industrial-c') }
@@ -20,6 +29,7 @@ switch ($Task) {
     'Fidelity' { $uvArguments += @('tools/worldgen/fidelity/run.py','--region','bialystok-industrial-c','--art',"$PSScriptRoot/fidelity") }
     'TestFile' { $uvArguments += @('python','-m','pytest',$TestFile,'-q') }
     'GisFinal' { $uvArguments += @('python','-m','pytest','tests/gis','-q') }
+    'Analyze' { $uvArguments += @('python',$Script); $uvArguments += $ScriptArguments }
 }
 $log = Join-Path $PSScriptRoot ("heavy-{0}-{1}.log" -f $Task,(Get-Date -Format 'yyyyMMdd-HHmmss'))
 & pwsh $slot -Acquire -Pool heavy -Owner $owner
