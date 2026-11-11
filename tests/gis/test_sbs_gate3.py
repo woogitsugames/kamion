@@ -51,7 +51,7 @@ def test_committed_set_has_unique_licensed_photos_and_file_seated_poses():
     for c,r in zip(cameras,refs):
         assert c['seat']=='file' and c['kind']=='photo_match'
         assert c['id'].startswith('sbs-')
-        assert r['author'] and r['license']=='CC BY-SA 4.0'
+        assert r['author'] and r['license'] in ('CC BY-SA 4.0','CC0','CC BY 3.0')
         assert len(r['sha256'])==64
 
 

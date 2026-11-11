@@ -21,6 +21,11 @@ function Wait-Phone {
         Start-Sleep -Seconds 60
     }
 }
+function Get-AspectKey($width, $height) {
+    $a=[int]$width; $b=[int]$height
+    while($b -ne 0) { $remainder=$a % $b; $a=$b; $b=$remainder }
+    return "$([int]($width/$a))x$([int]($height/$a))"
+}
 function Restore-UnitySideEffects {
     & git -C $taskRoot restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
 }
@@ -41,7 +46,7 @@ try {
             $renderDir = Join-Path $output "renders/$tier-$light"
             if (!$ComposeOnly) {
                 # Camera FOV was converted from horizontal to vertical using this EXACT aspect ratio.
-                foreach ($group in ($references | Group-Object { "$($_.width)x$($_.height)" })) {
+                foreach ($group in ($references | Group-Object { Get-AspectKey $_.width $_.height })) {
                     $first = $group.Group[0]
                     $width = 1280
                     $height = [int]($width * $first.height / $first.width)

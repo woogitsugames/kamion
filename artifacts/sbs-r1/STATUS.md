@@ -43,3 +43,7 @@ Następny krok po baseline: pwsh -NoProfile -File artifacts/sbs-r1/render-pose-p
 ## Spójność świata i fidelity
 Sprawdzono SHA wszystkich 64 GLB względem aktualnego manifestu: 64/64 zgodne. Raport fidelity odtworzono w artifacts/sbs-r1/fidelity z bieżących wejść bez zmian kodu dróg. Nie commitujemy produktów innych dziedzin. Import nadal oczekuje w kolejce Unity.
 Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20
+## Kandydaci do uzupełnienia pierwszych 300 m
+Z lokalnego manifestu Commons dodano dwa rzeczywiste zdjęcia: cm109685822 (Rakoon, CC0, 2021-09-04, około s=230 m / odległość 8 m) i cm92458760 (Rakoon, CC BY 3.0, 2020-07-11, około s=249 m / 6 m). To kandydaci klasy C, nie potwierdzone pokrycie bramki; miniatury nie mają EXIF, a kierunek/FOV/oko są WORKING_VALUE. Odcinek 0–200 m nadal bez referencji. Prepare odtwarza teraz 42 kamery (25 B, 17 C); manifesty i atrybucja obejmują osobne licencje. Dodano cache rektyfikacji związany z SHA źródła i parametrami obiektywu oraz grupowanie renderów po proporcjach obrazu zamiast rozdzielczości źródłowej.
+Cache pakietów Unity skopiowany z main, aby nie zależeć od niedziałającego DNS. Testy SBS 15/15.
+Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20

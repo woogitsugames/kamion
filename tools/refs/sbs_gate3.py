@@ -87,6 +87,7 @@ def fetch_intrinsics():
     fields='id,camera_parameters,camera_type,computed_compass_angle,exif_orientation,width,height,geometry,computed_geometry,altitude,computed_altitude'
     for ref in read(REGION/'sbs_references.json')['references']:
         sid=ref['source_id']
+        if not sid.isdecimal(): continue  # Commons references have no Mapillary intrinsics.
         if sid in records and 'geometry' in records[sid]: continue
         body=client._get('https://graph.mapillary.com/'+sid,params={'fields':fields}).json()
         records[sid]={k:body[k] for k in fields.split(',') if k in body}
@@ -240,7 +241,15 @@ def prepare(count=20, radius=40):
             focal=None
             if lens:
                 comparison=OUTPUT/'rectified'/(r['id']+'.png')
-                focal,_,_=rectify(photo,lens,comparison)
+                cache_path=comparison.with_suffix('.cache.json')
+                fingerprint=hashlib.sha256(json.dumps({'source':digest,'lens':lens,'algorithm':1},sort_keys=True).encode()).hexdigest()
+                cache=read(cache_path) if cache_path.exists() else {}
+                if (cache.get('fingerprint')==fingerprint and comparison.exists()
+                        and cache.get('sha256')==hashlib.sha256(comparison.read_bytes()).hexdigest()):
+                    focal=cache['focal']
+                else:
+                    focal,_,_=rectify(photo,lens,comparison)
+                    write(cache_path,{'fingerprint':fingerprint,'focal':focal,'sha256':hashlib.sha256(comparison.read_bytes()).hexdigest()})
             ov = overrides.get(camera_id, {})
             allowed = {'east_delta_m','north_delta_m','eye_height_m','absolute_u_m','heading_delta_deg',
                        'horizontal_fov_deg','horizon_y_fraction','rectified_horizon_y_fraction','heading_source','pose_status','note','masks','pose_confidence','pose_reason','photometric_use','photometric_reason','vanishing_lines','horizon_method'}
@@ -291,6 +300,42 @@ def prepare(count=20, radius=40):
                          'photo_vs_data_age': 'pre-2020: historical reference; data epoch UNVERIFIED' if int(str(r['captured_at'])[:4]) < 2020 else 'data epoch UNVERIFIED',
                          'assumptions': ('NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.' if lens else 'NMT bare earth; eye/FOV/pitch WORKING_VALUE. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.'),
                          'authored_overrides': ov})
+    extra_path=REGION/'sbs_extra_references.json'
+    for extra in read(extra_path).get('references',[]) if extra_path.exists() else []:
+        source_manifest=ROOT/extra['metadata_manifest']
+        record=next(r for r in [json.loads(line) for line in source_manifest.read_text(encoding='utf-8-sig').splitlines() if line.strip()] if r['id']==extra['source_id'])
+        photo=source_manifest.parent/record['file'];digest=hashlib.sha256(photo.read_bytes()).hexdigest()
+        if digest!=record['sha256']: raise ValueError('extra photo hash mismatch')
+        if record['license'] not in ('CC0','CC BY 3.0','CC BY 4.0','CC BY-SA 3.0','CC BY-SA 4.0'):
+            raise ValueError('unsupported extra reference license')
+        camera_id=extra['camera'];ov=overrides.get(camera_id,{})
+        confidence=ov.get('pose_confidence','C')
+        if confidence not in ('A','B','C'): raise ValueError('invalid extra pose confidence')
+        x,y=transform.transform(record['lon'],record['lat'])
+        e=x-origin['x']+ov.get('east_delta_m',0);n=y-origin['y']+ov.get('north_delta_m',0)
+        eye=ov.get('eye_height_m',1.7);u=ov.get('absolute_u_m',terrain(e+origin['x'],n+origin['y'])+eye)
+        heading=grid_heading(record['lon'],record['lat'],extra['heading_true_deg'],transform)+ov.get('heading_delta_deg',0)
+        with Image.open(photo) as im: width,height=im.size
+        fov=vfov(ov.get('horizontal_fov_deg',extra['horizontal_fov_deg']),width/height)
+        horizon=ov.get('horizon_y_fraction',extra['horizon_y_fraction'])
+        if 'vanishing_lines' in ov: horizon=vanishing_horizon(ov['vanishing_lines'])[1]
+        pitch=math.degrees(math.atan((2*horizon-1)*math.tan(math.radians(fov)/2)))
+        segment=next(seg for seg in read(REGION/'gate3_segment.json')['segments'] if seg['id']==extra['segment'])
+        line=LineString(segment['points_en']);point=Point(e,n)
+        common={'pose_confidence':confidence,'pose_reason':ov.get('pose_reason','Unreviewed Commons pose')}
+        cameras.append({'id':camera_id,'kind':'photo_match','seat':'file','type':'persp','pos':[round(e,4),round(n,4),round(u,4)],
+                        'look_at':pose(e,n,u,heading,pitch),'fov_deg':round(fov,5),'segment':segment['id'],**common,
+                        'note':'ADR0111 Commons GPS; manually inferred heading/FOV/eye/horizon WORKING_VALUE'})
+        refs.append({'camera':camera_id,'segment':segment['id'],'photo':photo.relative_to(ROOT).as_posix(),
+            'source_id':record['id'],'page_url':record['page_url'],'author':record['author'],'license':record['license'],
+            'license_url':record['license_url'],'captured_at':record['captured_at'],'sha256':digest,'comparison_photo':photo.relative_to(ROOT).as_posix(),
+            'comparison_sha256':digest,'width':width,'height':height,'lon':record['lon'],'lat':record['lat'],
+            'heading_grid_deg':heading,'heading_true_deg':extra['heading_true_deg'],'route_distance_m':round(line.distance(point),3),
+            'segment_station_m':round(line.project(point),3),'horizon_y_fraction':horizon,'pose_status':'WORKING_VALUE',**common,
+            'photometric_use':ov.get('photometric_use',False),'photometric_reason':ov.get('photometric_reason','Unvalidated masks'),
+            'photo_vs_data_age':'data epoch UNVERIFIED','authored_overrides':ov,
+            'assumptions':'Public cached Commons metadata, thumbnail has no EXIF; no calibrated lens or roll. Heading/FOV/eye/horizon WORKING_VALUE.',
+            'source_manifest_sha256':hashlib.sha256(source_manifest.read_bytes()).hexdigest()})
     write(REGION / 'sbs_cameras.json', {'schema': 'kamion/sbs-cameras/1', 'frame': 'E,N,absolute U', 'cameras': cameras})
     input_hashes={name:hashlib.sha256((REGION/name).read_bytes()).hexdigest()
                   for name in ('region.yaml','terrain.json','gate3_segment.json')}
@@ -299,11 +344,11 @@ def prepare(count=20, radius=40):
     write(config_path, config)
     lines = ['# ADR 0103 — per-photo attribution (reference sheets only)', '',
              'Photos stay outside git and builds. Source pixels on sheets are rectified/cropped, resized and overlaid.',
-             'Photo panels and their modifications: CC BY-SA 4.0; render panels retain project terms.',
-             'License: https://creativecommons.org/licenses/by-sa/4.0/', '',
-             '| Camera | Author | Date | Source | SHA256 |', '|---|---|---|---|---|']
+             'Photo panels and their modifications: per-photo license below; render panels retain project terms.',
+             'Licenses are linked per photo; derivative photo panels follow their source licenses.', '',
+             '| Camera | Author | Date | License | Source | SHA256 |', '|---|---|---|---|---|---|']
     for r in refs:
-        lines.append(f"| {r['camera']} | {r['author']} | {r['captured_at']} | [Mapillary {r['source_id']}]({r['page_url']}) | `{r['sha256']}` |")
+        lines.append(f"| {r['camera']} | {r['author']} | {r['captured_at']} | [{r['license']}]({r['license_url']}) | [{r['source_id']}]({r['page_url']}) | `{r['sha256']}` |")
     (ROOT/'docs/refs/sbs-gate3-attribution.md').write_text('\n'.join(lines)+'\n', encoding='utf-8')
     OUTPUT.mkdir(parents=True, exist_ok=True)
     coverage=[]
@@ -315,6 +360,7 @@ def prepare(count=20, radius=40):
                          'segment_length_m':round(LineString(segment['points_en']).length,3),
                          'max_distance_to_route_m':max(r['route_distance_m'] for r in selected),
                          'authors':sorted({r['author'] for r in selected}),
+                         'eligible_poses':sum(r.get('pose_confidence','C') in ('A','B') for r in selected),
                          'verified_poses':sum(r['pose_status']=='VERIFIED' for r in selected)})
     write(OUTPUT/'coverage.json',{'segments':coverage,'note':'Station range is not continuous photo coverage.'})
     contact(refs)

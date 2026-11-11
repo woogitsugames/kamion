@@ -471,6 +471,22 @@
       "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
       "photometric_use": false,
       "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+    },
+    "sbs-g3-a-cm109685822": {
+      "pose_confidence": "C",
+      "pose_reason": "New Commons candidate at station 230/249m; heading, FOV and GPS need fresh photo-render calibration",
+      "photometric_use": false,
+      "photometric_reason": "Uncalibrated pose/masks; cm92458760 is wet pavement",
+      "eye_height_m": 1.7,
+      "note": "Heading/FOV/horizon inferred from image and georeferenced object context, WORKING_VALUE. No EXIF in cached thumbnail."
+    },
+    "sbs-g3-a-cm92458760": {
+      "pose_confidence": "C",
+      "pose_reason": "New Commons candidate at station 230/249m; heading, FOV and GPS need fresh photo-render calibration",
+      "photometric_use": false,
+      "photometric_reason": "Uncalibrated pose/masks; cm92458760 is wet pavement",
+      "eye_height_m": 1.7,
+      "note": "Heading/FOV/horizon inferred from image and georeferenced object context, WORKING_VALUE. No EXIF in cached thumbnail."
     }
   }
 }
