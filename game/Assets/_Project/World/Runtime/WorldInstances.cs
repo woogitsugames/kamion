@@ -286,6 +286,9 @@ namespace Game.World
         {
             m_Camera = cam;
             SyncOrigin();
+            // ADR 0106 GPU breakdown (rq_props, rq_ab trees|props): diagnostics only, shipping state = both on.
+            bool trees = m_Trees && !RenderOverrides.AbTreesOff;
+            bool props = RenderOverrides.Props != false && !RenderOverrides.AbPropsOff;
             GeometryUtility.CalculateFrustumPlanes(cam, m_Planes);
             Vector3 cp = cam.transform.position;
             // ADR 0068: extra views (mirrors) use their own LOD scale on the tier bias (Game.Core.ExtraViewLod), whatever
@@ -315,7 +318,7 @@ namespace Game.World
             {
                 var mesh = groups[g].mesh;
                 bool gFar = false;
-                if (mesh != null && m_Trees && m_HlodSwitch > 0f)
+                if (mesh != null && trees && m_HlodSwitch > 0f)
                 {
                     var gb = mesh.bounds; gb.center += o;
                     float d = Mathf.Sqrt(gb.SqrDistance(cp));
@@ -337,7 +340,7 @@ namespace Game.World
                 Last.VisibleCells++;
                 // Forest HLOD (ADR 0015): beyond the tier's switch distance the cell mesh replaces its forest trees.
                 bool hlod = false;
-                if (cell.hlod > 0 && m_Trees && m_HlodSwitch > 0f && set.hlods != null && cell.hlod <= set.hlods.Length)
+                if (cell.hlod > 0 && trees && m_HlodSwitch > 0f && set.hlods != null && cell.hlod <= set.hlods.Length)
                 {
                     var h = set.hlods[cell.hlod - 1];
                     bool groupDrawn = h.group >= 0 && h.group < ng && m_GroupFar[h.group];
@@ -351,7 +354,8 @@ namespace Game.World
                     if (hlod && run.forest) continue;
                     var p = protos[run.prototype];
                     var ends = m_Ends[run.prototype];
-                    if (!m_Trees && m_Thin[run.prototype]) continue;
+                    if (!trees && m_Thin[run.prototype]) continue;
+                    if (!props && !m_Thin[run.prototype]) continue;
                     float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, m_TreeCard) : scale;
                     float cs = m_FixedCull[run.prototype] ? distanceScale : scale;   // vehicles: same cull on every tier
                     float l0 = m_Lod0Min[run.prototype] * distanceScale;   // vehicles: LOD0 floor on every tier

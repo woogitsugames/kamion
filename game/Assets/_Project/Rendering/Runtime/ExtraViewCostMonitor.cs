@@ -53,6 +53,10 @@ namespace Game.Rendering
         bool m_AbB;
         float m_SavedShadowDistance = -1f;
         int m_SavedCascades = -1;
+        float m_SavedLod = -1f, m_SavedScale = -1f, m_SavedFar = -1f;   // ADR 0106 A/B keys
+        int m_SavedMask;
+        Camera m_AbCam;
+        Canvas[] m_Canvases;
         readonly float[] m_Gpu = new float[2048], m_Cpu = new float[2048], m_Dt = new float[2048];
         int m_N;
         readonly float[][] m_WinGpu = { new float[64], new float[64] }, m_WinCpu = { new float[64], new float[64] };
@@ -111,6 +115,14 @@ namespace Game.Rendering
             "envcap" => "no reflection-capture faces",
             "shadows" => "shadow distance 0",
             "shadowcasc" => "one shadow cascade fewer",
+            // ADR 0106 (A16 Low GPU breakdown)
+            "lod" => "LOD bias x0.6",
+            "scale" => "render scale -0.1",
+            "far" => "main camera far clip x0.5",
+            "props" => "no instanced props / parked vehicles",
+            "trees" => "no instanced trees / forest HLOD",
+            "truck" => "main camera without the Vehicle layer (own truck, cab)",
+            "hud" => "no screen-space canvases",
             _ => "unknown key (no change)",
         };
 
@@ -160,6 +172,7 @@ namespace Game.Rendering
             float now = Time.realtimeSinceStartup;
             if (m_AbKey != null) AbUpdate(now);
             if (now - m_WindowStart < WindowS) return;
+            if (RenderOverrides.Hud == false) SetHud(false);   // ADR 0106: rq_hud 0 (canvases created later are caught here)
             int frames = Mathf.Max(1, Time.frameCount - m_WindowStartFrame);
             double msPerTick = 1000.0 / Stopwatch.Frequency;
             ExtraViewStats.MirrorRendersPerFrame = m_MirrorRenders / (float)frames;
@@ -223,6 +236,14 @@ namespace Game.Rendering
             m_N = 0;
         }
 
+        /// <summary>ADR 0106: shows / hides every screen-space overlay canvas (HUD, menus) for the GPU A/B.</summary>
+        void SetHud(bool visible)
+        {
+            if (!visible || m_Canvases == null) m_Canvases = FindObjectsByType<Canvas>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            foreach (var c in m_Canvases)
+                if (c != null && c.isRootCanvas && c.renderMode == RenderMode.ScreenSpaceOverlay) c.enabled = visible;
+        }
+
         static readonly float[] s_Tmp = new float[2048];
 
         static float P(float[] a, int n, float q)
@@ -251,6 +272,26 @@ namespace Game.Rendering
                     if (b) { m_SavedShadowDistance = urp.shadowDistance; urp.shadowDistance = 0f; }
                     else if (m_SavedShadowDistance >= 0f) { urp.shadowDistance = m_SavedShadowDistance; m_SavedShadowDistance = -1f; }
                     break;
+                case "lod":
+                    if (b) { m_SavedLod = QualitySettings.lodBias; QualitySettings.lodBias = m_SavedLod * 0.6f; }
+                    else if (m_SavedLod > 0f) { QualitySettings.lodBias = m_SavedLod; m_SavedLod = -1f; }
+                    break;
+                case "scale":
+                    if (urp == null) break;
+                    if (b) { m_SavedScale = urp.renderScale; urp.renderScale = Mathf.Max(0.3f, m_SavedScale - 0.1f); }
+                    else if (m_SavedScale > 0f) { urp.renderScale = m_SavedScale; m_SavedScale = -1f; }
+                    break;
+                case "far":
+                    if (b) { m_AbCam = ViewCameraResolver.Resolve(null); if (m_AbCam != null) { m_SavedFar = m_AbCam.farClipPlane; m_AbCam.farClipPlane = m_SavedFar * 0.5f; } }
+                    else if (m_AbCam != null && m_SavedFar > 0f) { m_AbCam.farClipPlane = m_SavedFar; m_SavedFar = -1f; }
+                    break;
+                case "truck":
+                    if (b) { m_AbCam = ViewCameraResolver.Resolve(null); if (m_AbCam != null) { m_SavedMask = m_AbCam.cullingMask; m_AbCam.cullingMask &= ~(1 << LayerMask.NameToLayer("Vehicle")); } }
+                    else if (m_AbCam != null && m_SavedMask != 0) { m_AbCam.cullingMask = m_SavedMask; m_SavedMask = 0; }
+                    break;
+                case "props": RenderOverrides.AbPropsOff = b; break;
+                case "trees": RenderOverrides.AbTreesOff = b; break;
+                case "hud": SetHud(!b); break;
                 case "shadowcasc":
                     if (urp == null) break;
                     if (b) { m_SavedCascades = urp.shadowCascadeCount; urp.shadowCascadeCount = Mathf.Max(1, m_SavedCascades - 1); }

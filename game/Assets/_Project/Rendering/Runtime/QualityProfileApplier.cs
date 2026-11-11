@@ -52,7 +52,9 @@ namespace Game.Rendering
                 t = RenderOverrides.ApplyTo(t);
                 ApplyPipelineOverrides(t);
             }
-            Apply(t, targetCamera != null ? targetCamera : ViewCameraResolver.Resolve(null), volume, worldTextures, ref m_Tonemapping);
+            var cam = targetCamera != null ? targetCamera : ViewCameraResolver.Resolve(null);
+            Apply(t, cam, volume, worldTextures, ref m_Tonemapping);
+            if (cam != null && RenderOverrides.CullMask.HasValue && Application.isPlaying) cam.cullingMask &= RenderOverrides.CullMask.Value;   // ADR 0106
         }
 
         /// <summary>
@@ -70,6 +72,7 @@ namespace Game.Rendering
             if (RenderOverrides.Hdr.HasValue) urp.supportsHDR = t.hdr;
             if (RenderOverrides.Upscale != null) urp.upscalingFilter = t.upscalingFilter;   // ADR 0062 A/B
             if (RenderOverrides.FsrSharpness.HasValue) { urp.fsrOverrideSharpness = true; urp.fsrSharpness = t.fsrSharpness; }
+            if (RenderOverrides.LodBias.HasValue && Application.isPlaying) QualitySettings.lodBias = t.lodBias;   // ADR 0106
         }
 
         /// <summary>Raised after a tier was applied (vegetation reads <see cref="Current"/>).</summary>
