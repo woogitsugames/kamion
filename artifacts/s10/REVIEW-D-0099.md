@@ -161,3 +161,18 @@ truck/trailer root transforms match baseline in bothscenes. Two prefabbytes diff
 but553truck/253trailer serialized records match after fileID identity normalization,
 161/73localtransforms exact. This does not recover historic actualruntimeposes;
 recorder prepared for nextplannedrender, no372pixelstable claim.
+
+Root independently verified gate192raw hashes versus bus-only fixture and every
+ordered primitive in6_6High/Low:109/68otherprimitives exact; oldtyre attributes
+exact after removing72vertices at176, oldindices exact after rebasing;64newtris.
+Materialdefinitions/nodetransforms, bus4_5 and all64instances exact,0newgroups.
+RawUV1.y.1 decodesUnity.9strength. ProofD-gate-world-independent-check.json.
+Root viewed narrowP8 all4conditions/P10HighOV: retained bounded .425paintwheel
+response/.085maskhalfwidth, centers unchanged. Arrow direction remains readable
+with thinner localrubband; stillheavyband/cleanerP10 explicitlynotfullqualityPASS.
+Production source9ba7b0fe reviewed: newwheelWear=FRESHmetadata*.5, preserves
+age/dirt/geometrywidth; no cumulativeGetVector scaling. Asphaltnominalwidth and
+forbiddenroads/build_world.py untouched. Broad3blockcandidate remains separate.
+FullGIS386/1xfail511.28s on finalPythonproducts; noPythonchanges afterpaintadoption.
+Gate BEFORE8 complete on frozenbus cache. PHONEperfdiag2 returned16:42:56
+beforegateimport, so nextactualuniform/gateAFTER pending freshrelease.

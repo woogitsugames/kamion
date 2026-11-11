@@ -621,3 +621,13 @@ C13 read-only preflight updatedad03 for0106/possible QA double scaling (source
 inference, not measurement); source0108 still waitsDclosure.
 NEXT COMMAND: monitor entire perf-low-r2diag1.done+PHONEabsence, then freshrelease;
 review D source masks/strictproofs and fullGIS whileheld.
+
+Step51: Wholeperfdiag1.done confirmed16:35; freshrelease16:36 removed owneddiag9.
+D narrow8 and gatepairBEFORE8 completed; root viewed4P8+P10 controls and retained
+.425/.085 productioncandidate9ba7 fromfreshmetadata. Independent gate192raw/
+allorderedprimitive proof passed, no oldgeometry/material/group changes beyond
+64tyretris in6_6. FullGIS386/1xfail511.28s complete.
+NewPHONEperfdiag2 returned16:42:56 before gateimport; owneddiag10 installed,
+release16:36 invalidated. No own Unity active/queued. NEXT COMMAND: wait entire
+run-diag2 diag2.done+PHONEabsence, freshrelease, then gateimport/actual.425uniform/
+AFTER, isolatedbroadprobe, finalselection/fullroute/EditMode/report.
