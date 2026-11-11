@@ -180,6 +180,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FD.apply(w, pl, roads_poly, bpoly, paved, park_polys, route_P, frep, log, overrides=overrides, deck_at=deck_at)   # Fab Megascans (ADR 0084)
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
     FU.clear_carriageway(pl, carriage, zsurf, frep)
+    FU.clear_narrow_islands(pl, w.buf.parts, w.net, frep)        # ADR 0093: no lamp on a separation < ~2 m
     FU.clear_under_decks(pl, w.buf.parts, frep)
     FU.clear_level_carriageways(pl, w.buf.parts, frep)
     frep["poles_reseated"] = pl.reseated

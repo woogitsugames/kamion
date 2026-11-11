@@ -433,6 +433,8 @@ def check(w, instances, region_id, pipeline, report_extra=None):
     for p in w.buf.parts:
         if p.layer not in ("road", "bridge") or p.mat != "curb_concrete" or len(p.T) == 0:
             continue
+        if p.src.startswith("island:"):      # authored traffic_island (orthophoto): a kerbed island on the carriageway
+            continue                         # by design; obstacle_in_lane still checks that no lane runs into it
         tri = p.V[p.T]
         a2 = 0.5 * np.abs((tri[:, 1, 0] - tri[:, 0, 0]) * (tri[:, 2, 1] - tri[:, 0, 1])
                           - (tri[:, 2, 0] - tri[:, 0, 0]) * (tri[:, 1, 1] - tri[:, 0, 1]))

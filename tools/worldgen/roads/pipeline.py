@@ -79,6 +79,10 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     ctx = json.loads((rdir / "generated" / "osm_context.json").read_text(encoding="utf-8"))
     terrain_meta = json.loads((rdir / "terrain.json").read_text(encoding="utf-8"))
     net, graph, overrides, net_stats = build_network(region_id)
+    net.authored = overrides                         # painted_zone etc. read by the marking stage (ADR 0093)
+    from shapely.geometry import LineString as _LS
+    net.foot_lines = [(_LS(np.array(f["geometry"]) - np.array(origin)), f["highway"]) for f in ctx["footways"]
+                      if len(f["geometry"]) >= 2]      # which way crosses at a crossing node: P-10 or P-11
     M.BRIDGE_STYLES.clear()
     for o in overrides:
         if o.get("kind") == "bridge_style":
@@ -132,6 +136,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
         M.build_patch(buf, net, j, coarse=True)
     GO.build(buf, net, gore_plan)                                    # paved gores / P-21 (ADR 0077)
     stats["sides_on_carriageway_culled"] = M.cull_sides_on_carriageway(buf)
+    stats["kerb_tris_dropped_in_fills"] = GO.drop_kerbs_in_fills(buf, gore_plan)     # ADR 0093: removed, not sunk
     w = World(region=region, origin=origin, net=net, junctions=juncs, hf=hf, ctx={"points": pts, "foot": foot},
               buf=buf, profiles=prof, stats=stats)
     w.stats.update(net_stats)                                        # fork_tapers / fork_shifts (ADR 0074/0076)

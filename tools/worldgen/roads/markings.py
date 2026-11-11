@@ -153,8 +153,14 @@ def build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
     first = len(buf.parts)
     _build_markings(buf, net, juncs, ctx_points, report)
     report["overlap_removed_tris"] = drop_overlapping(buf, net, first)
+    # ADR 0093: lines carried through the junction patches, authored P-21 zones (after the overlap pass: these are
+    # draped on the generated surface and belong to no single chain)
+    from . import through_lines as TL
+    TL.build(buf, net, juncs, report, MARKED, lane_layout)
+    TL.paint_zones(buf, getattr(net, "authored", None) or [], report, net.overrides_applied, net.overrides_stale)
 
 
+FRAGMENT_MIN_M = 2.0        # ADR 0093: a line cut by the overlap pass to less than this is removed
 OVERLAP_INSET_M = 0.25      # a line is inside another carriageway when it lies this far inside its edge (WORKING_VALUE)
 OVERLAP_DZ_M = 1.0          # ... and within this height of its surface (bridges over roads are not overlaps)
 
@@ -196,6 +202,18 @@ def drop_overlapping(buf, net, first):
         if drop.any():
             removed += int(drop.sum())
             p.T = p.T[~drop]
+            # ADR 0093: what is left of a cut line shorter than FRAGMENT_MIN_M is a stray fragment (REVIEW 0077 #10),
+            # a cut glyph (arrow, give-way triangle) is removed whole
+            kind = p.src.split("@", 1)[0]
+            if kind.startswith(("P-8", "P-13")):
+                removed += len(p.T)
+                p.T = p.T[:0]
+            elif kind.split("-P-2a")[0] in ("lane", "centre", "P-4", "P-7b") and len(p.T):
+                tri = p.V[p.T]
+                left = 0.5 * float(np.sum(np.max(np.linalg.norm(tri - np.roll(tri, 1, axis=1), axis=2), axis=1)))
+                if left < FRAGMENT_MIN_M:
+                    removed += len(p.T)
+                    p.T = p.T[:0]
     buf.parts[first:] = [p for p in buf.parts[first:] if len(p.T)]
     return removed
 
@@ -238,7 +256,43 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                 best = (c, s, abs(lat))
         if best is not None:
             crossings.setdefault(best[0].id, []).append((best[1], p["osm_node"]))
+    # ADR 0093: what crosses there? Only a cycleway through the node -> P-11 (two rows of squares), otherwise P-10.
+    # Two crossing nodes closer than their widths on one chain (footway + cycleway side by side, or one crossing
+    # mapped twice) used to give two zebras laid over each other (REVIEW 0077 #9): same kind -> one crossing at the
+    # mean station; foot + cycle -> pushed apart until they abut.
+    foot_lines = getattr(net, "foot_lines", None) or []
+    ftree = shapely.STRtree([f[0] for f in foot_lines]) if foot_lines else None
+    xy_of = {p["osm_node"]: (p["e"], p["n"]) for p in ctx_points if p["kind"] == "highway=crossing"}
+
+    def crossing_kind(osm):
+        if ftree is None or osm not in xy_of:
+            return "P-10"
+        pt = shapely.Point(*xy_of[osm])
+        kinds = {foot_lines[int(k)][1] for k in ftree.query(pt, predicate="dwithin", distance=0.75)}
+        return "P-11" if kinds == {"cycleway"} else "P-10"
+
+    merged = 0
+    for cid, lst in crossings.items():
+        lst = sorted((s_, osm, crossing_kind(osm)) for s_, osm in lst)
+        out = []
+        for s_, osm, kd in lst:
+            wd = S.P10_WIDTH if kd == "P-10" else S.P11_CLEAR + 2 * S.P11_SQUARE
+            if out:
+                ps, posm, pkd, pwd = out[-1]
+                need = (pwd + wd) / 2 + 0.4
+                if s_ - ps < need:
+                    if pkd == kd:
+                        out[-1] = (0.5 * (ps + s_), posm, pkd, pwd)
+                        merged += 1
+                        continue
+                    mid = 0.5 * (ps + s_)
+                    out[-1] = (mid - need / 2, posm, pkd, pwd)
+                    s_ = mid + need / 2
+            out.append((s_, osm, kd, wd))
+        crossings[cid] = out
     report["crossings_snapped"] = sum(len(v) for v in crossings.values())
+    report["crossings_merged"] = merged
+    report["crossings_p11"] = sum(1 for v in crossings.values() for x in v if x[2] == "P-11")
 
     for c in net.chains:
         if c.meta.get("absorbed"):
@@ -330,11 +384,32 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                         if abs(lat) + gw > hwb - 0.1:
                             cnt("P-8 skipped (off carriageway)")
                             continue
+                        # ADR 0093 (REVIEW 0076 #11): the arrow lies on the lane axis and inside the lane where it is
+                        # painted - not in a lane narrower than P8_MIN_LANE_W, not with a head on the lane line
+                        lw_here = (2 * hwb - 2 * float(sec.edge_strip)) / max(len(lanes) if sec.oneway else sec.lanes, 1)
+                        if lw_here < S.P8_MIN_LANE_W or gw > lw_here / 2 - 0.10:
+                            cnt("P-8 skipped (lane too narrow)")
+                            continue
                         polygon_mark(buf, c, g, base, lat, trav, trav, "P-8")
                         cnt("P-8 arrow")
         # crossings on this chain
-        for s_c, osm in crossings.get(c.id, []):
+        for s_c, osm, ckind, cwid in crossings.get(c.id, []):
             hw = float(c.hw_at(s_c))
+            if ckind == "P-11":
+                if s0 + cwid / 2 + 0.5 <= s_c <= s1 - cwid / 2 - 0.5:
+                    W = 2 * hw - 2 * 0.25
+                    nsq = int(math.floor((W + S.P11_GAP) / (S.P11_SQUARE + S.P11_GAP)))
+                    start = -(nsq * S.P11_SQUARE + (nsq - 1) * S.P11_GAP) / 2
+                    for row in (-1, 1):
+                        sr = s_c + row * (S.P11_CLEAR + S.P11_SQUARE) / 2
+                        for k_ in range(nsq):
+                            lat = start + k_ * (S.P11_SQUARE + S.P11_GAP) + S.P11_SQUARE / 2
+                            strip(buf, c, sr - S.P11_SQUARE / 2, sr + S.P11_SQUARE / 2, lat, S.P11_SQUARE, "P-11")
+                    cnt("P-11 cycle crossing")
+                    c.meta.setdefault("crossings", []).append(round(float(s_c), 2))
+                else:
+                    report.setdefault("crossings_skipped", []).append(osm)
+                continue
             half = S.P10_WIDTH / 2
             if s_c - half < s0 + 0.5 or s_c + half > s1 - 0.5:
                 # inside a junction patch (wide signalised mouths, roundabout entries: Mapillary p40 / p42 show the

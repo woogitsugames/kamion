@@ -546,6 +546,18 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         if c.id not in hero_chains:
             M.build_bridge_supports(w.buf, c, w.hf, on_ground_road, w.bridges)
     hero_tris = HB.apply(w, heroes, st["instances"], log)
+    if heroes:
+        # HB.apply rebuilds the ribbons of the hero chains, kerbs included: the ones under a paved gore / on another
+        # carriageway came back sunk 6 cm at asphalt level (28 kerb_on_carriageway at both ends of the Bieżeństwa
+        # viaduct, grey strips on the lane at s 580-620; REVIEW 0077 #1, ADR 0093). Same cull as in pipeline.build.
+        again = M.cull_sides_on_carriageway(w.buf)
+        log("sides on carriageway culled after hero ribbons", again)
+        w.stats["sides_on_carriageway_culled_hero"] = again
+    from roads import gores as GO
+    if heroes:
+        w.stats["kerb_tris_dropped_in_fills_hero"] = GO.drop_kerbs_in_fills(w.buf, w.gore_plan)
+    w.stats["gores"]["kerb_tris_in_fill"] = GO.kerbs_in_fills(w.buf, w.gore_plan)
+    log("kerb triangles inside paved gore fills:", w.stats["gores"]["kerb_tris_in_fill"])
     log("hero bridges", {k: [x["id"] for x in v] for k, v in w.stats["hero_bridges"].items()})
 
     half = w.region["bbox"]["width_m"] / 2
@@ -933,6 +945,11 @@ def qa_report(w, mk_report, mask):
             "markings_overlap_removed_tris": mk_report.get("overlap_removed_tris", 0),
             "decals": mk_report.get("decals", {}),
             "crossings_snapped": mk_report.get("crossings_snapped", 0),
+            "crossings_merged": mk_report.get("crossings_merged", 0),
+            "crossings_p11": mk_report.get("crossings_p11", 0),
+            "through_lines": mk_report.get("through_lines", {}),
+            "painted_zones": mk_report.get("painted_zones", []),
+            "paint_erased_in_zones_tris": mk_report.get("paint_erased_in_zones_tris", 0),
             "crossings_skipped": mk_report.get("crossings_skipped", []),
             "crossings_in_junction": mk_report.get("crossings_in_junction", []),
             "bridges": w.bridges,
