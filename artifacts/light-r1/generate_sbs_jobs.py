@@ -30,7 +30,7 @@ def main():
                            output=f"artifacts/light-r1/sbs/{args.phase}/renders/{tier}-{lighting}/{width}x{height}",
                            rq="")
                 if args.phase == "before":
-                    job.update(rq="rq_clearcover=0" + (",rq_fsrsharp=0" if tier == "High" else ""),
+                    job.update(rq="rq_clearcover=0" + (",rq_fsrsharp=0,rq_dither=1" if tier == "High" else ""),
                                overrideWhiteClip=True, whiteClip=1.2, shadowFilter=1)
                 jobs.append(job)
     (OUT / f"sbs-{args.phase}.json").write_text(json.dumps({"jobs": jobs}, indent=2), encoding="utf-8")

@@ -128,7 +128,9 @@ namespace Game.Rendering
                 var data = cam.GetUniversalAdditionalCameraData();
                 data.renderPostProcessing = t.postProcessing;
                 data.antialiasing = t.postProcessing ? t.postAntialiasing : AntialiasingMode.None;
-                data.dithering = RenderOverrides.Dither ?? t.postProcessing;
+                // ADR 0108: High RCAS uses a final pass whose dither raises clean-sky RMS above the review limit.
+                // Measured native PNG A/B: sky 0.64 -> 0.14, asphalt detail retained. Other tiers keep their policy.
+                data.dithering = RenderOverrides.Dither ?? (t.postProcessing && t.name != "High");
             }
             if (volume != null)
             {

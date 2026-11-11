@@ -52,6 +52,9 @@ Shader "Kamion/Sky"
             float4 _KamionCloudWind;   // xy uv offset of the deck, zw of the medium layer
             float4 _KamionCloudSun;    // xy unit XZ towards the sun's azimuth, z relief strength, w relief step (uv)
             float _KamionClearCloudCover; // ADR 0108: zero retains the original clear dome.
+            float _KamionClearCloudPhoto;
+            float4x4 _KamionClearCloudRotation;
+            TEXTURE2D(_KamionClearCloudTex); SAMPLER(sampler_KamionClearCloudTex); // R opacity, G photographic relative luminance.
 
             struct Attributes { float4 positionOS : POSITION; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct Varyings { float4 positionCS : SV_POSITION; float3 dir : TEXCOORD0; UNITY_VERTEX_OUTPUT_STEREO };
@@ -106,6 +109,15 @@ Shader "Kamion/Sky"
             {
                 clearCloud = 0.0;
                 if (_KamionCloud.x <= 0.0 && _KamionClearCloudCover <= 0.0) return 1.0;
+                bool photo = _KamionClearCloudPhoto > 0.5 && _KamionClearCloudCover > 0.0;
+                if (photo)
+                {
+                    float3 ray = normalize(mul((float3x3)_KamionClearCloudRotation, d));
+                    float2 uv = float2(frac(atan2(ray.x, ray.z) / (2.0 * PI) + 0.5), asin(clamp(ray.y, -1.0, 1.0)) / PI + 0.5);
+                    half2 source = SAMPLE_TEXTURE2D(_KamionClearCloudTex, sampler_KamionClearCloudTex, uv).rg;
+                    clearCloud = half2(source.r * (half)_KamionClearCloudCover * smoothstep(0.0, 0.06, d.y), source.g);
+                    if (_KamionCloud.x <= 0.0) return 1.0; // Clear: one photographic fetch, no noise deck.
+                }
                 float2 p = d.xz / (max(d.y, 0.0) + 0.14);          // plane at height 1; +0.14: finite at the horizon
                 float2 u = p * _KamionCloud.z + _KamionCloudWind.xy;
                 half4 a = SAMPLE_TEXTURE2D(_KamionCloudTex, sampler_KamionCloudTex, u);
@@ -124,7 +136,7 @@ Shader "Kamion/Sky"
                 }
                 half s = smoothstep(0.26, 0.74, n);                // billow edges; symmetric, mean stays 0.5
                 half fade = 1.0 - exp(-max(d.y, 0.0) * _KamionCloud.w);
-                if (_KamionClearCloudCover > 0.0)
+                if (_KamionClearCloudCover > 0.0 && !photo)
                 {
                     // Sparse billows leave blue gaps. Use the SAME two base fetches on Low (no new pass/texture).
                     half threshold = lerp(0.75h, 0.25h, (half)_KamionClearCloudCover);
@@ -160,7 +172,7 @@ Shader "Kamion/Sky"
                     // The display cap gives Low and post tiers the same cloud tones. This does not alter the
                     // irradiance model, exposure, surface shading or the legacy overcast deck.
                     float cap = lerp(_KamionSkyCap.x, _KamionSkyCap.y, smoothstep(0.0, 0.5, d.y));
-                    float cloudY = cap * lerp(0.85, 1.15, clearCloud.y);
+                    float cloudY = cap * lerp(0.35, 1.22, clearCloud.y);
                     // Reflection captures explicitly bypass display compression, as the analytic dome does.
                     if (_KamionSkyCapOff > 0.5)
                         cloudY = _SkyZenith.w * (1.0 + 2.0 * max(d.y, 0.0)) / 3.0 * clearCloud.y;

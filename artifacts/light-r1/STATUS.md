@@ -85,3 +85,5 @@ Zadanie heavy Analyze zakończone kodem 1. Log: C:\Users\matma\Documents\Claude\
 
 Krok 26: poprawiono pojedynczy nadmiarowy nawias w skrypcie podglądu; poprzedni start zakończył się błędem składni i zwolnił heavy, bez przetworzenia HDRI. Następny krok: ponownie wykonać skrypt w heavy.
 Zadanie heavy Analyze zakończone kodem 0. Log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-light\artifacts\light-r1\heavy-Analyze-20261111-230239.log. Następny krok: odczytać wynik i wykonać tylko uzasadnioną następną operację.
+
+Krok 27: podłączono fotograficzną mapę chmur CC0 w istniejącym skyboxie (1 odczyt zamiast 2–3 odczytów proceduralnych w clear). Kierunek źródłowego słońca zmierzony z HDRI: 47,856°; mapa obracana do słońca modelu. Dodano jawny kontrakt importu linear + ASTC 6×6, metadane i wpis licencyjny. High: końcowy dither domyślnie wyłączony zgodnie z pomiarem smoke; Rq nadal go nadpisuje, inne tiery bez zmiany. Before-SBS jawnie przywraca stary dither. Nowy obraz nieba jeszcze UNVERIFIED. Następny krok: PrepareBatch dla tekstury i cloud-photo.json, obejrzeć PNG.
