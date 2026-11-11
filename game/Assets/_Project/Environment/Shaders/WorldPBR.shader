@@ -565,6 +565,8 @@ Shader "Kamion/World PBR"
                     half lum = dot(base.rgb, half3(0.2126, 0.7152, 0.0722));
                     half detl = saturate(lum / 0.095);
                     albedo = lerp(albedo, albedo * half3(1.22, 1.10, 0.92), k.b * 0.8 * _GroundTint);
+                    // ADR0109: additive ground-only dry matter, behind the existing data keyword.
+                    albedo = KamionGrassDryMatter(albedo, k, _GroundTint);
                     // Pine-forest floor (bór sosnowy): needle litter in patches with feather moss and bilberry, not a
                     // uniform beige (review r3 W2 / r4 W-H8). Linear albedo: litter 0.045/0.035/0.021, moss + bilberry
                     // 0.034/0.049/0.019 (WORKING_VALUE, judged against the CC0 Tysiąclecia photos); patches from the
