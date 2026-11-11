@@ -15,3 +15,4 @@ Obejrzano syntetyczny podgląd maski i zapisano GROUND-CANDIDATE.md. Potwierdzon
 Testy bazowe roślinności zakończone kodem 0. Następny krok: Get-Content artifacts/vegetation-r1/pytest-baseline-vegetation.log; po baseline wykonać poprawki i pełny GIS.
 Przygotowano snapshot dziennych dopasowań fotograficznych i konfiguracje kamer w artifacts, bez edycji wspólnych plików SBS. Odrzucono błędne pozy z recenzji i zachody słońca. Pozy nadal UNVERIFIED. Następny krok: render grup proporcji po bazowej macierzy.
 Przygotowano render-photos.ps1: każda grupa zachowuje proporcje zdjęcia; każda sesja Unity bierze i oddaje osobny slot. Następny krok po before-done.txt: pwsh artifacts/vegetation-r1/render-photos.ps1 -Stage before
+Zapisano session.json z granicą pracy 12 listopada 2026 o 21:30:50 czasu Warszawy i identyfikatorami bieżących procesów. Parser skryptów renderujących OK. Następny krok: baseline-pipeline; potem render-photos before i zmiana materiału.
