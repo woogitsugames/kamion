@@ -34,3 +34,4 @@ Zapisano baseline Low clear, siedem kamer i sześć natywnych RT z identyfikator
 Zapisano baseline Low overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano baseline High clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano baseline High overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
+Poprawiono błąd składni zmiennej Stage przed dwukropkiem w helperze route-0112.ps1. Nie uruchomiono przez ten błąd żadnego procesu Unity ani slotu. Następny krok: ponowić route-0112 baseline.

@@ -11,6 +11,6 @@ try {
 }
 finally { pwsh $slot -Release -Owner gpt-cab; git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings }
 if ($code -ne 0) { throw "Błąd pełnej macierzy kamer: $code" }
-Add-Content artifacts/cab-r1/STATUS.md "Zapisano $Stage: pełna macierz Low overcast z kamerami Gate3, osobne draws instancji w stats.txt. Następny krok: porównać pełne stats baseline/result-0112 i obejrzeć arkusze."
+Add-Content artifacts/cab-r1/STATUS.md "Zapisano ${Stage}: pełna macierz Low overcast z kamerami Gate3, osobne draws instancji w stats.txt. Następny krok: porównać pełne stats baseline/result-0112 i obejrzeć arkusze."
 git add -f artifacts/cab-r1/STATUS.md
 git commit -m "wip(cab): capture $Stage complete Low route camera budget"
