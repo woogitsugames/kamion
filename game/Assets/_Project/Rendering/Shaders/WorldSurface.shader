@@ -72,6 +72,7 @@ Shader "Kamion/World Surface"
         CBUFFER_END
         float _KamionStreetLamps, _KamionLampLights, _KamionExposure;
         #include "KamionLampPools.hlsl"
+        #include "VegetationGround.hlsl"
         ENDHLSL
 
         Pass
@@ -178,7 +179,7 @@ Shader "Kamion/World Surface"
                     albedo = lerp(albedo, albedo * _DryTint.rgb, k.b * 0.8);
                     albedo = lerp(albedo, half3(0.085, 0.072, 0.045) * detail, k.g);
                     albedo = lerp(albedo, half3(0.13, 0.11, 0.085) * detail, k.a);
-                    half grit = (1.0 - smoothstep(0.03, 0.07, k.r)) * 0.7;
+                    half grit = KamionGrassGrit(k, macro);
                     albedo = lerp(albedo, half3(0.19, 0.17, 0.14) * detail, grit);
                 }
                 albedo = saturate(albedo);

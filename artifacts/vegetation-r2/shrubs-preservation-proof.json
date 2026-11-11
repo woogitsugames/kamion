@@ -1,0 +1,447 @@
+{
+  "scope": "Existing R1 scans preserved, no new boxwood/elderberry mesh claim. VarA active; other prepared variants not claimed active. Gallery is source-model QA, not driver/budget proof.",
+  "items": {
+    "boxwood": {
+      "status": "ready",
+      "review": {
+        "status": "approved",
+        "source_sha256": "9024cc6b4ec22da7958d83fc450b8e8dfa319e349da8a3915530695881d12376",
+        "reason": "Basecolor visually inspected in source-review sheets and detail previews; no identifiable brand/producer text observed. Mesh appearance still subject to world QA."
+      },
+      "active_variant": "VarA",
+      "dimensions_m": [
+        0.4836670160293579,
+        0.4586060047149658,
+        0.6879156231880188
+      ],
+      "lods": [
+        {
+          "budget": 8000,
+          "crossed_billboard": false,
+          "lod": 0,
+          "path": "art-source/world/megascans/_generated/boxwood/VarA/fab_boxwood.lod0.glb",
+          "triangles": 7062,
+          "sha256": "cc5f19001712f06f4faa4b9118f5475856481ba31b03455aff7af8e2e78e6eab",
+          "original_main_cache_sha256": "cc5f19001712f06f4faa4b9118f5475856481ba31b03455aff7af8e2e78e6eab",
+          "unchanged": true
+        },
+        {
+          "budget": 24,
+          "crossed_billboard": true,
+          "lod": 1,
+          "path": "art-source/world/megascans/_generated/boxwood/VarA/fab_boxwood.lod1.glb",
+          "triangles": 18,
+          "sha256": "e9dfd4b27c93a86472f10870c1aece79c18e1f1ff3ff582eaac0b217764f6c20",
+          "original_main_cache_sha256": "e9dfd4b27c93a86472f10870c1aece79c18e1f1ff3ff582eaac0b217764f6c20",
+          "unchanged": true
+        },
+        {
+          "budget": 8,
+          "crossed_billboard": true,
+          "lod": 2,
+          "path": "art-source/world/megascans/_generated/boxwood/VarA/fab_boxwood.lod2.glb",
+          "triangles": 6,
+          "sha256": "b0c428ad83090cffbe01b059b6d2071067968962148167493d69ee158a8e5f2a",
+          "original_main_cache_sha256": "b0c428ad83090cffbe01b059b6d2071067968962148167493d69ee158a8e5f2a",
+          "unchanged": true
+        }
+      ],
+      "world_instance_count": 6,
+      "world_instances": [
+        {
+          "e": -473.769,
+          "n": -1025.421,
+          "p": "fab_boxwood",
+          "src": "fab:parking-landscaping:9:WORKING_VALUE",
+          "yaw": 5.7904,
+          "z": 127.053
+        },
+        {
+          "e": -247.478,
+          "n": -655.657,
+          "p": "fab_boxwood",
+          "src": "fab:parking-landscaping:7:WORKING_VALUE",
+          "yaw": 3.2052,
+          "z": 134.494
+        },
+        {
+          "e": -220.906,
+          "n": -580.903,
+          "p": "fab_boxwood",
+          "src": "fab:parking-landscaping:8:WORKING_VALUE",
+          "yaw": 2.1688,
+          "z": 137.479
+        },
+        {
+          "e": 34.112,
+          "n": -301.438,
+          "p": "fab_boxwood",
+          "src": "fab:parking-landscaping:18:WORKING_VALUE",
+          "yaw": 6.2439,
+          "z": 135.597
+        },
+        {
+          "e": 84.265,
+          "n": -333.984,
+          "p": "fab_boxwood",
+          "src": "fab:parking-landscaping:28:WORKING_VALUE",
+          "yaw": 3.7281,
+          "z": 137.001
+        },
+        {
+          "e": 673.207,
+          "n": -726.39,
+          "p": "fab_boxwood",
+          "src": "fab:parking-landscaping:32:WORKING_VALUE",
+          "yaw": 2.5018,
+          "z": 142.42
+        }
+      ]
+    },
+    "elderberry": {
+      "status": "ready",
+      "review": {
+        "status": "approved",
+        "source_sha256": "70b9076f24d3852b8a2068dfd373048e4bcc427d233dc15b3ee2d90ff871cc75",
+        "reason": "Basecolor visually inspected in source-review sheets and detail previews; no identifiable brand/producer text observed. Mesh appearance still subject to world QA."
+      },
+      "active_variant": "VarA",
+      "dimensions_m": [
+        1.1039849519729614,
+        1.203672170639038,
+        1.1941903829574585
+      ],
+      "lods": [
+        {
+          "budget": 8000,
+          "crossed_billboard": false,
+          "lod": 0,
+          "path": "art-source/world/megascans/_generated/elderberry/VarA/fab_elderberry.lod0.glb",
+          "triangles": 7139,
+          "sha256": "f8301ac848934090b4dd2974af2c6a9e63eff8b5cd211451deb8ff1989cf7a57",
+          "original_main_cache_sha256": "f8301ac848934090b4dd2974af2c6a9e63eff8b5cd211451deb8ff1989cf7a57",
+          "unchanged": true
+        },
+        {
+          "budget": 24,
+          "crossed_billboard": true,
+          "lod": 1,
+          "path": "art-source/world/megascans/_generated/elderberry/VarA/fab_elderberry.lod1.glb",
+          "triangles": 22,
+          "sha256": "879c5ce4ff572a84cfbb4344f1961c9462ad1ba0fac6d74850bba79d27673575",
+          "original_main_cache_sha256": "879c5ce4ff572a84cfbb4344f1961c9462ad1ba0fac6d74850bba79d27673575",
+          "unchanged": true
+        },
+        {
+          "budget": 8,
+          "crossed_billboard": true,
+          "lod": 2,
+          "path": "art-source/world/megascans/_generated/elderberry/VarA/fab_elderberry.lod2.glb",
+          "triangles": 6,
+          "sha256": "a8ce6d4d4613b34fa9a1dffa9495e9343a493041526e75eeb8fac8e1293ebdd6",
+          "original_main_cache_sha256": "a8ce6d4d4613b34fa9a1dffa9495e9343a493041526e75eeb8fac8e1293ebdd6",
+          "unchanged": true
+        }
+      ],
+      "world_instance_count": 37,
+      "world_instances": [
+        {
+          "e": -785.43,
+          "n": 786.166,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w197904074:2081020082-2081020084:L:83.62:WORKING_VALUE",
+          "yaw": 1.0457,
+          "z": 146.213
+        },
+        {
+          "e": -890.107,
+          "n": 521.2,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w305072043:2256103776-2256103783:R:14.39:WORKING_VALUE",
+          "yaw": 1.3775,
+          "z": 136.957
+        },
+        {
+          "e": -744.373,
+          "n": 719.419,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w197904074:2081020082-2081020084:L:163.62:WORKING_VALUE",
+          "yaw": 0.3807,
+          "z": 145.517
+        },
+        {
+          "e": -569.818,
+          "n": -469.755,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w100927659:1166108001-1166108003:R:38.14:WORKING_VALUE",
+          "yaw": 2.3326,
+          "z": 127.623
+        },
+        {
+          "e": -529.867,
+          "n": -288.786,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w676746630:8473985979-7592455343:L:158.65:WORKING_VALUE",
+          "yaw": 5.694,
+          "z": 126.858
+        },
+        {
+          "e": -695.02,
+          "n": -1002.871,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w302318842:3664178876-2274001289:R:22.15:WORKING_VALUE",
+          "yaw": 2.1336,
+          "z": 132.436
+        },
+        {
+          "e": -555.088,
+          "n": -944.263,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w211644569:3664179005-2216256648:L:71.40:WORKING_VALUE",
+          "yaw": 5.7108,
+          "z": 126.601
+        },
+        {
+          "e": -396.399,
+          "n": -90.89,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w173956083:2840742310-1852129066:R:103.54:WORKING_VALUE",
+          "yaw": 1.1342,
+          "z": 131.66
+        },
+        {
+          "e": -268.465,
+          "n": -142.828,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w305141607:7918287062-2638975384:R:23.52:WORKING_VALUE",
+          "yaw": 3.8423,
+          "z": 130.394
+        },
+        {
+          "e": -451.671,
+          "n": -473.142,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w744388589:7069321044-8498370708:R:25.67:WORKING_VALUE",
+          "yaw": 1.1127,
+          "z": 131.374
+        },
+        {
+          "e": -480.216,
+          "n": -608.837,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w100927679:1166108066-1166108049:R:36.36:WORKING_VALUE",
+          "yaw": 0.3619,
+          "z": 126.576
+        },
+        {
+          "e": -477.695,
+          "n": -654.093,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w100927633:1166107997-1166108049:R:29.42:WORKING_VALUE",
+          "yaw": 1.3837,
+          "z": 125.257
+        },
+        {
+          "e": -300.595,
+          "n": -762.443,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w249429049:2560366180-2844147158:L:113.09:WORKING_VALUE",
+          "yaw": 2.6095,
+          "z": 130.067
+        },
+        {
+          "e": -250.015,
+          "n": -182.885,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w305141607:2638975384-2638975387:R:31.19:WORKING_VALUE",
+          "yaw": 0.2836,
+          "z": 129.918
+        },
+        {
+          "e": -98.148,
+          "n": -383.122,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w408409088:4332859766-4103450290:L:52.32:WORKING_VALUE",
+          "yaw": 0.5253,
+          "z": 135.273
+        },
+        {
+          "e": -76.375,
+          "n": -383.035,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w560802656:4103450292-277320063:L:65.16:WORKING_VALUE",
+          "yaw": 3.6451,
+          "z": 135.544
+        },
+        {
+          "e": -149.002,
+          "n": -616.861,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w674070918:6312580417-6312580416:R:22.66:WORKING_VALUE",
+          "yaw": 3.5312,
+          "z": 135.595
+        },
+        {
+          "e": -72.214,
+          "n": -736.201,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w213244884:5634797405-2229796326:R:23.98:WORKING_VALUE",
+          "yaw": 3.7915,
+          "z": 134.316
+        },
+        {
+          "e": -28.442,
+          "n": -661.045,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w213244884:2229796377-8602403492:R:122.56:WORKING_VALUE",
+          "yaw": 0.0037,
+          "z": 135.973
+        },
+        {
+          "e": 2.583,
+          "n": -723.806,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w590134605:2229796261-5634797393:R:20.89:WORKING_VALUE",
+          "yaw": 1.5115,
+          "z": 134.573
+        },
+        {
+          "e": 204.719,
+          "n": -527.998,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w552161976:3341716402-2367445386:R:143.71:WORKING_VALUE",
+          "yaw": 2.008,
+          "z": 141.802
+        },
+        {
+          "e": 17.469,
+          "n": -843.048,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w1456564282:13358260850-13358260846:L:30.32:WORKING_VALUE",
+          "yaw": 4.4614,
+          "z": 134.562
+        },
+        {
+          "e": 163.155,
+          "n": -826.173,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w1456564285:2229796289-2229796428:L:14.12:WORKING_VALUE",
+          "yaw": 5.4307,
+          "z": 134.306
+        },
+        {
+          "e": 354.847,
+          "n": -239.054,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w1093579587:4009843109-10015785290:L:69.66:WORKING_VALUE",
+          "yaw": 4.1146,
+          "z": 134.524
+        },
+        {
+          "e": 419.745,
+          "n": -139.471,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w361607779:3660672443-4329802192:L:46.00:WORKING_VALUE",
+          "yaw": 1.9583,
+          "z": 134.083
+        },
+        {
+          "e": 481.717,
+          "n": -135.523,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w177719991:4329802192-3660672443:R:28.14:WORKING_VALUE",
+          "yaw": 1.7353,
+          "z": 135.036
+        },
+        {
+          "e": 446.933,
+          "n": -409.34,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w282879159:2868238048-7563193213:L:31.19:WORKING_VALUE",
+          "yaw": 1.6919,
+          "z": 140.567
+        },
+        {
+          "e": 497.07,
+          "n": -713.681,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w177876102:1882690750-5749429981:R:238.99:WORKING_VALUE",
+          "yaw": 3.4882,
+          "z": 139.241
+        },
+        {
+          "e": 332.622,
+          "n": -896.616,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w549993391:3882336779-5312688224:L:40.48:WORKING_VALUE",
+          "yaw": 2.2929,
+          "z": 136.283
+        },
+        {
+          "e": 484.93,
+          "n": -858.835,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w178208423:2284431990-2388464999:R:35.98:WORKING_VALUE",
+          "yaw": 6.1367,
+          "z": 137.803
+        },
+        {
+          "e": 605.225,
+          "n": -696.496,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w1455105300:1882953937-9706821977:R:30.72:WORKING_VALUE",
+          "yaw": 5.9698,
+          "z": 139.989
+        },
+        {
+          "e": 618.122,
+          "n": -723.064,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w177895172:5749429979-1882953865:L:44.00:WORKING_VALUE",
+          "yaw": 2.3472,
+          "z": 140.063
+        },
+        {
+          "e": 701.04,
+          "n": -797.776,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w177895177:1883101822-1883062831:L:116.70:WORKING_VALUE",
+          "yaw": 2.1536,
+          "z": 142.685
+        },
+        {
+          "e": 734.899,
+          "n": -838.857,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w182399965:1882953794-1883469502:R:203.41:WORKING_VALUE",
+          "yaw": 2.8768,
+          "z": 142.554
+        },
+        {
+          "e": 736.272,
+          "n": -816.5,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w177895177:1883101822-1883062831:L:76.70:WORKING_VALUE",
+          "yaw": 4.8542,
+          "z": 142.865
+        },
+        {
+          "e": 757.113,
+          "n": -950.897,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w264567313:2702319724-2702319718:R:41.30:WORKING_VALUE",
+          "yaw": 4.1106,
+          "z": 137.373
+        },
+        {
+          "e": 890.466,
+          "n": -862.964,
+          "p": "fab_elderberry",
+          "src": "fab:verge:c:w231796722:1883483329-1883101801:L:123.18:WORKING_VALUE",
+          "yaw": 1.8889,
+          "z": 142.621
+        }
+      ]
+    }
+  }
+}

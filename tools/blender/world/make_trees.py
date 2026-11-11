@@ -1,4 +1,4 @@
-"""Procedural tree library for Podlasie roadsides (our own generator, no external assets).
+"""Procedural tree library for Podlasie roadsides (our geometry/broadleaf, CC0 pine bark/needles).
 
     blender -b --factory-startup -P tools/blender/world/make_trees.py
 
@@ -10,8 +10,8 @@ undergrowth). 3 variants each. Crowns are made of foliage cards (art-source/worl
 streetscape/leaf_textures.py) on a recursive branch skeleton; card normals point away from the crown centre
 (soft crown shading). Per variant three LODs:
   <name>        LOD0  trunk + branches + cards  (High, < 150 m)
-  <name>.lod1   LOD1  trunk + main limbs + 1/3 of the cards at 1.6x size  (Low near / High 60-150 m)
-  <name>.lod2   impostor: two crossed quads with a baked orthographic render (> 150 m)
+  <name>.lod1   LOD1  trunk/main limbs + capped stable subset of LOD0 cards at 1.4x size
+  <name>.lod2   LOD2  one camera-facing quad with six baked orthographic views
 Models are built at the reference height HREF[species]; instances scale by h / HREF.
 Output: art-source/world/vegetation/trees.glb, trees_meta.json, impostor_<name>.png
 """
@@ -27,7 +27,13 @@ import numpy as np
 from mathutils import Matrix, Vector
 
 REPO = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(REPO / "tools/worldgen"))
+from streetscape.foliage_policy import crown_opening, leaf_lod_indices
 VEG = REPO / "art-source" / "world" / "vegetation"
+ARGV = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+if "--out" in ARGV:
+    VEG = Path(ARGV[ARGV.index("--out") + 1]).resolve()
+VEG.mkdir(parents=True, exist_ok=True)
 HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.5, "shrub": 2.8}
 BARK = {"pine": ["bark_pine_lower", "bark_pine"], "birch": ["bark_birch"], "alder": ["bark_alder"],
         "maple": ["bark_maple"], "linden": ["bark_linden"], "shrub": ["bark_shrub"]}
@@ -36,6 +42,8 @@ BARK = {"pine": ["bark_pine_lower", "bark_pine"], "birch": ["bark_birch"], "alde
 class Geo:
     def __init__(self):
         self.parts = {}     # mat -> (verts, faces, uvs, normals or None)
+        self.crown_height = 0
+        self.crown_phase = 0
 
     def _p(self, mat):
         return self.parts.setdefault(mat, ([], [], [], []))
@@ -65,6 +73,8 @@ class Geo:
                 F.append((a, a + 1, a + n + 1, a + n))
 
     def card(self, mat, c, normal, up, size, crown_c):
+        if self.crown_height and crown_opening(c, crown_c, self.crown_height, self.crown_phase):
+            return
         V, F, UV, N = self._p(mat)
         nrm = normal.normalized()
         r = up.cross(nrm)
@@ -99,6 +109,8 @@ def grow(species, variant, lod):
     rng = random.Random(hash((species, variant)) & 0xFFFF if False else (sum(map(ord, species)) * 31 + variant))
     H = HREF[species] * rng.uniform(0.92, 1.08)
     g = Geo()
+    g.crown_height = H
+    g.crown_phase = variant * 1.73 + sum(map(ord, species)) * .013
     leaf = f"leaves_{species}"
     cards_keep = 1.0 if lod == 0 else (0.6 if species == "birch" else 0.33)
     csize_k = 1.0 if lod == 0 else (1.5 if species == "birch" else 1.6)
@@ -128,7 +140,10 @@ def grow(species, variant, lod):
         g.tube("bark_pine", trunk[6:], rad[6:], seg, v0=H * 0.43)
         cc = trunk[13]
         light = rng.uniform(0, 2 * math.pi)            # side of the stand edge / gap: longer limbs there
-        z0 = H * rng.uniform(0.58, 0.68)
+        # Mature Scots pine has long lateral scaffold limbs, with visible gaps
+        # between their needle fans; a tiny dense tuft on a long pole reads as a
+        # lollipop. Different variants keep distinct live-crown depth.
+        z0 = H * (0.48 + 0.04 * variant + rng.uniform(-0.025, 0.025))
         z = z0
         nlimb = 0
         while z < H * 0.93:
@@ -138,8 +153,8 @@ def grow(species, variant, lod):
                     continue
                 a = rng.uniform(0, 2 * math.pi)
                 bias = 0.65 + 0.55 * max(0.0, math.cos(a - light))
-                L = (1.0 + 2.6 * math.sin(math.pi * min(1.0, 0.25 + f * 0.85))) * bias * rng.uniform(0.6, 1.2)
-                up = rng.uniform(0.15, 0.55) + f * 0.3
+                L = H * (0.13 + 0.10 * math.sin(math.pi * min(1.0, 0.12 + f * 0.85))) * bias * rng.uniform(0.75, 1.12)
+                up = rng.uniform(0.12, 0.35) + f * 0.22
                 d = Vector((math.cos(a), math.sin(a), up))
                 k = z / H * 14
                 p0 = trunk[min(int(k), 13)].lerp(trunk[min(int(k) + 1, 14)], k - int(k))
@@ -149,21 +164,21 @@ def grow(species, variant, lod):
                            max(3, seg // 2))
                 # foliage clumps: 1-3 dense clusters near the limb end (sparse inside the crown)
                 for cl in range(rng.randint(2, 4)):
-                    t = rng.uniform(0.55, 1.0)
+                    t = rng.uniform(0.38, 1.0)
                     kk = t * (len(br) - 1)
                     ia = int(kk)
                     q = br[ia].lerp(br[min(ia + 1, len(br) - 1)], kk - ia)
-                    rcl = rng.uniform(0.5, 1.0) * (0.7 + 0.4 * bias)
-                    for _ in range(int((7 + 6 * rcl) * (1.0 if lod == 0 else 0.45)) + 1):
+                    rcl = rng.uniform(0.45, 0.85) * (0.7 + 0.4 * bias)
+                    for _ in range(int((5 + 3 * rcl) * (1.0 if lod == 0 else 0.45)) + 1):
                         pc = q + Vector((crng.uniform(-rcl, rcl), crng.uniform(-rcl, rcl), crng.uniform(-0.55, 0.45) * rcl))
                         nrm = Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), crng.uniform(-0.2, 1.4)))
-                        g.card(leaf, pc, nrm, Vector((0, 0, 1)), 1.25 * csize_k * crng.uniform(0.8, 1.2), cc)
+                        g.card(leaf, pc, nrm, Vector((0, 0, 1)), 0.95 * csize_k * crng.uniform(0.8, 1.2), cc)
                 nlimb += 1
-            z += rng.uniform(0.45, 1.0)
+            z += rng.uniform(0.9, 1.45)
         # leader: the stem ends inside the top clumps (no tuft on a bare pole)
-        for _ in range(int(14 * (1.0 if lod == 0 else 0.5))):
+        for _ in range(int(10 * (1.0 if lod == 0 else 0.5))):
             pc = trunk[-1] + Vector((crng.uniform(-1.1, 1.1), crng.uniform(-1.1, 1.1), crng.uniform(-1.2, 0.2)))
-            g.card(leaf, pc, Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), 1.2)), Vector((0, 0, 1)), 1.2 * csize_k, cc)
+            g.card(leaf, pc, Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), 1.2)), Vector((0, 0, 1)), 0.9 * csize_k, cc)
         # dead lower branch stubs
         if lod == 0:
             for _ in range(12):
@@ -185,9 +200,9 @@ def grow(species, variant, lod):
             g.tube("bark_shrub", st, [0.03 * (1 - i / 6) + 0.006 for i in range(6)], 4)
             cards_along(st, 0.9, 10, cc, start=0.25)
         return g, H
-    trunk_frac = {"birch": 0.4, "alder": 0.3, "maple": 0.35, "linden": 0.4}[species]
+    trunk_frac = {"birch": 0.30, "alder": 0.28, "maple": 0.28, "linden": 0.30}[species]
     r0 = {"birch": 0.17, "alder": 0.18, "maple": 0.22, "linden": 0.25}[species]
-    top = {"birch": 0.88, "alder": 0.95, "maple": 0.6, "linden": 0.75}[species]
+    top = {"birch": 0.94, "alder": 0.95, "maple": 0.84, "linden": 0.92}[species]
     lean = Vector((rng.uniform(-0.06, 0.06), rng.uniform(-0.06, 0.06), 1))
     trunk = bend_path(Vector((0, 0, -0.3)), lean, H * top, 10, rng, 0.04)
     g.tube(BARK[species][0], trunk, [r0 * (1 - i / 10) ** 0.9 + 0.02 for i in range(11)], seg)
@@ -196,11 +211,14 @@ def grow(species, variant, lod):
     for b in range(nmain):
         f = trunk_frac + (top - trunk_frac) * (b + rng.uniform(0, 1)) / nmain
         k = f / top * 10
-        p0 = trunk[min(int(k), 10)]
+        ia = min(int(k), 9)
+        p0 = trunk[ia].lerp(trunk[ia + 1], k - ia)
         a = rng.uniform(0, 2 * math.pi)
-        up = {"birch": 0.9, "alder": 0.25, "maple": 0.8, "linden": 0.7}[species]
+        up = {"birch": 0.45, "alder": 0.25, "maple": 0.6, "linden": 0.5}[species]
         rel = (f - trunk_frac) / max(top - trunk_frac, 1e-3)
-        L = H * {"birch": 0.32, "alder": 0.3 * (1 - rel) + 0.06, "maple": 0.42, "linden": 0.36 * (1 - 0.5 * rel)}[species]
+        profile = max(.25, math.sin(math.pi * (0.10 + rel * .83)) ** .65)
+        L = H * {"birch": .27 * profile, "alder": .3 * (1-rel) + .06,
+                 "maple": .34 * profile, "linden": .30 * profile}[species]
         L *= rng.uniform(0.75, 1.15)
         d = Vector((math.cos(a), math.sin(a), up))
         br = bend_path(p0, d, L, 5, rng, 0.18)
@@ -209,17 +227,18 @@ def grow(species, variant, lod):
         nsub = (7 if species == "birch" else 5) if lod == 0 else (5 if species == "birch" else 3)
         for s in range(nsub):
             t = 0.35 + 0.6 * rng.random()
-            q0 = br[int(t * 5)]
+            bi = min(int(t * 5), 4)
+            q0 = br[bi].lerp(br[bi + 1], t * 5 - bi)
             a2 = a + rng.uniform(-1.2, 1.2)
             droop = 0.6 if species == "birch" else 0.15
             d2 = Vector((math.cos(a2), math.sin(a2), rng.uniform(-0.2, 0.6)))
             sub = bend_path(q0, d2, L * 0.45, 4, rng, 0.2, gravity=droop * 0.25)
             if lod == 0:
                 g.tube("bark_twig", sub, [0.03 * (1 - i / 5) + 0.006 for i in range(5)], 3)
-            csz = {"birch": 0.95, "alder": 1.15, "maple": 1.35, "linden": 1.3}[species]
+            csz = {"birch": 0.85, "alder": 1.0, "maple": 1.05, "linden": 1.0}[species]
             dens = {"birch": 14, "alder": 12, "maple": 14, "linden": 15}[species]
             cards_along(sub, csz, dens, cc, droop=0.4 if species == "birch" else 0.0, start=0.1)
-        cards_along(br, {"birch": 1.0, "alder": 1.15, "maple": 1.35, "linden": 1.3}[species], 6, cc, start=0.5)
+        cards_along(br, {"birch": .9, "alder": 1.0, "maple": 1.05, "linden": 1.0}[species], 6, cc, start=0.20)
     if species == "birch":
         # v3.1 (REVIEW r2 #7, "birches without crowns"): the white stem ran bare through the open, drooping crown
         # and read as a pole at 60-250 m. Foliage clumps hug the stem over the whole crown height.
@@ -233,6 +252,25 @@ def grow(species, variant, lod):
                 nrm = Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), crng.uniform(-0.6, 1.0)))
                 g.card(leaf, pc, nrm, Vector((0, 0, 1)), 1.0 * csize_k * crng.uniform(0.8, 1.2), cc)
     return g, H
+
+
+def reuse_leaf_lod(g0, g1, seed):
+    """Keep LOD1 leaf centres on the LOD0 branch groups, without new submeshes."""
+    for name, (vertices, faces, uv, normals) in g0.parts.items():
+        if not name.startswith("leaves_"):
+            continue
+        out_v, out_f, out_uv, out_n = [], [], [], []
+        old_faces = len(g1.parts.get(name, ([], [], [], []))[1])
+        for index in leaf_lod_indices(len(faces), seed, maximum=old_faces):
+            face = faces[index]
+            centre = sum((vertices[i] for i in face), Vector()) / len(face)
+            base = len(out_v)
+            out_v += [centre + (vertices[i] - centre) * 1.40 for i in face]
+            out_uv += [uv[i] for i in face]
+            out_n += [normals[i] for i in face]
+            out_f.append(tuple(range(base, base + len(face))))
+        g1.parts[name] = (out_v, out_f, out_uv, out_n)
+    return g1
 
 
 def to_object(name, g):
@@ -276,7 +314,9 @@ def material(name):
     nt = m.node_tree
     bsdf = nt.nodes["Principled BSDF"]
     tex = nt.nodes.new("ShaderNodeTexImage")
-    file = name.replace("bark_pine_lower", "bark_alder")
+    file = name
+    if name == "bark_pine_lower" and not (VEG / f"{file}.png").exists():
+        file = "bark_alder"  # public fallback for old caches
     tex.image = bpy.data.images.load(str(VEG / f"{file}.png"))
     nt.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
     bsdf.inputs["Roughness"].default_value = 0.9
@@ -309,7 +349,7 @@ def material(name):
 # specks from the silhouette and packs <name>.png (RGB albedo + A coverage) and <name>_n.png (RG normal, B occlusion).
 IMP_NF = 6                       # impostor views around the tree (60 degrees apart), blended in the shader
 IMP_RES = (256, 384)             # one view
-RAW = REPO / "artifacts" / "vegetation_bake"     # raw passes (not versioned)
+RAW = REPO / "artifacts" / "vegetation-r2" / "raw-bakes"  # raw passes, never tracked
 _passmats = {}
 
 
@@ -770,6 +810,9 @@ def main():
     # --quick <name>: bake one tree's impostor only (look development), nothing exported
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     quick = argv[argv.index("--quick") + 1] if "--quick" in argv else None
+    cached = {}
+    if "--reuse-bakes" in argv and (VEG / "trees_meta.json").exists():
+        cached = json.loads((VEG / "trees_meta.json").read_text(encoding="utf-8"))
     for sp in ("pine", "birch", "alder", "maple", "linden", "shrub"):
         for v in range(3):
             name = f"tree_{sp}_{v}"
@@ -778,11 +821,22 @@ def main():
             g0, H = grow(sp, v, 0)
             o0 = to_object(name, g0)
             g1, _ = grow(sp, v, 1)
+            g1 = reuse_leaf_lod(g0, g1, sum(map(ord, sp)) * 31 + v)
             o1 = to_object(name + ".lod1", g1)
             o1.hide_render = True
-            S = bake_impostor(o0, name, H)
             png = VEG / f"impostor_{name}.png"
-            pack([f"impostor_{name}_{k}" for k in range(IMP_NF)], png, VEG / f"impostor_{name}_n.png")
+            prior = cached.get("trees", {}).get(name)
+            if prior and png.exists() and (VEG / f"impostor_{name}_n.png").exists():
+                half_w = max(math.hypot(v[0], v[1]) for v in o0.bound_box)
+                S = max(H * 1.05, 2.0 * half_w * 1.04 * IMP_RES[1] / IMP_RES[0])
+            else:
+                S = bake_impostor(o0, name, H)
+                # ADR0088: opening erased 1–2px photographed twig connections,
+                # leaving detached broad green islands. Keep connected pine twigs;
+                # still reject isolated specks. Non-pine and forest HLOD retain
+                # their established opening / component rules (far shimmer guard).
+                pack([f"impostor_{name}_{k}" for k in range(IMP_NF)], png, VEG / f"impostor_{name}_n.png",
+                     open_r=0 if sp == "pine" else 1, min_island=16 if sp == "pine" else 0)
             o2 = impostor_object(name, H, png, S)
             o2.hide_render = True
             objs += [o0, o1, o2]
@@ -790,11 +844,11 @@ def main():
             meta[name] = {"species": sp, "variant": v, "href_m": round(H, 2), "impostor_frame_m": round(S, 2),
                           "impostor_views": IMP_NF, "impostor_aspect": round(IMP_RES[0] / IMP_RES[1], 4),
                           "tris_lod0": sum(len(p.vertices) - 2 for p in o0.data.polygons),
-                          "tris_lod1": sum(len(p.vertices) - 2 for p in o1.data.polygons), "tris_lod2": 4}
+                          "tris_lod1": sum(len(p.vertices) - 2 for p in o1.data.polygons), "tris_lod2": 2}
     if quick:
         return
     href = {k: v["href_m"] for k, v in meta.items()}
-    forest = {mix: bake_forest(mix, src, href, 1000 + i) for i, mix in enumerate(FOREST_MIX)}
+    forest = cached.get("forest_hlod") or {mix: bake_forest(mix, src, href, 1000 + i) for i, mix in enumerate(FOREST_MIX)}
     for fn, sel in (("trees.glb", [o for o in objs if not o.name.endswith(".lod2")]),
                     ("trees_lod2.glb", [o for o in objs if o.name.endswith(".lod2")])):
         for o in bpy.context.scene.objects:
@@ -807,4 +861,5 @@ def main():
     print("[trees] wrote", VEG / "trees.glb")
 
 
-main()
+if __name__ == "__main__":
+    main()

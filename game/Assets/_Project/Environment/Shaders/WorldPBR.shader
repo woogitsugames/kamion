@@ -92,6 +92,7 @@ Shader "Kamion/World PBR"
         HLSLINCLUDE
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         #include "../../Rendering/Shaders/KamionLampPools.hlsl"
+        #include "../../Rendering/Shaders/VegetationGround.hlsl"
         CBUFFER_START(UnityPerMaterial)
             float4 _BaseMap_ST;
             float4 _Tint;
@@ -287,7 +288,7 @@ Shader "Kamion/World PBR"
                 #endif
                     half keep = smoothstep(0.45, 0.65, macro.b * 0.6 + macro.r * 0.4 + (macro.a - 0.5) * 0.5);
                 #if defined(_GROUNDMASKS)
-                    keep = max(keep, (1.0 - smoothstep(0.02, 0.12, i.masks.r)) * 0.8);   // trampled edge, ~0.4-2.4 m
+                    keep = max(keep, KamionGrassGrit(i.masks, macro.a));
                 #endif
                     half glum = dot(_GrassFill.rgb, half3(0.2126, 0.7152, 0.0722));
                     half lumA = dot(albedo, half3(0.2126, 0.7152, 0.0722));
@@ -572,7 +573,7 @@ Shader "Kamion/World PBR"
                     half3 floorAlb = lerp(half3(0.045, 0.035, 0.021), half3(0.034, 0.049, 0.019), mossy);
                     albedo = lerp(albedo, floorAlb * (0.6 + 0.8 * detl), k.g * _GroundTint);
                     albedo = lerp(albedo, half3(0.13, 0.11, 0.085) * (0.6 + 0.8 * detl), k.a * _GroundTint);
-                    half grit = (1.0 - smoothstep(0.03, 0.07, k.r)) * 0.6 * _GroundTint;
+                    half grit = KamionGrassGrit(k, macro.a) * _GroundTint;
                     albedo = lerp(albedo, half3(0.19, 0.17, 0.14) * (0.7 + 0.6 * detl), grit);
                 }
             #endif

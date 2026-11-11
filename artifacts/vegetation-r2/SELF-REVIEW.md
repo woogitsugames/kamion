@@ -1,0 +1,19 @@
+# Samokrytyka wizualna — ADR0088
+
+Przejrzano 236 klatek przed i 236 po: 59 kamer × Low/High × clear/overcast, na WorldC i WorldC_High. Autor obejrzał pełne arkusze; koordynator niezależnie obejrzał wszystkie 20 końcowych arkuszy i porównania DK8, Putry oraz trawy w szerokości 960 px. Kontakty nie zastępują natywnych pomiarów. Macierze mają identyczny pojazd; canonical fixture przywrócono dopiero do testów.
+
+- DK8: zniknęła dominująca czarna czapa. Widać konary i prześwity, lecz las zachowuje spójną gęstość. Overcast Low p10/p50: 18,644/31,147 → 33,140/42,495; High: 21,504/34,786 → 35,849/46,064. Udział <16 spadł z 5,427% do 0% i z 0,861% do 0,070%.
+- Sosna: rzeczywista gałązka CC0 zastępuje proceduralną kartę. Największy spójny komponent alfa usuwa osobne fragmenty UV, co koordynator sprawdził na surowej i przefiltrowanej masce. Tylko sosnowe impostory zachowują cienkie połączenia przez open0/min16; HLOD i pozostałe gatunki zachowały wcześniejsze filtrowanie. Nie deklarujemy braku migotania w ruchu.
+- Zdrowe korony: Putry p50 rośnie około 12,8% — Low 63,993 → 72,203, High 73,491 → 82,928; p10 pozostaje bliski bazie. Palety liściastych są zachowane, histogram obrazu nie jest identyczny. Brak widocznego neonu w obejrzanych kadrach; po wspólnej integracji trzeba powtórzyć tę kontrolę.
+- Trawa: zniknęła jednakowa beżowa obwódka trawników. Zmienna szerokość gritu wymaga istniejącego kontekstu odsłoniętego lub suchszego gruntu. Pola 6 m/3,5 m są parametrami artystycznymi, nie zinwentaryzowanymi ścieżkami. Nie dodano pobrań tekstur ani podziałów materiałów.
+- LOD: zachowano trzy aktywne pasma — geometrię LOD0/1 i billboard LOD2. Wszystkie 18 wariantów geometrii mieszczą się w bazowych liczbach trójkątów. Lipa i skupiska kart nadal są stylizowane; to pozostałe P2, nie fotorealistyczny pokrój każdego gatunku.
+- Krzewy: skany R1 boxwood/elderberry zachowano, nie tworzono nowych modeli. Sześć aktywnych GLB ma identyczne SHA jak źródłowy cache; w świecie jest 6/37 instancji. Galeria z rzeczywistymi teksturami potwierdza sylwetkę źródłową, nie oświetlenie z kamery kierowcy. Bliskie niskobudżetowe LOD pozostają uproszczone.
+- Budżet: 236 porównań ma dokładnie zerowy przyrost draws. Low: -8..0k tris; High: -8..+1k, maks. +0,074%. Peak Low 1016 draws/482k tris i High 1756/2471k bez zmiany. To estymaty istniejącego runnera, nie pomiar GPU A16.
+
+Zdjęcia Mapillary służą wyłącznie odniesieniu: jawne ROI, SHA i maski w photo-crown-metrics.json. Sezon i ekspozycja są różne; druga maska obejmuje tylko 5,3% ROI. Nie używamy bezwzględnego sRGB ze zdjęcia jako ścisłego pomiaru albedo. Globalne światło, post i Tint nie zostały zmienione przez B.
+
+Fab jest dostępny bez fallbacku: właściwa sekcja furniture.megascans ma 15 zatwierdzonych źródeł, 320 props i 954 podmiany odpływów. Drewno Fab działa wyłącznie jako ignorowany near override; publiczne bake zawierają nasze/CC0 dane. Wczesne podejrzenie braku wywołania integracji zostało zweryfikowane i wycofane.
+
+Końcowe sprawdzenie: GIS 364 PASS/2 xfail, 676,87 s. EditMode 218/218 PASS, 0 failed/skipped, sprawdzone XML przy 1dc20dd2; 192 raw i canonical JSON bez dryfu. Pierwsze 218/212 ujawniło sześć błędnych dokładnych porównań wejściowego Color z odczytem Unity. Test-only f37499de porównuje przechowany kolor przed i po polityce; produkcja i obrazy pozostały bez zmian.
+
+Werdykt koordynatora: ograniczony PASS w zakresie B. Temporalne LOD/shimmer, GPU telefonu i wspólna integracja A/C/ADR0101 pozostają UNVERIFIED. Przed regeneracją po scaleniu B należy odtworzyć dwa przypięte wejścia CC0 poleceniem restore_cc0_inputs.py; w main ich brakowało, co uruchomiłoby proceduralny fallback.
