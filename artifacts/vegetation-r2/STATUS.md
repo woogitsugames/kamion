@@ -29,3 +29,6 @@
 
 - Baseline59 WorldC Low-overcast: rzeczywista scena profilu, kontrolne+s9Gate3; zastępuje wcześniejszy28kamerowy zestaw. NASTĘPNY KROK: `Get-Content artifacts/vegetation-r2/before/Low-overcast/stats.txt` oraz pomiar koron.
 
+
+- Baseline59 WorldC Low-clear: rzeczywista scena profilu, kontrolne+s9Gate3; zastępuje wcześniejszy28kamerowy zestaw. NASTĘPNY KROK: `Get-Content artifacts/vegetation-r2/before/Low-clear/stats.txt` oraz pomiar koron.
+
