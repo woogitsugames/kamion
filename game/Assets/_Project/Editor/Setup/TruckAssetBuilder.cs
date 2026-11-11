@@ -607,6 +607,9 @@ namespace Game.Editor.Setup
 
                 // ADR 0104: only the detailed housing embeds the adjusted glass; Low/Medium body meshes stay unchanged.
                 RecessMirrorBacking(root.transform, exteriorLods[0].FirstOrDefault(r => r.name.StartsWith("CAB_Body", StringComparison.Ordinal)), mirrorInfo);
+                // ADR 0112: support-only deformation on every body LOD; no exterior export or material changes.
+                foreach (var bodyLod in exteriorLods)
+                    ClearMirrorSupports(root.transform, bodyLod.FirstOrDefault(r => r.name.StartsWith("CAB_Body", StringComparison.Ordinal)));
 
                 // ---- cab glazing seen from the eye (ADR 0045): the exterior FBX glass is a single outward-facing sheet, so with
                 // Kamion/Truck Glass (Cull Back) the driver looked through no glass at all on every tier (no tint, no dash
@@ -946,6 +949,37 @@ namespace Game.Editor.Setup
             if (old != null) { EditorUtility.CopySerialized(m, old); UnityEngine.Object.DestroyImmediate(m); EditorUtility.SetDirty(old); return old; }
             AssetDatabase.CreateAsset(m, path);
             return m;
+        }
+
+        static void ClearMirrorSupports(Transform root, Renderer body)
+        {
+            var filter = body != null ? body.GetComponent<MeshFilter>() : null;
+            if (filter == null || filter.sharedMesh == null) return;
+            var data = Json.Obj(Json.Parse(File.ReadAllText(Path.Combine(EditorTools.RepoRoot, "art-source/truck/interior/cab_mirror_supports.json"))));
+            var supports = new List<MirrorSupportClearance.Support>();
+            foreach (var value in Json.Arr(data["supports"]))
+            {
+                var item = Json.Obj(value);
+                supports.Add(new MirrorSupportClearance.Support {
+                    name = Json.Str(item["name"]), start = V3(item["start"]), end = V3(item["end"]),
+                    right = V3(item["right"]), up = V3(item["up"]), shift = V3(item["shift"]),
+                    halfWidth = (float)Json.Num(item["halfWidth"]), halfHeight = (float)Json.Num(item["halfHeight"]),
+                });
+            }
+            var source = filter.sharedMesh;
+            var mesh = MirrorSupportClearance.Apply(source, root.worldToLocalMatrix * body.transform.localToWorldMatrix, supports, out int moved);
+            string dir = Root + "/Meshes";
+            Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, dir));
+            string path = $"{dir}/{mesh.name}.asset";
+            var old = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (old != null)
+            {
+                EditorUtility.CopySerialized(mesh, old); UnityEngine.Object.DestroyImmediate(mesh);
+                EditorUtility.SetDirty(old); mesh = old;
+            }
+            else AssetDatabase.CreateAsset(mesh, path);
+            filter.sharedMesh = mesh;
+            Debug.Log($"[TRUCK] Mirror support clearance {body.name}: moved={moved} vertices={source.vertexCount}->{mesh.vertexCount} indices={source.triangles.Length}->{mesh.triangles.Length}");
         }
 
         // ADR 0104: called only for the detailed exterior body after inspecting the baseline. Low/Medium retain their
