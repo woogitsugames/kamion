@@ -90,3 +90,6 @@ Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/run-heavy.ps1 -Task Final
 Obejrzano wszystkie 28 stron overview (100 par B) i 16 galerii prób. Niezależny recenzent potwierdził PASS narzędzia i kompletności pakietu; bramka świata nadal UNVERIFIED. Zapisano VISUAL-REVIEW.md z jawnymi ograniczeniami: 17 C, brak potwierdzonego pokrycia początku, wyłączona fotometria i możliwe pomieszanie błędów pozy z geometrią.
 Końcowy GIS nadal działa przez heavy; nie uruchamiamy równolegle kolejnego ciężkiego zadania tej sesji.
 Następny krok: Get-Content artifacts/sbs-r1/pytest-gis-final.log -Tail 20
+## Runda r1 zakończona
+Końcowy GIS: 523 passed, 1 xfailed, 663,68 s; heavy zwolnione. Narzędzie i kompletność dowodów: niezależny PASS; kalibracja C częściowa, świat UNVERIFIED. REPORT.md i ADR zaktualizowane. 42 kamery Low overcast przed/po bez różnic estymacji draws/tris. Przywrócono tylko osiem znanych produktów generatora poza sbs, zachowując ich dowody w artefaktach.
+Następny krok: robocopy artifacts/sbs-r1 C:/Users/matma/Documents/Claude/kamion/artifacts/sbs-r1 /E /R:1 /W:1, potem git switch -c gpt-sbs-r2 oraz git merge main.
