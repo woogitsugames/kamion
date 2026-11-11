@@ -91,3 +91,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T23:11:30.4394720+01:00: build-after exit=0, slot heavy zwolniony. Przygotowano analizę eksportowanych markerów i porównanie 6833 chronionych payloadów, także w puli heavy. Baseline/odrzucone zbliżenia pozostają zachowane. NASTĘPNY KROK: heavy-step geometry after, następnie import after.
 
 2026-11-11T23:17:24.3696179+01:00: wyeksportowany manifest zawiera kompletną flagę furniture_plinth_detail i wskazuje istniejący PNG (material-flag-export.json). Dopisano licencje pochodnych tekstur ADR 0120 bez zmiany innych wpisów. Porównanie geometrii/import after nadal trwa w runnerze oczekującym na heavy. NASTĘPNY KROK: odczytać wynik procesu i nie uruchamiać drugiego importu.
+
+2026-11-11T23:18:33.6479337+01:00: heavy geometry after; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
