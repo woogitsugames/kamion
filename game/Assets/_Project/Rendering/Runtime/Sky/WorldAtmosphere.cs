@@ -139,7 +139,7 @@ namespace Game.Rendering
     /// <summary>CC0 photographic cloud opacity and self-shadowing. Cached once; no frame allocations.</summary>
     public static class PhotographicClouds
     {
-        [System.Serializable] sealed class Source { public Vector3 sunDirection; }
+        [System.Serializable] sealed class Source { public Vector3 sunDirection = Vector3.zero; }
         static bool s_Loaded;
         static Texture2D s_Texture;
         static Vector3 s_Sun;
