@@ -230,3 +230,6 @@ and derived-output provenance hashes. No Fab assets or textures enter tracked ar
 Prepared normal maps remain disabled pending a tangent-capable reviewed mesh
 path. Existing tree leaves remain. Missing licensed files preserve procedural/CC0
 fallback; no licensed download is attempted by the public-clone build.
+
+## ADR 0103 — fotografie w arkuszach side-by-side G3
+Każde z 40 zdjęć Mapillary (CC BY-SA 4.0, tylko referencje, bez pikseli w grze) ma osobny wpis z autorem, datą, URL i SHA256 w [rejestrze SBS](refs/sbs-gate3-attribution.md). Dane maszynowe: `Data/Regions/bialystok-industrial-c/sbs_references.json`. Modyfikacje panelu zdjęcia: zmniejszenie, siatka i linia horyzontu; panel fotograficzny na CC BY-SA 4.0. Panel renderu zachowuje warunki projektu. Obrazy poza gitem i buildem.

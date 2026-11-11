@@ -14,7 +14,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 from PIL import Image, ImageDraw, ImageOps
-from pyproj import Transformer
+from pyproj import Geod, Transformer
 from shapely.geometry import LineString, Point
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -32,7 +32,17 @@ def write(path, data):
 
 
 def vfov(horizontal, aspect):
+    if not (1 < horizontal < 179 and aspect > 0):
+        raise ValueError('invalid FOV/aspect')
     return math.degrees(2 * math.atan(math.tan(math.radians(horizontal) / 2) / aspect))
+
+
+def grid_heading(lon, lat, azimuth, transform):
+    """Mapillary true-north compass -> EPSG:2180 grid north (meridian convergence matters)."""
+    lon2, lat2, _ = Geod(ellps='WGS84').fwd(lon, lat, azimuth, 20)
+    x,y = transform.transform(lon,lat)
+    x2,y2 = transform.transform(lon2,lat2)
+    return math.degrees(math.atan2(x2-x,y2-y)) % 360
 
 
 def pose(e, n, u, heading, pitch):
@@ -66,11 +76,21 @@ def prepare(count=20, radius=40):
     config_path = REGION / 'sbs_authored_overrides.json'
     config = read(config_path) if config_path.exists() else {'schema': 'kamion/sbs-overrides/1', 'authored_overrides': {}}
     overrides = config['authored_overrides']
+    eligible = []
+    for r in records:
+        photo = manifest.parent / r['file']
+        if not photo.is_file():
+            continue
+        with Image.open(photo) as im:
+            a = np.asarray(im.convert('RGB').resize((64,48)))
+        # Daylight gate: avoid comparing night/dusk dashcam exposures with clear/overcast renders.
+        if float(np.median(a[:24])) > 65:
+            eligible.append(r)
     cameras, refs, used = [], [], set()
     for segment in read(REGION / 'gate3_segment.json')['segments']:
         line = LineString(segment['points_en'])
         candidates = []
-        for r in records:
+        for r in eligible:
             if r.get('is_pano') or r.get('compass_angle') is None or not r.get('author'):
                 continue
             if r.get('license') != 'CC BY-SA 4.0':
@@ -108,9 +128,11 @@ def prepare(count=20, radius=40):
             n = y-origin['y'] + ov.get('north_delta_m', 0)
             eye = ov.get('eye_height_m', 2.2)
             u = ov.get('absolute_u_m', terrain(e+origin['x'], n+origin['y']) + eye)
-            heading = (r['compass_angle'] + ov.get('heading_delta_deg', 0)) % 360
+            heading = (grid_heading(r['lon'], r['lat'], r['compass_angle'], transform) + ov.get('heading_delta_deg', 0)) % 360
             fov = vfov(ov.get('horizontal_fov_deg', 90), width/height)
             horizon = ov.get('horizon_y_fraction', 0.5)
+            if not (0 < horizon < 1 and eye > 0):
+                raise ValueError(f'invalid authored horizon/eye: {camera_id}')
             pitch = math.degrees(math.atan((2*horizon-1)*math.tan(math.radians(fov)/2)))
             cameras.append({'id': camera_id, 'kind': 'photo_match', 'seat': 'file', 'type': 'persp',
                             'pos': [round(e,4),round(n,4),round(u,4)], 'look_at': pose(e,n,u,heading,pitch),
@@ -120,15 +142,23 @@ def prepare(count=20, radius=40):
                          'source_id': r['id'], 'page_url': r['page_url'], 'author': r['author'],
                          'license': r['license'], 'license_url': r['license_url'], 'captured_at': r['captured_at'],
                          'sha256': digest, 'width': width, 'height': height, 'lon': r['lon'], 'lat': r['lat'],
-                         'heading_deg': heading, 'route_distance_m': round(distance,3),
+                         'heading_grid_deg': heading, 'heading_true_deg': r['compass_angle'], 'route_distance_m': round(distance,3),
                          'segment_station_m': round(station,3), 'horizon_y_fraction': horizon,
                          'pose_status': ov.get('pose_status','WORKING_VALUE'),
-                         'assumptions': 'NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.',
+                         'assumptions': 'NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.',
                          'authored_overrides': ov})
     write(REGION / 'sbs_cameras.json', {'schema': 'kamion/sbs-cameras/1', 'frame': 'E,N,absolute U', 'cameras': cameras})
     write(REGION / 'sbs_references.json', {'schema': 'kamion/sbs-references/1',
           'source_manifest_sha256': hashlib.sha256(manifest.read_bytes()).hexdigest(), 'references': refs})
     write(config_path, config)
+    lines = ['# ADR 0103 — per-photo attribution (reference sheets only)', '',
+             'Photos stay outside git and builds. Source pixels on sheets are resized with grid/horizon overlays.',
+             'Photo panels and their modifications: CC BY-SA 4.0; render panels retain project terms.',
+             'License: https://creativecommons.org/licenses/by-sa/4.0/', '',
+             '| Camera | Author | Date | Source | SHA256 |', '|---|---|---|---|---|']
+    for r in refs:
+        lines.append(f"| {r['camera']} | {r['author']} | {r['captured_at']} | [Mapillary {r['source_id']}]({r['page_url']}) | `{r['sha256']}` |")
+    (ROOT/'docs/refs/sbs-gate3-attribution.md').write_text('\n'.join(lines)+'\n', encoding='utf-8')
     OUTPUT.mkdir(parents=True, exist_ok=True)
     contact(refs)
     print(f'Prepared {len(cameras)} distinct photo cameras; pose calibration still required.')

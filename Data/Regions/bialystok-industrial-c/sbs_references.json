@@ -3,142 +3,60 @@
   "source_manifest_sha256": "1835f7cae2d51b68b79bb2ac06acd5722e7278712e9edab6b3ccdb60bab95320",
   "references": [
     {
-      "camera": "sbs-g3-a-486817149235493",
+      "camera": "sbs-g3-a-2818555625124739",
       "segment": "G3-A",
-      "photo": "Data/raw/mapillary/bialystok-industrial-c/486817149235493.jpg",
-      "source_id": "486817149235493",
-      "page_url": "https://www.mapillary.com/app/?pKey=486817149235493",
-      "author": "grobin",
+      "photo": "Data/raw/mapillary/bialystok-industrial-c/2818555625124739.jpg",
+      "source_id": "2818555625124739",
+      "page_url": "https://www.mapillary.com/app/?pKey=2818555625124739",
+      "author": "richlv",
       "license": "CC BY-SA 4.0",
       "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "captured_at": "2019-10-18",
-      "sha256": "4618adfb5b5df8020826cc65ef75c46280c762a6797d422761279bb0c081bb46",
+      "captured_at": "2020-08-15",
+      "sha256": "3c6394070399d66098e844ec9d6b0ad8cf98f850a4ab56ba5114a95a9d157410",
       "width": 2048,
-      "height": 1152,
-      "lon": 23.168161307007,
-      "lat": 53.15212187547,
-      "heading_deg": 126.01734793241,
-      "route_distance_m": 23.521,
-      "segment_station_m": 317.017,
-      "horizon_y_fraction": 0.5,
+      "height": 1536,
+      "lon": 23.167700924861,
+      "lat": 53.15204545506,
+      "heading_grid_deg": 298.41124954022166,
+      "heading_true_deg": 301.74850056311,
+      "route_distance_m": 1.852,
+      "segment_station_m": 340.426,
+      "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
-      "camera": "sbs-g3-a-935897680566050",
+      "camera": "sbs-g3-a-3970163613102941",
       "segment": "G3-A",
-      "photo": "Data/raw/mapillary/bialystok-industrial-c/935897680566050.jpg",
-      "source_id": "935897680566050",
-      "page_url": "https://www.mapillary.com/app/?pKey=935897680566050",
-      "author": "grobin",
+      "photo": "Data/raw/mapillary/bialystok-industrial-c/3970163613102941.jpg",
+      "source_id": "3970163613102941",
+      "page_url": "https://www.mapillary.com/app/?pKey=3970163613102941",
+      "author": "richlv",
       "license": "CC BY-SA 4.0",
       "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "captured_at": "2019-10-18",
-      "sha256": "67def15e45f44f0102d96c155f83326b7525dcb09e901640780483ea6a1d9bad",
+      "captured_at": "2020-08-15",
+      "sha256": "f3bdde122e0902ee0bf363243ec83b91639af1b952a679b6090b5ea05dceb7b6",
       "width": 2048,
-      "height": 1152,
-      "lon": 23.168055010246,
-      "lat": 53.152142097946,
-      "heading_deg": 100.73633980631,
-      "route_distance_m": 16.302,
-      "segment_station_m": 318.682,
-      "horizon_y_fraction": 0.5,
+      "height": 1536,
+      "lon": 23.16762857779,
+      "lat": 53.152071227389,
+      "heading_grid_deg": 289.9741348687284,
+      "heading_true_deg": 293.31132848038,
+      "route_distance_m": 3.774,
+      "segment_station_m": 340.544,
+      "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
-    },
-    {
-      "camera": "sbs-g3-a-603795310580843",
-      "segment": "G3-A",
-      "photo": "Data/raw/mapillary/bialystok-industrial-c/603795310580843.jpg",
-      "source_id": "603795310580843",
-      "page_url": "https://www.mapillary.com/app/?pKey=603795310580843",
-      "author": "grobin",
-      "license": "CC BY-SA 4.0",
-      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "captured_at": "2019-10-18",
-      "sha256": "671c0496f6a4e1ce6301a1c653c9270041d6f0b217320ec073d4ccd40fba3957",
-      "width": 2048,
-      "height": 1152,
-      "lon": 23.167995411428,
-      "lat": 53.152149734284,
-      "heading_deg": 64.057812600437,
-      "route_distance_m": 12.474,
-      "segment_station_m": 320.089,
-      "horizon_y_fraction": 0.5,
-      "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
-    },
-    {
-      "camera": "sbs-g3-a-540207987340497",
-      "segment": "G3-A",
-      "photo": "Data/raw/mapillary/bialystok-industrial-c/540207987340497.jpg",
-      "source_id": "540207987340497",
-      "page_url": "https://www.mapillary.com/app/?pKey=540207987340497",
-      "author": "grobin",
-      "license": "CC BY-SA 4.0",
-      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "captured_at": "2019-10-18",
-      "sha256": "e1d4144cca2ec890456f2a7e82434c8dbd1b6457ced7db8b1b1385b204f9303f",
-      "width": 2048,
-      "height": 1152,
-      "lon": 23.167918245324,
-      "lat": 53.152104851278,
-      "heading_deg": 39.136343016219,
-      "route_distance_m": 10.732,
-      "segment_station_m": 327.172,
-      "horizon_y_fraction": 0.5,
-      "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
-    },
-    {
-      "camera": "sbs-g3-a-786835625284115",
-      "segment": "G3-A",
-      "photo": "Data/raw/mapillary/bialystok-industrial-c/786835625284115.jpg",
-      "source_id": "786835625284115",
-      "page_url": "https://www.mapillary.com/app/?pKey=786835625284115",
-      "author": "grobin",
-      "license": "CC BY-SA 4.0",
-      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "captured_at": "2019-10-18",
-      "sha256": "4914f06b1b9778f3c5afc293dde5b52f21fc00eaf917509b5900c7c4c7831a00",
-      "width": 2048,
-      "height": 1152,
-      "lon": 23.167865989834,
-      "lat": 53.1520356698,
-      "heading_deg": 9.6189712037643,
-      "route_distance_m": 11.81,
-      "segment_station_m": 335.523,
-      "horizon_y_fraction": 0.5,
-      "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
-    },
-    {
-      "camera": "sbs-g3-a-884825882065990",
-      "segment": "G3-A",
-      "photo": "Data/raw/mapillary/bialystok-industrial-c/884825882065990.jpg",
-      "source_id": "884825882065990",
-      "page_url": "https://www.mapillary.com/app/?pKey=884825882065990",
-      "author": "grobin",
-      "license": "CC BY-SA 4.0",
-      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "captured_at": "2019-10-18",
-      "sha256": "116100e835a9b27ac6f0c40c81a7497d289a29ffd7dd485fee3d23852ce5d776",
-      "width": 2048,
-      "height": 1152,
-      "lon": 23.167860155857,
-      "lat": 53.151991059044,
-      "heading_deg": 9.6189712037643,
-      "route_distance_m": 14.098,
-      "segment_station_m": 339.947,
-      "horizon_y_fraction": 0.5,
-      "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-a-149248627179406",
@@ -155,13 +73,158 @@
       "height": 1536,
       "lon": 23.167759575049,
       "lat": 53.152012006509,
-      "heading_deg": 314.35560453951,
+      "heading_grid_deg": 311.01830724005185,
+      "heading_true_deg": 314.35560453951,
       "route_distance_m": 7.151,
       "segment_station_m": 341.518,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
+    },
+    {
+      "camera": "sbs-g3-a-1406533339711789",
+      "segment": "G3-A",
+      "photo": "Data/raw/mapillary/bialystok-industrial-c/1406533339711789.jpg",
+      "source_id": "1406533339711789",
+      "page_url": "https://www.mapillary.com/app/?pKey=1406533339711789",
+      "author": "szurek",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "captured_at": "2017-08-16",
+      "sha256": "4d025318b53ff13b2ac7803a8582e3405cdbc7a5485746bc285bb0f7c167ab14",
+      "width": 2048,
+      "height": 1536,
+      "lon": 23.16776007333,
+      "lat": 53.151807714441,
+      "heading_grid_deg": 297.4272383339709,
+      "heading_true_deg": 300.76452636719,
+      "route_distance_m": 26.161,
+      "segment_station_m": 343.026,
+      "horizon_y_fraction": 0.66,
+      "pose_status": "WORKING_VALUE",
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.66,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
+    },
+    {
+      "camera": "sbs-g3-a-177786140912399",
+      "segment": "G3-A",
+      "photo": "Data/raw/mapillary/bialystok-industrial-c/177786140912399.jpg",
+      "source_id": "177786140912399",
+      "page_url": "https://www.mapillary.com/app/?pKey=177786140912399",
+      "author": "richlv",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "captured_at": "2020-08-15",
+      "sha256": "bf9401a24155a6467c5f78def4f96cbd7012d58981a2cb4adb88380a186e95b6",
+      "width": 2048,
+      "height": 1536,
+      "lon": 23.167842759568,
+      "lat": 53.151881316446,
+      "heading_grid_deg": 345.56024723897093,
+      "heading_true_deg": 348.8976067643,
+      "route_distance_m": 21.096,
+      "segment_station_m": 343.026,
+      "horizon_y_fraction": 0.71,
+      "pose_status": "WORKING_VALUE",
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.71,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
+    },
+    {
+      "camera": "sbs-g3-a-178689077481862",
+      "segment": "G3-A",
+      "photo": "Data/raw/mapillary/bialystok-industrial-c/178689077481862.jpg",
+      "source_id": "178689077481862",
+      "page_url": "https://www.mapillary.com/app/?pKey=178689077481862",
+      "author": "richlv",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "captured_at": "2020-08-15",
+      "sha256": "a01d88eedd635e08899f1c6a0e8239ae13cf304a86461410846727577143dda0",
+      "width": 2048,
+      "height": 1536,
+      "lon": 23.167836523626,
+      "lat": 53.151834806424,
+      "heading_grid_deg": 3.7011649786564695,
+      "heading_true_deg": 7.0385175934296,
+      "route_distance_m": 25.261,
+      "segment_station_m": 343.026,
+      "horizon_y_fraction": 0.71,
+      "pose_status": "WORKING_VALUE",
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.71,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
+    },
+    {
+      "camera": "sbs-g3-a-223210302566110",
+      "segment": "G3-A",
+      "photo": "Data/raw/mapillary/bialystok-industrial-c/223210302566110.jpg",
+      "source_id": "223210302566110",
+      "page_url": "https://www.mapillary.com/app/?pKey=223210302566110",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "captured_at": "2019-08-30",
+      "sha256": "d329e82590fdb86487b94171bb3d2fdd59e6d8cdb8e34573e8c505fa02ea295a",
+      "width": 2048,
+      "height": 1152,
+      "lon": 23.167785605589,
+      "lat": 53.151832588668,
+      "heading_grid_deg": 298.42112610042614,
+      "heading_true_deg": 301.75843574268,
+      "route_distance_m": 24.059,
+      "segment_station_m": 343.026,
+      "horizon_y_fraction": 0.59,
+      "pose_status": "WORKING_VALUE",
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.59,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
+    },
+    {
+      "camera": "sbs-g3-a-309664504075286",
+      "segment": "G3-A",
+      "photo": "Data/raw/mapillary/bialystok-industrial-c/309664504075286.jpg",
+      "source_id": "309664504075286",
+      "page_url": "https://www.mapillary.com/app/?pKey=309664504075286",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "captured_at": "2019-08-30",
+      "sha256": "1cf402b4754a05b7c9908d797fd6688729aeddc08dd8ee16e4d2f6ecc22fcc41",
+      "width": 2048,
+      "height": 1152,
+      "lon": 23.167853657784,
+      "lat": 53.151810016842,
+      "heading_grid_deg": 298.42107251652567,
+      "heading_true_deg": 301.75843574268,
+      "route_distance_m": 28.235,
+      "segment_station_m": 343.026,
+      "horizon_y_fraction": 0.59,
+      "pose_status": "WORKING_VALUE",
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.59,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-a-504348097385466",
@@ -178,13 +241,18 @@
       "height": 1536,
       "lon": 23.167803993085,
       "lat": 53.151971912115,
-      "heading_deg": 326.81994090017,
+      "heading_grid_deg": 323.48260915694976,
+      "heading_true_deg": 326.81994090017,
       "route_distance_m": 12.052,
       "segment_station_m": 343.026,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.72,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.72,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-a-201270605169291",
@@ -201,13 +269,46 @@
       "height": 1536,
       "lon": 23.167546615169,
       "lat": 53.152087058404,
-      "heading_deg": 291.73464071888,
+      "heading_grid_deg": 288.39751223149335,
+      "heading_true_deg": 291.73464071888,
       "route_distance_m": 4.928,
       "segment_station_m": 350.7,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
+    },
+    {
+      "camera": "sbs-g3-a-2948595898752384",
+      "segment": "G3-A",
+      "photo": "Data/raw/mapillary/bialystok-industrial-c/2948595898752384.jpg",
+      "source_id": "2948595898752384",
+      "page_url": "https://www.mapillary.com/app/?pKey=2948595898752384",
+      "author": "picturehoover",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "captured_at": "2020-06-28",
+      "sha256": "2624cff1201e3ed428e047bfb0b0fac36ccd9bc4224a87a10be509cd6455d761",
+      "width": 1280,
+      "height": 720,
+      "lon": 23.167518812044,
+      "lat": 53.151915323299,
+      "heading_grid_deg": 152.6629059997263,
+      "heading_true_deg": 156,
+      "route_distance_m": 14.246,
+      "segment_station_m": 351.838,
+      "horizon_y_fraction": 0.62,
+      "pose_status": "WORKING_VALUE",
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.62,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-a-1398898753813071",
@@ -224,36 +325,18 @@
       "height": 1536,
       "lon": 23.167458032213,
       "lat": 53.152099546804,
-      "heading_deg": 295.72384626313,
+      "heading_grid_deg": 292.38678800146823,
+      "heading_true_deg": 295.72384626313,
       "route_distance_m": 3.807,
       "segment_station_m": 359.145,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
-    },
-    {
-      "camera": "sbs-g3-a-1532333400308546",
-      "segment": "G3-A",
-      "photo": "Data/raw/mapillary/bialystok-industrial-c/1532333400308546.jpg",
-      "source_id": "1532333400308546",
-      "page_url": "https://www.mapillary.com/app/?pKey=1532333400308546",
-      "author": "grobin",
-      "license": "CC BY-SA 4.0",
-      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "captured_at": "2019-10-18",
-      "sha256": "b9cf0f9340d86e9b3c420ff70e05682337750a7834f8334caf1ee261510e6b00",
-      "width": 2048,
-      "height": 1152,
-      "lon": 23.167072771201,
-      "lat": 53.151818907785,
-      "heading_deg": 119.59891341183,
-      "route_distance_m": 36.421,
-      "segment_station_m": 363.383,
-      "horizon_y_fraction": 0.5,
-      "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-a-320326319617139",
@@ -270,36 +353,18 @@
       "height": 1536,
       "lon": 23.167170998845,
       "lat": 53.152157080572,
-      "heading_deg": 301.75698681341,
+      "heading_grid_deg": 298.42015580247244,
+      "heading_true_deg": 301.75698681341,
       "route_distance_m": 1.197,
       "segment_station_m": 378.907,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
-    },
-    {
-      "camera": "sbs-g3-a-813418555936824",
-      "segment": "G3-A",
-      "photo": "Data/raw/mapillary/bialystok-industrial-c/813418555936824.jpg",
-      "source_id": "813418555936824",
-      "page_url": "https://www.mapillary.com/app/?pKey=813418555936824",
-      "author": "grobin",
-      "license": "CC BY-SA 4.0",
-      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "captured_at": "2019-10-18",
-      "sha256": "6c727e438d77f52c60f408f6b8ee45966a9ee70d79b464f1fb913d8b2fab30de",
-      "width": 2048,
-      "height": 1152,
-      "lon": 23.166829309257,
-      "lat": 53.151909773993,
-      "heading_deg": 123.95104179903,
-      "route_distance_m": 36.647,
-      "segment_station_m": 383.803,
-      "horizon_y_fraction": 0.5,
-      "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-a-482392746429891",
@@ -316,13 +381,18 @@
       "height": 1536,
       "lon": 23.166965743495,
       "lat": 53.152210700305,
-      "heading_deg": 301.58066378103,
+      "heading_grid_deg": 298.2439950144841,
+      "heading_true_deg": 301.58066378103,
       "route_distance_m": 3.376,
       "segment_station_m": 393.724,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-a-454716650857984",
@@ -339,13 +409,18 @@
       "height": 1536,
       "lon": 23.166848632785,
       "lat": 53.152206197978,
-      "heading_deg": 303,
+      "heading_grid_deg": 299.66342523667146,
+      "heading_true_deg": 303,
       "route_distance_m": 7.937,
       "segment_station_m": 400.115,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.63,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.63,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-a-500263111404933",
@@ -362,36 +437,18 @@
       "height": 1536,
       "lon": 23.166857653629,
       "lat": 53.152239590217,
-      "heading_deg": 301.30615914892,
+      "heading_grid_deg": 297.96957580385606,
+      "heading_true_deg": 301.30615914892,
       "route_distance_m": 4.461,
       "segment_station_m": 401.565,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
-    },
-    {
-      "camera": "sbs-g3-a-2814382482208297",
-      "segment": "G3-A",
-      "photo": "Data/raw/mapillary/bialystok-industrial-c/2814382482208297.jpg",
-      "source_id": "2814382482208297",
-      "page_url": "https://www.mapillary.com/app/?pKey=2814382482208297",
-      "author": "grobin",
-      "license": "CC BY-SA 4.0",
-      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "captured_at": "2019-10-18",
-      "sha256": "ff070669101b942c2597c0e6bc6d867a1d2159c472b6bd761a513606639abc98",
-      "width": 2048,
-      "height": 1152,
-      "lon": 23.166554810229,
-      "lat": 53.15201945308,
-      "heading_deg": 121.97089608468,
-      "route_distance_m": 35.971,
-      "segment_station_m": 405.849,
-      "horizon_y_fraction": 0.5,
-      "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-a-1259231227807789",
@@ -408,36 +465,74 @@
       "height": 1536,
       "lon": 23.166639752447,
       "lat": 53.152364455005,
-      "heading_deg": 301.26275733776,
+      "heading_grid_deg": 297.9263432680244,
+      "heading_true_deg": 301.26275733776,
       "route_distance_m": 0.35,
       "segment_station_m": 421.286,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
-      "camera": "sbs-g3-a-975269743012231",
+      "camera": "sbs-g3-a-751431972202262",
       "segment": "G3-A",
-      "photo": "Data/raw/mapillary/bialystok-industrial-c/975269743012231.jpg",
-      "source_id": "975269743012231",
-      "page_url": "https://www.mapillary.com/app/?pKey=975269743012231",
+      "photo": "Data/raw/mapillary/bialystok-industrial-c/751431972202262.jpg",
+      "source_id": "751431972202262",
+      "page_url": "https://www.mapillary.com/app/?pKey=751431972202262",
+      "author": "richlv",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "captured_at": "2020-08-15",
+      "sha256": "582991313053da433abc9a8376403f4ecd846b3f93566320bc3223a7d16a3a4b",
+      "width": 2048,
+      "height": 1536,
+      "lon": 23.166660069274,
+      "lat": 53.152394994647,
+      "heading_grid_deg": 298.2051357257221,
+      "heading_true_deg": 301.54156744243,
+      "route_distance_m": 3.255,
+      "segment_station_m": 421.925,
+      "horizon_y_fraction": 0.7,
+      "pose_status": "WORKING_VALUE",
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
+    },
+    {
+      "camera": "sbs-g3-a-303305168125936",
+      "segment": "G3-A",
+      "photo": "Data/raw/mapillary/bialystok-industrial-c/303305168125936.jpg",
+      "source_id": "303305168125936",
+      "page_url": "https://www.mapillary.com/app/?pKey=303305168125936",
       "author": "grobin",
       "license": "CC BY-SA 4.0",
       "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "captured_at": "2019-10-18",
-      "sha256": "a7529501c0d0ed5aee5620e1c256257831ce0f9adff3f83805cd247f3d3f0ed0",
+      "captured_at": "2019-10-20",
+      "sha256": "ec4bd8f918a2236c1443d71a4ad5b88f2b2cf1765a9d531171dd6e2497923128",
       "width": 2048,
       "height": 1152,
-      "lon": 23.166278498081,
-      "lat": 53.152127025049,
-      "heading_deg": 122.17782332681,
-      "route_distance_m": 35.558,
-      "segment_station_m": 427.874,
-      "horizon_y_fraction": 0.5,
+      "lon": 23.166130331935,
+      "lat": 53.152554330805,
+      "heading_grid_deg": 298.82207264401916,
+      "heading_true_deg": 302.15808660416,
+      "route_distance_m": 24.683,
+      "segment_station_m": 436.716,
+      "horizon_y_fraction": 0.6,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.6,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-a-320215796381417",
@@ -454,13 +549,18 @@
       "height": 1152,
       "lon": 23.166396058726,
       "lat": 53.152497803979,
-      "heading_deg": 302.07346137617,
+      "heading_grid_deg": 298.73723683117225,
+      "heading_true_deg": 302.07346137617,
       "route_distance_m": 7.244,
       "segment_station_m": 436.716,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.6,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.6,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-381800493259507",
@@ -477,13 +577,18 @@
       "height": 1536,
       "lon": 23.156724287213,
       "lat": 53.156276413225,
-      "heading_deg": 312.68591308594,
+      "heading_grid_deg": 309.3572783115489,
+      "heading_true_deg": 312.68591308594,
       "route_distance_m": 1.707,
       "segment_station_m": 0.0,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.65,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.65,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-2279538078845158",
@@ -500,13 +605,18 @@
       "height": 1152,
       "lon": 23.156555799781,
       "lat": 53.156396562529,
-      "heading_deg": 311.92348609378,
+      "heading_grid_deg": 308.5949812281754,
+      "heading_true_deg": 311.92348609378,
       "route_distance_m": 0.987,
       "segment_station_m": 16.427,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.57,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.57,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-837235577143499",
@@ -523,13 +633,18 @@
       "height": 1152,
       "lon": 23.156348880342,
       "lat": 53.156507989655,
-      "heading_deg": 311.98061910197,
+      "heading_grid_deg": 308.65227530572463,
+      "heading_true_deg": 311.98061910197,
       "route_distance_m": 0.975,
       "segment_station_m": 35.018,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.57,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.57,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-3281350541967811",
@@ -546,13 +661,18 @@
       "height": 1536,
       "lon": 23.155958479612,
       "lat": 53.156586633817,
-      "heading_deg": 131.31509399414,
+      "heading_grid_deg": 127.98706465360604,
+      "heading_true_deg": 131.31509399414,
       "route_distance_m": 10.073,
       "segment_station_m": 60.218,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.68,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.68,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-275528677534382",
@@ -569,13 +689,18 @@
       "height": 1152,
       "lon": 23.155880959001,
       "lat": 53.156761551789,
-      "heading_deg": 311.82765779912,
+      "heading_grid_deg": 308.4996781825064,
+      "heading_true_deg": 311.82765779912,
       "route_distance_m": 0.807,
       "segment_station_m": 77.179,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.58,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.58,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-150280503737744",
@@ -592,13 +717,18 @@
       "height": 720,
       "lon": 23.155584368376,
       "lat": 53.15677406892,
-      "heading_deg": 22,
+      "heading_grid_deg": 18.672256379033456,
+      "heading_true_deg": 22,
       "route_distance_m": 11.546,
       "segment_station_m": 92.767,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.62,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.62,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-297817221966185",
@@ -615,13 +745,18 @@
       "height": 1536,
       "lon": 23.155252137967,
       "lat": 53.156915404549,
-      "heading_deg": 128.33740234375,
+      "heading_grid_deg": 125.00992490944147,
+      "heading_true_deg": 128.33740234375,
       "route_distance_m": 14.613,
       "segment_station_m": 120.117,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.68,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.68,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-3678296072299092",
@@ -638,13 +773,18 @@
       "height": 1152,
       "lon": 23.155023675168,
       "lat": 53.15721219061,
-      "heading_deg": 311.57441011737,
+      "heading_grid_deg": 308.2470983279352,
+      "heading_true_deg": 311.57441011737,
       "route_distance_m": 0.198,
       "segment_station_m": 153.369,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.58,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.58,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-962702164479831",
@@ -661,13 +801,18 @@
       "height": 1536,
       "lon": 23.154593804326,
       "lat": 53.157319353391,
-      "heading_deg": 132.13750269125,
+      "heading_grid_deg": 128.81053578635644,
+      "heading_true_deg": 132.13750269125,
       "route_distance_m": 9.751,
       "segment_station_m": 182.878,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.69,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.69,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-1528935774382039",
@@ -684,13 +829,18 @@
       "height": 1536,
       "lon": 23.154090213507,
       "lat": 53.157422405097,
-      "heading_deg": 128.63209372032,
+      "heading_grid_deg": 125.30552593579772,
+      "heading_true_deg": 128.63209372032,
       "route_distance_m": 33.732,
       "segment_station_m": 215.302,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.66,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.66,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-810896133189484",
@@ -707,13 +857,18 @@
       "height": 1536,
       "lon": 23.153907721858,
       "lat": 53.157686597285,
-      "heading_deg": 131.96363427421,
+      "heading_grid_deg": 128.63720152920942,
+      "heading_true_deg": 131.96363427421,
       "route_distance_m": 23.035,
       "segment_station_m": 245.294,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-810525063224609",
@@ -730,13 +885,18 @@
       "height": 1536,
       "lon": 23.153989435073,
       "lat": 53.157992006896,
-      "heading_deg": 317.016398166,
+      "heading_grid_deg": 313.68988150956267,
+      "heading_true_deg": 317.016398166,
       "route_distance_m": 4.028,
       "segment_station_m": 266.759,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-326454015490067",
@@ -753,13 +913,18 @@
       "height": 1536,
       "lon": 23.153800508371,
       "lat": 53.158101242425,
-      "heading_deg": 317.224704,
+      "heading_grid_deg": 313.89833407432747,
+      "heading_true_deg": 317.224704,
       "route_distance_m": 3.072,
       "segment_station_m": 284.276,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.65,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.65,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-209622370971977",
@@ -776,13 +941,18 @@
       "height": 1536,
       "lon": 23.153479161744,
       "lat": 53.15824651567,
-      "heading_deg": 317.50759803322,
+      "heading_grid_deg": 314.1814794598213,
+      "heading_true_deg": 317.50759803322,
       "route_distance_m": 1.629,
       "segment_station_m": 310.764,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-339463879238809",
@@ -799,13 +969,18 @@
       "height": 1536,
       "lon": 23.153291385039,
       "lat": 53.158496334941,
-      "heading_deg": 314,
+      "heading_grid_deg": 310.674021321803,
+      "heading_true_deg": 314,
       "route_distance_m": 8.106,
       "segment_station_m": 339.77,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.63,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.63,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-468026894483428",
@@ -822,13 +997,18 @@
       "height": 1536,
       "lon": 23.152918435652,
       "lat": 53.158678442093,
-      "heading_deg": 316.83505688114,
+      "heading_grid_deg": 313.50936919497894,
+      "heading_true_deg": 316.83505688114,
       "route_distance_m": 3.302,
       "segment_station_m": 371.534,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-4312632558767412",
@@ -845,13 +1025,18 @@
       "height": 1536,
       "lon": 23.15265096113,
       "lat": 53.15887333034,
-      "heading_deg": 317.14399912502,
+      "heading_grid_deg": 313.8185174327852,
+      "heading_true_deg": 317.14399912502,
       "route_distance_m": 5.411,
       "segment_station_m": 399.514,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.7,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-494288258686575",
@@ -868,13 +1053,18 @@
       "height": 1536,
       "lon": 23.151998633796,
       "lat": 53.158848070861,
-      "heading_deg": 313.35070800781,
+      "heading_grid_deg": 310.02575065832053,
+      "heading_true_deg": 313.35070800781,
       "route_distance_m": 28.018,
       "segment_station_m": 427.716,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.66,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.66,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
       "camera": "sbs-g3-b-182011943700132",
@@ -891,36 +1081,46 @@
       "height": 1152,
       "lon": 23.151829204338,
       "lat": 53.159033422415,
-      "heading_deg": 9.1433639680037,
+      "heading_grid_deg": 5.818533058232951,
+      "heading_true_deg": 9.1433639680037,
       "route_distance_m": 21.832,
       "segment_station_m": 453.366,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.62,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.62,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     },
     {
-      "camera": "sbs-g3-b-2233850540082337",
+      "camera": "sbs-g3-b-1801374876712141",
       "segment": "G3-B",
-      "photo": "Data/raw/mapillary/bialystok-industrial-c/2233850540082337.jpg",
-      "source_id": "2233850540082337",
-      "page_url": "https://www.mapillary.com/app/?pKey=2233850540082337",
-      "author": "grobin",
+      "photo": "Data/raw/mapillary/bialystok-industrial-c/1801374876712141.jpg",
+      "source_id": "1801374876712141",
+      "page_url": "https://www.mapillary.com/app/?pKey=1801374876712141",
+      "author": "gpsmapper",
       "license": "CC BY-SA 4.0",
       "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "captured_at": "2020-08-23",
-      "sha256": "f5ad1a238cd37c778a59d73964e1d9f98360437ad5b9bd9235eca8f3d23c02e3",
+      "captured_at": "2019-08-04",
+      "sha256": "bbd1d50053c9be39a755ba312f549b5a6cbc7ff2adb80206302a5ee6ff4d3639",
       "width": 2048,
       "height": 1152,
-      "lon": 23.151799003239,
-      "lat": 53.159433631184,
-      "heading_deg": 353.66259826854,
-      "route_distance_m": 1.896,
+      "lon": 23.151803669704,
+      "lat": 53.159468382436,
+      "heading_grid_deg": 356.390697611121,
+      "heading_true_deg": 359.7155269255,
+      "route_distance_m": 4.368,
       "segment_station_m": 485.862,
-      "horizon_y_fraction": 0.5,
+      "horizon_y_fraction": 0.62,
       "pose_status": "WORKING_VALUE",
-      "assumptions": "NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.",
-      "authored_overrides": {}
+      "assumptions": "NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.",
+      "authored_overrides": {
+        "horizon_y_fraction": 0.62,
+        "pose_status": "WORKING_VALUE",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      }
     }
   ]
 }
