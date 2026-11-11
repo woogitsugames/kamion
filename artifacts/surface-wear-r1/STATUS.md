@@ -55,3 +55,6 @@
 
 - Step24 native comparison rejected expected4 vsactual8 changed UV1buffers: mixed road layers included96 sidewalk vertices with missingUV1. Geometry/normals/indices/UV0 remain identical all154meshes, noUVchannelallocation. First12causalframes rendered successfully but classification remains provisional; no false PASS packet committed. Narrowed sentinel to asphalt/_new material only and added mixed-sidewalk regression.
 - NEXT COMMAND: guarded uv-sentinel.ps1 -Phase Import then native-audit.ps1 -Stage sentinel-final and compare expected4buffers. Reuse causal frames only after proving corrected96vertices have unusedUV1 and no pixels changed; otherwise rerender.
+
+- Step25 narrowed sentinel canonical reimport+native audit COMPLETE exit0.154meshes all positions/normals/indices/UV0/vertex/submesh identical. EXACT4roadUV1 buffers change (2_3/5_4 per tier); sidewalk96vertices restored tobaseline defaults. Actual extra channel allocation0bytes; prior forecast superseded. First12frames still provisional broader-buffer experiment; root reviewed bounded/no broad change, final372 will use corrected source.
+- NEXT COMMAND: sourcefield4closeup foundation capture (UVcorrected, broadinactive) then robust sourceUVtransfer feasibility plus actual surface-layer material controls.
