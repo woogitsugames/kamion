@@ -72,3 +72,5 @@ Supplementary edge-pietrasze-horizon (road-seated driver eye) and edge-pietrasze
 Performance baseline for r2 is argon-edge + main 9e6e9fde on the same imported world. The original r1 addition relative to main without a backdrop cost +2..4 estimated draws; r2 does not erase that inherited cost. Render comparisons and current test results belong in artifacts/edge-far-r2/REPORT.md; old r1 claims above are historical, not revalidation of this revision.
 
 
+
+Measured r2 extraction/mesh audit: buildings 8470 -> 8447 (23 excluded: 2 blocks, 18 halls, 3 offices). Against the full region-building union, raw rectangle intersections 19 -> 0 and compressed rectangle intersections 22 -> 0 (sets overlap). Low mesh triangles 24826 -> 24508 (-1.28%); High 118902 -> 118524 (-0.32%). Forest primitive triangle counts and textures are unchanged. These are generated mesh counts, not per-camera GPU measurements; render/Unity checks remain pending while PHONE_RUN exists.

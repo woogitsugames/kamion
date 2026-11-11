@@ -31,6 +31,16 @@ def test_rectangle_can_overlap_even_when_source_does_not():
     assert not FF.building_outside_region(source.minimum_rotated_rectangle, 1024)
 
 
+def test_compression_must_clear_the_exterior_part_of_a_region_building():
+    from shapely import union_all
+
+    exclusion = union_all([box(-1024, -1024, 1024, 1024),
+                           box(310, -1400, 350, -1000)])
+    rectangle = np.asarray(box(300, -1600, 360, -1500).exterior.coords)[:4]
+    assert FF.building_outside_region(Polygon(rectangle), 1024, exclusion)
+    assert not FF.building_rectangle_outside_region(rectangle, 1024, exclusion)
+
+
 def test_bdot_extraction_excludes_crossing_source_and_lod_rectangle(tmp_path, monkeypatch):
     import pyogrio
 

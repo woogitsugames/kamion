@@ -22,3 +22,6 @@
 - NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30
 - Real-data regression caught an additional case: a rectangle disjoint in source space can move into a regional building continuation after distance compression. Extraction now validates both raw and mapped rectangles (cache /10), not only the final mesh guard. No visual claim made from the earlier 8451 count.
 - NEXT: Get-Content artifacts/edge-far-r2/generate-after.log -Tail 20; Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30
+- Final real-data audit after cache /10: raw intersections with full region buildings 19 -> 0; compressed intersections 22 -> 0; 8470 -> 8447 buildings (23 distinct exclusions, sets overlap). Low triangles 24826 -> 24508 (-1.28%), High 118902 -> 118524 (-0.32%). after-audit.json records exact IDs.
+- Added deterministic synthetic compression-overlap regression: 12 passed plus local-data case pending in the next full GIS collection. Corrected license inventory ring extent to square +/-4200m from region anchor (existing sources only).
+- NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30; after GIS passes run pwsh artifacts/edge-far-r2/run-evidence.ps1 -SkipGis (waits PHONE_RUN).
