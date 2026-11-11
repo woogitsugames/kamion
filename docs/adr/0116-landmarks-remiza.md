@@ -25,7 +25,7 @@ nieużywanej komórce tego samego atlasu. Bazowy pigment tynku D48 jest zachowan
 Pas zacieków o autorskiej głębokości 1 m podąża za obróbką łukowego dachu;
 kontrola geometrii sprawdza zarówno jego krzywiznę, jak i odsunięcie od otworów.
 
-Wygenerowany GLB: LOD0 9344 → 9584 trójkąty, LOD1 2828 → 2860, LOD2 164 → 164.
+Wygenerowany GLB: LOD0 9344 → 9584 trójkąty, LOD1 2828 → 2818, LOD2 164 → 164.
 Liczba prymitywów pozostaje 3/2/1. Są to liczby modelu. Kanał alfa całej mapy jest identyczny z bazą, podobnie
 jak RGBA poza istniejącą komórką igliwia. Skany i licencje pozostają dotychczasowe.
 
@@ -47,24 +47,44 @@ Geometria przeszkody: `artifacts/landmarks-r1/shadow-occluder.json`.
 
 Powtórzono wszystkie 48 kamer w Low/High i clear/overcast, w tej samej kolejności
 co baseline: 192 pary. Obejrzano 24 arkusze po osiem par, szerokość 960 px.
-112 obrazów jest pikselowo identycznych; największa zmiana dotyczy remizy.
+Końcowy przebieg `after-budget`: 122 obrazy są pikselowo identyczne z baseline;
+największa zmiana dotyczy remizy. Obejrzano ponownie wszystkie 24 arkusze po korekcie budżetu.
 Pofałdowane cienie dachów w High-above występują również w baseline przy tym samym
 pełnym przebiegu. Wczesnego fokusu z inną kolejnością kamer nie używa się do oceny tej regresji.
 Wszystkie 96 warunków Low: draws siatek +0, draws instancji +0, maksymalna delta
-sumy trójkątów 0,0% w statystykach zaokrąglonych do tysiąca. Dokładny wzrost LOD1
-samej remizy wynosi 32 trójkąty. To szacunki edytora, bez deklaracji wyniku GPU.
-`budget-after.csv` zawiera każdą kamerę, siatki i instancje osobno.
+sumy trójkątów 0,0% w statystykach zaokrąglonych do tysiąca. Dokładna delta LOD1
+samej remizy wynosi -10 trójkątów. To szacunki edytora, bez deklaracji wyniku GPU.
+`budget-after-budget.csv` zawiera każdą kamerę, siatki i instancje osobno.
+
+Pełny GIS wykrył w pierwszym kandydacie przekroczenie starego limitu całego modelu
+Low (2860 zamiast 2828). Nie podniesiono limitu: rdzenie trzech iglaków Low mają
+pięć zamiast sześciu gładko cieniowanych boków. Oszczędność 42 trójkątów pokrywa
+32 trójkąty pasa zacieków, zachowując wszystkie karty igliwia i osiem poziomów koron.
+Dodano kontrolę całego Low do testu remizy. Osobny przebieg `after → after-budget`
+ma 126 obrazów identycznych; największe różnice dotyczą sylwetki iglaków Low.
 
 Mediana Y szkła Low-overcast: lewa góra/dół 64,72/66,93 → 59,93/48,86;
 prawa 68,65/67,72 → 62,65/48,86. High-overcast: 71,93/74,65 → 66,65/54,86
 oraz 74,79/73,93 → 68,72/54,86. Gradient góra–dół jest czytelny; High pozostaje
-nieco jaśniejszy od orientacyjnego celu fotografii. Dokładne ROI: `glass-glass-final.json`.
+nieco jaśniejszy od orientacyjnego celu fotografii. Dokładne ROI: `glass-after-budget.json`.
 Materiał wnętrza jest autorskim WORKING_VALUE, nie pomiarem transmisji szyby.
 
 Wszystkie 64 wpisy chunków i roads_qa są identyczne względem świeżego baseline.
-W manifeście zmienił się tylko materiał fire_station. Generator 479 s, bez fallback=True.
+W manifeście względem świeżego baseline zmienił się tylko materiał fire_station.
+Końcowy generator: 1260,6 s czasu ściennego, w tym 775 s udokumentowanej pauzy
+ops-watchdog; nie jest to benchmark CPU. Bez fallback=True.
 Shared shadery, globalne światło i źródła dróg nie są zmieniane.
-EditMode: 261/261. Końcowy pełny GIS: w toku; wynik będzie zapisany w REPORT.
+EditMode: 261/261. Pełny GIS przed korektą: 493 passed, 2 failed, 1 xfailed (662 s).
+Po korekcie i regeneracji powtórzono dwa powiązane pliki: remiza 7/7, hero building 10/10.
+Własna porażka limitu jest rozwiązana. Drugą porażką był zastany stale fidelity_qa;
+wszystkie siedem jego niezgodnych wejść jest niezmienionych od bazy rundy
+(`stale-fidelity-proof.json`). Nie zmieniano raportu ani źródeł dróg. Nie deklaruje
+się pełnego GIS jako PASS; całego zestawu nie powtarzano po lokalnej redukcji rdzeni.
+
+Wygenerowane agregaty świata po świeżej regeneracji zawierają również odświeżenie
+wcześniej nieaktualnych danych z bazy main. Ich różnice poza remizą występowały już
+w świeżym baseline; dowód zachowania 64 chunków i roads_qa dotyczy porównania
+baseline → kandydat. Konflikty tych agregatów przy integracji: wersja main i regeneracja.
 
 Ocena fotografii: PARTIAL. Tuje Low mają gładkie normalne bez wzrostu geometrii,
 a iglaki ciemniejsze i szersze rdzenie. Ich korony nadal mają rozpoznawalną
