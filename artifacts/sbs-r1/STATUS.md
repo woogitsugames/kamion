@@ -51,3 +51,6 @@ Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20
 Przeczytano aktualny punkt 3 zlecenia. Poprzednie generacje świata/PBR, pełny GIS i fidelity są zakończone; po poleceniu właściciela nie stwierdzono aktywnego procesu Pythona z tego worktree. Kolejne ciężkie zadania i testy uruchamiamy przez run-heavy.ps1: Acquire/Release -Pool heavy z właścicielem równym bieżącej gałęzi, finally gwarantuje zwolnienie. Pełny GIS wymaga jawnego -EndOfRound i nastąpi wyłącznie na końcu rundy. Podczas pracy używamy pojedynczych plików testów.
 Wrappery wskazują aktualny skrypt slotów z main, aby obsługiwać nową pulę bez edytowania wspólnego skryptu w swojej gałęzi. Oczekujące Unity nadal używa limitu czterech procesów i właściciela gpt-sbs.
 Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20
+## Bezpieczne oczekiwanie na zasoby
+PBR Medium jest kompletny i aktualny: missing=0, stale=0, więc import nie powinien uruchomić ukrytego build_all. Testy SBS: 16/16. Oczekiwanie slotów sprawdzamy co 7 s; limity pozostają 4 Unity i 3 heavy. Długi próg stale w naszych wywołaniach zapobiega automatycznemu usuwaniu cudzych slotów przez współdzielony skrypt. Przed ponownym ustawieniem kolejki potwierdzono brak Unity z tego worktree i zwolniono wyłącznie własny slot.
+Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/import-and-baseline.ps1

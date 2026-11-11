@@ -33,7 +33,7 @@ function Restore-UnitySideEffects {
 Push-Location $taskRoot
 try {
     if ($EditMode -and !$ComposeOnly) {
-        & pwsh -NoProfile -File $slotScript -Acquire -Owner $SlotOwner
+        & pwsh -NoProfile -File $slotScript -Acquire -Owner $SlotOwner -PollSeconds 7 -StaleHours 87600
         if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
         try {
             & pwsh -NoProfile -File scripts/test.ps1 -Platform EditMode
@@ -68,7 +68,7 @@ try {
                     }
                     $captureFile = Join-Path $renderDir "capture-$($group.Name).json"
 
-                    & pwsh -NoProfile -File $slotScript -Acquire -Owner $SlotOwner
+                    & pwsh -NoProfile -File $slotScript -Acquire -Owner $SlotOwner -PollSeconds 7 -StaleHours 87600
                     if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
                     try {
                         $capture.captured_at_utc = [DateTime]::UtcNow.ToString('o')

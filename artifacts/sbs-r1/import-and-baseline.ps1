@@ -1,5 +1,5 @@
 $ErrorActionPreference = 'Stop'
-pwsh -NoProfile -File C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Acquire -Owner gpt-sbs
+pwsh -NoProfile -File C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Acquire -Owner gpt-sbs -PollSeconds 7 -StaleHours 87600
 if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu Unity' }
 try {
     pwsh -NoProfile -File scripts/import-region.ps1 -Region bialystok-industrial-c

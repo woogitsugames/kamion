@@ -8,7 +8,7 @@ try {
         $renderDir='artifacts/sbs-r1/pose-renders'
         $first=$group.Group[0]; $height=[int](1280*$first.height/$first.width)
         $ids=$group.Group.probe -join ','
-        pwsh -NoProfile -File C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Acquire -Owner gpt-sbs
+        pwsh -NoProfile -File C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Acquire -Owner gpt-sbs -PollSeconds 7 -StaleHours 87600
         if($LASTEXITCODE -ne 0){throw 'Brak slotu Unity'}
         try {
             pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -Width 1280 -Height $height -Gate3 $probeFile -Cameras $ids -OutputDir $renderDir
