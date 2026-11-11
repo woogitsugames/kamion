@@ -5,3 +5,5 @@ Istniejący czysty worktree gpt-furniture-r1 przeniesiono na gpt-furniture; gał
 Skopiowano derived, cc0, cc0/_raw, megascans, _Generated; zachowano junctiony surowych referencji; git lfs checkout OK. Dawne dowody ADR 0102 pozostają w katalogu nadrzędnym, nowe dowody w 24h/.
 Cel: podmurówka i deformacje siatki, rozpoznawalny słup betonowy, korozja uchwytów znaków. Bariery i geometria dróg poza zakresem.
 NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+
+21:33: generator baseline przerwany przed startem: stara .venv bez interpretera. Zachowano jako .venv.pre24h-invalid; uv odtwarza środowisko. NASTĘPNY KROK: powtórzyć build_world.
