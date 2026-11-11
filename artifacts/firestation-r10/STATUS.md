@@ -15,3 +15,6 @@ Krok2: prywatne kopie raw/cache/Fab/Generated gotowe, Library ze stabilnego C; j
 
 Krok3a: plny PBR wygenerowany475s. Uzupełniono jedyne brakujące istniejące wejście pipeline: public-domain Worn_cracked_asphalt_pavement.jpg (John Harvey, LICENSES), odtworzono tylko asphalt_detail_photo. To wejście istniejącej tekstury świata, nie fizyczna referencja remizy; dla JRG2 pozostaje wyłącznie rzeczywiste7197. NASTĘPNA KOMENDA: `Get-Content artifacts/firestation-r10/baseline-world.log -Tail 8`; nadal bez Unity przed ROOT release.
 
+
+Krok3: świeży własny PBR/alpha/layout, hero i świat z901c przed zmianami produkcyjnymi. Zapisano źródła/referencję i192rawSHA, Fab15bezfallback, hero applied. NASTĘPNA KOMENDA: po explicit ROOT release i sprawdzeniu obu blokad import-region + canonicalvehiclefixture; następnie prawdziwe baseline LowWorldC/HighWorldC_High.
+
