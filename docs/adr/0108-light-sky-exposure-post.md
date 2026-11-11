@@ -1,6 +1,6 @@
 ﻿# ADR 0108 — światło, niebo, ekspozycja i post
 
-## Runda r1 — w toku, 11 listopada 2026
+## Runda r1 — wynik roboczy, 11–12 listopada 2026
 
 Bazą jest main 4c9905b1, gałąź gpt-light-r1, worktree .claude/worktrees/gpt-light. Okno pracy: 11 listopada 2026 21:30–12 listopada 2026 21:30 czasu Warszawy.
 
@@ -16,7 +16,11 @@ Biel: porównanie 1,2/1,8 potwierdza rzeczywisty parametr po renderze. ROI furgo
 
 Cienie: 20/20 PNG ablacją filtrów Low/Medium/High, bliższych podziałów i atlasu 4096. Filtr High wygładza falistość, lecz zmiękcza krawędź; atlas 4K nie został włączony. Niezależny przegląd 43 PNG potwierdza poprawę, ale nie próg 10 m ani GPU. Wprowadzono addytywny flagą danych LightingPreset.highSunShadowFilter=3 wyłącznie LP_LowSun; EnvironmentLighting stosuje go tylko High. Inne presety/tiery resetują do dziedziczenia pipeline. Nie ma nowego pola QualityProfile ani zmiany jego danych. Potwierdzenie produkcyjnej polityki 8/8 PNG z kontrolą rzeczywistego filtru Low→High. Pierwszy crop metryczny był poza krawędzią, więc nie zgłaszam spełnienia metryki 10 m. Zachowano log znanego błędu sprzątania Mono dopiero po pełnym wyniku 20/20, zgodnie z wyjątkiem istniejącego visual-qa.ps1; nie mylić z awarią renderowania.
 
-Walidacja po ostatniej zmianie: EditMode 264/264 (artifacts/tests/editmode-20261111-235211.xml). Pełny GIS i analiza SBS oczekują na heavy; nie zgłaszam ich PASS. Regeneracja bazowego świata dała zmiany raportów/generated spoza light; patch zachowano w artifacts/light-r1/generated-baseline-rebuild.patch i nie włączono tych plików do commitów produkcji light. Po testach wrócą do bazy przed scaleniem aktualnego main w r2.
+Walidacja po ostatniej zmianie: EditMode 264/264 (kopia artifacts/light-r1/tests/editmode-final.xml), pełny GIS 493 passed / 1 xfailed w 753,56 s na świeżo regenerowanym świecie i raporcie fidelity. Analiza, GIS i dodatkowa metryka biegły kolejno w heavy, bez reentrantnego współdzielenia slotu przez dwa zadania. Regeneracja bazowego świata dała zmiany raportów/generated spoza light; patch zachowano w artifacts/light-r1/generated-baseline-rebuild.patch i nie włączono tych plików do commitów produkcji light. Po testach przywrócono je do bazy przed scaleniem aktualnego main w r2; lider odtwarza testy po generatorze i fidelity.
+
+Próg cienia 1 px / 10 m nie jest osiągnięty. Potwierdzono fizyczny odcinek 10 m na pionowej ścianie przez raycast i widoczność obu końców (x925,65–1861,82, bez drzwi/rury). Detektor maksimum pochodnej na miękkim brzegu był niestabilny; zachowano jego wynik. Drugi, zmiennoprzecinkowy detektor połowy lokalnego kontrastu, wszystkie 936 kolumn bez odrzucania: legacy max1,547/1,537 px i RMS0,737/0,726; High max1,440/1,268 px i RMS0,461/0,437 dla sigma1,5/2,5. Obejrzano obie nakładki. To poprawa statycznego konturu luminancji, nadal FAIL wobec progu max≤1 px oraz brak oceny w ruchu i GPU.
+
+SBS: wygenerowano i przejrzano wszystkie320 par (160 przed i160 po), a krytyk niezależnie obejrzał wszystkie80 końcowych High. Dla wszystkich160 wpisów kamery/pogody/tieru estymaty CPU draws +0 i tris +0%, instancing osobno. Galerie HTML i pary ≤960 px są w artifacts/light-r1/sbs/{before,after}; źródłowe metadane i pozy SBS pozostały nietknięte. Końcowo HF asfaltu High5,6757, czystego błękitu0,2318; Low ma ten sam kształt chmur przy zachowaniu swojego dotychczasowego tieru. Wzmocnienie16× ujawnia stopnie8-bitowego gradientu bez dithera — nie ma deklaracji rozwiązania bandingu na AMOLED.
 
 Dowody SBS: 160/160 przed i 160/160 po, te same świeżo wygenerowane geometria i pozy. Stan przed jest kontrolowanym odtworzeniem dawnych parametrów, nie historyczną geometrią. 40 póz × Low/High × clear/overcast; tylko 27 dziennych póz dopuszczono do podsumowania ROI po wykluczeniu 6 błędnych i 8 zachodów (jedna wspólna). Pozy nadal WORKING_VALUE. Źródła sbs_references/sbs_cameras bez zmian. Analiza i galerie ≤960 px czekają w heavy.
 
