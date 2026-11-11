@@ -40,3 +40,6 @@ Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20
 ## Odtwarzalne próby pozy
 Rozszerzono sondy J2 do siatki XY −5,5/0/+5,5 m (72 warianty), ponieważ przesunięcie względem jezdni nie musi być prostopadłe do osi zdjęcia. Skrypty generatora, renderu ze slotami i galerii 960 px zapisano w artifacts/sbs-r1. Sondy nie zmieniają pozy przyjętych do bramki.
 Następny krok po baseline: pwsh -NoProfile -File artifacts/sbs-r1/render-pose-probes.ps1
+## Spójność świata i fidelity
+Sprawdzono SHA wszystkich 64 GLB względem aktualnego manifestu: 64/64 zgodne. Raport fidelity odtworzono w artifacts/sbs-r1/fidelity z bieżących wejść bez zmian kodu dróg. Nie commitujemy produktów innych dziedzin. Import nadal oczekuje w kolejce Unity.
+Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20
