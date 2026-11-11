@@ -9,3 +9,4 @@ Następny krok: dostosować własne skrypty do katalogu r2, zamrozić kamery/kla
 Krok 2: skrypty r2 mają własny STATUS, centralne pule, limitów nie podnoszą i nie usuwają cudzych starych slotów. Kamery: 42 aktualne sbs + własne ujęcie DK8 + kontrolne sceny; w zdjęciach akceptowane tylko A/B, C wykluczone, SHA zdjęć kontrolowane. Capture zapisuje i sprawdza SHA wejść po pobraniu slotu. Merge main nie zmienił geometrii świata, więc bazą jest lokalny wygenerowany i sprawdzony świat z r1. Następny krok: pwsh artifacts/edge-r2/validate.ps1 -Phase Before.
 2026-11-11T23:51:14.3738539+01:00 Zapisano rendery before/Low-clear wszystkich kamer; ocena PNG i budżetu nadal w toku.
 2026-11-11T23:51:49.8820657+01:00 Zapisano rendery before/Low-overcast wszystkich kamer; ocena PNG i budżetu nadal w toku.
+2026-11-11T23:52:30.1063581+01:00 Zapisano rendery before/High-clear wszystkich kamer; ocena PNG i budżetu nadal w toku.
