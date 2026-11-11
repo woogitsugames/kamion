@@ -27,3 +27,6 @@ Następny krok po zakończeniu baseline i generatora: pwsh artifacts/life-r1/uni
 
 Krok 9: audyt wejść generatora wykrył brak opcjonalnego zdjęcia asfaltu w nowym worktree. Skopiowano wyłącznie istniejący plik źródłowy Data/photos/nowe/Worn_cracked_asphalt_pavement.jpg z main przed dojściem generatora do warstwy detalu. Zapobiega to pominięciu istniejącego materiału innych dziedzin; nie zmieniono jego kodu ani ustawień.
 Następny krok: sprawdzić log materiałów pod kątem SKIP/fallback i diff specyfikacji; do commita brać wyłącznie konieczne różnice car_grime_clean.
+
+Krok 10: baseline Low/overcast ukończony, również 92 PNG. Obejrzano r10b_black_05: czerń jest czytelna w pochmurnym świetle, brud to nadal jednolity stary pas. Nagłówek stats potwierdza Low renderScale=0.75 i msaa=2; wartości draws/instancji są szacunkami CPU, nie pomiarem GPU telefonu. High/clear w toku.
+Następny krok: zakończyć dwa zestawy High, dopiero potem przywrócić shader kandydata i zaimportować zregenerowany świat.
