@@ -211,8 +211,8 @@ def test_thuja_rows_are_irregular():
         V = kit.out()[0]
         hs.append(V[:, 2].max())
         rs.append(np.hypot(V[:, 0] - k * 0.9, V[:, 1]).max())
-    assert max(hs) / min(hs) > 1.5 and np.std(rs) / np.mean(rs) > 0.08
-    assert len(kit.out()[2]) <= 40                                              # 5 sides x <= 4 bands x 2
+    assert max(hs) / min(hs) > 1.5 and np.std(rs) / np.mean(rs) > 0.05
+    assert len(kit.out()[2]) <= 7 * 2 * 7                                       # 7 sides x <= 7 rings
 
 
 def test_plot_kit_atlas_rows_and_matt_colours():

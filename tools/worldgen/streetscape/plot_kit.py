@@ -320,10 +320,10 @@ def _thuja(rng, h, w):
     front, dark inside, yellow-green at the tips; ~7 % holes onto the dark interior of the shell."""
     im = _pil(h, w)
     d = ImageDraw.Draw(im)
-    d.rectangle([0, 0, w, h], fill=(22, 36, 22, 255))
-    live = [(30, 46, 26), (42, 64, 34), (54, 80, 40), (72, 98, 46)]
+    d.rectangle([0, 0, w, h], fill=(26, 42, 25, 255))
+    live = [(34, 52, 29), (42, 64, 34), (50, 74, 38), (62, 86, 42)]
     dead = [(64, 48, 32), (98, 74, 44), (124, 94, 54), (142, 112, 68)]
-    n = 3600
+    n = 7000
     ppm_x, ppm_y = w / KIT_M, h / ROW_H_M["thuja"]
     for i in range(n):
         x, y = rng.uniform(0, w), rng.uniform(-0.05 * h, 1.05 * h)

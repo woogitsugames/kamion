@@ -800,31 +800,34 @@ def gate_geo(kit, g, style, h, z, key, col=None):
 
 
 def thuja(kit, p, z, h, r, key, dead=False):
-    """Columnar thuja ('Smaragd' / 'Brabant'): one 5-sided shell of the foliage row, every ring jittered."""
+    """Columnar thuja ('Smaragd' / 'Brabant'): one 7-sided shell of the foliage row with a ring every 0.6 m, every ring
+    a little off round and off centre (r2: five sides and three rings read as green crystals)."""
+    step = PK.ROW_H_M["thuja"] / 2
     zs = [0.0]
     while zs[-1] < h - 1e-6:
-        zs.append(min(zs[-1] + PK.ROW_H_M["thuja"], h))
-    if len(zs) > 2 and zs[-1] - zs[-2] < 0.35:
+        zs.append(min(zs[-1] + step, h))
+    if len(zs) > 2 and zs[-1] - zs[-2] < 0.2:
         zs.pop(-2)
     v0, v1 = PK.row("thuja")
-    sides = 5
+    vm = 0.5 * (v0 + v1)
+    sides = 7
     circ = 2 * math.pi * r
     span = min(circ / PK.KIT_M, 0.11) if dead else circ / PK.KIT_M
-    u0 = (PK.THUJA_GREEN_U + 0.015 + hfloat(key, "tu") * (1 - PK.THUJA_GREEN_U - 0.03 - span)) if dead else \
-        hfloat(key, "tu") * (PK.THUJA_GREEN_U - span - 0.01)
+    u0 = (PK.THUJA_GREEN_U + 0.015 + hfloat(key, "tu") * (1 - PK.THUJA_GREEN_U - 0.03 - span)) if dead else         hfloat(key, "tu") * (PK.THUJA_GREEN_U - span - 0.01)
     a0 = hfloat(key, "ta") * 6.2832
-    lean = (np.array([hfloat(key, "tlx"), hfloat(key, "tly")]) - 0.5) * 0.10
+    lean = (np.array([hfloat(key, "tlx"), hfloat(key, "tly")]) - 0.5) * 0.08
     V, UV = [], []
     for i, zz in enumerate(zs):
         f = zz / h
-        k = 0.66 + 0.34 * min(f / 0.14, 1.0) if f < 0.14 else 1.0 - 0.20 * ((f - 0.14) / 0.5) if f < 0.64 else \
-            0.80 * (1.0 - ((f - 0.64) / 0.36) ** 1.6) + 0.07
+        # ogive: widest at a fifth of the height, a blunt tip
+        k = 0.72 + 0.28 * math.sin(min(f / 0.2, 1.0) * math.pi / 2) if f < 0.2 else math.sqrt(max(1.0 - ((f - 0.2) / 0.8) ** 2.2, 0.0)) * 0.94 + 0.06
+        off = (np.array([hfloat(key, "tox", i), hfloat(key, "toy", i)]) - 0.5) * 0.10 * r
         for j in range(sides + 1):
             jj = j % sides
-            rr = r * k * (0.86 + 0.28 * hfloat(key, "tr", i, jj))
+            rr = r * k * (0.92 + 0.16 * hfloat(key, "tr", i, jj))
             ang = a0 + 2 * math.pi * j / sides
-            V.append([p[0] + lean[0] * zz + math.cos(ang) * rr, p[1] + lean[1] * zz + math.sin(ang) * rr, z - 0.05 + zz])
-            UV.append([u0 + span * j / sides, v0 if i % 2 == 0 else v1])
+            V.append([p[0] + lean[0] * zz + off[0] + math.cos(ang) * rr, p[1] + lean[1] * zz + off[1] + math.sin(ang) * rr, z - 0.05 + zz])
+            UV.append([u0 + span * j / sides, (v0, vm, v1, vm)[i % 4]])
     T = []
     m = sides + 1
     for i in range(len(zs) - 1):
@@ -963,7 +966,7 @@ def build(buf, rp, zf, surf_top, report):
         keepout += hard
         if plot.get("drive") is not None:
             rep["drives"] += 1
-            rep["verge_overlays"] += _verge_overlay(buf, plot, surf_top, src_id)
+            rep["verge_overlays"] += _verge_overlay(buf, plot, surf_top, src_id, zf, rp.get("roads_poly"))
         # ---- garden
         poly = plot["poly"]
         foot = plot["foot"]
@@ -1083,36 +1086,44 @@ def build(buf, rp, zf, surf_top, report):
     return {"keepout": keepout, "lawns": [p["lawn"] for p in plots if p.get("lawn") is not None], "plots": plots}
 
 
-def _verge_overlay(buf, plot, surf_top, src_id):
-    """Where the driveway crosses a grass verge / gravel shoulder of the road (no footway there), pave that stretch:
-    a strip draped 2 cm over the road-side surface, from the carriageway edge to the road footprint edge."""
+def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None):
+    """Between the gate apron (a paved item, cut at the road footprint) and the carriageway edge the driveway crosses
+    whatever the road profile has there: a footway (stays as it is, lowered with the kerb), a grass verge / gravel
+    shoulder, or the battered edge of the footprint with no surface at all (r2: a 0.5 m strip of grass before the
+    kerb). Pave that stretch: a strip draped 2 cm over the road-side surface (the terrain where there is none)."""
     acc = plot.get("access")
-    if acc is None or surf_top is None or acc.get("walk") == "sidewalk_paving" and acc.get("kind") == 0:
+    if acc is None or surf_top is None:
         return 0
+    footway = acc.get("walk") == "sidewalk_paving" and acc.get("kind") == 0
     g = plot["lay"]["gate"]
     m, n, t = g["m"], g["n"], g["t"]
     L = acc["d_cw"]
-    ns = max(2, int(math.ceil(L / 0.5)))
+    ns = max(2, int(math.ceil(L / 0.4)))
     lat = np.linspace(-g["w"] / 2, g["w"] / 2, 5)
-    V, UV, ok = [], [], []
+    V, UV, top = [], [], []
     for i in range(ns + 1):
-        d = L * i / ns + 0.05
+        d = L * i / ns + 0.03
         for x in lat:
             p = m + n * d + t * x
             z = surf_top.top(float(p[0]), float(p[1]))
-            ok.append(np.isfinite(z))
-            V.append([p[0], p[1], (z if np.isfinite(z) else 0.0) + 0.02])
+            top.append(bool(np.isfinite(z)))
+            if not np.isfinite(z):
+                z = zf(p) if zf is not None else 0.0
+            V.append([p[0], p[1], z + 0.02])
             UV.append([p[0], p[1]])
+    V = np.asarray(V)
     T = []
     nl = len(lat)
     for i in range(ns):
         for j in range(nl - 1):
-            a_, b_, c_, d_ = i * nl + j, i * nl + j + 1, (i + 1) * nl + j + 1, (i + 1) * nl + j
-            if ok[a_] and ok[b_] and ok[c_] and ok[d_]:
-                T += [(a_, d_, c_), (a_, c_, b_)]
+            q = [i * nl + j, i * nl + j + 1, (i + 1) * nl + j + 1, (i + 1) * nl + j]
+            c = V[q, :2].mean(0)
+            inside = roads_poly is None or roads_poly.contains(Point(*c))      # outside it the apron is already paved
+            covered = all(top[k] for k in q)
+            if (covered and not footway) or (not covered and inside and zf is not None):
+                T += [(q[0], q[3], q[2]), (q[0], q[2], q[1])]
     if not T:
         return 0
-    V = np.asarray(V)
     T = np.asarray(T)
     nrm = np.cross(V[T[:, 1]] - V[T[:, 0]], V[T[:, 2]] - V[T[:, 0]])
     T[nrm[:, 2] < 0] = T[nrm[:, 2] < 0][:, [0, 2, 1]]
