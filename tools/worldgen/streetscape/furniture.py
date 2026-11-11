@@ -65,14 +65,14 @@ class SurfaceTop:
     (gate 3 audit). Upward faces only (|n.z| >= 0.5); bridge decks are a separate layer and are not sampled."""
     CELL = 4.0
 
-    def __init__(self, parts, collision=False):
+    def __init__(self, parts, collision=False, layers=("road", "paved")):
         tris = []
         for p in parts:
             if collision:                 # the smooth collision surfaces (4 m stations) the player and the audit stand on
                 if p.layer != "collision" or p.mat not in ("collision_asphalt", "collision_curb", "collision_paving",
                                                              "collision_grass"):
                     continue
-            elif p.layer not in ("road", "paved") or p.mat.startswith("collision") or p.mat.startswith("marking"):
+            elif p.layer not in layers or p.mat.startswith("collision") or p.mat.startswith("marking"):
                 continue
             A = p.V[p.T]
             nrm = np.cross(A[:, 1] - A[:, 0], A[:, 2] - A[:, 0])
@@ -243,6 +243,62 @@ def clear_carriageway(pl, carriage, zsurf, report):
     if drop:
         pl.items[:] = [it for it in pl.items if id(it) not in drop]
     report["props_off_carriageway"] = {"moved": moved, "still_on_road": 0, "removed": left[:20]}
+
+
+def clear_under_decks(pl, parts, report):
+    """Ground-standing poles whose shaft would pierce a bridge deck above them are removed with everything stacked
+    on the same base (ADR 0076, owner 2026-11-10: "a lamp stands in the middle of the lane" on the Andersa
+    viaduct - a 12 m lamp of the road below came up through the deck). Lamps along a road that passes under a
+    viaduct are placed by the same rule as anywhere else; under the deck there is no room for the column."""
+    deck = SurfaceTop(parts, layers=("bridge",))
+    groups = {}
+    for it in pl.items:
+        groups.setdefault((round(it["e"], 2), round(it["n"], 2)), []).append(it)
+    drop, removed = set(), []
+    for (e, n), items in groups.items():
+        base = [it for it in items if it["p"].startswith(GROUND_PROPS)]
+        if not base:
+            continue
+        b = min(base, key=lambda it: it["z"])
+        h = S.ground_prop_height(b["p"])
+        r = 0.6
+        zs = [deck.top(e + dx, n + dy) for dx, dy in ((0, 0), (r, 0), (-r, 0), (0, r), (0, -r))]
+        zs = [z for z in zs if math.isfinite(z)]
+        if zs and any(b["z"] + 0.5 < z < b["z"] + h + 0.5 for z in zs):
+            drop.update(id(it) for it in items)
+            removed.append({"p": b["p"], "at": [round(e, 1), round(n, 1)], "base_z": round(b["z"], 2),
+                            "deck_z": round(max(zs), 2), "src": b.get("src", "")})
+    if drop:
+        pl.items[:] = [it for it in pl.items if id(it) not in drop]
+    report["poles_under_decks"] = {"removed": len(removed), "items": removed[:40]}
+
+
+def clear_level_carriageways(pl, parts, report):
+    """Ground-standing props whose base stands on a carriageway at its own level are removed with everything
+    stacked on them (ADR 0076). clear_carriageway works on the 2D footprint of the ground roads only: a lamp of
+    one deck carriageway placed 0.6 m beyond its edge landed in the lane of the carriageway laid abreast of it,
+    and a ground lamp at a junction corner under another ribbon stayed (consistency.prop_on_carriageway: 2).
+    Same criterion as that check: carriageway under the base and under 4 points PROP_INSET_M around it, within
+    DZ_M of the base height, nothing else (kerb, sidewalk, island) on top."""
+    from roads import consistency as CQ
+    idx = CQ.SurfaceIndex(parts)
+    groups = {}
+    for it in pl.items:
+        groups.setdefault((round(it["e"], 2), round(it["n"], 2)), []).append(it)
+    ring = [(0.0, 0.0), (CQ.PROP_INSET_M, 0.0), (-CQ.PROP_INSET_M, 0.0), (0.0, CQ.PROP_INSET_M), (0.0, -CQ.PROP_INSET_M)]
+    drop, removed = set(), []
+    for (e, n), items in groups.items():
+        base = [it for it in items if it["p"].startswith(CQ.GROUND_PROPS)]
+        if not base:
+            continue
+        b = min(base, key=lambda it: it["z"])
+        lab = idx.classify(np.array([[e + dx, n + dy, b["z"]] for dx, dy in ring]))
+        if all(x == "carriageway" for x in lab):
+            drop.update(id(it) for it in items)
+            removed.append({"p": b["p"], "at": [round(e, 1), round(n, 1)], "src": b.get("src", "")})
+    if drop:
+        pl.items[:] = [it for it in pl.items if id(it) not in drop]
+    report["props_on_level_carriageway"] = {"removed": len(removed), "items": removed[:40]}
 
 
 # ------------------------------------------------------------------------------------------- lamps

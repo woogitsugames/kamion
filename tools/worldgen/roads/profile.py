@@ -304,7 +304,7 @@ def _surface_offset(e, roof, lat):
     return -S.CROSSFALL * abs(lat) if roof else e * lat
 
 
-def adjacent_targets(c, ground: list, el) -> dict:
+def adjacent_targets(c, ground: list, el, min_dot: float = 0.9) -> dict:
     """Stations of chain c (not elevated) whose edge touches or overlaps a roughly parallel, already solved ground
     road (gap between the edges < ADJ_TOUCH_M): the centreline height that puts this edge on that road's surface.
     Two carriageways side by side (a merge, an on-ramp along a main road) share their edge height; the NMT alone
@@ -330,7 +330,7 @@ def adjacent_targets(c, ground: list, el) -> dict:
             if s_o <= 0.0 or s_o >= g.length:
                 continue
             io = g.idx(s_o)
-            if abs(float(np.dot(g.line.t[io], t))) < 0.9:
+            if abs(float(np.dot(g.line.t[io], t))) < min_dot:
                 continue
             hw_o = float(g.hw_at(s_o))
             if abs(lat_o) - hw_o - float(c.hw[i]) >= S.ADJ_TOUCH_M:
@@ -347,6 +347,39 @@ def adjacent_targets(c, ground: list, el) -> dict:
     return out
 
 
+ABREAST_TIE_DOT = 0.7        # = the parallel test of network._push_abreast (a merge closes at up to ~45 deg)
+SHIFTED_END_MIN_M = 0.3      # chain ends nearer than this to their node keep the node height
+
+
+def shifted_end_heights(net, ground: dict) -> dict:
+    """{(chain id, 0 | -1): height} for ground chain ends that no longer sit on their node (fork shifts): the
+    surface of the widest unshifted ground chain ending at that node (its end section extended as a plane: end
+    height + grade x distance along + crossfall x lateral) at the shifted end point."""
+    ends = {}
+    for c in net.chains:
+        if c.id not in ground or c.closed or len(c.line.s) < 3:
+            continue
+        for node, e in ((c.node_a, 0), (c.node_b, -1)):
+            d = float(np.hypot(*(c.line.p[e] - net.nodes[node]["xy"])))
+            ends.setdefault(node, []).append((c, e, d))
+    out = {}
+    for node in sorted(ends):
+        stems = [(c, e) for c, e, d in ends[node] if d < SHIFTED_END_MIN_M]
+        moved = [(c, e) for c, e, d in ends[node] if d >= SHIFTED_END_MIN_M]
+        if not stems or not moved:
+            continue
+        st, se = max(stems, key=lambda x: (float(x[0].hw[x[1]]), x[0].id))
+        ce = crossfall(st)[se]
+        P0, t0, n0 = st.line.p[se], st.line.t[se], st.line.n[se]
+        k = min(len(st.z) - 1, max(2, int(5.0 / DENSE)))
+        g = float((st.z[-1] - st.z[-1 - k]) / (st.line.s[-1] - st.line.s[-1 - k])) if se == -1 else             float((st.z[k] - st.z[0]) / (st.line.s[k] - st.line.s[0]))
+        for c, e in moved:
+            v = c.line.p[e] - P0
+            lat = float(np.clip(v @ n0, -float(st.hw[se]), float(st.hw[se])))
+            out[(c.id, e)] = float(st.z[se]) + g * float(v @ t0) +                 _surface_offset(0.0 if np.isnan(ce) else float(ce), bool(np.isnan(ce)), lat)
+    return out
+
+
 def build_profiles(net, hf: Heightfield) -> dict:
     zn = node_heights(net, hf)
     stats = {}
@@ -359,6 +392,34 @@ def build_profiles(net, hf: Heightfield) -> dict:
             continue
         c.z, stats[c.id] = chain_profile(c, hf, zn.get(c.node_a), zn.get(c.node_b), rmin_of[c.id], el_of[c.id])
         ground[c.id] = c.z
+    # 1c) chain ends moved off their node by network.align_forks / abreast_forks (ADR 0074 / 0076) start on the
+    #     surface of the carriageway they leave, not at the node height: the Andersa -> Rondo Putry link starts
+    #     3.25 m right of and 2.4 m before the node, where the 3-lane approach (grade + 2 % crossfall) is 0.11 m
+    #     below the node height -> a 0.2 m ramp over 3 m under the right wheels (route_start s = 1408 m)
+    zend = shifted_end_heights(net, ground)
+    for c in net.chains:
+        if (c.id, 0) in zend or (c.id, -1) in zend:
+            c.z, stats[c.id] = chain_profile(c, hf, zend.get((c.id, 0), zn.get(c.node_a)),
+                                             zend.get((c.id, -1), zn.get(c.node_b)), rmin_of[c.id], el_of[c.id])
+            stats[c.id]["shifted_end_dz"] = {("a" if e == 0 else "b"): round(v - zn[n_], 3)
+                                             for e, n_ in ((0, c.node_a), (-1, c.node_b))
+                                             for v in [zend.get((c.id, e))] if v is not None}
+            ground[c.id] = c.z
+    # 1b) a ground chain laid abreast of another ground road (network.abreast_forks, ADR 0076) takes that road's
+    #     surface height at the shared edge, like an elevated ramp does in step 3
+    by_id = {c.id: c for c in net.chains}
+    for c in net.chains:
+        nb = by_id.get(c.meta.get("abreast_of"))
+        if c.id not in ground or nb is None or nb.id not in ground:
+            continue
+        nb.e = crossfall(nb)
+        adj = adjacent_targets(c, [nb], el_of[c.id])
+        if adj:
+            c.z, stats[c.id] = chain_profile(c, hf, zend.get((c.id, 0), zn.get(c.node_a)),
+                                             zend.get((c.id, -1), zn.get(c.node_b)), rmin_of[c.id], el_of[c.id],
+                                             adj=adj)
+            stats[c.id]["adjacent_edge"] = {"stations": len(adj)}
+            ground[c.id] = c.z
     # 2) grade separation: deck heights over the ground roads
     req = clearance_requirements(net, el_of, ground)
     ground_chains = [c for c in net.chains if c.id in ground]
@@ -377,6 +438,14 @@ def build_profiles(net, hf: Heightfield) -> dict:
             zb = float(np.mean(pending[c.node_b]))
         el = el_of[c.id] if (c.id in req or za is not None or zb is not None) else None
         adj_of[c.id] = adjacent_targets(c, ground_chains, el_of[c.id])
+        # an embankment ramp (OSM layer >= 1, no structure) that a ground carriageway merges into / diverges from
+        # (network.abreast_forks: the carriageways overlap before the node) is on that carriageway's level over the
+        # overlap, not on the straight descent to the node: the Putry viaduct ramp was 1.0 m above the on-ramp from
+        # the roundabout 30 m before their node, the 45 m junction patch between them a 0.6 m ridge (MA-012)
+        tied = [g for g in ground_chains if g.meta.get("abreast_of") == c.id]
+        if tied:
+            for i, zt in adjacent_targets(c, tied, c.bridge, min_dot=ABREAST_TIE_DOT).items():
+                adj_of[c.id].setdefault(i, zt)
         c.z, stats[c.id] = chain_profile(c, hf, za, zb, rmin_of[c.id], el, req.get(c.id), adj_of[c.id])
         for node, zz in ((c.node_a, c.z[0]), (c.node_b, c.z[-1])):
             if zn.get(node) is None:
