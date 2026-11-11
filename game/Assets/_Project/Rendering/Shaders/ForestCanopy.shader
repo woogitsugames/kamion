@@ -69,8 +69,8 @@ Shader "Kamion/Forest Canopy"
                 half3 n = (half3)TransformObjectToWorldNormal(v.normalOS);
                 o.normalWS = n;
                 o.ambient = SampleSH(n);
-                half3 V = (half3)GetWorldSpaceNormalizeViewDir(o.positionWS);
-                half3 r = reflect(-V, n);
+                half3 vd = (half3)GetWorldSpaceNormalizeViewDir(o.positionWS);
+                half3 r = reflect(-vd, n);
                 o.envFog.rgb = GlossyEnvironmentReflection(r, 1.0h - _Smoothness, 1.0h);
                 o.envFog.a = ComputeFogFactor(o.positionCS.z);
                 return o;
@@ -79,7 +79,7 @@ Shader "Kamion/Forest Canopy"
             {
                 half3 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, i.uv).rgb * _BaseColor.rgb;
                 half3 n = normalize(i.normalWS);
-                half3 V = (half3)GetWorldSpaceNormalizeViewDir(i.positionWS);
+                half3 vd = (half3)GetWorldSpaceNormalizeViewDir(i.positionWS);
                 // URP InitializeBRDFData, metallic 0.
                 half oneMinusReflectivity = kDielectricSpec.a;
                 half reflectivity = 1.0h - oneMinusReflectivity;
@@ -90,14 +90,14 @@ Shader "Kamion/Forest Canopy"
                 half roughness2 = max(roughness * roughness, HALF_MIN);
                 half grazingTerm = saturate(_Smoothness + reflectivity);
                 // URP GlobalIllumination + EnvironmentBRDF (environment radiance per vertex).
-                half NoV = saturate(dot(n, V));
+                half NoV = saturate(dot(n, vd));
                 half fresnelTerm = Pow4(1.0h - NoV);
                 half surfaceReduction = 1.0h / (roughness2 + 1.0h);
                 half3 color = i.ambient * diffuse + i.envFog.rgb * (surfaceReduction * lerp(specular, grazingTerm.xxx, fresnelTerm));
                 // URP LightingPhysicallyBased + DirectBRDFSpecular, no shadow (always past the fade).
                 Light L = GetMainLight();
                 half NdotL = saturate(dot(n, L.direction));
-                float3 H = SafeNormalize(float3(L.direction) + float3(V));
+                float3 H = SafeNormalize(float3(L.direction) + float3(vd));
                 half NoH = saturate(dot(float3(n), H));
                 half LoH = saturate(dot(float3(L.direction), H));
                 float d = NoH * NoH * (roughness2 - 1.0h) + 1.00001f;
