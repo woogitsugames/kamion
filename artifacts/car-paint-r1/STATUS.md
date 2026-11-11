@@ -92,3 +92,6 @@
 
 - Step31 COMPLETE G: independentROOT finalSCOPED PASS REVIEW.md received/read (all324R3+231XML+GPU/sourcepins independentlychecked), forceadded with finalREPORT/ADR. Fullbundle incrementalcopy to main /E /XJ verified allsourcefiles present/sizesmatch; this is evidence only, no main source edit/merge/push. Workingtree clean after finalcommit. DeviceGPU/combined-main integration UNVERIFIED; all limits retained. Renewed diag6HOLD invalidates13:58release, no Unity active/queued. DCPU/source ownership remainsF, no Dwrite.
 - NEXT COMMAND: leader integrates additive CARPAINT/linearPearl/materialdefs and regenerates products; this worker standbyCPU until explicit dispatch. No new Unity/source work for0108/0109 before currentD/E queue perROOT.
+
+- Step32 READ-ONLY D review atROOTrequest: read D92bc26af plan/bothinactivepatches, originalS10D/source and all6reference photos; wrote D-SCOPE-REVIEW.md in OWN G artifacts only. Compact source/tier/candidate/proof table covers7wear requirements. Found authoredmark x=.5 ->wheelmask0 (inclauthoredline default), and no dedicatedbusstopoil rule; not actualabsence/visualclaim. Dproduction/cache/patches untouched; Gimplementation/REPORT/validation unchanged. No Unity.
+- NEXT COMMAND: send review toF/ROOT, docs-onlyWIPcommit/copy; standbyCPU.0108/0109 remain queued AFTER D/E, no newsource/Unity untildispatch.
