@@ -71,3 +71,27 @@ C proved empty-override harness parity (max 2 LSB noise). Both dithers off gave
 banding and was rejected. Pre-LUT sky dither off plus final dither retained and
 RCAS off is under edge/sharpness validation; original route exposure is healthy.
 NEXT COMMAND: review A calibrated frames, B revised silhouettes/scene metrics and C edge/highlight diagnostics; keep the F→G→E→D queue and 0095 gate.
+
+## Step 6 — real 0095 merge and focused review findings
+Main advanced to 232fbada, with actual merge 471438fb (ADR0095). D's dependency
+is now satisfied; dispatch order remains F, G, E, D as directly instructed.
+A/B/C retain their fixed 4f7 baselines; future worktrees start from current main.
+B's missing-Fab-hook suspicion was checked and retracted: streetscape/stage.py
+line180 calls FD.apply, invoked by roads/build_world.py SS.run. B's actual nested
+furniture.megascans has 15 available, 320 props, 954 replacements, 197 covers.
+No source correction was needed or made.
+A's first calibrated 236-frame matrix hits both remiza RGB bands and screen
+reference range. Reviewed all 59 Low/High overcast matched pairs and key full
+960 pairs: found curtain-family regression (dock3 ~55→112 sRGB), now separately
+recalibrated against accepted 0092 cloth appearance. Canonical truck cache was
+refreshed after that matrix: EditMode226/226 passes, GIS358 passes/2xfail before
+last pigment-only change. Mixed vehicle fixtures must not be presented as a
+matched whole-frame zero-cost proof; old-fixture matrix and canonical tests are
+separately labeled. Final curtain frames/testing remain pending.
+B focused same-frame DK8 Low p10/p50 improves18.64/31.15→32.72/43.36; lt16
+5.43%→0. No draw increases in five Low/High focus cameras; full matrix pending.
+C shadow split/bias tests improve trailer stair bands; generic glazing offsets
+did not affect the actual hero glass material. C owns a tiny additive explicit
+_ArchitecturalGlass setter in RegionImporter for kp_glass_block and is testing
+bounded receiver bias; A notified of the separate common-file ownership.
+NEXT COMMAND: finish independent A/B/C visual/code reviews and final tests; start F on the first free slot from latest main, then G/E/D.
