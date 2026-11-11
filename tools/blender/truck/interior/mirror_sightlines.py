@@ -30,6 +30,7 @@ def main():
     parser.add_argument("--include-exterior", action="store_true", help="include opaque exterior FBX geometry")
     parser.add_argument("--open-housing-ablation", action="store_true", help="diagnostic only: omit flat forward housing caps")
     parser.add_argument("--housing-recess-mm", type=float, default=0, help="diagnostic only: recess backing behind adjustable glass")
+    parser.add_argument("--preview-dir", default="", help="clay/magenta source visibility renders, NOT game-material evidence")
     args = parser.parse_args(argv)
     saved = sys.argv
     sys.argv = [saved[0], "--", "--out", "artifacts", "--no-backdrop"]
@@ -42,6 +43,7 @@ def main():
                and EX.group_of(o.name) not in ("CAB_ShellPlaceholder", "CAB_Glass_Windows", "CAB_Glass")
                and not EX.group_of(o.name).startswith("MIRROR_")]
     BI.fit_to_exterior(objects)
+    bpy.context.view_layer.update()
     manifest = json.load(open(os.path.join(BI.REPO, "art-source/truck/exterior/export/truck_exterior_manifest.json")))
     lod = manifest["lods"]["LOD0"]
     def axis(v):
@@ -84,6 +86,13 @@ def main():
                         moved += 1
                         break
         vertices.extend(world_points)
+        if args.preview_dir and obj.name == "CAB_Body_LOD0" and args.housing_recess_mm:
+            inverse = obj.matrix_world.inverted()
+            if len(mesh.vertices) != len(obj.data.vertices):
+                raise ValueError("Imported CAB_Body has unexpected modifiers; cannot preview by vertex index")
+            for vertex, world in zip(obj.data.vertices, world_points):
+                vertex.co = inverse @ world
+            obj.data.update()
         for face in mesh.polygons:
             points = [world_points[i] for i in face.vertices]
             face_normal = (points[1] - points[0]).cross(points[2] - points[0]).normalized()
@@ -123,6 +132,10 @@ def main():
             if abs(turn.angle) > math.radians(10.0001):
                 raise ValueError(f"{role}: adjuster exceeds builder limit")
             x, y = turn @ x, turn @ y
+            if args.preview_dir and args.include_exterior:
+                from mathutils import Matrix
+                obj = bpy.data.objects[role + "_LOD0"]
+                obj.matrix_world = Matrix.Translation(centre) @ turn.to_matrix().to_4x4() @ Matrix.Translation(-centre) @ obj.matrix_world
         width, height = info["size_m"][:2]
         blockers = Counter()
         blocker_gaps = {}
@@ -147,6 +160,50 @@ def main():
     with open(args.report, "w") as report:
         json.dump(output, report, indent=2)
     print("MIRROR_SIGHTLINES", json.dumps(output))
+    if args.preview_dir:
+        preview(args.preview_dir, objects, roles, axis, offset)
+
+
+def preview(directory, opaque, roles, axis, offset):
+    """Uniform clay geometry and magenta glass distinguish occlusion from missing mirror texture content."""
+    allowed = {obj.name for obj in opaque}
+    clay = bpy.data.materials.new("Audit_Clay")
+    clay.diffuse_color = (.18, .18, .18, 1)
+    glass = bpy.data.materials.new("Audit_Glass_Magenta")
+    glass.diffuse_color = (1, 0, 1, 1)
+    for obj in bpy.data.objects:
+        is_mirror = obj.name.startswith("MIRROR_")
+        if obj.type != "MESH":
+            continue
+        obj.hide_render = obj.name not in allowed and not is_mirror
+        material = glass if is_mirror else clay
+        for i in range(len(obj.data.materials)):
+            obj.data.materials[i] = material
+        if not obj.data.materials:
+            obj.data.materials.append(material)
+    scene = bpy.context.scene
+    scene.render.engine = "BLENDER_WORKBENCH"
+    scene.display.shading.light = "STUDIO"
+    scene.display.shading.color_type = "MATERIAL"
+    scene.display.shading.show_shadows = False
+    scene.display.shading.show_cavity = True
+    scene.render.resolution_x, scene.render.resolution_y = 960, 444
+    scene.render.resolution_percentage = 100
+    scene.render.image_settings.file_format = "PNG"
+    os.makedirs(directory, exist_ok=True)
+    for side in ("L", "R"):
+        centre = sum((axis(roles["MIRROR_" + name + side]["pivot_unity_vehicle"]) + offset
+                      for name in ("Main", "Wide")), Vector()) / 2
+        camera = bpy.data.objects.new("AuditEye_" + side, bpy.data.cameras.new("AuditEye_" + side))
+        scene.collection.objects.link(camera)
+        camera.location = BI.EYE
+        camera.rotation_euler = (centre - BI.EYE).to_track_quat("-Z", "Y").to_euler()
+        camera.data.sensor_fit = "VERTICAL"
+        camera.data.sensor_height = 24
+        camera.data.lens = 24 / (2 * math.tan(math.radians(20)))
+        scene.camera = camera
+        scene.render.filepath = os.path.abspath(os.path.join(directory, "mirror-" + side + ".png"))
+        bpy.ops.render.render(write_still=True)
 
 
 if __name__ == "__main__":
