@@ -35,3 +35,6 @@
 
 - Step11: source default candidate now HighFSRsharp0withEXPLICIToverride(mustnotfallbackURPdefault), Highsplits.2/.55 and Med/Highbias.4/.3, map sizes/counts andLowunchanged. PreLUTsky dither off onlypost tiers; finalURPdither retained. Clear-onlywhiteClip.9 shoulder preserves fixed low/midanchors, noEV/toe/Lowchange. Revision98 migrates shippedprofile; bake next to prove actual emptyRq (notonlyoverride). Glasssmalloffset remains diagnostic0default; paneShadowCaster omission rejected+removed.
 - NEXT COMMAND: pwsh -File artifacts/light-r12/bake-policy.ps1; then emptyRq clear ROI proof before fullaftermatrix.
+
+- Step12: Unitybaked revision98 profile +High/MediumURPassets from code; LowURP unchanged, actualHighFSRoverrideTrue/0. Restored only unintendedDusk/LowSunserialization side effects. Fullafter wrapper now restoresonlyM_Sky/ProjectSettings, preserving intended bakedpolicies. Three-wayglassdiagnostic realtimeOff alone fixes triangles, bakedOff alone doesnot; root authorized8/12cm sweep after rejection2/4cm. Canonicalimportflag assignedONLYkp_glass_block, receiverShadowCasterunchanged.
+- NEXT COMMAND: inspect actual8cmnormal result; emptyRq High clear ROIs after bakeddefaults, then canonicalimport and finalmatrix.

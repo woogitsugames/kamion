@@ -121,7 +121,7 @@ namespace Game.Rendering
             // Pre-LUT sky noise is amplified by grading/RCAS; post tiers keep the final URP dither instead.
             bool skyDither = RenderOverrides.SkyDither ?? !t.postProcessing;
             Shader.SetGlobalFloat(k_SkyDitherOff, skyDither ? 0f : 1f);
-            Shader.SetGlobalFloat(k_GlassShadowBias, Mathf.Clamp(RenderOverrides.GlassShadowBias ?? 0f, 0f, 0.08f));
+            Shader.SetGlobalFloat(k_GlassShadowBias, Mathf.Clamp(RenderOverrides.GlassShadowBias ?? 0f, 0f, 0.12f));
 #if UNITY_EDITOR
             if (RenderOverrides.Any) Debug.Log($"[RQ_CAMERA] skyDitherOff={Shader.GetGlobalFloat(k_SkyDitherOff)} glassShadowBias={Shader.GetGlobalFloat(k_GlassShadowBias)}");
             if (RenderOverrides.GlassShadowBias.HasValue)

@@ -19,8 +19,8 @@ foreach ($tier in @('Low','High')) {
         if ($LowSunOnly -or $Targeted) { $argsQa += @('-Cameras', $cameras) }
         & pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/visual-qa.ps1 @argsQa
         if ($LASTEXITCODE -ne 0) { throw "Capture failed: $tier $light" }
-        # Unity setup/QA writes tier assets; restore only these known generated policy side effects.
-        git restore -- game/ProjectSettings game/Assets/_Project/Rendering/Settings
+        # Preserve intentionally baked policy assets; restore only known QA side effects.
+        git restore -- game/ProjectSettings game/Assets/_Project/Rendering/Settings/Lighting/M_Sky.mat
         if ($LASTEXITCODE -ne 0) { throw 'Settings restore failed.' }
     }
 }
