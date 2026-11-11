@@ -16,3 +16,4 @@ Konwersja CC0 zakończona pod heavy, exit 0, slot zwolniony. Crop 614 px z 2048 
 Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Scan1 BuildBatch i InstallBatch: exit 0, markery OK. Rzeczywiste LOD: korekta UV 4278/862/623 wierzchołków, mnożnik 0,416667; liczby vertices/indices bez zmian. Alfa High porównana z oryginalnym obiektem LFS: AE=0, zachowana dokładnie. Następny krok: świeże rendery scan1, potem budżety; kontrolny generator świata osobno pod heavy, produkty obce zostaną cofnięte.
+Zapisano result-0112-scan1 Low clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
