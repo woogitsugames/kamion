@@ -6,3 +6,6 @@ Start pętli: 2026-11-11 21:31 Europe/Warsaw. Planowany koniec: 2026-11-12 21:31
 Historyczny raport ADR 0104 zachowano w history-0104; nowe dowody powstają w baseline i następnie result-0112. Nie traktować starego katalogu after jako dowodu nowej rundy.
 Wykryto near clip V/VI 1,881/1,973 m, który może wycinać dach przed wirtualnym okiem; render bazowy w toku. Kopia venv z historycznego worktree ma nieaktualny interpreter, dlatego Python uruchamiany z UV_PROJECT_ENVIRONMENT=.venv-cab.
 Następny krok: natywne RT baseline przez Game.Editor.VisualQA.CabMirrorAudit.Run, potem korekta near clip i cullingu.
+Obejrzano baseline Low clear: cab-mirrors-left i cab-mirror-front. Wspornik rzeczywiście przechodzi przed dolnym szkłem. Odrębny pomiar źródłowej geometrii (2400 promieni/szkło) wykrył 73/2400 WideL i 131/2400 WideR zasłoniętych przez dolne ramiona. To udział całej powierzchni, nie dolnej połowy kadru z recenzji.
+Próby przesunięcia mocowania przy głowicy za jej tylną płaszczyznę o 80/160/240 mm dały 0 trafień w ramiona dla wszystkich czterech szkieł. Są to wyłącznie promienie na geometrii źródłowej, wymagają potwierdzenia w eksporcie i renderze Unity.
+Następny krok: audyt baseline natywnych RT (oczekuje na slot), potem wprowadzić bliższy near clip V/VI i ukrywanie wnętrza ze sprawdzeniem przywrócenia stanu rendererów.
