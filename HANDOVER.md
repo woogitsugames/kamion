@@ -1,6 +1,7 @@
 # HANDOVER — kamion, sesja 9 (start 2026-11-11 00:30 lokalnie / 23:30 UTC; limit 5 h reset 04:30 UTC)
 
 ## Najpierw
+- 0084 po regeneracji: pytest gis 323 ✓ / 0 ✗.
 - Trigger 01:23 (limit 42 %): 0077 w toku (końcowy pytest), 0091 r1 import, 0092 runda; 0084 GPT scalone.
 - Zasady s9: `docs/owner/START-PROMPT-S9.md` — max 3 agentów naraz, trigger co godzinę (CronCreate w sesji s9, :17, wygasa po 7 dniach / z zamknięciem sesji).
 - **main = `2ab23b2` (+ ten commit), wypchnięty.** Scalone w s9 (po recenzji `docs/reports/visual/REVIEW-2026-11-11-s9.md`, wszystkie PASS/PASS warunkowy): 0080 światło r11 `ddda766` → 0071 Kwadrat r11 `a00a5a2` → 0081 zabudowa r2 `24964e9` → 0070 remiza r6 `95eb72f` → 0078 auta r10b `2ab23b2`. Konflikty: `WorldPbrMaterials.cs` unia (zacieki `weather`‖`runoff`; `_Tile` = `set_tile || elementScan || atlas`), `build_all.py` unia importów, `materials_spec.json` unia JSON, `street_props.glb` + generated = ours (regen). Worktree tych 5 + 0083 usunięte (artifacts w main, gałęzie skasowane).
@@ -10,7 +11,7 @@
 | zadanie | ADR | worktree | STATUS | stan s9 |
 |---|---|---|---|---|
 | P0 korytarz + ratchety | 0076 | usunięty | artifacts/roads-p0-r10 | SCALONE `da5dd11` (main po s9-scaleniach: pytest gis 246/3 znane przed 0076); main po 0076 zregenerowany: pytest gis 249 ✓ / 0 ✗ (log `artifacts/logs/s9-main-regen-0076.log`); recenzja `docs/reports/visual/REVIEW-2026-11-11-s9-0076.md`: PASS warunkowy scalenia, węzły vs ortofoto FAIL (łaty bez linii P-1, nosy klinów, P-21, latarnia na igłowej wysepce E −774,5 N 77,5) → ADR 0093 |
-| wysepki z OSM | 0077 | agent-a2afb96d89584cca6 | tools/worldgen/fidelity/STATUS_islands_r10.md | GOTOWE `c507ba2f` (steep_grass 16→4, ścianki 21→9, override s1060); recenzja `docs/reports/visual/REVIEW-2026-11-11-s9-0077.md`: PASS warunkowy, nowa wada #1 zatopione krawężniki na jezdni → pierwszy punkt 0093; scalenie po pytest main (0084) |
+| wysepki z OSM | 0077 | usunięty | artifacts/islands-r10 | SCALONE `0f6a5cee` (konflikty kodu z 0076: pipeline.py — stats 0076 + GO.build przed cull_sides; meshing.py — flaga flush 0076 + stacja 0077; BASELINE fidelity z 0077); regeneracja + pytest main w tle `artifacts/logs/s9-main-regen-0077.log` → potem start 0093 |
 | zabudowa r3 (domy dwuspadowe, balkony, tynk, cegła) | 0091 | buildings-r11 (z d205d4a) | artifacts/buildings-r11 | s9: agent Fable start 01:05 |
 | Kwadrat Park r12 (firanka matowa, szlaban domknięty, dryf do paneli) | 0092 | kwadrat-r12 (z d8e929ca) | artifacts/kwadrat-r12 | s9: agent Fable start ~01:35 |
 | import Megascans R1 | 0084 | gpt-megascans (NIE usuwać — Codex wciąż aktywny) | artifacts/megascans-r1/REPORT.md | SCALONE `98e54e47` (REPORT: lokalnie PASS, skok sceny FAIL, Low lokalnie +4 draw/+4k tris; normal mapy Fab wyłączone; High 1024 i telefon UNVERIFIED); konflikt stage.py = unia (yard wear 0071 + FD.apply); regeneracja main w tle `artifacts/logs/s9-main-regen-0084.log`; GPT następnie Q1 0086 / Q2 0088 |
