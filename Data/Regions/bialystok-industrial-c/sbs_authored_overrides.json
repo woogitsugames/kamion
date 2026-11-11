@@ -108,9 +108,9 @@
     "sbs-g3-a-454716650857984": {
       "horizon_y_fraction": 0.63,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. Photo visibly on deck: absolute U = interpolated existing viaduct station road altitude 144.914 + nominal eye 1.7m; distance to deck axis 4.70m; c:w177895177:1883101822-1883062831. This changes camera only, not the deck; road/NMT discrepancy is not hidden.",
-      "east_delta_m": -1.9013,
-      "north_delta_m": -0.4228,
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. Photo visibly on deck: absolute U = interpolated existing viaduct station road altitude 144.914 + nominal eye 1.7m; distance to deck axis 4.70m; c:w177895177:1883101822-1883062831. This changes camera only, not the deck; road/NMT discrepancy is not hidden. R2: manual 2.95m SW lateral correction from original GPS near guard rail into photographed right lane; deck normal, not world geometry change.",
+      "east_delta_m": -3.3013,
+      "north_delta_m": -3.0228,
       "absolute_u_m": 146.6139,
       "eye_height_m": 1.7
     },
@@ -262,7 +262,9 @@
     "sbs-g3-b-494288258686575": {
       "horizon_y_fraction": 0.66,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R2: photo visibly on Putry deck. Existing generated bridge road asphalt vertical ray at stored EN hits absolute U 140.188m (artifacts/sbs-gate3/deck-ray-heights.json), add nominal eye 1.7m; keep computed GPS because original GPS is outside deck asphalt. Camera only; WORKING_VALUE eye, no world modification.",
+      "absolute_u_m": 141.888,
+      "eye_height_m": 1.7
     },
     "sbs-g3-b-182011943700132": {
       "horizon_y_fraction": 0.62,

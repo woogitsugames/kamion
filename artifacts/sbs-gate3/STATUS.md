@@ -31,3 +31,6 @@ NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 15
 
 Step 11: EditMode 226/226; first matrix 160 renders/sheets completed and archived under r0 (40 per state). Inspected initial pairs: definite below-deck camera error on 4 G3-A photos. Eight original/SfM position/heading probes rendered and inspected; original GPS better for richlv close viaduct and elevated sequences, SfM optical heading retained. Authored 4 deck heights from existing deck stations + 1.7m eye (world untouched), original-GPS deltas for richlv/4 elevated frames. R1 camera JSON generated; 9 focused tests pass.
 NEXT: pwsh scripts/sbs-gate3.ps1
+
+Step 12: R1 matrix complete (160/160); inspected representative corrected sheets. Two remaining fixes authored: source 454716650857984 moved 2.95m laterally from rail into lane; source 494288258686575 raised to measured road asphalt U 140.188 + eye 1.7. Exact pose diff asserts only these 2 of 40 changed, so 38 per state are retained; R1 originals for the 2 preserved. R2 rerenders 2 cameras x 4 states, no world changes.
+NEXT: pwsh artifacts/sbs-gate3/rerender-r2.ps1
