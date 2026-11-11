@@ -11,3 +11,6 @@
 
 - Step4: artifact-only pearl Color-property GPU diagnostic prepared from the actual WorldPBR shader contract (no production edits). Probe attempt stopped by PHONE_RUN guard before Unity launched. Root now also requires GPT_UNITY_HOLD plus explicit ROOT release; both wrappers enforce both locks. Found floating-origin caveat: per-instance dirt seed must be relative to existing GI region corner, not raw world origin. PBR still regenerating.
 - NEXT COMMAND: finish baseline-pbr.log; wait explicit ROOT Unity release, then baseline.ps1 -Phase Import.
+
+- Step5: canonical Python PBR regeneration complete (471 s); no production source changes. Saved actual baseline27 car/van meshes and1007 instances. Synthetic22-segment LOD0 plus removal of redundant film primitives predicts fleet all-LOD0 triangles4057998 to4036054; per-prototype -80..+88, LOD1 film -44, LOD2 unchanged. This is source-model accounting only, NOT visible route or GPU proof. Parent authorized existing LOD0 range approach; actual baseline and visual choice still pending explicit Unity release.
+- NEXT COMMAND: after explicit ROOT Unity release and both locks absent, baseline.ps1 -Phase Import; then Fixtures, pearl-probe.ps1, Capture.

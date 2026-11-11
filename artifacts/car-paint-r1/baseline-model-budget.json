@@ -1,0 +1,1466 @@
+{
+  "note": "Authored per-prototype counts, not visible draw/GPU costs. Instance transforms source matches InstanceImporter e,z,n TRS.",
+  "source_sha256": "6ffd1214887b39e00e77cd0cbea67dced58c3e51b1deae7082b94ab9ad285720",
+  "models": {
+    "car_hatch_silver": [
+      {
+        "triangles": 3936,
+        "primitives": 13,
+        "materials": {
+          "car_dirt_1": 328,
+          "car_glass": 4,
+          "car_glass_tint": 58,
+          "car_interior": 259,
+          "car_lamp": 162,
+          "car_light_head": 80,
+          "car_light_tail": 95,
+          "car_paint_silver": 1676,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 566,
+          "car_tyre": 428,
+          "rim_dark": 264
+        }
+      },
+      {
+        "triangles": 864,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_1": 44,
+          "car_glass": 16,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_silver": 450,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 112,
+          "rim": 20,
+          "rim_dark": 32,
+          "tyre": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_silver": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_hatch_grey": [
+      {
+        "triangles": 3976,
+        "primitives": 13,
+        "materials": {
+          "car_dirt_3": 368,
+          "car_glass": 4,
+          "car_glass_tint": 58,
+          "car_interior": 259,
+          "car_lamp": 162,
+          "car_light_head": 80,
+          "car_light_tail": 95,
+          "car_paint_grey": 1676,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 566,
+          "car_tyre_dusty": 428,
+          "rim_dark": 264
+        }
+      },
+      {
+        "triangles": 864,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_3": 44,
+          "car_glass": 16,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_grey": 450,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 112,
+          "rim": 20,
+          "rim_dark": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_grey": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_hatch_black": [
+      {
+        "triangles": 3976,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_3": 368,
+          "car_glass": 4,
+          "car_glass_tint": 58,
+          "car_interior": 259,
+          "car_lamp": 162,
+          "car_light_head": 80,
+          "car_light_tail": 95,
+          "car_paint_black": 1676,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 566,
+          "car_tyre_dusty": 428,
+          "rim_dark": 160,
+          "rim_dusty": 104
+        }
+      },
+      {
+        "triangles": 864,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_3": 44,
+          "car_glass": 16,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_black": 450,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 112,
+          "rim_dark": 20,
+          "rim_dusty": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_black": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_hatch_white": [
+      {
+        "triangles": 4012,
+        "primitives": 15,
+        "materials": {
+          "car_dirt_1": 328,
+          "car_glass": 4,
+          "car_glass_tint": 58,
+          "car_interior": 259,
+          "car_lamp": 162,
+          "car_light_head": 80,
+          "car_light_tail": 95,
+          "car_paint_white": 1676,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 546,
+          "car_tyre": 428,
+          "rim": 132,
+          "rim_dark": 96,
+          "rim_steel": 132
+        }
+      },
+      {
+        "triangles": 860,
+        "primitives": 11,
+        "materials": {
+          "car_dirt_1": 44,
+          "car_glass": 16,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_white": 450,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 112,
+          "rim": 32,
+          "tyre": 168
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_white": 32,
+          "car_trim": 4,
+          "rim_steel": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_hatch_blue": [
+      {
+        "triangles": 3976,
+        "primitives": 13,
+        "materials": {
+          "car_dirt_2": 368,
+          "car_glass": 4,
+          "car_glass_tint": 58,
+          "car_interior": 259,
+          "car_lamp": 162,
+          "car_light_head": 80,
+          "car_light_tail": 95,
+          "car_paint_blue": 1676,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 566,
+          "car_tyre_dusty": 428,
+          "rim_dark": 264
+        }
+      },
+      {
+        "triangles": 864,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_2": 44,
+          "car_glass": 16,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_blue": 450,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 112,
+          "rim": 20,
+          "rim_dark": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_blue": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_hatch_red": [
+      {
+        "triangles": 3936,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_1": 328,
+          "car_glass": 4,
+          "car_glass_tint": 58,
+          "car_interior": 259,
+          "car_lamp": 162,
+          "car_light_head": 80,
+          "car_light_tail": 95,
+          "car_paint_red": 1676,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 566,
+          "car_tyre": 428,
+          "rim": 104,
+          "rim_dark": 160
+        }
+      },
+      {
+        "triangles": 864,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_1": 44,
+          "car_glass": 16,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_red": 450,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 112,
+          "rim": 32,
+          "rim_dark": 20,
+          "tyre": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_red": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_sedan_silver": [
+      {
+        "triangles": 4158,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_3": 416,
+          "car_glass": 4,
+          "car_glass_tint": 64,
+          "car_interior": 257,
+          "car_lamp": 152,
+          "car_light_head": 80,
+          "car_light_tail": 97,
+          "car_paint_silver": 1794,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 586,
+          "car_tyre_dusty": 428,
+          "rim_dark": 160,
+          "rim_dusty": 104
+        }
+      },
+      {
+        "triangles": 890,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_3": 44,
+          "car_glass": 18,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_silver": 474,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 112,
+          "rim_dark": 20,
+          "rim_dusty": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 90,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_silver": 36,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_sedan_grey": [
+      {
+        "triangles": 4158,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_3": 416,
+          "car_glass": 4,
+          "car_glass_tint": 64,
+          "car_interior": 257,
+          "car_lamp": 152,
+          "car_light_head": 80,
+          "car_light_tail": 97,
+          "car_paint_grey": 1794,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 586,
+          "car_tyre_dusty": 428,
+          "rim_dark": 160,
+          "rim_dusty": 104
+        }
+      },
+      {
+        "triangles": 890,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_3": 44,
+          "car_glass": 18,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_grey": 474,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 112,
+          "rim_dark": 20,
+          "rim_dusty": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 90,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_grey": 36,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_sedan_black": [
+      {
+        "triangles": 4118,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_1": 376,
+          "car_glass": 4,
+          "car_glass_tint": 64,
+          "car_interior": 257,
+          "car_lamp": 152,
+          "car_light_head": 80,
+          "car_light_tail": 97,
+          "car_paint_black": 1794,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 586,
+          "car_tyre": 428,
+          "rim": 104,
+          "rim_dark": 160
+        }
+      },
+      {
+        "triangles": 890,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_1": 44,
+          "car_glass": 18,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_black": 474,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 112,
+          "rim": 32,
+          "rim_dark": 20,
+          "tyre": 152
+        }
+      },
+      {
+        "triangles": 90,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_black": 36,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_sedan_white": [
+      {
+        "triangles": 4158,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_2": 416,
+          "car_glass": 4,
+          "car_glass_tint": 64,
+          "car_interior": 257,
+          "car_lamp": 152,
+          "car_light_head": 80,
+          "car_light_tail": 97,
+          "car_paint_white": 1794,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 586,
+          "car_tyre_dusty": 428,
+          "rim_dark": 160,
+          "rim_dusty": 104
+        }
+      },
+      {
+        "triangles": 890,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_2": 44,
+          "car_glass": 18,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_white": 474,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 112,
+          "rim_dark": 20,
+          "rim_dusty": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 90,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_white": 36,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_sedan_blue": [
+      {
+        "triangles": 4158,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_2": 416,
+          "car_glass": 4,
+          "car_glass_tint": 64,
+          "car_interior": 257,
+          "car_lamp": 152,
+          "car_light_head": 80,
+          "car_light_tail": 97,
+          "car_paint_blue": 1794,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 586,
+          "car_tyre_dusty": 428,
+          "rim_dark": 160,
+          "rim_dusty": 104
+        }
+      },
+      {
+        "triangles": 890,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_2": 44,
+          "car_glass": 18,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_blue": 474,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 112,
+          "rim_dark": 20,
+          "rim_dusty": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 90,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_blue": 36,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_sedan_red": [
+      {
+        "triangles": 4150,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_1": 376,
+          "car_glass": 4,
+          "car_glass_tint": 64,
+          "car_interior": 257,
+          "car_lamp": 152,
+          "car_light_head": 80,
+          "car_light_tail": 97,
+          "car_paint_red": 1794,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 586,
+          "car_tyre": 428,
+          "rim": 136,
+          "rim_dark": 160
+        }
+      },
+      {
+        "triangles": 898,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_1": 44,
+          "car_glass": 18,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_red": 474,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 112,
+          "rim": 32,
+          "rim_dark": 28,
+          "tyre": 152
+        }
+      },
+      {
+        "triangles": 90,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_red": 36,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_estate_silver": [
+      {
+        "triangles": 4070,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_1": 352,
+          "car_glass": 4,
+          "car_glass_tint": 66,
+          "car_interior": 271,
+          "car_lamp": 152,
+          "car_light_head": 82,
+          "car_light_tail": 89,
+          "car_paint_silver": 1706,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 588,
+          "car_tyre_dusty": 428,
+          "rim": 136,
+          "rim_dark": 180
+        }
+      },
+      {
+        "triangles": 886,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_1": 44,
+          "car_glass": 22,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_silver": 454,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 116,
+          "rim": 32,
+          "rim_dark": 28,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_silver": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_estate_grey": [
+      {
+        "triangles": 4078,
+        "primitives": 13,
+        "materials": {
+          "car_dirt_3": 392,
+          "car_glass": 4,
+          "car_glass_tint": 66,
+          "car_interior": 271,
+          "car_lamp": 152,
+          "car_light_head": 82,
+          "car_light_tail": 89,
+          "car_paint_grey": 1706,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 588,
+          "car_tyre_dusty": 428,
+          "rim_dark": 284
+        }
+      },
+      {
+        "triangles": 878,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_3": 44,
+          "car_glass": 22,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_grey": 454,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 116,
+          "rim": 20,
+          "rim_dark": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_grey": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_estate_black": [
+      {
+        "triangles": 4078,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_3": 392,
+          "car_glass": 4,
+          "car_glass_tint": 66,
+          "car_interior": 271,
+          "car_lamp": 152,
+          "car_light_head": 82,
+          "car_light_tail": 89,
+          "car_paint_black": 1706,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 588,
+          "car_tyre_dusty": 428,
+          "rim_dark": 180,
+          "rim_dusty": 104
+        }
+      },
+      {
+        "triangles": 878,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_3": 44,
+          "car_glass": 22,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_black": 454,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 116,
+          "rim_dark": 20,
+          "rim_dusty": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_black": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_estate_white": [
+      {
+        "triangles": 4114,
+        "primitives": 15,
+        "materials": {
+          "car_dirt_1": 352,
+          "car_glass": 4,
+          "car_glass_tint": 66,
+          "car_interior": 271,
+          "car_lamp": 152,
+          "car_light_head": 82,
+          "car_light_tail": 89,
+          "car_paint_white": 1706,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 568,
+          "car_tyre": 428,
+          "rim": 132,
+          "rim_dark": 116,
+          "rim_steel": 132
+        }
+      },
+      {
+        "triangles": 874,
+        "primitives": 11,
+        "materials": {
+          "car_dirt_1": 44,
+          "car_glass": 22,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_white": 454,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 116,
+          "rim": 32,
+          "tyre": 168
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_white": 32,
+          "car_trim": 4,
+          "rim_steel": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_estate_blue": [
+      {
+        "triangles": 4078,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_2": 392,
+          "car_glass": 4,
+          "car_glass_tint": 66,
+          "car_interior": 271,
+          "car_lamp": 152,
+          "car_light_head": 82,
+          "car_light_tail": 89,
+          "car_paint_blue": 1706,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 588,
+          "car_tyre_dusty": 428,
+          "rim_dark": 180,
+          "rim_dusty": 104
+        }
+      },
+      {
+        "triangles": 878,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_2": 44,
+          "car_glass": 22,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_blue": 454,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 116,
+          "rim_dark": 20,
+          "rim_dusty": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_blue": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_estate_red": [
+      {
+        "triangles": 4078,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_3": 392,
+          "car_glass": 4,
+          "car_glass_tint": 66,
+          "car_interior": 271,
+          "car_lamp": 152,
+          "car_light_head": 82,
+          "car_light_tail": 89,
+          "car_paint_red": 1706,
+          "car_plate": 4,
+          "car_sill": 12,
+          "car_trim": 588,
+          "car_tyre_dusty": 428,
+          "rim_dark": 180,
+          "rim_dusty": 104
+        }
+      },
+      {
+        "triangles": 878,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_3": 44,
+          "car_glass": 22,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_red": 454,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 116,
+          "rim_dark": 20,
+          "rim_dusty": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_red": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_suv_silver": [
+      {
+        "triangles": 4045,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_3": 384,
+          "car_glass": 4,
+          "car_glass_tint": 66,
+          "car_interior": 271,
+          "car_lamp": 150,
+          "car_light_head": 78,
+          "car_light_tail": 90,
+          "car_paint_silver": 1612,
+          "car_plate": 4,
+          "car_sill": 92,
+          "car_trim": 582,
+          "car_tyre_dusty": 428,
+          "rim_dark": 180,
+          "rim_dusty": 104
+        }
+      },
+      {
+        "triangles": 886,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_3": 44,
+          "car_glass": 22,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_silver": 462,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 116,
+          "rim_dark": 20,
+          "rim_dusty": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_silver": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_suv_grey": [
+      {
+        "triangles": 4077,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_3": 384,
+          "car_glass": 4,
+          "car_glass_tint": 66,
+          "car_interior": 271,
+          "car_lamp": 150,
+          "car_light_head": 78,
+          "car_light_tail": 90,
+          "car_paint_grey": 1612,
+          "car_plate": 4,
+          "car_sill": 92,
+          "car_trim": 582,
+          "car_tyre_dusty": 428,
+          "rim_dark": 180,
+          "rim_dusty": 136
+        }
+      },
+      {
+        "triangles": 894,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_3": 44,
+          "car_glass": 22,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_grey": 462,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 116,
+          "rim_dark": 28,
+          "rim_dusty": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_grey": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_suv_black": [
+      {
+        "triangles": 4005,
+        "primitives": 13,
+        "materials": {
+          "car_dirt_1": 344,
+          "car_glass": 4,
+          "car_glass_tint": 66,
+          "car_interior": 271,
+          "car_lamp": 150,
+          "car_light_head": 78,
+          "car_light_tail": 90,
+          "car_paint_black": 1612,
+          "car_plate": 4,
+          "car_sill": 92,
+          "car_trim": 582,
+          "car_tyre": 428,
+          "rim_dark": 284
+        }
+      },
+      {
+        "triangles": 886,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_1": 44,
+          "car_glass": 22,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_black": 462,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 116,
+          "rim": 20,
+          "rim_dark": 32,
+          "tyre": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_black": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_suv_white": [
+      {
+        "triangles": 4045,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_3": 384,
+          "car_glass": 4,
+          "car_glass_tint": 66,
+          "car_interior": 271,
+          "car_lamp": 150,
+          "car_light_head": 78,
+          "car_light_tail": 90,
+          "car_paint_white": 1612,
+          "car_plate": 4,
+          "car_sill": 92,
+          "car_trim": 582,
+          "car_tyre_dusty": 428,
+          "rim_dark": 180,
+          "rim_dusty": 104
+        }
+      },
+      {
+        "triangles": 886,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_3": 44,
+          "car_glass": 22,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_white": 462,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 116,
+          "rim_dark": 20,
+          "rim_dusty": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_white": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_suv_blue": [
+      {
+        "triangles": 4045,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_3": 384,
+          "car_glass": 4,
+          "car_glass_tint": 66,
+          "car_interior": 271,
+          "car_lamp": 150,
+          "car_light_head": 78,
+          "car_light_tail": 90,
+          "car_paint_blue": 1612,
+          "car_plate": 4,
+          "car_sill": 92,
+          "car_trim": 582,
+          "car_tyre_dusty": 428,
+          "rim_dark": 180,
+          "rim_dusty": 104
+        }
+      },
+      {
+        "triangles": 886,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_3": 44,
+          "car_glass": 22,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_blue": 462,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 116,
+          "rim_dark": 20,
+          "rim_dusty": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_blue": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "car_suv_red": [
+      {
+        "triangles": 4045,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_3": 384,
+          "car_glass": 4,
+          "car_glass_tint": 66,
+          "car_interior": 271,
+          "car_lamp": 150,
+          "car_light_head": 78,
+          "car_light_tail": 90,
+          "car_paint_red": 1612,
+          "car_plate": 4,
+          "car_sill": 92,
+          "car_trim": 582,
+          "car_tyre_dusty": 428,
+          "rim_dark": 180,
+          "rim_dusty": 104
+        }
+      },
+      {
+        "triangles": 886,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_3": 44,
+          "car_glass": 22,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 12,
+          "car_paint_red": 462,
+          "car_plate": 4,
+          "car_sill": 4,
+          "car_trim": 116,
+          "rim_dark": 20,
+          "rim_dusty": 32,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 86,
+        "primitives": 7,
+        "materials": {
+          "car_glass": 10,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_red": 32,
+          "car_trim": 4,
+          "rim": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "van_white": [
+      {
+        "triangles": 4005,
+        "primitives": 15,
+        "materials": {
+          "car_dirt_3": 360,
+          "car_glass": 4,
+          "car_glass_tint": 38,
+          "car_interior": 209,
+          "car_lamp": 179,
+          "car_light_head": 95,
+          "car_light_tail": 68,
+          "car_paint_white": 1560,
+          "car_plate": 4,
+          "car_sill": 208,
+          "car_trim": 492,
+          "car_tyre_dusty": 428,
+          "rim_dark": 96,
+          "rim_dusty": 132,
+          "rim_steel": 132
+        }
+      },
+      {
+        "triangles": 884,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_3": 44,
+          "car_glass": 8,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 8,
+          "car_paint_white": 418,
+          "car_plate": 4,
+          "car_sill": 76,
+          "car_trim": 108,
+          "rim_dusty": 32,
+          "tyre": 16,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 88,
+        "primitives": 8,
+        "materials": {
+          "car_glass": 4,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_white": 36,
+          "car_sill": 4,
+          "car_trim": 4,
+          "rim_steel": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "van_silver": [
+      {
+        "triangles": 3849,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_2": 360,
+          "car_glass": 4,
+          "car_glass_tint": 38,
+          "car_interior": 209,
+          "car_lamp": 179,
+          "car_light_head": 95,
+          "car_light_tail": 68,
+          "car_paint_silver": 1560,
+          "car_plate": 4,
+          "car_sill": 208,
+          "car_trim": 492,
+          "car_tyre_dusty": 428,
+          "rim_dark": 48,
+          "rim_steel": 156
+        }
+      },
+      {
+        "triangles": 884,
+        "primitives": 12,
+        "materials": {
+          "car_dirt_2": 44,
+          "car_glass": 8,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 8,
+          "car_paint_silver": 418,
+          "car_plate": 4,
+          "car_sill": 76,
+          "car_trim": 108,
+          "rim_steel": 32,
+          "tyre": 16,
+          "tyre_dusty": 152
+        }
+      },
+      {
+        "triangles": 88,
+        "primitives": 8,
+        "materials": {
+          "car_glass": 4,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_silver": 36,
+          "car_sill": 4,
+          "car_trim": 4,
+          "rim_steel": 8,
+          "tyre": 24
+        }
+      }
+    ],
+    "van_white2": [
+      {
+        "triangles": 3809,
+        "primitives": 14,
+        "materials": {
+          "car_dirt_1": 320,
+          "car_glass": 4,
+          "car_glass_tint": 38,
+          "car_interior": 209,
+          "car_lamp": 179,
+          "car_light_head": 95,
+          "car_light_tail": 68,
+          "car_paint_white2": 1560,
+          "car_plate": 4,
+          "car_sill": 208,
+          "car_trim": 492,
+          "car_tyre": 428,
+          "rim_dark": 48,
+          "rim_steel": 156
+        }
+      },
+      {
+        "triangles": 884,
+        "primitives": 11,
+        "materials": {
+          "car_dirt_1": 44,
+          "car_glass": 8,
+          "car_lamp": 10,
+          "car_light_head": 8,
+          "car_light_tail": 8,
+          "car_paint_white2": 418,
+          "car_plate": 4,
+          "car_sill": 76,
+          "car_trim": 108,
+          "rim_steel": 32,
+          "tyre": 168
+        }
+      },
+      {
+        "triangles": 88,
+        "primitives": 8,
+        "materials": {
+          "car_glass": 4,
+          "car_light_head": 4,
+          "car_light_tail": 4,
+          "car_paint_white2": 36,
+          "car_sill": 4,
+          "car_trim": 4,
+          "rim_steel": 8,
+          "tyre": 24
+        }
+      }
+    ]
+  },
+  "instance_count": 1007,
+  "instance_counts": {
+    "car_estate_black": 40,
+    "car_estate_blue": 23,
+    "car_estate_grey": 42,
+    "car_estate_red": 15,
+    "car_estate_silver": 44,
+    "car_estate_white": 40,
+    "car_hatch_black": 59,
+    "car_hatch_blue": 33,
+    "car_hatch_grey": 60,
+    "car_hatch_red": 30,
+    "car_hatch_silver": 52,
+    "car_hatch_white": 60,
+    "car_sedan_black": 18,
+    "car_sedan_blue": 17,
+    "car_sedan_grey": 24,
+    "car_sedan_red": 8,
+    "car_sedan_silver": 41,
+    "car_sedan_white": 37,
+    "car_suv_black": 49,
+    "car_suv_blue": 29,
+    "car_suv_grey": 46,
+    "car_suv_red": 26,
+    "car_suv_silver": 49,
+    "car_suv_white": 50,
+    "van_silver": 32,
+    "van_white": 46,
+    "van_white2": 37
+  },
+  "all_instanced_lod0_triangles": 4057998
+}
