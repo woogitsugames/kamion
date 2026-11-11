@@ -109,3 +109,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T23:38:03.8306338+01:00: iteracja 1 ma draws delta0 we wszystkich 220 kombinacjach; konserwatywna granica tris przekracza 2% m.in. driver 2,257% i fire-station-route 2,325%, więc budżetu jeszcze nie potwierdzono. Zachowano rendery/liczniki w after-iteration1/ i iteration1/. Sztywne panele mieszają proste i wygięte przęsła (1/4 WORKING_VALUE); elastyczne nadal mają zwis. Oprawa starego słupa dostała skośną obudowę sodową bez wzrostu liczby trójkątów/slotów. NASTĘPNY KROK: pojedyncze testy przez heavy i build-after2.
 
 2026-11-11T23:41:17.3341251+01:00: heavy focused after; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-11T23:41:20.1803496+01:00: heavy focused after; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
