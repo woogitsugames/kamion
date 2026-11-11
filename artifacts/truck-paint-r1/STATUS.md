@@ -45,3 +45,6 @@
 
 - Step17 CPU reproducibility check: pinned asphaltphoto already present in initial F privatecopy; verified SHAe26237d85c097af9560537c60e6ed6f67ed0090e284398a5d7a7a2bf41889135 per coordinator. No raw copy/regeneration and no locked generated map changes; proof asphalt-input-proof.json. Unity hold continues.
 - NEXT COMMAND: wait explicit ROOTrelease; then verify bothlocks absent and resume guarded candidate1.
+
+- Step18 resume: explicit ROOTrelease11:56:56 after stable phone-window end. Bothguards independently absent, branchba61eec7 clean. Candidate wrapper now stops rather than auto-resumes if either guard returns.
+- NEXT COMMAND: pwsh -NoProfile -ExecutionPolicy Bypass -File artifacts/truck-paint-r1/rebuild-candidate.ps1 -Round candidate1; then actual102PNG/metrics/GPU evidence and refinement.
