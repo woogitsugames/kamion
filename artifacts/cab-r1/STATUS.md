@@ -32,3 +32,4 @@ Zapisano baseline High overcast, siedem kamer i sześć natywnych RT z identyfik
 Zakończono wszystkie cztery stany baseline kabiny i RT; trwa tylko uzupełnienie brakującego Low-clear budgets.txt. Przygotowano route-0112.ps1 do pełnego zestawu kamer Low + Gate3, bez filtra siedmiu kamer. Następny krok: po zakończeniu capture baseline uruchomić pwsh -NoProfile -ExecutionPolicy Bypass -File artifacts/cab-r1/route-0112.ps1 -Stage baseline, potem aktywować V/VI.
 Zapisano baseline Low clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano baseline Low overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
+Zapisano baseline High clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
