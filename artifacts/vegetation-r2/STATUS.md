@@ -80,3 +80,6 @@
 
 - Krok14: przyjęto najmniejszy wariant do walidacji: tylko3sosnoweimpostory zachowują cienkie gałązki (open0,min16), pozostałeimpostory iwszystkieHLOD zachowujądotychczasowe zasady. OdrzuconoHLODr0 po wzroście tiny-mipproxy mimo niewielkiej różnicyobrazu. Komponenty sosnowych koron186→49; testassetów plusźródła9PASS. NativeablationLow/High≤930px i ryzykomipmap jawne; ocena lidera końcowa w toku. NASTĘPNY KROK: `pwsh artifacts/vegetation-r2/final-world.ps1`.
 
+
+- Krok15: końcowy worldbuild i canonicalimport po wybranej poprawce pine-only. Sprawdzono192rawSHA względemr2; finalny snapshotJSON/GLB zapisany. NASTĘPNY KROK: finalna236macierz59kamer na oryginalnym fixture oraz końcoweGIS/EditMode.
+
