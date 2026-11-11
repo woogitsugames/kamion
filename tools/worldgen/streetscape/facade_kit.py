@@ -297,7 +297,7 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key="", inner=True
             acc.box(L0, "downpipe", so_ - d3 * sg * 0.02 - n3 * 0.02 + [0, 0, BAL_GAP / 2], d3 * 0.02, n3 * 0.02,
                     [0, 0, BAL_GAP / 2], skip=(0, 1, 2, 4 if sg > 0 else 5))
     # handrail: 5 x 4 cm on the three open sides, 3 cm proud of the infill (top and outer faces only)
-    rail = up + [0, 0, 0.01]
+    rail = up + [0, 0, 0.04]                         # handrail top 1.10 m above the floor (WT par. 298: >= 1.1 m)
     acc.box(L0, "downpipe", f + n3 * 0.01 + rail, d3 * (hw + 0.03), n3 * 0.025, [0, 0, 0.02],
             skip=(0, 2, 4, 5) if inner else (0, 1, 2, 4, 5))
     for sg in (-1, 1):
