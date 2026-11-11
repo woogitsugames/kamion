@@ -229,3 +229,23 @@ Explicitly resumed exactly3workers F/G/E11:56:56; E localrelease markerwritten.
 G resumes ownfreshbaseline FIRST; D remainsCPU-ready frozen. RecheckPHONE
 andsharedhold before everylaunch, no device/mainmerge actions byGPT.
 NEXT COMMAND: inspect actual F candidate102 and G/E freshbaseline metrics; finalize B artifactcopy/cleancommit, then continue full F/G/E and D.
+
+## Step17 - actual F/G/E baselines and first measured candidates
+B final4db366ad is clean: GIS364/2xfail, EditMode218/218; source-input restore
+prerequisite packaged and copied with all artifacts. C5db77e9d remains closed.
+F102 actual candidate frames: finite lamp encoding/decode verified; mesh/pose and
+all102 stats unchanged. Owner door profile1.57Low/2.01High still below4, glass
+OV18.77/22.61 below23-45. No visualPASS. Cube orientation validated; current
+box-mip versus GGX-prefilter mapping diagnostic underway, no arbitrary F0 gain.
+Coat nWS already contains baked normal (shader source348), so no missing-normal fix.
+G292 fresh baseline frames: blackdoor38.672High/34.144Low already meets target.
+Pearl-only actual correction38.356/33.854, cleanbonnet81.017->78.519High,
+74.221->71.475Low, original dirt unchanged. No lift/floor. Camera occlusions
+rejected before wheel/dirt production, actual instancedOBB visibility checked.
+E160 baseline frames pinned; hero-local plant palette/source/shape production
+step underway. Fir alpha atlas integration and old-cell/mip parity remain gates;
+no actual candidate image or visualPASS yet. D frozenCPU-ready d00807ed.
+Main advanced independently through0097 merge and0106 perf work; our fixed
+comparison bases are preserved. No merge/push-main byGPT. Shared phone gate
+released, both guards must still be checked before every Unity launch.
+NEXT COMMAND: inspect F physical sampling controls and first G/E actual production captures; review protected budgets, then finish F/G/E and dispatch D when a slot frees.
