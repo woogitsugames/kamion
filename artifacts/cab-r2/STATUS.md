@@ -19,3 +19,4 @@ Scan1 BuildBatch i InstallBatch: exit 0, markery OK. Rzeczywiste LOD: korekta UV
 Zapisano result-0112-scan1 Low clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano result-0112-scan1 Low overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano result-0112-scan1 High clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
+Pierwsze kadry skóry Low clear obejrzane: ziarno mniej regularne, widoczne na obręczy; pełna macierz scan1 trwa. Przygotowano wyłączony profil ziarna tworzywa jako rekonstrukcję tłoczenia ze skanu skóry, nie skan plastiku: crop 20 cm→kafel 10 cm, osłabione normal/roughness/AO/albedo (WORKING_VALUE). Nie zmieniono tekstur tworzywa ani bieżących renderów. Konwersja profilu dopiero po zakończeniu własnego World pod heavy.
