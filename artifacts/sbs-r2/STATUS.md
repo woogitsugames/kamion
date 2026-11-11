@@ -64,3 +64,6 @@ Audyt r2 dodatkowo wymaga dokładnej zgodności capture w metrykach i katalogu r
 
 ## Świat po regeneracji i przygotowanie importu
 Generacja zakończona kodem 0 po 457 s, bez fallback=True. Wszystkie 64 SHA GLB w nowym manifeście są identyczne z r1. Przygotowano import przez osobny slot Unity gpt-sbs. Wrapper sprawdza, czy import nie uruchomi automatycznie build_world/build_all poza heavy: w razie brakujących lub nieaktualnych materiałów przerwie przed Unity. Fidelity zapisuje tylko QA, nie zmienia GLB, dlatego import może działać niezależnie od kolejki testów heavy. Nowe capture dopiero po obu etapach i zamrożeniu HEAD.
+
+## Import zakończony
+IMPORT_RESULT: OK, 64 chunki, oba tiery Low+High. Preflight PBR: 0 brakujących, 0 nieaktualnych; 13 zestawów CC0, 65 plików, 0 problemów. Slot Unity zwolniony. Raport importu podaje geometrię 117,0 MB Low i 259,1 MB High (bez twierdzenia o pełnej pamięci procesu lub telefonu). Przygotowano osobny EditMode przez Acquire/Release gpt-sbs, z zachowaniem świeżego XML w artefaktach r2.
