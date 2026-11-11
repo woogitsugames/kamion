@@ -28,7 +28,9 @@ def test_axis_contact_and_local_search_avoid_a_sharp_step():
     assert it["z"] == pytest.approx(1.087 if it["e"] > 0 else 0)
     m = P.lamp(12, 2)[0].out()
     v = next(p["V"] for p in m if p["mat"] == "furniture_footing")[:, 2]
-    assert -0.6 < v.min() < 0 and v.max() > 0
+    # The native ground probe accepts a support up to 15 cm above the rendered minimum. A deeper hidden block
+    # under a deck makes that probe incorrectly select the lower road/terrain instead of the deck.
+    assert -0.15 < v.min() < 0 and v.max() > 0
 
 
 def test_explicit_bridge_lamp_position_and_height_are_preserved():

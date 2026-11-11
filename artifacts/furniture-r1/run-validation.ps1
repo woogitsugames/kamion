@@ -87,6 +87,8 @@ Save-Status 'Regenerated ADR0102 world.'
 Import-World 'after'
 Audit-World 'after'
 Render-World 'after'
+while (Test-Path "$ev/pytest-after.running") { Start-Sleep -Seconds 5 }
+if (Test-Path "$ev/pytest-after.failed") { throw 'External GIS failed; inspect pytest-after.log' }
 if (!(Test-Path "$ev/pytest-after.done")) {
     & uv run --project tools/worldgen python -m pytest tests/gis -q *> "$ev/pytest-after.log"
     if ($LASTEXITCODE -ne 0) { throw 'GIS after failed' }
