@@ -38,14 +38,14 @@ namespace Game.Tests.EditMode
             Assert.That(lights.StateTexture.width,Is.EqualTo(16)); Assert.That(lights.StateTexture.height,Is.EqualTo(1));
             foreach(var c in lights.StateTexture.GetPixels())
                 foreach(float value in new[]{c.r,c.g,c.b,c.a}) Assert.That(float.IsNaN(value)||float.IsInfinity(value),Is.False);
-            CheckNits(1,low?56000f:160000f); CheckNits(2,low?50000f:0f); CheckNits(3,high?80000f:0f);
+            CheckNits(1,low?700f:2000f); CheckNits(2,low?50000f:0f); CheckNits(3,high?80000f:0f);
         }
         void CheckNits(int group,float expected)
         {
             float decoded=lights.StateTexture.GetPixel(group,0).r*TruckLights.NitsPerEncodedUnit;
             Assert.That(decoded,Is.EqualTo(expected).Within(Mathf.Max(0.01f,expected*0.001f)));
         }
-        [TestCase(1,16f)] [TestCase(3,8f)]
+        [TestCase(1,0.2f)] [TestCase(3,8f)]
         public void ActualProductionShaderDecodesFiniteTextureBeforeExposure(int group,float expected)
         {
             if(SystemInfo.graphicsDeviceType==GraphicsDeviceType.Null) Assert.Ignore("Actual GPU readback requires graphics device");

@@ -8,8 +8,8 @@ namespace Game.Vehicle.Runtime
     /// Kamion/Truck Exterior (texel = light group id from the manifest light_groups; RGB = lamp luminance / NitsPerEncodedUnit, the
     /// shader decodes the nits scale before applying scene exposure). State from the solver input: DRL on, low beam + tail lamps with the
     /// automatic light sensor (sun below <see cref="autoLowBeamSunDeg"/>), brake lamps from the service brake pedal, reverse
-    /// lamps with the selector in R. Luminances are WORKING_VALUE (LED signal lamps: ECE R7/R87 intensity over the lens
-    /// area), to be replaced by measured values. One global 16 x 1 texture, updated only when the state changes, no lights: Low safe. One player truck per scene
+    /// lamps with the selector in R. Luminances are WORKING_VALUE display calibrations, not measured lamp photometry.
+    /// One global 16 x 1 texture, updated only when the state changes, no lights: Low safe. One player truck per scene
     /// (traffic trucks will need per-instance state).
     /// </summary>
     [ExecuteAlways]
@@ -24,11 +24,12 @@ namespace Game.Vehicle.Runtime
 
         // Group ids (truck_exterior_manifest.json shader_contract.light_groups).
         const int DRL = 1, LOW = 2, HIGH = 3, IND_L = 4, IND_R = 5, TAIL_BRAKE = 6, REVERSE = 7, MARKER_F = 8, MARKER_S = 9, MARKER_R = 10, FOG = 11, WORK = 12, PLATE = 13;
-        // cd/m^2 (WORKING_VALUE): LED DRL ~ 400 cd over ~25 cm^2; low beam lens apparent ~ 5e4; tail 8 cd / brake 120 cd over ~60 cm^2.
-        const float DrlNits = 1.6e5f, LowNits = 5e4f, HighNits = 8e4f, TailNits = 1.3e3f, BrakeNits = 2.0e4f, ReverseNits = 3e4f, MarkerNits = 2e3f, IndicatorNits = 2.5e4f;   // amber LED indicator ~ 2e4 cd/m^2 apparent (WORKING_VALUE; R48 minimum intensity over the lens)
+        // cd/m^2 (WORKING_VALUE): ADR 0115 starts a bounded DRL display calibration against the clipped High-overcast strip.
+        // Day/night ratio remains 1 / 0.35. Other lamp levels retain the preceding provisional calibration.
+        const float DrlNits = 2e3f, LowNits = 5e4f, HighNits = 8e4f, TailNits = 1.3e3f, BrakeNits = 2.0e4f, ReverseNits = 3e4f, MarkerNits = 2e3f, IndicatorNits = 2.5e4f;
         static readonly Color White = new Color(1f, 0.97f, 0.92f), Red = new Color(1f, 0.03f, 0.01f), Amber = new Color(1f, 0.42f, 0.02f);
 
-        // Encode luminance before RGBAHalf storage: DRL160000 and high80000 exceed65504.
+        // Encode luminance before RGBAHalf storage: high80000 exceeds65504; retain headroom for authored lamp levels.
         // Shader decodes in float after combining this scale with scene exposure. No photometric calibration implied.
         public const float NitsPerEncodedUnit = 1000f;
         static readonly int k_NitsScale = Shader.PropertyToID("_TruckLightNitsScale");
