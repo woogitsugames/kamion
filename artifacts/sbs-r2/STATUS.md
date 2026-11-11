@@ -34,3 +34,6 @@ Uzupełniono ADR 0111 o zmienione kryterium D51, wynik FAIL, ograniczenia metryk
 
 ## Samoczynne migawki dowodów
 Skrypt SBS po ukończeniu żądanych stanów sprawdza wspólny commit i zgodność SHA kamer, referencji, świata oraz materiałów ze wszystkimi capture. Dopiero wtedy kopiuje dokładne bajty wejść i tworzy inputs.zip. Migawka nie może zatwierdzić mieszanej lub zmienionej epoki. Dołączane są także autorskie poprawki, intrinsics i rejestry adnotacji. Następny krok: kontrola parsera PowerShell i próba w serii r2.
+
+## Integralność migawki
+Parser PowerShell potwierdził składnię wrappera. Dodano ponowne sprawdzanie SHA skopiowanych bajtów oraz odrzucanie nieoczekiwanych starych plików w inputs. Zapis do ponownie użytego katalogu nie może po cichu zostawić usuniętej adnotacji z poprzedniego przebiegu. Próba całościowa pozostaje przed nami.

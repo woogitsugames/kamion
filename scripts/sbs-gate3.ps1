@@ -62,7 +62,14 @@ function Save-EvidenceInputs {
     if($Photometry){$sourceMap['sbs_photometry.json']=[IO.Path]::GetFullPath($Photometry,$taskRoot)}
     $snapshot=Join-Path $output 'inputs'
     New-Item -ItemType Directory -Force $snapshot | Out-Null
+    foreach($existing in Get-ChildItem -LiteralPath $snapshot -Force){
+        if($existing.PSIsContainer -or $existing.Name -notin $sourceMap.Keys){throw 'Snapshot contains obsolete inputs; use a fresh OutputRoot'}
+    }
     foreach($key in $sourceMap.Keys){Copy-Item -LiteralPath $sourceMap[$key] -Destination (Join-Path $snapshot $key)}
+    foreach($key in $expected.Keys){
+        $copied=(Get-FileHash -LiteralPath (Join-Path $snapshot $key) -Algorithm SHA256).Hash.ToLowerInvariant()
+        foreach($capture in $captureRows){if($capture.($expected[$key]) -ne $copied){throw "Snapshot changed while copying: $key"}}
+    }
     Compress-Archive -LiteralPath @($sourceMap.Keys | ForEach-Object {Join-Path $snapshot $_}) -DestinationPath (Join-Path $output 'inputs.zip') -Force
 }
 Push-Location $taskRoot
