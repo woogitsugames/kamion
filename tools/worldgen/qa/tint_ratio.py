@@ -148,8 +148,7 @@ def table(result: dict) -> str:
         lines.append(f"{r['material'][:14]:14s}/{r['check'][:14]:14s} {r['condition']:14s} {r['target']['level']:7.1f} "
                      f"{r['ref']['level']:6.1f} {r['ratio_level']:6.3f} {before} {r['target']['clip_250']:7.3f} "
                      f"{r['target']['spread']:6.1f}  {'ok' if r['pass'] else 'FAIL'}")
-    return "
-".join(lines)
+    return "\n".join(lines)
 
 
 def main(argv=None) -> int:

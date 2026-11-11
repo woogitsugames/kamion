@@ -1,0 +1,174 @@
+{
+ "schema": "kamion/tint-ratio-spec/1",
+ "adr": "0101",
+ "note": "ROIs in a 960 px-wide view of the 2340x1080 control-camera PNG. ratio_level = mean display level target / reference in the same frame. Placement verified on material masks (artifacts/tint-r2/masks/). Limits are WORKING_VALUE targets derived from the photo_refs ratios below, not absolute photo levels.",
+ "materials": {
+  "kp_wall": {
+   "calibrated": true,
+   "checks": [
+    {
+     "id": "gate_lit",
+     "camera": "kwadrat-park-gate",
+     "side": "lit",
+     "roi": [
+      40,
+      190,
+      230,
+      212
+     ],
+     "ref": "sky",
+     "ref_roi": [
+      60,
+      105,
+      330,
+      150
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.55,
+        0.88
+       ]
+      },
+      "clear": {
+       "clip_max": 0.01,
+       "spread_min": 6.0
+      }
+     }
+    },
+    {
+     "id": "docks_shaded",
+     "camera": "stretch-05-docks",
+     "side": "shaded",
+     "roi": [
+      210,
+      83,
+      240,
+      94
+     ],
+     "ref": "sky",
+     "ref_roi": [
+      620,
+      30,
+      900,
+      110
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.45,
+        0.88
+       ]
+      },
+      "clear": {
+       "clip_max": 0.01
+      }
+     }
+    },
+    {
+     "id": "hall4_far",
+     "camera": "r10_hall_4",
+     "side": "lit",
+     "roi": [
+      445,
+      200,
+      590,
+      232
+     ],
+     "ref": "sky",
+     "ref_roi": [
+      480,
+      60,
+      800,
+      140
+     ],
+     "limits": {
+      "clear": {
+       "clip_max": 0.01
+      }
+     }
+    }
+   ]
+  },
+  "noise_panel_dark": {
+   "calibrated": true,
+   "checks": [
+    {
+     "id": "putry_entry_right",
+     "camera": "route-putry-entry-signs",
+     "side": "shaded",
+     "roi": [
+      830,
+      165,
+      915,
+      205
+     ],
+     "ref": "plinth",
+     "ref_roi": [
+      870,
+      352,
+      900,
+      370
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.31,
+        0.41
+       ]
+      }
+     }
+    },
+    {
+     "id": "approach_viaduct_left",
+     "camera": "route-putry-approach",
+     "side": "lit",
+     "roi": [
+      10,
+      170,
+      200,
+      250
+     ],
+     "ref": "plinth",
+     "ref_roi": [
+      10,
+      255,
+      200,
+      270
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.31,
+        0.41
+       ]
+      }
+     }
+    }
+   ]
+  }
+ },
+ "photo_refs": [
+  {
+   "id": "hall_overcast_cm157094809",
+   "file": "artifacts/kwadrat-r9/refs/cm157094809_hall.jpg",
+   "roi": [
+    12,
+    59,
+    96,
+    71
+   ],
+   "ref": "sky",
+   "ref_roi": [
+    240,
+    4,
+    720,
+    24
+   ],
+   "note": "CC0 Rakoon, overcast; cleanest (brightest) facade panel left of the branches vs sky above the treeline; 1200 px source scaled to 960 view"
+  }
+ ],
+ "photo_notes": {
+  "noise_panel_dark": "ADR 0069: Mapillary p40 (2024-07-26) cassettes 36-40 sRGB next to plinth 105 sRGB on the same vertical face -> 0.34-0.38 (full-resolution Mapillary frames, not stored in the repo)"
+ }
+}

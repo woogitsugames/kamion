@@ -7,7 +7,7 @@ while (Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/PHONE_R
 $log = Join-Path $LogsDir "tint-r2-round-$Round.log"
 $a = @('-executeMethod','Game.Editor.VisualQA.WorldPbrTintRound.RunBatch','-tintRound',$Round,
        '-tintOutDir',(Join-Path $RepoRoot 'artifacts/tint-r2'),
-       '-qaGate3',(Join-Path $RepoRoot 'Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json'))
+       '-qaGate3',(Join-Path $RepoRoot 'artifacts/tint-r2/cameras_r2.json'))
 if ($Cameras) { $a += @('-tintCameras', $Cameras) }
 $code = Invoke-UnityBatch -LogFile $log -Arguments $a
 Show-UnityLogErrors $log

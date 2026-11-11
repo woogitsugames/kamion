@@ -134,7 +134,10 @@ M = {
     # rose from 28/29/28 to 57/59/56 in High overcast (route-putry-entry-signs).
     # Candidate linear albedo below targets the photo's 36–40 display levels;
     # screen appearance calibration only, not a physical measurement of the paint.
-    "noise_panel_dark": {"color": [0.022, 0.024, 0.023], "rough": 0.7, "metal": 0.05, "texture_set": "noise_cassette"},
+    # ADR0101 (r2): that compared absolute levels with a brighter summer photo; the measured quantity is the
+    # cassette/plinth ratio on one face (p40: 0.34-0.38). Back to the measured 0.04 (hue of the old .068/.072/.070),
+    # checked as a ratio to the plinth on 2 cameras (tools/worldgen/qa/tint_ratio.py).
+    "noise_panel_dark": {"color": [0.039, 0.041, 0.040], "rough": 0.7, "metal": 0.05, "texture_set": "noise_cassette"},
     "noise_post": {"color": [0.17, 0.21, 0.18], "rough": 0.55, "metal": 0.3},
     "car_sill": {"color": [0.035, 0.033, 0.03], "rough": 0.8},
     # contact shadow / AO patch under parked vehicles (ADR 0050): Kamion/World Vehicle Contact, parameters per
@@ -301,7 +304,10 @@ M = {
     # photo 20210904_101250 shows the sheet clearly darker than the overcast sky).
     # r12 (ADR 0092): `panel_m` = cladding module of the set [panel length, course height] m: the macro tone drift is
     # quantised to it (one tone per panel + a butt joint line) instead of a smooth noise
-    "kp_wall": {"color": [0.56, 0.57, 0.57], "rough": 0.5, "metal": 0.1, "texture_set": "sandwich_ribbed", "weather": True,
+    # ADR0101 (r2): under the linear _Tint contract (0086) 0.56 doubled the GPU albedo and the sunlit gate facade
+    # clipped (252 sRGB, ribs lost). 0.37/0.38/0.38 (WORKING_VALUE) is checked as hall/sky ratio on a lit and a
+    # shaded camera (overcast 0.6-0.88 like the CC0 photos, clear without clip; tools/worldgen/qa/tint_ratio.py).
+    "kp_wall": {"color": [0.37, 0.38, 0.38], "rough": 0.5, "metal": 0.1, "texture_set": "sandwich_ribbed", "weather": True,
                 "panel_m": [6.0, 1.0]},
     "kp_accent": {"color": [0.50, 0.075, 0.035], "rough": 0.55, "metal": 0.2},
     "kp_glass_block": {"color": [0.27, 0.29, 0.30], "rough": 0.3},
