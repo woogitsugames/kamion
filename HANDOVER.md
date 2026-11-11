@@ -24,7 +24,8 @@
 2. Integracja na main z Megascans + 0086 (import-region, Truck BuildBatch/InstallBatch, EditMode/PlayMode, APK Low) → telefon A16 Low gate3.
 3. Scalanie GPT B 0088 → C 0098 po REPORT.md; 0097 po REPORT.md.
 4. Węzły r3 wg recenzji 0095; Kwadrat r13 po zdjęciach właściciela; raport bramki 3.
-5. Ostatni przydzielony ADR: **0101** (kalibracja r2).
+5. **GPT pakiet S10-B** `docs/owner/GPT-TASK-03-S10.md` (5 nowych sesji właściciela, po 1 strumieniu): H 0085 r2 tło (gpt-edge-r2 z argon-edge), I 0102 meble uliczne (gpt-furniture-r1), J 0103 side-by-side bramki 3 (gpt-sbs-gate3), K 0104 kabina/lusterka (gpt-cab-r1), L 0105 wiadukt pod pomostem (gpt-viaduct-r1). Scalać po REPORT.md.
+6. Ostatni przydzielony ADR: **0105**.
 
 ---
 # HANDOVER — kamion, sesja 9 (2026-11-11 00:30 → ~10:30 lokalnie; zamknięta na polecenie właściciela przy końcu limitu 5 h)
