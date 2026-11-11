@@ -1,0 +1,11 @@
+﻿# E — JRG2 r7 (ADR0070)
+
+Stan: bootstrap i baseline; produkcyjny model/atlas jeszcze nietknięty.
+Gałąź/worktree: gpt-firestation-r7; bazowy main 901c427f2bc5cebf9571adc14df3253bbd3bd772.
+Zakres: sets_fire_station.py, make_fire_station.py, art-source/world/landmarks/fire_station_jrg2; dopisek r7 do ADR0070, bez nowego ADR0090.
+D48: tynk overcast110/126/145±10, zachować plaster-only x1.15. Referencja: rzeczywiste CC0 7197, nie AI Data/photos.
+B pozostaje zamrożone przy9070b252; ROOT zamyka jego pozostałe EditMode/raport/kopię.
+Unity przed każdym startem czeka na główny PHONE_RUN; bez adb i telefonów. Żadnych main source writes.
+
+Krok1: przeczytano bieżące S10 E, zasady, s9§1, ADR0070 i D48. Nowy worktree z aktualnego main, git lfs checkout.
+NASTĘPNA KOMENDA: `pwsh artifacts/firestation-r10/bootstrap.ps1` — prywatne kopie danych/cache, referencja i junctiony tylko do odczytu; potem świeży hero/PBR/world/canonical fixture przed baseline.
