@@ -2,7 +2,8 @@ param(
  [Parameter(Mandatory=$true)][ValidateSet('Fixtures','PrepareImport','Import','Capture')][string]$Phase,
  [Parameter(Mandatory=$true)][string]$RootRelease,
  [string]$Cameras='',
- [string]$ContentProof=''
+ [string]$ContentProof='',
+ [ValidatePattern('^[a-z0-9-]+$')][string]$Stage='before'
 )
 $ErrorActionPreference='Stop'
 Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
@@ -99,13 +100,13 @@ if($Phase-eq'Import') {
  New-Item -ItemType Directory -Force (Split-Path $observer) | Out-Null
  Copy-Item -LiteralPath artifacts/car-paint-r1/R4PosePacket.cs -Destination $observer
  try {
-  $log=[IO.Path]::GetFullPath('artifacts/car-paint-r1/r4-final-normal-import.log')
+  $log=if($Stage-eq'before'){[IO.Path]::GetFullPath('artifacts/car-paint-r1/r4-final-normal-import.log')}else{[IO.Path]::GetFullPath("artifacts/car-paint-r1/r4-$Stage-normal-import.log")}
   Assert-Slot # Immediately adjacent to the actual launch, after all CPU work.
   $code=Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.World.Import.RegionImporter.ImportBatch','-region','bialystok-industrial-c','-tiers','Low,High','-materialTier','Medium')
   $ok=Select-String -Path $log -Pattern 'IMPORT_RESULT: OK' -Quiet
   if($code-ne0 -or -not$ok){throw "R4 final normal import failed exit=$code; inspect log"}
  } finally {Restore-OwnedSideEffects}
- & python artifacts/car-paint-r1/proof.py r4-before-imported
+ & python artifacts/car-paint-r1/proof.py "r4-$Stage-imported"
  if($LASTEXITCODE-ne0){throw 'R4 imported baseline source proof failed'}
  Write-Output 'Final normal import complete. No more install/rebuild before matched BEFORE.'
 }

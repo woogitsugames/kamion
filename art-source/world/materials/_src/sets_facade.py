@@ -373,6 +373,9 @@ def car_grime(n=1024, lower_film=True):
         result.albedo = np.where(((film > 0) & clean_region)[..., None],
                                  np.clip(clean_raw.astype(np.float32) * gain, 0, 1), result.albedo)
         result.rough = np.where(clean_region, np.clip(0.32 + 0.15 * dust, 0.05, 1).astype(np.float32), result.rough)
+        # Clean-only Mask.R payload: exactly the film removed here. Seven car
+        # paint materials have MetallicScale0 and a separate CarPaint metal model.
+        result.metal = np.where(clean_region, film, 0).astype(np.float32)
     return result
 
 

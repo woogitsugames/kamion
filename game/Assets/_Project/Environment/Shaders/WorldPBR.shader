@@ -285,6 +285,13 @@ Shader "Kamion/World PBR"
                     half falloff = 0.16h + 0.06h * i.carFilm.x;
                     half vertical = exp2(-max(i.uv.z, 0.0) / falloff * 1.442695h);
                     half keepUpper = smoothstep(0.45h, 0.85h, abs(n.y)) * smoothstep(0.6, 0.8, um.y);
+                    // Clean-map Mask.R carries removed legacy film, not metal.
+                    // Preserve the existing bonnet/roof response by forward application;
+                    // the monotone sill layer below remains independent of that coverage.
+                    half upperFilm = saturate(mask.r);
+                    half3 legacyMultiplier = (1.0h - 0.30h * upperFilm) * half3(1.0h, 1.0h - 0.08h * upperFilm, 1.0h - 0.22h * upperFilm);
+                    base.rgb *= lerp(half3(1, 1, 1), legacyMultiplier, keepUpper);
+                    mask.a = saturate(mask.a - 0.35h * upperFilm * keepUpper);
                     half frontTrail = saturate(1.0h - abs(i.uv.w - 0.87h) / 0.28h);
                     half rearTrail = saturate(1.0h - abs(i.uv.w + 0.13h) / 0.28h);
                     half rearFace = saturate((-i.uv.w - 0.20h) * 8.0h);

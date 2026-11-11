@@ -22,6 +22,16 @@ def test_clean_car_map_preserves_upper_pixels_and_legacy_wrap_padding(tmp_path, 
         assert np.array_equal(legacy.albedo[mask],clean.albedo[mask])
         assert np.array_equal(legacy.rough[mask],clean.rough[mask])
     assert np.any(clean.albedo!=legacy.albedo)
+    assert legacy.metal is None
+    assert clean.metal is not None
+    assert np.all((clean.metal>=0)&(clean.metal<=1))
+    assert np.all(clean.metal[v<.05]==0)
+    assert np.all(clean.metal[v>1.1]==0)
+    # Coverage must describe exactly the removed film, never arbitrary noise or metal.
+    assert np.allclose(legacy.rough-clean.rough,.35*clean.metal,atol=2e-7)
+    coverage=clean.metal
+    forward=(1-.30*coverage)[...,None]*np.stack([np.ones_like(coverage),1-.08*coverage,1-.22*coverage],axis=-1)
+    assert np.allclose(clean.albedo*forward,legacy.albedo,atol=3e-7)
     legacy.name='legacy'
     clean.name='clean'
     kit.write_set(legacy,tmp_path)
