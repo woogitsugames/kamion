@@ -1,0 +1,239 @@
+{
+  "method": "Independent comparison of 28 P0/P2 captured-pose packets; rear uses validated same-frame level3 diagnostic, not historic R3",
+  "keys": [
+    "cameraId",
+    "scene",
+    "quality",
+    "pipeline",
+    "targetWidth",
+    "targetHeight",
+    "pixelWidth",
+    "pixelHeight",
+    "msaa",
+    "fov",
+    "aspect",
+    "near",
+    "far",
+    "pipelineScale",
+    "fsrSharpness",
+    "fsrOverride",
+    "post",
+    "glassFast",
+    "upscalingFilter",
+    "view",
+    "projection",
+    "pixelRect",
+    "giRect",
+    "cameraParents",
+    "vehicleHierarchy",
+    "regionRoots",
+    "regionState",
+    "paintMaterials"
+  ],
+  "rows": [
+    {
+      "condition": "Low-clear",
+      "camera": "g_dirt_level_0",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "g_dirt_level_1",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "g_dirt_level_2",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "g_dirt_level_3",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "r10_front_04",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "r10_rear_04",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "r4_rear_target_3",
+      "differentFields": [
+        "paintMaterials"
+      ],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "g_dirt_level_0",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "g_dirt_level_1",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "g_dirt_level_2",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "g_dirt_level_3",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "r10_front_04",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "r10_rear_04",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "r4_rear_target_3",
+      "differentFields": [
+        "paintMaterials"
+      ],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "g_dirt_level_0",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "g_dirt_level_1",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "g_dirt_level_2",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "g_dirt_level_3",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "r10_front_04",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "r10_rear_04",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "r4_rear_target_3",
+      "differentFields": [
+        "paintMaterials"
+      ],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "g_dirt_level_0",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "g_dirt_level_1",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "g_dirt_level_2",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "g_dirt_level_3",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "r10_front_04",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "r10_rear_04",
+      "differentFields": [],
+      "withinFrameDifferences": [],
+      "missing": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "r4_rear_target_3",
+      "differentFields": [
+        "paintMaterials"
+      ],
+      "withinFrameDifferences": [],
+      "missing": []
+    }
+  ]
+}

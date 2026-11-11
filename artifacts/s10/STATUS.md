@@ -1005,3 +1005,13 @@ hash was missing. ROOT directly hashed current Instances.asset after probe:
 94e11d81...43a686 exactly matches recorded before SHA, closing that asset's gap.
 Saved result in independent JSON; G asked for full native protected afterproof.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
+
+Step 93: ROOT viewed all14Low P2 pairs and10 native plate crop pairs; visual
+PASS bounded. Four hatch registrations distinct, readable/nonmirrored; no
+visible nonplate change. Independent28pose comparisons exact except expected
+rear QA-clone paint material identities; all28 numeric stats ninefields delta0.
+MotionVectors reopening traced independently to inherited LitShader validation:
+owned shaderID Unknown -> enabled pass. Approved remove only copiedCustomEditor
+association, persistedload+1Low/1High replay; no CPUexport required for GUI-only
+change. Full368 still waits High14 and corrected pass proof. See Low review.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
