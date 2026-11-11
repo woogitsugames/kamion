@@ -193,6 +193,60 @@ def assemble(parts, layers, half):
     return out
 
 
+VERGE_TERRAIN_MAX_LOD = 1     # strips ride on terrain LOD0 / LOD1 (to 300 m); beyond that a kerb back is under a pixel
+
+
+def _is_verge(p):
+    return p.layer == "road" and p.src.endswith(":vg")
+
+
+def merge_verge_into_terrain(terrain, parts, half, col, e0, n0):
+    """ADR 0110: the grass strips behind kerbs (roads.meshing._emit_verge, src "...:vg") become part of the terrain
+    primitives of their chunk (LOD0: the 128 m sub-grid they lie in, and LOD1) instead of a `verge_grass` primitive
+    of the road mesh: same grass as the ground around (terrain shader, ground masks sampled at the nearest node) and
+    no extra draw call (23 road chunks had no verge_grass material before). Returns counts."""
+    tris = 0
+    add = {}
+    for p in parts:
+        if not _is_verge(p) or not len(p.T):
+            continue
+        Nn = smooth_normals(p.V, p.T)
+        cen = p.V[p.T].mean(1)
+        ci, cj = chunk_of(cen[:, 0], cen[:, 1], half)
+        # LOD0 sub-grid (2 x 2 per chunk, order: rows from north, columns from west)
+        si = np.clip(((cen[:, 0] + half) - ci * CH.CHUNK_M) // CH.SUB_M, 0, 1).astype(int)
+        sj = np.clip(((half - cen[:, 1]) - cj * CH.CHUNK_M) // CH.SUB_M, 0, 1).astype(int)
+        for key in sorted(set(zip(ci.tolist(), cj.tolist(), (sj * 2 + si).tolist()))):
+            sel = (ci == key[0]) & (cj == key[1]) & (sj * 2 + si == key[2])
+            T = p.T[sel]
+            u, inv = np.unique(T.ravel(), return_inverse=True)
+            add.setdefault(key, []).append((p.V[u], Nn[u], inv.reshape(-1, 3)))
+            tris += len(T)
+    nsub = (CH.CHUNK_M // CH.SUB_M) ** 2
+    for (ci, cj, sub), items in sorted(add.items()):
+        V = np.concatenate([it[0] for it in items])
+        Nn = np.concatenate([it[1] for it in items])
+        off = np.cumsum([0] + [len(it[0]) for it in items[:-1]])
+        T = np.concatenate([it[2] + o for it, o in zip(items, off)])
+        C = None
+        if col is not None:
+            i = np.clip(np.round(V[:, 0] - e0).astype(int), 0, col.shape[1] - 1)
+            j = np.clip(np.round(n0 - V[:, 1]).astype(int), 0, col.shape[0] - 1)
+            C = col[j, i]
+        for li, prims in terrain[(ci, cj)].items():
+            if li > VERGE_TERRAIN_MAX_LOD:
+                continue
+            pr = prims[sub] if len(prims) == nsub else prims[0]
+            base = len(pr["V"])
+            pr["V"] = np.vstack([pr["V"], V])
+            pr["N"] = np.vstack([pr["N"], Nn])
+            pr["UV"] = np.vstack([pr["UV"], V[:, :2]])
+            pr["T"] = np.vstack([pr["T"], T + base])
+            if pr.get("COL") is not None and C is not None:
+                pr["COL"] = np.vstack([pr["COL"], C.reshape(len(V), -1)])
+    return {"tris": int(tris), "chunks": len({k[:2] for k in add})}
+
+
 # --------------------------------------------------------------------------------------------
 def route_polyline(region_id, w):
     """Start route (D4 candidate) as local polyline with per-vertex edge id (cameras, QA)."""
@@ -570,7 +624,9 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
     n0 = w.region["bbox"]["ymax"] - w.origin[1]
     terrain = CH.build_chunks(zc, mask, e0, n0, w.region["bbox"]["width_m"], col=st["col"])
     log("terrain chunks", len(terrain))
-    roads = assemble(w.buf.parts, LAYERS, half)
+    w.stats["verge_strips"] = merge_verge_into_terrain(terrain, w.buf.parts, half, st["col"], e0, n0)
+    log("verge strips in terrain", w.stats["verge_strips"])
+    roads = assemble([p for p in w.buf.parts if not _is_verge(p)], LAYERS, half)
     log("road chunks", len(roads))
 
     out_root = out_root or (REPO / "Data" / "raw" / "derived" / region_id / "world")
@@ -970,6 +1026,7 @@ def qa_report(w, mk_report, mask):
             "fork_tapers": w.stats.get("fork_tapers", []),
             "fork_abreast": w.stats.get("fork_abreast", []),
             "sides_on_carriageway_culled": w.stats.get("sides_on_carriageway_culled", {}),
+            "verge_strips": w.stats.get("verge_strips", {}),
             "fork_shifts": w.stats.get("fork_shifts", []),
             "gores": w.stats.get("gores", {}),
             "overrides_applied": net.overrides_applied, "overrides_stale": net.overrides_stale,

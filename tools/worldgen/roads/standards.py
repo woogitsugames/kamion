@@ -87,6 +87,8 @@ KERB_HEIGHT_APRON = 0.04            # WORKING_VALUE: roundabout truck apron kerb
 SIDEWALK_W = 2.00
 SIDEWALK_CROSSFALL = 0.02
 VERGE_W = 1.00                      # WORKING_VALUE: grass strip behind the kerb when no sidewalk
+VERGE_SKIRT_SLOPE = 2.0              # WORKING_VALUE (ADR 0110): run per unit fall of the grass skirt of a verge strip
+MEDIAN_VERGE_MAX = 3.00             # WORKING_VALUE (ADR 0110): grass strip behind a median kerb (two meet in the middle)
 FLANGE_DEPTH = 0.50                 # vertical skirt under the outer edge (hides terrain/road seams)
 TERRAIN_UNDER_ROAD = 0.35           # terrain pushed this far below the road surface inside footprint
 # Rural profile (outside built-up area), PTB2022 § 23 ust. 10 pkt 3-5: unpaved shoulder
@@ -239,6 +241,10 @@ GUARDRAIL_EMBANKMENT_H = 2.0
 GUARDRAIL_H = 0.75          # top of W-beam (typical SP-05 system) WORKING_VALUE
 GUARDRAIL_POST_SPACING = 2.0
 GUARDRAIL_OFFSET = 0.60     # behind the kerb face / edge WORKING_VALUE
+GUARDRAIL_TERMINAL_M = 4    # WORKING_VALUE (ADR 0110): free ground end of a W-beam turned down to the ground over this length
+BRIDGE_BARRIER_H = 1.10     # WORKING_VALUE (ADR 0110): handrail of the bridge barrier-railing (posts), Mapillary 454716650857984
+BRIDGE_BARRIER_MID = 0.92   # WORKING_VALUE: flat rail between the W-beam and the handrail (same frame)
+BRIDGE_BARRIER_EDGE_M = 0.40  # WORKING_VALUE: barrier-railing axis in from the outer edge of the cap (orthophoto 0.2-0.4 m)
 RAILING_H = 1.10            # pedestrian railing U-12a WORKING_VALUE (catalogue 1.0-1.1 m)
 # Fences (industrial plots) – catalogue values of 3D welded panel fences WORKING_VALUE
 FENCE_PANEL_W = 2.50
@@ -285,6 +291,8 @@ def grade_limit(highway: str, maxspeed: float | None) -> tuple[float, float]:
 # `surface: asphalt_new` / `surface: asphalt` on the edges wins.
 NEW_ASPHALT_SHARE = 0.25
 NEW_ASPHALT_CLASSES = ("A", "S", "GP", "G", "Z")
+NEW_ASPHALT_MIN_LEN_M = 120.0   # WORKING_VALUE (ADR 0110): a shorter chain is never "resurfaced" on its own - a 20 m
+#                                 chain between two plates (Putry N southbound, N 100-120) read as a patch rectangle
 
 
 def surface_material(chain, sec):
@@ -296,6 +304,8 @@ def surface_material(chain, sec):
         return m
     br = getattr(chain, "bridge", None)
     if chain.roundabout or sec.cls not in NEW_ASPHALT_CLASSES or (br is not None and bool(br.any())):
+        return m
+    if float(getattr(chain, "length", 1e9)) < NEW_ASPHALT_MIN_LEN_M:
         return m
     h = int(hashlib.sha1(f"{chain.id}:asphalt_new".encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
     return "road_asphalt_new" if h < NEW_ASPHALT_SHARE else m

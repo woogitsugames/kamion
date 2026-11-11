@@ -1026,11 +1026,16 @@ overrides:
     verify: owner drive
   - id: n10015785253-p21-north
     kind: painted_zone
-    stripe_az_deg: 42
-    stripe_w_m: 0.25      # ADR 0100: dense hatching on the 0.08 m orthophoto (zones0/n10015785253-p21-*.jpg), pitch ~0.5 m
-    stripe_gap_m: 0.25
-    polygon_en: [[-216.25, -226.6], [-212.5, -223.6], [-215.0, -227.3]]
-    reason: P-21 north of the island tip, between the two slip lanes.
+    stripe_az_deg: 8      # ADR 0110: re-read on the 0.08 m orthophoto at 120 px/m (artifacts/junctions-r4/trace/n100n.jpg)
+    stripe_w_m: 0.20      # 6-7 stripes about 0.2 m wide at 0.42 m pitch (WORKING_VALUE, orthophoto read)
+    stripe_gap_m: 0.22
+    border_w_m: 0.15
+    stripe_min_m: 0.2
+    polygon_en: [[-216.13, -226.57], [-212.21, -223.63], [-214.71, -227.54]]
+    reason: >-
+      P-21 north of the island tip, between the two slip lanes. ADR 0110 (REVIEW s10-0100 P0-1): the r3 polygon was
+      about 0.5-1 m too narrow on its east side and its 0.25/0.25 m stripes at 42 deg were all rejected as fragments
+      (empty frame); re-traced with stripes nearly east-west as on the orthophoto.
     confidence: high
     verify: owner drive
   - id: n10015785253-edge-line-clear
@@ -1135,6 +1140,20 @@ overrides:
   # ---------------------------------------------------------------- ADR 0100 (REVIEW s10-0095 P0-2): Putry N and MA-010
   # Lines join the ends of the generated lines at the patch borders (artifacts/junctions-r3/scripts/mk_near.py on the
   # plan cache) along the topology of the 0.08 m orthophoto (artifacts/junctions-r3/plan1/putry_n.jpg, trace/putry_n.jpg).
+  - id: putry-n-median-nose
+    kind: traffic_island
+    surface: apron_sett
+    polygon_en: [[-555.55, 130.3], [-555.5, 129.4], [-555.0, 128.75], [-554.2, 128.35], [-553.0, 128.2], [-551.8, 128.35],
+                 [-551.0, 128.75], [-550.55, 129.4], [-550.5, 130.3]]
+    reason: >-
+      ADR 0110 (REVIEW s10-0100 P1-1a): the north median of the Putry N arm ended square at the crossover plate (open
+      kerb end and a blunt face at N 129.6-130, the first thing the driver sees in eye_putry_n). The 0.08 m orthophoto
+      (artifacts/junctions-r4/trace/putry_n_nose.jpg) has a rounded nose with a paved collar about 1.5 m wide. Here a
+      kerbed sett nose closes the square end on the plate. The real nose tip sits at N 131.7 (the generated median
+      reaches 1.7 m further south than the real one - geometry of the plate not rebuilt), so the nose protrudes only
+      1.8 m to keep the crossover open.
+    confidence: medium
+    verify: owner drive
   - id: putry-n-sb-lane-1
     kind: painted_line
     line: P-1
@@ -1212,12 +1231,42 @@ overrides:
   - id: andersa-bay-apron-west
     kind: paved_apron
     surface: sett
-    polygon_en: [[-114.0, -317.5], [-100.0, -326.82], [-98.0, -326.0], [-98.0, -316.0], [-114.0, -313.0]]
+    # ADR 0110 (REVIEW s10-0100 P1-4): the r3 polygon kept 0.9-2 m of asphalt between the wide broken edge line and the
+    # sett (orthophoto: sett right up to the line) and ended in a corner short of the generated bay (stepped asphalt
+    # "tooth" E -103...-101 N -326...-328, plan_b2/bay_w.jpg). SW edge = the broken line (through E -114.25 N -319.56
+    # and E -103.5 N -328.2 on the plan) + 0.25 m, from E -122 to E -98.
+    polygon_en: [[-122.0, -313.08], [-98.0, -332.38], [-96.5, -331.0], [-96.5, -316.0], [-114.0, -313.0], [-122.0, -309.5]]
     reason: >-
       Sett bay on Andersa s 1040-1080, west end: on the orthophoto the sett runs on unbroken from E -122 N -310
       (artifacts/junctions-r3/plan1/merge1060.jpg, left); the generator ends it at E -100 with an asphalt "ear" of the
       junction patch. The polygon lies north of the P-7a edge line of the carriageway (0.15 m clear of it).
     confidence: medium
+    verify: owner drive
+  - id: andersa-bay-west-orphan-paint-1
+    kind: paint_clear
+    polygon_en: [[-116.2, -322.3], [-112.9, -322.3], [-112.9, -324.0], [-116.2, -324.0]]
+    reason: >-
+      ADR 0110 (REVIEW s10-0100 P1-4): orphaned arcs of generated edge paint at the west end of the sett bay (left over
+      from the old asphalt "ear" of the junction plate; nothing there on the orthophoto, plan_b1/bay_w.jpg).
+    confidence: high
+    verify: owner drive
+  - id: andersa-bay-west-orphan-paint-2
+    kind: paint_clear
+    polygon_en: [[-118.5, -325.1], [-117.3, -325.1], [-117.3, -326.05], [-118.5, -326.05]]
+    reason: Same (short tick on the lane, plan_b1/bay_w.jpg x 1100-1125 y 555-575).
+    confidence: high
+    verify: owner drive
+  - id: andersa-bay-west-orphan-paint-3
+    kind: paint_clear
+    polygon_en: [[-109.1, -323.65], [-107.0, -323.25], [-107.05, -322.7], [-109.1, -323.1]]
+    reason: Same (thin arc east of a dash of the wide broken edge line, plan_b1/bay_w.jpg x 1390-1458 y 476-499).
+    confidence: high
+    verify: owner drive
+  - id: andersa-bay-west-orphan-paint-4
+    kind: paint_clear
+    polygon_en: [[-103.6, -321.9], [-101.0, -321.9], [-101.0, -322.65], [-103.6, -322.65]]
+    reason: Same (arc on the sett, plan_b1/bay_w.jpg x 1578-1648 y 452-466).
+    confidence: high
     verify: owner drive
   - id: andersa-bay-apron-east
     kind: paved_apron
@@ -1241,12 +1290,21 @@ overrides:
     reason: The through line drawn diagonally across the plate (TL-P-7b@j:n1832975577, E -859.6 N 61.6 -> E -780.4 N 53.9) is not on the orthophoto.
     confidence: high
     verify: owner drive
+  - id: dk8-e-split-main-lane-clear
+    kind: paint_clear
+    polygon_en: [[-890.0, 56.8], [-875.0, 58.2], [-860.0, 59.8], [-845.0, 60.2], [-829.0, 60.75], [-812.0, 60.25], [-796.0, 59.75], [-786.0, 59.5], [-770.0, 57.85], [-756.0, 56.8], [-756.0, 55.6], [-770.0, 56.65], [-786.0, 58.3], [-796.0, 58.55], [-812.0, 59.05], [-829.0, 59.55], [-845.0, 59.0], [-860.0, 58.6], [-875.0, 57.0], [-890.0, 55.6]]
+    reason: >-
+      ADR 0110: the generated line on the lane boundary of the main carriageway (0.35 m left of the OSM way after
+      dk8-e-split-main-geometry) comes out solid on the junction plate (render b4 r3_e_split_top); cleared +-0.6 m and
+      repainted broken (next override).
+    confidence: high
+    verify: owner drive
   - id: dk8-e-split-main-lane
     kind: painted_line
     line: P-1
-    polyline_en: [[-860.0, 59.9], [-830.0, 59.85], [-805.0, 59.8], [-786.0, 59.75]]
-    reason: Broken lane line of the two main lanes at N 59.85 (east_split_w.jpg y 360, east_split.jpg y 445).
-    confidence: high
+    polyline_en: [[-890.0, 56.2], [-875.0, 57.6], [-860.0, 59.2], [-845.0, 59.6], [-829.0, 60.15], [-812.0, 59.65], [-796.0, 59.15], [-786.0, 58.9], [-770.0, 57.25], [-756.0, 56.2]]
+    reason: Broken lane line of the main carriageway E -890...-756 (orthophoto N 59.75 at E -815, plan_b2/east_split.jpg).
+    confidence: medium
     verify: owner drive
   - id: dk8-e-split-line-solid
     kind: painted_line
@@ -1255,24 +1313,66 @@ overrides:
     reason: Solid wide line between the main carriageway and the ramp lane west of the chevrons (east_split_w.jpg y 495).
     confidence: high
     verify: owner drive
+  - id: dk8-e-split-main-geometry
+    target: {edge: "w23982185:1832975577-4825844767"}
+    reason: >-
+      ADR 0110 (REVIEW s10-0100 P1-3): eastbound DK8 after the split node, 139.5 m to the bridge joint. Orthophoto
+      (artifacts/junctions-r4/trace/e_split_band.jpg 50 px/m, plan_b2/east_split.jpg 20 px/m, xsec/e_main_raw.png): north
+      kerb about 4.3 m left of the OSM way, lane line 0.35 m left, solid line / top border of the chevrons 2.55 m right
+      (N 64.2 / 59.75 / 56.9 at E -815) = two lanes 3.45 + 2.9 m; south of them the painted wedge (0.75 -> 3 m) and from
+      E -805.6 the kerbed separator. lane_edges (from the left edge) + width: the carriageway runs on under the hatching
+      and the island to the ramp lane, so they keep asphalt under them and no kerb is generated between the two ribbons; over the last 28 m it
+      returns to the standard 8.0 m on the OSM way (bridge joint, deck not touched)
+      (the standard gave 8.0 m centred on the way: its right lane lay under the chevrons and the island).
+      Readings +-0.5 m between crops (WORKING_VALUE).
+    confidence: medium
+    verify: owner drive
+    set:
+      lane_edges: [0.5, 3.95, 6.85]
+      width: [[0.0, 10.6], [0.8, 10.6], [1.0, 8.0]]
+      center_offset: [[0.0, -1.0], [0.8, -1.0], [1.0, 0.0]]
+      edge_lines: left
+  - id: dk8-e-split-link-geometry
+    target: {edge: "w173956079:1832975577-2256069814"}
+    reason: >-
+      ADR 0110 (REVIEW s10-0100 P1-3): eastbound ramp to Rondo Putry, first 139 m after the split node. OSM lanes=3 gave
+      an 11.5 m ribbon centred on the way; on the 0.08 m orthophoto it is ONE lane 3.6-4.3 m wide whose south kerb runs
+      5.3 / 2.75 / 2.5 / 0.6 / 0.4 / 2.4 m right of the way at stations 0 / 29 / 55 / 86 / 108 / 139 (kerb at N 50.4 /
+      51.05 / 52.1 / 51.2 / 48.5 / 42.6; crops artifacts/junctions-r4/trace/e_split_band.jpg, plan_b0x/east_split_w.jpg,
+      east_split_e.jpg, xsec/e_link_raw.png). The generated south edge lay 3-4 m beyond it. The ribbon is that lane (the
+      hatching and the island lie on the main carriageway, dk8-e-split-main-geometry); from station 108 it widens to the
+      7.5 m of the next edge and returns to the OSM way at the bridge joint (deck not touched). Readings +-0.5 m (WORKING_VALUE).
+    confidence: medium
+    verify: owner drive
+    set:
+      lanes: 1
+      width: [[0.0, 3.8], [0.206, 3.8], [0.397, 3.8], [0.616, 3.8], [0.78, 4.3], [1.0, 7.5]]
+      center_offset: [[0.0, -3.4], [0.206, -0.85], [0.397, -0.6], [0.616, 1.3], [0.78, 1.75], [1.0, 0.0]]
+      edge_lines: right
   - id: dk8-e-split-p21-front
     kind: painted_zone
-    chevron_axis: [[-831.0, 56.12], [-805.6, 55.75]]
+    chevron_axis: [[-831.0, 56.3], [-806.0, 55.3]]
     chevron_apex: tip
     stripe_rel_deg: 35
     stripe_w_m: 0.3
     stripe_gap_m: 0.55
-    polygon_en: [[-831.0, 56.12], [-826.0, 56.6], [-806.2, 56.65], [-805.7, 56.2], [-805.6, 55.75], [-805.9, 55.1],
-                 [-806.3, 54.85], [-820.0, 55.1]]
-    reason: P-21 chevrons in front of the separator nose (east_split.jpg x 0-470 y 540-600; apex west, crop es.jpg).
+    polygon_en: [[-831.0, 56.65], [-806.2, 56.65], [-805.7, 56.2], [-805.6, 55.75], [-805.9, 55.1], [-806.2, 53.9],
+                 [-813.0, 54.5], [-821.0, 55.2], [-831.0, 55.9]]
+    reason: >-
+      P-21 chevrons in front of the separator nose (apex west). ADR 0110 (REVIEW s10-0100 P1-3): re-traced at 50 px/m
+      (artifacts/junctions-r4/trace/e_split_band.jpg): the band is 0.75-1.0 m wide at E -831 and 2.75-3.0 m at the
+      nose (south border N 55.9 / 55.2 / 54.5 / 53.9 at E -831 / -821 / -813 / -806.2); the r3 wedge was at most 1.2 m.
     confidence: high
     verify: owner drive
   - id: dk8-e-split-island
     kind: traffic_island
     surface: sidewalk_paving
-    polygon_en: [[-805.6, 55.75], [-805.2, 56.45], [-804.4, 56.68], [-788.0, 56.75], [-788.0, 54.7], [-804.4, 54.8],
-                 [-805.2, 55.05]]
-    reason: Kerbed paved separator east of the nose E -805.6 N 55.75 (east_split.jpg x 470-1000 y 545-605); continues east beyond the crop (end not traced, WORKING_VALUE E -788).
+    polygon_en: [[-805.6, 55.75], [-805.2, 56.45], [-804.4, 56.68], [-796.0, 56.5], [-788.0, 55.6], [-788.0, 53.4],
+                 [-797.0, 54.5], [-804.4, 54.9], [-805.2, 55.05]]
+    reason: >-
+      Kerbed paved separator east of the nose E -805.6 N 55.75. ADR 0110: its east part drifts south with the ramp
+      (plan_b0x/east_split_e.jpg: N 52.7-55.1 at E -797); it runs on with the barrier to the bridge joint E -754 -
+      traced to E -788 (beyond it the two ribbons separate and the generator builds the kerbs).
     confidence: medium
     verify: owner drive
   - id: dk8-e-split-barrier
@@ -1294,7 +1394,7 @@ overrides:
     stripe_az_deg: -35
     stripe_w_m: 0.3
     stripe_gap_m: 0.55
-    polygon_en: [[-806.3, 54.65], [-795.5, 54.7], [-795.5, 53.0]]
+    polygon_en: [[-806.2, 53.9], [-806.0, 55.0], [-797.0, 54.45], [-796.5, 53.3]]   # ADR 0110: 1 m band sliding SE (was a wedge)
     reason: P-21 oblique band on the ramp side of the separator (east_split.jpg x 450-770 y 600-655).
     confidence: medium
     verify: owner drive
@@ -1336,17 +1436,20 @@ overrides:
     verify: owner drive
   - id: n100-se-guidance-arrow-1
     kind: painted_arrow
-    at_en: [-261.0, -237.0]
-    heading_deg: 17
-    turns: [through]
-    reason: P-9 guidance arrow in the ending right lane (plan1/n10015785253.jpg left, x 105-160 y 300-315), pointing into lane 3.
-    confidence: medium
+    at_en: [-260.83, -236.85]
+    heading_deg: -34.7
+    turns: [guide_left]
+    reason: >-
+      P-9 guidance arrow in the ending right lane, pointing into lane 3. ADR 0110 (REVIEW s10-0100 P1-5): the r3 glyph
+      was a thin through arrow turned across the lane ("needle"); now the P-9 shape traced on the orthophoto
+      (artifacts/junctions-r4/trace/n100_arrow1.jpg), tail edge parallel to the lane.
+    confidence: high
     verify: owner drive
   - id: n100-se-guidance-arrow-2
     kind: painted_arrow
-    at_en: [-248.6, -245.8]
-    heading_deg: 14
-    turns: [through]
-    reason: Second P-9 guidance arrow (x 250-310 y 403-418), 14 m before the kerb jog E -247 N -253.
-    confidence: medium
+    at_en: [-247.83, -245.79]
+    heading_deg: -34.7
+    turns: [guide_left]
+    reason: Second P-9 guidance arrow 15.8 m further (artifacts/junctions-r4/trace/n100_arrow2.jpg), before the kerb jog E -247 N -253.
+    confidence: high
     verify: owner drive

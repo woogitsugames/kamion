@@ -109,6 +109,15 @@ def polygon_mark(buf, c, poly_xy, origin_s, lat0, fwd, left, kind):
 
 
 def arrow_glyph(turns: list, long: bool):
+    for t in turns:
+        if t in ("guide_left", "guide_right"):
+            # P-9 guidance arrow (lane ends, move over): traced at 75 px/m on the 0.08 m orthophoto, Andersa SE-bound
+            # before n10015785253 (artifacts/junctions-r4/trace/n100_arrow1.jpg; ADR 0110, REVIEW s10-0100 P1-5).
+            # x = lane direction, y = left; origin = middle of the tail edge (which is cut parallel to the lane).
+            # WORKING_VALUE (orthophoto read; the dimensions of the regulation drawing are UNVERIFIED).
+            sg = 1.0 if t == "guide_left" else -1.0
+            pts = [(-0.9, 0.0), (0.65, 1.45), (-0.2, 1.45), (4.2, 2.75), (3.1, 1.4), (2.1, 1.4), (0.9, 0.0)]
+            return Polygon([(x, sg * y) for x, y in pts])
     d = S.ARROW_LONG if long else S.ARROW_SHORT
     L, hl, hw, sw = d["len"], d["head_len"], d["head_w"], d["shaft_w"]
     shapes = []

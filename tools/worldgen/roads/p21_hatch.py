@@ -81,7 +81,7 @@ def _axis_line(axis):
         np.vstack([A[0] - d0 * 500.0, A[-1] + d1 * 500.0])
 
 
-def _pieces_quads(region, direction, origin, w=STRIPE_W_M, gap=STRIPE_GAP_M):
+def _pieces_quads(region, direction, origin, w=STRIPE_W_M, gap=STRIPE_GAP_M, min_len=STRIPE_MIN_M):
     """Analytic stripe quads of stripes running along `direction`, spaced from `origin`, clipped to `region`."""
     if region.is_empty:
         return []
@@ -118,7 +118,7 @@ def _pieces_quads(region, direction, origin, w=STRIPE_W_M, gap=STRIPE_GAP_M):
                 Q = np.vstack(pts)
                 t = (Q - o) @ d
                 ends.append((float(t.min()), float(t.max()), h))
-            if any(e is None or e[1] - e[0] < STRIPE_MIN_M for e in ends):
+            if any(e is None or e[1] - e[0] < min_len for e in ends):
                 continue
             (a0, a1, ha_), (b0, b1, hb_) = ends
             q = np.array([o + d * a0 + nrm * ha_, o + d * a1 + nrm * ha_, o + d * b1 + nrm * hb_, o + d * b0 + nrm * hb_])
@@ -138,13 +138,15 @@ def hatch(o):
         raise ValueError("self-intersecting polygon: " + shapely.is_valid_reason(pg))
     if pg.area < 1.0:
         raise ValueError("polygon smaller than 1 m2")
-    border, inner_pts = border_quads(P, edges=o.get("border_edges")) if o.get("border", True) else ([], _ccw(P))
+    bw = float(o.get("border_w_m", BORDER_W_M))          # ADR 0110: small fields carry a thinner frame on the orthophoto
+    border, inner_pts = border_quads(P, w=bw, edges=o.get("border_edges")) if o.get("border", True) else ([], _ccw(P))
     inner = Polygon(inner_pts)
     if not inner.is_valid or inner.is_empty:
-        inner = pg.buffer(-BORDER_W_M, join_style=2)
+        inner = pg.buffer(-bw, join_style=2)
     inner = inner.intersection(pg)
     rel = float(o.get("stripe_rel_deg", STRIPE_REL_DEG))
     sw, sg_ = float(o.get("stripe_w_m", STRIPE_W_M)), float(o.get("stripe_gap_m", STRIPE_GAP_M))
+    smin = float(o.get("stripe_min_m", STRIPE_MIN_M))    # ADR 0110: small dense fields keep shorter stripes at the tip
     # chevrons: the apex of every V points to `chevron_apex` (tip = first axis point, nose = last), read off the
     # orthophoto per zone (DK8 E -782: nose; s 1440 diverge: tip)
     apex = -1.0 if o.get("chevron_apex", "tip") == "nose" else 1.0
@@ -164,7 +166,7 @@ def hatch(o):
             for side, sg in ((left, 1.0), (right, -1.0)):
                 part = inner.intersection(side)
                 dd = az + apex * sg * rel
-                q = _pieces_quads(part, (math.cos(math.radians(dd)), math.sin(math.radians(dd))), A[0], sw, sg_)
+                q = _pieces_quads(part, (math.cos(math.radians(dd)), math.sin(math.radians(dd))), A[0], sw, sg_, smin)
                 stripes += q
                 fields.append((round(dd, 2), len(q)))
         else:
@@ -183,7 +185,7 @@ def hatch(o):
                 dd = math.degrees(math.atan2(seg[1], seg[0])) + rel
                 mode = "auto"
             cen = np.asarray(pg.centroid.coords[0])
-            q = _pieces_quads(inner, (math.cos(math.radians(dd)), math.sin(math.radians(dd))), cen, sw, sg_)
+            q = _pieces_quads(inner, (math.cos(math.radians(dd)), math.sin(math.radians(dd))), cen, sw, sg_, smin)
             stripes += q
             fields.append((round(dd, 2), len(q)))
     return {"border": border, "stripes": stripes, "fields": fields, "mode": mode, "polygon": pg}

@@ -105,3 +105,9 @@ def test_built_zones_do_not_sink_and_keep_their_stripes():
         # cells are lifted onto the highest surface sample (no paint under the asphalt), never by more than a step
         assert z["max_lift_m"] <= H.MAX_LIFT_M, (z["id"], z["max_lift_m"])
         assert z["stripes"] > 0, z["id"]
+        if "stripes_built" in z:
+            # ADR 0110 (REVIEW s10-0100 P0-1): a field must not come out as an empty frame - most analytic stripes
+            # reach the mesh and they cover a visible share of the field
+            assert z["stripes_built"] >= max(1, int(0.6 * z["stripes"])), (z["id"], z["stripes_built"], z["stripes"])
+            if z["area_m2"] > 1.0:
+                assert z["stripe_cover"] >= 0.15, (z["id"], z["stripe_cover"])

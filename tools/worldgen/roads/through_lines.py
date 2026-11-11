@@ -334,12 +334,14 @@ def paint_zones(buf, overrides, report, applied, stale):
         cen = np.asarray(pg.centroid.coords[0])
         Vs, Ts, nv = [], [], 0
         lost, sink = 0, 0.0
-        for q in g["border"] + g["stripes"]:
+        nb, sbuilt = len(g["border"]), 0
+        for qi, q in enumerate(g["border"] + g["stripes"]):
             V, T = H.drape_quad(q)
             zl, T, nl, lf = H.drape_lift(top, V, T)
             lost += nl
             if not len(T):
                 continue
+            sbuilt += qi >= nb          # ADR 0110: stripes that reached the mesh (an empty frame must fail the test)
             sink = max(sink, lf)
             Vs.append(np.column_stack([V, np.nan_to_num(zl) + S.MARKING_LIFT]))
             Ts.append(T + nv)
@@ -354,7 +356,9 @@ def paint_zones(buf, overrides, report, applied, stale):
             stale.append(o["id"])
         rep.append({"id": o["id"], "built": bool(ntri), "area_m2": round(float(pg.area), 1), "tris": ntri,
                     "tris_off_carriageway": lost, "xy": [round(float(v), 1) for v in cen], "mode": g["mode"],
-                    "stripes": len(g["stripes"]), "fields_deg": g["fields"], "max_lift_m": round(sink, 4)})
+                    "stripes": len(g["stripes"]), "stripes_built": int(sbuilt),
+                    "stripe_cover": round(float(sum(Polygon(q).area for q in g["stripes"]) / max(pg.area, 1e-9)), 3),
+                    "fields_deg": g["fields"], "max_lift_m": round(sink, 4)})
     report["painted_zones"] = rep
     # other paint inside a painted zone or on an authored island is erased (a lane line of the generated ribbon
     # under the hatching of a painted lane drop; lines of the patch under an island)

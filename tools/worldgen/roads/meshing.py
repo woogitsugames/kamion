@@ -168,6 +168,20 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
     zg = c.crossfall_z(st, sgn * hw)
     G = P + N * (sgn * hw)[:, None]
     # flush edge shared with another carriageway (asphalt, no kerb): its own strip, like a profile family
+    if not coarse and c.side[side].get("verge") is not None:
+        vg = c.side[side]["verge"]
+        wl = c.meta.get("walled")
+        vw = np.array([float(c.interp(vg, s)) if (p[0] == URBAN and p[2] < 0.05 and p[4] == 0 and p[1] > 0.05) else 0.0
+                       for s, p in zip(st, params)])
+        if br is not None:
+            vw[br] = 0.0
+        if wl is not None:
+            vw[c.interp(wl.astype(float), st) > 0.01] = 0.0
+        _emit_verge(buf, G, N * sgn, zg, np.array([p[1] for p in params]), vw, kap, hw, side == "R",
+                    f"{c.id}:{side}:vg")
+        nofl = vw > 0.05
+    else:
+        nofl = None
     kl = [(p[0], p[4] == MAT_FLUSH_ROAD) for p in params]
     if len(set(kl)) > 1 and (len(kinds - {URBAN, ISLAND}) > 0 or any(k[1] for k in kl)):
         # rural/urban mix (e.g. a bridge on a rural road): one strip per run of the same profile family,
@@ -187,10 +201,62 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
                 # where the hidden kerb starts). The borrowed station continues this run's own height instead.
                 prm[0] = (kr, prm[1][1], *prm[0][2:])
             _emit_strip(buf, G[sl], (N * sgn)[sl], zg[sl], prm, kap[sl], hw[sl], side == "R",
-                        br[sl] if br is not None else None, coarse, f"{c.id}:{side}:{r}")
+                        br[sl] if br is not None else None, coarse, f"{c.id}:{side}:{r}",
+                        noflange=None if nofl is None else nofl[sl])
         return
     _emit_strip(buf, G, N * sgn, zg, params, kap, hw, side == "R",
-                br, coarse, c.id + ":" + side)
+                br, coarse, c.id + ":" + side, noflange=nofl)
+
+
+def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
+    """ADR 0110: grass strip behind a kerb without a sidewalk, from the back of the kerb top at the kerb crown
+    (rising SIDEWALK_CROSSFALL outward), VW m wide per station, ending in a battered grass skirt
+    (1 : VERGE_SKIRT_SLOPE, FLANGE_DEPTH deep) instead of the kerb's vertical concrete flange. Visual only (the
+    collision ground behind a kerb stays the terrain). Exported inside the terrain primitives of its chunk
+    (build_world.merge_verge_into_terrain): same grass, no extra draw call."""
+    n = len(G)
+    VW = np.asarray(VW, float).copy()
+    if n < 2 or VW.max() < 0.05:
+        return
+    VW[VW < 0.05] = 0.0
+    along = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(G, axis=0).T))])
+    # ends: the strip and its skirt run out over 2 m (a strip that stopped within one station next to a dense corner
+    # arc left a near-vertical grass face, terrain_walls b1)
+    zero = np.where(VW <= 0.0)[0]
+    dist = np.full(n, 1e9) if not len(zero) else np.abs(along[:, None] - along[zero][None, :]).min(1)
+    VW = np.minimum(VW, 0.5 * dist)
+    depth = np.minimum(S.FLANGE_DEPTH, 0.06 * dist)
+    tw = S.KERB_TOP_W
+    scale = np.ones(n)
+    inside = kap_toward > 1e-6
+    if inside.any():
+        R = 1.0 / np.maximum(kap_toward[inside], 1e-6)
+        allow = np.maximum(0.3, 0.9 * R - (hw[inside] if np.ndim(hw) else hw))
+        scale[inside] = np.minimum(1.0, allow / np.maximum(tw + VW[inside] + S.FLANGE_DEPTH * S.VERGE_SKIRT_SLOPE, 1e-6))
+    on = VW > 0.0
+    u0 = tw * scale
+    u1 = (tw + VW) * scale
+    depth = np.where(on, depth, 0.0) * scale          # squeezed on the inside of a curve: shallower, same 1:2 slope
+    u2 = u1 + depth * S.VERGE_SKIRT_SLOPE
+    z0 = zg + H
+    z1 = z0 + S.SIDEWALK_CROSSFALL * VW
+    z2 = z1 - depth
+    P0 = np.column_stack([G + OUT * u0[:, None], z0])
+    P1 = np.column_stack([G + OUT * u1[:, None], z1])
+    P2 = np.column_stack([G + OUT * u2[:, None], z2])
+    # straights: one quad per run (Douglas-Peucker on the three edge lines, 1-2 cm; the kerb beside it keeps every
+    # station, the hairline between them is under the tolerance, 2.5 cm)
+    from .geom import dp_keep
+    kp = dp_keep(P0, 0.025) | dp_keep(P1, 0.025) | dp_keep(P2, 0.03)
+    P0, P1, P2, u0, u1, u2, along = P0[kp], P1[kp], P2[kp], u0[kp], u1[kp], u2[kp], along[kp]
+    n = len(P0)
+    T = grid_tris(n, 2, flip=flip)
+    for A, B, ua, ub, fp in ((P0, P1, u0, u1, True), (P1, P2, u1, u2, False)):
+        V = np.concatenate([A[:, None, :], B[:, None, :]], axis=1).reshape(-1, 3)
+        UV1 = np.column_stack([np.repeat(along, 2), np.column_stack([ua, ub]).ravel()])
+        # not footprint: the conformed terrain under the strip stays as it was (road edge - 0.03 m, below the crown), so
+        # the footprint mask the streetscape stage reads (plantings in island holes, yards, trees) is unchanged
+        buf.add("road", "verge_grass", V, V[:, :2].copy(), T, footprint=False, src=src, UV1=UV1)
 
 
 # ADR 0100 (REVIEW s10-0095 P1-8): a concrete strip wider than a kerb top (walk material code 0 = curb_concrete, e.g.
@@ -199,7 +265,7 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
 KERB_TOP_UV_MAX_W = 0.4
 
 
-def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
+def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, noflange=None):
     """G: gutter points (n,2), OUT: unit outward vectors (n,2) (may be miter-scaled), zg gutter z,
     params: per-point side params, kap_toward: curvature toward this side (>0 = side is inside)."""
     n = len(G)
@@ -208,7 +274,10 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
     kinds = [p[0] for p in params]
     # unify family: all points must share topology
     if len(set(kinds)) > 1:
-        params = [(URBAN, p[1], (p[2] if p[0] == URBAN else 0.0), p[3], p[4] if p[0] == URBAN else 0) for p in params]
+        # ADR 0110: `h` of a rural station is its DITCH depth (0.2-0.6 m), not a kerb height: a corner between a kerbed
+        # and a rural arm rose to a 0.6 m concrete wall (j:n1847317049:corner0, kerb_rise.py)
+        params = [(URBAN, p[1] if p[0] == URBAN else S.KERB_HEIGHT, (p[2] if p[0] == URBAN else 0.0), p[3],
+                   p[4] if p[0] == URBAN else 0) for p in params]
     profs = [_profile_rows(*p, coarse) for p in params]
     nseg = len(profs[0])
     # fold protection
@@ -269,6 +338,11 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
         T = grid_tris(n, 2, flip=flip)
         vertical = rw < 1e-6
         is_flange = vertical and k == nseg - 1 and not coarse
+        if is_flange and noflange is not None and len(T):
+            # ADR 0110: behind a verge strip (meshing._emit_verge) the buried flange is never seen - not meshed
+            # (about half of all kerb triangles of the region were flanges of kerbs without a sidewalk)
+            ts = np.minimum(T.min(1) // 2, n - 2)
+            T = T[~(noflange[ts] & noflange[ts + 1])]
         cmat = ("collision_" + ("curb" if mat == "curb_concrete" else "asphalt" if mat.startswith("road_") else
                                 "paving" if mat in ("sidewalk_paving", "apron_sett", "bridge_concrete") else
                                 "grass")) if coarse else mat
@@ -410,7 +484,9 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
         # balustrade on both cap edges (WORKING_VALUE geometry, low confidence): open steel railing =
         # handrail band at 1.0-1.1 m + mid rail at 0.45-0.60 m + posts every 2 m, set 0.15 m in from the edge
         tt, nn = c.line.frame(ss)
-        for side, sgn in (() if hero else (("L", 1.0), ("R", -1.0))):
+        # ADR 0110: no balustrade where a noise screen stands on the same edge (the screen is the edge protection; with
+        # the barrier-railing that made three rail systems side by side, REVIEW s10-0100 P1-6 p0_lamp_w1101181473_eye)
+        for side, sgn in (() if (hero or style["noise_screen"]) else (("L", 1.0), ("R", -1.0))):
             top = outer[side][1].copy()
             top[:, :2] -= nn * sgn * 0.15
             for z0, z1, th in ((S.BRIDGE_PARAPET_H - 0.10, S.BRIDGE_PARAPET_H, 0.06), (0.45, 0.60, 0.04)):
@@ -693,7 +769,8 @@ def build_patch(buf, net, j, coarse=False, stats=None):
                 i1 = (i + 1) % n
                 T.append((b0 + i, b1 + i, b1 + i1))
                 T.append((b0 + i, b1 + i1, b0 + i1))
-        buf.add(layer, mat, V, V[:, :2].copy(), np.array(T), footprint=(layer == "road" and not coarse), src=j.id)
+        buf.add(layer, mat, V, V[:, :2].copy(), np.array(T), footprint=(layer == "road" and not coarse), src=j.id,
+                UV1=None if coarse else _patch_uv1(net, j, V))
         if stats is not None:
             stats["polar"] = stats.get("polar", 0) + 1
     else:
@@ -702,7 +779,8 @@ def build_patch(buf, net, j, coarse=False, stats=None):
             res = _repair_fill(poly, zb, ph, S.PATCH_COLLISION_SPACING_M if coarse else 2.5)
             if res is not None:
                 V, T = res
-                buf.add(layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id)
+                buf.add(layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id,
+                UV1=None if coarse else _patch_uv1(net, j, V))
                 if stats is not None:
                     stats["repaired"] = stats.get("repaired", 0) + 1
                     stats.setdefault("repaired_ids", []).append(j.id)
@@ -726,7 +804,8 @@ def build_patch(buf, net, j, coarse=False, stats=None):
                 T = np.array(ear_clip(poly))
                 kind = "earclip"
             V = np.column_stack([poly, zb])
-        buf.add(layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id)
+        buf.add(layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id,
+                UV1=None if coarse else _patch_uv1(net, j, V))
         if stats is not None:
             stats[kind] = stats.get(kind, 0) + 1
             if kind == "earclip":
@@ -841,6 +920,66 @@ def _repair_fill(poly, zb, ph, spacing):
     return np.vstack(Vs), np.vstack(Ts)
 
 
+def _patch_uv1(net, j, V):
+    """UV1 = (lane coordinate, distance to the carriageway edge) of a junction plate, in the frame of its through
+    road: the widest arm and the arm opposite to it (ADR 0110, REVIEW s10-0100 P1-2). Plates had no UV1 (the exporter
+    default -1 / 5 m = no wheel paths, no gutter dirt), so every plate in a weathered carriageway read as a cleaner,
+    lighter rectangle across the lanes (p0_fork_putry_eye, eye_putry_n). Vertices outside the through road keep the
+    default."""
+    P = np.asarray(V, float)[:, :2]
+    lane = np.full(len(P), -1.0)
+    edge = np.full(len(P), 5.0)
+    score = np.full(len(P), np.inf)
+    if not j.arms:
+        return np.column_stack([lane, edge])
+    hws = [float(a.chain.hw_at(float(a.s(j.trims[i])))) for i, a in enumerate(j.arms)]
+    i0 = int(np.argmax(hws))
+    d0 = j.arms[i0].direction(float(j.trims[i0]))
+    ref = [i0]
+    best = None
+    for i, a in enumerate(j.arms):
+        if i == i0:
+            continue
+        dot = float(np.dot(a.direction(float(j.trims[i])), d0))
+        if dot < -0.8 and (best is None or dot < best[0]):
+            best = (dot, i)
+    if best is not None:
+        ref.append(best[1])
+    for i in ref:
+        a = j.arms[i]
+        c = a.chain
+        d = float(j.trims[i])
+        s0 = float(a.s(d))
+        sec = c.section(s0, net.sec_list)
+        lo, hi = (0.0, d + 5.0) if a.end == "a" else (c.length - d - 5.0, c.length)
+        idx = np.where((c.line.s >= lo - 1e-6) & (c.line.s <= hi + 1e-6))[0]
+        if len(idx) < 2:
+            continue
+        pts = c.line.p[idx]
+        A, B = pts[:-1], pts[1:]
+        AB = B - A
+        l2 = np.maximum((AB ** 2).sum(1), 1e-12)
+        t = np.clip(((P[:, None, :] - A[None]) * AB[None]).sum(2) / l2[None], 0.0, 1.0)
+        C = A[None] + AB[None] * t[..., None]
+        D = np.hypot(P[:, None, 0] - C[..., 0], P[:, None, 1] - C[..., 1])
+        k = D.argmin(1)
+        dist = D[np.arange(len(P)), k]
+        cross = AB[k, 0] * (P[:, 1] - A[k, 1]) - AB[k, 1] * (P[:, 0] - A[k, 0])
+        lat = np.copysign(dist, cross)
+        hw = hws[i]
+        if getattr(sec, "lane_edges", None):
+            lc = sec.lane_coord(lat, hw, int(c.dirn[c.idx(s0)]) or 1)
+        elif sec.oneway or sec.roundabout:
+            lc = (lat + hw - sec.edge_strip) / max(float(sec.lane_w), 2.0)
+        else:
+            lc = np.abs(lat) / max(float(sec.lane_w), 2.0)
+        better = (dist < score) & (dist <= hw + 0.3)
+        lane[better] = np.asarray(lc, float)[better]
+        edge[better] = np.maximum(hw - dist, 0.0)[better]
+        score[better] = dist[better]
+    return np.column_stack([lane, edge])
+
+
 def _patch_mat(net, j):
     # ADR 0100 (REVIEW s10-0095 P1-6): the majority of the arms' ENGINE materials (incl. the resurfaced share,
     # standards.surface_material). Taking the raw section material made every plate between two resurfaced arms a
@@ -929,6 +1068,13 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
                 corner = j.corners[tag[1]]
                 if corner.kind in ("fillet", "nose") and corner.R > 0:
                     kap[m] = 1.0 / (0.8 / 0.9 * corner.R)
+        va = A.chain.side[sideA].get("verge")
+        vb = B.chain.side[sideB].get("verge")
+        cv = None
+        if va is not None and vb is not None and not coarse:
+            va_ = float(A.chain.interp(va, float(A.s(j.trims[i]))))
+            vb_ = float(B.chain.interp(vb, float(B.s(j.trims[i1]))))
+            cv = va_ + (vb_ - va_) * f
         # another carriageway (not an arm of this junction) right beside the corner: the strip is flush asphalt up
         # to it. The kerb of a median that two carriageways close on used to end 3 m before they met and left a
         # slot down to the terrain (j:n10015785253, 0.5 m deep, terrain_walls QA; ADR 0076)
@@ -937,6 +1083,18 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
                   ((p[0], 0.0, p[2], p[3], p[4]) if (p[0] == URBAN and p[4] == MAT_FLUSH_ROAD) else p)
                   for p, g, r in zip(params, gaps, rise)]
         fl = [p[0] == URBAN and p[4] == MAT_FLUSH_ROAD for p in params]
+        nofl = None
+        if cv is not None and not _patch_on_bridge(j):
+            # ADR 0110: the grass behind the kerb runs round the corner / median nose too
+            vw = np.array([v if (q[0] == URBAN and q[2] < 0.05 and q[4] == 0 and q[1] > 0.05) else 0.0
+                           for v, q in zip(cv, params)])
+            # a corner whose kerb line jumps in height (plates of two levels meeting: j:n2591872092, +-1 m between
+            # stations) gets no grass - the strip would repeat the jumps as 1-2 m grass faces
+            dsz = np.maximum(np.hypot(*np.diff(G, axis=0).T), 0.25)
+            if len(Z) > 1 and float(np.max(np.abs(np.diff(Z)) / dsz)) > 0.15:
+                vw[:] = 0.0
+            _emit_verge(buf, G, OUT, Z, np.array([q[1] for q in params]), vw, kap, hwz, True, j.id + f":corner{i}:vg")
+            nofl = vw > 0.05
         # the corner polyline runs CCW around the patch, outward = right of travel -> mirrored strip
         if len(set(fl)) > 1:
             # one strip per run of flush / kerbed stations sharing the boundary station (as build_side_strip): the
@@ -952,9 +1110,9 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
                         ((q[0], 0.0, 0.0, q[3], 0) if q[4] == MAT_FLUSH_ROAD else q))
                        if q[0] == URBAN else q for q in params[lo:b_]]
                 _emit_strip(buf, G[sl], OUT[sl], Z[sl], prm, kap[sl], hwz[sl], True, None, coarse,
-                            j.id + f":corner{i}" + (f":{r}" if r else ""))
+                            j.id + f":corner{i}" + (f":{r}" if r else ""), noflange=None if nofl is None else nofl[sl])
         else:
-            _emit_strip(buf, G, OUT, Z, params, kap, hwz, True, None, coarse, j.id + f":corner{i}")
+            _emit_strip(buf, G, OUT, Z, params, kap, hwz, True, None, coarse, j.id + f":corner{i}", noflange=nofl)
 
 
 CORNER_FILL_DZ_M = 0.15      # the neighbour's edge must be this close in height to the corner (WORKING_VALUE)
@@ -1060,7 +1218,12 @@ def cull_sides_on_carriageway(buf: MeshBuf) -> dict:
         tri = p.V[p.T]
         cen = tri.mean(1)
         drop = on_cw(cen)
-        if kerb:
+        if p.src.endswith(":vg"):
+            # ADR 0110: grass behind a kerb never lies on a carriageway, not even with one vertex (a strip reaching
+            # onto the lane of a merging road stood 0.13 m above its asphalt: marking_off_carriageway 2 -> 11 in b1)
+            for k in range(3):
+                drop |= on_cw(tri[:, k] + (cen - tri[:, k]) * 0.05)
+        elif kerb:
             for o in ring:
                 if not drop.any():
                     break
