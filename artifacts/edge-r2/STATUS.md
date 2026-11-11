@@ -68,3 +68,5 @@ Po GIS sprawdzono niezmienność własnego QA/manifesta i obu SHA far GLB; odtwo
 Następny krok: uzupełnić ADR i REPORT ze wszystkimi porażkami, skopiować artifacts, od razu r3.
 Krok 26: REPORT (normalny polski tekst, 17 linii) i VALIDATION opisują wyniki oraz obie porażki pełnego GIS bez oznaczania zestawu PASS. ADR uzupełniono o dowód deterministyczności 64 fizycznych chunków i problem bazowych metadanych. Stan produkcji i własne artefakty są zapisane.
 Następny krok: robocopy artifacts/edge-r2 do main, zweryfikować liczby plików, bajty i SHA REPORT, zapisać kwit i rozpocząć gpt-edge-r3.
+Krok 27: robocopy /E /XJ /MT:1 zakończone; katalog rundy, PNG, pary, źródła GLB/cache przed/po, XML i logi Unity skopiowane do main artifacts/edge-r2. Ta operacja kopiuje artefakty, nie scala gałęzi i nie zmienia kodu main.
+Kwitem artifact-copy-receipt.json potwierdzono identyczną liczbę plików i bajtów (bez samego kwitu) oraz SHA REPORT. Następny krok: git switch -c gpt-edge-r3, git merge main, rozpocząć diagnozę i poprawę zgodności podłoża NW zgodnie z protokołem.
