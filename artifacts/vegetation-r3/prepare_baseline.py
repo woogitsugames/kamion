@@ -1,4 +1,4 @@
-"""Reuse identical control renders, restore valid generated metadata, snapshot sources."""
+"""Reuse identical control renders and snapshot their imported-world metadata."""
 import hashlib
 import json
 import shutil
@@ -24,14 +24,20 @@ for tier in ("Low", "High"):
     for weather in ("clear", "overcast"):
         name = tier + "-" + weather
         shutil.copytree(prior / "after" / name, here / "before" / name, dirs_exist_ok=True)
-# These are the recorded outputs of our own valid B generation, not edits to
-# roads/buildings sources. The shared metadata had been restored before merge.
+# Preserve the metadata that produced the imported B world, separately from
+# the canonical on-disk metadata restored before merge. Windows snapshot paths
+# use backslashes; normalise only for matching, not for filesystem access.
+metadata_dir = here / "snapshot-baseline/imported-world"
+metadata_dir.mkdir(parents=True, exist_ok=True)
+metadata_count = 0
 for name in snapshot["files"]:
-    if name.startswith("Data/Regions/bialystok-industrial-c/generated/") and name.endswith(".json"):
-        shutil.copyfile(prior / "snapshot-candidate-b-pretests" / Path(name).name, root / name)
+    if name.replace("\\", "/").startswith("Data/Regions/bialystok-industrial-c/generated/") and name.endswith(".json"):
+        shutil.copyfile(prior / "snapshot-candidate-b-pretests" / Path(name).name, metadata_dir / Path(name).name)
+        metadata_count += 1
 result = dict(prior_round="gpt-vegetation-r1", prior_candidate="B", prior_source_commit="51bd2559",
               merge_commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip(),
               reused_control_frames=268, exact_source_hashes=proof["files"], verified_raw_glbs=len(glbs),
-              note="World sources/assets unchanged by merge. SBS metadata changed; photo cameras will be captured afresh. No fresh rendering claim for reused controls.")
+              imported_metadata_files=metadata_count,
+              note="World sources/assets unchanged by merge. SBS metadata changed; photo cameras will be captured afresh. No fresh rendering claim for reused controls. Imported B metadata is preserved separately; canonical files are not restored by this helper.")
 (here / "baseline-provenance.json").write_text(json.dumps(result, indent=2)+"\n", encoding="utf-8")
-print("Reused 268 controls after exact source and", len(glbs), "GLB hash checks; restored recorded metadata.")
+print("Reused 268 controls after exact source and", len(glbs), "GLB hash checks; saved", metadata_count, "imported metadata files.")

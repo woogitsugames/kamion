@@ -14,5 +14,8 @@
     "Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json": "33b5a28a2be921aac04d06b040c2d09615922ce17d18b44012db9b4280aa3218"
   },
   "verified_raw_glbs": 130,
-  "note": "World sources/assets unchanged by merge. SBS metadata changed; photo cameras will be captured afresh. No fresh rendering claim for reused controls."
+  "note": "World sources/assets unchanged by merge. SBS metadata changed; photo cameras will be captured afresh. No fresh rendering claim for reused controls.",
+  "imported_metadata_files": 12,
+  "canonical_metadata_restored": false,
+  "correction": "Initial helper matched no Windows backslash paths and copied zero canonical metadata files. Imported B world, raw GLB hashes and rendered PNG were unaffected. Preserved imported metadata separately; left canonical pre-round snapshot intact."
 }
