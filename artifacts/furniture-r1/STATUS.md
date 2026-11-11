@@ -48,3 +48,6 @@ NASTĘPNY KROK: pipeline import/audyt/rendery, potem GIS po poprawce atlasu.
 Import before przerwany: brak plików pakietów (CS0246 ColorBlock / UnlockReloadAssembliesTask). Przyczyna lokalna: zbyt szeroki filtr *lock* przy początkowej kopii Library. Uzupełniono całą PackageCache bez tego filtra; bez zmian Packages/ProjectSettings. PBR wygenerowane. NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1
 
 Przyczyna ponownego PBR: 2 stare mapy asphalt_detail_photo; build_all pomijał ich odtworzenie, bo worktree nie miał wejściowego Data/photos/nowe/Worn_cracked_asphalt_pavement.jpg. Skopiowano ten istniejący, ignorowany plik z main przed etapem layer bieżącego build_all; bez zmian generatorów wspólnych. NASTĘPNY KROK: sprawdzić layer asphalt_detail_photo i brak dalszych STALE/MISSING przed importem after.
+
+Import before complete.
+NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
