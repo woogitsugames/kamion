@@ -43,3 +43,5 @@
 - EditMode r3 226/226 PASS (EditMode-r3.xml). Obejrzane pary Low-clear i High-overcast oraz 6 prób kamer detali. Finalne dodatkowe kadry: dk8-east-north i dk8-west-interior (schody/skrzydła bez zasłonięcia).
 - Finalna kolejka validate-after.ps1 czeka na zielony GIS r4, potem import, 28 after PNG (20 sparowanych + 8 dodatkowych detali) oraz EditMode.
 - NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/final-gis-r4.log -Tail 8; Get-Content artifacts/viaduct-r10/validate-after-r4.log -Tail 8
+- Końcowy GIS r4: 377 PASS / 1 XFAIL, 663.87 s. Raport QA potwierdza vegetation_added [0,0]; GLB konstrukcji bez zmian. Końcowy import rozpoczęty po sprawdzeniu braku PHONE_RUN.
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/validate-after-r4.log -Tail 10; uv run --project tools/worldgen python artifacts/viaduct-r10/compare_stats.py

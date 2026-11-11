@@ -56,14 +56,16 @@ głowice, łożyska, rury, skrzydła, schody, zacieki i położenie plam farby s
   Generator Low: maks. +0,628% trójkątów; delta liczby materiałów 0.
   64/64 bazowych chunków Low zweryfikowano po SHA; delta grup siatka/materiał 0.
   Szacunek CPU, **nie** pomiar draw calls ani GPU. Wyniki końcowe w REPORT.
-- Testy lokalne 6/6 PASS, w tym obniżanie stopni co 0,18 m i podparcie końca biegu.
+- Testy lokalne 7/7 PASS, w tym obniżanie stopni co 0,18 m, podparcie końca biegu
+  i wyłączenie dodatkowej trawy dla budżetu Low.
   Obejrzany podgląd geometrii Blendera (porównanie trzech kamer): głowice i łożyska
   są rozdzielone, bieg schodów dochodzi do gruntu. Płaskie materiały podglądu i
   gruby LOD terenu nie pozwalają ocenić końcowego materiału ani kontaktu w Unity.
-  Pełny GIS na ustabilizowanej generacji r3: **376 PASS / 1 XFAIL**, 531,61 s,
-  w tym deterministyczny eksport; `artifacts/viaduct-r10/final-gis-r3.log`.
-- Unity czeka na blokadę `artifacts/locks/PHONE_RUN` w main. Właściciel potwierdził,
-  że pomiar telefonu nadal trwa. Nie uruchamiamy Unity ani adb podczas blokady.
+  Końcowy GIS r4: **377 PASS / 1 XFAIL**, 663,87 s, w tym deterministyczny eksport;
+  `artifacts/viaduct-r10/final-gis-r4.log`.
+- Unity uruchomiono dopiero po zwolnieniu PHONE_RUN (~11:54). Pierwszy import
+  przeszedł, EditMode 226/226 PASS. Para before/after ujawniła +1 draw od dodatkowej
+  trawy; finalny import i rendery bez nowych kęp są w toku. Bez uruchamiania adb.
 
 Dowody i aktualny stan: `artifacts/viaduct-r10/STATUS.md`, `REPORT.md`,
 `generator-budget.json`, `lod2-audit.json`, logi i PNG przed/po po zwolnieniu telefonu.
