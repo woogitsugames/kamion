@@ -15,3 +15,5 @@ Wynik: poprawa czytelności części materiałów, ale jeszcze nie pełny wizual
 
 Obejrzano wszystkie 28 contact sheets comparison-candidate2-960: po 7 stron dla Low/High i overcast/clear. Obejmują 312 par obrazów ze wszystkich 78 kamer. Na małych miniaturach nie widać przesunięcia geometrii, zmian kadru ani rozległych usterek poza opisanymi materiałami. W clear różnica asfaltu jest mniej kontrastowa niż w overcast; w ujęciach pod wiaduktem ślady są mocno podłużne. W kamerach kabiny i pojazdów nawierzchnia zajmuje niewielką część obrazu, więc ten przegląd wykrywa tylko duże regresje; nie potwierdza jakości drobnej faktury. Drobny wzór przy krawężniku oceniono osobno w natywnych wycinkach. Wszystkie liczniki candidate2 mają delta 0, ale budżet GPU nadal UNVERIFIED.
 
+
+Obejrzano próbę siły 0,80 i porównano ją z candidate2 0,45 w tym samym kadrze Low overcast. Wzmocnienie daje mocne równoległe pasma, uwydatnia też drobny falisty wzór po prawej. Wariant nie jest wybrany. Do dalszej poprawy potrzebna jest zmienność zależna od lokalnej nawierzchni, nie tylko większa globalna wartość. Materiał przywrócony do źródłowej wartości 0,45; kolejne testy nadal dotyczą candidate2.

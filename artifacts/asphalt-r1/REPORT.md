@@ -36,3 +36,6 @@ Na tym etapie nie zgłaszamy gotowości do bezwarunkowej integracji. Po końcowy
 ![Zdjęcie Mapillary i render Low, druga poza wiaduktu](review-candidate2-960/Low-ref-454716650857984.jpg)
 
 
+
+Próba diagnostyczna podczas oczekiwania na heavy: w jednym kadrze Low overcast zwiększono siłę śladów z 0,45 do 0,80 wyłącznie w wygenerowanym materiale, a po renderze przywrócono go bajt w bajt. Stan w czasie renderowania potwierdził 0,80. Ślady są mocniejsze, ale bardziej regularne, a falisty wzór przy krawężniku wyraźniejszy. Próba nie została wybrana; candidate2 i źródła pozostają przy 0,45. Sama globalna siła nie wystarcza do zgodności z referencją. Artefakt: probe-strength-comparison-960.jpg. Unity zapisało poprawny 1/1 PNG, po czym wystąpił znany błąd wyjścia mono cleanup -1073741819 zaakceptowany przez istniejący skrypt według ADR 0083; nie przedstawiamy go jako czystego wyjścia natywnego.
+
