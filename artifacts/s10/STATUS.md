@@ -655,3 +655,13 @@ run5 END/PHONE and issue new guarded release before D Unity; no main merge.
 Step 54: Updated independent D review with actual gate r1 failure, exact signed
 r2 delta, new GIS requirement and fresh broad-baseline requirement. NEXT COMMAND:
 wait actual run5 END/PHONE absence, release D guarded16frame packet.
+
+Step 55: Independently parsed final signed-mode GIS JUnit:389 cases,0failures,
+0errors,1expected skip/xfail =>388PASS;428.67s console. XML SHA256
+0369b42cc762adb398b28b30ad733ced01ac2964b476ea17844ac6009ce0e5e9.
+Readonly preflights closed: G873daedb C13/F2, Eee7e296c E8. Root confirmed main
+WorldInstances132 requests High||Ultra but169 stores High-only and197 gates
+hero copy: Ultra keeps URP Lit, not intended Vegetation. Artifact-only one-line
+patch is ready, not applied; leader integration check and future test remain.
+NEXT COMMAND: wait run5 actual END/PHONE absence; fresh release then D16frames,
+review gate/legacy negatives and broad56 before final full validation/report.
