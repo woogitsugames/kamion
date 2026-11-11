@@ -1,0 +1,36 @@
+{
+  "domain": "vegetation",
+  "round": 1,
+  "branch": "gpt-vegetation-r1",
+  "started_at": "2026-11-11T21:30:50+01:00",
+  "deadline_at": "2026-11-12T21:30:50+01:00",
+  "base_sha": "4c9905b1",
+  "owner": "gpt-vegetation",
+  "phase": "round_closed_handoff",
+  "branch_collision": "gpt-vegetation-r2 belongs to the previous vegetation worktree; preserve it; choose next unused round branch when needed",
+  "restrictions": [
+    "no_push",
+    "no_merge_into_main",
+    "no_phones",
+    "vegetation_files_only",
+    "acquire_release_each_Unity"
+  ],
+  "baseline_complete": true,
+  "baseline_frames": 322,
+  "world_after_complete": true,
+  "focused_tests": "12 passed",
+  "heavy_slot_owner": "gpt-vegetation-r1",
+  "slot_script": "C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1",
+  "candidate": "B",
+  "probe_b_grass_std": 5.17,
+  "next_step": "copy artifacts to main, create next unused branch and merge main, continue open crown priority",
+  "final_gis": {
+    "passed": 495,
+    "xfailed": 1,
+    "failed": 1,
+    "failure": "stale pre-existing road fidelity report"
+  },
+  "editmode": "261/261",
+  "critic": "limited editor correction PASS, overall vegetation realism FAIL",
+  "next_branch": "gpt-vegetation-r3"
+}

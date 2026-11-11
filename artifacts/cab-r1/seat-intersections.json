@@ -1,0 +1,105 @@
+{
+  "scope": "Source surfaces after fit_to_exterior. Exact edge/triangle intersections; no solid containment test, no claim about game FBX. 0.025 variant moves door armrests outward only. Rear hinge contact may be intentional.",
+  "states": {
+    "0": {
+      "armrest_pairs": []
+    },
+    "0.025": {
+      "armrest_pairs": []
+    }
+  },
+  "selectors": {
+    "seats": {
+      "drv": [
+        "drv_backcover",
+        "drv_backpocket",
+        "drv_backrest",
+        "drv_belt_guide",
+        "drv_belt_latch",
+        "drv_belt_latch_grip",
+        "drv_buckle",
+        "drv_buckle_stalk",
+        "drv_cushion",
+        "drv_headrest",
+        "drv_hr_collar_-0.075",
+        "drv_hr_collar_0.075",
+        "drv_hr_post_-0.075",
+        "drv_hr_post_0.075",
+        "drv_lever_h",
+        "drv_lever_knob",
+        "drv_pan",
+        "drv_pocket_edge",
+        "drv_shield_-1",
+        "drv_shield_1"
+      ],
+      "pas": [
+        "pas_backcover",
+        "pas_backpocket",
+        "pas_backrest",
+        "pas_belt_guide",
+        "pas_belt_latch",
+        "pas_belt_latch_grip",
+        "pas_buckle",
+        "pas_buckle_stalk",
+        "pas_cushion",
+        "pas_headrest",
+        "pas_hr_collar_-0.075",
+        "pas_hr_collar_0.075",
+        "pas_hr_post_-0.075",
+        "pas_hr_post_0.075",
+        "pas_lever_h",
+        "pas_lever_knob",
+        "pas_pan",
+        "pas_pocket_edge",
+        "pas_shield_-1",
+        "pas_shield_1"
+      ]
+    },
+    "wheel": [
+      "spoke_-1",
+      "spoke_1",
+      "spoke_btn_-1_0_0",
+      "spoke_btn_-1_0_1",
+      "spoke_btn_-1_1_0",
+      "spoke_btn_-1_1_1",
+      "spoke_btn_-1_rk_-1",
+      "spoke_btn_-1_rk_1",
+      "spoke_btn_1_0_0",
+      "spoke_btn_1_0_1",
+      "spoke_btn_1_1_0",
+      "spoke_btn_1_1_1",
+      "spoke_btn_1_rk_-1",
+      "spoke_btn_1_rk_1",
+      "spoke_icon_-1_0_0",
+      "spoke_icon_-1_0_1",
+      "spoke_icon_-1_1_0",
+      "spoke_icon_-1_1_1",
+      "spoke_icon_-1_rk_-1",
+      "spoke_icon_-1_rk_1",
+      "spoke_icon_1_0_0",
+      "spoke_icon_1_0_1",
+      "spoke_icon_1_1_0",
+      "spoke_icon_1_1_1",
+      "spoke_icon_1_rk_-1",
+      "spoke_icon_1_rk_1",
+      "spoke_low_0",
+      "spoke_low_1",
+      "spoke_pod_-1",
+      "spoke_pod_1",
+      "spoke_trim_low_0",
+      "spoke_trim_low_1",
+      "spoke_trim_pod_-1",
+      "spoke_trim_pod_1",
+      "wheel_hub",
+      "wheel_hub_shroud",
+      "wheel_rim"
+    ],
+    "arms": [
+      "door_armrest_-1",
+      "door_armrest_1",
+      "drv_armrest",
+      "pas_armrest"
+    ]
+  },
+  "wheel_seat_pairs": []
+}
