@@ -455,3 +455,13 @@ for _k, _v in M.items():
 M["plaster_cream"]["color"][:] = [round(c * 0.92, 4) for c in M["plaster_cream"]["color"]]
 M["plinth_dark"]["color"][:] = [0.24, 0.24, 0.235]
 M["plinth_dark"]["splash_h"] = 0.8
+
+
+# ADR 0107 (zabudowa r6; additive block, same rule as the ADR 0097 block above):
+# - review 0097 P1-e "spody i boki płyt balkonowych 38-40 sRGB przy ścianie 100-150": the slab was raw concrete 0.30
+#   with the ambient of its underside halved (SKY_OCC_STRUCT). Balcony slabs of the insulated blocks are rendered and
+#   painted with the facade (light grey / off-white underside on the CC0 Putry photos, refs/cm121537425): albedo 0.52,
+#   and no halving of the down-facing ambient (like soffit_boards, ADR 0094) - the ground SH term is already the dark
+#   side of the ambient. WORKING_VALUE, target: underside >= 55-60 % of the wall luminance at overcast.
+M["balcony_slab"]["color"][:] = [0.52, 0.515, 0.50]
+M["balcony_slab"]["sky_occ"] = [0.0, 0.0]
