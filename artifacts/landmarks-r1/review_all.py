@@ -1,16 +1,18 @@
 """Inventory and inspect every like-for-like camera, at 960 px sheet width."""
 from pathlib import Path
 import json
+import sys
 import numpy as np
 from PIL import Image, ImageDraw, ImageOps
 
 ROOT = Path(__file__).resolve().parent
-OUT = ROOT / 'review' / 'after-all'
+PHASE = sys.argv[1] if len(sys.argv)>1 else 'after'
+OUT = ROOT / 'review' / (PHASE+'-all')
 OUT.mkdir(parents=True, exist_ok=True)
 rows = []
 for cond in ('Low-overcast', 'Low-clear', 'High-overcast', 'High-clear'):
     before = {p.name: p for p in (ROOT/'before'/cond).glob('*.png')}
-    after = {p.name: p for p in (ROOT/'after'/cond).glob('*.png')}
+    after = {p.name: p for p in (ROOT/PHASE/cond).glob('*.png')}
     assert before.keys() == after.keys(), cond
     assert len(before) == 48, (cond, len(before))
     panels = []
@@ -34,7 +36,7 @@ for cond in ('Low-overcast', 'Low-clear', 'High-overcast', 'High-clear'):
         sheet=Image.new('RGB',(960,246*len(panels[page:page+8])))
         for y,panel in enumerate(panels[page:page+8]): sheet.paste(panel,(0,y*246))
         sheet.save(OUT/f'{cond}-{page//8+1:02d}.jpg',quality=91)
-(ROOT/'pixel-diff-all.json').write_text(json.dumps(rows,indent=2),encoding='utf-8')
+(ROOT/f'pixel-diff-{PHASE}.json').write_text(json.dumps(rows,indent=2),encoding='utf-8')
 print('Camera conditions:',len(rows))
 print('Exact:',sum(r['exact'] for r in rows))
 for row in sorted(rows,key=lambda r:r['mean_abs'],reverse=True)[:20]: print(row)

@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 import struct
+import sys
 import numpy as np
 from PIL import Image
 
@@ -11,7 +12,9 @@ def read(p): return json.loads(p.read_text(encoding='utf-8-sig'))
 a=read(ROOT/'baseline-generated/world_manifest.json')
 b=read(GEN/'world_manifest.json')
 print('Manifest keys',a.keys())
-proof={}
+phase=sys.argv[1] if len(sys.argv)>1 else 'after'
+world_log=sys.argv[2] if len(sys.argv)>2 else 'round2-world.log'
+proof={'phase':phase}
 for key in ('chunks',):
     proof[key+'_exact']=a[key]==b[key]
 proof['roads_qa_exact']=read(ROOT/'baseline-generated/roads_qa.json')==read(GEN/'roads_qa.json')
@@ -24,7 +27,7 @@ proof['hero_tris_after']=read(REPO/'art-source/world/landmarks/fire_station_jrg2
 glb=(REPO/'art-source/world/landmarks/fire_station_jrg2/fire_station_jrg2.glb').read_bytes()
 g=json.loads(glb[20:20+struct.unpack_from('<I',glb,12)[0]])
 proof['hero_primitives_after']=[len(m['primitives']) for m in g['meshes']]
-budget=read(ROOT/'budget-after.json')
+budget=read(ROOT/f'budget-{phase}.json')
 low=[r for r in budget['rows'] if r['condition'].startswith('Low')]
 proof['Low_conditions']=len(low)
 proof['Low_max_mesh_draw_delta']=max(r['draws_delta'] for r in low)
@@ -32,6 +35,6 @@ proof['Low_max_instance_draw_delta']=max(r['instance_draws_delta'] for r in low)
 proof['Low_max_total_tris_percent_delta']=max(r['total_tris_percent_delta'] for r in low)
 proof['all_192_camera_conditions']=budget['camera_conditions']==192
 proof['all_low_budget_ok']=budget['all_low_budget_ok']
-proof['world_fallback_true']='fallback=True' in (ROOT/'round2-world.log').read_text(encoding='utf-8-sig')
+proof['world_fallback_true']='fallback=True' in (ROOT/world_log).read_text(encoding='utf-8-sig')
 (ROOT/'final-protected-proof.json').write_text(json.dumps(proof,indent=2),encoding='utf-8')
 print(json.dumps(proof,indent=2))
