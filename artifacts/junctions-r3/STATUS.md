@@ -47,3 +47,9 @@ scripts = narzędzia r2 + zones_plan.py; logs). „Przed” = main b12 z ADR 009
 - b6 (sha 21b222a5): UV pasów trawy obrócone/przesunięte hashem paska (powtarzalny „W” na medianach). b6 fast: build OK, testy 51/51.
   Dowody skopiowane do main `artifacts/junctions-r3/` (bez plan_cache.pkl). PHONE_RUN nadal (od 10:48).
   NASTĘPNY KROK: (bez PHONE_RUN) `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` → visual-qa (renders_b6).
+- Unity b6: import OK (Low 111,5 / High 240,0 MB; r2: 110,0 / 237,9), 44 kamer High overcast `renders_b6_high/` (obejrzane, `view_b6/`):
+  P-21 czyste (n100, DK8 obie strony, s1440, s610), Putry N linie + plac kostki, rozdział wsch. jodełka/wyspa, murek 0,6 m mediany
+  zniknął (r2_kerb_merge_main_eye), szew łaty w r2_bay_eye zniknął. Poprawki po renderze: pas betonu N 82 nadal smużył (tekstura
+  krawężnika) → `sidewalk_paving`; P-21 s1440 ramp → ukośne −30° od osi; obrót UV trawy cofnięty (wzór „W” bez zmian → to nie UV paska).
+  W toku: b8 (fast) → import → rendery High overcast + Low clear (`renders_b8_*`).
+  NASTĘPNY KROK: obejrzeć `renders_b8_high/`, PlayMode `pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCRouteTests|WorldCBarrierTests"`, EditMode, robocopy.
