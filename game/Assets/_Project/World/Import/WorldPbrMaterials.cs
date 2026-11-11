@@ -94,6 +94,9 @@ namespace Game.World.Import
                 case "boom_red_white": return (new Vector2(1f, 0f), 1.0f, new Color(0.45f, 0.025f, 0.02f), new Color(0.68f, 0.68f, 0.66f));
                 // dock leveller edges: yellow / black 45 deg, 0.1 m bands (WORKING_VALUE)
                 case "hazard_stripes_45deg": return (new Vector2(0.7071f, 0.7071f), 0.2f, new Color(0.55f, 0.40f, 0.03f), new Color(0.02f, 0.02f, 0.02f));
+                // ADR 0092: condenser grille of a transport refrigeration unit - horizontal slats, 60 mm pitch, dark
+                // gaps (UV v = metres up, life_props.trailer; WORKING_VALUE)
+                case "louvre_slats": return (new Vector2(0f, 1f), 0.06f, new Color(0.012f, 0.012f, 0.012f), new Color(0.085f, 0.088f, 0.09f));
             }
             return null;
         }
@@ -190,6 +193,13 @@ namespace Game.World.Import
             // manifest value was ignored and every paint rendered at 0.59 mean smoothness ("primer", REVIEW r8).
             if (id.StartsWith("car_paint_") && def.Get("rough") != null)
                 mat.SetFloat("_SmoothnessScale", Mathf.Clamp((1f - (float)Num(def.Get("rough"))) / 0.68f, 0.5f, 1.4f));
+            // ADR 0092 (review s9 par. 4, "firanka odbija jak polerowana blacha"): the curtain set carried smoothness 0.36
+            // whatever the manifest said; in the shade of the hall the grazing-angle environment term (smoothness + F0)
+            // then outshone the dark PVC and drew a horizon line across the tarpaulin. The manifest "rough" of a
+            // curtain is the mean roughness of matt PVC-coated fabric: the set is scaled to it. Metallic stays 0.
+            if (id.StartsWith("trailer_curtain_") && def.Get("rough") != null && set != null && FilesFor(set) is Dictionary<string, object> cinfo
+                && cinfo.Get("smoothness_mean") != null)
+                mat.SetFloat("_SmoothnessScale", Mathf.Clamp((1f - (float)Num(def.Get("rough"))) / Mathf.Max(0.05f, (float)Num(cinfo.Get("smoothness_mean"))), 0.2f, 1.2f));
             mat.SetFloat("_MetallicScale", 0f);
             // Parked-car paint r10 (ADR 0078): clear coat over a base coat. Manifest "paint": [base metal, flake tilt,
             // pearl, base-coat roughness] (+ optional "pearl_tint"); solid colours have metal 0 and no flake.
@@ -291,6 +301,18 @@ namespace Game.World.Import
             {
                 mat.SetFloat("_MacroSize", (float)Num(mc[0]));
                 mat.SetFloat("_MacroStrength", (float)Num(mc[1]));
+            }
+            // ADR 0092: manifest "panel_m": [length, course] (metres of the texture set) = the drift above is quantised to
+            // the cladding module instead of a smooth noise. The set is sampled at `tile` (4 m unless _Tile is written),
+            // so the course on the wall is the set's course x applied tile / set tile.
+            if (def.Get("panel_m") is List<object> pm && pm.Count >= 2 && set != null)
+            {
+                var tmS = Arr(set.Get("tile_m"));
+                Vector4 applied = mat.GetVector("_Tile");
+                // only the course height follows the texture (its shadow-gap joints); the panel length is physical
+                float ky = applied.y / Mathf.Max(1e-3f, (float)Num(tmS[1]));
+                mat.EnableKeyword("_PANELTONE");
+                mat.SetVector("_PanelTone", new Vector4((float)Num(pm[0]), (float)Num(pm[1]) * ky, 0.35f, 0.3f));
             }
             bool plasterRunoff = def.Get("runoff") is bool pr && pr;   // ADR 0081: plaster / panel walls of flat-roofed blocks and offices
             if (id.StartsWith("hall_wall") || Runoff(def) || plasterRunoff)

@@ -151,6 +151,21 @@ overrides:
     # two automatic booms stay (WORKING_VALUE, gameplay anchor of the route start; Game.World.DepotBarrier).
     sliding_gate: false
     fence: false
+    # r12 (ADR 0092, review 2026-11-11 s9: the booms could be driven round on both sides over flush paving).
+    # SEEN on the GUGiK orthophoto 2024-05-27 (0.25 m, artifacts/kwadrat-r12/ortho_gate*.jpg): east of the entry lane a
+    # narrow light kerbed strip ~1.5 m x 18 m with two posts on it, the thin boom line ends at its north end; west of
+    # the exit lane a kerbed grass verge with a tree. The strips are laid on the edges of the GENERATED lanes (the OSM
+    # lanes sit 3-5 m off the orthophoto here), so position +-5 m, sizes by eye.
+    # WORKING_VALUE (not visible on the orthophoto, no open ground photo): the closure lines from the strips to the edge
+    # of the paved yard - steel posts toward the neighbouring units (east; the orthophoto shows open paving there, no
+    # fence shadow), panel fence toward the car park of the tower block (west). Needed so that the boom is a gate at
+    # all; replace with the real arrangement after the owner photo session item 1.
+    side_strips:
+      entry: {toward_road_m: 9.0, toward_depot_m: 4.0, w_m: 1.5, top: sidewalk_paving}
+      exit: {toward_road_m: 5.0, toward_depot_m: 6.0, w_m: 2.2, top: verge_grass}
+    closure:
+      entry: {style: bollards, max_m: 45.0}
+      exit: {style: fence, max_m: 60.0}
     reason: >-
       OSM maps the Kwadrat Park entrance only as a two-way access road splitting into one-way entry and exit
       lanes, plus one lift_gate node 13 m off the road; no fence, no gatehouse. The 2024-05-27 orthophoto

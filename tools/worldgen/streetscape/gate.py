@@ -14,6 +14,16 @@ The kit (prototypes in streetscape.life_props, fence meshes like streetscape.fur
   * panel fence returns (anthracite 3D panels on a concrete plinth) from both gate posts along the gate line,
     up to `fence_return_m`, cut by road surfaces and buildings.
 OSM lift_gate / gate nodes within `replace_radius_m` of the split are replaced by the kit (counted in the QA).
+
+r12 (ADR 0092, review 2026-11-11 s9 par. 4: "szlaban da się objechać z obu stron"):
+  * `side_strips: {entry: {...}, exit: {...}}` - a raised kerbed strip along the OUTER edge of each lane at the
+    housing line (toward_road_m / toward_depot_m along the lane, w_m wide, top: sidewalk_paving | verge_grass); the
+    rest post of the boom stands on it;
+  * `closure: {entry: {style: bollards | fence, max_m}, exit: {...}}` - from the outer edge of that strip straight
+    across the yard to where the paved yard ends (plot edge / building), so that no vehicle fits round the boom:
+    steel posts every CLOSURE_POST_M with a collision wall, or the 3D panel fence on a plinth. The line is exported
+    (`report["gates"]["closure_lines"]`) so that the parking rule keeps its bays off it;
+  * tyre scuffs on the kerb at both noses of the island and of the strips (`decal_tyre` bands).
 """
 
 from __future__ import annotations
@@ -58,48 +68,236 @@ ISLAND_AFTER_M = 3.5
 LOOP_SIZE = (2.0, 1.0)     # m, saw-cut induction loop (along x across the lane), sealant line 4 cm (WORKING_VALUE)
 
 
-def _island(lin, P_e, P_x, z_lane, src):
-    """Raised kerbed refuge the barrier housings stand on (review 2026-11-10 A6: the booms stood on flush paving that
-    could be driven round). Outline = the median between the two kerb backs (rows P_e / P_x, same stations) with rounded
-    corners; precast kerb ring 0.15 m (curb_concrete) with a vertical face, block-paved top, hard collision. Returns
-    (polygon, top z) or (None, None) when the median is too narrow."""
-    poly = shapely.Polygon(np.vstack([P_e, P_x[::-1]]))
-    poly = shapely.make_valid(poly).buffer(-0.35, join_style="mitre").buffer(0.35, quad_segs=3)
-    if poly.is_empty or poly.geom_type != "Polygon" or poly.area < 1.5:
-        return None, None
-    poly = shapely.geometry.polygon.orient(poly, 1.0).simplify(0.02)
+def _raised(lin, poly, zlane, src, top="sidewalk_paving"):
+    """Raised kerbed island over `poly` (a CCW polygon): precast kerb ring 0.15 m (curb_concrete) with a vertical face,
+    top surface `top` at the kerb level, hard collision. zlane(R) -> level of the lane / yard beside each ring vertex
+    (the island top is ISLAND_H above it, so a long strip follows the fall of its lane). Returns the ring levels
+    (R, top z per vertex) or None when the polygon is too thin for a kerb ring."""
     R = np.asarray(poly.exterior.coords)[:-1]
     n = len(R)
     inner = poly.buffer(-S.KERB_TOP_W, join_style="mitre")
     if inner.is_empty or inner.geom_type != "Polygon":
-        return None, None
+        return None
     ib = inner.exterior
     Ri = np.array([ib.interpolate(ib.project(Point(*q))).coords[0] for q in R])
-    zt = float(z_lane) + ISLAND_H
-    zb = float(z_lane) - 0.08
+    zl = np.asarray(zlane(R), float)
+    zt = zl + ISLAND_H
+    zb = zl - 0.08
     s_arc = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(np.vstack([R, R[:1]]), axis=0).T))])
     buf = lin.buf
     for k in range(n):
         j = (k + 1) % n
         u0, u1 = s_arc[k], s_arc[k + 1]
         # kerb top (CCW seen from above = faces up) and the outer vertical face (faces out of a CCW ring)
-        V = np.array([[*R[k], zt], [*R[j], zt], [*Ri[j], zt], [*Ri[k], zt]])
+        V = np.array([[*R[k], zt[k]], [*R[j], zt[j]], [*Ri[j], zt[j]], [*Ri[k], zt[k]]])
         buf.add("paved", "curb_concrete", V, [[u0, 0.0], [u1, 0.0], [u1, S.KERB_TOP_W], [u0, S.KERB_TOP_W]],
                 [(0, 1, 2), (0, 2, 3)], src=src)
-        F = np.array([[*R[k], zb], [*R[j], zb], [*R[j], zt], [*R[k], zt]])
+        F = np.array([[*R[k], zb[k]], [*R[j], zb[j]], [*R[j], zt[j]], [*R[k], zt[k]]])
         buf.add("paved", "curb_concrete", F, [[u0, 0.25], [u1, 0.25], [u1, 0.0], [u0, 0.0]], [(0, 1, 2), (0, 2, 3)], src=src)
-    c = Ri.mean(axis=0)
-    Vf = np.vstack([[*c, zt], np.column_stack([Ri, np.full(n, zt)])])
-    Tf = [(0, 1 + k, 1 + (k + 1) % n) for k in range(n)]
-    buf.add("paved", "sidewalk_paving", Vf, Vf[:, :2].copy(), Tf, src=src)
-    # collider: the island as a low prism (top + skirt), kerb surface
-    Vc = np.vstack([[*R.mean(axis=0), zt], np.column_stack([R, np.full(n, zt)]), np.column_stack([R, np.full(n, zb)])])
-    Tc = [(0, 1 + k, 1 + (k + 1) % n) for k in range(n)]
+    # top: constrained fill of the inner ring (a strip may be a bent band: a fan from the centroid would fold over)
+    ipoly = shapely.Polygon(Ri)
+    if not ipoly.is_valid:
+        return None
+    Vf = np.column_stack([Ri, zt])
+    key = {(round(float(q[0]), 5), round(float(q[1]), 5)): k for k, q in enumerate(Ri)}
+    Tf = []
+    for g in shapely.delaunay_triangles(shapely.MultiPoint(Ri)).geoms:
+        if not ipoly.buffer(1e-6).contains(g.representative_point()):
+            continue
+        ids = [key.get((round(x, 5), round(y, 5))) for x, y in list(g.exterior.coords)[:3]]
+        if None in ids:
+            continue
+        a, b, c = (Ri[k] for k in ids)
+        if (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]) < 0:
+            ids = [ids[0], ids[2], ids[1]]
+        Tf.append(tuple(ids))
+    buf.add("paved", top, Vf, Vf[:, :2].copy(), Tf, src=src)
+    # collider: the island as a low prism (top + kerb ring + skirt), kerb surface
+    Vc = np.vstack([np.column_stack([Ri, zt]), np.column_stack([R, zt]), np.column_stack([R, zb])])
+    Tc = list(Tf)
     for k in range(n):
         j = (k + 1) % n
-        Tc += [(1 + n + k, 1 + n + j, 1 + j), (1 + n + k, 1 + j, 1 + k)]
+        Tc += [(n + k, n + j, j), (n + k, j, k)]                              # kerb top ring
+        Tc += [(2 * n + k, 2 * n + j, n + j), (2 * n + k, n + j, n + k)]      # skirt
     buf.add("collision", "collision_curb", Vc, Vc[:, :2].copy(), Tc, src=src)
-    return poly, zt
+    return R, zt
+
+
+def _island(lin, P_e, P_x, z_lane, src):
+    """Raised kerbed refuge the barrier housings stand on (review 2026-11-10 A6: the booms stood on flush paving that
+    could be driven round). Outline = the median between the two kerb backs (rows P_e / P_x, same stations) with rounded
+    corners, block-paved top. Returns (polygon, top z) or (None, None) when the median is too narrow."""
+    poly = shapely.Polygon(np.vstack([P_e, P_x[::-1]]))
+    poly = shapely.make_valid(poly).buffer(-0.35, join_style="mitre").buffer(0.35, quad_segs=3)
+    if poly.is_empty or poly.geom_type != "Polygon" or poly.area < 1.5:
+        return None, None
+    poly = shapely.geometry.polygon.orient(poly, 1.0).simplify(0.02)
+    if _raised(lin, poly, lambda R: np.full(len(R), float(z_lane)), src) is None:
+        return None, None
+    return poly, float(z_lane) + ISLAND_H
+
+
+CLOSURE_POST_M = 1.5       # m between the steel posts of a closure line (a car is 1.7-1.9 m wide; WORKING_VALUE)
+SCUFF_M = 2.2              # m of kerb round each nose of an island that carries tyre rub (WORKING_VALUE)
+
+
+def _side_strip(lin, c, s_k, g, lat_sign, cfg, roads_poly, keep_pt, src):
+    """Raised kerbed strip along the outer edge of lane chain `c` at the housing station s_k (r12). g = sign of the
+    direction away from the split node (toward the public road), lat_sign = outer side in the chain frame. Returns
+    (polygon, zlane function, outer offset from the lane centre at s_k) or (None, None, None)."""
+    out_m, in_m = float(cfg.get("toward_road_m", 6.0)), float(cfg.get("toward_depot_m", 5.0))
+    w = float(cfg.get("w_m", 1.4))
+    aa = np.arange(-in_m, out_m + 1e-6, 0.5)
+    ss = np.clip(s_k + g * aa, 0.0, c.length)
+    hw = np.asarray(c.hw_at(ss), float)
+    inner = hw + S.KERB_TOP_W - 0.03
+    A = np.array([c.line.offset_point(float(s_), float(lat_sign * o_)) for s_, o_ in zip(ss, inner)])
+    B = np.array([c.line.offset_point(float(s_), float(lat_sign * (o_ + w))) for s_, o_ in zip(ss, inner)])
+    poly = shapely.make_valid(shapely.Polygon(np.vstack([A, B[::-1]])))
+    poly = poly.difference(roads_poly.buffer(0.05))
+    poly = poly.buffer(-0.3, join_style="mitre").buffer(0.3, quad_segs=3)
+    parts = [q for q in getattr(poly, "geoms", [poly]) if q.geom_type == "Polygon" and q.area > 1.0]
+    parts = [q for q in parts if q.buffer(0.3).contains(Point(*keep_pt))] or sorted(parts, key=lambda q: -q.area)[:1]
+    if not parts:
+        return None, None, None
+    poly = shapely.geometry.polygon.orient(parts[0], 1.0).simplify(0.02)
+
+    def zlane(R):
+        out = []
+        for q in np.asarray(R, float):
+            sq = float(np.clip(c.line.project(q)[0], 0.0, c.length))
+            out.append(max(float(c.crossfall_z(sq, lat_sign * float(c.hw_at(sq)))), float(lin.z(q[None, :])[0])))
+        return np.array(out)
+
+    if _raised(lin, poly, zlane, src, top=cfg.get("top", "sidewalk_paving")) is None:
+        return None, None, None
+    k0 = int(np.argmin(np.abs(aa)))
+    return poly, zlane, float(inner[k0] + w)
+
+
+def _scuffs(buf, poly, zlane, t_axis, key, src):
+    """Tyre rub on the kerb at both noses of a raised island (review s9: "wyspa czysta"): a dark band on the kerb top
+    edge and on its face over SCUFF_M round the vertices that are extreme along t_axis. `decal_tyre` bands (UV0 =
+    metres along, v inside 0.36..0.64 = full opacity, hard edge; UV1 = length, strength). Returns the triangle count."""
+    R = np.asarray(shapely.geometry.polygon.orient(poly, 1.0).exterior.coords)[:-1]
+    n = len(R)
+    zt = np.asarray(zlane(R), float) + ISLAND_H
+    seg = np.hypot(*np.diff(np.vstack([R, R[:1]]), axis=0).T)
+    a = R @ np.asarray(t_axis, float)
+    tris = 0
+    for e, k0 in enumerate((int(np.argmin(a)), int(np.argmax(a)))):
+        idx = [k0]                       # walk both ways from the nose vertex until SCUFF_M / 2 of kerb is covered
+        d, k = 0.0, k0
+        while d < SCUFF_M / 2 and len(idx) < n:
+            d += seg[k]
+            k = (k + 1) % n
+            idx.append(k)
+        d, k = 0.0, k0
+        while d < SCUFF_M / 2 and len(idx) < n:
+            k = (k - 1) % n
+            d += seg[k]
+            idx.insert(0, k)
+        P, Z = R[idx], zt[idx]
+        m = len(P)
+        if m < 2:
+            continue
+        tt = np.gradient(P, axis=0)
+        tt /= np.maximum(np.linalg.norm(tt, axis=1, keepdims=True), 1e-9)
+        nout = np.column_stack([tt[:, 1], -tt[:, 0]])               # outward of a CCW ring
+        ssl = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
+        strength = 2.5              # >= 2.5: solid band, no macro break-up (WorldPBR.shader _DECAL_TYRE)
+        uv1 = np.column_stack([np.full(2 * m, ssl[-1] + 6.5), np.full(2 * m, strength)])   # +6.5: no end fade on a short band
+        uvu = np.tile(ssl + 2.5, 2)
+        T = np.array([(i, i + 1, m + i + 1) for i in range(m - 1)] + [(i, m + i + 1, m + i) for i in range(m - 1)])
+        # face: from 15 mm under the top edge down to 0.11 m, 4 mm proud at the top and 16 mm at the bottom (the batter
+        # of a kerb face; it also keeps the decal's normal pointing up-and-out: test_decals_face_up)
+        Vf = np.vstack([np.column_stack([P + nout * 0.016, Z - 0.11]), np.column_stack([P + nout * 0.004, Z - 0.015])])
+        buf.add("markings", "decal_tyre", Vf, np.column_stack([uvu, np.repeat([0.36, 0.64], m)]), T, src=f"{src}:face{e}",
+                UV1=uv1)
+        # top edge: 0.10 m of the kerb top
+        Vt = np.vstack([np.column_stack([P - nout * 0.002, Z + 0.004]), np.column_stack([P - nout * 0.10, Z + 0.004])])
+        buf.add("markings", "decal_tyre", Vt, np.column_stack([uvu, np.repeat([0.3, 0.7], m)]), T, src=f"{src}:top{e}",
+                UV1=uv1)
+        tris += 2 * len(T)
+    return tris
+
+
+def _closure_ray(a0, t, max_m, yardb, roads_b, bld_b, beyond_m):
+    """One candidate closure line from a0 along unit t: the stretch over the paved yard (stops at a road or a
+    building), continued over unpaved ground for up to beyond_m when a building stands there (a fence that stops at
+    the edge of the paving can be driven round on the grass). Returns (LineString, why) or (None, why); why:
+    building (ends on a wall: closed), yard_edge (ends where the paving ends), road (another carriageway), max_m."""
+    line = LineString([a0, a0 + t * max_m])
+    g = line.intersection(yardb).difference(roads_b).difference(bld_b)
+    parts = [q for q in getattr(g, "geoms", [g]) if q.geom_type == "LineString" and q.length > 1.0]
+    parts = [q for q in parts if q.distance(Point(*a0)) < 0.8]
+    if not parts:
+        return None, "no_room"
+    L = max(float(np.hypot(*(np.asarray(c) - a0))) for c in parts[0].coords)
+    end = a0 + t * L
+    if L > max_m - 0.5:
+        return LineString([a0, end]), "max_m"
+    if bld_b.distance(Point(*end)) < 0.3:
+        return LineString([a0, end]), "building"
+    if roads_b.distance(Point(*end)) < 0.3:
+        return LineString([a0, end]), "road"
+    ext = LineString([end, end + t * beyond_m]).intersection(bld_b)
+    if not ext.is_empty and roads_b.distance(LineString([end, end + t * beyond_m])) > 0.0:
+        L2 = L + float(ext.distance(Point(*end)))
+        return LineString([a0, a0 + t * L2]), "building"
+    return LineString([a0, end]), "yard_edge"
+
+
+def _closure(lin, a0, direction, cfg, yard, roads_poly, bpoly, src):
+    """Line that keeps vehicles from driving round the boom: from a0 (outer edge of the side strip) to the nearest
+    boundary of the paved yard. Candidates: rays within +-fan_deg of `direction` (straight out of the lane) every
+    5 deg; the shortest one that ends on a building wins, else the shortest that ends at the edge of the paving (a ray
+    that only reaches another road or max_m does not close anything and is the last resort). style bollards: yellow
+    steel posts every CLOSURE_POST_M + one collision wall; style fence: anthracite 3D panels on a concrete plinth.
+    Everything goes to the "paved" layer (a part in the chunk's furniture mesh would drag that whole mesh into the
+    gate view, ADR 0071 r11). Returns (LineString or None, why it ends)."""
+    t0 = direction / max(float(np.hypot(*direction)), 1e-9)
+    max_m, beyond_m = float(cfg.get("max_m", 60.0)), float(cfg.get("beyond_m", 8.0))
+    yardb, roads_b, bld_b = yard.buffer(0.3), roads_poly.buffer(0.4), bpoly.buffer(0.5)
+    rank = {"building": 0, "yard_edge": 1, "road": 2, "max_m": 3}
+    best = None
+    fan = int(cfg.get("fan_deg", 60))
+    for a in range(-fan, fan + 1, 5):
+        ca, sa = math.cos(math.radians(a)), math.sin(math.radians(a))
+        t = np.array([t0[0] * ca - t0[1] * sa, t0[0] * sa + t0[1] * ca])
+        ln, why = _closure_ray(a0, t, max_m, yardb, roads_b, bld_b, beyond_m)
+        if ln is None:
+            continue
+        key = (rank[why], round(ln.length, 2), abs(a))
+        if best is None or key < best[0]:
+            best = (key, ln, why, t)
+    if best is None:
+        return None, "no_room"
+    _, part, why, t = best
+    buf = lin.buf
+    n0 = len(buf.parts)
+    if cfg.get("style", "bollards") == "fence":
+        P = lin.dens(part, 1.0)
+        Z = lin.z(P)
+        lin.slab("concrete_plinth", P, Z - 0.2, Z + S.FENCE_PLINTH_H, 0.05, src)
+        lin.ribbon("fence_anthracite_mesh", P, Z + S.FENCE_PLINTH_H, Z + S.FENCE_H, 0.0, src, both=True,
+                   collision="collision_fence")
+        lin.posts("fence_anthracite", P, S.FENCE_PANEL_W, 0.06, 0.04, S.FENCE_H + 0.05, src=src)
+    else:
+        p0 = np.asarray(part.coords[0])
+        for d in np.arange(0.9, part.length - 0.2, CLOSURE_POST_M):
+            q = p0 + t * d
+            _bollard(buf, q, t, float(lin.z(q[None, :])[0]), src)
+        P = lin.dens(part, 2.0)
+        Z = lin.z(P)
+        lin.ribbon("collision_fence", P, Z - 0.1, Z + 0.95, 0.0, src, both=True)
+        for q in buf.parts[n0:]:
+            if q.mat == "collision_fence":
+                q.layer = "collision"
+    for q in buf.parts[n0:]:
+        if q.layer == "furniture":
+            q.layer = "paved"
+    return part, why
 
 
 def _bollard(buf, q, t, z, src, w=0.11, h=0.95):
@@ -145,8 +343,9 @@ def _loop(buf, c, s, g, lat_feed, src):
         buf.add("markings", "decal_sealant", V, [[0, 0], [L, 0], [L, 1], [0, 1]], T, src=f"{src}:{k}")
 
 
-def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
-    rep = {"applied": [], "stale": [], "replaced_osm": 0}
+def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report, paved=None):
+    rep = {"applied": [], "stale": [], "replaced_osm": 0, "closure_lines": []}
+    yard = shapely.union_all([it["poly"] for it in paved]) if paved else None
     nodes = {n["id"]: n for n in graph["nodes"]}
     for o in overrides:
         if o.get("kind") != "depot_gate":
@@ -206,6 +405,8 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
                 rep["stale"].append(o["id"] + ":island")
         # --- barriers: housing on the median kerb, boom over each lane, raised (MA-003)
         bars = []
+        strips = {}
+        clos = {}
         for (c, s0, g), name in (((ce, se, ge), "entry"), ((cx, sx, gx), "exit")):
             s = s0 + g * dd[k]
             p_c = c.line.offset_point(s, 0.0)
@@ -231,6 +432,26 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
             pl.items[-1]["barrier"] = {"L": LP.BOOM_L, "open_deg": LP.BOOM_OPEN_DEG, "lane": name,
                                        "travel": 1.0 if float(np.dot(travel_dir, side_y)) >= 0 else -1.0}
             bars.append((c, s, g, across, hw))
+            # r12: raised strip under the rest post on the outer side of the lane + the closure line to the plot edge
+            scfg = (o.get("side_strips") or {}).get(name)
+            if scfg and on_island:
+                rest = base + across * (LP.BOOM_L - 0.25) + side_y * LP.BOOM_SIDE
+                lat_sign = 1.0 if float(np.dot(c.line.offset_point(s, 1.0) - c.line.offset_point(s, 0.0), across)) > 0 else -1.0
+                sp, szl, s_out = _side_strip(lin, c, s, g, lat_sign, scfg, roads_poly, rest, f"{src}:strip:{name}")
+                if sp is None:
+                    rep["stale"].append(f"{o['id']}:strip:{name}")
+                else:
+                    strips[name] = {"poly": sp, "zlane": szl, "rest_on_strip": bool(sp.buffer(-0.1).contains(Point(*rest))),
+                                    "t": c.line.frame(s)[0]}
+                    ccfg = (o.get("closure") or {}).get(name)
+                    if ccfg and yard is not None:
+                        a0 = p_c + across * (s_out - 0.25)
+                        ln, why = _closure(lin, a0, across, ccfg, yard, roads_poly, bpoly, f"{src}:closure:{name}")
+                        if ln is None:
+                            rep["stale"].append(f"{o['id']}:closure:{name}:{why}")
+                        else:
+                            clos[name] = {"style": ccfg.get("style", "bollards"), "m": round(float(ln.length), 1), "ends": why}
+                            rep["closure_lines"].append([[round(float(v), 2) for v in q] for q in ln.coords])
             # oil stains where vehicles wait in front of the boom (approach side)
             for mm_ in range(2):
                 s_w = s + (g if name == "entry" else -g) * (2.5 + mm_ * 1.7)
@@ -323,6 +544,14 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
                     continue
                 q = np.asarray(cut.centroid.coords[0])
                 _bollard(lin.buf, q, t_m, isl_z, f"{src}:bollard")
+            # r12: tyre rub on the kerb noses of the island and of the side strips
+            scuff = 0
+            if o.get("scuffs", True):
+                scuff += _scuffs(lin.buf, isl_poly, lambda R: np.full(len(R), isl_z - ISLAND_H), t_m, (o["id"], "isl"),
+                                 f"scuff:{src}:island")
+                for nm, st_ in strips.items():
+                    scuff += _scuffs(lin.buf, st_["poly"], st_["zlane"], st_["t"], (o["id"], nm), f"scuff:{src}:{nm}")
+            rep["scuff_tris"] = scuff
             # asphalt repair patches hashed onto the lanes right at the booms sat under the loops like pasted
             # rectangles (review A6): none within 14 m of the housing line
             keep = [p_ for p_ in lin.buf.parts
@@ -332,6 +561,14 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report):
         rep["applied"].append({"id": o["id"], "node": o["node"], "fence_m": round(total, 1),
                                "island_m2": round(float(isl_poly.area), 1) if isl_poly is not None else 0.0,
                                "gatehouse": [round(float(v), 2) for v in placed[0]] if placed is not None else None,
-                               "barrier_median_w": round(float(gap[k]), 2)})
+                               "barrier_median_w": round(float(gap[k]), 2),
+                               "side_strips": {nm: {"m2": round(float(v["poly"].area), 1), "rest_on_strip": v["rest_on_strip"]}
+                                               for nm, v in strips.items()},
+                               "closure": clos})
     report["gates"] = rep
     return rep
+
+
+def no_parking(report, margin=1.6):
+    """Polygons round the closure lines of the gates (r12): the parking rule lays no bay across a fence / post line."""
+    return [LineString(c).buffer(margin, cap_style="flat") for c in (report.get("gates") or {}).get("closure_lines", [])]

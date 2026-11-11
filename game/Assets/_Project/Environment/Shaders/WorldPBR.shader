@@ -76,6 +76,7 @@ Shader "Kamion/World PBR"
         _CarPaint ("Car paint (_CARPAINT): x base metal, y flake tilt, z pearl, w base-coat roughness", Vector) = (0, 0, 0, 0.5)
         _CarFlake ("Car flake: x cells per m, y fade scale (1 = gone when a pixel covers a cell)", Vector) = (400, 1, 0, 0)
         _PearlTint ("Pearl grazing tint (linear)", Color) = (1, 1, 1, 1)
+        _PanelTone ("Panel tone (_PANELTONE): xy cladding module in UV0 m (length, course), z per-panel hash share, w butt-joint line", Vector) = (6, 1, 0.35, 0.3)
         _OffsetFactor ("Depth offset factor", Float) = 0
         _OffsetUnits ("Depth offset units", Float) = 0
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("Src blend", Float) = 1
@@ -98,6 +99,7 @@ Shader "Kamion/World PBR"
             float _AlbedoScale, _NormalStrength, _SmoothnessScale, _MetallicScale;
             float _ElementJitter, _ElementSize, _MacroSize, _MacroStrength, _MacroWear, _CrackStrength, _DetailFade;
             float _WheelPolish, _GutterDirt, _AgeTint, _DecalAlpha, _SplashHeight, _GroundTint, _RunoffStrength;
+            float4 _PanelTone;
             float4 _Stripe, _StripeA, _StripeB;
             float4 _GrassFill;
             float4 _PaintColor, _PaintWear;
@@ -139,6 +141,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _STRIPES
             #pragma shader_feature_local _GRIME
             #pragma shader_feature_local _CARPAINT
+            #pragma shader_feature_local _PANELTONE
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
@@ -327,6 +330,28 @@ Shader "Kamion/World PBR"
                 }
             #endif
                 half tone = (macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 0.6 + (macro.a - 0.5) * 0.4;
+            #if defined(_PANELTONE)
+                {
+                    // ADR 0092 (review 2026-11-11 s9 par. 4): a coated sandwich-panel wall does not drift in tone like a
+                    // cloud - every panel is one sheet from one coil, so the tone steps at the panel joints. The macro
+                    // drift is sampled once per panel (at its centre, in the wall's own UV0 metres: u along, v up) and
+                    // mixed with a per-panel hash (lot-to-lot difference of neighbouring panels). One point sample.
+                    float2 cellf = um / _PanelTone.xy;
+                    float2 cell = floor(cellf);
+                    float2 pc = (cell + 0.5) * _PanelTone.xy;
+                    half4 mp = SAMPLE_TEXTURE2D_LOD(_MacroMap, sampler_MacroMap, pc / _MacroSize + 0.19, 0);
+                    float3 p3 = frac(float3(cell.xyx) * float3(0.1031, 0.1030, 0.0973));
+                    p3 += dot(p3, p3.yzx + 33.33);
+                    half hsh = frac((p3.x + p3.y) * p3.z);
+                    half drift = (mp.r - 0.5) * 1.4 + (mp.g - 0.5) * 0.6 + (mp.a - 0.5) * 0.4;
+                    tone = drift * (1.0 - _PanelTone.z) + (hsh - 0.5) * 2.0 * _PanelTone.z;
+                    // butt joint between two panels of a course (the set draws only the horizontal shadow gaps)
+                    float du = abs(frac(cellf.x) - 0.5) * _PanelTone.x;                  // 0 at mid-panel
+                    float fwu = max(fwidth(um.x), 1e-4);
+                    half jl = 1.0 - saturate((0.5 * _PanelTone.x - du - 0.006) / fwu);
+                    albedo *= 1.0 - _PanelTone.w * jl * saturate(0.012 / fwu);
+                }
+            #endif
                 albedo *= 1.0 + _MacroStrength * tone;
                 half wear = saturate((macro.b - 0.5) * 2.0);          // > 0: worn / soiled patches
                 albedo *= 1.0 + _MacroWear * (macro.b - 0.5) * 0.8;
@@ -454,6 +479,9 @@ Shader "Kamion/World PBR"
                     half prof = smoothstep(0.0, 0.55, across);
                     half ends = saturate(i.uv.x / 2.5) * saturate((i.uv.z - i.uv.x) / 4.0);
                     half brk = saturate(0.55 + (macro.a - 0.5) * 2.5 + (macro.g - 0.5));
+                    // ADR 0092: strength >= 2.5 = a solid band (tyre rub on a kerb nose must not vanish where the macro
+                    // mottling happens to be low); driving lines and soil bands (<= 1.5) keep the break-up
+                    brk = max(brk, saturate(i.uv.w - 1.5));
                     albedo = _Tint.rgb;
                     smooth = 0.42 * _SmoothnessScale;
                     ao = 1.0;
@@ -568,8 +596,14 @@ Shader "Kamion/World PBR"
                     // PNG row 0 (right under the coping) is texture v = 1 in Unity: v = 1 - depth / 4 m. Before
                     // (G3 wires-streaks-v2) v = depth / 4 sampled the faded last rows at the top and drew the streaks
                     // upside down 3-4 m lower. LOD1 walls start 0.25 m above their coping (depth < 0): clamped.
-                    float2 ur = float2(i.uv.z / 24.0, 1.0 - clamp((i.uv.w - 1.0) * 0.25, 0.0, 0.985));
+                    // ADR 0092: v >= 48 = the face hangs under a window sill (v - 64 = 1 + depth below the sill). A sill
+                    // collects dust over its whole length and sheds it at every joint: streaks 1.7x denser and stronger
+                    // than under the coping, and a dirt line right under the sill flashing (0.2 m, WORKING_VALUE).
+                    half sill = step(48.0, i.uv.w);
+                    float depth = i.uv.w - 1.0 - 64.0 * sill;
+                    float2 ur = float2(i.uv.z * lerp(1.0, 1.7, sill) / 24.0 + 0.31 * sill, 1.0 - clamp(depth * lerp(0.25, 0.4, sill), 0.0, 0.985));
                     half3 ro = SAMPLE_TEXTURE2D(_RunoffMap, sampler_MacroMap, ur).rgb;
+                    ro.r = saturate(ro.r * (1.0 + 0.8 * sill) + sill * 0.3 * (1.0 - smoothstep(0.0, 0.2, depth)) * (0.5 + macro.a));
                     half k = _RunoffStrength * saturate(0.8 + (macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 1.0);
                     albedo = lerp(albedo, albedo * half3(0.22, 0.21, 0.2), ro.r * k);
                     albedo = lerp(albedo, half3(0.075, 0.042, 0.022), ro.g * k * 0.8);
@@ -613,7 +647,14 @@ Shader "Kamion/World PBR"
                 specColor = lerp(half3(0.04, 0.04, 0.04), albedo + _CarFlake.z, metal);
             #endif
 
+            #if defined(_PANELTONE)
+                // ADR 0092: the clear preset's sun runs almost along the 180 m dock wall; the receiver then self-shadows
+                // in sawtooth patches (Medium) / soft clouds (High). Normal-offset receiver bias on this wall only, up
+                // to 0.25 m when the sun grazes it (shadows cast on the wall move by less than that).
+                float4 shadowCoord = TransformWorldToShadowCoord(pw + n * (0.03 + 0.22 * saturate(1.0 - abs(dot(n, _MainLightPosition.xyz)) * 3.0)));
+            #else
                 float4 shadowCoord = TransformWorldToShadowCoord(pw);
+            #endif
                 Light L = GetMainLight(shadowCoord, pw, half4(1, 1, 1, 1));
                 half giK, giSun;
                 KamionWorldGI(pw, n, giK, giSun);
