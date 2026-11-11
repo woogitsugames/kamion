@@ -20,11 +20,13 @@ public static class FireStationR7AlphaMips
             var original=AssetDatabase.LoadAssetAtPath<Texture2D>(actual);
             string qa="Assets/_Generated/FireStationR7QA";
             Directory.CreateDirectory(Path.Combine(repo,"game",qa));
+            foreach(int qaMax in new[]{0,1024})
             foreach(string phase in new[]{"before","after"})
             {
                 string input=phase=="before"?Path.Combine(task,"baseline-materials/fire_station_alpha.png"):
                     Path.Combine(repo,"art-source/world/textures/fire_station_alpha.png");
-                string dst=qa+"/alpha_"+phase+".png";
+                string scale=qaMax==0?"native":"max1024";
+                string dst=qa+"/alpha_"+scale+"_"+phase+".png";
                 File.Copy(input,Path.Combine(repo,"game",dst),true);
                 AssetDatabase.ImportAsset(dst,ImportAssetOptions.ForceSynchronousImport);
                 var ti=(TextureImporter)AssetImporter.GetAtPath(dst);
@@ -33,17 +35,26 @@ public static class FireStationR7AlphaMips
                 ti.crunchedCompression=source.crunchedCompression;ti.maxTextureSize=source.maxTextureSize;
                 ti.SetPlatformTextureSettings(source.GetDefaultPlatformTextureSettings());
                 foreach(string platform in new[]{"Standalone","Android"})ti.SetPlatformTextureSettings(source.GetPlatformTextureSettings(platform));
+                if(qaMax>0)
+                {
+                    ti.maxTextureSize=qaMax;
+                    var defaults=ti.GetDefaultPlatformTextureSettings();defaults.maxTextureSize=qaMax;ti.SetPlatformTextureSettings(defaults);
+                    var standalone=ti.GetPlatformTextureSettings("Standalone");
+                    if(standalone.overridden){standalone.maxTextureSize=qaMax;ti.SetPlatformTextureSettings(standalone);}
+                }
                 ti.isReadable=true;ti.SaveAndReimport();
                 var texture=AssetDatabase.LoadAssetAtPath<Texture2D>(dst);
-                if(texture.width!=original.width || texture.height!=original.height || texture.format!=original.format)
+                int expectedWidth=qaMax==0?original.width:Math.Min(original.width,qaMax);
+                int expectedHeight=original.height*expectedWidth/original.width;
+                if(texture.width!=expectedWidth || texture.height!=expectedHeight || texture.format!=original.format)
                     throw new InvalidOperationException("QA clone differs from actual source texture resolution/format");
-                string output=Path.Combine(task,"actual-alpha-mips",phase);Directory.CreateDirectory(output);
+                string output=Path.Combine(task,"actual-alpha-mips",scale,phase);Directory.CreateDirectory(output);
                 File.WriteAllText(Path.Combine(output,"import.txt"),
-                    $"QA_CLONE_OF={actual}\nsize={texture.width}x{texture.height}\nformat={texture.format}\nmips={texture.mipmapCount}\n"+
+                    $"QA_CLONE_OF={actual}\nqaScale={scale}\nsize={texture.width}x{texture.height}\nformat={texture.format}\nmips={texture.mipmapCount}\n"+
                     $"preserveCoverage={ti.mipMapsPreserveCoverage}\ncutoff={ti.alphaTestReferenceValue}\nalphaTransparency={ti.alphaIsTransparency}\n"+
                     $"readableOverrideForQA=true\nandroidFormat={ti.GetPlatformTextureSettings("Android").format}\n"+
                     $"actualSourceFormat={original.format}\nactualSourceSize={original.width}x{original.height}\n"+
-                    "Editor mip data; phone GPU/ASTC appearance remains unverified.\n");
+                    "Editor imported mip data, max1024 is a size proxy using the SAME Editor compression; actual format above is authoritative, but phone GPU/temporal appearance remains unverified.\n");
                 for(int mip=0;mip<texture.mipmapCount;mip++)
                 {
                     int w=Math.Max(1,texture.width>>mip),h=Math.Max(1,texture.height>>mip);
