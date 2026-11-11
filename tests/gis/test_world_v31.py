@@ -294,13 +294,16 @@ def test_house_roof_mesh_covers_footprint_with_overhang():
             s += 0.5 * np.abs(e1[:, 0] * e2[:, 1] - e1[:, 1] * e2[:, 0]).sum()
         return s
     want = (12 + 2 * RF.OVERHANG) * (8 + 2 * RF.OVERHANG)
-    for layer in ("buildings", "buildings_low"):
-        assert area(layer, "roof_tiles_red") == pytest.approx(want, rel=0.01)
+    # ADR 0094: LOD0 carries the ridge cap on top of the covering (0.22 m wide over the 13 m ridge, 5 cm proud)
+    assert area("buildings", "roof_tiles_red") == pytest.approx(want + 0.22 * 13.0, rel=0.01)
+    assert area("buildings_low", "roof_tiles_red") == pytest.approx(want, rel=0.01)
     assert area("collision", "collision_building") == pytest.approx(want, rel=0.01)
     assert ("buildings", "hall_flashing") in acc.d and ("buildings_low", "hall_flashing") not in acc.d
     V = np.concatenate([it[0] for it in acc.d[("buildings", "roof_tiles_red")]])
-    assert V[:, 2].max() == pytest.approx(107.0 + RF.T_TOP, abs=0.01)
-    uv = np.concatenate([it[2] for it in acc.d[("buildings", "roof_tiles_red")]])
+    assert V[:, 2].max() == pytest.approx(107.0 + RF.T_TOP + 0.05, abs=0.01)
+    V1 = np.concatenate([it[0] for it in acc.d[("buildings_low", "roof_tiles_red")]])
+    assert V1[:, 2].max() == pytest.approx(107.0 + RF.T_TOP, abs=0.01)
+    uv = np.concatenate([it[2] for it in acc.d[("buildings_low", "roof_tiles_red")]])
     assert uv[:, 1].min() >= -1e-6 and uv[:, 1].max() == pytest.approx((4 + RF.OVERHANG + 0.05) * r.sl, abs=0.02)
 
 

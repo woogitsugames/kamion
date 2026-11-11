@@ -144,7 +144,7 @@ def downpipe(acc, a, d, nout, u, z0, z1, hopper=True, mat="downpipe"):
             skip=(0, 1, 2))
 
 
-def gutter(acc, a, c, nout, z, mat="gutter", proud=0.12):
+def gutter(acc, a, c, nout, z, mat="downpipe", proud=0.12):      # ADR 0094: one material with the downpipes
     d = c - a
     L = float(np.hypot(*d))
     d = d / L
@@ -247,45 +247,75 @@ def _abox(acc, c, ax, ay, az, front=None, sw="pvc_white", skip=()):
         _aq(acc, c - ax - ay - az, c + ax - ay - az, c + ax + ay - az, c - ax + ay - az, su)
 
 
-def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key=""):
-    """Slab at floor level zf; balustrade front = a `balf` cell of the facade atlas (sheet, bars, boards, glass,
-    cloth - the same variant the LOD1 row shows), both faces; plain side sheets; ADR 0081: 14 % glazed in above the
-    balustrade, 18 % with a satellite dish, 30 % with a laundry line (shares WORKING_VALUE)."""
+# satellite dishes: every dish of the city looks at the same satellite. Hot Bird 13 deg E from Białystok (53.13 N,
+# 23.16 E): azimuth ~192 deg, elevation ~28 deg (geometry of the geostationary arc; WORKING_VALUE to +-2 deg); an
+# offset dish is tilted ~20 deg less than the beam, so its face looks ~8 deg above the horizon
+DISH_AZ = np.array([math.sin(math.radians(192.0)), math.cos(math.radians(192.0)), 0.0])
+DISH_FACE = DISH_AZ * math.cos(math.radians(8.0)) + np.array([0, 0, math.sin(math.radians(8.0))])
+BAL_GAP = 0.10                  # clear gap between the slab and the balustrade infill, m
+BAL_V = (0.08, 1.02)            # rows of the `balf` cell the infill shows (bottom rail ... top rail), m
+
+
+def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key="", inner=True):
+    """Balcony at floor level zf (ADR 0094, review s9 P1-5: was a closed dark box).
+    Slab 0.16 m, 4 cm proud of the balustrade on its three free sides. Balustrade = a `balf` cell of the facade atlas
+    (sheet, bars, boards, glass, cloth - the variant the LOD1 row shows) on the front AND on both sides, both faces,
+    carried 10 cm clear of the slab on corner posts (the gap shows the sky / the wall behind: the balustrade reads as
+    a screen in front of the slab, not as the side of a box); 5 x 4 cm handrail on the three sides.
+    inner: also the faces only an eye level with the balcony or above it can see - the balustrade faces that look
+    into the balcony, the slab top, the handrail tops, the corner posts (10 cm, hidden behind the slab edge from below).
+    The generator passes it for the two lowest storeys only: 20 instead of 34 triangles per balcony above them (the
+    Low tier draws LOD0 along the route: r1 of ADR 0094 cost +4.6...5.0 % triangles on the block cameras).
+    ADR 0081: 14 % glazed in above the balustrade, 18 % with a satellite dish, 30 % with a laundry line (WORKING_VALUE)."""
     d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
-    p = a + d * u + nout * (depth / 2)
-    acc.box(L0, "balcony_slab", v3(p, zf - 0.09), d3 * (w / 2 + 0.1), n3 * (depth / 2), [0, 0, 0.09], skip=(2,))
-    f = v3(a + d * u + nout * (depth - 0.03), zf)
     hw = w / 2 + 0.1
-    up = np.array([0, 0, 1.05])
-    _aq(acc, f - d3 * hw, f + d3 * hw, f + d3 * hw + up, f - d3 * hw + up, FA.uv_rect("balf", variant))
-    _aq(acc, f + d3 * hw - n3 * 0.04, f - d3 * hw - n3 * 0.04, f - d3 * hw - n3 * 0.04 + up, f + d3 * hw - n3 * 0.04 + up,
-        FA.uv_rect("balf", variant, flip=True))
-    su = FA.swatch_uv(hpick(["galv", "concrete", "steel_grey"], variant, "side"))   # r11: was always dark steel
+    dep = depth - 0.03                               # balustrade line from the wall
+    p = a + d * u + nout * ((depth + 0.01) / 2)
+    acc.box(L0, "balcony_slab", v3(p, zf - 0.08), d3 * (hw + 0.04), n3 * ((depth + 0.01) / 2), [0, 0, 0.08],
+            skip=(2,) if inner else (1, 2))
+    cu, cv, cw, _ = FA.cell("balf", variant)
+    va, vb = cv + BAL_V[0], cv + BAL_V[1]
+    z0 = np.array([0, 0, BAL_GAP])
+    up = np.array([0, 0, BAL_GAP + BAL_V[1] - BAL_V[0]])
+    f = v3(a + d * u + nout * dep, zf)
+    A_, B_ = f - d3 * hw, f + d3 * hw
+    _aq(acc, A_ + z0, B_ + z0, B_ + up, A_ + up, [[cu, va], [cu + cw, va], [cu + cw, vb], [cu, vb]])
+    if inner:
+        _aq(acc, B_ - n3 * 0.04 + z0, A_ - n3 * 0.04 + z0, A_ - n3 * 0.04 + up, B_ - n3 * 0.04 + up,
+            [[cu + cw, va], [cu, va], [cu, vb], [cu + cw, vb]])
     w0 = v3(a + d * u, zf)
     for sg in (-1, 1):
-        s0, s1 = w0 + d3 * sg * hw, w0 + d3 * sg * hw + n3 * (depth - 0.03)
-        if sg < 0:
-            s0, s1 = s1, s0
-        _aq(acc, s0, s1, s1 + up, s0 + up, su)
-        _aq(acc, s1, s0, s0 + up, s1 + up, su)
-    # ADR 0091: the balustrade is geometry, not a card - a 5 x 4 cm handrail on the three open sides, 3 cm proud of
-    # the infill (LOD0, 12 triangles: top and outer faces only; LOD1 shows the balustrade from the facade_far rows)
-    rail = np.array([0, 0, 1.07])
-    acc.box(L0, "downpipe", f + n3 * 0.01 + rail, d3 * (hw + 0.03), n3 * 0.025, [0, 0, 0.02], skip=(0, 2, 4, 5))
+        # side screens: the first `dep` metres of the same cell, its end post at the free corner
+        sw_, so_ = w0 + d3 * sg * hw, w0 + d3 * sg * hw + n3 * dep
+        uw, uo = cu + dep, cu
+        q = [(sw_, uw), (so_, uo)] if sg < 0 else [(so_, uo), (sw_, uw)]      # CCW seen from outside
+        (P0, u0_), (P1, u1_) = q
+        _aq(acc, P0 + z0, P1 + z0, P1 + up, P0 + up, [[u0_, va], [u1_, va], [u1_, vb], [u0_, vb]])
+        if inner:
+            _aq(acc, P1 + z0, P0 + z0, P0 + up, P1 + up, [[u1_, va], [u0_, va], [u0_, vb], [u1_, vb]])
+        if inner:           # corner post under the screen (front + outer face)
+            acc.box(L0, "downpipe", so_ - d3 * sg * 0.02 - n3 * 0.02 + [0, 0, BAL_GAP / 2], d3 * 0.02, n3 * 0.02,
+                    [0, 0, BAL_GAP / 2], skip=(0, 1, 2, 4 if sg > 0 else 5))
+    # handrail: 5 x 4 cm on the three open sides, 3 cm proud of the infill (top and outer faces only)
+    rail = up + [0, 0, 0.04]                         # handrail top 1.10 m above the floor (WT par. 298: >= 1.1 m)
+    acc.box(L0, "downpipe", f + n3 * 0.01 + rail, d3 * (hw + 0.03), n3 * 0.025, [0, 0, 0.02],
+            skip=(0, 2, 4, 5) if inner else (0, 1, 2, 4, 5))
     for sg in (-1, 1):
-        acc.box(L0, "downpipe", w0 + d3 * sg * hw + n3 * (depth - 0.03) / 2 + rail, d3 * 0.025, n3 * (depth - 0.03) / 2,
-                [0, 0, 0.02], skip=(0, 2, 3, 4 if sg > 0 else 5))
+        acc.box(L0, "downpipe", w0 + d3 * sg * hw + n3 * dep / 2 + rail, d3 * 0.025, n3 * dep / 2,
+                [0, 0, 0.02], skip=(0, 2, 3, 4 if sg > 0 else 5) + (() if inner else (1,)))
+    up = np.array([0, 0, 1.05])
     if hfloat(key, "glz") < 0.14:               # zabudowa balkonu: glazing above the balustrade, front + sides
         gv = int(hfloat(key, "glzv") * 97)
         g0 = f + up
         gup = np.array([0, 0, 1.45])
         _aq(acc, g0 - d3 * hw, g0 + d3 * hw, g0 + d3 * hw + gup, g0 - d3 * hw + gup, FA.uv_rect("balg", gv))
-        sg_ = FA.swatch_uv("glass_dark")
+        gu, gv_, _, gh = FA.cell("balg", gv)          # sides: the first `dep` metres of the same glazing cell
         for sg in (-1, 1):
             s0, s1 = w0 + up + d3 * sg * hw, w0 + up + d3 * sg * hw + n3 * (depth - 0.03)
+            ua_, ub_ = gu + dep, gu
             if sg < 0:
-                s0, s1 = s1, s0
-            _aq(acc, s0, s1, s1 + gup, s0 + gup, sg_)
+                s0, s1, ua_, ub_ = s1, s0, ub_, ua_
+            _aq(acc, s0, s1, s1 + gup, s0 + gup, [[ua_, gv_], [ub_, gv_], [ub_, gv_ + gh], [ua_, gv_ + gh]])
     else:
         if hfloat(key, "line") < 0.30:          # laundry: cloths hanging from a line under the slab above
             x = -hw + 0.3
@@ -301,18 +331,31 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key=""):
                 _aq(acc, c0 + d3 * cw - [0, 0, ch], c0 - [0, 0, ch], c0, c0 + d3 * cw, uvc)
                 x += cw + 0.08 + 0.3 * hfloat(key, "cg", k)
                 k += 1
-        if hfloat(key, "dish") < 0.18:          # satellite dish on the balustrade corner: octagon, turned and tilted
+        if hfloat(key, "dish") < 0.18 and float(n3 @ DISH_AZ) > -0.2:
+            # satellite dish on an arm off the balustrade rail (review s9 P1-5: the dishes were white ovals hanging in
+            # the air): 0.30 m horizontal arm, 0.42 m mast, offset dish 0.60 x 0.66 m facing the satellite, feed arm
+            # and LNB in front of it. Only on balconies that see the southern sky.
             sgn = 1 if hfloat(key, "dside") < 0.5 else -1
-            c0 = f + d3 * sgn * (hw - 0.35) + n3 * 0.22 + [0, 0, 1.25]
-            t = d3 * math.cos(0.5) * sgn + n3 * math.sin(0.5)
-            upv = np.array([0, 0, 1.0]) * 0.94 + np.cross(t, [0, 0, 1.0]) * 0.34
-            r = 0.34
-            ring = [c0 + r * (math.cos(i * math.pi / 4) * t + math.sin(i * math.pi / 4) * upv) for i in range(8)]
+            b0 = f + d3 * sgn * (hw - 0.30) + [0, 0, 1.0]
+            m0 = b0 + n3 * 0.30
+            acc.box(L0, "downpipe", b0 + n3 * 0.15, d3 * 0.018, n3 * 0.15, [0, 0, 0.018], skip=(2, 3))
+            acc.box(L0, "downpipe", m0 + [0, 0, 0.21], d3 * 0.018, n3 * 0.018, [0, 0, 0.21], skip=(0,))
+            nd = DISH_FACE
+            t = np.cross([0, 0, 1.0], nd)
+            t = t / np.linalg.norm(t)
+            upv = np.cross(nd, t)
+            c0 = m0 + [0, 0, 0.44] + nd * 0.05
+            ring = [c0 + 0.30 * math.cos(i * math.pi / 4) * t + 0.33 * math.sin(i * math.pi / 4) * upv for i in range(8)]
             uvd = FA.swatch_uv("dish", 3)
             for i in range(1, 7):
                 for tri in ((0, i, i + 1), (0, i + 1, i)):
                     acc.add(L0, "facade_atlas", [ring[j] for j in tri], [[0, 1, 2]], uvd)
-            acc.box(L0, "downpipe", f + d3 * sgn * (hw - 0.35) + n3 * 0.08 + [0, 0, 1.12], d3 * 0.02, n3 * 0.1, [0, 0, 0.02])
+            # feed arm from the lower rim to the focus, LNB at its end
+            q0, q1 = c0 - upv * 0.33, c0 + nd * 0.34 - upv * 0.16
+            us_ = FA.swatch_uv("steel_grey")
+            _aq(acc, q0 - t * 0.012, q0 + t * 0.012, q1 + t * 0.012, q1 - t * 0.012, us_)
+            _aq(acc, q0 + t * 0.012, q0 - t * 0.012, q1 - t * 0.012, q1 + t * 0.012, us_)
+            acc.box(L0, "downpipe", q1, t * 0.03, upv * 0.03, nd * 0.045, skip=(1,))
 
 
 def window_kit(acc, a, d, nout, o, key, p_ac):
@@ -371,9 +414,11 @@ def cage_ladder(acc, a, d, nout, u, z0, z1, mat="downpipe"):
         acc.quad(L0, mat, B_, A_, A_ + [0, 0, top - zc0], B_ + [0, 0, top - zc0])
 
 
-def chimney(acc, p, along, z0, z1):
+def chimney(acc, p, along, z0, z1, apron=None):
     """Brick chimney stack 0.56 x 0.44 m from z0 (inside the roof) to z1 with a sheet-metal cap (ADR 0091: the
-    stack stands on the roof slope next to the ridge and ends 0.45 m above it)."""
+    stack stands on the roof slope next to the ridge and ends 0.45 m above it).
+    apron(xy) -> roof surface z: sheet flashing round the foot of the stack (obróbka komina, ADR 0094), 3 cm proud
+    of the brick, from the roof surface 0.15 m up the stack, following the slope; LOD0, four faces."""
     along = np.asarray(along, float)
     across = np.array([-along[1], along[0]])
     c = v3(p, (z0 + z1) / 2)
@@ -381,6 +426,12 @@ def chimney(acc, p, along, z0, z1):
         acc.box(layer, "chimney_brick", c, np.append(along * 0.28, 0), np.append(across * 0.22, 0), [0, 0, (z1 - z0) / 2],
                 skip=(0,))
     acc.box(L0, "hall_flashing", v3(p, z1 + 0.04), np.append(along * 0.33, 0), np.append(across * 0.27, 0), [0, 0, 0.04])
+    if apron is not None:
+        cs = [np.asarray(p, float) + along * (sx * 0.31) + across * (sy * 0.25) for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+        zs = [float(apron(q)) for q in cs]
+        for i in range(4):
+            q0, q1, za, zb = cs[i], cs[(i + 1) % 4], zs[i], zs[(i + 1) % 4]
+            acc.quad(L0, "hall_flashing", v3(q0, za - 0.04), v3(q1, zb - 0.04), v3(q1, zb + 0.15), v3(q0, za + 0.15))
 
 
 def sign_instance(code, a, d, nout, u, z, src):

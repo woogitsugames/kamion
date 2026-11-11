@@ -32,7 +32,14 @@ RAY_UP = 10.0
 # authored view angles (deg off the route side) for buildings whose default view is blocked by things the generator
 # does not know (r10_hall_1: a parked trailer at the docks, since ADR 0071)
 ANGLES = (25, -25, 50, -50, 0, 75, -75, 110, -110, 150, -150, 180)
-ANGLES_FOR = {"bdot:7abd670e-1a55-4ccb-9da0-9a2ad052ff32": (50, 75, -75, 0, 110, -110)}
+ANGLES_FOR = {"bdot:7abd670e-1a55-4ccb-9da0-9a2ad052ff32": (50, 75, -75, 0, 110, -110),
+              # ADR 0094 (review s9 P2-2): the default eye of r10_shed_2 stood behind the glazed noise barrier of the
+              # route - the "green band over the ridge" and the "vertical seam of the slope" were the barrier's rail and
+              # a panel joint seen through the glass, not the roof
+              "bdot:2BE4B431-BD32-1BF0-E053-CC2BA8C0D140": (-50, 50, -75, 75, 110, -110)}
+# ADR 0094 (review s9 P2-7): eye distance from the nearest wall (m) for buildings whose default distance (scaled with
+# the footprint) leaves them a strip on the horizon - r10_hall_1 is a 5.7 m high, very long hall
+DIST_FOR = {"bdot:7abd670e-1a55-4ccb-9da0-9a2ad052ff32": 22.0}
 
 
 def main():
@@ -93,11 +100,19 @@ def main():
                 for k in (1.0, 0.75, 1.3):
                     r = poly.exterior.distance(Point(*c)) + k * max(14.0, 0.7 * size, 1.1 * h)
                     pos = c + w * (r + 0.5 * size)
+                    if b["id"] in DIST_FOR:          # first point of the ray that is DIST_FOR x k outside the footprint
+                        want = DIST_FOR[b["id"]] * k
+                        for rr in np.arange(1.0, 600.0, 0.5):
+                            q = Point(*(c + w * rr))
+                            if not poly.contains(q) and poly.exterior.distance(q) >= want:
+                                pos = c + w * rr
+                                break
                     if any(polys[j].contains(Point(*pos)) for j in tree.query(Point(*pos))):
                         continue
                     edge_pt = np.asarray(poly.exterior.interpolate(poly.exterior.project(Point(*pos))).coords[0])
                     if clear(pos, edge_pt + (pos - edge_pt) * 0.02, i):
-                        add(f"r10_{typ}_{n + 1}", pos, c, zg, zg + min(h * 0.5, 6.0),
+                        look = edge_pt + (c - edge_pt) * 0.1 if b["id"] in DIST_FOR else c
+                        add(f"r10_{typ}_{n + 1}", pos, look, zg, zg + min(h * 0.5, 6.0),
                             f"{typ} {b['id']} ({p.get('function')}, h {h:.1f} m, storeys {p.get('storeys')}), "
                             f"{dist:.0f} m from the start route, view {ang:+d} deg off the route side")
                         done = True

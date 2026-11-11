@@ -56,7 +56,10 @@ M = {
                   "macro": [48.0, 0.18]},
     # plinths (cokół): render in two tones, `splash_h` = splash / soil zone height (m) of Kamion/World PBR _SPLASH
     # (the plinth covers the zone the plaster_* walls had it in, so r10 showed no splash at all)
-    "plinth_dark": {"color": [0.16, 0.16, 0.16], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.5},
+    # ADR 0094: one plinth tone again (plinth_grey stays defined but unused: every material is a draw per chunk on
+    # both LODs - review s9 "draws Low +3...5 %"), 0.16 -> 0.20; the tone variation of a plinth now comes from the
+    # splash zone that follows the terrain (buildings_mesh: plinth UV0.v = metres above the ground at the wall)
+    "plinth_dark": {"color": [0.20, 0.20, 0.195], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.5},
     "plinth_grey": {"color": [0.25, 0.25, 0.24], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.5},
     # pitched roofs (ADR 0091): one modulation set `roof_tiles` (S-profile tile courses) for ceramic tile and pressed
     # metal tile sheet, set_tile = real course size
@@ -241,6 +244,10 @@ M = {
     "barrier_housing": {"color": [0.55, 0.40, 0.03], "rough": 0.5, "metal": 0.3},
     # facade kit (streetscape.buildings_mesh)
     "downpipe": {"color": [0.30, 0.31, 0.31], "rough": 0.45, "metal": 0.7},
+    # ADR 0094: soffit boarding under the eaves and verges of houses (white-grey PVC / painted boards). sky_occ x = 0:
+    # the ambient of a face that looks down is not halved (ADR 0060) - with the halving a white soffit read 72 sRGB
+    # under an overcast sky next to a wall of 140, a graphite one 24 ("black sail", review s9 P1-4)
+    "soffit_boards": {"color": [0.55, 0.54, 0.51], "rough": 0.85, "sky_occ": [0.0, 0.0]},
     "gutter": {"color": [0.30, 0.31, 0.31], "rough": 0.45, "metal": 0.7},
     "hall_wall_graphite": {"color": [0.08, 0.085, 0.09], "rough": 0.5, "metal": 0.3, "texture_set": "trapezoid_sheet"},
     "hall_wall_accent_blue": {"color": [0.06, 0.12, 0.20], "rough": 0.5, "metal": 0.3, "texture_set": "trapezoid_sheet"},
@@ -368,6 +375,11 @@ for _k, _v in M.items():
     # and read as a coarse relief from the street (r11 r2 render) - same fix as brick in ADR 0081
     if _v.get("texture_set") == "plaster":
         _v["set_tile"] = True
+        # ADR 0094: the walls' splash zone (0.6 m) was hidden behind the plinth (0.45-0.9 m); 1.2 m leaves a faint
+        # soiled band above the plinth (-10 % at 0.6 m, 0 at 1.2 m) - the tone variation of a facade comes from here
+        # and from the run-off streaks, not from the plaster tile (review s9 P1-2). WORKING_VALUE.
+        if _k.startswith("plaster_"):
+            _v["splash_h"] = 1.2
 
 # ADR 0081 (r10 r2): run-off streaks under the attic coping also on the render / panel walls of flat-roofed blocks
 # and offices (LOD0 only; the wall-top TEXCOORD_1 comes from buildings_mesh, the importer enables _RUNOFF)
