@@ -32,7 +32,7 @@ $excluded = @('REPORT.md','STATUS.md','DELIVERED.json','copy-to-main.log')
 $files = @(Get-ChildItem -LiteralPath $source -Recurse -File | Where-Object Name -NotIn $excluded)
 $missing = @()
 foreach ($file in $files) {
-    $relative = $file.FullName.Substring($source.Length).TrimStart('\','/')
+    $relative = $file.FullName.Substring($source.Length).TrimStart([char]92,[char]47)
     $target = Join-Path $destination $relative
     if (-not (Test-Path -LiteralPath $target) -or (Get-Item -LiteralPath $target).Length -ne $file.Length) {
         $missing += $relative
@@ -61,4 +61,6 @@ foreach ($name in $excluded) {
         throw "Published metadata hash differs: $name"
     }
 }
-Write-Output "Delivered $label: $($files.Count) files checked, robocopy exit $copyExit."
+Write-Output "Delivered ${label}: $($files.Count) files checked, robocopy exit $copyExit."
+
+
