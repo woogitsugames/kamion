@@ -79,20 +79,33 @@ def test_lod0_balconies_follow_the_building_type():
     assert set(vs) - {1} <= set(B.BAL_EXCEPT)
 
 
-def test_sill_streak_uv1_under_windows_only():
-    """P1-a: the wall piece right under a window carries the sill mode of the run-off layer (v >= 64), the piers
-    between windows do not."""
+def test_sill_streak_uv1_under_windows_only(monkeypatch):
+    """P1-a / ADR 0107 P1-f: the wall piece right under a window carries the sill-local mode of the run-off layer
+    (v >= 112: u = signed metres from the nearer sill end, two halves), the piers between windows do not."""
     from streetscape import buildings_mesh as B
+    monkeypatch.setattr(B, "SILL_CLEAN", 0.0)
     acc = B.Acc()
     ops = [(1.0, 2.5, 101.0, 102.4, 0.2, "window", "glass"), (4.0, 5.0, 100.0, 102.2, 0.15, "door", "glass")]
     B.wall_with_openings(acc, "buildings", "plaster_grey", np.array([0.0, 0.0]), np.array([1.0, 0.0]),
                          np.array([0.0, -1.0]), 6.0, 99.5, 103.0, ops, sills=(3.0, 0.7))
     items = acc.d[("buildings", "plaster_grey")]
-    sill = [it for it in items if it[3] is not None and it[3][:, 1].min() >= 64.0]
-    assert len(sill) == 1
-    V = sill[0][0]
+    sill = [it for it in items if it[3] is not None and it[3][:, 1].min() >= 112.0]
+    assert len(sill) == 2                              # left and right half of the sill
+    V = np.concatenate([it[0] for it in sill])
     assert V[:, 0].min() == pytest.approx(1.0) and V[:, 0].max() == pytest.approx(2.5) and V[:, 2].max() == pytest.approx(101.0)
-    assert sill[0][3][:, 1].min() == pytest.approx(65.0) and sill[0][3][:, 1].max() == pytest.approx(65.0 + 1.5 / 0.7)
+    U1 = np.concatenate([it[3] for it in sill])
+    assert np.abs(U1[:, 0]).max() == pytest.approx(0.75) and np.abs(U1[:, 0]).min() == pytest.approx(1e-3)
+    assert (U1[:, 0] < 0).sum() == 4 and (U1[:, 0] > 0).sum() == 4
+    v0 = U1[:, 1].min()
+    assert (v0 - 129.0) % 8.0 == pytest.approx(0.0) and v0 < 192.0
+    assert 0.5 < U1[:, 1].max() - v0 < 6.6             # 1.5 m of wall in units of the per-window length scale
+
+
+def test_sill_marks_skip_a_share_of_the_windows():
+    """ADR 0107 P1-f: 30-50 % of the sills leave no mark."""
+    from streetscape import buildings_mesh as B
+    n = sum(B.sill_marks((1.0, 0.7), 0.0, 1.5, 0.0, 1.0, 3.0 * k, 3.0 * k + 1.5, 0.5) is None for k in range(400))
+    assert 0.30 <= n / 400 <= 0.50
 
 
 def test_plinth_drip_skips_the_door():
@@ -123,7 +136,7 @@ def test_door_landing_and_steps():
     acc = B.Acc()
     FK.door_steps(acc, np.array([0.0, 0.0]), np.array([1.0, 0.0]), np.array([0.0, -1.0]), 3.0, 100.6, 100.0)
     # landing (4 faces) + 3 steps for 0.58 m of rise
-    assert _tris(acc, "plinth_dark") == 8 + 3 * 8 and _tris(acc, "window_sill") == 4
+    assert _tris(acc, "plinth_dark") == 8 + 3 * 8 and _tris(acc, "downpipe") == 4          # ADR 0107: grey threshold
     assert _tris(acc, "plinth_dark", "buildings_low") == 0
 
 

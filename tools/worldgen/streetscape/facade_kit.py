@@ -118,6 +118,43 @@ def coping(acc, a, c, nout, zt, mat="hall_flashing"):
     acc.box(L0, mat, v3(ctr, zt + 0.03), np.append(d * (L / 2 + 0.06), 0), np.append(nout * 0.11, 0), [0, 0, 0.05])
 
 
+PLINTH_JOINT_M = 2.4            # ADR 0107: spacing of the vertical joints of a tall plinth (cast / precast basement wall), m
+PLINTH_TALL_M = 0.9             # plinth standing higher than this above the ground gets joints
+PLINTH_BAND_M = 0.5             # the plinth band proper under the drip profile; the basement wall is below it
+
+
+def plinth_joints(acc, a, d, nout, L, zpl, zbot, ops, ground, phase, mat="hall_flashing"):
+    """ADR 0107 (review 0097 P2-k "cokół 2 m jedną płytą"): where the plinth stands more than PLINTH_TALL_M out of a
+    slope it is a basement wall under a plinth band - a horizontal joint PLINTH_BAND_M under the plinth top and
+    vertical joints every PLINTH_JOINT_M below it (owner photo `ściana budynku.png`: cast wall with thin joints every
+    2-3 m). Joints = 1.5 cm dark strips 4 mm proud of the plinth face, in the drip profile's material (no new draw),
+    never across an opening. ground(u) = terrain height at u along the wall; phase in [0, 1) shifts the joints per
+    wall. LOD0, 2 triangles per joint. Returns the triangle count."""
+    d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
+    w, zj = 0.0075, zpl - PLINTH_BAND_M
+    us = [min(max(PLINTH_JOINT_M * (phase * 0.8 + 0.1) + k * PLINTH_JOINT_M, 0.0), L)
+          for k in range(int(L / PLINTH_JOINT_M) + 1)]
+    us = sorted({round(u, 3) for u in [0.0, L] + us})
+    tall = [zpl - ground(u) > PLINTH_TALL_M for u in us]
+
+    def clear(u0, u1, z0, z1):
+        return not any(o[0] < u1 and o[1] > u0 and o[2] < z1 and o[3] > z0 for o in ops)
+    n = 0
+    p0 = v3(a + nout * 0.004, 0.0)
+    for (u0, t0), (u1, t1) in zip(zip(us, tall), zip(us[1:], tall[1:])):
+        if t0 and t1 and u1 - u0 > 0.3 and clear(u0, u1, zj - w, zj + w):
+            acc.quad(L0, mat, p0 + d3 * u0 + [0, 0, zj - w], p0 + d3 * u1 + [0, 0, zj - w],
+                     p0 + d3 * u1 + [0, 0, zj + w], p0 + d3 * u0 + [0, 0, zj + w])
+            n += 2
+    for u, t in zip(us[1:-1], tall[1:-1]):
+        z0 = max(ground(u) - 0.05, zbot)
+        if t and zj - z0 > 0.3 and clear(u - w, u + w, z0, zj):
+            acc.quad(L0, mat, p0 + d3 * (u - w) + [0, 0, z0], p0 + d3 * (u + w) + [0, 0, z0],
+                     p0 + d3 * (u + w) + [0, 0, zj], p0 + d3 * (u - w) + [0, 0, zj])
+            n += 2
+    return n
+
+
 def plinth_drip(acc, a, d, nout, L, z, ops, mat="hall_flashing"):
     """ADR 0097 (review 0094 P1-a "linia cokół-ściana"): starter / drip profile of the insulation over the plinth -
     3.5 cm proud, 3 cm tall, front + underside in the dark flashing (r1 had a light top face: from 10-30 m it read as a
@@ -156,7 +193,9 @@ def door_steps(acc, a, d, nout, u, zd, zg, mat="plinth_dark", w=1.4):
         c = a + d * u + nout * (1.0 + 0.15 + 0.3 * k)
         acc.box(L0, mat, v3(c, (zt_ + zb) / 2), d3 * (w / 2 - 0.05 * (k + 1)), n3 * 0.15, [0, 0, (zt_ - zb) / 2],
                 skip=(0, 2))
-    acc.box(L0, "window_sill", v3(a + d * u + nout * 0.03, zd - 0.005), d3 * 0.52, n3 * 0.09, [0, 0, 0.018],
+    # ADR 0107 (review 0097 P2-j "biała strefa drzwi przebija cokół"): the threshold is grey sheet (the gutter /
+    # downpipe material every house already draws), not the white of the window sills
+    acc.box(L0, "downpipe", v3(a + d * u + nout * 0.03, zd - 0.005), d3 * 0.52, n3 * 0.09, [0, 0, 0.018],
             skip=(0, 2, 4, 5))
 
 
@@ -385,13 +424,16 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key="", inner=True
             # the balustrade, line 1.55-1.75 m, small pieces (0.25-0.55 m) of muted colours with gaps, hanging at
             # different depths and a few degrees off the line - only the tops show over the 1.1 m handrail
             x = -hw + 0.35 + 0.3 * hfloat(key, "lx")
-            zl = 1.55 + 0.2 * hfloat(key, "lz")
+            # ADR 0107 (review 0097 P2-h "trzy płaskie kwadraty nad balustradą"): the rack is a standing dryer, its
+            # line 0.95-1.05 m - below the 1.1 m handrail, so the washing shows only through bars / glass and from
+            # above; no saturated red (cloth_red S 0.74)
+            zl = 0.95 + 0.1 * hfloat(key, "lz")
             k = 0
             while x < hw - 0.45 and k < 5:
                 cw = 0.22 + 0.33 * hfloat(key, "cw", k)
                 ch = 0.25 + 0.30 * hfloat(key, "ch", k)
                 col = hpick(["cloth_white", "cloth_dark", "cloth_white", "cloth_blue", "cloth_dark", "cloth_white",
-                             "cloth_red"], key, "cc", k)
+                             "cloth_green"], key, "cc", k)
                 tilt = (hfloat(key, "ct", k) - 0.5) * 0.12
                 c0 = w0 + d3 * x + n3 * (depth - 0.55 - 0.1 * hfloat(key, "cd", k)) + [0, 0, zl]
                 uvc = FA.swatch_uv(col)

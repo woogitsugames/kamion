@@ -27,6 +27,7 @@ from . import landmarks as LM
 from . import life as LF
 from . import paved as PV
 from . import plantings as PT
+from . import plots as PLT
 from . import sources as SRC
 from . import vegetation as VG
 from . import yard_wear as YW
@@ -190,8 +191,14 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     rep["furniture"] = frep
     log("furniture", {k: v for k, v in frep.items() if k != "junction_signs"})
 
+    # house plots (ADR 0107): fence / gate / driveway / garden instances around single-family houses
+    plots = PLT.build(pl, blds, roads_poly, bpoly, paved, src, origin, zground, rep)
+    log("plots", {k: v for k, v in rep["plots"].items()})
+
     # vegetation
     blocked = ndimage.binary_dilation(mask | bmask, iterations=3)
+    if plots["keepout"]:
+        blocked |= PV.rasterize_polys(plots["keepout"], hf)
     if plant_blocked:
         blocked |= PV.rasterize_polys(plant_blocked, hf)
     hero_keepout = HBD.keepout(heroes)
@@ -208,6 +215,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     hlod = FH.build(trees, forest_mix, no_forest, zground, half, vrep)
     log("forest hlod", vrep["forest_hlod"])
     col = VG.ground_masks(src, origin, hf, dist, forests)
+    col = PLT.lawn_mask(col, plots["lawns"], hf, PV.rasterize_polys)     # mown lawn inside the plots (ADR 0107)
     instances = pl.items + trees
     hero_tris = {**hero_tris, **HBD.apply(w.buf, heroes, instances, rep, log)}      # depot halls + hero buildings
     if heroes or rep.get("hero_buildings", {}).get("stale"):

@@ -77,8 +77,9 @@ BALCONY_SUN = np.array([-0.5, -0.866])       # towards SSW (E, N)
 PLINTH_H = {"block": None, "office": 0.6, "house": 0.45, "shed": 0.3}
 PLINTHS = ["plinth_dark"]
 BAL_EXCEPT_PCT = 12            # ADR 0097: share of balconies with another balustrade than the building's (WORKING_VALUE)
-BAL_EXCEPT = (4, 5, 0)         # balf variants of the exceptions: bars + flowers, reed mat, perforated (r1 also brown /
-                               # green plastic: the brown read orange on r10_block_3)
+BAL_EXCEPT = (4, 7, 0)         # balf variants of the exceptions: bars + flowers, faded grey-green plastic, perforated
+                               # (r1 also brown: read orange on r10_block_3; ADR 0107, review 0097 P2-i: the reed
+                               # mat (5) read yellow / ochre from 60 m - exceptions stay near-neutral)
 ESTATE_M = 250.0               # ADR 0097: estate cell for the balustrade types (<= 2 types per cell), m (WORKING_VALUE)
 # ADR 0097 r2: the paved apron round blocks is OFF - draped on the height field it sank under the terrain mesh along
 # most of the wall and showed as loose light patches where the slope dips (r2 r10_block_5); needs the terrain mesh's
@@ -247,16 +248,33 @@ def runoff_uv1(runoff, ua, ub, za, zb):
     return [[a, ka], [b, ka], [b, kb], [a, kb]]
 
 
-def sill_uv1(sills, ua, ub, za, zb):
-    """ADR 0097 (review 0094 P1-a): TEXCOORD_1 of a wall quad that hangs under a window sill (top zb = the sill):
-    v = 64 + 1 + (zb - z) / length scale - the shader's sill mode (ADR 0092: dirt line under the flashing, denser and
-    stronger streaks). sills = (u_offset, length_scale); u shifted per quad like runoff_uv1 (half floats)."""
+SILL_CLEAN = 0.40              # ADR 0107: share of windows whose sill left no mark (review 0097 P1-f: 30-50 %)
+
+
+def sill_marks(sills, ua, ub, za, zb, oa, ob, zfrac):
+    """ADR 0107 (review 0097 P1-f; replaces the ADR 0097 `sill_uv1`): TEXCOORD_1 of the wall under a window sill, the
+    column [ua, ub] of the opening [oa, ob], top zb = the sill. [(u0, u1, uv1)] - the column split at the sill centre -
+    or None (this sill left no mark: SILL_CLEAN of the windows). Shader contract (Kamion/World PBR _RUNOFF, v >= 112):
+    u = signed metres from the nearer sill end (left half < 0), v = 128 + 8 * rnd + 1 + depth / length scale, rnd 0-7
+    per window. Lower storeys carry longer marks (zfrac = height of the sill in the wall, 0 bottom ... 1 top).
+    Half floats (WorldMeshBake): |u| < 4 m -> 1/256 m steps; v < 192 -> exact at the sill, 1/8 unit at the bottom."""
     uo, ls = sills
-    a = uo + ua
-    sh = RUNOFF_PERIOD_M * math.floor(a / RUNOFF_PERIOD_M)
-    a, b = a - sh, uo + ub - sh
-    ka, kb = 65.0 + (zb - za) / ls, 65.0
-    return [[a, ka], [b, ka], [b, kb], [a, kb]]
+    wk = f"{uo:.3f}:{oa:.2f}:{zb:.2f}"
+    if FK.hfloat(wk, "sill_clean") < SILL_CLEAN:
+        return None
+    rnd = int(FK.hfloat(wk, "sill_rnd") * 8) % 8
+    lsw = max(ls * (1.3 - 0.6 * min(max(zfrac, 0.0), 1.0)) * (0.8 + 0.4 * FK.hfloat(wk, "sill_len")), (zb - za) / 6.5)
+    v0 = 129.0 + 8.0 * rnd
+    kb = v0 + (zb - za) / lsw
+    om = 0.5 * (oa + ob)
+    out = []
+    for c0, c1, sg in ((ua, min(ub, om), -1.0), (max(ua, om), ub, 1.0)):
+        if c1 - c0 < 1e-4:
+            continue
+        e0, e1 = (c0 - oa, c1 - oa) if sg < 0 else (ob - c0, ob - c1)
+        e0, e1 = max(e0, 1e-3), max(e1, 1e-3)              # 0 would lose the side sign
+        out.append((c0, c1, [[sg * e0, kb], [sg * e1, kb], [sg * e1, v0], [sg * e0, v0]]))
+    return out
 
 
 def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0, vref=0.0, runoff=None, reveal=None,
@@ -280,24 +298,26 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
         if ub - ua < 1e-4:
             continue
         um = 0.5 * (ua + ub)
-        cov = sorted([(o[2], o[3], o[5]) for o in ops if o[0] <= um <= o[1]])
+        cov = sorted([(o[2], o[3], o[5], o[0], o[1]) for o in ops if o[0] <= um <= o[1]])
         z = zb
         segs = []
-        for va, vb, kd in cov:
+        for va, vb, kd, oa, ob in cov:
             if va > z:
-                segs.append((z, va, kd))
+                segs.append((z, va, kd, oa, ob))
             z = max(z, vb)
         if z < zt:
-            segs.append((z, zt, None))
-        for za, zb2, kd in segs:
-            # the wall under a window sill streaks from the sill (ADR 0097); elsewhere the parapet run-off (if any)
+            segs.append((z, zt, None, 0.0, 0.0))
+        for za, zb2, kd, oa, ob in segs:
+            # the wall under a window sill is marked from the sill (ADR 0097 / 0107); elsewhere the parapet run-off
+            marks = None
             if sills is not None and kd in ("window", "ribbon") and zb2 - za > 0.15 and not str(mat).startswith("plinth"):
-                uv1 = sill_uv1(sills, u0 + ua, u0 + ub, za, zb2)
-            else:
-                uv1 = runoff_uv1(runoff, u0 + ua, u0 + ub, za, zb2)
-            va_, vb_ = (gnd(u0 + ua), gnd(u0 + ub)) if gnd else (vref, vref)
-            acc.quad(layer, mat, P(ua, za), P(ub, za), P(ub, zb2), P(ua, zb2),
-                     uv=[[u0 + ua, za - va_], [u0 + ub, za - vb_], [u0 + ub, zb2 - vb_], [u0 + ua, zb2 - va_]], uv1=uv1)
+                marks = sill_marks(sills, ua, ub, za, zb2, oa, ob, (zb2 - zb) / max(zt - zb, 1e-6))
+            if marks is None:
+                marks = [(ua, ub, runoff_uv1(runoff, u0 + ua, u0 + ub, za, zb2))]
+            for c0, c1, uv1 in marks:
+                va_, vb_ = (gnd(u0 + c0), gnd(u0 + c1)) if gnd else (vref, vref)
+                acc.quad(layer, mat, P(c0, za), P(c1, za), P(c1, zb2), P(c0, zb2),
+                         uv=[[u0 + c0, za - va_], [u0 + c1, za - vb_], [u0 + c1, zb2 - vb_], [u0 + c0, zb2 - va_]], uv1=uv1)
     n3 = np.append(nout[:2], 0.0)
     d3 = np.append(d[:2], 0.0)
     for (ua, ub, va, vb, depth, kind, mat_in) in [o[:7] for o in ops]:
@@ -1169,6 +1189,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                                    sills=sills_)
                 if typ in ("block", "office", "house") and not wooden and zpl > zbot + 0.6:
                     FK.plinth_drip(acc, a, d, nout, L, zpl, ops)
+                    if typ in ("block", "office"):       # ADR 0107 (P2-k): joints of a tall plinth on a slope
+                        FK.plinth_joints(acc, a, d, nout, L, zpl, zbot, ops, lambda u, ua0=u_acc: gfn(ua0 + u),
+                                         FK.hfloat(key, ei, "pj"))
                 if typ in ("block", "office"):                       # attic coping (obróbka attyki): silhouette
                     FK.coping(acc, a, c_, nout, zt, mat="hall_flashing")
                 if typ == "block":
@@ -1254,7 +1277,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             # fascia / verge board: white boards with a tile roof, sheet flashing in the roof tone with a metal roof
             # (review s9 P2-3 "thick black verge board")
             eaves = RF.build(acc, roof, poly, rmat, soffit_mat="soffit_boards",
-                             fascia_mat="hall_flashing" if rmat.startswith("roof_metal") else "soffit_boards")
+                             fascia_mat="hall_flashing" if rmat.startswith("roof_metal") else "soffit_boards",
+                             step_mat=wall)       # ADR 0107: wall faces closing the steps of a MultiRoof
             # ADR 0097 (review 0094 P2-c "wiatrownica biała vs szara"): with a tile roof the fascia / verge boards are
             # the soffit boarding material, so main roof and wing show one board colour (was white reveal_plaster
             # fascia next to the grey soffit_boards under the short wing overhang)

@@ -474,3 +474,18 @@ for _kind, _base in (("galv", "steel_galv"), ("grey", "steel_painted_grey"),
     M[f"furniture_{_kind}"] = {**M[_base], "texture": f"furniture_{_kind}"}
 M["furniture_footing"] = {**M["concrete_base"], "texture": "furniture_concrete"}
 
+
+
+# ADR 0107 (zabudowa r6; additive block, same rule as the ADR 0097 block above):
+# - review 0097 P1-e "spody i boki płyt balkonowych 38-40 sRGB przy ścianie 100-150": the slab was raw concrete 0.30
+#   with the ambient of its underside halved (SKY_OCC_STRUCT). Balcony slabs of the insulated blocks are rendered and
+#   painted with the facade (light grey / off-white underside on the CC0 Putry photos, refs/cm121537425): albedo 0.52,
+#   and no halving of the down-facing ambient (like soffit_boards, ADR 0094) - the ground SH term is already the dark
+#   side of the ambient. WORKING_VALUE, target: underside >= 55-60 % of the wall luminance at overcast.
+M["balcony_slab"]["color"][:] = [0.52, 0.515, 0.50]
+M["balcony_slab"]["sky_occ"] = [0.0, 0.0]
+# - review 0097 P2-n "dachówka: regularne pasy, jednolity ton": the 1.4 m roof_tiles set repeats its 7 x 4 tiles; a
+#   macro tone drift of 7 m / 0.16 (importer `macro` = [size m, strength], as on brick_red: lots, weathering, moss on
+#   the north slope) breaks the repeat over a slope. Tile roofs only - a pressed metal sheet is one tone. WORKING_VALUE.
+for _k in ("roof_tiles_red", "roof_tiles_brown"):
+    M[_k]["macro"] = [7.0, 0.16]
