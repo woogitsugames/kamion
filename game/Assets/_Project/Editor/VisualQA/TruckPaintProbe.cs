@@ -10,7 +10,7 @@ using UnityEngine.Rendering;
 namespace Game.Editor.VisualQA
 {
     /// <summary>ADR0087 GPU readback of the actual Truck Exterior Color-property upload contract.
-    /// The ignored diagnostic shader is an exact source copy with only its fragment return replaced.
+    /// The diagnostic retains source properties/CBUFFER, replaces the fragment return, uses CullOff for the numeric quad and rewrites local include paths.
     /// No light, exposure, texture sampling or render-target sRGB conversion participates.</summary>
     public static class TruckPaintProbe
     {
@@ -28,7 +28,7 @@ namespace Game.Editor.VisualQA
             public string unityVersion;
             public string colorSpace;
             public string graphicsDevice;
-            public string originalTintPropertyType;
+            public string originalPaintPropertyType;
             public string originalShaderSha256;
             public Sample[] samples;
             public string lampTextureFormat, drlTextureR, highTextureR, drlGpuR, highGpuR, nightDrlGpuR, nightLowGpuR, highOffGpuR;
@@ -69,7 +69,6 @@ namespace Game.Editor.VisualQA
             if (gammaEncode) color = color.gamma;
             if (setColor) mat.SetColor("_PaintColor", color);
             else mat.SetVector("_PaintColor", new Vector4(color.r, color.g, color.b, 1));
-            mat.SetFloat("_Cull", (float)CullMode.Off);
             stored = mat.GetVector("_PaintColor").x;
             var mesh = new Mesh();
             mesh.vertices = new[] { new Vector3(-1,-1,0), new Vector3(1,-1,0), new Vector3(1,1,0), new Vector3(-1,1,0) };
@@ -114,7 +113,7 @@ namespace Game.Editor.VisualQA
             string sha;
             using (var hash = System.Security.Cryptography.SHA256.Create()) sha = BitConverter.ToString(hash.ComputeHash(File.ReadAllBytes(source))).Replace("-", "").ToLowerInvariant();
             var evidence = new Evidence { unityVersion = Application.unityVersion, colorSpace = QualitySettings.activeColorSpace.ToString(), graphicsDevice = SystemInfo.graphicsDeviceType.ToString(),
-                originalTintPropertyType = original.GetPropertyType(original.FindPropertyIndex("_PaintColor")).ToString(), originalShaderSha256 = sha, samples = samples.ToArray() };
+                originalPaintPropertyType = original.GetPropertyType(original.FindPropertyIndex("_PaintColor")).ToString(), originalShaderSha256 = sha, samples = samples.ToArray() };
             var previousSun=RenderSettings.sun;
             var sunGo=new GameObject("Truck lamp numeric probe sun");
             var lampGo=new GameObject("Truck lamp numeric probe state");

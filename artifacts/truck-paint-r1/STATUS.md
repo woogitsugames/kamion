@@ -13,3 +13,6 @@
 
 - Step5: merged main db1432c5 into F atf52fabf6 before captures; fresh fullPBR+world regeneration running from A-correct sources. Source diagnosis being tested: DRL160000/high80000 encoded directly in RGBAHalf(max65504) may overflow. Probe now records actual GPU texture sampling day/night/on/off alongside Color upload, before production edits.
 - NEXT COMMAND: wait fresh PBR/world completion; prepare-baseline.ps1; snapshot_fixture.py; baseline102PNG plus no-pane/no-coat diagnostics.
+
+- Step6: A-correct world finished339.5s; fullPBR near completion. Baseline preparation queued with per-Unity phone guards, canonicalTruck+Trailer+Install, shader/light GPU probe, immutable Generated snapshot including production sourceSHA then102matched images. Actual lampGPU and day/night state evidence pending; no production fix assumed.
+- NEXT COMMAND: inspect baseline-prepare-a-correct.log and baseline-fixture-proof.log; then resize/view before102 and measure no-coat/no-pane references.
