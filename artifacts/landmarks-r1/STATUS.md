@@ -87,3 +87,5 @@ NASTĘPNA KOMENDA: końcowa generacja materiału, pojedynczy test i szybki rende
 
 Krok 28: końcowa korekta szkła wzmacnia dolne wnętrze tafli i pozostawia górne odbicie nieba. Maska ma własny przedział wysokości 0,25–0,70; ramy nadal chronione testem. To wyłącznie materiał, bez kolejnej zmiany geometrii. Doprecyzowano opis fallbacku igliwia, aby nie przypisywać skanowi niezweryfikowanych map.
 NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/final-glass.ps1
+
+Zapis pośredni: STATUS, fokusowe porównania i pomiary wariantu 2 skopiowano robocopy do głównego artifacts/landmarks-r1. REPORT jeszcze nie jest gotowy; trwa oczekiwanie na heavy dla końcowego materiału szkła. Wrapper Unity korzysta z własnej nazwy katalogu rundy i obsługuje osobny zestaw kamer, aby kolejne rundy nie nadpisywały tych dowodów.

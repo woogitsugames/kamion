@@ -1,10 +1,12 @@
 param(
     [ValidateSet('Import','Capture','EditMode')] [string]$Step = 'Capture',
     [string]$Phase = 'before',
-    [string]$Cameras = 'fire-station-ref7197,fire-station-route,fire-station-abeam,fire-station-above'
+    [string]$Cameras = 'fire-station-ref7197,fire-station-route,fire-station-abeam,fire-station-above',
+    [string]$Gate3 = ''
 )
 $ErrorActionPreference = 'Stop'
 $wt = Split-Path (Split-Path $PSScriptRoot)
+$roundRelative = 'artifacts/'+(Split-Path $PSScriptRoot -Leaf)
 Set-Location $wt
 function Run-Guarded([string]$Script, [hashtable]$Params) {
     # This session's baseline diagnostics use the same project. Finish those
@@ -22,14 +24,15 @@ function Run-Guarded([string]$Script, [hashtable]$Params) {
     }
 }
 switch ($Step) {
-    'Import' { Run-Guarded 'artifacts/landmarks-r1/import-prepared.ps1' @{} }
+    'Import' { Run-Guarded "$roundRelative/import-prepared.ps1" @{} }
     'EditMode' { Run-Guarded 'scripts/test.ps1' @{Platform='EditMode'} }
     'Capture' {
         foreach ($tier in @('Low','High')) {
             foreach ($light in @('overcast','clear')) {
                 $scene = if ($tier -eq 'High') { 'WorldC_High' } else { 'WorldC' }
-                $params = @{Scene=$scene; Tier=$tier; Lighting=$light; OutputDir="artifacts/landmarks-r1/$Phase/$tier-$light"}
+                $params = @{Scene=$scene; Tier=$tier; Lighting=$light; OutputDir="$roundRelative/$Phase/$tier-$light"}
                 if ($Cameras -and $Cameras -ne 'all') { $params.Cameras = $Cameras }
+                if ($Gate3) { $params.Gate3 = $Gate3 }
                 Run-Guarded 'scripts/visual-qa.ps1' $params
             }
         }
