@@ -226,3 +226,6 @@ Verdict of the review: FAIL (quality) - "plac wygląda jak gra mobilna z okolic 
 Not done (open): A8 (tower block facade, lamp head lit by day), a sign / board at the gate (no source), phone
 screenshots (`docs/06` §5.2; the leader's device queue), trailers still stand in a perfectly regular 4 m pitch
 (the dock pitch).
+
+## r12 (2026-11-11)
+See `docs/adr/0092-kwadrat-park-r12.md` (review `REVIEW-2026-11-11-s9.md` par. 4): curtain road film removed, gate side strips + closure lines, panel-quantised wall tone, sill run-off, twin-tyre tracks, kerb scuffs, reefer grille.

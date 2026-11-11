@@ -64,8 +64,47 @@ jak plamy cienia, wyspa czysta z jednym słupkiem, agregat chłodni jako biały 
 
 Unia w `WorldPbrMaterials.cs` zachowana: zacieki `weather` ‖ `runoff`, `_Tile` = `set_tile || elementScan || atlas`.
 
-## Liczby
-(uzupełnione niżej w sekcji „Pomiary”)
+## Pomiary (2026-11-11, ten worktree, edytor RTX 5070; tekstury ze skanów CC0; brak pomiaru na telefonie)
+- **Firanka (naczepa przy doku 3, `stretch-05-docks`, średnie sRGB w prostokątach 110 px):** Medium-clear dół / góra
+  plandeki: przed 100/96/85 (R−B +15) / 89/92/91, po 49/53/54 (R−B −6) / 86/89/86; Medium-overcast: przed 64/62/56
+  (R−B +8) / 59/61/60, po 40/42/43 / 49/51/50. Przed: dół jaśniejszy i cieplejszy od góry (film); po: dół ciemniejszy,
+  neutralny. `M_trailer_curtain_grey.mat` `_SmoothnessScale` 1 → 0,4945 (gładkość 0,364 → 0,18; chropowatość 0,82).
+- **Brama (`streetscape_qa.json` → `furniture.gates`):** pasy boczne 18,5 m² (wjazd) i 23,4 m² (wyjazd), obie podpory na
+  pasach (`rest_on_strip` true); linie zamknięcia 31,3 m (słupki, 21 szt., koniec na ścianie budynku) i 39,3 m (płot,
+  koniec na ścianie budynku); otarcia 152 trójkąty. Wyspa 12,1 m², dwa słupki (bez zmian od r11).
+- **Plac:** pasy śladów 14 → 28 (bliźniak 2 × 0,26 m + 0,08 m), trójkąty zużycia 1002 → 1782.
+- **Naczepy (`props_meta.json`):** firanka LOD0 1106 → 1102 trójkąty i 16 → 15 materiałów (−1 draw); chłodnia LOD0
+  1188 → 1192, LOD1 192 → 194 (+1 materiał na LOD1: kratka); skrzynia bez zmian (1174 / 180). Budżety testu 1200 / 250.
+- **Ściana:** `M_kp_wall.mat`: `_PANELTONE`, `_PanelTone` = (6; 0,667; 0,35; 0,3). Efekt w słońcu oceniony na kadrach
+  (`before/wall_clear*.jpg` vs `r3/wall_clear.jpg`, `after/`), **nie skwantyfikowany**: profil jasności wzdłuż pasa
+  okładziny (`wall_measure.py`: odch. std. reszt 3,79 → 3,70 clear, 4,34 → 4,25 overcast) nie rozróżnia piły
+  samozacienienia od zacieków.
+- **Budżet Low (8 kamer, `stats.txt` visual-qa, `budget_low.txt`):** draws 6462 → 6497 (+0,5 %), trójkąty 2136 k →
+  2153 k (+0,8 %); najgorsza kamera +3,4 % draws (`g3a_eye_s0212`, +23), +1,3 % trójkątów (`kwadrat-park-gate`).
+  Czasy klatki edytora (3–7 ms, GPU desktop) nieporównywalne, nieużywane.
+- **Testy:** PlayMode `WorldCBarrierTests|DepotBarrierTests` 4/4 (zestaw 40 t przez bramę: kontakty z ramieniem 0,
+  maks. |dv| na krok 0,035 m/s); EditMode 188 zielone / 3 czerwone — `TruckDoorGlassTests` × 3 tiery (brak
+  `MI_Ext_DoorGlassL` w `_Generated/Truck` także w głównym katalogu: zasób ciężarówki nieprzebudowany, poza r12);
+  `pytest tests/gis` 251 zielone / 0 czerwonych / 2 xfail (po ponownym `fidelity/run.py`; pierwszy przebieg na świecie r3:
+  246 / 5 — raport fidelity nieaktualny, płot w warstwie `paved` liczony jako ściana terenu, pionowe otarcie w
+  `markings`, dwa testy oczekiwań — wszystkie poprawione).
+- Dowody: `artifacts/kwadrat-r12/{before,r1,r2,r3,after}/`, `compare/` (przed nad po), `ortho_gate*.jpg`,
+  `topdown_gate_*.png`, `budget_low.txt`, `logs/`.
+
+## Samoocena wg `docs/06` (bez `visual-critic`: subagent nie tworzy subagentów)
+- Lepiej: plandeka czyta się jako matowa tkanina; brama jest bramą (krawężnik, trawnik, płot, słupki, otarcia);
+  ściana w słońcu bez piły / obłoków, z podziałem na płyty i zaciekiem pod parapetem; agregat ma kratkę; ślady są
+  parami wąskich linii.
+- Nadal słabe: cień sąsiedniej naczepy na plandece ma schodkową krawędź (rozdzielczość mapy cieni przy ślizgowym
+  słońcu — zakres światła); na Low naczepy przechodzą w LOD1 już przy dokach (gładkie pudła); płot i słupki to
+  WORKING_VALUE; ślady opon są słabe na tle wilgotnych plam z `_GRIME`; drugi słupek wyspy niewidoczny z kamery bramy.
+
+## Otwarte
+- Tablica przy bramie — brak źródła (zdjęcie właściciela, sesja pkt 1).
+- Rzeczywisty układ zamknięcia bramy (płot / słupki / nic) — zdjęcie właściciela; do tego czasu WORKING_VALUE.
+- Samozacienienie pozostałych hal w presecie `clear` (ten sam mechanizm co na `kp_wall`) i schodki cieni na pojazdach.
+- A8 z r11 (wieżowiec, klosz lampy) — poza zakresem r12.
+- Zrzuty z telefonu (`docs/06` §5.2) — kolejka urządzeń lidera.
 
 ## Odrzucone
 - Ogrodzenie panelowe po obu stronach: po stronie wschodniej ortofoto pokazuje otwartą kostkę używaną przez sąsiednie
