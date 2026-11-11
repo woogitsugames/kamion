@@ -665,3 +665,10 @@ hero copy: Ultra keeps URP Lit, not intended Vegetation. Artifact-only one-line
 patch is ready, not applied; leader integration check and future test remain.
 NEXT COMMAND: wait run5 actual END/PHONE absence; fresh release then D16frames,
 review gate/legacy negatives and broad56 before final full validation/report.
+Step 56: New leader review0089 reopens G R4 (P0 dirt patch regression).
+Pearl/wheels PASS, overall merge FAIL supersedes our previous scoped acceptance.
+Dispatched G on its existing branch, explicitly authorized merge main INTO G,
+generated conflicts main+canonical regeneration. CPU only while PHONE run5 held;
+D gets first Unity release/16frames. C13 follows current D/G closure, then B3.
+B3 readonly preflight closed0a49e84f, no source. NEXT COMMAND: monitor run5 END,
+release D only; review G bounded source/UV dirt plan before actual candidate.
