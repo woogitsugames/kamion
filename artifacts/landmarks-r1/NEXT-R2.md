@@ -23,6 +23,12 @@ Natywne wycinki underdeck-photo-details pokazują szerokie pionowe szare pasy na
 ścięciach naroży filarów, obok ochrowych płaszczyzn, oraz słabsze zacieki od głowicy.
 Znaczna część rozrzutu w ROI może wynikać z geometrii, różnych powierzchni i światła,
 a nie z plam w samej farbie. Nie próbować osiągnąć sd 19–24 samym losowym szumem.
+Wąskie natywne ROI na pojedynczych płaszczyznach (source.json ma dokładne boksy):
+najbliższa ciemna ochrowa ściana RGB 37/31/16, Y sd 6,60; szare ścięcie 42/38/28,
+sd 6,76; jaśniejszy dalszy filar 109/92/51, sd 10,02. To pokazuje duży udział
+oświetlenia i doboru ROI. Nie przyciemniać globalnie wszystkich filarów do RGB 79/67/37.
+Najpierw sprawdzić zmianę R/G i rozdzielenie powierzchni ścięć, a dopiero potem
+dodatkowe plamy. Stosować te pomiary jako piksele zdjęcia, nie albedo fizyczne.
 Sprawdzić po świeżym baseline przypisanie istniejących ośmiu ścian _prism:
 odcinki 1/3/5/7 obwodu to bevel. Kandydat za flagą danych: odsłonięty beton na
 potwierdzonych ścięciach, przy zachowaniu ochrowych głównych ścian. Reużycie

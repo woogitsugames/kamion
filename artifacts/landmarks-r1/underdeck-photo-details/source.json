@@ -48,5 +48,57 @@
         460
       ]
     }
+  },
+  "front_piers_ROIs": {
+    "grey_chamfer": {
+      "box_in_crop": [
+        95,
+        150,
+        124,
+        440
+      ],
+      "RGB_p50": [
+        42.0,
+        38.0,
+        28.0
+      ],
+      "Y_p50": 38.0562,
+      "Y_std": 6.759130640268286,
+      "note": "sRGB photo pixels, not reflectance; different face orientations"
+    },
+    "ochre_face": {
+      "box_in_crop": [
+        160,
+        150,
+        220,
+        440
+      ],
+      "RGB_p50": [
+        37.0,
+        31.0,
+        16.0
+      ],
+      "Y_p50": 30.830399999999997,
+      "Y_std": 6.6043751043884455,
+      "note": "sRGB photo pixels, not reflectance; different face orientations"
+    }
+  },
+  "mid_pier_ROIs": {
+    "ochre_face": {
+      "box_in_crop": [
+        120,
+        130,
+        155,
+        415
+      ],
+      "RGB_p50": [
+        109.0,
+        92.0,
+        51.0
+      ],
+      "Y_p50": 92.9388,
+      "Y_std": 10.020346922915024,
+      "note": "sRGB photo pixels, not reflectance; different face orientations"
+    }
   }
 }
