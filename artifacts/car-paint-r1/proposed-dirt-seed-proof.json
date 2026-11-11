@@ -1,0 +1,63 @@
+{
+  "note": "CPU float32 proposal only; actual instanced GPU proof still required. Quarter-metre stable origin grid plus arbitrary hash salt. No runtime/source changes.",
+  "count": 1007,
+  "levels": {
+    "0": 253,
+    "1": 273,
+    "2": 226,
+    "3": 255
+  },
+  "shift_cell_mismatches": {
+    "(1024, 0)": 0,
+    "(-1024, 1024)": 0,
+    "(4096, -4096)": 0,
+    "(-4096, 4096)": 0,
+    "(512.25, -2048.75)": 0
+  },
+  "examples": [
+    {
+      "level": 0,
+      "instance": {
+        "e": -497.538,
+        "n": -127.024,
+        "p": "car_estate_white",
+        "src": "life:parking:bdot:2BE4B431-FE9C-1BF0-E053-CC2BA8C0D140:0#2~p1",
+        "yaw": -0.5442,
+        "z": 130.648
+      }
+    },
+    {
+      "level": 1,
+      "instance": {
+        "e": -513.495,
+        "n": -122.321,
+        "p": "car_suv_silver",
+        "src": "life:parking:bdot:2BE4B431-FE9C-1BF0-E053-CC2BA8C0D140:0#2~p2",
+        "yaw": -2.2084,
+        "z": 130.582
+      }
+    },
+    {
+      "level": 2,
+      "instance": {
+        "e": -516.368,
+        "n": -126.844,
+        "p": "car_hatch_silver",
+        "src": "life:parking:bdot:2BE4B431-FE9C-1BF0-E053-CC2BA8C0D140:0#2~p2",
+        "yaw": -2.1847,
+        "z": 130.553
+      }
+    },
+    {
+      "level": 3,
+      "instance": {
+        "e": -514.725,
+        "n": -124.458,
+        "p": "car_sedan_white",
+        "src": "life:parking:bdot:2BE4B431-FE9C-1BF0-E053-CC2BA8C0D140:0#2~p2",
+        "yaw": -2.1503,
+        "z": 130.507
+      }
+    }
+  ]
+}

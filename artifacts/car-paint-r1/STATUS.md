@@ -14,3 +14,6 @@
 
 - Step5: canonical Python PBR regeneration complete (471 s); no production source changes. Saved actual baseline27 car/van meshes and1007 instances. Synthetic22-segment LOD0 plus removal of redundant film primitives predicts fleet all-LOD0 triangles4057998 to4036054; per-prototype -80..+88, LOD1 film -44, LOD2 unchanged. This is source-model accounting only, NOT visible route or GPU proof. Parent authorized existing LOD0 range approach; actual baseline and visual choice still pending explicit Unity release.
 - NEXT COMMAND: after explicit ROOT Unity release and both locks absent, baseline.ps1 -Phase Import; then Fixtures, pearl-probe.ps1, Capture.
+
+- Step6: expanded source provenance with actual prop GLB/meta, regenerated car_grime maps, tracked truck FBX/JSON and canonical builder/importer sources. CPU float32 dirt-seed proposal covers all4 levels across1007 actual placements (253/273/226/255); zero cell changes under five tested origin shifts including +/-4096m. GPU proof remains required. Viewed existing real Mapillary references <=960px and recorded hashes; historical car image used only to locate ROIs, never as fresh baseline. Both Unity locks remain active.
+- NEXT COMMAND: wait explicit ROOT release; then guarded baseline.ps1 -Phase Import (fresh source/PBR ready).

@@ -3,6 +3,7 @@ from pathlib import Path
 import hashlib
 import json
 import sys
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/worldgen"))
@@ -32,6 +33,19 @@ def main():
     old = json.loads((ROOT / "artifacts/car-paint-r1/bootstrap-proof.json").read_text())
     for name in old["source_sha256"]:
         sources[name] = sha(ROOT / name)
+    for name in ('art-source/world/props/street_props.glb', 'art-source/world/props/props_meta.json',
+                 'art-source/world/materials/materials_spec.json',
+                 'game/Assets/_Project/Editor/Setup/TruckAssetBuilder.cs',
+                 'game/Assets/_Project/Editor/Setup/TrailerAssetBuilder.cs',
+                 'game/Assets/_Project/World/Import/WorldTruckInstaller.cs'):
+        sources[name] = sha(ROOT / name)
+    for p in sorted((ROOT/'art-source/world/materials/car_grime').rglob('*.png')):
+        sources[p.relative_to(ROOT).as_posix()] = sha(p)
+    tracked = subprocess.check_output(['git','ls-files','art-source/truck'],cwd=ROOT,text=True).splitlines()
+    for name in tracked:
+        p=ROOT/name
+        if p.is_file() and p.suffix.lower() in ('.json','.fbx'):
+            sources[name]=sha(p)
     result = dict(manifest_sha256=sha(manifest), raw_count=len(raw), mismatches=0,
                   fab_ready=len(ready), fab_fallback=not bool(ready), raw=raw,
                   fixture_sha256=fixtures, source_sha256=sources)
