@@ -1,5 +1,6 @@
 """Report every captured view, with independent static and instanced budgets."""
 import csv
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -35,6 +36,8 @@ def pair(left, right, target, titles):
     sheet.save(target, quality=93)
 
 rows = []
+if not (HERE/'After.complete').exists():
+    raise RuntimeError('After matrix has not completed')
 pairs = HERE / 'pairs'
 pairs.mkdir(exist_ok=True)
 for tier in ('Low', 'High'):
@@ -67,25 +70,33 @@ with (HERE/'all-cameras.csv').open('w', newline='', encoding='utf-8-sig') as str
         writer.writerow(flat)
 
 refs = json.loads((ROOT/'Data/Regions/bialystok-industrial-c/sbs_references.json').read_text())['references']
-bad_pose = ('810896','339463','962702','182011','326454','1406')
 photo_index = []
+excluded = []
 for ref in refs:
     camera = ref['camera']
-    if any(bad in ref['source_id'] for bad in bad_pose):
+    confidence = ref.get('pose_confidence', 'C')
+    if confidence not in ('A','B','C'):
+        raise ValueError(f'Unknown pose confidence: {camera} {confidence}')
+    if confidence == 'C':
+        excluded.append(dict(camera=camera,reason='pose_confidence C'))
         continue
     photo = MAIN/ref.get('comparison_photo', ref['photo'])
     if not photo.exists():
-        photo = ROOT/ref['photo']
+        raise FileNotFoundError(f'Accepted comparison photo unavailable: {photo}')
+    expected = ref.get('comparison_sha256') or ref.get('sha256')
+    if not expected or hashlib.sha256(photo.read_bytes()).hexdigest() != expected:
+        raise RuntimeError(f'Reference photo hash mismatch: {camera}')
     for config in ('Low-clear','High-clear','Low-overcast','High-overcast'):
         render = HERE/'after'/config/f'{camera}.png'
         if not render.exists() or not photo.exists():
             continue
         target = pairs/f'photo-{config}-{camera}.jpg'
-        pair(photo, render, target, (f"Mapillary | {ref['author']} | CC BY-SA 4.0", f'Render | {config} | poza WORKING_VALUE'))
+        pair(photo, render, target, (f"Zdjecie | {ref['author']} | {ref['license']}", f'Render | {config} | poza {confidence}/WORKING_VALUE'))
         photo_index.append(dict(camera=camera, configuration=config, pair=target.name,
                                 photo=str(photo), source=ref['page_url'], author=ref['author'],
-                                license=ref['license'], pose='WORKING_VALUE; review JK limitations'))
+                                license=ref['license'], pose=confidence, photometry='UNVERIFIED'))
 (HERE/'photo-index.json').write_text(json.dumps(photo_index, indent=2), encoding='utf-8')
+(HERE/'excluded-references.json').write_text(json.dumps(excluded,indent=2),encoding='utf-8')
 low = [row for row in rows if row['configuration'].startswith('Low')]
 summary = dict(pairs=len(rows), photographic_pairs=len(photo_index), low_pairs=len(low),
                low_failures=[row for row in low if not row['low_budget_pass']],

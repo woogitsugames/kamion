@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory)]
-    [ValidateSet('BuildWorld','BuildMaterials','GisFile','GisFinal','PhysicsFile','Gate3File','AuditMesh','Compare')]
+    [ValidateSet('BuildWorld','BuildMaterials','FarField','GisFile','GisFinal','PhysicsFile','Gate3File','AuditMesh','Compare')]
     [string]$Task,
     [string]$TestFile,
     [switch]$AtRoundEnd,
@@ -20,13 +20,14 @@ if ($Task -in @('GisFile','PhysicsFile','Gate3File')) {
 }
 # Use the current central protocol, even before the next round merges updated main.
 $slot = 'C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
-& pwsh $slot -Acquire -Pool heavy -Owner $owner
+& pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 7 -StaleHours 100000
 if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
 $code = 1
 try {
     switch ($Task) {
         'BuildWorld' { & uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c }
         'BuildMaterials' { & uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py }
+        'FarField' { & uv run --project tools/worldgen tools/worldgen/streetscape/far_field.py --region bialystok-industrial-c }
         'AuditMesh' { & uv run --project tools/worldgen python "$PSScriptRoot/audit_mesh.py" $Phase }
         'Compare' { & uv run --project tools/worldgen python "$PSScriptRoot/compare.py" }
         'GisFinal' { & uv run --project tools/worldgen python -m pytest tests/gis -q }
@@ -34,6 +35,6 @@ try {
     }
     $code = $LASTEXITCODE
 } finally {
-    & pwsh $slot -Release -Pool heavy -Owner $owner
+    & pwsh $slot -Release -Pool heavy -Owner $owner -StaleHours 100000
 }
 exit $code
