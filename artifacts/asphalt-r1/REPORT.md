@@ -2,7 +2,7 @@
 
 Gałąź: `gpt-asphalt-r1`. Stan: raport roboczy, trwa końcowa walidacja. Wariant obrazu: `candidate2`. SHA końcowe oraz wyniki GIS, physics/gate3 i pomiary wszystkich kamer zostaną dopisane po zakończeniu procesów. Nie scalono do main, niczego nie pushowano i nie używano telefonu.
 
-Przygotowano wymagany worktree i zasoby, włączono gałąź `gpt-surface-wear`, a następnie wykonano baseline i dwa warianty. Każda pełna seria ma 78 kamer w Low i High, clear i overcast, czyli 312 obrazów. Własne kamery bliskich łat służą kontroli materiału, nie są pozami odtworzonymi ze zdjęcia.
+Przygotowano wymagany worktree i zasoby, włączono gałąź `gpt-surface-wear`, a następnie wykonano baseline i dwa warianty. Każda pełna seria ma 78 kamer w Low i High, clear i overcast, czyli 312 obrazów. Własne kamery bliskich łat służą kontroli materiału, nie są pozami odtworzonymi ze zdjęcia. Audyt runtime-state-audit.json potwierdza 78 stanów dla każdego warunku, bez brakujących kamer. Low: global detail false, cel renderowania 1755 × 810 i PNG po przeskalowaniu do 2340 × 1080; High: global detail true, 2340 × 1080. To dotychczasowe profile, takie same w baseline i candidate2. Wszystkie odczytane maski były ASTC 8×8. Macierze i stany z momentu renderowania zachowano w candidate2/*/runtime-cameras.
 
 Na Low stary asfalt może teraz korzystać z istniejących masek spękań i foto-albedo bez dodatkowej normalnej tych warstw. W danych materiału ustawiono ton 0,90 i dodatkowe przyciemnienie śladów kół 0,45. Są to WORKING_VALUE. Istniejące naprawy dostały szew 25 mm oraz odmienny ton zależny od wieku. UV0 całych łat jest normalizowane przed cięciem na chunki, bez zmiany ich położeń i trójkątów.
 
@@ -34,4 +34,5 @@ Na tym etapie nie zgłaszamy gotowości do bezwarunkowej integracji. Po końcowy
 ![Zdjęcie Mapillary i render Low, wiadukt](review-candidate2-960/Low-ref-303305168125936.jpg)
 
 ![Zdjęcie Mapillary i render Low, druga poza wiaduktu](review-candidate2-960/Low-ref-454716650857984.jpg)
+
 
