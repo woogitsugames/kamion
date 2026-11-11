@@ -445,13 +445,13 @@ def _balf(p, i, kind):
     panel = p.rect(0.05, p.w - 0.05, 0.10, 0.93)
     n1 = p.noise(0.4, 1)
     if i == 0:                                            # perforated steel-blue sheet in a grey frame
-        c = np.array(lin(140, 162, 180), F32)
+        c = np.array(lin(150, 160, 166), F32)              # ADR 0097: blue desaturated (was 140, 162, 180)
         hole = (np.hypot((p.X / 0.03) % 1 - 0.5, (p.Y / 0.03) % 1 - 0.5) < 0.2)
         p.put(panel, c * (1 + 0.04 * n1)[..., None] * np.where(hole, 0.5, 1.0)[..., None], h=-0.004, r=0.5)
         for xb in (0.87, 1.73):
             p.put(p.rect(xb - 0.02, xb + 0.02, 0.0, 1.0), steel, h=0.0)
     elif i in (1, 2):                                     # trapezoid sheet, white / brown
-        c = np.array([lin(214, 214, 208), lin(172, 128, 98)][i - 1], F32)
+        c = np.array([lin(214, 214, 208), lin(160, 134, 114)][i - 1], F32)   # ADR 0097: brown 172, 128, 98 -> less orange
         rib = 0.5 + 0.5 * np.cos(6.2832 * p.X / 0.137)
         p.put(panel, c * (0.82 + 0.18 * rib)[..., None] * (1 + 0.03 * n1)[..., None], r=0.5)
         p.hgt = np.where(panel > 0.5, -0.012 * (1 - rib), p.hgt)
@@ -482,7 +482,7 @@ def _balf(p, i, kind):
         p.put(panel * np.clip(run, 0, 0.6), [0.10, 0.10, 0.09])
     else:                                                 # corrugated green plastic, faded
         rib = 0.5 + 0.5 * np.cos(6.2832 * p.X / 0.076)
-        c = np.array(lin(142, 172, 144), F32) * (0.8 + 0.2 * rib)[..., None] * (1 + 0.10 * n1)[..., None]
+        c = np.array(lin(150, 164, 150), F32) * (0.8 + 0.2 * rib)[..., None] * (1 + 0.10 * n1)[..., None]
         p.put(panel, c, r=0.6)
         p.hgt = np.where(panel > 0.5, -0.008 * (1 - rib), p.hgt)
     # frame: top rail, bottom rail, end posts; slab edge with a drip stain at the very bottom
@@ -653,7 +653,7 @@ def facade_far(nx=2048):
                 x0 = xc - 1.05
                 _far_paste(alb, rough, px, x0, vf + 0.05, d)
                 _far_paste(alb, rough, px, x0 + 0.9, vf + 0.05 + 0.85, w_)
-                f = paint_cell("balf", var, px)
+                f = paint_cell("balf", A.bal_type(group), px)     # ADR 0097: one balustrade type per row group
                 _far_paste(alb, rough, px, xc - 1.3, vf + 0.02, f)
                 # slab edge + its shadow line
                 r0 = ny - int(round((vf + 0.02) / px))

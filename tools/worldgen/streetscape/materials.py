@@ -443,3 +443,15 @@ for _k, _v in M.items():
     if _so is not None:
         _v.setdefault("sky_occ", _so)
 
+
+# ADR 0097 (zabudowa r5; additive block - the table above is shared with ADR 0086 / 0098, so the building changes of
+# this round are applied here, in place, after it):
+# - review 0094 P2-e "szczyt 251/241/210 (R przy klipie)" in High clear: plaster_cream albedo -8 % (the review's own
+#   alternative to an exposure change, which belongs to the lighting work, ADR 0098). In place: the LOD1 far
+#   materials share the colour list.
+# - review 0094 P1-a / P2-g "rozbryzgu nie widać": the plinth 0.20 -> 0.24 (dark mineral plaster; the shader's splash
+#   multiplier is fixed, so a lighter base is what makes 8-10 sRGB levels of splash) and its splash zone 0.5 -> 0.8 m.
+#   WORKING_VALUE both.
+M["plaster_cream"]["color"][:] = [round(c * 0.92, 4) for c in M["plaster_cream"]["color"]]
+M["plinth_dark"]["color"][:] = [0.24, 0.24, 0.235]
+M["plinth_dark"]["splash_h"] = 0.8
