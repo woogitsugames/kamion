@@ -54,3 +54,4 @@ Dodano test ramki: nie zasłania środka szkła, zakrywa ostre rogi, zachowuje s
 Podglądy i logi P0 pozostają w result-0112. Helpery obsługują teraz osobny etap result-0112-p2 i osobny plik porównania, żeby iteracje ramki nie nadpisywały sprawdzonych dowodów P0. Następny krok: build-0112.ps1 -Label result-0112-p2, następnie celowane testy Mirror i kadry lusterek.
 Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
+Zaktualizowano raport pośredni: checkpoint P0 1284e35e, 78 zerowych delt i 35/35 testów; bieżąca ramka P2 nadal UNVERIFIED. Następny krok: koniec capture P2, route P2 i testy Mirror, potem pozostałe poprawki wnętrza.

@@ -1,8 +1,9 @@
-# Raport rundy cab r1 — praca w toku, nie do scalenia
-Gałąź: gpt-cab-r1. Aktualny commit roboczy: a39876c0; późniejsze commity sprawdź przez git log.
-Nowa sesja 0112 zaczęła się 11 listopada 2026 o 21:31 czasu warszawskiego, z main 4c9905b1. Starsze dowody ADR 0104 zachowano w history-0104 oraz dawnych katalogach before/after.
-Wykonano przygotowanie worktree, render bazowy siedmiu kamer Low clear i pomiar geometrii ramion. Przygotowano modyfikator wyłącznie czterech wysp podpór, zachowujący topologię, UV i sloty, oraz testy jego niezmienników. Zmiana nie jest jeszcze zweryfikowana w Unity.
-Dla źródłowej geometrii ramiona zasłaniają 73 z 2400 promieni WideL i 131 z 2400 WideR. Próba cofnięcia mocowania o 80 mm daje 0 trafień w ramiona; to nie jest pomiar pikseli z gry. Dane i ograniczenia opisuje ADR 0112.
-Audyt natywnych RT czeka na slot Unity. Stan po zmianie, budżety wszystkich kamer, EditMode i jakość obrazu pozostają UNVERIFIED. Testy GIS są w toku.
-Nie wykonano jeszcze poprawek materiałów deski, foteli, podłokietników ani oświetlenia nocnego. Nie użyto telefonów. Nie scalano do main i nie pushowano.
-Przewidywany konflikt: addytywne fragmenty TruckAssetBuilder.cs przy budowie kabiny; pozostałe nowe pliki dotyczą wyłącznie lusterek. Żaden shader zewnętrza ani eksport ciężarówki nie został zmieniony.
+# Raport rundy cab r1 — praca nadal w toku, etap P2 niegotowy do scalenia
+Gałąź: gpt-cab-r1. Sprawdzony checkpoint K1/K2: 1284e35e. Bieżące commity obejmują dalsze, jeszcze walidowane poprawki P2.
+W worktree gpt-cab pracuje wyłącznie sesja 5. K1: kamery V/VI mają near clip 0,1 m i pomijają wnętrze. K2: końce podpór cofnięto za szkła, bez zmiany indeksów, UV, materiałów i bounds źródłowych siatek LOD0/1/2.
+W Low clear piksele wnętrza Kerb spadły 3366→0, Front 5364→0. W czterech stanach Low/High i clear/overcast test identyfikatora wnętrza daje zero po zmianie. Zwykłe draws Kerb 83→77, Front 120→100; instancje odpowiednio 79 i 102 bez zmian. Są to estymaty widoczności edytora, nie pomiary GPU telefonu.
+Wszystkie 78 kamer Low/Gate3 mają dla checkpointu K1/K2 dokładnie zerowe delty zwykłych drawów, drawów instancji i trójkątów. Pełne dane: comparison-0112.json. Testy EditMode lusterek: 35/35. Generator świata: exit 0, 491,1 s, brak fallback=True.
+Wstępny GIS przed nową zasadą heavy: 488 zaliczonych, 5 błędów bazowych świata, 1 xfailed. Pełny GIS końcowy zostanie uruchomiony dopiero przy zamknięciu rundy, pod slotem heavy. Obce produkty generatora cofnięto.
+Pary przed/po do 960 px: native-K1-before-after-960.jpg i left-K2-before-after-960.jpg. Rzeczywista referencja mocowania: reference-real-cab-mirrors-960.jpg, pochodzenie w REFERENCES-0112.md; nie jest dokładnym dopasowaniem pozy wnętrza.
+P2 w toku: zaokrąglona ramka czterech szkieł w istniejącym submeshu Trim (+480 tris na LOD, pięć slotów i bounds zachowane). Wynik wizualny i końcowy budżet tej iteracji są jeszcze UNVERIFIED. Smuga deski, odczyt zużycia i wygląd podłokietnika pozostają do opracowania. Audyt źródłowych powierzchni nie wykrył ich przecięć; nie utożsamiamy go z oceną obrazu gry.
+Nie używano telefonów, nie scalano do main i nie pushowano. Ostatni STATUS.md podaje komendę następnego kroku. Przewidywany konflikt: addytywne fragmenty TruckAssetBuilder.cs i RenderTextureMirror.cs; brak zmian shaderów zewnętrza, szyb i świata.
