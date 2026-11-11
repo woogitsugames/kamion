@@ -252,7 +252,8 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
             UV = np.column_stack([np.repeat(along, 2), np.tile([0.0, 1.0], n) * abs(profs[0][k][3] - profs[0][k][1])])
             if mat in ("sidewalk_paving", "apron_sett", "verge_grass", "shoulder_gravel"):
                 mat = "curb_concrete" if mat != "verge_grass" else "verge_grass"
-        elif mat == "curb_concrete" and abs(profs[0][k][2] - profs[0][k][0]) <= KERB_TOP_UV_MAX_W:
+        elif mat == "curb_concrete" and max(abs(pr[k][2] - pr[k][0]) for pr in profs) <= KERB_TOP_UV_MAX_W:
+            # (width over ALL stations: the strip N 82 is 0.06 m at its first station and 2 m further on)
             # kerb top: u along (1 m segment joints)
             UV = np.column_stack([np.repeat(along, 2), np.tile([0.0, 1.0], n) * abs(profs[0][k][2] - profs[0][k][0])])
         else:
