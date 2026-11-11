@@ -158,3 +158,6 @@
 
 - Step 69: Returned from artifact-only F2 preflight immediately on ROOT's D-only release at 18:21:15. Both guards checked before launch. Gate version 2 canonical import completed with exit 0 and IMPORT_RESULT: OK. No old bus, narrow paint or gate baseline captures repeated. The guarded canonical vehicle installation is now running. Native sign readback, paint idempotence and 16 images remain pending; no visual acceptance is assumed.
 - NEXT COMMAND: finish gate-r2-install.ps1, then guarded native-audit.ps1 -Stage gate-r2, paint_uniform_proof.py gate-r2, gate_r2_native_proof.py and gate-r2-capture.ps1. Check both guards before every launch; a new PHONE marker invalidates the release and prevents the next start. Broad wear remains inactive until ROOT reviews the actual gate packet.
+
+- Step 70: Canonical vehicle installation completed with exit 0 and TRUCK_RESULT: OK. A fresh guard check allowed the native mesh/material audit to start. Installation and import were separate successful launches; actual signed UV readback and repeat paint-uniform comparison are still pending this audit. Broad wear remains inactive.
+- NEXT COMMAND: finish native-gate-r2 audit, run the two CPU proof helpers, then launch the guarded 16-frame capture only if both guards remain absent under the current explicit D release.
