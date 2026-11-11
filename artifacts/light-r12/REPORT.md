@@ -16,5 +16,5 @@ Macierz używała tego samego cache pojazdu; dopiero potem uzupełniono brakują
 Obejrzane wszystkie arkusze≤960px i referencje; samokrytyka `SELF-CRITICISM.md`; niezależny root PASS `REVIEW.md`.
 KP clear ROI diagnostycznie RGB≥250 1.68→0%; nie zastępuje kalibracji materiału należącej do lidera ADR0101 (`kp-clip-diagnostic.json`).
 UNVERIFIED: telefon GPU/termika/deviceEASU; liczby CPU i proxy nie są pomiarem GPU; wymagany końcowy wspólny test integracji A/B/F/lidera.
-Konflikty addytywne: `WorldSurface.shader`, mały setter `RegionImporter`, `ProjectSetup` migracja98, `QualityProfile`/`RenderOverrides`; zachowano tile/weather/runoff/macro/panel/splash.
-Dowody skopiowane do main `artifacts/light-r12/` przez robocopy `/E /XJ`, bez `/MIR`; canonical `world_manifest.json` pozostawiony lokalnie z odświeżonymi SHA.
+Konflikty addytywne: `WorldSurface.shader`, setter `RegionImporter`, migracja98, profile/overrides; zachowano tile/weather/runoff/macro/panel/splash. Generated `world_manifest.json`: lider regeneruje przy integracji.
+Dowody skopiowane do main `artifacts/light-r12/` przez robocopy `/E /XJ`, bez `/MIR`; canonical `world_manifest.json` z odświeżonymi SHA zapisany w commicie, worktree czysty.

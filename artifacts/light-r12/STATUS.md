@@ -50,3 +50,6 @@
 
 - Step16: ADR0098(17lines), REPORT(20lines), SELF-CRITICISM, independentREVIEW PASS, canonicalproof192/0 andNUnitXML complete. Evidence copiedtomain /E /XJ noMIR (robocopyexit1 accepted). No ownUnity active; no ProjectSettings/Packages/scenes/asmdef source changes. Canonicalgenerated world_manifest SHA refresh intentionallykeptlocal/uncommitted, matchingrawproof; snapshots copied. No merge/push.
 - NEXT COMMAND (leader): git log --oneline gpt-light-r12; integrate scopedC withA/B/F/materialcalibration and runjointvisual/deviceproof. Cworktree retained.
+
+- Step17: perrootrequest committed untouchedgenerator-producedcanonical world_manifest (192verifiedrawSHA; onlyrefreshedserializationbytes/hashes, no manualgeometry/dataediting). Expectedgeneratedmetadata conflict isleader-regenerate, documentedREPORT. Cworktreeclean; allsource/settings/fixture checks complete, independentPASS.
+- NEXT COMMAND: retainCworktree; startG freshcurrentmain worktree gpt-car-paint pernew scopeddispatch.
