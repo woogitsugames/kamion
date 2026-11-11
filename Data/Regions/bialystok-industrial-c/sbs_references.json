@@ -35,12 +35,29 @@
         "computed_compass_angle": 265.47964734991,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.1677268,
+            53.1519732
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167700924861,
+            53.15204545506
+          ]
+        },
+        "altitude": 168.203,
+        "computed_altitude": 3.9646336724982
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 262.14239872926544,
       "heading_true_deg": 265.47964734991,
       "route_distance_m": 1.852,
+      "heading_original_deg": 301.74850056311,
       "segment_station_m": 340.426,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
@@ -48,7 +65,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": 2.1968,
+        "north_delta_m": -7.9288,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -79,12 +99,29 @@
         "computed_compass_angle": 252.03873164769,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.1676694,
+            53.1519945
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.16762857779,
+            53.152071227389
+          ]
+        },
+        "altitude": 168.043,
+        "computed_altitude": 3.5196678591892
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 248.70154079711244,
       "heading_true_deg": 252.03873164769,
       "route_distance_m": 3.774,
+      "heading_original_deg": 293.31132848038,
       "segment_station_m": 340.544,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
@@ -92,7 +129,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": 3.2243,
+        "north_delta_m": -8.3676,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -123,12 +163,29 @@
         "computed_compass_angle": 278.60309661893,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.1677737,
+            53.151945699972
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167759575049,
+            53.152012006509
+          ]
+        },
+        "altitude": 168.462,
+        "computed_altitude": 4.2255847807974
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 275.26580153417075,
       "heading_true_deg": 278.60309661893,
       "route_distance_m": 7.151,
+      "heading_original_deg": 314.35560453951,
       "segment_station_m": 341.518,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
@@ -136,7 +193,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": 1.3733,
+        "north_delta_m": -7.3135,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -167,12 +227,29 @@
         "computed_compass_angle": 187.84528608516,
         "exif_orientation": 1,
         "width": 4032,
-        "height": 3024
+        "height": 3024,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167741801611,
+            53.151815319483
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.16776007333,
+            53.151807714441
+          ]
+        },
+        "altitude": 131.668213,
+        "computed_altitude": 6.4443097161129
       },
       "rectified_focal": 0.941154215279635,
       "heading_grid_deg": 184.50800376426488,
       "heading_true_deg": 187.84528608516,
       "route_distance_m": 26.161,
+      "heading_original_deg": 300.76452636719,
       "segment_station_m": 343.026,
       "horizon_y_fraction": 0.6645931464567811,
       "pose_status": "WORKING_VALUE",
@@ -211,12 +288,29 @@
         "computed_compass_angle": 316.62424500086,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.1678439,
+            53.151837999972
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167842759568,
+            53.151881316446
+          ]
+        },
+        "altitude": 168.432,
+        "computed_altitude": 4.6722558690235
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 313.28688658429314,
       "heading_true_deg": 316.62424500086,
       "route_distance_m": 21.096,
+      "heading_original_deg": 348.8976067643,
       "segment_station_m": 343.026,
       "horizon_y_fraction": 0.7483330000605141,
       "pose_status": "WORKING_VALUE",
@@ -224,7 +318,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.71,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": 0.3569,
+        "north_delta_m": -4.8093,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -255,12 +352,29 @@
         "computed_compass_angle": 329.24355930011,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.1678362,
+            53.1518006
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167836523626,
+            53.151834806424
+          ]
+        },
+        "altitude": 168.642,
+        "computed_altitude": 4.6536472011358
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 325.9062073534738,
       "heading_true_deg": 329.24355930011,
       "route_distance_m": 25.261,
+      "heading_original_deg": 7.0385175934296,
       "segment_station_m": 343.026,
       "horizon_y_fraction": 0.7483330000605141,
       "pose_status": "WORKING_VALUE",
@@ -268,7 +382,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.71,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": 0.2,
+        "north_delta_m": -3.8026,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -299,12 +416,29 @@
         "computed_compass_angle": 300.50065841636,
         "exif_orientation": 1,
         "width": 3840,
-        "height": 2160
+        "height": 2160,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167799383351,
+            53.151817095994
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167785605589,
+            53.151832588668
+          ]
+        },
+        "altitude": 148.4918012024,
+        "computed_altitude": 2.6771181961522
       },
       "rectified_focal": 0.50655636360298,
       "heading_grid_deg": 297.1633488463905,
       "heading_true_deg": 300.50065841636,
       "route_distance_m": 24.059,
+      "heading_original_deg": 301.75843574268,
       "segment_station_m": 343.026,
       "horizon_y_fraction": 0.5903527001948774,
       "pose_status": "WORKING_VALUE",
@@ -343,12 +477,29 @@
         "computed_compass_angle": 300.34764450686,
         "exif_orientation": 1,
         "width": 3840,
-        "height": 2160
+        "height": 2160,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167850254877,
+            53.151798211242
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167853657784,
+            53.151810016842
+          ]
+        },
+        "altitude": 148.47503957916,
+        "computed_altitude": 2.5733326245099
       },
       "rectified_focal": 0.50655636360298,
       "heading_grid_deg": 297.01028137037474,
       "heading_true_deg": 300.34764450686,
       "route_distance_m": 28.235,
+      "heading_original_deg": 301.75843574268,
       "segment_station_m": 343.026,
       "horizon_y_fraction": 0.5903527001948774,
       "pose_status": "WORKING_VALUE",
@@ -387,12 +538,29 @@
         "computed_compass_angle": 291.18411575639,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.1678099,
+            53.1519125
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167803993085,
+            53.151971912115
+          ]
+        },
+        "altitude": 168.807,
+        "computed_altitude": 4.4350020196289
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 287.84678596180447,
       "heading_true_deg": 291.18411575639,
       "route_distance_m": 12.052,
+      "heading_original_deg": 326.81994090017,
       "segment_station_m": 343.026,
       "horizon_y_fraction": 0.7610966593728179,
       "pose_status": "WORKING_VALUE",
@@ -400,7 +568,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.72,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": 0.7796,
+        "north_delta_m": -6.5794,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -431,12 +602,29 @@
         "computed_compass_angle": 240.67509818706,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167604,
+            53.152011399972
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167546615169,
+            53.152087058404
+          ]
+        },
+        "altitude": 167.696,
+        "computed_altitude": 3.3838903950527
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 237.3379730540385,
       "heading_true_deg": 240.67509818706,
       "route_distance_m": 4.928,
+      "heading_original_deg": 291.73464071888,
       "segment_station_m": 350.7,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
@@ -444,7 +632,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": 4.3238,
+        "north_delta_m": -8.1843,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -475,12 +666,29 @@
         "computed_compass_angle": 302.28439348559,
         "exif_orientation": 1,
         "width": 1280,
-        "height": 720
+        "height": 720,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167279,
+            53.1519756
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167518812044,
+            53.151915323299
+          ]
+        },
+        "altitude": 0,
+        "computed_altitude": 4.7974830530584
       },
       "rectified_focal": 0.8047097199480016,
       "heading_grid_deg": 298.9472941092291,
       "heading_true_deg": 302.28439348559,
       "route_distance_m": 14.246,
+      "heading_original_deg": 156,
       "segment_station_m": 351.838,
       "horizon_y_fraction": 0.6235977444665237,
       "pose_status": "WORKING_VALUE",
@@ -488,7 +696,11 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.62,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. Photo visibly on deck: absolute U = interpolated existing viaduct station road altitude 145.575 + nominal eye 1.7m; distance to deck axis 0.45m; c:w177895177:1883101822-1883062831. This changes camera only, not the deck; road/NMT discrepancy is not hidden.",
+        "east_delta_m": -16.4111,
+        "north_delta_m": 5.7643,
+        "absolute_u_m": 147.2755,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -519,12 +731,29 @@
         "computed_compass_angle": 236.71943065927,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167535399972,
+            53.152027799972
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167458032213,
+            53.152099546804
+          ]
+        },
+        "altitude": 167.588,
+        "computed_altitude": 3.0460532763973
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 233.38237622900903,
       "heading_true_deg": 236.71943065927,
       "route_distance_m": 3.807,
+      "heading_original_deg": 295.72384626313,
       "segment_station_m": 359.145,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
@@ -532,7 +761,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": 5.6334,
+        "north_delta_m": -7.6717,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -563,12 +795,29 @@
         "computed_compass_angle": 243.935882039,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167308599972,
+            53.1521005
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167170998845,
+            53.152157080572
+          ]
+        },
+        "altitude": 167.352,
+        "computed_altitude": 1.9917864985764
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 240.59905481904542,
       "heading_true_deg": 243.935882039,
       "route_distance_m": 1.197,
+      "heading_original_deg": 301.75698681341,
       "segment_station_m": 378.907,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
@@ -576,7 +825,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": 9.559,
+        "north_delta_m": -5.7517,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -607,12 +859,29 @@
         "computed_compass_angle": 246.0216934198,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167163899972,
+            53.152154299972
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.166965743495,
+            53.152210700305
+          ]
+        },
+        "altitude": 167.436,
+        "computed_altitude": 1.3619926190004
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 242.68502831023548,
       "heading_true_deg": 246.0216934198,
       "route_distance_m": 3.376,
+      "heading_original_deg": 301.58066378103,
       "segment_station_m": 393.724,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
@@ -620,7 +889,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": 13.6031,
+        "north_delta_m": -5.4959,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -651,12 +923,29 @@
         "computed_compass_angle": 298.42038991421,
         "exif_orientation": 3,
         "width": 4032,
-        "height": 3024
+        "height": 3024,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.1668199,
+            53.1522034
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.166848632785,
+            53.152206197978
+          ]
+        },
+        "altitude": 0,
+        "computed_altitude": 4.3417111989111
       },
       "rectified_focal": 0.76147595277636,
       "heading_grid_deg": 295.08381542847707,
       "heading_true_deg": 298.42038991421,
       "route_distance_m": 7.937,
+      "heading_original_deg": 303,
       "segment_station_m": 400.115,
       "horizon_y_fraction": 0.6300045649789922,
       "pose_status": "WORKING_VALUE",
@@ -664,7 +953,11 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.63,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. Photo visibly on deck: absolute U = interpolated existing viaduct station road altitude 144.914 + nominal eye 1.7m; distance to deck axis 4.70m; c:w177895177:1883101822-1883062831. This changes camera only, not the deck; road/NMT discrepancy is not hidden.",
+        "east_delta_m": -1.9013,
+        "north_delta_m": -0.4228,
+        "absolute_u_m": 146.6139,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -695,12 +988,29 @@
         "computed_compass_angle": 245.38185113493,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.167073299972,
+            53.152187699972
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.166857653629,
+            53.152239590217
+          ]
+        },
+        "altitude": 167.478,
+        "computed_altitude": 1.0705167418346
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 242.04527146667252,
       "heading_true_deg": 245.38185113493,
       "route_distance_m": 4.461,
+      "heading_original_deg": 301.30615914892,
       "segment_station_m": 401.565,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
@@ -708,7 +1018,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": 14.7423,
+        "north_delta_m": -4.9266,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -739,12 +1052,29 @@
         "computed_compass_angle": 238.88216469794,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.1666129,
+            53.1523563
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.166639752447,
+            53.152364455005
+          ]
+        },
+        "altitude": 167.484,
+        "computed_altitude": -4.9253968689591
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 235.54575468158242,
       "heading_true_deg": 238.88216469794,
       "route_distance_m": 0.35,
+      "heading_original_deg": 301.26275733776,
       "segment_station_m": 421.286,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
@@ -752,7 +1082,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": -1.741,
+        "north_delta_m": -1.0108,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -783,12 +1116,29 @@
         "computed_compass_angle": 238.83540448779,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.1662983,
+            53.152472199972
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.166660069274,
+            53.152394994647
+          ]
+        },
+        "altitude": 167.381,
+        "computed_altitude": -7.1066792728379
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 235.4989768460129,
       "heading_true_deg": 238.83540448779,
       "route_distance_m": 3.255,
+      "heading_original_deg": 301.54156744243,
       "segment_station_m": 421.925,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
@@ -796,7 +1146,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": -24.6678,
+        "north_delta_m": 7.1709,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -827,12 +1180,29 @@
         "computed_compass_angle": 288.9213059094,
         "exif_orientation": 1,
         "width": 3840,
-        "height": 2160
+        "height": 2160,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.166148268489,
+            53.152421533907
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.166130331935,
+            53.152554330805
+          ]
+        },
+        "altitude": 143.48682634731,
+        "computed_altitude": 1.3547142716125
       },
       "rectified_focal": 0.55672235338635,
       "heading_grid_deg": 285.5852927874408,
       "heading_true_deg": 288.9213059094,
       "route_distance_m": 24.683,
+      "heading_original_deg": 302.15808660416,
       "segment_station_m": 436.716,
       "horizon_y_fraction": 0.6004071465893173,
       "pose_status": "WORKING_VALUE",
@@ -840,7 +1210,11 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.6,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. Photo visibly on deck: absolute U = interpolated existing viaduct station road altitude 142.516 + nominal eye 1.7m; distance to deck axis 1.39m; c:w177895177:1883101822-1883062831. This changes camera only, not the deck; road/NMT discrepancy is not hidden.",
+        "east_delta_m": 2.0585,
+        "north_delta_m": -14.6877,
+        "absolute_u_m": 144.2164,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -871,12 +1245,29 @@
         "computed_compass_angle": 288.89900519549,
         "exif_orientation": 1,
         "width": 3840,
-        "height": 2160
+        "height": 2160,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.166435210615,
+            53.152313430395
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.166396058726,
+            53.152497803979
+          ]
+        },
+        "altitude": 144.35494505495,
+        "computed_altitude": 0.86039117630571
       },
       "rectified_focal": 0.55672235338635,
       "heading_grid_deg": 285.56278148539036,
       "heading_true_deg": 288.89900519549,
       "route_distance_m": 7.244,
+      "heading_original_deg": 302.07346137617,
       "segment_station_m": 436.716,
       "horizon_y_fraction": 0.6004071465893173,
       "pose_status": "WORKING_VALUE",
@@ -884,7 +1275,11 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.6,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. Photo visibly on deck: absolute U = interpolated existing viaduct station road altitude 143.763 + nominal eye 1.7m; distance to deck axis 1.40m; c:w177895177:1883101822-1883062831. This changes camera only, not the deck; road/NMT discrepancy is not hidden.",
+        "east_delta_m": 3.8099,
+        "north_delta_m": -20.3367,
+        "absolute_u_m": 145.4629,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -915,12 +1310,29 @@
         "computed_compass_angle": 312.32434820115,
         "exif_orientation": 1,
         "width": 4032,
-        "height": 3024
+        "height": 3024,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.156724292807,
+            53.156276419808
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.156724287213,
+            53.156276413225
+          ]
+        },
+        "altitude": 116.58783,
+        "computed_altitude": 1.998043156229
       },
       "rectified_focal": 0.88973461119198,
       "heading_grid_deg": 308.99571344715946,
       "heading_true_deg": 312.32434820115,
       "route_distance_m": 1.707,
+      "heading_original_deg": 312.68591308594,
       "segment_station_m": 0.0,
       "horizon_y_fraction": 0.6543160564295782,
       "pose_status": "WORKING_VALUE",
@@ -959,12 +1371,29 @@
         "computed_compass_angle": 309.91332601132,
         "exif_orientation": 1,
         "width": 3840,
-        "height": 2160
+        "height": 2160,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.156553650068,
+            53.156396290963
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.156555799781,
+            53.156396562529
+          ]
+        },
+        "altitude": 136.20053420523,
+        "computed_altitude": 1.9753599464893
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 306.5848212566498,
       "heading_true_deg": 309.91332601132,
       "route_distance_m": 0.987,
+      "heading_original_deg": 311.92348609378,
       "segment_station_m": 16.427,
       "horizon_y_fraction": 0.5745206819902662,
       "pose_status": "WORKING_VALUE",
@@ -1003,12 +1432,29 @@
         "computed_compass_angle": 310.16298223124,
         "exif_orientation": 1,
         "width": 3840,
-        "height": 2160
+        "height": 2160,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.156331038953,
+            53.156516257033
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.156348880342,
+            53.156507989655
+          ]
+        },
+        "altitude": 135.7951978022,
+        "computed_altitude": 2.0243998384103
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 306.83463853706536,
       "heading_true_deg": 310.16298223124,
       "route_distance_m": 0.975,
+      "heading_original_deg": 311.98061910197,
       "segment_station_m": 35.018,
       "horizon_y_fraction": 0.5745206819902662,
       "pose_status": "WORKING_VALUE",
@@ -1047,12 +1493,29 @@
         "computed_compass_angle": 123.34655802389,
         "exif_orientation": 1,
         "width": 4032,
-        "height": 3024
+        "height": 3024,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.155959192685,
+            53.156587723692
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.155958479612,
+            53.156586633817
+          ]
+        },
+        "altitude": 118.065857,
+        "computed_altitude": 1.8629621518776
       },
       "rectified_focal": 0.9388413792023853,
       "heading_grid_deg": 120.01852823519104,
       "heading_true_deg": 123.34655802389,
       "route_distance_m": 10.073,
+      "heading_original_deg": 131.31509399414,
       "segment_station_m": 60.218,
       "horizon_y_fraction": 0.6851063969284589,
       "pose_status": "WORKING_VALUE",
@@ -1091,12 +1554,29 @@
         "computed_compass_angle": 310.15427348142,
         "exif_orientation": 1,
         "width": 3840,
-        "height": 2160
+        "height": 2160,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.155863853429,
+            53.156768385799
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.155880959001,
+            53.156761551789
+          ]
+        },
+        "altitude": 135.28630467662,
+        "computed_altitude": 2.1483285389841
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 306.82629395760137,
       "heading_true_deg": 310.15427348142,
       "route_distance_m": 0.807,
+      "heading_original_deg": 311.82765779912,
       "segment_station_m": 77.179,
       "horizon_y_fraction": 0.5852377707506379,
       "pose_status": "WORKING_VALUE",
@@ -1135,12 +1615,29 @@
         "computed_compass_angle": 136.04808353444,
         "exif_orientation": 1,
         "width": 1280,
-        "height": 720
+        "height": 720,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.155587800002,
+            53.1567712
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.155584368376,
+            53.15677406892
+          ]
+        },
+        "altitude": 0,
+        "computed_altitude": 1.9910758286715
       },
       "rectified_focal": 0.77275122835857,
       "heading_grid_deg": 132.72034626527446,
       "heading_true_deg": 136.04808353444,
       "route_distance_m": 11.546,
+      "heading_original_deg": 22,
       "segment_station_m": 92.767,
       "horizon_y_fraction": 0.6200000648529395,
       "pose_status": "WORKING_VALUE",
@@ -1179,12 +1676,29 @@
         "computed_compass_angle": 120.57365054172,
         "exif_orientation": 1,
         "width": 4032,
-        "height": 3024
+        "height": 3024,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.155276067577,
+            53.156927651775
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.155252137967,
+            53.156915404549
+          ]
+        },
+        "altitude": 118.983459,
+        "computed_altitude": 1.6238147104159
       },
       "rectified_focal": 0.9388413792023853,
       "heading_grid_deg": 117.24617265740565,
       "heading_true_deg": 120.57365054172,
       "route_distance_m": 14.613,
+      "heading_original_deg": 128.33740234375,
       "segment_station_m": 120.117,
       "horizon_y_fraction": 0.6851063969284589,
       "pose_status": "WORKING_VALUE",
@@ -1223,12 +1737,29 @@
         "computed_compass_angle": 308.91193322029,
         "exif_orientation": 1,
         "width": 3840,
-        "height": 2160
+        "height": 2160,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.155034132807,
+            53.157208161246
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.155023675168,
+            53.15721219061
+          ]
+        },
+        "altitude": 135.28919700599,
+        "computed_altitude": 1.8671432938427
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 305.5846215770588,
       "heading_true_deg": 308.91193322029,
       "route_distance_m": 0.198,
+      "heading_original_deg": 311.57441011737,
       "segment_station_m": 153.369,
       "horizon_y_fraction": 0.5852377707506379,
       "pose_status": "WORKING_VALUE",
@@ -1267,12 +1798,29 @@
         "computed_compass_angle": 81.994324625523,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.154596999972,
+            53.157320099972
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.154593804326,
+            53.157319353391
+          ]
+        },
+        "altitude": 158.873,
+        "computed_altitude": 1.7416681274772
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 78.66735450491268,
       "heading_true_deg": 81.994324625523,
       "route_distance_m": 9.751,
+      "heading_original_deg": 132.13750269125,
       "segment_station_m": 182.878,
       "horizon_y_fraction": 0.7209278007962098,
       "pose_status": "WORKING_VALUE",
@@ -1280,7 +1828,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.69,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": 0.2086,
+        "north_delta_m": 0.0954,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -1311,12 +1862,29 @@
         "computed_compass_angle": 121.0522092388,
         "exif_orientation": 1,
         "width": 4032,
-        "height": 3024
+        "height": 3024,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.154083812216,
+            53.157424914628
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.154090213507,
+            53.157422405097
+          ]
+        },
+        "altitude": 127.59959935583,
+        "computed_altitude": 4.6809502989054
       },
       "rectified_focal": 0.86200933731979,
       "heading_grid_deg": 117.72564101278026,
       "heading_true_deg": 121.0522092388,
       "route_distance_m": 33.732,
+      "heading_original_deg": 128.63209372032,
       "segment_station_m": 215.302,
       "horizon_y_fraction": 0.6599999995727285,
       "pose_status": "WORKING_VALUE",
@@ -1355,12 +1923,29 @@
         "computed_compass_angle": 81.999915788457,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.1539116,
+            53.157690299972
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.153907721858,
+            53.157686597285
+          ]
+        },
+        "altitude": 160.882,
+        "computed_altitude": 2.0103677585721
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 78.6734798400643,
       "heading_true_deg": 81.999915788457,
       "route_distance_m": 23.035,
+      "heading_original_deg": 131.96363427421,
       "segment_station_m": 245.294,
       "horizon_y_fraction": 0.7332960503309632,
       "pose_status": "WORKING_VALUE",
@@ -1368,7 +1953,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": 0.2351,
+        "north_delta_m": 0.4265,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -1399,12 +1987,29 @@
         "computed_compass_angle": 269.40567781973,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.1538484,
+            53.158009499972
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.153989435073,
+            53.157992006896
+          ]
+        },
+        "altitude": 160.493,
+        "computed_altitude": 4.7540447534993
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 266.0791641330345,
       "heading_true_deg": 269.40567781973,
       "route_distance_m": 4.028,
+      "heading_original_deg": 317.016398166,
       "segment_station_m": 266.759,
       "horizon_y_fraction": 0.736125531589907,
       "pose_status": "WORKING_VALUE",
@@ -1412,7 +2017,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": -9.5335,
+        "north_delta_m": 1.3964,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -1443,12 +2051,29 @@
         "computed_compass_angle": 317.39143178138,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.153800517222,
+            53.158101243889
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.153800508371,
+            53.158101242425
+          ]
+        },
+        "altitude": 127.30796,
+        "computed_altitude": 2.0000000139698
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 314.06506185059186,
       "heading_true_deg": 317.39143178138,
       "route_distance_m": 3.072,
+      "heading_original_deg": 317.224704,
       "segment_station_m": 284.276,
       "horizon_y_fraction": 0.677954170512396,
       "pose_status": "WORKING_VALUE",
@@ -1487,12 +2112,29 @@
         "computed_compass_angle": 273.42008364127,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.153412299972,
+            53.1582908
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.153479161744,
+            53.15824651567
+          ]
+        },
+        "altitude": 161.026,
+        "computed_altitude": 4.5339261703193
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 270.093967782092,
       "heading_true_deg": 273.42008364127,
       "route_distance_m": 1.629,
+      "heading_original_deg": 317.50759803322,
       "segment_station_m": 310.764,
       "horizon_y_fraction": 0.736125531589907,
       "pose_status": "WORKING_VALUE",
@@ -1500,7 +2142,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": -4.7521,
+        "north_delta_m": 4.6617,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -1531,12 +2176,29 @@
         "computed_compass_angle": 312.24927892437,
         "exif_orientation": 3,
         "width": 4032,
-        "height": 3024
+        "height": 3024,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.1532632,
+            53.1584522
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.153291385039,
+            53.158496334941
+          ]
+        },
+        "altitude": 0,
+        "computed_altitude": 15.757099851966
       },
       "rectified_focal": 0.7538895674535585,
       "heading_grid_deg": 308.9233003394742,
       "heading_true_deg": 312.24927892437,
       "route_distance_m": 8.106,
+      "heading_original_deg": 314,
       "segment_station_m": 339.77,
       "horizon_y_fraction": 0.633877863917123,
       "pose_status": "WORKING_VALUE",
@@ -1575,12 +2237,29 @@
         "computed_compass_angle": 272.4282377633,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.1528901,
+            53.158629599972
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.152918435652,
+            53.158678442093
+          ]
+        },
+        "altitude": 162.26,
+        "computed_altitude": 3.4164574714378
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 269.10255282234095,
       "heading_true_deg": 272.4282377633,
       "route_distance_m": 3.302,
+      "heading_original_deg": 316.83505688114,
       "segment_station_m": 371.534,
       "horizon_y_fraction": 0.736125531589907,
       "pose_status": "WORKING_VALUE",
@@ -1588,7 +2267,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": -1.5773,
+        "north_delta_m": -5.5378,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -1619,12 +2301,29 @@
         "computed_compass_angle": 271.4673859536,
         "exif_orientation": 1,
         "width": 4000,
-        "height": 3000
+        "height": 3000,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.152633,
+            53.1587966
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.15265096113,
+            53.15887333034
+          ]
+        },
+        "altitude": 162.533,
+        "computed_altitude": 2.4788191290572
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 268.1419070934887,
       "heading_true_deg": 271.4673859536,
       "route_distance_m": 5.411,
+      "heading_original_deg": 317.14399912502,
       "segment_station_m": 399.514,
       "horizon_y_fraction": 0.736125531589907,
       "pose_status": "WORKING_VALUE",
@@ -1632,7 +2331,10 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
+        "east_delta_m": -0.7042,
+        "north_delta_m": -8.5967,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -1663,12 +2365,29 @@
         "computed_compass_angle": 312.69551740057,
         "exif_orientation": 1,
         "width": 4032,
-        "height": 3024
+        "height": 3024,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.152175182498,
+            53.15882384782
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.151998633796,
+            53.158848070861
+          ]
+        },
+        "altitude": 131.701172,
+        "computed_altitude": 2.2796531002969
       },
       "rectified_focal": 1.308701949319759,
       "heading_grid_deg": 309.3705600871404,
       "heading_true_deg": 312.69551740057,
       "route_distance_m": 28.018,
+      "heading_original_deg": 313.35070800781,
       "segment_station_m": 427.716,
       "horizon_y_fraction": 0.6646958378169694,
       "pose_status": "WORKING_VALUE",
@@ -1707,12 +2426,29 @@
         "computed_compass_angle": 3.7204831279956,
         "exif_orientation": 1,
         "width": 4608,
-        "height": 2592
+        "height": 2592,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.151787,
+            53.15891069996
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.151829204338,
+            53.159033422415
+          ]
+        },
+        "altitude": 159.735,
+        "computed_altitude": 1.4345833836123
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 0.3956521977692769,
       "heading_true_deg": 3.7204831279956,
       "route_distance_m": 21.832,
+      "heading_original_deg": 9.1433639680037,
       "segment_station_m": 453.366,
       "horizon_y_fraction": 0.6244587519600411,
       "pose_status": "WORKING_VALUE",
@@ -1751,12 +2487,29 @@
         "computed_compass_angle": 356.38890343516,
         "exif_orientation": 1,
         "width": 4608,
-        "height": 2592
+        "height": 2592,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.151759100001,
+            53.159476200027
+          ]
+        },
+        "computed_geometry": {
+          "type": "Point",
+          "coordinates": [
+            23.151803669704,
+            53.159468382436
+          ]
+        },
+        "altitude": 159.154,
+        "computed_altitude": 2.0092567028478
       },
       "rectified_focal": 0.5,
       "heading_grid_deg": 353.06407414187214,
       "heading_true_deg": 356.38890343516,
       "route_distance_m": 4.368,
+      "heading_original_deg": 359.7155269255,
       "segment_station_m": 485.862,
       "horizon_y_fraction": 0.6244587519600411,
       "pose_status": "WORKING_VALUE",

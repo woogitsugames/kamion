@@ -1,4 +1,4 @@
-﻿# ADR 0103 — per-photo attribution (reference sheets only)
+# ADR 0103 — per-photo attribution (reference sheets only)
 
 Photos stay outside git and builds. Source pixels on sheets are rectified/cropped, resized and overlaid.
 Photo panels and their modifications: CC BY-SA 4.0; render panels retain project terms.
@@ -46,4 +46,3 @@ License: https://creativecommons.org/licenses/by-sa/4.0/
 | sbs-g3-b-494288258686575 | szurek | 2017-08-10 | [Mapillary 494288258686575](https://www.mapillary.com/app/?pKey=494288258686575) | `111127b0c5ca1f8bfeeb001f9ed61da9b16c8cc36cade18eb89a7ee96751a104` |
 | sbs-g3-b-182011943700132 | gpsmapper | 2019-08-04 | [Mapillary 182011943700132](https://www.mapillary.com/app/?pKey=182011943700132) | `825c03d2431b2b7dd2efb0fd50fa5a21ebd32dab259f0394af04cf8819421461` |
 | sbs-g3-b-1801374876712141 | gpsmapper | 2019-08-04 | [Mapillary 1801374876712141](https://www.mapillary.com/app/?pKey=1801374876712141) | `bbd1d50053c9be39a755ba312f549b5a6cbc7ff2adb80206302a5ee6ff4d3639` |
-

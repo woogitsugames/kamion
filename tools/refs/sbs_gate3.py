@@ -76,10 +76,10 @@ def fetch_intrinsics():
     client=MapillaryClient(token,retries=1)
     path=REGION/'sbs_intrinsics.json'
     records=read(path).get('images',{}) if path.exists() else {}
-    fields='id,camera_parameters,camera_type,computed_compass_angle,exif_orientation,width,height'
+    fields='id,camera_parameters,camera_type,computed_compass_angle,exif_orientation,width,height,geometry,computed_geometry,altitude,computed_altitude'
     for ref in read(REGION/'sbs_references.json')['references']:
         sid=ref['source_id']
-        if sid in records: continue
+        if sid in records and 'geometry' in records[sid]: continue
         body=client._get('https://graph.mapillary.com/'+sid,params={'fields':fields}).json()
         records[sid]={k:body[k] for k in fields.split(',') if k in body}
         write(path,{'schema':'kamion/sbs-intrinsics/1','images':records})
@@ -214,7 +214,7 @@ def prepare(count=20, radius=40):
                 focal,_,_=rectify(photo,lens,comparison)
             ov = overrides.get(camera_id, {})
             allowed = {'east_delta_m','north_delta_m','eye_height_m','absolute_u_m','heading_delta_deg',
-                       'horizontal_fov_deg','horizon_y_fraction','rectified_horizon_y_fraction','pose_status','note','masks'}
+                       'horizontal_fov_deg','horizon_y_fraction','rectified_horizon_y_fraction','heading_source','pose_status','note','masks'}
             if set(ov)-allowed:
                 raise ValueError(f"unknown authored corrections for {camera_id}: {sorted(set(ov)-allowed)}")
             e = x-origin['x'] + ov.get('east_delta_m', 0)
@@ -222,6 +222,8 @@ def prepare(count=20, radius=40):
             eye = ov.get('eye_height_m', 2.2)
             u = ov.get('absolute_u_m', terrain(e+origin['x'], n+origin['y']) + eye)
             true_heading=lens.get('computed_compass_angle',r['compass_angle']) if lens else r['compass_angle']
+            if ov.get('heading_source')=='original': true_heading=r['compass_angle']
+            elif ov.get('heading_source','computed')!='computed': raise ValueError('heading_source must be original or computed')
             heading = (grid_heading(r['lon'], r['lat'], true_heading, transform) + ov.get('heading_delta_deg', 0)) % 360
             native_hfov=math.degrees(2*math.atan(width/max(width,height)/(2*focal))) if focal else 90
             if lens and 'horizontal_fov_deg' in ov:
@@ -245,6 +247,7 @@ def prepare(count=20, radius=40):
                          'comparison_sha256':hashlib.sha256(comparison.read_bytes()).hexdigest(),
                          'projection':lens, 'rectified_focal':focal,
                          'heading_grid_deg': heading, 'heading_true_deg': true_heading, 'route_distance_m': round(distance,3),
+                         'heading_original_deg':r['compass_angle'],
                          'segment_station_m': round(station,3), 'horizon_y_fraction': horizon,
                          'pose_status': ov.get('pose_status','WORKING_VALUE'),
                          'assumptions': ('NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.' if lens else 'NMT bare earth; eye/FOV/pitch WORKING_VALUE. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.'),

@@ -28,3 +28,6 @@ NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10
 
 Step 10: PHONE_RUN removed; guarded runner started EditMode at 11:55 local (log artifacts/logs/test-editmode-20261111-115503.log), then queued the 4-state camera matrix. No second Unity process for this project.
 NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 15
+
+Step 11: EditMode 226/226; first matrix 160 renders/sheets completed and archived under r0 (40 per state). Inspected initial pairs: definite below-deck camera error on 4 G3-A photos. Eight original/SfM position/heading probes rendered and inspected; original GPS better for richlv close viaduct and elevated sequences, SfM optical heading retained. Authored 4 deck heights from existing deck stations + 1.7m eye (world untouched), original-GPS deltas for richlv/4 elevated frames. R1 camera JSON generated; 9 focused tests pass.
+NEXT: pwsh scripts/sbs-gate3.ps1
