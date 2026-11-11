@@ -13,3 +13,6 @@ NASTĘPNA KOMENDA: po zakończeniu generatorów: pwsh artifacts/landmarks-r1/uni
 
 Krok 4: zapisano SHA źródeł baseline i termin pracy do 12.11.2026 21:31 CET. Bazowy GIS przerwany na etapie 14%: uruchamiał trzy dodatkowe generatory przy ~1,6 GB wolnego RAM. Nie jest zaliczony; pełny GIS zostanie wykonany po zmianach. Świat i materiały dalej w regeneracji, bez startu Unity i bez zmian modelu.
 NASTĘPNA KOMENDA: po zakończeniu generatorów: pwsh artifacts/landmarks-r1/unity-step.ps1 -Step Import
+
+Krok 5: źródłowy audyt tui wykazał rozdzielone narożniki ścian bez radialnych normalnych; samo use_smooth nie wygładzi Low. Przygotowano plan korekty bez nowych trójkątów. Oba wejścia igliwia CC0 zgodne z SHA. Regenerację PBR ograniczono do Medium, faktycznie importowanego zestawu (Low/High to osobne geometrie, nie wymagają trzech rozdzielczości PBR). Produkcja bez zmian.
+NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-materials-medium.log -Tail 12
