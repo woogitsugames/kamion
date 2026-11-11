@@ -14,3 +14,22 @@ Gałąź `junctions-r5` (z main 60705006). Dowody: `artifacts/junctions-r5/` (re
   Testy `tests/gis/test_junctions_r4.py` (bariery): 3 passed.
   NASTĘPNY KROK: `bash artifacts/junctions-r5/scripts/fast.sh b1` → `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c`
   → `bash artifacts/junctions-r5/scripts/qa.sh b1 Low clear` → obejrzeć `r4_deck_bz_eye`, `r4_link_bz_a`, `r4_pier_bz`.
+- krok 2 (b1, sha poniżej): build b1 + import + rendery `renders_b1_low_clear/`, `renders_b1_high_overcast/` — OBEJRZANE: profil W,
+  słupki C, górna belka i poręcz z prętami czytelne (`r4_deck_bz_eye`, `r4_link_bz_a`), kapa 1,0 m; ALE `barrier_steel` 0,25 nadal
+  za jasny w kadrze (belka sRGB ~185 przy asfalcie 60; zdjęcie 454716: belka 74–102 przy asfalcie 63) → następna wartość ~0,11.
+  keytests b1: 125 passed. `guardrails_m` b1: bridge 2916, structure 603, pier 0 (reguła po łańcuchach nie łapała ronda).
+  Po b1 (kod, jeszcze NIE zbudowane): `pier_guardrails` przepisane na obrys asfaltu (test offline: 3 biegi, 58,5 m przy filarach
+  hero 2,7–4,1 m od jezdni). Ustalenia: (a) `_Generated` skopiowane z main było importem SPRZED 0110 → `renders_b0_*` to nie jest
+  uczciwe „przed”; prawdziwy baseline = świat main f260ab36: `bash artifacts/junctions-r5/scripts/baseline.sh m0` (W TOKU — na czas
+  działania podmienia `Data/raw/derived/.../world`, `generated/world_manifest.json`, `route_start.json`, asset wiaduktu i
+  `viaduct_steel.png` na wersje main, kopie w `artifacts/junctions-r5/_swap/` i `world_cur`; jeśli przerwane: przywrócić ręcznie
+  wg końcówki skryptu albo po prostu przebudować `fast.sh`). (b) latarnia `p0_lamp_putry_eye`: w b1 nadal brak — do wyjaśnienia
+  (`support_adjustments` na main = 20, nie 28→50; `props_off_carriageway.moved` 48→49). (c) pasmo jodełki wsch.: ortofoto 50 px/m
+  (`junctions-r4/trace/e_split_band.jpg`) = klin 1,1 m (E −830,6) → 3,1 m (E −806,2), NIE stałe 2,5 m — geometrii nie zmieniam.
+  (d) `p0_kerb_merge_eye`: bieg łańcucha `c:w1101181473…:L` i `authored:dk8-ramp-split-barrier` spotykają się przy E −765 z różnym
+  offsetem (jeden z terminalem w ziemię, drugi ucięty) — plan: biegi autorskie pierwsze, ucięty koniec dociągany do sąsiedniego
+  biegu (bez terminala), górna belka zawsze schodzi na końcu.
+  NASTĘPNY KROK: poczekać na `baseline.sh m0` (log `logs/m0_*`), potem: `barrier_steel` color → ~0.11 w `tools/worldgen/roads/build_world.py`,
+  łączenie biegów w `furniture._dedup_guardrail`, nos Putry N (wielokąt elipsy w overrides `putry-n-median-nose`), murek
+  `r2_fork_link_eye`; `bash artifacts/junctions-r5/scripts/fast.sh b2 && bash artifacts/junctions-r5/scripts/imp.sh b2` →
+  `python artifacts/junctions-r5/scripts/stats_cmp.py artifacts/junctions-r5/renders_m0_low_clear/stats.txt artifacts/junctions-r5/renders_b2_low_clear/stats.txt`

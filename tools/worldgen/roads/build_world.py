@@ -613,7 +613,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
     hero_tris = HB.apply(w, heroes, st["instances"], log)
     # ADR 0117: W-beam where a ground carriageway passes a viaduct pier (hero columns + generic cylinders exist now)
     from streetscape import furniture as _FU
-    _FU.pier_guardrails(_FU.Lin(w.buf, None), w.net, HB.pier_points(heroes, w.buf.parts), st["report"]["furniture"])
+    _FU.pier_guardrails(_FU.Lin(w.buf, None), w.net, HB.pier_points(heroes, w.buf.parts), w.buf.parts,
+                        st["report"]["furniture"])
     log("pier guardrails", st["report"]["furniture"].get("guardrails_pier"))
     if heroes:
         # HB.apply rebuilds the ribbons of the hero chains, kerbs included: the ones under a paved gore / on another

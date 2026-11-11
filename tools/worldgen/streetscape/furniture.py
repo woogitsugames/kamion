@@ -1450,78 +1450,93 @@ def guardrails(lin, net, zground, report):
                                   "ground": "NMT (decks removed) at the profile end + 5 / 7 / 9 m"}
 
 
-PIER_GUARD_GAP_M = 4.0       # WORKING_VALUE (ADR 0117, REVIEW s10-0110 P1-7): a pier this close behind the post line
+PIER_GUARD_GAP_M = 4.5       # WORKING_VALUE (ADR 0117, REVIEW s10-0110 P1-7): pier axis this close to a carriageway edge
 PIER_GUARD_REACH_M = 8.0     # ... gets a W-beam reaching this far past it both ways (+ the turned-down terminals)
+PIER_R_M = 0.5               # half size of a pier across (hero column 0.8 x 1.0 m, generic cylinder r 0.6 m)
 
 
-def pier_guardrails(lin, net, piers, report):
-    """ADR 0117: W-beam along a ground carriageway edge that passes a viaduct pier closer than PIER_GUARD_GAP_M
-    (Mapillary 177786140912399: W-beam in front of the pier of the Biezenstwa viaduct at the roundabout edge).
+def pier_guardrails(lin, net, piers, parts, report):
+    """ADR 0117: W-beam between a ground carriageway and a viaduct pier standing closer than PIER_GUARD_GAP_M to its
+    edge (Mapillary 177786140912399: W-beam in front of a pier of the Biezenstwa viaduct at the roundabout kerb).
     `piers` = (n, 2) pier axes: hero spec columns + the generic cylinders (roads.meshing.build_bridge_supports), so
-    it runs after them, not in guardrails(). Offsets as the `structure` rule; runs are deduplicated against the
-    rails built before. WORKING rule."""
-    from scipy import ndimage
+    it runs after them, not in guardrails(). The edge is the outline of the ground asphalt (chains, junction plates and
+    roundabout rings alike), the post line GUARDRAIL_OFFSET behind the kerb (closer when the pier leaves no room);
+    runs are deduplicated against the rails built before. WORKING rule."""
     from scipy.spatial import cKDTree
+    from shapely.geometry import LineString, Point, Polygon
+    from shapely.ops import substring, unary_union
     piers = np.asarray(piers, float).reshape(-1, 2)
     m = {}
-    total = 0.0
+    total, hits = 0.0, []
     built = getattr(net, "guardrail_built", None)
     if built is None:
         built = net.guardrail_built = []
-    if len(piers):
-        tree = cKDTree(piers)
-        for c in net.chains:
-            if c.meta.get("absorbed"):
+    reach = PIER_GUARD_REACH_M + S.GUARDRAIL_TERMINAL_M
+    tri, kerb = [], []
+    for p in parts:
+        if p.layer != "road" or not len(p.T):
+            continue
+        if p.mat.startswith("road_asphalt") and not p.src.endswith(":vg"):
+            tri.append(p.V[p.T])
+        elif p.mat == "curb_concrete":
+            kerb.append(p.V[:, :2])
+    if len(piers) and tri:
+        A = np.concatenate(tri)
+        cen = A[:, :, :2].mean(1)
+        ktree = cKDTree(np.concatenate(kerb)) if kerb else None
+        for i, q in enumerate(piers):
+            sel = np.hypot(cen[:, 0] - q[0], cen[:, 1] - q[1]) < PIER_GUARD_GAP_M + reach + 6.0
+            if not sel.any():
                 continue
-            s0, s1 = c.t_a, c.length - c.t_b
-            if s1 - s0 < 10:
+            loc = A[sel]
+            U = unary_union([Polygon(t[:, :2]).buffer(0.03) for t in loc]).buffer(-0.03)
+            pq = Point(q)
+            dq = float(U.distance(pq))
+            if dq <= 0.0 or dq > PIER_GUARD_GAP_M:
                 continue
-            ss = np.arange(s0, s1, 1.0)
-            hw = c.hw_at(ss)
-            br = np.asarray(c.bridge[c.idx(ss)], bool)
-            wl = c.meta.get("walled")
-            if wl is not None:
-                br = br | np.asarray(wl, bool)[c.idx(ss)]
-            if br.all():
+            rings = []
+            for g in getattr(U, "geoms", [U]):
+                rings += [g.exterior] + list(g.interiors)
+            ring = min(rings, key=lambda r: r.distance(pq))
+            off = min(S.KERB_TOP_W + S.GUARDRAIL_OFFSET, dq - PIER_R_M - 0.35)
+            if off < 0.3 or ring.length < 2 * reach + 2:
                 continue
-            for side, sgn in (("L", 1.0), ("R", -1.0)):
-                prm = [side_params(c, side, s) for s in ss]
-                kinds = np.array([p[0] for p in prm])
-                kh = np.array([p[1] for p in prm])
-                kw = np.array([p[2] for p in prm])
-                kmat = np.array([p[4] for p in prm])
-                rur = kinds == RURAL
-                kerbed = (kinds == URBAN) & (kw < 0.05) & (kh > 0.05) & (kmat == 0)
-                zg = c.crossfall_z(ss, sgn * hw)
-                off = np.where(rur, hw + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET, hw + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
-                zb = np.where(rur, zg - S.CROSSFALL * S.PAVED_SHOULDER, zg + kh)
-                E = c.line.offset_point(ss, sgn * off)
-                out = c.line.offset_point(ss, sgn * (off + 1.0)) - E
-                dist, k = tree.query(E)
-                behind = ((piers[k] - E) * out).sum(1)
-                want = (dist < PIER_GUARD_GAP_M) & (behind > 0.3) & ~br & (rur | kerbed)
-                if not want.any():
-                    continue
-                want = ndimage.binary_dilation(want, iterations=int(PIER_GUARD_REACH_M)) & ~br & (rur | kerbed)
-                k0 = 0
-                while k0 < len(ss):
-                    if not want[k0]:
-                        k0 += 1
-                        continue
-                    k1 = k0
-                    while k1 + 1 < len(ss) and want[k1 + 1]:
-                        k1 += 1
-                    if k1 - k0 >= 2 * S.GUARDRAIL_TERMINAL_M + 4:
-                        P, z_ = E[k0:k1 + 1], zb[k0:k1 + 1]
-                        if sgn > 0:
-                            P, z_ = P[::-1], z_[::-1]
-                        n0 = len(built)
-                        _dedup_guardrail(lin, P, z_, f"{c.id}:{side}:structure", built, m)
-                        total += sum(b.length for b in built[n0:])
-                    k0 = k1 + 1
+            # start the ring opposite the pier so the stretch beside it does not cross the seam
+            C = np.asarray(ring.coords)[:-1]
+            k0 = int(np.argmax(np.hypot(C[:, 0] - q[0], C[:, 1] - q[1])))
+            line = LineString(np.vstack([C[k0:], C[:k0 + 1]]))
+            s0 = line.project(pq)
+            seg = substring(line, max(s0 - reach, 0.0), min(s0 + reach, line.length)).simplify(0.05)
+            n = max(2, int(round(seg.length)) + 1)
+            P = np.array([seg.interpolate(t).coords[0] for t in np.linspace(0.0, seg.length, n)])
+            if len(P) < 2 * S.GUARDRAIL_TERMINAL_M + 6:
+                continue
+            d = np.gradient(P, axis=0)
+            d /= np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)[:, None]
+            nrm = np.column_stack([-d[:, 1], d[:, 0]])
+            j = int(np.argmin(np.hypot(P[:, 0] - q[0], P[:, 1] - q[1])))
+            sg = 1.0 if float((q - P[j]) @ nrm[j]) > 0 else -1.0
+            E = P + nrm * sg * off
+            # foot height: nearest asphalt vertex + kerb (when a kerb runs along this edge)
+            V3 = loc.reshape(-1, 3)
+            _, kk = cKDTree(V3[:, :2]).query(P)
+            z = V3[kk, 2]
+            if ktree is not None:
+                dk, _ = ktree.query(P)
+                z = z + np.where(dk < 0.6, S.KERB_HEIGHT, -0.02)
+            z = np.convolve(np.pad(z, 2, mode="edge"), np.ones(5) / 5, mode="valid")
+            if sg > 0:                       # guardrail(): the road is on the LEFT of the post line
+                E, z = E[::-1], z[::-1]
+            n0 = len(built)
+            _dedup_guardrail(lin, E, z, f"pier{i}:structure", built, m)
+            got = sum(b_.length for b_ in built[n0:])
+            total += got
+            if got > 0:
+                hits.append({"pier": [round(float(q[0]), 1), round(float(q[1]), 1)], "edge_m": round(dq, 2),
+                             "offset_m": round(off, 2), "built_m": round(got, 1)})
     report.setdefault("guardrails_m", {})["pier"] = round(total)
     report["guardrails_pier"] = {"piers": int(len(piers)), "gap_m": PIER_GUARD_GAP_M, "built_m": round(total, 1),
-                                 **{k: int(v) for k, v in m.items()}}
+                                 "runs": hits, **{k: int(v) for k, v in m.items()}}
 
 
 def is_noise_wall(tags):
