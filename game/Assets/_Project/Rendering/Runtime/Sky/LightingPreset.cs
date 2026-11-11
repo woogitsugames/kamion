@@ -113,8 +113,9 @@ namespace Game.Rendering
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_Clear";
             p.sunElevationDeg = 42f; p.sunAzimuthDeg = 200f; p.turbidity = 2.5f; p.overcast = 0f; p.visibilityKm = 20f;
-            // ADR0098 WORKING_VALUE: highlight shoulder above the fixed asphalt/mid-grey anchors, no EV change.
-            p.lookWhiteClip = 1.2f;
+            // ADR 0108 r1 WORKING_VALUE: measured 1.2/1.8 ablation removes the white-van plateau
+            // above the fixed asphalt/mid-grey anchors, without changing exposure.
+            p.lookWhiteClip = 1.8f;
             // ADR 0108 r1 WORKING_VALUE: the route reference photos show scattered cumulus in blue sky.
             p.clearCloudCover = 1f;
             return p;
