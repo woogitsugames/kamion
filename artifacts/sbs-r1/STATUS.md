@@ -93,3 +93,6 @@ Następny krok: Get-Content artifacts/sbs-r1/pytest-gis-final.log -Tail 20
 ## Runda r1 zakończona
 Końcowy GIS: 523 passed, 1 xfailed, 663,68 s; heavy zwolnione. Narzędzie i kompletność dowodów: niezależny PASS; kalibracja C częściowa, świat UNVERIFIED. REPORT.md i ADR zaktualizowane. 42 kamery Low overcast przed/po bez różnic estymacji draws/tris. Przywrócono tylko osiem znanych produktów generatora poza sbs, zachowując ich dowody w artefaktach.
 Następny krok: robocopy artifacts/sbs-r1 C:/Users/matma/Documents/Claude/kamion/artifacts/sbs-r1 /E /R:1 /W:1, potem git switch -c gpt-sbs-r2 oraz git merge main.
+## Kopia artefaktów potwierdzona
+Robocopy do main zakończone poprawnie. SHA REPORT.md i AUDIT.json źródła oraz kopii są identyczne; zapisano artifact-copy-receipt.json z rozmiarem pakietu i migawką gałęzi. Niczego nie commitowano na main. Runda r1 gotowa do recenzji i integracji przez lidera.
+Następny krok: git switch -c gpt-sbs-r2; git merge main.
