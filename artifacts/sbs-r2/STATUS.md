@@ -121,3 +121,6 @@ Fidelity: kod 0, własny slot heavy zwolniony. Pomiar osi względem OSM: p95 0,0
 
 ## Pełna kontrola delt liczników
 Sprawdzono zbiory wszystkich wartości, nie tylko maksimum: dla 84 Low i 84 High delty static draws, instanced draws, tris i shadow draws wynoszą wyłącznie 0. Low max 812 = 445 + 367 w A454716650857984; High max 1376 = 945 + 431 w A320215796381417. Dopisano pełne zbiory delt i rekordy maksimów do capture-summary.json. To estymacje CPU przed batchingiem, nie rzeczywiste GPU ani pomiar A16.
+
+## Oba warianty GLB
+Rozszerzono porównanie o chunk.low: manifesty r1/r2 zgadzają się dla 64 High i 64 Low, czyli 128 plików. Dotychczasowy skrót 64 chunków odnosił się do plików głównych High. Audyt końcowy sprawdzi teraz rzeczywiste bajty obu wariantów, a nie wyłącznie High. Wynik metadanych zapisano w capture-summary.json, jawnie odróżniony od przyszłej kontroli plików. Składnia audytu poprawna; nie wykonywano haszowania dużych siatek poza heavy.

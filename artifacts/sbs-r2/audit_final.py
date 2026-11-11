@@ -76,12 +76,17 @@ with zipfile.ZipFile(EVIDENCE/'inputs.zip') as archive:
     assert set(archive.namelist())=={p.name for p in REGION.iterdir() if p.is_file()}
     for name in archive.namelist():assert archive.read(name)==(REGION/name).read_bytes()
 world=read(REGION/'world_manifest.json')
-for chunk in world['chunks']:assert sha(ROOT/chunk['file'])==chunk['sha256']
+for chunk in world['chunks']:
+    assert sha(ROOT/chunk['file'])==chunk['sha256']
+    assert sha(ROOT/chunk['low']['file'])==chunk['low']['sha256']
 summary['verified_glb_chunks']=len(world['chunks'])
+summary['verified_glb_files_per_tier']={'High':len(world['chunks']),'Low':len(world['chunks'])}
 review=read(REGION/'sbs_recognition.json');summary['recognition_source']=review['source_review'];summary['recognition_counts']=review['counts']
 assert review['gate_result']=='FAIL' and len(review['assessments'])==25
 old_world=read(ROOT/'artifacts/sbs-r1/evidence/inputs/world_manifest.json')
 old_chunks={c['file']:c['sha256'] for c in old_world['chunks']}
+old_low_chunks={c['low']['file']:c['low']['sha256'] for c in old_world['chunks']}
+summary['low_world_chunks_changed_since_r1']=sum(old_low_chunks.get(c['low']['file'])!=c['low']['sha256'] for c in world['chunks'])
 summary['world_chunks_changed_since_r1']=sum(old_chunks.get(c['file'])!=c['sha256'] for c in world['chunks'])
 subprocess.run([sys.executable,str(ART/'summarize_stats.py'),'--renders',str(EVIDENCE/'renders'),
                 '--baseline',str(ROOT/'artifacts/sbs-r1/evidence/renders'),'--output',str(ART/'counters')],check=True,cwd=ROOT)
