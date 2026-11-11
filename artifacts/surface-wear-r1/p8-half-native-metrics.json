@@ -1,0 +1,36 @@
+{
+  "note": "WORKING native screen diagnostic, not physicalpaintcoverage or ownerPASS. Fullarrowmask=wearOFFHighOVconnectedwhite>100LSB nearestsourcearrowstemseed, componentfullyinsideROI. Retainedthreshold onluma>=.75*offluma. Dither/AA canfragmentthinconnections; actual960images decide readability.",
+  "full_arrow_pixels": 25733,
+  "roi_native": [
+    780,
+    400,
+    1450,
+    850
+  ],
+  "mask_bounds_yx": [
+    [
+      451,
+      830
+    ],
+    [
+      828,
+      1400
+    ]
+  ],
+  "results": [
+    {
+      "stage": "p8-turn-before",
+      "retained_pixels": 14199,
+      "retained_fraction": 0.5517817588310729,
+      "components_ge9px": 3,
+      "largest_component_fraction_of_fullarrow": 0.3321416080519178
+    },
+    {
+      "stage": "paint-half",
+      "retained_pixels": 19758,
+      "retained_fraction": 0.7678078731589787,
+      "components_ge9px": 6,
+      "largest_component_fraction_of_fullarrow": 0.43022578012668555
+    }
+  ]
+}
