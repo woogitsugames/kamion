@@ -2,7 +2,7 @@
 
 ## Najpierw (dla następnej sesji)
 - **Tempo (właściciel, s10):** dalej max 3 agentów naraz. Limit tygodniowy Fable zresetował się (0 % o 10:05, reset 15.11); 5 h reset 15:00 lokalnie.
-- **Do zrobienia (lider):** `tools/worldgen/.venv/` (8339 plików) jest śledzony w gicie od 0091 — `git rm -r --cached tools/worldgen/.venv` + .gitignore, po scaleniach bieżących gałęzi. Do scalenia czekają: GPT J 0103 sbs (narzędzia), K 0104 kabina — krytyk.
+- **Do zrobienia (lider):** `tools/worldgen/.venv/` (8339 plików) jest śledzony w gicie od 0091 — `git rm -r --cached tools/worldgen/.venv` + .gitignore, po scaleniach bieżących gałęzi. Do scalenia czekają: GPT J 0103 sbs i K 0104 kabina — recenzja `REVIEW-2026-11-11-s10-gpt-JK.md` PASS obu → scalić po regeneracji HIL. Priorytety bramki 3 z side-by-side (top 5): niebo/ekspozycja, trawa/pobocza, asfalt bez zużycia, bariery na pomostach/łącznicach, pod wiaduktem → GPT 0108/0109/0099 i Claude 0110.
 - Trigger 13:21: limit 5 h 40 % (reset 15:00), tydzień 7 %. Claude: 0101 GOTOWE `e6baa1f7` (critic w toku), 0106 perf w toku (PHONE_RUN jego), critic B+C w toku; regeneracja 0100 — pytest w toku. GPT S10-B gotowe do recenzji: J 0103 sbs (40 kamer, 160 arkuszy), K 0104 kabina/lusterka, H 0085 r2 tło, I 0102 meble, L 0105 wiadukt → kolejność scalania: J (narzędzia) → H → I → L → K, każdy po visual-critic. GPT koord.: 0087 truck-paint, 0089 car-paint, 0090 remiza, 0099 surface-wear w toku.
 - Trigger 12:21: limit 5 h 28 %, tydzień 5 %. GPT B 0088 GOTOWE (EditMode 218/218) → scalenie B, potem C 0098 po zakończeniu regeneracji 0097 (w toku); visual-critic B+C gdy zwolni się miejsce. Claude: 0100, 0101, 0106 w toku.
 - **A16 gate3 Low (11:25, APK 43bc53a769-dirty → valid=False tylko z powodu „dirty”; liczby orientacyjne):** G3-A 29,7 fps p95 33,5 / p99 50,0 ms (budżet p99 40 — OVER), GPU p50/p95 30,7/32,9 ms, CPU 22,5/29,0 ms, PSS 826 MB; G3-B 29,8 fps p95 33,5 / p99 49,9, GPU 30,0/34,5, CPU 21,6/28,7, PSS 829 MB; termika 0; kamery 57/57 + 46/46 (`artifacts/gate3/20261111-104851`, `…-112456`). GPU bez zapasu → potrzebna runda wydajności Low przed bramką; ważny pomiar = czysty APK po scaleniach. Naprawiono `build-android.ps1 -Apk` (901c427f).
@@ -19,6 +19,7 @@
 | recenzja B 0088 + C 0098 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0088-0098.md | ZROBIONA: zostają na main, jakość FAIL; P0 RCAS-off rozmywa asfalt → GPT `docs/owner/GPT-FEEDBACK-S10.md` (0108 światło r13, 0109 roślinność r3) |
 | kalibracja r2 0101 | 0101 | (worktree tint-r2 do usunięcia) | artifacts/tint-r2/REPORT.md | SCALONE `4c63f4c4` |
 | GPT H 0085r2 / I 0102 / L 0105 | — | gpt-edge-r2, gpt-furniture-r1, gpt-viaduct-r1 | REVIEW-2026-11-11-s10-gpt-HIL.md (scalenie PASS, jakość FAIL) | SCALONE `4a2eea8c`, `85e19ebf`, `68ca9fd8` (LICENSES/materials.py — unia); regeneracja `artifacts/logs/s10-regen-HIL.log`; po niej sprawdzić roads_qa (4 wpisy mostów) i 806 chronionych elementów (I) |
+| węzły r4 + bariery | 0110 | .claude/worktrees/junctions-r4 | artifacts/junctions-r4/STATUS.md | w toku (world-builder, **Fable**) |
 | zabudowa r6 + działki | 0107 | .claude/worktrees/buildings-r6 | artifacts/buildings-r14/STATUS.md | w toku (world-builder, **Fable**) |
 | recenzja 0086 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0086.md | ZROBIONA: kontrakt OK, kalibracja FAIL (hala kp_wall przepalona, ekrany za ciemne); D48: tynk remizy 110/126/145 zostaje |
 | kalibracja r2 | 0101 | .claude/worktrees/tint-r2 (gałąź tint-r2) | artifacts/tint-r2/STATUS.md | w toku (rendering-perf) wg recenzji s10-0086 |
@@ -36,7 +37,7 @@
 4. Węzły r3 wg recenzji 0095; Kwadrat r13 po zdjęciach właściciela; raport bramki 3.
 5. **GPT pakiet S10-B** `docs/owner/GPT-TASK-03-S10.md` (5 nowych sesji właściciela, po 1 strumieniu): H 0085 r2 tło (gpt-edge-r2 z argon-edge), I 0102 meble uliczne (gpt-furniture-r1), J 0103 side-by-side bramki 3 (gpt-sbs-gate3), K 0104 kabina/lusterka (gpt-cab-r1), L 0105 wiadukt pod pomostem (gpt-viaduct-r1). Scalać po REPORT.md.
 6. Następni w kolejce Claude: zabudowa r6 (0107, na Fable — lista r6 z REVIEW s10-0097 + działki domów P1-h), Kwadrat r13.
-7. Ostatni przydzielony ADR: **0109** (0107 zabudowa r6, 0108/0109 GPT feedback).
+7. Ostatni przydzielony ADR: **0112** (0107 zabudowa r6, 0108/0109/0111/0112 GPT feedback `docs/owner/GPT-FEEDBACK-S10.md`, 0110 węzły r4).
 
 ---
 # HANDOVER — kamion, sesja 9 (2026-11-11 00:30 → ~10:30 lokalnie; zamknięta na polecenie właściciela przy końcu limitu 5 h)
