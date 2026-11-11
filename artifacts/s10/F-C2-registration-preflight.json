@@ -1,0 +1,60 @@
+{
+  "condition": "High-overcast",
+  "camera": "truck-at-gate",
+  "shape": [
+    1080,
+    2340,
+    3
+  ],
+  "rows": [
+    {
+      "region": "left_building",
+      "box_native": [
+        20,
+        320,
+        760,
+        720
+      ],
+      "mean_abs_rgb_native": 0.4937691390514374,
+      "exact_pixel_fraction": 0.3015202702702703,
+      "best_translation_subsample2": {
+        "mean_abs_rgb": 0.5343513488769531,
+        "dx": 0,
+        "dy": 0
+      }
+    },
+    {
+      "region": "right_hall",
+      "box_native": [
+        1840,
+        330,
+        2320,
+        730
+      ],
+      "mean_abs_rgb_native": 0.4940173625946045,
+      "exact_pixel_fraction": 0.2917239583333333,
+      "best_translation_subsample2": {
+        "mean_abs_rgb": 0.5329999923706055,
+        "dx": 0,
+        "dy": 0
+      }
+    },
+    {
+      "region": "foreground",
+      "box_native": [
+        30,
+        880,
+        1100,
+        1060
+      ],
+      "mean_abs_rgb_native": 0.491123229265213,
+      "exact_pixel_fraction": 0.3066147455867082,
+      "best_translation_subsample2": {
+        "mean_abs_rgb": 0.5321495532989502,
+        "dx": 0,
+        "dy": 0
+      }
+    }
+  ],
+  "scope": "unaffected background regions only, not proof of vehicle world pose"
+}

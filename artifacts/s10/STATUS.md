@@ -302,3 +302,20 @@ Wholeframe darkwing impression withdrawn, no paint/illumination gain warranted.
 E glass unoccludedleft samples exceed60-75; rightoccludedbaseline not a glassROI.
 First E4actualplant candidates beforefullmatrix; G finishesCPU/GIS thenGPU/capture.
 NEXT COMMAND: inspect F focusedcandidate2 and E first4PNGs; verify G fullGIS/inputparity, then independent actual candidate review; D staysready until workerfree.
+## Step23 - third phone hold; E probe rejected; G parked and D CPU patch
+New perf-low-r1 diag1 PHONE_RUN created12:50:14 (seven104s runs). G guard stopped
+BEFORE Unity12:50:52; F/E completed ownruns and confirm noneactive/queued. Root
+renewedexplicitHOLD and ownedsharedmarker12:52; prior12:46release invalid.
+E4actualprobe frames independently viewed with7197photo: archesopen and3tuja
+forms improved, but fircrowns too sparse/antenna-like. REJECTvisualPASS, request
+connected denser innerfoliage withoutnewtris/draws. Two-viewLow/Highstats exactly
+matchdisplayedbaseline; not fullroute/GPUproof. REVIEW-E recordscorrect paintROI.
+F C2 improvesdoor but remainsOVFAIL; glass unchanged. Nativebackgroundregistration
+root3ROIs bestdxdy0/~.494LSB; worker18groups includingvehicleboundaries agree.
+Stackedpreviewalignment concern retracted; no camera/worldpose defect evidenced.
+Actualglass audit finds no extraoverlay or wrongnear/farflag; remainingphysical
+term diagnostic prepared, no gain/blur ofreal transmittedgeometry.
+G fullGIS375passed/1xfail575.12s;192raw+canonicalmanifest stable. Parkedclean
+75082bd1 with exactnextcommands; sameworker temporarily preparesDartifact-onlypatch,
+pristineDbaseline source+Generated preserved. Active3workers F/E/D, no4thagent.
+NEXT COMMAND: inspect perf-low-r1/diag1.log for fullseven-runEND; review E CPU densercore candidates and D patch, then explicitrelease prioritizes G captures/closure before Dbaseline/apply.
