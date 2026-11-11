@@ -35,3 +35,4 @@ Rendered after Low clear plus native mirror evidence. NEXT: continue matrix / in
 Rendered after High overcast plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/after
 Rendered after High clear plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/after
 Inspections captured: Low overcast seat-entry/grain. NEXT COMMAND: pwsh scripts/test.ps1 -Platform EditMode (after detail matrix ends)
+Inspections captured: Low clear seat-entry/grain. NEXT COMMAND: pwsh scripts/test.ps1 -Platform EditMode (after detail matrix ends)
