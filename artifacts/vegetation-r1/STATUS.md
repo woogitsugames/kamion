@@ -82,3 +82,4 @@ Próba B obejrzana: zachowany detal, łaty żółtozielone. Grass-only Low overc
 Zapisano after WorldC Low overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Zapisano after WorldC Low clear. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Zapisano after WorldC_High High overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
+Zapisano after WorldC_High High clear. Następny krok: obejrzenie arkuszy i porównanie statystyk.
