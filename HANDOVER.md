@@ -13,7 +13,7 @@
 | zadanie | ADR | worktree | STATUS | stan |
 |---|---|---|---|---|
 | recenzja 0095 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0095.md | ZROBIONA `503c89ae`: scalenie PASS warunkowy, bramka wizualna węzłów FAIL (połamana P-21, Putry N/MA-010 gołe) |
-| węzły r3 | 0100 | .claude/worktrees/junctions-r3 (gałąź junctions-r3) | artifacts/junctions-r3/STATUS.md | w toku (world-builder) wg recenzji s10-0095 |
+| węzły r3 | 0100 | .claude/worktrees/junctions-r3 (gałąź junctions-r3) | artifacts/junctions-r3/REPORT.md | GOTOWE `2e160fbd` — visual-critic w toku → scalenie + build_world + export-route + pytest gis/physics/gate3 |
 | recenzja 0086 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0086.md | ZROBIONA: kontrakt OK, kalibracja FAIL (hala kp_wall przepalona, ekrany za ciemne); D48: tynk remizy 110/126/145 zostaje |
 | kalibracja r2 | 0101 | .claude/worktrees/tint-r2 (gałąź tint-r2) | artifacts/tint-r2/STATUS.md | w toku (rendering-perf) wg recenzji s10-0086 |
 | zabudowa r5 | 0097 | .claude/worktrees/buildings-r5 (gałąź buildings-r5) | artifacts/buildings-r13/REPORT.md | SCALONE (recenzja `REVIEW-2026-11-11-s10-0097.md`: PASS, jakość warunkowa; lista r6 P1-e..h); worktree usunięty; regeneracja `artifacts/logs/s10-regen-0097.log` |
