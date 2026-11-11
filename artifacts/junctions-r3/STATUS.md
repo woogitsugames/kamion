@@ -37,3 +37,7 @@ scripts = narzędzia r2 + zones_plan.py; logs). „Przed” = main b12 z ADR 009
   testy kluczowe 51/51, plany `plan_b4/` (s610 gęste P-21, zatoka: kostka na obu „uszach”). W toku: test_world_roads + physics/gate3
   na b4 (`logs/b4_*.log`). Unity czeka na zdjęcie PHONE_RUN (lider s10 gate3 A16).
   NASTĘPNY KROK: (bez PHONE_RUN) `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` → `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting overcast -Gate3 Data/Regions/bialystok-industrial-c/junctions_cameras.json -OutputDir artifacts/junctions-r3/renders_b4`
+- b4 testy: `test_world_roads.py` 15/15 (szwy szczelne po poprawce apronów), `pytest tests/physics tests/gate3` 47 passed / 1 failed
+  (znana 0082). Kerb rise ≥ 0,25 m: 1 (j:n1847317049:corner0 E −983 N 66,5 — poza trasą). Override'y 94 zastosowane / 0 nieaktualnych;
+  farba autorska 20/20. Czekam na zdjęcie PHONE_RUN (od 10:48).
+  NASTĘPNY KROK: jak wyżej (import-region → visual-qa).
