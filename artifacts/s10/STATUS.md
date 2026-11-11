@@ -33,3 +33,10 @@ NEXT COMMAND: `git -C C:/Users/matma/Documents/Claude/kamion log main --oneline 
 ## Step2 - bootstrap and tint evidence
 Allthreeworkerscommittedbootstrap andstartedfreshbaselinebuild. C/B caughtandrestoredcopy-inducedtrackedmaterialsource drift; A usedPNG-onlyfilters. AactualWorldPBRGPUreadbackconfirmsdoublegamma (.18->.0272118raw, gammaencoded->.18), isolatinglights/exposure; probeinspection reviewedbycoordinator. B retains3runtimebands: geometricLOD0/1 plusbillboardLOD2, noforbiddenroadpolicymirroredit; reportsmustdescribethiscontractexactly.
 NEXT COMMAND: review workers baseline Low/High clear/overcast captures afterfreshimport; continue main0095mergegatewatch.
+
+## Step 3 — independent baseline file proof
+All three fresh worlds contain 192 files matching their own manifest. Their
+sorted file/hash signatures are identical (7579ea53d9ce10288f7ffb42ab9581b49db92e0fe31ce933b0485b964ec56b74).
+Proof: baseline-world-proof.json, produced by read-only compare-baselines.py.
+Workers are importing fresh material caches before matched baseline captures.
+NEXT COMMAND: review A/B/C baseline frames and measured material/crown/post metrics; `git -C C:/Users/matma/Documents/Claude/kamion log main --oneline --grep="merge.*0095" -5`.
