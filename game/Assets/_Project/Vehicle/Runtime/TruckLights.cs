@@ -24,12 +24,12 @@ namespace Game.Vehicle.Runtime
 
         // Group ids (truck_exterior_manifest.json shader_contract.light_groups).
         const int DRL = 1, LOW = 2, HIGH = 3, IND_L = 4, IND_R = 5, TAIL_BRAKE = 6, REVERSE = 7, MARKER_F = 8, MARKER_S = 9, MARKER_R = 10, FOG = 11, WORK = 12, PLATE = 13;
-        // cd/m^2 (WORKING_VALUE): ADR 0115 starts a bounded DRL display calibration against the clipped High-overcast strip.
-        // Day/night ratio remains 1 / 0.35. Other lamp levels retain the preceding provisional calibration.
-        const float DrlNits = 3e3f, LowNits = 5e4f, HighNits = 8e4f, TailNits = 1.3e3f, BrakeNits = 2.0e4f, ReverseNits = 3e4f, MarkerNits = 2e3f, IndicatorNits = 2.5e4f;
+        // Raw cd/m^2 WORKING_VALUEs retained from ADR 0087. ADR 0115 calibrates the displayed DRL highlight in the shader.
+        // Day/night ratio remains 1 / 0.35; the source values are not measured lamp photometry.
+        const float DrlNits = 1.6e5f, LowNits = 5e4f, HighNits = 8e4f, TailNits = 1.3e3f, BrakeNits = 2.0e4f, ReverseNits = 3e4f, MarkerNits = 2e3f, IndicatorNits = 2.5e4f;
         static readonly Color White = new Color(1f, 0.97f, 0.92f), Red = new Color(1f, 0.03f, 0.01f), Amber = new Color(1f, 0.42f, 0.02f);
 
-        // Encode luminance before RGBAHalf storage: high80000 exceeds65504; retain headroom for authored lamp levels.
+        // Encode luminance before RGBAHalf storage: DRL160000 and high80000 exceed65504.
         // Shader decodes in float after combining this scale with scene exposure. No photometric calibration implied.
         public const float NitsPerEncodedUnit = 1000f;
         static readonly int k_NitsScale = Shader.PropertyToID("_TruckLightNitsScale");

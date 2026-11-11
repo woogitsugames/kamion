@@ -75,3 +75,5 @@ Zapisano drl-power-3000 Low overcast, kod wejściowy zgodny z fingerprintem. Nas
 Zapisano drl-power-3000 Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano drl-power-3000 High overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano drl-power-3000 High clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+
+Krok 27: 3000 usuwa clipping w badanym ROI we wszystkich czterech warunkach, ale w słońcu pasek nadal wygląda na mocno osłabiony. Nowy ograniczony eksperyment: przywrócono surowe 160000/56000 i dotychczasowy stan sterownika; w TruckExterior dodano lokalny luminancyjny shoulder 0,8 (WORKING_VALUE odsłoniętych jednostek sceny), wyłącznie dla grupy DRL=1, przed konwersją half i maską emitera. Parametr 0 wyłącza korektę. Pozostałe lampy, hue, F0, przebiegi, próbki i geometria bez zmian. Dodano pięć rzeczywistych prób GPU dla skończoności/bound i bypassu. Następny krok: hdr-shoulder-080 w Low/High, overcast/clear; potem testy GPU i oględziny.
