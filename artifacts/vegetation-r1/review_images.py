@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw
 ROOT = Path(__file__).resolve().parent
 ROIS = {
     "route-onramp-andersa-above": (.82, .62, .97, .80),
-    "route-onramp-andersa-above:grass-only": (.60, .80, .66, .96),
+    "route-onramp-andersa-above:grass-only": (.87, .85, .95, .97),
     "r10_fence_2": (.10, .72, .85, .93),
 }
 FOCUS = ("dk8-dk19-exit", "driver-andersa-to-putry", "route-putry-approach",
