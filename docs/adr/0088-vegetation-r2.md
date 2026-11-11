@@ -1,6 +1,6 @@
 # ADR 0088: Roślinność r2
 
-Status: WIP — pomiary świata i recenzja końcowa w toku.
+Status: zaimplementowane; ograniczony wizualny PASS i GIS PASS. EditMode PENDING za PHONE_RUN; zamknięcie techniczne przejmuje lider ROOT.
 
 ## Problem
 
@@ -12,7 +12,7 @@ Zachowujemy istniejący kontrakt trzech pasm runtime: geometryczne LOD0 i LOD1 o
 
 Near bark brzozy/lipy korzysta z istniejącego importera zatwierdzonych Fab: silver-birch-bark, birch-tree-trunk, linden-branch. Nie tworzymy liści ze skanu drewna. Zatwierdzenie Fab i hash źródła pozostają wymagane. Kora sosny pochodzi z pine_bark, Poly Haven CC0, z istniejącego cc0_manifest i kontrolą SHA256; brak źródła zachowuje proceduralny fallback. Publiczne GLB, impostory i HLOD zawierają nasze liście/proceduralną korę liściastych oraz korę i eksperymentalne igły sosny CC0. Fab pozostaje ignorowanym near override, nigdy wejściem do publicznego bake.
 
-Po r2 recenzja wykazała płaskie wyspy kart sosnowych mimo poprawy jasności. W ograniczonej próbie zastępujemy wyłącznie RGBA sosny czystym wycinkiem gałązki z igłami z Poly Haven pine_tree_01 (CC0). Manifest pine_needles_manifest.json przypina SHA256/MD5, crop i autorów. Procesor odrzuca padding/szyszki atlasu, składa3gałązki na512px i zachowuje zmierzoną średnią luminancję pokrytych texeli r2 (0,0638625 liniowo). Nie dodaje trójkątów ani materiałów. Przy braku/podmianie raw wraca proceduralna sosna; pochodne CC0 mogą być publiczne. Akceptacja tej próby wymaga pełnego bake impostor/HLOD i tych samych kamer, nie samego swatcha.
+Po r2 recenzja wykazała płaskie wyspy kart sosnowych mimo poprawy jasności. Końcowy wariant zastępuje RGBA sosny czystym wycinkiem gałązki z igłami z Poly Haven pine_tree_01 (CC0). Manifest pine_needles_manifest.json przypina SHA256/MD5, crop i autorów. Procesor odrzuca padding/szyszki atlasu, składa3gałązki na512px i zachowuje zmierzoną średnią luminancję pokrytych texeli r2 (0,0638625 liniowo). Przy braku/podmianie raw wraca proceduralna sosna; pochodne CC0 mogą być publiczne. Pełny bake impostor/HLOD i końcowa macierz zostały wykonane. Tylko sosnowe impostory zachowują cienkie mostki gałązek przez open0/min16; liczba komponentów18widoków186→49. Szerszy wariant HLODr0 odrzucono ze względu na drobne fragmenty proxy mipmap. WszystkieHLOD pozostają open1/min600, inne gatunki zachowują stare zasady. Nie jest to dowód braku shimmeringu w ruchu.
 
 Korekcja canopy scattering dotyczy sosny oraz iglastego/mieszanego HLOD. Nie zmienia światła, ekspozycji, emisji ani globalnego Tint. Bazowe palety liściastych zachowano: zdrowe korony Andersa/Putry są granicami regresji. Wartości lokalnego rozpraszania i otwarć korony są WORKING_VALUE, nie pomiarem parametrów optycznych konkretnego gatunku.
 
@@ -23,3 +23,13 @@ Maska podłoża zachowuje R odległości i G lasu. B zawiera łagodne pole suchs
 vegetation_metrics.py liczy p10/p50 jasności Rec709 na sRGB8 w jawnych ROI po zmniejszeniu do <=960px. Maska odrzuca niebo i brązowe podłoże, ale zatrzymuje piksele <16, aby nie usuwać problematycznej czerni z pomiaru. Te same ROI/maska obowiązują przed i po. Baseline DK8 Low: p10/p50 18,64/31,15, 5,43%<16; High:21,50/34,79,0,86%. Zdrowe Andersa/Putry mają p50 około64–73.
 
 Zdjęcia referencyjne z Mapillary są wyłącznie materiałem QA, nie źródłem tekstur. photo-crown-metrics.json zawiera ścieżki, SHA i ROI; p10 około30–36,p50 47–65. Różne ekspozycje, zachmurzenie, sezon i gatunki wykluczają traktowanie tych wartości jako dokładnego celu kalibracji. Podgląd sylwetek nie dowodzi jakości końcowego oświetlenia ani gęstości z kamery kierowcy. Końcowe statystyki, pomiary po i otwarte ograniczenia: artifacts/vegetation-r2/REPORT.md.
+
+## Wynik i granice dowodu
+
+Obejrzano236przed +236po:59kamer × Low/High × clear/overcast, na właściwych scenach WorldC i WorldC_High. Każda para ma0delta draws; Low trisdelta -8..0k,High -8..+1k (max+0,074%). Peak Low1016draw/482ktris,High1756draw/2471ktris bez zmiany. Jest to metryka istniejącego runnera, nie pomiar GPU telefonu. Baseline i końcowa macierz korzystają z identycznego oryginalnego fixture pojazdu; canonical fixture przywrócono po obrazach do EditMode.
+
+DK8 overcast p10/p50 Low18,644/31,147→33,140/42,495,High21,504/34,786→35,849/46,064; <16:5,427→0% i0,861→0,070%. Putry p50 rośnie o około12,8%:Low63,993→72,203,High73,491→82,928, przy p10 bliskim bazowemu. Zachowanie palet liściastych nie oznacza niezmienionych histogramów kadru. Kontrole te należy powtórzyć po integracji Tint/światła A/C/ADR0101.
+
+Istniejące skanyR1 boxwood/elderberry są zachowane, nie stanowią nowej geometrii B. Aktywne VarA:boxwood7062/18/6tri i6instancji; elderberry7139/22/6tri i37instancji. Wszystkie6GLB mają SHA identyczne z oryginalnym cache, źródła pozostają zatwierdzone. Dowód i neutralna galeria z runtime teksturami: shrubs-preservation-proof.json / shrubs-LOD-preserved.jpg.
+
+PełneGIS364passed,2xfailed,676,87s;192raw i canonicalJSON bez zmian po testach. EditMode nadal PENDING za główną blokadą PHONE_RUN; XML i końcowe zamknięcie przejmuje ROOT. Wizualny PASS jest ograniczony: karty i lipa pozostają stylizowane (P2), bliskie żywopłoty uproszczone, temporalne LOD/shimmer i GPU A16 UNVERIFIED. Nie deklarujemy fotorealizmu.

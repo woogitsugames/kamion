@@ -98,3 +98,12 @@
 
 - Krok17: pełneGIS po finalnych produktach i macierzy zakończone; wynik w pytest-complete.log. Przywrócono dokładny canonicalJSON po fixturetestów,192rawSHA sprawdzone. NASTĘPNY KROK: odtworzenie canonicalvehiclefixture po macierzy i pełneEditMode.
 
+
+## Przekazanie B do ROOT — 2026-11-11
+
+Kod i produkty B zamrożone. Pełne GIS: 364 passed, 2 xfailed, 676,87 s, exit 0. Końcowe 236 par ma identyczne draws; Low nie zwiększa tri. Recenzja wizualna ograniczony PASS; P2 i wzrost Putry o12,8% ujawnione w raporcie.
+
+EditMode PENDING za głównym PHONE_RUN. Canonical fixture jest już przywrócony po całej macierzy. Uruchomiony final-tests.ps1 automatycznie poczeka na blokadę, wykona EditMode, zapisze EditMode.xml i sprawdzi192raw. ROOT przejmuje odczyt XML, aktualizację REVIEW/REPORT/ADR/STATUS, końcowy commit i kopię artefaktów /E /XJ. To przekazanie odpowiedzialności, nie deklaracja zamkniętego DoD.
+
+NASTĘPNA KOMENDA (ROOT): `Get-Content artifacts/vegetation-r2/editmode-complete.log -Tail 20`; po zakończeniu `uv run --project tools/worldgen python artifacts/vegetation-r2/snapshot_canonical.py --check`.
+
