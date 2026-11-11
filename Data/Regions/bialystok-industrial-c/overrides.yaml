@@ -1121,3 +1121,176 @@ overrides:
     confidence: low
     verify: owner drive
     set: {center_offset: [0.0, -1.3]}
+  # ---------------------------------------------------------------- ADR 0100 (REVIEW s10-0095 P0-2): Putry N and MA-010
+  # Lines join the ends of the generated lines at the patch borders (artifacts/junctions-r3/scripts/mk_near.py on the
+  # plan cache) along the topology of the 0.08 m orthophoto (artifacts/junctions-r3/plan1/putry_n.jpg, trace/putry_n.jpg).
+  - id: putry-n-sb-lane-1
+    kind: painted_line
+    line: P-1
+    polyline_en: [[-562.4, 138.8], [-563.6, 131.0], [-564.9, 123.0], [-565.7, 118.0]]
+    reason: >-
+      Putry N, southbound carriageway across the median crossover plate (N 138-118): the orthophoto shows both lane
+      lines carried through as broken lines (trace/putry_n.jpg, x 300-370); the generator left the plate bare (crossing
+      through pairs = an intersection box). Joins lane line 1|2 above (E -562.4 N 138.8) to the one below (E -565.7 N 118.0).
+    confidence: medium
+    verify: owner drive
+  - id: putry-n-sb-lane-2
+    kind: painted_line
+    line: P-1
+    polyline_en: [[-559.2, 138.4], [-560.4, 131.0], [-561.5, 123.0], [-562.2, 117.3]]
+    reason: Same, lane line 2|3 (E -559.2 N 138.4 -> E -562.2 N 117.3).
+    confidence: medium
+    verify: owner drive
+  - id: putry-n-sb-edge-crossover
+    kind: painted_line
+    line: P-7a
+    polyline_en: [[-555.8, 138.0], [-556.9, 130.0], [-558.0, 122.0], [-558.7, 118.0]]
+    reason: >-
+      Putry N, right edge of the southbound carriageway along the median crossover: broken wide line on the
+      orthophoto at E -555.9 from N 133 to 122 (trace/putry_n.jpg x 430-440), joining the generated P-7b ends.
+    confidence: high
+    verify: owner drive
+  - id: putry-n-nb-edge-crossover
+    kind: painted_line
+    line: P-7a
+    polyline_en: [[-550.0, 128.9], [-550.4, 123.0], [-550.7, 117.0]]
+    reason: >-
+      Putry N, left (median) edge of the northbound carriageway along the crossover: broken wide line on the orthophoto
+      at E -550.2 N 133-120 (trace/putry_n.jpg x 530), joining the generated P-7b ends.
+    confidence: high
+    verify: owner drive
+  - id: putry-n-sb-edge-west
+    kind: painted_line
+    line: P-7b
+    polyline_en: [[-565.7, 139.1], [-566.9, 131.0], [-568.0, 124.0], [-568.9, 119.8]]
+    reason: >-
+      Putry N, left edge of the southbound carriageway past the service-road mouth: solid edge line on the orthophoto
+      at E -567.9 N 132-125 (trace/putry_n.jpg x 165) between the carriageway and the paved plaza.
+    confidence: medium
+    verify: owner drive
+  - id: putry-n-plaza-apron
+    kind: paved_apron
+    surface: paving
+    polygon_en: [[-583.0, 137.6], [-566.3, 138.9], [-567.3, 131.0], [-568.4, 124.0], [-569.3, 119.5], [-583.0, 119.5]]
+    reason: >-
+      Putry N: the service roads w238234015 / w1383532303 meet the crossover over a plaza of concrete pavers (light
+      grey on the orthophoto, trace/putry_n.jpg x 0-160 y 150-330); the generator laid asphalt plate. West of the
+      southbound edge line only.
+    confidence: medium
+    verify: owner drive
+  - id: ma010-ring-lane-s
+    kind: painted_line
+    line: P-1
+    polyline_en: [[-551.7, -9.4], [-548.4, -12.2], [-544.6, -15.3], [-541.5, -17.8]]
+    reason: >-
+      MA-010, south part of the Rondo Putry ring under the viaduct: lane line between the two ring lanes continued from
+      the generated line (ends E -551.7 N -9.4) across the next junction plate; broken lane line on the orthophoto
+      (trace/ma010_ring.jpg). The ring geometry itself is 1.5-2.5 m off the orthophoto here (not rebuilt, ADR 0100 open).
+    confidence: medium
+    verify: owner drive
+  - id: ma010-south-arm-lane
+    kind: painted_line
+    line: P-1
+    polyline_en: [[-573.2, -6.5], [-573.7, -4.0], [-574.1, -1.5]]
+    reason: >-
+      MA-010, the secondary arm w284541843 entering the ring: its centre line ends before the P-11 / P-10 crossings
+      (N -8) and the plate up to the ring was bare; the orthophoto shows the broken line up to the ring.
+    confidence: medium
+    verify: owner drive
+  # ---------------------------------------------------------------- ADR 0100 (REVIEW s10-0095 P1-5): sett bay s 1040-1080, ends
+  - id: andersa-bay-apron-west
+    kind: paved_apron
+    surface: sett
+    polygon_en: [[-117.0, -314.45], [-106.0, -321.75], [-103.0, -321.0], [-103.0, -312.0], [-117.0, -309.5]]
+    reason: >-
+      Sett bay on Andersa s 1040-1080, west end: on the orthophoto the sett runs on unbroken from E -122 N -310
+      (artifacts/junctions-r3/plan1/merge1060.jpg, left); the generator ends it at E -103 with an asphalt "ear" of the
+      junction patch. The polygon lies north of the P-7a edge line of the carriageway (0.15 m clear of it).
+    confidence: medium
+    verify: owner drive
+  - id: andersa-bay-apron-east
+    kind: paved_apron
+    surface: sett
+    polygon_en: [[-66.0, -344.15], [-50.0, -354.65], [-48.0, -354.0], [-48.0, -343.0], [-66.0, -335.0]]
+    reason: Same bay, east end (asphalt ear E -64...-50 north of the edge line; sett on the orthophoto to E -50).
+    confidence: medium
+    verify: owner drive
+  # ---------------------------------------------------------------- ADR 0100 (REVIEW s10-0095 P1-2/P1-3): eastbound split E -830...-790
+  # Mirror of the westbound ramp split at E -782 N 77 on the eastbound carriageway of DK8 west of Rondo Putry. The
+  # generator builds main (w173956078, 2 lanes) and link (w173956079, OSM lanes=3) abreast from n1832975577 as ONE
+  # junction plate, 14.9 m wide, with a single through line drawn diagonally across it. Orthophoto (1 m grid crops
+  # artifacts/junctions-r3/trace/east_split.jpg, east_split_w.jpg): main 2 lanes N 64.4-56.1 with a broken line at
+  # N 59.85, a 0.24 m solid line N 56.1 between main and the ramp lane west of E -831, P-21 chevrons E -831...-806
+  # (apex towards the tip, ~1.5 m apart, arms ~35 deg), kerbed separator nose E -805.6 N 55.75 with a barrier from
+  # E -797, P-21 oblique band on its south side E -806...-796, a broken wide line from E -799 at N 52.6. The
+  # carriageway is 2 m too wide on the south side (N 48.8 vs 51.6): geometry not rebuilt (ADR 0100 open).
+  - id: dk8-e-split-clear-diagonal
+    kind: paint_clear
+    polygon_en: [[-861.0, 62.4], [-779.0, 54.6], [-779.0, 53.2], [-861.0, 60.8]]
+    reason: The through line drawn diagonally across the plate (TL-P-7b@j:n1832975577, E -859.6 N 61.6 -> E -780.4 N 53.9) is not on the orthophoto.
+    confidence: high
+    verify: owner drive
+  - id: dk8-e-split-main-lane
+    kind: painted_line
+    line: P-1
+    polyline_en: [[-860.0, 59.9], [-830.0, 59.85], [-805.0, 59.8], [-786.0, 59.75]]
+    reason: Broken lane line of the two main lanes at N 59.85 (east_split_w.jpg y 360, east_split.jpg y 445).
+    confidence: high
+    verify: owner drive
+  - id: dk8-e-split-line-solid
+    kind: painted_line
+    line: P-2b
+    polyline_en: [[-860.0, 56.1], [-831.0, 56.12]]
+    reason: Solid wide line between the main carriageway and the ramp lane west of the chevrons (east_split_w.jpg y 495).
+    confidence: high
+    verify: owner drive
+  - id: dk8-e-split-p21-front
+    kind: painted_zone
+    chevron_axis: [[-831.0, 56.12], [-805.6, 55.75]]
+    chevron_apex: tip
+    stripe_rel_deg: 35
+    stripe_w_m: 0.3
+    stripe_gap_m: 0.55
+    polygon_en: [[-831.0, 56.12], [-826.0, 56.6], [-806.2, 56.65], [-805.7, 56.2], [-805.6, 55.75], [-805.9, 55.1],
+                 [-806.3, 54.85], [-820.0, 55.1]]
+    reason: P-21 chevrons in front of the separator nose (east_split.jpg x 0-470 y 540-600; apex west, crop es.jpg).
+    confidence: high
+    verify: owner drive
+  - id: dk8-e-split-island
+    kind: traffic_island
+    surface: sidewalk_paving
+    polygon_en: [[-805.6, 55.75], [-805.2, 56.45], [-804.4, 56.68], [-788.0, 56.75], [-788.0, 54.7], [-804.4, 54.8],
+                 [-805.2, 55.05]]
+    reason: Kerbed paved separator east of the nose E -805.6 N 55.75 (east_split.jpg x 470-1000 y 545-605); continues east beyond the crop (end not traced, WORKING_VALUE E -788).
+    confidence: medium
+    verify: owner drive
+  - id: dk8-e-split-barrier
+    kind: guardrail
+    polyline_en: [[-797.0, 55.3], [-788.5, 55.35]]
+    reason: Steel barrier on the separator from E -797 (east_split.jpg x 750 y 585).
+    confidence: medium
+    verify: owner drive
+  - id: dk8-ramp-split-barrier
+    kind: guardrail
+    polyline_en: [[-780.5, 76.35], [-753.5, 75.2]]
+    reason: >-
+      Steel barrier on the westbound separator dk8-ramp-split-island (REVIEW s10-0095 P1-3: "na wyspie brak bariery";
+      artifacts/junctions-r2/xsec/km_sheet.png, dk8_front.jpg x 960-1000 y 490-530: barrier end at the nose ~E -781, along the island centre).
+    confidence: medium
+    verify: owner drive
+  - id: dk8-e-split-p21-side
+    kind: painted_zone
+    stripe_az_deg: -35
+    stripe_w_m: 0.3
+    stripe_gap_m: 0.55
+    polygon_en: [[-806.3, 54.75], [-795.5, 54.7], [-795.5, 53.0], [-806.3, 54.55]]
+    reason: P-21 oblique band on the ramp side of the separator (east_split.jpg x 450-770 y 600-655).
+    confidence: medium
+    verify: owner drive
+  - id: dk8-e-split-ramp-line
+    kind: painted_line
+    line: P-1e
+    polyline_en: [[-799.0, 52.65], [-788.0, 52.45]]
+    reason: Broken wide line from E -799 at N 52.6 (east_split.jpg x 680-1000 y 670-680).
+    confidence: medium
+    verify: owner drive

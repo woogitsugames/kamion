@@ -211,3 +211,30 @@ def drape_quad(q, step=DRAPE_STEP_M):
     cr = (p[:, 1, 0] - p[:, 0, 0]) * (p[:, 2, 1] - p[:, 0, 1]) - (p[:, 1, 1] - p[:, 0, 1]) * (p[:, 2, 0] - p[:, 0, 0])
     T[cr < 0] = T[cr < 0][:, [0, 2, 1]]
     return V, T
+
+
+def drape_lift(top, V, T):
+    """Drape plan cells (V (n, 2), T (m, 3)) on `top` (through_lines._Top) so the paint plane never dips under the
+    surface: z at every vertex; each cell sampled at its centroid and edge midpoints and its corners lifted by the
+    largest excess of the surface over the paint plane there (junction plates and chain ribbons overlap with cm
+    differences, the carriageway is crowned). Cells with a corner off the carriageway or over a step > MAX_LIFT_M are
+    dropped. Returns (z (n,), T kept, cells dropped, max lift)."""
+    z = top.z(V)
+    ok = np.isfinite(z)
+    keep = ok[T].all(1)
+    lost = int((~keep).sum())
+    T = T[keep]
+    if not len(T):
+        return z, T, lost, 0.0
+    P3, Z3 = V[T], z[T]
+    smp = np.concatenate([P3.mean(1)[:, None], 0.5 * (P3 + np.roll(P3, -1, axis=1))], axis=1)
+    zpl = np.concatenate([Z3.mean(1)[:, None], 0.5 * (Z3 + np.roll(Z3, -1, axis=1))], axis=1)
+    zs = top.z(smp.reshape(-1, 2)).reshape(len(T), 4)
+    under = np.where(np.isfinite(zs), zs - zpl, 0.0).max(1)
+    step = under > MAX_LIFT_M
+    lost += int(step.sum())
+    T, under = T[~step], np.maximum(under[~step], 0.0)
+    lift = np.zeros(len(V))
+    for k in range(3):
+        np.maximum.at(lift, T[:, k], under)
+    return z + lift, T, lost, float(under.max()) if len(under) else 0.0

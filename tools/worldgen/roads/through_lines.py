@@ -336,32 +336,11 @@ def paint_zones(buf, overrides, report, applied, stale):
         lost, sink = 0, 0.0
         for q in g["border"] + g["stripes"]:
             V, T = H.drape_quad(q)
-            z = top.z(V)
-            ok = np.isfinite(z)
-            keep = ok[T].all(1)
-            lost += int((~keep).sum())
-            if not keep.any():
-                continue
-            T = T[keep]
-            # the paint plane between the draped corners must not dip under the surface (junction plates and chain
-            # ribbons overlap with cm differences): sample each cell at its centroid and edge midpoints and lift the
-            # cell's corners to the highest sample; a cell over a step > H.MAX_LIFT_M is dropped (paint over a step)
-            P3 = V[T]
-            Z3 = z[T]
-            smp = np.concatenate([P3.mean(1)[:, None], 0.5 * (P3 + np.roll(P3, -1, axis=1))], axis=1)   # (m, 4, 2)
-            zpl = np.concatenate([Z3.mean(1)[:, None], 0.5 * (Z3 + np.roll(Z3, -1, axis=1))], axis=1)  # paint plane there
-            zs = top.z(smp.reshape(-1, 2)).reshape(len(T), 4)
-            under = np.where(np.isfinite(zs), zs - zpl, 0.0).max(1)          # surface above the paint plane
-            step = under > H.MAX_LIFT_M
-            lost += int(step.sum())
-            T, under = T[~step], np.maximum(under[~step], 0.0)
+            zl, T, nl, lf = H.drape_lift(top, V, T)
+            lost += nl
             if not len(T):
                 continue
-            lift = np.zeros(len(V))
-            for k in range(3):
-                np.maximum.at(lift, T[:, k], under)
-            zl = z + lift
-            sink = max(sink, float(under.max()))
+            sink = max(sink, lf)
             Vs.append(np.column_stack([V, np.nan_to_num(zl) + S.MARKING_LIFT]))
             Ts.append(T + nv)
             nv += len(V)

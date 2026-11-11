@@ -17,7 +17,7 @@ s = s.rstrip("\n") + """
   # lane line 1|2, ..., end of the last lane]; the first value is the left gutter / edge strip, the last one the
   # carriageway width. Read off straightened strips of the GUGiK 0.08 m orthophoto (WMS HighResolution) drawn along
   # the OSM way with a 1 m lateral scale (artifacts/junctions-r2/scripts/xbatch.py; strips in
-  # artifacts/junctions-r2/xsec/, reading accuracy about +-0.15 m). center_offset as above (left of the OSM way).
+  # artifacts/junctions-r3/xsec/, reading accuracy about +-0.15 m). center_offset as above (left of the OSM way).
   # edge_lines = painted edge lines actually on the photo (default with lane_edges: none - kerbed edges on Andersa).
   # Replaces the generic "lanes x 3.50 m + 2 x 0.50 m" (11.5 m) the generator fell back to because BDOT10k says 8.0 m.
   - id: andersa-nw-xsec-s1100-1270

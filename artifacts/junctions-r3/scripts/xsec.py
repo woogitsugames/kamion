@@ -1,5 +1,5 @@
 """Straightened orthophoto strip along a generated chain: x = station, y = lateral offset (left = up).
-   xsec.py <chain-id> <s0> <s1> <lat_half> <name> [raw]   -> artifacts/junctions-r2/xsec/<name>.png + lateral profile peaks
+   xsec.py <chain-id> <s0> <s1> <lat_half> <name> [raw]   -> artifacts/junctions-r3/xsec/<name>.png + lateral profile peaks
    'raw' = use the chain's raw OSM polyline (before centre offsets) instead of the built centre line."""
 import sys
 sys.path.insert(0, "tools/worldgen")
@@ -64,7 +64,7 @@ for c2 in net.chains:
             if prev is not None and abs(cur[0] - prev[0]) < 200:
                 d.line([prev, cur], fill=col, width=1)
             prev = cur
-out = Path("artifacts/junctions-r2/xsec"); out.mkdir(parents=True, exist_ok=True)
+out = Path("artifacts/junctions-r3/xsec"); out.mkdir(parents=True, exist_ok=True)
 if im.width > 1900:
     im = im.resize((1900, int(im.height * 1900 / im.width)), Image.LANCZOS)
 im.save(out / f"{name}.png")

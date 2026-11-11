@@ -1044,6 +1044,26 @@ def guardrails(lin, net, zground, report):
                                      "at": [round(float(v), 1) for v in c.line.offset_point(ss[(k + kk) // 2], 0.0)]})
                     m[["", "bridge", "median", "embankment"][want[k]]] += kk - k
                 k = kk + 1
+    # ADR 0100: authored guardrails on kerbed separators traced on the orthophoto (`kind: guardrail`, polyline_en in
+    # region-local E/N, drawn with the road on the RIGHT of the drawing direction = the face of the W-beam)
+    m["authored"] = 0.0
+    for o in getattr(net, "authored", None) or []:
+        if o.get("kind") != "guardrail":
+            continue
+        Q = np.asarray(o.get("polyline_en") or [], float)
+        if Q.ndim != 2 or len(Q) < 2:
+            net.overrides_stale.append(o["id"])
+            continue
+        sq = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(Q, axis=0).T))])
+        u = np.linspace(0.0, sq[-1], max(2, int(np.ceil(sq[-1])) + 1))
+        P = np.column_stack([np.interp(u, sq, Q[:, 0]), np.interp(u, sq, Q[:, 1])])
+        Z = lin.z(P)
+        if not np.isfinite(Z).all():
+            net.overrides_stale.append(o["id"])
+            continue
+        guardrail(lin, P, Z, f"authored:{o['id']}")
+        net.overrides_applied.append({"id": o["id"], "targets": [f"guardrail@{P[0][0]:.0f},{P[0][1]:.0f}"]})
+        m["authored"] += float(sq[-1])
     report["guardrails_m"] = {k: round(v) for k, v in m.items()}
     d = np.array(drops) if drops else np.zeros(1)
     report["embankment_check"] = {"rural_sides": len(drops), "max_drop_m": round(float(d.max()), 2),

@@ -76,6 +76,6 @@ out = Image.new("RGB", (Wt, max(i.height for i in ims)))
 x = 0
 for i in ims:
     out.paste(i, (x, 0)); x += i.width + 6
-d = Path("artifacts/junctions-r2/xsec"); d.mkdir(parents=True, exist_ok=True)
+d = Path("artifacts/junctions-r3/xsec"); d.mkdir(parents=True, exist_ok=True)
 out.save(d / f"{sys.argv[1]}.png")
 print(sys.argv[1], out.size)
