@@ -86,3 +86,4 @@ Krok 28: HDR shoulder 0,8: clipping w stałym ROI 0 we wszystkich czterech warun
 EditMode lamp-focused: 11/11, failed 0, skipped 0, exit 0. XML i JSON w pakiecie. Następny krok: przy błędzie odczytać konkretny test; przy powodzeniu kontynuować walidację rundy.
 
 Krok 29: skupione EditMode/GPU TruckLampEncodingTests: 11/11 passed, 0 failed, 0 skipped, exit 0. Zapisano XML/JSON. Przygotowano odtwarzalny kanoniczny TruckAssetBuilder, TrailerAssetBuilder, WorldTruckInstaller i migawki hashy oraz semantycznych pozycji/rendererów prefabów. Migawki Pythona również korzystają z puli heavy, Unity z oddzielnego slotu. Następny krok: canonical.ps1, porównanie geometrii/pozycji, potem końcowe kadry i pełne testy rundy.
+Krok 30: kanoniczny builder zatrzymał się na brakującym, ignorowanym źródle wnętrza LOD0. Skopiowano istniejący FBX z main bez zmiany źródeł kabiny; zapisano porównanie SHA. Slot zwolniony po błędzie. Następny krok: ponowić kanoniczną regenerację.

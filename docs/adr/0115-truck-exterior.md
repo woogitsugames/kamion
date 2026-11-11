@@ -13,3 +13,23 @@ Pierwsza uzasadniona poprawka techniczna dotyczy mgły w `FragFast`: szkło uży
 DRL zachowuje kodowanie 1000 nitów na jednostkę RGBAHalf. Luminancja jest WORKING_VALUE i wymaga porównania przed i po. Nie zmieniamy ekspozycji całej sceny ani presetów oświetlenia należących do innej sesji. Lakier wymaga aktualnego dowodu rozdzielającego refleks od jasności białego pigmentu; nie przyjmujemy z góry, że capture nie zawiera podłoża.
 
 Wyniki, porównania, ograniczenia i konflikty zostaną wpisane po walidacji. Na tym etapie nie ogłaszamy PASS wyglądu.
+
+### Decyzje i dotychczasowe dowody r1
+
+Zachowujemy poprawkę mgły w `FragFast`: wkład atmosfery jest pomnożony przez alfę tafli, a transmitancja obliczona w wierzchołku pozostaje bez zmian. Wariant pełny High nie został zmieniony. Niezależny recenzent nie stwierdził regresji w parach widoku kierowcy i zewnętrza. Zmiana jest mała wizualnie: Low `truck-34` ma medianę jasności próbki szyby 19,86 → 19,05% i odchylenie 5,885 → 6,065 punktu. Nie jest to rozwiązanie mleczności ani spełnienie D34.
+
+Stała redukcja surowej luminancji DRL nie dała właściwego kompromisu pogodowego. Wariant 2000 usunął przycięcie, ale recenzent wskazał wygląd jasnego plastiku. Wariant 4000 pozostawił 1209 przyciętych pikseli High-overcast wobec 1214 w bazie. Wariant 3000 usunął clipping, lecz mocno osłabił pasek w słońcu. Te warianty są dowodami porównawczymi, a nie wybranymi ustawieniami kontrolera.
+
+Kandydat końcowy zachowuje surowe ustawienia sterownika 160000/56000 oraz skalę kodowania 1000 nitów na jednostkę. Wyłącznie grupa DRL o identyfikatorze 1 dostaje w `TruckExterior.shader` lokalną kompresję luminancji `E / (1 + Y / k)`. Wspólny mnożnik RGB zachowuje barwę; maska emitera jest stosowana po korekcie. Obliczenie odbywa się w `float` przed konwersją do `half`. Parametr materiału `_DrlHighlightShoulder` ma roboczą wartość 0,8 w odsłoniętych jednostkach sceny, a 0 wyłącza korektę. To jawna kalibracja obrazu dla istniejącej krzywej D23, nie pomiar fizycznej fotometrii lampy.
+
+Nie zmieniamy F0, amplitudy wypukłości drzwi, geometrii, pozostałych grup lamp ani ustawień światła i postprocessingu. Korekta nie dodaje tekstur, próbek, przebiegów ani wariantów shaderowych. Dodatkowa arytmetyka dotyczy fragmentów DRL; jej czas na A16 pozostaje UNVERIFIED. Liczniki wszystkich kamer oraz instancji będą porównane osobno po kanonicznej regeneracji.
+
+W stałym natywnym ROI lewej lampy liczba pikseli z każdym kanałem RGB ≥254 wynosi 1214 → 0 na High-overcast; w pozostałych trzech warunkach kandydat również ma 0. ROI zawiera obudowę i otoczenie lampy. Recenzent rozpoznaje włączone DRL w obu pogodach, nie widzi regresji reflektorów i kierunkowskazu; zaznacza, że gradient pozostaje subtelny. To akceptacja kandydata do walidacji, nie PASS całego truck.
+
+Testy rzeczywistego dekodowania/stanu oraz nowego ograniczenia HDR i bypassu przeszły 11/11, bez pominięć. Nowe próby GPU obejmują zerową i dużą ekspozycję. Pełny EditMode i końcowy GIS są jeszcze wymagane.
+
+Kontrole lakieru zachowały szorstkość i tłumienie podłoża przy wyłączaniu samego wkładu powłoki. High-overcast: wkład powłoki w średnią jasność próbki drzwi wynosi 1,62 punktu na bieli i 4,66 na ciemnym pigmencie. To wyniki po przetwarzaniu obrazu, nie surowe HDR. Potwierdzają obecność odbicia, lecz nie zamykają celu połysku białej kabiny. W tej rundzie nie wzmacniamy sztucznie F0.
+
+Pozostają otwarte: kredowy lakier i dach w słońcu, mleczność szyby oraz D44. Stara baza ma stosunek odchyleń szyby do widoku bez przedniej tafli 0,475 Low i 0,526 High, przy celu 0,7. Końcowa próba bez tafli zostanie wykonana na identycznej wersji kandydata. Brak pomiarów telefonów zgodnie z zakresem właściciela.
+
+Po pilnej aktualizacji właściciela wszystkie ciężkie zadania Pythona korzystają z puli `heavy` (max 3), a pełny GIS jest uruchamiany wyłącznie na końcu rundy. Wcześniejszy bazowy GIS, wykonany przed tą aktualizacją i przed zmianami produkcyjnymi, dał 488 passed, 5 failed, 1 xfailed. Pięć błędów dotyczy far-field, wiaduktu, przeterminowanego fidelity, brakującego prototypu i deterministyczności świata; pliki tych dziedzin nie są poprawiane w sesji truck.
