@@ -319,3 +319,13 @@ G fullGIS375passed/1xfail575.12s;192raw+canonicalmanifest stable. Parkedclean
 75082bd1 with exactnextcommands; sameworker temporarily preparesDartifact-onlypatch,
 pristineDbaseline source+Generated preserved. Active3workers F/E/D, no4thagent.
 NEXT COMMAND: inspect perf-low-r1/diag1.log for fullseven-runEND; review E CPU densercore candidates and D patch, then explicitrelease prioritizes G captures/closure before Dbaseline/apply.
+## Step24 - external B/C integration regenerated green; source parity checked
+Leader committed main14790c48 after own B/C merges: s10-regen-BC END12:53:46,
+GIS389passed/1xfailed549.86s exit0. Root did not merge/push or regenerate main.
+Postregen leaves_pine.png matches acceptedB exactly: fileSHA4afdd4b6187100419ded99d59006047b77b369bc588c2ec347e244766bd7abd6,
+512RGBA pixelSHA8ad86b8f4960fddc741e65c2d9b5e4ea62a50b569ef64fe2931d2fb3a7fa2bb2.
+Proof B-main-regeneration-parity.json; no assumption that every cachedfile was
+rebuilt, only measuredpostregen equality. Missingrawprerequisite alreadyrestored.
+PHONEdiag1 active (sevenruns), F/E noUnity, G parked75082bd1, sameworkerDartifact
+prep. No newqualityPASS for F/E/G/D, A calibrationstill leader0101pending.
+NEXT COMMAND: Get-Content ../perf-low-r1/artifacts/perf-low-r1/diag1.log -Tail 5; require final ab_scale+lockreleased andstableabsence before freshrelease, then immediate Gimport/captures and F/E next actualrounds.
