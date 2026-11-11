@@ -422,7 +422,9 @@ def prepare_chain(c: Chain, net: Network, sec_index: dict):
             return (v0 + (v1 - v0) * t) * (-1.0 if rv else 1.0)
         off = np.array([_off(i, sr) for i, sr in zip(k0, s0)])
         if len(off) > 3 and np.ptp(off) > 0:
-            off = smooth_1d(off, 10.0 / DENSE)
+            # steps between per-edge constants are blended over ~20 m; a profile traced along the edge (ADR 0095)
+            # is already continuous and may change fast (a link leaving the axis of the main carriageway)
+            off = smooth_1d(off, (2.5 if any(s.center_offset_profile for s in secs) else 10.0) / DENSE)
         c.meta["center_offset"] = off
         c.line = Polyline(c.line.p + c.line.n * off[:, None])
     L_raw = c.raw_spans[-1][1]
@@ -581,6 +583,8 @@ def align_forks(net: Network, report: list | None = None):
                     shift = want - have                   # + = towards travel-left
                     if abs(shift) < 0.3:
                         continue
+                    if getattr(sec, "center_offset_profile", None):
+                        continue        # ADR 0095: placement traced along the edge on the orthophoto is absolute
                     # hold the full shift until the branch has left its neighbours (gore), then fade it out
                     d = c.line.s if e == "a" else c.length - c.line.s
                     others = [LineString(o.line.p) for _, o, _, _, _ in br if o is not c]

@@ -725,13 +725,18 @@ overrides:
   - id: andersa-nw-xsec-s1355-1410
     target: {edge: "w266084693:12620261934-2840742308"}
     reason: >-
-      Andersa NW-bound before the fork to Rondo Putry (strip xsec/and5.png station 18-42): median barrier kerb 4.7 m
-      left of the OSM way, lane lines 0.6 m left / 3.0 m right (solid). Right edge: read as 7.25 m on the strip, but
-      fidelity/edge_sides puts the pavement edge 0.72 m inside that (n 20) and the plan view agrees
-      (plan1/fork_putry.jpg): 6.3 m -> 11.0 m, centre 0.8 m right of the way.
-    confidence: medium
+      Andersa NW-bound before the fork to Rondo Putry (strips xsec/and5.png station 18-42, xsec/fork3.png station
+      36-60): median barrier kerb 4.85 -> 4.6 m left of the OSM way, lane lines 0.6 m left / 3.0 m right (solid; from
+      station 46 it opens into the P-21 chevrons), right kerb 6.25 m right at the start, 7.6 m at station 30,
+      8.7 m at station 55 (xsec/fork4.png): the exit lane widens from 3.4 to 4.6 m and the gore starts on this edge. width and
+      center_offset = [[t, m], ...] along the edge (11.1 -> 13.4 m; the median kerb stays straight). A first
+      correction to 11.0 m after fidelity/edge_sides (it took the P-21 for the pavement edge) is withdrawn.
+    confidence: high
     verify: owner drive
-    set: {center_offset: -0.8, lane_edges: [0.6, 4.1, 7.7, 11.0]}
+    set:
+      lane_edges: [0.6, 4.1, 7.7, 12.0]
+      width: [[0.0, 11.1], [0.5, 12.3], [0.92, 13.3], [1.0, 13.4]]
+      center_offset: [[0.0, -0.7], [0.5, -1.45], [0.92, -2.05], [1.0, -2.1]]
   - id: andersa-se-xsec-w560802655
     target: {edge: "w560802655:12620261936-1946476472"}
     reason: >-
@@ -1034,14 +1039,17 @@ overrides:
       the chain runs with its kerb 2.25 m and the P-21 band 1.1-3.1 m either side of the way: carriageway 5.35 m,
       centre 0.45 m left of the way. The fork alignment held its 4.65 m shift for 40 m and faded it over 93 m, which
       put the link 4-4.8 m beyond the real kerb, on the verge and the barrier (edge_sides: left -2.8, right +5.3 m).
-      First 20 m: lane centre read on plan5/fork_putry.jpg at E -335.7 N -145 / E -339.2 N -140 / E -344.2 N -135
-      = 4.57 / 1.48 m right, 0.05 m left of the way; behind the separator nose the P-21 band (2 m) joins the carriageway.
+      First 20 m re-read on the strip xsec/fork3.png (stations 164-188 of the link chain): the exit lane is the
+      4 m right lane of Andersa and keeps its kerb line; lane centre points E -335.5 N -142.7 / E -337.55 N -140.0 /
+      E -339.8 N -137.3 / E -342.1 N -134.1 read on plan6/fork_putry.jpg; the first 0.22 of the profile is fitted to them
+      (artifacts/junctions-r2/scripts/fit_offset.py, residual <= 0.15 m); behind the separator nose the P-21 band (2 m) joins the
+      carriageway.
       center_offset / width = [[t, m], ...], t = 0 at the fork node.
     confidence: medium
     verify: owner drive
     set:
-      center_offset: [[0.0, -4.9], [0.05, -4.57], [0.125, -1.48], [0.22, 0.05], [0.30, 1.1], [0.42, 0.8], [0.75, 0.45], [1.0, 0.2]]
-      width: [[0.0, 3.5], [0.22, 3.6], [0.30, 5.35], [0.75, 5.35], [1.0, 6.5]]
+      center_offset: [[0.0, -8.4], [0.05, -6.53], [0.1, -3.56], [0.15, -1.96], [0.222, -2.45], [0.366, -0.2], [0.5, 0.35], [0.75, 0.45], [1.0, 0.2]]
+      width: [[0.0, 4.0], [0.15, 3.9], [0.222, 3.7], [0.3, 4.6], [0.366, 5.35], [0.75, 5.35], [1.0, 6.5]]
   - id: s1440-diverge-p21-band
     kind: painted_zone
     stripe_az_deg: 4
