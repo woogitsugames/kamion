@@ -27,3 +27,6 @@
 
 - Step11 PHONE_RUN: leader phone lock observed before any candidate Unity launch; all F Unity held. Added GPU exposed-lamp readback at controlled exposure0.0001 (dayDRL/high/nightlow/nightDRL/off), restoring previous globals in finally. Candidate rebuild wrapper checks/waits PHONE_RUN before each of4Unity steps and capture. Six regression tests added; baseline cache untouched.
 - NEXT COMMAND: pwsh -NoProfile -ExecutionPolicy Bypass -File artifacts/truck-paint-r1/rebuild-candidate.ps1 -Round candidate1 (waits for lock release before launching Unity); then measure/inspect candidate102.
+
+- Step12 PHONE WINDOW: observed transient leader lock gap: candidateTruck launched only after PHONE_RUN absent, then lock recreated. Initial licencewarnings recovered; actual TRUCK_RESULT OK, no compile/shader errors. No F Unity remains. Stopped only own waiting PowerShellPID73772 before Trailer. ROOT explicitly holds Unity until release; added shared GPT_UNITY_HOLD alongside PHONE_RUN in every F launch wrapper. No further launch until explicit root message. Baseline remains immutable.
+- NEXT COMMAND AFTER ROOT RELEASE ONLY: pwsh -NoProfile -ExecutionPolicy Bypass -File artifacts/truck-paint-r1/rebuild-candidate.ps1 -Round candidate1; until then CPU metrics/ADR preparation.

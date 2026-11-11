@@ -1,5 +1,5 @@
-﻿$ErrorActionPreference='Stop'
-if(Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/PHONE_RUN'){throw 'Phone lock present'}
+$ErrorActionPreference='Stop'
+if(((Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/PHONE_RUN') -or (Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/GPT_UNITY_HOLD'))){throw 'Phone lock present'}
 . "$PSScriptRoot/../../scripts/env.ps1"
 . "$PSScriptRoot/capture-proof.ps1"
 $truckStart=Get-Date

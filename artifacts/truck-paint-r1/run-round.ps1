@@ -1,6 +1,6 @@
 param([string]$Round='before')
 $ErrorActionPreference='Stop'
-if(Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/PHONE_RUN'){throw 'PHONE_RUN present'}
+if(((Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/PHONE_RUN') -or (Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/GPT_UNITY_HOLD'))){throw 'PHONE_RUN/GPT_UNITY_HOLD present'}
 . "$PSScriptRoot/../../scripts/env.ps1"
 $truckLog=Join-Path $LogsDir "truck-paint-$Round.log"
 . "$PSScriptRoot/capture-proof.ps1"
