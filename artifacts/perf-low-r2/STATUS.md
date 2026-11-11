@@ -25,3 +25,34 @@
 - Sonda [SPIKE] (dev): piki 50 ms = GPU ~30–34 ms + Gfx.WaitForPresent; skupisko G3-A t≈57–60 s, pos (552,-695) = rondo Bieżeństwa:
   DrawOpaqueObjects kamery głównej 38–70 ms na wątku głównym + `Loading:GfxResource.Register` (pierwsze użycie zasobów/stanów) → hipoteza: PSO/rejestracja przy nowym widoku.
 - NASTĘPNY KROK: visual-qa przed/po (`pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -Rq rq_forestfast=0 -OutputDir artifacts/perf-low-r2/vqa/before-ov` + after), build czysty, `artifacts/perf-low-r2/gate-final.ps1 -Apk <apk>` + G3-A z pso_warm=0.
+
+## 17:10 — krok 4: finał (czysty APK 6b6c1d8003), testy, dokumenty
+- APK `artifacts/apk/kamion-0.1.0-6b6c1d8003.apk` (SHA256 02ce1654a3d14c23073b259863f0c8b6bb95258bed933affcb6ce0d368b12fc3, 191,4 MB).
+- Testy: EditMode 248/248, PlayMode 110 pass / 0 fail / 7 skip. visual-qa Low overcast/clear przed/po: `vqa/`, `vqa/960/`.
+- docs/adr/0113-perf-low-a16-r2.md, docs/PERFORMANCE_BUDGETS.md (sekcja r2).
+- W toku: `artifacts/perf-low-r2/shimmer.ps1` (wideo z telefonu, las w ruchu, po/przed) — czeka na PHONE_RUN lidera.
+- NASTĘPNY KROK: po `shimmer.done`: `ffmpeg -i artifacts/perf-low-r2/shimmer/after.mp4 -vf fps=10,scale=960:-1 ...` → obejrzeć klatki, dopisać do ADR/STATUS.
+
+## RAPORT KOŃCOWY (ADR 0113, gałąź perf-low-r2)
+- SHA kodu pomiaru: `6b6c1d80` (APK powyżej); ostatni commit gałęzi: patrz `git log -1` (docs/artefakty po pomiarze).
+- Zrobione: szybka ścieżka lasu na Low (`QualityProfile.forestFast`, rev 113): korony HLOD `Kamion/Forest Canopy` (−0,30 ms),
+  ściany HLOD jednoprzebiegowo (−0,28), `_KAMION_VEG_FAST` (≈0 ms, ale usuwa artefakty cienia za dystansem cieni); razem −0,68 ms GPU p50.
+  Prewarm PSO `GraphicsStateCollection` (Resources/Pso, nagrane na A16 dev buildem; 3,5–5,3 s w ładowaniu): >40 ms w 1. 5 s G3-A 17 → 3.
+  Sonda `[SPIKE]` (`spike_probe 1`), trace PSO (`pso_trace`), A/B `rq_ab forestfast|vegfast|hlod1pass|canopyfast|veganiso`, `rq_forestfast`, `pso_warm`.
+
+| A16 Low 30 FPS | FPS | p50/p95/p99 | p99x | >40 (x) | GPU p50/p95 | CPU p50/p95 | PSS | T bat |
+|---|---|---|---|---|---|---|---|---|
+| G3-A przed (ten APK, forest off, PSO off) | 29,77 | 33,3/33,5/49,9 | 49,9 | 27 (22) | 30,1/32,1 | 22,5/28,9 | 842 | 28,2 |
+| G3-A po | 29,81 | 33,3/33,5/49,9 | 33,6 | 24 (12) | 30,0/31,7 | 22,4/29,5 | 869 | 28,2 |
+| G3-B przed | 29,89 | 33,3/33,5/33,7 | 33,7 | 16 (15) | 29,7/33,6 | 20,4/27,9 | 858 | 28,4 |
+| G3-B po | 29,96 | 33,3/33,5/33,6 | 33,6 | 5 (5) | 29,0/32,2 | 21,8/28,3 | 839 | 28,1 |
+  p99x / (x) = bez ostatnich 1,5 s CSV (screencap + dumpsys meminfo skryptu pomiaru w trakcie renderu). Termika: status 0 wszędzie.
+  Przejazdy ~1,5 min, nie 30 min (termika po 30 min — nie mierzona w tej rundzie).
+- Cel: p99 ≤ 40 — G3-B tak, G3-A tak bez okna zrzutu (oficjalnie 49,9 przez artefakt pomiaru); GPU p95 ≤ 28 — NIE (31,7/32,2).
+- Koszt jakości: overcast PSNR ≥ 60 dB, clear ≥ 47 dB; jedyne widoczne różnice = usunięte czarne bloki cienia na dalekich koronach
+  (`vqa/960/clear-*-crop-before-after.jpg`).
+- Otwarte: (1) device-metrics: zrzut/meminfo po zatrzymaniu zapisu klatek (build-qa); (2) GPU p95 ≤ 28 tylko przez mniej pikseli (D50);
+  (3) nagrać PSO ponownie po scaleniu 0107/0108/0110 i dla Medium/High na S24+; (4) korony HLOD bez toe/KamionMixFog (jak URP Lit) — do oceny;
+  (5) lusterka bez zmian (Low = 1 render/klatkę już; rzadziej = szarpanie).
+- Konflikty: QualityProfile(.cs/.asset)/ProjectSetup (rev 113, migracje 98/106 zachowane), Vegetation.shader (GPT 0109),
+  WorldInstances.cs (3 haki), RenderOverrides/ExtraViewCostMonitor/QualityProfileApplier (dopisane).
