@@ -23,3 +23,9 @@ K3: `MirrorGlassBezel` dokłada do istniejącego submeshu Trim cztery zaokrąglo
 `comparison-0112-p2.json`: PASS czterech stanów kabiny, sześciu natywnych RT i pełnych 78 kamer Low/Gate3. Zwykłe draws i instancje są raportowane oddzielnie: wzrost drawów +0, maksymalny wzrost sumy tris 0,498%. Testy lusterek 36/36, XML `editmode-20261111-233900.xml`; pełne EditMode 276/276, XML `editmode-20261111-234613.xml`. To estymaty widoczności CPU w edytorze, nie pomiary GPU telefonu ani niezależna akceptacja wizualna.
 
 Końcowy GIS r1 pod heavy: 491 pass, 2 fail, 1 xfailed, 673,09 s. Nieaktualny raport fidelity i hash eksportu chunk 0_0 zawodziły również w pomiarze bazowym; brak zmian naprawczych poza cab. Produkty testów cofnięte, slot zwolniony. K4–K6 przechodzą do r2 z audytem UV i wariantami kanałów materiału; r1 nie zgłasza ich naprawy.
+
+## r2 — Materiały ze skanów CC0 i czytelność zużycia
+
+Stan: w toku. Gałąź `gpt-cab-r2` od r1, następnie scalono aktualny main bez konfliktów. Baseline obejmuje poprawki K1–K3; budżety kolejnych wariantów liczymy względem nowego baseline, bez przypisywania zmian main materiałom kabiny. Pozostają własność plików cab oraz zakaz zmian szyb i zewnętrza.
+
+Przed obróbką skanów poprawiono sprzątanie audytu powierzchni: oryginalne referencje MeshFilter są przywracane przed zniszczeniem tymczasowych kopii. Nie zakłada to, że poprzednia awaria D3D12 była spowodowana tym błędem. Przygotowanie skanów i eksport obejmujemy heavy, owner `gpt-cab-r2`; Unity nadal pod owner `gpt-cab` zgodnie z poleceniem sesji.
