@@ -77,3 +77,5 @@ NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/round2-resume.ps1
 
 Krok 24: poprawiono wyłącznie maskę AO parapetu i poprzecznika rysowanych po glazing. Geometria wariantu 2 pozostaje ta sama, dlatego wznowienie obejmuje generator materiału i pojedynczy test, następnie import oraz render. Zachowano mapy sprzed poprawki do porównania kanałów. Materiał zostanie teraz wygenerowany High/Medium/Low i wpisany do wspólnego spec wyłącznie jako fire_station, z zachowaniem pozostałych zestawów.
 NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/round2-resume.ps1
+
+Krok 25: materiał z poprawką białych detali wygenerowany we wszystkich trzech rozdzielczościach pod heavy. Wspólny spec zachowuje wszystkie pozostałe wpisy z HEAD. Następnie pojedynczy test remizy; bez pełnego GIS.
