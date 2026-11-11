@@ -12,6 +12,6 @@ Zasady (jak w s9): max 3 agentów naraz (chyba że właściciel zdecyduje inacze
 
 Telefony: zawsze -Serial, jeden agent telefonowy naraz, pomiar tylko gdy żaden Unity.exe nie działa (artifacts/locks/PHONE_RUN). S24+ (RZCX60VE8ZY): bateria nigdy < 20 %, pomiar przy ≥ 40 % i < 36 °C, potem am force-stop. A16 (RFGL34SJYDZ) bez ograniczeń. Nigdy nie usypiaj/blokuj telefonu, nie wpisuj PIN-u.
 
-Inni wykonawcy (wznawia właściciel): GPT/Codex (docs/owner/GPT-TASK-01-MEGASCANS.md, kolejka Q1 0086, Q2 0088) i Antigravity Argon (docs/owner/ARGON-TASK-01-WORLD-EDGE.md — najpierw „UWAGI LIDERA s9”, potem Q1 0087, Q2 0089). Nie ruszaj ich worktree; scal po ich REPORT.md; trzymaj im w kolejce 1–2 zadania.
+Inni wykonawcy (wznawia właściciel): GPT 6.1 Sol (pakiet docs/owner/GPT-TASK-02-S10.md: 0086, 0088, 0098, potem 0099, 0090 — gałęzie gpt-*) i Antigravity Argon (docs/owner/ARGON-TASK-01-WORLD-EDGE.md — najpierw „UWAGI LIDERA s9”, potem Q1 0087, Q2 0089). Nie ruszaj ich worktree; scal po ich REPORT.md; trzymaj im w kolejce 1–2 zadania.
 
-Zadania: wg „Następne kroki” w HANDOVER.md (0095 → integracja na main z Megascans → telefon A16 → 0097 zabudowa r5 → 0090 remiza r7 → raport bramki 3). Ostatni przydzielony ADR: 0097.
+Zadania: wg „Następne kroki” w HANDOVER.md (0095 → integracja na main z Megascans → telefon A16 → 0097 zabudowa r5 → raport bramki 3; 0090 robi GPT). Ostatni przydzielony ADR: 0099. Nie ruszaj plików z sekcji „NIE ruszać” pakietu GPT odwrotnie: Claude nie dotyka gałęzi gpt-* — scala je po REPORT.md (kolejność A → B → C).
