@@ -77,3 +77,6 @@
 
 - Krok13: pełny bakeCC0igieł (3impostory sosny+3rodzinyHLOD) gotowy. Geometria obuGLB ma identycznySHAakcesorów przed/po, trees_meta identyczny bajtowo; zmieniono wyłącznie tekstury,0nowychtri/material. Pełny import/trial w toku; poprzedni near-only zachowany w needle-near-experiment. NASTĘPNY KROK: `Get-Content artifacts/vegetation-r2/needle-experiment-full.log -Tail 8` i ocena nowych8PNG zliderem.
 
+
+- Krok14: przyjęto najmniejszy wariant do walidacji: tylko3sosnoweimpostory zachowują cienkie gałązki (open0,min16), pozostałeimpostory iwszystkieHLOD zachowujądotychczasowe zasady. OdrzuconoHLODr0 po wzroście tiny-mipproxy mimo niewielkiej różnicyobrazu. Komponenty sosnowych koron186→49; testassetów plusźródła9PASS. NativeablationLow/High≤930px i ryzykomipmap jawne; ocena lidera końcowa w toku. NASTĘPNY KROK: `pwsh artifacts/vegetation-r2/final-world.ps1`.
+

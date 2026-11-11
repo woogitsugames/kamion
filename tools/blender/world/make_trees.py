@@ -831,7 +831,12 @@ def main():
                 S = max(H * 1.05, 2.0 * half_w * 1.04 * IMP_RES[1] / IMP_RES[0])
             else:
                 S = bake_impostor(o0, name, H)
-                pack([f"impostor_{name}_{k}" for k in range(IMP_NF)], png, VEG / f"impostor_{name}_n.png")
+                # ADR0088: opening erased 1–2px photographed twig connections,
+                # leaving detached broad green islands. Keep connected pine twigs;
+                # still reject isolated specks. Non-pine and forest HLOD retain
+                # their established opening / component rules (far shimmer guard).
+                pack([f"impostor_{name}_{k}" for k in range(IMP_NF)], png, VEG / f"impostor_{name}_n.png",
+                     open_r=0 if sp == "pine" else 1, min_island=16 if sp == "pine" else 0)
             o2 = impostor_object(name, H, png, S)
             o2.hide_render = True
             objs += [o0, o1, o2]

@@ -67,6 +67,22 @@ def test_cc0_needles_red_alpha_and_atlas_padding_are_not_opaque_cards(tmp_path):
     assert needle_card(n=128,root=tmp_path) is None
 
 
+def test_shipping_pine_impostors_retain_branch_connections():
+    from PIL import Image
+    from scipy import ndimage
+    # Asset-level regression for the P1 visible in DK8: the old 3x3 opening
+    # disconnected186 crown components over these atlases; connected CC049.
+    # Includes all six views of all three variants; independent of optional raw.
+    root = Path(__file__).resolve().parents[2]
+    components = 0
+    for variant in range(3):
+        path=root/f'art-source/world/vegetation/impostor_tree_pine_{variant}.png'
+        with Image.open(path) as image:
+            alpha=np.array(image.convert('RGBA'))[...,3]
+        components += ndimage.label(alpha>127,np.ones((3,3)))[1]
+    assert components <= 60, f'{components} disconnected pine crown pieces; check twig alpha opening'
+
+
 def test_metric_patches_are_world_anchored_without_chunk_seams():
     east, north = np.arange(-30., 31), np.arange(45., -16., -1)
     full = metric_patch_field(east, north)
