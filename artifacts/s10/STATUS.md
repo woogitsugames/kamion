@@ -830,3 +830,17 @@ G WIP23acda0d now records active7files/17newtests/76PASS, CPUworld396.4s and
 upperPNGedge failed3132components. Approvedgutter testedagainstactualTile/UVwrap
 before candidateimport; no false upper/allmip parity claim. NEXT COMMAND:
 Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
+
+Step 74: D actual GPU packed probe:2048/12mips/linear/alpha ASTC8. Mip0GBA
+meanAbs .223/.051/.105, max62/18/13, >3 at2.07%/.171%/.353%; no Highparity
+claim. Desktop objectmemory23.8MB is not A16 residency. First4Lowclear frames
+fresh/IDs/stats/poses andfinally44renderers/1clone/globals verified before known
+Mono cleanup exit-1073741819; raw exception retained, only12missing resumed.
+ROOT viewed4Lowclear pairs; large visible detail improvement not yet demonstrated.
+G CPU actualTile4x4 revealed upper-role bug beforeimport: bonnetmax+14.543%base/
++.11283smoothness. Approved forwardlegacyfilm on keepUpper using cleanMaskR;
+maskA is smoothness, restored by subtraction, no inverse/extra fetch. e0ae8c44
+77target/18source tests, native81UV/norm/phase CPU residual max1.0192%bonnet/
+.003742smoothness, roof0; actualGPU/output stillpending. All427baselinePNG and
+legacy12 exact, unrelatedsourceAST exact; guardedcandidateimport nowrunning.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
