@@ -4,3 +4,6 @@
 
 - Step2: copied private Data/raw derived+cc0, CC0raw, Fab products, Unity Generated/Library, photos and PNG/NPY/NPZ material caches only. Read-only-use source junctions created. gitdiff clean. Missing ignored interiorLOD0 FBX SHA177d820ebe99b45b359789469107eaa498198e679a851a24db912ebd2a2930fe copied from main.
 - NEXT COMMAND: uv run --project tools/worldgen python tools/worldgen/roads/build_world.py --region bialystok-industrial-c; then import-region +canonicalTruck/Trailer builders/install, snapshot and baseline6conditions.
+
+- Step3: added isolated QA round17cameras x6conditions with exact LowWorldC/HighWorldC_High, actual TruckExterior Color GPU probe, true no-pane reference (disable GLASS_ renderers, not old partial qaNoGlass), and coat-off diagnostic. Canonical snapshot will preserve every GeneratedTruck/Trailer file plus raw192SHA and actual nested FabQA. No production shader/material changes. C confirms no vehicle edits; future clear-shoulder integration review remains separate.
+- NEXT COMMAND: pwsh -ExecutionPolicy Bypass -File artifacts/truck-paint-r1/prepare-baseline.ps1 (queued after current world build); snapshot_fixture.py; run-round.ps1 before; run-baseline-ablations.ps1.
