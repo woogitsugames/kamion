@@ -13,3 +13,9 @@ Obecny LOD1 naczepy zastępuje trzy koła jednym długim graniastosłupem na str
 Kryterium wyboru: poprawa sylwetki i powierzchni na renderze Low/High, clear/overcast względem baseline i zdjęć; bez nowych grup materiałowych/draws na Low, trójkąty na kamerach trasy najwyżej +2%. Zmiany nie mogą przesuwać obrysu kolizji, osi ani punktu podparcia kół. Koszt geometrii prototypu oraz pełny budżet kamer będą raportowane osobno. Limity szacunkowe pojedynczego prototypu nie zastępują pomiaru trasy.
 
 Stan dowodów: skrypt wyboru rzeczywistych instancji i dopisania kamer jest uruchomiony pod kolejką heavy. Baseline renderów r2 oraz pomiary kandydata pozostają do wykonania. Materiały i geometria produkcyjna r2 jeszcze bez zmian. Pełny GIS dopiero na końcu rundy; podczas poprawek pojedyncze pliki testów. Wszystkie zadania ciężkie mają slot heavy gpt-life-r2, każde Unity slot gpt-life.
+
+## Wynik audytu kandydata r2
+
+Baseline i kandydat przeszły audyt pod heavy. LOD1: firanka 220→316 trójkątów (6→6 grup), box 180→276 (5→5), chłodnia 194→290 (7→7), ciągnik 254→286 (7→7). Wszystkie hashe siatek kolizji oraz zestawy materiałów obu LOD są identyczne. LOD0 nie otrzymał nowej geometrii. Opony LOD1 naczepy miały 0,12 m przerwy nad gruntem, ciągnika około 0,0683 m; kandydat ma 0 m. Audyt potwierdza trzy rozdzielone osie po obu stronach naczepy oraz UV plandeki wewnątrz kafla 2,7 m.
+
+Historyczny limit pojedynczej naczepy LOD1 w test_streetscape wynosił 250 trójkątów. Dla sześciu oddzielnych zamkniętych kół przyjęto limit 320 (zmierzony maksymalny koszt 316); nie zmieniamy ograniczenia kamery trasy: draws +0 i łączne trójkąty najwyżej +2%. Nowy limit prototypu nie stanowi odbioru wydajności. Warunkiem przyjęcia pozostaje pełne porównanie 114 kamer × cztery warunki i oględziny AFTER. UV dają warianty istniejącego nalotu, nie pełną symulację brudu ani niezależne tekstury każdej instancji.
