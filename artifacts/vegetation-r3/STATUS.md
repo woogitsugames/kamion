@@ -27,3 +27,4 @@ Test red przed implementacją zakończony kodem 1. Szczegóły pytest-mapped-bef
 Zapisano pary foto before High-overcast-photo-2048x1152. Następny krok: porównać z photo-references.json.
 Zapisano pary foto before High-overcast-photo-2048x1536. Następny krok: porównać z photo-references.json.
 Baseline ukończony: 100 nowych kadrów B oraz 268 odzyskanych kontrolnych; snapshot-baseline zapisany. Test red: 3 failed, 1 passed, zgodnie z brakiem funkcji. Dane czterech koron wpisano do vegetation.py, z dotychczasowym blocked/zc, klipem kafla i pierwszeństwem OSM/BDOT w deduplikacji. Sprawdzono sąsiedni landmark JRG2: punkty leżą przed jego ogrodzeniem, nie zastępują jego tui i świerków; kod/dane landmarku nietknięte. Następny krok: testy celowane w heavy, potem generator.
+Testy celowane po danych D51: kod 0. Log pytest-mapped-after.log.
