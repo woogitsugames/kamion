@@ -42,3 +42,5 @@ Następny krok po zakończeniu sesji generatora 24311: pwsh artifacts/life-r1/ru
 
 Krok 14: przygotowano dowód zgodności wszystkich 192 produktów raw z manifestem, liczby gotowych zasobów Fab oraz hashów istniejących modeli/prefabów/materiałów zestawu gracza. Skrypt nie modyfikuje produktów i nie korzysta z historycznego bootstrapu innej gałęzi. Generator PID 28064 nadal postępuje: CPU wzrosło z 275,75 do 316,89 s.
 Następny krok po generatorze: uv run --project tools/worldgen python artifacts/life-r1/source-proof.py candidate
+
+Krok 15: sprawdzono 192 produkty raw (0 rozbieżności) i 15 gotowych zasobów Fab. Pełne GIS działa. Własne pliki tekstowe zapisane wcześniej przez Windows PowerShell przekonwertowano z cp1250 do UTF-8; logi pozostawiono w oryginalnym kodowaniu. Następny krok: zakończyć baseline High/overcast i sprawdzić zgodność generatów ze skopiowanym main.
