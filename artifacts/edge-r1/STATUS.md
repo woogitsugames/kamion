@@ -4,3 +4,4 @@ Przeczytano pliki wymagane przez GPT-TASK-05-24H oraz recenzję HIL. Worktree pr
 Zakres: wyłącznie tło i WorldEdgeBuilder. Nie uruchomiono Unity. Wynik wizualny i budżet: UNVERIFIED.
 Następny krok: Get-Content game/Assets/_Project/World/Import/WorldEdgeBuilder.cs | Select-Object -Skip 230 -First 430
 Uwaga: historyczna gałąź gpt-edge-r2 jest zajęta przez starszy worktree. Nie zmieniam jej ani cudzych plików.
+Krok 2: przeanalizowano istniejące stubs 420 m i selekcję budynków; przygotowano ujęcie w osi DK8 z wysokości kabiny. Trwa kopiowanie Library i test bazowy far-field. Następny krok: pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting clear -Gate3 artifacts/edge-r1/edge-cameras.json -Cameras edge-north,edge-east,edge-south,edge-west,edge-pietrasze-driver -OutputDir artifacts/edge-r1/before/Low-clear (po pobraniu slotu).
