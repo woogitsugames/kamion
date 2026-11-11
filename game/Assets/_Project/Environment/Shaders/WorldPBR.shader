@@ -414,12 +414,9 @@ Shader "Kamion/World PBR"
                         float lc = frac(w.x);
                         half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.11);
                         albedo *= 1.0 - 0.10 * wp * _WheelPolish;
-                        // ADR0099 WORKING_VALUE: restrained polish, broken by existing macro binder variation.
-                        smooth = lerp(smooth, smooth + 0.18 * lerp(0.65, 1.05, macro.b), wp * _WheelPolish);
+                        smooth = lerp(smooth, smooth + 0.12, wp * _WheelPolish);
                         // gutter: grit, leaves and soot within ~0.6 m of the kerb
                         half g = (1.0 - smoothstep(0.05, 0.65, w.y)) * _GutterDirt;
-                        // ADR0099: interrupt uniform gutter deposits without a new texture fetch or central dirt layer.
-                        g *= lerp(0.6, 1.4, macro.a);
                         albedo = lerp(albedo, albedo * half3(1.12, 1.06, 0.92) + half3(0.012, 0.010, 0.006), g);
                         smooth *= 1.0 - 0.4 * g;
                         // ADR 0060 (review r7 N-2): the gutter's lowest ~0.25 m stays damp (water runs along the kerb to the
@@ -512,9 +509,7 @@ Shader "Kamion/World PBR"
                     half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.085) * known;
                     half peaks = SAMPLE_TEXTURE2D(_VarMap, sampler_BaseMap, uvb).r;     // aggregate tops wear first
                     half mott = (macro.a - 0.5) * 2.0;
-                    // ADR0099 WORKING_VALUE: weak incidental contact on longitudinal marks with known lane data.
-                    // Preserves the retained calibrated transverse response (.425 uniform/.085 width).
-                    half worn = _PaintWear.x * wp * lerp(0.12, 1.0, transverse) * (0.55 + 0.9 * age)
+                    half worn = _PaintWear.x * wp * transverse * (0.55 + 0.9 * age)     // tyres scrub the crossed marks
                               + _PaintWear.y * (0.35 + age) * (0.6 + 0.4 * wp)          // weathering everywhere
                               + 0.10 * mott;
                     // chipped, not faded: a narrow threshold on the peak-weighted wear gives sharp-edged bare spots
