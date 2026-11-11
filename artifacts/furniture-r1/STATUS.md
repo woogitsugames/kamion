@@ -155,3 +155,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:28:12.1725122+01:00: Unity render after High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T00:28:41.9069071+01:00: Unity render after High clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T00:29:01.0884380+01:00: Unity sbs-sign after High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
