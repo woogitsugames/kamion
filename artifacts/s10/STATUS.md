@@ -772,3 +772,12 @@ observed. D81d787ca new current broad proof and BEFORE56 underway. GFixtures3/3
 complete; repaired only own venv and importrefreshes143stale Medium maps before
 new pinned baseline. CandidateG remains inactive. NEXT COMMAND:
 Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
+
+Step 69: G long PBR stage exposed missing inner guard in canonical scripts.
+Stopped own parent83620/build children before Unity; no PHONE race observed.
+Artifact wrapper repair separates CPU and immediate guarded launch; no mainedit.
+D BEFORE56 complete, pin catches only2 signalmaterial _EMISSION removals during
+first capture cleanup. Original2files verified against startpins; replay their
+exact bytes before AFTER firstcondition, compare END AFTER to actual END BEFORE.
+All other2439/raw192 exact; keyword validation exception explicitly retained.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
