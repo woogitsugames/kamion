@@ -15,7 +15,10 @@
 |---|---|---|---|---|
 | recenzja 0095 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0095.md | ZROBIONA `503c89ae`: scalenie PASS warunkowy, bramka wizualna węzłów FAIL (połamana P-21, Putry N/MA-010 gołe) |
 | węzły r3 | 0100 | .claude/worktrees/junctions-r3 (gałąź junctions-r3) | artifacts/junctions-r3/REPORT.md | SCALONE (REVIEW s10-0100: scalenie PASS warunkowy, bramka węzłów FAIL mniejszy; r4: pole płn. n100, nosy/koryta median, szwy łat, rozdział wsch. geometrią, zatoka zach., bariery E −782; materiały dróg = osobna runda ze zdjęciami); worktree usunięty; regeneracja `artifacts/logs/s10-regen-0100.log`; PO NIEJ: import-region + visual-qa kamery p0_/r2_/r3_ na main (stan po 0088/0098) |
-| recenzja B 0088 + C 0098 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0088-0098.md | w toku |
+| recenzja B 0088 + C 0098 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0088-0098.md | ZROBIONA: zostają na main, jakość FAIL; P0 RCAS-off rozmywa asfalt → GPT `docs/owner/GPT-FEEDBACK-S10.md` (0108 światło r13, 0109 roślinność r3) |
+| recenzja 0101 | — | — | REVIEW-2026-11-11-s10-0101.md | scalenie PASS warunkowy → scalić po regeneracji 0100 |
+| recenzja GPT H+I+L | — | — | REVIEW-2026-11-11-s10-gpt-HIL.md | w toku |
+| zabudowa r6 + działki | 0107 | .claude/worktrees/buildings-r6 | artifacts/buildings-r14/STATUS.md | w toku (world-builder, **Fable**) |
 | recenzja 0086 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0086.md | ZROBIONA: kontrakt OK, kalibracja FAIL (hala kp_wall przepalona, ekrany za ciemne); D48: tynk remizy 110/126/145 zostaje |
 | kalibracja r2 | 0101 | .claude/worktrees/tint-r2 (gałąź tint-r2) | artifacts/tint-r2/STATUS.md | w toku (rendering-perf) wg recenzji s10-0086 |
 | zabudowa r5 | 0097 | .claude/worktrees/buildings-r5 (gałąź buildings-r5) | artifacts/buildings-r13/REPORT.md | SCALONE (recenzja `REVIEW-2026-11-11-s10-0097.md`: PASS, jakość warunkowa; lista r6 P1-e..h); worktree usunięty; regeneracja `artifacts/logs/s10-regen-0097.log` |
@@ -32,7 +35,7 @@
 4. Węzły r3 wg recenzji 0095; Kwadrat r13 po zdjęciach właściciela; raport bramki 3.
 5. **GPT pakiet S10-B** `docs/owner/GPT-TASK-03-S10.md` (5 nowych sesji właściciela, po 1 strumieniu): H 0085 r2 tło (gpt-edge-r2 z argon-edge), I 0102 meble uliczne (gpt-furniture-r1), J 0103 side-by-side bramki 3 (gpt-sbs-gate3), K 0104 kabina/lusterka (gpt-cab-r1), L 0105 wiadukt pod pomostem (gpt-viaduct-r1). Scalać po REPORT.md.
 6. Następni w kolejce Claude: zabudowa r6 (0107, na Fable — lista r6 z REVIEW s10-0097 + działki domów P1-h), Kwadrat r13.
-7. Ostatni przydzielony ADR: **0106**.
+7. Ostatni przydzielony ADR: **0109** (0107 zabudowa r6, 0108/0109 GPT feedback).
 
 ---
 # HANDOVER — kamion, sesja 9 (2026-11-11 00:30 → ~10:30 lokalnie; zamknięta na polecenie właściciela przy końcu limitu 5 h)
