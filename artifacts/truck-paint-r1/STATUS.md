@@ -1,3 +1,6 @@
-﻿# S10 F / ADR0087
+# S10 F / ADR0087
 - Step1: read current F contract, owner glass decisions D31/D34/D44, ADR0059/0083 and project rules. Branch gpt-truck-paint at232fbada; A completed separately38149050. No source changes yet.
 - NEXT COMMAND: git lfs checkout; copy ignored local sources/caches, read-only junction raw source folders, audit gitdiff, then fresh world build/import and canonical truck/trailer build/install before baseline.
+
+- Step2: copied private Data/raw derived+cc0, CC0raw, Fab products, Unity Generated/Library, photos and PNG/NPY/NPZ material caches only. Read-only-use source junctions created. gitdiff clean. Missing ignored interiorLOD0 FBX SHA177d820ebe99b45b359789469107eaa498198e679a851a24db912ebd2a2930fe copied from main.
+- NEXT COMMAND: uv run --project tools/worldgen python tools/worldgen/roads/build_world.py --region bialystok-industrial-c; then import-region +canonicalTruck/Trailer builders/install, snapshot and baseline6conditions.
