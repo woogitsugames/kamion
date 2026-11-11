@@ -43,10 +43,13 @@ jak jechać”. Dowody: `artifacts/junctions-r2/`.
    zbudowane = `overrides_stale`. `paved_gore` dostał `surface:` (kostka).
 5. **P-2a tylko na dojeździe**: na jezdni jednokierunkowej ciągłe linie przed skrzyżowaniem były malowane także 20 m
    ZA skrzyżowaniem (koniec „a” łańcucha).
-6. **Trasa**: (a) na pierścieniu ronda i na jednokierunkowych ramionach przy nim trasa idzie osią jezdni; oś jest
-   trzymana `RING_HOLD_M` = 12 m od pierścienia i przechodzi w środek prawego pasa na `RING_BLEND_M` = 30 m; narożnik
-   przy pierścieniu zaokrąglany na 2 m zamiast 4–10 m (WORKING_VALUE); (b) trasa jadąca na wprost nie używa pasa
-   tylko do skrętu (`turn:lanes` / `turn_lanes`): przed n10015785253 prawy pas kończy się na wyspie.
+6. **Trasa** (regresja swept path ze scalenia 0076, zgłoszona przez integrację s9): (a) na pierścieniu ronda i na
+   jednokierunkowych ramionach przy nim trasa idzie osią jezdni; oś jest trzymana `RING_HOLD_M` = 12 m od pierścienia
+   i przechodzi w środek prawego pasa na `RING_BLEND_M` = 30 m; narożnik przy pierścieniu zaokrąglany na 2 m zamiast
+   4–10 m; (b) w ciasnym łuku jezdni jednokierunkowej ≥ 2 pasy, gdy pas leży po wewnętrznej stronie łuku, trasa
+   schodzi do osi jezdni (od R 60 m, w pełni przy R 30 m, wyprzedzenie 12 m) — obejście ronda Putry (w237183783 nie
+   ma `junction=roundabout`); (c) trasa jadąca na wprost nie używa pasa tylko do skrętu (`turn:lanes` / `turn_lanes`):
+   przed n10015785253 prawy pas kończy się na wyspie. Wszystkie progi WORKING_VALUE.
 7. **Pasy z pomiaru są prawdą dla fidelity**: `fidelity/run.py` porównuje liczbę pasów z `lane_edges` (z identyfikatorem
    override'u jako źródłem), gdy istnieje; tag OSM `lanes` zostaje w raporcie.
 8. **Narzędzia pomiaru**: `artifacts/junctions-r2/scripts/xsec.py`, `xbatch.py` — ortofoto „wyprostowane” wzdłuż łańcucha
@@ -55,6 +58,18 @@ jak jechać”. Dowody: `artifacts/junctions-r2/`.
    komórek HR (`ORTHO_HR_EXTRA`), bo `Data/raw/refs` jest w worktree tylko do odczytu (dociągnięte 2 komórki GUGiK WMS
    HighResolution: `artifacts/junctions-r2/ortho_hr/`, manifest z URL / sha256 / licencją — do przeniesienia przez lidera
    do `Data/raw/refs/gugik-ortho-hr/bialystok-industrial-c/`).
+
+9. **Rozwidlenia z położeniem autorskim**: (a) profil położenia odrysowany wzdłuż krawędzi jest bezwzględny —
+   `align_forks` go nie przesuwa, a wygładzanie przesunięć w łańcuchu ma dla niego σ 2,5 m zamiast 10 m; (b)
+   `profile.shifted_end_heights`: gdy wszystkie końce w węźle są odsunięte od węzła (pień ma położenie autorskie),
+   pniem jest najszerszy koniec, a pozostałe startują z jego powierzchni (łącznica do ronda Putry brała wysokość
+   węzła, 0,10 m nad powierzchnią pnia 4,9 m w bok — dwa progi po 5 cm w profilu trasy przy s 1411–1413);
+   (c) override węzła `nose_max_angle`: nos wysepki tam, gdzie krawężniki się rozchodzą, także gdy pierwsze metry
+   linii OSM odchodzą pod kątem > 25° (inaczej zaokrąglenie R 2,5 m dopiero 50 m dalej i łata rozciągnięta między
+   łącznicą a wznoszącym się dojazdem wiaduktu: 1,3 m różnicy wysokości w korytarzu trasy).
+10. **Dopasowanie profilu do punktów z ortofoto**: `artifacts/junctions-r2/scripts/fit_offset.py` (iteracyjnie, na
+   samej sieci; reszta ≤ 0,15 m). Odczyt „na oko” przesunięć względem linii OSM z załamaniem zawodził trzy razy
+   (zapis w `reason` override'ów) — przy ostrych załamaniach linii OSM mierzyć punkty w E/N i dopasowywać.
 
 ## Override'y (wszystkie z `reason` = pomiar, plik paska w `artifacts/junctions-r2/xsec/`)
 - Andersa, obie jezdnie między s 1100 a rozwidleniem do ronda Putry: 9 krawędzi z `lane_edges` + `center_offset`
