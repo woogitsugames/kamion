@@ -18,3 +18,6 @@ Krok3a: plny PBR wygenerowany475s. Uzupełniono jedyne brakujące istniejące we
 
 Krok3: świeży własny PBR/alpha/layout, hero i świat z901c przed zmianami produkcyjnymi. Zapisano źródła/referencję i192rawSHA, Fab15bezfallback, hero applied. NASTĘPNA KOMENDA: po explicit ROOT release i sprawdzeniu obu blokad import-region + canonicalvehiclefixture; następnie prawdziwe baseline LowWorldC/HighWorldC_High.
 
+
+Krok4: istniejący asphalt_detail_photo odtworzony bitowo identycznie z main/F/G (4 mapy); pin SHA1 pliku zgadza się z Commons, źródło PD John Harvey. Dowód asphalt-existing-input-parity.json. Przygotowano unity-baseline.ps1: oddzielne import/kanoniczny pojazd/capture, wymagany ROOT_UNITY_RELEASE.txt i brak OBU blokad przed każdym startem. Żadna Unity nie wystartowała. NASTĘPNA KOMENDA: dopiero po explicit ROOT release: pwsh artifacts/firestation-r10/unity-baseline.ps1 -Stage Import.
+
