@@ -55,3 +55,4 @@ Krok 19: ADR uzupełniono o zmierzone wyniki ekstrakcji, niezmienione obrysy, li
 Następny krok: wynik Compare oczekującego w heavy; później pełny GIS na zamknięcie rundy.
 Krok 20: przygotowano niewykonywany jeszcze audyt przejścia podłoża dla następnej rundy: porówna model wysokości Python z rzeczywistymi trójkątami zapisanej siatki apron, z wyłączeniem poboczy. Nie zmienia kodu produkcyjnego ani mgły i nie zakłada z góry widocznego szwu. Uruchomienie dopiero pod heavy, sekwencyjnie po Compare.
 Następny krok bieżącej rundy: Compare, a przy końcu rundy audyt diagnostyczny i pełny GIS w slocie heavy.
+Krok 21: Compare zakończone: 364 pary kamer, 182 Low bez naruszeń budżetu; 100 par fotograficznych B, 17 referencji C wykluczonych. Diagnostyka podłoża zakończyła się kodem 0 (audit-ground.log); nie zmienia geometrii. Następna komenda w tym samym heavy: uv run --project tools/worldgen python -m pytest tests/gis -q, na koniec rundy.
