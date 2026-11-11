@@ -110,12 +110,12 @@ def candidate_plants(lod, shift=4):
 
 COLORS={'fire_station':(146,157,171),'fire_station_alpha':(114,125,145),'hedge_thuja':(41,76,43),
         'hedge_shell_thuja':(49,87,44),'thuja':(48,83,47),'spruce':(36,73,47),'trunk':(79,71,54)}
-def project(mb,camera,size=(460,300),look_override=None):
+def project(mb,camera,size=(460,212),look_override=None):
     eye=np.array(camera['pos']);forward=np.array(camera['look_at'])-eye
     forward/=np.linalg.norm(forward);right=np.cross(forward,[0,0,1]);right/=np.linalg.norm(right);up=np.cross(right,forward)
     vv=np.array(mb.V);en=vv[:,:1]*g['AX_U']+vv[:,1:2]*g['AX_V']+g['AX_O']
     world=np.c_[en,vv[:,2]+g['FLOOR']];v=world-eye
-    z=v@forward;f=size[0]/(2*math.tan(math.radians(camera['fov_deg'])/2))
+    z=v@forward;f=size[1]/(2*math.tan(math.radians(camera['fov_deg'])/2))
     xy=np.c_[size[0]/2+f*(v@right)/z,size[1]/2-f*(v@up)/z]
     rgb=np.full((size[1],size[0],3),(224,229,234),dtype=np.uint8)
     depth=np.full((size[1],size[0]),np.inf)
@@ -163,7 +163,7 @@ for arch_index,center in enumerate(hall['arch_windows_u']):
         head.append(P3((center+x,-.205),sill+spring+rise*math.sqrt(max(0,1-(2*x/w)**2))))
     building.face(head,[(0,0)]*len(head),head_marker)
 sheet=Image.new('RGB',(960,720),'white');d=ImageDraw.Draw(sheet)
-d.text((10,8),'CPU SOURCE-MESH PROJECTION ONLY / unlit, no Unity material or lighting proof',fill='black')
+d.text((10,8),'SOURCE ONLY / Unity VERTICAL FOV, 460x212; unlit, no runtime material/alpha mip proof',fill='black')
 counts={};arch_visibility={}
 base_projection=np.array(project(building,camera))
 for row,lod in enumerate((1,0)):
@@ -215,5 +215,5 @@ for p,digest in snapshot.items(): assert hashlib.sha256(Path(p).read_bytes()).he
 raw_manifest=json.loads((OUT.parent/'baseline-raw-sha256.json').read_text())
 for name,digest in raw_manifest.items():
     assert hashlib.sha256((ROOT/'Data/raw/derived/bialystok-industrial-c/world'/name).read_bytes()).hexdigest()==digest
-(OUT/'proof.json').write_text(json.dumps({'status':'ARTIFACT_ONLY_UNLIT_SOURCE_MODEL_NOT_RUNTIME_ACCEPTANCE','source_sha256':snapshot,'plant_triangles':counts,'arch_visibility_definition':{'whole':'projected full arched opening silhouette from sill to curved top, including mullion/trim areas; NOT actual glass-pane pixels','head':'subset above sill+spring (4.2m floor-relative), the circular upper cap up to5.5m; excludes lower rectangular area','method':'CPU opaque source-mesh depth test against fixed fire_station_ref7197 camera at460x300; baseline ground/thuja positions retained','roi_proof':'arch-rois.jpg blue+pink=whole, pink=head'},'arch_visibility':arch_visibility,'spacing':spacing,'spruce_shift_m':4,'spruce_shift_ids':[0,1],'wing_conifer_id2':'unchanged; moving +u would place it into left arch','ground_height':'baseline heights retained for projection only; production must resample terrain through planner'},indent=2))
-print(json.dumps({'plant_triangles':counts,'arch_visibility_definition':{'whole':'projected full arched opening silhouette from sill to curved top, including mullion/trim areas; NOT actual glass-pane pixels','head':'subset above sill+spring (4.2m floor-relative), the circular upper cap up to5.5m; excludes lower rectangular area','method':'CPU opaque source-mesh depth test against fixed fire_station_ref7197 camera at460x300; baseline ground/thuja positions retained','roi_proof':'arch-rois.jpg blue+pink=whole, pink=head'},'arch_visibility':arch_visibility,'spacing':spacing},indent=2))
+(OUT/'proof.json').write_text(json.dumps({'status':'ARTIFACT_ONLY_UNLIT_SOURCE_MODEL_NOT_RUNTIME_ACCEPTANCE','source_sha256':snapshot,'plant_triangles':counts,'arch_visibility_definition':{'whole':'projected full arched opening silhouette from sill to curved top, including mullion/trim areas; NOT actual glass-pane pixels','head':'subset above sill+spring (4.2m floor-relative), the circular upper cap up to5.5m; excludes lower rectangular area','method':'CPU opaque source-mesh depth test against fixed fire_station_ref7197 camera verticalFOV at460x212; source shell treated opaque, NOT runtime alpha coverage; baseline ground/thuja positions retained','roi_proof':'arch-rois.jpg blue+pink=whole, pink=head'},'arch_visibility':arch_visibility,'spacing':spacing,'spruce_shift_m':4,'spruce_shift_ids':[0,1],'wing_conifer_id2':'unchanged; moving +u would place it into left arch','ground_height':'baseline heights retained for projection only; production must resample terrain through planner'},indent=2))
+print(json.dumps({'plant_triangles':counts,'arch_visibility_definition':{'whole':'projected full arched opening silhouette from sill to curved top, including mullion/trim areas; NOT actual glass-pane pixels','head':'subset above sill+spring (4.2m floor-relative), the circular upper cap up to5.5m; excludes lower rectangular area','method':'CPU opaque source-mesh depth test against fixed fire_station_ref7197 camera verticalFOV at460x212; source shell treated opaque, NOT runtime alpha coverage; baseline ground/thuja positions retained','roi_proof':'arch-rois.jpg blue+pink=whole, pink=head'},'arch_visibility':arch_visibility,'spacing':spacing},indent=2))

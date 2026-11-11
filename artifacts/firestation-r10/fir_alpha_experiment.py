@@ -129,7 +129,7 @@ for col,(label,mb,atlas) in enumerate((('opaque baseline Low',d['baseline_plants
     env['active_atlas']=atlas
     im=env['project'](d['combine'](d['building'],mb),d['camera'])
     sheet.paste(im,(10+480*col,55));dr.text((10+480*col,32),label+f' /{d["tri_count"](mb)}plant tris',fill='black')
-dr.text((10,8),'ARTIFACT ONLY: exact source alpha; unlit proxy, NOT a spruce scan or Unity acceptance.',fill='black')
+dr.text((10,8),'SOURCE ONLY: Unity VERTICAL FOV460x212; nearest basealpha, NOT runtime mips/lighting or Picea scan.',fill='black')
 sheet.save(OUT/'fir-alpha-proxy-low.jpg',quality=95)
 
 # Map diagnostic semantic colors to the EXISTING atlas material for a real

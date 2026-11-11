@@ -39,3 +39,6 @@ Krok9: ROOT obejrzał pełniejszy876tri CPUfirproxy: użyteczny do próby w Unit
 
 Krok10: jawny ROOTrelease11:56:56; przed pierwszym Unitypotwierdzono4sourceSHA+192rawbez zmian i obie blokady absent. Baseline IMPORT_RESULT OK,64chunks,190prototypes127065instances, Low111.3MB/High239.7MB z collision+instances. KanonicznyVehicle już uruchomiony sekwencyjnie po guardcheck; brak produkcyjnych zmian. Wykryto wyłącznie serializację nowych pól LP_Clear/Dusk/LowSun iM_Sky; przywrócę tylko te własne sideeffects przed baselinecapture. Skorygowano R1cameraIDs nafire-station-*; CPUhelper zakładał horizontalFOV, a prawdziwyUnityCamera używa verticalFOV — aktualne runtimeROIs będą liczone poprawnie. NASTĘPNA KOMENDA: po końcu Vehicle restorewłasnychLightingplików; unity-baseline.ps1 -Stage Capture -Phase before.
 
+
+Krok11: kanonicznyVehicleTRUCK_RESULT OKprzedBaseline. Prawdziwe160PNG(40kamer×4cond) i4stats gotowe: LowWorldC/HighWorldC_High clear/overcast. CanonicalvehicleSHAunchanged,192rawunchanged. Własne UnitysideeffectsLighting/M_Sky/QualitySettings przywrócone doHEAD. Pierwsze960pxref potwierdzają ciemne towerwing i przesłonięty prawyłuk. CPUrzuty przeliczone/oznaczone prawidłowym verticalFOV; nieużywanejakoexactruntimeROI. NASTĘPNA KOMENDA: wąskie wdrożenie fir876tri+existingalpha+pozycje3tujaforms; potem ownbuild/import i Lowovercast ref7197/route przed pełnymR1.
+
