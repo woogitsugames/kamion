@@ -1080,9 +1080,10 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
     T = np.array(T)
     lin.buf.add("furniture", "barrier_steel", V, UV, T, src=key)
     lin.buf.add("furniture", "barrier_steel", V, UV, T[:, [0, 2, 1]], src=key)
-    if tall.any():
-        # ADR 0110: a run on a deck belongs to the bridge mesh of its chunk (drawn with the deck), not to the furniture
-        # mesh (fences, hedges: its bounds grew by the viaduct and 8 more draws entered frames beside it)
+    if tall.any() or key.endswith(":structure"):
+        # ADR 0110: a run on a deck, and a run beside a viaduct, belong to the bridge mesh of their chunk (drawn with
+        # the deck; one barrier_steel primitive for both), not to the furniture mesh (fences, hedges: its bounds grew
+        # by the viaduct and 8 more draws entered frames beside it)
         for prt in lin.buf.parts[first:]:
             if prt.layer == "furniture":
                 prt.layer = "bridge"
