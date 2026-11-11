@@ -33,3 +33,6 @@
 - NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/final-gis-r3.log -Tail 6; Get-Content artifacts/viaduct-r10/unity-queue.log -Tail 1
 - Pełny GIS r3: 376 PASS / 1 XFAIL, 531.61 s (final-gis-r3.log); deterministyczny eksport zielony. Kod/geometria ustabilizowane.
 - Stan: GIS_DONE / UNITY_WAIT. PHONE_RUN nadal obecny; czekamy zgodnie z odpowiedzią właściciela. NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/render-before.log -Tail 10; Get-Content artifacts/viaduct-r10/validate-after.log -Tail 10
+- PHONE_RUN zwolniony ~11:54; baseline Unity zakończony: 20 PNG (5 kamer × Low/High × clear/overcast). Obejrzano before-low-sheet.jpg: ujęcia pod konstrukcją czytelne, oryginalny kadr przyczółka zasłania ekran akustyczny.
+- Import r3 do Unity w toku; po EditMode kolejka scout-detail.ps1 dobierze dodatkowy kadr przyczółka bez zmiany par before/after.
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/validate-after.log -Tail 10; Get-Content artifacts/viaduct-r10/import.log -Tail 10
