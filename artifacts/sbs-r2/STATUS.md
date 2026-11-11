@@ -52,3 +52,6 @@ Przygotowano recompose-history.ps1 do ponownego obliczenia metryk v2 dla render�
 
 ## Generator rozpoczął pracę
 Około północy po oczekiwaniu uzyskano heavy gpt-sbs-r2 (3/3). Log potwierdza rozpoczęcie pass 1 i przetworzenie węzłów pomostów. Proces nadal trwa; nie uruchamiamy jednocześnie innego ciężkiego zadania tej gałęzi. Wynik generatora nie jest jeszcze zatwierdzony.
+
+## Sekwencja po generatorze
+Przygotowano proces oczekujący na zakończenie własnego procesu World (PID 68496). Przypina uchwyt, sprawdza jego końcowy kod, a dopiero po sukcesie uruchomi kolejno trzy pojedyncze pliki testowe, fidelity i ponowne metryki historyczne. Każda ciężka faza ma osobne Acquire/Release i nie nakłada się z generatorem. Nie uruchamia Unity ani pełnego GIS; te kroki wymagają dalszej kontroli.
