@@ -12,7 +12,7 @@ and this coordination worktree start at 4f7da66c.
 | Stream | Agent | Branch / worktree | Status | State |
 |---|---|---|---|---|
 | A 0086 tint gamma | fab_processor | gpt-tint-gamma | artifacts/tint-gamma-r1/STATUS.md | contract PASS; calibration FAIL, leader ADR0101; docs1317afba |
-| B 0088 vegetation | tree_surfaces | gpt-vegetation-r2 | artifacts/vegetation-r2/STATUS.md | GIS364/2xfail; root owns EditMode retry after test assertion fix |
+| B 0088 vegetation | tree_surfaces | gpt-vegetation-r2 | artifacts/vegetation-r2/STATUS.md | COMPLETE scoped PASS; GIS364/2xfail, EditMode218/218 |
 | C 0098 light/post | world_integration | gpt-light-r12 | artifacts/light-r12/STATUS.md | COMPLETE clean5db77e9d; visual PASS; EditMode221/221 |
 | D 0099 surface wear | world_integration | gpt-surface-wear | artifacts/surface-wear-r1/STATUS.md | CPU baseline READY d00807ed; no production edits |
 | E 0090 fire station r7 | tree_surfaces | gpt-firestation-r7 | artifacts/firestation-r10/STATUS.md | CPU baseline READY; artifact-only shape/color audit; Unity held |
@@ -219,3 +219,13 @@ existingLowalphaatlas withoutnewbatch onlyifactualbatchkey/UV/mips verified.
 Species remains source-namedFir/unverifiedtaxonomy, nevercalledverifiedspruce.
 No E/Bproductionpromotion; phone segmentB stillactive, guardsremain.
 NEXT COMMAND: monitor G3B completion/stablePHONE absence, then rootB fullEditMode and explicit F/G/E release; G beforeD implementation.
+
+## Step16 - B closed, F/G/E explicitly resumed
+Actual phone gate3B END11:54:10, PHONE absent stable>2min. Removed only owned
+GPT_UNITY_HOLD, controlled B retry218/218 PASS0failed/0skip at11:55:44; all6
+newpolicycases pass,192raw/JSON unchanged. REVIEW-B PASS finalized; branchB
+REPORT/ADR/XML/verification updated with test-only fix andCC0 input prerequisite.
+Explicitly resumed exactly3workers F/G/E11:56:56; E localrelease markerwritten.
+G resumes ownfreshbaseline FIRST; D remainsCPU-ready frozen. RecheckPHONE
+andsharedhold before everylaunch, no device/mainmerge actions byGPT.
+NEXT COMMAND: inspect actual F candidate102 and G/E freshbaseline metrics; finalize B artifactcopy/cleancommit, then continue full F/G/E and D.
