@@ -39,3 +39,6 @@
 - Offline PBR preparation complete (466s). Missing asphalt source photo found in main, copied locally, and asphalt_detail_photo regenerated in 1s; materials_spec.json remains byte-equivalent under git (no material source/spec changes).
 - New guarded render sequence running: session uses baseline generator then waits for PHONE_RUN before import. No Unity launched yet; user confirmed phone measurement still active.
 - NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20
+- Verified named Las Pietrasze in the pinned local OSM source (pyosmium Area.id 11153179); nearest outside-tile part from helper camera is E -637.79 / N 1032. Camera target E -500/N1300 is inside source polygon.
+- Supplementary cameras now look NE from DK8/DK19 exit, not along NNW road axis; standard dk8-dk19-exit unchanged. forest_identity.py reproduces source identity/geometry, summary kept in git.
+- NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20 (PHONE_RUN active, no Unity).

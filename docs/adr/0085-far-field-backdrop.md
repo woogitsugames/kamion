@@ -74,3 +74,5 @@ Performance baseline for r2 is argon-edge + main 9e6e9fde on the same imported w
 
 
 Measured r2 extraction/mesh audit: buildings 8470 -> 8447 (23 excluded: 2 blocks, 18 halls, 3 offices). Against the full region-building union, raw rectangle intersections 19 -> 0 and compressed rectangle intersections 22 -> 0 (sets overlap). Low mesh triangles 24826 -> 24508 (-1.28%); High 118902 -> 118524 (-0.32%). Forest primitive triangle counts and textures are unchanged. These are generated mesh counts, not per-camera GPU measurements; render/Unity checks remain pending while PHONE_RUN exists.
+
+Named-forest provenance: the pinned OSM extract contains Las Pietrasze (pyosmium Area.id 11153179), bounds E -676.23..1712.76 / N -306.91..2889.50. The supplementary road-eye camera looks NE from E -828 / N 905 toward E -500 / N 1300, verified inside that forest polygon; the NNW road-axis camera remains unchanged. This avoids calling a generic NNW corridor tree line Las Pietrasze. See forest_identity.py and pietrasze-source-summary.json.
