@@ -809,3 +809,17 @@ poses/region exact;192raw/90fixtures unchanged. Approved R4sevenfiles active,
 17targettests and cleanmap generation complete; candidate CPUworld export running.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
 Check D CPU pack proof and G smallP0focus next; no final acceptance implied.
+Step 72: D CPU packf654f17e reviewed:4096RGBA G/B/A16tiles byte-exact, existing
+16m open-R nearest4x, deterministic two-run PNG SHA, ideal box-mip/UV-period tests
+pass. Private PNG not committed; originalshader/cache2441/raw192 unchanged.
+Fresh explicit QA-only release19:00:59 after both guards absent: actualASTC2048/
+12mip/readback first, then16frames oldlane/missingUV2/newroad/P8 x4 via temporary
+clone/QAshader, exactfinallyrestore and no shipping activation. Original1dc stays.
+G368BEFORE source96386 validated; R4candidate export complete/pending import.
+Clean PNG test caught Gaussian-wrap changes only at upper edge rows0/1; approved
+car_grime-only legacypadding v<.05, conditional actualTile/UVwrap proof/alltiers.
+No sharedwriter changes; do not claim allmip equality. Content-only private prep
+exception allowed solely with allbaselinePNG/otherfunction+source hashes exact,
+missing/fallback failclosed and versioned readyrecord. No generic stale bypass.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
+Review D actualASTC/16QA and G smallP0focus; final acceptance still pending.
