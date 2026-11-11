@@ -10,7 +10,7 @@ Inspected all20 contact sheets covering160 final full frames, the16 true-runtime
 | Thuja Low/High, clear/overcast | Three irregular habits, spacing≤19.50%; final interior paired ratio High/Low1.0889OV/.9945clear, coherent hue. High runtime copy now physically leaf-lit; Low stays Lit even near. | Individual lighting differences remain; selected interior masks are not exact radiometric matching. |
 | D48 plaster / wing / tower | Preserved PASS: gableOVLow105/123/141,High112/131/150 within owner±10. Wing/tower already comparable or brighter. | No new brightening/fix claimed. Roof/trim/office/flag protected. |
 | Old alpha lettering/fence/clock/flag | No obvious regression in actual native ref/route; old alpha exactmip0–3. Coarse threshold differences disclosed. | Android GPU/temporal shimmer and distant glyph stability UNVERIFIED. |
-| Technical Low budget | Full80matched views maxdelta0drawEst/0ktri; unchanged peaks968/487k. Low2slots/2828hero tri exact baseline. | Draw estimates do not replace phone timing. |
+| Technical Low budget | Full80matched views maxdelta0drawEst/0ktri; unchanged peaks968/487k. Asset LOD1 retains2slots/2828tri; activeLow near canselectLOD0 (3slots/9344tri). | Draw estimates do not replace phone timing. |
 | Technical High cost | Full80matched maxdelta0drawEst/0ktri; unchanged peaks1778/2476k. Source assets unchanged by runtime copies. | Additional Vegetation depth pass is not measured on GPU; do not claim free. |
 
 Arch whole-opening and head metrics are distinct color classifiers, not depth visibility. Right head improves~63→99%Low/~54→98%High, while lower glass still has thuja occlusion. Photo provenance/exposure and the fir/conifer source identity are explicit; no verified Picea scan claim.

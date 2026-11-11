@@ -1,7 +1,7 @@
 # JRG2 r7 — technical validation and appearance
 - Branch gpt-firestation-r7; matched baseline901c427f,160before/160after,40cameras×LowWorldC/HighWorldC_High×clear/overcast; all20finalsheets inspected.
 - Connected short-needle conifer cards/core, foreground+4m, three irregular thuja forms; CC0fir source pinned/restore package self-contained; not verified Picea.
-- Hero9344/2828/164tri (was9944/2828/164),High3/Low2slots; global hedge palette and D48paint preserved.
+- Hero LOD0/LOD1/Far9344/2828/164tri (was9944/2828/164),3/2/1slots; activeLow canselectLOD0; global hedge palette and D48paint preserved.
 - Exact hero runtime High-only leaf lighting; LowURPLit includingLOD0,HighVegetationcopy .25transmission/0shade, no sharedasset mutation; factoryreimport byte-idempotent.
 - Brown clinker and sparse physical runoff; existing splash/vents/flag retained. Cleanpaint/roof/trim/office/flag pixels and9auxmaps exactbaseline.
 - Glass meanY: OVLow63.42–66.81/High70.12–73.24 PASS60–75; clearLow81.83–89.92/High88.97–96.76 (round~98) FAIL.
