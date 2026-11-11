@@ -1,6 +1,6 @@
 # ADR 0088: Roślinność r2
 
-Status: zaimplementowane; ograniczony wizualny PASS i GIS PASS. EditMode PENDING za PHONE_RUN; zamknięcie techniczne przejmuje lider ROOT.
+Status: implemented in gpt-vegetation-r2; scoped independent PASS, GIS364/2xfail, EditMode218/218; no main merge by GPT.
 
 ## Problem
 
@@ -32,4 +32,4 @@ DK8 overcast p10/p50 Low18,644/31,147→33,140/42,495,High21,504/34,786→35,849
 
 Istniejące skanyR1 boxwood/elderberry są zachowane, nie stanowią nowej geometrii B. Aktywne VarA:boxwood7062/18/6tri i6instancji; elderberry7139/22/6tri i37instancji. Wszystkie6GLB mają SHA identyczne z oryginalnym cache, źródła pozostają zatwierdzone. Dowód i neutralna galeria z runtime teksturami: shrubs-preservation-proof.json / shrubs-LOD-preserved.jpg.
 
-PełneGIS364passed,2xfailed,676,87s;192raw i canonicalJSON bez zmian po testach. First EditMode218/212 had6 exact input-Color versus Unity readback assertion failures. Test-only fixf37499de compares stored pre/post-policy color; production unchanged. Full EditMode retry PENDING behind PHONE_RUN/GPT_UNITY_HOLD, owned by ROOT. Wizualny PASS jest ograniczony: karty i lipa pozostają stylizowane (P2), bliskie żywopłoty uproszczone, temporalne LOD/shimmer i GPU A16 UNVERIFIED. Nie deklarujemy fotorealizmu.
+PełneGIS364passed,2xfailed,676,87s;192raw i canonicalJSON bez zmian po testach. Final full EditMode218/218 PASS,0failed/0skipped, after test-only stored-color assertion correction f37499de. Production and matched images unchanged; verified head1dc20dd2 and192raw/canonicalJSON unchanged. Earlier218/212 run is retained for audit, not final acceptance. Wizualny PASS jest ograniczony: karty i lipa pozostają stylizowane (P2), bliskie żywopłoty uproszczone, temporalne LOD/shimmer i GPU A16 UNVERIFIED. Nie deklarujemy fotorealizmu.

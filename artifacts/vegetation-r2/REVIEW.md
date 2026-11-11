@@ -1,6 +1,6 @@
 # Independent review - S10 B / ADR0088
 
-Verdict: bounded visual/source PASS; finalGIS/EditMode pending.
+Verdict: bounded visual/source PASS; final GIS364/2xfail and EditMode218/218 independently verified,0failed/0skipped.
 Root independently viewed all20finalafter sheets, all236frames fourconditions,
 960pairedDK8/Putry/grassblock2 and actualpine-alpha causalablations. Baseline
 4f7da66c retained; finaltexturepolicy1d822d56, freshcanonicalworld698fc0c3.
@@ -31,7 +31,11 @@ R1Fabboxwood/elderberry preserved proof reviewed: all6activeLOD GLB hashes
 match originalcache,6boxwood/37elderberry worldinstances; actual externalruntime
 texture gallery viewed at960x860. Gallery is source-model QA, not driver lighting
 or GPUbudget proof. Lowbudget elderberry LODs retain coarse inherited appearance.
-FinalGIS/canonicalfixtureEditMode and ADR/report stillneed closure. C/A/leader
+Final canonicalfixture EditMode218/218 and192raw/canonicalJSON invariance verified.
+The first218/212 run failed six exact Color input/readback comparisons; test-only
+f37499de compares stored pre/post color. Runtime and matched images unchanged. C/A/leader
 ADR0101 integration is separate; commonshaderincludes/CanopyPolicy must survive.
 
 Reference photo-crown-rois.jpg independently viewed with sourceSHA/ROIs; mixedseason/exposure and sparse5.3percent secondphoto mask preclude exactphysicalalbedo inference.
+
+Coordinator closure2026-11-11: testedhead1dc20dd2, sourcepolicy1d822d56. B rawpine CC0 input packet must be restored from artifacts with restore_cc0_inputs.py aftermerge before regeneration; main lacked both inputs, procedural fallback would otherwise undo the reviewed needle source.
