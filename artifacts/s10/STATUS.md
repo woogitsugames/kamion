@@ -988,3 +988,11 @@ moved import before transient creation and pins live assets. Corrected probe
 is running. No GPU acceptance from failed output. C13 preflight wording was
 also corrected04068bbe to internal ROOT review rather than new user approval.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-plate-gpu.log -Tail 8
+
+Step 91: Corrected plate vertex GPU probe exits0. ROOT independently parsed
+260 recorded cases:216 native54*4target,40 rebase,4 GI-off; zero cell/UV-center
+mismatches. Actual four target cells8/25/6/11 stay stable across their65cases.
+Observed D3D12/Forward; source/material unchanged and cloned factory idempotent
+per probe records. SRP raw code1 for both owned and Lit is parity, not a claim
+of compatibility. E audits the harness independently. Small focus next.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8

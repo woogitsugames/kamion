@@ -1,0 +1,52 @@
+{
+    "method":  "Independent parsing of recorded GPU cases, not a new GPU run",
+    "cases":  260,
+    "mismatches":  0,
+    "maxUvError":  0.0,
+    "originalUnchanged":  true,
+    "factoryIdempotent":  true,
+    "controls":  [
+                     {
+                         "Name":  "native54",
+                         "Count":  216
+                     },
+                     {
+                         "Name":  "rebase",
+                         "Count":  40
+                     },
+                     {
+                         "Name":  "GI-off",
+                         "Count":  4
+                     }
+                 ],
+    "targets":  [
+                    {
+                        "index":  "13465",
+                        "cells":  [
+                                      8
+                                  ],
+                        "cases":  65
+                    },
+                    {
+                        "index":  "14842",
+                        "cells":  [
+                                      25
+                                  ],
+                        "cases":  65
+                    },
+                    {
+                        "index":  "8908",
+                        "cells":  [
+                                      6
+                                  ],
+                        "cases":  65
+                    },
+                    {
+                        "index":  "731",
+                        "cells":  [
+                                      11
+                                  ],
+                        "cases":  65
+                    }
+                ]
+}
