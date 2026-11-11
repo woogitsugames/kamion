@@ -13,3 +13,6 @@ Zgodność dotychczasowej kompozycji: 40/40, testy fotometrii: 13/13. Dodano rap
 
 ## Odświeżenie świata i testy raportu
 Uruchomiono regenerację świata z właścicielem heavy gpt-sbs-r2. Testy raportu sprawdzają odrzucanie niezgodnych kohort, liczenie zmiany błędu, nieprzenoszenie recenzji na inne piksele, brak cichego pomijania arkuszy i bezpieczne osadzenie danych w HTML. Wykonanie pojedynczego pliku testowego nastąpi po zwolnieniu naszego slotu przez generator, aby nie współdzielić jednej dzierżawy między zadaniami.
+
+## Kontrola niezależna raportu
+Recenzent wskazał trzy blokery: ukrycie D51 przez brak pliku, awans starej diagnostyki i różne rozdzielczości trendu. Poprawiono: domyślnie ładowana jest repozytoryjna recenzja D51, jawnie brakująca ścieżka zgłasza błąd; diagnostyka wymaga identycznej epoki i nie może awansować C; trend porównuje rozdzielczości źródłowe, analityczne i gradientu. Dodano regresje. Arkusz pokazuje końcowy status kwalifikacji próbki. Generator nadal oczekuje na wolny heavy, bez uruchamiania równoległych ciężkich zadań naszej gałęzi.

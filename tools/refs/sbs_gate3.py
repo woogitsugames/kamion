@@ -557,7 +557,7 @@ def compose(render_dir, outdir, strict=True, include_rejected=False, historical=
         for j,text in enumerate([f"Photo: {r['author']} | {r['license']} | {r['captured_at']}",r['page_url'],
                                   'Grid: 25%; red: authored horizon. Photo rectified/cropped if intrinsics cached.',
                                   'Histogram and sky/asphalt estimates: metrics.json; no gate PASS inferred.',
-                                  f"Photometric use: {m['photometric_use']} ({photo_samples['status']}) | {r.get('photo_vs_data_age','Data epoch UNVERIFIED')}"]):
+                                  f"Photometric use: {m['photometric_use']} ({m['photometry']['status']}) | {r.get('photo_vs_data_age','Data epoch UNVERIFIED')}"]):
             d.text((6,height+29+j*17),text,fill='white')
         peak=max(float(ph.max()),float(rh.max()),1e-9)
         for hist,color in [(ph,'#55bbff'),(rh,'#ffaa44')]:

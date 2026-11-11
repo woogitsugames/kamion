@@ -24,6 +24,12 @@ def compatibility(before,after):
         if before[key]!=after[key]:return 'SOURCE_CHANGED' if key=='comparison_sha256' else 'POSE_CHANGED'
     if not before.get('metric_definition') or before.get('metric_definition')!=after.get('metric_definition'):return 'METRIC_DEFINITION_CHANGED'
     if not before.get('tier') or not before.get('lighting') or any(before.get(k)!=after.get(k) for k in ('tier','lighting')):return 'RENDER_STATE_CHANGED'
+    for panel in ('photo','render'):
+        for key in ('source_size_px','analysis_size_px'):
+            values=[row.get(panel,{}).get(key) for row in (before,after)]
+            if any(not isinstance(v,list) or len(v)!=2 or any(isinstance(x,bool) or not isinstance(x,int) or x<=0 for x in v) for v in values):return 'MISSING_RESOLUTION'
+            if values[0]!=values[1]:return 'RESOLUTION_CHANGED'
+        if any(row.get(panel,{}).get('gradient_width_px')!=before.get(panel,{}).get('gradient_width_px') for row in (before,after)):return 'RESOLUTION_CHANGED'
     if not all(row.get('photometric_use') is True and row.get('photometry',{}).get('status')=='REVIEWED_SAMPLES' for row in (before,after)):return 'UNQUALIFIED_SAMPLES'
     if not all(valid_sha(row.get('mask_signature')) for row in (before,after)):return 'MISSING_MASK_IDENTITY'
     if before['mask_signature']!=after['mask_signature']:return 'MASK_CHANGED'
@@ -82,10 +88,19 @@ def collect_run(path,outdir):
         if not metric_file.exists():continue
         metrics=read(metric_file)
         if metrics.get('missing_renders'):raise ValueError(f'incomplete SBS run: {path} {state}')
+        if len({p['camera'] for p in metrics.get('pairs',[])})!=len(metrics.get('pairs',[])):raise ValueError('duplicate metric camera')
+        rejected={r['camera']:r.get('reason','') for r in metrics.get('rejected_poses',[])}
         records={p['camera']:{**p,'sheet_root':path/'sheets'/state} for p in metrics.get('pairs',[])}
+        if set(records)&set(rejected):raise ValueError('qualified metrics overlap excluded roster')
         diagnostic_file=path/'diagnostics'/state/'metrics.json'
         if diagnostic_file.exists():
-            for p in read(diagnostic_file).get('pairs',[]):records.setdefault(p['camera'],{**p,'sheet_root':path/'diagnostics'/state})
+            diagnostic=read(diagnostic_file)
+            for key in ('render_captures','cameras_sha256','metric_definition'):
+                if diagnostic.get(key)!=metrics.get(key):raise ValueError('diagnostic provenance differs from qualified metrics')
+            for p in diagnostic.get('pairs',[]):
+                if p['camera'] in records:continue
+                if p['camera'] not in rejected or p.get('pose_confidence')!='C':raise ValueError('diagnostic cannot promote rejected or unknown pose')
+                records[p['camera']]={**p,'sheet_root':path/'diagnostics'/state}
         rejected={r['camera']:r.get('reason','') for r in metrics.get('rejected_poses',[])}
         for camera,reason in rejected.items():records.setdefault(camera,{'camera':camera,'pose_confidence':'C','pose_reason':reason})
         pairs=[]
@@ -119,7 +134,9 @@ def build_report(run_paths,outdir,recognition_file=None):
     runs=[collect_run(Path(path),outdir) for path in run_paths]
     if len({r['id'] for r in runs})!=len(runs):raise ValueError('duplicate report run IDs')
     runs.sort(key=lambda r:r.get('captured_at_utc') or '')
-    recognition=read(recognition_file) if recognition_file and Path(recognition_file).exists() else {'gate_result':'UNVERIFIED','criterion':'D51','assessments':[]}
+    recognition_path=Path(recognition_file) if recognition_file is not None else ROOT/'Data/Regions/bialystok-industrial-c/sbs_recognition.json'
+    if not recognition_path.is_file():raise ValueError('recognition review file required; refusing to hide existing D51 verdict')
+    recognition=read(recognition_path)
     review_by_camera={r['camera']:r for r in recognition.get('assessments',[])}
     for run in runs:
         for state in run['states'].values():

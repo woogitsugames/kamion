@@ -1,4 +1,4 @@
-﻿"""Report regression checks: matched cohorts, pixel-bound reviews and offline HTML."""
+"""Report regression checks: matched cohorts, pixel-bound reviews and offline HTML."""
 from pathlib import Path
 import copy
 import json
@@ -12,8 +12,8 @@ def pair():
     return dict(camera='sbs-test',pose_confidence='B',comparison_sha256='a'*64,render_sha256='b'*64,
                 pose_signature='c'*64,mask_signature='d'*64,metric_definition='v2',tier='Low',lighting='clear',
                 photometric_use=True,photometry={'status':'REVIEWED_SAMPLES'},histogram_l1_distance=0.5,
-                photo={'asphalt_luma_mean_srgb_estimate':70,'rms_contrast_srgb':0.5},
-                render={'asphalt_luma_mean_srgb_estimate':90,'rms_contrast_srgb':0.8})
+                photo={'source_size_px':[1280,960],'analysis_size_px':[1280,960],'gradient_width_px':640,'asphalt_luma_mean_srgb_estimate':70,'rms_contrast_srgb':0.5},
+                render={'source_size_px':[1280,960],'analysis_size_px':[1280,960],'gradient_width_px':640,'asphalt_luma_mean_srgb_estimate':90,'rms_contrast_srgb':0.8})
 
 
 @pytest.mark.parametrize('key,value,reason',[
@@ -79,3 +79,33 @@ def test_report_refuses_path_escape(camera):
 def test_missing_qualified_sheet_is_not_silently_hidden(tmp_path):
     run=fixture_run(tmp_path);(run/'sheets/Low-clear/sbs-test.png').unlink()
     with pytest.raises(ValueError,match='missing report sheet'):report.build_report([run],tmp_path/'out')
+
+
+def test_resolution_change_is_not_comparable():
+    a=pair();b=pair();b['render']['source_size_px']=[640,480]
+    assert report.compatibility(a,b)=='RESOLUTION_CHANGED'
+    del b['render']['source_size_px']
+    assert report.compatibility(a,b)=='MISSING_RESOLUTION'
+
+
+def test_missing_review_cannot_erase_existing_fail(tmp_path):
+    run=fixture_run(tmp_path)
+    with pytest.raises(ValueError,match='recognition review file required'):
+        report.build_report([run],tmp_path/'out',tmp_path/'typo.json')
+
+
+def test_diagnostic_cannot_promote_rejected_pose(tmp_path):
+    run=fixture_run(tmp_path);diag=run/'diagnostics/Low-clear';diag.mkdir(parents=True)
+    p=pair();p['camera']='sbs-rejected'
+    metrics=json.loads((run/'sheets/Low-clear/metrics.json').read_text());metrics['pairs']=[p]
+    (diag/'metrics.json').write_text(json.dumps(metrics))
+    with pytest.raises(ValueError,match='diagnostic cannot promote'):
+        report.build_report([run],tmp_path/'out')
+
+
+def test_diagnostic_requires_same_capture_epoch(tmp_path):
+    run=fixture_run(tmp_path);diag=run/'diagnostics/Low-clear';diag.mkdir(parents=True)
+    metrics=json.loads((run/'sheets/Low-clear/metrics.json').read_text());metrics['render_captures'][0]['git_sha']='a'*40
+    (diag/'metrics.json').write_text(json.dumps(metrics))
+    with pytest.raises(ValueError,match='diagnostic provenance differs'):
+        report.build_report([run],tmp_path/'out')
