@@ -1321,24 +1321,17 @@ overrides:
       kerb about 4.3 m left of the OSM way, lane line 0.35 m left, solid line / top border of the chevrons 2.55 m right
       (N 64.2 / 59.75 / 56.9 at E -815) = two lanes 3.45 + 2.9 m; south of them the painted wedge (0.75 -> 3 m) and from
       E -805.6 the kerbed separator. lane_edges (from the left edge) + width: the carriageway runs on under the hatching
-      and the island to the ramp lane, so they keep asphalt under them and no kerb is generated between the two ribbons
+      and the island to the ramp lane, so they keep asphalt under them and no kerb is generated between the two ribbons; over the last 28 m it
+      returns to the standard 8.0 m on the OSM way (bridge joint, deck not touched)
       (the standard gave 8.0 m centred on the way: its right lane lay under the chevrons and the island).
       Readings +-0.5 m between crops (WORKING_VALUE).
     confidence: medium
     verify: owner drive
     set:
       lane_edges: [0.5, 3.95, 6.85]
-      width: 10.6
-      center_offset: -1.0
+      width: [[0.0, 10.6], [0.8, 10.6], [1.0, 8.0]]
+      center_offset: [[0.0, -1.0], [0.8, -1.0], [1.0, 0.0]]
       edge_lines: left
-  - id: dk8-e-split-main-geometry-2
-    target: {edge: "w490398847:4825844767-4825844765"}
-    reason: The widened plate of dk8-e-split-main-geometry runs out to the standard 8.0 m on the OSM way over this 11.5 m edge (viaduct deck not touched).
-    confidence: low
-    verify: owner drive
-    set:
-      width: [[0.0, 10.6], [1.0, 8.0]]
-      center_offset: [[0.0, -1.0], [1.0, 0.0]]
   - id: dk8-e-split-link-geometry
     target: {edge: "w173956079:1832975577-2256069814"}
     reason: >-
@@ -1348,22 +1341,14 @@ overrides:
       51.05 / 52.1 / 51.2 / 48.5 / 42.6; crops artifacts/junctions-r4/trace/e_split_band.jpg, plan_b0x/east_split_w.jpg,
       east_split_e.jpg, xsec/e_link_raw.png). The generated south edge lay 3-4 m beyond it. The ribbon is that lane (the
       hatching and the island lie on the main carriageway, dk8-e-split-main-geometry); from station 108 it widens to the
-      two lanes of the next edge. Readings +-0.5 m (WORKING_VALUE).
+      7.5 m of the next edge and returns to the OSM way at the bridge joint (deck not touched). Readings +-0.5 m (WORKING_VALUE).
     confidence: medium
     verify: owner drive
     set:
       lanes: 1
-      width: [[0.0, 3.8], [0.206, 3.8], [0.397, 3.8], [0.616, 3.8], [0.78, 4.3], [1.0, 6.4]]
-      center_offset: [[0.0, -3.4], [0.206, -0.85], [0.397, -0.6], [0.616, 1.3], [0.78, 1.75], [1.0, 0.8]]
+      width: [[0.0, 3.8], [0.206, 3.8], [0.397, 3.8], [0.616, 3.8], [0.78, 4.3], [1.0, 7.5]]
+      center_offset: [[0.0, -3.4], [0.206, -0.85], [0.397, -0.6], [0.616, 1.3], [0.78, 1.75], [1.0, 0.0]]
       edge_lines: right
-  - id: dk8-e-split-link-geometry-2
-    target: {edge: "w257367449:2256069814-2256069811"}
-    reason: dk8-e-split-link-geometry runs back to the OSM way and 7.5 m over the 11.5 m edge at the bridge joint.
-    confidence: low
-    verify: owner drive
-    set:
-      width: [[0.0, 6.4], [1.0, 7.5]]
-      center_offset: [[0.0, 0.8], [1.0, 0.0]]
   - id: dk8-e-split-p21-front
     kind: painted_zone
     chevron_axis: [[-831.0, 56.3], [-806.0, 55.3]]
