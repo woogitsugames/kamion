@@ -9,3 +9,5 @@ Krok 2: skopiowano derived, CC0, Megascans i _Generated; robocopy bez błędów,
 Krok 3: przygotowano procedurę baseline i ADR 0115. Obejrzano zdjęcia Commons: ciągnik użytkowy oraz lakier z odbiciami otoczenia. Library nadal się kopiuje; Unity jeszcze nie uruchamiano. Następny krok: pwsh artifacts/truck-r1/baseline.ps1.
 
 Krok 4: Library skopiowano bez błędów (53144 pliki). Baseline czeka na slot 4/4; równolegle uruchomiono wymagane testy GIS. Przygotowano jawne prostokątne ROI oraz arkusze przed/po do 960 px. Następny krok: uv run --project tools/worldgen python artifacts/truck-r1/measure.py before (po renderze).
+
+Krok 5: zapisano SHA-256 shaderów, TruckLights i wszystkich źródłowych FBX zewnętrza/naczepy przed zmianami. Baseline nadal w kolejce Unity, bez uruchomienia poza blokadą. Następny krok: po zapisaniu baseline zmierzyć ROI i poprawić zgodność FragFast.
