@@ -36,3 +36,4 @@ Baseline Low clear zapisany. Następny krok: obejrzeć PNG i zmierzyć lakier, s
 
 Krok 16: pomiary zapisują także historyczną metodę po zmniejszeniu do 1024 px oraz dotychczasowe ROI szyby w truck-34, obok pomiaru natywnego. Dodano kontrolę bez samej przedniej tafli dla D44 przy zachmurzeniu; nie usuwa soczewek lamp ani pozostałego szkła. Następny krok: po baseline wykonać zestawy kontrolne, porównywać te same ROI i metodę.
 Baseline High overcast zapisany. Następny krok: obejrzeć PNG i zmierzyć lakier, szybę oraz DRL.
+Baseline High clear zapisany. Następny krok: obejrzeć PNG i zmierzyć lakier, szybę oraz DRL.
