@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
 foreach ($tier in @('Low', 'High')) {
     $scene = if ($tier -eq 'High') { 'WorldC_High' } else { 'WorldC' }
-    pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-truck -StaleHours 100000
+    pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-truck -StaleHours 100000 -PollSeconds 5
     if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu Unity.' }
     try {
         pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $tier -Lighting overcast -OutputDir "artifacts/truck-r1/$Stage/$tier-overcast"

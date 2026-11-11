@@ -7,7 +7,7 @@ foreach ($case in @('white-on', 'white-off', 'dark-on', 'dark-off')) {
     $argsForUnity = @('-executeMethod', 'Game.Editor.VisualQA.TruckRound0115.RunBatch', '-truckRound', "control-$case", '-truckOutputRoot', 'artifacts/truck-r1', '-truckCameras', 'truck-34,truck-side', '-truckTiers', 'Low,High', '-truckLights', 'overcast,clear')
     if ($case.StartsWith('dark')) { $argsForUnity += @('-truckPigment', '0.08') }
     if ($case.EndsWith('off')) { $argsForUnity += @('-truckCoatRadianceOff', '1') }
-    pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-truck -StaleHours 100000
+    pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-truck -StaleHours 100000 -PollSeconds 5
     if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu Unity.' }
     try {
         $log = "artifacts/truck-r1/control-$case.log"
