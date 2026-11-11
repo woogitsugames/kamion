@@ -29,3 +29,13 @@
   `grep -n "error CS\|Shader error" artifacts/buildings-r16/r1/import.log` →
   `python artifacts/buildings-r16/budget2.py artifacts/buildings-r16/base/Low-overcast artifacts/buildings-r16/r1/Low-overcast` (i High) →
   obejrzeć `r1/extra/960/r16_*.jpg`, `r15_front_*.jpg` → poprawki → ADR `docs/adr/0124-buildings-r8.md`.
+
+## krok 3 — import r1 OK, Low zmierzony
+- Import r1 exit 0 (568 s), brak błędów C# / shaderów; `Kamion/World PlotKit` renderuje (obejrzane `r1/Low-overcast/r10_house_2`:
+  zjazd bez kostki na jezdni, krawężnik obniżony, płot nie przecina bramy garażu).
+- Budżet Low overcast, 67 kamer, r1 vs baza (= r7 / main), `budget_low_r1.txt`: MeshRenderer −6, instancje −6, razem **−12**,
+  najgorsza kamera **+3** (`r10_block_3`, `r10_block_4`: nowy węzeł `wires` w chunkach bez przewodów), `r10_house_1/2` **−4**
+  (r7 względem świata bez działek: +11 → teraz +7); cienie MR −32; trójkąty siatek −8 k.
+- W toku: `full_round.ps1 -Round r1` (High overcast, extra High, extra Low).
+- NASTĘPNY KROK: `python artifacts/buildings-r16/budget2.py artifacts/buildings-r16/base/High-overcast artifacts/buildings-r16/r1/High-overcast`
+  → obejrzeć `artifacts/buildings-r16/r1/extra/960/r16_*.jpg` → ADR 0124.
