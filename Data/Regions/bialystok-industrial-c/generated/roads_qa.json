@@ -10345,7 +10345,7 @@
   "crossings_skipped": [],
   "crossings_snapped": 71,
   "decals": {
-   "gullies": 771,
+   "gullies": 770,
    "oil": 286,
    "patches": 316
   },
@@ -10354,7 +10354,7 @@
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 505757,
+  "footprint_nodes": 563161,
   "fork_abreast": [
    {
     "alongside_run_m": 125.0,
@@ -11552,7 +11552,7 @@
      "surface": "sidewalk_paving"
     },
     {
-     "area_m2": 7.7,
+     "area_m2": 31.9,
      "built": true,
      "id": "putry-n-median-nose",
      "note": "z 136.06",
@@ -12384,6 +12384,12 @@
     ]
    },
    {
+    "id": "dk8-ramp-split-barrier-n",
+    "targets": [
+     "guardrail@-750,77"
+    ]
+   },
+   {
     "id": "kwadrat-park-hero",
     "targets": [
      "bdot:9962cca0-95de-4200-a0c4-3922b8e40d9c"
@@ -12736,9 +12742,9 @@
   ],
   "roundabout_junctions": 12,
   "sides_on_carriageway_culled": {
-   "kerb_tris": 4540,
-   "parts": 598,
-   "side_tris": 775
+   "kerb_tris": 4532,
+   "parts": 629,
+   "side_tris": 834
   },
   "signalised_junctions": 11,
   "through_lines": {
@@ -12754,7 +12760,7 @@
   },
   "verge_strips": {
    "chunks": 37,
-   "tris": 48283
+   "tris": 49327
   },
   "walled_ramps": [
    {

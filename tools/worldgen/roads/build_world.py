@@ -93,7 +93,7 @@ MATERIALS = {
     # clear / 1.96 High overcast). WORKING_VALUE, matched in the frames r4_deck_bz_eye / _eye2.
     "bridge_concrete": {"color": [0.26, 0.26, 0.25], "rough": 0.85, "surface": "concrete",
                         "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.5, 0.0],
-                        "vertex_grime": [0.135, 0.128, 0.115, 0.3]},
+                        "vertex_grime": [0.165, 0.158, 0.145, 0.3]},   # t1: cap / asphalt 1.35 (Low clear), 1.46-1.50 (High overcast)
     "bridge_soffit": {"color": [0.15, 0.15, 0.145], "rough": 0.9, "surface": "concrete",
                       "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.6, 0.0]},
     # ADR 0117 (REVIEW s10-0110 P1-2, "bialy plotek"): weathered hot-dip zinc is a dull grey patina, not a mirror -
@@ -108,7 +108,12 @@ MATERIALS = {
     # overcast photo (454716650857984: beam / asphalt 1.4-1.5) and sunny ones (2948595898752384: sunlit beam 1.5 x
     # asphalt, shaded 0.6 x; 500263111404933 from below: beam / grass 3-4).
     "barrier_steel": {"color": [0.50, 0.505, 0.51], "rough": 0.56, "metal": 1.0, "surface": "steel",
-                      "texture_set": "barrier_galv", "set_tile": True, "set_metal": 0.9, "shadow_low": False},
+                      "texture_set": "barrier_galv", "set_tile": True, "set_metal": 0.9, "shadow_low": False,
+                      # horizon occlusion of the environment term: a beam face reflects the road and the far bank, not
+                      # the sky. Iterated on the generated .mat (artifacts/junctions-r6 t1 / t2 / b2, lum_set.sh):
+                      # metal 0.9 + 0 -> beam / asphalt 1.43-1.48 sun, 1.51-1.64 overcast, 0.98 in shade (photo 0.58);
+                      # 0.65 -> 1.28 / 1.07 / 0.70; metal 0.7 + 0.35 -> 1.65 / 1.57 / 0.88. 0.25 = between (WORKING_VALUE)
+                      "sky_occ": [0.0, 0.25]},
     "verge_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
     "shoulder_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     "terrain_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
