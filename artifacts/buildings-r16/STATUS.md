@@ -76,3 +76,18 @@ NASTĘPNY KROK (kolejna sesja, slot heavy / unity):
   `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner claude-buildings-r8; uv run --project tools/worldgen python -m pytest tests/gis -q; uv run --project tools/worldgen python tools/worldgen/fidelity/run.py --region bialystok-industrial-c` (sprawdzić właściwe wywołanie fidelity)
   → `pwsh artifacts/buildings-r16/editmode.ps1` → `pwsh artifacts/buildings-r16/extra.ps1 -Round r1 -Sub sill_off -Runoff off -Only r15_sill_5m,r15_sill_20m`
   → `python artifacts/buildings-r16/sill_marks.py artifacts/buildings-r16/r1` → poprawki z listy „NIEZROBIONE” → `world.ps1 -Round r2` → `full_round.ps1 -Round r2`.
+
+## s11 / r2 — krok 1: diagnoza + kod r2 (przed budową świata)
+- **Błąd metody r1 (i wcześniejszych rund):** `visual-qa.ps1 -Scene WorldC -Tier High` renderuje scenę treści LOW (`WorldC`) z jakością
+  High — LOD0 budynków tylko ≤ 60 m od trasy (`RegionImporter.LowBuildingsLod0M`). „High” w `base/` i `r1/` = treść Low + jakość High.
+  Dowód: `r2/probe_cmp.jpg` (WorldC_High: domy z oknami; po wyłączeniu `buildings` znikają), `r2/lodprobe.log`. Prawdziwy High = `-Scene WorldC_High`
+  (`extra.ps1 -Scene WorldC_High`).
+- Skutek dla Low (telefon): ulice domów > 60 m od trasy = gładkie pudła LOD1 z daszkiem bez drzwi (`r1/extra/960/r15_cab_1.jpg`).
+  Poprawka r2: `buildings_mesh.LOD1_HOUSE_OPENINGS` — okna i drzwi domu na LOD1 jako ciemne quady 5 cm przed ścianą w materiale
+  `hall_flashing` (jest już w LOD1 chunków z domami poza 0_5 i 1_0 → spodziewane +1 draw w tych 2 chunkach; do zmierzenia).
+- Klin trawy (`r16_kerb_0`): pas zjazdu poza nawierzchnią drogi leżał 2 cm nad INTERPOLOWANYM gruntem — siatka terenu przebijała;
+  teraz powierzchnia prostokreślna wzdłuż zjazdu, nie niżej niż maks. gruntu w 0,8 m + 3 cm (`plots._verge_overlay`).
+- Mur / beton / podmurówka: przęsła poziome, schodkowane na słupkach (`fence_run`, rigid). Kamery `r16_door_*` (od furtki), `r16_garden_*` (od bramy).
+- EditMode (import r1, C# bez zmian od r1): **261/261** (`r2/editmode_pre.log`). Pełny pytest + fidelity: w toku w slocie heavy.
+- NASTĘPNY KROK: `tail artifacts/buildings-r16/r2/pytest_gis.log artifacts/buildings-r16/r2/fidelity.log` → `pwsh artifacts/buildings-r16/world.ps1 -Round r2`
+  → `pwsh artifacts/buildings-r16/full_round.ps1 -Round r2` → `pwsh artifacts/buildings-r16/extra.ps1 -Round r2 -Scene WorldC_High -Sub extra_hc`

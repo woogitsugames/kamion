@@ -9,9 +9,11 @@ from PIL import Image
 from scipy import ndimage
 
 w = np.array([0.2126, 0.7152, 0.0722])
+import os
+ON = os.environ.get("SILL_ON", "extra")      # sub-directory of the Runoff-on renders
 rd = sys.argv[1]
 for cam in sys.argv[2:] or ("r15_sill_5m", "r15_sill_20m"):
-    on = np.asarray(Image.open(f"{rd}/extra/{cam}.png").convert("RGB")).astype(float) @ w
+    on = np.asarray(Image.open(f"{rd}/{ON}/{cam}.png").convert("RGB")).astype(float) @ w
     off = np.asarray(Image.open(f"{rd}/sill_off/{cam}.png").convert("RGB")).astype(float) @ w
     d = off - on
     lab, n = ndimage.label(d >= 3.0)
