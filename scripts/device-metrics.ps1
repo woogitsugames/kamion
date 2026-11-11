@@ -69,11 +69,8 @@ foreach ($d in $devices) {
     New-Item -ItemType Directory -Force $out | Out-Null
     Write-Host "== $d -> $out"
 
-    # Screenshot: screencap to file on device + pull (PowerShell pipes would corrupt binary stdout).
-    & $Adb -s $d shell screencap -p /sdcard/kamion_screen.png
-    & $Adb -s $d pull /sdcard/kamion_screen.png (Join-Path $out 'screen.png') | Out-Null
-    & $Adb -s $d shell rm /sdcard/kamion_screen.png
-
+    # ADR 0113: pull the frame log FIRST - screencap and dumpsys stall the game and used to add ~12 frames > 40 ms
+    # at the end of every run (enough on their own to push p99 over budget).
     # Diagnostics files from Application.persistentDataPath (external app files dir).
     $remote = "/sdcard/Android/data/$PackageName/files/diag"
     & $Adb -s $d pull "$remote/frametimes.csv" (Join-Path $out 'frametimes.csv') 2>&1 | Out-Null
@@ -82,6 +79,11 @@ foreach ($d in $devices) {
         # Debuggable builds: fall back to run-as.
         & $Adb -s $d shell run-as $PackageName cat "files/diag/frametimes.csv" 2>$null | Set-Content (Join-Path $out 'frametimes.csv')
     }
+
+    # Screenshot: screencap to file on device + pull (PowerShell pipes would corrupt binary stdout).
+    & $Adb -s $d shell screencap -p /sdcard/kamion_screen.png
+    & $Adb -s $d pull /sdcard/kamion_screen.png (Join-Path $out 'screen.png') | Out-Null
+    & $Adb -s $d shell rm /sdcard/kamion_screen.png
 
     $props = [ordered]@{}
     foreach ($p in 'ro.product.model', 'ro.product.manufacturer', 'ro.soc.model', 'ro.build.version.release', 'ro.build.version.sdk', 'ro.hardware.egl') {
