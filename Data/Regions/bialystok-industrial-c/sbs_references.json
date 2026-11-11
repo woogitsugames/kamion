@@ -61,6 +61,11 @@
       "segment_station_m": 340.426,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -68,7 +73,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 2.1968,
         "north_delta_m": -7.9288,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -125,6 +134,11 @@
       "segment_station_m": 340.544,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -132,7 +146,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 3.2243,
         "north_delta_m": -8.3676,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -189,6 +207,11 @@
       "segment_station_m": 341.518,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -196,7 +219,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 1.3733,
         "north_delta_m": -7.3135,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -253,6 +280,11 @@
       "segment_station_m": 343.026,
       "horizon_y_fraction": 0.6645931464567811,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J1: heading mismatch and sunset",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.66,
@@ -262,7 +294,11 @@
         "north_delta_m": 0.774,
         "absolute_u_m": 147.5188,
         "eye_height_m": 1.7,
-        "heading_source": "original"
+        "heading_source": "original",
+        "pose_confidence": "C",
+        "pose_reason": "J1: heading mismatch and sunset",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
       }
     },
     {
@@ -319,6 +355,11 @@
       "segment_station_m": 343.026,
       "horizon_y_fraction": 0.7483330000605141,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.71,
@@ -326,7 +367,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 0.3569,
         "north_delta_m": -4.8093,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -383,6 +428,11 @@
       "segment_station_m": 343.026,
       "horizon_y_fraction": 0.7483330000605141,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.71,
@@ -390,7 +440,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 0.2,
         "north_delta_m": -3.8026,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -447,6 +501,11 @@
       "segment_station_m": 343.026,
       "horizon_y_fraction": 0.5903527001948774,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.59,
@@ -455,7 +514,11 @@
         "east_delta_m": 1.0208,
         "north_delta_m": -1.668,
         "absolute_u_m": 147.5288,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
       }
     },
     {
@@ -512,6 +575,11 @@
       "segment_station_m": 343.026,
       "horizon_y_fraction": 0.5903527001948774,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.59,
@@ -520,7 +588,11 @@
         "east_delta_m": -0.1508,
         "north_delta_m": -1.3252,
         "absolute_u_m": 147.5342,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
       }
     },
     {
@@ -577,6 +649,11 @@
       "segment_station_m": 343.026,
       "horizon_y_fraction": 0.7610966593728179,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.72,
@@ -584,7 +661,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 0.7796,
         "north_delta_m": -6.5794,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -641,6 +722,11 @@
       "segment_station_m": 350.7,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -648,7 +734,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 4.3238,
         "north_delta_m": -8.1843,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -703,8 +793,13 @@
       "route_distance_m": 14.246,
       "heading_original_deg": 156,
       "segment_station_m": 351.838,
-      "horizon_y_fraction": 0.6235977444665237,
+      "horizon_y_fraction": 0.5249381,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J3: horizon now derived from two road edges; fresh render review pending",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.62,
@@ -713,7 +808,34 @@
         "east_delta_m": -16.4111,
         "north_delta_m": 5.7643,
         "absolute_u_m": 147.2755,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J3: horizon now derived from two road edges; fresh render review pending",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+        "vanishing_lines": [
+          [
+            [
+              0.25,
+              0.7291666666666666
+            ],
+            [
+              0.4078125,
+              0.5444444444444444
+            ]
+          ],
+          [
+            [
+              0.99609375,
+              0.7263888888888889
+            ],
+            [
+              0.4640625,
+              0.5388888888888889
+            ]
+          ]
+        ],
+        "horizon_method": "Two manually marked road edges on rectified 1280x720 photo; road slope and roll remain WORKING_VALUE"
       }
     },
     {
@@ -770,6 +892,11 @@
       "segment_station_m": 359.145,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -777,7 +904,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 5.6334,
         "north_delta_m": -7.6717,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -834,6 +965,11 @@
       "segment_station_m": 378.907,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -841,7 +977,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 9.559,
         "north_delta_m": -5.7517,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -898,6 +1038,11 @@
       "segment_station_m": 393.724,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -905,7 +1050,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 13.6031,
         "north_delta_m": -5.4959,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -962,6 +1111,11 @@
       "segment_station_m": 400.115,
       "horizon_y_fraction": 0.6300045649789922,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.63,
@@ -970,7 +1124,11 @@
         "east_delta_m": -3.3013,
         "north_delta_m": -3.0228,
         "absolute_u_m": 146.6139,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -1027,6 +1185,11 @@
       "segment_station_m": 401.565,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -1034,7 +1197,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 14.7423,
         "north_delta_m": -4.9266,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -1091,6 +1258,11 @@
       "segment_station_m": 421.286,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -1098,7 +1270,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": -1.741,
         "north_delta_m": -1.0108,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -1155,6 +1331,11 @@
       "segment_station_m": 421.925,
       "horizon_y_fraction": 0.7357005657423237,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -1162,7 +1343,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": -24.6678,
         "north_delta_m": 7.1709,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -1219,6 +1404,11 @@
       "segment_station_m": 436.716,
       "horizon_y_fraction": 0.6004071465893173,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.6,
@@ -1227,7 +1417,11 @@
         "east_delta_m": 2.0585,
         "north_delta_m": -14.6877,
         "absolute_u_m": 144.2164,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -1284,6 +1478,11 @@
       "segment_station_m": 436.716,
       "horizon_y_fraction": 0.6004071465893173,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.6,
@@ -1292,7 +1491,11 @@
         "east_delta_m": 3.8099,
         "north_delta_m": -20.3367,
         "absolute_u_m": 145.4629,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -1349,11 +1552,20 @@
       "segment_station_m": 0.0,
       "horizon_y_fraction": 0.6543160564295782,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.65,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
       }
     },
     {
@@ -1410,11 +1622,20 @@
       "segment_station_m": 16.427,
       "horizon_y_fraction": 0.5745206819902662,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.57,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
       }
     },
     {
@@ -1471,11 +1692,20 @@
       "segment_station_m": 35.018,
       "horizon_y_fraction": 0.5745206819902662,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.57,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
       }
     },
     {
@@ -1532,11 +1762,20 @@
       "segment_station_m": 60.218,
       "horizon_y_fraction": 0.6851063969284589,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.68,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -1593,11 +1832,20 @@
       "segment_station_m": 77.179,
       "horizon_y_fraction": 0.5852377707506379,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.58,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
       }
     },
     {
@@ -1654,11 +1902,20 @@
       "segment_station_m": 92.767,
       "horizon_y_fraction": 0.6200000648529395,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.62,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -1715,11 +1972,20 @@
       "segment_station_m": 120.117,
       "horizon_y_fraction": 0.6851063969284589,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.68,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -1776,11 +2042,20 @@
       "segment_station_m": 153.369,
       "horizon_y_fraction": 0.5852377707506379,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Sunset/backlit exposure",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.58,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Sunset/backlit exposure"
       }
     },
     {
@@ -1837,6 +2112,11 @@
       "segment_station_m": 182.878,
       "horizon_y_fraction": 0.7209278007962098,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J1: heading mismatch 35-40 degrees",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.69,
@@ -1844,7 +2124,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 0.2086,
         "north_delta_m": 0.0954,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J1: heading mismatch 35-40 degrees",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -1901,11 +2185,20 @@
       "segment_station_m": 215.302,
       "horizon_y_fraction": 0.6599999995727285,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.66,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -1962,6 +2255,11 @@
       "segment_station_m": 245.294,
       "horizon_y_fraction": 0.7332960503309632,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J1: camera intersects acoustic screen",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -1969,7 +2267,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": 0.2351,
         "north_delta_m": 0.4265,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J1: camera intersects acoustic screen",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -2026,6 +2328,11 @@
       "segment_station_m": 266.759,
       "horizon_y_fraction": 0.736125531589907,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -2033,7 +2340,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": -9.5335,
         "north_delta_m": 1.3964,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -2090,11 +2401,20 @@
       "segment_station_m": 284.276,
       "horizon_y_fraction": 0.677954170512396,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J1: horizon/pitch mismatch",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.65,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "C",
+        "pose_reason": "J1: horizon/pitch mismatch",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -2151,6 +2471,11 @@
       "segment_station_m": 310.764,
       "horizon_y_fraction": 0.736125531589907,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -2158,7 +2483,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": -4.7521,
         "north_delta_m": 4.6617,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -2215,11 +2544,20 @@
       "segment_station_m": 339.77,
       "horizon_y_fraction": 0.633877863917123,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J1: lateral offset from photographed lane",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.63,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "C",
+        "pose_reason": "J1: lateral offset from photographed lane",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -2276,6 +2614,11 @@
       "segment_station_m": 371.534,
       "horizon_y_fraction": 0.736125531589907,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -2283,7 +2626,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": -1.5773,
         "north_delta_m": -5.5378,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -2340,6 +2687,11 @@
       "segment_station_m": 399.514,
       "horizon_y_fraction": 0.736125531589907,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
@@ -2347,7 +2699,11 @@
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
         "east_delta_m": -0.7042,
         "north_delta_m": -8.5967,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "C",
+        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -2404,13 +2760,22 @@
       "segment_station_m": 427.716,
       "horizon_y_fraction": 0.6646958378169694,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.66,
         "pose_status": "WORKING_VALUE",
         "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R2: photo visibly on Putry deck. Existing generated bridge road asphalt vertical ray at stored EN hits absolute U 140.188m (artifacts/sbs-gate3/deck-ray-heights.json), add nominal eye 1.7m; keep computed GPS because original GPS is outside deck asphalt. Camera only; WORKING_VALUE eye, no world modification.",
         "absolute_u_m": 141.888,
-        "eye_height_m": 1.7
+        "eye_height_m": 1.7,
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -2467,11 +2832,20 @@
       "segment_station_m": 453.366,
       "horizon_y_fraction": 0.6244587519600411,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "J1: heading mismatch 30-40 degrees",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.62,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "C",
+        "pose_reason": "J1: heading mismatch 30-40 degrees",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
     },
     {
@@ -2528,12 +2902,99 @@
       "segment_station_m": 485.862,
       "horizon_y_fraction": 0.6244587519600411,
       "pose_status": "WORKING_VALUE",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "photometric_use": false,
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
       "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
       "authored_overrides": {
         "horizon_y_fraction": 0.62,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+        "pose_confidence": "B",
+        "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+        "photometric_use": false,
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
       }
+    },
+    {
+      "camera": "sbs-g3-a-cm109685822",
+      "segment": "G3-A",
+      "photo": "Data/raw/refs/objects/kwadrat-park/commons-geo/cm109685822.jpg",
+      "source_id": "cm109685822",
+      "page_url": "https://commons.wikimedia.org/wiki/File:20210904_101250_September_2021_in_Bia%C5%82ystok.jpg",
+      "author": "Rakoon",
+      "license": "CC0",
+      "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "captured_at": "2021-09-04",
+      "sha256": "13a469670f996e7ed580269bcfea740fa3c6b48633b19f46a2c503cc4d4f5574",
+      "comparison_photo": "Data/raw/refs/objects/kwadrat-park/commons-geo/cm109685822.jpg",
+      "comparison_sha256": "13a469670f996e7ed580269bcfea740fa3c6b48633b19f46a2c503cc4d4f5574",
+      "width": 3840,
+      "height": 2160,
+      "lon": 23.168504,
+      "lat": 53.152931,
+      "heading_grid_deg": 36.66206524479035,
+      "heading_true_deg": 40,
+      "route_distance_m": 7.999,
+      "segment_station_m": 229.676,
+      "horizon_y_fraction": 0.55,
+      "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "New Commons candidate at station 230/249m; heading, FOV and GPS need fresh photo-render calibration",
+      "photometric_use": false,
+      "photometric_reason": "Uncalibrated pose/masks; cm92458760 is wet pavement",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
+      "authored_overrides": {
+        "pose_confidence": "C",
+        "pose_reason": "New Commons candidate at station 230/249m; heading, FOV and GPS need fresh photo-render calibration",
+        "photometric_use": false,
+        "photometric_reason": "Uncalibrated pose/masks; cm92458760 is wet pavement",
+        "eye_height_m": 1.7,
+        "note": "Heading/FOV/horizon inferred from image and georeferenced object context, WORKING_VALUE. No EXIF in cached thumbnail."
+      },
+      "assumptions": "Public cached Commons metadata, thumbnail has no EXIF; no calibrated lens or roll. Heading/FOV/eye/horizon WORKING_VALUE.",
+      "source_manifest_sha256": "da83ba4d5e8ec77b807681e5e2208dab6e1517fac9b51a92724a77c4d7b89dd8"
+    },
+    {
+      "camera": "sbs-g3-a-cm92458760",
+      "segment": "G3-A",
+      "photo": "Data/raw/refs/objects/kwadrat-park/commons-geo/cm92458760.jpg",
+      "source_id": "cm92458760",
+      "page_url": "https://commons.wikimedia.org/wiki/File:20200711_073128_Elektrociep%C5%82ownia_Bia%C5%82ystok.jpg",
+      "author": "Rakoon",
+      "license": "CC BY 3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0",
+      "captured_at": "2020-07-11",
+      "sha256": "a583fe8f775bae5403a984fd38bc843a1de7fc931d87232997325a942fd5e5af",
+      "comparison_photo": "Data/raw/refs/objects/kwadrat-park/commons-geo/cm92458760.jpg",
+      "comparison_sha256": "a583fe8f775bae5403a984fd38bc843a1de7fc931d87232997325a942fd5e5af",
+      "width": 3840,
+      "height": 2160,
+      "lon": 23.168333,
+      "lat": 53.152778,
+      "heading_grid_deg": 108.66221341254062,
+      "heading_true_deg": 112,
+      "route_distance_m": 5.712,
+      "segment_station_m": 248.704,
+      "horizon_y_fraction": 0.54,
+      "pose_status": "WORKING_VALUE",
+      "pose_confidence": "C",
+      "pose_reason": "New Commons candidate at station 230/249m; heading, FOV and GPS need fresh photo-render calibration",
+      "photometric_use": false,
+      "photometric_reason": "Uncalibrated pose/masks; cm92458760 is wet pavement",
+      "photo_vs_data_age": "data epoch UNVERIFIED",
+      "authored_overrides": {
+        "pose_confidence": "C",
+        "pose_reason": "New Commons candidate at station 230/249m; heading, FOV and GPS need fresh photo-render calibration",
+        "photometric_use": false,
+        "photometric_reason": "Uncalibrated pose/masks; cm92458760 is wet pavement",
+        "eye_height_m": 1.7,
+        "note": "Heading/FOV/horizon inferred from image and georeferenced object context, WORKING_VALUE. No EXIF in cached thumbnail."
+      },
+      "assumptions": "Public cached Commons metadata, thumbnail has no EXIF; no calibrated lens or roll. Heading/FOV/eye/horizon WORKING_VALUE.",
+      "source_manifest_sha256": "da83ba4d5e8ec77b807681e5e2208dab6e1517fac9b51a92724a77c4d7b89dd8"
     }
   ]
 }

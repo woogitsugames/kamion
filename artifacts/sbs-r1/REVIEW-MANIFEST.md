@@ -1,0 +1,7 @@
+﻿# Materiały do niezależnej recenzji SBS r1
+Gałąź gpt-sbs-r1. Tylko narzędzie, dane kamer, źródła i artefakty. Brak zmian runtime i geometrii.
+Świeży import własnego świata: 64 chunki Low+High, EditMode 261/261. Testy SBS 16/16. Zestaw 42 zdjęć: 25 B, 17 C, brak A. Wszystkie 42 mają baseline Low overcast, ale domyślne arkusze zawierają wyłącznie 25 B. Diagnostyka C nie jest dowodem bramki.
+Rendery i metadane: baseline-current/renders/Low-overcast. Arkusze B: baseline-current/sheets/Low-overcast. Wszystkie 42 diagnostycznie: diagnostic-baseline. Migawka danych dokładnie zgodna z SHA renderu: baseline-current/inputs. Starszy input-snapshot jest wcześniejszy i nie służy do odtwarzania aktualnego baseline.
+Galerie prób: pose-galleries (16 zdjęć, po 9 wariantów, łącznie 144 rendery). J1: sześć błędnych par nadal C; hipotezy oryginalnego kursu/GPS nie zostały przyjęte. J2: osiem par C, siatka XY. Dwa Commons z okolicy 230/249 m także C. Horyzont 2948 wyznaczono z dwóch krawędzi; nadal C do oceny pozostałych różnic pozy.
+Próba 326454015490067-probe-08: heading +5 stopni, horyzont około 0,891; kandydat do poprawy J1, nie zapisano go jeszcze w danych przyjętych. Potrzebna ocena, czy poprawia pozę na tyle, by otrzymać B, czy pozostawić C.
+Nie ma PASS bramki, wyników telefonu ani izolowanego pomiaru kosztu runtime. Pełny końcowy GIS jeszcze nie był uruchomiony. Limit heavy obejmuje kolejne zadania i kompozycje; Unity ma osobne sloty. Nie uruchamiaj nowych procesów Unity, generatorów ani testów w ramach recenzji.
