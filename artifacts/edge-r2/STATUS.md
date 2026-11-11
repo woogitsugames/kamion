@@ -30,3 +30,4 @@ Następny krok: pwsh artifacts/edge-r2/heavy.ps1 -Task GisFile -TestFile tests/g
 Krok 11: QA po budowie potwierdza 31 GML, 36971 poprawnych wysokości i 0 duplikatów/konfliktów; 5390 budynków z LoD1, 97 szacunków BDOT, 2921 szacunków OSM i 39 tagów OSM UNVERIFIED, łącznie 8447. Są 16 kominów, 302 maszty/słupy i 107 linii.
 Test parsera czeka na heavy. Dodano polecenie ScopeGenerated do tej samej puli: przed renderami odtworzymy uboczne metadane dróg/props i zachowamy wyłącznie pola far-field w world_manifest, zgodnie z własnością dziedzin.
 Następny krok po teście: AuditHeights → ScopeGenerated → test_far_field.py → validate.ps1 -Phase After.
+Krok 12: test parsera po poprawce rzeczywistej jednostki meter: 15/15 w 0,60 s, heavy zwolniony. Następna komenda: pwsh artifacts/edge-r2/heavy.ps1 -Task AuditHeights.
