@@ -63,3 +63,6 @@
 
 - Step25 CPU durability: read-only mesh audit also recognizes the transient glass diagnostic shader, so far-pane mask/audit can run together. Both PHONE_RUN and GPT_UNITY_HOLD currently present; no F Unity. Copying latest actual evidence and prepared control packet to main artifacts with /E /XJ only.
 - NEXT COMMAND: remain stopped until NEW explicit root Unity release; then run-box-mip.ps1 (compile/audit/render18+3).
+
+- Step26 CPU GIS validation started during explicit Unity hold: pinned4234source/generated/cache files (3,601,665,039bytes), backed up744canonicalGenerated/JSON files privately in gis-pre-fixture. Immutable baseline fixture untouched. Requested full uv run --project tools/worldgen python -m pytest tests/gis -q running with JUnit artifact; compare all pinned inputs after completion and restore any mutation before next capture.
+- NEXT COMMAND: inspect gis-full.log/XML; hash all4234 inputs after tests and compare pin; persist actual result + any restoration. No Unity until new explicit rootrelease.
