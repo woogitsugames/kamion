@@ -15,7 +15,7 @@
 | węzły r3 | 0100 | .claude/worktrees/junctions-r3 (gałąź junctions-r3) | artifacts/junctions-r3/STATUS.md | w toku (world-builder) wg recenzji s10-0095 |
 | recenzja 0086 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0086.md | ZROBIONA: kontrakt OK, kalibracja FAIL (hala kp_wall przepalona, ekrany za ciemne); D48: tynk remizy 110/126/145 zostaje |
 | kalibracja r2 | 0101 | .claude/worktrees/tint-r2 (gałąź tint-r2) | artifacts/tint-r2/STATUS.md | w toku (rendering-perf) wg recenzji s10-0086 |
-| zabudowa r5 | 0097 | .claude/worktrees/buildings-r5 (gałąź buildings-r5) | artifacts/buildings-r13/STATUS.md | w toku (world-builder) |
+| zabudowa r5 | 0097 | .claude/worktrees/buildings-r5 (gałąź buildings-r5) | artifacts/buildings-r13/REPORT.md | GOTOWE `93c35222` — visual-critic w toku → potem scalenie |
 | GPT B roślinność r2 | 0088 | gpt-vegetation-r2 | — | GPT w toku, brak REPORT |
 | GPT C światło r12 | 0098 | gpt-light-r12 | — | GPT w toku, brak REPORT |
 | GPT 0087 lakier TRAKT | 0087 | gpt-truck-paint | — | GPT w toku |
