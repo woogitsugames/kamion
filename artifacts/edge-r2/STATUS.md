@@ -48,3 +48,6 @@ Krok 17: pojedynczy test_far_field.py zaliczony; wynik w test-far-field.log. Nas
 2026-11-12T00:29:21.4129652+01:00 Zapisano rendery after/High-clear wszystkich kamer; ocena PNG i budżetu nadal w toku.
 2026-11-12T00:29:56.4945532+01:00 Zapisano rendery after/High-overcast wszystkich kamer; ocena PNG i budżetu nadal w toku.
 2026-11-12T00:31:05.1559594+01:00 Zakończono testy EditMode; szczegółowy wynik w artifacts/tests.
+Krok 18: ukończono macierz After 364 PNG. Obejrzano preview-east i preview-south (High clear, przed/po, 960 px): południowa sylwetka zmieniła proporcje hali zgodnie z wysokością LoD1; na wschodzie efekt subtelny. Cały cel jakości tła pozostaje częściowy, szczególnie wobec przybliżonych pozy B.
+EditMode zakończyło się kodem 0; kopię XML zapisano w tests. Compare oczekuje na heavy; liczbowego werdyktu budżetu jeszcze nie przypisano.
+Następny krok: sprawdzić budget-summary.json, obejrzeć ostateczne pary zdjęcie/render, potem pełny GIS przy końcu rundy.
