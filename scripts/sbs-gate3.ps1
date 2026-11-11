@@ -40,7 +40,7 @@ try {
                 # Camera FOV was converted from horizontal to vertical using this EXACT aspect ratio.
                 foreach ($group in ($references | Group-Object { "$($_.width)x$($_.height)" })) {
                     $first = $group.Group[0]
-                    $width = if ($first.width * 9 -eq $first.height * 16) { 1280 } else { 1280 }
+                    $width = 1280
                     $height = [int]($width * $first.height / $first.width)
                     $ids = ($group.Group.camera -join ',')
                     Wait-Phone

@@ -179,19 +179,33 @@ def contact(refs):
         sheet.save(OUTPUT/f'contact-{seg}.jpg')
 
 
-def measurements(im, horizon):
+def measurements(im, horizon, authored_masks=None):
     a = np.asarray(im.convert('RGB'),dtype=float)
     luma = a @ np.array([0.2126,0.7152,0.0722])
     yy,xx=np.indices(luma.shape)
     # Deliberately labelled estimates: no semantic segmenter or ground-truth masks.
     sky=(yy<luma.shape[0]*horizon)&(luma>115)&(a[:,:,2]>=a[:,:,0]*0.95)
     asphalt=(yy>luma.shape[0]*max(horizon,0.55))&(xx>luma.shape[1]*0.2)&(xx<luma.shape[1]*0.8)&(np.ptp(a,axis=2)<35)&(luma>25)&(luma<180)
+    method='WORKING_VALUE RGB/position heuristic, not semantic ground truth'
+    if authored_masks is not None:
+        masks=[]
+        for label in ('sky','asphalt'):
+            mask=Image.new('1',im.size)
+            draw=ImageDraw.Draw(mask)
+            for polygon in authored_masks.get(label,[]):
+                if len(polygon)<3 or any(not (0<=x<=1 and 0<=y<=1) for x,y in polygon):
+                    raise ValueError('mask polygons require >=3 normalized points')
+                draw.polygon([(x*(im.width-1),y*(im.height-1)) for x,y in polygon],fill=1)
+            masks.append(np.asarray(mask,dtype=bool))
+        sky,asphalt=masks
+        if np.any(sky & asphalt): raise ValueError('sky/asphalt masks overlap')
+        method='authored normalized polygons; see sbs_authored_overrides.json'
     hist=np.histogram(luma,bins=32,range=(0,256))[0]
     return {'luma_mean_srgb': round(float(luma.mean()),3), 'histogram_32':hist.tolist(),
             'sky_fraction_estimate':round(float(sky.mean()),5),
             'asphalt_fraction_estimate':round(float(asphalt.mean()),5),
             'sky_asphalt_ratio_estimate':round(float(sky.sum()/asphalt.sum()),5) if asphalt.any() else None,
-            'mask_method':'WORKING_VALUE RGB/position heuristic, not semantic ground truth'}
+            'mask_method':method}
 
 
 def compose(render_dir, outdir, strict=True):
@@ -204,14 +218,22 @@ def compose(render_dir, outdir, strict=True):
         if not render.exists():
             missing.append(r['camera']); continue
         with Image.open(ROOT/r['photo']) as src, Image.open(render) as dst:
+            if r.get('sha256') and hashlib.sha256((ROOT/r['photo']).read_bytes()).hexdigest()!=r['sha256']:
+                raise ValueError(f"photo hash mismatch: {r['camera']}")
             if src.width*dst.height != dst.width*src.height:
                 raise ValueError(f"aspect mismatch: {r['camera']}; render at photo aspect ratio")
             left,right=src.convert('RGB'),dst.convert('RGB')
-        m={'camera':r['camera'],'pose_status':r['pose_status'], 'photo':measurements(left,r['horizon_y_fraction']),
-           'render':measurements(right,r['horizon_y_fraction'])}
+        masks=r.get('authored_overrides',{}).get('masks',{})
+        m={'camera':r['camera'],'pose_status':r['pose_status'], 'photo_sha256':r.get('sha256'),
+           'render_sha256':hashlib.sha256(render.read_bytes()).hexdigest(),
+           'photo':measurements(left,r['horizon_y_fraction'],masks.get('photo')),
+           'render':measurements(right,r['horizon_y_fraction'],masks.get('render'))}
+        ph=np.array(m['photo']['histogram_32'],dtype=float); ph/=ph.sum()
+        rh=np.array(m['render']['histogram_32'],dtype=float); rh/=rh.sum()
+        m['histogram_l1_distance']=round(float(np.abs(ph-rh).sum()),5)
         metrics.append(m)
         height=round(470*r['height']/r['width'])
-        sheet=Image.new('RGB',(960,height+108),'#202020')
+        sheet=Image.new('RGB',(960,height+190),'#202020')
         d=ImageDraw.Draw(sheet)
         d.text((8,4),r['camera']+' | '+r['pose_status'],fill='white')
         for x,im,label in [(0,left,'PHOTO'),(490,right,'RENDER')]:
@@ -226,6 +248,11 @@ def compose(render_dir, outdir, strict=True):
                                   'Grid: 25%; red: authored/assumed horizon. Photo pixels resized + overlays.',
                                   'Histogram and sky/asphalt estimates: metrics.json; no gate PASS inferred.']):
             d.text((6,height+29+j*17),text,fill='white')
+        peak=max(float(ph.max()),float(rh.max()),1e-9)
+        for hist,color in [(ph,'#55bbff'),(rh,'#ffaa44')]:
+            points=[(24+i*28,height+178-float(value)/peak*65) for i,value in enumerate(hist)]
+            d.line(points,fill=color,width=2)
+        d.text((24,height+99),'sRGB luma histogram: blue PHOTO / orange RENDER (32 bins, normalized)',fill='white')
         sheet.save(outdir/(r['camera']+'.png'))
     write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'gate_status':'UNVERIFIED'})
     print(f'Composed {len(metrics)} pairs; missing {len(missing)} renders.')

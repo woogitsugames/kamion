@@ -7,3 +7,6 @@ NEXT: uv run --project tools/refs python tools/refs/sbs_gate3.py prepare
 
 Step 3: 40 day/twilight photos (night excluded), per-photo attribution and hashes; manual horizon estimates authored for all 40. True-north to grid-north heading correction added. Focused geometry/evidence integrity tests 6/6 pass. Full GIS baseline still running. PHONE_RUN remains active.
 NEXT: pwsh scripts/sbs-gate3.ps1 -EditMode
+
+Step 4: ADR 0103 documents commands, coordinate/FOV contract, calibration, licence and coverage limits. Composer now draws histograms, checks photo hashes and supports authored sky/asphalt polygons. 6 focused tests pass. Main Library copied (robocopy exit 1 = success). Guarded render/EditMode runner started and is waiting for PHONE_RUN; no Unity launched.
+NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10
