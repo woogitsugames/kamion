@@ -112,3 +112,5 @@ Krok 36a: dowód stale-fidelity-proof.json potwierdza, że wszystkie 7 niezgodny
 Krok 36b: test remizy z kontrolą całego LOD1 przeszedł: 7/7 w 4,88 s pod heavy. Slot zwolniono przed uruchomieniem generatora, który teraz działa pod własnym kolejnym przydziałem. NASTĘPNY KROK: pipeline budget-fix.ps1 sam wykona test_hero_building.py, import i pełne rendery po regeneracji.
 
 Krok 36c: zapisano NEXT-R2.md z analizą ścieżki PBR i kontraktów UV oraz planem wyłączenia niepotwierdzonych schodów. Źródła wiaduktu nadal nietknięte. NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/budget-fix-world.log -Tail 8
+
+Krok 36d: ustalono przyczynę braku postępu generatora: liderowy ops-watchdog zapisał SUSPEND własnego launchera Python PID 107876 o 00:07:38; jego rzeczywisty proces 111836 ma wszystkie wątki Suspended. Pula heavy jest poprawnie zajęta. Nie wznawiam procesu poza nadzorem i nie uruchamiam duplikatu. Pipeline pozostaje aktywny i po automatycznym RESUME będzie kontynuował. NASTĘPNY KROK: analiza referencji bez ciężkiego Pythona; monitor budget-fix-world.log.
