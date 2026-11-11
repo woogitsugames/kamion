@@ -86,9 +86,9 @@ mają to samo pokrycie A2C i ten sam próg co ścieżka dwuprzebiegowa, impostor
 2. GPU p95 ≤ 28 ms przy limicie 30: wymaga mniej pikseli (skala/HLOD/impostory — decyzja właściciela, D50) albo szyby r2.
 3. PSO: kolekcje nagrane dla Low/Vulkan i dwóch odcinków; nowe treści (zabudowa 0107, drogi 0110, światło 0108) dodadzą stany —
    po scaleniu nagrać ponownie (`pso_trace`, build Development) i podmienić pliki. Medium/High: nagrać na S24+.
-5. Wideo migotania lasu na A16 (po/przed) — `shimmer.ps1`, do obejrzenia przed scaleniem.
 4. Korony HLOD nadal bez tonu „toe” Low i z mgłą Unity (jak URP Lit) — niespójność z resztą świata (KamionMixFog) zostawiona,
    bo zmiana obrazu; do oceny wizualnej.
+5. Wideo migotania lasu na A16 (po/przed) — `shimmer.ps1`, do obejrzenia przed scaleniem.
 
 ## Konflikty przewidywane
 - `QualityProfile.cs/.asset`, `ProjectSetup.cs`: pola `forestFast`, `canopyMaterial`, `CurrentRevision` 113, blok `< 113` (106 → 106
