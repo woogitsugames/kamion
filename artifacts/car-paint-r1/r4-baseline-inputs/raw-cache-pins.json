@@ -1,0 +1,2859 @@
+{
+  "note": "Old own raw/cache snapshot before canonical R4 baseline; mismatches expected after main merge",
+  "raw": [
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_0.glb",
+      "sha256": "4bf800950946a4314759609a55541f9ef9ed3338ef4f2fe83f7416ba648735a5",
+      "expected": "4bf800950946a4314759609a55541f9ef9ed3338ef4f2fe83f7416ba648735a5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_0.low.glb",
+      "sha256": "24ae9031e6989012638ab2ac396487e1d67f426ebdadc7e0fc6dce04e5921e87",
+      "expected": "24ae9031e6989012638ab2ac396487e1d67f426ebdadc7e0fc6dce04e5921e87"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_0.json",
+      "sha256": "e366ea3ddca0015fcfe6a802a24f9babeae2f6d096dbfca15a9131258a9ef312",
+      "expected": "e366ea3ddca0015fcfe6a802a24f9babeae2f6d096dbfca15a9131258a9ef312"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_1.glb",
+      "sha256": "334c974093278c88a1e57b3731d3fbeb1525755f1b5530044df4fdbbff26b67c",
+      "expected": "334c974093278c88a1e57b3731d3fbeb1525755f1b5530044df4fdbbff26b67c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_1.low.glb",
+      "sha256": "bfd0052445bbddc6004a5d6a843ccf39fab5aaa8180e55df8c25694bd3af79fa",
+      "expected": "bfd0052445bbddc6004a5d6a843ccf39fab5aaa8180e55df8c25694bd3af79fa"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_1.json",
+      "sha256": "1f7b0e2114bd5e6fbea1030f2b76dc19aaeaa7655dccbce75b83d27740339db6",
+      "expected": "1f7b0e2114bd5e6fbea1030f2b76dc19aaeaa7655dccbce75b83d27740339db6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_2.glb",
+      "sha256": "018c4d7eab8b3a273aae582cc0f29c8e67ce3cddc19000c8031be88540b2ecf6",
+      "expected": "018c4d7eab8b3a273aae582cc0f29c8e67ce3cddc19000c8031be88540b2ecf6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_2.low.glb",
+      "sha256": "a879d5d4e12d2787845ec73c4f13334248d3fc94749d06e43da408b72aad7f41",
+      "expected": "a879d5d4e12d2787845ec73c4f13334248d3fc94749d06e43da408b72aad7f41"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_2.json",
+      "sha256": "c2ba20c5e85b718a20dbc74bcd0a7aca4f5884da8d33b63ab955fca9c39105b1",
+      "expected": "c2ba20c5e85b718a20dbc74bcd0a7aca4f5884da8d33b63ab955fca9c39105b1"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_3.glb",
+      "sha256": "2dd742a4744638b54d0064765f3a20ff43ab43507992f3e27bd309c1cd6cf0e4",
+      "expected": "2dd742a4744638b54d0064765f3a20ff43ab43507992f3e27bd309c1cd6cf0e4"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_3.low.glb",
+      "sha256": "549bb533a9869d910a7b44ddda900c4de18d7676b4b416114022320553b2ff62",
+      "expected": "549bb533a9869d910a7b44ddda900c4de18d7676b4b416114022320553b2ff62"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_3.json",
+      "sha256": "2137355821b260f5969e9789fc6181a354543f6d172bd59e7707d3b99db5b3e2",
+      "expected": "2137355821b260f5969e9789fc6181a354543f6d172bd59e7707d3b99db5b3e2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_4.glb",
+      "sha256": "64aaf85d43663401f13b6a12b8cf852c7118a18ef9a65b16abb6589c1dee859c",
+      "expected": "64aaf85d43663401f13b6a12b8cf852c7118a18ef9a65b16abb6589c1dee859c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_4.low.glb",
+      "sha256": "42f5eb2f6a79dce32cbaf74c5d57e637d0b1037a27cbc82fa1f572a3df480e6c",
+      "expected": "42f5eb2f6a79dce32cbaf74c5d57e637d0b1037a27cbc82fa1f572a3df480e6c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_4.json",
+      "sha256": "2b58797d78a6f5dbb975dfe456daa32ee9584790274c5a003255da72b9319934",
+      "expected": "2b58797d78a6f5dbb975dfe456daa32ee9584790274c5a003255da72b9319934"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_5.glb",
+      "sha256": "98527c504d10ee0a2c17f098dc828c6f28f8213aff817f8e1932435e02a495ba",
+      "expected": "98527c504d10ee0a2c17f098dc828c6f28f8213aff817f8e1932435e02a495ba"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_5.low.glb",
+      "sha256": "9579aaccbf00a43cd09e60399142c97934ec46a10c4b7c7590a6be79ebb9ee37",
+      "expected": "9579aaccbf00a43cd09e60399142c97934ec46a10c4b7c7590a6be79ebb9ee37"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_5.json",
+      "sha256": "2167fbe02c5a1ca95bed4d68a4d6723747368fe918b8c7f08a214788dc89af78",
+      "expected": "2167fbe02c5a1ca95bed4d68a4d6723747368fe918b8c7f08a214788dc89af78"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_6.glb",
+      "sha256": "e317675fc54aaa78dc81f68e7ad2d1199409c2e58140c0c2ee7c51c7a9bdfa25",
+      "expected": "e317675fc54aaa78dc81f68e7ad2d1199409c2e58140c0c2ee7c51c7a9bdfa25"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_6.low.glb",
+      "sha256": "00713bcf87aa5480c9cba6b4c73ada7735a7f939cc7346f6b949ff518fa4c46c",
+      "expected": "00713bcf87aa5480c9cba6b4c73ada7735a7f939cc7346f6b949ff518fa4c46c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_6.json",
+      "sha256": "b97bc054a0baacc63ef408fcfe078767fc33f8809cb4b3af8c328e985c250627",
+      "expected": "b97bc054a0baacc63ef408fcfe078767fc33f8809cb4b3af8c328e985c250627"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_7.glb",
+      "sha256": "cc308ef08ce5e4d34b5d299ef649d571589bf285f60dea1bf6e1724eeb5170f7",
+      "expected": "cc308ef08ce5e4d34b5d299ef649d571589bf285f60dea1bf6e1724eeb5170f7"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_7.low.glb",
+      "sha256": "da40fbda36e4e34b50cddfa81c1979a2097ea608da561bcdc87e580de55145f2",
+      "expected": "da40fbda36e4e34b50cddfa81c1979a2097ea608da561bcdc87e580de55145f2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_7.json",
+      "sha256": "1a8f2a318651877e10600ffb4210840a45e7320a4faf473d8a7140bb33676242",
+      "expected": "1a8f2a318651877e10600ffb4210840a45e7320a4faf473d8a7140bb33676242"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_0.glb",
+      "sha256": "ef2f8dd9a792fe29fa4b0ecd02f2c984a3f79830a24c8340c96e240f85444f42",
+      "expected": "ef2f8dd9a792fe29fa4b0ecd02f2c984a3f79830a24c8340c96e240f85444f42"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_0.low.glb",
+      "sha256": "1cc3f0e202c65c147ccd82eed12a8df13ab44b6a0e731cdc4660ff1eeac4cf66",
+      "expected": "1cc3f0e202c65c147ccd82eed12a8df13ab44b6a0e731cdc4660ff1eeac4cf66"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_0.json",
+      "sha256": "fa0665cf60cfe2238a6ac2ecf40aad636cf8ea48ec7ddbea7196c1189e00476a",
+      "expected": "fa0665cf60cfe2238a6ac2ecf40aad636cf8ea48ec7ddbea7196c1189e00476a"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_1.glb",
+      "sha256": "7ea0f86259be08e5ce9150c10c24b44141b3e7858c008cdf5d5d5d0ffa9a689a",
+      "expected": "7ea0f86259be08e5ce9150c10c24b44141b3e7858c008cdf5d5d5d0ffa9a689a"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_1.low.glb",
+      "sha256": "99fac1b3ed6cef8236facb4a0594378c6cf61400d973bc35ee55ab9d4d2a84ae",
+      "expected": "99fac1b3ed6cef8236facb4a0594378c6cf61400d973bc35ee55ab9d4d2a84ae"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_1.json",
+      "sha256": "6c4158657b303a825b17e95d3503149293535cdf624d5caf1f513994623b76b0",
+      "expected": "6c4158657b303a825b17e95d3503149293535cdf624d5caf1f513994623b76b0"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_2.glb",
+      "sha256": "04d1910c9f3cf7b980e03e9050c39f98343635079af7b0663803826422eea49e",
+      "expected": "04d1910c9f3cf7b980e03e9050c39f98343635079af7b0663803826422eea49e"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_2.low.glb",
+      "sha256": "0ede4f9dc0a36a58226bbf10ed52ec1f1fcbafdacbc50783d16b34501ae5c0d6",
+      "expected": "0ede4f9dc0a36a58226bbf10ed52ec1f1fcbafdacbc50783d16b34501ae5c0d6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_2.json",
+      "sha256": "72f0faddf3c84034cf1c7e7893a066987688a4cbbe03960b4dbe5d946924db2e",
+      "expected": "72f0faddf3c84034cf1c7e7893a066987688a4cbbe03960b4dbe5d946924db2e"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_3.glb",
+      "sha256": "b56d86a41dcf794e3698d0f174d0fe7dbadbea4b9ad71eccfe220b4c974f1dd1",
+      "expected": "b56d86a41dcf794e3698d0f174d0fe7dbadbea4b9ad71eccfe220b4c974f1dd1"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_3.low.glb",
+      "sha256": "52577249b5d4bd4f7ac0b43efb0bb1176132017b0e750d8ad265852b97a74efd",
+      "expected": "52577249b5d4bd4f7ac0b43efb0bb1176132017b0e750d8ad265852b97a74efd"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_3.json",
+      "sha256": "759e8027c69ae77a6fe908535b567182ed64f182c44ffe3ff9f333b66533fb4e",
+      "expected": "759e8027c69ae77a6fe908535b567182ed64f182c44ffe3ff9f333b66533fb4e"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_4.glb",
+      "sha256": "e56fdd7034c9f7e336e10343b14f27e343e2ed1f3d8d7e4232b318c169bb3ff9",
+      "expected": "e56fdd7034c9f7e336e10343b14f27e343e2ed1f3d8d7e4232b318c169bb3ff9"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_4.low.glb",
+      "sha256": "71a4205f8c9871e0e5fcea4719e1a2094f0f8cdf32e95d0d244481ce145f8830",
+      "expected": "71a4205f8c9871e0e5fcea4719e1a2094f0f8cdf32e95d0d244481ce145f8830"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_4.json",
+      "sha256": "d1b5d9581bb8f5a1110ebd4d15059a476c60298c6cca30d556f7fcde563b72c2",
+      "expected": "d1b5d9581bb8f5a1110ebd4d15059a476c60298c6cca30d556f7fcde563b72c2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_5.glb",
+      "sha256": "a6c8bcb0a20bd4f09468898a4be6b2e2c4e7bdecc28ddd775876746a860cf1bb",
+      "expected": "a6c8bcb0a20bd4f09468898a4be6b2e2c4e7bdecc28ddd775876746a860cf1bb"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_5.low.glb",
+      "sha256": "75f386ae9eaa1f53d39008fb3133583c6befe99371e6e9221466e53e5452cfa1",
+      "expected": "75f386ae9eaa1f53d39008fb3133583c6befe99371e6e9221466e53e5452cfa1"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_5.json",
+      "sha256": "30ab8d6f3542151d104db2c77dc0bfa51814480630b8aed58ff76763405738ac",
+      "expected": "30ab8d6f3542151d104db2c77dc0bfa51814480630b8aed58ff76763405738ac"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_6.glb",
+      "sha256": "629ec7fb7aabe5a47d14bbb2441ff85b430c3c5c2d1a39d987fa1fca37eb78c3",
+      "expected": "629ec7fb7aabe5a47d14bbb2441ff85b430c3c5c2d1a39d987fa1fca37eb78c3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_6.low.glb",
+      "sha256": "ce9c309ec9a4604e0a56185137f6ad12b4ec29a6ff46c38cc8674794707bafa6",
+      "expected": "ce9c309ec9a4604e0a56185137f6ad12b4ec29a6ff46c38cc8674794707bafa6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_6.json",
+      "sha256": "1a2b006b82e0f6b1ffa0b19476c2310ab30438be34c771b224e3f7a73dbc0a00",
+      "expected": "1a2b006b82e0f6b1ffa0b19476c2310ab30438be34c771b224e3f7a73dbc0a00"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_7.glb",
+      "sha256": "df68f911b6808b8c30e9369b9fa49b0d0aa0805cd682d683be507820362fcec7",
+      "expected": "df68f911b6808b8c30e9369b9fa49b0d0aa0805cd682d683be507820362fcec7"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_7.low.glb",
+      "sha256": "61ec6c397ff057b011afa9d39b9c7686b8434e702e90175679ffea877b106399",
+      "expected": "61ec6c397ff057b011afa9d39b9c7686b8434e702e90175679ffea877b106399"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_7.json",
+      "sha256": "6c80144ee463a96a8dfd2ef9b86b268fa05cfe25763c348290c5425df9f226f4",
+      "expected": "6c80144ee463a96a8dfd2ef9b86b268fa05cfe25763c348290c5425df9f226f4"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_0.glb",
+      "sha256": "b8ae449753ba6ac1c81e8a008ed3fc9bb90c7e63e2a1be0464c18c92cb433c54",
+      "expected": "b8ae449753ba6ac1c81e8a008ed3fc9bb90c7e63e2a1be0464c18c92cb433c54"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_0.low.glb",
+      "sha256": "b6c5e5ec966835527c6044da3507f1c3089f2419d2e4f5d31305e3a6f14076ba",
+      "expected": "b6c5e5ec966835527c6044da3507f1c3089f2419d2e4f5d31305e3a6f14076ba"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_0.json",
+      "sha256": "4accd6881bef629b0c1c82f8d48376ccaf2263482c85a0b103521598dd07684a",
+      "expected": "4accd6881bef629b0c1c82f8d48376ccaf2263482c85a0b103521598dd07684a"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_1.glb",
+      "sha256": "79f5e7214ec1e6dc22c4bb00a4d51398778ad53e57e51bd2a5fa0c6c45a3123b",
+      "expected": "79f5e7214ec1e6dc22c4bb00a4d51398778ad53e57e51bd2a5fa0c6c45a3123b"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_1.low.glb",
+      "sha256": "893b4df31057ad89e54c8b696fa9c5a29e629cb3dddc1bb37120b948c5bfefd6",
+      "expected": "893b4df31057ad89e54c8b696fa9c5a29e629cb3dddc1bb37120b948c5bfefd6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_1.json",
+      "sha256": "4f30f6a52e2168e0589204b7dbbd0e8bab139e25e49d8815ad1cc58a8a1c7550",
+      "expected": "4f30f6a52e2168e0589204b7dbbd0e8bab139e25e49d8815ad1cc58a8a1c7550"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_2.glb",
+      "sha256": "997264c58f8edd5ad510b7b4d479f00445976c455f89b4a72b627f8a5aaa0dc3",
+      "expected": "997264c58f8edd5ad510b7b4d479f00445976c455f89b4a72b627f8a5aaa0dc3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_2.low.glb",
+      "sha256": "ca678e50a858abc4fc5d78099f71f4bf720b4a622c800527837ef86b8c75ce56",
+      "expected": "ca678e50a858abc4fc5d78099f71f4bf720b4a622c800527837ef86b8c75ce56"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_2.json",
+      "sha256": "7e07353d57f0c2d5bad66aed4215a731f0123f7109b261126fd5c1ee44fe9fce",
+      "expected": "7e07353d57f0c2d5bad66aed4215a731f0123f7109b261126fd5c1ee44fe9fce"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_3.glb",
+      "sha256": "2fdf82c102394f74f4195d4cdc6a4ee5ac963b5b6f71ca7b65eb6dc6dd8140c1",
+      "expected": "2fdf82c102394f74f4195d4cdc6a4ee5ac963b5b6f71ca7b65eb6dc6dd8140c1"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_3.low.glb",
+      "sha256": "944dba521755a1d939c8f73fb3298dbcefc2a8cccb8de1b9a93aed7a31ca3ff5",
+      "expected": "944dba521755a1d939c8f73fb3298dbcefc2a8cccb8de1b9a93aed7a31ca3ff5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_3.json",
+      "sha256": "6f32ab9826c900e5a197f5a8bbfd4b663136b864583419e92385930f35105222",
+      "expected": "6f32ab9826c900e5a197f5a8bbfd4b663136b864583419e92385930f35105222"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.glb",
+      "sha256": "c0d6774302efaff8fe5d813bf3f844c3356bd26c567e338d920ee7646fb67100",
+      "expected": "c0d6774302efaff8fe5d813bf3f844c3356bd26c567e338d920ee7646fb67100"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.low.glb",
+      "sha256": "1ff00b334b0b7c0c983f38a825bb2eeb265cafa4b127f36a44df3c60aa9e5a92",
+      "expected": "1ff00b334b0b7c0c983f38a825bb2eeb265cafa4b127f36a44df3c60aa9e5a92"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_4.json",
+      "sha256": "a1792a6dbb2393c367ee5afa499b3dc21164f299fa089f5a81a661484bab83ac",
+      "expected": "a1792a6dbb2393c367ee5afa499b3dc21164f299fa089f5a81a661484bab83ac"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_5.glb",
+      "sha256": "17b46760d753c7014e6f875160933362c608ffc8fababee758741adb182a4449",
+      "expected": "17b46760d753c7014e6f875160933362c608ffc8fababee758741adb182a4449"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_5.low.glb",
+      "sha256": "369cf218483e663d17020af4ce9a36e4c9ff398d960e233ac2720dc4e00338d4",
+      "expected": "369cf218483e663d17020af4ce9a36e4c9ff398d960e233ac2720dc4e00338d4"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_5.json",
+      "sha256": "db79e3bc1ebff707bd99897925ff80ac78f2baa6627d3e7da65370fe02bbabb9",
+      "expected": "db79e3bc1ebff707bd99897925ff80ac78f2baa6627d3e7da65370fe02bbabb9"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_6.glb",
+      "sha256": "04f8beb2e95cb7299cd8717b411042a73b3f6a10a0510e2be9c1bf4633298cb8",
+      "expected": "04f8beb2e95cb7299cd8717b411042a73b3f6a10a0510e2be9c1bf4633298cb8"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_6.low.glb",
+      "sha256": "f125f8b4299fca2766c1246d8249953e80978721bb2a9454d9fc95b7bad67ac7",
+      "expected": "f125f8b4299fca2766c1246d8249953e80978721bb2a9454d9fc95b7bad67ac7"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_6.json",
+      "sha256": "20a55dbe939a6716c43ebf4d1c3c4d26a7245adc96ec854c1e7684eff54a98b7",
+      "expected": "20a55dbe939a6716c43ebf4d1c3c4d26a7245adc96ec854c1e7684eff54a98b7"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_7.glb",
+      "sha256": "5e92ef1359c51ed6f3249a1acb2690bbd67261a886f4a23476c39c503ce8dd46",
+      "expected": "5e92ef1359c51ed6f3249a1acb2690bbd67261a886f4a23476c39c503ce8dd46"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_7.low.glb",
+      "sha256": "abfbc11d628cc6051743040cf1e65f5196ef48ed8302bedc274a4e184d2e8ec5",
+      "expected": "abfbc11d628cc6051743040cf1e65f5196ef48ed8302bedc274a4e184d2e8ec5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_7.json",
+      "sha256": "3df782c63d1aaa7eb1cb3140ac4320f10d05220f0a091497c2c35fdea499e8a8",
+      "expected": "3df782c63d1aaa7eb1cb3140ac4320f10d05220f0a091497c2c35fdea499e8a8"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_0.glb",
+      "sha256": "afa901b4ba41640b12c18f44aeb3f935b0b2fdb432e8265d4071e0dbd353e5e9",
+      "expected": "afa901b4ba41640b12c18f44aeb3f935b0b2fdb432e8265d4071e0dbd353e5e9"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_0.low.glb",
+      "sha256": "abc0c8d37ea120b2b0c4316f724e2f87c34c79f3e648b2e090c512dce495a114",
+      "expected": "abc0c8d37ea120b2b0c4316f724e2f87c34c79f3e648b2e090c512dce495a114"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_0.json",
+      "sha256": "10fac61717856d996fe040d93f70ea8df9ec142504cc69ecd6c4b34aee34749d",
+      "expected": "10fac61717856d996fe040d93f70ea8df9ec142504cc69ecd6c4b34aee34749d"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_1.glb",
+      "sha256": "fd757a84cbc92884990a2143083dedaa42a0ab0afcc9fe1c1b7312d54f1b22f2",
+      "expected": "fd757a84cbc92884990a2143083dedaa42a0ab0afcc9fe1c1b7312d54f1b22f2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_1.low.glb",
+      "sha256": "70d9b26be872f1a37b60439fe8c16e451b84b4ba8264a777cbc861e416eb65c5",
+      "expected": "70d9b26be872f1a37b60439fe8c16e451b84b4ba8264a777cbc861e416eb65c5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_1.json",
+      "sha256": "33361a3140aa4d11cbd997101d1ba39ebaaffab75f51bbdd461c10f137165d3b",
+      "expected": "33361a3140aa4d11cbd997101d1ba39ebaaffab75f51bbdd461c10f137165d3b"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_2.glb",
+      "sha256": "9bf7979855d6e8703b21410a1c9c81284d1b875b0ef9508dc2c440d9bf2221c3",
+      "expected": "9bf7979855d6e8703b21410a1c9c81284d1b875b0ef9508dc2c440d9bf2221c3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_2.low.glb",
+      "sha256": "bf4ccf746ebbd5fe78f77d28c09cea671d0aa99849e8ef366fbf407f262775e2",
+      "expected": "bf4ccf746ebbd5fe78f77d28c09cea671d0aa99849e8ef366fbf407f262775e2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_2.json",
+      "sha256": "220dc86b4747391ecc8c18cef8b92dcfd67b55508edb9977112517a7b4fd00e3",
+      "expected": "220dc86b4747391ecc8c18cef8b92dcfd67b55508edb9977112517a7b4fd00e3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_3.glb",
+      "sha256": "f90e40272ebb6041c8e1db67925979e415f46f457deca06b37fbc2c2eae4ab8b",
+      "expected": "f90e40272ebb6041c8e1db67925979e415f46f457deca06b37fbc2c2eae4ab8b"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_3.low.glb",
+      "sha256": "c882096571a2e06c61ba23aa5c4137e3b8b8431884b91668296ab889273927f2",
+      "expected": "c882096571a2e06c61ba23aa5c4137e3b8b8431884b91668296ab889273927f2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_3.json",
+      "sha256": "f26afaa5c5e02c5f7b222989a16bc11430f723676d21955ed551d5e7d0357545",
+      "expected": "f26afaa5c5e02c5f7b222989a16bc11430f723676d21955ed551d5e7d0357545"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_4.glb",
+      "sha256": "6cdf76696ec1801d5423c9df525ec63f0bde2b8f5f9c42f195233a05157bc045",
+      "expected": "6cdf76696ec1801d5423c9df525ec63f0bde2b8f5f9c42f195233a05157bc045"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_4.low.glb",
+      "sha256": "40bbdcf700bbbb0e73d5669307932937434f5524d74e100f2978cc12a39f0c09",
+      "expected": "40bbdcf700bbbb0e73d5669307932937434f5524d74e100f2978cc12a39f0c09"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_4.json",
+      "sha256": "56842663d8a59bb7f83ee88238c35dc2e8ea4815b54c4bca955297fed269d0f3",
+      "expected": "56842663d8a59bb7f83ee88238c35dc2e8ea4815b54c4bca955297fed269d0f3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_5.glb",
+      "sha256": "d031dc4a596f1ccd590e38ade21815c5f4051b2311593b20a7c0b1214b483329",
+      "expected": "d031dc4a596f1ccd590e38ade21815c5f4051b2311593b20a7c0b1214b483329"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_5.low.glb",
+      "sha256": "6707674ee69f8a7691b42a41a1cf525af9dc85c24fb96c72d65f83362e373426",
+      "expected": "6707674ee69f8a7691b42a41a1cf525af9dc85c24fb96c72d65f83362e373426"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_5.json",
+      "sha256": "3a564d98a8b26a33abdc5cc1e7b657e2c21c0bc68a1dcd5464f9a91d87235818",
+      "expected": "3a564d98a8b26a33abdc5cc1e7b657e2c21c0bc68a1dcd5464f9a91d87235818"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_6.glb",
+      "sha256": "6f4c6efe4c7bd343823429adc7b89c495af33b8980fb2e59e61251c408c30207",
+      "expected": "6f4c6efe4c7bd343823429adc7b89c495af33b8980fb2e59e61251c408c30207"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_6.low.glb",
+      "sha256": "eeaa367b157b16a22795fb7dd989d91683576be0a21e5c084d9807af475216eb",
+      "expected": "eeaa367b157b16a22795fb7dd989d91683576be0a21e5c084d9807af475216eb"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_6.json",
+      "sha256": "46bb26cff69deb64565a28c9ec2df0635bb5bf4c9dfe092b9a7e4f6d3f6719cb",
+      "expected": "46bb26cff69deb64565a28c9ec2df0635bb5bf4c9dfe092b9a7e4f6d3f6719cb"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_7.glb",
+      "sha256": "78ef086f3a244f81fa6923d9134de109480fc8e320fc1d253ce5521a27c2a7af",
+      "expected": "78ef086f3a244f81fa6923d9134de109480fc8e320fc1d253ce5521a27c2a7af"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_7.low.glb",
+      "sha256": "6b54c149000838b39e5e985e58e7b21091b4f0e3272e2ef8c45f65e37fe84eab",
+      "expected": "6b54c149000838b39e5e985e58e7b21091b4f0e3272e2ef8c45f65e37fe84eab"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_7.json",
+      "sha256": "e2035ebab745a4e657a89128b029b23e857b206552feca2ad296654496ca3440",
+      "expected": "e2035ebab745a4e657a89128b029b23e857b206552feca2ad296654496ca3440"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_0.glb",
+      "sha256": "93059629d025fa594317d99cc3f5546ea011f7d2bc3ebccbf50d26c7e5eacaba",
+      "expected": "93059629d025fa594317d99cc3f5546ea011f7d2bc3ebccbf50d26c7e5eacaba"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_0.low.glb",
+      "sha256": "88a0e708c926b2e214a6e7711bb47a3dde426364d6c79594320bc2c2386e75d4",
+      "expected": "88a0e708c926b2e214a6e7711bb47a3dde426364d6c79594320bc2c2386e75d4"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_0.json",
+      "sha256": "5bd88d8d216f11a414f3df0aef4b4a7595774f1e468ecafbf39527da964eafca",
+      "expected": "5bd88d8d216f11a414f3df0aef4b4a7595774f1e468ecafbf39527da964eafca"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_1.glb",
+      "sha256": "61b4b5f54f20a9cd13d13e71a2e297be1afcc53238d342665c3b260287ab5aa3",
+      "expected": "61b4b5f54f20a9cd13d13e71a2e297be1afcc53238d342665c3b260287ab5aa3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_1.low.glb",
+      "sha256": "534f02a3465875d17511dc6e342f72ae78fbb02f10bf060a537d298f0700c894",
+      "expected": "534f02a3465875d17511dc6e342f72ae78fbb02f10bf060a537d298f0700c894"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_1.json",
+      "sha256": "ed2505eea904157275e70b9305736f2bc39d27b12d70eab1d1be287654e11dd3",
+      "expected": "ed2505eea904157275e70b9305736f2bc39d27b12d70eab1d1be287654e11dd3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_2.glb",
+      "sha256": "076a036a23a04ba394afc086c13e2251b07f25a277380621af0a0370362273fd",
+      "expected": "076a036a23a04ba394afc086c13e2251b07f25a277380621af0a0370362273fd"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_2.low.glb",
+      "sha256": "98a59d27edf2fb327647a8c3390dd64ac8c51f0ebdfdd8dbdba1ce92d3bbf96b",
+      "expected": "98a59d27edf2fb327647a8c3390dd64ac8c51f0ebdfdd8dbdba1ce92d3bbf96b"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_2.json",
+      "sha256": "7912490ea275aa4d127a1d8ae28515de79361a7f2efa1447f5fe8fcba04bc218",
+      "expected": "7912490ea275aa4d127a1d8ae28515de79361a7f2efa1447f5fe8fcba04bc218"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_3.glb",
+      "sha256": "80415038604a2ce16779faff4ea9b1272fdda613a34ccacab255cee3a6022460",
+      "expected": "80415038604a2ce16779faff4ea9b1272fdda613a34ccacab255cee3a6022460"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_3.low.glb",
+      "sha256": "3bd59f386fc587abbdab94e02536dc98447cf4388c74587cfcf2e749d377fdd4",
+      "expected": "3bd59f386fc587abbdab94e02536dc98447cf4388c74587cfcf2e749d377fdd4"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_3.json",
+      "sha256": "b78018b63bf5a35afec2af7483c3ac2dc5435598aabcc188bdd0c19394a69f8e",
+      "expected": "b78018b63bf5a35afec2af7483c3ac2dc5435598aabcc188bdd0c19394a69f8e"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_4.glb",
+      "sha256": "0718fbd0dbb4a118b0e03bd65d7fbc756d8e049609af6225b58a33dce692c549",
+      "expected": "0718fbd0dbb4a118b0e03bd65d7fbc756d8e049609af6225b58a33dce692c549"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_4.low.glb",
+      "sha256": "d3985fc5743e3aea7d3f226d9ea7edec0bb6ac9249ae70e310ca3d7553b3129e",
+      "expected": "d3985fc5743e3aea7d3f226d9ea7edec0bb6ac9249ae70e310ca3d7553b3129e"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_4.json",
+      "sha256": "674d833c21f0988a28742e99fdd033c821e74e6e9c09a068013c748cc3d06854",
+      "expected": "674d833c21f0988a28742e99fdd033c821e74e6e9c09a068013c748cc3d06854"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_5.glb",
+      "sha256": "5e826315c921b860a879ff6de028354ee5244f93bf717c1829ee9307514e3ca7",
+      "expected": "5e826315c921b860a879ff6de028354ee5244f93bf717c1829ee9307514e3ca7"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_5.low.glb",
+      "sha256": "0f6437ab0273a03d0f4dcbca61d207d962b7a57e812b73686e67c560e00a97fd",
+      "expected": "0f6437ab0273a03d0f4dcbca61d207d962b7a57e812b73686e67c560e00a97fd"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_5.json",
+      "sha256": "c6d707a01a658c2f770c13ecdc5d925c6926c64799c27dd069124b9646ca7c8b",
+      "expected": "c6d707a01a658c2f770c13ecdc5d925c6926c64799c27dd069124b9646ca7c8b"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_6.glb",
+      "sha256": "2e91a83b3240dd4a75c55192d83f3e81da3a1fc04b5b33683340697716b7974e",
+      "expected": "2e91a83b3240dd4a75c55192d83f3e81da3a1fc04b5b33683340697716b7974e"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_6.low.glb",
+      "sha256": "f95465e0fe76ce0b7cc8dc1e0f0a55bfed690d49a0ef827f47d336019ecfe689",
+      "expected": "f95465e0fe76ce0b7cc8dc1e0f0a55bfed690d49a0ef827f47d336019ecfe689"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_6.json",
+      "sha256": "3da751db4397ac47941b8e775bb5f5bb49aacb80318c30e10e1866bd1460326c",
+      "expected": "3da751db4397ac47941b8e775bb5f5bb49aacb80318c30e10e1866bd1460326c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_7.glb",
+      "sha256": "0cd14efbe203cf8c6ba78ea4564a31dbc730e1d367013985eb7ddc99305192f9",
+      "expected": "0cd14efbe203cf8c6ba78ea4564a31dbc730e1d367013985eb7ddc99305192f9"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_7.low.glb",
+      "sha256": "b00551fefeda9e0eb95735d4a36976398026f65a57fe6f65cfdfca1fa244f295",
+      "expected": "b00551fefeda9e0eb95735d4a36976398026f65a57fe6f65cfdfca1fa244f295"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_7.json",
+      "sha256": "e16ac1fc2861e37a0ede15eff0d0577cf15b61ea807d0743d2c8469a9d6cdcfd",
+      "expected": "e16ac1fc2861e37a0ede15eff0d0577cf15b61ea807d0743d2c8469a9d6cdcfd"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_0.glb",
+      "sha256": "610757dd85a5abd67f0d552b3eb4b3b261d48a2127bd091534a341f53076f93c",
+      "expected": "610757dd85a5abd67f0d552b3eb4b3b261d48a2127bd091534a341f53076f93c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_0.low.glb",
+      "sha256": "709dd3086e3cc02f33ea0cfa7d64d9839a0567dfc8cb4596b4043ded58097d92",
+      "expected": "709dd3086e3cc02f33ea0cfa7d64d9839a0567dfc8cb4596b4043ded58097d92"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_0.json",
+      "sha256": "0719904ba2bac23dcc3e16ee3b89c04e0ed53f6b5384db244db6d78fc7ff4b93",
+      "expected": "0719904ba2bac23dcc3e16ee3b89c04e0ed53f6b5384db244db6d78fc7ff4b93"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_1.glb",
+      "sha256": "a66210b2213699583fded78a20cb8459195d9a0691c5888dd64c0464d351b340",
+      "expected": "a66210b2213699583fded78a20cb8459195d9a0691c5888dd64c0464d351b340"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_1.low.glb",
+      "sha256": "625abc9c295522cb5244f3c48a0a34013fd7dcbc6d2bf10ee001c5c243b9a0ed",
+      "expected": "625abc9c295522cb5244f3c48a0a34013fd7dcbc6d2bf10ee001c5c243b9a0ed"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_1.json",
+      "sha256": "31271c56c0bf194777f782ee190d180743b6917c47552c55c5235b2428c83be5",
+      "expected": "31271c56c0bf194777f782ee190d180743b6917c47552c55c5235b2428c83be5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_2.glb",
+      "sha256": "59aa35b304ba9ca628753ee7a0dfe0a3703afb755b5330ae3037744921309a94",
+      "expected": "59aa35b304ba9ca628753ee7a0dfe0a3703afb755b5330ae3037744921309a94"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_2.low.glb",
+      "sha256": "2da06501aaa0c11024794d7040e7f8793b85e615260e323b79daf305c445c3cb",
+      "expected": "2da06501aaa0c11024794d7040e7f8793b85e615260e323b79daf305c445c3cb"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_2.json",
+      "sha256": "cc3d39950ec4852e28bbe478da507ff231caed466b1d29f2c0ada19e0f2b7910",
+      "expected": "cc3d39950ec4852e28bbe478da507ff231caed466b1d29f2c0ada19e0f2b7910"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_3.glb",
+      "sha256": "f7ce1afe2e024cea699ce0951ecfc52fd0f5c41b756eabfb371740572b0c5f7d",
+      "expected": "f7ce1afe2e024cea699ce0951ecfc52fd0f5c41b756eabfb371740572b0c5f7d"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_3.low.glb",
+      "sha256": "73dbd293b653cb7b0461d170f96ee0876d796b95f4470cacf52c67e4ac4410ae",
+      "expected": "73dbd293b653cb7b0461d170f96ee0876d796b95f4470cacf52c67e4ac4410ae"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_3.json",
+      "sha256": "f2067698562b76de777e114517ee1a1a091e5092390d0bd4c36b46004586551f",
+      "expected": "f2067698562b76de777e114517ee1a1a091e5092390d0bd4c36b46004586551f"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_4.glb",
+      "sha256": "85debac26fbc477fc6059c9e44708e9e29e394bf81ec7e80263f59eaf9f4d0e7",
+      "expected": "85debac26fbc477fc6059c9e44708e9e29e394bf81ec7e80263f59eaf9f4d0e7"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_4.low.glb",
+      "sha256": "8e2d639578994e5fe83830a103e1b6595825e28cc5d3999081ad05604e5406d5",
+      "expected": "8e2d639578994e5fe83830a103e1b6595825e28cc5d3999081ad05604e5406d5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_4.json",
+      "sha256": "55fdff67d6ff8a6240f5001cc15134310038ffae1ed44c10f0339e3ac9653d8c",
+      "expected": "55fdff67d6ff8a6240f5001cc15134310038ffae1ed44c10f0339e3ac9653d8c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_5.glb",
+      "sha256": "96c376f2715f34b3af01e89c439958179b13a287a227ea212de1ada39250a573",
+      "expected": "96c376f2715f34b3af01e89c439958179b13a287a227ea212de1ada39250a573"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_5.low.glb",
+      "sha256": "5674cfb93d46e3ab1080367183dec5260673cff25a631de754af511aab0a5ac2",
+      "expected": "5674cfb93d46e3ab1080367183dec5260673cff25a631de754af511aab0a5ac2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_5.json",
+      "sha256": "3f928d228d0e216beabeb12b8f52af842c12ff8c607e90be09be145350146fd6",
+      "expected": "3f928d228d0e216beabeb12b8f52af842c12ff8c607e90be09be145350146fd6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.glb",
+      "sha256": "706ae4a4b1aaea35b3cc53d85fc96a504a219237a7a465f225be5960a067aa8f",
+      "expected": "706ae4a4b1aaea35b3cc53d85fc96a504a219237a7a465f225be5960a067aa8f"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.low.glb",
+      "sha256": "80e570ce625d682f93ac6613b80c0f35e3598907486f59fd675726358e9ce58d",
+      "expected": "80e570ce625d682f93ac6613b80c0f35e3598907486f59fd675726358e9ce58d"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_6.json",
+      "sha256": "855bd401ec343de52fc95f610c3247a21c34f18c3d26929feda48ada2a678f9f",
+      "expected": "855bd401ec343de52fc95f610c3247a21c34f18c3d26929feda48ada2a678f9f"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_7.glb",
+      "sha256": "d6546ec98a1d96cecf2a40637fc2870113f3ea7c585a7c6458f1e773400426ad",
+      "expected": "d6546ec98a1d96cecf2a40637fc2870113f3ea7c585a7c6458f1e773400426ad"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_7.low.glb",
+      "sha256": "6484824ccebae2c6f70ff07e1eed8bdbf1d62765fbfa57636d493e3f88a8d582",
+      "expected": "6484824ccebae2c6f70ff07e1eed8bdbf1d62765fbfa57636d493e3f88a8d582"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_7.json",
+      "sha256": "d605b08d41334fee2ab7973a612547becfcfeb173371be881b881afe35e07752",
+      "expected": "d605b08d41334fee2ab7973a612547becfcfeb173371be881b881afe35e07752"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_0.glb",
+      "sha256": "fc9bf21571d51865a03ab09b12c33667b255a663dc44907cc8a94af69a32fbc3",
+      "expected": "fc9bf21571d51865a03ab09b12c33667b255a663dc44907cc8a94af69a32fbc3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_0.low.glb",
+      "sha256": "7e155e42d2315cabecd12f261d75b1b399fb1dd26606d2289dc65ec4a8ee5c37",
+      "expected": "7e155e42d2315cabecd12f261d75b1b399fb1dd26606d2289dc65ec4a8ee5c37"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_0.json",
+      "sha256": "b5f2f522f7476964688750a54f73d586d52c358047d1b008660bfc5e843e4155",
+      "expected": "b5f2f522f7476964688750a54f73d586d52c358047d1b008660bfc5e843e4155"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_1.glb",
+      "sha256": "5c34e41d6df9a7cd117582e7998c6dd9ca27ae11f30393725c828b2c7226d493",
+      "expected": "5c34e41d6df9a7cd117582e7998c6dd9ca27ae11f30393725c828b2c7226d493"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_1.low.glb",
+      "sha256": "b8d3bdfd00eb69a905313eeddcf025e9c985bdfe47ddd059e756312a5d7ae333",
+      "expected": "b8d3bdfd00eb69a905313eeddcf025e9c985bdfe47ddd059e756312a5d7ae333"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_1.json",
+      "sha256": "57db2ef77c902e32b5cfa7a8385b2d6258adda836eb850801cf395a394989ccc",
+      "expected": "57db2ef77c902e32b5cfa7a8385b2d6258adda836eb850801cf395a394989ccc"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_2.glb",
+      "sha256": "7131f35add9bf3562abf5b0e6fb8ab5d23e43776345a5c8514158816388c283c",
+      "expected": "7131f35add9bf3562abf5b0e6fb8ab5d23e43776345a5c8514158816388c283c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_2.low.glb",
+      "sha256": "80af772451c45bfb3a444504c2ec235fcf903526e8764d4a132a72ae3a0a7d68",
+      "expected": "80af772451c45bfb3a444504c2ec235fcf903526e8764d4a132a72ae3a0a7d68"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_2.json",
+      "sha256": "e2abf0e74f8b33aa3599f84a092611d6bde5dd6108109af19cf270808fca9345",
+      "expected": "e2abf0e74f8b33aa3599f84a092611d6bde5dd6108109af19cf270808fca9345"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_3.glb",
+      "sha256": "e1ee8fd20de8322e3d1fa97b565b47125d5218ced1f1539f6a1da74e7f2ce535",
+      "expected": "e1ee8fd20de8322e3d1fa97b565b47125d5218ced1f1539f6a1da74e7f2ce535"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_3.low.glb",
+      "sha256": "361872cd2c584588154e0dfe1be501936a868419c3ff7b9a4e07f63f48cc336d",
+      "expected": "361872cd2c584588154e0dfe1be501936a868419c3ff7b9a4e07f63f48cc336d"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_3.json",
+      "sha256": "46b90e0ecce594cc9ba28637964347e3fabb9b0055fa86845208e2456d319245",
+      "expected": "46b90e0ecce594cc9ba28637964347e3fabb9b0055fa86845208e2456d319245"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_4.glb",
+      "sha256": "751d8cd02db9dd8cf6d442672b431fd8ec35de5eb04c5ae0590d5db404d219c4",
+      "expected": "751d8cd02db9dd8cf6d442672b431fd8ec35de5eb04c5ae0590d5db404d219c4"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_4.low.glb",
+      "sha256": "54cb8754424b02cb58fdaf443cc8cc75383b00019ace6249f85646469bf42547",
+      "expected": "54cb8754424b02cb58fdaf443cc8cc75383b00019ace6249f85646469bf42547"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_4.json",
+      "sha256": "dce5fa14cdc0c7aad79c83c9bd4ef608c181c166792465ebe0e75295c2b68e77",
+      "expected": "dce5fa14cdc0c7aad79c83c9bd4ef608c181c166792465ebe0e75295c2b68e77"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_5.glb",
+      "sha256": "7baad6db8beba96f799a6c14f2c22fbd4295dbcd0379dcafad0a4b83ff3bdb2d",
+      "expected": "7baad6db8beba96f799a6c14f2c22fbd4295dbcd0379dcafad0a4b83ff3bdb2d"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_5.low.glb",
+      "sha256": "db98a88f8942c09867cd94b3c6decc221dd3ba26a658ff5e5475eea72fe08cd2",
+      "expected": "db98a88f8942c09867cd94b3c6decc221dd3ba26a658ff5e5475eea72fe08cd2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_5.json",
+      "sha256": "024505484ad20725d012deb84a6c10170f79925ebbce05c8bacbb2b6c1360c48",
+      "expected": "024505484ad20725d012deb84a6c10170f79925ebbce05c8bacbb2b6c1360c48"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.glb",
+      "sha256": "b6edd1093733cbf7c8215e990c10fa876e64b503512cbe60793391a48c7a5461",
+      "expected": "b6edd1093733cbf7c8215e990c10fa876e64b503512cbe60793391a48c7a5461"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.low.glb",
+      "sha256": "0fa4c70133e973828bc72cda0320bcfe9f071f9de1c658d09997cd35529a62fe",
+      "expected": "0fa4c70133e973828bc72cda0320bcfe9f071f9de1c658d09997cd35529a62fe"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_6.json",
+      "sha256": "59defc51cb24853bbf1d4385c97e00147937af004248389fb9def392e651bde2",
+      "expected": "59defc51cb24853bbf1d4385c97e00147937af004248389fb9def392e651bde2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_7.glb",
+      "sha256": "8daf51fad6b1899a7753c075968978ceb584a6e0d46eb0469bf6e1584f81bfd5",
+      "expected": "8daf51fad6b1899a7753c075968978ceb584a6e0d46eb0469bf6e1584f81bfd5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_7.low.glb",
+      "sha256": "0ff7597dbca949e3fd6f18c3920a0403d27d48310d735815c2d5d55a36adb485",
+      "expected": "0ff7597dbca949e3fd6f18c3920a0403d27d48310d735815c2d5d55a36adb485"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_7.json",
+      "sha256": "b823bf6120a64b7c07b8254b6fb889b22b7a2a2153183e8905a539f0375e1f07",
+      "expected": "b823bf6120a64b7c07b8254b6fb889b22b7a2a2153183e8905a539f0375e1f07"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_0.glb",
+      "sha256": "85911287b2c44daa84e7da29adbe560619893ea2e22c82e925f024078e43a918",
+      "expected": "85911287b2c44daa84e7da29adbe560619893ea2e22c82e925f024078e43a918"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_0.low.glb",
+      "sha256": "9ff4056d9f111863e8a105a18c29e6e216c71fb9399fe722a3bb6fb0521cb9f7",
+      "expected": "9ff4056d9f111863e8a105a18c29e6e216c71fb9399fe722a3bb6fb0521cb9f7"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_0.json",
+      "sha256": "af4513cba8b1c6ece2916f9e4582fa417e7136028b4c4b000c11f81c3f43aa65",
+      "expected": "af4513cba8b1c6ece2916f9e4582fa417e7136028b4c4b000c11f81c3f43aa65"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_1.glb",
+      "sha256": "30087e28740197922b8ceca85ae17c29f74127d28ab3de564ce221064cc9f692",
+      "expected": "30087e28740197922b8ceca85ae17c29f74127d28ab3de564ce221064cc9f692"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_1.low.glb",
+      "sha256": "6a6aca1f7a159522e287a8f363f55ea8ab1d65c19ff2b0e25f2a7e7fd1ceaa2c",
+      "expected": "6a6aca1f7a159522e287a8f363f55ea8ab1d65c19ff2b0e25f2a7e7fd1ceaa2c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_1.json",
+      "sha256": "17a483d30604c4c895687d50ac07cf81dee217c6830cb1fc30e5d242ef7721f5",
+      "expected": "17a483d30604c4c895687d50ac07cf81dee217c6830cb1fc30e5d242ef7721f5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_2.glb",
+      "sha256": "8ba97863d00d4c3224251c30d3307941132fbee78b48c1a1b15ea91ee2e39d18",
+      "expected": "8ba97863d00d4c3224251c30d3307941132fbee78b48c1a1b15ea91ee2e39d18"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_2.low.glb",
+      "sha256": "76213edcc97d8f133999786b022aad840bfa9ba654a74584e4f5a4b203476730",
+      "expected": "76213edcc97d8f133999786b022aad840bfa9ba654a74584e4f5a4b203476730"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_2.json",
+      "sha256": "34fd7d778bb27c0b77ec8fe233957ba7bc928f7da9eb2f4954eccc60e8d09f7a",
+      "expected": "34fd7d778bb27c0b77ec8fe233957ba7bc928f7da9eb2f4954eccc60e8d09f7a"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_3.glb",
+      "sha256": "f24890a1bd26fdfceac11bd592c99bc778d4d30efd0f4d22f294d3d5dba8b2e6",
+      "expected": "f24890a1bd26fdfceac11bd592c99bc778d4d30efd0f4d22f294d3d5dba8b2e6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_3.low.glb",
+      "sha256": "9f0c47038104130f1a0ec377d7bfe676c5497efdae7ee8cb1d42f9ff162de3e3",
+      "expected": "9f0c47038104130f1a0ec377d7bfe676c5497efdae7ee8cb1d42f9ff162de3e3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_3.json",
+      "sha256": "f4fb1bf1cad962cc2c5ffe4f5c69d2a6d6e6bdea90984328a3c6f0827a549d7a",
+      "expected": "f4fb1bf1cad962cc2c5ffe4f5c69d2a6d6e6bdea90984328a3c6f0827a549d7a"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_4.glb",
+      "sha256": "810ae94dc81eb63407010892077ad1725ef31f1b672d8bfbf671d3c768d0c0dd",
+      "expected": "810ae94dc81eb63407010892077ad1725ef31f1b672d8bfbf671d3c768d0c0dd"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_4.low.glb",
+      "sha256": "3d6f2b90eb115c188947493152839d05587444d35636c8c2327a569cd20d4aec",
+      "expected": "3d6f2b90eb115c188947493152839d05587444d35636c8c2327a569cd20d4aec"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_4.json",
+      "sha256": "8cebf780b7ee55b63566175f7862219a8a713a58045eb5f99fa64e143fb7bc6d",
+      "expected": "8cebf780b7ee55b63566175f7862219a8a713a58045eb5f99fa64e143fb7bc6d"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_5.glb",
+      "sha256": "cecc603229155a2327a50f342605443ca3583ece86554005bcfd51b4e08bbf15",
+      "expected": "cecc603229155a2327a50f342605443ca3583ece86554005bcfd51b4e08bbf15"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_5.low.glb",
+      "sha256": "760ee7bbe53a9f714dbd62e57a765b914c0431ba45db63008f8b482b91540609",
+      "expected": "760ee7bbe53a9f714dbd62e57a765b914c0431ba45db63008f8b482b91540609"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_5.json",
+      "sha256": "3bf0a75ffb8d7ba5c63cae4e038d694748abef868adcaf3efc380fca4d2219ea",
+      "expected": "3bf0a75ffb8d7ba5c63cae4e038d694748abef868adcaf3efc380fca4d2219ea"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_6.glb",
+      "sha256": "860e91884e77821753b952547fe2830c7e82644a908c5c605bcdea8f2ecfb0c9",
+      "expected": "860e91884e77821753b952547fe2830c7e82644a908c5c605bcdea8f2ecfb0c9"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_6.low.glb",
+      "sha256": "50845c3a21083c4fd480dd545cefb2cd487ad54f037f3a662546b647dc2be31e",
+      "expected": "50845c3a21083c4fd480dd545cefb2cd487ad54f037f3a662546b647dc2be31e"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_6.json",
+      "sha256": "1b857aaf03d42f4e51759ad203a9b4928d11eaa8c1cd62b200253282dcc984b1",
+      "expected": "1b857aaf03d42f4e51759ad203a9b4928d11eaa8c1cd62b200253282dcc984b1"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_7.glb",
+      "sha256": "be90942e87337bc8c8213a3df8cf86850613c27b13b134497e706428a98670d3",
+      "expected": "be90942e87337bc8c8213a3df8cf86850613c27b13b134497e706428a98670d3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_7.low.glb",
+      "sha256": "2861bac7f1d505a2af7574c4033ebf4e3e5aa2b8b8fc623f0422884e302af1e6",
+      "expected": "2861bac7f1d505a2af7574c4033ebf4e3e5aa2b8b8fc623f0422884e302af1e6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_7.json",
+      "sha256": "67588d8fba41c43178fcad739bd9decbce83e478f37a9fc23044ca3232961aed",
+      "expected": "67588d8fba41c43178fcad739bd9decbce83e478f37a9fc23044ca3232961aed"
+    }
+  ],
+  "materials": [
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_apron_sett.mat",
+      "sha256": "52faad82e84f9b4e709115f4fbeaa3c6af5f9dbcac4b06c47b9a31c0f4150add"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_balcony_panel.mat",
+      "sha256": "f716db57d779014862f3452a0200d0c7e58ca73c9b17a90024400fb70a894108"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_balcony_slab.mat",
+      "sha256": "f35b1fa86e22023f561fa81e8a40154659eb6513c82bf6757bf84e6379effeda"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_barrier_housing.mat",
+      "sha256": "efa19a2c4c23ac0f88fb038a0a19afc1f565240fccff925ebbc04573721d7b7d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_barrier_post.mat",
+      "sha256": "cd27203a3dc5b359bba4f7c10aecd9310db5e22d9fddb1103e040a5933be07bf"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_barrier_steel.mat",
+      "sha256": "bd80afe7be9cd302a9fb90689b1f6663160cb69b5c003fd8a3688793c8288808"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_bed_soil.mat",
+      "sha256": "f1d24f1719538264b3be391dcd6a523b72602b90975a50c5014f06e96bf92a27"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_bed_stones.mat",
+      "sha256": "cca61c4874d1107026f7c5857238864f368b3e0e32fcdd0864662aeb5e92fd12"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_bench_wood.mat",
+      "sha256": "448e49c8616fa6f1b99b7ab1c7fcb29016b18f993090de0af8a8bc5345110174"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_bin_plastic_blue.mat",
+      "sha256": "621a18d7f1587744dc52458ff245658dd80b7b2a02b0d6f6d3458ad8248ea4a5"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_bin_plastic_green.mat",
+      "sha256": "40db2432cef3ab5cc483f8f438250b191b1700e0df84ef407fba5e67ed373e82"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_bin_plastic_grey.mat",
+      "sha256": "7c4e8f8fe75582a1f3f91671a95322a80f75d5fa21791225f3a58d99f97249be"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_bin_plastic_yellow.mat",
+      "sha256": "00679e8a52965405bcac610a731b730504dc6e9df9ee1dd64d2a63a9d4a5f10c"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_booth_glass.mat",
+      "sha256": "2e60fda5dd21954adac1ca239aa67127c77ed33b88a26c1610a2d52aa2ab9c98"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_booth_panel.mat",
+      "sha256": "6a0b46f79ff54dba7bfb819da3392a268864659902d7e524373fd03250e70db7"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_brick_red.mat",
+      "sha256": "f3f91615d8251e1bb914876226aee5d362af0e3213d925d90354cdfef31ae813"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_brick_red__far_office.mat",
+      "sha256": "b9cbff3555b0a50e6c3cf3a14006ad4ea7fe25080267530258436ac29bef4e5c"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_brick_red__far_ribbon.mat",
+      "sha256": "c60076e6ac9ef6e5a491e54d89f72772d4e7dbec0c4e18a751cbead38798820f"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_bridge_concrete.mat",
+      "sha256": "c32f3f019052c7683cc39f008ada7c614737df65f7e649c1bd1ef626f0359c97"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_bridge_fascia_green.mat",
+      "sha256": "b704094b97e720ea0fa747384a56f7b6d0d7a6545b8a8a77f3da9eb451cd7760"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_bridge_fascia_red.mat",
+      "sha256": "087539dbaa0ef21d9d3fb50d47b97d3055bdd1d8dc53793e5e274dee4423783d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_bridge_soffit.mat",
+      "sha256": "bdb3dff453e9c1f43c532fd8e4e32b5c2dbc421142335c682f042f98da4a57c5"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_cabinet_grey.mat",
+      "sha256": "bfd82476103b65f936b321773e71524d092351020173f7906d034acbfdaea67b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_canopy_fascia.mat",
+      "sha256": "7d94b4acca45b36e851b5325339f875746c0575ea3b1497e4a7437d054b6dfd1"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_canopy_glass.mat",
+      "sha256": "dfe6bf76f5782d3079449a327505ef37067ed6695141d400cba43ded352787d3"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_canopy_steel.mat",
+      "sha256": "21d27d87388a93244fa3c2cbeb20033329564c57de71f720be3906ad90b18fbe"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_cardboard.mat",
+      "sha256": "831a6bd8bb193f4ccb8ba0a580f2a635e051f3637fc16e9646a01fa2c9afce89"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_dirt_1.mat",
+      "sha256": "e1059a6d7f190a95e4759e9c1a4150c9ba57340c1212a2db0fa1c938476cf328"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_dirt_2.mat",
+      "sha256": "fffe3f5d82210a151fc2a7ebbcfaa67eddaa9c7874c6d10b8cccde80f901ee51"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_dirt_3.mat",
+      "sha256": "a9c62a4db2ab978db1dd8a672db1c889737be3e3dc15293b4a340276a9c13439"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_glass.mat",
+      "sha256": "5b4fc47e610b33cda232dc560103a5365d2c70a7bb601fd849b0039ed9e92af2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_glass_tint.mat",
+      "sha256": "bda49f798267208c9cbd33edd9ad817a4d19269d15d2d8c2f4d19ea3dfe65e29"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_interior.mat",
+      "sha256": "3cf54097f6ebe0feb15059ac4cff1b6ecfedfa2ccdcb2edd20b5fe23bf486d03"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_lamp.mat",
+      "sha256": "6f9faadae3f2004d3d85728e4fd431d0a720f1fd407836ca9d4c8dcc57982528"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_light_head.mat",
+      "sha256": "2890c7cc4cd04ded013b96dc77536a5f32759057221563ded626fe7620e0add3"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_light_tail.mat",
+      "sha256": "d0def007d0986cea1d8efc730566b76ac2d8108b678055f09a8aae361402de14"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_paint_beige.mat",
+      "sha256": "168e8b3e4fe040bd740aa7f53cad1ab351ea5d02f86d0c4adef8046aabf0a2e9"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_paint_black.mat",
+      "sha256": "226a73f4bf9e116c56c8866781ef24b84ed46bec3d98946d666008858586ce5f"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_paint_blue.mat",
+      "sha256": "6c35386bb35b9b99dfb86a7d4c4c793cb2102e8641534268b8ef2bf3dd420dbf"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_paint_green.mat",
+      "sha256": "77da10e04daf7088778adc70c7bc5af653e1ee2a0ac39192919dd896d3fa2c8b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_paint_grey.mat",
+      "sha256": "ba146540754eada9d6196f277e84dc82a1490de676dd8ee2f8bd000d1e6b56af"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_paint_red.mat",
+      "sha256": "b46708db63c3fa54403f964ba2f05d778f8ffc6d43cff2a0280d92aa7135c9eb"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_paint_silver.mat",
+      "sha256": "39b0f05c2ddcb2fd92af37d012985b0029347fddbec7cd7424c03fc6478ac6f6"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_paint_white.mat",
+      "sha256": "49e911ac3975f5f8ca05db5ebaeac15f3b2464d76be9465db73a2b4bcf7c447d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_paint_white2.mat",
+      "sha256": "e2da822867499abec6f4657d3cea808a9dbc337bf574640c9ca7712b719dc60b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+      "sha256": "03219566936b1701aa3091041b9500de0b342ade1e78f86992ebd25170e019d3"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_sill.mat",
+      "sha256": "6c3fb87db2d16a1af5a4c2abd9f8a6211fac8e94ecfdc7e034648d22f515339f"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_trim.mat",
+      "sha256": "93722952011216930002196ec0d7c08c0497e1dbe500f942463d0ec26f02da04"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_tyre.mat",
+      "sha256": "a4d342af5e950310fb2baae98aab50b894171265fbef2ead8a642e7188da9203"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_tyre_dusty.mat",
+      "sha256": "d22e54d5b8cbfbe49ef84a12d544deb13a41fe03431d1fd51bcb29cbe9e70ddf"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_chimney_brick.mat",
+      "sha256": "64eaf23a4eacde0ebf27b426a02e549590db52c54cbebe0cb0ded8df000fc4ee"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_chimney_concrete.mat",
+      "sha256": "c8afd4a8fda8b05ade039f5e53c85ccaf8744b7961ab65a37dcb0ec61bc32159"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_chimney_red.mat",
+      "sha256": "e98c1d006121a1e5f524f953041cfb09e839e00b1114102edfe70cc3e64bf4c4"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_chimney_white.mat",
+      "sha256": "dfaef720a5fd9767b0ef073c358187fb231c4e3aa9b3fe68c3f3850330b2d27a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_concrete_base.mat",
+      "sha256": "9fc313def3b89e401ec6fe5d029c25cede294563db2f5ffbc8dceffd799f4724"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_concrete_fence.mat",
+      "sha256": "94e961c17963fb0cbed5b7ce2640ee5771f3700ed8e244e6ee456fe161b0b2f7"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_concrete_fence_post.mat",
+      "sha256": "912a00f52f07326cb21965541670fe2564317dc67b8024e050a1975834f20d78"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_concrete_plinth.mat",
+      "sha256": "66c377cd9382bcf0322c2c4e4b95f3e13c5e9f04027149f7e111d994be8be5cf"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_concrete_pole.mat",
+      "sha256": "acdf1ef56897ab30a16df995605e237b471ff80ac4c202b009ac2adb89c92f18"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_concrete_wall.mat",
+      "sha256": "1903ad443e3fe2df89785bd00c46c2ce93701084b32288c445cd04d0e7e18eb1"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_cone_base.mat",
+      "sha256": "d54ff89db8ced4c024d4788a74f1d377690d029ae8840ed84011e3660bd32910"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_cone_orange.mat",
+      "sha256": "7c24b0ac7fbaee813dc54589ecaeb9d941e0c1c4ce16398f1e893757520bb166"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_container_beige.mat",
+      "sha256": "edae3a33f9ccd52813dd0373540fd68eb0be12cca9252a8393c2bbdc4653d8c0"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_container_blue.mat",
+      "sha256": "212ca81c6ce9b6a6c793fca58efe96ce447fdbd5f7bc44ca38de1746c58d0502"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_container_doors.mat",
+      "sha256": "fc784a64954a116b0276c53289d895822788184febe8ffac8a988a158cee2278"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_container_frame.mat",
+      "sha256": "8a2c8f2f7ac39b09c06ed3b69b29b4b6d0157d206cffcb51984f043f9df7d776"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_container_green.mat",
+      "sha256": "a750a5d571de26cd2cfa8b5628bd44df66d666eedd24e366f08dfe37b2e11234"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_container_grey.mat",
+      "sha256": "f084ec05bc592748e885bdebfe8e0caacd6b9c9e1757ef190c89ae763c51ebc2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_container_rust.mat",
+      "sha256": "2137b4c3fe93fa35f951a9542b3083d574f8a59f83ce76acc16fc026f68aa023"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_container_white.mat",
+      "sha256": "4e56c9fbf4eeceb6a80f4fee3309c7f8e6f16be961ac5125073b6a3682dfbbdc"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_coupling_red.mat",
+      "sha256": "6ab97f53cabc169dd21c2a66773faaee03edf331fa56a5e8e8230e4d62bc5afe"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_coupling_yellow.mat",
+      "sha256": "76f415493feae37a4f3cb2ea737b1d83da2d49d9a7504f68c6c4b1b6d8d4ceb0"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_curb_concrete.mat",
+      "sha256": "d674008e6453f52e90fd71e9b1f18c134275a802883a6e97805db10ca4f7091b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_cycle_red.mat",
+      "sha256": "075626280f58fe7b881b5ef5921bfba91d8ee9a57a51fe0549ec577b786aa989"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_decal_oil.mat",
+      "sha256": "b0c3d83d910eeed8775be4cbc3c22fa22060378edab4108e4f49778a80d67aa0"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_decal_patch.mat",
+      "sha256": "63653d3d8d02bf1cd17f1ce2cbdfdbdefdb8fc385dcf979d0d8ba636daceb0a4"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_decal_sealant.mat",
+      "sha256": "7207e4e5a3cfbf1d0bc0ba01bfb2a3596ea300636047daaf022ee87150d4f24a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_decal_tyre.mat",
+      "sha256": "bbf25095c056cd4fa807bced1287b5e954eab88235f13371e3b40fcedf155a0c"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_decal_yard_patch_dark.mat",
+      "sha256": "3d554ba6000401091c9740432a0e3c956523afdce89eed364c7893cf56796cbb"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_decal_yard_patch_light.mat",
+      "sha256": "bec127ed919032c2fa351f00a6a78e5d30cda0048de8462a0e7c0651dbc5c4d9"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_dock_digits.mat",
+      "sha256": "b2422a40a59ccc25b6f9b0871e70a30e08a5e73ad9dbb6d4a982dd1861ec4105"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_dock_door.mat",
+      "sha256": "399063647b42e6385506265b1bc86d5e99c9868f8b41b07533442202403363e9"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_dock_light.mat",
+      "sha256": "b3224a3da4cacd19e1102e3f19dedb50cb4df1a871a9c00f32e44a2ca2c83305"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_dock_shelter.mat",
+      "sha256": "f9c79db6be5f0c95e644825aa96bcce09b804a7c2d693ed104c263f97ac4fe16"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_door_glass.mat",
+      "sha256": "6f8c32120c3ab2d6a1694db30264fa4fa8350ddb269615074d20cc8fb19a8a58"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_door_steel.mat",
+      "sha256": "e86896e455f65ef2186a6a117bd949ae1124c584438458bc85af2daf7c560ae5"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_downpipe.mat",
+      "sha256": "610c9a4b1ed89d2d0174484aa1322fb0bc827d1611cb1f3d58dd3f658444866d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_drain_grate.mat",
+      "sha256": "38fb68836e00dac0ce77a393764c9f1cd71aa29fac7fa69ef0e5773fe2e9c76f"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_birch_tree_trunk.mat",
+      "sha256": "2e598bd0fc3ff66b9a0bf6eb91764a9c278c75f6cfbbff8eb80df458e6cb2825"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_boxwood.mat",
+      "sha256": "03c76e83c72c522d21634cd3a59491cb0ced22ed182a51f68d8e5d6ab6b0b282"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_drainage.mat",
+      "sha256": "28a6b2157cc3ccc1ccf33390d1f8e1e3e24e9010ace52ba7832cef3425d282ec"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_elderberry.mat",
+      "sha256": "c22d6f74a189db545c57b8a4b340a29541c5b456db1deb9853265fbd0ca62911"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_granite_rock.mat",
+      "sha256": "34f084f1d50bbe04af5bf46af0977ad09157ce915c032f437964a941e655dc0d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_grass_clumps.mat",
+      "sha256": "10f5a624899e2dfa32485a8e97ff9fb3104824d1643da98e60ac6b07502a9900"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_linden_branch.mat",
+      "sha256": "d8342a1a6f768e5864ee9c9ed111a52e2124a3e035bdc0af8ff7efc563d33f3a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_metal_manhole_cover.mat",
+      "sha256": "be18a7c0deb2f2c5ef2fa81378f1c8e61f53d25472c561c26d7bbdc6a11cd541"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_modular_curb.mat",
+      "sha256": "e42e9c64b4fc9c82e00e3a26b4dec2becbc8dccfc1c55167ae56313c23365ea0"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_round_drain_cover.mat",
+      "sha256": "07f3857b0496a7a765bbfa3c6415a9dac4c547cc5c7b5d08cb15a8645c2237b4"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_silver_birch_bark.mat",
+      "sha256": "d3e6809850345aa6a793c2bcc95019f8abe24a4fc2852ee2541063c7349be256"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_small_granite_rock.mat",
+      "sha256": "c856802bebe317c57856e7560c0ea37df552834fe43f109337a20d17e0c3674a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_square_rusty_drain.mat",
+      "sha256": "3813cacb55926cf33799afc6fce3d2a244a212bbfbfee085e4cab72b9a7bd964"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_street_curbs.mat",
+      "sha256": "2f057fe2fb540b1fdf4fdb00c89d073a074ee5ed4053e51ad8e990a24e995e57"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_trash_bag_pack.mat",
+      "sha256": "4dc3d3d0b351372414a8faf20201b8859310964ed785e4c1b2e7acdd5d038279"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fab_wild_grass.mat",
+      "sha256": "b1628cf14a6e7f17ecaa19474ea1344ab8541d532742c7b59ec8016626e5d6fb"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_facade_atlas.mat",
+      "sha256": "652b1e5f269f9ee817c9f76b2d9a3813090c731ed66dcaa9c0c4d2fec2c7a5f6"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fence_anthracite.mat",
+      "sha256": "d3810d5696c550b095da4a37bf7b51e50cab34ce7ca8952bc997a4a087cd338a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fence_anthracite_mesh.mat",
+      "sha256": "081f563208b35d6e2abaf3d53afd02795c34ca73b7990e63ff9e8c2a2b1bdcb9"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fence_galv.mat",
+      "sha256": "77fec330bceaac956470eead768a4bfca984b6a35f843220f66207f2bc095adc"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fence_galv_mesh.mat",
+      "sha256": "dbeb74802861bc02c9a2f7da003f874744d8df72e1222895e974962a956a6d49"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fence_green.mat",
+      "sha256": "f3ef31d61480af429f7e027c43489477a08b468e1f05dcdd169d1ea688fbb263"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fence_green_mesh.mat",
+      "sha256": "8e24b1b6561848cf71dd649dced1e3551b996b9c265e62f8d42d779cd93b5080"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fire_station.mat",
+      "sha256": "a6f9f58046e91bc8728ee341c802f69359fd22c75c1b8a7fdd9c90ce4f639779"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_fire_station_alpha.mat",
+      "sha256": "880efb10955499f6b0725db9cc93586a26ab73c392addb7011a9b3c3f8d9ba87"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_forest_canopy_broadleaf.mat",
+      "sha256": "93119667c9e19d809a814a8eb0fd0b3756571d076fe719709ecf50adc7170fdb"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_forest_canopy_conifer.mat",
+      "sha256": "4dcf6804ffbf1e8acf432cb11ce2561b10f2050d6a1dde87839caac39f8265c0"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_forest_canopy_mixed.mat",
+      "sha256": "48df8bd2072dec9ace9d16f3c44c29ba54fc746639438e6b373c107042183052"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_forest_edge_broadleaf.mat",
+      "sha256": "fabb2404d088cd0d16a017dc3f291eff095dbbbaebe5101bc1cc8c996beae1c8"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_forest_edge_conifer.mat",
+      "sha256": "2d6456711708a107cfb367dbbd97ede56077fbcb7b3f09e123ae1c2f5c8a65f2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_forest_edge_mixed.mat",
+      "sha256": "34ff0d9d2e7bef0d89a0ef44fd14cef0e5f4be75c70d1fcb7265cef2849a3954"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_gantry_steel.mat",
+      "sha256": "ebbbf9a2bc7f642a8b549c14e084af33447612e052589c082b93b1170d6194d5"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_garage_door.mat",
+      "sha256": "00c9b3657bb014ec3f139279956ad05478276a6570c4fc7fa5bdf1fe39699a9b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_gate_boom.mat",
+      "sha256": "05ea00c21647414d463c419a1150cef9140d4abbf6cf4870f5220ab0595d0c91"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_glass.mat",
+      "sha256": "c30b640830a1c6c3b12a3dd70d48fcd0c97283c0568e04904e68f2cc1dd04814"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_gutter.mat",
+      "sha256": "e9b596b34ea7c21b229f0b1ffeb0aa0cebf08ea79da1212d1e88244182710c19"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hall_flashing.mat",
+      "sha256": "07eb26775c6513b15455b2820a579231f2f6df37be99ab39942f977d2f1b6e28"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hall_plinth.mat",
+      "sha256": "e2f7c8c543db831ee369b4a77bc55ba4f66c467f7182714a9551fe90ed0dc070"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hall_wall_accent_blue.mat",
+      "sha256": "0bc6ec945654250b70036d7717930428e929a61c4fd73a294d22fa6ae3b16393"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hall_wall_accent_green.mat",
+      "sha256": "a3a6e9c8f1d26169c2389181904acaddc8da99e9c24482d1e490da4f0a138274"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hall_wall_accent_red.mat",
+      "sha256": "570001bfdfded40b7f1567ced526593ea4fb8155f6a6870211646d59af561bd5"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hall_wall_graphite.mat",
+      "sha256": "ed275ce936f02794df6b8d16afae2ebb676ef7b23454f75431ed87b7a0a56249"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hall_wall_grey.mat",
+      "sha256": "58ed057abbc62649e1bcd93e889bc3e21c83fdb7290d0676c78558a9564fa505"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hall_wall_ivory.mat",
+      "sha256": "3cf3793119b2518ca5f912cbbdfb03b1c0162fa50c7ba7056def0ca4d707789f"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hall_wall_silver.mat",
+      "sha256": "a3211cc6f75142e6dee3076d1f7a8c115183755ab28a7986509fa10c5326dfbe"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hall_wall_white.mat",
+      "sha256": "26a963f6b728961241b38e8577f2d25b59f9984a6c32213d6a376956ad6dc290"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hazard_stripes.mat",
+      "sha256": "b3ccd6632e438bb34da75609875fb7bc08fa3151b4a270e9f7e51a33c1da3011"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hedge_berberis.mat",
+      "sha256": "98c801824ee112e2a78054a6cbfe0d3eefb032f879bd6786391bdb67157889a2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hedge_hornbeam.mat",
+      "sha256": "f0158ae504156a3deb778538216336c30a481642ee94247dafb02da3c53fc5c7"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hedge_privet.mat",
+      "sha256": "165297c42b293be1bb382d7ce16b159da98ce1b9605505178a4e545fa6f9ea1d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hedge_shell_berberis.mat",
+      "sha256": "f4269da2140920af88a86930dcd1788018d4c0475cdaaaf9ac8513d576bc1ab4"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hedge_shell_hornbeam.mat",
+      "sha256": "c6909e844d1f5c26177477867e9c55550e7c93372bd44cde009cbb1c9f3d512c"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hedge_shell_privet.mat",
+      "sha256": "407331a0269c94c7ac1b549bc236bbd5b0c85ccf2a21bac85192dafe35bf66ed"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hedge_shell_thuja.mat",
+      "sha256": "b94bbf84355e932af5dc9f06852ae12b4b69d1fd4de6b0fed5c7fec38d96fcaf"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hedge_sprig_berberis.mat",
+      "sha256": "d9182ee2929dff4ba5e70ba671c121f6ace188a6bca1be6fd96708bb1bf6ba63"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hedge_sprig_hornbeam.mat",
+      "sha256": "8700b7a5977cd4d8c56fa24da3dd597eb893a1da075525e0cf70ac7938f4959a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hedge_sprig_privet.mat",
+      "sha256": "e126079af5e5b0e84a18f3695ea89cd66ad7524e643a65abf658e3abbf205302"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hedge_sprig_thuja.mat",
+      "sha256": "10900ba34e5c88f6395f53c2b5cdfb71143a91589bed7f5b2ac49c45e7f58875"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_hedge_thuja.mat",
+      "sha256": "4c6eac4a936bff64644418236f14544ff7ab07fb33fd15587f8d75b049215203"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_insulator.mat",
+      "sha256": "6d3c165096673806b922f5cc864cc66ae938ff8cc75fc4799659a4a2ed2bc566"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_island_gravel.mat",
+      "sha256": "276261a833177347c05d57241ed5dadb1b8dede0af9184b6bf4a631f18e9873e"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_kp_accent.mat",
+      "sha256": "1c8f90eee6128c7774503ada6fe1fda9bec0c00a21a0e41ba86c84a06296faca"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_kp_glass_block.mat",
+      "sha256": "2295b08a3645980d2ec31407a96c58e07d1be0755e2c3fe8e271e7b99ad00e71"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_kp_roof_white.mat",
+      "sha256": "9546e1d508050d5c2b4b8803b8ee2242cc786b0d217ccba49a1a6578c52d757f"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_kp_wall.mat",
+      "sha256": "f04c0eec9a8b9cefe92125e67a6bbb77cb6817a5b5a938dadc7cc195230746aa"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_lamp_glass.mat",
+      "sha256": "9e4439da1fc0dea59499f4b862d01cd4cc699ae846dcb554fe7d9904d77b4e8d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_lamp_glass_sodium.mat",
+      "sha256": "d2bfece11face37ddd447443500d85a4caabe76958b1b7b7e7d102823990eb99"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_luminaire_housing.mat",
+      "sha256": "e0ed052a02555da22a5a689c911a5d1959323e81abe7cdf8de00922e250232d2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_luminaire_old.mat",
+      "sha256": "30db9a1b0a12c5e1a7d3f80d85905acb0d520284ec4d4903bd0541d458fc4441"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_marking_white.mat",
+      "sha256": "a50d85144941e5f211a02e8b1677ba1352c8672bd2d674e32a2c6201a1cfc0a2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_marking_yard.mat",
+      "sha256": "c9f522f011684d3932954f97807a757cbeed7255cdb9b83937d227db6df7a28d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_noise_glass.mat",
+      "sha256": "1002735648efda00e8329c85e9e910a854ab3f8efd6c99b6176db9ac1524bdb4"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_noise_panel.mat",
+      "sha256": "878df4e60ded39b8d78df8f5a9e55ce0097332fbe0592e3e24c93b0379748a37"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_noise_panel_dark.mat",
+      "sha256": "9b7ce6cf5386556bf8169dac11aeb875edbf3430ee318ae161b707e8403a1e9e"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_noise_post.mat",
+      "sha256": "5787caeedf872337b25bfc42796a9bb8d4715cda4675f8e2fcdfda14e24d06df"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_paint_white_reflective.mat",
+      "sha256": "e889912b17341ebcfb1296d06c2af155bc1b50b38e524bc6cfb280c3bbca1603"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_paint_yellow.mat",
+      "sha256": "7659cc91f30a3ad5c407d7097eca72dd97bc668071752ad63d473c174fa9cf15"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_pallet_foil.mat",
+      "sha256": "0f319c9c0ada4cf63b358b36575f94a65e33144f1c2c4559828d9f7b943f300b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_pallet_wood.mat",
+      "sha256": "88a18c6fb1b91bd2d2ce28021b9502bc52245ca42507a79d32fadff54720da69"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_panel_concrete.mat",
+      "sha256": "4ccd0bbb2b38ae6ce7f152fd9e878f4e73560659ba8d86e44c7c7936df1a066e"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_panel_concrete__far_block.mat",
+      "sha256": "a352a5c48449237fac3b9e7f35857683819761ca96f1b3d10b1619baa4cadd8b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_path_asphalt.mat",
+      "sha256": "25ed0ef9cc5d4af3f70bd303d0008160c8884da2e9b7a11e210463d1ddc8622c"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_pier_yellow.mat",
+      "sha256": "74022f5775a51dbc91d23822da6e6c7a47ab8db11b1f0b6c0f8b4405549525b5"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_accent_green.mat",
+      "sha256": "fc3e9b0ba35b712f965b7e279f863e30bda3687024e1fcb91971cbcc0c35994c"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_accent_green__far_block.mat",
+      "sha256": "7e149d1fc24ba6bbdd0c0dd57a72f104b610d5c56b3e6d919765bbc26d422a2d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_accent_grey.mat",
+      "sha256": "09ae0034604ba692ff66bd04b21172eb84a21ba65c0cdb8ad99e163e24c9a554"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_accent_grey__far_block.mat",
+      "sha256": "1b94ba9b3f236dabcf3a61e94fe35e996b425ad7342ac066e2a0d65ec0f0c765"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_accent_ochre.mat",
+      "sha256": "0d9859cdd666cb99e6a926be06b2d74dbf7267dfe5d5c2aa82b14aaefa3bde83"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_accent_ochre__far_block.mat",
+      "sha256": "075e4e920ba48f4c4991b53db68f998dcc0b042ffac64c4b9ffbca1495e078c5"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_accent_terracotta.mat",
+      "sha256": "51a403192943a0ff5d5620a0c429a14917792f324bb691fa30da0124f71e8c88"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_accent_terracotta__far_block.mat",
+      "sha256": "6fcf1ab4b65ec6d7aa7c3b43da2c8d5e32dbeef117b067465e5fb8052b2a5450"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_band_grey.mat",
+      "sha256": "2b4ae25560ba6f071f78b75d3d60de062941fda6de02f87429d9abc706535dc9"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_beige.mat",
+      "sha256": "f3839d0bffc65cbc4ded0b8668c49bb3e93ad56708ae2909409938aa4afb2d8f"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_beige__far_office.mat",
+      "sha256": "e001c2260368416f2918f78c5fedbe9813979327d20bfc9fe292030a75fcd3bf"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_beige__far_ribbon.mat",
+      "sha256": "d358a75f553cdae6ef63f5795471c7492663978fc0a05f958c530552f3cfae4a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_cream.mat",
+      "sha256": "ba7739b256bb80064390021a58014e378780f028206bb2e3f2af7f2af77c3912"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_cream__far_block.mat",
+      "sha256": "f40ad2e4372fdd73d5ead26ed215f2c9ebf21be150ded19810d9850f90a0ddec"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_grey.mat",
+      "sha256": "3329cc4465fdab81673b7b6a682723ff67e5e0fb2a9758a5bf3fd62b5aea0bb2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_grey__far_block.mat",
+      "sha256": "c14a892ff875ac0090dbd92b40e5de83921e1037c563ebac750a723370030204"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_grey__far_office.mat",
+      "sha256": "185e7d16f0a9ce12ada4fc86e40e9c79609da80777b2e5ae2968df7380085fe7"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_grey__far_ribbon.mat",
+      "sha256": "db7525f4698f4849bebeca2b1293a1bc099c1c1a072a0e337ff3f7451fcb8325"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_light.mat",
+      "sha256": "dd29d936dc51302166b7b1c8738ddd8df881ab9cd941f93565665c197ca3e86c"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_light__far_block.mat",
+      "sha256": "53194752438daaecb9538e5427da4cd7aad68e2bd4baa25f64f60c7f21591ac4"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_light__far_office.mat",
+      "sha256": "a7151077e5bb0ddacedf2c0ee10080cc131aab6e85afa7d528f17e25fca0c7eb"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_light__far_ribbon.mat",
+      "sha256": "9f39a92e96cd32690b73117e4fe279dbd11965d3096023c8623ccad78675c26b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_pastel_blue.mat",
+      "sha256": "2280b746b19307ffae19796885b24171293103106d9ee1aefafa018b987fcd37"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_pastel_blue__far_block.mat",
+      "sha256": "9053ef6b5afda789b651a475fa2a04bcba68fb452f98331c75d72d72ef4e559f"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_peach.mat",
+      "sha256": "0c43106b8223a77e5d94de2c106101b038851e99f48244e3cf17acbd40ea12a6"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_peach__far_block.mat",
+      "sha256": "02585650a3c781093d61f92c4fd73d0caf49adc9f467fb44c2c7444d06e8d585"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_sage.mat",
+      "sha256": "5ae641283adb6b75ee6888f89a8c6c36f10564d4d62140360672e2f559086af8"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_sage__far_block.mat",
+      "sha256": "8b51cf22c80afac70f1c7b7843fe78fed1bf47cfa4e803d45c8f15b218a6f4ae"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_white.mat",
+      "sha256": "4dc01c20f36b3c7b031ae10b29428f980e7e9f4695ecc6cbd064c3b4e189857a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_white__far_office.mat",
+      "sha256": "4850be88e461e348927b549264b66cab6b5e58294f7dc2aab49e105b17c05495"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_white__far_ribbon.mat",
+      "sha256": "07d05cbf0a06afc650f825873077b0f5100c5d48f20c91b6cfcf299a9ef7313e"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_yellow.mat",
+      "sha256": "0d3c20b7ac6cab549ad1c1374e4ef688c68c889d541bc285599da09b86e565ad"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plaster_yellow__far_block.mat",
+      "sha256": "50d039685c5a9631a7145efd2a530b0b4ce2ea20322c5f27cdeb0b677fc45acc"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plate_back.mat",
+      "sha256": "10ecc1385eec126be79388b3d88e56ed45956eec67039add7829347e759b6d6a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plate_white.mat",
+      "sha256": "8c0071ecfb96489638200968c15f5f651aad1a1d02e3ca7f94c75a081899731d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plinth_dark.mat",
+      "sha256": "78d53f769bf7679231d472ba32587035862e7dc84dc8ade36c45cb4f9242f92c"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_plinth_grey.mat",
+      "sha256": "9fe63cb85cd2bc9160f52e04563134b79ba5717ca931acfb85ccecba6d56f352"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_ramp_wall_blocks.mat",
+      "sha256": "84103714ab7211f3b0475bf8f8731be1e1a7fd113c99e91cf2fb8a3ec3ab2275"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_reefer_grille.mat",
+      "sha256": "141468332d194d2c4ca248b4f9b91fd71f12ee995c4d7f68fc53004c0d730f62"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_reefer_unit.mat",
+      "sha256": "3cc9524a9fffcdbf002b04f0d9d9cffbc6ffc6f10a7b1293192d7703f7f1e729"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_reflector_red.mat",
+      "sha256": "3e0c53a5eb3d626497b36c80d0dd7685328e733d62af745a93fbf546de62b79d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_reveal_hall.mat",
+      "sha256": "1cfff02f569f3d7ddf6b84e1ba2c508b1575deaf0574c63262f6b68235dc501a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_reveal_plaster.mat",
+      "sha256": "2351ee7664090cfb5de992cb38693629c9c51bd38bc8af98fae6edf5c21562f2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_rim.mat",
+      "sha256": "069c8575e01ee43c1b123b824ac07f11ef97950d739df32d5ae88c36b976951f"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_rim_dark.mat",
+      "sha256": "a19cbae2d76df007523752d5b6f93d193c2685a6e74dda1bf45ae5718b19899b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_rim_dusty.mat",
+      "sha256": "feeddb7390c24d51cff7231e34112911382c1d4e72ee73744c8ee7c56a1570a5"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_rim_steel.mat",
+      "sha256": "5e802fe80e4a5559107e1fed900a47c7c5e558d859be10ac70d911460f59e29e"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_road_asphalt.mat",
+      "sha256": "bd11c5674cf81aadfaf0e589a2462407c60b18e68be5061559d0a9909f004dbc"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_road_asphalt_new.mat",
+      "sha256": "bcccca301de543e556dc787e3aca4ecc1a59f1de5cc39544750465f589573c54"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_road_concrete.mat",
+      "sha256": "96c39feef25e46b052fb0a72f4a5e38cc07bdda9498d3a1336e7c1504dad73fc"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_road_gravel.mat",
+      "sha256": "b520a2bd232cf8f129ecc90fb1dfa4a5ff1baba6ad5e10ad8b8a28a944da7b3a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_road_paving.mat",
+      "sha256": "53d4393ae8dab7e7cfc1d25afc1d483dde7374fa315b248eb9cd9c91af497788"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_road_sett.mat",
+      "sha256": "eeb99723be9199547a51ec925fc64907e6f683228f639a67e8ae1e3cae1ded1d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_roof_membrane.mat",
+      "sha256": "a0d7db42b09748f390b5a828dca211031ed4862a82e90f1bc92eda8d2ab77669"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_roof_metal_graphite.mat",
+      "sha256": "6553368358ca335c8a5030022f51cab555cb1a07f06949761e417a63dc7b64a6"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_roof_tiles_brown.mat",
+      "sha256": "c3176f9055f70f3e864d3dbd8d464b9098a92673408a0436b450e2e341c86a47"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_roof_tiles_red.mat",
+      "sha256": "68d98546259ae8e9b3ce4921a35b98f28e657c7b92c95e1e5ebb24f2f3edf3a2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_roof_vent.mat",
+      "sha256": "596e0e1f0810b5cc95641e9fa778ed8b067a799750745009f645bdc3c45d34de"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_rubber_black.mat",
+      "sha256": "a6b95ba0258aaebb4b1466f5011b9f574711e5550d9a52d1096fb15e4910ebcf"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_rubble.mat",
+      "sha256": "bd63383a6e85ade7cba4dda03d0e50aa556924f9a827b8fd4868382db0ef396c"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_shelter_glass.mat",
+      "sha256": "e26bbb512d886fd847969d87d9a9ac82ba42401d48df9cfc1914c90c3a567d3a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_shelter_roof.mat",
+      "sha256": "ba00ddd0f056b76730b1acda0628ef9fcd8db042e79c4b29c4ac9e4e70f745f5"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_shoulder_gravel.mat",
+      "sha256": "88f4ecc5887b5282d5c55fd044095579cdd2a889923bc123155af47ee9449ec7"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_sidewalk_paving.mat",
+      "sha256": "f4eca9c8792185e784481b2efe6c98b001cf79d8b56a1ab6afcb3aa7f8044b21"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_backplate.mat",
+      "sha256": "211a648c246d5406259b4c3d5dbf5e6e9f4a006c1e97378934b031fa80182285"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_border.mat",
+      "sha256": "9eebdc86ceffe8ee54c1a14500ef986752095dcc752feaa667d8352b8e5343d1"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_green_off.mat",
+      "sha256": "6522c6136727bdbf86770f299f579a6f3c4a052c501707034e948db6c7c9612f"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_green_on.mat",
+      "sha256": "911572c055c744f4b976dea22c41eef72f4f983348e1a1ce7012b4171bee2166"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_housing.mat",
+      "sha256": "9b230bc2d51a1f32ff9fe034822b431e1ca10b23991cc1a1d1087c66e2eb9edc"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_red_off.mat",
+      "sha256": "106e00b4d70c907301ac9981225b3cf9f679d509b3b72c56dc75ffa58a864281"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_red_on.mat",
+      "sha256": "6053a7d2980198456c99faa4dcd61949faae2b1977ca0d29f1e80dfd102e5e12"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_yellow_off.mat",
+      "sha256": "315f861f4070bf121c1ca774313ce7442d2be378e2901a1eddfd007954fcfbb2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_skip_inside.mat",
+      "sha256": "bb8de3489899c2492465a7fd3ec165b22fc2c55c52e16d5a43be7440ebaf0a1a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_skip_paint.mat",
+      "sha256": "6691c7dbc92ce8dfc83672603c7d5aab3a4fcf34749b5c1acfaf8848ba8bdf2d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_skylight.mat",
+      "sha256": "de57d9704777cebab4990048347ca0ab72350e6e7b63608faa551dbe1f02022a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_soffit_boards.mat",
+      "sha256": "ea4490d186c9ab06b8e1fa78c85fe6aea551f79b7429e492dd009ac8e943391a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_steel_checker.mat",
+      "sha256": "73c51cb63c1f7fcdb849f9ec978e8ccb50e6af643a9b188d170d8b7a8d4fd6ff"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_steel_galv.mat",
+      "sha256": "de62445e5168c6a1f95a685cfef4c501bdfc48167433c5b979af89fac6906244"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_steel_galv_dark.mat",
+      "sha256": "2e42d31ba40d5312337b79f9e8deaa6cb026760f1b963ffca91f59415e8fd1cf"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_steel_painted.mat",
+      "sha256": "354cc72158e4ad502369d2577e806efa62b1f4958a85f4e6563763d3581f63e2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_steel_painted_grey.mat",
+      "sha256": "ff681f5db7f6861e0f8ee9373487f800674c49df3c617253058e1d2fd1b1aaa7"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_terrain_grass.mat",
+      "sha256": "0c04bc804b00207c05c34392abf9d6d414979054975a9268709c713f50ce0974"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_tractor_paint_black.mat",
+      "sha256": "e0f662a3349f7ac4093ad85896d3acdc6652ddc59bdd48d63d00027b7034ed0e"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_tractor_paint_blue.mat",
+      "sha256": "4b7c46c7e46e85726f8718505cb5e1bce7a35c655722923a2d5ed26e48774986"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_tractor_paint_green.mat",
+      "sha256": "23781200cd860254141f39e93ad5da7435b09d8787f50e9b617e5f4c1caea3c3"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_tractor_paint_red.mat",
+      "sha256": "a6ba813b3da655f03be5174486757bbf5162da65219dd77cb74553e05e7b685f"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_tractor_paint_silver.mat",
+      "sha256": "93977e41e899dee8f119ade9eff46255bb0eb64f76697d953c312edfdee2555e"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_tractor_paint_white.mat",
+      "sha256": "16e30390a50ac556c25ca16a9db03c8ca93286789cabf4125437cecb01d7f5c6"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_trailer_alu.mat",
+      "sha256": "30529dbaff804de71c102c2a35c1144bb28ddbee859017089eff84380470bd19"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_trailer_box_white.mat",
+      "sha256": "6240f47d90bc55a1312071b9ea6adb8b53b28f5da55660e8981359a3c14e45c5"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_trailer_chassis.mat",
+      "sha256": "4173604cccf409698c824acd838c8ecd7214e895e472602069379eba5045a504"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_trailer_curtain_blue.mat",
+      "sha256": "0a85cc97aa73cd8a09cf2fbbc0391671d92b2d04ca9909b623d04f59733ca57e"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_trailer_curtain_green.mat",
+      "sha256": "3a9f1b55f45bffe314d73ecbb59fcf889322ba523089155828a41369d01bdba6"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_trailer_curtain_grey.mat",
+      "sha256": "65a497ca6d035fe8b45c545000177ee8cc5eb6f40bf4ef43fa28dfbe0b432ba9"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_trailer_curtain_red.mat",
+      "sha256": "042f5a31b94cc1e4e0ad8029242886d578765d76214e584bcc43653356bf6b02"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_trailer_curtain_silver.mat",
+      "sha256": "d04479c281804f924651c94d26a5f8c1222f9923e999b1f425d2c26b32238615"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_trailer_curtain_white.mat",
+      "sha256": "7cc5b0f184ffc3f67f0e0575932ff35bb3ec8524c48120831a3868491638d5c6"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_trailer_doors.mat",
+      "sha256": "bb299139476c63553e1395f8f6aa04eba426e1011253f328f0abbb9261f2b687"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_trailer_front.mat",
+      "sha256": "695a52005e688d221bb7e90d09d7b6630e183038c12202b1576207185dc356b5"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_trailer_front_dark.mat",
+      "sha256": "c35bdebd0e3b9d3750fbea6f5d6415b8118f886774a734875c0ddd96755bc2ae"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_trailer_strap.mat",
+      "sha256": "223186b7bd5cd5e40f681c2fa5adb62d156d6f8da8c722dc068525560597934d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_tyre.mat",
+      "sha256": "3f0ee3576503408cff53ec58e17332afda611423f70bc705a458da4ce31e251e"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_tyre_dusty.mat",
+      "sha256": "d9b77f0846dc8c662963f1442cd3c7ab03c497b91cca580dd36eb492dd3650ba"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_vehicle_contact.mat",
+      "sha256": "c2c332cff27bf783afe0e1f50f284f1cb77a0ac439de0aaad18db611710798cb"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_verge_grass.mat",
+      "sha256": "4db34dba996bc28ac2edc39f8e6c58b033dc3f8cee61d002a98d67da401ebcd1"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_viaduct_concrete.mat",
+      "sha256": "06f96c7ef56f823309bb77eaac2547d2437b8fd07d934f55599d1f39ef03a74d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_viaduct_steel.mat",
+      "sha256": "a76e7abbb2fd6b10eff0a03f4700cf8b80cbf1a30336b3d5319dc7679249341b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_window_frame.mat",
+      "sha256": "595c35f92a5dae23ea25b231bd72693d9a4539852899461d468c977fb8fd6d52"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_window_sill.mat",
+      "sha256": "f7541060deb7806ec1165f87cc824527eaffce5ca6efd35cebc5d542546c9922"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_wire.mat",
+      "sha256": "38e2cd0e75d7004fc1b8636171821b4df44595ae7498f2bef05912ccee01f0a2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_wood_planks.mat",
+      "sha256": "e772a9ef17d6cccbcbd1d39e98a94302ab93c9251b251be3da72fa7bc183a045"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_wood_planks_green.mat",
+      "sha256": "7cd9a503d2ca23ec59c9009cb3ef118f0d09743ebab5afc11dc6b70a26b3108a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_yard_asphalt.mat",
+      "sha256": "f3b24eb96df761f008efee6e535ee0d8d232d4832a7e0eabb7c39952e69d9641"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_yard_behaton.mat",
+      "sha256": "31114ce1a4b371a0a7f2da92f3699ad9bde65168188e8f90ede288c6b0be57f4"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_yard_concrete.mat",
+      "sha256": "79fe6acbf88ff6aa6b1a79cf95e90529c9337fb1700fb4165dedc6426382ed6d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_yard_concrete_worn.mat",
+      "sha256": "a424fe63bd69ef69208bebe207685d6c0b000ca6b20a2b3ecabc9fcbe030adee"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_yard_gravel.mat",
+      "sha256": "674a1a773e330d68a5ad7982ee7449b90a9b74ebbc2fc176d800628bfcd95288"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_yard_paving.mat",
+      "sha256": "d87a211276d73f48fa26d9eef5bd3cdaf8a0165f07370110987f6037c8a1a6bc"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_yard_slabs.mat",
+      "sha256": "791b48689af36d81bff00cb5667116ae139bf76487a5637b6393b9c06bf28820"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_bark_alder.mat",
+      "sha256": "2668d9a50ec26f279cfa59de1c829c3d56e04456039dd5e02b661e4d3defe1b3"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_bark_birch.mat",
+      "sha256": "e384b2a18de219e2f9c19786e5ac6ca50602889a885943d6a8a2f379eb0a79f9"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_bark_linden.mat",
+      "sha256": "f801f1e93964058797644ca3ecfa09e15b1be6f6d1cf06c50fd077011d8cb595"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_bark_maple.mat",
+      "sha256": "a561544d12da96f806af8a9dbae17cffd0c04afb1d7a969800718d945ca36efe"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_bark_pine.mat",
+      "sha256": "cdcb510e1a771e5960a1b5cdecaf01b27c44eecff783458116cfe8a48d425da0"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_bark_pine_lower.mat",
+      "sha256": "8f142720985511cac8b624aa8968524c052d8bf2227eb755415db3761557a385"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_bark_shrub.mat",
+      "sha256": "985deb54b4b752916f358636be489af52ffaf7f579cf9d31a937d07b673c672d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_bark_twig.mat",
+      "sha256": "52b635584def88e226bebe2cf2393262b4d7a2b6ccf74905b40baa0054832129"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_08ff46d042.mat",
+      "sha256": "ccbfbda24879463cd4296c747872aae5ed64384f702b0a3f05b8b9dfa5d7c85d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_12b4852f20.mat",
+      "sha256": "d213d0ed8123767b8039ffff9d0d67c07d57fce7d8843f5488f0ddb5352a5a24"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_132be592a2.mat",
+      "sha256": "ea7b8cab09ca60bf46ea39615a88866cc83544b06e4e96518429929327fbd4b0"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_1bea3aec92.mat",
+      "sha256": "dce9b2ea5198600e7eda8894f79440990d9d14ae47017b93339e8813f36631ef"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_2108b04360.mat",
+      "sha256": "803c99544447d86cb3616896ff8e26a8a25734a49778aa1f74f840ba275a7bcb"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_2673e2ce12.mat",
+      "sha256": "970ed1ac40ad8c82e1e34776fe289c03b4b44c18d409e7efeffe36509b4aad10"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_35e5c7ba9a.mat",
+      "sha256": "ae4ae1fc1a01f2a2838879b609a75ad6045de517f8cdaddc9d03d8eed3e6b454"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_3b556841aa.mat",
+      "sha256": "bc2b8140c0d091fd282d7991c77f4718a3a55998d91452a5471d09b03c5650dc"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_471acc4eb6.mat",
+      "sha256": "6b0bfa22f7db45ed7497cdc2e55b2d9f1dc00d34c06067d31bf063910ab9a128"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_aa0029a0c4.mat",
+      "sha256": "323106d2aaa55f40ba580a17801080505040dd8331881fd3772cd1efdb9127aa"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_b5143813fb.mat",
+      "sha256": "5e9048988db256015a882b769d5c2de7d0bc53498810ce5777918c3c6dc1361b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_ba07d0bb4b.mat",
+      "sha256": "47ec6fd1fbdeb07545ca15ed1393c8961c02ec8f978a897bccb407897bc7a9a2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_bbc039ced6.mat",
+      "sha256": "986b157af7ba11a4070a9da206250aa4b77df1ed8dfaf9f251cb58ebbe1501e2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_cb0ceac02e.mat",
+      "sha256": "ed7bdb883f28009114438f8fa02b269352c8c570653c0b8291930144e2727663"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_e3704b746d.mat",
+      "sha256": "2903d173035bee9fe792641ecac42ae05fb26102a069d4f77358ab3310d2fe85"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_f291297c95.mat",
+      "sha256": "9a87bf5416f38dfde4710b25582a12886a0b39dcf4b75c42144d7c56593cf029"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_contact_f2f5deb121.mat",
+      "sha256": "4d6da86e2af9e1096d497caa46a729cc4c47f58ad22e005f4e75814ae6fce700"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_fab_boxwood.mat",
+      "sha256": "3b7f9d166e44cefdc6e33dbeb0d75bec0a4891bed5eae0947599e95ca6155fc0"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_fab_boxwood_billboard.mat",
+      "sha256": "a75c6700cbdf37def1262c7987f2cfb871b7e5fed55044aefefdb52ba2a02d9b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_fab_elderberry.mat",
+      "sha256": "e090f02f523478f715de9b4e005cea82501c7f92cd349288162fdf7f1911635b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_fab_elderberry_billboard.mat",
+      "sha256": "be3ad30ac3b33de4d900dfb6a140481280811fcb97276defb228af396479bf1c"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_fab_granite_rock.mat",
+      "sha256": "3bdff8c4a21b09832931331d00df36478de229e8702ebec5c9b70581542a26ff"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_fab_grass_clumps.mat",
+      "sha256": "074100f90b984c31bea48b34ef40f10ace794e8cf12fe557487b39bcc18aee8e"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_fab_grass_clumps_billboard.mat",
+      "sha256": "862ef52fc21fce977838258c3bea1e3a6d1b084e31a6909d79c7182cfb01bf61"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_fab_small_granite_rock.mat",
+      "sha256": "faa4278c34bf467cf98199c8d17fbbb3075bc16361c02a1f529cee62bedd1d66"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_fab_trash_bag_pack.mat",
+      "sha256": "e6c908e13eb9e07642410f3d29b3efd1434ee4cd2ea87feea2489831a4c16554"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_fab_wild_grass.mat",
+      "sha256": "c1bd8bdfd44829b0b0b310be11bcd07745f23eae3a69b9670f1d2df7ebfc5577"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_fab_wild_grass_billboard.mat",
+      "sha256": "b190a93fcea69a448afda21361b86829ce88c25600c44c525705116c5d9359a7"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_alder_0.mat",
+      "sha256": "46b90a49a4b091e9c4df0b4d942aefdf1cea2b2a914eb095a1e230a7852ccecf"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_alder_1.mat",
+      "sha256": "0aa7e83f88a19f22a132d4f5131cb060f50f8e354f7711a91a2668bbab24277d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_alder_2.mat",
+      "sha256": "943ad4dc4c63a9068030ebf0896c0bd40df25e775a0db088291fd3980da80fd1"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_birch_0.mat",
+      "sha256": "bd4b13c7a97eb3c867d6a50a4c8ad22d0b35fdbe01da04586640535b5c40da97"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_birch_1.mat",
+      "sha256": "ff67556d1a69b5e7b451376b3820e1d7ea6543bd881950137ed8070fb162fcac"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_birch_2.mat",
+      "sha256": "e839d282455f69216634724a3b8a929b0fe3439f7156627d5fa22e5ec041ff8c"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_linden_0.mat",
+      "sha256": "cb04334c96d5d1f5eac9eb57f5ab85e7c4d8e816f40d48204888d093384a03fb"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_linden_1.mat",
+      "sha256": "9154e91e5fcf4938f4bead9b5a4c5201da97f9d4bdaae0d4dc0b644c927c9210"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_linden_2.mat",
+      "sha256": "96bcb548bfb719738b2f0dfc7c53c66d3a66eeb3086f570b9188e393e65fe0f2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_maple_0.mat",
+      "sha256": "b5ecd5b6b8ddbc35856b9da41ecb390f72d89a3f54478f06f239cfd9b67708de"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_maple_1.mat",
+      "sha256": "7fccced289dfc14a33fb921aaf7f7cc1df145d511c930cf8e0a22425d62d2e01"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_maple_2.mat",
+      "sha256": "33faa5c986e6fcd4c39b20b5903dc80dedecd836f31bab4d7f9494d6fbd3b4b8"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_pine_0.mat",
+      "sha256": "7c4f5a3be6ac53edcb69aa3cca05dc39a403eff108482a8231990ac766bf85f4"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_pine_1.mat",
+      "sha256": "ed22dae249225fdc7291484cdfe2116cf32e21dac797ac03648df671728a5cbe"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_pine_2.mat",
+      "sha256": "44b9909f0ffcbb20d605343a7c2d23eef7a540abbc25dcced78edfe1d521c8c5"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_shrub_0.mat",
+      "sha256": "4eae22d6ed137b8c6e70d5bce3bb7e3d87b9139a1efcac1e266eedc77347d404"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_shrub_1.mat",
+      "sha256": "5dde6e0074615b6d6dd0a5c44b09e8285911a1b0246fea9c0962087581dd8217"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_impostor_tree_shrub_2.mat",
+      "sha256": "c6244c10b6b7393ebbf10361a96e39d14bae11bca3fb7fabdf2d8e1a3be392c1"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_leaves_alder.mat",
+      "sha256": "c1af4119300d9abe513971f8315c2e7bceaaa62545623401d371124ff6089920"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_leaves_birch.mat",
+      "sha256": "a47d39a561a9d94f7cdba086ecf3ad3d3e6d16916e07fde1874e224d84018445"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_leaves_linden.mat",
+      "sha256": "887fb468343b295c10717fb805562681d9bef885dfcd30100ab7fa9b20729d6b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_leaves_maple.mat",
+      "sha256": "3fcb124a608495c49afc266376e10367baf54d740644a2fc5bbaf0cc2751413f"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_leaves_pine.mat",
+      "sha256": "b2964d3c647b0bedca310ccd44216b6cfb6a7ff5c958441863ad977064a9934f"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_leaves_shrub.mat",
+      "sha256": "aa96bd7e770d419c6e262f8814f62a25571dcf0a4bffb6632466817857fd915b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_plate_pl.mat",
+      "sha256": "faa7814125a0d37233f6ea9971da86a5ab099920fc3bcc96b4d905477b9c4f17"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_A-7.mat",
+      "sha256": "9a5171a80c3c3ba1b9df8d672a89f648ede92edc2b35ffcf25163a1ef63639c0"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_B-33_20.mat",
+      "sha256": "609bbacf20c02676eb57115106c0c013aad4a89eb25027a764b1ac993b76d2a0"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_B-33_30.mat",
+      "sha256": "ba9aaa55c50e351520b5d82dcd5120e477a6ba5987307d8cf0e3f3275cac6693"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_B-33_40.mat",
+      "sha256": "1db171430d1a335d1143eb2b6fd0070541f08519718468c1096b5eb4fc5f68bf"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_B-33_70.mat",
+      "sha256": "f5577b806c7cd0e546a28df8393ccc5d0b1a27b10465cbf9a3f01a14887127cf"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_B-33_90.mat",
+      "sha256": "941c9c5e386fa5691b07d55675fd6be2da8cb8f4e47629c46d8d514627ada6c1"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_C-12.mat",
+      "sha256": "77afef5d93dcf483f93a53dc1751af83bd9d052997b705e119e1502207ec9250"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_C-9.mat",
+      "sha256": "8ed7520af02fbc5eeb478b331d5f285e7b1667f163bdc8aad7bf66fc5ffe8375"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_D-1.mat",
+      "sha256": "e525b027067f5d4fd0367ec0b2e714f27ac3798e5e04c54f526381e1b198021e"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_D-15.mat",
+      "sha256": "eac574a8e7258de8e11b0dce63c7dd9a90b8946471930aedc87a82e5eb942056"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_D-6.mat",
+      "sha256": "ec5390775cc860759e85199fd2e0dc5f659581229c4e3dec4900dd6ef7d189c5"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-1_57412.mat",
+      "sha256": "bc7a4791cb07a5f28910f9957ef108b1a3dfa40030443e0134e8053c2fa18114"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-1_79161.mat",
+      "sha256": "71ddb0d35069626d4c6d3702f19c754d376073abfa5d4680552105372d386bec"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-1_82686.mat",
+      "sha256": "a245be2ad519678dc4bada7e3857f95b795bccdf3b2cfe7acc500892daa8ff7e"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-1_92106.mat",
+      "sha256": "89b035d72d3c090067a51c675b18b497710354c8d00b9ac9407c510f637e424e"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-2a_32638.mat",
+      "sha256": "0034c1e79b0a95be2b1b289aadecc0d79ab879c36f6fa28f15f691f0a51a77e7"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-2a_41037.mat",
+      "sha256": "8ede5a2aefb7322aed55750dda1a0c33901c49faacc9cf66211e62096b1529a0"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-2a_60520.mat",
+      "sha256": "19873be0eb566b5247ff897fe2b977116cbcf2248a1b328886ef96b7bbdd34b2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-2a_71003.mat",
+      "sha256": "af0fed4f48dad339ad674b3dd69307bec6a064a72958f1b66fd58bb01f51732f"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-2a_80201.mat",
+      "sha256": "c8b8ee64f0e3b77f86b3edfab43a38aff052dc26d75ddea26a67a0886f52576a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-2a_90339.mat",
+      "sha256": "3d7bb9f971fcc1cf08e6437e7b4ec275e95f607a859ff77154259bd44a4d2d45"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-2_41037.mat",
+      "sha256": "b0043757711cf35a07f9b136febf209d2384d4f1c027272dec4880d7788bed29"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-2_57737.mat",
+      "sha256": "02cbcf4e8043e451cbb3427ccb878b2f2fd352cdefdea7e9a2158fc1a22698a2"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-2_60520.mat",
+      "sha256": "e551bbe53a18a5a8517a2c32d2f2eed02fbe7def57e9c383bf5feff5cae017af"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-2_65161.mat",
+      "sha256": "ab4f225a11671ba7ca4fa79f887142c53bd5eadea3dc30656051ad30ac304455"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-2_76988.mat",
+      "sha256": "e181129b121675d4040663837ae5ea9916b7e115dff45d712732c336bd475c00"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-2_80201.mat",
+      "sha256": "70e9f8b54fbd0ab56df6db6547444ba7e812dac599b20e619742c0b56a52789b"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_E-2_90339.mat",
+      "sha256": "79481def32bff9d519b51f99396e1750dc837d668182adf4529482ca4bc42cfb"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_facade_biuro.mat",
+      "sha256": "e2afdbbf35920d4d3967599bec45b9f1744bcb37033f7d53a859a05bd4f07b17"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_facade_dostawy.mat",
+      "sha256": "6e08171be39925a1bfbf999375608a7b09a83abb2fb6d11080c62d2d82e2bb0d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_facade_hala_a.mat",
+      "sha256": "43f1fbb377e20b015ecc37ec547059784190764e8a45f2d8843fb4cdcc0b3ed3"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_facade_hala_b.mat",
+      "sha256": "785cbac3d066994fb696b235df7b8f578c034c2040dd4323b421feb2ad540a6c"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_facade_hala_c.mat",
+      "sha256": "988251b5979e28a9d037c6cad668b7f415f8c358f517ad242113c176bfe2b09a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_facade_hala_d.mat",
+      "sha256": "6300550612e0072b1163d4755fa2aac88574072b4258fcc55205732041674f7c"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_facade_magazyn.mat",
+      "sha256": "2f7ed375ec002f48c181e8b3bec183b7907203ed82043b0da64f9c94762f37e4"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_facade_portiernia.mat",
+      "sha256": "3e2c0d937f5088c3524d43e6238751fb33a9f1ed57c7e0b2649c937cdda82ef3"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_facade_recepcja.mat",
+      "sha256": "148baf03c6d185206f8e4f28ab4ee6bdea7501d1032cbb59e1078150d12a9691"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_facade_serwis.mat",
+      "sha256": "23a4f1c6b05704b995e77d22e3708f0b1ea5ad3ed99e7ff10b2834d36ae0e670"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_OB_0bfe6830.mat",
+      "sha256": "fca385d09bace396eab664c036e3832b9058b28bdb5cba68e3b632b93ffdc835"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_OB_26fd429a.mat",
+      "sha256": "9784001cdc8e9c20e480e91c765e6123c0900936220b36886ba2d09ade3c15aa"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_OB_6bbf26a1.mat",
+      "sha256": "7ada579613bd92d3c1741a0f5e7e0fb7ea622a92be33a36c4eeebc000ab6453a"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_OB_8a02c9de.mat",
+      "sha256": "5e2e0059efed14fc9f0862e3879f36b3436d31498d7d22e23902d90c98d3ed8d"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/Proto/M_sign_OB_f99035fb.mat",
+      "sha256": "f02768738d991dddbf61dd29587603f52469d124462ce47061bb195a0acc6732"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/MI_FifthWheel_Interim.mat",
+      "sha256": "bf3b6f3bff7921d26217188d939583d0ff978297e6401ab8161859c9cc3f9f0a"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Decal.mat",
+      "sha256": "4c64926a466434cb63088d4865a1315a358e484c60ae5a2f0456517066daf49e"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_DISPLAY_BunkPanel.mat",
+      "sha256": "d40e903139840593a2d1c5fc66b3ccff5630b97090477388d84896ef3be585b4"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_DISPLAY_Cluster.mat",
+      "sha256": "7f763a37c086e812ece4c2507e8ca8053bf647efae3d956e1a1608853f80a809"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_DISPLAY_Infotainment.mat",
+      "sha256": "40f6761c62ba2c1245445546539fa6a25596d23cf99e6965d733a6785f44ca59"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_DISPLAY_Radio.mat",
+      "sha256": "77a47161514b36323029e131d1d9a3e77604f2b15c96e908454252a5dda31371"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_DISPLAY_Tachograph.mat",
+      "sha256": "7bf6ebf921999f5c2a12121e8f29fad754b54af0108060f14491e8b838104caf"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Fabric.mat",
+      "sha256": "198d72537ebba3ba9f86965c05adf98999a647867b1af210f07515439611cb1c"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Glass.mat",
+      "sha256": "2c003f8011d389e3e048a79f9f46a3d1c929156dd2a84edfc7ce242d7ab9764a"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Leather.mat",
+      "sha256": "03754bb40f693990ff4d755f6b85d0bd5de6a52fa33dee4f99c2ea066f705d1e"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Metal.mat",
+      "sha256": "242db0cd243852d455da602e2062a6af6c486cde6b237c925bb4ecc6331cc7a5"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Plastic.mat",
+      "sha256": "82fd06bc956a977c8e67a95644bebdad309ca3b6bffb4a11abf45d008f244823"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Rubber.mat",
+      "sha256": "5f3fce7f608cfcb0c67ba77396a78c1fddcbf8e8b04dc9dd44098e85b4f7209e"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_DoorGlassL.mat",
+      "sha256": "2f19cb71fc4e61863db541daf767aaeffa012891579fe88e4295e03bd863885d"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_DoorGlassR.mat",
+      "sha256": "66741baebf7d2ff7059190f3b1855cc75f0756e18658a28ee95d4aff24c9dfd2"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_Glass.mat",
+      "sha256": "9c979f2d616a02d7c3bd246a8548f0cf1b1e635c6dbe287859a2f5565b7e67f4"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_Lights.mat",
+      "sha256": "a8e3e5c864575688c02f0ff74e99fca5fe4d36d7c92f51726daccf8ec0210691"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_Metal.mat",
+      "sha256": "a00abbd5fba0b5bd839c2bb1872547d6c6e87ef2d546220b8eb0205e5cb91b69"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_MirrorProbe.mat",
+      "sha256": "2d162369ccb38b417c4eaa83a714ea6c694cbc6826254f460bd0e5e44bcc6b00"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_MirrorRT.mat",
+      "sha256": "b0576f290f06d95d0fef6516b06839f1034d4be0d224711d5e7b65b948f8abb4"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_Paint.mat",
+      "sha256": "51661ef7fb22a6dcf6bc9931c32b5555ca3b32537b998a1e0b0bb344bc41841e"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_Trim.mat",
+      "sha256": "483374b2a365b152af2b59aea57fe49c5ba5ee8c76747367c24fac01c1ab6452"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Decal.mat",
+      "sha256": "b5af6388037644e57ca6d47ccadce0f29450db440a2f55fe6d86ea3732a1a1ac"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_DISPLAY_BunkPanel.mat",
+      "sha256": "d40e903139840593a2d1c5fc66b3ccff5630b97090477388d84896ef3be585b4"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_DISPLAY_Cluster.mat",
+      "sha256": "7f763a37c086e812ece4c2507e8ca8053bf647efae3d956e1a1608853f80a809"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_DISPLAY_Infotainment.mat",
+      "sha256": "40f6761c62ba2c1245445546539fa6a25596d23cf99e6965d733a6785f44ca59"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_DISPLAY_Radio.mat",
+      "sha256": "77a47161514b36323029e131d1d9a3e77604f2b15c96e908454252a5dda31371"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_DISPLAY_Tachograph.mat",
+      "sha256": "7bf6ebf921999f5c2a12121e8f29fad754b54af0108060f14491e8b838104caf"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Fabric.mat",
+      "sha256": "a873b7ed2f0607f1b96f7e380a30eade6b91b497f14f2237a905cd7d877444cf"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Glass.mat",
+      "sha256": "69108981d6d426fa2badcdaa7bb9aee1ab3a8785bf17bba7ba86c5f4a99bf598"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Leather.mat",
+      "sha256": "9d6a73c90775dbc1857e18fa5a16d0e61e1e699c0f970995eca86310196e182c"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Metal.mat",
+      "sha256": "cee975cde8e08008d64dc5336df45731f765288f0176d3bbffa80e7f15d2dd4c"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Plastic.mat",
+      "sha256": "1aa64739854b29ab41e0cc8fc0cff7be11a700b866d0d3a82ea17428aa376d83"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Rubber.mat",
+      "sha256": "a25338bac29fe81456b5106b7f83cc7b7078bc5b9531d0c66d32e49a05d90dd9"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_DoorGlassL.mat",
+      "sha256": "2f19cb71fc4e61863db541daf767aaeffa012891579fe88e4295e03bd863885d"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_DoorGlassR.mat",
+      "sha256": "66741baebf7d2ff7059190f3b1855cc75f0756e18658a28ee95d4aff24c9dfd2"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_Glass.mat",
+      "sha256": "9c979f2d616a02d7c3bd246a8548f0cf1b1e635c6dbe287859a2f5565b7e67f4"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_Lights.mat",
+      "sha256": "b50965d14832c0bfa211516a77d171c38fc7604ea73b0abee0f0bad28197e724"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_Metal.mat",
+      "sha256": "910a5be053317de53552896df2aaf09197b972f84559ce200135654951b53565"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_MirrorProbe.mat",
+      "sha256": "5cff1ed33a9ac341d202464a689b0c763db43d1dded1a6c3c8db0238d014d082"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_MirrorRT.mat",
+      "sha256": "74702a1ebc9db423bc95e427ef83c599766a8919884b43fa7cac0f8320a64e1f"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_Paint.mat",
+      "sha256": "7c7771c21a8500dc03ba8578d40a31e9da077e536bc23c23465645aa917ca206"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_Trim.mat",
+      "sha256": "311ae32f39413ccd77fb19e0d14a6e3ed15dc63f8e12f5387a43d49d8b1ec0b0"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Decal.mat",
+      "sha256": "d70d54573365c788e228d1cf3a358115dc25b691d398a09aa326fbb4bb95a7fb"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_DISPLAY_BunkPanel.mat",
+      "sha256": "d40e903139840593a2d1c5fc66b3ccff5630b97090477388d84896ef3be585b4"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_DISPLAY_Cluster.mat",
+      "sha256": "7f763a37c086e812ece4c2507e8ca8053bf647efae3d956e1a1608853f80a809"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_DISPLAY_Infotainment.mat",
+      "sha256": "40f6761c62ba2c1245445546539fa6a25596d23cf99e6965d733a6785f44ca59"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_DISPLAY_Radio.mat",
+      "sha256": "77a47161514b36323029e131d1d9a3e77604f2b15c96e908454252a5dda31371"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_DISPLAY_Tachograph.mat",
+      "sha256": "7bf6ebf921999f5c2a12121e8f29fad754b54af0108060f14491e8b838104caf"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Fabric.mat",
+      "sha256": "fc975555ac6474aab2541ffbbd9dc4bf2cc9ac7958f9d6df117625f1089f115d"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Glass.mat",
+      "sha256": "9716e6e6985ad36839759203777311cb61eca13cfd605dc6e339704ad8cb4166"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Leather.mat",
+      "sha256": "949105d04e0f98bdf49fea8485a0418ae0a227f89b463187e292c45b7c3bcf06"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Metal.mat",
+      "sha256": "05d5702a169c25660945c6abaf9f6b992983b5a45dcd3507eeb361a633ecf3d1"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Plastic.mat",
+      "sha256": "d819e8bec7248ab896e6cc6cf62fe3c76369a68c2f391afa1d80da6c88e46cdf"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Rubber.mat",
+      "sha256": "f82bca992837fd07ffc8bd02011dca4ca126ee9dc3cf0a6022776f798bcc5d47"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_DoorGlassL.mat",
+      "sha256": "2f19cb71fc4e61863db541daf767aaeffa012891579fe88e4295e03bd863885d"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_DoorGlassR.mat",
+      "sha256": "66741baebf7d2ff7059190f3b1855cc75f0756e18658a28ee95d4aff24c9dfd2"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_Glass.mat",
+      "sha256": "9c979f2d616a02d7c3bd246a8548f0cf1b1e635c6dbe287859a2f5565b7e67f4"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_Lights.mat",
+      "sha256": "37eddfe05d6136d8ffaf16f9c9d58a714d78e982fab004220cc0fbb50fa4111a"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_Metal.mat",
+      "sha256": "aba4dc8569f4079ba38b55a0b73cb7dec57a8d02e56eb899b86f77bb2a0fef80"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_MirrorProbe.mat",
+      "sha256": "14cbbdafc2429adab7dcf31162e9d1e7f46bae7f7d191ea62f37cd408a257549"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_MirrorRT.mat",
+      "sha256": "e936be8b2f7db917839962c515fde55d128a7256753f5c838452da7e47e3c0f3"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_Paint.mat",
+      "sha256": "ba775c9302c2b8fda0806de166cd932d4ea3c49f87e2bd4fcc31b3cd9d3c59e1"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_Trim.mat",
+      "sha256": "46ffec0d997e999dcde4a879c1a35669c6afbbe202954c0be0aab96b452bdc2a"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/High/MI_Trl_Curtain.mat",
+      "sha256": "56759aff77c64e21cc9d0eb85d702981995867fa72d4375f78879f1a53158cda"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/High/MI_Trl_Lights.mat",
+      "sha256": "2bd1da3d8ba3c46444d3ba8c04a68f7fdfde3081e30e8eba5e50a6f6d62d3f64"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/High/MI_Trl_Metal.mat",
+      "sha256": "5a29c814839be9b3d6b8f10a4ad7cc59c324f32877524679e185a16d11c4d337"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/High/MI_Trl_Paint.mat",
+      "sha256": "1bed052bc98811dec5f434ab8fc9ad211bc10edc6d427e3c6577d3f8799d9ed7"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/High/MI_Trl_Trim.mat",
+      "sha256": "33935ace8cabd64cca311fb25a4b4ac05f30182822f3e25a4b6bb232ce892a9b"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Low/MI_Trl_Curtain.mat",
+      "sha256": "742ed066fccae0384aa2ea297313ef50a798e746b807e29f49a24eb783c53198"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Low/MI_Trl_Lights.mat",
+      "sha256": "148cec0175a2d725b877457fdbaa1256b6a52d2c2acd1eeb6c1c35f01e271724"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Low/MI_Trl_Metal.mat",
+      "sha256": "611f77451d7f719e55177889c3491ef8b2c2b1d397a04ddd0f4223f82f02ddb0"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Low/MI_Trl_Paint.mat",
+      "sha256": "b9d075610f0ed9f1f20ed5c7fce91f356270bbaf070f527824f2d9623159947d"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Low/MI_Trl_Trim.mat",
+      "sha256": "dfcd6ba275acc6e748c1f55cc9ede7970a5dc16405ef43891914ab8c63788f13"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Medium/MI_Trl_Curtain.mat",
+      "sha256": "2a2dddca727e2006569b68f23360e7f92c3db7ae357a208422bb49b0b5dba386"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Medium/MI_Trl_Lights.mat",
+      "sha256": "a821da1c7c1bb39a9c0b0bf49d2af06a00154aee68f46f8e5257959981dca9ef"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Medium/MI_Trl_Metal.mat",
+      "sha256": "c05257c562793ec64f71bf37a692ce72365e1dc3529e053e8ef34f33bbacec1b"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Medium/MI_Trl_Paint.mat",
+      "sha256": "7723b462f260c9584c8cee940862cf4e384f9516e3332bde01fad35784e9c2fc"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Medium/MI_Trl_Trim.mat",
+      "sha256": "cb479c5f32e7b2813265c890cf9be72b130b0ff8a25b00ef677e26fa7ba84eeb"
+    }
+  ]
+}
