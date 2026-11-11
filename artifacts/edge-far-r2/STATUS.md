@@ -42,3 +42,6 @@
 - Verified named Las Pietrasze in the pinned local OSM source (pyosmium Area.id 11153179); nearest outside-tile part from helper camera is E -637.79 / N 1032. Camera target E -500/N1300 is inside source polygon.
 - Supplementary cameras now look NE from DK8/DK19 exit, not along NNW road axis; standard dk8-dk19-exit unchanged. forest_identity.py reproduces source identity/geometry, summary kept in git.
 - NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20 (PHONE_RUN active, no Unity).
+- PHONE_RUN cleared; guarded import succeeded: 64 chunks, Low+High; before matrix captured. First Low-clear edge-south pair inspected: false long red-fascia hall removed and regional cream office revealed; false yellow hall on left also removed.
+- Self-critique: source-verified NE helper at road eye/18.2m is occluded by nearby crowns, so it does not prove the far skyline. Added separate 40m diagnostic camera (explicitly not driver eye), to run as second evidence round after primary matrix/tests finish. Original 7 views preserved.
+- NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20; after EVIDENCE_COMPLETE run pwsh artifacts/edge-far-r2/run-skyline.ps1
