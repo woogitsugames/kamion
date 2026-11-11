@@ -131,3 +131,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:07:07.5342874+01:00: przygotowano sekwencję validate-after3.ps1: czeka na istniejący proces91696, wymaga sukcesu generatora i braku fallback, potem osobno slotowane geometry/import/4rendery/SBS/arkusze. Nie uruchamia generatora ponownie i nie ogłasza PASS. NASTĘPNY KROK: uruchomić tę sekwencję i obejrzeć powstałe dowody.
 
 2026-11-12T00:08:46.7346367+01:00: narzędzie porównań przygotuje również końcowy arkusz pięciu detali i parę referencja/render znaku do960px, z polskimi opisami, atrybucją i jawną niepewnością pozy. Poprawiono uszkodzone znaki w opisach referencji. NASTĘPNY KROK: odczytać wyniki działającej sekwencji; obrazy powstaną dopiero po renderach, wewnątrz heavy.
+
+2026-11-12T00:12:54.8705431+01:00: generator after3 uzyskał heavy i działa (Python PID 67868, uv 108248); zapisano hash źródeł oraz HEAD w build-after3-context.json. Walidacja czeka na zakończenie tego samego procesu. NASTĘPNY KROK: sprawdzić brak fallback, porównanie chronionej geometrii i końcowe rendery.
