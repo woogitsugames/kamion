@@ -12,8 +12,9 @@ def read(path):
  nodes={}
  for node in d['nodes']:
   if 'mesh'not in node:continue
-  nodes[node['name']]={d['materials'][p['material']]['name']:{**{k:acc(i) for k,i in p['attributes'].items()},'indices':acc(p['indices'])}for p in d['meshes'][node['mesh']]['primitives']}
- return nodes
+  # Material names are NOT unique: terrain_lod0 has four terrain_grass primitives.
+  nodes[node['name']]=[(d['materials'][p['material']]['name'],{**{k:acc(i) for k,i in p['attributes'].items()},'indices':acc(p['indices'])})for p in d['meshes'][node['mesh']]['primitives']]
+ return d,nodes
 
 def main():
  fixture=json.loads((OUT/'raw-before-fixture.json').read_text());changed=[];files=[]
@@ -24,11 +25,12 @@ def main():
  assert sorted(changed)==sorted(expected),changed
  proof=[]
  for file in changed:
-  a=read(OUT/'raw-before'/Path(file).name);b=read(ROOT/file);assert a.keys()==b.keys();same=0
-  for node,materials in a.items():
-   assert materials.keys()==b[node].keys()
-   for mat,attrs in materials.items():
-    other=b[node][mat];assert attrs.keys()==other.keys()
+  da,a=read(OUT/'raw-before'/Path(file).name);db,b=read(ROOT/file);assert a.keys()==b.keys();same=0
+  assert da['materials']==db['materials'] and da['nodes']==db['nodes']
+  for node,primitives in a.items():
+   assert len(primitives)==len(b[node])
+   for (mat,attrs),(othermat,other) in zip(primitives,b[node]):
+    assert mat==othermat and attrs.keys()==other.keys()
     if node=='markings'and mat=='decal_oil':
      for name,old in attrs.items():
       new=other[name];assert np.array_equal(new[:len(old)],old),(file,node,mat,name)
@@ -37,7 +39,7 @@ def main():
     else:
      for name,old in attrs.items():assert np.array_equal(old,other[name]),(file,node,mat,name)
      same+=1
-  proof.append(dict(file=file,unchanged_node_material_attribute_groups=same,added_vertices=10,added_triangles=9,new_material_groups=0,all_road_terrain_bridge_building_geometry_and_masks_identical=True))
+  proof.append(dict(file=file,unchanged_ordered_primitives=same,added_vertices=10,added_triangles=9,new_material_groups=0,all_road_terrain_bridge_building_geometry_and_masks_identical=True,material_definitions_node_transforms_identical=True))
  qa=json.loads((ROOT/'Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json').read_text());fab=qa['furniture']['megascans'];assert len(fab['available'])==15 and fab['added_props']==320 and not fab.get('fallback',False)
  bus=qa['furniture']['life']['bus_stop_oil'];assert len(bus['applied'])==1 and len(bus['rejected'])==19
  manifest=json.loads((ROOT/'Data/Regions/bialystok-industrial-c/generated/world_manifest.json').read_text())
