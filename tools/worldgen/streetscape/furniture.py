@@ -1010,10 +1010,16 @@ def panel_fence(lin, line, col, key, flexible=False):
         lateral = np.array([-direction[1], direction[0]])
         seed = _h(f"{key}:bay:{i}")
         bow = (0.012 + (seed % 14) * 0.001) * (1 if seed & 16 else -1)
-        Q = np.array([ends[0], ends.mean(axis=0) + lateral * bow, ends[1]])
-        bottom = np.full(3, base + S.FENCE_PLINTH_H)
-        sag = 0.045 if flexible else 0.0
-        upper = base + S.FENCE_H - np.array([0, sag, 0])
+        # Flexible wire always sags; rigid panels mix intact bays and occasional local bows.
+        # A 1-in-4 distribution is WORKING_VALUE, not an inventory of every real panel.
+        deformed = flexible or seed % 4 == 0
+        if deformed:
+            Q = np.array([ends[0], ends.mean(axis=0) + lateral * bow, ends[1]])
+            bottom = np.full(3, base + S.FENCE_PLINTH_H)
+            sag = 0.045 if flexible else 0.0
+            upper = base + S.FENCE_H - np.array([0, sag, 0])
+        else:
+            Q, bottom, upper = ends, top, np.full(2, base + S.FENCE_H)
         lin.ribbon(f"{col}_mesh", Q, bottom, upper, 0, key, both=True, collision="collision_fence")
     lin.posts(col, P, None, 0.06, 0.04, S.FENCE_H + 0.05, zb=post_base, src=key, ground_feet=True)
 

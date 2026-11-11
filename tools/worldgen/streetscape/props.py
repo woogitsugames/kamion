@@ -126,9 +126,15 @@ def lamp_old(h, kind):
                 rr = 0.15 - 0.08 * zb / h + 0.004
                 mm.tube("steel_painted_grey", [0, 0, zb], [0, 0, zb + 0.08], rr, rr, seg, cap=False)
             e = pts[-1]
-            mm.box("luminaire_old", e + [0, 0.35, 0.02], 0.15, 0.40, 0.08)
-            mm.quad("lamp_glass_sodium", e + [-0.12, 0.02, -0.065], e + [0.12, 0.02, -0.065],
-                    e + [0.12, 0.66, -0.065], e + [-0.12, 0.66, -0.065])
+            # A sloped, bevelled sodium housing rather than a flat LED box; same 12 housing triangles.
+            # Generic proportions, WORKING_VALUE; no manufacturer's model or branding.
+            housing = e + np.array([[-.11,.06,-.10], [.11,.06,-.10], [-.12,.66,-.10], [.12,.66,-.10],
+                                    [-.17,-.05,.10], [.17,-.05,.10], [-.16,.78,.06], [.16,.78,.06]])
+            faces = [(0,2,3,1), (4,5,7,6), (0,1,5,4), (2,6,7,3), (0,4,6,2), (1,3,7,5)]
+            triangles = [t for a,b,c,d in faces for t in ((a,b,c),(a,c,d))]
+            mm.add("luminaire_old", housing, triangles)
+            mm.quad("lamp_glass_sodium", e + [-.10,.09,-.102], e + [-.11,.63,-.102],
+                    e + [.11,.63,-.102], e + [.10,.09,-.102])
         else:
             mm.box("concrete_base", [0, 0, -0.01], 0.2, 0.2, 0.09)
             mm.tube("steel_painted_grey", [0, 0, 0.06], [0, 0, h - 0.2], 0.075, 0.05, seg)

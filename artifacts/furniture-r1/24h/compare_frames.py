@@ -2,6 +2,7 @@
 import csv
 import json
 import re
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw
@@ -49,6 +50,8 @@ for tier in ('Low', 'High'):
                                 tris_delta_upper_percent=delta_upper))
         names = {p.name for p in before.glob('*.png')}
         assert names == {p.name for p in after.glob('*.png')}, f'Missing PNG: {key}'
+        if '--metrics-only' in sys.argv:
+            continue
         # Each sheet is at most 960 px wide. All cameras are included, in groups of six.
         names = sorted(n for n in names if not n.endswith(('_mask.png','_envcube.png')))
         out = ROOT/'compare'; out.mkdir(exist_ok=True)

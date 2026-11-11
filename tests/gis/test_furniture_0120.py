@@ -68,6 +68,15 @@ def test_only_our_boards_receive_byte_stable_detail_markers_and_ground_height():
         assert np.max(np.abs(decoded-expected)) <= 1/255
 
 
+def test_rigid_fence_has_a_mix_of_intact_and_bowed_bays():
+    buf = Buffer()
+    F.panel_fence(F.Lin(buf, lambda e,n: np.zeros_like(e)), LineString([(0,0),(100,0)]),
+                  'fence_green', 'mixed-rigid-panels')
+    widths = [np.ptp(v[:,1]) for layer,mat,v,t in buf.parts if mat=='fence_green_mesh']
+    assert any(w == 0 for w in widths)
+    assert any(.01 <= w <= .03 for w in widths)
+
+
 @pytest.mark.parametrize('code', ['A-7', 'C-12', 'B-20', 'D-1', 'D-6'])
 def test_sign_back_and_folded_rim_never_wrap_the_wear_atlas(code):
     for mesh in P.plate(code)[:2]:
