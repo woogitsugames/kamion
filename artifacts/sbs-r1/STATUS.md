@@ -24,3 +24,6 @@ Następny krok: Get-Content artifacts/sbs-r1/build-world.log -Tail 20
 ## Czytelność arkuszy
 15/15 testów SBS zaliczone. Arkusze pokazują flagę użycia fotometrii i wiek zdjęcia; 2948 ma nakładkę dwóch wybranych krawędzi oraz ich punktu zbiegu. Test integralności wykrywa podmianę pikseli renderu po zapisaniu metadanych.
 Generacja PBR trwa niezależnie od generacji geometrii. Następny krok: Get-Content artifacts/sbs-r1/build-materials.log -Tail 20
+## Liczniki kamer
+Zebrano historyczne statystyki 160 wierszy kamer (40 × Low/High × clear/overcast), z draws geometrii i instancji osobno. Te dane są estymacją CPU edytora, nie licznikami GPU telefonu; różnic względem starego main nie przypisujemy kosztowi narzędzia SBS.
+Następny krok: uv run --project tools/refs python artifacts/sbs-r1/summarize_stats.py --renders artifacts/sbs-r1/evidence/renders --baseline C:/Users/matma/Documents/Claude/kamion/artifacts/sbs-gate3/renders --output artifacts/sbs-r1/counters
