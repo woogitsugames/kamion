@@ -20,3 +20,6 @@
 
 - Step7: ROOT temporarily reassigned same worker while G75082bd1 parked under newdiag1 phonehold. Prepared INACTIVE candidate-r1.patch: road-only missingUV1 sentinel +force allocation for all-missing ROADWEAR, preserving validzero/other-layer defaults. gitapply-check passes pristineD and sandbox; applied ONLYsandbox.3 meaningful EditMode cases prepared but C#/NUnit UNEXECUTED. CPU scope check shows predicted+36124UVbytes/tier in chunk5_4 (9031road-layer verts), no shader/maps/globalalbedo/geometry change. Pristine593Generated asset pins recorded; production gitdiff remainszero. Tiny mask correction is not broad road-realism completion.
 - NEXT COMMAND: wait NEW explicit ROOT release; IMMEDIATELY switchG75082bd1 and run guarded baseline.ps1 -Phase Import then gpu-proof.ps1. D stays inactive; only AFTER actualD BEFOREmatrix/slot apply candidate-r1.patch per CANDIDATE.md.
+
+- Step8: pinned artifact.patch files toLF using artifact-local .gitattributes so future Windows checkout preserves gitapply-checkability. No project/global attributes or production/cache edits. Candidate remains inactive.
+- NEXT COMMAND: on NEW explicit ROOT release immediately resumeG import->GPU->candidate captures; D activation waits its real BEFOREmatrix.
