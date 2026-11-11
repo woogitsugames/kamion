@@ -35,6 +35,11 @@ EAVE_MIN = 2.5                  # lowest eave above the ground, m
 # there stuck out above the lower wing like a dark sail (review s9 P1-4); 0.15 m = a flashing, not an eave
 OVERHANG_NOTCH = 0.15
 MULTI = True                    # ADR 0097: rectangle decomposition + upper envelope for L / T / U plans (MultiRoof)
+# ADR 0097: reach of a MultiRoof part's field past its rectangle, m. The plans are rectilinear only within ~11 deg and
+# the grid snaps their walls by up to 0.25 m, so the field of a part must cover its walls and the overhang beyond
+# them; past its rectangle a part's plane runs on down the slope and loses to the neighbouring part's
+MULTI_REACH = 1.2
+MULTI_MIN_SIDE = 1.0            # ADR 0097: narrower decomposition parts (jogs) get no roof of their own, m
 
 
 class Roof:
@@ -167,7 +172,7 @@ class MultiRoof:
         return (np.abs(u) <= part.hu + ov + 1e-6) & (np.abs(v) <= part.hv + ov + 1e-6)
 
     def z(self, p, ov=None):
-        ov = OVERHANG + 0.05 if ov is None else ov
+        ov = MULTI_REACH if ov is None else ov
         q = np.asarray(p, float)[..., :2]
         best = np.full(q.shape[:-1], -np.inf)
         for part in self.parts:
@@ -203,8 +208,8 @@ class MultiRoof:
         for pt in self.parts:                              # rectangle (domain) edges: a step in the field
             for ax, h in ((pt.eu, pt.hu), (pt.ev, pt.hv)):
                 for sg in (1, -1):
-                    fa = float(ax @ (a - pt.c)) - sg * (h + OVERHANG + 0.05)
-                    fb = float(ax @ (b - pt.c)) - sg * (h + OVERHANG + 0.05)
+                    fa = float(ax @ (a - pt.c)) - sg * (h + MULTI_REACH)
+                    fb = float(ax @ (b - pt.c)) - sg * (h + MULTI_REACH)
                     if fa * fb < 0:
                         t = fa / (fa - fb)
                         ts.update((max(0.0, t - 1e-4), min(1.0, t + 1e-4)))
@@ -234,7 +239,7 @@ class MultiRoof:
             return self._faces[key]
         dom = []
         for i, pt in enumerate(self.parts):
-            hu, hv = pt.hu + ov, pt.hv + ov
+            hu, hv = pt.hu + MULTI_REACH, pt.hv + MULTI_REACH
             W = lambda u, v, pt=pt: pt.c + pt.eu * u + pt.ev * v
             for sg in (1, -1):
                 cs = [W(-hu, 0), W(hu, 0), W(hu, sg * hv), W(-hu, sg * hv)]
@@ -253,10 +258,11 @@ class MultiRoof:
                     reg = reg.difference(Polygon(cut).buffer(0))
                 if reg.is_empty:
                     break
-            if reg.is_empty or reg.area < 1e-3:
+            reg = shapely.unary_union(_polys(reg)) if not reg.is_empty else reg
+            if reg.is_empty or reg.area < 1e-3 or reg.geom_type not in ("Polygon", "MultiPolygon"):
                 continue
             pt = self.parts[i]
-            hv = pt.hv + ov
+            hv = pt.hv + ov                                # UV v from the (grown) eave line as a single roof
             k_sl = pt.sl / self.sl
             if sg > 0:
                 d0 = lambda p, pt=pt, hv=hv, k_sl=k_sl: (hv - pt.uv(p)[1]) * k_sl
@@ -377,6 +383,9 @@ def plan_multi(poly, c, eu, ev, heights):
     if hv_m < 1.5:
         return None
     s, he, source = heights(hv_m)
+    parts = [m] + [q for q in parts[1:] if min(q[1] - q[0], q[3] - q[2]) >= MULTI_MIN_SIDE]
+    if len(parts) < 2:
+        return None
     rects = []
     tolc = 0.05
     for k, (u0, u1, v0, v1) in enumerate(parts):
@@ -502,7 +511,10 @@ def plan(poly, props, h, zref, key_float, others=(), wooden=False):
         pm = plan_multi(poly, c, eu, ev, heights)
         if pm is not None:
             mr = _multi_roof(c, eu, ev, pm[0], pm[1], zref + pm[2], pm[3])
-            if mr is not None:
+            # the envelope must cover the whole covering (a plan whose walls stray from the grid by more than the
+            # reach would get a hole): otherwise the single roof as before
+            if mr is not None and covering(poly, mr).difference(
+                    shapely.unary_union([f[0] for f in mr.faces(OVERHANG + 0.05)])).area < 0.05:
                 return mr
     if fill < 0.6 or hv < 1.5:
         return None
