@@ -131,7 +131,8 @@ def apply(buf, overrides, report, applied, stale):
             if inside.V:
                 V, UV, UV1, COL, T = inside.arrays()
                 a = V[T][:, :, :2]
-                area += float(np.abs(np.cross(a[:, 1] - a[:, 0], a[:, 2] - a[:, 0])).sum() / 2)
+                u, v = a[:, 1] - a[:, 0], a[:, 2] - a[:, 0]
+                area += float(np.abs(u[:, 0] * v[:, 1] - u[:, 1] * v[:, 0]).sum() / 2)
                 new_parts.append(Part(p.layer, mat, V, V[:, :2].copy(), T, p.footprint, f"apron:{o['id']}", UV1, COL))
         buf.parts[:] = [p for p in buf.parts if len(p.T)] + new_parts
         if area > 0.5:

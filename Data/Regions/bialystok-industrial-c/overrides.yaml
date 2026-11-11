@@ -1294,3 +1294,48 @@ overrides:
     reason: Broken wide line from E -799 at N 52.6 (east_split.jpg x 680-1000 y 670-680).
     confidence: medium
     verify: owner drive
+  # ---------------------------------------------------------------- ADR 0100 (REVIEW s10-0095 P1-4): SE-bound Andersa at n10015785253
+  # Orthophoto (artifacts/junctions-r3/plan1/n10015785253.jpg, left): the right-hand lane ends at the kerb jog E -247
+  # N -253 and carries two P-9 guidance arrows pointing into the next lane; no through arrows in lanes 2-3. The
+  # generated through arrows (OSM turn:lanes on w266084684 / w560802655) stood in lanes 2-3. Lane geometry (lane drop,
+  # kerb jog) not rebuilt in ADR 0100 (open).
+  - id: n100-se-arrows-clear
+    kind: paint_clear
+    polygon_en: [[-230.6, -247.21], [-235.55, -243.38], [-236.4, -244.49], [-231.45, -248.32]]
+    reason: Generated through arrow in lane 2 E -233 N -246 (not on the orthophoto).
+    confidence: high
+    verify: owner drive
+  - id: n100-se-arrows-clear-2
+    kind: paint_clear
+    polygon_en: [[-242.81, -238.17], [-247.89, -234.58], [-248.69, -235.73], [-243.61, -239.32]]
+    reason: Generated through arrow in lane 2 E -246 N -237 (not on the orthophoto).
+    confidence: high
+    verify: owner drive
+  - id: n100-se-arrows-clear-3
+    kind: paint_clear
+    polygon_en: [[-232.7, -249.91], [-237.65, -246.08], [-238.5, -247.19], [-233.55, -251.02]]
+    reason: Generated through arrow in lane 3 E -235 N -249 (not on the orthophoto).
+    confidence: high
+    verify: owner drive
+  - id: n100-se-arrows-clear-4
+    kind: paint_clear
+    polygon_en: [[-244.8, -240.99], [-249.77, -237.38], [-250.6, -238.51], [-245.63, -242.12]]
+    reason: Generated through arrow in lane 3 E -248 N -240 (not on the orthophoto).
+    confidence: high
+    verify: owner drive
+  - id: n100-se-guidance-arrow-1
+    kind: painted_arrow
+    at_en: [-261.0, -237.0]
+    heading_deg: 17
+    turns: [through]
+    reason: P-9 guidance arrow in the ending right lane (plan1/n10015785253.jpg left, x 105-160 y 300-315), pointing into lane 3.
+    confidence: medium
+    verify: owner drive
+  - id: n100-se-guidance-arrow-2
+    kind: painted_arrow
+    at_en: [-248.6, -245.8]
+    heading_deg: 14
+    turns: [through]
+    reason: Second P-9 guidance arrow (x 250-310 y 403-418), 14 m before the kerb jog E -247 N -253.
+    confidence: medium
+    verify: owner drive
