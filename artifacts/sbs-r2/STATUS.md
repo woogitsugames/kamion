@@ -67,3 +67,6 @@ Generacja zakończona kodem 0 po 457 s, bez fallback=True. Wszystkie 64 SHA GLB 
 
 ## Import zakończony
 IMPORT_RESULT: OK, 64 chunki, oba tiery Low+High. Preflight PBR: 0 brakujących, 0 nieaktualnych; 13 zestawów CC0, 65 plików, 0 problemów. Slot Unity zwolniony. Raport importu podaje geometrię 117,0 MB Low i 259,1 MB High (bez twierdzenia o pełnej pamięci procesu lub telefonu). Przygotowano osobny EditMode przez Acquire/Release gpt-sbs, z zachowaniem świeżego XML w artefaktach r2.
+
+## EditMode i rozdzielenie pul
+EditMode: 261/261, 0 porażek i pominięć; świeży XML zachowany, slot Unity zwolniony. Dodano RenderOnly, rozłączne z ComposeOnly. Pozwala wykonać same capture Unity, gdy sekwencja testów i fidelity używa lub oczekuje na heavy. Nie uruchamia kompozycji ani publikacji migawki; te nastąpią osobnym ComposeOnly po zakończeniu wszystkich ciężkich zadań gałęzi. Cała seria raw wymaga niezmiennego HEAD, kamer, świata i materiałów. Parser PowerShell przechodzi. Następny krok: zamrożony pełny render 42 kamer × 4 stany.

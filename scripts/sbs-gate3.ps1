@@ -5,11 +5,13 @@ param(
     [switch]$EditMode,
     [string]$SlotOwner = 'gpt-sbs',
     [string]$OutputRoot = 'artifacts/sbs-gate3',
+    [switch]$RenderOnly,
     [switch]$IncludeDiagnostics,
     [string]$Photometry,
     [switch]$ComposeOnly
 )
 $ErrorActionPreference = 'Stop'
+if($RenderOnly -and $ComposeOnly){throw 'RenderOnly and ComposeOnly are mutually exclusive'}
 $taskRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $mainRoot = (& git -C $taskRoot rev-parse --path-format=absolute --git-common-dir).Trim()
 $mainRoot = Split-Path $mainRoot -Parent
@@ -159,6 +161,7 @@ try {
                     } finally { Restore-UnitySideEffects; & pwsh -NoProfile -File $slotScript -Release -Owner $SlotOwner }
                 }
             }
+            if($RenderOnly){continue}
             $heavyOwner = (& git branch --show-current).Trim()
             & pwsh -NoProfile -File $slotScript -Acquire -Pool heavy -Owner $heavyOwner -PollSeconds 7 -StaleHours 87600
             if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
@@ -176,5 +179,5 @@ try {
             } finally { & pwsh -NoProfile -File $slotScript -Release -Pool heavy -Owner $heavyOwner }
         }
     }
-    Save-EvidenceInputs
+    if(!$RenderOnly){Save-EvidenceInputs}
 } finally { Pop-Location }
