@@ -1721,6 +1721,9 @@ def noise_wall(lin, P, Z, st, H, key):
             k = len(prt.V) // 2
             prt.UV = np.column_stack([np.zeros(2 * k), np.concatenate([np.ones(k), np.full(k, -0.25)])])
         lin.slab(st["post_mat"], P, Z + H - 0.08, Z + H, 0.10, key + ":rail")        # top rail
+        if Z is not None and H - (zb - Z).max() > 2.0:      # ADR 0125: panel joint rail at mid height of the glazing
+            zm = (zb + Z + H) / 2                           # (frames read at distance where the clear sheet does not)
+            lin.slab(st["post_mat"], P, zm - 0.04, zm + 0.04, 0.08, key + ":rail")
     lin.ribbon("collision_fence", P, Z - 0.2, Z + H, 0.0, key, both=False)
     lin.buf.parts[-1].layer = "collision"
     lin.posts(st["post_mat"], P, S.NOISE_BARRIER_POST, 0.16, 0.16, H + 0.1, src=key)
