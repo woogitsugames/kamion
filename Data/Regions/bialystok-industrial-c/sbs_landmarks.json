@@ -1,0 +1,24 @@
+{
+  "schema": "kamion/sbs-landmarks/1",
+  "annotations": [
+    {
+      "camera": "sbs-g3-a-2948595898752384",
+      "comparison_sha256": "8049e87d6a6b1ed43cbd4aa4de3c61d4d599805c3e3d78029c01990aacb62562",
+      "render_sha256": "b1643aedc6419bc44068409653cc93e2fea316d7155f83ad0f1e3314aeca5ba6",
+      "note": "One road vanishing point only. Photo point from two marked edges; render point manually read from baseline sheet. Insufficient independent anchors for pose approval.",
+      "points": [
+        {
+          "id": "VP",
+          "photo": [
+            0.4244772043099718,
+            0.5249381238879979
+          ],
+          "render": [
+            0.5617021276595745,
+            0.5227272727272727
+          ]
+        }
+      ]
+    }
+  ]
+}
