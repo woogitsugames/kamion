@@ -36,3 +36,5 @@ Krok 12: build_world baseline zakończony (log: [world 1089.0s] done); uruchomio
 Render ablacji zakończony: artifacts/light-r1/rcas/High-overcast-0.25. PNG wymagają obejrzenia i pomiarów. Następny krok: kolejny wariant w artifacts/light-r1/rcas-ablation.ps1, potem analiza.
 
 Krok 13: przygotowano validation-followup.ps1. Czeka na potwierdzony własny proces RCAS 93600, sprawdza komplet 40 PNG, potem kolejno import, 15 PNG smoke i pełne EditMode. Każde nowe Unity ma osobne Acquire/Release gpt-light. GIS w toku, na 58% wystąpiła jedna porażka — przyczyna do odczytu po końcu testów, bez zgadywania.
+
+Krok 14: przygotowano kontrolowane próby ramienia bieli 1,2/1,4/1,6/1,8 oraz filtrów cienia Medium/High, podziałów kaskad i 4096 px. LightQaBatch przywraca presety między zadaniami; filtr cieni ustawiany tylko dla bieżącego zadania, bez zmiany domyślnej polityki Low. Wyniki tych prób jeszcze UNVERIFIED. Następny krok: po smoke obejrzeć niebo, następnie uruchomić shadow-ablation.json i white-shoulder-ablation.json.
