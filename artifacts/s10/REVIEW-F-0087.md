@@ -54,3 +54,16 @@ Glass thresholds and Highclearroof2.59 remain FAIL; no owner-qualityPASS. Earlie
 pending final-validation paragraphs above are superseded by this closure.
 Retain bounded implementation, explicit remaining appearance limitations and
 actual shader math/device timing UNVERIFIED; no further ungrounded amplification.
+
+F2 source-only fast-fog check on main7265bd65: TruckGlass vertex stage first
+stores optical depth, then fast keyword replaces it with exp(-tau). FragFast
+currently lerps full haze into its additive reflection/body term and outputs
+alpha=1-trans; full frag already weights haze by alpha. Before nonlinear tone,
+with fog transmittance t and background B=t*S+(1-t)*H, premultiplied OVER requires
+glass additive t*R+alpha*(1-t)*H: plus (1-alpha)*B yields one haze term. The old
+full-H lerp yields (2-alpha)*(1-t)*H, an extra veil. Future fast correction should
+multiply H by alpha and reuse i.fogFactor directly, not exponentiate it again.
+This is source/algebra evidence only. KamionTone is nonlinear and applied before
+blend, so do not claim exact final-image physical equivalence from this algebra.
+Actual Low/Medium pane gradient/interior and matched cost remain required. No
+production patch applied; D/G remain the active streams ahead of F2.

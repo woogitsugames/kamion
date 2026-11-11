@@ -715,3 +715,8 @@ first Unity priority. D owner may do bounded readonly F2 capture-data preflight
 in old F artifacts during wait; no source/newWT/Unity or D scope change.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/artifacts/integration-s10/run5.log -Tail 10
 After actual END+PHONEabsence remove only own diag12 and explicitly release D.
+Step 62: F readonly preflight8ecfca00 finds old sky/ground contrast and nonzero
+coat, no saved rawHDR. Root independently checked fast fog pre-tone algebra,
+existing varying is transmittance; extra haze is source-supported. Nonlinear tone
+limits exact final equivalence; future actual Low/Medium proof required.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/artifacts/integration-s10/run5.log -Tail 10
