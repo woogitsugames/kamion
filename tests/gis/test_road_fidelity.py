@@ -82,7 +82,7 @@ def test_ratchet_islands(qa):
 
 
 # which owner targets are already met (hard asserts); the rest xfail until met, then this test fails ("promote")
-MET = {"axis_p95": True, "edge_p95": False, "lane_mismatch": True, "islands_absent": False}
+MET = {"axis_p95": True, "edge_p95": False, "lane_mismatch": True, "islands_absent": True}
 
 
 def _target(name, ok):

@@ -1,0 +1,83 @@
+# ADR 0095: Węzły r2 — szerokość i liczba pasów z ortofoto, farba autorska, linia trasy na rondach
+
+Status: przyjęty (world-builder, junctions-r2), 2026-11-11. Wynika z `docs/reports/visual/REVIEW-2026-11-11-s9-0092-0093.md`
+(sekcja 0093, „Następna runda (ADR 0095)”) oraz z raportu integracji s9 (`artifacts/integration-s9/REPORT.md`, regresja
+swept path). Powiązane: ADR 0074–0077, 0093. Wymaganie właściciela: „drogi dosłownie jak w OSM, żeby mieszkaniec wiedział,
+jak jechać”. Dowody: `artifacts/junctions-r2/`.
+
+## Kontekst
+- Trzy zarzuty P0-L recenzji 0093 (s 1040–1080, n10015785253, rozdział łącznicy E −782 N 77) miały jedną przyczynę:
+  BDOT10k podaje dla Andersa 8,0 m, generator to odrzuca i bierze `lanes` × 3,50 m + 2 × 0,50 m = 11,5 m, wyśrodkowane
+  na linii OSM. Pomiar na ortofoto 0,08 m: jezdnie mają 10,5–11,2 m, a linia OSM biegnie 1,1–1,5 m od osi jezdni w
+  stronę pasa dzielącego (OSM rysuje ją wzdłuż linii pasów). Skutek: pas dzielący „do zera”, 5 rzędów linii tam, gdzie
+  są 3 pasy, latarnie „na pasie”.
+- OSM podaje `lanes=3` na wiadukcie DK8 nad rondem Putry (w490398852, w490398851, w173985169, w23844386). Mozaika WMS
+  0,08 m i arkusz 0,25 m z 2024-05-27 pokazują zgodnie 2 pasy; trzeci „pas” OSM to łącznica z ronda (osobna linia
+  w240542867), którą generator i tak kładzie obok. Pomost był o 3,3 m szerszy od prawdziwego po stronie pasa
+  dzielącego — latarnia „na lewym pasie” z filmu właściciela (E −589 N 19,5) stała na linii prawdziwej bariery.
+- OSM wprowadza łącznice w oś jezdni głównej (węzeł na osi). `align_forks` przesuwał początek łącznicy pod właściwy
+  pas, trzymał przesunięcie 40 m i wygaszał je na 65–100 m, choć sama linia OSM już po 10–40 m biegnie własnym śladem:
+  łącznica do ronda Putry leżała 4–4,8 m za prawdziwym krawężnikiem, łącznica przy E −782 zostawiała pas trawy w
+  miejscu linii ciągłej i P-21.
+- Linia trasy startowej (ADR 0076: środek skrajnego prawego pasa) na rondach biegła przy zewnętrznym krawężniku
+  pierścienia i ścinała wewnętrzny narożnik wyjazdu: 7 czerwonych testów `tests/physics/test_swept_path_gate3`.
+
+## Decyzja
+1. **Przekrój z pomiaru (`lane_edges`)** — nowy klucz `set:` dla jezdni jednokierunkowych: odległości od LEWEJ krawędzi
+   jezdni (w kierunku jazdy) do [początku pasa 1, linii 1|2, …, końca ostatniego pasa]; pierwsza wartość = opaska /
+   ściek, ostatnia = szerokość; ostatni przedział < 2 m = prawa opaska (pobocze za linią krawędziową); `width` obok
+   `lane_edges` = jezdnia szersza niż pasy (pole wyłączone, wyspa). Pasy nie muszą być równe. `lane_layout`,
+   linie przez łaty, trasa, strzałki, UV kolein czytają ten sam układ. `edge_lines: none|left|right|both` — linie
+   krawędziowe faktycznie widoczne (domyślnie przy `lane_edges`: brak; reguła P-7b dla klas A/S/GP bez zmian tam, gdzie
+   nie ma pomiaru). `turn_lanes` — strzałki tam, gdzie OSM ich nie ma.
+2. **Położenie i szerokość jako profil wzdłuż krawędzi**: `center_offset: [a, b]` (liniowo) albo `[[t, m], …]`,
+   `width: [[t, m], …]` (t = 0…1 w kierunku krawędzi). Gdy autorskie położenie stawia koniec gałęzi pod jej pasem
+   (różnica < 0,3 m), `align_forks` nie przesuwa — łącznica idzie śladem z ortofoto, nie śladem „trzymaj 40 m”.
+3. **Jedna powierzchnia dla gałęzi biegnącej krawędź w krawędź** (`network._tie_alongside`): gałąź rozwidlenia, której
+   pasy sumują się do pasów pnia, a krawędź biegnie < 1 m od sąsiedniej przez ≥ 15 m, dostaje `abreast_of` (wspólna
+   wysokość jak dla gałęzi nachodzących, ADR 0076). Bez tego klin przed nosem wyspy miał 0,41 m różnicy profili i był
+   odrzucany (ADR 0093, otwarte #2).
+4. **Farba autorska z ortofoto** (`roads/authored_paint.py`): `painted_line` (P-1, P-1e, P-2, P-2b, P-7a, P-7b, P-12,
+   P-13, P-14; łamana w E/N, wygładzana), `painted_arrow`, `painted_crossing` (P-10 / P-11 po linii przejścia),
+   `paint_clear` (wymazanie farby generatora w wielokącie). Wszystko układane na wygenerowanej nawierzchni; nic nie
+   zbudowane = `overrides_stale`. `paved_gore` dostał `surface:` (kostka).
+5. **P-2a tylko na dojeździe**: na jezdni jednokierunkowej ciągłe linie przed skrzyżowaniem były malowane także 20 m
+   ZA skrzyżowaniem (koniec „a” łańcucha).
+6. **Trasa**: (a) na pierścieniu ronda i na jednokierunkowych ramionach przy nim trasa idzie osią jezdni; oś jest
+   trzymana `RING_HOLD_M` = 12 m od pierścienia i przechodzi w środek prawego pasa na `RING_BLEND_M` = 30 m; narożnik
+   przy pierścieniu zaokrąglany na 2 m zamiast 4–10 m (WORKING_VALUE); (b) trasa jadąca na wprost nie używa pasa
+   tylko do skrętu (`turn:lanes` / `turn_lanes`): przed n10015785253 prawy pas kończy się na wyspie.
+7. **Pasy z pomiaru są prawdą dla fidelity**: `fidelity/run.py` porównuje liczbę pasów z `lane_edges` (z identyfikatorem
+   override'u jako źródłem), gdy istnieje; tag OSM `lanes` zostaje w raporcie.
+8. **Narzędzia pomiaru**: `artifacts/junctions-r2/scripts/xsec.py`, `xbatch.py` — ortofoto „wyprostowane” wzdłuż łańcucha
+   (x = kilometraż, y = odległość poprzeczna, podziałka 1 m, obrys generatora); `sl2en.py` / `en2sl.py` — przeliczenie
+   (s, lat) ↔ E/N po surowej linii OSM; `planview.py --route` rysuje trasę. `fidelity/ortho.py`: dodatkowe katalogi
+   komórek HR (`ORTHO_HR_EXTRA`), bo `Data/raw/refs` jest w worktree tylko do odczytu (dociągnięte 2 komórki GUGiK WMS
+   HighResolution: `artifacts/junctions-r2/ortho_hr/`, manifest z URL / sha256 / licencją — do przeniesienia przez lidera
+   do `Data/raw/refs/gugik-ortho-hr/bialystok-industrial-c/`).
+
+## Override'y (wszystkie z `reason` = pomiar, plik paska w `artifacts/junctions-r2/xsec/`)
+- Andersa, obie jezdnie między s 1100 a rozwidleniem do ronda Putry: 9 krawędzi z `lane_edges` + `center_offset`
+  (10,8–11,2 m; oś 0,7–1,45 m w prawo od linii OSM). Pas dzielący ciągły, 3,5–4,8 m.
+- Zatoka s 1040–1080: w174545870 = kostka 4,9 m (było 4 m asfaltu), wypełnienie między jezdnią a zatoką z kostki,
+  pas krawężnikowy 1,35 × 48,5 m jako `traffic_island`, linia krawędziowa ciągła wzdłuż pasa i przerywana P-7a w obu
+  otwarciach.
+- n10015785253: krawędź 21 m = 2 pasy przelotowe + jezdnia do 11,0 m, wyspa trójkątna z kostki, 3 pola P-21, dwie
+  zebry na pasach skrętu (węzły OSM przejść leżą na liniach wchłoniętych przez łatę), linia ciągła 0,24 m przez
+  skrzyżowanie, gardziel ulicy bocznej 7,3 → 16 m, `turn_lanes` through|through|right na dojeździe.
+- Wiadukt DK8 nad rondem Putry (kier. zach.): 6 krawędzi, 2 pasy 8,0–8,2 m z liniami krawędziowymi; oś do 1,6 m od
+  linii OSM (profil). Łącznica z ronda: szerokość 3,9–5,75 m i położenie profilem; klin asfaltowy przed nosem
+  (`paved_gore`), wyspa z nosem E −781,9 N 76,5, P-21 jodełka przed nosem (`chevron_axis`) i ukośne po stronie
+  łącznicy, linia ciągła i przerywana między łącznicą a jezdnią. Jezdnia 3-pasowa na zachód od węzła: 10,5 m, oś 1,5 m
+  w prawo.
+- Rozwidlenie Andersa → rondo Putry (s 1410–1480): łącznica w606396463 położeniem i szerokością z ortofoto, pasmo P-21
+  po lewej stronie łącznicy (obrys z ADR 0093, wtedy niezbudowany).
+
+## Wynik
+Tabela liczb: sekcja „Liczby” niżej (uzupełniana z `roads_qa.json`, `fidelity_qa.json`, `road_consistency_qa.json`,
+`terrain_walls_qa.json`, `swept_*/summary.json`; logi `artifacts/junctions-r2/logs/`).
+
+LICZBY_PLACEHOLDER
+
+## Otwarte
+OTWARTE_PLACEHOLDER
