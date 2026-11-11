@@ -262,14 +262,17 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key="", inner=True
     (sheet, bars, boards, glass, cloth - the variant the LOD1 row shows) on the front AND on both sides, both faces,
     carried 10 cm clear of the slab on corner posts (the gap shows the sky / the wall behind: the balustrade reads as
     a screen in front of the slab, not as the side of a box); 5 x 4 cm handrail on the three sides.
-    inner: also the faces of the balustrade that look into the balcony (only the two lowest storeys - from the
-    street nobody sees into a balcony above the eye; 6-10 triangles per balcony, the Low tier budget).
+    inner: also the faces only an eye level with the balcony or above it can see - the balustrade faces that look
+    into the balcony, the slab top, the handrail tops, the corner posts (10 cm, hidden behind the slab edge from below).
+    The generator passes it for the two lowest storeys only: 20 instead of 34 triangles per balcony above them (the
+    Low tier draws LOD0 along the route: r1 of ADR 0094 cost +4.6...5.0 % triangles on the block cameras).
     ADR 0081: 14 % glazed in above the balustrade, 18 % with a satellite dish, 30 % with a laundry line (WORKING_VALUE)."""
     d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
     hw = w / 2 + 0.1
     dep = depth - 0.03                               # balustrade line from the wall
     p = a + d * u + nout * ((depth + 0.01) / 2)
-    acc.box(L0, "balcony_slab", v3(p, zf - 0.08), d3 * (hw + 0.04), n3 * ((depth + 0.01) / 2), [0, 0, 0.08], skip=(2,))
+    acc.box(L0, "balcony_slab", v3(p, zf - 0.08), d3 * (hw + 0.04), n3 * ((depth + 0.01) / 2), [0, 0, 0.08],
+            skip=(2,) if inner else (1, 2))
     cu, cv, cw, _ = FA.cell("balf", variant)
     va, vb = cv + BAL_V[0], cv + BAL_V[1]
     z0 = np.array([0, 0, BAL_GAP])
@@ -290,12 +293,13 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key="", inner=True
         _aq(acc, P0 + z0, P1 + z0, P1 + up, P0 + up, [[u0_, va], [u1_, va], [u1_, vb], [u0_, vb]])
         if inner:
             _aq(acc, P1 + z0, P0 + z0, P0 + up, P1 + up, [[u1_, va], [u0_, va], [u0_, vb], [u1_, vb]])
-        # corner post under the screen (front face; the outer side face only on the two lowest storeys)
-        acc.box(L0, "downpipe", so_ - d3 * sg * 0.02 - n3 * 0.02 + [0, 0, BAL_GAP / 2], d3 * 0.02, n3 * 0.02,
-                [0, 0, BAL_GAP / 2], skip=(0, 1, 2, 4 if sg > 0 else 5) + (() if inner else (5 if sg > 0 else 4,)))
+        if inner:           # corner post under the screen (front + outer face)
+            acc.box(L0, "downpipe", so_ - d3 * sg * 0.02 - n3 * 0.02 + [0, 0, BAL_GAP / 2], d3 * 0.02, n3 * 0.02,
+                    [0, 0, BAL_GAP / 2], skip=(0, 1, 2, 4 if sg > 0 else 5))
     # handrail: 5 x 4 cm on the three open sides, 3 cm proud of the infill (top and outer faces only)
     rail = up + [0, 0, 0.01]
-    acc.box(L0, "downpipe", f + n3 * 0.01 + rail, d3 * (hw + 0.03), n3 * 0.025, [0, 0, 0.02], skip=(0, 2, 4, 5))
+    acc.box(L0, "downpipe", f + n3 * 0.01 + rail, d3 * (hw + 0.03), n3 * 0.025, [0, 0, 0.02],
+            skip=(0, 2, 4, 5) if inner else (0, 1, 2, 4, 5))
     for sg in (-1, 1):
         acc.box(L0, "downpipe", w0 + d3 * sg * hw + n3 * dep / 2 + rail, d3 * 0.025, n3 * dep / 2,
                 [0, 0, 0.02], skip=(0, 2, 3, 4 if sg > 0 else 5) + (() if inner else (1,)))
@@ -305,12 +309,13 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key="", inner=True
         g0 = f + up
         gup = np.array([0, 0, 1.45])
         _aq(acc, g0 - d3 * hw, g0 + d3 * hw, g0 + d3 * hw + gup, g0 - d3 * hw + gup, FA.uv_rect("balg", gv))
-        sg_ = FA.swatch_uv("glass_dark")
+        gu, gv_, _, gh = FA.cell("balg", gv)          # sides: the first `dep` metres of the same glazing cell
         for sg in (-1, 1):
             s0, s1 = w0 + up + d3 * sg * hw, w0 + up + d3 * sg * hw + n3 * (depth - 0.03)
+            ua_, ub_ = gu + dep, gu
             if sg < 0:
-                s0, s1 = s1, s0
-            _aq(acc, s0, s1, s1 + gup, s0 + gup, sg_)
+                s0, s1, ua_, ub_ = s1, s0, ub_, ua_
+            _aq(acc, s0, s1, s1 + gup, s0 + gup, [[ua_, gv_], [ub_, gv_], [ub_, gv_ + gh], [ua_, gv_ + gh]])
     else:
         if hfloat(key, "line") < 0.30:          # laundry: cloths hanging from a line under the slab above
             x = -hw + 0.3

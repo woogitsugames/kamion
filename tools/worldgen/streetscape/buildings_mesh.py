@@ -50,10 +50,10 @@ OFFICE_WALLS = ["plaster_light", "plaster_grey", "plaster_beige", "plaster_white
                 "brick_red"]                     # brick 1 in 7 (v3.1 render: two neighbouring brick offices)
 BLOCK_WALLS = ["plaster_cream", "plaster_grey", "plaster_pastel_blue", "plaster_light", "plaster_yellow",
                "plaster_peach", "plaster_sage"]
-# ADR 0094 (review s9 P2-1 "every house white + anthracite roof"): 7 tones instead of 4 (all exist as block / office
-# walls: no new material), white and light grey 2 of 7; roofs: red / brown tile 5 of 7, graphite sheet 2 of 7 (was 2 of 5)
-HOUSE_WALLS = ["plaster_light", "plaster_beige", "plaster_cream", "plaster_grey", "plaster_yellow", "plaster_peach",
-               "plaster_beige"]
+# ADR 0094 (review s9 P2-1 "every house white + anthracite roof"): the same four materials (a fifth tone is one more
+# draw per house chunk and LOD: r1 / r2 of this ADR had 7 tones and +1.0...1.3 % draws on two cameras), beige and cream
+# 4 of 6, white and light grey 2 of 6 (was 2 of 4); roofs: red / brown tile 5 of 7, graphite sheet 2 of 7 (was 2 of 5)
+HOUSE_WALLS = ["plaster_beige", "plaster_cream", "plaster_light", "plaster_grey", "plaster_cream", "plaster_beige"]
 # pitched roofs: ceramic / concrete tile and pressed metal tile sheet (blachodachowka, the commonest re-roofing in
 # Podlasie); shares WORKING_VALUE
 ROOFS_PITCHED = ["roof_tiles_red", "roof_metal_graphite", "roof_tiles_brown", "roof_tiles_red", "roof_tiles_brown",
@@ -1141,13 +1141,14 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 uh += L
         if pitched:
             rmat = hpick(key, ROOFS_PITCHED, "roof")
-            # ADR 0094 (review s9 P1-4): the soffit is boxed in and rendered / painted in the wall colour (the wall
-            # material itself: no new material = no new draw call), not the graphite flashing - under an overcast sky
-            # it read 24-52 sRGB next to a wall of 186. r1 of this ADR tried the white `reveal_plaster`: lighter than
-            # the wall above it (225 vs 204), the corner of the overhang read as a white wedge on the gable.
+            # ADR 0094 (review s9 P1-4): the soffit is grey boarding (`plinth_dark`, albedo 0.20: drawn by every
+            # house chunk already, no new draw call), not the graphite flashing (0.045) - under an overcast sky it read
+            # 24-52 sRGB next to a wall of 186. r1 / r2 of this ADR tried white `reveal_plaster` and the wall material:
+            # the engine lights a face that looks down about as much as a wall, so both came out LIGHTER than the wall
+            # (225 vs 204) and the corner of the overhang read as a white wedge on the gable.
             # fascia / verge board: white boards with a tile roof, sheet flashing in the roof tone with a metal roof
             # (review s9 P2-3 "thick black verge board")
-            eaves = RF.build(acc, roof, poly, rmat, soffit_mat=wall,
+            eaves = RF.build(acc, roof, poly, rmat, soffit_mat="plinth_dark",
                              fascia_mat="hall_flashing" if rmat.startswith("roof_metal") else "reveal_plaster")
             eaves.sort(key=lambda e_: -float(np.hypot(*(e_[1] - e_[0]))))
             for k_, (ea, eb, ze) in enumerate(eaves):             # eaves gutters; downpipes on the two longest
