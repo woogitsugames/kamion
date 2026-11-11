@@ -25,3 +25,6 @@ NASTĘPNY KROK: pipeline czeka na PHONE_RUN przed importem bazowym.
 
 Produkty bazowe zachowane w ignorowanym Data/raw/derived/bialystok-industrial-c/furniture-r1-before. Build wariantu po zmianach w toku (build-after.log), bez Unity. Pipeline rozszerzony o wybieranie snapshotów, aby GIS i generację wykonać podczas blokady telefonu.
 NASTĘPNY KROK: po build-after: python artifacts/furniture-r1/products.py save after; uv run --project tools/worldgen python -m pytest tests/gis -q
+
+Build po zmianach 307.2 s, bez wzrostu błędów spójności dróg (65, identyczne kategorie jak baza). QA stopni 147→135, maksimum 1.087→0.517 m (najgorszy teraz sign_post). 100 lokalnych korekt podpór lamp; najgorsza pozostała rozbieżność w korektach 0.167 m. To relief podparcia, nie pomiar liczby wiszących obiektów. Produkty after zachowane poza gitem.
+NASTĘPNY KROK: uv run --project tools/worldgen python -m pytest tests/gis -q
