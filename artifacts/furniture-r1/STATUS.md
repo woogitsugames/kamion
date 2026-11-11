@@ -119,3 +119,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T23:59:27.9609004+01:00: kolejka heavy nadal pełna; nie uruchomiono dodatkowej pracy. Wrapper porównań arkuszy również używa heavy; nowe logi pojedynczych testów zachowują nazwę pliku i etap. Dopisano uzasadnienie korekty słupków do ADR. NASTĘPNY KROK: odczytać wynik oczekujących testów i generatora.
 
 2026-11-12T00:00:12.6355610+01:00: przegląd kodu potwierdził usunięcie przyczyny gęstych słupków. Otwarte: ukośna góra sztywnego panelu niepotwierdzona zdjęciem, lokalne garby i koszt końców desek do oceny końcowej. Dodano regresję poziomej fazy UV między przęsłami. NASTĘPNY KROK: oczekujące pojedyncze testy, build i rendery; nie ogłaszać PASS wyglądu.
+
+2026-11-12T00:05:23.7840001+01:00: heavy focused after; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
