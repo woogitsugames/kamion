@@ -2,7 +2,7 @@
 # Usage: pwsh artifacts/tint-r2/run-round.ps1 -Round baseline [-Cameras 'a,b,c']
 param([string]$Round = 'baseline', [string]$Cameras = '')
 $ErrorActionPreference = 'Stop'
-while (Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/PHONE_RUN') { Write-Output 'PHONE_RUN present; waiting 60 s'; Start-Sleep 60 }
+while ((Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/PHONE_RUN') -or (Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/GPT_UNITY_HOLD')) { Write-Output 'PHONE_RUN present; waiting 60 s'; Start-Sleep 60 }
 . "$PSScriptRoot/../../scripts/env.ps1"
 $log = Join-Path $LogsDir "tint-r2-round-$Round.log"
 $a = @('-executeMethod','Game.Editor.VisualQA.WorldPbrTintRound.RunBatch','-tintRound',$Round,

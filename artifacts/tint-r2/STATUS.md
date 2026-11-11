@@ -13,3 +13,8 @@ pwsh scripts/import-region.ps1 -Region bialystok-industrial-c ; pwsh artifacts/t
 - r1 values in materials.py: kp_wall 0.37/0.38/0.38, noise_panel_dark 0.039/0.041/0.040; build_world done (derived glbs = r1).
 ## Next
 (after baseline) pwsh artifacts/tint-r2/run-masks.ps1 -Materials 'kp_wall,noise_panel_dark,bridge_concrete,bridge_soffit,bed_soil,container_rust,hedge_thuja,booth_panel,car_paint_white' ; pwsh scripts/import-region.ps1 -Region bialystok-industrial-c ; pwsh artifacts/tint-r2/run-round.ps1 -Round r1
+## Step 3 (done) — baseline round (62 cams x 4 = 248 PNG, artifacts/tint-r2/baseline, not committed: PNGs)
+- Baseline == 0086 after-final in all world ROIs (tool ratio identical to 3 decimals): gate hall/sky 0.935 High-ov, 0.966 Low-ov, High-clear clip 0.815; screen/plinth 0.304 / 0.282.
+- Waited ~70 min on PHONE_RUN + GPT_UNITY_HOLD (respected both).
+## Next
+masks -> import r1 -> round r1 running (chain in background): see artifacts/tint-r2/masks.log, import-r1.log, round-r1.log
