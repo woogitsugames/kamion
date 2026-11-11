@@ -53,7 +53,26 @@ class EdgeSection:
     turn_bwd: list | None
     side_override: dict = field(default_factory=dict)     # {"left"/"right": kind} in OSM edge direction
     center_offset: float = 0.0  # authored: carriageway centre this far LEFT of the OSM way (edge direction), m (ADR 0077)
+    # ADR 0095 (measured on the orthophoto, one-way carriageways only): distances from the LEFT carriageway edge in the
+    # direction of travel to [start of lane 1, lane boundary 1|2, ..., end of the last lane]. lane_edges[0] is the
+    # left edge strip / gutter; lanes need not be equal. In the override a last interval narrower than 2 m is the
+    # right edge strip (shoulder beyond the right edge line): it sets `width`, not a lane.
+    lane_edges: list | None = None
+    center_offset_end: float | None = None   # authored: offset at the END of the edge (linear from center_offset)
+    center_offset_profile: list | None = None  # authored: [[t, offset], ...], t = 0..1 along the edge (ADR 0095)
+    width_profile: list | None = None          # authored: [[t, width], ...] along the edge (ADR 0095); `width` = max
+    edge_lines: str | None = None   # painted edge lines in the direction of travel: none | left | right | both
     provenance: dict = field(default_factory=dict)
+
+    def lane_coord(self, lat, hw, dirn=1):
+        """Lane coordinate across the carriageway (0 = first lane boundary, +1 per lane) for wheel-path weathering
+        and paint UVs; follows the measured lane edges where they exist."""
+        lat = np.asarray(lat, float)
+        if self.lane_edges and self.oneway:
+            x = np.asarray(hw, float) - (float(dirn) or 1.0) * lat
+            le = np.asarray(self.lane_edges, float)
+            return np.interp(x, le, np.arange(len(le), dtype=float))
+        return (lat + np.asarray(hw, float) - self.edge_strip) / max(float(self.lane_w), 2.0)
 
 
 def _v(a, k, default=None):
@@ -251,15 +270,53 @@ def apply_edge_overrides(net: Network, edges, overrides):
             if any(k in st for k in ("lanes", "lane_width", "edge_strip")):
                 sec.width = round(sec.lanes * sec.lane_w + 2 * sec.edge_strip, 3)
                 sec.width_src = f"authored_override:{ov['id']}"
-            if "width" in st:
+            if "width" in st and isinstance(st["width"], (list, tuple)):
+                # ADR 0095: measured width varying along the edge, [[t, w], ...] with t = 0..1 in the edge direction
+                # (a ramp lane that widens beside a painted gore); lane layout keeps using the widest value
+                sec.width_profile = sorted((float(t), float(v)) for t, v in st["width"])
+                sec.width = max(v for _, v in sec.width_profile)
+                sec.lane_w = round((sec.width - 2 * sec.edge_strip) / max(sec.lanes, 1), 3)
+                sec.width_src = f"authored_override:{ov['id']} (profile)"
+            elif "width" in st:
                 # measured carriageway width (orthophoto): lanes keep their count, lane width follows
                 sec.width = float(st["width"])
                 sec.lane_w = round((sec.width - 2 * sec.edge_strip) / max(sec.lanes, 1), 3)
                 sec.width_src = f"authored_override:{ov['id']}"
+            if "lane_edges" in st:
+                # ADR 0095: lanes as measured on the orthophoto (count, widths and edge strip in one list)
+                le = [float(v) for v in st["lane_edges"]]
+                total = le[-1] if le else 0.0
+                if len(le) >= 3 and 0 < le[-1] - le[-2] < 2.0:
+                    le = le[:-1]                    # right edge strip
+                if not sec.oneway or len(le) < 2 or any(b - a < 2.0 for a, b in zip(le, le[1:])) or le[0] < 0:
+                    if ov["id"] not in net.overrides_stale:
+                        net.overrides_stale.append(ov["id"])
+                    sec.provenance["lane_edges_rejected"] = le
+                else:
+                    sec.lane_edges = le
+                    sec.lanes = sec.lanes_fwd = len(le) - 1
+                    sec.edge_strip = le[0]
+                    sec.width = total
+                    sec.lane_w = round((le[-1] - le[0]) / sec.lanes, 3)
+                    sec.width_src = f"authored_override:{ov['id']} (lane_edges, orthophoto)"
+                    if "turn_lanes" not in st and sec.turn_fwd and len(sec.turn_fwd) != sec.lanes:
+                        sec.turn_fwd = None
+            if "edge_lines" in st:
+                sec.edge_lines = str(st["edge_lines"])
+            if "turn_lanes" in st:
+                sec.turn_fwd = [t for t in str(st["turn_lanes"]).split("|")] if st["turn_lanes"] else None
             if "center_offset" in st:
                 # the OSM way is not the carriageway centre here (like OSM placement=*): measured on the orthophoto
-                sec.center_offset = float(st["center_offset"])
-                sec.provenance["center_offset_m"] = sec.center_offset
+                co = st["center_offset"]
+                if isinstance(co, (list, tuple)) and co and isinstance(co[0], (list, tuple)):
+                    prof = sorted((float(t), float(v)) for t, v in co)   # ADR 0095: [[t, offset], ...] along the edge
+                    sec.center_offset_profile = prof
+                    sec.center_offset, sec.center_offset_end = prof[0][1], prof[-1][1]
+                elif isinstance(co, (list, tuple)):     # ADR 0095: [at the start, at the end] of the edge, linear
+                    sec.center_offset, sec.center_offset_end = float(co[0]), float(co[1])
+                else:
+                    sec.center_offset = float(co)
+                sec.provenance["center_offset_m"] = co
             for side in ("left", "right"):
                 if f"side_{side}" in st:
                     sec.side_override[side] = st[f"side_{side}"]
@@ -343,13 +400,25 @@ def prepare_chain(c: Chain, net: Network, sec_index: dict):
         sigma = 1.5
     dense = smooth_open(c.raw, sigma, DENSE) if len(c.raw) > 2 else smooth_open(c.raw, 0, DENSE)
     c.line = Polyline(dense)
-    if any(s.center_offset for s in secs):
+    if any(s.center_offset or s.center_offset_end or s.center_offset_profile for s in secs):
         # authored lateral placement (ADR 0077): shift the carriageway centre off the OSM way, blended over 20 m
         L0 = c.raw_spans[-1][1]
         s0 = c.line.s * (L0 / max(c.line.length, 1e-9))
         k0 = np.clip(np.searchsorted([sp[1] for sp in c.raw_spans], s0, side="left"), 0, len(c.raw_spans) - 1)
-        off = np.array([net.sections[c.raw_spans[i][2]].center_offset * (-1.0 if c.raw_spans[i][3] else 1.0)
-                        for i in k0])
+
+        def _off(i, sr):
+            a0, a1, eid, rv = c.raw_spans[i]
+            sc = net.sections[eid]
+            v0 = sc.center_offset
+            v1 = v0 if sc.center_offset_end is None else sc.center_offset_end
+            t = float(np.clip((sr - a0) / max(a1 - a0, 1e-6), 0.0, 1.0))
+            if rv:
+                t = 1.0 - t
+            if sc.center_offset_profile:
+                pr = sc.center_offset_profile
+                return float(np.interp(t, [q[0] for q in pr], [q[1] for q in pr])) * (-1.0 if rv else 1.0)
+            return (v0 + (v1 - v0) * t) * (-1.0 if rv else 1.0)
+        off = np.array([_off(i, sr) for i, sr in zip(k0, s0)])
         if len(off) > 3 and np.ptp(off) > 0:
             off = smooth_1d(off, 10.0 / DENSE)
         c.meta["center_offset"] = off
@@ -362,6 +431,12 @@ def prepare_chain(c: Chain, net: Network, sec_index: dict):
     rev = np.array([c.raw_spans[i][3] for i in k])
     sl = net.sec_list
     hw = np.array([sl[i].width / 2 for i in c.sec_idx])
+    for i_sp, (a0, a1, eid, rv) in enumerate(c.raw_spans):
+        pr = net.sections[eid].width_profile
+        if pr:
+            m = k == i_sp
+            t = np.clip((s_raw[m] - a0) / max(a1 - a0, 1e-6), 0.0, 1.0)
+            hw[m] = np.interp(1.0 - t if rv else t, [q[0] for q in pr], [q[1] for q in pr]) / 2
     one = np.array([sl[i].oneway for i in c.sec_idx])
     c.dirn = np.where(one, np.where(rev, -1, 1), 0)
     c.bridge = np.array([sl[i].bridge for i in c.sec_idx])
@@ -668,6 +743,37 @@ def _push_abreast(net: Network, ends: dict, c: Chain, e: str, nb: Chain, side: f
             report.append({"node": far_node, "chain": o.id, "dragged_m": round(float(np.hypot(*delta)), 2)})
 
 
+ALONGSIDE_GAP_M = 1.0        # WORKING_VALUE: edges closer than this = one surface (painted separation at most)
+ALONGSIDE_MIN_RUN_M = 15.0   # WORKING_VALUE
+
+
+def _tie_alongside(c: Chain, e: str, nb: Chain, report: list, node: str):
+    """Mark chain c (leaving `node` at end e) as sharing nb's height surface when their edges run within
+    ALONGSIDE_GAP_M of each other for at least ALONGSIDE_MIN_RUN_M (no lateral move)."""
+    if c.meta.get("abreast_of"):
+        return
+    idx = range(len(c.line.s)) if e == "a" else range(len(c.line.s) - 1, -1, -1)
+    run, far = 0.0, 0.0
+    for i in idx:
+        d = float(c.line.s[i]) if e == "a" else float(c.length - c.line.s[i])
+        if d > 250.0:
+            break
+        s_o, lat = nb.line.project(c.line.p[i])
+        if s_o <= 1e-6 or s_o >= nb.length - 1e-6:
+            continue
+        io = nb.idx(s_o)
+        if abs(float(np.dot(nb.line.t[io], c.line.t[i]))) < 0.7 or bool(nb.bridge[io]) != bool(c.bridge[i]):
+            continue
+        if abs(lat) - float(c.hw[i]) - float(nb.hw_at(s_o)) < ALONGSIDE_GAP_M:
+            run += DENSE
+            far = d
+    if run >= ALONGSIDE_MIN_RUN_M:
+        c.meta["abreast_of"] = nb.id
+        c.meta["alongside_m"] = round(run, 1)
+        report.append({"node": node, "chain": c.id, "beside": nb.id, "alongside_run_m": round(run, 1),
+                       "to_m": round(far, 1), "shift_max_m": 0.0})
+
+
 def abreast_forks(net: Network, report: list | None = None):
     """Merges and diverges of one-way carriageways whose lanes do NOT add up (a lane gain / drop at the node: an
     on-ramp joining a carriageway that keeps its lane count, ADR 0076; align_forks handles the ones that add up).
@@ -719,7 +825,15 @@ def abreast_forks(net: Network, report: list | None = None):
             if any(abs(b["ang"]) > FORK_ALIGN_MAX_DEG for b in br):
                 continue
             if sum(b["sec"].lanes for b in br) <= ssec.lanes:
-                continue                                 # lanes add up (align_forks) or fewer: nothing to lay out
+                # lanes add up (align_forks) or fewer: nothing to lay out. ADR 0095: a branch that then runs edge to
+                # edge with its neighbour (a ramp lane beside the main carriageway up to a painted gore) still
+                # shares that neighbour's height surface - tie it like an overlapping branch.
+                br.sort(key=lambda b: -b["lat"])
+                ia = min(range(len(br)), key=lambda i: (abs(br[i]["ang"]), -br[i]["sec"].lanes))
+                for i in range(len(br)):
+                    if i != ia:
+                        _tie_alongside(br[i]["c"], br[i]["e"], br[i + 1]["c"] if i < ia else br[i - 1]["c"], report, node)
+                continue
             if ssec.highway in ABREAST_SKIP_HIGHWAYS:
                 continue                                 # yard lanes / side streets: a Y junction, not a merge lane
             br.sort(key=lambda b: -b["lat"])             # left -> right in the direction of travel

@@ -50,6 +50,8 @@ def _paint_uv1(c, s, lat, kind):
         lw, edge, ring = 3.5, 0.0, False
     hw = np.asarray(c.hw_at(s), float)
     lanec = (lat + hw - edge) / lw if ring else np.abs(lat) / lw
+    if _SECS and getattr(sec, "lane_edges", None):
+        lanec = sec.lane_coord(lat, hw, int(c.dirn[c.idx(sm)]) or 1)
     key = f"{kind}@{c.id}:{sm:.1f}:{float(np.mean(lat)):.1f}".encode()
     age = (zlib.crc32(key) % 1000) / 1000.0 * 0.98
     y = (2.0 if kind.split("-P-2a")[0] in TRANSVERSE else 0.0) + age
@@ -138,6 +140,13 @@ def arrow_glyph(turns: list, long: bool):
 def lane_layout(sec, hw, dirn):
     """Return (centre_line_lat or None, [lane boundary lats], lane centres by travel dir)."""
     lw, e = sec.lane_w, sec.edge_strip
+    le = getattr(sec, "lane_edges", None)
+    if le and sec.oneway:
+        # ADR 0095: measured lane edges, distances from the left edge in the direction of travel
+        d = int(dirn) or 1
+        bounds = [d * (hw - x) for x in le[1:-1]]
+        centres = [d * (hw - 0.5 * (a + b)) for a, b in zip(le, le[1:])]
+        return None, bounds, {"fwd": centres, "bwd": []}
     if sec.oneway:
         bounds = [hw - e - k * lw for k in range(1, sec.lanes)]
         centres = [dirn * (hw - e - (i + 0.5) * lw) for i in range(sec.lanes)]
@@ -149,6 +158,39 @@ def lane_layout(sec, hw, dirn):
     return lat_c, bounds, {"fwd": fwd, "bwd": bwd}
 
 
+def follow_edge(sec, lat, hw_mid, hw_s, dirn):
+    """A lane line of a one-way carriageway keeps its distance from the gutter it was laid out from where the
+    half-width changes (hw_mid at the layout station, hw_s where it is painted)."""
+    sg = (int(dirn) or 1) if getattr(sec, "lane_edges", None) else 1
+    return sg * (hw_s - (hw_mid - sg * lat))
+
+
+def edge_lines(sec, hw, dirn):
+    """[(lat, kind)] of the painted edge lines of a section at half-width hw (scalar or array). Default rule:
+    P-7b on both sides of class A / S / GP roads with an edge strip. `edge_lines` (override, direction of travel)
+    narrows it; a section with measured `lane_edges` paints only what `edge_lines` names (ADR 0095)."""
+    if sec.roundabout:
+        return []
+    el = getattr(sec, "edge_lines", None)
+    le = getattr(sec, "lane_edges", None)
+    d = int(dirn) or 1
+    half = S.LINE_W_WIDE / 2
+    out = []
+    if le and sec.oneway:
+        el = el or "none"
+        if el in ("left", "both"):
+            out.append((d * (hw - (le[0] - half if le[0] >= S.LINE_W_WIDE else le[0] + half)), "P-7b"))
+        if el in ("right", "both"):       # on the right edge strip where there is one, else just inside the edge
+            strip_r = float(sec.width) - le[-1] >= S.LINE_W_WIDE
+            out.append((d * (hw - (le[-1] + half if strip_r else le[-1] - half)), "P-7b"))
+        return out
+    if sec.cls in ("A", "S", "GP") and sec.edge_strip > 0 and el != "none":
+        for sg, name in ((1, "left"), (-1, "right")):       # sg in the travel frame: +1 = travel-left
+            if el in (None, "both", name):
+                out.append(((d if sec.oneway else 1) * sg * (hw - sec.edge_strip + half), "P-7b"))
+    return out
+
+
 def build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
     first = len(buf.parts)
     _build_markings(buf, net, juncs, ctx_points, report)
@@ -157,7 +199,11 @@ def build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
     # draped on the generated surface and belong to no single chain)
     from . import through_lines as TL
     TL.build(buf, net, juncs, report, MARKED, lane_layout)
-    TL.paint_zones(buf, getattr(net, "authored", None) or [], report, net.overrides_applied, net.overrides_stale)
+    from . import authored_paint as AP
+    authored = getattr(net, "authored", None) or []
+    AP.clear_zones(buf, authored, report, net.overrides_applied)        # ADR 0095: erase zones, then authored paint
+    TL.paint_zones(buf, authored, report, net.overrides_applied, net.overrides_stale)
+    AP.paint(buf, authored, report, net.overrides_applied, net.overrides_stale)
 
 
 FRAGMENT_MIN_M = 2.0        # ADR 0093: a line cut by the overlap pass to less than this is removed
@@ -329,8 +375,8 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                     cont.append((sj, sj + S.P2A_MIN_LEN) if end == "a" else (sj - S.P2A_MIN_LEN, sj))
                 for lat in bounds:
                     if sec.oneway:            # one-way lane lines are laid out from the left gutter: follow it
-                        dl = float(lat) - hw
-                        lat = (lambda ss_, dl=dl: c.hw_at(ss_) + dl)
+                        lat = (lambda ss_, l0=float(lat), sec=sec, hw=hw, dirn=dirn:
+                               follow_edge(sec, l0, hw, c.hw_at(ss_), dirn))
                     _segmented(buf, c, sa, sb, lat, S.LINE_W_NARROW, dash, gap, cont, "lane")
                     cnt("P-1 lane line")
                 if lat_c is not None and sec.width >= S.SEGREGATION_MIN_CARRIAGEWAY:
@@ -341,11 +387,10 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                     else:
                         _segmented(buf, c, sa, sb, lat_c, S.LINE_W_NARROW, dash, gap, cont, "centre")
                         cnt("P-1 centre line")
-                if sec.cls in ("A", "S", "GP") and sec.edge_strip > 0 and not sec.roundabout:
-                    for sg in (-1, 1):
-                        strip(buf, c, sa, sb, (lambda ss_, sg=sg, e=sec.edge_strip:
-                                               sg * (c.hw_at(ss_) - e + S.LINE_W_WIDE / 2)), S.LINE_W_WIDE, "P-7b")
-                    cnt("P-7b edge line", 2)
+                for k_e, _ in enumerate(edge_lines(sec, hw, dirn)):
+                    strip(buf, c, sa, sb, (lambda ss_, k_e=k_e, sec=sec, dirn=dirn:
+                                           edge_lines(sec, c.hw_at(ss_), dirn)[k_e][0]), S.LINE_W_WIDE, "P-7b")
+                    cnt("P-7b edge line")
             # arrows from turn:lanes at the downstream end of this section
             for tl, tdir in ((sec.turn_fwd, 1), (sec.turn_bwd, -1)):
                 if not tl:

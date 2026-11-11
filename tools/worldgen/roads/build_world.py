@@ -264,6 +264,8 @@ def cameras(region_id, w):
         tch, nch = c.line.frame(cs)
         trav = 1 if float(np.dot(tch, t)) > 0 else -1
         lat_l = -trav * (hw - sec.edge_strip - sec.lane_w / 2)     # rightmost lane of travel
+        if getattr(sec, "lane_edges", None):
+            lat_l = float(MK.lane_layout(sec, hw, trav)[2]["fwd"][-1])
         q = c.line.offset_point(cs, lat_l)
         zq = float(c.crossfall_z(cs, lat_l))
         return q, zq, t
