@@ -844,3 +844,13 @@ maskA is smoothness, restored by subtraction, no inverse/extra fetch. e0ae8c44
 .003742smoothness, roof0; actualGPU/output stillpending. All427baselinePNG and
 legacy12 exact, unrelatedsourceAST exact; guardedcandidateimport nowrunning.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
+
+Step 75: ROOT viewed all8packedLow pairs and independent High8review34b89b4
+received. High visualnonregressionPASS bounded; no exactnativeGBA/pixelparity.
+Highlocaltails8.21-11.07LSB form3-15pixelcomponents, maxbbox7x4native; no double
+crack/broadAO/wet-ribbon observed. Lowbenefit remains weak (oldROI-.073/-.070,
+missingUV-.035/-.033LSB); fresh/P8exactLow. All16runtime/counters and protected
+2441cached/192raw/source restored. One identicalLowOV4state-only replay permitted
+to verify actualbranch/positiveR before finalreject/costdecision, no newvariant.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
+Then select1dc shipping source/final93x4+EditMode if probevalid andstillweak.
