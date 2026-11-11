@@ -43,6 +43,19 @@ function Render-World([string]$phase) {
         Save-Status "Render $phase $tier $lighting complete: $dir"
     } }
 }
+function Audit-World([string]$phase) {
+    if (Test-Path "$ev/audit-$phase.done") { return }
+    Wait-Phone
+    . "$root/scripts/env.ps1"
+    $log = "$root/$ev/audit-$phase.log"
+    try {
+        $code = Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.Editor.VisualQA.Gate3Audit.Run',
+            '-auditScene','WorldC','-auditOut',"$root/$ev/audit-$phase.json",'-auditCorridorM','40')
+        if ($code -ne 0) { throw "Ground audit $phase failed ($code)" }
+    } finally { Restore-Unity }
+    Set-Content "$ev/audit-$phase.done" 'OK'
+    Save-Status "Ground/UV/material audit $phase complete."
+}
 if (!(Test-Path "$ev/build-before.done")) {
     & uv run --project tools/worldgen python "$ev/source_snapshot.py" baseline
     try {
@@ -59,6 +72,7 @@ if (!(Test-Path 'Data/raw/derived/bialystok-industrial-c/furniture-r1-before')) 
 }
 & uv run --project tools/worldgen python "$ev/products.py" load before
 Import-World 'before'
+Audit-World 'before'
 Render-World 'before'
 if (Test-Path 'Data/raw/derived/bialystok-industrial-c/furniture-r1-after') {
     & uv run --project tools/worldgen python "$ev/products.py" load after
@@ -71,6 +85,7 @@ Copy-Item Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json "$ev
 Copy-Item Data/Regions/bialystok-industrial-c/generated/world_manifest.json "$ev/manifest-after.json"
 Save-Status 'Regenerated ADR0102 world.'
 Import-World 'after'
+Audit-World 'after'
 Render-World 'after'
 if (!(Test-Path "$ev/pytest-after.done")) {
     & uv run --project tools/worldgen python -m pytest tests/gis -q *> "$ev/pytest-after.log"

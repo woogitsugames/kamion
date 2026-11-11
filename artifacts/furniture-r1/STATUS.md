@@ -31,3 +31,6 @@ NASTĘPNY KROK: uv run --project tools/worldgen python -m pytest tests/gis -q
 
 Audyt produktów: 388/388 chronionych prymitywów road_/bridge_/barrier_/marking identycznych bajtowo (POSITION/NORMAL/UV/COLOR/index), protected-geometry.json. Estymator 23 kamer: Low tris -0.3421%…-0.0047%, liczba materiałów bez zmian; to nie draws z Unity. GIS po zmianach trwa; nie uruchamiać drugiej kopii.
 NASTĘPNY KROK: Get-Content artifacts/furniture-r1/pytest-after.log -Tail 10; po pytest-after.done uruchomić pwsh artifacts/furniture-r1/run-validation.ps1
+
+Dodano do zaplanowanej walidacji istniejący Gate3Audit przed/po (Low, korytarz trasy 40 m): kontrola finalnych instancji po wszystkich filtrach usuwania/przesuwania, UV i materiałów. Nie opieramy werdyktu o kontakcie z ziemią wyłącznie na logu wstępnego osadzania.
+NASTĘPNY KROK: po zakończeniu aktywnego GIS wznowić run-validation.ps1
