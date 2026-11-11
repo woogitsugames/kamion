@@ -334,6 +334,17 @@ overrides:
     reason: Same junction, 14 m2 corner leftover on asphalt (orthophoto road fraction 1.0).
     confidence: medium
     verify: Mapillary / owner drive
+  - id: gore-andersa-merge-s1060-plain
+    kind: paved_gore
+    at_en: [-83.7, -342.7]
+    radius_m: 45.0
+    reason: >-
+      Ramp / Andersa merge at s 1060: the generic merge-gore rule painted a 127 m2 P-21 ladder between the main
+      carriageway and the added lane. The 0.08 m orthophoto shows one continuous surface with a single solid line
+      there (artifacts/islands-r10/after5/merge_ortho.jpg vs render artifacts/islands-r10/renders/top_merge.png of
+      2026-11-11), so the gap is plain asphalt without hatching.
+    confidence: high
+    verify: Mapillary / owner drive
   # island_confirmed: generated islands checked by eye on the 0.08 m orthophoto that the fidelity colour classifier
   # takes for road (grey paving / gravel). Read only by tools/worldgen/fidelity (verdict present_authored).
   - id: island-biezenstwa-splitter-confirmed
