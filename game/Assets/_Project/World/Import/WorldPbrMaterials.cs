@@ -40,6 +40,14 @@ namespace Game.World.Import
             s_Tier = EditorTools.Arg("-materialTier", "Medium");
         }
 
+        /// <summary>ADR0086: all authored tint values are linear multipliers. ShaderLab Color properties
+        /// are decoded from sRGB on GPU upload even with SetVector; encode once for storage so the shader
+        /// receives the original linear value. Verified by WorldPbrTintProbe, including HDR ratios > 1.</summary>
+        public static void SetLinearTint(Material material, Vector3 linear)
+        {
+            material.SetColor("_Tint", new Color(linear.x, linear.y, linear.z, 1f).gamma);
+        }
+
         static Dictionary<string, object> Spec()
         {
             if (s_Spec == null)
@@ -167,13 +175,8 @@ namespace Game.World.Import
             if (kind == "modulation_set")
             {
                 scale = 2f; tint = col;
-                // ADR 0081: _Tint is a Color property, Unity linearises what is written here once more (colour ^ 2.2 on
-                // screen). Materials flagged `tint_linear` get the gamma-encoded value, so the shader sees `col`.
-                if (def.Get("tint_linear") is bool tl && tl)
-                {
-                    var g = new Color(col.x, col.y, col.z, 1f).gamma;
-                    tint = new Vector3(g.r, g.g, g.b);
-                }
+                // ADR0081's tint_linear flag is accepted as legacy metadata, but conversion now applies
+                // to every set/path. Already-correct building colours retain their exact GPU values.
             }
             else if (set != null && set.Get("albedo") is Dictionary<string, object> alb && alb.Get("mean_rgb_linear") is List<object> mean)
             {
@@ -184,7 +187,7 @@ namespace Game.World.Import
                 float t = Mathf.Clamp(lc / Mathf.Max(lm, 1e-3f), 0.4f, 2.5f);
                 tint = new Vector3(t, t, t);
             }
-            mat.SetVector("_Tint", new Vector4(tint.x, tint.y, tint.z, 1f));
+            SetLinearTint(mat, tint);
             mat.SetFloat("_AlbedoScale", scale);
             mat.SetFloat("_NormalStrength", 1f);
             mat.SetFloat("_SmoothnessScale", 1f);
@@ -366,7 +369,7 @@ namespace Game.World.Import
                 {
                     mat.EnableKeyword("_DECAL_ALPHA");
                     mat.SetFloat("_DecalAlpha", 0.85f);
-                    mat.SetVector("_Tint", Vector4.one);
+                    SetLinearTint(mat, Vector3.one);
                     SetBlend(mat, true);
                     mat.renderQueue = (int)RenderQueue.Geometry + 20;
                 }
@@ -379,7 +382,7 @@ namespace Game.World.Import
                 {
                     // road markings (ADR 0049): paint film over the road's own asphalt set (calibrated, tint 1)
                     mat.EnableKeyword("_DECAL_PAINT");
-                    mat.SetVector("_Tint", Vector4.one);
+                    SetLinearTint(mat, Vector3.one);
                     float rough = def.Get("rough") != null ? (float)Num(def.Get("rough")) : 0.65f;
                     mat.SetVector("_PaintColor", new Vector4(col.x, col.y, col.z, Mathf.Clamp01(1f - rough)));
                     float P(string k, float d) => pd.Get(k) != null ? (float)Num(pd.Get(k)) : d;
@@ -388,7 +391,7 @@ namespace Game.World.Import
                 else if (id == "decal_tyre")
                 {
                     mat.EnableKeyword("_DECAL_TYRE");
-                    mat.SetVector("_Tint", new Vector4(col.x, col.y, col.z, 1f));
+                    SetLinearTint(mat, col);
                     mat.SetFloat("_DecalAlpha", 0.45f);
                     SetBlend(mat, true);
                     mat.renderQueue = (int)RenderQueue.Geometry + 20;
