@@ -20,3 +20,6 @@
 - Audyt referencji: obejrzano ortofoto/plan Putry; 33 pliki GML LoD2 nie zawierają namespace Bridge, więc nie są źródłem geometrii spodu (lod2-audit.json).
 - Właściciel potwierdził: pomiar telefonu nadal trwa, czekamy. ADR 0105 i dopisek licencyjny przygotowane; brak startu Unity.
 - NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/build-r2.log -Tail 10
+- Regeneracja r2 PASS (299.6 s). QA drogowe wróciło dokładnie do bazowych 65 przypadków (bez nowych regresji). 8 kęp istniejącego Fab grass-clumps przy przyczółkach.
+- Niezależny audyt GLB Low: 64/64 chunków bazowych zweryfikowane po SHA; suma grup siatka/materiał delta 0. Nie zastępuje to liczników draws z renderu Unity.
+- NASTĘPNY KROK: uv run --project tools/worldgen python -m pytest tests/gis -q

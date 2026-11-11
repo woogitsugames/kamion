@@ -1,0 +1,42 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-industrial-c",
+ "cameras": [
+  {
+   "id": "dk8-under-span",
+   "type": "persp",
+   "kind": "driver_eye",
+   "seat": "file",
+   "fov_deg": 65,
+   "pos": [
+    -549,
+    2,
+    137.0
+   ],
+   "look_at": [
+    -570,
+    26,
+    139.3
+   ],
+   "note": "WORKING_VALUE camera under DK8 Putry, fixed before/after"
+  },
+  {
+   "id": "dk8-bearing",
+   "type": "persp",
+   "kind": "driver_eye",
+   "seat": "file",
+   "fov_deg": 55,
+   "pos": [
+    -565,
+    12,
+    137.0
+   ],
+   "look_at": [
+    -554,
+    18,
+    139.5
+   ],
+   "note": "WORKING_VALUE detail camera; verify framing after first render"
+  }
+ ]
+}
