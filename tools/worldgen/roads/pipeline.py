@@ -9,6 +9,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
+from . import gores as GO
 from . import junctions as J
 from . import meshing as M
 from . import network as Nw
@@ -116,6 +117,10 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     hf = hf or P.load_heightfield(terrain_meta, REPO, origin)
     prof = P.build_profiles(net, hf)
     prof["walled_ramps"] = P.mark_walled_ramps(net, hf)
+    # gaps between carriageways: island only where OSM / the orthophoto says so, otherwise paved (ADR 0077)
+    gore_plan = GO.plan(net, juncs, overrides, origin)
+    net.overrides_applied += gore_plan.overrides_applied
+    net.overrides_stale += gore_plan.overrides_stale
 
     buf = M.MeshBuf()
     stats = {"patch": {}}
@@ -125,8 +130,11 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     for j in juncs:
         M.build_patch(buf, net, j, stats=stats["patch"])
         M.build_patch(buf, net, j, coarse=True)
+    GO.build(buf, net, gore_plan)                                    # paved gores / P-21 (ADR 0077)
     stats["sides_on_carriageway_culled"] = M.cull_sides_on_carriageway(buf)
     w = World(region=region, origin=origin, net=net, junctions=juncs, hf=hf, ctx={"points": pts, "foot": foot},
               buf=buf, profiles=prof, stats=stats)
-    w.stats.update(net_stats)
+    w.stats.update(net_stats)                                        # fork_tapers / fork_shifts (ADR 0074/0076)
+    w.stats["gores"] = GO.report(gore_plan)
+    w.gore_plan = gore_plan
     return w

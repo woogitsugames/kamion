@@ -1,0 +1,82 @@
+"""Gaps between carriageways and authored carriageway placement (ADR 0077).
+
+Reads Data/Regions/<id>/generated/roads_qa.json (roads/build_world.py) and overrides.yaml.
+"""
+from __future__ import annotations
+
+import json
+
+import pytest
+import yaml
+
+from conftest import REGION_DIR
+
+QA = REGION_DIR / "generated" / "roads_qa.json"
+
+
+@pytest.fixture(scope="module")
+def qa():
+    if not QA.exists():
+        pytest.skip("roads_qa.json not built")
+    return json.loads(QA.read_text(encoding="utf-8"))
+
+
+@pytest.fixture(scope="module")
+def overrides():
+    return yaml.safe_load((REGION_DIR / "overrides.yaml").read_text(encoding="utf-8"))["overrides"]
+
+
+def test_gore_stage_reported(qa):
+    g = qa["summary"]["gores"]
+    assert g["rule"]["status"] == "WORKING_VALUE"
+    assert g["gores"], "no paved gores: the stage did not run"
+    assert g["kerb_dropped_m"] > 0
+
+
+def test_every_planned_gore_is_built(qa):
+    """A planned gore has its kerbs dropped; without the fill there would be a hole in the road."""
+    bad = [x for x in qa["summary"]["gores"]["gores"] if not x["built"]]
+    assert not bad, bad
+
+
+def test_authored_gores_applied(qa, overrides):
+    want = {o["id"] for o in overrides if o.get("kind") in ("paved_gore", "traffic_island")}
+    applied = {x["id"] for x in qa["summary"]["overrides_applied"]}
+    assert want <= applied, f"not applied: {sorted(want - applied)}"
+    assert not (want & set(qa["summary"]["overrides_stale"]))
+    built = {x["why"].split(":", 1)[1] for x in qa["summary"]["gores"]["gores"] if x["why"].startswith("override:")}
+    missing = {o["id"] for o in overrides if o.get("kind") == "paved_gore"} - built
+    assert not missing, f"authored paved gores without a fill (rejected for height?): {sorted(missing)}"
+
+
+def test_hatched_gores_are_paint_only(qa, overrides):
+    """Owner 2026-11-10: a painted island is paint only. hatch: true -> P-21 decal parts, never an island."""
+    hatch = {o["id"] for o in overrides if o.get("kind") == "paved_gore" and o.get("hatch")}
+    for x in qa["summary"]["gores"]["gores"]:
+        if x["why"].startswith("override:") and x["why"].split(":", 1)[1] in hatch:
+            assert x["hatch"] and "P-21" in x["note"], x
+
+
+def test_slivers_obey_rule(qa):
+    r = qa["summary"]["gores"]["rule"]
+    for x in qa["summary"]["gores"]["gores"]:
+        if x["why"] == "hole":
+            assert x["area_m2"] < r["min_island_m2"]
+
+
+def test_center_offset_overrides_applied(qa, overrides):
+    want = {o["id"] for o in overrides if "center_offset" in (o.get("set") or {})}
+    assert want, "no placement overrides (MA-010 needs putry-ring-s-placement)"
+    applied = {x["id"] for x in qa["summary"]["overrides_applied"]}
+    assert want <= applied
+    for o in overrides:
+        st = o.get("set") or {}
+        if "center_offset" in st:
+            assert abs(st["center_offset"]) <= 3.5, "larger than a lane: fix the graph, not the placement"
+            assert o.get("reason") and o.get("verify")
+
+
+def test_generated_axis_still_on_osm(qa, pytestconfig):
+    """Authored placement is excluded from the deviation; everything else stays where it was (fork shifts, smoothing)."""
+    d = qa["summary"]["axis_smoothing_deviation_m"]
+    assert d["p95"] <= 0.5, d

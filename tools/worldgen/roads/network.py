@@ -52,6 +52,7 @@ class EdgeSection:
     turn_fwd: list | None
     turn_bwd: list | None
     side_override: dict = field(default_factory=dict)     # {"left"/"right": kind} in OSM edge direction
+    center_offset: float = 0.0  # authored: carriageway centre this far LEFT of the OSM way (edge direction), m (ADR 0077)
     provenance: dict = field(default_factory=dict)
 
 
@@ -250,6 +251,15 @@ def apply_edge_overrides(net: Network, edges, overrides):
             if any(k in st for k in ("lanes", "lane_width", "edge_strip")):
                 sec.width = round(sec.lanes * sec.lane_w + 2 * sec.edge_strip, 3)
                 sec.width_src = f"authored_override:{ov['id']}"
+            if "width" in st:
+                # measured carriageway width (orthophoto): lanes keep their count, lane width follows
+                sec.width = float(st["width"])
+                sec.lane_w = round((sec.width - 2 * sec.edge_strip) / max(sec.lanes, 1), 3)
+                sec.width_src = f"authored_override:{ov['id']}"
+            if "center_offset" in st:
+                # the OSM way is not the carriageway centre here (like OSM placement=*): measured on the orthophoto
+                sec.center_offset = float(st["center_offset"])
+                sec.provenance["center_offset_m"] = sec.center_offset
             for side in ("left", "right"):
                 if f"side_{side}" in st:
                     sec.side_override[side] = st[f"side_{side}"]
@@ -333,6 +343,17 @@ def prepare_chain(c: Chain, net: Network, sec_index: dict):
         sigma = 1.5
     dense = smooth_open(c.raw, sigma, DENSE) if len(c.raw) > 2 else smooth_open(c.raw, 0, DENSE)
     c.line = Polyline(dense)
+    if any(s.center_offset for s in secs):
+        # authored lateral placement (ADR 0077): shift the carriageway centre off the OSM way, blended over 20 m
+        L0 = c.raw_spans[-1][1]
+        s0 = c.line.s * (L0 / max(c.line.length, 1e-9))
+        k0 = np.clip(np.searchsorted([sp[1] for sp in c.raw_spans], s0, side="left"), 0, len(c.raw_spans) - 1)
+        off = np.array([net.sections[c.raw_spans[i][2]].center_offset * (-1.0 if c.raw_spans[i][3] else 1.0)
+                        for i in k0])
+        if len(off) > 3 and np.ptp(off) > 0:
+            off = smooth_1d(off, 10.0 / DENSE)
+        c.meta["center_offset"] = off
+        c.line = Polyline(c.line.p + c.line.n * off[:, None])
     L_raw = c.raw_spans[-1][1]
     s_raw = c.line.s * (L_raw / max(c.line.length, 1e-9))
     k = np.searchsorted([sp[1] for sp in c.raw_spans], s_raw, side="left")

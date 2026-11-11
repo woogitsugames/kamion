@@ -896,7 +896,8 @@ def qa_report(w, mk_report, mask):
             continue
         raw = Polyline(c.raw)
         k = max(1, len(c.line.p) // 200)
-        dev = [abs(raw.project(p)[1]) for p in c.line.p[::k]]
+        ctr = c.line.p if c.meta.get("center_offset") is None or len(c.meta["center_offset"]) != len(c.line.p)             else c.line.p - c.line.n * c.meta["center_offset"][:, None]     # authored placement is not a deviation
+        dev = [abs(raw.project(p)[1]) for p in ctr[::k]]
         dev_all += dev
         secs = [net.sec_list[i] for i in np.unique(c.sec_idx)]
         st = w.profiles["chains"][c.id]
@@ -941,6 +942,7 @@ def qa_report(w, mk_report, mask):
             "fork_abreast": w.stats.get("fork_abreast", []),
             "sides_on_carriageway_culled": w.stats.get("sides_on_carriageway_culled", {}),
             "fork_shifts": w.stats.get("fork_shifts", []),
+            "gores": w.stats.get("gores", {}),
             "overrides_applied": net.overrides_applied, "overrides_stale": net.overrides_stale,
             "low_confidence": [
                 "bridge deck heights interpolated between abutments (NMT = ground under deck); piers by rule",

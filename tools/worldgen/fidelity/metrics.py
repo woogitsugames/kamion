@@ -57,6 +57,10 @@ class Ctx:
         self.net = g.world.net
         self.ox, self.oy = g.origin
         self.route = LineString(route_pts)
+        # islands the 0.08 m orthophoto was inspected for by hand (overrides.yaml kind: island_confirmed, ADR 0077):
+        # paved splitter islands and gravel / barrier strips are grey, the colour classifier takes them for road
+        from roads import pipeline as _pl
+        self.confirmed = [tuple(o["at_en"]) for o in _pl.load_overrides(g.world.region["id"]) if o.get("kind") == "island_confirmed"]
         self.ways = {w["id"]: w for w in osm["ways"]}
         self.chain_of_edge = {}
         for c in self.net.chains:
@@ -104,8 +108,15 @@ def axis_metrics(ctx: Ctx, edges=None):
             pts = c.line.p[sel][::2]
             if not len(pts):
                 continue
+            off = c.meta.get("center_offset")
+            if off is not None:
+                # authored carriageway placement (ADR 0077, orthophoto evidence): the OSM way is reproduced when the
+                # generated centre minus the authored offset lies on it; the offset itself is reported separately
+                pts = (c.line.p - c.line.n * off[:, None])[sel][::2]
             d = np.array([ol.distance(Point(p)) for p in pts])
             out[eid] = stats(d)
+            if off is not None:
+                out[eid]["authored_center_offset_m"] = round(float(np.max(np.abs(off[sel]))), 2)
             # graph geometry vs fresh OSM (same snapshot -> ~0; > 0.05 m means the graph is stale)
             raw = np.array(c.raw)
             k = (np.r_[0, np.cumsum(np.hypot(*np.diff(raw, axis=0).T))] >= s0 - 1e-6) & \
@@ -236,8 +247,26 @@ def window_masks(ctx: Ctx, center, half, res=0.1, yards=None, walk_tris=None):
         if shapes:
             other |= features.rasterize(shapes, out_shape=gm.shape, transform=from_origin(x0, y1, res, res)).astype(bool)
     deck = G.rasterize(ctx.bridge_tris, x0, y1, res, rgb.shape[:2]) if len(ctx.bridge_tris) else np.zeros_like(gm)
-    return {"rgb": rgb, "src": src, "res": res, "x0": x0, "y1": y1, "gen": gm, "ortho": om, "green": green, "deck": deck,
-            "paint": paint, "other": other, "model": model}
+    # roundabout centres (convex hull of the ring carriageway axes): a central island with a sett apron reads as
+    # "road" in the colour classifier, but it is a real island by OSM (junction=roundabout), ADR 0077
+    ring = np.zeros_like(gm)
+    from rasterio import features as _ft
+    from rasterio.transform import from_origin as _fo
+    from shapely.geometry import MultiPoint
+    win = Polygon([(x0, y0), (x1, y0), (x1, y1), (x0, y1)])
+    hulls = [MultiPoint(c.line.p).convex_hull for c in ctx.net.chains if c.roundabout]
+    if hulls:
+        import shapely as _sh
+        rings = [h for h in _parts_of(_sh.union_all([h.buffer(2.0) for h in hulls])) if h.intersects(win)]
+        if rings:
+            ring = _ft.rasterize([(h, 1) for h in rings], out_shape=gm.shape, transform=_fo(x0, y1, res, res)).astype(bool)
+    return {"confirmed": ctx.confirmed,
+            "rgb": rgb, "src": src, "res": res, "x0": x0, "y1": y1, "gen": gm, "ortho": om, "green": green, "deck": deck,
+            "paint": paint, "other": other, "model": model, "ring": ring}
+
+
+def _parts_of(g):
+    return list(getattr(g, "geoms", [g]))
 
 
 def iou(wm, band_m=6.0):
@@ -289,10 +318,23 @@ def separations(wm, close_m=7.0, min_m2=4.0):
         r, c = cpt["rc"]
         half_w = float(ndi.distance_transform_edt(np.pad(m, 1)).max()) * res
         verdict = "absent_on_ortho" if rf >= 0.6 else ("partial" if rf >= 0.3 else "present")
+        # share of the 1.5 m ring around the component that is carriageway: a notch in the outline (kerb-return
+        # concavity closed by the 7 m closing) has road on one side only and is not a separation at all
+        halo = I.dilate(m, 1.5 / res) & ~m
+        enclosed = float(gen[halo].mean()) if halo.any() else 0.0
         if float(wm["deck"][m].mean()) >= 0.4:
             verdict = "under_deck"
+        elif "ring" in wm and float(wm["ring"][m].mean()) >= 0.5:
+            verdict = "roundabout_centre"
+        elif enclosed < 0.7:
+            verdict = "outline_notch"
         elif half_w > 7.5:
             verdict = "enclosed_block"           # a block ringed by roads (yard, roundabout centre), not an island
+        if verdict == "absent_on_ortho":
+            for (ce, cn) in wm.get("confirmed", ()):
+                rr, cc = int((wm["y1"] - cn) / res), int((ce - wm["x0"]) / res)
+                if 0 <= rr < m.shape[0] and 0 <= cc < m.shape[1] and I.dilate(m, 2.0 / res)[rr, cc]:
+                    verdict = "present_authored"
         (bad_m if verdict == "absent_on_ortho" else ok_m)[m] = True
         gen_islands.append({"xy": [wm["x0"] + (c + 0.5) * res, wm["y1"] - (r + 0.5) * res], "area_m2": cpt["area_m2"],
                             "ortho_road_frac": round(rf, 3), "ortho_green_frac": round(gf, 3), "half_width_m": round(half_w, 2),

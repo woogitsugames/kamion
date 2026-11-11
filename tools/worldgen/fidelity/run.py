@@ -105,6 +105,8 @@ def lane_into_island(ctx, gmask, gsep, x0, y1, res, ahead=20.0):
             c = a.chain
             if c.meta.get("absorbed") or a.is_ring():
                 continue
+            if jn.roundabout:
+                continue      # entering a roundabout the lane follows the ring: straight ahead is the central island
             inb = a.inbound_dirn()
             t = jn.trims[ai]
             if t >= a.L - 2:
@@ -450,7 +452,11 @@ def main(argv=None):
         if ol is None or not sp:
             continue
         ss = np.arange(sp[0], sp[1], 1.0)
-        pooled += [ol.distance(Point(p)) for p in c.line.point(ss)]
+        pp = c.line.point(ss)
+        off = c.meta.get("center_offset")
+        if off is not None:        # authored carriageway placement is not an axis error (metrics.axis_metrics)
+            pp = pp - c.line.frame(ss)[1] * np.interp(ss, c.line.s, off)[:, None]
+        pooled += [ol.distance(Point(p)) for p in pp]
     route_ax = Mx.stats(pooled)
     rs = edge_summary(route_edge_all)
     summary = {

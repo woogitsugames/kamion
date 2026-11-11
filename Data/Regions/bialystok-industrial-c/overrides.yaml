@@ -436,3 +436,175 @@ overrides:
       WORKING_VALUE); species from the crown shape (linden / maple); only positions are authored.
     confidence: low
     verify: tree positions on site / orthophoto
+  # ---------------------------------------------------------------- gaps between carriageways (roads/gores.py, ADR 0077)
+  # Rule: a gap between carriageways is a kerbed island only where OSM or the orthophoto shows one. OSM has no
+  # area:highway / traffic_island objects in this tile, so places the GUGiK orthophoto (WMS HighResolution 0.08 m,
+  # cells in Data/raw/refs/gugik-ortho-hr; sheet 0.25 m 2024-05-27) shows as continuous asphalt or as a painted
+  # exclusion zone are listed here. at_en = region-local E/N of a point inside the generated gap; the gap component
+  # within radius_m of it is paved. hatch: true = P-21 paint only (no kerb, no collision obstacle).
+  - id: gore-s610-hatch-north
+    kind: paved_gore
+    at_en: [344.0, -546.0]
+    radius_m: 8.0
+    close_m: 7.0
+    hatch: true
+    reason: >-
+      Junction of the Andersa ramps with the service road at s 610 (j:n1882887385): the orthophoto shows white P-21
+      chevrons on asphalt between the two carriageways, no kerb. Overlay artifacts/islands-r10/before/ramps610.jpg.
+    confidence: high
+    verify: Mapillary / owner drive (paint layout is WORKING_VALUE, 0.5 m stripes, 1.0 m gaps, 45 deg)
+  - id: gore-s610-centre-hatch
+    kind: paved_gore
+    at_en: [346.9, -557.5]
+    radius_m: 7.0
+    close_m: 7.0
+    hatch: true
+    # listed before gore-s610-north-carriageway (radius 45 m): the first override that claims a gap keeps its paint
+    reason: >-
+      Same junction, 32 m2 triangle left between the junction patches in its centre: on the orthophoto the tip of the
+      painted P-21 zone (with U-25 separators), no kerb. Overlay artifacts/islands-r10/after4/ramps610.jpg.
+    confidence: high
+    verify: Mapillary / owner drive
+  - id: gore-s610-north-carriageway
+    kind: paved_gore
+    at_en: [348.5, -539.8]
+    radius_m: 45.0
+    close_m: 7.0
+    reason: >-
+      Same junction, north arm: OSM draws two one-way ways, the orthophoto shows one continuous asphalt surface with
+      cars across the generated 436 m2 island (road fraction 0.77-1.0).
+    confidence: medium
+    verify: Mapillary / owner drive
+  - id: gore-s610-hatch-south
+    kind: paved_gore
+    at_en: [337.5, -574.2]
+    radius_m: 30.0
+    close_m: 7.0
+    hatch: true
+    reason: >-
+      Same junction, south side: the 191 m2 triangle is a painted P-21 exclusion zone on the orthophoto (chevrons,
+      zebra crossing through it), not a kerbed island.
+    confidence: high
+    verify: Mapillary / owner drive
+  - id: gore-s610-corners
+    kind: paved_gore
+    at_en: [353.2, -563.5]
+    radius_m: 8.0
+    close_m: 7.0
+    reason: >-
+      Same junction: 33 m2 leftover between the junction patches, asphalt with a zebra crossing on the orthophoto.
+    confidence: high
+    verify: Mapillary / owner drive
+  - id: gore-s610-corner-e
+    kind: paved_gore
+    at_en: [366.2, -562.1]
+    radius_m: 6.0
+    close_m: 7.0
+    reason: Same junction, 11 m2 corner leftover on asphalt (orthophoto road fraction 1.0).
+    confidence: medium
+    verify: Mapillary / owner drive
+  - id: gore-s610-corner-n
+    kind: paved_gore
+    at_en: [353.8, -555.7]
+    radius_m: 5.0
+    close_m: 7.0
+    reason: Same junction, 10 m2 corner leftover on asphalt (orthophoto road fraction 1.0).
+    confidence: medium
+    verify: Mapillary / owner drive
+  - id: gore-s610-corner-w
+    kind: paved_gore
+    at_en: [336.0, -563.1]
+    radius_m: 6.0
+    close_m: 7.0
+    reason: Same junction, 14 m2 corner leftover on asphalt (orthophoto road fraction 1.0).
+    confidence: medium
+    verify: Mapillary / owner drive
+  - id: gore-andersa-merge-s1060-plain
+    kind: paved_gore
+    at_en: [-83.7, -342.7]
+    radius_m: 45.0
+    reason: >-
+      Ramp / Andersa merge at s 1060: the generic merge-gore rule painted a 127 m2 P-21 ladder between the main
+      carriageway and the added lane. The 0.08 m orthophoto shows one continuous surface with a single solid line
+      there (artifacts/islands-r10/after5/merge_ortho.jpg vs render artifacts/islands-r10/renders/top_merge.png of
+      2026-11-11), so the gap is plain asphalt without hatching.
+    confidence: high
+    verify: Mapillary / owner drive
+  # island_confirmed: generated islands checked by eye on the 0.08 m orthophoto that the fidelity colour classifier
+  # takes for road (grey paving / gravel). Read only by tools/worldgen/fidelity (verdict present_authored).
+  - id: island-biezenstwa-splitter-confirmed
+    kind: island_confirmed
+    at_en: [570.7, -688.2]
+    reason: >-
+      Rondo Biezenstwa, Kwadrat Park arm: kerbed splitter island paved with setts, zebra through it, P-21 chevrons in
+      front of its nose. Orthophoto crop artifacts/islands-r10/after3/biez_split_ortho.jpg.
+    confidence: high
+    verify: owner drive
+  - id: island-putry-n-barrier-strip-confirmed
+    kind: island_confirmed
+    at_en: [-538.0, 130.2]
+    reason: >-
+      DK8 north of Rondo Putry: grass strip with a noise barrier between the carriageway and the service road.
+      Overlay artifacts/islands-r10/after4/dk8.jpg (verdict present at 0.08 m; absent only on the 0.25 m sheet).
+    confidence: high
+    verify: owner drive
+  # ---------------------------------------------------------------- carriageway placement (network.prepare_chain, ADR 0077)
+  # center_offset = carriageway centre this many metres to the LEFT of the OSM way (in the way's travel direction).
+  # OSM draws one line per carriageway but not always on its centre (no placement=* tags in this tile). Values are
+  # measured on the GUGiK orthophoto with tools/worldgen/fidelity/edge_sides.py: (left edge offset - right edge offset)/2
+  # where both kerb lines were detected (medians, n in the reason). Width is NOT changed by these overrides.
+  - id: putry-ring-s-placement
+    target: {edge: "w180144451:2629251364-4075461271"}
+    reason: >-
+      MA-010 (artifacts/map-audit-r9/BUGS.md): the OSM way of this 46 m ring segment of Rondo Putry runs along the
+      real SOUTH kerb, so the symmetric 7 m carriageway put its right lane on the real grass triangle and left the
+      real left lane out. Orthophoto 0.08 m (artifacts/islands-r10/after3/ma010_chains.jpg): south kerb ~0.6 m right
+      of the way, two lanes to the left of it -> centre 2.9 m left.
+    confidence: medium
+    verify: Mapillary 987194858750300 / owner drive
+    set: {center_offset: 2.9}
+  - id: lacznica-biezenstwa-placement
+    target: {edge: "w177861600:1882953899-4391371827"}
+    reason: >-
+      edge_sides: left kerb +1.06 m (n 70, verge-verified 48: +0.98); right -0.52 m (n 81, mostly pavement edge),
+      verge-verified part of the right side +2.32 m (n 24, local widening not reproduced). BDOT10k 6.5 m is clamped;
+      7.5 m with the centre 0.5 m left puts the left kerb on the orthophoto and leaves the right one where it was.
+    confidence: medium
+    verify: orthophoto overlay artifacts/islands-r10/fidelity/overlays/04_s610_ramps.jpg
+    set: {center_offset: 0.5, width: 7.5}
+  - id: andersa-placement-s700-1060
+    target: {edge: "w552161976:3341716402-2367445386"}
+    reason: "edge_sides (chain frame, edge reversed): left +0.46 m (n 93), right -0.60 m (n 93, verge-verified 87: -0.68)."
+    confidence: medium
+    verify: orthophoto overlay 05_s900.jpg
+    set: {center_offset: -0.55}
+  - id: andersa-placement-s1060
+    target: {edge: "w560802658:2367445386-1882690822"}
+    reason: "edge_sides (edge reversed): left +0.62 m (n 21), right -1.32 m (n 28, verge-verified 25)."
+    confidence: medium
+    verify: orthophoto overlay 06_s1060_merge.jpg
+    set: {center_offset: -0.95}
+  - id: andersa-placement-s1100-1270
+    target: {edge: "w249640399:1881569071-131612943"}
+    reason: "edge_sides (edge reversed): left +0.46 m (n 67, verge 20: +0.70), right -1.16 m (n 67, verge 63)."
+    confidence: medium
+    verify: orthophoto overlay 07_s1270.jpg
+    set: {center_offset: -0.8}
+  - id: andersa-placement-s1300-1355
+    target: {edge: "w266084693:10015785253-12620261934"}
+    reason: "edge_sides: left -0.90 m (n 25, verge 21), right +0.68 m (n 28, verge 6: +1.24)."
+    confidence: medium
+    verify: orthophoto overlay 08_signals.jpg
+    set: {center_offset: -0.8}
+  - id: dk8-placement-a
+    target: {edge: "w882366266:2256069816-8205694666"}
+    reason: "edge_sides (edge reversed): left +0.70 m (n 93), right -0.36 m (n 93, verge 36: -0.28)."
+    confidence: low
+    verify: orthophoto overlay 11_dk8.jpg
+    set: {center_offset: -0.5}
+  - id: dk8-placement-b
+    target: {edge: "w238861874:8205694666-2081020082"}
+    reason: "edge_sides (edge reversed): left +0.94 m (n 162, verge 15: +1.02), right -0.20 m (n 164, verge 35)."
+    confidence: low
+    verify: orthophoto overlay 11_dk8.jpg
+    set: {center_offset: -0.55}
