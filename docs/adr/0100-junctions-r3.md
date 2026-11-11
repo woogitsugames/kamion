@@ -72,7 +72,15 @@ plan_*/ = ortofoto | generator, renders_*/ = kamery kontrolne Unity).
 | `pytest tests/gis` | 356 passed, 1 xfailed (r2) | b3: 387 passed / 1 failed (szwy, naprawione); b4: `test_world_roads` 15/15, testy kluczowe 51/51 |
 | swept path G3-A wide / lane, G3-B (min. prześwit opon) | −0,10 / −1,12, −0,14 m | −0,10 / −1,12, −0,14 m (b3, bez zmian); RING-B +1,61 m |
 | `pytest tests/physics tests/gate3` | 47 passed, 1 failed (0082) | 47 passed, 1 failed (ta sama znana `test_generator_reproduces_committed_scenarios`) |
-UNITY_PLACEHOLDER
+| import-region (pamięć świata) | Low 110,0 / High 237,9 MB (r2) | Low 111,5 / High 240,0 MB (b10; markings 2,8 MB, paved 3,2 MB) |
+| PlayMode `WorldCRouteTests|WorldCBarrierTests` | 3/3: 40 t max \|dv\|/krok 0,121 m/s (s 361), solo 0,080 | 3/3 (b8): 0,121 m/s (s 361), solo 0,080 m/s — bez zmian |
+
+Kontrola wizualna: rendery 44 kamer `artifacts/junctions-r3/renders_b6_high/`, `renders_b8_high/` (High overcast),
+`renders_b8_low/` (Low clear), `renders_b10_high/` (stan końcowy), wycinki ≤ 960 px `view_b6/`, `view_b8/`; plany
+ortofoto | generator `plan_b2/`…`plan_b10/`; pola P-21 na ortofoto `zones2/`. Obejrzane: p0_n10015785253_top,
+p0_kerb_merge_top (+ wycinek), r3_e_split_eye/top, top_putry_n, eye_putry_n (High i Low), top_ma010, r3_ma010_eye,
+r2_n100_eye, r3_n100_se_eye, r2_bay_eye, top_merge, r2_kerb_merge_main_eye, p0_kerb_merge_eye, top_s1440,
+r2_fork_link_eye, top_s610.
 
 
 ## Otwarte
