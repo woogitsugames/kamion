@@ -14,3 +14,6 @@
 
 - Step5: fresh D world complete398.3s; verified192/192 rawSHA, zero mismatches, Fab15/fallbackFalse. Own128GLB UV preflight reproduces62.443percent valid-lane vertices on oldroad,100percent newroad; missingUV1 9+162verts per tier. Counts are vertices, not area/pixels or visual quality. PBR still generating; no D production change. props_meta line-ending rewrite normalized, no content delta.
 - NEXT COMMAND: finish baseline-pbr.log, verify.py baseline and final4-map parity; commit preparation proof then freezeD, resumeG FIRST only after explicit ROOT release.
+
+- Step6: D CPU preparation complete: fullPBR560s; final192/192 hashes,0mismatches,Fab15/fallbackFalse. All4 freshly regenerated asphalt-detail maps preserve exact pinned main/E/G hashes. Fab-not-tracked guard3/3 PASS9.16s. No tracked production diff from main901c427f, no Unity/captures/performance claims. BASELINE-READY explicitly preparation-only; G0f5f7b1c and D now frozen under both shared locks. Copying own artifacts to main via /E /XJ, no main source edits/merge/push.
+- NEXT COMMAND: wait explicit ROOT Unity release; FIRST pwsh -ExecutionPolicy Bypass -File artifacts/car-paint-r1/baseline.ps1 -Phase Import in gpt-car-paint. D stays frozen until implementation slot afterG/E.
