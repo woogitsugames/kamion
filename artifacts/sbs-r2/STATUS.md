@@ -25,3 +25,6 @@ Wygenerowano lekki raport z istniejących metryk r1 (bez obliczeń obrazów i be
 
 ## Domknięcie identyfikacji pary
 Drugi przegląd potwierdził zamknięcie trzech blockerów, wskazując dodatkowo potrzebę sprawdzania SHA zdjęcia przy przenoszeniu recenzji oraz obecności wymiaru gradientu. Poprawiono oba przypadki i dodano regresje. Kontrola składni trzech modułów przechodzi. Przygotowano trzy małe nakładki masek do wizualnej kontroli.
+
+## Kontrola masek
+Obejrzano wszystkie trzy nakładki próbek: fiolet oznacza wolne niebo, zielony asfalt. Próbki są małe, bez pojazdów i oznakowania; w drugim renderze fragment asfaltu zawiera cień, co pozostaje ograniczeniem fotometrii, zapisanym w adnotacji. Nie są pomiarem albedo. Logi podglądu przeglądarkowego przeniesiono do artefaktów rundy. Nie pozostawiono aktywnego serwera HTTP ani przeglądarki.
