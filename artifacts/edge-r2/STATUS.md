@@ -31,3 +31,5 @@ Krok 11: QA po budowie potwierdza 31 GML, 36971 poprawnych wysokości i 0 duplik
 Test parsera czeka na heavy. Dodano polecenie ScopeGenerated do tej samej puli: przed renderami odtworzymy uboczne metadane dróg/props i zachowamy wyłącznie pola far-field w world_manifest, zgodnie z własnością dziedzin.
 Następny krok po teście: AuditHeights → ScopeGenerated → test_far_field.py → validate.ps1 -Phase After.
 Krok 12: test parsera po poprawce rzeczywistej jednostki meter: 15/15 w 0,60 s, heavy zwolniony. Następna komenda: pwsh artifacts/edge-r2/heavy.ps1 -Task AuditHeights.
+Krok 13: zapisano własny QA i manifest źródeł nowej siatki; uboczne metadane pozostałych dziedzin pozostają niezatwierdzone do odtworzenia przez ScopeGenerated. Audyt wysokości oczekuje na heavy, nie równoleglimy go z innym Pythonem.
+Następny krok: po potwierdzeniu kodu 0 audytu wykonać ScopeGenerated i sprawdzić diff world_manifest.
