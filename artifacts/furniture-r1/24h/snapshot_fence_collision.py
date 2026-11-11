@@ -31,9 +31,13 @@ for path in sorted((ROOT/'Data/raw/derived/bialystok-industrial-c/world').glob('
             width = components[accessor['type']]*sizes[accessor['componentType']]
             stride = view.get('byteStride',width)
             assert stride >= width
+            digest.update(json.dumps({key:accessor.get(key,False) for key in
+                                      ('type','count','componentType','normalized')},sort_keys=True).encode())
             stream.seek(binary_offset+view.get('byteOffset',0)+accessor.get('byteOffset',0))
             count = accessor['count']
-            data = stream.read((count-1)*stride+width if count else 0)
+            span = (count-1)*stride+width if count else 0
+            data = stream.read(span)
+            assert len(data) == span,'Truncated collision accessor'
             if stride == width:
                 digest.update(data)
             else:
