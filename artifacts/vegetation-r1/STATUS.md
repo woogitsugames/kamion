@@ -74,3 +74,4 @@ Zapisano pary foto after High-clear-photo-1280x720. Następny krok: porównać z
 Zapisano pary foto after High-clear-photo-2048x1152. Następny krok: porównać z photo-references.json.
 Zapisano pary foto after High-clear-photo-2048x1536. Następny krok: porównać z photo-references.json.
 Zdjęcia after zakończone kodem 0. Następny krok: kompletne porównania i testy końca rundy.
+Dodano porównanie koron na tej samej masce pikseli wybranej z baseline, aby przyciemnienie nie zmieniało selekcji próbek. Całe binarne hashe assetów kolizji są niemiarodajne: BakeCollision usuwa i tworzy asset z nowymi identyfikatorami podzasobów (RegionImporter.cs 620-644). Importer kolizji czyta wyłącznie Positions i Indices, bez kolorów B. Wynik surowego hash-check pozostaje w danych jako niepotwierdzający równości geometrii; nie deklarujemy bitowej identyczności assetów. Następny krok: ocena obrazów after i pełne porównanie.

@@ -82,7 +82,7 @@ def main():
                                  for camera, box in ROIS.items() if (folder/(camera.split(':')[0]+".png")).exists()}
             if (folder/"stats.txt").exists():
                 measurements[key]["all_camera_stats"] = stats(folder/"stats.txt")
-            if stage == "after" and (ROOT/"before"/folder.name/"stats.txt").exists():
+            if stage == "after" and (ROOT/"before"/folder.name/"stats.txt").exists() and (folder/"stats.txt").exists():
                 before, after = stats(ROOT/"before"/folder.name/"stats.txt"), stats(folder/"stats.txt")
                 if before.keys() != after.keys():
                     raise ValueError("Camera sets differ: "+folder.name)
