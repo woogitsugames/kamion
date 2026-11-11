@@ -204,3 +204,18 @@ Phone workflow nowsegmentB; allourUnity stopped and bothguards honored. F/G
 workers maypark withoutpolling; rootwill explicitlyresume afterrealphoneend,
 nottransientlockgaps. Root ownsB test-onlyfixf37499de andpendingfullretry.
 NEXT COMMAND: `Get-Content C:/Users/matma/Documents/Claude/kamion/artifacts/integration-s10/gate3.log -Tail 8`; require G3B completion plusstablePHONE_RUN absence, then B EditMode and F/G/E release; G firstbeforeD implementation.
+
+## Step15 - reproducible B inputs and E needle source candidate
+B exactsourcecrop independentlychecked: largest-component mask removesseparate
+whiteUVpadding, actualfilteredtwigclean. No B regression; unfilteredcrop concern
+retracted. Main lacks2newpineCC0rawmaps, so B74fbcd48 packagesignoredsource
+inputs+manifest and safe restore_cc0_inputs.py; own verificationpasses, allinputs
+hashpinned. Main artifacts copied; afterBmerge leader mustrestoreinputsBEFORE
+regeneration toavoidproceduralfallback. No main raw/sourcewrite byroot.
+E sourcepalettemismatch/headROI audits retained. Rootfound official CC0
+fir_tree_01 shortneedle source, downloadedonly2maps, verifiedAPI MD5/size and
+SHA256, inspectedpairedalpha768preview. E artifact-only evaluation canuse
+existingLowalphaatlas withoutnewbatch onlyifactualbatchkey/UV/mips verified.
+Species remains source-namedFir/unverifiedtaxonomy, nevercalledverifiedspruce.
+No E/Bproductionpromotion; phone segmentB stillactive, guardsremain.
+NEXT COMMAND: monitor G3B completion/stablePHONE absence, then rootB fullEditMode and explicit F/G/E release; G beforeD implementation.
