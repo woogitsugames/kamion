@@ -134,3 +134,5 @@ Krok 37c: mierzone wąskie ROI na natywnych płaszczyznach filarów mają Y sd 6
 Krok 37d: pełne dotychczasowe artifacts/landmarks-r1 skopiowano robocopy do głównego repo (kopia pośrednia, brak końcowego REPORT). Zachowano rendery, porażki testów i natywne referencje z metadanymi. Testy po naprawie budżetu wciąż oczekują na slot heavy. Po ich zakończeniu pipeline przejdzie do importu i after-budget; końcowa kopia zostanie powtórzona.
 
 Krok 37e: przygotowano REPORT-DRAFT.md z wyraźnie oznaczonymi oczekującymi wynikami. Nie jest to zamknięcie rundy ani zastępstwo końcowego raportu. NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/budget-fix-wrapper.log -Tail 12
+
+Krok 38: oba pojedyncze pliki remizy przeszły po regeneracji (heavy). Import i pełne 192 porównania w nowym katalogu after-budget, bez nadpisywania wcześniejszych dowodów.
