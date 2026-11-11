@@ -72,3 +72,6 @@ Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/render-pose-probes.ps1
 ## Materiały gotowe do recenzji
 Zapisano migawkę baseline-current/inputs i potwierdzono jej SHA względem zapisów renderowania. Pose QA obejmuje 144 rendery i 16 galerii. Klasy C nie zostały awansowane na podstawie samych metadanych; oryginalny kompas nie rozwiązał wszystkich błędów. Przygotowano REVIEW-MANIFEST.md do niezależnej oceny narzędzia i kandydatów.
 Następny krok: niezależna recenzja, następnie końcowe testy rundy przez pulę heavy.
+## Poprawki po niezależnej recenzji
+Usunięto luki klas A/B/C, walidacji Commons i integralności epoki renderu. Odczyt SHA następuje po Acquire, z kontrolą niezmienności po renderze. Kompozycja odrzuca mieszane światy/materiały/tiery/światło/commity; historyczne rekonstrukcje wymagają jawnego trybu. Testy SBS: 33/33 przez heavy; slot zwolniony. Zachowano 17 C bez awansu. Zapisano recenzję i binarne archiwum migawki baseline, aby konwersja końców linii w gicie nie zmieniała jej pierwotnych SHA.
+Następny krok: uzupełnić narzędzie o kotwice pozy i wykonać końcowy pełny render na zamrożonym HEAD.

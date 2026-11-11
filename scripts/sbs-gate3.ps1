@@ -15,6 +15,7 @@ $slotScript = Join-Path $mainRoot 'scripts/unity-slot.ps1'
 $phoneLock = Join-Path $mainRoot 'artifacts/locks/PHONE_RUN'
 $cameraFile = Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_cameras.json'
 $references = (Get-Content (Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_references.json') -Raw | ConvertFrom-Json).references
+$loadedReferencesHash = (Get-FileHash -LiteralPath (Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_references.json') -Algorithm SHA256).Hash.ToLowerInvariant()
 $output = [IO.Path]::GetFullPath($OutputRoot, $taskRoot)
 function Wait-Phone {
     while (Test-Path -LiteralPath $phoneLock) {
@@ -53,6 +54,11 @@ try {
                     $height = [int]($width * $first.height / $first.width)
                     $ids = ($group.Group.camera -join ',')
                     New-Item -ItemType Directory -Force $renderDir | Out-Null
+                    $captureFile = Join-Path $renderDir "capture-$($group.Name).json"
+
+                    & pwsh -NoProfile -File $slotScript -Acquire -Owner $SlotOwner -PollSeconds 7 -StaleHours 87600
+                    if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
+                    try {
                     $capture = [ordered]@{
                         captured_at_utc = [DateTime]::UtcNow.ToString('o')
                         git_sha = (& git rev-parse HEAD).Trim()
@@ -66,15 +72,25 @@ try {
                         cameras = @($group.Group.camera)
                         status = 'RUNNING'
                     }
-                    $captureFile = Join-Path $renderDir "capture-$($group.Name).json"
-
-                    & pwsh -NoProfile -File $slotScript -Acquire -Owner $SlotOwner -PollSeconds 7 -StaleHours 87600
-                    if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
-                    try {
+                        if ($capture.references_sha256 -ne $loadedReferencesHash) { throw 'Reference grouping changed while waiting; restart SBS' }
                         $capture.captured_at_utc = [DateTime]::UtcNow.ToString('o')
                         $capture | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $captureFile -Encoding utf8
                         & pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene WorldC -Tier $tier -Lighting $light -Width $width -Height $height -Gate3 $cameraFile -Cameras $ids -OutputDir $renderDir
                         if ($LASTEXITCODE -ne 0) { throw "Render failed: $tier $light $($group.Name)" }
+                        $after = [ordered]@{
+                            git_sha = (& git rev-parse HEAD).Trim()
+                            cameras_sha256 = (Get-FileHash -LiteralPath $cameraFile -Algorithm SHA256).Hash.ToLowerInvariant()
+                            references_sha256 = (Get-FileHash -LiteralPath (Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_references.json') -Algorithm SHA256).Hash.ToLowerInvariant()
+                            world_manifest_sha256 = (Get-FileHash -LiteralPath (Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/generated/world_manifest.json') -Algorithm SHA256).Hash.ToLowerInvariant()
+                            materials_spec_sha256 = (Get-FileHash -LiteralPath (Join-Path $taskRoot 'art-source/world/materials/materials_spec.json') -Algorithm SHA256).Hash.ToLowerInvariant()
+                        }
+                        foreach ($key in $after.Keys) {
+                            if ($after[$key] -ne $capture[$key]) {
+                                $capture.status = 'STALE_INPUTS'
+                                $capture | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $captureFile -Encoding utf8
+                                throw "Render inputs changed during capture: $key"
+                            }
+                        }
                         $capture.render_sha256 = @{}
                         foreach ($camera in $group.Group.camera) {
                             $png = Join-Path $renderDir ($camera + '.png')

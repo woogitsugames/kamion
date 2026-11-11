@@ -40,6 +40,30 @@ def save_png(im,path):
     temporary.replace(path)
 
 
+OVERRIDE_FIELDS = {'east_delta_m','north_delta_m','eye_height_m','absolute_u_m','heading_delta_deg',
+    'horizontal_fov_deg','horizon_y_fraction','rectified_horizon_y_fraction','heading_source','pose_status',
+    'note','masks','pose_confidence','pose_reason','photometric_use','photometric_reason','vanishing_lines','horizon_method'}
+
+
+def validate_override(camera_id, ov, *, commons=False):
+    unknown=set(ov)-OVERRIDE_FIELDS
+    if unknown: raise ValueError(f'unknown authored corrections for {camera_id}: {sorted(unknown)}')
+    if ov.get('pose_confidence','C') not in ('A','B','C'):
+        raise ValueError(f'invalid pose_confidence: {camera_id}')
+    if commons and set(ov)&{'rectified_horizon_y_fraction','heading_source'}:
+        raise ValueError('Commons has no rectified horizon or SfM heading source')
+    for key in ('east_delta_m','north_delta_m','absolute_u_m','heading_delta_deg','eye_height_m','horizontal_fov_deg',
+                'horizon_y_fraction','rectified_horizon_y_fraction'):
+        if key in ov and (isinstance(ov[key],bool) or not isinstance(ov[key],(int,float)) or not math.isfinite(ov[key])):
+            raise ValueError(f'invalid finite number for {key}: {camera_id}')
+    if ov.get('eye_height_m',1.7 if commons else 2.2)<=0:
+        raise ValueError(f'invalid eye height: {camera_id}')
+    for key in ('horizon_y_fraction','rectified_horizon_y_fraction'):
+        if key in ov and not 0<ov[key]<1: raise ValueError(f'invalid horizon: {camera_id}')
+    if 'photometric_use' in ov and not isinstance(ov['photometric_use'],bool):
+        raise ValueError('photometric_use must be boolean')
+
+
 def vfov(horizontal, aspect):
     if not (1 < horizontal < 179 and aspect > 0):
         raise ValueError('invalid FOV/aspect')
@@ -251,10 +275,7 @@ def prepare(count=20, radius=40):
                     focal,_,_=rectify(photo,lens,comparison)
                     write(cache_path,{'fingerprint':fingerprint,'focal':focal,'sha256':hashlib.sha256(comparison.read_bytes()).hexdigest()})
             ov = overrides.get(camera_id, {})
-            allowed = {'east_delta_m','north_delta_m','eye_height_m','absolute_u_m','heading_delta_deg',
-                       'horizontal_fov_deg','horizon_y_fraction','rectified_horizon_y_fraction','heading_source','pose_status','note','masks','pose_confidence','pose_reason','photometric_use','photometric_reason','vanishing_lines','horizon_method'}
-            if set(ov)-allowed:
-                raise ValueError(f"unknown authored corrections for {camera_id}: {sorted(set(ov)-allowed)}")
+            validate_override(camera_id,ov)
             confidence = ov.get('pose_confidence', 'C')
             if confidence not in ('A','B','C'):
                 raise ValueError(f'invalid pose_confidence: {camera_id}')
@@ -309,6 +330,7 @@ def prepare(count=20, radius=40):
         if record['license'] not in ('CC0','CC BY 3.0','CC BY 4.0','CC BY-SA 3.0','CC BY-SA 4.0'):
             raise ValueError('unsupported extra reference license')
         camera_id=extra['camera'];ov=overrides.get(camera_id,{})
+        validate_override(camera_id,ov,commons=True)
         confidence=ov.get('pose_confidence','C')
         if confidence not in ('A','B','C'): raise ValueError('invalid extra pose confidence')
         x,y=transform.transform(record['lon'],record['lat'])
@@ -319,6 +341,7 @@ def prepare(count=20, radius=40):
         fov=vfov(ov.get('horizontal_fov_deg',extra['horizontal_fov_deg']),width/height)
         horizon=ov.get('horizon_y_fraction',extra['horizon_y_fraction'])
         if 'vanishing_lines' in ov: horizon=vanishing_horizon(ov['vanishing_lines'])[1]
+        if not (math.isfinite(horizon) and 0<horizon<1 and eye>0): raise ValueError('invalid Commons horizon/eye')
         pitch=math.degrees(math.atan((2*horizon-1)*math.tan(math.radians(fov)/2)))
         segment=next(seg for seg in read(REGION/'gate3_segment.json')['segments'] if seg['id']==extra['segment'])
         line=LineString(segment['points_en']);point=Point(e,n)
@@ -417,20 +440,46 @@ def measurements(im, horizon, authored_masks=None):
             'mask_method':method}
 
 
-def compose(render_dir, outdir, strict=True, include_rejected=False):
-    refs=read(REGION/'sbs_references.json')['references']
+def compose(render_dir, outdir, strict=True, include_rejected=False, historical=False, inputs=None):
+    if inputs is not None and not historical: raise ValueError("custom input snapshots require --historical")
+    input_dir=Path(inputs) if inputs is not None else REGION
+    refs=read(input_dir/'sbs_references.json')['references']
     outdir.mkdir(parents=True,exist_ok=True)
     metrics=[]
     missing=[]
     rejected=[]
     captures=[read(path) for path in render_dir.glob('capture-*.json')]
-    camera_hash=hashlib.sha256((REGION/'sbs_cameras.json').read_bytes()).hexdigest() if (REGION/'sbs_cameras.json').exists() else None
-    reference_hash=hashlib.sha256((REGION/'sbs_references.json').read_bytes()).hexdigest()
+    camera_hash=hashlib.sha256((input_dir/'sbs_cameras.json').read_bytes()).hexdigest() if (input_dir/'sbs_cameras.json').exists() else None
+    reference_hash=hashlib.sha256((input_dir/'sbs_references.json').read_bytes()).hexdigest()
     for capture in captures:
         if capture.get('status')!='OK' or capture.get('cameras_sha256')!=camera_hash or capture.get('references_sha256')!=reference_hash:
             raise ValueError('incomplete or stale render capture; rerender after camera edits')
+    warnings=[]
+    if not captures and not historical: raise ValueError('capture metadata required; use --historical for legacy diagnostics')
+    required=('git_sha','main_sha','world_manifest_sha256','materials_spec_sha256','tier','lighting','width','height')
+    incomplete=[c for c in captures if any(not c.get(k) for k in required)]
+    if incomplete and not historical: raise ValueError('incomplete capture provenance; rerender or use --historical')
+    if incomplete: warnings.append('legacy capture has incomplete provenance')
+    complete=[c for c in captures if c not in incomplete]
+    for key in ('world_manifest_sha256','materials_spec_sha256','tier','lighting','main_sha'):
+        if len({c[key] for c in complete})>1: raise ValueError(f'mixed render captures: {key}')
+    if len({c['git_sha'] for c in complete})>1:
+        if not historical: raise ValueError('mixed render captures: git_sha')
+        warnings.append('different git commits; historical diagnostics only')
+    if complete:
+        world_path=input_dir/'world_manifest.json' if inputs is not None else REGION/'generated/world_manifest.json'
+        material_path=input_dir/'materials_spec.json' if inputs is not None else ROOT/'art-source/world/materials/materials_spec.json'
+        for path,key in ((world_path,'world_manifest_sha256'),(material_path,'materials_spec_sha256')):
+            if not path.exists() or hashlib.sha256(path.read_bytes()).hexdigest()!=complete[0][key]:
+                raise ValueError(f'world/material snapshot mismatch: {key}')
+    capture_ids=[camera for c in captures for camera in c.get('cameras',[])]
+    if len(set(capture_ids))!=len(capture_ids): raise ValueError('duplicate camera capture')
+    if set(capture_ids)-{r['camera'] for r in refs}: raise ValueError('capture contains unknown reference cameras')
+    provenance=('HISTORICAL_UNVERIFIED' if warnings or not captures else 'HISTORICAL_VERIFIED') if historical else 'RECORDED'
     for r in refs:
-        if r.get('pose_confidence','C') == 'C' and not include_rejected:
+        confidence=r.get('pose_confidence','C')
+        if confidence not in ('A','B','C'): raise ValueError(f'invalid pose_confidence: {r["camera"]}')
+        if confidence not in ('A','B') and not include_rejected:
             stale=outdir/(r['camera']+'.png')
             if stale.exists(): stale.unlink()
             rejected.append({'camera':r['camera'], 'reason':r.get('pose_reason','Unreviewed pose')})
@@ -448,6 +497,8 @@ def compose(render_dir, outdir, strict=True, include_rejected=False):
                 raise ValueError(f"photo hash mismatch: {r['camera']}")
             if r.get('comparison_sha256') and hashlib.sha256((ROOT/r.get('comparison_photo',r['photo'])).read_bytes()).hexdigest()!=r['comparison_sha256']:
                 raise ValueError(f"rectified photo hash mismatch: {r['camera']}")
+            if captures and matching[0].get('width') and tuple(dst.size)!=(matching[0]['width'],matching[0]['height']):
+                raise ValueError(f'capture dimensions mismatch: {r["camera"]}')
             if src.width*dst.height != dst.width*src.height:
                 raise ValueError(f"aspect mismatch: {r['camera']}; render at photo aspect ratio")
             left,right=src.convert('RGB'),dst.convert('RGB')
@@ -490,9 +541,8 @@ def compose(render_dir, outdir, strict=True, include_rejected=False):
             d.line(points,fill=color,width=2)
         d.text((24,height+119),'sRGB luma histogram: blue PHOTO / orange RENDER (32 bins, normalized)',fill='white')
         save_png(sheet,outdir/(r['camera']+'.png'))
-    write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'rejected_poses':rejected,'render_captures':captures,'provenance_status':'RECORDED' if captures else 'UNVERIFIED','gate_status':'UNVERIFIED',
-          'cameras_sha256':hashlib.sha256((REGION/'sbs_cameras.json').read_bytes()).hexdigest()
-              if (REGION/'sbs_cameras.json').exists() else None})
+    write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'rejected_poses':rejected,'render_captures':captures,'provenance_status':provenance,'provenance_warnings':warnings,'gate_status':'UNVERIFIED',
+          'cameras_sha256':camera_hash})
     print(f'Composed {len(metrics)} pairs; missing {len(missing)} renders.')
     if strict and missing:
         raise SystemExit(2)
@@ -503,11 +553,11 @@ def main():
     sub=ap.add_subparsers(dest='command',required=True)
     p=sub.add_parser('prepare'); p.add_argument('--count-per-segment',type=int,default=20)
     sub.add_parser('fetch-intrinsics')
-    p=sub.add_parser('compose'); p.add_argument('--renders',type=Path,required=True); p.add_argument('--output',type=Path,required=True); p.add_argument('--include-rejected',action='store_true')
+    p=sub.add_parser('compose'); p.add_argument('--renders',type=Path,required=True); p.add_argument('--output',type=Path,required=True); p.add_argument('--include-rejected',action='store_true'); p.add_argument('--historical',action='store_true'); p.add_argument('--inputs',type=Path)
     args=ap.parse_args()
     if args.command=='prepare': prepare(args.count_per_segment)
     elif args.command=='fetch-intrinsics': fetch_intrinsics()
-    else: compose(args.renders,args.output,include_rejected=args.include_rejected)
+    else: compose(args.renders,args.output,include_rejected=args.include_rejected,historical=args.historical,inputs=args.inputs)
 
 
 if __name__=='__main__':

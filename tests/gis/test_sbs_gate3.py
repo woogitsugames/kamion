@@ -62,11 +62,11 @@ def test_compose_rejects_missing_and_wrong_aspect(tmp_path,monkeypatch):
          'width':40,'height':30,'author':'Example','license':'CC BY-SA 4.0','captured_at':'2020','page_url':'https://www.mapillary.com/'}
     sbs.write(region/'sbs_references.json',{'references':[ref]})
     monkeypatch.setattr(sbs,'ROOT',tmp_path);monkeypatch.setattr(sbs,'REGION',region)
-    with pytest.raises(SystemExit): sbs.compose(renders,tmp_path/'out')
+    with pytest.raises(SystemExit): sbs.compose(renders,tmp_path/'out',historical=True)
     Image.new('RGB',(40,20),'gray').save(renders/'sbs-test.png')
-    with pytest.raises(ValueError,match='aspect mismatch'): sbs.compose(renders,tmp_path/'out')
+    with pytest.raises(ValueError,match='aspect mismatch'): sbs.compose(renders,tmp_path/'out',historical=True)
     Image.new('RGB',(40,30),'gray').save(renders/'sbs-test.png')
-    sbs.compose(renders,tmp_path/'out')
+    sbs.compose(renders,tmp_path/'out',historical=True)
     report=sbs.read(tmp_path/'out/metrics.json')
     assert len(report['pairs'])==1 and not report['missing_renders']
     assert report['gate_status']=='UNVERIFIED'
@@ -133,7 +133,7 @@ def test_compose_quarantines_rejected_and_unreviewed_poses(tmp_path,monkeypatch)
     sbs.write(tmp_path/'sbs_references.json',{'references':[
         {'camera':'bad','pose_confidence':'C','pose_reason':'screen intersection'},
         {'camera':'unreviewed'}]})
-    sbs.compose(tmp_path/'renders',tmp_path/'out')
+    sbs.compose(tmp_path/'renders',tmp_path/'out',historical=True)
     report=sbs.read(tmp_path/'out/metrics.json')
     assert not report['pairs'] and not report['missing_renders']
     assert {r['camera'] for r in report['rejected_poses']}=={'bad','unreviewed'}
@@ -170,7 +170,12 @@ def test_capture_hashes_bind_the_actual_render_pixels(tmp_path,monkeypatch):
     sbs.write(tmp_path/'sbs_cameras.json',{'cameras':[]})
     sbs.write(tmp_path/'sbs_references.json',{'references':[ref]})
     digest=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+    sbs.write(tmp_path/'generated/world_manifest.json',{'world':'fixture'})
+    material=tmp_path/'art-source/world/materials/materials_spec.json'
+    sbs.write(material,{'materials':'fixture'})
     sbs.write(renders/'capture-test.json',{'status':'OK','cameras':['sbs-test'],
+        'git_sha':'a'*40,'main_sha':'b'*40,'tier':'Low','lighting':'overcast','width':40,'height':30,
+        'world_manifest_sha256':digest(tmp_path/'generated/world_manifest.json'),'materials_spec_sha256':digest(material),
         'cameras_sha256':digest(tmp_path/'sbs_cameras.json'),
         'references_sha256':digest(tmp_path/'sbs_references.json'),
         'render_sha256':{'sbs-test':digest(render)}})
@@ -191,3 +196,48 @@ def test_early_route_commons_candidates_keep_licenses_and_uncertainty():
         assert r['pose_confidence']=='C' and not r['photometric_use']
         assert len(r['source_manifest_sha256'])==64
         assert 'no EXIF' in r['assumptions']
+
+
+@pytest.mark.parametrize('value',[None,'','D','a',False])
+def test_compose_rejects_unknown_confidence_even_in_diagnostics(tmp_path,monkeypatch,value):
+    monkeypatch.setattr(sbs,'REGION',tmp_path)
+    sbs.write(tmp_path/'sbs_references.json',{'references':[{'camera':'invalid','pose_confidence':value}]})
+    with pytest.raises(ValueError,match='invalid pose_confidence'):
+        sbs.compose(tmp_path/'renders',tmp_path/'out',historical=True)
+
+
+@pytest.mark.parametrize('override',[{'typo':1},{'eye_height_m':0},{'horizon_y_fraction':1.01},
+                                     {'eye_height_m':float('nan')},{'photometric_use':'false'}])
+def test_both_source_types_validate_authored_corrections(override):
+    for commons in (False,True):
+        with pytest.raises(ValueError):sbs.validate_override('test',override,commons=commons)
+
+
+def test_commons_rejects_unsupported_rectification_and_sfm_options():
+    for override in ({'rectified_horizon_y_fraction':0.5},{'heading_source':'original'}):
+        with pytest.raises(ValueError,match='Commons'):
+            sbs.validate_override('test',override,commons=True)
+
+
+def test_legacy_composition_requires_explicit_historical_mode(tmp_path,monkeypatch):
+    monkeypatch.setattr(sbs,'REGION',tmp_path)
+    sbs.write(tmp_path/'sbs_references.json',{'references':[]})
+    with pytest.raises(ValueError,match='historical'):
+        sbs.compose(tmp_path/'renders',tmp_path/'out')
+
+
+@pytest.mark.parametrize('changed',['tier','lighting','git_sha','world_manifest_sha256','materials_spec_sha256'])
+def test_capture_groups_cannot_mix_epochs_or_render_states(tmp_path,monkeypatch,changed):
+    import hashlib
+    monkeypatch.setattr(sbs,'REGION',tmp_path);monkeypatch.setattr(sbs,'ROOT',tmp_path)
+    sbs.write(tmp_path/'sbs_references.json',{'references':[]});sbs.write(tmp_path/'sbs_cameras.json',{'cameras':[]})
+    world=tmp_path/'generated/world_manifest.json';material=tmp_path/'art-source/world/materials/materials_spec.json'
+    sbs.write(world,{'world':1});sbs.write(material,{'materials':1})
+    sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+    capture={'status':'OK','cameras':[],'git_sha':'a'*40,'main_sha':'b'*40,'tier':'Low','lighting':'overcast','width':40,'height':30,
+             'cameras_sha256':sha(tmp_path/'sbs_cameras.json'),'references_sha256':sha(tmp_path/'sbs_references.json'),
+             'world_manifest_sha256':sha(world),'materials_spec_sha256':sha(material)}
+    renders=tmp_path/'renders';renders.mkdir();sbs.write(renders/'capture-a.json',capture)
+    capture[changed]='different';sbs.write(renders/'capture-b.json',capture)
+    with pytest.raises(ValueError,match='mixed render captures'):
+        sbs.compose(renders,tmp_path/'out')
