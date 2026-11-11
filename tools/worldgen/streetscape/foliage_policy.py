@@ -19,13 +19,15 @@ def crown_opening(position, centre, height, phase):
     return math.cos(2 * angle) > .70 and -.13 < band < .12
 
 
-def leaf_lod_indices(count, seed, share=.40):
+def leaf_lod_indices(count, seed, share=.40, maximum=None):
     """LOD1 reuses the exact LOD0 candidate positions; stable independent seed."""
     if count <= 0:
         return np.zeros(0, dtype=int)
     rng = np.random.default_rng(seed)
-    chosen = np.flatnonzero(rng.random(count) < share)
-    return chosen if len(chosen) else np.array([count // 2], dtype=int)
+    wanted = max(1, int(count * share))
+    if maximum is not None:
+        wanted = max(1, min(wanted, maximum))
+    return np.sort(rng.choice(count, min(wanted, count), replace=False))
 
 
 def metric_patch_field(east, north, scale_m=6.0, salt=17):

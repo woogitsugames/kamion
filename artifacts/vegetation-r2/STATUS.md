@@ -38,3 +38,6 @@
 
 - Baseline59 WorldC_High High-clear: rzeczywista scena profilu, kontrolne+s9Gate3; zastępuje wcześniejszy28kamerowy zestaw. NASTĘPNY KROK: `Get-Content artifacts/vegetation-r2/before/High-clear/stats.txt` oraz pomiar koron.
 
+
+- Krok6: pełny baseline59×4 gotowy (WorldC Low, WorldC_High High, overcast+clear). Dopiero teraz zmieniono shader liści (lokalne rozpraszanie półkulowe, mniej podwójnej okluzji), warunkową obwódkę gruntu8–55cm i sylwetkę istniejących żywopłotów bez nowych materiałów/trójkątów. NASTĘPNY KROK: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` po zatwierdzeniu nowego bake drzew; następnie import i pomiary.
+

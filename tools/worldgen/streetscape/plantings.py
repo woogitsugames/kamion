@@ -79,13 +79,13 @@ SPECIES = {
     # ADR 0060 (review r7 N-4, "red sofa"): the r7 cushion (barrel sides, 0.4 m shoulder, 0.08 m lump per plant) read
     # as a couch of sausages. The photo shows a low band clipped to a straight, slightly battered side and a flat top
     # with a small rounded arris; shoots grow out lighter (copper) above the cut. Lumps 0.015 m, dome 0.05.
-    "berberis_red": dict(tex="berberis", h=HEDGE_H, plant=(0.55, 0.85), bulge=0.025, dome=0.05, gap_p=0.03, sigma=0.5,
+    "berberis_red": dict(tex="berberis", h=HEDGE_H, plant=(0.55, 0.85), bulge=0.025, dome=0.10, gap_p=0.09, sigma=0.5,
                          sprig=0.13, sprig_wh=((0.16, 0.28), (0.10, 0.20)), prof="clipped", band=BAND_M),
-    "privet": dict(tex="privet", h=(1.2, 1.7), plant=(0.45, 0.65), bulge=0.04, dome=0.04, gap_p=0.04, sigma=0.36,
+    "privet": dict(tex="privet", h=(1.2, 1.7), plant=(0.45, 0.65), bulge=0.08, dome=0.12, gap_p=0.10, sigma=0.36,
                    sprig=0.30, sprig_wh=((0.14, 0.24), (0.10, 0.18))),
-    "hornbeam": dict(tex="hornbeam", h=(1.4, 2.0), plant=(0.5, 0.7), bulge=0.04, dome=0.03, gap_p=0.04, sigma=0.38,
+    "hornbeam": dict(tex="hornbeam", h=(1.4, 2.0), plant=(0.5, 0.7), bulge=0.08, dome=0.10, gap_p=0.09, sigma=0.38,
                      sprig=0.34, sprig_wh=((0.16, 0.28), (0.12, 0.22))),
-    "thuja": dict(tex="thuja", h=(1.6, 2.2), plant=(0.6, 0.8), bulge=0.06, dome=0.16, gap_p=0.05, sigma=0.27,
+    "thuja": dict(tex="thuja", h=(1.6, 2.2), plant=(0.6, 0.8), bulge=0.10, dome=0.24, gap_p=0.09, sigma=0.27,
                   sprig=0.40, sprig_wh=((0.12, 0.2), (0.12, 0.2))),
 }
 # cross-sections (inset m, height share, bulge share), foot first

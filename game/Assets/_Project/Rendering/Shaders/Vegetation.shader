@@ -35,9 +35,10 @@ Shader "Kamion/Vegetation"
         _BaseColor ("Color", Color) = (1, 1, 1, 1)
         _Cutoff ("Alpha cutoff", Range(0, 1)) = 0.5
         _Transmission ("Back-lit transmission", Range(0, 1)) = 0.25
+        _AmbientTransmission ("Diffuse canopy transmission", Range(0, 1)) = 0.40
         [NoScaleOffset] _NormalOcc ("Normal XY (RG), sky visibility (B) - impostor / HLOD edge", 2D) = "bump" {}
         _Impostor ("Impostor: x views, y visibility strength (ambient), z visibility strength (sun)", Vector) = (6, 0.6, 0.35, 0)
-        _CrownShade ("Leaf cards: sky occlusion of the lower crown (ambient; ADR 0060)", Range(0, 1)) = 0.5
+        _CrownShade ("Leaf cards: sky occlusion of the lower crown (ambient; ADR 0088)", Range(0, 1)) = 0.25
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 0
         [Toggle] _AlphaToMask ("Alpha to coverage", Float) = 0
     }
@@ -53,6 +54,7 @@ Shader "Kamion/Vegetation"
             half4 _BaseColor;
             half _Cutoff;
             half _Transmission;
+            half _AmbientTransmission;
             half _Cull;
             half _AlphaToMask;
             float4 _Impostor;
@@ -200,7 +202,10 @@ Shader "Kamion/Vegetation"
             // Without it the underside of a crown saw only the ground bounce and fell to black under the overcast toe.
             half3 LeafAmbient(half3 n)
             {
-                half t = _Transmission * _KamionLeafAmbient.x * step(_Cull, 0.5h);   // two-sided = leaf cards / impostors, not bark
+                // Diffuse light arriving through surrounding foliage includes
+                // multiple scattering omitted by the direct-only visibility bake.
+                // Keep this material-local; sky/exposure/global tint stay unchanged.
+                half t = _AmbientTransmission * _KamionLeafAmbient.x * step(_Cull, 0.5h);
                 half3 l0 = half3(unity_SHAr.w, unity_SHAg.w, unity_SHAb.w);
                 half3 l1 = half3(dot(unity_SHAr.xyz, n), dot(unity_SHAg.xyz, n), dot(unity_SHAb.xyz, n));
                 half3 l2 = SHEvalLinearL2(n, unity_SHBr, unity_SHBg, unity_SHBb, unity_SHC);
