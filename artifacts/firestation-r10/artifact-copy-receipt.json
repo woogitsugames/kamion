@@ -3,7 +3,7 @@
   "mode": "robocopy /E /XJ /R:1 /W:1; no MIR",
   "selected_sha256": {
     "REPORT.md": "3712e1997179a96c82d6e49bdf03cff67ef8a864d6170ccdb05a2e477adc3f07",
-    "STATUS.md": "3216a73cbdc4d1581425f32c1400e40be3bab594fddd6109c27e843e14afa47c",
+    "STATUS.md": "4d67938def22ec5720fa797a129bb953e24cdf8d9cebffcdac12cd691293a4ed",
     "REVIEW.md": "0da78a8c72f09bd33e5dd132d4f67df7e3ccc0a156d9239b96adfe8f945d1cc2",
     "SELF-REVIEW.md": "70ec35b251f58e32fcb7fc8fb57aa3e3a342fbbc7e2132474cb155bd9018fbd1",
     "editmode-final.xml": "d616a08cb84e178ba26ce93921d1310c1ebf93305f0e8ab4f1a393195b12a6c0",
@@ -21,7 +21,9 @@
     "C13CameraProbeFeature.cs": "37238e965915213fa73a0600e4c28ce20ebdd8e15066e9a91bcef33732dd42ce",
     "D-GATE-R2-HIGH-REVIEW.md": "d105f1a3557cac5acc7a1639a0e006933174fa497f1e3222a8c3aa0a833f569b",
     "D-BROAD-HIGH-REVIEW.md": "8cd8e4db4a6e96ed84730f0de979479aca91935cf8533213cca414b794614077",
-    "D-broad-high-pairs-960/view-inputs.json": "599f0e0263dc00b3483ed4ceaf0b2d6cc20a47c799bf767e7316e83376792551"
+    "D-broad-high-pairs-960/view-inputs.json": "599f0e0263dc00b3483ed4ceaf0b2d6cc20a47c799bf767e7316e83376792551",
+    "D-LOW-WEAR-PACKING-PREFLIGHT.md": "543a3df72f20fd795b1366b178f8b66190544229ab9f161bfe5c3954752aaada",
+    "D-low-wear-map-inventory.json": "8cb95475708c1a18b37a1a3f65df54ca1568e182ea776629480191573db5a9ca"
   },
   "png_inventory": {
     "before": 160,
@@ -29,7 +31,7 @@
   },
   "cc0_source_packaged": true,
   "main_sources_modified": false,
-  "documentation_extension": "Read-only preflights and independent D gate/BROAD High reviews; production sources unchanged",
+  "documentation_extension": "Read-only preflights/reviews and one D Low packing source plan; no production changes",
   "post_handoff_main_line_endings": {
     "restore_cc0_inputs.py": {
       "original_sha256": "a268c5fe4386c2a33d74ea88f482d8e672f309a6817038e846f50c0b650c2b1f",

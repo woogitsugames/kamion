@@ -1,0 +1,234 @@
+{
+  "source_head": "5cbbd928e1c057e8b11859ea5016a92e673231bd",
+  "scope": "READONLY source/importer/PNG inspection; ASTC storage arithmetic NOT actual GPU/PSS measurement",
+  "current_runtime_tile_m": [
+    4,
+    4,
+    16,
+    1
+  ],
+  "current_spec_scan_tile_m": [
+    4.04,
+    4.04
+  ],
+  "maps": [
+    {
+      "map": "BaseColor",
+      "source": "game/Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_worn/T_asphalt_worn_BaseColor.png",
+      "png_mode": "RGB",
+      "source_dimensions": [
+        1024,
+        1024
+      ],
+      "channel_extrema": [
+        [
+          46,
+          154
+        ],
+        [
+          46,
+          155
+        ],
+        [
+          46,
+          155
+        ]
+      ],
+      "source_sha256": "da5809d643e54300fe93f4befc9a1f65672953955b9b2c1b0ebdd49b4936e849",
+      "importer_signature": "pbr3|False|True|False|False|1024|6x6|1024",
+      "android_effective_dimensions": [
+        1024,
+        1024
+      ],
+      "mips_enabled": true,
+      "mip_count": 11,
+      "alpha_usage_serialized": "0",
+      "astc_block": [
+        6,
+        6
+      ],
+      "full_chain_payload_bytes": 626288,
+      "mip_payload_bytes": [
+        467856,
+        118336,
+        29584,
+        7744,
+        1936,
+        576,
+        144,
+        64,
+        16,
+        16,
+        16
+      ]
+    },
+    {
+      "map": "Normal",
+      "source": "game/Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_worn/T_asphalt_worn_Normal.png",
+      "png_mode": "RGB",
+      "source_dimensions": [
+        1024,
+        1024
+      ],
+      "channel_extrema": [
+        [
+          60,
+          188
+        ],
+        [
+          65,
+          200
+        ],
+        [
+          229,
+          255
+        ]
+      ],
+      "source_sha256": "2b6cba055036806aaeaa0b0123c68251f8c6d02efe98d841cc2348b9197fcd8f",
+      "importer_signature": "pbr3|True|False|False|False|1024|6x6|1024",
+      "android_effective_dimensions": [
+        1024,
+        1024
+      ],
+      "mips_enabled": true,
+      "mip_count": 11,
+      "alpha_usage_serialized": "0",
+      "astc_block": [
+        6,
+        6
+      ],
+      "full_chain_payload_bytes": 626288,
+      "mip_payload_bytes": [
+        467856,
+        118336,
+        29584,
+        7744,
+        1936,
+        576,
+        144,
+        64,
+        16,
+        16,
+        16
+      ]
+    },
+    {
+      "map": "MaskMap",
+      "source": "game/Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_worn/T_asphalt_worn_MaskMap.png",
+      "png_mode": "RGBA",
+      "source_dimensions": [
+        1024,
+        1024
+      ],
+      "channel_extrema": [
+        [
+          0,
+          0
+        ],
+        [
+          111,
+          255
+        ],
+        [
+          255,
+          255
+        ],
+        [
+          0,
+          66
+        ]
+      ],
+      "source_sha256": "f1309027dc74df76e3aaac21c6cf4bfd79a9a4d3fe8451b71352cee128c28fd7",
+      "importer_signature": "pbr3|False|False|False|True|1024|8x8|512",
+      "android_effective_dimensions": [
+        512,
+        512
+      ],
+      "mips_enabled": true,
+      "mip_count": 10,
+      "alpha_usage_serialized": "1",
+      "astc_block": [
+        8,
+        8
+      ],
+      "full_chain_payload_bytes": 87424,
+      "mip_payload_bytes": [
+        65536,
+        16384,
+        4096,
+        1024,
+        256,
+        64,
+        16,
+        16,
+        16,
+        16
+      ]
+    },
+    {
+      "map": "Var",
+      "source": "game/Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_worn/T_asphalt_worn_Var.png",
+      "png_mode": "RGBA",
+      "source_dimensions": [
+        1024,
+        1024
+      ],
+      "channel_extrema": [
+        [
+          2,
+          253
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          255
+        ],
+        [
+          0,
+          255
+        ]
+      ],
+      "source_sha256": "989a92456377031311b377d19a8a4e2bb5e04fbf882a9e6da9c30d92cf186663",
+      "importer_signature": "pbr3|False|False|True|True|1024|8x8|512",
+      "android_effective_dimensions": [
+        512,
+        512
+      ],
+      "mips_enabled": false,
+      "mip_count": 1,
+      "alpha_usage_serialized": "1",
+      "astc_block": [
+        8,
+        8
+      ],
+      "full_chain_payload_bytes": 65536,
+      "mip_payload_bytes": [
+        65536
+      ]
+    }
+  ],
+  "packed_mask_16m_proposals": {
+    "512": {
+      "payload_bytes": 87424,
+      "mips": 10,
+      "metres_per_texel_at_16m": 0.03125
+    },
+    "1024": {
+      "payload_bytes": 349568,
+      "mips": 11,
+      "metres_per_texel_at_16m": 0.015625
+    },
+    "2048": {
+      "payload_bytes": 1398144,
+      "mips": 12,
+      "metres_per_texel_at_16m": 0.0078125
+    }
+  },
+  "replacement_delta_512_to_2048_bytes": 1310720,
+  "additional_unique_packed_2048_bytes": 1398144,
+  "source_photo_exists": true,
+  "source_photo_sha256": "e26237d85c097af9560537c60e6ed6f67ed0090e284398a5d7a7a2bf41889135"
+}
