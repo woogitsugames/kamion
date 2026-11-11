@@ -25,10 +25,10 @@ for path in sorted(Path('Data/raw/derived/bialystok-industrial-c/world').glob('c
         if 'mesh' not in node:
             continue
         name = node.get('name', '')
-        if 'furniture' in name:
-            continue
         for k, primitive in enumerate(doc['meshes'][node['mesh']]['primitives']):
             mat = doc['materials'][primitive['material']]['name']
+            if 'furniture' in name and not (mat.startswith(('barrier', 'noise_')) or mat == 'concrete_wall'):
+                continue
             if mat == 'collision_fence':
                 continue
             digest = hashlib.sha256()

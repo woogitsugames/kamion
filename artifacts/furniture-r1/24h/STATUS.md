@@ -25,3 +25,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T21:45:03.7710219+01:00: dodano dwa przypadki regresji HIL. Na niezmienionym baseline oba zawodzą zgodnie z odtworzonymi problemami (pytest-review-red.log). NASTĘPNY KROK: po baseline zastosować zmianę i potwierdzić zielony wynik.
 
 2026-11-11T21:45:38.4852512+01:00: przygotowano snapshot_geometry.py do porównania payloadów siatek poza meblami i kolizją własnych płotów. Pliki licencjonowane nie są kopiowane do gita; dowód zawiera tylko hashe. NASTĘPNY KROK: uv run --project tools/worldgen python artifacts/furniture-r1/24h/snapshot_geometry.py before po zakończeniu build-before.
+
+2026-11-11T21:46:30.5137718+01:00: izolowany kandydat przeszedł 11 testów mebli (pytest-candidate.log), w tym oba czerwone przypadki HIL. Snapshot obejmuje także materiały barier i ekranów w węźle furniture. NASTĘPNY KROK: import baseline i zastosowanie kandydata produkcyjnie po zakończeniu generatora.
