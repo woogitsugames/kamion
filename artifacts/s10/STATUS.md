@@ -903,3 +903,10 @@ forceLevel and opacityOff false in every condition. Natural target level is 3;
 all source SHA packets agree. Controller records complement, not replace,
 the author's actual GPU target and pose proofs. Saved independent JSON.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 12
+
+Step 81: E review 9f7b0be6 read and accepted: all 20 valid rear-v2 PNGs viewed,
+40 selected pose packets exact, lower-paint PNG luma independently recomputed
+at supplied ray-selected points. Bounded function/blob-fix PASS and realism
+PARTIAL agree with ROOT. This is not an independent re-raycast or GPU constant
+readback. No additional dirt tuning; G proceeds with P2. E standby for its review.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 12
