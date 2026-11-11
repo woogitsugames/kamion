@@ -110,7 +110,7 @@ Tabela liczb: sekcja „Liczby” niżej (uzupełniana z `roads_qa.json`, `fidel
 | swept path G3-A (Bieżeństwa) wide / lane, min. prześwit opon | −1,92 / −2,94 m (integracja s9) | **−0,10 / −1,12 m** (jak baza 10.11: −0,10 / −1,10) |
 | swept path G3-B (Putry) wide / lane | −0,63 / −0,98 m | **−0,14 / −0,14 m** (w tolerancji testu 0,15 m; minimum przy krawężniku łącznicy E −338,8 N −137,1, obejście ronda czyste po `JOINT_PULL`) |
 | `pytest tests/physics tests/gate3` | 40 passed, 8 failed (integracja s9) | 47 passed, 1 failed (`test_generator_reproduces_committed_scenarios`, znana z 0082) |
-| PlayMode `WorldCRouteTests|WorldCBarrierTests` | 3/3 (0093) | 3/3: 40 t max \|dv\|/krok 0,135 m/s (s = 361 m), solo 0,080 m/s, max odchyłka 0,88 m |
+| PlayMode `WorldCRouteTests|WorldCBarrierTests` | 3/3 (0093) | 3/3 (b12): 40 t max \|dv\|/krok 0,121 m/s (s = 361 m), solo 0,080 m/s |
 | EditMode | 209/212 (0093) | 209/212 (3 × `TruckDoorGlassTests`: brak materiałów ciężarówki w `_Generated/Truck` worktree) |
 | import-region | Low 110,0 / High 237,9 MB (integracja) | Low 110,0 / High 237,9 MB |
 
@@ -118,7 +118,8 @@ Kontrola wizualna: `artifacts/junctions-r2/plan_after/*.jpg` (ortofoto | generat
 `renders_b10/` (Medium overcast) i `renders_b10_low/`. Obejrzane obok ortofoto: zatoka (`top_merge`, `r2_bay_eye`),
 n10015785253 (`p0_n10015785253_top`, `r2_n100_eye`), rozdział łącznicy (`p0_kerb_merge_top`, `p0_kerb_merge_eye`,
 `r2_kerb_merge_main_eye`), wiadukt (`p0_lamp_w1101181473_eye`, `p0_lamp_putry_eye`), rozwidlenie (`top_s1440`,
-plan_after) — stan b9; rendery b10 (po ostatniej zmianie łącznicy) nie były już oglądane jeden po drugim.
+plan_after) — stan b9; po ostatnich zmianach (b12) obejrzany arkusz 4 kadrów z góry `view_b12/sheet.jpg`
+(`p0_kerb_merge_top`, `top_s1440`, `top_merge`, `p0_n10015785253_top`); pełny zestaw 39 kamer jest z b10.
 
 ## Otwarte
 Z listy recenzji 0093 zrobiony jest punkt 1 (trzy P0-L) i część punktów 4 i 8; reszta nie została ruszona w tej rundzie.
