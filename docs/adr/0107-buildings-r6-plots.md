@@ -67,13 +67,57 @@ dachu, spadki pulpitów; wszystkie wymiary i udziały działek (marginesy, typy 
 fugi co 2,4 m; dryf dachówki.
 
 ## Liczby (edytor; nic z telefonu)
-LICZBY_TBD
+Rundy: base (świeży import danych main `ff400569`) → r1 → r2 → r3 (= stan końcowy). Dowody `artifacts/buildings-r14/<runda>/`.
+
+| miara | base | r3 |
+|---|---|---|
+| region High: submeshe / mln tris (`chunk_mats.py`) | 4028 / 14,03 | 4028 / 14,05 (+0,2 %) |
+| region Low: submeshe / mln tris | 3009 / 4,497 | 3009 / 4,499 (+0,04 %) |
+| budżet Low, 57 kamer: draws (szac. przed SRP, `budget.py`) | 16695 | 16695 (+0,0 %) |
+| budżet Low, 57 kamer: suma tris | 15256 k | 15297 k (+0,3 %; maks. kamera r10_block_2 +1,6 %) |
+| kamery > 400 draws | 10 | 10 |
+| spód balkonu / ściana, `r10_block_4`, ten sam prostokąt (`underside.py`) High overcast | 42 / 112 sRGB = 0,38 | 71 / 112 = 0,63 |
+| to samo, Low overcast | 0,36 | 0,61 |
+| domy MultiRoof: części dodatkowe dwuspadowe / pulpitowe | 98 domów: wszystkie dwuspadowe | 98 domów: 21 / 125 (89 domów z pulpitem); 0 dziur pokrycia (`roof_scan.py`) |
+| działki | 0 | 97 z 104 grup domów (270 domów), mediana 532 m² |
+| instancje działek | 0 | 4737: 3887 przęseł (siatka 5482 m, panel 2285 m, beton 1041 m, sztachety 555 m), 59 bram, 139 furtek, 275 płyt podjazdu, 165 tuj, 187 krzewów, 25 drzewek |
+
+- Instancje działek **nie wchodzą do `drawsEst`** (liczy tylko MeshRenderery; instancje rysuje `WorldInstances`). Górne
+  oszacowanie kosztu przy domach (`plot_instances.py`, wszystkie prototypy w promieniu 120 m, bez frustum): r1 21
+  prototypów / 38 submeshy → r3 14 prototypów / 17 submeshy na jeden LOD; ~3,4–5,9 tys. trójkątów. Zasięg wg domyślnej
+  reguły importera: LOD0 30 m, cull 120 m × lodBias. Realny koszt rozstrzygnie telefon.
+- Testy: `pytest tests/gis` 421 passed, 1 xfailed, 1 failed — `test_road_fidelity::test_report_not_stale` (raport
+  fidelity nieaktualny względem plików dróg z main; nie dotykane w tym zadaniu). Nowe `test_buildings_r6.py` 13 testów.
+  EditMode 241: 234 passed, 7 failed — `WorldPbrTintTests.LinearTint_ActualWorldShaderGpuReceivesLinear` × 7: kopia
+  shadera testu w `_Generated/TintGammaProbe` nie znajduje `../../Rendering/Shaders/VegetationGround.hlsl` (include
+  względny z ADR 0088 — nie z tej gałęzi; nie sprawdzałem na main).
 
 ## Samokrytyka (docs/06)
-SAMOKRYTYKA_TBD
+- **Bez `visual-critic` i bez telefonu** (zakaz subagentów; A16 robi lider). Oceny wyłącznie moje.
+- **Działki są regułą, nie danymi**: obrysy, typy ogrodzeń, położenie bramy i podjazdu nie pochodzą z EGiB ani ze zdjęć.
+  Z lotu ptaka widać to po prostokątach ustawionych wg domu, nie wg ulicy; 7 grup domów nie dostało działki (ciasno).
+- **Ogrodzenia bez kolizji** — ciężarówka przejedzie przez płot posesji.
+- **Podjazd to płyty-instancje**: na spadku schodkuje (krawędź 4 cm + fartuch), kończy się na śladzie drogi (nie
+  przecina chodnika ani pobocza jako zjazd), nie ma dojścia od furtki do drzwi.
+- **Brak siatki plecionej**: „siatka” używa tekstury panelu zgrzewanego (jedyna tekstura ogrodzeń); zieleń
+  `fence_green` jest jaskrawsza niż RAL 6005 (materiał wspólny, nie zmieniany). Płot betonowy z daleka czyta się
+  prawie biało.
+- **Znikanie**: ogrodzenia giną na 120 m × lodBias (Low: 60 m) — reguła domyślna importera.
+- **Ślady spod parapetów są subtelne** (siła materiału × 0,6 dla tynków bez zmian): z 15 m dwa miękkie wąsy i słaby
+  pas; wąs leży po wewnętrznej stronie krawędzi okna (geometria kolumny pod oknem), nie na osi końca parapetu.
+- **MultiRoof**: przybudówki przy szczycie mają pulpit 4–20° w materiale dachu głównego (dachówka na 5° jest
+  nierealna — powinna być blacha/papa); okap główny nad przybudówką jest przycięty (pole jednowarstwowe).
+- **P2-j częściowo**: zmieniony tylko kolor progu; wysokości stopnia nie ruszałem. **P2-l otwarte**: żółta linia w
+  trawie (`r13_block3_close`) nadal jest; źródła nie znalazłem (nie pochodzi z zabudowy).
+- **P2-n**: dryf tonu dachówki dodany, nie zmierzony liczbą.
 
 ## Otwarte / do decyzji lidera
-OTWARTE_TBD
+- visual-critic + zrzut z A16 (`r10_block_2`, `r10_block_5`, `r10_house_2`); realny koszt instancji działek na Low.
+- EGiB (działki ewidencyjne, otwarte dane GUGiK) jako źródło obrysów zamiast reguły — wymaga pobrania.
+- Kolizja ogrodzeń, zjazd przez chodnik, dojście do drzwi, tekstura siatki plecionej, materiał blachy dla pulpitów.
+- Reguła LOD/cull dla `plot_*` w `InstanceImporter.Policy` (+ lustro `build_world.instance_ends`).
+- P2-l (żółta linia), P2-j (stopień), EditMode `WorldPbrTintTests` (include względny).
+- Po scaleniu: `build_all.py --only facade_far` → `build_world` → `import-region`.
 
 ## Przewidywane konflikty
 - `gpt-furniture-r1` (`streetscape/furniture.py`, meble i ogrodzenia uliczne): `plots.py` nie importuje ani nie zmienia

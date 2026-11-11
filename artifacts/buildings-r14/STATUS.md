@@ -38,3 +38,19 @@ Gałąź `buildings-r6`, worktree `.claude/worktrees/buildings-r6`, z main `ff40
   bez prototypów połówkowych (26 → 19 prototypów), dryf tonu dachówki (P2-n).
 - NASTĘPNY KROK: (build r2 w toku, potem sam `seq.ps1 -Rounds r2`) → obejrzeć `r2/extra/960`, potem
   `uv run --project tools/worldgen python artifacts/buildings-r14/budget.py artifacts/buildings-r14/base/Low-overcast artifacts/buildings-r14/r2/Low-overcast`
+
+## krok 3 — r2, r3 (stan końcowy), testy
+- r2: prototypy 26 → 19, słupki w materiale siatki; kamery pokazały „żagle” na szczycie (wierzchołki pokrycia / podbitki na
+  linii uskoku brały wyższy dach, ściany przybudówek rosły do dachu głównego) → r3: pulpity biorą swój pas pierwsze,
+  połacie liczone własną płaszczyzną, profil ściany czytany wewnątrz przedziałów.
+- r3: budżet Low 57 kamer draws 16695 → 16695 (+0,0 %), tris +0,3 % (maks. r10_block_2 +1,6 %); region High 4028 / 14,05 mln,
+  Low 3009 / 4,499 mln; spód/ściana 0,63 High, 0,61 Low; 97 działek, 4737 instancji, 14 prototypów / 17 submeshy przy domach.
+- pytest gis 421 passed / 1 xfailed / 1 failed (fidelity stale, nie z tej gałęzi); EditMode 241: 234 / 7 failed
+  (`WorldPbrTintTests`, include względny w kopii shadera testu).
+
+## RAPORT KOŃCOWY
+Pełny: `artifacts/buildings-r14/REPORT.md` (liczby przed/po, ścieżki PNG ≤ 960 px, rozliczenie punktów, otwarte, konflikty).
+- NASTĘPNY KROK (lider): visual-critic na `artifacts/buildings-r14/pairs/` + `r3/extra/960/`; scalenie `buildings-r6`, potem
+  `uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only facade_far` →
+  `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` →
+  `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c`
