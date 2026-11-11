@@ -230,3 +230,5 @@ and derived-output provenance hashes. No Fab assets or textures enter tracked ar
 Prepared normal maps remain disabled pending a tangent-capable reviewed mesh
 path. Existing tree leaves remain. Missing licensed files preserve procedural/CC0
 fallback; no licensed download is attempted by the public-clone build.
+
+ADR0088 roślinność r2: bark_pine.png i bark_pine_lower.png oraz sosnowe partie naszych publicznych GLB/impostorów/HLOD korzystają ze skanu Pine Bark (Dimitrios Savva, Poly Haven, CC0; https://polyhaven.com/a/pine_bark). Wejście diffuse2k i SHA256: art-source/world/cc0/cc0_manifest.json, generator weryfikuje hash. Liście i geometria pozostają nasze proceduralne. Fab brzoza/lipa jest wyłącznie zatwierdzonym near override importera, nie wejściem do publicznego bake; linden-branch jest drewnem, nie liśćmi. Mapillary w artifacts/vegetation-r2 służy wyłącznie QA referencyjnemu, nie teksturowaniu ani buildowi.
