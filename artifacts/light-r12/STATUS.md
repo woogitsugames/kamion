@@ -32,3 +32,6 @@
 
 - Step10: actual glass primitive is hero kp_glass_block (GLB POSITION height6.82-8.38m), not generic M_glass; earlier roughness/SkyOcc heuristic excluded it, so discarded. Added explicit shader/importer flag ONLYkp_glass_block (root authorized). Temporary ignored material flag and GPU magenta probe confirmed exact visiblepane scope, probe restored. Toward-light4cm did not cure triangles; test actual-pane normal2cm next. Default remains0, no final glass fix claim. Existing WorldPBR panel offset untouched.
 - NEXT COMMAND: inspect shadow/glass-kp-normal-02; choose bounded actual-material offset only if frame/contact proof passes; bake canonical source policies with Unity.
+
+- Step11: source default candidate now HighFSRsharp0withEXPLICIToverride(mustnotfallbackURPdefault), Highsplits.2/.55 and Med/Highbias.4/.3, map sizes/counts andLowunchanged. PreLUTsky dither off onlypost tiers; finalURPdither retained. Clear-onlywhiteClip.9 shoulder preserves fixed low/midanchors, noEV/toe/Lowchange. Revision98 migrates shippedprofile; bake next to prove actual emptyRq (notonlyoverride). Glasssmalloffset remains diagnostic0default; paneShadowCaster omission rejected+removed.
+- NEXT COMMAND: pwsh -File artifacts/light-r12/bake-policy.ps1; then emptyRq clear ROI proof before fullaftermatrix.
