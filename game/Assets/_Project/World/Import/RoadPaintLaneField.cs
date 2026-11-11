@@ -67,6 +67,13 @@ namespace Game.World.Import
             {
                 if((p.Material!="marking_white"&&p.Material!="marking_yellow")||p.Uv1==null){result.Primitives.Add(p);continue;}
                 int count=p.Positions.Length;var parent=new int[count];for(int i=0;i<count;i++)parent[i]=i;
+                // Exporters may duplicate vertices for normal/UV seams. Grouping metadata only: never weld geometry.
+                var coincident=new Dictionary<(Vector3 Position,float Age),int>();
+                for(int i=0;i<count;i++)
+                {
+                    var key=(p.Positions[i],p.Uv1[i].y);
+                    if(coincident.TryGetValue(key,out int other))Join(parent,other,i);else coincident[key]=i;
+                }
                 for(int j=0;j<p.Indices.Length;j+=3){Join(parent,p.Indices[j],p.Indices[j+1]);Join(parent,p.Indices[j],p.Indices[j+2]);}
                 var groups=new Dictionary<int,List<int>>();for(int j=0;j<p.Indices.Length;j+=3)
                 {int root=Find(parent,p.Indices[j]);if(!groups.TryGetValue(root,out var ts))groups[root]=ts=new List<int>();ts.Add(j);}

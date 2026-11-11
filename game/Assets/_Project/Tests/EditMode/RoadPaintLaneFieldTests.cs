@@ -34,6 +34,11 @@ namespace Game.Tests
         {var p=Paint(existing:true);Assert.That(Transfer(MakeNode(Road()),p,out var stats),Is.SameAs(p));Assert.That(Changed(stats),Is.Zero);}
         [Test] public void UnknownPartRejectsEntireConnectedGlyphIncludingSupportedTriangle()
         {var p=Paint(outside:true);Assert.That(Transfer(MakeNode(Road()),p,out var stats),Is.SameAs(p));Assert.That(Changed(stats),Is.Zero);}
+        [Test] public void SplitVerticesAtSamePositionAndAgeStillRejectWholeGlyph()
+        {
+            var p=MakePrimitive("marking_white",new[]{new Vector3(.1f,.006f,.1f),new Vector3(.9f,.006f,.1f),new Vector3(.1f,.006f,.9f),new Vector3(.9f,.006f,.1f),new Vector3(1.2f,.006f,.9f),new Vector3(.1f,.006f,.9f)},new[]{new Vector2(.5f,.2f),new Vector2(.5f,.2f),new Vector2(.5f,.2f),new Vector2(.5f,.2f),new Vector2(.5f,.2f),new Vector2(.5f,.2f)},new[]{0,1,2,3,4,5});
+            Assert.That(Transfer(MakeNode(Road()),p,out var stats),Is.SameAs(p));Assert.That(Changed(stats),Is.Zero);
+        }
         [Test] public void AmbiguousOverlappingRoadFieldsAreRejected()
         {var p=Paint();Assert.That(Transfer(MakeNode(Road(),Road(.2f)),p,out var stats),Is.SameAs(p));Assert.That(Changed(stats),Is.Zero);}
         [Test] public void OtherRoadHeightCannotSupplyPaintLane()
