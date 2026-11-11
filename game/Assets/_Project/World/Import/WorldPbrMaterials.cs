@@ -48,6 +48,13 @@ namespace Game.World.Import
             material.SetColor("_Tint", new Color(linear.x, linear.y, linear.z, 1f).gamma);
         }
 
+        /// <summary>ADR0089: pearl ratios are linear HDR multipliers. The Color property has the same
+        /// upload decode as Tint; actual GPU readback showed raw 3.2 becoming 12.922 instead of 3.2.</summary>
+        public static void SetLinearPearlTint(Material material, Vector3 linear)
+        {
+            material.SetColor("_PearlTint", new Color(linear.x, linear.y, linear.z, 1f).gamma);
+        }
+
         static Dictionary<string, object> Spec()
         {
             if (s_Spec == null)
@@ -212,8 +219,8 @@ namespace Game.World.Import
                 mat.SetVector("_CarPaint", new Vector4((float)Num(cp[0]), (float)Num(cp[1]), (float)Num(cp[2]), (float)Num(cp[3])));
                 mat.SetVector("_CarFlake", new Vector4(400f, 1f, 0.08f, 0f));   // 2.5 mm cells, gone when a pixel covers a cell; z = flake reflectance above the pigment (WORKING_VALUE)
                 var pt = def.Get("pearl_tint") as List<object>;
-                mat.SetColor("_PearlTint", pt != null && pt.Count >= 3
-                    ? new Color((float)Num(pt[0]), (float)Num(pt[1]), (float)Num(pt[2]), 1f) : Color.white);
+                SetLinearPearlTint(mat, pt != null && pt.Count >= 3
+                    ? new Vector3((float)Num(pt[0]), (float)Num(pt[1]), (float)Num(pt[2])) : Vector3.one);
             }
             mat.SetFloat("_MacroSize", 64f);
             mat.SetFloat("_MacroStrength", kind == "modulation_set" ? 0.06f : 0.16f);
