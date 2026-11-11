@@ -12,10 +12,12 @@ class Buffer:
     def __init__(self):
         self.parts = []
         self.colors = []
+        self.uvs = []
 
     def add(self, layer, mat, V, UV, T, **kwargs):
         self.parts.append((layer, mat, np.asarray(V), np.asarray(T)))
         self.colors.append(kwargs.get('COL'))
+        self.uvs.append(np.asarray(UV))
 
 
 def test_steep_plot_fence_does_not_turn_into_a_metre_high_retaining_wall():
@@ -83,6 +85,19 @@ def test_short_board_steps_do_not_multiply_the_structural_posts():
     posts = next(v for layer,mat,v,t in buf.parts if mat=='fence_green').reshape(-1,8,3)
     assert len(posts) == 5
     assert np.allclose(np.diff(posts[:,:,:2].mean(axis=1)[:,0]),2.5)
+
+
+def test_sloping_mesh_preserves_horizontal_wire_phase_between_bays():
+    buf = Buffer()
+    F.panel_fence(F.Lin(buf,lambda e,n:.4*e),LineString([(0,0),(10,0)]),'fence_green','wire-phase')
+    phases = []
+    for (layer,mat,v,t), uv in zip(buf.parts,buf.uvs):
+        if mat != 'fence_green_mesh':
+            continue
+        phase = uv[:,1]-v[:,2]
+        assert np.allclose(phase,phase[0])
+        phases.append(phase[0])
+    assert phases and np.allclose(np.asarray(phases)-phases[0],np.round(np.asarray(phases)-phases[0]))
 
 
 @pytest.mark.parametrize('code', ['A-7', 'C-12', 'B-20', 'D-1', 'D-6'])
