@@ -5,3 +5,5 @@ Zakres: zewnętrze ciągnika TRAKT i naczepy. Bez scalania do main, pushowania i
 Następny krok: skopiować lokalne zasoby według protokołu, wykonać git lfs checkout i zapisać baseline Low/High.
 
 Krok 2: skopiowano derived, CC0, Megascans i _Generated; robocopy bez błędów, LFS 777/777. Junctiony surowych danych wskazują na main i są używane wyłącznie do odczytu. Kopiowanie Library trwa. Następny krok: pwsh artifacts/truck-r1/baseline.ps1 (każdy start Unity osobno pod slotem gpt-truck).
+
+Krok 3: przygotowano procedurę baseline i ADR 0115. Obejrzano zdjęcia Commons: ciągnik użytkowy oraz lakier z odbiciami otoczenia. Library nadal się kopiuje; Unity jeszcze nie uruchamiano. Następny krok: pwsh artifacts/truck-r1/baseline.ps1.
