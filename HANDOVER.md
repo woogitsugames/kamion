@@ -15,7 +15,8 @@
 | węzły r3 | 0100 | .claude/worktrees/junctions-r3 (gałąź junctions-r3) | artifacts/junctions-r3/STATUS.md | w toku (world-builder) wg recenzji s10-0095 |
 | recenzja 0086 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0086.md | ZROBIONA: kontrakt OK, kalibracja FAIL (hala kp_wall przepalona, ekrany za ciemne); D48: tynk remizy 110/126/145 zostaje |
 | kalibracja r2 | 0101 | .claude/worktrees/tint-r2 (gałąź tint-r2) | artifacts/tint-r2/STATUS.md | w toku (rendering-perf) wg recenzji s10-0086 |
-| zabudowa r5 | 0097 | .claude/worktrees/buildings-r5 (gałąź buildings-r5) | artifacts/buildings-r13/REPORT.md | GOTOWE `93c35222` — visual-critic w toku → potem scalenie |
+| zabudowa r5 | 0097 | .claude/worktrees/buildings-r5 (gałąź buildings-r5) | artifacts/buildings-r13/REPORT.md | SCALONE (recenzja `REVIEW-2026-11-11-s10-0097.md`: PASS, jakość warunkowa; lista r6 P1-e..h); worktree usunięty; regeneracja `artifacts/logs/s10-regen-0097.log` |
+| wydajność Low A16 | 0106 | .claude/worktrees/perf-low-r1 (gałąź perf-low-r1) | artifacts/perf-low-r1/STATUS.md | w toku (rendering-perf); agent SAM używa A16 z PHONE_RUN |
 | GPT B roślinność r2 | 0088 | gpt-vegetation-r2 | — | GPT w toku, brak REPORT |
 | GPT C światło r12 | 0098 | gpt-light-r12 | — | GPT w toku, brak REPORT |
 | GPT 0087 lakier TRAKT | 0087 | gpt-truck-paint | — | GPT w toku |
@@ -27,7 +28,8 @@
 3. Scalanie GPT B 0088 → C 0098 po REPORT.md; 0097 po REPORT.md.
 4. Węzły r3 wg recenzji 0095; Kwadrat r13 po zdjęciach właściciela; raport bramki 3.
 5. **GPT pakiet S10-B** `docs/owner/GPT-TASK-03-S10.md` (5 nowych sesji właściciela, po 1 strumieniu): H 0085 r2 tło (gpt-edge-r2 z argon-edge), I 0102 meble uliczne (gpt-furniture-r1), J 0103 side-by-side bramki 3 (gpt-sbs-gate3), K 0104 kabina/lusterka (gpt-cab-r1), L 0105 wiadukt pod pomostem (gpt-viaduct-r1). Scalać po REPORT.md.
-6. Ostatni przydzielony ADR: **0105**.
+6. Następni w kolejce Claude: zabudowa r6 (0107, na Fable — lista r6 z REVIEW s10-0097 + działki domów P1-h), Kwadrat r13.
+7. Ostatni przydzielony ADR: **0106**.
 
 ---
 # HANDOVER — kamion, sesja 9 (2026-11-11 00:30 → ~10:30 lokalnie; zamknięta na polecenie właściciela przy końcu limitu 5 h)
