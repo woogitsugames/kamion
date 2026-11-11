@@ -355,3 +355,22 @@ Root source-reviewed Dpatch+3packedMeshData cases: no sourceblocker, runtime/
 compile/buffer proofpending, broadweartaskNOTresolved. REVIEW-D records scope.
 Fda1d6901 and E2353ac05 CPU sourceproof ready; no actualcandidatePASS asserted.
 NEXT COMMAND: inspect firstactual GGPU/R1, Fglass/crown unit/AB and Ecore-probe4 images; verifyperlaunchguards; finish G then dispatchD baseline/activation in sameworker.
+## Step27 - actual G324 and Ecore4 reviewed; diag3 renewedhold
+PHONE perfdiag3 returned13:20:19; allworkersstopbefore nextlaunch, F/G explicitly
+noneactive/queued, Ecore4finished beforeguard. Root renewedownedHOLDdiag3; old
+13:13release invalid. AwaitrealbatchEND, promptreleaseaftercheckedabsence.
+G actualGPU1007matrices matches4levels253/273/226/255;18realLOD/origin cases
+passincl±4096,maxlevelerror0. ActualR1 81x4=324complete, pairingoriginal73
+andnewAFTER-onlydiagnostics keptseparate. Common59budget Lowdrawdelta-23..0,
+trisK-2..0, High-42..0/-3..0. Rootviewedfirstsheet: wheels/neutralrubber/improved
+oldstripe removal valid;4dirtlevelsNOTvisuallylegibleenough. Checkactualmask/
+UVheightdomain beforegain, preserveclean/bonnet/door. No finalGPUPASS.
+E actualcore4viewed registerednativecroppedboards: masscoherent/archheadsclear,
+but crownsstillnarrow/stylized. No finalvisualPASS; requestactualspritebbox versus
+inner_uv padding check and rootedCC0bundleartifact beforemoreopaquefill.
+F actualURP4mask confirms onlydoorssemanticbit10/eligiblepatch; failedCommandBuffer
+2tests classified invalidreadbackpath, notproductiondefect. RepairedrealCamera
+readback ready05d5f878;6tests then18OFF/18ON/6mask pendingrelease. Glassactual
+nearT~.745/F.082/film0; removingnearRadiance atrealalpha raisesOVsd10.43Low/7.83High
+versus5.92/5.33. Additiveveil confirmed; no arbitraryT/clutterboost.
+NEXT COMMAND: monitor perf-low-r1/diag3.log actualEND; CPUreview Gmaskedfilmdomain/EUVcoverage, then promptnewrelease for repairedFtests/crownAB and G/E boundednextcandidate. Dinactiveartifactdba4855d waitsGclosure.
