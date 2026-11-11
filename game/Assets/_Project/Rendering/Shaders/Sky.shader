@@ -161,6 +161,9 @@ Shader "Kamion/Sky"
                     // irradiance model, exposure, surface shading or the legacy overcast deck.
                     float cap = lerp(_KamionSkyCap.x, _KamionSkyCap.y, smoothstep(0.0, 0.5, d.y));
                     float cloudY = cap * lerp(0.85, 1.15, clearCloud.y);
+                    // Reflection captures explicitly bypass display compression, as the analytic dome does.
+                    if (_KamionSkyCapOff > 0.5)
+                        cloudY = _SkyZenith.w * (1.0 + 2.0 * max(d.y, 0.0)) / 3.0 * clearCloud.y;
                     float3 cloud = lerp(_SkyFogColor.rgb, cloudY.xxx, smoothstep(0.0, 0.18, d.y));
                     sky = lerp(sky, cloud, clearCloud.x * (1.0 - _SkyMisc.x));
                 }
