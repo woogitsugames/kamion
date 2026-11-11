@@ -2,6 +2,7 @@
 
 ## Najpierw (dla następnej sesji)
 - **Tempo (właściciel, s10):** dalej max 3 agentów naraz. Limit tygodniowy Fable zresetował się (0 % o 10:05, reset 15.11); 5 h reset 15:00 lokalnie.
+- Trigger 10:21: limit 5 h 8 %, tydzień 2 %; 3 agentów w toku, GPT B/C bez REPORT; regeneracja 0086: build_all/world/route OK, pytest w toku.
 - Trigger godzinny w sesji (CronCreate, :17) — ginie z sesją.
 - Regeneracja main po 0095: zielona (gis+physics+gate3 413/1 — znana `test_generator_reproduces_committed_scenarios` z 0082) → `48ac6b75`.
 - **Scalone w s10:** 0086 `_Tint` gamma (GPT A) `0e73211a` — konflikty generated → --ours; regeneracja (build_all → build_world → export-route → pytest gis) w toku: `artifacts/logs/s10-regen-0086.log`.
