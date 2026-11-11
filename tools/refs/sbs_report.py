@@ -157,7 +157,7 @@ def build_report(run_paths,outdir,recognition_file=None):
     serialized=json.dumps(data,ensure_ascii=False,indent=2,allow_nan=False)
     (outdir/'data.json').write_text(serialized+'\n',encoding='utf-8')
     template=Path(__file__).with_name('sbs_report_template.html').read_text(encoding='utf-8-sig')
-    page=template.replace('__SBS_DATA_JSON__',serialized.replace('<','\u003c'))
+    page=template.replace('__SBS_DATA_JSON__',serialized.replace('<',r'\u003c'))
     (outdir/'index.html').write_text(page,encoding='utf-8')
     print(f'Report: {len(runs)} runs, {len(trends)} state comparisons; {outdir / "index.html"}')
     return data

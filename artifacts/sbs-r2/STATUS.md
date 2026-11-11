@@ -77,3 +77,7 @@ Wyeksportowano lekkim parserem tekstu wszystkie 168 liczników (bez obliczeń ob
 
 ## Sekwencja po walidacji
 Przygotowano proces oczekujący na cały własny post-world (PID 105616). Dopiero po jego sukcesie wykona ComposeOnly wszystkich stanów wraz z C i zweryfikowaną migawką, następnie audyt przez heavy oraz lokalny raport latest z historią r1/r2. Każda ciężka faza pozostaje sekwencyjna; nie korzystamy reentrantnie z tej samej dzierżawy. Sekwencja kończy się przed ręcznym przeglądem, pełnym GIS i kopiowaniem do main. Trzy ręcznie sprawdzone kadry fotometrii Low-clear mają w r2 dokładnie te same SHA co r1, więc kwalifikacja dotyczy tych samych pikseli.
+
+## Pierwszy test raportu — wykryty błąd HTML
+Pierwsze uruchomienie test_sbs_report: 24 passed, 1 failed. Test z nieufnym autorem zawierającym zamknięcie script wykrył rzeczywisty błąd: literał Unicode był interpretowany przez Pythona jako znak < zamiast sześciu znaków ucieczki JSON. Poprawiono na jawny surowy literał i dodatkowo sprawdzono AST (sześć znaków, pierwszy backslash). Nie osłabiono testu. Stary log zachowano osobno. Dalsza sekwencja zatrzymała się poprawnie; nie wykonano jeszcze kompozycji ani audytu.
+Zapisano potwierdzenie ukończonego świata (kod 0, SHA logu i manifestu), aby ponowna walidacja nie wymagała powtarzania generatora. Wszystkie surowe capture pozostają zachowane na HEAD b9b5574e; poprawka raportu nie zmienia renderów, kamer ani świata.
