@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw
 ROOT = Path(__file__).resolve().parent
 ROIS = {
     "route-onramp-andersa-above": (.82, .62, .97, .80),
-    "route-onramp-andersa-above:grass-only": (.87, .85, .95, .97),
+    "route-onramp-andersa-above:grass-only": ((.835, .71), (.98, .83), (.98, .95), (.835, .78)),
     "r10_fence_2": (.10, .72, .85, .93),
 }
 FOCUS = ("dk8-dk19-exit", "driver-andersa-to-putry", "route-putry-approach",
@@ -35,16 +35,27 @@ def stats(path):
 def grass(path, box):
     a = np.array(Image.open(path).convert("RGB"), dtype=float)
     h, w = a.shape[:2]
-    x0, y0, x1, y1 = box
-    a = a[round(h*y0):round(h*y1), round(w*x0):round(w*x1)]
+    polygon = isinstance(box[0], (tuple, list))
+    if polygon:
+        mask_image = Image.new("L", (w, h))
+        ImageDraw.Draw(mask_image).polygon([(round(w*x), round(h*y)) for x, y in box], fill=255)
+        x0, y0, x1, y1 = mask_image.getbbox()
+        mask = np.array(mask_image)[y0:y1, x0:x1] > 0
+        a = a[y0:y1, x0:x1]
+    else:
+        x0, y0, x1, y1 = box
+        a = a[round(h*y0):round(h*y1), round(w*x0):round(w*x1)]
+        mask = np.ones(a.shape[:2], dtype=bool)
     luma = a @ np.array([.2126, .7152, .0722])
     blocks = [luma[y:y+32, x:x+32].mean()
               for y in range(0, luma.shape[0]-31, 32)
-              for x in range(0, luma.shape[1]-31, 32)]
-    return dict(roi=box, rgb_mean=a.mean((0, 1)).tolist(),
-                luma_p10_p50_p90=np.percentile(luma, [10, 50, 90]).tolist(),
+              for x in range(0, luma.shape[1]-31, 32) if mask[y:y+32, x:x+32].all()]
+    return dict(roi=box, rgb_mean=a[mask].mean(0).tolist(),
+                luma_p10_p50_p90=np.percentile(luma[mask], [10, 50, 90]).tolist(),
                 block32_mean_std=float(np.std(blocks)),
-                block_count=len(blocks), method="sRGB8 Rec709, original resolution; fixed rectangle, no semantic mask")
+                block_count=len(blocks), method=("sRGB8 Rec709, original resolution; fixed authored polygon; "
+                    "only 32px blocks entirely inside polygon; no semantic mask" if polygon else
+                    "sRGB8 Rec709, original resolution; fixed rectangle, no semantic mask"))
 
 
 def main():
