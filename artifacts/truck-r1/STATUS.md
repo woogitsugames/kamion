@@ -38,3 +38,4 @@ Krok 16: pomiary zapisują także historyczną metodę po zmniejszeniu do 1024 p
 Baseline High overcast zapisany. Następny krok: obejrzeć PNG i zmierzyć lakier, szybę oraz DRL.
 Baseline High clear zapisany. Następny krok: obejrzeć PNG i zmierzyć lakier, szybę oraz DRL.
 Zapisano wszystkie kamery: before-all Low overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
+Zapisano wszystkie kamery: before-all High overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
