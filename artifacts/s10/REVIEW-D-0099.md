@@ -119,5 +119,9 @@ Root independently checked finalblocked transfer native data:154meshes invariant
 positions/normals/index/UV0/vertex/submesh counts;150UV1.y hashes match original
 GlbReader+Unityhalf sourcecontract,4channels absent. RoadmissingUVy5 is intentional
 sentinel policy; paint/decal age is original. Exactly10UV1buffers changed:4road
-sentinel+6marking buffers in3chunks,0newchannels. Final logged counts16accepted/
-502rejected/406verts/59.519m2 pertier. No fullwear visual/budgetPASS from this.
+sentinel+6marking buffers in3chunks,0newchannels. Final blocked logged counts11accepted/
+507rejected/356verts/58.319m2 pertier. No fullwear visual/budgetPASS from this.
+
+Coverage correction: root initially read lane-field-import-proof.json (prior16),
+not lane-final-import-proof.json. Current final proof independently parsed11/507/
+356/58.319 per tier. Native154geometry/150yhash verification remains unchanged.

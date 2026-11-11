@@ -69,3 +69,11 @@ in test. Actual execution/Lowabeam+Highbindings pending; importerhook removed.
 
 Actual correctedruntime targettest XML independently parsed1/1/0skip PASS;
 source63c7a76f. Fullsuite/actualLowHighbinding renders pending.
+
+True runtime R1 clear8frames measured: glass Low81.83-89.92,High88.97-97.87,
+so target60-75 CLEAR FAIL (OV63.20-74.78 PASS). Thuja clear15pairedROI median
+Low90.58/High92.57, median pairratio.9917. No auto-retune: lowering static atlas
+again would fail OV. Root authorizes full160 after correctedOVbindings confirm;
+keep clear residual explicit, no aggregate owner-qualityPASS/newLowmaterialslot
+or unlit fake to force numeric target. Dedicated architecturalglass model/global
+C13 exposure need separate causal evidence; current atlas has lit diffuse response.

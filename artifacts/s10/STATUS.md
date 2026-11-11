@@ -560,3 +560,11 @@ road y5 is the intentional sentinel. ONE ref464 bus stain candidate has source
 preflight/8GIS tests, but needs matched BEFORE and actual generated-product proof.
 NEXT COMMAND: review E runtime R1 frames/bindings and D glyph/unknown/bus BEFORE;
 then bounded wear candidate, final matrices, GIS/EditMode and honest reports.
+
+Step45: D final blocked coverage independently corrected to 11 accepted, 507
+rejected, 356 vertices, 58.319m2 per tier (prior proof16 was stale). Native geometry/
+age proof is valid; source-specific final coverage SHA added. E true runtime clear
+glass82-98 FAIL vs60-75, OV passes; clear thuja pairratio .9917. No static re-darken
+that would break OV. Full160 authorized after OV runtime binding check, residual
+quality failure explicit. NEXT COMMAND: E finish R1?160/tests; D new matched
+glyph/unknown/bus BEFORE, then bounded wear/build and final validation.

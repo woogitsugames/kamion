@@ -47,5 +47,21 @@
   ],
   "sourceContract": "Original GlbReader V-unflip, Unity FloatToHalf roundtrip; road missing-UV intentional sentinel y5; paint/decal age remains original.",
   "nativeBeforeSHA256": "ca97e1ac6bc2f5f1f14fdaf029c9f87462d302dd8c539514a3bfcc0b51834078",
-  "nativeFinalSHA256": "b180d24a92eab25c5289cddcfc296f2d14b4df05714e132158d988d796de5918"
+  "nativeFinalSHA256": "b180d24a92eab25c5289cddcfc296f2d14b4df05714e132158d988d796de5918",
+  "finalBlockedCoverage": {
+    "Low": {
+      "accepted": 11,
+      "rejected": 507,
+      "changed_vertices": 356,
+      "area_m2": 58.319
+    },
+    "High": {
+      "accepted": 11,
+      "rejected": 507,
+      "changed_vertices": 356,
+      "area_m2": 58.319
+    }
+  },
+  "coverageSource": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-surface-wear\\artifacts\\surface-wear-r1\\lane-final-import-proof.json",
+  "coverageSourceSHA256": "3cf45690fd5a818aed535ee5367b6453189b1dc96ad689b6a98d85bd26232fc5"
 }
