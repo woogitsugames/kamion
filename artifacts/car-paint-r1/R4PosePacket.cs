@@ -34,6 +34,7 @@ public static class R4PosePacket
         public Node[] cameraParents, vehicleHierarchy, regionRoots;
         public string regionState;
         public Paint[] paintMaterials;
+        public NativeMesh[] carMeshes;
         public string note="Target and live pipeline fields are observed; actual internal URP descriptor/pass execution is NOT established by this packet.";
     }
     [Serializable] public class Paint
@@ -43,6 +44,33 @@ public static class R4PosePacket
         public float albedoScale;
         public Vector4 flake;
         public bool carPaint, meshUv0, meshUv1;
+    }
+    [Serializable] public class NativeMesh
+    {
+        public string prototype, name, indexFormat;
+        public int lod, vertices;
+        public int[] strides;
+        public long[] submeshIndices;
+        public string[] attributes;
+        public bool hasUv1;
+        public long rawBufferBytes;
+    }
+    static NativeMesh[] NativeMeshes()
+    {
+        return UnityEngine.Object.FindObjectsByType<WorldInstances>(FindObjectsInactive.Include,FindObjectsSortMode.None)
+            .Where(w=>w.set!=null).Select(w=>w.set).Distinct()
+            .SelectMany(s=>s.prototypes.Where(p=>p.name.StartsWith("car_")||p.name.StartsWith("van_")))
+            .SelectMany(p=>p.lods.Select((m,lod)=>new {p,m,lod})).Where(x=>x.m!=null)
+            .Select(x=> {
+                var m=x.m;
+                var strides=Enumerable.Range(0,m.vertexBufferCount).Select(m.GetVertexBufferStride).ToArray();
+                var indices=Enumerable.Range(0,m.subMeshCount).Select(s=>(long)m.GetIndexCount(s)).ToArray();
+                return new NativeMesh {prototype=x.p.name,name=m.name,lod=x.lod,vertices=m.vertexCount,
+                    indexFormat=m.indexFormat.ToString(),strides=strides,submeshIndices=indices,
+                    attributes=m.GetVertexAttributes().Select(a=>$"{a.attribute}:{a.format}:{a.dimension}:stream{a.stream}").ToArray(),
+                    hasUv1=m.HasVertexAttribute(VertexAttribute.TexCoord1),
+                    rawBufferBytes=(long)m.vertexCount*strides.Sum()+indices.Sum()*(m.indexFormat==IndexFormat.UInt16?2:4)};
+            }).OrderBy(x=>x.prototype).ThenBy(x=>x.lod).ToArray();
     }
 
     static R4PosePacket()
@@ -87,6 +115,7 @@ public static class R4PosePacket
             vehicleHierarchy=roots.SelectMany(t=>t.GetComponentsInChildren<Transform>(true)).Distinct().OrderBy(PathOf).Select(Read).ToArray(),
             regionRoots=regions.OrderBy(t=>PathOf(t.transform)).Select(t=>Read(t.transform)).ToArray(),
             regionState=string.Join("\n",regions.Select(t=>JsonUtility.ToJson(t))),
+            carMeshes=NativeMeshes(),
             paintMaterials=Resources.FindObjectsOfTypeAll<Material>().Where(m=>m.name.Contains("car_paint_")&&m.HasProperty("_CarFlake"))
                 .OrderBy(m=>AssetDatabase.GetAssetPath(m)).Select(m=>new Paint {name=m.name,path=AssetDatabase.GetAssetPath(m),shader=m.shader.name,
                     tint=m.GetColor("_Tint"),albedoScale=m.GetFloat("_AlbedoScale"),flake=m.GetVector("_CarFlake"),
