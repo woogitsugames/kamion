@@ -1,3 +1,28 @@
+# HANDOVER — kamion, sesja 10 (2026-11-11 od ~10:05 lokalnie)
+
+## Najpierw (dla następnej sesji)
+- **Tempo (właściciel, s10):** dalej max 3 agentów naraz. Limit tygodniowy Fable zresetował się (0 % o 10:05, reset 15.11); 5 h reset 15:00 lokalnie.
+- Trigger godzinny w sesji (CronCreate, :17) — ginie z sesją.
+- Regeneracja main po 0095: zielona (gis+physics+gate3 413/1 — znana `test_generator_reproduces_committed_scenarios` z 0082) → `48ac6b75`.
+- **Scalone w s10:** 0086 `_Tint` gamma (GPT A) `0e73211a` — konflikty generated → --ours; regeneracja (build_all → build_world → export-route → pytest gis) w toku: `artifacts/logs/s10-regen-0086.log`.
+
+| zadanie | ADR | worktree | STATUS | stan |
+|---|---|---|---|---|
+| recenzja 0095 | — | (visual-critic, bez worktree) | docs/reports/visual/REVIEW-2026-11-11-s10-0095.md | w toku |
+| zabudowa r5 | 0097 | .claude/worktrees/buildings-r5 (gałąź buildings-r5) | artifacts/buildings-r13/STATUS.md | w toku (world-builder) |
+| GPT B roślinność r2 | 0088 | gpt-vegetation-r2 | — | GPT w toku, brak REPORT |
+| GPT C światło r12 | 0098 | gpt-light-r12 | — | GPT w toku, brak REPORT |
+| GPT 0087 lakier TRAKT | 0087 | gpt-truck-paint | — | GPT w toku |
+| Argon 0085 | 0085 | argon-edge | artifacts/edge-far-r1 | czeka na poprawkę |
+
+## Następne kroki
+1. Po regeneracji 0086: commit Data/Regions; visual-critic 0086 (artifacts/tint-gamma-r1 compare-final).
+2. Integracja na main z Megascans + 0086 (import-region, Truck BuildBatch/InstallBatch, EditMode/PlayMode, APK Low) → telefon A16 Low gate3.
+3. Scalanie GPT B 0088 → C 0098 po REPORT.md; 0097 po REPORT.md.
+4. Węzły r3 wg recenzji 0095; Kwadrat r13 po zdjęciach właściciela; raport bramki 3.
+5. Ostatni przydzielony ADR: 0099.
+
+---
 # HANDOVER — kamion, sesja 9 (2026-11-11 00:30 → ~10:30 lokalnie; zamknięta na polecenie właściciela przy końcu limitu 5 h)
 
 ## Najpierw (dla sesji 10)
