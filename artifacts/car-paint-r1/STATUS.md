@@ -65,3 +65,6 @@
 
 - Step22 CPU-only: all28R1 sheets reviewed; native wheel ROI validation/metrics and R1-SELF-CRITICISM saved. Highov tyreRGB33.73/31.88/27.63 ->31.91/31.79/30.37, neutralized under same light; darkdish retained. ROOT accepts single bounded R2 proposal but requires focused4levels+control in BOTH tiers/weather before fullmatrix. capture-focused.ps1 now24frames with per-launch guards/finally restore. Final EditMode wrapper prepared, not run. Fresh diag4HOLD explicitly confirmed, no Unity active/queued; earlier height-bug hypothesis retracted.
 - NEXT COMMAND: after NEW explicit ROOT release and BOTH guards absent, capture-focused.ps1; inspect/measure all24 actual frames before fullR2, then final-editmode.ps1/GPU final source proof. D inactive.
+
+- Step23 CPU-only: provisional ADR0089 records causal HDR Color fix, fresh A-correct blackdoor decision, bounded wheel range and current evidence/limitations; explicitly WIP pending R2/EditMode/root acceptance. No new code, shader change remains single R2 candidate. Source/cache unchanged under hold.
+- NEXT COMMAND: NEW explicit ROOT release + both guards absent -> capture-focused.ps1. Do not run Unity automatically or activate D while held.
