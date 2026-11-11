@@ -12,4 +12,5 @@ Pierwszy wariant: obecna maska spękań na Low z jedną próbką koloru, bez pr�
 
 Dowody będą obejmować te same kamery przed i po w Low/High clear/overcast, zdjęcia ze wskazanych par sbs i osobne liczniki instancji. A16 pozostaje UNVERIFIED, ponieważ sesja nie używa telefonów. Bez potwierdzenia obrazu i budżetu zmiana nie otrzyma PASS.
 
-Instrukcja właściciela z 2026-11-11 ~22:20: każdy ciężki producent Pythona i pytest GIS/physics/gate3 korzysta z puli heavy (max 3). Pełny GIS dopiero na końcu rundy; śródrocznie tylko konkretne pliki. Import nie może uruchamiać ukrytego build_all/build_world bez heavy. Własne runnery stosują aktualny skrypt slotów z main bez edycji wspólnego skryptu.
+Instrukcja właściciela z 2026-11-11 ~22:20: każdy ciężki producent Pythona i pytest GIS/physics/gate3 korzysta z puli heavy (max 3). Pełny GIS dopiero na końcu rundy; w trakcie rundy tylko konkretne pliki. Import nie może uruchamiać ukrytego build_all/build_world bez heavy. Własne runnery stosują aktualny skrypt slotów z main bez edycji wspólnego skryptu.
+
