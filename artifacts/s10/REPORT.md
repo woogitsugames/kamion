@@ -18,7 +18,7 @@ Maksymalnie trzech wykonawców pracuje równolegle, każdy we własnym worktree.
 
 ## Wyniki wymagające zachowania przy integracji
 
-- B: surowe, przypięte hashem mapy CC0 sosny nie są w Git. Po scaleniu B, PRZED generacją, należy uruchomić `uv run --project tools/worldgen python artifacts/vegetation-r2/restore_cc0_inputs.py --root .`. Pakiet i bezpieczny skrypt są skopiowane do głównego `artifacts/vegetation-r2`. Bez tych wejść generator mógłby wrócić do proceduralnego zastępstwa.
+- B: surowe, przypięte hashem mapy CC0 sosny nie są w Git. Po scaleniu B, PRZED generacją, należy uruchomić `uv run --project tools/worldgen python artifacts/vegetation-r2/restore_cc0_inputs.py --root .`. Pakiet i bezpieczny skrypt są skopiowane do głównego `artifacts/vegetation-r2`. Po scaleniu B przez lidera koordynator wykonał ten krok: obie brakujące mapy odtworzone bez nadpisywania, zgodność manifestu i hashy potwierdzona (B-main-input-restore.json).
 - E: analogiczny pakiet CC0 fir_tree_01 jest przygotowany w prywatnym worktree. Taksonomia źródła nie potwierdza Picea; nie jest opisywany jako zweryfikowany skan świerka. Ostateczna instrukcja odtwarzania trafi do raportu E.
 - A: kontrakt `_Tint` i kalibracja wyglądu są oceniane oddzielnie. Wykrycie przepalonej hali oraz za ciemnych ekranów jest jawne w REVIEW-A-0086.md. Pomiary z jednego zacienionego fragmentu nie wystarczają do zamknięcia kalibracji.
 - Każdy zamknięty strumień ma własny REPORT, ADR, wyniki i ograniczenia. Pary porównawcze używają niezmiennej bazy; późniejsza kanoniczna przebudowa ciężarówki jest opisana osobno.
@@ -31,3 +31,5 @@ PHONE-RACE.md dokumentuje krótkie nakładanie uruchomień w przerwach zmiennej 
 ## Następny etap
 
 Dokończyć i niezależnie obejrzeć F/G/E, uruchomić D po zwolnieniu miejsca, zebrać pełne testy i budżety oraz zastąpić ten raport końcowym zestawieniem rzeczywistych wyników i otwartych ograniczeń. Zachować zakaz scalania do main.
+
+Aktualizacja: lider zewnętrzny scalił B (6b8f9123) i C (bfdde95f); trwa jego regeneracja. Ponowne okno telefonu perf-low-r1 od 12:27:10 wstrzymuje nasze Unity. Pełne GIS F i G działają podczas tej blokady.

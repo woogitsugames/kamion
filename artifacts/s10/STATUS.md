@@ -279,3 +279,4 @@ on main regeneration and closes the previously documented local-input prerequisi
 No main generated/source edits or commits. Our F/G/E fixedbaselines unchanged.
 PHONE perfdiag0 remains active; ownhold and noUnitylaunch rule remain.
 NEXT COMMAND: after leader regeneration inspect pine source/fallback log and main generated needle hashes; meanwhile monitor actual phonebatchEND before any explicit F/G/E release.
+Korekta metadanych dowodu: B-main-input-restore.json używa rzeczywistego Get-Date jako recorded_time_local, bez szacowanego czasu akcji. Raport WIP odnotowuje spełniony warunek wejść i zewnętrzne scalenia. NASTĘPNY KROK: Get-Content ../perf-low-r1/artifacts/perf-low-r1/diag0.log -Tail 6; po faktycznym końcu i stabilnym braku PHONE_RUN jawne wznowienie F/G/E.
