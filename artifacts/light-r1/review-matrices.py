@@ -60,3 +60,5 @@ if (ROOT / "sbs-final-ready.json").exists() and len(list((ROOT / "sbs/after/rend
     runpy.run_path(str(ROOT / "finalize-sbs.py"), run_name="__main__")
 if (ROOT / "shadow-metric-v2/policy/shadow-wall-10m.json").exists():
     runpy.run_path(str(ROOT / "measure-shadow.py"), run_name="__main__")
+if (ROOT / "ROUND-END-VALIDATION.json").exists():
+    runpy.run_path(str(ROOT / "finish-gis.py"), run_name="__main__")
