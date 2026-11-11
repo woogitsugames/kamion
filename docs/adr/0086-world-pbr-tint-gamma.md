@@ -42,3 +42,12 @@ Matched before/after-calibrated stats are byte-identical for all59cameras in all
 Final images use this refreshed canonical fixture. Separate canonical-fixture-budget-diagnostic.json reports Low stats unchanged and High vehicle-camera triangles changing -1k to+7k (cab-dash maximum), with draws/objects/shadow-draws unchanged. Every world-only and instanced row is unchanged. Mixed-fixture full-frame image differences are not attributed solely to tint.
 
 Independent root review PASS is scoped to this contract and material calibration. Remaining inherited issues belong to their owning streams: dark tree silhouettes, conical hero shrubs, sterile wear, High noise, clear white clipping and hall glass artifacts. Low dock trailers still use smooth LOD1 geometry (open s9P2); pigment cannot restore missing folds. No global visual or phone-performance PASS is claimed. Production shader/settings/scenes/packages/asmdefs and geometry code remain unchanged. Independent review: `artifacts/tint-gamma-r1/REVIEW.md` (canonical coordination copy `artifacts/s10/REVIEW-A-0086.md`).
+
+## Correction (ADR 0101, 2026-11-11)
+
+The "approximately 4 levels below the photo" screen statement compared absolute sRGB of a different-weather photo; by
+the ADR 0069 ratio method (cassette/plinth on one face, photo 0.34-0.38) the 0086 screens were 0.26-0.31, i.e. too
+dark. The hall "matches the photo" claim held only for the shaded dock side; the sunlit gate facade clipped. The single
+bridge-soffit ROI lies on the hero viaduct, not on `bridge_soffit`. ADR 0101 recalibrates `kp_wall`,
+`noise_panel_dark` and `bridge_concrete` with a two-camera ratio check (`tools/worldgen/qa/tint_ratio.py`); the
+`_Tint` contract above is unchanged.

@@ -101,7 +101,9 @@ def check_placement(spec: dict, masks_dir: Path) -> list[str]:
     problems = []
     for mat, entry in spec["materials"].items():
         for c in entry["checks"]:
-            png = masks_dir / mat / f"{c['camera']}_mask.png"
+            # a check can name the scene its mask comes from (Low draws an HLOD where High has the chunk renderers)
+            mdir = Path(f"{masks_dir}-{c['mask_scene']}") if c.get("mask_scene") else masks_dir
+            png = mdir / mat / f"{c['camera']}_mask.png"
             if not png.exists() or mask_fraction(png, [0, 0, 960, 9999]) == 0.0:
                 continue                      # no renderer slot (instanced/hero): use a change mask instead
             on, off = mask_fraction(png, c["roi"]), mask_fraction(png, c["ref_roi"])

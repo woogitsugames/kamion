@@ -1,0 +1,15 @@
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\tint-r2\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\tint-r2\artifacts\logs\test-editmode-20261111-131503.log -buildTarget Android -runTests -testPlatform EditMode -testResults C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\tint-r2\artifacts\tests\editmode-20261111-131503.xml
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 101648)
+EditMode: 226 total, 223 passed, 3 failed, 0 skipped (Failed(Child)) -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\tint-r2\artifacts\tests\editmode-20261111-131503.xml
+  FAILED Game.Tests.TruckDoorGlassTests.DoorGlass_OwnMaterial_NoWiperFilm_InsideFaceTowardsCabCentre("Low"):   MI_Ext_DoorGlassL on Low
+  Expected: not null
+  But was:  null
+
+  FAILED Game.Tests.TruckDoorGlassTests.DoorGlass_OwnMaterial_NoWiperFilm_InsideFaceTowardsCabCentre("Medium"):   MI_Ext_DoorGlassL on Medium
+  Expected: not null
+  But was:  null
+
+  FAILED Game.Tests.TruckDoorGlassTests.DoorGlass_OwnMaterial_NoWiperFilm_InsideFaceTowardsCabCentre("High"):   MI_Ext_DoorGlassL on High
+  Expected: not null
+  But was:  null
+
