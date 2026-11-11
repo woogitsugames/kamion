@@ -30,3 +30,6 @@ Następny krok: uv run --project tools/refs python artifacts/sbs-r1/summarize_st
 ## Przygotowany następny etap
 Zapisano skrypt import-and-baseline.ps1: osobny slot gpt-sbs dla importu, przywrócenie ustawień w finally, następnie EditMode i baseline Low overcast. Uruchomienie nastąpi dopiero po udanej generacji geometrii i PBR.
 Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/import-and-baseline.ps1
+## Generacja świata zakończona
+build_world zakończył się kodem 0 po 918,0 s; wyeksportowano 64 GLB. W logu brak wystąpień fallback=True. Budowa PBR jest na końcowych warstwach. Pełne GIS nadal działa i ma niepowodzenia wymagające odczytania po zakończeniu.
+Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/import-and-baseline.ps1
