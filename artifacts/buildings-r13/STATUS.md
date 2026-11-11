@@ -11,3 +11,11 @@ Gałąź `buildings-r5`, worktree `.claude/worktrees/buildings-r5`, z main `0e73
   (ściana + dach), drzwi domu na cokole + podest/stopnie/próg, pranie stonowane (12 %).
 - NASTĘPNY KROK: dach wielopołaciowy (`roofs.py` MultiRoof), potem
   `pwsh artifacts/buildings-r13/chain.ps1 -Round r1 -Only facade_atlas,facade_far`
+
+## krok 2 — baza zrenderowana, kod r1 kompletny
+- Baza (`base/`): import 145 s, QA High/Low overcast + High clear OK. Region GLB bazy niezmierzony (build r1 nadpisał
+  generated przed chunk_mats) — porównanie regionu względem r12 r3b.
+- Kod r1 + testy (`tests/gis/test_buildings_r5.py` 9 passed, r4 dostosowane): MultiRoof (obwiednia dwuspadowych
+  części z rozkładu rzutu na prostokąty, kosze z obróbką), deska czołowa = soffit_boards, krem −8 %, cokół 0,24 /
+  rozbryzg 0,8 m (blok addytywny na końcu materials.py).
+- NASTĘPNY KROK: (build_world r1 w toku) → `pwsh artifacts/buildings-r13/run_round.ps1 -Round r1 -Configs 'High:overcast,Low:overcast,High:clear'`
