@@ -4,6 +4,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
+$env:PYTHONUNBUFFERED = '1'
 $slotScript = 'C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
 $owner = (& git branch --show-current).Trim()
 if ($LASTEXITCODE -ne 0 -or -not $owner) { throw 'Cannot determine heavy-slot branch owner' }
