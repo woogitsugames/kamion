@@ -7,3 +7,6 @@
 
 - Step3: added isolated QA round17cameras x6conditions with exact LowWorldC/HighWorldC_High, actual TruckExterior Color GPU probe, true no-pane reference (disable GLASS_ renderers, not old partial qaNoGlass), and coat-off diagnostic. Canonical snapshot will preserve every GeneratedTruck/Trailer file plus raw192SHA and actual nested FabQA. No production shader/material changes. C confirms no vehicle edits; future clear-shoulder integration review remains separate.
 - NEXT COMMAND: pwsh -ExecutionPolicy Bypass -File artifacts/truck-paint-r1/prepare-baseline.ps1 (queued after current world build); snapshot_fixture.py; run-round.ps1 before; run-baseline-ablations.ps1.
+
+- Step4: root authorized merge latest main into F before any baseline captures. Stopped only verified own build_all PythonPID42312 while no Unity was active; no vehicle production edits/no baseline images. Fresh321.6s old-base world metadata persisted as WIP only.
+- NEXT COMMAND: git merge main --no-edit (into F only); regenerate world and all PBR from merged sources, then canonical builders/install, raw192SHA/Fab15+320 proof and snapshot before baseline.
