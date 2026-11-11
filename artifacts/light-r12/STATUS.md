@@ -38,3 +38,6 @@
 
 - Step12: Unitybaked revision98 profile +High/MediumURPassets from code; LowURP unchanged, actualHighFSRoverrideTrue/0. Restored only unintendedDusk/LowSunserialization side effects. Fullafter wrapper now restoresonlyM_Sky/ProjectSettings, preserving intended bakedpolicies. Three-wayglassdiagnostic realtimeOff alone fixes triangles, bakedOff alone doesnot; root authorized8/12cm sweep after rejection2/4cm. Canonicalimportflag assignedONLYkp_glass_block, receiverShadowCasterunchanged.
 - NEXT COMMAND: inspect actual8cmnormal result; emptyRq High clear ROIs after bakeddefaults, then canonicalimport and finalmatrix.
+
+- Step13: root chose8cm smallesttestedacceptable glazingoffset. Actualreceived frame shadow remains6.59LSB versus realtimeOff; broadtriangleerror13.62->1.00LSB; trailer/contactROI MAXdiff0 vscontrol, castersunchanged. Default8cm ONLYMed/High+explicitkp; Low/Ultra0, productioncap8cm. Added9meaningful EditModecases: shoulderanchors, Low/bakedpipeline consistency, semanticimport scope, bound/tier isolation. ClearwhiteClip.9 failedgable249R; factory1.1 now baked, verify actual beforefullmatrix. Canonicalimport resets ignoredtestmaterial tosource-generated semantic next.
+- NEXT COMMAND: pwsh scripts/import-region.ps1 -Region bialystok-industrial-c; then emptyRq defaultROI proof/fullafter captures (no truckfixture refresh before matchedmatrix).

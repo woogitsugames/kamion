@@ -231,7 +231,7 @@ Shader "Kamion/World Surface"
                 // Sun
                 float3 shadowReceiver = i.positionWS;
                 // ADR0098: explicit imported glazing semantic, not a roughness heuristic.
-                // Small receiver-depth offset retains cast/frame shadows and does not move geometry.
+                // Bounded receiver-normal offset retains cast/frame shadows and does not move geometry.
                 if (_KamionGlassShadowBias > 0.0 && _ArchitecturalGlass > 0.5)
                     shadowReceiver += n * _KamionGlassShadowBias;
                 float4 shadowCoord = TransformWorldToShadowCoord(shadowReceiver);

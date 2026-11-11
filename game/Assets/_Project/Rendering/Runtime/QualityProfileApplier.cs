@@ -14,6 +14,13 @@ namespace Game.Rendering
     public sealed class QualityProfileApplier : MonoBehaviour
     {
         public const string WorldDetailKeyword = "_KAMION_WORLD_DETAIL";
+        public const float MaxArchitecturalGlassReceiverBias = 0.08f; // ADR0098 WORKING_VALUE, smallest tested acceptable.
+
+        public static float ArchitecturalGlassBias(QualityProfile.Tier t, float? requested = null)
+        {
+            float policy = t.name == "Medium" || t.name == "High" ? MaxArchitecturalGlassReceiverBias : 0f;
+            return Mathf.Clamp(requested ?? policy, 0f, MaxArchitecturalGlassReceiverBias);
+        }
         static readonly int k_ClearCoatOff = Shader.PropertyToID("_KamionClearCoatOff");
         static readonly int k_GrimeDetailOff = Shader.PropertyToID("_KamionGrimeDetailOff");
         static readonly int k_SkyDitherOff = Shader.PropertyToID("_KamionSkyDitherOff");
@@ -121,9 +128,9 @@ namespace Game.Rendering
             // Pre-LUT sky noise is amplified by grading/RCAS; post tiers keep the final URP dither instead.
             bool skyDither = RenderOverrides.SkyDither ?? !t.postProcessing;
             Shader.SetGlobalFloat(k_SkyDitherOff, skyDither ? 0f : 1f);
-            Shader.SetGlobalFloat(k_GlassShadowBias, Mathf.Clamp(RenderOverrides.GlassShadowBias ?? 0f, 0f, 0.12f));
+            Shader.SetGlobalFloat(k_GlassShadowBias, ArchitecturalGlassBias(t, RenderOverrides.GlassShadowBias));
 #if UNITY_EDITOR
-            if (RenderOverrides.Any) Debug.Log($"[RQ_CAMERA] skyDitherOff={Shader.GetGlobalFloat(k_SkyDitherOff)} glassShadowBias={Shader.GetGlobalFloat(k_GlassShadowBias)}");
+            Debug.Log($"[QUALITY_STATE] tier={t.name} cameraDither={(cam != null ? cam.GetUniversalAdditionalCameraData().dithering.ToString() : "none")} skyDitherOff={Shader.GetGlobalFloat(k_SkyDitherOff)} glassShadowBias={Shader.GetGlobalFloat(k_GlassShadowBias)}");
             if (RenderOverrides.GlassShadowBias.HasValue)
                 foreach (var m in Resources.FindObjectsOfTypeAll<Material>())
                     if (m.name == "M_kp_glass_block") Debug.Log($"[RQ_GLASS] name={m.name} shader={m.shader.name} flag={m.GetFloat("_ArchitecturalGlass")} receive={m.GetFloat("_ReceiveShadows")}");
