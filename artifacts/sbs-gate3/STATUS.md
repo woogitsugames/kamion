@@ -22,3 +22,6 @@ NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10
 
 Step 8: fetched safe public intrinsics for all 40 references using existing header-only token loader (no credentials saved). 27 fisheye / 13 perspective. Added photographic radial rectification + matched FOV, preserved originals, hashed derivatives and preferred SfM compass. Rectified contacts inspected: bridge/poles now straight, no blank borders observed. 9 focused tests pass. No Unity start: PHONE_RUN still active.
 NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10
+
+Step 9: exposed rectified_horizon_y_fraction for direct calibration on rectified sheets, avoiding double application of the lens transform. Original horizon field remains reproducible. Focused tests 9/9 still pass; worktree otherwise clean, Unity still waits for PHONE_RUN.
+NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10

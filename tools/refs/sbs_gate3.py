@@ -214,7 +214,7 @@ def prepare(count=20, radius=40):
                 focal,_,_=rectify(photo,lens,comparison)
             ov = overrides.get(camera_id, {})
             allowed = {'east_delta_m','north_delta_m','eye_height_m','absolute_u_m','heading_delta_deg',
-                       'horizontal_fov_deg','horizon_y_fraction','pose_status','note','masks'}
+                       'horizontal_fov_deg','horizon_y_fraction','rectified_horizon_y_fraction','pose_status','note','masks'}
             if set(ov)-allowed:
                 raise ValueError(f"unknown authored corrections for {camera_id}: {sorted(set(ov)-allowed)}")
             e = x-origin['x'] + ov.get('east_delta_m', 0)
@@ -229,6 +229,7 @@ def prepare(count=20, radius=40):
             fov = vfov(ov.get('horizontal_fov_deg', native_hfov), width/height)
             horizon = ov.get('horizon_y_fraction', 0.5)
             if lens: horizon=rectified_horizon(horizon,width,height,lens,focal)
+            horizon=ov.get('rectified_horizon_y_fraction',horizon)
             if not (0 < horizon < 1 and eye > 0):
                 raise ValueError(f'invalid authored horizon/eye: {camera_id}')
             pitch = math.degrees(math.atan((2*horizon-1)*math.tan(math.radians(fov)/2)))

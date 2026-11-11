@@ -101,6 +101,11 @@ re-render; compose alone cannot update the camera image. `-ComposeOnly` regenera
 sheets from existing renders; it does not run Unity. `-Tiers Low -Lighting clear` is
 a smaller render pass; the default matrix remains required for final evidence.
 
+`horizon_y_fraction` is measured on the **original** photo. During comparison-sheet
+calibration, use `rectified_horizon_y_fraction` to specify the fraction directly on
+the rectified panel instead; this takes precedence and avoids applying the lens
+transform twice. Mask polygons likewise refer to the comparison panels.
+
 ## Sheets and metrics
 
 Each 960-pixel-wide sheet has photo | render, 25% grid, red horizon line, attribution,
