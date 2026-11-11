@@ -134,7 +134,9 @@ def test_driveway_strip_is_clear_of_the_carriageway_and_the_kerb():
             assert poly.intersection(kerbed).area < 1e-4                       # nothing on the carriageway or the kerb stone
         assert s.V[:, 1].max() > 0.2                                           # overlaps the apron beyond the footprint
         assert abs(s.V[:, 1].min() - (-2.5 + PL.KERB_BAND_M)) < 0.03           # and starts right behind the kerb, on its true line
-        assert np.allclose(s.V[:, 2], 100.02)
+        on = s.V[:, 1] <= 0.0                                                  # r2: 2 cm over a road surface, and beyond the
+        assert np.allclose(s.V[on, 2], 100.02)                                 # footprint a ruled strip >= ground + 3 cm
+        assert (s.V[~on, 2] >= 100.03 - 1e-6).all() and (s.V[~on, 2] <= 100.03 + 1e-6).all()
 
 
 def test_one_card_per_fence_panel_and_foliage_normals():

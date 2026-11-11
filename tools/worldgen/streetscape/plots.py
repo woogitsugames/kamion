@@ -982,6 +982,8 @@ def fence_run(kit, style, a, b, n, h, zf, key, col=None, ends=(True, True), lean
                 u0, u1 = PK.uspan(rowname, 0.0, i1 - i0)
             f0, f1 = (i0 - s0) / (s1 - s0), (i1 - s0) / (s1 - s0)
             za, zb = z0 + (z1 - z0) * f0, z0 + (z1 - z0) * f1
+            if rigid:                                        # ADR 0124 r2 (P2-r8-d): masonry / concrete / plinth bays are
+                za = zb = min(z0, z1)                        # level and step at the posts; r1 sheared them along the slope
             la, lb = lean[k] + (lean[k + 1] - lean[k]) * f0, lean[k] + (lean[k + 1] - lean[k]) * f1
             lo = ph if plinth else -0.08
             A, B = a + t * i0, a + t * i1
