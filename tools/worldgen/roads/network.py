@@ -1027,6 +1027,13 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
             verge = np.where(med_d, S.MEDIAN_VERGE_MAX, S.VERGE_W)
             verge = np.minimum(verge, np.maximum((gapm - 2 * S.KERB_TOP_W) / 2, 0.0))
             verge[(kind != URBAN) | (w > 0.05) | (mat != 0) | (h < 0.05) | c.bridge] = 0.0
+            # the width changes by at most 1 m per 2 m along the kerb (median flag / gap steps: 1 m -> 3 m between two
+            # stations gave 0.6 m grass faces in the skirt, terrain_walls b2)
+            dv = 0.5 * np.diff(c.line.s)
+            for i in range(1, n):
+                verge[i] = min(verge[i], verge[i - 1] + dv[i - 1])
+            for i in range(n - 2, -1, -1):
+                verge[i] = min(verge[i], verge[i + 1] + dv[i])
             c.side[side] = {"kind": kind, "walk": walk_d, "median": med_d, "raw": {"h": h, "w": w, "depth": depth},
                             "mat": mat, "verge": verge}
         structure_sides(c, c.bridge)

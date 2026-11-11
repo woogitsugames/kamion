@@ -36,6 +36,7 @@ from shapely.geometry import LineString, Point
 
 from roads import standards as S
 from roads.network import MEDIAN_RURAL, RURAL, URBAN, side_params, side_extent
+from roads.geom import dp_keep
 
 from . import facade_atlas as FA
 
@@ -1046,10 +1047,11 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
             if tall[k]:
                 lin.posts("barrier_post", P[k:kk + 1], S.GUARDRAIL_POST_SPACING, 0.1, 0.06, S.BRIDGE_BARRIER_H,
                           zb=Z[k:kk + 1], src=key)
-                zt = Z[k:kk + 1]
-                lin.ribbon("barrier_steel", P[k:kk + 1], zt + S.BRIDGE_BARRIER_MID - 0.03, zt + S.BRIDGE_BARRIER_MID + 0.03,
+                kp = dp_keep(np.column_stack([P[k:kk + 1], Z[k:kk + 1]]), 0.01)
+                Pt, zt = P[k:kk + 1][kp], Z[k:kk + 1][kp]
+                lin.ribbon("barrier_steel", Pt, zt + S.BRIDGE_BARRIER_MID - 0.03, zt + S.BRIDGE_BARRIER_MID + 0.03,
                            0.03, key)
-                lin.slab("barrier_steel", P[k:kk + 1], zt + S.BRIDGE_BARRIER_H - 0.06, zt + S.BRIDGE_BARRIER_H, 0.06, key)
+                lin.slab("barrier_steel", Pt, zt + S.BRIDGE_BARRIER_H - 0.06, zt + S.BRIDGE_BARRIER_H, 0.06, key)
             else:
                 lin.posts("barrier_post", P[k:kk + 1], S.GUARDRAIL_POST_SPACING, 0.1, 0.05, S.GUARDRAIL_H - 0.05,
                           zb=Z[k:kk + 1], src=key)
@@ -1057,6 +1059,11 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
     d = np.gradient(P, axis=0)
     d /= np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)[:, None]
     nrm = np.column_stack([-d[:, 1], d[:, 0]])
+    # ADR 0110: the beam keeps only the points a 1 cm Douglas-Peucker needs (it was meshed every metre: 16 triangles
+    # per metre also on straights; the posts above keep their spacing)
+    kp = dp_keep(np.column_stack([P, Z + top]), 0.01)
+    P, Z, top, nrm = P[kp], Z[kp], top[kp], nrm[kp]
+    n = len(P)
     # W profile (two bulges toward the road side, +nrm): 5 points of the 0.31 m high beam
     prof = [(0.0, -0.31), (0.05, -0.24), (0.0, -0.155), (0.05, -0.07), (0.0, 0.0)]
     rows = []

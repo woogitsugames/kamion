@@ -187,3 +187,36 @@ def ear_clip(poly: np.ndarray) -> list[tuple[int, int, int]]:
     if len(idx) == 3:
         tris.append(tuple(idx))
     return tris
+
+
+def dp_keep(P, tol):
+    """Douglas-Peucker: boolean mask of the points of polyline P (n, 2 or 3) kept so that no dropped point lies
+    further than `tol` from the simplified line (ADR 0110: guardrail beams and verge strips were meshed at every
+    1 m station also on straights)."""
+    P = np.asarray(P, float)
+    n = len(P)
+    keep = np.zeros(n, bool)
+    if n == 0:
+        return keep
+    keep[[0, n - 1]] = True
+    stack = [(0, n - 1)]
+    while stack:
+        a, b = stack.pop()
+        if b - a < 2:
+            continue
+        ab = P[b] - P[a]
+        l2 = float(ab @ ab)
+        q = P[a + 1:b] - P[a]
+        if l2 < 1e-18:
+            d2 = (q * q).sum(1)
+        else:
+            t = np.clip((q @ ab) / l2, 0.0, 1.0)
+            r = q - t[:, None] * ab[None, :]
+            d2 = (r * r).sum(1)
+        k = int(d2.argmax())
+        if d2[k] > tol * tol:
+            m = a + 1 + k
+            keep[m] = True
+            stack.append((a, m))
+            stack.append((m, b))
+    return keep

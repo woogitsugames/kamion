@@ -214,6 +214,13 @@ def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
     if n < 2 or VW.max() < 0.05:
         return
     VW[VW < 0.05] = 0.0
+    along = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(G, axis=0).T))])
+    # ends: the strip and its skirt run out over 2 m (a strip that stopped within one station next to a dense corner
+    # arc left a near-vertical grass face, terrain_walls b1)
+    zero = np.where(VW <= 0.0)[0]
+    dist = np.full(n, 1e9) if not len(zero) else np.abs(along[:, None] - along[zero][None, :]).min(1)
+    VW = np.minimum(VW, 0.5 * dist)
+    depth = np.minimum(S.FLANGE_DEPTH, 0.25 * dist)
     tw = S.KERB_TOP_W
     scale = np.ones(n)
     inside = kap_toward > 1e-6
@@ -224,14 +231,20 @@ def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
     on = VW > 0.0
     u0 = tw * scale
     u1 = (tw + VW) * scale
-    u2 = u1 + np.where(on, S.FLANGE_DEPTH * S.EMBANKMENT_SLOPE, 0.0) * scale
+    depth = np.where(on, depth, 0.0) * scale          # squeezed on the inside of a curve: shallower, same 1:1.5 slope
+    u2 = u1 + depth * S.EMBANKMENT_SLOPE
     z0 = zg + H
     z1 = z0 + S.SIDEWALK_CROSSFALL * VW
-    z2 = z1 - np.where(on, S.FLANGE_DEPTH, 0.0)
+    z2 = z1 - depth
     P0 = np.column_stack([G + OUT * u0[:, None], z0])
     P1 = np.column_stack([G + OUT * u1[:, None], z1])
     P2 = np.column_stack([G + OUT * u2[:, None], z2])
-    along = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(G, axis=0).T))])
+    # straights: one quad per run (Douglas-Peucker on the three edge lines, 1-2 cm; the kerb beside it keeps every
+    # station, the hairline between them is under the tolerance)
+    from .geom import dp_keep
+    kp = dp_keep(P0, 0.01) | dp_keep(P1, 0.015) | dp_keep(P2, 0.02)
+    P0, P1, P2, u0, u1, u2, along = P0[kp], P1[kp], P2[kp], u0[kp], u1[kp], u2[kp], along[kp]
+    n = len(P0)
     T = grid_tris(n, 2, flip=flip)
     for A, B, ua, ub, fp in ((P0, P1, u0, u1, True), (P1, P2, u1, u2, False)):
         V = np.concatenate([A[:, None, :], B[:, None, :]], axis=1).reshape(-1, 3)
@@ -744,7 +757,8 @@ def build_patch(buf, net, j, coarse=False, stats=None):
                 i1 = (i + 1) % n
                 T.append((b0 + i, b1 + i, b1 + i1))
                 T.append((b0 + i, b1 + i1, b0 + i1))
-        buf.add(layer, mat, V, V[:, :2].copy(), np.array(T), footprint=(layer == "road" and not coarse), src=j.id)
+        buf.add(layer, mat, V, V[:, :2].copy(), np.array(T), footprint=(layer == "road" and not coarse), src=j.id,
+                UV1=None if coarse else _patch_uv1(net, j, V))
         if stats is not None:
             stats["polar"] = stats.get("polar", 0) + 1
     else:
@@ -753,7 +767,8 @@ def build_patch(buf, net, j, coarse=False, stats=None):
             res = _repair_fill(poly, zb, ph, S.PATCH_COLLISION_SPACING_M if coarse else 2.5)
             if res is not None:
                 V, T = res
-                buf.add(layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id)
+                buf.add(layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id,
+                UV1=None if coarse else _patch_uv1(net, j, V))
                 if stats is not None:
                     stats["repaired"] = stats.get("repaired", 0) + 1
                     stats.setdefault("repaired_ids", []).append(j.id)
@@ -777,7 +792,8 @@ def build_patch(buf, net, j, coarse=False, stats=None):
                 T = np.array(ear_clip(poly))
                 kind = "earclip"
             V = np.column_stack([poly, zb])
-        buf.add(layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id)
+        buf.add(layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id,
+                UV1=None if coarse else _patch_uv1(net, j, V))
         if stats is not None:
             stats[kind] = stats.get(kind, 0) + 1
             if kind == "earclip":
@@ -890,6 +906,66 @@ def _repair_fill(poly, zb, ph, spacing):
     if not Vs:
         return None
     return np.vstack(Vs), np.vstack(Ts)
+
+
+def _patch_uv1(net, j, V):
+    """UV1 = (lane coordinate, distance to the carriageway edge) of a junction plate, in the frame of its through
+    road: the widest arm and the arm opposite to it (ADR 0110, REVIEW s10-0100 P1-2). Plates had no UV1 (the exporter
+    default -1 / 5 m = no wheel paths, no gutter dirt), so every plate in a weathered carriageway read as a cleaner,
+    lighter rectangle across the lanes (p0_fork_putry_eye, eye_putry_n). Vertices outside the through road keep the
+    default."""
+    P = np.asarray(V, float)[:, :2]
+    lane = np.full(len(P), -1.0)
+    edge = np.full(len(P), 5.0)
+    score = np.full(len(P), np.inf)
+    if not j.arms:
+        return np.column_stack([lane, edge])
+    hws = [float(a.chain.hw_at(float(a.s(j.trims[i])))) for i, a in enumerate(j.arms)]
+    i0 = int(np.argmax(hws))
+    d0 = j.arms[i0].direction(float(j.trims[i0]))
+    ref = [i0]
+    best = None
+    for i, a in enumerate(j.arms):
+        if i == i0:
+            continue
+        dot = float(np.dot(a.direction(float(j.trims[i])), d0))
+        if dot < -0.8 and (best is None or dot < best[0]):
+            best = (dot, i)
+    if best is not None:
+        ref.append(best[1])
+    for i in ref:
+        a = j.arms[i]
+        c = a.chain
+        d = float(j.trims[i])
+        s0 = float(a.s(d))
+        sec = c.section(s0, net.sec_list)
+        lo, hi = (0.0, d + 5.0) if a.end == "a" else (c.length - d - 5.0, c.length)
+        idx = np.where((c.line.s >= lo - 1e-6) & (c.line.s <= hi + 1e-6))[0]
+        if len(idx) < 2:
+            continue
+        pts = c.line.p[idx]
+        A, B = pts[:-1], pts[1:]
+        AB = B - A
+        l2 = np.maximum((AB ** 2).sum(1), 1e-12)
+        t = np.clip(((P[:, None, :] - A[None]) * AB[None]).sum(2) / l2[None], 0.0, 1.0)
+        C = A[None] + AB[None] * t[..., None]
+        D = np.hypot(P[:, None, 0] - C[..., 0], P[:, None, 1] - C[..., 1])
+        k = D.argmin(1)
+        dist = D[np.arange(len(P)), k]
+        cross = AB[k, 0] * (P[:, 1] - A[k, 1]) - AB[k, 1] * (P[:, 0] - A[k, 0])
+        lat = np.copysign(dist, cross)
+        hw = hws[i]
+        if getattr(sec, "lane_edges", None):
+            lc = sec.lane_coord(lat, hw, int(c.dirn[c.idx(s0)]) or 1)
+        elif sec.oneway or sec.roundabout:
+            lc = (lat + hw - sec.edge_strip) / max(float(sec.lane_w), 2.0)
+        else:
+            lc = np.abs(lat) / max(float(sec.lane_w), 2.0)
+        better = (dist < score) & (dist <= hw + 0.3)
+        lane[better] = np.asarray(lc, float)[better]
+        edge[better] = np.maximum(hw - dist, 0.0)[better]
+        score[better] = dist[better]
+    return np.column_stack([lane, edge])
 
 
 def _patch_mat(net, j):
@@ -1017,6 +1093,11 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
             # ADR 0110: the grass behind the kerb runs round the corner / median nose too
             vw = np.array([v if (q[0] == URBAN and q[2] < 0.05 and q[4] == 0 and q[1] > 0.05) else 0.0
                            for v, q in zip(cv, params)])
+            # a corner whose kerb line jumps in height (plates of two levels meeting: j:n2591872092, +-1 m between
+            # stations) gets no grass - the strip would repeat the jumps as 1-2 m grass faces
+            dsz = np.maximum(np.hypot(*np.diff(G, axis=0).T), 0.25)
+            if len(Z) > 1 and float(np.max(np.abs(np.diff(Z)) / dsz)) > 0.15:
+                vw[:] = 0.0
             _emit_verge(buf, G, OUT, Z, np.array([q[1] for q in params]), vw, kap, hwz, True, j.id + f":corner{i}:vg")
 
 
@@ -1123,7 +1204,12 @@ def cull_sides_on_carriageway(buf: MeshBuf) -> dict:
         tri = p.V[p.T]
         cen = tri.mean(1)
         drop = on_cw(cen)
-        if kerb:
+        if p.src.endswith(":vg"):
+            # ADR 0110: grass behind a kerb never lies on a carriageway, not even with one vertex (a strip reaching
+            # onto the lane of a merging road stood 0.13 m above its asphalt: marking_off_carriageway 2 -> 11 in b1)
+            for k in range(3):
+                drop |= on_cw(tri[:, k] + (cen - tri[:, k]) * 0.05)
+        elif kerb:
             for o in ring:
                 if not drop.any():
                     break

@@ -290,6 +290,8 @@ def grade_limit(highway: str, maxspeed: float | None) -> tuple[float, float]:
 # `surface: asphalt_new` / `surface: asphalt` on the edges wins.
 NEW_ASPHALT_SHARE = 0.25
 NEW_ASPHALT_CLASSES = ("A", "S", "GP", "G", "Z")
+NEW_ASPHALT_MIN_LEN_M = 120.0   # WORKING_VALUE (ADR 0110): a shorter chain is never "resurfaced" on its own - a 20 m
+#                                 chain between two plates (Putry N southbound, N 100-120) read as a patch rectangle
 
 
 def surface_material(chain, sec):
@@ -301,6 +303,8 @@ def surface_material(chain, sec):
         return m
     br = getattr(chain, "bridge", None)
     if chain.roundabout or sec.cls not in NEW_ASPHALT_CLASSES or (br is not None and bool(br.any())):
+        return m
+    if float(getattr(chain, "length", 1e9)) < NEW_ASPHALT_MIN_LEN_M:
         return m
     h = int(hashlib.sha1(f"{chain.id}:asphalt_new".encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
     return "road_asphalt_new" if h < NEW_ASPHALT_SHARE else m

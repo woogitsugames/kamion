@@ -492,10 +492,40 @@ def _build_island(buf, isl: Island, ms, cs):
     isl.note = f"z {zmean:.2f}"
 
 
+def _drop_verge_in_islands(buf, gp: GorePlan) -> int:
+    """ADR 0110: the grass strips behind kerbs (meshing._emit_verge, src "...:vg") do not run under an authored
+    traffic island or a paved gore fill (dk8-ramp-split-island: paving with grass strips showing through it)."""
+    polys = [i.poly.buffer(0.30) for i in gp.islands] + [g.poly.buffer(0.10) for g in gp.gores if g.built]
+    if not polys:
+        return 0
+    zone = shapely.union_all(polys)
+    shapely.prepare(zone)
+    b = zone.bounds
+    n = 0
+    keep = []
+    for p in buf.parts:
+        if p.src.endswith(":vg") and len(p.T):
+            lo, hi = p.V[:, :2].min(0), p.V[:, :2].max(0)
+            if not (hi[0] < b[0] or lo[0] > b[2] or hi[1] < b[1] or lo[1] > b[3]):
+                tri = p.V[p.T]
+                cen = tri.mean(1)
+                drop = shapely.contains_xy(zone, cen[:, 0], cen[:, 1])
+                for k in range(3):
+                    drop |= shapely.contains_xy(zone, tri[:, k, 0], tri[:, k, 1])
+                if drop.any():
+                    n += int(drop.sum())
+                    p.T = p.T[~drop]
+        if len(p.T):
+            keep.append(p)
+    buf.parts[:] = keep
+    return n
+
+
 def drop_kerbs_in_fills(buf, gp: GorePlan) -> int:
     """Remove the kerbs (render + collision, top and face) lying inside a built paved gore. plan() sinks them 6 cm so
     that the ribbon edge has no ridge; the sunk strip must not stay in the mesh (REVIEW 0077 #1). Returns triangles
     removed. meshing.cull_sides_on_carriageway only takes kerbs with carriageway all around at 0.30 m."""
+    _drop_verge_in_islands(buf, gp)
     built = [g.poly.buffer(-0.10) for g in gp.gores if g.built]
     built = [b for b in built if not b.is_empty]
     if not built:
