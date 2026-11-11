@@ -1,9 +1,8 @@
 param([ValidateSet('before','after')][string]$Stage)
 $ErrorActionPreference='Stop'
 Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
-$shader='game/Assets/_Project/Environment/Shaders/WorldPBR.shader'
-if($Stage -eq 'before') { git restore --source=main --worktree -- $shader }
-try {
+# Source state is prepared explicitly by source-mode.ps1. Do not mix a shader
+# from a moving main branch with a canonical world generated from a fixed base.
  foreach($tier in @('Low','High')) { foreach($light in @('clear','overcast')) {
   $scene=if($tier -eq 'High'){'WorldC_High'}else{'WorldC'}
   & pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-life
@@ -17,4 +16,3 @@ try {
   }
  }
  }
-} finally { if($Stage -eq 'before') { git restore --worktree -- $shader } }
