@@ -2,9 +2,11 @@
 from types import SimpleNamespace
 
 import numpy as np
+import pytest
 from shapely.geometry import box, mapping
 
 from streetscape.vegetation import ground_masks
+from streetscape.plantings import hedge_mass, hedge_mats
 
 
 def test_verge_keeps_patch_variation_beside_a_mapped_lawn_without_invented_bare_soil():
@@ -32,3 +34,36 @@ def test_mapped_forest_and_exposed_soil_survive_ground_variation():
     assert masks[64, 94, 3] > .35
     assert masks[64, 34, 3] == 0
     assert (masks[:, 64, 0] == 0).all()  # road channel remains exactly zero on road
+
+
+@pytest.mark.parametrize("plant", ["berberis_red", "privet", "hornbeam", "thuja"])
+def test_hedge_core_stays_below_the_actual_triangulated_leaf_top(plant):
+    class Capture:
+        def __init__(self):
+            self.parts = []
+
+        def add(self, layer, material, vertices, uv, triangles, **kwargs):
+            self.parts.append((material, np.asarray(vertices), np.asarray(triangles)))
+
+    buf = Capture()
+    hedge_mass(buf, box(0, 0, 8, 1.3), lambda x, y: np.zeros_like(x),
+               ("qa", "local-top"), h=.65, plant=plant)
+    core_m, shell_m, sprig_m = hedge_mats(plant)
+    assert {p[0] for p in buf.parts} <= {core_m, shell_m, sprig_m}
+    core = [p for p in buf.parts if p[0] == core_m][-1][1]
+    _, shell, indices = [p for p in buf.parts if p[0] == shell_m][-1]
+    triangles = shell[indices]
+    a, b, c = (triangles[:, i, :2] for i in range(3))
+    ab, ac = b-a, c-a
+    ap = core[:, None, :2]-a[None, :, :]
+    cross = lambda x, y: x[..., 0]*y[..., 1]-x[..., 1]*y[..., 0]
+    den = cross(ab, ac)
+    valid = abs(den) > 1e-10
+    w1 = cross(ap, ac)/np.where(valid, den, 1)
+    w2 = cross(ab, ap)/np.where(valid, den, 1)
+    w0 = 1-w1-w2
+    inside = valid & (w0 >= -1e-7) & (w1 >= -1e-7) & (w2 >= -1e-7)
+    heights = w0*triangles[:, 0, 2]+w1*triangles[:, 1, 2]+w2*triangles[:, 2, 2]
+    surface = np.where(inside, heights, -np.inf).max(axis=1)
+    assert np.isfinite(surface).all(), "core top must lie inside the leaf top footprint"
+    assert np.max(core[:, 2]-surface) <= .005, "opaque core pokes through the leaf top"
