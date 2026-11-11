@@ -31,3 +31,6 @@ NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/unity-step.ps1 -Step Import
 
 Krok 10: przygotowano warunkową kontynuację po imporcie: sprawdzenie tożsamości własnego procesu, IMPORT_RESULT OK i zwolnienia slotu, następnie pełny baseline Low/High clear/overcast. Wrapper przyszłych uruchomień nie usuwa cudzych starych slotów. Wszystkie uruchomienia nadal korzystają z oficjalnego Acquire/Release i Owner gpt-landmarks.
 NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-capture-wrapper.log -Tail 10
+
+Krok 11: artifact-only kandydat wygładzenia tui przeszedł porównanie 26 rzeczywistych krzewów. Geometria, UV i materiały identyczne; High 4576 tris/0 nowych normalnych, Low 552 tris/1104 zgodne normalne narożników. Współdzielone pozycje mają identyczne normalne. Nie wdrożono do produkcji; brak renderu oznacza brak visual PASS. Import nadal w kolejce.
+NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-import-wrapper.log -Tail 10
