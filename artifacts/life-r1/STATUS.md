@@ -15,3 +15,6 @@ Następny krok: uv run --project tools/worldgen python art-source/world/material
 
 Krok 5: obejrzano lokalny arkusz zdjęć Mapillary; nie jest kalibrowaną referencją albedo. Przygotowano skrypt porównujący wszystkie kamery, osobno draws świata i instancji, oraz pary przed/po do 960 px. Pierwszy import Unity trwa, nie wykonano jeszcze oceny nowych PNG.
 Następny krok po renderze AFTER: uv run --project tools/worldgen python artifacts/life-r1/compare.py
+
+Krok 6: analiza następnej rundy wykonana bez zmiany produkcji. Zapisano trójkąty i grupy materiałowe wszystkich statycznych ciągników/naczep w yard-prototype-baseline.json. Potencjalny problem: koła naczep LOD1 są długimi pryzmami, a warunek dodający chlapacze LOD0 jest nieosiągalny wewnątrz if lod > 0. Weryfikacja wizualna i poprawki dopiero w rundzie 2.
+Następny krok: zakończyć bieżący baseline 92 kamer × 4, regenerację materiałów i build_world przed importem kandydata.
