@@ -41,3 +41,4 @@ Krok 15: podczas kolejki przygotowano 10 bazowych par G3-B z atrybucją i klasą
 Następny krok: wynik audytu, ograniczenie metadanych i nowe rendery; dotychczasowe pary są wyłącznie bazą, nie dowodem poprawy r2.
 Krok 16: audyt zakończony kodem 0: 5384 zmienione wysokości (2253 bloki, 1564 biurowe, 1065 hale, 502 domy); wszystkie 8447 obrysów oraz lasy, kominy, maszty i linie bez zmian. ScopeGenerated zweryfikował oba SHA GLB i odtworzył metadane innych dziedzin; world_manifest zachowuje wyłącznie aktualizację far-field.
 Następny krok w tym samym heavy: pojedynczy tests/gis/test_far_field.py, potem pula zwolniona i Unity After.
+Krok 17: pojedynczy test_far_field.py zaliczony; wynik w test-far-field.log. Następna komenda: pwsh artifacts/edge-r2/validate.ps1 -Phase After.
