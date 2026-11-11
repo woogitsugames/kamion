@@ -127,6 +127,11 @@ namespace Game.Rendering
             "cabint" => "no Kamion/Cab Interior renderers",
             "truckext" => "no Kamion/Truck Exterior renderers",
             "cabdisp" => "no Kamion/Cab Display renderers",
+            "mirrorlow" => "mirror LOD scale 0.5 (convex 0.3) as on High",
+            "far80" => "main camera far clip x0.8",
+            "scale5" => "render scale -0.05",
+            "hlodcanopy" => "no forest HLOD canopy (URP Lit) submeshes",
+            "hlodedge" => "no forest HLOD edge-wall submeshes",
             "hlod" => "no forest HLOD meshes",
             "impostor" => "no tree impostor LOD",
             "treeshadow" => "instanced trees cast no shadows",
@@ -352,6 +357,18 @@ namespace Game.Rendering
                 case "cabint": SetShaderRenderers("Kamion/Cab Interior", b); break;
                 case "truckext": SetShaderRenderers("Kamion/Truck Exterior", b); break;
                 case "cabdisp": SetShaderRenderers("Kamion/Cab Display", b); break;
+                case "mirrorlow": MirrorOverrides.LodScale = b ? 0.5f : (float?)null; break;
+                case "far80":
+                    if (b) { m_AbCam = ViewCameraResolver.Resolve(null); if (m_AbCam != null) { m_SavedFar = m_AbCam.farClipPlane; m_AbCam.farClipPlane = m_SavedFar * 0.8f; } }
+                    else if (m_AbCam != null && m_SavedFar > 0f) { m_AbCam.farClipPlane = m_SavedFar; m_SavedFar = -1f; }
+                    break;
+                case "scale5":
+                    if (urp == null) break;
+                    if (b) { m_SavedScale = urp.renderScale; urp.renderScale = Mathf.Max(0.3f, m_SavedScale - 0.05f); }
+                    else if (m_SavedScale > 0f) { urp.renderScale = m_SavedScale; m_SavedScale = -1f; }
+                    break;
+                case "hlodcanopy": RenderOverrides.AbHlodPart = b ? 1 : 0; break;
+                case "hlodedge": RenderOverrides.AbHlodPart = b ? 2 : 0; break;
                 case "hlod": RenderOverrides.AbHlodOff = b; break;
                 case "impostor": RenderOverrides.AbImpostorOff = b; break;
                 case "treeshadow": RenderOverrides.AbTreeShadowOff = b; break;

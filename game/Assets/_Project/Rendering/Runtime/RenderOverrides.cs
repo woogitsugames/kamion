@@ -72,6 +72,7 @@ namespace Game.Rendering
         /// <summary>ADR 0106 A/B state (ExtraViewCostMonitor): instanced trees / props suspended in the B windows.</summary>
         public static bool AbTreesOff, AbPropsOff, AbTreeShadowOff, AbHlodOff, AbImpostorOff;
         public static float AbTreeThinScale = 1f, AbTreeCardScale = 1f;
+        public static int AbHlodPart;   // 1 canopy off, 2 edge walls off
 
         public static bool Any => Msaa.HasValue || RenderScale.HasValue || ShadowDistance.HasValue || Post.HasValue || Hdr.HasValue ||
                                   LeafA2C.HasValue || Trees.HasValue || TreeShadowMask.HasValue || TreeCardScale.HasValue ||

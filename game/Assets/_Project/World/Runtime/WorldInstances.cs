@@ -472,6 +472,8 @@ namespace Game.World
             {
                 var mat = mats[materialStart + s];
                 if (mat == null) continue;
+                // ADR 0106 A/B (diagnostics): 1 = no canopy (opaque) submeshes, 2 = no edge-wall (Kamion/Vegetation) submeshes.
+                if (RenderOverrides.AbHlodPart != 0 && (RenderOverrides.AbHlodPart == 2) == (mat.shader == m_FoliageShader)) continue;
 
                 var rp = new RenderParams(mat)
                 {
