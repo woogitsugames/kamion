@@ -12,9 +12,11 @@ for tier in ('Low', 'High'):
             continue
         for reference in ('working-tractor', 'paint-reflection'):
             sheet = Image.new('RGB', (960, 410), '#202020')
-            for x, path in ((0, root / 'references' / f'{reference}.jpg'), (480, render)):
+            # Similar vehicle occupancy, without inventing an exact camera registration.
+            crops = ((100, 170, 940, 630), (800, 240, 1780, 800)) if reference == 'working-tractor' else ((160, 10, 610, 505), (820, 245, 1310, 790))
+            for (x, path), crop in zip(((0, root / 'references' / f'{reference}.jpg'), (480, render)), crops):
                 with Image.open(path) as source:
-                    picture = ImageOps.contain(source.convert('RGB'), (480, 340), Image.Resampling.LANCZOS)
+                    picture = ImageOps.contain(source.convert('RGB').crop(crop), (480, 340), Image.Resampling.LANCZOS)
                     sheet.paste(picture, (x + (480-picture.width)//2, 34 + (340-picture.height)//2))
             draw = ImageDraw.Draw(sheet)
             draw.text((8, 8), 'ZDJĘCIE | ' + reference, font=font, fill='white')

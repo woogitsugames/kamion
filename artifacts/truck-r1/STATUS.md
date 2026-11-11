@@ -106,3 +106,4 @@ Krok 34: niezależna kontrola ośmiu końcowych arkuszy po rebuildzie nie wykaza
 Zapisano wszystkie kamery: after-all Low overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
 Zapisano wszystkie kamery: after-all High overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
 EditMode final: 266/266, failed 0, skipped 0, exit 0. XML i JSON w pakiecie. Następny krok: przy błędzie odczytać konkretny test; przy powodzeniu kontynuować walidację rundy.
+Krok 35: końcowe EditMode 266/266 passed, zero failed/skipped. W 96 wierszach kamer wszystkie liczniki przed/po identyczne (renderery i instancje osobno; zaokrąglone tysiące trójkątów). Clipping lampy High-overcast 1214 → 0; D44 Low 0,490 i High 0,526 nadal poniżej 0,7. Arkusze fotograficzne poprawiono przez porównywalne wypełnienie kadru pojazdem, bez deklarowania identycznej pozy. Następny krok: końcowy GIS po zwolnieniu slotu porównania zasobów.
