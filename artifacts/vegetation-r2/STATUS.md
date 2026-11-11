@@ -74,3 +74,6 @@
 
 - Krok12: eksperyment near-only zaimportowany; source iGeneratedPNG mają ten samSHA6c2da699..., koronyDK8Lowp10/p50 33,50/44,14,0%<16. Dalsze HLOD/billboardy nadalr2, nie jest to końcowy wynik. Przywrócony oryginalny fixture potwierdzony cab-dash staticdraw/tris423/319Low,781/1326High zgodniezbaseline; totaldraw856/1459 także zgodne. LiderP1płaskie wyspy nadalotwarte do pełnegobake. NASTĘPNY KROK: `Get-Content artifacts/vegetation-r2/needle-bake.log -Tail 8`; potem pełne produkty/import i kontrolaDK8/fixture.
 
+
+- Krok13: pełny bakeCC0igieł (3impostory sosny+3rodzinyHLOD) gotowy. Geometria obuGLB ma identycznySHAakcesorów przed/po, trees_meta identyczny bajtowo; zmieniono wyłącznie tekstury,0nowychtri/material. Pełny import/trial w toku; poprzedni near-only zachowany w needle-near-experiment. NASTĘPNY KROK: `Get-Content artifacts/vegetation-r2/needle-experiment-full.log -Tail 8` i ocena nowych8PNG zliderem.
+
