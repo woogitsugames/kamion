@@ -25,3 +25,5 @@ Krok 8: przed przebudową zapisano SHA aktualnych scen i siatek edge z Unity (sn
 Następny krok nadal zależy od końca build_world; testów Python z tym samym właścicielem slotu nie uruchamiamy równolegle.
 Krok 9: build_world działa i przeszedł etapy dróg/budynków/placów (ostatnio 340,8 s czasu generatora). Bez drugiego zadania Python tej sesji. Skrypt heavy dla kolejnych uruchomień zapisuje osobny kwit z pulą, właścicielem, czasem oczekiwania, czasem pracy i kodem zakończenia.
 Następny krok: po końcu budowy test_lod1 → AuditHeights → test_far_field, sekwencyjnie i każdy przez heavy.
+Krok 10: build_world zakończył się komunikatem done po 459,9 s i zwolnił heavy. Far-field High 118524 trójkątów, Low 24500 (baza 24508). Log nie zawiera fallback=True. Weryfikacja rzeczywistych rekordów i budżetu kamer nadal przed nami.
+Następny krok: pwsh artifacts/edge-r2/heavy.ps1 -Task GisFile -TestFile tests/gis/test_far_field_lod1.py.
