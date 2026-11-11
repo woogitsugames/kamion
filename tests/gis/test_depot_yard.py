@@ -151,7 +151,7 @@ def test_region_gate_cannot_be_driven_round():
         assert st["m2"] >= 8.0, (name, st)
     assert set(ap["closure"]) == {"entry", "exit"}
     for name, c in ap["closure"].items():
-        assert c["ends"] in ("yard_edge", "cut"), (name, c)       # not cut short by max_m: it reaches a boundary
+        assert c["ends"] in ("yard_edge", "building"), (name, c)  # reaches a boundary, not another road / max_m
         assert c["m"] >= 5.0, (name, c)
     assert len(g["closure_lines"]) == 2
     from shapely.geometry import LineString

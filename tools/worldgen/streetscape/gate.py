@@ -221,24 +221,58 @@ def _scuffs(buf, poly, zlane, t_axis, key, src):
     return tris
 
 
-def _closure(lin, a0, direction, cfg, yard, cutter, src):
-    """Line that keeps vehicles from driving round the boom: from a0 (outer edge of the side strip) along `direction`
-    until the paved yard ends or a road / building cuts it, at most max_m. style bollards: yellow steel posts every
-    CLOSURE_POST_M + one collision wall; style fence: anthracite 3D panels on a concrete plinth. Everything goes to the
-    "paved" layer (a part in the chunk's furniture mesh would drag that whole mesh into the gate view, ADR 0071 r11).
-    Returns (LineString or None, why it ends)."""
-    t = direction / max(float(np.hypot(*direction)), 1e-9)
-    line = LineString([a0, a0 + t * float(cfg.get("max_m", 60.0))])
-    g = line.intersection(yard.buffer(0.3)).difference(cutter)
+def _closure_ray(a0, t, max_m, yardb, roads_b, bld_b, beyond_m):
+    """One candidate closure line from a0 along unit t: the stretch over the paved yard (stops at a road or a
+    building), continued over unpaved ground for up to beyond_m when a building stands there (a fence that stops at
+    the edge of the paving can be driven round on the grass). Returns (LineString, why) or (None, why); why:
+    building (ends on a wall: closed), yard_edge (ends where the paving ends), road (another carriageway), max_m."""
+    line = LineString([a0, a0 + t * max_m])
+    g = line.intersection(yardb).difference(roads_b).difference(bld_b)
     parts = [q for q in getattr(g, "geoms", [g]) if q.geom_type == "LineString" and q.length > 1.0]
     parts = [q for q in parts if q.distance(Point(*a0)) < 0.8]
     if not parts:
         return None, "no_room"
-    part = parts[0]
-    if float(np.hypot(*(np.asarray(part.coords[-1]) - a0))) < float(np.hypot(*(np.asarray(part.coords[0]) - a0))):
-        part = LineString(list(part.coords)[::-1])
-    end = np.asarray(part.coords[-1])
-    why = "max_m" if part.length > line.length - 0.5 else ("cut" if cutter.distance(Point(*end)) < 0.6 else "yard_edge")
+    L = max(float(np.hypot(*(np.asarray(c) - a0))) for c in parts[0].coords)
+    end = a0 + t * L
+    if L > max_m - 0.5:
+        return LineString([a0, end]), "max_m"
+    if bld_b.distance(Point(*end)) < 0.3:
+        return LineString([a0, end]), "building"
+    if roads_b.distance(Point(*end)) < 0.3:
+        return LineString([a0, end]), "road"
+    ext = LineString([end, end + t * beyond_m]).intersection(bld_b)
+    if not ext.is_empty and roads_b.distance(LineString([end, end + t * beyond_m])) > 0.0:
+        L2 = L + float(ext.distance(Point(*end)))
+        return LineString([a0, a0 + t * L2]), "building"
+    return LineString([a0, end]), "yard_edge"
+
+
+def _closure(lin, a0, direction, cfg, yard, roads_poly, bpoly, src):
+    """Line that keeps vehicles from driving round the boom: from a0 (outer edge of the side strip) to the nearest
+    boundary of the paved yard. Candidates: rays within +-fan_deg of `direction` (straight out of the lane) every
+    5 deg; the shortest one that ends on a building wins, else the shortest that ends at the edge of the paving (a ray
+    that only reaches another road or max_m does not close anything and is the last resort). style bollards: yellow
+    steel posts every CLOSURE_POST_M + one collision wall; style fence: anthracite 3D panels on a concrete plinth.
+    Everything goes to the "paved" layer (a part in the chunk's furniture mesh would drag that whole mesh into the
+    gate view, ADR 0071 r11). Returns (LineString or None, why it ends)."""
+    t0 = direction / max(float(np.hypot(*direction)), 1e-9)
+    max_m, beyond_m = float(cfg.get("max_m", 60.0)), float(cfg.get("beyond_m", 8.0))
+    yardb, roads_b, bld_b = yard.buffer(0.3), roads_poly.buffer(0.4), bpoly.buffer(0.5)
+    rank = {"building": 0, "yard_edge": 1, "road": 2, "max_m": 3}
+    best = None
+    fan = int(cfg.get("fan_deg", 60))
+    for a in range(-fan, fan + 1, 5):
+        ca, sa = math.cos(math.radians(a)), math.sin(math.radians(a))
+        t = np.array([t0[0] * ca - t0[1] * sa, t0[0] * sa + t0[1] * ca])
+        ln, why = _closure_ray(a0, t, max_m, yardb, roads_b, bld_b, beyond_m)
+        if ln is None:
+            continue
+        key = (rank[why], round(ln.length, 2), abs(a))
+        if best is None or key < best[0]:
+            best = (key, ln, why, t)
+    if best is None:
+        return None, "no_room"
+    _, part, why, t = best
     buf = lin.buf
     n0 = len(buf.parts)
     if cfg.get("style", "bollards") == "fence":
@@ -411,8 +445,7 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report, pav
                     ccfg = (o.get("closure") or {}).get(name)
                     if ccfg and yard is not None:
                         a0 = p_c + across * (s_out - 0.25)
-                        cutter = shapely.union_all([roads_poly.buffer(0.4), bpoly.buffer(0.5)])
-                        ln, why = _closure(lin, a0, across, ccfg, yard, cutter, f"{src}:closure:{name}")
+                        ln, why = _closure(lin, a0, across, ccfg, yard, roads_poly, bpoly, f"{src}:closure:{name}")
                         if ln is None:
                             rep["stale"].append(f"{o['id']}:closure:{name}:{why}")
                         else:

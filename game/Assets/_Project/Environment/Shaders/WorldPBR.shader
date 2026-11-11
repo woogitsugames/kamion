@@ -568,8 +568,14 @@ Shader "Kamion/World PBR"
                     // PNG row 0 (right under the coping) is texture v = 1 in Unity: v = 1 - depth / 4 m. Before
                     // (G3 wires-streaks-v2) v = depth / 4 sampled the faded last rows at the top and drew the streaks
                     // upside down 3-4 m lower. LOD1 walls start 0.25 m above their coping (depth < 0): clamped.
-                    float2 ur = float2(i.uv.z / 24.0, 1.0 - clamp((i.uv.w - 1.0) * 0.25, 0.0, 0.985));
+                    // ADR 0092: v >= 48 = the face hangs under a window sill (v - 64 = 1 + depth below the sill). A sill
+                    // collects dust over its whole length and sheds it at every joint: streaks 1.7x denser and stronger
+                    // than under the coping, and a dirt line right under the sill flashing (0.2 m, WORKING_VALUE).
+                    half sill = step(48.0, i.uv.w);
+                    float depth = i.uv.w - 1.0 - 64.0 * sill;
+                    float2 ur = float2(i.uv.z * lerp(1.0, 1.7, sill) / 24.0 + 0.31 * sill, 1.0 - clamp(depth * lerp(0.25, 0.4, sill), 0.0, 0.985));
                     half3 ro = SAMPLE_TEXTURE2D(_RunoffMap, sampler_MacroMap, ur).rgb;
+                    ro.r = saturate(ro.r * (1.0 + 0.8 * sill) + sill * 0.3 * (1.0 - smoothstep(0.0, 0.2, depth)) * (0.5 + macro.a));
                     half k = _RunoffStrength * saturate(0.8 + (macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 1.0);
                     albedo = lerp(albedo, albedo * half3(0.22, 0.21, 0.2), ro.r * k);
                     albedo = lerp(albedo, half3(0.075, 0.042, 0.022), ro.g * k * 0.8);
