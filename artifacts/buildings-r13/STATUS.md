@@ -53,3 +53,13 @@ Gałąź `buildings-r5`, worktree `.claude/worktrees/buildings-r5`, z main `0e73
   (r10_block_2/4), domy z podestem, kosze/skrzydła na kamerach r13_house2_*. Opaska zapadała się pod siatkę terenu
   (r10_block_5: jasne łaty) → `BLOCK_APRON = False` (otwarte).
 - NASTĘPNY KROK: `pwsh artifacts/buildings-r13/chain.ps1 -Round r3`, potem `pwsh scripts/test.ps1 -Platform EditMode`
+
+## krok 6 — KONIEC: r3 (stan końcowy) zmierzony, EditMode, ADR 0097
+- r3 = r2 bez opaski. Region High 4025 / 14,02 mln tris, Low 3006 / 4,489 mln; budżet Low 57 kamer: draws 16688 →
+  16683 (−0,0 %), tris +0,5 % (maks. r10_block_2 +2,2 %), kamer > 400 draws 10 → 10.
+- EditMode 226: 223 passed, 3 failed (TruckDoorGlassTests × 3, znane, C# bez zmian). pytest gis (r2) 380 / 1 xfail.
+- Pary przed/po: `pairs/*.jpg` (base vs r3), kamery dodatkowe `r2/extra/960/`.
+- NASTĘPNY KROK (lider): visual-critic na `pairs/` + `r2/extra/960/`; scalenie `buildings-r5`, potem
+  `uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only facade_atlas,facade_far` →
+  `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` →
+  `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c`

@@ -65,14 +65,14 @@ Rundy: base (main) → r1 → r2 → r3 (= stan końcowy: r2 bez opaski). Dowody
 
 | miara | base | r1 | r2 | r3 |
 |---|---|---|---|---|
-| balkony w regionie | 2369 | 3413 | 3413 | R3_BAL |
+| balkony w regionie | 2369 | 3413 | 3413 | 3413 |
 | domy: MultiRoof / dwuspad. / czterosp. / jednosp. / płaskie | 0 / 200 / 30 / 36 / 4 | 98 / 102 / 30 / 36 / 4 | = | = |
-| region High: submeshe / mln tris | (r12 r3b: 4025 / 13,96) | 4025 / 14,04 | 4038 / 14,03 | R3_HIGH |
-| region Low: submeshe / mln tris | (r12 r3b: 3004 / 4,490) | 3006 / 4,489 | 3006 / 4,489 | R3_LOW |
-| budżet Low, 57 kamer: draws | 16688 | 16683 (−0,0 %) | 16697 (+0,1 %) | R3_DRAWS |
-| budżet Low: tris (maks. kamera) | 15117 k | +0,6 % (r10_block_2 +3,0 %) | +0,6 % (r10_block_3 +2,8 %) | R3_TRIS |
-| cokół `r10_block_3` High overcast (sRGB) | 63,9 | 69,4 | — | R3_PLINTH |
-| rozbryzg cokołu, góra − dół pasa (luma) | 8,4 | 11,7 | 11,0 | R3_SPLASH |
+| region High: submeshe / mln tris | (r12 r3b: 4025 / 13,96) | 4025 / 14,04 | 4038 / 14,03 | 4025 / 14,02 |
+| region Low: submeshe / mln tris | (r12 r3b: 3004 / 4,490) | 3006 / 4,489 | 3006 / 4,489 | 3006 / 4,489 |
+| budżet Low, 57 kamer: draws | 16688 | 16683 (−0,0 %) | 16697 (+0,1 %) | 16683 (−0,0 %) |
+| budżet Low: tris (maks. kamera) | 15117 k | +0,6 % (r10_block_2 +3,0 %) | +0,6 % (r10_block_3 +2,8 %) | +0,5 % (r10_block_2 +2,2 %) |
+| cokół `r10_block_3` High overcast (sRGB) | 63,9 | 69,4 | — | 69,4 |
+| rozbryzg cokołu, góra − dół pasa (luma) | 8,4 | 11,7 | 11,0 | 11,0 |
 | szczyt `r10_house_2` High clear, średnio / p99 R | 232/221/193, 255 | 220/211/189, 253 | — | — |
 
 - Paleta domów (270, `palette_stats.py`): ciepłe (krem + beż) 63 % → 48 %; najbliższy sąsiad z tą samą ścianą
@@ -80,7 +80,7 @@ Rundy: base (main) → r1 → r2 → r3 (= stan końcowy: r2 bez opaski). Dowody
 - Row atlas `facade_far`: 40,2 → 45,8 m wysokości, GPU (ASTC + mipy) High 4,95 → 5,64 MB, Medium 1,59 → 1,82 MB,
   Low 0,59 → 0,67 MB (+14 %).
 - Tynk, cegła, niebo bez zmian (`measure.py`: szary tynk 128,0 / 131,9, cegła R/B 1,66).
-- Testy: `pytest tests/gis` (r2) 380 passed, 1 xfailed; `test_buildings_r5.py` 10 testów. EditMode: R3_EDIT.
+- Testy: `pytest tests/gis` (r2) 380 passed, 1 xfailed; `test_buildings_r5.py` 10 testów. EditMode: 226: 223 passed, 3 failed — `TruckDoorGlassTests` × 3 (materiał ciężarówki, te same co w ADR 0091/0094; C# w tym zadaniu bez zmian).
 
 ## Samokrytyka (docs/06)
 - **Bez `visual-critic` i bez telefonu** (zakaz subagentów; A16 robi lider). Oceny wyłącznie moje.
