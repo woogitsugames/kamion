@@ -37,3 +37,4 @@ Generacja 442,7 s, kod 0. verify_world: cztery kandydaty, dwa placed i dwa block
 Import D51 dwóch drzew: kod 0. Szczegóły import-after.log.
 Zapisano próbę B/120 Low-overcast w tych samych 1024x768 i FOV co baseline. Następny krok: obejrzeć i porównać koszt, przed pełną macierzą.
 Próba A Low B/120: instancing draws 205 -> 209, instancje 129 -> 132, triangles instanced 28k -> 28k (rozdzielczość raportu 1k). Nie spełnia +0 i wizualnie korony wciąż skromne. Zachowano probe i snapshot-candidate-a. Przygotowano odwracalną ablacją zero: bazowe pliki instancji i manifest importowanego B, bez zmian źródła/GLB/landmarku. Następny krok: świeży import zera i osobny probe-zero, aby oddzielić wpływ importu od drzew.
+Ablacja zero po świeżym imporcie i probe: kod 0. Następny krok: porównanie statystyk oraz przywrócenie wejść A.
