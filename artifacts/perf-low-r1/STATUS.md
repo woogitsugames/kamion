@@ -21,3 +21,10 @@
 - GPU p50 A−B: **ciężarówka (warstwa Vehicle w kamerze głównej) +4,7…5,4 ms**, drzewa +3,0, skala −0,1 +3,3, far ×0,5 +1,4,
   LOD ×0,6 +1,4, propsy +0,3 (liczba draws to nie problem), HUD +0,3.
 - Następnie: rozbicie ciężarówki na shadery (glass / cabint / truckext / cabdisp) — nowe klucze rq_ab.
+
+## 13:40 — krok 1c: rozbicie ciężarówki (diag2, diag3; APK d2e7f22851 / 22a104cee0)
+- GPU p50 A−B: **szyba (Kamion/Truck Glass) +3,6…4,3 ms** (1 warstwa: GLASS_Windscreen_LOD0 + DoorL_LOD0, ~80 % ekranu w widoku kabiny),
+  zewnętrze +0,65, wnętrze −1,2 (bez wnętrza widać świat), wyświetlacz 0.
+- Szybka ścieżka szyby (SH per wierzchołek, wielomianowy atan2) tylko −0,4 ms → koszt nie w tych miejscach; bisekcja `_KamionGlassDebug` 1..5
+  i A/B drzew (treeshadow/treethin/treecard) w toku: diag4 (APK 5117650d90).
+- NASTĘPNY KROK: wyniki `artifacts/perf-low-r1/diag4/*/logcat.txt` ([PASSAB] summary) → wybór poprawek.
