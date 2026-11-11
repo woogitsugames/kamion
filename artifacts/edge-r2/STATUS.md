@@ -53,3 +53,5 @@ EditMode zakończyło się kodem 0; kopię XML zapisano w tests. Compare oczekuj
 Następny krok: sprawdzić budget-summary.json, obejrzeć ostateczne pary zdjęcie/render, potem pełny GIS przy końcu rundy.
 Krok 19: ADR uzupełniono o zmierzone wyniki ekstrakcji, niezmienione obrysy, liczniki siatek i testy 15/15, 5/5 oraz EditMode 267/267. Budżet wszystkich kamer oraz końcowy GIS nadal otwarte, bez przedwczesnego PASS.
 Następny krok: wynik Compare oczekującego w heavy; później pełny GIS na zamknięcie rundy.
+Krok 20: przygotowano niewykonywany jeszcze audyt przejścia podłoża dla następnej rundy: porówna model wysokości Python z rzeczywistymi trójkątami zapisanej siatki apron, z wyłączeniem poboczy. Nie zmienia kodu produkcyjnego ani mgły i nie zakłada z góry widocznego szwu. Uruchomienie dopiero pod heavy, sekwencyjnie po Compare.
+Następny krok bieżącej rundy: Compare, a przy końcu rundy audyt diagnostyczny i pełny GIS w slocie heavy.
