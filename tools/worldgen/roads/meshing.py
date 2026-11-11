@@ -218,7 +218,9 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
     layer = "collision" if coarse else "road"
     for k in range(nseg):
         mats = [pr[k][4] for pr in profs]
-        mat = max(set(mats), key=mats.count)
+        # majority material; a tie goes to the one met first along the strip. `max(set(mats), ...)` broke ties by
+        # str-hash order = PYTHONHASHSEED: kerb vs sidewalk flipped between runs (ADR 0096)
+        mat = max(dict.fromkeys(mats), key=mats.count)
         rows = []
         # grass verge skirt: battered 1:EMBANKMENT_SLOPE outward instead of a vertical flange, so a terrain node
         # left lower than the verge edge shows a grass slope, not a green wall (REVIEW r4 W-H5). Plan footprint
