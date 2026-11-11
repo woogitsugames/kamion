@@ -210,3 +210,10 @@ convert a nonzero metric into an unconditional visibility PASS. Low oldkerb mask
 pixel-exact; High <=1LSB p95/no>3. Historical kerb runtime caveat stays. Independent
 High review copied to REVIEW-D-GATE-R2-HIGH.md. Broader wear is a separate fresh
 56-pair experiment, source not yet activated at its BEFORE stage.
+
+Broad3block experiment REJECTED byROOT after Low28 pair review and independent
+High28 reviewb2804a0c. Almost invisible changes do not resolve sterile asphalt.
+No wet-ribbon/obvious negativecontrol regression was observed, but no quality
+benefit demonstrated. Keep rejected experiment/history; restore prior shader
+while retaining all other D changes. Physical map/channel plan pending, no blind
+amplitude sweep. Full independent High finding in REVIEW-D-BROAD-HIGH.md.

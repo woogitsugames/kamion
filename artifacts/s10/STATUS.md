@@ -781,3 +781,17 @@ first capture cleanup. Original2files verified against startpins; replay their
 exact bytes before AFTER firstcondition, compare END AFTER to actual END BEFORE.
 All other2439/raw192 exact; keyword validation exception explicitly retained.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
+
+Step 70: Broad56AFTER complete. ROOT viewed all28Low pairs in8own960 contact
+pages; independent E reviewb2804a0c viewed all28High pairs/full960 selected views.
+Both find no demonstrated quality improvement. High full-frame MAE .015-.324LSB,
+old-asphalt ROI mean+.041clear/+.188OV; Low similarly microscopic. No wet ribbons
+or obvious negativecontrol regression, but that is not sterility closure.
+ROOT rejects ALL3experimental blocks; D must revert only these, preserve UV/paint/
+bus/gateR2, retain rejected56pairs and source/camera/counter proof. Actual native
+bindings confirm roadwear active, Low crack/detail tier gates remain separate.
+D source-field attribution and E readonly map-channel/metric-scale/memory preflight
+will propose minimal visible physical wear without extra Low texture samples.
+END AFTER matches END BEFORE2441cached/192raw; explicit signal validation replay
+controlled. No new GIS repeat or finalroute before selected source.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
