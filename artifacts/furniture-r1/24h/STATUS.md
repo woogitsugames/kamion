@@ -13,3 +13,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T21:37:11.6591530+01:00: opracowano izolowany wariant panel_candidate.py: krótsze przęsła na skarpie, szczeliny desek, odchylenie boczne siatki. Kod produkcyjny nietknięty do końca baseline. NASTĘPNY KROK: sprawdzić wzrost liczby trójkątów oraz zastosować po baseline.
 
 2026-11-11T21:37:50.6953790+01:00: zmierzono kandydat na 15 m granicy (płasko, 10%, 40%); candidate-measurements.json. To test syntetyczny, nie wynik kamer ani telefonu. NASTĘPNY KROK: baseline import i pomiar rzeczywistych kadrów.
+
+2026-11-11T21:38:53.2777977+01:00: kandydat zmniejsza syntetyczną odsłoniętą podmurówkę na spadku 40% z 1,20 do 0,447 m; 130→442 trójkąty na 15 m, trzy te same materiały. Zapisano odtwarzalny apply_r1.py, jeszcze nie uruchomiony. NASTĘPNY KROK: zakończyć baseline przed modyfikacją produkcji.
