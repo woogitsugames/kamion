@@ -97,3 +97,5 @@
 - NASTEPNY KROK: uwzglednic audyt Fab w `artifacts/megascans-r1/REPORT.md`; odtworzenie: `uv run --project tools/worldgen python artifacts/megascans-r1/measure-fab-textures.py`.
 
 - Krok29 FINAL: raport18linii zapisany, ADR opisuje wszystkie niezliczone bramki. Fab aktywne mapy:8,689MiB ASTC+mipy (59GUID), legacy licznik ich nie obejmował; konserwatywnie39,79MiB razem, bez twierdzenia o rezydencjiGPU. WIPy zachowane, bez push/merge/telefonów. NASTĘPNY: git diff --check; uv run --project tools/worldgen pytest tests/gis/test_fab_not_tracked.py -q; skopiować artifacts/megascans-r1 do main/artifacts/megascans-r1 bez usuwania cudzych plików.
+
+- Krok30: kompletny katalog QA skopiowany do C:/Users/matma/Documents/Claude/kamion/artifacts/megascans-r1 (robocopy/E/XJ bez MIR, wynik<8); SHA raportu źródło/kopia identyczne, katalog ignorowany przez main. Źródła main nie były zmieniane przez tę operację; zastane równoległe modyfikacje pozostawiono. Worktree czyste po końcowym commicie, guard indeksu3/3PASS. NASTĘPNY KROK LIDERA: przeczytać artifacts/megascans-r1/REPORT.md i round4/CRITIC.md przed decyzją o integracji; pełny DoD nadal NIEZALICZONY.
