@@ -18,8 +18,8 @@
 | kalibracja r2 | 0101 | .claude/worktrees/tint-r2 (gałąź tint-r2) | artifacts/tint-r2/STATUS.md | w toku (rendering-perf) wg recenzji s10-0086 |
 | zabudowa r5 | 0097 | .claude/worktrees/buildings-r5 (gałąź buildings-r5) | artifacts/buildings-r13/REPORT.md | SCALONE (recenzja `REVIEW-2026-11-11-s10-0097.md`: PASS, jakość warunkowa; lista r6 P1-e..h); worktree usunięty; regeneracja `artifacts/logs/s10-regen-0097.log` |
 | wydajność Low A16 | 0106 | .claude/worktrees/perf-low-r1 (gałąź perf-low-r1) | artifacts/perf-low-r1/STATUS.md | w toku (rendering-perf); agent SAM używa A16 z PHONE_RUN |
-| GPT B roślinność r2 | 0088 | gpt-vegetation-r2 | — | GPT w toku, brak REPORT |
-| GPT C światło r12 | 0098 | gpt-light-r12 | — | GPT w toku, brak REPORT |
+| GPT B roślinność r2 | 0088 | gpt-vegetation-r2 | artifacts/vegetation-r2/REPORT.md | SCALONE `6b8f9123` (generated → ours) |
+| GPT C światło r12 | 0098 | gpt-light-r12 | artifacts/light-r12/REPORT.md | SCALONE `bfdde95f`; regeneracja B+C `artifacts/logs/s10-regen-BC.log`; visual-critic B+C gdy wolne miejsce |
 | GPT 0087 lakier TRAKT | 0087 | gpt-truck-paint | — | GPT w toku |
 | Argon 0085 | 0085 | argon-edge | artifacts/edge-far-r1 | czeka na poprawkę |
 
