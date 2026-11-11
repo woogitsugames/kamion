@@ -346,3 +346,12 @@ Root removes extra120s wait policy after verifiedactualphonebatchEND: not requir
 byproject; it letnextdiagnostic take ourwholewindow. ActualEND+guardabsence+
 perlaunchguard remain mandatory; transientgapauto-resume forbidden.
 NEXT COMMAND: monitor perf-low-r1/diag2.log finalfourrunEND+lockreleased; promptlycheckPHONEabsence and removeonlyownedhold for explicitrelease, immediateGimport first then F/E actual next candidates.
+## Step26 - prompt explicit release after actual diag2 END
+Actualdiag2 finalab_cabdisp done+lockreleased13:13:01. After2srecheck PHONEabsent,
+rootremovedonlyowned12:52hold andwrotefreshErelease13:13:04. Explicitmessages
+F/G/E immediate; Gimportfirst, Fglass/crown actualAB, Ecore-probe4actualimages.
+Dparkedartifactdba4855d. Everylaunchguardsstaymandatory; noextra120swait.
+Root source-reviewed Dpatch+3packedMeshData cases: no sourceblocker, runtime/
+compile/buffer proofpending, broadweartaskNOTresolved. REVIEW-D records scope.
+Fda1d6901 and E2353ac05 CPU sourceproof ready; no actualcandidatePASS asserted.
+NEXT COMMAND: inspect firstactual GGPU/R1, Fglass/crown unit/AB and Ecore-probe4 images; verifyperlaunchguards; finish G then dispatchD baseline/activation in sameworker.
