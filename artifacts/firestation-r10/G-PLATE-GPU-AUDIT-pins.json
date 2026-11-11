@@ -1,0 +1,35 @@
+{
+  "scope": "read-only proof+harness audit at G6660919d; no GPU execution by reviewer",
+  "pins_sha256": {
+    "artifacts/car-paint-r1/R4PlateGpuProbe.cs": "da6d475b73ac00db2ca067bf5546024c48ca474b7b6858945e55788ac11cbd80",
+    "artifacts/car-paint-r1/r4-plate-gpu.ps1": "e14a247774f0e3fb0e0d39bddbddcc9ab03c5e69c4d1e94fae1e64816f52b28e",
+    "artifacts/car-paint-r1/r4-plate-gpu/plate-vertex-gpu-proof.json": "7bf92879c86a0fe5eee0e1c4c58eb123a343ac8ee3425abfc11022c4a1e36efc",
+    "artifacts/car-paint-r1/r4-plate-native-audit.py": "642a5f2c5b10a21b706452b712fb8225c2f49f690af1ae954443fba36d9ae8cf",
+    "artifacts/car-paint-r1/r4-plate-native-parity.json": "53dbca7a49425c03264587719d610bba876ddb8fa992d01d4439407191327cc5",
+    "artifacts/car-paint-r1/r4-plate-gpu-after-protected-proof.json": "e8eb2376c864417c63aad3c12a54541d6adb35f10eb57a7c570b3d5a3bb560e6",
+    "artifacts/car-paint-r1/r4-plate-gpu-after-source-proof.json": "0f864bbb8f79a01a44054ff2616efa75d9fa523afbd2665b242977ec2b9790e0",
+    "game/Assets/_Project/Environment/Shaders/WorldCarPlate.shader": "3d517ceb43fb9afc1e07258c782b9e16bdb15ba3f38e711731fd5b906c1126b6",
+    "game/Assets/_Generated/World/bialystok-industrial-c/Instances.asset": "94e11d8175739b390c9c67396109838f303c4e1576a793aad861a6c74e43a686",
+    "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat": "54fdad7f14fe0b8fddb8d16638351d158b6726e20ea7f7d2b68ade5cabc21877"
+  },
+  "row_count": 260,
+  "case_counts": {
+    "native54": 216,
+    "rebase": 40,
+    "GI-off": 4
+  },
+  "native_submesh_lod_pairs": 54,
+  "all260_recorded_cells_and_center_expected_independently_recomputed": true,
+  "cells": [
+    6,
+    8,
+    11,
+    25
+  ],
+  "current_source_matches_probe_input": true,
+  "current_instances_matches_recorded_before": true,
+  "srp_codes_raw_only": [
+    1,
+    1
+  ]
+}
