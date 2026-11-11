@@ -133,7 +133,7 @@ namespace Game.Editor.VisualQA
             var quad=new Mesh();quad.vertices=new[]{new Vector3(-1,-1,0),new Vector3(1,-1,0),new Vector3(1,1,0),new Vector3(-1,1,0)};
             quad.normals=new[]{Vector3.back,Vector3.back,Vector3.back,Vector3.back};quad.uv=new[]{Vector2.zero,Vector2.right,Vector2.one,Vector2.up};quad.triangles=new[]{0,1,2,0,2,3};quad.RecalculateBounds();
             var go=new GameObject("G film numeric probe");var camera=go.AddComponent<Camera>();camera.enabled=false;camera.orthographic=true;
-            camera.orthographicSize=1;camera.nearClipPlane=.01f;camera.farClipPlane=10;camera.clearFlags=CameraClearFlags.SolidColor;
+            camera.transform.position=new Vector3(0,0,-5000);camera.orthographicSize=5000;camera.nearClipPlane=.01f;camera.farClipPlane=20000;camera.clearFlags=CameraClearFlags.SolidColor;
             camera.backgroundColor=Color.magenta;camera.allowHDR=true;camera.allowMSAA=false;camera.cullingMask=~0;
             var extra=camera.GetUniversalAdditionalCameraData();extra.renderPostProcessing=false;extra.antialiasing=AntialiasingMode.None;extra.volumeLayerMask=0;
             var rt=new RenderTexture(64,16,24,RenderTextureFormat.ARGBFloat,RenderTextureReadWrite.Linear){filterMode=FilterMode.Point};rt.Create();camera.targetTexture=rt;
