@@ -47,3 +47,6 @@
 
 - Krok8: finalny bake wszystkich18 drzew i HLOD ukończony; publiczne wyjścia wyłącznie proc/CC0, przywrócone palety liściastych. Budżet rzeczywistych LOD zapisany w tree-budget-final.json. NASTĘPNY KROK: build_world i import obu scen, potem identyczne ROI DK8/Andersa/Putry i żywopłoty.
 
+
+- Krok8a: obejrzano rzeczywistą galerię3pasm LOD0/1+billboard (lod-gallery.jpg), prześwity zachowane w LOD1. Wszystkie18wariantów nie zwiększają trójkątów LOD0/1; lipa nadal ma stylizowane skupiska, finalna ocena w świecie otwarta. Przerwany pre-copy fullGIS nie jest wynikiem końcowym; pełny suite będzie po canonical build. NASTĘPNY KROK: `Get-Content artifacts/vegetation-r2/world-after.log -Tail 8`.
+

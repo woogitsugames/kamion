@@ -21,7 +21,7 @@ def crown_opening(position, centre, height, phase):
 
 def leaf_lod_indices(count, seed, share=.40, maximum=None):
     """LOD1 reuses the exact LOD0 candidate positions; stable independent seed."""
-    if count <= 0:
+    if count <= 0 or (maximum is not None and maximum <= 0):
         return np.zeros(0, dtype=int)
     rng = np.random.default_rng(seed)
     wanted = max(1, int(count * share))

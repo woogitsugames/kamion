@@ -1,4 +1,4 @@
-"""Procedural tree library for Podlasie roadsides (our own generator, no external assets).
+"""Procedural tree library for Podlasie roadsides (our geometry/leaves, CC0 pine bark).
 
     blender -b --factory-startup -P tools/blender/world/make_trees.py
 
@@ -10,8 +10,8 @@ undergrowth). 3 variants each. Crowns are made of foliage cards (art-source/worl
 streetscape/leaf_textures.py) on a recursive branch skeleton; card normals point away from the crown centre
 (soft crown shading). Per variant three LODs:
   <name>        LOD0  trunk + branches + cards  (High, < 150 m)
-  <name>.lod1   LOD1  trunk + main limbs + 1/3 of the cards at 1.6x size  (Low near / High 60-150 m)
-  <name>.lod2   impostor: two crossed quads with a baked orthographic render (> 150 m)
+  <name>.lod1   LOD1  trunk/main limbs + capped stable subset of LOD0 cards at 1.4x size
+  <name>.lod2   LOD2  one camera-facing quad with six baked orthographic views
 Models are built at the reference height HREF[species]; instances scale by h / HREF.
 Output: art-source/world/vegetation/trees.glb, trees_meta.json, impostor_<name>.png
 """

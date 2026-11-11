@@ -23,6 +23,7 @@ def test_lod_leaf_subset_is_deterministic_and_budgeted():
     assert 330 < len(a) < 470
     assert np.all(np.diff(a) > 0) and 0 <= a.min() < a.max() < 1000
     assert len(leaf_lod_indices(1000, 48, maximum=140)) == 140
+    assert len(leaf_lod_indices(1000, 48, maximum=0)) == 0
 
 
 def test_cc0_bark_clean_clone_fallback_stays_useful(tmp_path, caplog):
