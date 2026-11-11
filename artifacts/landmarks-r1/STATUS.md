@@ -28,3 +28,6 @@ NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-import-wrapper.lo
 
 Krok 9: oczekiwanie na slot trwało kilkanaście minut, podczas gdy inni właściciele wymieniali sloty. Zatrzymano wyłącznie własny proces Acquire bez posiadanego slotu i skrócono odpytywanie z 60 do 10 s. Limit czterech slotów, blokada PHONE_RUN i wymagany Owner pozostają zachowane. Żadna Unity jeszcze nie wystartowała.
 NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/unity-step.ps1 -Step Import
+
+Krok 10: przygotowano warunkową kontynuację po imporcie: sprawdzenie tożsamości własnego procesu, IMPORT_RESULT OK i zwolnienia slotu, następnie pełny baseline Low/High clear/overcast. Wrapper przyszłych uruchomień nie usuwa cudzych starych slotów. Wszystkie uruchomienia nadal korzystają z oficjalnego Acquire/Release i Owner gpt-landmarks.
+NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-capture-wrapper.log -Tail 10
