@@ -89,7 +89,8 @@ def test_sill_streak_uv1_under_windows_only(monkeypatch):
     B.wall_with_openings(acc, "buildings", "plaster_grey", np.array([0.0, 0.0]), np.array([1.0, 0.0]),
                          np.array([0.0, -1.0]), 6.0, 99.5, 103.0, ops, sills=(3.0, 0.7))
     items = acc.d[("buildings", "plaster_grey")]
-    sill = [it for it in items if it[3] is not None and it[3][:, 1].min() >= 112.0]
+    sill_all = [it for it in items if it[3] is not None and it[3][:, 1].min() >= 112.0]
+    sill = [it for it in sill_all if np.abs(it[3][:, 0]).max() < 1.5]
     assert len(sill) == 2                              # left and right half of the sill
     V = np.concatenate([it[0] for it in sill])
     assert V[:, 0].min() == pytest.approx(1.0) and V[:, 0].max() == pytest.approx(2.5) and V[:, 2].max() == pytest.approx(101.0)
@@ -99,6 +100,17 @@ def test_sill_streak_uv1_under_windows_only(monkeypatch):
     v0 = U1[:, 1].min()
     assert (v0 - 129.0) % 8.0 == pytest.approx(0.0) and v0 < 192.0
     assert 0.5 < U1[:, 1].max() - v0 < 6.6             # 1.5 m of wall in units of the per-window length scale
+    # ADR 0114: the wall strips beside the two sill ends carry the outer half of the whiskers (|u| = 2 + metres)
+    out = [it for it in sill_all if np.abs(it[3][:, 0]).min() >= 1.5]
+    assert len(out) == 2
+    xs = sorted((float(it[0][:, 0].min()), float(it[0][:, 0].max())) for it in out)
+    assert xs[0] == pytest.approx((1.0 - B.SILL_STRIP_M, 1.0)) and xs[1] == pytest.approx((2.5, 2.5 + B.SILL_STRIP_M))
+    for it in out:
+        x, u = it[0][:, 0], it[3][:, 0]
+        near = np.abs(u) < B.SILL_OUT + 0.01                               # the vertices on the reveal line
+        assert set(np.round(x[near], 3)) <= {1.0, 2.5} and near.sum() == 2
+        assert it[3][:, 1].min() == pytest.approx(v0) and it[0][:, 2].max() == pytest.approx(101.0)
+        assert np.sign(u).min() == np.sign(u).max() == (-1.0 if x.max() <= 1.0 + 1e-6 else 1.0)
 
 
 def test_sill_marks_skip_a_share_of_the_windows():

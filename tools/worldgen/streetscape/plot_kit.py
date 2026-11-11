@@ -316,47 +316,70 @@ def _wrap_poly(d, w, pts, fill):
 
 
 def _thuja(rng, h, w):
-    """Scale-leaf sprays: flat fans pointing up and out, dark inside, yellow-green tips; ~8 % holes."""
+    """Scale-leaf sprays of a thuja: flat fronds hanging up and out - a stem with short side shoots - drawn back to
+    front, dark inside, yellow-green at the tips; ~7 % holes onto the dark interior of the shell."""
     im = _pil(h, w)
     d = ImageDraw.Draw(im)
-    d.rectangle([0, 0, w, h], fill=(24, 40, 24, 255))
-    live = [(34, 52, 28), (46, 72, 38), (58, 84, 42), (74, 96, 46)]
-    dead = [(70, 52, 34), (104, 78, 46), (128, 96, 56), (140, 110, 66)]
-    n = 5200
+    d.rectangle([0, 0, w, h], fill=(22, 36, 22, 255))
+    live = [(30, 46, 26), (42, 64, 34), (54, 80, 40), (72, 98, 46)]
+    dead = [(64, 48, 32), (98, 74, 44), (124, 94, 54), (142, 112, 68)]
+    n = 3600
+    ppm_x, ppm_y = w / KIT_M, h / ROW_H_M["thuja"]
     for i in range(n):
-        x, y = rng.uniform(0, w), rng.uniform(-10, h + 10)
+        x, y = rng.uniform(0, w), rng.uniform(-0.05 * h, 1.05 * h)
         pal = dead if x / w > THUJA_GREEN_U + 0.01 else live
         lvl = min(3, int(i / n * 4))
-        L = rng.uniform(0.05, 0.10) * (w / KIT_M) * (0.8 + 0.1 * lvl)
-        a = rng.normal(0, 0.45)
-        tipx, tipy = x + math.sin(a) * L, y - math.cos(a) * L * (h / ROW_H_M["thuja"]) / (w / KIT_M)
-        wd = L * 0.42
-        pts = [(x, y), (x + wd * math.cos(a), y + wd * math.sin(a) * 0.5), (tipx, tipy),
-               (x - wd * math.cos(a), y - wd * math.sin(a) * 0.5)]
-        _wrap_poly(d, w, pts, _jit(pal[lvl], rng))
+        L = rng.uniform(0.07, 0.13)                       # frond length, m
+        a = rng.normal(0, 0.30)                           # off vertical
+        col = _jit(pal[lvl], rng, 0.14)
+        tip = (x + math.sin(a) * L * ppm_x, y - math.cos(a) * L * ppm_y)
+        wd = max(2, int(0.006 * ppm_x))
+        for dx in (-w, 0, w):
+            d.line([(x + dx, y), (tip[0] + dx, tip[1])], fill=col, width=wd + 1)
+        for k in range(1, 6):                             # side shoots, shorter towards the tip
+            f = k / 6
+            bx, by = x + (tip[0] - x) * f, y + (tip[1] - y) * f
+            sl = L * (0.42 - 0.25 * f)
+            for sg in (-1, 1):
+                aa = a + sg * 0.9
+                ex, ey = bx + math.sin(aa) * sl * ppm_x, by - math.cos(aa) * sl * ppm_y
+                for dx in (-w, 0, w):
+                    d.line([(bx + dx, by), (ex + dx, ey)], fill=col, width=wd)
     a = np.asarray(im, np.float32).copy()
-    hole = _noise(rng, h, w, 2.2 * SS, 2.2 * SS) > 0.80
-    a[hole, 3] = 0.0
+    hole = _noise(rng, h, w, 1.6 * SS, 1.6 * SS) > 0.74
+    a[hole & (a[..., :3].sum(-1) < 110), 3] = 0.0         # holes only where the dark interior shows
     a[..., 3] /= 255.0
     return a
 
 
 def _spruce(rng, h, w):
-    """One tier of drooping branches of a blue spruce: dense at the top (the trunk side), ragged finger tips below."""
+    """One tier of drooping branches of a blue spruce: twigs with short needles hanging down and out, dense at the top
+    (the trunk side), ragged tips below."""
     im = _pil(h, w)
     d = ImageDraw.Draw(im)
-    pal = [(30, 46, 44), (52, 76, 72), (74, 100, 94), (96, 122, 114)]
-    d.rectangle([0, 0, w, int(h * 0.30)], fill=pal[0] + (255,))
-    n = 2600
+    pal = [(28, 42, 40), (48, 70, 68), (70, 96, 92), (98, 124, 118)]
+    d.rectangle([0, 0, w, int(h * 0.34)], fill=pal[0] + (255,))
+    n = 3000
+    ppm_x, ppm_y = w / KIT_M, h / ROW_H_M["spruce"]
     for i in range(n):
         lvl = min(3, int(i / n * 4))
         x = rng.uniform(0, w)
-        y0 = rng.uniform(0, h * 0.55) ** 1.0
-        L = rng.uniform(0.25, 0.48) * h * (1.0 if rng.random() < 0.8 else 1.35)
-        wd = rng.uniform(0.02, 0.045) * (w / KIT_M)
-        sway = rng.normal(0, wd * 0.8)
-        pts = [(x - wd, y0), (x + wd, y0), (x + sway + wd * 0.2, min(y0 + L, h - 2)), (x + sway - wd * 0.2, min(y0 + L, h - 2))]
-        _wrap_poly(d, w, pts, _jit(pal[lvl], rng, 0.12))
+        y = rng.uniform(0, 0.62 * h)
+        L = rng.uniform(0.16, 0.32) * (1.25 if rng.random() < 0.2 else 1.0)       # twig length, m
+        a = math.pi + rng.normal(0, 0.28)                                       # hanging
+        col = _jit(pal[lvl], rng, 0.12)
+        tip = (x + math.sin(a) * L * ppm_x, min(y - math.cos(a) * L * ppm_y, h - 2))
+        wd = max(2, int(0.008 * ppm_x))
+        for dx in (-w, 0, w):
+            d.line([(x + dx, y), (tip[0] + dx, tip[1])], fill=col, width=wd + 1)
+        for k in range(1, 9):                                                   # needles all along the twig
+            f = k / 9
+            bx, by = x + (tip[0] - x) * f, y + (tip[1] - y) * f
+            for sg in (-1, 1):
+                aa = a + sg * 1.05
+                ex, ey = bx + math.sin(aa) * 0.022 * ppm_x, by - math.cos(aa) * 0.022 * ppm_y
+                for dx in (-w, 0, w):
+                    d.line([(bx + dx, by), (ex + dx, min(ey, h - 1))], fill=col, width=wd)
     a = np.asarray(im, np.float32).copy()
     a[..., 3] /= 255.0
     return a
