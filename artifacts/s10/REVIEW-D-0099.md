@@ -36,3 +36,14 @@ causal activation authorized with4condition missingUV1/2+newroad negative contro
 Broad patch separate; add actual source-field glyph/oil/busstop/gate controls first.
 No protected roads producer edits; robust allowed-import UVfield transfer or precise
 upstream handoff required where authored paint has no lane coordinates.
+
+## Native imported mesh/reference review (14:53)
+Root read actual native-before154meshes/21materials,521419road+mark vertices per
+tier. All road mesh assets have UV1 at merged-asset level; missing source primitive
+fields may still become zero within that channel. Only two marking assets lack
+channel (682/20verts). Do not conflate asset channel presence with valid lane field.
+Actual buffer-size afterproof must supersede predicted36124extraUVbytes.
+Constant-half marking area572.831m2/tier (geometry, not pixel/visible coverage).
+Root viewed all6Mapillary refs: large transverse rectangular repair boundaries
+on Putry and locally abraded paint are clear; smooth uniform noise cannot substitute
+for those features. Exact locations/coverage of existing patches still required.

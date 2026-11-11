@@ -494,3 +494,10 @@ caseproof, earlier0101failurehistory supersededbyactualmainretry. REPORTWIP
 updatedD372/Eglass+leafstatus. RootpriorStep34clockcorrected14:46.
 NEXT COMMAND: waitDreadonlyimportsnapshot thenUVcausal and Ehero-onlydurable
 factory/round1+160 finalcaptures; fulltests+rootreview beforeclosures/0108.
+
+Step36 14:53: Dnative-before154meshes/21materials read/rootproofSHA saved. Actual
+roadassetsUV1present evenmissingprimitivefields;exactconstantHalf
+markingarea572.831m2/tier measured, notpixels. Actualbufferdelta neededvsold
+prediction. Sixrefs independentlyviewed, repairboundaries/paintwear feedbacksent.
+Ehooksource reviewed exacthero scope/encodedcolor preserved; finalbindings/tests
+pending. NEXT COMMAND: inspectDnative-after/UVcausal and Eround1/full160; guards.
