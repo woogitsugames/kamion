@@ -153,3 +153,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:27:54.5656941+01:00: niezależny przegląd zaakceptował kierunek kandydata optymalizacji warunkowo: zachować osobną kolizję, próbki całego przęsła i bocznego wygięcia, sprawdzić teren Low/AABB/cienie. Warunki zapisano w wire-budget-candidate.md. Źródła iteracji3 pozostają bez zmian. NASTĘPNY KROK: wyniki oczekującej kontroli geometrii i rendery.
 
 2026-11-12T00:28:12.1725122+01:00: Unity render after High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T00:28:41.9069071+01:00: Unity render after High clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
