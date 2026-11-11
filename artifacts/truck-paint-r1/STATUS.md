@@ -39,3 +39,6 @@
 
 - Step15 CPU binary proof: candidateTruck first build changes0mesh/FBX files and0semantic hierarchy/local-pose values (161nodes before/after); prefab byte churn is fileID reallocation.16current changedfiles are material values+prefab only. Narrowed OrangePeel experiment toPaint slot so nonpaint unused fields stay legacy. Corrected encoded-unit comments. No Unity launched; repeat this proof after full final canonical rebuild.
 - NEXT COMMAND: after explicit ROOTrelease and bothlocks absent, resume rebuild-candidate.ps1 candidate1; then compare_fixture.py candidate1 and measure_contract.py candidate1.
+
+- Step16 durability: copied current baseline/refs/diagnostics/immutablefixture and sourceproof to main artifacts/truck-paint-r1 using /E /XJ (no sources/main commit touched). Production consumer audit: only TruckExterior samples state texture; trailer shares it; existing indicator UI test threshold remains valid at encoded25. Final runtime/visual tests still pending explicit release.
+- NEXT COMMAND: wait explicit ROOTrelease; verify PHONE_RUN and GPT_UNITY_HOLD absent; rebuild-candidate.ps1 candidate1.
