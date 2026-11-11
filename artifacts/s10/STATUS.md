@@ -738,3 +738,11 @@ unchanged);190unchanged belongs EACH isolated two-file step, not cumulative.
 Sheet_far recovered at G7f09c3f2: black20/grey20/blue20/black45; last occluded.
 Run5 G3A completed57/57 EXIT0; full G3B/END still pending.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/artifacts/integration-s10/run5.log -Tail 10
+
+Step 65: Whole run5 END18:20:19 independently observed; G3A57/57 and G3B46/46
+EXIT0. PHONE absent twice, removed ONLY owned diag12 hold. Fresh D-only explicit
+release18:21:15.307 issued; D dispatched import/install/native signedUV+paint
+idempotence and16 gate/legacy-kerb controls. G not released yet. New PHONE
+invalidates release, both guards checked before every launch. NEXT COMMAND:
+Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
+Review16frames before broad56 activation; then release G baseline separately.
