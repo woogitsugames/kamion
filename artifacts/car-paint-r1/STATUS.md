@@ -101,3 +101,6 @@
 
 - Step34 READONLY Dbusstop support: inspected allowedfurniture/life flow+actualD23shelter/source/chunkinventory.20OSMstops allplatform/no direction, no explicitstop_position orbusbayattributes inextract; cannot certify realall23roadstops. Existing14shelterchunks allalreadyoil,9tris/stain reuse feasible conditionally; border/culling/height/side/provenance constraints documented in D-BUSSTOP-PREFLIGHT.md. No code/D/cache/Unity changes. C13docs only now explicitlycountsGate3sky32/asphalt21 and verifies0105ancestor68ca9fd8 atmain276d2205.
 - NEXT COMMAND: docsWIPcommit/copy/sendFROOT, standby0108untilD/Eclosed+explicitdispatch. Gimplementation/report/technicalvalidation unchanged.
+
+- Step35 READONLY gate-tyre review: exactactualbarrierline617.8605/-601.8095 distinguished fromgatehouse38.3maway. High/Low152strength2.5kerbscufftris and6face/topnose coordinatepairs pinned; nearesttrueyardtwins85.8maway notentryproof. Twoactualroadseated1.6meye camerasCPUcentre-rayclear againststaticmeshes+gateprototypes, notrenderPASS. D-GATE-TYRE-PREFLIGHT.md ownartifact only. AppendedFnewrawPBF10stop_position proof tobusstopdoc; no Dsource/cache/Unity changes or Gimplementation/report/validationchanges.
+- NEXT COMMAND: docsWIPcommit/copy/sendFROOT, standby0108afterD/Eclose+dispatch. No newcamera/source/Unity activation.
