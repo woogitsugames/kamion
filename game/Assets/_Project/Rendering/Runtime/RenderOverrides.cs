@@ -29,6 +29,8 @@ namespace Game.Rendering
         public static float? RenderScale;
         public static float? ShadowDistance;
         public static bool? Post;
+        public static bool? Dither;       // ADR0098: isolate output noise from material microstructure.
+        public static bool? SkyDither;
         public static bool? Hdr;
         public static bool? LeafA2C;
         public static bool? Trees;
@@ -59,7 +61,7 @@ namespace Game.Rendering
         public static string Ab;
         public static float? AbPeriod;
 
-        public static bool Any => Msaa.HasValue || RenderScale.HasValue || ShadowDistance.HasValue || Post.HasValue || Hdr.HasValue ||
+        public static bool Any => Msaa.HasValue || RenderScale.HasValue || ShadowDistance.HasValue || Post.HasValue || Dither.HasValue || SkyDither.HasValue || Hdr.HasValue ||
                                   LeafA2C.HasValue || Trees.HasValue || TreeShadowMask.HasValue || TreeCardScale.HasValue ||
                                   TreeCull.HasValue || TreeThin.HasValue || SimpleFoliage.HasValue || ForestHlod.HasValue ||
                                   VehicleLook.HasValue || EnvCapture.HasValue || ScaleMin.HasValue || Upscale != null ||
@@ -74,6 +76,7 @@ namespace Game.Rendering
         {
             Msaa = I(arg("rq_msaa")); RenderScale = F(arg("rq_scale")); ShadowDistance = F(arg("rq_shadow"));
             Post = B(arg("rq_post")); Hdr = B(arg("rq_hdr")); LeafA2C = B(arg("rq_a2c")); Trees = B(arg("rq_trees"));
+            Dither = B(arg("rq_dither")); SkyDither = B(arg("rq_skydither"));
             TreeShadowMask = I(arg("rq_treeshadow")); TreeCardScale = F(arg("rq_card")); TreeCull = F(arg("rq_cull"));
             TreeThin = F(arg("rq_thin")); SimpleFoliage = B(arg("rq_vegshader")); ForestHlod = F(arg("rq_hlod"));
             VehicleLook = B(arg("rq_a8")); EnvCapture = I(arg("rq_envcap"));

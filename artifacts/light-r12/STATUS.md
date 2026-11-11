@@ -20,3 +20,6 @@
 
 - Step6a: initial capture launch stopped before Unity because PS5 lacks Path.GetFullPath(path,basePath). Changed artifact wrapper child shell to pwsh7, required by existing visual-qa.ps1; restarted baseline capture successfully. No output accepted from failed launch.
 - NEXT COMMAND: pwsh -File artifacts/light-r12/capture.ps1 -Phase before (running; inspect before-capture.log).
+
+- Step7: untouched full baseline236PNGs(59x4), plus22selectedlowsun; all20standard sheets viewed. Route19 overcast gap Low116/High119 already matches photo116-121; keep exposure/toe. Clear High gable254.7/243.8/212.3 confirms clip. Added diagnostic-only rq_dither/rq_skydither; default oldpolicy preserved. QA explicit pipeline override hook centralized/static and logs actual URP fields. Root review requested before ablations.
+- NEXT COMMAND: pwsh scripts/visual-qa.ps1 -Scene WorldC_High -Tier High -Lighting clear -Cameras r10_block_3,r10_block_4,r10_house_2 -Gate3 Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json -OutputDir artifacts/light-r12/harness-parity/High-clear

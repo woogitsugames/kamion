@@ -16,6 +16,7 @@ namespace Game.Rendering
         public const string WorldDetailKeyword = "_KAMION_WORLD_DETAIL";
         static readonly int k_ClearCoatOff = Shader.PropertyToID("_KamionClearCoatOff");
         static readonly int k_GrimeDetailOff = Shader.PropertyToID("_KamionGrimeDetailOff");
+        static readonly int k_SkyDitherOff = Shader.PropertyToID("_KamionSkyDitherOff");
 
         public Camera targetCamera;
         public Volume volume;
@@ -50,7 +51,6 @@ namespace Game.Rendering
             if (RenderOverrides.Any)
             {
                 t = RenderOverrides.ApplyTo(t);
-                ApplyPipelineOverrides(t);
             }
             Apply(t, targetCamera != null ? targetCamera : ViewCameraResolver.Resolve(null), volume, worldTextures, ref m_Tonemapping);
         }
@@ -78,6 +78,13 @@ namespace Game.Rendering
         /// <summary>Static entry for editor tools (visual QA) that render without entering play mode.</summary>
         public static void Apply(QualityProfile.Tier t, Camera cam, Volume volume, Texture[] worldTextures, ref Tonemapping tonemapping)
         {
+            // Editor QA uses this entry directly. Only explicit overrides write pipeline properties;
+            // an empty rq set remains a no-op, keeping before/after baseline harnesses identical.
+            if (RenderOverrides.Any) ApplyPipelineOverrides(t);
+#if UNITY_EDITOR
+            if (RenderOverrides.Any && GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset pipeline)
+                Debug.Log($"[RQ_PIPELINE] scale={pipeline.renderScale} fsrSharpness={pipeline.fsrSharpness} fsrOverride={pipeline.fsrOverrideSharpness} cascades={pipeline.shadowCascadeCount} shadowResolution={pipeline.mainLightShadowmapResolution} shadowDistance={pipeline.shadowDistance}");
+#endif
             Current = t;
             HasCurrent = true;
             if (cam != null)
@@ -88,7 +95,7 @@ namespace Game.Rendering
                 var data = cam.GetUniversalAdditionalCameraData();
                 data.renderPostProcessing = t.postProcessing;
                 data.antialiasing = t.postProcessing ? t.postAntialiasing : AntialiasingMode.None;
-                data.dithering = t.postProcessing;
+                data.dithering = RenderOverrides.Dither ?? t.postProcessing;
             }
             if (volume != null)
             {
@@ -102,6 +109,7 @@ namespace Game.Rendering
                 }
             }
             if (t.worldDetail) Shader.EnableKeyword(WorldDetailKeyword); else Shader.DisableKeyword(WorldDetailKeyword);
+            Shader.SetGlobalFloat(k_SkyDitherOff, RenderOverrides.SkyDither == false ? 1f : 0f);
             // A8: truck paint clear coat switch (Kamion/Truck Exterior reads 0 = on, so an unset global keeps it on).
             Shader.SetGlobalFloat(k_ClearCoatOff, t.clearCoat ? 0f : 1f);
             Shader.SetGlobalFloat(k_GrimeDetailOff, t.vehicleGrimeDetail ? 0f : 1f);   // ADR 0038
