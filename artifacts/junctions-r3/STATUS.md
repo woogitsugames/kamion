@@ -44,3 +44,6 @@ scripts = narzędzia r2 + zones_plan.py; logs). „Przed” = main b12 z ADR 009
 - b5 (sha 704c50d6): deduplikacja barier < 1 m (furniture `_dedup_guardrail`; pominięte 24 m, autorskie 36 m). Testy b5: kluczowe 51/51,
   `test_streetscape.py` + `test_world_roads.py` 74/74. ADR 0100 uzupełniony (liczby bez Unity). PHONE_RUN nadal aktywny.
   NASTĘPNY KROK: (bez PHONE_RUN) `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` → visual-qa jak wyżej (renders_b5).
+- b6 (sha 21b222a5): UV pasów trawy obrócone/przesunięte hashem paska (powtarzalny „W” na medianach). b6 fast: build OK, testy 51/51.
+  Dowody skopiowane do main `artifacts/junctions-r3/` (bez plan_cache.pkl). PHONE_RUN nadal (od 10:48).
+  NASTĘPNY KROK: (bez PHONE_RUN) `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` → visual-qa (renders_b6).
