@@ -1,0 +1,110 @@
+{
+  "legacy_source_triangles": 152,
+  "note": "Actual immutable strength2.5 kerb-scuff geometry mask, not new gate tracks. New runtime camera agrees authored world position; older kerb BEFORE predates runtime recorder, so no retroactive matrix-equality claim. RGB includes raster AA/dither and exposure, not physical reflectance or globalqualityPASS.",
+  "results": [
+    {
+      "condition": "Low-clear",
+      "camera": "d_gate_kerb_nose",
+      "projected_legacy_scuff_pixels": 109838,
+      "mean_rgb_delta": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_abs_rgb_lsb": 0.0,
+      "p95_abs_rgb_lsb": 0.0,
+      "fraction_rgb_over3_lsb": 0.0
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_gate_kerb_outer",
+      "projected_legacy_scuff_pixels": 80602,
+      "mean_rgb_delta": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_abs_rgb_lsb": 0.0,
+      "p95_abs_rgb_lsb": 0.0,
+      "fraction_rgb_over3_lsb": 0.0
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_gate_kerb_nose",
+      "projected_legacy_scuff_pixels": 109838,
+      "mean_rgb_delta": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_abs_rgb_lsb": 0.0,
+      "p95_abs_rgb_lsb": 0.0,
+      "fraction_rgb_over3_lsb": 0.0
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_gate_kerb_outer",
+      "projected_legacy_scuff_pixels": 80602,
+      "mean_rgb_delta": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_abs_rgb_lsb": 0.0,
+      "p95_abs_rgb_lsb": 0.0,
+      "fraction_rgb_over3_lsb": 0.0
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_gate_kerb_nose",
+      "projected_legacy_scuff_pixels": 109838,
+      "mean_rgb_delta": [
+        -0.0008284928713195798,
+        -0.0005917806223711284,
+        -0.00014566907627597007
+      ],
+      "mean_abs_rgb_lsb": 0.4435684068051737,
+      "p95_abs_rgb_lsb": 1.0,
+      "fraction_rgb_over3_lsb": 0.0
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_gate_kerb_outer",
+      "projected_legacy_scuff_pixels": 80602,
+      "mean_rgb_delta": [
+        -0.0015384233641845115,
+        0.0004714523212823503,
+        0.0009925312026996848
+      ],
+      "mean_abs_rgb_lsb": 0.47118764629496374,
+      "p95_abs_rgb_lsb": 1.0,
+      "fraction_rgb_over3_lsb": 0.0
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_gate_kerb_nose",
+      "projected_legacy_scuff_pixels": 109838,
+      "mean_rgb_delta": [
+        0.00020939929714670696,
+        0.0016660900599064076,
+        -0.00013656475900872194
+      ],
+      "mean_abs_rgb_lsb": 0.4493314396353417,
+      "p95_abs_rgb_lsb": 1.0,
+      "fraction_rgb_over3_lsb": 0.0
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_gate_kerb_outer",
+      "projected_legacy_scuff_pixels": 80602,
+      "mean_rgb_delta": [
+        0.0012530706434083522,
+        0.001029751122800923,
+        -2.481328006749212e-05
+      ],
+      "mean_abs_rgb_lsb": 0.4718824181368535,
+      "p95_abs_rgb_lsb": 1.0,
+      "fraction_rgb_over3_lsb": 0.0
+    }
+  ]
+}
