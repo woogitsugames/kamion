@@ -280,3 +280,12 @@ No main generated/source edits or commits. Our F/G/E fixedbaselines unchanged.
 PHONE perfdiag0 remains active; ownhold and noUnitylaunch rule remain.
 NEXT COMMAND: after leader regeneration inspect pine source/fallback log and main generated needle hashes; meanwhile monitor actual phonebatchEND before any explicit F/G/E release.
 Korekta metadanych dowodu: B-main-input-restore.json używa rzeczywistego Get-Date jako recorded_time_local, bez szacowanego czasu akcji. Raport WIP odnotowuje spełniony warunek wejść i zewnętrzne scalenia. NASTĘPNY KROK: Get-Content ../perf-low-r1/artifacts/perf-low-r1/diag0.log -Tail 6; po faktycznym końcu i stabilnym braku PHONE_RUN jawne wznowienie F/G/E.
+
+## Step21 - merged B input closure independently reproduced
+Read-only CPU reconstruction using restored maininputs and acceptedB inputs yields
+identical512RGBA pixelSHA8ad86b8f4960fddc741e65c2d9b5e4ea62a50b569ef64fe2931d2fb3a7fa2bb2.
+Both processor sourceSHA also identical. No texture/generator/source write;
+proof B-main-needle-card-parity.json. Mainrawfiles confirmed gitignored. FullGIS F
+is running; G fullGIS is planned after its own source/world CPU checkpoint (earlier
+report wording was premature, not a completed/run proof). Phone diag0 now7/9.
+NEXT COMMAND: Get-Content ../perf-low-r1/artifacts/perf-low-r1/diag0.log -Tail 5; require final batch completion+stablePHONE absence before explicit Unityrelease.
