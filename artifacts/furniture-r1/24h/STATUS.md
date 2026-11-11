@@ -81,3 +81,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T22:57:49.6994556+01:00: Unity plinth-probe before Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-11T22:59:24.5431526+01:00: plinth-probe GPU/fabryka 7/7 passed, 0 skipped (XML zapisany). Wariant nieoznaczony ma identyczne próbki GPU z keywordem off/on; oznaczony skan działa liniowo i brud zanika ku górze. Dodano test UNorm8 markera/metrycznej wysokości oraz braku danych detalu na pozostałej geometrii. NASTĘPNY KROK: focused plik 0120 przez heavy, następnie build-after przez heavy.
+
+2026-11-11T22:59:27.6127238+01:00: heavy focused after; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
