@@ -1,6 +1,6 @@
 # Samokontrola obrazu, r1b / candidate2
 
-Obejrzano 6 arkuszy zdjęcie | render w `review-candidate2-960`: po 3 referencje dla Low i High, overcast. Obejrzano też pełne podglądy Low starej drogi, nowej drogi, świeżej i starej łaty oraz SBS 150280503737744. Pozostałe arkusze przed | po wymagają dokończenia kontroli po analizie liczników.
+Obejrzano 6 arkuszy zdjęcie | render w `review-candidate2-960`: po 3 referencje dla Low i High, overcast. Obejrzano też pełne podglądy Low starej drogi, nowej drogi, świeżej i starej łaty oraz SBS 150280503737744. Dokończono oględziny wszystkich 8 arkuszy przed | po w tym katalogu. Pełne contact sheets pozostałych kamer wymagają jeszcze kontroli po analizie liczników.
 
 Stara jezdnia ma wyraźniejsze ciemne ślady kół. W SBS 150280503737744 ślady są teraz widoczne z kamery trasy, lecz na zdjęciu kontrast i lokalne ciemne plamy nadal są mocniejsze. Tonu nie można porównywać jako fizycznego albedo: zdjęcie ma inne światło, ekspozycję, datę i pozę. Referencje 303305168125936 i 454716650857984 pokazują bardziej równy, ciemny asfalt wiaduktu; render ma mocniejsze powtarzalne pasma. Ujęcia mają różne horyzonty, więc nie są dowodem dokładnego dopasowania do zdjęcia.
 
@@ -11,3 +11,4 @@ Obie łaty są jednoznacznie widoczne z własnych kamer bliskich. Szew i różni
 Przy prawym krawężniku starej drogi pozostaje drobny falisty wzór. Próby wyłączenia foto-warstwy, spękań, normalnej i brudu rynsztoka go nie usunęły. Stan shadera Low został sprawdzony bezpośrednio w czasie renderowania. Przyczyna nieustalona, problem pozostaje otwarty.
 
 Wynik: poprawa czytelności części materiałów, ale jeszcze nie pełny wizualny PASS. Niezależna recenzja, pomiary z masek, pełna kontrola kamer i końcowe testy są w toku. Koszt A16 UNVERIFIED, bez telefonu.
+
