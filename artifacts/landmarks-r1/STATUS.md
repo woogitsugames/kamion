@@ -124,3 +124,5 @@ Krok 36g: watchdog wznowił własny generator o 00:20:32 i 00:20:33 (dwa uruchom
 Krok 36h: odnaleziono pierwotną referencję EC_Białystok (Hiuppo, CC BY-SA 2.5). EXIF DateTime wskazuje 2007-03-06; ma szachownicę i pasy tylko u góry, a referencja CC0 z 2020 pokazuje inny stan malowania. Dane i podglądy zapisane z atrybucją. To istotna różnica epok referencji przed r3; nie przenoszę starego malowania do modelu na ślepo. Generator zakończył pierwszy etap dróg po wznowieniu.
 
 Krok 37: regeneracja modelu i świata po naprawie budżetu: trójkąty 9584/2818/164, brak fallback=True. Następnie pojedyncze testy remizy i hero building.
+
+Krok 37a: model po regeneracji ma potwierdzone 9584/2818/164 trójkąty. Generator zakończony w 1260,6 s czasu ściennego, w tym 775 s udokumentowanego zawieszenia przez watchdog (zdarzenia tylko własnego PID zachowane). Nie jest to pomiar CPU ani regresji wydajności. Oba pliki testów czekają w pipeline na pulę heavy; następnie import i nowe rendery.
