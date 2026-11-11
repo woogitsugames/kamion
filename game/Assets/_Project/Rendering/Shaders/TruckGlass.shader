@@ -51,6 +51,9 @@ Shader "Kamion/Truck Glass"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_fog
+            // ADR 0106: Low fast path (QualityProfile.glassFast, global keyword): ambient SH per vertex (flat panes), polynomial
+            // atan2 in the wiper sweeps. Same image within 1/255 (visual QA); A16 Low windscreen pass measured 3.6 ms GPU.
+            #pragma multi_compile _ _KAMION_GLASS_FAST
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
             #include "KamionVehicleEnv.hlsl"
@@ -76,6 +79,10 @@ Shader "Kamion/Truck Glass"
                 half fogFactor : TEXCOORD4;
                 float3 positionOS : TEXCOORD5;
                 half inside : TEXCOORD6;
+            #if defined(_KAMION_GLASS_FAST)
+                half3 amb : TEXCOORD7;      // SampleSH(outward normal), per vertex (planar panes)
+                half3 skyE : TEXCOORD8;     // SampleSH(up)
+            #endif
             };
 
             Varyings vert(Attributes v)
@@ -91,7 +98,24 @@ Shader "Kamion/Truck Glass"
                 o.positionOS = v.positionOS.xyz;
                 // Inner face of the glass: its normal points towards the cab centre.
                 o.inside = dot(v.normalOS, _CabCentreOS.xyz - v.positionOS.xyz) > 0.0 ? 1.0 : 0.0;
+            #if defined(_KAMION_GLASS_FAST)
+                half3 nW = normalize(o.normalWS);
+                o.amb = SampleSH(o.inside > 0.5 ? -nW : nW);
+                o.skyE = SampleSH(half3(0, 1, 0));
+            #endif
                 return o;
+            }
+
+            // ADR 0106: atan2 by a minimax polynomial (|error| < 1e-5 rad = 0.0006 deg; the sweep border is 16 deg wide).
+            float KamionAtan2(float y, float x)
+            {
+                float ax = abs(x), ay = abs(y);
+                float a = min(ax, ay) / max(max(ax, ay), 1e-6);
+                float s = a * a;
+                float r = ((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a;
+                r = ay > ax ? 1.57079637 - r : r;
+                r = x < 0.0 ? 3.14159274 - r : r;
+                return y < 0.0 ? -r : r;
             }
 
             // 1 inside one wiper sweep (annulus sector), 0 outside, soft 2 cm border; also the arc streak phase.
@@ -99,7 +123,11 @@ Shader "Kamion/Truck Glass"
             {
                 float2 d = p - pivot.xy;
                 r = length(d);
+            #if defined(_KAMION_GLASS_FAST)
+                float a = degrees(KamionAtan2(d.y, d.x));
+            #else
                 float a = degrees(atan2(d.y, d.x));
+            #endif
                 half inR = smoothstep(pivot.z - 0.06, pivot.z + 0.06, r) * (1.0 - smoothstep(pivot.w - 0.06, pivot.w + 0.06, r));
                 half inA = smoothstep(sweepDeg.x - 8.0, sweepDeg.x + 8.0, a) * (1.0 - smoothstep(sweepDeg.y - 8.0, sweepDeg.y + 8.0, a));
                 return inR * inA;
@@ -122,7 +150,11 @@ Shader "Kamion/Truck Glass"
                 // ADR 0059: ambient on the OUTWARD normal (inside face: -n). The film sits on the outer surface; the body tint term
                 // below exists on outside faces only, where nOut = n, so one SH evaluation serves both (no extra cost).
                 half3 nOut = i.inside > 0.5 ? -n : n;
+            #if defined(_KAMION_GLASS_FAST)
+                half3 amb = i.amb;
+            #else
                 half3 amb = SampleSH(nOut);
+            #endif
 
                 // ---- road film outside the wiper sweeps (windscreen) ----
                 half film = 0;
@@ -150,7 +182,11 @@ Shader "Kamion/Truck Glass"
                 {
                     // Cab interior in the reflection: dash below (lit by the sky through the glass and by the sun on its
                     // top), headliner and back wall above (sky light only). Exposed units like the SH ambient.
+                #if defined(_KAMION_GLASS_FAST)
+                    half3 skyE = i.skyE;
+                #else
                     half3 skyE = SampleSH(half3(0, 1, 0));
+                #endif
                     half3 dash = _InteriorAlbedo.x * (skyE * 0.6 + L.color * saturate(L.direction.y) * 0.5);
                     half3 roof = _InteriorAlbedo.y * skyE * 0.15;
                     env = lerp(roof, dash, smoothstep(0.1, -0.2, R.y));

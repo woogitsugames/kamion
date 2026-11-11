@@ -127,6 +127,7 @@ namespace Game.Rendering
             "cabint" => "no Kamion/Cab Interior renderers",
             "truckext" => "no Kamion/Truck Exterior renderers",
             "cabdisp" => "no Kamion/Cab Display renderers",
+            "glassfast" => "Kamion/Truck Glass fast path toggled (_KAMION_GLASS_FAST)",
             _ => "unknown key (no change)",
         };
 
@@ -251,14 +252,46 @@ namespace Game.Rendering
         /// <summary>ADR 0106: disables (B) / re-enables (A) the enabled renderers whose first material uses the shader (GPU A/B
         /// per vehicle shader). Renderer.enabled, not forceRenderingOff: the mirrors toggle the latter on the cab interior.</summary>
         readonly System.Collections.Generic.List<Renderer> m_AbOff = new System.Collections.Generic.List<Renderer>();
+        bool m_AbLogged;
+        int m_GlassShip = -1;
+
+        /// <summary>ADR 0106: which renderers of the A/B shader the main camera drew last frame, and their screen share.</summary>
+        static void LogRenderer(Renderer r)
+        {
+            var cam = ViewCameraResolver.Resolve(null);
+            float share = 0f;
+            if (cam != null && r.isVisible)
+            {
+                var b = r.bounds;
+                Vector2 mn = new Vector2(1e9f, 1e9f), mx = new Vector2(-1e9f, -1e9f);
+                bool behind = false;
+                for (int k = 0; k < 8; k++)
+                {
+                    var c = b.center + Vector3.Scale(b.extents, new Vector3((k & 1) == 0 ? -1 : 1, (k & 2) == 0 ? -1 : 1, (k & 4) == 0 ? -1 : 1));
+                    var v = cam.WorldToViewportPoint(c);
+                    if (v.z <= 0f) behind = true;
+                    mn = Vector2.Min(mn, v); mx = Vector2.Max(mx, v);
+                }
+                mn = Vector2.Max(mn, Vector2.zero); mx = Vector2.Min(mx, Vector2.one);
+                share = behind ? -1f : Mathf.Max(0f, mx.x - mn.x) * Mathf.Max(0f, mx.y - mn.y);
+            }
+            var lg = r.GetComponentInParent<LODGroup>();
+            Debug.Log($"[PASSAB] renderer '{r.name}' visible={r.isVisible} bboxShare={share:F2} layer={r.gameObject.layer} lodGroup={(lg != null ? lg.name : "-")} mats={r.sharedMaterials.Length}");
+        }
+
         void SetShaderRenderers(string shader, bool off)
         {
             if (!off) { foreach (var r in m_AbOff) if (r != null) r.enabled = true; m_AbOff.Clear(); return; }
             foreach (var r in FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
             {
                 var m = r.sharedMaterial;
-                if (r.enabled && m != null && m.shader != null && m.shader.name == shader) { r.enabled = false; m_AbOff.Add(r); }
+                if (r.enabled && m != null && m.shader != null && m.shader.name == shader)
+                {
+                    if (!m_AbLogged) LogRenderer(r);
+                    r.enabled = false; m_AbOff.Add(r);
+                }
             }
+            m_AbLogged = true;
         }
 
         static readonly float[] s_Tmp = new float[2048];
@@ -313,6 +346,10 @@ namespace Game.Rendering
                 case "cabint": SetShaderRenderers("Kamion/Cab Interior", b); break;
                 case "truckext": SetShaderRenderers("Kamion/Truck Exterior", b); break;
                 case "cabdisp": SetShaderRenderers("Kamion/Cab Display", b); break;
+                case "glassfast":
+                    if (m_GlassShip < 0) m_GlassShip = Shader.IsKeywordEnabled("_KAMION_GLASS_FAST") ? 1 : 0;
+                    if ((m_GlassShip == 1) ^ b) Shader.EnableKeyword("_KAMION_GLASS_FAST"); else Shader.DisableKeyword("_KAMION_GLASS_FAST");
+                    break;
                 case "shadowcasc":
                     if (urp == null) break;
                     if (b) { m_SavedCascades = urp.shadowCascadeCount; urp.shadowCascadeCount = Mathf.Max(1, m_SavedCascades - 1); }
