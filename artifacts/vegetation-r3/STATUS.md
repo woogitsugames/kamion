@@ -35,3 +35,4 @@ Przygotowano próbę jednego kadru B/120 Low-overcast z identycznym FOV i 1024x7
 Generacja świata D51 zakończona kodem 0. Następny krok: streetscape_qa orthophoto_trees, kontrola Megascans i import przez Unity slot.
 Generacja 442,7 s, kod 0. verify_world: cztery kandydaty, dwa placed i dwa blocked, bez deduplikacji. Zaakceptowano punkty 1 i 2 (indeksy źródłowe; lokalnie -263,-185 oraz -251,-193), nie cały proponowany zestaw. Pozostałe instancje bez zmian, wszystkie 130 GLB identyczne z baseline; 15 Megascans, fallback false. Następny krok: import dwóch rzeczywistych drzew i próba Low, równolegle analiza odrzuconych punktów bez wyłączania blokad.
 Import D51 dwóch drzew: kod 0. Szczegóły import-after.log.
+Zapisano próbę B/120 Low-overcast w tych samych 1024x768 i FOV co baseline. Następny krok: obejrzeć i porównać koszt, przed pełną macierzą.
