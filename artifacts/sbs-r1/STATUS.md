@@ -8,3 +8,6 @@ Nast?pny krok: uv run --project tools/refs python tools/refs/sbs_gate3.py prepar
 ## Kalibracja i przygotowanie renderu
 Ukończono kopiowanie danych i cache Library bez Bee/BuildPlayerData/PackageCache. Przygotowano 40 referencji z jawną klasyfikacją pozy. Dla 2948 wskazano dwie krawędzie jezdni na wyprostowanym zdjęciu; ich przecięcie wyznacza horyzont roboczy, z zastrzeżeniem spadku drogi.
 Następny krok: pwsh scripts/sbs-gate3.ps1 -EditMode
+## Pokrycie początku trasy
+Przeszukano lokalny manifest; brak kandydatów z pierwszych 300 m G3-A w promieniu 100 m. Próba pobrania dodatkowych zdjęć: błąd DNS graph.mapillary.com. Przygotowano 40 prób pozy bocznej dla ośmiu par J2 (−6, −3, 0, +3, +6 m). Nie zmieniono geometrii świata.
+Następny krok: Get-Content artifacts/sbs-r1/render-validation.log -Tail 20
