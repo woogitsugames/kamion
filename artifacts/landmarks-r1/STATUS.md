@@ -132,3 +132,5 @@ Krok 37b: pobrano zweryfikowany SHA-1 oryginał CC0 zdjęcia wiaduktu 7204 (5520
 Krok 37c: mierzone wąskie ROI na natywnych płaszczyznach filarów mają Y sd 6,60–10,02, znacznie mniej niż mieszane ROI z recenzji. Ich mediany różnią się z oświetleniem: ciemna ściana 37/31/16, jaśniejszy dalszy filar 109/92/51. Zapisano dokładne boksy, aby w r2 nie zastąpić błędu powierzchni/światła nadmiernym szumem farby. Pipeline remizy nadal czeka na heavy dla pojedynczych testów.
 
 Krok 37d: pełne dotychczasowe artifacts/landmarks-r1 skopiowano robocopy do głównego repo (kopia pośrednia, brak końcowego REPORT). Zachowano rendery, porażki testów i natywne referencje z metadanymi. Testy po naprawie budżetu wciąż oczekują na slot heavy. Po ich zakończeniu pipeline przejdzie do importu i after-budget; końcowa kopia zostanie powtórzona.
+
+Krok 37e: przygotowano REPORT-DRAFT.md z wyraźnie oznaczonymi oczekującymi wynikami. Nie jest to zamknięcie rundy ani zastępstwo końcowego raportu. NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/budget-fix-wrapper.log -Tail 12
