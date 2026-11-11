@@ -21,3 +21,6 @@ Następny krok: zakończyć bieżący baseline 92 kamer × 4, regenerację mater
 
 Krok 7: pierwszy baseline Low/clear zakończony: VISUALQA_RESULT OK, 92 PNG. Obejrzano nowe r10_wheel_02 i r10b_black_05 w 960 px: kadry pokazują właściwe auta, stary pas brudu i powtarzalne tablice. Czarny lakier w słońcu nadal wygląda szaro, więc nie zamykamy tego problemu jako naprawionego. Trwają pozostałe trzy warunki.
 Następny krok: zakończyć capture.ps1 -Stage before, potem import kandydata dopiero po build_world bez fallback=True.
+
+Krok 8: zapisano osobne wejścia importu i EditMode z obowiązkowym slotem gpt-life i cofnięciem efektów ubocznych Unity. Materiały są regenerowane kanonicznie; import kandydata jeszcze nie został uruchomiony.
+Następny krok po zakończeniu baseline i generatora: pwsh artifacts/life-r1/unity-phase.ps1 -Phase Import
