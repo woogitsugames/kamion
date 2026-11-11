@@ -518,3 +518,8 @@ M["plot_lawn"] = {"color": [0.150, 0.200, 0.060], "rough": 0.95, "surface": "gra
 # but no longer samples the dirty ground line of the entire concrete pole atlas (review I3).
 # Existing material identity/slot count, linear tint and tiling rules stay unchanged.
 M["furniture_footing"] = {**M["furniture_footing"], "texture": "furniture_footing"}
+
+# ADR 0120: one existing material identity. Only panel_fence COLOR_0 markers activate this detail;
+# gates and noise-wall plinths retain the unmarked path. No texture_set/_Tile/_Tint contract changes.
+M["concrete_plinth"] = {**M["concrete_plinth"], "furniture_plinth_detail": {
+    "texture": "furniture_plinth", "tile_m": 1.0, "dirt_h": 0.25, "dirt_strength": 0.55}}

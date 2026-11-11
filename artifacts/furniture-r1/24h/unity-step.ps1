@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('import','render','sbs-sign','editmode')] [string]$Step,
+    [ValidateSet('import','render','sbs-sign','editmode','plinth-probe')] [string]$Step,
     [string]$Phase='before',
     [ValidateSet('Low','High')] [string]$Tier='Low',
     [ValidateSet('clear','overcast','dusk')] [string]$Lighting='overcast',
@@ -59,6 +59,9 @@ try {
         }
         'editmode' {
             & pwsh scripts/test.ps1 -Platform EditMode *> "$ev/editmode.log"
+        }
+        'plinth-probe' {
+            & pwsh scripts/test.ps1 -Platform EditMode -Filter Game.Tests.FurniturePlinthTests *> "$ev/plinth-probe.log"
         }
         'sbs-sign' {
             $scene=if ($Tier -eq 'High') { 'WorldC_High' } else { 'WorldC' }

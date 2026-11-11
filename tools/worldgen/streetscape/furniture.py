@@ -946,6 +946,27 @@ def concrete_fence(lin, line, key, style_key):
     return nb
 
 
+class PanelPlinthDetail:
+    """Furniture-only COLOR_0 contract; no new material, and no changes to Lin/barrier helpers.
+
+    B=64/255, A=128/255 mark our concrete boards. R is a per-bay scan phase;
+    G encodes height above the sampled ground + 0.25 m. UNorm8 survives mobile mesh packing.
+    Unmarked concrete (gates/noise walls) keeps the old shader path.
+    """
+    def __init__(self, lin, phase):
+        self.lin, self.phase = lin, phase
+
+    def add(self, layer, mat, V, UV, T, **kwargs):
+        assert layer == "furniture" and mat == "concrete_plinth"
+        V = np.asarray(V, float)
+        colors = np.empty((len(V), 4))
+        colors[:, 0] = self.phase
+        colors[:, 1] = np.clip(V[:, 2] - self.lin.z(V[:, :2]) + 0.25, 0, 1)
+        colors[:, 2] = 64 / 255
+        colors[:, 3] = 128 / 255
+        self.lin.buf.add(layer, mat, V, UV, T, COL=colors, **kwargs)
+
+
 def panel_fence(lin, line, col, key, flexible=False):
     """ADR0120: short stepped bays on grades, joints and a slight lateral mesh bow.
 
@@ -984,7 +1005,8 @@ def panel_fence(lin, line, col, key, flexible=False):
         board = ends + np.array([direction * inset, -direction * inset])
         low = lin.z(board) - 0.2
         top = np.full(2, base + S.FENCE_PLINTH_H)
-        lin.slab("concrete_plinth", board, low, top, 0.05, key)
+        phase = (_h(f"{key}:concrete:{i}") % 256) / 255
+        Lin(PanelPlinthDetail(lin, phase), lin.zsurf).slab("concrete_plinth", board, low, top, 0.05, key)
         lateral = np.array([-direction[1], direction[0]])
         seed = _h(f"{key}:bay:{i}")
         bow = (0.012 + (seed % 14) * 0.001) * (1 if seed & 16 else -1)

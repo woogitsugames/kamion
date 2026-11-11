@@ -49,6 +49,8 @@ Shader "Kamion/World Surface"
         _Emission ("Emission luminance (cd/m2, linear; street lamp glass)", Color) = (0, 0, 0, 0)
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull (lamp glass: Off - the generator's glass quad faces up)", Float) = 2
         [Toggle] _GroundMasks ("Terrain ground masks from COLOR_0 (R road distance/20 m, G forest floor, B unmown, A bare soil)", Float) = 0
+        _FurnitureMap ("Marked fence-board scan (mean 0.5 linear)", 2D) = "grey" {}
+        _FurnitureDetail ("Fence board: tile m, dirt height m, dirt strength", Vector) = (1, 0.25, 0.55, 0)
     }
     SubShader
     {
@@ -71,6 +73,7 @@ Shader "Kamion/World Surface"
             float4 _Emission;
             float4 _SkyOcc;
             float _ArchitecturalGlass;
+            float4 _FurnitureDetail;
         CBUFFER_END
         float _KamionStreetLamps, _KamionLampLights, _KamionExposure;
         float _KamionGlassShadowBias;
@@ -96,6 +99,7 @@ Shader "Kamion/World Surface"
             #pragma multi_compile_fog
             #pragma multi_compile_instancing
             #pragma shader_feature_local _FAR_FACADE
+            #pragma shader_feature_local _FURNITURE_PLINTH
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
@@ -103,6 +107,9 @@ Shader "Kamion/World Surface"
 
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
             TEXTURE2D(_MacroMap); SAMPLER(sampler_MacroMap);
+        #if defined(_FURNITURE_PLINTH)
+            TEXTURE2D(_FurnitureMap); SAMPLER(sampler_FurnitureMap);
+        #endif
 
             struct Attributes
             {
@@ -185,6 +192,18 @@ Shader "Kamion/World Surface"
                     half grit = KamionGrassGrit(k, macro);
                     albedo = lerp(albedo, half3(0.19, 0.17, 0.14) * detail, grit);
                 }
+            #if defined(_FURNITURE_PLINTH)
+                // ADR0120: COLOR_0 B=64/255,A=128/255 is reserved for our fence boards.
+                // Default white/zero colours on gates and noise-wall plinths take the unchanged path.
+                if (abs(i.masks.b - 64.0h / 255.0h) < 0.008h && abs(i.masks.a - 128.0h / 255.0h) < 0.008h)
+                {
+                    float2 grainUv = uvm / _FurnitureDetail.x + float2(7.31, 3.73) * i.masks.r;
+                    half grain = 2.0h * SAMPLE_TEXTURE2D(_FurnitureMap, sampler_FurnitureMap, grainUv).r;
+                    half heightAboveGround = i.masks.g - 0.25h;
+                    half dirt = saturate(1.0h - max(heightAboveGround, 0.0h) / _FurnitureDetail.y) * _FurnitureDetail.z;
+                    albedo *= grain * lerp(half3(1, 1, 1), half3(0.62, 0.57, 0.48), dirt);
+                }
+            #endif
                 albedo = saturate(albedo);
                 // Markings: a 0.12 m line covers less than a pixel at distance / grazing angles; the geometry then
                 // sparkles. Pre-filter: blend towards the road albedo by the line's pixel coverage (fwidth footprint).

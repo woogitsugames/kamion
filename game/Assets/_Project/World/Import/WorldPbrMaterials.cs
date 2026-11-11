@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Game.Editor.Build;
+using Game.Rendering.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -74,6 +75,8 @@ namespace Game.World.Import
         public static void Channels(Dictionary<string, object> def, string id, out bool uv0, out bool uv1, out bool colors)
         {
             uv0 = uv1 = colors = false;
+            // ADR0120: the existing World Surface material reads a byte-stable board marker, not UVs.
+            if (id == "concrete_plinth" && def.Get("furniture_plinth_detail") is Dictionary<string, object>) { colors = true; return; }
             if (id != null && id.StartsWith("fab_", StringComparison.Ordinal) && FabMaterials.Has(id)) { uv0 = true; return; }
             if (!Has(def, id)) return;
             var s = Set(def.Get("texture_set") as string);
@@ -124,6 +127,19 @@ namespace Game.World.Import
         /// <summary>PBR material for a manifest material, or null when its set is missing (caller falls back).</summary>
         public static Material Create(RegionImporter.Result r, string id, Dictionary<string, object> def, string path)
         {
+            // ADR0120 additive, data-gated route: retain the original World Surface factory and material identity.
+            if (id == "concrete_plinth")
+            {
+                if (def.Get("furniture_plinth_detail") is Dictionary<string, object> detail)
+                    return FurniturePlinth(r, def, detail, path);
+                var previous = AssetDatabase.LoadAssetAtPath<Material>(path);
+                if (previous != null && previous.IsKeywordEnabled("_FURNITURE_PLINTH"))
+                {
+                    previous.DisableKeyword("_FURNITURE_PLINTH");
+                    previous.SetTexture("_FurnitureMap", null);
+                    EditorUtility.SetDirty(previous);
+                }
+            }
             if (!Has(def, id)) return null;
             var shader = Shader.Find(ShaderName) ?? throw new InvalidOperationException(ShaderName + " not found (compile error?)");
             var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
@@ -504,6 +520,29 @@ namespace Game.World.Import
             if (!AssetDatabase.IsValidFolder(dir)) return Array.Empty<Texture>();
             return AssetDatabase.FindAssets("t:Texture2D", new[] { dir }).Select(AssetDatabase.GUIDToAssetPath)
                 .Where(p => !p.EndsWith("_Var.png")).Select(AssetDatabase.LoadAssetAtPath<Texture>).Where(t => t != null).ToArray();
+        }
+
+        static Material FurniturePlinth(RegionImporter.Result r, Dictionary<string, object> def,
+            Dictionary<string, object> detail, string path)
+        {
+            var c = Arr(def.Get("color"));
+            var albedo = new Color((float)Num(c[0]), (float)Num(c[1]), (float)Num(c[2]));
+            float rough = def.Get("rough") != null ? (float)Num(def.Get("rough")) : 0.9f;
+            float metal = def.Get("metal") != null ? (float)Num(def.Get("metal")) : 0f;
+            var mat = LookDevAssets.WorldMaterial(path, Str(def.Get("surface")), albedo, rough, metal, false);
+            mat.SetFloat("_GroundMasks", 0f); // same final state as RegionImporter's original fallback
+            string texture = detail.Get("texture") as string ?? "furniture_plinth";
+            if (texture != "furniture_plinth") throw new InvalidOperationException("Unexpected furniture plinth texture");
+            var scan = InstanceImporter.ImportTexture(r,
+                Path.Combine(EditorTools.RepoRoot, "art-source", "world", "textures", texture + ".png"), clamp: false);
+            mat.SetTexture("_FurnitureMap", scan);
+            mat.SetVector("_FurnitureDetail", new Vector4(
+                Mathf.Max(0.01f, (float)Num(detail.Get("tile_m"))),
+                Mathf.Max(0.01f, (float)Num(detail.Get("dirt_h"))),
+                Mathf.Clamp01((float)Num(detail.Get("dirt_strength"))), 0f));
+            mat.EnableKeyword("_FURNITURE_PLINTH");
+            EditorUtility.SetDirty(mat); // persisted scene material retains the build-time variant reference
+            return mat;
         }
 
         /// <summary>Estimated GPU bytes of the imported PBR textures (Android ASTC with mips, from the spec).</summary>

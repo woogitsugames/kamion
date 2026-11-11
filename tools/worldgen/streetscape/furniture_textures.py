@@ -67,4 +67,26 @@ def pole_texture(kind):
 
 
 def textures():
-    return {f"furniture_{k}": pole_texture(k) for k in ("galv", "grey", "concrete", "bollard", "footing")}
+    return {**{f"furniture_{k}": pole_texture(k) for k in ("galv", "grey", "concrete", "bollard", "footing")},
+            "furniture_plinth": plinth_texture()}
+
+
+def plinth_texture():
+    """CC0 scan modulation, mean 0.5 linear. The 1 m grain tile is WORKING_VALUE.
+
+    Lighting is removed from the source; the surface shader applies the existing concrete pigment once.
+    Dirt height/strength belongs to marked board geometry, never to unmarked gates or noise walls.
+    """
+    raw = ROOT / "art-source/world/cc0/_raw/brushed_concrete/brushed_concrete_diff_2k.jpg"
+    if raw.exists():
+        im = np.asarray(Image.open(raw).convert("RGB").resize((256, 256), Image.Resampling.LANCZOS), float)
+        lum = im.mean(axis=2)
+        ratio = np.clip(lum / np.maximum(gaussian_filter(lum, 16), 1), 0.65, 1.35)
+        ratio /= ratio.mean()
+    else:
+        warnings.warn("ADR0120 concrete scan missing; neutral plinth fallback", stacklevel=2)
+        ratio = np.ones((256, 256))
+    linear = np.clip(0.5 * ratio, 0, 1)
+    srgb = np.where(linear <= 0.0031308, linear * 12.92, 1.055 * linear ** (1/2.4) - 0.055)
+    rgb = np.repeat(np.round(srgb * 255).astype(np.uint8)[..., None], 3, axis=2)
+    return Image.fromarray(rgb, "RGB")
