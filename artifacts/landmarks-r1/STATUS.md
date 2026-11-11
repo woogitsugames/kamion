@@ -74,3 +74,6 @@ NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/round2-build-wrapper.log -
 
 Krok 23: World wariantu 2 ukończony w 479,0 s, hero applied, bez fallback=True. Model: 9584/2860/164 tris; Low zachował budżet poprzedniego wariantu. Pojedynczy zestaw testów zatrzymał pipeline przed importem: 6 PASS, 1 FAIL. Nowa kontrola maski wykryła przyciemnienie białego poprzecznika i parapetu rysowanych po funkcji glazing; pozostałe kontrole geometrii i materiałów przeszły. Poprawka będzie ograniczona do AO tych białych detali. Pełnego GIS nie uruchamiano.
 NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/round2-resume.ps1
+
+Krok 24: poprawiono wyłącznie maskę AO parapetu i poprzecznika rysowanych po glazing. Geometria wariantu 2 pozostaje ta sama, dlatego wznowienie obejmuje generator materiału i pojedynczy test, następnie import oraz render. Zachowano mapy sprzed poprawki do porównania kanałów. Materiał zostanie teraz wygenerowany High/Medium/Low i wpisany do wspólnego spec wyłącznie jako fire_station, z zachowaniem pozostałych zestawów.
+NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/round2-resume.ps1

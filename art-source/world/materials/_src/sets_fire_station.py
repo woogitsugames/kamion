@@ -435,6 +435,7 @@ def fire_station(nx=2048):
     glazing(in_a, au, av, ga["col"], ga["row"], bar=ga["bar"], shape=in_shape, trim=(trim_m, tblue * 1.0), blind_seed=3, glass=hall_glass)
     sill_a = in_a & in_shape & (av < 0.06)
     alb = np.where(sill_a[..., None], pvc * 0.8, alb)
+    room_visibility = np.where(sill_a,1.0,room_visibility)
     out_a = in_a & ~in_shape
     alb = np.where(out_a[..., None], base * (det ** 0.8)[..., None], alb)
     rough = np.where(out_a, 0.9, rough)
@@ -455,6 +456,7 @@ def fire_station(nx=2048):
     glazing(in_rw, ru + R0, rv2 + R0, 9.0, 9.0, shape=in_circ, trim=(ring | cross, tblue), blind_seed=5, glass=hall_glass)
     transom = in_rw & in_circ & ~ring & ~cross & (np.abs(rv2) < 0.035)
     alb = np.where(transom[..., None], pvc, alb)
+    room_visibility = np.where(transom,1.0,room_visibility)
     rough = np.where(transom, 0.45, rough)
     h = np.where(transom, 0.0, h)
     out_r = in_rw & ~in_circ
