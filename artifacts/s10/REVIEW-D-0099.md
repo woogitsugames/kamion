@@ -47,3 +47,11 @@ Constant-half marking area572.831m2/tier (geometry, not pixel/visible coverage).
 Root viewed all6Mapillary refs: large transverse rectangular repair boundaries
 on Putry and locally abraded paint are clear; smooth uniform noise cannot substitute
 for those features. Exact locations/coverage of existing patches still required.
+
+Per-material native white paint area4989.216m2 exactly matches source; total
+_markings layer15028.320m2 includes tyre5189.475,oil514.561,patch1613.442,
+yard2195.019 and other decal materials. Layer total is not paint coverage.
+Source connected-footprint inventory312patch/871oil/799tyre is neither generator
+source attribution nor rendered-visible count.23bus shelters nearest oil7.04-92.11m
+proves proximity only; no dedicated stop-zone attribution. Need target-specific
+source/actual images before adding/moving existing wear under allowed scope.

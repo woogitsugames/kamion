@@ -17,7 +17,20 @@
         }
       ],
       "markingArea": 15028.32039430621,
-      "constantHalfMarkingArea": 572.83148388681
+      "constantHalfMarkingArea": 572.83148388681,
+      "markingsLayerAreaByMaterial": {
+        "M_decal_oil": 514.561344191432,
+        "M_decal_patch": 1613.441939264536,
+        "M_fab_drainage": 367.95961739402264,
+        "M_marking_white": 4989.216438357951,
+        "M_marking_yard": 2195.019362539053,
+        "M_decal_tyre": 5189.475425163284,
+        "M_decal_yard_patch_dark": 47.298647940158844,
+        "M_decal_yard_patch_light": 110.24439918994904,
+        "M_decal_sealant": 1.1032202658243477
+      },
+      "whitePaintArea": 4989.216438357951,
+      "markingAreaNote": "Layer includes oil/patch/tyre/yard/drain; total layer area is not white-paint area or coverage."
     },
     "WorldC_High": {
       "vertices": 521419,
@@ -32,7 +45,20 @@
         }
       ],
       "markingArea": 15028.32039430621,
-      "constantHalfMarkingArea": 572.83148388681
+      "constantHalfMarkingArea": 572.83148388681,
+      "markingsLayerAreaByMaterial": {
+        "M_decal_oil": 514.561344191432,
+        "M_decal_patch": 1613.441939264536,
+        "M_decal_sealant": 1.1032202658243477,
+        "M_decal_tyre": 5189.475425163284,
+        "M_decal_yard_patch_dark": 47.298647940158844,
+        "M_fab_drainage": 367.95961739402264,
+        "M_marking_white": 4989.216438357951,
+        "M_marking_yard": 2195.019362539053,
+        "M_decal_yard_patch_light": 110.24439918994904
+      },
+      "whitePaintArea": 4989.216438357951,
+      "markingAreaNote": "Layer includes oil/patch/tyre/yard/drain; total layer area is not white-paint area or coverage."
     }
   }
 }
