@@ -1,9 +1,10 @@
 param(
     [Parameter(Mandatory)]
-    [ValidateSet('BuildWorld','BuildMaterials','GisFile','GisFinal','PhysicsFile','Gate3File','Fidelity')]
+    [ValidateSet('BuildWorld','BuildMaterials','GisFile','GisFinal','PhysicsFile','Gate3File','AuditMesh','Compare')]
     [string]$Task,
     [string]$TestFile,
-    [switch]$AtRoundEnd
+    [switch]$AtRoundEnd,
+    [ValidateSet('before','after','prototype')] [string]$Phase = 'after'
 )
 $ErrorActionPreference = 'Stop'
 $edgeRoot = (Resolve-Path "$PSScriptRoot/../..").Path
@@ -26,7 +27,8 @@ try {
     switch ($Task) {
         'BuildWorld' { & uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c }
         'BuildMaterials' { & uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py }
-        'Fidelity' { throw 'Road fidelity belongs to Claude; this edge session does not regenerate it.' }
+        'AuditMesh' { & uv run --project tools/worldgen python "$PSScriptRoot/audit_mesh.py" $Phase }
+        'Compare' { & uv run --project tools/worldgen python "$PSScriptRoot/compare.py" }
         'GisFinal' { & uv run --project tools/worldgen python -m pytest tests/gis -q }
         default { & uv run --project tools/worldgen python -m pytest $TestFile -q }
     }
