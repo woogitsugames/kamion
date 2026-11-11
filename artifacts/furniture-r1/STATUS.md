@@ -39,3 +39,5 @@ GIS po zmianach: 377 passed, 1 xfailed / 538.42 s. Brak nowych porażek względe
 
 Blokada telefonu zwolniona; import bazowy w toku (przebudowa lokalnych PBR). Obejrzano blender-prototypes.png: odrębne sylwetki 12 m / betonowa 9 m / stalowa 8 m, stopy na płaszczyźnie, prawidłowy U-słupek. Blender ma jawnie przywrócone tinty z manifestu (GLB z teksturą zapisuje factor=1); to diagnostyka modeli, nie dowód Unity. Bounds zapisane w blender-prototype-bounds.json.
 NASTĘPNY KROK: obserwować validation.log/import-before.log; obejrzeć before/ po pojawieniu PNG.
+
+Rozszerzony audyt produktów obejmuje też curb_/kerb_ i collision_asphalt/curb/paving/grass: 806/806 prymitywów identycznych bajtowo. Import before nadal generuje PBR; PHONE_RUN nie istnieje. NASTĘPNY KROK: Get-Content artifacts/furniture-r1/import-before.log -Tail 8

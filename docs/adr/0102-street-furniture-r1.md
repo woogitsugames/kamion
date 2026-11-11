@@ -55,7 +55,7 @@ Po scaleniu z innymi strumieniami regeneracja zamiast wybierania obcych produkt�
 - Finalny filtr usuwa 3 zamiast 2 słupów spod pomostu; po odsunięciach nadal 0 pozostawionych na jezdni.
 - Estymator generatora (23 kamery): Low tris −0,3421%…−0,0047%, liczba materiałów bez zmian.
   Nie zastępuje to SceneStats ani pomiaru GPU.
-- 388 chronionych prymitywów `road_`, `bridge_`, `barrier_`, `marking` porównano w obu wariantach:
+- 806 chronionych prymitywów dróg, mostów, barier, oznakowania, krawężników i kolizji drogowej porównano w obu wariantach:
   POSITION/NORMAL/UV/COLOR/index identyczne bajtowo (`protected-geometry.json`).
 - Zużycie atlasu dotyczy koloru. Roughness/metallic pozostają stałe per materiał; osobna mapa korozji
   zmieniająca metaliczność nie jest częścią r1. Nie ma fotogrametrycznej inwentaryzacji każdej bocznej ulicy.
