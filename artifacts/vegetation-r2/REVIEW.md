@@ -39,3 +39,15 @@ ADR0101 integration is separate; commonshaderincludes/CanopyPolicy must survive.
 Reference photo-crown-rois.jpg independently viewed with sourceSHA/ROIs; mixedseason/exposure and sparse5.3percent secondphoto mask preclude exactphysicalalbedo inference.
 
 Coordinator closure2026-11-11: testedhead1dc20dd2, sourcepolicy1d822d56. B rawpine CC0 input packet must be restored from artifacts with restore_cc0_inputs.py aftermerge before regeneration; main lacked both inputs, procedural fallback would otherwise undo the reviewed needle source.
+
+## Uzupełnienie po niezależnej recenzji s10 (2026-11-11)
+Scalenie zostało ocenione PASS, ale jakość względem całego celu 0088 — FAIL.
+Recenzja: docs/reports/visual/REVIEW-2026-11-11-s10-0088-0098.md na main.
+Pozostały P1: żywopłoty jako jednolite wałki, pokrój i obłe impostory sosny,
+szew kory oraz zbyt jasne zdrowe korony Putry. Wariacja trawy w skali metrów
+jest za słaba; usunięcie jednolitej obwódki nie zamyka tego celu.
+Wcześniejsza ocena gotowości nie oznacza pełnego zaliczenia jakości. Testy
+364 passed / 2 xfailed i EditMode218/218 oraz budżet pozostają dowodami
+poprzedniej implementacji, a nie nowej poprawki tych wad.
+Lider przydzielił kontynuację 0109 / gpt-vegetation-r3 w GPT-FEEDBACK-S10.md,
+po bieżących F/G/E/D i korekcie światła0108. Ten zapis nie zmienia kodu.

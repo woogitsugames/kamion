@@ -18,3 +18,15 @@
 - Integracja: zachować VegetationGround/include i CanopyPolicy; po A/C/ADR0101 osobno przegląd Tint/światła, regenerować wspólne JSON.
 
 - Integration prerequisite: main lacks the two new ignored pine CC0 raw maps. After B merge, run `uv run --project tools/worldgen python artifacts/vegetation-r2/restore_cc0_inputs.py --root .` BEFORE material/tree regeneration. Hash-pinned packet is copied with artifacts; no Fab data included.
+
+## Uzupełnienie po niezależnej recenzji s10 (2026-11-11)
+Scalenie zostało ocenione PASS, ale jakość względem całego celu 0088 — FAIL.
+Recenzja: docs/reports/visual/REVIEW-2026-11-11-s10-0088-0098.md na main.
+Pozostały P1: żywopłoty jako jednolite wałki, pokrój i obłe impostory sosny,
+szew kory oraz zbyt jasne zdrowe korony Putry. Wariacja trawy w skali metrów
+jest za słaba; usunięcie jednolitej obwódki nie zamyka tego celu.
+Wcześniejsza ocena gotowości nie oznacza pełnego zaliczenia jakości. Testy
+364 passed / 2 xfailed i EditMode218/218 oraz budżet pozostają dowodami
+poprzedniej implementacji, a nie nowej poprawki tych wad.
+Lider przydzielił kontynuację 0109 / gpt-vegetation-r3 w GPT-FEEDBACK-S10.md,
+po bieżących F/G/E/D i korekcie światła0108. Ten zapis nie zmienia kodu.
