@@ -24,7 +24,8 @@
 | Kwadrat Park r12 | 0092 | usunięty | artifacts/kwadrat-r12 | SCALONE `8cbc9264` (firanka matowa R−B +15→−6, brama domknięta — płot/słupki WORKING_VALUE, `_PANELTONE`, ślady par bieżników; budżet Low +0,5 % draws; pytest 251/0, PlayMode 4/4). **visual-critic odłożony po resecie limitu**; po regeneracji pytest gis 336 ✓ / 2 ✗ (znane → 0093) |
 | integracja Unity stanu main (build_all, build_world, import, Truck BuildBatch/InstallBatch, EditMode/PlayMode, render połączony, APK Low) | — | integration-s9 (z fa83f577) | artifacts/integration-s9 | s9: agent build-qa Fable start 05:40 |
 | zabudowa r4 (P1 z recenzji 0091) | 0094 | buildings-r12 (z fa83f577) | artifacts/buildings-r12 | s9: agent Fable start 05:40 |
-| recenzja 0092 + 0093 | — | — | docs/reports/visual/ | s9: visual-critic start 05:40 |
+| recenzja 0092 + 0093 | — | — | docs/reports/visual/REVIEW-2026-11-11-s9-0092-0093.md | GOTOWE: oba PASS warunkowy; 0093: 5× P0-L (liczba/szerokość pasów z OSM zamiast ortofoto: s1040–1080, n10015785253, kerb_merge z filmu; Putry N; MA-010) → 0095; 0092: krawężnik jak szlifowany kamień, plamy > ślady, słupki — brama czeka na **zdjęcia właściciela z ziemi** |
+| węzły r2: szerokości/liczba pasów z ortofoto | 0095 | junctions-r2 (z 88c6c6e9) | artifacts/junctions-r2 | s9: agent Fable start ~06:00 |
 | import Megascans R1 | 0084 | gpt-megascans (NIE usuwać — Codex wciąż aktywny) | artifacts/megascans-r1/REPORT.md | SCALONE `98e54e47` (REPORT: lokalnie PASS, skok sceny FAIL, Low lokalnie +4 draw/+4k tris; normal mapy Fab wyłączone; High 1024 i telefon UNVERIFIED); konflikt stage.py = unia (yard wear 0071 + FD.apply); regeneracja main w tle `artifacts/logs/s9-main-regen-0084.log`; GPT następnie Q1 0086 / Q2 0088 |
 | tło za krawędzią | 0085 | argon-edge | artifacts/edge-far-r1/REPORT.md | REPORT 01:38; stan zacommitowany przez lidera (Argon bezczynny od 01:46). NIEscalone: `edge-south` — budynek regionu zastąpiony/zdublowany halą far-field (podejrzenie: budynki przecinające granicę w far-field) → uwagi w `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` „UWAGI LIDERA s9” |
 
@@ -34,7 +35,7 @@
 3. Nowe zadania z recenzji s9 (agenci po zwolnieniu miejsc): **0090** remiza r7 (świerki piętrowe, tuje 3 kształty + Low, szkło 60–75, zacieki). **0089** czarny lakier aut → Argon Q2 (dopisane).
 3a. **0094** zabudowa r4 (z recenzji 0091: P1-1 daszek przebija połać, P1-2 łaty jasnego tynku — osłabić warstwę niskoczęst., P1-3 balkony na obu długich stronach, P1-4 czarna podbitka nad skrzydłem L ≥ 90, P1-5 balkony z płytą 0,15–0,2 m i jaśniejszą balustradą; P2 kolory dachów/tynków, gąsior, pieprz High w shaderze). **0090** remiza r7.
 4. Integracja, czyste buildy Low/High, telefony (A16 Low gate3, S24+ High), raport bramki 3.
-5. Ostatni przydzielony ADR: **0094**.
+5. Ostatni przydzielony ADR: **0095**.
 
 ---
 # HANDOVER — kamion, sesja 8 (2026-11-10 ok. 22:00 UTC start; limit 5 h reset 2026-11-11 03:00 UTC)
