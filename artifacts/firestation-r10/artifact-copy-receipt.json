@@ -3,7 +3,7 @@
   "mode": "robocopy /E /XJ /R:1 /W:1; no MIR",
   "selected_sha256": {
     "REPORT.md": "3712e1997179a96c82d6e49bdf03cff67ef8a864d6170ccdb05a2e477adc3f07",
-    "STATUS.md": "dd81a6577b16090796438f1261499a375d62f1a242b68b0af2d44c179cabec3e",
+    "STATUS.md": "124300bc65c0258ced1398b482258068254c3c919e8542d47d2628f486226c81",
     "REVIEW.md": "0da78a8c72f09bd33e5dd132d4f67df7e3ccc0a156d9239b96adfe8f945d1cc2",
     "SELF-REVIEW.md": "70ec35b251f58e32fcb7fc8fb57aa3e3a342fbbc7e2132474cb155bd9018fbd1",
     "editmode-final.xml": "d616a08cb84e178ba26ce93921d1310c1ebf93305f0e8ab4f1a393195b12a6c0",
@@ -18,7 +18,8 @@
     "E-R8-ULTRA-INTEGRATION.patch": "d700d5b3107c74692ebf4d3c2c2a048abaacc7a4d423431000e69b3357805e74",
     "B3-PREFLIGHT.md": "6a54fa63da509720fed18b453a2bf91f1259164b35d16b3c389aa87164dd6539",
     "C13-INSTRUMENTATION-PREFLIGHT.md": "8047decfd663b7096b5de86f6a35272de35239ab1bf96cd8c4c3dd19cc160915",
-    "C13CameraProbeFeature.cs": "37238e965915213fa73a0600e4c28ce20ebdd8e15066e9a91bcef33732dd42ce"
+    "C13CameraProbeFeature.cs": "37238e965915213fa73a0600e4c28ce20ebdd8e15066e9a91bcef33732dd42ce",
+    "D-GATE-R2-HIGH-REVIEW.md": "d105f1a3557cac5acc7a1639a0e006933174fa497f1e3222a8c3aa0a833f569b"
   },
   "png_inventory": {
     "before": 160,
@@ -26,7 +27,7 @@
   },
   "cc0_source_packaged": true,
   "main_sources_modified": false,
-  "documentation_extension": "Read-only E r8, B3 and C13 instrumentation preflights; no source/runtime changes; patches/sketch NOT active",
+  "documentation_extension": "Read-only E8/B3/C13 preflights and independent D gate-R2 High review; production sources unchanged",
   "post_handoff_main_line_endings": {
     "restore_cc0_inputs.py": {
       "original_sha256": "a268c5fe4386c2a33d74ea88f482d8e672f309a6817038e846f50c0b650c2b1f",
