@@ -259,6 +259,64 @@ def container_corrugation(n=1024):
     return _finish("container_corrugation", c, lum, h, rough, np.floor(X / p) / 10.0, rust, extra=tint, ao_k=0.2)
 
 
+def barrier_galv(n=1024):
+    """Weathered hot-dip galvanised road barrier (ADR 0117): one 4.0 m W-beam element, u along the beam, v = unrolled
+    metres across the folded profile from the bottom edge (0.472 m; roads/streetscape furniture.W_PROFILE) in a
+    4.0 x 0.5 m tile. Dull zinc patina (no spangle shine left after years), cloudy mottling, splice at u = 0 (lap
+    edge shadow + 2 x 4 bolt heads on the flanks), a post bolt in the valley, road spray on the faces that look up
+    (flank below each top fold) and along the bottom edge, run-off below bolts, sparse brown rust at the lap and on
+    the bottom edge. Pattern read off Mapillary 177786140912399 / 500263111404933 / 454716650857984 (CC BY-SA,
+    reference only, no pixels). All dimensions WORKING_VALUE. Posts / spacers sample u 1.3-2.0 (plain sheet)."""
+    Lx, Ly = 4.0, 0.5
+    c = Ctx(n, int(n * Ly / Lx) // 4 * 4, Lx, Ly, seed=531)
+    X, Y = c.xy()
+    v = Ly - Y
+    # fold lines of the unrolled profile (bottom edge 0 -> top edge 0.472)
+    folds = (0.0746, 0.1396, 0.2361, 0.3326, 0.3976)
+    valley = 0.2361
+    cloud = noise(c, 1, 0.15, 2.0, beta=1.3)
+    fine = noise(c, 2, c.px * 2, 0.03, beta=0.4)
+    lum = 1.0 + 0.07 * cloud + 0.025 * fine
+    # faces looking up collect road dust: the flank below the top edge (v 0.3976-0.472) and below the valley
+    # (v 0.1396-0.2361); the bottom edge gets spray
+    up = sstep(0.3976, 0.44, v) + sstep(0.1396, 0.19, v) * sstep(0.2361, 0.20, v)
+    dirt = np.clip(0.55 * up + 0.9 * sstep(0.06, 0.0, v) + 0.6 * sstep(0.03, 0.0, np.abs(v - valley)), 0, 1)
+    dirt *= 0.6 + 0.4 * sstep(-1.0, 1.0, noise(c, 3, 0.05, 0.8, beta=1.0, aniso=4.0))
+    # splice: lap 0.32 m, the edge of the upper sheet at u = 0.32 casts a line; bolts in two columns
+    du0 = np.minimum(X, Lx - X)
+    lap_edge = sstep(0.006, 0.002, np.abs(X - 0.32)) + sstep(0.006, 0.002, du0)
+    bolt = np.zeros_like(X)
+    for bu in (0.06, 0.26):
+        for bv in (0.107, 0.188, 0.284, 0.365):
+            bolt = np.maximum(bolt, sstep(0.016, 0.011, np.hypot(X - bu, v - bv)))
+    for bu in (0.16, 2.16):                                   # post bolt in the valley (posts every 2 / 4 m)
+        bolt = np.maximum(bolt, sstep(0.016, 0.011, np.hypot(X - bu, v - valley)))
+    # run-off below bolts and from the lap edge (short dark streaks down the face)
+    runs = np.zeros_like(X)
+    for bu in (0.06, 0.26, 0.16, 2.16, 0.32):
+        w_ = sstep(0.02, 0.004, np.abs(X - bu + 0.006 * noise(c, 4, 0.02, 0.1)))
+        runs = np.maximum(runs, w_ * sstep(0.40, 0.05, v) * 0.6)
+    rust = sstep(1.5, 2.3, noise(c, 5, 0.02, 0.5, beta=0.7)) * np.clip(
+        sstep(0.05, 0.0, v) + 0.7 * sstep(0.05, 0.0, np.abs(X - 0.32)) + 0.6 * sstep(0.05, 0.0, du0), 0, 1)
+    rust = np.maximum(rust, 0.5 * bolt * sstep(0.0, 1.5, noise(c, 6, 0.3, 2.0)))
+    lum *= (1 - 0.30 * dirt) * (1 - 0.45 * lap_edge) * (1 - 0.22 * runs) * (1 + 0.10 * bolt)
+    foldm = np.zeros_like(X)
+    for f_ in folds:
+        foldm = np.maximum(foldm, sstep(0.006, 0.002, np.abs(v - f_)))
+    lum *= 1 + 0.05 * foldm                                    # worn-bright arrises
+    h = 2.5e-3 * bolt - 3.0e-3 * sstep(0.0, 0.004, X - 0.32) * sstep(0.34, 0.32, X) + 0.15e-3 * fine
+
+    def tint(alb):
+        rc = np.array([0.50, 0.30, 0.17], np.float32)
+        brown = np.array([1.0, 0.94, 0.84], np.float32)
+        k = np.clip(dirt * 0.8, 0, 1)[..., None]
+        alb = alb * (1 - k) + alb * brown * k
+        r = np.clip(rust, 0, 1)[..., None]
+        return alb * (1 - 0.8 * r) + r * rc * float(alb.mean()) * 0.8
+    rough = 0.62 + 0.12 * dirt + 0.15 * rust - 0.06 * foldm + 0.04 * cloud
+    return _finish("barrier_galv", c, lum, h, rough, np.zeros_like(X), np.maximum(lap_edge, bolt), extra=tint, ao_k=0.4)
+
+
 def box_panel(n=1024):
     """Box / reefer body: GRP-skinned panels with vertical seam profiles every 1.2 m, road film on the lower
     part. Tile 4.8 x 2.7 m."""
@@ -540,6 +598,9 @@ FACADE_SETS = {
         note="Curtainsider tarpaulin folds, sag between straps, grime on the lower third."),
     "container_corrugation": dict(fn=container_corrugation, tile_m=[2.78, 2.6], slots=["container_*"],
         note="Container side corrugation 0.278 m pitch, dents, rust spots."),
+    "barrier_galv": dict(fn=barrier_galv, tile_m=[4.0, 0.5], slots=["barrier_steel"],
+        note="Weathered galvanised W-beam element 4.0 m (ADR 0117): u along, v unrolled across the folded profile "
+             "(0.472 m); splice bolts, lap edge, road dust on up-facing flanks, bottom-edge spray, sparse rust."),
     "noise_cassette": dict(fn=noise_cassette, tile_m=[4.0, 4.0], slots=["noise_panel"],
         note="Absorbing noise-barrier cassettes 4.0 x 0.5 m, perforated face, joint lips, splash grime, run-off."),
     "concrete_fence_panel": dict(fn=concrete_fence_panel, tile_m=[4.0, 2.0], slots=["concrete_fence"],

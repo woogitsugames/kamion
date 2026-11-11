@@ -107,41 +107,79 @@ def _rail(n=80, tall=None, term=(True, True)):
     return lin.buf.parts
 
 
+def _is_beam(p):
+    """W-beam part (ADR 0117): 6 flat facets = 12 vertex rows, UV v spans the unrolled profile (0 .. 0.472 m)."""
+    return p.mat == "barrier_steel" and abs(float(p.UV[:, 1].max()) - FU._w_unrolled()[0]) < 1e-6 \
+        and float(p.UV[:, 1].min()) == 0.0
+
+
 def _is_posts(p):
-    """Lin.posts: 8 vertices and 10 triangles (5 faces) per post, same material as the beam (one draw call)."""
-    return p.layer in ("furniture", "bridge") and len(p.V) % 8 == 0 and len(p.T) == len(p.V) // 8 * 10
+    """C posts: three thin plates per post drawn from both sides = 24 vertices / 12 triangles (ADR 0117)."""
+    return p.mat == "barrier_steel" and len(p.V) % 24 == 0 and len(p.T) == len(p.V) // 2 and not _is_beam(p) \
+        and float(np.ptp(p.V[:, 2])) > 0.6          # (the spacer blocks are 0.16 m high)
 
 
 def _posts(parts):
-    return [p for p in parts if _is_posts(p)]
+    return [p for p in parts if p.layer in ("furniture", "bridge") and _is_posts(p)]
 
 
 def test_guardrail_free_ends_are_turned_down_and_the_beam_is_decimated():
     parts = _rail()
-    beam = [p for p in parts if p.layer == "furniture" and p.mat == "barrier_steel" and not _is_posts(p)][0]
+    beam = [p for p in parts if p.layer == "furniture" and _is_beam(p)][0]
     z = beam.V[:, 2] - 10.0
     assert np.isclose(z.max(), S.GUARDRAIL_H)
     ends = beam.V[(beam.V[:, 0] < 0.5) | (beam.V[:, 0] > 78.5)]
     assert np.isclose((ends[:, 2] - 10.0).max(), 0.33)                 # top of the beam at the free end
-    # 79 m straight: terminals + one straight piece, not 79 cells (5 rows x 4 kept stations at most 6)
-    assert len(beam.V) <= 5 * 6
+    # 79 m straight: terminals + one straight piece, not 79 cells (12 rows x 4 kept stations at most 6)
+    assert len(beam.V) <= 12 * 6
     posts = _posts(parts)[0]
     assert posts.V[:, 0].min() >= S.GUARDRAIL_TERMINAL_M - 0.2        # no post standing above the turned-down end
+    # ground posts every GUARDRAIL_POST_SPACING_GROUND, top just below the top edge of the beam (the beam hangs on
+    # the face of the post)
+    assert len(posts.V) // 24 == round((79 - 2 * S.GUARDRAIL_TERMINAL_M) / S.GUARDRAIL_POST_SPACING_GROUND) + 1
+    assert np.isclose(posts.V[:, 2].max() - 10.0, S.GUARDRAIL_H - 0.03)
 
 
-def test_bridge_barrier_railing_has_posts_to_the_handrail_and_two_rails_above_the_beam():
+def test_w_beam_profile_is_the_folded_sheet_with_hard_arrises():
+    """REVIEW s10-0110 P1-1: 310 mm high, 83 mm deep, flat crests; every facet owns its vertices (flat shading - the
+    5-point profile with shared rows rendered as a tube)."""
+    pr = np.array(FU.W_PROFILE)
+    assert np.isclose(pr[:, 1].min(), -0.31) and np.isclose(pr[:, 0].max() - pr[:, 0].min(), 0.083)
+    assert len(pr) >= 7
+    beam = [p for p in _rail(term=(False, False)) if p.layer == "furniture" and _is_beam(p)][0]
+    n = len(beam.V) // (2 * (len(pr) - 1))
+    assert n == 2 and len(beam.V) == 2 * (len(pr) - 1) * n          # straight: 2 stations x 12 rows
+    from terrain_mesh.gltf import smooth_normals
+    N = smooth_normals(beam.V, beam.T)
+    # two crest facets face the road squarely (+y in the test frame: P runs along +x, left normal = +y)
+    flat = [r for r in range(0, 12, 2) if np.allclose(np.abs(N[r * n:(r + 1) * n, 1]), 1.0, atol=1e-6)]
+    assert len(flat) == 2
+    # the face of the beam stays where the 0110 beam had it (collision / swept-path clearance): 0.133 m
+    assert np.isclose(np.abs(beam.V[:, 1]).max(), FU.W_BACK + 0.083)
+    col = [p for p in _rail(term=(False, False)) if p.layer == "collision"][0]
+    assert np.isclose(np.abs(col.V[:, 1]).max(), FU.W_BACK + 0.083)
+
+
+def test_deck_barrier_has_heavy_posts_on_foot_plates_and_an_upper_beam():
     tall = np.zeros(80, bool)
     tall[20:60] = True
     parts = _rail(tall=tall, term=(False, False))
     posts = _posts(parts)
     tops = sorted({round(float(p.V[:, 2].max() - 10.0), 2) for p in posts})
-    assert tops == [round(S.GUARDRAIL_H - 0.05, 2), S.BRIDGE_BARRIER_H]
+    assert tops == [round(S.GUARDRAIL_H - 0.03, 2), S.BRIDGE_BARRIER_H]
     assert not [p for p in parts if p.layer == "furniture"]          # a deck run lives in the bridge mesh
-    steel = [p for p in parts if p.layer == "bridge" and p.mat == "barrier_steel" and not _is_posts(p)]
+    assert {p.mat for p in parts if p.layer == "bridge"} == {"barrier_steel"}      # one draw call
+    deck_posts = [p for p in posts if np.isclose(p.V[:, 2].max() - 10.0, S.BRIDGE_BARRIER_H)][0]
+    assert len(deck_posts.V) // 24 == round(39 / S.GUARDRAIL_POST_SPACING) + 1
+    assert np.isclose(deck_posts.V[:, 2].min(), 10.0)                # stands on the cap (foot plate), not driven in
+    steel = [p for p in parts if p.layer == "bridge" and not _is_posts(p)]
     zmax = max(float(p.V[:, 2].max()) for p in steel) - 10.0
-    assert np.isclose(zmax, S.BRIDGE_BARRIER_H)
-    mid = [p for p in steel if np.isclose(p.V[:, 2].max() - 10.0, S.BRIDGE_BARRIER_MID + 0.03)]
-    assert mid and all(p.V[:, 0].min() >= 20.0 - 1e-6 and p.V[:, 0].max() <= 59.0 + 1e-6 for p in mid)
+    assert np.isclose(zmax, S.BRIDGE_BARRIER_H)                       # upper box beam; no handrail above it
+    upper = [p for p in steel if np.isclose(p.V[:, 2].max() - 10.0, S.BRIDGE_BARRIER_H) and not _is_beam(p)]
+    assert upper and all(p.V[:, 0].min() >= 20.0 - 1e-6 and p.V[:, 0].max() <= 59.0 + 1e-6 for p in upper)
+    # where the W-beam carries on along the ground the upper beam comes down to it instead of ending in the air
+    lo = min(float(p.V[p.V[:, 0] < 20.5][:, 2].max()) for p in upper if (p.V[:, 0] < 20.5).any()) - 10.0
+    assert lo <= S.GUARDRAIL_H + 0.01
 
 
 @pytest.mark.parametrize("turn,sg", [("guide_left", 1.0), ("guide_right", -1.0)])

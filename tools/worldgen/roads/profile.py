@@ -553,8 +553,10 @@ def mark_walled_ramps(net, hf: Heightfield) -> list:
             structure_sides(c, keep)
         # ground at the wall foot (NMT 1.5 m beyond the deck edge cap), per side ("L" = +normal)
         zg = {}
+        from .meshing import bridge_cap_w
+        _cap_w = bridge_cap_w(c)
         for name, sg in (("L", 1), ("R", -1)):
-            q = P + nrm * sg * (c.hw[:, None] + S.KERB_TOP_W + S.BRIDGE_CAP_W + 1.5)
+            q = P + nrm * sg * (c.hw[:, None] + S.KERB_TOP_W + _cap_w + 1.5)
             zg[name] = hf.sample(q[:, 0], q[:, 1])
         c.meta["walled_zg"] = zg
         out.append({"chain": c.id, "walled_m": round(float(keep.sum() * (s[1] - s[0] if len(s) > 1 else 0)), 1),

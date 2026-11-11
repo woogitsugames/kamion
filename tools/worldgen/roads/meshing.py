@@ -374,6 +374,11 @@ def bridge_style(c):
     return DEFAULT_BRIDGE_STYLE
 
 
+def bridge_cap_w(c):
+    """Width of the deck cap behind the kerb (ADR 0117): `cap_w` of the bridge_style override, else BRIDGE_CAP_W."""
+    return float(bridge_style(c).get("cap_w") or S.BRIDGE_CAP_W)
+
+
 def _strip(buf, layer, mat, A, B, src, both=True):
     """Vertical strip between polylines A (bottom) and B (top), both windings (thin decorative parts)."""
     n = len(A)
@@ -545,7 +550,7 @@ def build_bridge_supports(buf, c, hf, ground_footprint, report):
         if sb - sa < 4:
             continue
         hwmax = float(c.hw[run].max())
-        width = 2 * (hwmax + S.KERB_TOP_W + S.BRIDGE_CAP_W)
+        width = 2 * (hwmax + S.KERB_TOP_W + bridge_cap_w(c))
         style = bridge_style(c)
         for s_end in (sa, sb):
             p = c.line.point(s_end)

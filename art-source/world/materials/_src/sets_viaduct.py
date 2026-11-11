@@ -289,8 +289,8 @@ def viaduct_concrete(nx=4096):
 
 
 def railing_texture(path: Path | None = None):
-    """viaduct_steel.png 512 x 256 RGBA: left 3/4 = one 2.0 x 1.0 m railing bay (u 0..0.75, v 0..1: bottom rail,
-    vertical bars every 0.125 m, mid flat, alpha elsewhere), right 1/4 = opaque weathered galvanised steel."""
+    """viaduct_steel.png 512 x 256 RGBA: left 3/4 = one 2.0 x 1.0 m railing bay (u 0..0.75, v 0..1: six horizontal
+    bars + top flat, alpha elsewhere; ADR 0117), right 1/4 = opaque weathered galvanised steel."""
     W, H = 512, 256
     rng = np.random.default_rng(672)
     a = np.zeros((H, W), np.float32)
@@ -301,11 +301,12 @@ def railing_texture(path: Path | None = None):
     Xg, Yg = np.meshgrid(x, y)
     ub = Xg / 0.75 * 2.0                                  # metres along the bay
     bay = Xg < 0.75 - 1.0 / W
-    bars = np.abs(((ub + 0.0625) % 0.125) - 0.0625) < 0.0085
-    a[bay & bars & (Yg > 0.10) & (Yg < 0.97)] = 1
-    a[bay & (np.abs(Yg - 0.10) < 0.022)] = 1              # bottom rail
+    # ADR 0117 (REVIEW s10-0110 P1-2): horizontal bars, no pickets - the railing at the deck edge of the Biezenstwa
+    # viaduct seen from below (Mapillary 500263111404933, 1259231227807789: 6-7 thin horizontal bars between posts
+    # under a flat top rail; pattern only). 6 bars d ~20 mm + top flat; the posts are separate quads of the asset.
+    for yb in (0.12, 0.26, 0.40, 0.54, 0.68, 0.82):
+        a[bay & (np.abs(Yg - yb) < 0.011)] = 1
     a[bay & (np.abs(Yg - 0.955) < 0.02)] = 1              # top flat under the handrail
-    a[bay & (np.abs(Yg - 0.80) < 0.016)] = 1              # second rail (reference frame 201270605169291)
     a[~bay & (Xg > 0.75 + 2.0 / W)] = 1
     n = rng.standard_normal((H // 8, W // 8)).astype(np.float32)
     n = np.asarray(Image.fromarray(n).resize((W, H), Image.BICUBIC))
