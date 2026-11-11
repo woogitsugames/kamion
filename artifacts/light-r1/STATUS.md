@@ -104,3 +104,4 @@ Batch światła zakończony: artifacts/light-r1/sbs-before.json; log C:\Users\ma
 Ukierunkowane EditMode LightPostPolicyTests zakończone kodem 0. Następny krok: odczytać light-policy-test.log i ocenić obrazy.
 
 Krok 33: obejrzano trzy podglądy v2 (natywna konwersja ImageMagick ograniczona do 1 wątku i 64 MiB pamięci; analiza Pythona nadal czeka w heavy). Chmury fotograficzne mają strukturę i cienie na Low/High. Natywny wycinek porównany z flat potwierdził pionowy szew tylko w wersji photo. Poprawiono pochodne U na granicy lat-long przez SAMPLE_TEXTURE2D_GRAD, bez nowego odczytu/przebiegu. Następny krok: cloud-photo-v3 i ponowna kontrola tego samego wycinka.
+Batch światła zakończony: artifacts/light-r1/cloud-photo-v3.json; log C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-light\artifacts\light-r1\cloud-photo-v3.20261111-232639.log. Następny krok: obejrzeć PNG i policzyć metryki, nie deklarować PASS z samego kodu wyjścia.
