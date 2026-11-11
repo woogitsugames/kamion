@@ -32,7 +32,7 @@ namespace Game.Editor.VisualQA
                 for(int si=0;si<Math.Min(materials.Length,mesh.subMeshCount);si++)
                 {
                     var material=materials[si];
-                    if(material==null||material.shader==null||!material.shader.name.Contains("Truck Glass"))continue;
+                    if(material==null||material.shader==null||!(material.shader.name=="Kamion/Truck Glass"||material.shader.name.StartsWith("Hidden/Kamion/TruckGlassDiagnostic_",StringComparison.Ordinal)))continue;
                     var row=new Row { renderer=Hierarchy(renderer.transform),mesh=mesh.name,asset=AssetDatabase.GetAssetPath(mesh),material=material.name,
                         lodGroup=renderer.GetComponentInParent<LODGroup>()?.name,enabled=renderer.enabled,forcedOff=renderer.forceRenderingOff,
                         active=renderer.gameObject.activeInHierarchy,readable=mesh.isReadable,submesh=si,minWorldY=float.PositiveInfinity,maxWorldY=float.NegativeInfinity,
