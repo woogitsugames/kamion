@@ -795,3 +795,17 @@ will propose minimal visible physical wear without extra Low texture samples.
 END AFTER matches END BEFORE2441cached/192raw; explicit signal validation replay
 controlled. No new GIS repeat or finalroute before selected source.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
+Step 71: D exact rollback5cbbd928 confirmed source1dc7db..., sterile asphalt still
+open. E packing preflightc8be6bcf independently confirms ONE feasible CPU trial:
+old-road-only shared Mask at16m, source4k/Android2k ASTC8, G/B/A tiled4x4, R existing
+open cracks. Mask fetch count stays1; High R ignored at metallicScale0, external
+High CRACKS retained once; fresh-road untouched. Additional resident map1,398,144B
+(1.333MiB); no false zero-memory claim or512@16m coarsening. ASTC nativeG/A parity
+must be measured; sourcebyte parity alone insufficient. Existing authored working
+mask, not surveyed/photo damage. D approved CPU artifact prototype only, no shader
+or material activation/render until review. No new random noise or fetched assets.
+G96386b05 BEFORE complete368=92x4, includes8newregistrycontrols. All368begin/end
+poses/region exact;192raw/90fixtures unchanged. Approved R4sevenfiles active,
+17targettests and cleanmap generation complete; candidate CPUworld export running.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
+Check D CPU pack proof and G smallP0focus next; no final acceptance implied.
