@@ -58,3 +58,7 @@ NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/round1-build-wrapper.log -
 
 Krok 18: pojedynczy test remizy w heavy zakończony 6/6 w 3,74 s; slot zwolniony. GLB 9344→9392 / 2828→2860 / 164→164 tris, prymitywy 3/2/1 bez zmiany. Import nowego wariantu w toku. Diagnostyki baseline zakończone i zwolniły slot; własny znacznik ich trwania usunięty. Plama: High Y114,83, bez cieni 131,12 przy sąsiednim tynku131,19; GI-off i SSAO-off pozostawiają114,83. To cień, prawdopodobnie flagi, a nie powód do dodawania kompensacji do albedo. CPU ray/UV probe potwierdził te same UV i kolor atlasu dla LOD0/1 w badanym miejscu.
 NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/round1-build-wrapper.log -Tail 10
+
+Krok 19: obejrzano wszystkie 16 par fokusowych (cztery kamery × cztery warunki) i zestawienie ze zdjęciem. Budżet Low w tym podzbiorze PASS, ale pełna trasa jeszcze niezweryfikowana. Wszystkie 64 wpisy kafli i roads_qa są identyczne ze świeżym baseline; w world_manifest zmienił się wyłącznie materiał fire_station. Inne źródła i geometria pozostają bez zmian.
+Wygląd PARTIAL: iglaki są szersze i ciemniejsze, lecz rdzeń czyta się jak zbyt gładki stożek. Gradient szkła odwrócony poprawnie, ale za słaby w overcast: High lewa góra/dół 66,65/63,43 (przed71,93/74,65). Następna iteracja: piętrowa sylwetka z zamianą niewidocznych kart Low na geometrię rdzenia w tym samym budżecie oraz lokalna maska wnętrza dolnych tafli, bez zmiany shaderów.
+NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/round1-build.ps1 -Phase round2

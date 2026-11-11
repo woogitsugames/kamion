@@ -21,10 +21,15 @@ def read(path):
     return result
 
 before, after = sys.argv[1:3]
+focus_subset = '--focus' in sys.argv[3:]
 rows = []
 for path in sorted((ROOT / before).glob('*/stats.txt')):
     condition = path.parent.name
     a, b = read(path), read(ROOT / after / condition / 'stats.txt')
+    if focus_subset:
+        if not b.keys() <= a.keys():
+            raise RuntimeError(f'Unknown focus camera: {condition}')
+        a = {name:a[name] for name in b}
     if a.keys() != b.keys():
         raise RuntimeError(f'Camera inventory mismatch: {condition}')
     for name in sorted(a):
@@ -46,6 +51,7 @@ with (ROOT / f'budget-{after}.csv').open('w', newline='', encoding='utf-8') as f
     writer.writeheader()
     writer.writerows(rows)
 (ROOT / f'budget-{after}.json').write_text(json.dumps({'camera_conditions': len(rows),
+    'scope': 'focus subset only' if focus_subset else 'all captured cameras',
     'all_low_budget_ok': all(r['low_budget_ok'] for r in rows),
     'estimates_only_not_GPU': True, 'rows': rows}, ensure_ascii=False, indent=2), encoding='utf-8')
 print(f'{len(rows)} camera/conditions; Low budget: {all(r["low_budget_ok"] for r in rows)}')
