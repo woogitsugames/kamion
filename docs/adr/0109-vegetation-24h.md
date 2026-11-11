@@ -2,7 +2,7 @@
 
 ## Runda r1
 
-Stan: ograniczona korekta edytorowa B oceniona PASS przez niezależnego krytyka. Ogólny realizm pozostaje FAIL; końcowy GIS trwa. Wydajność i bramka telefonu pozostają UNVERIFIED.
+Stan: ograniczona korekta edytorowa B oceniona PASS przez niezależnego krytyka. Ogólny realizm pozostaje FAIL. Wydajność i bramka telefonu pozostają UNVERIFIED.
 
 Recenzja 0088 wskazała trawę bez wariacji w skali metrów, prześwietlone korony Putry, walcowate żywopłoty i uproszczone sosny. Punktem odniesienia jest aktualny main 4c9905b1, nie dawna macierz 0088.
 
@@ -36,4 +36,6 @@ Surowe hashe 64 assetów kolizji różnią się po imporcie. Importer usuwa i tw
 
 Zapisano 322 obrazy przed i 322 po: 67 kamer Low/High razy clear/overcast oraz 27 kadrów fotograficznych w dwóch profilach. Każde z 322 porównań ma delta draws 0 i delta triangles 0%; wywołania instancji podano osobno w all-camera-costs.csv. Metryki trawy grass-only przed/po: Low-overcast 3,614/5,170; Low-clear 4,416/5,476; High-overcast 2,981/3,900; High-clear 3,179/3,495. Mediana sRGB wzrosła też o około 18–19 jednostek, więc poprawka rozjaśnia i osusza wygląd, nie tylko zwiększa wariację.
 
-Niezależna recenzja: docs/reports/visual/2026-11-11-vegetation-0109-r1.md. Brak nowej regresji B blokującej ograniczoną korektę. Sosny, tuje, skład nasadzeń Putry i dalszy realizm berberysu pozostają backlogiem. EditMode 261/261. Pełny GIS na końcu rundy wymaga osobnego odnotowania wyniku; nie deklarujemy go jako PASS przed zakończeniem.
+Niezależna recenzja: docs/reports/visual/2026-11-11-vegetation-0109-r1.md. Brak nowej regresji B blokującej ograniczoną korektę. Sosny, tuje, skład nasadzeń Putry i dalszy realizm berberysu pozostają backlogiem. EditMode 261/261; testy celowane 12/12. Pełny GIS na końcu rundy: 495 passed, 1 xfailed, 1 failed w 612,15 s. Jedyny błąd to test_road_fidelity.py::test_report_not_stale: siedem hashy raportu drogowego nie odpowiada źródłom. fidelity-stale-baseline-proof.json potwierdza nieaktualność także względem blobów bazowego 4c9905b1 oraz brak zmian tych źródeł. Raportu cudzej dziedziny nie regenerowano. Audyt posttests-audit.json: brak zmian źródeł po renderach i brak zmian wyjść kanonicznych po testach.
+
+Do integracji dostarczamy kod i pełne migawki wyników w artefaktach. Wspólne metadane po własnej regeneracji, zawierające też różnice bazowe spoza vegetation, przywracamy w indeksie roboczym przed kolejną rundą; lider musi regenerować świat na swoim aktualnym main. Nie przenosimy do commita cudzych zmian dróg ani budynków. Potencjalne konflikty: addytywne wywołania w WorldPBR/WorldSurface oraz dane generowane, dla których obowiązuje main i regeneracja.
