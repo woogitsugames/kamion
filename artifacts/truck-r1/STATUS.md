@@ -72,3 +72,4 @@ Zapisano drl-power-4000 High clear, kod wejściowy zgodny z fingerprintem. Nast�
 
 Krok 26: wariant 4000 przywrócił rozległe przycięcie na High-overcast: 1209 pikseli wobec 1214 w bazie. Pozostałe trzy warunki bez pikseli RGB ≥254. W słońcu pasek przy 4000 jest wyraźnie ciemniejszy niż w bazie. Odrzucono 4000 jako rozwiązanie problemu High-overcast. Sprawdzany jest pojedynczy środkowy wariant 3000/1050, nadal WORKING_VALUE bez dodatkowych mechanizmów i kosztu renderowania. Następny krok: drl-power-3000 w czterech warunkach i ocena niezależna.
 Zapisano drl-power-3000 Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Zapisano drl-power-3000 Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
