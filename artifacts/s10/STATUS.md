@@ -289,3 +289,16 @@ proof B-main-needle-card-parity.json. Mainrawfiles confirmed gitignored. FullGIS
 is running; G fullGIS is planned after its own source/world CPU checkpoint (earlier
 report wording was premature, not a completed/run proof). Phone diag0 now7/9.
 NEXT COMMAND: Get-Content ../perf-low-r1/artifacts/perf-low-r1/diag0.log -Tail 5; require final batch completion+stablePHONE absence before explicit Unityrelease.
+## Step22 - renewed phone ended; explicit Unity release12:46:20
+Perfdiag0 all9completed, finalbase1+lockreleased12:43:52. PHONE absent confirmed
+12:43:58/12:45:17/12:46:20 (>2min), removed only owned12:31GPT_UNITY_HOLD.
+Fresh Erelease markerwritten; explicit F/G/E messages sent. Everylaunchguardsremain;
+ifPHONEreturns stopbefore nextlaunch and await newexplicitrelease.
+F fullGIS370passed/1xfailed exit0,542.66s,4234pinnedfiles identical,0restored;
+log/XML/result committed8e4c0094 and copied. Candidate2 actual renders nowresuming.
+Root independently viewed E baseline material/UVmask overlay: clean gableHigh
+112/131/150, wing113/134/153, tower114/134/153; D48preserved and wing/towerNOTdarker.
+Wholeframe darkwing impression withdrawn, no paint/illumination gain warranted.
+E glass unoccludedleft samples exceed60-75; rightoccludedbaseline not a glassROI.
+First E4actualplant candidates beforefullmatrix; G finishesCPU/GIS thenGPU/capture.
+NEXT COMMAND: inspect F focusedcandidate2 and E first4PNGs; verify G fullGIS/inputparity, then independent actual candidate review; D staysready until workerfree.
