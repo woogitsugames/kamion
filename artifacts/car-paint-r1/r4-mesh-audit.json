@@ -1,0 +1,3009 @@
+{
+  "source_head": "bc506639",
+  "method": "generated source mesh plus current main-selected GLB metadata; no Unity",
+  "coordinate_contract": "generator right,nose,up; GLB (-x,z,y); glTFast Unity (x,z,y), subject to runtime verification",
+  "library_sha256": "a9d3f9fac549f44f4a634366b169ffdfd85a5b7ef41c00c426bc0d0e4a87b035",
+  "source_rows": [
+    {
+      "prototype": "car_hatch_silver",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -1.058,
+          -2.13,
+          0.19
+        ],
+        [
+          1.058,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1676,
+      "vertices": 1371,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.334648315250126,
+      "rear_vertices": 130,
+      "front_vertices": 186
+    },
+    {
+      "prototype": "car_hatch_silver",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.118,
+          0.19
+        ],
+        [
+          1.063,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 450,
+      "vertices": 482,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.032361181076555,
+      "rear_vertices": 64,
+      "front_vertices": 71
+    },
+    {
+      "prototype": "car_hatch_silver",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -0.86539,
+          -2.118,
+          0.21
+        ],
+        [
+          0.86539,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 54,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.08342729461417,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_hatch_grey",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -1.058,
+          -2.13,
+          0.19
+        ],
+        [
+          1.058,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1676,
+      "vertices": 1371,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.334648315250126,
+      "rear_vertices": 130,
+      "front_vertices": 186
+    },
+    {
+      "prototype": "car_hatch_grey",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.118,
+          0.19
+        ],
+        [
+          1.063,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 450,
+      "vertices": 482,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.032361181076555,
+      "rear_vertices": 64,
+      "front_vertices": 71
+    },
+    {
+      "prototype": "car_hatch_grey",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -0.86539,
+          -2.118,
+          0.21
+        ],
+        [
+          0.86539,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 54,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.08342729461417,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_hatch_black",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -1.058,
+          -2.13,
+          0.19
+        ],
+        [
+          1.058,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1676,
+      "vertices": 1371,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.334648315250126,
+      "rear_vertices": 130,
+      "front_vertices": 186
+    },
+    {
+      "prototype": "car_hatch_black",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.118,
+          0.19
+        ],
+        [
+          1.063,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 450,
+      "vertices": 482,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.032361181076555,
+      "rear_vertices": 64,
+      "front_vertices": 71
+    },
+    {
+      "prototype": "car_hatch_black",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -0.86539,
+          -2.118,
+          0.21
+        ],
+        [
+          0.86539,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 54,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.08342729461417,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_hatch_white",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -1.058,
+          -2.13,
+          0.19
+        ],
+        [
+          1.058,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1676,
+      "vertices": 1371,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.334648315250126,
+      "rear_vertices": 130,
+      "front_vertices": 186
+    },
+    {
+      "prototype": "car_hatch_white",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.118,
+          0.19
+        ],
+        [
+          1.063,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 450,
+      "vertices": 482,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.032361181076555,
+      "rear_vertices": 64,
+      "front_vertices": 71
+    },
+    {
+      "prototype": "car_hatch_white",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -0.86539,
+          -2.118,
+          0.21
+        ],
+        [
+          0.86539,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 54,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.08342729461417,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_hatch_blue",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -1.058,
+          -2.13,
+          0.19
+        ],
+        [
+          1.058,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1676,
+      "vertices": 1371,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.334648315250126,
+      "rear_vertices": 130,
+      "front_vertices": 186
+    },
+    {
+      "prototype": "car_hatch_blue",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.118,
+          0.19
+        ],
+        [
+          1.063,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 450,
+      "vertices": 482,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.032361181076555,
+      "rear_vertices": 64,
+      "front_vertices": 71
+    },
+    {
+      "prototype": "car_hatch_blue",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -0.86539,
+          -2.118,
+          0.21
+        ],
+        [
+          0.86539,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 54,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.08342729461417,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_hatch_red",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -1.058,
+          -2.13,
+          0.19
+        ],
+        [
+          1.058,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1676,
+      "vertices": 1371,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.334648315250126,
+      "rear_vertices": 130,
+      "front_vertices": 186
+    },
+    {
+      "prototype": "car_hatch_red",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.118,
+          0.19
+        ],
+        [
+          1.063,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 450,
+      "vertices": 482,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.032361181076555,
+      "rear_vertices": 64,
+      "front_vertices": 71
+    },
+    {
+      "prototype": "car_hatch_red",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.25,
+      "axle_rear": -1.37,
+      "tyre_radius": 0.316,
+      "arch_radius": 0.361,
+      "bbox_generator": [
+        [
+          -0.86539,
+          -2.118,
+          0.21
+        ],
+        [
+          0.86539,
+          2.1215,
+          1.46
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 54,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.08342729461417,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_sedan_silver",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.32,
+          0.19
+        ],
+        [
+          1.063,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1794,
+      "vertices": 1474,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.3897787341156145,
+      "rear_vertices": 129,
+      "front_vertices": 193
+    },
+    {
+      "prototype": "car_sedan_silver",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.068,
+          -2.308,
+          0.19
+        ],
+        [
+          1.068,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 474,
+      "vertices": 505,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 2.9710706743697632,
+      "rear_vertices": 60,
+      "front_vertices": 83
+    },
+    {
+      "prototype": "car_sedan_silver",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -0.86509,
+          -2.308,
+          0.21
+        ],
+        [
+          0.86509,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 36,
+      "vertices": 56,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.350258313663684,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_sedan_grey",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.32,
+          0.19
+        ],
+        [
+          1.063,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1794,
+      "vertices": 1474,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.3897787341156145,
+      "rear_vertices": 129,
+      "front_vertices": 193
+    },
+    {
+      "prototype": "car_sedan_grey",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.068,
+          -2.308,
+          0.19
+        ],
+        [
+          1.068,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 474,
+      "vertices": 505,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 2.9710706743697632,
+      "rear_vertices": 60,
+      "front_vertices": 83
+    },
+    {
+      "prototype": "car_sedan_grey",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -0.86509,
+          -2.308,
+          0.21
+        ],
+        [
+          0.86509,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 36,
+      "vertices": 56,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.350258313663684,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_sedan_black",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.32,
+          0.19
+        ],
+        [
+          1.063,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1794,
+      "vertices": 1474,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.3897787341156145,
+      "rear_vertices": 129,
+      "front_vertices": 193
+    },
+    {
+      "prototype": "car_sedan_black",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.068,
+          -2.308,
+          0.19
+        ],
+        [
+          1.068,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 474,
+      "vertices": 505,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 2.9710706743697632,
+      "rear_vertices": 60,
+      "front_vertices": 83
+    },
+    {
+      "prototype": "car_sedan_black",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -0.86509,
+          -2.308,
+          0.21
+        ],
+        [
+          0.86509,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 36,
+      "vertices": 56,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.350258313663684,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_sedan_white",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.32,
+          0.19
+        ],
+        [
+          1.063,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1794,
+      "vertices": 1474,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.3897787341156145,
+      "rear_vertices": 129,
+      "front_vertices": 193
+    },
+    {
+      "prototype": "car_sedan_white",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.068,
+          -2.308,
+          0.19
+        ],
+        [
+          1.068,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 474,
+      "vertices": 505,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 2.9710706743697632,
+      "rear_vertices": 60,
+      "front_vertices": 83
+    },
+    {
+      "prototype": "car_sedan_white",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -0.86509,
+          -2.308,
+          0.21
+        ],
+        [
+          0.86509,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 36,
+      "vertices": 56,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.350258313663684,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_sedan_blue",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.32,
+          0.19
+        ],
+        [
+          1.063,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1794,
+      "vertices": 1474,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.3897787341156145,
+      "rear_vertices": 129,
+      "front_vertices": 193
+    },
+    {
+      "prototype": "car_sedan_blue",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.068,
+          -2.308,
+          0.19
+        ],
+        [
+          1.068,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 474,
+      "vertices": 505,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 2.9710706743697632,
+      "rear_vertices": 60,
+      "front_vertices": 83
+    },
+    {
+      "prototype": "car_sedan_blue",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -0.86509,
+          -2.308,
+          0.21
+        ],
+        [
+          0.86509,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 36,
+      "vertices": 56,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.350258313663684,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_sedan_red",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.32,
+          0.19
+        ],
+        [
+          1.063,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1794,
+      "vertices": 1474,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.3897787341156145,
+      "rear_vertices": 129,
+      "front_vertices": 193
+    },
+    {
+      "prototype": "car_sedan_red",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.068,
+          -2.308,
+          0.19
+        ],
+        [
+          1.068,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 474,
+      "vertices": 505,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 2.9710706743697632,
+      "rear_vertices": 60,
+      "front_vertices": 83
+    },
+    {
+      "prototype": "car_sedan_red",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.42,
+      "axle_rear": -1.2800000000000002,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -0.86509,
+          -2.308,
+          0.21
+        ],
+        [
+          0.86509,
+          2.31191,
+          1.44
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 36,
+      "vertices": 56,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.350258313663684,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_estate_silver",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.33,
+          0.19
+        ],
+        [
+          1.063,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1706,
+      "vertices": 1382,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.0424533935385312,
+      "rear_vertices": 130,
+      "front_vertices": 187
+    },
+    {
+      "prototype": "car_estate_silver",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.068,
+          -2.318,
+          0.19
+        ],
+        [
+          1.068,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 454,
+      "vertices": 486,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.3199913685429965,
+      "rear_vertices": 65,
+      "front_vertices": 74
+    },
+    {
+      "prototype": "car_estate_silver",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -0.87271,
+          -2.318,
+          0.21
+        ],
+        [
+          0.87271,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 54,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.487708779544413,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_estate_grey",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.33,
+          0.19
+        ],
+        [
+          1.063,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1706,
+      "vertices": 1382,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.0424533935385312,
+      "rear_vertices": 130,
+      "front_vertices": 187
+    },
+    {
+      "prototype": "car_estate_grey",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.068,
+          -2.318,
+          0.19
+        ],
+        [
+          1.068,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 454,
+      "vertices": 486,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.3199913685429965,
+      "rear_vertices": 65,
+      "front_vertices": 74
+    },
+    {
+      "prototype": "car_estate_grey",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -0.87271,
+          -2.318,
+          0.21
+        ],
+        [
+          0.87271,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 54,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.487708779544413,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_estate_black",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.33,
+          0.19
+        ],
+        [
+          1.063,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1706,
+      "vertices": 1382,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.0424533935385312,
+      "rear_vertices": 130,
+      "front_vertices": 187
+    },
+    {
+      "prototype": "car_estate_black",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.068,
+          -2.318,
+          0.19
+        ],
+        [
+          1.068,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 454,
+      "vertices": 486,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.3199913685429965,
+      "rear_vertices": 65,
+      "front_vertices": 74
+    },
+    {
+      "prototype": "car_estate_black",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -0.87271,
+          -2.318,
+          0.21
+        ],
+        [
+          0.87271,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 54,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.487708779544413,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_estate_white",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.33,
+          0.19
+        ],
+        [
+          1.063,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1706,
+      "vertices": 1382,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.0424533935385312,
+      "rear_vertices": 130,
+      "front_vertices": 187
+    },
+    {
+      "prototype": "car_estate_white",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.068,
+          -2.318,
+          0.19
+        ],
+        [
+          1.068,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 454,
+      "vertices": 486,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.3199913685429965,
+      "rear_vertices": 65,
+      "front_vertices": 74
+    },
+    {
+      "prototype": "car_estate_white",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -0.87271,
+          -2.318,
+          0.21
+        ],
+        [
+          0.87271,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 54,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.487708779544413,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_estate_blue",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.33,
+          0.19
+        ],
+        [
+          1.063,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1706,
+      "vertices": 1382,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.0424533935385312,
+      "rear_vertices": 130,
+      "front_vertices": 187
+    },
+    {
+      "prototype": "car_estate_blue",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.068,
+          -2.318,
+          0.19
+        ],
+        [
+          1.068,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 454,
+      "vertices": 486,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.3199913685429965,
+      "rear_vertices": 65,
+      "front_vertices": 74
+    },
+    {
+      "prototype": "car_estate_blue",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -0.87271,
+          -2.318,
+          0.21
+        ],
+        [
+          0.87271,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 54,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.487708779544413,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_estate_red",
+      "lod": 0,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.063,
+          -2.33,
+          0.19
+        ],
+        [
+          1.063,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1706,
+      "vertices": 1382,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.0424533935385312,
+      "rear_vertices": 130,
+      "front_vertices": 187
+    },
+    {
+      "prototype": "car_estate_red",
+      "lod": 1,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -1.068,
+          -2.318,
+          0.19
+        ],
+        [
+          1.068,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 454,
+      "vertices": 486,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.3199913685429965,
+      "rear_vertices": 65,
+      "front_vertices": 74
+    },
+    {
+      "prototype": "car_estate_red",
+      "lod": 2,
+      "sill": 0.19,
+      "axle_front": 1.4300000000000002,
+      "axle_rear": -1.27,
+      "tyre_radius": 0.32,
+      "arch_radius": 0.365,
+      "bbox_generator": [
+        [
+          -0.87271,
+          -2.318,
+          0.21
+        ],
+        [
+          0.87271,
+          2.32186,
+          1.48
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 54,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.487708779544413,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_suv_silver",
+      "lod": 0,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -1.083,
+          -2.21,
+          0.25
+        ],
+        [
+          1.083,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1612,
+      "vertices": 1323,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.045839233582294,
+      "rear_vertices": 144,
+      "front_vertices": 222
+    },
+    {
+      "prototype": "car_suv_silver",
+      "lod": 1,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -1.088,
+          -2.198,
+          0.25
+        ],
+        [
+          1.088,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 462,
+      "vertices": 502,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.158917173637194,
+      "rear_vertices": 64,
+      "front_vertices": 75
+    },
+    {
+      "prototype": "car_suv_silver",
+      "lod": 2,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -0.89776,
+          -2.198,
+          0.27
+        ],
+        [
+          0.89776,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 44,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.374274550871264,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_suv_grey",
+      "lod": 0,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -1.083,
+          -2.21,
+          0.25
+        ],
+        [
+          1.083,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1612,
+      "vertices": 1323,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.045839233582294,
+      "rear_vertices": 144,
+      "front_vertices": 222
+    },
+    {
+      "prototype": "car_suv_grey",
+      "lod": 1,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -1.088,
+          -2.198,
+          0.25
+        ],
+        [
+          1.088,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 462,
+      "vertices": 502,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.158917173637194,
+      "rear_vertices": 64,
+      "front_vertices": 75
+    },
+    {
+      "prototype": "car_suv_grey",
+      "lod": 2,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -0.89776,
+          -2.198,
+          0.27
+        ],
+        [
+          0.89776,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 44,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.374274550871264,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_suv_black",
+      "lod": 0,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -1.083,
+          -2.21,
+          0.25
+        ],
+        [
+          1.083,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1612,
+      "vertices": 1323,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.045839233582294,
+      "rear_vertices": 144,
+      "front_vertices": 222
+    },
+    {
+      "prototype": "car_suv_black",
+      "lod": 1,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -1.088,
+          -2.198,
+          0.25
+        ],
+        [
+          1.088,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 462,
+      "vertices": 502,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.158917173637194,
+      "rear_vertices": 64,
+      "front_vertices": 75
+    },
+    {
+      "prototype": "car_suv_black",
+      "lod": 2,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -0.89776,
+          -2.198,
+          0.27
+        ],
+        [
+          0.89776,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 44,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.374274550871264,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_suv_white",
+      "lod": 0,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -1.083,
+          -2.21,
+          0.25
+        ],
+        [
+          1.083,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1612,
+      "vertices": 1323,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.045839233582294,
+      "rear_vertices": 144,
+      "front_vertices": 222
+    },
+    {
+      "prototype": "car_suv_white",
+      "lod": 1,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -1.088,
+          -2.198,
+          0.25
+        ],
+        [
+          1.088,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 462,
+      "vertices": 502,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.158917173637194,
+      "rear_vertices": 64,
+      "front_vertices": 75
+    },
+    {
+      "prototype": "car_suv_white",
+      "lod": 2,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -0.89776,
+          -2.198,
+          0.27
+        ],
+        [
+          0.89776,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 44,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.374274550871264,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_suv_blue",
+      "lod": 0,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -1.083,
+          -2.21,
+          0.25
+        ],
+        [
+          1.083,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1612,
+      "vertices": 1323,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.045839233582294,
+      "rear_vertices": 144,
+      "front_vertices": 222
+    },
+    {
+      "prototype": "car_suv_blue",
+      "lod": 1,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -1.088,
+          -2.198,
+          0.25
+        ],
+        [
+          1.088,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 462,
+      "vertices": 502,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.158917173637194,
+      "rear_vertices": 64,
+      "front_vertices": 75
+    },
+    {
+      "prototype": "car_suv_blue",
+      "lod": 2,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -0.89776,
+          -2.198,
+          0.27
+        ],
+        [
+          0.89776,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 44,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.374274550871264,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_suv_red",
+      "lod": 0,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -1.083,
+          -2.21,
+          0.25
+        ],
+        [
+          1.083,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1612,
+      "vertices": 1323,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.045839233582294,
+      "rear_vertices": 144,
+      "front_vertices": 222
+    },
+    {
+      "prototype": "car_suv_red",
+      "lod": 1,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -1.088,
+          -2.198,
+          0.25
+        ],
+        [
+          1.088,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 462,
+      "vertices": 502,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 3.158917173637194,
+      "rear_vertices": 64,
+      "front_vertices": 75
+    },
+    {
+      "prototype": "car_suv_red",
+      "lod": 2,
+      "sill": 0.25,
+      "axle_front": 1.31,
+      "axle_rear": -1.35,
+      "tyre_radius": 0.35,
+      "arch_radius": 0.39499999999999996,
+      "bbox_generator": [
+        [
+          -0.89776,
+          -2.198,
+          0.27
+        ],
+        [
+          0.89776,
+          2.2031,
+          1.65
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 32,
+      "vertices": 44,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.374274550871264,
+      "rear_vertices": 6,
+      "front_vertices": 6
+    },
+    {
+      "prototype": "car_van_white",
+      "lod": 0,
+      "sill": 0.27,
+      "axle_front": 1.52,
+      "axle_rear": -1.48,
+      "tyre_radius": 0.345,
+      "arch_radius": 0.38999999999999996,
+      "bbox_generator": [
+        [
+          -1.154,
+          -2.45,
+          0.27
+        ],
+        [
+          1.154,
+          2.43539,
+          1.97
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1560,
+      "vertices": 1192,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.4746010764610205,
+      "rear_vertices": 96,
+      "front_vertices": 141
+    },
+    {
+      "prototype": "car_van_white",
+      "lod": 1,
+      "sill": 0.27,
+      "axle_front": 1.52,
+      "axle_rear": -1.48,
+      "tyre_radius": 0.345,
+      "arch_radius": 0.38999999999999996,
+      "bbox_generator": [
+        [
+          -1.159,
+          -2.42,
+          0.27
+        ],
+        [
+          1.159,
+          2.43539,
+          1.97
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 418,
+      "vertices": 429,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.038249551228849,
+      "rear_vertices": 61,
+      "front_vertices": 64
+    },
+    {
+      "prototype": "car_van_white",
+      "lod": 2,
+      "sill": 0.27,
+      "axle_front": 1.52,
+      "axle_rear": -1.48,
+      "tyre_radius": 0.345,
+      "arch_radius": 0.38999999999999996,
+      "bbox_generator": [
+        [
+          -0.95961,
+          -2.438,
+          0.29
+        ],
+        [
+          0.95961,
+          2.44255,
+          1.97
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 36,
+      "vertices": 48,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.926492403363675,
+      "rear_vertices": 6,
+      "front_vertices": 4
+    },
+    {
+      "prototype": "car_van_silver",
+      "lod": 0,
+      "sill": 0.27,
+      "axle_front": 1.52,
+      "axle_rear": -1.48,
+      "tyre_radius": 0.345,
+      "arch_radius": 0.38999999999999996,
+      "bbox_generator": [
+        [
+          -1.154,
+          -2.45,
+          0.27
+        ],
+        [
+          1.154,
+          2.43539,
+          1.97
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1560,
+      "vertices": 1192,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.4746010764610205,
+      "rear_vertices": 96,
+      "front_vertices": 141
+    },
+    {
+      "prototype": "car_van_silver",
+      "lod": 1,
+      "sill": 0.27,
+      "axle_front": 1.52,
+      "axle_rear": -1.48,
+      "tyre_radius": 0.345,
+      "arch_radius": 0.38999999999999996,
+      "bbox_generator": [
+        [
+          -1.159,
+          -2.42,
+          0.27
+        ],
+        [
+          1.159,
+          2.43539,
+          1.97
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 418,
+      "vertices": 429,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.038249551228849,
+      "rear_vertices": 61,
+      "front_vertices": 64
+    },
+    {
+      "prototype": "car_van_silver",
+      "lod": 2,
+      "sill": 0.27,
+      "axle_front": 1.52,
+      "axle_rear": -1.48,
+      "tyre_radius": 0.345,
+      "arch_radius": 0.38999999999999996,
+      "bbox_generator": [
+        [
+          -0.95961,
+          -2.438,
+          0.29
+        ],
+        [
+          0.95961,
+          2.44255,
+          1.97
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 36,
+      "vertices": 48,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.926492403363675,
+      "rear_vertices": 6,
+      "front_vertices": 4
+    },
+    {
+      "prototype": "car_van_white2",
+      "lod": 0,
+      "sill": 0.27,
+      "axle_front": 1.52,
+      "axle_rear": -1.48,
+      "tyre_radius": 0.345,
+      "arch_radius": 0.38999999999999996,
+      "bbox_generator": [
+        [
+          -1.154,
+          -2.45,
+          0.27
+        ],
+        [
+          1.154,
+          2.43539,
+          1.97
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 1560,
+      "vertices": 1192,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 1.4746010764610205,
+      "rear_vertices": 96,
+      "front_vertices": 141
+    },
+    {
+      "prototype": "car_van_white2",
+      "lod": 1,
+      "sill": 0.27,
+      "axle_front": 1.52,
+      "axle_rear": -1.48,
+      "tyre_radius": 0.345,
+      "arch_radius": 0.38999999999999996,
+      "bbox_generator": [
+        [
+          -1.159,
+          -2.42,
+          0.27
+        ],
+        [
+          1.159,
+          2.43539,
+          1.97
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 418,
+      "vertices": 429,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.038249551228849,
+      "rear_vertices": 61,
+      "front_vertices": 64
+    },
+    {
+      "prototype": "car_van_white2",
+      "lod": 2,
+      "sill": 0.27,
+      "axle_front": 1.52,
+      "axle_rear": -1.48,
+      "tyre_radius": 0.345,
+      "arch_radius": 0.38999999999999996,
+      "bbox_generator": [
+        [
+          -0.95961,
+          -2.438,
+          0.29
+        ],
+        [
+          0.95961,
+          2.44255,
+          1.97
+        ]
+      ],
+      "uv0_max_error_m": 0.0,
+      "uv1_present": false,
+      "triangles": 36,
+      "vertices": 48,
+      "paint_groups": 1,
+      "maximum_triangle_edge_m": 4.926492403363675,
+      "rear_vertices": 6,
+      "front_vertices": 4
+    }
+  ],
+  "library_paint_primitives": [
+    {
+      "node": "car_estate_black",
+      "material": "car_paint_black",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_black.lod1",
+      "material": "car_paint_black",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_black.lod2",
+      "material": "car_paint_black",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_blue",
+      "material": "car_paint_blue",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_blue.lod1",
+      "material": "car_paint_blue",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_blue.lod2",
+      "material": "car_paint_blue",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_grey",
+      "material": "car_paint_grey",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_grey.lod1",
+      "material": "car_paint_grey",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_grey.lod2",
+      "material": "car_paint_grey",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_red",
+      "material": "car_paint_red",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_red.lod1",
+      "material": "car_paint_red",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_red.lod2",
+      "material": "car_paint_red",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_silver",
+      "material": "car_paint_silver",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_silver.lod1",
+      "material": "car_paint_silver",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_silver.lod2",
+      "material": "car_paint_silver",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_white",
+      "material": "car_paint_white",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_white.lod1",
+      "material": "car_paint_white",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_estate_white.lod2",
+      "material": "car_paint_white",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_black",
+      "material": "car_paint_black",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_black.lod1",
+      "material": "car_paint_black",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_black.lod2",
+      "material": "car_paint_black",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_blue",
+      "material": "car_paint_blue",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_blue.lod1",
+      "material": "car_paint_blue",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_blue.lod2",
+      "material": "car_paint_blue",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_grey",
+      "material": "car_paint_grey",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_grey.lod1",
+      "material": "car_paint_grey",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_grey.lod2",
+      "material": "car_paint_grey",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_red",
+      "material": "car_paint_red",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_red.lod1",
+      "material": "car_paint_red",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_red.lod2",
+      "material": "car_paint_red",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_silver",
+      "material": "car_paint_silver",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_silver.lod1",
+      "material": "car_paint_silver",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_silver.lod2",
+      "material": "car_paint_silver",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_white",
+      "material": "car_paint_white",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_white.lod1",
+      "material": "car_paint_white",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_hatch_white.lod2",
+      "material": "car_paint_white",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_black",
+      "material": "car_paint_black",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_black.lod1",
+      "material": "car_paint_black",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_black.lod2",
+      "material": "car_paint_black",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_blue",
+      "material": "car_paint_blue",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_blue.lod1",
+      "material": "car_paint_blue",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_blue.lod2",
+      "material": "car_paint_blue",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_grey",
+      "material": "car_paint_grey",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_grey.lod1",
+      "material": "car_paint_grey",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_grey.lod2",
+      "material": "car_paint_grey",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_red",
+      "material": "car_paint_red",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_red.lod1",
+      "material": "car_paint_red",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_red.lod2",
+      "material": "car_paint_red",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_silver",
+      "material": "car_paint_silver",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_silver.lod1",
+      "material": "car_paint_silver",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_silver.lod2",
+      "material": "car_paint_silver",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_white",
+      "material": "car_paint_white",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_white.lod1",
+      "material": "car_paint_white",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_sedan_white.lod2",
+      "material": "car_paint_white",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_black",
+      "material": "car_paint_black",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_black.lod1",
+      "material": "car_paint_black",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_black.lod2",
+      "material": "car_paint_black",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_blue",
+      "material": "car_paint_blue",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_blue.lod1",
+      "material": "car_paint_blue",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_blue.lod2",
+      "material": "car_paint_blue",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_grey",
+      "material": "car_paint_grey",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_grey.lod1",
+      "material": "car_paint_grey",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_grey.lod2",
+      "material": "car_paint_grey",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_red",
+      "material": "car_paint_red",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_red.lod1",
+      "material": "car_paint_red",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_red.lod2",
+      "material": "car_paint_red",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_silver",
+      "material": "car_paint_silver",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_silver.lod1",
+      "material": "car_paint_silver",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_silver.lod2",
+      "material": "car_paint_silver",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_white",
+      "material": "car_paint_white",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_white.lod1",
+      "material": "car_paint_white",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "node": "car_suv_white.lod2",
+      "material": "car_paint_white",
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    }
+  ],
+  "source_uv1_count": 0,
+  "library_uv1_count": 0
+}
