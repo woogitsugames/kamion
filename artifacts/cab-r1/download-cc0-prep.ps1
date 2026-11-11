@@ -5,7 +5,9 @@ New-Item -ItemType Directory -Force $root | Out-Null
 $rows=@()
 foreach ($asset in @('brown_leather','fabric_leather_02')) {
     $meta=Get-Content "artifacts/cab-r1/cc0-$asset-files.json" -Raw | ConvertFrom-Json
-    foreach ($role in @('Diffuse','nor_gl','Rough')) {
+    $roles=@('Diffuse','nor_gl','Rough')
+    if ($asset -eq 'brown_leather') { $roles += 'AO' }
+    foreach ($role in $roles) {
         $kind=if ($role -eq 'nor_gl') { 'png' } else { 'jpg' }
         $file=$meta.$role.'2k'.$kind
         if (-not $file.url) { throw "Missing official file for $asset $role" }
@@ -20,4 +22,4 @@ foreach ($asset in @('brown_leather','fabric_leather_02')) {
     }
 }
 $rows | ConvertTo-Json -Depth 5 | Set-Content "$root/downloads.json" -Encoding utf8
-Write-Output 'Six official maps verified; not integrated.'
+Write-Output "$($rows.Count) official maps verified; not integrated."
