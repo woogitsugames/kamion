@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 $wt = Split-Path (Split-Path $PSScriptRoot)
 Set-Location $wt
 function Run-Guarded([string]$Script, [hashtable]$Params) {
-    & pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-landmarks
+    & pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-landmarks -PollSeconds 10
     if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
     try {
         & pwsh $Script @Params

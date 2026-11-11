@@ -25,3 +25,6 @@ NASTĘPNA KOMENDA: po imporcie pwsh artifacts/landmarks-r1/unity-step.ps1 -Step 
 
 Krok 8: zachowano prywatną kopię bazowego GLB i wszystkich map atlasu remizy Medium oraz alfa, z SHA-256. Uzupełniono audyt r2/r3 na podstawie obejrzanych zdjęć lokalnych, bez zmian produkcyjnych w innych dziedzinach. Import nadal oczekuje na slot.
 NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-import-wrapper.log -Tail 10
+
+Krok 9: oczekiwanie na slot trwało kilkanaście minut, podczas gdy inni właściciele wymieniali sloty. Zatrzymano wyłącznie własny proces Acquire bez posiadanego slotu i skrócono odpytywanie z 60 do 10 s. Limit czterech slotów, blokada PHONE_RUN i wymagany Owner pozostają zachowane. Żadna Unity jeszcze nie wystartowała.
+NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/unity-step.ps1 -Step Import
