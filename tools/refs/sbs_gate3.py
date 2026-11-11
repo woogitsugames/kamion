@@ -1,0 +1,217 @@
+"""ADR 0103: offline, reproducible photo-pose cameras and reference | render sheets.
+
+No network or world writes. Coordinates: local E,N,absolute U (not Unity XYZ).
+FOV/eye/pitch are explicitly WORKING_VALUE until calibrated in authored_overrides.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+from pathlib import Path
+
+import numpy as np
+import yaml
+from PIL import Image, ImageDraw, ImageOps
+from pyproj import Transformer
+from shapely.geometry import LineString, Point
+
+ROOT = Path(__file__).resolve().parents[2]
+REGION = ROOT / 'Data/Regions/bialystok-industrial-c'
+OUTPUT = ROOT / 'artifacts/sbs-gate3'
+
+
+def read(path):
+    return json.loads(Path(path).read_text(encoding='utf-8-sig'))
+
+
+def write(path, data):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+
+def vfov(horizontal, aspect):
+    return math.degrees(2 * math.atan(math.tan(math.radians(horizontal) / 2) / aspect))
+
+
+def pose(e, n, u, heading, pitch):
+    h, p = math.radians(heading), math.radians(pitch)
+    return [round(e + 40 * math.sin(h) * math.cos(p), 4),
+            round(n + 40 * math.cos(h) * math.cos(p), 4), round(u + 40 * math.sin(p), 4)]
+
+
+def ground_sampler():
+    meta = read(REGION / 'terrain.json')
+    values = np.fromfile(ROOT / meta['encoding']['file'], dtype='<u2').reshape(meta['samples'][::-1])
+    def sample(x, y):
+        i = (x - meta['bbox'][0]) / meta['spacing_m']
+        j = (meta['bbox'][3] - y) / meta['spacing_m']
+        if not (0 <= i < values.shape[1] - 1 and 0 <= j < values.shape[0] - 1):
+            raise ValueError('camera outside NMT coverage')
+        a, b = int(i), int(j)
+        fx, fy = i - a, j - b
+        raw = ((1-fx)*(1-fy)*float(values[b,a]) + fx*(1-fy)*float(values[b,a+1])
+               + (1-fx)*fy*float(values[b+1,a]) + fx*fy*float(values[b+1,a+1]))
+        return meta['encoding']['offset_m'] + raw * meta['encoding']['scale_m_per_unit']
+    return sample
+
+
+def prepare(count=20, radius=40):
+    manifest = ROOT / 'Data/raw/mapillary/bialystok-industrial-c/manifest.jsonl'
+    records = [json.loads(line) for line in manifest.read_text(encoding='utf-8').splitlines() if line.strip()]
+    origin = yaml.safe_load((REGION / 'region.yaml').read_text(encoding='utf-8'))['origin']
+    transform = Transformer.from_crs(4326, 2180, always_xy=True)
+    terrain = ground_sampler()
+    config_path = REGION / 'sbs_authored_overrides.json'
+    config = read(config_path) if config_path.exists() else {'schema': 'kamion/sbs-overrides/1', 'authored_overrides': {}}
+    overrides = config['authored_overrides']
+    cameras, refs, used = [], [], set()
+    for segment in read(REGION / 'gate3_segment.json')['segments']:
+        line = LineString(segment['points_en'])
+        candidates = []
+        for r in records:
+            if r.get('is_pano') or r.get('compass_angle') is None or not r.get('author'):
+                continue
+            if r.get('license') != 'CC BY-SA 4.0':
+                continue
+            photo = manifest.parent / r['file']
+            if not photo.is_file():
+                continue
+            x, y = transform.transform(r['lon'], r['lat'])
+            point = Point(x-origin['x'], y-origin['y'])
+            distance = line.distance(point)
+            if distance <= radius:
+                candidates.append((r, x, y, line.project(point), distance))
+        # Farthest-point sampling along each segment, stable tie-break by image id.
+        selected = []
+        while len(selected) < count:
+            remaining = [c for c in candidates if c[0]['id'] not in used]
+            if not remaining:
+                raise ValueError(f"{segment['id']}: fewer than {count} unique eligible photos")
+            def score(c):
+                spread = min(abs(c[3]-s[3]) for s in selected) if selected else -c[3]
+                return (-spread, c[4], c[0]['id'])
+            chosen = min(remaining, key=score)
+            selected.append(chosen)
+            used.add(chosen[0]['id'])
+        for r, x, y, station, distance in sorted(selected, key=lambda c: (c[3], c[0]['id'])):
+            camera_id = 'sbs-' + segment['id'].lower() + '-' + r['id']
+            photo = manifest.parent / r['file']
+            digest = hashlib.sha256(photo.read_bytes()).hexdigest()
+            if digest != r['sha256']:
+                raise ValueError(f"photo hash mismatch: {r['id']}")
+            with Image.open(photo) as im:
+                width, height = im.size
+            ov = overrides.get(camera_id, {})
+            e = x-origin['x'] + ov.get('east_delta_m', 0)
+            n = y-origin['y'] + ov.get('north_delta_m', 0)
+            eye = ov.get('eye_height_m', 2.2)
+            u = ov.get('absolute_u_m', terrain(e+origin['x'], n+origin['y']) + eye)
+            heading = (r['compass_angle'] + ov.get('heading_delta_deg', 0)) % 360
+            fov = vfov(ov.get('horizontal_fov_deg', 90), width/height)
+            horizon = ov.get('horizon_y_fraction', 0.5)
+            pitch = math.degrees(math.atan((2*horizon-1)*math.tan(math.radians(fov)/2)))
+            cameras.append({'id': camera_id, 'kind': 'photo_match', 'seat': 'file', 'type': 'persp',
+                            'pos': [round(e,4),round(n,4),round(u,4)], 'look_at': pose(e,n,u,heading,pitch),
+                            'fov_deg': round(fov,5), 'segment': segment['id'],
+                            'note': 'ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json'})
+            refs.append({'camera': camera_id, 'segment': segment['id'], 'photo': photo.relative_to(ROOT).as_posix(),
+                         'source_id': r['id'], 'page_url': r['page_url'], 'author': r['author'],
+                         'license': r['license'], 'license_url': r['license_url'], 'captured_at': r['captured_at'],
+                         'sha256': digest, 'width': width, 'height': height, 'lon': r['lon'], 'lat': r['lat'],
+                         'heading_deg': heading, 'route_distance_m': round(distance,3),
+                         'segment_station_m': round(station,3), 'horizon_y_fraction': horizon,
+                         'pose_status': ov.get('pose_status','WORKING_VALUE'),
+                         'assumptions': 'NMT bare earth; eye 2.2m, horizontal FOV 90deg, zero roll unless authored. GPS/compass accuracy unknown.',
+                         'authored_overrides': ov})
+    write(REGION / 'sbs_cameras.json', {'schema': 'kamion/sbs-cameras/1', 'frame': 'E,N,absolute U', 'cameras': cameras})
+    write(REGION / 'sbs_references.json', {'schema': 'kamion/sbs-references/1',
+          'source_manifest_sha256': hashlib.sha256(manifest.read_bytes()).hexdigest(), 'references': refs})
+    write(config_path, config)
+    OUTPUT.mkdir(parents=True, exist_ok=True)
+    contact(refs)
+    print(f'Prepared {len(cameras)} distinct photo cameras; pose calibration still required.')
+
+
+def contact(refs):
+    for seg in sorted({r['segment'] for r in refs}):
+        group = [r for r in refs if r['segment'] == seg]
+        sheet = Image.new('RGB', (960, math.ceil(len(group)/4)*165), '#202020')
+        d = ImageDraw.Draw(sheet)
+        for i,r in enumerate(group):
+            with Image.open(ROOT/r['photo']) as im:
+                thumb = ImageOps.contain(im.convert('RGB'), (238,135))
+            x,y=(i%4)*240,(i//4)*165
+            sheet.paste(thumb,(x,y))
+            d.text((x+2,y+136),r['source_id'],fill='white')
+            d.text((x+2,y+149),f"s={r['segment_station_m']:.0f} d={r['route_distance_m']:.0f}m",fill='white')
+        sheet.save(OUTPUT/f'contact-{seg}.jpg')
+
+
+def measurements(im, horizon):
+    a = np.asarray(im.convert('RGB'),dtype=float)
+    luma = a @ np.array([0.2126,0.7152,0.0722])
+    yy,xx=np.indices(luma.shape)
+    # Deliberately labelled estimates: no semantic segmenter or ground-truth masks.
+    sky=(yy<luma.shape[0]*horizon)&(luma>115)&(a[:,:,2]>=a[:,:,0]*0.95)
+    asphalt=(yy>luma.shape[0]*max(horizon,0.55))&(xx>luma.shape[1]*0.2)&(xx<luma.shape[1]*0.8)&(np.ptp(a,axis=2)<35)&(luma>25)&(luma<180)
+    hist=np.histogram(luma,bins=32,range=(0,256))[0]
+    return {'luma_mean_srgb': round(float(luma.mean()),3), 'histogram_32':hist.tolist(),
+            'sky_fraction_estimate':round(float(sky.mean()),5),
+            'asphalt_fraction_estimate':round(float(asphalt.mean()),5),
+            'sky_asphalt_ratio_estimate':round(float(sky.sum()/asphalt.sum()),5) if asphalt.any() else None,
+            'mask_method':'WORKING_VALUE RGB/position heuristic, not semantic ground truth'}
+
+
+def compose(render_dir, outdir, strict=True):
+    refs=read(REGION/'sbs_references.json')['references']
+    outdir.mkdir(parents=True,exist_ok=True)
+    metrics=[]
+    missing=[]
+    for r in refs:
+        render=render_dir/(r['camera']+'.png')
+        if not render.exists():
+            missing.append(r['camera']); continue
+        with Image.open(ROOT/r['photo']) as src, Image.open(render) as dst:
+            if src.width*dst.height != dst.width*src.height:
+                raise ValueError(f"aspect mismatch: {r['camera']}; render at photo aspect ratio")
+            left,right=src.convert('RGB'),dst.convert('RGB')
+        m={'camera':r['camera'],'pose_status':r['pose_status'], 'photo':measurements(left,r['horizon_y_fraction']),
+           'render':measurements(right,r['horizon_y_fraction'])}
+        metrics.append(m)
+        height=round(470*r['height']/r['width'])
+        sheet=Image.new('RGB',(960,height+108),'#202020')
+        d=ImageDraw.Draw(sheet)
+        d.text((8,4),r['camera']+' | '+r['pose_status'],fill='white')
+        for x,im,label in [(0,left,'PHOTO'),(490,right,'RENDER')]:
+            sheet.paste(im.resize((470,height)),(x,24))
+            for fraction in (0.25,0.5,0.75):
+                d.line((x+470*fraction,24,x+470*fraction,24+height),fill='#808080')
+                d.line((x,24+height*fraction,x+470,24+height*fraction),fill='#808080')
+            hy=24+height*r['horizon_y_fraction']
+            d.line((x,hy,x+470,hy),fill='#ff5050',width=2)
+            d.text((x+4,28),label,fill='#ff5050')
+        for j,text in enumerate([f"Photo: {r['author']} | {r['license']} | {r['captured_at']}",r['page_url'],
+                                  'Grid: 25%; red: authored/assumed horizon. Photo pixels resized + overlays.',
+                                  'Histogram and sky/asphalt estimates: metrics.json; no gate PASS inferred.']):
+            d.text((6,height+29+j*17),text,fill='white')
+        sheet.save(outdir/(r['camera']+'.png'))
+    write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'gate_status':'UNVERIFIED'})
+    print(f'Composed {len(metrics)} pairs; missing {len(missing)} renders.')
+    if strict and missing:
+        raise SystemExit(2)
+
+
+def main():
+    ap=argparse.ArgumentParser(description=__doc__)
+    sub=ap.add_subparsers(dest='command',required=True)
+    p=sub.add_parser('prepare'); p.add_argument('--count-per-segment',type=int,default=20)
+    p=sub.add_parser('compose'); p.add_argument('--renders',type=Path,required=True); p.add_argument('--output',type=Path,required=True)
+    args=ap.parse_args()
+    if args.command=='prepare': prepare(args.count_per_segment)
+    else: compose(args.renders,args.output)
+
+
+if __name__=='__main__':
+    main()
