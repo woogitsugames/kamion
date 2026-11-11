@@ -16,3 +16,6 @@ NASTĘPNA KOMENDA: po zakończeniu generatorów: pwsh artifacts/landmarks-r1/uni
 
 Krok 5: źródłowy audyt tui wykazał rozdzielone narożniki ścian bez radialnych normalnych; samo use_smooth nie wygładzi Low. Przygotowano plan korekty bez nowych trójkątów. Oba wejścia igliwia CC0 zgodne z SHA. Regenerację PBR ograniczono do Medium, faktycznie importowanego zestawu (Low/High to osobne geometrie, nie wymagają trzech rozdzielczości PBR). Produkcja bez zmian.
 NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-materials-medium.log -Tail 12
+
+Krok 6: świat zakończył wszystkie etapy po 1082,1 s, 64 pary GLB; remiza applied, bez stale, tris 9344/2828/164. Brak fallback=True w logu. Powłoka zwróciła 1 po potraktowaniu komunikatów instalacji uv na stderr jako błędu; sam log generatora kończy się done, bez traceback, eksport obecny. Materiały Medium zakończone exit 0, 694 s. Rozpoczynam import przez slot.
+NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/unity-step.ps1 -Step Capture -Phase before -Cameras ''
