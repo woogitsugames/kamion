@@ -1,0 +1,6 @@
+﻿# Stan rundy sbs r2
+Gałąź gpt-sbs-r2, ten sam worktree. R1 zakończona na 814d3408, artefakty skopiowane i zweryfikowane na main. Wykonano merge main ce3f1a77 (merge bec082b1), bez konfliktów. Zmiany main od bazy r1 dotyczą dokumentacji i ochrony zasobów, bez zmian generatora świata, materiałów i runtime.
+Przeczytano nową D51 oraz recenzję REVIEW-2026-11-11-s11-sbs-r1-D51.md. Bramka świata: FAIL według rozpoznawalności, 12 rozpoznawalnych / 11 częściowych / 2 nie. G3-B pozostaje głównym problemem. Fotometria nie jest blokerem bramki. Cztery dodatkowe zastrzeżenia pozy dotyczą 328135, 177786, 494288 i stacji 275528; nie ukrywamy ich przez usuwanie negatywnych ocen świata.
+R2 obejmuje metryki obrazu i kontrastu, zgodność kohort/warunków przy trendzie, raport HTML latest oraz ślad D51. Punkty i maski mają wiązać się z konkretnymi obrazami; nie wolno zaliczać świata na podstawie histogramu. Priorytety geometryczne w r3 oprzemy na D51.
+Ciężkie zadania wyłącznie przez run-heavy.ps1, właściciel gpt-sbs-r2, max 3. Unity przez osobne sloty gpt-sbs, max 4. Pełny GIS dopiero na końcu rundy. Nie używamy telefonów, nie scalany do main, nie pushujemy.
+Następny krok: przegląd metrics/report API i implementacja raportu z jednoznacznym stanem D51 oraz trendami dla zgodnych źródeł.
