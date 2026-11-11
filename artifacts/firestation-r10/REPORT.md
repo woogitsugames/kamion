@@ -12,5 +12,5 @@
 - Thuja 15 paired interior ROIs: median High/Low ratio 1.0889 overcast / .9945 clear; coherent hue, no exact all-crown equality claim.
 - Conifers remain narrow/column-like versus photo7197; runoff subtle. Coarse alpha-mip differences disclosed; device/temporal shimmer unverified.
 - 17 vehicle-relative views have limited causal parity; some show background/framing shifts. Canonical asset SHA equality does not prove scene-pose parity; fixed hero views remain relevant. See `VEHICLE-CAMERA-AUDIT.md`.
-- Proof: `round2/`, `round2-sheets/`, ROI/paint/thuja metrics, `actual-alpha-mips/`, `SELF-REVIEW.md`, independent High review; ROOT final Low review pending.
+- Proof: `round2/`, `round2-sheets/`, ROI/paint/thuja metrics, `actual-alpha-mips/`, `SELF-REVIEW.md`, independent High review; ROOT combined review: technical PASS, appearance PARTIAL/FAIL; see REVIEW.md.
 - CC0 Fir inputs are SHA-pinned and packaged in ignored `source-cache/`; run `restore_cc0_inputs.py` after artifact copy. No merge or push.

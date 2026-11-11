@@ -1,6 +1,6 @@
 # E r7 self-review — final160, technical suites passed
 
-Inspected all20 contact sheets covering160 final full frames, the16 true-runtime gate frames, actual2340×1080 native details, semantic ROI overlays and physical photo7197. The baseline has the same40cameraIDs, canonical vehicle assets and locked901c source; scene-pose parity is limited for17vehicle views; final geometry uses current own products. No exposure matching. ROOT independently reviewed each bounded candidate and true-runtime gate; final80Low/80High independent review is in progress.
+Inspected all20 contact sheets covering160 final full frames, the16 true-runtime gate frames, actual2340×1080 native details, semantic ROI overlays and physical photo7197. The baseline has the same40cameraIDs, canonical vehicle assets and locked901c source; scene-pose parity is limited for17vehicle views; final geometry uses current own products. No exposure matching. ROOT independently reviewed each bounded candidate and true-runtime gate; final80Low/80High independent review is complete: ROOT combined REVIEW.md confirms technical PASS and appearance PARTIAL/FAIL with the vehicle-camera limitation.
 
 | Priority / location | Verdict and evidence | Remaining action |
 |---|---|---|
