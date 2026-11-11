@@ -7,3 +7,4 @@ Przygotowanie: skopiowano derived, cc0, _raw, megascans, _Generated, wygenerowan
 
 2026-11-11T21:36:23.0278826+01:00: Start baseline build_world i build_all. Po ukończeniu: import z unity-slot gpt-asphalt, cztery serie baseline, następnie wariant materiałowy. ADR 0118 zapisany jako WIP.
 Przygotowano powtarzalny runner: każda operacja Unity bierze i zwalnia slot gpt-asphalt w finally; po wyjściu cofane są ustawienia edytora. Fixture kamer obejmuje stare/nowe nawierzchnie, przejście i wybrane pary sbs oraz kamery domyślne.
+2026-11-11T21:39:35.5818169+01:00: Zmierzono lokalny kontrast zdjęcia Mapillary 150280503737744. Mediany śladów 58,89/59,03 vs 88,07 między kołami, iloraz 0,669/0,670. To luminancja jednego zdjęcia, nie pomiar fizycznego albedo; prostokąty i atrybucja w reference-wheel-contrast.json. Następny krok: zakończyć baseline generatorów, uruchomić slotted import i Capture.
