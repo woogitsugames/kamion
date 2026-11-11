@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw
 ROOT = Path(__file__).resolve().parent
 ROIS = {
     "route-onramp-andersa-above": (.82, .62, .97, .80),
+    "route-onramp-andersa-above:grass-only": (.60, .80, .66, .96),
     "r10_fence_2": (.10, .72, .85, .93),
 }
 FOCUS = ("dk8-dk19-exit", "driver-andersa-to-putry", "route-putry-approach",
@@ -66,8 +67,8 @@ def main():
                     draw.text((x+2, y+3), path.stem[:34], fill="white")
                 sheet.save(output/f"{stage}-{folder.name}-{offset//12+1}.jpg", quality=90)
             key = stage+"/"+folder.name
-            measurements[key] = {camera: grass(folder/(camera+".png"), box)
-                                 for camera, box in ROIS.items() if (folder/(camera+".png")).exists()}
+            measurements[key] = {camera: grass(folder/(camera.split(':')[0]+".png"), box)
+                                 for camera, box in ROIS.items() if (folder/(camera.split(':')[0]+".png")).exists()}
             if (folder/"stats.txt").exists():
                 measurements[key]["all_camera_stats"] = stats(folder/"stats.txt")
             if stage == "after" and (ROOT/"before"/folder.name/"stats.txt").exists():
