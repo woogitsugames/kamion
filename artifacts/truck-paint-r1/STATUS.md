@@ -42,3 +42,6 @@
 
 - Step16 durability: copied current baseline/refs/diagnostics/immutablefixture and sourceproof to main artifacts/truck-paint-r1 using /E /XJ (no sources/main commit touched). Production consumer audit: only TruckExterior samples state texture; trailer shares it; existing indicator UI test threshold remains valid at encoded25. Final runtime/visual tests still pending explicit release.
 - NEXT COMMAND: wait explicit ROOTrelease; verify PHONE_RUN and GPT_UNITY_HOLD absent; rebuild-candidate.ps1 candidate1.
+
+- Step17 CPU reproducibility check: pinned asphaltphoto already present in initial F privatecopy; verified SHAe26237d85c097af9560537c60e6ed6f67ed0090e284398a5d7a7a2bf41889135 per coordinator. No raw copy/regeneration and no locked generated map changes; proof asphalt-input-proof.json. Unity hold continues.
+- NEXT COMMAND: wait explicit ROOTrelease; then verify bothlocks absent and resume guarded candidate1.
