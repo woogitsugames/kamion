@@ -32,3 +32,4 @@ Krok 13: gotowe porównanie wszystkich liczników do CSV/JSON. Skrócono odpytyw
 Krok 14 — pilna aktualizacja właściciela: każde ciężkie zadanie Pythona wymaga puli heavy (max 3), pełny GIS wyłącznie na końcu rundy, w trakcie pojedyncze pliki. Przeczytano aktualny pkt 3 i skrypt z main. Nie działa żaden nasz ciężki Python; wcześniejszy GIS zakończył się przed tą instrukcją. Nowy gis-final.ps1 korzysta z aktualnego centralnego skryptu, właściciel heavy gpt-truck-r1, zwolnienie w finally. Następny krok: dokończyć baseline; gis-final.ps1 dopiero po walidacji rundy.
 
 Krok 15: procedury korzystają teraz z aktualnego unity-slot.ps1 w main, bez edycji infrastruktury w worktree. Końcowy GIS ma lokalny limit jednego wątku BLAS/OMP/MKL. Low-clear rozpoczął render pod własnym slotem; ciężki Python nie jest uruchomiony. Następny krok: ukończyć baseline High i zestawy kontrolne.
+Baseline Low clear zapisany. Następny krok: obejrzeć PNG i zmierzyć lakier, szybę oraz DRL.
