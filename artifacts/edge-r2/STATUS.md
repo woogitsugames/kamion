@@ -23,3 +23,5 @@ Bieżący build_world już działa pod heavy. Jeśli załadował moduł przed po
 Następny krok: sprawdzić lod1_height_audit.usable_ids, potem ponowić test_lod1 i audyt wysokości pod heavy.
 Krok 8: przed przebudową zapisano SHA aktualnych scen i siatek edge z Unity (snapshot po bazowych renderach, bez udawania pomiaru w trakcie ich wykonywania). Kolejne zrzuty sprawdzą również SHA sceny, apron i siatki far-field przed/po każdym renderze.
 Następny krok nadal zależy od końca build_world; testów Python z tym samym właścicielem slotu nie uruchamiamy równolegle.
+Krok 9: build_world działa i przeszedł etapy dróg/budynków/placów (ostatnio 340,8 s czasu generatora). Bez drugiego zadania Python tej sesji. Skrypt heavy dla kolejnych uruchomień zapisuje osobny kwit z pulą, właścicielem, czasem oczekiwania, czasem pracy i kodem zakończenia.
+Następny krok: po końcu budowy test_lod1 → AuditHeights → test_far_field, sekwencyjnie i każdy przez heavy.
