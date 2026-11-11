@@ -20,3 +20,5 @@ Punkt kontrolny 21:42: baseline clear obejrzany; RMS nieba 1,5 px = 0,5503, asfa
 
 Krok 6: budget_compare.py porównał wszystkie 5 kamer RCAS 0 i 0,5: osobne draws instancji, zmiana liczby draws i trójkątów = 0. To estymaty CPU SceneStats, nie pomiar GPU. Proces generatora 98884 potwierdzony żywy (CPU 298 s o 21:42). Następny krok: dokończyć renderowanie i obejrzeć pełną ablacjas.
 Render ablacji zakończony: artifacts/light-r1/rcas/High-clear-0.75. PNG wymagają obejrzenia i pomiarów. Następny krok: kolejny wariant w artifacts/light-r1/rcas-ablation.ps1, potem analiza.
+
+Krok 7: dodano clearCloudCover w LightingPreset (clear 0,42 WORKING_VALUE; inne presety 0), global atmosfery i warstwę chmur w istniejącym przebiegu Sky.shader. Clear ablacjas zakończone przed zmianą. Overcast zachowuje oryginalny wzór i coverage 0. Źródła zmienione, preset asset jeszcze nie zsynchronizowany; wygląd nowego nieba UNVERIFIED. Następny krok: zakończyć overcast RCAS, potem import/synchronizacja presetów i rendery nieba clear.

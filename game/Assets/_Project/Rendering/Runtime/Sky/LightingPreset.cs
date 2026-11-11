@@ -44,6 +44,8 @@ namespace Game.Rendering
         [Range(0f, 12000f)] public float overcastCctK;
         [Tooltip("Cloud deck contrast of the overcast dome (0 = flat dome): thick parts darker, thin parts lighter, mean 1")]
         [Range(0f, 0.6f)] public float cloudContrast;
+        [Tooltip("ADR 0108: scattered cloud coverage of the clear dome (0 = original clear sky). Display sky only; sun/ambient metering stay unchanged.")]
+        [Range(0f, 1f)] public float clearCloudCover;
         [Tooltip("Cloud texture tiles per unit of the cloud plane (plane at height 1; smaller = larger cloud masses)")]
         public float cloudScale = 0.16f;
         [Tooltip("Cloud drift (plane units per second; ~0.004 = 20 km/h at 1500 m)")]
@@ -113,6 +115,8 @@ namespace Game.Rendering
             p.sunElevationDeg = 42f; p.sunAzimuthDeg = 200f; p.turbidity = 2.5f; p.overcast = 0f; p.visibilityKm = 20f;
             // ADR0098 WORKING_VALUE: highlight shoulder above the fixed asphalt/mid-grey anchors, no EV change.
             p.lookWhiteClip = 1.2f;
+            // ADR 0108 r1 WORKING_VALUE: the route reference photos show scattered cumulus in blue sky.
+            p.clearCloudCover = 0.42f;
             return p;
         }
 

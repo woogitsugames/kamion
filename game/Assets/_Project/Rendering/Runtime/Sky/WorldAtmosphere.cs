@@ -61,6 +61,7 @@ namespace Game.Rendering
             k_Tone = Shader.PropertyToID("_KamionTone"), k_Wet = Shader.PropertyToID("_KamionWet"),
             k_Cloud = Shader.PropertyToID("_KamionCloud"), k_CloudWind = Shader.PropertyToID("_KamionCloudWind"),
             k_CloudSun = Shader.PropertyToID("_KamionCloudSun"), k_CloudTex = Shader.PropertyToID("_KamionCloudTex"),
+            k_ClearCloudCover = Shader.PropertyToID("_KamionClearCloudCover"),
             k_LeafAmb = Shader.PropertyToID("_KamionLeafAmbient");
 
         /// <summary>Ground haze: extinction at height y = beta (1 + a exp(-(y - y0) / H)). Mirror of KamionFogTau.</summary>
@@ -104,8 +105,11 @@ namespace Game.Rendering
             // ---- cloud deck
             int q = CloudOverride ?? (hasTier ? (t.cloudsOff ? -1 : t.cloudQuality) : 1);
             float contrast = q < 0 ? 0f : p.cloudContrast;
+            // Clear clouds share the existing noise texture and sky pass. A zero coverage keeps the legacy dome.
+            float clearCover = q < 0 ? 0f : Mathf.Clamp01(p.clearCloudCover);
+            Shader.SetGlobalFloat(k_ClearCloudCover, clearCover);
             Shader.SetGlobalVector(k_Cloud, new Vector4(contrast, Mathf.Max(q, 0), p.cloudScale, 5f));
-            if (contrast > 0f)
+            if (contrast > 0f || clearCover > 0f)
             {
                 Shader.SetGlobalTexture(k_CloudTex, CloudNoise.Texture);
                 float time = Application.isPlaying ? Time.time : 0f;

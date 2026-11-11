@@ -51,6 +51,7 @@ Shader "Kamion/Sky"
             float4 _KamionCloud;       // x contrast (0 = off), y quality 0..2, z uv per plane unit, w horizon fade rate
             float4 _KamionCloudWind;   // xy uv offset of the deck, zw of the medium layer
             float4 _KamionCloudSun;    // xy unit XZ towards the sun's azimuth, z relief strength, w relief step (uv)
+            float _KamionClearCloudCover; // ADR 0108: zero retains the original clear dome.
 
             struct Attributes { float4 positionOS : POSITION; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct Varyings { float4 positionCS : SV_POSITION; float3 dir : TEXCOORD0; UNITY_VERTEX_OUTPUT_STEREO };
@@ -101,9 +102,10 @@ Shader "Kamion/Sky"
             }
 
             // Cloud deck luminance factor (mean 1): thick parts darker, thin parts lighter.
-            half CloudDeck(float3 d)
+            half CloudDeck(float3 d, out half2 clearCloud)
             {
-                if (_KamionCloud.x <= 0.0) return 1.0;
+                clearCloud = 0.0;
+                if (_KamionCloud.x <= 0.0 && _KamionClearCloudCover <= 0.0) return 1.0;
                 float2 p = d.xz / (max(d.y, 0.0) + 0.14);          // plane at height 1; +0.14: finite at the horizon
                 float2 u = p * _KamionCloud.z + _KamionCloudWind.xy;
                 half4 a = SAMPLE_TEXTURE2D(_KamionCloudTex, sampler_KamionCloudTex, u);
@@ -122,6 +124,14 @@ Shader "Kamion/Sky"
                 }
                 half s = smoothstep(0.26, 0.74, n);                // billow edges; symmetric, mean stays 0.5
                 half fade = 1.0 - exp(-max(d.y, 0.0) * _KamionCloud.w);
+                if (_KamionClearCloudCover > 0.0)
+                {
+                    // Sparse billows leave blue gaps. Use the SAME two base fetches on Low (no new pass/texture).
+                    half threshold = lerp(0.75h, 0.25h, (half)_KamionClearCloudCover);
+                    clearCloud.x = smoothstep(threshold - 0.035h, threshold + 0.035h, n) * fade;
+                    // Thicker cloud interiors are darker; the optional tier relief lights the sunward rim.
+                    clearCloud.y = saturate(0.98h - saturate((n - threshold) * 5.0h) * 0.26h + relief * 0.15h);
+                }
                 return 1.0 + (half)_KamionCloud.x * fade * ((0.5 - s) * 2.0 + relief);
             }
 
@@ -129,7 +139,8 @@ Shader "Kamion/Sky"
             {
                 float3 d = normalize(i.dir);
                 float3 sky = SkyRadiance(d);
-                half deck = CloudDeck(d);
+                half2 clearCloud;
+                half deck = CloudDeck(d, clearCloud);
                 // A phone keeps cloud-deck tone in an overcast sky (local tone mapping of the bright sky region) instead of
                 // clipping the whole dome to 254: soft knee from 80 % of the cap, cap rising from the horizon value (matches
                 // the fog, no seam) to the zenith value by ~30 deg elevation. Clear blue sky is below the knee: unchanged.
@@ -144,6 +155,15 @@ Shader "Kamion/Sky"
                 // After the cap: the cap is the phone's exposure of the deck, the structure is what it keeps of it. The
                 // overcast share only (a clear dome has no deck; partly cloudy presets get a proportional hint).
                 sky *= lerp(1.0, deck, _SkyMisc.x);
+                if (_KamionClearCloudCover > 0.0)
+                {
+                    // The display cap gives Low and post tiers the same cloud tones. This does not alter the
+                    // irradiance model, exposure, surface shading or the legacy overcast deck.
+                    float cap = lerp(_KamionSkyCap.x, _KamionSkyCap.y, smoothstep(0.0, 0.5, d.y));
+                    float cloudY = cap * lerp(0.85, 1.15, clearCloud.y);
+                    float3 cloud = lerp(_SkyFogColor.rgb, cloudY.xxx, smoothstep(0.0, 0.18, d.y));
+                    sky = lerp(sky, cloud, clearCloud.x * (1.0 - _SkyMisc.x));
+                }
                 // Sun disc (0.53° nominal, slightly enlarged so it survives render scale), with limb darkening.
                 float cosSun = dot(d, _SkySunDir.xyz);
                 float r = 0.00465 * _SunDiscScale;               // angular radius in radians
@@ -151,7 +171,7 @@ Shader "Kamion/Sky"
                 float disc = saturate(1.0 - ang / r);
                 float limb = 0.4 + 0.6 * sqrt(disc);
                 float3 sun = _SkySunColor.rgb * min(_SkyMisc.y, 64.0) * limb * step(1e-4, disc) * (1.0 - _SkyMisc.x);
-                float3 c = sky + sun * smoothstep(0.0, 0.02, d.y + 0.01);
+                float3 c = sky + sun * smoothstep(0.0, 0.02, d.y + 0.01) * (1.0 - clearCloud.x);
                 // Below the horizon: distant ground seen through the full aerial perspective = fog colour.
                 float below = smoothstep(0.0, 0.03, -d.y);
                 c = lerp(c, _SkyFogColor.rgb, below);
