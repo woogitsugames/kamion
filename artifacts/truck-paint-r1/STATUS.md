@@ -33,3 +33,6 @@
 
 - Step13 CPU-only during explicithold: ADR0087 WIP records measured Infinity, diagnostic validity, exact baseline and separate A/C integration caveat; no visual or performance PASS asserted. measure_contract.py reproduces owner legacy1024 metrics plus native rawROI counterpart and placement proof.
 - NEXT COMMAND: wait explicit ROOTrelease (bothlocks absent); resume rebuild-candidate.ps1, then candidate102 inspection and quantified acceptance/refinement.
+
+- Step14 CPU source-review followup: explicitly documented legacy serialized Paint/Decal/Dirt Color encoding without changing any values. White stored.78/.785/.78 ->actualGPU multiplier.5704816/.5787147/.5704816, then_CMap; not physical linear albedo. Dirt stored.15 ->GPU.01960665. Builder comments and ADR corrected; no broad gamma conversion. Shared Unity hold remains active, no launch.
+- NEXT COMMAND: wait explicit ROOTrelease; resume guarded candidate rebuild/render.

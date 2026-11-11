@@ -287,6 +287,7 @@ namespace Game.Editor.Setup
                     m.SetTexture("_MMap", Tex<Texture2D>($"{et}/T_Ext_{slot}_M.png"));
                     m.SetFloat("_IsPaint", slot == "Paint" ? 1f : 0f);
                     m.SetFloat("_Dirt", 0.5f);
+                    // Legacy Color storage, decoded by Unity (probe .15 -> .01960665 GPU); preserve calibration.
                     m.SetColor("_DirtColor", new Color(0.15f, 0.135f, 0.11f, 1f));
                     // ADR 0038: coated base lobe, orange peel, procedural road grime (vehicle frame from ContactShadowCaster). WORKING_VALUE.
                     m.SetFloat("_CoatedBaseRoughness", 0.6f);
@@ -295,12 +296,15 @@ namespace Game.Editor.Setup
                     m.SetFloat("_GrimeHeight", 0.8f); m.SetFloat("_GrimeChassis", 1.3f);
                     if (slot == "Paint")
                     {
-                        // Livery "white" (biel flotowa), manifest liveries.white; colours are linear.
+                        // Legacy serialized Color encoding deliberately preserved (ADR0087 actual GPU probe):
+                        // stored .78/.785/.78 -> linear shader multiplier .5704816/.5787147/.5704816.
+                        // These stored numbers are not physical linear reflectance or the final albedo (_CMap also multiplies).
                         m.SetTexture("_DecalMap", Tex<Texture2D>($"{et}/T_Ext_Decal.png"));
                         m.SetColor("_PaintColor", new Color(0.78f, 0.785f, 0.78f, 1f));
                         // Base coat under a clear coat (review r3 E1): base 0.36, coat 0.08, F0 0.04 (shader).
                         m.SetFloat("_PaintRoughness", 0.36f); m.SetFloat("_PaintMetallic", 0f);
                         m.SetFloat("_ClearCoat", 1f); m.SetFloat("_ClearCoatRoughness", 0.08f); m.SetFloat("_Flake", 0f);
+                        // Same legacy Color storage contract, not a newly measured metallic reflectance.
                         m.SetColor("_DecalColor", new Color(0.1f, 0.104f, 0.11f, 1f));
                         m.SetFloat("_DecalMetallic", 1f); m.SetFloat("_DecalRoughness", 0.3f);
                     }
