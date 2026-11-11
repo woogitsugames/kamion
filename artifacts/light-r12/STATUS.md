@@ -41,3 +41,6 @@
 
 - Step13: root chose8cm smallesttestedacceptable glazingoffset. Actualreceived frame shadow remains6.59LSB versus realtimeOff; broadtriangleerror13.62->1.00LSB; trailer/contactROI MAXdiff0 vscontrol, castersunchanged. Default8cm ONLYMed/High+explicitkp; Low/Ultra0, productioncap8cm. Added9meaningful EditModecases: shoulderanchors, Low/bakedpipeline consistency, semanticimport scope, bound/tier isolation. ClearwhiteClip.9 failedgable249R; factory1.1 now baked, verify actual beforefullmatrix. Canonicalimport resets ignoredtestmaterial tosource-generated semantic next.
 - NEXT COMMAND: pwsh scripts/import-region.ps1 -Region bialystok-industrial-c; then emptyRq defaultROI proof/fullafter captures (no truckfixture refresh before matchedmatrix).
+
+- Step14: canonical world import reproduced explicitkpflag fromresetignoredmaterial; emptyRq Highactualpipeline logged FSR0overrideTrue/2048px/3cascades/.4/.3/.20,.55, finalditherTrue/skyDitherOff1/glass8cm. Clear1.1gable242.3/231.7/201.2 unclipped; tunedfinalshoulder1.2 for <=~240R, fixed asphaltanchors. SourcebakedLP1.2, Lowpolicy unchanged. Beginfullmatchedafter beforevehiclefixture refresh.
+- NEXT COMMAND: pwsh -File artifacts/light-r12/capture.ps1 -Phase after; then selectedlowsun +Mediumglassdefault, measure/viewall and refreshvehiclefixture for fullEditMode.
