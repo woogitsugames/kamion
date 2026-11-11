@@ -83,3 +83,6 @@ Następny krok: końcowy render wszystkich 42 par Low/High × clear/overcast, be
 Recenzent potwierdził uczciwość adnotacji J7 i wskazał jeden przypadek brakującego SHA zdjęcia. Naprawiono go: wymagany jest poprawny SHA, a compose przekazuje hash faktycznie otwartego obrazu. Testy SBS: 40/40 przez heavy, slot zwolniony. Adnotacje nie zmieniają klas i pojedynczy VP nie zatwierdza kamery.
 Końcowy render obejmie 42 kadry × Low/High × clear/overcast (168 renderów). Do zakończenia joba nie zmieniamy HEAD ani danych wejściowych; WIP zapisany przed uruchomieniem. Następnie oględziny, końcowy GIS przez heavy, raport i następna runda.
 Następny krok: pwsh -NoProfile -File scripts/sbs-gate3.ps1 -OutputRoot artifacts/sbs-r1/evidence
+## Końcowe rendery i audyt
+Pełny render 42 kadrów w czterech stanach zakończony. Audyt potwierdził 168 PNG, 100 arkuszy B, 68 wykluczeń C w czterech stanach, jedną epokę źródeł i spójne SHA wszystkich klatek. Zapisano 28 przeglądów PNG oraz pełne liczniki kamer, z instancjami osobno. Migawka inputs.zip zachowuje pierwotne bajty wejść renderu.
+Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/run-heavy.ps1 -Task FinalGis -EndOfRound
