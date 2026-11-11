@@ -57,7 +57,8 @@
 4. Węzły r3 wg recenzji 0095; Kwadrat r13 po zdjęciach właściciela; raport bramki 3.
 5. **GPT pakiet S10-B** `docs/owner/GPT-TASK-03-S10.md` (5 nowych sesji właściciela, po 1 strumieniu): H 0085 r2 tło (gpt-edge-r2 z argon-edge), I 0102 meble uliczne (gpt-furniture-r1), J 0103 side-by-side bramki 3 (gpt-sbs-gate3), K 0104 kabina/lusterka (gpt-cab-r1), L 0105 wiadukt pod pomostem (gpt-viaduct-r1). Scalać po REPORT.md.
 6. Następni w kolejce Claude: zabudowa r6 (0107, na Fable — lista r6 z REVIEW s10-0097 + działki domów P1-h), Kwadrat r13.
-7. Ostatni przydzielony ADR: **0117** (0113 wydajność r2, 0114 zabudowa r7, 0115/0116 GPT) (0107 zabudowa r6, 0108/0109/0111/0112 GPT feedback `docs/owner/GPT-FEEDBACK-S10.md`, 0110 węzły r4).
+7. GPT pakiet S10-C `docs/owner/GPT-TASK-04-S10.md` (10 strumieni wg priorytetu bramki 3; 0108, 0109, 0118, 0111, 0112, 0119, 0115, 0116, 0120, 0121).
+8. Ostatni przydzielony ADR: **0121** (0113 wydajność r2, 0114 zabudowa r7, 0115/0116 GPT) (0107 zabudowa r6, 0108/0109/0111/0112 GPT feedback `docs/owner/GPT-FEEDBACK-S10.md`, 0110 węzły r4).
 
 ---
 # HANDOVER — kamion, sesja 9 (2026-11-11 00:30 → ~10:30 lokalnie; zamknięta na polecenie właściciela przy końcu limitu 5 h)
