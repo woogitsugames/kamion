@@ -3,7 +3,7 @@
   "mode": "robocopy /E /XJ /R:1 /W:1; no MIR",
   "selected_sha256": {
     "REPORT.md": "3712e1997179a96c82d6e49bdf03cff67ef8a864d6170ccdb05a2e477adc3f07",
-    "STATUS.md": "8aea25a87897cca801bbc70519f6cd860de5459a35efd86f6d666241886d88b8",
+    "STATUS.md": "38e1223dab621dc6cb4c98d39741c8ee004a28819cdc3b0166e056697a55a622",
     "REVIEW.md": "0da78a8c72f09bd33e5dd132d4f67df7e3ccc0a156d9239b96adfe8f945d1cc2",
     "SELF-REVIEW.md": "70ec35b251f58e32fcb7fc8fb57aa3e3a342fbbc7e2132474cb155bd9018fbd1",
     "editmode-final.xml": "d616a08cb84e178ba26ce93921d1310c1ebf93305f0e8ab4f1a393195b12a6c0",
@@ -41,7 +41,11 @@
     "G-PLATE-GPU-AUDIT.md": "b637d9c52c4ea867365e0294e0ba887bc61c8245ed21c2fd35749a329f59a9dd",
     "G-PLATE-GPU-AUDIT-pins.json": "5fa1a0894ce6398ace44e4d7a69c0789c46ec51038412ad174e7175465b4c5bd",
     "G-PLATE-HIGH-REVIEW.md": "993378a4084bd1e17792a6429765220866729b6b3468c856ad0601798ea5a16f",
-    "G-plate-high-independent/inputs-and-bindings.json": "954a4173afdab8bb9ce5b9bbcfe118c07aa00f2df68033390d3c9ed55f9a49a7"
+    "G-plate-high-independent/inputs-and-bindings.json": "954a4173afdab8bb9ce5b9bbcfe118c07aa00f2df68033390d3c9ed55f9a49a7",
+    "G-FINAL-HIGH-REVIEW.md": "3a6b47406369d3537afc141aecd7389420a5fa5514b5baa2d713050efb2d0356",
+    "G-final-high-960/independent-final-check.json": "04dcd5877232ce2e0096b2ffdca336a11ede4521478382ad0997a7abead4d4f8",
+    "G-final-high-960/inputs.json": "0c61bc71cce292d51aa4acc3dd3989e99cae62cca6da5ec359fe4b49f46a2e5b",
+    "G-final-high-960/keypairs.json": "a60b6e8925d2a05b8b3f5c8b48ee8cc3c077249bf721ea015807660792d2b669"
   },
   "png_inventory": {
     "before": 160,
@@ -58,5 +62,5 @@
       "not_overwritten": true
     }
   },
-  "doc_extension": "Step67: High14 P2 visual review;16 paired/native previews; captured MotionVectors true is explicitly not shipping-pass proof."
+  "doc_extension": "Step68: independent final G High184 visual review +184 pose/state checks,16 paired contact pages and14 keypairs. No source/Unity/tests."
 }
