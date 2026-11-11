@@ -51,6 +51,11 @@ LEAN_DROP_EAVE = 0.5            # max drop of an eave-side lean-to below the mai
 LEAN_DROP_GABLE = 0.35          # a gable-end lean-to's eave below the main eave, m
 LEAN_RISE_GABLE = 0.6           # its high edge above the main eave (never above the main roof at the annexe), m
 LEAN_SLOPE = (math.tan(math.radians(4.0)), math.tan(math.radians(20.0)))
+# Reach of a lean-to past its rectangle: its own overhang + the 0.25 m the grid may sit off its walls. Lean-tos claim
+# this band FIRST (before the reach of the gables): a low annexe keeps its walls and overhang under its own plane
+# instead of under the 1.2 m reach of the tall gable beside it (r1 of ADR 0107: the annexe's side wall and the roof
+# vertices on the shared line rose to the main roof - a roof-coloured sail on the gable).
+MONO_REACH = 0.8
 
 
 class Roof:
@@ -189,6 +194,7 @@ class MultiRoof:
         self._faces = {}
         self._regions = []
         self._dom = None
+        self._domb = None
 
     @property
     def zridge(self):
@@ -199,17 +205,12 @@ class MultiRoof:
         d = np.asarray(q, float)[..., :2] - fc
         return d @ fu, d @ fv
 
-    def _inside(self, k, q, ov):
-        """Domain test of part k (index) at plan point(s) q."""
-        U, V = self._fuv(q)
-        r = self.rects[k]
-        own = (U >= r[0] - 1e-6) & (U <= r[1] + 1e-6) & (V >= r[2] - 1e-6) & (V <= r[3] + 1e-6)
-        grown = (U >= r[0] - ov - 1e-6) & (U <= r[1] + ov + 1e-6) & (V >= r[2] - ov - 1e-6) & (V <= r[3] + ov + 1e-6)
-        excl = np.zeros(np.shape(U), bool)
-        for j, o in enumerate(self.rects0):
-            if j != k:
-                excl |= (U > o[0] + 1e-6) & (U < o[1] - 1e-6) & (V > o[2] + 1e-6) & (V < o[3] - 1e-6)
-        return own | (grown & ~excl)
+    def _inside(self, k, q, ov=None):
+        """Domain test of part k (index) at plan point(s) q (boundary inclusive)."""
+        if self._domb is None:
+            self._domb = [d.buffer(1e-6) for d in self._domains()]
+        q = np.asarray(q, float)
+        return shapely.intersects_xy(self._domb[k], q[..., 0], q[..., 1])
 
     def _rect_poly(self, r, ov=0.0):
         fc, fu, fv = self.frame
@@ -217,23 +218,44 @@ class MultiRoof:
                                                            (r[1] + ov, r[3] + ov), (r[0] - ov, r[3] + ov))])
 
     def _domains(self):
+        """Plan domain of every part (ADR 0107):
+        lean-to k: its rectangle + the MONO_REACH band round it, outside every other rectangle and outside the
+                   domains of the lean-tos before it;
+        gable k:   its roof rectangle (a wing's runs on to the main ridge) + the MULTI_REACH band round it, outside
+                   every other decomposition rectangle and outside the lean-to domains."""
         if self._dom is None:
-            self._dom = []
-            for k, r in enumerate(self.rects):
-                others = [self._rect_poly(o) for j, o in enumerate(self.rects0) if j != k]
-                g = self._rect_poly(r, MULTI_REACH)
-                if others:
-                    g = g.difference(shapely.unary_union(others))
-                self._dom.append(shapely.unary_union([self._rect_poly(r), g]).buffer(0))
+            n = len(self.parts)
+            rect0 = [self._rect_poly(o) for o in self.rects0]
+            dom = [None] * n
+            mono = []
+            for k in range(n):
+                if self.parts[k].kind == "mono":
+                    others = shapely.unary_union([rect0[j] for j in range(n) if j != k] + mono)
+                    # the band on the low side and the two flanks only: past its high edge the lean-to's plane
+                    # keeps rising and would lift the eave of the wall it leans on
+                    pt = self.parts[k]
+                    W = lambda u, v, pt=pt: pt.c + pt.eu * u + pt.ev * v
+                    hu, hv = pt.hu + MONO_REACH, pt.hv
+                    g = Polygon([W(-hu, -hv - MONO_REACH), W(hu, -hv - MONO_REACH), W(hu, hv), W(-hu, hv)]).buffer(0)
+                    g = g.difference(others)
+                    dom[k] = shapely.unary_union([rect0[k], g]).buffer(0)
+                    mono.append(dom[k])
+            for k in range(n):
+                if dom[k] is None:
+                    others = [rect0[j] for j in range(n) if j != k] + mono
+                    g = self._rect_poly(self.rects[k], MULTI_REACH)
+                    if others:
+                        g = g.difference(shapely.unary_union(others))
+                    dom[k] = shapely.unary_union([self._rect_poly(self.rects[k]), g]).buffer(0)
+            self._dom = dom
         return self._dom
 
     def z(self, p, ov=None):
-        ov = MULTI_REACH if ov is None else ov
         q = np.asarray(p, float)[..., :2]
         best = np.full(q.shape[:-1], -np.inf)
         for k, part in enumerate(self.parts):
             zi = part.z(q)
-            best = np.where(self._inside(k, q, ov) & (zi > best), zi, best)
+            best = np.where(self._inside(k, q) & (zi > best), zi, best)
         return np.where(np.isfinite(best), best, self.parts[0].z(q))
 
     def eave_dist(self, p):
@@ -265,34 +287,46 @@ class MultiRoof:
                     ts.add(fa / (fa - fb))
         (ua, va), (ub, vb) = self._fuv(a), self._fuv(b)    # domain edges: a step in the field
         for r in self.rects + self.rects0:
-            for ov in (0.0, MULTI_REACH):
+            for ov in (0.0, MONO_REACH, MULTI_REACH):
                 for xa, xb, lines in ((ua, ub, (r[0] - ov, r[1] + ov)), (va, vb, (r[2] - ov, r[3] + ov))):
                     for x0 in lines:
                         fa, fb = float(xa) - x0, float(xb) - x0
                         if fa * fb < 0:
-                            t = fa / (fa - fb)
-                            ts.update((max(0.0, t - 1e-4), min(1.0, t + 1e-4)))
-        tt = np.array(sorted(ts))
-        keep_t = [tt[0]]
-        for t in tt[1:]:
-            if (t - keep_t[-1]) * L > 0.02:
-                keep_t.append(t)
-        if keep_t[-1] < 1.0:
-            keep_t[-1] = 1.0
-        tt = np.array(keep_t)
-        zz = self.z(a[None, :] + (b - a)[None, :] * tt[:, None])
+                            ts.add(fa / (fa - fb))
+        tt = sorted(ts)
+        # intervals between the breakpoints; the field is linear inside one, so it is read 3 cm inside both ends
+        # (a wall runs ALONG domain edges, within a centimetre of them: the values on the breakpoints themselves
+        # belong to whichever side the max rule picks). Intervals under 3 cm are slivers: dropped.
+        iv = [(t0, t1) for t0, t1 in zip(tt, tt[1:]) if (t1 - t0) * L >= 0.03]
+        if not iv:
+            iv = [(0.0, 1.0)]
+        out = []
+        for k, (t0, t1) in enumerate(iv):
+            d = min(0.03 / L, 0.25 * (t1 - t0))
+            za, zb = (float(self.z(a + (b - a) * t)) for t in (t0 + d, t1 - d))
+            sl = (zb - za) / max(t1 - t0 - 2 * d, 1e-9)
+            z0, z1 = za - sl * d, zb + sl * d
+            t0 = 0.0 if k == 0 else t0                     # slivers at the ends / between: the neighbours take over
+            t1 = 1.0 if k == len(iv) - 1 else t1
+            if out and abs(out[-1][1] - z0) > 0.01:       # a step: two points 2e-4 apart
+                out[-1] = (max(out[-1][0] - 1e-4, 0.0), out[-1][1])
+                out.append((min(t0 + 1e-4, 1.0), z0))
+            elif not out:
+                out.append((t0, z0))
+            out.append((t1, z1))
         keep = [0]                                         # drop collinear interior points
-        for k in range(1, len(tt) - 1):
-            t0, t1 = tt[keep[-1]], tt[k + 1]
-            zi = zz[keep[-1]] + (zz[k + 1] - zz[keep[-1]]) * (tt[k] - t0) / max(t1 - t0, 1e-9)
-            if abs(zi - zz[k]) > 0.01:
+        for k in range(1, len(out) - 1):
+            (t0, z0), (tk, zk), (t1, z1) = out[keep[-1]], out[k], out[k + 1]
+            zi = z0 + (z1 - z0) * (tk - t0) / max(t1 - t0, 1e-9)
+            if abs(zi - zk) > 0.01:
                 keep.append(k)
-        keep.append(len(tt) - 1)
-        return [(float(tt[k] * L), float(zz[k])) for k in keep]
+        keep.append(len(out) - 1)
+        return [(float(out[k][0] * L), float(out[k][1])) for k in keep]
 
     def faces(self, ov):
-        """Upper-envelope regions: [(plan polygon, eave direction, d0)] - each face of each part (inside the part's
-        domain) minus where another part's face is higher (ties: the earlier part wins)."""
+        """Upper-envelope regions: [(plan polygon, eave direction, d0, z)] - each face of each part (inside the part's
+        domain) minus where another part's face is higher (ties: the earlier part wins); z(p) = height of the face's
+        own plane."""
         key = round(float(ov), 4)
         if key in self._faces:
             return self._faces[key]
@@ -327,8 +361,8 @@ class MultiRoof:
                 d0 = lambda p, pt=pt, hv=hv, k_sl=k_sl: (hv - pt.uv(p)[1]) * k_sl
             else:                                          # gable low side / lean-to: v grows from the eave
                 d0 = lambda p, pt=pt, hv=hv, k_sl=k_sl: (hv + pt.uv(p)[1]) * k_sl
-            out.append((reg, pt.eu, d0))
-            regions.append((i, reg))
+            out.append((reg, pt.eu, d0, pt.z))            # pt.z: the face's own plane (not the envelope: on a step
+            regions.append((i, reg))                      # line the envelope is the higher roof)
         self._faces[key] = out
         self._regions = regions
         return out
@@ -718,13 +752,14 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
     exp = covering(poly, roof, ov)
     soffit_mat = soffit_mat or fascia_mat
     eaves = []
-    for face, e, d0 in roof.faces(ov + 0.05):
+    for face, e, d0, *zf in roof.faces(ov + 0.05):
+        zfun = zf[0] if zf else roof.z                       # MultiRoof: the face's own plane (steps between parts)
         for g in _polys(exp.intersection(face)):
             T = _tris(g)
             if not len(T):
                 continue
             xy = T.reshape(-1, 2)
-            V = np.column_stack([xy, roof.z(xy) + T_TOP])
+            V = np.column_stack([xy, zfun(xy) + T_TOP])
             UV = np.column_stack([xy @ e, np.asarray(d0(xy)) * roof.sl])
             idx = np.arange(len(V)).reshape(-1, 3)
             acc.add("buildings", mat, V, idx, UV)
@@ -734,7 +769,7 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
             for a, b in zip(ring, ring[1:]):
                 if np.hypot(*(b - a)) < 0.02 or exp.exterior.distance(Point(*(0.5 * (a + b)))) > 1e-3:
                     continue
-                za, zb = float(roof.z(a)), float(roof.z(b))
+                za, zb = float(zfun(a)), float(zfun(b))
                 acc.quad("buildings", fascia_mat, [a[0], a[1], za - T_SOFFIT], [b[0], b[1], zb - T_SOFFIT],
                          [b[0], b[1], zb + T_TOP], [a[0], a[1], za + T_TOP])
                 if (abs(za - zb) < 0.01 and np.hypot(*(b - a)) > 1.5 and float(roof.eave_dist(0.5 * (a + b))) < 0.1 and
@@ -746,7 +781,7 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
                     sxy = S[:, [0, 2, 1]].reshape(-1, 2)
                     # UV0.v >= 3 m: wall materials read v as metres above the ground (splash zone)
                     suv = np.column_stack([sxy[:, 0], sxy[:, 1] - np.floor(sxy[:, 1].min()) + 3.0])
-                    acc.add("buildings", soffit_mat, np.column_stack([sxy, roof.z(sxy) - T_SOFFIT]),
+                    acc.add("buildings", soffit_mat, np.column_stack([sxy, zfun(sxy) - T_SOFFIT]),
                             np.arange(len(sxy)).reshape(-1, 3), suv)
     # ridge and hip caps (gąsiory, ADR 0094 - review s9 P2-3 "knife-edge ridge"): a three-facet cap 0.22 m wide and
     # 5 cm proud along every ridge / hip line of the height field, where the covering exists. LOD0, the roof's own

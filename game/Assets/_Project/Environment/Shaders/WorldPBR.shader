@@ -621,9 +621,10 @@ Shader "Kamion/World PBR"
                         half slen = 0.45 + 0.55 * frac(srnd * lerp(0.37, 0.61, sside) + lerp(0.1, 0.5, sside));
                         float sde = abs(i.uv.z);                               // metres from the nearer sill end
                         // r1 (1.5-5 cm core, up to 1.6 scale lengths) read as 1 px hairlines 2 m long from 15 m: wider, shorter
-                        half whisk = (1.0 - smoothstep(0.02, 0.09 + 0.06 * depth, sde)) * (1.0 - smoothstep(0.15 * slen, 1.1 * slen, depth));
-                        half band = (0.25 + 0.75 * ro.r) * (1.0 - smoothstep(0.0, 0.6, depth)) * smoothstep(0.0, 0.04, sde);
-                        ro.r = saturate(max(whisk, band * 0.6));
+                        // r1b: soft-edged (no hard bar), strongest right under the sill end, broken by the map's streak structure
+                        half whisk = (1.0 - smoothstep(0.0, 0.07 + 0.05 * depth, sde)) * (1.0 - smoothstep(0.1 * slen, 1.1 * slen, depth)) * (0.65 + 0.35 * ro.r);
+                        half band = (0.35 + 0.65 * ro.r) * (1.0 - smoothstep(0.0, 0.5, depth));
+                        ro.r = saturate(max(whisk, band * 0.8));
                         ro.g *= whisk * 0.5;
                     }
                     half k = _RunoffStrength * saturate(0.8 + (macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 1.0);

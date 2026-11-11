@@ -209,3 +209,30 @@ def test_rectangular_plots_close_with_whole_bays():
         if front:
             mids = sorted(float(b[1][0]) for b in front)
             assert all(abs((b_ - a_) / PL.MODULE_M - round((b_ - a_) / PL.MODULE_M)) < 1e-6 for a_, b_ in zip(mids, mids[1:]))
+
+
+def test_roof_faces_keep_their_own_plane_on_a_step_line():
+    """r1 of ADR 0107: covering / soffit vertices on the line between a lean-to and the gable above it took the
+    envelope height (the higher roof) - roof- and soffit-coloured sails standing on the annexe. Every covering and
+    soffit triangle lies in a roof plane (never steeper than 60 deg), and the annexe walls stay under the lean-to."""
+    from streetscape import buildings_mesh as B
+    from streetscape import roofs as RF
+    poly = Polygon(HOUSE2)
+    r = RF.plan(poly, PROPS, 7.0, 100.0, lambda s: 0.9)
+    acc = B.Acc()
+    RF.build(acc, r, poly, "roof_tiles_red", soffit_mat="soffit_boards", fascia_mat="hall_flashing", step_mat="plaster_grey")
+    for mat in ("roof_tiles_red", "soffit_boards"):
+        for it in acc.d[("buildings", mat)]:
+            V, T = np.asarray(it[0]), np.asarray(it[1])
+            for t in T:
+                tri = V[t]
+                nrm = np.cross(tri[1] - tri[0], tri[2] - tri[0])
+                area = np.linalg.norm(nrm) / 2
+                if area > 0.05 and not (mat == "roof_tiles_red" and area < 1.0 and abs(tri[:, 2].max() - r.zridge) < 0.5):
+                    assert abs(nrm[2]) / (2 * area) > 0.5, (mat, tri)          # ridge cap facets excepted
+    ring = np.asarray(poly.exterior.coords)
+    lean_top = max(p.zridge for p in r.parts[1:])
+    for a, b in zip(ring[:-1], ring[1:]):
+        m = 0.5 * (a + b)
+        if any(r._inside(k, m) for k in (1, 2)) and not r._inside(0, m):
+            assert max(z for _, z in r.profile(a, b)) <= lean_top + 0.01
