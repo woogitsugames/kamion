@@ -14,3 +14,6 @@
 
 - Krok5: w generatorze masek trawy dodano pola przestrzenne6m/3,5m zakotwiczone we współrzędnych, ograniczone do klas BDOT/OSM; zachowano kanałR odległości iG lasu. OSM species/genus wybiera istniejące gatunki zamiast zawsze lipy. Testy5PASS. NASTĘPNY KROK: `Get-Content artifacts/vegetation-r2/tree-bake.log -Tail 8` i dokończenie czterech59kamerowych baseline z prawdziwym WorldC_High.
 
+
+- Baseline Low-overcast wyrenderowany i zapisany; NASTĘPNY KROK: `Get-Content artifacts/vegetation-r2/before/Low-overcast/stats.txt` i pomiar koron/ref.
+
