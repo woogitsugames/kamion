@@ -68,3 +68,4 @@ Przygotowano porównanie wszystkich kamer: mesh draws, shadow draws oraz draws/t
 2026-11-11T23:52:24.1934793+01:00: Niezależny krytyk obejrzał 14 arkuszy: warunkowe, bez pełnego PASS. Stara łata zbyt płaska/regularna, nowa droga nadal ma ubytki na części pasów; zapis VISUAL-CRITIC.md. EditMode 275/275 passed; kolejne kroki to pomiary, końcowy GIS/physics/gate3, REPORT i następna runda.
 2026-11-11T23:53:45.1082588+01:00: Przygotowano REPORT.md jako roboczy, z rozróżnieniem źródłowych liczników, widoczności i kosztu GPU. Bez końcowego PASS; oczekiwanie na heavy do pomiarów i końcowych testów.
 2026-11-11T23:53:57.5348979+01:00: Pomiar kontrastu Low overcast exit=0, slot heavy zwolniony. Wymagana kontrola projekcji masek.
+2026-11-11T23:55:20.2661512+01:00: Pierwsza maska ma poprawną projekcję na czystą jezdnię, ale wąski ROI pomija lewy ślad. Poszerzono ROI poziomo do 380..630 px przy szerokości 960; maski pozostają kontrolowane polem UV, bez krawężnika/farby.

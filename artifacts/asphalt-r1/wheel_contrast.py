@@ -27,7 +27,7 @@ def main():
         im = Image.open(directory / (camera + '.png')).convert('RGB')
         width, height = im.size
         # Clear near asphalt, away from the crossing, kerb and white boundary line.
-        x0, y0, x1, y1 = [round(v * width / 960) for v in (470, 280, 610, 400)]
+        x0, y0, x1, y1 = [round(v * width / 960) for v in (380, 280, 630, 400)]
         depth = np.full((y1-y0, x1-x0), np.inf)
         uv = np.full((*depth.shape, 2), np.nan)
         runtime_pos = state['position']
@@ -93,7 +93,7 @@ def main():
                          for y in range(luma.shape[0]) if masks[side][y].sum() >= 3 and masks['centre'][y].sum() >= 3]
                 ratios[side] = dict(rows=len(pairs), median_ratio=float(np.median([a/b for a, b in pairs if b > 0])) if pairs else None)
             measurements.append(dict(label=label, fields=values, row_matched=ratios))
-        rows.append(dict(condition=condition, camera=camera, roi960=[470, 280, 610, 400], runtime=state, measurements=measurements))
+        rows.append(dict(condition=condition, camera=camera, roi960=[380, 280, 630, 400], runtime=state, measurements=measurements))
     result = dict(note='Display luma, not physical albedo. Actual runtime matrices, perspective-correct Half UV1. Road-only projection does not resolve non-road occluders; inspect coloured masks before accepting. Baseline reuses identical camera pose and unchanged road geometry.', rows=rows)
     (OUT / f'wheel-contrast-{args.after}.json').write_text(json.dumps(result, indent=2)+'\n')
     for row in rows:
@@ -102,4 +102,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
