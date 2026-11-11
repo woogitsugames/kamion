@@ -982,8 +982,8 @@ namespace Game.Editor.Setup
             Debug.Log($"[TRUCK] Mirror support clearance {body.name}: moved={moved} vertices={source.vertexCount}->{mesh.vertexCount} indices={source.triangles.Length}->{mesh.triangles.Length}");
         }
 
-        // ADR 0104: called only for the detailed exterior body after inspecting the baseline. Low/Medium retain their
-        // original body meshes; all tiers retain the exact mirror glass transforms and camera optics.
+        // ADR 0104: backing recess only on the detailed exterior body. Low/Medium retain their original backing;
+        // ADR 0112 adjusts support islands separately. Glass transforms and camera fields stay unchanged.
         static void RecessMirrorBacking(Transform root, Renderer body, Dictionary<string, Dictionary<string, object>> mirrors)
         {
             var filter = body != null ? body.GetComponent<MeshFilter>() : null;
