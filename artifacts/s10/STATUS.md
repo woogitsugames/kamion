@@ -696,3 +696,8 @@ of9van paint rows, not evidence of stale generated data. Corrected count81/81,
 UV1 absent in both. Canonical baseline build still runs. Inactive patch prepared;
 production maps/source remain R3. NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/artifacts/integration-s10/run5.log -Tail 10
 Then release D only after actual END and PHONE absence; keep own diag12 held.
+
+Step 60: Root re-viewed rejected R3 white estate and level3 sheet; independently
+confirms detached mid-door grey patches. Review records earlier root acceptance
+was too lenient and requires new metric profiles, not recolouring old mask.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/artifacts/integration-s10/run5.log -Tail 10

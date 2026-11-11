@@ -16,3 +16,12 @@ Pairing:73original cameras have before/after; eight extra views are AFTER-only d
 
 Integration: union CARPAINT-only WorldPBR changes and linearPearl helper with A/B/C/D and leader changes; preserve _Tile=set_tile||elementScan||atlas, weather||runoff, macro/panel/splash. No main merge/push, phone or ADB action by this worker. Reviewed implementation is ready for leader integration with these limits.
 Leader review2026-11-11-s10-gpt-0089 supersedes ROOT scoped acceptance: overall merge FAIL, P0 dirt creates floating mid-door dark patches. Pearl and wheels retain PASS. R4 reopened on same G branch with current main merge authorized by leader; new evidence required after0098, no old clear results reused.
+
+Root visual re-review after leader P0: viewed R3 High-overcast focused sheet and
+r10_wheel_02 resized to960 without tonal edits. White estate has unmistakable
+floating grey patches around mid-door, with a lighter gap below and a dark lower
+edge. Focused level3 also reads as cloudy camouflage. Earlier ROOT acceptance
+was too lenient; withdrawn. Warm recolouring of the same mask is insufficient.
+Require metric-height profiles at several columns on matching door masks, exclude
+handles/seams/wheels, show deposition connected to sill/arches/rear and monotonically
+falling upward. New frames and causality still pending; this is rejected R3 only.
