@@ -530,14 +530,15 @@ overrides:
     verify: owner drive
   - id: s1440-diverge-p21
     kind: painted_zone
-    chevron_axis: [[-335.5, -147.5], [-346.2, -138.1]]
-    polygon_en: [[-335.5, -147.5], [-338.0, -144.3], [-343.5, -137.5], [-346.2, -138.1], [-343.4, -140.5]]
+    chevron_axis: [[-329.5, -151.5], [-344.7, -138.0]]
+    polygon_en: [[-329.5, -151.5], [-336.2, -145.0], [-340.2, -141.0], [-343.6, -138.0], [-345.9, -138.0],
+                 [-345.0, -140.6], [-340.4, -144.8], [-334.8, -149.0]]
     reason: >-
-      Diverge Andersa / link to Rondo Putry (s 1432-1480): P-21 chevrons in front of the separator nose, tip
-      E -335.5 N -147.5 (ADR 0093). ADR 0095: nose re-measured at station 173 of the link chain = E -346.2 N -138.1
-      (xsec/fork_link_raw.png, xsec/fork2.png, plan5/fork_putry.jpg; ADR 0093 had E -349.3 N -135.7), field clipped
-      to the nose, chevrons instead of parallel stripes (REVIEW 0093 P1). The band NW of the nose is
-      s1440-diverge-p21-band.
+      Diverge Andersa / link to Rondo Putry (s 1432-1480): P-21 chevrons in front of the separator nose. ADR 0095:
+      re-traced on the clean crop trace/fork_zoom_o.jpg (0.08 m, 1 m = 50 px): nose E -345.9 N -138.0, borders through
+      E -340.2 N -141.0 / E -340.4 N -144.8, tip about E -329.5 N -151.5 (ADR 0093 had the nose at E -349.3 N -135.7
+      and the tip at E -335.5 N -147.5), chevrons instead of parallel stripes (REVIEW 0093 P1). The band NW of the
+      nose is s1440-diverge-p21-band.
     confidence: high
     verify: owner drive
   - id: s610-north-arm-width
@@ -1042,14 +1043,15 @@ overrides:
       First 20 m re-read on the strip xsec/fork3.png (stations 164-188 of the link chain): the exit lane is the
       4 m right lane of Andersa and keeps its kerb line; lane centre points E -335.5 N -142.7 / E -337.55 N -140.0 /
       E -339.8 N -137.3 / E -342.1 N -134.1 read on plan6/fork_putry.jpg; the first 0.22 of the profile is fitted to them
-      (artifacts/junctions-r2/scripts/fit_offset.py, residual <= 0.15 m); behind the separator nose the P-21 band (2 m) joins the
+      (artifacts/junctions-r2/scripts/fit_offset.py, residual <= 0.15 m); between the chevrons and the kerb the
+      carriageway is 6.3-6.8 m wide there (crop trace/fork_zoom_o.jpg, 1 m = 50 px); behind the separator nose the P-21 band (2 m) joins the
       carriageway.
       center_offset / width = [[t, m], ...], t = 0 at the fork node.
     confidence: medium
     verify: owner drive
     set:
       center_offset: [[0.0, -8.4], [0.05, -6.53], [0.1, -3.56], [0.15, -1.96], [0.222, -2.45], [0.366, -0.2], [0.5, 0.35], [0.75, 0.45], [1.0, 0.2]]
-      width: [[0.0, 4.0], [0.15, 3.9], [0.222, 3.7], [0.3, 4.6], [0.366, 5.35], [0.75, 5.35], [1.0, 6.5]]
+      width: [[0.0, 4.6], [0.08, 6.3], [0.22, 6.5], [0.3, 6.0], [0.366, 5.35], [0.75, 5.35], [1.0, 6.5]]
   - id: s1440-diverge-p21-band
     kind: painted_zone
     stripe_az_deg: 4
