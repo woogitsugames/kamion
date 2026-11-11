@@ -465,7 +465,7 @@ namespace Game.World
         /// <summary>A forest HLOD mesh (cell or chunk merge), region-root space, no shadows (beyond every tier's shadow distance).</summary>
         void DrawMesh(Mesh mesh, int materialStart, Bounds b)
         {
-            if (mesh == null) return;
+            if (mesh == null || RenderOverrides.AbHlodOff) return;   // ADR 0106 A/B (diagnostics)
             var mats = m_Mats ?? set.materials;
             var trs = Matrix4x4.Translate(m_Origin);
             for (int s = 0; s < mesh.subMeshCount; s++)
@@ -491,6 +491,7 @@ namespace Game.World
 
         void Append(int proto, int lod, Matrix4x4[] src, int start, int count, Bounds cellBounds)
         {
+            if (RenderOverrides.AbImpostorOff && m_Thin[proto] && lod > 0 && lod == set.prototypes[proto].lods.Length - 1) return;   // ADR 0106 A/B
             int slot = m_BatchOffset[proto] + lod;
             while (count > 0)
             {

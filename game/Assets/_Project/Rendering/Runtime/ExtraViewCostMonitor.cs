@@ -127,6 +127,8 @@ namespace Game.Rendering
             "cabint" => "no Kamion/Cab Interior renderers",
             "truckext" => "no Kamion/Truck Exterior renderers",
             "cabdisp" => "no Kamion/Cab Display renderers",
+            "hlod" => "no forest HLOD meshes",
+            "impostor" => "no tree impostor LOD",
             "treeshadow" => "instanced trees cast no shadows",
             "treethin" => "tree thinning starts at half the distance",
             "treecard" => "tree card LOD distances x0.5",
@@ -350,6 +352,8 @@ namespace Game.Rendering
                 case "cabint": SetShaderRenderers("Kamion/Cab Interior", b); break;
                 case "truckext": SetShaderRenderers("Kamion/Truck Exterior", b); break;
                 case "cabdisp": SetShaderRenderers("Kamion/Cab Display", b); break;
+                case "hlod": RenderOverrides.AbHlodOff = b; break;
+                case "impostor": RenderOverrides.AbImpostorOff = b; break;
                 case "treeshadow": RenderOverrides.AbTreeShadowOff = b; break;
                 case "treethin": RenderOverrides.AbTreeThinScale = b ? 0.5f : 1f; break;
                 case "treecard": RenderOverrides.AbTreeCardScale = b ? 0.5f : 1f; break;

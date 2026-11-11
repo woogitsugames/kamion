@@ -91,6 +91,15 @@ namespace Game.Editor.Setup
                         qp.tiers[i].cloudQuality = d.cloudQuality;
                         qp.tiers[i].ssao = d.ssao;
                     }
+                qp.revision = 80;
+                dirty = true;
+            }
+            if (qp.revision < 106)
+            {
+                // ADR 0106: Truck Glass fast path per tier (Low on).
+                for (int i = 0; i < qp.tiers.Length; i++)
+                    foreach (var d in defs)
+                        if (string.Equals(d.name, qp.tiers[i].name, StringComparison.OrdinalIgnoreCase)) qp.tiers[i].glassFast = d.glassFast;
                 qp.revision = QualityProfile.CurrentRevision;
                 dirty = true;
             }
