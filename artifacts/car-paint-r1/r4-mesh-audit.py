@@ -41,7 +41,7 @@ g=json.loads(b[20:20+size])
 actual=[]
 for node in g["nodes"]:
     name=node.get("name","")
-    if not name.startswith("car_") or "mesh" not in node or name.endswith((".col",".contact")):
+    if not name.startswith(("car_", "van_")) or "mesh" not in node or name.endswith((".col",".contact")):
         continue
     for prim in g["meshes"][node["mesh"]]["primitives"]:
         mat=g["materials"][prim["material"]].get("name","")
