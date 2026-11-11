@@ -2,7 +2,8 @@ param(
     [ValidateSet('import','render','sbs-sign','editmode')] [string]$Step,
     [string]$Phase='before',
     [ValidateSet('Low','High')] [string]$Tier='Low',
-    [ValidateSet('clear','overcast','dusk')] [string]$Lighting='overcast'
+    [ValidateSet('clear','overcast','dusk')] [string]$Lighting='overcast',
+    [string]$Cameras=''
 )
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot/../../..").Path
@@ -40,7 +41,21 @@ try {
         }
         'render' {
             $scene=if ($Tier -eq 'High') { 'WorldC_High' } else { 'WorldC' }
-            & pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $Tier -Lighting $Lighting -Gate3 "$ev/cameras.json" -OutputDir "$ev/$Phase/$Tier-$Lighting" *> "$ev/render-$Phase-$Tier-$Lighting.log"
+            $renderDir="$ev/$Phase/$Tier-$Lighting"
+            $priorStats=@()
+            if ($Cameras -and (Test-Path "$renderDir/stats.txt")) {
+                $priorStats=@(Get-Content "$renderDir/stats.txt")
+                Copy-Item "$renderDir/stats.txt" "$renderDir/stats-before-diagnostic-correction.txt"
+            }
+            & pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $Tier -Lighting $Lighting -Gate3 "$ev/cameras.json" -Cameras $Cameras -OutputDir $renderDir *> "$ev/render-$Phase-$Tier-$Lighting.log"
+            $renderCode=$LASTEXITCODE
+            if ($renderCode -eq 0 -and $priorStats.Count) {
+                $ids=$Cameras.Split(',') | ForEach-Object { [regex]::Escape($_) }
+                $pattern='^\s*(?:'+($ids -join '|')+')(?::| instanced)'
+                $freshStats=@(Get-Content "$renderDir/stats.txt" | Where-Object { $_ -match $pattern })
+                @($priorStats | Where-Object { $_ -notmatch $pattern })+$freshStats | Set-Content "$renderDir/stats.txt"
+            }
+            $global:LASTEXITCODE=$renderCode
         }
         'editmode' {
             & pwsh scripts/test.ps1 -Platform EditMode *> "$ev/editmode.log"
