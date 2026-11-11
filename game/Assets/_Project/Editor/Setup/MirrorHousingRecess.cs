@@ -34,7 +34,7 @@ namespace Game.Editor.Setup
                     Vector3 d = p - opening.centre;
                     float z = Vector3.Dot(d, opening.normal), y = Vector3.Dot(d, opening.up);
                     if (Mathf.Abs(Vector3.Dot(d, opening.right)) > opening.halfWidth + Clearance ||
-                        y < opening.bottom - Clearance || y > opening.top + Clearance || z <= -Depth || z > 0.002f)
+                        y < opening.bottom - Clearance || y > opening.top + Clearance || z <= -Depth + 1e-6f || z > 0.002f)
                         continue;
                     positions[i] = inverse.MultiplyPoint3x4(p - opening.normal * (z + Depth));
                     changed[i] = true;
