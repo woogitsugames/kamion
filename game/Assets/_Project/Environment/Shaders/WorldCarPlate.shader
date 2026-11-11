@@ -569,5 +569,7 @@ Shader "Kamion/World Car Plate"
     }
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
-    CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.LitShader"
+    // Generated-only material: the exact-id factory owns validation. URP's Lit
+    // inspector identifies this shader name as Unknown and incorrectly enables
+    // MotionVectors during load. Default ShaderGUI preserves the copied Lit state.
 }

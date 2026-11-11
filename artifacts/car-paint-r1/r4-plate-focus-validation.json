@@ -1,0 +1,1812 @@
+{
+  "frames": 28,
+  "matched_p0_frames": 28,
+  "poses_exact": true,
+  "method": "Independent parsed begin/end packets; conservative native LOD0 plate projection mask, no GPU object-ID/occlusion mask. Nonplate residual includes any unmasked projection/filter edge.",
+  "rows": [
+    {
+      "condition": "Low-clear",
+      "camera": "r10_front_04",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_hatch_white",
+          "e": 728.832,
+          "n": -385.563,
+          "face": 0,
+          "box": [
+            2229,
+            794,
+            2307,
+            931
+          ],
+          "distance": 3.2868039588220217
+        }
+      ],
+      "nonplate_mae": 0.011864295873842414,
+      "nonplate_changed_gt2_fraction": 0.0009266787309746737,
+      "excluded_fraction": 0.004228395061728395
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "r10_rear_04",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_suv_black",
+          "e": 729.867,
+          "n": -383.667,
+          "face": 1,
+          "box": [
+            460,
+            776,
+            962,
+            1023
+          ],
+          "distance": 1.570264810298053
+        },
+        {
+          "prototype": "car_hatch_white",
+          "e": 728.832,
+          "n": -385.563,
+          "face": 1,
+          "box": [
+            1584,
+            594,
+            1723,
+            686
+          ],
+          "distance": 3.2121357050486683
+        }
+      ],
+      "nonplate_mae": 5.577825021955714e-07,
+      "nonplate_changed_gt2_fraction": 0.0,
+      "excluded_fraction": 0.05412393162393162
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "g_dirt_level_0",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_suv_red",
+          "e": 172.63,
+          "n": -999.151,
+          "face": 0,
+          "box": [
+            118,
+            909,
+            495,
+            1047
+          ],
+          "distance": 2.7756791998640002
+        },
+        {
+          "prototype": "car_hatch_black",
+          "e": 174.754,
+          "n": -1000.776,
+          "face": 0,
+          "box": [
+            1507,
+            734,
+            1664,
+            819
+          ],
+          "distance": 3.5329902602781083
+        },
+        {
+          "prototype": "car_hatch_silver",
+          "e": 177.244,
+          "n": -1002.023,
+          "face": 0,
+          "box": [
+            2077,
+            609,
+            2154,
+            665
+          ],
+          "distance": 5.97957010538799
+        }
+      ],
+      "nonplate_mae": 0.004326996178120707,
+      "nonplate_changed_gt2_fraction": 0.0010526885470171722,
+      "excluded_fraction": 0.027573203545425768
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "g_dirt_level_1",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "van_silver",
+          "e": -63.26,
+          "n": -858.949,
+          "face": 0,
+          "box": [
+            263,
+            755,
+            572,
+            852
+          ],
+          "distance": 3.0824145897628954
+        },
+        {
+          "prototype": "car_hatch_black",
+          "e": -65.083,
+          "n": -857.231,
+          "face": 0,
+          "box": [
+            1370,
+            760,
+            1566,
+            838
+          ],
+          "distance": 3.303659983985643
+        },
+        {
+          "prototype": "car_suv_black",
+          "e": -67.573,
+          "n": -856.694,
+          "face": 1,
+          "box": [
+            1920,
+            558,
+            2030,
+            608
+          ],
+          "distance": 5.422702647274716
+        }
+      ],
+      "nonplate_mae": 5.6263583852997524e-05,
+      "nonplate_changed_gt2_fraction": 8.076112514784333e-06,
+      "excluded_fraction": 0.020085865780310224
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "g_dirt_level_2",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_hatch_white",
+          "e": 763.09,
+          "n": -752.346,
+          "face": 1,
+          "box": [
+            0,
+            848,
+            237,
+            1038
+          ],
+          "distance": 2.1733453839301995
+        },
+        {
+          "prototype": "car_hatch_black",
+          "e": 765.805,
+          "n": -753.318,
+          "face": 0,
+          "box": [
+            1507,
+            734,
+            1664,
+            819
+          ],
+          "distance": 3.5330035237053328
+        },
+        {
+          "prototype": "car_sedan_silver",
+          "e": 767.659,
+          "n": -754.706,
+          "face": 1,
+          "box": [
+            2231,
+            583,
+            2335,
+            646
+          ],
+          "distance": 4.964163428368976
+        }
+      ],
+      "nonplate_mae": 0.0003050027352775261,
+      "nonplate_changed_gt2_fraction": 4.304965371427133e-05,
+      "excluded_fraction": 0.02569127888572333
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "g_dirt_level_3",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [],
+      "nonplate_mae": 1.2662234884457106e-05,
+      "nonplate_changed_gt2_fraction": 4.352643241532131e-06,
+      "excluded_fraction": 0.0
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "r4_rear_target_3",
+      "reference": "P0 same-frame forced3 (not historical R3)",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_hatch_black",
+          "e": 674.796,
+          "n": -523.807,
+          "face": 1,
+          "box": [
+            1111,
+            462,
+            1236,
+            508
+          ],
+          "distance": 4.863993955673358
+        },
+        {
+          "prototype": "car_sedan_white",
+          "e": 677.014,
+          "n": -519.267,
+          "face": 0,
+          "box": [
+            406,
+            487,
+            459,
+            519
+          ],
+          "distance": 8.74264581822158
+        },
+        {
+          "prototype": "car_hatch_grey",
+          "e": 678.512,
+          "n": -516.933,
+          "face": 1,
+          "box": [
+            292,
+            410,
+            326,
+            435
+          ],
+          "distance": 11.58517048450335
+        },
+        {
+          "prototype": "car_suv_silver",
+          "e": 680.721,
+          "n": -512.491,
+          "face": 1,
+          "box": [
+            59,
+            390,
+            84,
+            411
+          ],
+          "distance": 16.1419986464926
+        },
+        {
+          "prototype": "van_silver",
+          "e": 682.019,
+          "n": -510.547,
+          "face": 1,
+          "box": [
+            0,
+            382,
+            15,
+            400
+          ],
+          "distance": 18.35060537301054
+        }
+      ],
+      "nonplate_mae": 0.0068743383758738535,
+      "nonplate_changed_gt2_fraction": 0.0009133838130120658,
+      "excluded_fraction": 0.003597261791706236
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "r10_front_04",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_hatch_white",
+          "e": 728.832,
+          "n": -385.563,
+          "face": 0,
+          "box": [
+            2229,
+            794,
+            2307,
+            931
+          ],
+          "distance": 3.2868039588220217
+        }
+      ],
+      "nonplate_mae": 0.0031205866528062234,
+      "nonplate_changed_gt2_fraction": 0.0005253298809384728,
+      "excluded_fraction": 0.004228395061728395
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "r10_rear_04",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_suv_black",
+          "e": 729.867,
+          "n": -383.667,
+          "face": 1,
+          "box": [
+            460,
+            776,
+            962,
+            1023
+          ],
+          "distance": 1.570264810298053
+        },
+        {
+          "prototype": "car_hatch_white",
+          "e": 728.832,
+          "n": -385.563,
+          "face": 1,
+          "box": [
+            1584,
+            594,
+            1723,
+            686
+          ],
+          "distance": 3.2121357050486683
+        }
+      ],
+      "nonplate_mae": 0.0,
+      "nonplate_changed_gt2_fraction": 0.0,
+      "excluded_fraction": 0.05412393162393162
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "g_dirt_level_0",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_suv_red",
+          "e": 172.63,
+          "n": -999.151,
+          "face": 0,
+          "box": [
+            118,
+            909,
+            495,
+            1047
+          ],
+          "distance": 2.7756791998640002
+        },
+        {
+          "prototype": "car_hatch_black",
+          "e": 174.754,
+          "n": -1000.776,
+          "face": 0,
+          "box": [
+            1507,
+            734,
+            1664,
+            819
+          ],
+          "distance": 3.5329902602781083
+        },
+        {
+          "prototype": "car_hatch_silver",
+          "e": 177.244,
+          "n": -1002.023,
+          "face": 0,
+          "box": [
+            2077,
+            609,
+            2154,
+            665
+          ],
+          "distance": 5.97957010538799
+        }
+      ],
+      "nonplate_mae": 0.0069038518689121305,
+      "nonplate_changed_gt2_fraction": 0.0012073161650560302,
+      "excluded_fraction": 0.027573203545425768
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "g_dirt_level_1",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "van_silver",
+          "e": -63.26,
+          "n": -858.949,
+          "face": 0,
+          "box": [
+            263,
+            755,
+            572,
+            852
+          ],
+          "distance": 3.0824145897628954
+        },
+        {
+          "prototype": "car_hatch_black",
+          "e": -65.083,
+          "n": -857.231,
+          "face": 0,
+          "box": [
+            1370,
+            760,
+            1566,
+            838
+          ],
+          "distance": 3.303659983985643
+        },
+        {
+          "prototype": "car_suv_black",
+          "e": -67.573,
+          "n": -856.694,
+          "face": 1,
+          "box": [
+            1920,
+            558,
+            2030,
+            608
+          ],
+          "distance": 5.422702647274716
+        }
+      ],
+      "nonplate_mae": 1.8036651283018345e-05,
+      "nonplate_changed_gt2_fraction": 4.0380562573921665e-06,
+      "excluded_fraction": 0.020085865780310224
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "g_dirt_level_2",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_hatch_white",
+          "e": 763.09,
+          "n": -752.346,
+          "face": 1,
+          "box": [
+            0,
+            848,
+            237,
+            1038
+          ],
+          "distance": 2.1733453839301995
+        },
+        {
+          "prototype": "car_hatch_black",
+          "e": 765.805,
+          "n": -753.318,
+          "face": 0,
+          "box": [
+            1507,
+            734,
+            1664,
+            819
+          ],
+          "distance": 3.5330035237053328
+        },
+        {
+          "prototype": "car_sedan_silver",
+          "e": 767.659,
+          "n": -754.706,
+          "face": 1,
+          "box": [
+            2231,
+            583,
+            2335,
+            646
+          ],
+          "distance": 4.964163428368976
+        }
+      ],
+      "nonplate_mae": 0.00015541195743391033,
+      "nonplate_changed_gt2_fraction": 3.655159277626811e-06,
+      "excluded_fraction": 0.02569127888572333
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "g_dirt_level_3",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [],
+      "nonplate_mae": 1.4113115964967818e-05,
+      "nonplate_changed_gt2_fraction": 4.352643241532131e-06,
+      "excluded_fraction": 0.0
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "r4_rear_target_3",
+      "reference": "P0 same-frame forced3 (not historical R3)",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_hatch_black",
+          "e": 674.796,
+          "n": -523.807,
+          "face": 1,
+          "box": [
+            1111,
+            462,
+            1236,
+            508
+          ],
+          "distance": 4.863993955673358
+        },
+        {
+          "prototype": "car_sedan_white",
+          "e": 677.014,
+          "n": -519.267,
+          "face": 0,
+          "box": [
+            406,
+            487,
+            459,
+            519
+          ],
+          "distance": 8.74264581822158
+        },
+        {
+          "prototype": "car_hatch_grey",
+          "e": 678.512,
+          "n": -516.933,
+          "face": 1,
+          "box": [
+            292,
+            410,
+            326,
+            435
+          ],
+          "distance": 11.58517048450335
+        },
+        {
+          "prototype": "car_suv_silver",
+          "e": 680.721,
+          "n": -512.491,
+          "face": 1,
+          "box": [
+            59,
+            390,
+            84,
+            411
+          ],
+          "distance": 16.1419986464926
+        },
+        {
+          "prototype": "van_silver",
+          "e": 682.019,
+          "n": -510.547,
+          "face": 1,
+          "box": [
+            0,
+            382,
+            15,
+            400
+          ],
+          "distance": 18.35060537301054
+        }
+      ],
+      "nonplate_mae": 0.008467465070018812,
+      "nonplate_changed_gt2_fraction": 0.0008589779076283036,
+      "excluded_fraction": 0.003597261791706236
+    },
+    {
+      "condition": "High-clear",
+      "camera": "r10_front_04",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_hatch_white",
+          "e": 728.832,
+          "n": -385.563,
+          "face": 0,
+          "box": [
+            2229,
+            794,
+            2307,
+            931
+          ],
+          "distance": 3.2868039588220217
+        }
+      ],
+      "nonplate_mae": 0.4205840566222428,
+      "nonplate_changed_gt2_fraction": 3.1790007923659473e-06,
+      "excluded_fraction": 0.004228395061728395
+    },
+    {
+      "condition": "High-clear",
+      "camera": "r10_rear_04",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_suv_black",
+          "e": 729.867,
+          "n": -383.667,
+          "face": 1,
+          "box": [
+            460,
+            776,
+            962,
+            1023
+          ],
+          "distance": 1.570264810298053
+        },
+        {
+          "prototype": "car_hatch_white",
+          "e": 728.832,
+          "n": -385.563,
+          "face": 1,
+          "box": [
+            1584,
+            594,
+            1723,
+            686
+          ],
+          "distance": 3.2121357050486683
+        }
+      ],
+      "nonplate_mae": 0.4567091055483462,
+      "nonplate_changed_gt2_fraction": 2.1753517585627285e-05,
+      "excluded_fraction": 0.05412393162393162
+    },
+    {
+      "condition": "High-clear",
+      "camera": "g_dirt_level_0",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_suv_red",
+          "e": 172.63,
+          "n": -999.151,
+          "face": 0,
+          "box": [
+            118,
+            909,
+            495,
+            1047
+          ],
+          "distance": 2.7756791998640002
+        },
+        {
+          "prototype": "car_hatch_black",
+          "e": 174.754,
+          "n": -1000.776,
+          "face": 0,
+          "box": [
+            1507,
+            734,
+            1664,
+            819
+          ],
+          "distance": 3.5329902602781083
+        },
+        {
+          "prototype": "car_hatch_silver",
+          "e": 177.244,
+          "n": -1002.023,
+          "face": 0,
+          "box": [
+            2077,
+            609,
+            2154,
+            665
+          ],
+          "distance": 5.97957010538799
+        }
+      ],
+      "nonplate_mae": 0.4526819821253186,
+      "nonplate_changed_gt2_fraction": 0.000406914784312784,
+      "excluded_fraction": 0.027573203545425768
+    },
+    {
+      "condition": "High-clear",
+      "camera": "g_dirt_level_1",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "van_silver",
+          "e": -63.26,
+          "n": -858.949,
+          "face": 0,
+          "box": [
+            263,
+            755,
+            572,
+            852
+          ],
+          "distance": 3.0824145897628954
+        },
+        {
+          "prototype": "car_hatch_black",
+          "e": -65.083,
+          "n": -857.231,
+          "face": 0,
+          "box": [
+            1370,
+            760,
+            1566,
+            838
+          ],
+          "distance": 3.303659983985643
+        },
+        {
+          "prototype": "car_suv_black",
+          "e": -67.573,
+          "n": -856.694,
+          "face": 1,
+          "box": [
+            1920,
+            558,
+            2030,
+            608
+          ],
+          "distance": 5.422702647274716
+        }
+      ],
+      "nonplate_mae": 0.4344955263047734,
+      "nonplate_changed_gt2_fraction": 4.0380562573921665e-06,
+      "excluded_fraction": 0.020085865780310224
+    },
+    {
+      "condition": "High-clear",
+      "camera": "g_dirt_level_2",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_hatch_white",
+          "e": 763.09,
+          "n": -752.346,
+          "face": 1,
+          "box": [
+            0,
+            848,
+            237,
+            1038
+          ],
+          "distance": 2.1733453839301995
+        },
+        {
+          "prototype": "car_hatch_black",
+          "e": 765.805,
+          "n": -753.318,
+          "face": 0,
+          "box": [
+            1507,
+            734,
+            1664,
+            819
+          ],
+          "distance": 3.5330035237053328
+        },
+        {
+          "prototype": "car_sedan_silver",
+          "e": 767.659,
+          "n": -754.706,
+          "face": 1,
+          "box": [
+            2231,
+            583,
+            2335,
+            646
+          ],
+          "distance": 4.964163428368976
+        }
+      ],
+      "nonplate_mae": 0.450109444945111,
+      "nonplate_changed_gt2_fraction": 0.0,
+      "excluded_fraction": 0.02569127888572333
+    },
+    {
+      "condition": "High-clear",
+      "camera": "g_dirt_level_3",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [],
+      "nonplate_mae": 0.4429721958425662,
+      "nonplate_changed_gt2_fraction": 2.769863880974992e-06,
+      "excluded_fraction": 0.0
+    },
+    {
+      "condition": "High-clear",
+      "camera": "r4_rear_target_3",
+      "reference": "P0 same-frame forced3 (not historical R3)",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_hatch_black",
+          "e": 674.796,
+          "n": -523.807,
+          "face": 1,
+          "box": [
+            1111,
+            462,
+            1236,
+            508
+          ],
+          "distance": 4.863993955673358
+        },
+        {
+          "prototype": "car_sedan_white",
+          "e": 677.014,
+          "n": -519.267,
+          "face": 0,
+          "box": [
+            406,
+            487,
+            459,
+            519
+          ],
+          "distance": 8.74264581822158
+        },
+        {
+          "prototype": "car_hatch_grey",
+          "e": 678.512,
+          "n": -516.933,
+          "face": 1,
+          "box": [
+            292,
+            410,
+            326,
+            435
+          ],
+          "distance": 11.58517048450335
+        },
+        {
+          "prototype": "car_suv_silver",
+          "e": 680.721,
+          "n": -512.491,
+          "face": 1,
+          "box": [
+            59,
+            390,
+            84,
+            411
+          ],
+          "distance": 16.1419986464926
+        },
+        {
+          "prototype": "van_silver",
+          "e": 682.019,
+          "n": -510.547,
+          "face": 1,
+          "box": [
+            0,
+            382,
+            15,
+            400
+          ],
+          "distance": 18.35060537301054
+        }
+      ],
+      "nonplate_mae": 0.4533591145842641,
+      "nonplate_changed_gt2_fraction": 0.0009876458882439165,
+      "excluded_fraction": 0.003597261791706236
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "r10_front_04",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_hatch_white",
+          "e": 728.832,
+          "n": -385.563,
+          "face": 0,
+          "box": [
+            2229,
+            794,
+            2307,
+            931
+          ],
+          "distance": 3.2868039588220217
+        }
+      ],
+      "nonplate_mae": 0.4122027534915363,
+      "nonplate_changed_gt2_fraction": 3.973750990457434e-05,
+      "excluded_fraction": 0.004228395061728395
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "r10_rear_04",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_suv_black",
+          "e": 729.867,
+          "n": -383.667,
+          "face": 1,
+          "box": [
+            460,
+            776,
+            962,
+            1023
+          ],
+          "distance": 1.570264810298053
+        },
+        {
+          "prototype": "car_hatch_white",
+          "e": 728.832,
+          "n": -385.563,
+          "face": 1,
+          "box": [
+            1584,
+            594,
+            1723,
+            686
+          ],
+          "distance": 3.2121357050486683
+        }
+      ],
+      "nonplate_mae": 0.45651527612883325,
+      "nonplate_changed_gt2_fraction": 3.681364514490771e-05,
+      "excluded_fraction": 0.05412393162393162
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "g_dirt_level_0",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_suv_red",
+          "e": 172.63,
+          "n": -999.151,
+          "face": 0,
+          "box": [
+            118,
+            909,
+            495,
+            1047
+          ],
+          "distance": 2.7756791998640002
+        },
+        {
+          "prototype": "car_hatch_black",
+          "e": 174.754,
+          "n": -1000.776,
+          "face": 0,
+          "box": [
+            1507,
+            734,
+            1664,
+            819
+          ],
+          "distance": 3.5329902602781083
+        },
+        {
+          "prototype": "car_hatch_silver",
+          "e": 177.244,
+          "n": -1002.023,
+          "face": 0,
+          "box": [
+            2077,
+            609,
+            2154,
+            665
+          ],
+          "distance": 5.97957010538799
+        }
+      ],
+      "nonplate_mae": 0.4515154930769553,
+      "nonplate_changed_gt2_fraction": 0.0003808722381167658,
+      "excluded_fraction": 0.027573203545425768
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "g_dirt_level_1",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "van_silver",
+          "e": -63.26,
+          "n": -858.949,
+          "face": 0,
+          "box": [
+            263,
+            755,
+            572,
+            852
+          ],
+          "distance": 3.0824145897628954
+        },
+        {
+          "prototype": "car_hatch_black",
+          "e": -65.083,
+          "n": -857.231,
+          "face": 0,
+          "box": [
+            1370,
+            760,
+            1566,
+            838
+          ],
+          "distance": 3.303659983985643
+        },
+        {
+          "prototype": "car_suv_black",
+          "e": -67.573,
+          "n": -856.694,
+          "face": 1,
+          "box": [
+            1920,
+            558,
+            2030,
+            608
+          ],
+          "distance": 5.422702647274716
+        }
+      ],
+      "nonplate_mae": 0.42598424592731743,
+      "nonplate_changed_gt2_fraction": 2.4228337544353e-06,
+      "excluded_fraction": 0.020085865780310224
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "g_dirt_level_2",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_hatch_white",
+          "e": 763.09,
+          "n": -752.346,
+          "face": 1,
+          "box": [
+            0,
+            848,
+            237,
+            1038
+          ],
+          "distance": 2.1733453839301995
+        },
+        {
+          "prototype": "car_hatch_black",
+          "e": 765.805,
+          "n": -753.318,
+          "face": 0,
+          "box": [
+            1507,
+            734,
+            1664,
+            819
+          ],
+          "distance": 3.5330035237053328
+        },
+        {
+          "prototype": "car_sedan_silver",
+          "e": 767.659,
+          "n": -754.706,
+          "face": 1,
+          "box": [
+            2231,
+            583,
+            2335,
+            646
+          ],
+          "distance": 4.964163428368976
+        }
+      ],
+      "nonplate_mae": 0.4361952012090725,
+      "nonplate_changed_gt2_fraction": 0.0,
+      "excluded_fraction": 0.02569127888572333
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "g_dirt_level_3",
+      "reference": "P0 focus same production grime",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [],
+      "nonplate_mae": 0.4957212197952939,
+      "nonplate_changed_gt2_fraction": 0.0034465020576131687,
+      "excluded_fraction": 0.0
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "r4_rear_target_3",
+      "reference": "P0 same-frame forced3 (not historical R3)",
+      "pose_diff": [],
+      "within_frame_diff": [],
+      "plate_binding": {
+        "name": "M_car_plate",
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+        "shader": "Kamion/World Car Plate",
+        "baseMap": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "localCorners": true,
+        "motionVectors": true,
+        "instancing": true,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "metallic": 0.0,
+        "cull": 2.0,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "plate_projected_rois": [
+        {
+          "prototype": "car_hatch_black",
+          "e": 674.796,
+          "n": -523.807,
+          "face": 1,
+          "box": [
+            1111,
+            462,
+            1236,
+            508
+          ],
+          "distance": 4.863993955673358
+        },
+        {
+          "prototype": "car_sedan_white",
+          "e": 677.014,
+          "n": -519.267,
+          "face": 0,
+          "box": [
+            406,
+            487,
+            459,
+            519
+          ],
+          "distance": 8.74264581822158
+        },
+        {
+          "prototype": "car_hatch_grey",
+          "e": 678.512,
+          "n": -516.933,
+          "face": 1,
+          "box": [
+            292,
+            410,
+            326,
+            435
+          ],
+          "distance": 11.58517048450335
+        },
+        {
+          "prototype": "car_suv_silver",
+          "e": 680.721,
+          "n": -512.491,
+          "face": 1,
+          "box": [
+            59,
+            390,
+            84,
+            411
+          ],
+          "distance": 16.1419986464926
+        },
+        {
+          "prototype": "van_silver",
+          "e": 682.019,
+          "n": -510.547,
+          "face": 1,
+          "box": [
+            0,
+            382,
+            15,
+            400
+          ],
+          "distance": 18.35060537301054
+        }
+      ],
+      "nonplate_mae": 0.44600174178321905,
+      "nonplate_changed_gt2_fraction": 2.8592884581247278e-05,
+      "excluded_fraction": 0.003597261791706236
+    }
+  ]
+}
