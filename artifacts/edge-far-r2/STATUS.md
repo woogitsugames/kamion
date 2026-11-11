@@ -48,3 +48,6 @@
 - Primary 28 before/after pairs rendered and inspected (all 4 sheets). Editor estimates: Low static+instanced draws delta 0 for every camera; rounded trisK delta 0 or -1; shadows unchanged. compare_evidence.py passes.
 - EditMode 226/226 passed. PlayMode 2/3 passed: scene test expects WorldEdge/WorldFarField, but inherited builder parents sectors directly under WorldEdge. Added identity WorldFarField container (no geometry/material/collider changes), preserving existing integration assertion.
 - NEXT: pwsh artifacts/edge-far-r2/run-evidence.ps1 -SkipGis -ResumeAfter (rebuild, re-render final after, rerun both Unity suites). Then run-skyline.ps1.
+- FINAL primary Unity validation after hierarchy fix: EditMode 226/226; WorldEdgeRecoveryTests 3/3, no skips. XML editmode-20261111-120601.xml and playmode-20261111-120628.xml.
+- Re-rendered all four after configurations after C# fix, checked budgets again; diagnostic skyline second round now running (checks PHONE_RUN at every start).
+- NEXT: Get-Content artifacts/edge-far-r2/run-skyline.log -Tail 20; inspect skyline PNGs; finalize REPORT and copy artifacts to main.
