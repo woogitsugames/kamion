@@ -27,3 +27,6 @@ Generacja PBR trwa niezależnie od generacji geometrii. Następny krok: Get-Cont
 ## Liczniki kamer
 Zebrano historyczne statystyki 160 wierszy kamer (40 × Low/High × clear/overcast), z draws geometrii i instancji osobno. Te dane są estymacją CPU edytora, nie licznikami GPU telefonu; różnic względem starego main nie przypisujemy kosztowi narzędzia SBS.
 Następny krok: uv run --project tools/refs python artifacts/sbs-r1/summarize_stats.py --renders artifacts/sbs-r1/evidence/renders --baseline C:/Users/matma/Documents/Claude/kamion/artifacts/sbs-gate3/renders --output artifacts/sbs-r1/counters
+## Przygotowany następny etap
+Zapisano skrypt import-and-baseline.ps1: osobny slot gpt-sbs dla importu, przywrócenie ustawień w finally, następnie EditMode i baseline Low overcast. Uruchomienie nastąpi dopiero po udanej generacji geometrii i PBR.
+Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/import-and-baseline.ps1
