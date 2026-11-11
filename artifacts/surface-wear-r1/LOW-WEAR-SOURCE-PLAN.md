@@ -2,6 +2,8 @@
 
 Read-only plan after ROOT's rejection. No new shader, generator, atlas or render is implemented here. The selected shader is restored byte-for-byte to SHA256 `1dc7db4ea4ec839f4dc8fbd301ba5aedd38a12c3fff892e66818841d125edce4`. Paint, UV transfer, bus oil and gate version 2 remain selected; overall asphalt sterility is still open.
 
+Update: ROOT selected E's corrected 4096-source / 2048-Android packing for a CPU-only prototype. It repeats the actual G/B/A bytes at full original per-metre resolution and costs 1.333374 MiB if the original stays resident. PACKED-MASK16-RECIPE.md and its proofs supersede the historical lower-resolution candidate below. Shader/material activation and runtime parity remain unapproved and unverified.
+
 ## Attribution from actual data
 
 The source-field proof rasterizes the actual road triangles and Half UV1 through recorded camera matrices inside inspected clear-asphalt ROIs. Both old and fresh road regions have 100% known lane data. Positive wheel masks cover 42.2% and 50.1% of the respective ROIs. The real old-road material has `_ROADWEAR`, `_CRACKS`, `_PHOTO_DETAIL`, `_WheelPolish=0.6`, `_GutterDirt=0.55`, worn base/normal/mask textures and bound crack mask/normal. Fresh road has `_ROADWEAR`, `_PHOTO_DETAIL`, values 0.25/0.3 and fresh textures, without a crack texture. These bindings are from native readback and unchanged material-file hashes.

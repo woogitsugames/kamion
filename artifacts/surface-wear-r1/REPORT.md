@@ -12,7 +12,7 @@ Tests: final signed-mode GIS passed 388 tests with one expected failure; XML and
 Budget: 73 source triangles added per tier, no new material groups; rounded bus/gate counters are unchanged. GPU cost is unverified.
 Images: artifacts/surface-wear-r1/{before,before-legacy,bus-only-after,paint-narrow,gate-pair-after}.
 Gate frames have matching recorded camera and vehicle poses. Older kerb controls lack historical runtime packets; no retroactive pixel-stability claim.
-The three-block wear probe was rejected after 56 matched pairs; exact pre-probe shader restored. A read-only Low crack packaging plan awaits review.
+The three-block wear probe was rejected after 56 matched pairs; exact pre-probe shader restored. A private CPU packed-mask prototype preserves G/B/A exactly; source activation and runtime compression/image parity await review.
 Existing Mapillary photographs guide appearance; the bay photograph verifies the zone, not a measured oil leak or tyre dimensions.
 Expected additive conflicts: RegionImporter with E, WorldPBR with C/G, material importer with A. Preserve all shared contracts.
 No Unity is active or queued. Final route and editor tests wait for a selected visible-wear mechanism.
