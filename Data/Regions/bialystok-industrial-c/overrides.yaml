@@ -294,8 +294,8 @@ overrides:
   - id: andersa-putry-approach-gantry
     kind: sign_gantry
     osm_way: 266084693
-    before_node: n2840742308
-    distance_m: 99.0
+    before_node: n12620261934
+    distance_m: 39.0
     boards:
       - lanes: [0, 1]
         rows: [[["8", E67], Warszawa], [["65"], Ełk]]
@@ -309,14 +309,15 @@ overrides:
       (0.25 m) across the northbound carriageway at E,N = (-261, -208) +- 3 m (region-local); Mapillary richlv
       2020-08-15 brackets it between 468708117568850 (GPS -252.7,-214.8: column ~15 m ahead) and 143559297695026
       (GPS -269.3,-200.4: its shadow at the camera); grobin 275528677534382 (2019) and kino 1056932506043672 (2024)
-      agree. The old WORKING_VALUE (40 m before the split node) stood 59 m too far north-west. zsolt
+      agree (39 m before OSM node 12620261934). The old WORKING_VALUE (40 m before the split node 2840742308) stood
+      59 m too far north-west. zsolt
       3281350541967811 (2017) shows the same portal from behind; its GPS is ~45 m off (pose error, not a second
       portal). Board texts after the 2020 frame; faces are our own schematic drawings, not copies of the real boards.
     confidence: medium
     verify: board layout and portal height on site
   - id: andersa-gantry-warning-right
     kind: gate3_sign
-    along: {osm_way: 266084693, before_node: n2840742308, distance_m: 106.0, side: R}
+    along: {osm_way: 266084693, before_node: n12620261934, distance_m: 46.0, side: R}
     parts: [{face: A-30, plate: "wyjazd\nstraży"}]
     mapillary: ["468708117568850", "275528677534382"]
     reason: >-
@@ -329,7 +330,7 @@ overrides:
     verify: sign code and plate on site
   - id: andersa-gantry-warning-left
     kind: gate3_sign
-    along: {osm_way: 266084693, before_node: n2840742308, distance_m: 106.0, side: L}
+    along: {osm_way: 266084693, before_node: n12620261934, distance_m: 46.0, side: L}
     parts: [{face: A-30, plate: "wyjazd\nstraży"}]
     mapillary: ["468708117568850", "275528677534382"]
     reason: Same sign repeated on the median side (both photos). ADR 0125.

@@ -81,6 +81,7 @@ def test_same_parts_share_one_prototype_key():
 def test_unknown_face_is_reported_stale_not_dropped():
     class _Pl:
         items = []
+        zground = None
 
         def add(self, *a, **k):
             raise AssertionError("nothing may be placed")
@@ -157,3 +158,33 @@ def test_portal_stands_where_the_orthophoto_has_it(qa):
     t = np.array([math.sin(math.radians(312)), math.cos(math.radians(312))])
     cross = t[0] * (r[1] - l[1]) - t[1] * (r[0] - l[0])
     assert cross < 0                                                # "R" really is on the right of the travel
+
+
+def test_snap_off_the_carriageway():
+    """An authored point up to SNAP_MAX_M inside the carriageway moves SNAP_CLEAR_M behind its nearest edge; deeper
+    points are refused (reported stale by build)."""
+    from shapely.geometry import box
+    road = box(0, -3.5, 100, 3.5)
+    assert G3.off_carriageway(road, np.array([50.0, 5.0])) == pytest.approx([50.0, 5.0])
+    assert G3.off_carriageway(road, np.array([50.0, 2.0])) == pytest.approx([50.0, 3.5 + G3.SNAP_CLEAR_M])
+    assert G3.off_carriageway(box(0, -30, 100, 30), np.array([50.0, 0.0])) is None
+
+
+def test_sign_under_a_deck_stands_on_the_ground():
+    """The top surface under a viaduct is the deck (first build: name plates at z = deck); the sign must take the
+    terrain height unless the entry says on_deck."""
+    class _Pl:
+        def __init__(self):
+            self.items = []
+            self.zsurf = lambda e, n: np.full(len(e), 140.0)
+            self.zground = lambda e, n: np.full(len(e), 132.0)
+
+        def add(self, proto, p, yaw, z=None, src=""):
+            self.items.append((proto, z))
+            return z
+    ov = {"id": "x", "kind": "gate3_sign", "at_en": [1.0, 2.0], "travel_bearing_deg": 90, "parts": [{"face": "D-3"}],
+          "mapillary": ["1"]}
+    pl, rep = _Pl(), {}
+    G3.build(pl, None, {"nodes": []}, [ov, dict(ov, id="y", on_deck=True)], (0, 0), {}, rep)
+    assert [z for _, z in pl.items] == [132.0, 140.0]
+    assert [s["under_deck"] for s in rep["gate3_landmarks"]["signs"]] == [True, False]

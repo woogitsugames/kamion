@@ -257,6 +257,28 @@ def _locate_along(net, graph_nodes, origin, spec):
     return None
 
 
+UNDER_DECK_M = 2.5            # top surface this far above the terrain = a bridge deck over the point
+SNAP_MAX_M = 4.0              # authored positions are read off a 0.25 m orthophoto / photos: +- a few metres
+SNAP_CLEAR_M = 0.6            # post axis behind the carriageway edge after a snap (plate edge stays off the kerb)
+
+
+def off_carriageway(carriage, p):
+    """p if it is off the carriageway, else the nearest point SNAP_CLEAR_M behind the carriageway edge when that is
+    within SNAP_MAX_M (the generated island / verge differs from the orthophoto by a metre or two), else None."""
+    from shapely.geometry import Point
+    pt = Point(float(p[0]), float(p[1]))
+    if not carriage.contains(pt):
+        return np.asarray(p, float)
+    b = carriage.boundary
+    e = np.array(b.interpolate(b.project(pt)).coords[0])
+    d = float(np.hypot(*(e - p)))
+    if d > SNAP_MAX_M:
+        return None
+    u = (e - p) / d if d > 1e-6 else np.array([1.0, 0.0])
+    q = e + u * SNAP_CLEAR_M
+    return q if not carriage.contains(Point(float(q[0]), float(q[1]))) else None
+
+
 def build(pl, net, graph, overrides, origin, boards, report, carriage=None):
     """Place every `gate3_sign` override. `boards` gets the texture of each distinct assembly (exported as
     art-source/world/signs/<key>.png, material sign_<key>); the prototype sign_g3_<key> is registered in PROTOS."""
@@ -282,17 +304,24 @@ def build(pl, net, graph, overrides, origin, boards, report, carriage=None):
         else:
             p = np.asarray(o["at_en"], float)
             travel = _bearing_vec(o["travel_bearing_deg"])
+        moved = 0.0
         if carriage is not None:
-            from shapely.geometry import Point
-            if carriage.contains(Point(float(p[0]), float(p[1]))):
+            q = off_carriageway(carriage, p)
+            if q is None:
                 rep["stale"].append(f"{o['id']}: on a carriageway at {[round(float(v), 1) for v in p]}")
                 continue
+            moved, p = float(np.hypot(*(q - p))), q
         proto = f"sign_g3_{key}"
         PROTOS[proto] = (lod0, lod1, col)
         boards[key] = (round(wm, 3), round(hm, 3), im)
-        z = pl.add(proto, p, PP_yaw(-travel), src=f"override:{o['id']}")
+        # under a viaduct the top surface at (E, N) is the deck: stand on the ground unless the entry says on_deck
+        zs = float(pl.zsurf(np.array([p[0]]), np.array([p[1]]))[0])
+        zg = float(pl.zground(np.array([p[0]]), np.array([p[1]]))[0]) if pl.zground is not None else zs
+        under = (zs - zg) > UNDER_DECK_M and not o.get("on_deck")
+        z = pl.add(proto, p, PP_yaw(-travel), z=zg if under else zs, src=f"override:{o['id']}")
         rep["signs"].append({"id": o["id"], "proto": proto, "at": [round(float(v), 1) for v in p], "z": round(float(z), 2),
                              "faces": [c for c, _ in _norm_parts(parts)], "top_m": round(top, 2),
+                             "snapped_m": round(moved, 2), "under_deck": bool(under),
                              "travel_bearing_deg": round(math.degrees(math.atan2(travel[0], travel[1])) % 360, 1),
                              "mapillary": o.get("mapillary", [])})
     report["gate3_landmarks"] = rep
