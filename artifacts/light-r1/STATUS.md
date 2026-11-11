@@ -11,3 +11,5 @@ Krok 3: kopia Library zakończona (kod robocopy 1 = skopiowane pliki). Ruszyła 
 
 Krok 4: zapisano ADR 0108 z kryteriami r1, granicami własności i oknem pracy do 12.11.2026 21:30 Europe/Warsaw. Następny krok: zakończyć ablacjas RCAS, obejrzeć i zmierzyć PNG.
 Render ablacji zakończony: artifacts/light-r1/rcas/High-clear-0. PNG wymagają obejrzenia i pomiarów. Następny krok: kolejny wariant w artifacts/light-r1/rcas-ablation.ps1, potem analiza.
+
+Krok 5: przygotowano compare_rcas.py, który liczy RMS z oryginalnych PNG i zapisuje arkusze ≤960 px. Następny krok: uv run --project tools/worldgen python artifacts/light-r1/compare_rcas.py po zakończeniu ablacji.
