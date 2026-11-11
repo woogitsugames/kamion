@@ -39,3 +39,6 @@ Procesy w toku: capture.ps1 (sesja exec 94597), materiały -> build_world (sesja
 
 Krok 13: zweryfikowano żywy proces właściwego generatora: python PID 28064 (potomek 103344 w worktree gpt-life), CPU 275,75 s. Pusty początkowo world-build.log wynika z buforowania stdout, nie jest dowodem zatrzymania. Nie uruchomiono duplikatu. Przygotowano pełne GIS z ochroną kanonicznego manifestu i zapisaniem kodu zakończenia oraz SHA przed/po.
 Następny krok po zakończeniu sesji generatora 24311: pwsh artifacts/life-r1/run-gis.ps1
+
+Krok 14: przygotowano dowód zgodności wszystkich 192 produktów raw z manifestem, liczby gotowych zasobów Fab oraz hashów istniejących modeli/prefabów/materiałów zestawu gracza. Skrypt nie modyfikuje produktów i nie korzysta z historycznego bootstrapu innej gałęzi. Generator PID 28064 nadal postępuje: CPU wzrosło z 275,75 do 316,89 s.
+Następny krok po generatorze: uv run --project tools/worldgen python artifacts/life-r1/source-proof.py candidate
