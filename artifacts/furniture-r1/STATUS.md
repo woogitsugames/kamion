@@ -93,3 +93,6 @@ NASTĘPNY KROK: uv run --project tools/worldgen python tools/worldgen/roads/buil
 
 Korekta zapisu wyżej: pierwszy przebieg R2 miał 8 passed / 1 failed, bo test wymuszał konkretną stronę uskoku; obie płaskie strony są poprawnym podparciem. Poprawiono asercję kontaktu bez wymuszania strony. Potwierdzony wynik: 9 passed / 0.27 s (patrz wynik bieżącego pytest). Regeneracja R2 trwa.
 NASTĘPNY KROK: po build-after-r2.log done zapisać snapshot after i usunąć wyłącznie markery audit/import/render-after/pytest-after.done, następnie run-validation.ps1
+
+R2 build zakończony 307.8 s; spójność dróg 65 jak baza. Zapisano nowy snapshot after, zachowano bazę before i dowody odrzuconej R1. 9 regresji przechodzi. Markery after z R1 unieważnione; walidacja pełna ponowiona dla R2.
+NASTĘPNY KROK: po load after OK uruchomić pełny GIS z pytest-after.running, równolegle do oczekiwania na PHONE_RUN.
