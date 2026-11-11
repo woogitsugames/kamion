@@ -752,3 +752,17 @@ parsed native154 records and repeated paint uniform; all invariants pass, only
 two expected signed UV1 buffers.16frame capture running; no PHONE return.
 NEXT COMMAND: Get-ChildItem C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/gate-r2-after -Recurse -Filter *.png
 Review actual16 and contrast/pose/kerb controls before broad; G separate release.
+
+Step 67: D16 complete5b56eacb; ROOT verified16PNG hashes,8 actual gate pose pairs,
+all16 rounded counter rows, Low4legacy-scuff masks pixel-exact. Root viewed Low8
+and four r1/r2 pairs; E independently viewed High8. Retain R2 as bounded dry-track
+improvement, NOT unconditional two-clear-tracks PASS: exit second track remains
+weak. High legacy mask meanAbs .444-.472LSB/p951/no>3; historical runtime caveat.
+Low-clear capture had known post-completion Mono cleanup exception after4fresh
+frames; record it, do not hide as ordinary exit. Other3conditions normal exit.
+G baseline separately released18:26:59 after Dpriority16; Fixtures running.
+D broad release18:29:36: fresh BEFORE56 on currentR2/.425/.085, then ONLY reviewed
+three shader blocks and AFTER56, no Python change/GIS repeat absent new reason.
+New current2441/source/patch proof required; old593 plan remains historical.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-surface-wear/artifacts/surface-wear-r1/STATUS.md -Tail 15
+Monitor PHONE/HOLD every launch; review56pairs before final route/choice.
