@@ -910,3 +910,14 @@ at supplied ray-selected points. Bounded function/blob-fix PASS and realism
 PARTIAL agree with ROOT. This is not an independent re-raycast or GPU constant
 readback. No additional dirt tuning; G proceeds with P2. E standby for its review.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 12
+
+Step 82: Read D's independent C13 URP17.3 API verification 67a75b39.
+Inactive helper has a concrete source-proven Execute override gap without
+URP_COMPATIBILITY_MODE; guard that method, never enable a global project symbol
+for the probe. Public RG pre-post descriptor access verified. Late camera data
+is mutated after upscale, and CPU material/keyword state does not prove an
+executed EASU/RCAS draw. Future C13 must compile its temporary probe, verify
+default parity and capture actual passes with input/output dimensions. No C13
+source work or Unity launch yet. D runtime stays closed. Review lives at main
+artifacts/surface-wear-r1/C13-URP-API-VERIFICATION.md with pinned source lines.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 12
