@@ -134,6 +134,7 @@ namespace Game.Vehicle.Runtime
         // ADR 0068: own-cab interior renderers, not drawn while a class II / IV mirror renders (81 k triangles in every
         // mirror view, seen only at a grazing angle through the side glass). null = not looked up yet.
         Renderer[] m_HideInMirror;
+        bool[] m_PreviousHidden;
         static RenderTextureMirror s_Hiding;
         static bool s_Hooked;
 
@@ -186,8 +187,18 @@ namespace Game.Vehicle.Runtime
 
         void SetHidden(bool hide)
         {
-            if (m_HideInMirror == null) m_HideInMirror = FindInterior();
-            for (int i = 0; i < m_HideInMirror.Length; i++) if (m_HideInMirror[i] != null) m_HideInMirror[i].forceRenderingOff = hide;
+            if (m_HideInMirror == null)
+            {
+                m_HideInMirror = FindInterior();
+                m_PreviousHidden = new bool[m_HideInMirror.Length];
+            }
+            for (int i = 0; i < m_HideInMirror.Length; i++)
+            {
+                var renderer = m_HideInMirror[i];
+                if (renderer == null) continue;
+                if (hide) { m_PreviousHidden[i] = renderer.forceRenderingOff; renderer.forceRenderingOff = true; }
+                else renderer.forceRenderingOff = m_PreviousHidden[i];
+            }
             s_Hiding = hide ? this : null;
         }
 

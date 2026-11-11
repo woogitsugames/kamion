@@ -16,6 +16,41 @@ namespace Game.Tests.EditMode
     /// </summary>
     public class MirrorCostTests
     {
+        [TestCase(2), TestCase(4)]
+        public void InteriorCulling_RestoresPreviouslyHiddenRenderer(int mirrorClass)
+        {
+            var root = new GameObject("mirror-culling-state-test");
+            try
+            {
+                var rig = root.AddComponent<TruckVisualRig>();
+                var group = root.AddComponent<LODGroup>();
+                var part = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                part.transform.SetParent(root.transform, false);
+                var renderer = part.GetComponent<Renderer>();
+                renderer.forceRenderingOff = true;
+                group.SetLODs(new[] { new LOD(.01f, new[] { renderer }) });
+                rig.interiorGroup = group;
+                var view = new GameObject("mirror-state-camera");
+                view.transform.SetParent(root.transform, false);
+                var camera = view.AddComponent<Camera>();
+                var mirror = view.AddComponent<RenderTextureMirror>();
+                mirror.r46Class = mirrorClass;
+                void Callback(string method) => typeof(RenderTextureMirror).GetMethod(method,
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+                    .Invoke(null, new object[] { default(UnityEngine.Rendering.ScriptableRenderContext), camera });
+                Callback("OnBeginCamera");
+                Assert.IsTrue(renderer.forceRenderingOff, "hidden in mirror");
+                Callback("OnEndCamera");
+                Assert.IsTrue(renderer.forceRenderingOff, "mirror must not reveal a renderer hidden by another system");
+                renderer.forceRenderingOff = false;
+                Callback("OnBeginCamera");
+                Assert.IsTrue(renderer.forceRenderingOff);
+                Callback("OnEndCamera");
+                Assert.IsFalse(renderer.forceRenderingOff, "ordinary main-view visibility restored");
+            }
+            finally { Object.DestroyImmediate(root); }
+        }
+
         static readonly int[] k_Class = { 2, 2, 4, 4, 5, 6 };
 
         static MirrorRefreshSchedule.Entry[] Six(bool standing, params bool[] visible)
