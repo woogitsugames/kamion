@@ -104,3 +104,4 @@ Zapisano final-dusk High dusk, kod wejściowy zgodny z fingerprintem. Następny 
 Zapisano kontrolę pigmentu no-pane. Następny krok: porównać amplitudę odbicia ON/OFF i wybrać poprawkę lakieru na podstawie wyniku.
 Krok 34: niezależna kontrola ośmiu końcowych arkuszy po rebuildzie nie wykazała nowej regresji sylwetki, ustawienia ani widoku kierowcy. DRL nadal czytelne w clear. Lakier, dach, szyba i prostokąt za szybą pozostają otwarte. Low-dusk ma płaskie jasne moduły reflektorów, bez bazy do przypisania zmiany. Pełna ocena w FINAL-REVIEW.md. Medium i zmierzch Low/High zapisane, kontrola bez szyby zakończona; trwa pomiar wszystkich kamer.
 Zapisano wszystkie kamery: after-all Low overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
+Zapisano wszystkie kamery: after-all High overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
