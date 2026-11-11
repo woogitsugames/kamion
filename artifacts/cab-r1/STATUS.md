@@ -11,3 +11,4 @@ Próby przesunięcia mocowania przy głowicy za jej tylną płaszczyznę o 80/16
 Następny krok: audyt baseline natywnych RT (oczekuje na slot), potem wprowadzić bliższy near clip V/VI i ukrywanie wnętrza ze sprawdzeniem przywrócenia stanu rendererów.
 Dodano do CabMirrorAudit diagnostyczne przejście identyfikujące piksele wnętrza przez chwilowy materiał magenta, z przywróceniem materiałów po pomiarze. Zwykły obraz RT jest zapisywany osobno. Nie zmieniono jeszcze zachowania runtime ani kamer: pomiar baseline pozostaje bazowy.
 Następny krok: poczekać na zakończenie baseline-native-Low-clear.log, obejrzeć RT i interior-pixels.tsv, następnie poprawić runtime.
+Sprostowano ADR 0104 i zapisano ADR 0112 ze stanem hipotez oraz rozróżnieniem dowodów historycznych i bieżących. Następny krok: baseline-native po zwolnieniu Unity.
