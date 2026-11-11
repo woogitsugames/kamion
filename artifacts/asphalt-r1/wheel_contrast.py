@@ -15,11 +15,12 @@ from bus_world_proof import read
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--after', default='candidate2')
+    parser.add_argument('--condition', action='append')
     args = parser.parse_args()
     camera = 'd_wear_lane_old'
     spec = next(c for c in json.loads((OUT / 'cameras.json').read_text(encoding='utf-8-sig'))['cameras'] if c['id'] == camera)
     rows = []
-    for condition in ('Low-overcast', 'Low-clear', 'High-overcast', 'High-clear'):
+    for condition in args.condition or ('Low-overcast', 'Low-clear', 'High-overcast', 'High-clear'):
         directory = OUT / args.after / condition
         state = json.loads((directory / 'runtime-cameras' / ('QA_' + camera + '.json')).read_text())
         matrix = np.array(state['projection']).reshape(4, 4) @ np.array(state['view']).reshape(4, 4)
@@ -101,3 +102,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

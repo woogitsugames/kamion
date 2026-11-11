@@ -63,3 +63,4 @@ Przygotowano porównanie wszystkich kamer: mesh draws, shadow draws oraz draws/t
 2026-11-11T23:48:28.2526237+01:00: zapisano artifacts/asphalt-r1/candidate2/Low-clear. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-11T23:49:14.8987958+01:00: zapisano artifacts/asphalt-r1/candidate2/High-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-11T23:49:48.5741096+01:00: zapisano artifacts/asphalt-r1/candidate2/High-clear. Następny krok: pozostałe serie lub porównanie wariantu.
+2026-11-11T23:51:30.4740868+01:00: Obejrzano sześć par zdjęcie/render i pięć podglądów Low. Własna ocena zapisana w SELF-REVIEW.md; łaty czytelne, ale regularne/płaskie, szczegół przy krawężniku nierozwiązany. 315 grup łat / 34,9849 km osi = 9,0039/km w całym regionie, bez zmiany liczby. Niezależny krytyk pracuje wyłącznie na obrazach.
