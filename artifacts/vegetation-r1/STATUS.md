@@ -44,3 +44,4 @@ Zakończono macierz before: 67 kamer razy 4 warianty = 268 PNG. Uruchomiono befo
 Zapisano pary foto before Low-clear-photo-1280x720. Następny krok: porównać z photo-references.json.
 Zapisano pary foto before Low-clear-photo-2048x1152. Następny krok: porównać z photo-references.json.
 Zapisano pary foto before Low-clear-photo-2048x1536. Następny krok: porównać z photo-references.json.
+Zapisano pary foto before High-clear-photo-1280x720. Następny krok: porównać z photo-references.json.
