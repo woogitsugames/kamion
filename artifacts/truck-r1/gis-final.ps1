@@ -7,6 +7,9 @@ pwsh $slotScript -Acquire -Pool heavy -Owner gpt-truck-r1 -StaleHours 100000 -Po
 if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy.' }
 $testExit = -1
 try {
+    $env:OPENBLAS_NUM_THREADS = '1'
+    $env:OMP_NUM_THREADS = '1'
+    $env:MKL_NUM_THREADS = '1'
     uv run --project tools/worldgen python -m pytest tests/gis -q *> artifacts/truck-r1/gis-final.log
     $testExit = $LASTEXITCODE
 }

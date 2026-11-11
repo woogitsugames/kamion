@@ -1,5 +1,6 @@
 $ErrorActionPreference = 'Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
+$slotScript = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 foreach ($tier in @('Low', 'High')) {
     foreach ($lighting in @('overcast', 'clear')) {
         $output = "artifacts/truck-r1/before/$tier-$lighting"
@@ -10,7 +11,7 @@ foreach ($tier in @('Low', 'High')) {
             }
             continue
         }
-        pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-truck -StaleHours 100000 -PollSeconds 5
+        pwsh $slotScript -Acquire -Owner gpt-truck -StaleHours 100000 -PollSeconds 5
         if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu Unity.' }
         try {
             $scene = if ($tier -eq 'High') { 'WorldC_High' } else { 'WorldC' }
@@ -18,7 +19,7 @@ foreach ($tier in @('Low', 'High')) {
             if ($LASTEXITCODE -ne 0) { throw "Baseline nieudany: $tier $lighting" }
         }
         finally {
-            pwsh scripts/unity-slot.ps1 -Release -Owner gpt-truck
+            pwsh $slotScript -Release -Owner gpt-truck
             git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
         }
         'VISUALQA verified; immutable baseline.' | Set-Content -Encoding utf8 "$output/complete.ok"
