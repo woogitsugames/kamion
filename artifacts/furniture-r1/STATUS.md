@@ -96,3 +96,6 @@ NASTĘPNY KROK: po build-after-r2.log done zapisać snapshot after i usunąć wy
 
 R2 build zakończony 307.8 s; spójność dróg 65 jak baza. Zapisano nowy snapshot after, zachowano bazę before i dowody odrzuconej R1. 9 regresji przechodzi. Markery after z R1 unieważnione; walidacja pełna ponowiona dla R2.
 NASTĘPNY KROK: po load after OK uruchomić pełny GIS z pytest-after.running, równolegle do oczekiwania na PHONE_RUN.
+
+Regenerated ADR0102 world.
+NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
