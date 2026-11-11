@@ -5,7 +5,7 @@ import re
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent
 
@@ -73,3 +73,29 @@ with (ROOT/'frame-budget.csv').open('w',newline='',encoding='utf-8-sig') as hand
     writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
     writer.writeheader(); writer.writerows(records)
 print(f'Compared {len(records)} camera/tier/lighting combinations; CPU estimates, not GPU measurements.')
+
+if '--metrics-only' not in sys.argv:
+    font = ImageFont.truetype('C:/Windows/Fonts/segoeui.ttf', 12)
+    details = ['furniture-fence', 'furniture-concrete-foot-close', 'furniture-concrete-collars',
+               'furniture-footing-slope', 'furniture-sign-back']
+    sheet = Image.new('RGB', (960, 250*len(details)), '#202020')
+    draw = ImageDraw.Draw(sheet)
+    for row, camera in enumerate(details):
+        draw.text((6,row*250+4),f'{camera} | PRZED / PO | High, zachmurzenie',font=font,fill='white')
+        for col, phase in enumerate(('before','after')):
+            with Image.open(ROOT/phase/'High-overcast'/f'{camera}.png') as raw:
+                thumb = raw.convert('RGB'); thumb.thumbnail((480,222))
+                sheet.paste(thumb,(col*480,row*250+25))
+    sheet.save(ROOT/'after3-detail.jpg',quality=92)
+    sheet = Image.new('RGB',(960,440),'#202020')
+    draw = ImageDraw.Draw(sheet)
+    draw.text((6,4),'Mapillary: zsolt, CC BY-SA 4.0 | Referencja / render; odziedziczona poza WORKING_VALUE',
+              font=font,fill='white')
+    draw.text((6,24),'Zdjęcie nie potwierdza rdzy; różnice pozostałych dziedzin nie są wynikiem tej rundy.',
+              font=font,fill='white')
+    for col, path in enumerate((ROOT/'reference-sign-rectified.png',
+                               ROOT/'after-sbs/High-overcast/sbs-g3-b-297817221966185.png')):
+        with Image.open(path) as raw:
+            thumb = raw.convert('RGB'); thumb.thumbnail((480,380))
+            sheet.paste(thumb,(col*480,52))
+    sheet.save(ROOT/'reference-sign-after.jpg',quality=92)

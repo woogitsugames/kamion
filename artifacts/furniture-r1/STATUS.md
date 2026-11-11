@@ -129,3 +129,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:06:36.6364113+01:00: poprawka iteracji3 przeszła pojedyncze pliki: test_furniture_0120.py 14/14 (w tym UV), test_furniture_r1.py 9/9. Zachowano osobne logi obu plików. Generator after3 jest kolejnym krokiem tej samej działającej kolejki. NASTĘPNY KROK: po jego sukcesie weryfikacja chronionej geometrii i import z osobnym slotem Unity.
 
 2026-11-12T00:07:07.5342874+01:00: przygotowano sekwencję validate-after3.ps1: czeka na istniejący proces91696, wymaga sukcesu generatora i braku fallback, potem osobno slotowane geometry/import/4rendery/SBS/arkusze. Nie uruchamia generatora ponownie i nie ogłasza PASS. NASTĘPNY KROK: uruchomić tę sekwencję i obejrzeć powstałe dowody.
+
+2026-11-12T00:08:46.7346367+01:00: narzędzie porównań przygotuje również końcowy arkusz pięciu detali i parę referencja/render znaku do960px, z polskimi opisami, atrybucją i jawną niepewnością pozy. Poprawiono uszkodzone znaki w opisach referencji. NASTĘPNY KROK: odczytać wyniki działającej sekwencji; obrazy powstaną dopiero po renderach, wewnątrz heavy.
