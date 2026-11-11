@@ -53,3 +53,8 @@ scripts = narzędzia r2 + zones_plan.py; logs). „Przed” = main b12 z ADR 009
   krawężnika) → `sidewalk_paving`; P-21 s1440 ramp → ukośne −30° od osi; obrót UV trawy cofnięty (wzór „W” bez zmian → to nie UV paska).
   W toku: b8 (fast) → import → rendery High overcast + Low clear (`renders_b8_*`).
   NASTĘPNY KROK: obejrzeć `renders_b8_high/`, PlayMode `pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCRouteTests|WorldCBarrierTests"`, EditMode, robocopy.
+- b8 Unity: import OK (Low 111,6 / High 240,0 MB), rendery `renders_b8_high/` (44 kamer, High overcast) i `renders_b8_low/` (Low clear),
+  PlayMode WorldCRoute|Barrier 3/3 (40 t |dv|/krok 0,121 m/s s=361, solo 0,080 — jak r2). Pas N 82 nadal smużył: reguła krawężnika
+  patrzyła na szerokość w 1. stacji (0,06 m) → teraz max po stacjach (sha 02b26dd6). b9: build OK.
+  W toku: import b9 → `renders_b9_high/` → EditMode.
+  NASTĘPNY KROK: obejrzeć `renders_b9_high/p0_kerb_merge_top.png`; robocopy; raport.
