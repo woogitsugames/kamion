@@ -338,6 +338,17 @@ def paint_deposition(primitives, prototype):
     for primitive in primitives:
         if primitive['mat'].startswith('car_paint_'):
             primitive = dict(primitive, UV1=payload(primitive['V'], dimensions))
+        elif primitive['mat'] == 'car_plate':
+            # Both faces already use the same atlas cell. Keep UV0 as the legacy
+            # fallback and add exact local corners to the existing Half2 channel.
+            uv = np.asarray(primitive['UV'])
+            span = np.ptp(uv, axis=0)
+            if np.any(span <= 0):
+                raise ValueError(f'{prototype}: degenerate plate UV rectangle')
+            local = (uv - uv.min(axis=0)) / span
+            if not np.allclose(local, np.rint(local), atol=1e-6):
+                raise ValueError(f'{prototype}: plate payload requires rectangle corners')
+            primitive = dict(primitive, UV1=np.rint(local))
         result.append(primitive)
     return result
 

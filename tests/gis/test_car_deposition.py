@@ -22,6 +22,10 @@ def test_deposition_coordinates_preserve_shape_and_interpolate_affinely(body, lo
         assert after['mat'] == before['mat']
         for key in ('V', 'N', 'T', 'UV'):
             assert np.array_equal(before[key], after[key]), key
+        if before['mat'] == 'car_plate':
+            assert np.array_equal(after['UV1'], np.rint(after['UV1']))
+            assert np.all((after['UV1'] >= 0) & (after['UV1'] <= 1))
+            continue
         if not before['mat'].startswith('car_paint_'):
             assert 'UV1' not in after
             continue

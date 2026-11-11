@@ -216,6 +216,7 @@ namespace Game.World.Import
             // ---- point instances (props, trees) ----
             var instFiles = chunkDefs.Select(co => Path.Combine(srcDir, Path.GetFileName(Str(Obj(Obj(co).Get("instances")).Get("file"))))).ToList();
             r.Instances = InstanceImporter.Build(r, instFiles, out r.PropColliders);
+            WorldCarPlateMaterials.Configure(r);
 
             AssetDatabase.SaveAssets();
             Debug.Log($"[IMPORT] {region}: sha256 mismatches vs manifest: {r.ShaMismatches}");
