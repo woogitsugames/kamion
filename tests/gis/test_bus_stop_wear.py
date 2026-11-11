@@ -81,3 +81,13 @@ def test_source_selector_retains_on_road_stop_and_bus_identity():
     assert S._match({"public_transport":"stop_position","bus":"yes"},S.OSM_NODE_KEYS)
     assert not S._match({"public_transport":"platform"},S.OSM_NODE_KEYS)
     assert S._tags({"public_transport":"stop_position","bus":"yes","ref":"464"})["bus"]=="yes"
+
+
+def test_tiny_interior_road_hole_rejects_whole_oil_fan():
+    buf=Buffer();roads=[]
+    for x0,y0,x1,y1 in [(0,-20,10.09,0),(10.11,-20,20,0),(10.09,-20,10.11,-10.03),(10.09,-10.01,10.11,0)]:
+        roads.append(part("road","road_asphalt",[(x0,y0,x0*.01),(x1,y0,x1*.01),(x1,y1,x1*.01),(x0,y1,x0*.01)],[(0,1,2),(0,2,3)]))
+    buf.parts=roads+[buf.parts[1]]
+    result=B.emit(buf,[stop()],{})
+    assert not result["applied"] and result["rejected"][0]["reason"]=="outside_driveable_asphalt"
+    assert len(buf.parts)==5

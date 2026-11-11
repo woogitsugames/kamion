@@ -7,6 +7,7 @@ Unknown stops are recorded and left untouched. Existing roads.decals atlas/fan i
 from __future__ import annotations
 
 import math
+import shapely
 import numpy as np
 from shapely.geometry import Polygon
 from roads import decals as DC
@@ -38,6 +39,17 @@ def _height(top, point):
     if float(np.ptp(z)) > .02:
         raise ValueError("ambiguous_road_levels")
     return float(z.mean())
+
+
+def _road_covers_polygon(top, polygon):
+    """Exact plan-area coverage, not only vertex/centroid sampling."""
+    lo=np.floor(np.asarray(polygon.bounds[:2])/top.CELL).astype(int)
+    hi=np.floor(np.asarray(polygon.bounds[2:])/top.CELL).astype(int)
+    ids=set()
+    for i in range(lo[0],hi[0]+1):
+        for j in range(lo[1],hi[1]+1):ids.update(top.grid.get((i,j),[]))
+    support=shapely.union_all([Polygon(top.A[i,:,:2]) for i in ids])
+    return polygon.difference(support).area <= 1e-8
 
 
 def emit(buf, candidates, report):
@@ -74,6 +86,8 @@ def emit(buf, candidates, report):
             polygon = Polygon(points[1:])
             if not polygon.is_valid or any(polygon.intersects(p) for p in paint):
                 raise ValueError("paint_overlap_or_invalid_polygon")
+            if not _road_covers_polygon(top, polygon):
+                raise ValueError("outside_driveable_asphalt")
             triangles = np.array([(0, 1+k, 1+(k+1) % 9) for k in range(9)])
             tri = points[triangles]
             samples = np.vstack([points, tri.mean(axis=1), (tri[:, 0]+tri[:, 1])/2,
