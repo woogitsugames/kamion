@@ -1,7 +1,7 @@
 # HANDOVER — kamion, SESJA 11 (start 2026-11-11 23:05)
 
 ## Stan na żywo (s11)
-- 23:05 start: ops-watchdog uruchomiony w tle przez lidera (log `artifacts/logs/ops-watchdog.log`). Usage: 5 h 0 % (reset 04:00), tydzień 33 %, Fable 62 % (reset 17.11 04:00). Trigger godzinny :17 (CronCreate, tylko w sesji lidera).
+- 23:05 start: ops-watchdog uruchomiony w tle przez lidera (log `artifacts/logs/ops-watchdog.log`). Usage: 5 h 0 % (reset 04:00), tydzień 33 %, Fable 62 % (reset 17.11 04:00). Trigger godzinny :17 (CronCreate, tylko w sesji lidera). Właściciel 23:4x: tempo normalne (Fable 62 % tygodniowo na tym koncie); rano zmiana na konto po resecie → wtedy Fable na maksa.
 - Agenci Claude (3/3):
 | zadanie | ADR | worktree / gałąź | STATUS | stan |
 |---|---|---|---|---|
