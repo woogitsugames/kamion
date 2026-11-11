@@ -1,0 +1,18 @@
+{
+  "schema": "kamion.world.cc0-needle-crop/1",
+  "id": "pine_tree_01",
+  "page": "https://polyhaven.com/a/pine_tree_01",
+  "api": "https://api.polyhaven.com/files/pine_tree_01",
+  "license": "CC0 1.0 Universal",
+  "license_page": "https://polyhaven.com/license",
+  "checked_utc": "2026-11-11",
+  "authors": {"Rico Cilliers": "Model", "Rob Tuytel": "Photography"},
+  "raw_dir": "art-source/world/cc0/_raw/pine_tree_01",
+  "crop_xyxy": [5, 26, 220, 450],
+  "processing": "Only the connected needle-twig within the crop; cones and atlas dilation excluded. Three rotations on a 512px RGBA card; measured-r2 covered linear luminance retained. Raw stays ignored; CC0 derivatives may be public.",
+  "covered_mean_linear_luminance_WORKING_VALUE": 0.06386251954367107,
+  "files": [
+    {"map": "diffuse", "file": "twig_diff.png", "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/pine_tree_01/pine_tree_01_twig_diff_1k.png", "md5_api": "a4fa4a55aab9231915a4023ea9841577", "sha256": "d02c031de64b8ad671f3dd0da19870fa4783d912ae6674aeab0702871deeaeaa", "bytes": 3208228, "fetched_utc": "2026-11-11"},
+    {"map": "alpha", "file": "twig_alpha.png", "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/pine_tree_01/pine_tree_01_twig_alpha_1k.png", "md5_api": "641911a5a3f543911dad04ebb26e7bca", "sha256": "6f91aa99f2c27108d6f817f874954aa7df8bfbb4dea2673e9322555a6ae79d99", "bytes": 351928, "fetched_utc": "2026-11-11"}
+  ]
+}

@@ -68,3 +68,6 @@
 
 - After59 WorldC_High High-clear: rzeczywista scena profilu,59 identycznych kamer. NASTĘPNY KROK: porównanie stats i ROI, następnie pozostałe warunki / końcowy GIS+EditMode.
 
+
+- Krok11: lider uznał płaskie sosnowe wyspy kart zaP1 mimo poprawy jasności/budżetu. Przygotowano ograniczony eksperyment:3gałązki z czystego cropCC0 pine_tree_01,512RGBA, bez szyszek/paddingu atlasu, SHA+MD5API+licencja jawne. Zachowano zmierzoną średnią luminancję0,06386 w liniowym RGB, bez zmiany geometrii/budżetu. Przerwany supersededGISr2 nie jest końcowym wynikiem. Oryginalny fixture pojazdu odtworzono z niezmienionego maincache, canonical backup+552/564SHA zapisane. NASTĘPNY KROK: import i DK8Low/High orazcab-dash/truck-gate na oryginalnym fixture.
+

@@ -67,6 +67,14 @@ def leaf_poly(kind, cx, cy, size, ang):
 
 
 def foliage(species, seed, n=512):
+    if species == "pine":
+        if __package__:
+            from .pine_needles import needle_card
+        else:
+            from pine_needles import needle_card
+        scan = needle_card(n)
+        if scan is not None:
+            return scan
     rng = np.random.default_rng(seed)
     im = Image.new("RGBA", (n, n), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
