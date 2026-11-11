@@ -24,3 +24,4 @@ Przygotowano porównanie wszystkich kamer: mesh draws, shadow draws oraz draws/t
 2026-11-11T22:24:21.7849188+01:00: Pula heavy obejmuje również przyszłe masowe porównanie PNG i inwentaryzację GLB, aby nie obciążać pamięci poza limitem. Fidelity zapisuje dowody do katalogu asphalt-r1. Parsowanie runnera: 0 błędów. Unity baseline w fazie kompilacji skryptów; ciężki Python pozostaje nieuruchomiony.
 2026-11-11T22:28:24.4972354+01:00: import baseline zakończony. Następny krok: Capture baseline.
 2026-11-11T22:29:03.2891714+01:00: zapisano artifacts/asphalt-r1/baseline/Low-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
+2026-11-11T22:29:54.7116026+01:00: zapisano artifacts/asphalt-r1/baseline/Low-clear. Następny krok: pozostałe serie lub porównanie wariantu.
