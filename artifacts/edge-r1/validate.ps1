@@ -1,4 +1,4 @@
-param([ValidateSet('Before','After','Tests')][string]$Phase)
+param([ValidateSet('Before','After','Tests')][string]$Phase, [switch]$SkipRebuild)
 $ErrorActionPreference = 'Stop'
 $edgeRoot = (Resolve-Path "$PSScriptRoot/../..").Path
 Set-Location $edgeRoot
@@ -24,14 +24,17 @@ if ($Phase -eq 'Before') {
     # It is deliberately not reimported with the edited WorldEdgeBuilder before baseline capture.
     $label = 'before'
 } elseif ($Phase -eq 'After') {
-    With-UnitySlot {
+    if (-not $SkipRebuild) { With-UnitySlot {
         $code = Invoke-UnityBatch -LogFile "$out/rebuild-after.log" -Arguments @(
             '-executeMethod','Game.World.Import.WorldEdgeBuilder.RebuildEdgeBatch',
             '-region','bialystok-industrial-c')
         if ($code -ne 0) { throw "Edge rebuild failed: $code" }
-        if (-not (Select-String "$out/rebuild-after.log" -SimpleMatch 'REBUILD_EDGE_RESULT: OK' -Quiet)) {
+        if (-not (Select-String -LiteralPath "$out/rebuild-after.log" -SimpleMatch -Pattern 'REBUILD_EDGE_RESULT: OK' -Quiet)) {
             throw 'Missing successful rebuild marker'
         }
+    } }
+    elseif (-not (Select-String -LiteralPath "$out/rebuild-after.log" -SimpleMatch -Pattern 'REBUILD_EDGE_RESULT: OK' -Quiet)) {
+        throw 'Cannot resume rendering without a successful edge rebuild marker'
     }
     Save-Step 'Przebudowano wyłącznie WorldEdge w scenach Low i High; wynik wizualny do sprawdzenia.'
     $label = 'after'
