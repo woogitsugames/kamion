@@ -52,6 +52,7 @@ Shader "Kamion/Sky"
             float4 _KamionCloudWind;   // xy uv offset of the deck, zw of the medium layer
             float4 _KamionCloudSun;    // xy unit XZ towards the sun's azimuth, z relief strength, w relief step (uv)
             float _KamionClearCloudCover; // ADR 0108: zero retains the original clear dome.
+            float _KamionClearSkySaturation;
             float _KamionClearCloudPhoto;
             float4x4 _KamionClearCloudRotation;
             TEXTURE2D(_KamionClearCloudTex); SAMPLER(sampler_KamionClearCloudTex); // R opacity, G photographic relative luminance.
@@ -167,6 +168,14 @@ Shader "Kamion/Sky"
                     float k = 0.8 * cap;
                     float Yc = Y <= k ? Y : k + (cap - k) * (1.0 - exp(-(Y - k) / max(cap - k, 1e-4)));
                     sky *= Yc / max(Y, 1e-5);
+                }
+                // Display-only blue-sky grade; leave radiometric captures, clouds, surfaces and the fog horizon alone.
+                if (_KamionClearSkySaturation > 1.0 && _KamionSkyCapOff < 0.5 && _SkyMisc.x < 1.0)
+                {
+                    float Y = dot(sky, float3(0.2126, 0.7152, 0.0722));
+                    float amount = 1.0 + (_KamionClearSkySaturation - 1.0) * (1.0 - _SkyMisc.x) * smoothstep(0.02, 0.35, d.y);
+                    sky = max(0.0, Y.xxx + (sky - Y.xxx) * amount);
+                    sky *= Y / max(dot(sky, float3(0.2126, 0.7152, 0.0722)), 1e-5);
                 }
                 // After the cap: the cap is the phone's exposure of the deck, the structure is what it keeps of it. The
                 // overcast share only (a clear dome has no deck; partly cloudy presets get a proportional hint).

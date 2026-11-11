@@ -64,6 +64,7 @@ namespace Game.Rendering
             k_Cloud = Shader.PropertyToID("_KamionCloud"), k_CloudWind = Shader.PropertyToID("_KamionCloudWind"),
             k_CloudSun = Shader.PropertyToID("_KamionCloudSun"), k_CloudTex = Shader.PropertyToID("_KamionCloudTex"),
             k_ClearCloudCover = Shader.PropertyToID("_KamionClearCloudCover"),
+            k_ClearSkySaturation = Shader.PropertyToID("_KamionClearSkySaturation"),
             k_ClearCloudPhoto = Shader.PropertyToID("_KamionClearCloudPhoto"),
             k_ClearCloudTex = Shader.PropertyToID("_KamionClearCloudTex"),
             k_ClearCloudRotation = Shader.PropertyToID("_KamionClearCloudRotation"),
@@ -113,6 +114,7 @@ namespace Game.Rendering
             // Clear clouds share the existing noise texture and sky pass. A zero coverage keeps the legacy dome.
             float clearCover = q < 0 ? 0f : Mathf.Clamp01(ClearCloudCoverOverride ?? p.clearCloudCover);
             Shader.SetGlobalFloat(k_ClearCloudCover, clearCover);
+            Shader.SetGlobalFloat(k_ClearSkySaturation, Mathf.Clamp(p.clearSkySaturation, 1f, 4f));
             bool photo = clearCover > 0f && PhotographicClouds.TryGet(out _, out _);
             Shader.SetGlobalFloat(k_ClearCloudPhoto, photo ? 1f : 0f);
             if (photo && PhotographicClouds.TryGet(out var texture, out var sourceSun))

@@ -25,6 +25,7 @@ namespace Game.Rendering.Editor
             public float whiteClip;
             public int shadowFilter; // 0 keeps the light's state; 1/2/3 = URP Low/Medium/High.
             public bool shadowWallProbe; // hall3: establish a physical 10 m span for the PNG edge measurement.
+            public float clearSkySaturation; // 0 leaves preset unchanged; diagnostic display-only chroma.
         }
 
         static string Arg(string key)
@@ -77,6 +78,13 @@ namespace Game.Rendering.Editor
                         if (job.whiteClip < 0.55f || job.whiteClip > 3f) throw new ArgumentException("whiteClip outside preset bounds");
                         var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
                         preset.lookWhiteClip = job.whiteClip;
+                    }
+                    if (job.clearSkySaturation > 0f)
+                    {
+                        if (job.clearSkySaturation < 1f || job.clearSkySaturation > 4f)
+                            throw new ArgumentException("clearSkySaturation outside 1..4");
+                        var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
+                        preset.clearSkySaturation = job.clearSkySaturation;
                     }
                     profile.tiers = (QualityProfile.Tier[])originalTiers.Clone();
                     var overrides = (job.rq ?? "").Split(',').Where(s => !string.IsNullOrWhiteSpace(s))

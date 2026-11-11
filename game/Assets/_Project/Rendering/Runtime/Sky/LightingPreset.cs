@@ -48,6 +48,8 @@ namespace Game.Rendering
         [Range(0f, 1f)] public float clearCloudCover;
         [Tooltip("ADR 0108: opt-in smoother sun-shadow filter on High only; 0 inherits the tier. Low unchanged.")]
         [Range(0, 3)] public int highSunShadowFilter;
+        [Tooltip("ADR 0108: display-only blue-sky chroma multiplier above the haze horizon; 0/1 keep the analytic colour.")]
+        [Range(1f, 4f)] public float clearSkySaturation = 1f;
         [Tooltip("Cloud texture tiles per unit of the cloud plane (plane at height 1; smaller = larger cloud masses)")]
         public float cloudScale = 0.16f;
         [Tooltip("Cloud drift (plane units per second; ~0.004 = 20 km/h at 1500 m)")]
