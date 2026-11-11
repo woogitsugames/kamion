@@ -25,3 +25,6 @@
 - Final real-data audit after cache /10: raw intersections with full region buildings 19 -> 0; compressed intersections 22 -> 0; 8470 -> 8447 buildings (23 distinct exclusions, sets overlap). Low triangles 24826 -> 24508 (-1.28%), High 118902 -> 118524 (-0.32%). after-audit.json records exact IDs.
 - Added deterministic synthetic compression-overlap regression: 12 passed plus local-data case pending in the next full GIS collection. Corrected license inventory ring extent to square +/-4200m from region anchor (existing sources only).
 - NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30; after GIS passes run pwsh artifacts/edge-far-r2/run-evidence.ps1 -SkipGis (waits PHONE_RUN).
+- Fidelity regeneration finished; full GIS now running sequentially after data regeneration. Render continuation waits for a passing full-GIS summary, then still checks PHONE_RUN before every Unity process.
+- Evidence generator can reconstruct the baseline source from git argon-edge 293c5f69 and re-extract missing local cache, so the before comparison does not depend on an unversioned Python file.
+- NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30
