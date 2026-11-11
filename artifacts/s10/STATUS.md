@@ -11,13 +11,13 @@ and this coordination worktree start at 4f7da66c.
 
 | Stream | Agent | Branch / worktree | Status | State |
 |---|---|---|---|---|
-| A 0086 tint gamma | fab_processor | gpt-tint-gamma | artifacts/tint-gamma-r1/STATUS.md | running: bootstrap and diagnosis |
-| B 0088 vegetation | tree_surfaces | gpt-vegetation-r2 | artifacts/vegetation-r2/STATUS.md | running: bootstrap and diagnosis |
-| C 0098 light/post | world_integration | gpt-light-r12 | artifacts/light-r12/STATUS.md | running: bootstrap and diagnosis |
-| D 0099 surface wear | pending | gpt-surface-wear | artifacts/surface-wear-r1/STATUS.md | wait for actual merge of 0095 into main |
-| E 0090 fire station r7 | pending | gpt-firestation-r7 | artifacts/firestation-r10/STATUS.md | after a worker completes |
-| F 0087 truck paint | pending | gpt-truck-paint | artifacts/truck-paint-r1/STATUS.md | added by updated task document; queue |
-| G 0089 car paint | pending | gpt-car-paint | artifacts/car-paint-r1/STATUS.md | added by updated task document; queue |
+| A 0086 tint gamma | fab_processor | gpt-tint-gamma | artifacts/tint-gamma-r1/STATUS.md | COMPLETE 38149050, scoped independent PASS |
+| B 0088 vegetation | tree_surfaces | gpt-vegetation-r2 | artifacts/vegetation-r2/STATUS.md | running: real CC0 pine-needle quality pass |
+| C 0098 light/post | world_integration | gpt-light-r12 | artifacts/light-r12/STATUS.md | running: final shoulder/glass policy validation |
+| D 0099 surface wear | pending | gpt-surface-wear | artifacts/surface-wear-r1/STATUS.md | dependency satisfied by 471438fb; after G/E |
+| E 0090 fire station r7 | pending | gpt-firestation-r7 | artifacts/firestation-r10/STATUS.md | queued after G |
+| F 0087 truck paint | fab_processor | gpt-truck-paint | artifacts/truck-paint-r1/STATUS.md | running from 232fbada: canonical baseline |
+| G 0089 car paint | pending | gpt-car-paint | artifacts/car-paint-r1/STATUS.md | NEXT free worker |
 
 A owns importer tint/calibration; B vegetation geometry, leaf ambient and grass;
 C lighting/post/atmosphere/shadow policy. Shared shader edits must be additive
@@ -95,3 +95,21 @@ did not affect the actual hero glass material. C owns a tiny additive explicit
 _ArchitecturalGlass setter in RegionImporter for kp_glass_block and is testing
 bounded receiver bias; A notified of the separate common-file ownership.
 NEXT COMMAND: finish independent A/B/C visual/code reviews and final tests; start F on the first free slot from latest main, then G/E/D.
+
+## Step 7 — A complete, F dispatched; B/C final quality work
+A complete at38149050 (implementation ab738b01), clean branch, no merge/push.
+Independent scoped PASS saved in REVIEW-A-0086.md and copied/committed with A.
+Final GIS359 passed/2 xfailed; EditMode226/226 including14 numeric tint tests.
+All four-condition clearance covers59 cameras; final curtain regression resolved.
+REPORT/ADR encoding was repaired, last validated SHA and fixture caveat explicit.
+F is now running in its own current-main232fbada worktree, with canonical truck
+build/install before baseline images and its own fixture SHA snapshot.
+B's detached procedural pine cards remain a quality issue after the metrics pass;
+coordinator verified/downloaded two official CC0 pine_tree_01 twig maps and
+provided pinned source records. B is evaluating a clean crop at the same texture,
+material and triangle budget, with no Fab source embedded in public assets.
+C's8cm architectural-glass receiver offset removes the gross triangles while
+measured narrow frame shadows remain;12cm is flatter. Keep smallest tested
+acceptable8cm on kp_glass_block only, Medium/High only, with Low/casters unchanged.
+Clear highlight shoulder still needs measured red<=240; do not call it passed yet.
+NEXT COMMAND: review B full-needle world and C final empty-Rq matrix/tests; next free worker starts G from then-current main, followed by E and D.
