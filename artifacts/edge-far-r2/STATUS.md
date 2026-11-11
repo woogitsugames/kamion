@@ -28,3 +28,6 @@
 - Fidelity regeneration finished; full GIS now running sequentially after data regeneration. Render continuation waits for a passing full-GIS summary, then still checks PHONE_RUN before every Unity process.
 - Evidence generator can reconstruct the baseline source from git argon-edge 293c5f69 and re-extract missing local cache, so the before comparison does not depend on an unversioned Python file.
 - NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30
+- Full GIS at 74%, no failures so far; slow final fixture rebuilds world and validates deterministic export. Exact before/after ID sets: removed 23, added 0.
+- Preparing existing PBR sets offline to avoid long pre-Unity material generation; render driver waits for material completion as well as GIS success and PHONE_RUN clearance. No material-generator source changes.
+- NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30; Get-Content artifacts/edge-far-r2/materials-prepare.log -Tail 10

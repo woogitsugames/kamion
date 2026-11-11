@@ -29,6 +29,14 @@ function Render-Matrix([string]$phase) {
 if (!(Select-String "$out/build-before.log" -Pattern '\[world.*\] done' -Quiet)) {
     throw 'Run the merged world generation first; build-before.log has no completion marker'
 }
+# A local texture preparation may run while the phone owns Unity; never import half-written sets.
+while ((Test-Path "$out/materials-prepare.log") -and
+       !(Select-String "$out/materials-prepare.log" -Pattern 'wrote.*materials_spec.json.*total' -Quiet)) {
+    if (Select-String "$out/materials-prepare.log" -Pattern 'Traceback|Error:' -Quiet) {
+        throw 'Local material preparation failed; inspect materials-prepare.log'
+    }
+    Start-Sleep -Seconds 10
+}
 & uv run --project tools/worldgen python "$out/generate_evidence.py" before > "$out/generate-before.log"
 if ($LASTEXITCODE -ne 0) { throw 'Before generation failed' }
 Wait-Phone
