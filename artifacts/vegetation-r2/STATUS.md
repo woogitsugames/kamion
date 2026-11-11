@@ -95,3 +95,6 @@
 
 - After59 WorldC_High High-clear: rzeczywista scena profilu,59 identycznych kamer. NASTĘPNY KROK: porównanie stats i ROI, następnie pozostałe warunki / końcowy GIS+EditMode.
 
+
+- Krok17: pełneGIS po finalnych produktach i macierzy zakończone; wynik w pytest-complete.log. Przywrócono dokładny canonicalJSON po fixturetestów,192rawSHA sprawdzone. NASTĘPNY KROK: odtworzenie canonicalvehiclefixture po macierzy i pełneEditMode.
+
