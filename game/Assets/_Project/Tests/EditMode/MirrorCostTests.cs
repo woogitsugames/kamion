@@ -19,6 +19,7 @@ namespace Game.Tests.EditMode
         [TestCase(2), TestCase(4), TestCase(5), TestCase(6)]
         public void InteriorCulling_RestoresPreviouslyHiddenRenderer(int mirrorClass)
         {
+            float tyreFlat = Shader.GetGlobalFloat("_KamionTyreFlatRadius");
             var root = new GameObject("mirror-culling-state-test");
             try
             {
@@ -48,7 +49,7 @@ namespace Game.Tests.EditMode
                 Callback("OnEndCamera");
                 Assert.IsFalse(renderer.forceRenderingOff, "ordinary main-view visibility restored");
             }
-            finally { Object.DestroyImmediate(root); }
+            finally { Object.DestroyImmediate(root); Shader.SetGlobalFloat("_KamionTyreFlatRadius", tyreFlat); }
         }
 
         static readonly int[] k_Class = { 2, 2, 4, 4, 5, 6 };
