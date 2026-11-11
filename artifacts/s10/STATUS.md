@@ -947,3 +947,11 @@ auxiliary passes and CBUFFER retained. Accepted progression to guarded native
 compile/import and four-car focus; runtime/SRP/hash/rebase/budget still pending.
 Full review is main artifacts/firestation-r10/G-PLATE-DRAFT-REVIEW.md with pins.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
+
+Step 86: ROOT independently parsed G filtered native EditMode XML: six passed,
+zero failed/skipped. Read the new unreadable-mesh regression: identical Half2
+layout/stride, valid corners accepted and all-zero payload rejected after
+UploadMeshData(true). Pass metadata test checks imported URP passes without
+assuming an active renderer. Invalid quit/active-pass attempts are retained by
+G and are not final PASS. Export CPU worker remains active; no restart needed.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-plate-world.log -Tail 6
