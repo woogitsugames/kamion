@@ -888,7 +888,7 @@
           ],
           "texel_mm": 1.47,
           "dir": "brick/High",
-          "png_bytes": 5835221,
+          "png_bytes": 5805607,
           "files": [
             "T_brick_BaseColor.png",
             "T_brick_MaskMap.png",
@@ -911,7 +911,7 @@
           ],
           "texel_mm": 2.94,
           "dir": "brick/Medium",
-          "png_bytes": 1661685,
+          "png_bytes": 1654291,
           "files": [
             "T_brick_BaseColor.png",
             "T_brick_MaskMap.png",
@@ -934,7 +934,7 @@
           ],
           "texel_mm": 5.88,
           "dir": "brick/Low",
-          "png_bytes": 446617,
+          "png_bytes": 446456,
           "files": [
             "T_brick_BaseColor.png",
             "T_brick_MaskMap.png",
@@ -956,16 +956,16 @@
         0.00406
       ],
       "albedo": {
-        "mean_lum_linear": 0.4989,
-        "p05": 0.3677,
-        "p95": 0.707,
+        "mean_lum_linear": 0.4999,
+        "p05": 0.2737,
+        "p95": 0.6696,
         "mean_rgb_linear": [
-          0.4999,
-          0.4987,
-          0.4977
+          0.4998,
+          0.5,
+          0.4999
         ]
       },
-      "hf_ratio_albedo": 0.0295,
+      "hf_ratio_albedo": 0.0147,
       "ao_mean": 0.916
     },
     "car_grime": {
@@ -2055,6 +2055,114 @@
       "hf_ratio_albedo": 0.0251,
       "ao_mean": 0.978
     },
+    "fire_station": {
+      "tile_m": [
+        14.0,
+        14.0
+      ],
+      "target": 0.57,
+      "atlas": true,
+      "uv": "mesh_uv0_metres (atlas position in metres; layout in art-source/world/landmarks/fire_station_jrg2/atlas_layout.json)",
+      "slots": [
+        "fire_station (hero fire station asset, ADR 0070)"
+      ],
+      "note": "Atlas 14 x 14 m (2048 x 2048 High, 6.8 mm/texel): pale blue render band with splash zone and run-off, blue trapezoidal roof sheet, flashing, plinth, sectional door, clinker pier, windows, swatches. Detail / relief / roughness from CC0 scans (Poly Haven: Painted Plaster Wall, Brick Wall 006, Concrete Wall 008); colours WORKING_VALUE by eye from CC0 photos. albedo_target_mean_lum_linear applies to the clean render, not the atlas mean.",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.57,
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 6.84,
+          "dir": "fire_station/High",
+          "png_bytes": 10009057,
+          "files": [
+            "T_fire_station_BaseColor.png",
+            "T_fire_station_MaskMap.png",
+            "T_fire_station_Normal.png",
+            "T_fire_station_Var.png"
+          ],
+          "smoothness_mean": 0.329,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 9954481
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 13.67,
+          "dir": "fire_station/Medium",
+          "png_bytes": 2711085,
+          "files": [
+            "T_fire_station_BaseColor.png",
+            "T_fire_station_MaskMap.png",
+            "T_fire_station_Normal.png",
+            "T_fire_station_Var.png"
+          ],
+          "smoothness_mean": 0.308,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1943360
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 27.34,
+          "dir": "fire_station/Low",
+          "png_bytes": 670164,
+          "files": [
+            "T_fire_station_BaseColor.png",
+            "T_fire_station_MaskMap.png",
+            "T_fire_station_Normal.png",
+            "T_fire_station_Var.png"
+          ],
+          "smoothness_mean": 0.283,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 349525
+        }
+      },
+      "height_range_m": [
+        -0.02956,
+        0.03727
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.2169,
+        "p05": 0.0636,
+        "p95": 0.6162,
+        "mean_rgb_linear": [
+          0.1907,
+          0.2142,
+          0.2841
+        ]
+      },
+      "hf_ratio_albedo": 0.0034,
+      "ao_mean": 0.961,
+      "source": "polyhaven:painted_plaster_wall (CC0); polyhaven:concrete_wall_008 (CC0); polyhaven:brick_wall_006 (CC0)",
+      "render_mean_rgb_linear": [
+        0.185,
+        0.2592,
+        0.364
+      ]
+    },
     "grass_verge": {
       "tile_m": [
         3.0,
@@ -3111,7 +3219,7 @@
           ],
           "texel_mm": 1.95,
           "dir": "plaster/High",
-          "png_bytes": 6129485,
+          "png_bytes": 5079657,
           "files": [
             "T_plaster_BaseColor.png",
             "T_plaster_MaskMap.png",
@@ -3134,7 +3242,7 @@
           ],
           "texel_mm": 3.91,
           "dir": "plaster/Medium",
-          "png_bytes": 1593377,
+          "png_bytes": 1350311,
           "files": [
             "T_plaster_BaseColor.png",
             "T_plaster_MaskMap.png",
@@ -3157,14 +3265,14 @@
           ],
           "texel_mm": 7.81,
           "dir": "plaster/Low",
-          "png_bytes": 372596,
+          "png_bytes": 332489,
           "files": [
             "T_plaster_BaseColor.png",
             "T_plaster_MaskMap.png",
             "T_plaster_Normal.png",
             "T_plaster_Var.png"
           ],
-          "smoothness_mean": 0.08,
+          "smoothness_mean": 0.081,
           "astc": {
             "BaseColor": "8x8",
             "Normal": "8x8",
@@ -3175,21 +3283,122 @@
         }
       },
       "height_range_m": [
-        -0.00318,
-        0.00252
+        -0.00199,
+        0.00195
       ],
       "albedo": {
         "mean_lum_linear": 0.5,
-        "p05": 0.4469,
-        "p95": 0.5514,
+        "p05": 0.463,
+        "p95": 0.538,
+        "mean_rgb_linear": [
+          0.5001,
+          0.5,
+          0.5001
+        ]
+      },
+      "hf_ratio_albedo": 0.0697,
+      "ao_mean": 0.984
+    },
+    "roof_tiles": {
+      "tile_m": [
+        1.4,
+        1.4
+      ],
+      "slots": [
+        "roof_tiles_*",
+        "roof_metal_*"
+      ],
+      "note": "S-profile roof tile courses, roll pitch 0.20 m, gauge 0.35 m (u along the eave, v up the slope).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 2.73,
+          "dir": "roof_tiles/High",
+          "png_bytes": 1186456,
+          "files": [
+            "T_roof_tiles_BaseColor.png",
+            "T_roof_tiles_MaskMap.png",
+            "T_roof_tiles_Normal.png",
+            "T_roof_tiles_Var.png"
+          ],
+          "smoothness_mean": 0.199,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 622155
+        },
+        "Medium": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 5.47,
+          "dir": "roof_tiles/Medium",
+          "png_bytes": 266662,
+          "files": [
+            "T_roof_tiles_BaseColor.png",
+            "T_roof_tiles_MaskMap.png",
+            "T_roof_tiles_Normal.png",
+            "T_roof_tiles_Var.png"
+          ],
+          "smoothness_mean": 0.189,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 121460
+        },
+        "Low": {
+          "res": [
+            128,
+            128
+          ],
+          "texel_mm": 10.94,
+          "dir": "roof_tiles/Low",
+          "png_bytes": 53668,
+          "files": [
+            "T_roof_tiles_BaseColor.png",
+            "T_roof_tiles_MaskMap.png",
+            "T_roof_tiles_Normal.png",
+            "T_roof_tiles_Var.png"
+          ],
+          "smoothness_mean": 0.181,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 21845
+        }
+      },
+      "height_range_m": [
+        -0.00027,
+        0.03622
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.4174,
+        "p95": 0.5812,
         "mean_rgb_linear": [
           0.5,
           0.5,
           0.5
         ]
       },
-      "hf_ratio_albedo": 0.2233,
-      "ao_mean": 0.978
+      "hf_ratio_albedo": 0.0529,
+      "ao_mean": 0.925
     },
     "sandwich_ribbed": {
       "tile_m": [
@@ -3743,6 +3952,7 @@
         12.0
       ],
       "target": 0.36,
+      "atlas": true,
       "uv": "mesh_uv0_metres (u along the bridge, v = band position; layout in art-source/world/landmarks/viaduct_biezenstwa/atlas_layout.json)",
       "slots": [
         "viaduct_concrete (hero viaduct asset, ADR 0067)"
@@ -3842,115 +4052,6 @@
         0.3726,
         0.3586,
         0.3062
-      ],
-      "atlas": true
-    },
-    "fire_station": {
-      "tile_m": [
-        14.0,
-        14.0
-      ],
-      "target": 0.57,
-      "atlas": true,
-      "uv": "mesh_uv0_metres (atlas position in metres; layout in art-source/world/landmarks/fire_station_jrg2/atlas_layout.json)",
-      "slots": [
-        "fire_station (hero fire station asset, ADR 0070)"
-      ],
-      "note": "Atlas 14 x 14 m (2048 x 2048 High, 6.8 mm/texel): pale blue render band with splash zone and run-off, blue trapezoidal roof sheet, flashing, plinth, sectional door, clinker pier, windows, swatches. Detail / relief / roughness from CC0 scans (Poly Haven: Painted Plaster Wall, Brick Wall 006, Concrete Wall 008); colours WORKING_VALUE by eye from CC0 photos. albedo_target_mean_lum_linear applies to the clean render, not the atlas mean.",
-      "kind": "tiling_set",
-      "albedo_target_mean_lum_linear": 0.57,
-      "files": {
-        "High": {
-          "res": [
-            2048,
-            2048
-          ],
-          "texel_mm": 6.84,
-          "dir": "fire_station/High",
-          "png_bytes": 10009057,
-          "files": [
-            "T_fire_station_BaseColor.png",
-            "T_fire_station_MaskMap.png",
-            "T_fire_station_Normal.png",
-            "T_fire_station_Var.png"
-          ],
-          "smoothness_mean": 0.329,
-          "astc": {
-            "BaseColor": "6x6",
-            "Normal": "5x5",
-            "MaskMap": "6x6",
-            "Var": "8x8"
-          },
-          "gpu_bytes_astc_mips": 9954481
-        },
-        "Medium": {
-          "res": [
-            1024,
-            1024
-          ],
-          "texel_mm": 13.67,
-          "dir": "fire_station/Medium",
-          "png_bytes": 2711085,
-          "files": [
-            "T_fire_station_BaseColor.png",
-            "T_fire_station_MaskMap.png",
-            "T_fire_station_Normal.png",
-            "T_fire_station_Var.png"
-          ],
-          "smoothness_mean": 0.308,
-          "astc": {
-            "BaseColor": "6x6",
-            "Normal": "6x6",
-            "MaskMap": "8x8",
-            "Var": "8x8"
-          },
-          "gpu_bytes_astc_mips": 1943360
-        },
-        "Low": {
-          "res": [
-            512,
-            512
-          ],
-          "texel_mm": 27.34,
-          "dir": "fire_station/Low",
-          "png_bytes": 670164,
-          "files": [
-            "T_fire_station_BaseColor.png",
-            "T_fire_station_MaskMap.png",
-            "T_fire_station_Normal.png",
-            "T_fire_station_Var.png"
-          ],
-          "smoothness_mean": 0.283,
-          "astc": {
-            "BaseColor": "8x8",
-            "Normal": "8x8",
-            "MaskMap": "8x8",
-            "Var": "8x8"
-          },
-          "gpu_bytes_astc_mips": 349525
-        }
-      },
-      "height_range_m": [
-        -0.02956,
-        0.03727
-      ],
-      "albedo": {
-        "mean_lum_linear": 0.2169,
-        "p05": 0.0636,
-        "p95": 0.6162,
-        "mean_rgb_linear": [
-          0.1907,
-          0.2142,
-          0.2841
-        ]
-      },
-      "hf_ratio_albedo": 0.0034,
-      "ao_mean": 0.961,
-      "source": "polyhaven:painted_plaster_wall (CC0); polyhaven:concrete_wall_008 (CC0); polyhaven:brick_wall_006 (CC0)",
-      "render_mean_rgb_linear": [
-        0.185,
-        0.2592,
-        0.364
       ]
     }
   }

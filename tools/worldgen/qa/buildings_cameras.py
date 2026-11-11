@@ -25,6 +25,14 @@ sys.path.insert(0, str(REPO / "tools" / "worldgen"))
 from streetscape import buildings_mesh as BM  # noqa: E402
 
 N_PER = {"block": 5, "hall": 4, "shed": 3, "house": 2, "office": 2}
+# ADR 0091 (review s9 P2): the eye and the look-at point are written RAY_UP above the building ground, so the engine's
+# re-seating ray (Gate3Cameras.ComputePose: from pos + 4 m down) starts above raised ground too - r10_hall_3 stood on a
+# ramp 6 m above the hall's ground and was seated under the terrain. The offset cancels out in the re-seating.
+RAY_UP = 10.0
+# authored view angles (deg off the route side) for buildings whose default view is blocked by things the generator
+# does not know (r10_hall_1: a parked trailer at the docks, since ADR 0071)
+ANGLES = (25, -25, 50, -50, 0, 75, -75, 110, -110, 150, -150, 180)
+ANGLES_FOR = {"bdot:7abd670e-1a55-4ccb-9da0-9a2ad052ff32": (-50, 50, -25, 75, -75, 0)}
 
 
 def main():
@@ -49,8 +57,8 @@ def main():
 
     def add(cid, pos, look, zg, zlook, note, kind="photo_match", fov=60.0):
         cams.append({"id": cid, "type": "persp", "kind": kind, "seat": "road",
-                     "pos": [round(float(pos[0]), 2), round(float(pos[1]), 2), round(float(zg + 1.7), 2)],
-                     "look_at": [round(float(look[0]), 2), round(float(look[1]), 2), round(float(zlook), 2)],
+                     "pos": [round(float(pos[0]), 2), round(float(pos[1]), 2), round(float(zg + 1.7 + RAY_UP), 2)],
+                     "look_at": [round(float(look[0]), 2), round(float(look[1]), 2), round(float(zlook + RAY_UP), 2)],
                      "fov_deg": fov, "note": note})
 
     by = {}
@@ -79,7 +87,7 @@ def main():
             v = rp - c
             v = v / max(np.hypot(*v), 1e-6)
             done = False
-            for ang in (25, -25, 50, -50, 0, 75, -75, 110, -110, 150, -150, 180):
+            for ang in ANGLES_FOR.get(b["id"], ANGLES):
                 ca, sa = np.cos(np.radians(ang)), np.sin(np.radians(ang))
                 w = np.array([v[0] * ca - v[1] * sa, v[0] * sa + v[1] * ca])
                 for k in (1.0, 0.75, 1.3):

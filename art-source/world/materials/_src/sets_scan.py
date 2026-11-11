@@ -36,7 +36,7 @@ from numpy.fft import fft2, ifft2, fftfreq
 from PIL import Image
 from scipy import ndimage
 
-from pbrkit import Ctx, SurfaceSet, LUM, blur, calibrate, hash01
+from pbrkit import sstep, Ctx, SurfaceSet, LUM, blur, calibrate, hash01
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[3]
@@ -285,9 +285,11 @@ def _cavity(h: np.ndarray, px: float) -> np.ndarray:
 def tiling_from_scan(name: str, aid: str, *, target: float, hue, out_L: float, out_n: int, seed: int,
                      bomb_cells: int = 0, ao_k=0.5, flat_m=1.0, flat_k=0.8, nrm_gain=1.0, hue_keep=0.6,
                      rough_scale=1.0, rough_add=0.0, ao_gamma=0.4, segment: dict | None = None, period_fix: dict | None = None,
-                     modulation=False):
+                     modulation=False, hf_keep=1.0, hf_sigma_m=0.004, joint_dark=0.0):
     """A tiling (calibrated) or modulation set from one scan. out_L = tile size (m); bomb_cells > 0 re-assembles the
-    scan (resampled to the output texel) into the out_L tile."""
+    scan (resampled to the output texel) into the out_L tile.
+    ADR 0091: hf_keep < 1 scales the albedo and height detail finer than hf_sigma_m (the grain 'pepper' of a render
+    seen from the street); joint_dark darkens the mortar joints of a brick scan."""
     sc = Scan(aid)
     alb, h = prepare(sc, ao_k=ao_k, flat_m=flat_m, flat_k=flat_k, nrm_gain=nrm_gain)
     rough = np.clip(sc.rough * rough_scale + rough_add, 0.05, 1).astype(np.float32)
@@ -337,7 +339,21 @@ def tiling_from_scan(name: str, aid: str, *, target: float, hue, out_L: float, o
             joint = _cavity(h, Lx / nx)
             eid = np.zeros((ny, nx), np.float32)
     c = Ctx(nx, ny, Lx, Ly, seed=seed)
+    if hf_keep < 1.0:
+        sg = hf_sigma_m / (Lx / nx)
+        low = np.stack([ndimage.gaussian_filter(alb[..., i], sg, mode="wrap") for i in range(3)], -1)
+        alb = (low + hf_keep * (alb - low)).astype(np.float32)
+        lowh = ndimage.gaussian_filter(h, sg, mode="wrap")
+        h = (lowh + hf_keep * (h - lowh)).astype(np.float32)
     alb = rebalance_hue(alb, hue, hue_keep)
+    if joint_dark:
+        # mortar of a brick scan = the texels less red than the mean (cyan side of the neutralised map; the scan's
+        # joints are nearly flush, a height cavity mask misses them); darkened, hue kept (so it stays grey under the tint)
+        lum = np.maximum(alb @ LUM, 1e-4)
+        jm = sstep(0.04, 0.22, ((alb[..., 1] + alb[..., 2]) * 0.5 - alb[..., 0]) / lum)
+        jm = ndimage.gaussian_filter(jm.astype(np.float32), 0.7, mode="wrap")[..., None]
+        alb = (alb * (1.0 - joint_dark * jm)).astype(np.float32)
+        joint = np.maximum(joint, jm[..., 0])
     if modulation:
         m = alb.reshape(-1, 3).mean(0)
         alb = np.clip(alb * (0.5 / m), 0, 1).astype(np.float32)
@@ -473,10 +489,10 @@ SCAN_SETS = {
     # modulation sets (engine albedo = 2 x manifest colour x map)
     "plaster": (["painted_plaster_wall"], lambda: tiling_from_scan(
         "plaster", "painted_plaster_wall", target=0.5, hue=NEUTRAL, out_L=2.0, out_n=1024, seed=6318,
-        flat_m=0.8, flat_k=0.6, hue_keep=0.5, modulation=True)),
+        flat_m=0.8, flat_k=0.6, hue_keep=0.5, modulation=True, hf_keep=0.4, hf_sigma_m=0.006)),   # ADR 0091 pepper
     "brick": (["red_brick"], lambda: tiling_from_scan(
         "brick", "red_brick", target=0.5, hue=NEUTRAL, out_L=1.4, out_n=1024, seed=6319,
-        flat_m=0.4, flat_k=0.8, hue_keep=1.0, modulation=True,
+        flat_m=0.4, flat_k=0.8, hue_keep=1.0, modulation=True, joint_dark=0.45,   # ADR 0091 darker joints
         period_fix=[{"axis": 0, "search_m": (0.05, 0.10), "period_m": 0.075}])),
     "bark_pine": (["pine_bark"], lambda: tiling_from_scan(
         "bark_pine", "pine_bark", target=0.5, hue=NEUTRAL, out_L=2.0, out_n=1024, seed=6320,

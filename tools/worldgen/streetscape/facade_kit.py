@@ -268,6 +268,13 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key=""):
             s0, s1 = s1, s0
         _aq(acc, s0, s1, s1 + up, s0 + up, su)
         _aq(acc, s1, s0, s0 + up, s1 + up, su)
+    # ADR 0091: the balustrade is geometry, not a card - a 5 x 4 cm handrail on the three open sides, 3 cm proud of
+    # the infill (LOD0, 18 triangles: no undersides / end caps; LOD1 shows the balustrade from the facade_far rows)
+    rail = np.array([0, 0, 1.07])
+    acc.box(L0, "downpipe", f + n3 * 0.01 + rail, d3 * (hw + 0.03), n3 * 0.025, [0, 0, 0.02], skip=(0, 4, 5))
+    for sg in (-1, 1):
+        acc.box(L0, "downpipe", w0 + d3 * sg * hw + n3 * (depth - 0.03) / 2 + rail, d3 * 0.025, n3 * (depth - 0.03) / 2,
+                [0, 0, 0.02], skip=(0, 2, 3))
     if hfloat(key, "glz") < 0.14:               # zabudowa balkonu: glazing above the balustrade, front + sides
         gv = int(hfloat(key, "glzv") * 97)
         g0 = f + up
@@ -364,17 +371,16 @@ def cage_ladder(acc, a, d, nout, u, z0, z1, mat="downpipe"):
         acc.quad(L0, mat, B_, A_, A_ + [0, 0, top - zc0], B_ + [0, 0, top - zc0])
 
 
-def chimney(acc, rect_poly, zridge, key):
-    c = np.asarray(rect_poly.exterior.coords)[:4]
-    e = [np.hypot(*(c[(i + 1) % 4] - c[i])) for i in range(4)]
-    k = 0 if e[0] >= e[1] else 1
-    along = (c[(k + 1) % 4] - c[k]) / max(e[k], 1e-6)
-    ctr = np.asarray(rect_poly.centroid.coords[0])
-    t = (hfloat(key, "chim") - 0.5) * max(e) * 0.5
-    p = ctr + along * t
+def chimney(acc, p, along, z0, z1):
+    """Brick chimney stack 0.56 x 0.44 m from z0 (inside the roof) to z1 with a concrete cap slab (ADR 0091: the
+    stack stands on the roof slope next to the ridge and ends 0.45 m above it)."""
+    along = np.asarray(along, float)
+    across = np.array([-along[1], along[0]])
+    c = v3(p, (z0 + z1) / 2)
     for layer in (L0, L1):
-        acc.box(layer, "chimney_brick", v3(p, zridge - 0.2), np.append(along * 0.3, 0),
-                np.append(np.array([-along[1], along[0]]) * 0.25, 0), [0, 0, 1.0], skip=(0,))
+        acc.box(layer, "chimney_brick", c, np.append(along * 0.28, 0), np.append(across * 0.22, 0), [0, 0, (z1 - z0) / 2],
+                skip=(0,))
+    acc.box(L0, "balcony_slab", v3(p, z1 + 0.04), np.append(along * 0.33, 0), np.append(across * 0.27, 0), [0, 0, 0.04])
 
 
 def sign_instance(code, a, d, nout, u, z, src):

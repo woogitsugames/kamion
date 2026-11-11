@@ -186,6 +186,31 @@ def brick(n=1024):
     return _finish("brick", c, lum, h, rough, t, mort, extra=col_var)
 
 
+def roof_tiles(n=512):
+    """S-profile roof tile courses (ADR 0091): roll pitch 0.20 m, course gauge 0.35 m - ceramic / concrete pantile and
+    pressed metal tile sheet (blachodachowka module 350 mm) share it (dimensions WORKING_VALUE inside the product
+    ranges). u along the eave, v up the slope. Tile 1.4 x 1.4 m (7 rolls x 4 courses)."""
+    L = 1.4
+    c = Ctx(n, n, L, L, seed=531)
+    X, Y = c.xy()
+    v = L - Y
+    wave, course = 0.20, 0.35
+    pu = (X % wave) / wave
+    pv = (v % course) / course                  # 0 = exposed lower edge of a course, 1 = under the next course
+    roll = 0.5 - 0.5 * np.cos(2 * np.pi * np.clip(pu * 1.25, 0, 1))      # crest over 80 % of the pitch, flat pan 20 %
+    row = np.floor(v / course).astype(int) % 4
+    col = np.floor(X / wave).astype(int) % 7
+    t = hash01(row * 7 + col, 1)
+    grain = noise(c, 1, c.px * 2, 0.01, beta=0.4)
+    lichen = sstep(0.6, 2.2, noise(c, 2, 0.02, 0.25, beta=0.8))
+    h = 0.022 * roll + 0.014 * (1 - pv) + 0.3e-3 * grain
+    shadow = sstep(0.93, 1.0, pv)               # the line under the lower edge of the next course
+    lum = (1 + 0.14 * (t - 0.5) + 0.05 * grain) * (1 - 0.5 * shadow) * (1 - 0.14 * (1 - roll)) * (1 - 0.10 * lichen)
+    lum *= _streaks(c, 3, 0.08)
+    rough = 0.72 + 0.12 * (1 - roll) + 0.1 * lichen
+    return _finish("roof_tiles", c, lum, h, rough, t, shadow)
+
+
 def curtain_folds(n=2048):
     """Curtainsider tarpaulin: irregular vertical folds, sag between buckle straps (every ~1.2 m along u),
     road grime on the lower third. Tile 4.8 x 2.7 m (u along the trailer, v up)."""
@@ -504,6 +529,8 @@ FACADE_SETS = {
         note="Large-panel block: 3.0 x 2.8 m panels, sealed joints, per-panel tone."),
     "brick": dict(fn=brick, tile_m=[1.04, 1.2], slots=["brick_red", "chimney_brick"],
         note="Brick NF 250 x 65 mm, 10 mm mortar, stretcher bond, per-brick tone."),
+    "roof_tiles": dict(fn=roof_tiles, tile_m=[1.4, 1.4], slots=["roof_tiles_*", "roof_metal_*"],
+        note="S-profile roof tile courses, roll pitch 0.20 m, gauge 0.35 m (u along the eave, v up the slope)."),
     "curtain_folds": dict(fn=curtain_folds, tile_m=[4.8, 2.7], slots=["trailer_curtain_*"],
         note="Curtainsider tarpaulin folds, sag between straps, grime on the lower third."),
     "container_corrugation": dict(fn=container_corrugation, tile_m=[2.78, 2.6], slots=["container_*"],

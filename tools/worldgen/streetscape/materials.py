@@ -38,18 +38,34 @@ M = {
     "roof_membrane": {"color": [0.07, 0.07, 0.07], "rough": 0.85},
     "skylight": {"color": [0.55, 0.57, 0.58], "rough": 0.3},
     "reveal_hall": {"color": [0.30, 0.31, 0.31], "rough": 0.6},
-    "reveal_plaster": {"color": [0.40, 0.38, 0.34], "rough": 0.85},
+    # ADR 0091: reveals are painted white with the insulation (was 0.40 warm grey = the wall tone, so the opening
+    # had no outline); plaster_grey 0.36 -> 0.62 and plaster_white 0.60 -> 0.76: at 0.36 the wall read 92-98 sRGB under
+    # an overcast sky of 238 ("dark concrete", review s9: +25-35 levels asked = albedo x 1.7 at gamma 2.2); facade
+    # greys are light paints of LRV ~60, whites ~75-85 (WORKING_VALUE until the owner's photos)
+    "reveal_plaster": {"color": [0.60, 0.59, 0.56], "rough": 0.85},
     "plaster_light": {"color": [0.52, 0.50, 0.46], "rough": 0.9, "texture_set": "plaster"},
-    "plaster_grey": {"color": [0.36, 0.36, 0.35], "rough": 0.9, "texture_set": "plaster"},
+    "plaster_grey": {"color": [0.62, 0.62, 0.61], "rough": 0.9, "texture_set": "plaster"},
     "plaster_beige": {"color": [0.50, 0.44, 0.34], "rough": 0.9, "texture_set": "plaster"},
     "plaster_cream": {"color": [0.55, 0.48, 0.33], "rough": 0.9, "texture_set": "plaster"},
     "plaster_pastel_blue": {"color": [0.36, 0.42, 0.47], "rough": 0.9, "texture_set": "plaster"},
     # set_tile (ADR 0067): the NF brick set is 1.506 m, at the shader default 4 m a course read as 20 cm (r10 r1 render)
-    "brick_red": {"color": [0.26, 0.10, 0.07], "rough": 0.9, "texture_set": "brick", "set_tile": True},
-    "plinth_dark": {"color": [0.16, 0.16, 0.16], "rough": 0.9, "texture_set": "plaster"},   # r10: was a flat colour
-    "roof_tiles_red": {"color": [0.22, 0.07, 0.04], "rough": 0.7, "texture_set": "roof_tiles"},
-    "roof_tiles_brown": {"color": [0.12, 0.06, 0.04], "rough": 0.7, "texture_set": "roof_tiles"},
-    "roof_metal_graphite": {"color": [0.05, 0.05, 0.055], "rough": 0.5, "metal": 0.5, "texture_set": "roof_metal_tile"},
+    # ADR 0091: saturation -20 % (linear chroma about the luminance: [0.26, 0.10, 0.07] -> below), `macro` =
+    # [size m, strength] of the macro tone drift (importer default for modulation sets 64 m / 0.06): lots of brick
+    # from different firings differ every few metres
+    "brick_red": {"color": [0.235, 0.107, 0.083], "rough": 0.9, "texture_set": "brick", "set_tile": True,
+                  "macro": [48.0, 0.18]},
+    # plinths (cokół): render in three tones, `splash_h` = splash / soil zone height (m) of Kamion/World PBR _SPLASH
+    # (the plinth covers the zone the plaster_* walls had it in, so r10 showed no splash at all)
+    "plinth_dark": {"color": [0.16, 0.16, 0.16], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.5},
+    "plinth_grey": {"color": [0.25, 0.25, 0.24], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.5},
+    "plinth_brown": {"color": [0.17, 0.125, 0.10], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.5},
+    # pitched roofs (ADR 0091): one modulation set `roof_tiles` (S-profile tile courses) for ceramic tile and pressed
+    # metal tile sheet, set_tile = real course size
+    "roof_tiles_red": {"color": [0.20, 0.075, 0.05], "rough": 0.75, "texture_set": "roof_tiles", "set_tile": True},
+    "roof_tiles_brown": {"color": [0.11, 0.065, 0.045], "rough": 0.75, "texture_set": "roof_tiles", "set_tile": True},
+    "roof_metal_graphite": {"color": [0.055, 0.057, 0.06], "rough": 0.5, "texture_set": "roof_tiles", "set_tile": True},
+    "roof_metal_brick": {"color": [0.17, 0.065, 0.045], "rough": 0.5, "texture_set": "roof_tiles", "set_tile": True},
+    "roof_fascia": {"color": [0.09, 0.065, 0.045], "rough": 0.8},      # stained timber fascia / soffit boards
     "glass": {"color": [0.03, 0.035, 0.04], "rough": 0.05},
     "window_frame": {"color": [0.6, 0.6, 0.58], "rough": 0.5},
     "window_sill": {"color": [0.45, 0.45, 0.45], "rough": 0.4, "metal": 0.6},
@@ -241,7 +257,7 @@ M = {
     "plaster_accent_grey": {"color": [0.20, 0.21, 0.22], "rough": 0.9, "texture_set": "plaster"},
     "wood_planks": {"color": [0.22, 0.15, 0.09], "rough": 0.85, "texture_set": "wood_siding"},
     "wood_planks_green": {"color": [0.08, 0.14, 0.10], "rough": 0.85, "texture_set": "wood_siding"},
-    "chimney_brick": {"color": [0.22, 0.09, 0.06], "rough": 0.9, "texture_set": "brick", "set_tile": True},
+    "chimney_brick": {"color": [0.20, 0.092, 0.07], "rough": 0.9, "texture_set": "brick", "set_tile": True},
     # behaton (I-shaped interlocking blocks) in truck yards (streetscape.paved)
     "yard_behaton": {"color": [0.23, 0.228, 0.22], "rough": 0.85, "surface": "paving_stones", "texture_set": "behaton_i_grey"},
     # decals on roads (markings layer, depth offset like the markings)
@@ -326,7 +342,7 @@ M = {
     "plaster_yellow": {"color": [0.58, 0.50, 0.28], "rough": 0.9, "texture_set": "plaster"},
     "plaster_peach": {"color": [0.58, 0.42, 0.32], "rough": 0.9, "texture_set": "plaster"},
     "plaster_sage": {"color": [0.40, 0.45, 0.36], "rough": 0.9, "texture_set": "plaster"},
-    "plaster_white": {"color": [0.60, 0.60, 0.58], "rough": 0.9, "texture_set": "plaster"},
+    "plaster_white": {"color": [0.76, 0.76, 0.74], "rough": 0.9, "texture_set": "plaster"},
     "plaster_band_grey": {"color": [0.26, 0.27, 0.27], "rough": 0.9, "texture_set": "plaster"},
     # retaining walls of the raised ramps (roads.profile.mark_walled_ramps): block-faced concrete
     "ramp_wall_blocks": {"color": [0.34, 0.33, 0.31], "rough": 0.9, "texture_set": "concrete_blocks_split"},
@@ -339,7 +355,7 @@ M = {
 # gamma-encoded so the shader multiplies by the linear colour of this table. Scoped to the building envelope (walls,
 # roofs, doors) - the materials this task renders and reviews; the other modulation materials keep the look they
 # were reviewed with until the lead switches the flag on globally (open point in the ADR).
-_TINT_LINEAR = ("plaster_", "plinth_dark", "panel_concrete", "brick_red", "chimney_brick", "hall_wall_", "hall_plinth",
+_TINT_LINEAR = ("plaster_", "plinth_", "panel_concrete", "brick_red", "chimney_brick", "hall_wall_", "hall_plinth",
                 "roof_tiles_", "roof_metal_", "wood_planks", "garage_door", "dock_door", "balcony_panel")
 for _k, _v in M.items():
     if _k.startswith(_TINT_LINEAR) and "texture_set" in _v:
