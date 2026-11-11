@@ -22,3 +22,6 @@ NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/unity-step.ps1 -Step Capture -Pha
 
 Krok 7: import oczekuje na cztery zajęte sloty, bez startu Unity. W tym czasie odczytano rzeczywisty street_props.glb: osie obu kominów EC i ich LOD1 mają poziomy dryf 0 m, znaleziono dwie instancje. To dowód CPU, nie runtime Unity; pozorne pochylenie wymaga sprawdzenia kadru, nie zgadywania rotacji. Dopisano jawne -Cameras all do wrappera pełnego baseline.
 NASTĘPNA KOMENDA: po imporcie pwsh artifacts/landmarks-r1/unity-step.ps1 -Step Capture -Phase before -Cameras all
+
+Krok 8: zachowano prywatną kopię bazowego GLB i wszystkich map atlasu remizy Medium oraz alfa, z SHA-256. Uzupełniono audyt r2/r3 na podstawie obejrzanych zdjęć lokalnych, bez zmian produkcyjnych w innych dziedzinach. Import nadal oczekuje na slot.
+NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/baseline-import-wrapper.log -Tail 10
