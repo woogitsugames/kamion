@@ -98,3 +98,6 @@
 
 - Step42 durabilityCPU: retainedfailedfirst6testXML+classification andactualnearT/radiance/crownmask/canonical logs insideownpacket. Preparedrun-crown-resume.ps1 toexecuterepaired6tests thenOFF/ON/masks withoutrepeatingalready-proven canonicalbuild/install. NoUnityuntilNEWexplicitrelease.
 - NEXT COMMAND AFTER NEW EXPLICIT ROOT RELEASE: powershell -NoProfile -ExecutionPolicy Bypass -File artifacts/truck-paint-r1/run-crown-resume.ps1.
+
+- Step43 actualROOTrelease13:25:09: repaired6GPU/fixturetestsPASS6/6,0failed/0skipped usingrealURPCamera.Render foractualcanonicalmesh/layerdata. BothLIGHT_LAYERSQAdefinesoff/onPASS; bounds/maskrejects/bothsides/hinge+suspension+rebase+gradientdirection and6allLODcanonicaltagsPASS. FailedfirstCommandBuffertesthistoryretainedwithinvalidpathclassification. CorrectedXML/log/resultcopiedownpacket. GuardedC3OFF18nowrendering, thenON18+mask6; no visualPASSyet.
+- NEXT COMMAND: letguardedrun-crown-resume.ps1 finish; generateOFF/ONpaired960, measureownerrows androotreview.
