@@ -74,6 +74,30 @@ namespace Game.Editor.VisualQA
             if(paints.Count!=3) throw new InvalidOperationException("Expected all3canonical paint materials, got "+paints.Count);
             return shader;
         }
+        static Shader GlassDiagnostic(string mode)
+        {
+            string source=File.ReadAllText(Path.Combine(Application.dataPath,"_Project/Rendering/Shaders/TruckGlass.shader"));
+            source=source.Replace("Shader \"Kamion/Truck Glass\"","Shader \"Hidden/Kamion/TruckGlassDiagnostic_"+mode+"\"")
+                .Replace("\"KamionVehicleEnv.hlsl\"","\"Assets/_Project/Rendering/Shaders/KamionVehicleEnv.hlsl\"");
+            string fields=mode=="mask"?"float3(i.inside,glazing,hasFrame?1:0)":mode=="height"?"float3(saturate(h/5.0),NoV,F)":throw new InvalidOperationException("Unknown glass probe");
+            const string output="return half4(col, alpha);";
+            if(!source.Contains(output))throw new InvalidOperationException("Glass output changed");
+            source=source.Replace(output,"return half4("+fields+",1);");
+            string path="Assets/_Generated/TruckPaintProbe/GlassDiagnostic_"+mode+".shader";
+            File.WriteAllText(Path.Combine(EditorTools.ProjectRoot,path),source);
+            AssetDatabase.ImportAsset(path,ImportAssetOptions.ForceSynchronousImport|ImportAssetOptions.ForceUpdate);
+            var shader=AssetDatabase.LoadAssetAtPath<Shader>(path);
+            if(shader==null||ShaderUtil.ShaderHasError(shader))throw new InvalidOperationException("Glass diagnostic compile failed");
+            foreach(var guid in AssetDatabase.FindAssets("t:Material",new[]{"Assets/_Generated/Truck"}))
+            {
+                var material=AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guid));
+                if(material==null||material.shader==null||material.shader.name!="Kamion/Truck Glass")continue;
+                paints.Add((material,EditorJsonUtility.ToJson(material))); material.shader=shader;
+            }
+            if(paints.Count!=12)throw new InvalidOperationException("Expected12cab/lens glass materials, got "+paints.Count);
+            return shader;
+        }
+
         public static void RunBatch()
         {
             string round=EditorTools.Arg("-truckRound","before"), cameras=EditorTools.Arg("-truckCameras",Cameras);
@@ -82,13 +106,15 @@ namespace Game.Editor.VisualQA
             bool radianceOff=EditorTools.Arg("-truckCoatRadianceOff","0")=="1";
             string meshProbe=EditorTools.Arg("-truckMeshProbe",null);
             bool paintDiagnostic=radianceOff||!string.IsNullOrEmpty(meshProbe);
+            string glassProbe=EditorTools.Arg("-truckGlassProbe",null);
+            if(paintDiagnostic&&!string.IsNullOrEmpty(glassProbe))throw new InvalidOperationException("Use separate paint/glass probe rounds");
             string production=Path.Combine(Application.dataPath,"_Project/Rendering/Shaders/TruckExterior.shader");
             string originalHash=Hash(production);
             float originalCoatOff=Shader.GetGlobalFloat("_KamionClearCoatOff");
             panes.Clear(); paints.Clear(); int total=0;
             try
             {
-                Shader diagnostic=paintDiagnostic?PaintDiagnostic(production,radianceOff?"radiance-off":meshProbe):null;
+                Shader diagnostic=paintDiagnostic?PaintDiagnostic(production,radianceOff?"radiance-off":meshProbe):!string.IsNullOrEmpty(glassProbe)?GlassDiagnostic(glassProbe):null;
                 EditorSceneManager.sceneOpened+=OnScene; QualityProfileApplier.Applied+=OnTier;
                 foreach(string tier in EditorTools.Arg("-truckTiers","Low,High").Split(','))
                     foreach(string light in EditorTools.Arg("-truckLights","overcast,clear,lowsun").Split(','))
@@ -107,11 +133,12 @@ namespace Game.Editor.VisualQA
                             if(forced==0) throw new InvalidOperationException("No live forced-off panes after render");
                             Debug.Log("TRUCK_NO_PANE_AFTER_RENDER: forcedOff="+forced+" enabled="+enabled);
                         }
-                        if(paintDiagnostic)
+                        if(paintDiagnostic||!string.IsNullOrEmpty(glassProbe))
                         {
                             foreach(var paint in paints) if(paint.material.shader!=diagnostic) throw new InvalidOperationException("Radiance ablation paint binding reset");
                             Debug.Log("TRUCK_COAT_RADIANCE_AFTER_RENDER: boundMaterials="+paints.Count);
                         }
+                        if(EditorTools.Arg("-truckGlassAudit","0")=="1") TruckGlassAudit.Write(Path.Combine(target,"glass-mesh-audit.json"));
                         if(EditorTools.Arg("-truckEnvDirections","0")=="1") TruckPaintProbe.WriteEnvironmentDirections(Path.Combine(target,"environment-directions.json"));
                         total+=count; Debug.Log("TRUCK_ROUND_CONDITION: OK "+round+" "+tier+"-"+light+" count="+count);
                     }

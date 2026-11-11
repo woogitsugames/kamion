@@ -162,8 +162,8 @@ namespace Game.Rendering
         void Bind()
         {
             Shader.SetGlobalTexture(k_EnvCube, m_Cube);
-            // x: mip of perceptual roughness 1 (URP's UNITY_SPECCUBE_LOD_STEPS = 6, capped by the cube's mip count)
-            Shader.SetGlobalVector(k_EnvParams, new Vector4(Mathf.Min(6f, m_Cube.mipmapCount - 1), 0f, 0f, 0f));
+            // ADR0087 box-mip footprint: x maximum sampled mip, y actual face size (not a GGX probe).
+            Shader.SetGlobalVector(k_EnvParams, new Vector4(Mathf.Min(6f, m_Cube.mipmapCount - 1), m_Size, 0f, 0f));
             Shader.SetGlobalFloat(k_Capture, 1f);   // KamionVehicleEnv.hlsl samples _KamionVehicleEnvCube
         }
 

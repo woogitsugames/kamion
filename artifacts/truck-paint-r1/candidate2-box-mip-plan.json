@@ -1,0 +1,138 @@
+{
+  "status": "CPU_PREPARED_NOT_RENDERED_PHONE_HOLD",
+  "mapping": "approx alpha=pr^2 radians / face-centre texel=2/N radians; box approximation, not GGX convolution",
+  "sharedConsumers": [
+    "TruckExterior coat",
+    "TruckGlass outside capture"
+  ],
+  "fallback": "GlossyEnvironmentReflection and analytic ground unchanged",
+  "radianceOrF0Gain": false,
+  "rows": [
+    {
+      "face": 64,
+      "pr": 0.004,
+      "legacyMip": 0.0407328,
+      "angularBoxMip": 0
+    },
+    {
+      "face": 64,
+      "pr": 0.09,
+      "legacyMip": 0.88398,
+      "angularBoxMip": 0
+    },
+    {
+      "face": 64,
+      "pr": 0.0976,
+      "legacyMip": 0.9555118080000001,
+      "angularBoxMip": 0
+    },
+    {
+      "face": 64,
+      "pr": 0.15,
+      "legacyMip": 1.4355,
+      "angularBoxMip": 0
+    },
+    {
+      "face": 64,
+      "pr": 0.2,
+      "legacyMip": 1.8720000000000003,
+      "angularBoxMip": 0.3561438102252756
+    },
+    {
+      "face": 64,
+      "pr": 0.4,
+      "legacyMip": 3.4079999999999995,
+      "angularBoxMip": 2.3561438102252756
+    },
+    {
+      "face": 64,
+      "pr": 1,
+      "legacyMip": 6.0,
+      "angularBoxMip": 5.0
+    },
+    {
+      "face": 128,
+      "pr": 0.004,
+      "legacyMip": 0.0407328,
+      "angularBoxMip": 0
+    },
+    {
+      "face": 128,
+      "pr": 0.09,
+      "legacyMip": 0.88398,
+      "angularBoxMip": 0
+    },
+    {
+      "face": 128,
+      "pr": 0.0976,
+      "legacyMip": 0.9555118080000001,
+      "angularBoxMip": 0
+    },
+    {
+      "face": 128,
+      "pr": 0.15,
+      "legacyMip": 1.4355,
+      "angularBoxMip": 0.5260688116675876
+    },
+    {
+      "face": 128,
+      "pr": 0.2,
+      "legacyMip": 1.8720000000000003,
+      "angularBoxMip": 1.3561438102252756
+    },
+    {
+      "face": 128,
+      "pr": 0.4,
+      "legacyMip": 3.4079999999999995,
+      "angularBoxMip": 3.3561438102252756
+    },
+    {
+      "face": 128,
+      "pr": 1,
+      "legacyMip": 6.0,
+      "angularBoxMip": 6
+    },
+    {
+      "face": 256,
+      "pr": 0.004,
+      "legacyMip": 0.0407328,
+      "angularBoxMip": 0
+    },
+    {
+      "face": 256,
+      "pr": 0.09,
+      "legacyMip": 0.88398,
+      "angularBoxMip": 0.05213762333517526
+    },
+    {
+      "face": 256,
+      "pr": 0.0976,
+      "legacyMip": 0.9555118080000001,
+      "angularBoxMip": 0.28604991602687396
+    },
+    {
+      "face": 256,
+      "pr": 0.15,
+      "legacyMip": 1.4355,
+      "angularBoxMip": 1.5260688116675876
+    },
+    {
+      "face": 256,
+      "pr": 0.2,
+      "legacyMip": 1.8720000000000003,
+      "angularBoxMip": 2.3561438102252756
+    },
+    {
+      "face": 256,
+      "pr": 0.4,
+      "legacyMip": 3.4079999999999995,
+      "angularBoxMip": 4.356143810225276
+    },
+    {
+      "face": 256,
+      "pr": 1,
+      "legacyMip": 6.0,
+      "angularBoxMip": 6
+    }
+  ]
+}
