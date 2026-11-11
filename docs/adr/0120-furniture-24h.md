@@ -131,3 +131,11 @@ terenu sprawdzane jest także wzdłuż uproszczonego wygięcia co najwyżej 0,25
 na nietypowym spadku poprzecznym pozostaje poprzednia geometria. Nowa dolna
 krawędź nie schodzi poniżej istniejących desek. Ostateczne granice rendererów,
 cienie, wygląd i budżet wymagają ponownej kontroli po eksporcie.
+
+Doprecyzowanie po przeglądzie kodu iteracji 4: warunek zachowania górnej
+krawędzi kontroluje wysokość. Aproksymacja bocznego wygięcia może zmienić XY
+około 5 mm; wymaga porównania obrazów. Skala skanu odpowiada średniemu obwodowi
+modelu, a nie dokładnie całemu stożkowi. Próbki terenu nie dowodzą braku każdej
+szczeliny względem uproszczonego Low. Dodano przypadek ostrego poprzecznego
+uskoku oraz porównanie hashy rzeczywistych accessorów kolizji GLB przed/po
+iteracji 4 (w slocie heavy przed generatorem i po kontroli eksportu).

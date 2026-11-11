@@ -126,6 +126,16 @@ def test_wire_reduction_preserves_the_visible_top_over_a_local_ground_hump():
     assert mesh[len(mesh)//2:,2].max() >= 3.59
 
 
+def test_wire_reduction_keeps_existing_geometry_at_a_sharp_transverse_ground_drop():
+    buf = Buffer()
+    terrain = lambda e,n: .4*e+np.where(np.abs(n)>.005,-.6,0)
+    F.panel_fence(F.Lin(buf,terrain),LineString([(0,0),(2.5,0)]),
+                  'fence_green','transverse-drop',flexible=True)
+    mesh = next(v for layer,mat,v,t in buf.parts if mat=='fence_green_mesh')
+    collision = next(v for layer,mat,v,t in buf.parts if mat=='collision_fence')
+    assert len(mesh) == len(collision) and len(mesh) > 6
+
+
 @pytest.mark.parametrize('code', ['A-7', 'C-12', 'B-20', 'D-1', 'D-6'])
 def test_sign_back_and_folded_rim_never_wrap_the_wear_atlas(code):
     for mesh in P.plate(code)[:2]:

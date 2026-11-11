@@ -17,6 +17,10 @@ $ok=$false
 try {
     switch ($Step) {
         'world' {
+            if ($Phase -eq 'after4') {
+                & uv run --project tools/worldgen python "$ev/snapshot_fence_collision.py" before4 *> "$ev/fence-collision-before4.log"
+                if ($LASTEXITCODE -ne 0) { throw 'Could not capture pre-optimization collision' }
+            }
             [pscustomobject]@{phase=$Phase;branch=$owner;head=(& git rev-parse HEAD);started_at=Get-Date -Format o;pool='heavy'} |
                 ConvertTo-Json | Set-Content "$ev/world-context-$Phase.json" -Encoding UTF8
             & uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> "$ev/build-$Phase.log"
@@ -24,7 +28,12 @@ try {
         'pbr' { & uv run --project tools/worldgen python -u art-source/world/materials/_src/build_all.py *> "$ev/pbr-$Phase.log" }
         'gis' { & uv run --project tools/worldgen python -m pytest tests/gis -q *> "$ev/pytest-gis-final.log" }
         'physics' { & uv run --project tools/worldgen python -m pytest tests/physics tests/gate3 -q *> "$ev/pytest-physics-gate3.log" }
-        'geometry' { & uv run --project tools/worldgen python "$ev/snapshot_geometry.py" $Phase *> "$ev/geometry-$Phase.log" }
+        'geometry' {
+            & uv run --project tools/worldgen python "$ev/snapshot_geometry.py" $Phase *> "$ev/geometry-$Phase.log"
+            if ($LASTEXITCODE -eq 0 -and (Test-Path "$ev/fence-collision-before4.json")) {
+                & uv run --project tools/worldgen python "$ev/snapshot_fence_collision.py" after4 --compare before4 *> "$ev/fence-collision-after4.log"
+            }
+        }
         'compare' { & uv run --project tools/worldgen python "$ev/compare_frames.py" --label $Phase *> "$ev/compare-$Phase.log" }
         'focused' {
             if ($TestFile -notmatch '^tests/gis/test_furniture[^/\\]*\.py$') { throw 'Use one owned furniture test file during the round' }
