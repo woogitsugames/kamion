@@ -65,3 +65,4 @@ Import-after: IMPORT_RESULT OK, 64 chunki, Low+High, bez błędów shaderów w l
 Zapisano after WorldC Low overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Zapisano after WorldC Low clear. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Zapisano after WorldC_High High overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
+Zapisano after WorldC_High High clear. Następny krok: obejrzenie arkuszy i porównanie statystyk.
