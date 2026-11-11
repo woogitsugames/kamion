@@ -200,3 +200,13 @@ length vertices each, Half value -4.19921875. Second planned import paint unifor
 remains [.425,.25,.38,.12], confirming no cumulative scaling. Input hashes and
 ROOT proof saved in D-gate-r2-native-independent-check.json. Actual appearance
 and shader/GPU cost remain separate;16frame capture in progress.
+
+Combined R2 image choice: ROOT viewed Low8 plus four r1/R2 pairs; independent
+E reviewer8a7c6649 viewed High8, four pairs, entry/exit baseline and four oldkerbs.
+Retain R2 as bounded improvement; no wet black ribbons/visible oldscuff regression.
+Pair legibility remains PARTIAL: second exit-clear track is near asphalt variation
+(High weak strip mean1.27/median.67LSB; only16% projected pixels >3LSB). Do not
+convert a nonzero metric into an unconditional visibility PASS. Low oldkerb masks
+pixel-exact; High <=1LSB p95/no>3. Historical kerb runtime caveat stays. Independent
+High review copied to REVIEW-D-GATE-R2-HIGH.md. Broader wear is a separate fresh
+56-pair experiment, source not yet activated at its BEFORE stage.
