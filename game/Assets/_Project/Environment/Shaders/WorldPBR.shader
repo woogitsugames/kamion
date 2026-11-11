@@ -420,12 +420,7 @@ Shader "Kamion/World PBR"
                     if (f > 0.001)
                     {
                         float2 ud = pw.xz / _Tile.w;
-                    #if defined(_KAMION_WORLD_DETAIL)
                         half d = SAMPLE_TEXTURE2D(_DetailAlbedo, sampler_DetailAlbedo, ud).r;
-                    #else
-                        // Low upscales a 0.75-resolution image: one coarser mip avoids a crawling photo-grain grid.
-                        half d = SAMPLE_TEXTURE2D_BIAS(_DetailAlbedo, sampler_DetailAlbedo, ud, 1.0).r;
-                    #endif
                         albedo *= lerp(1.0, d * 4.594794, f);          // unity_ColorSpaceDouble (linear)
                     #if defined(_KAMION_WORLD_DETAIL)
                         half3 dn = UnpackNormalScale(SAMPLE_TEXTURE2D(_DetailNormal, sampler_DetailAlbedo, ud), f);
@@ -446,7 +441,9 @@ Shader "Kamion/World PBR"
                         float lc = frac(w.x);
                         half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.11);
                         // ADR0118: traffic polish darkens binder; existing macro breaks continuous bands.
-                        half traffic = _AsphaltWear.y * (0.65 + 0.35 * macro.a);
+                        // Traffic accumulation varies over metres (G: 2-16 m), not the sub-metre A noise.
+                        // Keep the original mean modulation 0.825 while avoiding a fine grid in wheel paths.
+                        half traffic = _AsphaltWear.y * (0.70 + 0.25 * macro.g);
                         albedo *= 1.0 - wp * (0.10 * _WheelPolish + traffic) * (1.0 - paintFresh);
                         smooth = lerp(smooth, smooth + 0.12, wp * _WheelPolish);
                     #if !defined(_DECAL_PAINT)
