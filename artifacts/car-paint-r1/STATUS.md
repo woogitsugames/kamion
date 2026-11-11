@@ -83,3 +83,6 @@
 
 - Step28 CPU-only: all324R3 sheets plus allnativewheel/door/bonnet crops viewed, selfcriticism/REPORT/ADR updated with measuredR3 and explicit pending gates. No additional scoped blocker found; lowpoly2m chords and partialfar views disclosed. ROOT fullreview requested.90vehiclefixture parity and all192SHA/Fab checks persisted. No Unity active/queued; renewed sharedHOLD remains mandatory.
 - NEXT COMMAND: NEW explicitROOT release+bothguards absent -> final-editmode.ps1 then gpu-proof.ps1; afteractualtests update onlypendinglines, finalproof/copy/review/commit. No newvisual changes/cameras.
+
+- Step29 CPU-only: prepared artifact bundle copied to main artifacts/car-paint-r1 using robocopy /E /XJ, successful standard exit1; allsourcefiles present withmatching sizes. This is evidence-only handoff, no main source edit/merge. Final two Unity checks still blocked; copy will be updated after their results/review.
+- NEXT COMMAND: on NEW explicitROOT release+bothguards absent final-editmode.ps1 then gpu-proof.ps1. No active/queuedUnity.
