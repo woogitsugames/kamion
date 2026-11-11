@@ -4,6 +4,7 @@ from pathlib import Path
 root = Path.cwd()
 path = root / 'tools/worldgen/streetscape/furniture.py'
 text = path.read_text(encoding='utf-8')
+assert 'ADR0120' not in text, 'Initial proposal already applied; do not overwrite reviewed production changes'
 start = text.index('def panel_fence(')
 end = text.index('\ndef fences(', start)
 candidate = Path(__file__).with_name('panel_candidate.py').read_text(encoding='utf-8')

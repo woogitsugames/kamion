@@ -43,3 +43,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T22:03:47.8638782+01:00: przygotowano compare_frames.py: wszystkie kamery, osobne draws siatek i instancji, konserwatywna granica kwantyzacji trisK, arkusze ≤960 px. NASTĘPNY KROK: uruchomić po kompletnych renderach before/after; obejrzeć każdy arkusz.
 
 2026-11-11T22:10:23.4376323+01:00: niezależny review wykrył limit .35 m na krótkiej skarpie i rozjazd korozji A-7. Usunięto próg długości podziału, poprawiono wspólny kontrakt UV/masek, czyste obrzeża i tyły E-2. Dodano regresję krótkiej skarpy i UV pięciu kształtów; testy exit=0. NASTĘPNY KROK: import i rendery po zwolnieniu slotu; globalny budżet nadal niezweryfikowany.
+
+2026-11-11T22:15:27.5786881+01:00: zapisano niezależny REVIEW-CODE.md i zabezpieczono jednorazowy apply_r1.py przed nadpisaniem poprawek review. Test rejestracji rdzy odczytuje UV wyeksportowanej geometrii i próbkuje atlas poniżej rzeczywistych obejm A-7/C-12; exit=0. NASTĘPNY KROK: finalne rendery i niezależny przegląd wyglądu.

@@ -4,6 +4,8 @@ from shapely.geometry import LineString
 import pytest
 
 from streetscape import furniture as F, props as P
+from streetscape import signs as SG
+from roads import standards as S
 
 
 class Buffer:
@@ -51,3 +53,20 @@ def test_sign_back_and_folded_rim_never_wrap_the_wear_atlas(code):
     for mesh in P.plate(code)[:2]:
         uv = next(p['UV'] for p in mesh.out() if p['mat'] == 'plate_back')
         assert np.all(uv >= 0) and np.all(uv <= 1)
+
+
+@pytest.mark.parametrize('code', ['A-7', 'C-12'])
+def test_rust_runoff_is_registered_below_the_actual_steel_mounts(code):
+    back = next(p for p in P.plate(code)[0].out() if p['mat'] == 'plate_back')
+    # Recover the affine XZ -> UV mapping from the exported plate geometry, not the author's UV formula.
+    xyz = back['V'][:3]
+    basis = np.column_stack([xyz[:, 0], xyz[:, 2], np.ones(3)])
+    mapping = np.linalg.solve(basis, back['UV'][:3])
+    shape, _ = SG.face(code)
+    height = S.SIGN_SIZE[shape] * (np.sqrt(3)/2 if shape == 'triangle' else 1)
+    texture = np.asarray(SG.plate_back().convert('RGB'), dtype=float)
+    for z in (-0.28*height, 0.22*height):
+        for x in (-0.04, 0.04):
+            u, v = np.array([x, z-0.025, 1]) @ mapping
+            red, green, blue = texture[round((1-v)*(len(texture)-1)), round(u*(texture.shape[1]-1))]
+            assert red-blue > 25  # local warm transfer below the mount, not a neutral-grey plate sample

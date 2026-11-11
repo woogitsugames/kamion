@@ -21,6 +21,8 @@ for path in sorted(Path('Data/raw/derived/bialystok-industrial-c/world').glob('c
         stride = view.get('byteStride', width)
         start = view.get('byteOffset', 0) + a.get('byteOffset', 0)
         assert stride >= width and not a.get('sparse')
+        if stride == width:
+            return binary[start:start+a['count']*width]
         return b''.join(binary[start+i*stride:start+i*stride+width] for i in range(a['count']))
 
     for node in doc.get('nodes', []):
