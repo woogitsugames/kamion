@@ -54,17 +54,29 @@ if (!(Test-Path "$ev/build-before.done")) {
     Set-Content "$ev/build-before.done" 'OK'
     Save-Status 'Regenerated baseline from 9e6e9fde; furniture source restored to branch HEAD.'
 }
+if (!(Test-Path 'Data/raw/derived/bialystok-industrial-c/furniture-r1-before')) {
+    & uv run --project tools/worldgen python "$ev/products.py" save before
+}
+& uv run --project tools/worldgen python "$ev/products.py" load before
 Import-World 'before'
 Render-World 'before'
-& uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> "$ev/build-after.log"
-if ($LASTEXITCODE -ne 0) { throw 'After generation failed' }
+if (Test-Path 'Data/raw/derived/bialystok-industrial-c/furniture-r1-after') {
+    & uv run --project tools/worldgen python "$ev/products.py" load after
+} else {
+    & uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> "$ev/build-after.log"
+    if ($LASTEXITCODE -ne 0) { throw 'After generation failed' }
+    & uv run --project tools/worldgen python "$ev/products.py" save after
+}
 Copy-Item Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json "$ev/qa-after.json"
 Copy-Item Data/Regions/bialystok-industrial-c/generated/world_manifest.json "$ev/manifest-after.json"
 Save-Status 'Regenerated ADR0102 world.'
 Import-World 'after'
 Render-World 'after'
-& uv run --project tools/worldgen python -m pytest tests/gis -q *> "$ev/pytest-after.log"
-if ($LASTEXITCODE -ne 0) { throw 'GIS after failed' }
+if (!(Test-Path "$ev/pytest-after.done")) {
+    & uv run --project tools/worldgen python -m pytest tests/gis -q *> "$ev/pytest-after.log"
+    if ($LASTEXITCODE -ne 0) { throw 'GIS after failed' }
+    Set-Content "$ev/pytest-after.done" 'OK'
+}
 Save-Status 'GIS after passed (see pytest-after.log).'
 Wait-Phone
 try {

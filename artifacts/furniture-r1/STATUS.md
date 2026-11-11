@@ -22,3 +22,6 @@ NASTĘPNY KROK: czekać na PHONE_RUN; pipeline walidacji działa.
 
 Przegląd współdzielonych helperów: terenowe stopy słupków ograniczone opcją ground_feet=True wyłącznie do nowego panel_fence. Bariery/ekrany korzystające z jawnego zb zachowują poprzednią geometrię; dedykowana regresja mostu 8 m przechodzi. Łącznie 7 nowych testów zielonych.
 NASTĘPNY KROK: pipeline czeka na PHONE_RUN przed importem bazowym.
+
+Produkty bazowe zachowane w ignorowanym Data/raw/derived/bialystok-industrial-c/furniture-r1-before. Build wariantu po zmianach w toku (build-after.log), bez Unity. Pipeline rozszerzony o wybieranie snapshotów, aby GIS i generację wykonać podczas blokady telefonu.
+NASTĘPNY KROK: po build-after: python artifacts/furniture-r1/products.py save after; uv run --project tools/worldgen python -m pytest tests/gis -q
