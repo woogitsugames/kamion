@@ -86,3 +86,4 @@ Przygotowano porównanie wszystkich kamer: mesh draws, shadow draws oraz draws/t
 2026-11-12T00:22:01.5489789+01:00: Próba y080 obejrzana, nie wybrana. Zapisano porównanie <=960 px i ograniczenia w REPORT/SELF-REVIEW. Stan wygenerowanego materiału sprawdzony: 0,45. Unity slot zwolniony, źródła bez zmian. Końcowa kolejka heavy nadal ma uchwyt 3026.
 2026-11-12T00:25:13.0388559+01:00: heavy Fidelity owner=gpt-asphalt-r1 exit=0; log artifacts/asphalt-r1/candidate2-Fidelity.log. Slot zwolniony po zakończeniu procesu.
 2026-11-12T00:26:03.3167884+01:00: Fidelity zakończone, wygenerowane fidelity_qa.json zapisane w WIP. Końcowa kolejka przeszła do physics/gate3 pod kolejnym slotem heavy. Nie edytowano źródeł dróg; odświeżono wymagany raport po generatorze.
+2026-11-12T00:30:40.8987418+01:00: heavy PhysicsGate3 owner=gpt-asphalt-r1 exit=1; log artifacts/asphalt-r1/candidate2-PhysicsGate3.log. Slot zwolniony po zakończeniu procesu.
