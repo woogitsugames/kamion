@@ -135,3 +135,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:12:54.8705431+01:00: generator after3 uzyskał heavy i działa (Python PID 67868, uv 108248); zapisano hash źródeł oraz HEAD w build-after3-context.json. Walidacja czeka na zakończenie tego samego procesu. NASTĘPNY KROK: sprawdzić brak fallback, porównanie chronionej geometrii i końcowe rendery.
 
 2026-11-12T00:21:12.0433527+01:00: heavy world after3; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T00:22:23.1205420+01:00: after3 zakończony sukcesem: 64 chunki GLB, High 479 MiB i Low 150 MiB (rozmiary eksportu, nie PSS). Brak fallback=True w logu. Zachowano manifest i streetscape_qa iteracji3; geometry czeka na heavy. NASTĘPNY KROK: sprawdzić hashe chronionych obiektów, import i wizualny efekt rozstawu słupków.
