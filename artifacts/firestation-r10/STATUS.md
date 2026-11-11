@@ -21,3 +21,6 @@ Krok3: świeży własny PBR/alpha/layout, hero i świat z901c przed zmianami pro
 
 Krok4: istniejący asphalt_detail_photo odtworzony bitowo identycznie z main/F/G (4 mapy); pin SHA1 pliku zgadza się z Commons, źródło PD John Harvey. Dowód asphalt-existing-input-parity.json. Przygotowano unity-baseline.ps1: oddzielne import/kanoniczny pojazd/capture, wymagany ROOT_UNITY_RELEASE.txt i brak OBU blokad przed każdym startem. Żadna Unity nie wystartowała. NASTĘPNA KOMENDA: dopiero po explicit ROOT release: pwsh artifacts/firestation-r10/unity-baseline.ps1 -Stage Import.
 
+
+Krok5: wyłącznie artifact-only CPU rzuty sylwetek/layoutu i sprawdzenie kontraktu materiałów. Low używa opaque atlasu (brak alpha); High opaque core + osobna shell alpha0.5. Odrzucono cienkie/odłączone Low gałęzie i hourglass; bieżący wolumen nadal stylizowany, brak visualPASS. +4u m tylko dwóch świerków odsłania łuki; trzeci bez przesunięcia. Jitter .25: nominal2.692m, actual2.369..3.217m, max19.50%. Wszystkie192raw i4źródła/produkty bez zmian. NASTĘPNA KOMENDA: obejrzeć shape-candidates/layout.jpg; Unity nadal WYŁĄCZNIE po explicit ROOT release i sprawdzeniu obu blokad, następnie unity-baseline.ps1 -Stage Import.
+
