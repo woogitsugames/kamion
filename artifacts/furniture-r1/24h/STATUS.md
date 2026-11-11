@@ -53,3 +53,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T22:25:41.3503984+01:00: ADR uzupełniono o pulę heavy, stan 19 testów, niezmieniony koszt prototypów i otwarte ograniczenia referencji. Składnia wrapperów sprawdzona parserem PowerShell. NASTĘPNY KROK: kontynuować oczekujący import baseline; nie uruchamiać pełnego GIS w trakcie rundy.
 
 2026-11-11T22:29:41.3553029+01:00: stary proces samego oczekiwania (PID 110476) zakończono przed zdobyciem slotu i przed Unity. Potwierdzono brak własnego Unity i własnego slotu. Wznawiam import z nowym preflight cache i aktualnym gate main; polling 10 s nie zmienia limitów 4/3. NASTĘPNY KROK: pwsh artifacts/furniture-r1/24h/unity-step.ps1 -Step import -Phase before.
+
+2026-11-11T22:31:51.6272278+01:00: Unity import before Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
