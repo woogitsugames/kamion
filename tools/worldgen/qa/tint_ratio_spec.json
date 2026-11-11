@@ -1,0 +1,325 @@
+{
+ "schema": "kamion/tint-ratio-spec/1",
+ "adr": "0101",
+ "note": "ROIs in a 960 px-wide view of the 2340x1080 control-camera PNG. ratio_level = mean display level target / reference in the same frame. Placement verified on material masks (artifacts/tint-r2/masks/). Limits are WORKING_VALUE targets derived from the photo_refs ratios below, not absolute photo levels.",
+ "materials": {
+  "kp_wall": {
+   "calibrated": true,
+   "checks": [
+    {
+     "id": "gate_lit",
+     "camera": "kwadrat-park-gate",
+     "side": "lit",
+     "roi": [
+      40,
+      190,
+      230,
+      212
+     ],
+     "ref": "sky",
+     "ref_roi": [
+      60,
+      105,
+      330,
+      150
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.55,
+        0.88
+       ]
+      },
+      "clear": {
+       "clip_max": 0.01,
+       "spread_min": 6.0
+      }
+     },
+     "note": "sunlit facade at the start gate (critic P0-1); ROI on the change mask baseline->r1 (instanced hero: no renderer mask)"
+    },
+    {
+     "id": "docks_shaded",
+     "camera": "stretch-05-docks",
+     "side": "shaded",
+     "roi": [
+      210,
+      83,
+      240,
+      94
+     ],
+     "ref": "sky",
+     "ref_roi": [
+      620,
+      30,
+      900,
+      110
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.4,
+        0.88
+       ]
+      },
+      "clear": {
+       "clip_max": 0.01
+      }
+     },
+     "note": "dock facade upper band, sun-averted in clear; sky ROI is a bright cloud area, hence the lower overcast ratio"
+    },
+    {
+     "id": "hall4_right_of_portal",
+     "camera": "r10_hall_4",
+     "side": "lit",
+     "roi": [
+      180,
+      196,
+      315,
+      218
+     ],
+     "ref": "sky",
+     "ref_roi": [
+      480,
+      60,
+      800,
+      140
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.45,
+        0.88
+       ]
+      },
+      "clear": {
+       "clip_max": 0.01
+      }
+     },
+     "note": "third orientation; ROI on the change mask baseline->r1"
+    }
+   ]
+  },
+  "noise_panel_dark": {
+   "calibrated": true,
+   "checks": [
+    {
+     "id": "putry_entry_right",
+     "camera": "route-putry-entry-signs",
+     "side": "lit",
+     "roi": [
+      840,
+      165,
+      915,
+      205
+     ],
+     "ref": "plinth",
+     "ref_roi": [
+      870,
+      352,
+      900,
+      370
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.31,
+        0.41
+       ]
+      }
+     },
+     "note": "solid wall, open sky; ROI 100 % on M_noise_panel_dark mask, plinth 0 %; clear/overcast of the cassette 2.0 (sunlit)"
+    },
+    {
+     "id": "g3b_right_band",
+     "camera": "g3b-rondo-putry-approach",
+     "side": "lit",
+     "roi": [
+      685,
+      240,
+      790,
+      285
+     ],
+     "ref": "plinth",
+     "ref_roi": [
+      690,
+      315,
+      790,
+      330
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.31,
+        0.41
+       ]
+      }
+     },
+     "note": "glazed style, dark band; ROI 100 % mask, plinth 0.7 %"
+    },
+    {
+     "id": "house1_band",
+     "camera": "r10_house_1",
+     "side": "lit",
+     "roi": [
+      660,
+      268,
+      840,
+      284
+     ],
+     "ref": "plinth",
+     "ref_roi": [
+      660,
+      298,
+      840,
+      312
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.31,
+        0.41
+       ]
+      }
+     },
+     "note": "glazed band, other orientation; ROI 95 % mask (posts), plinth 0 %"
+    },
+    {
+     "id": "g3b_left_under_deck",
+     "camera": "g3b-rondo-putry-approach",
+     "side": "shaded",
+     "roi": [
+      100,
+      237,
+      142,
+      249
+     ],
+     "ref": "plinth",
+     "ref_roi": [
+      100,
+      253,
+      142,
+      257
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.3,
+        0.6
+       ]
+      }
+     },
+     "gate": true,
+     "note": "band in the viaduct's shadow (clear/overcast 0.99); plinth also under the deck, so the open-wall photo ratio does not apply: sanity range only"
+    }
+   ]
+  },
+  "bridge_concrete": {
+   "calibrated": true,
+   "checks": [
+    {
+     "id": "putry_girder",
+     "camera": "route-putry-entry-signs",
+     "side": "shaded",
+     "roi": [
+      28,
+      155,
+      88,
+      161
+     ],
+     "ref": "asphalt",
+     "ref_roi": [
+      440,
+      330,
+      560,
+      400
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.85,
+        1.1
+       ]
+      }
+     },
+     "note": "generic viaduct girder face (100 % on M_bridge_concrete mask); sun-averted in clear (girder/asphalt clear < overcast)"
+    },
+    {
+     "id": "g3b_girder",
+     "camera": "g3b-rondo-putry-approach",
+     "side": "shaded",
+     "roi": [
+      24,
+      170,
+      84,
+      177
+     ],
+     "ref": "asphalt",
+     "ref_roi": [
+      180,
+      330,
+      330,
+      380
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.85,
+        1.1
+       ]
+      }
+     },
+     "note": "same viaduct, other station (100 % on mask)"
+    },
+    {
+     "id": "biez_above_cornice",
+     "camera": "biezenstwa-above",
+     "side": "lit",
+     "roi": [
+      32,
+      308,
+      52,
+      311
+     ],
+     "ref": "asphalt",
+     "ref_roi": [
+      330,
+      330,
+      420,
+      345
+     ],
+     "limits": {
+      "clear": {
+       "clip_max": 0.0
+      }
+     },
+     "note": "cornice seen from above (High mask masks-WorldC_High; Low draws an HLOD here): no photo ratio, guard against white/clip only",
+     "mask_scene": "WorldC_High"
+    }
+   ]
+  }
+ },
+ "photo_refs": [
+  {
+   "id": "hall_overcast_cm157094809",
+   "file": "artifacts/kwadrat-r9/refs/cm157094809_hall.jpg",
+   "roi": [
+    12,
+    59,
+    96,
+    71
+   ],
+   "ref": "sky",
+   "ref_roi": [
+    240,
+    4,
+    720,
+    24
+   ],
+   "note": "CC0 Rakoon, overcast; cleanest (brightest) facade panel left of the branches vs sky above the treeline; 1200 px source scaled to 960 view"
+  }
+ ],
+ "photo_notes": {
+  "noise_panel_dark": "ADR 0069: Mapillary p40 (2024-07-26) cassettes 36-40 sRGB next to plinth 105 sRGB on the same vertical face -> 0.34-0.38 (full-resolution Mapillary frames, not stored in the repo)",
+  "bridge_concrete": "CC0 Rakoon 20201102_152339 (overcast, wet road): lit pier / road 0.95-1.02 (pier ROIs 208-222 and 568-580 x 205-262, road 560-800 x 390-440, 960 view), deck underside / road 0.52; wet asphalt biases the ratio upwards, so the range is an upper guide"
+ }
+}

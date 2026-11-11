@@ -1,0 +1,403 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-industrial-c",
+ "frame": "local E,N,U (E,N = EPSG:2180 minus region origin; U = EVRF2007, re-seated on the collision)",
+ "cameras": [
+  {
+   "id": "r10_hall_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    662.57,
+    -509.31,
+    153.63
+   ],
+   "look_at": [
+    684.53,
+    -516.93,
+    154.78
+   ],
+   "fov_deg": 60.0,
+   "note": "hall bdot:7abd670e-1a55-4ccb-9da0-9a2ad052ff32 (obiekt handlowo-us\u0142ugowy, h 5.7 m, storeys 1), 18 m from the start route, view +50 deg off the route side"
+  },
+  {
+   "id": "r10_hall_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    622.55,
+    -591.1,
+    153.58
+   ],
+   "look_at": [
+    679.93,
+    -595.43,
+    154.69
+   ],
+   "fov_deg": 60.0,
+   "note": "hall bdot:2BE4B431-CB20-1BF0-E053-CC2BA8C0D140 (magazyn, h 5.6 m, storeys None), 34 m from the start route, view +25 deg off the route side"
+  },
+  {
+   "id": "r10_hall_3",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    711.15,
+    -357.83,
+    147.03
+   ],
+   "look_at": [
+    606.04,
+    -349.75,
+    151.33
+   ],
+   "fov_deg": 60.0,
+   "note": "hall bdot:245cc9a6-b45c-4f68-a384-6fc834c62d8b (obiekt handlowo-us\u0142ugowy, h 14.3 m, storeys 2), 41 m from the start route, view +25 deg off the route side"
+  },
+  {
+   "id": "r10_hall_4",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    716.43,
+    -451.43,
+    152.05
+   ],
+   "look_at": [
+    679.53,
+    -320.08,
+    155.32
+   ],
+   "fov_deg": 60.0,
+   "note": "hall bdot:6693a8b5-71fb-400a-9d62-2c1b38e22c2b (magazyn, h 9.9 m, storeys None), 44 m from the start route, view -25 deg off the route side"
+  },
+  {
+   "id": "r10_house_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -538.01,
+    94.54,
+    147.33
+   ],
+   "look_at": [
+    -516.97,
+    104.51,
+    148.78
+   ],
+   "fov_deg": 60.0,
+   "note": "house bdot:2BE4B431-C792-1BF0-E053-CC2BA8C0D140 (budynek jednorodzinny, h 6.3 m, storeys 2), 25 m from the start route, view +25 deg off the route side"
+  },
+  {
+   "id": "r10_house_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -533.32,
+    123.79,
+    147.64
+   ],
+   "look_at": [
+    -512.03,
+    132.68,
+    148.62
+   ],
+   "fov_deg": 60.0,
+   "note": "house bdot:2BE4B431-C793-1BF0-E053-CC2BA8C0D140 (budynek jednorodzinny, h 5.3 m, storeys 2), 29 m from the start route, view +25 deg off the route side"
+  },
+  {
+   "id": "r10_office_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    709.11,
+    -421.77,
+    153.87
+   ],
+   "look_at": [
+    744.32,
+    -424.47,
+    154.92
+   ],
+   "fov_deg": 60.0,
+   "note": "office bdot:9a38533b-00ee-4f83-8e23-1d5c2e052a87 (obiekt handlowo-us\u0142ugowy, h 5.5 m, storeys 1), 17 m from the start route, view +25 deg off the route side"
+  },
+  {
+   "id": "r10_office_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    623.11,
+    -572.27,
+    153.14
+   ],
+   "look_at": [
+    661.62,
+    -575.19,
+    155.72
+   ],
+   "fov_deg": 60.0,
+   "note": "office bdot:ffe33067-f96d-4676-9355-469cfe147783 (obiekt handlowo-us\u0142ugowy, h 8.6 m, storeys 2), 17 m from the start route, view +25 deg off the route side"
+  },
+  {
+   "id": "r10_shed_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    729.37,
+    -408.1,
+    153.85
+   ],
+   "look_at": [
+    752.67,
+    -409.9,
+    154.73
+   ],
+   "fov_deg": 60.0,
+   "note": "shed bdot:da26b671-1894-11ed-913d-b8ca3aa2e5c2 (budynek gospodarczy, h 5.2 m, storeys 1), 17 m from the start route, view +25 deg off the route side"
+  },
+  {
+   "id": "r10_shed_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -525.33,
+    133.99,
+    147.48
+   ],
+   "look_at": [
+    -514.07,
+    118.8,
+    147.29
+   ],
+   "fov_deg": 60.0,
+   "note": "shed bdot:2BE4B431-BD32-1BF0-E053-CC2BA8C0D140 (budynek gospodarczy, h 3.0 m, storeys 1), 26 m from the start route, view -50 deg off the route side"
+  },
+  {
+   "id": "r10_shed_3",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    65.68,
+    -476.57,
+    152.8
+   ],
+   "look_at": [
+    80.55,
+    -490.57,
+    152.98
+   ],
+   "fov_deg": 60.0,
+   "note": "shed bdot:2BE4B431-C508-1BF0-E053-CC2BA8C0D140 (stacja transformatorowa, h 3.8 m, storeys 1), 29 m from the start route, view +75 deg off the route side"
+  },
+  {
+   "id": "r10_block_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -268.74,
+    -236.43,
+    140.41
+   ],
+   "look_at": [
+    -277.68,
+    -272.09,
+    144.71
+   ],
+   "fov_deg": 60.0,
+   "note": "block bdot:d0f4dd2c-c040-439e-aece-8fe13f9d3046 (budynek wielorodzinny, h 14.3 m, storeys 4), 50 m from the start route, view +25 deg off the route side"
+  },
+  {
+   "id": "r10_block_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -331.58,
+    -320.31,
+    141.91
+   ],
+   "look_at": [
+    -342.08,
+    -362.17,
+    146.21
+   ],
+   "fov_deg": 60.0,
+   "note": "block bdot:2BE4B431-CA03-1BF0-E053-CC2BA8C0D140 (budynek wielorodzinny, h 17.5 m, storeys 5), 138 m from the start route, view +25 deg off the route side"
+  },
+  {
+   "id": "r10_block_3",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -279.51,
+    -351.29,
+    143.92
+   ],
+   "look_at": [
+    -288.49,
+    -388.58,
+    148.22
+   ],
+   "fov_deg": 60.0,
+   "note": "block bdot:2BE4B431-C728-1BF0-E053-CC2BA8C0D140 (budynek wielorodzinny, h 15.2 m, storeys 4), 140 m from the start route, view +25 deg off the route side"
+  },
+  {
+   "id": "r10_block_4",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -381.84,
+    -303.74,
+    140.56
+   ],
+   "look_at": [
+    -395.66,
+    -358.85,
+    144.86
+   ],
+   "fov_deg": 60.0,
+   "note": "block bdot:2BE4B431-C9E1-1BF0-E053-CC2BA8C0D140 (budynek wielorodzinny, h 20.1 m, storeys 6), 144 m from the start route, view +25 deg off the route side"
+  },
+  {
+   "id": "r10_block_5",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -401.77,
+    -274.43,
+    139.51
+   ],
+   "look_at": [
+    -410.85,
+    -314.31,
+    143.81
+   ],
+   "fov_deg": 60.0,
+   "note": "block bdot:2BE4B431-C9E3-1BF0-E053-CC2BA8C0D140 (budynek wielorodzinny, h 20.0 m, storeys 6), 150 m from the start route, view +25 deg off the route side"
+  },
+  {
+   "id": "r10_fence_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -288.52,
+    -243.17,
+    142.84
+   ],
+   "look_at": [
+    -302.83,
+    -250.16,
+    142.34
+   ],
+   "fov_deg": 55.0,
+   "note": "concrete fence osm way 1537671087, 31 m, 39 m from the start route"
+  },
+  {
+   "id": "r10_fence_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -608.8,
+    -87.68,
+    142.84
+   ],
+   "look_at": [
+    -587.16,
+    -91.14,
+    142.34
+   ],
+   "fov_deg": 55.0,
+   "note": "concrete fence osm way 1341554979, 53 m, 119 m from the start route"
+  },
+  {
+   "id": "r10_fence_3",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -429.18,
+    -358.22,
+    142.84
+   ],
+   "look_at": [
+    -402.5,
+    -342.7,
+    142.34
+   ],
+   "fov_deg": 55.0,
+   "note": "concrete fence osm way 1537671072, 83 m, 158 m from the start route"
+  },
+  {
+   "id": "r2_container_rust",
+   "type": "persp",
+   "kind": "material_probe",
+   "seat": "file",
+   "pos": [
+    -188.0,
+    -556.0,
+    146.0
+   ],
+   "look_at": [
+    -206.0,
+    -542.0,
+    139.5
+   ],
+   "fov_deg": 50.0,
+   "note": "ADR0101 P2-4: life:containers yard, container_20_0 (rust) at (-204.7,-541.1); elevated 3/4 view"
+  },
+  {
+   "id": "r2_gatehouse_booth",
+   "type": "persp",
+   "kind": "material_probe",
+   "seat": "file",
+   "pos": [
+    655.0,
+    -584.0,
+    143.5
+   ],
+   "look_at": [
+    642.1,
+    -572.1,
+    142.2
+   ],
+   "fov_deg": 50.0,
+   "note": "ADR0101 P2-4: kwadrat-park gatehouse (booth_panel) close view"
+  },
+  {
+   "id": "r2_fire_thuja",
+   "type": "persp",
+   "kind": "material_probe",
+   "seat": "file",
+   "pos": [
+    -250.0,
+    -160.0,
+    134.5
+   ],
+   "look_at": [
+    -262.9,
+    -142.7,
+    132.5
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR0101 P2-4: fire station JRG2 thuja row (hedge_thuja) and plaster, eye level"
+  }
+ ]
+}
