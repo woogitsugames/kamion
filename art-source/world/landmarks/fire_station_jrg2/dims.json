@@ -82,6 +82,8 @@
   "ridge_z": 9.2
  },
  "hall": {
+  "gable_runoff_depth_m_WORKING_VALUE": 1.0,
+  "gable_runoff_note": "ADR 0116 r1: runoff follows the actual curved flashing, not the horizontal crown level; openings remain below the strip.",
   "u": [
    36.4,
    48.4
@@ -267,13 +269,13 @@
     51.6,
     -21.0,
     7.6,
-    1.5
+    1.9
    ],
    [
     54.4,
     -19.5,
     6.2,
-    1.25
+    1.55
    ],
    [
     31.0,
@@ -283,8 +285,8 @@
    ]
   ],
   "note": "r7: first two foreground conifers shifted+4u m screen-right in ref7197; wing conifer unchanged. Tiered root-connected boughs, CC0 short-needle fir/conifer proxy (not verified Picea). Placement WORKING_VALUE?3m from one photo; ground re-sampled by planner.",
-  "inner_core_fill_r_WORKING_VALUE": 0.55,
-  "inner_core_note": "r7r2: continuous irregular inner canopy, broader lower third; .55R chosen after actual4-frame sparse-crown rejection. Outer CC0 boughs/cards/positions unchanged; density is authored WORKING_VALUE, not scan geometry.",
+  "inner_core_fill_r_WORKING_VALUE": 0.95,
+  "inner_core_note": "ADR 0116 r1: dense opaque inner canopy remains readable when sparse needle cards disappear in Low mips. First two crown radii broadened to a height-to-width envelope near 2:1. Same card, core and material counts; authored WORKING_VALUE, not scanned tree geometry.",
   "bough_uv_revision": "r7-bundle2-root-content-16px"
  }
 }

@@ -78,6 +78,7 @@ LAYOUT = {
     "win_small": _r(12.45, 7.35, 0.9, 0.9),
     "door_entry": _r(12.45, 8.35, 1.1, 2.2),
     "flag": _r(8.35, 9.85, 1.6, 1.0),
+    "conifer_core": _r(8.35, 10.95, 1.6, 0.4),  # ADR 0116: unused atlas gap, same opaque material
     "steel_galv": _r(10.10, 9.90, 0.9, 1.4),
     "pvc_white": _r(11.20, 9.90, 0.9, 1.4),
     "membrane": _r(0.05, 12.60, 7.9, 1.35),
@@ -96,6 +97,7 @@ LAYOUT = {
     # Hero-local intended leaf palette, shared by opaque cores/far foliage and clipped boughs.
     # Retains the previous far-LOD starting palette; lit Low/High calibration remains WORKING_VALUE.
     "foliage_linear": [0.040, 0.068, 0.030],
+    "conifer_linear": [0.030, 0.051, 0.0225],  # darker evergreen needles/core; WORKING_VALUE from 7197
 }
 
 
@@ -224,18 +226,19 @@ def fire_station(nx=2048):
     splash = np.clip(splash, 0, 0.8)
     # run-off under the top edge (flashing / sills above): streaks hanging 0.3-1.1 m below the top
     g_top = P["h"] - pv
-    streak = ss(0.25, 1.1, n_run) * np.clip(1 - g_top / (0.5 + 0.6 * ss(-1, 1, n_big)), 0, 1) ** 1.4
+    streak = ss(0.25, 1.1, n_run) * np.clip(1 - g_top / (0.5 + 0.4 * ss(-1, 1, n_big)), 0, 1) ** 1.4
     streak += 0.25 * ss(0.10, 0.0, g_top)
-    # r7: discrete runoff below the flashing only, 7-16 cm wide and 0.35-1.0 m long.
+    # ADR 0116: discrete runoff below flashing, ending inside the 1 m gable band.
     # Metric authored WORKING_VALUE, not general wall noise. Hashing does not advance old material RNGs.
-    drip_cell = np.floor(X / 0.78).astype(np.int64)
-    drip_centre = (drip_cell + 0.20 + 0.60 * K.hash01(drip_cell, 73)) * 0.78
-    drip_halfwidth = 0.035 + 0.045 * K.hash01(drip_cell, 79)
-    drip_length = 0.35 + 0.65 * K.hash01(drip_cell, 83)
+    drip_pitch = TILE[0] / 18
+    drip_cell = np.floor(X / drip_pitch).astype(np.int64)
+    drip_centre = (drip_cell + 0.20 + 0.60 * K.hash01(drip_cell, 73)) * drip_pitch
+    drip_halfwidth = 0.05 + 0.045 * K.hash01(drip_cell, 79)
+    drip_length = 0.40 + 0.50 * K.hash01(drip_cell, 83)
     drip = ss(drip_halfwidth * 1.7, drip_halfwidth, np.abs(X - drip_centre))
     drip *= np.clip(1 - g_top / drip_length, 0, 1) ** 1.2
     drip *= K.hash01(drip_cell, 89) > 0.30
-    streak += 0.32 * drip
+    streak += 0.65 * drip
     streak = np.clip(streak, 0, 0.7) * (pv > P["base_h"])
     # hairline shrinkage cracks, sparse
     crk = ss(0.012, 0.004, np.abs(noise(c, 7, 0.5, 4.0, beta=1.4))) * ss(0.2, 0.9, noise(c, 8, 1.5, 6.0, beta=1.0))
@@ -524,6 +527,14 @@ def fire_station(nx=2048):
     rough = np.where(in_tf, 0.9, rough)
     h = np.where(in_tf, 0.004 * n_mid, h)
 
+    # ADR 0116: evergreen inner mass is darker than the thuja shell. Reuse an
+    # unused opaque-atlas cell; the hero keeps its existing material slots.
+    in_cf = _gut(X, v, L["conifer_core"])
+    ccol = np.array(L["conifer_linear"], np.float32) * (1 + 0.22 * n_mid + 0.12 * n_fine).clip(0.5, 1.5)[..., None]
+    alb = np.where(in_cf[..., None], ccol, alb)
+    rough = np.where(in_cf, 0.97, rough)
+    h = np.where(in_cf, 0.002 * n_mid, h)
+
     alb = np.clip(alb, 0.012, 0.9).astype(np.float32)
     s = K.SurfaceSet("fire_station", c, alb, h.astype(np.float32), np.clip(rough, 0.05, 1).astype(np.float32),
                      eid.astype(np.float32), np.clip(joint, 0, 1).astype(np.float32), metal=metal.astype(np.float32),
@@ -602,7 +613,7 @@ def _conifer_sprite(log=print):
         alpha = np.array(im); rgb = np.full((*alpha.shape, 3), 128, np.uint8); applied = False
     covered = alpha >= 128
     linear = _lin(rgb.astype(np.float32) / 255)
-    linear *= np.array(LAYOUT["foliage_linear"], np.float32) / np.maximum(linear[covered].mean(0, dtype=np.float64), 1e-6)
+    linear *= np.array(LAYOUT["conifer_linear"], np.float32) / np.maximum(linear[covered].mean(0, dtype=np.float64), 1e-6)
     rgb = np.clip(np.rint(K.srgb_encode(np.clip(linear, 0, 1)) * 255), 0, 255).astype(np.uint8)
     rgba = np.dstack([rgb, alpha]); yy, xx = np.where(alpha > 32)
     rgba = rgba[yy.min():yy.max() + 1, xx.min():xx.max() + 1]
@@ -612,7 +623,7 @@ def _conifer_sprite(log=print):
     centred.alpha_composite(Image.fromarray(rgba), (round(half - root_x), 0))
     status = {"id": manifest["id"], "applied": applied, "species_status": manifest["species_status"],
               "source_sha256": {f["map"]: f["sha256"] for f in manifest["files"]},
-              "intended_mean_rgb_linear_WORKING_VALUE": LAYOUT["foliage_linear"]}
+              "intended_mean_rgb_linear_WORKING_VALUE": LAYOUT["conifer_linear"]}
     (LANDMARK / "conifer_foliage_meta.json").write_text(json.dumps(status, indent=1) + "\n", encoding="utf-8")
     return centred
 
@@ -632,7 +643,7 @@ def _conifer_patch():
     reference = sprite.copy(); reference.thumbnail((width-2*gap, height-2*gap), Image.Resampling.LANCZOS)
     ref = np.array(reference); ref_keep = ref[..., 3] >= 128
     target = (_lin(ref[..., :3].astype(np.float64)/255)[ref_keep].mean(0)
-              if ref_keep.any() else np.array(LAYOUT["foliage_linear"]))
+              if ref_keep.any() else np.array(LAYOUT["conifer_linear"]))
     canvas = Image.new("RGBA", (1200, 900)); layer = Image.new("RGBA", canvas.size)
     root = (600, 840)
     layer.alpha_composite(sprite, (round(root[0]-sprite.width/2), root[1]-sprite.height))

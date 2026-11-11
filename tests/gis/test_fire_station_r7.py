@@ -81,7 +81,8 @@ def test_hero_palette_alias_leaves_all_route_hedges_unchanged():
     np.testing.assert_allclose(linear[pixels[..., 3] >= 128].mean(0) * hero["color"], target, rtol=2e-5)
 
 
-def test_new_geometry_keeps_two_low_slots_and_original_plant_budget(monkeypatch):
+@pytest.fixture
+def geometry_namespace(monkeypatch):
     # Definition-only load: no bpy import, writer main(), Blender or output mutation.
     source = REPO / "tools/blender/world/landmarks/make_fire_station.py"
     tree = ast.parse(source.read_text(encoding="utf-8"))
@@ -93,6 +94,11 @@ def test_new_geometry_keeps_two_low_slots_and_original_plant_budget(monkeypatch)
         pytest.skip("generated source spec unavailable")
     monkeypatch.setattr(sys, "argv", [str(source), "--", "--spec", str(spec)])
     namespace = {"__file__": str(source)}; exec(compile(tree, str(source), "exec"), namespace)
+    return namespace
+
+
+def test_new_geometry_keeps_two_low_slots_and_original_plant_budget(geometry_namespace):
+    namespace = geometry_namespace
     mb = namespace["MB"]()
     for e,n,z,height,radius,key in namespace["SPEC"]["ground"]["thuja"]:
         namespace["build_thuja"](mb,namespace["en_to_uvz"]([e,n,z]),height,radius,key,1)
@@ -116,3 +122,32 @@ def test_new_geometry_keeps_two_low_slots_and_original_plant_budget(monkeypatch)
             a = np.array(uv)
             assert a[:,0].min() >= u0 and a[:,0].max() <= u1
             assert a[:,1].min() >= v0 and a[:,1].max() <= v1
+
+
+def test_gable_runoff_starts_at_curved_flashing_without_an_extra_material(geometry_namespace):
+    ns = geometry_namespace
+    h, plaster = ns["D"]["hall"], ns["LAY"]["plaster"]
+    depth = h["gable_runoff_depth_m_WORKING_VALUE"]
+    root_v = plaster["v0"] + plaster["h"]
+    for lod in (0, 1):
+        mb = ns["MB"]()
+        ns["build_hall"](mb, lod)
+        roots, strip_faces = [], 0
+        for face, uv, material in zip(mb.F, mb.UV, mb.M):
+            points, tex = np.array([mb.V[i] for i in face]), np.array(uv)
+            if (len(face) != 4 or material != ns["MAT"]
+                    or not np.allclose(points[:, 1], h["v"][0])
+                    or tex[:, 1].min() < root_v-depth-1e-6
+                    or tex[:, 1].max() > root_v+1e-6
+                    or np.count_nonzero(np.isclose(tex[:, 1], root_v)) != 2):
+                continue
+            strip_faces += 1
+            roots.extend(points[np.isclose(tex[:, 1], root_v), 2])
+            for u in np.unique(points[:, 0]):
+                heights = points[np.isclose(points[:, 0], u), 2]
+                assert np.ptp(heights) == pytest.approx(depth)
+        assert strip_faces >= 8
+        assert min(roots) == pytest.approx(ns["zl"](h["eave_z"]))
+        assert max(roots) == pytest.approx(ns["zl"](h["crown_z"]))
+        assert max(roots)-min(roots) > 1.0, "drip origins must not stay at a single horizontal crown height"
+        assert set(mb.M) == {ns["MAT"], ns["ALPHA"]}

@@ -519,7 +519,28 @@ def wall(mb, p0, p1, z0, z1, lod, openings=(), ground=True, top=None, plinth=Non
     holes = [(o[0] - o[2] / 2, o[0] + o[2] / 2, o[1], o[1] + o[3]) for o in ops]
     segs = bands(ztop - zb, "plaster", ground=ground, lod=lod)
     u0 = round(h01(ASSET, "wall", key) * 13.0, 2)
-    surface(mb, O, S, UP, poly, segs, u0, MAT, nout, holes, t_base=zb)
+    runoff_depth = float(D["hall"].get("gable_runoff_depth_m_WORKING_VALUE", 0)) if top and key in ("hsw", "hne") and lod < 2 else 0
+    if runoff_depth > 0:
+        # The old horizontal atlas band put the drip origin at the crown even
+        # near the lower curved edges. Keep the strip attached to the flashing
+        # at every station, in the same opaque material and draw group.
+        if max((hole[3] for hole in holes), default=zb) >= min(z for _, z in top) - runoff_depth:
+            raise ValueError("Gable runoff strip intersects an opening")
+        lower_top = [(s, z-runoff_depth) for s,z in top]
+        base_poly = [(0.0,zb),(L,zb)] + list(reversed(lower_top))
+        p = LAY["plaster"]
+        clean_segs = [(a,b,p["v0"]+p["mid"][0]+.05,p["v0"]+p["mid"][1]-.05)
+                      if max(va,vb) > p["v0"]+p["base_h"]+.001 else (a,b,va,vb)
+                      for a,b,va,vb in segs]
+        surface(mb, O, S, UP, base_poly, clean_segs, u0, MAT, nout, holes, t_base=zb)
+        root_v = p["v0"]+p["h"]
+        for (sa,za),(sb,zzb) in zip(top[:-1],top[1:]):
+            mb.face([O+S*sa+UP*(za-runoff_depth),O+S*sb+UP*(zzb-runoff_depth),
+                     O+S*sb+UP*zzb,O+S*sa+UP*za],
+                    [(u0+sa,root_v-runoff_depth),(u0+sb,root_v-runoff_depth),
+                     (u0+sb,root_v),(u0+sa,root_v)],MAT,nout)
+    else:
+        surface(mb, O, S, UP, poly, segs, u0, MAT, nout, holes, t_base=zb)
     pm = LAY["plaster"]["v0"] + LAY["plaster"]["mid"][0]
     for o, h in zip(ops, holes):
         if lod == 0 and o[4] in ("arch", "round"):
@@ -1036,6 +1057,13 @@ def foliage_uv(key=0, level=0):
     return [(u,v),(u+.48,v),(u+.48,v+.38),(u,v+.38)]
 
 
+def conifer_core_uv(key=0, level=0):
+    r = LAY["conifer_core"]
+    u = r["u"][0]+.08+(key%3)*.30
+    v = r["v"][0]+.06+(level%2)*.02
+    return [(u,v),(u+.48,v),(u+.48,v+.28),(u,v+.28)]
+
+
 def build_thuja(mb, c, height, radius, key, lod):
     habit = key % 3
     profile = THUJA_HABITS[habit]
@@ -1117,7 +1145,7 @@ def build_conifer(mb, c, height, radius, key, lod):
     for j in range(len(rings)-1):
         for i in range(sides):
             ii = (i+1)%sides
-            mb.face([rings[j][i],rings[j][ii],rings[j+1][ii],rings[j+1][i]],foliage_uv(key+i,j),MAT,
+            mb.face([rings[j][i],rings[j][ii],rings[j+1][ii],rings[j+1][i]],conifer_core_uv(key+i,j),MAT,
                     np.r_[(rings[j][i]+rings[j][ii])[:2]/2-c[:2],.15],
                     normals=[normals[j][i],normals[j][ii],normals[j+1][ii],normals[j+1][i]])
     # A plain dark atlas swatch is a WORKING_VALUE trunk colour, not a claimed bark scan.
