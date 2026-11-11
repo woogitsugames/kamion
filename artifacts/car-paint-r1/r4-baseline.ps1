@@ -60,7 +60,7 @@ if($Phase-eq'Capture') {
     if(Test-Path $out){throw "Do not overwrite historical capture directory: $out"}
     $env:KAMION_G_POSE_OUTPUT=[IO.Path]::GetFullPath("$out/poses")
     try {
-     $capture=@('-NoProfile','-ExecutionPolicy','Bypass','-File','scripts/visual-qa.ps1','-Scene',$scene,'-Tier',$tier,'-Lighting',$light,'-Gate3','artifacts/car-paint-r1/r1-cameras.json','-OutputDir',$out)
+     $capture=@('-NoProfile','-ExecutionPolicy','Bypass','-File','scripts/visual-qa.ps1','-Scene',$scene,'-Tier',$tier,'-Lighting',$light,'-Gate3','artifacts/car-paint-r1/r4-baseline-cameras.json','-OutputDir',$out)
      if($Cameras){$capture+=@('-Cameras',$Cameras)}
      & pwsh @capture
      if($LASTEXITCODE-ne0){throw "R4 BEFORE failed $tier $light"}
