@@ -60,3 +60,4 @@ Krok 22: kontrole radiancyjne potwierdzają obecność odbicia lakieru. High-ove
 
 Krok 23: niezależna ocena fog-only: zachować jako poprawkę kontraktu, brak widocznej regresji w sześciu parach, bez PASS materiału. Pierwsza ograniczona kalibracja DRL: 160000→2000 cd/m² jako WORKING_VALUE obrazu, nie pomiar fotometrii; stosunek noc/dzień 0,35 bez zmian, kodowanie RGBAHalf 1000 nitów/jednostkę zachowane. Zaktualizowano oczekiwania istniejących testów stanu i rzeczywistego dekodowania GPU. Geometria, przebiegi, keywordy i pozostałe lampy bez zmian. Następny krok: render drl-power-2000 Low/High overcast i oględziny paska.
 Zapisano drl-power-2000 Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Zapisano drl-power-2000 High overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
