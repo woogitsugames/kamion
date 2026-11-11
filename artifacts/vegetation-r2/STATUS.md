@@ -20,3 +20,6 @@
 
 - Baseline Low-clear wyrenderowany i zapisany; NASTĘPNY KROK: `Get-Content artifacts/vegetation-r2/before/Low-clear/stats.txt` i pomiar koron/ref.
 
+
+- Baseline High-overcast wyrenderowany i zapisany; NASTĘPNY KROK: `Get-Content artifacts/vegetation-r2/before/High-overcast/stats.txt` i pomiar koron/ref.
+
