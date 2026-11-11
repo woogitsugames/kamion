@@ -97,6 +97,20 @@ namespace Game.Editor.VisualQA
             return result;
         }
 
+        [Serializable] sealed class DirectionSample { public string ray; public float gpuRed; }
+        [Serializable] sealed class DirectionEvidence { public string graphicsDevice; public float captureActive; public DirectionSample[] samples; }
+        public static void WriteEnvironmentDirections(string output)
+        {
+            var rows=new List<DirectionSample>();
+            foreach(string ray in new[]{"0,1,0","0,-1,0","1,1,0","1,-1,0","0,1,1","0,-1,1"})
+            {
+                var shader=BuildProbeShader("SAMPLE_TEXTURECUBE_LOD(_KamionVehicleEnvCube, sampler_KamionVehicleEnvCube, normalize(float3("+ray+")),0).rgb");
+                rows.Add(new DirectionSample{ray=ray,gpuRed=Read(shader,1f,false,true,out _)});
+            }
+            File.WriteAllText(output,JsonUtility.ToJson(new DirectionEvidence{graphicsDevice=SystemInfo.graphicsDeviceType.ToString(),captureActive=Shader.GetGlobalFloat("_KamionVehicleCapture"),samples=rows.ToArray()},true));
+            Debug.Log("TRUCK_ENV_DIRECTION_PROBE: "+output);
+        }
+
         public static void RunBatch()
         {
             var shader = BuildProbeShader();

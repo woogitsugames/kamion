@@ -1,0 +1,926 @@
+[
+  {
+    "condition": "Low-overcast",
+    "roi": "front_glass",
+    "camera": "truck-front",
+    "roi960": [
+      335,
+      70,
+      590,
+      170
+    ],
+    "rgb": [
+      50.93592572712272,
+      52.56548908901745,
+      54.22089686752417
+    ],
+    "p50_luma_pct": 20.25372549019608,
+    "sd_luma_pct": 1.7859837178322124,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 4.23174354344641,
+    "sd_ratio": 0.42204441254435615,
+    "D44_threshold_pct": 2.962220480412487,
+    "D44_pass": false,
+    "D34_pass": false
+  },
+  {
+    "condition": "Low-overcast",
+    "roi": "threequarter_glass",
+    "camera": "truck-34",
+    "roi960": [
+      372,
+      155,
+      436,
+      197
+    ],
+    "rgb": [
+      48.1477501256913,
+      49.73692810457516,
+      50.77922322775264
+    ],
+    "p50_luma_pct": 17.92909803921569,
+    "sd_luma_pct": 2.611190667502118,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 23.191747777105057,
+    "sd_ratio": 0.11259137054258114,
+    "D44_threshold_pct": 16.23422344397354,
+    "D44_pass": false,
+    "D34_pass": false
+  },
+  {
+    "condition": "Low-overcast",
+    "roi": "gate_glass",
+    "camera": "truck-at-gate",
+    "roi960": [
+      654,
+      177,
+      704,
+      213
+    ],
+    "rgb": [
+      48.73919523099851,
+      48.81529433681073,
+      46.92101341281669
+    ],
+    "p50_luma_pct": 20.727686274509804,
+    "sd_luma_pct": 5.000287620073924,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 24.06170164140603,
+    "sd_ratio": 0.207811055701451,
+    "D44_threshold_pct": 16.84319114898422,
+    "D44_pass": false,
+    "D34_pass": false
+  },
+  {
+    "condition": "Low-overcast",
+    "roi": "flat_door",
+    "camera": "truck-34",
+    "roi960": [
+      479,
+      208,
+      505,
+      234
+    ],
+    "rgb": [
+      137.05190224237845,
+      139.92567397329302,
+      138.25850340136054
+    ],
+    "p50_luma_pct": 54.9873725490196,
+    "sd_luma_pct": 0.8817931572409198,
+    "clip250": 0.0,
+    "coat_delta_mean_pct": 0.8991805314718482,
+    "coat_delta_p95_pct": 1.1481568627450982,
+    "coat_delta_max_pct": 1.259843137254902
+  },
+  {
+    "condition": "Low-overcast",
+    "roi": "roof_deflector",
+    "camera": "truck-34",
+    "roi960": [
+      370,
+      110,
+      459,
+      131
+    ],
+    "rgb": [
+      205.3880003614349,
+      205.75612180356012,
+      200.0522273425499
+    ],
+    "p50_luma_pct": 79.40964705882352,
+    "sd_luma_pct": 9.685580699138402,
+    "clip250": 0.0018071744826963043,
+    "coat_delta_mean_pct": 3.5564174076967907,
+    "coat_delta_p95_pct": 8.992862745098039,
+    "coat_delta_max_pct": 22.466196078431373
+  },
+  {
+    "condition": "Low-overcast",
+    "roi": "day_lamp_left",
+    "camera": "truck-front",
+    "roi960": [
+      298,
+      276,
+      333,
+      299
+    ],
+    "rgb": [
+      60.84323089700997,
+      60.305855481727576,
+      58.320598006644516
+    ],
+    "p50_luma_pct": 17.591999999999995,
+    "sd_luma_pct": 13.235137938476132,
+    "clip250": 0.0
+  },
+  {
+    "condition": "Low-overcast",
+    "roi": "day_lamp_right",
+    "camera": "truck-front",
+    "roi960": [
+      600,
+      276,
+      629,
+      299
+    ],
+    "rgb": [
+      72.91172032193158,
+      65.19793762575453,
+      56.83978873239437
+    ],
+    "p50_luma_pct": 20.645882352941175,
+    "sd_luma_pct": 14.520061560351598,
+    "clip250": 0.0
+  },
+  {
+    "condition": "High-overcast",
+    "roi": "front_glass",
+    "camera": "truck-front",
+    "roi960": [
+      335,
+      70,
+      590,
+      170
+    ],
+    "rgb": [
+      55.702119904839535,
+      57.13781038150335,
+      58.433894621047955
+    ],
+    "p50_luma_pct": 21.905725490196076,
+    "sd_luma_pct": 1.7791843002537442,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 6.186364080334386,
+    "sd_ratio": 0.2875977354629887,
+    "D44_threshold_pct": 4.33045485623407,
+    "D44_pass": false,
+    "D34_pass": false
+  },
+  {
+    "condition": "High-overcast",
+    "roi": "threequarter_glass",
+    "camera": "truck-34",
+    "roi960": [
+      372,
+      155,
+      436,
+      197
+    ],
+    "rgb": [
+      54.96430367018602,
+      56.49170437405731,
+      57.5026395173454
+    ],
+    "p50_luma_pct": 21.038039215686272,
+    "sd_luma_pct": 2.237872175839691,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 23.836198236295903,
+    "sd_ratio": 0.09388544908273308,
+    "D44_threshold_pct": 16.68533876540713,
+    "D44_pass": false,
+    "D34_pass": false
+  },
+  {
+    "condition": "High-overcast",
+    "roi": "gate_glass",
+    "camera": "truck-at-gate",
+    "roi960": [
+      654,
+      177,
+      704,
+      213
+    ],
+    "rgb": [
+      51.306166169895675,
+      52.02812965722802,
+      50.97233606557377
+    ],
+    "p50_luma_pct": 21.2315294117647,
+    "sd_luma_pct": 3.998982509778467,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 26.250304957630114,
+    "sd_ratio": 0.15234042104398837,
+    "D44_threshold_pct": 18.375213470341077,
+    "D44_pass": false,
+    "D34_pass": false
+  },
+  {
+    "condition": "High-overcast",
+    "roi": "flat_door",
+    "camera": "truck-34",
+    "roi960": [
+      479,
+      208,
+      505,
+      234
+    ],
+    "rgb": [
+      134.54018644494835,
+      137.24489795918367,
+      136.14840010078106
+    ],
+    "p50_luma_pct": 54.0913725490196,
+    "sd_luma_pct": 1.1971822129430714,
+    "clip250": 0.0,
+    "coat_delta_mean_pct": 1.4897381174692101,
+    "coat_delta_p95_pct": 2.1275294117647054,
+    "coat_delta_max_pct": 3.108941176470588
+  },
+  {
+    "condition": "High-overcast",
+    "roi": "roof_deflector",
+    "camera": "truck-34",
+    "roi960": [
+      370,
+      110,
+      459,
+      131
+    ],
+    "rgb": [
+      217.59971085208278,
+      217.2338483780609,
+      212.98843408331075
+    ],
+    "p50_luma_pct": 86.27341176470587,
+    "sd_luma_pct": 12.113311026303425,
+    "clip250": 0.0427396765157676,
+    "coat_delta_mean_pct": 3.198276557935001,
+    "coat_delta_p95_pct": 6.049098039215687,
+    "coat_delta_max_pct": 49.973803921568624
+  },
+  {
+    "condition": "High-overcast",
+    "roi": "day_lamp_left",
+    "camera": "truck-front",
+    "roi960": [
+      298,
+      276,
+      333,
+      299
+    ],
+    "rgb": [
+      72.9015780730897,
+      73.42919435215947,
+      72.87416943521595
+    ],
+    "p50_luma_pct": 22.32462745098039,
+    "sd_luma_pct": 12.875459920885735,
+    "clip250": 0.0
+  },
+  {
+    "condition": "High-overcast",
+    "roi": "day_lamp_right",
+    "camera": "truck-front",
+    "roi960": [
+      600,
+      276,
+      629,
+      299
+    ],
+    "rgb": [
+      78.65291750503017,
+      73.09406438631791,
+      66.68863179074447
+    ],
+    "p50_luma_pct": 23.86337254901961,
+    "sd_luma_pct": 14.53503652568187,
+    "clip250": 0.0
+  },
+  {
+    "condition": "Low-clear",
+    "roi": "front_glass",
+    "camera": "truck-front",
+    "roi960": [
+      335,
+      70,
+      590,
+      170
+    ],
+    "rgb": [
+      67.1154649012942,
+      70.94847683611326,
+      71.08517391967025
+    ],
+    "p50_luma_pct": 27.08917647058823,
+    "sd_luma_pct": 1.35431618734779,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 5.755642930443265,
+    "sd_ratio": 0.23530232916020885,
+    "D44_threshold_pct": 8.0,
+    "D44_pass": false,
+    "D34_pass": true
+  },
+  {
+    "condition": "Low-clear",
+    "roi": "threequarter_glass",
+    "camera": "truck-34",
+    "roi960": [
+      372,
+      155,
+      436,
+      197
+    ],
+    "rgb": [
+      63.036073403720465,
+      66.31881598793363,
+      66.22624434389141
+    ],
+    "p50_luma_pct": 25.185019607843138,
+    "sd_luma_pct": 2.035889760938245,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 22.418714564367036,
+    "sd_ratio": 0.09081206485291302,
+    "D44_threshold_pct": 8.0,
+    "D44_pass": false,
+    "D34_pass": true
+  },
+  {
+    "condition": "Low-clear",
+    "roi": "gate_glass",
+    "camera": "truck-at-gate",
+    "roi960": [
+      654,
+      177,
+      704,
+      213
+    ],
+    "rgb": [
+      69.29824888226527,
+      69.61857302533532,
+      66.42371460506706
+    ],
+    "p50_luma_pct": 29.24345098039216,
+    "sd_luma_pct": 6.639645760259589,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 31.415250277755685,
+    "sd_ratio": 0.21135103815999035,
+    "D44_threshold_pct": 8.0,
+    "D44_pass": false,
+    "D34_pass": true
+  },
+  {
+    "condition": "Low-clear",
+    "roi": "flat_door",
+    "camera": "truck-34",
+    "roi960": [
+      479,
+      208,
+      505,
+      234
+    ],
+    "rgb": [
+      139.0612244897959,
+      141.68077601410934,
+      137.9856386999244
+    ],
+    "p50_luma_pct": 56.47105882352942,
+    "sd_luma_pct": 2.345684503135878,
+    "clip250": 0.0,
+    "coat_delta_mean_pct": 1.5144639189008937,
+    "coat_delta_p95_pct": 1.9324705882352937,
+    "coat_delta_max_pct": 2.2963137254901964
+  },
+  {
+    "condition": "Low-clear",
+    "roi": "roof_deflector",
+    "camera": "truck-34",
+    "roi960": [
+      370,
+      110,
+      459,
+      131
+    ],
+    "rgb": [
+      239.42441492726124,
+      239.63829402728834,
+      230.6114574862203
+    ],
+    "p50_luma_pct": 97.83788235294118,
+    "sd_luma_pct": 11.178803012520458,
+    "clip250": 0.5955543507725671,
+    "coat_delta_mean_pct": 0.5375799878458658,
+    "coat_delta_p95_pct": 1.2897254901960782,
+    "coat_delta_max_pct": 6.164392156862744
+  },
+  {
+    "condition": "Low-clear",
+    "roi": "day_lamp_left",
+    "camera": "truck-front",
+    "roi960": [
+      298,
+      276,
+      333,
+      299
+    ],
+    "rgb": [
+      104.65635382059801,
+      103.98318106312293,
+      98.85195182724253
+    ],
+    "p50_luma_pct": 34.38160784313726,
+    "sd_luma_pct": 16.609010097146843,
+    "clip250": 0.0
+  },
+  {
+    "condition": "Low-clear",
+    "roi": "day_lamp_right",
+    "camera": "truck-front",
+    "roi960": [
+      600,
+      276,
+      629,
+      299
+    ],
+    "rgb": [
+      120.87952716297787,
+      113.90165995975855,
+      99.75477867203219
+    ],
+    "p50_luma_pct": 40.333960784313724,
+    "sd_luma_pct": 17.757814325477938,
+    "clip250": 0.0
+  },
+  {
+    "condition": "High-clear",
+    "roi": "front_glass",
+    "camera": "truck-front",
+    "roi960": [
+      335,
+      70,
+      590,
+      170
+    ],
+    "rgb": [
+      72.219651034108,
+      76.29226059124073,
+      76.42292731092158
+    ],
+    "p50_luma_pct": 29.13333333333333,
+    "sd_luma_pct": 1.4723158307424837,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 6.786203472647674,
+    "sd_ratio": 0.21695721866825365,
+    "D44_threshold_pct": 8.0,
+    "D44_pass": false,
+    "D34_pass": true
+  },
+  {
+    "condition": "High-clear",
+    "roi": "threequarter_glass",
+    "camera": "truck-34",
+    "roi960": [
+      372,
+      155,
+      436,
+      197
+    ],
+    "rgb": [
+      68.95311714429361,
+      72.17998994469583,
+      72.10432378079437
+    ],
+    "p50_luma_pct": 27.117490196078432,
+    "sd_luma_pct": 2.2683454897472584,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 23.092239541703737,
+    "sd_ratio": 0.09822977479731707,
+    "D44_threshold_pct": 8.0,
+    "D44_pass": false,
+    "D34_pass": true
+  },
+  {
+    "condition": "High-clear",
+    "roi": "gate_glass",
+    "camera": "truck-at-gate",
+    "roi960": [
+      654,
+      177,
+      704,
+      213
+    ],
+    "rgb": [
+      74.21535022354695,
+      74.57516766020865,
+      71.35897913561848
+    ],
+    "p50_luma_pct": 33.55560784313725,
+    "sd_luma_pct": 7.439396574467706,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 37.06582687707507,
+    "sd_ratio": 0.20070769226704924,
+    "D44_threshold_pct": 8.0,
+    "D44_pass": false,
+    "D34_pass": true
+  },
+  {
+    "condition": "High-clear",
+    "roi": "flat_door",
+    "camera": "truck-34",
+    "roi960": [
+      479,
+      208,
+      505,
+      234
+    ],
+    "rgb": [
+      135.7785336356765,
+      138.3827160493827,
+      135.36054421768708
+    ],
+    "p50_luma_pct": 56.52611764705882,
+    "sd_luma_pct": 4.447994954679093,
+    "clip250": 0.0,
+    "coat_delta_mean_pct": 2.627965813485888,
+    "coat_delta_p95_pct": 3.584470588235294,
+    "coat_delta_max_pct": 4.53756862745098
+  },
+  {
+    "condition": "High-clear",
+    "roi": "roof_deflector",
+    "camera": "truck-34",
+    "roi960": [
+      370,
+      110,
+      459,
+      131
+    ],
+    "rgb": [
+      244.86120899972892,
+      245.4217041655372,
+      244.18180175295925
+    ],
+    "p50_luma_pct": 99.85843137254902,
+    "sd_luma_pct": 11.466462075936489,
+    "clip250": 0.8346435348332881,
+    "coat_delta_mean_pct": 0.2232860739488711,
+    "coat_delta_p95_pct": 1.1497254901960785,
+    "coat_delta_max_pct": 19.282196078431372
+  },
+  {
+    "condition": "High-clear",
+    "roi": "day_lamp_left",
+    "camera": "truck-front",
+    "roi960": [
+      298,
+      276,
+      333,
+      299
+    ],
+    "rgb": [
+      106.12603820598007,
+      106.46387043189368,
+      103.24107142857143
+    ],
+    "p50_luma_pct": 33.612235294117646,
+    "sd_luma_pct": 18.131548618688026,
+    "clip250": 0.0029069767441860465
+  },
+  {
+    "condition": "High-clear",
+    "roi": "day_lamp_right",
+    "camera": "truck-front",
+    "roi960": [
+      600,
+      276,
+      629,
+      299
+    ],
+    "rgb": [
+      115.85689134808852,
+      109.82671026156942,
+      100.49496981891348
+    ],
+    "p50_luma_pct": 34.03396078431373,
+    "sd_luma_pct": 20.970284547487367,
+    "clip250": 0.06740442655935613
+  },
+  {
+    "condition": "Low-lowsun",
+    "roi": "front_glass",
+    "camera": "truck-front",
+    "roi960": [
+      335,
+      70,
+      590,
+      170
+    ],
+    "rgb": [
+      40.040966713716756,
+      43.34080170705685,
+      43.02902526788732
+    ],
+    "p50_luma_pct": 16.555999999999997,
+    "sd_luma_pct": 0.6090802052045842,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 3.045476025482006,
+    "sd_ratio": 0.1999950746971273,
+    "D44_threshold_pct": 8.0,
+    "D44_pass": false,
+    "D34_pass": false
+  },
+  {
+    "condition": "Low-lowsun",
+    "roi": "threequarter_glass",
+    "camera": "truck-34",
+    "roi960": [
+      372,
+      155,
+      436,
+      197
+    ],
+    "rgb": [
+      60.26439165409754,
+      57.94570135746606,
+      51.45940170940171
+    ],
+    "p50_luma_pct": 18.29137254901961,
+    "sd_luma_pct": 6.296387843719448,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 34.61199522787207,
+    "sd_ratio": 0.18191346099138322,
+    "D44_threshold_pct": 8.0,
+    "D44_pass": false,
+    "D34_pass": false
+  },
+  {
+    "condition": "Low-lowsun",
+    "roi": "gate_glass",
+    "camera": "truck-at-gate",
+    "roi960": [
+      654,
+      177,
+      704,
+      213
+    ],
+    "rgb": [
+      32.340815946348734,
+      34.06203427719821,
+      35.01359910581222
+    ],
+    "p50_luma_pct": 13.58705882352941,
+    "sd_luma_pct": 1.2907976426273162,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 9.45912395862673,
+    "sd_ratio": 0.13646059067130709,
+    "D44_threshold_pct": 8.0,
+    "D44_pass": false,
+    "D34_pass": false
+  },
+  {
+    "condition": "Low-lowsun",
+    "roi": "flat_door",
+    "camera": "truck-34",
+    "roi960": [
+      479,
+      208,
+      505,
+      234
+    ],
+    "rgb": [
+      210.2108843537415,
+      190.6230788611741,
+      160.08314436885865
+    ],
+    "p50_luma_pct": 75.60831372549019,
+    "sd_luma_pct": 0.9027261208200555,
+    "clip250": 0.0,
+    "coat_delta_mean_pct": 1.0827722891625786,
+    "coat_delta_p95_pct": 1.6236862745098037,
+    "coat_delta_max_pct": 1.9041568627450975
+  },
+  {
+    "condition": "Low-lowsun",
+    "roi": "roof_deflector",
+    "camera": "truck-34",
+    "roi960": [
+      370,
+      110,
+      459,
+      131
+    ],
+    "rgb": [
+      87.10761724044457,
+      93.73732718894009,
+      99.2180356013373
+    ],
+    "p50_luma_pct": 34.46149019607843,
+    "sd_luma_pct": 6.905964206039404,
+    "clip250": 0.0,
+    "coat_delta_mean_pct": 1.8413953158746106,
+    "coat_delta_p95_pct": 4.231921568627451,
+    "coat_delta_max_pct": 17.331529411764706
+  },
+  {
+    "condition": "Low-lowsun",
+    "roi": "day_lamp_left",
+    "camera": "truck-front",
+    "roi960": [
+      298,
+      276,
+      333,
+      299
+    ],
+    "rgb": [
+      46.05917774086379,
+      46.22549833887043,
+      44.9437292358804
+    ],
+    "p50_luma_pct": 17.39850980392157,
+    "sd_luma_pct": 5.033025081561302,
+    "clip250": 0.0
+  },
+  {
+    "condition": "Low-lowsun",
+    "roi": "day_lamp_right",
+    "camera": "truck-front",
+    "roi960": [
+      600,
+      276,
+      629,
+      299
+    ],
+    "rgb": [
+      45.237927565392354,
+      44.249245472837025,
+      41.106136820925556
+    ],
+    "p50_luma_pct": 16.344745098039215,
+    "sd_luma_pct": 5.786878910114585,
+    "clip250": 0.0
+  },
+  {
+    "condition": "High-lowsun",
+    "roi": "front_glass",
+    "camera": "truck-front",
+    "roi960": [
+      335,
+      70,
+      590,
+      170
+    ],
+    "rgb": [
+      45.210810918272,
+      48.20827949079872,
+      47.45123026049846
+    ],
+    "p50_luma_pct": 18.490039215686274,
+    "sd_luma_pct": 0.924359912457328,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 5.749802253025281,
+    "sd_ratio": 0.16076377443606385,
+    "D44_threshold_pct": 8.0,
+    "D44_pass": false,
+    "D34_pass": false
+  },
+  {
+    "condition": "High-lowsun",
+    "roi": "threequarter_glass",
+    "camera": "truck-34",
+    "roi960": [
+      372,
+      155,
+      436,
+      197
+    ],
+    "rgb": [
+      65.41861488185017,
+      63.091566113624935,
+      56.56850175967823
+    ],
+    "p50_luma_pct": 19.943372549019603,
+    "sd_luma_pct": 6.626855044668108,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 39.55138563302233,
+    "sd_ratio": 0.167550515325946,
+    "D44_threshold_pct": 8.0,
+    "D44_pass": false,
+    "D34_pass": false
+  },
+  {
+    "condition": "High-lowsun",
+    "roi": "gate_glass",
+    "camera": "truck-at-gate",
+    "roi960": [
+      654,
+      177,
+      704,
+      213
+    ],
+    "rgb": [
+      39.96218330849479,
+      40.98733233979136,
+      40.92138599105812
+    ],
+    "p50_luma_pct": 15.352784313725486,
+    "sd_luma_pct": 4.371383682592234,
+    "clip250": 0.0,
+    "no_pane_sd_pct": 10.735444365742927,
+    "sd_ratio": 0.4071916851939012,
+    "D44_threshold_pct": 8.0,
+    "D44_pass": false,
+    "D34_pass": false
+  },
+  {
+    "condition": "High-lowsun",
+    "roi": "flat_door",
+    "camera": "truck-34",
+    "roi960": [
+      479,
+      208,
+      505,
+      234
+    ],
+    "rgb": [
+      225.7122700932225,
+      205.92139077853363,
+      179.60191484001007
+    ],
+    "p50_luma_pct": 81.63223529411765,
+    "sd_luma_pct": 1.6129816899583884,
+    "clip250": 0.0,
+    "coat_delta_mean_pct": 1.851650151418592,
+    "coat_delta_p95_pct": 2.997254901960784,
+    "coat_delta_max_pct": 3.7815686274509797
+  },
+  {
+    "condition": "High-lowsun",
+    "roi": "roof_deflector",
+    "camera": "truck-34",
+    "roi960": [
+      370,
+      110,
+      459,
+      131
+    ],
+    "rgb": [
+      88.07011836992862,
+      93.9047619047619,
+      98.78268726845577
+    ],
+    "p50_luma_pct": 34.54486274509804,
+    "sd_luma_pct": 7.030595215244333,
+    "clip250": 0.0,
+    "coat_delta_mean_pct": 1.9064383815512291,
+    "coat_delta_p95_pct": 4.120235294117647,
+    "coat_delta_max_pct": 26.810745098039213
+  },
+  {
+    "condition": "High-lowsun",
+    "roi": "day_lamp_left",
+    "camera": "truck-front",
+    "roi960": [
+      298,
+      276,
+      333,
+      299
+    ],
+    "rgb": [
+      58.53218438538206,
+      57.28426079734219,
+      54.618355481727576
+    ],
+    "p50_luma_pct": 21.678745098039215,
+    "sd_luma_pct": 7.1531394934709285,
+    "clip250": 0.0
+  },
+  {
+    "condition": "High-lowsun",
+    "roi": "day_lamp_right",
+    "camera": "truck-front",
+    "roi960": [
+      600,
+      276,
+      629,
+      299
+    ],
+    "rgb": [
+      55.14310865191147,
+      52.93158953722334,
+      48.844567404426556
+    ],
+    "p50_luma_pct": 20.35992156862745,
+    "sd_luma_pct": 8.299870010692118,
+    "clip250": 0.0
+  }
+]

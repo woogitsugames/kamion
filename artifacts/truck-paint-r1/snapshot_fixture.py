@@ -31,5 +31,6 @@ for name in ['Truck','Trailer']:
  for p in sorted(src.rglob('*')):
   if p.is_file():assets.append({'file':str(p.relative_to(root)).replace('\\','/'),'sha256':sha(p),'bytes':p.stat().st_size})
 evidence={'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'world_manifest_sha256':sha(manifest),'world_raw_verified':verified,'fab_actual_qa':qa,'source_assets':sources,'production_sources':production,'canonical_generated_assets':assets,'note':'Immutable pre-change canonical binary snapshot for material/shader comparisons; all truck/trailer builders/install completed first.'}
+shutil.copy2(root/'artifacts/truck-paint-r1/paint-color-probe.json',out/'paint-color-probe.json')
 (out/'fixture-proof.json').write_text(json.dumps(evidence,indent=2)+'\n',encoding='utf-8')
 print('BASELINE_PROOF: world192 verified, Fab15 available/320props, source assets',len(sources),'canonical snapshot files',len(assets))
