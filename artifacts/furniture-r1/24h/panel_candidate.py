@@ -21,7 +21,9 @@ def panel_fence(lin, line, col, key, flexible=False):
             P.append(b)
 
     for a, b in zip(np.asarray(line.coords)[:-1], np.asarray(line.coords)[1:]):
-        subdivide(a, b)
+        count = max(1, int(math.ceil(np.linalg.norm(b-a) / S.FENCE_PANEL_W)))
+        for j in range(count):
+            subdivide(a + (b-a)*j/count, a + (b-a)*(j+1)/count)
     P = np.asarray(P)
     Z = lin.z(P)
     bases = np.maximum(Z[:-1], Z[1:])

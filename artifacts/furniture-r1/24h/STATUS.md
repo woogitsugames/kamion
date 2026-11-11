@@ -11,3 +11,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 21:37: przygotowano ADR 0120 i runner Unity z acquire/release także przy błędzie. Przejrzano arkusz Commons: ogrodzenia przemysłowe i wyposażenie, bez dowodu dokładnego typu bocznych lamp. NASTĘPNY KROK: po build-before uruchomić pwsh artifacts/furniture-r1/24h/unity-step.ps1 -Step import -Phase before.
 
 2026-11-11T21:37:11.6591530+01:00: opracowano izolowany wariant panel_candidate.py: krótsze przęsła na skarpie, szczeliny desek, odchylenie boczne siatki. Kod produkcyjny nietknięty do końca baseline. NASTĘPNY KROK: sprawdzić wzrost liczby trójkątów oraz zastosować po baseline.
+
+2026-11-11T21:37:50.6953790+01:00: zmierzono kandydat na 15 m granicy (płasko, 10%, 40%); candidate-measurements.json. To test syntetyczny, nie wynik kamer ani telefonu. NASTĘPNY KROK: baseline import i pomiar rzeczywistych kadrów.
