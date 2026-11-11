@@ -465,3 +465,8 @@ M["plinth_dark"]["splash_h"] = 0.8
 #   side of the ambient. WORKING_VALUE, target: underside >= 55-60 % of the wall luminance at overcast.
 M["balcony_slab"]["color"][:] = [0.52, 0.515, 0.50]
 M["balcony_slab"]["sky_occ"] = [0.0, 0.0]
+# - review 0097 P2-n "dachówka: regularne pasy, jednolity ton": the 1.4 m roof_tiles set repeats its 7 x 4 tiles; a
+#   macro tone drift of 7 m / 0.16 (importer `macro` = [size m, strength], as on brick_red: lots, weathering, moss on
+#   the north slope) breaks the repeat over a slope. Tile roofs only - a pressed metal sheet is one tone. WORKING_VALUE.
+for _k in ("roof_tiles_red", "roof_tiles_brown"):
+    M[_k]["macro"] = [7.0, 0.16]

@@ -75,6 +75,11 @@ h1 = "bdot:2BE4B431-C792-1BF0-E053-CC2BA8C0D140"
 for k, az in enumerate((20, 110, 200, 290)):
     cam(f"r13_house2_az{az}", h2, zg_of("r10_house_2"), 20.0, az, 9.0, 4.0)
 cam("r13_house1_az200", h1, zg_of("r10_house_1"), 20.0, 200, 9.0, 4.0)
+# ADR 0107 (P1-h): eye-level views of the plots round the two review houses (fence, gate, driveway, garden)
+for az in (70, 160, 250, 340):
+    cam(f"r14_plot2_eye_az{az}", h2, ground(np.asarray(blds[h2]["poly"].centroid.coords[0])), 17.0, az, 1.7, 1.5, fov=62.0)
+cam("r14_plot1_eye_az250", h1, ground(np.asarray(blds[h1]["poly"].centroid.coords[0])), 17.0, 250, 1.7, 1.5, fov=62.0)
+cam("r14_plots_aerial_low", h2, zg_of("r10_house_2"), 38.0, 215, 16.0, 1.0, fov=60.0)
 cam("r13_houses_aerial", h2, zg_of("r10_house_2"), 60.0, 250, 35.0, 2.0, fov=60.0)
 b3 = base["r10_block_3"]["note"].split()[1]
 b1 = base["r10_block_1"]["note"].split()[1]
