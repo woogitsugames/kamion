@@ -332,13 +332,6 @@ Shader "Kamion/Vegetation"
                 // height on the crown is known: the lower half sees less sky through the leaves above it (the impostors
                 // and HLOD walls carry a baked visibility instead). Unflipped normal: a card seen from its back keeps its place.
                 occA = lerp(1.0 - _CrownShade, 1.0, smoothstep(-0.6, 0.75, normalize(i.normalWS).y));
-                // ADR0109: dense broadleaf card crowns lack the self-occlusion
-                // carried by their impostor bake. Strengthen existing material
-                // shade only above the pine policy (0.25); hero shade=0 and
-                // pine cards stay unchanged. WORKING_VALUE, validate by ROI.
-                // Shared by the normal and _KAMION_VEG_FAST paths.
-                half denseCrown = saturate((_CrownShade - 0.25h) * 4.0h);
-                occA = lerp(occA, occA * occA, denseCrown);
             #endif
             #if defined(_IMPOSTOR)
                 // View-space normal of the bake: x right, y up, z towards the camera.
