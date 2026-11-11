@@ -20,3 +20,9 @@
 - artifacts/integration-s9/merged/{High-overcast,Low-overcast,High-clear}/ (PNG, view/*.jpg 1280 px, sheet-*.jpg, stats.txt); tabela Low: artifacts/integration-s9/stats-low-compare.md (suma draws +0,5 %, tris +0,2 % vs buildings-r11/r3).
 - Brak różu/czarnych obiektów/brakujących tekstur. Znane sprzed integracji: rozciągnięte UV na murze g3b-rondo-putry-approach, ekran akustyczny w kadrze r10_shed_2.
 - NASTĘPNY KROK: `pwsh scripts/build-android.ps1 -Tier Low`
+
+## Kroki 6–7 — ZROBIONE (06:14–06:20)
+- APK Low czysty: artifacts/apk/kamion-0.1.0-ad4062539c.apk, 179,5 MB, SHA256 ad514a8bf6e6bfd795a72b2fcf5c645106e21fccc45682814789a7e1faffbf82 (BUILD_RESULT Succeeded, errors=0, warnings=12).
+- Swept path: 7 czerwonych = linia trasy z 0076 ścina narożniki rond (baza 10.11 czysta); szczegóły w REPORT.md.
+- REPORT.md gotowy; artefakty skopiowane do main/artifacts.
+- NASTĘPNY KROK (lider): `pwsh scripts/build-android.ps1 -SkipBuild -Apk artifacts/apk/kamion-0.1.0-ad4062539c.apk -Install -Run -Serial <A16> -Tier Low`
