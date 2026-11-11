@@ -28,3 +28,6 @@ Drugi przegląd potwierdził zamknięcie trzech blockerów, wskazując dodatkowo
 
 ## Kontrola masek
 Obejrzano wszystkie trzy nakładki próbek: fiolet oznacza wolne niebo, zielony asfalt. Próbki są małe, bez pojazdów i oznakowania; w drugim renderze fragment asfaltu zawiera cień, co pozostaje ograniczeniem fotometrii, zapisanym w adnotacji. Nie są pomiarem albedo. Logi podglądu przeglądarkowego przeniesiono do artefaktów rundy. Nie pozostawiono aktywnego serwera HTTP ani przeglądarki.
+
+## ADR r2
+Uzupełniono ADR 0111 o zmienione kryterium D51, wynik FAIL, ograniczenia metryk, warunki trendu i kontrolę integralności raportu. Zapis jest jawnie roboczy, przed końcową generacją i testami r2.

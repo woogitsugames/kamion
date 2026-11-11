@@ -26,3 +26,12 @@ W 42 identycznych kadrach Low overcast przed i po zmianach narzędzia estymacje 
 
 ## Kolejne rundy
 Ten sam worktree, gałęzie gpt-sbs-r2 i następne, merge main przed rundą, bez scalania do main i bez pushowania. R2: nowe metryki i raport HTML z trendem oraz odświeżanie wszystkich par około co 6 h. R3: ranking odstępstw dla sesji. Dalszy największy problem sbs: kalibracja C, w tym możliwy zły poziom jezdni przy mostach i brak początku trasy. Praca trwa do około 12.11.2026, 21:31 Europe/Warsaw.
+
+## r2 — metryki obrazu i raport D51 (w trakcie)
+Formalna recenzja świata po r1, REVIEW-2026-11-11-s11-sbs-r1-D51.md, zmieniła stan bramki z nieocenionego na FAIL: 12 kadrów rozpoznawalnych, 11 częściowych i 2 nierozpoznawalne. Raport zachowuje ten wynik i pełną kohortę 25 B, w tym cztery zastrzeżenia pozy. Nie ukrywa negatywnych ocen przez samo usunięcie kadru.
+
+Metryki v2 dodają kontrast RMS, kontrast percentylowy, gradient przy szerokości do 640 px i maski próbek z wyłączeniami. Domyślne heurystyki nieba/asfaltu pozostają orientacyjne. Ręczna kwalifikacja wymaga obu SHA, notatki kontroli i zgodnego światła; nie zmienia klasy pozy ani D51. Małe próbki trzech Low-clear r1 sprawdzono na nakładkach. Różny kierunek słońca i cienie ograniczają interpretację; to diagnostyka obrazu, nie pomiar albedo.
+
+Trend wymaga identycznego zdjęcia, pozy, masek, definicji metryk, tieru, światła oraz rozdzielczości źródła, analizy i gradientu. Próbki niesprawdzone lub C są wykluczone. Brak zgodnych danych jest jawnym brakiem trendu, a nie zerową różnicą. Ocenę D51 można przypisać bieżącej parze tylko po zgodności poprawnych SHA zdjęcia i renderu. Brak jawnie wskazanego pliku recenzji jest błędem; domyślnym źródłem jest repozytoryjny sbs_recognition.json.
+
+Raport HTML jest lokalny, bez zasobów sieciowych; zawiera źródła, licencje, epokę, wybór rundy i stanu oraz osobny przełącznik diagnostyki C. Diagnostyka musi zgadzać się z epoką pomiarów i nie może awansować wykluczonego kadru. Podgląd starych danych r1 obejrzano przy 1280×960 i 390×844. Nowy świat i końcowe testy r2 pozostają w toku; ten zapis nie oznacza zakończenia rundy.
