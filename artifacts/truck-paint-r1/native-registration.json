@@ -1,0 +1,906 @@
+{
+  "status": "native fixed-ROI pixel registration, not image rescaling/warping",
+  "note": "Exact RGB on unchanged object/background regions proves pixel alignment there; coat/glass/lamp regions may change radiance. Integer offset search +/-4pixels; zerooffsetminimum reported. Camera/runtime numeric metadata still being added.",
+  "rows": [
+    {
+      "condition": "High-overcast",
+      "stage": "candidate1",
+      "roi": "background_hall",
+      "coords960": [
+        20,
+        140,
+        420,
+        260
+      ],
+      "coordsNative": [
+        49,
+        341,
+        1024,
+        634
+      ],
+      "samePixelFraction": 0.9998564802660366,
+      "maxChannelDifference": 9.0,
+      "mae": 0.00015752165922814387,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.00015752165922814387
+    },
+    {
+      "condition": "High-overcast",
+      "stage": "candidate1",
+      "roi": "trailer_folds",
+      "coords960": [
+        532,
+        166,
+        610,
+        253
+      ],
+      "coordsNative": [
+        1297,
+        405,
+        1487,
+        617
+      ],
+      "samePixelFraction": 0.5942154915590864,
+      "maxChannelDifference": 8.0,
+      "mae": 0.5653839788149619,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.5653839788149619
+    },
+    {
+      "condition": "High-overcast",
+      "stage": "candidate1",
+      "roi": "grille_numberplate",
+      "coords960": [
+        659,
+        266,
+        716,
+        308
+      ],
+      "coordsNative": [
+        1606,
+        648,
+        1745,
+        751
+      ],
+      "samePixelFraction": 0.969337151637913,
+      "maxChannelDifference": 7.0,
+      "mae": 0.029591860492188773,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.029591860492188773
+    },
+    {
+      "condition": "High-overcast",
+      "stage": "candidate1",
+      "roi": "road",
+      "coords960": [
+        620,
+        336,
+        710,
+        350
+      ],
+      "coordsNative": [
+        1511,
+        819,
+        1731,
+        853
+      ],
+      "samePixelFraction": 1.0,
+      "maxChannelDifference": 0.0,
+      "mae": 0.0,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.0
+    },
+    {
+      "condition": "High-overcast",
+      "stage": "candidate1",
+      "roi": "frontwheel",
+      "coords960": [
+        638,
+        293,
+        666,
+        341
+      ],
+      "coordsNative": [
+        1555,
+        714,
+        1623,
+        831
+      ],
+      "samePixelFraction": 0.9351432880844646,
+      "maxChannelDifference": 6.0,
+      "mae": 0.10231271995977878,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.10231271995977878
+    },
+    {
+      "condition": "High-overcast",
+      "stage": "candidate1",
+      "roi": "roof_outline",
+      "coords960": [
+        642,
+        137,
+        729,
+        169
+      ],
+      "coordsNative": [
+        1565,
+        334,
+        1777,
+        412
+      ],
+      "samePixelFraction": 0.7679608127721336,
+      "maxChannelDifference": 12.0,
+      "mae": 0.2948717948717949,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.2948717948717949
+    },
+    {
+      "condition": "High-overcast",
+      "stage": "candidate2-boxmip",
+      "roi": "background_hall",
+      "coords960": [
+        20,
+        140,
+        420,
+        260
+      ],
+      "coordsNative": [
+        49,
+        341,
+        1024,
+        634
+      ],
+      "samePixelFraction": 0.30216504769405794,
+      "maxChannelDifference": 8.0,
+      "mae": 0.49374755695574807,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.49374755695574807
+    },
+    {
+      "condition": "High-overcast",
+      "stage": "candidate2-boxmip",
+      "roi": "trailer_folds",
+      "coords960": [
+        532,
+        166,
+        610,
+        253
+      ],
+      "coordsNative": [
+        1297,
+        405,
+        1487,
+        617
+      ],
+      "samePixelFraction": 0.21958788480635552,
+      "maxChannelDifference": 23.0,
+      "mae": 0.9649122807017544,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.9649122807017544
+    },
+    {
+      "condition": "High-overcast",
+      "stage": "candidate2-boxmip",
+      "roi": "grille_numberplate",
+      "coords960": [
+        659,
+        266,
+        716,
+        308
+      ],
+      "coordsNative": [
+        1606,
+        648,
+        1745,
+        751
+      ],
+      "samePixelFraction": 0.3448348117622407,
+      "maxChannelDifference": 8.0,
+      "mae": 0.521873763125422,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.521873763125422
+    },
+    {
+      "condition": "High-overcast",
+      "stage": "candidate2-boxmip",
+      "roi": "road",
+      "coords960": [
+        620,
+        336,
+        710,
+        350
+      ],
+      "coordsNative": [
+        1511,
+        819,
+        1731,
+        853
+      ],
+      "samePixelFraction": 0.2872994652406417,
+      "maxChannelDifference": 2.0,
+      "mae": 0.49224598930481284,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.49224598930481284
+    },
+    {
+      "condition": "High-overcast",
+      "stage": "candidate2-boxmip",
+      "roi": "frontwheel",
+      "coords960": [
+        638,
+        293,
+        666,
+        341
+      ],
+      "coordsNative": [
+        1555,
+        714,
+        1623,
+        831
+      ],
+      "samePixelFraction": 0.3201357466063348,
+      "maxChannelDifference": 7.0,
+      "mae": 0.5769230769230769,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.5769230769230769
+    },
+    {
+      "condition": "High-overcast",
+      "stage": "candidate2-boxmip",
+      "roi": "roof_outline",
+      "coords960": [
+        642,
+        137,
+        729,
+        169
+      ],
+      "coordsNative": [
+        1565,
+        334,
+        1777,
+        412
+      ],
+      "samePixelFraction": 0.23850991775520078,
+      "maxChannelDifference": 18.0,
+      "mae": 0.8032373810675697,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.8032373810675697
+    },
+    {
+      "condition": "High-clear",
+      "stage": "candidate1",
+      "roi": "background_hall",
+      "coords960": [
+        20,
+        140,
+        420,
+        260
+      ],
+      "coordsNative": [
+        49,
+        341,
+        1024,
+        634
+      ],
+      "samePixelFraction": 0.9997899711210292,
+      "maxChannelDifference": 33.0,
+      "mae": 0.0009824684227414603,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.0009824684227414603
+    },
+    {
+      "condition": "High-clear",
+      "stage": "candidate1",
+      "roi": "trailer_folds",
+      "coords960": [
+        532,
+        166,
+        610,
+        253
+      ],
+      "coordsNative": [
+        1297,
+        405,
+        1487,
+        617
+      ],
+      "samePixelFraction": 0.45295431976166833,
+      "maxChannelDifference": 16.0,
+      "mae": 1.0269778219132737,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 1.0269778219132737
+    },
+    {
+      "condition": "High-clear",
+      "stage": "candidate1",
+      "roi": "grille_numberplate",
+      "coords960": [
+        659,
+        266,
+        716,
+        308
+      ],
+      "coordsNative": [
+        1606,
+        648,
+        1745,
+        751
+      ],
+      "samePixelFraction": 0.9844241111964797,
+      "maxChannelDifference": 7.0,
+      "mae": 0.011012549183953807,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.011012549183953807
+    },
+    {
+      "condition": "High-clear",
+      "stage": "candidate1",
+      "roi": "road",
+      "coords960": [
+        620,
+        336,
+        710,
+        350
+      ],
+      "coordsNative": [
+        1511,
+        819,
+        1731,
+        853
+      ],
+      "samePixelFraction": 1.0,
+      "maxChannelDifference": 0.0,
+      "mae": 0.0,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.0
+    },
+    {
+      "condition": "High-clear",
+      "stage": "candidate1",
+      "roi": "frontwheel",
+      "coords960": [
+        638,
+        293,
+        666,
+        341
+      ],
+      "coordsNative": [
+        1555,
+        714,
+        1623,
+        831
+      ],
+      "samePixelFraction": 0.9636752136752137,
+      "maxChannelDifference": 5.0,
+      "mae": 0.02492877492877493,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.02492877492877493
+    },
+    {
+      "condition": "High-clear",
+      "stage": "candidate1",
+      "roi": "roof_outline",
+      "coords960": [
+        642,
+        137,
+        729,
+        169
+      ],
+      "coordsNative": [
+        1565,
+        334,
+        1777,
+        412
+      ],
+      "samePixelFraction": 0.9031809385582971,
+      "maxChannelDifference": 18.0,
+      "mae": 0.4327527818093856,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.4327527818093856
+    },
+    {
+      "condition": "High-clear",
+      "stage": "candidate2-boxmip",
+      "roi": "background_hall",
+      "coords960": [
+        20,
+        140,
+        420,
+        260
+      ],
+      "coordsNative": [
+        49,
+        341,
+        1024,
+        634
+      ],
+      "samePixelFraction": 0.29001487704559376,
+      "maxChannelDifference": 33.0,
+      "mae": 0.4850908666608325,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.4850908666608325
+    },
+    {
+      "condition": "High-clear",
+      "stage": "candidate2-boxmip",
+      "roi": "trailer_folds",
+      "coords960": [
+        532,
+        166,
+        610,
+        253
+      ],
+      "coordsNative": [
+        1297,
+        405,
+        1487,
+        617
+      ],
+      "samePixelFraction": 0.1500248262164846,
+      "maxChannelDifference": 19.0,
+      "mae": 1.3970622310493215,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 1.3970622310493215
+    },
+    {
+      "condition": "High-clear",
+      "stage": "candidate2-boxmip",
+      "roi": "grille_numberplate",
+      "coords960": [
+        659,
+        266,
+        716,
+        308
+      ],
+      "coordsNative": [
+        1606,
+        648,
+        1745,
+        751
+      ],
+      "samePixelFraction": 0.2892365719075225,
+      "maxChannelDifference": 10.0,
+      "mae": 0.4933296081581337,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.4933296081581337
+    },
+    {
+      "condition": "High-clear",
+      "stage": "candidate2-boxmip",
+      "roi": "road",
+      "coords960": [
+        620,
+        336,
+        710,
+        350
+      ],
+      "coordsNative": [
+        1511,
+        819,
+        1731,
+        853
+      ],
+      "samePixelFraction": 0.27901069518716576,
+      "maxChannelDifference": 2.0,
+      "mae": 0.49175579322638147,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.49175579322638147
+    },
+    {
+      "condition": "High-clear",
+      "stage": "candidate2-boxmip",
+      "roi": "frontwheel",
+      "coords960": [
+        638,
+        293,
+        666,
+        341
+      ],
+      "coordsNative": [
+        1555,
+        714,
+        1623,
+        831
+      ],
+      "samePixelFraction": 0.28833584715937655,
+      "maxChannelDifference": 7.0,
+      "mae": 0.5072900955253896,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.5072900955253896
+    },
+    {
+      "condition": "High-clear",
+      "stage": "candidate2-boxmip",
+      "roi": "roof_outline",
+      "coords960": [
+        642,
+        137,
+        729,
+        169
+      ],
+      "coordsNative": [
+        1565,
+        334,
+        1777,
+        412
+      ],
+      "samePixelFraction": 0.3140420899854862,
+      "maxChannelDifference": 18.0,
+      "mae": 0.871109498467989,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.871109498467989
+    },
+    {
+      "condition": "Low-overcast",
+      "stage": "candidate1",
+      "roi": "background_hall",
+      "coords960": [
+        20,
+        140,
+        420,
+        260
+      ],
+      "coordsNative": [
+        49,
+        341,
+        1024,
+        634
+      ],
+      "samePixelFraction": 1.0,
+      "maxChannelDifference": 0.0,
+      "mae": 0.0,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.0
+    },
+    {
+      "condition": "Low-overcast",
+      "stage": "candidate1",
+      "roi": "trailer_folds",
+      "coords960": [
+        532,
+        166,
+        610,
+        253
+      ],
+      "coordsNative": [
+        1297,
+        405,
+        1487,
+        617
+      ],
+      "samePixelFraction": 0.6612462760675273,
+      "maxChannelDifference": 5.0,
+      "mae": 0.42883151274412445,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.42883151274412445
+    },
+    {
+      "condition": "Low-overcast",
+      "stage": "candidate1",
+      "roi": "grille_numberplate",
+      "coords960": [
+        659,
+        266,
+        716,
+        308
+      ],
+      "coordsNative": [
+        1606,
+        648,
+        1745,
+        751
+      ],
+      "samePixelFraction": 0.9821191590416987,
+      "maxChannelDifference": 3.0,
+      "mae": 0.009475914414099788,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.009475914414099788
+    },
+    {
+      "condition": "Low-overcast",
+      "stage": "candidate1",
+      "roi": "road",
+      "coords960": [
+        620,
+        336,
+        710,
+        350
+      ],
+      "coordsNative": [
+        1511,
+        819,
+        1731,
+        853
+      ],
+      "samePixelFraction": 1.0,
+      "maxChannelDifference": 0.0,
+      "mae": 0.0,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.0
+    },
+    {
+      "condition": "Low-overcast",
+      "stage": "candidate1",
+      "roi": "frontwheel",
+      "coords960": [
+        638,
+        293,
+        666,
+        341
+      ],
+      "coordsNative": [
+        1555,
+        714,
+        1623,
+        831
+      ],
+      "samePixelFraction": 0.9514831573655103,
+      "maxChannelDifference": 3.0,
+      "mae": 0.05387967152673035,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.05387967152673035
+    },
+    {
+      "condition": "Low-overcast",
+      "stage": "candidate1",
+      "roi": "roof_outline",
+      "coords960": [
+        642,
+        137,
+        729,
+        169
+      ],
+      "coordsNative": [
+        1565,
+        334,
+        1777,
+        412
+      ],
+      "samePixelFraction": 0.7000483792936623,
+      "maxChannelDifference": 4.0,
+      "mae": 0.17966860183841316,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.17966860183841316
+    },
+    {
+      "condition": "Low-overcast",
+      "stage": "candidate2-boxmip",
+      "roi": "background_hall",
+      "coords960": [
+        20,
+        140,
+        420,
+        260
+      ],
+      "coordsNative": [
+        49,
+        341,
+        1024,
+        634
+      ],
+      "samePixelFraction": 1.0,
+      "maxChannelDifference": 0.0,
+      "mae": 0.0,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.0
+    },
+    {
+      "condition": "Low-overcast",
+      "stage": "candidate2-boxmip",
+      "roi": "trailer_folds",
+      "coords960": [
+        532,
+        166,
+        610,
+        253
+      ],
+      "coordsNative": [
+        1297,
+        405,
+        1487,
+        617
+      ],
+      "samePixelFraction": 0.4452581926514399,
+      "maxChannelDifference": 6.0,
+      "mae": 0.5167659715326051,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.5167659715326051
+    },
+    {
+      "condition": "Low-overcast",
+      "stage": "candidate2-boxmip",
+      "roi": "grille_numberplate",
+      "coords960": [
+        659,
+        266,
+        716,
+        308
+      ],
+      "coordsNative": [
+        1606,
+        648,
+        1745,
+        751
+      ],
+      "samePixelFraction": 0.97010546902284,
+      "maxChannelDifference": 2.0,
+      "mae": 0.013690018858699448,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.013690018858699448
+    },
+    {
+      "condition": "Low-overcast",
+      "stage": "candidate2-boxmip",
+      "roi": "road",
+      "coords960": [
+        620,
+        336,
+        710,
+        350
+      ],
+      "coordsNative": [
+        1511,
+        819,
+        1731,
+        853
+      ],
+      "samePixelFraction": 1.0,
+      "maxChannelDifference": 0.0,
+      "mae": 0.0,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.0
+    },
+    {
+      "condition": "Low-overcast",
+      "stage": "candidate2-boxmip",
+      "roi": "frontwheel",
+      "coords960": [
+        638,
+        293,
+        666,
+        341
+      ],
+      "coordsNative": [
+        1555,
+        714,
+        1623,
+        831
+      ],
+      "samePixelFraction": 0.9440673705379587,
+      "maxChannelDifference": 3.0,
+      "mae": 0.05706385118149824,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.05706385118149824
+    },
+    {
+      "condition": "Low-overcast",
+      "stage": "candidate2-boxmip",
+      "roi": "roof_outline",
+      "coords960": [
+        642,
+        137,
+        729,
+        169
+      ],
+      "coordsNative": [
+        1565,
+        334,
+        1777,
+        412
+      ],
+      "samePixelFraction": 0.6091557813255927,
+      "maxChannelDifference": 8.0,
+      "mae": 0.31636026447347204,
+      "bestIntegerOffsetWithin4px": [
+        0,
+        0
+      ],
+      "bestOffsetMae": 0.31636026447347204
+    }
+  ]
+}
