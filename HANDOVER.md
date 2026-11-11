@@ -2,7 +2,7 @@
 
 ## Najpierw (dla sesji 10)
 - **Start: `docs/owner/START-PROMPT-S10.md`.** Ta sekcja = prawda o stanie.
-- **main = ten commit, wypchnięty. pytest gis na main: 352 ✓ / 0 ✗ po 0094.** Regeneracja po 0096 mogła się nie zakończyć przed końcem sesji — sprawdź `artifacts/logs/s9-main-regen-0096.log`; przy `PYTEST EXIT 0` zacommituj `Data/Regions`, inaczej: build_world → export-route → fidelity/run.py → `uv run --project tools/worldgen python -m pytest tests/gis -q`.
+- **main = ten commit, wypchnięty. pytest gis na main: 355 ✓ / 0 ✗ po 0096 (regeneracja zacommitowana).**
 - **Limity (08:00):** 5 h — 65 % (reset 09:30 UTC); **tygodniowy Fable 51 %** (reset 17.11) — przy 3 agentach naraz skończy się ok. 12.11. Właściciel zamknął s9 przed decyzją o tempie — **zapytaj go na starcie s10** (max 2 agentów / Sonnet do lżejszych zadań / dalej 3).
 - **Megascans (0084) działa na main tylko dzięki lokalnym produktom** (`pwsh scripts/prepare-megascans.ps1` → ignorowane `art-source/world/megascans/_generated`). **Każdy nowy worktree musi mieć te produkty** (robocopy `art-source/world/megascans` z main albo prepare), inaczej po cichu fallback.
 - **Determinizm naprawiony (0096):** generator świata daje identyczne hashe niezależnie od PYTHONHASHSEED (stan: 1526 stanowisk / 908 aut). Test `tests/gis/test_determinism.py`.
