@@ -20,3 +20,6 @@
 
 - Step7: unchanged baseline car geometry tests11/11 PASS (16.2 s). Prepared native2340x1080 fixed-ROI/CPU-counter comparison script; ROIs remain provisional until fresh PNG visual verification. Current raw confirms historical black/grey/blue cameras target correct colours within4/3/2.7cm; historical silver now targets a blackSUV within18cm, retained as unchanged regression view but never silver-colour evidence. Unity still held; zero fresh Unity captures, zero production changes.
 - NEXT COMMAND: after explicit ROOT release and both locks absent, baseline.ps1 -Phase Import, then Fixtures and Capture; inspect fresh ROI semantics before measurements.
+
+- Step8: ROOT requested restore of existing ignored Commons asphalt detail input skipped by nested-photo /XJ bootstrap. Copied only Worn_cracked_asphalt_pavement.jpg; verifiedSHA256 e26237d85c097af9560537c60e6ed6f67ed0090e284398a5d7a7a2bf41889135,1644231bytes and pinnedSHA1. All4 existing detail maps byte-identical to main/E proof; no map or production change, G baseline remains frozen.
+- NEXT COMMAND: await explicit ROOT Unity release and both locks absent; baseline.ps1 -Phase Import (G FIRST; D implementation stays queued).
