@@ -106,3 +106,13 @@ Zasady: na zdjęciach są osoby (także dzieci) — tylko jako referencja, nigdy
 40 unikalnych zdjęć Mapillary przy G3-A/G3-B: [pełny rejestr autorów i źródeł](refs/sbs-gate3-attribution.md), metadane i SHA256 w `Data/Regions/bialystok-industrial-c/sbs_references.json`. Kamery w nowym `sbs_cameras.json`, jawne korekty w `sbs_authored_overrides.json`; `control_cameras.json` bez zmian. GPS przeliczony do EPSG:2180, kurs skorygowany o zbieżność południków. `sbs_intrinsics.json` zawiera publiczne parametry całych 40 zdjęć (27 fisheye, 13 perspective); offline prepare prostuje zniekształcenia i wyprowadza zgodny FOV renderu, zachowując oryginały. Po przeglądzie renderów skorygowano GPS bliskich ujęć oraz wysokość ośmiu zdjęć z pomostów; nadal oznaczono niepewność GPS/modelu wysokości/oka/horyzontu/roll jako WORKING_VALUE. Gotowe porównania: `artifacts/sbs-gate3/sheets/` (160 arkuszy, Low/High × clear/overcast), szczegóły w ADR 0103 i raporcie.
 
 Zdjęcia publiczne nie zastępują wymaganych w docs/03 zdjęć właściciela ani jego akceptacji. Część zdjęć pochodzi z zachodu słońca; histogramów i masek RGB nie traktować jako pomiaru albedo ani PASS bramki. Brak referencji początkowych ~300 m G3-A; 20 zdjęć z okolic ronda nie oznacza pełnego pokrycia segmentu.
+
+## Posesje jednorodzinne — referencje do rundy zabudowy r7 (ADR 0114; dodane 2026-11-11)
+Analiza typologii (płoty, bramy, podjazdy, zieleń, barwy) z odsyłaczami do klatek: [`docs/refs/posesje-bialystok.md`](refs/posesje-bialystok.md). Arkusze ≤ 960 px: `artifacts/refs-posesje/` (`mapillary_sheet1.jpg`, `mapillary_sheet2.jpg`, `commons_sheet.jpg`).
+
+| Źródło | Licencja | Dane | Gdzie | Użycie |
+|---|---|---|---|---|
+| Mapillary (33 klatki P01-P33; 5 z regionu `bialystok-industrial-c`, reszta z osiedli domków 4-7 km dalej: okolice OSM Mickiewicza, Bojary-Chopina, Piasta II, Zaścianki, Jakimy) | CC BY-SA 4.0 | zdjęcia uliczne 2017-2024, `tools/refs/posesje_fetch.py` (jedno zapytanie bbox na komórkę 0,01°, cache; wybór po BDOT10k/OSM `building=house`) | `Data/raw/mapillary/posesje/` (poza gitem), `manifest.jsonl` | tylko referencja, bez pikseli w buildzie |
+| Wikimedia Commons (7 zdjęć C01-C07: Supraśl, Tykocin, Podlaskie, 1 brama z Solca Kujawskiego) | CC0 (1), CC BY 4.0 (5), CC BY-SA 4.0 (1) | `tools/refs/posesje_commons.py` (wyszukiwanie tekstowe, extmetadata) | `Data/raw/refs/posesje/` (poza gitem), `manifest.jsonl` | CC0/BY możliwa tekstura (wpis w LICENSES); BY-SA tylko referencja |
+
+LUKI: brak zbliżeń bram przesuwnych, zjazdów z obniżonym krawężnikiem, nawierzchni podjazdów, skrzynek/słupków licznikowych; boczne ulice regionu C nie mają pokrycia Mapillary (28 z 1004 zdjęć przy domach). Klatki z pojazdami/dashcamem oznaczone "tylko referencja, nie publikować".

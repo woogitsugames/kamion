@@ -256,3 +256,10 @@ Rakoon's CC0 `7204_May_2021_in_Białystok.jpg` and Mapillary p42/p45/p47
 authored WORKING_VALUE shapes without text or brands. See ADR 0105.
 ## ADR 0103 — fotografie w arkuszach side-by-side G3
 Każde z 40 zdjęć Mapillary (CC BY-SA 4.0, tylko referencje, bez pikseli w grze) ma osobny wpis z autorem, datą, URL i SHA256 w [rejestrze SBS](refs/sbs-gate3-attribution.md). Dane maszynowe: `Data/Regions/bialystok-industrial-c/sbs_references.json`, publiczne parametry obiektywów: `sbs_intrinsics.json`. Modyfikacje panelu zdjęcia: prostowanie radialne według modelu obiektywu, kadrowanie, zmniejszenie, siatka i linia horyzontu. Panel fotograficzny i jego modyfikacje na CC BY-SA 4.0; panel renderu zachowuje warunki projektu. Oryginały i pochodne (`artifacts/sbs-gate3/rectified`) poza gitem i buildem.
+
+## Referencje posesji jednorodzinnych — r7 (2026-11-11, tylko referencja, nie do buildu)
+Zdjęcia nie wchodzą do builda ani tekstur. Rejestr: [`docs/refs/posesje-bialystok.md`](refs/posesje-bialystok.md) (autor, data, URL, SHA256 per zdjęcie); dane maszynowe `Data/raw/mapillary/posesje/manifest.jsonl` i `Data/raw/refs/posesje/manifest.jsonl` (poza gitem).
+- Mapillary, 33 zdjęcia (autorzy: szurek, richlv, czadzik, strudel, grobin), CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/. Pobrane przez Graph API v4 (`thumb_2048_url`). Użycie: wzór proporcji/typologii; każda przyszła pochodna piksele-do-tekstury wymaga osobnej decyzji (share-alike, ADR 0065). Jeżeli zostaną użyte w publicznym raporcie/arkuszu, atrybucja z rejestru.
+- Wikimedia Commons, 7 zdjęć: C01 Rakoon (CC0 1.0), C02-C05 i C07 Krzysztof Popławski (CC BY 4.0), C06 Jacek Fink-Finowicki (CC BY-SA 4.0). Licencje z extmetadata Commons w dniu pobrania; strony plików w rejestrze.
+- Odrzucone: `Wysoki stoczek 58 Bialystok.jpg` (wygląd jak zrzut z panoramy Google; usunięty z dysku i manifestu).
+- Google Maps/Street View/Earth/3D Tiles: nie użyte.
