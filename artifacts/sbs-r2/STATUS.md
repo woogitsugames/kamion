@@ -40,3 +40,6 @@ Parser PowerShell potwierdził składnię wrappera. Dodano ponowne sprawdzanie S
 
 ## Powiązanie adnotacji z kompozycją
 Migawka powstaje teraz w nowym katalogu tymczasowym. Weryfikowane są skopiowane bajty oraz SHA fotometrii i punktów względem metryk wszystkich żądanych stanów, również diagnostycznych. Dopiero po tych kontrolach powstaje ZIP i publikowane są inputs. Poprzedni katalog jest zachowywany w inputs-history, a każda ścieżka przeniesienia jest sprawdzana jako leżąca wewnątrz własnego OutputRoot. Parser PowerShell przechodzi.
+
+## Próba migawki bez obciążenia generatorów
+Lekka kontrola PowerShell na małych sztucznych plikach przechodzi: pierwszy zapis, usunięcie opcjonalnej adnotacji bez pozostawienia starej kopii, zgodny skład ZIP, odrzucenie zmienionej adnotacji i zmienionej kamery oraz zachowanie poprzedniej poprawnej migawki po błędzie. Nie uruchamiano Unity ani testów GIS poza slotem. Właściwy generator wciąż czeka na heavy.
