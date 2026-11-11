@@ -407,9 +407,14 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                             strip(buf, c, sr - S.P11_SQUARE / 2, sr + S.P11_SQUARE / 2, lat, S.P11_SQUARE, "P-11")
                     cnt("P-11 cycle crossing")
                     c.meta.setdefault("crossings", []).append(round(float(s_c), 2))
-                else:
-                    report.setdefault("crossings_skipped", []).append(osm)
-                continue
+                    continue
+                if _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-11"):
+                    cnt("P-11 cycle crossing")
+                    cnt("P-11 cycle crossing in junction")
+                    report.setdefault("crossings_in_junction", []).append(osm)
+                    c.meta.setdefault("crossings", []).append(round(float(s_c), 2))
+                    continue
+                # not placeable as P-11 (too close to the node): handled like any crossing below (moved onto the ribbon)
             half = S.P10_WIDTH / 2
             if s_c - half < s0 + 0.5 or s_c + half > s1 - 0.5:
                 # inside a junction patch (wide signalised mouths, roundabout entries: Mapillary p40 / p42 show the
@@ -505,7 +510,7 @@ P10_DRAPE_STEP_M = 0.5      # vertices along a stripe on a patch (patch facets a
 P10_DRAPE_MAX_STEP_M = 0.06  # a larger height step between samples 0.5 m apart is a kerb, not the carriageway
 
 
-def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of):
+def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10"):
     """P-10 inside a junction patch: stripes in the chain frame at the OSM station, z = top of the patch mesh + lift.
     False (nothing added) when the station is too close to the node or any vertex is off the road meshes."""
     half = S.P10_WIDTH / 2
@@ -528,6 +533,29 @@ def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of):
     if float(np.dot(l_probe, nrm)) < 0:                 # keep the chain's lateral sign convention
         nrm = -nrm
     meshes = []
+    if kind == "P-11":      # cycle crossing (ADR 0093): two rows of squares instead of stripes
+        nsq = int(math.floor((W + S.P11_GAP) / (S.P11_SQUARE + S.P11_GAP)))
+        start = -(nsq * S.P11_SQUARE + (nsq - 1) * S.P11_GAP) / 2
+        for row in (-1.0, 1.0):
+            sr = s_c + row * (S.P11_CLEAR + S.P11_SQUARE) / 2
+            sq = np.array([sr - S.P11_SQUARE / 2, sr + S.P11_SQUARE / 2])
+            for k_ in range(nsq):
+                lat = start + k_ * (S.P11_SQUARE + S.P11_GAP) + S.P11_SQUARE / 2
+                sides = []
+                for l_ in (lat - S.P11_SQUARE / 2, lat + S.P11_SQUARE / 2):
+                    p = o + np.outer(sq - s_c, t) + nrm * l_
+                    z = np.array([top_of(float(e), float(nn)) for e, nn in p])
+                    if not np.all(np.isfinite(z)) or np.max(np.abs(np.diff(z))) > P10_DRAPE_MAX_STEP_M:
+                        return False
+                    sides.append(np.column_stack([p, z + S.MARKING_LIFT]))
+                meshes.append((lat, sides, sq))
+        for lat, (a, b), sq in meshes:
+            V = np.concatenate([a[:, None], b[:, None]], axis=1).reshape(-1, 3)
+            uv = np.column_stack([np.repeat(sq - sq[0], 2), np.tile([0.0, 1.0], 2)])
+            lv = np.tile([lat - S.P11_SQUARE / 2, lat + S.P11_SQUARE / 2], 2)
+            buf.add("markings", "marking_white", V, uv, np.array([(0, 2, 3), (0, 3, 1)]), src=f"P-11J@{c.id}",
+                    UV1=_paint_uv1(c, np.repeat(sq, 2), lv, "P-10"))
+        return True
     for k_ in range(n):
         lat = -used / 2 + k_ * (S.P10_STRIPE + S.P10_GAP) + S.P10_STRIPE / 2
         sides = []

@@ -204,6 +204,11 @@ def build(buf, net, juncs, report, marked_hw, lane_layout):
                 if LineString(pairs[x][3]).intersects(LineString(pairs[y][3])):
                     crossing |= {x, y}
         used = False
+        # candidates of every pair of this junction, then one greedy pass by offset mismatch: a line of an arm is
+        # continued once, a line of the exit arm is reached at most twice (the two edges of a merging wedge end in
+        # one lane line) and no connection crosses one already made (two entries fanning into one exit used to
+        # paint a star of crossing dashes in short patches)
+        cand = []
         for pi, (i, k, ring, axis) in enumerate(pairs):
             if pi in crossing and not ring:
                 rep["crossing_pairs_skipped"] += 1
@@ -214,59 +219,76 @@ def build(buf, net, juncs, report, marked_hw, lane_layout):
             delta = float(np.dot(B["end"] - A["end"], nb))
             sgA = 1.0 if A["a"].end == "b" else -1.0          # travel into the junction along +s at a 'b' end
             sgB = 1.0 if B["a"].end == "a" else -1.0
-            cand = []
             for ia, (la, ka) in enumerate(A["lines"]):
                 for ib, (lb, kb) in enumerate(B["lines"]):
                     if ka == "edge" and kb in ("edge", "P-7b") or kb == "edge" and ka in ("edge", "P-7b"):
                         continue
                     cost = abs(sgA * la - delta - sgB * lb)
                     if cost <= MATCH_MAX_M:
-                        cand.append((cost, ia, ib))
-            cand.sort()
-            ua, ub = set(), set()
+                        cand.append((cost, pi, ia, ib))
+            rep["pairs"] += 1
+        cand.sort()
+        used_a, used_b, drawn = set(), {}, []
+        for cost, pi, ia, ib in cand:
+            i, k, ring, axis = pairs[pi]
+            A, B = fr[i], fr[k]
+            if (i, ia) in used_a:
+                continue
+            (la, ka), (lb, kb) = A["lines"][ia], B["lines"][ib]
+            edge_like_a = ka in ("edge", "P-7b")
+            # an exit line is reached by at most one lane line and, besides, by wedge edges only (two in all)
+            took = used_b.get((k, ib), [])
+            if len(took) >= 2 or (not edge_like_a and any(not e for e in took)):
+                continue
+            tA, tB = -A["out"], B["out"]
+            nb = _left(_unit(tA + tB))
+            sgA = 1.0 if A["a"].end == "b" else -1.0
+            pa = np.asarray(A["c"].line.offset_point(A["s"], la), float).reshape(-1)[:2]
+            pb = np.asarray(B["c"].line.offset_point(B["s"], lb), float).reshape(-1)[:2]
+            if float(np.hypot(*(pb - pa))) < 0.6:
+                used_a.add((i, ia))
+                used_b.setdefault((k, ib), []).append(edge_like_a)
+                continue
+            Q = _bezier(pa, tA, pb, tB)
+            core = LineString(Q[1:-1]) if len(Q) > 4 else LineString(Q)
+            if any(core.crosses(d) for d in drawn):
+                continue
+            zref = np.linspace(A["z"], B["z"], len(Q))
+            kinds = {ka, kb}
+            src, n = None, 0
             others = [fr[m]["mouth"] for m in range(len(fr)) if m not in (i, k) and fr[m] is not None]
             # arms that merge into / diverge from this pair (they form a through pair with A or B themselves): the
             # edge line towards them is the wedge border, not a line across a side-road mouth
             partners = [fr[m]["mouth"] for m in range(len(fr)) if m not in (i, k) and fr[m] is not None
-                        and any((p[0] in (i, k) or p[1] in (i, k)) and m in (p[0], p[1]) for p in pairs)]
-            for cost, ia, ib in cand:
-                if ia in ua or ib in ub:
+                        and any((p_[0] in (i, k) or p_[1] in (i, k)) and m in (p_[0], p_[1]) for p_ in pairs)]
+            if kinds == {"P-7b"}:
+                side = math.copysign(1.0, sgA * la)
+                mid = Q[len(Q) // 2]
+                if any(float(np.dot(m - mid, nb)) * side > 0.5 for m in partners):
                     continue
-                ua.add(ia)
-                ub.add(ib)
-                (la, ka), (lb, kb) = A["lines"][ia], B["lines"][ib]
-                pa = np.asarray(A["c"].line.offset_point(A["s"], la), float).reshape(-1)[:2]
-                pb = np.asarray(B["c"].line.offset_point(B["s"], lb), float).reshape(-1)[:2]
-                if float(np.hypot(*(pb - pa))) < 0.6:
-                    continue
-                Q = _bezier(pa, tA, pb, tB)
-                zref = np.linspace(A["z"], B["z"], len(Q))
-                kinds = {ka, kb}
-                src = None
-                if kinds == {"P-7b"}:
-                    side = math.copysign(1.0, sgA * la)
-                    mid = Q[len(Q) // 2]
-                    if any(float(np.dot(m - mid, nb)) * side > 0.5 for m in partners):
-                        continue
-                    joined = any(float(np.dot(m - mid, nb)) * side > 0.5 for m in others)
-                    n = _line(buf, top, Q, S.LINE_W_WIDE, S.DASH["P-7a"] if joined else None,
-                              f"TL-{'P-7a' if joined else 'P-7b'}@{j.id}", zref)
-                    src = "P-7a" if joined else "P-7b"
-                elif "P-4" in kinds:
-                    nq = np.gradient(Q, axis=0)
-                    nq /= np.maximum(np.hypot(nq[:, 0], nq[:, 1]), 1e-9)[:, None]
-                    nq = np.column_stack([-nq[:, 1], nq[:, 0]])
-                    n = sum(_line(buf, top, Q + nq * off, S.LINE_W_NARROW, None, f"TL-P-4@{j.id}", zref)
-                            for off in (-0.12, 0.12))
-                    src = "P-4"
-                elif "P-7b" in kinds or "edge" in kinds or kinds <= {"lane", "centre"}:
-                    n = _line(buf, top, Q, S.LINE_W_NARROW, A["dash"], f"TL-lane@{j.id}", zref)
-                    src = "lane"
-                if src and n:
-                    rep["lines"][src] = rep["lines"].get(src, 0) + 1
-                    used = True
-            rep["unmatched"] += sum(1 for ia, (_, ka) in enumerate(A["lines"]) if ka != "edge" and ia not in ua)
-            rep["pairs"] += 1
+                joined = any(float(np.dot(m - mid, nb)) * side > 0.5 for m in others)
+                n = _line(buf, top, Q, S.LINE_W_WIDE, S.DASH["P-7a"] if joined else None,
+                          f"TL-{'P-7a' if joined else 'P-7b'}@{j.id}", zref)
+                src = "P-7a" if joined else "P-7b"
+            elif "P-4" in kinds:
+                nq = np.gradient(Q, axis=0)
+                nq /= np.maximum(np.hypot(nq[:, 0], nq[:, 1]), 1e-9)[:, None]
+                nq = np.column_stack([-nq[:, 1], nq[:, 0]])
+                n = sum(_line(buf, top, Q + nq * off, S.LINE_W_NARROW, None, f"TL-P-4@{j.id}", zref)
+                        for off in (-0.12, 0.12))
+                src = "P-4"
+            else:
+                n = _line(buf, top, Q, S.LINE_W_NARROW, A["dash"], f"TL-lane@{j.id}", zref)
+                src = "lane"
+            used_a.add((i, ia))
+            used_b.setdefault((k, ib), []).append(edge_like_a)
+            if src and n:
+                drawn.append(core)
+                rep["lines"][src] = rep["lines"].get(src, 0) + 1
+                used = True
+        for i, f_ in enumerate(fr):
+            if f_ is not None and any(p_[0] == i for p_ in pairs):
+                rep["unmatched"] += sum(1 for ia, (_, ka) in enumerate(f_["lines"]) if ka != "edge" and (i, ia) not in used_a)
         rep["junctions"] += int(used)
     report["through_lines"] = rep
 

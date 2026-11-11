@@ -333,10 +333,30 @@ def clear_narrow_islands(pl, parts, net, report):
         drop.update(id(it) for it in items)
         c = chains.get(b.get("src", "")[5:]) if b.get("src", "").startswith("rule:") else None
         q = None
+        # first choice: the outer edge of the carriageway on the far side of the island (a ramp beside the main
+        # carriageway keeps its lamps on its outer edge), then the other edge of the lamp's own carriageway
+        tries = []
         if c is not None:
-            s, lat = c.line.project(np.array([e, n]))
-            s = float(np.clip(s, 0.0, c.length))
-            sgn = -1.0 if lat > 0 else 1.0
+            s_own, lat_own = c.line.project(np.array([e, n]))
+            best = None
+            for c2 in net.chains:
+                if c2 is c or c2.meta.get("absorbed") or c2.roundabout:
+                    continue
+                lo, hi = c2.line.p.min(0) - 12, c2.line.p.max(0) + 12
+                if not (lo[0] <= e <= hi[0] and lo[1] <= n <= hi[1]):
+                    continue
+                s2, lat2 = c2.line.project(np.array([e, n]))
+                if not (0.0 < s2 < c2.length):
+                    continue
+                gap = abs(lat2) - float(c2.hw_at(s2))
+                if -0.2 < gap < 2 * NARROW_ISLAND_R and (best is None or gap < best[0]):
+                    best = (gap, c2, float(s2), -1.0 if lat2 > 0 else 1.0)
+            if best is not None:
+                tries.append(best[1:])
+            tries.append((c, float(np.clip(s_own, 0.0, c.length)), -1.0 if lat_own > 0 else 1.0))
+        for c, s, sgn in tries:
+            if q is not None:
+                break
             if not bool(c.bridge[c.idx(s)]):
                 kind, h, w, ext = side_surface_offset(c, "L" if sgn > 0 else "R", s)
                 if kind != MEDIAN_RURAL:

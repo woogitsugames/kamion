@@ -10,7 +10,7 @@ import pytest
 from conftest import REGION_DIR
 
 QA = REGION_DIR / "generated" / "terrain_walls_qa.json"
-RATCHET = {"skirt:yard_asphalt": 1, "skirt:yard_concrete": 3, "skirt:yard_slabs": 1,
+RATCHET = {"skirt:yard_asphalt": 1, "skirt:yard_concrete": 2, "skirt:yard_slabs": 1,   # yard_concrete 3 -> 2: tips trimmed (ADR 0093)
            "steep_grass:verge_grass": 0,     # 8 -> 4 (ADR 0074) -> 0 (ADR 0076: verges of one carriageway lying on
                                              # another are culled, merge branches share one height surface)
            "skirt:j:road_asphalt": 0}        # flush junction corners reach the neighbouring carriageway (ADR 0076;
