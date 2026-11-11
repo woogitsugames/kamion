@@ -61,3 +61,6 @@ TruckMaterialSet. This identifies fixture cause. It does NOT independently prove
 those failures pre-existed that baseline; canonical Truck build/install plus retry
 required at leader integration. Original A canonical226/226 remains its own proof.
 No external worktree edits, mainmerge or blanket integration approval byroot.
+Latest externalmain retry14:31:39 XML245/245/0skip PASS; all3 TruckDoorGlass
+Low/Medium/High pass. Earlier missing generated-material integration gap closed
+by actual later test, not retroactive claim about original0101test.

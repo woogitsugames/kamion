@@ -1,6 +1,6 @@
 # S10 — raport koordynatora (WIP)
 
-Stan 2026-11-11 14:25:07 CET. Pakiet nadal w toku. Nie scalano ani nie pushowano main z tej sesji; scalenia A/B/C i0101 wykonał lider Claude. Maksymalnie trzech wykonawców, każdy we własnym worktree. Każdy strumień ma osobny STATUS i raport z dowodami.
+Stan 2026-11-11 14:48 CET. Pakiet nadal w toku. Nie scalano ani nie pushowano main z tej sesji; scalenia A/B/C i0101 wykonał lider Claude. Maksymalnie trzech wykonawców, każdy we własnym worktree. Każdy strumień ma osobny STATUS i raport z dowodami.
 
 | Strumień | Zweryfikowany stan | Testy i ograniczenia |
 |---|---|---|
@@ -10,7 +10,7 @@ Stan 2026-11-11 14:25:07 CET. Pakiet nadal w toku. Nie scalano ani nie pushowano
 | F /0087, gpt-truck-paint | Zakończone wdrożenie2086e780, jakość właścicielska CZĘŚCIOWA/FAIL | GIS370/1xfail, EditMode238/238, końcowe102 kadry, budżet bez wzrostu. Naprawione przepełnienie lamp; fizyczne próbkowanie odbić i ograniczona krzywizna normalnych3,6mm. Drzwi overcast3,32Low/2,77High nadal poniżej4; inne niespełnione wiersze jawnie w REPORT. |
 | G /0089, gpt-car-paint | SCOPED PASS; wdrożenie aa1af012, późniejsze2f7e64f1/7ababc29 tylko przeglądy D/C13 | GIS375/1xfail, EditMode231/231. GPU1007 instancji i18 przypadkówLOD/origin PASS.324 kadry obejrzane przez autora i root. Drzwi HighOV39,840; maska nie rozjaśniona.236 porównań trasy bez wzrostu. |
 | E /remiza r7, gpt-firestation-r7 | W toku: rośliny i pozycje poprawione z ujawnioną wąskością koron; trwa druga kalibracja szkła | Docelowy tynk już spełniony i zachowany. Cztery kadry pierwszej elewacji zbyt jasne High79–85 zamiast60–75. ASTC1024×512 zmierzone: stare detale zgodne mip0–3, dalsze mipy mają pojedyncze różnice. Pełne testy/budżety po finalnych produktach. |
-| D /0099, gpt-surface-wear | Przejęte przez F; przygotowana niezmieniona baza i patche nieaktywne92bc26af/58b6e8b9 | Import i kanoniczne pojazdy gotowe, kadry BEFORE jeszcze0. Brak UV dla części dróg i stałe UV oznakowania to osobne ograniczenia; małe patche nie zamykają całego zużycia nawierzchni. |
+| D /0099, gpt-surface-wear | Przejęte przez F; przygotowana niezmieniona baza i patche nieaktywne92bc26af/58b6e8b9 | Import i kanoniczne pojazdy gotowe,372 kadry BEFORE=93?4; root sprawdzi? wszystkie hashe i cztery plansze cel?w. Brak UV dla części dróg i stałe UV oznakowania to osobne ograniczenia; małe patche nie zamykają całego zużycia nawierzchni. |
 
 Po zakończeniu F/G/E/D:0108 światło r13, następnie0109 roślinność r3 według docs/owner/GPT-FEEDBACK-S10.md. Preflight0108 jest gotowy, kod nie został zmieniony.
 

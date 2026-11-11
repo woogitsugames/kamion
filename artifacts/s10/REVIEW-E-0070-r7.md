@@ -33,7 +33,7 @@ Still required: denser actual plant review, old alpha/text/fence/flag/clock mip
 proof, new needle survival at actual Android-sized mips, clear and above/route views,
 glass/clinker/weather/grilles/flag inventory, GIS/EditMode, full budget, ADR0070r7,
 REPORT and source-input restore packet. No phone or final visual acceptance claim.
-## Glass2 and one High-only leaf experiment (14:49)
+## Glass2 and one High-only leaf experiment (14:46)
 Root independently viewed actual4/glass native material crops. Primary and valid
 safe pane grids meet60-75sRGB:63.20-67.94Low,69.39-74.78High. Blue-trim contaminated
 and tree-occluded panes excluded explicitly. Brown clinker improved, runoff modest;

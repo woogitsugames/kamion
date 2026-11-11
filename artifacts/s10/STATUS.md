@@ -480,10 +480,17 @@ no automaticproductionpromotion. Bothsharedguardsabsent at14:42.
 NEXT COMMAND: review Eactualleaf2frame/restoreproof, Dsourcefieldcontrols and
 UVonlycausalpair; then fixedcandidates/fullvalidation. Keep main unmerged byus.
 
-Step34 14:49: independent D372PNGhashes checked,0mismatches;93uniqueIDs each4
+Step34 14:46: independent D372PNGhashes checked,0mismatches;93uniqueIDs each4
 conditions identical. SavedD-before-independent-check.json. EONEleafQA actual
 High2 done/exactrestore/784pins: medianHigh/Low.782->1.088; rootviewednative+full
 pairs, retainboundedHigh-onlyheroalias persistentopt-in for final160. Lowunchanged;
 Highdepthpass/costunverified, no drawestimate=GPUclaim. Glass60-75PASS.
 NEXT COMMAND: Efixedcandidate160/fullGIS/EditMode; DisolatedUVcausal+actual
 sourcefieldfeaturecontrols; monitorbothguards. C13source waitsD/Eclosure.
+
+Step35 14:48: latest externalmainEditMode XML14:31:39 parsed245/245/0skip,
+includingall3TruckDoorGlasspreviousmissingmaterialcasesPASS. RecordedXMLSHA+
+caseproof, earlier0101failurehistory supersededbyactualmainretry. REPORTWIP
+updatedD372/Eglass+leafstatus. RootpriorStep34clockcorrected14:46.
+NEXT COMMAND: waitDreadonlyimportsnapshot thenUVcausal and Ehero-onlydurable
+factory/round1+160 finalcaptures; fulltests+rootreview beforeclosures/0108.
