@@ -110,3 +110,6 @@
 
 - Step37 niezale?ny READONLY reviewE: wszystkie10Highcontact?w80obraz?w,8hero przed/po+7197, dodatkoweparypojazdu/ROI/dumpy przejrzane. W?asneRGB80High i564fixturehash0mismatch potwierdzaj? osobno luk?pozykadr?w (trailer/truckrear), nieautomatyczn?regresj?E. Szk?oOVtargetPASS/clearFAIL, korony/HighdepthGPUlimity jawne; finalEditModeEpendingPHONE. E-FINAL-INDEPENDENT-REVIEW.md+HighdiffJSON wOWNartifacts, bezEsource/cache/Unity lubGimplementation/report changes.
 - NEXT COMMAND: docsWIPcommit/copy/sendROOT/E/F, standby0108dopieroD/Eclosure+explicitdispatch.
+
+- Step38 docs-only encoding repair: rewrote own E-FINAL-INDEPENDENT-REVIEW.md as readable English ASCII after Polish characters were lost in the PS5-to-Python pipe. Preserved all numbers, findings, scope and pending-at-review-time gates. Verified zero question marks/non-ASCII in the rewritten review. No E/G implementation or validation changes.
+- NEXT COMMAND: WIP commit/copy, then standby0108 after D/E closure and explicit dispatch. No Unity.
