@@ -125,35 +125,19 @@ P0 z HANDOVER, wiadukt s≈1432–1480; `test_report_not_stale`: `fidelity_qa.js
 Wcześniejsze: `blender/it{1..6}/`, `unity/r2..r4/`, `plan_overlay.jpg`.
 Przegląd `visual-critic`: do zrobienia przez lidera (subagent nie tworzy subagentów).
 
-## r7 — S10 E (2026-11-11, w toku — bramki końcowe PENDING)
+## r7 — S10 E (2026-11-11; technical validation partly complete, appearance residuals open)
 
-- Zamrożona baza `901c427f2bc5cebf9571adc14df3253bbd3bd772`, świeży własny PBR/hero/świat i kanoniczny pojazd przed
-  160 prawdziwymi PNG: 40 kamer × Low `WorldC` / High `WorldC_High` × clear / overcast. Baseline192rawSHA i pojazd
-  zapisane w `artifacts/firestation-r10/`; bez porównywania starego cache z nową produkcją.
-- Dwa świerki przed szczytem przesunięte +4m w osi u, trzeci przed skrzydłem zachowuje środek. Korony: połączony,
-  nieregularny rdzeń .55R, niskie gałęzie i wycięte karty z dwoma sprayami ±26° o wspólnej nasadzie. Źródło:
-  Poly Haven `fir_tree_01`, CC0, Rob Tuytel / Rico Cilliers, przypięte dwa SHA256 w `conifer_source.json`.
-  To krótkoigłowy fir/conifer, **nie zweryfikowany skan Picea ani geometria rzeczywistego świerka JRG2**.
-  Źródła repo-relative i pakiet odtworzenia `source-cache/` + `restore_cc0_inputs.py`, bez zależności od strumienia B.
-- Trzy nieregularne pokroje tui i zasiane odchylenie odstępów maks.19.50% (limit±25%). Wspólna paleta własnego atlasu
-  i lokalnego aliasu `fire_station_thuja_shell`; dotychczasowe globalne kolory/tekstury żywopłotów zachowane.
-- LOD **9344 / 2828 / 164**, wcześniej9944 /2828 /164. High3materiały, Low2bez nowego batcha. Karty wykorzystują
-  istniejący `fire_station_alpha`, ustawienia importu i zachowania pokrycia alfa bez zmian. Android-target Editor
-  importuje rzeczywiste ASTC6×6,1024×512,11mipów: stare litery/płot/brama/998 mają alfa dokładnie zgodną do mip3,
-  dalsze poziomy mają jawne różnice progu (letters1pixelmip4/8mip5,fence3/gate1mip5,9983mip6). Native i max1024
-  to **ta sama importowana rozdzielczość**, nie niezależne testy. Oglądane kadry ref/route bez oczywistej regresji
-  napisu/płotu/flagi/okrągłego obramienia; telefon i migotanie pozostają UNVERIFIED.
-- Po dwóch odrzuconych próbach (rzadka korona, potem sam połączony rdzeń) ROOT przyjął bundle2 jako ograniczoną
-  poprawę tej iteracji. Korony nadal węższe/kolumnowe względem7197; **nie deklarujemy mocnego dopasowania do zdjęcia**.
-  Rzeczywisty kolorystyczny proxy odsłonięcia prawej głowy łuku rośnie Low62.87→99.11%,High54.25→97.81%; całego
-  otworu51.45→88.70%,45.16→85.42%. Proxy klasyfikuje zieleń/ciemne piksele w ustalonej masce, ma fałszywe wskazania
-  na obramieniu/AA i **nie jest pomiarem widoczności z bufora głębi ani100% szkła**. Dolne tuje nadal przesłaniają otwory.
-- D48/A: zachowana baza tynku x1.15 `[.21275,.299,.41975]`. Semantyczny baseline czystego tynku szczytu Low105/123/141,
-  High112/131/150; skrzydło/tower nie wymagają rozjaśnienia względem szczytu. To stan zastany zachowany, nie nowa poprawka.
-- Oddzielny kandydat fasady: szkło hali/okrągłe `[.102,.108,.117]` z łagodnym gradientem nieba .90+.06, brązowy klinkier
-  `[.27,.135,.06]`, miejscowe zacieki pod obróbką .35–1m, gęsty rdzeń7–16cm z miękkim ramieniem. Strefa rozbryzgu przy
-  gruncie, kratki i flaga zachowane. Target szkła60–75 sRGB wymaga świeżego renderu — **PENDING**. Wszystkie9map
-  Normal/Mask/Var i czyste piksele tynku/dachu/opasek/flagi/okien biura dokładnie zgodne z bazą; aktualizowany manifest
-  średniej atlasu utrzymuje mnożnik blisko1 (istniejące zaokrąglenie3cyfry daje1.000743 liniowo).
-- Lokalne2widoki: Lowdraws/tris bez zmian, High−1instancedcall/widok i−1ktri z trasy. Pełna końcowa macierz, globalny
-  budżet, pełny GIS, EditMode, ocena końcowa i REPORT wciąż **PENDING**. Praca nie jest zakończona.
+- Matched base `901c427f2bc5cebf9571adc14df3253bbd3bd772`: fresh PBR/hero/world and canonical vehicle before 160 baseline PNGs. Final `round2/` contains the same 40 cameras × Low `WorldC` / High `WorldC_High` × clear/overcast, 2340×1080. Both use the existing shared Medium512 material tier. All 20 final full-frame contact sheets were inspected; no exposure matching was applied.
+- Two foreground conifers move +4m in authored u; wing tree stays in place. Connected asymmetric .55R core and rooted two-spray alpha cards replace opaque smooth cones. Poly Haven `fir_tree_01`, CC0, Rob Tuytel/Rico Cilliers; two pinned SHA256 values and repo-relative raw paths are in `conifer_source.json`. This is short-needle fir/conifer imagery, **not verified Picea or a scan of JRG2 trees**. Offline inputs and verified `restore_cc0_inputs.py` accompany artifacts; no dependency on B/cache paths.
+- Three irregular thuja habits and seeded spacing maximum19.50% (limit±25%). Hero-local core/shell aliases preserve every existing global hedge palette. LOD triangles **9344/2828/164** versus9944/2828/164; High3/Low2 materials, Low plants remain888tri.
+- High-only thin-leaf lighting uses a runtime copy of exactly `M_fire_station_thuja_shell` in `WorldInstances`: active quality profile High, existing simpleFoliage/template control, Transmission.25/CrownShade0. Source asset remains URP Lit; Low—including near LOD0—uses original source. Gamma color, texture/ST, Cull, cutoff.5 and A2C retained. Cache tracks the hero policy independently from simpleFoliage. The importer-hook attempt affected Low LOD0 and is explicitly superseded (`round1/`); accepted proof is `round1-runtime/` and `round2/`.
+- Actual normal factory reimport is byte-idempotent; bindings prove Low direct Lit / High Vegetation copy and source JSON unchanged. ONE NUnit test passes1/1 and exercises two actual factory imports and Low→High→Low with unchanged simpleFoliage. No global shader, scene or quality settings change.
+- Final15paired interior thuja ROIs: overcast Low medianY50=61.65, High66.94, median paired ratio1.0889; clear90.58/92.29, paired ratio.9945. These are selected foliage interiors, not whole-crown radiometric calibration. Source photo7197 has different exposure/weather. No exact every-pixel brightness claim.
+- Arch upper-head and whole-opening masks are separate. Color proxy for right head Low62.87→99.11%, High54.25→97.81%; whole opening51.45→88.70% /45.16→85.42%. Dark frames/AA cause classification errors: this is not depth-buffer visibility or100% unobscured glass. Lower thujas remain.
+- D48/A plaster-only x1.15 base `[.21275,.299,.41975]` preserved. Actual overcast clean gable Low105/123/141, High112/131/150 meets110/126/145±10. Wing/tower already at least as bright; preserved, not claimed newly fixed. Clean plaster, roof, trim, flag, office pixels and all9 Normal/Mask/Var maps remain exact baseline.
+- Hall/round glass `[.0612,.0648,.0702]`, soft sky gradient .90+.06; brown clinker `[.27,.135,.06]`; sparse flashing runoff .35–1m long with7–16cm dense core. Existing splash, vents and flag retained. Updated atlas mean keeps original global linear tint near1 (**1.0003615**, existing3-digit rounding).
+- Final clean primary-pane mean sRGB Y: LowOV63.42–66.81 / HighOV70.12–73.24: **60–75 overcast PASS**. Clear Low81.83–89.92 / High88.97–96.76 (round pane near97.87): **clear FAIL**. No further scalar: it would break overcast. Static atlas receives diffuse illumination; a glass-lighting model/common exposure integration needs separate causal evidence, not an unlit fake or extra Low material slot.
+- Existing alpha importer/coverage unchanged. Actual Editor Android-target ASTC6×6 readback1024×512,11mips: protected old alpha exactmip0–3; coarse cutoff differences letters1pixelmip4/8mip5,fence3/gate1mip5,9983mip6. Native/max1024 are the SAME imported size. Actual native letters/fence/clock/flag frames show no obvious regression; device/temporal shimmer unverified.
+- Full matrix80Low/80High matched: maximum per-view drawEst and ktri delta0 in both tiers; peaks Low968drawEst/487ktri, High1778/2476 unchanged. Some views decrease. These are editor estimates before batching; additional High depth pass GPU/timing cost **UNVERIFIED**, not free.
+- Latest-product full GIS **375 passed,1xfail,517.58s**, after graph-only fidelity refresh. All784 pinned products including192raw and canonical vehicle unchanged after suite. Full EditMode **PENDING renewed explicit Unity release** (PHONE hold); targeted runtime NUnit1/1 passed. ROOT reviewed true runtime16-frame gate and approved full160; final review pending.
+- Appearance remains bounded: conifers narrower/column-like than7197, repeated card structure, subtle runoff, clear glass outside target. No collective visual-quality PASS. Full evidence and rejected rounds retained in `artifacts/firestation-r10/`; final technical and appearance verdicts are separate.

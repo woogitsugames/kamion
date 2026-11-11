@@ -1,0 +1,14 @@
+# JRG2 r7 — technical validation and appearance
+- Branch gpt-firestation-r7; matched baseline901c427f,160before/160after,40cameras×LowWorldC/HighWorldC_High×clear/overcast; all20finalsheets inspected.
+- Connected short-needle conifer cards/core, foreground+4m, three irregular thuja forms; CC0fir source pinned/restore package self-contained; not verified Picea.
+- Hero9344/2828/164tri (was9944/2828/164),High3/Low2slots; global hedge palette and D48paint preserved.
+- Exact hero runtime High-only leaf lighting; LowURPLit includingLOD0,HighVegetationcopy .25transmission/0shade, no sharedasset mutation; factoryreimport byte-idempotent.
+- Brown clinker and sparse physical runoff; existing splash/vents/flag retained. Cleanpaint/roof/trim/office/flag pixels and9auxmaps exactbaseline.
+- Glass meanY: OVLow63.42–66.81/High70.12–73.24 PASS60–75; clearLow81.83–89.92/High88.97–96.76 (round~98) FAIL.
+- Thuja15paired medianHigh/Low: OV1.0889,clear.9945; coherenthue, not exact all-crown luminance equality.
+- Fullmatched80Low: maxdelta0drawEst/0ktri,peaks968/487k;80High:maxdelta0/0,peaks1778/2476k. HighextraDepthGPU/timingUNVERIFIED.
+- Latest-product fullGIS375passed/1xfail517.58s;784products incl192raw+canonicalvehicle unchanged; targetedNUnit1/1PASS(twofactoryimports/Low→High→Low).
+- FullEditMode PENDING renewed explicitROOTrelease afterPHONE hold; no Unity queued. TechnicalDoD not complete yet.
+- Visual residuals: conifers still narrow/column-like vs7197, clearglass outside target, subtle runoff, coarsealpha-mip differences/device temporal unverified; no collectivequalityPASS.
+- Proof: round2/160PNGs,round2-sheets/,round2-roi/,round2-paint/,round2-thuja*/,actual-alpha-mips/,factory-reimport-durability.json; SELF-REVIEW.md.
+- ROOT final80Low/80High independent review in progress. No merge/push; source-cache+restore_cc0_inputs.py must accompany artifact copy to main.

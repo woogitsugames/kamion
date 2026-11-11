@@ -1,0 +1,18 @@
+# E r7 self-review — final160, EditMode pending
+
+Inspected all20 contact sheets covering160 final full frames, the16 true-runtime gate frames, actual2340×1080 native details, semantic ROI overlays and physical photo7197. The baseline has identical cameras, canonical vehicle and locked901c source; final geometry uses current own products. No exposure matching. ROOT independently reviewed each bounded candidate and true-runtime gate; final80Low/80High independent review is in progress.
+
+| Priority / location | Verdict and evidence | Remaining action |
+|---|---|---|
+| P1 hall glass, clear | FAIL target60–75: Low81.83–89.92,High88.97–96.76; round near97.87. Overcast63.42–73.24 PASS. | Keep explicit residual; a lighting/glass-model integration needs separate proof. Further scalar would harm overcast. |
+| P1→P2 foreground conifers, ref7197/route | Bounded improvement: branches/needles and rooted openings replace smooth cones; relocation exposes right arch head. Still narrower/column-like and repeated than substantial photo crowns. | Do not call strong photo/species match. Further production tuning stopped by ROOT. |
+| P2 facade weathering, native ref | Sparse under-flashing drips and ground splash are physically located but subtle at driver distance; clinker now brown. | Do not claim global realism transformation or solved facade aging. |
+| Thuja Low/High, clear/overcast | Three irregular habits, spacing≤19.50%; final interior paired ratio High/Low1.0889OV/.9945clear, coherent hue. High runtime copy now physically leaf-lit; Low stays Lit even near. | Individual lighting differences remain; selected interior masks are not exact radiometric matching. |
+| D48 plaster / wing / tower | Preserved PASS: gableOVLow105/123/141,High112/131/150 within owner±10. Wing/tower already comparable or brighter. | No new brightening/fix claimed. Roof/trim/office/flag protected. |
+| Old alpha lettering/fence/clock/flag | No obvious regression in actual native ref/route; old alpha exactmip0–3. Coarse threshold differences disclosed. | Android GPU/temporal shimmer and distant glyph stability UNVERIFIED. |
+| Technical Low budget | Full80matched views maxdelta0drawEst/0ktri; unchanged peaks968/487k. Low2slots/2828hero tri exact baseline. | Draw estimates do not replace phone timing. |
+| Technical High cost | Full80matched maxdelta0drawEst/0ktri; unchanged peaks1778/2476k. Source assets unchanged by runtime copies. | Additional Vegetation depth pass is not measured on GPU; do not claim free. |
+
+Arch whole-opening and head metrics are distinct color classifiers, not depth visibility. Right head improves~63→99%Low/~54→98%High, while lower glass still has thuja occlusion. Photo provenance/exposure and the fir/conifer source identity are explicit; no verified Picea scan claim.
+
+Latest-product GIS375passed/1xfail;784product pins unchanged including192raw+canonicalvehicle. Actual targeted NUnit1/1 passes two factory imports and Low→High→Low. FullEditMode remains PENDING explicit release after PHONE hold. Technical validation is incomplete until it finishes; overall appearance goals are NOT all PASS because clear glass and canopy photo-match remain open. Main C13/other-stream integrations were not silently absorbed into matched901c proof.
