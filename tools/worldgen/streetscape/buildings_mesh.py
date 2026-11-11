@@ -872,7 +872,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         if typ == "block" and not insulated:
             wall = "panel_concrete"
         accent = FK.hpick(FK.ACCENT_PLASTER, key, "accent")
-        plinth = FK.hpick(PLINTHS, key, "plinth")
+        plinth = FK.hpick(PLINTHS, key, "plinth") if typ in ("block", "office") else "plinth_dark"   # draws (Low)
         if wooden:
             wall = "wood_planks" if FK.hfloat(key, "woodc") < 0.6 else "wood_planks_green"
         u_acc = 0.0

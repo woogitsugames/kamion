@@ -489,7 +489,7 @@ SCAN_SETS = {
     # modulation sets (engine albedo = 2 x manifest colour x map)
     "plaster": (["painted_plaster_wall"], lambda: tiling_from_scan(
         "plaster", "painted_plaster_wall", target=0.5, hue=NEUTRAL, out_L=2.0, out_n=1024, seed=6318,
-        flat_m=0.5, flat_k=0.85, hue_keep=0.5, modulation=True, hf_keep=0.4, hf_sigma_m=0.006, nrm_gain=0.5)),   # ADR 0091
+        flat_m=0.5, flat_k=0.85, hue_keep=0.5, modulation=True, hf_keep=0.4, hf_sigma_m=0.03, nrm_gain=0.3, ao_gamma=0.15)),   # ADR 0091
     "brick": (["red_brick"], lambda: tiling_from_scan(
         "brick", "red_brick", target=0.5, hue=NEUTRAL, out_L=1.4, out_n=1024, seed=6319,
         flat_m=0.4, flat_k=0.8, hue_keep=1.0, modulation=True, joint_dark=0.35,   # ADR 0091 darker joints

@@ -345,4 +345,7 @@ def test_r3_materials():
     assert not M["concrete_fence"].get("tint_linear") and not M["yard_paving"].get("tint_linear")
     spec = json.loads((REPO / "art-source" / "world" / "materials" / "materials_spec.json").read_text(encoding="utf-8"))
     assert spec["sets"]["roof_tiles"]["kind"] == "modulation_set"
-    assert spec["sets"]["plaster"]["hf_ratio_albedo"] < 0.5 * 0.2233             # 'pepper' at least halved (r10: 0.2233)
+    pl = spec["sets"]["plaster"]                    # r10: albedo p05-p95 0.447-0.551, relief -3.2..+2.5 mm ('pepper')
+    assert pl["albedo"]["p95"] - pl["albedo"]["p05"] < 0.07
+    assert pl["height_range_m"][1] - pl["height_range_m"][0] < 0.5 * 0.0057
+    assert M["plaster_grey"]["set_tile"] and M["plinth_dark"]["set_tile"]

@@ -358,6 +358,10 @@ _TINT_LINEAR = ("plaster_", "plinth_", "panel_concrete", "brick_red", "chimney_b
 for _k, _v in M.items():
     if _k.startswith(_TINT_LINEAR) and "texture_set" in _v:
         _v["tint_linear"] = True
+    # ADR 0091: the plaster scan is 2 m of wall; at the shader default (4 m) its trowel marks came out twice their size
+    # and read as a coarse relief from the street (r11 r2 render) - same fix as brick in ADR 0081
+    if _v.get("texture_set") == "plaster":
+        _v["set_tile"] = True
 
 # ADR 0081 (r10 r2): run-off streaks under the attic coping also on the render / panel walls of flat-roofed blocks
 # and offices (LOD0 only; the wall-top TEXCOORD_1 comes from buildings_mesh, the importer enables _RUNOFF)

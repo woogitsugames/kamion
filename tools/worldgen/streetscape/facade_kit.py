@@ -372,7 +372,7 @@ def cage_ladder(acc, a, d, nout, u, z0, z1, mat="downpipe"):
 
 
 def chimney(acc, p, along, z0, z1):
-    """Brick chimney stack 0.56 x 0.44 m from z0 (inside the roof) to z1 with a concrete cap slab (ADR 0091: the
+    """Brick chimney stack 0.56 x 0.44 m from z0 (inside the roof) to z1 with a sheet-metal cap (ADR 0091: the
     stack stands on the roof slope next to the ridge and ends 0.45 m above it)."""
     along = np.asarray(along, float)
     across = np.array([-along[1], along[0]])
@@ -380,7 +380,7 @@ def chimney(acc, p, along, z0, z1):
     for layer in (L0, L1):
         acc.box(layer, "chimney_brick", c, np.append(along * 0.28, 0), np.append(across * 0.22, 0), [0, 0, (z1 - z0) / 2],
                 skip=(0,))
-    acc.box(L0, "balcony_slab", v3(p, z1 + 0.04), np.append(along * 0.33, 0), np.append(across * 0.27, 0), [0, 0, 0.04])
+    acc.box(L0, "hall_flashing", v3(p, z1 + 0.04), np.append(along * 0.33, 0), np.append(across * 0.27, 0), [0, 0, 0.04])
 
 
 def sign_instance(code, a, d, nout, u, z, src):
