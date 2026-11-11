@@ -409,9 +409,12 @@ def layout(plot, cut=None, near=None, garages=(), gate_s=None, no_gate=False, ga
         if gate_s is not None:
             sg = float(gate_s)
         out["gate_s"], out["gate_range"] = sg, (gslot / 2 + 0.3, L - gslot / 2 - 0.3)
-        if no_gate:                                          # no way to a carriageway (ADR 0124): a wicket only
-            if L >= wslot + 0.6:
-                w0 = min(max(sg - wslot / 2, 0.3), L - wslot - 0.3)
+        if no_gate:                                          # no way to a carriageway (ADR 0124): a wicket only,
+            if L >= wslot + 0.6:                             # in front of the house door when it is known
+                st = plot.get("steps") or []
+                tgt = float((min(st, key=lambda q: float(np.hypot(*(q["p"] - a))))["p"] - a) @ t) if st else sg
+                pad = min(3.0, (L - wslot) / 2)              # clear of the corner (a neighbour's fence ends there)
+                w0 = min(max(tgt - wslot / 2, pad), L - wslot - pad)
                 gate_iv["wicket"] = (w0, w0 + wslot)
         elif len(plot["houses"]) >= TERRACE_MIN:             # terrace: a wicket in front of every house, no shared gate
             for k, hp in enumerate(plot["house_pts"]):

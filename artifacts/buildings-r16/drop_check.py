@@ -1,5 +1,7 @@
-"""Does the kerb really drop at the driveways? Pass-1 geometry without and with apply_drops: kerb-top height above the
-gutter at every access point (road-layer `curb_concrete` vertices within 1.2 m of the carriageway edge point q).
+"""Does the kerb really drop at every driveway (ADR 0124 item 1: 'pomiar wysokości z siatki dla wszystkich zjazdów')?
+Pass-1 geometry without and with the side edit (house-street kerbs + drops): kerb-top height above the gutter at every
+access point (road-layer `curb_concrete` vertices within 1.2 m of the carriageway edge point q), and the kerb height
+of the house streets away from the driveways.
     uv run --project tools/worldgen python artifacts/buildings-r16/drop_check.py"""
 import sys
 from pathlib import Path
@@ -13,17 +15,26 @@ from streetscape import plots as PLT, stage as SS  # noqa: E402
 rid = "bialystok-industrial-c"
 w0 = pipeline.build(rid)
 rp = SS.plan_plots(w0, rid)
-w1 = pipeline.build(rid, side_edit=lambda net: PLT.apply_drops(net, rp["drops"]))
-print("drops", len(rp["drops"]), "applied", w1.stats.get("side_edit"))
+hk = {}
 
 
-def kerb(w, q):
+def edit(net):
+    hk.update(PLT.apply_house_kerbs(net, rp["plots"]))
+    return PLT.apply_drops(net, rp["drops"])
+
+
+w1 = pipeline.build(rid, side_edit=edit)
+print("plots", len(rp["plots"]), "gates", sum(p["lay"]["gate"] is not None for p in rp["plots"]), "drops", len(rp["drops"]),
+      "applied", w1.stats.get("side_edit"), "access stats", rp["access_stats"], "house-kerb chains", len(hk), round(sum(hk.values())), "m")
+
+
+def kerb(w, q, r=1.2):
     zs, za = [], []
     for p in w.buf.parts:
         if p.layer != "road":
             continue
         d = np.hypot(p.V[:, 0] - q[0], p.V[:, 1] - q[1])
-        m = d < 1.2
+        m = d < r
         if not m.any():
             continue
         if p.mat == "curb_concrete":
@@ -40,9 +51,19 @@ for p in rp["plots"]:
     a = p.get("access")
     if not a:
         continue
+    g = p["lay"]["gate"]
+    t = g["t"]
     h0, h1 = kerb(w0, a["q"]), kerb(w1, a["q"])
-    rows.append((p["id"][-6:], a["chain"] is not None, a["walk"], a["kind"], None if h0 is None else round(h0, 3), None if h1 is None else round(h1, 3)))
+    side = [kerb(w1, a["q"] + t * s, 0.8) for s in (-8.0, 8.0)]          # the street kerb 8 m either side of the driveway
+    rows.append((p["id"][-6:], p["front_style"], a["walk"], a["kind"], bool(a.get("kerbed")), round(a["d_cw"], 1),
+                 None if h0 is None else round(h0, 3), None if h1 is None else round(h1, 3),
+                 [None if s is None else round(s, 3) for s in side]))
 for r in rows:
     print(r)
-ok = [r for r in rows if r[5] is not None and r[5] < 0.06]
-print(f"{len(ok)} of {len(rows)} accesses have a kerb below 6 cm after the drop")
+kerbed = [r for r in rows if r[4]]
+ok = [r for r in kerbed if r[7] is not None and r[7] < 0.06]
+h = [r[7] for r in kerbed if r[7] is not None]
+print(f"{len(rows)} driveways; {len(kerbed)} at a kerbed edge, {len(ok)} of them with the kerb below 6 cm after the drop "
+      f"(min {min(h):.3f}, median {np.median(h):.3f}, max {max(h):.3f} m); {len(rows) - len(kerbed)} at an edge without a kerb")
+st = [s for r in rows for s in r[8] if s is not None]
+print(f"street kerb 8 m beside the driveways: n {len(st)}, median {np.median(st):.3f}, p10 {np.percentile(st, 10):.3f}, p90 {np.percentile(st, 90):.3f} m")
