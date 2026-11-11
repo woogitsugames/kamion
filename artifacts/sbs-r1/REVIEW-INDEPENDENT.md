@@ -13,3 +13,5 @@ Atrybucja źródeł jest uczciwa, a rozdzielenie 25 B i 17 C oraz wyłączenie f
 
 ## Poprawki autora po recenzji
 Wprowadzono bezpieczną listę klas, wspólną walidację korekt, odrzucanie mieszanych epok, sprawdzanie SHA świata i materiałów oraz wymiarów capture. Dane źródłowe są odczytywane po Acquire i sprawdzane ponownie po renderze. Rekonstrukcja starszych danych wymaga --historical, a migawki wejść --inputs. Bieżące testy pojedynczego pliku: 33/33, przez pulę heavy. Żadna klasa C nie została awansowana.
+## Ponowna ocena
+Dla fb5375fb recenzent potwierdził poprawność napraw integralności (punkty 1–4), bez nowych problemów w tym zakresie. Mechanizm J7 uznał za uczciwy: adnotacje nie awansują klas, wymagają zgodnych obrazów i ujawniają niewystarczającą liczbę punktów. Zgłoszony przypadek None == None dla SHA zdjęcia naprawiono i objęto testami. Cały plik SBS: 40/40. Kalibracja 17 C i bramka świata pozostają niezweryfikowane.

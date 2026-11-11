@@ -443,6 +443,9 @@ def measurements(im, horizon, authored_masks=None):
 def landmark_report(annotations, ref, render_digest, render_size):
     """Manual correspondences, bound to exact photo/render pixels; no automatic pose approval."""
     candidates=[a for a in annotations if a.get('camera')==ref['camera']]
+    valid_sha=lambda value: isinstance(value,str) and len(value)==64 and all(c in '0123456789abcdef' for c in value.lower())
+    if candidates and (not valid_sha(ref.get('comparison_sha256')) or not valid_sha(render_digest)):
+        return {'status':'UNBOUND_IMAGES','points':[],'rmse_render_px':None}
     matching=[a for a in candidates if a.get('comparison_sha256')==ref.get('comparison_sha256')
               and a.get('render_sha256')==render_digest]
     if not matching:
@@ -540,7 +543,7 @@ def compose(render_dir, outdir, strict=True, include_rejected=False, historical=
            'render':measurements(right,r['horizon_y_fraction'],masks.get('render'))}
         ph=np.array(m['photo']['histogram_32'],dtype=float); ph/=ph.sum()
         rh=np.array(m['render']['histogram_32'],dtype=float); rh/=rh.sum()
-        m['landmarks']=landmark_report(annotations,r,m['render_sha256'],right.size)
+        m['landmarks']=landmark_report(annotations,{**r,'comparison_sha256':hashlib.sha256((ROOT/r.get('comparison_photo',r['photo'])).read_bytes()).hexdigest()},m['render_sha256'],right.size)
         m['histogram_l1_distance']=round(float(np.abs(ph-rh).sum()),5)
         metrics.append(m)
         height=round(470*r['height']/r['width'])

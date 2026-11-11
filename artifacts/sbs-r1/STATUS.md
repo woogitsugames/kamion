@@ -79,3 +79,7 @@ Następny krok: uzupełnić narzędzie o kotwice pozy i wykonać końcowy pełny
 Ponowna niezależna ocena potwierdziła warunkowy PASS narzędzia po poprawkach integralności. Dodano opcjonalne adnotacje punktów na obu panelach, związane z SHA zdjęcia porównawczego i renderu. Po zmianie obrazu adnotacja ma status STALE i nie daje wyniku błędu. Jeden punkt zbiegu ma status INSUFFICIENT_ANCHORS i nie zatwierdza pozy. Przykład 2948 obejrzano w diagnostic-anchored; pozostaje C.
 Testy SBS: 37/37 przez heavy. Obejrzano wszystkie 16 galerii prób. Nie przyjęto żadnej z 144 hipotez automatycznie; dopasowania pozy i różnice geometrii nadal wymagają rozdzielenia.
 Następny krok: końcowy render wszystkich 42 par Low/High × clear/overcast, bez zmiany HEAD w trakcie joba.
+## Domknięcie mechanizmu kotwic
+Recenzent potwierdził uczciwość adnotacji J7 i wskazał jeden przypadek brakującego SHA zdjęcia. Naprawiono go: wymagany jest poprawny SHA, a compose przekazuje hash faktycznie otwartego obrazu. Testy SBS: 40/40 przez heavy, slot zwolniony. Adnotacje nie zmieniają klas i pojedynczy VP nie zatwierdza kamery.
+Końcowy render obejmie 42 kadry × Low/High × clear/overcast (168 renderów). Do zakończenia joba nie zmieniamy HEAD ani danych wejściowych; WIP zapisany przed uruchomieniem. Następnie oględziny, końcowy GIS przez heavy, raport i następna runda.
+Następny krok: pwsh -NoProfile -File scripts/sbs-gate3.ps1 -OutputRoot artifacts/sbs-r1/evidence

@@ -268,3 +268,12 @@ def test_one_vanishing_point_cannot_claim_enough_pose_anchors():
     annotation={'camera':'test','comparison_sha256':'a'*64,'render_sha256':'b'*64,'points':[
         {'id':'VP','photo':[0.5,0.5],'render':[0.5,0.5]}]}
     assert sbs.landmark_report([annotation],ref,'b'*64,(100,100))['status']=='INSUFFICIENT_ANCHORS'
+
+
+@pytest.mark.parametrize('photo_hash',[None,'','invalid'])
+def test_missing_or_invalid_photo_hash_never_binds_landmarks(photo_hash):
+    ref={'camera':'test','comparison_sha256':photo_hash}
+    annotation={'camera':'test','comparison_sha256':photo_hash,'render_sha256':'b'*64,'points':[
+        {'id':'VP','photo':[0.5,0.5],'render':[0.5,0.5]}]}
+    result=sbs.landmark_report([annotation],ref,'b'*64,(100,100))
+    assert result['status']=='UNBOUND_IMAGES' and not result['points'] and result['rmse_render_px'] is None
