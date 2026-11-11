@@ -44,3 +44,5 @@ Rozszerzony audyt produktów obejmuje też curb_/kerb_ i collision_asphalt/curb/
 
 Samokrytyka zbliżenia Blendera: usunięto pionowy profil przetłoczeń skanu metalu z atlasu. Obejrzano poprawiony blender-old-steel-foot.png i szary tył z dwiema obejmami blender-sign-back.png. Cache after odświeżony wyłącznie w 5 obrazach GLB; no-op pack identyczny bajtowo, 7252 widoki accessorów geometrii bez zmian. Nowy pełny GIS zostanie wykonany po renderach; 7 regresji nadal zielonych. Baza before nietknięta.
 NASTĘPNY KROK: pipeline import/audyt/rendery, potem GIS po poprawce atlasu.
+
+Import before przerwany: brak plików pakietów (CS0246 ColorBlock / UnlockReloadAssembliesTask). Przyczyna lokalna: zbyt szeroki filtr *lock* przy początkowej kopii Library. Uzupełniono całą PackageCache bez tego filtra; bez zmian Packages/ProjectSettings. PBR wygenerowane. NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1
