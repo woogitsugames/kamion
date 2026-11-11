@@ -112,7 +112,12 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     pmask = PV.rasterize_polys([p["poly"] for p in paved + plot_paved], hf) & ~rmask
     pz = PV.paved_heights(hf, road_z, rmask, pmask)
     shapely.prepare(roads_poly)
-    PV.build_meshes(w.buf, paved + plot_paved, np.where(np.isfinite(pz), pz, sm), hf, walls=bpoly.boundary, roads_poly=roads_poly)
+    PV.build_meshes(w.buf, paved, np.where(np.isfinite(pz), pz, sm), hf, walls=bpoly.boundary, roads_poly=roads_poly)
+    # ADR 0124 r2: the ground of the house plots reads the ROAD height on the nodes of the road footprint (the yards
+    # above read the smoothed terrain there). A driveway that comes down from a plot 0.3-0.5 m above the street ended
+    # 15-20 cm over the lowered kerb, and the terrain showed under that lip as a wedge of grass (`r16_kerb_0`).
+    PV.build_meshes(w.buf, plot_paved, np.where(np.isfinite(pz), pz, np.where(rmask, road_z, sm)), hf,
+                    walls=bpoly.boundary, roads_poly=roads_poly)
     mats = {}
     for p in paved:
         mats[p["mat"]] = round(mats.get(p["mat"], 0) + p["poly"].area)

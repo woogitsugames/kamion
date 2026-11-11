@@ -249,6 +249,8 @@ def runoff_uv1(runoff, ua, ub, za, zb):
 
 
 LOD1_HOUSE_OPENINGS = True     # ADR 0124 r2: windows / door of houses on the LOD1 prism (dark quads, no new material)
+LOD1_HOUSE_OPENING_FALLBACK = "downpipe"       # 0.30 grey: gutters of every pitched house on LOD1
+_CHUNK_M = 256.0                               # terrain_mesh.chunks.CHUNK_M (chunk bounds are multiples of it)
 LOD1_HOUSE_OPENING_MAT = "hall_flashing"       # 0.045 graphite sheet: already on the LOD1 of every pitched house (verge / fascia)
 SILL_CLEAN = 0.40              # ADR 0107: share of windows whose sill left no mark (review 0097 P1-f: 30-50 %)
 
@@ -947,6 +949,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
     roof_kinds = {}
     canopy_skipped = 0
     lod1_house_openings = 0
+    l1_pending, l1_cells, l1_fallback = [], set(), 0
     bal_count = 0
     btree = shapely.STRtree([b["poly"] for b in blds])
     house_pal = house_palette(blds)
@@ -1329,8 +1332,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                     if o[5] not in ("window", "door") or o[1] - o[0] < 0.4 or o[3] - o[2] < 0.4:
                         continue
                     q0, q1 = a + d * o[0] + nout * 0.05, a + d * o[1] + nout * 0.05
-                    acc.quad("buildings_low", LOD1_HOUSE_OPENING_MAT, [q0[0], q0[1], o[2]], [q1[0], q1[1], o[2]],
-                             [q1[0], q1[1], o[3]], [q0[0], q0[1], o[3]])
+                    l1_pending.append((key, [[q0[0], q0[1], o[2]], [q1[0], q1[1], o[2]], [q1[0], q1[1], o[3]],
+                                             [q0[0], q0[1], o[3]]]))
                     lod1_house_openings += 1
             u_acc += L
         if typ == "block" and BLOCK_APRON:                         # ADR 0097 (P2-g): paved apron
@@ -1400,12 +1403,25 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         hero_h = (heroes or {}).get(key)
         if hero_h and hero_h["meta"] is not None:       # the authored asset replaces the visible hall
             acc.d = {k: v for k, v in acc.d.items() if k[0] not in ("buildings", "buildings_low")}
+            l1_pending[:] = [q for q in l1_pending if q[0] != key]
+        for it in acc.d.get(("buildings_low", LOD1_HOUSE_OPENING_MAT), ()):
+            l1_cells.update(map(tuple, np.floor(it[0][it[1]].mean(1)[:, :2] / _CHUNK_M).astype(int).tolist()))
         acc.flush(buf, key)
+    # ADR 0124 r2: LOD1 openings of houses, in the dark sheet material where the LOD1 of that chunk has it anyway and in
+    # the gutter grey elsewhere (2 chunks of bialystok-industrial-c) - never a draw of their own
+    by_key = {}
+    for k_, quad in l1_pending:
+        cell = tuple(np.floor(np.mean(quad, axis=0)[:2] / _CHUNK_M).astype(int).tolist())
+        mat = LOD1_HOUSE_OPENING_MAT if cell in l1_cells else LOD1_HOUSE_OPENING_FALLBACK
+        by_key.setdefault(k_, Acc()).quad("buildings_low", mat, *quad)
+        l1_fallback += mat != LOD1_HOUSE_OPENING_MAT
+    for k_, a_ in by_key.items():
+        a_.flush(buf, k_)
     report.update({"typologies": counts, "docks": sum(len(d["docks"]) for d in all_docks),
                    "dock_facades": [d["id"] for d in all_docks], "facade_signs": len(signs),
                    "hall_wall_runoff_tris": dict(Acc.runoff_tris),
                    "house_roofs": dict(sorted(roof_kinds.items())),
-                   "house_canopies_under_eave_skipped": canopy_skipped, "lod1_house_openings": lod1_house_openings, "balconies": bal_count})
+                   "house_canopies_under_eave_skipped": canopy_skipped, "lod1_house_openings": lod1_house_openings, "lod1_house_openings_fallback_mat": int(l1_fallback), "balconies": bal_count})
     if sign_out is not None:
         sign_out.extend(signs)
     return all_docks
