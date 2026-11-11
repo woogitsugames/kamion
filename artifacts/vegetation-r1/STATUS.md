@@ -90,3 +90,4 @@ Zapisano pary foto after Low-clear-photo-2048x1536. Następny krok: porównać z
 Zapisano pary foto after High-clear-photo-1280x720. Następny krok: porównać z photo-references.json.
 Zapisano pary foto after High-clear-photo-2048x1152. Następny krok: porównać z photo-references.json.
 Zapisano pary foto after High-clear-photo-2048x1536. Następny krok: porównać z photo-references.json.
+EditMode koniec rundy: kod 0. Szczegóły editmode-final.log i NUnit XML. Następny krok: raport i dalsza runda.
