@@ -17,3 +17,6 @@
 
 - Step6: baseline import OK64chunks Low+High; fresh sky visibility bake1m2048, vis_road0.926, solid_inst82. Material cache rebuilt495s from unchanged4f7 source. Reverted Unity-only settings/sky side effects; no visual policy edit yet.
 - NEXT COMMAND: powershell -File artifacts/light-r12/capture.ps1 -Phase before (full registry4conditions).
+
+- Step6a: initial capture launch stopped before Unity because PS5 lacks Path.GetFullPath(path,basePath). Changed artifact wrapper child shell to pwsh7, required by existing visual-qa.ps1; restarted baseline capture successfully. No output accepted from failed launch.
+- NEXT COMMAND: pwsh -File artifacts/light-r12/capture.ps1 -Phase before (running; inspect before-capture.log).

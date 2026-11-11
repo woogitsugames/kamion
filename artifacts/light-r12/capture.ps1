@@ -17,7 +17,7 @@ foreach ($tier in @('Low','High')) {
         $argsQa = @('-Scene', $scene, '-Tier', $tier, '-Lighting', $light, '-Gate3', 'Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json', '-OutputDir', "artifacts/light-r12/$Phase/$tier-$light")
         if ($Rq) { $argsQa += @('-Rq', $Rq) }
         if ($LowSunOnly -or $Targeted) { $argsQa += @('-Cameras', $cameras) }
-        & powershell -NoProfile -ExecutionPolicy Bypass -File scripts/visual-qa.ps1 @argsQa
+        & pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/visual-qa.ps1 @argsQa
         if ($LASTEXITCODE -ne 0) { throw "Capture failed: $tier $light" }
         # Unity setup/QA writes tier assets; restore only these known generated policy side effects.
         git restore -- game/ProjectSettings game/Assets/_Project/Rendering/Settings
