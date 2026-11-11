@@ -11,3 +11,6 @@
 
 - Krok4: przygotowano spójne okna koron, stabilny podzbiór kart LOD1 z LOD0, fotograficzną korę sosny CC0 oraz paletę liści WORKING_VALUE. Wyjścia tylko w artifacts/vegetation-r2/tree-products, scena baseline nietknięta; zachowano3pasmaLOD0/1+impostorLOD2. NASTĘPNY KROK: `blender -b --factory-startup -P tools/blender/world/make_trees.py -- --out artifacts/vegetation-r2/tree-products`.
 
+
+- Krok5: w generatorze masek trawy dodano pola przestrzenne6m/3,5m zakotwiczone we współrzędnych, ograniczone do klas BDOT/OSM; zachowano kanałR odległości iG lasu. OSM species/genus wybiera istniejące gatunki zamiast zawsze lipy. Testy5PASS. NASTĘPNY KROK: `Get-Content artifacts/vegetation-r2/tree-bake.log -Tail 8` i dokończenie czterech59kamerowych baseline z prawdziwym WorldC_High.
+

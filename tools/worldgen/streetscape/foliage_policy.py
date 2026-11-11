@@ -26,3 +26,36 @@ def leaf_lod_indices(count, seed, share=.40):
     rng = np.random.default_rng(seed)
     chosen = np.flatnonzero(rng.random(count) < share)
     return chosen if len(chosen) else np.array([count // 2], dtype=int)
+
+
+def metric_patch_field(east, north, scale_m=6.0, salt=17):
+    """Smooth deterministic metre-scale variation anchored in world coordinates.
+
+    Small / large arrays sample the same field, so chunking cannot create seams.
+    Four integer hashes per coarse-cell sample, with separable smooth interpolation.
+    """
+    x, y = np.asarray(east, np.float32) / scale_m, np.asarray(north, np.float32) / scale_m
+    ix, iy = np.floor(x).astype(np.int64), np.floor(y).astype(np.int64)
+    fx, fy = x - ix, y - iy
+    fx, fy = fx * fx * (3 - 2 * fx), fy * fy * (3 - 2 * fy)
+    def hashed(dx, dy):
+        h = ((ix[None, :] + dx).astype(np.uint32) * np.uint32(1597334677)
+             ^ (iy[:, None] + dy).astype(np.uint32) * np.uint32(3812015801) ^ np.uint32(salt))
+        h ^= h >> np.uint32(16)
+        h *= np.uint32(2246822519)
+        return (h & np.uint32(0xFFFFFF)).astype(np.float32) / float(0xFFFFFF)
+    a, b = hashed(0, 0), hashed(1, 0)
+    c, d = hashed(0, 1), hashed(1, 1)
+    return ((a + (b - a) * fx[None, :]) * (1 - fy[:, None])
+            + (c + (d - c) * fx[None, :]) * fy[:, None]).astype(np.float32)
+
+
+def osm_tree_species(tags, default="linden"):
+    """Use explicit OSM botanical tags; unspecified species remain WORKING_VALUE."""
+    text = " ".join(str(tags.get(k, "")) for k in ("species", "genus", "species:pl", "species:en")).casefold()
+    for species, names in {"pine": ("pinus", "pine", "sosna"), "birch": ("betula", "birch", "brzoza"),
+                           "linden": ("tilia", "linden", "lipa"), "maple": ("acer", "maple", "klon"),
+                           "alder": ("alnus", "alder", "olsza", "olcha")}.items():
+        if any(name in text for name in names):
+            return species
+    return default

@@ -3,7 +3,7 @@ import math
 from pathlib import Path
 import numpy as np
 
-from streetscape.foliage_policy import crown_opening, leaf_lod_indices
+from streetscape.foliage_policy import crown_opening, leaf_lod_indices, metric_patch_field, osm_tree_species
 from streetscape.leaf_textures import pine_scan
 
 
@@ -28,3 +28,20 @@ def test_cc0_bark_clean_clone_fallback_stays_useful(tmp_path, caplog):
     assert image.size == (64, 64)
     assert np.asarray(image)[..., :3].std() > 2
     assert 'procedural bark retained' in caplog.text
+
+
+def test_metric_patches_are_world_anchored_without_chunk_seams():
+    east, north = np.arange(-30., 31), np.arange(45., -16., -1)
+    full = metric_patch_field(east, north)
+    piece = metric_patch_field(east[13:43], north[7:27])
+    np.testing.assert_array_equal(piece, full[7:27, 13:43])
+    assert .05 < full.std() < .35 and 0 <= full.min() <= full.max() <= 1
+    # No leaf-size salt noise: adjacent one-metre samples vary smoothly.
+    assert np.abs(np.diff(full, axis=1)).mean() < .12
+
+
+def test_explicit_osm_botany_is_not_replaced_by_generic_linden():
+    assert osm_tree_species({'genus': 'Betula'}) == 'birch'
+    assert osm_tree_species({'species': 'Pinus sylvestris'}) == 'pine'
+    assert osm_tree_species({'species:pl': 'lipa drobnolistna'}) == 'linden'
+    assert osm_tree_species({'natural': 'tree'}) == 'linden'
