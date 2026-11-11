@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw
 
-parser=argparse.ArgumentParser();parser.add_argument('--phase',default='before');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--phase',default='before');parser.add_argument('--pane-grid',action='store_true');args=parser.parse_args()
 ROOT=Path(__file__).resolve().parents[2];OUT=Path(__file__).resolve().parent
 spec=json.loads((ROOT/'Data/Regions/bialystok-industrial-c/generated/landmarks/fire_station_jrg2.spec.json').read_text())
 d=spec['dims'];origin=np.array(d['axis']['origin_en']);u=np.array(d['axis']['u']);u/=np.linalg.norm(u);v=np.array([-u[1],u[0]]);floor=spec['anchor'][2]
@@ -31,7 +31,14 @@ regions={
  'G3_right_glass_upper':{'type':'glass_may_be_occluded_before','points':box(44.95,45.75,-.08,4.45,4.85)},
  'G4_right_glass_mid':{'type':'glass_may_be_occluded_before','points':box(44.95,45.75,-.08,2.75,3.25)},
 }
-records={};out=OUT/(args.phase+'-roi');out.mkdir(exist_ok=True)
+if args.pane_grid:
+ regions={}
+ for window,center in enumerate(d['hall']['arch_windows_u']):
+  for column in range(3):
+   cx=center+(column-1)*4.7/3
+   for row,(z0,z1) in {'mid':(2.75,3.25),'upper':(4.20,4.40)}.items():
+    regions[f'W{window}_C{column}_{row}']={'type':'glass_pane_centre_REQUIRES_TREE_CHECK','points':box(cx-.2,cx+.2,-.08,z0,z1)}
+records={};out=OUT/(args.phase+('-panes' if args.pane_grid else '-roi'));out.mkdir(exist_ok=True)
 colors=[(255,60,40),(255,180,0),(230,0,230),(255,80,180),(200,120,255),(255,255,0),(0,255,255),(0,200,255),(150,255,0),(0,255,130)]
 for tier in ('Low','High'):
  for light in ('clear','overcast'):
@@ -39,11 +46,12 @@ for tier in ('Low','High'):
     if not path.exists():continue
     im=Image.open(path).convert('RGB');rgb=np.array(im);h,w=rgb.shape[:2]
     annotation=im.copy();dr=ImageDraw.Draw(annotation);row={}
-    for (name,region),color in zip(regions.items(),colors):
+    for (name,region),color in zip(regions.items(),colors*((len(regions)+9)//10)):
         poly=project(region['points'],w,h);mask=Image.new('L',(w,h));ImageDraw.Draw(mask).polygon([tuple(p) for p in poly],fill=255)
-        keep=np.array(mask)>0;data=rgb[keep];assert len(data)>0
+        keep=np.array(mask)>0;data=rgb[keep].astype(np.int16);assert len(data)>0
         lum=data@np.array([.2126,.7152,.0722]);srgb=data/255;linear=np.where(srgb<=.04045,srgb/12.92,((srgb+.055)/1.055)**2.4)
-        row[name]={'type':region['type'],'native_polygon':poly.tolist(),'pixels':len(data),'median_rgb_srgb':np.median(data,axis=0).tolist(),
+        green_or_dark=((data[:,1]-data[:,0]>=2)&(data[:,1]-data[:,2]>=1))|(lum<40)
+        row[name]={'green_or_dark_fraction':float(green_or_dark.mean()),'mean_luminance_srgb':float(lum.mean()),'type':region['type'],'native_polygon':poly.tolist(),'pixels':len(data),'median_rgb_srgb':np.median(data,axis=0).tolist(),
                    'mean_rgb_srgb':data.mean(0).tolist(),'p10_p50_p90_luminance_srgb':np.percentile(lum,[10,50,90]).tolist(),'mean_linear_luminance':float((linear@np.array([.2126,.7152,.0722])).mean()),
                    'validity':'PROPOSED mask; verify annotated overlay before using as semantic evidence'}
         dr.line([tuple(p) for p in poly]+[tuple(poly[0])],fill=color,width=5);dr.text(tuple(poly[0]),name[:2],fill=color,stroke_width=1,stroke_fill='black')
