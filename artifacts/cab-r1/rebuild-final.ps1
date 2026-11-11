@@ -6,7 +6,8 @@ foreach($method in @('Game.Editor.Setup.TruckAssetBuilder.BuildBatch','Game.Worl
  $log=Join-Path $PWD "artifacts/cab-r1/final-$($method.Split('.')[-2]).log"
  $code=Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod',$method)
  git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
- if($code -ne 0 -or !(Select-String $log -SimpleMatch 'TRUCK_RESULT: OK' -Quiet)) { throw "Build failed $code" }
+ if($code -ne 0 -or !(Select-String -Path $log -SimpleMatch 'TRUCK_RESULT: OK' -Quiet)) { throw "Build failed $code" }
 }
 & pwsh -NoProfile -File artifacts/cab-r1/validate.ps1
 exit $LASTEXITCODE
+
