@@ -1,0 +1,41 @@
+# D final independent High review
+
+2026-11-11. Read-only review of the selected production shader `1dc7db4ea4ec839f4dc8fbd301ba5aedd38a12c3fff892e66818841d125edce4`. All **186 High pairs** reviewed: 93 unique camera IDs in clear and overcast, from original `before`/`before-legacy` to final `after`/`after-legacy`. Low is ROOT's separate review. No source, Unity, cache or test mutations by this reviewer.
+
+**Verdict: scoped visual nonregression PASS; paint correction/readability PASS with local visual limitations; road-wear realism PARTIAL, broad asphalt-sterility goal still open.** Passing CI does not turn the remaining appearance issues into a docs/06 PASS.
+
+## What was actually viewed
+
+All 16 `paired-page-*.jpg` High pages were opened and inspected: five pages per weather condition for 57 main IDs, three per condition for 36 legacy IDs. These are full-frame comparisons at contact-sheet size, not 186 individual native-detail inspections. I then opened ten 960-pixel-wide full pairs: crossing and newroad-negative in both conditions; old-lane and docks in clear; patch-Putry, gate-tracks, missing-UV2 and fire-station-ref7197 in overcast. The montage script was read: size-only RGB conversion/thumbnail, no tonal corrections, original BEFORE at left/top and selected FINAL at right/bottom.
+
+Independently enumerated the original/final PNG IDs: exactly 93 unique IDs per condition, no overlapping main/legacy IDs, no missing counterpart. All 186 final PNG hashes match final-capture-proof. The full per-ID SHA record, viewed-page hashes, proof-file hashes and counter ranges are in `D-final-high-inputs.json`. This review follows the final selected source; the rejected broad three-block and private packed-mask QA images were not substituted for FINAL.
+
+## Independent image findings
+
+| Scope / priority | Observation | Verdict / remaining issue |
+|---|---|---|
+| Architecture and scene negatives, all pages | Fire-station forms/paint, residential blocks, halls, fence geometry, tree crowns, shrubs and grass retain their prior appearance at page scale. Full remiza overcast pair shows the same legacy plant and facade limitations, not a new D change. No obvious background colour or geometry regression stands out. | Scoped nonregression PASS. This does not certify every native texel or retroactive runtime pose. |
+| Vehicles, cab and mirrors, legacy pages | Truck/trailer silhouette, cab framing, visible trim, parked cars and mirror contents do not show a new obvious visual change. | Scoped nonregression PASS. No material or performance acceptance for unrelated vehicle work is inferred. |
+| Crossing, d_wear_crossing clear/overcast | The previous large soft loss at crossing-strip edges is reduced; final stripes are more coherent and legible while retaining modest breakup. They are not newly covered by dark wet ribbons. This is a correction of overdone wear, not evidence that more wear is now visible everywhere. | Readability PASS. At this distance some white blocks still look rather clean and regular. |
+| P8/large markings, g3a_ext34_s0338 and newroad-negative | Broad arrow/marking shapes remain readable. Narrow, elongated grey scuffs are now visible within some large white areas, rather than removing a large arbitrary edge. The close newroad-negative pair clearly changes paint; it is only an asphalt negative, not an unchanged-paint control. | Shape/readability PASS; P2 cosmetic limit: isolated elongated scuffs can still look like soft rubbed/smudged bands, especially at 960. No claim of photographic paint wear. |
+| Old asphalt, old-lane, patch-Putry and long route stretches | Fine grain, patches and some cracks remain, but the before/final road surfaces are mostly very similar. Long lane areas still read as clean, evenly maintained surfaces with sparse contextual wear. | Broad realism PARTIAL/open. The frame-wide driving impression has not been transformed. Source transfer counts or nonzero differences do not close the sterility criticism. |
+| Gate-tracks overcast full pair / main-page clear | No black wet pair or broad oil ribbon has appeared. At the full route view, the added tracks are subtle; this final wide frame alone does not strongly communicate two distinct tyre paths. | Bounded improvement only. Prior independent gate-R2 assessment remains: second clear-exit trace weak. Do not upgrade that to full pair-readability PASS from the wider final matrix. |
+| Gutter and newroad asphalt negatives | I see no new broad dirty verge stripe, no global brown overlay and no apparent double crack layer. Fresh-road asphalt retains its comparatively sound character, while paint on top intentionally changes. | Scoped negative PASS; no pixel-parity claim. |
+| Docks / local stains | Existing scattered dark scuffs and contact dirt remain visible. Final does not show a new obvious large black puddle pattern or altered trailer contact appearance in the selected full pair. | Nonregression PASS; bus-stop-specific shape/source acceptance is separate evidence, not inferred from this dock view. |
+
+The most legible result is better controlled marking loss. Much of the route remains visually close to BEFORE. Against docs/06 this is a useful bounded correction, not proof of rich, physically varied wear across the whole industrial district. Remaining uniform road expanses and weak gate-exit second trace must stay explicit. No further source variant is requested in this review.
+
+## Technical evidence read, separate from appearance
+
+- `final-native-proof.json`: 154 inspected native mesh rows, 150 geometry/UV0 exact; four deliberate marking buffers account for bus/gate additions. All physical road geometry remains exact. Ordered source proof establishes +73 decal triangles / +82 vertices per tier, no new material groups. UV1 sentinel/transfer/signed-gate changes are separate from positions/topology.
+- Native marking uniform is `[.425,.25,.38,.12]`, derived freshly rather than repeatedly halving the stored value. Fine numerical wear settings are implementation evidence, not a visual score.
+- Selected shader is 1dc; native old-road fields retain the ordinary worn maps and existing external High cracks. Rejected broad smoothness/macro/longitudinal-paint blocks and packed Mask16 are not shipping; native proof explicitly reports QA shaders/packed textures unbound. Existing High fetch branches remain, rather than a newly activated packed crack sample.
+- Independently read all 186 High counter CSV rows: object, draw estimate, shadow estimate, instanced draws/instances/triangles, cells and HLOD-cell deltas are zero; rounded `trisK` changes range 0..1. These are counter estimates, not GPU timestamps or a device-performance PASS.
+- `final-capture-proof.json` reports 372 final frames, original 372 baseline hashes intact, protected 2441 cache and 192 raw files exact. The proper signed-mode GIS result is **gis-gate-r2.xml: 389 cases, 388 passed / one expected failure, no errors/failures**, SHA256 `0369b42cc762adb398b28b30ad733ced01ac2964b476ea17844ac6009ce0e5e9`. The historical `gis-final-summary.json` contains 386+1 from R1 and is superseded for this final claim. I notified D to label/link that history correctly.
+- Independently parsed `EditMode-final.xml`: 240/240 passed, zero skipped/inconclusive; SHA256 `f2d9e789e3831d9bb1da9616fb8bce4fdbae8bd0eb28aef2299cb16733ac2e23`. No new test run by this reviewer.
+
+## Causality and acceptance limits
+
+Original BEFORE372 predates the runtime recorder. There is no retrospective 372-frame runtime/pixel-stability proof. `final-scene-pose-proof` instead verifies serialized 40 control cameras per scene and exact actor inputs; tractor161 and trailer73 hierarchical transforms are exact. Final capture packets are actual. Fresh field comparisons and their runtime registration are separate evidence, not replacement BEFOREs for all historical views. I do not infer that all 372 original/final pixels are causally identical outside the intended surface effect.
+
+This High review covers the registered 93 IDs, not every special field camera. Native buffers and selected screenshots cannot establish temporal shimmer, actual executed pass cost, A16 ASTC appearance, internal render resolution or phone performance. Technical validation supports the bounded patch; the overall photographic asphalt-wear goal remains PARTIAL/open.
