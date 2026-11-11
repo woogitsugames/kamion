@@ -68,7 +68,7 @@ TREE_GROUP_DEFAULTS = {"group_size": [3, 7], "in_group_m": [3.0, 5.5], "gap_m": 
 # gugik-orto-2024-rgb-0p25-bialystok-industrial-c; SHA256 below. Mapillary
 # 297817221966185 (zsolt, 2017-07-29, CC BY-SA 4.0) confirms the roadside habit.
 # EPSG:2180 crown centres, NOT surveyed trunks: +/-3m WORKING_VALUE. Heights
-# and linden as a broadleaf proxy are WORKING_VALUE, botanical species unverified.
+# and reused broadleaf models are WORKING_VALUE, botanical species unverified.
 # Keep these source corrections here, in the vegetation-owned data, rather than
 # altering the shared road/landmark overrides. Other regions clip them out.
 ORTHO_TREE_CORRECTIONS = ({
@@ -76,8 +76,88 @@ ORTHO_TREE_CORRECTIONS = ({
     "ortho_sha256": "19d7c3ca5d2192b1d0367c8d039e41aa60221927755b45c6a6763e933d96258b",
     "points_epsg2180": ((777718., 596045.), (777732., 596038.),
                         (777744., 596030.), (777762., 596021.)),
-    "species": "linden", "height_range_m_WORKING_VALUE": (12.5, 15.0),
+    "height_range_m_WORKING_VALUE": (12.5, 15.0),
+    "root_uncertainty_m_WORKING_VALUE": 3.0,
+    "replace_self_seeded_radius_m_WORKING_VALUE": 10.0,
 },)
+
+
+def _replace_orthophoto_trees(out, origin, hf, zc, blocked, report):
+    """Correct nearby synthetic broadleaf records, preserving prototype and cell.
+
+    Candidate A added new draws. Reuse the donor's prototype/variant and stay in
+    its 64m InstanceImporter.CellM cell; mapped OSM/BDOT trees are never donors.
+    The crown centre is uncertain, so search <=3m for a root that remains outside
+    blocked and >=1.8m from other trunks. No mask is modified or bypassed.
+    """
+    H, W = zc.shape
+    ymin = hf.y1-H+1
+    cell = lambda p: (int(np.floor((p[0]-hf.x0)/64.)), int(np.floor((p[1]-ymin)/64.)))
+    broadleaf = {"tree_birch", "tree_alder", "tree_maple", "tree_linden"}
+    qa = dict(candidates=0, placed=0, blocked=0, already_mapped=0, deferred_budget=0,
+              new_instances=0, replaced_self_seeded=0, replacements=[],
+              position_status="WORKING_VALUE: crown centres +/-3m, not surveyed trunks",
+              height_species_status="WORKING_VALUE: 12.5-15m; existing broadleaf proxy retained")
+    for correction in ORTHO_TREE_CORRECTIONS:
+        radius = correction["root_uncertainty_m_WORKING_VALUE"]
+        reach = correction["replace_self_seeded_radius_m_WORKING_VALUE"]
+        offsets = [(dx, dy) for dx in range(-int(radius), int(radius)+1)
+                   for dy in range(-int(radius), int(radius)+1) if dx*dx+dy*dy <= radius*radius]
+        offsets.sort(key=lambda d: (d[0]*d[0]+d[1]*d[1], d))
+        for j, point in enumerate(correction["points_epsg2180"]):
+            centre = np.asarray(point, float)-np.asarray(origin, float)
+            if not (hf.x0 <= centre[0] <= hf.x0+W-1 and ymin <= centre[1] <= hf.y1):
+                continue
+            qa["candidates"] += 1
+            if any(not t["src"].endswith(":self") and
+                   np.hypot(t["e"]-centre[0], t["n"]-centre[1]) <= radius for t in out):
+                qa["already_mapped"] += 1
+                continue
+            roots = []
+            for offset in offsets:
+                q = centre+offset
+                if not (hf.x0 <= q[0] <= hf.x0+W-1 and ymin <= q[1] <= hf.y1):
+                    continue
+                i, k = int(np.rint(q[0]-hf.x0)), int(np.rint(hf.y1-q[1]))
+                if not blocked[k, i]:
+                    roots.append((q, float(zc[k, i])))
+            if not roots:
+                qa["blocked"] += 1
+                continue
+            pool = [(i, t) for i, t in enumerate(out) if t["src"].endswith(":self")
+                    and t["p"] in broadleaf
+                    and np.hypot(t["e"]-centre[0], t["n"]-centre[1]) <= reach+radius]
+            selected = None
+            for q, z in roots:
+                donors = [(np.hypot(t["e"]-q[0], t["n"]-q[1]), i) for i, t in pool
+                          if cell((t["e"], t["n"])) == cell(q)]
+                for distance, i in sorted(donors):
+                    if distance > reach:
+                        break
+                    if any(k != i and np.hypot(t["e"]-q[0], t["n"]-q[1]) < 1.8
+                           for k, t in enumerate(out)):
+                        continue
+                    selected = (i, q, z)
+                    break
+                if selected is not None:
+                    break
+            if selected is None:
+                qa["deferred_budget"] += 1
+                continue
+            i, q, z = selected
+            old = out[i]
+            key = f"ortho:gugik-2024:{correction['id']}:{j}"
+            height = float(np.random.default_rng(_seed(key)).uniform(*correction["height_range_m_WORKING_VALUE"]))
+            out[i] = {**old, "e": round(float(q[0]), 2), "n": round(float(q[1]), 2),
+                      "z": round(z, 2), "h": round(height, 1), "src": key}
+            qa["replaced_self_seeded"] += 1
+            qa["replacements"].append(dict(source=key, previous_source=old["src"],
+                previous_position=[old["e"], old["n"]], root_local=q.tolist(),
+                crown_centre_local=centre.tolist(), prototype=old["p"], variant=old["v"]))
+    if qa["candidates"]:
+        qa["placed"] = sum(t["src"].startswith("ortho:gugik-2024:") for t in out)
+        report["orthophoto_trees"] = qa
+    return out
 
 
 def group_positions(line, rng, prm):
@@ -124,14 +204,14 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
         j = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, H - 1)
         return ~blocked[j, i], zc[j, i]
 
-    def emit(P, species, rng, src_id, hscale=1.0, fk=None, height_range=None):
+    def emit(P, species, rng, src_id, hscale=1.0, fk=None):
         if not len(P):
             return
         good, z = ok(P)
         for (x, y), zz, sp, g in zip(P, z, species, good):
             if not g:
                 continue
-            lo, hi = HEIGHT[sp] if height_range is None else height_range
+            lo, hi = HEIGHT[sp]
             h = rng.uniform(lo, hi) * hscale
             out.append({"p": f"tree_{sp}", "v": int(rng.integers(0, 3)), "e": round(float(x), 2), "n": round(float(y), 2),
                         "z": round(float(zz), 2), "h": round(float(h), 1), "yaw": round(float(rng.uniform(0, 6.2832)), 3),
@@ -226,21 +306,6 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             q = np.asarray(nd["geometry"]["coordinates"], float)[None] - origin
             rng = np.random.default_rng(nd["osm_node"])
             emit(q, [osm_tree_species(nd["tags"])], rng, f"osm:node/{nd['osm_node']}")
-    # Confirmed source points still go through the same blocked/ground guard.
-    # Insert after mapped trees, before speculative self-seeded vegetation: the
-    # existing mapped tree wins the 1.8m dedup; a random sapling cannot replace it.
-    ortho_candidates, ortho_emitted = 0, 0
-    for correction in ORTHO_TREE_CORRECTIONS:
-        for j, point in enumerate(correction["points_epsg2180"]):
-            q = np.asarray(point, float) - np.asarray(origin, float)
-            if not (hf.x0 <= q[0] <= hf.x0+W-1 and hf.y1-H+1 <= q[1] <= hf.y1):
-                continue  # never clamp a different region's point onto a tile edge
-            ortho_candidates += 1
-            key = f"ortho:gugik-2024:{correction['id']}:{j}"
-            n0 = len(out)
-            emit(q[None], [correction["species"]], np.random.default_rng(_seed(key)), key,
-                 height_range=correction["height_range_m_WORKING_VALUE"])
-            ortho_emitted += len(out)-n0
     # self-seeded vegetation on unmown land
     for layer in ("OT_PTNZ_A", "OT_PTTR_A"):
         for f in src["bdot10k"][layer]:
@@ -260,17 +325,12 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             if keep[i] and keep[j]:
                 keep[j] = False
         out = [t for t, k in zip(out, keep) if k]
+    out = _replace_orthophoto_trees(out, origin, hf, zc, blocked, report)
     cnt = {}
     for t in out:
         cnt[t["p"]] = cnt.get(t["p"], 0) + 1
     report["trees"] = cnt
     report["understorey"] = sum(1 for t in out if t["src"].endswith(":under"))
-    if ortho_candidates:
-        placed = sum(t["src"].startswith("ortho:gugik-2024:") for t in out)
-        report["orthophoto_trees"] = dict(candidates=ortho_candidates, placed=placed,
-            blocked=ortho_candidates-ortho_emitted, deduplicated=ortho_emitted-placed,
-            position_status="WORKING_VALUE: crown centres +/-3m, not surveyed trunks",
-            height_species_status="WORKING_VALUE: 12.5-15m, linden proxy for broadleaf")
     report["_forest_mix"] = forest_mix
     return out, forests
 
