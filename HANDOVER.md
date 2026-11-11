@@ -25,7 +25,8 @@
 | integracja Unity stanu main | — | usunięty | artifacts/integration-s9/REPORT.md | GOTOWE (dowody scalone `f913b2ad`): pytest gis 345/0, import OK, Truck/Trailer BuildBatch+InstallBatch OK, **EditMode 212/212** (TruckDoorGlassTests zielone), **PlayMode 109/0/8 skip**, rendery 3×59 kamer bez regresji integracji, Low draws +0,5 % vs po 0091. **physics/gate3 40 ✓ / 8 ✗**: 7× swept path = regresja z 0076 (linia trasy ścina narożnik na wyjazdach z rond Bieżeństwa/Putry, prześwit naczepy do −2,94 m) → przekazane agentowi 0095; 1× `test_generator_reproduces_committed_scenarios` znane z 0082. **APK Low `artifacts/apk/kamion-0.1.0-ad4062539c.apk`** (179,5 MB, SHA256 ad514a8b…bf82, +13,3 MB) — telefon gdy żaden Unity nie działa. Ustalenia: **Megascans 0084 nieaktywny** (`available=[], fallback=True` także na main — brak lokalnych produktów) → na main w tle `prepare-megascans.ps1` + build_world + pytest (`artifacts/logs/s9-main-fab-prepare.log`); regeneracja w worktree ≠ main (stanowiska 1526→1500, auta 908→900 — niedeterminizm albo stara kopia derived, NIEzbadane) |
 | zabudowa r4 (P1 z recenzji 0091) | 0094 | buildings-r12 (z fa83f577) | artifacts/buildings-r12 | s9: agent Fable start 05:40 |
 | recenzja 0092 + 0093 | — | — | docs/reports/visual/REVIEW-2026-11-11-s9-0092-0093.md | GOTOWE: oba PASS warunkowy; 0093: 5× P0-L (liczba/szerokość pasów z OSM zamiast ortofoto: s1040–1080, n10015785253, kerb_merge z filmu; Putry N; MA-010) → 0095; 0092: krawężnik jak szlifowany kamień, plamy > ślady, słupki — brama czeka na **zdjęcia właściciela z ziemi** |
-| węzły r2: szerokości/liczba pasów z ortofoto | 0095 | junctions-r2 (z 88c6c6e9) | artifacts/junctions-r2 | s9: agent Fable start ~06:00 |
+| determinizm generatora świata (worktree ≠ main) | 0096 | determinism (z 0889cae1) | artifacts/determinism | s9: agent Fable start ~07:00 (bez Unity) |
+| węzły r2: szerokości/liczba pasów z ortofoto + swept-path z 0076 | 0095 | junctions-r2 (z 88c6c6e9) | artifacts/junctions-r2 | s9: agent Fable start ~06:00 |
 | import Megascans R1 | 0084 | gpt-megascans (NIE usuwać — Codex wciąż aktywny) | artifacts/megascans-r1/REPORT.md | SCALONE `98e54e47` (REPORT: lokalnie PASS, skok sceny FAIL, Low lokalnie +4 draw/+4k tris; normal mapy Fab wyłączone; High 1024 i telefon UNVERIFIED); konflikt stage.py = unia (yard wear 0071 + FD.apply); regeneracja main w tle `artifacts/logs/s9-main-regen-0084.log`; GPT następnie Q1 0086 / Q2 0088 |
 | tło za krawędzią | 0085 | argon-edge | artifacts/edge-far-r1/REPORT.md | REPORT 01:38; stan zacommitowany przez lidera (Argon bezczynny od 01:46). NIEscalone: `edge-south` — budynek regionu zastąpiony/zdublowany halą far-field (podejrzenie: budynki przecinające granicę w far-field) → uwagi w `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` „UWAGI LIDERA s9” |
 
@@ -35,7 +36,7 @@
 3. Nowe zadania z recenzji s9 (agenci po zwolnieniu miejsc): **0090** remiza r7 (świerki piętrowe, tuje 3 kształty + Low, szkło 60–75, zacieki). **0089** czarny lakier aut → Argon Q2 (dopisane).
 3a. **0094** zabudowa r4 (z recenzji 0091: P1-1 daszek przebija połać, P1-2 łaty jasnego tynku — osłabić warstwę niskoczęst., P1-3 balkony na obu długich stronach, P1-4 czarna podbitka nad skrzydłem L ≥ 90, P1-5 balkony z płytą 0,15–0,2 m i jaśniejszą balustradą; P2 kolory dachów/tynków, gąsior, pieprz High w shaderze). **0090** remiza r7.
 4. Integracja, czyste buildy Low/High, telefony (A16 Low gate3, S24+ High), raport bramki 3.
-5. Ostatni przydzielony ADR: **0095**.
+5. Ostatni przydzielony ADR: **0096**.
 
 ---
 # HANDOVER — kamion, sesja 8 (2026-11-10 ok. 22:00 UTC start; limit 5 h reset 2026-11-11 03:00 UTC)
