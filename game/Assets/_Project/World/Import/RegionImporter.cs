@@ -160,6 +160,7 @@ namespace Game.World.Import
             if (!WorldTextureGenerator.Exist()) WorldTextureGenerator.GenerateAll();
             LookDevAssets.EnsureAll();
             WorldPbrMaterials.Reset();
+            FabMaterials.Reset();
             var roadAsphalt = Obj(manifest.Get("materials")).Get("road_asphalt") as Dictionary<string, object>;
             foreach (var kv in Obj(manifest.Get("materials")))
             {
@@ -254,6 +255,13 @@ namespace Game.World.Import
             float metal = m.Get("metal") != null ? (float)Num(m.Get("metal")) : 0f;
             string surface = Str(m.Get("surface"));
             string path = $"{r.Dir}/Materials/M_{id}.mat";
+            if (FabMaterials.IsBaseSurface(id) && FabMaterials.Has(id))
+            {
+                var surfaceBase = WorldPbrMaterials.Create(r, id, m, path);
+                if (surfaceBase != null && FabMaterials.ApplySurfaceBase(r, id, surfaceBase)) return surfaceBase;
+            }
+            var fab = FabMaterials.Create(r, id, path);
+            if (fab != null) return fab;
             if (m.Get("hlod") is bool hl && hl)
             {
                 // Forest HLOD (ADR 0015): shared PNG baked from the LOD0 trees (texture_ref, repo-relative). Edge walls are
@@ -444,6 +452,12 @@ namespace Game.World.Import
             var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
             mat.shader = shader;
+            // Optional scanned materials can fall back at the same asset path on
+            // reimport. Clear the scan-only state before restoring plain Lit.
+            foreach (var keyword in new[] { "_NORMALMAP", "_OCCLUSIONMAP", "_METALLICSPECGLOSSMAP" }) mat.DisableKeyword(keyword);
+            mat.SetTexture("_BumpMap", null);
+            mat.SetTexture("_OcclusionMap", null);
+            mat.SetTexture("_MetallicGlossMap", null);
             mat.enableInstancing = true;
             mat.SetColor("_BaseColor", new Color(linear.r, linear.g, linear.b, 1f).gamma);
             mat.SetTexture("_BaseMap", tex);

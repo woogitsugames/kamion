@@ -190,12 +190,43 @@ Licencja **Fab Standard License** (Quixel Megascans; karta pozycji: „Licencja 
 | `trash-can` | Trash Can (3d) | https://www.fab.com/listings/35267674-3634-4fd2-bca2-423fbc7da4b3 | Fab Standard | 2026-11-10 | `c94ba814a011dc81bb36c049d7da08d98b8725bacd4e1db13a28007896f8d85b` |
 | `grass-clumps` | Grass Clumps (plant) | https://www.fab.com/listings/d22b2fc3-9389-4d39-894c-5369a7e49ddf | Fab Standard | 2026-11-10 | `3542bded154fbe4e946cb634dbb5ace08cb3e36c212f21d01b957bac8873f6f8` |
 | `wild-grass` | Wild Grass (plant) | https://www.fab.com/listings/5848d16a-f6ab-45a7-b69f-fe21dcbe4669 | Fab Standard | 2026-11-10 | `ff6fb1b4a07768a34482f2a2c13f5f888245059a9a2cc455e34d5149a7f35533` |
-| `boxwood` | Boxwood (plant) | https://www.fab.com/listings/ae90090d-cafb-4431-a74f-8cded15f93e1 | Fab Standard | 2026-11-10 | `c11a7c455f086bc71f4ad18a0762f6bd6cdb20cbe9cac12a5c7a24ad1b5a98d0` |
+| `boxwood` | Boxwood (plant) | https://www.fab.com/listings/ae90090d-cafb-4431-a74f-8cded15f93e1 | Fab Standard | 2026-11-10 | `9024cc6b4ec22da7958d83fc450b8e8dfa319e349da8a3915530695881d12376` |
 | `elderberry` | Elderberry (plant) | https://www.fab.com/listings/d72dd7bb-d514-4a14-8b4b-3333c99057fb | Fab Standard | 2026-11-10 | `70b9076f24d3852b8a2068dfd373048e4bcc427d233dc15b3ee2d90ff871cc75` |
 | `silver-birch-bark` | Silver Birch Bark (surface) | https://www.fab.com/listings/eb28e8b4-3198-4cf3-a42b-b3e12b612d06 | Fab Standard | 2026-11-10 | `2a3030a7c07ad56dc14ba4e515032815fdfd38c4cf1f3cf9f0f21c7506dee6c4` |
 | `birch-tree-trunk` | Birch Tree Trunk (3d) | https://www.fab.com/listings/a2289955-a389-4fdb-a17b-b27c4146b03d | Fab Standard | 2026-11-10 | `b65fc13b280b0041b32029c32555dd22df39deeabc4623ca2352ba3ebe8b7635` |
 | `pine-bark` | Pine Bark (surface) | https://www.fab.com/listings/5f6f6a17-3b21-470a-b74b-fbbf80c6dc11 | Fab Standard | 2026-11-10 | `b80cd5d01cae4070e71cfe3b917eed994ca022b426575855ef7ea81553fd8c4b` |
 | `linden-branch` | Linden Branch (plant) | https://www.fab.com/listings/d8c3a5b3-7212-45b7-93b2-6c630333ec13 | Fab Standard | 2026-11-10 | `20973973e53d2f6fa97ba9e9abbd8f37d84e8401d986bc2708549b96b183fe71` |
-| `granite-rock` | Granite Rock (3d) | https://www.fab.com/listings/01d40602-eb64-448b-af63-a7896924280a | Fab Standard | 2026-11-10 | `9acf14177d29d6f33909719e13d0af4430c5be109f55b9effb847cd211d378a8` |
-| `small-granite-rock` | Small Granite Rock (3d) | https://www.fab.com/listings/d4de5337-7536-41df-9706-2825dc0a9dad | Fab Standard | 2026-11-10 | `dc7fe40bae15ad1ce28df5acd4d6c384ea060f97f0fc4e2d48851864e0537680` |
+| `granite-rock` | Granite Rock (3d) | https://www.fab.com/listings/01d40602-eb64-448b-af63-a7896924280a | Fab Standard | 2026-11-10 | `178df9900e3eccaf3ce21069281cdd3cfa4eead781f3b1828596570986ae5484` |
+| `small-granite-rock` | Small Granite Rock (3d) | https://www.fab.com/listings/d4de5337-7536-41df-9706-2825dc0a9dad | Fab Standard | 2026-11-10 | `3af7d445e783e65254590ecd3abab12a83cc1e88f54aac82ce5c1873f420e11b` |
 | `urban-trash` | Urban Trash (3d, mid) | https://www.fab.com/listings/4eb4b87c-92bf-495a-b68a-5877fc07094f | Fab Standard | 2026-11-10 | `89aab0683b618a66040d49d40241cae63db9a9eeda0d18ce1c4e61f032e96383` |
+
+### Optional world integration (ADR 0084, gpt-megascans)
+
+Local source manifest + `tools/worldgen/fab/review.json` control eligibility.
+The observed local hashes for boxwood, granite-rock and small-granite-rock were
+verified against intact ZIPs and embedded Quixel identities; original acquisition
+pins remain in the manifest because the replacement chronology is UNVERIFIED.
+`tools/worldgen/fab/prepare.py` produces mobile LOD libraries, alpha/albedo,
+normal, roughness, AO and packed metallic/smoothness maps exclusively under
+`art-source/world/megascans/_generated/`; Unity copies into `Assets/_Generated`.
+Both directories are ignored; the git guard checks paths, archive/member hashes
+and derived-output provenance hashes. No Fab assets or textures enter tracked art.
+
+| Source ids | Intended local use / decision |
+|---|---|
+| street-curbs, modular-curb | Clean atlas crops blended into our generated road kerb material; original metric road geometry retained |
+| metal-manhole-cover | Lane-centred cover detail; locations WORKING_VALUE |
+| round-drain-cover, square-rusty-drain | Existing kerb-side gully mesh materials; spacing retained |
+| round-manhole-cover | Rejected: embossed emblem and lettering |
+| trash-bag-pack | Small grounded groups by existing shelter/gate/parking context |
+| trash-can, urban-trash | Rejected: visible emblem / printed packaging and branded bin |
+| grass-clumps, wild-grass | Bounded soft-verge details, LOD0/1/2; grass-clumps also supplies the private periodic grass base-map bake |
+| boxwood, elderberry | Landscaping/soft-verge shrubs and explicitly authored island selections |
+| silver-birch-bark, birch-tree-trunk | Bark crops mixed onto our generated birch material |
+| linden-branch | Woody bark crop onto our generated linden; supplied scan contains no leaves |
+| pine-bark | Rejected for trunk use: source is loose bark/mulch atlas; existing pine bark retained |
+| granite-rock, small-granite-rock | Grounded roadside stone props, LOD0/1/2 |
+
+Prepared normal maps remain disabled pending a tangent-capable reviewed mesh
+path. Existing tree leaves remain. Missing licensed files preserve procedural/CC0
+fallback; no licensed download is attempted by the public-clone build.

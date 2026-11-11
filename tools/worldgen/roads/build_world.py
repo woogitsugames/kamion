@@ -99,9 +99,11 @@ MATERIALS = {
     "collision_grass": {"color": [1, 0, 1], "rough": 1.0, "surface": "grass", "collision": True},
 }
 from streetscape.materials import M as _SM   # noqa: E402
+from streetscape import fab_details as FD
 from streetscape import forest_hlod as FH     # noqa: E402
 MATERIALS.update(_SM)
 MATERIALS.update(FH.materials())
+MATERIALS.update(FD.materials())
 _GLB_MATS = None
 
 
@@ -732,7 +734,9 @@ HERO_LOD_ENDS = {
 def instance_ends(proto, nlods):
     """(LOD end distances at lodBias 1, fixed_cull) of a non-tree prototype: a copy of InstanceImporter.Policy
     (game/Assets/_Project/World/Import/InstanceImporter.cs) incl. its LOD-count reduction. Keep the two in sync."""
-    if proto.startswith("lamp_"):
+    if proto.startswith("fab_"):
+        e = [12.0, 30.0, 65.0]
+    elif proto.startswith("lamp_"):
         e = [60.0, 400.0]
     elif proto in ("pylon", "power_pole"):
         e = [80.0, 1500.0]
@@ -786,6 +790,7 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
     """Static triangles/materials per chunk + per-camera frame estimate (120 deg wedge around the view) with a
     breakdown by category (terrain, roads = road + bridge + markings + paved, furniture, buildings, trees per
     LOD, forest HLOD, props)."""
+    props_meta = {**props_meta, **FD.prototype_stats()}
     tp = REPO / "art-source" / "world" / "vegetation" / "trees_meta.json"
     trees = json.loads(tp.read_text(encoding="utf-8"))["trees"] if tp.exists() else {}
 

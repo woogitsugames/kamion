@@ -17,6 +17,7 @@ from terrain_mesh import conform as CF
 from . import buildings_mesh as BM
 from . import forest_hlod as FH
 from . import furniture as FU
+from . import fab_details as FD
 from . import signs_route as SR
 from . import gate as GT
 from . import depot_yard as DY
@@ -176,6 +177,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     LF.place(pl, docks, paved, blds, roads_poly, bpoly, route_P, frep, buf=w.buf, zsurf=zsurf, park_polys=park_polys,
              no_parking=DY.no_parking(overrides, origin), authored_trailers=DY.dock_trailers(overrides))
     YW.apply(w.buf, overrides, origin, docks, paved, roads_poly, zsurf, frep)     # authored yard wear (ADR 0071 r11)
+    FD.apply(w, pl, roads_poly, bpoly, paved, park_polys, route_P, frep, log, overrides=overrides, deck_at=deck_at)   # Fab Megascans (ADR 0084)
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
     FU.clear_carriageway(pl, carriage, zsurf, frep)
     FU.clear_under_decks(pl, w.buf.parts, frep)

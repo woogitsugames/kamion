@@ -229,3 +229,35 @@ Wpis `kind: hero_bridge` (pola: `id`, `osm_ways`, `asset`, opcjonalne `params`) 
 - Photo-pose cameras: `tools/worldgen/photolist/photo_cameras.py` (pose from Mapillary lat/lon/compass, snapped to the
   road centreline) and `montage` (photo | before | after). Evidence: `artifacts/street-r9/`. Tests:
   `tests/gis/test_street_r9.py`.
+
+## Optional local Fab details (ADR 0084)
+
+With the owner's acquired ZIPs under `Data/raw/fab/`, run
+`pwsh scripts/prepare-megascans.ps1` **before** the normal world-generation/import
+commands. The preparation is offline and verifies pinned SHA256 + visual review.
+`-RefreshTextures` explicitly preserves existing mesh products while rebuilding
+maps; a full run is needed after changing the mesh generator. No ZIPs on disk is
+a supported fallback: the public clone keeps existing CC0/procedural content and
+logs warnings. `KAMION_DISABLE_FAB=1` disables consumption for before/after QA.
+
+All licensed source derivatives (including intermediate FBX, atlases and meshes)
+remain in ignored `art-source/world/megascans/_generated/` and Unity
+`game/Assets/_Generated/`. Never add them to git or overwrite tracked vegetation
+or prop libraries with them. `-UpdateHashInventory` refreshes a **hash-only**
+tracked denylist; it contains no licensed payload. The guard checks git-index
+blobs and LFS object ids, including renamed known products. Exact byte hashes do
+not identify every possible new transformation; output confinement remains
+mandatory.
+
+Street and yard utilities share one padded atlas and retain their existing positions;
+new lane covers and all art placements are WORKING_VALUE, not surveyed utility
+locations. Props are bounded, avoid carriageways/buildings and sample their
+support. Plantings on an authored island require `fab_plants` with explicitly
+selected source ids; existing maintained/gravel islands are preserved.
+
+Rejected scans and semantic mismatches are listed in `fab/review.json`, ADR 0084
+and `docs/LICENSES.md`. Pine mulch is not pine trunk bark; the Linden Branch
+source supplies wood but no leaves. Prepared normal maps stay disabled until
+world compact meshes have a reviewed tangent basis. Low/Medium maps are512 px,
+High1024 px; inspect both tiers after regeneration and compare scene estimates
+with `artifacts/megascans-r1/before/` before requesting integration.
