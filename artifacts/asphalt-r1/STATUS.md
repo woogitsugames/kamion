@@ -25,3 +25,4 @@ Przygotowano porównanie wszystkich kamer: mesh draws, shadow draws oraz draws/t
 2026-11-11T22:28:24.4972354+01:00: import baseline zakończony. Następny krok: Capture baseline.
 2026-11-11T22:29:03.2891714+01:00: zapisano artifacts/asphalt-r1/baseline/Low-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-11T22:29:54.7116026+01:00: zapisano artifacts/asphalt-r1/baseline/Low-clear. Następny krok: pozostałe serie lub porównanie wariantu.
+2026-11-11T22:30:50.2464420+01:00: zapisano artifacts/asphalt-r1/baseline/High-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
