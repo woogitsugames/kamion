@@ -45,13 +45,17 @@ plan_*/ = ortofoto | generator, renders_*/ = kamery kontrolne Unity).
 6. **Szwy łat**: materiał łaty skrzyżowania = większość materiałów silnikowych ramion (`standards.surface_material`, z
    udziałem „świeżego” SMA), a nie surowego materiału sekcji — łaty między dwoma ramionami SMA nie są już jaśniejszymi
    prostokątami w poprzek jezdni.
-7. **UV w metrach**: pas `curb_concrete` szerszy niż 0,4 m (kod chodnika 0 = beton) dostaje UV planu w metrach zamiast
-   UV górnej płaszczyzny krawężnika (u wzdłuż, v w poprzek, fugi co 1 m) — smugi E −830…−770 N 82.
+7. **Pas betonu przy krawężniku** (`meshing._emit_strip`): wiersz `curb_concrete` szerszy niż 0,4 m (kod chodnika 0) dostawał
+   UV górnej płaszczyzny krawężnika (u wzdłuż, v w poprzek, fugi co 1 m) — smugi w poprzek pasa E −830…−770 N 82; teraz
+   UV planu w metrach i materiał `sidewalk_paving` (render b6: sama zmiana UV zostawiała smugi tekstury krawężnika).
 8. Override'y z ortofoto (wszystkie z `reason` i wycinkiem w `artifacts/junctions-r3/trace|zones*|plan*`): pola P-21
    (DK8 przód, s1440 nos i pasmo, n10015785253 × 3), Putry N (2 × P-1, 2 × P-7a, P-7b, plac `paved_apron` paving), MA-010
    (P-1 pierścienia, P-1 wlotu ramienia płd.), zatoka s 1060 (2 × `paved_apron` sett na końcach), rozdział wsch.
    (`paint_clear` ukośnej linii, P-1, P-2b, jodełka, wyspa, bariera, P-21 boczne, P-1e), bariera na wyspie E −782,
-   n10015785253 SE (4 × `paint_clear` strzałek na wprost, 2 strzałki naprowadzające). Kamery: `r3_*` (6).
+   n10015785253 SE (4 × `paint_clear` strzałek na wprost, 2 strzałki naprowadzające), s610 (4 pola: kąty 19–20°, gęste),
+   s1440 ramp (ukośne −30° od osi zamiast drabiny). Kamery: `r3_*` (6).
+9. **Bariery** (`streetscape/furniture._dedup_guardrail`): run bariery w promieniu 1 m od już zbudowanej nie powstaje drugi
+   raz (24 m pominięte w regionie).
 
 ## Wynik
 ### Liczby (build b5, 2026-11-11, `bialystok-industrial-c`; „przed” = main 503c89ae / r2 b12)
@@ -81,8 +85,9 @@ UNITY_PLACEHOLDER
    (kołnierz 0,5 m widoczny tam, gdzie teren mediany leży niżej) — nie ruszone. Samotny murek przed łącznicą s 1440 —
    nie sprawdzony po zmianie.
 3. **P1-9** separator łącznica/dojazd wiaduktu (trawa → kostka z barierą) — nie zrobione (wyspa autorska leży na jezdni,
-   tu jest trawa poza jezdnią). **P1-11** zygzak trawy median — maska tekstury w shaderze (`WorldSurface.shader`, plik
-   wspólny), nie ruszone. **P1-10** — tylko deduplikacja < 1 m (24 m); „słupek-skrzynka” nie zidentyfikowany.
+   tu jest trawa poza jezdnią). **P1-11** zygzak trawy median — obrót / przesunięcie UV pasków trawy hashem nie zmienił
+   wzoru na renderze b6 (cofnięte): przyczyna w teksturze / masce shadera (`WorldSurface.shader`, plik wspólny) — nie ruszone. **P1-10** — tylko deduplikacja < 1 m (24 m); „słupek-skrzynka” nie zidentyfikowany; w `p0_kerb_merge_eye`
+   nadal krzyżują się balustrada wiaduktu i bariery (odstęp > 1 m, różne systemy).
 4. **P2**: P2-1 (skok linii) nie ruszone; P2-2 (podwójne linie na wiadukcie) — `mk_near.py` na b4 pokazuje jedną P-7b
    na krawędź; drugi pas na planie to kapa / krawężnik w kolorze planview — do potwierdzenia na renderze; P2-3 (czerwone
    przejazdy, sygnalizator), P2-4 (filary) — nie ruszone; P2-5 — dodane kamery `r3_*`.
@@ -90,3 +95,13 @@ UNITY_PLACEHOLDER
    ortofoto 0,08 m — WORKING_VALUE; zgodność z rozporządzeniem (Dz.U. 2019 poz. 2311, zał. 2) UNVERIFIED.
 6. Ocena `visual-critic` i zrzut z telefonu — dla lidera (agent nie tworzy subagentów i nie używa telefonów).
 
+
+## Pliki wspólne i przewidywane konflikty
+- Nie dotknięte: `WorldPbrMaterials.cs`, `WorldPBR.shader`, `WorldSurface.shader`, `streetscape/materials.py` (kontrakt `_Tint`
+  ADR 0086 bez zmian), zabudowa (agent 0097).
+- Zmienione addytywnie: `roads/through_lines.py` (`paint_zones` przepisane — konflikt tylko z inną zmianą P-21),
+  `roads/authored_paint.py` (`_drape_polygon`), `roads/markings.py` (wywołanie `aprons.apply`), `roads/meshing.py`
+  (`_patch_mat`, `_emit_strip` — r2 ostrzegał o konflikcie w `_emit_strip` z main, tu zmiana to 6 linii w gałęzi UV),
+  `roads/network.py` (1 linia po regule mediany), `streetscape/furniture.py` (`guardrails`: dedup + bariery autorskie;
+  jeśli 0097 zmienia `furniture.py`, konflikt możliwy tylko w `guardrails`).
+- `Data/Regions/bialystok-industrial-c/overrides.yaml` (dopisane bloki + zmiany pól P-21) i `junctions_cameras.json` (+6 kamer).
