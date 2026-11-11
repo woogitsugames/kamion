@@ -44,3 +44,13 @@ Lowlowsun3.23 below4. Clear5.21Low/6.69High andHighlowsun6.04 pass. Glass unchan
 Normal delta affects diffuse+coat together, not pure specular. Full final102,
 canonical lamp probe, two focused coat-radianceOFF and fullEditMode still required.
 Do not call final owner-qualityPASS merely because runtime tests/budgets pass.
+## Final bounded closure verified (14:43)
+Final head2086e780, validated source9a29204d. Actual final102 paired frames and
+two isolated coatOFF controls reviewed; canonical Truck/Trailer/Install and lamp
+GPU probe pass; EditMode238/238/0skip; GIS370/1xfail. Raw192,217source assets,
+0mesh/FBX/161pose deltas,102 before-SRP estimate/counter rows unchanged.
+Final OVdoor3.32Low/2.77High FAIL, clear5.21/6.67 PASS, lowsun3.23FAIL/6.11PASS.
+Glass thresholds and Highclearroof2.59 remain FAIL; no owner-qualityPASS. Earlier
+pending final-validation paragraphs above are superseded by this closure.
+Retain bounded implementation, explicit remaining appearance limitations and
+actual shader math/device timing UNVERIFIED; no further ungrounded amplification.

@@ -22,3 +22,17 @@ This narrow correctness fix does not solve the broad sterile-road appearance tas
 D still needs baseline, reference-guided patches/ruts/cracks/oil/marking/tyre wear,
 two reviewed rounds, preserved asphalt calibration and Low sampling policy, full
 GIS/EditMode/budgets, ADR0099/REPORT. G closure has priority before activating D.
+## Actual pristine baseline / activation review (14:43)
+D a59fc1a9 has372actual fresh frames:93views x Low/High clear/overcast. Primary
+57=23nativeworld+26Gate3+8wear; legacy36=17vehicle+19architecture. Canonical59
+controls retained in union. Requested ortho_putry is unavailable because scene
+builder imports only perspective; explicitly excluded before matching, no pose edit.
+Root independently viewed all4wear-target contact sheets: visible road surfaces,
+no truck/blank frames; missingUV1 pole remains outside central target. Newroad
+negative valid. gate_tracks has no readable twin treads; mark_signal shows distant
+longitudinal lines, patch_putry no distinct patch. Names do not prove feature coverage.
+Source/raw/canonical fixtures pinned, patches inactive at capture. UVsentinel-only
+causal activation authorized with4condition missingUV1/2+newroad negative controls.
+Broad patch separate; add actual source-field glyph/oil/busstop/gate controls first.
+No protected roads producer edits; robust allowed-import UVfield transfer or precise
+upstream handoff required where authored paint has no lane coordinates.
