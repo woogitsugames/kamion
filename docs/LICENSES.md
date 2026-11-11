@@ -253,3 +253,5 @@ source imagery, third-party texture pixels or Fab derivatives are versioned.
 Rakoon's CC0 `7204_May_2021_in_Białystok.jpg` and Mapillary p42/p45/p47
 (reference-only, as registered above) inform the structure; paint blobs are
 authored WORKING_VALUE shapes without text or brands. See ADR 0105.
+## ADR 0103 — fotografie w arkuszach side-by-side G3
+Każde z 40 zdjęć Mapillary (CC BY-SA 4.0, tylko referencje, bez pikseli w grze) ma osobny wpis z autorem, datą, URL i SHA256 w [rejestrze SBS](refs/sbs-gate3-attribution.md). Dane maszynowe: `Data/Regions/bialystok-industrial-c/sbs_references.json`, publiczne parametry obiektywów: `sbs_intrinsics.json`. Modyfikacje panelu zdjęcia: prostowanie radialne według modelu obiektywu, kadrowanie, zmniejszenie, siatka i linia horyzontu. Panel fotograficzny i jego modyfikacje na CC BY-SA 4.0; panel renderu zachowuje warunki projektu. Oryginały i pochodne (`artifacts/sbs-gate3/rectified`) poza gitem i buildem.

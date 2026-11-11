@@ -5,6 +5,7 @@ description = "TRUCK SIM PL street-level reference fetcher (Mapillary, CC BY-SA 
 requires-python = "==3.12.*"
 dependencies = [
     "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
     "pillow>=11.0",
     "pyproj>=3.8.0",
     "pyyaml>=6.0.3",
