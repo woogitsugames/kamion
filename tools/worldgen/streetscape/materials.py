@@ -130,7 +130,11 @@ M = {
     # ADR 0069 noise barriers after Mapillary p38/p40 (2024, overcast): cassettes 36-40 sRGB next to a plinth of 105
     # sRGB on the same vertical face -> linear ratio 0.135 x concrete_plinth 0.30 = 0.04; 0.07 keeps the cassette
     # relief readable on Low overcast (0.17 + metal 0.3 read near-black in r5). Posts 98/108/100 sRGB (green-grey).
-    "noise_panel_dark": {"color": [0.068, 0.072, 0.070], "rough": 0.7, "metal": 0.05, "texture_set": "noise_cassette"},
+    # ADR0086: with the corrected linear upload, the old bug-tuned .068/.072/.070
+    # rose from 28/29/28 to 57/59/56 in High overcast (route-putry-entry-signs).
+    # Candidate linear albedo below targets the photo's 36–40 display levels;
+    # screen appearance calibration only, not a physical measurement of the paint.
+    "noise_panel_dark": {"color": [0.022, 0.024, 0.023], "rough": 0.7, "metal": 0.05, "texture_set": "noise_cassette"},
     "noise_post": {"color": [0.17, 0.21, 0.18], "rough": 0.55, "metal": 0.3},
     "car_sill": {"color": [0.035, 0.033, 0.03], "rough": 0.8},
     # contact shadow / AO patch under parked vehicles (ADR 0050): Kamion/World Vehicle Contact, parameters per
