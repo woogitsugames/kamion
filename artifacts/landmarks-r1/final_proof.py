@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import struct
 import numpy as np
 from PIL import Image
 
@@ -20,6 +21,9 @@ new=np.asarray(Image.open(REPO/'art-source/world/textures/fire_station_alpha.png
 proof['alpha_channel_every_pixel_exact']=bool(np.array_equal(old[:,:,3],new[:,:,3]))
 proof['hero_tris_before']=read(ROOT/'baseline-asset/fire_station_jrg2_meta.json')['tris']
 proof['hero_tris_after']=read(REPO/'art-source/world/landmarks/fire_station_jrg2/fire_station_jrg2_meta.json')['tris']
+glb=(REPO/'art-source/world/landmarks/fire_station_jrg2/fire_station_jrg2.glb').read_bytes()
+g=json.loads(glb[20:20+struct.unpack_from('<I',glb,12)[0]])
+proof['hero_primitives_after']=[len(m['primitives']) for m in g['meshes']]
 budget=read(ROOT/'budget-after.json')
 low=[r for r in budget['rows'] if r['condition'].startswith('Low')]
 proof['Low_conditions']=len(low)
