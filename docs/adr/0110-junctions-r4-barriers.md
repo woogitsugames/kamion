@@ -34,11 +34,11 @@ ortofoto z siatką, `zones0/`, `plan_b*/` = ortofoto | generator, `xsec/`, `rend
 2. **Trawa za krawężnikiem bez chodnika** (`meshing._emit_verge`, `network.assign_sides` → `side["verge"]`, `network._side_gap`):
    pas trawy od tyłu korony krawężnika, na wysokości korony (+2 % na zewnątrz), 1,0 m (`VERGE_W`), w medianie do 3,0 m
    (`MEDIAN_VERGE_MAX`), nigdy za połowę odstępu do równoległej jezdni (dwa pasy spotykają się w osi mediany); szerokość zmienia się
-   najwyżej o 1 m na 2 m; dalej skarpa trawiasta 1 : 2 głęboka 0,5 m zamiast pionowego kołnierza. Także wzdłuż narożników i nosów
+   najwyżej o 1 m na 2 m; dalej skarpa trawiasta 1 : 2 (`VERGE_SKIRT_SLOPE`) głęboka 0,5 m zamiast pionowego kołnierza. Także wzdłuż narożników i nosów
    (`build_corner_strips`), z wyjątkiem narożników o skaczącej niwelecie (> 15 %). Po wewnętrznej stronie łuku pas i skarpa są
    ściskane z zachowaniem nachylenia. Pasy nie leżą nad inną jezdnią (ścisłe wycinanie w `cull_sides_on_carriageway`) ani pod wyspą
    autorską / wypełnieniem klina (`gores._drop_verge_in_islands`). **Eksport**: pasy trafiają do prymitywów terenu swojego chunku
-   (`build_world.merge_verge_into_terrain`, każdy LOD) — ta sama trawa co obok, bez nowego draw calla (osobny materiał
+   (`build_world.merge_verge_into_terrain`, LOD0 i LOD1, tj. do 300 m) — ta sama trawa co obok, bez nowego draw calla (osobny materiał
    `verge_grass` pojawiłby się w 23 chunkach drogi). Nie są footprintem (maska terenu dla nasadzeń / placów bez zmian). Kołnierz
    krawężnika nie jest meszowany tam, gdzie zakrywa go pas; pasy po Douglasie–Peuckerze 2,5 cm (`geom.dp_keep`).
    Kolizja bez zmian (wizualne). `_emit_strip`: `h` stacji wiejskiej w narożniku mieszanym = `KERB_HEIGHT` (był murek 0,6 m).
@@ -53,6 +53,8 @@ ortofoto z siatką, `zones0/`, `plan_b*/` = ortofoto | generator, `xsec/`, `rend
    - balustrada generyczna (`meshing.build_bridge_extras`) pominięta na krawędzi z ekranem akustycznym.
    - **reguła „structure”**: bariera W przy krawędzi jezdni naziemnej biegnącej ≤ 8 m obok wiaduktu / rampy w murach stojących
      ≥ 1 m wyżej, po stronie konstrukcji (krawędź wiejska: za poboczem; krawężnik bez chodnika: 0,6 m za krawężnikiem). WORKING rule.
+   - biegi z barieroporęczą i biegi „structure” są meszowane w warstwie `bridge` (rysowanej razem z pomostem), słupki w
+     materiale belki — w siatce `furniture` powiększały jej obrys i wciągały do kadru 8 dodatkowych draw calli.
    - **jeden bieg na krawędź**: sąsiednie odcinki różnych reguł (most → nasyp → mediana) to jeden bieg, offset i wysokość stopy
      wygładzane 9 m; dedup gruntowy 2,5 m (pomosty 1 m); wolny koniec na gruncie odgięty do ziemi na 4 m; belka i poręcze po
      Douglasie–Peuckerze 1 cm (była siatka co 1 m).
@@ -72,7 +74,15 @@ ortofoto z siatką, `zones0/`, `plan_b*/` = ortofoto | generator, `xsec/`, `rend
    nos mediany Putry N.
 
 ## Wynik
-Liczby: sekcja „RAPORT KOŃCOWY” w `artifacts/junctions-r4/STATUS.md` (tabela przed / po z builda końcowego).
+Build końcowy b11 względem b0 (pełna tabela: sekcja „RAPORT KOŃCOWY” w `artifacts/junctions-r4/STATUS.md`, `REPORT.md`):
+- odsłonięte tyły krawężnika bez chodnika 63 735 → 5 349 wierzchołków; max wzniesienie krawężnika 0,60 → 0,24 m;
+- bariery: `structure` 0 → 529 m, pomosty wiaduktu Bieżeństwa z barieroporęczą (było: brak bariery);
+- swept path G3-A −0,10 / −1,12, G3-B −0,14 (bez zmian); fidelity krawędzi p50 0,36 / p95 2,304 m (bez zmian);
+  road_consistency 65 (bez zmian); ściany terenu 3 → 4 (w ratchecie); pasy trawy osobno: 226 stromych trójkątów, 18 ścianek, max 0,627 m;
+- `pytest tests/gis` 457 passed / 1 xfailed; physics + gate3 47 passed / 1 failed (znana 0082); PlayMode 3/3; EditMode 234/241
+  (7 × `WorldPbrTintTests` — kompilacja shadera odczytu w batchmode; gałąź nie zmienia `game/`);
+- edytor Low, kamery trasy: draws −5…+3 (+1 na chunk z barierą na wiadukcie — budżet „+0” niespełniony), tris −9,4…+2,2 %;
+  pamięć świata Low 114,6 → 110,9 MB.
 
 ## Otwarte
 1. **Telefon** — brak zrzutu (agent nie używa adb); budżet zmierzony tylko w edytorze (`stats.txt`) i szacunkiem siatek.

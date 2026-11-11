@@ -1,6 +1,6 @@
 # REPORT — junctions-r4 (ADR 0110: węzły r4 + bariery)
 
-## Raport końcowy (ADR 0110, gałąź `junctions-r4`, sha PENDING)
+## Raport końcowy (ADR 0110, gałąź `junctions-r4`, sha 0fe8b392+1)
 
 Wynik: **PARTIAL** — punkty 1–6 zlecenia zrobione w generatorze i zmierzone; brak zrzutu z telefonu i oceny `visual-critic`
 (dla lidera); budżet draws na kamerach strony Bieżeństwa nie jest +0 (nowe bariery, patrz niżej).
@@ -26,12 +26,21 @@ Wynik: **PARTIAL** — punkty 1–6 zlecenia zrobione w generatorze i zmierzone;
 | `pytest tests/physics tests/gate3` | 47 passed, 1 failed (znana 0082) | 47 passed, 1 failed (ta sama `test_generator_reproduces_committed_scenarios`) |
 | prymitywy (= draw) w chunkach Low (`scripts/glb_mats.py world_b0 world low`) | — | +6 `bridge/barrier_steel` (w tym 3 chunki wiaduktu hero, które nie miały barier), −9 `furniture/barrier_post`, −3 `furniture/barrier_steel`, −10 `road/road_asphalt_new`, −1 `road/bridge_concrete`; `verge_grass` +0 |
 
-### Unity (edytor; kamery kontrolne WorldC, 2340 × 1080)
-- b8 (stan pośredni: słupki barier jako osobny materiał, bariery w siatce `furniture`, pasy trawy na wszystkich LOD terenu):
-  import OK, pamięć świata Low 114,6 / High 252,3 MB (b0: 114,6 / 251,0), 53 kamery High overcast + Low clear obejrzane
-  (`view_b8/`); `stats.txt` Low względem b0 na kamerach trasy: draws −4…+4 (stretch-05-docks +8), trisK −10,6…+8,4 % (+11,3 %).
-- build końcowy b11 (bariery pomostu i przy wiaduktach w siatce `bridge`, słupki w materiale belki, pasy trawy tylko na LOD0/1 terenu):
-  import / rendery / EditMode / PlayMode czekają na zdjęcie blokad `PHONE_RUN` / `GPT_UNITY_HOLD` (od 17:34) — NIE ZMIERZONE.
+### Unity (edytor; build końcowy b11; kamery kontrolne WorldC 2340 × 1080; `renders_b11_high/` High overcast, `renders_b11_low/` Low clear)
+| miara | przed (b0) | po (b11) |
+|---|---|---|
+| import-region, pamięć świata Low / High | 114,6 / 251,0 MB | 110,9 / 248,7 MB |
+| Low `stats.txt`, kamery trasy (stretch-01…05, g3a, g3b, route-*, cab-dash/driver/gate, chase, driver-andersa-to-putry): drawsEst | — | −5…+3 (driver-andersa-to-putry +5); stretch-01 +3, 02 +2, 03 +1, 04 +2, 05 +0; g3a +1 / +0; g3b −4 / −4; route-onramp +0; cab +3 |
+| jw.: trisK | — | −9,4…+2,2 % (stretch-01 +2,2 %; reszta ≤ +1,5 %) |
+| wszystkie 98 kamer: max draws / max tris, Low; High | — | +8 / +2,2 %; +8 / +0,4 % (pełna tabela `logs/b11_stats_low.txt`, `logs/b11_stats_high.txt`) |
+| EditMode | nie mierzone na b0 (r3: 223/226) | 234/241; 7 × `WorldPbrTintTests.LinearTint_ActualWorldShaderGpuReceivesLinear` („Tint readback shader failed to compile”) — gałąź nie zmienia nic w `game/` (`git diff 7a685901 -- game` pusty) |
+| PlayMode `WorldCRouteTests|WorldCBarrierTests` | 3/3 (r3) | 3/3 |
+
+Budżet: tris ≤ +2 % spełnione poza stretch-01 (+2,2 %); **draws +0 niespełnione**: +1…+3 na kamerach widzących wiadukty — każda siatka
+`bridge` chunku z barierą dostała prymityw `barrier_steel` (6 chunków, w tym 3 wiaduktu Bieżeństwa, który nie miał żadnej bariery).
+Stan pośredni b8 (bariery w siatce `furniture`, słupki jako osobny materiał, pasy trawy na wszystkich LOD terenu): draws do +8, tris do +11,3 %.
+Obejrzane PNG (Read): b0, b4, b8 i b11 — `view_b11/_m1.jpg` (pomost, łącznica, E −782, rozdział wsch., trasa), `view_b8/_m1.jpg`,
+`view_b4/_m1.jpg`, `_m2.jpg`, `_tops.jpg`; pary przed | po ≤ 960 px: `pairs_b11/*.jpg` (23).
 
 ### Rozliczenie punktów zlecenia
 1. **P0 pole P-21 n100 N** — zrobione: 6 pasów 0,20 / 0,22 m pod 8°, wielokąt z ortofoto 120 px/m; test na pustą ramkę.
