@@ -43,3 +43,4 @@ Final BuildBatch OK; wrapper stopped on its own Select-String argument binding (
 Inspections captured: Low overcast seat-entry/grain. NEXT COMMAND: pwsh scripts/test.ps1 -Platform EditMode (after detail matrix ends)
 Inspections captured: Low clear seat-entry/grain. NEXT COMMAND: pwsh scripts/test.ps1 -Platform EditMode (after detail matrix ends)
 Inspections captured: High overcast seat-entry/grain. NEXT COMMAND: pwsh scripts/test.ps1 -Platform EditMode (after detail matrix ends)
+ADR rewritten around final implementation: double-flip fix, detailed-only backing recess, exact unchanged budgets and explicit phone/review limits. NEXT COMMAND: Get-ChildItem artifacts/cab-r1/validation/tests/*.xml | Sort-Object LastWriteTime -Descending | Select-Object -First 1

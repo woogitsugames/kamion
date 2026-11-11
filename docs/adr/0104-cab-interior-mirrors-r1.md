@@ -1,70 +1,63 @@
-# ADR 0104 — Cab r1: interior detail and usable mirrors
+# ADR 0104 — Cab r1: interior audit and mirror presentation
 
-Status: audit in progress, 2026-11-11. Stream K only, branch `gpt-cab-r1`, base `9e6e9fde`.
+Status: implemented; editor validation, independent review and device gate are distinct. Stream K only, base main `9e6e9fde`.
 
-## Context
+## Problem
 
-Gate 3 requires a final cab fragment and useful mirrors from the driving eye. ADR 0020 supplies live instruments;
-0044 supplies the interior lighting/wear contract; 0042 supplies all six mirror views; 0045 owns the glazing; 0068
-caps mirror rendering cost. Historic visibility findings are hypotheses to re-check against the current export.
+Gate 3 requires a final cab fragment and usable mirrors. The current TRAKT export had two concrete mirror defects:
+- the glass UV basis already presents the reflected-eye camera as a mirror, but the runtime material flipped it again;
+  the own vehicle appeared at the outer edge of both main mirrors;
+- the detailed aero housing was a solid rounded box. Adjusting its glass embedded part of the wide-angle quad in the
+  backing. In a 315-point grid per glass, High WideL/WideR were only 84.1% / 74.9% visible from the design eye.
 
-The isolated checkout initially lacked the ignored LOD0 interior FBX. Copying the local truck source directories
-from main restored the reproducible input; Blender `check_export.py` passes with 103285 / 44190 / 21479 triangles.
-The source instrument/head-box sightline test passes. GIS baseline: 370 passed, 1 xfailed (643.87 s).
+Historic front/kerb visibility findings did not reproduce: both glasses were fully clear in the source ray audit and
+showed the road in fresh editor frames. The interior instrument/head-box sightline test passes.
 
-## Audit and evidence contract
+## Decisions
 
-- Original driver-eye cameras (`cab-driver`, `cab-dash`, left/right and mirror views) remain the acceptance views.
-  Add inactive, generated `cab-seat` relative to `DriverHPoint` and `cab-materials` to expose the driver's bolster,
-  seams and moulded grain. These detail views cannot establish legibility from the driving eye.
-- `CabMirrorAudit.Run` writes native render textures and TSV configuration. Native images have not undergone the
-  horizontal flip applied by the glass material. Record resolution, FOV, aspect, near/far, LOD scale and shared cap.
-  Interval columns describe configuration; actual round-robin cadence depends on visibility and is not measured Hz.
-- `mirror_sightlines.py` diagnoses obstruction on 315 samples per exterior-manifest mirror glass. It excludes
-  transparent glazing and removed shell placeholders and applies the export's interior fit. Read glass-adjuster
-  targets from the owning C# builder; `--include-exterior` includes opaque exterior FBX geometry in the same frame.
-  This tests visibility of the glass, not the reflected R46 field or transparency attenuation. Confirm in renders.
-  Initial interior-only/unadjusted check: WideR 314/315 clear, other five 315/315.
-  Full adjusted baseline: MainL 315/315, MainR 312/315, WideL 265/315, WideR 236/315, Kerb and Front 315/315.
-  Blockers: left wide CAB_Body 50; right wide CAB_Body 60, DOOR_R 17, interior win_channel 2.
-  A solid housing face behind glass which the builder tilts by ~6 degrees is a candidate cause; inspect native
-  mirror frames and the rendered glass before choosing a fix. Evidence `mirror-full-before.json` / `.log`.
-- `artifacts/cab-r1/render-matrix.ps1` serializes BuildBatch, InstallBatch and Low/High × overcast/clear captures,
-  using WorldC / WorldC_High respectively. It waits for both PHONE_RUN and the coordinator's GPT_UNITY_HOLD before
-  every Unity launch, and restores rendering settings / ProjectSettings after each run.
-- `artifacts/cab-r1/measure.py` writes full-frame sRGB statistics, matched-image absolute deltas and review sheets
-  at most 960 pixels wide. Full-frame dark percentage is a diagnostic, not a substitute for checking instruments.
+1. `RenderTextureMirror.flipHorizontally` retains the legacy graybox default. The TRAKT builder sets it false: its
+   exported glass UVs and reflected-eye camera already implement the reflection. HUD insets retain their own flip of
+   the raw texture; their screen UVs differ from the physical glass UVs. Camera poses, FOV/aspect and captures stay fixed.
+   `MirrorPresentationTests` projects a trailer-side point through camera, texture transform and actual glass UVs,
+   asserting the own vehicle appears at the inner edge (right in left mirror, left in right mirror).
+2. `MirrorHousingRecess` recesses existing inner-backing vertices, with 30 mm depth and 6 mm clearance (WORKING_VALUE).
+   Outer bezel and rear cap stay. Only affected normals/tangents are updated. Topology, material slots, UVs, colours and
+   bounds stay fixed. The builder applies it to **CAB_Body LOD0 only**. Unity measured 107 moved vertices, with identical
+   28500 vertices / 110904 indices. Low/Medium exterior meshes remain original.
+3. Add inactive `cab-seat`, `cab-materials`, `cab-seat-entry`, `cab-grain` inspection cameras. Original driver-eye
+   cameras remain the driving-legibility gate. The first two are in the matched matrix; entry/grain are separate
+   inspection evidence for existing, unchanged interior materials, seams and wear.
+4. Keep ADR 0068's RT dimensions, far clips, LOD scales, optics and shared schedules. Low main RT 100x224, High
+   171x384; hard caps 1 / 2 renders per frame. High due schedule: main every 2 frames, convex every 4 while driving;
+   actual phone refresh Hz is UNVERIFIED. Low weighted cadence depends on visible mirrors, not the diagnostic interval column.
 
-## Constraints
+## Evidence and budgets
 
-Keep ADR 0068's mirror resolution, far clips, optics, LOD/culling and shared scheduling budgets. Do not edit exterior
-paint, glazing, TruckExterior.shader or TruckLights.cs. Do not use adb. No merge or push to main.
+`artifacts/cab-r1/`: `before/` and `after/` each have 9 cameras x Low/High x overcast/clear (72 PNG total), with six
+native mirror RTs per configuration. `after-details/` adds entry/grain inspection. `review/` holds <=960px previews
+and matched pairs; `image-metrics.json` and `budget-comparison.json` are reproducible with the adjacent Python tools.
+All 36 matched scene-stat rows have **zero delta** for regular/instanced draws, shadows and triangles; all four
+mirror configuration data tables are identical. These are CPU visibility estimates before SRP batching, not GPU counters.
+Example cab-dash: Low 423+433 draws / 318+30 k triangles; High 781+687 / 1331+74 k (regular+instanced; rounded k).
 
-The leader's saved A16 cab frames (integration-s10, dirty APK `43bc53a769`) are auxiliary evidence only: speed and
-wheel stitches can be read; the dash looks smooth; front glass is visible in the front-mirror frame. They are not
-fresh editor baseline/candidate comparisons and cannot close the clean-build or device-performance gate.
+The full adjusted source-geometry study after recess gives High WideL 97.5%, WideR 88.3%, MainR 99.7%; MainL,
+Kerb and Front remain 100%. Low original WideL/WideR are already 97.5%/89.5%, justifying the LOD0-only fix.
+These percentages come from Blender rays, including opaque exterior and interior; they are not pixel measurements,
+transparency/attenuation tests or certification of the reflected R46 field. Clay/magenta ablations and game PNGs
+were inspected. Residual right wide obstruction includes the door/window channel.
 
-## Validation still required
+GIS: 370 passed / 1 xfailed (643.87 s). Export round-trip: PASS, interior 103285 / 44190 / 21479 tris.
+Full EditMode: 230/230 (including presentation, housing invariants and existing R46/budget tests).
+BuildBatch + InstallBatch succeeded. Unity batch compilation uses Android target; no new APK or device run by K.
+Cab-dash dark<3% pixels after: Low clear/overcast 1.393%/2.191%, High 1.468%/2.790%.
 
-Fresh editor baseline, bounded fixes based on it, rebuilt candidate, inspected before/after PNGs, EditMode without
-new failures, Low stats and mirror configuration comparison, independent visual review and leader phone validation.
-No visual PASS or device-performance claim is made while those items remain open.
+## Limits and handoff
 
-## Prepared candidate (not yet enabled; await baseline Unity frames)
+Independent visual review and clean A16/S24+ device verification remain for the leader; no Gate 3 PASS is claimed.
+The leader's saved dirty `43bc53a769` A16 frames are auxiliary only (cabView=True; dash dark 2.406% overcast,
+4.515% dusk). Existing Scania S730 photo is layout reference only, CC BY-SA 3.0, Herranderssvensson (REFERENCES.md).
+No new third-party asset or licence is introduced. Grain/roughness remain authored WORKING_VALUEs, not calibrated
+against owner cab photos. Do not infer phone text readability or GPU timing solely from enlarged editor inspection.
 
-The opaque housing is only 2.7–32.6 mm in front of blocked wide-glass samples. Removing just its flat cap in an
-ablation improves but does not solve the obstruction; rounded cap faces also intersect the adjusted glass.
-`MirrorHousingRecess` instead moves the existing inner-backing vertices to a plane 30 mm behind the nominal glass,
-with 6 mm clearance and a 1 µm rebuild tolerance. Outer bezel and rear cap stay. Recalculate only affected normals
-and orthogonalize their existing tangents. Topology, slots, UVs, colours and bounds stay unchanged. Depth/clearance
-are WORKING_VALUEs, not measured production-truck dimensions.
-
-Blender source study (opaque geometry + adjusted glass; 315 samples): High WideL 84.1→97.5%, WideR 74.9→88.3%,
-MainR 99.0→99.7%; MainL, Kerb, Front stay 100%. The remaining right obstruction includes the actual door/window
-channel. Clay/magenta before/after PNGs were inspected; they are visibility diagnostics, not game-material proof.
-
-Runtime ownership matters: `TruckVisualRig.InteriorLodFor` always selects LOD0; Low uses exterior LOD2 and LOD0
-mirror quads. With that actual geometry chain, WideL is already 97.5%, WideR 89.5%. Therefore the proposed fix is
-**exterior CAB_Body LOD0 only**, retaining Low/Medium geometry rather than changing a model that lacks the High defect.
-The candidate helper is currently unused. Its tests guard topology, UV/colour data, transformed mesh coordinates,
-immutable source, idempotence, outer bezel/back-cap and unrelated body positions. Unity execution remains pending.
+No TruckExterior.shader, glazing, TruckLights.cs, world materials, ProjectSettings or Packages edits. Expected merge
+conflicts: additive TruckAssetBuilder.cs and RenderTextureMirror.cs changes; regenerate truck prefab and world scenes.
