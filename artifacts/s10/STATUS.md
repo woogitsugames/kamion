@@ -720,3 +720,15 @@ coat, no saved rawHDR. Root independently checked fast fog pre-tone algebra,
 existing varying is transmittance; extra haze is source-supported. Nonlinear tone
 limits exact final equivalence; future actual Low/Medium proof required.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/artifacts/integration-s10/run5.log -Tail 10
+
+Step 63: C13 instrumentation preflight11d83d6e is ready in main artifacts/
+firestation-r10, with inactive C13CameraProbeFeature.cs (compileUNVERIFIED).
+Reviewed exact URP17.3 public feature/UniversalCameraData hooks and internal fields.
+Pre-post descriptor snapshot required because RG mutates resolution after upscale.
+EASU is a separate material pass0; RCAS is a local finalPass keyword. RecordGraph
+and late CPU material state do not prove execution; need actual draw/graph capture.
+No PackageCache/ProjectSettings/source/Unity changes. Also located original
+cars-r10/m3/High-overcast/sheet_far.jpg: a four-view contact sheet, not a cameraID.
+G tasked to recover its actual source views instead of treating it as missingID.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/artifacts/integration-s10/run5.log -Tail 10
+D first release after whole segmentB/END and PHONEabsence; G remains held too.
