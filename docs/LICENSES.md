@@ -244,3 +244,12 @@ Wynik: tekstury `furniture_{galv,grey,concrete,bollard}` — filtr usuwa szeroki
 warstwy zużycia są własne. Mapillary p12/p15/p20/p26/p30 tylko jako referencja proporcji i rodzin;
 żaden piksel Mapillary nie trafia do atlasów ani do builda.
 
+### ADR 0105 — DK8 Putry underdeck (2026-11-11)
+
+Reuses the existing CC0 `concrete_precast` material. Existing Fab Standard
+`grass-clumps` vegetation is retained; additional abutment clumps are disabled
+after the Low draw budget check. No new
+source imagery, third-party texture pixels or Fab derivatives are versioned.
+Rakoon's CC0 `7204_May_2021_in_Białystok.jpg` and Mapillary p42/p45/p47
+(reference-only, as registered above) inform the structure; paint blobs are
+authored WORKING_VALUE shapes without text or brands. See ADR 0105.

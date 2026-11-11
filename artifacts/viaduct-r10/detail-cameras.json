@@ -1,0 +1,12 @@
+{
+ "schema":"truck-sim-pl/gate3-cameras/1",
+ "region":"bialystok-industrial-c",
+ "cameras":[
+  {"id":"dk8-east-interior","type":"persp","seat":"file","fov_deg":65,"pos":[-464,-52,134.8],"look_at":[-457,-55,135.3],"note":"WORKING_VALUE detail viewpoint"},
+  {"id":"dk8-east-north","type":"persp","seat":"file","fov_deg":65,"pos":[-454,-41,135.0],"look_at":[-453,-52,135.0],"note":"WORKING_VALUE detail viewpoint"},
+  {"id":"dk8-east-south","type":"persp","seat":"file","fov_deg":65,"pos":[-447,-59,134.3],"look_at":[-455,-52,135.0],"note":"WORKING_VALUE detail viewpoint"},
+  {"id":"dk8-west-interior","type":"persp","seat":"file","fov_deg":65,"pos":[-636,66,139.5],"look_at":[-644,57,139.0],"note":"WORKING_VALUE detail viewpoint"},
+  {"id":"dk8-west-north","type":"persp","seat":"file","fov_deg":65,"pos":[-653,64,139.5],"look_at":[-643,57,139.0],"note":"WORKING_VALUE detail viewpoint"},
+  {"id":"dk8-west-south","type":"persp","seat":"file","fov_deg":65,"pos":[-656,30,139.0],"look_at":[-647,43,139.7],"note":"WORKING_VALUE detail viewpoint"}
+ ]
+}
