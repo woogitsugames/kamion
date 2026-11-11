@@ -76,7 +76,8 @@ namespace Game.Editor.VisualQA
                             try
                             {
                                 mask.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0); mask.Apply();
-                                int count = mask.GetPixels32().Count(p => p.r > 220 && p.b > 220 && p.g < 35);
+                                // Glazing can attenuate the identifier. Detect its chroma, not just full-bright magenta.
+                                int count = mask.GetPixels32().Count(p => p.r > 64 && p.b > 64 && p.g * 2 < Math.Min(p.r, p.b));
                                 interiorReport.AppendLine($"{mirror.name}\t{count}\t{rt.width * rt.height}");
                                 File.WriteAllBytes(Path.Combine(output, mirror.name + "_interior-mask.png"), mask.EncodeToPNG());
                             }
