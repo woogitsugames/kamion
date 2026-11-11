@@ -47,3 +47,7 @@ Niezależna kontrola po rebuildzie nie wykazała nowej regresji sylwetki, ustawi
 Końcowy GIS pod slotem heavy: 488 passed, 5 failed, 1 xfailed w 688,34 s, dokładnie te same pięć testów co w bazie. Porównanie nazw i wyników jest w `gis-comparison.json`. Sześć zmienionych przez test plików generated zachowano w patchu i przywrócono do wersji gałęzi. Nie poprawiano błędów innych dziedzin.
 
 Kompilacja Android z zawartością Low i High zakończyła się powodzeniem: 0 błędów, 12 ostrzeżeń, 289 s. APK ma 375305009 bajtów; log, SHA i metadane w `artifacts/truck-r1/build/`. Wśród ostrzeżeń są potencjalnie niezainicjalizowane wartości w niezmienionym `KamionVehicleEnv.hlsl`; brak błędów shaderów. Nie instalowano ani nie uruchamiano aplikacji na telefonie. Wygenerowane ustawienia przywrócono; tymczasowe Resources usunął sam pipeline Unity. Kod źródłowy builda jest wskazany przez SHA w nazwie APK, późniejsze commity zapisywały jedynie dowody i dokumentację.
+
+## Runda 2 — zabrudzenia i zużycie
+
+Start po dostarczeniu r1. Gałąź gpt-truck-r2, merge main 2c3939b2 do własnej gałęzi bez konfliktów. Najpierw świeże wejścia i import po zmianach innych sesji, następnie kontrola ilości brudu i baseline Low/High w obu pogodach. Pełny GIS wyłącznie na końcu rundy. Źródła innych dziedzin pozostają bez zmian.
