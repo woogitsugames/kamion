@@ -47,7 +47,7 @@ plan_* = ortofoto | generator, renders_* = kamery Unity, scripts = narzędzia r3
   `python artifacts/junctions-r4/scripts/stats_cmp.py artifacts/junctions-r4/renders_b0_low/stats.txt artifacts/junctions-r4/renders_b8_low/stats.txt`;
   potem `pwsh scripts/test.ps1 -Platform EditMode`, `pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCRouteTests|WorldCBarrierTests"`
 
-## RAPORT KOŃCOWY (ADR 0110, gałąź `junctions-r4`, sha 0fe8b392+1)
+## RAPORT KOŃCOWY (ADR 0110, gałąź `junctions-r4`, sha a7fff137 (kod i dane; ten plik o 1 commit później))
 
 Wynik: **PARTIAL** — punkty 1–6 zlecenia zrobione w generatorze i zmierzone; brak zrzutu z telefonu i oceny `visual-critic`
 (dla lidera); budżet draws na kamerach strony Bieżeństwa nie jest +0 (nowe bariery, patrz niżej).

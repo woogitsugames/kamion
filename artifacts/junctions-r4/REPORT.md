@@ -1,6 +1,6 @@
 # REPORT — junctions-r4 (ADR 0110: węzły r4 + bariery)
 
-## Raport końcowy (ADR 0110, gałąź `junctions-r4`, sha 0fe8b392+1)
+## Raport końcowy (ADR 0110, gałąź `junctions-r4`, sha a7fff137 (kod i dane; ten plik o 1 commit później))
 
 Wynik: **PARTIAL** — punkty 1–6 zlecenia zrobione w generatorze i zmierzone; brak zrzutu z telefonu i oceny `visual-critic`
 (dla lidera); budżet draws na kamerach strony Bieżeństwa nie jest +0 (nowe bariery, patrz niżej).
