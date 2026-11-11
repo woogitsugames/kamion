@@ -977,8 +977,39 @@ def guardrail(lin, P, Z, key):
     lin.buf.add("collision", "collision_steel", V, UV, np.concatenate([T, T[:, [0, 2, 1]]]), src=key)
 
 
+GUARDRAIL_DEDUP_M = 1.0     # ADR 0100 (REVIEW s10-0095 P1-10): a run within this of an already built rail is not built twice
+GUARDRAIL_MIN_RUN = 8       # points (1 m apart) of a run left after the dedup; shorter leftovers are dropped
+
+
+def _dedup_guardrail(lin, P, Z, key, built, m):
+    """Build the parts of run P that are not within GUARDRAIL_DEDUP_M of a rail built before (two chains / a chain
+    and an authored rail on the same separator crossed and overlapped at E -782 and on the viaduct approaches)."""
+    from shapely.geometry import LineString, Point
+    keep = np.ones(len(P), bool)
+    if built:
+        near = shapely.union_all([b.buffer(GUARDRAIL_DEDUP_M) for b in built])
+        shapely.prepare(near)
+        keep = ~shapely.contains_xy(near, P[:, 0], P[:, 1])
+    k = 0
+    while k < len(P):
+        if not keep[k]:
+            k += 1
+            continue
+        kk = k
+        while kk + 1 < len(P) and keep[kk + 1]:
+            kk += 1
+        if kk - k + 1 >= GUARDRAIL_MIN_RUN:
+            guardrail(lin, P[k:kk + 1], Z[k:kk + 1], key)
+            built.append(LineString(P[k:kk + 1]))
+        else:
+            m["dedup_dropped_pts"] = m.get("dedup_dropped_pts", 0) + (kk - k + 1)
+        k = kk + 1
+    m["dedup_skipped_pts"] = m.get("dedup_skipped_pts", 0) + int((~keep).sum())
+
+
 def guardrails(lin, net, zground, report):
     m = {"bridge": 0.0, "median": 0.0, "embankment": 0.0}
+    built = []
     drops, runs = [], []
     for c in net.chains:
         if c.meta.get("absorbed"):
@@ -1037,7 +1068,7 @@ def guardrails(lin, net, zground, report):
                         P, Zr = P[::-1], zb[sl][::-1]
                     else:
                         Zr = zb[sl]
-                    guardrail(lin, P, Zr, f"{c.id}:{side}:{['', 'bridge', 'median', 'embankment'][want[k]]}")
+                    _dedup_guardrail(lin, P, Zr, f"{c.id}:{side}:{['', 'bridge', 'median', 'embankment'][want[k]]}", built, m)
                     if want[k] == 3:
                         runs.append({"chain": c.id, "side": side, "s": [round(float(ss[k]), 1), round(float(ss[kk]), 1)],
                                      "max_drop_m": round(float(drop[sl].max()), 2),
@@ -1061,7 +1092,7 @@ def guardrails(lin, net, zground, report):
         if not np.isfinite(Z).all():
             net.overrides_stale.append(o["id"])
             continue
-        guardrail(lin, P, Z, f"authored:{o['id']}")
+        _dedup_guardrail(lin, P, Z, f"authored:{o['id']}", built, m)
         net.overrides_applied.append({"id": o["id"], "targets": [f"guardrail@{P[0][0]:.0f},{P[0][1]:.0f}"]})
         m["authored"] += float(sq[-1])
     report["guardrails_m"] = {k: round(v) for k, v in m.items()}
