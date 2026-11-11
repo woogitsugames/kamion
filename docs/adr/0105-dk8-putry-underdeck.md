@@ -43,8 +43,9 @@ głowice, łożyska, rury, skrzydła, schody, zacieki i położenie plam farby s
    Ciemne nieregularne nakładki z istniejącego materiału podsufitki oznaczają
    lokalne zacieki/plamy. Graffiti wyłącznie jako abstrakcyjne plamy farby,
    bez napisów, znaków i marek; lokalizacje WORKING_VALUE.
-6. Samosiejna trawa przy przyczółkach używa wyłącznie już obecnego w regionie
-   prototypu Megascans `fab_grass_clumps`. Jeśli go brak, detale nie są dodawane.
+6. Istniejąca roślinność Megascans pozostaje. Próba dodatkowych 8 kęp przy
+   przyczółkach używała wyłącznie `fab_grass_clumps`, ale kosztowała +1 draw Low
+   w dwóch kamerach. Dlatego `add_grass=false`: nowych instancji nie dodajemy.
    Żadna pochodna Fab nie trafia do git. Bez zmian generatora roślinności (0088).
 
 ## Walidacja

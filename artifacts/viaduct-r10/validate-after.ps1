@@ -1,3 +1,4 @@
+param([string]$GisLog = 'artifacts/viaduct-r10/final-gis-r4.log')
 $ErrorActionPreference = 'Stop'
 Set-Location (Join-Path $PSScriptRoot '../..')
 $phoneLock = 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/PHONE_RUN'
@@ -12,8 +13,8 @@ function Restore-Unity {
 while ($true) {
  $before = Test-Path artifacts/viaduct-r10/unity-queue.log
  if ($before) { $before = Select-String artifacts/viaduct-r10/unity-queue.log -Pattern '^baseline renders finished$' -Quiet }
- $gis = Test-Path artifacts/viaduct-r10/final-gis-r3.log
- if ($gis) { $gis = Select-String artifacts/viaduct-r10/final-gis-r3.log -Pattern '^\d+ passed.*in ' -Quiet }
+ $gis = Test-Path $GisLog
+ if ($gis) { $gis = Select-String $GisLog -Pattern '^\d+ passed.*in ' -Quiet }
  if ($before -and $gis) { break }
  Start-Sleep -Seconds 30
 }
@@ -39,7 +40,7 @@ foreach ($tier in @('Low','High')) {
  foreach ($light in @('overcast','clear')) {
   Wait-Phone
   try {
-   & pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier $tier -Lighting $light -Gate3 artifacts/viaduct-r10/cameras.json -Cameras 'dk8-under-span,dk8-bearing,dk8-abutment,route-putry-entry-signs,g3b-rondo-putry-approach' -OutputDir "artifacts/viaduct-r10/after/$tier-$light"
+   & pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier $tier -Lighting $light -Gate3 artifacts/viaduct-r10/cameras.json -Cameras 'dk8-under-span,dk8-bearing,dk8-abutment,route-putry-entry-signs,g3b-rondo-putry-approach,dk8-east-north,dk8-west-interior' -OutputDir "artifacts/viaduct-r10/after/$tier-$light"
    if ($LASTEXITCODE -ne 0) { throw "after render $tier/$light failed" }
   } finally { Restore-Unity }
  }

@@ -39,3 +39,7 @@
 - Unity import PASS i 20 PNG after gotowe (r3 z 8 dodatkowymi kępami). SceneStats wykrył Low +1 draw w dk8-abutment i g3b-rondo-putry-approach; konstrukcja ma nadal 0 nowych grup GLB. Dodatkowe kępy Fab wyłączone (add_grass=false), istniejąca roślinność pozostaje.
 - Korekta zmienia tylko instancje, nie GLB konstrukcji. Pełny GIS uruchomiony ponownie; jego fixture regeneruje świat i sprawdza deterministyczny eksport. Wymagany ponowny import i after po tym przebiegu.
 - NASTĘPNY KROK: uv run --project tools/worldgen python -m pytest tests/gis -q
+- Diagnoza draws potwierdzona: Low g3b statyczne 295 -> 295, instancje 129 -> 130; dk8-abutment statyczne 278 -> 278, instancje 222 -> 223. Wzrost pochodzi wyłącznie z kęp, a nie konstrukcji.
+- EditMode r3 226/226 PASS (EditMode-r3.xml). Obejrzane pary Low-clear i High-overcast oraz 6 prób kamer detali. Finalne dodatkowe kadry: dk8-east-north i dk8-west-interior (schody/skrzydła bez zasłonięcia).
+- Finalna kolejka validate-after.ps1 czeka na zielony GIS r4, potem import, 28 after PNG (20 sparowanych + 8 dodatkowych detali) oraz EditMode.
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/final-gis-r4.log -Tail 8; Get-Content artifacts/viaduct-r10/validate-after-r4.log -Tail 8

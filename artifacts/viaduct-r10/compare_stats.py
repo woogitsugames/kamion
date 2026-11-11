@@ -27,7 +27,7 @@ for bp in sorted((OUT / 'before').glob('*/stats.txt')):
     if not ap.exists():
         continue
     before, after = stats(bp), stats(ap)
-    assert before.keys() == after.keys(), (bp, before.keys(), after.keys())
+    assert before.keys() <= after.keys(), (bp, before.keys(), after.keys())
     for cid in before:
         b, a = before[cid], after[cid]
         rows.append(dict(tier_light=bp.parent.name, camera=cid, before=b, after=a,
