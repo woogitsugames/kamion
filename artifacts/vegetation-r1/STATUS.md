@@ -14,3 +14,4 @@ Przygotowano wyłącznie syntetyczną hipotezę masek ground_candidate.py: osobn
 Obejrzano syntetyczny podgląd maski i zapisano GROUND-CANDIDATE.md. Potwierdzono 15 zasobów Megascans ready. To nie dowód renderu; czekamy na bazę. Następny krok: zakończenie baseline-pipeline, potem wdrożenie i A/B.
 Testy bazowe roślinności zakończone kodem 0. Następny krok: Get-Content artifacts/vegetation-r1/pytest-baseline-vegetation.log; po baseline wykonać poprawki i pełny GIS.
 Przygotowano snapshot dziennych dopasowań fotograficznych i konfiguracje kamer w artifacts, bez edycji wspólnych plików SBS. Odrzucono błędne pozy z recenzji i zachody słońca. Pozy nadal UNVERIFIED. Następny krok: render grup proporcji po bazowej macierzy.
+Przygotowano render-photos.ps1: każda grupa zachowuje proporcje zdjęcia; każda sesja Unity bierze i oddaje osobny slot. Następny krok po before-done.txt: pwsh artifacts/vegetation-r1/render-photos.ps1 -Stage before
