@@ -91,3 +91,14 @@ NASTĘPNY KROK (kolejna sesja, slot heavy / unity):
 - EditMode (import r1, C# bez zmian od r1): **261/261** (`r2/editmode_pre.log`). Pełny pytest + fidelity: w toku w slocie heavy.
 - NASTĘPNY KROK: `tail artifacts/buildings-r16/r2/pytest_gis.log artifacts/buildings-r16/r2/fidelity.log` → `pwsh artifacts/buildings-r16/world.ps1 -Round r2`
   → `pwsh artifacts/buildings-r16/full_round.ps1 -Round r2` → `pwsh artifacts/buildings-r16/extra.ps1 -Round r2 -Scene WorldC_High -Sub extra_hc`
+
+## s11 / r2 — krok 2: testy + świat r2
+- Pełny `pytest tests/gis` (przed budową r2): 497 passed, 2 failed, 1 xfailed — oba to testy świeżości plików generowanych
+  (`test_report_not_stale`: fidelity_qa.json z r1 był nieaktualny → odświeżony `fidelity/run.py`, exit 0, różnice: p95 4,556 → 4,554 m,
+  wyspy 12 → 13, IoU 11_dk8 0,665 → 0,667; `test_export_is_deterministic`: manifest r1 vs kod r2 → po `world.ps1 -Round r2` do powtórzenia).
+- Zacieki (WorldC_High, para Runoff on/off, `r2/sill_marks_r1_highcontent.txt`): 20 m — 30 śladów, rdzeń mediana 9,1 poz. sRGB, p10 5,5
+  (cel ≥ 6 dla najsłabszych 10 % — o 0,5 poniżej), 5 m — 14,5.
+- `build_world` r2: exit 0, 555 s; High 4075 submeshy / 14,176 mln tris (r1 4073 / 14,167), Low 3056 / 4,524 mln (r1 3054 / 4,515);
+  +1 submesh `buildings_lod1|hall_flashing` w chunkach 0_5 i 1_0 (zgodnie z przewidywaniem), poza tym zestawy materiałów bez zmian.
+- NASTĘPNY KROK: `pwsh artifacts/buildings-r16/full_round.ps1 -Round r2` → `python artifacts/buildings-r16/budget2.py artifacts/buildings-r16/r1/Low-overcast artifacts/buildings-r16/r2/Low-overcast`
+  (i High-overcast, i `r1/extra_hc` vs `r2/extra_hc` dla prawdziwej treści High) → obejrzeć `r2/extra_hc/960`, `r2/extra_low/960`.
