@@ -240,6 +240,14 @@ namespace Game.World.Import
             else if (set != null && set.Get("source") is Dictionary<string, object> src2 && src2.Get("elements_per_tile") != null)
                 mat.SetFloat("_ElementJitter", mat.GetFloat("_ElementJitter") * 0.5f);   // scan tone + half the jitter
 
+            // ADR0118: explicit opt-in data. Reset on every import so removing a block is idempotent.
+            mat.SetVector("_AsphaltWear", new Vector4(1f, 0f, 0f, 0f));
+            if (def.Get("asphalt_wear") is Dictionary<string, object> aw)
+            {
+                float A(string key, float fallback) => aw.Get(key) != null ? (float)Num(aw.Get(key)) : fallback;
+                mat.SetVector("_AsphaltWear", new Vector4(A("tone", 1f), A("wheel_darkening", 0f),
+                    A("low_cracks", 0f), 0f));
+            }
             bool asphalt = setName == "asphalt_worn" || setName == "asphalt_sma_fresh" || setName == "asphalt_patch";
             if (id == "road_asphalt" || id == "road_asphalt_new")
             {
@@ -388,7 +396,7 @@ namespace Game.World.Import
                     float P(string k, float d) => pd.Get(k) != null ? (float)Num(pd.Get(k)) : d;
                     // ADR0099 WORKING_VALUE: narrower contact wear remains legible on P8/P10.
                     // Always calibrate fresh metadata, never the existing material (reimports must be idempotent).
-                    float wheelWear = P("wheel_wear", 0.85f) * 0.5f;
+                    float wheelWear = P("wheel_wear", 0.85f); // ADR0118: strength belongs to material data
                     mat.SetVector("_PaintWear", new Vector4(wheelWear, P("age_wear", 0.25f), P("dirt", 0.3f), P("line_w_m", 0.12f)));
                 }
                 else if (id == "decal_tyre")

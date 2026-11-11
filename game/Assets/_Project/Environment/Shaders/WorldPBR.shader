@@ -56,6 +56,7 @@ Shader "Kamion/World PBR"
         _MacroWear ("Macro wear-patch strength (B)", Range(0, 1)) = 0.15
         _CrackStrength ("Crack layer strength", Range(0, 1)) = 0.8
         _DetailFade ("Photo detail fade distance (m)", Float) = 25
+        _AsphaltWear ("Asphalt: tone, wheel darkening, Low cracks, reserved (ADR0118)", Vector) = (1, 0, 0, 0)
         _WheelPolish ("Wheel-path polish (_ROADWEAR)", Range(0, 1)) = 0.5
         _GutterDirt ("Gutter grime (_ROADWEAR)", Range(0, 1)) = 0.5
         _DripBand ("Lane-centre oil / soot drip band between the wheel paths (_ROADWEAR)", Range(0, 1)) = 0
@@ -104,6 +105,7 @@ Shader "Kamion/World PBR"
             float4 _Stripe, _StripeA, _StripeB;
             float4 _GrassFill;
             float4 _PaintColor, _PaintWear;
+            float4 _AsphaltWear;
             float4 _Grime, _SkyOcc;
             float _DripBand;
             float4 _CarPaint, _CarFlake, _PearlTint;
@@ -375,7 +377,10 @@ Shader "Kamion/World PBR"
 
                 // ---- crack layer (asphalt): open cracks darken, sealant bands glossy black; faded by macro wear so
                 // whole stretches can be sound
-            #if defined(_CRACKS) && defined(_KAMION_WORLD_DETAIL)
+            #if defined(_CRACKS)
+            #if !defined(_KAMION_WORLD_DETAIL)
+                if (_AsphaltWear.z > 0.5) // opt-in: existing mask, one fetch, no crack normal on Low
+            #endif
                 {
                     float2 uc = pw.xz / _Tile.z;
                     half4 cm = SAMPLE_TEXTURE2D(_CrackMap, sampler_CrackMap, uc);
@@ -384,8 +389,10 @@ Shader "Kamion/World PBR"
                     albedo = lerp(albedo, half3(0.03, 0.03, 0.03), cm.g * amount);
                     albedo *= 1.0 - cm.a * amount * 0.12;
                     smooth = lerp(smooth, 0.55, cm.g * amount);
+                #if defined(_KAMION_WORLD_DETAIL)
                     half3 cn = UnpackNormalScale(SAMPLE_TEXTURE2D(_CrackNormal, sampler_CrackMap, uc), amount);
                     tn = normalize(half3(tn.xy + cn.xy, tn.z * cn.z));
+                #endif
                 }
             #endif
 
@@ -409,12 +416,15 @@ Shader "Kamion/World PBR"
             #if defined(_ROADWEAR)
                 {
                     float2 w = i.uv.zw;
+                    albedo *= _AsphaltWear.x; // tone also applies to old-road patches without lane data
                     if (w.x > -0.5)        // (-1, 5) = no road data (junction patches, kerbs)
                     {
                         // wheel paths at ~0.25 / 0.75 of a lane: darker binder-rich, smoother
                         float lc = frac(w.x);
                         half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.11);
-                        albedo *= 1.0 - 0.10 * wp * _WheelPolish;
+                        // ADR0118: traffic polish darkens binder; existing macro breaks continuous bands.
+                        half traffic = _AsphaltWear.y * (0.65 + 0.35 * macro.a);
+                        albedo *= 1.0 - wp * (0.10 * _WheelPolish + traffic);
                         smooth = lerp(smooth, smooth + 0.12, wp * _WheelPolish);
                         // gutter: grit, leaves and soot within ~0.6 m of the kerb
                         half g = (1.0 - smoothstep(0.05, 0.65, w.y)) * _GutterDirt;

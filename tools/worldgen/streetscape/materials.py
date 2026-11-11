@@ -513,3 +513,17 @@ for _k in ("roof_tiles_red", "roof_tiles_brown"):
 #   unmown verge next to it).
 M["plot_kit"] = {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "plot_kit", "alpha_cutoff": 0.5}
 M["plot_lawn"] = {"color": [0.150, 0.200, 0.060], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"}
+
+
+# ADR0118 r1: asphalt-only overrides of the road material table (MATERIALS.update(M)).
+# WORKING_VALUE: judged against local photo wheel/centre ratio 0.67, not measured physical albedo.
+# No road generator/geometry change; fresh SMA deliberately has no old-road damage opt-in.
+M["road_asphalt"] = {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "asphalt",
+                     "texture_set": "asphalt_worn",
+                     "asphalt_wear": {"tone": 0.90, "wheel_darkening": 0.45, "low_cracks": 1.0}}
+# Restore authored wheel wear (0099 halved it in C#). Keep all coefficients visible here.
+# Glyphs share the transverse encoding: their readability is an explicit visual control, not a claimed fix.
+from roads.standards import MARKING_LIFT as _ASPHALT_PAINT_LIFT
+M["marking_white"] = {"color": [0.55, 0.55, 0.54], "rough": 0.65, "surface": "paint",
+                      "texture_set": "asphalt_worn", "decal": True, "depth_offset_m": _ASPHALT_PAINT_LIFT,
+                      "paint": {"wheel_wear": 0.85, "age_wear": 0.25, "dirt": 0.38, "line_w_m": 0.12}}
