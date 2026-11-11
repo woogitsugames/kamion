@@ -1317,20 +1317,12 @@ overrides:
       edge_lines: left
   - id: dk8-e-split-main-geometry-2
     target: {edge: "w490398847:4825844767-4825844765"}
-    reason: The widened plate of dk8-e-split-main-geometry runs out towards the viaduct over this 11.5 m edge.
+    reason: The widened plate of dk8-e-split-main-geometry runs out to the standard 8.0 m on the OSM way over this 11.5 m edge (viaduct deck not touched).
     confidence: low
     verify: owner drive
     set:
-      width: [[0.0, 10.6], [1.0, 9.0]]
-      center_offset: [[0.0, -1.0], [1.0, -0.4]]
-  - id: dk8-e-split-main-geometry-3
-    target: {edge: "w490398850:4825844765-1847263318"}
-    reason: Same, back to the standard 8.0 m on the OSM way 19 m after the joint (viaduct deck not touched).
-    confidence: low
-    verify: owner drive
-    set:
-      width: [[0.0, 9.0], [0.2, 8.0], [1.0, 8.0]]
-      center_offset: [[0.0, -0.4], [0.2, 0.0], [1.0, 0.0]]
+      width: [[0.0, 10.6], [1.0, 8.0]]
+      center_offset: [[0.0, -1.0], [1.0, 0.0]]
   - id: dk8-e-split-link-geometry
     target: {edge: "w173956079:1832975577-2256069814"}
     reason: >-
@@ -1345,24 +1337,17 @@ overrides:
     verify: owner drive
     set:
       lanes: 1
-      width: [[0.0, 3.8], [0.206, 3.8], [0.397, 3.8], [0.616, 3.8], [0.78, 4.3], [1.0, 7.2]]
-      center_offset: [[0.0, -3.4], [0.206, -0.85], [0.397, -0.6], [0.616, 1.3], [0.78, 1.75], [1.0, 1.2]]
+      width: [[0.0, 3.8], [0.206, 3.8], [0.397, 3.8], [0.616, 3.8], [0.78, 4.3], [1.0, 6.4]]
+      center_offset: [[0.0, -3.4], [0.206, -0.85], [0.397, -0.6], [0.616, 1.3], [0.78, 1.75], [1.0, 0.8]]
       edge_lines: right
   - id: dk8-e-split-link-geometry-2
     target: {edge: "w257367449:2256069814-2256069811"}
-    reason: Continuation of dk8-e-split-link-geometry over the 11.5 m edge at the bridge joint (placement and width run on).
+    reason: dk8-e-split-link-geometry runs back to the OSM way and 7.5 m over the 11.5 m edge at the bridge joint.
     confidence: low
     verify: owner drive
     set:
-      width: [[0.0, 7.2], [1.0, 7.5]]
-      center_offset: [[0.0, 1.2], [1.0, 0.9]]
-  - id: dk8-e-split-link-geometry-3
-    target: {edge: "w249431348:2256069811-2629251364"}
-    reason: The placement of dk8-e-split-link-geometry fades back to the OSM way over the first 35 m (no jog at the joint).
-    confidence: low
-    verify: owner drive
-    set:
-      center_offset: [[0.0, 0.9], [0.2, 0.0], [1.0, 0.0]]
+      width: [[0.0, 6.4], [1.0, 7.5]]
+      center_offset: [[0.0, 0.8], [1.0, 0.0]]
   - id: dk8-e-split-p21-front
     kind: painted_zone
     chevron_axis: [[-831.0, 56.3], [-806.0, 55.3]]

@@ -1162,7 +1162,7 @@ def _beside_structure(c, ss, sgn, hw, zg, structs):
             continue
         d0 = shapely.distance(poly, shapely.points(E))
         d1 = shapely.distance(poly, shapely.points(Eo))
-        cand = (d0 > 0.2) & (d0 < STRUCT_GUARD_GAP_M) & (d1 < d0 - 1.0)
+        cand = (d0 > 1.0) & (d0 < STRUCT_GUARD_GAP_M) & (d1 < d0 - 1.0)
         if not cand.any():
             continue
         _, k = tree.query(E[cand])

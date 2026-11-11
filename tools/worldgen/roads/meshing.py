@@ -212,7 +212,8 @@ def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
     """ADR 0110: grass strip behind a kerb without a sidewalk, from the back of the kerb top at the kerb crown
     (rising SIDEWALK_CROSSFALL outward), VW m wide per station, ending in a battered grass skirt
     (1 : EMBANKMENT_SLOPE, FLANGE_DEPTH deep) instead of the kerb's vertical concrete flange. Visual only (the
-    collision ground behind a kerb stays the terrain); the top is footprint (terrain conforms under it, "soft")."""
+    collision ground behind a kerb stays the terrain). Exported inside the terrain primitives of its chunk
+    (build_world.merge_verge_into_terrain): same grass, no extra draw call."""
     n = len(G)
     VW = np.asarray(VW, float).copy()
     if n < 2 or VW.max() < 0.05:
@@ -253,7 +254,9 @@ def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
     for A, B, ua, ub, fp in ((P0, P1, u0, u1, True), (P1, P2, u1, u2, False)):
         V = np.concatenate([A[:, None, :], B[:, None, :]], axis=1).reshape(-1, 3)
         UV1 = np.column_stack([np.repeat(along, 2), np.column_stack([ua, ub]).ravel()])
-        buf.add("road", "verge_grass", V, V[:, :2].copy(), T, footprint=fp, src=src, UV1=UV1)
+        # not footprint: the conformed terrain under the strip stays as it was (road edge - 0.03 m, below the crown), so
+        # the footprint mask the streetscape stage reads (plantings in island holes, yards, trees) is unchanged
+        buf.add("road", "verge_grass", V, V[:, :2].copy(), T, footprint=False, src=src, UV1=UV1)
 
 
 # ADR 0100 (REVIEW s10-0095 P1-8): a concrete strip wider than a kerb top (walk material code 0 = curb_concrete, e.g.

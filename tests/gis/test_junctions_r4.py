@@ -52,9 +52,15 @@ def _slopes(p):
     return np.abs(nrm[:, 2]) / np.maximum(np.linalg.norm(nrm, axis=1), 1e-12)
 
 
+def _top_skirt(buf):
+    """(flat top strips, battered skirts) of the verge parts: the top rises 2 % outward, the skirt falls 1 : 1.5."""
+    top = [p for p in buf.parts if _slopes(p).min() > 0.99]
+    return top, [p for p in buf.parts if not any(p is q for q in top)]
+
+
 def test_verge_strip_sits_at_the_kerb_crown_and_ends_in_a_1_to_1p5_skirt():
     buf = _verge(np.full(60, 1.0))
-    top, skirt = [p for p in buf.parts if p.footprint], [p for p in buf.parts if not p.footprint]
+    top, skirt = _top_skirt(buf)
     assert len(top) == 1 and len(skirt) == 1 and top[0].mat == "verge_grass"
     # straight graded kerb: one quad per strip (Douglas-Peucker), not one per station
     assert len(top[0].T) == 2 and len(skirt[0].T) == 2
@@ -76,7 +82,7 @@ def test_verge_strip_runs_out_over_two_metres_without_steep_faces():
         steep = _slopes(p) < 0.80
         assert not (steep & (tz.max(1) - tz.min(1) > 0.15)).any(), "steep grass face where the strip starts"
         assert p.V[np.unique(p.T)][:, 0].min() >= 19.0 - 1e-6       # nothing before the last station without a strip
-    top = [p for p in buf.parts if p.footprint][0]
+    top = _top_skirt(buf)[0][0]
     V = top.V[np.unique(top.T)]
     w_at = lambda x: V[np.isclose(V[:, 0], x)][:, 1].max() - S.KERB_TOP_W   # noqa: E731
     assert np.isclose(w_at(19.0), 0.0, atol=1e-6) and np.isclose(w_at(21.0), 1.0, atol=1e-6)   # 1 m per 2 m
