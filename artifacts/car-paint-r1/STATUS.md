@@ -104,3 +104,6 @@
 
 - Step35 READONLY gate-tyre review: exactactualbarrierline617.8605/-601.8095 distinguished fromgatehouse38.3maway. High/Low152strength2.5kerbscufftris and6face/topnose coordinatepairs pinned; nearesttrueyardtwins85.8maway notentryproof. Twoactualroadseated1.6meye camerasCPUcentre-rayclear againststaticmeshes+gateprototypes, notrenderPASS. D-GATE-TYRE-PREFLIGHT.md ownartifact only. AppendedFnewrawPBF10stop_position proof tobusstopdoc; no Dsource/cache/Unity changes or Gimplementation/report/validationchanges.
 - NEXT COMMAND: docsWIPcommit/copy/sendFROOT, standby0108afterD/Eclose+dispatch. No newcamera/source/Unity activation.
+
+- Step36 docs correction: full F busstop-raw-proof.json independentlyparsed20bboxstop_position nodes/1872regional, not10from earliertruncatedstdout. Corrected ownbusdoc addendum/count and recorded bbox; historicalStep35note superseded by this correction. Dataset/scope/placement unchanged; no Dsource/Unity or Gimplementation/report change.
+- NEXT COMMAND: docsWIPcommit/copy/sendROOT, standby0108afterD/Eclose+explicitdispatch.
