@@ -1,0 +1,28 @@
+{
+  "engine_sha": "9e7e0b45",
+  "EditMode": {
+    "total": "221",
+    "passed": "221",
+    "failed": "0",
+    "skipped": "0",
+    "result": "Passed"
+  },
+  "new_policy_cases": [
+    "Game.Tests.LightPostPolicyTests.ClearShoulderPreservesAsphaltAndMidGreyAnchors",
+    "Game.Tests.LightPostPolicyTests.GlassReceiverScopeAndWorkingValueBound(\"Low\",0.0f)",
+    "Game.Tests.LightPostPolicyTests.GlassReceiverScopeAndWorkingValueBound(\"Medium\",0.08f)",
+    "Game.Tests.LightPostPolicyTests.GlassReceiverScopeAndWorkingValueBound(\"High\",0.08f)",
+    "Game.Tests.LightPostPolicyTests.GlassReceiverScopeAndWorkingValueBound(\"Ultra\",0.0f)",
+    "Game.Tests.LightPostPolicyTests.ImportedGlassSemanticIsRestrictedAndStillReceivesShadows",
+    "Game.Tests.LightPostPolicyTests.SerializedPolicyAndActualPipelineAgreeWithoutOverrides(\"Low\")",
+    "Game.Tests.LightPostPolicyTests.SerializedPolicyAndActualPipelineAgreeWithoutOverrides(\"Medium\")",
+    "Game.Tests.LightPostPolicyTests.SerializedPolicyAndActualPipelineAgreeWithoutOverrides(\"High\")"
+  ],
+  "GIS": {
+    "passed": 355,
+    "xfailed": 2
+  },
+  "full_registry_frames_each_phase": 236,
+  "selected_lowsun_each_phase": 22,
+  "final_medium_frames": 6
+}

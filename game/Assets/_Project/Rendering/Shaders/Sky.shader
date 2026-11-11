@@ -44,6 +44,7 @@ Shader "Kamion/Sky"
             // y towards the zenith, z = 1 when set (EnvironmentLighting, from the tier's tone curve). _KamionSkyCapOff = 1
             // while the vehicle reflection capture renders (reflections keep the physical sky radiance).
             float4 _KamionSkyCap;
+            float _KamionSkyDitherOff; // ADR0098 A/B; zero preserves existing sky dither.
             float _KamionSkyCapOff;
             TEXTURE2D(_SkyChroma); SAMPLER(sampler_SkyChroma);   // u = γ/π, v = sqrt(cos θ); rgb of luminance 1
             TEXTURE2D(_KamionCloudTex); SAMPLER(sampler_KamionCloudTex);   // R billows, G medium, B fine, A sheets; mean 0.5 each
@@ -157,7 +158,7 @@ Shader "Kamion/Sky"
                 c = KamionTone(c);
                 // Banding: ±0.5 LSB of 8-bit sRGB in linear space (interleaved gradient noise, Jimenez 2014).
                 float n = frac(52.9829189 * frac(dot(i.positionCS.xy, float2(0.06711056, 0.00583715)))) - 0.5;
-                float3 srgb = LinearToSRGB(saturate(c)) + n / 255.0;
+                float3 srgb = LinearToSRGB(saturate(c)) + n * (1.0 - _KamionSkyDitherOff) / 255.0;
                 c = lerp(c, SRGBToLinear(saturate(srgb)), step(c, 1.0));
                 return half4(c, 1.0);
             }

@@ -111,6 +111,8 @@ namespace Game.Rendering
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_Clear";
             p.sunElevationDeg = 42f; p.sunAzimuthDeg = 200f; p.turbidity = 2.5f; p.overcast = 0f; p.visibilityKm = 20f;
+            // ADR0098 WORKING_VALUE: highlight shoulder above the fixed asphalt/mid-grey anchors, no EV change.
+            p.lookWhiteClip = 1.2f;
             return p;
         }
 

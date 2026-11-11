@@ -1,0 +1,37 @@
+{
+  "camera": "kwadrat-park-gate",
+  "condition": "High-clear",
+  "rect_1280": [
+    85,
+    250,
+    280,
+    280
+  ],
+  "scope": "diagnostic only; kp_wall material calibration owned by leader ADR0101",
+  "before": {
+    "rgb_mean": [
+      180.84807741278328,
+      176.61089890501654,
+      167.57305831423477
+    ],
+    "p95": [
+      199.0,
+      196.0,
+      187.0
+    ],
+    "any_rgb_ge250_percent": 1.675579322638146
+  },
+  "after": {
+    "rgb_mean": [
+      181.57428062133945,
+      178.0097275273746,
+      166.97519735166793
+    ],
+    "p95": [
+      194.0,
+      194.0,
+      183.0
+    ],
+    "any_rgb_ge250_percent": 0.0
+  }
+}

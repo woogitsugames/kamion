@@ -1,0 +1,57 @@
+{
+  "road_paint": {
+    "camera": "driver-andersa-to-putry",
+    "rect_original_px": [
+      1330,
+      760,
+      1540,
+      900
+    ],
+    "before": {
+      "p95_minus_p05_srgb": 81.0,
+      "mean_abs_gradient": 5.896453609497911,
+      "edge_10_90_width_original_px_median": 1.6728605852761884,
+      "valid_rows": 140
+    },
+    "candidate_rcas0": {
+      "p95_minus_p05_srgb": 78.0,
+      "mean_abs_gradient": 3.295581907679598,
+      "edge_10_90_width_original_px_median": 1.658193686394906,
+      "valid_rows": 140
+    }
+  },
+  "window_edge": {
+    "camera": "r10_block_3",
+    "rect_original_px": [
+      1480,
+      375,
+      1550,
+      405
+    ],
+    "before": {
+      "p95_minus_p05_srgb": 29.0,
+      "mean_abs_gradient": 1.874982746721877
+    },
+    "candidate_rcas0": {
+      "p95_minus_p05_srgb": 29.0,
+      "mean_abs_gradient": 1.457415339949073
+    }
+  },
+  "cab_numeral": {
+    "camera": "cab-dash",
+    "rect_original_px": [
+      980,
+      580,
+      1020,
+      645
+    ],
+    "before": {
+      "p95_minus_p05_srgb": 149.0,
+      "mean_abs_gradient": 6.711470660749507
+    },
+    "candidate_rcas0": {
+      "p95_minus_p05_srgb": 148.0,
+      "mean_abs_gradient": 6.400008089866864
+    }
+  }
+}

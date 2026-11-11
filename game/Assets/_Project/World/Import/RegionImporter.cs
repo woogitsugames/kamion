@@ -238,6 +238,12 @@ namespace Game.World.Import
         static Material CreateMaterial(Result r, string id, Dictionary<string, object> m, Dictionary<string, object> roadAsphalt)
         {
             var mat = CreateMaterialCore(r, id, m, roadAsphalt);
+            // ADR0098: explicit hero glazing semantic for receiver-depth bias; other materials stay off.
+            if (mat != null && mat.HasProperty("_ArchitecturalGlass"))
+            {
+                mat.SetFloat("_ArchitecturalGlass", id == "kp_glass_block" ? 1f : 0f);
+                EditorUtility.SetDirty(mat);
+            }
             // ADR 0060: manifest "sky_occ": [down-facing ambient, horizon reflection] (structures, glazing; 0 = off)
             if (mat != null && m.Get("sky_occ") is List<object> so && so.Count >= 2 && mat.HasProperty("_SkyOcc"))
             {
