@@ -1,8 +1,34 @@
-# HANDOVER — kamion, sesja 9 (2026-11-11 00:30 → ~08:20 lokalnie; zamknięta na polecenie właściciela przy końcu limitu 5 h)
+# HANDOVER — kamion, sesja 10 (2026-11-11 od ~10:05 lokalnie)
+
+## Najpierw (dla następnej sesji)
+- **Tempo (właściciel, s10):** dalej max 3 agentów naraz. Limit tygodniowy Fable zresetował się (0 % o 10:05, reset 15.11); 5 h reset 15:00 lokalnie.
+- Trigger godzinny w sesji (CronCreate, :17) — ginie z sesją.
+- Regeneracja main po 0095: zielona (gis+physics+gate3 413/1 — znana `test_generator_reproduces_committed_scenarios` z 0082) → `48ac6b75`.
+- **Scalone w s10:** 0086 `_Tint` gamma (GPT A) `0e73211a` — konflikty generated → --ours; regeneracja (build_all → build_world → export-route → pytest gis) w toku: `artifacts/logs/s10-regen-0086.log`.
+
+| zadanie | ADR | worktree | STATUS | stan |
+|---|---|---|---|---|
+| recenzja 0095 | — | (visual-critic, bez worktree) | docs/reports/visual/REVIEW-2026-11-11-s10-0095.md | w toku |
+| zabudowa r5 | 0097 | .claude/worktrees/buildings-r5 (gałąź buildings-r5) | artifacts/buildings-r13/STATUS.md | w toku (world-builder) |
+| GPT B roślinność r2 | 0088 | gpt-vegetation-r2 | — | GPT w toku, brak REPORT |
+| GPT C światło r12 | 0098 | gpt-light-r12 | — | GPT w toku, brak REPORT |
+| GPT 0087 lakier TRAKT | 0087 | gpt-truck-paint | — | GPT w toku |
+| Argon 0085 | 0085 | argon-edge | artifacts/edge-far-r1 | czeka na poprawkę |
+
+## Następne kroki
+1. Po regeneracji 0086: commit Data/Regions; visual-critic 0086 (artifacts/tint-gamma-r1 compare-final).
+2. Integracja na main z Megascans + 0086 (import-region, Truck BuildBatch/InstallBatch, EditMode/PlayMode, APK Low) → telefon A16 Low gate3.
+3. Scalanie GPT B 0088 → C 0098 po REPORT.md; 0097 po REPORT.md.
+4. Węzły r3 wg recenzji 0095; Kwadrat r13 po zdjęciach właściciela; raport bramki 3.
+5. Ostatni przydzielony ADR: 0099.
+
+---
+# HANDOVER — kamion, sesja 9 (2026-11-11 00:30 → ~10:30 lokalnie; zamknięta na polecenie właściciela przy końcu limitu 5 h)
 
 ## Najpierw (dla sesji 10)
 - **Start: `docs/owner/START-PROMPT-S10.md`.** Ta sekcja = prawda o stanie.
-- **main = ten commit, wypchnięty. pytest gis na main: 355 ✓ / 0 ✗ po 0096 (regeneracja zacommitowana).**
+- **main = ten commit, wypchnięty.** pytest gis 355/0 po 0096. **Po scaleniu 0095 (`471438fb`) regeneracja main trwała w tle przy zamknięciu s9** — sprawdź `artifacts/logs/s9-main-regen-0095.log` (build_world → export-route → fidelity → pytest gis+physics+gate3; oczekiwane ~356 ✓ gis, 47/1 physics — 1 znana z 0082); przy `PYTEST EXIT` 0 lub tylko ta znana porażka → `git add Data/Regions && git commit`; inaczej zdiagnozuj.
+- **Żaden agent Claude nie działa** (wszystkie worktree Claude usunięte). Działają: **GPT 6.1 Sol** (worktree `gpt-s10-coordination`, `gpt-tint-gamma`, `gpt-vegetation-r2`, `gpt-light-r12` — pakiet `docs/owner/GPT-TASK-02-S10.md`; NIE ruszać, scalać po REPORT.md w kolejności A 0086 → B 0088 → C 0098) i ewentualnie Argon (tylko poprawka 0085, `argon-edge`).
 - **Limity (08:00):** 5 h — 65 % (reset 09:30 UTC); **tygodniowy Fable 51 %** (reset 17.11) — przy 3 agentach naraz skończy się ok. 12.11. Właściciel zamknął s9 przed decyzją o tempie — **zapytaj go na starcie s10** (max 2 agentów / Sonnet do lżejszych zadań / dalej 3).
 - **Megascans (0084) działa na main tylko dzięki lokalnym produktom** (`pwsh scripts/prepare-megascans.ps1` → ignorowane `art-source/world/megascans/_generated`). **Każdy nowy worktree musi mieć te produkty** (robocopy `art-source/world/megascans` z main albo prepare), inaczej po cichu fallback.
 - **Determinizm naprawiony (0096):** generator świata daje identyczne hashe niezależnie od PYTHONHASHSEED (stan: 1526 stanowisk / 908 aut). Test `tests/gis/test_determinism.py`.

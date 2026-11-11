@@ -85,7 +85,10 @@ LAYOUT = {
     "ochre": _r(10.35, 12.60, 1.6, 1.35),
     "thuja_far": _r(12.15, 12.60, 1.75, 1.35),     # r4: far-LOD thuja body (LOD1/2 have no leaf shell)
     # linear albedo, WORKING_VALUE read by eye off the CC0 photos (overcast frame 7197 + sunny frame 20240626)
-    "render_blue_linear": [0.185, 0.26, 0.365],      # r6: measured against photo 7197 (review P0), was 0.47/0.545/0.65
+    # ADR0086: common plaster-only x1.15 WORKING_VALUE experiment after the global
+    # tint fix. Baseline High ov 105/121/137, Low ov 97/112/130; photo7197 111/126/147.
+    # The atlas roof/glass/trim regions keep their prior albedo (separate S10 E work).
+    "render_blue_linear": [0.21275, 0.299, 0.41975],
     "roof_blue_linear": [0.024, 0.085, 0.235],        # r6: B -35 % linear (review P1 #3)
     "trim_blue_linear": [0.022, 0.060, 0.22],
     "clinker_linear": [0.47, 0.29, 0.115],

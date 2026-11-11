@@ -130,7 +130,11 @@ M = {
     # ADR 0069 noise barriers after Mapillary p38/p40 (2024, overcast): cassettes 36-40 sRGB next to a plinth of 105
     # sRGB on the same vertical face -> linear ratio 0.135 x concrete_plinth 0.30 = 0.04; 0.07 keeps the cassette
     # relief readable on Low overcast (0.17 + metal 0.3 read near-black in r5). Posts 98/108/100 sRGB (green-grey).
-    "noise_panel_dark": {"color": [0.068, 0.072, 0.070], "rough": 0.7, "metal": 0.05, "texture_set": "noise_cassette"},
+    # ADR0086: with the corrected linear upload, the old bug-tuned .068/.072/.070
+    # rose from 28/29/28 to 57/59/56 in High overcast (route-putry-entry-signs).
+    # Candidate linear albedo below targets the photo's 36–40 display levels;
+    # screen appearance calibration only, not a physical measurement of the paint.
+    "noise_panel_dark": {"color": [0.022, 0.024, 0.023], "rough": 0.7, "metal": 0.05, "texture_set": "noise_cassette"},
     "noise_post": {"color": [0.17, 0.21, 0.18], "rough": 0.55, "metal": 0.3},
     "car_sill": {"color": [0.035, 0.033, 0.03], "rough": 0.8},
     # contact shadow / AO patch under parked vehicles (ADR 0050): Kamion/World Vehicle Contact, parameters per
@@ -196,13 +200,15 @@ M = {
     # r12 (ADR 0092): "rough" of a curtain is now applied by the importer (mean roughness of the set scaled to it; before
     # the set's 0.64 was used whatever stood here). Matt PVC-coated fabric 0.82, the silver (aluminised) tarp 0.72;
     # metallic 0 (WORKING_VALUE, judged on the dock renders: no horizon line on a tarp in the shade of the hall).
-    "trailer_curtain_grey": {"color": [0.20, 0.21, 0.21], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_blue": {"color": [0.03, 0.06, 0.14], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_white": {"color": [0.55, 0.56, 0.55], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_red": {"color": [0.18, 0.045, 0.035], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_green": {"color": [0.045, 0.08, 0.06], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_silver": {"color": [0.36, 0.37, 0.37], "rough": 0.72, "texture_set": "curtain_folds"},
-    "trailer_box_white": {"color": [0.60, 0.61, 0.60], "rough": 0.45, "texture_set": "box_panel"},
+    # ADR0086: explicit working pigments preserve ADR0092/s9 accepted matte curtain appearance.
+    # Previous values were tuned through Unity Color double-gamma; these are their linear GPU values.
+    "trailer_curtain_grey": {"color": [0.03310477, 0.03630648, 0.03630648], "rough": 0.82, "texture_set": "curtain_folds"},
+    "trailer_curtain_blue": {"color": [0.00232198, 0.00489631, 0.0173891], "rough": 0.82, "texture_set": "curtain_folds"},
+    "trailer_curtain_white": {"color": [0.26327341, 0.27383842, 0.26327341], "rough": 0.82, "texture_set": "curtain_folds"},
+    "trailer_curtain_red": {"color": [0.02721178, 0.00350102, 0.00270898], "rough": 0.82, "texture_set": "curtain_folds"},
+    "trailer_curtain_green": {"color": [0.00350102, 0.00719441, 0.00489631], "rough": 0.82, "texture_set": "curtain_folds"},
+    "trailer_curtain_silver": {"color": [0.10653922, 0.11280479, 0.11280479], "rough": 0.72, "texture_set": "curtain_folds"},
+    "trailer_box_white": {"color": [0.31854678, 0.33034371, 0.31854678], "rough": 0.45, "texture_set": "box_panel"},
     "tractor_paint_white": {"color": [0.66, 0.66, 0.64], "rough": 0.3},
     "tractor_paint_silver": {"color": [0.40, 0.41, 0.42], "rough": 0.3, "metal": 0.6},
     "tractor_paint_blue": {"color": [0.025, 0.06, 0.16], "rough": 0.3, "metal": 0.3},
