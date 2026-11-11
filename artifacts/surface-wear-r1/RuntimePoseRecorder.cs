@@ -15,7 +15,8 @@ namespace SurfaceWearQA
     public static class RuntimePoseRecorder
     {
         [Serializable] public class Pose { public string name,parent;public Vector3 position,localPosition,scale;public Quaternion rotation,localRotation; }
-        [Serializable] public class Row { public string id,scene;public Vector3 cameraPosition;public Quaternion cameraRotation;public float fov,near,far;public int width,height;public float[] view,projection;public Pose truck,trailer; }
+        [Serializable] public class SignalState { public string material,path,shader,keywords;public Color emission;public int rendererUses; }
+        [Serializable] public class Row { public string id,scene;public Vector3 cameraPosition;public Quaternion cameraRotation;public float fov,near,far;public int width,height;public float[] view,projection;public Pose truck,trailer;public List<SignalState> signals; }
         [Serializable] public class Packet { public string note="Actual beginCameraRendering world pose and matrices. Readonly QA, no transform/material mutation. Baseline serialized comparison is a separate proof, not retroactive runtime evidence.";public List<Row> cameras=new List<Row>(); }
         static readonly Dictionary<string,Row> rows=new Dictionary<string,Row>();
         static string output;
@@ -27,6 +28,23 @@ namespace SurfaceWearQA
         }
         static float[] Matrix(Matrix4x4 m){var a=new float[16];for(int r=0;r<4;r++)for(int c=0;c<4;c++)a[r*4+c]=m[r,c];return a;}
         static Pose Read(Transform t){return t==null?null:new Pose{name=t.name,parent=t.parent==null?"":t.parent.name,position=t.position,localPosition=t.localPosition,rotation=t.rotation,localRotation=t.localRotation,scale=t.lossyScale};}
+        static List<SignalState> Signals()
+        {
+            var found=new SortedDictionary<string,SignalState>(StringComparer.Ordinal);
+            foreach(var renderer in UnityEngine.Object.FindObjectsByType<MeshRenderer>(FindObjectsInactive.Include,FindObjectsSortMode.None))
+                foreach(var material in renderer.sharedMaterials)
+                {
+                    if(material==null||(material.name!="M_signal_green_on"&&material.name!="M_signal_red_on"))continue;
+                    if(!found.TryGetValue(material.name,out var state))
+                    {
+                        state=new SignalState{material=material.name,path=AssetDatabase.GetAssetPath(material),shader=material.shader.name,
+                            keywords=string.Join(",",material.shaderKeywords),emission=material.HasProperty("_EmissionColor")?material.GetColor("_EmissionColor"):Color.clear};
+                        found.Add(material.name,state);
+                    }
+                    state.rendererUses++;
+                }
+            return new List<SignalState>(found.Values);
+        }
         static void Capture(ScriptableRenderContext context,Camera camera)
         {
             var cc=camera.GetComponent<ControlCamera>();if(cc==null)return;
@@ -34,7 +52,7 @@ namespace SurfaceWearQA
             rows[cc.id]=new Row{id=cc.id,scene=SceneManager.GetActiveScene().name,cameraPosition=camera.transform.position,cameraRotation=camera.transform.rotation,
                 fov=camera.fieldOfView,near=camera.nearClipPlane,far=camera.farClipPlane,width=camera.targetTexture==null?camera.pixelWidth:camera.targetTexture.width,
                 height=camera.targetTexture==null?camera.pixelHeight:camera.targetTexture.height,view=Matrix(camera.worldToCameraMatrix),projection=Matrix(camera.projectionMatrix),
-                truck=Read(truck==null?null:truck.transform),trailer=Read(trailer==null?null:trailer.transform)};
+                truck=Read(truck==null?null:truck.transform),trailer=Read(trailer==null?null:trailer.transform),signals=Signals()};
             var packet=new Packet();foreach(string key in new SortedSet<string>(rows.Keys,StringComparer.Ordinal))packet.cameras.Add(rows[key]);
             Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,JsonUtility.ToJson(packet,true));
         }
