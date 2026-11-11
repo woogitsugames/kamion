@@ -11,8 +11,9 @@
 | zadanie | ADR | worktree | STATUS | stan s9 |
 |---|---|---|---|---|
 | P0 korytarz + ratchety | 0076 | usunięty | artifacts/roads-p0-r10 | SCALONE `da5dd11` (main po s9-scaleniach: pytest gis 246/3 znane przed 0076); main po 0076 zregenerowany: pytest gis 249 ✓ / 0 ✗ (log `artifacts/logs/s9-main-regen-0076.log`); recenzja `docs/reports/visual/REVIEW-2026-11-11-s9-0076.md`: PASS warunkowy scalenia, węzły vs ortofoto FAIL (łaty bez linii P-1, nosy klinów, P-21, latarnia na igłowej wysepce E −774,5 N 77,5) → ADR 0093 |
-| wysepki z OSM | 0077 | usunięty | artifacts/islands-r10 | SCALONE `0f6a5cee` (konflikty kodu z 0076: pipeline.py — stats 0076 + GO.build przed cull_sides; meshing.py — flaga flush 0076 + stacja 0077; BASELINE fidelity z 0077); regeneracja + pytest main w tle `artifacts/logs/s9-main-regen-0077.log` → potem start 0093 |
+| wysepki z OSM | 0077 | usunięty | artifacts/islands-r10 | SCALONE `0f6a5cee` (konflikty kodu z 0076: pipeline.py — stats 0076 + GO.build przed cull_sides; meshing.py — flaga flush 0076 + stacja 0077; BASELINE fidelity z 0077); po regeneracji main `8cc25713`: pytest gis 328 ✓ / **2 ✗** (kerb_on_carriageway 28 > 0 = zatopione krawężniki pod klinami; skirt:yard_concrete 4 > 3) → krok 0 zadania 0093 |
 | zabudowa r3 (domy dwuspadowe, balkony, tynk, cegła) | 0091 | buildings-r11 (z d205d4a) | artifacts/buildings-r11 | s9: agent Fable start 01:05 |
+| geometria i oznakowanie węzłów + 2 czerwone testy main | 0093 | junctions-r1 (z 8cc25713) | artifacts/junctions-r1 | s9: agent Fable start ~02:30 |
 | Kwadrat Park r12 (firanka matowa, szlaban domknięty, dryf do paneli) | 0092 | kwadrat-r12 (z d8e929ca) | artifacts/kwadrat-r12 | s9: agent Fable start ~01:35 |
 | import Megascans R1 | 0084 | gpt-megascans (NIE usuwać — Codex wciąż aktywny) | artifacts/megascans-r1/REPORT.md | SCALONE `98e54e47` (REPORT: lokalnie PASS, skok sceny FAIL, Low lokalnie +4 draw/+4k tris; normal mapy Fab wyłączone; High 1024 i telefon UNVERIFIED); konflikt stage.py = unia (yard wear 0071 + FD.apply); regeneracja main w tle `artifacts/logs/s9-main-regen-0084.log`; GPT następnie Q1 0086 / Q2 0088 |
 | tło za krawędzią | 0085 | argon-edge | artifacts/edge-far-r1 | Argon w toku |
@@ -20,7 +21,7 @@
 ## Następne kroki
 1. Scal 0076 → 0077 (gdy skończą); na main: build_all → build_world → pytest gis → import-region → Truck/Trailer BuildBatch + InstallBatch → EditMode/PlayMode (`WorldCBarrierTests|DepotBarrierTests|WorldCRouteTests|WorldEdgeRecoveryTests`).
 2. Render stanu połączonego (wymóg recenzji): High+Low overcast `fire-station-ref7197`, `stretch-05-docks`, `kwadrat-park-gate`, `truck-at-gate`, `r10_block_2`, `r10b_black_05` + zrzuty z telefonu → ponowny pomiar tynku remizy.
-3. Nowe zadania z recenzji s9 (agenci po zwolnieniu miejsc): **0090** remiza r7 (świerki piętrowe, tuje 3 kształty + Low, szkło 60–75, zacieki). **0089** czarny lakier aut → Argon Q2 (dopisane). **0093** geometria i oznakowanie węzłów vs ortofoto (recenzja 0076 #1–11 + kamery miejsc z filmu właściciela) — start PO scaleniu 0077 (te same pliki roads/).
+3. Nowe zadania z recenzji s9 (agenci po zwolnieniu miejsc): **0090** remiza r7 (świerki piętrowe, tuje 3 kształty + Low, szkło 60–75, zacieki). **0089** czarny lakier aut → Argon Q2 (dopisane).
 4. Integracja, czyste buildy Low/High, telefony (A16 Low gate3, S24+ High), raport bramki 3.
 5. Ostatni przydzielony ADR: **0093**.
 
