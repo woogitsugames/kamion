@@ -633,7 +633,8 @@ namespace Game.World.Import
             ti.SetPlatformTextureSettings(new TextureImporterPlatformSettings
             {
                 // impostor atlases are 6 views x 256 px wide (1536): keep them whole on the phone (ADR 0023)
-                name = "Android", overridden = true, maxTextureSize = file.StartsWith("impostor_") && !linear ? 2048 : 1024,
+                // plot_kit (ADR 0114): one 2048 atlas carries every fence / garden texture of the house plots
+                name = "Android", overridden = true, maxTextureSize = (file.StartsWith("impostor_") && !linear) || file.StartsWith("plot_kit") ? 2048 : 1024,
                 format = text ? TextureImporterFormat.ASTC_4x4 : TextureImporterFormat.ASTC_6x6,
                 compressionQuality = 50,
             });

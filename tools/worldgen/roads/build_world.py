@@ -39,8 +39,10 @@ from terrain_mesh import conform as CF    # noqa: E402
 from terrain_mesh.gltf import GLB, GLTF_AXES, smooth_normals  # noqa: E402
 from streetscape import export as PR      # noqa: E402
 
-LAYERS = ("road", "bridge", "markings", "paved", "buildings", "buildings_low", "furniture", "wires", "collision")
-NODES = (("road", "road"), ("bridge", "bridge"), ("markings", "markings"), ("paved", "paved"),
+# plot_ground (ADR 0114): lawn / driveway of the house plots - ground like `paved`, but shown with the chunk's LOD0 / LOD1
+# only (like `furniture`) and never a shadow caster
+LAYERS = ("road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_low", "furniture", "wires", "collision")
+NODES = (("road", "road"), ("bridge", "bridge"), ("markings", "markings"), ("paved", "paved"), ("plot_ground", "plot_ground"),
          ("buildings", "buildings"), ("buildings_low", "buildings_lod1"), ("furniture", "furniture"),
          ("wires", "wires"), ("collision", "road_collision"))
 
@@ -560,8 +562,15 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
     clean, bad = CF.clean_under_bridges(w0.hf.z, deck, deck_mask, thick)
     log(f"pass 1: deck nodes {int(deck_mask.sum())}, NMT nodes replaced under decks {int(bad.sum())}")
     hf = pipeline.P.Heightfield(clean, w0.hf.bbox, (w0.hf.ox, w0.hf.oy))
+    # house plots (ADR 0114): planned once on the pass-1 geometry, so pass 2 can lower the kerbs at their driveways
+    from streetscape import stage as SS0
+    from streetscape import plots as PLT
+    plot_plan = SS0.plan_plots(w0, region_id)
+    log(f"plots planned: {len(plot_plan['plots'])}, kerb drops {len(plot_plan['drops'])}")
     # pass 2: final geometry on the cleaned ground model
-    w = pipeline.build(region_id, hf=hf)
+    w = pipeline.build(region_id, hf=hf, side_edit=lambda net: PLT.apply_drops(net, plot_plan["drops"]))
+    w.plot_plan = plot_plan
+    log(f"kerb drops applied: {w.stats.get('side_edit')}")
     w.stats["nmt_replaced_under_decks"] = int(bad.sum())
     log(f"network: {len(w.net.chains)} chains, {len(w.junctions)} junctions")
     mk_report = {}
@@ -894,7 +903,7 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
     per_chunk = []
     for ch in chunks_meta:
         t = ch["triangles"]
-        stat = sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved", "furniture", "wires"))
+        stat = sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved", "plot_ground", "furniture", "wires"))
         ci, cj = (int(x) for x in ch["id"].split("_"))
         inst = inst_by_chunk.get((ci, cj), [])
         per_chunk.append({"chunk": ch["id"], "materials": len(ch["materials"]),

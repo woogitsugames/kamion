@@ -204,7 +204,8 @@ EDGING_H = 0.03             # top of edging above the block paving WORKING_VALUE
 SETBACK_PATH_W = 2.0        # default width of a set-back footpath without BDOT SZEROKOSC (PTB2022 § 29: >= 1.80 m)
 SURFACE_OF = {"yard_paving": "paving", "yard_behaton": "paving", "sidewalk_paving": "paving", "cycle_red": "asphalt",
               "yard_concrete": "asphalt", "yard_concrete_worn": "asphalt", "yard_slabs": "asphalt", "yard_asphalt": "asphalt",
-              "path_asphalt": "asphalt", "yard_gravel": "grass"}   # -> collision_<x> materials
+              "path_asphalt": "asphalt", "yard_gravel": "grass",
+              "plot_lawn": "grass"}   # -> collision_<x> materials
 
 # Vertical signs [ZNAKI-Z1]. Table 1.11: lower edge >= 2.00 m in built-up areas, 2.20 m when the sign
 # stands on a sidewalk; signs over the carriageway >= 5.00 m.

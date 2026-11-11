@@ -306,10 +306,12 @@ namespace Game.World.Import
             float metal = m.Get("metal") != null ? (float)Num(m.Get("metal")) : 0f;
             string surface = Str(m.Get("surface"));
             string path = $"{r.Dir}/Materials/M_{id}.mat";
-            if (FabMaterials.IsBaseSurface(id) && FabMaterials.Has(id))
+            // ADR 0114: the mown lawn of a house plot (plot_lawn) shares the photographic grass base of the verges
+            string fabBase = id == "plot_lawn" ? "verge_grass" : id;
+            if (FabMaterials.IsBaseSurface(fabBase) && FabMaterials.Has(fabBase))
             {
                 var surfaceBase = WorldPbrMaterials.Create(r, id, m, path);
-                if (surfaceBase != null && FabMaterials.ApplySurfaceBase(r, id, surfaceBase)) return surfaceBase;
+                if (surfaceBase != null && FabMaterials.ApplySurfaceBase(r, fabBase, surfaceBase)) return surfaceBase;
             }
             var fab = FabMaterials.Create(r, id, path);
             if (fab != null) return fab;
@@ -532,8 +534,8 @@ namespace Game.World.Import
         }
 
         // ------------------------------------------------------------------------------------------------- meshes
-        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires" };
-        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "buildings", "buildings_lod1", "furniture", "wires" };
+        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings_lod1", "furniture", "wires" };   // plot_ground: ADR 0114
+        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_lod1", "furniture", "wires" };
 
         static void BakeVisual(Result r, Chunk ch, GlbReader g, string tier, GlbReader.MeshNode extraBuildingsLod0 = null)
         {

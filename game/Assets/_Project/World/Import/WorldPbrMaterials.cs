@@ -283,7 +283,7 @@ namespace Game.World.Import
                 }
             }
             if (id == "terrain_grass") { mat.EnableKeyword("_GROUNDMASKS"); mat.SetFloat("_GroundTint", 1f); }
-            if (id == "terrain_grass" || id == "verge_grass")
+            if (id == "terrain_grass" || id == "verge_grass" || id == "plot_lawn")   // plot_lawn: ADR 0114
             {
                 // Review r5 W-N3: macro-masked bare soil + rotated second sample (ADR 0042). Refill = linear mean of
                 // the grass_verge texels without bare soil (Var.B < 0.1), measured from the Medium BaseColor.

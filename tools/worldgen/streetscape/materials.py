@@ -502,3 +502,14 @@ M["balcony_slab"]["sky_occ"] = [0.0, 0.0]
 #   the north slope) breaks the repeat over a slope. Tile roofs only - a pressed metal sheet is one tone. WORKING_VALUE.
 for _k in ("roof_tiles_red", "roof_tiles_brown"):
     M[_k]["macro"] = [7.0, 0.16]
+
+
+# ADR 0114 (zabudowa r7, house plots; additive block):
+# - `plot_kit`: ONE alpha-clip atlas (streetscape.plot_kit, colours in the texture, sRGB) for every fence / gate /
+#   garden plant of the single-family plots, so a chunk full of plots is one draw. Matt (rough 0.85, no metal): the
+#   galvanised mesh of ADR 0107 (metal 0.9, albedo 0.40) clipped to white under the overcast sky (review 0107 P1-r7-b).
+# - `plot_lawn`: the mown lawn inside a plot, a draped surface of the grass_verge set. Lighter and yellower than the
+#   rough grass outside the fence (WORKING_VALUE, refs P13 / P19 / C04: a lawn reads ~1.3x the luminance of the
+#   unmown verge next to it).
+M["plot_kit"] = {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "plot_kit", "alpha_cutoff": 0.5}
+M["plot_lawn"] = {"color": [0.150, 0.200, 0.060], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"}

@@ -98,7 +98,7 @@ namespace Game.World.Import
                     string n = kv.Key;
                     Kind nodeKind;
                     if (n == "road") nodeKind = Kind.Road;
-                    else if (n == terrain || n == "paved") nodeKind = Kind.Ground;
+                    else if (n == terrain || n == "paved" || n == "plot_ground") nodeKind = Kind.Ground;
                     else if (n == buildings || n == "bridge" || n == "furniture") nodeKind = Kind.Solid;
                     else continue;   // other terrain LODs, LOD1 when LOD0 exists, markings, wires
                     var mesh = kv.Value.GetComponent<MeshFilter>().sharedMesh;

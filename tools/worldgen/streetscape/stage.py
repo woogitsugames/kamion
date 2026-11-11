@@ -33,6 +33,37 @@ from . import vegetation as VG
 from . import yard_wear as YW
 
 
+def _yard_src(src, origin, overrides):
+    out = [PV._poly_local(f["geometry"]["coordinates"], origin) for f in src["bdot10k"]["OT_PTPL_A"]
+           if f["props"].get("materialnawierzchni") != "grunt naturalny"]
+    out += [PV._poly_local(a["geometry"]["coordinates"], origin) for a in src["osm"]["areas"]
+            if a["tags"].get("amenity") == "parking"]
+    out += [shapely.geometry.Polygon(np.asarray(o["polygon_epsg2180"], float) - np.asarray(origin)) for o in overrides
+            if o.get("kind") == "paved_area"]
+    return out
+
+
+def plan_plots(w, rid, blds=None):
+    """House plots of the region (ADR 0114), planned on the road geometry of `w` (pass 1 of build_world: the kerb
+    drops of the driveways go into pass 2; the streetscape stage reuses the plan as w.plot_plan)."""
+    import os
+    origin = np.array(w.origin)
+    src = SRC.load(rid)
+    overrides = pipeline.load_overrides(rid)
+    road_parts = [p for p in w.buf.parts if p.layer == "road"]
+    roads_poly = PV.road_footprint_polygon(road_parts)
+    if os.environ.get("KAMION_NO_PLOTS") == "1":      # budget measurement (ADR 0114): the world without house plots
+        return {"plots": [], "drops": [], "roads_poly": roads_poly}
+    carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
+    if blds is None:
+        fc = json.loads((pipeline.REGIONS / rid / "buildings.geojson").read_text(encoding="utf-8"))
+        blds = BM.load(fc, w.origin, overrides)
+    yards = [g for p in _yard_src(src, w.origin, overrides) for g in getattr(shapely.make_valid(p), "geoms", [shapely.make_valid(p)])
+             if g.geom_type == "Polygon"]
+    bpoly = shapely.union_all([b["poly"] for b in blds])
+    return PLT.region_plan(blds, roads_poly, carriage, yards, src, origin, bpoly, net=w.net)
+
+
 def run(w, road_z, rmask, deck, deck_mask, thick, log):
     rid = w.region["id"]
     rep = {}
@@ -74,10 +105,14 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
                                    [d["apron"].buffer(10.0) for d in docks])
     paved = PV.collect(src, origin, overrides, docks, roads_poly, bpoly, prep, truck_zone=truck_zone)
     rep["paved_m2_by_source"] = prep
-    pmask = PV.rasterize_polys([p["poly"] for p in paved], hf) & ~rmask
+    # house plots (ADR 0114): lawn / driveway / path are paved-area items of their own list (yard life, wear and
+    # gate logic keep reading `paved` only)
+    plot_plan = getattr(w, "plot_plan", None) or plan_plots(w, rid, blds)
+    plot_paved = PLT.paved_items(plot_plan, roads_poly, bpoly, paved)
+    pmask = PV.rasterize_polys([p["poly"] for p in paved + plot_paved], hf) & ~rmask
     pz = PV.paved_heights(hf, road_z, rmask, pmask)
     shapely.prepare(roads_poly)
-    PV.build_meshes(w.buf, paved, np.where(np.isfinite(pz), pz, sm), hf, walls=bpoly.boundary, roads_poly=roads_poly)
+    PV.build_meshes(w.buf, paved + plot_paved, np.where(np.isfinite(pz), pz, sm), hf, walls=bpoly.boundary, roads_poly=roads_poly)
     mats = {}
     for p in paved:
         mats[p["mat"]] = round(mats.get(p["mat"], 0) + p["poly"].area)
@@ -191,9 +226,11 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     rep["furniture"] = frep
     log("furniture", {k: v for k, v in frep.items() if k != "junction_signs"})
 
-    # house plots (ADR 0107): fence / gate / driveway / garden instances around single-family houses
-    plots = PLT.build(pl, blds, roads_poly, bpoly, paved, src, origin, zground, rep)
-    log("plots", {k: v for k, v in rep["plots"].items()})
+    # house plots (ADR 0107 / 0114): fences, gates and garden as chunk geometry in one material (`plot_kit`)
+    def zplot(q):
+        return float(np.asarray(zsurf(np.array([q[0]]), np.array([q[1]]))).ravel()[0])
+    plots = PLT.build(w.buf, plot_plan, zplot, FU.SurfaceTop([p_ for p_ in w.buf.parts if p_.layer == "road"]), rep)
+    log("plots", {k: v for k, v in rep["plots"].items() if k != "list"})
 
     # vegetation
     blocked = ndimage.binary_dilation(mask | bmask, iterations=3)
@@ -215,7 +252,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     hlod = FH.build(trees, forest_mix, no_forest, zground, half, vrep)
     log("forest hlod", vrep["forest_hlod"])
     col = VG.ground_masks(src, origin, hf, dist, forests)
-    col = PLT.lawn_mask(col, plots["lawns"], hf, PV.rasterize_polys)     # mown lawn inside the plots (ADR 0107)
+    col = PLT.lawn_mask(col, plots["lawns"], hf, PV.rasterize_polys)     # no grit strip around the lawns (ADR 0114)
     instances = pl.items + trees
     hero_tris = {**hero_tris, **HBD.apply(w.buf, heroes, instances, rep, log)}      # depot halls + hero buildings
     if heroes or rep.get("hero_buildings", {}).get("stale"):

@@ -616,18 +616,27 @@ Shader "Kamion/World PBR"
                     ur = lerp(ur, float2(i.uv.z * 1.7 / 24.0 + srnd * 0.137 + sside * 0.37, 1.0 - clamp(depth * 0.4, 0.0, 0.985)), sill2);
                     half3 ro = SAMPLE_TEXTURE2D(_RunoffMap, sampler_MacroMap, ur).rgb;
                     ro.r = saturate(ro.r * (1.0 + 0.8 * sill) + sill * 0.3 * (1.0 - smoothstep(0.0, 0.2, depth)) * (0.5 + macro.a));
+                    half k = _RunoffStrength * saturate(0.8 + (macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 1.0);
                     if (sill2 > 0.5)
                     {
-                        half slen = 0.45 + 0.55 * frac(srnd * lerp(0.37, 0.61, sside) + lerp(0.1, 0.5, sside));
-                        float sde = abs(i.uv.z);                               // metres from the nearer sill end
-                        // r1 (1.5-5 cm core, up to 1.6 scale lengths) read as 1 px hairlines 2 m long from 15 m: wider, shorter
-                        // r1b: soft-edged (no hard bar), strongest right under the sill end, broken by the map's streak structure
-                        half whisk = (1.0 - smoothstep(0.0, 0.07 + 0.05 * depth, sde)) * (1.0 - smoothstep(0.1 * slen, 1.1 * slen, depth)) * (0.65 + 0.35 * ro.r);
-                        half band = (0.35 + 0.65 * ro.r) * (1.0 - smoothstep(0.0, 0.5, depth));
-                        ro.r = saturate(max(whisk, band * 0.8));
+                        // ADR 0114 (review 0107 P1-r7-g: the 0107 mark read as a pale rectangle with thin edges, 2-5
+                        // sRGB levels, gone from 20 m). |u| >= 2 = the wall strip just OUTSIDE the sill end, so a whisker
+                        // is centred on the sill end (the reveal line) instead of ending on the edge of the column under
+                        // the window. Whisker: 9 cm wide under the sill, 4 cm at its tip, soft 3 cm flanks, per-end length
+                        // 0.55-1.0 scale lengths; the wet band under the drip edge lives inside the sill only and is gone
+                        // 0.25 scale lengths down. Strength floor 0.5: the plaster factor of the parapet layer (x 0.6)
+                        // left a sill mark at ~3 levels. WORKING_VALUE, measured from 5 m and 20 m (ADR 0114 table).
+                        float au = abs(i.uv.z);
+                        half outside = step(1.5, au);
+                        float sde = au - 2.0 * outside;                       // metres from the sill end
+                        half slen = 0.55 + 0.45 * frac(srnd * lerp(0.37, 0.61, sside) + lerp(0.1, 0.5, sside));
+                        float hw = lerp(0.045, 0.02, saturate(depth / slen));
+                        half whisk = (1.0 - smoothstep(hw, hw + 0.03, sde)) * (1.0 - smoothstep(0.3 * slen, slen, depth)) * (0.8 + 0.2 * ro.r);
+                        half band = (1.0 - outside) * (0.3 + 0.5 * ro.r) * (1.0 - smoothstep(0.03, 0.25, depth)) * 0.5;
+                        ro.r = saturate(max(whisk, band));
                         ro.g *= whisk * 0.5;
+                        k = max(k, 0.5);
                     }
-                    half k = _RunoffStrength * saturate(0.8 + (macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 1.0);
                     albedo = lerp(albedo, albedo * half3(0.22, 0.21, 0.2), ro.r * k);
                     albedo = lerp(albedo, half3(0.075, 0.042, 0.022), ro.g * k * 0.8);
                     smooth *= 1.0 - 0.35 * ro.r * k;

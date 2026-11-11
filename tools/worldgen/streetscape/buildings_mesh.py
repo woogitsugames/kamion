@@ -251,19 +251,29 @@ def runoff_uv1(runoff, ua, ub, za, zb):
 SILL_CLEAN = 0.40              # ADR 0107: share of windows whose sill left no mark (review 0097 P1-f: 30-50 %)
 
 
-def sill_marks(sills, ua, ub, za, zb, oa, ob, zfrac):
-    """ADR 0107 (review 0097 P1-f; replaces the ADR 0097 `sill_uv1`): TEXCOORD_1 of the wall under a window sill, the
-    column [ua, ub] of the opening [oa, ob], top zb = the sill. [(u0, u1, uv1)] - the column split at the sill centre -
-    or None (this sill left no mark: SILL_CLEAN of the windows). Shader contract (Kamion/World PBR _RUNOFF, v >= 112):
-    u = signed metres from the nearer sill end (left half < 0), v = 128 + 8 * rnd + 1 + depth / length scale, rnd 0-7
-    per window. Lower storeys carry longer marks (zfrac = height of the sill in the wall, 0 bottom ... 1 top).
-    Half floats (WorldMeshBake): |u| < 4 m -> 1/256 m steps; v < 192 -> exact at the sill, 1/8 unit at the bottom."""
+def _sill_code(sills, za, zb, oa, zfrac):
+    """(rnd 0-7, length scale m) of the mark of one window sill, or None (a clean sill: SILL_CLEAN of the windows)."""
     uo, ls = sills
     wk = f"{uo:.3f}:{oa:.2f}:{zb:.2f}"
     if FK.hfloat(wk, "sill_clean") < SILL_CLEAN:
         return None
     rnd = int(FK.hfloat(wk, "sill_rnd") * 8) % 8
     lsw = max(ls * (1.3 - 0.6 * min(max(zfrac, 0.0), 1.0)) * (0.8 + 0.4 * FK.hfloat(wk, "sill_len")), (zb - za) / 6.5)
+    return rnd, lsw
+
+
+def sill_marks(sills, ua, ub, za, zb, oa, ob, zfrac):
+    """ADR 0107 (review 0097 P1-f; replaces the ADR 0097 `sill_uv1`): TEXCOORD_1 of the wall under a window sill, the
+    column [ua, ub] of the opening [oa, ob], top zb = the sill. [(u0, u1, uv1)] - the column split at the sill centre -
+    or None (this sill left no mark: SILL_CLEAN of the windows). Shader contract (Kamion/World PBR _RUNOFF, v >= 112):
+    u = signed metres from the nearer sill end (left half < 0), v = 128 + 8 * rnd + 1 + depth / length scale, rnd 0-7
+    per window. Lower storeys carry longer marks (zfrac = height of the sill in the wall, 0 bottom ... 1 top).
+    Half floats (WorldMeshBake): |u| < 4 m -> 1/256 m steps; v < 192 -> exact at the sill, 1/8 unit at the bottom.
+    ADR 0114: the wall BESIDE the sill end carries the other half of the whisker (sill_strip_uv1, |u| >= SILL_OUT)."""
+    code = _sill_code(sills, za, zb, oa, zfrac)
+    if code is None:
+        return None
+    rnd, lsw = code
     v0 = 129.0 + 8.0 * rnd
     kb = v0 + (zb - za) / lsw
     om = 0.5 * (oa + ob)
@@ -275,6 +285,28 @@ def sill_marks(sills, ua, ub, za, zb, oa, ob, zfrac):
         e0, e1 = max(e0, 1e-3), max(e1, 1e-3)              # 0 would lose the side sign
         out.append((c0, c1, [[sg * e0, kb], [sg * e1, kb], [sg * e1, v0], [sg * e0, v0]]))
     return out
+
+
+SILL_STRIP_M = 0.12            # ADR 0114: width of the wall strip beside a sill end that carries the whisker, m
+SILL_OUT = 2.0                 # |u| offset of that strip in TEXCOORD_1 (sills are narrower than 2 x this)
+
+
+def sill_strip_uv1(sills, za, zb, oa, ob, zfrac, side):
+    """ADR 0114 (review 0107 P1-r7-g: "prostokąt z cienkimi krawędziami", the whisker ended on the column edge):
+    TEXCOORD_1 of the wall strip SILL_STRIP_M wide just outside the left (side < 0) / right end of the sill of the
+    opening [oa, ob]: |u| = SILL_OUT + metres from the sill end, sign = side, v as in sill_marks (same rnd and length
+    scale, so the two halves of a whisker meet). Corners of the quad (c0, za) (c1, za) (c1, zb) (c0, zb), c0 < c1.
+    None for a clean sill."""
+    code = _sill_code(sills, za, zb, oa, zfrac)
+    if code is None:
+        return None
+    rnd, lsw = code
+    v0 = 129.0 + 8.0 * rnd
+    kb = v0 + (zb - za) / lsw
+    near, far = SILL_OUT + 1e-3, SILL_OUT + SILL_STRIP_M
+    e0, e1 = (far, near) if side < 0 else (near, far)
+    sg = -1.0 if side < 0 else 1.0
+    return [[sg * e0, kb], [sg * e1, kb], [sg * e1, v0], [sg * e0, v0]]
 
 
 def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0, vref=0.0, runoff=None, reveal=None,
@@ -290,6 +322,23 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
     p0, d, nout = (np.asarray(x, float) for x in (p0, d, nout))
     ops = sorted([o for o in openings if o[1] > o[0] + 0.05 and o[3] > o[2] + 0.05], key=lambda o: o[0])
     us = sorted({0.0, L, *[o[0] for o in ops], *[o[1] for o in ops]})
+    # ADR 0114: wall strips beside the sill ends of marked windows (the outer half of the two whiskers)
+    strips = {}
+    if sills is not None and not str(mat).startswith("plinth"):
+        for o in ops:
+            if o[5] not in ("window", "ribbon"):
+                continue
+            za_o = max([q[3] for q in ops if q is not o and q[0] < o[1] - 1e-3 and q[1] > o[0] + 1e-3 and q[3] <= o[2] + 1e-6] + [zb])
+            if o[2] - za_o <= 0.15:
+                continue
+            for side, c0, c1 in ((-1, o[0] - SILL_STRIP_M, o[0]), (1, o[1], o[1] + SILL_STRIP_M)):
+                if c0 < 0.0 or c1 > L or any(q[0] < c1 - 1e-3 and q[1] > c0 + 1e-3 for q in ops):
+                    continue
+                uv1 = sill_strip_uv1(sills, za_o, o[2], o[0], o[1], (o[2] - zb) / max(zt - zb, 1e-6), side)
+                if uv1 is not None:
+                    strips.setdefault((round(c0, 4), round(c1, 4)), []).append((za_o, o[2], uv1))
+        us = sorted(set(us) | {u for k in strips for u in k})
+        us = [u for i, u in enumerate(us) if i == 0 or u - us[i - 1] > 1e-4]
 
     def P(u, z):
         return [p0[0] + d[0] * u, p0[1] + d[1] * u, z]
@@ -307,6 +356,25 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
             z = max(z, vb)
         if z < zt:
             segs.append((z, zt, None, 0.0, 0.0))
+        marked = strips.get((round(ua, 4), round(ub, 4)))
+        if marked and not cov:                  # a strip beside sill ends: cut it at the sills it serves
+            cuts, z = [], zb
+            for s0, s1, uv1 in sorted(marked, key=lambda m: m[1]):
+                s0 = max(s0, z)
+                if s1 - s0 < 0.05:
+                    continue
+                if s0 > z:
+                    cuts.append((z, s0, None))
+                cuts.append((s0, s1, uv1))
+                z = s1
+            if z < zt:
+                cuts.append((z, zt, None))
+            for za, zb2, uv1 in cuts:
+                va_, vb_ = (gnd(u0 + ua), gnd(u0 + ub)) if gnd else (vref, vref)
+                acc.quad(layer, mat, P(ua, za), P(ub, za), P(ub, zb2), P(ua, zb2),
+                         uv=[[u0 + ua, za - va_], [u0 + ub, za - vb_], [u0 + ub, zb2 - vb_], [u0 + ua, zb2 - va_]],
+                         uv1=uv1 if uv1 is not None else runoff_uv1(runoff, u0 + ua, u0 + ub, za, zb2))
+            continue
         for za, zb2, kd, oa, ob in segs:
             # the wall under a window sill is marked from the sill (ADR 0097 / 0107); elsewhere the parapet run-off
             marks = None

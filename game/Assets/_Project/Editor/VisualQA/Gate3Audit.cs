@@ -178,7 +178,7 @@ namespace Game.Editor.VisualQA
 
                 // floating / sunk (terrain, collision-backed chunks only)
                 string nameLc = r.gameObject.name;
-                bool surface = nameLc.StartsWith("terrain") || nameLc == "road" || nameLc == "markings" || nameLc == "paved" || nameLc.StartsWith("col_") || nameLc == "wires";
+                bool surface = nameLc.StartsWith("terrain") || nameLc == "road" || nameLc == "markings" || nameLc == "paved" || nameLc == "plot_ground" || nameLc.StartsWith("col_") || nameLc == "wires";
                 if (surface) continue;
                 if (Mathf.Max(b.size.x, b.size.z) > 60f) { objMerged++; continue; }   // chunk-wide merged mesh: 5 probes say nothing about its buildings
                 objChecked++;
