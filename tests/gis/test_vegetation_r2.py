@@ -5,6 +5,7 @@ import numpy as np
 
 from streetscape.foliage_policy import crown_opening, leaf_lod_indices, metric_patch_field, osm_tree_species
 from streetscape.leaf_textures import pine_scan
+from streetscape.vegetation_metrics import foliage_mask
 
 
 def test_canopy_has_coherent_openings_and_retains_stem_foliage():
@@ -46,3 +47,8 @@ def test_explicit_osm_botany_is_not_replaced_by_generic_linden():
     assert osm_tree_species({'species': 'Pinus sylvestris'}) == 'pine'
     assert osm_tree_species({'species:pl': 'lipa drobnolistna'}) == 'linden'
     assert osm_tree_species({'natural': 'tree'}) == 'linden'
+
+
+def test_crown_mask_retains_crushed_foliage_and_excludes_sky_bark():
+    pixels = np.array([[[45, 65, 35], [8, 8, 8], [205, 215, 230], [90, 75, 61]]], dtype=np.uint8)
+    assert foliage_mask(pixels).tolist() == [[True, True, False, False]]

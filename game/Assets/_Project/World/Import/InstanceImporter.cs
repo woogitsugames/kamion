@@ -570,9 +570,9 @@ namespace Game.World.Import
         /// impostor crown matches the LOD1 cards (no occlusion term) in mean luminance at the switch distance:
         /// WORKING_VALUE, measured in artifacts/vqa (ADR 0023 table).
         /// </summary>
-        public static readonly Vector2 ImpostorVisibility = new Vector2(0.30f, 0.25f);
+        public static readonly Vector2 ImpostorVisibility = new Vector2(0.45f, 0.25f);
         /// <summary>ADR0088: direct-only bake omits transmitted / multiply scattered leaf light. WORKING_VALUE.</summary>
-        public static readonly Vector2 EdgeVisibility = new Vector2(0.65f, 0.6f);
+        public static readonly Vector2 EdgeVisibility = new Vector2(1.0f, 0.6f);
 
         /// <summary>Kamion/Vegetation material asset (impostor / HLOD edge variant), alpha-to-coverage, double sided, instanced.</summary>
         public static Material VegetationMaterial(string path, Texture2D tex, Texture2D normalOcc, string keyword, Vector4 impostor, float cutoff)
@@ -589,6 +589,7 @@ namespace Game.World.Import
             mat.SetTexture("_NormalOcc", normalOcc);
             mat.SetColor("_BaseColor", Color.white);
             mat.SetVector("_Impostor", impostor);
+            VegetationCanopyPolicy.Apply(mat);
             mat.SetFloat("_Cutoff", cutoff);
             mat.SetFloat("_Cull", 0f);
             mat.SetFloat("_AlphaToMask", 1f);

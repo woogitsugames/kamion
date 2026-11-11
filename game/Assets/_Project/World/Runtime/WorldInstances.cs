@@ -207,6 +207,7 @@ namespace Game.World
                     c.SetFloat("_AlphaToMask", m_LeafA2C ? 1f : 0f);
                     copies[m] = c;
                 }
+                VegetationCanopyPolicy.Apply(c);
                 m_Mats[i] = c;
             }
         }

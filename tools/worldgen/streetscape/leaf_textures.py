@@ -27,8 +27,8 @@ OUT = REPO / "art-source" / "world" / "vegetation"
 # ADR0088: the old pine covered-texel median linear luminance was .0353.
 # Muted needle / leaf reflectance starting values, WORKING_VALUE; final acceptance
 # uses lit crown p10/p50 against the same photographic metric, not these swatches.
-COL = {"birch": (100, 116, 50), "alder": (65, 83, 46), "maple": (78, 100, 52), "linden": (84, 104, 56),
-       "pine": (66, 85, 52), "shrub": (74, 94, 51)}
+COL = {"birch": (100, 116, 50), "alder": (52, 68, 34), "maple": (70, 92, 40), "linden": (74, 94, 42),
+       "pine": (66, 85, 52), "shrub": (66, 84, 40)}
 
 
 def jitter(c, rng, k=0.18):

@@ -41,3 +41,6 @@
 
 - Krok6: pełny baseline59×4 gotowy (WorldC Low, WorldC_High High, overcast+clear). Dopiero teraz zmieniono shader liści (lokalne rozpraszanie półkulowe, mniej podwójnej okluzji), warunkową obwódkę gruntu8–55cm i sylwetkę istniejących żywopłotów bez nowych materiałów/trójkątów. NASTĘPNY KROK: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` po zatwierdzeniu nowego bake drzew; następnie import i pomiary.
 
+
+- Krok7: pomiar rzeczywistych ROI koron zachowuje piksele<16 i odrzuca niebo; DK8 Low p10/p50 18,64/31,15,5,43%<16. Zdrowe Andersa/Putry p50 64–73 pozostają granicą regresji. Przywrócono bazowe palety liściastych; korekcja rozpraszania dotyczy sosny/HLOD iglastego i mieszanego. Zdjęcia referencyjne mają inne ekspozycje/sezon, służą granicom orientacyjnym, nie dopasowaniu globalnemu. Testy16PASS. NASTĘPNY KROK: `Get-Content artifacts/vegetation-r2/tree-final-bake.log -Tail 5`; potem kopia legalnych proc/CC0 produktów i build_world.
+
