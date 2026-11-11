@@ -102,7 +102,7 @@ namespace Game.World.Import
                 if (RoadY(root, inside, out float ey))
                 {
                     var cand = new Vector3(ex.edgeEN.x, ey, ex.edgeEN.y);
-                    int nearIdx = stubs.FindIndex(s => Vector2.Distance(new Vector2(s.start.x, s.start.z), ex.edgeEN) < 30f);
+                    int nearIdx = stubs.FindIndex(s => SameRoadContinuation(s.start, s.dir, ex.edgeEN, ex.edgeDir));
                     if (nearIdx >= 0)
                     {
                         if (ex.width > stubs[nearIdx].width) stubs[nearIdx] = (cand, ex.edgeDir, ex.width);
@@ -225,6 +225,12 @@ namespace Game.World.Import
             EditorUtility.SetDirty(farHost);
             return totalTris;
         }
+
+        // ADR 0121: the old 30 m radius erased one carriageway at the Andersa and Tysiąclecia exits
+        // (measured centreline gaps 12–15 m). Merge only near-coincident source ends with matching headings.
+        static bool SameRoadContinuation(Vector3 start, Vector2 direction, Vector2 next, Vector2 nextDirection) =>
+            Vector2.Distance(new Vector2(start.x, start.z), next) < 3f &&
+            Vector2.Dot(direction.normalized, nextDirection.normalized) > 0.95f; // WORKING_VALUE source-end tolerance
 
         static float ClosureSpan(float roadWidth) => roadWidth + 5f;   // carriageway + shoulders / kerbs on both sides
 

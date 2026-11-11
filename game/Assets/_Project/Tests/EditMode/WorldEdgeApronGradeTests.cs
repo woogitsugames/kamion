@@ -9,6 +9,35 @@ namespace Game.Tests.EditMode
 {
     public class WorldEdgeApronGradeTests
     {
+        static bool SameContinuation(Vector2 first, Vector2 second, Vector2 firstDir, Vector2 secondDir)
+        {
+            var type = Type.GetType("Game.World.Import.WorldEdgeBuilder, Game.World.Import.Editor", true);
+            var method = type.GetMethod("SameRoadContinuation", BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.NotNull(method);
+            return (bool)method.Invoke(null, new object[] {
+                new Vector3(first.x, 140f, first.y), firstDir, second, secondDir });
+        }
+
+        [TestCase(-237.483f, -1024f, -222.926f, -1024f)]
+        [TestCase(1024f, -966.147f, 1024f, -980.553f)]
+        public void DistinctCarriageways_RetainBothContinuations(float e0, float n0, float e1, float n1)
+        {
+            Assert.IsFalse(SameContinuation(new Vector2(e0, n0), new Vector2(e1, n1),
+                Vector2.up, Vector2.up), "real Tysiąclecia/Andersa parallel road axes must not merge");
+        }
+
+        [Test]
+        public void NearCoincidentEnds_MergeWithMatchingHeadings()
+        {
+            Assert.IsTrue(SameContinuation(Vector2.zero, new Vector2(0.1f, 0.2f), Vector2.up, Vector2.up));
+        }
+
+        [Test]
+        public void DivergentEnds_DoNotMergeEvenAtTheSamePoint()
+        {
+            Assert.IsFalse(SameContinuation(Vector2.zero, Vector2.zero, Vector2.up, Vector2.right));
+        }
+
         [TestCase(0.025f)]
         [TestCase(-0.025f)]
         public void ObliqueContinuation_StaysAboveApron_OnTransverseTerrainSlope(float slope)
