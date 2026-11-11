@@ -99,3 +99,6 @@ NASTĘPNY KROK: po load after OK uruchomić pełny GIS z pytest-after.running, r
 
 Regenerated ADR0102 world.
 NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
+
+Import after complete.
+NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
