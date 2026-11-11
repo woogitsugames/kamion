@@ -577,3 +577,13 @@ G performs only read-only gate-coordinate support. REPORT rewritten to current
 state, preserving pending0108/0109 and all partial failures.
 NEXT COMMAND: E full160/GIS/EditMode; D actual arrow BEFORE, bounded bus/world
 change and wear candidate, then route validation. Check both guards each launch.
+
+Step47: Independently verified bus-only raw delta: 190/192 exact, all64instances
+exact; two4_5GLBs add only10verts/9tris, no newgroups. Every ordered primitive
+checked, including3duplicate High terrain-material primitives omitted by the first
+dictionary-based check. All unaffected geometry, material definitions and node
+transforms match. Gate8 BEFORE views show existing curb scuffs, no asphalt twins.
+P8 wearOFF visibly reconnects the arrow: mask causes the break. One .425 material
+diagnostic approved with age/dirt unchanged. E160 captured; full GIS running.
+NEXT COMMAND: review P8/P10 diagnostic and bus-only renders; E full test results
+and160 budget/contacts; bounded gate/wear candidates then final D validation.

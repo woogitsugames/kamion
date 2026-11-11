@@ -132,3 +132,18 @@ provenP8arrow. Additional actualcompactglyph closeup pending before worldbuild.
 G readonly gate-source coordinate preflight assigned, no D source/cache/Unity
 overlap. Newstop metadata selector may add20stopnodes andbus=yes to20existing
 platformnodes; unchanged geometry/otherobjects must be measured separately.
+
+Root independently hashed all192bus BEFORE backups/current files and checked
+every ordered primitive in the2changed4_5GLBs.190files/all64instances exact;
+onlyoil tail+10vertices/+9tris per tier, no newgroups.95High/57Low otherprimitives
+exact, materialdefinitions/node-transforms exact. Agent's material-name dictionary
+had hidden3duplicate terrain_grass primitives; root checked them too (unchanged).
+Source proof savedD-bus-world-independent-check.json; runtimebudget still pending.
+Root viewed all4gatekerb sheets/8frames: realbarriers/raisedcurbscuffs visible,
+no pairedasphaltpaths. Bounded pairedcandidate authorized after BEFORE/source
+footprint/height/clearance and unchangedmaterialgroups; WORKING sizes/strength,
+no scuff2.5 blackribbons. Bus-only source remained frozen during its build.
+Root viewed genuine P8HighOV baseline and actualwearOFF: fullarm/head reconnects
+with samegeometry. Runtime mask caused severedarrow, notgeometry. Do not call
+this baseline qualityPASS. One diagnostic wheelstrength.85->.425 approved on
+P8/P10 with sameage/dirt and exactfinallyrestore; no globaladoption before review.
