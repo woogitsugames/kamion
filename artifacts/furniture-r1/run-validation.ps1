@@ -5,7 +5,7 @@ $mainRoot = 'C:/Users/matma/Documents/Claude/kamion'
 $phoneLock = Join-Path $mainRoot 'artifacts/locks/PHONE_RUN'
 $ev = 'artifacts/furniture-r1'
 function Wait-Phone {
-    while (Test-Path $phoneLock) { Write-Host 'PHONE_RUN present; waiting before Unity'; Start-Sleep -Seconds 30 }
+    while (Test-Path $phoneLock) { Write-Host 'PHONE_RUN present; waiting before Unity'; Start-Sleep -Seconds 60 }
     $ours = Get-CimInstance Win32_Process -Filter "name = 'Unity.exe'" |
         Where-Object { $_.CommandLine -like "*$root/game*" -or $_.CommandLine -like "*$root\game*" }
     if ($ours) { throw 'Unity already running in this worktree' }
