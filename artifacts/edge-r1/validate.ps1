@@ -11,7 +11,7 @@ function Save-Step([string]$message) {
     if ($LASTEXITCODE -ne 0) { throw 'WIP checkpoint failed' }
 }
 function With-UnitySlot([scriptblock]$action) {
-    & pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-edge
+    & pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-edge -PollSeconds 5
     if ($LASTEXITCODE -ne 0) { throw 'Slot acquisition failed' }
     try { & $action }
     finally {
