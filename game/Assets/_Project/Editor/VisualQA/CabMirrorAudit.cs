@@ -37,6 +37,7 @@ namespace Game.Editor.VisualQA
                     .First(c => c.id == "cab-driver").GetComponent<Camera>();
                 foreach (var fill in UnityEngine.Object.FindObjectsByType<CabInteriorLighting>(FindObjectsSortMode.None)) fill.Refresh(eye);
                 var report = new StringBuilder();
+                var interiorReport = new StringBuilder("mirror\tinteriorPixels\ttotalPixels\n");
                 report.AppendLine("# Editor mirror audit; cadence is configured, not measured phone Hz. Native RT pixels are unflipped; surface mapping follows the prefab UV/flip contract.");
                 report.AppendLine("mirror\tclass\twidth\theight\tfovV\taspect\tnear\tfar\tlodScale\tcap\tintervalDrivingFrames\tintervalStandingFrames");
                 var previous = RenderTexture.active;
@@ -58,12 +59,42 @@ namespace Game.Editor.VisualQA
                             File.WriteAllBytes(Path.Combine(output, mirror.name + ".png"), pixels.EncodeToPNG());
                         }
                         finally { UnityEngine.Object.DestroyImmediate(pixels); }
+                        // ADR 0112: identify own-interior pixels independently of leather colour, lighting and tier.
+                        // The material override is diagnostic only; keep the normal RT above as the visual evidence.
+                        var interior = UnityEngine.Object.FindObjectsByType<TruckVisualRig>(FindObjectsSortMode.None)
+                            .SelectMany(r => r.interiorGroup.GetLODs()).SelectMany(l => l.renderers).Where(r => r != null).Distinct().ToArray();
+                        var saved = interior.Select(r => r.sharedMaterials).ToArray();
+                        var marker = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+                        marker.SetColor("_BaseColor", Color.magenta);
+                        try
+                        {
+                            for (int i = 0; i < interior.Length; i++)
+                                interior[i].sharedMaterials = Enumerable.Repeat(marker, saved[i].Length).ToArray();
+                            mirror.RenderNow();
+                            RenderTexture.active = rt;
+                            var mask = new Texture2D(rt.width, rt.height, TextureFormat.RGB24, false);
+                            try
+                            {
+                                mask.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0); mask.Apply();
+                                int count = mask.GetPixels32().Count(p => p.r > 220 && p.b > 220 && p.g < 35);
+                                interiorReport.AppendLine($"{mirror.name}\t{count}\t{rt.width * rt.height}");
+                                File.WriteAllBytes(Path.Combine(output, mirror.name + "_interior-mask.png"), mask.EncodeToPNG());
+                            }
+                            finally { UnityEngine.Object.DestroyImmediate(mask); }
+                        }
+                        finally
+                        {
+                            for (int i = 0; i < interior.Length; i++) interior[i].sharedMaterials = saved[i];
+                            UnityEngine.Object.DestroyImmediate(marker);
+                            mirror.RenderNow();
+                        }
                         int level = VehicleCameraBudget.Level;
                         report.AppendLine(FormattableString.Invariant($"{mirror.name}\t{mirror.Class}\t{rt.width}\t{rt.height}\t{cam.fieldOfView:F3}\t{cam.aspect:F5}\t{cam.nearClipPlane:F3}\t{cam.farClipPlane:F1}\t{mirror.LodScale:F2}\t{VehicleCameraBudget.MirrorsPerFrame}\t{VehicleCameraBudget.MirrorIntervalFor(level, mirror.Class, false)}\t{VehicleCameraBudget.MirrorIntervalFor(level, mirror.Class, true)}"));
                     }
                 }
                 finally { RenderTexture.active = previous; }
                 File.WriteAllText(Path.Combine(output, "configuration.tsv"), report.ToString());
+                File.WriteAllText(Path.Combine(output, "interior-pixels.tsv"), interiorReport.ToString());
                 exit = 0;
             }
             catch (Exception e) { Debug.LogException(e); }
