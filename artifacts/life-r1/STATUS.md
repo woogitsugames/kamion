@@ -24,3 +24,6 @@ Następny krok: zakończyć capture.ps1 -Stage before, potem import kandydata do
 
 Krok 8: zapisano osobne wejścia importu i EditMode z obowiązkowym slotem gpt-life i cofnięciem efektów ubocznych Unity. Materiały są regenerowane kanonicznie; import kandydata jeszcze nie został uruchomiony.
 Następny krok po zakończeniu baseline i generatora: pwsh artifacts/life-r1/unity-phase.ps1 -Phase Import
+
+Krok 9: audyt wejść generatora wykrył brak opcjonalnego zdjęcia asfaltu w nowym worktree. Skopiowano wyłącznie istniejący plik źródłowy Data/photos/nowe/Worn_cracked_asphalt_pavement.jpg z main przed dojściem generatora do warstwy detalu. Zapobiega to pominięciu istniejącego materiału innych dziedzin; nie zmieniono jego kodu ani ustawień.
+Następny krok: sprawdzić log materiałów pod kątem SKIP/fallback i diff specyfikacji; do commita brać wyłącznie konieczne różnice car_grime_clean.
