@@ -8,3 +8,6 @@
 
 - Step3: fresh own world and fullPBR Python generators running independently (sessions2165/19122). Copied six real Mapillary road photos with original hashes/date metadata; viewed960x900 contact sheet. Observed regional resurfacing seams, localized edge deposits and worn paint; no generic global-noise conclusion. Copied ROOT preflight and adapted read-only helper for ownD products, to run after build. No Unity wrapper/automatic launch exists forD.
 - NEXT COMMAND: wait baseline-build.log and baseline-pbr.log completion; uv run --project tools/worldgen python artifacts/surface-wear-r1/verify.py baseline; then road-wear-uv-preflight.py and freezeD (resumeG first after explicit ROOT Unity release).
+
+- Step4: ROOT requested existing Commons asphalt detail input skipped by nested-photo /XJ bootstrap; copied one ignored file, verifiedSHA256 e26237d85c097af9560537c60e6ed6f67ed0090e284398a5d7a7a2bf41889135,1644231bytes and pinnedSHA1. All4 cached detail maps currently byte-identical to main/E/G, no map change; own fullPBR generation still running and will be checked again. No production/Unity change.
+- NEXT COMMAND: after both Python sessions finish, verify.py baseline and road-wear-uv-preflight.py; recheck detail-map parity then freezeD (G Unity baseline first when released).
