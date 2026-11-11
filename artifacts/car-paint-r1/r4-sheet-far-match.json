@@ -1,0 +1,227 @@
+{
+  "note": "Historical sheet identity and frozen source poses only; current-world visibility must be rendered anew.",
+  "source_camera_json_sha256": "fc4e1735e02e1a2dfad06f6efdafdb2bb7e42348a66e92639d811273e138004c",
+  "source_camera_builder_sha256": "7eaf6ead72f10bdca881b8b1b4bbd55a5461fe0cc984fdc88f59dcaf334f0141",
+  "conditions": [
+    {
+      "condition": "High-overcast",
+      "sheet_sha256": "c1dc57e0abdb8b78d35b7b35f1fa8aa19f0d7e4583b3d0f71fccf5b0f0087af4",
+      "tiles": [
+        {
+          "tile": 1,
+          "camera": "r10b_black_20",
+          "png_sha256": "09af821ae071872a6b29bc66058baf15aa18b1d5c178e822c13c9be1996a4936",
+          "full_tile_mae": 1.3852066395663956,
+          "small_tile_mae": 0.3375,
+          "runner_up": "r10b_grey_20",
+          "runner_up_mae": 16.197691441441442,
+          "source_pose": {
+            "id": "r10b_black_20",
+            "type": "persp",
+            "kind": "photo_match",
+            "fov_deg": 40.0,
+            "pos": [
+              722.6829777863375,
+              -465.77385639494844,
+              143.47899999999998
+            ],
+            "look_at": [
+              716.35,
+              -446.803,
+              142.579
+            ],
+            "note": "r10b dark paint QA: car_hatch_black front 3/4 at 20 m"
+          }
+        },
+        {
+          "tile": 2,
+          "camera": "r10b_grey_20",
+          "png_sha256": "f8cd4082eddac40f169bf98cbeaec4926b85c811e5ecc3117d9a44d78520cbd1",
+          "full_tile_mae": 1.3620754290876242,
+          "small_tile_mae": 0.3334740990990991,
+          "runner_up": "r10b_blue_20",
+          "runner_up_mae": 10.330630630630631,
+          "source_pose": {
+            "id": "r10b_grey_20",
+            "type": "persp",
+            "kind": "photo_match",
+            "fov_deg": 40.0,
+            "pos": [
+              703.22643200652,
+              -501.13089814636623,
+              143.201
+            ],
+            "look_at": [
+              697.173,
+              -482.069,
+              142.30100000000002
+            ],
+            "note": "r10b dark paint QA: car_hatch_grey front 3/4 at 20 m"
+          }
+        },
+        {
+          "tile": 3,
+          "camera": "r10b_blue_20",
+          "png_sha256": "e0ff1672f12857ed6774b4d981160246a8b2a704353a0259e94c8e42e10cefd2",
+          "full_tile_mae": 1.3434801264679312,
+          "small_tile_mae": 0.3317849099099099,
+          "runner_up": "r10b_grey_20",
+          "runner_up_mae": 10.352477477477477,
+          "source_pose": {
+            "id": "r10b_blue_20",
+            "type": "persp",
+            "kind": "photo_match",
+            "fov_deg": 40.0,
+            "pos": [
+              698.5919102174205,
+              -507.7897808027513,
+              143.20299999999997
+            ],
+            "look_at": [
+              693.642,
+              -488.412,
+              142.303
+            ],
+            "note": "r10b dark paint QA: car_hatch_blue front 3/4 at 20 m"
+          }
+        },
+        {
+          "tile": 4,
+          "camera": "r10b_black_45",
+          "png_sha256": "e318f7d79829e69d441e51c01e6db8076975692f43cbcd2243262f5318f7d323",
+          "full_tile_mae": 1.316745709123758,
+          "small_tile_mae": 0.3634009009009009,
+          "runner_up": "r10b_grey_45",
+          "runner_up_mae": 9.515202702702704,
+          "source_pose": {
+            "id": "r10b_black_45",
+            "type": "persp",
+            "kind": "photo_match",
+            "fov_deg": 40.0,
+            "pos": [
+              730.5992000192592,
+              -489.48742688863405,
+              143.47899999999998
+            ],
+            "look_at": [
+              716.35,
+              -446.803,
+              142.579
+            ],
+            "note": "r10b dark paint QA: car_hatch_black front 3/4 at 45 m"
+          }
+        }
+      ]
+    },
+    {
+      "condition": "High-clear",
+      "sheet_sha256": "ecdd18f21b63e6ed8514447cc69e1a9e0878f96f588dc12d1914c82ee67421be",
+      "tiles": [
+        {
+          "tile": 1,
+          "camera": "r10b_black_20",
+          "png_sha256": "b548be1a7f67c5503f8d2ec0ce48fffb078c2444fc7080f291ef91e8929b7244",
+          "full_tile_mae": 1.7190368112014454,
+          "small_tile_mae": 0.33068693693693696,
+          "runner_up": "r10b_grey_20",
+          "runner_up_mae": 15.61739864864865,
+          "source_pose": {
+            "id": "r10b_black_20",
+            "type": "persp",
+            "kind": "photo_match",
+            "fov_deg": 40.0,
+            "pos": [
+              722.6829777863375,
+              -465.77385639494844,
+              143.47899999999998
+            ],
+            "look_at": [
+              716.35,
+              -446.803,
+              142.579
+            ],
+            "note": "r10b dark paint QA: car_hatch_black front 3/4 at 20 m"
+          }
+        },
+        {
+          "tile": 2,
+          "camera": "r10b_grey_20",
+          "png_sha256": "ed78b4300e1a5da379434bd4640618cdfe54f0d59200b7464143947fcdc267af",
+          "full_tile_mae": 1.6942039295392954,
+          "small_tile_mae": 0.3391047297297297,
+          "runner_up": "r10b_blue_20",
+          "runner_up_mae": 11.294059684684685,
+          "source_pose": {
+            "id": "r10b_grey_20",
+            "type": "persp",
+            "kind": "photo_match",
+            "fov_deg": 40.0,
+            "pos": [
+              703.22643200652,
+              -501.13089814636623,
+              143.201
+            ],
+            "look_at": [
+              697.173,
+              -482.069,
+              142.30100000000002
+            ],
+            "note": "r10b dark paint QA: car_hatch_grey front 3/4 at 20 m"
+          }
+        },
+        {
+          "tile": 3,
+          "camera": "r10b_blue_20",
+          "png_sha256": "120156b7d3f4adc5745f615ef276bcde902f48b6b12a82d64a1a61285bf00f07",
+          "full_tile_mae": 1.6736201445347787,
+          "small_tile_mae": 0.33085585585585586,
+          "runner_up": "r10b_grey_20",
+          "runner_up_mae": 11.287162162162161,
+          "source_pose": {
+            "id": "r10b_blue_20",
+            "type": "persp",
+            "kind": "photo_match",
+            "fov_deg": 40.0,
+            "pos": [
+              698.5919102174205,
+              -507.7897808027513,
+              143.20299999999997
+            ],
+            "look_at": [
+              693.642,
+              -488.412,
+              142.303
+            ],
+            "note": "r10b dark paint QA: car_hatch_blue front 3/4 at 20 m"
+          }
+        },
+        {
+          "tile": 4,
+          "camera": "r10b_black_45",
+          "png_sha256": "09a8dba87362aa5da46023609876feba139eb2a46059c6eef018dd2a1e42c8bf",
+          "full_tile_mae": 1.4826242095754292,
+          "small_tile_mae": 0.43572635135135135,
+          "runner_up": "r10b_grey_45",
+          "runner_up_mae": 8.921734234234235,
+          "source_pose": {
+            "id": "r10b_black_45",
+            "type": "persp",
+            "kind": "photo_match",
+            "fov_deg": 40.0,
+            "pos": [
+              730.5992000192592,
+              -489.48742688863405,
+              143.47899999999998
+            ],
+            "look_at": [
+              716.35,
+              -446.803,
+              142.579
+            ],
+            "note": "r10b dark paint QA: car_hatch_black front 3/4 at 45 m"
+          }
+        }
+      ]
+    }
+  ]
+}

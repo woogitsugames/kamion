@@ -1,0 +1,197 @@
+{
+  "schema": "truck-sim-pl/gate3-cameras/1",
+  "region": "bialystok-industrial-c",
+  "cameras": [
+    {
+      "id": "r10b_black_20",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        722.6829777863375,
+        -465.77385639494844,
+        143.47899999999998
+      ],
+      "look_at": [
+        716.35,
+        -446.803,
+        142.579
+      ],
+      "note": "r10b dark paint QA: car_hatch_black front 3/4 at 20 m"
+    },
+    {
+      "id": "r10b_grey_20",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        703.22643200652,
+        -501.13089814636623,
+        143.201
+      ],
+      "look_at": [
+        697.173,
+        -482.069,
+        142.30100000000002
+      ],
+      "note": "r10b dark paint QA: car_hatch_grey front 3/4 at 20 m"
+    },
+    {
+      "id": "r10b_blue_20",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        698.5919102174205,
+        -507.7897808027513,
+        143.20299999999997
+      ],
+      "look_at": [
+        693.642,
+        -488.412,
+        142.303
+      ],
+      "note": "r10b dark paint QA: car_hatch_blue front 3/4 at 20 m"
+    },
+    {
+      "id": "r10b_black_45",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        730.5992000192592,
+        -489.48742688863405,
+        143.47899999999998
+      ],
+      "look_at": [
+        716.35,
+        -446.803,
+        142.579
+      ],
+      "note": "r10b dark paint QA: car_hatch_black front 3/4 at 45 m"
+    }
+  ],
+  "note": "Exact source poses copied, old camera files unchanged. The fourth camera is an invalid fleet proof, retained as historical regression only.",
+  "identity": [
+    {
+      "camera": "r10b_black_20",
+      "nearest_instance": {
+        "e": 716.39,
+        "n": -446.808,
+        "p": "car_hatch_black",
+        "src": "life:parking:kwadrat-park-units-forecourt#0",
+        "yaw": -2.0343,
+        "z": 141.782
+      },
+      "expected_distance_m": 20,
+      "source_pose": {
+        "id": "r10b_black_20",
+        "type": "persp",
+        "kind": "photo_match",
+        "fov_deg": 40.0,
+        "pos": [
+          722.6829777863375,
+          -465.77385639494844,
+          143.47899999999998
+        ],
+        "look_at": [
+          716.35,
+          -446.803,
+          142.579
+        ],
+        "note": "r10b dark paint QA: car_hatch_black front 3/4 at 20 m"
+      },
+      "historical_visibility": "historical parking-row frame; actual target/LOD must be verified on fresh baseline"
+    },
+    {
+      "camera": "r10b_grey_20",
+      "nearest_instance": {
+        "e": 697.203,
+        "n": -482.067,
+        "p": "car_hatch_grey",
+        "src": "life:parking:kwadrat-park-units-forecourt#0",
+        "yaw": -2.0491,
+        "z": 141.503
+      },
+      "expected_distance_m": 20,
+      "source_pose": {
+        "id": "r10b_grey_20",
+        "type": "persp",
+        "kind": "photo_match",
+        "fov_deg": 40.0,
+        "pos": [
+          703.22643200652,
+          -501.13089814636623,
+          143.201
+        ],
+        "look_at": [
+          697.173,
+          -482.069,
+          142.30100000000002
+        ],
+        "note": "r10b dark paint QA: car_hatch_grey front 3/4 at 20 m"
+      },
+      "historical_visibility": "historical parking-row frame; actual target/LOD must be verified on fresh baseline"
+    },
+    {
+      "camera": "r10b_blue_20",
+      "nearest_instance": {
+        "e": 693.669,
+        "n": -488.409,
+        "p": "car_hatch_blue",
+        "src": "life:parking:kwadrat-park-units-forecourt#0",
+        "yaw": -2.1064,
+        "z": 141.504
+      },
+      "expected_distance_m": 20,
+      "source_pose": {
+        "id": "r10b_blue_20",
+        "type": "persp",
+        "kind": "photo_match",
+        "fov_deg": 40.0,
+        "pos": [
+          698.5919102174205,
+          -507.7897808027513,
+          143.20299999999997
+        ],
+        "look_at": [
+          693.642,
+          -488.412,
+          142.303
+        ],
+        "note": "r10b dark paint QA: car_hatch_blue front 3/4 at 20 m"
+      },
+      "historical_visibility": "historical parking-row frame; actual target/LOD must be verified on fresh baseline"
+    },
+    {
+      "camera": "r10b_black_45",
+      "nearest_instance": {
+        "e": 716.39,
+        "n": -446.808,
+        "p": "car_hatch_black",
+        "src": "life:parking:kwadrat-park-units-forecourt#0",
+        "yaw": -2.0343,
+        "z": 141.782
+      },
+      "expected_distance_m": 45,
+      "source_pose": {
+        "id": "r10b_black_45",
+        "type": "persp",
+        "kind": "photo_match",
+        "fov_deg": 40.0,
+        "pos": [
+          730.5992000192592,
+          -489.48742688863405,
+          143.47899999999998
+        ],
+        "look_at": [
+          716.35,
+          -446.803,
+          142.579
+        ],
+        "note": "r10b dark paint QA: car_hatch_black front 3/4 at 45 m"
+      },
+      "historical_visibility": "INVALID fleet proof: wall occludes target"
+    }
+  ]
+}
